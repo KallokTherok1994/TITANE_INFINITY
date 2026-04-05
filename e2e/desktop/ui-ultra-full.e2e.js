@@ -97,7 +97,10 @@ describe('UI Desktop Ultra Full Coverage (WDIO/Tauri)', () => {
     );
 
     // Required control: retry/regenerate action (if present)
-    await sendChatAndAssertNoSilence('[RETRY_CHECK] Réponds seulement: retry ok.', 120000);
+    await sendChatAndAssertNoSilence(
+      '[RETRY_CHECK] Réponds seulement: retry ok.',
+      120000
+    );
     const retryCheck = await retryLatestUserMessageAndAssertNoSilence();
     assert.equal(
       retryCheck.present,

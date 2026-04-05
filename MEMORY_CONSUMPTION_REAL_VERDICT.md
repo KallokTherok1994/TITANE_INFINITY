@@ -7,30 +7,36 @@
 ## Memory Pipeline Chain
 
 ### Write ✅
+
 - chatEngine → memoryIntegration.saveInteraction()
 - Saves user message, AI response, mode, emotion state
 - Called in both generate() and stream() paths
 
 ### Persist ✅
+
 - memoryService → backend storage (Tauri IPC)
 - Non-blocking saves with timeout protection
 - AutoHeal on save failures
 
 ### Recall ✅
+
 - chatEngine → memoryIntegration.loadContext()
 - Loads projects, decisions, knowledge, rituals
 - Parallel loading with Promise.all
 
 ### Inject ✅
+
 - Controlled by kernel: `canonicalDecision.memoryInjection.use`
 - chatEngine only injects memory if kernel decides to use it
 - No independent memory injection exists outside kernel
 
 ### Consume ✅
+
 - LLM processes system prompt with memory block
 - Memory context formatted as structured block in prompt
 
 ### Answer ✅
+
 - LLM produces response informed by memory context
 - Memory-first check: `checkMemoryForAnswer()` skips LLM if high-confidence match
 

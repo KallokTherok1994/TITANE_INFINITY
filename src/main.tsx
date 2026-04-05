@@ -942,7 +942,8 @@ const getSingularityPollingIntervalMs = (): number => {
     return defaultIntervalMs;
   }
 
-  const envEnabled = String(import.meta.env.VITE_SINGULARITY_POLLING_ENABLED ?? '') === '1';
+  const envEnabled =
+    String(import.meta.env.VITE_SINGULARITY_POLLING_ENABLED ?? '') === '1';
   const storedEnabled = window.localStorage.getItem('titane_singularity_polling_enabled');
   const lsEnabled = storedEnabled === '1' || storedEnabled === 'true';
   const enabled = envEnabled || lsEnabled;
@@ -953,7 +954,9 @@ const getSingularityPollingIntervalMs = (): number => {
       ? Number(envIntervalRaw)
       : NaN;
 
-  const lsIntervalRaw = window.localStorage.getItem('titane_singularity_polling_interval_ms');
+  const lsIntervalRaw = window.localStorage.getItem(
+    'titane_singularity_polling_interval_ms'
+  );
   const lsIntervalMs = lsIntervalRaw ? Number(lsIntervalRaw) : NaN;
 
   const candidate = Number.isFinite(envIntervalMs)
@@ -993,7 +996,9 @@ SingularityBridge.initialize()
     SingularityConnections.start(singularityIntervalMs)
       .then(() => {
         if (singularityIntervalMs > 0) {
-          console.log(`🔗 SingularityConnections started (${singularityIntervalMs}ms polling)`);
+          console.log(
+            `🔗 SingularityConnections started (${singularityIntervalMs}ms polling)`
+          );
         } else {
           console.log('🔗 SingularityConnections started (event-driven; no polling)');
         }

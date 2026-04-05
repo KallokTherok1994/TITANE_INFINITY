@@ -163,6 +163,99 @@ export const createFallbackSingularityState = (): SingularityState => {
   };
 };
 
+const TOTAL_DEV_BROWSER_SESSION_KEY = 'titane_total_dev_browser_session_expiry';
+const TOTAL_DEV_BROWSER_UNLOCK_HASH =
+  '895d3d67cc9d3b3698b59e35818c7ac9f06c3fe710c48e69a80908ca5ad999a8';
+
+type TotalDevBrowserLockState = 'LOCKED' | 'UNLOCKED' | 'EXPIRED';
+
+const getNowUnix = () => Math.floor(Date.now() / 1000);
+
+const readTotalDevBrowserExpiry = (): number => {
+  if (typeof window === 'undefined') {
+    return 0;
+  }
+
+  const raw = window.sessionStorage.getItem(TOTAL_DEV_BROWSER_SESSION_KEY);
+  const expiry = Number(raw ?? 0);
+  return Number.isFinite(expiry) ? expiry : 0;
+};
+
+const writeTotalDevBrowserExpiry = (expiry: number) => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  if (expiry > 0) {
+    window.sessionStorage.setItem(TOTAL_DEV_BROWSER_SESSION_KEY, String(expiry));
+  } else {
+    window.sessionStorage.removeItem(TOTAL_DEV_BROWSER_SESSION_KEY);
+  }
+};
+
+const getTotalDevBrowserLockState = (): {
+  lock_state: TotalDevBrowserLockState;
+  expires_at_unix?: number;
+  now_unix: number;
+  fallback: true;
+} => {
+  const now = getNowUnix();
+  const expiry = readTotalDevBrowserExpiry();
+
+  if (!expiry) {
+    return {
+      lock_state: 'LOCKED',
+      expires_at_unix: undefined,
+      now_unix: now,
+      fallback: true,
+    };
+  }
+
+  if (now >= expiry) {
+    writeTotalDevBrowserExpiry(0);
+    return {
+      lock_state: 'EXPIRED',
+      expires_at_unix: expiry,
+      now_unix: now,
+      fallback: true,
+    };
+  }
+
+  return {
+    lock_state: 'UNLOCKED',
+    expires_at_unix: expiry,
+    now_unix: now,
+    fallback: true,
+  };
+};
+
+const getTotalDevBrowserUnlockResult = (args?: TauriCommandArgs) => {
+  const token = typeof args?.token === 'string' ? args.token : '';
+
+  if (token === TOTAL_DEV_BROWSER_UNLOCK_HASH) {
+    const expiresAt = getNowUnix() + 3600;
+    writeTotalDevBrowserExpiry(expiresAt);
+
+    return {
+      ok: true,
+      session_token: `tdsk_browser_${token.slice(0, 16)}`,
+      expires_at_unix: expiresAt,
+      lock_state: 'UNLOCKED',
+      error: undefined,
+      fallback: true,
+    };
+  }
+
+  return {
+    ok: false,
+    session_token: undefined,
+    expires_at_unix: undefined,
+    lock_state: 'LOCKED',
+    error: 'Token invalide',
+    fallback: true,
+  };
+};
+
 const getTauriGlobal = (): TauriCoreBridge | undefined => {
   if (typeof window === 'undefined') {
     return undefined;
@@ -347,7 +440,7 @@ export class TauriInvokeProtector {
         // En mode test, propager l'erreur pour permettre les assertions
         throw normalizedError;
       }
-      return this.createFallbackResponse<T>(command, normalizedError);
+      return this.createFallbackResponse<T>(command, normalizedError, args);
     }
   }
 
@@ -368,7 +461,11 @@ export class TauriInvokeProtector {
         command,
         '- Tauri marked as unavailable'
       );
-      return this.createFallbackResponse<T>(command, 'Tauri not available (cached)');
+      return this.createFallbackResponse<T>(
+        command,
+        'Tauri not available (cached)',
+        args
+      );
     }
 
     // ✅ CRITICAL FIX v20.3: Use cached module if available, don't re-import
@@ -385,7 +482,11 @@ export class TauriInvokeProtector {
         if (this.isTestEnv) {
           throw new Error('Tauri invoke not available');
         }
-        return this.createFallbackResponse<T>(command, 'Tauri invoke not available');
+        return this.createFallbackResponse<T>(
+          command,
+          'Tauri invoke not available',
+          args
+        );
       }
       // Cache the module for future calls
       this.tauriModuleCache = tauriModule;
@@ -491,7 +592,11 @@ export class TauriInvokeProtector {
   /**
    * Génère une réponse de fallback intelligente selon le type de commande
    */
-  private createFallbackResponse<T>(command: string | undefined, error: unknown): T {
+  private createFallbackResponse<T>(
+    command: string | undefined,
+    error: unknown,
+    args?: TauriCommandArgs
+  ): T {
     const safeCommand = command || 'unknown_command';
     if (safeCommand.includes('conversation_generate')) {
       console.log('[TauriProtector] Fallback engaged for conversation_generate');
@@ -500,6 +605,34 @@ export class TauriInvokeProtector {
     }
 
     const errorMessage = error instanceof Error ? error.message : String(error);
+
+    if (safeCommand === 'total_dev_session_status') {
+      return getTotalDevBrowserLockState() as T;
+    }
+
+    if (safeCommand === 'total_dev_unlock') {
+      return getTotalDevBrowserUnlockResult(args) as T;
+    }
+
+    if (safeCommand === 'total_dev_revoke') {
+      writeTotalDevBrowserExpiry(0);
+      return true as T;
+    }
+
+    if (
+      safeCommand === 'update_singularity_state' ||
+      safeCommand.startsWith('singularity_update_')
+    ) {
+      return {
+        ok: true,
+        content: {
+          command: safeCommand,
+          fallback: true,
+          timestamp: Date.now(),
+        },
+        error: null,
+      } as T;
+    }
 
     // Fallbacks spécifiques par type de commande
     if (safeCommand.includes('singularity_get_full_state')) {

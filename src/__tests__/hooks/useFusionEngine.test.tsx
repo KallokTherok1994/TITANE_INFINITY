@@ -129,6 +129,25 @@ describe('useFusionEngine Hook', () => {
       expect(result.current.isFusing).toBe(false);
     });
 
+    it('should reset fusion state when fusion fails', async () => {
+      const fusionModule = await import('@/modules/fusion/FusionEngine');
+      vi.mocked(fusionModule.fusionEngine.runFusionPipeline).mockRejectedValueOnce(
+        new Error('Fusion backend unavailable')
+      );
+
+      const { result } = renderHook(() => useFusionEngine());
+
+      await expect(
+        act(async () => {
+          await result.current.runFusion();
+        })
+      ).rejects.toThrow('Fusion backend unavailable');
+
+      await waitFor(() => {
+        expect(result.current.isFusing).toBe(false);
+      });
+    });
+
     it('should provide download helpers', () => {
       const { result } = renderHook(() => useFusionEngine());
       expect(typeof result.current.downloadDataset).toBe('function');

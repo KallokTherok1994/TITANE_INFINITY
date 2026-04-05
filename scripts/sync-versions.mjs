@@ -87,7 +87,12 @@ if (fs.existsSync(tauriConfPath)) {
 
 // ── 4. Sync runtime/stable/tauri.conf.json (stable build config) ───────────
 
-const runtimeStableTauriConfPath = path.join(root, 'runtime', 'stable', 'tauri.conf.json');
+const runtimeStableTauriConfPath = path.join(
+  root,
+  'runtime',
+  'stable',
+  'tauri.conf.json'
+);
 if (fs.existsSync(runtimeStableTauriConfPath)) {
   const conf = JSON.parse(fs.readFileSync(runtimeStableTauriConfPath, 'utf8'));
 

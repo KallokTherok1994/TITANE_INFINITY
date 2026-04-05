@@ -45,6 +45,7 @@ DEB:       d2c57c92b48f653660faf9b83904f9037f4cbb1fcfc9cbf88df84058919e1f57
 ```
 
 **Release Notes & Installation**:
+
 - Full release notes: [RELEASE_v28.88.0.md](RELEASE_v28.88.0.md)
 - GitHub Release: https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v28.88.0-release-20260403
 - Proof Pack: [proof_packs/PROD_RELEASE_v28.88.0_SEALED_2026-04-03.md](proof_packs/PROD_RELEASE_v28.88.0_SEALED_2026-04-03.md)

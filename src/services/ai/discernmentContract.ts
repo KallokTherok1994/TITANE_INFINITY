@@ -1,4 +1,8 @@
-import { RESPONSE_PROFILES, type ResponseProfileId, type InferenceState } from '@/services/ai/responsePolicy';
+import {
+  RESPONSE_PROFILES,
+  type ResponseProfileId,
+  type InferenceState,
+} from '@/services/ai/responsePolicy';
 
 export type TaskType = 'question' | 'instruction' | 'multi-step' | 'code' | 'data';
 export type SafetyMode = 'normal' | 'high';
@@ -109,7 +113,11 @@ export function buildDiscernmentDecision(inputs: DiscernmentInputs): Discernment
   // Memory decision
   const profile = RESPONSE_PROFILES[profileId];
   let memoryAction: DiscernmentDecision['memoryAction'] = 'none';
-  if (profile.memory.injectSTM || profile.memory.injectLTM || profile.memory.targetedRetrievalOnly) {
+  if (
+    profile.memory.injectSTM ||
+    profile.memory.injectLTM ||
+    profile.memory.targetedRetrievalOnly
+  ) {
     if (memoryAvailable) {
       if (profile.memory.targetedRetrievalOnly) {
         memoryAction = 'targeted';
@@ -127,7 +135,9 @@ export function buildDiscernmentDecision(inputs: DiscernmentInputs): Discernment
   }
 
   // Provider
-  const providerChoice = providerAvailable ? (profile.preferredProviders[0] ?? 'auto') : null;
+  const providerChoice = providerAvailable
+    ? (profile.preferredProviders[0] ?? 'auto')
+    : null;
   if (!providerAvailable) {
     reasons.push('RC_HOLD_NO_PROVIDER');
   } else {
@@ -136,7 +146,11 @@ export function buildDiscernmentDecision(inputs: DiscernmentInputs): Discernment
 
   // Web
   let webAction: DiscernmentDecision['webAction'] = 'none';
-  if (inferenceState === 'SAFE_TO_INFER' && webAvailable && (taskType === 'question' || taskType === 'data')) {
+  if (
+    inferenceState === 'SAFE_TO_INFER' &&
+    webAvailable &&
+    (taskType === 'question' || taskType === 'data')
+  ) {
     webAction = 'search';
   } else if (!webAvailable && (taskType === 'question' || taskType === 'data')) {
     reasons.push('RC_WEB_UNAVAILABLE');

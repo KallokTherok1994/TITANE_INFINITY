@@ -370,18 +370,23 @@ describe('ChatEngine ↔ CanonicalDiscernmentKernel Integration', () => {
     expect(mockedChatEngineCommands.generateResponse).toHaveBeenCalled();
     const payload = mockedChatEngineCommands.generateResponse.mock.calls[0][0];
     const canonicalProvider = response.omegaMetadata?.canonicalDecision?.provider?.name;
-    expect(payload.provider).toBe(canonicalProvider === 'auto' ? undefined : canonicalProvider);
+    expect(payload.provider).toBe(
+      canonicalProvider === 'auto' ? undefined : canonicalProvider
+    );
     expect(payload.temperature).toBeUndefined();
     expect(payload.maxOutputTokens).toBeUndefined();
     expect(payload.profile).toBe('fast');
 
-    delete (window as typeof window & { __TAURI_INTERNALS__?: unknown }).__TAURI_INTERNALS__;
+    delete (window as typeof window & { __TAURI_INTERNALS__?: unknown })
+      .__TAURI_INTERNALS__;
   });
 
   it('should keep clarification prompts to a single short question', () => {
-    const response = (chatEngine as unknown as {
-      buildClarificationResponse: (message: string, mode: string) => string;
-    }).buildClarificationResponse('architecture titane', 'default');
+    const response = (
+      chatEngine as unknown as {
+        buildClarificationResponse: (message: string, mode: string) => string;
+      }
+    ).buildClarificationResponse('architecture titane', 'default');
 
     expect((response.match(/\?/g) || []).length).toBeLessThanOrEqual(1);
     expect(response).not.toContain('Comment');

@@ -325,6 +325,12 @@ const handleTauriInvoke = async (
     }
     case 'memory_get_active_projects':
       return clone(memoryProjects);
+    case 'memory_get_recent_decisions':
+      return clone(memoryInteractions.slice(-5));
+    case 'memory_get_knowledge':
+      return [];
+    case 'memory_get_active_rituals':
+      return [];
     case 'parse_document': {
       const content = String(payload?.content ?? '');
       const sections = content
@@ -556,6 +562,38 @@ const handleTauriInvoke = async (
         gemini: { healthy: true, latency_ms: 320 },
         ollama: { healthy: true, latency_ms: 110 },
         fallback: { healthy: true },
+      };
+    case 'chat_check_providers':
+      return [
+        { provider: 'local', available: true },
+        { provider: 'ollama', available: true },
+        { provider: 'gemini', available: false, error: 'Missing API key' },
+      ];
+    case 'exp_get_global_state':
+      return {
+        level: 1,
+        totalXP: 0,
+        xpInCurrentLevel: 0,
+        xpToNextLevel: 100,
+        milestones: [],
+        unlockedMilestones: [],
+        lastXPGain: null,
+        streakDays: 0,
+        lastActiveDate: new Date().toISOString().split('T')[0],
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      };
+    case 'load_conversation_history':
+      return [];
+    case 'persistent_memory_get_stats':
+      return {
+        totalEntries: 0,
+        countByLevel: {
+          session: 0,
+          intermediate: 0,
+          long_term: 0,
+        },
+        byCategory: {},
       };
     case 'health_check':
       return {

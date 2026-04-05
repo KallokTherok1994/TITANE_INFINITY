@@ -24,7 +24,12 @@ import {
 import { secureInvoke } from '@/lib/security';
 import { listen } from '@tauri-apps/api/event';
 import { logger } from '@/lib/logger';
-import { calculateLevel, xpInCurrentLevel, xpToNextLevel, xpForLevel } from '@/services/xp/xpCanonical';
+import {
+  calculateLevel,
+  xpInCurrentLevel,
+  xpToNextLevel,
+  xpForLevel,
+} from '@/services/xp/xpCanonical';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES

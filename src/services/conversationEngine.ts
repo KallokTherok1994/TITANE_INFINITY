@@ -14,7 +14,11 @@ import { tauriClient } from '@/lib/tauriClient';
 import { getSystemPrompt } from '@/config/chatModes.config';
 import { userPreferencesEngine } from '@/services/userPreferencesEngine';
 import { classifyMode, resolveMode } from '@/services/ai/omegaModeClassifier';
-import { RESPONSE_PROFILES, type ResponseProfileId, type InferenceState } from '@/services/ai/responsePolicy';
+import {
+  RESPONSE_PROFILES,
+  type ResponseProfileId,
+  type InferenceState,
+} from '@/services/ai/responsePolicy';
 import {
   buildDiscernmentDecision,
   type DiscernmentDecision,
@@ -942,7 +946,8 @@ export async function processMessage(
   const taskType: 'question' | 'instruction' | 'multi-step' | 'code' | 'data' =
     detectedIntention === 'Action' ? 'instruction' : 'question';
   const memoryAvailable = persistentMemoryStatus === 'loaded';
-  const webAvailable = typeof navigator !== 'undefined' ? navigator.onLine === true : false;
+  const webAvailable =
+    typeof navigator !== 'undefined' ? navigator.onLine === true : false;
   const toolAvailable = false; // frontend has no direct tool lane
   const providerAvailable =
     typeof normalizedMetadata.provider_used === 'string' &&

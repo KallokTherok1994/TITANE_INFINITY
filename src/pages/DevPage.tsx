@@ -744,11 +744,14 @@ function DevPageContent(): JSX.Element {
   const updateActiveSection = useCallback(
     (nextSection: SectionId) => {
       setActiveSection(nextSection);
-      setSearchParams(prev => {
-        const next = new URLSearchParams(prev);
-        next.set('tab', nextSection);
-        return next;
-      }, { replace: true });
+      setSearchParams(
+        prev => {
+          const next = new URLSearchParams(prev);
+          next.set('tab', nextSection);
+          return next;
+        },
+        { replace: true }
+      );
     },
     [setSearchParams]
   );

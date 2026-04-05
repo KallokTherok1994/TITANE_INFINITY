@@ -130,21 +130,47 @@ Tu réponds en français. Tu cites les fichiers touchés. Tu classes chaque risq
 // HOOKS
 // ─────────────────────────────────────────────────────────────────
 
+const normalizeLockState = (
+  status: Partial<SessionStatus> | null | undefined
+): LockState => {
+  const candidate =
+    typeof status?.lock_state === 'string' ? status.lock_state.toUpperCase() : '';
+
+  if (
+    candidate === 'LOCKED' ||
+    candidate === 'UNLOCKED' ||
+    candidate === 'EXPIRED' ||
+    candidate === 'CHECKING'
+  ) {
+    return candidate;
+  }
+
+  return 'LOCKED';
+};
+
+const normalizeExpiry = (status: Partial<SessionStatus> | null | undefined): number => {
+  return typeof status?.expires_at_unix === 'number' &&
+    Number.isFinite(status.expires_at_unix)
+    ? status.expires_at_unix
+    : 0;
+};
+
 function useLockState() {
   const [lockState, setLockState] = useState<LockState>('CHECKING');
   const [expiresAt, setExpiresAt] = useState<number>(0);
 
   const checkSession = useCallback(async () => {
     try {
-      const status = await secureInvoke<SessionStatus>(
+      const status = await secureInvoke<Partial<SessionStatus>>(
         TAURI_COMMANDS.TOTAL_DEV_SESSION_STATUS,
         {}
       );
-      const ls = status.lock_state as LockState;
-      setLockState(ls);
-      setExpiresAt(status.expires_at_unix ?? 0);
+
+      setLockState(normalizeLockState(status));
+      setExpiresAt(normalizeExpiry(status));
     } catch {
       setLockState('LOCKED');
+      setExpiresAt(0);
     }
   }, []);
 

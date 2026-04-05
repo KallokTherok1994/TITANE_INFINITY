@@ -490,7 +490,10 @@ export class CanonicalDiscernmentKernel {
     } else if (canonicalMode) {
       const champion = getChampion(canonicalMode);
       if (champion?.provider) {
-        candidates = [champion.provider, ...candidates.filter(p => p !== champion.provider)];
+        candidates = [
+          champion.provider,
+          ...candidates.filter(p => p !== champion.provider),
+        ];
       }
     }
 

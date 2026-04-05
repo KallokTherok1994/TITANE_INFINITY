@@ -34,7 +34,9 @@ vi.mock('@/hooks/useToast', () => ({
   }),
 }));
 
-function buildHookState(overrides: Partial<UseTimeAgendaReturn> = {}): UseTimeAgendaReturn {
+function buildHookState(
+  overrides: Partial<UseTimeAgendaReturn> = {}
+): UseTimeAgendaReturn {
   const agendaEvent = {
     id: 'evt-sync-1',
     title: 'Sync TITANE sprint',
@@ -170,8 +172,6 @@ describe('TimePage', () => {
       fireEvent.click(screen.getByTestId('btn-time-flow-toggle'));
     });
 
-    expect(window.localStorage.getItem('titane_cognitive_state')).toContain(
-      'deep-work'
-    );
+    expect(window.localStorage.getItem('titane_cognitive_state')).toContain('deep-work');
   });
 });

@@ -1,9 +1,9 @@
 /**
  * TITANE∞ — Canonical XP Level Calculation
- * 
+ *
  * Single source of truth for all XP/level calculations across the codebase.
  * Formula: level = floor(sqrt(xp / 100))
- * 
+ *
  * This quadratic formula provides diminishing returns at higher levels,
  * encouraging sustained engagement without runaway progression.
  */

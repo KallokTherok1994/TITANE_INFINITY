@@ -120,7 +120,9 @@ const formatAgendaTime = (isoDateTime: string): string => {
   });
 };
 
-const mapAgendaCategoryToBlockType = (category: AgendaEvent['category']): TimeBlock['type'] => {
+const mapAgendaCategoryToBlockType = (
+  category: AgendaEvent['category']
+): TimeBlock['type'] => {
   switch (category) {
     case 'meeting':
       return 'meeting';
@@ -195,7 +197,10 @@ const readStoredCognitiveState = (
         typeof parsed.energy === 'number' && Number.isFinite(parsed.energy)
           ? parsed.energy
           : fallbackEnergy,
-      mode: typeof parsed.mode === 'string' && parsed.mode.trim() ? parsed.mode : fallback.mode,
+      mode:
+        typeof parsed.mode === 'string' && parsed.mode.trim()
+          ? parsed.mode
+          : fallback.mode,
       updatedAt:
         typeof parsed.updatedAt === 'number' && Number.isFinite(parsed.updatedAt)
           ? parsed.updatedAt
@@ -205,7 +210,8 @@ const readStoredCognitiveState = (
           ? parsed.segment
           : currentSegment,
       todayFocusMinutes:
-        typeof parsed.todayFocusMinutes === 'number' && Number.isFinite(parsed.todayFocusMinutes)
+        typeof parsed.todayFocusMinutes === 'number' &&
+        Number.isFinite(parsed.todayFocusMinutes)
           ? parsed.todayFocusMinutes
           : todayFocusMinutes,
     };
@@ -281,11 +287,14 @@ export const TimePage: React.FC = () => {
   const updateActiveTab = useCallback(
     (nextTab: TabId) => {
       setActiveTab(nextTab);
-      setSearchParams(prev => {
-        const next = new URLSearchParams(prev);
-        next.set('tab', nextTab);
-        return next;
-      }, { replace: true });
+      setSearchParams(
+        prev => {
+          const next = new URLSearchParams(prev);
+          next.set('tab', nextTab);
+          return next;
+        },
+        { replace: true }
+      );
     },
     [setSearchParams]
   );
@@ -406,7 +415,9 @@ export const TimePage: React.FC = () => {
       >
         {activeTab === 'now' && (
           <NowSection
-            currentDate={new Date(timeState?.currentDateTime ?? currentDate.toISOString())}
+            currentDate={
+              new Date(timeState?.currentDateTime ?? currentDate.toISOString())
+            }
             currentEnergy={currentEnergy}
             todayBlocks={todayBlocks}
             currentSegment={agendaStats.currentSegment}
@@ -686,7 +697,10 @@ const AgendaSection: React.FC<AgendaSectionProps> = ({
   const [planningPrompt, setPlanningPrompt] = useState('');
 
   const monthEvents = useMemo(
-    () => [...viewEvents].sort((left, right) => left.startDateTime.localeCompare(right.startDateTime)),
+    () =>
+      [...viewEvents].sort((left, right) =>
+        left.startDateTime.localeCompare(right.startDateTime)
+      ),
     [viewEvents]
   );
 
@@ -753,14 +767,18 @@ const AgendaSection: React.FC<AgendaSectionProps> = ({
           onClick={onToggleEnergyOverlay}
           className={`px-3 py-2 rounded ${agendaMeta.showEnergyOverlay ? 'bg-emerald-700 text-white' : 'bg-gray-800 text-gray-300'}`}
         >
-          {agendaMeta.showEnergyOverlay ? '🔋 Overlay énergie actif' : '🔋 Overlay énergie inactif'}
+          {agendaMeta.showEnergyOverlay
+            ? '🔋 Overlay énergie actif'
+            : '🔋 Overlay énergie inactif'}
         </button>
         <button
           data-testid="btn-time-toggle-focus"
           onClick={onToggleFocusBlocks}
           className={`px-3 py-2 rounded ${agendaMeta.showFocusBlocks ? 'bg-purple-700 text-white' : 'bg-gray-800 text-gray-300'}`}
         >
-          {agendaMeta.showFocusBlocks ? '🎯 Blocs focus visibles' : '🎯 Blocs focus masqués'}
+          {agendaMeta.showFocusBlocks
+            ? '🎯 Blocs focus visibles'
+            : '🎯 Blocs focus masqués'}
         </button>
       </div>
 
@@ -777,7 +795,9 @@ const AgendaSection: React.FC<AgendaSectionProps> = ({
         </div>
 
         {loading && !initialized ? (
-          <div className="text-gray-400 text-center py-12">Synchronisation de l&apos;agenda…</div>
+          <div className="text-gray-400 text-center py-12">
+            Synchronisation de l&apos;agenda…
+          </div>
         ) : currentView === 'week' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
             {weekGrid.map(({ date, events }) => (
@@ -805,9 +825,12 @@ const AgendaSection: React.FC<AgendaSectionProps> = ({
                         className="rounded border border-blue-800 bg-blue-900/20 p-3"
                         data-testid="time-agenda-event"
                       >
-                        <div className="text-sm font-semibold text-white">{event.title}</div>
+                        <div className="text-sm font-semibold text-white">
+                          {event.title}
+                        </div>
                         <div className="text-xs text-blue-200">
-                          {formatAgendaTime(event.startDateTime)} → {formatAgendaTime(event.endDateTime)}
+                          {formatAgendaTime(event.startDateTime)} →{' '}
+                          {formatAgendaTime(event.endDateTime)}
                         </div>
                         <div className="mt-1 text-xs text-gray-300">
                           {event.category} · priorité {event.priority}
@@ -841,7 +864,8 @@ const AgendaSection: React.FC<AgendaSectionProps> = ({
                   </div>
                 </div>
                 <div className="text-sm text-blue-300">
-                  {formatAgendaTime(event.startDateTime)} → {formatAgendaTime(event.endDateTime)}
+                  {formatAgendaTime(event.startDateTime)} →{' '}
+                  {formatAgendaTime(event.endDateTime)}
                 </div>
               </div>
             ))}
@@ -850,7 +874,9 @@ const AgendaSection: React.FC<AgendaSectionProps> = ({
       </div>
 
       <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-        <h3 className="text-xl font-semibold mb-4 text-blue-400">🤖 Création Intelligente</h3>
+        <h3 className="text-xl font-semibold mb-4 text-blue-400">
+          🤖 Création Intelligente
+        </h3>
         <div className="space-y-3">
           <input
             type="text"
@@ -879,7 +905,8 @@ const AgendaSection: React.FC<AgendaSectionProps> = ({
         </div>
         <div className="mt-4 p-4 bg-blue-900/20 rounded border border-blue-800">
           <div className="text-sm text-blue-300">
-            💡 TITANE synchronise maintenant les blocs visibles avec l&apos;agenda réel et le contexte énergétique.
+            💡 TITANE synchronise maintenant les blocs visibles avec l&apos;agenda réel et
+            le contexte énergétique.
           </div>
         </div>
       </div>
@@ -1011,7 +1038,10 @@ const TimelineSection: React.FC<TimelineSectionProps> = ({ agendaEvents, snapsho
   }, [agendaEvents, snapshots]);
 
   const allEvents = React.useMemo(
-    () => [...curatedEvents, ...liveEvents].sort((a, b) => a.date.getTime() - b.date.getTime()),
+    () =>
+      [...curatedEvents, ...liveEvents].sort(
+        (a, b) => a.date.getTime() - b.date.getTime()
+      ),
     [liveEvents]
   );
 
@@ -1475,7 +1505,12 @@ const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({
   isWorkHours,
 }) => {
   const [cognitiveState, setCognitiveState] = React.useState<CognitiveStateSnapshot>(() =>
-    readStoredCognitiveState(energyPercent, currentSegment, todayFocusMinutes, isWorkHours)
+    readStoredCognitiveState(
+      energyPercent,
+      currentSegment,
+      todayFocusMinutes,
+      isWorkHours
+    )
   );
 
   React.useEffect(() => {
@@ -1507,7 +1542,9 @@ const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({
       isInFlow: cognitiveState.flowActive,
       flowIntensity: cognitiveState.flowActive ? energyPercent : 0,
       flowDuration,
-      lastFlowSession: cognitiveState.updatedAt ? new Date(cognitiveState.updatedAt) : null,
+      lastFlowSession: cognitiveState.updatedAt
+        ? new Date(cognitiveState.updatedAt)
+        : null,
       totalFlowToday: todayFocusMinutes,
     };
   }, [cognitiveState, energyPercent, todayFocusMinutes]);

@@ -210,11 +210,14 @@ export const TitanePage: React.FC = () => {
   const updateActiveTab = useCallback(
     (nextTab: TabId) => {
       setActiveTab(nextTab);
-      setSearchParams(prev => {
-        const next = new URLSearchParams(prev);
-        next.set('tab', nextTab);
-        return next;
-      }, { replace: true });
+      setSearchParams(
+        prev => {
+          const next = new URLSearchParams(prev);
+          next.set('tab', nextTab);
+          return next;
+        },
+        { replace: true }
+      );
     },
     [setSearchParams]
   );

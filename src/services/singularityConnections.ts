@@ -430,17 +430,21 @@ export class SingularityConnections {
         runtime: {
           ...previousRuntime,
           version:
-            typeof previousRuntime.version === 'string' && previousRuntime.version.trim().length > 0
+            typeof previousRuntime.version === 'string' &&
+            previousRuntime.version.trim().length > 0
               ? previousRuntime.version
               : 'unknown',
           build:
-            typeof previousRuntime.build === 'string' && previousRuntime.build.trim().length > 0
+            typeof previousRuntime.build === 'string' &&
+            previousRuntime.build.trim().length > 0
               ? previousRuntime.build
               : inferredBuild,
           environment: import.meta.env.MODE,
           uptime: Math.floor(performance.now() / 1000), // ✅ v∞.FIX - Convert ms to seconds (u64)
           restart_count:
-            typeof previousRuntime.restart_count === 'number' ? previousRuntime.restart_count : 0,
+            typeof previousRuntime.restart_count === 'number'
+              ? previousRuntime.restart_count
+              : 0,
         },
         runtime_health: this.calculateRuntimeHealth(),
       };

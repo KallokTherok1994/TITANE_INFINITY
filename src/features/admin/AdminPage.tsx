@@ -174,11 +174,14 @@ const AdminPageComponent: React.FC = () => {
   const handleTabChange = useCallback(
     (tab: AdminTab) => {
       setActiveTab(tab);
-      setSearchParams(prev => {
-        const next = new URLSearchParams(prev);
-        next.set('tab', tab);
-        return next;
-      }, { replace: true });
+      setSearchParams(
+        prev => {
+          const next = new URLSearchParams(prev);
+          next.set('tab', tab);
+          return next;
+        },
+        { replace: true }
+      );
     },
     [setSearchParams]
   );

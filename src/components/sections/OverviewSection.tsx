@@ -67,7 +67,9 @@ export const OverviewSection: React.FC<OverviewSectionProps> = memo(({ stats }) 
           label="Niveau"
           value={stats.level}
           trend={stats.level > 1 ? 'up' : 'neutral'}
-          trendValue={stats.level > 1 ? `Niveau ${stats.level} synchronisé` : 'Initialisation'}
+          trendValue={
+            stats.level > 1 ? `Niveau ${stats.level} synchronisé` : 'Initialisation'
+          }
           color="#3b82f6"
         />
         <QuickStatCard

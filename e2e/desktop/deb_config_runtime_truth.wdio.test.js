@@ -33,7 +33,11 @@ async function recoverFromWindowLoss(contextLabel = 'unknown') {
     lastError = String(reloadError?.message || reloadError);
   }
 
-  const candidates = [process.env.TITANE_E2E_URL, 'tauri://localhost/admin', 'tauri://localhost'].filter(Boolean);
+  const candidates = [
+    process.env.TITANE_E2E_URL,
+    'tauri://localhost/admin',
+    'tauri://localhost',
+  ].filter(Boolean);
 
   for (const targetUrl of candidates) {
     try {
@@ -83,7 +87,9 @@ async function invokeTauri(command, args = {}) {
           attempts.push(params => window.__TAURI__.invoke(payload.command, params));
         }
         if (window.__TAURI_INTERNALS__?.invoke) {
-          attempts.push(params => window.__TAURI_INTERNALS__.invoke(payload.command, params));
+          attempts.push(params =>
+            window.__TAURI_INTERNALS__.invoke(payload.command, params)
+          );
         }
 
         if (!attempts.length) {
@@ -257,7 +263,8 @@ async function enterAiEditMode() {
     const maxTokensInput = await $('[data-testid="input-request-max-tokens"]');
 
     if ((await saveButton.isExisting()) && (await saveButton.isDisplayed())) return true;
-    if ((await maxTokensInput.isExisting()) && (await maxTokensInput.isDisplayed())) return true;
+    if ((await maxTokensInput.isExisting()) && (await maxTokensInput.isDisplayed()))
+      return true;
     return false;
   };
 
@@ -372,14 +379,14 @@ async function getRequestMaxTokensInput() {
 
   const marked = await browser.execute(() => {
     const needle = ['request max tokens', 'max tokens'];
-    const candidates = Array.from(document.querySelectorAll('div, label, span, p')).filter(
-      el => {
-        const txt = String(el.textContent || '')
-          .trim()
-          .toLowerCase();
-        return needle.some(n => txt.includes(n));
-      }
-    );
+    const candidates = Array.from(
+      document.querySelectorAll('div, label, span, p')
+    ).filter(el => {
+      const txt = String(el.textContent || '')
+        .trim()
+        .toLowerCase();
+      return needle.some(n => txt.includes(n));
+    });
 
     for (const label of candidates) {
       let cursor = label;
@@ -588,14 +595,11 @@ async function setInputValueSafely(selector, value) {
     target
   );
 
-  await browser.waitUntil(
-    async () => (await readBack()).trim() === target.trim(),
-    {
-      timeout: 5000,
-      interval: 200,
-      timeoutMsg: 'chat input value did not update before send',
-    }
-  );
+  await browser.waitUntil(async () => (await readBack()).trim() === target.trim(), {
+    timeout: 5000,
+    interval: 200,
+    timeoutMsg: 'chat input value did not update before send',
+  });
 }
 
 async function triggerSendAction(inputSelector, sendSelector) {
@@ -698,14 +702,12 @@ describe('DEB CONFIG HUB RUNTIME TRUTH', () => {
       );
       await triggerSendAction(selectors.input, selectors.send);
 
-      await browser.waitUntil(
-        async () => Boolean(await readGenerateResponseTrace()),
-        {
-          timeout: 30000,
-          interval: 250,
-          timeoutMsg: 'conversation_generate/generate_response/stream_response was not observed after live chat send',
-        }
-      );
+      await browser.waitUntil(async () => Boolean(await readGenerateResponseTrace()), {
+        timeout: 30000,
+        interval: 250,
+        timeoutMsg:
+          'conversation_generate/generate_response/stream_response was not observed after live chat send',
+      });
 
       const traced = await readGenerateResponseTrace();
       metrics.tracedPayload = traced;

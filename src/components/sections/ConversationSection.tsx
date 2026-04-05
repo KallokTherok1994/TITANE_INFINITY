@@ -93,7 +93,6 @@ interface LatestAssistantRuntimeSnapshot {
   runtimeSignals: RuntimeSignals;
 }
 
-
 const BUILT_IN_CONVERSATION_MODES = [
   {
     id: 'default',
@@ -154,8 +153,8 @@ export function resolveConversationDisplayProvider(
   }
 
   return (
-    buildConversationProviders().find(provider => provider.id === selectedProvider)?.name ??
-    selectedProvider
+    buildConversationProviders().find(provider => provider.id === selectedProvider)
+      ?.name ?? selectedProvider
   );
 }
 
@@ -2052,10 +2051,10 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
               data-testid="chat-provider-warning"
               role="alert"
             >
-              <strong>⚠️ Provider non configuré:</strong> {selectedProviderLabel} n&apos;est
-              pas disponible sur ce runtime. TITANE conservera ce choix sans fallback
-              silencieux et affichera un résultat dégradé tant que la clé API n&apos;est
-              pas ajoutée dans <strong>Admin → Gouvernance → Secrets</strong>.
+              <strong>⚠️ Provider non configuré:</strong> {selectedProviderLabel}{' '}
+              n&apos;est pas disponible sur ce runtime. TITANE conservera ce choix sans
+              fallback silencieux et affichera un résultat dégradé tant que la clé API
+              n&apos;est pas ajoutée dans <strong>Admin → Gouvernance → Secrets</strong>.
             </div>
           )}
 

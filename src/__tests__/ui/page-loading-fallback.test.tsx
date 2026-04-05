@@ -7,16 +7,20 @@ describe('PageLoadingFallback desktop safety', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     localStorage.clear();
-    delete (window as Window & { __TAURI__?: unknown; __TAURI_INTERNALS__?: unknown }).__TAURI__;
-    delete (window as Window & { __TAURI__?: unknown; __TAURI_INTERNALS__?: unknown }).__TAURI_INTERNALS__;
+    delete (window as Window & { __TAURI__?: unknown; __TAURI_INTERNALS__?: unknown })
+      .__TAURI__;
+    delete (window as Window & { __TAURI__?: unknown; __TAURI_INTERNALS__?: unknown })
+      .__TAURI_INTERNALS__;
   });
 
   afterEach(() => {
     vi.useRealTimers();
     cleanup();
     localStorage.clear();
-    delete (window as Window & { __TAURI__?: unknown; __TAURI_INTERNALS__?: unknown }).__TAURI__;
-    delete (window as Window & { __TAURI__?: unknown; __TAURI_INTERNALS__?: unknown }).__TAURI_INTERNALS__;
+    delete (window as Window & { __TAURI__?: unknown; __TAURI_INTERNALS__?: unknown })
+      .__TAURI__;
+    delete (window as Window & { __TAURI__?: unknown; __TAURI_INTERNALS__?: unknown })
+      .__TAURI_INTERNALS__;
     vi.restoreAllMocks();
   });
 

@@ -11,6 +11,7 @@ The TITANE version authority chain is CONSISTENT. No critical drift found.
 ## Evidence
 
 All primary version surfaces verified at 28.88.0:
+
 - package.json: 28.88.0 ✅
 - src-tauri/Cargo.toml: 28.88.0 ✅
 - tauri.base.json: 28.88.0 ✅
@@ -24,6 +25,7 @@ All primary version surfaces verified at 28.88.0:
 **No patch required.** The system is NOT currently drifting.
 
 The subagent report incorrectly stated that sealed release evidence was missing. In fact:
+
 1. LOCAL_VERSION_STREAM_AUTHORITY_DECISION.md lists item 4 as "sealed release evidence file (RELEASE_v28.88.0_SEALED.txt for this cycle)"
 2. RELEASE_v28.88.0_SEALED.txt exists with PASS verdict and test results
 3. No contradiction exists between governance decision and actual file state

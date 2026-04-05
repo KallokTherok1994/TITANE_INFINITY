@@ -365,7 +365,10 @@ const ChatDebugPanel = ({
                         <div>Décision: {d.askActHold}</div>
                         <div>Initiative: {d.initiativeLevel}</div>
                         <div>Provider: {d.providerChoice ?? 'n/a'}</div>
-                        <div>Memoire/Web/Outil: {`${d.memoryAction} / ${d.webAction} / ${d.toolAction}`}</div>
+                        <div>
+                          Memoire/Web/Outil:{' '}
+                          {`${d.memoryAction} / ${d.webAction} / ${d.toolAction}`}
+                        </div>
                         <div>Truth: {d.truthLabel}</div>
                         {Array.isArray(d.reasonCodes) && d.reasonCodes.length > 0 && (
                           <div>Reasons: {d.reasonCodes.join(', ')}</div>
