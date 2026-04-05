@@ -286,7 +286,11 @@ const MetaCenterContent: React.FC = () => {
           <span className="meta-version">OPUS #18 v∞</span>
         </div>
         <div className="meta-header-actions">
-          <button type="button" className="meta-btn meta-btn-primary" onClick={handleRunCycle}>
+          <button
+            type="button"
+            className="meta-btn meta-btn-primary"
+            onClick={handleRunCycle}
+          >
             ▶️ Run Cycle
           </button>
           <button
