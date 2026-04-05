@@ -121,12 +121,20 @@ if (fs.existsSync(runtimeStableTauriConfPath)) {
   console.warn('  ⚠️  runtime/stable/tauri.conf.json not found, skipping');
 }
 
-// ── 5. Sync tauri.base.json (template) ───────────────────────────────────────
+// ── 5. Sync tauri.base.json templates (root + legacy src-tauri copy) ───────
 
-const tauriBasePath = path.join(root, 'tauri.base.json');
-if (fs.existsSync(tauriBasePath)) {
+const tauriBasePaths = [
+  path.join(root, 'tauri.base.json'),
+  path.join(root, 'src-tauri', 'tauri.base.json'),
+];
+
+for (const tauriBasePath of tauriBasePaths) {
+  if (!fs.existsSync(tauriBasePath)) {
+    console.warn(`  ⚠️  ${path.relative(root, tauriBasePath)} not found, skipping`);
+    continue;
+  }
+
   const base = JSON.parse(fs.readFileSync(tauriBasePath, 'utf8'));
-
   let baseChanged = false;
 
   if (base.version !== undefined && base.version !== version) {
@@ -136,13 +144,11 @@ if (fs.existsSync(tauriBasePath)) {
 
   if (baseChanged) {
     if (!dryRun) fs.writeFileSync(tauriBasePath, JSON.stringify(base, null, 2) + '\n');
-    console.log(`  ✅ tauri.base.json → ${version}`);
+    console.log(`  ✅ ${path.relative(root, tauriBasePath)} → ${version}`);
     changed++;
   } else {
-    console.log(`  ✓  tauri.base.json already at ${version}`);
+    console.log(`  ✓  ${path.relative(root, tauriBasePath)} already at ${version}`);
   }
-} else {
-  console.warn('  ⚠️  tauri.base.json not found, skipping');
 }
 
 // ── 6. Sync runtime/stable/manifest.json (deployment metadata) ──────────────

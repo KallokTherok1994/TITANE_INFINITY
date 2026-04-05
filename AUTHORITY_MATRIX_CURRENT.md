@@ -1,49 +1,48 @@
 # Authority Matrix Current
 
-**Date**: 2026-04-03
+**Date**: 2026-04-05
 **Lock**: L1: CURRENT_AUTHORITY_DRIFT
 
 ## SURFACE CLASSIFICATION
 
-| Surface                                    | File Path                                          | Present-Tense Claim                           | Classification            | Proof Basis                        | Contradiction                                 | Severity | Canonical Owner          | Decision          | Next Action                                        |
-| ------------------------------------------ | -------------------------------------------------- | --------------------------------------------- | ------------------------- | ---------------------------------- | --------------------------------------------- | -------- | ------------------------ | ----------------- | -------------------------------------------------- |
-| package.json                               | package.json                                       | Version 28.88.0                               | PROOF_BACKED_CURRENT      | VERSION_AUTHORITY_MAP.md           | None                                          | None     | VERSION_AUTHORITY_MAP.md | Keep              | None                                               |
-| Cargo.toml                                 | src-tauri/Cargo.toml                               | Version 28.88.0                               | PROOF_BACKED_CURRENT      | VERSION_AUTHORITY_MAP.md           | None                                          | None     | VERSION_AUTHORITY_MAP.md | Keep              | None                                               |
-| tauri.base.json                            | tauri.base.json                                    | Version 28.88.0                               | PROOF_BACKED_CURRENT      | VERSION_AUTHORITY_MAP.md           | None                                          | None     | VERSION_AUTHORITY_MAP.md | Keep              | None                                               |
-| tauri.conf.json                            | src-tauri/tauri.conf.json                          | Version 28.88.0                               | PROOF_BACKED_CURRENT      | VERSION_AUTHORITY_MAP.md           | None                                          | None     | VERSION_AUTHORITY_MAP.md | Keep              | None                                               |
-| CHANGELOG.md                               | CHANGELOG.md                                       | Top entry 28.88.0                             | PROOF_BACKED_CURRENT      | VERSION_AUTHORITY_MAP.md           | None                                          | None     | VERSION_AUTHORITY_MAP.md | Keep              | None                                               |
-| README.md                                  | README.md                                          | "Production (v28.88.0 — SEALED)"              | PROOF_BACKED_CURRENT      | RELEASE_v28.88.0_SEALED.txt (PASS) | None                                          | None     | VERSION_AUTHORITY_MAP.md | Keep              | Verify SEALED evidence periodically                |
-| VERSION_AUTHORITY_MAP.md                   | VERSION_AUTHORITY_MAP.md                           | Version governance authority                  | PROOF_BACKED_CURRENT      | Actual file inspection             | None                                          | None     | Self                     | Keep              | Canonical owner                                    |
-| RELEASE_v28.88.0_SEALED.txt                | RELEASE_v28.88.0_SEALED.txt                        | SEALED evidence                               | PROOF_BACKED_CURRENT      | Contains PASS verdict              | None                                          | None     | N/A                      | Keep              | None                                               |
-| LOCAL_VERSION_STREAM_AUTHORITY_DECISION.md | reports/LOCAL_VERSION_STREAM_AUTHORITY_DECISION.md | Canonical precedence established              | DRIFT                     | Decision doc                       | Says sealed evidence missing, but file exists | Low      | VERSION_AUTHORITY_MAP.md | Patch             | Update to note sealed evidence exists              |
-| tauri.conf.json (descriptions)             | src-tauri/tauri.conf.json                          | "Stable Release", "stable production release" | CLAIM_STRONGER_THAN_PROOF | Self-declared                      | No independent stability verification         | Low      | Self                     | Keep (acceptable) | Self-declared stability is standard for Tauri apps |
-| Cargo.toml (comments)                      | src-tauri/Cargo.toml                               | "verified 2026-03-20"                         | HISTORICAL_ONLY           | Comment reference                  | Date is past                                  | None     | N/A                      | Keep              | Minor — date is now historical                     |
+| Surface                       | File Path                                | Present-Tense Claim                        | Classification           | Proof Basis                                  | Contradiction                    | Severity | Canonical Owner            | Decision    | Next Action                                            |
+| ----------------------------- | ---------------------------------------- | ------------------------------------------ | ------------------------ | -------------------------------------------- | -------------------------------- | -------- | -------------------------- | ----------- | ------------------------------------------------------ |
+| `package.json`                | `package.json`                           | Version 29.0.0                             | `PROOF_BACKED_CURRENT`   | Direct repo inspection                       | None                             | None     | `VERSION_AUTHORITY_MAP.md` | Keep        | None                                                   |
+| `Cargo.toml`                  | `src-tauri/Cargo.toml`                   | Version 29.0.0                             | `PROOF_BACKED_CURRENT`   | Matches `package.json`                       | None                             | None     | `VERSION_AUTHORITY_MAP.md` | Keep        | None                                                   |
+| Root Tauri base               | `tauri.base.json`                        | Version 29.0.0                             | `PROOF_BACKED_CURRENT`   | Matches `package.json`                       | None                             | None     | `VERSION_AUTHORITY_MAP.md` | Keep        | None                                                   |
+| Active Tauri config           | `src-tauri/tauri.conf.json`              | Version 29.0.0                             | `PROOF_BACKED_CURRENT`   | Matches `package.json`                       | None                             | None     | `VERSION_AUTHORITY_MAP.md` | Keep        | None                                                   |
+| Legacy Tauri base copy        | `src-tauri/tauri.base.json`              | Legacy fallback now synced to 29.0.0       | `LEGACY_SYNCED_FALLBACK` | Reconciled during this patch                 | Was stale at 26.2.0 before patch | Medium   | Root `tauri.base.json`     | Keep synced | Ensure `scripts/sync-versions.mjs` updates both copies |
+| Deployment manifest           | `deployment/latest/MANIFEST.json`        | Certified deployment version 29.0.0        | `PROOF_BACKED_CURRENT`   | `release_gate_status=PASSED`                 | None                             | None     | `VERSION_AUTHORITY_MAP.md` | Keep        | None                                                   |
+| Release checksums             | `RELEASE_ARTIFACTS_CHECKSUMS_29.0.0.txt` | Current AppImage/DEB hashes for 29.0.0     | `PROOF_BACKED_CURRENT`   | Direct file inspection                       | None                             | None     | `VERSION_AUTHORITY_MAP.md` | Keep        | None                                                   |
+| `CHANGELOG.md`                | `CHANGELOG.md`                           | Top entry 29.0.0                           | `PROOF_BACKED_CURRENT`   | Direct repo inspection                       | None                             | None     | `VERSION_AUTHORITY_MAP.md` | Keep        | None                                                   |
+| `README.md`                   | `README.md`                              | Current release stream presented as 29.0.0 | `PROOF_BACKED_CURRENT`   | Release tag + deployment metadata references | None                             | None     | `VERSION_AUTHORITY_MAP.md` | Keep        | Periodic verification only                             |
+| `VERSION_AUTHORITY_MAP.md`    | `VERSION_AUTHORITY_MAP.md`               | Version governance authority               | `PROOF_BACKED_CURRENT`   | Actual file inspection                       | None                             | None     | Self                       | Keep        | Canonical owner                                        |
+| `RELEASE_v28.88.0_SEALED.txt` | `RELEASE_v28.88.0_SEALED.txt`            | Prior-cycle SEALED evidence                | `HISTORICAL_PROOF`       | PASS verdict inside file                     | None                             | None     | N/A                        | Keep        | Preserve as historical reference                       |
 
 ## DRIFT SUMMARY
 
-**Type 1: Governance decision contradicts actual file state**
+**Type 1: stale authority layer (resolved)**
 
-- LOCAL_VERSION_STREAM_AUTHORITY_DECISION.md says sealed release evidence is missing
-- RELEASE_v28.88.0_SEALED.txt exists with PASS verdict
-- **Severity**: Low — governance doc, not user-facing
-- **Action**: Patch governance doc to note file exists
+- `CURRENT_AUTHORITY_INDEX.md`, `AUTHORITY_VERDICT.md`, and `AUTHORITY_MATRIX_CURRENT.md` were still anchored to 2026-04-03 / 28.88.0.
+- The actual runtime + deployment surfaces were already aligned on 29.0.0.
+- **Severity**: Medium — authority docs lagged behind certified deployment truth.
+- **Action**: Patched and reconciled to the 2026-04-05 current state.
 
-**Type 2: Self-declared stability claims**
+**Type 2: legacy Tauri base copy (resolved)**
 
-- tauri.conf.json claims "Stable Release" and "stable production release"
-- No independent verification beyond self-declaration
-- **Severity**: Low — standard for Tauri applications
-- **Action**: Keep (acceptable self-declaration)
+- `src-tauri/tauri.base.json` still exposed 26.2.0 strings while root `tauri.base.json` was already 29.0.0.
+- **Severity**: Medium — dormant fallback file could mislead audits or future packaging tasks.
+- **Action**: Synced the file and extended `scripts/sync-versions.mjs` coverage to prevent recurrence.
 
-## NO CRITICAL DRIFT FOUND
+## CURRENT STATUS
 
-The version authority chain is consistent:
+The current authority chain is now coherent for **29.0.0**:
 
-- package.json: 28.88.0 ✅
-- Cargo.toml: 28.88.0 ✅
-- tauri.base.json: 28.88.0 ✅
-- tauri.conf.json: 28.88.0 ✅
-- CHANGELOG.md: 28.88.0 ✅
-- SEALED evidence: PASS ✅
+- `package.json`: 29.0.0 ✅
+- `src-tauri/Cargo.toml`: 29.0.0 ✅
+- `tauri.base.json`: 29.0.0 ✅
+- `src-tauri/tauri.conf.json`: 29.0.0 ✅
+- `deployment/latest/MANIFEST.json`: 29.0.0, certified ✅
+- `RELEASE_ARTIFACTS_CHECKSUMS_29.0.0.txt`: current hashes present ✅
 
-The system is NOT currently drifting on version authority. The only drift is in a governance decision document that incorrectly says sealed evidence is missing.
+Historical SEALED evidence for 28.88.0 remains archived and non-contradictory.
