@@ -105,7 +105,10 @@ describe('eval harness structural checks', () => {
 
   it('accepts a French explicit no-memory statement', () => {
     const item = makeItem('D-NO-MEMORY-FR', 'D', ['explicit_no_memory_statement']);
-    const results = scoreBlockingChecks(item, "Je n'ai jamais eu de conversation avec toi.");
+    const results = scoreBlockingChecks(
+      item,
+      "Je n'ai jamais eu de conversation avec toi."
+    );
 
     expect(results[0]?.passed).toBe(true);
   });
@@ -238,7 +241,9 @@ describe('eval harness structural checks', () => {
   it('resolves the real orchestrator module inside this workspace', () => {
     const orchestratorPath = getOrchestratorModulePath();
 
-    expect(orchestratorPath).toContain('/TITANE_INFINITY/src/services/ai/orchestrator.ts');
+    expect(orchestratorPath).toContain(
+      '/TITANE_INFINITY/src/services/ai/orchestrator.ts'
+    );
     expect(existsSync(orchestratorPath)).toBe(true);
   });
 

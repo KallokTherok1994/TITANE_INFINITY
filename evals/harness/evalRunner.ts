@@ -161,7 +161,8 @@ async function generateDirectOllamaEval(
 
   const start = Date.now();
   const numPredict = getDirectOllamaNumPredict(rawInput);
-  const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  const controller =
+    typeof AbortController !== 'undefined' ? new AbortController() : null;
   const timeoutHandle = controller
     ? setTimeout(() => controller.abort(), 45_000)
     : undefined;
@@ -244,13 +245,20 @@ export function buildEvalPrompt(input: string, context: string): string {
     );
   }
 
-  if (lowerInput.includes('garbage collector') || lowerInput.includes('(v8)') || lowerInput.includes('v8')) {
+  if (
+    lowerInput.includes('garbage collector') ||
+    lowerInput.includes('(v8)') ||
+    lowerInput.includes('v8')
+  ) {
     guidance.push(
       'If the question is about V8 garbage collection, explicitly mention mark-and-sweep and generational GC (young/old generations, minor/major collection).'
     );
   }
 
-  if (lowerInput.includes('event-driven') || lowerInput.includes('notifications en temps réel')) {
+  if (
+    lowerInput.includes('event-driven') ||
+    lowerInput.includes('notifications en temps réel')
+  ) {
     guidance.push(
       'If designing an event-driven architecture, include the event bus, the scaling strategy, and a short section titled "Trade-offs" with at least two concrete trade-offs (for example latency vs consistency, complexity vs scalability, or cost vs reliability).'
     );
@@ -268,7 +276,10 @@ export function buildEvalPrompt(input: string, context: string): string {
     );
   }
 
-  if (lowerContext.includes('no_prior_memory') || lowerInput.includes("n'avez jamais eue")) {
+  if (
+    lowerContext.includes('no_prior_memory') ||
+    lowerInput.includes("n'avez jamais eue")
+  ) {
     guidance.push(
       'State explicitly that there is no prior conversation or memory available, and do not invent one.'
     );

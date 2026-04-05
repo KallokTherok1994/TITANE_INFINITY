@@ -25,9 +25,11 @@ import {
 } from '../transports/ollamaTransport';
 
 const logger = createLogger('Ollama');
-const runtimeEnv = (import.meta as ImportMeta & {
-  env?: { VITE_OLLAMA_MODEL?: string };
-}).env;
+const runtimeEnv = (
+  import.meta as ImportMeta & {
+    env?: { VITE_OLLAMA_MODEL?: string };
+  }
+).env;
 const DEFAULT_OLLAMA_MODEL = runtimeEnv?.VITE_OLLAMA_MODEL?.trim() || 'gemma2:2b';
 
 // ═══════════════════════════════════════════════════════════════
@@ -174,7 +176,8 @@ async function checkOllamaHealth(): Promise<boolean> {
     const health = await ollamaCheckHealth();
     if (health.ok) {
       const models = health.content.models || [];
-      const configuredModelFamily = OLLAMA_CONFIG.model.split(':')[0] ?? OLLAMA_CONFIG.model;
+      const configuredModelFamily =
+        OLLAMA_CONFIG.model.split(':')[0] ?? OLLAMA_CONFIG.model;
       const hasModel = models.some(
         (m: { name: string }) =>
           m.name === OLLAMA_CONFIG.model || m.name.startsWith(configuredModelFamily)

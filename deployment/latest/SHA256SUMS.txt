@@ -1,2 +1,2 @@
-06084f894fbcd3eeba9c72dd9835a1315f10becb3bf475cecceea1013424db78  Titan-Stable_28.90.0_amd64.AppImage
-f83924ea70c36630e12a6e2c8a74a96b4a82eec9bcd03f761ebd34a9497f8cdb  Titan-Stable_28.90.0_amd64.deb
+12ed61d6581f7d16d626a8da73dbba8c37b8f56b9f562deca878898170a60a84  Titan-Stable_29.0.0_amd64.AppImage
+2bcfc64e57f5f234a6fa43dd810e8240ba1a37c61faee934f8e136b83f04f880  Titan-Stable_29.0.0_amd64.deb

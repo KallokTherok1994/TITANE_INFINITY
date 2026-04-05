@@ -145,6 +145,35 @@ if (fs.existsSync(tauriBasePath)) {
   console.warn('  ⚠️  tauri.base.json not found, skipping');
 }
 
+// ── 6. Sync runtime/stable/manifest.json (deployment metadata) ──────────────
+
+const runtimeStableManifestPath = path.join(root, 'runtime', 'stable', 'manifest.json');
+if (fs.existsSync(runtimeStableManifestPath)) {
+  const manifest = JSON.parse(fs.readFileSync(runtimeStableManifestPath, 'utf8'));
+
+  let manifestChanged = false;
+
+  if (manifest.version !== undefined && manifest.version !== version) {
+    manifest.version = version;
+    manifestChanged = true;
+  }
+
+  if (manifestChanged) {
+    if (!dryRun) {
+      fs.writeFileSync(
+        runtimeStableManifestPath,
+        JSON.stringify(manifest, null, 2) + '\n'
+      );
+    }
+    console.log(`  ✅ runtime/stable/manifest.json → ${version}`);
+    changed++;
+  } else {
+    console.log(`  ✓  runtime/stable/manifest.json already at ${version}`);
+  }
+} else {
+  console.warn('  ⚠️  runtime/stable/manifest.json not found, skipping');
+}
+
 // ── Summary ───────────────────────────────────────────────────────────────────
 
 if (dryRun) {

@@ -35,9 +35,11 @@ export async function initializeAISystem(options?: {
   healthMonitor: unknown;
 }> {
   const isHealthMonitoringEnabledByDefault = (): boolean => {
-    const runtimeEnv = (import.meta as ImportMeta & {
-      env?: { DEV?: boolean; VITE_AI_HEALTH_MONITORING_ENABLED?: string };
-    }).env;
+    const runtimeEnv = (
+      import.meta as ImportMeta & {
+        env?: { DEV?: boolean; VITE_AI_HEALTH_MONITORING_ENABLED?: string };
+      }
+    ).env;
 
     if (runtimeEnv?.DEV) return true;
 

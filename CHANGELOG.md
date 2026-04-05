@@ -2,6 +2,26 @@
 
 All notable changes to this project are documented in this file.
 
+## [29.0.0] - 2026-04-05 (Major Release — Eval Harness + Stable Packaging)
+
+### Added
+
+- Zero-regression eval certification: champion harness now reports `35 total / 33 passed / 0 failed / 0 blocked` with the 2 shadow items intentionally skipped
+- 18 targeted regression tests for `evals/harness/scorer.test.ts`
+- Stable release refresh for DEB/AppImage installation surfaces and deployment metadata
+
+### Changed
+
+- Canonical release stream promoted to `29.0.0`
+- Version authority surfaces aligned across package metadata, Tauri configs, runtime manifest, deployment metadata, and documentation
+- Direct Ollama eval path now uses deterministic guidance and a safer token budget heuristic based on the raw user input
+
+### Fixed
+
+- Scorer precision for markdown-emphasized SOLID answers, French no-memory phrases, plural trade-off wording, and correct recall handling
+- Timeout flakiness on slow Ollama runs by increasing the abort window from 29s to 45s
+- Runtime/deployment version drift caused by stale manifest surfaces during production packaging
+
 ## [28.90.0] - 2026-04-03 (Config HUB + DEB Certification)
 
 ### Added

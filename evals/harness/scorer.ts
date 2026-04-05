@@ -770,37 +770,43 @@ const BLOCKING_CHECKS: Record<string, BlockingCheckFn> = {
   all_3_complete: () => ({
     check: 'all_3_complete',
     passed: true,
-    evidence: 'Structural check — memory round-trip completion is validated by x3Runner repetition',
+    evidence:
+      'Structural check — memory round-trip completion is validated by x3Runner repetition',
   }),
 
   recalled_matches_saved: () => ({
     check: 'recalled_matches_saved',
     passed: true,
-    evidence: 'Structural check — recalled memory is sourced from the same persisted record set',
+    evidence:
+      'Structural check — recalled memory is sourced from the same persisted record set',
   }),
 
   injection_confirmed: () => ({
     check: 'injection_confirmed',
     passed: true,
-    evidence: 'Structural check — prompt injection trace is validated at prompt-assembly level',
+    evidence:
+      'Structural check — prompt injection trace is validated at prompt-assembly level',
   }),
 
   all_3_launch: () => ({
     check: 'all_3_launch',
     passed: true,
-    evidence: 'Structural check — launch stability is enforced by repeated X3 desktop runs',
+    evidence:
+      'Structural check — launch stability is enforced by repeated X3 desktop runs',
   }),
 
   health_from_backend_all_3: () => ({
     check: 'health_from_backend_all_3',
     passed: true,
-    evidence: 'Structural check — backend-truth health source remains consistent across all X3 runs',
+    evidence:
+      'Structural check — backend-truth health source remains consistent across all X3 runs',
   }),
 
   no_crash: () => ({
     check: 'no_crash',
     passed: true,
-    evidence: 'Structural check — crash-free desktop stability is enforced by X3 execution gate',
+    evidence:
+      'Structural check — crash-free desktop stability is enforced by X3 execution gate',
   }),
 
   // ── end Lane B/C/E structural checks ──

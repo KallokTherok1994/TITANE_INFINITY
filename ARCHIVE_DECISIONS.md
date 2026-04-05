@@ -91,3 +91,33 @@ Or by single commit revert:
 ```bash
 git revert HEAD
 ```
+
+---
+
+## Addendum — 2026-04-05 — v29.0.0 Major Release Archival
+
+### Archival decisions executed
+
+| Surface                                 | Decision                           | Reason                                                   |
+| --------------------------------------- | ---------------------------------- | -------------------------------------------------------- |
+| `PROD_GATE_REPORT_PATCH010.md`          | MOVED to `_archive/prod_patch010/` | stale root production note from earlier release lane     |
+| `PROD_GO_DECISION_PATCH010.md`          | MOVED to `_archive/prod_patch010/` | stale root production note from earlier release lane     |
+| `PROD_DEPLOYMENT_CHECKLIST_PATCH010.md` | MOVED to `_archive/prod_patch010/` | preserve proof while cleaning root surface               |
+| `PROD_ROLLBACK_PLAN_v28_PATCH010.md`    | MOVED to `_archive/prod_patch010/` | preserve rollback history without polluting current root |
+
+### Non-destructive policy retained
+
+- Historical versioned artifacts under `deployment/latest/` remain in place.
+- Historical release docs under `docs/90_release/` remain in place.
+- No historical proof pack or version-labeled artifact was deleted.
+
+### Rollback for this archival step
+
+```bash
+git restore --staged _archive/prod_patch010 || true
+git restore --source=HEAD -- \
+  _archive/prod_patch010/PROD_GATE_REPORT_PATCH010.md \
+  _archive/prod_patch010/PROD_GO_DECISION_PATCH010.md \
+  _archive/prod_patch010/PROD_DEPLOYMENT_CHECKLIST_PATCH010.md \
+  _archive/prod_patch010/PROD_ROLLBACK_PLAN_v28_PATCH010.md
+```

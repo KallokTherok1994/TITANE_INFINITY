@@ -176,7 +176,11 @@ async function main() {
         ? 'FAIL'
         : 'PASS';
   const finalVerdict: Verdict =
-    gates?.verdict ?? runVerdict ?? x3Stability?.verdict ?? comparisonVerdict ?? 'BLOCKED';
+    gates?.verdict ??
+    runVerdict ??
+    x3Stability?.verdict ??
+    comparisonVerdict ??
+    'BLOCKED';
   console.log(`Verdict: ${finalVerdict}`);
   if (gates) {
     if (finalVerdict === 'PASS') {

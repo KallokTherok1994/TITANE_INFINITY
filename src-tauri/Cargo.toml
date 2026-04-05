@@ -1,7 +1,7 @@
 [package]
 name         = "titane-infinity"
-version      = "28.90.0"
-description  = "TITANE∞ v28.88.0 - V28.88"
+version      = "29.0.0"
+description  = "TITANE∞ v29.0.0 - Major release"
 authors      = ["Kevin Thibault / Humain Total / TITANE Team"]
 license      = "SEE LICENSE.md"
 repository   = "https://github.com/KallokTherok1994/TITANE_INFINITY"

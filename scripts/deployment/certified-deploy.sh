@@ -363,6 +363,7 @@ EOF
     
     # Keep checksum and size sidecars aligned with the deployed artifacts.
     local checksums_file="$DEPLOY_PATH/CHECKSUMS.sha256"
+    local compat_checksums_file="$DEPLOY_PATH/CHECKSUMS.txt"
     local sha_file="$DEPLOY_PATH/SHA256SUMS.txt"
     local sizes_file="$DEPLOY_PATH/SIZES.txt"
     : > "$checksums_file"
@@ -379,6 +380,7 @@ EOF
         echo "$binary_hash  titane-infinity" >> "$checksums_file"
     fi
     cp "$checksums_file" "$sha_file"
+    cp "$checksums_file" "$compat_checksums_file"
 
     {
         echo "# Artifact Sizes"
@@ -395,7 +397,7 @@ EOF
     } > "$sizes_file"
 
     success "Deployment manifest updated: MANIFEST.json"
-    success "Checksums updated: CHECKSUMS.sha256, SHA256SUMS.txt"
+    success "Checksums updated: CHECKSUMS.sha256, SHA256SUMS.txt, CHECKSUMS.txt"
     success "Sizes updated: SIZES.txt"
     info "Version: $version"
     info "Certification: TITANE_INFINITY_RELEASE_${TIMESTAMP}_CERTIFIED"
