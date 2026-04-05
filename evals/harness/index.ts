@@ -41,7 +41,7 @@ async function main() {
   console.log(`Dataset: ${config.datasetVersion}`);
   console.log('');
 
-  const championGenerator = createMockGenerator('ollama', 'sonnet');
+  const championGenerator = createMockGenerator('ollama', 'gemma2:2b');
   const challengerGenerator = createMockGenerator('gemini', 'haiku');
 
   let laneResults: LaneResult[] = [];
