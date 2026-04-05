@@ -252,6 +252,7 @@
     "storybook": "^10.3.1",
     "tailwindcss": "^4.2.2",
     "tauri": "^0.15.0",
+    "tsx": "4.21.0",
     "typescript": "^5.9.3",
     "uuid": "^13.0.0",
     "vite": "^7.3.0",
