@@ -78,7 +78,7 @@ EXPERIMENTAL ──→ QUALIFIED ──→ STABLE ──→ DEPRECATED ──→
 
 | Statut | Count | Détail |
 |--------|-------|--------|
-| **STABLE** | 216 | Commands production-ready avec rétrocompatibilité |
+| **STABLE** | 217 | Commands production-ready avec rétrocompatibilité |
 | **QUALIFIED** | 2 | Commands avec API figée, tests complets, prêts pour STABLE |
 | **EXPERIMENTAL** | 0 | Commands en développement, API instable |
 | **DEPRECATED** | 0 | Commands marqués obsolètes, migration path définie |
@@ -119,7 +119,7 @@ command: <nom>
 
 ## Couche STABLE
 
-**Total commands stable**: 216 (au 2026-03-05) - **Grandfathered PHASE 5 → PHASE 6**
+**Total commands stable**: 217 (au 2026-04-05) - **Grandfathered PHASE 5 → PHASE 6**
 
 *Note: Toutes les commands ci-dessous ont été automatiquement promues **STABLE** lors de la migration PHASE 5 → PHASE 6 avec grandfathering. Aucune re-qualification requise.*
 
@@ -165,6 +165,7 @@ command: <nom>
 |---------|--------|-------------|---------------|---------|-------|-----------|-------|
 | `set_state` | **STABLE** | memory | tests/contract/tauri.contract.test.ts | docs/API_SURFACE.md | v26.3.0 | v26.3.0 | State bridge set (P5→P6) |
 | `delete_state` | **STABLE** | memory | tests/contract/tauri.contract.test.ts | docs/API_SURFACE.md | v26.3.0 | v26.3.0 | State bridge delete (P5→P6) |
+| `identity_get_active_voice_profile` | **STABLE** | memory, audio | tests/contract/tauri.contract.test.ts | docs/API_SURFACE.md | v29.0.0 | v29.0.0 | Lit le profil vocal actif backend pour hydrater la voix canonique (P6) |
 | `identity_set_matrix` | **STABLE** | memory | tests/contract/tauri.contract.test.ts | docs/API_SURFACE.md | v26.3.0 | v26.3.0 | Identity matrix update (P5→P6) |
 
 ### Logging
