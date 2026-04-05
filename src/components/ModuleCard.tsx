@@ -56,10 +56,20 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
   const autoVariant =
     variant || (typeof value === 'number' ? getStatusVariant(numericValue) : 'default');
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!onClick) return;
+
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      onClick();
+    }
+  };
+
   return (
     <div
       className={`module-card module-card--${autoVariant}`}
       onClick={onClick}
+      onKeyDown={handleKeyDown}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
     >

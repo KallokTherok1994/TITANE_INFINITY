@@ -78,13 +78,25 @@ const AutomationItem: React.FC<AutomationItemProps> = ({
     }
   }, [automation.id, isAvailable, isRunning, onExecute]);
 
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        handleClick();
+      }
+    },
+    [handleClick]
+  );
+
   return (
     <div
       className={`automation-item ${isAvailable ? 'available' : 'unavailable'} ${isRunning ? 'running' : ''} ${compact ? 'compact' : ''}`}
       onClick={handleClick}
       role="button"
       tabIndex={isAvailable ? 0 : -1}
-      onKeyDown={e => e.key === 'Enter' && handleClick()}
+      onKeyDown={handleKeyDown}
+      aria-disabled={!isAvailable || isRunning}
+      aria-busy={isRunning}
       title={unavailableReason || automation.description}
     >
       <div className="automation-item__icon">
@@ -342,14 +354,25 @@ export const AutomationPanel: React.FC<AutomationPanelProps> = ({
 
       {/* Last Result Banner */}
       {lastResult && (
-        <div className={`automation-panel__result ${lastResult.status}`}>
+        <div
+          className={`automation-panel__result ${lastResult.status}`}
+          role={lastResult.status === 'success' ? 'status' : 'alert'}
+          aria-live="polite"
+        >
           {lastResult.status === 'success' ? '✅' : '❌'}
           <span>
             {lastResult.status === 'success'
               ? `+${lastResult.xpAwarded} XP`
               : lastResult.error}
           </span>
-          <button onClick={() => setLastResult(null)}>✕</button>
+          <button
+            type="button"
+            onClick={() => setLastResult(null)}
+            aria-label="Masquer le résultat d'automatisation"
+            data-testid="btn-automation-result-dismiss"
+          >
+            ✕
+          </button>
         </div>
       )}
 

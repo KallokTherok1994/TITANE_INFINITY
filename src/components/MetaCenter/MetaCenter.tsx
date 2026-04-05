@@ -286,12 +286,14 @@ const MetaCenterContent: React.FC = () => {
           <span className="meta-version">OPUS #18 v∞</span>
         </div>
         <div className="meta-header-actions">
-          <button className="meta-btn meta-btn-primary" onClick={handleRunCycle}>
+          <button type="button" className="meta-btn meta-btn-primary" onClick={handleRunCycle}>
             ▶️ Run Cycle
           </button>
           <button
+            type="button"
             className={`meta-btn ${autoRefresh ? 'meta-btn-active' : ''}`}
             onClick={() => setAutoRefresh(!autoRefresh)}
+            aria-pressed={autoRefresh}
           >
             🔄 Auto {autoRefresh ? 'ON' : 'OFF'}
           </button>
@@ -299,9 +301,16 @@ const MetaCenterContent: React.FC = () => {
       </div>
 
       {error && (
-        <div className="meta-error">
+        <div className="meta-error" role="alert">
           <span>⚠️ {error}</span>
-          <button onClick={() => setError(null)}>✕</button>
+          <button
+            type="button"
+            onClick={() => setError(null)}
+            aria-label="Masquer l'erreur du meta orchestrator"
+            data-testid="btn-meta-error-dismiss"
+          >
+            ✕
+          </button>
         </div>
       )}
 

@@ -647,9 +647,16 @@ export const MemoryEvolutionCenter: React.FC = () => {
       </section>
 
       {error && (
-        <div className="error-banner">
+        <div className="error-banner" role="alert">
           <span>⚠️ {error}</span>
-          <button onClick={() => setError(null)}>✕</button>
+          <button
+            type="button"
+            onClick={() => setError(null)}
+            aria-label="Masquer l'erreur d'évolution mémoire"
+            data-testid="btn-memory-evolution-error-dismiss"
+          >
+            ✕
+          </button>
         </div>
       )}
 
