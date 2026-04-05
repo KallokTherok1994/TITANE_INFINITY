@@ -5,15 +5,45 @@
 use crate::memory_os::{
     MemoryOSError, MemoryOSResult, SearchResult, VectorIndex, VectorIndexConfig,
 };
-use hnsw_rs::prelude::*;
+use instant_distance::{Builder, HnswMap, Point, Search};
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::path::Path;
 
+#[derive(Debug, Clone)]
+struct IndexedVectorPoint {
+    vector: Vec<f32>,
+}
+
+impl Point for IndexedVectorPoint {
+    fn distance(&self, other: &Self) -> f32 {
+        cosine_distance(&self.vector, &other.vector)
+    }
+}
+
+fn cosine_distance(a: &[f32], b: &[f32]) -> f32 {
+    let mut dot = 0.0f32;
+    let mut norm_a = 0.0f32;
+    let mut norm_b = 0.0f32;
+
+    for (lhs, rhs) in a.iter().zip(b.iter()) {
+        dot += lhs * rhs;
+        norm_a += lhs * lhs;
+        norm_b += rhs * rhs;
+    }
+
+    if norm_a <= f32::EPSILON || norm_b <= f32::EPSILON {
+        return 1.0;
+    }
+
+    let similarity = (dot / (norm_a.sqrt() * norm_b.sqrt())).clamp(-1.0, 1.0);
+    1.0 - similarity
+}
+
 /// HNSW-based Vector Index
 pub struct HnswVectorIndex {
-    /// HNSW index (f32, cosine distance)
-    hnsw: Hnsw<'static, f32, DistCosine>,
+    /// HNSW index (rebuilt from in-memory vectors using instant-distance)
+    hnsw: Option<HnswMap<IndexedVectorPoint, usize>>,
 
     /// ID to internal index mapping
     id_map: HashMap<String, usize>,
@@ -34,22 +64,43 @@ pub struct HnswVectorIndex {
 impl HnswVectorIndex {
     /// Create new HNSW index
     pub fn new(config: VectorIndexConfig) -> Self {
-        let hnsw = Hnsw::<f32, DistCosine>::new(
-            config.m,
-            config.max_elements,
-            config.ef_construction,
-            config.ef_construction,
-            DistCosine {},
-        );
-
         Self {
-            hnsw,
+            hnsw: None,
             id_map: HashMap::with_capacity(config.max_elements),
             reverse_map: HashMap::with_capacity(config.max_elements),
             vectors: HashMap::with_capacity(config.max_elements),
             config,
             next_idx: 0,
         }
+    }
+
+    fn rebuild_index(&mut self) {
+        if self.id_map.is_empty() {
+            self.hnsw = None;
+            return;
+        }
+
+        let mut ordered_ids: Vec<(&String, &usize)> = self.id_map.iter().collect();
+        ordered_ids.sort_by_key(|(_, idx)| **idx);
+
+        let points: Vec<IndexedVectorPoint> = ordered_ids
+            .iter()
+            .filter_map(|(id, _)| {
+                self.vectors
+                    .get(*id)
+                    .cloned()
+                    .map(|vector| IndexedVectorPoint { vector })
+            })
+            .collect();
+
+        let values: Vec<usize> = ordered_ids.iter().map(|(_, idx)| **idx).collect();
+
+        if points.is_empty() {
+            self.hnsw = None;
+            return;
+        }
+
+        self.hnsw = Some(Builder::default().seed(42).build(points, values));
     }
 }
 
@@ -63,29 +114,18 @@ impl VectorIndex for HnswVectorIndex {
             )));
         }
 
-        // Check if ID already exists
         if self.id_map.contains_key(&id) {
-            // Update existing vector
-            if let Some(&idx) = self.id_map.get(&id) {
-                // HNSW doesn't support update, so we need to remove and re-add
-                // For now, just update the stored vector
-                self.vectors.insert(id.clone(), vector.clone());
-                return Ok(());
-            }
+            self.vectors.insert(id, vector);
+            self.rebuild_index();
+            return Ok(());
         }
 
-        // Add new vector
         let internal_idx = self.next_idx;
-
-        // Insert into HNSW
-        self.hnsw.insert((&vector, internal_idx));
-
-        // Update mappings
         self.id_map.insert(id.clone(), internal_idx);
         self.reverse_map.insert(internal_idx, id.clone());
         self.vectors.insert(id, vector);
-
         self.next_idx += 1;
+        self.rebuild_index();
 
         Ok(())
     }
@@ -99,35 +139,29 @@ impl VectorIndex for HnswVectorIndex {
             )));
         }
 
-        // Search HNSW
-        // We intentionally over-sample (when possible) so we can apply a deterministic
-        // tie-breaker in case multiple vectors have equal distance.
-        let available = self.id_map.len();
-        let oversample_k = if available == 0 {
-            k
-        } else {
-            let requested = k.max(1);
-            // Over-sample by a small factor, bounded by available elements.
-            (requested.saturating_mul(8)).max(requested).min(available)
+        let Some(hnsw) = self.hnsw.as_ref() else {
+            return Ok(Vec::new());
         };
 
-        let neighbors = self
-            .hnsw
-            .search(query, oversample_k, self.config.ef_construction);
+        let query_point = IndexedVectorPoint {
+            vector: query.to_vec(),
+        };
+        let mut search = Search::default();
 
-        // Convert to SearchResult
-        let mut results: Vec<SearchResult> = neighbors
-            .iter()
-            .filter_map(|neighbor| {
-                let internal_idx = neighbor.d_id;
-                self.reverse_map
-                    .get(&internal_idx)
-                    .map(|id| SearchResult::from_distance(id.clone(), neighbor.distance))
+        let mut results: Vec<SearchResult> = hnsw
+            .search(&query_point, &mut search)
+            .into_iter()
+            .filter_map(|item| {
+                let internal_idx = *item.value;
+                let id = self.reverse_map.get(&internal_idx)?;
+                let vector = self.vectors.get(id)?;
+                Some(SearchResult::from_distance(
+                    id.clone(),
+                    cosine_distance(query, vector),
+                ))
             })
             .collect();
 
-        // Deterministic ordering: distance ASC, then id ASC.
-        // This avoids flaky expectations when multiple vectors have equal cosine distance.
         results.sort_by(|a, b| {
             let dist_ord = a
                 .distance
@@ -147,11 +181,10 @@ impl VectorIndex for HnswVectorIndex {
     }
 
     fn remove(&mut self, id: &str) -> MemoryOSResult<()> {
-        // HNSW doesn't support efficient removal
-        // We mark as removed in our maps
         if let Some(idx) = self.id_map.remove(id) {
             self.reverse_map.remove(&idx);
             self.vectors.remove(id);
+            self.rebuild_index();
         }
 
         Ok(())
@@ -170,15 +203,7 @@ impl VectorIndex for HnswVectorIndex {
     }
 
     fn clear(&mut self) -> MemoryOSResult<()> {
-        // Create new HNSW index
-        self.hnsw = Hnsw::<f32, DistCosine>::new(
-            self.config.m,
-            self.config.max_elements,
-            self.config.ef_construction,
-            self.config.ef_construction,
-            DistCosine {},
-        );
-
+        self.hnsw = None;
         self.id_map.clear();
         self.reverse_map.clear();
         self.vectors.clear();
@@ -190,7 +215,6 @@ impl VectorIndex for HnswVectorIndex {
     fn save(&self, path: &str) -> MemoryOSResult<()> {
         let path = Path::new(path);
 
-        // Save metadata only (HNSW binary dump not supported in this version)
         let metadata = HnswMetadata {
             id_map: self.id_map.clone(),
             reverse_map: self.reverse_map.clone(),
@@ -208,35 +232,16 @@ impl VectorIndex for HnswVectorIndex {
 
     fn load(&mut self, path: &str) -> MemoryOSResult<()> {
         let path = Path::new(path);
-
-        // Load metadata
         let metadata_path = path.with_extension("meta");
         let metadata_json = std::fs::read_to_string(metadata_path)?;
         let metadata: HnswMetadata = serde_json::from_str(&metadata_json)?;
 
-        // Rebuild HNSW index from vectors (binary load not supported in this version)
-        let new_hnsw = Hnsw::<'static, f32, DistCosine>::new(
-            metadata.config.m,
-            metadata.config.max_elements,
-            metadata.config.ef_construction,
-            metadata.config.ef_construction,
-            DistCosine {},
-        );
-
-        // Re-insert all vectors
-        for (idx, id) in &metadata.reverse_map {
-            if let Some(vector) = metadata.vectors.get(id) {
-                new_hnsw.insert((vector.as_slice(), *idx));
-            }
-        }
-
-        // Update state
-        self.hnsw = new_hnsw;
         self.id_map = metadata.id_map;
         self.reverse_map = metadata.reverse_map;
         self.vectors = metadata.vectors;
         self.config = metadata.config;
         self.next_idx = metadata.next_idx;
+        self.rebuild_index();
 
         Ok(())
     }
@@ -261,7 +266,6 @@ mod tests {
         let config = VectorIndexConfig::new(128);
         let mut index = HnswVectorIndex::new(config);
 
-        // Add vectors
         let v1 = vec![1.0; 128];
         let v2 = vec![0.5; 128];
 
@@ -274,7 +278,6 @@ mod tests {
 
         assert_eq!(index.size(), 2);
 
-        // Search
         let results = index
             .search(&v1, 1)
             .expect("search should return nearest vector");

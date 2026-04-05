@@ -318,17 +318,24 @@ where
 
         // Try L3
         if let Some(disk_data) = self.l3.get(key).await? {
-            let value: V = bincode::deserialize(&disk_data).map_err(|e| {
-                TitaneError::InternalError(format!("Deserialization failed: {}", e))
-            })?;
+            match serde_json::from_slice::<V>(&disk_data) {
+                Ok(value) => {
+                    // Populate L2 and L1
+                    let compressed = self.compress(&value)?;
+                    self.l2.write().await.insert(key.clone(), compressed);
+                    self.l1.write().await.insert(key.clone(), value.clone());
 
-            // Populate L2 and L1
-            let compressed = self.compress(&value)?;
-            self.l2.write().await.insert(key.clone(), compressed);
-            self.l1.write().await.insert(key.clone(), value.clone());
-
-            self.metrics.write().await.record_l3_hit();
-            return Ok(value);
+                    self.metrics.write().await.record_l3_hit();
+                    return Ok(value);
+                }
+                Err(e) => {
+                    log::warn!(
+                        "Ignoring stale L3 cache entry for {} after cache format refresh: {}",
+                        key.as_ref(),
+                        e
+                    );
+                }
+            }
         }
 
         // Cache miss - compute
@@ -341,7 +348,7 @@ where
         let compressed = self.compress(&value)?;
         self.l2.write().await.insert(key.clone(), compressed);
 
-        let serialized = bincode::serialize(&value)
+        let serialized = serde_json::to_vec(&value)
             .map_err(|e| TitaneError::InternalError(format!("Serialization failed: {}", e)))?;
         self.l3.insert(key, &serialized).await?;
 
@@ -355,7 +362,7 @@ where
 
     /// Compress value
     fn compress(&self, value: &V) -> TitaneResult<Vec<u8>> {
-        let serialized = bincode::serialize(value)
+        let serialized = serde_json::to_vec(value)
             .map_err(|e| TitaneError::InternalError(format!("Serialization failed: {}", e)))?;
 
         // Implementation: Fast compression with lz4 or zstd
@@ -372,7 +379,7 @@ where
     /// Decompress value
     fn decompress(&self, compressed: &[u8]) -> TitaneResult<V> {
         // Simple decompression
-        bincode::deserialize(compressed)
+        serde_json::from_slice(compressed)
             .map_err(|e| TitaneError::InternalError(format!("Deserialization failed: {}", e)))
     }
 
