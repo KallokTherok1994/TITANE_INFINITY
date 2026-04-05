@@ -211,7 +211,7 @@ export function evaluateGates(
 
   const allBlockingPassed = gates.filter(g => g.blocking).every(g => g.passed);
   const promotionAllowed = allBlockingPassed;
-  const verdict: Verdict = allBlockingPassed ? 'PASS' : 'PROMOTION_BLOCKED';
+  const verdict: Verdict = allBlockingPassed ? 'PASS' : 'BLOCKED';
 
   return { gates, allBlockingPassed, promotionAllowed, verdict };
 }

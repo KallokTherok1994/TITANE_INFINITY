@@ -3,7 +3,8 @@
  * TITANE∞ — ZERO-REGRESSION EVAL HARNESS — MAIN ENTRY POINT
  *
  * Usage:
- *   npx tsx evals/harness/index.ts run          # Run champion eval
+ *   npx tsx evals/harness/index.ts run          # Run champion eval (real generator)
+ *   npx tsx evals/harness/index.ts run --mock   # Run harness self-test with mock responses
  *   npx tsx evals/harness/index.ts compare      # Run champion vs challenger
  *   npx tsx evals/harness/index.ts gates        # Evaluate promotion gates
  *   npx tsx evals/harness/index.ts x3           # Run X3 stability test
@@ -20,9 +21,10 @@ import type {
   ScorecardResult,
   GatesReport,
   X3StabilityResult,
+  Verdict,
 } from './types';
 import { DEFAULT_EVAL_CONFIG } from './types';
-import { runFullEval, createMockGenerator } from './evalRunner';
+import { runFullEval, createMockGenerator, createRealGenerator } from './evalRunner';
 import { loadChampionChallengerConfig, runComparison } from './championChallenger';
 import { evaluateGates } from './gates';
 import { detectAntiLieViolations } from './antiLie';
@@ -30,21 +32,34 @@ import { scoreAllScorecards } from './scorecardScorer';
 import { runX3Stability } from './x3Runner';
 import { generateProofPack } from './proofPackGenerator';
 
+function shouldUseMockGenerators(argv: string[]): boolean {
+  return argv.includes('--mock') || process.env.EVAL_USE_MOCK === '1';
+}
+
 async function main() {
   const command = process.argv[2] || 'all';
   const config: EvalConfig = { ...DEFAULT_EVAL_CONFIG };
+  const useMockGenerators = shouldUseMockGenerators(process.argv.slice(3));
 
   console.log('╔══════════════════════════════════════════════════════════════╗');
   console.log('║  TITANE∞ — ZERO-REGRESSION EVAL HARNESS                   ║');
   console.log('╚══════════════════════════════════════════════════════════════╝');
   console.log(`Command: ${command}`);
   console.log(`Dataset: ${config.datasetVersion}`);
+  console.log(
+    `Generator mode: ${useMockGenerators ? 'mock (harness self-test)' : 'real (orchestrator path)'}`
+  );
   console.log('');
 
-  const championGenerator = createMockGenerator('ollama', 'gemma2:2b');
-  const challengerGenerator = createMockGenerator('gemini', 'haiku');
+  const championGenerator = useMockGenerators
+    ? createMockGenerator('ollama', 'gemma2:2b')
+    : createRealGenerator('ollama', 'gemma2:2b');
+  const challengerGenerator = useMockGenerators
+    ? createMockGenerator('gemini', 'haiku')
+    : createRealGenerator('gemini', 'haiku');
 
   let laneResults: LaneResult[] = [];
+  let runVerdict: Verdict | null = null;
   let comparisons: ComparisonResult[] = [];
   let antiLieViolations: AntiLieViolation[] = [];
   let scorecards: ScorecardResult[] = [];
@@ -56,6 +71,7 @@ async function main() {
     console.log('═══ RUNNING CHAMPION EVAL ═══');
     const result = await runFullEval(config, championGenerator);
     laneResults = result.lanes;
+    runVerdict = result.overallVerdict;
     console.log(`\nChampion result: ${result.overallVerdict}`);
     console.log(
       `  Items: ${result.summary.totalItems} total, ${result.summary.totalPassed} passed, ${result.summary.totalFailed} failed, ${result.summary.totalBlocked} blocked\n`
@@ -153,12 +169,29 @@ async function main() {
   console.log('\n╔══════════════════════════════════════════════════════════════╗');
   console.log('║  FINAL VERDICT                                              ║');
   console.log('╚══════════════════════════════════════════════════════════════╝');
-  const finalVerdict = gates?.verdict ?? 'BLOCKED';
+  const comparisonVerdict: Verdict | null =
+    comparisons.length === 0
+      ? null
+      : comparisons.some(c => c.overallVerdict !== 'PASS')
+        ? 'FAIL'
+        : 'PASS';
+  const finalVerdict: Verdict =
+    gates?.verdict ?? runVerdict ?? x3Stability?.verdict ?? comparisonVerdict ?? 'BLOCKED';
   console.log(`Verdict: ${finalVerdict}`);
-  if (finalVerdict === 'PASS') {
-    console.log('All gates PASS. Champion retained. Challenger eligible for shadow.');
+  if (gates) {
+    if (finalVerdict === 'PASS') {
+      console.log('All gates PASS. Champion retained. Challenger eligible for shadow.');
+    } else {
+      console.log('Promotion BLOCKED. See gates report for details.');
+    }
+  } else if (command === 'run' && runVerdict) {
+    console.log('Champion eval complete. Run `gates` or `all` for promotion status.');
+  } else if (command === 'x3' && x3Stability) {
+    console.log('Stability run complete.');
+  } else if (comparisonVerdict) {
+    console.log('Comparison run complete.');
   } else {
-    console.log('Promotion BLOCKED. See gates report for details.');
+    console.log('Partial eval command complete.');
   }
   console.log('\nRollback: git reset --hard v28.0.0');
 }

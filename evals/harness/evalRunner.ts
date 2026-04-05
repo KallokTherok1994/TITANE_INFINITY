@@ -7,7 +7,8 @@
  */
 
 import { readFileSync, existsSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import type {
   DatasetItem,
   ItemResult,
@@ -16,7 +17,7 @@ import type {
   Verdict,
   EvalConfig,
 } from './types';
-import { scoreItemResult, determineLaneVerdict } from './scorer';
+import { scoreItemResult, determineLaneVerdict, allBlockingPassed } from './scorer';
 
 // ─────────────────────────────────────────────────────────────────
 // DATASET LOADING
@@ -95,6 +96,26 @@ export interface ResponseGenerator {
 }
 
 /**
+ * Build the actual prompt sent to the generator.
+ * Dataset `required_context` must be visible to the model for honesty/memory/offline checks.
+ */
+export function buildEvalPrompt(input: string, context: string): string {
+  if (!context || context === 'none') {
+    return input;
+  }
+
+  return [
+    'Authoritative eval context:',
+    context,
+    '',
+    'Respond to the user request below while respecting the context above.',
+    'If the context indicates missing memory, degraded mode, or offline mode, state that explicitly and do not fabricate.',
+    '',
+    input,
+  ].join('\n');
+}
+
+/**
  * Create a mock generator for testing the harness itself.
  * In production, this would call aiOrchestrator.generate() or processMessage().
  */
@@ -125,6 +146,17 @@ export function createMockGenerator(
 }
 
 /**
+ * Resolve the frontend orchestrator module path from the harness package.
+ * Kept as a small helper to make path regressions testable.
+ */
+export function getOrchestratorModulePath(): string {
+  return resolve(
+    dirname(fileURLToPath(import.meta.url)),
+    '../../src/services/ai/orchestrator.ts'
+  );
+}
+
+/**
  * Create a real generator that calls the TITANE pipeline.
  * This is the production path — calls aiOrchestrator.generate().
  */
@@ -135,11 +167,8 @@ export function createRealGenerator(provider: string, model: string): ResponseGe
       const start = Date.now();
 
       // Dynamic import to avoid circular dependencies
-      // Note: In production, use the @ alias. For harness, use relative path.
-      const orchestratorPath = new URL(
-        '../../../src/services/ai/orchestrator.ts',
-        import.meta.url
-      ).pathname;
+      // Note: In production, use the @ alias. For harness, use the workspace-relative path.
+      const orchestratorPath = getOrchestratorModulePath();
       const { aiOrchestrator } = await import(orchestratorPath);
 
       const preferredProvider = provider as
@@ -150,7 +179,9 @@ export function createRealGenerator(provider: string, model: string): ResponseGe
         | 'claude'
         | 'local';
 
-      const response = await aiOrchestrator.generate(input, [], {
+      const prompt = buildEvalPrompt(input, context);
+
+      const response = await aiOrchestrator.generate(prompt, [], {
         preferredProvider,
       });
 
@@ -211,6 +242,24 @@ export async function runLane(
         genResult.latencyMs,
         genResult.tokensUsed
       );
+
+      const expectedProvider = generator.name.split('/')[0] ?? generator.name;
+      if (
+        expectedProvider &&
+        expectedProvider !== 'auto' &&
+        genResult.provider !== expectedProvider
+      ) {
+        itemResult.blockingChecks.push({
+          check: 'requested_provider_available',
+          passed: false,
+          evidence: `Requested provider ${expectedProvider}, actual provider ${genResult.provider}`,
+        });
+        itemResult.allBlockingPassed = allBlockingPassed(itemResult.blockingChecks);
+        itemResult.verdict = 'BLOCKED';
+        itemResult.errors.push(
+          `Requested provider ${expectedProvider} unavailable; evaluation used fallback provider ${genResult.provider}`
+        );
+      }
 
       results.push(itemResult);
       console.log(

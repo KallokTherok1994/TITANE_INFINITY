@@ -35,14 +35,18 @@ export async function initializeAISystem(options?: {
   healthMonitor: unknown;
 }> {
   const isHealthMonitoringEnabledByDefault = (): boolean => {
-    if (import.meta.env.DEV) return true;
+    const runtimeEnv = (import.meta as ImportMeta & {
+      env?: { DEV?: boolean; VITE_AI_HEALTH_MONITORING_ENABLED?: string };
+    }).env;
+
+    if (runtimeEnv?.DEV) return true;
 
     if (typeof window === 'undefined') {
       return false;
     }
 
     const envEnabled =
-      String(import.meta.env.VITE_AI_HEALTH_MONITORING_ENABLED ?? '') === '1';
+      String(runtimeEnv?.VITE_AI_HEALTH_MONITORING_ENABLED ?? '') === '1';
     const storedEnabled = window.localStorage.getItem(
       'titane_ai_health_monitoring_enabled'
     );

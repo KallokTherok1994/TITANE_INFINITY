@@ -25,13 +25,17 @@ import {
 } from '../transports/ollamaTransport';
 
 const logger = createLogger('Ollama');
+const runtimeEnv = (import.meta as ImportMeta & {
+  env?: { VITE_OLLAMA_MODEL?: string };
+}).env;
+const DEFAULT_OLLAMA_MODEL = runtimeEnv?.VITE_OLLAMA_MODEL?.trim() || 'gemma2:2b';
 
 // ═══════════════════════════════════════════════════════════════
 // CONFIGURATION
 // ═══════════════════════════════════════════════════════════════
 
 const OLLAMA_CONFIG = {
-  model: import.meta.env.VITE_OLLAMA_MODEL || 'gemma2:2b',
+  model: DEFAULT_OLLAMA_MODEL,
   endpoint: `transport:${getTransportMode().toLowerCase()}`,
   timeout: PROVIDER_TIMEOUTS.ollama || 45000,
   healthCheckInterval: AVAILABILITY_CACHE.ttlMs || 300000,
@@ -170,10 +174,10 @@ async function checkOllamaHealth(): Promise<boolean> {
     const health = await ollamaCheckHealth();
     if (health.ok) {
       const models = health.content.models || [];
+      const configuredModelFamily = OLLAMA_CONFIG.model.split(':')[0] ?? OLLAMA_CONFIG.model;
       const hasModel = models.some(
         (m: { name: string }) =>
-          m.name === OLLAMA_CONFIG.model ||
-          m.name.startsWith(OLLAMA_CONFIG.model.split(':')[0])
+          m.name === OLLAMA_CONFIG.model || m.name.startsWith(configuredModelFamily)
       );
 
       if (!hasModel && models.length > 0) {

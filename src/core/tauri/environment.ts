@@ -50,7 +50,9 @@ export function detectEnvironment(): EnvironmentInfo {
 
   const protocol = window.location.protocol.replace(':', '');
   const origin = window.location.origin;
-  const isDev = import.meta.env.DEV;
+  const isDev = Boolean(
+    (import.meta as ImportMeta & { env?: { DEV?: boolean } }).env?.DEV
+  );
 
   // 🔍 DÉTECTION TAURI (critères multiples pour robustesse)
 

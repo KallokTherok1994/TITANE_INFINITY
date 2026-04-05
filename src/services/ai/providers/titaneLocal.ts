@@ -18,7 +18,8 @@ import { memoryIntegration } from '../memoryIntegration';
 import type { MemoryContext } from '../memoryIntegration';
 
 const logger = createLogger('TitaneLocal');
-const isDev = import.meta.env.DEV;
+const runtimeEnv = (import.meta as ImportMeta & { env?: { DEV?: boolean } }).env;
+const isDev = Boolean(runtimeEnv?.DEV);
 const isTestEnv = typeof process !== 'undefined' && Boolean(process.env?.VITEST);
 
 /**

@@ -97,7 +97,9 @@ import { responseCache } from '@/services/cache/responseCache';
 import { predictivePreloader } from '@/services/cache/predictivePreloader';
 
 const logger = createLogger('ChatEngine');
-const DEBUG_CHAT_ENGINE_TRACES = import.meta.env.DEV;
+const DEBUG_CHAT_ENGINE_TRACES = Boolean(
+  (import.meta as ImportMeta & { env?: { DEV?: boolean } }).env?.DEV
+);
 
 type BackendStreamMetadata = {
   raw?: string;
