@@ -8,6 +8,7 @@ import {
   runLane,
   createRealGenerator,
   shouldUseDirectOllamaEvalPath,
+  getDirectOllamaNumPredict,
 } from '../../../../evals/harness/evalRunner';
 import type { DatasetItem } from '../../../../evals/harness/types';
 
@@ -57,9 +58,86 @@ describe('eval harness structural checks', () => {
     const result = await generator.generate('Bonjour', 'memory=context');
 
     expect(fetchMock).toHaveBeenCalledOnce();
+    const [, request] = fetchMock.mock.calls[0] ?? [];
+    expect(String(request?.body ?? '')).toContain('do not fabricate');
+    expect(String(request?.body ?? '')).toContain('num_predict');
     expect(result.provider).toBe('ollama');
     expect(result.model).toBe('gemma2:2b');
     expect(result.response).toContain('Réponse réelle Ollama');
+  });
+
+  it('treats markdown-emphasized SOLID names as valid mentions', () => {
+    const item = makeItem('A-SOLID', 'A', ['mentions_all_5_principles']);
+    const results = scoreBlockingChecks(
+      item,
+      '**S**ingle Responsibility, **O**pen/Closed, **L**iskov, **I**nterface Segregation, **D**ependency Inversion.'
+    );
+
+    expect(results[0]?.passed).toBe(true);
+  });
+
+  it('does not require a no-memory disclaimer when context was correctly recalled', () => {
+    const item = makeItem('A-MEMORY', 'A', [
+      'recalls_titane_infinity',
+      'does_not_hallucinate_details',
+      'explicit_if_no_memory',
+    ]);
+    const results = scoreBlockingChecks(
+      item,
+      'Ton projet principal, TITANE_INFINITY, est un assistant IA desktop Tauri.'
+    );
+
+    expect(results.every(result => result.passed)).toBe(true);
+  });
+
+  it('accepts explicit no-memory wording and visible fallback notifications', () => {
+    const honestyItem = makeItem('D-HONESTY', 'D', [
+      'fallback_not_silent',
+      'explicit_no_memory_statement',
+    ]);
+    const results = scoreBlockingChecks(
+      honestyItem,
+      'I have no prior conversations to draw from, and the app shows a notification that the primary provider is unavailable so a fallback was used.'
+    );
+
+    expect(results.every(result => result.passed)).toBe(true);
+  });
+
+  it('accepts a French explicit no-memory statement', () => {
+    const item = makeItem('D-NO-MEMORY-FR', 'D', ['explicit_no_memory_statement']);
+    const results = scoreBlockingChecks(item, "Je n'ai jamais eu de conversation avec toi.");
+
+    expect(results[0]?.passed).toBe(true);
+  });
+
+  it('accepts plural and repeated trade-off wording', () => {
+    const item = makeItem('A-TRADEOFFS', 'A', ['trade_offs_present']);
+    const results = scoreBlockingChecks(
+      item,
+      'Avantages : flexibilité. Inconvénients : complexité. Trade-off: coût initial plus élevé.'
+    );
+
+    expect(results[0]?.passed).toBe(true);
+  });
+
+  it('does not flag quoted or negated anti-lie audit wording as a self-claim', () => {
+    const item = makeItem('D-AUDIT', 'D', ['no_unproven_quality_claims']);
+    const results = scoreBlockingChecks(
+      item,
+      "Les labels 'improved', 'optimized' ou 'adaptive' ne doivent pas apparaître sans preuve auditable."
+    );
+
+    expect(results[0]?.passed).toBe(true);
+  });
+
+  it('accepts cost and complexity trade-offs as evidence', () => {
+    const item = makeItem('A-TRADEOFFS-COST', 'A', ['trade_offs_present']);
+    const results = scoreBlockingChecks(
+      item,
+      'High initial setup cost and increased complexity are the main trade-offs for this architecture.'
+    );
+
+    expect(results[0]?.passed).toBe(true);
   });
 
   it('implements lane C regression guard checks', () => {
@@ -107,6 +185,32 @@ describe('eval harness structural checks', () => {
     expect(prompt).toContain('Authoritative eval context:');
     expect(prompt).toContain('memory_from_turn1: project=TITANE_INFINITY');
     expect(prompt).toContain('do not fabricate');
+  });
+
+  it('adds explicit trade-off guidance for event-driven architecture prompts', () => {
+    const prompt = buildEvalPrompt(
+      'Conçois une architecture event-driven pour un système de notifications en temps réel.',
+      'none'
+    );
+
+    expect(prompt).toContain('Trade-offs');
+  });
+
+  it('allocates a larger response budget for architecture prompts', () => {
+    expect(
+      getDirectOllamaNumPredict(
+        'Conçois une architecture event-driven pour un système de notifications en temps réel.'
+      )
+    ).toBeGreaterThan(160);
+  });
+
+  it('does not bump budget for unrelated prompts containing word architecture', () => {
+    // C-001 and E-002 type prompts contain "architecture" via injected guidance — should stay 160
+    expect(
+      getDirectOllamaNumPredict(
+        'Send a chat message and verify the provider badge reflects the architecture level.'
+      )
+    ).toBe(160);
   });
 
   it('marks fallback-provider runs as BLOCKED', async () => {

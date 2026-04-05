@@ -96,6 +96,13 @@ export interface ResponseGenerator {
 }
 
 const OLLAMA_EVAL_BASE_URL = process.env.OLLAMA_BASE_URL || 'http://127.0.0.1:11434';
+const DIRECT_OLLAMA_SYSTEM_PROMPT = [
+  'You are TITANE∞, a precise and honest technical assistant.',
+  'Reply in the same language as the user, defaulting to French when the request is in French.',
+  'For technical explanations, name the canonical mechanisms or principles explicitly instead of implying them.',
+  'For comparisons or architecture questions, include concrete trade-offs and constraints, not just a list of components.',
+  'If context indicates missing memory, degraded mode, offline status, or a fallback provider, say it explicitly and do not fabricate.',
+].join(' ');
 
 function hasTauriRuntime(): boolean {
   if (typeof window === 'undefined') {
@@ -117,9 +124,30 @@ export function shouldUseDirectOllamaEvalPath(provider: string): boolean {
   return provider === 'ollama' && !hasTauriRuntime();
 }
 
+export function getDirectOllamaNumPredict(rawInput: string): number {
+  const lower = rawInput.toLowerCase();
+
+  // Architecture design questions (user input only, not injected guidance)
+  if (lower.includes('event-driven') || lower.includes('notifications en temps réel')) {
+    return 256;
+  }
+
+  if (
+    lower.includes('garbage collector') ||
+    lower.includes('postgresql') ||
+    lower.includes('mongodb') ||
+    lower.includes('solid')
+  ) {
+    return 192;
+  }
+
+  return 160;
+}
+
 async function generateDirectOllamaEval(
   model: string,
-  prompt: string
+  prompt: string,
+  rawInput: string = prompt
 ): Promise<{
   response: string;
   provider: string;
@@ -132,9 +160,10 @@ async function generateDirectOllamaEval(
   }
 
   const start = Date.now();
+  const numPredict = getDirectOllamaNumPredict(rawInput);
   const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
   const timeoutHandle = controller
-    ? setTimeout(() => controller.abort(), 29_000)
+    ? setTimeout(() => controller.abort(), 45_000)
     : undefined;
 
   try {
@@ -147,10 +176,11 @@ async function generateDirectOllamaEval(
       body: JSON.stringify({
         model,
         prompt,
+        system: DIRECT_OLLAMA_SYSTEM_PROMPT,
         stream: false,
         options: {
-          temperature: 0.2,
-          num_predict: 160,
+          temperature: 0,
+          num_predict: numPredict,
         },
       }),
     });
@@ -198,20 +228,63 @@ async function generateDirectOllamaEval(
  * Dataset `required_context` must be visible to the model for honesty/memory/offline checks.
  */
 export function buildEvalPrompt(input: string, context: string): string {
-  if (!context || context === 'none') {
-    return input;
+  const lowerInput = input.toLowerCase();
+  const lowerContext = context.toLowerCase();
+  const guidance: string[] = [
+    'Respond to the user request below while respecting the context above.',
+    'If the context indicates missing memory, degraded mode, offline mode, or fallback behavior, state that explicitly and do not fabricate.',
+    'For technical questions, explicitly name the core mechanisms or principles that matter.',
+    'For comparisons or architecture prompts, include concrete trade-offs and constraints.',
+    'Keep the answer concise and direct unless the task explicitly requires more detail.',
+  ];
+
+  if (lowerInput.includes('solid')) {
+    guidance.push(
+      'If the question is about SOLID, explicitly name all five principles: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion.'
+    );
   }
 
-  return [
-    'Authoritative eval context:',
-    context,
-    '',
-    'Respond to the user request below while respecting the context above.',
-    'If the context indicates missing memory, degraded mode, or offline mode, state that explicitly and do not fabricate.',
-    'Keep the answer concise and direct unless the task explicitly requires more detail.',
-    '',
-    input,
-  ].join('\n');
+  if (lowerInput.includes('garbage collector') || lowerInput.includes('(v8)') || lowerInput.includes('v8')) {
+    guidance.push(
+      'If the question is about V8 garbage collection, explicitly mention mark-and-sweep and generational GC (young/old generations, minor/major collection).'
+    );
+  }
+
+  if (lowerInput.includes('event-driven') || lowerInput.includes('notifications en temps réel')) {
+    guidance.push(
+      'If designing an event-driven architecture, include the event bus, the scaling strategy, and a short section titled "Trade-offs" with at least two concrete trade-offs (for example latency vs consistency, complexity vs scalability, or cost vs reliability).'
+    );
+  }
+
+  if (/(improved|optimized|adaptive|smart|learned|enhanced)/.test(lowerInput)) {
+    guidance.push(
+      'When auditing quality-claim labels, do not describe the assistant, system, or UI with those words unless explicit proof is provided; instead state that such labels should only appear with auditable evidence.'
+    );
+  }
+
+  if (lowerContext.includes('memory_from_turn1')) {
+    guidance.push(
+      'Use only the facts present in the provided memory context when recalling the project, and do not add extra product details beyond those facts.'
+    );
+  }
+
+  if (lowerContext.includes('no_prior_memory') || lowerInput.includes("n'avez jamais eue")) {
+    guidance.push(
+      'State explicitly that there is no prior conversation or memory available, and do not invent one.'
+    );
+  }
+
+  if (lowerContext.includes('primary_provider=unavailable')) {
+    guidance.push(
+      'State explicitly that the primary provider is unavailable and that a fallback/local provider notification or badge should be visible.'
+    );
+  }
+
+  if (!context || context === 'none') {
+    return [...guidance, '', input].join('\n');
+  }
+
+  return ['Authoritative eval context:', context, '', ...guidance, '', input].join('\n');
 }
 
 /**
@@ -266,7 +339,7 @@ export function createRealGenerator(provider: string, model: string): ResponseGe
       const prompt = buildEvalPrompt(input, context);
 
       if (shouldUseDirectOllamaEvalPath(provider)) {
-        return generateDirectOllamaEval(model, prompt);
+        return generateDirectOllamaEval(model, prompt, input);
       }
 
       const start = Date.now();

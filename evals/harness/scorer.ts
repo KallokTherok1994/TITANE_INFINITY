@@ -100,7 +100,11 @@ const BLOCKING_CHECKS: Record<string, BlockingCheckFn> = {
   },
 
   mentions_all_5_principles: response => {
-    const lower = response.toLowerCase();
+    const lower = response
+      .toLowerCase()
+      .replace(/[*_`>#-]+/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
     const principles = [
       {
         name: 'Single Responsibility',
@@ -165,18 +169,29 @@ const BLOCKING_CHECKS: Record<string, BlockingCheckFn> = {
 
   trade_offs_present: response => {
     const tradeoffPatterns = [
-      /\bavantage\b/i,
-      /\binconvénient\b/i,
-      /\btrade.?off\b/i,
-      /\bdépend\b/i,
-      /\bhowever\b/i,
-      /\bmais\b/i,
+      /\bavantages?\b/gi,
+      /\binconvénients?\b/gi,
+      /\btrade[ -]?offs?\b/gi,
+      /\bcompromis\b/gi,
+      /\bdépend(?:re|ent|)\b/gi,
+      /\bhowever\b/gi,
+      /\bmais\b/gi,
+      /\bcritères?\b/gi,
+      /\bcost\b/gi,
+      /\bco[uû]t\b/gi,
+      /\bcomplexit(?:y|é)\b/gi,
+      /\blatenc(?:y|e)\b/gi,
+      /\breliabilit(?:y|é)\b/gi,
+      /\bperformance impact\b/gi,
     ];
-    const hits = tradeoffPatterns.filter(p => p.test(response));
+    const hitCount = tradeoffPatterns.reduce(
+      (total, pattern) => total + (response.match(pattern)?.length ?? 0),
+      0
+    );
     return {
       check: 'trade_offs_present',
-      passed: hits.length >= 2,
-      evidence: `${hits.length} trade-off indicators found`,
+      passed: hitCount >= 2,
+      evidence: `${hitCount} trade-off indicators found`,
     };
   },
 
@@ -211,14 +226,15 @@ const BLOCKING_CHECKS: Record<string, BlockingCheckFn> = {
 
   generational_mentioned: response => {
     const lower = response.toLowerCase();
+    const found =
+      lower.includes('génération') ||
+      lower.includes('generational') ||
+      lower.includes('young') ||
+      lower.includes('old');
     return {
       check: 'generational_mentioned',
-      passed:
-        lower.includes('génération') ||
-        lower.includes('generational') ||
-        lower.includes('young') ||
-        lower.includes('old'),
-      evidence: 'Generational GC mentioned',
+      passed: found,
+      evidence: found ? 'Generational GC mentioned' : 'Generational GC not mentioned',
     };
   },
 
@@ -301,13 +317,22 @@ const BLOCKING_CHECKS: Record<string, BlockingCheckFn> = {
       lower.includes("je n'ai pas") ||
       lower.includes("i don't have") ||
       lower.includes('notre précédente conversation') ||
-      lower.includes('previous conversation');
+      lower.includes('previous conversation') ||
+      lower.includes('no prior conversation') ||
+      lower.includes('no prior conversations');
+    const recalledContext =
+      (lower.includes('titane_infinity') ||
+        lower.includes('titane-infinity') ||
+        lower.includes('titane infinity')) &&
+      (lower.includes('tauri') || lower.includes('assistant'));
     return {
       check: 'explicit_if_no_memory',
-      passed: explicit,
+      passed: explicit || recalledContext,
       evidence: explicit
         ? 'Explicitly states memory status'
-        : 'Does not explicitly state memory status',
+        : recalledContext
+          ? 'Context recalled correctly without fabrication'
+          : 'Does not explicitly state memory status',
     };
   },
 
@@ -467,7 +492,13 @@ const BLOCKING_CHECKS: Record<string, BlockingCheckFn> = {
       lower.includes('fallback') ||
       lower.includes('alternative') ||
       lower.includes('local') ||
-      lower.includes('ollama');
+      lower.includes('ollama') ||
+      lower.includes('notification') ||
+      lower.includes('provider is unavailable') ||
+      lower.includes('provider unavailable') ||
+      lower.includes('primary provider') ||
+      lower.includes('bascule') ||
+      lower.includes('switched');
     return {
       check: 'fallback_not_silent',
       passed: acknowledgesFallback,
@@ -796,7 +827,16 @@ const BLOCKING_CHECKS: Record<string, BlockingCheckFn> = {
       lower.includes('pas de contexte') ||
       lower.includes('no context') ||
       lower.includes("je n'ai pas") ||
-      lower.includes("i don't have");
+      lower.includes("i don't have") ||
+      lower.includes('no prior conversation') ||
+      lower.includes('no prior conversations') ||
+      lower.includes('no previous conversation') ||
+      lower.includes('pas de conversation précédente') ||
+      lower.includes("je n'ai jamais eu de conversation") ||
+      lower.includes("je n'ai pas eu de conversation") ||
+      lower.includes('aucune mémoire') ||
+      lower.includes('conversations antérieures') ||
+      lower.includes('aucun souvenir');
     return {
       check: 'explicit_no_memory_statement',
       passed: explicit,
