@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { existsSync } from 'node:fs';
 import { scoreBlockingChecks } from '../../../../evals/harness/scorer';
 import { evaluateGates } from '../../../../evals/harness/gates';
@@ -6,6 +6,8 @@ import {
   getOrchestratorModulePath,
   buildEvalPrompt,
   runLane,
+  createRealGenerator,
+  shouldUseDirectOllamaEvalPath,
 } from '../../../../evals/harness/evalRunner';
 import type { DatasetItem } from '../../../../evals/harness/types';
 
@@ -29,6 +31,37 @@ function makeItem(
 }
 
 describe('eval harness structural checks', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it('uses the direct Ollama path for CLI evals outside Tauri', () => {
+    expect(shouldUseDirectOllamaEvalPath('ollama')).toBe(true);
+    expect(shouldUseDirectOllamaEvalPath('gemini')).toBe(false);
+  });
+
+  it('can generate through direct Ollama in CLI eval mode', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        response: 'Réponse réelle Ollama',
+        model: 'gemma2:2b',
+        prompt_eval_count: 12,
+        eval_count: 18,
+      }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const generator = createRealGenerator('ollama', 'gemma2:2b');
+    const result = await generator.generate('Bonjour', 'memory=context');
+
+    expect(fetchMock).toHaveBeenCalledOnce();
+    expect(result.provider).toBe('ollama');
+    expect(result.model).toBe('gemma2:2b');
+    expect(result.response).toContain('Réponse réelle Ollama');
+  });
+
   it('implements lane C regression guard checks', () => {
     const item = makeItem('C-TEST', 'C', [
       'provider_badge_equals_meta_provider_used',

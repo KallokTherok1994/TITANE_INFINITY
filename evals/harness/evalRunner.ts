@@ -95,6 +95,104 @@ export interface ResponseGenerator {
   }>;
 }
 
+const OLLAMA_EVAL_BASE_URL = process.env.OLLAMA_BASE_URL || 'http://127.0.0.1:11434';
+
+function hasTauriRuntime(): boolean {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  const tauriWindow = window as Window & {
+    __TAURI__?: { core?: { invoke?: unknown } };
+    __TAURI_INTERNALS__?: unknown;
+  };
+
+  return (
+    typeof tauriWindow.__TAURI__?.core?.invoke === 'function' ||
+    typeof tauriWindow.__TAURI_INTERNALS__ !== 'undefined'
+  );
+}
+
+export function shouldUseDirectOllamaEvalPath(provider: string): boolean {
+  return provider === 'ollama' && !hasTauriRuntime();
+}
+
+async function generateDirectOllamaEval(
+  model: string,
+  prompt: string
+): Promise<{
+  response: string;
+  provider: string;
+  model: string;
+  latencyMs: number;
+  tokensUsed: number;
+}> {
+  if (typeof fetch !== 'function') {
+    throw new Error('Direct Ollama eval requires fetch support in this runtime');
+  }
+
+  const start = Date.now();
+  const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  const timeoutHandle = controller
+    ? setTimeout(() => controller.abort(), 29_000)
+    : undefined;
+
+  try {
+    const response = await fetch(`${OLLAMA_EVAL_BASE_URL}/api/generate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      signal: controller?.signal,
+      body: JSON.stringify({
+        model,
+        prompt,
+        stream: false,
+        options: {
+          temperature: 0.2,
+          num_predict: 160,
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      const details = await response.text().catch(() => '');
+      throw new Error(
+        `Direct Ollama eval failed (${response.status}): ${details || response.statusText}`
+      );
+    }
+
+    const payload = (await response.json()) as {
+      response?: string;
+      model?: string;
+      prompt_eval_count?: number;
+      eval_count?: number;
+    };
+
+    const content = payload.response?.trim();
+    if (!content) {
+      throw new Error('Direct Ollama eval returned empty response');
+    }
+
+    return {
+      response: content,
+      provider: 'ollama',
+      model: payload.model || model,
+      latencyMs: Date.now() - start,
+      tokensUsed: (payload.prompt_eval_count || 0) + (payload.eval_count || 0),
+    };
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error('Direct Ollama eval timed out before completion');
+    }
+    throw error;
+  } finally {
+    if (timeoutHandle) {
+      clearTimeout(timeoutHandle);
+    }
+  }
+}
+
 /**
  * Build the actual prompt sent to the generator.
  * Dataset `required_context` must be visible to the model for honesty/memory/offline checks.
@@ -110,6 +208,7 @@ export function buildEvalPrompt(input: string, context: string): string {
     '',
     'Respond to the user request below while respecting the context above.',
     'If the context indicates missing memory, degraded mode, or offline mode, state that explicitly and do not fabricate.',
+    'Keep the answer concise and direct unless the task explicitly requires more detail.',
     '',
     input,
   ].join('\n');
@@ -164,6 +263,12 @@ export function createRealGenerator(provider: string, model: string): ResponseGe
   return {
     name: `${provider}/${model}`,
     async generate(input: string, context: string) {
+      const prompt = buildEvalPrompt(input, context);
+
+      if (shouldUseDirectOllamaEvalPath(provider)) {
+        return generateDirectOllamaEval(model, prompt);
+      }
+
       const start = Date.now();
 
       // Dynamic import to avoid circular dependencies
@@ -178,8 +283,6 @@ export function createRealGenerator(provider: string, model: string): ResponseGe
         | 'openai'
         | 'claude'
         | 'local';
-
-      const prompt = buildEvalPrompt(input, context);
 
       const response = await aiOrchestrator.generate(prompt, [], {
         preferredProvider,
