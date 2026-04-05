@@ -107,6 +107,7 @@
     "audit:deployment": "./scripts/audit/05-deployment-audit.sh",
     "audit:auto-fix": "./scripts/audit/06-auto-fix.sh",
     "audit:quality-gates": "./scripts/audit/07-quality-gates.sh",
+    "audit:tauri3-readiness": "./scripts/audit/08-tauri3-upgrade-readiness.sh",
     "clean": "rm -rf node_modules target dist",
     "clean:vite": "rm -rf node_modules/.vite dist/.vite-cache",
     "clean:all": "rm -rf node_modules/.vite dist node_modules target",
