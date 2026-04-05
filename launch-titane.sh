@@ -45,10 +45,10 @@ check_artifact_guard() {
 }
 
 declare -a candidates=(
-	"$ROOT_DIR/runtime/stable/Titan-Stable_27.0.5_amd64.AppImage"
-	"$ROOT_DIR/runtime/stable/TITANE-Infinity_27.2.0_amd64.AppImage"
-	"$ROOT_DIR/distribution/v27.2.0/appimage/TITANE-Infinity_27.2.0_amd64.AppImage"
-	"$ROOT_DIR/deployment/latest/TITANE-Infinity_27.2.0_amd64.AppImage"
+	"$ROOT_DIR/deployment/latest/Titan-Stable_29.0.0_amd64.AppImage"
+	"$ROOT_DIR/runtime/stable/Titan-Stable_29.0.0_amd64.AppImage"
+	"$ROOT_DIR/deployment/latest/TITANE-Infinity_29.0.0_amd64.AppImage"
+	"$ROOT_DIR/runtime/stable/TITANE-Infinity_29.0.0_amd64.AppImage"
 	"$ROOT_DIR/deployment/latest/titane-infinity"
 	"$HOME/.local/share/titane-infinity/titane-infinity.AppImage"
 	"$HOME/.local/bin/titane-infinity"
@@ -78,6 +78,18 @@ for candidate in "${candidates[@]}"; do
 	fi
 
 	echo "[launch-titane] launching: $candidate"
+	if [[ "$candidate" == *.AppImage ]]; then
+		set +e
+		mount_probe_out="$(timeout 2s "$candidate" --appimage-mount 2>&1)"
+		mount_probe_status=$?
+		set -e
+		mount_probe_first_line="$(printf '%s\n' "$mount_probe_out" | head -n 1)"
+
+		if [[ "$mount_probe_out" == *"Cannot mount AppImage"* || "$mount_probe_out" == *"mount failed"* || "$mount_probe_out" == *"fusermount"* || ( $mount_probe_status -ne 0 && "$mount_probe_first_line" != /* ) ]]; then
+			echo "[launch-titane] FUSE unavailable, retrying with --appimage-extract-and-run"
+			exec "$candidate" --appimage-extract-and-run "$@"
+		fi
+	fi
 	exec "$candidate" "$@"
 done
 
