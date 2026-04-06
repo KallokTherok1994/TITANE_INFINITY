@@ -229,6 +229,15 @@ const TotalDevPage = lazy(() =>
   import('./pages/TotalDevPage').then(m => ({ default: m.TotalDevPage }))
 );
 
+const AdminPage = lazy(() => import('./pages/AdminPage'));
+const PerfectFusionDashboard = lazy(() => import('./pages/PerfectFusionDashboard'));
+const UltimateOptimizationDashboard = lazy(() => import('./pages/UltimateOptimizationDashboard'));
+const RealityCenter = lazy(() => import('./pages/RealityCenter'));
+const CreationStudio = lazy(() => import('./pages/CreationStudio'));
+const EvolutionMonitor = lazy(() => import('./pages/EvolutionMonitor'));
+const SingularityMonitor = lazy(() => import('./pages/SingularityMonitor'));
+
+
 const emitBootMarker = (marker: string): void => {
   if (typeof window === 'undefined') {
     return;
