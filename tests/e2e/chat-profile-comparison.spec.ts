@@ -41,9 +41,35 @@ const getChatInput = (page: Page) =>
 
 const getSendButton = (page: Page) => page.getByTestId('chat-send');
 
+const gotoWithRetry = async (page: Page, url: string, maxAttempts = 3) => {
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    try {
+      await page.goto(url, { waitUntil: 'load', timeout: 30000 });
+      return;
+    } catch (error) {
+      lastError = error;
+      const message = error instanceof Error ? error.message : String(error);
+      const isTransientConnectionError = /ERR_CONNECTION_REFUSED|ECONNREFUSED/.test(message);
+
+      if (!isTransientConnectionError || attempt === maxAttempts) {
+        throw error;
+      }
+
+      console.warn(
+        `[PROFILE-COMPARISON] transient dev-server restart during goto, retry ${attempt}/${maxAttempts}`
+      );
+      await page.waitForTimeout(1500);
+    }
+  }
+
+  throw lastError instanceof Error ? lastError : new Error(String(lastError));
+};
+
 const openConversationSurface = async (page: Page) => {
   await enableChatMeasurementMode(page);
-  await page.goto('/');
+  await gotoWithRetry(page, '/');
   await expect(page.getByTestId('page-titane')).toBeVisible({ timeout: 60000 });
   await page.getByTestId('tab-conversation').click();
   await expect(page.getByTestId('page-conversation')).toBeVisible({ timeout: 15000 });

@@ -120,11 +120,18 @@ echo "── [3/8] playwright e2e ──"
 E2E_EXIT=0
 pnpm run test:e2e 2>&1 | tee /tmp/e2e_out_$$.txt | tail -6 || E2E_EXIT=$?
 E2E_FAIL=$(grep -oP '\d+(?= failed)' /tmp/e2e_out_$$.txt 2>/dev/null | tail -1 || echo "0")
-if [[ $E2E_EXIT -eq 0 ]] && [[ "${E2E_FAIL:-0}" -eq 0 ]]; then
-  E2E_PASS=$(grep -oP '\d+(?= passed)' /tmp/e2e_out_$$.txt 2>/dev/null | tail -1 || echo "?")
-  score "e2e" 1 "playwright ${E2E_PASS} passed, 0 failed"
+E2E_PASS=$(grep -oP '\d+(?= passed)' /tmp/e2e_out_$$.txt 2>/dev/null | tail -1 || echo "0")
+
+# Playwright can surface a managed webServer cleanup as exit 143 even when the suite itself
+# completed with zero test failures. Treat that case as PASS only with explicit evidence.
+if [[ ( $E2E_EXIT -eq 0 || $E2E_EXIT -eq 143 ) ]] && [[ "${E2E_FAIL:-0}" -eq 0 ]] && [[ "${E2E_PASS:-0}" -gt 0 ]]; then
+  if [[ $E2E_EXIT -eq 143 ]]; then
+    score "e2e" 1 "playwright ${E2E_PASS} passed, 0 failed (exit=143 cleanup tolerated)"
+  else
+    score "e2e" 1 "playwright ${E2E_PASS} passed, 0 failed"
+  fi
 else
-  score "e2e" 0 "playwright failed (exit=$E2E_EXIT, failures=${E2E_FAIL:-?})"
+  score "e2e" 0 "playwright failed (exit=$E2E_EXIT, failures=${E2E_FAIL:-?}, passed=${E2E_PASS:-0})"
 fi
 rm -f /tmp/e2e_out_$$.txt
 
