@@ -62,7 +62,7 @@ describe('TauriProtector memory truth', () => {
         };
       }
     ).createFallbackResponse('total_dev_unlock', new Error('invoke unavailable'), {
-      token: '895d3d67cc9d3b3698b59e35818c7ac9f06c3fe710c48e69a80908ca5ad999a8',
+      token: 'lock-check-input',
     });
 
     expect(result).toMatchObject({
