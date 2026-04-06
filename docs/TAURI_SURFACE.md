@@ -3,7 +3,7 @@
 **Version** : 1.0.0  
 **Status** : 🔒 SEALED (Production Certification P0-2)  
 **Date** : 15 janvier 2026  
-**Last Updated** : 2026-04-06 (stable allowlist sync `v29.0.0`)  
+**Last Updated** : 2026-04-06 (stable allowlist sync `v30.0.0`)  
 
 ---
 
@@ -127,7 +127,7 @@ Toute modification de l'allowlist stable doit être documentée et justifiée.
 
 #### 1.1 Sync complémentaire — stable allowlist documentée (2026-04-06)
 
-> Alignement append-only avec `src-tauri/allowlist.whitelist.stable.json` pour la surface active `v29.0.0`.  
+> Alignement append-only avec `src-tauri/allowlist.whitelist.stable.json` pour la surface active `v30.0.0`.  
 > Référence : `218` entrées allowlist brutes / `204` noms de commandes uniques.
 
 ```json

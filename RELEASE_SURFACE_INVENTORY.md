@@ -119,3 +119,35 @@ Canonical target version: **29.0.0**
 > v29.0.0 is the active canonical release stream for repository + deployment metadata as of 2026-04-05.
 > Current stable deployment truth remains `AppImage + DEB`; any additional DEB/RPM checksum rows are retained as secondary build-output proof, not as a second active deployment matrix.
 > No artifact checksums can be claimed for v28.5.0 without actual build proof.
+
+---
+
+## Addendum — 2026-04-06 — TITANE∞ v30.0.0 Major Release
+
+Session: `PROD_RELEASE_30_0_0`
+Canonical target version: **30.0.0**
+
+### Updated Current Surfaces
+
+| File / Surface | Version | Action |
+|---|---|---|
+| `package.json` | `30.0.0` | UPDATED_TO_30_0_0 |
+| `src-tauri/Cargo.toml` | `30.0.0` | UPDATED_TO_30_0_0 |
+| `src-tauri/tauri.conf.json` | `30.0.0` | UPDATED_TO_30_0_0 |
+| `runtime/stable/tauri.conf.json` | `30.0.0` | UPDATED_TO_30_0_0 |
+| `runtime/stable/manifest.json` | `30.0.0` | UPDATED_TO_30_0_0 |
+| `README.md` / `docs/README.md` | `v30.0.0` | UPDATED_TO_30_0_0 |
+| `deployment/latest/MANIFEST.json` | `30.0.0` | UPDATED_TO_30_0_0 |
+| `deployment/latest/CHECKSUMS.txt` / `SHA256SUMS.txt` | `30.0.0` artifact names | UPDATED_TO_30_0_0 |
+| `deployment/latest/SIZES.txt` | `30.0.0` artifact names | UPDATED_TO_30_0_0 |
+| `RELEASE_ARTIFACTS_CHECKSUMS_30.0.0.txt` | `30.0.0` | ADDED_AS_PROOF |
+
+### Artifact Status Summary — v30.0.0
+
+| Artifact | Status |
+|---|---|
+| `Titan-Stable_30.0.0_amd64.AppImage` | ⏳ PENDING_BUILD |
+| `Titan-Stable_30.0.0_amd64.deb` | ⏳ PENDING_BUILD |
+
+> v30.0.0 is the active canonical release stream for repository + deployment metadata as of 2026-04-06.
+> Build tokens required: GO_FOR_PROD_BUILD__TITANE_INFINITY

@@ -1,7 +1,7 @@
 {
   "deployment": {
     "timestamp": "2026-04-06 12:07:06 UTC",
-    "version": "29.0.0",
+    "version": "30.0.0",
     "commit": "466844f1c50e01f76f72e3f1b03417fd93dd183c",
     "branch": "tauri-3-upgrade",
     "certification": "TITANE_INFINITY_RELEASE_20260406_080417_CERTIFIED",

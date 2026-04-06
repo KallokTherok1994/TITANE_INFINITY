@@ -165,7 +165,7 @@ command: <nom>
 |---------|--------|-------------|---------------|---------|-------|-----------|-------|
 | `set_state` | **STABLE** | memory | tests/contract/tauri.contract.test.ts | docs/API_SURFACE.md | v26.3.0 | v26.3.0 | State bridge set (P5→P6) |
 | `delete_state` | **STABLE** | memory | tests/contract/tauri.contract.test.ts | docs/API_SURFACE.md | v26.3.0 | v26.3.0 | State bridge delete (P5→P6) |
-| `identity_get_active_voice_profile` | **STABLE** | memory, audio | tests/contract/tauri.contract.test.ts | docs/API_SURFACE.md | v29.0.0 | v29.0.0 | Lit le profil vocal actif backend pour hydrater la voix canonique (P6) |
+| `identity_get_active_voice_profile` | **STABLE** | memory, audio | tests/contract/tauri.contract.test.ts | docs/API_SURFACE.md | v30.0.0 | v30.0.0 | Lit le profil vocal actif backend pour hydrater la voix canonique (P6) |
 | `identity_set_matrix` | **STABLE** | memory | tests/contract/tauri.contract.test.ts | docs/API_SURFACE.md | v26.3.0 | v26.3.0 | Identity matrix update (P5→P6) |
 
 ### Logging

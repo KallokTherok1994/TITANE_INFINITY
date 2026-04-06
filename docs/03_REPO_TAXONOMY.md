@@ -40,8 +40,8 @@ Invariant : **pas d'import inverse Ring1/Ring2 vers Ring3/Ring4**.
 
 | Fichier | Version déclarée | Synchronisé ? |
 |---------|-----------------|--------------|
-| `package.json` | 29.0.0 | ✅ |
-| `src-tauri/Cargo.toml` | 29.0.0 | ✅ |
+| `package.json` | 30.0.0 | ✅ |
+| `src-tauri/Cargo.toml` | 30.0.0 | ✅ |
 | `deployment/latest/MANIFEST.json` | 28.88.0 | ❌ désynchronisé |
 
 **Verdict version** : PARTIAL — deployment MANIFEST n'est pas à jour (pre-existing, hors scope audit actuel).
