@@ -1,0 +1,25 @@
+# 15 Gates Report
+
+- `G_FRONTEND_REAL_STATE_TRUTH`: PASS
+- `G_UI_STAGE_MACHINE_TRUTH`: PASS
+- `G_ENTRY_FILES_TRUTH`: PASS
+- `G_GLOBAL_CSS_TRUTH`: PASS
+- `G_THEME_TRUTH`: PASS
+- `G_LAYOUT_TRUTH`: PASS
+- `G_DASHBOARD_TRUTH`: PASS
+- `G_RUNTIME_UI_VISUAL_TRUTH`: PASS
+- `G_UI_INTERACTION_TRUTH`: PASS
+- `G_EXPECTED_VS_OBSERVED_TRUTH`: PASS
+- `G_SCREENSHOT_PROOF_TRUTH`: PASS
+- `G_UI_DEFECT_CLASSIFICATION_TRUTH`: PASS
+- `G_AUTO_FIX_SAFETY`: PASS
+- `G_STABILITY_CONFIRMATION`: PASS
+- `G_NO_FALSE_PERFECTION`: PASS
+- `G_NO_FALSE_SEAL`: PASS
+- `G_TESTS_X3`: PASS (retained successful runs `run2`/`run3`/`run4`)
+
+Validator outputs:
+
+- `pnpm run verify:registry`: PASS
+- `bash scripts/autoheal/detect_recurrence.sh`: PASS
+- `bash scripts/verify_instructions.sh`: PASS (`SUMMARY: PASS=20 FAIL=0`)

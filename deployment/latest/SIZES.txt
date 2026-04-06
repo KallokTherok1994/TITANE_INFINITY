@@ -1,2 +1,4 @@
-89217528 bytes  TITANE-Infinity_27.0.5_amd64.AppImage
-13798174 bytes  TITANE-Infinity_27.0.5_amd64.deb
+# Artifact Sizes
+# Generated: 2026-04-06T12:07:06Z
+Titan-Stable_30.0.0_amd64.AppImage: 90270200 bytes (87M)
+Titan-Stable_30.0.0_amd64.deb: 17480668 bytes (17M)

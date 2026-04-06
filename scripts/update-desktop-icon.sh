@@ -4,7 +4,7 @@
 # Mise à jour automatique de l'icône dans le menu des applications
 # ═══════════════════════════════════════════════════════════════
 
-set -e
+set -euo pipefail
 
 # Couleurs
 GREEN='\033[0;32m'
@@ -22,27 +22,43 @@ PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 ICON_DIR="$PROJECT_DIR/src-tauri/icons"
 DESKTOP_FILE="$PROJECT_DIR/titane-infinity.desktop"
 DESKTOP_INSTALL_DIR="$HOME/.local/share/applications"
+LAUNCHER_SCRIPT="$PROJECT_DIR/launch-titane.sh"
+
+extract_version_from_path() {
+    local artifact_path="$1"
+    local artifact_name=""
+
+    artifact_name="$(basename "$artifact_path")"
+    if [[ "$artifact_name" =~ ([0-9]+\.[0-9]+\.[0-9]+) ]]; then
+        printf '%s' "${BASH_REMATCH[1]}"
+    fi
+}
 
 # Créer le répertoire si nécessaire
 mkdir -p "$DESKTOP_INSTALL_DIR"
 
 echo -e "${YELLOW}[1/4]${NC} Mise à jour du fichier .desktop avec chemins actuels..."
 
-# Détecter l'exécutable à utiliser (priorité: AppImage stable → cargo release → cargo debug)
+# Détecter l'exécutable à utiliser (priorité: AppImage la plus récente déployée/stable → binaire installé → cargo release → cargo debug)
 BINARY_PATH=""
 
 shopt -s nullglob
+DEPLOY_APPIMAGES=("$PROJECT_DIR"/deployment/latest/*.AppImage)
 STABLE_APPIMAGES=("$PROJECT_DIR"/runtime/stable/*.AppImage)
+BUNDLE_APPIMAGES=("$PROJECT_DIR"/src-tauri/target/release/bundle/appimage/*.AppImage)
+ALL_APPIMAGES=("${DEPLOY_APPIMAGES[@]}" "${STABLE_APPIMAGES[@]}" "${BUNDLE_APPIMAGES[@]}")
 shopt -u nullglob
 
-if [ ${#STABLE_APPIMAGES[@]} -gt 0 ]; then
-    # Prendre la plus récente
-    BINARY_PATH="$(ls -t "${STABLE_APPIMAGES[@]}" 2>/dev/null | head -n 1)"
-    echo -e "      ✓ AppImage Stable trouvée"
-elif [ -f "$PROJECT_DIR/src-tauri/target/release/titane-infinity" ]; then
+if [ ${#ALL_APPIMAGES[@]} -gt 0 ]; then
+    BINARY_PATH="$(ls -1t "${ALL_APPIMAGES[@]}" 2>/dev/null | head -n 1)"
+    echo -e "      ✓ AppImage la plus récente trouvée"
+elif [ -x "/usr/bin/titane-infinity" ]; then
+    BINARY_PATH="/usr/bin/titane-infinity"
+    echo -e "      ✓ Binaire installé trouvé (/usr/bin)"
+elif [ -x "$PROJECT_DIR/src-tauri/target/release/titane-infinity" ]; then
     BINARY_PATH="$PROJECT_DIR/src-tauri/target/release/titane-infinity"
     echo -e "      ✓ Binaire Release trouvé"
-elif [ -f "$PROJECT_DIR/src-tauri/target/debug/titane-infinity" ]; then
+elif [ -x "$PROJECT_DIR/src-tauri/target/debug/titane-infinity" ]; then
     BINARY_PATH="$PROJECT_DIR/src-tauri/target/debug/titane-infinity"
     echo -e "      ✓ Binaire Debug trouvé"
 else
@@ -52,6 +68,7 @@ fi
 
 # Assurer les répertoires de logs attendus par l'action "Logs"
 mkdir -p "$HOME/.titane/logs"
+chmod +x "$LAUNCHER_SCRIPT" 2>/dev/null || true
 
 # Si on lance une AppImage, vérifier si FUSE est utilisable.
 # En environnement restreint, le montage AppImage peut échouer ("Operation not permitted");
@@ -78,17 +95,30 @@ if [ ! -f "$ICON_PATH" ]; then
     ICON_PATH="$ICON_DIR/icon.png"
 fi
 
-# Version affichée dans le menu (évite la confusion quand plusieurs runtimes cohabitent)
-APP_VERSION=""
-if [ -f "$PROJECT_DIR/runtime/stable/tauri.conf.json" ]; then
-    APP_VERSION="$(grep -m1 '"version"' "$PROJECT_DIR/runtime/stable/tauri.conf.json" | sed -E 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')"
+# Version affichée dans le menu : reflète le binaire réellement sélectionné.
+CANONICAL_VERSION=""
+if [ -f "$PROJECT_DIR/src-tauri/tauri.conf.json" ]; then
+    CANONICAL_VERSION="$(grep -m1 '"version"' "$PROJECT_DIR/src-tauri/tauri.conf.json" | sed -E 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')"
 fi
-if [ -z "$APP_VERSION" ] && [ -f "$PROJECT_DIR/package.json" ]; then
-    APP_VERSION="$(grep -m1 '"version"' "$PROJECT_DIR/package.json" | sed -E 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')"
+if [ -z "$CANONICAL_VERSION" ] && [ -f "$PROJECT_DIR/runtime/stable/tauri.conf.json" ]; then
+    CANONICAL_VERSION="$(grep -m1 '"version"' "$PROJECT_DIR/runtime/stable/tauri.conf.json" | sed -E 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')"
+fi
+if [ -z "$CANONICAL_VERSION" ] && [ -f "$PROJECT_DIR/package.json" ]; then
+    CANONICAL_VERSION="$(grep -m1 '"version"' "$PROJECT_DIR/package.json" | sed -E 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')"
+fi
+
+APP_VERSION="$(extract_version_from_path "$BINARY_PATH")"
+if [ -z "$APP_VERSION" ]; then
+    APP_VERSION="$CANONICAL_VERSION"
 fi
 if [ -z "$APP_VERSION" ]; then
     APP_VERSION="unknown"
 fi
+
+if [ -n "$CANONICAL_VERSION" ] && [ -n "$APP_VERSION" ] && [ "$APP_VERSION" != "$CANONICAL_VERSION" ]; then
+    echo -e "      ${YELLOW}⚠ Launcher version aligned to selected binary: $APP_VERSION (canonical repo version: $CANONICAL_VERSION)${NC}"
+fi
+
 APP_NAME="TITANE∞ v$APP_VERSION"
 
 # Créer le fichier .desktop mis à jour
@@ -98,7 +128,7 @@ Version=1.0
 Type=Application
 Name=$APP_NAME
 Comment=🏛️ Cognitive OS - Multi-Provider AI - Production Perfect
-Exec=$EXEC_BASE
+Exec=$LAUNCHER_SCRIPT
 Icon=$ICON_PATH
 Terminal=false
 Categories=Development;Utility;AI;
@@ -109,7 +139,7 @@ Actions=DevMode;Logs;Config;
 
 [Desktop Action DevMode]
 Name=🔧 Developer Mode
-Exec=$EXEC_BASE --dev
+Exec=$LAUNCHER_SCRIPT --dev
 
 [Desktop Action Logs]
 Name=📋 View Logs

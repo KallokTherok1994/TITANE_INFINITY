@@ -4,12 +4,15 @@
  */
 
 import { createLogger } from '@/utils/logger';
+import { circuitBreaker } from './circuitBreaker';
 
 /**
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ v19.2Ω — AUTO-HEAL ENGINE (NOUVEAU MODULE)
- *   PHASE 6Ω: Moteur d'auto-guérison permanent • Détection • Classification • Réparation
- *   Pipeline: detectError() → classify() → repair() → reset() → fallback() → log() → restore()
+ *   PHASE 6Ω: Error detection, classification, health tracking + circuit-breaker-backed recovery.
+ *   Pipeline: detectError() → classify() → action() → circuitBreaker.reset/recordFailure() → update-health-label() → log()
+ *   Recovery actions (restart/purge/reset/reconnect/isolate) are wired to circuitBreaker.
+ *   restoreFromBackup = circuitBreaker reset (no snapshot system exists).
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -488,13 +491,9 @@ class AutoHealEngine {
   private async restartProvider(source: string): Promise<boolean> {
     try {
       logger.debug(`Restarting provider: ${source}`);
-
-      // Simulation restart (implémentation dépend du provider)
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      // Marquer comme redémarré
+      // Reset circuit breaker so the provider is allowed to execute on next call
+      circuitBreaker.reset(source);
       this.updateProviderHealth(source, 'restart');
-
       return true;
     } catch (error) {
       logger.error('Restart failed', { source, error });
@@ -505,8 +504,9 @@ class AutoHealEngine {
   private async activateFallback(source: string): Promise<boolean> {
     try {
       logger.debug(`Activating fallback for: ${source}`);
-
-      // Toujours réussir car titane-local est toujours disponible
+      // Open the failing provider's circuit so orchestrator routes to next in chain
+      // titane-local is always the last-resort fallback in the orchestrator chain
+      circuitBreaker.recordFailure(source);
       return true;
     } catch (error) {
       logger.error('Fallback activation failed', { error });
@@ -517,10 +517,8 @@ class AutoHealEngine {
   private async purgeCache(source: string): Promise<boolean> {
     try {
       logger.debug(`Purging cache for: ${source}`);
-
-      // Simulation purge cache
-      await new Promise(resolve => setTimeout(resolve, 200));
-
+      // Reset circuit state forces a fresh availability probe on next call
+      circuitBreaker.reset(source);
       return true;
     } catch (error) {
       logger.error('Cache purge failed', { source, error });
@@ -531,12 +529,9 @@ class AutoHealEngine {
   private async resetConnection(source: string): Promise<boolean> {
     try {
       logger.debug(`Resetting connection: ${source}`);
-
-      // Simulation reset connection
-      await new Promise(resolve => setTimeout(resolve, 300));
-
+      // Hard-reset circuit breaker to CLOSED state
+      circuitBreaker.reset(source);
       this.updateProviderHealth(source, 'reset');
-
       return true;
     } catch (error) {
       logger.error('Connection reset failed', { source, error });
@@ -547,10 +542,9 @@ class AutoHealEngine {
   private async isolateProvider(source: string): Promise<boolean> {
     try {
       logger.debug(`Isolating provider: ${source}`);
-
-      // Marquer comme isolé
+      // Force circuit OPEN by recording failures past threshold
+      for (let i = 0; i < 6; i++) circuitBreaker.recordFailure(source);
       this.updateProviderHealth(source, 'isolate');
-
       return true;
     } catch (error) {
       logger.error('Provider isolation failed', { source, error });
@@ -561,12 +555,9 @@ class AutoHealEngine {
   private async reconnectProvider(source: string): Promise<boolean> {
     try {
       logger.debug(`Reconnecting provider: ${source}`);
-
-      // Simulation reconnection
-      await new Promise(resolve => setTimeout(resolve, 800));
-
+      // Reset circuit to CLOSED — allows probe on next call
+      circuitBreaker.reset(source);
       this.updateProviderHealth(source, 'reconnect');
-
       return true;
     } catch (error) {
       logger.error('Reconnection failed', { source, error });
@@ -577,12 +568,9 @@ class AutoHealEngine {
   private async restoreFromBackup(source: string): Promise<boolean> {
     try {
       logger.debug(`Restoring from backup: ${source}`);
-
-      // Simulation restoration
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
+      // No snapshot/backup system exists — reset circuit as best-effort recovery
+      circuitBreaker.reset(source);
       this.updateProviderHealth(source, 'restore');
-
       return true;
     } catch (error) {
       logger.error('Backup restoration failed', { source, error });
@@ -628,14 +616,14 @@ class AutoHealEngine {
       case 'restart':
       case 'reset':
       case 'reconnect':
-      case 'restore':
+      case 'restore': {
         current.failureCount = Math.max(0, current.failureCount - 1);
-        if (current.failureCount === 0) {
-          current.status = 'healthy';
-        } else if (current.failureCount < 3) {
-          current.status = 'degraded';
+        const recoveredStatus = current.failureCount === 0 ? 'healthy' : 'degraded';
+        if (current.failureCount < 3) {
+          current.status = recoveredStatus;
         }
         break;
+      }
 
       case 'isolate':
         current.status = 'offline';

@@ -6,6 +6,7 @@
 
 import React, { useState } from 'react';
 import { useProductionHealthTelemetry } from '@/services/telemetry/useProductionHealthTelemetry';
+import type { ProductionHealthErrorKind } from '@/services/telemetry/useProductionHealthTelemetry';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import type { ProductionHealthStatus } from '@/types/telemetry';
 import './ProductionHealthPanel.css';
@@ -38,8 +39,51 @@ const getStatusLabel = (status: ProductionHealthStatus): string => {
   }
 };
 
+const getNoDataMessage = (
+  kind: ProductionHealthErrorKind | null
+): { title: string; detail: string } => {
+  switch (kind) {
+    case 'SOURCE_UNAVAILABLE':
+      return {
+        title: '📂 Source absente',
+        detail:
+          'Le fichier de télémétrie production est absent. La collecte doit être démarrée sur le système cible.',
+      };
+    case 'SOURCE_EMPTY':
+      return {
+        title: '📋 Aucune donnée collectée',
+        detail:
+          'Le fichier de télémétrie existe mais ne contient aucun échantillon. En attente de la première collecte.',
+      };
+    case 'SCHEMA_DRIFT':
+      return {
+        title: '⚠️ Structure CSV incompatible',
+        detail:
+          'Le fichier CSV existe mais sa structure ne correspond pas au schéma attendu. Vérifier les en-têtes et le délimiteur.',
+      };
+    case 'PARSER_ERROR':
+      return {
+        title: '⚠️ Erreur de lecture CSV',
+        detail:
+          'Le fichier de télémétrie existe mais contient des lignes malformées ou un encodage inattendu. Vérifier la structure CSV.',
+      };
+    case 'IPC_ERROR':
+      return {
+        title: '🔌 Erreur IPC',
+        detail:
+          "La commande Tauri n'a pas pu s'exécuter. Vérifier la configuration runtime.",
+      };
+    default:
+      return {
+        title: '❓ Source indisponible',
+        detail:
+          'Les données de production ne sont pas accessibles pour une raison inconnue.',
+      };
+  }
+};
+
 export const ProductionHealthPanel: React.FC = () => {
-  const { data, loading, error, refresh } = useProductionHealthTelemetry({
+  const { data, loading, error, errorKind, refresh } = useProductionHealthTelemetry({
     refreshIntervalMs: 60000,
     autoRefresh: true,
   });
@@ -65,10 +109,14 @@ export const ProductionHealthPanel: React.FC = () => {
     }
 
     if (error && !data) {
+      const noDataMsg = getNoDataMessage(errorKind ?? null);
       return (
-        <div className="ph-state ph-error">
-          <p className="ph-error-title">⚠️ Erreur de chargement</p>
-          <p className="ph-error-message">{error}</p>
+        <div className="ph-state ph-error" data-testid="production-health-no-data">
+          <p className="ph-error-title">{noDataMsg.title}</p>
+          <p className="ph-error-message">{noDataMsg.detail}</p>
+          <p className="ph-error-kind" data-testid="production-health-error-kind">
+            {errorKind ?? 'UNKNOWN_ERROR'}
+          </p>
           <button className="ph-button ph-button-retry" onClick={refresh}>
             Réessayer
           </button>
@@ -78,9 +126,8 @@ export const ProductionHealthPanel: React.FC = () => {
 
     if (!data) {
       return (
-        <div className="ph-state ph-unknown">
-          <p>Les données de production ne sont pas encore disponibles.</p>
-          <p className="ph-hint">La collection commence au déploiement du jour 1.</p>
+        <div className="ph-state ph-unknown" data-testid="production-health-no-data">
+          <p>Chargement initial des données de production...</p>
           <button className="ph-button" onClick={refresh}>
             Vérifier
           </button>
@@ -94,7 +141,7 @@ export const ProductionHealthPanel: React.FC = () => {
     return (
       <div className="ph-content">
         <div className="ph-header">
-          <h3 className="ph-title">Production V25 Week 1</h3>
+          <h3 className="ph-title">Santé Production</h3>
           <div
             className="ph-status-badge"
             style={{ backgroundColor: getStatusColor(data.status) }}
@@ -190,7 +237,7 @@ export const ProductionHealthPanel: React.FC = () => {
         </div>
 
         <div className="ph-footer">
-          <p className="ph-source">Source: CSV local (Tauri IPC) · V26 Telemetry</p>
+          <p className="ph-source">Source : CSV local (Tauri IPC) · Télémétrie V29</p>
         </div>
       </div>
     );

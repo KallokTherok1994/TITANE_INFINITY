@@ -96,12 +96,13 @@ describe('EvolutionTimeline', () => {
     fireEvent.click(screen.getByRole('button', { name: /chrono-mock/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/phase 1:\s*achievements & charts/i)).toBeInTheDocument();
+      // First event is v29.0 — DEV Cockpit Fusion (type: consolidation)
+      expect(screen.getByText(/v29\.0.*dev cockpit/i)).toBeInTheDocument();
 
       const detailsPanel = document.querySelector('.event-details-panel');
       expect(detailsPanel).toBeTruthy();
       expect(
-        within(detailsPanel as HTMLElement).getByText(/^milestones$/i)
+        within(detailsPanel as HTMLElement).getByText(/^consolidations$/i)
       ).toBeInTheDocument();
     });
   });

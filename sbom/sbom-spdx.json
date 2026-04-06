@@ -1,0 +1,1464 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "titane-infinity-28.88.0",
+  "documentNamespace": "https://github.com/KallokTherok1994/TITANE_INFINITY/sbom/titane-infinity-28.88.0-2026-04-03T13:36:46Z",
+  "creationInfo": {
+    "created": "2026-04-03T13:36:46Z",
+    "creators": ["Tool: TITANE∞ generate-sbom.sh", "Organization: KallokTherok1994"]
+  },
+  "documentDescribes": ["SPDXRef-Root"],
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-Root",
+      "name": "titane-infinity",
+      "versionInfo": "28.88.0",
+      "downloadLocation": "https://github.com/KallokTherok1994/TITANE_INFINITY",
+      "filesAnalyzed": false,
+      "supplier": "Organization: KallokTherok1994"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-0",
+      "name": "@axe-core/playwright",
+      "versionInfo": "4.11.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@axe-core/playwright@4.11.1"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-1",
+      "name": "@axe-core/react",
+      "versionInfo": "4.11.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@axe-core/react@4.11.1"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-2",
+      "name": "@chromatic-com/storybook",
+      "versionInfo": "5.0.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@chromatic-com/storybook@5.0.2"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-3",
+      "name": "@eslint/eslintrc",
+      "versionInfo": "3.3.5",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@eslint/eslintrc@3.3.5"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-4",
+      "name": "@eslint/js",
+      "versionInfo": "9.39.4",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@eslint/js@9.39.4"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-5",
+      "name": "@playwright/test",
+      "versionInfo": "1.58.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@playwright/test@1.58.2"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-6",
+      "name": "@sentry/react",
+      "versionInfo": "10.45.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@sentry/react@10.45.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-7",
+      "name": "@storybook/addon-a11y",
+      "versionInfo": "10.3.3",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@storybook/addon-a11y@10.3.3"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-8",
+      "name": "@storybook/addon-docs",
+      "versionInfo": "10.3.3",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@storybook/addon-docs@10.3.3"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-9",
+      "name": "@storybook/addon-onboarding",
+      "versionInfo": "10.3.3",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@storybook/addon-onboarding@10.3.3"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-10",
+      "name": "@storybook/addon-vitest",
+      "versionInfo": "10.3.3",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@storybook/addon-vitest@10.3.3"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-11",
+      "name": "@storybook/react-vite",
+      "versionInfo": "10.3.3",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@storybook/react-vite@10.3.3"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-12",
+      "name": "@tailwindcss/postcss",
+      "versionInfo": "4.2.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@tailwindcss/postcss@4.2.2"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-13",
+      "name": "@tanstack/react-query",
+      "versionInfo": "5.95.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@tanstack/react-query@5.95.2"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-14",
+      "name": "@tauri-apps/api",
+      "versionInfo": "2.10.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@tauri-apps/api@2.10.1"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-15",
+      "name": "@tauri-apps/cli",
+      "versionInfo": "2.10.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@tauri-apps/cli@2.10.1"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-16",
+      "name": "@tauri-apps/plugin-dialog",
+      "versionInfo": "2.6.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@tauri-apps/plugin-dialog@2.6.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-17",
+      "name": "@tauri-apps/plugin-fs",
+      "versionInfo": "2.4.5",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@tauri-apps/plugin-fs@2.4.5"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-18",
+      "name": "@tauri-apps/plugin-http",
+      "versionInfo": "2.5.7",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@tauri-apps/plugin-http@2.5.7"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-19",
+      "name": "@tauri-apps/plugin-shell",
+      "versionInfo": "2.3.5",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@tauri-apps/plugin-shell@2.3.5"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-20",
+      "name": "@testing-library/dom",
+      "versionInfo": "10.4.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@testing-library/dom@10.4.1"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-21",
+      "name": "@testing-library/jest-dom",
+      "versionInfo": "6.9.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@testing-library/jest-dom@6.9.1"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-22",
+      "name": "@testing-library/react",
+      "versionInfo": "16.3.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@testing-library/react@16.3.2"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-23",
+      "name": "@testing-library/user-event",
+      "versionInfo": "14.6.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@testing-library/user-event@14.6.1"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-24",
+      "name": "@types/better-sqlite3",
+      "versionInfo": "7.6.13",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@types/better-sqlite3@7.6.13"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-25",
+      "name": "@types/node",
+      "versionInfo": "25.5.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@types/node@25.5.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-26",
+      "name": "@types/react",
+      "versionInfo": "19.2.14",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@types/react@19.2.14"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-27",
+      "name": "@types/react-dom",
+      "versionInfo": "19.2.3",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@types/react-dom@19.2.3"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-28",
+      "name": "@types/react-router-dom",
+      "versionInfo": "5.3.3",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@types/react-router-dom@5.3.3"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-29",
+      "name": "@types/react-window",
+      "versionInfo": "1.8.8",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@types/react-window@1.8.8"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-30",
+      "name": "@types/three",
+      "versionInfo": "0.182.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@types/three@0.182.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-31",
+      "name": "@types/uuid",
+      "versionInfo": "10.0.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@types/uuid@10.0.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-32",
+      "name": "@typescript-eslint/eslint-plugin",
+      "versionInfo": "8.57.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@typescript-eslint/eslint-plugin@8.57.2"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-33",
+      "name": "@typescript-eslint/parser",
+      "versionInfo": "8.57.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@typescript-eslint/parser@8.57.2"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-34",
+      "name": "@vitejs/plugin-react",
+      "versionInfo": "5.2.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@vitejs/plugin-react@5.2.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-35",
+      "name": "@vitest/browser",
+      "versionInfo": "4.1.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@vitest/browser@4.1.1"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-36",
+      "name": "@vitest/browser-playwright",
+      "versionInfo": "4.1.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@vitest/browser-playwright@4.1.1"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-37",
+      "name": "@vitest/coverage-v8",
+      "versionInfo": "4.1.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@vitest/coverage-v8@4.1.1"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-38",
+      "name": "@vitest/ui",
+      "versionInfo": "4.1.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@vitest/ui@4.1.1"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-39",
+      "name": "@wdio/cli",
+      "versionInfo": "9.27.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@wdio/cli@9.27.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-40",
+      "name": "@wdio/local-runner",
+      "versionInfo": "9.27.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@wdio/local-runner@9.27.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-41",
+      "name": "@wdio/mocha-framework",
+      "versionInfo": "9.27.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@wdio/mocha-framework@9.27.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-42",
+      "name": "@wdio/spec-reporter",
+      "versionInfo": "9.27.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@wdio/spec-reporter@9.27.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-43",
+      "name": "@xenova/transformers",
+      "versionInfo": "2.17.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/@xenova/transformers@2.17.2"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-44",
+      "name": "autoprefixer",
+      "versionInfo": "10.4.27",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/autoprefixer@10.4.27"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-45",
+      "name": "axe-core",
+      "versionInfo": "4.11.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/axe-core@4.11.1"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-46",
+      "name": "baseline-browser-mapping",
+      "versionInfo": "2.10.10",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/baseline-browser-mapping@2.10.10"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-47",
+      "name": "better-sqlite3",
+      "versionInfo": "12.8.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/better-sqlite3@12.8.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-48",
+      "name": "clsx",
+      "versionInfo": "2.1.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/clsx@2.1.1"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-49",
+      "name": "cross-env",
+      "versionInfo": "10.1.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/cross-env@10.1.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-50",
+      "name": "date-fns",
+      "versionInfo": "4.1.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/date-fns@4.1.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-51",
+      "name": "dompurify",
+      "versionInfo": "3.3.3",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/dompurify@3.3.3"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-52",
+      "name": "eslint",
+      "versionInfo": "9.39.4",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/eslint@9.39.4"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-53",
+      "name": "eslint-config-prettier",
+      "versionInfo": "10.1.8",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/eslint-config-prettier@10.1.8"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-54",
+      "name": "eslint-plugin-react",
+      "versionInfo": "7.37.5",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/eslint-plugin-react@7.37.5"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-55",
+      "name": "eslint-plugin-react-hooks",
+      "versionInfo": "7.0.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/eslint-plugin-react-hooks@7.0.1"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-56",
+      "name": "eslint-plugin-react-refresh",
+      "versionInfo": "0.5.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/eslint-plugin-react-refresh@0.5.2"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-57",
+      "name": "eslint-plugin-storybook",
+      "versionInfo": "10.3.3",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/eslint-plugin-storybook@10.3.3"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-58",
+      "name": "eventemitter3",
+      "versionInfo": "5.0.4",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/eventemitter3@5.0.4"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-59",
+      "name": "framer-motion",
+      "versionInfo": "12.38.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/framer-motion@12.38.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-60",
+      "name": "happy-dom",
+      "versionInfo": "20.8.4",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/happy-dom@20.8.4"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-61",
+      "name": "husky",
+      "versionInfo": "9.1.7",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/husky@9.1.7"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-62",
+      "name": "i18next",
+      "versionInfo": "25.10.5",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/i18next@25.10.5"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-63",
+      "name": "i18next-browser-languagedetector",
+      "versionInfo": "8.2.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/i18next-browser-languagedetector@8.2.1"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-64",
+      "name": "identity-obj-proxy",
+      "versionInfo": "3.0.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/identity-obj-proxy@3.0.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-65",
+      "name": "jsdom",
+      "versionInfo": "29.0.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/jsdom@29.0.1"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-66",
+      "name": "lightningcss",
+      "versionInfo": "1.32.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/lightningcss@1.32.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-67",
+      "name": "lint-staged",
+      "versionInfo": "16.4.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/lint-staged@16.4.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-68",
+      "name": "lucide-react",
+      "versionInfo": "0.577.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/lucide-react@0.577.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-69",
+      "name": "mocha",
+      "versionInfo": "11.7.5",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/mocha@11.7.5"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-70",
+      "name": "playwright",
+      "versionInfo": "1.58.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/playwright@1.58.2"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-71",
+      "name": "postcss",
+      "versionInfo": "8.5.8",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/postcss@8.5.8"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-72",
+      "name": "prettier",
+      "versionInfo": "3.8.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/prettier@3.8.1"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-73",
+      "name": "react",
+      "versionInfo": "19.2.4",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/react@19.2.4"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-74",
+      "name": "react-chrono",
+      "versionInfo": "3.3.3",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/react-chrono@3.3.3"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-75",
+      "name": "react-d3-tree",
+      "versionInfo": "3.6.6",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/react-d3-tree@3.6.6"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-76",
+      "name": "react-dom",
+      "versionInfo": "19.2.4",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/react-dom@19.2.4"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-77",
+      "name": "react-i18next",
+      "versionInfo": "16.6.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/react-i18next@16.6.2"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-78",
+      "name": "react-is",
+      "versionInfo": "19.2.4",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/react-is@19.2.4"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-79",
+      "name": "react-markdown",
+      "versionInfo": "10.1.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/react-markdown@10.1.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-80",
+      "name": "react-router",
+      "versionInfo": "7.13.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/react-router@7.13.2"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-81",
+      "name": "react-router-dom",
+      "versionInfo": "7.13.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/react-router-dom@7.13.2"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-82",
+      "name": "react-window",
+      "versionInfo": "2.2.7",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/react-window@2.2.7"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-83",
+      "name": "recharts",
+      "versionInfo": "3.8.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/recharts@3.8.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-84",
+      "name": "remark-gfm",
+      "versionInfo": "4.0.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/remark-gfm@4.0.1"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-85",
+      "name": "rollup-plugin-visualizer",
+      "versionInfo": "6.0.11",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/rollup-plugin-visualizer@6.0.11"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-86",
+      "name": "sonner",
+      "versionInfo": "2.0.7",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/sonner@2.0.7"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-87",
+      "name": "storybook",
+      "versionInfo": "10.3.3",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/storybook@10.3.3"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-88",
+      "name": "tailwindcss",
+      "versionInfo": "4.2.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/tailwindcss@4.2.2"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-89",
+      "name": "tauri",
+      "versionInfo": "0.15.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/tauri@0.15.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-90",
+      "name": "three",
+      "versionInfo": "0.183.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/three@0.183.2"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-91",
+      "name": "titane-infinity",
+      "versionInfo": "28.88.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:cargo/titane-infinity@28.88.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-92",
+      "name": "typescript",
+      "versionInfo": "5.9.3",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/typescript@5.9.3"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-93",
+      "name": "uuid",
+      "versionInfo": "13.0.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/uuid@13.0.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-94",
+      "name": "vite",
+      "versionInfo": "7.3.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/vite@7.3.1"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-95",
+      "name": "vite-plugin-compression",
+      "versionInfo": "0.5.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/vite-plugin-compression@0.5.1"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-96",
+      "name": "vite-tsconfig-paths",
+      "versionInfo": "6.1.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/vite-tsconfig-paths@6.1.1"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-97",
+      "name": "vitest",
+      "versionInfo": "4.1.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/vitest@4.1.1"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-98",
+      "name": "web-vitals",
+      "versionInfo": "5.1.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/web-vitals@5.1.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-99",
+      "name": "webdriverio",
+      "versionInfo": "9.27.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/webdriverio@9.27.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-100",
+      "name": "workbox-build",
+      "versionInfo": "7.4.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/workbox-build@7.4.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-101",
+      "name": "zod",
+      "versionInfo": "4.3.6",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/zod@4.3.6"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-102",
+      "name": "zustand",
+      "versionInfo": "5.0.12",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/zustand@5.0.12"
+        }
+      ]
+    }
+  ]
+}

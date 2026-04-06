@@ -1,0 +1,57 @@
+TITANE∞ v28.5.0 — RELEASE SEALED
+═══════════════════════════════════
+
+Date: 2026-03-20
+Version: 28.5.0
+Tag: v28.5.0
+HEAD: b85e7422f (deploy artifacts + metadata)
+
+PROD TOKENS RECEIVED:
+  ✓ GO_FOR_PROD_BUILD__TITANE_INFINITY
+  ✓ GO_FOR_PROD_DEPLOY__TITANE_INFINITY
+
+BUILD PIPELINE:
+  ✓ lint (ESLint clean)
+  ✓ format:check (Prettier — all files conform)
+  ✓ ollama:bundle (SHA: af6b471c)
+  ✓ vite build (3482 modules, 13.53s)
+  ✓ tauri build v28.5.0 (release, 9m 03s)
+  ✓ post-build.sh (desktop icon + deployment/latest updated)
+
+ARTIFACTS (deployment/latest):
+  TITANE-Infinity_28.5.0_amd64.AppImage   90M  96c847ea
+  TITANE-Infinity_28.5.0_amd64.deb        21M  ba582945
+  TITANE-Infinity-28.5.0-1.x86_64.rpm     21M  eb4937b4
+  Titan-Stable_28.5.0_amd64.AppImage      90M  96c847ea
+  Titan-Stable_28.5.0_amd64.deb           21M  ba582945
+  titane-infinity (binary)                40M  c3d0b5f8
+
+GOVERNANCE GATES:
+  ✓ verify_instructions.sh   — 20/20 PASS
+  ✓ detect_recurrence.sh     — 479 entries PASS
+  ✓ AutoHeal AH-2026-03-20-0117 captured
+
+GITHUB RELEASE:
+  https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v28.5.0
+  Assets: 8 (AppImage×2, DEB×2, RPM×1, SHA256SUMS, MANIFEST, SIZES)
+
+COMMITS (session):
+  8904d1089 — chore(release): bump canonical version to v28.5.0 + release docs prep
+  378ba810f — style: apply Prettier formatting — pre-build gate v28.5.0
+  b85e7422f — chore(release): deploy artifacts + metadata v28.5.0 [PROD]
+
+VERDICT: SEALED ✓
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PROD REDEPLOY — provider-recovery-triple-fix
+Token: GO_FOR_PROD_BUILD__TITANE_INFINITY
+Token: GO_FOR_PROD_DEPLOY__TITANE_INFINITY
+Date: 2026-03-21T12:14:51Z
+Commit: 114057d56
+Build commit: 664728743
+Fixes: AH-2026-03-21-PROVIDER-RECOVERY-TRIPLE (entry 505)
+Gates: verify_instructions PASS=20 FAIL=0 | detect_recurrence G_AH_RECURRENCE_GUARD_PASS
+Chat: Vitest 229 files/3384 tests PASS | Playwright 36/36 PASS | Ollama live PASS
+Assets on GitHub release v28.5.0: 8 files (AppImage+deb+rpm fresh)
+VERDICT: PASS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

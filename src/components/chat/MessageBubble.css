@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v25.4.2 — MESSAGE BUBBLE CSS (Premium Glass Tech System)
+ *   TITANE∞ v29.0.0 — MESSAGE BUBBLE CSS (Premium Glass Tech System)
  *   Design révolutionnaire avec glass morphism et aura effects
  * ═══════════════════════════════════════════════════════════════════
  */
@@ -656,6 +656,104 @@
   text-align: center;
 }
 
+.message-bubble-audio {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+.message-bubble-audio-status {
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(203, 213, 225, 0.82);
+}
+
+.message-bubble-audio-status-loading {
+  color: rgba(148, 163, 184, 0.85);
+  animation: tts-loading-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes tts-loading-pulse {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.message-bubble-audio-status-speaking {
+  color: rgba(103, 232, 249, 0.95);
+}
+
+.message-bubble-audio-status-paused {
+  color: rgba(250, 204, 21, 0.95);
+}
+
+.message-bubble-audio-status-completed,
+.message-bubble-audio-status-stopped {
+  color: rgba(134, 239, 172, 0.95);
+}
+
+.message-bubble-audio-status-error {
+  color: rgba(252, 165, 165, 0.95);
+}
+
+.message-bubble-audio-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.message-bubble-audio-button {
+  appearance: none;
+  border: 1px solid rgba(103, 232, 249, 0.26);
+  border-radius: 999px;
+  background: rgba(8, 47, 73, 0.42);
+  color: rgba(226, 232, 240, 0.96);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+.message-bubble-audio-button:hover:not(:disabled) {
+  background: rgba(14, 116, 144, 0.45);
+  border-color: rgba(103, 232, 249, 0.42);
+  transform: translateY(-1px);
+}
+
+.message-bubble-audio-button:disabled {
+  opacity: 0.66;
+  cursor: wait;
+}
+
+.message-bubble-audio-button-primary {
+  background: linear-gradient(
+    135deg,
+    rgba(6, 182, 212, 0.22) 0%,
+    rgba(14, 165, 233, 0.16) 100%
+  );
+}
+
+.message-bubble-audio-button-secondary {
+  border-color: rgba(248, 113, 113, 0.24);
+  background: rgba(69, 10, 10, 0.34);
+}
+
+.message-bubble-audio-button-secondary:hover:not(:disabled) {
+  background: rgba(127, 29, 29, 0.34);
+  border-color: rgba(252, 165, 165, 0.42);
+}
+
 /* ═══════════════════════════════════
    RESPONSIVE - Tablet
    ═══════════════════════════════════ */
@@ -697,6 +795,10 @@
 
   .message-bubble-assistant {
     margin-right: var(--spacing-md, 16px);
+  }
+
+  .message-bubble-audio-actions {
+    gap: 8px;
   }
 }
 
@@ -761,6 +863,16 @@
     margin-right: 8px;
   }
 
+  .message-bubble-audio {
+    margin-top: 12px;
+    gap: 10px;
+  }
+
+  .message-bubble-audio-button {
+    width: 100%;
+    justify-content: center;
+  }
+
   .typing-dot {
     width: 8px;
     height: 8px;
@@ -792,4 +904,42 @@
   .message-bubble:hover {
     transform: none;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   LOCK1 — PROVIDER_DISPLAY_TRUTH
+   Provider badge: shows actual provider used by backend per message
+   ═══════════════════════════════════════════════════════════════════ */
+
+.message-provider-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: 8px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  background: rgba(99, 102, 241, 0.12);
+  color: rgba(165, 180, 252, 0.85);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  vertical-align: middle;
+  user-select: none;
+  transition:
+    background 180ms ease,
+    color 180ms ease;
+  white-space: nowrap;
+}
+
+.message-provider-badge-mismatch {
+  background: rgba(245, 158, 11, 0.12);
+  color: rgba(252, 211, 77, 0.9);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.message-provider-mismatch-indicator {
+  font-size: 9px;
+  opacity: 0.8;
+  margin-left: 2px;
 }

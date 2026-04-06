@@ -1,0 +1,105 @@
+{
+  "runId": "run1",
+  "timestamp": "2026-03-11T14:18:42.595Z",
+  "rootRendered": true,
+  "whiteScreen": false,
+  "currentUrl": "tauri://localhost#/titane",
+  "appSourceMode": "embedded",
+  "hasTauriGlobal": true,
+  "appVersion": "",
+  "activeTabCount": 0,
+  "selectedTabCount": 0,
+  "inputPresent": false,
+  "sendPresent": false,
+  "responseZonePresent": false,
+  "tabFocusRulePresent": false,
+  "zoomComputed": "1",
+  "reflowReasonable": true,
+  "potentialDoubleScroll": false,
+  "shellVisible": true,
+  "navVisible": false,
+  "titanePageVisible": false,
+  "titaneHeaderVisible": false,
+  "titaneTabsVisible": false,
+  "chatInputVisible": false,
+  "sendBtnVisible": false,
+  "adminPageVisible": false,
+  "settingsPageVisible": false,
+  "frictions": [
+    {
+      "id": "FAIL_PAGE_RENDER",
+      "severity": "important",
+      "msg": "TITANE header not visible"
+    },
+    {
+      "id": "FAIL_TAB_NAVIGATION",
+      "severity": "important",
+      "msg": "No tabs found on TITANE surface"
+    },
+    {
+      "id": "FAIL_FOCUS_PERCEPTIBILITY",
+      "severity": "important",
+      "msg": ":focus-visible rule missing on .titane-inline-tabs — V18 regression?"
+    },
+    {
+      "id": "FAIL_CHAT_VISIBILITY",
+      "severity": "important",
+      "msg": "Chat input not visible on any surface"
+    },
+    {
+      "id": "FAIL_CHAT_VISIBILITY",
+      "severity": "important",
+      "msg": "Send button not visible"
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "s1_shell_initial",
+      "file": "run1_s1_shell_initial.png"
+    },
+    {
+      "name": "s1_shell_structure",
+      "file": "run1_s1_shell_structure.png"
+    },
+    {
+      "name": "s2_titane_navigated",
+      "file": "run1_s2_titane_navigated.png"
+    },
+    {
+      "name": "s2_titane_header",
+      "file": "run1_s2_titane_header.png"
+    },
+    {
+      "name": "s2_titane_tabs",
+      "file": "run1_s2_titane_tabs.png"
+    },
+    {
+      "name": "s3_chat_input",
+      "file": "run1_s3_chat_input.png"
+    },
+    {
+      "name": "s3_chat_send",
+      "file": "run1_s3_chat_send.png"
+    },
+    {
+      "name": "s3_response_zone",
+      "file": "run1_s3_response_zone.png"
+    },
+    {
+      "name": "s4_admin",
+      "file": "run1_s4_admin.png"
+    },
+    {
+      "name": "s4_settings",
+      "file": "run1_s4_settings.png"
+    },
+    {
+      "name": "s4_back_to_titane",
+      "file": "run1_s4_back_to_titane.png"
+    },
+    {
+      "name": "s5_layout_final",
+      "file": "run1_s5_layout_final.png"
+    }
+  ]
+}

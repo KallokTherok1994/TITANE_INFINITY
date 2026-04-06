@@ -1,14 +1,14 @@
 /**
- * TITANE∞ v24.3.0 — Proprietary License
+ * TITANE∞ v37.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v24.3.0 — AI ORCHESTRATOR OMEGA (NEURAL ORDER)
+ *   TITANE∞ v37.0.0 — AI ORCHESTRATOR OMEGA (NEURAL ORDER)
  *   Orchestrator neural • Isolation absolue • Auto-heal intégré
- *   Architecture: Local-first → Sandbox providers → Fallback garanti → Never throw
- *   v22Ω AI Performance Optimizations: Circuit breaker, stream batching, availability cache
+ *   Architecture: Cloud-first → Sandbox providers → Fallback garanti → Never throw
+ *   Lazy cloud providers, Circuit breaker, Rate limiting, Availability cache
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -21,6 +21,8 @@ import type {
 } from './types';
 import type { AutoHealStats } from './autoHealEngine';
 import type { AggregatedMetrics } from './metricsEngine';
+import { autoHealEngine } from './autoHealEngine';
+import { metricsEngine } from './metricsEngine';
 import type { MetricsData } from '@/types/cognitiveKernel';
 import { buildSystemPrompt as buildTitanePrompt } from '@/core/prompts';
 import type { Provider as PromptProvider, PromptContext } from '@/core/prompts';
@@ -45,21 +47,18 @@ import {
 const logger = createLogger('Orchestrator');
 
 type LoadedEngines = {
-  autoHeal: typeof import('./autoHealEngine').autoHealEngine;
-  metrics: typeof import('./metricsEngine').metricsEngine;
+  autoHeal: typeof autoHealEngine;
+  metrics: typeof metricsEngine;
 };
 
 let enginesPromise: Promise<LoadedEngines> | null = null;
 
 const ensureEngines = async (): Promise<LoadedEngines> => {
   if (!enginesPromise) {
-    enginesPromise = Promise.all([
-      import('./autoHealEngine'),
-      import('./metricsEngine'),
-    ]).then(([autoHealModule, metricsModule]) => ({
-      autoHeal: autoHealModule.autoHealEngine,
-      metrics: metricsModule.metricsEngine,
-    }));
+    enginesPromise = Promise.resolve({
+      autoHeal: autoHealEngine,
+      metrics: metricsEngine,
+    });
   }
 
   return enginesPromise;
@@ -111,6 +110,23 @@ interface NeuralSelection {
   confidence: number; // 0-100
   alternates: string[];
 }
+
+interface ProvidersStatusSnapshot {
+  providers: ProviderStats[];
+  orchestrator: OrchestratorMetrics;
+  autoHeal: AutoHealStats | (AutoHealStats & { providers: Record<string, unknown> });
+  metrics: AggregatedMetrics;
+  timestamp: number;
+}
+
+interface HealthCheckSnapshot {
+  overall: 'healthy' | 'degraded' | 'critical';
+  providers: { name: string; status: string; available: boolean }[];
+  autoHeal: AutoHealStats;
+  recommendations: string[];
+}
+
+type ProviderHistoryCache = Map<string, AIMessage[]>;
 
 // ─────────────────────────────────────────────────────────────────
 // ORCHESTRATOR OMEGA CLASS
@@ -182,6 +198,16 @@ class AIOrchestrator {
   private readonly CRITICAL_ERROR_THRESHOLD = CIRCUIT_BREAKER.criticalErrorThreshold;
   private isDegradedMode = false;
   private readonly METRICS_CACHE_TTL_MS = CACHE_TTL.metrics;
+  private readonly STATUS_CACHE_TTL_MS = 2000;
+  private readonly HEALTH_CHECK_CACHE_TTL_MS = 2000;
+  private providersStatusCache: {
+    data: ProvidersStatusSnapshot | null;
+    timestamp: number;
+  } = { data: null, timestamp: 0 };
+  private healthCheckCache: { data: HealthCheckSnapshot | null; timestamp: number } = {
+    data: null,
+    timestamp: 0,
+  };
 
   constructor() {
     const resolveProviderSafely = (
@@ -268,9 +294,20 @@ class AIOrchestrator {
     this.quickFailCache.clear();
     this.availabilityCache.clear(); // v22Ω OPT12: Clear availability cache
     this.metricsCache = { data: null, timestamp: 0 };
+    this.providersStatusCache = { data: null, timestamp: 0 };
+    this.healthCheckCache = { data: null, timestamp: 0 };
     this.criticalErrorHistory = [];
     this.isDegradedMode = false;
+    if (this.quickFailCleanupInterval) {
+      clearInterval(this.quickFailCleanupInterval);
+      this.quickFailCleanupInterval = null;
+    }
     logger.info('Orchestrator destroyed and resources cleaned up');
+  }
+
+  private invalidateStatusCaches(): void {
+    this.providersStatusCache = { data: null, timestamp: 0 };
+    this.healthCheckCache = { data: null, timestamp: 0 };
   }
 
   /**
@@ -371,6 +408,8 @@ class AIOrchestrator {
         status: 'offline', // Mark as offline until loaded
       });
     });
+
+    this.invalidateStatusCaches();
   }
 
   /**
@@ -438,6 +477,7 @@ class AIOrchestrator {
         `Warmup complete (${warmupResults.length} providers):`,
         warmupResults.map(r => (r.status === 'fulfilled' ? r.value : { error: true }))
       );
+      this.invalidateStatusCaches();
     } catch (error) {
       logger.error('Warmup failed', error);
     } finally {
@@ -635,13 +675,13 @@ class AIOrchestrator {
       const timeSinceLastUsed = Date.now() - stats.lastUsed;
       const timeSinceLastFailure = Date.now() - stats.lastFailure;
 
-      // If provider hasn't been used in 60s and hasn't failed in 30s, give recovery boost
+      // If provider hasn't been used in 10s and hasn't failed in 10s, give recovery boost
       if (
-        timeSinceLastUsed > 60000 &&
-        timeSinceLastFailure > 30000 &&
+        timeSinceLastUsed > 10000 &&
+        timeSinceLastFailure > 10000 &&
         stats.reliability < 80
       ) {
-        const recoveryBoost = Math.min(15, (timeSinceLastUsed - 60000) / 10000); // +1 per 10s idle, max +15
+        const recoveryBoost = Math.min(20, (timeSinceLastUsed - 10000) / 10000); // +1 per 10s idle, max +20
         score += recoveryBoost;
         logger.debug(
           `   🔄 Recovery boost for ${provider.name}: +${recoveryBoost.toFixed(1)}`
@@ -813,13 +853,13 @@ class AIOrchestrator {
     let lastProviderLatencyMs = 0;
     let finalProviderUsed: string | null = null;
 
-    // 🚨 DEBUG CRITICAL: Log entrée orchestrator
-    console.log('[aiOrchestrator] 📨 generate() APPELÉ', {
-      message: message.substring(0, 100),
-      historyLength: history.length,
-      preferredProvider: config?.preferredProvider,
-      timestamp: new Date().toISOString(),
-    });
+    // 🚨 DEBUG CRITICAL: Log entrée orchestrator (désactivé en production)
+    // console.log('[aiOrchestrator] 📨 generate() APPELÉ', {
+    //   message: message.substring(0, 100),
+    //   historyLength: history.length,
+    //   preferredProvider: config?.preferredProvider,
+    //   timestamp: new Date().toISOString(),
+    // });
 
     // Ensure engines are loaded
     const { autoHeal, metrics: _metrics } = await ensureEngines();
@@ -916,14 +956,15 @@ class AIOrchestrator {
         preferredProvider
       );
 
-      // 🧠 Fusionner décision cognitive et sélection neurale
-      // Si un provider est explicitement demandé (UI/tests), il doit rester déterministe.
-      // La décision cognitive ne doit pas l'écraser (sinon impossible de forcer un scénario d'erreur).
-      // En Vitest, on force aussi un comportement déterministe pour les tests de cascade.
+      // ═══ PROVIDER TRUTH CHAIN: Single Canonical Authority ═══
+      // vPROVIDER_TRUTH: canonicalDiscernmentKernel is the SOLE authority for provider selection.
+      // When preferredProvider is explicitly set (not 'auto'), the canonical kernel chose it.
+      // The cognitiveKernel provides health/latency SIGNALS only — never override authority.
+      // In Vitest, force deterministic behavior for test stability.
       const finalProvider = IS_VITEST
         ? selection.selectedProvider
         : preferredProvider && preferredProvider !== 'auto'
-          ? selection.selectedProvider
+          ? preferredProvider
           : cognitiveDecision.confidence > 70
             ? cognitiveDecision.provider
             : selection.selectedProvider;
@@ -974,6 +1015,7 @@ class AIOrchestrator {
 
       let lastError: Error | null = null;
       let attempts = 0;
+      const providerHistoryCache: ProviderHistoryCache = new Map();
 
       for (const providerName of providersToTry) {
         const elapsedMs = Date.now() - requestStartTime;
@@ -1052,13 +1094,13 @@ class AIOrchestrator {
             `\n🔍 [${attempts}/${providersToTry.length}] Trying ${providerName}...`
           );
 
-          // 🚨 DEBUG CRITICAL: Log avant tentative provider
-          console.log(`[aiOrchestrator] 🎯 Tentative provider #${attempts}`, {
-            providerName,
-            totalProviders: providersToTry.length,
-            isAvailable: !!provider,
-            timestamp: new Date().toISOString(),
-          });
+          // 🚨 DEBUG CRITICAL: Log avant tentative provider (désactivé en production)
+          // console.log(`[aiOrchestrator] 🎯 Tentative provider #${attempts}`, {
+          //   providerName,
+          //   totalProviders: providersToTry.length,
+          //   isAvailable: !!provider,
+          //   timestamp: new Date().toISOString(),
+          // });
 
           // ═══ ISOLATED EXECUTION WITH ADAPTIVE TIMEOUT (v22Ω Optimized) ═══
           // v22Ω: Using centralized timeout config
@@ -1071,7 +1113,8 @@ class AIOrchestrator {
             history,
             providerName,
             config?.promptProfileId,
-            config?.promptContext
+            config?.promptContext,
+            providerHistoryCache
           );
 
           const response = await this.executeProviderIsolated(
@@ -1082,13 +1125,13 @@ class AIOrchestrator {
             requestId
           );
 
-          // 🚨 DEBUG CRITICAL: Log succès provider
-          console.log(`[aiOrchestrator] ✅ Succès provider`, {
-            providerName,
-            contentLength: response.content?.length,
-            provider: response.provider,
-            timestamp: new Date().toISOString(),
-          });
+          // 🚨 DEBUG CRITICAL: Log succès provider (désactivé en production)
+          // console.log(`[aiOrchestrator] ✅ Succès provider`, {
+          //   providerName,
+          //   contentLength: response.content?.length,
+          //   provider: response.provider,
+          //   timestamp: new Date().toISOString(),
+          // });
 
           // ═══ SUCCESS PATH + COGNITIVE KERNEL UPDATE ═══
           // EVOLUTION v21Ω: Use provider-specific timing for accurate stats
@@ -1165,13 +1208,13 @@ class AIOrchestrator {
           lastProviderLatencyMs = providerFailureLatency;
           finalProviderUsed = providerName;
 
-          // 🚨 DEBUG CRITICAL: Log échec provider
-          console.error(`[aiOrchestrator] ❌ Échec provider`, {
-            providerName,
-            error: lastError.message,
-            latency: providerFailureLatency,
-            timestamp: new Date().toISOString(),
-          });
+          // 🚨 DEBUG CRITICAL: Log échec provider (désactivé en production)
+          // console.error(`[aiOrchestrator] ❌ Échec provider`, {
+          //   providerName,
+          //   error: lastError.message,
+          //   latency: providerFailureLatency,
+          //   timestamp: new Date().toISOString(),
+          // });
 
           // ═══ FAILURE PATH + AUTO-HEAL + COGNITIVE KERNEL ═══
           this.updateProviderStats(providerName, false, providerFailureLatency);
@@ -1390,7 +1433,8 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     history: AIMessage[],
     providerName: string,
     promptProfileId?: string,
-    promptContext?: PromptContext
+    promptContext?: PromptContext,
+    requestCache?: ProviderHistoryCache
   ): AIMessage[] {
     if (!promptProfileId) {
       return history;
@@ -1398,29 +1442,50 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
 
     try {
       const promptProvider = this.mapProviderToPromptProvider(providerName);
+      const cached = requestCache?.get(promptProvider);
+      if (cached) {
+        return cached;
+      }
+
       const prompt = buildTitanePrompt(promptProfileId, promptProvider, promptContext);
 
       if (history.length === 0) {
-        return [{ role: 'system', content: prompt, timestamp: Date.now() }];
+        const promptOnlyHistory: AIMessage[] = [
+          { role: 'system', content: prompt, timestamp: Date.now() },
+        ];
+        requestCache?.set(promptProvider, promptOnlyHistory);
+        return promptOnlyHistory;
+      }
+
+      const systemIndex = history.findIndex(msg => msg.role === 'system');
+
+      if (systemIndex >= 0) {
+        const existing = history[systemIndex];
+        if (existing?.content === prompt) {
+          requestCache?.set(promptProvider, history);
+          return history;
+        }
+      } else {
+        const promptInjectedHistory = [
+          { role: 'system' as const, content: prompt, timestamp: Date.now() },
+          ...history,
+        ];
+        requestCache?.set(promptProvider, promptInjectedHistory);
+        return promptInjectedHistory;
       }
 
       const cloned = history.map(msg => ({ ...msg }));
-      const systemIndex = cloned.findIndex(msg => msg.role === 'system');
-
-      if (systemIndex >= 0) {
-        const existing = cloned[systemIndex];
-        if (existing) {
-          cloned[systemIndex] = {
-            ...existing,
-            role: 'system' as const,
-            content: prompt,
-            timestamp: Date.now(),
-          };
-        }
-      } else {
-        cloned.unshift({ role: 'system', content: prompt, timestamp: Date.now() });
+      const existing = cloned[systemIndex];
+      if (existing) {
+        cloned[systemIndex] = {
+          ...existing,
+          role: 'system' as const,
+          content: prompt,
+          timestamp: Date.now(),
+        };
       }
 
+      requestCache?.set(promptProvider, cloned);
       return cloned;
     } catch (error) {
       logger.warn(`Prompt rebuild skipped for ${providerName}`, error);
@@ -1517,11 +1582,10 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
       // Improve reliability
       stats.reliability = Math.min(100, stats.reliability + 1);
 
-      // Update status based on performance
-      if (stats.reliability > 95) {
-        stats.status = 'healthy';
-      } else if (stats.reliability > 80) {
-        stats.status = 'degraded';
+      // Update status based on derived performance signals
+      if (stats.reliability > 80) {
+        const derivedStatus = stats.reliability > 95 ? 'healthy' : 'degraded';
+        stats.status = derivedStatus;
       }
     } else {
       stats.failureCount++;
@@ -1551,6 +1615,8 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     if (stats.totalRequests > 0) {
       stats.reliability = Math.round((stats.successCount / stats.totalRequests) * 100);
     }
+
+    this.invalidateStatusCaches();
   }
 
   /**
@@ -1559,7 +1625,11 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
    * ═══════════════════════════════════════════════════════════════════
    */
 
-  async *stream(message: string, history: AIMessage[] = []): AsyncGenerator<string> {
+  async *stream(
+    message: string,
+    history: AIMessage[] = [],
+    preferredProvider?: ProviderChoice
+  ): AsyncGenerator<string> {
     const { sanitized, valid, issues } = this.sanitizeMessage(message);
 
     // ═══ v22Ω: STREAM CONFIG from centralized config ═══
@@ -1590,7 +1660,13 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
       return;
     }
 
-    const selection = await this.selectOptimalProvider(sanitized, history);
+    // ═══ PROVIDER TRUTH CHAIN: Honor canonical kernel's provider preference in streaming ═══
+    // vPROVIDER_TRUTH: Pass preferredProvider through to selectOptimalProvider
+    const selection = await this.selectOptimalProvider(
+      sanitized,
+      history,
+      preferredProvider
+    );
     const providersToTry = [selection.selectedProvider, 'titane-local']; // Minimal pour streaming
 
     let hasStreamed = false;
@@ -1700,7 +1776,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
             provider,
             sanitized,
             history,
-            15000,
+            30000,
             `stream_${Date.now()}`
           );
 
@@ -1748,13 +1824,15 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
    * Status complet des providers avec métriques OMEGA
    * AUTOFIX v19.3Ω: Added metrics to return type
    */
-  async getProvidersStatus(): Promise<{
-    providers: ProviderStats[];
-    orchestrator: OrchestratorMetrics;
-    autoHeal: AutoHealStats & { providers: Record<string, unknown> };
-    metrics?: AggregatedMetrics;
-    timestamp: number;
-  }> {
+  async getProvidersStatus(): Promise<ProvidersStatusSnapshot> {
+    const now = Date.now();
+    if (
+      this.providersStatusCache.data &&
+      now - this.providersStatusCache.timestamp < this.STATUS_CACHE_TTL_MS
+    ) {
+      return this.providersStatusCache.data;
+    }
+
     try {
       // v22Ω OPT12: Update provider availability using cache (parallel)
       // v37.0.0: Check both eager and loaded providers
@@ -1785,13 +1863,15 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
 
       const { autoHeal: _autoHealLoaded, metrics: _metricsLoaded } =
         await ensureEngines();
-      return {
+      const snapshot: ProvidersStatusSnapshot = {
         providers: Array.from(this.providerStats.values()),
         orchestrator: { ...this.orchestratorMetrics },
         autoHeal: _autoHealLoaded.getStats(),
         metrics: _metricsLoaded.getAggregatedMetrics(), // 📊 NOUVEAU: Métriques détaillées
-        timestamp: Date.now(),
+        timestamp: now,
       };
+      this.providersStatusCache = { data: snapshot, timestamp: now };
+      return snapshot;
     } catch (error) {
       const { metrics: _metricsLoaded } = await ensureEngines();
       // Return fallback stats with placeholder autoHeal
@@ -1806,13 +1886,15 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
         healthScore: 0,
         providers: {},
       };
-      return {
+      const snapshot: ProvidersStatusSnapshot = {
         providers: Array.from(this.providerStats.values()),
         orchestrator: { ...this.orchestratorMetrics },
         autoHeal: fallbackAutoHeal,
         metrics: _metricsLoaded.getAggregatedMetrics(), // 📊 NOUVEAU
-        timestamp: Date.now(),
+        timestamp: now,
       };
+      this.providersStatusCache = { data: snapshot, timestamp: now };
+      return snapshot;
     }
   }
 
@@ -1861,12 +1943,15 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
   /**
    * Test de santé complet
    */
-  async healthCheck(): Promise<{
-    overall: 'healthy' | 'degraded' | 'critical';
-    providers: { name: string; status: string; available: boolean }[];
-    autoHeal: AutoHealStats;
-    recommendations: string[];
-  }> {
+  async healthCheck(): Promise<HealthCheckSnapshot> {
+    const now = Date.now();
+    if (
+      this.healthCheckCache.data &&
+      now - this.healthCheckCache.timestamp < this.HEALTH_CHECK_CACHE_TTL_MS
+    ) {
+      return this.healthCheckCache.data;
+    }
+
     const status = await this.getProvidersStatus();
     const healthyCount = status.providers.filter(p => p.status === 'healthy').length;
     const totalProviders = status.providers.length;
@@ -1895,7 +1980,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
       recommendations.push('Average response time is high');
     }
 
-    return {
+    const snapshot: HealthCheckSnapshot = {
       overall,
       providers: status.providers.map(p => ({
         name: p.name,
@@ -1905,6 +1990,8 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
       autoHeal: autoHealStats,
       recommendations,
     };
+    this.healthCheckCache = { data: snapshot, timestamp: now };
+    return snapshot;
   }
 }
 

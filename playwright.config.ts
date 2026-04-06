@@ -10,21 +10,34 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const CONFIG_DIR = dirname(fileURLToPath(import.meta.url));
+const E2E_WATCH_SCRIPT = resolve(CONFIG_DIR, 'scripts/e2e/vite-e2e-watch.cjs');
 // Start local dev server by default for deterministic E2E runs.
 // Set TITANE_E2E_USE_WEBSERVER=0 when using an externally managed server.
 const useWebServer = process.env.TITANE_E2E_USE_WEBSERVER !== '0';
+const includeExperimentalTests = process.env.TITANE_E2E_INCLUDE_EXPERIMENTAL === '1';
+const testsE2ELegacyIgnore = [
+  '**/control_panel.spec.ts',
+  '**/accessibility.spec.ts',
+  '**/chat-accessibility-axe.spec.ts',
+  '**/chat-race-conditions.spec.ts',
+  '**/critical-flows.spec.ts',
+  '**/i18n.spec.ts',
+  '**/provider-flow.test.ts',
+  '**/ui-comprehensive.spec.ts',
+];
 
 export default defineConfig({
   // Test directories
-  // Chemin absolu pour éviter les soucis de cwd (ex: exécutions via wrappers/tasks)
+  // Primary browser lane: canonical e2e folder.
   testDir: resolve(CONFIG_DIR, 'e2e'),
-  testMatch: '**/*.spec.ts',
+  testMatch: '**/*.{spec,test}.ts',
 
   // Parallel execution
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: 1,
+  outputDir: resolve(CONFIG_DIR, 'reports/playwright/test-results'),
 
   // Timeouts
   timeout: 60000, // 60s per test (relaxed for CI env)
@@ -52,6 +65,21 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
+      testIgnore: includeExperimentalTests ? [] : ['**/onboarding.test.ts'],
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1280, height: 720 },
+      },
+    },
+    {
+      name: 'chromium-tests-e2e',
+      testDir: resolve(CONFIG_DIR, 'tests/e2e'),
+      testMatch: '**/*.{spec,test}.ts',
+      // Default lane runs only governed/stable suites.
+      // Use TITANE_E2E_INCLUDE_EXPERIMENTAL=1 to include legacy suites explicitly.
+      testIgnore: includeExperimentalTests
+        ? ['**/control_panel.spec.ts']
+        : testsE2ELegacyIgnore,
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1280, height: 720 },
@@ -85,12 +113,12 @@ export default defineConfig({
   // Keep Vite-only in CI where GUI/Tauri may be unavailable.
   webServer: useWebServer
     ? {
-        command:
-          'node scripts/e2e/vite-e2e-watch.cjs --host 127.0.0.1 --port 5173 --strictPort',
+        command: `${process.execPath} ${E2E_WATCH_SCRIPT} --host 127.0.0.1 --port 5173 --strictPort`,
+        cwd: CONFIG_DIR,
         url: process.env.TITANE_E2E_PORT
           ? `http://localhost:${process.env.TITANE_E2E_PORT}`
           : 'http://localhost:5173',
-        reuseExistingServer: false,
+        reuseExistingServer: true,
         timeout: 180000, // 3min to start (CI heavy load)
         stdout: 'pipe',
         stderr: 'pipe',

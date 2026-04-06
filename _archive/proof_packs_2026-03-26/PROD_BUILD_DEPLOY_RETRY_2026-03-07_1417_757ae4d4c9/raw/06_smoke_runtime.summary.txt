@@ -1,0 +1,2 @@
+]633;E;{   echo "SMOKE_EXIT_CODE=$SMOKE_RC"\x3b   echo "BOOT_MARKERS=$BOOT_MARKERS"\x3b } > "$PACK_DIR/raw/06_smoke_runtime.summary.txt";821ad286-1ba1-408a-9f54-3c5bf253229c]633;CSMOKE_EXIT_CODE=127
+BOOT_MARKERS=0

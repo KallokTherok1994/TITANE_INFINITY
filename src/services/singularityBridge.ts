@@ -31,6 +31,7 @@ import {
   createFallbackPhysical,
   createFallbackSingularityState,
   createFallbackSymbolic,
+  isTauriRuntimeAvailable,
 } from '@/utils/tauriProtector';
 import { XP } from '../core/experience/XP_ENGINE'; // ✨ v∞.D6 - XP Engine
 import type {
@@ -77,6 +78,14 @@ export class SingularityBridge {
       this.syncXPToState();
 
       console.log('[SingularityBridge] Initial state synced:', this.state);
+
+      if (!isTauriRuntimeAvailable()) {
+        this.initialized = true;
+        console.info(
+          '[SingularityBridge] Browser fallback active — skipping Tauri event listeners'
+        );
+        return;
+      }
 
       // 2. Listen for layer updates (événements Tauri)
       await this.setupEventListeners();

@@ -690,7 +690,7 @@ pub fn automation_validate(
         .map_err(|e| TAPIError::internal(format!("Lock error: {}", e)))?;
 
     let config = configs.get(&request.automation_id).ok_or_else(|| {
-        TAPIError::not_found(format!("Automation '{}' inconnue", request.automation_id))
+        TAPIError::not_found(&request.automation_id)
     })?;
 
     let cooldowns = state
@@ -727,9 +727,7 @@ pub fn automation_execute(
 
         configs
             .get(&request.automation_id)
-            .ok_or_else(|| {
-                TAPIError::not_found(format!("Automation '{}' inconnue", request.automation_id))
-            })?
+            .ok_or_else(|| TAPIError::not_found(&request.automation_id))?
             .clone()
     };
 
@@ -825,7 +823,8 @@ pub fn automation_execute(
 
         // Limiter à 100 entrées
         if history.len() > 100 {
-            history.drain(0..(history.len() - 100));
+            let to_remove = history.len() - 100;
+            history.drain(0..to_remove);
         }
     }
 

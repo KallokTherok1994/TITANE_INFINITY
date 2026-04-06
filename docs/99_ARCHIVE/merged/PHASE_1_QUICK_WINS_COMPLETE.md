@@ -147,7 +147,7 @@ initSentry();
 captureWebVitals();
 ```
 
-**Voir** : [SENTRY_MONITORING_SETUP.md](SENTRY_MONITORING_SETUP.md)
+**Voir** : [SENTRY_MONITORING_SETUP.md](../sessions/SENTRY_MONITORING_SETUP.md)
 
 ---
 

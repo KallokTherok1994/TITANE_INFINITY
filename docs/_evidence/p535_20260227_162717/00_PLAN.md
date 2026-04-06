@@ -1,5 +1,0 @@
-# 00_PLAN.md
-
-Phase: P535
-Statut: PASS_QUALIFIED
-Lot: P532→P538

@@ -32,6 +32,7 @@ import {
 } from '@features/dashboard/DashboardEditor';
 import { useState, useEffect } from 'react';
 import { Settings } from 'lucide-react';
+import { useExperience } from '@/hooks/useExperience';
 
 export const DashboardPage = (): JSX.Element => {
   // 🌟 Activer visual engines pour cette page
@@ -43,6 +44,9 @@ export const DashboardPage = (): JSX.Element => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [widgets, setWidgets] = useState<DashboardWidget[]>([]);
+
+  // XP réel depuis le moteur d'expérience
+  const { totalXp, level, xpForNextLevel } = useExperience();
 
   // Charger les widgets depuis localStorage
   useEffect(() => {
@@ -136,7 +140,12 @@ export const DashboardPage = (): JSX.Element => {
         <PersonaMoodIndicator />
 
         {/* XP Progress - Stats Réelles Système v19.3 */}
-        <XPProgressBar currentXP={193000} requiredXP={250000} level={19} showDetails />
+        <XPProgressBar
+          currentXP={totalXp}
+          requiredXP={xpForNextLevel}
+          level={level}
+          showDetails
+        />
 
         {/* Stats Grid - TITANE∞ v19.3 Real Metrics */}
         <Grid columns={3} gap={4}>

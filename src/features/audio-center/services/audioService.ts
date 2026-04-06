@@ -1,17 +1,99 @@
 /**
- * TITANE_INFINITY v19.2.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2 — AUDIO SERVICE
+ *   TITANE∞ v30.0.0 — AUDIO SERVICE
  *   Service audio avec gestion TTS, devices et tests
+ *   🎤 Audio permission fix active in Tauri runtime
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { detectEnvironment } from '@/core/tauri/environment';
 import { tauriClient } from '@/lib/tauriClient';
+import { detectEnvironment } from '@/core/tauri/environment';
+
+// Tauri client adapter for this service.
+// Audio device calls stay on the canonical IPC door through `tauriClient`
+// so the WebKitGTK permission fix remains Tauri-only without raw core calls
+// inside feature code.
+const simpleTauriClient = {
+  async getAudioInputDevices(params?: any) {
+    return tauriClient.getAudioInputDevices(params);
+  },
+  async getAudioOutputDevices(params?: any) {
+    return tauriClient.getAudioOutputDevices(params);
+  },
+  async testMicrophone(params: any, options?: any) {
+    return tauriClient.testMicrophone(params, options);
+  },
+  async identityGetActiveVoiceProfile() {
+    return tauriClient.identityGetActiveVoiceProfile();
+  },
+  async identitySetActiveVoiceProfile(params: any) {
+    return tauriClient.identitySetActiveVoiceProfile(params);
+  },
+  async hasSecret(params: any) {
+    return tauriClient.hasSecret(params);
+  },
+  async setAudioOutputDevice(params: any) {
+    return tauriClient.setAudioOutputDevice(params);
+  },
+  async getAudioDeviceConfig() {
+    return tauriClient.getAudioDeviceConfig();
+  },
+  async saveAudioDeviceConfig(params: any) {
+    return tauriClient.saveAudioDeviceConfig(params);
+  },
+  async setAudioInputDevice(params: any) {
+    return tauriClient.setAudioInputDevice(params);
+  },
+  async testTts(params: any) {
+    return tauriClient.testTts(params);
+  },
+  async ttsSpeak(params: any) {
+    return tauriClient.ttsSpeak(params);
+  },
+  async stopSpeaking() {
+    return tauriClient.stopSpeaking();
+  },
+  async ttsStop() {
+    return tauriClient.ttsStop();
+  },
+  async pauseSpeaking() {
+    return tauriClient.pauseSpeaking();
+  },
+  async resumeSpeaking() {
+    return tauriClient.resumeSpeaking();
+  },
+  async isSpeaking() {
+    return tauriClient.isSpeaking();
+  },
+  async vadGetState() {
+    return tauriClient.vadGetState();
+  },
+  async vadProcessFrame(params: any) {
+    return tauriClient.vadProcessFrame(params);
+  },
+  async vadConfigure(params: any) {
+    return tauriClient.vadConfigure(params);
+  },
+  async vadReset() {
+    return tauriClient.vadReset();
+  },
+  async vadTest() {
+    return tauriClient.vadTest();
+  },
+};
+
+// Use canonical detectEnvironment() — mockable in tests, robust multi-criteria detection
+const isTauriEnvironment = detectEnvironment().isTauri;
+
+import {
+  buildTtsSettingsFromTitaneProfile,
+  normalizeTitaneVoiceProfiles,
+} from '../titaneVoiceProfiles';
 import {
   type TTSSettings,
   type VoiceProfile,
@@ -27,6 +109,37 @@ import {
 
 const STORAGE_KEY = 'titane_audio_config';
 const DEVICE_CACHE_TTL = 30000; // 30 secondes
+const ELEVENLABS_VOICE_IDS = new Set(
+  AVAILABLE_VOICES.filter(voice => voice.engine === 'elevenlabs').map(voice => voice.id)
+);
+
+export type AudioPlaybackProvider = 'tauri' | 'webspeech' | null;
+
+export interface AudioSpeakLifecycle {
+  onStart?: (provider: Exclude<AudioPlaybackProvider, null>) => void;
+  onFallback?: (provider: Exclude<AudioPlaybackProvider, null>) => void;
+  onComplete?: (provider: Exclude<AudioPlaybackProvider, null>) => void;
+}
+
+export interface AudioPlaybackRuntimeState {
+  speaking: boolean;
+  paused: boolean;
+  provider: AudioPlaybackProvider;
+  supportsPause: boolean;
+}
+
+const waitForUiFrame = (): Promise<void> =>
+  new Promise(resolve => {
+    if (
+      typeof window !== 'undefined' &&
+      typeof window.requestAnimationFrame === 'function'
+    ) {
+      window.requestAnimationFrame(() => resolve());
+      return;
+    }
+
+    setTimeout(resolve, 0);
+  });
 
 interface DeviceCache {
   output: AudioDevice[];
@@ -39,12 +152,28 @@ class AudioService {
   private isTauri: boolean = false;
   private deviceCache: DeviceCache | null = null;
   private isSpeaking: boolean = false;
+  private isPaused: boolean = false;
+  private activeProvider: AudioPlaybackProvider = null;
+  private currentUtterance: SpeechSynthesisUtterance | null = null;
+  private runtimeVoiceProfileHydrationAttempted: boolean = false;
+  private runtimeVoiceProfileHydrationPromise: Promise<void> | null = null;
 
   constructor() {
     this.config = this.loadConfig();
-    // Détection synchrone (detectEnvironment est sync malgré son nom)
-    const env = detectEnvironment();
-    this.isTauri = env.isTauri;
+    // 🎤 AUDIO FIX: Simplified environment detection
+    this.isTauri = isTauriEnvironment;
+    const normalizedTTS = this.normalizeRuntimeCompatibleTTS(this.config.tts);
+    if (
+      normalizedTTS.engine !== this.config.tts.engine ||
+      normalizedTTS.voiceId !== this.config.tts.voiceId ||
+      normalizedTTS.language !== this.config.tts.language
+    ) {
+      this.config = {
+        ...this.config,
+        tts: normalizedTTS,
+      };
+      this.saveConfig();
+    }
     console.log('[AudioService] Initialized. Tauri mode:', this.isTauri);
   }
 
@@ -97,18 +226,131 @@ class AudioService {
     return { ...this.config.tts };
   }
 
+  private shouldHydrateVoiceProfileFromRuntime(): boolean {
+    const { tts } = this.config;
+
+    return (
+      !tts.voiceProfileId &&
+      tts.engine === DEFAULT_AUDIO_CONFIG.tts.engine &&
+      tts.voiceId === DEFAULT_AUDIO_CONFIG.tts.voiceId &&
+      tts.language === DEFAULT_AUDIO_CONFIG.tts.language &&
+      tts.rate === DEFAULT_AUDIO_CONFIG.tts.rate &&
+      tts.pitch === DEFAULT_AUDIO_CONFIG.tts.pitch &&
+      tts.volume === DEFAULT_AUDIO_CONFIG.tts.volume
+    );
+  }
+
+  private async ensureRuntimeVoiceProfileHydrated(): Promise<void> {
+    if (!this.isTauri || this.runtimeVoiceProfileHydrationAttempted) {
+      return;
+    }
+
+    if (!this.shouldHydrateVoiceProfileFromRuntime()) {
+      this.runtimeVoiceProfileHydrationAttempted = true;
+      return;
+    }
+
+    if (this.runtimeVoiceProfileHydrationPromise) {
+      return this.runtimeVoiceProfileHydrationPromise;
+    }
+
+    this.runtimeVoiceProfileHydrationAttempted = true;
+    this.runtimeVoiceProfileHydrationPromise =
+      this.hydrateActiveVoiceProfileFromRuntime().finally(() => {
+        this.runtimeVoiceProfileHydrationPromise = null;
+      });
+
+    return this.runtimeVoiceProfileHydrationPromise;
+  }
+
+  private async hydrateActiveVoiceProfileFromRuntime(): Promise<void> {
+    try {
+      const rawActiveProfile = await simpleTauriClient.identityGetActiveVoiceProfile();
+      const activeProfile = normalizeTitaneVoiceProfiles(
+        rawActiveProfile == null ? [] : [rawActiveProfile]
+      )[0];
+
+      if (!activeProfile || !this.shouldHydrateVoiceProfileFromRuntime()) {
+        return;
+      }
+
+      this.config = {
+        ...this.config,
+        tts: this.normalizeRuntimeCompatibleTTS({
+          ...this.config.tts,
+          ...buildTtsSettingsFromTitaneProfile(activeProfile, this.config.tts),
+        }),
+      };
+      this.saveConfig();
+    } catch (error) {
+      console.warn(
+        '[AudioService] Failed to hydrate TITANE active voice profile:',
+        error
+      );
+    }
+  }
+
+  private normalizeRuntimeCompatibleTTS(settings: TTSSettings): TTSSettings {
+    if (!this.isTauri || settings.engine !== 'elevenlabs') {
+      return settings;
+    }
+
+    const shouldResetVoiceId =
+      !settings.voiceId || ELEVENLABS_VOICE_IDS.has(settings.voiceId);
+
+    return {
+      ...settings,
+      engine: 'piper',
+      voiceId: shouldResetVoiceId ? DEFAULT_AUDIO_CONFIG.tts.voiceId : settings.voiceId,
+      language: settings.language || DEFAULT_AUDIO_CONFIG.tts.language,
+    };
+  }
+
   async updateTTSSettings(settings: Partial<TTSSettings>): Promise<void> {
-    this.config.tts = { ...this.config.tts, ...settings };
+    this.config.tts = this.normalizeRuntimeCompatibleTTS({
+      ...this.config.tts,
+      ...settings,
+    });
     this.saveConfig();
+    if (settings.voiceProfileId !== undefined) {
+      await this.syncVoiceIdentityProfile(settings.voiceProfileId);
+    }
     // Note: Settings are stored locally and passed to tts_speak on each call
     // No backend sync needed - Piper/espeak use settings per-call
+  }
+
+  private buildRuntimeTTSSettings(): TTSSettings & { outputDeviceId?: string } {
+    const runtimeTTS = this.normalizeRuntimeCompatibleTTS(this.config.tts);
+    return {
+      engine: runtimeTTS.engine,
+      voiceId: runtimeTTS.voiceId,
+      rate: runtimeTTS.rate,
+      pitch: runtimeTTS.pitch,
+      volume: runtimeTTS.volume,
+      language: runtimeTTS.language,
+      emotionEnabled: runtimeTTS.emotionEnabled,
+      autoFallback: runtimeTTS.autoFallback,
+      outputDeviceId: this.config.output.deviceId || undefined,
+    };
+  }
+
+  private async syncVoiceIdentityProfile(voiceProfileId?: string): Promise<void> {
+    if (!this.isTauri || !voiceProfileId) {
+      return;
+    }
+
+    try {
+      await simpleTauriClient.identitySetActiveVoiceProfile({ voiceProfileId });
+    } catch (error) {
+      console.warn('[AudioService] Failed to sync TITANE voice profile:', error);
+    }
   }
 
   private async isElevenLabsConfigured(): Promise<boolean> {
     // Prefer secure backend storage in Tauri mode
     if (this.isTauri) {
       try {
-        const res = (await tauriClient.hasSecret({
+        const res = (await simpleTauriClient.hasSecret({
           key: 'elevenlabs_api_key',
         })) as { ok: boolean; data: boolean | null } | boolean;
         if (res && typeof res === 'object' && 'data' in res) {
@@ -130,10 +372,11 @@ class AudioService {
   }
 
   async getAvailableVoices(): Promise<VoiceProfile[]> {
+    await this.ensureRuntimeVoiceProfileHydrated();
     const elevenLabsReady = await this.isElevenLabsConfigured();
     return AVAILABLE_VOICES.filter(voice => {
       if (voice.engine === 'elevenlabs') {
-        return elevenLabsReady;
+        return elevenLabsReady && !this.isTauri;
       }
       return true;
     });
@@ -165,7 +408,7 @@ class AudioService {
 
     if (this.isTauri) {
       try {
-        devices = (await tauriClient.getAudioOutputDevices()) as AudioDevice[];
+        devices = (await simpleTauriClient.getAudioOutputDevices()) as AudioDevice[];
       } catch (error) {
         console.warn('Failed to get output devices from Tauri:', error);
       }
@@ -195,18 +438,9 @@ class AudioService {
       }
     }
 
-    // Default fallback
+    // No fake fallback: return empty array so UI can show real "no devices" state
     if (devices.length === 0) {
-      devices = [
-        {
-          id: 'default',
-          name: 'Default Speaker',
-          type: 'output',
-          isDefault: true,
-          isActive: true,
-          driver: 'unknown',
-        },
-      ];
+      console.warn('[AudioService] No output audio devices found');
     }
 
     // Update cache
@@ -235,7 +469,7 @@ class AudioService {
 
     if (this.isTauri) {
       try {
-        devices = (await tauriClient.getAudioInputDevices()) as AudioDevice[];
+        devices = (await simpleTauriClient.getAudioInputDevices()) as AudioDevice[];
       } catch (error) {
         console.warn('Failed to get input devices from Tauri:', error);
       }
@@ -266,18 +500,9 @@ class AudioService {
       }
     }
 
-    // Default fallback
+    // No fake fallback: return empty array so UI can show real "no devices" state
     if (devices.length === 0) {
-      devices = [
-        {
-          id: 'default',
-          name: 'Default Microphone',
-          type: 'input',
-          isDefault: true,
-          isActive: false,
-          driver: 'unknown',
-        },
-      ];
+      console.warn('[AudioService] No input audio devices found');
     }
 
     // Update cache
@@ -304,9 +529,25 @@ class AudioService {
     if (this.isTauri) {
       try {
         // Tauri 2.0 attend camelCase pour les paramètres
-        await tauriClient.setAudioOutputDevice({ deviceId });
+        await simpleTauriClient.setAudioOutputDevice({ deviceId });
       } catch (error) {
         console.warn('Failed to set output device:', error);
+      }
+
+      // Persist to canonical audio device config
+      try {
+        const deviceLabel = await this._resolveDeviceLabel(deviceId, 'output');
+        const current = (await simpleTauriClient.getAudioDeviceConfig()) as Record<
+          string,
+          unknown
+        >;
+        await simpleTauriClient.saveAudioDeviceConfig({
+          ...(current || {}),
+          outputDeviceId: deviceId,
+          outputDeviceLabel: deviceLabel,
+        });
+      } catch (e) {
+        console.warn('[AudioService] canonical audio config save failed:', e);
       }
     }
   }
@@ -318,10 +559,40 @@ class AudioService {
     if (this.isTauri) {
       try {
         // Tauri 2.0 attend camelCase pour les paramètres
-        await tauriClient.setAudioInputDevice({ deviceId });
+        await simpleTauriClient.setAudioInputDevice({ deviceId });
       } catch (error) {
         console.warn('Failed to set input device:', error);
       }
+
+      // Persist to canonical audio device config
+      try {
+        const deviceLabel = await this._resolveDeviceLabel(deviceId, 'input');
+        const current = (await simpleTauriClient.getAudioDeviceConfig()) as Record<
+          string,
+          unknown
+        >;
+        await simpleTauriClient.saveAudioDeviceConfig({
+          ...(current || {}),
+          inputDeviceId: deviceId,
+          inputDeviceLabel: deviceLabel,
+        });
+      } catch (e) {
+        console.warn('[AudioService] canonical audio config save failed:', e);
+      }
+    }
+  }
+
+  /** Resolves a device ID to its label using the cached device list. */
+  private async _resolveDeviceLabel(
+    deviceId: string,
+    type: 'input' | 'output'
+  ): Promise<string> {
+    try {
+      const devices =
+        type === 'output' ? await this.getOutputDevices() : await this.getInputDevices();
+      return devices.find(d => d.id === deviceId)?.name ?? deviceId;
+    } catch {
+      return deviceId;
     }
   }
 
@@ -351,7 +622,12 @@ class AudioService {
 
     try {
       if (this.isTauri) {
-        await tauriClient.testTts({ text, settings: this.config.tts });
+        await this.ensureRuntimeVoiceProfileHydrated();
+        await this.syncVoiceIdentityProfile(this.config.tts.voiceProfileId);
+        await simpleTauriClient.testTts({
+          text,
+          settings: this.buildRuntimeTTSSettings(),
+        });
       } else if (this.isWebSpeechAvailable()) {
         // Web Speech fallback only if available
         await new Promise<void>((resolve, reject) => {
@@ -400,16 +676,40 @@ class AudioService {
         // Timeout = durée enregistrement + 5s de marge pour traitement
         const timeoutMs = durationMs + 5000;
         // Tauri 2.0 attend camelCase pour les paramètres de commande
-        const result = (await tauriClient.testMicrophone(
-          { durationMs },
+        const result = (await simpleTauriClient.testMicrophone(
+          { durationMs, deviceId: this.config.input.deviceId || undefined },
           { timeout: timeoutMs }
         )) as MicrophoneTestResult;
         console.log('[AudioService] test_microphone result:', result);
         return result;
       }
 
-      // Web Audio fallback
+      // Web Audio fallback - seulement en mode Web pur (pas Tauri)
       console.log('[AudioService] Using Web Audio API fallback...');
+
+      // IMPORTANT: En mode Tauri, éviter getUserMedia car WebKitGTK peut causer des problèmes
+      if (this.isTauri) {
+        console.warn('[AudioService] Tauri fallback attempted - avoiding Web APIs');
+        return {
+          success: false,
+          peakLevel: 0,
+          noiseFloor: 0,
+          signalToNoise: 0,
+          errorMessage: 'Microphone test failed in Tauri mode. Check system permissions.',
+        };
+      }
+
+      // Vérifier si les APIs sont disponibles
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        return {
+          success: false,
+          peakLevel: 0,
+          noiseFloor: 0,
+          signalToNoise: 0,
+          errorMessage: 'Web Audio API not supported',
+        };
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           deviceId:
@@ -454,7 +754,7 @@ class AudioService {
         setTimeout(() => {
           clearInterval(interval);
           stream.getTracks().forEach(t => t.stop());
-          audioContext.close();
+          audioContext.close().catch(console.warn);
 
           // Calculate noise floor (average of lowest 20% of samples)
           samples.sort((a, b) => a - b);
@@ -477,6 +777,30 @@ class AudioService {
       });
     } catch (error) {
       console.error('[AudioService] testMicrophone error:', error);
+
+      // Amélioration des messages d'erreur
+      let errorMessage = 'Unknown error';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+        // Traduire les erreurs communes
+        if (
+          errorMessage.includes('Permission denied') ||
+          errorMessage.includes('NotAllowedError')
+        ) {
+          errorMessage =
+            'Permission microphone refusée. Vérifiez les paramètres du navigateur.';
+        } else if (
+          errorMessage.includes('NotFoundError') ||
+          errorMessage.includes('DevicesNotFoundError')
+        ) {
+          errorMessage =
+            'Aucun microphone détecté. Vérifiez la connexion du périphérique.';
+        } else if (errorMessage.includes('not allowed by the user agent')) {
+          errorMessage =
+            'Accès microphone bloqué par le navigateur. En mode Tauri, utilisez les paramètres système.';
+        }
+      }
+
       return {
         success: false,
         peakLevel: 0,
@@ -491,7 +815,7 @@ class AudioService {
   //  TTS Quick Speak
   // ─────────────────────────────────────────────────────────────────
 
-  async speak(text: string): Promise<void> {
+  async speak(text: string, lifecycle?: AudioSpeakLifecycle): Promise<void> {
     if (!text || text.trim().length === 0) {
       console.warn('[AudioService] speak() called with empty text');
       return;
@@ -500,11 +824,13 @@ class AudioService {
     // Prevent overlapping speech
     if (this.isSpeaking) {
       console.log('[AudioService] Already speaking, stopping previous speech');
-      this.stop();
+      await this.stop();
       await new Promise(resolve => setTimeout(resolve, 100));
     }
 
     this.isSpeaking = true;
+    this.isPaused = false;
+    this.activeProvider = null;
     console.log(
       '[AudioService] speak() called. Tauri mode:',
       this.isTauri,
@@ -515,18 +841,25 @@ class AudioService {
     try {
       if (this.isTauri) {
         try {
+          await this.ensureRuntimeVoiceProfileHydrated();
+          await this.syncVoiceIdentityProfile(this.config.tts.voiceProfileId);
+          this.activeProvider = 'tauri';
+          lifecycle?.onStart?.('tauri');
+          await waitForUiFrame();
           console.log('[AudioService] Invoking tts_speak via Tauri...');
-          await tauriClient.ttsSpeak({
+          await simpleTauriClient.ttsSpeak({
             text,
-            settings: this.config.tts,
+            settings: this.buildRuntimeTTSSettings(),
           });
           console.log('[AudioService] tts_speak completed successfully');
+          lifecycle?.onComplete?.('tauri');
         } catch (error) {
           console.error('[AudioService] tts_speak error:', error);
           // Only fallback to Web Speech if it's available
-          if (this.isWebSpeechAvailable()) {
+          if (this.config.tts.autoFallback && this.isWebSpeechAvailable()) {
             console.log('[AudioService] Falling back to Web Speech API...');
-            await this.speakWithWebSpeech(text);
+            lifecycle?.onFallback?.('webspeech');
+            await this.speakWithWebSpeech(text, lifecycle);
           } else {
             console.warn(
               '[AudioService] No TTS available (Tauri failed, Web Speech not supported)'
@@ -536,13 +869,16 @@ class AudioService {
         }
       } else {
         if (this.isWebSpeechAvailable()) {
-          await this.speakWithWebSpeech(text);
+          await this.speakWithWebSpeech(text, lifecycle);
         } else {
-          console.warn('[AudioService] Web Speech API not available');
+          throw new Error('Web Speech API non disponible');
         }
       }
     } finally {
       this.isSpeaking = false;
+      this.isPaused = false;
+      this.activeProvider = null;
+      this.currentUtterance = null;
     }
   }
 
@@ -550,28 +886,40 @@ class AudioService {
    * Check if Web Speech API is available
    */
   private isWebSpeechAvailable(): boolean {
+    // Re-evaluate at call time — tests may alter window state
     return (
       typeof window !== 'undefined' &&
+      !detectEnvironment().isTauri &&
       'speechSynthesis' in window &&
       typeof SpeechSynthesisUtterance !== 'undefined'
     );
   }
 
-  private speakWithWebSpeech(text: string): Promise<void> {
+  private speakWithWebSpeech(
+    text: string,
+    lifecycle?: AudioSpeakLifecycle
+  ): Promise<void> {
     if (!this.isWebSpeechAvailable()) {
       return Promise.reject(new Error('Web Speech API not available'));
     }
 
     console.log('[AudioService] Using Web Speech API');
     const utterance = new SpeechSynthesisUtterance(text);
+    this.currentUtterance = utterance;
     utterance.lang = this.config.tts.language;
     utterance.rate = this.config.tts.rate;
     utterance.pitch = this.config.tts.pitch;
     utterance.volume = this.config.tts.volume * this.config.output.volume;
 
     return new Promise((resolve, reject) => {
+      utterance.onstart = () => {
+        this.activeProvider = 'webspeech';
+        this.isPaused = false;
+        lifecycle?.onStart?.('webspeech');
+      };
       utterance.onend = () => {
         console.log('[AudioService] Web Speech finished');
+        lifecycle?.onComplete?.('webspeech');
         resolve();
       };
       utterance.onerror = e => {
@@ -582,9 +930,12 @@ class AudioService {
     });
   }
 
-  stop(): void {
+  async stop(): Promise<void> {
     console.log('[AudioService] stop() called');
     this.isSpeaking = false;
+    this.isPaused = false;
+    this.currentUtterance = null;
+    this.activeProvider = null;
 
     // Stop Web Speech
     if (typeof window !== 'undefined' && window.speechSynthesis) {
@@ -593,14 +944,93 @@ class AudioService {
 
     // Stop Tauri TTS
     if (this.isTauri) {
-      tauriClient.ttsStop().catch(err => {
-        console.error('[AudioService] tts_stop error:', err);
-      });
+      try {
+        await simpleTauriClient.stopSpeaking();
+      } catch (err) {
+        console.error('[AudioService] stop_speaking error:', err);
+        await simpleTauriClient.ttsStop().catch(fallbackErr => {
+          console.error('[AudioService] tts_stop error:', fallbackErr);
+        });
+      }
     }
   }
 
   isCurrentlySpeaking(): boolean {
     return this.isSpeaking;
+  }
+
+  async pause(): Promise<void> {
+    if (!this.isSpeaking) {
+      throw new Error('Aucune lecture audio en cours');
+    }
+
+    if (this.activeProvider === 'webspeech' && typeof window !== 'undefined') {
+      window.speechSynthesis.pause();
+      this.isPaused = true;
+      return;
+    }
+
+    if (this.activeProvider === 'tauri') {
+      await simpleTauriClient.pauseSpeaking();
+      this.isPaused = true;
+      return;
+    }
+
+    throw new Error('Pause audio indisponible pour ce provider');
+  }
+
+  async resume(): Promise<void> {
+    if (!this.isSpeaking) {
+      throw new Error('Aucune lecture audio en cours');
+    }
+
+    if (this.activeProvider === 'webspeech' && typeof window !== 'undefined') {
+      window.speechSynthesis.resume();
+      this.isPaused = false;
+      return;
+    }
+
+    if (this.activeProvider === 'tauri') {
+      await simpleTauriClient.resumeSpeaking();
+      this.isPaused = false;
+      return;
+    }
+
+    throw new Error('Reprise audio indisponible pour ce provider');
+  }
+
+  async getPlaybackRuntimeState(): Promise<AudioPlaybackRuntimeState> {
+    if (this.activeProvider === 'tauri' && this.isTauri) {
+      try {
+        const speaking = Boolean(await simpleTauriClient.isSpeaking());
+        return {
+          speaking,
+          paused: speaking ? this.isPaused : false,
+          provider: speaking || this.isPaused ? 'tauri' : null,
+          supportsPause: true,
+        };
+      } catch (error) {
+        console.warn('[AudioService] Failed to query Tauri speaking state:', error);
+      }
+    }
+
+    if (this.isWebSpeechAvailable()) {
+      const speaking = window.speechSynthesis.speaking;
+      const paused = window.speechSynthesis.paused;
+      return {
+        speaking,
+        paused,
+        provider: speaking || paused ? 'webspeech' : null,
+        supportsPause: true,
+      };
+    }
+
+    return {
+      speaking: this.isSpeaking && !this.isPaused,
+      paused: this.isPaused,
+      provider: this.activeProvider,
+      supportsPause: this.isTauri,
+    };
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -615,7 +1045,7 @@ class AudioService {
       return { state: 'silence', isSpeaking: false };
     }
     try {
-      const result = (await tauriClient.vadGetState()) as {
+      const result = (await simpleTauriClient.vadGetState()) as {
         state: string;
         isSpeaking: boolean;
       };
@@ -638,7 +1068,7 @@ class AudioService {
     }
     try {
       const samples = Array.from(audioData);
-      const result = (await tauriClient.vadProcessFrame({
+      const result = (await simpleTauriClient.vadProcessFrame({
         audioData: samples,
       })) as { state: string; isSpeaking: boolean };
       return result;
@@ -660,7 +1090,7 @@ class AudioService {
       return 'VAD configuration not available (browser mode)';
     }
     try {
-      const result = (await tauriClient.vadConfigure({
+      const result = (await simpleTauriClient.vadConfigure({
         config: {
           threshold: config.threshold ?? 0.02,
           minSpeechFrames: config.minSpeechFrames ?? 10,
@@ -683,7 +1113,7 @@ class AudioService {
       return 'VAD reset not available (browser mode)';
     }
     try {
-      const result = (await tauriClient.vadReset()) as string;
+      const result = (await simpleTauriClient.vadReset()) as string;
       console.log('[AudioService] VAD reset:', result);
       return result;
     } catch (error) {
@@ -718,7 +1148,7 @@ class AudioService {
       };
     }
     try {
-      const result = (await (tauriClient.vadTest?.() ||
+      const result = (await (simpleTauriClient.vadTest?.() ||
         Promise.resolve({
           success: false,
           tests: {

@@ -1,5 +1,0 @@
-# 00_PLAN.md
-
-Phase: P1038
-Statut: PASS_QUALIFIED
-Lot: P1036→P1042

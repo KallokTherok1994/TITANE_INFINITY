@@ -1,0 +1,27 @@
+# Step 9: Governance Gates
+
+## verify_instructions.sh
+```
+PASS: G_AUTOHEAL_FILE_detect_recurrence.sh
+INFO: autoheal-jsonl-valid
+PASS: G_AUTOHEAL_JSONL_VALID
+PASS: G_MARKER_VERDICT_UNIQUE
+PASS: G_MARKER_STOPLINE
+PASS: G_MARKER_NO_SKIPS
+PASS: G_MARKER_PROOF_PACK
+PASS: G_MARKER_AUTOHEAL_CANONICAL_PATH
+PASS: G_AH_RECURRENCE_GUARD_PASS
+SUMMARY: PASS=20 FAIL=0
+```
+Exit code: 0 ✅
+
+## detect_recurrence.sh
+```
+PASS: G_AH_RULE_CAPTURED_FOR_EACH_FIX
+PASS: G_AH_RECURRENCE_GUARD_PASS
+INFO: entries=511
+```
+Exit code: 0 ✅
+
+## Result
+GOVERNANCE_GATES_PASS — 20/20 checks pass, 0 failures.

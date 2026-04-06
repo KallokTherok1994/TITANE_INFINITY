@@ -1,0 +1,5 @@
+PHASE=0_RELEASE_PROMOTION_OBJECTIVE
+OBJECTIVE=Promote V60 rerun technical success into single official governed release truth
+AUTHORIZED_FINAL_VERDICTS=FRONTEND_CERTIFIABLE_STRONG|FRONTEND_CERTIFIABLE_PARTIAL_IMPROVED
+STOPLINE=No broad product repair, no comfort reruns, no contradictory official docset
+SUCCESS_REQUIRES=Single official verdict, unified final matrix, coherent closure docs, traced release decision

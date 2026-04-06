@@ -13,7 +13,7 @@ FAIL=0
 echo "[Check 1] Vérifier que UI offline display requiert reason_code..."
 
 # Chercher patterns "hors ligne" ou "offline" dans setError/messages
-MATCHES=$(rg -n "hors ligne|offline" src/ --type ts --type tsx -g '!*.test.*' -g '!__tests__' || true)
+MATCHES=$(grep -rn "hors ligne\|offline" src/ --include="*.ts" --include="*.tsx" --exclude="*.test.*" 2>/dev/null | grep -v "__tests__\|stories\|\.snap" || true)
 
 if [ -n "$MATCHES" ]; then
   echo "Found offline messages:"
@@ -30,7 +30,7 @@ if [ -n "$MATCHES" ]; then
     echo "  Checking $file..."
     
     # Search for reason_code in same file
-    CONTEXT=$(rg -C 5 "hors ligne|offline" "$file" | rg "reason_?code|reasonCode" || true)
+    CONTEXT=$(grep -n "reason_code\|reasonCode" "$file" || true)
     
     if [ -z "$CONTEXT" ]; then
       echo "    ⚠️  WARNING: No reason_code found near offline message in $file"
@@ -48,7 +48,7 @@ echo
 echo "[Check 2] Vérifier logic setError + mode OFFLINE..."
 
 # Chercher setError dans hooks/components
-SETERROR_MATCHES=$(rg -n "setError.*offline|setError.*hors.ligne" src/ --type ts --type tsx -A 5 -B 10 || true)
+SETERROR_MATCHES=$(grep -rn "setError.*offline\|setError.*hors.ligne" src/ --include="*.ts" --include="*.tsx" 2>/dev/null | grep -v "__tests__\|stories\|\.snap" || true)
 
 if [ -n "$SETERROR_MATCHES" ]; then
   echo "Found setError with offline:"
@@ -58,7 +58,7 @@ if [ -n "$SETERROR_MATCHES" ]; then
   # Vérifier que c'est conditionnel sur mode='OFFLINE' et reason_code présent
   # Pattern attendu: if (mode === 'OFFLINE') { setError(...reason_code...) }
   
-  VALID_PATTERN=$(echo "$SETERROR_MATCHES" | rg "mode.*OFFLINE.*reason_?code|reason_?code.*mode.*OFFLINE" || true)
+  VALID_PATTERN=$(echo "$SETERROR_MATCHES" | grep -E "mode.*OFFLINE.*reason_code|reason_code.*mode.*OFFLINE" || true)
   
   if [ -z "$VALID_PATTERN" ]; then
     echo "❌ FAIL: setError with offline NOT conditional on mode+reason_code"
@@ -76,7 +76,7 @@ echo
 echo "[Check 3] Vérifier backend Rust offline logic..."
 
 # Chercher "offline" dans conversation_engine Rust code
-RUST_OFFLINE=$(rg -n "offline" src-tauri/src/conversation_engine/ --type rust || true)
+RUST_OFFLINE=$(grep -rn "offline" src-tauri/src/conversation_engine/ --include="*.rs" 2>/dev/null || true)
 
 if [ -n "$RUST_OFFLINE" ]; then
   echo "Found offline in Rust:"
@@ -84,7 +84,7 @@ if [ -n "$RUST_OFFLINE" ]; then
   echo
   
   # Check if reason_code is always set
-  RUST_REASON=$(rg -n "reason_code" src-tauri/src/conversation_engine/ --type rust || true)
+  RUST_REASON=$(grep -rn "reason_code" src-tauri/src/conversation_engine/ --include="*.rs" 2>/dev/null || true)
   
   if [ -z "$RUST_REASON" ]; then
     echo "⚠️  WARNING: No reason_code found in Rust conversation_engine"

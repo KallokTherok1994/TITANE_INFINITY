@@ -1,5 +1,9 @@
 # Documentation Actuelle TITANE∞ v26.2
 
+> ⚠️ **Statut:** `LEGACY` (snapshot historique v26.2).
+> Source canonique de navigation actuelle: [`../README.md`](../README.md).
+> Vérité version repo: `package.json` + `CHANGELOG.md` (`PROVEN_BY_REPO`).
+
 **Version:** v26.2  
 **Status:** Active  
 **Dernière MAJ:** 18 décembre 2025
@@ -27,7 +31,7 @@ docs/current/
 - [Audit Final](./audits/AUDIT_FINAL_v26.2_COMPLETE.md)
 
 ### Guides
-- [Quick Start Ubuntu](../../QUICKSTART_UBUNTU_24.04.md)
+- [Quick Start Ubuntu](../01_misc/QUICKSTART_UBUNTU_24.04.md)
 - [Quick Start Chat IA v19.5.2](./guides/QUICK_START_CHAT_IA_v19.5.2.md)
 - [Multimodal Guide](./guides/MULTIMODAL_QUICK_START.md)
 - [Aura Quick Start](./guides/AURA_QUICK_START_GUIDE.md)

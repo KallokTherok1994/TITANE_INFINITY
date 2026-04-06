@@ -102,6 +102,12 @@ impl EmbeddingEngine {
 
     /// OpenAI embedding
     async fn embed_openai(&self, text: &str) -> MemoryOSResult<Vec<f32>> {
+        // RING-2 GATE: external HTTP only when VITE_ENABLE_EXTERNAL_AI=1
+        if std::env::var("VITE_ENABLE_EXTERNAL_AI").as_deref() != Ok("1") {
+            return Err(MemoryOSError::EmbeddingError(
+                "External AI disabled (set VITE_ENABLE_EXTERNAL_AI=1 to enable OpenAI embeddings)".to_string(),
+            ));
+        }
         let api_key = self.config.api_key.as_ref().ok_or_else(|| {
             MemoryOSError::EmbeddingError("OpenAI API key not configured".to_string())
         })?;
@@ -149,6 +155,12 @@ impl EmbeddingEngine {
 
     /// Gemini embedding
     async fn embed_gemini(&self, text: &str) -> MemoryOSResult<Vec<f32>> {
+        // RING-2 GATE: external HTTP only when VITE_ENABLE_EXTERNAL_AI=1
+        if std::env::var("VITE_ENABLE_EXTERNAL_AI").as_deref() != Ok("1") {
+            return Err(MemoryOSError::EmbeddingError(
+                "External AI disabled (set VITE_ENABLE_EXTERNAL_AI=1 to enable Gemini embeddings)".to_string(),
+            ));
+        }
         let api_key = self.config.api_key.as_ref().ok_or_else(|| {
             MemoryOSError::EmbeddingError("Gemini API key not configured".to_string())
         })?;

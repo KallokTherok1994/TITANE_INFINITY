@@ -359,12 +359,12 @@ Ordre d'exécution optimisé:
 ## 📚 DOCUMENTATION COMPLÈTE
 
 ### Guides Principaux
-- ✅ [README.md](README.md) - Vue d'ensemble mise à jour
-- ✅ [CHANGELOG.md](docs/CHANGELOG.md) - Historique v8.0 complet
-- ✅ [ARCHITECTURE.md](docs/ARCHITECTURE.md) - Architecture technique
-- ✅ [MODULES.md](docs/MODULES.md) - Documentation modules
-- ✅ [SECURITY.md](docs/SECURITY.md) - Principes sécurité
-- ✅ [DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md) - Guide contribution
+- ✅ [README.md](../../../README.md) - Vue d'ensemble mise à jour
+- ✅ [CHANGELOG.md](../../90_release/CHANGELOG.md) - Historique v8.0 complet
+- ✅ [ARCHITECTURE.md](../../ARCHITECTURE.md) - Architecture technique
+- ✅ [MODULES.md](../../MODULES.md) - Documentation modules
+- ✅ [SECURITY.md](../../SECURITY.md) - Principes sécurité
+- ✅ [DEVELOPER_GUIDE.md](../../DEVELOPER_GUIDE.md) - Guide contribution
 
 ### Documentation Modules Spécifiques
 - ✅ [COGNITIVE_STACK_COMPLETE.md](COGNITIVE_STACK_COMPLETE.md) - Modules #31-35
@@ -553,7 +553,7 @@ cargo test
 ### Support
 - **Issues** : GitHub Issues
 - **Discussions** : GitHub Discussions
-- **Contributing** : [DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md)
+- **Contributing** : [DEVELOPER_GUIDE.md](../../DEVELOPER_GUIDE.md)
 
 ---
 

@@ -217,6 +217,18 @@ impl UnifiedMemory {
         &self.ltm.index
     }
 
+    /// Get canonical LTM storage path (for backup/restore)
+    pub fn ltm_storage_path(&self) -> PathBuf {
+        self.ltm.storage_path.clone()
+    }
+
+    /// Reload LTM index from disk without full re-init.
+    /// Safe to call after restore — clears stale index and scans *.mem files.
+    pub fn reload_ltm_from_disk(&mut self) {
+        self.ltm.index.clear();
+        self.restore_ltm_from_disk();
+    }
+
     // === CORE METHODS ===
 
     pub fn new() -> Self {
@@ -271,6 +283,12 @@ impl UnifiedMemory {
                 EngineError::Runtime(format!("Failed to create LTM storage: {}", e))
             })?;
         }
+
+        // ✅ FIX: LTM_NOT_RETRIEVABLE — restore LTM index from disk on startup.
+        // Previously the index was always empty at boot; persisted .mem files were
+        // never loaded back. Now: scan storage_path for *.mem files, deserialize
+        // each MemoryItem, and rebuild metadata index for cross-session recall.
+        self.restore_ltm_from_disk();
 
         self.health = EngineHealth::Healthy;
         self.initialized = true;
@@ -394,23 +412,29 @@ impl UnifiedMemory {
             }
         }
 
-        // Search LTM (index only - full load on demand)
+        // Search LTM — load full content from disk for matching entries.
+        // ✅ FIX: LTM_FULL_CONTENT_NOT_LOADED — previously returned "[LTM:N]" placeholder.
+        // Now: reads metadata.file_path, deserializes MemoryItem, returns real content.
+        // Safe degradation: missing or corrupt files are skipped (no crash, no fake content).
         for (id, metadata) in &self.ltm.index {
             if Self::matches_query_metadata(metadata, query) {
-                // For now, return metadata as lightweight item
-                // In production, would load full content from disk
-                // v20.1: Use SmallVec for tags
-                let tags_smallvec: MemoryTags = metadata.tags.iter().cloned().collect();
-                let item = MemoryItem {
-                    id: id.clone(),
-                    content: format!("[LTM:{}]", metadata.memory_type as u8),
-                    memory_type: metadata.memory_type,
-                    importance: metadata.importance,
-                    tags: tags_smallvec,
-                    created_at: metadata.created_at,
-                    accessed_count: 0,
-                    last_accessed: now,
-                    tier: MemoryTier::LongTerm,
+                // Attempt full content load from disk
+                let full_item: Option<MemoryItem> = std::fs::read(&metadata.file_path)
+                    .ok()
+                    .and_then(|bytes| serde_json::from_slice::<MemoryItem>(&bytes).ok());
+
+                let item = if let Some(mut disk_item) = full_item {
+                    // Real content loaded — update access metadata
+                    disk_item.accessed_count += 1;
+                    disk_item.last_accessed = now;
+                    disk_item
+                } else {
+                    // File missing or corrupt — skip this entry (no fake content)
+                    eprintln!(
+                        "[MEMORY] ⚠️ LTM full content unavailable for {}: skipping recall hit",
+                        id
+                    );
+                    continue;
                 };
                 results.push(item);
             }
@@ -536,7 +560,7 @@ impl UnifiedMemory {
                 encrypted: true,
             };
 
-            self.ltm.index.insert(item.id.clone(), metadata);
+            self.ltm.index.insert(item.id.clone(), metadata.clone());
 
             // v20.1: Use bounded timeline
             self.add_timeline_event(TimelineEvent {
@@ -545,14 +569,24 @@ impl UnifiedMemory {
                 timestamp: now,
             });
 
-            // Implementation: Encrypted disk persistence for LTM entries
-            // - Encryption: Use ChaCha20-Poly1305 (chacha20poly1305 crate) for fast encryption
-            // - Key derivation: PBKDF2 from user passphrase or device-specific key
-            // - Storage: Write to ~/.titane/memory/ltm/{entry_id}.enc with 16-byte nonce
-            // - Format: [nonce(16) | encrypted_data | tag(16)]
-            // - Serialization: Use bincode for compact binary serialization before encryption
-            // - Batch writes: Flush to disk every 100 promotions or 60s interval
-            // - Recovery: Load and decrypt on app restart, rebuild in-memory LTM
+            // ✅ FIX: STM_NOT_PERSISTED / LTM_NOT_RETRIEVABLE — actual disk write.
+            // Previously this was a comment-only placeholder; no data was ever written.
+            // Now: serialize item as JSON and write to LTM storage path.
+            // No encryption in this minimal fix (key management is a separate concern).
+            // File: <storage_path>/<item_id>.mem — JSON for cross-session survival.
+            if let Ok(json) = serde_json::to_string(&item) {
+                if let Err(e) = std::fs::write(&metadata.file_path, json.as_bytes()) {
+                    eprintln!(
+                        "[MEMORY] ⚠️ LTM disk write failed for {}: {}",
+                        item.id, e
+                    );
+                    // Remove from index if write failed to avoid stale ghost entries
+                    self.ltm.index.remove(&item.id);
+                }
+            } else {
+                eprintln!("[MEMORY] ⚠️ LTM serialization failed for {}", item.id);
+                self.ltm.index.remove(&item.id);
+            }
         }
 
         // v20.1: Rebuild MTM index after removals
@@ -669,6 +703,161 @@ impl UnifiedMemory {
             *byte = (i * 7 + 13) as u8; // Simple deterministic pattern for now
         }
         key
+    }
+
+    /// ✅ FIX: Restore LTM index from persisted .mem files on startup.
+    /// Scans LTM storage_path for *.mem files, deserializes each MemoryItem,
+    /// and rebuilds the in-memory LTM metadata index. Silent corruption: skipped
+    /// with eprintln; healthy entries are still loaded.
+    fn restore_ltm_from_disk(&mut self) {
+        let dir = match std::fs::read_dir(&self.ltm.storage_path) {
+            Ok(d) => d,
+            Err(_) => return, // Directory may not exist yet — not an error
+        };
+
+        let mut restored = 0usize;
+        for entry in dir.flatten() {
+            let path = entry.path();
+            if path.extension().and_then(|e| e.to_str()) != Some("mem") {
+                continue;
+            }
+            let bytes = match std::fs::read(&path) {
+                Ok(b) => b,
+                Err(e) => {
+                    eprintln!("[MEMORY] ⚠️ LTM restore: cannot read {:?}: {}", path, e);
+                    continue;
+                }
+            };
+            let item: MemoryItem = match serde_json::from_slice(&bytes) {
+                Ok(i) => i,
+                Err(e) => {
+                    eprintln!("[MEMORY] ⚠️ LTM restore: corrupt entry {:?}: {}", path, e);
+                    continue;
+                }
+            };
+            let tags_vec: Vec<String> = item.tags.to_vec();
+            let metadata = MemoryMetadata {
+                id: item.id.clone(),
+                memory_type: item.memory_type,
+                importance: item.importance,
+                tags: tags_vec,
+                created_at: item.created_at,
+                file_path: path,
+                compressed: false,
+                encrypted: false,
+            };
+            self.ltm.index.insert(item.id, metadata);
+            restored += 1;
+        }
+        if restored > 0 {
+            println!("[MEMORY] 🔄 LTM restored {} entries from disk", restored);
+        }
+    }
+
+    /// Load entries from persistent_memory intermediate entries.json into STM.
+    /// Bridges the persistent_memory v19 file store into UnifiedMemory so that
+    /// conversation_generate's unified_memory.recall() can find them.
+    /// Safe to call multiple times: deduplicates by entry id.
+    pub fn load_persistent_entries(&mut self, base_path: &std::path::Path) {
+        let entries_path = base_path.join("intermediate").join("entries.json");
+        if !entries_path.exists() {
+            return;
+        }
+
+        let content = match std::fs::read_to_string(&entries_path) {
+            Ok(c) => c,
+            Err(e) => {
+                eprintln!("[MEMORY] ⚠️ Cannot read persistent entries: {}", e);
+                return;
+            }
+        };
+
+        let entries: Vec<serde_json::Value> = match serde_json::from_str(&content) {
+            Ok(v) => v,
+            Err(e) => {
+                eprintln!("[MEMORY] ⚠️ Cannot parse persistent entries: {}", e);
+                return;
+            }
+        };
+
+        let mut loaded = 0usize;
+        let now = Self::current_timestamp();
+
+        // Collect existing STM + MTM ids to skip duplicates
+        let existing_ids: std::collections::HashSet<String> = self.stm.items.iter()
+            .map(|i| i.id.clone())
+            .chain(self.mtm.items.iter().map(|i| i.id.clone()))
+            .chain(self.ltm.index.keys().cloned())
+            .collect();
+
+        for entry in entries {
+            let id = match entry.get("id").and_then(|v| v.as_str()) {
+                Some(id) => id.to_string(),
+                None => continue,
+            };
+
+            if existing_ids.contains(&id) {
+                continue;
+            }
+
+            let content_str = entry.get("content")
+                .and_then(|v| v.as_str())
+                .unwrap_or("")
+                .to_string();
+
+            if content_str.is_empty() {
+                continue;
+            }
+
+            let importance_raw = entry.get("importance")
+                .and_then(|v| v.as_u64())
+                .unwrap_or(3) as f32;
+            let importance = (importance_raw / 5.0).clamp(0.0, 1.0);
+
+            let tags: MemoryTags = entry.get("tags")
+                .and_then(|v| v.as_array())
+                .map(|arr| arr.iter()
+                    .filter_map(|t| t.as_str().map(|s| s.to_string()))
+                    .collect())
+                .unwrap_or_default();
+
+            let created_at = entry.get("metadata")
+                .and_then(|m| m.get("created_at"))
+                .and_then(|v| v.as_u64())
+                .unwrap_or(now);
+
+            let memory_type = match entry.get("content_type")
+                .and_then(|v| v.as_str())
+            {
+                Some("knowledge") => MemoryType::Knowledge,
+                Some("decision") => MemoryType::Decision,
+                Some("project_context") => MemoryType::Project,
+                Some("preference") => MemoryType::System,
+                _ => MemoryType::Conversation,
+            };
+
+            let item = MemoryItem {
+                id: id.clone(),
+                content: content_str,
+                memory_type,
+                importance,
+                tags,
+                created_at,
+                accessed_count: 0,
+                last_accessed: now,
+                tier: MemoryTier::ShortTerm,
+            };
+
+            let stm_position = self.stm.items.len();
+            self.stm.items.push_back(item);
+            self.stm_index.insert(id, stm_position);
+            self.total_memories += 1;
+            loaded += 1;
+        }
+
+        if loaded > 0 {
+            println!("[MEMORY] 🔄 Loaded {} persistent memory entries into UnifiedMemory STM", loaded);
+        }
     }
 
     fn current_timestamp() -> u64 {

@@ -27,11 +27,33 @@ const COMMANDS = {
 
 const DEFAULTS = {
   temperature: 0.7,
-  maxTokens: 1024,
+  maxTokens: 2048, // BALANCED profile default — aligned with responsePolicy BALANCED
+  provider: 'auto' as ProviderPreference,
+  enableStreaming: true,
+  profile: 'balanced' as ChatPerformanceProfile,
 } as const;
+
+interface IpcEnvelope<T> {
+  ok: boolean;
+  content: T | null;
+  error: { code: string; message: string } | null;
+}
+
+interface ChatRequestDefaultsPayload {
+  temperature: number;
+  maxOutputTokens: number;
+  provider: ProviderPreference;
+  enableStreaming: boolean;
+}
 
 export type ProviderPreference = 'auto' | 'gemini' | 'ollama' | 'local';
 export type SpeechMode = 'auto' | 'online' | 'local';
+/** Adaptive performance profile forwarded to the Rust engine. */
+export type ChatPerformanceProfile = 'fast' | 'balanced' | 'deep';
+
+export function invalidateRequestDefaultsCache(): void {
+  cachedDefaults = null;
+}
 
 // OMEGA Pipeline Types
 export interface OmegaGenerateArgs {
@@ -41,6 +63,8 @@ export interface OmegaGenerateArgs {
   provider?: string;
   systemPrompt?: string; // ✨ Ajout: system prompt personnalisé depuis InstructionMode
   requestId?: string;
+  /** Performance profile: "fast" | "balanced" | "deep". Default: "balanced". */
+  profile?: ChatPerformanceProfile;
 }
 
 export interface OmegaResponse {
@@ -66,6 +90,8 @@ export interface ChatRequestArgs {
   maxOutputTokens?: number;
   provider?: ProviderPreference;
   enableStreaming?: boolean;
+  /** Performance profile override. Default: "balanced". */
+  profile?: ChatPerformanceProfile;
 }
 
 interface BackendChatCompletionPayload {
@@ -76,6 +102,8 @@ interface BackendChatCompletionPayload {
   token_count: number;
   latency_ms: number;
   timestamp: number;
+  stop_reason?: string;
+  profile?: string;
 }
 
 export interface ChatCompletionPayload {
@@ -86,6 +114,10 @@ export interface ChatCompletionPayload {
   tokenCount: number;
   latencyMs: number;
   timestamp: number;
+  /** Why generation stopped: "complete" | "timeout" | "budget" | "error". */
+  stopReason: string;
+  /** Active performance profile for this response. */
+  profile: string;
 }
 
 interface BackendEngineHealthReport {
@@ -140,6 +172,8 @@ function normalizeCompletion(
     tokenCount: payload.token_count,
     latencyMs: payload.latency_ms,
     timestamp: payload.timestamp,
+    stopReason: payload.stop_reason ?? 'complete',
+    profile: payload.profile ?? DEFAULTS.profile,
   };
 }
 
@@ -174,6 +208,35 @@ function toBackendPayload(args: ChatRequestArgs): Record<string, unknown> {
     max_output_tokens: args.maxOutputTokens ?? DEFAULTS.maxTokens,
     provider: (args.provider ?? 'auto').toLowerCase(),
     enable_streaming: args.enableStreaming ?? false,
+    profile: args.profile ?? DEFAULTS.profile,
+  };
+}
+
+let cachedDefaults: ChatRequestDefaultsPayload | null = null;
+
+async function resolveRequestDefaults(): Promise<ChatRequestDefaultsPayload> {
+  if (cachedDefaults) {
+    return cachedDefaults;
+  }
+
+  try {
+    const envelope = await secureInvoke<IpcEnvelope<ChatRequestDefaultsPayload>>(
+      'get_chat_request_defaults',
+      {}
+    );
+    if (envelope.ok && envelope.content) {
+      cachedDefaults = envelope.content;
+      return envelope.content;
+    }
+  } catch {
+    // Keep local fallback below.
+  }
+
+  return {
+    temperature: DEFAULTS.temperature,
+    maxOutputTokens: DEFAULTS.maxTokens,
+    provider: DEFAULTS.provider,
+    enableStreaming: DEFAULTS.enableStreaming,
   };
 }
 
@@ -193,7 +256,14 @@ async function invokeCommand<T>(
 export async function generateResponse(
   args: ChatRequestArgs
 ): Promise<ChatCompletionPayload> {
-  const payload = toBackendPayload({ ...args, enableStreaming: false });
+  const defaults = await resolveRequestDefaults();
+  const payload = toBackendPayload({
+    ...args,
+    temperature: args.temperature ?? defaults.temperature,
+    maxOutputTokens: args.maxOutputTokens ?? defaults.maxOutputTokens,
+    provider: args.provider ?? defaults.provider,
+    enableStreaming: false,
+  });
   const result = await invokeCommand<BackendChatCompletionPayload>(COMMANDS.generate, {
     payload,
   });
@@ -201,7 +271,14 @@ export async function generateResponse(
 }
 
 export async function streamResponse(args: ChatRequestArgs): Promise<StreamHandle> {
-  const payload = toBackendPayload({ ...args, enableStreaming: true });
+  const defaults = await resolveRequestDefaults();
+  const payload = toBackendPayload({
+    ...args,
+    temperature: args.temperature ?? defaults.temperature,
+    maxOutputTokens: args.maxOutputTokens ?? defaults.maxOutputTokens,
+    provider: args.provider ?? defaults.provider,
+    enableStreaming: args.enableStreaming ?? defaults.enableStreaming,
+  });
   return invokeCommand<StreamHandle>(COMMANDS.stream, { payload });
 }
 
@@ -285,6 +362,7 @@ export async function generate(args: OmegaGenerateArgs): Promise<OmegaResponse> 
 export const chatEngineCommands = {
   generateResponse,
   streamResponse,
+  invalidateRequestDefaultsCache,
   speakText,
   saveMemory,
   loadMemory,

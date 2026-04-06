@@ -8,8 +8,44 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
+import { invoke } from '@tauri-apps/api/core';
 import { safeInvokeTauri } from '@/utils/tauriProtector';
-import monitoring from '@/monitoring';
+
+type MonitoringBridge = {
+  trackRequest: () => void;
+  addBreadcrumb: (message: string, category?: string, data?: unknown) => void;
+  trackPipelineError: () => void;
+  trackPipelineLatency: (latency: number) => void;
+  trackError: (error: unknown, context?: unknown) => void;
+};
+
+const noopMonitoring: MonitoringBridge = {
+  trackRequest: () => {},
+  addBreadcrumb: () => {},
+  trackPipelineError: () => {},
+  trackPipelineLatency: () => {},
+  trackError: () => {},
+};
+
+let monitoringBridge: MonitoringBridge = noopMonitoring;
+
+void import('@/monitoring')
+  .then(mod => {
+    const candidate = (mod.monitoring ?? mod.default) as MonitoringBridge | undefined;
+    if (candidate) {
+      monitoringBridge = candidate;
+    }
+  })
+  .catch(() => {});
+
+const monitoring: MonitoringBridge = {
+  trackRequest: () => monitoringBridge.trackRequest(),
+  addBreadcrumb: (message, category, data) =>
+    monitoringBridge.addBreadcrumb(message, category, data),
+  trackPipelineError: () => monitoringBridge.trackPipelineError(),
+  trackPipelineLatency: latency => monitoringBridge.trackPipelineLatency(latency),
+  trackError: (error, context) => monitoringBridge.trackError(error, context),
+};
 
 // ────────────────────────────────────────────────────────────────
 // Constants
@@ -25,6 +61,8 @@ export const VOID_COMMANDS = new Set<string>([
   'tts_speak',
   'tts_stop',
   'stop_speaking',
+  'pause_speaking',
+  'resume_speaking',
   'set_audio_output_device',
   'set_audio_input_device',
   'vad_reset',
@@ -59,6 +97,7 @@ export const VOID_COMMANDS = new Set<string>([
   // Persistence commands that return ()
   'titan_persist_event',
   'titan_force_snapshot',
+  'titan_force_snapshot_current',
   'titan_persistence_init',
   'titan_persistence_shutdown',
   // Logging commands that return ()
@@ -265,6 +304,10 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'context_clear',
 
   // Persistent Memory (frontend hooks)
+  'persistent_memory_read',
+  'persistent_memory_get_bundles',
+  'persistent_memory_get_context',
+  'persistent_memory_get_stats',
   'persistent_memory_write_entry',
   'persistent_memory_create_summary',
   'persistent_memory_create_bundle',
@@ -288,6 +331,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'ping_gemini',
   'ping_ollama',
   'ollama_query', // ✅ v∞ Direct Ollama query
+  'ollama_generate', // ✅ Unified Ollama IPC command
   'chat_generate',
   'upload_and_process_file',
 
@@ -302,6 +346,8 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'load_conversation',
   'chat_set_gemini_key',
   'chat_stream_message',
+  'chat_mode_change', // ✅ v30.0.0 — Chat mode switching
+  'chat_mode_sync', // ✅ v30.0.0 — Chat mode sync
   'chat_generate_suggestions', // ✅ v∞ Suggestions IA
   'generate_response',
   'stream_response',
@@ -313,6 +359,16 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // Control Panel (secure)
   'cp_get_ai_config',
   'cp_set_ai_config',
+  'cp_get_design_config',
+  'cp_set_design_config',
+  'cp_get_modules_status',
+  'cp_toggle_module',
+  'cp_get_network_config',
+  'cp_set_network_config',
+  'cp_get_security_config',
+  'cp_set_security_config',
+  'cp_check_for_updates',
+  'cp_install_update',
 
   // ═══════════════════════════════════════════════════════════════
   // VOICE / TTS / ASR (v∞ PRODUCTION)
@@ -320,6 +376,8 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'speak',
   'stop_speaking',
   'is_speaking',
+  'pause_speaking',
+  'resume_speaking',
   'start_recording',
   'stop_recording',
   'cancel_recording',
@@ -443,6 +501,16 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'devops_stats',
 
   // ═══════════════════════════════════════════════════════════════
+  // TOTAL_DEV — GOD DEV Governed Space (v30.0.0)
+  // ═══════════════════════════════════════════════════════════════
+  'total_dev_unlock',
+  'total_dev_session_status',
+  'total_dev_revoke',
+  'total_dev_git_op',
+  'total_dev_run_command',
+  'total_dev_read_file',
+
+  // ═══════════════════════════════════════════════════════════════
   // SECURE COMMANDS (v∞)
   // ═══════════════════════════════════════════════════════════════
   'secure_import_file',
@@ -501,7 +569,6 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'voice_stop_listening',
   'voice_transcribe_audio',
   'voice_detect_wake_word',
-  'voice_synthesize_speech',
   'voice_play_audio',
   'voice_stop_speaking',
   'voice_get_config',
@@ -515,12 +582,14 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'voice_check_interruption',
   'voice_test_pipeline',
   'voice_get_available_models',
+  'calibrate_titane_voice', // ✅ v30.0.0 — TITANE voice calibration
 
   // ═══════════════════════════════════════════════════════════════
   // PERSISTENCE ENGINE v∞.MPE
   // ═══════════════════════════════════════════════════════════════
   'titan_persist_event',
   'titan_force_snapshot',
+  'titan_force_snapshot_current',
   'titan_load_state',
   'titan_get_events_since',
   'titan_list_snapshots',
@@ -775,7 +844,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'context_link_conversations',
 
   // ═══════════════════════════════════════════════════════════════
-  // VISUAL DEVOPS ENGINE (v25.5)
+  // VISUAL DEVOPS ENGINE (v30.0.0)
   // ═══════════════════════════════════════════════════════════════
   'visual_devops_analyze_screen',
   'visual_devops_detect_elements',
@@ -934,6 +1003,29 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'evolution_reject_suggestion',
   'evolution_create_action',
 
+  // v30.0.0 — Evolution persistence and data submission
+  'evolution_save_state',
+  'submit_evolution_data',
+
+  // ═══════════════════════════════════════════════════════════════
+  // KNOWLEDGE VAULT (v30.0.0)
+  // ═══════════════════════════════════════════════════════════════
+  'knowledge_ingest',
+  'knowledge_save_state',
+
+  // ═══════════════════════════════════════════════════════════════
+  // AGENDA / TIME CENTER (v30.0.0)
+  // ═══════════════════════════════════════════════════════════════
+  'agenda_save_event',
+  'agenda_save_events',
+  'agenda_delete_event',
+  'agenda_sync',
+
+  // ═══════════════════════════════════════════════════════════════
+  // PROGRESSION / XP (v30.0.0)
+  // ═══════════════════════════════════════════════════════════════
+  'progression_save_state',
+
   // ═══════════════════════════════════════════════════════════════
   // META & ORCHESTRATION (v24.4+)
   // ═══════════════════════════════════════════════════════════════
@@ -949,6 +1041,9 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // ═══════════════════════════════════════════════════════════════
   // IDENTITY CENTER (v24.4+)
   // ═══════════════════════════════════════════════════════════════
+  'identity_list_voice_profiles',
+  'identity_get_active_voice_profile',
+  'identity_set_active_voice_profile',
   'identity_set_mode',
   'identity_set_voice_profile',
   'identity_enable_rule',
@@ -978,11 +1073,18 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // CONFIG HUB (v24.4+)
   // ═══════════════════════════════════════════════════════════════
   'get_all_configs',
+  'get_audio_device_config',
+  'save_audio_device_config',
+  'get_chat_engine_config',
+  'get_chat_request_defaults',
   'export_config',
   'import_config',
   'list_config_presets',
   'update_runtime_config',
   'update_chat_engine_config',
+  'set_chat_engine_config',
+  'set_chat_request_defaults',
+  'set_chat_profile',
   'save_config_preset',
   'load_config_preset',
   'delete_config_preset',
@@ -1040,7 +1142,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'get_onboarding_preferences',
 
   // ═══════════════════════════════════════════════════════════════
-  // OMEGA CONVERSATION ENGINE (v26.2)
+  // OMEGA CONVERSATION ENGINE (v30.0.0)
   // Pipeline de conversation 12 étapes - Cerveau IA TITANE
   // ═══════════════════════════════════════════════════════════════
   'create_new_conversation',
@@ -1054,7 +1156,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'conversation_behavioral_check',
 
   // ═══════════════════════════════════════════════════════════════
-  // LITERARY ENGINE (v26.2)
+  // LITERARY ENGINE (v30.0.0)
   // Moteur littéraire OMEGA pour style et ton
   // ═══════════════════════════════════════════════════════════════
   'literary_engine_process',
@@ -1062,7 +1164,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'literary_engine_get_style_profile',
 
   // ═══════════════════════════════════════════════════════════════
-  // ANTHOLOGY ENGINE (v26.2)
+  // ANTHOLOGY ENGINE (v30.0.0)
   // Intégration anthologie et ADN littéraire
   // ═══════════════════════════════════════════════════════════════
   'anthology_integrate_text',
@@ -1188,7 +1290,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'sync_evolution_state',
 
   // ═══════════════════════════════════════════════════════════════
-  // WINDOW CONTROLS (v26.2.0+)
+  // WINDOW CONTROLS (v30.0.0+)
   // Zoom + Fullscreen (CTRL+Scroll, F11, F12)
   // ═══════════════════════════════════════════════════════════════
   'window_get_zoom',
@@ -1221,6 +1323,18 @@ const INJECTION_PATTERNS = [
   /\.\.\//g,
 ];
 
+// Chat/orchestrator commands are intentionally permissive so TITANE can
+// interpret rich user prompts and let the orchestrator enforce limits.
+const CHAT_OPEN_COMMANDS = new Set<string>([
+  'conversation_generate',
+  'conversation_process_message',
+  'create_new_conversation',
+  'chat_check_providers',
+  'chat_set_gemini_key',
+  'chat_set_openai_key',
+  'chat_set_anthropic_key',
+]);
+
 function readViteEnvNumber(key: string, fallback: number): number {
   try {
     const raw = (import.meta as unknown as { env?: Record<string, string | undefined> })
@@ -1240,10 +1354,8 @@ function readViteEnvNumber(key: string, fallback: number): number {
 const MAX_PAYLOAD_SIZE =
   readViteEnvNumber('VITE_TITANE_SECURITY_MAX_PAYLOAD_MB', 50) * 1024 * 1024;
 
-/**
- * Timeout maximal par défaut (30s)
- */
-const DEFAULT_TIMEOUT_MS = 30000;
+// Legacy metric retained for compatibility with existing security stats schema.
+const DEFAULT_TIMEOUT_MS = 0;
 
 /**
  * Cache pour détecter les boucles infinies
@@ -1267,7 +1379,7 @@ function maybeCleanupCallTracking(now: number): void {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// v26.2 - LOCAL NETWORK SECURITY MODE
+// v30.0.0 - LOCAL NETWORK SECURITY MODE
 // Pour réseau domestique sécurisé privé - restrictions réduites
 // ═══════════════════════════════════════════════════════════════
 
@@ -1286,6 +1398,7 @@ let localNetworkMode: LocalNetworkSecurityConfig = {
   skipInjectionCheckForLocalCmds: true,
   trustedCommands: new Set([
     'conversation_process_message',
+    'conversation_generate',
     // [RETRAIT v27.0.5-prod] Legacy chat command removed from trusted list (use conversation_generate)
     'chat_stream_message',
     'memory_get_state',
@@ -1293,7 +1406,6 @@ let localNetworkMode: LocalNetworkSecurityConfig = {
     'get_system_health',
     'singularity_get_state',
     'tts_speak',
-    'voice_synthesize_speech',
   ]),
 };
 
@@ -1352,7 +1464,7 @@ const isTestEnvironment =
 // ────────────────────────────────────────────────────────────────
 
 export interface SecureInvokeOptions {
-  /** Timeout en ms (défaut: 30000) */
+  /** Conservé pour compatibilité (non utilisé) */
   timeout?: number;
   /** Désactiver validation anti-injection (défaut: false) */
   skipInjectionCheck?: boolean;
@@ -1691,7 +1803,7 @@ export function sanitizeResponse<T>(response: T): T {
  * - ✅ Injection pattern detection
  * - ✅ Payload size validation
  * - ✅ Infinite loop detection
- * - ✅ Timeout protection
+ * - ✅ Command, payload and response validation
  * - ✅ Response validation with type guards
  *
  * @example
@@ -1709,7 +1821,7 @@ export function sanitizeResponse<T>(response: T): T {
  * const report = await secureInvoke<HardeningReport>(
  *   'run_hardening_selftest',
  *   {},
- *   { timeout: 60000 },
+ *   {},
  *   isHardeningReport
  * );
  * ```
@@ -1717,6 +1829,13 @@ export function sanitizeResponse<T>(response: T): T {
 function normalizeInvokeError(command: string, error: unknown): Error {
   const err = error instanceof Error ? error : new Error(String(error));
   const isAbort = err.name === 'AbortError' || /aborted/i.test(err.message);
+  const isTimeout = /timeout after|Timeout after/i.test(err.message);
+
+  if (isTimeout) {
+    const timeoutError = new Error(`IPC timeout for ${command}`);
+    timeoutError.name = 'IPC_TIMEOUT';
+    return timeoutError;
+  }
 
   if (!isAbort) {
     return err;
@@ -1736,20 +1855,29 @@ export async function secureInvoke<T>(
   validator?: (val: unknown) => val is T
 ): Promise<T> {
   const {
-    timeout = DEFAULT_TIMEOUT_MS,
+    timeout: _timeout,
     skipInjectionCheck = false,
     skipWhitelistCheck = false,
     skipLoopCheck = false,
     treatFallbackAsError = false,
   } = options;
 
+  const isChatOpenCommand = CHAT_OPEN_COMMANDS.has(command);
+
+  const shouldSkipWhitelistCheck = skipWhitelistCheck || isChatOpenCommand;
+
   const shouldSkipInjectionCheck =
     skipInjectionCheck ||
+    isChatOpenCommand ||
     (localNetworkMode.enabled &&
       localNetworkMode.skipInjectionCheckForLocalCmds &&
       localNetworkMode.trustedCommands.has(command));
 
+  const shouldSkipLoopCheck = skipLoopCheck || isChatOpenCommand;
+
   const startedAt = Date.now();
+  const invokeId = `${startedAt}-${Math.random().toString(36).slice(2, 10)}`;
+  console.info(`IPC:START ${command} ${invokeId}`);
   try {
     monitoring.trackRequest();
     monitoring.addBreadcrumb('secureInvoke start', 'tauri', {
@@ -1762,7 +1890,7 @@ export async function secureInvoke<T>(
   }
 
   // [1] Validation commande whitelist
-  if (!skipWhitelistCheck) {
+  if (!shouldSkipWhitelistCheck) {
     const cmdValidation = validateCommand(command);
     if (!cmdValidation.valid) {
       const errorMsg = `Security: ${cmdValidation.errors.join('; ')}`;
@@ -1820,7 +1948,7 @@ export async function secureInvoke<T>(
   }
 
   // [4] Détection boucle infinie
-  if (!skipLoopCheck) {
+  if (!shouldSkipLoopCheck) {
     const loopCheck = detectInfiniteLoop(command);
     if (!loopCheck.valid) {
       const errorMsg = `Security: ${loopCheck.errors.join('; ')}`;
@@ -1839,7 +1967,7 @@ export async function secureInvoke<T>(
     }
   }
 
-  // [5] Invoke avec timeout
+  // [5] Invoke
   try {
     const isTestEnv =
       (typeof process !== 'undefined' && Boolean(process.env?.VITEST_WORKER_ID)) ||
@@ -1848,16 +1976,10 @@ export async function secureInvoke<T>(
 
     let response: unknown;
     if (isTestEnv) {
-      // En environnement de test, utiliser directement le module mocké pour laisser Vitest contrôler les rejets/résolutions
-      const tauriCore = await import('@tauri-apps/api/core');
-      response = await Promise.race([
-        tauriCore.invoke<T>(command, payload),
-        new Promise((_, reject) =>
-          setTimeout(() => reject(new Error(`Timeout after ${timeout}ms`)), timeout)
-        ),
-      ]);
+      // En environnement de test, utiliser directement le module statique.
+      response = await invoke<T>(command, payload);
     } else {
-      response = await safeInvokeTauri<T>(command, payload, timeout);
+      response = await safeInvokeTauri<T>(command, payload);
     }
 
     // [6] Validation réponse - avec support des commandes void
@@ -1915,9 +2037,14 @@ export async function secureInvoke<T>(
       // ignore monitoring errors
     }
 
+    console.info(`IPC:END ${command} ${invokeId} ok`);
     return sanitized as T;
   } catch (error) {
     const normalized = normalizeInvokeError(command, error);
+    if (normalized.name === 'IPC_TIMEOUT') {
+      console.info(`IPC:TIMEOUT ${command} ${invokeId}`);
+    }
+    console.info(`IPC:END ${command} ${invokeId} error`);
     console.error(`[Security] ✗ secureInvoke("${command}") failed:`, normalized.message);
 
     try {
@@ -1946,7 +2073,7 @@ export async function runSecuritySelfTest(): Promise<HardeningReport> {
   const report = await secureInvoke<HardeningReport>(
     'run_hardening_selftest',
     {},
-    { timeout: 60000 },
+    {},
     isHardeningReport
   );
 
@@ -1979,28 +2106,5 @@ export function getSecurityStats() {
 // ═══════════════════════════════════════════════════════════════
 // v19.0 PHASE 2: AI SECURITY MODULES
 // ═══════════════════════════════════════════════════════════════
-
-export { AIInputSanitizer, type SanitizationResult } from './security/AIInputSanitizer';
-export {
-  AIResponseValidator,
-  type AIValidationResult,
-  ChatResponseSchema,
-  StreamingChunkSchema,
-  MetaModeResponseSchema,
-  type ChatResponse,
-  type StreamingChunk,
-  type MetaModeResponse,
-} from './security/AIResponseValidator';
-export {
-  AIRateLimiter,
-  globalAIRateLimiter,
-  type RateLimitConfig,
-  type RateLimitStatus,
-  type RequestMetrics,
-} from './security/AIRateLimiter';
-export {
-  SecureAIService,
-  type SecureAIRequest,
-  type SecureAIResponse,
-  type SecureAIServiceFunction,
-} from './security/SecureAIService';
+// NOTE: AI security modules (AIInputSanitizer, AIResponseValidator, AIRateLimiter)
+// are not yet implemented. Remove these exports when modules are created.

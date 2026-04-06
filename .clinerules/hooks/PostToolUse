@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# PostToolUse hook for TITANE∞
-# Surveille les performances et apprend des opérations
+# PostToolUse hook for TITANE∞ — v3 (sobered)
+# op_status=SUCCESS/FAIL uniquement. Pas de verdict PASS gouverné depuis un succès outil.
+# PASS gouverné requiert une preuve explicite (Rule 2 canon).
 
 input=$(cat)
 
@@ -10,35 +11,40 @@ success=$(echo "$input" | jq -r '.postToolUse.success')
 
 context=""
 
-# Surveiller les opérations lentes
-if (( execution_time > 5000 )); then
-  context="PERFORMANCE: Slow operation detected - $tool_name took ${execution_time}ms. "
-  context+="Consider optimizing or showing progress to user."
-fi
+# OPERATION STATUS — pas un verdict gouverné.
+# success=true = l'outil s'est exécuté. Ce n'est PAS un PASS constitutionnel.
+# PASS gouverné nécessite une preuve explicite (.clinerules/00-kernel.md Rule 2).
+if [[ "$success" == "false" ]]; then
+  context="op_status=FAIL tool=$tool_name — Rule 8 stop-the-line. Diagnostiquer avant de continuer."
 
-# Apprendre des échecs de compilation
-if [[ "$tool_name" == "execute_command" ]] && [[ "$success" == "false" ]]; then
-  result=$(echo "$input" | jq -r '.postToolUse.result // ""')
-  
-  if echo "$result" | grep -qiE 'error.*TS[0-9]+|TypeScript error'; then
-    if [[ -n "$context" ]]; then context+="\n"; fi
-    context+="TYPESCRIPT_ERROR: TypeScript compilation failed. "
-    context+="Verify types match existing patterns in the codebase."
-  fi
-  
-  if echo "$result" | grep -qiE 'test.*failed|FAIL'; then
-    if [[ -n "$context" ]]; then context+="\n"; fi
-    context+="TEST_FAILURE: Tests failed. "
-    context+="Review test expectations and ensure changes don't break existing functionality."
+  # Détection contextuelle d'échec
+  if [[ "$tool_name" == "execute_command" ]]; then
+    result=$(echo "$input" | jq -r '.postToolUse.result // ""')
+    if echo "$result" | grep -qiE 'error.*TS[0-9]+|TypeScript error'; then
+      context+="\nTS_ERROR: Compilation TypeScript échouée — vérifier les types."
+    fi
+    if echo "$result" | grep -qiE 'test.*failed|FAIL'; then
+      context+="\nTEST_FAIL: Tests échoués — vérifier les assertions."
+    fi
   fi
 fi
 
-# Logger les opérations critiques
+# AutoHeal: entrées écrites manuellement par Rule 10 — non auto-capturées
+# (auto-capture désactivée: générait du JSON multi-lignes dans JSONL — défaut de format)
+
+# Log sobre des opérations critiques (sans inflation de statut)
 if [[ "$tool_name" =~ ^(write_to_file|execute_command)$ ]]; then
   log_dir=".clinerules/logs"
   mkdir -p "$log_dir"
-  timestamp=$(echo "$input" | jq -r '.timestamp')
-  echo "$timestamp: $tool_name (${execution_time}ms) - success=$success" >> "$log_dir/operations.log"
+  timestamp=$(echo "$input" | jq -r '.timestamp // empty')
+  [[ -z "$timestamp" ]] && timestamp=$(date -Iseconds)
+  echo "$timestamp: $tool_name (${execution_time}ms) success=$success" >> "$log_dir/operations.log"
+fi
+
+# Anti-loop: si l'outil a réussi, confirmer explicitement que
+# le résultat est terminal. Vide = repo propre = décision finale.
+if [[ "$success" == "true" && "$tool_name" =~ ^(write_to_file|execute_command)$ ]]; then
+  context+="\nVERIFY_STATE: Repo check complete. Empty output = clean. No re-check needed."
 fi
 
 if [[ -n "$context" ]]; then

@@ -41,6 +41,7 @@ export interface TauriInvokeOptions {
   timeout?: number;
   skipWhitelistCheck?: boolean;
   skipInjectionCheck?: boolean;
+  skipLoopCheck?: boolean;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -639,10 +640,17 @@ class TauriClient {
   }
 
   async conversationGenerate(params?: unknown): Promise<unknown> {
-    return await this.invoke(
-      TAURI_COMMANDS.CONVERSATION_GENERATE,
-      (params as Record<string, unknown>) || {}
-    );
+    const payload = (params as Record<string, unknown>) || {};
+    const normalizedPayload =
+      payload && typeof payload === 'object' && 'args' in payload
+        ? payload
+        : { args: payload };
+
+    return await this.invoke(TAURI_COMMANDS.CONVERSATION_GENERATE, normalizedPayload, {
+      skipWhitelistCheck: true,
+      skipInjectionCheck: true,
+      skipLoopCheck: true,
+    });
   }
 
   async conversationHealthCheck(params?: unknown): Promise<unknown> {
@@ -823,6 +831,28 @@ class TauriClient {
   async getAllConfigs(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.GET_ALL_CONFIGS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getAudioDeviceConfig(): Promise<unknown> {
+    return await this.invoke(TAURI_COMMANDS.GET_AUDIO_DEVICE_CONFIG, {});
+  }
+
+  async saveAudioDeviceConfig(config: unknown): Promise<unknown> {
+    return await this.invoke(TAURI_COMMANDS.SAVE_AUDIO_DEVICE_CONFIG, { config });
+  }
+
+  async getChatEngineConfig(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_CHAT_ENGINE_CONFIG,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getChatRequestDefaults(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_CHAT_REQUEST_DEFAULTS,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -1373,6 +1403,13 @@ class TauriClient {
     );
   }
 
+  async identityGetActiveVoiceProfile(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.IDENTITY_GET_ACTIVE_VOICE_PROFILE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async identityGetCurrentTone(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.IDENTITY_GET_CURRENT_TONE,
@@ -1445,7 +1482,7 @@ class TauriClient {
 
   async installUpdate(params?: unknown): Promise<unknown> {
     return await this.invoke(
-      TAURI_COMMANDS.INSTALL_UPDATE,
+      TAURI_COMMANDS.CP_INSTALL_UPDATE,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -2749,6 +2786,55 @@ class TauriClient {
   async ttsStop(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.TTS_STOP,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async stopSpeaking(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.STOP_SPEAKING,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async isSpeaking(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.IS_SPEAKING,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async pauseSpeaking(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.PAUSE_SPEAKING,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async resumeSpeaking(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.RESUME_SPEAKING,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async setChatEngineConfig(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SET_CHAT_ENGINE_CONFIG,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async setChatRequestDefaults(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SET_CHAT_REQUEST_DEFAULTS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async setChatProfile(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SET_CHAT_PROFILE,
       (params as Record<string, unknown>) || {}
     );
   }

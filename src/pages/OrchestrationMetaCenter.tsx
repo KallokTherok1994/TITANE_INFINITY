@@ -727,40 +727,91 @@ const OrchestrationMetaCenterContent: React.FC = () => {
       // Load Cognitive orchestration states (with fallbacks)
       const multiAiState = (await tauriClient.multiAiGetState().catch(() => ({
         providers: [],
-        bestProvider: 'claude',
+        bestProvider: 'unknown', // IPC unavailable — not a real value
         autoMode: true,
-        globalScore: 85,
+        globalScore: 0, // IPC unavailable — not a real value
         lastUpdate: Date.now(),
       }))) as MultiAIState;
 
-      const nexusState = (await tauriClient.nexusGetState().catch(() => ({
-        activeNodes: 12,
-        totalNodes: 15,
-        linkCount: 45,
-        coherenceScore: 88,
-        nodes: [],
-        anomalies: [],
-        lastUpdate: Date.now(),
-      }))) as NexusState;
+      // [FIX-007] engine_get_nexus_state returns NexusEngineState — map to local NexusState shape
+      const nexusState: NexusState = await tauriClient
+        .nexusGetState()
+        .then(raw => {
+          const r = raw as {
+            health?: string;
+            coordination_count?: number;
+            active_connections?: number;
+            last_coordination_ms?: number;
+          };
+          const h = r.health ?? '';
+          // Derived heuristic from health string — not a measured value
+          const coherenceScore =
+            h === 'Ready'
+              ? (r.active_connections ?? 0) > 0
+                ? 75
+                : 50
+              : h === 'Degraded'
+                ? 25
+                : 0;
+          return {
+            activeNodes: r.active_connections ?? 0,
+            totalNodes: r.active_connections ?? 0, // total = active until backend exposes full count
+            linkCount: Math.min(r.coordination_count ?? 0, 999),
+            coherenceScore,
+            nodes: [],
+            anomalies: [],
+            lastUpdate: r.last_coordination_ms ?? Date.now(),
+          };
+        })
+        .catch(() => ({
+          activeNodes: 0,
+          totalNodes: 0, // IPC unavailable — not a real value
+          linkCount: 0,
+          coherenceScore: 0, // IPC unavailable — not a real value
+          nodes: [],
+          anomalies: [],
+          lastUpdate: Date.now(),
+        }));
 
-      const harmoniaState = (await tauriClient.harmoniaGetState().catch(() => ({
-        activeFlows: [],
-        cpuUsage: 35,
-        ramUsage: 45,
-        ioBalance: 78,
-        harmonyScore: 82,
-        mode: 'balanced',
-        lastUpdate: Date.now(),
-      }))) as HarmoniaState;
+      // [FIX-007] engine_get_harmonia_state returns HarmoniaEngineState — map to local HarmoniaState shape
+      const harmoniaState: HarmoniaState = await tauriClient
+        .harmoniaGetState()
+        .then(raw => {
+          const r = raw as {
+            health?: string;
+            harmony_index?: number;
+            balance_score?: number;
+            last_check_ms?: number;
+          };
+          const h = r.health ?? '';
+          return {
+            activeFlows: [],
+            cpuUsage: 0,
+            ramUsage: 0,
+            ioBalance: Math.round((r.balance_score ?? 0) * 100),
+            harmonyScore: Math.round((r.harmony_index ?? 0) * 100),
+            mode: h === 'Ready' ? 'balanced' : h === 'Degraded' ? 'degraded' : 'unknown',
+            lastUpdate: r.last_check_ms ?? Date.now(),
+          };
+        })
+        .catch(() => ({
+          activeFlows: [],
+          cpuUsage: 0,
+          ramUsage: 0,
+          ioBalance: 0,
+          harmonyScore: 0, // IPC unavailable — not a real value
+          mode: 'unknown',
+          lastUpdate: Date.now(),
+        }));
 
       const cognitiveState = (await tauriClient.cognitiveGetState().catch(() => ({
-        provider: 'claude',
-        mode: 'deep',
-        depth: 7,
-        stability: 92,
-        cognitiveScore: 87,
-        mentalLoad: 42,
-        reasoningQuality: 91,
+        provider: 'unknown', // IPC unavailable — not a real value
+        mode: 'unknown',
+        depth: 0,
+        stability: 0, // IPC unavailable — not a real value
+        cognitiveScore: 0, // IPC unavailable — not a real value
+        mentalLoad: 0, // IPC unavailable — not a real value
+        reasoningQuality: 0,
         activeProcesses: [],
         lastUpdate: Date.now(),
       }))) as CognitiveState;

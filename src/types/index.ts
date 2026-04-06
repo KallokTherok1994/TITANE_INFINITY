@@ -4,12 +4,13 @@
 
 // Export all types - duplicates resolved by module priority order
 // Priority: system > devtools > devops > automationXP > singularityState
-export * from './audio';
-export * from './ai';
+export type * from './audio';
+export type * from './ai';
 export * from './logger';
 export * from './conversation'; // 🆕 P1: Multi-conversations types
 export * from './providerMeta';
 export * from './research'; // P1: WebResearch Engine types (EXPERIMENTAL)
+export * from './remediationPermissions';
 
 // Conversation OS v1 types (Ring 1) — explicit export to avoid collisions
 export type {
@@ -27,7 +28,7 @@ export type {
 export { isOnlineCapable, isPolicyBlock, isRetriableFailure } from './conversation_os';
 
 // System exports (LogEntry, MemoryState prioritaires)
-export * from './system';
+export type * from './system';
 
 // DevTools exports (SystemEvent, DataPoint, MemoryNode prioritaires)
 export type { CoreHealth, Engine, SystemEvent, DataPoint, MemoryNode } from './devtools';

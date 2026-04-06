@@ -26,7 +26,6 @@ impl ChatState {
             history: Arc::new(Mutex::new(Vec::new())),
             api_key: Arc::new(Mutex::new(None)),
             client: Client::builder()
-                .timeout(std::time::Duration::from_secs(30))
                 .build()
                 .unwrap_or_else(|_| Client::new()),
         }
@@ -44,7 +43,6 @@ impl ChatState {
 /// // NEW (OMEGA v2)
 /// conversation_generate(message, conversation_id, mode, provider, system_prompt)
 /// ```
-#[tauri::command]
 #[deprecated(
     since = "24.2.0",
     note = "Use conversation_generate from OMEGA Pipeline v2 instead"

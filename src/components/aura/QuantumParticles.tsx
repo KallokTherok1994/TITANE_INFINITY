@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v25.3.1 — QUANTUM PARTICLES
+ *   TITANE∞ v30.0.0 — QUANTUM PARTICLES
  *   Background interactif canvas-based avec particules quantiques
  * ═══════════════════════════════════════════════════════════════
  */

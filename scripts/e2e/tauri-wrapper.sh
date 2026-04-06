@@ -4,8 +4,8 @@
 
 set -euo pipefail
 
-ARTIFACTS_DIR="${TITANE_E2E_ARTIFACTS_DIR:-}"
-WRAPPER_LOG=""
+ARTIFACTS_DIR="${TITANE_E2E_ARTIFACTS_DIR:-${RUN_ARTIFACTS:-}}"
+WRAPPER_LOG="/tmp/e2e-wrapper-last.log"
 if [[ -n "$ARTIFACTS_DIR" ]]; then
   mkdir -p "$ARTIFACTS_DIR"
   WRAPPER_LOG="$ARTIFACTS_DIR/tauri-wrapper.log"
@@ -19,6 +19,15 @@ log_line() {
   fi
 }
 
+WRAPPER_ENV_FILE="/tmp/titane-e2e-wrapper.env"
+if [[ -f "$WRAPPER_ENV_FILE" ]]; then
+  set -a
+  # shellcheck disable=SC1090
+  source "$WRAPPER_ENV_FILE"
+  set +a
+  log_line "[E2E_WRAPPER] loaded env overrides from $WRAPPER_ENV_FILE"
+fi
+
 log_line "[E2E_WRAPPER] start"
 log_line "[E2E_WRAPPER] env TITANE_E2E=${TITANE_E2E:-}"
 log_line "[E2E_WRAPPER] env HOME=${HOME}"
@@ -28,6 +37,9 @@ log_line "[E2E_WRAPPER] env XDG_DATA_HOME=${XDG_DATA_HOME:-<unset>}"
 log_line "[E2E_WRAPPER] env TMPDIR=${TMPDIR:-<unset>}"
 log_line "[E2E_WRAPPER] env TITANE_MEMORY_DIR=${TITANE_MEMORY_DIR:-<unset>}"
 log_line "[E2E_WRAPPER] env TITANE_LOG_DIR=${TITANE_LOG_DIR:-<unset>}"
+log_line "[E2E_WRAPPER] env TAURI_BINARY_PATH(input)=${TAURI_BINARY_PATH:-<unset>}"
+log_line "[E2E_WRAPPER] env TITANE_CONVERSATION_TIMEOUT_SECS=${TITANE_CONVERSATION_TIMEOUT_SECS:-<unset>}"
+log_line "[E2E_WRAPPER] env TITANE_TIMEOUT_TRACE=${TITANE_TIMEOUT_TRACE:-<unset>}"
 log_line "[E2E_WRAPPER] artifacts=${ARTIFACTS_DIR:-<unset>}"
 
 # Proof witness file (to detect wrapper execution even if stderr is lost)
@@ -41,31 +53,66 @@ log_line "[E2E_WRAPPER] active"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
+resolve_policy_binary() {
+  node - "$REPO_ROOT" <<'NODE'
+const path = require('node:path');
+const rootDir = process.argv[2];
+
+try {
+  const {
+    resolveNativeBinaryPolicy,
+  } = require(path.resolve(rootDir, 'scripts/e2e/native-binary-policy.cjs'));
+
+  const policy = resolveNativeBinaryPolicy({
+    rootDir,
+    explicitBinaryPath: process.env.TAURI_BINARY_PATH || '',
+    tauriDevServerUrl: process.env.TAURI_DEV_SERVER_URL || '',
+    mode: process.env.TITANE_NATIVE_BINARY_MODE || '',
+  });
+
+  process.stdout.write(policy.selectedBinaryPath || '');
+} catch {
+  process.stdout.write('');
+}
+NODE
+}
+
+POLICY_BINARY="$(resolve_policy_binary || true)"
+shopt -s nullglob
+APPIMAGE_CANDIDATES=(
+  "$REPO_ROOT"/deployment/latest/*.AppImage
+  "$REPO_ROOT"/runtime/stable/*.AppImage
+  "$REPO_ROOT"/src-tauri/target/release/bundle/appimage/*.AppImage
+)
+shopt -u nullglob
+
+if [[ -x "$HOME/.local/bin/titane-infinity" && -x "/usr/bin/titane-infinity" ]]; then
+  log_line "[E2E_WRAPPER] shadowing-risk ~/.local/bin/titane-infinity may mask /usr/bin/titane-infinity"
+fi
+
 # Binary selection policy:
-# - If TAURI_BINARY_PATH is explicitly provided: use it first.
-# - If TAURI_DEV_SERVER_URL is set: prefer debug/release binaries.
-# - Otherwise: prefer packaged AppImage binaries with embedded assets.
+# - explicit TAURI_BINARY_PATH always wins.
+# - native-binary-policy.cjs provides the canonical freshest candidate.
+# - fallback order keeps /usr/bin ahead of ~/.local/bin to avoid stale local shadowing.
 if [[ -n "${TAURI_DEV_SERVER_URL:-}" ]]; then
   BINARY_PATHS=(
     "${TAURI_BINARY_PATH:-}"
+    "$POLICY_BINARY"
     "$REPO_ROOT/src-tauri/target/debug/titane-infinity"
     "$REPO_ROOT/src-tauri/target/release/titane-infinity"
-    "$REPO_ROOT/runtime/stable/TITANE-Infinity_27.2.0_amd64.AppImage"
-    "$REPO_ROOT/src-tauri/target/release/bundle/appimage/TITANE-Infinity_27.2.0_amd64.AppImage"
-    "$REPO_ROOT/deployment/latest/TITANE-Infinity_27.2.0_amd64.AppImage"
-    "$HOME/.local/bin/titane-infinity"
+    "${APPIMAGE_CANDIDATES[@]}"
     "/usr/bin/titane-infinity"
+    "$HOME/.local/bin/titane-infinity"
   )
 else
   BINARY_PATHS=(
     "${TAURI_BINARY_PATH:-}"
-    "$REPO_ROOT/runtime/stable/TITANE-Infinity_27.2.0_amd64.AppImage"
-    "$REPO_ROOT/src-tauri/target/release/bundle/appimage/TITANE-Infinity_27.2.0_amd64.AppImage"
-    "$REPO_ROOT/deployment/latest/TITANE-Infinity_27.2.0_amd64.AppImage"
+    "$POLICY_BINARY"
+    "${APPIMAGE_CANDIDATES[@]}"
     "$REPO_ROOT/src-tauri/target/release/titane-infinity"
     "$REPO_ROOT/src-tauri/target/debug/titane-infinity"
-    "$HOME/.local/bin/titane-infinity"
     "/usr/bin/titane-infinity"
+    "$HOME/.local/bin/titane-infinity"
   )
 fi
 
@@ -109,7 +156,16 @@ fi
 
 # Pass Ollama model configuration to Tauri binary
 export OLLAMA_DEFAULT_MODEL="${OLLAMA_DEFAULT_MODEL:-gemma2:2b}"
+export OLLAMA_BASE_URL="http://127.0.0.1:11434"
+export OLLAMA_URL="http://127.0.0.1:11434"
+if [[ -n "${OFFLINE_SIM:-}" ]]; then
+  export OFFLINE_SIM
+else
+  unset OFFLINE_SIM
+fi
 log_line "[E2E_WRAPPER] OLLAMA_DEFAULT_MODEL=$OLLAMA_DEFAULT_MODEL"
+log_line "[E2E_WRAPPER] OLLAMA_BASE_URL=$OLLAMA_BASE_URL"
+log_line "[E2E_WRAPPER] OFFLINE_SIM=${OFFLINE_SIM:-<unset>}"
 
 # Log activation (memory dir will be decided by Rust guard fallback: /tmp/titane-infinity/memory-e2e)
 log_line "[E2E_WRAPPER] TITANE_E2E=$TITANE_E2E"

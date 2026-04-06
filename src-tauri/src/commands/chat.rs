@@ -8,7 +8,7 @@ use serde_json::json;
 pub async fn send_message(
     message: String,
     state: State<'_, AppState>
-) -> Result<String, String> {
+) -> Result<serde_json::Value, String> {
     // Rate limiting
     state.rate_limiter
         .check("user_default") // Implementation: Extract real user ID from authenticated session
@@ -36,5 +36,9 @@ pub async fn send_message(
         ip_address: None,
     }).await;
     
-    Ok("response".to_string())
+    // NOT IMPLEMENTED: send_message is a stub. Use conversation_generate instead.
+    // This command is kept registered to avoid IPC breakage but must not silently succeed.
+    Err(format!(
+        "send_message: not implemented — use conversation_generate for AI chat dispatch"
+    ))
 }

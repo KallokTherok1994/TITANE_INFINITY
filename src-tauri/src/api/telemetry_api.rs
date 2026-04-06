@@ -50,29 +50,10 @@ pub async fn read_production_week1_csv() -> Result<ProductionHealthSummary, Stri
     let csv_path = Path::new(CSV_PATH);
 
     if !csv_path.exists() {
-        return Ok(ProductionHealthSummary {
-            status: "UNKNOWN".to_string(),
-            window_start_iso: chrono::Utc::now().to_rfc3339(),
-            window_end_iso: chrono::Utc::now().to_rfc3339(),
-            initial_rss_mb: 0.0,
-            growth_mb: 0.0,
-            growth_percent: 0.0,
-            last_sample: ProductionHealthSample {
-                timestamp: chrono::Utc::now().to_rfc3339(),
-                rss_initial_mb: 0.0,
-                rss_current_mb: 0.0,
-                vsz_mb: None,
-                cpu_percent: None,
-                session_count: None,
-                crash_count: None,
-                failover_count: None,
-                event_loop_lag_ms: None,
-                provider_timeouts_per_hour: None,
-                error_count: None,
-            },
-            samples_collected: 0,
-            notes: Some("Waiting for observation data...".to_string()),
-        });
+        return Err(format!(
+            "SOURCE_UNAVAILABLE: {} absent — aucune collecte de télémétrie active",
+            CSV_PATH
+        ));
     }
 
     let content = fs::read_to_string(csv_path)
@@ -86,41 +67,30 @@ pub async fn read_production_week1_csv() -> Result<ProductionHealthSummary, Stri
 }
 
 fn parse_and_summarize(csv: &str) -> Result<ProductionHealthSummary, String> {
+    // Strip UTF-8 BOM if present
+    let csv = csv.strip_prefix('\u{feff}').unwrap_or(csv);
+
     let mut lines = csv.lines();
-    let _header = lines.next();
+    let header_line = lines.next();
+
+    // Detect delimiter mismatch: if header exists but uses ';' instead of ','
+    if let Some(header) = header_line {
+        let comma_count = header.matches(',').count();
+        let semicolon_count = header.matches(';').count();
+        if semicolon_count > comma_count && comma_count == 0 {
+            return Err(format!(
+                "SCHEMA_DRIFT: délimiteur inattendu ';' détecté dans l'en-tête CSV. Attendu: ','. En-tête: {}",
+                &header[..header.len().min(120)]
+            ));
+        }
+    }
 
     let data_lines: Vec<&str> = lines
-        .filter(|line| !line.trim().is_empty())
+        .filter(|line| !line.trim().is_empty() && !line.starts_with('#'))
         .collect();
 
     if data_lines.is_empty() {
-        return Err("CSV is empty".to_string());
-    }
-
-    if data_lines.len() < 2 {
-        return Ok(ProductionHealthSummary {
-            status: "UNKNOWN".to_string(),
-            window_start_iso: chrono::Utc::now().to_rfc3339(),
-            window_end_iso: chrono::Utc::now().to_rfc3339(),
-            initial_rss_mb: 0.0,
-            growth_mb: 0.0,
-            growth_percent: 0.0,
-            last_sample: ProductionHealthSample {
-                timestamp: chrono::Utc::now().to_rfc3339(),
-                rss_initial_mb: 0.0,
-                rss_current_mb: 0.0,
-                vsz_mb: None,
-                cpu_percent: None,
-                session_count: None,
-                crash_count: None,
-                failover_count: None,
-                event_loop_lag_ms: None,
-                provider_timeouts_per_hour: None,
-                error_count: None,
-            },
-            samples_collected: 0,
-            notes: Some("No data samples yet".to_string()),
-        });
+        return Err("SOURCE_EMPTY: CSV sans données — en attente de collecte".to_string());
     }
 
     let first_data_line = data_lines[0];
@@ -157,24 +127,41 @@ fn parse_csv_line(line: &str) -> Result<ProductionHealthSample, String> {
     let parts: Vec<&str> = line.split(',').collect();
 
     if parts.len() < 3 {
-        return Err(format!("Invalid CSV line: {}", line));
+        return Err(format!(
+            "PARSER_ERROR: ligne CSV invalide ({} colonnes, minimum 3 requis): {}",
+            parts.len(),
+            &line[..line.len().min(120)]
+        ));
     }
 
-    let timestamp = parts[0].to_string();
-    let rss_mb = parts[2].parse::<f64>().unwrap_or(0.0);
-    let vsz_mb = parts.get(3).and_then(|s| s.parse::<f64>().ok());
-    let cpu_percent = parts.get(4).and_then(|s| s.parse::<f64>().ok());
-    let session_count = parts.get(5).and_then(|s| s.parse::<u32>().ok());
-    let crash_count = parts.get(6).and_then(|s| s.parse::<u32>().ok());
-    let failover_count = parts.get(7).and_then(|s| s.parse::<u32>().ok());
-    let event_loop_lag_ms = parts.get(8).and_then(|s| s.parse::<f64>().ok());
-    let provider_timeouts_per_hour = parts.get(9).and_then(|s| s.parse::<f64>().ok());
-    let error_count = parts.get(10).and_then(|s| s.parse::<u32>().ok());
+    let timestamp = parts[0].trim().to_string();
+    let rss_initial_mb = parts[1].trim().parse::<f64>().map_err(|e| {
+        format!(
+            "PARSER_ERROR: colonne rss_initial_mb (index 1) non numérique '{}': {}",
+            parts[1].trim(),
+            e
+        )
+    })?;
+    let rss_current_mb = parts[2].trim().parse::<f64>().map_err(|e| {
+        format!(
+            "PARSER_ERROR: colonne rss_current_mb (index 2) non numérique '{}': {}",
+            parts[2].trim(),
+            e
+        )
+    })?;
+    let vsz_mb = parts.get(3).and_then(|s| s.trim().parse::<f64>().ok());
+    let cpu_percent = parts.get(4).and_then(|s| s.trim().parse::<f64>().ok());
+    let session_count = parts.get(5).and_then(|s| s.trim().parse::<u32>().ok());
+    let crash_count = parts.get(6).and_then(|s| s.trim().parse::<u32>().ok());
+    let failover_count = parts.get(7).and_then(|s| s.trim().parse::<u32>().ok());
+    let event_loop_lag_ms = parts.get(8).and_then(|s| s.trim().parse::<f64>().ok());
+    let provider_timeouts_per_hour = parts.get(9).and_then(|s| s.trim().parse::<f64>().ok());
+    let error_count = parts.get(10).and_then(|s| s.trim().parse::<u32>().ok());
 
     Ok(ProductionHealthSample {
         timestamp,
-        rss_initial_mb: rss_mb,
-        rss_current_mb: rss_mb,
+        rss_initial_mb,
+        rss_current_mb,
         vsz_mb,
         cpu_percent,
         session_count,
@@ -193,5 +180,131 @@ fn compute_status(rss_mb: f64, growth_percent: f64) -> &'static str {
         "YELLOW"
     } else {
         "GREEN"
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn make_line(timestamp: &str, rss_init: f64, rss_cur: f64) -> String {
+        format!("{},{},{}", timestamp, rss_init, rss_cur)
+    }
+
+    // ─── parse_csv_line ────────────────────────────────────────────────────
+
+    #[test]
+    fn test_parse_valid_line() {
+        let line = "2026-01-01T00:00:00Z,180.0,192.0,250.0,12.5,3,0,0,2.1,0.0,0";
+        let sample = parse_csv_line(line).expect("should parse valid line");
+        assert_eq!(sample.timestamp, "2026-01-01T00:00:00Z");
+        assert!((sample.rss_initial_mb - 180.0).abs() < 0.01);
+        assert!((sample.rss_current_mb - 192.0).abs() < 0.01);
+        assert_eq!(sample.vsz_mb, Some(250.0));
+        assert_eq!(sample.session_count, Some(3));
+    }
+
+    #[test]
+    fn test_parse_minimal_line_three_columns() {
+        let line = make_line("2026-01-01T00:00:00Z", 180.0, 190.0);
+        let sample = parse_csv_line(&line).expect("should parse with 3 columns");
+        assert!((sample.rss_initial_mb - 180.0).abs() < 0.01);
+        assert!((sample.rss_current_mb - 190.0).abs() < 0.01);
+        assert!(sample.vsz_mb.is_none());
+    }
+
+    #[test]
+    fn test_parse_too_few_columns_returns_parser_error() {
+        let err = parse_csv_line("2026-01-01T00:00:00Z,180.0").unwrap_err();
+        assert!(err.starts_with("PARSER_ERROR"), "expected PARSER_ERROR prefix, got: {}", err);
+    }
+
+    #[test]
+    fn test_parse_non_numeric_rss_returns_parser_error() {
+        let err = parse_csv_line("2026-01-01T00:00:00Z,abc,192.0").unwrap_err();
+        assert!(err.starts_with("PARSER_ERROR"), "expected PARSER_ERROR, got: {}", err);
+    }
+
+    #[test]
+    fn test_parse_with_whitespace_trimmed() {
+        let line = " 2026-01-01T00:00:00Z , 180.0 , 192.0 ";
+        let sample = parse_csv_line(line).expect("should trim whitespace");
+        assert!((sample.rss_initial_mb - 180.0).abs() < 0.01);
+    }
+
+    // ─── parse_and_summarize ──────────────────────────────────────────────
+
+    #[test]
+    fn test_summarize_valid_csv() {
+        let csv = "timestamp,rss_initial_mb,rss_current_mb\n\
+                   2026-01-01T00:00:00Z,180.0,185.0\n\
+                   2026-01-02T00:00:00Z,180.0,192.0\n";
+        let summary = parse_and_summarize(csv).expect("should summarize valid CSV");
+        assert_eq!(summary.samples_collected, 2);
+        assert!((summary.initial_rss_mb - 180.0).abs() < 0.01);
+        assert!((summary.growth_mb - 12.0).abs() < 0.01);
+        assert_eq!(summary.status, "GREEN");
+    }
+
+    #[test]
+    fn test_summarize_empty_csv_returns_source_empty() {
+        let csv = "timestamp,rss_initial_mb,rss_current_mb\n";
+        let err = parse_and_summarize(csv).unwrap_err();
+        assert!(err.starts_with("SOURCE_EMPTY"), "expected SOURCE_EMPTY, got: {}", err);
+    }
+
+    #[test]
+    fn test_summarize_bom_stripped() {
+        let csv = "\u{feff}timestamp,rss_initial_mb,rss_current_mb\n\
+                   2026-01-01T00:00:00Z,180.0,192.0\n";
+        let summary = parse_and_summarize(csv).expect("BOM should be stripped");
+        assert_eq!(summary.samples_collected, 1);
+    }
+
+    #[test]
+    fn test_summarize_semicolon_delimiter_returns_schema_drift() {
+        let csv = "timestamp;rss_initial_mb;rss_current_mb\n\
+                   2026-01-01T00:00:00Z;180.0;192.0\n";
+        let err = parse_and_summarize(csv).unwrap_err();
+        assert!(err.starts_with("SCHEMA_DRIFT"), "expected SCHEMA_DRIFT, got: {}", err);
+    }
+
+    #[test]
+    fn test_summarize_comment_lines_ignored() {
+        let csv = "timestamp,rss_initial_mb,rss_current_mb\n\
+                   # this is a comment\n\
+                   2026-01-01T00:00:00Z,180.0,192.0\n";
+        let summary = parse_and_summarize(csv).expect("comment lines should be ignored");
+        assert_eq!(summary.samples_collected, 1);
+    }
+
+    #[test]
+    fn test_summarize_blank_lines_ignored() {
+        let csv = "timestamp,rss_initial_mb,rss_current_mb\n\
+                   \n\
+                   2026-01-01T00:00:00Z,180.0,192.0\n\
+                   \n";
+        let summary = parse_and_summarize(csv).expect("blank lines should be ignored");
+        assert_eq!(summary.samples_collected, 1);
+    }
+
+    #[test]
+    fn test_compute_status_green() {
+        assert_eq!(compute_status(200.0, 10.0), "GREEN");
+    }
+
+    #[test]
+    fn test_compute_status_yellow_by_rss() {
+        assert_eq!(compute_status(220.0, 5.0), "YELLOW");
+    }
+
+    #[test]
+    fn test_compute_status_yellow_by_growth() {
+        assert_eq!(compute_status(200.0, 25.0), "YELLOW");
+    }
+
+    #[test]
+    fn test_compute_status_red() {
+        assert_eq!(compute_status(250.0, 5.0), "RED");
     }
 }

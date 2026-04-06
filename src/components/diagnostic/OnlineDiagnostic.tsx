@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v27 — Online Capabilities Diagnostic
+ * TITANE∞ v30.0.0 — Online Capabilities Diagnostic
  * Displays Internet + AI Provider status
  */
 
@@ -89,10 +89,14 @@ export const OnlineDiagnostic: React.FC = () => {
 
   if (!capabilities) {
     return (
-      <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
-        <div className="flex items-center gap-2 text-red-500">
+      <div className="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+        <div className="flex items-center gap-2 text-yellow-500">
           <AlertCircle size={18} />
-          <span>Impossible de vérifier les capacités online</span>
+          <span>
+            {isTauriRuntimeAvailable()
+              ? 'Impossible de vérifier les capacités online — vérifiez la commande IPC check_online_capabilities'
+              : 'Diagnostic disponible uniquement en runtime Tauri (non accessible en mode navigateur)'}
+          </span>
         </div>
       </div>
     );

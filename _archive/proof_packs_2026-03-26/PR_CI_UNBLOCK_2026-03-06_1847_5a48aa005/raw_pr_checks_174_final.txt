@@ -1,0 +1,51 @@
+Run Constitution Audit	fail	33s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311560/job/66106743346	
+✅ CI Pipeline Status	fail	2s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311565/job/66107114503	
+📋 Registry Sync Check	fail	1m47s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311545/job/66106743386	
+🔍 Lint & Type Check	fail	3m40s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311565/job/66106746750	
+🔒 P0_1_SECRETS Scanner	fail	25s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311567/job/66106743419	
+🚨 GATE_P0_1_SECRETS	fail	3s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311567/job/66106802330	
+CodeQL	pass	1s	https://github.com/KallokTherok1994/TITANE_INFINITY/runs/66106968250	
+L1 LOCAL_FIRST Audit	pass	10s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311637/job/66106743437	
+L2 DUAL_RUNTIME Audit	pass	12s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311637/job/66106743438	
+L3 NO_SECRETS Audit	pass	17s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311637/job/66106743425	
+L4 NO_EXPANSION Audit	pass	12s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311637/job/66106743439	
+L5 NO_FREE_REFACTOR Audit	pass	14s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311637/job/66106743475	
+L6 PROOF_OVER_INTUITION Audit	pass	10s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311637/job/66106743432	
+L7 SAFE_RUN_GATE Audit	pass	11s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311637/job/66106743456	
+Mermaid Canon Verify	pass	3m9s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311547/job/66106743395	
+P3.2 Build Hardening Test	pass	50s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311558/job/66106770288	
+P3.3 Forbidden Files Scan	pass	20s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311558/job/66106743350	
+P5.1 Runtime Isolation Audit	pass	17s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311655/job/66106743487	
+P5.2 Deployment Governance Audit	pass	18s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311655/job/66106743479	
+P5.3 Change Management Audit	pass	18s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311655/job/66106743482	
+P5.4 Operational Procedures Audit	pass	19s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311655/job/66106743490	
+P6.1 User Capabilities Audit	pass	20s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311552/job/66106743383	
+P6.2 Performance Qualification	pass	19s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311552/job/66106743385	
+P6.3 Integration Validation	pass	21s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311552/job/66106743380	
+P6.4 Production Readiness Assessment	pass	19s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311552/job/66106743381	
+mermaid_governance (required)	pass	2m15s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311561/job/66106743379	
+🏆 FINAL RELEASE AUTHORIZATION	pass	2s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311559/job/66106771013	
+🏛️ Constitutional Certification	pass	3s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311637/job/66106788593	
+🏛️ Constitutional Compliance Final Audit	pass	18s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311559/job/66106743392	
+🏛️ P5 Governance Certification	pass	2s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311655/job/66106769063	
+📊 Final Evidence Collection	pass	2s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311559/job/66106780612	
+📊 P3 Evidence Collection	pass	3s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311558/job/66106831204	
+📊 P4 Evidence Collection	pass	2s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311637/job/66106793773	
+📊 P5 Evidence Collection	pass	2s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311655/job/66106776196	
+📊 P6 Evidence Collection	pass	4s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311552/job/66106785000	
+📊 Registry Evidence	pass	10s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311545/job/66106871665	
+🔍 CodeQL Analysis (javascript)	pass	3m34s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311549/job/66106743478	
+🔍 CodeQL Analysis (typescript)	pass	3m20s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311549/job/66106743469	
+🔐 GitGuardian Secret Scan	pass	30s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311564/job/66106743515	
+🔒 Gitleaks	pass	20s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311566/job/66106743414	
+🔒 Security Audit	pass	4m49s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311565/job/66106746785	
+🚀 P6 Capability Certification	pass	2s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311552/job/66106771675	
+🚀 Production Readiness Final Check	pass	19s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311559/job/66106743408	
+🚪 GATE_P3 Final Validation	pass	4s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311558/job/66106831202	
+🧪 Frontend Tests	skipping	0	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311565/job/66107031241	
+🛤️ Release Pathway Validation	pass	18s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311559/job/66106743394	
+🎭 E2E Tests (Playwright)	skipping	0	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311565/job/66107031366	
+🦀 Rust Backend Tests	skipping	0	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311565/job/66107031318	
+🛡️ Security Posture Final Validation	pass	21s	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311559/job/66106743393	
+🏗️ Build Verification	skipping	0	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311565/job/66107031497	
+🛡️ Phase 0 Gates (Blocking)	skipping	0	https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/22787311565/job/66107031287	

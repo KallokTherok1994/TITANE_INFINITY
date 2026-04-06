@@ -175,7 +175,7 @@ const unsubscribe = haloEngine.onStateChange((status) => {
 
 ### Guides Complets (77K, ~3300 lignes)
 
-1. **[VOICE_PIPELINE_FINAL_REPORT_v∞.7_ULTIMATE.md](VOICE_PIPELINE_FINAL_REPORT_v∞.7_ULTIMATE.md)** (800 lines)
+1. **[VOICE_PIPELINE_FINAL_REPORT_v∞.7_ULTIMATE.md](../merged/VOICE_PIPELINE_FINAL_REPORT_v∞.7_ULTIMATE.md)** (800 lines)
    - Rapport final complet toutes phases
    - Fichiers créés/modifiés
    - Checklist déploiement

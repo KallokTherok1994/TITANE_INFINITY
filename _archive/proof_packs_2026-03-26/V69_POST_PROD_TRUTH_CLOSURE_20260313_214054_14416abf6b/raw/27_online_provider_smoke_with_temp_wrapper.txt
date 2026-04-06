@@ -1,0 +1,16 @@
+TS_UTC=2026-03-13T22:00:49Z
+RUN_TYPE=BOUND_ONLINE_PROVIDER_PROBE_TEMP_WRAPPER_NO_DEFAULT_OFFLINE
+TEMP_WRAPPER=/tmp/tauri-wrapper-v69-online.sh
+WDIO_CONFIG=/tmp/wdio.v69.onlinewrapper.conf.cjs
+SPEC=e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js
+EXIT_CODE=1
+METRICS_FILE=proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/online_provider_probe_artifacts_2/run_online_probe2_v25_metrics.json
+METRICS_EXISTS=NO
+V25_VERDICT=
+RUNTIME_PROVIDER_USED=
+RUNTIME_PROVIDER_MODE=
+RUNTIME_PROVIDER_REASON=
+RUNTIME_PROVIDER_NETWORK_USED=
+ONLINE_PROVIDER_NETWORK_PROVEN=FAIL
+LAST_ERROR_MARKER=50:[wry (unknown) #0-0] WebDriverError: The operation was aborted due to timeout when running "http://127.0.0.1:4444/session" with method "POST"
+LOG_FILE=proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/27_online_provider_smoke_with_temp_wrapper.log

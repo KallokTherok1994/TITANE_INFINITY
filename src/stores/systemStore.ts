@@ -9,9 +9,9 @@ import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import type {
   HeliosState,
-  NexusState,
-  HarmoniaState,
-  SentinelState,
+  NexusEngineState,
+  HarmoniaEngineState,
+  SentinelEngineState,
   HealthStatus,
 } from '../services/tauri/backend-v17.2.types';
 import { backendV17 } from '../services/tauri/backend-v17.2.commands';
@@ -19,9 +19,9 @@ import { backendV17 } from '../services/tauri/backend-v17.2.commands';
 interface SystemStore {
   // State
   helios: HeliosState | null;
-  nexus: NexusState | null;
-  harmonia: HarmoniaState | null;
-  sentinel: SentinelState | null;
+  nexus: NexusEngineState | null; // [FIX-003] was NexusState — LYING_UI resolved
+  harmonia: HarmoniaEngineState | null; // [FIX-003] was HarmoniaState — LYING_UI resolved
+  sentinel: SentinelEngineState | null; // [FIX-003] was SentinelState — LYING_UI resolved
   health: HealthStatus | null;
   loading: boolean;
   error: string | null;

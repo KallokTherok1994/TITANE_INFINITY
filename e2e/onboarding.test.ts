@@ -14,7 +14,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Onboarding Flow', () => {
   test.beforeEach(async ({ page }) => {
     // Réinitialiser l'onboarding avant chaque test
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
     await page.evaluate(() => {
       localStorage.removeItem('onboarding_completed');
       localStorage.removeItem('onboarding_preferences');
@@ -22,7 +22,7 @@ test.describe('Onboarding Flow', () => {
   });
 
   test('should display onboarding on first launch', async ({ page }) => {
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
 
     // Attendre que l'overlay d'onboarding soit visible
     await expect(page.locator('.onboarding-overlay')).toBeVisible({ timeout: 10000 });
@@ -36,7 +36,7 @@ test.describe('Onboarding Flow', () => {
   });
 
   test('should complete full onboarding flow with all steps', async ({ page }) => {
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
 
     // Attendre l'onboarding
     await expect(page.locator('.onboarding-overlay')).toBeVisible({ timeout: 10000 });
@@ -112,7 +112,7 @@ test.describe('Onboarding Flow', () => {
   });
 
   test('should navigate back through onboarding steps', async ({ page }) => {
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
     await expect(page.locator('.onboarding-overlay')).toBeVisible({ timeout: 10000 });
 
     // Avancer jusqu'au step 3
@@ -138,7 +138,7 @@ test.describe('Onboarding Flow', () => {
   });
 
   test('should save preferences correctly', async ({ page }) => {
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
     await expect(page.locator('.onboarding-overlay')).toBeVisible({ timeout: 10000 });
 
     // Naviguer jusqu'au step Customization
@@ -184,7 +184,7 @@ test.describe('Onboarding Flow', () => {
   });
 
   test('should display progress bar correctly', async ({ page }) => {
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
     await expect(page.locator('.onboarding-overlay')).toBeVisible({ timeout: 10000 });
 
     // Vérifier que la barre de progression est à 20% (step 1/5)
@@ -213,7 +213,7 @@ test.describe('Onboarding Flow', () => {
   });
 
   test('should display step dots indicator', async ({ page }) => {
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
     await expect(page.locator('.onboarding-overlay')).toBeVisible({ timeout: 10000 });
 
     // Vérifier qu'il y a 5 dots
@@ -233,7 +233,7 @@ test.describe('Onboarding Flow', () => {
 
   test('should skip onboarding if already completed', async ({ page }) => {
     // Marquer l'onboarding comme complété
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
     await page.evaluate(() => {
       localStorage.setItem('onboarding_completed', 'true');
       localStorage.setItem(
@@ -257,7 +257,7 @@ test.describe('Onboarding Flow', () => {
     // Définir viewport mobile
     await page.setViewportSize({ width: 375, height: 667 });
 
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
     await expect(page.locator('.onboarding-overlay')).toBeVisible({ timeout: 10000 });
 
     // L'onboarding devrait être responsive
@@ -272,7 +272,7 @@ test.describe('Onboarding Flow', () => {
   });
 
   test('should display animations correctly', async ({ page }) => {
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
     await expect(page.locator('.onboarding-overlay')).toBeVisible({ timeout: 10000 });
 
     // Vérifier que les animations Framer Motion sont présentes
@@ -291,7 +291,7 @@ test.describe('Onboarding Flow', () => {
 
 test.describe('Onboarding Theme Selection', () => {
   test('should select light theme', async ({ page }) => {
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
     await expect(page.locator('.onboarding-overlay')).toBeVisible({ timeout: 10000 });
 
     // Naviguer au step customization
@@ -317,7 +317,7 @@ test.describe('Onboarding Theme Selection', () => {
   });
 
   test('should select auto theme', async ({ page }) => {
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
     await expect(page.locator('.onboarding-overlay')).toBeVisible({ timeout: 10000 });
 
     // Naviguer au step customization
@@ -345,7 +345,7 @@ test.describe('Onboarding Theme Selection', () => {
 
 test.describe('Onboarding Accessibility', () => {
   test('should be keyboard navigable', async ({ page }) => {
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
     await expect(page.locator('.onboarding-overlay')).toBeVisible({ timeout: 10000 });
 
     // Utiliser Tab pour naviguer
@@ -360,7 +360,7 @@ test.describe('Onboarding Accessibility', () => {
   });
 
   test('should have proper ARIA labels', async ({ page }) => {
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
     await expect(page.locator('.onboarding-overlay')).toBeVisible({ timeout: 10000 });
 
     // Vérifier les labels

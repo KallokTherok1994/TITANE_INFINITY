@@ -52,6 +52,7 @@ export interface ProgressionState {
   totalXP: number;
   xpInCurrentLevel: number;
   xpToNextLevel: number;
+  chatMessageCount: number; // incremented on every 'chat_message' XP event
   milestones: ProgressionMilestone[];
   unlockedMilestones: string[];
   lastXPGain: XPEvent | null;

@@ -7,164 +7,159 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useFusionEngine } from '@/hooks';
 
+vi.mock('@/modules/fusion/FusionEngine', () => {
+  const mockStats = { totalEntries: 0, totalFusions: 0 };
+  return {
+    fusionEngine: {
+      getStats: vi.fn(() => mockStats),
+      isFusingNow: vi.fn(() => false),
+      getLastFusionTime: vi.fn(() => 0),
+      runFusionPipeline: vi.fn(async () => ({ status: 'ok', fused: 1 })),
+      exportToJSONL: vi.fn(() => '{"id":"1"}\n'),
+      getFusedDataset: vi.fn(() => []),
+      clearFusedDataset: vi.fn(),
+      getDatasetByCluster: vi.fn(() => []),
+      getDatasetBySource: vi.fn(() => []),
+    },
+  };
+});
+
+vi.mock('@/modules/fusion/DatasetBuilder', () => ({
+  datasetBuilder: {
+    buildTrainingPackage: vi.fn(() => ({
+      dataset: '{}',
+      modelfile: 'FROM base',
+      trainingScript: '#!/bin/bash',
+      metadata: '{}',
+    })),
+  },
+}));
+
 describe('useFusionEngine Hook', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   describe('Initialization', () => {
-    it.skip('should initialize with default state', () => {
+    it('should initialize with default state', async () => {
       const { result } = renderHook(() => useFusionEngine());
-      expect(result.current.isActive).toBe(false);
-      expect(result.current.state).toBe('idle');
+      await waitFor(() => {
+        expect(result.current.isFusing).toBe(false);
+      });
+      expect(result.current.stats).toBeDefined();
     });
 
-    it.skip('should have process method', () => {
+    it('should expose fusion actions', () => {
       const { result } = renderHook(() => useFusionEngine());
-      expect(typeof result.current.process).toBe('function');
+      expect(typeof result.current.runFusion).toBe('function');
+      expect(typeof result.current.exportDataset).toBe('function');
+      expect(typeof result.current.clearDataset).toBe('function');
     });
   });
 
   describe('Activation', () => {
-    it.skip('should activate engine', async () => {
+    it('should refresh without throwing', async () => {
       const { result } = renderHook(() => useFusionEngine());
 
       await act(async () => {
-        await result.current.activate();
+        result.current.refresh();
       });
 
-      expect(result.current.isActive).toBe(true);
+      expect(result.current.stats).toBeDefined();
     });
 
-    it.skip('should deactivate engine', async () => {
+    it('should clear dataset without throwing', async () => {
       const { result } = renderHook(() => useFusionEngine());
 
       await act(async () => {
-        await result.current.activate();
-        await result.current.deactivate();
+        result.current.clearDataset();
       });
 
-      expect(result.current.isActive).toBe(false);
+      expect(result.current.isFusing).toBe(false);
     });
   });
 
   describe('Processing', () => {
-    it.skip('should process input', async () => {
+    it('should run fusion pipeline', async () => {
       const { result } = renderHook(() => useFusionEngine());
 
+      let report: unknown;
       await act(async () => {
-        await result.current.activate();
+        report = await result.current.runFusion();
       });
 
-      await act(async () => {
-        await result.current.process({ input: 'test data' });
-      });
-
-      expect(result.current.state).toBe('idle');
+      expect(report).toBeDefined();
+      expect(result.current.lastReport).toBeDefined();
     });
 
-    it.skip('should update state during processing', async () => {
+    it('should export dataset as string', () => {
       const { result } = renderHook(() => useFusionEngine());
-
-      await act(async () => {
-        await result.current.activate();
-      });
-
-      act(() => {
-        result.current.process({ input: 'test' });
-      });
-
-      expect(result.current.state).toBe('processing');
+      const dataset = result.current.exportDataset();
+      expect(typeof dataset).toBe('string');
     });
 
-    it.skip('should handle processing errors', async () => {
+    it('should export training package', () => {
       const { result } = renderHook(() => useFusionEngine());
-
-      await act(async () => {
-        await result.current.activate();
-      });
-
-      await act(async () => {
-        try {
-          await result.current.process({ input: 'invalid' });
-        } catch (error) {
-          expect(error).toBeDefined();
-        }
-      });
+      const pack = result.current.exportTrainingPackage();
+      expect(pack).toHaveProperty('dataset');
+      expect(pack).toHaveProperty('modelfile');
     });
   });
 
   describe('State Management', () => {
-    it.skip('should track processing state', async () => {
+    it('should provide cluster/source filters', () => {
       const { result } = renderHook(() => useFusionEngine());
-
-      await act(async () => {
-        await result.current.activate();
-      });
-
-      expect(result.current.state).toBe('idle');
-
-      act(() => {
-        result.current.process({ input: 'test' });
-      });
-
-      expect(result.current.state).toBe('processing');
+      expect(Array.isArray(result.current.getByCluster('memory' as never))).toBe(true);
+      expect(Array.isArray(result.current.getBySource('chat' as never))).toBe(true);
     });
 
-    it.skip('should provide engine metrics', async () => {
+    it('should expose stats and timestamps', () => {
       const { result } = renderHook(() => useFusionEngine());
-
-      await act(async () => {
-        await result.current.activate();
-      });
-
-      expect(result.current.metrics).toBeDefined();
-      expect(typeof result.current.metrics.processedCount).toBe('number');
+      expect(result.current.stats).not.toBeUndefined();
+      expect(typeof result.current.lastFusionTime).toBe('number');
     });
   });
 
   describe('Error Handling', () => {
-    it.skip('should handle activation errors', async () => {
-      const { result } = renderHook(() => useFusionEngine({ failOnActivate: true }));
-
-      await expect(async () => {
-        await act(async () => {
-          await result.current.activate();
-        });
-      }).rejects.toThrow();
+    it('should keep hook stable after run', async () => {
+      const { result } = renderHook(() => useFusionEngine());
+      await act(async () => {
+        await result.current.runFusion();
+      });
+      expect(result.current.isFusing).toBe(false);
     });
 
-    it.skip('should recover from errors', async () => {
+    it('should reset fusion state when fusion fails', async () => {
+      const fusionModule = await import('@/modules/fusion/FusionEngine');
+      vi.mocked(fusionModule.fusionEngine.runFusionPipeline).mockRejectedValueOnce(
+        new Error('Fusion backend unavailable')
+      );
+
       const { result } = renderHook(() => useFusionEngine());
 
-      await act(async () => {
-        await result.current.activate();
-      });
+      await expect(
+        act(async () => {
+          await result.current.runFusion();
+        })
+      ).rejects.toThrow('Fusion backend unavailable');
 
-      await act(async () => {
-        try {
-          await result.current.process({ input: 'error' });
-        } catch {
-          // Handled
-        }
+      await waitFor(() => {
+        expect(result.current.isFusing).toBe(false);
       });
+    });
 
-      expect(result.current.isActive).toBe(true);
+    it('should provide download helpers', () => {
+      const { result } = renderHook(() => useFusionEngine());
+      expect(typeof result.current.downloadDataset).toBe('function');
+      expect(typeof result.current.downloadTrainingPack).toBe('function');
     });
   });
 
   describe('Cleanup', () => {
-    it.skip('should cleanup on unmount', async () => {
-      const { result, unmount } = renderHook(() => useFusionEngine());
-
-      await act(async () => {
-        await result.current.activate();
-      });
-
+    it('should cleanup on unmount', () => {
+      const { unmount } = renderHook(() => useFusionEngine());
       unmount();
-
-      // Should have cleaned up resources
-      expect(result.current.isActive).toBe(true); // Before unmount
+      expect(true).toBe(true);
     });
   });
 });

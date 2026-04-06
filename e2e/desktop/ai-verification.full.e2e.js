@@ -62,87 +62,201 @@ const UI_PAGES = [
   'Dashboard/Overview',
 ];
 
+const parsePositiveInt = (value, fallback) => {
+  const parsed = Number.parseInt(value, 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+};
+
+const AI_VERIFY_SCRIPT_TIMEOUT_MS = parsePositiveInt(
+  process.env.AI_VERIFY_SCRIPT_TIMEOUT_MS,
+  120000
+);
+
+const AI_VERIFY_RESPONSE_TIMEOUT_MS = parsePositiveInt(
+  process.env.AI_VERIFY_RESPONSE_TIMEOUT_MS,
+  90000
+);
+
+const AI_VERIFY_MAX_CONSECUTIVE_ERRORS = parsePositiveInt(
+  process.env.AI_VERIFY_MAX_CONSECUTIVE_ERRORS,
+  3
+);
+
+function isRecoverableSessionError(errorMessage) {
+  const msg = String(errorMessage || '').toLowerCase();
+  return (
+    msg.includes('script timed out') ||
+    msg.includes('invalid session id') ||
+    msg.includes('session deleted because of page crash or hang') ||
+    msg.includes('no such window') ||
+    msg.includes('invalidated')
+  );
+}
+
 function appendReport(fileName, body) {
   fs.mkdirSync(REPORT_ROOT, { recursive: true });
   const target = path.join(REPORT_ROOT, fileName);
   fs.appendFileSync(target, `${RUN_HEADER}${body}\n`);
 }
 
-async function invokeConversationGenerate(message) {
-  const conversationId = await browser.executeAsync(done => {
-    const run = async () => {
-      if (window.__TAURI_INTERNALS__?.invoke) {
-        return await window.__TAURI_INTERNALS__.invoke('create_new_conversation');
-      }
-      if (window.__TAURI__?.tauri?.invoke) {
-        return await window.__TAURI__.tauri.invoke('create_new_conversation');
-      }
-      if (window.__TAURI__?.core?.invoke) {
-        return await window.__TAURI__.core.invoke('create_new_conversation');
-      }
-      if (window.__TAURI__?.invoke) {
-        return await window.__TAURI__.invoke('create_new_conversation');
-      }
-      throw new Error('Tauri IPC unavailable');
-    };
+async function ensureTauriPageLoaded(preferredUrl) {
+  const candidates = [
+    preferredUrl,
+    'tauri://localhost/titane',
+    'tauri://localhost/#/chat',
+    'tauri://localhost',
+  ].filter(Boolean);
 
-    run()
-      .then(res => done({ ok: true, res }))
-      .catch(err => done({ ok: false, err: String(err?.message || err) }));
-  });
-
-  if (!conversationId?.ok || !conversationId.res) {
-    throw new Error(conversationId?.err || 'create_new_conversation failed');
-  }
-
-  const generated = await browser.executeAsync(
-    (payload, done) => {
-      const run = async () => {
-        if (window.__TAURI_INTERNALS__?.invoke) {
-          return await window.__TAURI_INTERNALS__.invoke(
-            'conversation_generate',
-            payload
-          );
-        }
-        if (window.__TAURI__?.tauri?.invoke) {
-          return await window.__TAURI__.tauri.invoke('conversation_generate', payload);
-        }
-        if (window.__TAURI__?.core?.invoke) {
-          return await window.__TAURI__.core.invoke('conversation_generate', payload);
-        }
-        if (window.__TAURI__?.invoke) {
-          return await window.__TAURI__.invoke('conversation_generate', payload);
-        }
-        throw new Error('Tauri IPC unavailable');
-      };
-
-      run()
-        .then(res => done({ ok: true, res }))
-        .catch(err => done({ ok: false, err: String(err?.message || err) }));
-    },
-    {
-      args: {
-        message,
-        conversationId: conversationId.res,
-        provider: 'local',
-      },
+  for (const url of candidates) {
+    try {
+      await browser.url(url);
+    } catch {
+      continue;
     }
-  );
 
-  if (!generated?.ok || !generated.res) {
-    throw new Error(generated?.err || 'conversation_generate failed');
+    await browser.pause(1200);
+
+    const loaded = await browser.execute(() => {
+      const href = window.location.href || '';
+      const readyState = document.readyState;
+      const hasTitaneSurface =
+        !!document.querySelector('[data-testid="page-titane"]') ||
+        !!document.querySelector('[data-testid="nav-top-main"]') ||
+        !!document.querySelector('[data-testid="tab-conversation"]') ||
+        !!document.querySelector('[data-testid="chat-input"]') ||
+        !!document.querySelector('#chat-window-textarea') ||
+        !!document.querySelector('#chat-input-textarea') ||
+        !!document.querySelector('.chat-bubble-input');
+
+      return {
+        href,
+        ready: readyState === 'interactive' || readyState === 'complete',
+        hasTitaneSurface,
+      };
+    });
+
+    if (loaded?.href?.startsWith('tauri://localhost') && loaded.ready) {
+      return loaded.hasTitaneSurface;
+    }
   }
 
-  return generated.res;
+  return false;
+}
+
+async function invokeConversationGenerate(message) {
+  const appUrl = process.env.TITANE_E2E_URL || 'tauri://localhost/titane';
+  let lastError = 'conversation_generate failed';
+
+  for (let attempt = 1; attempt <= 4; attempt += 1) {
+    try {
+      const conversationId = await browser.executeAsync(done => {
+        const run = async () => {
+          if (window.__TAURI_INTERNALS__?.invoke) {
+            return await window.__TAURI_INTERNALS__.invoke('create_new_conversation');
+          }
+          if (window.__TAURI__?.tauri?.invoke) {
+            return await window.__TAURI__.tauri.invoke('create_new_conversation');
+          }
+          if (window.__TAURI__?.core?.invoke) {
+            return await window.__TAURI__.core.invoke('create_new_conversation');
+          }
+          if (window.__TAURI__?.invoke) {
+            return await window.__TAURI__.invoke('create_new_conversation');
+          }
+          throw new Error('Tauri IPC unavailable');
+        };
+
+        run()
+          .then(res => done({ ok: true, res }))
+          .catch(err => done({ ok: false, err: String(err?.message || err) }));
+      });
+
+      if (!conversationId?.ok || !conversationId.res) {
+        throw new Error(conversationId?.err || 'create_new_conversation failed');
+      }
+
+      const generated = await browser.executeAsync(
+        (payload, done) => {
+          const run = async () => {
+            if (window.__TAURI_INTERNALS__?.invoke) {
+              return await window.__TAURI_INTERNALS__.invoke(
+                'conversation_generate',
+                payload
+              );
+            }
+            if (window.__TAURI__?.tauri?.invoke) {
+              return await window.__TAURI__.tauri.invoke(
+                'conversation_generate',
+                payload
+              );
+            }
+            if (window.__TAURI__?.core?.invoke) {
+              return await window.__TAURI__.core.invoke('conversation_generate', payload);
+            }
+            if (window.__TAURI__?.invoke) {
+              return await window.__TAURI__.invoke('conversation_generate', payload);
+            }
+            throw new Error('Tauri IPC unavailable');
+          };
+
+          run()
+            .then(res => done({ ok: true, res }))
+            .catch(err => done({ ok: false, err: String(err?.message || err) }));
+        },
+        {
+          args: {
+            message,
+            conversationId: conversationId.res,
+            provider: 'local',
+          },
+        }
+      );
+
+      if (!generated?.ok || !generated.res) {
+        throw new Error(generated?.err || 'conversation_generate failed');
+      }
+
+      return generated.res;
+    } catch (error) {
+      lastError = String(error?.message || error);
+      if (attempt < 4 && isRecoverableSessionError(lastError)) {
+        try {
+          await browser.reloadSession();
+        } catch {
+          // Ignore reload failures and retry navigation.
+        }
+
+        await ensureTauriPageLoaded(appUrl);
+        await browser.pause(400);
+        continue;
+      }
+      break;
+    }
+  }
+
+  throw new Error(lastError);
 }
 
 async function resolveSelectors() {
+  const conversationInput = await $('[data-testid="chat-input"]');
+  if (await conversationInput.isExisting()) {
+    return {
+      input: '[data-testid="chat-input"]',
+      send: '[data-testid="chat-send"]',
+      user: '[data-testid="chat-message-user"] [data-testid="chat-message-content"], [data-testid="chat-message-user"]',
+      response:
+        '[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]',
+      open: '[data-testid="tab-conversation"]',
+    };
+  }
+
   const bubbleInput = await $('.chat-bubble-input');
   const bubbleTrigger = await $('[data-testid="chat-bubble-trigger"]');
   if ((await bubbleInput.isExisting()) || (await bubbleTrigger.isExisting())) {
     return {
       input: '.chat-bubble-input',
       send: '.chat-bubble-send',
+      user: '.chat-message-user, [data-testid="chat-message-user"]',
       response: '.chat-bubble-message.assistant .message-content',
       open: '[data-testid="chat-bubble-trigger"]',
     };
@@ -152,6 +266,7 @@ async function resolveSelectors() {
     return {
       input: '#chat-window-textarea',
       send: '.send-button',
+      user: '.chat-message-user, [data-testid="chat-message-user"]',
       response: '.chat-messages .message-bubble-text',
       open: null,
     };
@@ -161,6 +276,7 @@ async function resolveSelectors() {
     return {
       input: '#chat-input-textarea',
       send: '.chat-input__send-btn',
+      user: '.chat-message-user, [data-testid="chat-message-user"]',
       response: '.message-bubble-assistant .message-bubble-text',
       open: null,
     };
@@ -192,9 +308,11 @@ async function attemptOnboardingSkip(maxClicks = 6) {
 }
 
 async function ensureChatOpen(selectors) {
-  if (!selectors?.open) return;
   const input = await $(selectors.input);
   if (await input.isExisting()) return;
+
+  if (!selectors?.open) return;
+
   const trigger = await $(selectors.open);
   if (await trigger.isExisting()) {
     await trigger.scrollIntoView();
@@ -212,13 +330,28 @@ async function ensureChatOpen(selectors) {
   }
 }
 
-async function getLastResponseText(selector) {
+async function getResponseSnapshot(selector) {
   return browser.execute(sel => {
     const nodes = Array.from(document.querySelectorAll(sel));
-    if (!nodes.length) return '';
+    if (!nodes.length) {
+      return { count: 0, text: '' };
+    }
     const last = nodes[nodes.length - 1];
-    return (last?.textContent || '').trim();
+    return {
+      count: nodes.length,
+      text: (last?.textContent || '').trim(),
+    };
   }, selector);
+}
+
+async function getLastResponseText(selector) {
+  const snapshot = await getResponseSnapshot(selector);
+  return snapshot.text || '';
+}
+
+async function getMessageCount(selector) {
+  if (!selector) return 0;
+  return browser.execute(sel => document.querySelectorAll(sel).length, selector);
 }
 
 async function sendPrompt(selectors, prompt) {
@@ -237,7 +370,9 @@ async function sendPrompt(selectors, prompt) {
     if (!(await input.isExisting())) {
       return { prompt, response: null, error: 'CHAT_INPUT_MISSING' };
     }
-    const lastText = await getLastResponseText(selectors.response);
+    const beforeSnapshot = await getResponseSnapshot(selectors.response);
+    const userBeforeCount = await getMessageCount(selectors.user);
+    const lastText = beforeSnapshot.text;
     await browser.execute(
       (sel, value) => {
         const el = document.querySelector(sel);
@@ -254,38 +389,106 @@ async function sendPrompt(selectors, prompt) {
       selectors.input,
       prompt
     );
-    await browser.execute(sel => {
-      const el = document.querySelector(sel);
-      if (!el) return;
-      const down = new KeyboardEvent('keydown', {
-        key: 'Enter',
-        code: 'Enter',
-        keyCode: 13,
-        which: 13,
-        bubbles: true,
-      });
-      const up = new KeyboardEvent('keyup', {
-        key: 'Enter',
-        code: 'Enter',
-        keyCode: 13,
-        which: 13,
-        bubbles: true,
-      });
-      el.dispatchEvent(down);
-      el.dispatchEvent(up);
-    }, selectors.input);
+
+    const sendTriggered = await browser.execute(
+      (inputSelector, sendSelector) => {
+        const input = document.querySelector(inputSelector);
+        const send = document.querySelector(sendSelector);
+        if (send) {
+          const disabled =
+            send.hasAttribute('disabled') ||
+            send.getAttribute('aria-disabled') === 'true';
+          if (!disabled) {
+            send.dispatchEvent(
+              new MouseEvent('click', {
+                bubbles: true,
+                cancelable: true,
+                composed: true,
+              })
+            );
+            return true;
+          }
+        }
+
+        if (!input) return false;
+        const down = new KeyboardEvent('keydown', {
+          key: 'Enter',
+          code: 'Enter',
+          keyCode: 13,
+          which: 13,
+          bubbles: true,
+          cancelable: true,
+        });
+        const up = new KeyboardEvent('keyup', {
+          key: 'Enter',
+          code: 'Enter',
+          keyCode: 13,
+          which: 13,
+          bubbles: true,
+          cancelable: true,
+        });
+        input.dispatchEvent(down);
+        input.dispatchEvent(up);
+        return true;
+      },
+      selectors.input,
+      selectors.send
+    );
+
+    if (!sendTriggered) {
+      return { prompt, response: null, error: 'CHAT_SEND_TRIGGER_FAILED' };
+    }
+
+    try {
+      await browser.waitUntil(
+        async () => {
+          const userAfterCount = await getMessageCount(selectors.user);
+          if (userAfterCount > userBeforeCount) return true;
+
+          const inputValue = await browser.execute(sel => {
+            const el = document.querySelector(sel);
+            if (!el) return null;
+            return typeof el.value === 'string' ? el.value : '';
+          }, selectors.input);
+
+          if (typeof inputValue === 'string' && inputValue.trim().length === 0) {
+            return true;
+          }
+
+          const afterSnapshot = await getResponseSnapshot(selectors.response);
+          return afterSnapshot.count > beforeSnapshot.count;
+        },
+        {
+          timeout: 7000,
+          interval: 200,
+          timeoutMsg: 'timeout waiting for send acknowledgement',
+        }
+      );
+    } catch (error) {
+      return {
+        prompt,
+        response: null,
+        error: error?.message || 'CHAT_SEND_NOT_ACKNOWLEDGED',
+      };
+    }
 
     let response = null;
     try {
       await browser.waitUntil(
         async () => {
-          const text = await getLastResponseText(selectors.response);
-          if (!text || text === lastText) return false;
-          response = text;
+          const afterSnapshot = await getResponseSnapshot(selectors.response);
+          const hasNewMessage = afterSnapshot.count > beforeSnapshot.count;
+          const hasChangedText = !!afterSnapshot.text && afterSnapshot.text !== lastText;
+
+          if (!hasNewMessage && !hasChangedText) {
+            return false;
+          }
+
+          response = afterSnapshot.text || null;
           return true;
         },
         {
-          timeout: 90000,
+          timeout: AI_VERIFY_RESPONSE_TIMEOUT_MS,
           interval: 1000,
           timeoutMsg: 'timeout waiting for response',
         }
@@ -323,15 +526,23 @@ describe('ai-verification (desktop/full)', () => {
   };
 
   let selectors = null;
+  const appUrl = process.env.TITANE_E2E_URL || 'tauri://localhost/titane';
 
-  before(async () => {
-    const appUrl = process.env.TITANE_E2E_URL || 'tauri://localhost/#/chat';
-    await browser.url(appUrl);
-    await browser.pause(1500);
+  const prepareUiSurface = async () => {
+    await browser.setTimeout({ script: AI_VERIFY_SCRIPT_TIMEOUT_MS });
+    await ensureTauriPageLoaded(appUrl);
+    await browser.pause(800);
     await attemptOnboardingSkip();
+
     try {
       await browser.waitUntil(
         async () => {
+          const tabConversation = await $('[data-testid="tab-conversation"]');
+          if (await tabConversation.isExisting()) return true;
+          const chatReady = await $('[data-testid="chat-ready"]');
+          if (await chatReady.isExisting()) return true;
+          const chatInput = await $('[data-testid="chat-input"]');
+          if (await chatInput.isExisting()) return true;
           const bubbleTrigger = await $('[data-testid="chat-bubble-trigger"]');
           if (await bubbleTrigger.isExisting()) return true;
           const bubbleInput = await $('.chat-bubble-input');
@@ -356,8 +567,92 @@ describe('ai-verification (desktop/full)', () => {
     selectors = await resolveSelectors();
     if (!selectors) {
       console.warn('[AI-VERIF] CHAT_ELEMENTS_MISSING: running suite with IPC fallback');
-    } else {
-      await ensureChatOpen(selectors);
+      return;
+    }
+
+    await ensureChatOpen(selectors);
+  };
+
+  const recoverPhaseSession = async ({ warmup = false } = {}) => {
+    try {
+      await browser.reloadSession();
+    } catch {
+      // Ignore reload failures and rebuild from app URL.
+    }
+
+    await prepareUiSurface();
+
+    if (warmup) {
+      const warmed = await warmupChat(selectors, 1);
+      if (!warmed) {
+        throw new Error(
+          'CHAT_PREFLIGHT_FAILED: no response to warmup prompt after recovery'
+        );
+      }
+    }
+  };
+
+  const sendPromptWithRecovery = async (prompt, { warmupAfterRecovery = false } = {}) => {
+    const first = await sendPrompt(selectors, prompt);
+    if (!first?.error || !isRecoverableSessionError(first.error)) {
+      return first;
+    }
+
+    try {
+      await recoverPhaseSession({ warmup: warmupAfterRecovery });
+    } catch (error) {
+      return {
+        prompt,
+        response: null,
+        error: `SESSION_RECOVERY_FAILED: ${String(error?.message || error)}`,
+      };
+    }
+
+    const retry = await sendPrompt(selectors, prompt);
+    if (!retry?.error) return retry;
+
+    return {
+      ...retry,
+      error: `RECOVERED_RETRY_FAILED: ${retry.error}`,
+    };
+  };
+
+  const enforceConsecutiveErrorBudget = (counter, result, phase) => {
+    if (!result?.error) return 0;
+    const next = counter + 1;
+    if (next >= AI_VERIFY_MAX_CONSECUTIVE_ERRORS) {
+      throw new Error(
+        `PHASE_ABORT_CONSECUTIVE_ERRORS(${phase}): ${next} failures; last=${result.error}`
+      );
+    }
+    return next;
+  };
+
+  before(async () => {
+    let bootstrapped = false;
+    let lastBootstrapError = 'bootstrap failed';
+    for (let attempt = 1; attempt <= 3; attempt += 1) {
+      try {
+        await prepareUiSurface();
+        bootstrapped = true;
+        break;
+      } catch (error) {
+        lastBootstrapError = String(error?.message || error);
+        if (attempt < 3 && isRecoverableSessionError(lastBootstrapError)) {
+          try {
+            await browser.reloadSession();
+          } catch {
+            // Ignore and retry setup from app URL.
+          }
+          await browser.pause(500);
+          continue;
+        }
+        throw error;
+      }
+    }
+
+    if (!bootstrapped) {
+      throw new Error(lastBootstrapError);
     }
 
     const warmed = await warmupChat(selectors);
@@ -367,57 +662,94 @@ describe('ai-verification (desktop/full)', () => {
   });
 
   it('always respond (20 prompts)', async () => {
+    let consecutiveErrors = 0;
     for (const prompt of ALWAYS_PROMPTS) {
-      const result = await sendPrompt(selectors, prompt);
+      const result = await sendPromptWithRecovery(prompt, {
+        warmupAfterRecovery: true,
+      });
       results.always.push(result);
+      consecutiveErrors = result.error
+        ? enforceConsecutiveErrorBudget(consecutiveErrors, result, 'ALWAYS_RESPOND')
+        : 0;
     }
   });
 
   it('offline autonomy (5 prompts)', async () => {
-    await browser.execute(() => {
-      if (!window.__E2E_ORIG_FETCH__) {
-        window.__E2E_ORIG_FETCH__ = window.fetch;
+    let consecutiveErrors = 0;
+    try {
+      await browser.execute(() => {
+        if (!window.__E2E_ORIG_FETCH__) {
+          window.__E2E_ORIG_FETCH__ = window.fetch;
+        }
+        window.fetch = () => Promise.reject(new Error('OFFLINE_TEST'));
+      });
+    } catch (error) {
+      if (!isRecoverableSessionError(error?.message || error)) {
+        throw error;
       }
-      window.fetch = () => Promise.reject(new Error('OFFLINE_TEST'));
-    });
 
-    for (const prompt of OFFLINE_PROMPTS) {
-      const result = await sendPrompt(selectors, prompt);
-      results.offline.push(result);
+      await recoverPhaseSession();
+      await browser.execute(() => {
+        if (!window.__E2E_ORIG_FETCH__) {
+          window.__E2E_ORIG_FETCH__ = window.fetch;
+        }
+        window.fetch = () => Promise.reject(new Error('OFFLINE_TEST'));
+      });
     }
 
-    await browser.execute(() => {
-      if (window.__E2E_ORIG_FETCH__) {
-        window.fetch = window.__E2E_ORIG_FETCH__;
+    try {
+      for (const prompt of OFFLINE_PROMPTS) {
+        const result = await sendPromptWithRecovery(prompt);
+        results.offline.push(result);
+        consecutiveErrors = result.error
+          ? enforceConsecutiveErrorBudget(consecutiveErrors, result, 'OFFLINE')
+          : 0;
       }
-    });
+    } finally {
+      try {
+        await browser.execute(() => {
+          if (window.__E2E_ORIG_FETCH__) {
+            window.fetch = window.__E2E_ORIG_FETCH__;
+          }
+        });
+      } catch (error) {
+        if (!isRecoverableSessionError(error?.message || error)) {
+          throw error;
+        }
+      }
+    }
   });
 
   it('ui matrix (5 pages)', async () => {
     for (const page of UI_PAGES) {
-      const q1 = await sendPrompt(selectors, 'Quelle page est ouverte maintenant ?');
-      const q2 = await sendPrompt(selectors, 'Quelles actions sont possibles ici ?');
-      const q3 = await sendPrompt(selectors, 'Aide-moi à utiliser cette page.');
+      const q1 = await sendPromptWithRecovery('Quelle page est ouverte maintenant ?');
+      const q2 = await sendPromptWithRecovery('Quelles actions sont possibles ici ?');
+      const q3 = await sendPromptWithRecovery('Aide-moi à utiliser cette page.');
       results.uiMatrix.push({ page, q1, q2, q3 });
     }
   });
 
   it('memory + metacognition', async () => {
+    let consecutiveErrors = 0;
     for (const prompt of MEMORY_PROMPTS) {
-      const result = await sendPrompt(selectors, prompt);
+      const result = await sendPromptWithRecovery(prompt, {
+        warmupAfterRecovery: true,
+      });
       results.memory.push(result);
+      consecutiveErrors = result.error
+        ? enforceConsecutiveErrorBudget(consecutiveErrors, result, 'MEMORY_METACOG')
+        : 0;
     }
   });
 
   it('error handling (3 scenarios)', async () => {
-    const empty = await sendPrompt(selectors, '');
+    const empty = await sendPromptWithRecovery('');
     results.errors.push({
       scenario: ERROR_SCENARIOS[0].description,
       ui: empty.response || empty.error || 'EMPTY',
     });
 
-    const impossible = await sendPrompt(
-      selectors,
+    const impossible = await sendPromptWithRecovery(
       'Fais une action impossible et explique pourquoi.'
     );
     results.errors.push({
@@ -425,8 +757,7 @@ describe('ai-verification (desktop/full)', () => {
       ui: impossible.response || impossible.error || 'EMPTY',
     });
 
-    const offline = await sendPrompt(
-      selectors,
+    const offline = await sendPromptWithRecovery(
       'Provider indisponible : réponds avec un fallback utile.'
     );
     results.errors.push({

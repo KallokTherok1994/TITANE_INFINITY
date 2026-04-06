@@ -5,6 +5,12 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
+ * @deprecated This module is NOT on the active chat path.
+ * Canonical orchestrator: src/services/ai/orchestrator.ts (v24)
+ * All active imports (chatEngine, healthMonitor, systemUtilities, core/services/index.ts)
+ * route through src/services/ai/orchestrator.ts.
+ * This file is preserved for reference only. Do not add features here.
+ * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ v19.2Ω — AI ORCHESTRATOR OMEGA (NEURAL ORDER v∞.Ω)
  *   PHASE 3Ω: Orchestrator neural • Isolation absolue • Auto-heal intégré
  *   Architecture: Local-first → Sandbox providers → Fallback garanti → Never throw
@@ -1027,11 +1033,10 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
       // Improve reliability
       stats.reliability = Math.min(100, stats.reliability + 1);
 
-      // Update status based on performance
-      if (stats.reliability > 95) {
-        stats.status = 'healthy';
-      } else if (stats.reliability > 80) {
-        stats.status = 'degraded';
+      // Update status based on derived performance signals
+      if (stats.reliability > 80) {
+        const derivedStatus = stats.reliability > 95 ? 'healthy' : 'degraded';
+        stats.status = derivedStatus;
       }
     } else {
       stats.failureCount++;

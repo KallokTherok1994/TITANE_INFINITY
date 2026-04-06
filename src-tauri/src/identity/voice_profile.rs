@@ -48,6 +48,8 @@ pub struct VoiceProfile {
     pub characteristics: VoiceCharacteristics,
     /// Modèle TTS à utiliser
     pub tts_model: String,
+    /// Voice ID concret à injecter dans le runtime TTS
+    pub preferred_voice_id: String,
     /// Langue principale
     pub language: String,
     /// Accents supportés
@@ -139,11 +141,12 @@ impl Default for VoiceProfile {
         );
 
         Self {
-            id: uuid::Uuid::new_v4().to_string(),
-            name: "TITANE Default".to_string(),
-            description: "Voix par défaut TITANE∞, équilibrée et chaleureuse".to_string(),
+            id: "titane-natural-fr".to_string(),
+            name: "TITANE Natural".to_string(),
+            description: "Voix française naturelle, claire et stable pour TITANE∞".to_string(),
             characteristics: VoiceCharacteristics::default(),
             tts_model: "piper".to_string(),
+            preferred_voice_id: "fr_FR-siwis-medium".to_string(),
             language: "fr-FR".to_string(),
             accents: vec!["fr-FR".to_string(), "en-US".to_string()],
             emotion_mappings,
@@ -193,10 +196,33 @@ impl Default for VoiceProfileManager {
         let default_profile = VoiceProfile::default();
         let id = default_profile.id.clone();
         profiles.insert(id.clone(), default_profile);
+        for profile in [
+            VoicePresets::warm(),
+            VoicePresets::professional(),
+            VoicePresets::energetic(),
+            VoicePresets::calm(),
+        ] {
+            profiles.insert(profile.id.clone(), profile);
+        }
+
+        let official_id = "titane-calm-fr".to_string();
+
+        if let Some(profile) = profiles.get_mut(&id) {
+            profile.active = false;
+        }
+        if let Some(profile) = profiles.get_mut(&official_id) {
+            profile.active = true;
+        }
+
+        let active_profile_id = if profiles.contains_key(&official_id) {
+            Some(official_id)
+        } else {
+            Some(id)
+        };
 
         Self {
             profiles,
-            active_profile_id: Some(id),
+            active_profile_id,
         }
     }
 }
@@ -250,48 +276,56 @@ impl VoicePresets {
     /// Voix professionnelle
     pub fn professional() -> VoiceProfile {
         let mut profile = VoiceProfile::default();
-        profile.name = "Professional".to_string();
-        profile.description = "Voix formelle et claire".to_string();
+        profile.id = "titane-clarity-fr".to_string();
+        profile.name = "TITANE Clarity".to_string();
+        profile.description = "Voix formelle, claire et précise pour les explications techniques".to_string();
         profile.characteristics.pitch = 180.0;
         profile.characteristics.rate = 140.0;
         profile.characteristics.warmth = 0.4;
         profile.characteristics.emphasis = 0.6;
+        profile.active = false;
         profile
     }
 
     /// Voix chaleureuse
     pub fn warm() -> VoiceProfile {
         let mut profile = VoiceProfile::default();
-        profile.name = "Warm".to_string();
-        profile.description = "Voix chaleureuse et amicale".to_string();
+        profile.id = "titane-warm-fr".to_string();
+        profile.name = "TITANE Warm".to_string();
+        profile.description = "Voix chaleureuse et amicale, pensée pour un accompagnement fluide".to_string();
         profile.characteristics.pitch = 210.0;
         profile.characteristics.rate = 145.0;
         profile.characteristics.warmth = 0.9;
         profile.characteristics.emphasis = 0.4;
+        profile.active = false;
         profile
     }
 
     /// Voix énergique
     pub fn energetic() -> VoiceProfile {
         let mut profile = VoiceProfile::default();
-        profile.name = "Energetic".to_string();
-        profile.description = "Voix dynamique et enthousiaste".to_string();
+        profile.id = "titane-dynamic-fr".to_string();
+        profile.name = "TITANE Dynamic".to_string();
+        profile.description = "Voix dynamique et enthousiaste pour les messages d\'élan".to_string();
         profile.characteristics.pitch = 220.0;
         profile.characteristics.rate = 170.0;
         profile.characteristics.emphasis = 0.7;
         profile.characteristics.pitch_variance = 0.5;
+        profile.active = false;
         profile
     }
 
     /// Voix calme
     pub fn calm() -> VoiceProfile {
         let mut profile = VoiceProfile::default();
-        profile.name = "Calm".to_string();
-        profile.description = "Voix apaisante et méditative".to_string();
+        profile.id = "titane-calm-fr".to_string();
+        profile.name = "TITANE Calm".to_string();
+        profile.description = "Voix apaisante, naturelle et reposante pour les guidances longues".to_string();
         profile.characteristics.pitch = 190.0;
         profile.characteristics.rate = 120.0;
         profile.characteristics.warmth = 0.8;
         profile.characteristics.pause_duration = 350;
+        profile.active = false;
         profile
     }
 }
@@ -412,8 +446,10 @@ mod tests {
     #[test]
     fn test_voice_profile_default() {
         let profile = VoiceProfile::default();
-        assert_eq!(profile.name, "TITANE Default");
+        assert_eq!(profile.id, "titane-natural-fr");
+        assert_eq!(profile.name, "TITANE Natural");
         assert_eq!(profile.tts_model, "piper");
+        assert_eq!(profile.preferred_voice_id, "fr_FR-siwis-medium");
         assert_eq!(profile.language, "fr-FR");
         assert!(profile.active);
     }
@@ -448,15 +484,16 @@ mod tests {
     fn test_voice_profile_debug() {
         let profile = VoiceProfile::default();
         let debug = format!("{:?}", profile);
-        assert!(debug.contains("TITANE Default"));
+        assert!(debug.contains("TITANE Natural"));
     }
 
     #[test]
     fn test_voice_profile_serialize() {
         let profile = VoiceProfile::default();
         let json = serde_json::to_string(&profile).expect("VoiceProfile should serialize");
-        assert!(json.contains("TITANE Default"));
+        assert!(json.contains("TITANE Natural"));
         assert!(json.contains("piper"));
+        assert!(json.contains("fr_FR-siwis-medium"));
     }
 
     #[test]
@@ -565,7 +602,8 @@ mod tests {
     fn test_voice_profile_unique_ids() {
         let profile1 = VoiceProfile::default();
         let profile2 = VoiceProfile::default();
-        assert_ne!(profile1.id, profile2.id);
+        assert_eq!(profile1.id, profile2.id);
+        assert_eq!(profile1.id, "titane-natural-fr");
     }
 
     // ========== VoiceProfileManager Tests ==========
@@ -585,7 +623,7 @@ mod tests {
             active
                 .expect("VoiceProfileManager should have an active profile")
                 .name,
-            "TITANE Default"
+            "TITANE Calm"
         );
     }
 
@@ -593,7 +631,7 @@ mod tests {
     fn test_voice_profile_manager_list_profiles() {
         let manager = VoiceProfileManager::default();
         let profiles = manager.list_profiles();
-        assert_eq!(profiles.len(), 1);
+        assert_eq!(profiles.len(), 5);
     }
 
     #[test]
@@ -604,7 +642,7 @@ mod tests {
         manager.add_profile(new_profile);
 
         let profiles = manager.list_profiles();
-        assert_eq!(profiles.len(), 2);
+        assert_eq!(profiles.len(), 5);
         assert!(manager.get_profile(&new_id).is_some());
     }
 
@@ -681,7 +719,8 @@ mod tests {
     #[test]
     fn test_voice_presets_professional() {
         let profile = VoicePresets::professional();
-        assert_eq!(profile.name, "Professional");
+        assert_eq!(profile.id, "titane-clarity-fr");
+        assert_eq!(profile.name, "TITANE Clarity");
         assert_eq!(profile.characteristics.pitch, 180.0);
         assert_eq!(profile.characteristics.warmth, 0.4);
     }
@@ -689,7 +728,8 @@ mod tests {
     #[test]
     fn test_voice_presets_warm() {
         let profile = VoicePresets::warm();
-        assert_eq!(profile.name, "Warm");
+        assert_eq!(profile.id, "titane-warm-fr");
+        assert_eq!(profile.name, "TITANE Warm");
         assert_eq!(profile.characteristics.pitch, 210.0);
         assert_eq!(profile.characteristics.warmth, 0.9);
     }
@@ -697,7 +737,8 @@ mod tests {
     #[test]
     fn test_voice_presets_energetic() {
         let profile = VoicePresets::energetic();
-        assert_eq!(profile.name, "Energetic");
+        assert_eq!(profile.id, "titane-dynamic-fr");
+        assert_eq!(profile.name, "TITANE Dynamic");
         assert_eq!(profile.characteristics.rate, 170.0);
         assert_eq!(profile.characteristics.emphasis, 0.7);
     }
@@ -705,7 +746,8 @@ mod tests {
     #[test]
     fn test_voice_presets_calm() {
         let profile = VoicePresets::calm();
-        assert_eq!(profile.name, "Calm");
+        assert_eq!(profile.id, "titane-calm-fr");
+        assert_eq!(profile.name, "TITANE Calm");
         assert_eq!(profile.characteristics.rate, 120.0);
         assert_eq!(profile.characteristics.pause_duration, 350);
     }

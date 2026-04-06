@@ -1,6 +1,6 @@
-# TITANE∞ v27.0.5
+# TITANE∞ v30.0.0
 
-![Version](https://img.shields.io/badge/version-27.0.5-blue)
+![Version](https://img.shields.io/badge/version-30.0.0-blue)
 ![Rust](https://img.shields.io/badge/rust-2021-orange)
 ![React](https://img.shields.io/badge/react-18-61dafb)
 ![TypeScript](https://img.shields.io/badge/typescript-5.5-3178c6)
@@ -12,7 +12,20 @@
 
 TITANE∞ (Transformative Intelligence Through Adaptive Neural Engines - Infinity) est une plateforme cognitive de nouvelle génération avec **60+ modules intelligents** organisés en **10+ stacks hiérarchiques**, construite pour l'auto-régulation, l'adaptation intelligente et l'évolution continue.
 
-## 🌟 Caractéristiques v27.0.5
+## Statut canonique de version (mode B2)
+
+- Verite version repo: `30.0.0` via `package.json` et `CHANGELOG.md` (`PROVEN_BY_REPO`)
+- `README.md` et ce fichier sont les surfaces canoniques de navigation (`PROVEN_BY_CANON_DOC`)
+- Les lignes binaires `v28.90.0`, `v28.88.0` et `v27.0.5` sont conservees comme historique documente
+- `CHANGELOG.md` + `deployment/latest/MANIFEST.json` portent la reference de release canonique courante
+
+## Navigation canonique
+
+- Entrée racine: [`../README.md`](../README.md)
+- Index documentaire global: [`INDEX.md`](INDEX.md)
+- Diagrammes Mermaid: [`diagrams/README.md`](diagrams/README.md)
+
+## 🌟 Caracteristiques v30.0.0
 
 - **60+ Modules Intelligents** : Architecture modulaire complète avec stacks hiérarchiques
 - **Auto-Régulation** : Governor et Autonomic Evolution pour homéostasie cognitive
@@ -21,12 +34,12 @@ TITANE∞ (Transformative Intelligence Through Adaptive Neural Engines - Infinit
 - **Synthèse Cognitive** : Resonance v2, Meaning et Identity pour cognition profonde
 - **Plasticité** : Adaptive Intelligence pour absorption tensions et adaptation
 - **Architecture Consultatif** : Observation pure sans actions directes
-- **Sécurité Maximale** : Exécution locale, sandbox, chiffrement multi-niveaux
+- **Sécurité Maximale** : Online-first gouverné, fallback local obligatoire, chiffrement multi-niveaux
 - **Performance Native** : Backend Rust 2021 optimisé (~75,000 lignes)
 - **Interface Moderne** : React 18 + TypeScript strict
 - **DevTools Intégrés** : Monitoring et dashboard en temps réel
 
-## 🏗️ Architecture v27.0.5
+## 🏗️ Architecture v30.0.0
 
 ```
 TITANE∞ - 10+ Stacks Hiérarchiques
@@ -119,8 +132,15 @@ pnpm run dev:tauri
 
 ### Build Production
 ```bash
-GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
+GO_FOR_PROD_BUILD__TITANE_INFINITY=GO_FOR_PROD_BUILD__TITANE_INFINITY corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
 ```
+
+### Native Desktop Freshness Gate (preprod/prod)
+```bash
+bash scripts/verify/verify-native-binary-freshness.sh
+```
+
+This gate must pass before native desktop certification and before any production build/deploy authorization.
 
 ### Nettoyage
 ```bash
@@ -155,8 +175,8 @@ Stockage persistant et gestion mémoire.
 
 ## 🔐 Sécurité
 
-- ✅ Exécution 100% locale
-- ✅ Pas d'accès réseau par défaut
+- ✅ Online-first gouverné (surfaces réseau contrôlées)
+- ✅ Fallback local obligatoire (Tauri/Ollama)
 - ✅ Sandbox activé
 - ✅ CSP stricte
 - ✅ Pas d'eval()
@@ -166,11 +186,11 @@ Stockage persistant et gestion mémoire.
 
 ### Documentation Principale
 
-- [Architecture Complète](ARCHITECTURE.md)
+- [Architecture Complète](MAP_ARCHITECTURE_4RING.md)
 - [Guide des Modules](MODULES.md)
 - [Sécurité](SECURITY.md)
 - [Guide Développeur](DEVELOPER_GUIDE.md)
-- [Changelog](CHANGELOG.md)
+- [Changelog App](../CHANGELOG.md)
 
 ### 🧬 Super Prompts (Chirurgie Frontend/Backend)
 
@@ -209,7 +229,7 @@ TITANE_INFINITY/
 ### Commandes Utiles
 ```bash
 # Type check TypeScript
-pnpm run type-check
+pnpm run check
 
 # Lint
 pnpm run lint
@@ -226,7 +246,7 @@ GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config s
 
 ## 🤝 Contribution
 
-Les contributions sont les bienvenues ! Voir [DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md).
+Les contributions sont les bienvenues ! Voir [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md).
 
 ## 📄 License
 

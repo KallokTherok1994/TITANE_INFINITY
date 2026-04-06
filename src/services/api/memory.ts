@@ -30,6 +30,59 @@ import type {
   ChatInteraction,
 } from '../memory/types';
 
+function mapStructuredTargetToLevel(target: StructuredMemoryEntry['target']) {
+  switch (target) {
+    case 'short':
+      return 'session';
+    case 'medium':
+      return 'intermediate';
+    case 'long':
+      return 'long_term';
+  }
+}
+
+function mapStructuredTemplate(templateId: StructuredMemoryEntry['templateId']) {
+  switch (templateId) {
+    case 'decision':
+      return { contentType: 'decision', topic: 'decisions', importance: 5 };
+    case 'project_snapshot':
+      return { contentType: 'project_context', topic: 'project', importance: 4 };
+    case 'season_summary':
+      return { contentType: 'identity', topic: 'personal', importance: 5 };
+    case 'rhythm_report':
+      return { contentType: 'summary', topic: 'personal', importance: 3 };
+    case 'listening_entry':
+    default:
+      return { contentType: 'summary', topic: 'personal', importance: 3 };
+  }
+}
+
+function deriveStructuredTitle(entry: StructuredMemoryEntry): string {
+  const data = entry.data ?? {};
+  const titleCandidate =
+    typeof data.title === 'string'
+      ? data.title
+      : typeof data.project === 'string'
+        ? data.project
+        : typeof data.season === 'string'
+          ? data.season
+          : typeof data.week === 'string'
+            ? data.week
+            : typeof data.timestamp === 'string'
+              ? data.timestamp
+              : entry.templateId;
+
+  return String(titleCandidate).slice(0, 120);
+}
+
+function deriveChatInteractionTitle(interaction: ChatInteraction): string {
+  const userMessage = interaction.userMessage?.trim();
+  if (userMessage && userMessage.length > 0) {
+    return userMessage.slice(0, 120);
+  }
+  return 'interaction-chat';
+}
+
 /**
  * Interaction chat à sauvegarder
  */
@@ -183,9 +236,46 @@ export class MemoryService {
    * Sauvegarde interaction chat
    */
   async saveChatInteraction(interaction: ChatInteraction): Promise<void> {
+    const tags = Array.from(
+      new Set(
+        [
+          'chat-interaction',
+          interaction.mode,
+          interaction.emotionState?.dominant_emotion,
+        ].filter(
+          (value): value is string => typeof value === 'string' && value.length > 0
+        )
+      )
+    );
+
+    const content = [
+      `Utilisateur: ${interaction.userMessage}`,
+      `Assistant: ${interaction.aiResponse}`,
+      `Mode: ${interaction.mode}`,
+      interaction.emotionState?.dominant_emotion
+        ? `Emotion dominante: ${interaction.emotionState.dominant_emotion}`
+        : null,
+      `Timestamp: ${interaction.timestamp}`,
+    ]
+      .filter((line): line is string => typeof line === 'string' && line.length > 0)
+      .join('\n');
+
     await invokeWithRetry<void>(
-      'memory_save_chat_interaction',
-      { interaction },
+      'persistent_memory_write_entry',
+      {
+        level: 'session',
+        contentType: 'message',
+        content,
+        topic: 'general',
+        importance: 3,
+        title: deriveChatInteractionTitle(interaction),
+        tags,
+        projectId:
+          typeof interaction.metadata?.projectId === 'string'
+            ? interaction.metadata.projectId
+            : undefined,
+        modeId: interaction.mode,
+      },
       { ...STANDARD_COMMAND_OPTIONS, context: 'Memory' }
     );
 
@@ -197,13 +287,45 @@ export class MemoryService {
    * Sauvegarde une entrée structurée (medium/long terme)
    */
   async saveStructuredEntry(entry: StructuredMemoryEntry | string): Promise<void> {
-    const serialized = typeof entry === 'string' ? entry : JSON.stringify(entry);
+    const normalized: StructuredMemoryEntry =
+      typeof entry === 'string'
+        ? {
+            templateId: 'season_summary',
+            target: 'medium',
+            data: { raw: entry },
+            tags: ['structured-memory'],
+            source: 'memory-service',
+          }
+        : entry;
 
-    await invokeWithRetry<void>(
-      'memory_save_entry',
-      { entry: serialized },
-      { ...STANDARD_COMMAND_OPTIONS, context: 'Memory' }
-    );
+    const template = mapStructuredTemplate(normalized.templateId);
+    const payload = {
+      level: mapStructuredTargetToLevel(normalized.target),
+      contentType: template.contentType,
+      content: JSON.stringify({
+        templateId: normalized.templateId,
+        timestamp: normalized.timestamp,
+        data: normalized.data,
+      }),
+      topic: template.topic,
+      importance: template.importance,
+      source: 'manual_save',
+      tags: Array.from(
+        new Set([
+          normalized.templateId,
+          normalized.target,
+          ...(Array.isArray(normalized.tags) ? normalized.tags : []),
+        ])
+      ),
+      title: deriveStructuredTitle(normalized),
+    };
+
+    await invokeWithRetry<void>('persistent_memory_write_entry', payload, {
+      ...STANDARD_COMMAND_OPTIONS,
+      context: 'Memory',
+    });
+
+    this.clearCache();
   }
 
   /**

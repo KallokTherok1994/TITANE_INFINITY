@@ -15,18 +15,43 @@ const tauriCommandsContent = readFileSync(tauriCommandsPath, 'utf-8');
 const tauriClientPath = resolve('src/lib/tauriClient.ts');
 const tauriClientContent = readFileSync(tauriClientPath, 'utf-8');
 
-// Load allowlist
-const allowlistPath = resolve('src-tauri/allowlist.whitelist.stable.json');
-const allowlist = JSON.parse(readFileSync(allowlistPath, 'utf-8'));
+// Load backend security whitelist (canonical runtime guard)
+const backendSecurityPath = resolve('src-tauri/src/commands/security.rs');
+let backendSecurityContent = '';
+try {
+  backendSecurityContent = readFileSync(backendSecurityPath, 'utf-8');
+} catch {
+  backendSecurityContent = '';
+}
 
-// Load used wrappers
+// Load allowlist (active config first, stable fallback)
+const tauriConfigPath = resolve('src-tauri/tauri.conf.json');
+const stableAllowlistPath = resolve('src-tauri/allowlist.whitelist.stable.json');
+
+let allowlistSourcePath = tauriConfigPath;
+let allowlist = JSON.parse(readFileSync(tauriConfigPath, 'utf-8'));
+
+if (!allowlist?.app?.security?.capabilities?.length) {
+  allowlistSourcePath = stableAllowlistPath;
+  allowlist = JSON.parse(readFileSync(stableAllowlistPath, 'utf-8'));
+}
+
+// Load used wrappers (auto-generate fallback if missing)
 const usedWrappersPath = '/tmp/used_wrappers.txt';
-const usedWrappers = readFileSync(usedWrappersPath, 'utf-8')
-  .trim()
-  .split('\n')
-  .filter(Boolean);
+let usedWrappersRaw = '';
+try {
+  usedWrappersRaw = readFileSync(usedWrappersPath, 'utf-8');
+} catch {
+  const usageMatches = [
+    ...tauriClientContent.matchAll(/tauriClient\.([a-zA-Z_][a-zA-Z0-9_]*)\(/g),
+  ];
+  usedWrappersRaw = usageMatches.map(m => m[1]).join('\n');
+}
+
+const usedWrappers = usedWrappersRaw.trim().split('\n').filter(Boolean);
 
 console.log(`✅ Loaded ${usedWrappers.length} used wrappers`);
+console.log(`✅ Allowlist source: ${allowlistSourcePath}`);
 
 // Build TAURI_COMMANDS constant → value map
 const commandMap = new Map();
@@ -76,9 +101,36 @@ if (unmappedWrappers.length > 0) {
   }
 }
 
-// Get allowlisted commands
-const allowlistedCommands = new Set(allowlist.allowed_commands || []);
+// Get allowlisted commands (supports both schemas)
+const allowlistedCommands = new Set();
+
+for (const command of allowlist.allowed_commands || []) {
+  allowlistedCommands.add(command);
+}
+
+for (const capability of allowlist?.app?.security?.capabilities || []) {
+  for (const entry of capability?.allow || []) {
+    if (entry?.command) {
+      allowlistedCommands.add(entry.command);
+    }
+  }
+}
+
+// Backend whitelist from security.rs (commands.insert("..."))
+const backendCommands = new Set();
+if (backendSecurityContent) {
+  const backendRegex = /commands\.insert\("([a-z0-9_]+)"\)/g;
+  let backendMatch;
+  while ((backendMatch = backendRegex.exec(backendSecurityContent)) !== null) {
+    backendCommands.add(backendMatch[1]);
+    allowlistedCommands.add(backendMatch[1]);
+  }
+}
+
 console.log(`\n✅ ${allowlistedCommands.size} commands in allowlist\n`);
+if (backendCommands.size > 0) {
+  console.log(`✅ ${backendCommands.size} commands loaded from backend whitelist\n`);
+}
 
 // Compare
 const missing = [...usedCommands].filter(cmd => !allowlistedCommands.has(cmd));

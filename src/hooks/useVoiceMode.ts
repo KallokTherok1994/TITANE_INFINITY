@@ -184,7 +184,8 @@ export function useVoiceMode(): UseVoiceModeReturn {
 
   const getVADState = useCallback(async () => {
     try {
-      const vadActive = await secureInvoke<boolean>('get_vad_state');
+      // FIX 2026-03-15 AUDIO_VOICE_AUDIT: backend command is vad_get_state (not get_vad_state)
+      const vadActive = await secureInvoke<boolean>('vad_get_state');
 
       setState(prev => ({
         ...prev,

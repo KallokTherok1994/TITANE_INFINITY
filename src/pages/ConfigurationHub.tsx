@@ -12,8 +12,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
+import { invalidateRequestDefaultsCache } from '@/services/tauri/chatEngine.commands';
 import { useToast } from '@/hooks/useToast';
 import { ConfigSection, ConfigFieldEditable } from '../components/config';
+import { useCognitiveLayout, type UIMode } from '@/hooks/useCognitiveLayout';
 import './ModulePages.css';
 
 interface RuntimeConfig {
@@ -25,20 +27,322 @@ interface RuntimeConfig {
 }
 
 interface ChatEngineConfig {
-  timeout_ms: number;
-  chunk_size: number;
-  max_tokens: number;
+  response_timeout_ms: number;
+  stream_chunk_size: number;
+  memory_context_tokens: number;
+  memory_retention_tokens: number;
+  memory_flush_interval_ms: number;
+  auto_tts_enabled: boolean;
+  stream_channel_buffer: number;
+}
+
+interface ChatRequestDefaults {
   temperature: number;
+  max_output_tokens: number;
+  provider: 'auto' | 'gemini' | 'ollama' | 'local';
+  enable_streaming: boolean;
+}
+
+interface IpcEnvelope<T> {
+  ok: boolean;
+  content: T | null;
+  error: { code: string; message: string } | null;
 }
 
 interface ConfigSnapshot {
   runtime: RuntimeConfig;
-  chat_engine: ChatEngineConfig;
+  chat_engine: {
+    timeout_ms: number;
+    chunk_size: number;
+    max_tokens: number;
+    temperature: number;
+  };
   timestamp: number;
   version: string;
 }
 
-type ConfigTab = 'system' | 'ai' | 'performance';
+interface ChatEngineConfigPayload {
+  responseTimeoutMs: number;
+  streamChunkSize: number;
+  memoryContextTokens: number;
+  memoryRetentionTokens: number;
+  memoryFlushIntervalMs: number;
+  autoTtsEnabled: boolean;
+  streamChannelBuffer: number;
+}
+
+interface ChatRequestDefaultsPayload {
+  temperature: number;
+  maxOutputTokens: number;
+  provider: 'auto' | 'gemini' | 'ollama' | 'local';
+  enableStreaming: boolean;
+}
+
+const toRecord = (value: unknown): Record<string, unknown> | null => {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return null;
+  }
+  return value as Record<string, unknown>;
+};
+
+const pickDefined = <T,>(...values: Array<T | null | undefined>): T | undefined => {
+  for (const value of values) {
+    if (value !== undefined && value !== null) {
+      return value;
+    }
+  }
+  return undefined;
+};
+
+const asString = (value: unknown): string | undefined =>
+  typeof value === 'string' ? value : undefined;
+
+const asNumber = (value: unknown): number | undefined => {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value;
+  }
+  if (typeof value === 'string' && value.trim().length > 0) {
+    const parsed = Number(value);
+    if (Number.isFinite(parsed)) {
+      return parsed;
+    }
+  }
+  return undefined;
+};
+
+const asBoolean = (value: unknown): boolean | undefined =>
+  typeof value === 'boolean' ? value : undefined;
+
+const normalizeProvider = (value: unknown): ChatRequestDefaults['provider'] => {
+  const raw = asString(value)?.toLowerCase();
+  if (raw === 'gemini' || raw === 'ollama' || raw === 'local') {
+    return raw;
+  }
+  return 'auto';
+};
+
+const normalizeRuntimeConfig = (value: unknown): RuntimeConfig => {
+  const raw = toRecord(value);
+  if (!raw) {
+    throw new Error('Runtime config invalide');
+  }
+
+  // Keep the page operational even when a partial runtime payload is returned.
+  const ollama_url =
+    pickDefined(asString(raw.ollama_url), asString(raw.ollamaUrl)) ?? '/api/ollama';
+  const ollama_model =
+    pickDefined(asString(raw.ollama_model), asString(raw.ollamaModel)) ??
+    'qwen2.5:latest';
+
+  return {
+    ollama_url,
+    ollama_model,
+    secrets_mode:
+      pickDefined(asString(raw.secrets_mode), asString(raw.secretsMode)) ?? 'encrypted',
+    gemini_configured:
+      pickDefined(asBoolean(raw.gemini_configured), asBoolean(raw.geminiConfigured)) ??
+      false,
+    timestamp:
+      pickDefined(asNumber(raw.timestamp), asNumber(raw.updatedAt)) ??
+      Math.floor(Date.now() / 1000),
+  };
+};
+
+const normalizeChatEngineConfig = (value: unknown): ChatEngineConfig => {
+  const raw = toRecord(value);
+  if (!raw) {
+    throw new Error('Chat engine config invalide');
+  }
+
+  const response_timeout_ms = pickDefined(
+    asNumber(raw.response_timeout_ms),
+    asNumber(raw.responseTimeoutMs)
+  );
+  const stream_chunk_size = pickDefined(
+    asNumber(raw.stream_chunk_size),
+    asNumber(raw.streamChunkSize)
+  );
+  const memory_context_tokens = pickDefined(
+    asNumber(raw.memory_context_tokens),
+    asNumber(raw.memoryContextTokens)
+  );
+  const memory_retention_tokens = pickDefined(
+    asNumber(raw.memory_retention_tokens),
+    asNumber(raw.memoryRetentionTokens)
+  );
+  const memory_flush_interval_ms = pickDefined(
+    asNumber(raw.memory_flush_interval_ms),
+    asNumber(raw.memoryFlushIntervalMs)
+  );
+  const auto_tts_enabled = pickDefined(
+    asBoolean(raw.auto_tts_enabled),
+    asBoolean(raw.autoTtsEnabled)
+  );
+  const stream_channel_buffer = pickDefined(
+    asNumber(raw.stream_channel_buffer),
+    asNumber(raw.streamChannelBuffer)
+  );
+
+  if (
+    response_timeout_ms === undefined ||
+    stream_chunk_size === undefined ||
+    memory_context_tokens === undefined ||
+    memory_retention_tokens === undefined ||
+    memory_flush_interval_ms === undefined ||
+    auto_tts_enabled === undefined ||
+    stream_channel_buffer === undefined
+  ) {
+    throw new Error('Chat engine config incomplete');
+  }
+
+  return {
+    response_timeout_ms,
+    stream_chunk_size,
+    memory_context_tokens,
+    memory_retention_tokens,
+    memory_flush_interval_ms,
+    auto_tts_enabled,
+    stream_channel_buffer,
+  };
+};
+
+const normalizeChatRequestDefaults = (value: unknown): ChatRequestDefaults => {
+  const raw = toRecord(value);
+  if (!raw) {
+    throw new Error('Chat request defaults invalides');
+  }
+
+  const temperature = asNumber(raw.temperature);
+  const max_output_tokens = pickDefined(
+    asNumber(raw.max_output_tokens),
+    asNumber(raw.maxOutputTokens)
+  );
+  const enable_streaming = pickDefined(
+    asBoolean(raw.enable_streaming),
+    asBoolean(raw.enableStreaming)
+  );
+
+  if (
+    temperature === undefined ||
+    max_output_tokens === undefined ||
+    enable_streaming === undefined
+  ) {
+    throw new Error('Chat request defaults incomplets');
+  }
+
+  return {
+    temperature,
+    max_output_tokens,
+    provider: normalizeProvider(raw.provider),
+    enable_streaming,
+  };
+};
+
+const normalizeConfigSnapshot = (value: unknown): ConfigSnapshot => {
+  const raw = toRecord(value);
+  if (!raw) {
+    throw new Error('Snapshot de configuration invalide');
+  }
+
+  const runtime = normalizeRuntimeConfig(raw.runtime);
+  const rawChatEngine = pickDefined(toRecord(raw.chat_engine), toRecord(raw.chatEngine));
+  if (!rawChatEngine) {
+    throw new Error('Snapshot chat_engine manquant');
+  }
+
+  const timeout_ms = pickDefined(
+    asNumber(rawChatEngine.timeout_ms),
+    asNumber(rawChatEngine.timeoutMs)
+  );
+  const chunk_size = pickDefined(
+    asNumber(rawChatEngine.chunk_size),
+    asNumber(rawChatEngine.chunkSize)
+  );
+  const max_tokens = pickDefined(
+    asNumber(rawChatEngine.max_tokens),
+    asNumber(rawChatEngine.maxTokens)
+  );
+  const temperature = asNumber(rawChatEngine.temperature);
+
+  if (
+    timeout_ms === undefined ||
+    chunk_size === undefined ||
+    max_tokens === undefined ||
+    temperature === undefined
+  ) {
+    throw new Error('Snapshot chat_engine incomplet');
+  }
+
+  return {
+    runtime,
+    chat_engine: {
+      timeout_ms,
+      chunk_size,
+      max_tokens,
+      temperature,
+    },
+    timestamp: asNumber(raw.timestamp) ?? Math.floor(Date.now() / 1000),
+    version: asString(raw.version) ?? 'unknown',
+  };
+};
+
+const normalizeEnvelope = <T,>(
+  value: unknown,
+  contentParser: (content: unknown) => T
+): IpcEnvelope<T> => {
+  const raw = toRecord(value);
+  if (!raw) {
+    throw new Error('Invalid IPC response');
+  }
+
+  const ok = asBoolean(raw.ok);
+  if (ok === undefined) {
+    throw new Error('IPC response missing ok field');
+  }
+
+  const errorRaw = toRecord(raw.error);
+  const error = errorRaw
+    ? {
+        code: asString(errorRaw.code) ?? 'IPC_ERROR',
+        message: asString(errorRaw.message) ?? 'Erreur IPC inconnue',
+      }
+    : null;
+
+  if (!ok) {
+    return {
+      ok: false,
+      content: null,
+      error: error ?? { code: 'IPC_ERROR', message: 'IPC response failed' },
+    };
+  }
+
+  return {
+    ok: true,
+    content: contentParser(raw.content),
+    error: null,
+  };
+};
+
+const normalizeSnapshotResponse = (value: unknown): ConfigSnapshot => {
+  const raw = toRecord(value);
+  if (!raw) {
+    throw new Error('Snapshot de configuration invalide');
+  }
+
+  const hasEnvelopeShape = typeof raw.ok === 'boolean';
+  if (!hasEnvelopeShape) {
+    return normalizeConfigSnapshot(raw);
+  }
+
+  const envelope = normalizeEnvelope(raw, normalizeConfigSnapshot);
+  if (!envelope.ok || !envelope.content) {
+    throw new Error(envelope.error?.message || 'Snapshot de configuration indisponible');
+  }
+
+  return envelope.content;
+};
+
+type ConfigTab = 'system' | 'ai' | 'performance' | 'audio';
 
 export const ConfigurationHub: React.FC = () => {
   const [config, setConfig] = useState<ConfigSnapshot | null>(null);
@@ -48,12 +352,58 @@ export const ConfigurationHub: React.FC = () => {
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
   const { success, error: errorToast } = useToast();
 
+  // Cognitive Layout Engine (déplacé depuis panneau flottant)
+  const {
+    currentMode: cognitiveMode,
+    setMode: setCognitiveMode,
+    toggleAdaptation,
+    isAdaptationEnabled,
+  } = useCognitiveLayout();
+
+  const COGNITIVE_MODE_LABELS: Record<UIMode, string> = {
+    focus_deep: '🎯 Focus Profond',
+    exploration: '🔍 Exploration',
+    monitoring: '📊 Monitoring',
+    maintenance: '🔧 Maintenance',
+    coaching: '🎓 Coaching',
+    neutral: '⚖️ Neutre',
+  };
+
   // Edit mode state
   const [editMode, setEditMode] = useState(false);
   const [editedRuntime, setEditedRuntime] = useState<Partial<RuntimeConfig>>({});
   const [editedChatEngine, setEditedChatEngine] = useState<Partial<ChatEngineConfig>>({});
+  const [engineConfig, setEngineConfig] = useState<ChatEngineConfig | null>(null);
+  const [editedRequestDefaults, setEditedRequestDefaults] = useState<
+    Partial<ChatRequestDefaults>
+  >({});
+  const [requestDefaults, setRequestDefaults] = useState<ChatRequestDefaults | null>(
+    null
+  );
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
+
+  // Audio device config state (canonical — single source of truth)
+  const [audioConfig, setAudioConfig] = useState<{
+    inputDeviceId: string;
+    inputDeviceLabel: string;
+    outputDeviceId: string;
+    outputDeviceLabel: string;
+    volume: number;
+    noiseReduction: boolean;
+    echoCancellation: boolean;
+    autoGainControl: boolean;
+  }>({
+    inputDeviceId: '',
+    inputDeviceLabel: '',
+    outputDeviceId: '',
+    outputDeviceLabel: '',
+    volume: 1.0,
+    noiseReduction: false,
+    echoCancellation: false,
+    autoGainControl: false,
+  });
+  const [audioSaving, setAudioSaving] = useState(false);
 
   // Presets state
   const [presets, setPresets] = useState<Array<{ name: string; description: string }>>(
@@ -67,19 +417,72 @@ export const ConfigurationHub: React.FC = () => {
 
     try {
       console.log('🎯 [ConfigHub] Loading configuration snapshot...');
-      const snapshot = (await tauriClient.getAllConfigs()) as ConfigSnapshot;
+      const snapshot = normalizeSnapshotResponse(await tauriClient.getAllConfigs());
+      const engineEnvelope = normalizeEnvelope(
+        await tauriClient.getChatEngineConfig(),
+        normalizeChatEngineConfig
+      );
+      const defaultsEnvelope = normalizeEnvelope(
+        await tauriClient.getChatRequestDefaults(),
+        normalizeChatRequestDefaults
+      );
+
+      if (!engineEnvelope.ok || !engineEnvelope.content) {
+        throw new Error(
+          engineEnvelope.error?.message ||
+            'Impossible de charger Chat Engine Configuration'
+        );
+      }
+
+      if (!defaultsEnvelope.ok || !defaultsEnvelope.content) {
+        throw new Error(
+          defaultsEnvelope.error?.message || 'Impossible de charger Chat Request Defaults'
+        );
+      }
+
       console.log('✅ [ConfigHub] Configuration loaded:', snapshot);
-      setConfig(snapshot);
+      setConfig({
+        ...snapshot,
+        chat_engine: {
+          timeout_ms: engineEnvelope.content.response_timeout_ms,
+          chunk_size: engineEnvelope.content.stream_chunk_size,
+          max_tokens: defaultsEnvelope.content.max_output_tokens,
+          temperature: defaultsEnvelope.content.temperature,
+        },
+      });
+      setEngineConfig(engineEnvelope.content);
+      setRequestDefaults(defaultsEnvelope.content);
       setLastRefresh(new Date());
       // Reset edit state when reloading
       setEditedRuntime({});
       setEditedChatEngine({});
+      setEditedRequestDefaults({});
       setValidationErrors({});
     } catch (err) {
       console.error('❌ [ConfigHub] Failed to load configuration:', err);
       setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
+    }
+
+    // Load canonical audio device config (independent — no throw on failure)
+    try {
+      const raw = await tauriClient.getAudioDeviceConfig();
+      if (raw && typeof raw === 'object') {
+        const r = raw as Record<string, unknown>;
+        setAudioConfig({
+          inputDeviceId: (r.inputDeviceId as string) || '',
+          inputDeviceLabel: (r.inputDeviceLabel as string) || '',
+          outputDeviceId: (r.outputDeviceId as string) || '',
+          outputDeviceLabel: (r.outputDeviceLabel as string) || '',
+          volume: typeof r.volume === 'number' ? r.volume : 1.0,
+          noiseReduction: Boolean(r.noiseReduction),
+          echoCancellation: Boolean(r.echoCancellation),
+          autoGainControl: Boolean(r.autoGainControl),
+        });
+      }
+    } catch (audioErr) {
+      console.warn('[ConfigHub] Audio config load failed (non-fatal):', audioErr);
     }
   };
 
@@ -92,6 +495,7 @@ export const ConfigurationHub: React.FC = () => {
       // Cancel edit - reset changes
       setEditedRuntime({});
       setEditedChatEngine({});
+      setEditedRequestDefaults({});
       setValidationErrors({});
     }
     setEditMode(!editMode);
@@ -129,8 +533,23 @@ export const ConfigurationHub: React.FC = () => {
     });
   };
 
+  const handleRequestDefaultsFieldChange = (
+    field: keyof ChatRequestDefaults,
+    value: string | number | boolean
+  ) => {
+    setEditedRequestDefaults(prev => ({
+      ...prev,
+      [field]: value,
+    }));
+    setValidationErrors(prev => {
+      const newErrors = { ...prev };
+      delete newErrors[`request_defaults.${field}`];
+      return newErrors;
+    });
+  };
+
   const handleSave = async () => {
-    if (!config) return;
+    if (!config || !requestDefaults || !engineConfig) return;
 
     setSaving(true);
     setValidationErrors({});
@@ -153,10 +572,61 @@ export const ConfigurationHub: React.FC = () => {
       // Save chat engine config if changed
       if (Object.keys(editedChatEngine).length > 0) {
         console.log('📤 [ConfigHub] Updating chat engine config:', editedChatEngine);
-        await tauriClient.updateChatEngineConfig({
-          update: editedChatEngine,
-        });
+        const payload: ChatEngineConfigPayload = {
+          responseTimeoutMs:
+            editedChatEngine.response_timeout_ms ?? engineConfig.response_timeout_ms,
+          streamChunkSize:
+            editedChatEngine.stream_chunk_size ?? engineConfig.stream_chunk_size,
+          memoryContextTokens:
+            editedChatEngine.memory_context_tokens ?? engineConfig.memory_context_tokens,
+          memoryRetentionTokens:
+            editedChatEngine.memory_retention_tokens ??
+            engineConfig.memory_retention_tokens,
+          memoryFlushIntervalMs:
+            editedChatEngine.memory_flush_interval_ms ??
+            engineConfig.memory_flush_interval_ms,
+          autoTtsEnabled:
+            editedChatEngine.auto_tts_enabled ?? engineConfig.auto_tts_enabled,
+          streamChannelBuffer:
+            editedChatEngine.stream_channel_buffer ?? engineConfig.stream_channel_buffer,
+        };
+
+        const envelope = normalizeEnvelope(
+          await tauriClient.setChatEngineConfig({
+            config: payload,
+          }),
+          normalizeChatEngineConfig
+        );
+        if (!envelope.ok) {
+          throw new Error(
+            envelope.error?.message || 'Échec mise à jour Chat Engine Configuration'
+          );
+        }
         console.log('✅ [ConfigHub] Chat engine config updated');
+      }
+
+      if (Object.keys(editedRequestDefaults).length > 0) {
+        const payload: ChatRequestDefaultsPayload = {
+          temperature: editedRequestDefaults.temperature ?? requestDefaults.temperature,
+          maxOutputTokens:
+            editedRequestDefaults.max_output_tokens ?? requestDefaults.max_output_tokens,
+          provider: (editedRequestDefaults.provider ??
+            requestDefaults.provider) as ChatRequestDefaults['provider'],
+          enableStreaming:
+            editedRequestDefaults.enable_streaming ?? requestDefaults.enable_streaming,
+        };
+        const envelope = normalizeEnvelope(
+          await tauriClient.setChatRequestDefaults({
+            defaults: payload,
+          }),
+          normalizeChatRequestDefaults
+        );
+        if (!envelope.ok) {
+          throw new Error(
+            envelope.error?.message || 'Échec mise à jour Chat Request Defaults'
+          );
+        }
+        invalidateRequestDefaultsCache();
       }
 
       // Reload config after successful save
@@ -177,10 +647,20 @@ export const ConfigurationHub: React.FC = () => {
         setValidationErrors({ 'chat_engine.timeout_ms': errorMsg });
       } else if (errorMsg.includes('Chunk size')) {
         setValidationErrors({ 'chat_engine.chunk_size': errorMsg });
+      } else if (errorMsg.includes('memory_context_tokens')) {
+        setValidationErrors({ 'chat_engine.memory_context_tokens': errorMsg });
+      } else if (errorMsg.includes('memory_retention_tokens')) {
+        setValidationErrors({ 'chat_engine.memory_retention_tokens': errorMsg });
+      } else if (errorMsg.includes('memory_flush_interval_ms')) {
+        setValidationErrors({ 'chat_engine.memory_flush_interval_ms': errorMsg });
+      } else if (errorMsg.includes('stream_channel_buffer')) {
+        setValidationErrors({ 'chat_engine.stream_channel_buffer': errorMsg });
       } else if (errorMsg.includes('Max tokens')) {
         setValidationErrors({ 'chat_engine.max_tokens': errorMsg });
       } else if (errorMsg.includes('Temperature')) {
-        setValidationErrors({ 'chat_engine.temperature': errorMsg });
+        setValidationErrors({ 'request_defaults.temperature': errorMsg });
+      } else if (errorMsg.includes('max_output_tokens')) {
+        setValidationErrors({ 'request_defaults.max_output_tokens': errorMsg });
       } else {
         setError(errorMsg);
       }
@@ -383,8 +863,73 @@ export const ConfigurationHub: React.FC = () => {
     );
   }
 
-  if (!config) {
-    return null;
+  if (!config || !engineConfig || !requestDefaults) {
+    const missingParts = [
+      !config ? 'snapshot' : null,
+      !engineConfig ? 'chat_engine' : null,
+      !requestDefaults ? 'request_defaults' : null,
+    ]
+      .filter(Boolean)
+      .join(', ');
+
+    return (
+      <div className="module-page">
+        <div className="module-page__header">
+          <h1 className="module-page__title">
+            <span className="module-page__icon">🎯</span>
+            Configuration Hub
+          </h1>
+        </div>
+        <div style={{ textAlign: 'center', padding: '3rem' }}>
+          <div
+            style={{
+              fontSize: '2rem',
+              marginBottom: '1rem',
+              color: 'var(--color-error)',
+            }}
+          >
+            ⚠️
+          </div>
+          <div style={{ color: 'var(--color-error)', marginBottom: '1rem' }}>
+            Configuration incomplete
+          </div>
+          <div
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-text-secondary)',
+              marginBottom: '1.5rem',
+            }}
+          >
+            Missing data: {missingParts}
+          </div>
+          {error && (
+            <div
+              style={{
+                fontSize: '0.85rem',
+                color: 'var(--color-text-secondary)',
+                marginBottom: '1.5rem',
+              }}
+            >
+              Last error: {error}
+            </div>
+          )}
+          <button
+            onClick={loadConfig}
+            style={{
+              padding: '0.75rem 1.5rem',
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              border: 'none',
+              borderRadius: '8px',
+              color: 'white',
+              cursor: 'pointer',
+              fontWeight: 600,
+            }}
+          >
+            🔄 Reload Configuration
+          </button>
+        </div>
+      </div>
+    );
   }
 
   // Get current values (edited or original)
@@ -396,17 +941,37 @@ export const ConfigurationHub: React.FC = () => {
   };
 
   const currentChatEngine = {
-    timeout_ms: editedChatEngine.timeout_ms ?? config.chat_engine.timeout_ms,
-    chunk_size: editedChatEngine.chunk_size ?? config.chat_engine.chunk_size,
-    max_tokens: editedChatEngine.max_tokens ?? config.chat_engine.max_tokens,
-    temperature: editedChatEngine.temperature ?? config.chat_engine.temperature,
+    response_timeout_ms:
+      editedChatEngine.response_timeout_ms ?? engineConfig.response_timeout_ms,
+    stream_chunk_size:
+      editedChatEngine.stream_chunk_size ?? engineConfig.stream_chunk_size,
+    memory_context_tokens:
+      editedChatEngine.memory_context_tokens ?? engineConfig.memory_context_tokens,
+    memory_retention_tokens:
+      editedChatEngine.memory_retention_tokens ?? engineConfig.memory_retention_tokens,
+    memory_flush_interval_ms:
+      editedChatEngine.memory_flush_interval_ms ?? engineConfig.memory_flush_interval_ms,
+    auto_tts_enabled: editedChatEngine.auto_tts_enabled ?? engineConfig.auto_tts_enabled,
+    stream_channel_buffer:
+      editedChatEngine.stream_channel_buffer ?? engineConfig.stream_channel_buffer,
+  };
+
+  const currentRequestDefaults = {
+    temperature: editedRequestDefaults.temperature ?? requestDefaults.temperature,
+    max_output_tokens:
+      editedRequestDefaults.max_output_tokens ?? requestDefaults.max_output_tokens,
+    provider: editedRequestDefaults.provider ?? requestDefaults.provider,
+    enable_streaming:
+      editedRequestDefaults.enable_streaming ?? requestDefaults.enable_streaming,
   };
 
   const hasChanges =
-    Object.keys(editedRuntime).length > 0 || Object.keys(editedChatEngine).length > 0;
+    Object.keys(editedRuntime).length > 0 ||
+    Object.keys(editedChatEngine).length > 0 ||
+    Object.keys(editedRequestDefaults).length > 0;
 
   return (
-    <div className="module-page">
+    <div className="module-page" data-testid="page-configuration-hub">
       {/* Header */}
       <div className="module-page__header">
         <div>
@@ -436,6 +1001,7 @@ export const ConfigurationHub: React.FC = () => {
           {!editMode && (
             <>
               <button
+                data-testid="btn-config-refresh"
                 onClick={loadConfig}
                 disabled={loading}
                 style={{
@@ -455,6 +1021,7 @@ export const ConfigurationHub: React.FC = () => {
                 {loading ? '⏳ Actualisation...' : '🔄 Actualiser'}
               </button>
               <button
+                data-testid="btn-config-export"
                 onClick={handleExport}
                 style={{
                   padding: '0.75rem 1.5rem',
@@ -470,6 +1037,7 @@ export const ConfigurationHub: React.FC = () => {
                 📤 Exporter
               </button>
               <button
+                data-testid="btn-config-import"
                 onClick={handleImport}
                 style={{
                   padding: '0.75rem 1.5rem',
@@ -485,6 +1053,7 @@ export const ConfigurationHub: React.FC = () => {
                 📥 Importer
               </button>
               <button
+                data-testid="btn-config-save-preset"
                 onClick={handleSavePreset}
                 style={{
                   padding: '0.75rem 1.5rem',
@@ -501,6 +1070,7 @@ export const ConfigurationHub: React.FC = () => {
               </button>
               {presets.length > 0 && (
                 <select
+                  data-testid="select-config-preset"
                   onChange={e => {
                     if (e.target.value) {
                       handleLoadPreset(e.target.value);
@@ -527,6 +1097,7 @@ export const ConfigurationHub: React.FC = () => {
                 </select>
               )}
               <button
+                data-testid="btn-config-edit"
                 onClick={handleEditToggle}
                 style={{
                   padding: '0.75rem 1.5rem',
@@ -546,6 +1117,7 @@ export const ConfigurationHub: React.FC = () => {
           {editMode && (
             <>
               <button
+                data-testid="btn-config-cancel"
                 onClick={handleEditToggle}
                 disabled={saving}
                 style={{
@@ -563,6 +1135,7 @@ export const ConfigurationHub: React.FC = () => {
                 ❌ Annuler
               </button>
               <button
+                data-testid="btn-config-save"
                 onClick={handleSave}
                 disabled={saving || !hasChanges}
                 style={{
@@ -631,7 +1204,9 @@ export const ConfigurationHub: React.FC = () => {
           >
             <span style={{ fontSize: '0.85rem', color: '#667eea' }}>
               ✏️{' '}
-              {Object.keys(editedRuntime).length + Object.keys(editedChatEngine).length}{' '}
+              {Object.keys(editedRuntime).length +
+                Object.keys(editedChatEngine).length +
+                Object.keys(editedRequestDefaults).length}{' '}
               modification(s)
             </span>
           </div>
@@ -641,19 +1216,32 @@ export const ConfigurationHub: React.FC = () => {
       {/* Tabs Navigation */}
       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
         <button
+          data-testid="tab-config-system"
           style={tabStyle(activeTab === 'system')}
           onClick={() => setActiveTab('system')}
         >
           💻 Système
         </button>
-        <button style={tabStyle(activeTab === 'ai')} onClick={() => setActiveTab('ai')}>
+        <button
+          data-testid="tab-config-ai"
+          style={tabStyle(activeTab === 'ai')}
+          onClick={() => setActiveTab('ai')}
+        >
           🤖 Intelligence Artificielle
         </button>
         <button
+          data-testid="tab-config-performance"
           style={tabStyle(activeTab === 'performance')}
           onClick={() => setActiveTab('performance')}
         >
           ⚡ Performance
+        </button>
+        <button
+          data-testid="tab-config-audio"
+          style={tabStyle(activeTab === 'audio')}
+          onClick={() => setActiveTab('audio')}
+        >
+          🎤 Audio
         </button>
       </div>
 
@@ -674,6 +1262,7 @@ export const ConfigurationHub: React.FC = () => {
                 icon="🌐"
                 valueType="url"
                 editable={editMode}
+                testId="input-ollama-url"
                 onChange={value => handleRuntimeFieldChange('ollama_url', value)}
                 validationError={validationErrors['runtime.ollama_url']}
               />
@@ -683,6 +1272,7 @@ export const ConfigurationHub: React.FC = () => {
                 description="Modèle LLM utilisé par défaut"
                 icon="🧠"
                 editable={editMode}
+                testId="input-ollama-model"
                 onChange={value => handleRuntimeFieldChange('ollama_model', value)}
                 validationError={validationErrors['runtime.ollama_model']}
               />
@@ -702,6 +1292,76 @@ export const ConfigurationHub: React.FC = () => {
                 editable={false}
               />
             </ConfigSection>
+
+            <ConfigSection
+              title="Cognitive Layout"
+              icon="🧠"
+              description="Paramètres du moteur d'adaptation cognitive de l'interface"
+              defaultOpen={false}
+            >
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <label
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={isAdaptationEnabled}
+                      onChange={e => toggleAdaptation(e.target.checked)}
+                    />
+                    <span>Adaptation auto</span>
+                  </label>
+                  {cognitiveMode && (
+                    <span
+                      style={{
+                        background: 'var(--accent-primary, #0ea5e9)',
+                        color: '#fff',
+                        padding: '2px 10px',
+                        borderRadius: '6px',
+                        fontSize: '13px',
+                        fontWeight: 600,
+                      }}
+                    >
+                      {COGNITIVE_MODE_LABELS[cognitiveMode]}
+                    </span>
+                  )}
+                </div>
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(3, 1fr)',
+                    gap: '0.5rem',
+                  }}
+                >
+                  {(Object.keys(COGNITIVE_MODE_LABELS) as UIMode[]).map(mode => (
+                    <button
+                      key={mode}
+                      onClick={() => setCognitiveMode(mode)}
+                      style={{
+                        padding: '8px',
+                        borderRadius: '6px',
+                        fontSize: '12px',
+                        fontWeight: cognitiveMode === mode ? 700 : 400,
+                        border: `1px solid ${cognitiveMode === mode ? 'var(--accent-primary, #0ea5e9)' : 'rgba(255,255,255,0.1)'}`,
+                        background:
+                          cognitiveMode === mode
+                            ? 'var(--accent-primary, #0ea5e9)'
+                            : 'rgba(255,255,255,0.05)',
+                        color: '#fff',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {COGNITIVE_MODE_LABELS[mode]}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </ConfigSection>
           </>
         )}
 
@@ -713,45 +1373,195 @@ export const ConfigurationHub: React.FC = () => {
               description="Paramètres du moteur de chat IA"
               defaultOpen={true}
             >
+              <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                <button
+                  disabled={!editMode}
+                  onClick={async () => {
+                    try {
+                      const result = (await tauriClient.setChatProfile({
+                        name: 'StableProduction',
+                      })) as IpcEnvelope<unknown>;
+                      if (!result.ok) {
+                        throw new Error(result.error?.message || 'Profil invalide');
+                      }
+                      invalidateRequestDefaultsCache();
+                      await loadConfig();
+                    } catch (err) {
+                      errorToast(`Échec application profil: ${err}`);
+                    }
+                  }}
+                  style={{ padding: '0.45rem 0.7rem', borderRadius: '6px' }}
+                >
+                  StableProduction
+                </button>
+                <button
+                  disabled={!editMode}
+                  onClick={async () => {
+                    try {
+                      const result = (await tauriClient.setChatProfile({
+                        name: 'DeepMemoryCoaching',
+                      })) as IpcEnvelope<unknown>;
+                      if (!result.ok) {
+                        throw new Error(result.error?.message || 'Profil invalide');
+                      }
+                      invalidateRequestDefaultsCache();
+                      await loadConfig();
+                    } catch (err) {
+                      errorToast(`Échec application profil: ${err}`);
+                    }
+                  }}
+                  style={{ padding: '0.45rem 0.7rem', borderRadius: '6px' }}
+                >
+                  DeepMemoryCoaching
+                </button>
+                <button
+                  disabled={!editMode}
+                  onClick={async () => {
+                    try {
+                      const result = (await tauriClient.setChatProfile({
+                        name: 'UltraReactiveLowIO',
+                      })) as IpcEnvelope<unknown>;
+                      if (!result.ok) {
+                        throw new Error(result.error?.message || 'Profil invalide');
+                      }
+                      invalidateRequestDefaultsCache();
+                      await loadConfig();
+                    } catch (err) {
+                      errorToast(`Échec application profil: ${err}`);
+                    }
+                  }}
+                  style={{ padding: '0.45rem 0.7rem', borderRadius: '6px' }}
+                >
+                  UltraReactiveLowIO
+                </button>
+              </div>
               <ConfigFieldEditable
                 label="Timeout"
-                value={currentChatEngine.timeout_ms}
+                value={currentChatEngine.response_timeout_ms}
                 description="Délai maximum d'attente pour une réponse (1000-300000ms)"
                 icon="⏱️"
                 valueType="duration"
                 editable={editMode}
-                onChange={value => handleChatEngineFieldChange('timeout_ms', value)}
+                onChange={value =>
+                  handleChatEngineFieldChange('response_timeout_ms', value)
+                }
                 validationError={validationErrors['chat_engine.timeout_ms']}
               />
               <ConfigFieldEditable
                 label="Chunk Size"
-                value={currentChatEngine.chunk_size}
+                value={currentChatEngine.stream_chunk_size}
                 description="Taille des chunks de streaming (100-10000)"
                 icon="📦"
                 valueType="number"
                 editable={editMode}
-                onChange={value => handleChatEngineFieldChange('chunk_size', value)}
+                onChange={value =>
+                  handleChatEngineFieldChange('stream_chunk_size', value)
+                }
                 validationError={validationErrors['chat_engine.chunk_size']}
               />
               <ConfigFieldEditable
-                label="Max Tokens"
-                value={currentChatEngine.max_tokens}
-                description="Nombre maximum de tokens par requête (100-100000)"
+                label="Memory Context Tokens"
+                value={currentChatEngine.memory_context_tokens}
+                description="Fenêtre de contexte mémoire injectée dans le prompt"
                 icon="🎯"
                 valueType="number"
                 editable={editMode}
-                onChange={value => handleChatEngineFieldChange('max_tokens', value)}
-                validationError={validationErrors['chat_engine.max_tokens']}
+                onChange={value =>
+                  handleChatEngineFieldChange('memory_context_tokens', value)
+                }
+                validationError={validationErrors['chat_engine.memory_context_tokens']}
               />
               <ConfigFieldEditable
-                label="Temperature"
-                value={currentChatEngine.temperature}
-                description="Créativité du modèle (0.0 = déterministe, 2.0 = créatif)"
+                label="Memory Retention Tokens"
+                value={currentChatEngine.memory_retention_tokens}
+                description="Limite de rétention totale (conserve les messages les plus récents)"
+                icon="🧠"
+                valueType="number"
+                editable={editMode}
+                onChange={value =>
+                  handleChatEngineFieldChange('memory_retention_tokens', value)
+                }
+                validationError={validationErrors['chat_engine.memory_retention_tokens']}
+              />
+              <ConfigFieldEditable
+                label="Memory Flush Interval"
+                value={currentChatEngine.memory_flush_interval_ms}
+                description="Intervalle debounce des écritures mémoire sur disque (ms)"
+                icon="💾"
+                valueType="number"
+                editable={editMode}
+                onChange={value =>
+                  handleChatEngineFieldChange('memory_flush_interval_ms', value)
+                }
+                validationError={validationErrors['chat_engine.memory_flush_interval_ms']}
+              />
+              <ConfigFieldEditable
+                label="Stream Channel Buffer"
+                value={currentChatEngine.stream_channel_buffer}
+                description="Taille du buffer de canal streaming"
+                icon="📡"
+                valueType="number"
+                editable={editMode}
+                onChange={value =>
+                  handleChatEngineFieldChange('stream_channel_buffer', value)
+                }
+                validationError={validationErrors['chat_engine.stream_channel_buffer']}
+              />
+              <ConfigFieldEditable
+                label="Auto TTS"
+                value={currentChatEngine.auto_tts_enabled}
+                description="Active la synthèse vocale automatique"
+                icon="🔊"
+                valueType="boolean"
+                editable={editMode}
+                testId="toggle-auto-tts"
+                onChange={value => handleChatEngineFieldChange('auto_tts_enabled', value)}
+                validationError={validationErrors['chat_engine.auto_tts_enabled']}
+              />
+              <ConfigFieldEditable
+                label="Request Temperature"
+                value={currentRequestDefaults.temperature}
+                description="Valeur par défaut pour les requêtes ChatRequestPayload"
                 icon="🌡️"
                 valueType="number"
                 editable={editMode}
-                onChange={value => handleChatEngineFieldChange('temperature', value)}
-                validationError={validationErrors['chat_engine.temperature']}
+                onChange={value => handleRequestDefaultsFieldChange('temperature', value)}
+                validationError={validationErrors['request_defaults.temperature']}
+              />
+              <ConfigFieldEditable
+                label="Request Max Tokens"
+                value={currentRequestDefaults.max_output_tokens}
+                description="Nombre maximum de tokens par défaut"
+                icon="🧮"
+                valueType="number"
+                editable={editMode}
+                testId="input-request-max-tokens"
+                onChange={value =>
+                  handleRequestDefaultsFieldChange('max_output_tokens', value)
+                }
+                validationError={validationErrors['request_defaults.max_output_tokens']}
+              />
+              <ConfigFieldEditable
+                label="Request Provider"
+                value={currentRequestDefaults.provider}
+                description="Provider par défaut (auto/gemini/ollama/local)"
+                icon="🛰️"
+                editable={editMode}
+                testId="select-request-provider"
+                onChange={value => handleRequestDefaultsFieldChange('provider', value)}
+                validationError={validationErrors['request_defaults.provider']}
+              />
+              <ConfigFieldEditable
+                label="Request Streaming"
+                value={currentRequestDefaults.enable_streaming}
+                description="Streaming activé par défaut"
+                icon="🌊"
+                valueType="boolean"
+                editable={editMode}
+                onChange={value =>
+                  handleRequestDefaultsFieldChange('enable_streaming', value)
+                }
+                validationError={validationErrors['request_defaults.enable_streaming']}
               />
             </ConfigSection>
           </>
@@ -774,7 +1584,7 @@ export const ConfigurationHub: React.FC = () => {
               />
               <ConfigFieldEditable
                 label="Streaming Enabled"
-                value={currentChatEngine.chunk_size > 0}
+                value={currentRequestDefaults.enable_streaming}
                 description="Mode streaming activé pour les réponses"
                 icon="📡"
                 valueType="boolean"
@@ -782,13 +1592,162 @@ export const ConfigurationHub: React.FC = () => {
               />
               <ConfigFieldEditable
                 label="Timeout Configuré"
-                value={currentChatEngine.timeout_ms > 0}
+                value={currentChatEngine.response_timeout_ms > 0}
                 description="Timeout défini pour éviter les blocages"
                 icon="⏰"
                 valueType="boolean"
                 editable={false}
               />
             </ConfigSection>
+          </>
+        )}
+        {activeTab === 'audio' && (
+          <>
+            <ConfigSection
+              title="Périphériques Audio"
+              icon="🎤"
+              description="Configuration canonique des entrées/sorties audio. Source unique de vérité — partagée avec la page Audio Center."
+              defaultOpen={true}
+            >
+              <ConfigFieldEditable
+                label="Périphérique d'entrée (ID)"
+                value={audioConfig.inputDeviceId || '—'}
+                description="ID wpctl du microphone actif (ex: 42)"
+                icon="🎙️"
+                editable={false}
+                data-testid="audio-input-device-id"
+              />
+              <ConfigFieldEditable
+                label="Périphérique d'entrée (Nom)"
+                value={audioConfig.inputDeviceLabel || '—'}
+                description="Nom du microphone sélectionné"
+                icon="🎙️"
+                editable={false}
+                data-testid="audio-input-device-label"
+              />
+              <ConfigFieldEditable
+                label="Périphérique de sortie (ID)"
+                value={audioConfig.outputDeviceId || '—'}
+                description="ID wpctl du haut-parleur actif (ex: 48)"
+                icon="🔊"
+                editable={false}
+                data-testid="audio-output-device-id"
+              />
+              <ConfigFieldEditable
+                label="Périphérique de sortie (Nom)"
+                value={audioConfig.outputDeviceLabel || '—'}
+                description="Nom du haut-parleur sélectionné"
+                icon="🔊"
+                editable={false}
+                data-testid="audio-output-device-label"
+              />
+              <ConfigFieldEditable
+                label="Volume"
+                value={audioConfig.volume}
+                description="Volume de sortie (0.0–1.0)"
+                icon="🔉"
+                editable={false}
+                data-testid="audio-volume"
+              />
+            </ConfigSection>
+            <ConfigSection
+              title="Paramètres de Traitement"
+              icon="⚙️"
+              description="Paramètres de traitement audio (lecture seule — géré par Audio Center)"
+              defaultOpen={false}
+            >
+              <ConfigFieldEditable
+                label="Réduction de bruit"
+                value={audioConfig.noiseReduction}
+                description="Réduction active du bruit de fond"
+                icon="🔇"
+                valueType="boolean"
+                editable={false}
+                data-testid="audio-noise-reduction"
+              />
+              <ConfigFieldEditable
+                label="Annulation d'écho"
+                value={audioConfig.echoCancellation}
+                description="Annulation active de l'écho"
+                icon="📣"
+                valueType="boolean"
+                editable={false}
+                data-testid="audio-echo-cancellation"
+              />
+              <ConfigFieldEditable
+                label="Gain automatique"
+                value={audioConfig.autoGainControl}
+                description="Contrôle automatique du gain"
+                icon="📶"
+                valueType="boolean"
+                editable={false}
+                data-testid="audio-auto-gain"
+              />
+            </ConfigSection>
+            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
+              <button
+                data-testid="audio-config-reload"
+                onClick={async () => {
+                  try {
+                    const raw = await tauriClient.getAudioDeviceConfig();
+                    if (raw && typeof raw === 'object') {
+                      const r = raw as Record<string, unknown>;
+                      setAudioConfig({
+                        inputDeviceId: (r.inputDeviceId as string) || '',
+                        inputDeviceLabel: (r.inputDeviceLabel as string) || '',
+                        outputDeviceId: (r.outputDeviceId as string) || '',
+                        outputDeviceLabel: (r.outputDeviceLabel as string) || '',
+                        volume: typeof r.volume === 'number' ? r.volume : 1.0,
+                        noiseReduction: Boolean(r.noiseReduction),
+                        echoCancellation: Boolean(r.echoCancellation),
+                        autoGainControl: Boolean(r.autoGainControl),
+                      });
+                      success('Config audio rechargée');
+                    }
+                  } catch (e) {
+                    errorToast('Erreur rechargement audio: ' + String(e));
+                  }
+                }}
+                style={{
+                  padding: '0.5rem 1rem',
+                  background: '#1e40af',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                }}
+              >
+                🔄 Recharger
+              </button>
+              {(audioConfig.inputDeviceId || audioConfig.outputDeviceId) && (
+                <button
+                  data-testid="audio-config-save"
+                  disabled={audioSaving}
+                  onClick={async () => {
+                    setAudioSaving(true);
+                    try {
+                      await tauriClient.saveAudioDeviceConfig(audioConfig);
+                      success('Config audio sauvegardée');
+                    } catch (e) {
+                      errorToast('Erreur sauvegarde audio: ' + String(e));
+                    } finally {
+                      setAudioSaving(false);
+                    }
+                  }}
+                  style={{
+                    padding: '0.5rem 1rem',
+                    background: '#065f46',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: audioSaving ? 'not-allowed' : 'pointer',
+                    opacity: audioSaving ? 0.7 : 1,
+                  }}
+                >
+                  {audioSaving ? '⏳ Sauvegarde...' : '💾 Sauvegarder'}
+                </button>
+              )}
+            </div>
           </>
         )}
       </div>

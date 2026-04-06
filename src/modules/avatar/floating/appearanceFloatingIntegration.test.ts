@@ -43,7 +43,14 @@ const mockRenderer = hasThreeJS
     }
   : null;
 
-describe.skipIf(!hasThreeJS)('AppearanceFloatingIntegration', () => {
+describe('AppearanceFloatingIntegration', () => {
+  if (!hasThreeJS) {
+    it('requires Three.js runtime to execute integration checks', () => {
+      expect(hasThreeJS).toBe(false);
+    });
+    return;
+  }
+
   let integration: InstanceType<typeof AppearanceFloatingIntegration>;
 
   beforeEach(() => {

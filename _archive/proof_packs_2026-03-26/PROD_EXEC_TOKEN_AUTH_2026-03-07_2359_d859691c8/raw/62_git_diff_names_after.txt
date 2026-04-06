@@ -1,0 +1,10 @@
+deployment/latest/MANIFEST.json
+registry/autofix-autoheal-rules.jsonl
+registry/closure-events.jsonl
+registry/proofpack-index.jsonl
+runtime/stable/manifest.json
+scripts/autoheal/autoheal_rules.jsonl
+scripts/tauri/before-dev.sh
+scripts/verify/pre-deployment-check.sh
+scripts/verify/verify-preprod.sh
+titane-infinity.desktop

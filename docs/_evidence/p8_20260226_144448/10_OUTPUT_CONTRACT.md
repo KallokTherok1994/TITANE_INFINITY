@@ -1,4 +1,0 @@
-# 10_OUTPUT_CONTRACT.md
-
-Phase: P8
-Statut: PENDING

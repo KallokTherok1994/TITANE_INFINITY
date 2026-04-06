@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25.2.2 — Admin Center Styles
+ * TITANE∞ v29.0.0 — Admin Center Styles
  * Module ADMIN unifié - Architecture CSS
  * © 2025 TITANE Team. All rights reserved.
  */
@@ -53,12 +53,13 @@
 .admin-header {
   background: linear-gradient(
     135deg,
-    var(--admin-header-bg-start) 0%,
-    var(--admin-header-bg-end) 100%
+    rgba(18, 22, 36, 0.98) 0%,
+    rgba(12, 15, 24, 0.99) 100%
   );
-  border-bottom: 2px solid rgba(0, 255, 255, 0.2);
+  /* v29.0.0: border calme — suppression cyan 2px néon → subtle titanium */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   padding: var(--admin-spacing-lg) var(--admin-spacing-xl);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
 }
 
 .admin-header-content {
@@ -81,19 +82,12 @@
 }
 
 .admin-header h1 {
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 700;
-  background: linear-gradient(
-    135deg,
-    var(--admin-gold-start) 0%,
-    var(--admin-gold-end) 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  /* v29.1: suppression gold gradient néon → titanium blanc cohérent */
+  color: rgba(240, 244, 255, 0.96);
   margin: 0;
-  letter-spacing: 0.1em;
-  text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  letter-spacing: 0.04em;
 }
 
 .admin-header-subtitle {
@@ -109,12 +103,13 @@
 }
 
 .admin-version {
-  padding: 0.5rem 1rem;
-  background: rgba(0, 255, 255, 0.1);
-  border: 1px solid rgba(0, 255, 255, 0.3);
+  padding: 0.375rem 0.875rem;
+  /* v29.1: remplace cyan #00ffff → badge neutre titanium */
+  background: var(--badge-accent-bg, rgba(99, 102, 241, 0.12));
+  border: 1px solid var(--badge-accent-border, rgba(99, 102, 241, 0.22));
   border-radius: 6px;
-  color: var(--admin-cyan);
-  font-size: 0.85rem;
+  color: var(--badge-accent-color, #a5b4fc);
+  font-size: 0.8125rem;
   font-weight: 600;
   font-family: var(--admin-font-mono);
 }
@@ -143,7 +138,7 @@
 }
 
 .admin-tabs::-webkit-scrollbar-thumb {
-  background: rgba(0, 255, 255, 0.3);
+  background: rgba(99, 102, 241, 0.3);
   border-radius: 3px;
 }
 
@@ -151,39 +146,44 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.75rem 1.5rem;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.625rem 1.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
-  color: rgba(255, 255, 255, 0.88);
-  font-size: 0.95rem;
+  color: var(--tab-item-color, rgba(180, 188, 204, 0.82));
+  font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.18s ease;
   white-space: nowrap;
 }
 
 .admin-tab:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(0, 255, 255, 0.3);
-  color: #ffffff;
-  transform: translateY(-2px);
+  background: var(--tab-item-bg-hover, rgba(99, 102, 241, 0.08));
+  border-color: var(--tab-item-border-hover, rgba(99, 102, 241, 0.2));
+  color: var(--tab-item-color-hover, rgba(226, 232, 240, 0.96));
+  /* Long-session: lift réduit à 1px depuis -2px */
+  transform: translateY(-1px);
+  box-shadow: 0 1px 6px rgba(99, 102, 241, 0.1);
 }
 
 .admin-tab--active {
-  background: linear-gradient(
-    135deg,
-    rgba(0, 255, 255, 0.2) 0%,
-    rgba(0, 200, 255, 0.15) 100%
-  );
-  border-color: rgba(0, 255, 255, 0.5);
-  color: #e6ffff;
-  box-shadow: 0 4px 15px rgba(0, 255, 255, 0.2);
+  background: var(--tab-active-bg);
+  border-color: var(--tab-active-border);
+  color: var(--tab-active-color);
+  font-weight: 700;
+  box-shadow: var(--tab-active-shadow);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .admin-tab-icon {
-  font-size: 1.4rem;
-  filter: drop-shadow(0 0 5px currentColor);
+  font-size: 1.25rem;
+  /* v29.1: drop-shadow calme — supprime glow currentColor saturé */
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.admin-tab--active .admin-tab-icon {
+  filter: drop-shadow(0 1px 4px rgba(99, 102, 241, 0.3));
 }
 
 .admin-tab-content {
@@ -197,11 +197,13 @@
 }
 
 .admin-tab-badge {
-  font-size: 0.7rem;
-  padding: 0.15rem 0.5rem;
-  background: rgba(0, 255, 255, 0.2);
+  font-size: 0.6875rem;
+  padding: 0.125rem 0.45rem;
+  /* v29.1: remplace cyan néon → badge accent unifié */
+  background: var(--badge-accent-bg, rgba(99, 102, 241, 0.12));
+  border: 1px solid var(--badge-accent-border, rgba(99, 102, 241, 0.22));
   border-radius: 4px;
-  color: var(--admin-cyan);
+  color: var(--badge-accent-color, #a5b4fc);
   font-family: var(--admin-font-mono);
   font-weight: 700;
 }

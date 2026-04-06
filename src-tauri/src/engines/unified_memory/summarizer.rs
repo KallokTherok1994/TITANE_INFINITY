@@ -295,7 +295,7 @@ Cost Optimization:
 - Cache aggressively: 90%+ cache hit rate for repeated views
 
 pub async fn summarize_ai(entries: &[MemoryEntry], llm_api: &str) -> Result<String, String> {
-    use http_client;
+    use crate::services::network_gateway::NetworkGatewayService;
     use serde_json::json;
 
     // Prepare context
@@ -311,16 +311,14 @@ pub async fn summarize_ai(entries: &[MemoryEntry], llm_api: &str) -> Result<Stri
         context
     );
 
-    // Call LLM API
-    let client = HttpClient::new();
-    let response = client
-        .post(llm_api)
-        .json(&json!({
+    // Call LLM API through governed Ring3 gateway
+    let gateway = NetworkGatewayService::default_governed();
+    let response = gateway
+        .post_json(llm_api, &json!({
             "prompt": prompt,
             "max_tokens": 200,
             "temperature": 0.3
         }))
-        .send()
         .await
         .map_err(|e| format!("API request failed: {}", e))?;
 

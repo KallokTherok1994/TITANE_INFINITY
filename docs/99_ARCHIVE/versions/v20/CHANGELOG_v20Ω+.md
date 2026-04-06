@@ -286,8 +286,8 @@ const response = await askTitan('Hello');
 ## 🔗 Liens
 
 - [Guide Démarrage Rapide](./AI_SYSTEM_QUICKSTART_v20Ω.md)
-- [Rapport Complet](./RAPPORT_KERNEL_EXTENDED_STABILITY_v20Ω.md)
-- [Synthèse](./SYNTHESE_FINALE_v20Ω+.md)
+- [Rapport Complet](../../sessions/RAPPORT_KERNEL_EXTENDED_STABILITY_v20Ω.md)
+- [Synthèse](../../merged/SYNTHESE_FINALE_v20Ω+.md)
 
 ---
 

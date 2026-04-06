@@ -57,4 +57,4 @@ _Link to related docs, issues, or discussions if applicable._
 
 ---
 
-**Note**: Community contributions welcome! See [Contributing](../CONTRIBUTING.md)
+**Note**: Community contributions welcome! See [Contributing](../../docs/00_core/CONTRIBUTING.md)

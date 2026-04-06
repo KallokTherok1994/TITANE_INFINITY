@@ -1,0 +1,39 @@
+PHASE=2_PROMOTION_WINDOW_PLAN
+UTC_TIMESTAMP=2026-03-13T12:23:30Z
+
+CLASS_COUNTS
+PROMOTION_REQUIRED=62
+PROMOTION_OPTIONAL=50
+HISTORICAL_EVIDENCE_KEEP_OUT_OF_COMMIT=256
+PARASITIC_NOISE=10
+PROMOTION_EXCLUDED=0
+
+DECISIONS
+PROMOTION_REQUIRED=commit_now_candidate
+PROMOTION_OPTIONAL=keep_out_of_commit_by_default_and_stash_for_clean_window
+HISTORICAL_EVIDENCE_KEEP_OUT_OF_COMMIT=stash_keep_local_not_deleted
+PARASITIC_NOISE=stash_or_restore_targeted_not_deleted
+PROMOTION_EXCLUDED=leave_untouched
+BLOCKER=branch_detached_and_ahead_behind_requires_explicit_resync_strategy
+
+ACTION_PLAN
+1) Preserve for promotion scope only:
+- scripts/autoheal/autoheal_rules.jsonl
+- proof_packs/V61_PROMOTION_CLOSURE_RELEASE_GOVERNANCE_20260313_074108_8ed1ef72c/**
+- proof_packs/V62_RELEASE_PROMOTION_EXECUTION_20260313_075617_8ed1ef72c/**
+- proof_packs/V63_CLEAN_PROMOTION_WINDOW_20260313_121853_8ed1ef72c/**
+
+2) Exclude and stash (non-destructive) for clean window:
+- scripts/e2e/tauri-wrapper.sh
+- src-tauri/src/conversation_engine/commands.rs
+- src/lib/ipcContract.ts
+- src/services/conversationEngine.ts
+- .v54_pack_path .. .v59_pack_path
+- e2e/desktop/v54* v56* v57* v58* v59* v60*
+- proof_packs/V54* V55* V56* V57* V58* V59* V60_RUNTIME_ASSET*
+- proof_packs/V60_IPC_ENTRY_CAPTURE_REAL_UI_STRONG_CLOSURE_20260313_015700_8ed1ef72c64abd90/** (optional kept out for minimal promotion commit)
+
+3) After cleanup, recompute git snapshot and continue with main resync strategy.
+
+SAFETY_RULE
+No destructive deletion/reset/checkout --no-path. Only targeted stash/restore with traceable command logs.

@@ -1,5 +1,0 @@
-# 00_PLAN.md
-
-Phase: P3900
-Statut: PASS_QUALIFIED
-Lot: P3899→P3905

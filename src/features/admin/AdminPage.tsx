@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25.2.2 — Admin Center Page
+ * TITANE∞ v30.0.0 — Admin Center Page
  *
  * 🎯 MODULE ADMIN UNIFIÉ - Fusion de 5 modules:
  *   1. Centre Système (⚙️)
@@ -14,7 +14,8 @@
  * © 2025 TITANE Team. All rights reserved.
  */
 
-import React, { useState, useCallback, lazy, Suspense, memo } from 'react';
+import React, { useState, useCallback, useEffect, lazy, Suspense, memo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { type AdminTab, ADMIN_TABS } from './types';
@@ -39,9 +40,13 @@ const headerVariants: Variants = {
 // LAZY IMPORTS - Performance Optimization
 // ══════════════════════════════════════════════════════════════════
 
-const SystemCenterPage = lazy(() =>
-  import('../system-center').then(m => ({ default: m.SystemCenterPage }))
-);
+const SystemCenterPage = lazy(async () => {
+  const m = await import('../system-center/SystemCenterPage');
+  if (!m.SystemCenterPage) {
+    throw new Error('[ADMIN_IMPORT] Export SystemCenterPage manquant');
+  }
+  return { default: m.SystemCenterPage };
+});
 
 const ConfigurationHub = lazy(() =>
   import('../../pages/ConfigurationHub').then(m => ({ default: m.ConfigurationHub }))
@@ -55,15 +60,21 @@ const DesignCenterPage = lazy(() =>
   import('../design-center').then(m => ({ default: m.DesignCenterPage }))
 );
 
-const GovernanceCenterPage = lazy(() =>
-  import('../governance-center').then(m => ({ default: m.GovernanceCenterPage }))
-);
+const GovernanceCenterPage = lazy(async () => {
+  const m = await import('../governance-center/GovernanceCenterPage');
+  if (!m.GovernanceCenterPage) {
+    throw new Error('[ADMIN_IMPORT] Export GovernanceCenterPage manquant');
+  }
+  return { default: m.GovernanceCenterPage };
+});
 
-const ProductionHealthPanel = lazy(() =>
-  import('../production-health/ProductionHealthPanel').then(m => ({
-    default: m.ProductionHealthPanel,
-  }))
-);
+const ProductionHealthPanel = lazy(async () => {
+  const m = await import('../production-health/ProductionHealthPanel');
+  if (!m.ProductionHealthPanel) {
+    throw new Error('[ADMIN_IMPORT] Export ProductionHealthPanel manquant');
+  }
+  return { default: m.ProductionHealthPanel };
+});
 
 // ══════════════════════════════════════════════════════════════════
 // LOADING SPINNER
@@ -152,14 +163,38 @@ const TabContent: React.FC<TabContentProps> = ({ tab }) => {
 // ══════════════════════════════════════════════════════════════════
 
 const AdminPageComponent: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<AdminTab>('system');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState<AdminTab>(() => {
+    const requestedTab = searchParams.get('tab');
+    return ADMIN_TABS.some(tab => tab.id === requestedTab)
+      ? (requestedTab as AdminTab)
+      : 'system';
+  });
 
-  const handleTabChange = useCallback((tab: AdminTab) => {
-    setActiveTab(tab);
-  }, []);
+  const handleTabChange = useCallback(
+    (tab: AdminTab) => {
+      setActiveTab(tab);
+      setSearchParams(
+        prev => {
+          const next = new URLSearchParams(prev);
+          next.set('tab', tab);
+          return next;
+        },
+        { replace: true }
+      );
+    },
+    [setSearchParams]
+  );
+
+  useEffect(() => {
+    const requestedTab = searchParams.get('tab');
+    if (ADMIN_TABS.some(tab => tab.id === requestedTab) && requestedTab !== activeTab) {
+      setActiveTab(requestedTab as AdminTab);
+    }
+  }, [activeTab, searchParams]);
 
   return (
-    <div className="admin-page">
+    <div className="admin-page" data-testid="page-admin">
       {/* Header */}
       <motion.header
         className="admin-header"
@@ -180,7 +215,7 @@ const AdminPageComponent: React.FC = () => {
             </div>
           </div>
           <div className="admin-header-badge">
-            <span className="admin-version">v25.2.2</span>
+            <span className="admin-version">v30.0.0</span>
           </div>
         </div>
       </motion.header>
@@ -190,6 +225,7 @@ const AdminPageComponent: React.FC = () => {
         {ADMIN_TABS.map(tab => (
           <button
             key={tab.id}
+            data-testid={`tab-admin-${tab.id}`}
             className={`admin-tab ${activeTab === tab.id ? 'admin-tab--active' : ''}`}
             onClick={() => handleTabChange(tab.id)}
             title={tab.description}
@@ -204,7 +240,7 @@ const AdminPageComponent: React.FC = () => {
       </nav>
 
       {/* Tab Content */}
-      <main className="admin-content">
+      <main className="admin-content" data-testid="page-admin-content">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}

@@ -219,6 +219,12 @@ function runStructuralValidation(runId: number): void {
   const meta = generateSimulatedMeta(runId);
   const allowed = meta.allowed !== false;
 
+  // ANTI_MOCK [AH-P4]: provider_used must never be 'e2e-mock' — reject test stub contamination
+  expect(
+    meta.provider_used,
+    `[RUN${runId}] ANTI_MOCK: provider_used must not be 'e2e-mock' (stub contamination)`
+  ).not.toBe('e2e-mock');
+
   console.log(`[RUN${runId}] Generated meta:`, JSON.stringify(meta, null, 2));
   console.log(`[RUN${runId}] In-context: allowed=${allowed}`);
 

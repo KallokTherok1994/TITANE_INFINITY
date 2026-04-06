@@ -170,7 +170,7 @@ impl DbService {
 
     /// Insert event (append-only)
     pub fn insert_event(&self, event: EventRow) -> SqliteResult<()> {
-        let conn = self.conn.lock().unwrap();
+        let conn = self.conn.lock().expect("db_service: Mutex poisonné");
         conn.execute(
             "INSERT INTO events (id, ts, session_id, kind, payload_json, sha256) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
             params![
@@ -187,7 +187,7 @@ impl DbService {
 
     /// Insert snapshot (append-only)
     pub fn insert_snapshot(&self, snapshot: SnapshotRow) -> SqliteResult<()> {
-        let conn = self.conn.lock().unwrap();
+        let conn = self.conn.lock().expect("db_service: Mutex poisonné");
         conn.execute(
             "INSERT INTO snapshots (id, ts, session_id, summary_fr, state_json, sha256) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
             params![
@@ -204,7 +204,7 @@ impl DbService {
 
     /// Insert provider decision (append-only)
     pub fn insert_provider_decision(&self, decision: ProviderDecisionRow) -> SqliteResult<()> {
-        let conn = self.conn.lock().unwrap();
+        let conn = self.conn.lock().expect("db_service: Mutex poisonné");
         conn.execute(
             "INSERT INTO provider_decisions (id, ts, session_id, decision_json, sha256) VALUES (?1, ?2, ?3, ?4, ?5)",
             params![
@@ -220,7 +220,7 @@ impl DbService {
 
     /// Insert source (append-only)
     pub fn insert_source(&self, source: SourceRow) -> SqliteResult<()> {
-        let conn = self.conn.lock().unwrap();
+        let conn = self.conn.lock().expect("db_service: Mutex poisonné");
         conn.execute(
             "INSERT INTO sources (id, ts, session_id, provider, url, title, snippet, retrieved_at, sha256) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
             params![
@@ -240,7 +240,7 @@ impl DbService {
 
     /// Insert failure (append-only)
     pub fn insert_failure(&self, failure: FailureRow) -> SqliteResult<()> {
-        let conn = self.conn.lock().unwrap();
+        let conn = self.conn.lock().expect("db_service: Mutex poisonné");
         conn.execute(
             "INSERT INTO failures (id, ts, session_id, class, detail_json, sha256) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
             params![
@@ -261,7 +261,7 @@ impl DbService {
 
     /// Get events for session
     pub fn get_events(&self, session_id: &str, limit: u32) -> SqliteResult<Vec<EventRow>> {
-        let conn = self.conn.lock().unwrap();
+        let conn = self.conn.lock().expect("db_service: Mutex poisonné");
         let mut stmt = conn.prepare(
             "SELECT id, ts, session_id, kind, payload_json, sha256 FROM events WHERE session_id = ?1 ORDER BY ts DESC LIMIT ?2"
         )?;
@@ -286,7 +286,7 @@ impl DbService {
 
     /// Get latest snapshot for session
     pub fn get_latest_snapshot(&self, session_id: &str) -> SqliteResult<Option<SnapshotRow>> {
-        let conn = self.conn.lock().unwrap();
+        let conn = self.conn.lock().expect("db_service: Mutex poisonné");
         let mut stmt = conn.prepare(
             "SELECT id, ts, session_id, summary_fr, state_json, sha256 FROM snapshots WHERE session_id = ?1 ORDER BY ts DESC LIMIT 1"
         )?;
@@ -308,7 +308,7 @@ impl DbService {
 
     /// Get sources for session
     pub fn get_sources(&self, session_id: &str, limit: u32) -> SqliteResult<Vec<SourceRow>> {
-        let conn = self.conn.lock().unwrap();
+        let conn = self.conn.lock().expect("db_service: Mutex poisonné");
         let mut stmt = conn.prepare(
             "SELECT id, ts, session_id, provider, url, title, snippet, retrieved_at, sha256 FROM sources WHERE session_id = ?1 ORDER BY ts DESC LIMIT ?2"
         )?;
@@ -336,7 +336,7 @@ impl DbService {
 
     /// Get failures for session
     pub fn get_failures(&self, session_id: &str, limit: u32) -> SqliteResult<Vec<FailureRow>> {
-        let conn = self.conn.lock().unwrap();
+        let conn = self.conn.lock().expect("db_service: Mutex poisonné");
         let mut stmt = conn.prepare(
             "SELECT id, ts, session_id, class, detail_json, sha256 FROM failures WHERE session_id = ?1 ORDER BY ts DESC LIMIT ?2"
         )?;

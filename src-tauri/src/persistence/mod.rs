@@ -33,6 +33,7 @@ pub mod migrations;
 // v∞.MPE-3 modules
 pub mod invariants;
 pub mod memory_health;
+pub mod compliance_monitor;
 
 // v∞.MPE-Ω modules
 pub mod memory_doctor;
@@ -54,6 +55,10 @@ pub use migrations::{MigrationEngine, MigrationError, MigrationReport, CURRENT_S
 pub use invariants::{InvariantError, InvariantsEngine, ValidationMode, ValidationResult};
 pub use memory_health::{
     MemoryHealth, MemoryHealthEngine, SelfHealingReport, MEMORY_HEALTH_ENGINE,
+};
+pub use compliance_monitor::{
+    ComplianceInput, ComplianceMonitor, ComplianceReport, ComplianceStatus, PurgeProofV2,
+    StorageDriftDetector, StorageDriftReport, StorageSnapshot,
 };
 
 // Re-exports - MPE-Ω
@@ -159,6 +164,7 @@ impl PersistenceEngine {
             db.save_snapshot(&snapshot).await?;
 
             self.snapshot_manager.record_snapshot(&snapshot);
+            self.status.snapshots_created += 1;
             self.status.last_snapshot = Some(chrono::Utc::now().timestamp_millis() as u64);
             self.status.dirty = false;
 

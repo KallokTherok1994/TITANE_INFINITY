@@ -1,0 +1,9 @@
+PHASE=1_GIT_CLEANLINESS_MATRIX
+UTC_TIMESTAMP=2026-03-13T11:57:22Z
+repo_clean_for_promotion=FAIL
+only_expected_promotion_deltas=FAIL
+main_sync_status=FAIL
+build_script_ready=PASS
+deploy_script_ready=PASS
+prod_token_gate_open=FAIL
+release_blockers_remaining=dirty_worktree;unexpected_deltas;prod_token_gate_closed;

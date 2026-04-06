@@ -1,0 +1,3 @@
+90M	TITANE-Infinity_28.0.0_amd64.AppImage
+21M	TITANE-Infinity_28.0.0_amd64.deb
+15M	Titan-Stable_28.0.0_amd64.deb

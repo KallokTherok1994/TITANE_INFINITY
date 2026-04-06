@@ -15,6 +15,7 @@ describe('useThrottle Hook', () => {
   });
 
   afterEach(() => {
+    vi.clearAllTimers();
     vi.useRealTimers();
   });
 

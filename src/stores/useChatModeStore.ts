@@ -6,7 +6,7 @@
  */
 
 import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import { devtools, persist } from 'zustand/middleware';
 import type { ChatMode } from '@/types/chatModes';
 import { chatModeService } from '@/services/chat/chatModeService';
 import { CHAT_MODES, INITIAL_CHAT_MODE_STATE } from '@/config/chatModes.config';
@@ -34,61 +34,71 @@ interface ChatModeStore {
 
 export const useChatModeStore = create<ChatModeStore>()(
   devtools(
-    set => ({
-      // ═══════════════════════════════════════════════════════════════════
-      // ÉTAT INITIAL
-      // ═══════════════════════════════════════════════════════════════════
-      currentModeId: INITIAL_CHAT_MODE_STATE.current_mode_id,
-      currentMode: CHAT_MODES[INITIAL_CHAT_MODE_STATE.current_mode_id] ?? null,
-      availableModes: Object.values(CHAT_MODES).filter(m => m.enabled),
-      isLoading: false,
-      error: null,
+    persist(
+      set => ({
+        // ═══════════════════════════════════════════════════════════════════
+        // ÉTAT INITIAL
+        // ═══════════════════════════════════════════════════════════════════
+        currentModeId: INITIAL_CHAT_MODE_STATE.current_mode_id,
+        currentMode: CHAT_MODES[INITIAL_CHAT_MODE_STATE.current_mode_id] ?? null,
+        availableModes: Object.values(CHAT_MODES).filter(m => m.enabled),
+        isLoading: false,
+        error: null,
 
-      // ═══════════════════════════════════════════════════════════════════
-      // ACTIONS
-      // ═══════════════════════════════════════════════════════════════════
-      initialize: async () => {
-        set({ isLoading: true });
-        try {
-          await chatModeService.initialize();
-          const state = chatModeService.getState();
-          set({
-            currentModeId: state.current_mode_id,
-            currentMode: chatModeService.getCurrentMode() ?? null,
-            availableModes: chatModeService.getAvailableModes(),
-            isLoading: false,
-          });
-        } catch (error) {
-          const message = error instanceof Error ? error.message : 'Erreur inconnue';
-          set({
-            error: `Impossible d'initialiser ChatModeService: ${message}`,
-            isLoading: false,
-          });
-          console.error('[useChatModeStore] Initialization failed:', error);
-        }
-      },
-
-      changeMode: async (modeId: string) => {
-        set({ isLoading: true });
-        try {
-          const result = await chatModeService.changeMode({ new_mode_id: modeId });
-          if (result.success) {
+        // ═══════════════════════════════════════════════════════════════════
+        // ACTIONS
+        // ═══════════════════════════════════════════════════════════════════
+        initialize: async () => {
+          set({ isLoading: true });
+          try {
+            await chatModeService.initialize();
+            const state = chatModeService.getState();
             set({
-              currentModeId: result.new_mode_id,
+              currentModeId: state.current_mode_id,
               currentMode: chatModeService.getCurrentMode() ?? null,
+              availableModes: chatModeService.getAvailableModes(),
               isLoading: false,
-              error: null,
             });
-          } else {
-            throw new Error(result.error || 'Changement de mode échoué');
+          } catch (error) {
+            const message = error instanceof Error ? error.message : 'Erreur inconnue';
+            set({
+              error: `Impossible d'initialiser ChatModeService: ${message}`,
+              isLoading: false,
+            });
+            console.error('[useChatModeStore] Initialization failed:', error);
           }
-        } catch (error) {
-          const message = error instanceof Error ? error.message : 'Erreur inconnue';
-          set({ error: `Impossible de changer de mode: ${message}`, isLoading: false });
-          console.error(`[useChatModeStore] Failed to change mode to ${modeId}:`, error);
-        }
-      },
-    }),
+        },
+
+        changeMode: async (modeId: string) => {
+          set({ isLoading: true });
+          try {
+            const result = await chatModeService.changeMode({ new_mode_id: modeId });
+            if (result.success) {
+              set({
+                currentModeId: result.new_mode_id,
+                currentMode: chatModeService.getCurrentMode() ?? null,
+                isLoading: false,
+                error: null,
+              });
+            } else {
+              throw new Error(result.error || 'Changement de mode échoué');
+            }
+          } catch (error) {
+            const message = error instanceof Error ? error.message : 'Erreur inconnue';
+            set({ error: `Impossible de changer de mode: ${message}`, isLoading: false });
+            console.error(
+              `[useChatModeStore] Failed to change mode to ${modeId}:`,
+              error
+            );
+          }
+        },
+      }),
+      {
+        name: 'titane_chat_mode_default',
+        // LOCK5: persist currentModeId only; runtime state is re-derived on init
+        partialize: state => ({ currentModeId: state.currentModeId }),
+      }
+    ),
     {
       name: 'titane-chat-mode-store',
     }

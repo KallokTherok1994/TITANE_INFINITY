@@ -47,7 +47,7 @@ warn() {
 
 ALLOWLIST_STABLE="src-tauri/allowlist.whitelist.stable.json"
 REGISTRY="docs/CAPABILITIES_REGISTRY.md"
-CONTRACT_TESTS="tests/contract/tauri.contract.test.ts"
+CONTRACT_TESTS="tests/contract/tauri-ipc-contract.test.ts"
 
 # Vérifier fichiers critiques existent
 for file in "$ALLOWLIST_STABLE" "$REGISTRY" "$CONTRACT_TESTS"; do

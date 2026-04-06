@@ -1,0 +1,5 @@
+96c847eab8f5c8982235a39224d8b48a393d339a2cece81c826cc15fbf1f01d7  deployment/latest/TITANE-Infinity_28.5.0_amd64.AppImage
+ba5829458c56887af459629fa4c5197266ec6110c504fc0fff4fa0084781c42e  deployment/latest/TITANE-Infinity_28.5.0_amd64.deb
+eb4937b47dbd1626705de26462381ddcf173f631c63c5a6c06b961e2c6d9de79  deployment/latest/TITANE-Infinity-28.5.0-1.x86_64.rpm
+96c847eab8f5c8982235a39224d8b48a393d339a2cece81c826cc15fbf1f01d7  deployment/latest/Titan-Stable_28.5.0_amd64.AppImage
+ba5829458c56887af459629fa4c5197266ec6110c504fc0fff4fa0084781c42e  deployment/latest/Titan-Stable_28.5.0_amd64.deb

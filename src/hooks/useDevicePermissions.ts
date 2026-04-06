@@ -10,8 +10,10 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { detectEnvironment, type EnvironmentInfo } from '@/core/tauri/environment';
 import { secureInvoke } from '@/lib/security';
+
+// Simple Tauri detection without external dependencies
+const isTauriEnvironment = typeof window !== 'undefined' && '__TAURI__' in window;
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -48,8 +50,6 @@ export interface DevicePermissionsState {
 export interface DevicePermissionsResult {
   /** État de toutes les permissions */
   permissions: DevicePermissionsState;
-  /** Environnement d'exécution */
-  environment: EnvironmentInfo;
   /** Chargement en cours */
   isLoading: boolean;
 
@@ -101,20 +101,35 @@ interface MicrophoneTestResult {
 
 async function checkMicrophoneTauri(): Promise<DevicePermission> {
   try {
-    const result = await secureInvoke<MicrophoneTestResult>('test_microphone', {
-      durationMs: 500, // Test court de 500ms
-    });
+    // Use secureInvoke (Tauri v2 compatible) instead of direct __TAURI__.core access
+    if (isTauriEnvironment) {
+      const result = await secureInvoke<{ success: boolean; message?: string }>(
+        'test_microphone',
+        { durationMs: 500 }
+      );
 
-    return {
-      type: 'microphone',
-      status: result.success ? 'granted' : 'denied',
-      lastCheck: Date.now(),
-      details: {
-        samplesRecorded: result.samples_recorded,
-        durationMs: result.duration_ms,
-      },
-      error: result.success ? undefined : result.message,
-    };
+      return {
+        type: 'microphone',
+        status:
+          result && typeof result === 'object' && 'success' in result && result.success
+            ? 'granted'
+            : 'denied',
+        lastCheck: Date.now(),
+        details: result || {},
+        error:
+          result && typeof result === 'object' && 'success' in result && !result.success
+            ? 'Microphone test failed'
+            : undefined,
+      };
+    } else {
+      // Fallback si pas en mode Tauri
+      return {
+        type: 'microphone',
+        status: 'unsupported',
+        lastCheck: Date.now(),
+        error: 'Tauri API not available',
+      };
+    }
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : String(error);
 
@@ -153,7 +168,26 @@ async function checkMicrophoneBrowser(): Promise<DevicePermission> {
   }
 
   try {
-    // Essayer d'obtenir l'accès au micro
+    // IMPORTANT: En mode Tauri, eviter getUserMedia si possible
+    // car WebKitGTK peut ne pas supporter correctement les permissions
+    const isTauri = typeof window !== 'undefined' && '__TAURI__' in window;
+
+    if (isTauri) {
+      console.warn(
+        '[useDevicePermissions] Tauri mode detected - avoiding getUserMedia for permission check'
+      );
+      // En mode Tauri, on fait confiance au backend Rust pour les tests
+      return {
+        type: 'microphone',
+        status: 'granted', // Assume granted, let Tauri backend handle actual tests
+        lastCheck: Date.now(),
+        details: {
+          note: 'Permission handled by Tauri backend',
+        },
+      };
+    }
+
+    // Essayer d'obtenir l'accès au micro (Web mode seulement)
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
     // Libérer immédiatement les ressources
@@ -198,11 +232,11 @@ async function checkMicrophoneBrowser(): Promise<DevicePermission> {
 // CAMERA CHECK (PRÉPARATION)
 // ═══════════════════════════════════════════════════════════════════════════════
 
-async function checkCamera(env: EnvironmentInfo): Promise<DevicePermission> {
+async function checkCamera(): Promise<DevicePermission> {
   // Pour l'instant, la caméra n'est pas implémentée côté Tauri
   // Sur Linux/WebKitGTK, le support caméra est très limité
 
-  if (env.isTauri) {
+  if (isTauriEnvironment) {
     // Implementation: Tauri camera access via plugin or WebRTC bridge
     // - Option 1 (Native): tauri-plugin-camera with permissions in tauri.conf.json
     // - Option 2 (WebView): navigator.mediaDevices.getUserMedia() in Tauri webview
@@ -260,7 +294,7 @@ async function checkCamera(env: EnvironmentInfo): Promise<DevicePermission> {
 // SCREEN CAPTURE CHECK (PRÉPARATION)
 // ═══════════════════════════════════════════════════════════════════════════════
 
-async function checkScreen(env: EnvironmentInfo): Promise<DevicePermission> {
+async function checkScreen(): Promise<DevicePermission> {
   // Implementation: Screen capture via Tauri plugin
   // - Plugin: Add tauri-plugin-screenshots to Cargo.toml dependencies
   // - API: await invoke('plugin:screenshots|capture', {monitor: 0})
@@ -271,7 +305,7 @@ async function checkScreen(env: EnvironmentInfo): Promise<DevicePermission> {
   // - Privacy: Request permission on first use, respect system privacy settings
   // - Use cases: Screenshot tool, visual memory capture, bug reporting
 
-  if (env.isTauri) {
+  if (isTauriEnvironment) {
     return {
       type: 'screen',
       status: 'unsupported',
@@ -309,7 +343,7 @@ async function checkScreen(env: EnvironmentInfo): Promise<DevicePermission> {
 // KEYBOARD CHECK (PRÉPARATION)
 // ═══════════════════════════════════════════════════════════════════════════════
 
-async function checkKeyboard(env: EnvironmentInfo): Promise<DevicePermission> {
+async function checkKeyboard(): Promise<DevicePermission> {
   // Implementation: Global shortcuts via tauri-plugin-global-shortcut
   // - Plugin: Already available in Tauri v2 core (tauri-plugin-global-shortcut)
   // - Registration: await register('CommandOrControl+Shift+T', () => handleShortcut())
@@ -321,7 +355,7 @@ async function checkKeyboard(env: EnvironmentInfo): Promise<DevicePermission> {
   // - Use cases: Quick capture (Ctrl+Space), show/hide window, voice activation
   // - Permissions: May require accessibility permissions on macOS
 
-  if (env.isTauri) {
+  if (isTauriEnvironment) {
     return {
       type: 'keyboard',
       status: 'unsupported',
@@ -349,7 +383,7 @@ async function checkKeyboard(env: EnvironmentInfo): Promise<DevicePermission> {
 // MOUSE CHECK (PRÉPARATION)
 // ═══════════════════════════════════════════════════════════════════════════════
 
-async function checkMouse(env: EnvironmentInfo): Promise<DevicePermission> {
+async function checkMouse(): Promise<DevicePermission> {
   // La souris fonctionne toujours pour les événements locaux
   // Les événements globaux nécessiteraient un plugin spécifique
 
@@ -359,7 +393,7 @@ async function checkMouse(env: EnvironmentInfo): Promise<DevicePermission> {
     lastCheck: Date.now(),
     details: {
       scope: 'local',
-      globalCapture: env.isTauri ? 'not_implemented' : 'not_available',
+      globalCapture: isTauriEnvironment ? 'not_implemented' : 'not_available',
     },
   };
 }
@@ -371,7 +405,6 @@ async function checkMouse(env: EnvironmentInfo): Promise<DevicePermission> {
 export function useDevicePermissions(): DevicePermissionsResult {
   const [permissions, setPermissions] = useState<DevicePermissionsState>(initialState);
   const [isLoading, setIsLoading] = useState(false);
-  const [environment] = useState<EnvironmentInfo>(() => detectEnvironment());
   const mountedRef = useRef(true);
 
   // Cleanup
@@ -394,21 +427,21 @@ export function useDevicePermissions(): DevicePermissionsResult {
 
       switch (device) {
         case 'microphone':
-          result = environment.isTauri
+          result = isTauriEnvironment
             ? await checkMicrophoneTauri()
             : await checkMicrophoneBrowser();
           break;
         case 'camera':
-          result = await checkCamera(environment);
+          result = await checkCamera();
           break;
         case 'screen':
-          result = await checkScreen(environment);
+          result = await checkScreen();
           break;
         case 'keyboard':
-          result = await checkKeyboard(environment);
+          result = await checkKeyboard();
           break;
         case 'mouse':
-          result = await checkMouse(environment);
+          result = await checkMouse();
           break;
         default:
           result = {
@@ -428,7 +461,7 @@ export function useDevicePermissions(): DevicePermissionsResult {
 
       return result;
     },
-    [environment]
+    []
   );
 
   // Vérifier toutes les permissions
@@ -505,7 +538,7 @@ export function useDevicePermissions(): DevicePermissionsResult {
         timestamp,
         device,
         code,
-        environment: environment.isTauri ? 'tauri' : 'browser',
+        environment: isTauriEnvironment ? 'tauri' : 'browser',
         details,
       };
 
@@ -521,7 +554,7 @@ export function useDevicePermissions(): DevicePermissionsResult {
         // Ignore localStorage errors
       }
     },
-    [environment.isTauri]
+    [isTauriEnvironment]
   );
 
   // Vérification initiale au montage
@@ -532,7 +565,6 @@ export function useDevicePermissions(): DevicePermissionsResult {
 
   return {
     permissions,
-    environment,
     isLoading,
     checkAll,
     checkPermission,
@@ -552,13 +584,12 @@ export function useDevicePermissions(): DevicePermissionsResult {
  * Hook simplifié pour les permissions microphone uniquement
  */
 export function useMicrophonePermission() {
-  const { permissions, checkPermission, requestPermission, environment } =
-    useDevicePermissions();
+  const { permissions, checkPermission, requestPermission } = useDevicePermissions();
 
   return {
     status: permissions.microphone.status,
     error: permissions.microphone.error,
-    isTauri: environment.isTauri,
+    isTauri: isTauriEnvironment,
     check: () => checkPermission('microphone'),
     request: () => requestPermission('microphone'),
   };
@@ -568,13 +599,12 @@ export function useMicrophonePermission() {
  * Hook simplifié pour les permissions caméra (préparation)
  */
 export function useCameraPermission() {
-  const { permissions, checkPermission, requestPermission, environment } =
-    useDevicePermissions();
+  const { permissions, checkPermission, requestPermission } = useDevicePermissions();
 
   return {
     status: permissions.camera.status,
     error: permissions.camera.error,
-    isTauri: environment.isTauri,
+    isTauri: isTauriEnvironment,
     isSupported: permissions.camera.status !== 'unsupported',
     check: () => checkPermission('camera'),
     request: () => requestPermission('camera'),
@@ -585,12 +615,12 @@ export function useCameraPermission() {
  * Hook simplifié pour les permissions écran (préparation)
  */
 export function useScreenPermission() {
-  const { permissions, checkPermission, environment } = useDevicePermissions();
+  const { permissions, checkPermission } = useDevicePermissions();
 
   return {
     status: permissions.screen.status,
     error: permissions.screen.error,
-    isTauri: environment.isTauri,
+    isTauri: isTauriEnvironment,
     isSupported: permissions.screen.status !== 'unsupported',
     check: () => checkPermission('screen'),
   };

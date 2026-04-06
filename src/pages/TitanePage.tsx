@@ -31,12 +31,15 @@
  */
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Container, Stack } from '@components/layout';
 import { createLogger } from '@/utils/logger';
-import { useToast } from '@/hooks/useToast';
 import { useVisualEngines } from '@hooks/useVisualEngines';
 import { xpEngine } from '@/cognitive/progression/xpEngine';
 import type { ProgressionState } from '@/cognitive/types';
+import { tauriClient } from '@/lib/tauriClient';
+import type { MemoryStats } from '@/services/memory/persistentMemory.config';
+import { normalizePersistentMemoryStats } from '@/services/memory/persistentMemory.normalize';
 
 // Section Components (Phase 3C Extracted)
 import {
@@ -54,6 +57,7 @@ import type { TitaneStats } from '@/components/sections';
 // UI Components
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { TitaneLogo } from '@/components/branding/TitaneLogo';
+import { TwinEvolutionPanel } from '@/components/twin/TwinEvolutionPanel';
 
 import './TitanePage.css';
 import './TitanePage-local.css';
@@ -72,7 +76,24 @@ type TabId =
   | 'memory-map'
   | 'memory-evolution'
   | 'progression'
-  | 'transformation';
+  | 'transformation'
+  | 'symbiose';
+
+const VALID_TABS: TabId[] = [
+  'conversation',
+  'vision',
+  'overview',
+  'identity',
+  'memory-map',
+  'memory-evolution',
+  'progression',
+  'transformation',
+  'symbiose',
+];
+
+const isTabId = (value: string | null): value is TabId => {
+  return value !== null && VALID_TABS.includes(value as TabId);
+};
 
 const TAB_PANEL_IDS: Record<TabId, string> = {
   conversation: 'titane-panel-conversation',
@@ -83,6 +104,7 @@ const TAB_PANEL_IDS: Record<TabId, string> = {
   'memory-evolution': 'titane-panel-evolution',
   progression: 'titane-panel-progression',
   transformation: 'titane-panel-transformation',
+  symbiose: 'titane-panel-symbiose',
 };
 
 const TAB_LABEL_IDS: Record<TabId, string> = {
@@ -94,6 +116,7 @@ const TAB_LABEL_IDS: Record<TabId, string> = {
   'memory-evolution': 'titane-tab-evolution',
   progression: 'titane-tab-progression',
   transformation: 'titane-tab-transformation',
+  symbiose: 'titane-tab-symbiose',
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -114,11 +137,21 @@ const TAB_LABEL_IDS: Record<TabId, string> = {
  * in src/components/sections/ for better maintainability and testability.
  */
 export const TitanePage: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   // ═══ STATE ═══
-  const [activeTab, setActiveTab] = useState<TabId>('conversation');
+  const [activeTab, setActiveTab] = useState<TabId>(() => {
+    const requestedTab = searchParams.get('tab');
+    return isTabId(requestedTab) ? requestedTab : 'conversation';
+  });
   const [progression, setProgression] = useState<ProgressionState | null>(null);
-  const [_isEditing, _setIsEditing] = useState(false);
-  const { success: toastSuccess, error: errorToast } = useToast();
+  const [memoryStats, setMemoryStats] = useState<MemoryStats | null>(null);
+
+  // LOCK2: titane_active_conversation_id is canonical; legacy key migrated on boot.
+  const [conversationId] = useState<string>(() => {
+    if (typeof window === 'undefined') return '';
+    return window.localStorage.getItem('titane_active_conversation_id') ?? '';
+  });
 
   // ═══ VISUAL ENGINES INITIALIZATION ═══
   useVisualEngines({
@@ -127,7 +160,7 @@ export const TitanePage: React.FC = () => {
     mode: 'stable',
   });
 
-  // ═══ PROGRESSION LOADING ═══
+  // ═══ PROGRESSION LOADING + LIVE SUBSCRIPTION ═══
   useEffect(() => {
     const loadProgression = async () => {
       try {
@@ -135,38 +168,81 @@ export const TitanePage: React.FC = () => {
         setProgression(state);
       } catch (error) {
         pageLogger.error('Erreur chargement progression', error);
-        // Graceful fallback: use default progression state
       }
     };
     loadProgression();
+    // Live subscription — updates whenever XP is earned (e.g. per chat message)
+    const unsubscribe = xpEngine.subscribe(state => setProgression({ ...state }));
+    return () => unsubscribe();
+  }, []);
+
+  // ═══ MEMORY STATS LOADING ═══
+  useEffect(() => {
+    const loadMemoryStats = async () => {
+      try {
+        const stats = normalizePersistentMemoryStats(
+          await tauriClient.persistentMemoryGetStats()
+        ) as MemoryStats;
+        setMemoryStats(stats);
+      } catch {
+        // Non-blocking: hardcoded fallback values will be used
+      }
+    };
+    loadMemoryStats();
   }, []);
 
   // ═══ STATS CALCULATION ═══
   const stats: TitaneStats = useMemo(
     () => ({
-      totalXP: progression?.totalXP || 193000,
-      level: progression?.level || 19,
-      memoryShortTerm: 247,
-      memoryMidTerm: 1832,
-      memoryLongTerm: 4521,
-      evolutionScore: 92,
+      totalXP: progression?.totalXP ?? 0,
+      level: progression?.level ?? 1,
+      chatMessageCount: progression?.chatMessageCount ?? 0,
+      memoryShortTerm: memoryStats?.countByLevel?.['session'] ?? 0,
+      memoryMidTerm: memoryStats?.countByLevel?.['intermediate'] ?? 0,
+      memoryLongTerm: memoryStats?.countByLevel?.['long_term'] ?? 0,
+      evolutionScore: progression?.totalXP
+        ? Math.min(100, Math.round((progression.totalXP / 250000) * 100))
+        : 0,
     }),
-    [progression]
+    [progression, memoryStats]
   );
+
+  const updateActiveTab = useCallback(
+    (nextTab: TabId) => {
+      setActiveTab(nextTab);
+      setSearchParams(
+        prev => {
+          const next = new URLSearchParams(prev);
+          next.set('tab', nextTab);
+          return next;
+        },
+        { replace: true }
+      );
+    },
+    [setSearchParams]
+  );
+
+  useEffect(() => {
+    const requestedTab = searchParams.get('tab');
+    if (isTabId(requestedTab) && requestedTab !== activeTab) {
+      setActiveTab(requestedTab);
+    }
+  }, [activeTab, searchParams]);
 
   // ═══ TAB HANDLERS ═══
   const tabHandlers = useMemo(
     () => ({
-      conversation: () => setActiveTab('conversation'),
-      vision: () => setActiveTab('vision'),
-      overview: () => setActiveTab('overview'),
-      identity: () => setActiveTab('identity'),
-      memoryMap: () => setActiveTab('memory-map'),
-      memoryEvolution: () => setActiveTab('memory-evolution'),
-      progression: () => setActiveTab('progression'),
-      transformation: () => setActiveTab('transformation'),
+      conversation: () => updateActiveTab('conversation'),
+      vision: () => updateActiveTab('vision'),
+      overview: () => updateActiveTab('overview'),
+      identity: () => updateActiveTab('identity'),
+      memoryMap: () => updateActiveTab('memory-map'),
+      memoryEvolution: () => updateActiveTab('memory-evolution'),
+      progression: () => updateActiveTab('progression'),
+      transformation: () => updateActiveTab('transformation'),
+      symbiose: () => updateActiveTab('symbiose'),
     }),
-    []
+    [updateActiveTab]
   );
 
   // ═══ RENDER ACTIVE SECTION ═══
@@ -181,13 +257,15 @@ export const TitanePage: React.FC = () => {
       case 'identity':
         return <IdentitySection />;
       case 'memory-map':
-        return <MemorySection stats={stats} />;
+        return <MemorySection stats={stats} conversationId={conversationId} />;
       case 'memory-evolution':
         return <MemoryEvolutionSection />;
       case 'progression':
         return <ProgressionSection progression={progression} stats={stats} />;
       case 'transformation':
-        return <TransformationSection />;
+        return <TransformationSection stats={stats} />;
+      case 'symbiose':
+        return <TwinEvolutionPanel isAdmin={true} compact={false} />;
       default:
         return <ConversationSection />;
     }
@@ -196,7 +274,7 @@ export const TitanePage: React.FC = () => {
   // ═══ RENDER ═══
   return (
     <ErrorBoundary context="TitanePage">
-      <Container size="xl" className="titane-page">
+      <Container size="xl" className="titane-page" data-testid="page-titane">
         <Stack direction="vertical" gap={4}>
           {/* ═══ PAGE HEADER (Integrated, Not Navigation) ═══ */}
           <div className="titane-page-header">
@@ -222,6 +300,7 @@ export const TitanePage: React.FC = () => {
                     ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
                     : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
                 }`}
+                data-testid="tab-conversation"
                 onClick={tabHandlers.conversation}
                 role="tab"
                 aria-selected={activeTab === 'conversation'}
@@ -236,6 +315,7 @@ export const TitanePage: React.FC = () => {
                     ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
                     : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
                 }`}
+                data-testid="tab-overview"
                 onClick={tabHandlers.overview}
                 role="tab"
                 aria-selected={activeTab === 'overview'}
@@ -250,6 +330,7 @@ export const TitanePage: React.FC = () => {
                     ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
                     : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
                 }`}
+                data-testid="tab-vision"
                 onClick={tabHandlers.vision}
                 role="tab"
                 aria-selected={activeTab === 'vision'}
@@ -264,6 +345,7 @@ export const TitanePage: React.FC = () => {
                     ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
                     : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
                 }`}
+                data-testid="tab-identity"
                 onClick={tabHandlers.identity}
                 role="tab"
                 aria-selected={activeTab === 'identity'}
@@ -278,6 +360,7 @@ export const TitanePage: React.FC = () => {
                     ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
                     : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
                 }`}
+                data-testid="tab-memory"
                 onClick={tabHandlers.memoryMap}
                 role="tab"
                 aria-selected={activeTab === 'memory-map'}
@@ -292,6 +375,7 @@ export const TitanePage: React.FC = () => {
                     ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
                     : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
                 }`}
+                data-testid="tab-memory-evolution"
                 onClick={tabHandlers.memoryEvolution}
                 role="tab"
                 aria-selected={activeTab === 'memory-evolution'}
@@ -306,6 +390,7 @@ export const TitanePage: React.FC = () => {
                     ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
                     : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
                 }`}
+                data-testid="tab-progression"
                 onClick={tabHandlers.progression}
                 role="tab"
                 aria-selected={activeTab === 'progression'}
@@ -320,6 +405,7 @@ export const TitanePage: React.FC = () => {
                     ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
                     : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
                 }`}
+                data-testid="tab-transformation"
                 onClick={tabHandlers.transformation}
                 role="tab"
                 aria-selected={activeTab === 'transformation'}
@@ -328,18 +414,36 @@ export const TitanePage: React.FC = () => {
               >
                 🌱 Transform
               </button>
+              <button
+                className={`px-4 py-2 text-sm font-medium rounded transition-all ${
+                  activeTab === 'symbiose'
+                    ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
+                    : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
+                }`}
+                data-testid="tab-symbiose"
+                onClick={tabHandlers.symbiose}
+                role="tab"
+                aria-selected={activeTab === 'symbiose'}
+                aria-controls={TAB_PANEL_IDS.symbiose}
+                id={TAB_LABEL_IDS.symbiose}
+              >
+                🔀 Symbiose
+              </button>
             </div>
           </div>
 
           {/* ═══ CONTENT AREA (A11Y Enhanced) ═══ */}
           <div
             className="titane-content"
+            data-testid="page-titane-content"
             role="tabpanel"
             id={TAB_PANEL_IDS[activeTab]}
             aria-labelledby={TAB_LABEL_IDS[activeTab]}
             tabIndex={0}
           >
-            {renderActiveSection()}
+            <ErrorBoundary context={`TitaneTab:${activeTab}`}>
+              {renderActiveSection()}
+            </ErrorBoundary>
           </div>
         </Stack>
       </Container>

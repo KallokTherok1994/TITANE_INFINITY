@@ -1,0 +1,7 @@
+remote: 
+remote: Create a pull request for 'copilot/pr-ci-unblock-20260306-1847' on GitHub by visiting:        
+remote:      https://github.com/KallokTherok1994/TITANE_INFINITY/pull/new/copilot/pr-ci-unblock-20260306-1847        
+remote: 
+To https://github.com/KallokTherok1994/TITANE_INFINITY.git
+ * [new branch]          copilot/pr-ci-unblock-20260306-1847 -> copilot/pr-ci-unblock-20260306-1847
+la branche 'copilot/pr-ci-unblock-20260306-1847' est paramétrée pour suivre 'origin/copilot/pr-ci-unblock-20260306-1847'.

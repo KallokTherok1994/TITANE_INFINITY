@@ -78,7 +78,7 @@ EXPERIMENTAL ──→ QUALIFIED ──→ STABLE ──→ DEPRECATED ──→
 
 | Statut | Count | Détail |
 |--------|-------|--------|
-| **STABLE** | 66 | Commands production-ready avec rétrocompatibilité |
+| **STABLE** | 218 | Commands production-ready avec rétrocompatibilité |
 | **QUALIFIED** | 2 | Commands avec API figée, tests complets, prêts pour STABLE |
 | **EXPERIMENTAL** | 0 | Commands en développement, API instable |
 | **DEPRECATED** | 0 | Commands marqués obsolètes, migration path définie |
@@ -88,9 +88,9 @@ EXPERIMENTAL ──→ QUALIFIED ──→ STABLE ──→ DEPRECATED ──→
 
 | Version | STABLE | QUALIFIED | EXPERIMENTAL | DEPRECATED | Notes |
 |---------|--------|-----------|-------------|------------|-------|
-| v26.3.0 | 66 | 0 | 0 | 0 | État initial PHASE 6 (migration depuis PHASE 5) |
-| v26.3.0+ | 66 | 0 | 2 | 0 | Première capability PHASE 6: memory-core-encryption |
-| v26.3.0++ | 66 | 2 | 0 | 0 | memory-core-encryption EXPERIMENTAL → QUALIFIED |
+| v26.3.0 | 216 | 0 | 0 | 0 | État actuel synchronisé avec allowlist stable |
+| v26.3.0+ | 216 | 0 | 2 | 0 | Première capability PHASE 6: memory-core-encryption |
+| v26.3.0++ | 216 | 2 | 0 | 0 | memory-core-encryption EXPERIMENTAL → QUALIFIED |
 
 **Migration PHASE 5 → PHASE 6**: Toutes les capabilities PHASE 5 "stable" sont automatiquement promues **STABLE** PHASE 6 avec grandfathering (pas de re-qualification requise).
 
@@ -119,7 +119,7 @@ command: <nom>
 
 ## Couche STABLE
 
-**Total commands stable**: 66 (au 2026-01-15) - **Grandfathered PHASE 5 → PHASE 6**
+**Total commands stable**: 218 (au 2026-04-06) - **Grandfathered PHASE 5 → PHASE 6**
 
 *Note: Toutes les commands ci-dessous ont été automatiquement promues **STABLE** lors de la migration PHASE 5 → PHASE 6 avec grandfathering. Aucune re-qualification requise.*
 
@@ -165,6 +165,7 @@ command: <nom>
 |---------|--------|-------------|---------------|---------|-------|-----------|-------|
 | `set_state` | **STABLE** | memory | tests/contract/tauri.contract.test.ts | docs/API_SURFACE.md | v26.3.0 | v26.3.0 | State bridge set (P5→P6) |
 | `delete_state` | **STABLE** | memory | tests/contract/tauri.contract.test.ts | docs/API_SURFACE.md | v26.3.0 | v26.3.0 | State bridge delete (P5→P6) |
+| `identity_get_active_voice_profile` | **STABLE** | memory, audio | tests/contract/tauri.contract.test.ts | docs/API_SURFACE.md | v30.0.0 | v30.0.0 | Lit le profil vocal actif backend pour hydrater la voix canonique (P6) |
 | `identity_set_matrix` | **STABLE** | memory | tests/contract/tauri.contract.test.ts | docs/API_SURFACE.md | v26.3.0 | v26.3.0 | Identity matrix update (P5→P6) |
 
 ### Logging
@@ -396,3 +397,146 @@ Si absolument nécessaire:
 **SCELLÉ** : PHASE_5 BLOC D (2026-01-15)  
 **Mainteneur** : Kevin Thibault (TITANE∞)  
 **Prochaine révision** : À chaque ajout command stable
+
+## Sync Addendum 2026-03-05 (Stable Allowlist Alignment)
+
+Commands added to satisfy drift gate (append-only):
+
+- `ai_check_ollama_status`
+- `chat_generate_openai`
+- `chat_get_providers_status`
+- `cloud_get_devices`
+- `cloud_get_status`
+- `cloud_get_sync_history`
+- `cloud_list_backups`
+- `cognitive_get_state`
+- `conversation_generate`
+- `conversation_health_check`
+- `conversation_memory_stats`
+- `conversation_reset`
+- `cp_get_design_config`
+- `cp_get_modules_status`
+- `cp_toggle_module`
+- `create_new_conversation`
+- `engine_health`
+- `engine_init`
+- `engine_metrics`
+- `engine_modules`
+- `engines_build_get_result`
+- `engines_build_get_status`
+- `engine_singularity_reset`
+- `engines_monitoring_get_dashboard`
+- `engines_monitoring_get_health`
+- `engines_monitoring_get_metrics`
+- `engine_stop`
+- `engine_tick`
+- `evolution_get_stats`
+- `exp_get_categories`
+- `exp_get_global_state`
+- `exp_get_projects`
+- `exp_get_talents`
+- `get_all_configs`
+- `get_audio_input_devices`
+- `get_audio_output_devices`
+- `test_microphone`
+- `get_cognitive_state`
+- `get_core_info`
+- `get_dashboard_metrics`
+- `get_engines_status`
+- `get_event_stream`
+- `get_helios_metrics`
+- `get_logs`
+- `get_module_health`
+- `get_system_logs`
+- `get_system_metrics`
+- `get_system_state`
+- `get_travel_stats`
+- `harmonia_get_state`
+- `hyper_get_insights`
+- `hyper_get_thoughts`
+- `identity_disable_rule`
+- `identity_enable_rule`
+- `identity_get_active_rules`
+- `identity_get_available_modes`
+- `identity_get_coherence_score`
+- `identity_get_current_mode`
+- `identity_get_current_tone`
+- `identity_get_matrix`
+- `identity_get_personality_snapshot`
+- `identity_list_voice_profiles`
+- `identity_set_active_voice_profile`
+- `identity_set_mode`
+- `list_config_presets`
+- `list_conversations`
+- `list_snapshots`
+- `memory_evolve_full`
+- `memory_get_active_projects`
+- `memory_get_active_rituals`
+- `memory_get_all_keys`
+- `memory_get_clusters`
+- `memory_get_entry`
+- `memory_get_knowledge`
+- `memory_get_recent_decisions`
+- `memory_get_stats`
+- `memory_get_timeline`
+- `memory_save_chat_interaction`
+- `memory_search`
+- `mesh_get_stats`
+- `multi_ai_get_state`
+- `nexus_get_state`
+- `one_core_get_engine_status`
+- `one_core_get_event_history`
+- `one_core_get_metrics`
+- `one_core_get_state`
+- `one_core_list_commands`
+- `orchestrator_get_metrics`
+- `orchestrator_get_state`
+- `orchestrator_init`
+- `orchestrator_run_cycle`
+- `orchestrator_set_mode`
+- `performance_get_metrics`
+- `qa_get_hardening_config`
+- `qa_get_logs`
+- `qa_get_performance_report`
+- `qa_get_state`
+- `qa_get_system_metrics`
+- `qa_get_test_result`
+- `qa_list_alerts`
+- `qa_list_monitors`
+- `qa_list_test_suites`
+- `reality_get_state`
+- `sc_get_cluster_peers`
+- `sc_get_cluster_status`
+- `sc_get_diagnostic_status`
+- `sc_get_env`
+- `sc_get_logs`
+- `sc_get_log_stats`
+- `sc_hypervision_get_anomalies`
+- `sc_hypervision_get_layers`
+- `sc_hypervision_get_metrics`
+- `sc_hypervision_get_state`
+- `selfheal_force_evaluation`
+- `selfheal_get_health`
+- `selfheal_get_prediction`
+- `selfheal_get_state`
+- `send_audio_chunk`
+- `set_audio_input_device`
+- `set_audio_output_device`
+- `singularity_self_check`
+- `titan_get_persistence_status`
+- `titan_state_get`
+- `tts_speak`
+- `update_chat_engine_config`
+- `vad_configure`
+- `vad_get_state`
+- `vad_process_frame`
+- `vad_reset`
+- `window_get_zoom`
+- `window_is_fullscreen`
+- `window_set_fullscreen`
+- `window_set_zoom`
+- `window_toggle_fullscreen`
+- `window_zoom_in`
+- `window_zoom_out`
+- `window_zoom_reset`
+

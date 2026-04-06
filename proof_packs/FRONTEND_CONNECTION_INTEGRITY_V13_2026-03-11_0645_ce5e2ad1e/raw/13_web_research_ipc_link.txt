@@ -1,0 +1,2 @@
+24:export async function webResearch(
+28:  return tauri<ResearchReport>('web_research', { query, options });

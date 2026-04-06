@@ -26,6 +26,8 @@ import {
 import { audioStateMachine } from '@/services/audio/audioStateMachine';
 import { parlerTTSBridge, playAudioBlob, type ParlerTTSConfig } from './parlerTTSBridge';
 import { antiEchoShield } from '@/services/voice/antiEchoShield';
+import audioService from '@/features/audio-center/services/audioService';
+import { useUIStore } from '@/stores/uiStore';
 
 export interface TTSConfig {
   rate?: number; // 0.5 - 2.0
@@ -47,8 +49,8 @@ export interface TTSStatus {
 /**
  * [P0.4 ANTI-ECHO] Événements TTS pour synchronisation VAD
  */
-export type TTSEventType = 'start' | 'end' | 'error';
-export type TTSEventListener = (event: TTSEventType) => void;
+export type TTSEventType = 'start' | 'end' | 'error' | 'fallback';
+export type TTSEventListener = (event: TTSEventType, detail?: string) => void;
 
 /**
  * [P1.3] Élément de la file d'attente TTS
@@ -68,6 +70,15 @@ interface TTSQueueItem {
  */
 // ✨ v24.2.1: TTL cache for availability checks (30s)
 const AVAILABILITY_CACHE_TTL_MS = 30000;
+
+// STEP 3 — VOICE_MAP: strict binding from voiceId to engine label
+const VOICE_MAP: Record<string, string> = {
+  'fr_FR-siwis-medium': 'piper_fr_female',
+  'fr_FR-upmc-medium': 'piper_fr_female_upmc',
+  'en_US-amy-medium': 'piper_en_female',
+  FvmvwvObRqIHojkEGh5N: 'cloud_fr_elevenlabs',
+  fr: 'espeak_fr',
+};
 
 interface AvailabilityCache {
   value: boolean;
@@ -114,15 +125,28 @@ class HybridTTSService {
   /**
    * [P0.4 ANTI-ECHO] Émettre un événement TTS
    */
-  private emitEvent(event: TTSEventType): void {
-    console.log(`[HybridTTS] 📢 Event: ${event}`);
+  private emitEvent(event: TTSEventType, detail?: string): void {
+    console.log(`[HybridTTS] 📢 Event: ${event}${detail ? ` — ${detail}` : ''}`);
     this.eventListeners.forEach(listener => {
       try {
-        listener(event);
+        listener(event, detail);
       } catch (e) {
         console.error('[HybridTTS] Listener error:', e);
       }
     });
+
+    // Surface fallback warnings as UI toasts
+    if (event === 'fallback' && detail) {
+      try {
+        useUIStore.getState().addToast({
+          type: 'warning',
+          message: `⚠️ Voix: ${detail}`,
+          duration: 5000,
+        });
+      } catch {
+        // Non-blocking: store may not be initialized
+      }
+    }
   }
 
   /**
@@ -131,6 +155,26 @@ class HybridTTSService {
   private isCacheValid(cache: AvailabilityCache | null): boolean {
     if (!cache) return false;
     return Date.now() - cache.timestamp < AVAILABILITY_CACHE_TTL_MS;
+  }
+
+  /**
+   * STEP 1 — Enrich TTS config with persisted voice settings from audioService.
+   * Ensures the user's selected voice is always forwarded to the engine,
+   * even when callers omit config.voice.
+   */
+  private enrichConfigWithStoredVoice(config: TTSConfig): TTSConfig {
+    try {
+      const stored = audioService.getTTSSettings();
+      return {
+        voice: config.voice || stored.voiceId || undefined,
+        lang: config.lang || stored.language || 'fr-FR',
+        rate: config.rate ?? stored.rate ?? 1.0,
+        pitch: config.pitch ?? stored.pitch ?? 1.0,
+        volume: config.volume ?? stored.volume ?? 1.0,
+      };
+    } catch {
+      return config;
+    }
   }
 
   /**
@@ -406,6 +450,31 @@ class HybridTTSService {
       return;
     }
 
+    // STEP 0 — BOOTSTRAP: Enrich config and log engine truth
+    const enrichedConfig = this.enrichConfigWithStoredVoice(config);
+    try {
+      const stored = audioService.getTTSSettings();
+      const engineLabel = VOICE_MAP[enrichedConfig.voice ?? ''] ?? 'unknown';
+      console.group('[TTS:BOOTSTRAP] ─── Voice Engine Diagnostic ───');
+      console.log(`  selectedVoice (UI stored) : ${stored.voiceId}`);
+      console.log(`  engine (stored)           : ${stored.engine}`);
+      console.log(`  config.voice (caller)     : ${config.voice ?? 'none — NOT PASSED'}`);
+      console.log(`  enriched voice            : ${enrichedConfig.voice ?? 'none'}`);
+      console.log(`  engine label (VOICE_MAP)  : ${engineLabel}`);
+      console.log(`  provider chain            : parler-tts → tauri → webspeech`);
+      if (!config.voice && enrichedConfig.voice) {
+        console.warn(
+          `  ⚠️ MISMATCH: caller did not pass voice — injected from settings: ${enrichedConfig.voice}`
+        );
+      }
+      if (engineLabel === 'unknown') {
+        console.warn(`  ⚠️ CRITICAL: voice "${enrichedConfig.voice}" not in VOICE_MAP`);
+      }
+      console.groupEnd();
+    } catch {
+      // Non-blocking diagnostic failure
+    }
+
     console.log('\n🔊 TTS: Starting synthesis...');
     console.log(`📝 Text: "${text.substring(0, 60)}${text.length > 60 ? '...' : ''}"`);
     console.log(`🌐 Mode: ${useOnline ? 'Online' : 'Offline First'}`);
@@ -420,7 +489,7 @@ class HybridTTSService {
       const parlerTTSAvailable = await this.checkParlerTTSAvailable();
       if (parlerTTSAvailable && !useOnline) {
         try {
-          await this.speakParlerTTS(text, config);
+          await this.speakParlerTTS(text, enrichedConfig);
           // [P0.4 ANTI-ECHO] Notifier fin TTS
           this.emitEvent('end');
           // [P1.1 STATE MACHINE] Transition vers idle
@@ -428,6 +497,7 @@ class HybridTTSService {
           return;
         } catch (error) {
           console.warn('⚠️ TTS: Parler-TTS failed, falling back to Tauri backend');
+          this.emitEvent('fallback', 'Parler-TTS indisponible — passage au moteur Tauri');
         }
       }
 
@@ -435,7 +505,7 @@ class HybridTTSService {
       const tauriAvailable = await this.checkTauriAvailable();
       if (tauriAvailable) {
         try {
-          await this.speakTauri(text, config, useOnline);
+          await this.speakTauri(text, enrichedConfig, useOnline);
           // [P0.4 ANTI-ECHO] Notifier fin TTS
           this.emitEvent('end');
           // [P1.1 STATE MACHINE] Transition vers idle
@@ -443,13 +513,17 @@ class HybridTTSService {
           return;
         } catch (error) {
           console.warn('⚠️ TTS: Tauri failed, falling back to Web Speech API');
+          this.emitEvent(
+            'fallback',
+            'Moteur Tauri indisponible — passage au Web Speech API (voix navigateur)'
+          );
         }
       }
 
       // Stratégie 3: Web Speech API (fallback final)
       if (this.checkWebSpeechAvailable()) {
         try {
-          await this.speakWebSpeech(text, config);
+          await this.speakWebSpeech(text, enrichedConfig);
           // [P0.4 ANTI-ECHO] Notifier fin TTS
           this.emitEvent('end');
           // [P1.1 STATE MACHINE] Transition vers idle
@@ -461,6 +535,11 @@ class HybridTTSService {
       }
 
       // Stratégie 4: Silent mode (dernier recours)
+      // STEP 2 — FALLBACK ABUSE: all providers failed, log CRITICAL
+      console.warn(
+        `[TTS:FALLBACK] ⛔ CRITICAL: All providers failed. voice="${enrichedConfig.voice ?? 'none'}" — audio output is SILENT`
+      );
+      this.emitEvent('fallback', 'Tous les moteurs TTS ont échoué — mode silence activé');
       console.log('🔇 TTS: No provider available, silent mode');
       // [P0.4 ANTI-ECHO] Notifier fin même en mode silence
       this.emitEvent('end');

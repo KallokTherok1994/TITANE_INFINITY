@@ -28,6 +28,9 @@ export {
   composite,
 } from './backend-v17.2.commands';
 export * from './backend-v17.2.types';
+// Resolve ambiguity: SystemStatus is defined in both ./types and ./backend-v17.2.types
+// v17.2 (nested helios/nexus/harmonia structure) is the canonical version
+export type { SystemStatus } from './backend-v17.2.types';
 
 // 🔧 P1_BUILD_CHUNKS_FIX: Chat Engine Backend exports removed from static index
 // Reason: chatEngine.commands.ts is dynamically imported by chatEngine.ts

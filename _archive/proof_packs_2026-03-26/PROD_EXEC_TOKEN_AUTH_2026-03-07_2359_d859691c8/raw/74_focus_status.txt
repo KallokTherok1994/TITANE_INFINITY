@@ -1,0 +1,3 @@
+ M registry/closure-events.jsonl
+ M registry/proofpack-index.jsonl
+?? proof_packs/PROD_EXEC_TOKEN_AUTH_2026-03-07_2359_d859691c8/

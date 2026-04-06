@@ -1,0 +1,666 @@
+src-tauri/tauri.conf.json:79:          "description": "Capability for the main window",
+src-tauri/gen/schemas/linux-schema.json:2343:          "format": "double"
+src-tauri/gen/schemas/desktop-schema.json:2343:          "format": "double"
+src/__tests__/omega/conversation-manager.test.ts:72:  it('should be a singleton', () => {
+src/pages/CognitivePage.tsx:265:// v24.3.1 FIX: Add missing default export for lazy loading
+src-tauri/memory/memory_core_state.json:9:      "message": "BOOT:START"
+src-tauri/memory/memory_core_state.json:16:      "message": "BOOT:START"
+src-tauri/memory/memory_core_state.json:23:      "message": "BOOT:START"
+src-tauri/memory/memory_core_state.json:30:      "message": "BOOT:START"
+src-tauri/memory/memory_core_state.json:37:      "message": "BOOT:START"
+src-tauri/memory/memory_core_state.json:44:      "message": "BOOT:START"
+src-tauri/memory/memory_core_state.json:51:      "message": "BOOT:START"
+src-tauri/memory/memory_core_state.json:58:      "message": "BOOT:START"
+src-tauri/memory/memory_core_state.json:65:      "message": "BOOT:START"
+src-tauri/memory/memory_core_state.json:72:      "message": "BOOT:START"
+src-tauri/memory/memory_core_state.json:79:      "message": "BOOT:START"
+src/pages/DevTools.tsx:27:// P1-B OPTIMIZATION: Tab-based lazy loading for -100 KB bundle split
+src/pages/DevTools.tsx:394:      {/* Tab Content - P1-B: Using lazy-loaded DevToolsTabs for -100 KB bundle split */}
+src/__tests__/boot-smoke.test.ts:45:  it('should import lazy diagnostic utility without errors', async () => {
+src/__tests__/boot-smoke.test.ts:46:    await expect(import('../utils/lazyImportDiagnostic')).resolves.toBeDefined();
+src/__tests__/boot-smoke.test.ts:55:  it('should create lazy component with diagnostic wrapper', async () => {
+src/__tests__/boot-smoke.test.ts:56:    const { lazyWithDiagnostic } = await import('../utils/lazyImportDiagnostic');
+src/__tests__/boot-smoke.test.ts:58:    const testLazy = lazyWithDiagnostic(
+src/__tests__/boot-smoke.test.ts:66:  it('should handle timeout lazy component', async () => {
+src/__tests__/boot-smoke.test.ts:67:    const { lazyWithTimeout } = await import('../utils/lazyImportDiagnostic');
+src/__tests__/boot-smoke.test.ts:69:    const testLazy = lazyWithTimeout(() => Promise.resolve({ default: () => 'test' }), {
+src/__tests__/boot-smoke.test.ts:77:  it('should handle failed lazy import gracefully', async () => {
+src/__tests__/boot-smoke.test.ts:78:    const { lazyWithDiagnostic } = await import('../utils/lazyImportDiagnostic');
+src/__tests__/boot-smoke.test.ts:80:    const failingLazy = lazyWithDiagnostic(
+src/__tests__/boot-smoke.test.ts:86:    // Le lazy component devrait être créé même si le factory échoue
+src/__tests__/ollama-proxy.test.ts:11:describe('Ollama proxy routing', () => {
+src/__tests__/e2e-automated-validation.test.tsx:1615:    // 8. Éviter doubles-réponses (avoid duplicate responses)
+src/pages/DashboardPage.tsx:341:// v24.3.1 FIX: Add missing default export for lazy loading
+src/__tests__/ui/ui-navigation.test.ts:193:  it('scrolling does not reveal double sticky headers', async () => {
+src/pages/DevToolsTabs.tsx:9: *   Tab-based conditional rendering with lazy loading
+src/pages/DevToolsTabs.tsx:14:import { lazy, Suspense } from 'react';
+src/pages/DevToolsTabs.tsx:19:const SystemTab = lazy(
+src/pages/DevToolsTabs.tsx:22:const LogsTab = lazy(
+src/pages/DevToolsTabs.tsx:25:const PerformanceTab = lazy(
+src/pages/DevToolsTabs.tsx:31:const DiagnosticTab = lazy(
+src/pages/DevToolsTabs.tsx:51: * Loading fallback for lazy tabs
+src/pages/DevToolsTabs.tsx:75: * DevTools Tab System with lazy loading
+src/__tests__/services/api/voice.test.ts:31:  it('startRecording() devrait échouer si déjà en cours (anti double-call)', async () => {
+src/__tests__/architecture/engine-isolation.test.ts:53:    // seule l'instanciation du singleton utilise les services
+src/pages/DevToolsLazy.tsx:9: *   Split monitoring components into lazy-loaded chunks per tab
+src/pages/DevToolsLazy.tsx:14:import { lazy, Suspense } from 'react';
+src/pages/DevToolsLazy.tsx:17:const MonitoringHeader = lazy(() =>
+src/pages/DevToolsLazy.tsx:23:const SystemStatusCard = lazy(() =>
+src/pages/DevToolsLazy.tsx:29:const LogsCard = lazy(() =>
+src/pages/DevToolsLazy.tsx:35:const ErrorsCard = lazy(() =>
+src/pages/DevToolsLazy.tsx:41:const CognitiveModuleCard = lazy(() =>
+src/pages/DevToolsLazy.tsx:47:const LivingEnginesCard = lazy(() =>
+src/pages/DevToolsLazy.tsx:53:const ChatDiagnostic = lazy(() =>
+src/pages/DevToolsLazy.tsx:60: * Loading fallback for lazy components
+src/pages/DevToolsLazy.tsx:83:// Export lazy components with Suspense wrappers
+src/__tests__/performance/PerformanceTests.test.tsx:237:    it('should lazy load heavy components', async () => {
+src/__tests__/performance/PerformanceTests.test.tsx:247:      // Heavy component should lazy load
+src/__tests__/services/adminEngine/adminEngine.test.ts:76:  // Reset toutes les instances singleton
+src-tauri/reports/prod_path/2026-02-10T23-25-13Z/P1_BLOCKERS/git_status_raw.txt:122:?? src/__tests__/ollama-proxy.test.ts
+src/_deprecated/router.tsx:21:import React, { lazy, Suspense } from 'react';
+src/_deprecated/router.tsx:29:const Dashboard = lazy(() => import('./pages').then(m => ({ default: m.DashboardPage })));
+src/_deprecated/router.tsx:30:const Chat = lazy(() => import('./ui/pages/Chat').then(m => ({ default: m.Chat })));
+src/_deprecated/router.tsx:31:const Stats = lazy(() => import('./pages/Stats').then(m => ({ default: m.Stats })));
+src/_deprecated/router.tsx:32:const Sentinel = lazy(() => import('./pages').then(m => ({ default: m.Sentinel })));
+src/_deprecated/router.tsx:33:const Watchdog = lazy(() => import('./pages').then(m => ({ default: m.Watchdog })));
+src/_deprecated/router.tsx:34:const SelfHeal = lazy(() => import('./pages').then(m => ({ default: m.SelfHeal })));
+src/_deprecated/router.tsx:35:const AdaptiveEngine = lazy(() =>
+src/_deprecated/router.tsx:38:const Memory = lazy(() => import('./pages').then(m => ({ default: m.Memory })));
+src/_deprecated/router.tsx:39:const Settings = lazy(() => import('./pages').then(m => ({ default: m.Settings })));
+src/_deprecated/router.tsx:40:const DevTools = lazy(() => import('./pages').then(m => ({ default: m.DevTools })));
+src/_deprecated/router.tsx:41:const CloudCenter = lazy(() =>
+src/_deprecated/router.tsx:44:const Agenda = lazy(() => import('./pages').then(m => ({ default: m.AgendaPage })));
+src/_deprecated/router.tsx:45:const DesignSystemShowcase = lazy(() => import('./pages/DesignSystemShowcase'));
+src-tauri/src/core/tests_engine.rs:45:    async fn test_engine_double_init() -> Result<(), Box<dyn std::error::Error>> {
+src-tauri/src/core/boot_orchestrator.rs:9:// Event TITANE_READY émis quand système complet ready
+src-tauri/src/core/boot_orchestrator.rs:172:        log::info!("║     TITANE∞ BOOT COMPLETE — SYSTEM READY                    ║");
+src/pages/ProgressionPage.tsx:185:// v24.3.1 FIX: Add missing default export for lazy loading
+src-tauri/src/avatar/immersive_avatar_engine.rs:758:    fn test_prosody_prepare_text_double_r() {
+src-tauri/src/avatar/fullbody/fullbody_engine.rs:407:        // Vérifier état geste et décider action (éviter double borrow)
+src-tauri/src/avatar/fullbody/fullbody_engine.rs:750:lazy_static::lazy_static! {
+src/core/devops/LocalAgentEngine.ts:1041:// Export singleton
+src/core/services/index.ts:46:// ⚠️ Use getMetricsEngine() from '../../services/ai/system' for lazy loading
+src-tauri/Cargo.toml:60:lazy_static   = "1.4"
+src/core/devops/VisualDevOpsEngine.ts:1094:// Export singleton
+src-tauri/src/avatar/appearance_commands.rs:7:use lazy_static::lazy_static;
+src-tauri/src/avatar/appearance_commands.rs:14:lazy_static! {
+src/main.tsx:25:    __TITANE_BOOT_READY__?: boolean;
+src/main.tsx:52:// ✨ v25.3.0 OPT-9 - Monitoring lazy-loaded (non-blocking initialization)
+src/main.tsx:197:  if (marker === 'BOOT:READY') {
+src/main.tsx:198:    window.__TITANE_BOOT_READY__ = true;
+src/main.tsx:212:  emitBootMarker('BOOT:START');
+src/main.tsx:213:  emitBootMarker('BOOT:AFTER_STORE');
+src/main.tsx:705:      const bootReady = Boolean(window.__TITANE_BOOT_READY__);
+src/core/hyperdepth/HYPERDEPTH_ENGINE.ts:321:// 🌟 Instance singleton
+src-tauri/src/control_panel_commands/tests.rs:9:    use lazy_static::lazy_static;
+src-tauri/src/control_panel_commands/tests.rs:12:    lazy_static! {
+src-tauri/src/control_panel_commands/tests.rs:273:        assert!(config.proxy_url.is_empty() || !config.proxy_url.is_empty());
+src-tauri/src/control_panel_commands/tests.rs:280:            proxy_enabled: false,
+src-tauri/src/control_panel_commands/tests.rs:281:            proxy_url: String::new(),
+src/entry.ts:3:  __TITANE_BOOT_READY__?: boolean;
+src/entry.ts:137:  void emitBootMarker(`BOOT:ENTRY_RECOVERY_RELOAD|${tag}`);
+src/entry.ts:151:    if (win.__TITANE_BOOT_READY__) {
+src/entry.ts:165:    if (win.__TITANE_BOOT_READY__) {
+src/entry.ts:184:    if (!win.__TITANE_BOOT_READY__) {
+src/entry.ts:187:      void emitBootMarker(`BOOT:ENTRY_WATCHDOG_${ENTRY_WATCHDOG_MS}MS`);
+src/entry.ts:191:  await emitBootMarker('BOOT:ENTRY_START');
+src/entry.ts:196:    await emitBootMarker('BOOT:ENTRY_MAIN_IMPORTED');
+src/entry.ts:203:    await emitBootMarker(`BOOT:ENTRY_IMPORT_FAIL|${errorDetails.slice(0, 420)}`);
+src/core/index.ts:46:// INSTANCES SINGLETONS (READY TO USE)
+src-tauri/src/commands/window_controls_commands.rs:9:lazy_static::lazy_static! {
+src-tauri/src/audio/recording_engine.rs:348:// Global singleton
+src-tauri/src/commands/orchestration_center.rs:8:use lazy_static::lazy_static;
+src-tauri/src/commands/orchestration_center.rs:125:lazy_static! {
+src-tauri/src/commands/orchestration_center.rs:388:lazy_static! {
+src-tauri/src/commands/orchestration_center.rs:550:lazy_static! {
+src-tauri/src/commands/orchestration_center.rs:724:lazy_static! {
+src-tauri/src/commands/orchestration_center.rs:861:lazy_static! {
+src-tauri/src/ipc/cached_commands.rs:7:use lazy_static::lazy_static;
+src-tauri/src/ipc/cached_commands.rs:13:lazy_static! {
+src/core/engines/ENGINE_BRIDGE.ts:299:// 🌟 Instance singleton
+src/core/holography/HOLOMESH_ENGINE.ts:343:// 🌟 Instance singleton
+src/core/engines/SINGULARITY_ENGINE.ts:543:// Instance singleton
+src-tauri/src/omega/tests_pipeline.rs:79:async fn test_pipeline_double_initialization() -> Result<(), Box<dyn Error>> {
+src-tauri/src/commands/system_center_commands.rs:6:use lazy_static::lazy_static;
+src-tauri/src/commands/system_center_commands.rs:26:lazy_static! {
+src/core/cognitive/USER_RHYTHM_ANALYZER.ts:222:// 🌟 Instance singleton
+src-tauri/src/commands/self_healing_commands.rs:6:use lazy_static::lazy_static;
+src-tauri/src/commands/self_healing_commands.rs:43:lazy_static! {
+src/core/cognitive/INTERFACE_MIRROR.ts:184:// 🌟 Instance singleton
+src/core/cognitive/COGNITIVE_ENGINE.ts:241:// 🌟 Instance singleton
+src/core/cognitive/ADAPTIVE_UI.ts:200:// 🌟 Instance singleton
+src/engines/psyche/lazyArchetypeResonanceEngine.ts:6: * Permet lazy loading du moteur archétypal pour réduire bundle initial
+src/engines/psyche/lazyArchetypeResonanceEngine.ts:33: * Start engine (lazy)
+src/engines/psyche/lazyArchetypeResonanceEngine.ts:42: * Stop engine (lazy)
+src/i18n/i18nLazyLoader.ts:29:  // Start lazy loading
+src-tauri/src/commands/governance_commands.rs:8:use lazy_static::lazy_static;
+src-tauri/src/commands/governance_commands.rs:65:lazy_static! {
+src/engines/psyche/index.ts:2:export * from './lazyArchetypeResonanceEngine';
+src/i18n/index.ts:8:// YOLO OPT-7: Export lazy loader instead of initialized instance
+src/engines/aura/lazyAuraEngine.ts:6: * Permet lazy loading du moteur aura pour réduire bundle initial
+src/engines/aura/lazyAuraEngine.ts:33: * Start engine (lazy)
+src/engines/aura/lazyAuraEngine.ts:42: * Stop engine (lazy)
+src-tauri/src/commands/memory_os_commands.rs:6:use lazy_static::lazy_static;
+src-tauri/src/commands/memory_os_commands.rs:20:lazy_static! {
+src/engines/aura/index.ts:2:export * from './lazyAuraEngine';
+src-tauri/src/commands/ui_theme_commands.rs:6:use lazy_static::lazy_static;
+src-tauri/src/commands/ui_theme_commands.rs:17:lazy_static! {
+src/engines/aura/auraEngine.ts:454:    // Core : pulsation cardiaque (double beat)
+src/engines/aura/auraEngine.ts:456:    const doubleBeat = heartbeat * (1 + 0.2 * Math.sin(time * Math.PI * 4));
+src/engines/aura/auraEngine.ts:457:    this.state.layers.core.radius = this.config.baseSize * 0.3 * (1 + doubleBeat * 0.1);
+src/core/prompts/profiles.ts:69:      'Voix principale utilisée par défaut : double numérique holistique qui relie mission, écoute intérieure et stratégie.',
+src/core/prompts/roles.ts:13:      'Être le double numérique de Kevin Thibault, activer la Deuxième vitesse, relier chaque échange à la mission vivante et aux cycles énergétiques.',
+src-tauri/src/memory_persistence.rs:8:use lazy_static::lazy_static;
+src-tauri/src/memory_persistence.rs:78:// VaultEngine singleton pour chiffrement transparent
+src-tauri/src/memory_persistence.rs:79:lazy_static! {
+src-tauri/src/cache/middleware.rs:17:/// Global cache instance (singleton pattern)
+src/engines/selfHealing/controlLoopEngine.ts:110:        reasons: ['TARGET_ALREADY_HEALTHY'],
+src-tauri/src/cache/mod.rs:202:        // V24: First, clean up expired entries (lazy TTL cleanup)
+src/features/governance-center/types.ts:141:    description: 'URL du proxy Ollama local (default: /api/ollama)',
+src/engines/time/PriorityEngine.ts:401: * Instance singleton du PriorityEngine
+src/engines/time/AgendaEngine.ts:620: * Instance singleton de l'AgendaEngine (sans I/O). Les callbacks de stockage
+src-tauri/src/harmonia_engine.rs:12:lazy_static::lazy_static! {
+src/engines/time/TimeEngine.ts:494: * Instance singleton du TimeEngine
+src/engines/time/ChatScheduler.ts:585: * Instance singleton du ChatScheduler
+src/engines/time/EnergyEngine.ts:505: * Instance singleton de l'EnergyEngine
+src/engines/flow/FlowEngine.ts:68: * Moteur de Flow singleton
+src/engines/emotion/index.ts:2:export * from './lazySynestheticEmotionEngine';
+src-tauri/src/cognitive_gravity/real_feedback_collector.rs:370:        // Heuristic: Use process count as proxy for queue activity
+src-tauri/src/cognitive_gravity/real_feedback_collector.rs:403:        // Fallback: Use global CPU average as proxy
+src/engines/emotion/lazySynestheticEmotionEngine.ts:6: * Permet lazy loading du moteur émotionnel pour réduire bundle initial
+src/engines/emotion/lazySynestheticEmotionEngine.ts:33: * Start engine (lazy)
+src/engines/emotion/lazySynestheticEmotionEngine.ts:42: * Stop engine (lazy)
+src-tauri/src/doc_engine/technical.rs:199:                Caching, CDN, lazy loading, etc.\n\n\
+src/design-system/components/UIStates.tsx:254:// READY STATE (wrapper)
+src/dev/index.ts:2:// Re-export all dev-only utilities for lazy-loading
+src/engines/expression/expressionEngine.ts:26:import { getAuraEngine, type AuraAnimationPattern } from '../aura/lazyAuraEngine';
+src/engines/expression/expressionEngine.ts:521:    // Apply to Aura Engine (v∞.38+ - lazy loaded)
+src-tauri/src/control_panel_commands.rs:73:    pub proxy_enabled: bool,
+src-tauri/src/control_panel_commands.rs:74:    pub proxy_url: String,
+src-tauri/src/control_panel_commands.rs:648:        proxy_enabled: false,
+src-tauri/src/control_panel_commands.rs:649:        proxy_url: String::new(),
+src-tauri/src/memory_os/multimodal_memory.rs:717:            .store(create_test_entry("lazy dog sleeping", 0.8))
+src-tauri/src/conversation_engine/self_healing.rs:14:    /// Conversations déjà vues (anti-double-submit immédiat)
+src-tauri/src/conversation_engine/self_healing.rs:20:    /// les doublons rapprochés (ex: double click / double event).
+src-tauri/src/conversation_engine/self_healing.rs:44:        // Vérifier double-render immédiat (double submit)
+src/features/meta-dashboard/MetaDashboardRouter.tsx:14:const SystemHealthMonitor = React.lazy(() =>
+src/features/meta-dashboard/MetaDashboardRouter.tsx:19:const SingularityDashboard = React.lazy(() =>
+src/features/meta-dashboard/MetaDashboardRouter.tsx:24:const MonitoringDashboard = React.lazy(() => import('@/pages/MonitoringDashboard'));
+src-tauri/src/conversation_engine/omega_integration.rs:313:        // Parse emotion (simplified - OMEGA provides confidence as proxy)
+src-tauri/src/conversation_engine/french_mastery.rs:186:            ProcessingMode::Double => self.apply_double_version(&request).await,
+src-tauri/src/conversation_engine/french_mastery.rs:275:    async fn apply_double_version(
+src-tauri/src/conversation_engine/french_mastery.rs:582:    fn test_processing_mode_double() {
+src-tauri/src/conversation_engine/french_mastery.rs:604:        assert!(json.contains("double"));
+src-tauri/src/conversation_engine/french_mastery.rs:1307:    async fn test_process_double_mode() {
+src-tauri/src/conversation_engine/french_mastery.rs:1419:    async fn test_apply_double_quality_scores() {
+src-tauri/src/conversation_engine/literary_engine.rs:149:            WritingMode::DoubleVersion => self.apply_double_version(request),
+src-tauri/src/conversation_engine/literary_engine.rs:214:    fn apply_double_version(&self, request: LiteraryRequest) -> LiteraryResponse {
+src-tauri/src/conversation_engine/literary_engine.rs:665:    fn test_double_version() {
+src-tauri/src/conversation_engine/literary_engine.rs:787:    fn test_writing_mode_double_version() {
+src/features/evolution/EvolutionTimeline.tsx:220:        'Réduction de 30% du bundle size via code splitting, lazy loading, et optimisation des chunks Vite.',
+src-tauri/src/memory_evolution/memory_stability.rs:339:        // Clusters vides ou singleton
+src-tauri/src/memory_evolution/memory_stability.rs:346:                    description: format!("Cluster singleton: {}", cluster_id),
+src-tauri/src/memory_evolution/memory_stability.rs:564:        // Retirer les items des clusters singletons
+src/modules/devSudo/devSudoVisionHandlers.ts:464:  🟡 Images: Pas de lazy loading
+src/modules/devSudo/devSudoVisionHandlers.ts:804:const HeavyComponent = lazy(() => import('./HeavyComponent'));
+src/modules/devSudo/devSudoVisionHandlers.ts:834:  loading="lazy"
+src/modules/devSudo/devSudoVisionHandlers.ts:929:const AudioCenter = lazy(() => import('./features/audio-center/AudioCenter'));
+src/modules/devSudo/devSudoVisionHandlers.ts:930:const Developer = lazy(() => import('./features/developer/Developer'));
+src/modules/devSudo/devSudoVisionHandlers.ts:959:const ExpensiveChart = lazy(() => import('./ExpensiveChart'));
+src/modules/devSudo/devSudoHandler.ts:11: *   YOLO OPT-5: Handlers lazy-loadés par domaine (-150 KB gzip estimé)
+src/modules/devSudo/devSudoHandler.ts:27:// are now lazy-loaded dynamically instead of static imports
+src/modules/devSudo/devSudoHandler.ts:1384: * YOLO OPT-5: Dispatch handler call with lazy-loading
+src/modules/devSudo/devSudoHandler.ts:1413:    console.error(`[DEV-SUDO LAZY] Error calling lazy handler "${handlerName}":`, error);
+src/modules/devSudo/devSudoHandler.ts:2581:6. ✅ Vérifier le proxy Ollama (/api/ollama)
+src/modules/devSudo/devSudoHandler.ts:2686:3. Le proxy répond-il ? → \`curl http://localhost:11434/api/tags\`
+src/modules/devSudo/devSudoHandler.ts:2871:2. Le proxy répond-il ? → \`curl http://localhost:11434/api/tags\`
+src/modules/devSudo/devSudoHandler.ts:2971:3. Tester proxy: \`curl http://localhost:11434/api/tags\`
+src/monitoring/index.ts:56:// Sentry integration (lazy-loaded)
+src/monitoring/index.ts:77:  lazyLoadedBundles?: number;
+src/modules/devSudo/devSudoExecutor.test.ts:10: * Tests the command dispatcher, lazy loading, and handler execution.
+src/modules/devSudo/devSudoExecutor.test.ts:70:      it('should lazy load singularity handlers', async () => {
+src/modules/devSudo/devSudoExecutor.test.ts:85:      it('should lazy load vision handlers', async () => {
+src/modules/devSudo/devSudoExecutor.test.ts:99:      it('should lazy load titanone handlers', async () => {
+src-tauri/src/persistence/crypto_store.rs:133:/// Store cryptographique (singleton thread-safe)
+src/modules/devSudo/devSudoLazyLoader.ts:4: *   Domain-based lazy-loading for DevSudo handlers (13K lines split)
+src/modules/devSudo/devSudoLazyLoader.ts:268: * Get handler function for a specific action (with lazy-loading)
+src/modules/devSudo/devSudoLazyLoader.ts:276: * Check if handler module is already loaded (no lazy-load)
+src/modules/devSudo/devSudoExecutor.ts:4: *   Main command execution dispatcher with lazy-loaded handlers
+src/modules/devSudo/devSudoExecutor.ts:16:// Import built-in handlers that don't need lazy loading
+src/modules/devSudo/devSudoExecutor.ts:126: * YOLO OPT-5: Dispatch handler call with lazy-loading
+src/modules/devSudo/devSudoExecutor.ts:155:    logger.error(`[DEV-SUDO LAZY] Error calling lazy handler "${handlerName}":`, error);
+src/features/admin/AdminPage.tsx:17:import React, { useState, useCallback, lazy, Suspense, memo } from 'react';
+src/features/admin/AdminPage.tsx:42:const SystemCenterPage = lazy(() =>
+src/features/admin/AdminPage.tsx:46:const ConfigurationHub = lazy(() =>
+src/features/admin/AdminPage.tsx:50:const AudioCenterPage = lazy(() =>
+src/features/admin/AdminPage.tsx:54:const DesignCenterPage = lazy(() =>
+src/features/admin/AdminPage.tsx:58:const GovernanceCenterPage = lazy(() =>
+src/features/admin/AdminPage.tsx:62:const ProductionHealthPanel = lazy(() =>
+src/modules/devSudo/devSudoExtendedHandlers.ts:412:  1. Image lazy loading
+src-tauri/src/persistence/mod.rs:203:                    // Appliquer XP delta aux métriques (ticks comme proxy)
+src-tauri/src/persistence/mod.rs:213:                // Mettre à jour progression dans cognition (depth comme proxy)
+src/modules/devSudo/devSudoBuiltins.ts:481:6. ✅ Vérifier le proxy Ollama (/api/ollama)
+src/modules/devSudo/devSudoBuiltins.ts:587:3. Le proxy répond-il ? → \`curl http://localhost:11434/api/tags\`
+src/modules/devSudo/devSudoBuiltins.ts:773:2. Le proxy répond-il ? → \`curl http://localhost:11434/api/tags\`
+src/modules/devSudo/devSudoBuiltins.ts:873:3. Tester proxy: \`curl http://localhost:11434/api/tags\`
+src/features/dashboard/index.ts:8:// Strategy: Keep 100% lazy loading via React.lazy() for performance
+src-tauri/src/wakeword/listener.rs:204:    async fn test_double_start() {
+src/modules/devSudo/devSudoIDEHandlers.ts:63:// 2. Generate template: React → functional component with hooks, service → class/singleton
+src/modules/IdentityMemoryEvolutionCenter.tsx:11: * C'est le "noyau intérieur du double numérique"
+src/modules/IdentityMemoryEvolutionCenter.tsx:33:          Le noyau intérieur du double numérique — Qui je suis, ce que je garde, comment
+src/stores/effectsStore.ts:64:  // Cooldown multiplier (1 = default, 2 = double cooldown, etc.)
+src-tauri/src/main.rs:1094:            // ✅ CRITICAL FIX: Show main window that was auto-created from tauri.conf.json
+src-tauri/src/main.rs:1101:                        eprintln!("❌ Failed to show main window: {err}");
+src-tauri/src/main.rs:1115:                        log::info!("✅ Main window shown successfully");
+src-tauri/src/main.rs:1213:                                                    ? 'BOOT:READY'
+src-tauri/src/main.rs:1214:                                                    : 'BOOT:NOT_READY_22S';
+src-tauri/src/main.rs:1217:                                                await probeInvoke(`BOOT:STAGE:${stage}`);
+src/modules/performance/AdvancedPerformanceMonitor.ts:779:// Export singleton instance
+src-tauri/src/security/permission_guard.rs:136:lazy_static::lazy_static! {
+src/modules/singularity/SingularityIntrospectionEngine.ts:392:      '⚠️  Certains moteurs pourraient bénéficier de lazy loading',
+src/modules/singularity/SingularityIntrospectionEngine.ts:566:        solution: 'Implémenter caching + lazy evaluation',
+src/modules/singularity/SingularityIntrospectionEngine.ts:607:      solution: 'Implémenter virtual scrolling + lazy rendering',
+src-tauri/src/security/sandbox.rs:17:lazy_static::lazy_static! {
+src-tauri/src/security/permissions.rs:112:lazy_static::lazy_static! {
+src-tauri/src/security/validation.rs:18:// Phase 1 Stabilisation: Regex statiques dans lazy_static
+src-tauri/src/multimodal/vision_models.rs:235:        // - Cache result: Store in lazy_static AVAILABLE_PROVIDERS: Vec<String>
+src-tauri/src/commands/devtools_commands.rs:6:use lazy_static::lazy_static;
+src-tauri/src/commands/devtools_commands.rs:9:lazy_static! {
+src/os/config/ConfigManager.ts:289:// Instance singleton
+src-tauri/src/commands/whisper_commands.rs:6:use lazy_static::lazy_static;
+src-tauri/src/commands/whisper_commands.rs:17:lazy_static! {
+src-tauri/src/commands/persistent_memory_commands.rs:6:use lazy_static::lazy_static;
+src-tauri/src/commands/persistent_memory_commands.rs:28:lazy_static! {
+src/modules/avatar/__tests__/floatingWindowChatHandler.test.ts:284:    it('should parse "dock back to main window"', () => {
+src/modules/avatar/__tests__/floatingWindowChatHandler.test.ts:285:      const result = parseFloatingWindowCommand('dock back to main window');
+src-tauri/src/commands/web_research.rs:73:const M_RAG_CONTEXT_READY: &str = "RAG_CONTEXT_READY";
+src-tauri/src/commands/web_research.rs:234:        markers.push(M_RAG_CONTEXT_READY.to_string());
+src-tauri/src/commands/web_research.rs:363:        markers.push(M_RAG_CONTEXT_READY.to_string());
+src-tauri/src/commands/web_research.rs:929:        markers.push(M_RAG_CONTEXT_READY.to_string());
+src/modules/avatar/camera/CameraDynamismEngine.ts:2://   TITANE∞ v25.3.0 — CAMERA DYNAMISM ENGINE (YOLO OPT-1: Three.js lazy)
+src/hooks/useLazyAvatar.ts:5: *   Purpose: Easy integration of lazy-loaded avatar components
+src/hooks/useConversationEngine.ts:270:      // Prévenir double-envoi
+src/hooks/useLivingEngines.ts:174:          window.__TITANE_EMIT_BOOT_MARKER__?.('BOOT:ORCHESTRATOR_DEGRADED');
+src/modules/avatar/appearance/appearanceRenderer.ts:11: * - Performance: Asset caching, lazy loading, LOD support
+src-tauri/src/services/index_service.rs:462:                "The quick brown fox jumps over the lazy dog",
+src/modules/avatar/appearance/appearanceMapper.ts:267:    variant = normalizedStyle.includes('double') ? 'double' : 'simple';
+src/modules/avatar/appearance/outfits.json:398:          "double": {
+src/modules/avatar/appearance/outfits.json:399:            "mesh": "/assets/avatar/hair/braids_double.glb",
+src-tauri/src/memory/security.rs:3://   SHA256 verification, double validation, rollback, timeouts
+src-tauri/src/memory/security.rs:64:/// Écriture sécurisée avec double validation
+src/hooks/useChat.ts:444:  // Fallback sync + lazy-load (remplacement du ref quand prêt).
+src/hooks/useChat.ts:456:        chatLogger.debug('CognitiveKernel lazy-load failed (using fallback)', { error });
+src/modules/avatar/floating/appearanceFloatingIntegration.ts:2://   TITANE∞ v25.3.0 — APPEARANCE FLOATING INTEGRATION (YOLO OPT-1: Three.js lazy)
+src/hooks/useExpression.ts:24:import { getAuraEngine } from '@/engines/aura/lazyAuraEngine';
+src/os/bridge/TauriBridge.ts:216:// Instance singleton
+src/App.tsx:11: *   TITANE∞ v26.3.0 — APP COMPONENT - PRODUCTION READY
+src/App.tsx:18:import React, { useEffect, useState, Suspense, lazy, useMemo, useCallback } from 'react';
+src/App.tsx:37:const XPBar = lazy(() =>
+src/App.tsx:48:// ✨ OPT-10: autoAuditEngine lazy-loaded below (removed static import)
+src/App.tsx:52:// ✨ OPT-10: initializeMicroInteractions lazy-loaded below (removed static import)
+src/App.tsx:58:// ✨ OPT-12: connectCacheToSingularity lazy-loaded below (removed static import)
+src/App.tsx:59:// ✨ OPT-7: i18n is now lazy-loaded in useEffect below (removed static import)
+src/App.tsx:64:const QuantumParticles = lazy(() =>
+src/App.tsx:69:const AuraControlPanel = lazy(() =>
+src/App.tsx:112:const TimePage = lazy(() =>
+src/App.tsx:115:const Experience = lazy(() =>
+src/App.tsx:118:const Stats = lazy(() => import('./pages/Stats').then(m => ({ default: m.Stats })));
+src/App.tsx:121:const SingularityMonitor = lazy(() =>
+src/App.tsx:136:const lazyWithTimeout = <T extends React.ComponentType>(
+src/App.tsx:140:  lazy<T>(() => {
+src/App.tsx:150:const PerformanceTest = lazy(() =>
+src/App.tsx:155:const KnowledgeFusionPage = lazy(() => import('./ui/pages/KnowledgeFusionPage'));
+src/App.tsx:156:const CreationStudio = lazy(() => import('./ui/pages/CreationStudio'));
+src/App.tsx:157:const EvolutionMonitor = lazy(() => import('./ui/pages/EvolutionMonitor'));
+src/App.tsx:160:const AdminPage = lazy(() =>
+src/App.tsx:163:const TitanePage = lazyWithTimeout(
+src/App.tsx:171:const OrchestrationMetaCenter = lazy(() =>
+src/App.tsx:176:const DevPage = lazy(() => import('./pages/DevPage').then(m => ({ default: m.DevPage })));
+src/App.tsx:177:const PerfectFusionDashboard = lazy(() =>
+src/App.tsx:182:const UltimateOptimizationDashboard = lazy(() =>
+src/App.tsx:189:const RealityCenter = lazy(() =>
+src/App.tsx:196:const ConsoleMonitorDashboard = lazy(() =>
+src/App.tsx:203:const PredictiveDashboard = lazy(() =>
+src/App.tsx:210:const HyperCenter = lazy(() =>
+src/App.tsx:217:const QuantumCenter = lazy(() =>
+src/App.tsx:224:const IdentityCenter = lazy(() =>
+src/App.tsx:231:const MemoryEvolutionCenter = lazy(() =>
+src/App.tsx:238:const CloudCenter = lazy(() =>
+src/App.tsx:242:const OrchestrationIntelligenceCenter = lazy(
+src/App.tsx:247:const Sentinel = lazy(() =>
+src/App.tsx:250:const Watchdog = lazy(() =>
+src/App.tsx:253:const SelfHeal = lazy(() =>
+src/App.tsx:256:const AdaptiveEngine = lazy(() =>
+src/App.tsx:259:const Memory = lazy(() => import('./pages/Memory').then(m => ({ default: m.Memory })));
+src/App.tsx:260:const ResearchPage = lazy(() =>
+src/App.tsx:281:    emitBootMarker('BOOT:AFTER_ROUTER');
+src/App.tsx:282:    emitBootMarker('BOOT:BEFORE_ORCHESTRATOR');
+src/App.tsx:283:    emitBootMarker('BOOT:BEFORE_ORCHESTRATOR_INIT');
+src/App.tsx:532:  // ✨ OPT-7 - Initialize i18n asynchronously (non-blocking, lazy-loaded)
+src/App.tsx:539:        logger.warn('i18n lazy initialization failed', {
+src/App.tsx:550:    // OPT-12: Import dynamique complet (évite circular dependency + lazy-load)
+src/App.tsx:752:  // ✨ PHASE 4.2 - Désactivé temporairement (engines stubés pour lazy loading)
+src/App.tsx:784:  // ✨ PHASE 4.2 - Désactivé temporairement (engines stubés pour lazy loading)
+src/App.tsx:840:    emitBootMarker('BOOT:AFTER_ORCHESTRATOR');
+src/App.tsx:841:    emitBootMarker('BOOT:AFTER_ORCHESTRATOR_INIT');
+src/App.tsx:842:    emitBootMarker('BOOT:READY');
+src/App.tsx:1021:      {/* Phase 9: Suspense boundary for lazy-loaded routes */}
+src/App.tsx:1258:          {/* v∞ Phases 5-10 - Knowledge, Creation, Evolution (Phase 9: lazy loaded) */}
+src/App.tsx:1279:          {/* System Routes (Phase 9: lazy loaded) */}
+src/os/bridge/StateBridge.ts:306:// Instance singleton
+src/hooks/useVisualEngine.ts:82:  // Engine instance (singleton pattern)
+src/os/lifecycle/LifecycleManager.ts:228:// Instance singleton
+src/hooks/index.ts:399:// ✨ PHASE 4.2 - Temporairement commenté pour lazy loading (réduire bundle)
+src/hooks/index.ts:693:// ✨ PHASE 4.2 - Temporairement commenté pour lazy loading
+src/os/bus/MessageBus.ts:239:// Instance singleton
+src/os/bus/EventBus.ts:220:// Instance singleton
+src/os/TitaneOS.ts:56:    // Initialiser les sous-systèmes (singletons)
+src/modules/avatar/floating/AvatarFloatingWindow.tsx:88:    // v36.0.0: Async initialization with Three.js lazy-loading
+src/os/registry/EngineRegistry.ts:279:// Instance singleton
+src/os/registry/ServiceRegistry.ts:232:// Instance singleton
+src/modules/avatar/floating/ThreeJSAvatarRenderer.ts:3://   v36 OPT: Three.js lazy-loading (-536 KB gzip on initial bundle)
+src/modules/avatar/floating/ThreeJSAvatarRenderer.ts:46:  private renderer: any = null; // THREE.WebGLRenderer (lazy-loaded)
+src/modules/avatar/floating/ThreeJSAvatarRenderer.ts:90:   * v36.0.0: Async initialization with Three.js lazy-loading
+src/config/featureFlags.ts:84:  ENABLE_LOCAL_LLM: true, // Ollama via proxy (optional)
+src/config/featureFlags.ts:93:    ollama: true, // Local Ollama via proxy (optional)
+src/visual-engine/TitaneVisualEngine.ts:72:    // En tests, on évite les fuites d'état d'un singleton entre suites.
+src/utils/safeLazyImport.ts:5: * **Stratégie:** Fallback UI si lazy import échoue
+src/utils/safeLazyImport.ts:17: * Composant fallback pour imports lazy échoués
+src/utils/safeLazyImport.ts:78: * Wrapper sécurisé pour React.lazy()
+src/utils/safeLazyImport.ts:92:  return React.lazy(async () => {
+src/utils/safeLazyImport.ts:116:  return React.lazy(async () => {
+src/utils/safeLazyImport.ts:152: * Diagnostic des imports lazy
+src/utils/safeLazyImport.ts:154:export const lazyImportDiagnostic = {
+src/utils/safeLazyImport.ts:170:   * Log les stats des imports lazy
+src/lib/tauriClient.ts:3427: * Instance unique du client Tauri (singleton)
+src/utils/routePreloading.ts:26: * Map of routes to their lazy-loaded chunk paths
+src/services/api/numericTwin.ts:273:/** Instance singleton */
+src/utils/lazyImportDiagnostic.ts:36:export const lazyWithDiagnostic = <T extends React.ComponentType<any>>(
+src/utils/lazyImportDiagnostic.ts:40:  return React.lazy(async () => {
+src/utils/lazyImportDiagnostic.ts:74:export const lazyWithTimeout = <T extends React.ComponentType<any>>(
+src/utils/lazyImportDiagnostic.ts:80:  return React.lazy(async () => {
+src/utils/lazyImportDiagnostic.ts:116:export { lazyWithDiagnostic as default };
+src/modules/avatar/rendering/PostProcessingPipeline.ts:2://   TITANE∞ v25.3.0 — POST-PROCESSING PIPELINE (YOLO OPT-1: Three.js lazy)
+src/modules/avatar/rendering/PostProcessingPipeline.ts:117:   * YOLO OPT-1: Async initialization after Three.js lazy-load
+src/services/api/persona.ts:232: * Instance singleton
+src/modules/avatar/rendering/StudioLightingRig.ts:2://   TITANE∞ v25.3.0 — STUDIO LIGHTING RIG (YOLO OPT-1: Three.js lazy)
+src/modules/avatar/rendering/StudioLightingRig.ts:121:   * YOLO OPT-1: Async initialization after Three.js lazy-load
+src/utils/enhancedLazySystem.ts:53: * Système de chargement lazy avancé avec toutes les optimisations
+src/utils/enhancedLazySystem.ts:69:  const finalCacheKey = cacheKey || `enhanced-lazy:${moduleName}`;
+src/utils/enhancedLazySystem.ts:71:  // Composant lazy avec tous les systèmes intégrés
+src/utils/enhancedLazySystem.ts:72:  const lazyComponent = React.lazy(async () => {
+src/utils/enhancedLazySystem.ts:123:          performanceOptimizer.recordBenchmark('enhanced_lazy_import', loadTime, {
+src/utils/enhancedLazySystem.ts:246:    component: lazyComponent as any,
+src/utils/enhancedLazySystem.ts:255:export const lazyWithAdvancedDiagnostic = <T extends React.ComponentType<any>>(
+src/utils/enhancedLazySystem.ts:278:      `enhanced-lazy:${moduleName}`,
+src/utils/enhancedLazySystem.ts:279:      `lazy:${moduleName}`,
+src/utils/enhancedLazySystem.ts:409:      (window as any).TITANE_ANALYTICS.track('lazy_load_diagnostic', info);
+src/utils/enhancedLazySystem.ts:445:export { lazyWithDiagnostic } from './lazyImportDiagnostic';
+src/utils/enhancedLazySystem.ts:450:  lazyWithAdvancedDiagnostic,
+src/services/api/voice.ts:112:      // Check if already recording (prevent double-call)
+src/services/api/voice.ts:369: * Instance singleton
+src/utils/performanceProfiler.ts:106:   * Get singleton instance
+src/utils/quantumOrchestrator.ts:785:// Instance singleton
+src/services/api/chat.ts:1486: * Instance singleton
+src/modules/avatar/gesture/BodyGestureFluidityEngine.ts:2://   TITANE∞ v25.3.0 — BODY GESTURE FLUIDITY ENGINE (YOLO OPT-1: Three.js lazy)
+src/utils/webVitals.ts:216:      recommendations.push('→ Optimiser images (WebP, lazy loading)');
+src/services/api/system.ts:280: * Instance singleton
+src/services/api/evolution.ts:313: * Instance singleton
+src/utils/bootRecoverySystem.ts:67:        requirements: ['DOM_READY'],
+src/utils/bootRecoverySystem.ts:77:        requirements: ['DOM_READY'],
+src/utils/bootRecoverySystem.ts:87:        requirements: ['DOM_READY'],
+src/utils/bootRecoverySystem.ts:608:        case 'DOM_READY':
+src/utils/bootRecoverySystem.ts:769:// Démarrage automatique au chargement (désactivé par défaut pour éviter les double-mount)
+src/services/ragService.ts:362:// Export singleton instance
+src/utils/bootSafetyLock.ts:10: * État global du boot - Module scope (singleton strict)
+src/services/chat/moduleRouteContext.ts:155:    limits: ['panel-content-varies-by-lazy-module'],
+src/utils/selfHealingSystem.ts:131:        id: 'restart_lazy_modules',
+src/utils/selfHealingSystem.ts:133:        description: 'Redémarre les modules lazy qui ont échoué lors du chargement',
+src/utils/selfHealingSystem.ts:234:        actions: ['clear_cache', 'restart_lazy_modules', 'preload_critical_modules'],
+src-tauri/src/conversation_engine/commands.rs:1521:        Some("double") => ProcessingMode::Double,
+src-tauri/src/conversation_engine/commands.rs:1664:        "double_version" => WritingMode::DoubleVersion,
+src/tests/chat-ia-interface.test.tsx:152:    // Assistant message uses lazy-loaded markdown, wait for it
+src/modules/avatar/core/AudioVisualSyncEngine.ts:2://   TITANE∞ v25.3.0 — AUDIO-VISUAL SYNC ENGINE (YOLO OPT-1: Three.js lazy)
+src/modules/avatar/core/AudioVisualSyncEngine.ts:114:   * YOLO OPT-1: Async initialization after Three.js lazy-load
+src/modules/avatar/core/AudioVisualSyncEngine.ts:117:    // Three.js is now directly imported (no lazy-loading needed)
+src/utils/logger.ts:73: * Logger singleton avec conditional logging
+src/utils/logger.ts:229: * Export singleton par défaut
+src/utils/ollamaFallback.ts:3: * Fallback via proxy Ollama quand le backend Tauri est indisponible
+src/utils/ollamaFallback.ts:32: * Appel via proxy Ollama (fallback mode)
+src/services/adminEngine/logEngine.ts:722: * Récupère l'instance singleton du LogEngine
+src/services/adminEngine/logEngine.ts:732: * Réinitialise l'instance singleton (pour tests)
+src/tests/voice/voiceE2ETests.ts:222:  it('should prevent double start recording', async () => {
+src/utils/imageOptimization.tsx:5: * Provides image lazy-loading and preloading strategies
+src/utils/imageOptimization.tsx:29: * Replaces native loading="lazy" for older browsers
+src/utils/imageOptimization.tsx:67:    loading: 'lazy' as const,
+src/utils/imageOptimization.tsx:249:  loading?: 'lazy' | 'eager';
+src/utils/imageOptimization.tsx:262:  loading = 'lazy',
+src/utils/imageOptimization.tsx:267:    <div className="lazy-image-container">
+src/modules/dataCollector/DataCollectorEngine.ts:617:echo "  Status: ✅ READY"
+src/utils/advancedBootMonitor.ts:107:   * Enregistre l'échec d'un module lazy
+src/utils/advancedBootMonitor.ts:130:   * Enregistre le succès d'un module lazy
+src/utils/advancedBootMonitor.ts:182:          if (resource.name.includes('chunk-') || resource.name.includes('.lazy.')) {
+src/utils/advancedBootMonitor.ts:435:// Intégration avec le système de diagnostic lazy
+src/utils/advancedBootMonitor.ts:437:  // Cette fonction sera appelée depuis lazyImportDiagnostic.ts
+src/utils/lazyEngineLoader.tsx:107: * Hook for lazy loading an engine
+src/utils/lazyEngineLoader.tsx:174: * Hook for conditionally lazy loading an engine
+src/utils/lazyEngineLoader.tsx:239: * HOC for wrapping components that need lazy engines
+src/utils/lazyEngineLoader.tsx:341: * // VoicePage.tsx - lazy loaded
+src/utils/lazyComponentLoader.tsx:41:export function lazyComponent<P extends object = {}>(
+src/utils/lazyComponentLoader.tsx:53:    logger.debug(`[lazyComponent] Loading: ${label}`);
+src/utils/lazyComponentLoader.tsx:64:        logger.debug(`[lazyComponent] Loaded: ${label}`);
+src/utils/lazyComponentLoader.tsx:70:        logger.warn(`[lazyComponent] Retrying ${label}...`);
+src/utils/lazyComponentLoader.tsx:73:      logger.error(`[lazyComponent] Failed to load ${label}: ${errorMsg}`);
+src/utils/lazyComponentLoader.tsx:78:  return React.lazy(wrappedImport);
+src/utils/lazyComponentLoader.tsx:99: * Preload a lazy component
+src/utils/lazyComponentLoader.tsx:125: * Measure lazy component load time
+src/stories/LazyImage.stories.tsx:12: * - ✅ Native loading="lazy" fallback (97%+ support)
+src/stories/LazyImage.stories.tsx:149: * LazyImage grid - Multiple images lazy-loading
+src/stories/LazyImage.stories.tsx:152: * Scroll down to see lazy-loading in action (DevTools Network).
+src/stories/LazyImage.stories.tsx:158:        Scroll down to see lazy-loading (check DevTools Network)
+src/stories/LazyImage.stories.tsx:201:        Only images in viewport load initially (lazy-loading active)
+src/stories/LazyImage.stories.tsx:310:          <br />✅ TTI: -300ms (lazy non-critical images)
+src/components/sections/MemorySection.tsx:52:const LazyMemoryDashboard = React.lazy(() =>
+src/components/sections/MemorySection.tsx:58:const LazyMemoryTreeViewer = React.lazy(() =>
+src/components/sections/MemorySection.tsx:64:const LazyMemorySearchPanel = React.lazy(() =>
+src/components/sections/IdentitySection.tsx:24:const LazyModeMatrix = React.lazy(() =>
+src/components/sections/IdentitySection.tsx:30:const LazyPersonaEditor = React.lazy(() =>
+src/components/sections/IdentitySection.tsx:36:const LazyIdentityCenter = React.lazy(
+src/components/sections/VisionSection.tsx:88:const LazyDetectionOverlay = React.lazy(() =>
+src/components/sections/VisionSection.tsx:94:const LazyVisionMetricsChart = React.lazy(() =>
+src/components/sections/MemoryEvolutionSection.tsx:23:const LazyMemoryEvolutionCenter = React.lazy(
+src/components/sections/MemoryEvolutionSection.tsx:27:const LazyEvolutionTimeline = React.lazy(() =>
+src/services/tts/hybridTTS.ts:710:// Export singleton
+src/services/tts/parlerTTSBridge.ts:205: * Instance singleton
+src/components/sections/OverviewSection.tsx:36:const LazyRealTimeCharts = React.lazy(() =>
+src/components/sections/TransformationSection.tsx:23:const LazyTransformationRoadmap = React.lazy(() =>
+src/services/tts/ttsEngineService.ts:673: * Get TTS Engine singleton instance
+src/services/tts/emotionAnalyzer.ts:498:/** Instance singleton de l'analyseur */
+src/services/tts/emotionAnalyzer.ts:502: * Obtient l'instance singleton de l'analyseur
+src/components/diagnostics/SplashWatchdog.tsx:51:      (window as Window & { __TITANE_BOOT_READY__?: boolean }).__TITANE_BOOT_READY__ ===
+src/components/diagnostics/SplashWatchdog.tsx:59:  if (stage === 'BOOT:READY') {
+src/components/diagnostics/SplashWatchdog.tsx:63:  if (stage === 'BOOT:AFTER_ORCHESTRATOR' || stage === 'BOOT:AFTER_ORCHESTRATOR_INIT') {
+src/components/diagnostics/SplashWatchdog.tsx:79:  if (stage.startsWith('BOOT:')) {
+src/components/diagnostics/SplashWatchdog.tsx:80:    return !fallbackVisible && stage.includes('READY');
+src/services/audio/audioSelfHeal.ts:318:// Export singleton
+src/services/audio/audioStreaming.ts:283:// Export singleton instance
+src/types/ui-layout-contract.ts:90: * Registry singleton pour tracker les composants de navigation actifs
+src/services/selfHealing/__tests__/selfHealing.test.ts:19:    // Reset singleton for each test
+src/types/performanceEngine.ts:122:  | 'lazy_loading'
+src/components/ui/LazyImage.tsx:27: * - Intersection Observer lazy-loading
+src/components/ui/LazyImage.tsx:28: * - Native loading="lazy" fallback
+src/components/ui/LazyImage.tsx:64:    // Intersection Observer for lazy-loading
+src/components/ui/LazyImage.tsx:129:      loading="lazy" // Native lazy-loading fallback (97%+ support)
+src/services/orchestration/__tests__/UnifiedOrchestrator.test.ts:44:          mcp: { enabled: true, lazyLoad: false, priority: 100 },
+src/services/orchestration/__tests__/UnifiedOrchestrator.test.ts:45:          cognitive: { enabled: false, lazyLoad: true, priority: 90 },
+src/services/orchestration/__tests__/UnifiedOrchestrator.test.ts:75:          quantum: { enabled: false, lazyLoad: true, priority: 70 },
+src/services/orchestration/__tests__/UnifiedOrchestrator.test.ts:183:          quantum: { enabled: false, lazyLoad: false, priority: 70 },
+src/services/orchestration/__tests__/UnifiedOrchestrator.test.ts:277:          mcp: { enabled: false, lazyLoad: false, priority: 100 },
+src/services/orchestration/__tests__/UnifiedOrchestrator.test.ts:278:          cognitive: { enabled: false, lazyLoad: false, priority: 90 },
+src/services/orchestration/__tests__/UnifiedOrchestrator.test.ts:279:          ai: { enabled: false, lazyLoad: false, priority: 80 },
+src/services/orchestration/__tests__/UnifiedOrchestrator.test.ts:280:          quantum: { enabled: false, lazyLoad: false, priority: 70 },
+src/services/orchestration/__tests__/UnifiedOrchestrator.test.ts:346:    it('should support lazy loading of strategies', async () => {
+src/services/orchestration/__tests__/UnifiedOrchestrator.test.ts:349:          ai: { enabled: true, lazyLoad: true, priority: 80 },
+src/services/orchestration/__tests__/UnifiedOrchestrator.test.ts:353:      const lazyOrchestrator = new UnifiedOrchestrator(config);
+src/services/orchestration/__tests__/UnifiedOrchestrator.test.ts:354:      await lazyOrchestrator.initialize();
+src/services/orchestration/__tests__/UnifiedOrchestrator.test.ts:357:      const aiStrategy = await lazyOrchestrator.getStrategy('ai');
+src/services/orchestration/__tests__/UnifiedOrchestrator.test.ts:360:      await lazyOrchestrator.shutdown();
+src/services/orchestration/__tests__/UnifiedOrchestrator.test.ts:366:          mcp: { enabled: true, lazyLoad: true, priority: 100 },
+src/services/orchestration/__tests__/UnifiedOrchestrator.test.ts:367:          cognitive: { enabled: true, lazyLoad: true, priority: 90 },
+src/services/orchestration/__tests__/UnifiedOrchestrator.test.ts:368:          ai: { enabled: true, lazyLoad: true, priority: 80 },
+src/components/ui/LazyImage.css:7:.lazy-image {
+src/components/ui/LazyImage.css:23:.lazy-image.loading {
+src/components/ui/LazyImage.css:32:.lazy-image.loaded {
+src/components/ui/LazyImage.css:39:.lazy-image.error {
+src/components/ui/LazyImage.css:47:  .lazy-image {
+src/components/ui/LazyImage.css:52:  .lazy-image.loading {
+src/components/ui/LazyImage.css:61:  .lazy-image.loading {
+src/components/ui/LazyImage.css:68:  .lazy-image {
+src/components/performance/MetricsGraph.tsx:8:import React, { useMemo, useCallback, useState, lazy, Suspense } from 'react';
+src/components/performance/MetricsGraph.tsx:12:const LazyLineChart = lazy(() =>
+src/components/performance/MetricsGraph.tsx:15:const LazyAreaChart = lazy(() =>
+src/components/performance/MetricsGraph.tsx:18:const LazyLine = lazy(() => import('recharts').then(m => ({ default: m.Line })));
+src/components/performance/MetricsGraph.tsx:19:const LazyArea = lazy(() => import('recharts').then(m => ({ default: m.Area })));
+src/components/performance/MetricsGraph.tsx:20:const LazyXAxis = lazy(() => import('recharts').then(m => ({ default: m.XAxis })));
+src/components/performance/MetricsGraph.tsx:21:const LazyYAxis = lazy(() => import('recharts').then(m => ({ default: m.YAxis })));
+src/components/performance/MetricsGraph.tsx:22:const LazyCartesianGrid = lazy(() =>
+src/components/performance/MetricsGraph.tsx:25:const LazyTooltip = lazy(() => import('recharts').then(m => ({ default: m.Tooltip })));
+src/components/performance/MetricsGraph.tsx:26:const LazyResponsiveContainer = lazy(() =>
+src/components/performance/MetricsGraph.tsx:29:const LazyReferenceLine = lazy(() =>
+src/components/performance/MetricsGraph.tsx:377:  // Rendu du graphique avec lazy Recharts
+src/components/performance/MetricsGraph.tsx:379:    // YOLO OPT: Composants lazy-loadés
+src/components/Onboarding/OnboardingFlow.css:799:   READY STEP
+src/services/orchestration/UnifiedOrchestrator.ts:35:    mcp: { enabled: true, lazyLoad: true, priority: 100 },
+src/services/orchestration/UnifiedOrchestrator.ts:36:    cognitive: { enabled: true, lazyLoad: true, priority: 90 },
+src/services/orchestration/UnifiedOrchestrator.ts:37:    ai: { enabled: true, lazyLoad: true, priority: 80 },
+src/services/orchestration/UnifiedOrchestrator.ts:38:    quantum: { enabled: false, lazyLoad: true, priority: 70 },
+src/services/orchestration/UnifiedOrchestrator.ts:66:    this.log('UnifiedOrchestrator created (lazy init enabled)');
+src/services/orchestration/UnifiedOrchestrator.ts:95:          if (!this.config.strategies[type]?.lazyLoad) {
+src/services/orchestration/UnifiedOrchestrator.ts:120:   * Load strategy dynamically (lazy loading)
+src/services/orchestration/UnifiedOrchestrator.ts:164:   * Get strategy by type (lazy load if needed)
+src/services/orchestration/UnifiedOrchestrator.ts:186:    // Initialize strategy if lazy-loaded
+src/components/chat/VirtualizedMessageList.tsx:43:const SimpleMessageList = React.lazy(() =>
+src/services/orchestration/strategies/MCPStrategy.ts:62:    // MCP Orchestrator is already initialized as singleton
+src/services/orchestration/strategies/MCPStrategy.ts:426:    // MCP Orchestrator is a singleton, don't shut it down
+src/ui/pages/ChatIA/InstructionModeManager.ts:260:// Instance singleton
+src/components/chat/MessageList.test.tsx:3: * v24.3.0: Use waitFor for lazy-loaded markdown content
+src/components/chat/MessageList.test.tsx:27:    // Wait for lazy-loaded markdown to render
+src/services/orchestration/strategies/CognitiveStrategy.ts:54:    // Cognitive Omega Orchestrator uses lazy initialization
+src/services/orchestration/strategies/CognitiveStrategy.ts:387:    // Cognitive Omega Orchestrator is a singleton, preserve it
+src/components/panels/GovernancePanel.tsx:39:// a fresh object each time. The tests expect singleton behavior.
+src/components/panels/GovernancePanel.tsx:46:    const singleton = checkerModule.getInstance();
+src/components/panels/GovernancePanel.tsx:48:      checkerModule.getInstance = () => singleton;
+src/services/orchestration/strategies/AIStrategy.ts:58:    // AI Orchestrators are already initialized as singletons
+src/services/orchestration/strategies/AIStrategy.ts:430:    // AI Orchestrators are singletons, preserve them
+src/services/orchestration/types.ts:202:   * Initialize strategy (lazy loading)
+src/services/orchestration/types.ts:335:  lazyLoad: boolean;
+src/components/chat/ChatInput.tsx:337:        // Marquer comme envoyé pour éviter les doubles
+src/services/performanceEngine/index.ts:566: * Récupère l'instance singleton du Performance Engine
+src/services/performanceEngine/index.ts:576: * Réinitialise l'instance singleton (pour les tests)
+src/ui/pages/ControlPanel/components/ControlPanelLayout.tsx:66:    description: 'Connectivité et proxy',
+src/components/chat/CodeBlock.tsx:119:      'double',
+src/services/performanceEngine/performanceEngine.config.ts:220:    lazyLoaded: number;
+src/services/performanceEngine/performanceEngine.config.ts:1501:      bundle: { totalSize: 0, modulesLoaded: 0, lazyLoaded: 0 },
+src/services/performanceEngine/metricsCollector.ts:521:   * Obtient l'instance singleton
+src/services/performanceEngine/metricsCollector.ts:795:        lazyLoaded: 0,
+src/ui/pages/ControlPanel/ControlPanel.tsx:4: * Optimisé avec lazy loading pour réduire le bundle initial
+src/ui/pages/ControlPanel/ControlPanel.tsx:10:import React, { useState, useEffect, lazy, Suspense, useCallback, memo } from 'react';
+src/ui/pages/ControlPanel/ControlPanel.tsx:24:const SystemSection = lazy(() =>
+src/ui/pages/ControlPanel/ControlPanel.tsx:29:const AppearanceSection = lazy(() =>
+src/ui/pages/ControlPanel/ControlPanel.tsx:34:const SingularitySection = lazy(() =>
+src/ui/pages/ControlPanel/ControlPanel.tsx:39:const AISection = lazy(() =>
+src/ui/pages/ControlPanel/ControlPanel.tsx:44:const MemorySection = lazy(() =>
+src/ui/pages/ControlPanel/ControlPanel.tsx:49:const ModulesSection = lazy(() =>
+src/ui/pages/ControlPanel/ControlPanel.tsx:54:const NetworkSection = lazy(() =>
+src/ui/pages/ControlPanel/ControlPanel.tsx:59:const UpdatesSection = lazy(() =>
+src/ui/pages/ControlPanel/ControlPanel.tsx:64:const LogsSection = lazy(() =>
+src/ui/pages/ControlPanel/ControlPanel.tsx:69:const SecuritySection = lazy(() =>
+src/ui/pages/ControlPanel/ControlPanel.tsx:129:    // Mapping des sections vers les composants lazy-loaded
+src/services/aiChatClient.ts:208:// Export singleton instance
+src/services/autoAuditEngine.ts:527:// Instance singleton
+src/services/adminEngine/actionsEngine.ts:510: * Récupère l'instance singleton du ActionsEngine
+src/services/adminEngine/actionsEngine.ts:520: * Réinitialise l'instance singleton (pour tests)
+src/services/voice/wakeWordEngine.ts:551: * Instance singleton
+src/services/adminEngine/index.ts:405: * Récupère l'instance singleton de l'Admin Engine
+src/services/adminEngine/index.ts:415: * Réinitialise l'instance singleton (pour tests)
+src/services/evolutionEngine/collector.ts:726: * Récupère l'instance singleton du Collector
+src/services/evolutionEngine/collector.ts:736: * Réinitialise l'instance singleton (pour tests)
+src/services/voice/contextualAttentionV2.ts:251:   * Calculer variance spectrale (proxy pour voix multiples)
+src/services/personaTauriBridge.ts:299:// Export singleton
+src/ui/pages/ControlPanel/sections/NetworkSection.tsx:3: * Configuration connectivité et proxy
+src/ui/pages/ControlPanel/sections/NetworkSection.tsx:13:  proxy_enabled: boolean;
+src/ui/pages/ControlPanel/sections/NetworkSection.tsx:14:  proxy_url: string;
+src/ui/pages/ControlPanel/sections/NetworkSection.tsx:20:  proxy_enabled: false,
+src/ui/pages/ControlPanel/sections/NetworkSection.tsx:21:  proxy_url: '',
+src/ui/pages/ControlPanel/sections/NetworkSection.tsx:43:    setConfig(prev => ({ ...prev, proxy_enabled: !prev.proxy_enabled }));
+src/ui/pages/ControlPanel/sections/NetworkSection.tsx:48:      setConfig(prev => ({ ...prev, proxy_url: e.target.value }));
+src/ui/pages/ControlPanel/sections/NetworkSection.tsx:87:        <h3 className="cp-card-title">Configuration proxy</h3>
+src/ui/pages/ControlPanel/sections/NetworkSection.tsx:90:            checked={config.proxy_enabled}
+src/ui/pages/ControlPanel/sections/NetworkSection.tsx:92:            title="Activer le proxy"
+src/ui/pages/ControlPanel/sections/NetworkSection.tsx:95:          {config.proxy_enabled && (
+src/ui/pages/ControlPanel/sections/NetworkSection.tsx:97:              <label className="cp-input-label">URL du proxy</label>
+src/ui/pages/ControlPanel/sections/NetworkSection.tsx:101:                value={config.proxy_url}
+src/ui/pages/ControlPanel/sections/NetworkSection.tsx:103:                placeholder="proxy.exemple:8080"
+src/services/evolutionEngine/index.ts:600: * Récupère l'instance singleton de l'Evolution Engine
+src/services/evolutionEngine/index.ts:610: * Réinitialise l'instance singleton (pour tests)
+src/services/voice/emotionalAnalyzer.ts:452: * Instance singleton
+src/services/monitoring/alerting.ts:419: * Instance singleton du système d'alertes
+src/services/lazy.ts:4: * Ring 3 (Services) lazy-loading module for on-demand service imports.
+src/services/voice/adaptiveThresholdEngine.ts:341: * Instance singleton
+src/services/monitoring/chatMetrics.ts:392: * Instance singleton du service
+src/services/monitoring/index.ts:9: *   Monitoring infrastructure lazy-loaded to reduce main bundle
+src/services/monitoring/index.ts:13:// Export lazy loader functions
+src/services/monitoring/index.ts:31:// ✅ OPT-9 FIX: All exports now through lazy loader (no static sentry.ts import)
+src/services/monitoring/index.ts:33:// Use: initMonitoringAsync() instead of initSentry() for lazy initialization
+src/services/monitoring/monitoringLazyLoader.ts:5: * Pattern: Promise-based singleton with loading state tracking
+src/services/monitoring/monitoringLazyLoader.ts:15: * Get monitoring module (lazy-loaded, cached)
+src/services/voice/emotionalTTS.ts:142: * Instance singleton
+src/services/evolutionEngine/evolutionEngine.bindings.ts:489:   * Obtenir l'instance singleton
+src/services/evolutionEngine/evolutionEngine.bindings.ts:577:// Export par défaut du client singleton
+src/services/monitoring/consoleMonitor.ts:588:// Initialize on first use (lazy load to avoid boot loops)
+src/services/monitoring/logger.ts:320: * Instance singleton du logger
+src/services/cache/predictivePreloader.ts:234:// Instance singleton
+src/services/voice/interruptionController.ts:234: * Instance singleton
+src/services/voice/vocalMicroFXEngine.ts:333: * Instance singleton
+src/services/voice/index.ts:4: * Central export point for voice services lazy loading.
+src/services/voice/index.ts:8:// Main engine instances (singleton exports from each module)
+src/services/systemCenter/SystemCenterAutoFix.ts:549:        `Modules: ${moduleErrors.length} module(s) nécessite(nt) isolation ou lazy loading`
+src/services/voice/voiceFingerprint.ts:153:    // 4. Tempo (zero-crossing rate as proxy)
+src/services/voice/voiceFingerprint.ts:180:    // Placeholder: use spectral features as proxy
+src/services/userPreferencesEngine.ts:544:// Export singleton
+src/services/voice/attentionEngine.ts:406: * Instance singleton
+src/services/voice/autonomicReactionEngine.ts:430: * Instance singleton
+src/services/voice/prosodyEngine.ts:288: * Instance singleton
+src/services/cache/responseCache.ts:491:// Instance singleton
+src/services/voice/emotionalStateEstimator.ts:693: * Instance singleton
+src/services/cognitive/cognitiveOmegaIntegration.ts:104:    this.log('CognitiveOmegaOrchestrator created (lazy init)');
+src/services/cognitive/ConversationEvaluationEngine.ts:395:    // Semantic similarity proxy (simple keyword overlap)
+src/services/ai/system.ts:26:// ⚠️ v37.1.0: Cloud providers now lazy-loaded via AIProviderLazyLoader
+src/services/ai/system.ts:36:// ℹ️ Previously lazy-loaded, but metaKernel.ts uses static imports
+src/services/ai/AIProviderLazyLoader.ts:159: * Cached provider instances (singleton pattern)
+src/services/ia/__tests__/ia.api.test.ts:77:        const result = IAService.validateKeyFormat('ollama', 'ollama-proxy-endpoint');
+src/services/providers/parallelLoader.ts:113:   * Charge un provider lazy et lance le health check
+src/services/providers/parallelLoader.ts:238:    const lazyName = this.normalizeProviderName(normalized);
+src/services/providers/parallelLoader.ts:239:    if (!lazyName) {
+src/services/providers/parallelLoader.ts:248:    return this.loadAndCheck(lazyName, 3000);
+src/services/providers/parallelLoader.ts:271:// Instance singleton
+src/services/ai/ConversationManager.ts:580: * Export singleton instance
+src/services/ai/contextManager.ts:506: * Global instance (singleton pattern)
+src/services/ai/chatModes.config.ts:273:• Les clés et valeurs doivent être entre guillemets doubles
+src/services/ai/orchestrator.ts:32:// v37.0.0: Cloud providers lazy-loaded on first use (OpenAI, Claude, Gemini, Copilot)
+src/services/ai/orchestrator.ts:127:  private lazyProviderNames: LazyProviderName[] = [
+src/services/ai/orchestrator.ts:359:    // Initialize placeholder stats for lazy providers
+src/services/ai/orchestrator.ts:360:    this.lazyProviderNames.forEach(providerName => {
+src/services/ai/orchestrator.ts:989:        // If not found in eager list, try lazy-loading
+src/services/ai/orchestrator.ts:992:          this.lazyProviderNames.includes(providerName as LazyProviderName)
+src/services/ai/providers/ollama.ts:80:export let IS_OLLAMA_READY = false;
+src/services/ai/providers/ollama.ts:180:    IS_OLLAMA_READY = healthy; // ✅ AUDIT FIX #3: Set boot ready gate
+src/services/ai/providers/ollama.ts:197:    IS_OLLAMA_READY = false; // ✅ AUDIT FIX #3: Mark not ready on error
+src/services/ai/providers/ollama.ts:626:        // Don't double-handle errors already processed
+src/services/ai/index.ts:42:// ✨ Direct exports of AI engines (no lazy loading)
+src/services/ai/index.ts:74:// ⚠️ v37.1.0: Cloud providers lazy-loaded via AIProviderLazyLoader
+src/services/cache/cachePersistence.ts:306:// Instance singleton
+src/services/adminEngine/stateAggregator.ts:625: * Récupère l'instance singleton du StateAggregator
+src/services/adminEngine/stateAggregator.ts:635: * Réinitialise l'instance singleton (pour tests)
+src-tauri/src/commands/state_bridge_commands.rs:15:lazy_static::lazy_static! {
+src/tests/voice/voiceArchitectureTests.ts:237:  it('should handle double start breathing', () => {

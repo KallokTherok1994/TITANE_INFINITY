@@ -7,9 +7,11 @@
  */
 
 // TITANE∞ v15 - Memory Core Hook
+// Compatibility bridge: now backed by persistent memory reads/writes for the
+// active frontend path, while keeping the legacy hook surface stable.
 import { useState, useCallback, useMemo } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
-import { memoryService } from '../services/api';
+import { normalizePersistentMemoryReadResponse } from '@/services/memory/persistentMemory.normalize';
 import type { MemoryEntry } from '../core/ARCHITECTURE_TYPES_v∞';
 
 interface MemoryState {
@@ -17,6 +19,8 @@ interface MemoryState {
   total: number;
   encrypted_count: number;
 }
+
+const ALL_PERSISTENT_LEVELS = ['session', 'intermediate', 'long_term'] as const;
 
 /**
  * Normalize memory state with validation and type safety
@@ -50,6 +54,30 @@ const normalizeMemoryState = (
       typeof state?.encrypted_count === 'number' ? state.encrypted_count : encryptedCount,
   };
 };
+
+const mapPersistentEntryToCoreEntry = (entry: Record<string, any>): MemoryEntry => ({
+  id: typeof entry.id === 'string' ? entry.id : `memory-${Date.now()}`,
+  content: typeof entry.content === 'string' ? entry.content : '',
+  timestamp:
+    typeof entry?.metadata?.createdAt === 'number'
+      ? entry.metadata.createdAt
+      : typeof entry?.metadata?.updatedAt === 'number'
+        ? entry.metadata.updatedAt
+        : Date.now(),
+  encrypted: entry.level === 'long_term',
+  tags: Array.isArray(entry.tags)
+    ? entry.tags.filter((tag: unknown): tag is string => typeof tag === 'string')
+    : [],
+  metadata:
+    entry && typeof entry === 'object'
+      ? {
+          level: typeof entry.level === 'string' ? entry.level : 'session',
+          topic: typeof entry.topic === 'string' ? entry.topic : 'general',
+          contentType:
+            typeof entry.contentType === 'string' ? entry.contentType : 'message',
+        }
+      : undefined,
+});
 
 export interface UseMemoryCoreReturn {
   entries: MemoryEntry[];
@@ -106,8 +134,22 @@ export const useMemoryCore = (): UseMemoryCoreReturn => {
     try {
       setLoading(true);
       setError(null);
-      const state = (await tauriClient.memoryGetState()) as Partial<MemoryState>;
-      const normalized = memoizedNormalizeMemoryState(state);
+      const response = normalizePersistentMemoryReadResponse(
+        await tauriClient.persistentMemoryRead({
+          levels: [...ALL_PERSISTENT_LEVELS],
+          currentMode: 'default',
+          limit: 500,
+          includeSummaries: false,
+        })
+      );
+      const normalized = memoizedNormalizeMemoryState({
+        entries: response.entries.map(entry =>
+          mapPersistentEntryToCoreEntry(entry as Record<string, any>)
+        ),
+        total: response.totalCount,
+        encrypted_count: response.entries.filter(entry => entry.level === 'long_term')
+          .length,
+      });
       setEntries(normalized.entries);
       return normalized;
     } catch (err) {
@@ -125,12 +167,15 @@ export const useMemoryCore = (): UseMemoryCoreReturn => {
       try {
         setLoading(true);
         setError(null);
-        // Note: memory_save_entry est legacy, utiliser memoryService.saveChatInteraction pour nouvelles interactions
-        await memoryService.saveChatInteraction({
-          userMessage: content,
-          aiResponse: '',
-          mode: 'manual',
-          timestamp: new Date().toISOString(),
+        await tauriClient.persistentMemoryWriteEntry({
+          level: 'session',
+          contentType: 'message',
+          content,
+          topic: 'general',
+          importance: 3,
+          source: 'manual_save',
+          tags: ['memory-core'],
+          modeId: 'default',
         });
         await loadEntries();
       } catch (err) {
@@ -148,8 +193,17 @@ export const useMemoryCore = (): UseMemoryCoreReturn => {
     try {
       setLoading(true);
       setError(null);
-      // Note: memory_clear est legacy, pas de service équivalent - garder invoke direct
-      await tauriClient.memoryClear();
+      const response = normalizePersistentMemoryReadResponse(
+        await tauriClient.persistentMemoryRead({
+          levels: [...ALL_PERSISTENT_LEVELS],
+          currentMode: 'default',
+          limit: 1000,
+          includeSummaries: false,
+        })
+      );
+      for (const entry of response.entries) {
+        await tauriClient.persistentMemoryDeleteEntry({ entryId: entry.id });
+      }
       setEntries([]);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to clear memory';
@@ -162,8 +216,22 @@ export const useMemoryCore = (): UseMemoryCoreReturn => {
 
   const getMemoryState = useCallback(async () => {
     try {
-      const state = (await tauriClient.memoryGetState()) as Partial<MemoryState>;
-      const normalized = memoizedNormalizeMemoryState(state);
+      const response = normalizePersistentMemoryReadResponse(
+        await tauriClient.persistentMemoryRead({
+          levels: [...ALL_PERSISTENT_LEVELS],
+          currentMode: 'default',
+          limit: 500,
+          includeSummaries: false,
+        })
+      );
+      const normalized = memoizedNormalizeMemoryState({
+        entries: response.entries.map(entry =>
+          mapPersistentEntryToCoreEntry(entry as Record<string, any>)
+        ),
+        total: response.totalCount,
+        encrypted_count: response.entries.filter(entry => entry.level === 'long_term')
+          .length,
+      });
       setEntries(normalized.entries);
       return normalized;
     } catch (err) {

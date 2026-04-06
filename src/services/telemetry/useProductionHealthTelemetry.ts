@@ -13,6 +13,42 @@ export interface UseProductionHealthTelemetryOptions {
   autoRefresh?: boolean;
 }
 
+export type ProductionHealthErrorKind =
+  | 'SOURCE_UNAVAILABLE'
+  | 'SOURCE_EMPTY'
+  | 'IPC_ERROR'
+  | 'PARSER_ERROR'
+  | 'SCHEMA_DRIFT'
+  | 'UNKNOWN_ERROR';
+
+function classifyError(msg: string): ProductionHealthErrorKind {
+  if (msg.startsWith('SOURCE_UNAVAILABLE')) return 'SOURCE_UNAVAILABLE';
+  if (msg.startsWith('SOURCE_EMPTY')) return 'SOURCE_EMPTY';
+  // Distinguish schema/parse failures from generic "invalid" IPC shape issues
+  if (msg.startsWith('SCHEMA_DRIFT') || msg.includes('schéma') || msg.includes('schema'))
+    return 'SCHEMA_DRIFT';
+  if (msg.startsWith('PARSER_ERROR') || msg.includes('parse') || msg.includes('CSV'))
+    return 'PARSER_ERROR';
+  if (msg.includes('IPC') || msg.includes('invoke') || msg.includes('tauri'))
+    return 'IPC_ERROR';
+  // "Invalid" alone (without CSV/parse context) is an IPC shape issue, not a parser error
+  if (msg.includes('Invalid telemetry payload') || msg.includes('Invalid CSV'))
+    return 'PARSER_ERROR';
+  return 'UNKNOWN_ERROR';
+}
+
+/**
+ * Extract error message safely from Error instances OR plain TauriError objects.
+ */
+function extractErrorMessage(err: unknown): string {
+  if (err instanceof Error) return err.message;
+  if (err && typeof err === 'object') {
+    const obj = err as Record<string, unknown>;
+    if (typeof obj.message === 'string' && obj.message) return obj.message;
+  }
+  return String(err);
+}
+
 function isProductionHealthSummary(value: unknown): value is ProductionHealthSummary {
   if (!value || typeof value !== 'object') return false;
   const candidate = value as Record<string, unknown>;
@@ -37,11 +73,13 @@ export function useProductionHealthTelemetry(
   const [data, setData] = useState<ProductionHealthSummary | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [errorKind, setErrorKind] = useState<ProductionHealthErrorKind | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const loadData = useCallback(async () => {
     setLoading(true);
     setError(null);
+    setErrorKind(null);
     try {
       const response = await tauriClient.readProductionWeek1Csv();
       if (
@@ -69,15 +107,14 @@ export function useProductionHealthTelemetry(
       const summary = response;
       setData(summary);
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : String(err);
+      const errorMsg = extractErrorMessage(err);
       setError(errorMsg);
-      if (!data) {
-        setData(null);
-      }
+      setErrorKind(classifyError(errorMsg));
+      setData(null); // Always clear stale data on error — no silent fallback
     } finally {
       setLoading(false);
     }
-  }, [data]);
+  }, []); // No dep on `data` — avoids re-creating loadData on every successful fetch
 
   useEffect(() => {
     if (!autoRefresh) return;
@@ -96,6 +133,7 @@ export function useProductionHealthTelemetry(
     data,
     loading,
     error,
+    errorKind,
     refresh: manualRefresh,
     isHealthy: data?.status === 'GREEN',
     isWarning: data?.status === 'YELLOW',

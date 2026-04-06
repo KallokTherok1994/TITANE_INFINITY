@@ -15,7 +15,9 @@ use tauri::{command, Emitter, Window};
 
 const DEFAULT_OLLAMA_BASE_URL: &str = "http://127.0.0.1:11434";
 const DEFAULT_OLLAMA_MODEL: &str = "gemma2:2b";
-const TIMEOUT_SECONDS: u64 = 60;
+/// Env var governing the Ollama HTTP client request timeout (seconds, bounded 10..300).
+const OLLAMA_REQUEST_TIMEOUT_SECS_ENV: &str = "OLLAMA_REQUEST_TIMEOUT_SECS";
+const OLLAMA_REQUEST_TIMEOUT_SECS_DEFAULT: u64 = 120;
 
 // ✨ v27.2.1: Ollama status cache (anti-flapping)
 // Cache TTL: 10s to avoid repeated health checks
@@ -25,11 +27,25 @@ const OLLAMA_STATUS_CACHE_TTL_SECS: u64 = 10;
 static OLLAMA_STATUS_CACHE: Mutex<Option<(OllamaStatus, Instant)>> = Mutex::new(None);
 
 fn ollama_base_url() -> String {
-    std::env::var("OLLAMA_BASE_URL")
+    let raw = std::env::var("OLLAMA_BASE_URL")
         .ok()
         .filter(|s| !s.is_empty())
         .or_else(|| std::env::var("OLLAMA_URL").ok().filter(|s| !s.is_empty()))
-        .unwrap_or_else(|| DEFAULT_OLLAMA_BASE_URL.to_string())
+        .unwrap_or_else(|| DEFAULT_OLLAMA_BASE_URL.to_string());
+
+    let mut normalized = raw.trim().trim_end_matches('/').to_string();
+    if normalized.ends_with("/v1") {
+        normalized = normalized.trim_end_matches("/v1").to_string();
+    }
+    if normalized.ends_with("/api") {
+        normalized = normalized.trim_end_matches("/api").to_string();
+    }
+
+    if normalized.is_empty() {
+        DEFAULT_OLLAMA_BASE_URL.to_string()
+    } else {
+        normalized
+    }
 }
 
 fn ollama_default_model() -> String {
@@ -40,12 +56,24 @@ fn ollama_default_model() -> String {
         .unwrap_or_else(|| DEFAULT_OLLAMA_MODEL.to_string())
 }
 
-    fn build_ollama_client(timeout_secs: u64) -> Result<Client, String> {
-        Client::builder()
-        .timeout(Duration::from_secs(timeout_secs))
+/// Returns the effective Ollama HTTP request timeout.
+/// Governed by env var OLLAMA_REQUEST_TIMEOUT_SECS (bounded 10..300).
+/// Defaults to 120s if unset or out of bounds.
+fn ollama_request_timeout() -> Duration {
+    std::env::var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV)
+        .ok()
+        .and_then(|v| v.trim().parse::<u64>().ok())
+        .filter(|&s| s >= 10 && s <= 300)
+        .map(Duration::from_secs)
+        .unwrap_or(Duration::from_secs(OLLAMA_REQUEST_TIMEOUT_SECS_DEFAULT))
+}
+
+fn build_ollama_client() -> Result<Client, String> {
+    Client::builder()
+        .timeout(ollama_request_timeout())
         .build()
         .map_err(|e| format!("Client error: {}", e))
-    }
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 //   TYPES & STRUCTURES
@@ -139,7 +167,7 @@ pub async fn ai_generate_local(request: LocalAIRequest) -> Result<LocalAIRespons
         return Err(format!("Rate limit exceeded: {}", e));
     }
 
-    let client = build_ollama_client(TIMEOUT_SECONDS)?;
+    let client = build_ollama_client()?;
 
     let model = request.model.unwrap_or_else(ollama_default_model);
 
@@ -201,7 +229,7 @@ pub async fn ai_generate_local_stream(
     window: Window,
     request: LocalAIRequest,
 ) -> Result<String, String> {
-    let client = build_ollama_client(TIMEOUT_SECONDS)?;
+    let client = build_ollama_client()?;
 
     let model = request.model.unwrap_or_else(ollama_default_model);
 
@@ -285,7 +313,7 @@ pub async fn ai_generate_local_stream(
 
 #[command]
 pub async fn ai_scan_local_models() -> Result<Vec<String>, String> {
-    let client = build_ollama_client(5)?;
+    let client = build_ollama_client()?;
 
     let response = client
         .get(format!("{}/api/tags", ollama_base_url()))
@@ -370,7 +398,7 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
     }
 
     // Cache miss or expired → perform actual check
-    let client = build_ollama_client(2)?;
+    let client = build_ollama_client()?;
 
     // Test de disponibilité
     let response = client
@@ -458,10 +486,39 @@ pub struct OllamaClient {
     shell_guard: ShellGuard,
 }
 
+fn truncate_for_log(input: &str, max_len: usize) -> String {
+    if input.len() <= max_len {
+        input.to_string()
+    } else {
+        format!("{}...", &input[..max_len])
+    }
+}
+
+fn select_fallback_model(requested_model: &str, available_models: &[String]) -> Option<String> {
+    if available_models.is_empty() {
+        return None;
+    }
+
+    if available_models.iter().any(|m| m == requested_model) {
+        return Some(requested_model.to_string());
+    }
+
+    let requested_family = requested_model.split(':').next().unwrap_or_default();
+    if !requested_family.is_empty() {
+        if let Some(candidate) = available_models
+            .iter()
+            .find(|m| m.split(':').next().unwrap_or_default() == requested_family)
+        {
+            return Some(candidate.clone());
+        }
+    }
+
+    available_models.first().cloned()
+}
+
 impl OllamaClient {
     pub fn new(model: Option<String>) -> Self {
-        let client =
-            build_ollama_client(TIMEOUT_SECONDS).unwrap_or_else(|_| Client::new());
+        let client = build_ollama_client().unwrap_or_else(|_| Client::new());
 
         let resolved_model = model.unwrap_or_else(ollama_default_model);
         log::info!("[OllamaClient] new() | resolved_model={}", resolved_model);
@@ -481,28 +538,44 @@ impl OllamaClient {
     }
 
     pub async fn is_available(&self) -> bool {
-        if !self.is_installed() {
-            return false;
-        }
-
-        // Check if Ollama daemon is running
+        // AH-FIXME: Do NOT call is_installed() here — it uses std::process::Command::output()
+        // which calls fork() synchronously in a Tokio multi-thread context, causing
+        // malloc(): unaligned tcache chunk detected (heap corruption → WebView crash).
+        // HTTP check is sufficient: if Ollama is not installed, the HTTP call will fail.
         self.client
             .get(format!("{}/api/tags", ollama_base_url()))
-            .timeout(Duration::from_secs(2))
             .send()
             .await
-            .is_ok()
+            .map(|r| r.status().is_success())
+            .unwrap_or(false)
     }
 
-    pub async fn query(&self, request: &AIRequest) -> AIResult<AIResponse> {
-        if !self.is_available().await {
-            return Err(AIError::NetworkError(
-                "Ollama daemon not running".to_string(),
-            ));
+    async fn list_models(&self) -> AIResult<Vec<String>> {
+        let response = self
+            .client
+            .get(format!("{}/api/tags", ollama_base_url()))
+            .send()
+            .await
+            .map_err(|e| AIError::NetworkError(e.to_string()))?;
+
+        if !response.status().is_success() {
+            return Err(AIError::APIError(format!(
+                "Ollama tags API error: {}",
+                response.status()
+            )));
         }
 
+        let models_response: OllamaModelsResponse = response
+            .json()
+            .await
+            .map_err(|e| AIError::InvalidResponse(e.to_string()))?;
+
+        Ok(models_response.models.into_iter().map(|m| m.name).collect())
+    }
+
+    async fn query_with_model(&self, request: &AIRequest, model: &str) -> AIResult<AIResponse> {
         let ollama_request = OllamaRequest {
-            model: self.model.clone(),
+            model: model.to_string(),
             prompt: request.prompt.clone(),
             stream: false,
             options: OllamaOptions {
@@ -515,7 +588,7 @@ impl OllamaClient {
         log::debug!(
             "[OllamaClient] POST {} | model={} | prompt_len={}",
             url,
-            self.model,
+            model,
             request.prompt.len()
         );
 
@@ -528,9 +601,24 @@ impl OllamaClient {
             .map_err(|e| AIError::NetworkError(e.to_string()))?;
 
         if !response.status().is_success() {
+            let status = response.status();
+            let body = response
+                .text()
+                .await
+                .unwrap_or_else(|_| String::from("<unreadable_body>"));
+            let body_trimmed = truncate_for_log(body.trim(), 220);
+            let body_lower = body_trimmed.to_lowercase();
+
+            if status.as_u16() == 404 && body_lower.contains("model") && body_lower.contains("not found") {
+                return Err(AIError::APIError(format!(
+                    "OLLAMA_MODEL_NOT_FOUND:model={} body={}",
+                    model, body_trimmed
+                )));
+            }
+
             return Err(AIError::APIError(format!(
-                "Ollama API error: {}",
-                response.status()
+                "Ollama API error: status={} body={}",
+                status, body_trimmed
             )));
         }
 
@@ -549,6 +637,39 @@ impl OllamaClient {
         })
     }
 
+    pub async fn query(&self, request: &AIRequest) -> AIResult<AIResponse> {
+        if !self.is_available().await {
+            return Err(AIError::NetworkError(
+                "Ollama daemon not running".to_string(),
+            ));
+        }
+
+        match self.query_with_model(request, &self.model).await {
+            Ok(response) => Ok(response),
+            Err(AIError::APIError(msg)) if msg.starts_with("OLLAMA_MODEL_NOT_FOUND:") => {
+                let available_models = self.list_models().await?;
+                let fallback_model = select_fallback_model(&self.model, &available_models)
+                    .filter(|candidate| candidate != &self.model);
+
+                if let Some(model) = fallback_model {
+                    log::warn!(
+                        "[OllamaClient] configured model unavailable ({}). Retry with fallback model={} | available={:?}",
+                        self.model,
+                        model,
+                        available_models
+                    );
+                    self.query_with_model(request, &model).await
+                } else {
+                    Err(AIError::APIError(format!(
+                        "{} | available_models={:?}",
+                        msg, available_models
+                    )))
+                }
+            }
+            Err(e) => Err(e),
+        }
+    }
+
     pub async fn query_stream(&self, request: &AIRequest) -> AIResult<AIResponse> {
         // Implementation: True streaming with Server-Sent Events (SSE)
         // - API: POST /api/generate with {"stream": true} parameter
@@ -563,25 +684,20 @@ impl OllamaClient {
     }
 
     pub fn get_available_models(&self) -> Vec<String> {
-        // ✅ SECURED: Use ShellGuard
-        self.shell_guard
-            .execute_verified("ollama", &["list"])
-            .ok()
-            .map(|output| {
-                output
-                    .lines()
-                    .skip(1) // Skip header
-                    .filter_map(|line| line.split_whitespace().next())
-                    .map(String::from)
-                    .collect()
-            })
-            .unwrap_or_default()
+        // AH-FIXME: Do NOT use ShellGuard / ollama list here — synchronous fork() in
+        // async Tokio causes malloc heap corruption. Return empty list for health_check
+        // reporting; actual availability is confirmed via HTTP in is_available().
+        vec![]
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::sync::Mutex;
+
+    // Serialize env-var tests to prevent parallel mutation races.
+    static ENV_TEST_LOCK: Mutex<()> = Mutex::new(());
 
     #[test]
     fn test_ollama_installed() {
@@ -594,5 +710,85 @@ mod tests {
     async fn test_ollama_availability() {
         let client = OllamaClient::new(None);
         let _ = client.is_available().await;
+    }
+
+    #[test]
+    fn test_select_fallback_model_prefers_family_then_first() {
+        let models = vec![
+            "llama3.1:latest".to_string(),
+            "mistral:latest".to_string(),
+        ];
+
+        let selected = select_fallback_model("llama3:latest", &models);
+        assert_eq!(selected.as_deref(), Some("llama3.1:latest"));
+
+        let selected_unknown = select_fallback_model("unknown:latest", &models);
+        assert_eq!(selected_unknown.as_deref(), Some("llama3.1:latest"));
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // ollama_request_timeout governance tests (OLLAMA_REQUEST_TIMEOUT_SECS env)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_ollama_request_timeout_default() {
+        let _g = ENV_TEST_LOCK.lock().unwrap();
+        std::env::remove_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV);
+        let t = ollama_request_timeout();
+        assert_eq!(t, Duration::from_secs(OLLAMA_REQUEST_TIMEOUT_SECS_DEFAULT));
+    }
+
+    #[test]
+    fn test_ollama_request_timeout_env_valid() {
+        let _g = ENV_TEST_LOCK.lock().unwrap();
+        std::env::set_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV, "90");
+        let t = ollama_request_timeout();
+        std::env::remove_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV);
+        assert_eq!(t, Duration::from_secs(90));
+    }
+
+    #[test]
+    fn test_ollama_request_timeout_env_below_min_falls_back() {
+        let _g = ENV_TEST_LOCK.lock().unwrap();
+        std::env::set_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV, "5");
+        let t = ollama_request_timeout();
+        std::env::remove_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV);
+        assert_eq!(t, Duration::from_secs(OLLAMA_REQUEST_TIMEOUT_SECS_DEFAULT));
+    }
+
+    #[test]
+    fn test_ollama_request_timeout_env_above_max_falls_back() {
+        let _g = ENV_TEST_LOCK.lock().unwrap();
+        std::env::set_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV, "999");
+        let t = ollama_request_timeout();
+        std::env::remove_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV);
+        assert_eq!(t, Duration::from_secs(OLLAMA_REQUEST_TIMEOUT_SECS_DEFAULT));
+    }
+
+    #[test]
+    fn test_ollama_request_timeout_env_invalid_falls_back() {
+        let _g = ENV_TEST_LOCK.lock().unwrap();
+        std::env::set_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV, "notanumber");
+        let t = ollama_request_timeout();
+        std::env::remove_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV);
+        assert_eq!(t, Duration::from_secs(OLLAMA_REQUEST_TIMEOUT_SECS_DEFAULT));
+    }
+
+    #[test]
+    fn test_ollama_request_timeout_env_boundary_min() {
+        let _g = ENV_TEST_LOCK.lock().unwrap();
+        std::env::set_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV, "10");
+        let t = ollama_request_timeout();
+        std::env::remove_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV);
+        assert_eq!(t, Duration::from_secs(10));
+    }
+
+    #[test]
+    fn test_ollama_request_timeout_env_boundary_max() {
+        let _g = ENV_TEST_LOCK.lock().unwrap();
+        std::env::set_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV, "300");
+        let t = ollama_request_timeout();
+        std::env::remove_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV);
+        assert_eq!(t, Duration::from_secs(300));
     }
 }

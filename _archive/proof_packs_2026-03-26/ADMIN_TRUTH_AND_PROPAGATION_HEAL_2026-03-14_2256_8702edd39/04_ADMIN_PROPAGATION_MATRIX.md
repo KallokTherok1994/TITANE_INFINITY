@@ -1,0 +1,12 @@
+# ADMIN PROPAGATION MATRIX
+
+| ID | CONFIG_OR_ACTION | SOURCE_OF_TRUTH | TARGET_LAYER | PROPAGATION_PATH | OBSERVABLE_EFFECT | PROVEN? | STATUS |
+|---|---|---|---|---|---|---|---|
+| P-01 | Runtime config read | `src-tauri/src/config/mod.rs` | SYSTEM_RUNTIME | UI -> tauriClient.getAllConfigs -> get_all_configs -> current_runtime_values | URL/model affiches | Oui (statique + UI) | PASS |
+| P-02 | Chat engine config write | `src-tauri/src/config/update.rs` | CHAT_RUNTIME | UI setChatEngineConfig -> tauri command -> update bundle | Parametres chat modifies | Partiel (sans run chat live) | BLOCKED_RUNTIME |
+| P-03 | Request defaults write | `src-tauri/src/config/update.rs` | CHAT_BUILDER | UI setChatRequestDefaults -> tauri update | Defaults provider/temperature | Partiel | BLOCKED_RUNTIME |
+| P-04 | Audio output/input select | `src/features/audio-center/services/audioService.ts` | DEVICE_LAYER | UI -> setAudio*Device -> tauri | Device change effect | Partiel (runtime-gated) | QUALIFIED |
+| P-05 | TTS test | `audioService.ts` + tauri tts cmd | TTS_ENGINE | UI button -> ttsSpeak | Message resultat test audio | Oui (E2E) | PASS |
+| P-06 | UI theme load/save | `src-tauri/src/design_center/theme_manager.rs` | UI_THEME | UIThemeProvider -> load/save/reset ui theme | Theme/tokens changes | Partiel (pas d'E2E full design) | BLOCKED_RUNTIME |
+| P-07 | Governance policy toggle | governance service | GOVERNANCE_POLICY | UI -> governanceService -> safeInvoke | Etat policy update | Partiel (load OK, action runtime non rejouee) | QUALIFIED |
+| P-08 | Production health refresh | telemetry hook | HEALTH_MONITORING | Refresh button -> hook.refresh -> csv command | KPI recharges | Oui (UI path + control visible) | PASS |

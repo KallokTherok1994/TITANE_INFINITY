@@ -1,0 +1,19 @@
+73:🦀 Rust Backend Tests (Docker)	UNKNOWN STEP	2026-03-06T19:12:04.3212206Z PATH=/usr/local/cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+75:🦀 Rust Backend Tests (Docker)	UNKNOWN STEP	2026-03-06T19:12:04.3213664Z CARGO_HOME=/usr/local/cargo
+3828:🦀 Rust Backend Tests (Docker)	UNKNOWN STEP	2026-03-06T19:15:29.9106081Z invoke-rc.d: policy-rc.d denied execution of restart.
+4162:🦀 Rust Backend Tests (Docker)	UNKNOWN STEP	2026-03-06T19:15:31.9449982Z invoke-rc.d: policy-rc.d denied execution of start.
+4563:🦀 Rust Backend Tests (Docker)	UNKNOWN STEP	2026-03-06T19:15:43.1519917Z   path: ~/.cargo/registry
+4564:🦀 Rust Backend Tests (Docker)	UNKNOWN STEP	~/.cargo/git
+4566:🦀 Rust Backend Tests (Docker)	UNKNOWN STEP	2026-03-06T19:15:43.1520437Z   key: Linux-cargo-registry-74465fe217190f7ec645f655aa910bd309b2e18d70e7032bd2a088e0a9541bfd
+4567:🦀 Rust Backend Tests (Docker)	UNKNOWN STEP	2026-03-06T19:15:43.1520948Z   restore-keys: Linux-cargo-registry-
+4577:🦀 Rust Backend Tests (Docker)	UNKNOWN STEP	2026-03-06T19:15:43.6609580Z ##[warning]Cache not found for keys: Linux-cargo-registry-74465fe217190f7ec645f655aa910bd309b2e18d70e7032bd2a088e0a9541bfd, Linux-cargo-registry-
+4578:🦀 Rust Backend Tests (Docker)	UNKNOWN STEP	2026-03-06T19:15:43.6619479Z Cache not found for input keys: Linux-cargo-registry-74465fe217190f7ec645f655aa910bd309b2e18d70e7032bd2a088e0a9541bfd, Linux-cargo-registry-
+4582:🦀 Rust Backend Tests (Docker)	UNKNOWN STEP	2026-03-06T19:15:45.0326582Z   key: Linux-cargo-build-docker-74465fe217190f7ec645f655aa910bd309b2e18d70e7032bd2a088e0a9541bfd
+4583:🦀 Rust Backend Tests (Docker)	UNKNOWN STEP	2026-03-06T19:15:45.0327074Z   restore-keys: Linux-cargo-build-docker-
+4593:🦀 Rust Backend Tests (Docker)	UNKNOWN STEP	2026-03-06T19:15:45.5252980Z ##[warning]Cache not found for keys: Linux-cargo-build-docker-74465fe217190f7ec645f655aa910bd309b2e18d70e7032bd2a088e0a9541bfd, Linux-cargo-build-docker-
+4594:🦀 Rust Backend Tests (Docker)	UNKNOWN STEP	2026-03-06T19:15:45.5255873Z Cache not found for input keys: Linux-cargo-build-docker-74465fe217190f7ec645f655aa910bd309b2e18d70e7032bd2a088e0a9541bfd, Linux-cargo-build-docker-
+4595:🦀 Rust Backend Tests (Docker)	UNKNOWN STEP	2026-03-06T19:15:45.5357568Z ##[group]Run cargo check --verbose
+4596:🦀 Rust Backend Tests (Docker)	UNKNOWN STEP	2026-03-06T19:15:45.5357881Z [36;1mcargo check --verbose[0m
+4614:🦀 Rust Backend Tests (Docker)	UNKNOWN STEP	2026-03-06T19:15:46.9808676Z error: failed to parse manifest at `/usr/local/cargo/registry/src/index.crates.io-6f17d22bba15001f/hnsw_rs-0.3.3/Cargo.toml`
+4621:🦀 Rust Backend Tests (Docker)	UNKNOWN STEP	2026-03-06T19:15:46.9814001Z   See https://doc.rust-lang.org/nightly/cargo/reference/unstable.html#edition-2024 for more information about the status of this feature.
+4622:🦀 Rust Backend Tests (Docker)	UNKNOWN STEP	2026-03-06T19:15:47.0038521Z ##[error]Process completed with exit code 101.

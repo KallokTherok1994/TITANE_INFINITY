@@ -36,6 +36,8 @@ export interface MemoryDashboardProps {
   className?: string;
   /** Callback sur sélection d'entrée */
   onEntrySelect?: (entry: MemoryEntry) => void;
+  /** Entrée sélectionnée pilotée par un parent */
+  selectedEntryId?: string | null;
   /** Mode compact */
   compact?: boolean;
 }
@@ -109,6 +111,8 @@ const MemoryEntryCard: React.FC<{
 
   return (
     <div
+      data-testid={`memory-entry-card-${entry.id}`}
+      data-selected={selected ? 'true' : 'false'}
       className={`
         relative p-3 rounded-lg border transition-all cursor-pointer
         ${
@@ -222,6 +226,7 @@ const FilterBar: React.FC<{
   selectedTopic: MemoryTopic | 'all';
   sortBy: SortBy;
   viewMode: ViewMode;
+  disabled?: boolean;
   onLevelChange: (level: MemoryLevel | 'all') => void;
   onTopicChange: (topic: MemoryTopic | 'all') => void;
   onSortChange: (sort: SortBy) => void;
@@ -233,6 +238,7 @@ const FilterBar: React.FC<{
   selectedTopic,
   sortBy,
   viewMode,
+  disabled = false,
   onLevelChange,
   onTopicChange,
   onSortChange,
@@ -249,6 +255,8 @@ const FilterBar: React.FC<{
           value={searchQuery}
           onChange={e => onSearchChange(e.target.value)}
           placeholder="Rechercher dans la mémoire..."
+          disabled={disabled}
+          aria-disabled={disabled}
           className="w-full px-3 py-2 pl-9 bg-gray-900/50 border border-gray-700 rounded-lg text-sm text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
         />
         <svg
@@ -272,6 +280,8 @@ const FilterBar: React.FC<{
         <select
           value={selectedLevel}
           onChange={e => onLevelChange(e.target.value as MemoryLevel | 'all')}
+          disabled={disabled}
+          aria-disabled={disabled}
           className="px-2 py-1 bg-gray-900/50 border border-gray-700 rounded text-sm text-gray-300 focus:outline-none focus:border-blue-500"
         >
           <option value="all">Tous les niveaux</option>
@@ -284,6 +294,8 @@ const FilterBar: React.FC<{
         <select
           value={selectedTopic}
           onChange={e => onTopicChange(e.target.value as MemoryTopic | 'all')}
+          disabled={disabled}
+          aria-disabled={disabled}
           className="px-2 py-1 bg-gray-900/50 border border-gray-700 rounded text-sm text-gray-300 focus:outline-none focus:border-blue-500"
         >
           <option value="all">Tous les sujets</option>
@@ -298,6 +310,8 @@ const FilterBar: React.FC<{
         <select
           value={sortBy}
           onChange={e => onSortChange(e.target.value as SortBy)}
+          disabled={disabled}
+          aria-disabled={disabled}
           className="px-2 py-1 bg-gray-900/50 border border-gray-700 rounded text-sm text-gray-300 focus:outline-none focus:border-blue-500"
         >
           <option value="date">📅 Date</option>
@@ -315,6 +329,8 @@ const FilterBar: React.FC<{
             <button
               key={mode}
               onClick={() => onViewChange(mode)}
+              disabled={disabled}
+              aria-disabled={disabled}
               className={`p-1.5 rounded text-sm transition-colors ${
                 viewMode === mode
                   ? 'bg-blue-500/20 text-blue-400'
@@ -340,6 +356,7 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
   modeId,
   className = '',
   onEntrySelect,
+  selectedEntryId: controlledSelectedEntryId,
   compact = false,
 }) => {
   // État local
@@ -348,7 +365,9 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
   const [sortBy, setSortBy] = useState<SortBy>('date');
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedEntryId, setSelectedEntryId] = useState<string | null>(null);
+  const [internalSelectedEntryId, setInternalSelectedEntryId] = useState<string | null>(
+    null
+  );
 
   // Hook mémoire
   const {
@@ -408,10 +427,20 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
 
     return result;
   }, [entries, selectedLevel, selectedTopic, searchQuery, sortBy]);
+  const hasPersistentEntries = entries.length > 0;
+  const hasActiveFilters =
+    searchQuery.trim().length > 0 || selectedLevel !== 'all' || selectedTopic !== 'all';
+  const isEmptyPersistentMemory = !isLoading && !hasPersistentEntries;
+  const resolvedSelectedEntryId =
+    controlledSelectedEntryId !== undefined
+      ? controlledSelectedEntryId
+      : internalSelectedEntryId;
 
   // Handlers
   const handleEntryClick = (entry: MemoryEntry) => {
-    setSelectedEntryId(entry.id === selectedEntryId ? null : entry.id);
+    if (controlledSelectedEntryId === undefined) {
+      setInternalSelectedEntryId(entry.id === resolvedSelectedEntryId ? null : entry.id);
+    }
     onEntrySelect?.(entry);
   };
 
@@ -438,9 +467,11 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-2xl">🧠</span>
-          <h2 className="text-lg font-semibold text-white">Mémoire Persistante</h2>
+          <h2 className="text-lg font-semibold text-white">Mémoire 3 niveaux</h2>
           <span className="px-2 py-0.5 text-xs bg-blue-500/20 text-blue-400 rounded-full">
-            {filteredEntries.length} entrées
+            {isEmptyPersistentMemory
+              ? '0 entrée mémoire'
+              : `${filteredEntries.length} entrées`}
           </span>
         </div>
         <button
@@ -461,6 +492,7 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
         selectedTopic={selectedTopic}
         sortBy={sortBy}
         viewMode={viewMode}
+        disabled={isEmptyPersistentMemory}
         onLevelChange={setSelectedLevel}
         onTopicChange={setSelectedTopic}
         onSortChange={setSortBy}
@@ -468,6 +500,13 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
       />
+
+      {isEmptyPersistentMemory && (
+        <div className="px-3 py-2 text-sm text-gray-400 bg-gray-800/30 rounded-lg border border-dashed border-gray-700/80">
+          Le dashboard mémoire restera inactif tant qu&apos;aucune entrée mémoire réelle
+          n&apos;aura été consolidée.
+        </div>
+      )}
 
       {/* Liste des entrées */}
       <div
@@ -486,11 +525,17 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
           // Empty state
           <div className="col-span-full py-12 text-center text-gray-500">
             <span className="text-4xl mb-2 block">📭</span>
-            <p>Aucune entrée trouvée</p>
+            <p>
+              {isEmptyPersistentMemory
+                ? 'Aucune entrée mémoire consolidée'
+                : 'Aucun résultat pour les filtres actifs'}
+            </p>
             <p className="text-sm mt-1">
-              {searchQuery
-                ? "Essayez avec d'autres termes de recherche"
-                : "La mémoire est vide pour l'instant"}
+              {isEmptyPersistentMemory
+                ? "Le dashboard s'activera dès qu'une mémoire réelle sera consolidée."
+                : hasActiveFilters
+                  ? 'Ajustez la recherche ou les filtres pour retrouver une entrée.'
+                  : "La mémoire est vide pour l'instant"}
             </p>
           </div>
         ) : (
@@ -506,7 +551,7 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
               <MemoryEntryCard
                 entry={entry}
                 onClick={() => handleEntryClick(entry)}
-                selected={selectedEntryId === entry.id}
+                selected={resolvedSelectedEntryId === entry.id}
                 compact={compact || viewMode === 'list'}
               />
             </div>

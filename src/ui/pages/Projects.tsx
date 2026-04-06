@@ -98,6 +98,26 @@ export const ProjectsPage = memo(function ProjectsPage() {
   return (
     <div className="projects-page">
       <HUDFrame title="Projets" icon="📁">
+        {/* Notice données illustratives */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.4rem 0.75rem',
+            marginBottom: '0.75rem',
+            background: 'rgba(234,179,8,0.08)',
+            border: '1px solid rgba(234,179,8,0.25)',
+            borderRadius: '6px',
+            fontSize: '0.75rem',
+            fontStyle: 'italic',
+            color: 'rgba(234,179,8,0.85)',
+          }}
+          role="note"
+        >
+          🔒 Données illustratives — projets réels disponibles en mode Tauri
+        </div>
+
         {/* Header avec recherche */}
         <div className="projects-header">
           <div className="projects-stats">

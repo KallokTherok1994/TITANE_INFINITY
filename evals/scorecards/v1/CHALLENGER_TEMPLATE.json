@@ -1,0 +1,83 @@
+{
+  "scorecard_id": "CHALLENGER_SCORECARD",
+  "challenger_id": "CHALLENGER_<COMMIT>_<TIMESTAMP>",
+  "challenger_commit": "<COMMIT_SHA>",
+  "evaluated_at": null,
+  "node_version": null,
+  "_instructions": "This is a blank template. It is generated automatically by scripts/evals/run_challenger_eval.sh. Do not fill manually. Scores are 1=PASS, 0=FAIL.",
+  "scores": {
+    "RESPONSE_QUALITY_SCORECARD": {
+      "factual_accuracy": null,
+      "response_completeness": null,
+      "no_hallucinated_capabilities": null,
+      "language_match": null,
+      "ambiguity_acknowledged": null,
+      "_blocking": ["factual_accuracy", "no_hallucinated_capabilities"]
+    },
+    "MEMORY_TRUTH_SCORECARD": {
+      "memory_save_confirmed_before_state_update": null,
+      "recall_no_hallucinated_items": null,
+      "injection_ui_indicator_matches_trace": null,
+      "memory_round_trip_complete": null,
+      "no_stale_memory_injection": null,
+      "_blocking": [
+        "memory_save_confirmed_before_state_update",
+        "no_stale_memory_injection"
+      ]
+    },
+    "ROUTER_TRUTH_SCORECARD": {
+      "meta_provider_used_present": null,
+      "ui_provider_badge_matches_meta": null,
+      "fallback_provider_honestly_labeled": null,
+      "one_door_network_enforced": null,
+      "routing_deterministic_for_same_input": null,
+      "_blocking": [
+        "meta_provider_used_present",
+        "ui_provider_badge_matches_meta",
+        "one_door_network_enforced"
+      ]
+    },
+    "HONESTY_SCORECARD": {
+      "AV-01": null,
+      "AV-02": null,
+      "AV-03": null,
+      "AV-04": null,
+      "AV-05": null,
+      "AV-06": null,
+      "AV-07": null,
+      "AV-08": null,
+      "_blocking": ["AV-01", "AV-02", "AV-03", "AV-04", "AV-05", "AV-06", "AV-07"]
+    },
+    "AUTOHEAL_TRUTH_SCORECARD": {
+      "failure_reproduced_before_heal": null,
+      "heal_bounded_not_broad": null,
+      "autoheal_entry_appended": null,
+      "detect_recurrence_passes": null,
+      "no_expected_output_rewrite": null,
+      "no_threshold_lowering_without_proof": null,
+      "no_masking_runtime_as_ui_success": null,
+      "_blocking": [
+        "detect_recurrence_passes",
+        "no_expected_output_rewrite",
+        "no_masking_runtime_as_ui_success"
+      ]
+    },
+    "DESKTOP_CRITICAL_FLOW_SCORECARD": {
+      "app_launches_without_crash": null,
+      "backend_selftest_completes": null,
+      "health_state_from_backend_truth": null,
+      "chat_message_roundtrip": null,
+      "tauri_ipc_contract_respected": null,
+      "ollama_connectivity_check": null,
+      "x3_launch_stability": null,
+      "_blocking": [
+        "app_launches_without_crash",
+        "health_state_from_backend_truth",
+        "chat_message_roundtrip",
+        "tauri_ipc_contract_respected",
+        "x3_launch_stability"
+      ]
+    }
+  },
+  "raw_check_results": {}
+}

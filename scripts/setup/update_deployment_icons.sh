@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# 🔥 TITANE∞ v19.2Ω - Script de Mise à Jour des Icônes de Déploiement
+# 🔥 TITANE∞ v28.0.0 - Script de Mise à Jour des Icônes de Déploiement
 # Architecture OMEGA - Génération automatique des icônes
 
-echo "🔥 TITANE∞ v19.2Ω - Mise à Jour Icônes de Déploiement"
+echo "🔥 TITANE∞ v28.0.0 - Mise à Jour Icônes de Déploiement"
 echo "======================================================"
 
 # Configuration
@@ -31,7 +31,7 @@ done
 echo ""
 
 # Générer les nouvelles icônes
-echo "🎨 Génération des nouvelles icônes TITANE∞ v19.2Ω..."
+echo "🎨 Génération des nouvelles icônes TITANE∞ v28.0.0..."
 
 # Essayer d'abord le générateur avancé
 if python3 -c "import PIL" 2>/dev/null; then

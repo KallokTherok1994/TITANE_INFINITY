@@ -1,0 +1,1242 @@
+e2e/runtime-validation/chat-ar20.spec.ts:24:  '#chat-input-textarea, textarea.chat-input, [data-testid="chat-input"]';
+e2e/runtime-validation/chat-ar20.spec.ts:26:  'button.chat-send-btn, button.chat-send-omega, [data-testid="send-button"]';
+e2e/runtime-validation/chat-ar20.spec.ts:28:const ASSISTANT_MESSAGE_SELECTOR = `${MESSAGE_CONTAINER_SELECTOR} .message-bubble.message-assistant .message-text, [data-testid="assistant-message"]`;
+e2e/desktop/ui-driver.wdio.js:9:const testId = id => `[data-testid="${id}"]`;
+e2e/desktop/ui-driver.wdio.js:471:    const chatSelectors = [testId('chat-input'), '[data-testid="tab-conversation"]'];
+e2e/desktop/ui-driver.wdio.js:606:      const genericAlert = await $('[role="alert"]');
+e2e/desktop/ui-ultra-smoke.e2e.js:50:    await clickAllTabs(['[data-testid="tab-conversation"]']);
+e2e/desktop/ui-ultra-smoke.e2e.js:56:    await clickAllTabs(['[data-testid="tab-admin-audio"]']);
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:67:    // Priority 1: data-testid contains "chat"
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:68:    const testIdCandidates = Array.from(document.querySelectorAll('[data-testid]'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:69:      .filter(el => (el.getAttribute('data-testid') || '').toLowerCase().includes('chat'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:137:        dataTestId: el.getAttribute('data-testid') || null,
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:142:    const testIdCandidates = Array.from(document.querySelectorAll('[data-testid]'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:143:      .filter(el => (el.getAttribute('data-testid') || '').toLowerCase().includes('chat'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:146:      return buildMeta(testIdCandidates[0], 'data-testid:chat');
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:190:    // Priority 1: data-testid contains "send"
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:191:    const byTestId = Array.from(document.querySelectorAll('[data-testid]')).find(el =>
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:192:      (el.getAttribute('data-testid') || '').toLowerCase().includes('send')
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:197:    const buttons = Array.from(document.querySelectorAll('button, [role="button"]'));
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:202:      const ariaLabel = (btn.getAttribute('aria-label') || '').toLowerCase();
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:234:        dataTestId: el.getAttribute('data-testid') || null,
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:239:    const byTestId = Array.from(document.querySelectorAll('[data-testid]')).find(el =>
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:240:      (el.getAttribute('data-testid') || '').toLowerCase().includes('send')
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:242:    if (byTestId) return buildMeta(byTestId, 'data-testid:send');
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:244:    const buttons = Array.from(document.querySelectorAll('button, [role="button"]'));
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:247:      const ariaLabel = (btn.getAttribute('aria-label') || '').toLowerCase();
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:268:    // Priority 1: data-testid
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:270:      document.querySelectorAll('[data-testid="assistant-message"]')
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:297:    // Priority 1: data-testid
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:298:    const byTestId = document.querySelector('[data-testid="nav-chat"]');
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:303:      document.querySelectorAll('a, button, [role="link"], [role="button"]')
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:704:        'nav a, nav button, [role="navigation"] a, [role="navigation"] button'
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:709:    const dataTestIds = Array.from(document.querySelectorAll('[data-testid]'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:710:      .map(el => el.getAttribute('data-testid'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:777:        el => getText(el).includes('skip') || getAttr(el, 'aria-label').includes('skip')
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:784:        el => getText(el).includes('next') || getAttr(el, 'aria-label').includes('next')
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:794:      document.querySelectorAll('a, button, [role="button"], [role="link"]')
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:798:      const aria = getAttr(el, 'aria-label');
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:799:      const testId = getAttr(el, 'data-testid');
+e2e/desktop/ai-verification.full.e2e.js:141:  const bubbleTrigger = await $('[data-testid="chat-bubble-trigger"]');
+e2e/desktop/ai-verification.full.e2e.js:147:      open: '[data-testid="chat-bubble-trigger"]',
+e2e/desktop/ai-verification.full.e2e.js:335:          const bubbleTrigger = await $('[data-testid="chat-bubble-trigger"]');
+e2e/desktop/ui-ultra-full.e2e.js:18:  const trigger = await $('[data-testid="btn-mode-builder"]');
+e2e/desktop/ui-ultra-full.e2e.js:37:    return page.tabs.filter(tab => tab !== '[data-testid="tab-admin-audio"]');
+e2e/desktop/ui-ultra-full.e2e.js:91:    await clickAllTabs(['[data-testid="tab-conversation"]']);
+e2e/desktop/ui-ultra-full.e2e.js:99:    const userMessagesBefore = await $$('[data-testid="chat-message-user"]');
+e2e/desktop/ui-ultra-full.e2e.js:107:    await clickAllTabs(['[data-testid="tab-conversation"]']);
+e2e/desktop/ui-ultra-full.e2e.js:111:        const input = await $('[data-testid="chat-input"]');
+e2e/desktop/ui-ultra-full.e2e.js:117:          return (await $$('[data-testid="chat-message-user"]')).length >= userBefore;
+e2e/desktop/ui-ultra-full.e2e.js:120:        const messagesAfter = await $$('[data-testid="chat-message-user"]');
+e2e/desktop/ui-ultra-full.e2e.js:136:    const userAfter = (await $$('[data-testid="chat-message-user"]')).length;
+e2e/desktop/ui-ultra-full.e2e.js:145:    const providerSelect = await $('[data-testid="select-chat-provider"]');
+e2e/desktop/page-objects/uiPages.po.js:6:    root: '[data-testid="page-titane"]',
+e2e/desktop/page-objects/uiPages.po.js:8:      '[data-testid="tab-conversation"]',
+e2e/desktop/page-objects/uiPages.po.js:9:      '[data-testid="tab-overview"]',
+e2e/desktop/page-objects/uiPages.po.js:10:      '[data-testid="tab-vision"]',
+e2e/desktop/page-objects/uiPages.po.js:11:      '[data-testid="tab-identity"]',
+e2e/desktop/page-objects/uiPages.po.js:12:      '[data-testid="tab-memory"]',
+e2e/desktop/page-objects/uiPages.po.js:13:      '[data-testid="tab-memory-evolution"]',
+e2e/desktop/page-objects/uiPages.po.js:14:      '[data-testid="tab-progression"]',
+e2e/desktop/page-objects/uiPages.po.js:15:      '[data-testid="tab-transformation"]',
+e2e/desktop/page-objects/uiPages.po.js:22:    root: '[data-testid="page-time"]',
+e2e/desktop/page-objects/uiPages.po.js:24:      '[data-testid="tab-time-now"]',
+e2e/desktop/page-objects/uiPages.po.js:25:      '[data-testid="tab-time-agenda"]',
+e2e/desktop/page-objects/uiPages.po.js:26:      '[data-testid="tab-time-timeline"]',
+e2e/desktop/page-objects/uiPages.po.js:27:      '[data-testid="tab-time-snapshots"]',
+e2e/desktop/page-objects/uiPages.po.js:28:      '[data-testid="tab-time-intelligence"]',
+e2e/desktop/page-objects/uiPages.po.js:29:      '[data-testid="tab-time-flow"]',
+e2e/desktop/page-objects/uiPages.po.js:36:    root: '[data-testid="page-stats"]',
+e2e/desktop/page-objects/uiPages.po.js:43:    root: '[data-testid="page-admin"]',
+e2e/desktop/page-objects/uiPages.po.js:45:      '[data-testid="tab-admin-system"]',
+e2e/desktop/page-objects/uiPages.po.js:46:      '[data-testid="tab-admin-config"]',
+e2e/desktop/page-objects/uiPages.po.js:47:      '[data-testid="tab-admin-audio"]',
+e2e/desktop/page-objects/uiPages.po.js:48:      '[data-testid="tab-admin-design"]',
+e2e/desktop/page-objects/uiPages.po.js:49:      '[data-testid="tab-admin-governance"]',
+e2e/desktop/page-objects/uiPages.po.js:50:      '[data-testid="tab-admin-production-health"]',
+e2e/desktop/page-objects/uiPages.po.js:57:    root: '[data-testid="page-dev"]',
+e2e/desktop/page-objects/uiPages.po.js:59:      '[data-testid="tab-dev-overview"]',
+e2e/desktop/page-objects/uiPages.po.js:60:      '[data-testid="tab-dev-diagnostic"]',
+e2e/desktop/page-objects/uiPages.po.js:61:      '[data-testid="tab-dev-devtools"]',
+e2e/desktop/page-objects/uiPages.po.js:62:      '[data-testid="tab-dev-command-center"]',
+e2e/desktop/page-objects/uiPages.po.js:63:      '[data-testid="tab-dev-system-commands"]',
+e2e/desktop/page-objects/uiPages.po.js:64:      '[data-testid="tab-dev-qa-tests"]',
+e2e/desktop/page-objects/uiPages.po.js:65:      '[data-testid="tab-dev-orchestration"]',
+e2e/desktop/page-objects/uiPages.po.js:66:      '[data-testid="tab-dev-security"]',
+e2e/desktop/page-objects/uiPages.po.js:67:      '[data-testid="tab-dev-metrics"]',
+e2e/desktop/page-objects/uiPages.po.js:68:      '[data-testid="tab-dev-optimization"]',
+e2e/desktop/page-objects/uiPages.po.js:75:    root: '[data-testid="page-fusion"]',
+e2e/desktop/page-objects/uiPages.po.js:82:    root: '[data-testid="page-optimization"]',
+e2e/desktop/online-chat-proof-ui.wdio.test.js:150:  const bubbleInput = await $('[data-testid="chat-bubble-input"]');
+e2e/desktop/online-chat-proof-ui.wdio.test.js:153:      input: '[data-testid="chat-bubble-input"]',
+e2e/desktop/online-chat-proof-ui.wdio.test.js:154:      send: '[data-testid="chat-bubble-send"]',
+e2e/desktop/online-chat-proof-ui.wdio.test.js:155:      response: '[data-testid="chat-bubble-assistant-content"]',
+e2e/desktop/online-chat-proof-ui.wdio.test.js:156:      trigger: '[data-testid="chat-bubble-trigger"]',
+e2e/desktop/online-chat-proof-ui.wdio.test.js:157:      panel: '[data-testid="chat-bubble-panel"]',
+e2e/desktop/online-chat-proof-ui.wdio.test.js:161:  const bubblePanel = await $('[data-testid="chat-bubble-panel"]');
+e2e/desktop/online-chat-proof-ui.wdio.test.js:164:      input: '[data-testid="chat-bubble-input"]',
+e2e/desktop/online-chat-proof-ui.wdio.test.js:165:      send: '[data-testid="chat-bubble-send"]',
+e2e/desktop/online-chat-proof-ui.wdio.test.js:166:      response: '[data-testid="chat-bubble-assistant-content"]',
+e2e/desktop/online-chat-proof-ui.wdio.test.js:167:      trigger: '[data-testid="chat-bubble-trigger"]',
+e2e/desktop/online-chat-proof-ui.wdio.test.js:168:      panel: '[data-testid="chat-bubble-panel"]',
+e2e/desktop/online-chat-proof-ui.wdio.test.js:223:    const testIds = Array.from(document.querySelectorAll('[data-testid]'))
+e2e/desktop/online-chat-proof-ui.wdio.test.js:224:      .map(node => node.getAttribute('data-testid'))
+e2e/desktop/online-chat-proof-ui.wdio.test.js:305:              !!document.querySelector('[data-testid="chat-bubble-trigger"]') ||
+e2e/desktop/online-chat-proof-ui.wdio.test.js:306:              !!document.querySelector('[data-testid="chat-bubble-input"]') ||
+e2e/desktop/online-chat-proof-ui.wdio.test.js:321:    const trigger = await $('[data-testid="chat-bubble-trigger"]');
+e2e/desktop/online-chat-proof-ui.wdio.test.js:330:      const openTrigger = await $('[data-testid="chat-bubble-trigger"]');
+e2e/desktop/ui-connectivity-critical.wdio.test.js:27:  const direct = await $(`[data-testid="${navTestId}"]`);
+e2e/desktop/ui-connectivity-critical.wdio.test.js:48:  const moreButton = await $('[data-testid="btn-nav-more"]');
+e2e/desktop/ui-connectivity-critical.wdio.test.js:51:    const inMore = await $(`[data-testid="${navTestId}"]`);
+e2e/desktop/ui-connectivity-critical.wdio.test.js:73:    const topNav = await $('[data-testid="nav-top-main"]');
+e2e/desktop/ui-connectivity-critical.wdio.test.js:86:      const page = await $(`[data-testid="${check.page}"]`);
+e2e/desktop/ui-connectivity-critical.wdio.test.js:95:    const topNav = await $('[data-testid="nav-top-main"]');
+e2e/desktop/ui-connectivity-critical.wdio.test.js:100:    const tabConversation = await $('[data-testid="tab-conversation"]');
+e2e/desktop/ui-connectivity-critical.wdio.test.js:116:      const element = await $(`[data-testid="${testId}"]`);
+e2e/desktop/chat-ar20.wdio.test.js:197:      trigger: '[data-testid="chat-bubble-trigger"]',
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:42:        data-testid="tabs-component"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:45:          data-testid="tabs-list"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:48:            data-testid="tab-dashboard"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:55:            data-testid="tab-metrics"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:62:            data-testid="tab-logs"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:69:            data-testid="tab-engines"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:76:            data-testid="tab-memory"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:83:            data-testid="tab-pipeline"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:90:            data-testid="tab-errors"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:98:          data-testid="tabs-content"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:107:                data-testid="section-dashboard"
+tests/unit/ControlPanel.test.tsx:19:  SystemSection: () => <div data-testid="system-section">System Section</div>,
+tests/unit/ControlPanel.test.tsx:23:  AppearanceSection: () => <div data-testid="appearance-section">Appearance Section</div>,
+tests/unit/ControlPanel.test.tsx:28:    <div data-testid="singularity-section">Singularity Section</div>
+tests/unit/ControlPanel.test.tsx:64:      expect(screen.getByTestId('system-section')).toBeInTheDocument();
+tests/unit/ControlPanel.test.tsx:126:      expect(screen.getByTestId('system-section')).toBeInTheDocument();
+e2e/features/audio-center.spec.ts:28:      page.getByRole('heading', { name: /Centre Audio TITANE∞/i })
+e2e/features/audio-center.spec.ts:40:    const outputHeading = page.getByRole('heading', { name: /Sortie Audio/i }).first();
+e2e/features/audio-center.spec.ts:64:    await expect(page.getByRole('button', { name: /Tester la Voix/i })).toBeVisible({
+e2e/features/audio-center.spec.ts:71:    const testVoiceButton = page.getByRole('button', { name: /Tester la Voix/i }).first();
+e2e/features/audio-center.spec.ts:81:    const devicesTab = page.getByRole('button', { name: /Appareils/i }).first();
+e2e/features/audio-center.spec.ts:89:      .getByRole('button', { name: /Tester le haut-parleur/i })
+e2e/features/audio-center.spec.ts:101:    const devicesTab = page.getByRole('button', { name: /Appareils/i }).first();
+e2e/features/audio-center.spec.ts:109:      .getByRole('button', { name: /Tester le microphone/i })
+e2e/features/governance-center.spec.ts:28:      page.getByRole('heading', { name: /Centre Gouvernance & Sécurité/i })
+e2e/features/governance-center.spec.ts:33:    const secretsTab = page.getByRole('button', { name: /Secrets/i }).first();
+e2e/features/governance-center.spec.ts:34:    const policiesTab = page.getByRole('button', { name: /Politiques/i }).first();
+e2e/features/governance-center.spec.ts:35:    const permissionsTab = page.getByRole('button', { name: /Permissions/i }).first();
+e2e/features/governance-center.spec.ts:36:    const logsTab = page.getByRole('button', { name: /Journal/i }).first();
+e2e/features/governance-center.spec.ts:46:      .getByRole('button', { name: /Secrets/i })
+e2e/features/governance-center.spec.ts:57:      .getByRole('button', { name: /Politiques/i })
+e2e/features/governance-center.spec.ts:70:      .getByRole('button', { name: /Permissions/i })
+e2e/features/governance-center.spec.ts:81:      .getByRole('button', { name: /Journal/i })
+e2e/features/governance-center.spec.ts:94:      .getByRole('button', { name: /Secrets/i })
+src/__tests__/apps/devtools/sections/OmegaPipeline.test.tsx:35:    <div data-testid="section-header">
+src/__tests__/apps/devtools/sections/OmegaPipeline.test.tsx:37:      {actions && <div data-testid="header-actions">{actions}</div>}
+src/__tests__/apps/devtools/sections/OmegaPipeline.test.tsx:51:      expect(screen.getByTestId('section-header')).toBeInTheDocument();
+e2e/features/production-health.spec.ts:25:    const panel = page.getByTestId('production-health-panel');
+e2e/features/production-health.spec.ts:40:    const refreshButton = page.getByTestId('production-health-refresh');
+e2e/features/production-health.spec.ts:41:    const retryButton = page.getByRole('button', { name: /Réessayer/i }).first();
+src/__tests__/apps/devtools/sections/Logs.test.tsx:37:  SectionHeader: ({ title }: any) => <div data-testid="section-header">{title}</div>,
+src/__tests__/apps/devtools/sections/Logs.test.tsx:38:  LogLine: ({ log }: any) => <div data-testid={`log-${log.id}`}>{log.message}</div>,
+src/__tests__/apps/devtools/sections/Logs.test.tsx:40:    <div data-testid="log-filters">
+src/__tests__/apps/devtools/sections/Logs.test.tsx:51:      expect(screen.getByTestId('section-header')).toBeInTheDocument();
+src/__tests__/apps/devtools/sections/Logs.test.tsx:58:      expect(screen.getByTestId('log-viewer')).toBeInTheDocument();
+src/__tests__/apps/devtools/sections/Logs.test.tsx:64:      expect(screen.getByTestId('log-filters')).toBeInTheDocument();
+src/__tests__/apps/devtools/sections/Logs.test.tsx:72:      expect(screen.getByTestId('log-1')).toBeInTheDocument();
+src/__tests__/apps/devtools/sections/Logs.test.tsx:73:      expect(screen.getByTestId('log-2')).toBeInTheDocument();
+src/__tests__/apps/devtools/sections/Logs.test.tsx:88:      const filters = screen.getByTestId('log-filters');
+src/__tests__/apps/devtools/sections/Metrics.test.tsx:69:  SectionHeader: ({ title }: any) => <div data-testid="section-header">{title}</div>,
+src/__tests__/apps/devtools/sections/Metrics.test.tsx:71:    <div data-testid={`metric-${label.replace(/\s+/g, '-')}`}>{label}</div>
+src/__tests__/apps/devtools/sections/Metrics.test.tsx:80:      expect(screen.getByTestId('section-header')).toBeInTheDocument();
+src/__tests__/apps/devtools/sections/Metrics.test.tsx:87:      expect(screen.getByTestId('metric-IPC-Latency-P50')).toBeInTheDocument();
+src/__tests__/apps/devtools/sections/Metrics.test.tsx:88:      expect(screen.getByTestId('metric-IPC-Latency-P90')).toBeInTheDocument();
+src/__tests__/apps/devtools/sections/Metrics.test.tsx:89:      expect(screen.getByTestId('metric-CPU-Usage')).toBeInTheDocument();
+src/__tests__/apps/devtools/sections/Metrics.test.tsx:90:      expect(screen.getByTestId('metric-Memory-Usage')).toBeInTheDocument();
+src/__tests__/apps/devtools/sections/Metrics.test.tsx:98:      expect(screen.getByTestId('metric-IPC-Latency-P50')).toHaveTextContent(
+src/__tests__/apps/devtools/sections/Metrics.test.tsx:101:      expect(screen.getByTestId('metric-IPC-Latency-P90')).toHaveTextContent(
+src/__tests__/apps/devtools/sections/Metrics.test.tsx:109:      expect(screen.getByTestId('metric-CPU-Usage')).toHaveTextContent('CPU Usage');
+src/__tests__/apps/devtools/sections/Metrics.test.tsx:110:      expect(screen.getByTestId('metric-Memory-Usage')).toHaveTextContent('Memory Usage');
+e2e/chat-provider-decision-certification.spec.ts:23:  '[data-testid="chat-input"]',
+e2e/chat-provider-decision-certification.spec.ts:28:  'textarea[aria-label*="Tapez votre message"]',
+e2e/chat-provider-decision-certification.spec.ts:30:  'textarea[aria-label*="Message à envoyer"]',
+e2e/chat-provider-decision-certification.spec.ts:34:  '[data-testid="send-button"]',
+e2e/chat-provider-decision-certification.spec.ts:38:  'button[aria-label*="Envoyer"]',
+e2e/chat-provider-decision-certification.spec.ts:42:  '[data-testid="assistant-message"]',
+e2e/chat-provider-decision-certification.spec.ts:48:  '[data-testid="messages-container"]',
+e2e/chat-provider-decision-certification.spec.ts:258:      .locator('button, [data-testid="close"], [aria-label*="close" i]')
+src/__tests__/apps/devtools/sections/Errors.test.tsx:52:    <div data-testid="section-header">
+src/__tests__/apps/devtools/sections/Errors.test.tsx:67:      expect(screen.getByTestId('section-header')).toBeInTheDocument();
+e2e/helpers/navigation.ts:24:  const mainNav = page.getByRole('navigation', {
+e2e/helpers/navigation.ts:29:  const titaneButton = mainNav.getByRole('button', { name: /^TITANE$/i }).first();
+e2e/helpers/navigation.ts:41:  const adminHeading = page.getByRole('heading', { name: /^ADMIN$/i });
+e2e/helpers/navigation.ts:49:  const tabButton = tabsNav.getByRole('button', { name: tabName }).first();
+e2e/helpers/navigation.ts:65:  const closeButton = beacon.getByRole('button', { name: /Fermer diagnostic/i }).first();
+src/__tests__/apps/devtools/sections/__snapshots__/Dashboard.test.tsx.snap:8:    data-testid="section-header"
+src/__tests__/apps/devtools/sections/__snapshots__/Dashboard.test.tsx.snap:29:        data-testid="status-pill"
+src/__tests__/apps/devtools/sections/__snapshots__/Dashboard.test.tsx.snap:78:    data-testid="metrics-display"
+src/__tests__/apps/devtools/sections/__snapshots__/Dashboard.test.tsx.snap:89:        data-testid="metric-card-IPC-Latency-P50"
+src/__tests__/apps/devtools/sections/__snapshots__/Dashboard.test.tsx.snap:94:        data-testid="metric-card-CPU-Usage"
+src/__tests__/apps/devtools/sections/__snapshots__/Dashboard.test.tsx.snap:110:        data-testid="engine-helios"
+src/__tests__/apps/devtools/sections/__snapshots__/Dashboard.test.tsx.snap:115:        data-testid="engine-nexus"
+src/__tests__/apps/devtools/sections/__snapshots__/Engines.test.tsx.snap:8:    data-testid="section-header"
+src/__tests__/apps/devtools/sections/__snapshots__/Engines.test.tsx.snap:81:      data-testid="engine-chat-engine"
+src/__tests__/apps/devtools/sections/__snapshots__/Engines.test.tsx.snap:87:        data-testid="status-chat-engine"
+src/__tests__/apps/devtools/sections/__snapshots__/Engines.test.tsx.snap:99:      data-testid="engine-memory-engine"
+src/__tests__/apps/devtools/sections/__snapshots__/Engines.test.tsx.snap:105:        data-testid="status-memory-engine"
+src/__tests__/apps/devtools/sections/__snapshots__/Engines.test.tsx.snap:117:      data-testid="engine-fusion-engine"
+src/__tests__/apps/devtools/sections/__snapshots__/Engines.test.tsx.snap:123:        data-testid="status-fusion-engine"
+e2e/critical/app-launch.spec.ts:92:    const nav = await page.locator('nav, [role="navigation"]').first();
+e2e/critical/app-launch.spec.ts:113:    const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });
+e2e/critical/app-launch.spec.ts:179:    const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });
+e2e/critical/app-launch.spec.ts:186:    const mainNav = page.getByRole('navigation', {
+e2e/critical/app-launch.spec.ts:191:    const statsButton = mainNav.getByRole('button', { name: /^STATS$/i }).first();
+e2e/critical/app-launch.spec.ts:192:    const titaneButton = mainNav.getByRole('button', { name: /^TITANE$/i }).first();
+src/__tests__/apps/devtools/sections/__snapshots__/Logs.test.tsx.snap:8:    data-testid="section-header"
+src/__tests__/apps/devtools/sections/__snapshots__/Logs.test.tsx.snap:13:    data-testid="log-filters"
+src/__tests__/apps/devtools/sections/__snapshots__/Logs.test.tsx.snap:56:    data-testid="log-viewer"
+src/__tests__/apps/devtools/sections/__snapshots__/Logs.test.tsx.snap:61:        data-testid="log-1"
+src/__tests__/apps/devtools/sections/__snapshots__/Logs.test.tsx.snap:66:        data-testid="log-2"
+e2e/critical/engine-navigation.spec.ts:41:    const topNav = page.getByTestId('nav-top-main');
+e2e/critical/engine-navigation.spec.ts:46:      .locator('button[data-testid^="nav-"], button[data-testid="btn-nav-more"]')
+e2e/critical/engine-navigation.spec.ts:54:    const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });
+e2e/critical/engine-navigation.spec.ts:60:    const topNav = page.getByTestId('nav-top-main');
+e2e/critical/engine-navigation.spec.ts:63:    const statsButton = topNav.getByTestId('nav-stats');
+e2e/critical/engine-navigation.spec.ts:64:    const titaneButton = topNav.getByTestId('nav-titane');
+e2e/critical/engine-navigation.spec.ts:77:    const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });
+e2e/critical/engine-navigation.spec.ts:83:    const topNav = page.getByTestId('nav-top-main');
+e2e/critical/engine-navigation.spec.ts:121:    const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });
+e2e/critical/engine-navigation.spec.ts:134:      const navButton = page.getByTestId('nav-stats');
+e2e/critical/engine-navigation.spec.ts:140:        await page.getByTestId('nav-titane').click({ force: true });
+e2e/critical/engine-navigation.spec.ts:156:      .locator('[data-testid*="metric"], [class*="score"], [class*="health"]')
+e2e/critical/system-resilience.spec.ts:27:    const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });
+e2e/critical/system-resilience.spec.ts:53:    const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });
+src/__tests__/apps/devtools/sections/__snapshots__/Errors.test.tsx.snap:8:    data-testid="section-header"
+e2e/critical/visual-engine.spec.ts:63:    const combos = page.getByRole('combobox');
+e2e/critical/visual-engine.spec.ts:144:    const nav = page.getByTestId('nav-top-main');
+e2e/critical/visual-engine.spec.ts:145:    const adminButton = nav.getByTestId('nav-admin');
+e2e/critical/visual-engine.spec.ts:146:    const titaneButton = nav.getByTestId('nav-titane');
+e2e/critical/chat-interaction.spec.ts:31:  page.getByRole('button', { name: /Envoyer/i }).first();
+src/__tests__/apps/devtools/sections/__snapshots__/Metrics.test.tsx.snap:8:    data-testid="section-header"
+src/__tests__/apps/devtools/sections/__snapshots__/Metrics.test.tsx.snap:22:        data-testid="metric-IPC-Latency-P50"
+src/__tests__/apps/devtools/sections/__snapshots__/Metrics.test.tsx.snap:27:        data-testid="metric-IPC-Latency-P90"
+src/__tests__/apps/devtools/sections/__snapshots__/Metrics.test.tsx.snap:43:        data-testid="metric-CPU-Usage"
+src/__tests__/apps/devtools/sections/__snapshots__/Metrics.test.tsx.snap:48:        data-testid="metric-Memory-Usage"
+src/__tests__/apps/devtools/sections/__snapshots__/Metrics.test.tsx.snap:64:        data-testid="metric-Omega-Duration"
+tests/ui-navigation.test.tsx:93:    const tablist = screen.getByRole('tablist', {
+tests/ui-navigation.test.tsx:110:    const tablist = screen.getByRole('tablist');
+tests/ui-navigation.test.tsx:128:    const tablist = screen.getByRole('tablist');
+src/__tests__/apps/devtools/sections/__snapshots__/Memory.test.tsx.snap:8:    data-testid="section-header"
+src/__tests__/apps/devtools/sections/__snapshots__/Memory.test.tsx.snap:89:        data-testid="memory-tree"
+src/__tests__/apps/devtools/sections/__snapshots__/Memory.test.tsx.snap:92:          data-testid="node-stm"
+src/__tests__/apps/devtools/sections/__snapshots__/Memory.test.tsx.snap:100:          data-testid="node-mtm"
+src/__tests__/apps/devtools/sections/__snapshots__/Memory.test.tsx.snap:108:          data-testid="node-ltm"
+e2e/feedback-loop.spec.ts:333:      await page.waitForSelector('[data-testid="audio-error-modal"]', { timeout: 3000 });
+e2e/feedback-loop.spec.ts:336:      const errorModalVisible = await page.isVisible('[data-testid="audio-error-modal"]');
+e2e/feedback-loop.spec.ts:340:      const errorType = await page.textContent('[data-testid="error-title"]');
+e2e/feedback-loop.spec.ts:344:      await page.click('[data-testid="close-error-modal"]');
+e2e/feedback-loop.spec.ts:347:      const modalClosed = await page.isHidden('[data-testid="audio-error-modal"]');
+e2e/feedback-loop.spec.ts:415:      await page.waitForSelector('[data-testid="audio-error-modal"]');
+e2e/feedback-loop.spec.ts:416:      const errorType = await page.textContent('[data-testid="error-title"]');
+e2e/feedback-loop.spec.ts:429:      await page.waitForSelector('[data-testid="audio-error-modal"]');
+e2e/feedback-loop.spec.ts:430:      const errorType = await page.textContent('[data-testid="error-title"]');
+e2e/feedback-loop.spec.ts:443:      await page.waitForSelector('[data-testid="audio-error-modal"]');
+e2e/feedback-loop.spec.ts:444:      const errorType = await page.textContent('[data-testid="error-title"]');
+e2e/feedback-loop.spec.ts:457:      await page.waitForSelector('[data-testid="audio-error-modal"]');
+e2e/feedback-loop.spec.ts:460:      await page.click('[data-testid="retry-button"]');
+e2e/omega-pipeline-e2e.spec.ts:25:  const mainNav = page.getByRole('navigation', {
+e2e/omega-pipeline-e2e.spec.ts:30:  const titaneBtn = mainNav.getByRole('button', { name: 'TITANE' });
+e2e/omega-pipeline-e2e.spec.ts:34:  const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });
+src/__tests__/apps/devtools/sections/__snapshots__/OmegaPipeline.test.tsx.snap:8:    data-testid="section-header"
+src/__tests__/apps/devtools/sections/__snapshots__/OmegaPipeline.test.tsx.snap:14:      data-testid="header-actions"
+src/__tests__/apps/devtools/sections/Engines.test.tsx:47:    <div data-testid="section-header">
+src/__tests__/apps/devtools/sections/Engines.test.tsx:53:    <div data-testid={`engine-${engine.id}`}>
+src/__tests__/apps/devtools/sections/Engines.test.tsx:55:      <span data-testid={`status-${engine.id}`}>{engine.status}</span>
+src/__tests__/apps/devtools/sections/Engines.test.tsx:70:      expect(screen.getByTestId('section-header')).toBeInTheDocument();
+src/__tests__/apps/devtools/sections/Engines.test.tsx:75:      expect(screen.getByTestId('engine-chat-engine')).toBeInTheDocument();
+src/__tests__/apps/devtools/sections/Engines.test.tsx:76:      expect(screen.getByTestId('engine-memory-engine')).toBeInTheDocument();
+src/__tests__/apps/devtools/sections/Engines.test.tsx:77:      expect(screen.getByTestId('engine-fusion-engine')).toBeInTheDocument();
+src/__tests__/apps/devtools/sections/Engines.test.tsx:82:      expect(screen.getByTestId('status-chat-engine')).toHaveTextContent('running');
+src/__tests__/apps/devtools/sections/Engines.test.tsx:83:      expect(screen.getByTestId('status-memory-engine')).toHaveTextContent('idle');
+src/__tests__/apps/devtools/sections/Engines.test.tsx:84:      expect(screen.getByTestId('status-fusion-engine')).toHaveTextContent('error');
+src/__tests__/apps/devtools/sections/Memory.test.tsx:29:    <div data-testid="section-header">
+src/__tests__/apps/devtools/sections/Memory.test.tsx:36:    <div data-testid="memory-tree">
+src/__tests__/apps/devtools/sections/Memory.test.tsx:41:          data-testid={`node-${node.id}`}
+src/__tests__/apps/devtools/sections/Memory.test.tsx:58:      expect(screen.getByTestId('section-header')).toBeInTheDocument();
+src/__tests__/apps/devtools/sections/Memory.test.tsx:64:      expect(screen.getByTestId('memory-tree')).toBeInTheDocument();
+src/__tests__/apps/devtools/sections/Memory.test.tsx:69:      expect(screen.getByTestId('node-stm')).toBeInTheDocument();
+src/__tests__/apps/devtools/sections/Memory.test.tsx:70:      expect(screen.getByTestId('node-mtm')).toBeInTheDocument();
+src/__tests__/apps/devtools/sections/Memory.test.tsx:71:      expect(screen.getByTestId('node-ltm')).toBeInTheDocument();
+src/__tests__/apps/devtools/sections/Memory.test.tsx:85:      const purgeBtn = screen.getByRole('button', { name: /Purge STM/i });
+src/__tests__/apps/devtools/sections/Memory.test.tsx:91:      const stmNode = screen.getByTestId('node-stm');
+src/__tests__/apps/devtools/sections/Dashboard.test.tsx:44:    <div data-testid="section-header">
+src/__tests__/apps/devtools/sections/Dashboard.test.tsx:50:    <div data-testid={`metric-card-${label.replace(/\s+/g, '-')}`}>{label}</div>
+src/__tests__/apps/devtools/sections/Dashboard.test.tsx:52:  StatusPill: ({ label }: any) => <span data-testid="status-pill">{label}</span>,
+src/__tests__/apps/devtools/sections/Dashboard.test.tsx:54:    <div data-testid={`engine-${engine.id}`}>{engine.name}</div>
+src/__tests__/apps/devtools/sections/Dashboard.test.tsx:67:      expect(screen.getByTestId('section-header')).toBeInTheDocument();
+src/__tests__/apps/devtools/sections/Dashboard.test.tsx:74:      const metricsDisplay = screen.getByTestId('metrics-display');
+src/__tests__/apps/devtools/sections/Dashboard.test.tsx:82:      expect(screen.getByTestId('status-pill')).toBeInTheDocument();
+src/__tests__/apps/devtools/sections/Dashboard.test.tsx:90:      expect(screen.getByTestId('metric-card-IPC-Latency-P50')).toBeInTheDocument();
+src/__tests__/apps/devtools/sections/Dashboard.test.tsx:91:      expect(screen.getByTestId('metric-card-CPU-Usage')).toBeInTheDocument();
+src/__tests__/apps/devtools/sections/Dashboard.test.tsx:99:      expect(screen.getByTestId('engine-helios')).toBeInTheDocument();
+src/__tests__/apps/devtools/sections/Dashboard.test.tsx:100:      expect(screen.getByTestId('engine-nexus')).toBeInTheDocument();
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:17:  Dashboard: () => <div data-testid="section-dashboard">Dashboard Section</div>,
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:18:  Metrics: () => <div data-testid="section-metrics">Metrics Section</div>,
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:19:  Logs: () => <div data-testid="section-logs">Logs Section</div>,
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:20:  Engines: () => <div data-testid="section-engines">Engines Section</div>,
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:21:  Memory: () => <div data-testid="section-memory">Memory Section</div>,
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:22:  OmegaPipeline: () => <div data-testid="section-pipeline">Pipeline Section</div>,
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:23:  Errors: () => <div data-testid="section-errors">Errors Section</div>,
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:30:    <div data-testid="tabs-component">
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:31:      <div data-testid="tabs-list">
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:35:            data-testid={`tab-${tab.id}`}
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:42:      <div data-testid="tabs-content">
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:99:        const tab = screen.getByTestId(`tab-${tabId}`);
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:107:      const dashboardTab = screen.getByTestId('tab-dashboard');
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:110:      const metricsTab = screen.getByTestId('tab-metrics');
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:118:      expect(screen.getByTestId('tabs-component')).toBeInTheDocument();
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:124:      expect(screen.getByTestId('tabs-component')).toBeInTheDocument();
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:134:        expect(screen.getByTestId('tabs-content')).toBeInTheDocument();
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:142:      const metricsTab = screen.getByTestId('tab-metrics');
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:145:      const logsTab = screen.getByTestId('tab-logs');
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:189:        expect(screen.getByTestId('tabs-component')).toBeInTheDocument();
+src/__tests__/ui/ui-navigation.test.ts:118:    const tablist = screen.getByRole('tablist', {
+src/__tests__/ui/ui-navigation.test.ts:133:    const tablist = screen.getByRole('tablist');
+src/__tests__/ui/ui-navigation.test.ts:149:    const tablist = screen.getByRole('tablist');
+tests/e2e/chat-accessibility-axe.spec.ts:27:      '[role="button"][aria-label="Ouvrir TITANE∞ AI Companion"]'
+tests/e2e/chat-accessibility-axe.spec.ts:33:      .include('[role="button"][aria-label="Ouvrir TITANE∞ AI Companion"]')
+tests/e2e/chat-accessibility-axe.spec.ts:47:      '[role="button"][aria-label="Ouvrir TITANE∞ AI Companion"]'
+tests/e2e/chat-accessibility-axe.spec.ts:53:      '[role="dialog"][aria-label="TITANE∞ AI Companion Chat Panel"]'
+tests/e2e/chat-accessibility-axe.spec.ts:59:      .include('[role="dialog"]')
+tests/e2e/chat-accessibility-axe.spec.ts:77:    const chatBubble = page.locator('[role="button"]').first();
+tests/e2e/chat-accessibility-axe.spec.ts:81:    await page.waitForSelector('[role="dialog"]', { timeout: 3000 });
+tests/e2e/chat-accessibility-axe.spec.ts:85:      .include('[role="dialog"]')
+tests/e2e/chat-accessibility-axe.spec.ts:100:      '[role="button"][aria-label="Ouvrir TITANE∞ AI Companion"]'
+tests/e2e/chat-accessibility-axe.spec.ts:108:    const chatPanel = page.locator('[role="dialog"]');
+tests/e2e/chat-accessibility-axe.spec.ts:123:    const chatBubble = page.locator('[role="button"]').first();
+tests/e2e/chat-accessibility-axe.spec.ts:127:    await page.waitForSelector('[role="dialog"]', { timeout: 3000 });
+tests/e2e/chat-accessibility-axe.spec.ts:131:      { selector: '[role="dialog"]', name: 'dialog (panel principal)' },
+tests/e2e/chat-accessibility-axe.spec.ts:132:      { selector: '[role="banner"]', name: 'banner (header)' },
+tests/e2e/chat-accessibility-axe.spec.ts:133:      { selector: '[role="toolbar"]', name: 'toolbar (actions)' },
+tests/e2e/chat-accessibility-axe.spec.ts:134:      { selector: '[role="log"]', name: 'log (messages)' },
+tests/e2e/chat-accessibility-axe.spec.ts:135:      { selector: '[role="form"]', name: 'form (input)' },
+tests/e2e/chat-accessibility-axe.spec.ts:136:      { selector: '[role="status"]', name: 'status (compteur messages)' },
+tests/e2e/chat-accessibility-axe.spec.ts:147:      .include('[role="dialog"]')
+tests/e2e/chat-accessibility-axe.spec.ts:162:    const chatBubble = page.locator('[role="button"]').first();
+tests/e2e/chat-accessibility-axe.spec.ts:166:    await page.waitForSelector('[role="dialog"]', { timeout: 3000 });
+tests/e2e/chat-accessibility-axe.spec.ts:169:    const messagesContainer = page.locator('[role="log"]').first();
+tests/e2e/chat-accessibility-axe.spec.ts:179:    const chatBubble = page.locator('[role="button"]').first();
+tests/e2e/chat-accessibility-axe.spec.ts:183:    await page.waitForSelector('[role="dialog"]', { timeout: 3000 });
+tests/e2e/chat-accessibility-axe.spec.ts:186:    const textarea = page.locator('textarea[aria-label="Saisir votre message"]');
+tests/e2e/chat-accessibility-axe.spec.ts:211:    const chatBubble = page.locator('[role="button"]').first();
+tests/e2e/chat-accessibility-axe.spec.ts:215:    await page.waitForSelector('[role="dialog"]', { timeout: 3000 });
+tests/e2e/chat-accessibility-axe.spec.ts:219:      .include('[role="dialog"]')
+src/__tests__/memoryComponents.test.tsx:292:      fireEvent.click(screen.getByRole('button', { name: 'Supprimer' }));
+src/__tests__/memoryComponents.test.tsx:307:      fireEvent.click(screen.getByRole('button', { name: 'Annuler' }));
+tests/a11y/advanced-a11y.test.tsx:18:    <div role="dialog">
+tests/a11y/advanced-a11y.test.tsx:77:      const submitButton = screen.getByRole('button', { name: /submit/i });
+tests/a11y/advanced-a11y.test.tsx:120:      const triggerButton = screen.getByRole('button', { name: /open modal/i });
+tests/a11y/advanced-a11y.test.tsx:126:      const closeButton = screen.getByRole('button', { name: /close/i });
+tests/a11y/advanced-a11y.test.tsx:138:      expect(screen.getByRole('banner')).toBeInTheDocument(); // header
+tests/a11y/advanced-a11y.test.tsx:139:      expect(screen.getByRole('main')).toBeInTheDocument();
+tests/a11y/advanced-a11y.test.tsx:140:      expect(screen.getByRole('contentinfo')).toBeInTheDocument(); // footer
+tests/e2e/chat-race-conditions.spec.ts:209:    const messages = page.locator('[role="article"]');
+tests/e2e/chat-race-conditions.spec.ts:215:      const ariaLabel = await firstMessage.getAttribute('aria-label');
+src/__tests__/apps/Settings/Settings.test.tsx:23:  LanguageSwitcher: () => <div data-testid="language-switcher">LanguageSwitcher</div>,
+src/__tests__/apps/Settings/Settings.test.tsx:36:      const title = screen.getByRole('heading', { name: 'settings.title', level: 1 });
+src/__tests__/apps/Settings/Settings.test.tsx:44:      const main = screen.getByRole('main');
+src/__tests__/apps/Settings/Settings.test.tsx:45:      expect(main).toHaveAttribute('aria-labelledby', 'settings-title');
+src/__tests__/apps/Settings/Settings.test.tsx:51:      const section = screen.getByRole('heading', { name: 'settings.general', level: 2 });
+src/__tests__/apps/Settings/Settings.test.tsx:59:      const section = screen.getByRole('heading', {
+src/__tests__/apps/Settings/Settings.test.tsx:72:      const switcher = screen.getByTestId('language-switcher');
+tests/e2e/provider-flow.test.ts:46:    const providerSelect = page.locator('[data-testid="provider-select"]');
+tests/e2e/provider-flow.test.ts:54:    const messageInput = page.locator('[data-testid="chat-input"]');
+tests/e2e/provider-flow.test.ts:57:    const sendButton = page.locator('[data-testid="send-button"]');
+tests/e2e/provider-flow.test.ts:62:    await page.waitForSelector('[data-testid="assistant-message"]', {
+tests/e2e/provider-flow.test.ts:74:    const responseMessage = page.locator('[data-testid="assistant-message"]').last();
+tests/e2e/provider-flow.test.ts:121:    const providerSelect = page.locator('[data-testid="provider-select"]');
+tests/e2e/provider-flow.test.ts:125:    const messageInput = page.locator('[data-testid="chat-input"]');
+tests/e2e/provider-flow.test.ts:126:    const sendButton = page.locator('[data-testid="send-button"]');
+tests/e2e/provider-flow.test.ts:131:    await page.waitForSelector('[data-testid="assistant-message"]', { timeout: 5000 });
+tests/e2e/provider-flow.test.ts:137:    await page.waitForSelector('[data-testid="assistant-message"]:nth-of-type(2)', {
+tests/e2e/provider-flow.test.ts:145:    await page.waitForSelector('[data-testid="assistant-message"]:nth-of-type(3)', {
+tests/e2e/provider-flow.test.ts:150:      .locator('[data-testid="assistant-message"]')
+tests/e2e/provider-flow.test.ts:202:    const providerSelect = page.locator('[data-testid="provider-select"]');
+tests/e2e/provider-flow.test.ts:206:    const messageInput = page.locator('[data-testid="chat-input"]');
+tests/e2e/provider-flow.test.ts:207:    const sendButton = page.locator('[data-testid="send-button"]');
+tests/e2e/provider-flow.test.ts:211:    await page.waitForSelector('[data-testid="assistant-message"]', { timeout: 5000 });
+tests/e2e/provider-flow.test.ts:227:    await page.waitForSelector('[data-testid="assistant-message"]:nth-of-type(2)', {
+tests/e2e/provider-flow.test.ts:264:    const providerSelect = page.locator('[data-testid="provider-select"]');
+tests/e2e/provider-flow.test.ts:268:    const messageInput = page.locator('[data-testid="chat-input"]');
+tests/e2e/provider-flow.test.ts:269:    const sendButton = page.locator('[data-testid="send-button"]');
+tests/e2e/provider-flow.test.ts:282:    const errorMessage = page.locator('[data-testid="error-message"]');
+tests/e2e/provider-flow.test.ts:291:      const loadingSpinner = page.locator('[data-testid="loading-spinner"]');
+tests/e2e/provider-flow.test.ts:321:    const providerSelect = page.locator('[data-testid="provider-select"]');
+tests/e2e/provider-flow.test.ts:325:    const messageInput = page.locator('[data-testid="chat-input"]');
+tests/e2e/provider-flow.test.ts:326:    const sendButton = page.locator('[data-testid="send-button"]');
+tests/e2e/provider-flow.test.ts:337:        `[data-testid="assistant-message"]:nth-of-type(${i + 1})`,
+tests/e2e/provider-flow.test.ts:373: * - Test selectors ([data-testid]) ajoutés aux composants UI
+src/__tests__/apps/Settings/__snapshots__/Settings.test.tsx.snap:5:  aria-labelledby="settings-title"
+src/__tests__/apps/Settings/__snapshots__/Settings.test.tsx.snap:7:  role="main"
+src/__tests__/apps/Settings/__snapshots__/Settings.test.tsx.snap:17:    aria-labelledby="general-settings"
+src/__tests__/apps/Settings/__snapshots__/Settings.test.tsx.snap:25:      data-testid="language-switcher"
+src/__tests__/apps/Settings/__snapshots__/Settings.test.tsx.snap:31:    aria-labelledby="appearance-settings"
+tests/e2e/ui-comprehensive.spec.ts:27:    const mainContainer = await page.locator('[data-testid="dashboard-main"]');
+tests/e2e/ui-comprehensive.spec.ts:35:    const navItems = await page.locator('nav a, [role="navigation"] a, aside a');
+tests/e2e/ui-comprehensive.spec.ts:68:    const buttons = await page.locator('button:visible, [role="button"]');
+tests/e2e/ui-comprehensive.spec.ts:149:    const tabs = await page.locator('[role="tab"]');
+tests/e2e/ui-comprehensive.spec.ts:162:    const tabpanels = await page.locator('[role="tabpanel"]');
+tests/e2e/ui-comprehensive.spec.ts:187:    const dialogs = await page.locator('[role="dialog"]');
+tests/e2e/ui-comprehensive.spec.ts:195:          'button:has-text("Fermer"), button:has-text("Close"), [aria-label*="Close"]'
+tests/e2e/ui-comprehensive.spec.ts:256:      const ariaLabel = await input.getAttribute('aria-label');
+tests/e2e/ui-comprehensive.spec.ts:293:      '[aria-label*="pagination"], nav:has-text("Page"), .pagination'
+tests/e2e/ui-comprehensive.spec.ts:306:    const alerts = await page.locator('[role="alert"], .alert, .error, [class*="error"]');
+tests/e2e/ui-comprehensive.spec.ts:320:      'button:has-text("Dark"), button:has-text("Light"), [aria-label*="theme"], [aria-label*="mode"]'
+tests/e2e/ui-comprehensive.spec.ts:354:    const items = await page.locator('[data-tooltip], [title], [aria-label]');
+tests/e2e/accessibility.spec.ts:27:    await expect(page.locator('[role="main"]')).toBeVisible();
+tests/e2e/accessibility.spec.ts:28:    await expect(page.locator('[role="banner"]')).toBeVisible();
+tests/e2e/accessibility.spec.ts:29:    await expect(page.locator('[aria-label]')).toHaveCount.greaterThan(0);
+tests/e2e/critical-flows.spec.ts:30:    const input = page.locator('[data-testid="chat-input"]');
+tests/e2e/critical-flows.spec.ts:35:    await expect(page.locator('[data-testid="offline-indicator"]')).toBeVisible({
+tests/e2e/critical-flows.spec.ts:43:    await expect(page.locator('[data-testid="offline-indicator"]')).toBeHidden({
+tests/e2e/critical-flows.spec.ts:50:    await page.locator('[data-testid="chat-input"]').fill('Test provider recovery');
+tests/e2e/critical-flows.spec.ts:51:    await page.locator('[data-testid="chat-input"]').press('Enter');
+tests/e2e/critical-flows.spec.ts:54:    const retryIndicator = page.locator('[data-testid="retry-indicator"]');
+tests/e2e/critical-flows.spec.ts:61:    await expect(page.locator('[data-testid="chat-message"]').last()).toBeVisible();
+tests/e2e/critical-flows.spec.ts:65:    const input = page.locator('[data-testid="chat-input"]');
+tests/e2e/critical-flows.spec.ts:76:    await expect(page.locator('[data-testid="chat-message"]')).toHaveCount(10, {
+tests/e2e/critical-flows.spec.ts:81:    await expect(page.locator('[data-testid="error-banner"]')).toBeHidden();
+tests/e2e/critical-flows.spec.ts:89:      await page.locator('[data-testid="chat-input"]').fill(`Performance test ${i + 1}`);
+tests/e2e/critical-flows.spec.ts:90:      await page.locator('[data-testid="chat-input"]').press('Enter');
+tests/e2e/critical-flows.spec.ts:95:    await expect(page.locator('[data-testid="chat-message"]')).toHaveCount(20, {
+tests/e2e/critical-flows.spec.ts:133:      await page.locator('[data-testid="chat-input"]').fill(input);
+tests/e2e/critical-flows.spec.ts:134:      await page.locator('[data-testid="chat-input"]').press('Enter');
+tests/e2e/critical-flows.spec.ts:145:    const messages = page.locator('[data-testid="chat-message"]');
+tests/e2e/critical-flows.spec.ts:186:    await expect(page.locator('[data-testid="chat-message"]').last()).toContainText(
+tests/e2e/critical-flows.spec.ts:206:    const chatInput = page.locator('[data-testid="chat-input"]');
+tests/e2e/critical-flows.spec.ts:207:    await expect(chatInput).toHaveAttribute('aria-label');
+tests/e2e/critical-flows.spec.ts:209:    const sendButton = page.locator('[data-testid="send-button"]');
+tests/e2e/critical-flows.spec.ts:210:    await expect(sendButton).toHaveAttribute('aria-label');
+tests/e2e/critical-flows.spec.ts:213:    const mainContent = page.locator('main[role="main"]');
+tests/e2e/critical-flows.spec.ts:217:    const chatContainer = page.locator('[role="log"]');
+tests/e2e/critical-flows.spec.ts:233:    await page.locator('[data-testid="chat-input"]').fill('Test après memory load');
+tests/e2e/critical-flows.spec.ts:234:    await page.locator('[data-testid="chat-input"]').press('Enter');
+tests/e2e/critical-flows.spec.ts:237:    await expect(page.locator('[data-testid="chat-message"]').last()).toBeVisible({
+tests/e2e/critical-flows.spec.ts:263:    await page.locator('[data-testid="chat-input"]').fill('Test storage overflow');
+tests/e2e/critical-flows.spec.ts:264:    await page.locator('[data-testid="chat-input"]').press('Enter');
+tests/e2e/critical-flows.spec.ts:267:    await expect(page.locator('[data-testid="storage-warning"]')).toBeVisible({
+tests/e2e/critical-flows.spec.ts:272:    await expect(page.locator('[data-testid="chat-message"]').last()).toBeVisible();
+tests/e2e/critical-flows.spec.ts:281:    await page.locator('[data-testid="toggle-sidebar"]').click();
+tests/e2e/critical-flows.spec.ts:283:    await page.locator('[data-testid="toggle-sidebar"]').click();
+tests/e2e/critical-flows.spec.ts:310:    await page.locator('[data-testid="run-long-task"]').click();
+tests/e2e/critical-flows.spec.ts:313:    await page.locator('[data-testid="chat-input"]').fill('Test pendant long task');
+tests/e2e/critical-flows.spec.ts:314:    await page.locator('[data-testid="chat-input"]').press('Enter');
+tests/e2e/critical-flows.spec.ts:335:    await page.locator('[data-testid="chat-input"]').fill('Test consistency');
+tests/e2e/critical-flows.spec.ts:336:    await page.locator('[data-testid="chat-input"]').press('Enter');
+tests/e2e/critical-flows.spec.ts:340:    const initialCount = await page.locator('[data-testid="chat-message"]').count();
+tests/e2e/critical-flows.spec.ts:347:    const afterReloadCount = await page.locator('[data-testid="chat-message"]').count();
+tests/e2e/critical-flows.spec.ts:352:      .locator('[data-testid="chat-message"]')
+tests/e2e/critical-flows.spec.ts:362:        .locator('[data-testid="chat-input"]')
+tests/e2e/critical-flows.spec.ts:364:        .then(() => page.locator('[data-testid="chat-input"]').press('Enter'))
+tests/e2e/critical-flows.spec.ts:373:    const messageCount = await page.locator('[data-testid="chat-message"]').count();
+tests/e2e/critical-flows.spec.ts:377:    await expect(page.locator('[data-testid="error-banner"]')).toBeHidden();
+tests/e2e/critical-flows.spec.ts:401:    await page.locator('[data-testid="chat-input"]').fill('Test snapshot');
+tests/e2e/critical-flows.spec.ts:402:    await page.locator('[data-testid="chat-input"]').press('Enter');
+tests/e2e/critical-flows.spec.ts:406:    await expect(page.locator('[data-testid="chat-container"]')).toHaveScreenshot(
+src/styles/a11y.css:134:[role='button'] {
+src/styles/critical.css:156:a[role='button'] {
+src/__tests__/features/memory/__snapshots__/MemoryCard.test.tsx.snap:27:      aria-label="Collapse panel"
+src/apps/devtools/components/MetricCard.tsx:68:      data-testid={testId}
+src/__tests__/features/memory/__snapshots__/MemoryVisualization.test.tsx.snap:181:      data-testid="mock-tree"
+src/pages/TitanePage.tsx:199:      <Container size="xl" className="titane-page" data-testid="page-titane">
+src/pages/TitanePage.tsx:216:              role="tablist"
+src/pages/TitanePage.tsx:217:              aria-label="Sections principales TITANE"
+src/pages/TitanePage.tsx:225:                data-testid="tab-conversation"
+src/pages/TitanePage.tsx:227:                role="tab"
+src/pages/TitanePage.tsx:240:                data-testid="tab-overview"
+src/pages/TitanePage.tsx:242:                role="tab"
+src/pages/TitanePage.tsx:255:                data-testid="tab-vision"
+src/pages/TitanePage.tsx:257:                role="tab"
+src/pages/TitanePage.tsx:270:                data-testid="tab-identity"
+src/pages/TitanePage.tsx:272:                role="tab"
+src/pages/TitanePage.tsx:285:                data-testid="tab-memory"
+src/pages/TitanePage.tsx:287:                role="tab"
+src/pages/TitanePage.tsx:300:                data-testid="tab-memory-evolution"
+src/pages/TitanePage.tsx:302:                role="tab"
+src/pages/TitanePage.tsx:315:                data-testid="tab-progression"
+src/pages/TitanePage.tsx:317:                role="tab"
+src/pages/TitanePage.tsx:330:                data-testid="tab-transformation"
+src/pages/TitanePage.tsx:332:                role="tab"
+src/pages/TitanePage.tsx:345:            data-testid="page-titane-content"
+src/pages/TitanePage.tsx:346:            role="tabpanel"
+src/pages/TitanePage.tsx:348:            aria-labelledby={TAB_LABEL_IDS[activeTab]}
+src/__tests__/features/memory/MemoryCard.test.tsx:70:      const btn = screen.getByRole('button', { name: /collapse panel/i });
+src/__tests__/e2e-automated-validation.test.tsx:1254:    const sendButton = screen.getByRole('button', { name: /Envoyer message texte/i });
+src/__tests__/features/memory/MemoryVisualization.test.tsx:12:    <div data-testid="mock-tree">
+src/__tests__/features/memory/MemoryVisualization.test.tsx:38:      expect(screen.getByTestId('mock-tree')).toBeInTheDocument();
+src/pages/DesignSystemShowcase.tsx:169:                    <Button variant="primary" size="icon" aria-label="Icon button">
+src/__tests__/panels/__snapshots__/ChatPanel.test.tsx.snap:43:        aria-label="Collapse panel"
+src/__tests__/features/chat/ChatMessage.test.tsx:40:      render(<ChatMessage {...baseMessage} role="user" />);
+src/__tests__/features/chat/ChatMessage.test.tsx:48:          role="assistant"
+src/__tests__/features/chat/ChatMessage.test.tsx:59:        <ChatMessage {...baseMessage} role="system" content="System notification" />
+src/__tests__/panels/ChatPanel.test.tsx:68:      expect(screen.getByRole('button', { name: /collapse panel/i })).toBeInTheDocument();
+src/__tests__/panels/ChatPanel.test.tsx:84:      fireEvent.click(screen.getByRole('button', { name: /collapse panel/i }));
+src/pages/ConfigurationHub.tsx:556:    <div className="module-page" data-testid="page-configuration-hub">
+src/pages/ConfigurationHub.tsx:586:                data-testid="btn-config-refresh"
+src/pages/ConfigurationHub.tsx:606:                data-testid="btn-config-export"
+src/pages/ConfigurationHub.tsx:622:                data-testid="btn-config-import"
+src/pages/ConfigurationHub.tsx:638:                data-testid="btn-config-save-preset"
+src/pages/ConfigurationHub.tsx:655:                  data-testid="select-config-preset"
+src/pages/ConfigurationHub.tsx:682:                data-testid="btn-config-edit"
+src/pages/ConfigurationHub.tsx:702:                data-testid="btn-config-cancel"
+src/pages/ConfigurationHub.tsx:720:                data-testid="btn-config-save"
+src/pages/ConfigurationHub.tsx:801:          data-testid="tab-config-system"
+src/pages/ConfigurationHub.tsx:808:          data-testid="tab-config-ai"
+src/pages/ConfigurationHub.tsx:815:          data-testid="tab-config-performance"
+src/__tests__/a11y/ScreenReader.test.tsx:26:      const region = screen.getByRole('status');
+src/__tests__/a11y/ScreenReader.test.tsx:36:      const region = screen.getByRole('status');
+src/pages/DevPage.tsx:230:            data-testid={`btn-dev-operation-${op.id}`}
+src/pages/DevPage.tsx:248:          data-testid="btn-dev-execute-operation"
+src/pages/DevPage.tsx:336:            data-testid={`btn-dev-command-${cmd.id}`}
+src/pages/DevPage.tsx:412:              data-testid={`btn-dev-run-suite-${suite.id}`}
+src/pages/DevPage.tsx:538:                data-testid={`btn-dev-ack-alert-${alert.id}`}
+src/pages/DevPage.tsx:775:    <div className="dev-page" data-testid="page-dev">
+src/pages/DevPage.tsx:783:          data-testid="btn-dev-refresh"
+src/pages/DevPage.tsx:794:            data-testid={`tab-dev-${section.id}`}
+src/pages/DevPage.tsx:813:          <div data-testid="page-dev-diagnostic">
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:38:          aria-label="Importer fichiers"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:67:          aria-label="Capture d'écran"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:125:          aria-label="Analyser image"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:167:          aria-label="Capture caméra"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:201:          aria-label="Caméra live"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:249:          aria-label="Dictée vocale"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:288:          aria-label="Enregistrer audio"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:324:          aria-label="Transcrire audio"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:372:          aria-label="Mode conversation audio"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:401:          aria-label="Synthèse vocale"
+src/__tests__/features/chat/ChatToolbar.test.tsx:45:      expect(screen.getByRole('button', { name: /Importer fichiers/i })).toBeTruthy();
+src/__tests__/features/chat/ChatToolbar.test.tsx:56:        screen.getByRole('button', { name: /Capture d'écran/i })
+src/__tests__/features/chat/ChatToolbar.test.tsx:58:      expect(screen.getByRole('button', { name: /Analyser image/i })).toBeInTheDocument();
+src/__tests__/features/chat/ChatToolbar.test.tsx:59:      expect(screen.getByRole('button', { name: /Dictée vocale/i })).toBeInTheDocument();
+src/__tests__/features/chat/ChatToolbar.test.tsx:61:        screen.getByRole('button', { name: /Mode conversation audio/i })
+src/__tests__/features/chat/ChatToolbar.test.tsx:69:      expect(screen.getByRole('button', { name: /Importer fichiers/i })).toBeDisabled();
+src/__tests__/features/chat/ChatToolbar.test.tsx:70:      expect(screen.getByRole('button', { name: /Capture d'écran/i })).toBeDisabled();
+src/__tests__/features/chat/ChatToolbar.test.tsx:71:      expect(screen.getByRole('button', { name: /Dictée vocale/i })).toBeDisabled();
+src/__tests__/features/chat/ChatToolbar.test.tsx:73:        screen.getByRole('button', { name: /Mode conversation audio/i })
+src/__tests__/features/chat/ChatToolbar.test.tsx:79:      expect(screen.getByRole('button', { name: /Capture d'écran/i })).toBeDisabled();
+src/pages/TimePage.tsx:172:      data-testid="page-time"
+src/pages/TimePage.tsx:199:            data-testid={`tab-time-${tab.id}`}
+src/pages/TimePage.tsx:418:          data-testid="btn-time-view-week"
+src/pages/TimePage.tsx:425:          data-testid="btn-time-view-month"
+src/pages/TimePage.tsx:468:            data-testid="input-time-planning-prompt"
+src/pages/TimePage.tsx:474:              data-testid="btn-time-generate-plan"
+src/pages/TimePage.tsx:480:              data-testid="btn-time-add-manual"
+src/pages/TimePage.tsx:557:          data-testid="btn-time-nav-past"
+src/pages/TimePage.tsx:563:          data-testid="btn-time-nav-present"
+src/pages/TimePage.tsx:569:          data-testid="btn-time-nav-future"
+src/pages/TimePage.tsx:755:          data-testid="btn-time-create-snapshot"
+src/pages/TimePage.tsx:804:                data-testid={`btn-snapshot-select-${snapshot.id}`}
+src/pages/TimePage.tsx:895:              data-testid="btn-time-restore-snapshot"
+src/pages/TimePage.tsx:902:              data-testid="btn-time-compare-snapshot"
+src/pages/TimePage.tsx:908:              data-testid="btn-time-delete-snapshot"
+src/apps/devtools/sections/Dashboard.tsx:117:      <div data-testid="metrics-display">
+src/__tests__/performance/PerformanceTests.test.tsx:11:  <ul role="list" style={{ maxHeight: 200, overflow: 'auto' }}>
+src/__tests__/performance/PerformanceTests.test.tsx:13:      <li key={i} role="listitem">
+src/__tests__/performance/PerformanceTests.test.tsx:81:      const container = screen.getByRole('list');
+src/__tests__/performance/PerformanceTests.test.tsx:167:      const animatedElement = screen.getByRole('button', { name: /animate/i });
+src/__tests__/performance/PerformanceTests.test.tsx:248:      const heavyButton = screen.getByRole('button', { name: /devtools/i });
+src/apps/devtools/sections/Logs.tsx:130:        data-testid="log-viewer"
+src/pages/ResearchPage.tsx:147:  <div className="rp-citation" data-testid={`citation-${index}`}>
+src/pages/ResearchPage.tsx:165:        <span className="rp-locator-text" data-testid={`locator-text-${index}`}>
+src/pages/ResearchPage.tsx:191:        data-testid="trace-toggle"
+src/pages/ResearchPage.tsx:197:        <div className="rp-trace-body" data-testid="trace-body">
+src/pages/ResearchPage.tsx:368:      <div className="rp-root" data-testid="research-page">
+src/pages/ResearchPage.tsx:377:        <form className="rp-form" onSubmit={handleSubmit} data-testid="research-form">
+src/pages/ResearchPage.tsx:385:              data-testid="research-question"
+src/pages/ResearchPage.tsx:402:                data-testid="research-mode"
+src/pages/ResearchPage.tsx:421:                  data-testid="research-target-url"
+src/pages/ResearchPage.tsx:440:                data-testid="research-seed-urls"
+src/pages/ResearchPage.tsx:457:              data-testid="research-sandbox"
+src/pages/ResearchPage.tsx:468:              data-testid="research-submit"
+src/pages/ResearchPage.tsx:477:                data-testid="research-reset"
+src/pages/ResearchPage.tsx:489:          <div className="rp-error-banner" data-testid="research-error" role="alert">
+src/pages/ResearchPage.tsx:496:          <div className="rp-results" data-testid="research-results">
+src/pages/ResearchPage.tsx:498:            <div className="rp-mode-badge" data-testid="research-mode-badge">
+src/pages/ResearchPage.tsx:505:              data-testid="research-verdict"
+src/pages/ResearchPage.tsx:511:            <section className="rp-section" data-testid="research-answer-section">
+src/pages/ResearchPage.tsx:513:              <div className="rp-answer-text" data-testid="research-answer">
+src/pages/ResearchPage.tsx:524:              <section className="rp-section" data-testid="research-sources-section">
+src/pages/ResearchPage.tsx:538:              <section className="rp-section" data-testid="research-limitations-section">
+src/__tests__/features/voice/VoiceControl.test.tsx:44:      expect(screen.getByRole('button', { name: /mode voix/i })).toBeInTheDocument();
+src/__tests__/features/voice/VoiceControl.test.tsx:70:      fireEvent.click(screen.getByRole('button', { name: /mode voix/i }));
+src/__tests__/features/voice/VoiceControl.test.tsx:86:      expect(screen.getByRole('button', { name: /tester/i })).toBeDisabled();
+src/apps/Settings/Settings.tsx:9:    <div className="settings" role="main" aria-labelledby="settings-title">
+src/apps/Settings/Settings.tsx:14:      <section aria-labelledby="general-settings">
+src/apps/Settings/Settings.tsx:19:      <section aria-labelledby="appearance-settings">
+src/__tests__/e2e/ChatWorkflow.e2e.test.tsx:56:      const chatTab = screen.getByRole('tab', { name: /chat/i });
+src/__tests__/e2e/ChatWorkflow.e2e.test.tsx:64:      const sendButton = screen.getByRole('button', { name: /envoyer/i });
+src/__tests__/e2e/ChatWorkflow.e2e.test.tsx:82:      fireEvent.click(screen.getByRole('button', { name: /envoyer/i }));
+src/__tests__/e2e/ChatWorkflow.e2e.test.tsx:89:      fireEvent.click(screen.getByRole('tab', { name: /mémoire/i }));
+src/__tests__/e2e/ChatWorkflow.e2e.test.tsx:109:      fireEvent.click(screen.getByRole('button', { name: /envoyer/i }));
+src/__tests__/e2e/ChatWorkflow.e2e.test.tsx:124:      fireEvent.click(screen.getByRole('button', { name: /envoyer/i }));
+src/__tests__/e2e/ChatWorkflow.e2e.test.tsx:144:      fireEvent.click(screen.getByRole('button', { name: /envoyer/i }));
+src/__tests__/e2e/ChatWorkflow.e2e.test.tsx:155:      const clearButton = screen.getByRole('button', { name: /effacer/i });
+src/__tests__/e2e/ChatWorkflow.e2e.test.tsx:170:      fireEvent.click(screen.getByRole('button', { name: /envoyer/i }));
+src/__tests__/e2e/ChatWorkflow.e2e.test.tsx:178:      fireEvent.click(screen.getByRole('button', { name: /envoyer/i }));
+src/__tests__/e2e/ChatWorkflow.e2e.test.tsx:196:      fireEvent.click(screen.getByRole('button', { name: /envoyer/i }));
+src/__tests__/e2e/ChatWorkflow.e2e.test.tsx:229:      fireEvent.click(screen.getByRole('button', { name: /envoyer/i }));
+src/__tests__/e2e/ChatWorkflow.e2e.test.tsx:236:      const retryButton = screen.getByRole('button', { name: /retry/i });
+src/__tests__/components/ui/Dialog.test.tsx:33:          <DialogContent aria-labelledby="dialog-title">
+src/__tests__/components/ui/Dialog.test.tsx:38:      expect(screen.getByRole('dialog')).toBeInTheDocument();
+src/__tests__/components/ui/Dialog.test.tsx:44:          <DialogContent aria-labelledby="dialog-title">
+src/__tests__/components/ui/Dialog.test.tsx:59:          <DialogContent aria-labelledby="dialog-title">
+src/__tests__/components/ui/Dialog.test.tsx:68:      expect(screen.getByRole('button', { name: /cancel/i })).toBeInTheDocument();
+src/__tests__/components/ui/Dialog.test.tsx:69:      expect(screen.getByRole('button', { name: /confirm/i })).toBeInTheDocument();
+src/__tests__/components/ui/Dialog.test.tsx:78:          <DialogContent aria-labelledby="dialog-title">
+src/__tests__/components/ui/Dialog.test.tsx:85:      const dialog = screen.getByRole('dialog');
+src/__tests__/components/ui/Dialog.test.tsx:95:          <DialogContent aria-labelledby="dialog-title">
+src/__tests__/components/ui/Dialog.test.tsx:100:      expect(screen.getByRole('dialog')).toBeInTheDocument();
+src/__tests__/components/ui/Dialog.test.tsx:103:    it('should support aria-labelledby', () => {
+src/__tests__/components/ui/Dialog.test.tsx:106:          <DialogContent aria-labelledby="dialog-title">
+src/__tests__/components/ui/Dialog.test.tsx:111:      const dialog = screen.getByRole('dialog');
+src/__tests__/components/ui/Dialog.test.tsx:112:      expect(dialog).toHaveAttribute('aria-labelledby', 'dialog-title');
+src/__tests__/components/ui/Dialog.test.tsx:120:          <DialogContent aria-labelledby="dialog-title">
+src/__tests__/edge-cases/ErrorHandling.test.tsx:88:      <input role="textbox" ref={inputRef} />
+src/__tests__/edge-cases/ErrorHandling.test.tsx:157:      const retryButton = screen.getByRole('button', { name: /réessayer|retry/i });
+src/__tests__/edge-cases/ErrorHandling.test.tsx:231:      const button = screen.getByRole('button', { name: /send/i });
+src/__tests__/edge-cases/ErrorHandling.test.tsx:305:      const input = screen.getByRole('textbox');
+src/__tests__/edge-cases/ErrorHandling.test.tsx:311:      const submitButton = screen.getByRole('button', { name: /submit|send/i });
+src/__tests__/e2e/SettingsWorkflow.e2e.test.tsx:201:      fireEvent.click(screen.getByRole('button', { name: /settings/i }));
+src/__tests__/e2e/SettingsWorkflow.e2e.test.tsx:212:      fireEvent.click(screen.getByRole('button', { name: /save/i }));
+src/__tests__/e2e/SettingsWorkflow.e2e.test.tsx:236:      fireEvent.click(screen.getByRole('button', { name: /settings/i }));
+src/__tests__/e2e/SettingsWorkflow.e2e.test.tsx:251:      fireEvent.click(screen.getByRole('button', { name: /settings/i }));
+src/__tests__/e2e/SettingsWorkflow.e2e.test.tsx:262:      fireEvent.click(screen.getByRole('button', { name: /save/i }));
+src/__tests__/e2e/SettingsWorkflow.e2e.test.tsx:274:      fireEvent.click(screen.getByRole('button', { name: /settings/i }));
+src/__tests__/e2e/SettingsWorkflow.e2e.test.tsx:285:      fireEvent.click(screen.getByRole('button', { name: /save/i }));
+src/__tests__/e2e/SettingsWorkflow.e2e.test.tsx:311:      fireEvent.click(screen.getByRole('button', { name: /settings/i }));
+src/__tests__/e2e/SettingsWorkflow.e2e.test.tsx:314:      const resetButton = screen.getByRole('button', { name: /reset.*defaults?/i });
+src/__tests__/e2e/SettingsWorkflow.e2e.test.tsx:318:      const confirmButton = screen.getByRole('button', { name: /confirm/i });
+src/__tests__/e2e/SettingsWorkflow.e2e.test.tsx:335:      fireEvent.click(screen.getByRole('button', { name: /settings/i }));
+src/__tests__/e2e/SettingsWorkflow.e2e.test.tsx:342:      fireEvent.click(screen.getByRole('button', { name: /save/i }));
+src/__tests__/e2e/SettingsWorkflow.e2e.test.tsx:354:      fireEvent.click(screen.getByRole('button', { name: /settings/i }));
+src/__tests__/e2e/SettingsWorkflow.e2e.test.tsx:356:      const exportButton = screen.getByRole('button', { name: /export/i });
+src/__tests__/e2e/SettingsWorkflow.e2e.test.tsx:367:      fireEvent.click(screen.getByRole('button', { name: /settings/i }));
+src/__tests__/e2e/SettingsWorkflow.e2e.test.tsx:369:      const importButton = screen.getByRole('button', { name: /import/i });
+src/__tests__/c2-anti-silence.test.tsx:20:    <div data-testid="markdown-content">{content}</div>
+src/__tests__/c2-anti-silence.test.tsx:27:    <div data-testid="chat-fallback" role="alert">
+src/__tests__/c2-anti-silence.test.tsx:104:    const fallback = screen.getByTestId('chat-fallback');
+src/__tests__/c2-anti-silence.test.tsx:121:    const markdown = screen.getByTestId('markdown-content');
+src/__tests__/c2-anti-silence.test.tsx:172:          role="assistant"
+src/__tests__/c2-anti-silence.test.tsx:199:    const bubble = container.querySelector('[aria-label]');
+src/__tests__/c2-anti-silence.test.tsx:201:    expect(bubble?.getAttribute('aria-label')).not.toBe('');
+src/__tests__/c2-anti-silence.test.tsx:275:          role="assistant"
+src/__tests__/c2-anti-silence.test.tsx:330:  it('[C2.4.1] TypingIndicator has aria-label for screen readers', () => {
+src/__tests__/c2-anti-silence.test.tsx:339:    const indicator = document.querySelector('[aria-label*="génère"]');
+src/__tests__/c2-anti-silence.test.tsx:343:  it('[C2.4.2] ChatFallback has role=alert for errors', () => {
+src/__tests__/c2-anti-silence.test.tsx:353:    const fallback = screen.getByTestId('chat-fallback');
+src/__tests__/c2-anti-silence.test.tsx:357:  it('[C2.4.3] Bubble has article role + aria-label', () => {
+src/__tests__/c2-anti-silence.test.tsx:366:    const bubble = container.querySelector('[role="article"]');
+src/__tests__/c2-anti-silence.test.tsx:368:    expect(bubble).toHaveAttribute('aria-label');
+src/__tests__/e2e/VoiceWorkflow.e2e.test.tsx:110:      const voiceTab = screen.getByRole('button', { name: /voice/i });
+src/__tests__/e2e/VoiceWorkflow.e2e.test.tsx:114:      const recordButton = screen.getByRole('button', { name: /record|start/i });
+src/__tests__/e2e/VoiceWorkflow.e2e.test.tsx:122:      const stopButton = screen.getByRole('button', { name: /stop/i });
+src/__tests__/e2e/VoiceWorkflow.e2e.test.tsx:131:      const voiceTab = screen.getByRole('button', { name: /voice/i });
+src/__tests__/e2e/VoiceWorkflow.e2e.test.tsx:135:      const recordButton = screen.getByRole('button', { name: /record/i });
+src/__tests__/e2e/VoiceWorkflow.e2e.test.tsx:143:      fireEvent.click(screen.getByRole('button', { name: /stop/i }));
+src/__tests__/e2e/VoiceWorkflow.e2e.test.tsx:159:      fireEvent.click(screen.getByRole('button', { name: /voice/i }));
+src/__tests__/e2e/VoiceWorkflow.e2e.test.tsx:160:      fireEvent.click(screen.getByRole('button', { name: /record/i }));
+src/__tests__/e2e/VoiceWorkflow.e2e.test.tsx:166:      fireEvent.click(screen.getByRole('button', { name: /stop/i }));
+src/__tests__/e2e/VoiceWorkflow.e2e.test.tsx:177:      fireEvent.click(screen.getByRole('button', { name: /send.*chat/i }));
+src/__tests__/e2e/VoiceWorkflow.e2e.test.tsx:189:      fireEvent.click(screen.getByRole('button', { name: /settings/i }));
+src/__tests__/e2e/VoiceWorkflow.e2e.test.tsx:200:      fireEvent.click(screen.getByRole('button', { name: /save/i }));
+src/__tests__/e2e/VoiceWorkflow.e2e.test.tsx:217:      fireEvent.click(screen.getByRole('button', { name: /voice/i }));
+src/__tests__/e2e/VoiceWorkflow.e2e.test.tsx:218:      fireEvent.click(screen.getByRole('button', { name: /record/i }));
+src/__tests__/e2e/VoiceWorkflow.e2e.test.tsx:233:      fireEvent.click(screen.getByRole('button', { name: /voice/i }));
+src/__tests__/e2e/VoiceWorkflow.e2e.test.tsx:234:      fireEvent.click(screen.getByRole('button', { name: /record/i }));
+src/__tests__/e2e/VoiceWorkflow.e2e.test.tsx:240:      fireEvent.click(screen.getByRole('button', { name: /stop/i }));
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:75:              <img aria-label="chart" alt="chart" />
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:84:                  aria-label="error"
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:110:              <button type="button" aria-label="expand">
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:113:              <div role="treeitem">Node 1</div>
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:114:              <div role="treeitem">Node 2</div>
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:163:      fireEvent.click(screen.getByRole('button', { name: /devtools/i }));
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:188:      fireEvent.click(screen.getByRole('button', { name: /devtools/i }));
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:194:          expect(screen.getByRole('img', { name: /chart|graph/i })).toBeInTheDocument();
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:205:      fireEvent.click(screen.getByRole('button', { name: /devtools/i }));
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:206:      fireEvent.click(screen.getByRole('button', { name: /logs/i }));
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:216:      fireEvent.click(screen.getByRole('button', { name: /devtools/i }));
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:217:      fireEvent.click(screen.getByRole('button', { name: /logs/i }));
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:234:      fireEvent.click(screen.getByRole('button', { name: /devtools/i }));
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:235:      fireEvent.click(screen.getByRole('button', { name: /logs/i }));
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:251:      fireEvent.click(screen.getByRole('button', { name: /devtools/i }));
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:252:      fireEvent.click(screen.getByRole('button', { name: /memory/i }));
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:271:      fireEvent.click(screen.getByRole('button', { name: /devtools/i }));
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:272:      fireEvent.click(screen.getByRole('button', { name: /memory/i }));
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:277:      fireEvent.click(screen.getByRole('button', { name: /search/i }));
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:289:      fireEvent.click(screen.getByRole('button', { name: /devtools/i }));
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:310:      fireEvent.click(screen.getByRole('button', { name: /devtools/i }));
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:326:      fireEvent.click(screen.getByRole('button', { name: /devtools/i }));
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:337:      fireEvent.click(screen.getByRole('button', { name: /devtools/i }));
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:341:      const stopButton = screen.getByRole('button', { name: /stop/i });
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:349:      const startButton = screen.getByRole('button', { name: /start/i });
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:362:      fireEvent.click(screen.getByRole('button', { name: /devtools/i }));
+src/__tests__/e2e/DevToolsWorkflow.e2e.test.tsx:364:      const exportButton = screen.getByRole('button', { name: /export.*diagnostic/i });
+src/__tests__/components/ui/__snapshots__/Alert.test.tsx.snap:6:  role="alert"
+src/__tests__/components/ui/__snapshots__/Switch.test.tsx.snap:9:    aria-label="Toggle switch"
+src/__tests__/components/ui/__snapshots__/Switch.test.tsx.snap:18:    role="switch"
+src/__tests__/components/ui/Tabs.test.tsx:29:      expect(screen.getByRole('tab', { name: /tab 1/i })).toBeInTheDocument();
+src/__tests__/components/ui/Tabs.test.tsx:30:      expect(screen.getByRole('tab', { name: /tab 2/i })).toBeInTheDocument();
+src/__tests__/components/ui/Tabs.test.tsx:59:      fireEvent.click(screen.getByRole('tab', { name: /tab 2/i }));
+src/__tests__/components/ui/Tabs.test.tsx:75:      fireEvent.click(screen.getByRole('tab', { name: /tab 2/i }));
+src/__tests__/components/ui/Tabs.test.tsx:93:      const tab1 = screen.getByRole('tab', { name: /tab 1/i });
+src/__tests__/components/ui/Tabs.test.tsx:112:      const tab = screen.getByRole('tab', { name: /tab 1/i });
+src/__tests__/components/ui/Tabs.test.tsx:126:      expect(screen.getByRole('tablist')).toBeInTheDocument();
+src/__tests__/components/ui/__snapshots__/Dialog.test.tsx.snap:16:        aria-labelledby="dialog-title"
+src/__tests__/components/ui/__snapshots__/Dialog.test.tsx.snap:26:        role="dialog"
+src/__tests__/components/ui/__snapshots__/Tabs.test.tsx.snap:9:    role="tablist"
+src/__tests__/components/ui/__snapshots__/Tabs.test.tsx.snap:23:      role="tab"
+src/__tests__/components/ui/__snapshots__/Tabs.test.tsx.snap:37:    aria-labelledby="tab-tab1"
+src/__tests__/components/ui/__snapshots__/Tabs.test.tsx.snap:40:    role="tabpanel"
+src/__tests__/components/ui/Switch.test.tsx:13:      render(<Switch data-testid="switch" />);
+src/__tests__/components/ui/Switch.test.tsx:14:      expect(screen.getByTestId('switch')).toBeInTheDocument();
+src/__tests__/components/ui/Switch.test.tsx:25:      render(<Switch checked={false} data-testid="switch-unchecked" />);
+src/__tests__/components/ui/Switch.test.tsx:26:      const switchElement = screen.getByTestId('switch-unchecked');
+src/__tests__/components/ui/Switch.test.tsx:31:      render(<Switch checked={true} data-testid="switch-checked" />);
+src/__tests__/components/ui/Switch.test.tsx:32:      const switchElement = screen.getByTestId('switch-checked');
+src/__tests__/components/ui/Switch.test.tsx:37:      render(<Switch disabled data-testid="switch-disabled" />);
+src/__tests__/components/ui/Switch.test.tsx:38:      expect(screen.getByTestId('switch-disabled')).toBeDisabled();
+src/__tests__/components/ui/Switch.test.tsx:43:      render(<Switch onCheckedChange={handleChange} data-testid="switch-toggle" />);
+src/__tests__/components/ui/Switch.test.tsx:44:      fireEvent.click(screen.getByTestId('switch-toggle'));
+src/__tests__/components/ui/Switch.test.tsx:50:      render(<Switch disabled onCheckedChange={handleChange} data-testid="switch" />);
+src/__tests__/components/ui/Switch.test.tsx:51:      fireEvent.click(screen.getByTestId('switch'));
+src/__tests__/components/ui/Switch.test.tsx:57:    it('should have role="switch"', () => {
+src/__tests__/components/ui/Switch.test.tsx:59:      expect(screen.getByRole('switch')).toBeInTheDocument();
+src/__tests__/components/ui/Switch.test.tsx:62:    it('should support aria-label', () => {
+src/__tests__/components/ui/Switch.test.tsx:63:      render(<Switch aria-label="Enable notifications" />);
+src/__tests__/components/ui/Switch.test.tsx:65:        screen.getByRole('switch', { name: 'Enable notifications' })
+src/__tests__/components/ui/Switch.test.tsx:70:      render(<Switch checked={true} data-testid="switch" />);
+src/__tests__/components/ui/Switch.test.tsx:71:      expect(screen.getByTestId('switch')).toHaveAttribute('aria-checked', 'true');
+src/pages/Stats.tsx:180:    <div className="module-page" data-testid="page-stats">
+src/__tests__/components/ui/Button.test.tsx:14:      expect(screen.getByRole('button', { name: /click me/i })).toBeInTheDocument();
+src/__tests__/components/ui/Button.test.tsx:26:      expect(screen.getByRole('button')).toBeInTheDocument();
+src/__tests__/components/ui/Button.test.tsx:31:      expect(screen.getByRole('button')).toBeInTheDocument();
+src/__tests__/components/ui/Button.test.tsx:36:      expect(screen.getByRole('button')).toBeInTheDocument();
+src/__tests__/components/ui/Button.test.tsx:41:      expect(screen.getByRole('button')).toBeInTheDocument();
+src/__tests__/components/ui/Button.test.tsx:48:      expect(screen.getByRole('button')).toBeInTheDocument();
+src/__tests__/components/ui/Button.test.tsx:53:      expect(screen.getByRole('button')).toBeInTheDocument();
+src/__tests__/components/ui/Button.test.tsx:58:      expect(screen.getByRole('button')).toBeInTheDocument();
+src/__tests__/components/ui/Button.test.tsx:65:      expect(screen.getByRole('button')).toBeDisabled();
+src/__tests__/components/ui/Button.test.tsx:71:      fireEvent.click(screen.getByRole('button'));
+src/__tests__/components/ui/Button.test.tsx:82:      fireEvent.click(screen.getByRole('button'));
+src/__tests__/components/ui/Button.test.tsx:90:      expect(screen.getByRole('button')).toBeInTheDocument();
+src/__tests__/components/ui/Button.test.tsx:93:    it('should support aria-label', () => {
+src/__tests__/components/ui/Button.test.tsx:94:      render(<Button aria-label="Custom label">Icon</Button>);
+src/__tests__/components/ui/Input.test.tsx:25:      render(<Input type="text" data-testid="input-text" />);
+src/__tests__/components/ui/Input.test.tsx:26:      expect(screen.getByTestId('input-text')).toHaveAttribute('type', 'text');
+src/__tests__/components/ui/Input.test.tsx:30:      render(<Input type="email" data-testid="input-email" />);
+src/__tests__/components/ui/Input.test.tsx:31:      expect(screen.getByTestId('input-email')).toHaveAttribute('type', 'email');
+src/__tests__/components/ui/Input.test.tsx:35:      render(<Input type="password" data-testid="input-password" />);
+src/__tests__/components/ui/Input.test.tsx:36:      expect(screen.getByTestId('input-password')).toHaveAttribute('type', 'password');
+src/__tests__/components/ui/Input.test.tsx:40:      render(<Input type="number" data-testid="input-number" />);
+src/__tests__/components/ui/Input.test.tsx:41:      expect(screen.getByTestId('input-number')).toHaveAttribute('type', 'number');
+src/__tests__/components/ui/Input.test.tsx:47:      render(<Input disabled data-testid="input-disabled" />);
+src/__tests__/components/ui/Input.test.tsx:48:      expect(screen.getByTestId('input-disabled')).toBeDisabled();
+src/__tests__/components/ui/Input.test.tsx:53:      render(<Input onChange={handleChange} data-testid="input-change" />);
+src/__tests__/components/ui/Input.test.tsx:54:      const input = screen.getByTestId('input-change');
+src/__tests__/components/ui/Input.test.tsx:61:      render(<Input onFocus={handleFocus} data-testid="input-focus" />);
+src/__tests__/components/ui/Input.test.tsx:62:      fireEvent.focus(screen.getByTestId('input-focus'));
+src/__tests__/components/ui/Input.test.tsx:68:      render(<Input onBlur={handleBlur} data-testid="input-blur" />);
+src/__tests__/components/ui/Input.test.tsx:69:      fireEvent.blur(screen.getByTestId('input-blur'));
+src/__tests__/components/ui/Input.test.tsx:75:    it('should support aria-label', () => {
+src/__tests__/components/ui/Input.test.tsx:76:      render(<Input aria-label="Username" />);
+src/__tests__/components/ui/Input.test.tsx:81:      render(<Input aria-invalid="true" data-testid="input-invalid" />);
+src/__tests__/components/ui/Input.test.tsx:82:      expect(screen.getByTestId('input-invalid')).toHaveAttribute('aria-invalid', 'true');
+src/__tests__/components/ui/Badge.test.tsx:54:          <span data-testid="icon">★</span> Featured
+src/__tests__/components/ui/Badge.test.tsx:57:      expect(screen.getByTestId('icon')).toBeInTheDocument();
+src/__tests__/components/ui/Alert.test.tsx:14:      expect(screen.getByRole('alert')).toBeInTheDocument();
+src/__tests__/components/ui/Alert.test.tsx:32:      expect(screen.getByRole('alert')).toBeInTheDocument();
+src/__tests__/components/ui/Alert.test.tsx:37:      expect(screen.getByRole('alert')).toBeInTheDocument();
+src/__tests__/components/ui/Alert.test.tsx:42:      expect(screen.getByRole('alert')).toBeInTheDocument();
+src/__tests__/components/ui/Alert.test.tsx:47:      expect(screen.getByRole('alert')).toBeInTheDocument();
+src/__tests__/components/ui/Alert.test.tsx:59:      expect(screen.getByRole('button', { name: /close|dismiss/i })).toBeInTheDocument();
+src/__tests__/components/ui/Alert.test.tsx:69:      fireEvent.click(screen.getByRole('button', { name: /close|dismiss/i }));
+src/__tests__/components/ui/Alert.test.tsx:75:    it('should have role="alert"', () => {
+src/__tests__/components/ui/Alert.test.tsx:77:      expect(screen.getByRole('alert')).toBeInTheDocument();
+src/__tests__/components/ui/Alert.test.tsx:80:    it('should support aria-label', () => {
+src/__tests__/components/ui/Alert.test.tsx:81:      render(<Alert aria-label="Custom alert">Test</Alert>);
+src/__tests__/components/devtools/SectionHeader.test.tsx:29:      expect(screen.getByRole('button', { name: /export/i })).toBeInTheDocument();
+src/__tests__/components/devtools/LogFilters.test.tsx:27:      expect(screen.getByRole('button', { name: /debug/i })).toBeInTheDocument();
+src/__tests__/components/devtools/LogFilters.test.tsx:28:      expect(screen.getByRole('button', { name: /info/i })).toBeInTheDocument();
+src/__tests__/components/devtools/LogFilters.test.tsx:29:      expect(screen.getByRole('button', { name: /warn/i })).toBeInTheDocument();
+src/__tests__/components/devtools/LogFilters.test.tsx:30:      expect(screen.getByRole('button', { name: /error/i })).toBeInTheDocument();
+src/__tests__/components/devtools/LogFilters.test.tsx:38:      fireEvent.click(screen.getByRole('button', { name: /info/i }));
+src/__tests__/components/devtools/LogFilters.test.tsx:47:      fireEvent.click(screen.getByRole('button', { name: /error/i }));
+src/__tests__/components/devtools/LogFilters.test.tsx:61:      fireEvent.click(screen.getByRole('button', { name: /warn/i }));
+src/__tests__/components/devtools/MetricsDisplay.test.OLD:70:      expect(screen.getByRole('img', { name: /chart|graph/i })).toBeInTheDocument();
+src/main.tsx:340:  closeBtn.setAttribute('aria-label', 'Fermer diagnostic');
+src/features/production-health/ProductionHealthPanel.tsx:183:            data-testid="production-health-refresh"
+src/features/production-health/ProductionHealthPanel.tsx:201:      <div className="production-health-panel" data-testid="production-health-panel">
+src/__tests__/components/devtools/__snapshots__/EngineCard.test.tsx.snap:6:  role="button"
+src/__tests__/components/devtools/LogViewer.test.tsx:90:      const levelSelect = screen.getByRole('combobox');
+src/__tests__/components/devtools/LogViewer.test.tsx:119:      const levelSelect = screen.getByRole('combobox');
+src/__tests__/components/devtools/LogViewer.test.tsx:161:      const clearButton = screen.getByRole('button', { name: /clear/i });
+src/__tests__/components/devtools/LogViewer.test.tsx:183:      const exportButton = screen.getByRole('button', { name: /export/i });
+src/features/memory/MemorySearchPanel.tsx:132:            aria-label="Effacer"
+src/__tests__/components/devtools/EngineCard.test.tsx:80:      fireEvent.click(screen.getByRole('button', { name: /Fusion Engine/i }));
+src/hooks/useFocusTrap.ts:75: *   <div ref={modalRef} role="dialog" aria-modal="true">
+src/hooks/useFocusTrap.ts:170: *   <div ref={modalRef} role="dialog">
+src/modules/avatar/floating/AvatarFloatingPopup.tsx:97:          aria-label="Fermer"
+src/lib/accessibility.ts:334:    if (!img.alt && !img.getAttribute('aria-label')) {
+src/lib/accessibility.ts:348:    const hasAriaLabel = button.getAttribute('aria-label');
+src/lib/accessibility.ts:349:    const hasAriaLabelledby = button.getAttribute('aria-labelledby');
+src/lib/accessibility.ts:365:    const hasAriaLabel = input.getAttribute('aria-label');
+src/lib/accessibility.ts:366:    const hasAriaLabelledby = input.getAttribute('aria-labelledby');
+src/features/transformation/__tests__/TransformationRoadmap.test.tsx:24:      screen.getByRole('button', {
+src/features/transformation/__tests__/TransformationRoadmap.test.tsx:30:      screen.getByRole('button', { name: /filtrer par statut:\s*complété/i })
+src/features/transformation/__tests__/TransformationRoadmap.test.tsx:33:      screen.getByRole('button', { name: /filtrer par statut:\s*en cours/i })
+src/features/transformation/__tests__/TransformationRoadmap.test.tsx:36:      screen.getByRole('button', { name: /filtrer par statut:\s*planifié/i })
+src/features/transformation/__tests__/TransformationRoadmap.test.tsx:39:      screen.getByRole('button', { name: /filtrer par statut:\s*futur/i })
+src/features/transformation/__tests__/TransformationRoadmap.test.tsx:46:    const completedButton = screen.getByRole('button', {
+src/features/transformation/__tests__/TransformationRoadmap.test.tsx:132:    const stats = screen.getByTestId('roadmap-stats');
+src/features/transformation/__tests__/TransformationRoadmap.test.tsx:174:    const plannedButton = screen.getByRole('button', {
+src/features/transformation/__tests__/TransformationRoadmap.test.tsx:180:    const allButton = screen.getByRole('button', {
+src/features/transformation/__tests__/TransformationRoadmap.test.tsx:194:      screen.getByRole('button', {
+src/features/transformation/__tests__/TransformationRoadmap.test.tsx:199:      screen.getByRole('button', { name: /filtrer par statut:\s*complété/i })
+src/features/transformation/__tests__/TransformationRoadmap.test.tsx:202:      screen.getByRole('button', { name: /filtrer par statut:\s*en cours/i })
+src/features/transformation/__tests__/TransformationRoadmap.test.tsx:205:      screen.getByRole('button', { name: /filtrer par statut:\s*planifié/i })
+src/features/transformation/__tests__/TransformationRoadmap.test.tsx:208:      screen.getByRole('button', { name: /filtrer par statut:\s*futur/i })
+src/features/transformation/TransformationRoadmap.tsx:94:            aria-label="Afficher tous les milestones de la roadmap"
+src/features/transformation/TransformationRoadmap.tsx:95:            role="button"
+src/features/transformation/TransformationRoadmap.tsx:104:              aria-label={`Filtrer par statut: ${config.label}`}
+src/features/transformation/TransformationRoadmap.tsx:105:              role="button"
+src/features/transformation/TransformationRoadmap.tsx:128:              role="button"
+src/features/transformation/TransformationRoadmap.tsx:130:              aria-label={`Milestone ${milestone.version}: ${milestone.name}, statut ${statusInfo.label}, progression ${milestone.progress}%`}
+src/features/transformation/TransformationRoadmap.tsx:269:      <div className="roadmap-stats" data-testid="roadmap-stats">
+src/features/evolution/__tests__/EvolutionTimeline.test.tsx:15:        aria-label="chrono-mock"
+src/features/evolution/__tests__/EvolutionTimeline.test.tsx:32:      screen.getByRole('button', { name: /filtrer les événements:\s*tous/i })
+src/features/evolution/__tests__/EvolutionTimeline.test.tsx:40:      screen.getByRole('button', { name: /filtrer les événements:\s*tous/i })
+src/features/evolution/__tests__/EvolutionTimeline.test.tsx:43:      screen.getByRole('button', { name: /filtrer les événements:\s*milestones/i })
+src/features/evolution/__tests__/EvolutionTimeline.test.tsx:46:      screen.getByRole('button', {
+src/features/evolution/__tests__/EvolutionTimeline.test.tsx:51:      screen.getByRole('button', {
+src/features/evolution/__tests__/EvolutionTimeline.test.tsx:56:      screen.getByRole('button', {
+src/features/evolution/__tests__/EvolutionTimeline.test.tsx:61:      screen.getByRole('button', {
+src/features/evolution/__tests__/EvolutionTimeline.test.tsx:70:    const milestoneButton = screen.getByRole('button', { name: /milestones/i });
+src/features/evolution/__tests__/EvolutionTimeline.test.tsx:90:    expect(screen.getByRole('button', { name: /chrono-mock/i })).toBeInTheDocument();
+src/features/evolution/__tests__/EvolutionTimeline.test.tsx:96:    fireEvent.click(screen.getByRole('button', { name: /chrono-mock/i }));
+src/features/evolution/__tests__/EvolutionTimeline.test.tsx:113:    fireEvent.click(screen.getByRole('button', { name: /chrono-mock/i }));
+src/features/evolution/__tests__/EvolutionTimeline.test.tsx:128:    const achievementButton = screen.getByRole('button', { name: /achievements/i });
+src/features/evolution/__tests__/EvolutionTimeline.test.tsx:132:    const allButton = screen.getByRole('button', { name: /tous/i });
+src/features/evolution/__tests__/EvolutionTimeline.test.tsx:145:      screen.getByRole('button', { name: /réinitialiser les filtres/i })
+src/features/evolution/__tests__/EvolutionTimeline.test.tsx:154:      expect(button).toHaveAttribute('aria-label');
+src/features/evolution/EvolutionTimeline.tsx:81:            aria-label="Filtrer les événements: Tous"
+src/features/evolution/EvolutionTimeline.tsx:93:                aria-label={`Filtrer les événements: ${config.label}`}
+src/features/evolution/EvolutionTimeline.tsx:151:              aria-label="Réinitialiser les filtres"
+src/App.tsx:958:        data-testid="app-ready"
+src/App.tsx:964:        data-testid="ipc-ready"
+src/features/conversation/ThinkingPanel.tsx:130:          role="button"
+src/features/conversation/ThinkingPanel.tsx:132:          aria-label="Afficher les détails de réflexion OMEGA"
+src/features/conversation/ThinkingPanel.tsx:193:                aria-label="Réduire"
+src/features/conversation/ThinkingPanel.tsx:200:              <button className="thinking-close" onClick={onClose} aria-label="Fermer">
+src/a11y/ScreenReader.tsx:15:    <div role="status" aria-live={priority} aria-atomic="true" className="sr-only">
+src/features/chat/ThinkingPanel.tsx:130:          role="button"
+src/features/chat/ThinkingPanel.tsx:132:          aria-label="Afficher les détails de réflexion OMEGA"
+src/features/chat/ThinkingPanel.tsx:193:                aria-label="Réduire"
+src/features/chat/ThinkingPanel.tsx:200:              <button className="thinking-close" onClick={onClose} aria-label="Fermer">
+src/a11y/KeyboardShortcuts.tsx:88:      role="article"
+src/a11y/KeyboardShortcuts.tsx:89:      aria-label={`Message: ${content.substring(0, 50)}`}
+src/a11y/Modal.tsx:42:        role="dialog"
+src/a11y/Modal.tsx:44:        aria-labelledby="modal-title"
+src/a11y/Modal.tsx:49:          <button onClick={onClose} aria-label="Close modal" className="modal-close">
+src/features/chat/ChatProviderSelector.tsx:50:          data-testid="select-chat-provider"
+src/tests/chat-ia-interface.test.tsx:20:    <div data-testid="mock-vitals-panel">Mock VitalsPanel - mode {currentMode}</div>
+src/tests/chat-ia-interface.test.tsx:90:    const sendButton = screen.getByRole('button', { name: /Envoyer le message/ });
+src/tests/chat-ia-interface.test.tsx:100:    const sendButton = screen.getByRole('button', { name: /Envoyer le message/ });
+src/tests/chat-ia-interface.test.tsx:125:    expect(screen.getByRole('button', { name: /Envoi en cours/ })).toBeDisabled();
+src/tests/chat-ia-interface.test.tsx:175:    const voiceButton = screen.getByRole('button', { name: /Activer mode vocal/ });
+src/tests/chat-ia-interface.test.tsx:209:    const sendButton = screen.getByRole('button', { name: /Envoyer le message/ });
+src/features/admin/AdminPage.tsx:162:    <div className="admin-page" data-testid="page-admin">
+src/features/admin/AdminPage.tsx:193:            data-testid={`tab-admin-${tab.id}`}
+src/features/admin/AdminPage.tsx:208:      <main className="admin-content" data-testid="page-admin-content">
+src/ui/__tests__/Menu.test.tsx:6: * - ARIA attributes (role, aria-label, aria-expanded, aria-current)
+src/ui/__tests__/Menu.test.tsx:51:    it('should render nav with role="navigation"', () => {
+src/ui/__tests__/Menu.test.tsx:54:      const nav = screen.getByRole('navigation');
+src/ui/__tests__/Menu.test.tsx:58:    it('should have aria-label on navigation', () => {
+src/ui/__tests__/Menu.test.tsx:61:      const nav = screen.getByRole('navigation');
+src/ui/__tests__/Menu.test.tsx:62:      expect(nav).toHaveAttribute('aria-label');
+src/ui/__tests__/Menu.test.tsx:63:      expect(nav.getAttribute('aria-label')).toMatch(
+src/ui/__tests__/Menu.test.tsx:68:    it('should mark menu items with role="menuitem"', () => {
+src/ui/__tests__/Menu.test.tsx:78:      const titaneItem = screen.getByRole('menuitem', { name: /titane/i });
+src/ui/__tests__/Menu.test.tsx:107:      let titaneItem = screen.getByRole('menuitem', { name: /titane/i });
+src/ui/__tests__/Menu.test.tsx:122:      titaneItem = screen.getByRole('menuitem', { name: /titane/i });
+src/ui/__tests__/Menu.test.tsx:123:      const statsItem = screen.getByRole('menuitem', { name: /stats/i });
+src/ui/__tests__/Menu.test.tsx:169:    it('should have descriptive aria-label on menu items', () => {
+src/ui/__tests__/Menu.test.tsx:172:      const titaneItem = screen.getByRole('menuitem', { name: /titane/i });
+src/ui/__tests__/Menu.test.tsx:281:      const statsItem = screen.getByRole('menuitem', { name: /stats/i });
+src/ui/__tests__/Menu.test.tsx:313:      const titaneItem = screen.getByRole('menuitem', { name: /titane/i });
+src/ui/__tests__/Menu.test.tsx:325:        // Each item should have text content or aria-label
+src/ui/__tests__/Menu.test.tsx:327:        const hasAriaLabel = item.hasAttribute('aria-label');
+src/ui/__tests__/Menu.test.tsx:338:      const titaneItem = screen.getByRole('menuitem', { name: /titane/i });
+src/ui/__tests__/Menu.test.tsx:356:      const titaneItem = screen.getByRole('menuitem', { name: /titane/i });
+src/ui/__tests__/Menu.test.tsx:408:      const menubar = container.querySelector('[role="menubar"]');
+src/ui/__tests__/Menu.test.tsx:483:      const menuItems = container.querySelectorAll('[role="menuitem"]');
+src/features/audio-center/AudioCenterPage.tsx:155:        data-testid={testId}
+src/features/audio-center/AudioCenterPage.tsx:283:      data-testid="page-audio-center"
+src/features/audio-center/AudioCenterPage.tsx:299:            data-testid="btn-audio-refresh-devices"
+src/features/audio-center/AudioCenterPage.tsx:318:              data-testid={`tab-audio-${tab.id}`}
+src/features/audio-center/AudioCenterPage.tsx:477:                data-testid="btn-audio-test-speaker"
+src/features/audio-center/AudioCenterPage.tsx:554:                data-testid="btn-audio-test-microphone"
+src/features/audio-center/AudioCenterPage.tsx:603:                  data-testid="input-elevenlabs-api-key"
+src/features/audio-center/AudioCenterPage.tsx:619:                  data-testid="select-audio-language"
+src/features/audio-center/AudioCenterPage.tsx:638:                  data-testid="toggle-audio-auto-fallback"
+src/ui/AppLayout.tsx:67:        aria-label="Aller au contenu principal"
+src/ui/AppLayout.tsx:82:            role="button"
+src/ui/AppLayout.tsx:85:            aria-label="Fermer le menu"
+src/ui/AppLayout.tsx:100:          aria-label="Navigation principale"
+src/ui/AppLayout.tsx:114:          role="main"
+src/ui/AppLayout.tsx:115:          aria-label="Contenu principal"
+src/ui/reading/UIReadingPanel.tsx:52:            aria-label="Fermer"
+src/features/identity/__tests__/ModeMatrix.test.tsx:29:      screen.getByRole('button', { name: /filtrer par catégorie:\s*création/i })
+src/features/identity/__tests__/ModeMatrix.test.tsx:32:      screen.getByRole('button', { name: /filtrer par catégorie:\s*analyse/i })
+src/features/identity/__tests__/ModeMatrix.test.tsx:35:      screen.getByRole('button', {
+src/features/identity/__tests__/ModeMatrix.test.tsx:40:      screen.getByRole('button', {
+src/features/identity/__tests__/ModeMatrix.test.tsx:45:      screen.getByRole('button', {
+src/features/identity/__tests__/ModeMatrix.test.tsx:50:      screen.getByRole('button', { name: /filtrer par catégorie:\s*leadership/i })
+src/features/identity/__tests__/ModeMatrix.test.tsx:57:    const creationButton = screen.getByRole('button', {
+src/features/identity/__tests__/ModeMatrix.test.tsx:71:    const designerCard = screen.getByTestId('mode-card-designer');
+src/features/identity/__tests__/ModeMatrix.test.tsx:82:    const designerCard = screen.getByTestId('mode-card-designer');
+src/features/identity/__tests__/ModeMatrix.test.tsx:99:    const mentorCard = screen.getByTestId('mode-card-mentor');
+src/features/identity/__tests__/ModeMatrix.test.tsx:103:      const activateButton = screen.getByRole('button', {
+src/features/identity/__tests__/ModeMatrix.test.tsx:115:    const analysisButton = screen.getByRole('button', {
+src/features/identity/__tests__/ModeMatrix.test.tsx:121:    const allButton = screen.getByRole('button', {
+src/features/identity/__tests__/ModeMatrix.test.tsx:146:      expect(button).toHaveAttribute('aria-label');
+src/ui/reading/ZoomControls.tsx:44:        aria-label="Zoom arrière"
+src/ui/reading/ZoomControls.tsx:54:        aria-label={`Zoom actuel: ${zoomPercent}%`}
+src/ui/reading/ZoomControls.tsx:65:        aria-label="Zoom avant"
+src/ui/reading/ZoomControls.tsx:75:        aria-label={isFullscreen ? 'Quitter le plein écran' : 'Plein écran'}
+src/ui/reading/ZoomControls.tsx:86:          aria-label="Ouvrir les préférences de lecture"
+src/features/identity/__tests__/PersonaEditor.test.tsx:38:    const casualPresetButton = screen.getByRole('button', { name: /décontracté/i });
+src/features/identity/__tests__/PersonaEditor.test.tsx:124:    const creativePresetButton = screen.getByRole('button', { name: /créatif/i });
+src/features/identity/__tests__/PersonaEditor.test.tsx:139:      const saveButton = screen.getByRole('button', { name: /sauvegarder/i });
+src/features/identity/__tests__/PersonaEditor.test.tsx:153:    const resetButton = screen.getByRole('button', { name: /réinitialiser/i });
+src/ui/Spinner.tsx:74:        role="status"
+src/ui/Spinner.tsx:75:        aria-label="Chargement"
+src/features/identity/ModeMatrix.tsx:415:          aria-label="Filtrer par catégorie: Tous"
+src/features/identity/ModeMatrix.tsx:424:            aria-label={`Filtrer par catégorie: ${config.label}`}
+src/features/identity/ModeMatrix.tsx:444:              data-testid={`mode-card-${mode.id}`}
+src/features/identity/ModeMatrix.tsx:449:              role="button"
+src/features/identity/ModeMatrix.tsx:451:              aria-label={`Mode ${mode.name}: ${mode.description}${mode.unlocked ? '' : ' (Verrouillé)'}`}
+src/features/identity/ModeMatrix.tsx:465:                <div className="lock-overlay" data-testid={`lock-overlay-${mode.id}`}>
+src/features/identity/ModeMatrix.tsx:527:              aria-label={`Activer le mode ${selectedMode.name}`}
+src/ui/Modal.tsx:219:          role="dialog"
+src/ui/Modal.tsx:221:          aria-labelledby={title ? 'modal-title' : undefined}
+src/ui/Modal.tsx:241:              aria-label="Fermer la fenêtre modale"
+src/AGENTS.md:10:- Stable `data-testid` selectors for E2E.
+src/components/system/__tests__/BackendDownIndicator.test.tsx:29:      const banner = container.querySelector('[role="alert"]');
+src/components/system/__tests__/BackendDownIndicator.test.tsx:45:      const banner = container.querySelector('[role="alert"]');
+src/components/system/__tests__/BackendDownIndicator.test.tsx:61:      const banner = container.querySelector('[role="alert"]');
+src/components/system/__tests__/BackendDownIndicator.test.tsx:76:      const banner = container.querySelector('[role="alert"]');
+src/components/system/__tests__/BackendDownIndicator.test.tsx:181:        screen.getByRole('button', { name: /masquer|x/i });
+src/components/system/__tests__/BackendDownIndicator.test.tsx:201:      const banner = container.querySelector('[role="alert"]');
+src/components/system/__tests__/BackendDownIndicator.test.tsx:219:      const banner = container.querySelector('[role="alert"]');
+src/components/system/BackendDownIndicator.tsx:99:        role="alert"
+src/components/system/BackendDownIndicator.tsx:163:              aria-label="Réessayer la connexion"
+src/components/system/BackendDownIndicator.tsx:183:                aria-label="Masquer ce message"
+src/features/design-center/tabs/AppearanceTab.tsx:32:        role="switch"
+src/components/dev/ConsoleMonitorDashboard.tsx:57:          aria-label={isExpanded ? 'Réduire' : 'Agrandir'}
+src/components/aura/AuraControlPanel.tsx:36:        aria-label="Toggle Aura Control Panel"
+src/components/aura/AuraControlPanel.tsx:57:              aria-label="Close"
+src/components/ModuleCard.css:28:.module-card[role='button'] {
+src/components/ModuleCard.css:32:.module-card[role='button']:active {
+src/components/notifications/ToastContainer.tsx:108:              aria-label="Fermer"
+src/components/a11y/KeyboardShortcuts.tsx:245:          aria-label="Afficher les raccourcis clavier"
+src/components/a11y/KeyboardShortcuts.tsx:304:      document.querySelector('main') || document.querySelector('[role="main"]');
+src/components/layout/TopNav.tsx:168:      data-testid="nav-top-main"
+src/components/layout/TopNav.tsx:174:      role="navigation"
+src/components/layout/TopNav.tsx:175:      aria-label="Navigation principale"
+src/components/layout/TopNav.tsx:194:              data-testid={`nav-${item.id}`}
+src/components/layout/TopNav.tsx:197:              aria-label={item.label}
+src/components/layout/TopNav.tsx:225:              data-testid="btn-nav-more"
+src/components/layout/TopNav.tsx:227:              aria-label="Plus d'options"
+src/components/layout/TopNav.tsx:256:                  role="menu"
+src/components/layout/TopNav.tsx:264:                        data-testid={`nav-${item.id}`}
+src/components/layout/TopNav.tsx:265:                        role="menuitem"
+src/ui/components/Toast.tsx:74:    <div className={classes} role="alert" aria-live="polite" aria-atomic="true">
+src/ui/components/Toast.tsx:85:          aria-label="Fermer la notification"
+src/ui/components/Toast.tsx:113:    <div className={classes} aria-label="Notifications">
+src/components/layout/Sidebar.tsx:96:          aria-label={item.label}
+src/components/layout/Sidebar.tsx:143:                  aria-label={`${item.badge} notifications`}
+src/components/layout/Sidebar.tsx:171:        aria-label="Main navigation"
+src/components/layout/__tests__/TopNav.test.tsx:45:    it('should have aria-label on all buttons', () => {
+src/components/layout/__tests__/TopNav.test.tsx:49:        expect(button).toHaveAttribute('aria-label');
+src/components/layout/__tests__/TopNav.test.tsx:95:      const container = screen.getByRole('navigation');
+src/components/layout/__tests__/TopNav.test.tsx:101:      const logo = screen.getByAltText(/logo/i) || screen.getByRole('img');
+src/ui/components/Radio.tsx:117:    <div className={`radio-group ${className}`} role="radiogroup">
+src/components/experience/XPBar.tsx:57:      role="button"
+src/components/experience/XPBar.tsx:59:      aria-label={`Progression XP : Niveau ${level}, ${progress.toFixed(0)}% vers niveau ${level + 1}`}
+src/components/experience/XPBar.tsx:71:        role="progressbar"
+src/components/layout/MobileNav.tsx:122:          aria-label={isOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+src/components/layout/MobileNav.tsx:168:            role="navigation"
+src/components/layout/MobileNav.tsx:169:            aria-label="Menu principal mobile"
+src/components/layout/MobileNav.tsx:238:                aria-label="Fermer le menu"
+src/ui/components/Select.tsx:168:        role="button"
+src/ui/components/Select.tsx:211:          <div className="select__options" role="listbox">
+src/ui/components/Select.tsx:221:                  role="option"
+src/components/LanguageSwitcher.tsx:11:      aria-label="Select language"
+src/ui/components/Skeleton.tsx:44:    <span className={classes} style={style} aria-hidden="true" data-testid="skeleton" />
+src/ui/components/HUDFrame.tsx:50:              aria-label={isExpanded ? 'Réduire' : 'Agrandir'}
+src/components/ModuleCard.tsx:63:      role={onClick ? 'button' : undefined}
+src/components/evolution/EvolutionHistory.tsx:98:        role="button"
+src/components/StatusIndicator.tsx:31:        aria-label={`Status: ${statusText}`}
+src/ui/components/Modal.tsx:144:    <div className="modal__overlay" onClick={onClose} role="presentation">
+src/ui/components/Modal.tsx:149:        role="dialog"
+src/ui/components/Modal.tsx:151:        aria-labelledby={title ? 'modal-title' : undefined}
+src/ui/components/Modal.tsx:161:              aria-label="Fermer"
+src/components/Message.tsx:53:      role="article"
+src/components/Message.tsx:54:      aria-label={`Message ${role === 'user' ? 'utilisateur' : 'assistant'} à ${formattedTime}`}
+src/components/Message.tsx:66:        <div className="message__actions" role="toolbar" aria-label="Actions du message">
+src/components/Message.tsx:68:            <button onClick={onEdit} aria-label="Éditer ce message (touche E)">
+src/components/Message.tsx:73:            <button onClick={onDelete} aria-label="Supprimer ce message (touche Delete)">
+src/components/ChatWindow.tsx:200:              aria-label="Restaurer l'historique sécurisé"
+src/components/ChatWindow.tsx:210:                aria-label={
+src/components/ChatWindow.tsx:226:          role="log"
+src/components/ChatWindow.tsx:230:          aria-label="Historique de conversation"
+src/components/ChatWindow.tsx:233:            <div className="ui-shield-banner" role="status" aria-label="UI Shield actif">
+src/components/ChatWindow.tsx:243:            <div className="chat-welcome" role="region" aria-label="Message de bienvenue">
+src/components/ChatWindow.tsx:261:              role={message.role}
+src/components/ChatWindow.tsx:270:              role="status"
+src/components/ChatWindow.tsx:272:              aria-label="TITANE est en train de réfléchir"
+src/components/ChatWindow.tsx:284:            <div className="chat-error" role="alert" aria-live="assertive">
+src/components/ChatWindow.tsx:350:            aria-label="Importer un fichier"
+src/components/ChatWindow.tsx:368:            aria-label="Message à envoyer"
+src/components/ChatWindow.tsx:376:            aria-label={isLoading ? 'Envoi en cours' : 'Envoyer le message'}
+src/components/sections/ConversationSection.tsx:549:        data-testid={`chat-message-${message.role}`}
+src/components/sections/ConversationSection.tsx:582:          <div className="conversation-message-text" data-testid="chat-message-content">
+src/components/sections/ConversationSection.tsx:1128:      data-testid="page-conversation"
+src/components/sections/ConversationSection.tsx:1148:              data-testid="select-conversation-mode"
+src/components/sections/ConversationSection.tsx:1160:              data-testid="btn-export-json"
+src/components/sections/ConversationSection.tsx:1171:              data-testid="btn-export-markdown"
+src/components/sections/ConversationSection.tsx:1182:              data-testid="btn-copy-chat"
+src/components/sections/ConversationSection.tsx:1193:              data-testid="toggle-audio-tts"
+src/components/sections/ConversationSection.tsx:1196:              aria-label={audioEnabled ? 'Désactiver audio (TTS)' : 'Activer audio (TTS)'}
+src/components/sections/ConversationSection.tsx:1198:              role="switch"
+src/components/sections/ConversationSection.tsx:1206:              data-testid="toggle-voice-input"
+src/components/sections/ConversationSection.tsx:1209:              aria-label={
+src/components/sections/ConversationSection.tsx:1222:              data-testid="btn-mode-builder"
+src/components/sections/ConversationSection.tsx:1225:              aria-label="Créer un mode personnalisé"
+src/components/sections/ConversationSection.tsx:1233:              data-testid="btn-health-check"
+src/components/sections/ConversationSection.tsx:1236:              aria-label={`Vérifier santé du système (Statut: ${healthReport?.status || 'Inconnu'})`}
+src/components/sections/ConversationSection.tsx:1244:              data-testid="btn-clear-chat"
+src/components/sections/ConversationSection.tsx:1247:              aria-label="Effacer l'historique du chat"
+src/components/sections/ConversationSection.tsx:1260:              data-testid="input-conversation-search"
+src/components/sections/ConversationSection.tsx:1264:              aria-label="Rechercher dans la conversation"
+src/components/sections/ConversationSection.tsx:1270:            data-testid="select-conversation-role"
+src/components/sections/ConversationSection.tsx:1273:            aria-label="Filtrer par rôle"
+src/components/sections/ConversationSection.tsx:1313:              data-testid="chat-loading"
+src/components/sections/ConversationSection.tsx:1328:            <div className="conversation-error" data-testid="chat-error" role="alert">
+src/components/sections/ConversationSection.tsx:1355:            data-testid="chat-ready"
+src/components/sections/ConversationSection.tsx:1362:            data-testid="chat-input"
+src/components/sections/ConversationSection.tsx:1372:            data-testid="chat-send"
+src/ui/components/Toggle.tsx:72:    <div className={classes} role="tablist">
+src/ui/components/Toggle.tsx:92:            role="tab"
+src/components/devtools/EngineCard.tsx:18:      role="button"
+src/components/debug/TracePanel.tsx:14:      <div data-testid="trace-panel-empty" style={{ fontSize: '0.75rem', opacity: 0.7 }}>
+src/components/debug/TracePanel.tsx:22:      data-testid="trace-panel"
+src/components/debug/TracePanel.tsx:27:        data-testid="trace-panel-json"
+src/components/evolution/EvolutionTrends.tsx:110:    <div className="trend-card" onClick={onClick} role="button" tabIndex={0}>
+src/ui/components/Tabs.tsx:32:      <div className="tabs__list" role="tablist">
+src/ui/components/Tabs.tsx:36:            role="tab"
+src/ui/components/Tabs.tsx:45:      <div className="tabs__panel" role="tabpanel">
+src/ui/components/Switch.tsx:77:        role="switch"
+src/ui/components/Switch.tsx:84:        role="button"
+src/ui/components/Switch.tsx:85:        aria-label={label || 'Toggle switch'}
+src/components/fusion/PerfectFusionDashboard.tsx:118:    <div className="perfect-fusion-dashboard p-responsive" data-testid="page-fusion">
+src/components/fusion/PerfectFusionDashboard.tsx:470:                    data-testid={`btn-fusion-resolve-${alert.id}`}
+src/components/fusion/PerfectFusionDashboard.tsx:478:                      data-testid={`btn-fusion-autorecover-${alert.id}`}
+src/components/config/ConfigFieldEditable.tsx:93:          data-testid={testId}
+src/components/config/ConfigFieldEditable.tsx:121:          data-testid={testId}
+src/components/config/ConfigFieldEditable.tsx:146:        data-testid={testId}
+src/components/feedback/LoaderSpinner.tsx:41:        role="status"
+src/components/feedback/LoaderSpinner.tsx:42:        aria-label={label || 'Chargement en cours'}
+src/components/panels/ChatPanel.tsx:217:            aria-label={isCollapsed ? 'Expand panel' : 'Collapse panel'}
+src/components/chat/DictationButton.tsx:85:      aria-label={isRecording ? 'Arrêter la dictée' : 'Démarrer la dictée vocale'}
+src/components/chat/MessageList.tsx:278:                  role={message.role || 'user'}
+src/components/chat/MessageList.tsx:315:              role="status"
+src/components/chat/MessageList.tsx:317:              aria-label="TITANE∞ OMEGA génère une réponse"
+src/components/panels/GovernancePanel.tsx:243:          aria-label={isCollapsed ? 'Expand panel' : 'Collapse panel'}
+src/components/chat/ChatToolbar.tsx:120:      aria-label={label}
+src/components/chat/ConversationsSidebar.tsx:117:            aria-label="Fermer"
+src/components/chat/ConversationsSidebar.tsx:148:                role="button"
+src/components/chat/MessageBubble.tsx:70:    <span className="typing-indicator" aria-label="TITANE∞ génère une réponse...">
+src/components/chat/MessageBubble.tsx:179:    <div className={bubbleClasses} role="article" aria-label={ariaLabel}>
+src/components/panels/MemoryPanel.tsx:138:          aria-label={isCollapsed ? 'Expand panel' : 'Collapse panel'}
+src/components/chat/ChatFallback.tsx:130:      role="alert"
+src/components/chat/ChatFallback.tsx:197:            aria-label="Réessayer la génération"
+src/components/chat/ChatFallback.tsx:215:            aria-label="Changer de provider IA"
+src/components/chat/ChatFallback.tsx:232:          aria-label="Copier le diagnostic"
+src/components/cognitive/CognitiveLayoutControl.tsx:455:            aria-label="Undo mode change"
+src/components/cognitive/CognitiveLayoutControl.tsx:467:            aria-label="Redo mode change"
+src/components/cognitive/CognitiveLayoutControl.tsx:483:          aria-label={isCollapsed ? 'Agrandir le panneau' : 'Réduire le panneau'}
+src/components/cognitive/CognitiveLayoutControl.tsx:506:          role="status"
+src/components/cognitive/CognitiveLayoutControl.tsx:518:            role="alert"
+src/components/cognitive/CognitiveLayoutControl.tsx:567:            role="radiogroup"
+src/components/cognitive/CognitiveLayoutControl.tsx:568:            aria-labelledby="mode-selector-label"
+src/components/cognitive/CognitiveLayoutControl.tsx:582:                role="radio"
+src/components/cognitive/CognitiveLayoutControl.tsx:584:                aria-label={`${MODE_LABELS[mode]}: ${MODE_DESCRIPTIONS[mode]}`}
+src/components/cognitive/CognitiveLayoutControl.tsx:693:                    aria-label={`Delete preset ${preset.name}`}
+src/components/cognitive/CognitiveLayoutControl.tsx:763:      aria-label={`Open Cognitive Layout panel - Current mode: ${MODE_LABELS[currentMode]}`}
+src/components/chat/MemoryViewer.tsx:172:            aria-label={`Importance ${star}`}
+src/components/chat/MemoryViewer.tsx:568:          aria-label="Fermer"
+src/components/security/__tests__/SecurityPanel.test.tsx:172:        const addButton = screen.getByRole('button', { name: /Ajouter clé/i });
+src/components/security/__tests__/SecurityPanel.test.tsx:191:        expect(screen.getByRole('button', { name: /Tester/i })).toBeInTheDocument();
+src/components/security/__tests__/SecurityPanel.test.tsx:192:        expect(screen.getByRole('button', { name: /Modifier/i })).toBeInTheDocument();
+src/components/security/__tests__/SecurityPanel.test.tsx:193:        expect(screen.getByRole('button', { name: /Supprimer/i })).toBeInTheDocument();
+src/components/security/__tests__/SecurityPanel.test.tsx:215:        const testButton = screen.getByRole('button', { name: /Tester/i });
+src/components/security/__tests__/SecurityPanel.test.tsx:243:        const testButton = screen.getByRole('button', { name: /Tester/i });
+src/components/security/__tests__/SecurityPanel.test.tsx:282:        const deleteButton = screen.getByRole('button', { name: /Supprimer/i });
+src/components/security/__tests__/SecurityPanel.test.tsx:310:        const deleteButton = screen.getByRole('button', { name: /Supprimer/i });
+src/components/security/__tests__/SecurityPanel.test.tsx:354:        const deleteButton = screen.getByRole('button', { name: /Supprimer/i });
+src/components/chat/MessageListOptimized.tsx:115:        role="article"
+src/components/chat/MessageListOptimized.tsx:116:        aria-label={`Message de ${isUser ? 'vous' : 'TITANE∞'}`}
+src/components/chat/MessageListOptimized.tsx:151:              aria-label="Copier le message"
+src/components/chat/MessageListOptimized.tsx:161:                aria-label={isSpeaking ? 'Arrêter la lecture' : 'Lire à voix haute'}
+src/components/chat/MessageListOptimized.tsx:263:      role="log"
+src/components/chat/MessageListOptimized.tsx:264:      aria-label="Historique de conversation"
+src/components/chat/MessageListOptimized.tsx:312:        <div className="message-error-banner" role="alert">
+src/ui/components/ConfirmDialog.tsx:129:    <div className={overlayClasses} onClick={onCancel} role="presentation">
+src/ui/components/ConfirmDialog.tsx:134:        role="alertdialog"
+src/ui/components/ConfirmDialog.tsx:136:        aria-labelledby="confirm-dialog-title"
+src/ui/components/ConfirmDialog.tsx:149:            aria-label="Fermer"
+src/components/chat/__tests__/ChatFallback.test.tsx:45:        expect(screen.getByRole('alert')).toBeInTheDocument();
+src/components/chat/__tests__/ChatFallback.test.tsx:67:      const alert = container.querySelector('[role="alert"]');
+src/components/chat/__tests__/ChatFallback.test.tsx:77:    it('should have aria-label on all buttons', () => {
+src/components/chat/__tests__/ChatFallback.test.tsx:81:        expect(button).toHaveAttribute('aria-label');
+src/components/chat/ConversationsButton.tsx:31:      aria-label="Ouvrir les conversations"
+src/components/vision/CameraPreview.tsx:170:              aria-label={isMinimized ? 'Agrandir la preview' : 'Réduire la preview'}
+src/components/vision/CameraPreview.tsx:178:              aria-label="Masquer la preview caméra"
+src/components/chat/VirtualizedMessageList.tsx:104:          role={msg.role}
+src/components/chat/VirtualizedMessageList.tsx:131:              role="assistant"
+src/components/chat/VirtualizedMessageList.tsx:142:              role="system"
+src/components/chat/FileUploadButton.tsx:451:          role="button"
+src/components/chat/FileUploadButton.tsx:453:          aria-label="Importer des fichiers"
+src/ui/components/ExpandButton.tsx:46:      aria-label={label || (isExpanded ? 'Réduire' : 'Agrandir')}
+src/components/branding/TitaneLogo.tsx:119:      role={onClick ? 'button' : undefined}
+src/components/chat/AutomationPanel.tsx:85:      role="button"
+src/components/chat/AutomationPanel.tsx:306:            aria-label="Fermer"
+src/components/vision/VisionToggleButton.tsx:161:      aria-label={
+src/components/chat/ChatFileImport.tsx:312:        role="button"
+src/components/chat/ChatFileImport.tsx:314:        aria-label="Importer un fichier"
+src/ui/components/PageLoadingFallback.tsx:50:    <div className={classes} role="progressbar" aria-label="Chargement de la page">
+src/ui/components/PageLoadingFallback.tsx:68:          data-testid="long-loading-warning"
+src/components/chat/ModeBadge.tsx:141:      role={onClick ? 'button' : undefined}
+src/components/vision/VisionStatusIndicator.tsx:106:      aria-label={statusLabel}
+src/components/chat/ChatInput.tsx:549:                aria-label="Réinitialiser la saisie et réessayer"
+src/components/chat/ChatInput.tsx:571:              role="alert"
+src/components/chat/ChatInput.tsx:582:                aria-label="Fermer le message d'erreur"
+src/components/chat/ChatInput.tsx:607:              role="region"
+src/components/chat/ChatInput.tsx:608:              aria-label="Fichiers uploadés"
+src/components/chat/ChatInput.tsx:610:              <ul role="list" className="chat-uploaded-files-list">
+src/components/chat/ChatInput.tsx:614:                    role="listitem"
+src/components/chat/ChatInput.tsx:654:                aria-label="Importer des fichiers"
+src/components/chat/ChatInput.tsx:687:              aria-label="Message à envoyer"
+src/components/chat/ChatInput.tsx:696:              role="status"
+src/components/chat/ChatInput.tsx:724:              aria-label={
+src/components/chat/ChatInput.tsx:744:              aria-label={
+src/components/chat/ChatInput.tsx:764:            role="region"
+src/components/chat/ChatInput.tsx:765:            aria-label="Aide à la saisie"
+src/components/vision/VisionDebugOverlay.tsx:110:          aria-label="Fermer le debug overlay"
+src/components/ui/Toast.tsx:109:      role="status"
+src/components/ui/Toast.tsx:133:        aria-label="Fermer la notification"
+src/ui/components/Slider.tsx:190:          role="slider"
+src/components/chat/ChatModeSelector.tsx:165:          <div className="chat-mode-selector__menu" role="listbox">
+src/components/chat/ChatModeSelector.tsx:179:                    role="option"
+src/components/ui/icon-button.tsx:4: * WCAG 2.2 AA compliant - requires aria-label
+src/components/ui/icon-button.tsx:14:  'aria-label': string; // Required for accessibility
+src/components/ui/icon-button.tsx:51: *   aria-label="Search"
+src/components/ui/icon-button.tsx:64:  'aria-label': ariaLabel,
+src/components/ui/icon-button.tsx:69:      aria-label={ariaLabel}
+src/ui/Menu.tsx:237:      container.querySelectorAll<HTMLButtonElement>('[role="menuitem"]')
+src/ui/Menu.tsx:279:        role="navigation"
+src/ui/Menu.tsx:280:        aria-label="Menu principal de navigation TITANE∞"
+src/ui/Menu.tsx:312:                aria-label="Éditer le menu - Ouvrir l'éditeur de configuration du menu latéral"
+src/ui/Menu.tsx:327:              aria-label={
+src/ui/Menu.tsx:345:          role="menubar"
+src/ui/Menu.tsx:346:          aria-label="Sections de navigation principales"
+src/ui/Menu.tsx:356:                role="menuitem"
+src/ui/Menu.tsx:357:                aria-label={`${section.label} - ${section.description}`}
+src/ui/Menu.tsx:402:              <span className="menu-status-text" data-testid="menu-status-ai">
+src/components/ui/dialog.tsx:81:  'aria-labelledby': ariaLabelledby,
+src/components/ui/dialog.tsx:86:  'aria-labelledby'?: string;
+src/components/ui/dialog.tsx:90:      role="dialog"
+src/components/ui/dialog.tsx:92:      aria-labelledby={ariaLabelledby}
+src/components/ui/dialog.tsx:116:          aria-label="Close dialog"
+src/components/monitoring/MonitoringHeader.tsx:48:              aria-label="Activer/désactiver le mode débogage"
+src/components/ui/textarea.tsx:124:            role={hasError ? 'alert' : undefined}
+src/components/ui/alert.tsx:39:      role="alert"
+src/components/ui/alert.tsx:48:          aria-label="Close"
+src/components/ui/input.tsx:119:            role={hasError ? 'alert' : undefined}
+src/components/ui/SkeletonLoader.tsx:16:  'aria-label'?: string;
+src/components/ui/SkeletonLoader.tsx:38:  'aria-label': ariaLabel = 'Loading',
+src/components/ui/SkeletonLoader.tsx:54:      role="status"
+src/components/ui/SkeletonLoader.tsx:55:      aria-label={ariaLabel}
+src/components/ui/SkeletonLoader.tsx:68:    <div className="flex gap-3 p-4" role="status" aria-label="Message loading">
+src/components/ui/tabs.tsx:44:      role="tablist"
+src/components/ui/tabs.tsx:76:      role="tab"
+src/components/ui/tabs.tsx:128:      role="tabpanel"
+src/components/ui/tabs.tsx:130:      aria-labelledby={`tab-${value}`}
+src/components/ui/tabs.tsx:204:      <div role="tablist" className="flex flex-col">
+src/components/optimization/UltimateOptimizationDashboard.tsx:183:        data-testid="page-optimization"
+src/components/optimization/UltimateOptimizationDashboard.tsx:202:      data-testid="page-optimization"
+src/components/optimization/UltimateOptimizationDashboard.tsx:251:              data-testid="btn-optimization-test-gpu"
+src/components/optimization/UltimateOptimizationDashboard.tsx:315:              data-testid="btn-optimization-test-wasm"
+src/components/optimization/UltimateOptimizationDashboard.tsx:367:                data-testid="btn-optimization-clear-cache"
+src/components/optimization/UltimateOptimizationDashboard.tsx:442:              data-testid="btn-optimization-compact-db"
+src/components/ui/switch.tsx:17:  'data-testid'?: string;
+src/components/ui/switch.tsx:18:  'aria-label'?: string;
+src/components/ui/switch.tsx:40:  'data-testid': dataTestId,
+src/components/ui/switch.tsx:41:  'aria-label': ariaLabel,
+src/components/ui/switch.tsx:60:        role="switch"
+src/components/ui/switch.tsx:63:        aria-label={ariaLabel || label || 'Toggle switch'}
+src/components/ui/switch.tsx:67:        data-testid={dataTestId}
+src/components/psyche/DeepPsychePanel.tsx:72:        aria-label="Toggle Deep Psyche Panel"
+src/ui/pages/Chat.tsx:1023:                  aria-label="Effacer l'historique du chat"
+src/ui/pages/Chat.tsx:1032:                  aria-label="Restaurer l'historique sauvegardé"
+src/ui/pages/Chat.tsx:1044:                  aria-label={
+src/ui/pages/Chat.tsx:1056:                  aria-label="Ouvrir les paramètres"
+src/ui/pages/Chat.tsx:1068:                  role="status"
+src/ui/pages/Chat.tsx:1070:                  aria-label={`Provider ${providerStatus.name} : statut ${providerStatus.status}`}
+src/ui/pages/Chat.tsx:1119:                  aria-label="Sélection du provider IA"
+src/ui/pages/Chat.tsx:1384:                role="dialog"
+src/ui/pages/Chat.tsx:1386:                aria-labelledby="settings-title"
+src/ui/pages/Chat.tsx:1395:                    aria-label="Fermer les paramètres"
+src/ui/pages/Chat.tsx:1416:                        aria-label="Sélection du provider IA préféré"
+src/services/singularityConnections.ts:541:    const modal = document.querySelector('[role="dialog"], .modal, [data-modal]');
+src/ui/pages/ControlPanel/components/ControlPanelToggle.tsx:92:        role="switch"
+src/ui/pages/ControlPanel/components/ControlPanelToggle.tsx:94:        aria-label={computedAriaLabel}
+src/ui/pages/ControlPanel/ControlPanel.tsx:156:          <div className="cp-card" role="alert" data-testid="cp-system-error">
+src/ui/pages/ControlPanel/sections/MemorySection.tsx:89:        <div className="cp-card" role="alert" data-testid="cp-memory-error">
+src/ui/pages/ControlPanel/sections/ModulesSection.tsx:61:        <div className="cp-card" role="alert" data-testid="cp-modules-error">
+src/ui/pages/ControlPanel/sections/SingularitySection.tsx:75:          <span className={`cp-badge ${status?.active ? 'success' : ''}`} role="status">
+src/ui/pages/ControlPanel/sections/SingularitySection.tsx:86:            role="progressbar"
+src/ui/pages/ControlPanel/sections/UpdatesSection.tsx:88:                <span className="cp-badge warning" role="status">
+src/ui/pages/ControlPanel/sections/UpdatesSection.tsx:103:              <span className="cp-badge success" role="status">
+src/ui/pages/ControlPanel/sections/AISection.tsx:348:              <span role="img" aria-label="vault">
+src/ui/pages/ControlPanel/sections/LogsSection.tsx:86:            aria-label="Filtrer les logs par niveau"
+src/ui/pages/ControlPanel/sections/LogsSection.tsx:107:        <div className="cp-card" role="alert" data-testid="cp-logs-error">
+src/ui/pages/ControlPanel/sections/LogsSection.tsx:113:        <div className="cp-logs-container" role="log" aria-live="polite">

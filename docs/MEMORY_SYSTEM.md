@@ -296,7 +296,7 @@ await invoke('titan_export_data', { path })
 ## 8. Références
 
 - [MEMORY_QA_CHECKLIST.md](./MEMORY_QA_CHECKLIST.md)
-- [OPUS_MPE_2_3_REPORT.md](../OPUS_MPE_2_3_REPORT.md)
+- [OPUS_MPE_2_3_REPORT.md](99_ARCHIVE/sessions/OPUS_MPE_2_3_REPORT.md)
 - [TitanStateContext.tsx](../src/context/TitanStateContext.tsx)
 - [persistence/mod.rs](../src-tauri/src/persistence/mod.rs)
 

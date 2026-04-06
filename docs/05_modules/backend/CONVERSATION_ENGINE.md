@@ -448,8 +448,8 @@ cargo test --test conversation_integration_test
 - [AI_ROUTER.md](AI_ROUTER.md) — AI provider routing
 
 **Architecture:**
-- [DATA_FLOW_CHAT.md](../../02_architecture_reality/DATA_FLOW_CHAT.md) — Conversation data flow
-- [TAURI_COMMANDS_REFERENCE.md](../../02_architecture_reality/TAURI_COMMANDS_REFERENCE.md) — Tauri commands API
+- [DATA_FLOW_CHAT.md](../../01_architecture/DATA_FLOW_CHAT.md) — Conversation data flow
+- [TAURI_COMMANDS_REFERENCE.md](../../06_api/TAURI_COMMANDS_REFERENCE.md) — Tauri commands API
 
 ---
 

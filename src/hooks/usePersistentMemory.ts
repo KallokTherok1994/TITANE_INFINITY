@@ -18,7 +18,7 @@
  *   - Niveau 3: LongTerm (permanent, chiffré)
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
 import type {
   MemoryEntry,
@@ -38,6 +38,11 @@ import {
   filterByPermissions,
   prepareContextInjection,
 } from '../services/memory/memoryUtils';
+import {
+  normalizePersistentMemoryBundles,
+  normalizePersistentMemoryReadResponse,
+  normalizePersistentMemoryStats,
+} from '../services/memory/persistentMemory.normalize';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES DU HOOK
@@ -205,15 +210,48 @@ const persistentMemoryCache: {
   entries: LRUCache<string, MemoryEntry>;
   summaries: LRUCache<string, MemorySummary>;
   bundles: LRUCache<string, MemoryBundle>;
+  stats: MemoryStats | null;
   lastFetch: number | null;
+  lastWrite: number | null;
+  scopeKey: string | null;
 } = {
   entries: new LRUCache<string, MemoryEntry>(500),
   summaries: new LRUCache<string, MemorySummary>(100),
   bundles: new LRUCache<string, MemoryBundle>(50),
+  stats: null,
   lastFetch: null,
+  lastWrite: null,
+  scopeKey: null,
 };
 
 const CACHE_TTL = 30000; // 30 secondes
+
+// Stable default pour éviter la recréation de tableau à chaque render (boucle infinie)
+const DEFAULT_LEVELS: MemoryLevel[] = ['session', 'intermediate', 'long_term'];
+
+const invalidatePersistentMemoryCache = () => {
+  persistentMemoryCache.entries.clear();
+  persistentMemoryCache.summaries.clear();
+  persistentMemoryCache.bundles.clear();
+  persistentMemoryCache.stats = null;
+  persistentMemoryCache.lastFetch = null;
+  persistentMemoryCache.lastWrite = null;
+  persistentMemoryCache.scopeKey = null;
+};
+
+function buildPersistentMemoryScopeKey(options: {
+  modeId: ChatModeId;
+  levels: MemoryLevel[];
+  topics?: MemoryTopic[];
+  projectId?: string;
+}): string {
+  return JSON.stringify({
+    modeId: options.modeId,
+    levels: [...options.levels],
+    topics: options.topics ? [...options.topics].sort() : null,
+    projectId: options.projectId ?? null,
+  });
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HOOK PRINCIPAL
@@ -225,103 +263,177 @@ export function usePersistentMemory(
   const {
     modeId,
     refreshInterval = 0,
-    levels = ['session', 'intermediate', 'long_term'],
+    levels = DEFAULT_LEVELS, // Référence stable au lieu d'un nouveau tableau
     topics,
     projectId,
     enableCache = true,
   } = options;
+
+  // Guard anti-boucle: empêche les refreshs concurrents de se déclencher en cascade
+  const isRefreshingRef = useRef(false);
 
   const [state, setState] = useState<PersistentMemoryHookState>({
     entries: [],
     summaries: [],
     bundles: [],
     stats: null,
-    isLoading: false,
+    isLoading: true,
     error: null,
     lastUpdate: null,
   });
+
+  const scopeKey = useMemo(
+    () =>
+      buildPersistentMemoryScopeKey({
+        modeId,
+        levels,
+        topics,
+        projectId,
+      }),
+    [modeId, levels, topics, projectId]
+  );
 
   // ─────────────────────────────────────────────────────────────────────────
   // FONCTIONS DE LECTURE
   // ─────────────────────────────────────────────────────────────────────────
 
-  const refresh = useCallback(async () => {
-    // Vérifier le cache
-    if (enableCache && persistentMemoryCache.lastFetch) {
-      const age = Date.now() - persistentMemoryCache.lastFetch;
-      if (age < CACHE_TTL) {
-        // Utiliser le cache
-        setState(prev => ({
-          ...prev,
-          entries: Array.from(persistentMemoryCache.entries.values()),
-          summaries: Array.from(persistentMemoryCache.summaries.values()),
-          bundles: Array.from(persistentMemoryCache.bundles.values()),
-          lastUpdate: persistentMemoryCache.lastFetch,
-        }));
-        return;
+  const runRefresh = useCallback(
+    async (refreshOptions?: { bypassCache?: boolean }) => {
+      // Guard anti-boucle: empêche les appels concurrents en cascade
+      if (isRefreshingRef.current) return;
+      isRefreshingRef.current = true;
+      // Vérifier le cache
+      if (
+        !refreshOptions?.bypassCache &&
+        enableCache &&
+        persistentMemoryCache.lastFetch &&
+        persistentMemoryCache.scopeKey === scopeKey
+      ) {
+        const age = Date.now() - persistentMemoryCache.lastFetch;
+        if (age < CACHE_TTL) {
+          try {
+            const latestStats = normalizePersistentMemoryStats(
+              await tauriClient.persistentMemoryGetStats()
+            );
+            const cachedLastWrite = persistentMemoryCache.lastWrite ?? 0;
+            const latestLastWrite = latestStats.lastWrite ?? 0;
+
+            if (cachedLastWrite >= latestLastWrite) {
+              // Utiliser le cache uniquement si aucune écriture backend plus récente n'existe.
+              setState(prev => ({
+                ...prev,
+                entries: Array.from(persistentMemoryCache.entries.values()),
+                summaries: Array.from(persistentMemoryCache.summaries.values()),
+                bundles: Array.from(persistentMemoryCache.bundles.values()),
+                stats: latestStats,
+                isLoading: false,
+                error: null,
+                lastUpdate: persistentMemoryCache.lastFetch,
+              }));
+              isRefreshingRef.current = false;
+              return;
+            }
+          } catch {
+            setState(prev => ({
+              ...prev,
+              entries: Array.from(persistentMemoryCache.entries.values()),
+              summaries: Array.from(persistentMemoryCache.summaries.values()),
+              bundles: Array.from(persistentMemoryCache.bundles.values()),
+              stats: persistentMemoryCache.stats,
+              isLoading: false,
+              error: null,
+              lastUpdate: persistentMemoryCache.lastFetch,
+            }));
+            isRefreshingRef.current = false;
+            return;
+          }
+        }
       }
-    }
 
-    setState(prev => ({ ...prev, isLoading: true, error: null }));
+      setState(prev => ({ ...prev, isLoading: true, error: null }));
 
-    try {
-      const request: MemoryReadRequest = {
-        levels,
-        topics,
-        currentMode: modeId,
-        projectId,
-        includeSummaries: true,
-        limit: 500,
-      };
+      try {
+        const request: MemoryReadRequest = {
+          levels,
+          topics,
+          currentMode: modeId,
+          projectId,
+          includeSummaries: true,
+          limit: 500,
+        };
 
-      const response = (await tauriClient.persistentMemoryRead({
-        request,
-      })) as MemoryReadResponse;
+        const response = normalizePersistentMemoryReadResponse(
+          await tauriClient.persistentMemoryRead({
+            request,
+          })
+        );
 
-      // Filtrer selon les permissions du mode
-      const filteredEntries = filterByPermissions(response.entries, modeId);
+        // Filtrer selon les permissions du mode
+        const filteredEntries = filterByPermissions(response.entries, modeId);
 
-      // Mettre à jour le cache
-      if (enableCache) {
-        persistentMemoryCache.entries.clear();
-        filteredEntries.forEach(e => persistentMemoryCache.entries.set(e.id, e));
+        // Mettre à jour le cache
+        if (enableCache) {
+          persistentMemoryCache.entries.clear();
+          filteredEntries.forEach(e => persistentMemoryCache.entries.set(e.id, e));
 
-        if (response.summaries) {
-          persistentMemoryCache.summaries.clear();
-          response.summaries.forEach(s => persistentMemoryCache.summaries.set(s.id, s));
+          if (response.summaries) {
+            persistentMemoryCache.summaries.clear();
+            response.summaries.forEach(s => persistentMemoryCache.summaries.set(s.id, s));
+          }
         }
 
-        persistentMemoryCache.lastFetch = Date.now();
+        // Charger les bundles séparément
+        const bundles = normalizePersistentMemoryBundles(
+          await tauriClient.persistentMemoryGetBundles()
+        );
+        if (enableCache) {
+          persistentMemoryCache.bundles.clear();
+          bundles.forEach(b => persistentMemoryCache.bundles.set(b.id, b));
+        }
+
+        // Charger les stats
+        const stats = normalizePersistentMemoryStats(
+          await tauriClient.persistentMemoryGetStats()
+        );
+
+        if (enableCache) {
+          persistentMemoryCache.stats = stats;
+          persistentMemoryCache.lastWrite = stats.lastWrite;
+          persistentMemoryCache.lastFetch = Date.now();
+          persistentMemoryCache.scopeKey = scopeKey;
+        }
+
+        setState({
+          entries: filteredEntries,
+          summaries: response.summaries || [],
+          bundles,
+          stats,
+          isLoading: false,
+          error: null,
+          lastUpdate: Date.now(),
+        });
+      } catch (err) {
+        console.error('[usePersistentMemory] Erreur de chargement:', err);
+        setState(prev => ({
+          ...prev,
+          isLoading: false,
+          error: err instanceof Error ? err.message : 'Erreur de chargement mémoire',
+        }));
+      } finally {
+        isRefreshingRef.current = false;
       }
+    },
+    [modeId, levels, topics, projectId, enableCache, scopeKey]
+  );
 
-      // Charger les bundles séparément
-      const bundles = (await tauriClient.persistentMemoryGetBundles()) as MemoryBundle[];
-      if (enableCache) {
-        persistentMemoryCache.bundles.clear();
-        bundles.forEach(b => persistentMemoryCache.bundles.set(b.id, b));
-      }
+  const refresh = useCallback(async () => {
+    await runRefresh();
+  }, [runRefresh]);
 
-      // Charger les stats
-      const stats = (await tauriClient.persistentMemoryGetStats()) as MemoryStats;
-
-      setState({
-        entries: filteredEntries,
-        summaries: response.summaries || [],
-        bundles,
-        stats,
-        isLoading: false,
-        error: null,
-        lastUpdate: Date.now(),
-      });
-    } catch (err) {
-      console.error('[usePersistentMemory] Erreur de chargement:', err);
-      setState(prev => ({
-        ...prev,
-        isLoading: false,
-        error: err instanceof Error ? err.message : 'Erreur de chargement mémoire',
-      }));
-    }
-  }, [modeId, levels, topics, projectId, enableCache]);
+  const refreshAfterMutation = useCallback(async () => {
+    invalidatePersistentMemoryCache();
+    await runRefresh({ bypassCache: true });
+  }, [runRefresh]);
 
   const search = useCallback(
     async (searchOptions: PersistentMemorySearchOptions): Promise<MemoryEntry[]> => {
@@ -347,9 +459,11 @@ export function usePersistentMemory(
           minRelevanceScore: minScore,
         };
 
-        const response = (await tauriClient.persistentMemoryRead({
-          request,
-        })) as MemoryReadResponse;
+        const response = normalizePersistentMemoryReadResponse(
+          await tauriClient.persistentMemoryRead({
+            request,
+          })
+        );
 
         // Re-scorer et trier côté frontend pour plus de précision
         const ranked = rankByRelevance(response.entries, query);
@@ -362,7 +476,7 @@ export function usePersistentMemory(
         console.error('[usePersistentMemory] Erreur de recherche:', err);
 
         // Fallback: recherche locale dans le cache
-        if (enableCache) {
+        if (enableCache && persistentMemoryCache.scopeKey === scopeKey) {
           const cached = Array.from(persistentMemoryCache.entries.values());
           const ranked = rankByRelevance(cached, query);
           return ranked
@@ -374,7 +488,7 @@ export function usePersistentMemory(
         return [];
       }
     },
-    [modeId, levels, enableCache]
+    [modeId, levels, enableCache, scopeKey]
   );
 
   const getContextForPrompt = useCallback(
@@ -382,21 +496,27 @@ export function usePersistentMemory(
       // Utiliser les entrées en cache ou charger
       let entries = state.entries;
 
-      if (entries.length === 0 && enableCache) {
+      if (
+        entries.length === 0 &&
+        enableCache &&
+        persistentMemoryCache.scopeKey === scopeKey
+      ) {
         entries = Array.from(persistentMemoryCache.entries.values());
       }
 
       if (entries.length === 0) {
         // Charger depuis Rust
         try {
-          const response = (await tauriClient.persistentMemoryRead({
-            request: {
-              levels,
-              currentMode: modeId,
-              query,
-              limit: 100,
-            },
-          })) as MemoryReadResponse;
+          const response = normalizePersistentMemoryReadResponse(
+            await tauriClient.persistentMemoryRead({
+              request: {
+                levels,
+                currentMode: modeId,
+                query,
+                limit: 100,
+              },
+            })
+          );
           entries = response.entries;
         } catch {
           return { context: '', usedEntries: [] };
@@ -405,7 +525,7 @@ export function usePersistentMemory(
 
       return prepareContextInjection(entries, query, modeId);
     },
-    [state.entries, modeId, levels, enableCache]
+    [state.entries, modeId, levels, enableCache, scopeKey]
   );
 
   const getEntryById = useCallback(
@@ -458,12 +578,12 @@ export function usePersistentMemory(
           contentType: saveOptions?.contentType,
           tags: saveOptions?.tags,
           title: saveOptions?.title,
-          projectId: saveOptions?.projectId,
+          projectId: saveOptions?.projectId ?? projectId,
           modeId,
         })) as string;
 
         // Rafraîchir après écriture
-        await refresh();
+        await refreshAfterMutation();
 
         return entryId;
       } catch (err) {
@@ -471,53 +591,49 @@ export function usePersistentMemory(
         throw err;
       }
     },
-    [modeId, refresh]
+    [modeId, projectId, refreshAfterMutation]
   );
 
   const promoteEntry = useCallback(
     async (entryId: string): Promise<boolean> => {
       try {
         await tauriClient.persistentMemoryPromoteEntry({ entryId });
-        await refresh();
+        await refreshAfterMutation();
         return true;
       } catch (err) {
         console.error('[usePersistentMemory] Erreur de promotion:', err);
         return false;
       }
     },
-    [refresh]
+    [refreshAfterMutation]
   );
 
   const archiveEntry = useCallback(
     async (entryId: string): Promise<boolean> => {
       try {
         await tauriClient.persistentMemoryArchiveEntry({ entryId });
-        await refresh();
+        await refreshAfterMutation();
         return true;
       } catch (err) {
         console.error("[usePersistentMemory] Erreur d'archivage:", err);
         return false;
       }
     },
-    [refresh]
+    [refreshAfterMutation]
   );
 
   const deleteEntry = useCallback(
     async (entryId: string): Promise<boolean> => {
       try {
         await tauriClient.persistentMemoryDeleteEntry({ entryId });
-
-        // Supprimer du cache immédiatement
-        persistentMemoryCache.entries.delete(entryId);
-
-        await refresh();
+        await refreshAfterMutation();
         return true;
       } catch (err) {
         console.error('[usePersistentMemory] Erreur de suppression:', err);
         return false;
       }
     },
-    [refresh]
+    [refreshAfterMutation]
   );
 
   const requestSummary = useCallback(
@@ -529,14 +645,14 @@ export function usePersistentMemory(
           modeId,
         })) as string;
 
-        await refresh();
+        await refreshAfterMutation();
         return summaryId;
       } catch (err) {
         console.error('[usePersistentMemory] Erreur de création résumé:', err);
         throw err;
       }
     },
-    [modeId, refresh]
+    [modeId, refreshAfterMutation]
   );
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -552,28 +668,28 @@ export function usePersistentMemory(
           topic: topic || 'general',
         })) as string;
 
-        await refresh();
+        await refreshAfterMutation();
         return bundleId;
       } catch (err) {
         console.error('[usePersistentMemory] Erreur de création bundle:', err);
         throw err;
       }
     },
-    [refresh]
+    [refreshAfterMutation]
   );
 
   const addToBundle = useCallback(
     async (bundleId: string, entryIds: string[]): Promise<boolean> => {
       try {
         await tauriClient.persistentMemoryAddToBundle({ bundleId, entryIds });
-        await refresh();
+        await refreshAfterMutation();
         return true;
       } catch (err) {
         console.error("[usePersistentMemory] Erreur d'ajout au bundle:", err);
         return false;
       }
     },
-    [refresh]
+    [refreshAfterMutation]
   );
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -581,10 +697,7 @@ export function usePersistentMemory(
   // ─────────────────────────────────────────────────────────────────────────
 
   const clearCache = useCallback(() => {
-    persistentMemoryCache.entries.clear();
-    persistentMemoryCache.summaries.clear();
-    persistentMemoryCache.bundles.clear();
-    persistentMemoryCache.lastFetch = null;
+    invalidatePersistentMemoryCache();
 
     setState(prev => ({
       ...prev,

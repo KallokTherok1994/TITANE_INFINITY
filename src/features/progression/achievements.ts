@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
@@ -31,7 +31,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     name: 'Premier Contact',
     description: 'Envoyer votre premier message à TITANE',
     icon: '💬',
-    unlocked: true,
+    unlocked: false, // computed by resolveAchievements from real stats (messages not tracked yet)
     category: 'conversation',
     rarity: 'common',
     xpReward: 10,
@@ -42,7 +42,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     name: 'Communicateur',
     description: 'Envoyer 1000 messages',
     icon: '📨',
-    unlocked: true,
+    unlocked: false, // computed by resolveAchievements (messages not tracked yet)
     category: 'conversation',
     rarity: 'rare',
     xpReward: 500,
@@ -66,7 +66,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     name: 'Apprenti',
     description: 'Atteindre le niveau 10',
     icon: '🎓',
-    unlocked: true,
+    unlocked: false, // computed by resolveAchievements from real level
     category: 'progression',
     rarity: 'common',
     xpReward: 100,
@@ -136,7 +136,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     name: 'Omega',
     description: 'Atteindre 100 000 XP',
     icon: 'Ω',
-    unlocked: true,
+    unlocked: false, // computed by resolveAchievements from real totalXP
     category: 'mastery',
     rarity: 'legendary',
     xpReward: 0,
@@ -145,15 +145,69 @@ export const ACHIEVEMENTS: Achievement[] = [
 ];
 
 /**
- * Calculer la progression des achievements
+ * Dériver l'état unlocked depuis les stats réelles (XP/level).
+ * Pour les achievements de type 'messages' ou 'modes', on n'a pas
+ * de source canonique — ils restent à leur valeur statique initiale
+ * mais marqués avec un label honnête.
+ *
+ * IMPORTANT: ne jamais présenter un achievement comme gagné
+ * si son critère ne peut pas être vérifié à partir des stats réelles.
  */
+export function resolveAchievements(
+  achievements: Achievement[],
+  stats: { level: number; totalXP: number; chatMessageCount?: number }
+): Achievement[] {
+  return achievements.map(a => {
+    const req = a.requirements;
+    if (!req) return a;
+    let computedUnlocked = a.unlocked;
+    if (req.type === 'level') {
+      computedUnlocked = stats.level >= req.value;
+    } else if (req.type === 'xp') {
+      computedUnlocked = stats.totalXP >= req.value;
+    } else if (req.type === 'messages') {
+      // Use canonical chatMessageCount from xpEngine when available
+      const count = stats.chatMessageCount ?? 0;
+      computedUnlocked = count >= req.value;
+    }
+    // 'modes' and 'custom': no canonical event source — keep static value
+    return { ...a, unlocked: computedUnlocked };
+  });
+}
+
+/**
+ * Talents débloqués calculés depuis le niveau réel.
+ * Thresholds définis explicitement — jamais de constante statique présentée comme gagnée.
+ */
+export interface TalentStatus {
+  label: string;
+  variant: 'success' | 'info' | 'warning' | 'default';
+  unlocked: boolean;
+  requiredLevel: number;
+}
+
+export function resolveTalents(level: number): TalentStatus[] {
+  return [
+    { label: 'Architecte', variant: 'success', unlocked: level >= 1, requiredLevel: 1 },
+    { label: 'Optimiseur', variant: 'info', unlocked: level >= 5, requiredLevel: 5 },
+    {
+      label: 'Évolutionniste',
+      variant: 'info',
+      unlocked: level >= 10,
+      requiredLevel: 10,
+    },
+    { label: 'Pédagogue', variant: 'success', unlocked: level >= 15, requiredLevel: 15 },
+  ];
+}
+
 export function calculateAchievementProgress(
   achievement: Achievement,
   currentStats: {
     level: number;
     totalXP: number;
-    messageCount: number;
+    messageCount: number; // legacy param kept for compat — use chatMessageCount when available
     modesUsed: number;
+    chatMessageCount?: number;
   }
 ): number {
   if (achievement.unlocked) return 100;
@@ -166,8 +220,10 @@ export function calculateAchievementProgress(
       return Math.min(100, (currentStats.level / req.value) * 100);
     case 'xp':
       return Math.min(100, (currentStats.totalXP / req.value) * 100);
-    case 'messages':
-      return Math.min(100, (currentStats.messageCount / req.value) * 100);
+    case 'messages': {
+      const count = currentStats.chatMessageCount ?? currentStats.messageCount;
+      return Math.min(100, (count / req.value) * 100);
+    }
     case 'modes':
       return Math.min(100, (currentStats.modesUsed / req.value) * 100);
     default:

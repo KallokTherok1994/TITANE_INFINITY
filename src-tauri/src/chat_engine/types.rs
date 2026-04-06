@@ -26,6 +26,10 @@ pub struct ChatRequestPayload {
     pub max_output_tokens: usize,
     pub provider: ProviderPreference,
     pub enable_streaming: bool,
+    /// Optional profile override: "fast" | "balanced" | "deep".
+    /// Absent or unknown values default to Balanced.
+    #[serde(default)]
+    pub profile: Option<String>,
 }
 
 impl ChatRequestPayload {
@@ -42,8 +46,8 @@ impl ChatRequestPayload {
             return Err("Temperature must be between 0.0 and 2.0".to_string());
         }
 
-        if self.max_output_tokens == 0 || self.max_output_tokens > 8096 {
-            return Err("max_output_tokens must be between 1 and 8096".to_string());
+        if self.max_output_tokens == 0 || self.max_output_tokens > 16384 {
+            return Err("max_output_tokens must be between 1 and 16384".to_string());
         }
 
         Ok(())
@@ -60,6 +64,10 @@ pub struct ChatCompletionPayload {
     pub token_count: usize,
     pub latency_ms: u128,
     pub timestamp: i64,
+    /// Why generation stopped: "complete" | "timeout" | "budget" | "error".
+    pub stop_reason: String,
+    /// Profile that was active for this request.
+    pub profile: String,
 }
 
 /// Streaming chunk descriptor sent to the frontend.
@@ -267,7 +275,7 @@ mod tests {
             user_message: "Hello".to_string(),
             system_prompt: None,
             temperature: 0.7,
-            max_output_tokens: 10000,
+            max_output_tokens: 20000,
             provider: ProviderPreference::Auto,
             enable_streaming: false,
         };
@@ -324,7 +332,7 @@ mod tests {
             user_message: "Hello".to_string(),
             system_prompt: None,
             temperature: 0.7,
-            max_output_tokens: 8096,
+            max_output_tokens: 16384,
             provider: ProviderPreference::Auto,
             enable_streaming: false,
         };

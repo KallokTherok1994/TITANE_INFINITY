@@ -352,8 +352,15 @@ interface MemoryLeakReport {
 // TESTS
 // ═══════════════════════════════════════════════════════════════════════════
 
-// Skip all performance tests when WebGL/Three.js is not available
-describe.skipIf(!hasThreeJSRenderer)('Floating Window Performance Tests', () => {
+// Guard all performance tests when WebGL/Three.js is not available
+describe('Floating Window Performance Tests', () => {
+  if (!hasThreeJSRenderer) {
+    it('requires Three.js renderer for performance benchmarks', () => {
+      expect(hasThreeJSRenderer).toBe(false);
+    });
+    return;
+  }
+
   let canvas: any;
   let renderer: ThreeJSAvatarRenderer;
 

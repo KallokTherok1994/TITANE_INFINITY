@@ -10,12 +10,7 @@
  */
 
 import { sendChatMessage } from '../tauriBridge';
-import {
-  SecureAIService,
-  type SecureAIRequest,
-  type SecureAIResponse,
-  type ChatResponse,
-} from '@/lib/security';
+import { secureInvoke } from '@/lib/security';
 import { createLogger } from '@/utils/logger';
 
 const logger = createLogger('ChatClient');
@@ -163,105 +158,28 @@ export async function sendMessage(
   // ============================================================
   // SECURE AI REQUEST
   // ============================================================
-  const secureRequest: SecureAIRequest = {
-    input: userInput,
-    provider: model.includes('gpt')
-      ? 'openai'
-      : model.includes('claude')
-        ? 'anthropic'
-        : model.includes('gemini')
-          ? 'google'
-          : 'ollama',
-    model,
-    userId:
-      (typeof window !== 'undefined' && (window as any).__TITANE_USER_ID__) ||
-      'anonymous',
-    metadata: {
-      temperature,
-      maxTokens,
-      messageCount: messages.length,
-      requestId: `chat-${Date.now()}`,
-    },
-  };
-
   // ============================================================
-  // RETRY LOOP WITH SECURITY
+  // RETRY LOOP
   // ============================================================
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      const secureResult: SecureAIResponse<ChatResponse> =
-        await SecureAIService.executeSecureChat(secureRequest, async sanitizedInput => {
-          // Rebuild messages with sanitized input
-          const sanitizedMessages = messages.map(m =>
-            m.role === 'user' ? { ...m, content: sanitizedInput } : m
-          );
+      // API call via tauriBridge
+      const response = await sendChatMessage(messages, {
+        model,
+        temperature,
+        maxTokens,
+      });
 
-          // API call via tauriBridge
-          const response = await sendChatMessage(sanitizedMessages, {
-            model,
-            temperature,
-            maxTokens,
-          });
-
-          // Convert CoreResponse<string> to ChatResponse
-          return {
-            content: response.data || '',
-            role: 'assistant' as const,
-            timestamp: Date.now(),
-            metadata: {
-              model,
-              tokens: maxTokens,
-            },
-          };
-        });
-
-      // ============================================================
-      // SECURITY VALIDATION CHECK
-      // ============================================================
-      if (!secureResult.success) {
-        // Security failure (rate limit, validation, sanitization)
-        const errorMsg = secureResult.error || 'Security validation failed';
-
-        if (secureResult.rateLimitExceeded) {
-          return {
-            success: false,
-            error: `Rate limit exceeded — ${errorMsg}`,
-            duration: Date.now() - startTime,
-          };
-        }
-
-        if (secureResult.sanitization?.isBlocked) {
-          const patterns = secureResult.sanitization.detectedPatterns.join(', ');
-          return {
-            success: false,
-            error: `Input blocked — Detected: ${patterns}`,
-            duration: Date.now() - startTime,
-          };
-        }
-
-        if (!secureResult.validation?.isValid) {
-          return {
-            success: false,
-            error: `Response validation failed — ${errorMsg}`,
-            duration: Date.now() - startTime,
-          };
-        }
-
-        // Generic error - retry
-        throw new Error(errorMsg);
+      if (response.data && response.data.trim().length > 0) {
+        circuitBreaker.recordSuccess();
+        return {
+          success: true,
+          content: response.data,
+          model,
+          attempt,
+          duration: Date.now() - startTime,
+        };
       }
-
-      // ============================================================
-      // SUCCESS
-      // ============================================================
-      circuitBreaker.recordSuccess();
-      return {
-        success: true,
-        content: secureResult.response.content,
-        model: secureResult.response.metadata?.model || model,
-        attempt,
-        duration: Date.now() - startTime,
-      };
     } catch (error) {
       logger.warn(`Attempt ${attempt}/${retries} failed`, error);
 
@@ -272,44 +190,23 @@ export async function sendMessage(
   }
 
   // ============================================================
-  // FALLBACK MODELS (with security)
+  // FALLBACK MODELS
   // ============================================================
   for (const fallbackModel of fallbackModels) {
     try {
       logger.debug(`Trying fallback model: ${fallbackModel}`);
 
-      const fallbackRequest = { ...secureRequest, model: fallbackModel };
-      const fallbackResult = await SecureAIService.executeSecureChat(
-        fallbackRequest,
-        async sanitizedInput => {
-          const sanitizedMessages = messages.map(m =>
-            m.role === 'user' ? { ...m, content: sanitizedInput } : m
-          );
+      const response = await sendChatMessage(messages, {
+        model: fallbackModel,
+        temperature,
+        maxTokens,
+      });
 
-          const response = await sendChatMessage(sanitizedMessages, {
-            model: fallbackModel,
-            temperature,
-            maxTokens,
-          });
-
-          // Convert CoreResponse<string> to ChatResponse
-          return {
-            content: response.data || '',
-            role: 'assistant' as const,
-            timestamp: Date.now(),
-            metadata: {
-              model: fallbackModel,
-              tokens: maxTokens,
-            },
-          };
-        }
-      );
-
-      if (fallbackResult.success) {
+      if (response.data && response.data.trim().length > 0) {
         circuitBreaker.recordSuccess();
         return {
           success: true,
-          content: fallbackResult.response.content,
+          content: response.data,
           model: fallbackModel,
           duration: Date.now() - startTime,
         };

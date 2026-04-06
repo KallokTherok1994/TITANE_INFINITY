@@ -1,0 +1,11 @@
+PHASE=0_EXECUTION_OBJECTIVE
+UTC_TIMESTAMP=2026-03-13T15:35:00Z
+
+OBJECTIF_UNIQUE=Check real PROD authorization and execute real commit->main->build->deploy only if strict GO gates are all PASS; otherwise strict HOLD with no forbidden execution.
+
+BASELINE_OFFICIELLE
+- FINAL_CERTIFICATION=FRONTEND_CERTIFIABLE_STRONG
+- RELEASE_READY=HOLD
+- unique blocker from V66: PROD_TOKEN_GATE_OPEN=FAIL
+
+STOPLINE=No fake GO and no commit/main/build/deploy unless PROD_TOKEN_GATE_OPEN=PASS in this exact context.

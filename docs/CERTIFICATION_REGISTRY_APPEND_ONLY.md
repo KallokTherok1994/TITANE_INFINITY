@@ -139,7 +139,7 @@
 
 **Governance References:**
 - [TITANE∞ Copilot Instructions](../.github/copilot-instructions.md)
-- [Architecture Documentation](../ARCHITECTURE.md)
+- [Architecture Documentation](ARCHITECTURE.md)
 - [4-Ring Enforcement](../.github/instructions/tauri.instructions.md)
 
 ---
@@ -1081,3 +1081,37 @@ Date: 2026-02-24T19:46:00Z
 | test_result      | 4387 pass / 0 fail / 7 ignored (x3 runs)           |
 | tsc_result       | PASS                                               |
 | sealed_by        | Copilot TITANE∞ FINAL_SEAL_v1                      |
+
+---
+
+## EVENT: STRUCTURE_AUDIT_SEAL
+
+| Field            | Value                                              |
+|------------------|----------------------------------------------------|
+| timestamp        | 2026-03-01T13:40:00-05:00                          |
+| commit           | f1b5eb3782ee                                       |
+| previous_commit  | c83f07f7534b                                       |
+| proof_pack       | docs/_evidence/structure_audit_2026-03-01_1320/   |
+| seal_tag         | seal/structure-audit-2026-03-01_1320              |
+| seal_tag_object  | 1b7acd484c7ed901636b5a99de6f114db69cfd8d           |
+| verdict          | SCELLE                                             |
+| scope            | Audit, migration ciblée, gate anti-drift structure |
+| gates            | PASS (MD outside docs, local md links, top dirs)  |
+| sealed_by        | Copilot TITANE∞ STRUCTURE_AUDIT_v1                |
+
+---
+
+## EVENT: STRUCTURE_REORG_SEAL
+
+| Field            | Value                                              |
+|------------------|----------------------------------------------------|
+| timestamp        | 2026-03-01T13:52:00-05:00                          |
+| commit           | 760e75bd3976                                       |
+| previous_commit  | 846e05b387dd                                       |
+| proof_pack       | docs/_evidence/structure_reorg_2026-03-01_133944/ |
+| seal_tag         | seal/structure-reorg-2026-03-01_133944            |
+| seal_tag_object  | 316a08b3fefd87c96311a553d2ecd3908e570c56           |
+| verdict          | SCELLE                                             |
+| scope            | Structure + docs + gouvernance + auto-fix unicode |
+| gates            | PASS (structure gate + links + unicode json audit) |
+| sealed_by        | Copilot TITANE∞ STRUCTURE_REORG_v1                |

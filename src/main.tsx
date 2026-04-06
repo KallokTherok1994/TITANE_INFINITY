@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v26.3.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025-2026 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -22,6 +22,9 @@ declare global {
       captureException: (error: unknown, options?: Record<string, unknown>) => void;
     };
     __TITANE_MONITORING__?: unknown;
+    __TITANE_BOOT_READY__?: boolean;
+    __TITANE_BOOT_FALLBACK__?: boolean;
+    __TITANE_EMIT_BOOT_MARKER__?: (marker: string) => void;
   }
 }
 
@@ -37,22 +40,24 @@ import './utils/browserModeAdapter';
 // ✨ Phase 4 (Week 6): Initialize runtime log level manager
 import './config/logLevelConfig';
 
-// TITANE∞ v26.3.0 - Main Entry Point - Certification P10.4→P11 PASS
+// TITANE∞ v30.0.0 - Main Entry Point - Certification P10.4→P11 PASS
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { logger } from './lib/logger';
 import { setErrorToastDispatcher } from './lib/errorHandler';
 import { useUIStore } from './stores/uiStore';
 import App from './App'; // ✅ App principal réactivé (AppMinimal validé)
+import { SingularityBridge } from './services/singularityBridge';
+import { SingularityConnections } from './services/singularityConnections';
 // import AppMinimal from './AppMinimal'; // 🔍 DEBUG: Minimal test app
 
-// ✨ v25.3.0 OPT-9 - Monitoring lazy-loaded (non-blocking initialization)
+// ✨ v30.0.0 OPT-9 - Monitoring lazy-loaded (non-blocking initialization)
 // Moved to async initialization in bootstrap() below
 
 // ✅ v8.0 DESIGN SYSTEM - Tailwind CSS + TITANE∞ Tokens
 import './index.css'; // 🎨 v8.0: Tailwind CSS + Design Tokens (css-vars.css)
 
-// ✨ v25.7.4 RESPONSIVE DESIGN SYSTEM - Mobile-First Tokens & Utilities
+// ✨ v30.0.0 RESPONSIVE DESIGN SYSTEM - Mobile-First Tokens & Utilities
 import './design-system/responsive-tokens.css'; // 🎯 Fluid spacing, typography, layout
 import './design-system/responsive-utilities.css'; // 🛠️ Utility classes (grid-responsive, btn-touch, etc.)
 
@@ -97,6 +102,7 @@ type TitaneBootDiagnostics = {
 type MemoryCoreLogLevel = 'Info' | 'Warning' | 'Error';
 
 let lastBootStageLoggedToMemoryCore: string | null = null;
+const seenBootMarkers = new Set<string>();
 
 const tryWriteMemoryCoreLog = (
   level: MemoryCoreLogLevel,
@@ -148,11 +154,68 @@ const setBootStage = (stage: string): void => {
   const w = window as typeof window & { __TITANE_BOOT__?: TitaneBootDiagnostics };
   w.__TITANE_BOOT__ = { stage, timestamp: Date.now() };
 
+  if (typeof document !== 'undefined') {
+    document.documentElement.dataset.titaneBootStage = stage;
+  }
+
   if (stage !== lastBootStageLoggedToMemoryCore) {
     lastBootStageLoggedToMemoryCore = stage;
     tryWriteMemoryCoreLog('Info', 'frontend.boot', stage);
   }
 };
+
+const BOOT_RECOVERY_ONCE_KEY = 'titane_boot_recovery_once';
+const SUSPENSE_RECOVERY_ONCE_KEY = 'titane_suspense_recovery_once';
+
+const emitBootMarker = (marker: string): void => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  if (seenBootMarkers.has(marker)) {
+    return;
+  }
+
+  seenBootMarkers.add(marker);
+  setBootStage(marker);
+  console.info(`[${new Date().toISOString()}] ${marker}`);
+
+  void import('@tauri-apps/api/event')
+    .then(({ emit }) =>
+      emit('titane://boot-marker', {
+        marker,
+        ts: Date.now(),
+      })
+    )
+    .catch(() => {
+      // Do not break UI boot if event bus is unavailable
+    });
+
+  void safeInvokeTauri<void>(TAURI_COMMANDS.BOOT_MARKER_LOG, { marker }, 1500).catch(
+    () => {
+      // Do not break UI boot if marker IPC fails
+    }
+  );
+
+  if (marker === 'BOOT:READY') {
+    window.__TITANE_BOOT_READY__ = true;
+    if (typeof document !== 'undefined') {
+      document.documentElement.dataset.titaneBootReady = '1';
+    }
+    try {
+      window.localStorage.removeItem(BOOT_RECOVERY_ONCE_KEY);
+      window.localStorage.removeItem(SUSPENSE_RECOVERY_ONCE_KEY);
+    } catch {
+      // ignore
+    }
+  }
+};
+
+if (typeof window !== 'undefined') {
+  window.__TITANE_EMIT_BOOT_MARKER__ = emitBootMarker;
+  emitBootMarker('BOOT:START');
+  emitBootMarker('BOOT:AFTER_STORE');
+}
 
 const getUILogsSnapshot = (): unknown => {
   if (typeof window === 'undefined') {
@@ -458,8 +521,6 @@ import { logInfo } from './lib/UILogger';
 // import { singularityEngine } from './core/engines/SINGULARITY_ENGINE'; // DÉSACTIVÉ pour debug
 
 // 🌟 v15: Initialize SingularityBridge (Backend Rust ↔ Frontend React)
-import { SingularityBridge as _SingularityBridge } from './services/singularityBridge';
-import { SingularityConnections as _SingularityConnections } from './services/singularityConnections';
 
 // ✨ v∞.D: Initialize XP Engine
 import { XP } from './core/experience/XP_ENGINE';
@@ -645,8 +706,114 @@ const scheduleBootWatchdog = (): void => {
 
   window.setTimeout(() => {
     try {
+      const bootReady = Boolean(window.__TITANE_BOOT_READY__);
+
+      const loadingSplashVisible = Boolean(document.querySelector('.loading-splash'));
+      const pageFallbackVisible = Boolean(
+        document.querySelector('.page-loading-fallback')
+      );
+      const loadingStuck = loadingSplashVisible || pageFallbackVisible;
+
+      if (bootReady && !loadingStuck) {
+        return;
+      }
+
+      let recoveryAlreadyAttempted = false;
+      try {
+        recoveryAlreadyAttempted =
+          window.localStorage.getItem(BOOT_RECOVERY_ONCE_KEY) === '1';
+      } catch {
+        recoveryAlreadyAttempted = false;
+      }
+
+      if (loadingStuck && !recoveryAlreadyAttempted) {
+        try {
+          window.localStorage.setItem(BOOT_RECOVERY_ONCE_KEY, '1');
+        } catch {
+          // ignore
+        }
+
+        if ('serviceWorker' in navigator) {
+          void navigator.serviceWorker
+            .getRegistrations()
+            .then(registrations => Promise.all(registrations.map(r => r.unregister())))
+            .catch(() => {
+              // ignore
+            });
+        }
+
+        if (typeof caches !== 'undefined') {
+          void caches
+            .keys()
+            .then(keys => Promise.all(keys.map(key => caches.delete(key))))
+            .catch(() => {
+              // ignore
+            });
+        }
+
+        window.setTimeout(() => {
+          window.location.reload();
+        }, 600);
+        return;
+      }
+
+      if (!window.__TITANE_BOOT_FALLBACK__) {
+        window.__TITANE_BOOT_FALLBACK__ = true;
+        showFatalErrorOverlay({
+          title: 'BOOT timeout (>20s)',
+          message:
+            "Initialisation incomplète. L'application passe en fallback non bloquant. Vérifie les logs BOOT/IPC puis relance.",
+          source: 'BOOT_WATCHDOG_20S',
+        });
+
+        const reloadBtn = document.createElement('button');
+        reloadBtn.id = 'titane-boot-reload-btn';
+        reloadBtn.textContent = '🔄 Relancer';
+        reloadBtn.style.position = 'fixed';
+        reloadBtn.style.right = '20px';
+        reloadBtn.style.bottom = '20px';
+        reloadBtn.style.zIndex = '2147483647';
+        reloadBtn.style.padding = '10px 14px';
+        reloadBtn.style.borderRadius = '10px';
+        reloadBtn.style.border = '1px solid rgba(255,255,255,0.2)';
+        reloadBtn.style.background = '#1f2937';
+        reloadBtn.style.color = '#f3f4f6';
+        reloadBtn.style.cursor = 'pointer';
+        reloadBtn.addEventListener('click', () => {
+          window.location.reload();
+        });
+        document.body.appendChild(reloadBtn);
+      }
+
       const root = document.getElementById('root');
       const childCount = root?.childElementCount ?? 0;
+
+      if (loadingStuck) {
+        const w = window as typeof window & {
+          __TITANE_BOOT__?: { stage: string; timestamp: number };
+        };
+
+        showDebugOverlay('Boot Watchdog (loading persistant)', {
+          now: new Date().toISOString(),
+          boot: w.__TITANE_BOOT__ ?? null,
+          bootReady,
+          isTauri: true,
+          location: typeof location !== 'undefined' ? String(location.href) : 'n/a',
+          userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'n/a',
+          loading: {
+            loadingSplashVisible,
+            pageFallbackVisible,
+            recoveryAlreadyAttempted,
+          },
+          root: {
+            exists: Boolean(root),
+            childCount,
+          },
+          uiLogs: getUILogsSnapshot(),
+          hint: 'Un auto-reload a été tenté une fois; vérifier erreurs JS et chunks.',
+        });
+        return;
+      }
 
       if (childCount > 0) {
         return;
@@ -672,7 +839,7 @@ const scheduleBootWatchdog = (): void => {
     } catch {
       // never break boot
     }
-  }, 4500);
+  }, 20000);
 };
 
 scheduleBootWatchdog();
@@ -703,7 +870,7 @@ console.log('║  🌌 TITANE∞ v19 - BOOT SEQUENCE                            
 console.log('║  Timestamp: ' + new Date().toISOString() + '                  ║');
 console.log('╚════════════════════════════════════════════════════════════════╝\n');
 
-// ✨ v26.2.0 Phase 5 - Monitoring Infrastructure (Priority 1)
+// ✨ v30.0.0 Phase 5 - Monitoring Infrastructure (Priority 1)
 console.log('[1/7] 🔍 Monitoring: Initializing (Web Vitals, Errors, Performance)...');
 if (import.meta.env.PROD) {
   // Load monitoring in background after First Contentful Paint
@@ -768,18 +935,56 @@ singularityEngine.initialize().then(() => {
 */
 
 // 🌟 v15: Initialize SingularityBridge
-// 🔴 DÉSACTIVÉ PERMANENT - Mode navigateur uniquement
-/*
+const getSingularityPollingIntervalMs = (): number => {
+  const defaultIntervalMs = import.meta.env.DEV ? 5000 : 0;
+
+  if (typeof window === 'undefined') {
+    return defaultIntervalMs;
+  }
+
+  const envEnabled =
+    String(import.meta.env.VITE_SINGULARITY_POLLING_ENABLED ?? '') === '1';
+  const storedEnabled = window.localStorage.getItem('titane_singularity_polling_enabled');
+  const lsEnabled = storedEnabled === '1' || storedEnabled === 'true';
+  const enabled = envEnabled || lsEnabled;
+
+  const envIntervalRaw = import.meta.env.VITE_SINGULARITY_POLLING_INTERVAL_MS;
+  const envIntervalMs =
+    typeof envIntervalRaw === 'string' && envIntervalRaw.trim().length > 0
+      ? Number(envIntervalRaw)
+      : NaN;
+
+  const lsIntervalRaw = window.localStorage.getItem(
+    'titane_singularity_polling_interval_ms'
+  );
+  const lsIntervalMs = lsIntervalRaw ? Number(lsIntervalRaw) : NaN;
+
+  const candidate = Number.isFinite(envIntervalMs)
+    ? envIntervalMs
+    : Number.isFinite(lsIntervalMs)
+      ? lsIntervalMs
+      : defaultIntervalMs;
+
+  if (!enabled) {
+    return 0;
+  }
+
+  if (!Number.isFinite(candidate) || candidate <= 0) {
+    return 5000;
+  }
+
+  return Math.max(1000, Math.floor(candidate));
+};
+
 SingularityBridge.initialize()
   .then(() => {
     console.log('✅ SingularityBridge initialized (Rust ↔ React sync active)');
 
-    // Log initial state
-    SingularityBridge.getGlobalCoherence().then(coherence => {
+    void SingularityBridge.getGlobalCoherence().then(coherence => {
       console.log('🔗 Backend Coherence:', (coherence * 100).toFixed(1) + '%');
     });
 
-    SingularityBridge.isCritical().then(critical => {
+    void SingularityBridge.isCritical().then(critical => {
       if (critical) {
         console.warn('⚠️  System in CRITICAL state!');
       } else {
@@ -787,60 +992,6 @@ SingularityBridge.initialize()
       }
     });
 
-    const getSingularityPollingIntervalMs = (): number => {
-      // Default behavior:
-      // - Dev: keep legacy polling (5s) for fast feedback.
-      // - Prod: no background polling by default (event-driven only).
-      const defaultIntervalMs = import.meta.env.DEV ? 5000 : 0;
-
-      if (typeof window === 'undefined') {
-        return defaultIntervalMs;
-      }
-
-      // Explicit opt-in knobs.
-      // - Env: VITE_SINGULARITY_POLLING_ENABLED=1
-      // - Env: VITE_SINGULARITY_POLLING_INTERVAL_MS=5000
-      // - LocalStorage: titane_singularity_polling_enabled=true
-      // - LocalStorage: titane_singularity_polling_interval_ms=5000
-      const envEnabled =
-        String(import.meta.env.VITE_SINGULARITY_POLLING_ENABLED ?? '') === '1';
-      const storedEnabled = window.localStorage.getItem(
-        'titane_singularity_polling_enabled'
-      );
-      const lsEnabled = storedEnabled === '1' || storedEnabled === 'true';
-      const enabled = envEnabled || lsEnabled;
-
-      const envIntervalRaw = import.meta.env.VITE_SINGULARITY_POLLING_INTERVAL_MS;
-      const envIntervalMs =
-        typeof envIntervalRaw === 'string' && envIntervalRaw.trim().length > 0
-          ? Number(envIntervalRaw)
-          : NaN;
-
-      const lsIntervalRaw = window.localStorage.getItem(
-        'titane_singularity_polling_interval_ms'
-      );
-      const lsIntervalMs = lsIntervalRaw ? Number(lsIntervalRaw) : NaN;
-
-      const candidate = Number.isFinite(envIntervalMs)
-        ? envIntervalMs
-        : Number.isFinite(lsIntervalMs)
-          ? lsIntervalMs
-          : defaultIntervalMs;
-
-      // If polling isn't explicitly enabled, force event-driven.
-      if (!enabled) {
-        return 0;
-      }
-
-      // Guard rails: minimum 1s if enabled.
-      if (!Number.isFinite(candidate) || candidate <= 0) {
-        return 5000;
-      }
-
-      return Math.max(1000, Math.floor(candidate));
-    };
-
-    // 🔗 v15: Start subsystem connections (Helios, Memory, Persona, AutoHeal, UI)
     const singularityIntervalMs = getSingularityPollingIntervalMs();
     SingularityConnections.start(singularityIntervalMs)
       .then(() => {
@@ -872,8 +1023,6 @@ SingularityBridge.initialize()
       err as Error
     );
   });
-*/
-console.log('🔴 SingularityBridge: DÉSACTIVÉ PERMANENT (mode navigateur uniquement)');
 
 // Phase 8: Initialize Performance Monitoring - DÉSACTIVÉ pour debug
 /*
@@ -915,17 +1064,57 @@ window.addEventListener('unhandledrejection', event => {
 console.log('✅ TITANE∞ frontend loaded successfully');
 console.log('>>> MOUNTING REACT ROOT NOW...\n');
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🎯 REACT ROOT MOUNT - Point critique d'affichage
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const rootElement = document.getElementById('root');
+// ⚡ FIX: NON-MAIN WINDOW GUARD
+// Root cause: avatar-floating pre-created in tauri.conf.json (no dedicated URL)
+// loads full React bundle → duplicate App.tsx useEffects + Ollama probes + WebKit crash
+// Evidence: tauri.conf.json:47-63, App.tsx:456, main.rs:952+976, ollama.ts:156-165
+const _titaneCurrentWindowLabel: string = (() => {
+  try {
+    const internals = (window as any).__TAURI_INTERNALS__;
+    const label = internals?.metadata?.currentWindow?.label;
+    return typeof label === 'string' && label.length > 0 ? label : 'main';
+  } catch {
+    return 'main';
+  }
+})();
 
-if (!rootElement) {
-  const errorMsg = '❌ CRITICAL: #root element not found in DOM!';
-  logger.error(errorMsg, { component: 'RootElement' });
+if (_titaneCurrentWindowLabel !== 'main') {
+  // Non-main window (e.g. avatar-floating): mount minimal stub only.
+  // Prevents: duplicate Ollama probes, duplicate boot useEffects, WebKit crash.
+  const _nonMainRoot = document.getElementById('root');
+  if (_nonMainRoot) {
+    ReactDOM.createRoot(_nonMainRoot).render(
+      <React.StrictMode>
+        <div
+          id="titane-secondary-window-stub"
+          data-window-label={_titaneCurrentWindowLabel}
+          data-boot-status="minimal-non-main"
+          aria-hidden="true"
+          style={{ display: 'none' }}
+        />
+      </React.StrictMode>
+    );
+  }
+  // Signal a completed minimal boot for secondary windows to avoid watchdog reload loops.
+  window.__TITANE_BOOT_READY__ = true;
+  if (typeof document !== 'undefined') {
+    document.documentElement.dataset.titaneBootReady = '1';
+  }
+  console.log(
+    `[TITANE] Non-main window "${_titaneCurrentWindowLabel}" — minimal mode active (boot dedup)`
+  );
+} else {
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 🎯 REACT ROOT MOUNT - Point critique d'affichage
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  const rootElement = document.getElementById('root');
 
-  // Fallback visuel si #root manque
-  document.body.innerHTML = `
+  if (!rootElement) {
+    const errorMsg = '❌ CRITICAL: #root element not found in DOM!';
+    logger.error(errorMsg, { component: 'RootElement' });
+
+    // Fallback visuel si #root manque
+    document.body.innerHTML = `
     <div style="
       display: flex;
       align-items: center;
@@ -944,89 +1133,92 @@ if (!rootElement) {
       </div>
     </div>
   `;
-  throw new Error(errorMsg);
-}
-
-console.log('✅ Root element found:', rootElement);
-console.log('🎨 Starting React 18 render...');
-
-try {
-  console.log('🚀 [v16.2.3] Rendering App complet (après validation AppMinimal)');
-
-  // 🔬 DIAGNOSTIC: Test minimal pour isoler problème écran noir
-  // Décommenter la ligne ci-dessous pour tester React minimal
-  // import('./AppMinimalTest').then(({ default: AppMinimal }) => {
-  //   ReactDOM.createRoot(rootElement).render(<AppMinimal />);
-  // });
-
-  ReactDOM.createRoot(rootElement).render(
-    <React.StrictMode>
-      <ErrorBoundary
-        context="App"
-        onError={(error, errorInfo) => {
-          logger.error(
-            'Production Error Boundary caught',
-            {
-              component: 'ErrorBoundary',
-              componentStack: errorInfo.componentStack,
-            },
-            error
-          );
-
-          // Hook for Sentry/LogRocket integration
-          if (window.Sentry) {
-            window.Sentry.captureException(error, {
-              contexts: { react: { componentStack: errorInfo.componentStack } },
-            });
-          }
-        }}
-      >
-        <App />
-      </ErrorBoundary>
-    </React.StrictMode>
-  );
-
-  console.log('\n╔════════════════════════════════════════════════════════════════╗');
-  console.log('║  ✅ TITANE∞ REACT ROOT MOUNTED (App Complet Actif)           ║');
-  console.log('╚════════════════════════════════════════════════════════════════╝\n');
-
-  // ✨ P2-B: Register Service Worker for offline caching (-400ms repeat visit)
-  // In Tauri, service workers can create persistent caching issues across builds.
-  if (!isTauriRuntime() && 'serviceWorker' in navigator && import.meta.env.PROD) {
-    navigator.serviceWorker
-      .register('/sw.js', { scope: '/' })
-      .then(registration => {
-        console.log('✅ Service Worker registered:', registration.scope);
-
-        // Update on page reload
-        registration.addEventListener('updatefound', () => {
-          const newWorker = registration.installing;
-          if (newWorker) {
-            newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                console.log('🔄 New Service Worker available. Refresh to update.');
-                // Optional: Show update notification to user
-              }
-            });
-          }
-        });
-      })
-      .catch(error => {
-        console.warn('⚠️ Service Worker registration failed:', error);
-      });
+    throw new Error(errorMsg);
   }
-} catch (error) {
-  logger.error(
-    'CRITICAL: React mount failed',
-    { component: 'ReactMount' },
-    error as Error
-  );
 
-  // Fallback visuel en cas d'erreur React
-  const errorMsg = error instanceof Error ? error.message : String(error);
-  const errorStack = error instanceof Error ? error.stack : '';
+  console.log('✅ Root element found:', rootElement);
+  console.log('🎨 Starting React 18 render...');
 
-  document.body.innerHTML = `
+  try {
+    console.log('🚀 [v16.2.3] Rendering App complet (après validation AppMinimal)');
+
+    // 🔬 DIAGNOSTIC: Test minimal pour isoler problème écran noir
+    // Décommenter la ligne ci-dessous pour tester React minimal
+    // import('./AppMinimalTest').then(({ default: AppMinimal }) => {
+    //   ReactDOM.createRoot(rootElement).render(<AppMinimal />);
+    // });
+
+    ReactDOM.createRoot(rootElement).render(
+      <React.StrictMode>
+        <ErrorBoundary
+          context="App"
+          onError={(error, errorInfo) => {
+            logger.error(
+              'Production Error Boundary caught',
+              {
+                component: 'ErrorBoundary',
+                componentStack: errorInfo.componentStack,
+              },
+              error
+            );
+
+            // Hook for Sentry/LogRocket integration
+            if (window.Sentry) {
+              window.Sentry.captureException(error, {
+                contexts: { react: { componentStack: errorInfo.componentStack } },
+              });
+            }
+          }}
+        >
+          <App />
+        </ErrorBoundary>
+      </React.StrictMode>
+    );
+
+    console.log('\n╔════════════════════════════════════════════════════════════════╗');
+    console.log('║  ✅ TITANE∞ REACT ROOT MOUNTED (App Complet Actif)           ║');
+    console.log('╚════════════════════════════════════════════════════════════════╝\n');
+
+    // ✨ P2-B: Register Service Worker for offline caching (-400ms repeat visit)
+    // In Tauri, service workers can create persistent caching issues across builds.
+    if (!isTauriRuntime() && 'serviceWorker' in navigator && import.meta.env.PROD) {
+      navigator.serviceWorker
+        .register('/sw.js', { scope: '/' })
+        .then(registration => {
+          console.log('✅ Service Worker registered:', registration.scope);
+
+          // Update on page reload
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            if (newWorker) {
+              newWorker.addEventListener('statechange', () => {
+                if (
+                  newWorker.state === 'installed' &&
+                  navigator.serviceWorker.controller
+                ) {
+                  console.log('🔄 New Service Worker available. Refresh to update.');
+                  // Optional: Show update notification to user
+                }
+              });
+            }
+          });
+        })
+        .catch(error => {
+          console.warn('⚠️ Service Worker registration failed:', error);
+        });
+    }
+  } catch (error) {
+    logger.error(
+      'CRITICAL: React mount failed',
+      { component: 'ReactMount' },
+      error as Error
+    );
+
+    // Fallback visuel en cas d'erreur React
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : '';
+
+    document.body.innerHTML = `
     <div style="
       display: flex;
       align-items: center;
@@ -1064,5 +1256,6 @@ try {
       </div>
     </div>
   `;
-  throw error;
-}
+    throw error;
+  }
+} // end non-main window guard (FIX: UI_BOOT_DUPLICATION + OLLAMA_PROBE_STORM)

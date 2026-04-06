@@ -93,7 +93,7 @@ TITANE∞ Quality Score: 42/100 → 48/100
 Created comprehensive reports:
 
 - [STABILIZATION_SESSION_PHASE1_REPORT.md](STABILIZATION_SESSION_PHASE1_REPORT.md) (243 lines)
-- [STABILIZATION_SESSION_COMPLETE.md](STABILIZATION_SESSION_COMPLETE.md) (382 lines)
+- [STABILIZATION_SESSION_COMPLETE.md](../sessions/2025-12/STABILIZATION_SESSION_COMPLETE.md) (382 lines)
 
 ---
 
@@ -235,7 +235,7 @@ Net total:        +629 lines
    - 630 unwrap() mapping
    - Fix patterns and commands
 
-2. [STABILIZATION_SESSION_COMPLETE.md](STABILIZATION_SESSION_COMPLETE.md)
+2. [STABILIZATION_SESSION_COMPLETE.md](../sessions/2025-12/STABILIZATION_SESSION_COMPLETE.md)
    - Full session summary
    - All phases documented
    - Next steps roadmap
@@ -247,8 +247,8 @@ Net total:        +629 lines
 
 ### Previous Documentation
 
-- [SESSION_PIPELINE_v21_FINAL.md](SESSION_PIPELINE_v21_FINAL.md)
-- [PIPELINE_v21_SUCCESS_SUMMARY.md](PIPELINE_v21_SUCCESS_SUMMARY.md)
+- [SESSION_PIPELINE_v21_FINAL.md](../old_sessions/2025-12-10/SESSION_PIPELINE_v21_FINAL.md)
+- [PIPELINE_v21_SUCCESS_SUMMARY.md](../complete-reports/PIPELINE_v21_SUCCESS_SUMMARY.md)
 
 ---
 

@@ -453,8 +453,8 @@ cargo test memory_os:: -- --nocapture
 - [SINGULARITY.md](SINGULARITY.md) — Meta-cognitive memory
 
 **Architecture:**
-- [ARCHITECTURE_CURRENT_v24.md](../../00_meta/ARCHITECTURE_CURRENT_v24.md) — System architecture
-- [DATA_FLOW_CHAT.md](../../02_architecture_reality/DATA_FLOW_CHAT.md) — Memory flow in chat
+- [ARCHITECTURE_CURRENT_v24.md](../../01_architecture/ARCHITECTURE_CURRENT_v24.md) — System architecture
+- [DATA_FLOW_CHAT.md](../../01_architecture/DATA_FLOW_CHAT.md) — Memory flow in chat
 
 **Feature Guides:**
 - [MEMORY_OS.md](../../04_guides/features/MEMORY_OS.md) — User-facing memory guide

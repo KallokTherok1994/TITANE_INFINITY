@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
@@ -58,6 +58,11 @@ export const PersonaEditor: React.FC<PersonaEditorProps> = ({
   );
 
   const handleSave = useCallback(() => {
+    try {
+      localStorage.setItem('titane_persona_profile', JSON.stringify(profile));
+    } catch (e) {
+      console.warn('[PersonaEditor] Failed to persist persona profile', e);
+    }
     onSave?.(profile);
     setHasChanges(false);
   }, [profile, onSave]);

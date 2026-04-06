@@ -5,8 +5,42 @@
 - [ ] Created `.github/copilot-agents/dependency-guardian.agent.md`
 - [ ] Created `.vscode/settings.json` with agent settings
 - [ ] Ran "Index workspace" command in VS Code (Cmd/Ctrl+Shift+P → "Index workspace")
+- [ ] AutoHeal system present: `scripts/autoheal/README.md`, `scripts/autoheal/autoheal_rules.jsonl`, `scripts/autoheal/apply_autoheal.sh`, `scripts/autoheal/detect_recurrence.sh`
+- [ ] Inventory completed in proof-pack (`02_INSTRUCTIONS_INVENTORY.md`)
+- [ ] Contradictions resolved or explicitly marked BLOCKED (`03_CONTRADICTIONS.md`)
 - [ ] Committed all files to git
 - [ ] Restarted VS Code
+
+# Dev Launch — Canonical DEV_SAFE Path
+
+> **Required toolchain:** Node ≥ 20 (`.nvmrc` specifies 24) · Rust stable · pnpm  
+> If your Node version is wrong, `run-dev.sh` will tell you exactly what to do.
+
+## Primary path (use this first)
+
+```bash
+./runtime/dev/run-dev.sh
+```
+
+This is the governed DEV_SAFE launcher. It:
+
+- validates Node version (≥20) with an actionable error if wrong
+- blocks launch on `stable-runtime` branch
+- runs pre-launch cleanup
+- starts Tauri dev with DevTools enabled and full debug logging
+- tees logs to `runtime/dev/logs/tauri.log`
+
+## Alternate paths (secondary — for specific scenarios)
+
+| Command                        | When to use                                            |
+| ------------------------------ | ------------------------------------------------------ |
+| `pnpm run dev:tauri`           | Quick launch via monitor script (no branch/Node guard) |
+| `pnpm run dev:tauri:clean`     | Launch after cleanup if run-dev.sh cleanup seems stale |
+| `pnpm run dev:tauri:raw`       | Raw deploy script — advanced / manual override         |
+| `pnpm run dev:tauri:no-ollama` | Raw launch without Ollama service                      |
+| `pnpm run titane:dev`          | Dev-bridge direct — for bridge-layer debugging only    |
+
+Do not use `pnpm start` — it is intentionally blocked (Tauri-only mode).
 
 # Usage Checklist - For Every Session
 
@@ -14,4 +48,7 @@
 - [ ] Received ANALYSIS COMPLETE summary before code
 - [ ] Received DEPENDENCY CHECK before any installs
 - [ ] Received VALIDATION results after implementation
+- [ ] Captured each fix in `scripts/autoheal/autoheal_rules.jsonl` (append-only)
+- [ ] Ran `bash scripts/autoheal/detect_recurrence.sh` before DONE/SEALED
+- [ ] Ran `bash scripts/verify_instructions.sh` before DONE/SEALED
 - [ ] All checks show PASS before accepting changes

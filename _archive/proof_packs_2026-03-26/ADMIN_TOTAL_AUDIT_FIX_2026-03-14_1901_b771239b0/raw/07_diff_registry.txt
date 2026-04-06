@@ -1,0 +1,6 @@
+A	registry/autofix-autoheal-rules.jsonl
+A	registry/closure-events.jsonl
+A	registry/heavy-artifacts-manifest.jsonl
+A	registry/local-only-historical-residue.jsonl
+A	registry/proofpack-index.jsonl
+M	registry/ui-events.jsonl

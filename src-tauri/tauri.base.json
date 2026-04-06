@@ -1,11 +1,11 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0",
   "productName": "TITANE-Infinity",
-  "version": "26.2.0",
+  "version": "30.0.0",
   "identifier": "com.titane.infinity",
   "build": {
-    "devUrl": "http://localhost:5173",
-    "beforeDevCommand": "corepack pnpm exec vite dev --host 127.0.0.1 --port 5173 --strictPort",
+    "devUrl": "http://localhost:1420",
+    "beforeDevCommand": "corepack pnpm exec vite dev --host 127.0.0.1 --port 1420 --strictPort",
     "beforeBuildCommand": "corepack pnpm exec vite build",
     "frontendDist": "../dist"
   },
@@ -23,13 +23,13 @@
     "copyright": "Copyright © 2025 TITANE∞",
     "category": "Productivity",
     "shortDescription": "TITANE∞ - Cognitive Operating System",
-    "longDescription": "TITANE∞ v26.2.0 - Cognitive OS with OMEGA v2, 9 Unified Engines, ConversationManager, Local-First Architecture"
+    "longDescription": "TITANE Infinity - Cognitive Operating System, stable production release"
   },
   "app": {
     "windows": [
       {
         "label": "main",
-        "title": "TITANE∞ v26.2.0",
+        "title": "TITANE Infinity - Multi-Provider AI",
         "width": 1400,
         "height": 900,
         "minWidth": 1200,

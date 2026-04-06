@@ -44,7 +44,7 @@ PHASE_GATES=0
 for phase in p3-build-guard p4-constitution-audit p5-runtime-governance p6-capability-qualification; do
   if [[ -f ".github/workflows/${phase}.yml" ]]; then
     pass "GitHub Actions: ${phase}.yml present"
-    ((PHASE_GATES++))
+    PHASE_GATES=$((PHASE_GATES + 1))
   else
     fail "GitHub Actions: ${phase}.yml MISSING"
   fi
@@ -98,7 +98,7 @@ TOKEN_MARKERS=(
   "GO_FOR_PROD_DEPLOY__TITANE_INFINITY"
 )
 for token_marker in "${TOKEN_MARKERS[@]}"; do
-  if grep -r "$token_marker" scripts/ docs/ 2>/dev/null | grep -q .; then
+  if grep -rq "$token_marker" scripts/ docs/ 2>/dev/null; then
     pass "Token requirement documented: $token_marker"
   else
     fail "Token requirement missing: $token_marker"

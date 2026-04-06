@@ -1,0 +1,4 @@
+=== RUN B: DESKTOP E2E (20 WDIO Suites) ===
+Start: mer. 18 mars 2026 10:10:24 EDT
+Command: pnpm e2e:desktop
+

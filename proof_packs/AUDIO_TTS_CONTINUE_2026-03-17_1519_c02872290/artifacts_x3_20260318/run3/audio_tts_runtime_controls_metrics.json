@@ -1,0 +1,16 @@
+{
+  "chatPrompt": "Réponds en 8 phrases simples, calmes et claires sur respiration, alimentation et sommeil pour garder la lecture audio active assez longtemps et activer tous les contrôles TTS.",
+  "assistantMessageDetected": true,
+  "ttsControlsVisible": true,
+  "ttsStatusAfterRead": "Lecture en cours...",
+  "ttsStatusFinal": "Lecture arrêtée.",
+  "pauseResumePath": "executed",
+  "stopActionObserved": true,
+  "replayButtonObserved": true,
+  "audioCenterVisible": true,
+  "speakerButtonVisible": true,
+  "microphoneButtonVisible": true,
+  "speakerResultObserved": true,
+  "microphoneResultObserved": true,
+  "verdict": "PASS"
+}

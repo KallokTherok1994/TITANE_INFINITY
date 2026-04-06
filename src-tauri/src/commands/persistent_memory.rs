@@ -195,6 +195,7 @@ pub struct MemoryHealth {
 
 /// Requête de lecture
 #[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct MemoryReadRequest {
     pub levels: Option<Vec<MemoryLevel>>,
     pub topics: Option<Vec<MemoryTopic>>,
@@ -219,6 +220,17 @@ pub struct MemoryReadResponse {
     pub relevance_scores: HashMap<String, f32>,
 }
 
+#[derive(Debug, Clone)]
+struct ContextMemoryPermissions {
+    can_read_session: bool,
+    can_read_intermediate: bool,
+    can_read_long_term: bool,
+    allowed_topics: Vec<MemoryTopic>,
+    allowed_content_types: Vec<MemoryContentType>,
+    max_importance: MemoryImportance,
+    context_token_limit: usize,
+}
+
 /// État global de la mémoire persistante
 pub struct PersistentMemoryState {
     /// Chemin de base pour le stockage
@@ -235,16 +247,7 @@ pub struct PersistentMemoryState {
 
 impl PersistentMemoryState {
     pub fn new(app_handle: &AppHandle) -> Self {
-        // Phase 1 Stabilisation: Fallback si app_data_dir() échoue
-        let app_data_dir = app_handle.path().app_data_dir().unwrap_or_else(|e| {
-            eprintln!(
-                "Warning: Failed to get app data dir ({}), using current directory",
-                e
-            );
-            PathBuf::from(".").join("titane-data")
-        });
-
-        let base_path = app_data_dir.join("persistent_memory");
+        let base_path = resolve_persistent_memory_base_path(app_handle);
 
         // Créer les répertoires
         fs::create_dir_all(&base_path).ok();
@@ -257,7 +260,7 @@ impl PersistentMemoryState {
         Self {
             base_path,
             session_cache: Mutex::new(HashMap::new()),
-            encryptor: MemoryEncryption::new("TITANE_MEMORY_KEY_v19"),
+            encryptor: MemoryEncryption::new("TITANE_MEMORY_KEY_v19".to_string()),
             last_read: Mutex::new(Utc::now().timestamp_millis()),
             last_write: Mutex::new(Utc::now().timestamp_millis()),
         }
@@ -273,13 +276,29 @@ impl PersistentMemoryState {
 
     /// Génère un hash de contenu simple
     fn hash_content(&self, content: &str) -> String {
-        use std::collections::hash_map::DefaultHasher;
-        use std::hash::{Hash, Hasher};
-
-        let mut hasher = DefaultHasher::new();
-        content.hash(&mut hasher);
-        format!("{:x}", hasher.finish())
+        persistent_memory_hash_content(content)
     }
+}
+
+pub(crate) fn resolve_persistent_memory_base_path(app_handle: &AppHandle) -> PathBuf {
+    let app_data_dir = app_handle.path().app_data_dir().unwrap_or_else(|e| {
+        eprintln!(
+            "Warning: Failed to get app data dir ({}), using current directory",
+            e
+        );
+        PathBuf::from(".").join("titane-data")
+    });
+
+    app_data_dir.join("persistent_memory")
+}
+
+pub(crate) fn persistent_memory_hash_content(content: &str) -> String {
+    use std::collections::hash_map::DefaultHasher;
+    use std::hash::{Hash, Hasher};
+
+    let mut hasher = DefaultHasher::new();
+    content.hash(&mut hasher);
+    format!("{:x}", hasher.finish())
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -321,13 +340,14 @@ pub async fn persistent_memory_read(
 
                 if file_path.exists() {
                     let content = if *level == MemoryLevel::LongTerm {
-                        // Déchiffrer pour long_term
-                        let encrypted =
-                            fs::read(&file_path).map_err(|e| format!("Failed to read: {}", e))?;
-                        state
+                        let encrypted = fs::read_to_string(&file_path)
+                            .map_err(|e| format!("Failed to read: {}", e))?;
+                        let decrypted = state
                             .encryptor
                             .decrypt(&encrypted)
-                            .map_err(|e| format!("Decryption failed: {}", e))?
+                            .map_err(|e| format!("Decryption failed: {}", e))?;
+                        String::from_utf8(decrypted)
+                            .map_err(|e| format!("Invalid UTF-8 after decryption: {}", e))?
                     } else {
                         fs::read_to_string(&file_path)
                             .map_err(|e| format!("Failed to read: {}", e))?
@@ -465,8 +485,13 @@ pub async fn persistent_memory_get_stats(
             total_size += size;
 
             let entries: Vec<PersistentMemoryEntry> = if level == MemoryLevel::LongTerm {
-                let encrypted = fs::read(&path).unwrap_or_default();
-                let content = state.encryptor.decrypt(&encrypted).unwrap_or_default();
+                let encrypted = fs::read_to_string(&path).unwrap_or_default();
+                let content = state
+                    .encryptor
+                    .decrypt(&encrypted)
+                    .ok()
+                    .and_then(|bytes| String::from_utf8(bytes).ok())
+                    .unwrap_or_default();
                 serde_json::from_str(&content).unwrap_or_default()
             } else {
                 let content = fs::read_to_string(&path).unwrap_or_default();
@@ -542,15 +567,30 @@ pub async fn persistent_memory_get_context(
         query.len()
     );
 
+    let permissions = get_context_permissions(&mode_id);
+    let mut allowed_levels = Vec::new();
+    if permissions.can_read_session {
+        allowed_levels.push(MemoryLevel::Session);
+    }
+    if permissions.can_read_intermediate {
+        allowed_levels.push(MemoryLevel::Intermediate);
+    }
+    if permissions.can_read_long_term {
+        allowed_levels.push(MemoryLevel::LongTerm);
+    }
+
+    if allowed_levels.is_empty() {
+        return Ok(serde_json::json!({
+            "context": "",
+            "usedEntries": []
+        }));
+    }
+
     // Lire toutes les entrées pertinentes
     let request = MemoryReadRequest {
-        levels: Some(vec![
-            MemoryLevel::Session,
-            MemoryLevel::Intermediate,
-            MemoryLevel::LongTerm,
-        ]),
-        topics: None,
-        content_types: None,
+        levels: Some(allowed_levels),
+        topics: Some(permissions.allowed_topics.clone()),
+        content_types: Some(permissions.allowed_content_types.clone()),
         min_importance: Some(2),
         current_mode: mode_id,
         query: Some(query.clone()),
@@ -562,14 +602,15 @@ pub async fn persistent_memory_get_context(
     };
 
     let response = persistent_memory_read(state, request).await?;
+    let filtered_entries = filter_entries_for_context_mode(response.entries, &permissions);
 
     // Construire le contexte textuel
     let mut context = String::new();
     let mut used_entries: Vec<String> = Vec::new();
-    let max_tokens = 2000;
+    let max_tokens = permissions.context_token_limit;
     let mut current_tokens = 0;
 
-    for entry in response.entries {
+    for entry in filtered_entries {
         let score = response.relevance_scores.get(&entry.id).unwrap_or(&0.0);
         if *score < 0.3 {
             continue;
@@ -796,8 +837,9 @@ pub async fn persistent_memory_archive_entry(
         let path = state.get_level_path(&level).join("entries.json");
         if path.exists() {
             let content = if encrypted {
-                let data = fs::read(&path).map_err(|e| e.to_string())?;
-                state.encryptor.decrypt(&data).map_err(|e| e.to_string())?
+                let data = fs::read_to_string(&path).map_err(|e| e.to_string())?;
+                let bytes = state.encryptor.decrypt(&data).map_err(|e| e.to_string())?;
+                String::from_utf8(bytes).map_err(|e| e.to_string())?
             } else {
                 fs::read_to_string(&path).map_err(|e| e.to_string())?
             };
@@ -812,8 +854,10 @@ pub async fn persistent_memory_archive_entry(
                 let json = serde_json::to_string_pretty(&entries).map_err(|e| e.to_string())?;
 
                 if encrypted {
-                    let encrypted_data =
-                        state.encryptor.encrypt(&json).map_err(|e| e.to_string())?;
+                    let encrypted_data = state
+                        .encryptor
+                        .encrypt(json.as_bytes())
+                        .map_err(|e| e.to_string())?;
                     fs::write(&path, encrypted_data).map_err(|e| e.to_string())?;
                 } else {
                     fs::write(&path, json).map_err(|e| e.to_string())?;
@@ -851,8 +895,9 @@ pub async fn persistent_memory_delete_entry(
         let path = state.get_level_path(&level).join("entries.json");
         if path.exists() {
             let content = if encrypted {
-                let data = fs::read(&path).map_err(|e| e.to_string())?;
-                state.encryptor.decrypt(&data).map_err(|e| e.to_string())?
+                let data = fs::read_to_string(&path).map_err(|e| e.to_string())?;
+                let bytes = state.encryptor.decrypt(&data).map_err(|e| e.to_string())?;
+                String::from_utf8(bytes).map_err(|e| e.to_string())?
             } else {
                 fs::read_to_string(&path).map_err(|e| e.to_string())?
             };
@@ -866,8 +911,10 @@ pub async fn persistent_memory_delete_entry(
                 let json = serde_json::to_string_pretty(&entries).map_err(|e| e.to_string())?;
 
                 if encrypted {
-                    let encrypted_data =
-                        state.encryptor.encrypt(&json).map_err(|e| e.to_string())?;
+                    let encrypted_data = state
+                        .encryptor
+                        .encrypt(json.as_bytes())
+                        .map_err(|e| e.to_string())?;
                     fs::write(&path, encrypted_data).map_err(|e| e.to_string())?;
                 } else {
                     fs::write(&path, json).map_err(|e| e.to_string())?;
@@ -895,7 +942,7 @@ pub async fn persistent_memory_create_summary(
     );
 
     // Charger les entrées source
-    let request = MemoryReadRequest {
+    let _request = MemoryReadRequest {
         levels: Some(vec![MemoryLevel::Session, MemoryLevel::Intermediate]),
         topics: None,
         content_types: None,
@@ -909,9 +956,19 @@ pub async fn persistent_memory_create_summary(
         min_relevance_score: None,
     };
 
-    let response = persistent_memory_read(State::from(&*state), request).await?;
-    let source_entries: Vec<&PersistentMemoryEntry> = response
-        .entries
+    let mut pool: Vec<PersistentMemoryEntry> = {
+        let cache = state.session_cache.lock().map_err(|e| e.to_string())?;
+        cache.values().cloned().collect()
+    };
+    let intermediate_path = state
+        .get_level_path(&MemoryLevel::Intermediate)
+        .join("entries.json");
+    if intermediate_path.exists() {
+        let content = fs::read_to_string(&intermediate_path).map_err(|e| e.to_string())?;
+        let entries: Vec<PersistentMemoryEntry> = serde_json::from_str(&content).unwrap_or_default();
+        pool.extend(entries);
+    }
+    let source_entries: Vec<&PersistentMemoryEntry> = pool
         .iter()
         .filter(|e| entry_ids.contains(&e.id))
         .collect();
@@ -1081,8 +1138,13 @@ pub async fn persistent_memory_export(
         .get_level_path(&MemoryLevel::LongTerm)
         .join("entries.json");
     if lt_path.exists() {
-        let encrypted = fs::read(&lt_path).unwrap_or_default();
-        let content = state.encryptor.decrypt(&encrypted).unwrap_or_default();
+        let encrypted = fs::read_to_string(&lt_path).unwrap_or_default();
+        let content = state
+            .encryptor
+            .decrypt(&encrypted)
+            .ok()
+            .and_then(|bytes| String::from_utf8(bytes).ok())
+            .unwrap_or_default();
         let entries: Vec<PersistentMemoryEntry> =
             serde_json::from_str(&content).unwrap_or_default();
         all_data.insert(
@@ -1114,8 +1176,8 @@ pub async fn persistent_memory_export(
 /// Calculer le score de pertinence (simplifié)
 fn calculate_relevance(content: &str, query: &str) -> f32 {
     let content_lower = content.to_lowercase();
-    let query_terms: Vec<&str> = query
-        .to_lowercase()
+    let query_lower = query.to_lowercase();
+    let query_terms: Vec<&str> = query_lower
         .split_whitespace()
         .filter(|w| w.len() > 2)
         .collect();
@@ -1131,8 +1193,175 @@ fn calculate_relevance(content: &str, query: &str) -> f32 {
     (matches as f32) / (query_terms.len() as f32)
 }
 
+fn get_context_permissions(mode_id: &str) -> ContextMemoryPermissions {
+    match mode_id {
+        "default" => ContextMemoryPermissions {
+            can_read_session: true,
+            can_read_intermediate: true,
+            can_read_long_term: false,
+            allowed_topics: vec![
+                MemoryTopic::General,
+                MemoryTopic::Personal,
+                MemoryTopic::Creative,
+            ],
+            allowed_content_types: vec![
+                MemoryContentType::Message,
+                MemoryContentType::Summary,
+                MemoryContentType::Preference,
+            ],
+            max_importance: 3,
+            context_token_limit: 500,
+        },
+        "dev" => ContextMemoryPermissions {
+            can_read_session: true,
+            can_read_intermediate: true,
+            can_read_long_term: true,
+            allowed_topics: vec![
+                MemoryTopic::General,
+                MemoryTopic::Coding,
+                MemoryTopic::Project,
+                MemoryTopic::Technical,
+                MemoryTopic::Decisions,
+            ],
+            allowed_content_types: vec![
+                MemoryContentType::Message,
+                MemoryContentType::Summary,
+                MemoryContentType::Knowledge,
+                MemoryContentType::ProjectContext,
+                MemoryContentType::CodeSnippet,
+                MemoryContentType::Decision,
+            ],
+            max_importance: 5,
+            context_token_limit: 2000,
+        },
+        "debug_cognitive" => ContextMemoryPermissions {
+            can_read_session: true,
+            can_read_intermediate: true,
+            can_read_long_term: true,
+            allowed_topics: vec![
+                MemoryTopic::General,
+                MemoryTopic::Coding,
+                MemoryTopic::Project,
+                MemoryTopic::Technical,
+                MemoryTopic::Decisions,
+                MemoryTopic::Automation,
+            ],
+            allowed_content_types: vec![
+                MemoryContentType::Message,
+                MemoryContentType::Summary,
+                MemoryContentType::Knowledge,
+                MemoryContentType::ProjectContext,
+                MemoryContentType::CodeSnippet,
+                MemoryContentType::Decision,
+                MemoryContentType::AutomationResult,
+            ],
+            max_importance: 5,
+            context_token_limit: 3000,
+        },
+        "brainstorming" => ContextMemoryPermissions {
+            can_read_session: true,
+            can_read_intermediate: true,
+            can_read_long_term: true,
+            allowed_topics: vec![
+                MemoryTopic::General,
+                MemoryTopic::Creative,
+                MemoryTopic::Personal,
+                MemoryTopic::Learning,
+            ],
+            allowed_content_types: vec![
+                MemoryContentType::Message,
+                MemoryContentType::Summary,
+                MemoryContentType::Knowledge,
+                MemoryContentType::Reference,
+            ],
+            max_importance: 4,
+            context_token_limit: 1500,
+        },
+        "audit" => ContextMemoryPermissions {
+            can_read_session: true,
+            can_read_intermediate: true,
+            can_read_long_term: true,
+            allowed_topics: vec![
+                MemoryTopic::General,
+                MemoryTopic::Technical,
+                MemoryTopic::Project,
+                MemoryTopic::Decisions,
+                MemoryTopic::System,
+            ],
+            allowed_content_types: vec![
+                MemoryContentType::Message,
+                MemoryContentType::Summary,
+                MemoryContentType::Knowledge,
+                MemoryContentType::Decision,
+                MemoryContentType::Reference,
+            ],
+            max_importance: 5,
+            context_token_limit: 2500,
+        },
+        "admin" => ContextMemoryPermissions {
+            can_read_session: true,
+            can_read_intermediate: true,
+            can_read_long_term: true,
+            allowed_topics: vec![
+                MemoryTopic::General,
+                MemoryTopic::Coding,
+                MemoryTopic::Project,
+                MemoryTopic::Personal,
+                MemoryTopic::Technical,
+                MemoryTopic::Creative,
+                MemoryTopic::Learning,
+                MemoryTopic::Decisions,
+                MemoryTopic::Preferences,
+                MemoryTopic::Automation,
+                MemoryTopic::System,
+            ],
+            allowed_content_types: vec![
+                MemoryContentType::Message,
+                MemoryContentType::Summary,
+                MemoryContentType::Knowledge,
+                MemoryContentType::Preference,
+                MemoryContentType::ProjectContext,
+                MemoryContentType::CodeSnippet,
+                MemoryContentType::Decision,
+                MemoryContentType::Reference,
+                MemoryContentType::Identity,
+                MemoryContentType::AutomationResult,
+                MemoryContentType::Milestone,
+            ],
+            max_importance: 5,
+            context_token_limit: 4000,
+        },
+        _ => ContextMemoryPermissions {
+            can_read_session: true,
+            can_read_intermediate: true,
+            can_read_long_term: false,
+            allowed_topics: vec![MemoryTopic::General],
+            allowed_content_types: vec![MemoryContentType::Message, MemoryContentType::Summary],
+            max_importance: 3,
+            context_token_limit: 1000,
+        },
+    }
+}
+
+fn filter_entries_for_context_mode(
+    entries: Vec<PersistentMemoryEntry>,
+    permissions: &ContextMemoryPermissions,
+) -> Vec<PersistentMemoryEntry> {
+    entries
+        .into_iter()
+        .filter(|entry| match entry.level {
+            MemoryLevel::Session => permissions.can_read_session,
+            MemoryLevel::Intermediate => permissions.can_read_intermediate,
+            MemoryLevel::LongTerm => permissions.can_read_long_term,
+        })
+        .filter(|entry| permissions.allowed_topics.contains(&entry.topic))
+        .filter(|entry| permissions.allowed_content_types.contains(&entry.content_type))
+        .filter(|entry| entry.importance <= permissions.max_importance)
+        .collect()
+}
+
 /// Vérifier les données sensibles
-fn contains_sensitive_data(content: &str) -> bool {
+pub(crate) fn contains_sensitive_data(content: &str) -> bool {
     let patterns = [
         "password",
         "mot de passe",
@@ -1149,7 +1378,7 @@ fn contains_sensitive_data(content: &str) -> bool {
 }
 
 /// Sauvegarder une entrée dans un fichier
-fn save_entry_to_file(
+pub(crate) fn save_entry_to_file(
     base_path: &PathBuf,
     level: &MemoryLevel,
     entry: PersistentMemoryEntry,
@@ -1166,9 +1395,13 @@ fn save_entry_to_file(
     // Charger les entrées existantes
     let mut entries: Vec<PersistentMemoryEntry> = if file_path.exists() {
         if encrypt {
-            let encryptor = MemoryEncryption::new("TITANE_MEMORY_KEY_v19");
-            let encrypted = fs::read(&file_path).unwrap_or_default();
-            let content = encryptor.decrypt(&encrypted).unwrap_or_default();
+            let encryptor = MemoryEncryption::new("TITANE_MEMORY_KEY_v19".to_string());
+            let encrypted = fs::read_to_string(&file_path).unwrap_or_default();
+            let content = encryptor
+                .decrypt(&encrypted)
+                .ok()
+                .and_then(|bytes| String::from_utf8(bytes).ok())
+                .unwrap_or_default();
             serde_json::from_str(&content).unwrap_or_default()
         } else {
             let content = fs::read_to_string(&file_path).unwrap_or_default();
@@ -1184,8 +1417,10 @@ fn save_entry_to_file(
     let json = serde_json::to_string_pretty(&entries).map_err(|e| e.to_string())?;
 
     if encrypt {
-        let encryptor = MemoryEncryption::new("TITANE_MEMORY_KEY_v19");
-        let encrypted = encryptor.encrypt(&json).map_err(|e| e.to_string())?;
+        let encryptor = MemoryEncryption::new("TITANE_MEMORY_KEY_v19".to_string());
+        let encrypted = encryptor
+            .encrypt(json.as_bytes())
+            .map_err(|e| e.to_string())?;
         fs::write(&file_path, encrypted).map_err(|e| e.to_string())?;
     } else {
         fs::write(&file_path, json).map_err(|e| e.to_string())?;
@@ -1212,4 +1447,112 @@ fn load_bundles(base_path: &PathBuf) -> Result<Vec<MemoryBundle>, String> {
     }
     let content = fs::read_to_string(&path).map_err(|e| e.to_string())?;
     serde_json::from_str(&content).map_err(|e| e.to_string())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn build_entry(
+        id: &str,
+        level: MemoryLevel,
+        topic: MemoryTopic,
+        content_type: MemoryContentType,
+        importance: MemoryImportance,
+    ) -> PersistentMemoryEntry {
+        PersistentMemoryEntry {
+            id: id.to_string(),
+            level,
+            content_type,
+            title: None,
+            summary: None,
+            content: format!("contenu-{id}"),
+            topic,
+            importance,
+            tags: Vec::new(),
+            status: MemoryStatus::Active,
+            metadata: MemoryMetadata {
+                created_at: 0,
+                updated_at: 0,
+                last_accessed_at: None,
+                access_count: 0,
+                source: MemorySource::ChatUser,
+                mode_id: Some("default".to_string()),
+                evolution_phase: None,
+                project_id: None,
+                conversation_id: None,
+                content_hash: None,
+                schema_version: "1.0.0".to_string(),
+            },
+            ttl: None,
+            promotable: Some(true),
+            source_entry_ids: Vec::new(),
+            relevance_score: None,
+            expires_at: None,
+            confidence_score: None,
+            user_verified: None,
+            version: None,
+            version_history: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn test_filter_entries_for_context_mode_matches_default_permissions() {
+        let permissions = get_context_permissions("default");
+        let entries = vec![
+            build_entry(
+                "allowed-session",
+                MemoryLevel::Session,
+                MemoryTopic::General,
+                MemoryContentType::Message,
+                3,
+            ),
+            build_entry(
+                "allowed-intermediate",
+                MemoryLevel::Intermediate,
+                MemoryTopic::Personal,
+                MemoryContentType::Preference,
+                2,
+            ),
+            build_entry(
+                "blocked-long-term",
+                MemoryLevel::LongTerm,
+                MemoryTopic::General,
+                MemoryContentType::Summary,
+                2,
+            ),
+            build_entry(
+                "blocked-topic",
+                MemoryLevel::Intermediate,
+                MemoryTopic::Technical,
+                MemoryContentType::Summary,
+                2,
+            ),
+            build_entry(
+                "blocked-content-type",
+                MemoryLevel::Intermediate,
+                MemoryTopic::General,
+                MemoryContentType::Knowledge,
+                2,
+            ),
+            build_entry(
+                "blocked-importance",
+                MemoryLevel::Intermediate,
+                MemoryTopic::General,
+                MemoryContentType::Summary,
+                5,
+            ),
+        ];
+
+        let filtered = filter_entries_for_context_mode(entries, &permissions);
+        let ids: Vec<String> = filtered.into_iter().map(|entry| entry.id).collect();
+
+        assert_eq!(
+            ids,
+            vec![
+                "allowed-session".to_string(),
+                "allowed-intermediate".to_string()
+            ]
+        );
+    }
 }

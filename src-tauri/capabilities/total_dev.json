@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schema.tauri.app/config/2.0/capability.json",
+  "identifier": "total-dev",
+  "description": "Capability TOTAL_DEV — GOD DEV governed space (v30.0.0). Requires session unlock (SHA-256 validated backend). All actions journaled.",
+  "windows": ["main"],
+  "permissions": ["core:default"],
+  "commands": {
+    "allow": [
+      "total_dev_unlock",
+      "total_dev_session_status",
+      "total_dev_revoke",
+      "total_dev_git_op",
+      "total_dev_run_command",
+      "total_dev_read_file"
+    ],
+    "deny": []
+  }
+}

@@ -133,12 +133,23 @@ mkdir -p runtime/stable/build/
 # Detect platform and copy appropriate executable
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     shopt -s nullglob
-    APPIMAGES=(src-tauri/target/release/bundle/appimage/*.AppImage)
-    DEBS=(src-tauri/target/release/bundle/deb/*.deb)
+
+    STABLE_VERSION="$(grep -m1 '"version"' runtime/stable/tauri.conf.json | sed -E 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')"
+    APPIMAGES=(src-tauri/target/release/bundle/appimage/*_"$STABLE_VERSION"_*.AppImage)
+    DEBS=(src-tauri/target/release/bundle/deb/*_"$STABLE_VERSION"_*.deb)
+
+    if [[ ${#APPIMAGES[@]} -eq 0 ]]; then
+        APPIMAGES=(src-tauri/target/release/bundle/appimage/*.AppImage)
+    fi
+    if [[ ${#DEBS[@]} -eq 0 ]]; then
+        DEBS=(src-tauri/target/release/bundle/deb/*.deb)
+    fi
     if [[ ${#APPIMAGES[@]} -eq 0 ]]; then
         echo "❌ No AppImage produced in src-tauri/target/release/bundle/appimage/"
         exit 1
     fi
+
+    echo "ℹ️  Selecting stable artifacts for version: ${STABLE_VERSION:-unknown}"
 
     for src in "${APPIMAGES[@]}"; do
         base="$(basename "$src")"

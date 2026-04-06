@@ -1,11 +1,11 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v25.6.0 — ULTIMATE OPTIMIZATION DASHBOARD
+ * TITANE∞ v30.0.0 — ULTIMATE OPTIMIZATION DASHBOARD
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * Unified monitoring dashboard for all Phase 12 optimization modules
  *
- * @version 25.6.0
+ * @version 29.0.0
  * @created 2025-12-17
  * @phase 12 - Ultimate Optimization
  */
@@ -178,7 +178,10 @@ export const UltimateOptimizationDashboard: React.FC<
 
   if (!isInitialized) {
     return (
-      <div className={`ultimate-optimization-dashboard ${className}`}>
+      <div
+        className={`ultimate-optimization-dashboard ${className}`}
+        data-testid="page-optimization"
+      >
         <div className="dashboard-loading">
           <h2>⚡ Initializing Ultimate Optimization</h2>
           <div className="progress-bar">
@@ -194,10 +197,13 @@ export const UltimateOptimizationDashboard: React.FC<
   }
 
   return (
-    <div className={`ultimate-optimization-dashboard ${className}`}>
+    <div
+      className={`ultimate-optimization-dashboard ${className}`}
+      data-testid="page-optimization"
+    >
       <header className="dashboard-header">
         <h1>⚡ Ultimate Optimization Dashboard</h1>
-        <p>Phase 12 v25.6.0 - GPU · WASM · Service Worker · IndexedDB</p>
+        <p>Phase 12 v30.0.0 - GPU · WASM · Service Worker · IndexedDB</p>
       </header>
 
       {/* GPU Accelerator V2 */}
@@ -240,7 +246,11 @@ export const UltimateOptimizationDashboard: React.FC<
               </div>
             </div>
 
-            <button className="test-button" onClick={handleTestGPU}>
+            <button
+              className="test-button"
+              data-testid="btn-optimization-test-gpu"
+              onClick={handleTestGPU}
+            >
               🧪 Test Vector Addition
             </button>
           </div>
@@ -300,7 +310,11 @@ export const UltimateOptimizationDashboard: React.FC<
               </div>
             </div>
 
-            <button className="test-button" onClick={handleTestWASM}>
+            <button
+              className="test-button"
+              data-testid="btn-optimization-test-wasm"
+              onClick={handleTestWASM}
+            >
               🧪 Test Dot Product
             </button>
           </div>
@@ -348,7 +362,11 @@ export const UltimateOptimizationDashboard: React.FC<
             </div>
 
             <div className="action-buttons">
-              <button className="action-button" onClick={handleClearCache}>
+              <button
+                className="action-button"
+                data-testid="btn-optimization-clear-cache"
+                onClick={handleClearCache}
+              >
                 🗑️ Clear Cache
               </button>
               <button
@@ -419,7 +437,11 @@ export const UltimateOptimizationDashboard: React.FC<
               </div>
             </div>
 
-            <button className="action-button" onClick={handleCompactDB}>
+            <button
+              className="action-button"
+              data-testid="btn-optimization-compact-db"
+              onClick={handleCompactDB}
+            >
               🔧 Compact Database
             </button>
           </div>

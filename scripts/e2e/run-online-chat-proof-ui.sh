@@ -10,9 +10,9 @@ OUT_DIR="${TITANE_E2E_ARTIFACTS_DIR:-reports/ui_research_e2e/$STAMP}"
 mkdir -p "$OUT_DIR"
 export TITANE_E2E_ARTIFACTS_DIR="$OUT_DIR"
 
-SPEC_PATH="e2e/desktop/online-chat-proof-ui.wdio.test.js"
+SPEC_PATH="${TITANE_E2E_SPEC_PATH:-e2e/desktop/online-chat-proof-ui.wdio.test.js}"
 DRIVER_LOG="$OUT_DIR/tauri-driver.log"
-WDIO_LOG="$OUT_DIR/wdio-online-chat-proof-ui.log"
+WDIO_LOG="$OUT_DIR/${TITANE_E2E_WDIO_LOG_BASENAME:-wdio-online-chat-proof-ui.log}"
 
 if [[ -n "${TAURI_DEV_SERVER_URL:-}" ]]; then
   export TITANE_E2E_EXPECT_SOURCE="${TITANE_E2E_EXPECT_SOURCE:-dev-server}"
@@ -23,10 +23,51 @@ else
 fi
 export TITANE_E2E_ENFORCE_SOURCE="${TITANE_E2E_ENFORCE_SOURCE:-0}"
 
+# E2E stability profile: prefer a lightweight local model and cap backend turn timeout
+# to avoid long-running UI hangs that can invalidate the WRY WebDriver session.
+export OLLAMA_DEFAULT_MODEL="${TITANE_E2E_OLLAMA_MODEL:-gemma2:2b}"
+# OLLAMA_REQUEST_TIMEOUT_SECS: governs the Rust HTTP client timeout in ollama.rs.
+# Default 60s; harness may raise to 90s for cold-model scenarios.
+export OLLAMA_REQUEST_TIMEOUT_SECS="${OLLAMA_REQUEST_TIMEOUT_SECS:-60}"
+# TITANE_CONVERSATION_TIMEOUT_SECS: [DEAD — no Rust runtime honors this env var.
+# Kept as a labelled stub only; remove if confusing.]
+
 echo "[E2E_CHAT_PROOF] OUT_DIR=$OUT_DIR"
 echo "[E2E_CHAT_PROOF] EXPECT_SOURCE=$TITANE_E2E_EXPECT_SOURCE"
 echo "[E2E_CHAT_PROOF] ENFORCE_SOURCE=$TITANE_E2E_ENFORCE_SOURCE"
 echo "[E2E_CHAT_PROOF] USE_TAURI_DEV=$TITANE_E2E_USE_TAURI_DEV"
+echo "[E2E_CHAT_PROOF] OLLAMA_DEFAULT_MODEL=$OLLAMA_DEFAULT_MODEL"
+echo "[E2E_CHAT_PROOF] OLLAMA_REQUEST_TIMEOUT_SECS=$OLLAMA_REQUEST_TIMEOUT_SECS [effective Rust HTTP client cap]"
+
+# ── Ollama Pre-warm Preflight ─────────────────────────────────────────────────
+# Purpose: load the target model into memory BEFORE starting Tauri/WDIO to avoid
+# cold-start HTTP timeout (Rust Ollama client has a hard 60s cap in the binary).
+# This is INFRASTRUCTURE preparation only — NOT a product chat proof step.
+# Logs are clearly prefixed [E2E_PREWARM] and never counted as product success.
+OLLAMA_PREWARM_URL="${OLLAMA_BASE_URL:-http://127.0.0.1:11434}"
+PREWARM_MODEL="${OLLAMA_DEFAULT_MODEL:-gemma2:2b}"
+PREWARM_TIMEOUT_SECS="${TITANE_E2E_PREWARM_TIMEOUT_SECS:-120}"
+
+echo "[E2E_PREWARM] Starting model pre-warm | model=$PREWARM_MODEL | timeout=${PREWARM_TIMEOUT_SECS}s | url=$OLLAMA_PREWARM_URL"
+if ! curl -sf --max-time 5 "${OLLAMA_PREWARM_URL}/api/tags" > /dev/null 2>&1; then
+  echo "[E2E_PREWARM] WARN: Ollama not reachable — skipping pre-warm (test will run anyway)"
+else
+  PREWARM_START=$(date +%s)
+  PREWARM_RESPONSE=$(curl -sf --max-time "$PREWARM_TIMEOUT_SECS" \
+    -X POST "${OLLAMA_PREWARM_URL}/api/generate" \
+    -H "Content-Type: application/json" \
+    -d "{\"model\":\"${PREWARM_MODEL}\",\"prompt\":\"ping\",\"stream\":false}" \
+    2>/dev/null || echo "PREWARM_FAILED")
+  PREWARM_ELAPSED=$(( $(date +%s) - PREWARM_START ))
+  if echo "$PREWARM_RESPONSE" | grep -q '"response"'; then
+    echo "[E2E_PREWARM] PASS: model loaded and warm | elapsed=${PREWARM_ELAPSED}s"
+    echo "[E2E_PREWARM] INFRA_READY: cold-start window cleared before WDIO launch"
+  else
+    echo "[E2E_PREWARM] WARN: pre-warm response unclear after ${PREWARM_ELAPSED}s — test will run anyway"
+  fi
+fi
+echo "[E2E_PREWARM] END"
+# ── End Pre-warm ─────────────────────────────────────────────────────────────
 
 pkill -f 'tauri-driver|WebKitWebDriver' >/dev/null 2>&1 || true
 sleep 1

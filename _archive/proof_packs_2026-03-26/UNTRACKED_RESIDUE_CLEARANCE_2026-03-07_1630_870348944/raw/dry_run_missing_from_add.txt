@@ -1,0 +1,4 @@
+proof_packs/BUCKET_C_EXECUTION_2026-03-07_1615_988814c21/raw/bucket_c_commit.log
+proof_packs/BUCKET_C_EXECUTION_2026-03-07_1615_988814c21/raw/bucket_c_dry_run.log
+proof_packs/BUCKET_C_EXECUTION_2026-03-07_1615_988814c21/raw/gate_detect_recurrence.log
+proof_packs/BUCKET_C_EXECUTION_2026-03-07_1615_988814c21/raw/gate_verify_instructions.log

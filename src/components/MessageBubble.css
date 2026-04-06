@@ -6,20 +6,19 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  max-width: 80%;
+  /* v29.0: max-width réduit légèrement pour meilleure lisibilité longue ligne */
+  max-width: 76%;
   padding: var(--space-4);
-  margin-bottom: var(--space-3, 12px); /* Better vertical spacing between messages */
+  margin-bottom: var(--space-2, 8px);
   border-radius: 8px;
-  animation: fade-in 0.3s ease;
+  animation: fade-in 0.25s ease;
   position: relative;
-  /* Improved focus state for accessibility */
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: box-shadow 0.2s ease;
 }
 
 .message-bubble:hover {
-  transform: translateY(-1px);
+  /* v29.0: pas de lift sur les messages — trop bruité pour sessions longues */
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
 .message-bubble:focus-within {
@@ -142,7 +141,8 @@
 }
 
 .message-bubble.assistant .message-content {
-  color: #c4c4c4 !important;
+  /* v29.0: contraste amélioré — #c4c4c4 → #dde1e7 (WCAG AA compliant) */
+  color: #dde1e7 !important;
 }
 
 .message-content p {

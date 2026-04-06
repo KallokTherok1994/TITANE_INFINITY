@@ -550,8 +550,8 @@ Ctrl + R dans la fenêtre http://localhost:5173/
 
 - [AUDIT_UI_UX_CHAT_IA_v26.2.3.md](AUDIT_UI_UX_CHAT_IA_v26.2.3.md)
 - [OPTIMISATIONS_UI_UX_APPLIQUEES_v26.2.3.md](OPTIMISATIONS_UI_UX_APPLIQUEES_v26.2.3.md)
-- [docs/GEMINI_CONFIGURATION.md](docs/GEMINI_CONFIGURATION.md)
-- [docs/WINDOW_CONTROLS.md](docs/WINDOW_CONTROLS.md)
+- [docs/GEMINI_CONFIGURATION.md](../../GEMINI_CONFIGURATION.md)
+- [docs/WINDOW_CONTROLS.md](../../WINDOW_CONTROLS.md)
 - [scripts/setup-gemini.sh](scripts/setup-gemini.sh)
 
 ### Fichiers Modifiés

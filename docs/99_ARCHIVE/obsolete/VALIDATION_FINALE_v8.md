@@ -110,8 +110,8 @@ TITANE∞ v8.0 est maintenant un **système cognitif complet et auto-régulé** 
 ## 📚 DOCUMENTATION COMPLÈTE
 
 ### Fichiers Principaux Mis à Jour
-- ✅ [README.md](README.md) - Vue d'ensemble avec 60+ modules
-- ✅ [docs/CHANGELOG.md](docs/CHANGELOG.md) - Historique complet v8.0
+- ✅ [README.md](../../../README.md) - Vue d'ensemble avec 60+ modules
+- ✅ [docs/CHANGELOG.md](../../90_release/CHANGELOG.md) - Historique complet v8.0
 - ✅ [package.json](package.json) - Scripts verify ajoutés
 - ✅ [index.html](index.html) - Métadonnées v8.0
 - ✅ [SYSTEM_STATUS_COMPLETE.md](SYSTEM_STATUS_COMPLETE.md) - Statut système

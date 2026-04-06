@@ -2,6 +2,160 @@
   "snapshots": [],
   "logs": [
     {
+      "id": "ui-1774097601009-9spcudjw",
+      "timestamp": 1774097601009,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1774040454549-mna7tzzg",
+      "timestamp": 1774040454549,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1773879166902-f5r6847s",
+      "timestamp": 1773879166902,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1773843543278-tnmxi5ub",
+      "timestamp": 1773843543278,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1773841938939-jynsqqku",
+      "timestamp": 1773841938939,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1773841920042-gf1lgcgd",
+      "timestamp": 1773841920042,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1773837910329-oqfuxctu",
+      "timestamp": 1773837910329,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1773835395689-3bxjulzp",
+      "timestamp": 1773835395689,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1773835018629-cedkpidv",
+      "timestamp": 1773835018629,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:AFTER_STORE"
+    },
+    {
+      "id": "ui-1773834613683-cd85t6tj",
+      "timestamp": 1773834613683,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1773834573907-xt50n24y",
+      "timestamp": 1773834573907,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1773834484784-8cnwnp08",
+      "timestamp": 1773834484784,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1773834449916-lpbmj19d",
+      "timestamp": 1773834449916,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1773834363809-mc9m70t0",
+      "timestamp": 1773834363809,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1773786718382-9d0rj9k3",
+      "timestamp": 1773786718382,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1773786502596-u301d6ii",
+      "timestamp": 1773786502596,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1773588440781-zoehglqt",
+      "timestamp": 1773588440781,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1773588379314-lgywmb5o",
+      "timestamp": 1773588379314,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1773588325617-5d7isdb6",
+      "timestamp": 1773588325617,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1773588291302-pr6pqv9q",
+      "timestamp": 1773588291302,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1772900166800-6nu2ygle",
+      "timestamp": 1772900166800,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1772629380700-2wn16fd0",
+      "timestamp": 1772629380700,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
       "id": "ui-1771096743310-r3mro8cz",
       "timestamp": 1771096743310,
       "level": "Info",
@@ -94,7 +248,7 @@
   "knowledge": [],
   "rituals": [],
   "metadata": {
-    "last_validation_ts": 1771096743620,
+    "last_validation_ts": 1774097601039,
     "last_compaction_ts": null
   }
 }

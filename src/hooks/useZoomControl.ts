@@ -5,6 +5,14 @@
 
 import { useEffect } from 'react';
 
+import {
+  applyZoomScale,
+  BASE_ZOOM_SCALE,
+  formatZoomScale,
+  getStoredZoomScale,
+  readCurrentZoomScale,
+} from './zoomScale';
+
 export const useZoomControl = () => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -42,35 +50,24 @@ export const useZoomControl = () => {
  * Ajuste le zoom actuellement appliqué
  */
 function adjustZoom(factor: number) {
-  const html = document.documentElement;
-  const currentZoom = parseFloat(html.style.zoom || '75');
-  const newZoom = Math.max(50, Math.min(200, currentZoom * factor)); // Clamp between 50% and 200%
-  html.style.zoom = `${newZoom}%`;
-
-  // Save preference
-  localStorage.setItem('titane_zoom_level', newZoom.toString());
-
-  console.log(`🔍 Zoom ajusté: ${newZoom.toFixed(1)}%`);
+  const newZoom = applyZoomScale(readCurrentZoomScale() * factor);
+  console.log(`🔍 Zoom ajusté: ${(newZoom * 100).toFixed(1)}%`);
 }
 
 /**
  * Réinitialise le zoom à 75%
  */
 function resetZoom() {
-  const html = document.documentElement;
-  html.style.zoom = '75%';
-  localStorage.setItem('titane_zoom_level', '75');
-
-  console.log('🔍 Zoom réinitialisé: 75%');
+  const defaultZoom = applyZoomScale(BASE_ZOOM_SCALE);
+  console.log(`🔍 Zoom réinitialisé: ${(defaultZoom * 100).toFixed(1)}%`);
 }
 
 /**
  * Charge le zoom sauvegardé au démarrage
  */
 export const loadSavedZoom = () => {
-  const savedZoom = localStorage.getItem('titane_zoom_level');
-  if (savedZoom) {
-    const zoomValue = Math.max(50, Math.min(200, parseFloat(savedZoom)));
-    document.documentElement.style.zoom = `${zoomValue}%`;
+  const savedZoom = getStoredZoomScale();
+  if (savedZoom !== null) {
+    document.documentElement.style.zoom = formatZoomScale(savedZoom);
   }
 };

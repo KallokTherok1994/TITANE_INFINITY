@@ -334,7 +334,9 @@ export class AppearanceRenderer {
     // - Optimization: Apply THREE.DRACOLoader for compressed geometry
     // - Caching: Store loaded assets in THREE.Cache to avoid re-loading
     // - Error handling: Fallback to default cube geometry on load failure
-    // For now, return mock asset
+    // TODO:CONNECT_REAL_DATA — Replace with real 3D model loading via Tauri IPC
+    // Required backend command: `avatar_load_asset({ cacheKey, format }) => AssetData`
+    // Currently returns empty geometry; 3D models must be loaded from backend filesystem
     console.log(`[AppearanceRenderer] Loading asset: ${cacheKey}`);
     console.log(`  - Mesh: ${assetDef.mesh}`);
     console.log(`  - Texture: ${assetDef.texture}`);

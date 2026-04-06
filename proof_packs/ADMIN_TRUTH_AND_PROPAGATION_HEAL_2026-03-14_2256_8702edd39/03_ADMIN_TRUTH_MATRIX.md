@@ -1,0 +1,11 @@
+# ADMIN TRUTH MATRIX
+
+| ID | ADMIN_SURFACE | FILE_UI | LOADER_OR_HANDLER | STORE_TARGET | SERVICE_OR_SOURCE | EXPECTED_EFFECT | EFFECT_PROVEN? | STATUS | AUTOFIX_NEEDED? |
+|---|---|---|---|---|---|---|---|---|---|
+| T-01 | Admin route/tab load | src/features/admin/AdminPage.tsx | lazy imports + ErrorBoundary | React local state | module imports | Toutes tabs ouvrables sans import-failure | Oui (E2E) | PASS | Non |
+| T-02 | System diagnostics load | src/features/system-center/hooks/useSystemDiagnostics.ts | `unwrapDiagnostics` + IPC calls | diagnostics/status state | `sc_run_*` | Pas de crash + resultats coherents | Oui (E2E + stack fix) | PASS | Non |
+| T-03 | Config snapshot | src/pages/ConfigurationHub.tsx | `normalizeSnapshotResponse` | config/engine/defaults state | `get_all_configs` | Affichage config ou erreur truthful | Oui (E2E degrade/loaded) | PASS | Non |
+| T-04 | Config write actions | src/pages/ConfigurationHub.tsx | `updateRuntimeConfig`,`setChat*` | edited states | config update commands | Persistance vers backend | Partiel (statique) | BLOCKED_RUNTIME | Non |
+| T-05 | Governance load/actions | src/features/governance-center/hooks/useGovernance.ts | load/toggle/set key handlers | governance state | governanceService | Secrets/policies/permissions/logs | Partiel (static + tab load) | QUALIFIED | Non |
+| T-06 | Production health load | src/services/telemetry/useProductionHealthTelemetry.ts | `loadData` + refresh | data/loading/error | `readProductionWeek1Csv` | Telemetry visible ou erreur | Oui (tab load E2E) | PASS | Non |
+| T-07 | Audio actions | src/features/audio-center/services/audioService.ts | device setters + tests | audio config state | tauri audio cmds/tts | Device/TTS tests declenchables | Oui (E2E passes) | PASS | Non |

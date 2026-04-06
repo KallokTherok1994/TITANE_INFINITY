@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v26.2.1 — PERFORMANCE ALERT SYSTEM
+ * TITANE∞ v30.0.0 — PERFORMANCE ALERT SYSTEM
  * Real-time performance monitoring with configurable alerts
  * P1.2 Enhancement - 2026-01-07
  * ═══════════════════════════════════════════════════════════════════════════

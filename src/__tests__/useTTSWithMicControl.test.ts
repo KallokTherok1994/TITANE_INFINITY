@@ -51,7 +51,7 @@ describe('useTTSWithMicControl', () => {
   });
 
   afterEach(() => {
-    vi.runOnlyPendingTimers();
+    vi.clearAllTimers();
     vi.useRealTimers();
   });
 

@@ -38,6 +38,12 @@ const MAX_TIMELINE_RESPONSE: usize = 100;
 #[derive(Clone)]
 pub struct HeliosCore;
 
+impl std::fmt::Debug for HeliosCore {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("HeliosCore")
+    }
+}
+
 impl Default for HeliosCore {
     fn default() -> Self {
         Self::new()
@@ -60,6 +66,12 @@ impl HeliosCore {
 pub struct MemoryCore {
     data: Arc<RwLock<MemoryDisk>>, // In-memory cache guarded by async lock
     paths: Arc<MemoryPaths>,       // Shared path configuration
+}
+
+impl std::fmt::Debug for MemoryCore {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("MemoryCore")
+    }
 }
 
 impl Default for MemoryCore {
@@ -919,6 +931,12 @@ fn parse_timestamp_to_ms(timestamp: &str) -> Option<i64> {
 #[derive(Clone)]
 pub struct NexusCore;
 
+impl std::fmt::Debug for NexusCore {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("NexusCore")
+    }
+}
+
 impl Default for NexusCore {
     fn default() -> Self {
         Self::new()
@@ -939,6 +957,12 @@ impl NexusCore {
 #[derive(Clone)]
 pub struct HarmoniaCore;
 
+impl std::fmt::Debug for HarmoniaCore {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("HarmoniaCore")
+    }
+}
+
 impl Default for HarmoniaCore {
     fn default() -> Self {
         Self::new()
@@ -958,6 +982,12 @@ impl HarmoniaCore {
 /// Legacy SentinelCore adapter
 #[derive(Clone)]
 pub struct SentinelCore;
+
+impl std::fmt::Debug for SentinelCore {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("SentinelCore")
+    }
+}
 
 impl Default for SentinelCore {
     fn default() -> Self {

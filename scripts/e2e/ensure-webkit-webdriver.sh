@@ -19,7 +19,21 @@ POSSIBLE_PATHS=(
   "/usr/libexec/webkit2gtk-4.0/WebKitWebDriver"
   "/usr/lib/webkit2gtk-4.1/WebKitWebDriver"
   "/usr/lib/webkit2gtk-4.0/WebKitWebDriver"
+  "$HOME/.cache/ms-playwright/webkit-2248/minibrowser-gtk/WebKitWebDriver"
+  "$HOME/.cache/ms-playwright/webkit-2248/minibrowser-gtk/bin/WebKitWebDriver"
 )
+
+for pw_driver in "$HOME"/.cache/ms-playwright/webkit-*/minibrowser-gtk/WebKitWebDriver; do
+  if [ -x "$pw_driver" ]; then
+    POSSIBLE_PATHS+=("$pw_driver")
+  fi
+done
+
+for pw_driver in "$HOME"/.cache/ms-playwright/webkit-*/minibrowser-gtk/bin/WebKitWebDriver; do
+  if [ -x "$pw_driver" ]; then
+    POSSIBLE_PATHS+=("$pw_driver")
+  fi
+done
 
 for path in "${POSSIBLE_PATHS[@]}"; do
   if [ -x "$path" ]; then

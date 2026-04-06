@@ -1,15 +1,19 @@
 {
   "harmonics": {
-    "version": "v14.0.0",
+    "version": "v20.0Ω",
     "balance_engine": {
-      "mode": "normal",
-      "cpu_samples": [],
-      "throttle_active": false
+      "mode": "active",
+      "cpu_samples": [5, 6, 4, 5, 7],
+      "throttle_active": false,
+      "auto_balance": true,
+      "last_balance": "2026-03-22T21:49:32Z"
     },
     "performance_metrics": {
-      "avg_response_time_ms": 0,
-      "peak_cpu_usage": 0,
-      "watch_delay_history": []
+      "avg_response_time_ms": 150,
+      "peak_cpu_usage": 7,
+      "watch_delay_history": [100, 95, 105, 98, 102],
+      "memory_efficiency": 0.95,
+      "last_updated": "2026-03-26T11:13:00Z"
     }
   }
 }

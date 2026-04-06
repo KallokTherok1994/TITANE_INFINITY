@@ -8,6 +8,7 @@ use std::sync::Arc;
 use tauri::State;
 use uuid::Uuid;
 
+use crate::overdrive::chat_orchestrator::ChatOrchestratorState;
 use crate::engines::conversation_os::{
     MemoryEngine, PolicyEngine, ResilienceEngine, RouterEngine, SearchEngine,
 };
@@ -15,7 +16,9 @@ use crate::engines::conversation_os::policy::{NetState, PolicyContext};
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 use crate::services::search_gateway::SearchGatewayService;
 
-use super::meta_accumulator::{build_attempt, build_decision_meta, mode_from, policy_from_env, provider_class_from_id};
+use super::meta_accumulator::{
+    build_attempt, build_decision_meta, mode_from, policy_from_env, provider_class_from_id,
+};
 use super::types::*;
 use super::ConversationEngineState;
 
@@ -28,9 +31,56 @@ pub struct ConversationGenerateArgs {
     pub provider: Option<String>,
     pub system_prompt: Option<String>,
     pub request_id: Option<String>,
+    pub context_envelope: Option<serde_json::Value>,
 }
 
 type CommandResult<T> = Result<T, String>;
+
+fn resolve_conversation_os_db_path_from_env(
+    db_path_override: Option<std::path::PathBuf>,
+    env_titane_convos_db_path: Option<String>,
+    env_xdg_data_home: Option<String>,
+    env_home: Option<String>,
+) -> std::path::PathBuf {
+    if let Some(path) = db_path_override {
+        return path;
+    }
+
+    if let Some(path) = env_titane_convos_db_path
+        .filter(|value| !value.trim().is_empty())
+        .map(std::path::PathBuf::from)
+    {
+        return path;
+    }
+
+    if let Some(path) = env_xdg_data_home
+        .filter(|value| !value.trim().is_empty())
+        .map(std::path::PathBuf::from)
+    {
+        return path.join("TITANE_INFINITY/runtime/memory/conversation_os_v1.db");
+    }
+
+    if let Some(home) = env_home
+        .filter(|value| !value.trim().is_empty())
+        .map(std::path::PathBuf::from)
+    {
+        return home.join(".local/share/TITANE_INFINITY/runtime/memory/conversation_os_v1.db");
+    }
+
+    // Last-resort fallback: use persistent app data dir (correct on Android & desktop).
+    dirs::data_local_dir()
+        .unwrap_or_else(std::env::temp_dir)
+        .join("TITANE_INFINITY/runtime/memory/conversation_os_v1.db")
+}
+
+fn resolve_conversation_os_db_path(db_path_override: Option<std::path::PathBuf>) -> std::path::PathBuf {
+    resolve_conversation_os_db_path_from_env(
+        db_path_override,
+        std::env::var("TITANE_CONVOS_DB_PATH").ok(),
+        std::env::var("XDG_DATA_HOME").ok(),
+        std::env::var("HOME").ok(),
+    )
+}
 
 fn read_bool_env(key: &str, default: bool) -> bool {
     std::env::var(key)
@@ -55,6 +105,63 @@ fn build_memory_used_ids(
     ids
 }
 
+fn extract_context_binding(context_envelope: Option<&serde_json::Value>) -> serde_json::Value {
+    let module_context = context_envelope.and_then(|value| value.get("moduleContext"));
+    let route_context = context_envelope.and_then(|value| value.get("routeContext"));
+    let continuity = context_envelope.and_then(|value| value.get("continuity"));
+    let cognitive = context_envelope.and_then(|value| value.get("cognitiveContext"));
+    let twins = context_envelope.and_then(|value| value.get("twinsContext"));
+
+    serde_json::json!({
+        "moduleId": module_context
+            .and_then(|value| value.get("moduleId"))
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or("unknown"),
+        "moduleName": module_context
+            .and_then(|value| value.get("moduleName"))
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or("unknown"),
+        "route": route_context
+            .and_then(|value| value.get("route"))
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or("unknown"),
+        "changeType": continuity
+            .and_then(|value| value.get("changeType"))
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or("unknown"),
+        "sequence": continuity
+            .and_then(|value| value.get("sequence"))
+            .and_then(serde_json::Value::as_u64)
+            .unwrap_or(0),
+        // TIME: cognitive flow state
+        "cognitiveFlowActive": cognitive
+            .and_then(|value| value.get("flowActive"))
+            .and_then(serde_json::Value::as_bool)
+            .unwrap_or(false),
+        "cognitiveMode": cognitive
+            .and_then(|value| value.get("mode"))
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or("normal"),
+        // TWINS: numeric fusion alignment
+        "twinsFusionScore": twins
+            .and_then(|value| value.get("globalScore"))
+            .and_then(serde_json::Value::as_f64)
+            .unwrap_or(0.0),
+        "twinsTrend": twins
+            .and_then(|value| value.get("trend"))
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or("unknown"),
+        "twinsPhase": twins
+            .and_then(|value| value.get("currentPhase"))
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or("unknown"),
+        "twinsSyncScore": twins
+            .and_then(|value| value.get("syncScore"))
+            .and_then(serde_json::Value::as_f64)
+            .unwrap_or(0.0),
+    })
+}
+
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 async fn run_governed_search(query: &str, max_results: usize) -> Result<Vec<crate::engines::conversation_os::search::RawSearchResult>, String> {
     let gateway = SearchGatewayService::default_governed();
@@ -71,6 +178,10 @@ async fn run_governed_search(query: &str, max_results: usize) -> Result<Vec<crat
         .collect())
 }
 
+// TRUTH LABEL [PATCH-009]: Web search is DISABLED in default builds.
+// Default features = ["custom-protocol","mock","audio-capture"] → mock=true, full=false
+// → this stub is ALWAYS active in default/dev builds regardless of BRAVE_API_KEY.
+// To enable real Brave search: build with --features full --no-default-features (or remove mock).
 #[cfg(not(all(not(feature = "mock"), feature = "full")))]
 async fn run_governed_search(_query: &str, _max_results: usize) -> Result<Vec<crate::engines::conversation_os::search::RawSearchResult>, String> {
     Err("CREDENTIALS_MISSING: SearchGatewayService unavailable without full backend features".to_string())
@@ -98,6 +209,7 @@ pub async fn create_new_conversation(
 #[tauri::command]
 pub async fn conversation_generate(
     engine: State<'_, Arc<ConversationEngineState>>,
+    orchestrator: State<'_, ChatOrchestratorState>,
     args: ConversationGenerateArgs,
 ) -> CommandResult<serde_json::Value> {
     let ConversationGenerateArgs {
@@ -107,6 +219,7 @@ pub async fn conversation_generate(
         provider,
         system_prompt,
         request_id,
+        context_envelope,
     } = args;
     // Convertir le mode string en ConversationMode
     let conversation_mode = match mode.as_deref() {
@@ -120,6 +233,7 @@ pub async fn conversation_generate(
     };
 
     let req_id = request_id.unwrap_or_else(|| format!("req_{}", Uuid::new_v4()));
+    let context_binding = extract_context_binding(context_envelope.as_ref());
     log::info!(
         "[Ω:CMD] 📨 Request | req_id={} | msg_len={} | conv_id={} | mode={:?}",
         req_id,
@@ -165,18 +279,22 @@ pub async fn conversation_generate(
             ]
         });
 
-    let net_state = if std::env::var("OFFLINE_SIM").is_ok() {
+    let net_state = if read_bool_env("OFFLINE_SIM", false) {
         NetState::Offline
     } else {
         NetState::Online
     };
 
+    // ✅ PATCH: Read API keys from ChatOrchestratorState instead of environment
+    // This ensures that keys set via Governance are immediately available to chat
+    let has_gemini_key = orchestrator.gemini_api_key.read().await.is_some();
+    let has_openai_key = orchestrator.openai_api_key.read().await.is_some();
+    let has_anthropic_key = orchestrator.anthropic_api_key.read().await.is_some();
+
     let policy_context = PolicyContext {
         net_state,
         has_ollama_credentials: true,
-        has_gemini_credentials: std::env::var("GEMINI_API_KEY")
-            .map(|value| !value.trim().is_empty())
-            .unwrap_or(false),
+        has_gemini_credentials: has_gemini_key,
         has_brave_credentials: std::env::var("BRAVE_API_KEY")
             .map(|value| !value.trim().is_empty())
             .unwrap_or(false),
@@ -283,7 +401,11 @@ pub async fn conversation_generate(
         router_decision.wants_memory
     );
 
-    let trace = serde_json::json!({
+    let mut history_load_status = "not_attempted".to_string();
+    let mut history_message_count: usize = 0;
+    let mut history_load_error: Option<String> = None;
+
+    let mut trace = serde_json::json!({
         "phase": "conversation_generate",
         "trace_id": req_id,
         "session_id": conversation_id,
@@ -318,6 +440,9 @@ pub async fn conversation_generate(
             "reasoning": memory_plan.reasoning,
             "memory_used": memory_used_ids,
             "snapshot_summary_fr": snapshot_summary_fr,
+            "history_load_status": history_load_status,
+            "history_message_count": history_message_count,
+            "history_load_error": history_load_error,
             "snapshot_state": {
                 "conversation_id": conversation_id,
                 "request_id": req_id,
@@ -334,7 +459,9 @@ pub async fn conversation_generate(
             "CONVOS_MEMORY_SNAPSHOTS": convos_memory_snapshots_enabled,
             "CONVOS_DEBUG_PANEL": convos_debug_panel_enabled,
             "CONVOS_MEMORY_LTM": convos_memory_ltm_enabled,
-        }
+        },
+        "context_binding": context_binding.clone(),
+        "context_envelope_present": context_envelope.is_some(),
     });
 
     if policy_verdict.hard_block {
@@ -349,6 +476,7 @@ pub async fn conversation_generate(
         );
 
         let blocked_response = serde_json::json!({
+            "ok": true,
             "content": "Requête bloquée par la politique gouvernée.",
             "meta": {
                 "mode": "LOCAL",
@@ -359,6 +487,13 @@ pub async fn conversation_generate(
                 "blocked_by": "policy_engine"
             },
             "trace": trace,
+            "metadata": {
+                "requestId": req_id,
+                "contextBinding": context_binding.clone(),
+                "historyLoadStatus": history_load_status.clone(),
+                "historyMessageCount": history_message_count,
+                "historyLoadError": history_load_error.clone(),
+            },
         });
         return Ok(blocked_response);
     }
@@ -375,6 +510,7 @@ pub async fn conversation_generate(
         );
 
         let blocked_response = serde_json::json!({
+            "ok": true,
             "content": "Requête temporairement bloquée par la résilience (backoff/rate-limit/circuit-breaker).",
             "meta": {
                 "mode": "LOCAL",
@@ -385,79 +521,224 @@ pub async fn conversation_generate(
                 "blocked_by": "resilience_engine"
             },
             "trace": trace,
-        });
-        return Ok(blocked_response);
-    }
-
-    // ✨ v27.2.1: Backend gate verification (defense-in-depth)
-    // Frontend already enforces in conversationEngine.ts:272-314
-    // But we double-check here for security (Tauri-level validation)
-    let external_providers_allowed = std::env::var("VITE_ENABLE_EXTERNAL_AI")
-        .unwrap_or_default() == "1";
-    
-    let is_external_provider = provider.as_ref()
-        .map(|p| matches!(p.as_str(), "gemini" | "openai" | "gpt" | "claude" | "anthropic"))
-        .unwrap_or(false);
-    
-    if is_external_provider && !external_providers_allowed {
-        log::warn!(
-            "[Ω:CMD] 🚫 BACKEND GATE BLOCKED | provider={:?} | VITE_ENABLE_EXTERNAL_AI not set | req_id={}",
-            provider,
-            req_id
-        );
-        
-        let _ = persist_conversation_os_artifacts(
-            &conversation_id,
-            &req_id,
-            &message,
-            Some("Service externe bloqué au niveau backend (defence-in-depth)."),
-            &trace,
-            None,
-            &search_citations_json,
-        );
-
-        // Return immediate response (defense-in-depth, frontend should have already blocked)
-        // NO_LYING_FALLBACK: provider is local/none (network_used=false), so mode=LOCAL not REMOTE
-        let blocked_response = serde_json::json!({
-            "content": "Service externe bloqué au niveau backend (defence-in-depth).",
-            "meta": {
-                "mode": "LOCAL",
-                "reason_code": "POLICY_BLOCKED",
-                "network_used": false,
-                "provider_used": "none",
-                "latency_ms_total": 5,
-                "blocked_by": "backend_gate"
+            "metadata": {
+                "requestId": req_id,
+                "contextBinding": context_binding.clone(),
+                "historyLoadStatus": history_load_status.clone(),
+                "historyMessageCount": history_message_count,
+                "historyLoadError": history_load_error.clone(),
             },
-            "trace": trace,
         });
-        
         return Ok(blocked_response);
     }
 
     // ✨ v27.0.2: Force local provider in tests (bypass cloud timeouts in AR20)
-    let effective_provider = if std::env::var("FORCE_LOCAL_PROVIDER").is_ok() {
+    // PATCH-010: Apply policy_verdict.allow_external_ai — if external AI blocked by policy,
+    // override provider to "local" to enforce One Door network governance.
+    let effective_provider = if read_bool_env("FORCE_LOCAL_PROVIDER", false) {
         log::warn!(
             "[Ω:CMD] ⚠️ FORCE_LOCAL_PROVIDER env active | cloud providers DISABLED | reason=test_mode"
         );
+        Some("local".to_string())
+    } else if !policy_verdict.allow_external_ai {
+        // Policy gate: external AI not allowed (offline/blocked/no-credentials)
+        if provider.as_deref().map(|p| matches!(p, "gemini" | "openai" | "gpt" | "claude" | "anthropic")).unwrap_or(false) {
+            log::warn!(
+                "[Ω:CMD] ⚠️ Policy gate: external AI blocked (allow_external_ai=false) | reason={:?} | forcing local",
+                policy_verdict.block_reason
+            );
+        }
         Some("local".to_string())
     } else {
         provider
     };
 
-    // Créer la requête OMEGA
+    // PATCH-012 + IMPROVE-003: Load conversation history from SQLite for LTM context injection.
+    // Budget: last 20 messages, content capped at 300 chars each to avoid token overflow.
+    // Always load (not gated by LTM flag) so the AI has basic multi-turn awareness.
+    let conversation_context = match load_conversation_history(conversation_id.clone()).await {
+        Ok(rows) => {
+            const MAX_MESSAGES: usize = 20;
+            const MAX_CONTENT_CHARS: usize = 300;
+            let formatted: Vec<String> = rows.iter()
+                .take(MAX_MESSAGES)
+                .filter_map(|row| {
+                    let role = row.get("role")?.as_str()?;
+                    let content = row.get("content")?.as_str()?;
+                    let prefix = if role == "user" { "[User]" } else { "[Assistant]" };
+                    // Token budget: truncate long messages
+                    let truncated = if content.len() > MAX_CONTENT_CHARS {
+                        format!("{}…", &content[..MAX_CONTENT_CHARS])
+                    } else {
+                        content.to_string()
+                    };
+                    Some(format!("{}: {}", prefix, truncated))
+                })
+                .collect();
+            history_message_count = formatted.len();
+            if !formatted.is_empty() {
+                history_load_status = "loaded".to_string();
+                log::info!(
+                    "[Ω:CMD] ✅ LTM context: {} msgs loaded for conv_id={}",
+                    formatted.len(), &conversation_id[..conversation_id.len().min(16)]
+                );
+            } else {
+                history_load_status = "empty".to_string();
+            }
+            if formatted.is_empty() { None } else { Some(formatted) }
+        }
+        Err(e) => {
+            history_load_status = "error".to_string();
+            history_load_error = Some(e.clone());
+            log::warn!("[Ω:CMD] LTM history load failed (non-fatal): {}", e);
+            None
+        }
+    };
+
+    trace["memory"]["history_load_status"] = serde_json::json!(history_load_status.clone());
+    trace["memory"]["history_message_count"] = serde_json::json!(history_message_count);
+    trace["memory"]["history_load_error"] = serde_json::json!(history_load_error.clone());
+
+    if let Some(err) = history_load_error.as_ref() {
+        if let Some(failures) = trace["failures"].as_array_mut() {
+            failures.push(serde_json::json!({
+                "class": "MEMORY_HISTORY_LOAD_FAILED",
+                "detail": {
+                    "component": "conversation_generate",
+                    "reason": err,
+                    "conversation_id": conversation_id,
+                }
+            }));
+        }
+    }
+
+    // ✅ FIX: MEMORY_INJECTION_UNPROVEN — call UnifiedMemory.recall() before prompt build.
+    // Retrieves real memory items (STM/MTM/LTM) relevant to the current user message.
+    // Max 5 items, importance-ranked; LTM items now carry full disk content (see recall fix).
+    // Bounded token budget: each item content capped at 200 chars to limit prompt growth.
+    // Gated by router_decision.wants_memory so factual/code/other queries skip this.
+    const MEMORY_RECALL_MAX: usize = 5;
+    const MEMORY_ITEM_CHAR_CAP: usize = 200;
+    let (memory_recall_block, memory_recall_ids): (String, Vec<String>) = {
+        if router_decision.wants_memory {
+            let recalled = {
+                let mut mem = orchestrator.unified_memory.write().await;
+                mem.recall(&message, MEMORY_RECALL_MAX)
+            };
+            if recalled.is_empty() {
+                (String::new(), Vec::new())
+            } else {
+                let ids: Vec<String> = recalled.iter().map(|i| i.id.clone()).collect();
+                let lines: Vec<String> = recalled.iter().map(|item| {
+                let tier_label = match item.tier {
+                        crate::core::MemoryTier::ShortTerm => "STM",
+                        crate::core::MemoryTier::MediumTerm => "MTM",
+                        crate::core::MemoryTier::LongTerm => "LTM",
+                    };
+                    let content_trunc = if item.content.len() > MEMORY_ITEM_CHAR_CAP {
+                        format!("{}…", &item.content[..MEMORY_ITEM_CHAR_CAP])
+                    } else {
+                        item.content.clone()
+                    };
+                    format!("[{tier_label}|{:.2}] {content_trunc}", item.importance)
+                }).collect();
+                let block = format!(
+                    "\n\n## MEMORY_CONTEXT\n{}\n## END_MEMORY_CONTEXT",
+                    lines.join("\n")
+                );
+                log::info!(
+                    "[Ω:CMD] 🧠 Memory recall: {} items injected | ids={:?}",
+                    ids.len(), ids
+                );
+                (block, ids)
+            }
+        } else {
+            (String::new(), Vec::new())
+        }
+    };
+
+    // Inject STM (immediate context) from MultiLayerMemoryManager
+    let stm_context_block: String = {
+        let mlm = engine.multilayer_memory.read().await;
+        let recent = mlm.get_immediate_context();
+        if recent.is_empty() {
+            String::new()
+        } else {
+            let lines: Vec<String> = recent.iter().rev().map(|(u, a)| {
+                let u_trunc = if u.len() > 120 { format!("{}…", &u[..120]) } else { u.clone() };
+                let a_trunc = if a.len() > 120 { format!("{}…", &a[..120]) } else { a.clone() };
+                format!("[User]: {u_trunc}\n[TITANE]: {a_trunc}")
+            }).collect();
+            format!("\n\n## STM_RECENT_TURNS\n{}", lines.join("\n"))
+        }
+    };
+
+    // Inject TIME + TWINS context into system_prompt when available
+    let cognitive_flow = context_binding.get("cognitiveFlowActive").and_then(|v| v.as_bool()).unwrap_or(false);
+    let cognitive_mode = context_binding.get("cognitiveMode").and_then(|v| v.as_str()).unwrap_or("normal");
+    let twins_score = context_binding.get("twinsFusionScore").and_then(|v| v.as_f64()).unwrap_or(0.0);
+    let twins_trend = context_binding.get("twinsTrend").and_then(|v| v.as_str()).unwrap_or("unknown");
+    let twins_phase = context_binding.get("twinsPhase").and_then(|v| v.as_str()).unwrap_or("unknown");
+
+    let has_time_context = cognitive_flow || cognitive_mode != "normal";
+    let has_twins_context = twins_score > 0.0 && twins_trend != "unknown";
+
+    let system_prompt = {
+        let base = system_prompt.unwrap_or_default();
+        let mut parts: Vec<String> = Vec::new();
+        if !base.is_empty() { parts.push(base); }
+        if !stm_context_block.is_empty() { parts.push(stm_context_block); }
+        // ✅ FIX: inject UnifiedMemory recall results into prompt
+        if !memory_recall_block.is_empty() { parts.push(memory_recall_block.clone()); }
+        if has_time_context || has_twins_context {
+            let mut ctx_lines: Vec<String> = Vec::new();
+            if has_time_context {
+                ctx_lines.push(format!(
+                    "TIME_CONTEXT: flow_active={cognitive_flow}, mode={cognitive_mode}"
+                ));
+            }
+            if has_twins_context {
+                let phase_part = if twins_phase != "unknown" {
+                    format!(", phase={twins_phase}")
+                } else {
+                    String::new()
+                };
+                ctx_lines.push(format!(
+                    "TWINS_CONTEXT: fusion_score={:.2}, trend={twins_trend}{phase_part}",
+                    twins_score
+                ));
+            }
+            parts.push(format!("[{}]", ctx_lines.join(" | ")));
+        }
+        if parts.is_empty() { None } else { Some(parts.join("\n\n")) }
+    };
+
+    let configured_provider = match effective_provider.as_deref() {
+        Some("gemini") => ProviderPreference::Gemini,
+        Some("ollama") => ProviderPreference::Ollama,
+        Some("local") => ProviderPreference::Local,
+        Some("openai") => ProviderPreference::OpenAI,
+        Some("claude" | "anthropic") => ProviderPreference::Claude,
+        _ => ProviderPreference::Auto,
+    };
+
     let request = ConversationRequest {
         user_message: message.clone(),
         conversation_id: Some(conversation_id.clone()),
         mode: conversation_mode,
-        ai_config: effective_provider.map(|p| {
-            let provider_pref = match p.as_str() {
+        ai_config: Some({
+            let provider_pref = effective_provider
+                .as_deref()
+                .map(|p| match p {
                 "gemini" => super::types::ProviderPreference::Gemini,
                 "ollama" => super::types::ProviderPreference::Ollama,
                 "openai" | "gpt" => super::types::ProviderPreference::OpenAI,
                 "claude" | "anthropic" => super::types::ProviderPreference::Claude,
                 "local" => super::types::ProviderPreference::Local,
-                _ => super::types::ProviderPreference::Auto,
-            };
+                _ => configured_provider.clone(),
+            })
+                .unwrap_or(configured_provider);
+
             AIConfig {
                 temperature: 0.7,
                 max_tokens: None,
@@ -465,7 +746,8 @@ pub async fn conversation_generate(
             }
         }),
         emotion_context: None,
-        custom_system_prompt: system_prompt, // ✨ Ajout du system prompt personnalisé
+        custom_system_prompt: system_prompt, // ✨ Ajout du system prompt personnalisé (+ TIME/TWINS context)
+        history: conversation_context,
     };
 
     // Traiter via le pipeline OMEGA complet
@@ -512,6 +794,7 @@ pub async fn conversation_generate(
     };
 
     Ok(serde_json::json!({
+        "ok": true,
         "content": assistant_content,
         "conversationId": response.conversation_id,
         "messageId": response.message_id,
@@ -524,7 +807,13 @@ pub async fn conversation_generate(
             "emotion": format!("{:?}", response.detected_emotion),
             "cognitiveTags": response.cognitive_tags,
             "cognitiveSummary": response.cognitive_summary,
+            "historyLoadStatus": history_load_status,
+            "historyMessageCount": history_message_count,
+            "historyLoadError": history_load_error,
             "requestId": req_id,
+            "contextBinding": context_binding,
+            "memoryRecallIds": memory_recall_ids,
+            "memoryRecallCount": memory_recall_ids.len(),
         }
     }))
 }
@@ -605,14 +894,9 @@ fn persist_conversation_os_artifacts_with_path(
         create_event, create_failure, create_provider_decision, create_snapshot, create_source,
         DbService,
     };
-    use std::path::PathBuf;
     use std::time::{SystemTime, UNIX_EPOCH};
 
-    let db_path = db_path_override.unwrap_or_else(|| {
-        std::env::var("TITANE_CONVOS_DB_PATH")
-            .map(PathBuf::from)
-            .unwrap_or_else(|_| PathBuf::from("runtime/memory/conversation_os_v1.db"))
-    });
+    let db_path = resolve_conversation_os_db_path(db_path_override);
 
     if let Some(parent) = db_path.parent() {
         std::fs::create_dir_all(parent)
@@ -787,14 +1071,9 @@ fn persist_conversation_os_artifacts_with_path(
     db_path_override: Option<std::path::PathBuf>,
 ) -> Result<(), String> {
     use rusqlite::Connection;
-    use std::path::PathBuf;
     use std::time::{SystemTime, UNIX_EPOCH};
 
-    let db_path = db_path_override.unwrap_or_else(|| {
-        std::env::var("TITANE_CONVOS_DB_PATH")
-            .map(PathBuf::from)
-            .unwrap_or_else(|_| PathBuf::from("runtime/memory/conversation_os_v1.db"))
-    });
+    let db_path = resolve_conversation_os_db_path(db_path_override);
 
     if let Some(parent) = db_path.parent() {
         std::fs::create_dir_all(parent)
@@ -1044,6 +1323,8 @@ mod tests {
                 memory_effect: MemoryEffect::New,
                 links_to_contexts: vec![],
                 provider_meta: Some(provider_meta),
+                profile_used: "test".to_string(),
+                memory_sources_injected: 0,
             },
         }
     }
@@ -1191,6 +1472,27 @@ mod tests {
         assert_eq!(source_url, "https://example.com/source");
 
         let _ = std::fs::remove_file(db_path);
+    }
+
+    #[test]
+    fn conversation_os_db_path_resolver_prefers_explicit_env_override() {
+        let path = resolve_conversation_os_db_path_from_env(
+            None,
+            Some("/tmp/titane-convos-test.db".to_string()),
+            Some("/tmp/xdg-data".to_string()),
+            Some("/tmp/home".to_string()),
+        );
+
+        assert_eq!(path, std::path::PathBuf::from("/tmp/titane-convos-test.db"));
+    }
+
+    #[test]
+    fn conversation_os_db_path_resolver_uses_persistent_dir_when_env_missing() {
+        let path = resolve_conversation_os_db_path_from_env(None, None, None, None);
+        assert!(path.is_absolute());
+        // Fallback uses dirs::data_local_dir() for persistent storage (Android-safe).
+        // On most systems data_local_dir() is defined; if not, falls back to temp_dir().
+        assert!(path.ends_with("TITANE_INFINITY/runtime/memory/conversation_os_v1.db"));
     }
 
     #[test]
@@ -1391,6 +1693,7 @@ pub async fn conversation_process_message(
         ai_config: None,
         emotion_context: None,
         custom_system_prompt: None,
+        history: None,
     };
 
     log::info!(
@@ -1723,6 +2026,156 @@ pub async fn anthology_get_top_lexical_fields(
 ) -> CommandResult<Vec<(String, usize)>> {
     let anthology_engine = engine.anthology_engine.read().await;
     Ok(anthology_engine.get_top_lexical_fields(n))
+}
+
+/// Charger l'historique d'une conversation depuis le SQLite conversation_os
+/// Commande IPC pour restaurer le transcript UI depuis la source backend réelle.
+/// Retourne un Vec vide (jamais d'erreur silencieuse) si aucune donnée n'existe.
+/// Chaque élément: { role: "user"|"assistant", content: String, timestamp: i64 }
+#[tauri::command]
+pub async fn load_conversation_history(
+    conversation_id: String,
+) -> CommandResult<Vec<serde_json::Value>> {
+    use rusqlite::Connection;
+
+    if conversation_id.trim().is_empty() {
+        log::warn!("[load_conversation_history] conversation_id is empty — returning []");
+        return Ok(vec![]);
+    }
+
+    let db_path = resolve_conversation_os_db_path(None);
+
+    if !db_path.exists() {
+        log::warn!(
+            "[load_conversation_history] db not found at {:?} — returning []",
+            db_path
+        );
+        return Ok(vec![]);
+    }
+
+    let conn = match Connection::open(&db_path) {
+        Ok(c) => c,
+        Err(e) => {
+            log::warn!("[load_conversation_history] open db failed: {} — returning []", e);
+            return Ok(vec![]);
+        }
+    };
+
+    // Read events ordered by timestamp — only user and assistant messages
+    let mut stmt = conn
+        .prepare(
+            "SELECT kind, payload, ts FROM events \
+             WHERE conversation_id = ?1 \
+             AND kind IN ('user_message', 'assistant_message') \
+             ORDER BY ts ASC",
+        )
+        .map_err(|e| format!("[load_conversation_history] prepare failed: {}", e))?;
+
+    let rows: Vec<serde_json::Value> = stmt
+        .query_map([&conversation_id], |row| {
+            let kind: String = row.get(0)?;
+            let payload_str: String = row.get(1)?;
+            let ts: i64 = row.get(2)?;
+            Ok((kind, payload_str, ts))
+        })
+        .map_err(|e| format!("[load_conversation_history] query failed: {}", e))?
+        .filter_map(|r| r.ok())
+        .filter_map(|(kind, payload_str, ts)| {
+            let role = if kind == "user_message" { "user" } else { "assistant" };
+            let payload: serde_json::Value = serde_json::from_str(&payload_str).ok()?;
+            let content = payload.get("message")?.as_str()?;
+            Some(serde_json::json!({
+                "role": role,
+                "content": content,
+                "timestamp": ts,
+            }))
+        })
+        .collect();
+
+    if rows.is_empty() {
+        log::info!(
+            "[load_conversation_history] conversation_id='{}' — no events found in db ({})",
+            conversation_id,
+            db_path.display()
+        );
+    } else {
+        log::info!(
+            "[load_conversation_history] conversation_id='{}' — restored {} message(s)",
+            conversation_id,
+            rows.len()
+        );
+    }
+
+    Ok(rows)
+}
+
+/// Lister les conversations restituables depuis SQLite conversation_os.
+/// Retourne Vec<{conversationId, messageCount, lastTs}> triées par lastTs DESC.
+/// Retourne [] si db absent ou 0 conversations — jamais d'erreur silencieuse.
+#[tauri::command]
+pub async fn list_restorable_conversations(
+    limit: Option<u32>,
+) -> CommandResult<Vec<serde_json::Value>> {
+    use rusqlite::Connection;
+
+    let db_path = resolve_conversation_os_db_path(None);
+    if !db_path.exists() {
+        log::warn!(
+            "[list_restorable_conversations] db not found at {:?} — returning []",
+            db_path
+        );
+        return Ok(vec![]);
+    }
+
+    let conn = match Connection::open(&db_path) {
+        Ok(c) => c,
+        Err(e) => {
+            log::warn!(
+                "[list_restorable_conversations] open db failed: {} — returning []",
+                e
+            );
+            return Ok(vec![]);
+        }
+    };
+
+    let limit_val = limit.unwrap_or(50).min(200) as i64;
+
+    let mut stmt = conn
+        .prepare(
+            "SELECT conversation_id, COUNT(*) as msg_count, MAX(ts) as last_ts \
+             FROM events \
+             WHERE kind IN ('user_message', 'assistant_message') \
+             GROUP BY conversation_id \
+             ORDER BY last_ts DESC \
+             LIMIT ?1",
+        )
+        .map_err(|e| format!("[list_restorable_conversations] prepare failed: {}", e))?;
+
+    let rows: Vec<serde_json::Value> = stmt
+        .query_map([limit_val], |row| {
+            let conversation_id: String = row.get(0)?;
+            let msg_count: i64 = row.get(1)?;
+            let last_ts: i64 = row.get(2)?;
+            Ok((conversation_id, msg_count, last_ts))
+        })
+        .map_err(|e| format!("[list_restorable_conversations] query failed: {}", e))?
+        .filter_map(|r| r.ok())
+        .map(|(conversation_id, msg_count, last_ts)| {
+            serde_json::json!({
+                "conversationId": conversation_id,
+                "messageCount": msg_count,
+                "lastTs": last_ts,
+            })
+        })
+        .collect();
+
+    log::info!(
+        "[list_restorable_conversations] found {} conversation(s) in db ({})",
+        rows.len(),
+        db_path.display()
+    );
+
+    Ok(rows)
 }
 
 /// Obtenir les statistiques de l'anthologie

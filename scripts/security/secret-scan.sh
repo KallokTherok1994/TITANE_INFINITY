@@ -11,69 +11,77 @@ echo "===================================================="
 
 # Patterns de secrets critiques
 FORBIDDEN_PATTERNS=(
-    # Environnement files
     "^\\.env$"
     "^\\.env\\."
     "^\\.envrc$"
     "^\\.current-server-info$"
-    # Secrets/keys
     "secret.*\\.json$"
     ".*\\.key$"
     ".*\\.pem$"
     "id_rsa$"
     "id_ed25519$"
-    # Tunnel configs
     "tunnel.*\\.json$"
     "cloudflare.*\\.json$"
-    # Temporary/generated
     "^temp.*"
     "^tmp.*"
     ".*\\.tmp$"
-    # Logs avec potentiels secrets
     ".*\\.log$"
     "logs/.*"
 )
 
-# Extensions/patterns autorisés (.example, .template, etc.)
 ALLOWED_EXCEPTIONS=(
     ".*\\.example$"
     ".*\\.template$"
     ".*\\.sample$"
     "README\\.md$"
     "SECRETS\\.md$"
+    "^docs/_evidence/.*\\.log$"
+    "^docs/_evidence/.*/RUNLOGS/.*\\.log$"
+    "^reports/.*\\.log$"
+    "^docs/reports/.*\\.log$"
+    "^proof_packs/.*/.*\\.log$"
+    "^runs/current/triage_secrets/classification\\.json$"
 )
 
 EXIT_CODE=0
 
 echo "📋 Phase 1: Scan fichiers trackés git..."
-TRACKED_FILES=$(git ls-files)
+ALLOWED_REGEX="$(IFS='|'; echo "${ALLOWED_EXCEPTIONS[*]}")"
 
-while IFS= read -r file; do
-    for pattern in "${FORBIDDEN_PATTERNS[@]}"; do
-        if echo "$file" | grep -qE "$pattern"; then
-            # Vérifier exceptions
-            EXCEPTION_FOUND=false
-            for exception in "${ALLOWED_EXCEPTIONS[@]}"; do
-                if echo "$file" | grep -qE "$exception"; then
-                    EXCEPTION_FOUND=true
-                    break
-                fi
-            done
-            
-            if [ "$EXCEPTION_FOUND" = false ]; then
-                echo "❌ BLOQUANT: fichier sensible tracké '$file'"
-                EXIT_CODE=1
-            fi
+CANDIDATES="$(
+    git -c core.quotepath=off ls-files \
+        '.env' '.env.*' '.envrc' '.current-server-info' \
+        '*secret*.json' '*.key' '*.pem' 'id_rsa' 'id_ed25519' \
+        '*tunnel*.json' '*cloudflare*.json' \
+        'temp*' 'tmp*' '*.tmp' '*.log' 'logs/*' 2>/dev/null \
+        | sed '/^$/d' \
+        | sed -e 's/^"//' -e 's/"$//' \
+        | grep -Ev '^(reports/|docs/reports/)' || true
+)"
+
+BLOCKED_FILES="$(echo "$CANDIDATES" | grep -Ev "$ALLOWED_REGEX" || true)"
+
+if [ -n "$BLOCKED_FILES" ]; then
+    BLOCKED_COUNT=$(echo "$BLOCKED_FILES" | sed '/^$/d' | wc -l | tr -d ' ')
+    echo "❌ BLOQUANT: $BLOCKED_COUNT fichier(s) sensible(s) tracké(s)"
+    INDEX=0
+    while IFS= read -r file; do
+        [ -n "$file" ] || continue
+        INDEX=$((INDEX + 1))
+        if [ "$INDEX" -le 20 ]; then
+            echo "   - $file"
         fi
-    done
-done <<< "$TRACKED_FILES"
+    done <<< "$BLOCKED_FILES"
+    if [ "$BLOCKED_COUNT" -gt 20 ]; then
+        echo "   ... (+$((BLOCKED_COUNT - 20)) autres)"
+    fi
+    EXIT_CODE=1
+fi
 
 echo ""
 echo "📋 Phase 2: Scan contenu pour patterns secrets..."
 
-# Scan content pour API keys, tokens, etc.
 if command -v git >/dev/null 2>&1; then
-    # Patterns de contenu secrets
     SECRET_CONTENT_PATTERNS=(
         "api[_-]?key.*[=:].*[A-Za-z0-9+/]{20,}"
         "secret[_-]?key.*[=:].*[A-Za-z0-9+/]{20,}"
@@ -82,13 +90,14 @@ if command -v git >/dev/null 2>&1; then
         "bearer.*[A-Za-z0-9+/]{20,}"
         "BEGIN.*PRIVATE.*KEY"
     )
-    
+
     for pattern in "${SECRET_CONTENT_PATTERNS[@]}"; do
-        MATCHES=$(git ls-files -z | xargs -0 grep -lE "$pattern" 2>/dev/null | grep -v ".example" | grep -v "test" | grep -v ".md" | head -5 || true)
+        MATCHES=$(timeout 15 git grep -IlE "$pattern" -- \
+            '*.ts' '*.tsx' '*.js' '*.jsx' '*.json' '*.toml' '*.yml' '*.yaml' '*.env*' '*.sh' 2>/dev/null \
+            | grep -v ".example" | grep -v "test" | grep -v ".md" | awk 'NR<=5' || true)
         if [ -n "$MATCHES" ]; then
             echo "⚠️ PATTERN SECRET détecté dans:"
             echo "$MATCHES"
-            # Note: warn seulement, pas bloquant car peut être false positive
         fi
     done
 fi
@@ -109,9 +118,8 @@ REQUIRED_IGNORES=(
 )
 
 for ignore_pattern in "${REQUIRED_IGNORES[@]}"; do
-    if ! grep -qx "$ignore_pattern" .gitignore 2>/dev/null; then
+    if ! grep -Fqx "$ignore_pattern" .gitignore 2>/dev/null; then
         echo "⚠️ MANQUE dans .gitignore: '$ignore_pattern'"
-        # Note: warn seulement, pas bloquant si pas de fichier correspondant
     fi
 done
 

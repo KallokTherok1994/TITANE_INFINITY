@@ -36,6 +36,8 @@ export interface TTSSettings {
   language: string; // 'fr-FR', 'en-US'
   emotionEnabled: boolean;
   autoFallback: boolean;
+  autoReadAssistant?: boolean;
+  voiceProfileId?: string;
 }
 
 export const DEFAULT_TTS_SETTINGS: TTSSettings = {
@@ -47,6 +49,8 @@ export const DEFAULT_TTS_SETTINGS: TTSSettings = {
   language: 'fr-FR',
   emotionEnabled: true,
   autoFallback: true,
+  autoReadAssistant: true,
+  voiceProfileId: undefined,
 };
 
 export function buildTtsSettingsDefaults(
@@ -71,6 +75,7 @@ export interface AudioDevice {
   isDefault: boolean;
   isActive: boolean;
   driver: string; // 'pipewire', 'alsa', 'pulseaudio'
+  isMuted?: boolean;
 }
 
 export interface AudioOutputSettings {

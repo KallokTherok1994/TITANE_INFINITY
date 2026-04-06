@@ -21,6 +21,7 @@ export type BackendServiceStatus = 'available' | 'unavailable' | 'checking' | 'u
  * Raison de l'indisponibilité
  */
 export type BackendUnavailableReason =
+  | 'all-backends-down'
   | 'tauri-backend-down'
   | 'ollama-offline'
   | 'network-error'
@@ -179,13 +180,7 @@ export function useBackendHealth(): BackendHealthState {
   let unavailableReason: BackendUnavailableReason | undefined;
 
   if (allBackendsDown) {
-    if (tauriStatus === 'unavailable' && ollamaStatus === 'unavailable') {
-      unavailableReason = 'ollama-offline';
-    } else if (tauriStatus === 'unavailable') {
-      unavailableReason = 'tauri-backend-down';
-    } else {
-      unavailableReason = 'unknown-error';
-    }
+    unavailableReason = 'all-backends-down';
   }
 
   return {

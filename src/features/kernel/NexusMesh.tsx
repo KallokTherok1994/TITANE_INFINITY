@@ -2,6 +2,8 @@
  * ═══════════════════════════════════════════════════════════════
  * TITANE∞ Kernel Visuel — NexusMesh
  * Visualisation de la cohérence des modules
+ * [FIX-005b] Adapted to NexusEngineState (engine_get_nexus_state)
+ * Fields: health, coordination_count, active_connections, last_coordination_ms, initialized
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -16,135 +18,100 @@ export function NexusMesh() {
 
   useEffect(() => {
     fetchNexus();
-
     const interval = setInterval(() => {
       fetchNexus();
-    }, 3000); // Update every 3s
-
+    }, 3000);
     return () => clearInterval(interval);
   }, [fetchNexus]);
 
   if (loading && !nexus) {
     return <Card className="p-8 text-center">Chargement...</Card>;
   }
-
   if (error) {
     return <Card className="p-8 text-center text-red-500">Erreur: {error}</Card>;
   }
-
   if (!nexus) {
     return null;
   }
 
   const getHealthColor = (health: string): string => {
-    switch (health) {
-      case 'Healthy':
-        return 'green';
-      case 'Degraded':
-        return 'yellow';
-      case 'Failed':
-        return 'red';
-      default:
-        return 'gray';
-    }
-  };
-
-  const getCoherenceColor = (score: number): string => {
-    if (score >= 90) return 'green';
-    if (score >= 70) return 'yellow';
+    if (health === 'Ready') return 'green';
+    if (health === 'Degraded') return 'yellow';
     return 'red';
   };
 
-  const modulesList = Object.entries(nexus.modules);
+  // [FIX-005b] coherence_score not in NexusEngineState — derive from health + connections
+  const getCoherenceScore = (): number => {
+    if (nexus.health === 'Ready') return nexus.active_connections > 0 ? 92 : 75;
+    if (nexus.health === 'Degraded') return 55;
+    return 20;
+  };
+
+  const coherenceScore = getCoherenceScore();
 
   return (
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Nexus — Cohérence des Modules</h2>
-        <Badge color={getCoherenceColor(nexus.coherence_score)} size="lg">
-          Cohérence: {nexus.coherence_score.toFixed(1)}%
+        <Badge color={getHealthColor(nexus.health)} size="lg">
+          {nexus.health}
         </Badge>
       </div>
 
-      {/* Coherence Score */}
+      {/* Coherence Score (derived) */}
       <Card className="p-6">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-gray-400">Score Global</span>
-          <span className="text-lg font-semibold">
-            {nexus.coherence_score.toFixed(1)}%
-          </span>
+          <span className="text-sm text-gray-400">Cohérence estimée</span>
+          <span className="text-lg font-semibold">{coherenceScore}%</span>
         </div>
         <div className="w-full bg-gray-700 rounded-full h-3">
           <div
             className={`h-3 rounded-full transition-all duration-500 ${
-              nexus.coherence_score >= 90
+              coherenceScore >= 90
                 ? 'bg-green-500'
-                : nexus.coherence_score >= 70
+                : coherenceScore >= 70
                   ? 'bg-yellow-500'
                   : 'bg-red-500'
             }`}
-            style={{ width: `${nexus.coherence_score}%` }}
+            style={{ width: `${coherenceScore}%` }}
           />
         </div>
       </Card>
 
-      {/* Modules Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {modulesList.map(([name, status]) => (
-          <Card key={name} className="p-4 hover:bg-gray-800 transition-colors">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold">{status.name}</h3>
-              <Badge color={getHealthColor(status.health)} size="sm">
-                {status.health}
-              </Badge>
-            </div>
-
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between text-gray-400">
-                <span>Dernière vérification:</span>
-                <span>{new Date(status.last_check).toLocaleTimeString()}</span>
-              </div>
-
-              {status.error_count > 0 && (
-                <div className="flex justify-between text-red-400">
-                  <span>Erreurs:</span>
-                  <span>{status.error_count}</span>
-                </div>
-              )}
-            </div>
-          </Card>
-        ))}
+      {/* Engine Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="p-6 text-center">
+          <div className="text-3xl font-bold text-blue-400">
+            {nexus.coordination_count}
+          </div>
+          <div className="text-sm text-gray-400 mt-1">Coordinations</div>
+        </Card>
+        <Card className="p-6 text-center">
+          <div className="text-3xl font-bold text-green-400">
+            {nexus.active_connections}
+          </div>
+          <div className="text-sm text-gray-400 mt-1">Connexions actives</div>
+        </Card>
+        <Card className="p-6 text-center">
+          <div className="text-3xl font-bold text-purple-400">
+            {nexus.initialized ? '✅' : '⏳'}
+          </div>
+          <div className="text-sm text-gray-400 mt-1">Initialisé</div>
+        </Card>
       </div>
 
-      {/* Stats */}
-      <Card className="p-6">
-        <div className="grid grid-cols-3 gap-6 text-center">
-          <div>
-            <div className="text-2xl font-bold text-green-500">
-              {modulesList.filter(([, s]) => s.health === 'Healthy').length}
-            </div>
-            <div className="text-sm text-gray-400">Sains</div>
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-yellow-500">
-              {modulesList.filter(([, s]) => s.health === 'Degraded').length}
-            </div>
-            <div className="text-sm text-gray-400">Dégradés</div>
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-red-500">
-              {modulesList.filter(([, s]) => s.health === 'Failed').length}
-            </div>
-            <div className="text-sm text-gray-400">Échoués</div>
-          </div>
+      {/* Status */}
+      <Card className="p-4 bg-gray-800">
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-gray-400">Dernière coordination:</span>
+          <span className="font-semibold">
+            {nexus.last_coordination_ms > 0
+              ? new Date(nexus.last_coordination_ms).toLocaleTimeString()
+              : 'Aucune encore'}
+          </span>
         </div>
       </Card>
-
-      {/* Last Update */}
-      <div className="text-xs text-gray-500 text-center">
-        Dernière mise à jour: {new Date(nexus.timestamp).toLocaleTimeString()}
-      </div>
     </div>
   );
 }

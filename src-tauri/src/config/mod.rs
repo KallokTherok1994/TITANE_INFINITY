@@ -12,8 +12,10 @@ pub mod presets;
  */
 pub mod update;
 
+use crate::security::secrets_engine::{SecretsMode, SecureSecretsEngine};
 use serde::{Deserialize, Serialize};
 use std::time::{SystemTime, UNIX_EPOCH};
+use tauri::{AppHandle, Manager, State};
 
 /**
  * Runtime Configuration (serializable version)
@@ -26,6 +28,40 @@ pub struct RuntimeConfig {
     pub secrets_mode: String,
     pub gemini_configured: bool,
     pub timestamp: u64,
+}
+
+/**
+ * Audio Device Configuration
+ *
+ * Canonical audio device settings — single source of truth.
+ * Both Admin Audio page and ConfigurationHub read/write here.
+ */
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AudioDeviceConfig {
+    pub input_device_id: String,
+    pub input_device_label: String,
+    pub output_device_id: String,
+    pub output_device_label: String,
+    pub volume: f32,
+    pub noise_reduction: bool,
+    pub echo_cancellation: bool,
+    pub auto_gain_control: bool,
+}
+
+impl Default for AudioDeviceConfig {
+    fn default() -> Self {
+        Self {
+            input_device_id: String::new(),
+            input_device_label: String::new(),
+            output_device_id: String::new(),
+            output_device_label: String::new(),
+            volume: 1.0,
+            noise_reduction: false,
+            echo_cancellation: false,
+            auto_gain_control: false,
+        }
+    }
 }
 
 /**
@@ -81,6 +117,36 @@ impl ConfigSnapshot {
     }
 }
 
+fn build_runtime_config(
+    ollama_url: String,
+    ollama_model: String,
+    secrets: &SecureSecretsEngine,
+) -> RuntimeConfig {
+    let secrets_mode = match secrets.mode() {
+        SecretsMode::Encrypted { .. } => "encrypted".to_string(),
+        SecretsMode::Ephemeral => "ephemeral".to_string(),
+    };
+
+    let gemini_configured = match secrets.has_secret("gemini_api_key") {
+        Ok(exists) => exists,
+        Err(err) => {
+            log::warn!("[CONFIG] Failed to inspect Gemini secret status: {}", err);
+            false
+        }
+    };
+
+    RuntimeConfig {
+        ollama_url,
+        ollama_model,
+        secrets_mode,
+        gemini_configured,
+        timestamp: SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .map(|d| d.as_secs())
+            .unwrap_or(0),
+    }
+}
+
 /**
  * Récupère un snapshot complet de toutes les configurations
  *
@@ -94,30 +160,23 @@ impl ConfigSnapshot {
  * - Err(String) : Message d'erreur si échec
  */
 #[tauri::command]
-pub async fn get_all_configs() -> Result<ConfigSnapshot, String> {
+pub async fn get_all_configs(
+    secrets: State<'_, SecureSecretsEngine>,
+) -> Result<ConfigSnapshot, String> {
     log::info!("🎯 [CONFIG] Loading all configurations...");
 
-    // Récupérer runtime config (déjà implémenté)
-    let runtime = RuntimeConfig {
-        ollama_url: std::env::var("OLLAMA_BASE_URL")
-            .unwrap_or_else(|_| "http://localhost:11434".to_string()),
-        ollama_model: std::env::var("OLLAMA_DEFAULT_MODEL")
-            .unwrap_or_else(|_| "qwen2.5:latest".to_string()),
-        secrets_mode: "encrypted".to_string(), // Implementation: Get from SecureSecretsEngine.get_mode()
-        // - Query: SecureSecretsEngine::get_encryption_mode() → "encrypted"/"plaintext"/"keyring"
-        // - Fallback: "encrypted" if SecureSecretsEngine not initialized
-        gemini_configured: false, // Implementation: Check if Gemini API key exists in SecureSecretsEngine
-        // - Check: SecureSecretsEngine::has_secret("gemini_api_key").await
-        // - Validation: Optionally ping Gemini API to verify key validity
-        // - Return: true if key exists and valid, false otherwise
-        timestamp: SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .map(|d| d.as_secs())
-            .unwrap_or(0),
-    };
+    let (ollama_url, ollama_model) = update::current_runtime_values();
 
-    // Récupérer chat engine config (hardcoded defaults pour l'instant)
-    let chat_engine = ChatEngineConfig::default();
+    // Runtime config must reflect live secrets/runtime state, not placeholders.
+    let runtime = build_runtime_config(ollama_url, ollama_model, &secrets);
+
+    let bundle = update::current_chat_bundle().await;
+    let chat_engine = ChatEngineConfig {
+        timeout_ms: bundle.engine.response_timeout_ms,
+        chunk_size: bundle.engine.stream_chunk_size as usize,
+        max_tokens: bundle.request_defaults.max_output_tokens as usize,
+        temperature: bundle.request_defaults.temperature,
+    };
 
     let snapshot = ConfigSnapshot::new(runtime, chat_engine);
 
@@ -129,19 +188,77 @@ pub async fn get_all_configs() -> Result<ConfigSnapshot, String> {
     Ok(snapshot)
 }
 
+/**
+ * Returns the persisted audio device configuration.
+ * File: <app_data_dir>/audio_device_config.json
+ * Returns default values if file does not exist.
+ */
+#[tauri::command]
+pub async fn get_audio_device_config(app: AppHandle) -> Result<AudioDeviceConfig, String> {
+    let data_dir = app
+        .path()
+        .app_data_dir()
+        .map_err(|e| format!("app_data_dir error: {}", e))?;
+
+    let config_path = data_dir.join("audio_device_config.json");
+
+    if config_path.exists() {
+        let content = std::fs::read_to_string(&config_path)
+            .map_err(|e| format!("Read error: {}", e))?;
+        serde_json::from_str::<AudioDeviceConfig>(&content)
+            .map_err(|e| format!("Parse error: {}", e))
+    } else {
+        Ok(AudioDeviceConfig::default())
+    }
+}
+
+/**
+ * Persists the audio device configuration to disk.
+ * File: <app_data_dir>/audio_device_config.json
+ */
+#[tauri::command]
+pub async fn save_audio_device_config(
+    app: AppHandle,
+    config: AudioDeviceConfig,
+) -> Result<(), String> {
+    let data_dir = app
+        .path()
+        .app_data_dir()
+        .map_err(|e| format!("app_data_dir error: {}", e))?;
+
+    std::fs::create_dir_all(&data_dir)
+        .map_err(|e| format!("mkdir error: {}", e))?;
+
+    let config_path = data_dir.join("audio_device_config.json");
+    let content = serde_json::to_string_pretty(&config)
+        .map_err(|e| format!("Serialize error: {}", e))?;
+
+    std::fs::write(&config_path, content)
+        .map_err(|e| format!("Write error: {}", e))?;
+
+    log::info!(
+        "[CONFIG] audio_device_config saved: input={} output={}",
+        config.input_device_id, config.output_device_id
+    );
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    #[tokio::test]
-    async fn test_get_all_configs() {
-        let result = get_all_configs().await;
-        assert!(result.is_ok());
+    #[test]
+    fn test_build_runtime_config_uses_live_secrets_state() {
+        let secrets = SecureSecretsEngine::default();
+        let runtime = build_runtime_config(
+            "http://127.0.0.1:11434".to_string(),
+            "gemma2:2b".to_string(),
+            &secrets,
+        );
 
-        let snapshot = result.expect("config snapshot retrieval should succeed");
-        assert_eq!(snapshot.version, env!("CARGO_PKG_VERSION"));
-        assert!(!snapshot.runtime.ollama_url.is_empty());
-        assert!(!snapshot.runtime.ollama_model.is_empty());
+        assert!(!runtime.ollama_url.is_empty());
+        assert!(!runtime.ollama_model.is_empty());
+        assert!(!runtime.secrets_mode.is_empty());
     }
 
     #[test]

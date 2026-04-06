@@ -10,8 +10,22 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { describe, test, expect, beforeEach, vi } from 'vitest';
+import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
 import { chatEngine } from '@/services/ai/chatEngine';
+import { memoryIntegration } from '@/services/ai/memoryIntegration';
+import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
+
+const EMPTY_MEMORY_CONTEXT = {
+  activeProjects: [],
+  recentDecisions: [],
+  relevantKnowledge: [],
+  activeRituals: [],
+  timeline: [],
+};
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 describe('ChatEngine — calculateImportance', () => {
   test('reflection mode returns high importance (0.8)', () => {
@@ -199,5 +213,96 @@ describe('ChatEngine — edge cases', () => {
     // @ts-expect-error: accessing private method for testing with invalid mode
     const importance = chatEngine.calculateImportance('unknown_mode', 'Test');
     expect(importance).toBe(0.3); // Fallback
+  });
+});
+
+describe('ChatEngine — ordered memory persistence truth', () => {
+  test('skips cognitive save when persistent memory write fails', async () => {
+    const persistentSpy = vi
+      .spyOn(memoryIntegration, 'saveInteraction')
+      .mockRejectedValue(new Error('persistent-write-failed'));
+    const cognitiveSpy = vi
+      .spyOn(cognitiveOmega, 'saveInteraction')
+      .mockResolvedValue(undefined);
+
+    // @ts-expect-error: testing private method directly
+    const result = await chatEngine.saveMemoryArtifacts({
+      conversationId: 'conv_test',
+      userMessage: 'Message utilisateur',
+      assistantResponse: 'Reponse assistant',
+      mode: 'default',
+      memoryContext: EMPTY_MEMORY_CONTEXT,
+      pipelineStartTime: Date.now(),
+    });
+
+    expect(result).toMatchObject({
+      persistentStatus: 'rejected',
+      cognitiveStatus: 'skipped',
+      autoHealed: true,
+    });
+    expect(persistentSpy).toHaveBeenCalledTimes(1);
+    expect(cognitiveSpy).not.toHaveBeenCalled();
+  });
+
+  test('runs cognitive save only after persistent memory succeeds', async () => {
+    const steps: string[] = [];
+
+    const persistentSpy = vi
+      .spyOn(memoryIntegration, 'saveInteraction')
+      .mockImplementation(async () => {
+        steps.push('persistent');
+      });
+    const cognitiveSpy = vi
+      .spyOn(cognitiveOmega, 'saveInteraction')
+      .mockImplementation(async () => {
+        steps.push('cognitive');
+      });
+
+    // @ts-expect-error: testing private method directly
+    const result = await chatEngine.saveMemoryArtifacts({
+      conversationId: 'conv_test',
+      userMessage: 'Message utilisateur',
+      assistantResponse: 'Reponse assistant',
+      mode: 'default',
+      memoryContext: EMPTY_MEMORY_CONTEXT,
+      pipelineStartTime: Date.now(),
+      provider: 'ollama',
+      model: 'llama3.2',
+    });
+
+    expect(result).toMatchObject({
+      persistentStatus: 'fulfilled',
+      cognitiveStatus: 'fulfilled',
+      autoHealed: false,
+    });
+    expect(persistentSpy).toHaveBeenCalledTimes(1);
+    expect(cognitiveSpy).toHaveBeenCalledTimes(1);
+    expect(steps).toEqual(['persistent', 'cognitive']);
+  });
+});
+
+describe('ChatEngine — deferred trace start', () => {
+  test('resolves trace id without throwing when cognitive trace starts', async () => {
+    const traceSpy = vi
+      .spyOn(cognitiveOmega, 'startTrace')
+      .mockResolvedValue('trace-123');
+
+    // @ts-expect-error: testing private helper directly
+    const traceId = await chatEngine.startTraceDeferred('conv_test', 4, 'Bonjour');
+
+    expect(traceSpy).toHaveBeenCalledWith('conv_test', 4, 'Bonjour');
+    expect(traceId).toBe('trace-123');
+  });
+
+  test('returns undefined when cognitive trace start fails', async () => {
+    const traceSpy = vi
+      .spyOn(cognitiveOmega, 'startTrace')
+      .mockRejectedValue(new Error('trace-failed'));
+
+    // @ts-expect-error: testing private helper directly
+    const traceId = await chatEngine.startTraceDeferred('conv_test', 4, 'Bonjour');
+
+    expect(traceSpy).toHaveBeenCalledWith('conv_test', 4, 'Bonjour');
+    expect(traceId).toBeUndefined();
   });
 });

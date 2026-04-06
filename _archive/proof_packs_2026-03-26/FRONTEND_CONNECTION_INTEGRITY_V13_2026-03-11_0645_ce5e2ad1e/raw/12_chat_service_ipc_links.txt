@@ -1,0 +1,18 @@
+10:import { invokeWithRetry, LONG_COMMAND_OPTIONS } from '@/lib/serviceInvoker';
+11:import { validateIpcPayload } from '@/lib/ipcContract';
+13:import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
+309:      const response = await invokeWithRetry<StartConversationResponse>(
+310:        'create_new_conversation',
+348:    if (!isTauriRuntimeAvailable()) {
+428:      const payload = validateIpcPayload('conversation_generate', {
+439:      const backendResponse = await invokeWithRetry<any>(
+569:  async sendMessageLegacy(
+575:      throw new Error('No messages provided to sendMessageLegacy');
+617:    if (!isTauriRuntimeAvailable()) {
+950:      const rawResult = await invokeWithRetry<unknown>(
+1041:      return await invokeWithRetry<string[]>(
+1062:      return await invokeWithRetry(
+1083:      return await invokeWithRetry<ChatMessage[]>(
+1099:      await invokeWithRetry<void>(
+1117:      return await invokeWithRetry<ChatMessage[]>(
+1133:      return await invokeWithRetry<string>(

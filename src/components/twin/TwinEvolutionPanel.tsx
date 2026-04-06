@@ -33,6 +33,7 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
     isLoading: identityLoading,
     coreValues,
     humanStyle,
+    error: identityError,
   } = useTwinIdentity();
   const {
     fusionIndex,
@@ -44,6 +45,7 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
     recalculateFusion,
     transitionPhase,
     reinforceValue,
+    error: evolutionError,
   } = useTwinEvolution();
 
   const [activeTab, setActiveTab] = useState<'fusion' | 'values' | 'evolution' | 'admin'>(
@@ -51,6 +53,7 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
   );
 
   const isLoading = identityLoading || evolutionLoading;
+  const hookError = identityError ?? evolutionError ?? null;
 
   if (isLoading) {
     return (
@@ -83,7 +86,23 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
   }
 
   return (
-    <div className="twin-panel">
+    <div className="twin-panel" data-testid="twin-evolution-panel">
+      {/* Error banner */}
+      {hookError && (
+        <div
+          style={{
+            background: '#4a1a1a',
+            color: '#ff6b6b',
+            border: '1px solid #ff4444',
+            borderRadius: 6,
+            padding: '8px 12px',
+            margin: '8px 0',
+            fontWeight: 500,
+          }}
+        >
+          ❌ {hookError}
+        </div>
+      )}
       {/* Header */}
       <div className="twin-panel__header">
         <div className="twin-panel__title">
@@ -93,33 +112,49 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
             <p className="twin-panel__signature">{identity?.signature}</p>
           </div>
         </div>
-        <div className="twin-panel__version">v{identity?.version}</div>
+        <div className="twin-panel__version">v{identity?.version ?? 'N/A'}</div>
       </div>
 
       {/* Tabs */}
-      <div className="twin-panel__tabs">
+      <div className="twin-panel__tabs" role="tablist" aria-label="Navigation Twin">
         <button
+          role="tab"
+          aria-selected={activeTab === 'fusion'}
           className={`twin-panel__tab ${activeTab === 'fusion' ? 'twin-panel__tab--active' : ''}`}
           onClick={() => setActiveTab('fusion')}
+          aria-label="Onglet Fusion"
+          data-testid="twin-tab-fusion"
         >
           🔗 Fusion
         </button>
         <button
+          role="tab"
+          aria-selected={activeTab === 'values'}
           className={`twin-panel__tab ${activeTab === 'values' ? 'twin-panel__tab--active' : ''}`}
           onClick={() => setActiveTab('values')}
+          aria-label="Onglet Valeurs"
+          data-testid="twin-tab-values"
         >
           💎 Valeurs
         </button>
         <button
+          role="tab"
+          aria-selected={activeTab === 'evolution'}
           className={`twin-panel__tab ${activeTab === 'evolution' ? 'twin-panel__tab--active' : ''}`}
           onClick={() => setActiveTab('evolution')}
+          aria-label="Onglet Évolution"
+          data-testid="twin-tab-evolution"
         >
           📈 Évolution
         </button>
         {isAdmin && (
           <button
+            role="tab"
+            aria-selected={activeTab === 'admin'}
             className={`twin-panel__tab ${activeTab === 'admin' ? 'twin-panel__tab--active' : ''}`}
             onClick={() => setActiveTab('admin')}
+            aria-label="Onglet Administration"
+            data-testid="twin-tab-admin"
           >
             ⚙️ Admin
           </button>
@@ -160,7 +195,12 @@ interface FusionTabProps {
 }
 
 const FusionTab: React.FC<FusionTabProps> = ({ fusionIndex, humanStyle }) => {
-  if (!fusionIndex) return null;
+  if (!fusionIndex)
+    return (
+      <div className="twin-tab__empty" data-testid="twin-fusion-empty">
+        Données de fusion non disponibles
+      </div>
+    );
 
   const alignments = [
     { label: 'Valeurs', value: fusionIndex.valueAlignment, icon: '💎' },
@@ -270,11 +310,15 @@ interface ValuesTabProps {
 
 const ValuesTab: React.FC<ValuesTabProps> = ({ coreValues, onReinforce }) => {
   const [reinforcing, setReinforcing] = useState<string | null>(null);
+  const [reinforceError, setReinforceError] = useState<string | null>(null);
 
   const handleReinforce = async (valueName: string) => {
     setReinforcing(valueName);
+    setReinforceError(null);
     try {
       await onReinforce(valueName);
+    } catch (e: unknown) {
+      setReinforceError(e instanceof Error ? e.message : 'Erreur lors du renforcement');
     } finally {
       setReinforcing(null);
     }
@@ -283,6 +327,20 @@ const ValuesTab: React.FC<ValuesTabProps> = ({ coreValues, onReinforce }) => {
   return (
     <div className="twin-tab twin-tab--values">
       <h3>Valeurs Fondamentales (Inviolables)</h3>
+      {reinforceError && (
+        <div
+          style={{
+            background: '#4a1a1a',
+            color: '#ff6b6b',
+            border: '1px solid #ff4444',
+            borderRadius: 4,
+            padding: '6px 10px',
+            marginBottom: 8,
+          }}
+        >
+          ❌ {reinforceError}
+        </div>
+      )}
       <div className="twin-values__list">
         {coreValues.map(value => (
           <div key={value.name} className="twin-value">
@@ -443,12 +501,20 @@ interface AdminTabProps {
 
 const AdminTab: React.FC<AdminTabProps> = ({ onRecalculate, onTransition }) => {
   const [isWorking, setIsWorking] = useState(false);
+  const [feedback, setFeedback] = useState<string | null>(null);
+
+  const showFeedback = (msg: string) => {
+    setFeedback(msg);
+    setTimeout(() => setFeedback(null), 4000);
+  };
 
   const handleRecalculate = async () => {
     setIsWorking(true);
     try {
       const score = await onRecalculate();
-      console.log('[Admin] New fusion score:', score);
+      showFeedback(`✅ FusionIndex recalculé: ${score.toFixed(2)}`);
+    } catch (e: unknown) {
+      showFeedback(`❌ Erreur: ${e instanceof Error ? e.message : String(e)}`);
     } finally {
       setIsWorking(false);
     }
@@ -458,6 +524,9 @@ const AdminTab: React.FC<AdminTabProps> = ({ onRecalculate, onTransition }) => {
     setIsWorking(true);
     try {
       await onTransition(true);
+      showFeedback('✅ Transition de phase effectuée');
+    } catch (e: unknown) {
+      showFeedback(`❌ Erreur: ${e instanceof Error ? e.message : String(e)}`);
     } finally {
       setIsWorking(false);
     }
@@ -472,6 +541,20 @@ const AdminTab: React.FC<AdminTabProps> = ({ onRecalculate, onTransition }) => {
       </p>
 
       <div className="twin-admin__actions">
+        {feedback && (
+          <div
+            style={{
+              marginBottom: 8,
+              padding: '6px 10px',
+              borderRadius: 4,
+              background: feedback.startsWith('❌') ? '#4a1a1a' : '#1a3a1a',
+              color: feedback.startsWith('❌') ? '#ff6b6b' : '#6bff6b',
+              border: `1px solid ${feedback.startsWith('❌') ? '#ff4444' : '#44ff44'}`,
+            }}
+          >
+            {feedback}
+          </div>
+        )}
         <button
           className="twin-admin__action"
           onClick={handleRecalculate}

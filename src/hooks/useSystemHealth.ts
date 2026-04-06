@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v25.3.2 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v25.3.2 — USE SYSTEM HEALTH (Unified Dashboard Hook)
+ *   TITANE∞ v30.0.0 — USE SYSTEM HEALTH (Unified Dashboard Hook)
  *   Health monitoring: Conversation + Memory + Singularity + System
  *   Real-time metrics, alerts, auto-recovery
  * ═══════════════════════════════════════════════════════════════════
@@ -13,6 +13,7 @@
 
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
+import { normalizePersistentMemoryStats } from '@/services/memory/persistentMemory.normalize';
 
 // ═══════════════════════════════════════════════════════════════════
 // CONSTANTS
@@ -157,7 +158,7 @@ function generateAlerts(health: UnifiedHealth): HealthAlert[] {
       component: 'memory',
       message: `High fragmentation: ${(health.memory.fragmentation * 100).toFixed(1)}%`,
       timestamp: Date.now(),
-      auto_recoverable: true,
+      auto_recoverable: false,
     });
   }
 
@@ -185,12 +186,12 @@ function generateAlerts(health: UnifiedHealth): HealthAlert[] {
     });
   }
 
-  if (health.system.memory_usage_mb > 1024) {
+  if ((health?.system?.memory_usage_mb ?? 0) > 1024) {
     alerts.push({
-      id: `sys_mem_${Date.now()}`,
-      severity: health.system.memory_usage_mb > 2048 ? 'critical' : 'warning',
+      id: `high-memory-${Date.now()}`,
       component: 'system',
-      message: `High memory usage: ${health.system.memory_usage_mb.toFixed(0)}MB`,
+      severity: (health?.system?.memory_usage_mb ?? 0) > 2048 ? 'critical' : 'warning',
+      message: `High memory usage: ${(health?.system?.memory_usage_mb ?? 0).toFixed(0)}MB`,
       timestamp: Date.now(),
       auto_recoverable: true,
     });
@@ -223,6 +224,54 @@ function determineHealthStatus(
   return 'healthy';
 }
 
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
+}
+
+function derivePersistentMemoryHealth(payload: unknown): MemoryHealth {
+  if (!payload) {
+    return {
+      status: 'unknown',
+      total_entries: 0,
+      total_size_bytes: 0,
+      compression_ratio: 0,
+      last_compression: null,
+      fragmentation: 0,
+    };
+  }
+
+  const stats = normalizePersistentMemoryStats(payload);
+  const totalEntries =
+    (stats.countByLevel.session ?? 0) +
+    (stats.countByLevel.intermediate ?? 0) +
+    (stats.countByLevel.long_term ?? 0);
+
+  const status =
+    stats.health.status === 'healthy' ||
+    stats.health.status === 'degraded' ||
+    stats.health.status === 'critical'
+      ? stats.health.status
+      : 'unknown';
+
+  const healthScore =
+    status === 'healthy'
+      ? 1
+      : status === 'degraded'
+        ? 0.6
+        : status === 'critical'
+          ? 0.25
+          : 0;
+
+  return {
+    status,
+    total_entries: totalEntries,
+    total_size_bytes: stats.totalSize,
+    compression_ratio: 1,
+    last_compression: stats.health.lastIntegrityCheck || null,
+    fragmentation: clamp(1 - healthScore, 0, 1),
+  };
+}
+
 // ═══════════════════════════════════════════════════════════════════
 // HOOK PRINCIPAL
 // ═══════════════════════════════════════════════════════════════════
@@ -248,11 +297,7 @@ export function useSystemHealth(): UseSystemHealthReturn {
           avg_response_time_ms: number;
           error_rate: number;
         } | null>,
-        tauriClient.memoryGetStats().catch(() => null) as Promise<{
-          total_entries: number;
-          total_size_bytes: number;
-          health_score: number;
-        } | null>,
+        tauriClient.persistentMemoryGetStats().catch(() => null) as Promise<unknown>,
         tauriClient.engineGetSingularityState().catch(() => null) as Promise<{
           engines: Array<{ name: string; status: string }>;
         } | null>,
@@ -287,28 +332,7 @@ export function useSystemHealth(): UseSystemHealthReturn {
           };
 
       // Build memory health
-      const memoryHealth: MemoryHealth = memStats
-        ? {
-            status:
-              memStats.health_score > 0.8
-                ? 'healthy'
-                : memStats.health_score > 0.5
-                  ? 'degraded'
-                  : 'critical',
-            total_entries: memStats.total_entries,
-            total_size_bytes: memStats.total_size_bytes,
-            compression_ratio: 1.0,
-            last_compression: null,
-            fragmentation: 1.0 - memStats.health_score,
-          }
-        : {
-            status: 'unknown',
-            total_entries: 0,
-            total_size_bytes: 0,
-            compression_ratio: 0,
-            last_compression: null,
-            fragmentation: 0,
-          };
+      const memoryHealth: MemoryHealth = derivePersistentMemoryHealth(memStats);
 
       // Build singularity health
       const singularityHealth: SingularityHealth = singState
@@ -432,7 +456,9 @@ export function useSystemHealth(): UseSystemHealthReturn {
             await tauriClient.conversationReset();
             break;
           case 'memory':
-            await tauriClient.memoryCompress();
+            throw new Error(
+              'Persistent memory auto-recovery is not available through the legacy memory evolution engine.'
+            );
             break;
           case 'singularity':
             await tauriClient.engineSingularityReset();

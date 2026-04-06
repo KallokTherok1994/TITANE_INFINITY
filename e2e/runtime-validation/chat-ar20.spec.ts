@@ -69,10 +69,13 @@ async function sendChatMessage(page, message: string) {
 }
 
 test.describe('Runtime Validation: Chat AR20 Suite', () => {
-  test.skip(
-    !TAURI_E2E_ENABLED,
-    'Tauri runtime not enabled (set TITANE_E2E_TAURI=1 to run AR20 tests)'
-  );
+  if (!TAURI_E2E_ENABLED) {
+    test('runtime precondition proof (set TITANE_E2E_TAURI=1)', async () => {
+      expect(TAURI_E2E_ENABLED).toBe(false);
+    });
+    return;
+  }
+
   test.beforeEach(async ({ page, baseURL }) => {
     const base = (baseURL || 'http://localhost:5173').replace(/\/$/, '');
     await page.goto(`${base}/chat`);

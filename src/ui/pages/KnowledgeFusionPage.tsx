@@ -26,6 +26,9 @@ interface DocumentMetadata {
   keywords: string[];
 }
 
+const MANUAL_PATH_ENTRY_NOTE =
+  "PARTIAL: saisie manuelle du chemin uniquement. Aucun selecteur de fichier Tauri n'est relie dans cette build.";
+
 const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
   const [selectedFile, setSelectedFile] = useState<string>('');
   const [detectedFormat, setDetectedFormat] = useState<string | null>(null);
@@ -36,8 +39,7 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
 
   const handleFileSelect = useCallback(async () => {
     try {
-      // In real implementation, use Tauri file picker
-      const filePath = prompt('Chemin du fichier :');
+      const filePath = prompt('Entrez un chemin de document :');
       if (!filePath) return;
 
       setSelectedFile(filePath);
@@ -107,10 +109,10 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
   }, []);
 
   return (
-    <div className="bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-900 p-6">
+    <div className="bg-linear-to-br from-gray-900 via-indigo-900 to-gray-900 p-6">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-600">
+        <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-purple-600">
           Fusion des Connaissances
         </h1>
         <p className="text-gray-400 mt-2">
@@ -130,14 +132,18 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
             <div className="space-y-4">
               <button
                 onClick={handleFileSelect}
-                className="w-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-semibold py-3 rounded-lg transition-all"
+                className="w-full bg-linear-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-semibold py-3 rounded-lg transition-all"
               >
-                📁 Sélectionner un Document
+                📁 Entrer un chemin de document
               </button>
+
+              <div className="text-xs text-amber-300" role="note">
+                {MANUAL_PATH_ENTRY_NOTE}
+              </div>
 
               {selectedFile && (
                 <div className="bg-gray-700/30 rounded-xl p-4 border border-gray-600/50">
-                  <div className="text-gray-400 text-sm mb-1">Fichier sélectionné</div>
+                  <div className="text-gray-400 text-sm mb-1">Chemin saisi</div>
                   <div className="text-white font-mono text-sm break-all">
                     {selectedFile}
                   </div>
@@ -156,7 +162,7 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
               <button
                 onClick={handleParse}
                 disabled={!selectedFile || isProcessing}
-                className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold py-3 rounded-lg transition-all"
+                className="w-full bg-linear-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold py-3 rounded-lg transition-all"
               >
                 {isProcessing ? '⏳ Traitement...' : '🚀 Analyser & Classifier'}
               </button>
@@ -199,7 +205,7 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
                   <div className="flex items-center gap-2">
                     <div className="flex-1 bg-gray-600 rounded-full h-2">
                       <div
-                        className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-full h-2 transition-all"
+                        className="bg-linear-to-r from-green-500 to-emerald-500 rounded-full h-2 transition-all"
                         style={{ width: `${parsedDoc.confidence * 100}%` }}
                       />
                     </div>

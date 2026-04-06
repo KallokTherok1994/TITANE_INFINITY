@@ -5,8 +5,10 @@
  * Test coverage: Memory operations, Goal tracking, Consistency validation
  */
 
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { CognitiveStrategy } from '../../strategies/CognitiveStrategy';
+import { memoryIntegration } from '@/services/ai/memoryIntegration';
+import { tauriClient } from '@/lib/tauriClient';
 
 describe('CognitiveStrategy', () => {
   let strategy: CognitiveStrategy;
@@ -17,6 +19,7 @@ describe('CognitiveStrategy', () => {
 
   afterEach(async () => {
     await strategy.shutdown();
+    vi.restoreAllMocks();
   });
 
   // ───────────────────────────────────────────────────────────────────────
@@ -58,6 +61,46 @@ describe('CognitiveStrategy', () => {
       await strategy.initialize();
     });
 
+    it('should persist active memory before cognitive memory indexing', async () => {
+      const order: string[] = [];
+      const persistSpy = vi
+        .spyOn(memoryIntegration, 'saveStructuredEntry')
+        .mockImplementation(async () => {
+          order.push('persistent');
+        });
+      const cognitiveSpy = vi
+        // @ts-expect-error: testing private delegate for ordering
+        .spyOn(strategy.cognitiveOrchestrator, 'storeTextMemory')
+        .mockImplementation(async () => {
+          order.push('cognitive');
+          return 'semantic-memory-id';
+        });
+
+      const memoryId = await strategy.storeMemory('User prefers dark mode', 0.8);
+
+      expect(memoryId).toBe('semantic-memory-id');
+      expect(persistSpy).toHaveBeenCalledTimes(1);
+      expect(cognitiveSpy).toHaveBeenCalledTimes(1);
+      expect(order).toEqual(['persistent', 'cognitive']);
+    });
+
+    it('should skip cognitive memory indexing when active persistent write fails', async () => {
+      const persistSpy = vi
+        .spyOn(memoryIntegration, 'saveStructuredEntry')
+        .mockRejectedValue(new Error('persistent-write-failed'));
+      const cognitiveSpy = vi
+        // @ts-expect-error: testing private delegate skip behavior
+        .spyOn(strategy.cognitiveOrchestrator, 'storeTextMemory')
+        .mockResolvedValue('semantic-memory-id');
+
+      await expect(strategy.storeMemory('Important configuration', 0.9)).rejects.toThrow(
+        'persistent-write-failed'
+      );
+
+      expect(persistSpy).toHaveBeenCalledTimes(1);
+      expect(cognitiveSpy).not.toHaveBeenCalled();
+    });
+
     it('should store memory', async () => {
       const memoryId = await strategy.storeMemory('User prefers dark mode', 0.8);
 
@@ -97,6 +140,85 @@ describe('CognitiveStrategy', () => {
 
       expect(memories.every(m => typeof m.score === 'number')).toBe(true);
     });
+
+    it('should prefer persistent memory retrieval over cognitive enrichment', async () => {
+      const readSpy = vi.spyOn(tauriClient, 'persistentMemoryRead').mockResolvedValue({
+        entries: [
+          {
+            id: 'entry-1',
+            level: 'intermediate',
+            title: 'Atlas roadmap',
+            content: 'Roadmap Atlas sprint stabilisation',
+            contentType: 'project_context',
+            topic: 'project',
+            importance: 4,
+            tags: ['atlas'],
+            status: 'active',
+            metadata: {
+              createdAt: Date.now(),
+              updatedAt: Date.now(),
+              lastAccessedAt: Date.now(),
+              accessCount: 1,
+              schemaVersion: 'v1',
+            },
+            sourceEntryIds: [],
+            relevanceScore: 0.9,
+            expiresAt: Date.now() + 1000,
+            promotable: true,
+          },
+        ],
+        totalCount: 1,
+        queryTime: 3,
+        relevanceScores: { 'entry-1': 0.9 },
+      });
+      const cognitiveSpy = vi
+        // @ts-expect-error: testing private delegate skip behavior
+        .spyOn(strategy.cognitiveOrchestrator, 'enrichContext')
+        .mockResolvedValue({
+          memories: '\n[MEMOIRES PERTINENTES]\n1. Fallback cognitive (pertinence: 80%)\n',
+          goals: '',
+          facts: '',
+          combined: '',
+          metadata: { memoryCount: 1, goalCount: 0, factCount: 0 },
+        });
+
+      const memories = await strategy.retrieveMemories('atlas', 5);
+
+      expect(readSpy).toHaveBeenCalledTimes(1);
+      expect(cognitiveSpy).not.toHaveBeenCalled();
+      expect(memories).toEqual([
+        expect.objectContaining({
+          content: 'Atlas roadmap',
+        }),
+      ]);
+    });
+
+    it('should fallback to cognitive enrichment when persistent retrieval fails', async () => {
+      const readSpy = vi
+        .spyOn(tauriClient, 'persistentMemoryRead')
+        .mockRejectedValue(new Error('persistent-read-failed'));
+      const cognitiveSpy = vi
+        // @ts-expect-error: testing private delegate fallback behavior
+        .spyOn(strategy.cognitiveOrchestrator, 'enrichContext')
+        .mockResolvedValue({
+          memories: '\n[MEMOIRES PERTINENTES]\n1. Fallback cognitive (pertinence: 80%)\n',
+          goals: '',
+          facts: '',
+          combined: '',
+          metadata: { memoryCount: 1, goalCount: 0, factCount: 0 },
+        });
+
+      const memories = await strategy.retrieveMemories('atlas', 5);
+
+      expect(readSpy).toHaveBeenCalledTimes(1);
+      expect(cognitiveSpy).toHaveBeenCalledTimes(1);
+      expect(memories).toEqual([
+        {
+          content: 'Fallback cognitive',
+          score: 0.8,
+        },
+      ]);
+    });
   });
 
   // ───────────────────────────────────────────────────────────────────────
@@ -125,6 +247,50 @@ describe('CognitiveStrategy', () => {
       await expect(
         strategy.processConversation(messages as any)
       ).resolves.toBeUndefined();
+    });
+
+    it('should persist to active memory before cognitive save', async () => {
+      const order: string[] = [];
+      const persistSpy = vi
+        .spyOn(memoryIntegration, 'saveInteraction')
+        .mockImplementation(async () => {
+          order.push('persistent');
+        });
+      const cognitiveSpy = vi
+        // @ts-expect-error: testing private delegate for ordering
+        .spyOn(strategy.cognitiveOrchestrator, 'saveInteraction')
+        .mockImplementation(async () => {
+          order.push('cognitive');
+        });
+
+      await strategy.processConversation([
+        { role: 'user', content: 'Hello' },
+        { role: 'assistant', content: 'Hi there!' },
+      ] as any);
+
+      expect(persistSpy).toHaveBeenCalledTimes(1);
+      expect(cognitiveSpy).toHaveBeenCalledTimes(1);
+      expect(order).toEqual(['persistent', 'cognitive']);
+    });
+
+    it('should skip cognitive save when active persistent memory write fails', async () => {
+      const persistSpy = vi
+        .spyOn(memoryIntegration, 'saveInteraction')
+        .mockRejectedValue(new Error('persistent-write-failed'));
+      const cognitiveSpy = vi
+        // @ts-expect-error: testing private delegate skip behavior
+        .spyOn(strategy.cognitiveOrchestrator, 'saveInteraction')
+        .mockResolvedValue(undefined);
+
+      await expect(
+        strategy.processConversation([
+          { role: 'user', content: 'Hello' },
+          { role: 'assistant', content: 'Hi there!' },
+        ] as any)
+      ).rejects.toThrow('persistent-write-failed');
+
+      expect(persistSpy).toHaveBeenCalledTimes(1);
+      expect(cognitiveSpy).not.toHaveBeenCalled();
     });
   });
 

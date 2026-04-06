@@ -1,5 +1,5 @@
 <!--
-  TITANE_INFINITY v26.3.0 — Proprietary License
+  TITANE_INFINITY v29.0.0 — Proprietary License
   © 2025-2026 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
   Unauthorized use, reproduction, modification, distribution or extraction
   of the software, its architecture, engines or components is strictly prohibited.
@@ -31,6 +31,22 @@
         }
       };
 
+      // ⚠️ DIAGNOSTIC: Send errors to Rust backend via IPC for visibility in logs
+      var sendErrorToBackend = function (payload) {
+        try {
+          if (window.__TAURI_INTERNALS__ && window.__TAURI_INTERNALS__.invoke) {
+            var marker = 'FRONTEND_ERROR|' + JSON.stringify(payload).substring(0, 500);
+            window.__TAURI_INTERNALS__
+              .invoke('boot_marker_log', { marker: marker })
+              .catch(function () {
+                // ignore IPC failures
+              });
+          }
+        } catch {
+          // ignore
+        }
+      };
+
       // Capture errors ASAP
       window.onerror = function (msg, url, line, col, err) {
         var payload = {
@@ -46,6 +62,7 @@
         window.__TITANE_BOOT__.errors = window.__TITANE_BOOT__.errors || [];
         window.__TITANE_BOOT__.errors.push(payload);
         pushBootError(payload);
+        sendErrorToBackend(payload); // ⚠️ DIAGNOSTIC: Send to Rust logs
         console.error('[BOOT-ERROR]', msg);
       };
       window.addEventListener('unhandledrejection', function (evt) {
@@ -60,13 +77,94 @@
         window.__TITANE_BOOT__.errors = window.__TITANE_BOOT__.errors || [];
         window.__TITANE_BOOT__.errors.push(payload);
         pushBootError(payload);
+        sendErrorToBackend(payload); // ⚠️ DIAGNOSTIC: Send to Rust logs
         console.error('[BOOT-REJECTION]', evt.reason);
       });
+
+      // Anti-silence guard: if React entry never executes, avoid infinite loading splash.
+      (function () {
+        var BOOT_HTML_RECOVERY_ONCE_KEY = 'titane_boot_html_recovery_once';
+        var isDevHost =
+          window.location.protocol === 'http:' &&
+          (window.location.hostname === 'localhost' ||
+            window.location.hostname === '127.0.0.1');
+        var BOOT_HTML_GUARD_TIMEOUT_MS = isDevHost ? 120000 : 15000;
+
+        var clearRecoveryGuard = function () {
+          try {
+            window.sessionStorage.removeItem(BOOT_HTML_RECOVERY_ONCE_KEY);
+          } catch {
+            // ignore
+          }
+        };
+
+        window.addEventListener('titane:boot-ready', clearRecoveryGuard, { once: true });
+
+        window.setTimeout(function () {
+          try {
+            var boot = window.__TITANE_BOOT__ || {};
+            var entryTsStarted = Boolean(boot.entry_ts);
+            var mainTsxStarted = Boolean(boot.main_tsx);
+            var ready = Boolean(window.__TITANE_BOOT_READY__);
+            var splash = document.querySelector('.loading-splash');
+
+            if (entryTsStarted || mainTsxStarted || ready || !splash) {
+              if (ready) {
+                clearRecoveryGuard();
+              }
+              return;
+            }
+
+            var recoveryAlreadyAttempted = false;
+            try {
+              recoveryAlreadyAttempted =
+                window.sessionStorage.getItem(BOOT_HTML_RECOVERY_ONCE_KEY) === '1';
+            } catch {
+              recoveryAlreadyAttempted = false;
+            }
+
+            if (!recoveryAlreadyAttempted) {
+              try {
+                window.sessionStorage.setItem(BOOT_HTML_RECOVERY_ONCE_KEY, '1');
+              } catch {
+                // ignore
+              }
+              console.error(
+                '[BOOT_HTML_GUARD] React entry not started after ' +
+                  BOOT_HTML_GUARD_TIMEOUT_MS +
+                  'ms. Reloading once.'
+              );
+              window.location.reload();
+              return;
+            }
+
+            splash.innerHTML =
+              "<div style='display:flex;flex-direction:column;gap:0.75rem;align-items:center;max-width:680px;text-align:center'>" +
+              "<div style='font-size:1.15rem;font-weight:700;color:#fca5a5'>Chargement bloqué (entrée React non initialisée)</div>" +
+              "<div style='font-size:0.95rem;color:#cbd5e1'>Le noyau backend est lancé, mais l'interface n'a pas terminé son bootstrap frontend.</div>" +
+              "<button id='titane-html-guard-reload' style='padding:0.5rem 0.9rem;border-radius:8px;border:1px solid rgba(255,255,255,0.22);background:rgba(255,255,255,0.08);color:#fff;cursor:pointer'>Relancer l'interface</button>" +
+              '</div>';
+
+            var btn = document.getElementById('titane-html-guard-reload');
+            if (btn) {
+              btn.addEventListener('click', function () {
+                window.location.reload();
+              });
+            }
+
+            console.error(
+              '[BOOT_HTML_GUARD] Infinite loading prevented (manual recovery mode).'
+            );
+          } catch (e) {
+            console.error('[BOOT_HTML_GUARD_ERR]', e);
+          }
+        }, BOOT_HTML_GUARD_TIMEOUT_MS);
+      })();
     </script>
 
     <meta charset="UTF-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="./vite.svg" />
+    <link rel="icon" type="image/png" href="/titane-icon.png" />
 
     <!-- PWA: Enhanced viewport with safe-area support -->
     <meta
@@ -76,24 +174,24 @@
 
     <meta
       name="description"
-      content="TITANE∞ v26.3.0 - Cognitive Operating System: Certification P10.4→P11 PASS, Production Ready, Multi-Provider AI, Neural Orchestrator"
+      content="TITANE∞ v29.0.0 - Cognitive Operating System: certified stable release, production-ready, multi-provider AI, Tauri v2, Linux desktop canonical surface"
     />
     <meta
       name="keywords"
       content="cognitive os, ai performance, multi-provider ai, openai gpt-4o, claude 3.5 sonnet, gemini 2.0, neural orchestrator, ollama, local ai, rust backend, react 18, typescript 5, tauri v2, production ready, proprietary"
     />
     <meta name="author" content="Kevin Thibault / Humain Total / TITANE Team" />
-    <meta name="version" content="26.3.0" />
+    <meta name="version" content="29.0.0" />
     <meta name="status" content="Production Ready" />
     <meta name="license" content="Proprietary - See LICENSE.md" />
-    <title>TITANE∞ v26.3.0 - Cognitive Operating System</title>
+    <title>TITANE∞ v29.0.0 - Cognitive Operating System</title>
 
     <!-- PWA: Manifest & iOS Support -->
     <link rel="manifest" href="./manifest.json" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="TITANE" />
-    <link rel="apple-touch-icon" href="./vite.svg" />
+    <meta name="apple-mobile-web-app-title" content="TITANE∞" />
+    <link rel="apple-touch-icon" href="/titane-icon.png" />
 
     <!-- PWA: Theme Color (dynamic with media query) -->
     <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
@@ -103,19 +201,19 @@
     <meta name="msapplication-TileColor" content="#0a0a0a" />
     <meta name="msapplication-config" content="none" />
 
-    <!-- ✅ v35.0.0: CRITICAL CSS - Inlined below for optimal FCP -->
+    <!-- ✅ Current: critical CSS inlined below for optimal FCP -->
 
-    <!-- ✅ v35.0.0: FONTS OPTIMIZATION - System fonts first, web fonts non-blocking -->
+    <!-- ✅ Current: system fonts first, web fonts non-blocking -->
 
-    <!-- ✅ v35.0.0: Local-first (no external preconnect) -->
+    <!-- ✅ Current: local-only asset loading (no external preconnect) -->
 
-    <!-- ✅ v35.0.0: Defer non-critical CSS to avoid render-blocking -->
+    <!-- ✅ Current: non-critical CSS deferred to avoid render-blocking -->
     <!-- NOTE: Main CSS is loaded via src/main.tsx (index.css) with Vite optimization -->
 
     <!-- Mobile-specific meta tags -->
     <meta name="format-detection" content="telephone=no" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="application-name" content="TITANE" />
+    <meta name="application-name" content="TITANE∞" />
 
     <!-- ✨ PHASE 4.3 - Preload removed (SVG not critical for FCP) -->
 
@@ -203,6 +301,6 @@
         </div>
       </div>
     </div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/entry.ts"></script>
   </body>
 </html>

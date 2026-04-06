@@ -10,6 +10,25 @@ cd "$(dirname "$0")/../.."
 # Ensure repo-bundled Node/PNPM tools are available
 export PATH="$PWD/.tools/node/current/bin:$PATH"
 
+# ── Node version guard ─────────────────────────────────────────────
+# Repo requires Node >=20 (.nvmrc: 24, engines.node: ">=20.0.0").
+# Catch mismatches early with an actionable message.
+_node_major=$(node -e "process.stdout.write(String(process.versions.node.split('.')[0]))" 2>/dev/null || echo "0")
+if [ "$_node_major" -lt 20 ]; then
+    echo ""
+    echo "❌ NODE VERSION MISMATCH — DEV_SAFE rail blocked"
+    echo "   Found  : Node v$(node -v 2>/dev/null | tr -d v || echo '?')"
+    echo "   Required: Node >=20  (.nvmrc specifies 24)"
+    echo ""
+    echo "Fix options:"
+    echo "  1. nvm: nvm install 24 && nvm use 24"
+    echo "  2. Repo toolchain: bash scripts/install/setup-local-tools.sh"
+    echo "  3. Direct: https://nodejs.org/en/download/"
+    echo ""
+    exit 1
+fi
+# ──────────────────────────────────────────────────────────────────
+
 # Run cleanup script first
 echo "🧹 Pre-launch cleanup..."
 ./runtime/dev/cleanup.sh

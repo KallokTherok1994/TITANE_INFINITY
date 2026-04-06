@@ -18,6 +18,8 @@ import type {
   ConversationResponse,
   EmotionState,
   ConversationHealthReport,
+  ConversationProviderPreference,
+  OmegaTraceMeta,
 } from '@/services/conversationEngine';
 import {
   processMessage,
@@ -27,7 +29,17 @@ import {
 import { useChatMemory } from './useChatMemory';
 import type { AIMessage } from '@/types';
 import { chatMemoryCompactor } from '@/services/chatMemoryCompactor';
-import type { ProviderDecisionMeta } from '@/types/providerMeta';
+import type {
+  Mode,
+  ProviderClass,
+  ProviderDecisionMeta,
+  ReasonCode,
+} from '@/types/providerMeta';
+import {
+  buildChatContextEnvelope,
+  type ChatContextEnvelope,
+} from '@/services/chat/chatMemorySingleDoor';
+import { readActiveModuleContext } from '@/services/chat/moduleRouteContext';
 
 // ═══════════════════════════════════════════════════════════════════
 // CONSTANTS
@@ -37,6 +49,76 @@ const MAX_RETRIES = 3;
 const RETRY_DELAY_BASE_MS = 1000;
 const DEFAULT_MAX_MESSAGES = 500;
 const DEFAULT_HEALTH_CHECK_INTERVAL_MS = 30000;
+
+function persistMessagesInBackground(
+  saveMessage: (message: AIMessage) => unknown,
+  messages: AIMessage[],
+  failureLabel: string
+): void {
+  void (async () => {
+    try {
+      await Promise.all(messages.map(message => Promise.resolve(saveMessage(message))));
+      chatMemoryCompactor.flushPendingSaves();
+    } catch (persistError) {
+      console.warn(failureLabel, persistError);
+    }
+  })();
+}
+
+function mapRequestedProviderClass(
+  providerPreference: ConversationProviderPreference | undefined
+): ProviderClass {
+  switch (providerPreference) {
+    case 'gemini':
+    case 'openai':
+    case 'claude':
+      return 'remote';
+    case 'ollama':
+      return 'local';
+    default:
+      return 'hybrid';
+  }
+}
+
+export function buildConversationFallbackMeta(
+  errorMessage: string,
+  providerPreference: ConversationProviderPreference | undefined
+): ProviderDecisionMeta {
+  const normalized = errorMessage.toLowerCase();
+
+  let reasonCode: ReasonCode = 'UNKNOWN';
+  let mode: Mode = 'ERROR';
+
+  if (normalized.includes('timeout')) {
+    reasonCode = 'TIMEOUT';
+    mode = 'OFFLINE';
+  } else if (normalized.includes('network')) {
+    reasonCode = 'NETWORK_ERROR';
+    mode = 'OFFLINE';
+  } else if (
+    normalized.includes('provider') ||
+    normalized.includes('ollama') ||
+    normalized.includes('backend') ||
+    normalized.includes('unreachable')
+  ) {
+    reasonCode = 'PROVIDER_UNAVAILABLE';
+    mode = 'ERROR';
+  }
+
+  return {
+    provider_used: providerPreference ?? 'fallback',
+    provider_class: mapRequestedProviderClass(providerPreference),
+    mode,
+    reason_code: reasonCode,
+    latency_ms_total: 0,
+    timeout_ms: 30000,
+    retries: 0,
+    attempts: [],
+    network_used: reasonCode === 'NETWORK_ERROR',
+    cache_hit: false,
+    policy: 'conversation_hook_fallback',
+  };
+}
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
@@ -52,11 +134,24 @@ export interface ConversationMessage {
     emotion?: EmotionState;
     tags?: string[];
     providerMeta?: ProviderDecisionMeta;
+    contextBinding?: {
+      route: string;
+      pageState?: string;
+      fullRoute?: string;
+      moduleId: string;
+      moduleName: string;
+      sequence: number;
+      changeType: 'initial' | 'same-module' | 'module-switch';
+      staleGuard: 'steady' | 'resync';
+      generatedAt: number;
+    };
+    singleDoorTags?: string[];
   };
 }
 
 export interface UseConversationEngineOptions {
   mode?: ConversationMode;
+  providerPreference?: ConversationProviderPreference;
   emotionContext?: EmotionState;
   onResponse?: (response: ConversationResponse) => void;
   onError?: (error: Error) => void;
@@ -92,6 +187,8 @@ export interface UseConversationEngineReturn {
   // Métadonnées
   lastResponse: ConversationResponse | null;
   totalMessages: number;
+  /** OMEGA_AUTO_ORCHESTRATION_CHAIN trace meta from last message (Lock #1) */
+  lastOmegaTraceMeta: OmegaTraceMeta | undefined;
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -219,6 +316,38 @@ export function useConversationEngine(
     }
   }, []);
 
+  const buildSingleDoorEnvelope = useCallback((): ChatContextEnvelope | null => {
+    const activeModuleContext = readActiveModuleContext();
+    if (!activeModuleContext) {
+      return null;
+    }
+
+    return buildChatContextEnvelope({
+      mode: currentMode,
+      conversationId,
+      providerRequested: 'auto',
+      moduleContext: activeModuleContext,
+      inMemoryMessages: messages,
+      lastProviderMeta: lastResponse?.meta,
+    });
+  }, [conversationId, currentMode, lastResponse?.meta, messages]);
+
+  const toContextBinding = useCallback((envelope: ChatContextEnvelope | null) => {
+    if (!envelope) return undefined;
+
+    return {
+      route: envelope.routeContext.route,
+      pageState: envelope.routeContext.pageState,
+      fullRoute: envelope.routeContext.fullRoute,
+      moduleId: envelope.moduleContext.moduleId,
+      moduleName: envelope.moduleContext.moduleName,
+      sequence: envelope.continuity.sequence,
+      changeType: envelope.continuity.changeType,
+      staleGuard: envelope.continuity.staleGuard,
+      generatedAt: envelope.generatedAt,
+    };
+  }, []);
+
   // ═══ SEND MESSAGE (avec Retry Logic) ═══
   const sendMessage = useCallback(
     async (content: string, retryCount = 0): Promise<ConversationResponse | null> => {
@@ -234,12 +363,19 @@ export function useConversationEngine(
       setIsLoading(true);
       setError(null);
 
+      const contextEnvelope = buildSingleDoorEnvelope();
+      const contextBinding = toContextBinding(contextEnvelope);
+
       // Ajouter message utilisateur immédiatement
       const userMessage: ConversationMessage = {
         id: `user-${Date.now()}`,
         role: 'user',
         content,
         timestamp: Date.now(),
+        metadata: {
+          contextBinding,
+          singleDoorTags: contextEnvelope?.memorySingleDoor.tags,
+        },
       };
 
       setMessages(prev => {
@@ -249,21 +385,18 @@ export function useConversationEngine(
         return updated.length > maxMessages ? updated.slice(-maxMessages) : updated;
       });
 
-      // ✅ PERSIST USER MESSAGE IMMEDIATELY
-      try {
-        const userAIMessage: AIMessage = {
-          role: 'user',
-          content: userMessage.content,
-          timestamp: userMessage.timestamp,
-          metadata: {},
-        };
-        await saveMessage(userAIMessage);
-      } catch (persistError) {
-        console.warn(
-          '[useConversationEngine] ⚠️ Failed to persist user message',
-          persistError
-        );
-      }
+      // Keep persistence truthful but out of the request critical path.
+      const userAIMessage: AIMessage = {
+        role: 'user',
+        content: userMessage.content,
+        timestamp: userMessage.timestamp,
+        metadata: userMessage.metadata || {},
+      };
+      persistMessagesInBackground(
+        saveMessage,
+        [userAIMessage],
+        '[useConversationEngine] ⚠️ Failed to persist user message'
+      );
 
       try {
         // Traiter le message via Conversation Engine
@@ -271,6 +404,8 @@ export function useConversationEngine(
           conversationId: conversationId || undefined,
           mode: currentMode,
           emotionContext: options.emotionContext,
+          providerPreference: options.providerPreference,
+          contextEnvelope: contextEnvelope || undefined,
         });
 
         // Mettre à jour conversation ID
@@ -278,17 +413,39 @@ export function useConversationEngine(
           setConversationId(response.conversation_id);
         }
 
+        const noProviderPayload =
+          /no ai provider available/i.test(response.assistant_message) ||
+          response.meta?.reason_code === 'FALLBACK_OFFLINE' ||
+          response.meta?.reason_code === 'PROVIDER_UNAVAILABLE';
+
+        const requestedProvider = options.providerPreference ?? 'auto';
+        const assistantContent = noProviderPayload
+          ? `🤖 TITANE∞ est en mode récupération provider.
+
+Provider demandé: ${requestedProvider}
+Cause runtime: ${response.meta?.reason_code ?? 'UNKNOWN'}
+
+Je n'ai pas pu joindre le provider demandé pour cette requête. La sélection UI est conservée telle quelle pour éviter un fallback silencieux.
+
+Actions immédiates:
+- Vérifie la connexion réseau
+- Vérifie les clés API cloud (Gemini/OpenAI/Claude)
+- Ou démarre Ollama local si tu veux un mode local`
+          : response.assistant_message;
+
         // Ajouter réponse assistant
         const assistantMessage: ConversationMessage = {
           id: response.message_id,
           role: 'assistant',
-          content: response.assistant_message,
+          content: assistantContent,
           timestamp: Date.now(),
           metadata: {
             intention: response.detected_intention,
             emotion: response.detected_emotion,
             tags: response.cognitive_tags,
             providerMeta: response.meta,
+            contextBinding,
+            singleDoorTags: contextEnvelope?.memorySingleDoor.tags,
           },
         };
 
@@ -304,12 +461,13 @@ export function useConversationEngine(
         const reasonCode = response.meta?.reason_code || 'UNKNOWN';
 
         if (mode === 'OFFLINE') {
-          const message =
-            reasonCode !== 'UNKNOWN'
-              ? `Mode hors ligne: ${reasonCode}`
-              : 'Mode hors ligne (raison inconnue)';
-          setError(message);
-          logger.warn('[useConversationEngine] OFFLINE mode', { reasonCode });
+          // A successful offline fallback remains a truthful response path.
+          // Provider tags on the assistant message already expose OFFLINE / reason_code.
+          setError(null);
+          logger.warn('[useConversationEngine] OFFLINE degraded success', {
+            reasonCode,
+            provider: response.meta?.provider_used,
+          });
         } else if (mode === 'LOCAL') {
           logger.info('[useConversationEngine] LOCAL mode', { reasonCode });
           setError(null);
@@ -336,23 +494,17 @@ export function useConversationEngine(
           logger.warn('[useConversationEngine] ERROR mode', { meta: response.meta });
         }
 
-        // ✅ PERSIST MESSAGES TO LOCALSTORAGE
-        try {
-          const assistantAIMessage: AIMessage = {
-            role: 'assistant',
-            content: assistantMessage.content,
-            timestamp: assistantMessage.timestamp,
-            metadata: assistantMessage.metadata || {},
-          };
-          await saveMessage(assistantAIMessage);
-          // Ensure flush to localStorage
-          chatMemoryCompactor.flushPendingSaves();
-        } catch (persistError) {
-          console.warn(
-            '[useConversationEngine] ⚠️ Failed to persist messages',
-            persistError
-          );
-        }
+        const assistantAIMessage: AIMessage = {
+          role: 'assistant',
+          content: assistantMessage.content,
+          timestamp: assistantMessage.timestamp,
+          metadata: assistantMessage.metadata || {},
+        };
+        persistMessagesInBackground(
+          saveMessage,
+          [assistantAIMessage],
+          '[useConversationEngine] ⚠️ Failed to persist messages'
+        );
 
         setLastResponse(response);
 
@@ -402,26 +554,28 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
           timestamp: Date.now(),
           metadata: {
             intention: 'Meta',
+            providerMeta: buildConversationFallbackMeta(
+              errorMessage,
+              options.providerPreference
+            ),
+            contextBinding,
+            singleDoorTags: contextEnvelope?.memorySingleDoor.tags,
           },
         };
 
         setMessages(prev => [...prev, fallbackMessage]);
 
-        try {
-          const assistantAIMessage: AIMessage = {
-            role: 'assistant',
-            content: fallbackMessage.content,
-            timestamp: fallbackMessage.timestamp,
-            metadata: fallbackMessage.metadata || {},
-          };
-          await saveMessage(assistantAIMessage);
-          chatMemoryCompactor.flushPendingSaves();
-        } catch (persistError) {
-          console.warn(
-            '[useConversationEngine] ⚠️ Failed to persist fallback message',
-            persistError
-          );
-        }
+        const assistantAIMessage: AIMessage = {
+          role: 'assistant',
+          content: fallbackMessage.content,
+          timestamp: fallbackMessage.timestamp,
+          metadata: fallbackMessage.metadata || {},
+        };
+        persistMessagesInBackground(
+          saveMessage,
+          [assistantAIMessage],
+          '[useConversationEngine] ⚠️ Failed to persist fallback message'
+        );
 
         console.error('[ConversationEngine] Erreur finale:', err);
         return null;
@@ -430,7 +584,18 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
         isProcessingRef.current = false;
       }
     },
-    [conversationId, currentMode, options, saveMessage]
+    [
+      buildSingleDoorEnvelope,
+      conversationId,
+      currentMode,
+      options.emotionContext,
+      options.maxMessages,
+      options.onError,
+      options.onResponse,
+      options.providerPreference,
+      saveMessage,
+      toContextBinding,
+    ]
   );
 
   // ═══ CLEAR MESSAGES ═══
@@ -441,18 +606,31 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
       metadata?: ConversationMessage['metadata']
     ) => {
       const now = Date.now();
+      const contextEnvelope = buildSingleDoorEnvelope();
+      const contextBinding = toContextBinding(contextEnvelope);
+      const mergedMetadata: ConversationMessage['metadata'] = {
+        ...(metadata || {}),
+        contextBinding: metadata?.contextBinding ?? contextBinding,
+        singleDoorTags:
+          metadata?.singleDoorTags ?? contextEnvelope?.memorySingleDoor.tags,
+      };
+
       const userMessage: ConversationMessage = {
         id: `user-local-${now}`,
         role: 'user',
         content: userContent,
         timestamp: now,
+        metadata: {
+          contextBinding,
+          singleDoorTags: contextEnvelope?.memorySingleDoor.tags,
+        },
       };
       const assistantMessage: ConversationMessage = {
         id: `assistant-local-${now + 1}`,
         role: 'assistant',
         content: assistantContent,
         timestamp: now + 1,
-        metadata,
+        metadata: mergedMetadata,
       };
 
       setMessages(prev => {
@@ -461,30 +639,25 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
         return updated.length > maxMessages ? updated.slice(-maxMessages) : updated;
       });
 
-      try {
-        const userAIMessage: AIMessage = {
-          role: 'user',
-          content: userMessage.content,
-          timestamp: userMessage.timestamp,
-          metadata: {},
-        };
-        const assistantAIMessage: AIMessage = {
-          role: 'assistant',
-          content: assistantMessage.content,
-          timestamp: assistantMessage.timestamp,
-          metadata: assistantMessage.metadata || {},
-        };
-        await saveMessage(userAIMessage);
-        await saveMessage(assistantAIMessage);
-        chatMemoryCompactor.flushPendingSaves();
-      } catch (persistError) {
-        console.warn(
-          '[useConversationEngine] ⚠️ Failed to persist local exchange',
-          persistError
-        );
-      }
+      const userAIMessage: AIMessage = {
+        role: 'user',
+        content: userMessage.content,
+        timestamp: userMessage.timestamp,
+        metadata: userMessage.metadata || {},
+      };
+      const assistantAIMessage: AIMessage = {
+        role: 'assistant',
+        content: assistantMessage.content,
+        timestamp: assistantMessage.timestamp,
+        metadata: assistantMessage.metadata || {},
+      };
+      persistMessagesInBackground(
+        saveMessage,
+        [userAIMessage, assistantAIMessage],
+        '[useConversationEngine] ⚠️ Failed to persist local exchange'
+      );
     },
-    [options.maxMessages, saveMessage]
+    [buildSingleDoorEnvelope, options.maxMessages, saveMessage, toContextBinding]
   );
 
   // ═══ CLEAR MESSAGES ═══
@@ -525,6 +698,7 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
     refreshHealth,
     lastResponse,
     totalMessages,
+    lastOmegaTraceMeta: lastResponse?.omega_trace_meta,
   };
 }
 

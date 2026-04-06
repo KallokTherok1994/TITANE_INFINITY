@@ -7,7 +7,7 @@
 // PLAN v25.x: Migrer vers conversation_engine::conversation_generate (OMEGA v2)
 
 use crate::core::tapi_error::TAPIError;
-use crate::core::{MemoryType, UnifiedMemory};
+use crate::core::{MemoryItem, MemoryType, UnifiedMemory};
 use futures_util::StreamExt;
 use crate::core::http_types::Client;
 use serde::{Deserialize, Serialize};
@@ -27,11 +27,10 @@ fn env_flag_true(name: &str) -> bool {
 }
 
 fn is_ollama_auto_enabled() -> bool {
-    // Dev builds: keep local-first ergonomics.
-    // Release builds: default to silent-by-default (no localhost probes) unless opt-in.
-    cfg!(debug_assertions)
-        || env_flag_true("TITANE_OLLAMA_AUTO_ENABLED")
-        || env_flag_true("TITANE_LOCALHOST_PROBES_ENABLED")
+    // Enable Ollama probing by default in all builds (dev and release).
+    // Can be explicitly disabled via env var TITANE_OLLAMA_AUTO_DISABLED=1 in
+    // environments that prohibit localhost probes (e.g. sandboxed CI).
+    !env_flag_true("TITANE_OLLAMA_AUTO_DISABLED")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -71,6 +70,56 @@ fn build_http_client_with_timeout(
 
 fn build_http_client_with_secs(timeout_secs: u64) -> Result<Client, TAPIError> {
     build_http_client_with_timeout(std::time::Duration::from_secs(timeout_secs))
+}
+
+async fn has_cloud_network_connectivity() -> bool {
+    matches!(
+        tokio::time::timeout(
+            std::time::Duration::from_secs(3),
+            tokio::net::TcpStream::connect("www.google.com:443"),
+        )
+        .await,
+        Ok(Ok(_))
+    )
+}
+
+async fn is_cloud_provider_configured(
+    provider: &str,
+    state: &ChatOrchestratorState,
+) -> bool {
+    match provider {
+        "openai" => state.openai_api_key.read().await.is_some(),
+        "anthropic" => state.anthropic_api_key.read().await.is_some(),
+        "gemini" => state.gemini_api_key.read().await.is_some(),
+        _ => false,
+    }
+}
+
+fn unavailable_reason(
+    provider: &str,
+    configured: bool,
+    cloud_network_available: bool,
+    allow_ollama_probe: bool,
+) -> String {
+    match provider {
+        "gemini" | "openai" | "anthropic" => {
+            if !configured {
+                "API key not configured".to_string()
+            } else if !cloud_network_available {
+                "Network unavailable".to_string()
+            } else {
+                "Provider unreachable".to_string()
+            }
+        }
+        "ollama" => {
+            if allow_ollama_probe {
+                "Ollama unreachable".to_string()
+            } else {
+                "Ollama probe disabled".to_string()
+            }
+        }
+        _ => "Provider unavailable".to_string(),
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -330,6 +379,7 @@ async fn is_provider_available(
     provider: &str,
     state: &ChatOrchestratorState,
     allow_ollama_probe: bool,
+    cloud_network_available: Option<bool>,
 ) -> bool {
     const CACHE_DURATION_MS: u64 = 30000; // 30s
     const MAX_FAILURES: u32 = 3;
@@ -351,17 +401,13 @@ async fn is_provider_available(
 
     // Cache expiré ou première vérification, faire un heartbeat
     let is_available = match provider {
-        "openai" => {
-            let api_key = state.openai_api_key.read().await;
-            api_key.is_some()
-        }
-        "anthropic" => {
-            let api_key = state.anthropic_api_key.read().await;
-            api_key.is_some()
-        }
-        "gemini" => {
-            let api_key = state.gemini_api_key.read().await;
-            api_key.is_some() // Simplifié: si clé présente, considérer disponible
+        "openai" | "anthropic" | "gemini" => {
+            let configured = is_cloud_provider_configured(provider, state).await;
+            let network_available = match cloud_network_available {
+                Some(value) => value,
+                None => has_cloud_network_connectivity().await,
+            };
+            configured && network_available
         }
         "ollama" => {
             if !allow_ollama_probe {
@@ -387,6 +433,13 @@ async fn is_provider_available(
     {
         let mut last_check = state.provider_last_check.write().await;
         last_check.insert(provider.to_string(), now);
+    }
+
+    // If heartbeat succeeded, reset failure counter so the circuit breaker reopens.
+    // Without this, a count >= MAX_FAILURES persists across cache cycles → deadlock.
+    if is_available {
+        let mut failures = state.provider_failure_count.write().await;
+        failures.insert(provider.to_string(), 0);
     }
 
     is_available
@@ -582,7 +635,8 @@ pub async fn chat_send_message(
         let allow_ollama_probe = provider == "ollama"
             && (requested_provider == "ollama"
                 || (requested_provider == "auto" && ollama_auto_enabled));
-        let is_available = is_provider_available(&provider, &state, allow_ollama_probe).await;
+        let is_available =
+            is_provider_available(&provider, &state, allow_ollama_probe, None).await;
         println!(
             "[CHAT ROUTER] ⚡ Provider {} availability = {}",
             provider, is_available
@@ -1338,6 +1392,169 @@ pub async fn chat_get_memory_stats(
     }))
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// MEMORY BACKUP / RESTORE — Rust LTM coverage
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// Backup all Rust LTM .mem files to a destination directory.
+/// Returns a manifest: { backed_up: N, dest_dir: String, files: [...] }
+/// Safe: if src dir does not exist or is empty, returns ok with backed_up=0.
+#[tauri::command]
+pub async fn chat_memory_backup(
+    dest_dir: String,
+    state: State<'_, ChatOrchestratorState>,
+) -> Result<serde_json::Value, String> {
+    let memory = state.unified_memory.read().await;
+    let ltm_src = memory.ltm_storage_path();
+    drop(memory);
+
+    let dest = std::path::PathBuf::from(&dest_dir);
+    if let Err(e) = std::fs::create_dir_all(&dest) {
+        return Err(format!("[MEMORY BACKUP] Failed to create dest dir: {}", e));
+    }
+
+    let entries = match std::fs::read_dir(&ltm_src) {
+        Ok(d) => d,
+        Err(_) => {
+            // LTM dir does not exist yet — nothing to back up
+            return Ok(serde_json::json!({
+                "ok": true,
+                "backed_up": 0,
+                "dest_dir": dest_dir,
+                "files": [],
+                "ltm_src": ltm_src.to_string_lossy()
+            }));
+        }
+    };
+
+    let mut backed_up = 0usize;
+    let mut files_copied: Vec<String> = Vec::new();
+
+    for entry in entries.flatten() {
+        let path = entry.path();
+        if path.extension().and_then(|e| e.to_str()) != Some("mem") {
+            continue;
+        }
+        let filename = match path.file_name().and_then(|n| n.to_str()) {
+            Some(n) => n.to_string(),
+            None => continue,
+        };
+        let dest_file = dest.join(&filename);
+        match std::fs::copy(&path, &dest_file) {
+            Ok(_) => {
+                backed_up += 1;
+                files_copied.push(filename);
+            }
+            Err(e) => {
+                eprintln!("[MEMORY BACKUP] ⚠️ Failed to copy {:?}: {}", path, e);
+            }
+        }
+    }
+
+    println!(
+        "[MEMORY BACKUP] ✅ Backed up {} LTM files to {}",
+        backed_up, dest_dir
+    );
+
+    Ok(serde_json::json!({
+        "ok": true,
+        "backed_up": backed_up,
+        "dest_dir": dest_dir,
+        "files": files_copied,
+        "ltm_src": ltm_src.to_string_lossy()
+    }))
+}
+
+/// Restore Rust LTM .mem files from a backup directory.
+/// Copies files back to the canonical LTM storage path, then
+/// triggers restore_ltm_from_disk() to rebuild the in-memory index.
+/// Safe: missing/corrupt files are skipped. No crash on partial restore.
+#[tauri::command]
+pub async fn chat_memory_restore(
+    src_dir: String,
+    state: State<'_, ChatOrchestratorState>,
+) -> Result<serde_json::Value, String> {
+    let ltm_dest = {
+        let memory = state.unified_memory.read().await;
+        memory.ltm_storage_path()
+    };
+
+    if let Err(e) = std::fs::create_dir_all(&ltm_dest) {
+        return Err(format!("[MEMORY RESTORE] Failed to create LTM dir: {}", e));
+    }
+
+    let src = std::path::PathBuf::from(&src_dir);
+    let entries = match std::fs::read_dir(&src) {
+        Ok(d) => d,
+        Err(e) => {
+            return Err(format!(
+                "[MEMORY RESTORE] Cannot read backup dir {}: {}",
+                src_dir, e
+            ));
+        }
+    };
+
+    let mut restored = 0usize;
+    let mut files_restored: Vec<String> = Vec::new();
+    let mut skipped = 0usize;
+
+    for entry in entries.flatten() {
+        let path = entry.path();
+        if path.extension().and_then(|e| e.to_str()) != Some("mem") {
+            continue;
+        }
+        let filename = match path.file_name().and_then(|n| n.to_str()) {
+            Some(n) => n.to_string(),
+            None => continue,
+        };
+        // Validate: ensure file parses as MemoryItem before restoring
+        let bytes = match std::fs::read(&path) {
+            Ok(b) => b,
+            Err(e) => {
+                eprintln!("[MEMORY RESTORE] ⚠️ Cannot read backup file {:?}: {}", path, e);
+                skipped += 1;
+                continue;
+            }
+        };
+        if serde_json::from_slice::<MemoryItem>(&bytes).is_err() {
+            eprintln!("[MEMORY RESTORE] ⚠️ Corrupt backup file {:?}: skipping", path);
+            skipped += 1;
+            continue;
+        }
+        let dest_file = ltm_dest.join(&filename);
+        match std::fs::write(&dest_file, &bytes) {
+            Ok(_) => {
+                restored += 1;
+                files_restored.push(filename);
+            }
+            Err(e) => {
+                eprintln!("[MEMORY RESTORE] ⚠️ Failed to write {:?}: {}", dest_file, e);
+                skipped += 1;
+            }
+        }
+    }
+
+    // Rebuild in-memory LTM index from restored files (no restart needed)
+    {
+        let mut memory = state.unified_memory.write().await;
+        memory.reload_ltm_from_disk();
+    }
+
+    println!(
+        "[MEMORY RESTORE] ✅ Restored {} LTM files ({} skipped) from {}",
+        restored, skipped, src_dir
+    );
+
+    Ok(serde_json::json!({
+        "ok": true,
+        "restored": restored,
+        "skipped": skipped,
+        "src_dir": src_dir,
+        "ltm_dest": ltm_dest.to_string_lossy(),
+        "files": files_restored
+    }))
+}
+
 #[tauri::command]
 pub async fn chat_create_conversation(
     state: State<'_, ChatOrchestratorState>,
@@ -1497,32 +1714,33 @@ pub async fn chat_check_providers(
     // Keys are read inside is_provider_available() checks below
 
     let allow_ollama_probe = is_ollama_auto_enabled();
+    let cloud_network_available = has_cloud_network_connectivity().await;
     let existing = state.provider_status.read().await.clone();
     let mut updated = Vec::with_capacity(existing.len());
 
     for mut entry in existing {
         let start = std::time::Instant::now();
-        let available = is_provider_available(&entry.provider, &state, allow_ollama_probe).await;
+        let available = is_provider_available(
+            &entry.provider,
+            &state,
+            allow_ollama_probe,
+            Some(cloud_network_available),
+        )
+        .await;
         let latency_ms = start.elapsed().as_millis() as u64;
+        let configured = is_cloud_provider_configured(&entry.provider, &state).await;
 
         entry.available = available;
         entry.latency_ms = if available { latency_ms } else { 0 };
         entry.error = if available {
             None
         } else {
-            Some(match entry.provider.as_str() {
-                "gemini" => "API key not configured".to_string(),
-                "openai" => "API key not configured".to_string(),
-                "anthropic" => "API key not configured".to_string(),
-                "ollama" => {
-                    if allow_ollama_probe {
-                        "Ollama unreachable".to_string()
-                    } else {
-                        "Ollama probe disabled".to_string()
-                    }
-                }
-                _ => "Provider unavailable".to_string(),
-            })
+            Some(unavailable_reason(
+                &entry.provider,
+                configured,
+                cloud_network_available,
+                allow_ollama_probe,
+            ))
         };
 
         if available {
@@ -1636,7 +1854,7 @@ pub async fn chat_stream_message(
         "ollama" => true,
         "auto" => {
             if is_ollama_auto_enabled() {
-                is_provider_available("ollama", state.inner(), true).await
+                is_provider_available("ollama", state.inner(), true, None).await
             } else {
                 false
             }
@@ -2051,6 +2269,30 @@ fn get_timestamp() -> u64 {
 #[cfg(test)]
 mod smoke_tests {
     use super::*;
+
+    #[test]
+    fn unavailable_reason_distinguishes_config_from_network() {
+        assert_eq!(
+            unavailable_reason("gemini", false, false, false),
+            "API key not configured"
+        );
+        assert_eq!(
+            unavailable_reason("gemini", true, false, false),
+            "Network unavailable"
+        );
+        assert_eq!(
+            unavailable_reason("gemini", true, true, false),
+            "Provider unreachable"
+        );
+        assert_eq!(
+            unavailable_reason("ollama", false, false, true),
+            "Ollama unreachable"
+        );
+        assert_eq!(
+            unavailable_reason("ollama", false, false, false),
+            "Ollama probe disabled"
+        );
+    }
 
     #[tokio::test]
     #[ignore]

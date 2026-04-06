@@ -1,7 +1,8 @@
 /**
  * ═══════════════════════════════════════════════════════════════
  * TITANE∞ Kernel Visuel — MemoryGraph
- * Visualisation de la mémoire système (snapshots, logs, timeline)
+ * Visualisation de la mémoire système legacy (snapshots, logs, timeline)
+ * Distincte de la LTM persistante utilisée par le chat et la page /memory
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -72,7 +73,13 @@ export function MemoryGraph() {
   return (
     <div className="space-y-4">
       {/* Header */}
-      <h2 className="text-2xl font-bold">Memory — Mémoire Système</h2>
+      <div className="space-y-2">
+        <h2 className="text-2xl font-bold">MemoryCore Legacy — Memoire systeme</h2>
+        <p className="text-sm text-gray-400">
+          Surface systeme snapshots/logs/timeline, distincte de la memoire persistante
+          conversationnelle.
+        </p>
+      </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -160,7 +167,11 @@ export function MemoryGraph() {
             <div>
               <div className="text-xs text-gray-400">Cohérence</div>
               <div className="font-semibold">
-                {state.last_snapshot.nexus.coherence_score.toFixed(0)}%
+                {/* [FIX-005b] coherence_score not in NexusEngineState — guard undefined */}
+                {(
+                  state.last_snapshot.nexus as { coherence_score?: number }
+                ).coherence_score?.toFixed(0) ?? 'N/A'}
+                %
               </div>
             </div>
             <div>

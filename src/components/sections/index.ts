@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25.3.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * Section Components Index
@@ -7,6 +7,10 @@
  */
 
 export { ConversationSection } from './ConversationSection';
+export {
+  buildConversationProviders,
+  isConversationProviderReady,
+} from './conversationProviderReadiness';
 export { VisionSection } from './VisionSection';
 export { OverviewSection } from './OverviewSection';
 export type { TitaneStats } from './OverviewSection';

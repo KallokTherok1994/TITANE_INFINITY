@@ -1,0 +1,3 @@
+ M src/App.tsx
+?? .npmrc.e2e_override
+?? proof_packs/FRONTEND_CONNECTION_INTEGRITY_V13_2026-03-11_0645_ce5e2ad1e/

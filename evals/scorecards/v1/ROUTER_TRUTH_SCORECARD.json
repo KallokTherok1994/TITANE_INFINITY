@@ -1,0 +1,72 @@
+{
+  "scorecard_id": "ROUTER_TRUTH_SCORECARD",
+  "version": "v1",
+  "champion": "7973fbdec",
+  "champion_tag": "v28.0.0",
+  "date": "2026-03-20",
+  "scored_date": "2026-03-20",
+  "node_version": "v20.20.0",
+  "description": "Measures correctness and honesty of provider/router selection",
+  "evidence": {
+    "unit_tests": "chat-fallback-display.test.ts: 5/5 PASS; TAURI_COMMANDS.test.ts: 5/5 PASS",
+    "gate_g1": "PASS — g1-no-offline-without-reason.sh",
+    "gate_g7": "PASS — g7-tauri-allowlist-lock.sh",
+    "gate_ring": "PASS — ring-integrity-gate.sh",
+    "lock_history": "LOCK1 (provider badge wired to meta.provider_used) — fixed at 6abe58bac + 0dd11f69e"
+  },
+  "metrics": [
+    {
+      "name": "meta_provider_used_present",
+      "target": 1.0,
+      "blocking": true,
+      "description": "Every IPC chat response includes meta.provider_used (LOCK1 regression guard)",
+      "champion_score": 1.0,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PASS — LOCK1 fix at 0dd11f69e+6abe58bac; chat-fallback tests 5/5 PASS"
+    },
+    {
+      "name": "ui_provider_badge_matches_meta",
+      "target": 1.0,
+      "blocking": true,
+      "description": "UI provider badge equals meta.provider_used from backend (LOCK1 regression guard)",
+      "champion_score": 1.0,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PASS — LOCK1 fix confirmed; chat-fallback-display.test.ts 5/5 PASS"
+    },
+    {
+      "name": "fallback_provider_honestly_labeled",
+      "target": 1.0,
+      "blocking": true,
+      "description": "When fallback activates, UI reflects fallback provider, not the failed primary",
+      "champion_score": 1.0,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PASS — chat-fallback-display.test.ts 5/5 PASS (dedicated fallback display tests)"
+    },
+    {
+      "name": "one_door_network_enforced",
+      "target": 1.0,
+      "blocking": true,
+      "description": "All external network calls go through network_gateway.rs (One Door principle)",
+      "champion_score": 1.0,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PASS — g1 PASS, ring-integrity PASS, compliance/tauri-only 5/5 PASS"
+    },
+    {
+      "name": "routing_deterministic_for_same_input",
+      "target": 0.95,
+      "blocking": false,
+      "description": "Same input routes to same provider type (accounting for load balancing)",
+      "champion_score": 1.0,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PASS — E2E chat tests deterministic across 3 runs (x3 stability)"
+    }
+  ],
+  "blocking_regression_definition": "Any provider lie: wrong label, missing meta, fallback masking, One Door bypass",
+  "promotion_decision": "CHAMPION_BASELINE_ESTABLISHED",
+  "note": "Champion baseline established 2026-03-20. LOCK1 regression guards active. All blocking metrics PASS."
+}

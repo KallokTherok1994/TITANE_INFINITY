@@ -1,3 +1,5 @@
+> ⚠️ **LEGACY** — Ce guide est obsolète. Voir le guide canonique : [docs/user/fr/demarrage-rapide.md](./fr/demarrage-rapide.md) (FR) | [docs/user/en/quick-start.md](./en/quick-start.md) (EN)
+
 # 🚀 Guide de Démarrage Rapide — TITANE∞
 
 Apprenez à utiliser TITANE∞ en 5 minutes.
@@ -347,5 +349,5 @@ Vous savez maintenant:
 
 ---
 
-**Besoin d'aide ?** → [FAQ](./faq.md) | [Troubleshooting](./troubleshooting.md) | [Discord](https://discord.gg/titane-infinity)
+**Besoin d'aide ?** → [FAQ](./faq.md) | [Troubleshooting](../01_misc/TROUBLESHOOTING.md) | [Discord](https://discord.gg/titane-infinity)
 

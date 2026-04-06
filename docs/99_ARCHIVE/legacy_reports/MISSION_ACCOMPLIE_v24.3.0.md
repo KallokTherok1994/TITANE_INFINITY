@@ -221,21 +221,21 @@ Improvement:     +20 points in 50 hours 🚀
 
 ### User-Facing
 
-- **Architecture:** [docs/ARCHITECTURE_RINGS.md](docs/ARCHITECTURE_RINGS.md)
-- **Migration:** [docs/guides/MIGRATION_OMEGA_V2.md](docs/guides/MIGRATION_OMEGA_V2.md)
-- **Changelog:** [CHANGELOG.md](CHANGELOG.md)
+- **Architecture:** [docs/ARCHITECTURE_RINGS.md](../../ARCHITECTURE_RINGS.md)
+- **Migration:** [docs/guides/MIGRATION_OMEGA_V2.md](../../guides/MIGRATION_OMEGA_V2.md)
+- **Changelog:** [CHANGELOG.md](../../90_release/CHANGELOG__CHANGELOG.md.md)
 
 ### Developer
 
-- **Phase 2 Report:** [docs/audits/PHASE_2_COMPLETE_RAPPORT_FINAL.md](docs/audits/PHASE_2_COMPLETE_RAPPORT_FINAL.md)
-- **Phase 3 Report:** [docs/audits/PHASE_3_ARCHITECTURE_ENFORCEMENT.md](docs/audits/PHASE_3_ARCHITECTURE_ENFORCEMENT.md)
-- **Legacy Policy:** [legacy/README.md](legacy/README.md)
+- **Phase 2 Report:** [docs/audits/PHASE_2_COMPLETE_RAPPORT_FINAL.md](../../audits/PHASE_2_COMPLETE_RAPPORT_FINAL.md)
+- **Phase 3 Report:** [docs/audits/PHASE_3_ARCHITECTURE_ENFORCEMENT.md](../../audits/PHASE_3_ARCHITECTURE_ENFORCEMENT.md)
+- **Legacy Policy:** [legacy/README.md](../../00_core/README__legacy_README.md.md)
 
 ### Audits
 
-- **Conformity:** [AUDIT_CONFORMITE_TITANE_INFINITY.md](AUDIT_CONFORMITE_TITANE_INFINITY.md)
-- **Engines Imports:** [docs/audits/AUDIT_ENGINES_IMPORTS.md](docs/audits/AUDIT_ENGINES_IMPORTS.md)
-- **Dev/Stable:** [docs/audits/AUDIT_DEV_STABLE_COHERENCE.md](docs/audits/AUDIT_DEV_STABLE_COHERENCE.md)
+- **Conformity:** [AUDIT_CONFORMITE_TITANE_INFINITY.md](../../archive/sessions/AUDIT_CONFORMITE_TITANE_INFINITY.md)
+- **Engines Imports:** [docs/audits/AUDIT_ENGINES_IMPORTS.md](../../audits/AUDIT_ENGINES_IMPORTS.md)
+- **Dev/Stable:** [docs/audits/AUDIT_DEV_STABLE_COHERENCE.md](../../audits/AUDIT_DEV_STABLE_COHERENCE.md)
 
 ---
 

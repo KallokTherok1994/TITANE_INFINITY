@@ -248,6 +248,7 @@ impl ConversationPipeline {
         };
 
         let final_latency = start.elapsed().as_millis() as u64;
+        let memory_sources_injected = cognitive_summary.links.len();
 
         // 🔍 LOG SORTIE PIPELINE OMEGA
         log::info!(
@@ -275,6 +276,8 @@ impl ConversationPipeline {
                 memory_effect: cognitive_summary.memory_effect,
                 links_to_contexts: cognitive_summary.links,
                 provider_meta: Some(build_success_meta(&provider_used, final_latency as u128)),
+                profile_used: "default".to_string(),
+                memory_sources_injected,
             },
         })
     }
@@ -369,6 +372,16 @@ impl ConversationPipeline {
             Intention::Meta => "L'utilisateur réfléchit sur la conversation elle-même. Sois méta.",
         };
 
+        // [FIX-004] Inject LTM history from SQLite if available (request.history loaded by commands.rs)
+        // Previously: request.history was loaded, formatted, set in ConversationRequest — then silently dropped here.
+        // Now: injected as ## HISTORIQUE_RÉCENT block before user message.
+        let history_block = match &request.history {
+            Some(msgs) if !msgs.is_empty() => {
+                format!("\n\n## HISTORIQUE_RÉCENT\n{}", msgs.join("\n"))
+            }
+            _ => String::new(),
+        };
+
         format!(
             "# IDENTITÉ SYSTÈME\n\
             {}\n\n\
@@ -376,7 +389,7 @@ impl ConversationPipeline {
             {:?}\n\
             Instruction: {}\n\n\
             # CONTEXTE CONVERSATION\n\
-            {}\n\n\
+            {}{}\n\n\
             # ANALYSE COGNITIVE\n\
             Intention détectée: {}\n\
             État émotionnel: valence={:.2}, intensité={:.2}, énergie={:.2}\n\n\
@@ -384,13 +397,14 @@ impl ConversationPipeline {
             # MESSAGE UTILISATEUR\n\
             {}",
             system_identity,
-            request.mode, // 🎯 Correction: utiliser request.mode
+            request.mode,
             mode_instruction,
             if memory_context.is_empty() {
                 "Nouvelle conversation"
             } else {
                 memory_context
             },
+            history_block,
             intention_context,
             emotion.valence,
             emotion.intensity,
@@ -414,10 +428,15 @@ impl ConversationPipeline {
             super::types::ProviderPreference::Auto => None,
         };
 
+        let default_max_tokens = match config.provider_preference {
+            super::types::ProviderPreference::Local | super::types::ProviderPreference::Ollama => 512,
+            _ => 2000,
+        };
+
         let ai_request = AIRequest {
             prompt,
             temperature: config.temperature,
-            max_tokens: config.max_tokens.unwrap_or(2000),
+            max_tokens: config.max_tokens.unwrap_or(default_max_tokens),
             stream: false,
             provider_preference: provider_pref,
         };

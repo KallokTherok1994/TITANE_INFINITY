@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25.3.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * OverviewSection Component
@@ -11,6 +11,7 @@ import React, { memo } from 'react';
 import { Grid } from '@components/layout';
 import { Card } from '@/ui';
 import { QuickStatCard } from '@/features/dashboard';
+import { SectionLoadingFallback } from './SectionLoadingFallback';
 import { PersonaMoodIndicator } from '@components/PersonaMoodIndicator';
 import { TMetric, TSectionHeader } from '@/design-system';
 import { spacing } from '@themes/tokens';
@@ -22,6 +23,7 @@ import { spacing } from '@themes/tokens';
 export interface TitaneStats {
   totalXP: number;
   level: number;
+  chatMessageCount: number;
   memoryShortTerm: number;
   memoryMidTerm: number;
   memoryLongTerm: number;
@@ -64,38 +66,60 @@ export const OverviewSection: React.FC<OverviewSectionProps> = memo(({ stats }) 
           icon={<span style={{ fontSize: '1.5rem' }}>⚡</span>}
           label="Niveau"
           value={stats.level}
-          trend="up"
-          trendValue="+2 cette semaine"
+          trend={stats.level > 1 ? 'up' : 'neutral'}
+          trendValue={
+            stats.level > 1 ? `Niveau ${stats.level} synchronisé` : 'Initialisation'
+          }
           color="#3b82f6"
         />
         <QuickStatCard
           icon={<span style={{ fontSize: '1.5rem' }}>✨</span>}
           label="XP Total"
           value={stats.totalXP.toLocaleString()}
-          trend="up"
-          trendValue="+15k aujourd'hui"
+          trend={stats.totalXP > 0 ? 'up' : 'neutral'}
+          trendValue={
+            stats.totalXP > 0
+              ? `${stats.totalXP.toLocaleString()} XP enregistrés`
+              : 'Aucun XP synchronisé'
+          }
           color="#10b981"
         />
         <QuickStatCard
           icon={<span style={{ fontSize: '1.5rem' }}>💬</span>}
           label="Messages"
-          value="1,247"
-          trend="neutral"
-          trendValue="128/h"
+          value={stats.chatMessageCount.toLocaleString()}
+          trend={stats.chatMessageCount > 0 ? 'up' : 'neutral'}
+          trendValue={
+            stats.chatMessageCount > 0
+              ? 'Historique conversationnel synchronisé'
+              : 'Aucune conversation enregistrée'
+          }
           color="#f59e0b"
         />
         <QuickStatCard
           icon={<span style={{ fontSize: '1.5rem' }}>🎯</span>}
           label="Score Évolution"
           value={`${stats.evolutionScore}%`}
-          trend="up"
-          trendValue="+5%"
+          trend={stats.evolutionScore > 0 ? 'up' : 'neutral'}
+          trendValue={
+            stats.evolutionScore > 0
+              ? 'Calculé depuis XP et mémoire'
+              : 'En attente de progression'
+          }
           color="#8b5cf6"
         />
       </div>
 
       {/* Real-Time Charts */}
-      <React.Suspense fallback={null}>
+      <React.Suspense
+        fallback={
+          <SectionLoadingFallback
+            label="Graphiques temps réel"
+            note="Chargement du dashboard en temps réel…"
+            testId="loading-overview-charts"
+          />
+        }
+      >
         <LazyRealTimeCharts />
       </React.Suspense>
 

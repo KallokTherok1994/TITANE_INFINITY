@@ -132,7 +132,14 @@ export const AudioDiagnosticsPanel = ({
           </span>
         </div>
         {onClose && (
-          <button className="adp-close" onClick={onClose} title="Fermer">
+          <button
+            type="button"
+            className="adp-close"
+            onClick={onClose}
+            title="Fermer"
+            aria-label="Fermer le panneau audio"
+            data-testid="btn-audio-panel-close"
+          >
             ✕
           </button>
         )}
@@ -140,9 +147,16 @@ export const AudioDiagnosticsPanel = ({
 
       {/* Error Banner */}
       {lastError && (
-        <div className="adp-error-banner">
+        <div className="adp-error-banner" role="alert">
           <span>⚠️ {lastError}</span>
-          <button onClick={clearError}>✕</button>
+          <button
+            type="button"
+            onClick={clearError}
+            aria-label="Effacer l'erreur audio"
+            data-testid="btn-audio-error-dismiss"
+          >
+            ✕
+          </button>
         </div>
       )}
 
@@ -250,17 +264,19 @@ export const AudioDiagnosticsPanel = ({
                 <span>🎤</span>
                 <span>Microphone</span>
                 <button
+                  type="button"
                   className="adp-btn-icon"
                   onClick={() => refreshDevices()}
                   disabled={isLoading}
                   title="Actualiser"
+                  aria-label="Actualiser les périphériques audio"
                 >
                   🔄
                 </button>
               </div>
               <select
                 className="adp-select"
-                value={selectedInputDevice}
+                value={selectedInputDevice ?? ''}
                 onChange={e => selectInputDevice(e.target.value)}
                 disabled={isLoading}
               >
@@ -299,7 +315,7 @@ export const AudioDiagnosticsPanel = ({
               </div>
               <select
                 className="adp-select"
-                value={selectedOutputDevice}
+                value={selectedOutputDevice ?? ''}
                 onChange={e => selectOutputDevice(e.target.value)}
                 disabled={isLoading}
               >

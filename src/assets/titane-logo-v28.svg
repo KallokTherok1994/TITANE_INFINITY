@@ -1,0 +1,126 @@
+<svg
+  width="1024"
+  height="1024"
+  viewBox="0 0 1024 1024"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <!-- TITANE∞ Official Logo v29.0.0 -->
+  <!-- Design: T-bracket + Infinity symbol + Chevron heart -->
+  <!-- Color: Dark slate navy #2B3245 on transparent -->
+
+  <defs>
+    <!-- Clip for clean edges -->
+    <clipPath id="outer-clip">
+      <rect x="0" y="0" width="1024" height="1024" rx="80"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background transparent (for desktop icon: light grey bg added via compositor) -->
+  <rect x="0" y="0" width="1024" height="1024" fill="transparent"/>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- GROUP: Full logo mark in dark slate #2B3245         -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <g fill="#2B3245" fill-rule="evenodd">
+
+    <!-- ─────────────────────────────────────────────── -->
+    <!-- TOP BRACKET / T-FRAME                           -->
+    <!-- Two L-shaped corner brackets forming T opening  -->
+    <!-- ─────────────────────────────────────────────── -->
+
+    <!-- Left bracket (outer rect minus inner notch) -->
+    <!-- Outer left column -->
+    <rect x="112" y="80" width="140" height="300" rx="12"/>
+    <!-- Top horizontal bar left -->
+    <rect x="112" y="80" width="330" height="130" rx="12"/>
+    <!-- Inner notch cut-out (white/transparent) using subtract approach -->
+    <!-- Since SVG fill-rule=evenodd we draw the inner hole -->
+    <rect x="200" y="160" width="230" height="130" fill="transparent"/>
+
+    <!-- Right bracket mirror -->
+    <rect x="772" y="80" width="140" height="300" rx="12"/>
+    <rect x="582" y="80" width="330" height="130" rx="12"/>
+
+    <!-- ─────────────────────────────────────────────── -->
+    <!-- CENTER BAR connecting both brackets             -->
+    <!-- ─────────────────────────────────────────────── -->
+    <rect x="452" y="80" width="120" height="130" rx="0"/>
+
+    <!-- ─────────────────────────────────────────────── -->
+    <!-- INFINITY SYMBOL ∞ — Parametric lemniscate       -->
+    <!-- Two interlocked loops crossing at center        -->
+    <!-- ─────────────────────────────────────────────── -->
+
+    <!-- Left loop of infinity -->
+    <path d="
+      M 512 480
+      C 512 380, 420 310, 310 310
+      C 170 310, 110 390, 110 480
+      C 110 570, 170 650, 310 650
+      C 420 650, 512 580, 512 480
+      Z
+    "/>
+    <!-- Left loop inner hole (evenodd) -->
+    <path d="
+      M 512 480
+      C 512 420, 450 370, 310 370
+      C 200 370, 175 420, 175 480
+      C 175 540, 200 590, 310 590
+      C 450 590, 512 540, 512 480
+      Z
+    "/>
+
+    <!-- Right loop of infinity -->
+    <path d="
+      M 512 480
+      C 512 380, 604 310, 714 310
+      C 854 310, 914 390, 914 480
+      C 914 570, 854 650, 714 650
+      C 604 650, 512 580, 512 480
+      Z
+    "/>
+    <!-- Right loop inner hole (evenodd) -->
+    <path d="
+      M 512 480
+      C 512 420, 574 370, 714 370
+      C 824 370, 849 420, 849 480
+      C 849 540, 824 590, 714 590
+      C 574 590, 512 540, 512 480
+      Z
+    "/>
+
+    <!-- Center crossing bar of infinity symbol -->
+    <path d="
+      M 440 430 L 584 430 L 584 530 L 440 530 Z
+    "/>
+
+    <!-- ─────────────────────────────────────────────── -->
+    <!-- BOTTOM CHEVRON / HEART ARROW                    -->
+    <!-- Downward pointing V with angled sides           -->
+    <!-- ─────────────────────────────────────────────── -->
+    <path d="
+      M 512 940
+      L 180 710
+      L 260 680
+      L 512 870
+      L 764 680
+      L 844 710
+      Z
+    "/>
+    <!-- Inner chevron notch -->
+    <path d="
+      M 512 880
+      L 300 730
+      L 300 770
+      L 512 925
+      L 724 770
+      L 724 730
+      Z
+    "/>
+
+    <!-- Vertical connector from infinity to chevron -->
+    <rect x="452" y="640" width="120" height="90" rx="0"/>
+
+  </g>
+
+</svg>

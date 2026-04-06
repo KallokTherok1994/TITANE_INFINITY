@@ -1,0 +1,120 @@
+README.md:152:- **File**: `registry/ui-events.jsonl`
+README.md:153:- **Entries**: 87+ events (append-only, no deletions)
+README.md:218:- Registre UI obligatoire: chaque changement UI doit ajouter une entry append-only dans `registry/ui-events.jsonl`.
+README.md:534:- **Online-First** : Connectivité réseau requise, network surface minimal, audit logs append-only
+README.md:833:| Proof Pack Online-First (vΩ)       | `docs/_evidence/online_first_vΩ/VERDICT.md`  |
+README.md:834:| Proof Pack Online-Final            | `docs/_evidence/online_final/VERDICT.md`     |
+README.md:835:| Proof Pack Final Clean Seal        | `docs/_evidence/final_clean_seal/VERDICT.md` |
+README.md:837:| Registry audit trail (append-only) | `registry/ui-events.jsonl`                   |
+.github/instructions/docs-registry.instructions.md:2:applyTo: 'docs/**, reports/**, proof_packs/**'
+.github/instructions/docs-registry.instructions.md:10:- Proof evidence lives under `reports/` (append-only logs) and `proof_packs/` (session packs).
+.github/instructions/docs-registry.instructions.md:19:- Rewrite history or delete proof packs.
+.github/instructions/docs-registry.instructions.md:23:- VERDICT.md and ROLLBACK.md in proof packs.
+.github/instructions/frontend.instructions.md:26:- E2E logs + screenshots, registry/ui-events.jsonl entry if UI changed.
+.github/instructions/frontend.instructions.md:31:- verify:registry when UI registry changes.
+.github/instructions/frontend.instructions.md:35:- git restore -- src registry/ui-events.jsonl
+.github/copilot-setup-checklist.md:20:- [ ] Captured each fix in `scripts/autoheal/autoheal_rules.jsonl` (append-only)
+.github/copilot-routing.json:33:      "agents": ["docs-registry"]
+.github/copilot-instructions.md:86:Each governed session must produce evidence in proof_packs and reports.
+.github/workflows/ci-unified.yml:108:        run: node scripts/gates/registry-gate.js
+.github/workflows/registry-guard.yml:2:# Ensures registry is updated when test/config files change
+.github/workflows/registry-guard.yml:48:  registry-sync-check:
+.github/workflows/registry-guard.yml:75:      - name: '🔍 Check registry files exist'
+.github/workflows/registry-guard.yml:77:          echo "📋 Checking registry files..."
+.github/workflows/registry-guard.yml:79:          if [ ! -f "runtime/registry/events.jsonl" ]; then
+.github/workflows/registry-guard.yml:80:            echo "❌ FAIL: runtime/registry/events.jsonl missing"
+.github/workflows/registry-guard.yml:81:            echo "Initialize with: pnpm registry:cycle:start -- --objective='Décrire le cycle (>=20 chars)' --owner='<name>' --priority=P1 --next='Action prioritaire'"
+.github/workflows/registry-guard.yml:85:          if [ ! -f "runtime/registry/snapshot.json" ]; then
+.github/workflows/registry-guard.yml:86:            echo "❌ FAIL: runtime/registry/snapshot.json missing"
+.github/workflows/registry-guard.yml:87:            echo "Create with: pnpm registry:snapshot"
+.github/workflows/registry-guard.yml:91:          if [ ! -f "runtime/registry/dashboard.md" ]; then
+.github/workflows/registry-guard.yml:92:            echo "❌ FAIL: runtime/registry/dashboard.md missing"
+.github/workflows/registry-guard.yml:93:            echo "Create with: pnpm registry:dashboard"
+.github/workflows/registry-guard.yml:104:      - name: '🔍 Verify registry sync'
+.github/workflows/registry-guard.yml:105:        run: pnpm verify:registry
+.github/workflows/registry-guard.yml:110:          if [ -f ".registry-outdated" ]; then
+.github/workflows/registry-guard.yml:113:            cat .registry-outdated
+.github/workflows/registry-guard.yml:121:    needs: registry-sync-check
+.github/workflows/registry-guard.yml:130:          mkdir -p /tmp/registry-evidence
+.github/workflows/registry-guard.yml:132:          EVIDENCE_FILE="/tmp/registry-evidence/registry-guard-${{ github.run_id }}.txt"
+.github/workflows/registry-guard.yml:143:            echo "Status: ${{ needs.registry-sync-check.result }}"
+.github/workflows/registry-guard.yml:146:            if [ -f "runtime/registry/events.jsonl" ]; then
+.github/workflows/registry-guard.yml:147:              tail -10 runtime/registry/events.jsonl
+.github/workflows/registry-guard.yml:153:            if [ -f "runtime/registry/snapshot.json" ]; then
+.github/workflows/registry-guard.yml:154:              cat runtime/registry/snapshot.json | head -50
+.github/workflows/registry-guard.yml:163:          name: registry-guard-evidence-${{ github.run_id }}
+.github/workflows/registry-guard.yml:164:          path: /tmp/registry-evidence/
+.github/workflows/stable-build.yml:61:            ~/.cargo/registry/index/
+.github/workflows/stable-build.yml:62:            ~/.cargo/registry/cache/
+.github/workflows/rust-docker.yml:65:            ~/.cargo/registry
+.github/workflows/rust-docker.yml:67:          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+.github/workflows/rust-docker.yml:69:            ${{ runner.os }}-cargo-registry-
+.github/workflows/perfection-maintenance.yml:117:          gitignore_exists = os.path.exists('.gitignore')
+.github/workflows/perfection-maintenance.yml:120:          metrics['security_gitignore'] = gitignore_exists
+.github/workflows/perfection-maintenance.yml:133:              metrics['security_gitignore'],
+.github/workflows/mermaid.yml:84:          bash scripts/verify/mermaid-hash-registry.sh --check >/tmp/mermaid_registry.txt 2>&1
+.github/workflows/mermaid.yml:85:          registry=$?
+.github/workflows/mermaid.yml:96:            echo "- Registry check: $([[ $registry -eq 0 ]] && echo PASS || echo FAIL)"
+scripts/certification/lib_cert.sh:38:  # Exclude untracked (??) as outputs/proof packs are expected untracked
+scripts/certification/lib_cert.sh:178:  (cd "$pack_dir" && find . -type f ! -name "SHA256SUMS" ! -name "LOCK.md" ! -name "VERDICT.md" ! -name "ROLLBACK.md" -exec sha256sum {} \; | sort) > "$pack_dir/SHA256SUMS"
+scripts/certification/lib_cert.sh:188:This proof pack is immutable. All decisions sealed.
+scripts/certification/lib_cert.sh:191:  # VERDICT.md (required output keys)
+scripts/certification/lib_cert.sh:192:  cat > "$pack_dir/VERDICT.md" <<EOF
+scripts/certification/lib_cert.sh:203:  # ROLLBACK.md (git restore recipe)
+scripts/certification/lib_cert.sh:204:  cat > "$pack_dir/ROLLBACK.md" <<EOF
+scripts/certification/lib_cert.sh:219:append_registry() {
+scripts/certification/lib_cert.sh:223:  local registry="deployment/latest/certification/MASTER_REGISTRY.jsonl"
+scripts/certification/lib_cert.sh:225:  mkdir -p "$(dirname "$registry")"
+scripts/certification/lib_cert.sh:234:  echo "$entry" >> "$registry"
+scripts/certification/lib_cert.sh:285:export -f seal_pack append_registry commit_and_push classify_failure
+.github/workflows/capability-qualification.yml:167:          # Mais bloque si command stable n'est pas dans registry
+scripts/certification/run-master-chat-to-prod.sh:116:      append_registry "$pack_dir" "$phase_id" "PASS" "DRY-RUN"
+scripts/certification/run-master-chat-to-prod.sh:125:      append_registry "$pack_dir" "$phase_id" "PASS"
+scripts/certification/run-master-chat-to-prod.sh:144:        append_registry "$pack_dir" "$phase_id" "FAIL" "$failure_class (autofix limit)"
+scripts/certification/run-master-chat-to-prod.sh:151:        append_registry "$pack_dir" "$phase_id" "FAIL" "$failure_class"
+scripts/certification/phases_stub/p10_7_pkg_stub.sh:28:cat > "$PHASE_PACK/VERDICT.md" <<'EOF'
+scripts/certification/phases_stub/p10_6_build_stub.sh:28:cat > "$PHASE_PACK/VERDICT.md" <<'EOF'
+scripts/certification/phases_stub/p10_3_2r_e2e_stub.sh:28:cat > "$PHASE_PACK/VERDICT.md" <<'EOF'
+scripts/certification/phases_stub/p10_8_ops_stub.sh:28:cat > "$PHASE_PACK/VERDICT.md" <<'EOF'
+scripts/certification/phases_stub/p10_5_chat_stub.sh:28:cat > "$PHASE_PACK/VERDICT.md" <<'EOF'
+scripts/certification/phases_stub/p10_4_infra_stub.sh:38:cat > "$PHASE_PACK/VERDICT.md" <<'EOF'
+scripts/core/modules/system-check.sh:268:    if curl -s --max-time 5 https://registry.npmjs.org/ &> /dev/null; then
+scripts/core/modules/system-check.sh:269:        echo "✅ Internet connectivity (npm registry)"
+scripts/certification/run-p10-desktop-cert.sh:80:A) CREATE P10 WORKDIR (proof pack structure)
+scripts/certification/run-p10-desktop-cert.sh:865:        echo "See proof pack files:"
+scripts/certification/run-p10-desktop-cert.sh:873:    } > "VERDICT.md"
+scripts/certification/run-p10-desktop-cert.sh:922:        echo "# Remove proof pack (if not committed)"
+scripts/certification/run-p10-desktop-cert.sh:933:    } > "ROLLBACK.md"
+scripts/certification/run-p10-desktop-cert.sh:954:    # Add proof pack
+scripts/certification/run-p10-desktop-cert.sh:957:    # Append registry
+scripts/certification/run-p10-desktop-cert.sh:958:    local registry_file="docs/CERTIFICATION_REGISTRY_APPEND_ONLY.md"
+scripts/certification/run-p10-desktop-cert.sh:994:    } >> "${registry_file}"
+scripts/certification/run-p10-desktop-cert.sh:996:    git add "${registry_file}"
+scripts/certification/run-p10-desktop-cert.sh:1007:Seal: SHA256SUMS.txt, LOCK.md, VERDICT.md"
+scripts/certification/run-p10-desktop-cert.sh:1018:    log "Phase L complete: committed ${commit_hash}, registry appended, pushed to origin"
+scripts/certification/run-p10-desktop-cert.sh:1045:    # Also write to proof pack
+scripts/certification/p3-runner.sh:222:2. Créer proof pack P3 complet (BASELINE, detailed analysis, VERDICT_P3)
+scripts/certification/p3-runner.sh:223:3. Créer gate G4 (bloquer si proof pack absent)
+scripts/stopline_rebuild_proof.sh:4:# Governed rebuild workflow with automated proof pack generation
+.github/prompts/run-proof-pack.prompt.md:5:Produce a complete proof pack for one governed session.
+.github/prompts/run-proof-pack.prompt.md:16:1. Create proof pack directory with timestamp and sha.
+.github/workflows/archive/ci.yml:56:            ~/.cargo/registry
+scripts/certification/phases_real/p11_human_acceptance_real.sh:88:# Store for proof pack
+scripts/certification/phases_real/p11_human_acceptance_real.sh:190:cat > "$PHASE_PACK/VERDICT.md" <<EOF
+scripts/certification/phases_real/p11_human_acceptance_real.sh:227:- All proof packs immutable and sealed
+scripts/install/enforce-package-manager.cjs:13:// Ne jamais demander de login/registry ici (local-first, pas de secrets).
+scripts/verify_system.sh:238:    # Check .gitignore exists
+scripts/verify_system.sh:239:    if [ -f ".gitignore" ]; then
+scripts/verify_system.sh:240:        check_pass ".gitignore present"
+scripts/verify_system.sh:242:        check_warn ".gitignore missing"
+scripts/certification/phases_real/p10_4_infra_real.sh:180:cat > "$PHASE_PACK/VERDICT.md" <<EOF
+.github/workflows/archive/titane_ci.yml:111:            ~/.cargo/registry/index/
+.github/workflows/archive/titane_ci.yml:112:            ~/.cargo/registry/cache/
+.github/workflows/archive/titane_ci.yml:184:            ~/.cargo/registry/index/
+.github/workflows/archive/titane_ci.yml:185:            ~/.cargo/registry/cache/
+.github/workflows/archive/ci-cd.yml:77:            ~/.cargo/registry/index/
+.github/workflows/archive/ci-cd.yml:78:            ~/.cargo/registry/cache/
+scripts/advanced-diagnostic.sh:304:        if ! curl -s --max-time 5 https://registry.npmjs.org/ >/dev/null; then
+scripts/advanced-diagnostic.sh:305:            log_warning "NPM registry not accessible"
+scripts/advanced-diagnostic.sh:307:            log_success "NPM registry accessible"
+scripts/advanced-diagnostic.sh:447:    "npm_registry_accessible": $(curl -s --max-time 5 https://registry.npmjs.org/ >/dev/null && echo "true" || echo "false")

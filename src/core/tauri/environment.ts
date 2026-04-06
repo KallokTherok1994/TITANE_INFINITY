@@ -50,7 +50,9 @@ export function detectEnvironment(): EnvironmentInfo {
 
   const protocol = window.location.protocol.replace(':', '');
   const origin = window.location.origin;
-  const isDev = import.meta.env.DEV;
+  const isDev = Boolean(
+    (import.meta as ImportMeta & { env?: { DEV?: boolean } }).env?.DEV
+  );
 
   // 🔍 DÉTECTION TAURI (critères multiples pour robustesse)
 
@@ -103,16 +105,15 @@ export function detectEnvironment(): EnvironmentInfo {
 /**
  * Vérifie si l'application devrait afficher un avertissement contexte
  *
- * 🔓 DÉSACTIVÉ: Aucun blocage ni restriction - Mode ouvert total
- * Note: Ne bloque JAMAIS le rendu React (pas de document.body.innerHTML)
- * Les warnings sont gérés via logs console et composants UI dédiés
+ * Politique actuelle: rendu React non bloquant, avec fallback gouverné et erreurs visibles.
+ * Note: Ne bloque jamais le rendu via `document.body.innerHTML`; les warnings restent
+ * gérés via logs console et composants UI dédiés.
  *
- * @returns false - TOUJOURS autorisé (restrictions désactivées)
+ * @returns false - le chargement reste non bloquant, même en mode dégradé
  * @deprecated Utiliser directement detectEnvironment() dans les composants
  */
 export function shouldBlockLoading(): boolean {
-  // 🔓 RESTRICTION DÉSACTIVÉE: Aucun blocage ni avertissement
-  // L'application fonctionne dans tous les contextes sans restriction
+  // Le chargement reste autorisé; la dégradation doit être explicite plutôt que silencieuse.
   return false;
 }
 

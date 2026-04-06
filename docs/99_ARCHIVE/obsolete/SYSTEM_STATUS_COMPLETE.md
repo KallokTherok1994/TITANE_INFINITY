@@ -167,13 +167,13 @@
 ## 📚 DOCUMENTATION DISPONIBLE
 
 ### Documentation Principale
-- [README.md](README.md) - Vue d'ensemble
-- [docs/README.md](docs/README.md) - Documentation complète
-- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) - Architecture technique
-- [docs/MODULES.md](docs/MODULES.md) - Documentation modules
-- [docs/CHANGELOG.md](docs/CHANGELOG.md) - Historique changements
-- [docs/SECURITY.md](docs/SECURITY.md) - Sécurité
-- [docs/DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md) - Guide développeur
+- [README.md](../../../README.md) - Vue d'ensemble
+- [docs/README.md](../../../README.md) - Documentation complète
+- [docs/ARCHITECTURE.md](../../ARCHITECTURE.md) - Architecture technique
+- [docs/MODULES.md](../../MODULES.md) - Documentation modules
+- [docs/CHANGELOG.md](../../90_release/CHANGELOG.md) - Historique changements
+- [docs/SECURITY.md](../../SECURITY.md) - Sécurité
+- [docs/DEVELOPER_GUIDE.md](../../DEVELOPER_GUIDE.md) - Guide développeur
 
 ### Documentation Modules Récents
 - [MODULES_55_56_57_59_COMPLETE.md](MODULES_55_56_57_59_COMPLETE.md) - Advanced Cognitive Layer

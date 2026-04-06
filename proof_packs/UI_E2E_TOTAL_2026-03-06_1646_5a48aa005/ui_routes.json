@@ -1,0 +1,16 @@
+{
+	"pack": "UI_E2E_TOTAL_2026-03-06_1646_5a48aa005",
+	"source": [
+		"e2e/desktop/page-objects/uiPages.po.js",
+		"src/App.tsx"
+	],
+	"routes": [
+		{ "route": "/titane", "pageId": "titane" },
+		{ "route": "/time", "pageId": "time" },
+		{ "route": "/stats", "pageId": "stats" },
+		{ "route": "/admin", "pageId": "admin" },
+		{ "route": "/dev", "pageId": "dev" },
+		{ "route": "/fusion", "pageId": "fusion" },
+		{ "route": "/optimization", "pageId": "optimization" }
+	]
+}

@@ -1,4 +1,0 @@
-# 10_SMOKE_TESTS.md
-
-Phase: P13
-Statut: PENDING

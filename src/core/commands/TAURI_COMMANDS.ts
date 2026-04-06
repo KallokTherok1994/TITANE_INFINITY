@@ -11,11 +11,14 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
+import { invoke } from '@tauri-apps/api/core';
+
 export const TAURI_COMMANDS = {
   // ═══════════════════════════════════════════════════════════════
   // RUNTIME CONFIGURATION (Security)
   // ═══════════════════════════════════════════════════════════════
   RUNTIME_GET_CONFIG: 'get_runtime_config',
+  BOOT_MARKER_LOG: 'boot_marker_log',
 
   // ═══════════════════════════════════════════════════════════════
   // HELIOS - System Monitoring
@@ -202,6 +205,16 @@ export const TAURI_COMMANDS = {
   FULLBODY_GET_POSTURE: 'fullbody_get_posture',
   FULLBODY_GET_STATS: 'fullbody_get_stats',
   FULLBODY_RUN_SELFTEST: 'fullbody_run_selftest',
+
+  // ═══════════════════════════════════════════════════════════════
+  // TOTAL_DEV v30.0.0 — GOD DEV secure space
+  // ═══════════════════════════════════════════════════════════════
+  TOTAL_DEV_UNLOCK: 'total_dev_unlock',
+  TOTAL_DEV_SESSION_STATUS: 'total_dev_session_status',
+  TOTAL_DEV_REVOKE: 'total_dev_revoke',
+  TOTAL_DEV_GIT_OP: 'total_dev_git_op',
+  TOTAL_DEV_RUN_COMMAND: 'total_dev_run_command',
+  TOTAL_DEV_READ_FILE: 'total_dev_read_file',
 } as const;
 
 // ═══════════════════════════════════════════════════════════════
@@ -229,15 +242,11 @@ export async function invokeTauri<T>(
   }
 
   try {
-    // Dynamic import pour éviter erreurs SSR
-    const tauriCore = await import('@tauri-apps/api/core');
-
-    // Protection contre undefined
-    if (!tauriCore || typeof tauriCore.invoke !== 'function') {
+    // Protection contre undefined - invoke est importé au niveau global
+    if (typeof invoke !== 'function') {
       throw new Error('Tauri invoke function not available');
     }
 
-    const { invoke } = tauriCore;
     return await invoke<T>(command, args);
   } catch (error) {
     // Fallback en cas d'erreur Tauri (mode web ou erreur backend)

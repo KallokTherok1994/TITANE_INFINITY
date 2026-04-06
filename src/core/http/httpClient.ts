@@ -10,7 +10,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { fetch as tauriFetch } from '@tauri-apps/plugin-http';
+// Réseau direct frontend désactivé en mode gouverné.
 
 const isTauriRuntime = (): boolean => {
   if (typeof window === 'undefined') {
@@ -23,22 +23,8 @@ const isTauriRuntime = (): boolean => {
 
 const hasBrowserFetch = typeof fetch === 'function';
 const isVitest = typeof process !== 'undefined' && process.env?.VITEST === 'true';
-
-const isFetchMocked = (): boolean => {
-  if (!hasBrowserFetch) {
-    return false;
-  }
-
-  const candidate = fetch as unknown as {
-    mock?: unknown;
-    getMockImplementation?: () => unknown;
-  };
-  return Boolean(
-    candidate.mock ||
-    candidate.getMockImplementation ||
-    (candidate as any)._isMockFunction
-  );
-};
+const isHttpMockExplicit =
+  typeof process !== 'undefined' && process.env?.TITANE_HTTP_MOCK === 'true';
 
 const mockHttpResponse = async (url: string, _init?: RequestInit): Promise<Response> => {
   const body = url.includes('generativelanguage.googleapis.com')
@@ -198,52 +184,85 @@ async function request<T = unknown>(
       setTimeout(() => reject(new Error('[HTTP] Request timeout')), timeout);
     });
 
-    // Select appropriate HTTP implementation
     const useTauriFetch = isTauriRuntime();
-    if (!useTauriFetch && !hasBrowserFetch && !isVitest) {
-      throw new Error('[HTTP] No HTTP implementation available in this environment');
+
+    // Mock mode: explicit flag only (no auto-detection)
+    if (!useTauriFetch && isHttpMockExplicit) {
+      const response = await Promise.race([
+        mockHttpResponse(url, {
+          method,
+          headers,
+          body: fetchBody,
+          signal,
+        } as RequestInit),
+        timeoutPromise,
+      ]);
+      // ... continue processing response below
+      console.log(`[HTTP] ${method} ${url} → ${response.status} (MOCK)`);
+      let data: T;
+      try {
+        const text = await response.text();
+        data = text ? JSON.parse(text) : null;
+      } catch {
+        data = null as T;
+      }
+      const headersRecord: Record<string, string> = {};
+      response.headers.forEach((value, key) => {
+        headersRecord[key] = value;
+      });
+      return {
+        ok: response.ok,
+        status: response.status,
+        statusText: response.statusText,
+        data,
+        headers: headersRecord,
+      };
     }
 
-    const shouldUseMockFetch =
-      !useTauriFetch && isVitest && (!hasBrowserFetch || !isFetchMocked());
-    const fetchImpl = useTauriFetch
-      ? tauriFetch
-      : shouldUseMockFetch
-        ? mockHttpResponse
-        : globalThis['fetch'];
+    if (!useTauriFetch) {
+      throw new Error(
+        '[HTTP] Frontend HTTP disabled by governance. Use backend IPC network gateway. Set TITANE_HTTP_MOCK=true for test mock mode.'
+      );
+    }
 
-    const fetchPromise = fetchImpl(url, {
+    // Tauri IPC: delegate HTTP request to backend
+    const { secureInvoke } = await import('@/lib/security');
+    const tauriResult = await secureInvoke('http_request', {
+      url,
       method,
       headers,
-      body: fetchBody,
-      signal,
-    } as RequestInit);
+      body: fetchBody ? String(fetchBody) : null,
+      timeout,
+    });
 
-    const response = await Promise.race([fetchPromise, timeoutPromise]);
+    if (!tauriResult || typeof tauriResult !== 'object') {
+      throw new Error('[HTTP] Tauri IPC returned invalid response');
+    }
 
-    console.log(`[HTTP] ${method} ${url} → ${response.status}`);
+    const tauriData = tauriResult as {
+      ok: boolean;
+      status: number;
+      statusText: string;
+      body: string;
+      headers: Record<string, string>;
+    };
 
-    // Parse response data
+    console.log(`[HTTP] ${method} ${url} → ${tauriData.status}`);
+
+    // Parse Tauri IPC response
     let data: T;
     try {
-      const text = await response.text();
-      data = text ? JSON.parse(text) : null;
+      data = tauriData.body ? JSON.parse(tauriData.body) : null;
     } catch {
       data = null as T;
     }
 
-    // Convertir headers en Record
-    const headersRecord: Record<string, string> = {};
-    response.headers.forEach((value, key) => {
-      headersRecord[key] = value;
-    });
-
     return {
-      ok: response.ok,
-      status: response.status,
-      statusText: response.statusText,
+      ok: tauriData.ok,
+      status: tauriData.status,
+      statusText: tauriData.statusText,
       data,
-      headers: headersRecord,
+      headers: tauriData.headers ?? {},
     };
   } catch (error) {
     console.error(`[HTTP] ${method} ${url} → ERROR:`, error);

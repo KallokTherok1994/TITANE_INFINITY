@@ -1,3 +1,0 @@
-P42_48 proof logs
-- reports/p42_48_bootstrap_precheck_20260226T173016Z.log
-- reports/p42_48_execution_x3_20260226T173016Z.log

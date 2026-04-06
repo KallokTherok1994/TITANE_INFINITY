@@ -6,6 +6,7 @@
 
 import React, { useCallback } from 'react';
 import { useControlPanelSection } from '@/hooks/useControlPanelSection';
+import { TAURI_COMMANDS } from '@/lib/tauriCommands';
 import { ControlPanelToggle } from '../components/ControlPanelToggle';
 
 interface NetworkConfig {
@@ -25,8 +26,8 @@ const DEFAULT_NETWORK_CONFIG: NetworkConfig = {
 export const NetworkSection: React.FC = () => {
   const { config, setConfig, saveConfig, isSaving, saved, error, hasChanges } =
     useControlPanelSection<NetworkConfig>({
-      loadCommand: 'get_network_config',
-      saveCommand: 'set_network_config',
+      loadCommand: TAURI_COMMANDS.CP_GET_NETWORK_CONFIG,
+      saveCommand: TAURI_COMMANDS.CP_SET_NETWORK_CONFIG,
       defaultConfig: DEFAULT_NETWORK_CONFIG,
       saveParamKey: 'config',
     });

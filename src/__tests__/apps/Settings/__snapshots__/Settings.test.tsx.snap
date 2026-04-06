@@ -10,7 +10,7 @@ exports[`Settings Page > Snapshot > should match snapshot 1`] = `
     <h1
       id="settings-title"
     >
-      settings.title
+      Paramètres
     </h1>
   </header>
   <section
@@ -19,13 +19,23 @@ exports[`Settings Page > Snapshot > should match snapshot 1`] = `
     <h2
       id="general-settings"
     >
-      settings.general
+      Général
     </h2>
-    <div
-      data-testid="language-switcher"
+    <select
+      aria-label="Langue"
+      class="language-switcher"
     >
-      LanguageSwitcher
-    </div>
+      <option
+        value="fr"
+      >
+        🇫🇷 Français
+      </option>
+      <option
+        value="en"
+      >
+        🇬🇧 English
+      </option>
+    </select>
   </section>
   <section
     aria-labelledby="appearance-settings"
@@ -33,7 +43,7 @@ exports[`Settings Page > Snapshot > should match snapshot 1`] = `
     <h2
       id="appearance-settings"
     >
-      settings.appearance
+      Apparence
     </h2>
   </section>
 </div>

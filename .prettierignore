@@ -19,7 +19,9 @@ target
 .husky
 .vscode
 deployment
+proof_packs
 docs/_evidence
+runs/**
 .idea
 
 # Archives historiques (do not format)
@@ -110,3 +112,4 @@ baseline_measurements_real_w1.json
 OPTIMIZATION_TARGETS_W1.md
 runtime/registry/**
 **/wdio_caps.json
+.seal_bootstrap_capture.md

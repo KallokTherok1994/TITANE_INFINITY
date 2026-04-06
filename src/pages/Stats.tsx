@@ -14,7 +14,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
 import { ModuleCard } from '../components/ModuleCard';
 import { useEngineSubscription } from '../hooks/useEngineSubscription';
@@ -62,6 +62,256 @@ interface CognitiveMetrics {
 }
 
 // ─────────────────────────────────────────────────────────────────
+// StatsSystemPanels — v29.1 Fusion Export
+// Sections réutilisables sans wrapper page — pour fusion DEV Cockpit
+// Sources: NEXUS (useEngineSubscription), HELIOS, HARMONIA, Cognitive (polling IPC)
+// ─────────────────────────────────────────────────────────────────
+
+export const StatsSystemPanels: React.FC = () => {
+  const nexusData = useEngineSubscription('nexus');
+  const heliosData = useEngineSubscription('helios');
+  const harmoniaData = useEngineSubscription('harmonia');
+
+  const [cognitiveMetrics, setCognitiveMetrics] = useState<CognitiveMetrics | null>(null);
+
+  const fetchCognitive = useCallback(async (signal: AbortSignal) => {
+    try {
+      const data =
+        (await tauriClient.orchestrationGetCognitiveState()) as CognitiveMetrics | null;
+      if (signal.aborted) return;
+      setCognitiveMetrics(data);
+    } catch {
+      // fallback: keep null — no fake data
+    }
+  }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    void fetchCognitive(controller.signal);
+    const id = setInterval(() => void fetchCognitive(controller.signal), 5000);
+    return () => {
+      controller.abort();
+      clearInterval(id);
+    };
+  }, [fetchCognitive]);
+
+  const { data: nexusGraph } = nexusData as { data: NexusGraph | null; loading: boolean };
+  const { data: heliosMetrics } = heliosData as {
+    data: HeliosMetrics | null;
+    loading: boolean;
+  };
+  const { data: harmoniaFlows } = harmoniaData as {
+    data: HarmoniaFlows | null;
+    loading: boolean;
+  };
+
+  const nodeCount = extractNumber(nexusGraph?.nodeCount, 0);
+  const edgeCount = extractNumber(nexusGraph?.edgeCount, 0);
+  const networkDensity = useMemo(
+    () => (nodeCount > 0 ? (edgeCount / nodeCount) * 100 : 0),
+    [nodeCount, edgeCount]
+  );
+
+  const bpm = extractNumber(heliosMetrics?.bpm, 0);
+  const vitalityScore = extractNumber(heliosMetrics?.vitality_score, 0);
+  const systemLoad = extractNumber(heliosMetrics?.system_load, 0);
+  const temperature = extractNumber(heliosMetrics?.temperature);
+  const uptime = extractNumber(heliosMetrics?.uptime);
+
+  const activeFlowsCount = harmoniaFlows?.activeFlows?.length ?? 0;
+  const balance = extractNumber(harmoniaFlows?.balance, 0);
+  const coherence = extractNumber(harmoniaFlows?.coherence, 0);
+
+  const cognitiveScore = extractNumber(cognitiveMetrics?.cognitiveScore, 0);
+  const stability = extractNumber(cognitiveMetrics?.stability, 0);
+  const mentalLoad = extractNumber(cognitiveMetrics?.mentalLoad, 0);
+  const reasoningQuality = extractNumber(cognitiveMetrics?.reasoningQuality, 0);
+  const cognitiveDepth = extractNumber(cognitiveMetrics?.depth, 0);
+  const cognitiveMode = cognitiveMetrics?.mode ?? 'balanced';
+  const activeProcessesCount = cognitiveMetrics?.activeProcesses?.length ?? 0;
+
+  return (
+    <>
+      {/* RÉSEAU COGNITIF (NEXUS) */}
+      <div className="stats-section">
+        <h2 className="stats-section-title">
+          <span className="stats-section-icon">🧠</span>Réseau Cognitif
+        </h2>
+        <div className="module-grid grid-responsive-3">
+          <ModuleCard
+            title="Nœuds Actifs"
+            value={nodeCount.toFixed(0)}
+            icon="🔵"
+            subtitle="Nombre de nœuds dans le graphe"
+            variant="primary"
+          />
+          <ModuleCard
+            title="Connexions"
+            value={edgeCount.toFixed(0)}
+            icon="🔗"
+            subtitle="Liens entre les nœuds"
+            variant="success"
+          />
+          <ModuleCard
+            title="Densité du Réseau"
+            value={`${networkDensity.toFixed(1)}%`}
+            icon="📊"
+            subtitle="Ratio connexions/nœuds"
+            variant="warning"
+          />
+        </div>
+      </div>
+
+      {/* SYSTÈME VITAL (HELIOS) */}
+      <div className="stats-section">
+        <h2 className="stats-section-title">
+          <span className="stats-section-icon">💓</span>Système Vital
+        </h2>
+        <div className="module-grid">
+          <ModuleCard
+            title="BPM Système"
+            value={bpm.toFixed(0)}
+            icon="💓"
+            subtitle="Battements par minute"
+            variant={bpm > 60 ? 'success' : 'warning'}
+          />
+          <ModuleCard
+            title="Score de Vitalité"
+            value={`${vitalityScore.toFixed(1)}%`}
+            icon="⚡"
+            subtitle="Niveau de santé global"
+            variant={
+              vitalityScore > 80 ? 'success' : vitalityScore > 50 ? 'warning' : 'error'
+            }
+          />
+          <ModuleCard
+            title="Charge Système"
+            value={`${systemLoad.toFixed(1)}%`}
+            icon="📊"
+            subtitle="Utilisation des ressources"
+            variant={systemLoad < 70 ? 'success' : systemLoad < 85 ? 'warning' : 'error'}
+          />
+          {temperature !== undefined && temperature > 0 && (
+            <ModuleCard
+              title="Température"
+              value={`${temperature.toFixed(1)}°C`}
+              icon="🌡️"
+              subtitle="Température système"
+              variant={temperature < 70 ? 'success' : 'warning'}
+            />
+          )}
+          {uptime !== undefined && uptime > 0 && (
+            <ModuleCard
+              title="Uptime (Helios)"
+              value={`${(uptime / 3600).toFixed(1)}h`}
+              icon="⏱️"
+              subtitle="Temps de fonctionnement"
+              variant="primary"
+            />
+          )}
+        </div>
+      </div>
+
+      {/* ÉQUILIBRE DES FLUX (HARMONIA) */}
+      <div className="stats-section">
+        <h2 className="stats-section-title">
+          <span className="stats-section-icon">⚖️</span>Équilibre des Flux
+        </h2>
+        <div className="module-grid">
+          <ModuleCard
+            title="Flux Actifs"
+            value={activeFlowsCount.toFixed(0)}
+            icon="🌊"
+            subtitle="Processus en cours"
+            variant="primary"
+          />
+          <ModuleCard
+            title="Score d'Équilibre"
+            value={`${balance.toFixed(1)}%`}
+            icon="⚖️"
+            subtitle="Niveau d'équilibre global"
+            variant={balance > 75 ? 'success' : balance > 50 ? 'warning' : 'error'}
+          />
+          <ModuleCard
+            title="Cohérence"
+            value={`${coherence.toFixed(1)}%`}
+            icon="🔗"
+            subtitle="Synchronisation des flux"
+            variant={coherence > 75 ? 'success' : 'warning'}
+          />
+        </div>
+      </div>
+
+      {/* ÉTAT COGNITIF */}
+      <div className="stats-section">
+        <h2 className="stats-section-title">
+          <span className="stats-section-icon">🧠</span>État Cognitif
+        </h2>
+        <div className="module-grid">
+          <ModuleCard
+            title="Score Cognitif"
+            value={`${cognitiveScore.toFixed(0)}%`}
+            icon="🎯"
+            subtitle="Performance cognitive globale"
+            variant={
+              cognitiveScore > 80 ? 'success' : cognitiveScore > 60 ? 'warning' : 'error'
+            }
+          />
+          <ModuleCard
+            title="Stabilité"
+            value={`${stability.toFixed(0)}%`}
+            icon="⚖️"
+            subtitle="Stabilité du système cognitif"
+            variant={stability > 85 ? 'success' : stability > 70 ? 'warning' : 'error'}
+          />
+          <ModuleCard
+            title="Charge Mentale"
+            value={`${mentalLoad.toFixed(0)}%`}
+            icon="🧠"
+            subtitle="Niveau de charge cognitive"
+            variant={mentalLoad < 50 ? 'success' : mentalLoad < 75 ? 'warning' : 'error'}
+          />
+          <ModuleCard
+            title="Qualité du Raisonnement"
+            value={`${reasoningQuality.toFixed(0)}%`}
+            icon="💡"
+            subtitle="Qualité d'analyse et réflexion"
+            variant={
+              reasoningQuality > 85
+                ? 'success'
+                : reasoningQuality > 70
+                  ? 'warning'
+                  : 'error'
+            }
+          />
+          <ModuleCard
+            title="Profondeur Cognitive"
+            value={`${cognitiveDepth.toFixed(0)}/10`}
+            icon="🔍"
+            subtitle={`Mode: ${cognitiveMode}`}
+            variant={
+              cognitiveDepth >= 7
+                ? 'success'
+                : cognitiveDepth >= 4
+                  ? 'warning'
+                  : 'primary'
+            }
+          />
+          <ModuleCard
+            title="Processus Actifs"
+            value={activeProcessesCount.toFixed(0)}
+            icon="⚙️"
+            subtitle="Processus cognitifs en cours"
+            variant="primary"
+          />
+        </div>
+      </div>
+    </>
+  );
+};
+StatsSystemPanels.displayName = 'StatsSystemPanels';
+
+// ─────────────────────────────────────────────────────────────────
 // COMPONENT PRINCIPAL
 // ─────────────────────────────────────────────────────────────────
 
@@ -78,36 +328,35 @@ export const Stats: React.FC = () => {
   const [cognitiveMetrics, setCognitiveMetrics] = useState<CognitiveMetrics | null>(null);
   const [cognitiveLoading, setCognitiveLoading] = useState(true);
 
-  useEffect(() => {
-    let mounted = true;
-
-    const fetchCognitive = async () => {
-      try {
-        const data =
-          (await tauriClient.orchestrationGetCognitiveState()) as CognitiveMetrics | null;
-        if (mounted) {
-          setCognitiveMetrics(data);
-          setCognitiveLoading(false);
-        }
-      } catch (error) {
-        console.error('[Stats] Error fetching cognitive state:', error);
-        if (mounted) {
-          setCognitiveLoading(false);
-        }
+  const fetchCognitive = useCallback(async (signal: AbortSignal) => {
+    try {
+      const data =
+        (await tauriClient.orchestrationGetCognitiveState()) as CognitiveMetrics | null;
+      if (signal.aborted) return;
+      setCognitiveMetrics(data);
+      setCognitiveLoading(false);
+    } catch (error) {
+      console.error('[Stats] Error fetching cognitive state:', error);
+      if (!signal.aborted) {
+        setCognitiveLoading(false);
       }
-    };
+    }
+  }, []);
 
-    // Initial fetch
-    fetchCognitive();
+  useEffect(() => {
+    const controller = new AbortController();
+    void fetchCognitive(controller.signal);
 
     // Polling every 5s
-    const intervalId = setInterval(fetchCognitive, 5000);
+    const intervalId = setInterval(() => {
+      void fetchCognitive(controller.signal);
+    }, 5000);
 
     return () => {
-      mounted = false;
+      controller.abort();
       clearInterval(intervalId);
     };
-  }, []);
+  }, [fetchCognitive]);
 
   // ═══ Extraction des données typées ═══
   const { data: nexusGraph, loading: nexusLoading } = nexusData as {
@@ -178,7 +427,7 @@ export const Stats: React.FC = () => {
   }
 
   return (
-    <div className="module-page">
+    <div className="module-page" data-testid="page-stats">
       {/* ═══ HEADER ═══ */}
       <div className="module-header">
         <div className="module-title-group">

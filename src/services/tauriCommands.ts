@@ -51,19 +51,19 @@ export const TAURI_COMMANDS: Record<string, TauriCommand> = {
     description: 'Sync state with backend',
     params: { state: 'SingularityState' },
     returnType: 'void',
-    active: true,
+    active: false, // GHOST: not in generate_handler! — audit 2026-03-16
   },
   helios_get_modules: {
     name: 'helios_get_modules',
     description: 'Get all Helios modules',
     returnType: 'Vec<HeliosModule>',
-    active: true,
+    active: false, // GHOST: not in generate_handler! — audit 2026-03-16
   },
   helios_get_health: {
     name: 'helios_get_health',
     description: 'Get Helios health status',
     returnType: 'HealthStatus',
-    active: true,
+    active: false, // GHOST: not in generate_handler! — audit 2026-03-16
   },
   memory_get_active_projects: {
     name: 'memory_get_active_projects',
@@ -77,19 +77,19 @@ export const TAURI_COMMANDS: Record<string, TauriCommand> = {
     description: 'Get recent memories',
     params: { limit: 'number' },
     returnType: 'Vec<Memory>',
-    active: true,
+    active: false, // GHOST: not in generate_handler! — audit 2026-03-16
   },
   nexus_get_status: {
     name: 'nexus_get_status',
     description: 'Get Nexus orchestration status',
     returnType: 'NexusStatus',
-    active: true,
+    active: false, // GHOST: not in generate_handler! — audit 2026-03-16
   },
   persona_get_multipliers: {
     name: 'persona_get_multipliers',
     description: 'Get Persona multipliers',
     returnType: 'PersonaMultipliers',
-    active: true,
+    active: false, // GHOST: not in generate_handler! — audit 2026-03-16
   },
   start_recording: {
     name: 'start_recording',
@@ -116,7 +116,7 @@ export const TAURI_COMMANDS: Record<string, TauriCommand> = {
     name: 'engine_init',
     description: 'Initialize Singularity Engine',
     returnType: 'void',
-    active: true,
+    active: false, // GHOST: not in generate_handler! — audit 2026-03-16
   },
   engine_tick: {
     name: 'engine_tick',
@@ -128,19 +128,19 @@ export const TAURI_COMMANDS: Record<string, TauriCommand> = {
     name: 'engine_stop',
     description: 'Stop engine',
     returnType: 'void',
-    active: true,
+    active: false, // GHOST: not in generate_handler! — audit 2026-03-16
   },
   engine_get_state: {
     name: 'engine_get_state',
     description: 'Get engine state',
     returnType: 'EngineState',
-    active: true,
+    active: false, // GHOST: not in generate_handler! — audit 2026-03-16
   },
   engine_get_health: {
     name: 'engine_get_health',
     description: 'Get engine health',
     returnType: 'HealthStatus',
-    active: true,
+    active: false, // GHOST: not in generate_handler! — audit 2026-03-16
   },
 
   // ━━━ DEVTOOLS ━━━
@@ -148,19 +148,19 @@ export const TAURI_COMMANDS: Record<string, TauriCommand> = {
     name: 'devtools_get_logs',
     description: 'Get DevTools logs',
     returnType: 'Vec<LogEntry>',
-    active: true,
+    active: false, // GHOST: not in generate_handler! — audit 2026-03-16
   },
   devtools_get_metrics: {
     name: 'devtools_get_metrics',
     description: 'Get DevTools metrics',
     returnType: 'Metrics',
-    active: true,
+    active: false, // GHOST: not in generate_handler! — audit 2026-03-16
   },
   devtools_inspect_singularity: {
     name: 'devtools_inspect_singularity',
     description: 'Inspect Singularity state',
     returnType: 'SingularityInspection',
-    active: true,
+    active: false, // GHOST: not in generate_handler! — audit 2026-03-16
   },
 
   // ━━━ CORE SYSTEM ━━━
@@ -174,7 +174,7 @@ export const TAURI_COMMANDS: Record<string, TauriCommand> = {
     name: 'system_get_info',
     description: 'Get system info',
     returnType: 'SystemInfo',
-    active: true,
+    active: false, // GHOST: not in generate_handler! — audit 2026-03-16
   },
 
   // ━━━ DISABLED / EXPERIMENTAL ━━━

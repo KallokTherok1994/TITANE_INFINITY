@@ -1,0 +1,25 @@
+[0-0] 2026-03-11T06:47:14.059Z INFO webdriver: COMMAND deleteSession()
+[0-0] 2026-03-11T06:47:14.059Z INFO webdriver: [DELETE] http://127.0.0.1:4444/session/4141058d-16a5-428e-9b30-19e917229272
+[0-0] 2026-03-11T06:47:14.067Z INFO webdriver: RESULT null
+2026-03-11T06:47:14.183Z DEBUG @wdio/local-runner: Runner 0-0 finished with exit code 0
+[0-0] PASSED in wry - file:///tmp/v12_ui_visual_probe.wdio.test.js
+2026-03-11T06:47:14.183Z INFO @wdio/cli:launcher: Run onWorkerEnd hook
+
+ "spec" Reporter:
+------------------------------------------------------------------
+[wry 0.54.2 linux #0-0] Running: wry (v0.54.2) on linux
+[wry 0.54.2 linux #0-0] Session ID: 4141058d-16a5-428e-9b30-19e917229272
+[wry 0.54.2 linux #0-0]
+[wry 0.54.2 linux #0-0] » tmp/v12_ui_visual_probe.wdio.test.js
+[wry 0.54.2 linux #0-0] V12 frontend UI visual probe
+[wry 0.54.2 linux #0-0]    ✓ captures shell, interaction and response on the canonical surface
+[wry 0.54.2 linux #0-0]
+[wry 0.54.2 linux #0-0] 1 passing (5.7s)
+
+
+Spec Files:	 1 passed, 1 total (100% completed) in 00:00:06  
+
+2026-03-11T06:47:14.184Z INFO @wdio/local-runner: Shutting down spawned worker
+2026-03-11T06:47:14.434Z INFO @wdio/local-runner: Waiting for 0 to shut down gracefully
+2026-03-11T06:47:14.434Z INFO @wdio/local-runner: shutting down
+2026-03-11T06:47:14.434Z INFO @wdio/cli:launcher: Run onComplete hook

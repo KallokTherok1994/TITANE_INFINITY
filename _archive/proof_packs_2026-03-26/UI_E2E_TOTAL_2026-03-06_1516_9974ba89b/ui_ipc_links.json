@@ -1,0 +1,149 @@
+[
+  {
+    "page": "AdaptiveEngine",
+    "file": "src/pages/AdaptiveEngine.tsx",
+    "tauriClient": [],
+    "secureInvoke": [],
+    "engineSubscriptions": [
+      "adaptive"
+    ]
+  },
+  {
+    "page": "ConfigurationHub",
+    "file": "src/pages/ConfigurationHub.tsx",
+    "tauriClient": [
+      "getAllConfigs",
+      "getChatEngineConfig",
+      "getChatRequestDefaults",
+      "updateRuntimeConfig",
+      "setChatEngineConfig",
+      "setChatRequestDefaults",
+      "exportConfig",
+      "importConfig",
+      "listConfigPresets",
+      "saveConfigPreset",
+      "loadConfigPreset",
+      "deleteConfigPreset",
+      "setChatProfile"
+    ],
+    "secureInvoke": [],
+    "engineSubscriptions": []
+  },
+  {
+    "page": "DevPage",
+    "file": "src/pages/DevPage.tsx",
+    "tauriClient": [
+      "orchestrationGetUnifiedState"
+    ],
+    "secureInvoke": [],
+    "engineSubscriptions": []
+  },
+  {
+    "page": "Harmonia",
+    "file": "src/pages/Harmonia.tsx",
+    "tauriClient": [],
+    "secureInvoke": [],
+    "engineSubscriptions": [
+      "harmonia"
+    ]
+  },
+  {
+    "page": "Helios",
+    "file": "src/pages/Helios.tsx",
+    "tauriClient": [],
+    "secureInvoke": [],
+    "engineSubscriptions": [
+      "helios"
+    ]
+  },
+  {
+    "page": "Nexus",
+    "file": "src/pages/Nexus.tsx",
+    "tauriClient": [],
+    "secureInvoke": [],
+    "engineSubscriptions": [
+      "nexus"
+    ]
+  },
+  {
+    "page": "OrchestrationMetaCenter",
+    "file": "src/pages/OrchestrationMetaCenter.tsx",
+    "tauriClient": [
+      "orchestratorGetState",
+      "orchestratorInit",
+      "multiAiGetState",
+      "nexusGetState",
+      "harmoniaGetState",
+      "cognitiveGetState",
+      "orchestratorSetMode",
+      "orchestratorRunCycle"
+    ],
+    "secureInvoke": [],
+    "engineSubscriptions": []
+  },
+  {
+    "page": "SelfHeal",
+    "file": "src/pages/SelfHeal.tsx",
+    "tauriClient": [],
+    "secureInvoke": [],
+    "engineSubscriptions": [
+      "selfheal"
+    ]
+  },
+  {
+    "page": "Sentinel",
+    "file": "src/pages/Sentinel.tsx",
+    "tauriClient": [],
+    "secureInvoke": [],
+    "engineSubscriptions": [
+      "sentinel"
+    ]
+  },
+  {
+    "page": "Stats",
+    "file": "src/pages/Stats.tsx",
+    "tauriClient": [
+      "orchestrationGetCognitiveState"
+    ],
+    "secureInvoke": [],
+    "engineSubscriptions": [
+      "nexus",
+      "helios",
+      "harmonia"
+    ]
+  },
+  {
+    "page": "TimeNavigator",
+    "file": "src/pages/TimeNavigator.tsx",
+    "tauriClient": [
+      "listSnapshots",
+      "getTravelStats",
+      "restoreSnapshot",
+      "deleteSnapshot"
+    ],
+    "secureInvoke": [],
+    "engineSubscriptions": []
+  },
+  {
+    "page": "TimePage",
+    "file": "src/pages/TimePage.tsx",
+    "tauriClient": [
+      "listSnapshots",
+      "getTravelStats",
+      "restoreSnapshot",
+      "deleteSnapshot",
+      "titanForceSnapshot"
+    ],
+    "secureInvoke": [],
+    "engineSubscriptions": []
+  },
+  {
+    "page": "Watchdog",
+    "file": "src/pages/Watchdog.tsx",
+    "tauriClient": [],
+    "secureInvoke": [],
+    "engineSubscriptions": [
+      "watchdog"
+    ]
+  }
+]

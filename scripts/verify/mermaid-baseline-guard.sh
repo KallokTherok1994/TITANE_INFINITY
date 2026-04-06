@@ -4,6 +4,16 @@ set -euo pipefail
 ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
 cd "$ROOT_DIR"
 
+first_match_field() {
+  local pattern="$1"
+  local file="$2"
+  if command -v rg >/dev/null 2>&1; then
+    rg -n -- "$pattern" "$file" | head -n 1 | awk -F": " '{print $2}'
+  else
+    grep -nE -- "$pattern" "$file" | head -n 1 | awk -F": " '{print $2}'
+  fi
+}
+
 BASELINE_LOCK="docs/diagrams/MERMAID_BASELINE_LOCK.json"
 REGISTRY_PATH="docs/diagrams/MERMAID_HASH_REGISTRY.json"
 STATUS_PATH="docs/diagrams/MERMAID_STATUS.md"
@@ -223,7 +233,7 @@ if [[ ! -f "$STATUS_PATH" ]]; then
   exit 1
 fi
 
-status_baseline=$(rg -n "^\- Baseline SHA:" "$STATUS_PATH" | head -n 1 | awk -F": " '{print $2}')
+status_baseline=$(first_match_field "^\- Baseline SHA:" "$STATUS_PATH")
 if [[ -z "$status_baseline" || "$status_baseline" != "$BASELINE_SHA" ]]; then
   echo "FAIL: Mermaid status report baseline mismatch"
   exit 1

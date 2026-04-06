@@ -1,0 +1,4 @@
+ 16899350 runtime/stable/TITANE-Infinity_27.2.0_amd64.deb
+ 88496632 runtime/stable/Titan-Stable_27.0.5_amd64.AppImage
+ 13210290 runtime/stable/Titan-Stable_27.0.5_amd64.deb
+118606272 total

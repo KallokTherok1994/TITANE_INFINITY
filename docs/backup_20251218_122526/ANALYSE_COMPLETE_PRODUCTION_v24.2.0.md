@@ -379,7 +379,7 @@ Modules Rust:
 - [src/engines/time/AgendaEngine.ts](src/engines/time/AgendaEngine.ts#L29)
 - [src/engines/time/ChatScheduler.ts](src/engines/time/ChatScheduler.ts#L29)
 
-**Recommandation**: Refactorer pour conformité [ARCHITECTURE_RINGS.md](docs/ARCHITECTURE_RINGS.md)
+**Recommandation**: Refactorer pour conformité [ARCHITECTURE_RINGS.md](../ARCHITECTURE_RINGS.md)
 
 ---
 

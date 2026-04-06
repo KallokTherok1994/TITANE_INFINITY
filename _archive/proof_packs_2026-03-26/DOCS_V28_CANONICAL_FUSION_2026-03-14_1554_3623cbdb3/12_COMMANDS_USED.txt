@@ -1,0 +1,31 @@
+# 12 COMMANDS USED
+
+Mission pack root:
+/home/titane-os/Documents/GitHub/TITANE_INFINITY/proof_packs/DOCS_V28_CANONICAL_FUSION_2026-03-14_1554_3623cbdb3
+
+Precheck baseline:
+- git --no-pager log --oneline --decorate -30
+- git status --short
+- ls -1d /home/titane-os/Documents/GitHub/TITANE_INFINITY/proof_packs/DOCS_CANON_PARTIAL_*
+
+B2 authority and contradiction scans:
+- rg -n --no-heading 'v27|v28|current|latest|stable|PROVEN_BY_REPO|PARTIAL|CONTRADICTORY' /home/titane-os/Documents/GitHub/TITANE_INFINITY/README.md /home/titane-os/Documents/GitHub/TITANE_INFINITY/docs/README.md /home/titane-os/Documents/GitHub/TITANE_INFINITY/docs/90_release/PRODUCTION_RELEASE_v28.0.0.md /home/titane-os/Documents/GitHub/TITANE_INFINITY/CHANGELOG.md /home/titane-os/Documents/GitHub/TITANE_INFINITY/package.json
+- rg -n --no-heading 'v27\.[0-9]+\.[0-9]+.*(current|Current|latest|Latest|stable|Stable)|\b(Current Stable|Latest Deployment|Phase actuelle).*v27|v27\.[0-9]+\.[0-9]+.*(STABLE|LATEST)' /home/titane-os/Documents/GitHub/TITANE_INFINITY/README.md /home/titane-os/Documents/GitHub/TITANE_INFINITY/docs/README.md
+- rg -n --no-heading 'v27\.0\.|27\.0\.|27\.2\.|latest/current|contradict|Stable binaries remain|TITANE-Infinity_27|Titan-Stable_27' /home/titane-os/Documents/GitHub/TITANE_INFINITY/docs/90_release/PRODUCTION_RELEASE_v28.0.0.md
+- rg -n --no-heading '"version"|\[28\.0\.0\]' /home/titane-os/Documents/GitHub/TITANE_INFINITY/package.json /home/titane-os/Documents/GitHub/TITANE_INFINITY/CHANGELOG.md
+
+Governance gates:
+- bash /home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/verify_instructions.sh
+- bash /home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/autoheal/detect_recurrence.sh
+
+Evidence capture:
+- git --no-pager diff -- /home/titane-os/Documents/GitHub/TITANE_INFINITY/package.json /home/titane-os/Documents/GitHub/TITANE_INFINITY/CHANGELOG.md /home/titane-os/Documents/GitHub/TITANE_INFINITY/README.md /home/titane-os/Documents/GitHub/TITANE_INFINITY/docs/README.md /home/titane-os/Documents/GitHub/TITANE_INFINITY/docs/90_release/PRODUCTION_RELEASE_v28.0.0.md
+- git status --short /home/titane-os/Documents/GitHub/TITANE_INFINITY/package.json /home/titane-os/Documents/GitHub/TITANE_INFINITY/CHANGELOG.md /home/titane-os/Documents/GitHub/TITANE_INFINITY/README.md /home/titane-os/Documents/GitHub/TITANE_INFINITY/docs/README.md /home/titane-os/Documents/GitHub/TITANE_INFINITY/docs/90_release/PRODUCTION_RELEASE_v28.0.0.md
+- local markdown links check on /home/titane-os/Documents/GitHub/TITANE_INFINITY/README.md /home/titane-os/Documents/GitHub/TITANE_INFINITY/docs/README.md /home/titane-os/Documents/GitHub/TITANE_INFINITY/docs/90_release/PRODUCTION_RELEASE_v28.0.0.md
+
+Compatibility files:
+- create /home/titane-os/Documents/GitHub/TITANE_INFINITY/proof_packs/DOCS_V28_CANONICAL_FUSION_2026-03-14_1554_3623cbdb3/VERDICT.md
+- create /home/titane-os/Documents/GitHub/TITANE_INFINITY/proof_packs/DOCS_V28_CANONICAL_FUSION_2026-03-14_1554_3623cbdb3/ROLLBACK.md
+
+Seal:
+- sha256sum /home/titane-os/Documents/GitHub/TITANE_INFINITY/proof_packs/DOCS_V28_CANONICAL_FUSION_2026-03-14_1554_3623cbdb3/0[0-9]_*.md /home/titane-os/Documents/GitHub/TITANE_INFINITY/proof_packs/DOCS_V28_CANONICAL_FUSION_2026-03-14_1554_3623cbdb3/1[0-2]_*.{md,txt} /home/titane-os/Documents/GitHub/TITANE_INFINITY/proof_packs/DOCS_V28_CANONICAL_FUSION_2026-03-14_1554_3623cbdb3/VERDICT.md /home/titane-os/Documents/GitHub/TITANE_INFINITY/proof_packs/DOCS_V28_CANONICAL_FUSION_2026-03-14_1554_3623cbdb3/ROLLBACK.md

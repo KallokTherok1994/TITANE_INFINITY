@@ -549,10 +549,10 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
     let rate_profile = match options.rate_limit_profile.as_deref() {
         Some("polite") => RateLimitProfile::Polite,
         Some("strict") => RateLimitProfile::Strict,
-        Some(other) if other.parse::<u32>().is_ok() => {
-            RateLimitProfile::Custom(other.parse().unwrap())
-        }
-        _ => RateLimitProfile::Default,
+        Some(other) => other
+            .parse::<u32>()
+            .map(RateLimitProfile::Custom)
+            .unwrap_or(RateLimitProfile::Default),
     };
 
     let mut rate_svc = RateLimitService::new(rate_profile);

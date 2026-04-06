@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25.3.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * VisionSection Component
@@ -11,6 +11,7 @@ import React, { useState, useCallback, memo } from 'react';
 import { Grid, Stack } from '@components/layout';
 import { Button } from '../ui';
 import { Card } from '@/ui';
+import { SectionLoadingFallback } from './SectionLoadingFallback';
 import { CameraPreview } from '@/components/vision/CameraPreview';
 import { TMetric, TSectionHeader } from '@/design-system';
 import { Camera } from 'lucide-react';
@@ -112,8 +113,7 @@ export const VisionSection: React.FC<VisionSectionProps> = memo(() => {
   const engagementLevel = useVisionStore(selectEngagementLevel);
   const confidence = useVisionStore(selectConfidence);
   const enableVision = useVisionStore(s => s.enableVision);
-  const requestCameraPermission = useVisionStore(s => s.requestCameraPermission);
-  const startCamera = useVisionStore(s => s.startCamera);
+  const permissionStatus = useVisionStore(s => s.visionInput.permissionStatus);
 
   // ═══ STATE ═══
   const [isStarting, setIsStarting] = useState(false);
@@ -124,22 +124,13 @@ export const VisionSection: React.FC<VisionSectionProps> = memo(() => {
     setIsStarting(true);
     setError(null);
     try {
-      const permission = await requestCameraPermission();
-      if (permission !== 'granted') {
-        setError('Permission caméra refusée. Autorisez la caméra pour activer Vision.');
-        return;
-      }
-
       const enabled = await enableVision();
       if (!enabled) {
-        setError('Activation Vision annulée ou impossible.');
-        return;
-      }
-
-      const started = await startCamera();
-      if (!started) {
-        setError('Impossible de démarrer la caméra.');
-        return;
+        if (permissionStatus === 'denied' || permissionStatus === 'unavailable') {
+          setError('Permission caméra refusée. Autorisez la caméra pour activer Vision.');
+        } else {
+          setError('Activation Vision annulée ou impossible.');
+        }
       }
     } catch (e) {
       const message = e instanceof Error ? e.message : String(e);
@@ -148,7 +139,7 @@ export const VisionSection: React.FC<VisionSectionProps> = memo(() => {
     } finally {
       setIsStarting(false);
     }
-  }, [enableVision, requestCameraPermission, startCamera]);
+  }, [enableVision, permissionStatus]);
 
   // ═══ RENDER ═══
   return (
@@ -191,7 +182,15 @@ export const VisionSection: React.FC<VisionSectionProps> = memo(() => {
                 )}
 
                 <CameraPreview position="bottom-left" />
-                <React.Suspense fallback={null}>
+                <React.Suspense
+                  fallback={
+                    <SectionLoadingFallback
+                      label="Overlay de détection"
+                      note="Activation des détections visuelles…"
+                      testId="loading-vision-overlay"
+                    />
+                  }
+                >
                   <LazyDetectionOverlay />
                 </React.Suspense>
               </div>
@@ -251,7 +250,15 @@ export const VisionSection: React.FC<VisionSectionProps> = memo(() => {
       {/* Vision Metrics Charts */}
       <div style={{ marginTop: spacing[6] }}>
         <h3 style={{ marginBottom: spacing[4] }}>📈 Graphiques de Métriques</h3>
-        <React.Suspense fallback={null}>
+        <React.Suspense
+          fallback={
+            <SectionLoadingFallback
+              label="Graphiques Vision"
+              note="Préparation des métriques visuelles…"
+              testId="loading-vision-metrics"
+            />
+          }
+        >
           <LazyVisionMetricsChart />
         </React.Suspense>
       </div>

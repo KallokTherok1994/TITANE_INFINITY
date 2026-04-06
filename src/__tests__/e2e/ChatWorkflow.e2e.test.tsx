@@ -196,7 +196,7 @@ describe('E2E: Chat Workflow', () => {
       fireEvent.click(screen.getByRole('button', { name: /envoyer/i }));
 
       await waitFor(() => {
-        expect(screen.getByText(/erreur/i)).toBeInTheDocument();
+        expect(screen.getAllByText(/erreur/i).length).toBeGreaterThan(0);
       });
     });
 
@@ -229,7 +229,7 @@ describe('E2E: Chat Workflow', () => {
       fireEvent.click(screen.getByRole('button', { name: /envoyer/i }));
 
       await waitFor(() => {
-        expect(screen.getByText(/erreur/i)).toBeInTheDocument();
+        expect(screen.getAllByText(/erreur/i).length).toBeGreaterThan(0);
       });
 
       // Retry button

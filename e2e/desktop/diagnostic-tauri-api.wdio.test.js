@@ -7,6 +7,17 @@
 
 import assert from 'node:assert/strict';
 
+const parsePositiveInt = (value, fallback) => {
+  const parsed = Number.parseInt(value, 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+};
+
+const DIAG_SCRIPT_TIMEOUT_MS = parsePositiveInt(
+  process.env.DIAG_IPC_SCRIPT_TIMEOUT_MS,
+  90000
+);
+const DIAG_TEST_TIMEOUT_MS = parsePositiveInt(process.env.DIAG_TEST_TIMEOUT_MS, 120000);
+
 async function ensureTauriPageLoaded(appUrl) {
   const candidates = [appUrl, 'tauri://localhost/#/chat', 'tauri://localhost'];
 
@@ -22,15 +33,34 @@ async function ensureTauriPageLoaded(appUrl) {
   return false;
 }
 
+async function recoverDiagnosticSession(appUrl) {
+  try {
+    await browser.reloadSession();
+  } catch {
+    // Session may already be gone; continue with fresh navigation attempts.
+  }
+
+  const loaded = await ensureTauriPageLoaded(appUrl);
+  if (!loaded) {
+    throw new Error('Diagnostic recovery failed: Tauri page unavailable');
+  }
+}
+
 describe('Diagnostic: Tauri API Availability', () => {
   before(async function () {
     const appUrl = process.env.TITANE_E2E_URL || 'tauri://localhost/#/chat';
+
+    await browser.setTimeout({
+      script: DIAG_SCRIPT_TIMEOUT_MS,
+      pageLoad: 60000,
+      implicit: 0,
+    });
+
     const loaded = await ensureTauriPageLoaded(appUrl);
     if (!loaded) {
-      console.warn(
-        '[DIAG] Tauri page unavailable (about:blank), skipping diagnostic spec'
+      throw new Error(
+        'BLOCKER: Tauri page unavailable (about:blank) - environment setup required'
       );
-      this.skip();
     }
   });
 
@@ -76,51 +106,74 @@ describe('Diagnostic: Tauri API Availability', () => {
     console.log('\n📦 Tauri Metadata:', result);
   });
 
-  it('Test direct IPC call with @tauri-apps/api/core pattern', async () => {
+  it('Test direct IPC call with @tauri-apps/api/core pattern', async function () {
+    const appUrl = process.env.TITANE_E2E_URL || 'tauri://localhost/#/chat';
+
+    // Increase per-test timeout because local generation can exceed default Mocha timeout.
+    this.timeout(DIAG_TEST_TIMEOUT_MS);
+
     try {
       let response = null;
       let lastError = 'IPC invocation failed';
 
       for (let attempt = 1; attempt <= 5; attempt++) {
-        response = await browser.executeAsync(done => {
-          const run = async () => {
-            const payload = {
-              args: {
-                message: '[DIAG] ping',
-                conversationId: `diag-${Date.now()}`,
-                provider: 'local',
-              },
+        try {
+          response = await browser.executeAsync(done => {
+            const run = async () => {
+              const payload = {
+                args: {
+                  message: '[DIAG] ping',
+                  conversationId: `diag-${Date.now()}`,
+                  provider: 'local',
+                },
+              };
+
+              if (window.__TAURI_INTERNALS__?.invoke) {
+                return await window.__TAURI_INTERNALS__.invoke(
+                  'conversation_generate',
+                  payload
+                );
+              }
+
+              if (window.__TAURI__?.invoke) {
+                return await window.__TAURI__.invoke('conversation_generate', payload);
+              }
+
+              if (window.__TAURI__?.tauri?.invoke) {
+                return await window.__TAURI__.tauri.invoke(
+                  'conversation_generate',
+                  payload
+                );
+              }
+
+              if (window.__TAURI__?.core?.invoke) {
+                return await window.__TAURI__.core.invoke(
+                  'conversation_generate',
+                  payload
+                );
+              }
+
+              throw new Error('No Tauri API found');
             };
 
-            if (window.__TAURI_INTERNALS__?.invoke) {
-              return await window.__TAURI_INTERNALS__.invoke(
-                'conversation_generate',
-                payload
-              );
-            }
-
-            if (window.__TAURI__?.invoke) {
-              return await window.__TAURI__.invoke('conversation_generate', payload);
-            }
-
-            if (window.__TAURI__?.tauri?.invoke) {
-              return await window.__TAURI__.tauri.invoke(
-                'conversation_generate',
-                payload
-              );
-            }
-
-            if (window.__TAURI__?.core?.invoke) {
-              return await window.__TAURI__.core.invoke('conversation_generate', payload);
-            }
-
-            throw new Error('No Tauri API found');
-          };
-
-          run()
-            .then(res => done({ ok: true, res }))
-            .catch(err => done({ ok: false, err: String(err?.message || err) }));
-        });
+            run()
+              .then(res => done({ ok: true, res }))
+              .catch(err => done({ ok: false, err: String(err?.message || err) }));
+          });
+        } catch (error) {
+          lastError = String(error?.message || error);
+          if (
+            /script timed out|invalid session id|no such window|page crash|invalidated/i.test(
+              lastError
+            ) &&
+            attempt < 5
+          ) {
+            await recoverDiagnosticSession(appUrl);
+            await browser.pause(300);
+            continue;
+          }
+          throw error;
+        }
 
         if (response?.ok) {
           break;
@@ -128,9 +181,18 @@ describe('Diagnostic: Tauri API Availability', () => {
 
         lastError = response?.err || lastError;
         if (
-          String(lastError).includes('Origin header is not a valid URL') &&
+          /Origin header is not a valid URL|script timed out|invalid session id|no such window|page crash|invalidated/i.test(
+            String(lastError)
+          ) &&
           attempt < 5
         ) {
+          if (
+            /script timed out|invalid session id|no such window|page crash|invalidated/i.test(
+              String(lastError)
+            )
+          ) {
+            await recoverDiagnosticSession(appUrl);
+          }
           await browser.pause(300);
           continue;
         }

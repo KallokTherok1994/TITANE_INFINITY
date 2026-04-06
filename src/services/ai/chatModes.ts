@@ -19,6 +19,8 @@ export interface ChatModeConfig {
   systemPrompt: string;
   profileId?: string;
   temperature: number;
+  /** Optional token budget override for this mode (passed to getEffectiveProfile) */
+  maxTokens?: number;
   suggestedActions: string[];
   icon: string;
 }

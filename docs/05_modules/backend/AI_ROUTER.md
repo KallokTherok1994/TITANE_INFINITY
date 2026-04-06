@@ -584,8 +584,8 @@ const response = await aiOrchestrator.generate(message, history, {
 
 ### Architecture Docs
 
-- **[ARCHITECTURE_CURRENT_v24.md](../../00_meta/ARCHITECTURE_CURRENT_v24.md)** — System architecture
-- **[OMEGA_PIPELINE_DETAILED.md](../../02_architecture_reality/OMEGA_PIPELINE_DETAILED.md)** — OMEGA detailed architecture
+- **[ARCHITECTURE_CURRENT_v24.md](../../01_architecture/ARCHITECTURE_CURRENT_v24.md)** — System architecture
+- **[OMEGA_PIPELINE_DETAILED.md](../../01_architecture/OMEGA_PIPELINE_DETAILED.md)** — OMEGA detailed architecture
 
 ### Guides
 

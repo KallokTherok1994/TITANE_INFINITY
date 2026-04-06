@@ -1,0 +1,20 @@
+worktree /home/titane-os/Documents/GitHub/TITANE_INFINITY
+HEAD 3a32f5fd1a034b2919ca108e59d6314d1215ca82
+detached
+
+worktree /home/titane-os/.cache/titane_fastfs/p2_build_97b566d3_20260216_133021
+HEAD 97b566d3bcb70aa8dca53c63e735008737604c92
+detached
+
+worktree /home/titane-os/.cache/titane_fastfs/p2_bundle/repo
+HEAD bf79d71a1e2aa8a9a62154beb34851b5e4255a3e
+branch refs/heads/p2/bundle-phase2a-fastfs
+
+worktree /tmp/titane_v14_wt_20260311_070038
+HEAD e673aff05b1da6cb81a5f34b014cdf1ffd62e0c2
+branch refs/heads/v14_runtime_truth_20260311_070038
+
+worktree /tmp/titane_v6_wt_clean_001321
+HEAD e673aff05b1da6cb81a5f34b014cdf1ffd62e0c2
+branch refs/heads/MAIN
+

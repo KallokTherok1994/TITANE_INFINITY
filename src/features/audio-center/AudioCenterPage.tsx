@@ -11,10 +11,16 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAudio } from './hooks/useAudio';
 import { AudioDiagnosticsPanel } from '@/components/audio';
 import type { TTSEngine, VoiceProfile } from './types';
+import { tauriClient } from '@/lib/tauriClient';
+import {
+  buildTtsSettingsFromTitaneProfile,
+  normalizeTitaneVoiceProfiles,
+  type TitaneVoiceProfileOption,
+} from './titaneVoiceProfiles';
 
 // ─────────────────────────────────────────────────────────────────
 //  Voice Card Component
@@ -127,10 +133,11 @@ const Slider: React.FC<SliderProps> = ({
 interface DeviceSelectorProps {
   label: string;
   icon: string;
-  devices: Array<{ id: string; name: string; isActive: boolean }>;
+  devices: Array<{ id: string; name: string; isActive: boolean; isMuted?: boolean }>;
   selectedId: string;
   onSelect: (id: string) => void;
   isLoading?: boolean;
+  testId?: string;
 }
 
 const DeviceSelector: React.FC<DeviceSelectorProps> = ({
@@ -140,9 +147,12 @@ const DeviceSelector: React.FC<DeviceSelectorProps> = ({
   selectedId,
   onSelect,
   isLoading,
+  testId,
 }) => {
   // Sécurité: S'assurer que devices est toujours un tableau
   const safeDevices = Array.isArray(devices) ? devices : [];
+  const selectedDevice = safeDevices.find(d => d.id === selectedId);
+  const selectedIsMuted = selectedDevice?.isMuted ?? false;
 
   return (
     <div className="space-y-2">
@@ -150,6 +160,7 @@ const DeviceSelector: React.FC<DeviceSelectorProps> = ({
         <span>{icon}</span> {label}
       </label>
       <select
+        data-testid={testId}
         value={selectedId}
         onChange={e => onSelect(e.target.value)}
         disabled={isLoading || safeDevices.length === 0}
@@ -161,11 +172,22 @@ const DeviceSelector: React.FC<DeviceSelectorProps> = ({
         ) : (
           safeDevices.map(device => (
             <option key={device.id} value={device.id}>
-              {device.name} {device.isActive ? '(Actif)' : ''}
+              {device.name}
+              {device.isActive ? ' (Actif)' : ''}
+              {device.isMuted ? ' 🔇 MUET' : ''}
             </option>
           ))
         )}
       </select>
+      {selectedIsMuted && (
+        <p
+          className="text-xs text-amber-400 flex items-center gap-1"
+          data-testid="audio-device-muted-warning"
+        >
+          ⚠️ Ce périphérique est muet au niveau système. Désactivez le muet via wpctl ou
+          les paramètres son Ubuntu.
+        </p>
+      )}
     </div>
   );
 };
@@ -236,6 +258,42 @@ export const AudioCenterPage: React.FC = () => {
     type: 'success' | 'error';
     text: string;
   } | null>(null);
+  const [titaneVoiceProfiles, setTitaneVoiceProfiles] = useState<
+    TitaneVoiceProfileOption[]
+  >([]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadTitaneVoiceProfiles = async () => {
+      try {
+        const rawProfiles = (await tauriClient.identityListVoiceProfiles()) as unknown;
+        if (cancelled) {
+          return;
+        }
+
+        const normalizedProfiles = normalizeTitaneVoiceProfiles(rawProfiles);
+
+        if (!cancelled) {
+          setTitaneVoiceProfiles(normalizedProfiles);
+        }
+      } catch (error) {
+        console.warn(
+          '[AudioCenterPage] Impossible de charger les profils vocaux TITANE:',
+          error
+        );
+        if (!cancelled) {
+          setTitaneVoiceProfiles([]);
+        }
+      }
+    };
+
+    void loadTitaneVoiceProfiles();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleVoiceSelect = async (voice: VoiceProfile) => {
     setVoiceMessage(null);
@@ -275,7 +333,10 @@ export const AudioCenterPage: React.FC = () => {
   };
 
   return (
-    <div className="h-full overflow-auto bg-neutral-900 text-white">
+    <div
+      className="h-full overflow-auto bg-neutral-900 text-white"
+      data-testid="page-audio-center"
+    >
       {/* Header */}
       <header className="sticky top-0 z-10 bg-neutral-900/95 backdrop-blur border-b border-neutral-800 p-6">
         <div className="flex items-center justify-between">
@@ -290,6 +351,7 @@ export const AudioCenterPage: React.FC = () => {
           </div>
 
           <button
+            data-testid="btn-audio-refresh-devices"
             onClick={refreshDevices}
             disabled={isLoading}
             className="px-4 py-2 bg-neutral-800 hover:bg-neutral-700 rounded-lg transition-colors disabled:opacity-50"
@@ -308,6 +370,7 @@ export const AudioCenterPage: React.FC = () => {
           ].map(tab => (
             <button
               key={tab.id}
+              data-testid={`tab-audio-${tab.id}`}
               onClick={() => setActiveTab(tab.id as typeof activeTab)}
               className={`px-4 py-2 rounded-lg transition-colors ${
                 activeTab === tab.id
@@ -398,7 +461,7 @@ export const AudioCenterPage: React.FC = () => {
                     testSpeaker();
                   }}
                   disabled={isTesting}
-                  className="px-6 py-3 bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-500
+                  className="px-6 py-3 bg-linear-to-r from-cyan-600 to-purple-600 hover:from-cyan-500
                            hover:to-purple-500 rounded-lg font-medium transition-all disabled:opacity-50"
                 >
                   {isTesting && testType === 'speaker'
@@ -445,6 +508,7 @@ export const AudioCenterPage: React.FC = () => {
                 selectedId={config.output.deviceId}
                 onSelect={setOutputDevice}
                 isLoading={isLoading}
+                testId="select-audio-output-device"
               />
 
               <div className="mt-6 grid gap-6 md:grid-cols-2">
@@ -465,6 +529,7 @@ export const AudioCenterPage: React.FC = () => {
               </div>
 
               <button
+                data-testid="btn-audio-test-speaker"
                 onClick={() => {
                   setTestType('speaker');
                   testSpeaker('Test du haut-parleur. Un, deux, trois.');
@@ -495,6 +560,7 @@ export const AudioCenterPage: React.FC = () => {
                 selectedId={config.input.deviceId}
                 onSelect={setInputDevice}
                 isLoading={isLoading}
+                testId="select-audio-input-device"
               />
 
               <div className="mt-6">
@@ -540,6 +606,7 @@ export const AudioCenterPage: React.FC = () => {
               </div>
 
               <button
+                data-testid="btn-audio-test-microphone"
                 onClick={() => {
                   setTestType('microphone');
                   testMicrophone();
@@ -588,6 +655,7 @@ export const AudioCenterPage: React.FC = () => {
                 </label>
                 <input
                   type="password"
+                  data-testid="input-elevenlabs-api-key"
                   placeholder="sk-..."
                   className="w-full md:w-96 px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg
                            text-white placeholder-neutral-500 focus:border-cyan-500 focus:outline-none"
@@ -603,6 +671,7 @@ export const AudioCenterPage: React.FC = () => {
                   🌍 Langue par défaut
                 </label>
                 <select
+                  data-testid="select-audio-language"
                   value={config.tts.language}
                   onChange={e => updateTTSSettings({ language: e.target.value })}
                   className="w-full md:w-64 px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg
@@ -621,6 +690,7 @@ export const AudioCenterPage: React.FC = () => {
                 <input
                   type="checkbox"
                   id="autoFallback"
+                  data-testid="toggle-audio-auto-fallback"
                   checked={config.tts.autoFallback}
                   onChange={e => updateTTSSettings({ autoFallback: e.target.checked })}
                   className="w-4 h-4 accent-cyan-500"
@@ -628,6 +698,62 @@ export const AudioCenterPage: React.FC = () => {
                 <label htmlFor="autoFallback" className="text-sm text-neutral-300">
                   Fallback automatique (utiliser eSpeak si Piper échoue)
                 </label>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  id="autoReadAssistant"
+                  data-testid="toggle-audio-auto-read-assistant"
+                  checked={config.tts.autoReadAssistant ?? true}
+                  onChange={e =>
+                    updateTTSSettings({ autoReadAssistant: e.target.checked })
+                  }
+                  className="w-4 h-4 accent-cyan-500"
+                />
+                <label htmlFor="autoReadAssistant" className="text-sm text-neutral-300">
+                  Lecture automatique des réponses assistant quand le mode voix est actif
+                </label>
+              </div>
+
+              <div>
+                <label className="block text-sm text-neutral-300 mb-2">
+                  🎭 Profil vocal TITANE
+                </label>
+                <select
+                  data-testid="select-audio-voice-profile"
+                  value={config.tts.voiceProfileId ?? ''}
+                  onChange={e => {
+                    const selectedProfileId = e.target.value;
+                    const selectedProfile = titaneVoiceProfiles.find(
+                      profile => profile.id === selectedProfileId
+                    );
+
+                    if (!selectedProfile) {
+                      void updateTTSSettings({ voiceProfileId: undefined });
+                      return;
+                    }
+
+                    void updateTTSSettings(
+                      buildTtsSettingsFromTitaneProfile(selectedProfile, config.tts)
+                    );
+                  }}
+                  className="w-full md:w-96 px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg
+                           text-white focus:border-cyan-500 focus:outline-none"
+                >
+                  <option value="">Aucun profil vocal TITANE forcé</option>
+                  {titaneVoiceProfiles.map(profile => (
+                    <option key={profile.id} value={profile.id}>
+                      {profile.name} • {profile.language}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-neutral-500 mt-1">
+                  Le profil vocal TITANE est synchronisé avant chaque lecture desktop.
+                  {titaneVoiceProfiles.length === 0
+                    ? " Aucun profil n'a été exposé par le backend dans cette session."
+                    : " Choisissez un profil pour aligner la voix active avec l'identité TITANE."}
+                </p>
               </div>
 
               {/* Engine Info */}

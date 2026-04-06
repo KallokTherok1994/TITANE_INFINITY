@@ -259,7 +259,13 @@ export function Metrics() {
                     className="px-4 py-3 text-xs font-mono text-right"
                     style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
                   >
-                    {new Date(metric.timestamp).toLocaleTimeString()}
+                    {new Date(metric.timestamp).toLocaleTimeString('fr-FR', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      second: '2-digit',
+                      hour12: false,
+                      timeZone: 'UTC',
+                    })}
                   </td>
                 </tr>
               ))}

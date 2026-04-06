@@ -2,13 +2,44 @@
 
 exports[`Tabs Component > Snapshot > should match snapshot 1`] = `
 <div
-  class="flex flex-col"
-  role="tablist"
+  class="w-full "
 >
   <div
-    class="text-titanium-text-tertiary text-sm"
+    class="flex border-b border-titanium-border-default "
+    role="tablist"
   >
-    No tabs available
+    <button
+      aria-controls="tabpanel-tab1"
+      aria-selected="true"
+      class="
+        relative px-4 py-3 text-sm font-medium
+        transition-colors duration-200
+        focus-visible:outline-none focus-visible:shadow-focus
+        disabled:cursor-not-allowed disabled:opacity-50
+        text-titanium-text-primary border-b-2 border-titanium-accent-cool bg-titanium-bg-interactive
+        
+      "
+      id="tab-tab1"
+      role="tab"
+      tabindex="0"
+      type="button"
+    >
+      <div
+        class="flex items-center gap-2"
+      >
+        <span>
+          Tab 1
+        </span>
+      </div>
+    </button>
+  </div>
+  <div
+    aria-labelledby="tab-tab1"
+    class="mt-4 "
+    id="tabpanel-tab1"
+    role="tabpanel"
+  >
+    Content
   </div>
 </div>
 `;

@@ -63,7 +63,7 @@ export interface AudioStateMachineConfig {
  * Définition des transitions valides
  */
 const VALID_TRANSITIONS: Record<AudioConversationState, AudioEvent[]> = {
-  idle: ['VAD_SPEECH_START', 'PAUSE', 'ERROR'],
+  idle: ['VAD_SPEECH_START', 'TTS_START', 'PAUSE', 'ERROR'],
   user_speaking: ['VAD_SPEECH_END', 'PAUSE', 'ERROR', 'RESET'],
   processing: ['LLM_RESPONSE_START', 'TTS_START', 'PAUSE', 'ERROR', 'RESET'],
   ai_speaking: ['TTS_END', 'TTS_ERROR', 'BARGE_IN', 'PAUSE', 'ERROR', 'RESET'],
@@ -80,6 +80,7 @@ const STATE_TRANSITIONS: Record<
 > = {
   idle: {
     VAD_SPEECH_START: 'user_speaking',
+    TTS_START: 'ai_speaking',
     PAUSE: 'paused',
     ERROR: 'error',
   },

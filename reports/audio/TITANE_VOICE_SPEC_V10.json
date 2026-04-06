@@ -1,0 +1,76 @@
+{
+  "version": "v10",
+  "date": "2026-03-17",
+  "name": "TITANE_VOICE_SPEC_V10",
+  "locale_priority": ["fr-CA", "fr-FR", "fr"],
+  "voice_brand_level": "LEVEL_1_FRENCH_NATURAL_RUNTIME_SYNCED",
+  "provider_target": {
+    "primary_tts_provider": "piper",
+    "secondary_tts_provider": "espeak",
+    "voice_profile_source_of_truth": "backend_identity_active_profile",
+    "offline_fallback_provider": "espeak"
+  },
+  "provider_fallback_order": ["piper", "espeak", "webspeech_browser_only_last_resort"],
+  "base_voice_id": "fr_FR-siwis-medium",
+  "voice_profile_policy": {
+    "backend_default_profile_id": "titane-natural-fr",
+    "frontend_boot_policy": "hydrate_from_backend_active_profile_when_frontend_defaults_are_unbranded",
+    "manual_override_policy": "preserve_non_default_manual_tuning_when_voiceProfileId_is_absent"
+  },
+  "target_register": "feminine_soft_warm_human",
+  "target_pause_behavior": "micro-pauses aux virgules, pauses nettes en fin de phrase, transitions fluides sans coupure agressive",
+  "runtime_truth": {
+    "desktop_runtime": "tauri_wdio_real",
+    "current_supported_primary": "piper",
+    "current_supported_fallback": "espeak",
+    "desktop_elevenlabs_direct": "not_enabled_in_current_tts_speak_runtime",
+    "technical_fix_scope": [
+      "src-tauri/src/identity/voice_profile.rs",
+      "src/entry.ts",
+      "src/main.tsx",
+      "src/lib/tauriCommands.ts",
+      "src/lib/tauriClient.ts",
+      "src/lib/security.ts",
+      "src-tauri/src/main.rs",
+      "src-tauri/allowlist.whitelist.stable.json",
+      "src/features/audio-center/services/audioService.ts",
+      "src/features/audio-center/hooks/useAudio.ts"
+    ],
+    "technical_status": "PASS",
+    "desktop_runtime_recert_this_session": "PASS"
+  },
+  "technical_truth": {
+    "identity_get_active_voice_profile_registered": "PASS",
+    "identity_get_active_voice_profile_client_wrapper": "PASS",
+    "identity_voice_commands_frontend_whitelist": "PASS",
+    "identity_get_active_voice_profile_stable_allowlist": "PASS",
+    "audio_boot_hydration_from_backend_active_profile": "PASS",
+    "manual_non_default_tuning_preserved": "PASS",
+    "rust_voice_profile_unit_test": "PASS",
+    "ts_tts_runtime_policy_tests": "PASS"
+  },
+  "desktop_e2e_truth": {
+    "online_run": "PASS",
+    "offline_sim_run": "PASS",
+    "tts_status_after_read": "Lecture en cours...",
+    "tts_status_final": "Lecture arrêtée.",
+    "pause_resume_path": "executed",
+    "stop_action_observed": true,
+    "replay_button_observed": true,
+    "audio_center_visible": true,
+    "speaker_button_visible": true,
+    "microphone_button_visible": true,
+    "assistant_message_detected_online": true
+  },
+  "indirect_perceptual_truth": {
+    "active_profile_settings_drift_removed": "PASS",
+    "branded_voice_bootstrap_alignment": "PASS",
+    "sample_proximity_machine_proof": "BLOCKED",
+    "human_listening_required": "BLOCKED"
+  },
+  "human_perceptual_truth": {
+    "benchmark_protocol_status": "BLOCKED",
+    "target_sample_status": "BLOCKED"
+  },
+  "status": "PASS"
+}

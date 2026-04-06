@@ -12,8 +12,8 @@ TITANE∞ suit une **architecture en anneaux concentriques** inspirée des princ
 
 ## Diagrams
 
-- Mermaid canon: [docs/diagrams/README.md](docs/diagrams/README.md)
-- Anneaux: [architecture_4_ring](docs/diagrams/rendered/architecture_4_ring.md)
+- Mermaid canon: [docs/diagrams/README.md](../README.md)
+- Anneaux: [architecture_4_ring](diagrams/rendered/architecture_4_ring.md)
 
 ```
 ┌─────────────────────────────────────────────────────────┐

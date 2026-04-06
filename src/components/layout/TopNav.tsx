@@ -40,6 +40,7 @@ export interface TopNavItem {
   icon: React.ReactNode;
   route: string;
   description?: string;
+  matchRoutes?: string[];
 }
 
 export interface TopNavProps {
@@ -51,9 +52,9 @@ export interface TopNavProps {
 }
 
 interface ProviderStatus {
-  name: string;
+  provider: string;
   available: boolean;
-  reason?: string;
+  error?: string;
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -61,6 +62,24 @@ interface ProviderStatus {
 // ─────────────────────────────────────────────────────────────────
 
 const DEFAULT_MAX_VISIBLE = 5;
+
+export function deriveAiStatus(providers: ProviderStatus[]): {
+  percent: number | null;
+  available: number;
+  total: number;
+} {
+  const cloudProviders = providers.filter(provider => provider.provider !== 'local');
+
+  if (cloudProviders.length === 0) {
+    return { percent: null, available: 0, total: 0 };
+  }
+
+  const available = cloudProviders.filter(provider => provider.available).length;
+  const total = cloudProviders.length;
+  const percent = Math.round((available / total) * 100);
+
+  return { percent, available, total };
+}
 
 // ─────────────────────────────────────────────────────────────────
 // COMPONENT
@@ -76,7 +95,7 @@ export const TopNav: React.FC<TopNavProps> = ({
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
   const moreMenuRef = useRef<HTMLDivElement>(null);
 
-  // ✨ v27 AI Provider Status Indicator
+  // ✨ v30.0.0 AI Provider Status Indicator
   const [aiStatus, setAiStatus] = useState<{
     percent: number | null;
     available: number;
@@ -91,7 +110,7 @@ export const TopNav: React.FC<TopNavProps> = ({
   const visibleItems = items.slice(0, maxVisibleItems);
   const moreItems = items.slice(maxVisibleItems);
 
-  // ✨ v27 - Polling providers status every 30s
+  // ✨ v30.0.0 - Polling providers status every 30s
   useEffect(() => {
     let active = true;
 
@@ -108,12 +127,9 @@ export const TopNav: React.FC<TopNavProps> = ({
         if (!active) return;
 
         if (Array.isArray(providers) && providers.length > 0) {
-          const available = providers.filter(p => p.available).length;
-          const total = providers.length;
-          const percent = Math.round((available / total) * 100);
-          setAiStatus({ percent, available, total });
+          setAiStatus(deriveAiStatus(providers));
         } else {
-          setAiStatus({ percent: 0, available: 0, total: 0 });
+          setAiStatus({ percent: null, available: 0, total: 0 });
         }
       } catch {
         if (active) {
@@ -159,17 +175,30 @@ export const TopNav: React.FC<TopNavProps> = ({
     }
   };
 
-  const isActive = (route: string): boolean => {
-    return currentRoute === route || currentRoute.startsWith(route);
+  const matchesRoute = (route: string): boolean => {
+    return (
+      currentRoute === route ||
+      currentRoute.startsWith(`${route}/`) ||
+      currentRoute.startsWith(`${route}?`)
+    );
   };
+
+  const isActive = (item: TopNavItem): boolean => {
+    const candidates = [item.route, ...(item.matchRoutes ?? [])];
+    return candidates.some(matchesRoute);
+  };
+
+  const hasActiveMoreItem = moreItems.some(item => isActive(item));
 
   return (
     <nav
+      data-testid="nav-top-main"
       className={cn(
         'app-topnav fixed top-0 inset-x-0 z-10000 flex items-center justify-between h-16 px-6 bg-titanium-bg-elevated border-b border-titanium-border-default pointer-events-auto',
         'shadow-sm backdrop-blur-md',
         className
       )}
+      style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
       role="navigation"
       aria-label="Navigation principale"
     >
@@ -185,11 +214,12 @@ export const TopNav: React.FC<TopNavProps> = ({
       <div className="flex items-center gap-3 flex-1 justify-center max-w-5xl">
         {/* Visible Items */}
         {visibleItems.map(item => {
-          const active = isActive(item.route);
+          const active = isActive(item);
           return (
             <button
               key={item.id}
               type="button"
+              data-testid={`nav-${item.id}`}
               onClick={() => onNavigate(item.route)}
               onKeyDown={e => handleKeyDown(e, item.route)}
               aria-label={item.label}
@@ -220,11 +250,18 @@ export const TopNav: React.FC<TopNavProps> = ({
           <div className="relative" ref={moreMenuRef}>
             <button
               type="button"
+              data-testid="btn-nav-more"
               onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)}
               aria-label="Plus d'options"
               aria-expanded={isMoreMenuOpen}
               aria-haspopup="true"
-              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150 text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-interactive/50 focus:outline-none focus:ring-2 focus:ring-titanium-accent-cool"
+              aria-current={hasActiveMoreItem ? 'page' : undefined}
+              className={cn(
+                'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-titanium-accent-cool',
+                hasActiveMoreItem
+                  ? 'text-titanium-accent-cool bg-titanium-bg-interactive'
+                  : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-interactive/50'
+              )}
             >
               <MoreHorizontal size={18} />
               <span className="hidden md:inline">Plus</span>
@@ -253,11 +290,12 @@ export const TopNav: React.FC<TopNavProps> = ({
                   role="menu"
                 >
                   {moreItems.map(item => {
-                    const active = isActive(item.route);
+                    const active = isActive(item);
                     return (
                       <button
                         key={item.id}
                         type="button"
+                        data-testid={`nav-${item.id}`}
                         role="menuitem"
                         onClick={() => onNavigate(item.route)}
                         onKeyDown={e => handleKeyDown(e, item.route)}
@@ -291,7 +329,7 @@ export const TopNav: React.FC<TopNavProps> = ({
 
       {/* Actions secondaires */}
       <div className="flex items-center gap-3 shrink-0">
-        {/* ✨ v27 AI Provider Status Indicator */}
+        {/* ✨ v30.0.0 AI Provider Status Indicator */}
         {aiStatus.percent !== null && (
           <div
             className={cn(
@@ -303,7 +341,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                   ? 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20'
                   : 'bg-red-500/10 text-red-500 border border-red-500/20'
             )}
-            title={`${aiStatus.available}/${aiStatus.total} providers disponibles`}
+            title={`${aiStatus.available}/${aiStatus.total} providers cloud disponibles`}
           >
             {aiStatus.percent === 100 ? (
               <Zap size={14} className="animate-pulse" />
@@ -349,6 +387,7 @@ export const createTopNavItems = (
     label: string;
     route: string;
     description?: string;
+    matchRoutes?: string[];
   }>
 ): TopNavItem[] => {
   return menuSections.map(section => ({
@@ -357,5 +396,6 @@ export const createTopNavItems = (
     icon: ICON_MAP[section.id] || <Atom size={18} />,
     route: section.route,
     description: section.description,
+    matchRoutes: section.matchRoutes,
   }));
 };

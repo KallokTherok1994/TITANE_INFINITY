@@ -1,9 +1,9 @@
 /**
- * TITANE∞ VisualDevOpsEngine v25.5
+ * TITANE∞ VisualDevOpsEngine v30.0.0
  *
  * @module core/devops/VisualDevOpsEngine
  * @description Moteur d'analyse visuelle et DevOps assisté
- * @version 25.5.0
+ * @version 29.0.0
  * @license MIT
  *
  * CAPACITÉS :
@@ -50,7 +50,7 @@ class VisualDevOpsEngine {
   private readonly _MAX_SESSION_DURATION_MS = 8 * 60 * 60 * 1000; // 8 heures
 
   private constructor() {
-    console.log('[VisualDevOpsEngine] Initialized v25.5');
+    console.log('[VisualDevOpsEngine] Initialized v30.0.0');
   }
 
   public static getInstance(): VisualDevOpsEngine {

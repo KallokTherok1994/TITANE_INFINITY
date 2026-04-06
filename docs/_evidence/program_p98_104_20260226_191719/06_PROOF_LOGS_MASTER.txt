@@ -1,3 +1,0 @@
-P98_104 proof logs
-- reports/p98_104_bootstrap_precheck_20260226_191719Z.log
-- reports/p98_104_execution_x3_20260226_191719Z.log

@@ -1,0 +1,37 @@
+TITANE∞ v28.6.0 — PRODUCTION SEAL
+===================================
+Date: 2026-03-21T14:39:10Z
+Session: LOCAL_FINAL_SEAL_2026-03-21_1035_0f348f8e2
+GitSHA: b93675c91
+Tokens: GO_FOR_PROD_BUILD__TITANE_INFINITY + GO_FOR_PROD_DEPLOY__TITANE_INFINITY
+
+CHANGES SINCE v28.5.0:
+- fix(provider): circuit breaker deadlock resolved
+- feat(build): Vite 8.0.1 + rolldown (zero config changes)
+- chore(deps): vitest 4.1, storybook 10.3, jsdom 29, eslint 9.39.4
+- chore(deps): @vitejs/plugin-react 5.2.0
+
+GATES (verify at time of seal):
+- tsc --noEmit: PASS
+- eslint: PASS
+- vitest: PASS (3399/3399)
+- pnpm build (rolldown): PASS
+- cargo check: PASS
+- verify_instructions: PASS=20 FAIL=0
+- detect_recurrence: G_AH_RECURRENCE_GUARD_PASS
+
+BLOCKED MAJORS:
+- ESLint 10: PEER_BLOCKED (eslint-plugin-react caps at ^9.7)
+
+ARTIFACTS:
+- TITANE-Infinity_28.6.0_amd64.AppImage (27692dd09bc0024982eb86c6dd2588cd01390a5e0870ac64a401ecdaa0b619c2)
+- TITANE-Infinity_28.6.0_amd64.deb (8a6723ee1910f295841a3c6a1c0069c350e857a98c002bf6e478fc94015b539c)
+- TITANE-Infinity-28.6.0-1.x86_64.rpm (24a15654ed8403055d5c01b4adc03f7ce4405ee280732561aa4c4e8352daf01c)
+
+GITHUB RELEASE: https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v28.6.0
+
+ROLLBACK:
+git revert HEAD
+/home/titane-os/.local/bin/gh release delete v28.6.0 --repo KallokTherok1994/TITANE_INFINITY --yes
+
+VERDICT: SEALED

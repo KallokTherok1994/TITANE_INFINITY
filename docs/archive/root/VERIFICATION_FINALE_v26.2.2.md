@@ -571,13 +571,13 @@ Le projet est **prêt pour**:
 
 ### Guides techniques
 
-- [docs/BRANCH_CONSOLIDATION_REPORT_v26.2.2.md](docs/BRANCH_CONSOLIDATION_REPORT_v26.2.2.md)
-- [docs/guides/TAURI_FULL_DEPLOY.md](docs/guides/TAURI_FULL_DEPLOY.md)
-- [docs/BRANCH_MERGE_QUICK_REF.md](docs/BRANCH_MERGE_QUICK_REF.md)
+- [docs/BRANCH_CONSOLIDATION_REPORT_v26.2.2.md](../../BRANCH_CONSOLIDATION_REPORT_v26.2.2.md)
+- [docs/guides/TAURI_FULL_DEPLOY.md](../../guides/TAURI_FULL_DEPLOY.md)
+- [docs/BRANCH_MERGE_QUICK_REF.md](../../BRANCH_MERGE_QUICK_REF.md)
 
 ### Scripts
 
-- [scripts/README.md](scripts/README.md)
+- [scripts/README.md](../../00_core/README__scripts_README.md.md)
 - [scripts/verify-branch-sync.sh](scripts/verify-branch-sync.sh)
 - [scripts/merge-dev-to-main.sh](scripts/merge-dev-to-main.sh)
 

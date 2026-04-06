@@ -1,0 +1,9 @@
+77:function normalizeResponse<T>(
+95:  if (typeof payload.ok === 'boolean') {
+253:async function hasSecret(key: string): Promise<SecureResponse<boolean>> {
+261:async function deleteSecret(key: string): Promise<SecureResponse<void>> {
+273:async function getPolicies(): Promise<SecureResponse<IAPolicy[]>> {
+281:async function savePolicies(policies: IAPolicy[]): Promise<SecureResponse<void>> {
+289:async function togglePolicy(
+300:async function createPolicy(
+310:async function deletePolicy(policyId: string): Promise<SecureResponse<void>> {

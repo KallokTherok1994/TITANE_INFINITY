@@ -1,0 +1,7 @@
+registry/autofix-autoheal-rules.jsonl
+registry/chat-events.jsonl
+registry/chat-mem-phases.jsonl
+registry/REGISTRY_APPEND_TITANE_FINAL.jsonl
+registry/REGISTRY_APPEND_TITANE_Ω∞.jsonl
+registry/repo-events.jsonl
+registry/ui-events.jsonl

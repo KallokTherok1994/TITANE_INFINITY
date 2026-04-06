@@ -468,4 +468,27 @@ export class FullDuplexOrchestrator {
 /**
  * Singleton instance
  */
-export const fullDuplexOrchestrator = new FullDuplexOrchestrator();
+let fullDuplexOrchestratorInstance: FullDuplexOrchestrator | null = null;
+
+const getFullDuplexOrchestrator = (): FullDuplexOrchestrator => {
+  if (!fullDuplexOrchestratorInstance) {
+    fullDuplexOrchestratorInstance = new FullDuplexOrchestrator();
+  }
+  return fullDuplexOrchestratorInstance;
+};
+
+export const fullDuplexOrchestrator = new Proxy({} as FullDuplexOrchestrator, {
+  get(_target, prop, _receiver) {
+    const instance = getFullDuplexOrchestrator();
+    const value = instance[prop as keyof FullDuplexOrchestrator];
+    if (typeof value === 'function') {
+      return value.bind(instance);
+    }
+    return value;
+  },
+  set(_target, prop, value, _receiver) {
+    const instance = getFullDuplexOrchestrator();
+    (instance as unknown as Record<PropertyKey, unknown>)[prop] = value;
+    return true;
+  },
+});

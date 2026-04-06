@@ -1,0 +1,10 @@
+]633;E;{   for f in "$APP" "$DEB"\x3b do     echo "FILE=$f"\x3b     if [[ -f "$f" ]]\x3b then       stat -c 'SIZE_BYTES=%s MTIME=%y MODE=%A' "$f"\x3b       sha256sum "$f"\x3b       du -h "$f"\x3b     else       echo "MISSING=1"\x3b     fi\x3b     echo "---"\x3b   done\x3b } > "$PACK/raw/02_artifacts.txt";c1f2d524-187d-4d1a-b328-02b75f6cc3cf]633;CFILE=runtime/stable/Titan-Stable_27.2.0_amd64.AppImage
+SIZE_BYTES=88549880 MTIME=2026-03-13 20:57:16.436499838 -0400 MODE=-rwxr-xr-x
+4f3e48d38d6a3198e143470e1e6e7ec7bace8de2caa201f7dadf208b3defee93  runtime/stable/Titan-Stable_27.2.0_amd64.AppImage
+85M	runtime/stable/Titan-Stable_27.2.0_amd64.AppImage
+---
+FILE=src-tauri/target/release/bundle/deb/Titan-Stable_27.2.0_amd64.deb
+SIZE_BYTES=13261038 MTIME=2026-03-13 20:57:16.382500226 -0400 MODE=-rw-rw-r--
+2c2dbd194119be468ed54cf5c29d3c0fb2dc1a85dc4aa3c2f78184a99abc2718  src-tauri/target/release/bundle/deb/Titan-Stable_27.2.0_amd64.deb
+13M	src-tauri/target/release/bundle/deb/Titan-Stable_27.2.0_amd64.deb
+---

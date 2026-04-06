@@ -1,0 +1,26 @@
+6220:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:27.4264574Z error[E0433]: failed to resolve: could not find `commands` in `titane_infinity`
+6237:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:27.4271046Z error[E0433]: failed to resolve: could not find `commands` in `titane_infinity`
+6254:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:27.4278299Z error[E0433]: failed to resolve: could not find `commands` in `titane_infinity`
+6271:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:27.4285420Z error[E0433]: failed to resolve: could not find `commands` in `titane_infinity`
+6288:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:27.4291254Z error[E0433]: failed to resolve: could not find `commands` in `titane_infinity`
+6305:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:27.4298080Z error[E0433]: failed to resolve: could not find `commands` in `titane_infinity`
+6322:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:27.4304264Z error[E0433]: failed to resolve: could not find `commands` in `titane_infinity`
+6339:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:27.4311137Z error[E0433]: failed to resolve: could not find `commands` in `titane_infinity`
+6356:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:27.4316019Z error[E0433]: failed to resolve: could not find `commands` in `titane_infinity`
+6373:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:27.4320370Z error[E0433]: failed to resolve: could not find `commands` in `titane_infinity`
+6390:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:27.4325272Z error[E0433]: failed to resolve: could not find `commands` in `titane_infinity`
+6407:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:27.4332002Z error[E0433]: failed to resolve: could not find `commands` in `titane_infinity`
+6424:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:27.4336266Z error[E0433]: failed to resolve: could not find `commands` in `titane_infinity`
+6441:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:27.4340329Z error[E0433]: failed to resolve: could not find `commands` in `titane_infinity`
+6458:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:27.4344394Z error[E0433]: failed to resolve: could not find `commands` in `titane_infinity`
+6475:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:27.4348409Z error[E0433]: failed to resolve: could not find `commands` in `titane_infinity`
+6492:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:27.4352689Z error[E0433]: failed to resolve: could not find `commands` in `titane_infinity`
+6509:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:27.4356799Z error[E0433]: failed to resolve: could not find `commands` in `titane_infinity`
+6526:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:27.4360958Z error[E0433]: failed to resolve: could not find `commands` in `titane_infinity`
+6543:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:27.4365161Z error[E0433]: failed to resolve: could not find `__cmd__speak` in `commands`
+6549:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:27.4366551Z error[E0433]: failed to resolve: could not find `__cmd__start_recording` in `commands`
+6555:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:27.4368019Z error[E0433]: failed to resolve: could not find `__cmd__stop_recording` in `commands`
+6561:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:27.4369542Z error[E0433]: failed to resolve: could not find `__cmd__cancel_recording` in `commands`
+6567:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:27.6746771Z error[E0433]: failed to resolve: could not find `commands` in `titane_infinity`
+6585:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:42.3855815Z error: could not compile `titane-infinity` (bin "titane-infinity") due to 24 previous errors
+6589:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:16:42.5113158Z ##[error]Process completed with exit code 101.

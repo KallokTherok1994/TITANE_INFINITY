@@ -1,0 +1,770 @@
+]633;E;{   echo '### 09 admin src (top 40)'\x3b head -n 40 "$BOOT/09_rg_admin_src.txt"\x3b   echo '### 10 routes src (top 60)'\x3b head -n 60 "$BOOT/10_rg_router_src.txt"\x3b   echo '### 11 invoke src (top 60)'\x3b head -n 60 "$BOOT/11_rg_invoke_src.txt"\x3b   echo '### 12 tauri commands (top 80)'\x3b head -n 80 "$BOOT/12_rg_tauri_commands.txt"\x3b   echo '### 13 provider omega (top 80)'\x3b head -n 80 "$BOOT/13_rg_provider_omega.txt"\x3b   echo '### 14 audio (top 80)'\x3b head -n 80 "$BOOT/14_rg_audio.txt"\x3b   echo '### 15 boot/double (top 80)'\x3b head -n 80 "$BOOT/15_rg_boot_double.txt"\x3b   echo '### 16 storage/undefined (top 80)'\x3b head -n 80 "$BOOT/16_rg_storage_undefined.txt"\x3b   echo '### 17 todo/stub (top 80)'\x3b head -n 80 "$BOOT/17_rg_todo_stub.txt"\x3b   echo '### 18 data-testid (top 120)'\x3b head -n 120 "$BOOT/18_rg_data_testid.txt"\x3b } > "$BOOT/20_scan_top_hits.txt";823cce96-0443-43de-843a-f78fa998234e]633;C### 09 admin src (top 40)
+src/api/tauriClient.ts:106:        await new Promise(resolve => setTimeout(resolve, delay));
+src/constants/timeouts.ts:2: * TITANE∞ - Constantes de Timeout Centralisées
+src/constants/timeouts.ts:7: * Timeouts API et réseau (ms)
+src/constants/timeouts.ts:11:  /** Timeout par défaut pour les appels API (60s) */
+src/constants/timeouts.ts:13:  /** Timeout pour les opérations IA (60s max global) */
+src/constants/timeouts.ts:15:  /** Timeout court pour les checks rapides (5s) */
+src/constants/timeouts.ts:17:  /** Timeout pour les opérations longues (60s) */
+src/constants/timeouts.ts:25:  /** Mise à jour rapide (2s) - Stats temps réel */
+src/constants/timeouts.ts:36: * TTL (Time To Live) pour les caches (ms)
+src/monitoring/index.ts:69:  TTFB?: number; // Time to First Byte
+src/monitoring/index.ts:454: * ## Access via DevTools console
+src/__tests__/api/tauriClient.test.ts:12:    vi.useFakeTimers();
+src/__tests__/api/tauriClient.test.ts:16:    vi.runOnlyPendingTimers();
+src/__tests__/api/tauriClient.test.ts:17:    vi.useRealTimers();
+src/__tests__/api/tauriClient.test.ts:73:    // Laisse la promesse entrer dans le backoff, puis flush le setTimeout
+src/__tests__/api/tauriClient.test.ts:75:    await vi.advanceTimersByTimeAsync(100);
+src/__tests__/api/tauriClient.test.ts:78:    expect(secureInvokeMock).toHaveBeenCalledTimes(2);
+src/__tests__/api/tauriClient.test.ts:97:    await vi.advanceTimersByTimeAsync(10);
+src/__tests__/api/tauriClient.test.ts:100:    expect(secureInvokeMock).toHaveBeenCalledTimes(2);
+src/__tests__/useChat-streaming.test.ts:82:        await new Promise(resolve => setTimeout(resolve, 50));
+src/__tests__/chat-ia-diagnostic.test.ts:37:  memoryStats: { count: 0, sizeMB: 0, compressed: false },
+src/__tests__/chat-ia-diagnostic.test.ts:169:            setTimeout(() => reject(new Error('API_TIMEOUT')), 50);
+src/__tests__/chat-ia-diagnostic.test.ts:175:      const startTime = Date.now();
+src/__tests__/chat-ia-diagnostic.test.ts:181:      const duration = Date.now() - startTime;
+src/__tests__/chat-ia-diagnostic.test.ts:203:      const timeoutSpy = vi.spyOn(global, 'setTimeout');
+src/__tests__/chatModes.config.test.ts:20:  TOOLS_ADMIN,
+src/__tests__/chatModes.config.test.ts:178:    it('should have TOOLS_ADMIN include all capabilities', () => {
+src/__tests__/chatModes.config.test.ts:179:      expect(TOOLS_ADMIN.shellExecution).toBe(true);
+src/__tests__/chatModes.config.test.ts:180:      expect(TOOLS_ADMIN.fileSystemAccess).toBe(true);
+src/__tests__/chatModes.config.test.ts:181:      expect(TOOLS_ADMIN.configModification).toBe(true);
+src/__tests__/chatModes.config.test.ts:182:      expect(TOOLS_ADMIN.auditLogs).toBe(true);
+src/stores/__tests__/stores.spec.ts:76:      frameTime: 16.67,
+src/stores/__tests__/stores.spec.ts:431:      startTime: Date.now(),
+src/stores/__tests__/stores.spec.ts:432:      endTime: Date.now() + 1000,
+src/stores/__tests__/stores.spec.ts:451:      startTime: Date.now(),
+src/stores/__tests__/stores.spec.ts:452:      endTime: Date.now() + 1000,
+src/stores/__tests__/stores.spec.ts:478:      averageFrameTime: 16.67,
+src/stores/__tests__/stores.spec.ts:491:    const startTime = Date.now();
+src/stores/__tests__/stores.spec.ts:496:      startTime,
+src/stores/__tests__/stores.spec.ts:497:      endTime: startTime + 1000,
+### 10 routes src (top 60)
+src/__tests__/chatModes.config.test.ts:93:      // Admin requires level 5
+src/__tests__/chatModes.config.test.ts:116:      // Admin should only be in level 5
+src/__tests__/chatModes.config.test.ts:276:      // Admin should be global
+src/cognitive/progression/xpEngine.ts:514:  // RESET (Admin only)
+src/types/chatModes.ts:16:  | 'admin' // Administration système, configuration
+src/types/index.ts:20:  RouterDecision,
+src/__tests__/unifiedMemory.test.ts:27:  it('devrait router vers STM quand importance < 0.3', async () => {
+src/__tests__/unifiedMemory.test.ts:38:  it('devrait router vers MTM quand importance entre 0.3 et 0.7', async () => {
+src/__tests__/unifiedMemory.test.ts:53:  it('devrait router vers LTM quand importance > 0.7', async () => {
+src/__tests__/unifiedMemory.test.ts:65:  it('devrait router vers LTM quand importance = 0.7 exactement', async () => {
+src/types/conversation_os.ts:65: * Router decision about conversation intent
+src/types/conversation_os.ts:67:export interface RouterDecision {
+src/types/conversation_os.ts:155:  /** Router decision */
+src/types/conversation_os.ts:156:  router: RouterDecision;
+src/types/conversation_os.ts:169:    router_ms: number;
+src/__tests__/ui/ui-navigation.test.ts:10:import { BrowserRouter } from 'react-router-dom';
+src/__tests__/ui/ui-navigation.test.ts:38:        BrowserRouter,
+src/__tests__/ui/ui-navigation.test.ts:45:              currentRoute: '/titane',
+src/__tests__/ui/ui-navigation.test.ts:115:      React.createElement(BrowserRouter, null, React.createElement(TitanePage, null))
+src/__tests__/ui/ui-navigation.test.ts:130:      React.createElement(BrowserRouter, null, React.createElement(TitanePage, null))
+src/__tests__/ui/ui-navigation.test.ts:146:      React.createElement(BrowserRouter, null, React.createElement(TitanePage, null))
+src/__tests__/ui/ui-navigation.test.ts:195:      React.createElement(BrowserRouter, null, React.createElement(TitanePage, null))
+src/main.tsx:1021:        console.log('   → UI Router → MetaLayer');
+src/modules/TemporalFlowCenter.tsx:685:              <div>• 16:15-17:30 : Admin & communication</div>
+src/__tests__/services/adminEngine/adminEngine.test.ts:9: * Tests complets pour l'Admin & Monitoring Engine
+src/__tests__/services/adminEngine/adminEngine.test.ts:22:  AdminRole,
+src/__tests__/services/adminEngine/adminEngine.test.ts:25:  AdminVitals,
+src/__tests__/services/adminEngine/adminEngine.test.ts:27:  AdminSnapshot,
+src/__tests__/services/adminEngine/adminEngine.test.ts:28:  AdminLogRecord,
+src/__tests__/services/adminEngine/adminEngine.test.ts:29:  AdminEvent,
+src/__tests__/services/adminEngine/adminEngine.test.ts:30:  AdminActionDefinition,
+src/__tests__/services/adminEngine/adminEngine.test.ts:45:  generateAdminId,
+src/__tests__/services/adminEngine/adminEngine.test.ts:57:  createAdminEvent,
+src/__tests__/services/adminEngine/adminEngine.test.ts:66:  AdminEngine,
+src/__tests__/services/adminEngine/adminEngine.test.ts:67:  getAdminEngine,
+src/__tests__/services/adminEngine/adminEngine.test.ts:68:  resetAdminEngine,
+src/__tests__/services/adminEngine/adminEngine.test.ts:79:  resetAdminEngine();
+src/__tests__/services/adminEngine/adminEngine.test.ts:90:describe('Admin Engine - Types & Constantes', () => {
+src/__tests__/services/adminEngine/adminEngine.test.ts:213:describe('Admin Engine - Fonctions Utilitaires', () => {
+src/__tests__/services/adminEngine/adminEngine.test.ts:214:  describe('generateAdminId', () => {
+src/__tests__/services/adminEngine/adminEngine.test.ts:216:      const id1 = generateAdminId();
+src/__tests__/services/adminEngine/adminEngine.test.ts:217:      const id2 = generateAdminId();
+src/__tests__/services/adminEngine/adminEngine.test.ts:222:      const id = generateAdminId('test');
+src/__tests__/services/adminEngine/adminEngine.test.ts:227:      const id = generateAdminId();
+src/__tests__/services/adminEngine/adminEngine.test.ts:234:      const vitals: AdminVitals = {
+src/__tests__/services/adminEngine/adminEngine.test.ts:255:      const vitals: AdminVitals = {
+src/__tests__/services/adminEngine/adminEngine.test.ts:276:      const vitals: AdminVitals = {
+src/__tests__/services/adminEngine/adminEngine.test.ts:297:      const vitals: AdminVitals = {
+src/__tests__/services/adminEngine/adminEngine.test.ts:319:    const adminOnlyAction: AdminActionDefinition = {
+src/__tests__/services/adminEngine/adminEngine.test.ts:321:      displayName: 'Test Admin',
+src/__tests__/services/adminEngine/adminEngine.test.ts:335:    const devOrAdminAction: AdminActionDefinition = {
+src/__tests__/services/adminEngine/adminEngine.test.ts:341:    const allAction: AdminActionDefinition = {
+src/__tests__/services/adminEngine/adminEngine.test.ts:349:      expect(hasPermission('ADMIN', devOrAdminAction)).toBe(true);
+src/__tests__/services/adminEngine/adminEngine.test.ts:355:      expect(hasPermission('DEV', devOrAdminAction)).toBe(true);
+src/__tests__/services/adminEngine/adminEngine.test.ts:361:      expect(hasPermission('USER', devOrAdminAction)).toBe(false);
+src/__tests__/services/adminEngine/adminEngine.test.ts:388:      const action: AdminActionDefinition = {
+src/__tests__/services/adminEngine/adminEngine.test.ts:410:      const action: AdminActionDefinition = {
+src/__tests__/services/adminEngine/adminEngine.test.ts:440:      const vitals: AdminVitals = {
+src/__tests__/services/adminEngine/adminEngine.test.ts:469:      const vitals: AdminVitals = {
+src/__tests__/services/adminEngine/adminEngine.test.ts:609:  describe('createAdminEvent', () => {
+### 11 invoke src (top 60)
+src/api/tauriClient.ts:15:import { secureInvoke } from '@/lib/security';
+src/api/tauriClient.ts:44:export async function tauri<T>(
+src/api/tauriClient.ts:86:export async function tauriWithRetry<T>(
+src/api/tauriClient.ts:137:export async function tauriBatch<T = unknown>(
+src/api/tauriClient.ts:158:export function isTauriAvailable(): boolean {
+src/constants/timeouts.ts:10:export const API_TIMEOUTS = {
+src/constants/timeouts.ts:24:export const REFRESH_INTERVALS = {
+src/constants/timeouts.ts:38:export const CACHE_TTL = {
+src/constants/timeouts.ts:50:export const UI_DELAYS = {
+src/vite-env.d.ts:5:  export default content;
+src/vite-env.d.ts:10:  export default content;
+src/__tests__/c6-baseline.test.ts:9:import { describe, it, expect } from 'vitest';
+src/__tests__/xpExtended.config.test.ts:6:import { describe, it, expect } from 'vitest';
+src/__tests__/xpExtended.config.test.ts:7:import {
+src/__tests__/xpExtended.config.test.ts:34:import type {
+src/__tests__/xpExtended.config.test.ts:247:        'project_import',
+src/styles/fonts.css:10:  NOTE: Google Fonts @import is managed in index.css for proper PostCSS ordering
+src/__tests__/cognitive-kernel-v22omega.test.ts:14:import { describe, test, expect, beforeEach } from 'vitest';
+src/__tests__/cognitive-kernel-v22omega.test.ts:15:import { cognitiveKernel } from '@/services/ai/cognitiveKernel';
+src/__tests__/cognitive-kernel-v22omega.test.ts:51:    cognitiveKernel.updateEnvironmentState({
+src/__tests__/cognitive-kernel-v22omega.test.ts:65:    cognitiveKernel.updateIntentionState({
+src/__tests__/cognitive-kernel-v22omega.test.ts:100:    cognitiveKernel.updateEnvironmentState({
+src/__tests__/cognitive-kernel-v22omega.test.ts:197:    cognitiveKernel.updateEnvironmentState({
+src/__tests__/cognitive-kernel-v22omega.test.ts:208:    cognitiveKernel.updateProviderPreferences('openai', true, 1500);
+src/__tests__/cognitive-kernel-v22omega.test.ts:216:    cognitiveKernel.updateProviderPreferences('openai', false, 5000);
+src/__tests__/cognitive-kernel-v22omega.test.ts:235:    cognitiveKernel.updateEnvironmentState({
+src/__tests__/online-availability.test.ts:14:import { describe, it, expect } from 'vitest';
+src/__tests__/online-availability.test.ts:15:import { validateProviderDecisionMeta } from '@/types/providerDecisionMeta';
+src/__tests__/online-availability.test.ts:16:import type { ProviderDecisionMeta, Mode, ReasonCode } from '@/types/providerMeta';
+src/__tests__/singularity-fusion-mocked.test.ts:8:import { describe, it, expect, beforeEach, vi } from 'vitest';
+src/__tests__/singularity-fusion-mocked.test.ts:82:      const { invoke } = await import('@tauri-apps/api/core');
+src/__tests__/singularity-fusion-mocked.test.ts:94:      const { invoke } = await import('@tauri-apps/api/core');
+src/__tests__/singularity-fusion-mocked.test.ts:103:      const { invoke } = await import('@tauri-apps/api/core');
+src/__tests__/singularity-fusion-mocked.test.ts:113:      const { invoke } = await import('@tauri-apps/api/core');
+src/__tests__/singularity-fusion-mocked.test.ts:125:      const { invoke } = await import('@tauri-apps/api/core');
+src/__tests__/singularity-fusion-mocked.test.ts:139:      const { invoke } = await import('@tauri-apps/api/core');
+src/__tests__/singularity-fusion-mocked.test.ts:148:      const { invoke } = await import('@tauri-apps/api/core');
+src/__tests__/singularity-fusion-mocked.test.ts:157:      const { invoke } = await import('@tauri-apps/api/core');
+src/__tests__/singularity-fusion-mocked.test.ts:170:      const { invoke } = await import('@tauri-apps/api/core');
+src/__tests__/singularity-fusion-mocked.test.ts:179:      const { invoke } = await import('@tauri-apps/api/core');
+src/__tests__/singularity-fusion-mocked.test.ts:204:      const { invoke } = await import('@tauri-apps/api/core');
+src/__tests__/e2e-ui-integration.test.tsx:6:import React from 'react';
+src/__tests__/e2e-ui-integration.test.tsx:7:import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+src/__tests__/e2e-ui-integration.test.tsx:8:import { render, screen, fireEvent, waitFor } from '@/test-utils';
+src/__tests__/e2e-ui-integration.test.tsx:9:import { MessageList } from '../components/chat/MessageList';
+src/__tests__/e2e-ui-integration.test.tsx:10:import Chat from '../ui/pages/Chat';
+src/__tests__/e2e-ui-integration.test.tsx:11:import { setupE2ETest, teardownE2ETest } from './e2e-setup';
+src/__tests__/e2e-ui-integration.test.tsx:12:import { createTestMessage } from './e2e-test-utils';
+src/styles/tokens.ts:12:export const colors = {
+src/styles/tokens.ts:116:export const spacing = {
+src/styles/tokens.ts:137:export const fonts = {
+src/styles/tokens.ts:142:export const fontSizes = {
+src/styles/tokens.ts:154:export const lineHeights = {
+src/styles/tokens.ts:163:export const fontWeights = {
+src/styles/tokens.ts:179:export const radii = {
+src/styles/tokens.ts:193:export const shadows = {
+src/styles/tokens.ts:211:export const zIndices = {
+src/styles/tokens.ts:227:export const durations = {
+src/styles/tokens.ts:238:export const easings = {
+src/styles/tokens.ts:246:export const transitions = {
+### 12 tauri commands (top 80)
+src-tauri/tauri.conf.json:2:  "$schema": "https://schema.tauri.app/config/2.0",
+src-tauri/tauri.conf.json:115:            "dialog:allow-save",
+src-tauri/tauri.conf.json:121:            { "command": "get_runtime_config" },
+src-tauri/tauri.conf.json:127:            { "command": "get_system_health" },
+src-tauri/tauri.conf.json:143:            { "command": "save_chat_interaction" },
+src-tauri/tauri.conf.json:149:            { "command": "memory_save_chat_interaction" },
+src-tauri/tauri.conf.json:150:            { "command": "conversation_health_check" },
+src-tauri/tauri.conf.json:183:            { "command": "get_system_info" },
+src-tauri/tauri.conf.json:184:            { "command": "cp_get_ai_config" },
+src-tauri/tauri.conf.json:185:            { "command": "cp_set_ai_config" },
+src-tauri/tauri.conf.json:249:            { "command": "singularity_save_state" },
+src-tauri/tauri.conf.json:255:            { "command": "set_design_config" },
+src-tauri/tauri.conf.json:257:            { "command": "set_security_config" },
+src-tauri/tauri.conf.json:259:            { "command": "set_network_config" },
+src-tauri/tauri.conf.json:264:            { "command": "system_optimize" },
+src-tauri/tauri.conf.json:273:            { "command": "check_system_integrity" },
+src-tauri/tauri.conf.json:317:            { "command": "get_audio_output_devices" },
+src-tauri/tauri.conf.json:318:            { "command": "get_audio_input_devices" },
+src-tauri/tauri.conf.json:319:            { "command": "set_audio_output_device" },
+src-tauri/tauri.conf.json:320:            { "command": "set_audio_input_device" },
+src-tauri/tauri.conf.json:326:            { "command": "transcribe_audio" },
+src-tauri/tauri.conf.json:329:            { "command": "vad_configure" },
+src-tauri/tauri.conf.json:342:            { "command": "voice_transcribe_audio" },
+src-tauri/tauri.conf.json:345:            { "command": "voice_play_audio" },
+src-tauri/tauri.conf.json:347:            { "command": "voice_get_config" },
+src-tauri/tauri.conf.json:348:            { "command": "voice_update_config" },
+src-tauri/tauri.conf.json:414:            { "command": "qa_get_system_metrics" },
+src-tauri/tauri.conf.json:418:            { "command": "qa_get_hardening_config" },
+src-tauri/tauri.conf.json:419:            { "command": "qa_update_hardening_config" },
+src-tauri/tauri.conf.json:424:            { "command": "qa_health_check" },
+src-tauri/tauri.conf.json:437:            { "command": "engines_qa_get_system_info" },
+src-tauri/tauri.conf.json:454:            { "command": "reality_set_render_config" },
+src-tauri/tauri.conf.json:485:            { "command": "agenda_save_events" },
+src-tauri/tauri.conf.json:614:            { "command": "memory_hierarchy_health" },
+src-tauri/tauri.conf.json:616:            { "command": "memory_update_config" },
+src-tauri/tauri.conf.json:684:            { "command": "orchestrator_get_health" },
+src-tauri/tauri.conf.json:696:            { "command": "meta_design_system" },
+src-tauri/tauri.conf.json:763:            { "command": "get_system_health" },
+src-tauri/tauri.conf.json:765:            { "command": "system_optimize" },
+src-tauri/tauri.conf.json:766:            { "command": "memory_save_entry" },
+src-tauri/tauri.conf.json:800:            { "command": "engines_monitoring_get_health" },
+src-tauri/tauri.conf.json:879:            { "command": "get_system_metrics" },
+src-tauri/tauri.conf.json:932:            { "command": "cp_get_system_info" },
+src-tauri/tauri.conf.json:933:            { "command": "cp_run_system_diagnostic" },
+src-tauri/tauri.conf.json:934:            { "command": "cp_get_design_config" },
+src-tauri/tauri.conf.json:941:            { "command": "cp_get_network_config" },
+src-tauri/tauri.conf.json:942:            { "command": "cp_set_network_config" },
+src-tauri/tauri.conf.json:947:            { "command": "cp_get_security_config" },
+src-tauri/tauri.conf.json:948:            { "command": "cp_set_security_config" },
+src-tauri/tauri.conf.json:976:            { "command": "avatar_apply_style_preset" },
+src-tauri/tauri.conf.json:978:            { "command": "avatar_save_custom_style" },
+src-tauri/Cargo.toml:64:walkdir = "2.4" # Phase 9: Introspection filesystem traversal
+src-tauri/Cargo.toml:83:# Audio Engine v∞: Real-time audio capture and playback (optional)
+src-tauri/Cargo.toml:98:ort = { version = "2.0.0-rc.10", optional = true }  # ONNX Runtime (optional, requires system libs)
+src-tauri/Cargo.toml:106:default = ["custom-protocol", "mock", "audio-capture"]
+src-tauri/Cargo.toml:111:audio-capture = [
+src-tauri/Cargo.toml:113:] # Enable real-time audio capture (requires libasound2-dev)
+src-tauri/Cargo.lock:113: "pkg-config",
+src-tauri/Cargo.lock:117:name = "android_system_properties"
+src-tauri/Cargo.lock:331: "system-deps",
+src-tauri/Cargo.lock:582: "system-deps",
+src-tauri/Cargo.lock:893:name = "coreaudio-rs"
+src-tauri/Cargo.lock:900: "coreaudio-sys",
+src-tauri/Cargo.lock:904:name = "coreaudio-sys"
+src-tauri/Cargo.lock:920: "coreaudio-rs",
+src-tauri/Cargo.lock:1837: "system-deps",
+src-tauri/Cargo.lock:1853: "pkg-config",
+src-tauri/Cargo.lock:1854: "system-deps",
+src-tauri/Cargo.lock:1867: "pkg-config",
+src-tauri/Cargo.lock:1868: "system-deps",
+src-tauri/Cargo.lock:1894: "system-deps",
+src-tauri/Cargo.lock:2013: "system-deps",
+src-tauri/Cargo.lock:2061: "system-deps",
+src-tauri/Cargo.lock:2078: "system-deps",
+src-tauri/Cargo.lock:2099: "pkg-config",
+src-tauri/Cargo.lock:2117: "system-deps",
+src-tauri/Cargo.lock:2445: "android_system_properties",
+src-tauri/Cargo.lock:2799: "system-deps",
+src-tauri/Cargo.lock:3020: "pkg-config",
+src-tauri/Cargo.lock:3881: "pkg-config",
+### 13 provider omega (top 80)
+src-tauri/tauri.conf.json:195:            { "command": "chat_get_providers_status" },
+src-tauri/tauri.conf.json:196:            { "command": "chat_check_providers" },
+src-tauri/tauri.conf.json:630:            { "command": "orchestration_ping_providers" },
+src-tauri/tauri.conf.json:631:            { "command": "orchestration_force_provider" },
+src-tauri/tauri.conf.json:676:            { "command": "orchestrator_init" },
+src-tauri/tauri.conf.json:677:            { "command": "orchestrator_get_state" },
+src-tauri/tauri.conf.json:678:            { "command": "orchestrator_run_cycle" },
+src-tauri/tauri.conf.json:679:            { "command": "orchestrator_set_mode" },
+src-tauri/tauri.conf.json:680:            { "command": "orchestrator_get_metrics" },
+src-tauri/tauri.conf.json:681:            { "command": "orchestrator_enqueue_task" },
+src-tauri/tauri.conf.json:682:            { "command": "orchestrator_get_queue" },
+src-tauri/tauri.conf.json:683:            { "command": "orchestrator_get_engines" },
+src-tauri/tauri.conf.json:684:            { "command": "orchestrator_get_health" },
+src-tauri/tauri.conf.json:685:            { "command": "orchestrator_get_report" },
+src/__tests__/online-availability.test.ts:8: *   2. internetReachable=true implies provider_used!=local_only (unless explicit policy)
+src/__tests__/online-availability.test.ts:15:import { validateProviderDecisionMeta } from '@/types/providerDecisionMeta';
+src/__tests__/online-availability.test.ts:16:import type { ProviderDecisionMeta, Mode, ReasonCode } from '@/types/providerMeta';
+src/__tests__/online-availability.test.ts:24:    provider_used: 'gemini',
+src/__tests__/online-availability.test.ts:25:    provider_class: 'remote',
+src/__tests__/online-availability.test.ts:59:      provider_used: 'ollama',
+src/__tests__/online-availability.test.ts:60:      provider_class: 'local',
+src/__tests__/online-availability.test.ts:70:      provider_used: 'offline',
+src/__tests__/online-availability.test.ts:71:      provider_class: 'local',
+src/__tests__/online-availability.test.ts:79:// G5.2 — internetReachable=true implies provider_used != local_only
+src/__tests__/online-availability.test.ts:82:describe('G5.2: internetReachable=true implies provider!=local_only unless policy explicit', () => {
+src/__tests__/online-availability.test.ts:84:   * When internet is available (network_used=true), the provider should not be local_only.
+src/__tests__/online-availability.test.ts:89:      provider_used: 'local_only',
+src/__tests__/online-availability.test.ts:90:      provider_class: 'local',
+src/__tests__/online-availability.test.ts:102:      provider_used: 'local_only',
+src/__tests__/online-availability.test.ts:103:      provider_class: 'local',
+src/__tests__/online-availability.test.ts:112:  it('[G5.2.3] non-local provider + network_used=true + mode=REMOTE is valid (internet available + remote used)', () => {
+src/__tests__/online-availability.test.ts:114:      provider_used: 'gemini',
+src/__tests__/online-availability.test.ts:115:      provider_class: 'remote',
+src/__tests__/online-availability.test.ts:123:  it('[G5.2.4] ollama (local, not local_only) + network_used=false is valid', () => {
+src/__tests__/online-availability.test.ts:124:    // Ollama is a local provider — using it does not violate the contract
+src/__tests__/online-availability.test.ts:126:      provider_used: 'ollama',
+src/__tests__/online-availability.test.ts:127:      provider_class: 'local',
+src/__tests__/online-availability.test.ts:159:      provider_used: 'local_only',
+src/__tests__/online-availability.test.ts:160:      provider_class: 'local',
+src/__tests__/online-availability.test.ts:173:      provider_used: 'offline',
+src/__tests__/online-availability.test.ts:174:      provider_class: 'local',
+src/__tests__/online-availability.test.ts:192:      provider_used: 'gemini',
+src/__tests__/online-availability.test.ts:197:    expect(meta.provider_used).not.toBe('local_only');
+src/__tests__/online-availability.test.ts:204:      provider_used: 'local_only',
+src/__tests__/online-availability.test.ts:205:      provider_class: 'local',
+src/__tests__/online-availability.test.ts:219:      provider_used: 'offline',
+src/__tests__/online-availability.test.ts:220:      provider_class: 'local',
+src/__tests__/e2e-ui-integration.test.tsx:14:describe('🟣 OMEGA Phase 7Ω - E2E: UI Integration Tests', () => {
+src/__tests__/useChat-streaming.test.ts:36:      currentProvider: 'test-provider',
+src/__tests__/useChat-streaming.test.ts:37:      generate: async () => ({ content: 'fallback response', provider: 'test-provider' }),
+src/__tests__/useChat-streaming.test.ts:43:          provider: 'test-provider',
+src/__tests__/apps/devtools/sections/OmegaPipeline.test.tsx:3: * Coverage: Pipeline OMEGA, Étapes, État
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:14:import { aiOrchestrator } from '@/services/ai/orchestrator';
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:21:    it('should have all providers initialized', async () => {
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:24:      expect(status.providers).toBeDefined();
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:25:      expect(status.providers.length).toBeGreaterThan(0);
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:28:      const titaneLocal = status.providers.find(p => p.name === 'titane-local');
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:36:      expect(health.providers).toBeInstanceOf(Array);
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:46:      expect(response.provider).toBeDefined();
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:59:    it('openai provider should have correct structure', async () => {
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:60:      const { openaiProvider } = await import('@/services/ai/providers/openai');
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:62:      expect(openaiProvider.name).toBe('openai');
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:63:      expect(typeof openaiProvider.isAvailable).toBe('function');
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:64:      expect(typeof openaiProvider.generate).toBe('function');
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:67:    it('claude provider should have correct structure', async () => {
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:68:      const { claudeProvider } = await import('@/services/ai/providers/claude');
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:75:    it('gemini provider should have correct structure', async () => {
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:76:      const { geminiProvider } = await import('@/services/ai/providers/gemini');
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:78:      expect(geminiProvider.name).toBe('gemini');
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:79:      expect(typeof geminiProvider.isAvailable).toBe('function');
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:80:      expect(typeof geminiProvider.generate).toBe('function');
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:89:      const validResult = IAService.validateKeyFormat('openai', validKey);
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:90:      const invalidResult = IAService.validateKeyFormat('openai', invalidKey);
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:127:        provider: 'test-provider',
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:135:      expect(metrics.providers.length).toBeGreaterThan(0);
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:138:    it('should calculate provider metrics', () => {
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:143:        provider: 'openai',
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:150:        provider: 'openai',
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:155:      const providerMetrics = metricsEngine.getProviderMetrics('openai');
+src/__tests__/ai-subsystem-validation-v20omega.test.ts:157:      expect(providerMetrics.totalRequests).toBeGreaterThanOrEqual(2);
+### 14 audio (top 80)
+src-tauri/tauri.conf.json:321:            { "command": "test_microphone" },
+src/__tests__/services/api/voice.test.ts:137:      if (command === 'test_microphone') return Promise.resolve({ success: true });
+src-tauri/src/commands/security.rs:323:    commands.insert("test_microphone");
+src-tauri/src/commands/one_core.rs:381:            "Installer le plugin GStreamer FDK AAC pour le support audio complet".to_string(),
+src-tauri/src/commands/mod.rs:42:// Voice commands come from audio::commands instead
+src-tauri/src/commands/mod.rs:64:// audio_config_commands removed - duplicates audio::commands
+src-tauri/src/commands/mod.rs:76:// audio_config_commands removed - duplicates audio::commands
+src/test/setup.ts:608:    case 'test_microphone':
+src/features/audio-center/services/audioService.ts:399:        console.log('[AudioService] Calling Tauri test_microphone...');
+src/features/audio-center/services/audioService.ts:407:        console.log('[AudioService] test_microphone result:', result);
+src-tauri/capabilities/audio_tts.json:19:      "test_microphone",
+src-tauri/src/handlers.rs:70:                    // Voice Commands - using audio::commands (stateless)
+src-tauri/src/handlers.rs:71:                    $crate::audio::commands::speak,
+src-tauri/src/handlers.rs:72:                    $crate::audio::commands::start_recording,
+src-tauri/src/handlers.rs:73:                    $crate::audio::commands::stop_recording,
+src-tauri/src/handlers.rs:74:                    $crate::audio::commands::transcribe_audio,
+src-tauri/src/handlers.rs:75:                    $crate::audio::commands::force_reset_voice,
+src-tauri/src/handlers.rs:78:                    $crate::audio::commands::calibrate_titane_voice,
+src-tauri/src/handlers.rs:79:                    $crate::audio::commands::check_is_titane_speaking,
+src-tauri/src/handlers.rs:80:                    $crate::audio::commands::get_titane_voice_status,
+src-tauri/src/handlers.rs:303:                    $crate::audio::commands::speak,
+src-tauri/src/handlers.rs:304:                    $crate::audio::commands::start_recording,
+src-tauri/src/handlers.rs:305:                    $crate::audio::commands::stop_recording,
+src-tauri/src/handlers.rs:306:                    $crate::audio::commands::transcribe_audio,
+src-tauri/src/handlers.rs:307:                    $crate::audio::commands::force_reset_voice,
+src-tauri/src/handlers.rs:310:                    $crate::audio::commands::calibrate_titane_voice,
+src-tauri/src/handlers.rs:311:                    $crate::audio::commands::check_is_titane_speaking,
+src-tauri/src/handlers.rs:312:                    $crate::audio::commands::get_titane_voice_status,
+src/modules/vocalDev/VocalDevConsoleEngine.ts:859:      await secureInvoke('test_microphone');
+src-tauri/src/audio/commands.rs:623:pub async fn test_microphone(duration_ms: u64) -> CommandResult<MicrophoneTestResult> {
+src-tauri/src/audio/commands.rs:625:        "[Audio] test_microphone called with duration_ms={}",
+src-tauri/src/audio/commands.rs:1413:        "test_microphone",
+src/hooks/useVAD.ts:256:        }>('test_microphone', { durationMs: 1000 });
+src/hooks/useVoiceEngine.ts:73:        'test_microphone',
+src-tauri/src/main.rs:55:    // audio_config_commands removed - duplicates audio::commands
+src-tauri/src/main.rs:1527:            audio::commands::tts_speak,
+src-tauri/src/main.rs:1528:            audio::commands::tts_stop,
+src-tauri/src/main.rs:1529:            audio::commands::test_tts,
+src-tauri/src/main.rs:1531:            audio::commands::test_microphone,
+src-tauri/src/main.rs:1533:            audio::commands::get_audio_output_devices,
+src-tauri/src/main.rs:1534:            audio::commands::get_audio_input_devices,
+src-tauri/src/main.rs:1536:            audio::commands::set_audio_output_device,
+src-tauri/src/main.rs:1537:            audio::commands::set_audio_input_device,
+src-tauri/src/main.rs:1539:            audio::commands::vad_get_state,
+src-tauri/src/main.rs:1540:            audio::commands::vad_process_frame,
+src-tauri/src/main.rs:1541:            audio::commands::vad_configure,
+src-tauri/src/main.rs:1542:            audio::commands::vad_reset,
+src-tauri/src/main.rs:1543:            audio::commands::vad_test,
+src-tauri/src/main.rs:1545:            audio::commands::audio_capture_start,
+src-tauri/src/main.rs:1546:            audio::commands::audio_capture_stop,
+src-tauri/src/main.rs:1547:            audio::commands::audio_capture_status,
+src-tauri/src/main.rs:1548:            audio::commands::audio_capture_get_chunk,
+src-tauri/src/main.rs:1549:            audio::commands::audio_capture_export_wav,
+src-tauri/src/main.rs:1550:            audio::commands::audio_list_devices,
+src-tauri/src/main.rs:1628:            // Audio Config Commands - NOTE: Already exist in audio::commands (set/get_audio_*_device)
+src-tauri/src/main.rs:1809:            // audio::commands already included — missing variants added here
+src-tauri/src/main.rs:1811:            audio::commands::speak,
+src-tauri/src/main.rs:1812:            audio::commands::start_recording,
+src-tauri/src/main.rs:1813:            audio::commands::stop_recording,
+src-tauri/src/main.rs:1814:            audio::commands::cancel_recording,
+src-tauri/src/overdrive/voice_engine.rs:172:/// État global d'enregistrement pour voice_engine (indépendant de audio::commands)
+src-tauri/src/overdrive/voice_engine.rs:561:    let mic_test = test_microphone();
+src-tauri/src/overdrive/voice_engine.rs:572:fn test_microphone() -> bool {
+src/hooks/useAudioSettings.ts:227:      // ✅ En Tauri: utiliser le backend Rust (test_microphone) comme source de vérité
+src/hooks/useAudioSettings.ts:243:        console.error('[useAudioSettings] Tauri test_microphone error:', error);
+src/hooks/useDevicePermissions.ts:104:    const result = await secureInvoke<MicrophoneTestResult>('test_microphone', {
+src/lib/tauriCommands.ts:453:  TEST_MICROPHONE: 'test_microphone',
+src/lib/security.ts:376:  'test_microphone',
+src/services/tts/hybridTTS.ts:485:    // v19.3.0: Arrêt Tauri via commande tts_stop (audio::commands)
+src/services/tts/ttsEngineService.ts:155:    // Stop backend Tauri (v19.3.0: use tts_stop from audio::commands)
+src/tests/activeListeningIntegration.test.ts:119:// Prevent Tauri-only branches in tests (avoids secureInvoke('test_microphone') noise)
+src/services/audio/gstreamerCheck.ts:2: * TITANE∞ — GStreamer Availability Check
+src/services/audio/gstreamerCheck.ts:3: * Détecte si GStreamer est disponible sur le système
+src/services/audio/gstreamerCheck.ts:13: * Vérifie la disponibilité de GStreamer en Tauri
+src/services/audio/gstreamerCheck.ts:16:async function checkGStreamerAvailability(): Promise<boolean> {
+src/services/audio/gstreamerCheck.ts:23:    // En browser, GStreamer n'est pas géré par WebKit
+src/services/audio/gstreamerCheck.ts:31:      // Si backend est up mais audio échoue, c'est GStreamer
+src/services/audio/gstreamerCheck.ts:46:      console.warn('[GStreamerCheck] Failed to detect GStreamer:', error);
+src/services/audio/gstreamerCheck.ts:58:function getGStreamerStatus(): 'available' | 'unavailable' | 'unknown' {
+src/services/audio/gstreamerCheck.ts:63: * Marque GStreamer comme indisponible (appelé lors de GLib-GObject-CRITICAL)
+### 15 boot/double (top 80)
+src-tauri/tauri.conf.json:79:          "description": "Capability for the main window",
+src-tauri/gen/schemas/linux-schema.json:2343:          "format": "double"
+src-tauri/gen/schemas/desktop-schema.json:2343:          "format": "double"
+src/__tests__/omega/conversation-manager.test.ts:72:  it('should be a singleton', () => {
+src/pages/CognitivePage.tsx:265:// v24.3.1 FIX: Add missing default export for lazy loading
+src-tauri/memory/memory_core_state.json:9:      "message": "BOOT:START"
+src-tauri/memory/memory_core_state.json:16:      "message": "BOOT:START"
+src-tauri/memory/memory_core_state.json:23:      "message": "BOOT:START"
+src-tauri/memory/memory_core_state.json:30:      "message": "BOOT:START"
+src-tauri/memory/memory_core_state.json:37:      "message": "BOOT:START"
+src-tauri/memory/memory_core_state.json:44:      "message": "BOOT:START"
+src-tauri/memory/memory_core_state.json:51:      "message": "BOOT:START"
+src-tauri/memory/memory_core_state.json:58:      "message": "BOOT:START"
+src-tauri/memory/memory_core_state.json:65:      "message": "BOOT:START"
+src-tauri/memory/memory_core_state.json:72:      "message": "BOOT:START"
+src-tauri/memory/memory_core_state.json:79:      "message": "BOOT:START"
+src/pages/DevTools.tsx:27:// P1-B OPTIMIZATION: Tab-based lazy loading for -100 KB bundle split
+src/pages/DevTools.tsx:394:      {/* Tab Content - P1-B: Using lazy-loaded DevToolsTabs for -100 KB bundle split */}
+src/__tests__/boot-smoke.test.ts:45:  it('should import lazy diagnostic utility without errors', async () => {
+src/__tests__/boot-smoke.test.ts:46:    await expect(import('../utils/lazyImportDiagnostic')).resolves.toBeDefined();
+src/__tests__/boot-smoke.test.ts:55:  it('should create lazy component with diagnostic wrapper', async () => {
+src/__tests__/boot-smoke.test.ts:56:    const { lazyWithDiagnostic } = await import('../utils/lazyImportDiagnostic');
+src/__tests__/boot-smoke.test.ts:58:    const testLazy = lazyWithDiagnostic(
+src/__tests__/boot-smoke.test.ts:66:  it('should handle timeout lazy component', async () => {
+src/__tests__/boot-smoke.test.ts:67:    const { lazyWithTimeout } = await import('../utils/lazyImportDiagnostic');
+src/__tests__/boot-smoke.test.ts:69:    const testLazy = lazyWithTimeout(() => Promise.resolve({ default: () => 'test' }), {
+src/__tests__/boot-smoke.test.ts:77:  it('should handle failed lazy import gracefully', async () => {
+src/__tests__/boot-smoke.test.ts:78:    const { lazyWithDiagnostic } = await import('../utils/lazyImportDiagnostic');
+src/__tests__/boot-smoke.test.ts:80:    const failingLazy = lazyWithDiagnostic(
+src/__tests__/boot-smoke.test.ts:86:    // Le lazy component devrait être créé même si le factory échoue
+src/__tests__/ollama-proxy.test.ts:11:describe('Ollama proxy routing', () => {
+src/__tests__/e2e-automated-validation.test.tsx:1615:    // 8. Éviter doubles-réponses (avoid duplicate responses)
+src/pages/DashboardPage.tsx:341:// v24.3.1 FIX: Add missing default export for lazy loading
+src/__tests__/ui/ui-navigation.test.ts:193:  it('scrolling does not reveal double sticky headers', async () => {
+src/pages/DevToolsTabs.tsx:9: *   Tab-based conditional rendering with lazy loading
+src/pages/DevToolsTabs.tsx:14:import { lazy, Suspense } from 'react';
+src/pages/DevToolsTabs.tsx:19:const SystemTab = lazy(
+src/pages/DevToolsTabs.tsx:22:const LogsTab = lazy(
+src/pages/DevToolsTabs.tsx:25:const PerformanceTab = lazy(
+src/pages/DevToolsTabs.tsx:31:const DiagnosticTab = lazy(
+src/pages/DevToolsTabs.tsx:51: * Loading fallback for lazy tabs
+src/pages/DevToolsTabs.tsx:75: * DevTools Tab System with lazy loading
+src/__tests__/services/api/voice.test.ts:31:  it('startRecording() devrait échouer si déjà en cours (anti double-call)', async () => {
+src/__tests__/architecture/engine-isolation.test.ts:53:    // seule l'instanciation du singleton utilise les services
+src/pages/DevToolsLazy.tsx:9: *   Split monitoring components into lazy-loaded chunks per tab
+src/pages/DevToolsLazy.tsx:14:import { lazy, Suspense } from 'react';
+src/pages/DevToolsLazy.tsx:17:const MonitoringHeader = lazy(() =>
+src/pages/DevToolsLazy.tsx:23:const SystemStatusCard = lazy(() =>
+src/pages/DevToolsLazy.tsx:29:const LogsCard = lazy(() =>
+src/pages/DevToolsLazy.tsx:35:const ErrorsCard = lazy(() =>
+src/pages/DevToolsLazy.tsx:41:const CognitiveModuleCard = lazy(() =>
+src/pages/DevToolsLazy.tsx:47:const LivingEnginesCard = lazy(() =>
+src/pages/DevToolsLazy.tsx:53:const ChatDiagnostic = lazy(() =>
+src/pages/DevToolsLazy.tsx:60: * Loading fallback for lazy components
+src/pages/DevToolsLazy.tsx:83:// Export lazy components with Suspense wrappers
+src/__tests__/performance/PerformanceTests.test.tsx:237:    it('should lazy load heavy components', async () => {
+src/__tests__/performance/PerformanceTests.test.tsx:247:      // Heavy component should lazy load
+src/__tests__/services/adminEngine/adminEngine.test.ts:76:  // Reset toutes les instances singleton
+src-tauri/reports/prod_path/2026-02-10T23-25-13Z/P1_BLOCKERS/git_status_raw.txt:122:?? src/__tests__/ollama-proxy.test.ts
+src/_deprecated/router.tsx:21:import React, { lazy, Suspense } from 'react';
+src/_deprecated/router.tsx:29:const Dashboard = lazy(() => import('./pages').then(m => ({ default: m.DashboardPage })));
+src/_deprecated/router.tsx:30:const Chat = lazy(() => import('./ui/pages/Chat').then(m => ({ default: m.Chat })));
+src/_deprecated/router.tsx:31:const Stats = lazy(() => import('./pages/Stats').then(m => ({ default: m.Stats })));
+src/_deprecated/router.tsx:32:const Sentinel = lazy(() => import('./pages').then(m => ({ default: m.Sentinel })));
+src/_deprecated/router.tsx:33:const Watchdog = lazy(() => import('./pages').then(m => ({ default: m.Watchdog })));
+src/_deprecated/router.tsx:34:const SelfHeal = lazy(() => import('./pages').then(m => ({ default: m.SelfHeal })));
+src/_deprecated/router.tsx:35:const AdaptiveEngine = lazy(() =>
+src/_deprecated/router.tsx:38:const Memory = lazy(() => import('./pages').then(m => ({ default: m.Memory })));
+src/_deprecated/router.tsx:39:const Settings = lazy(() => import('./pages').then(m => ({ default: m.Settings })));
+src/_deprecated/router.tsx:40:const DevTools = lazy(() => import('./pages').then(m => ({ default: m.DevTools })));
+src/_deprecated/router.tsx:41:const CloudCenter = lazy(() =>
+src/_deprecated/router.tsx:44:const Agenda = lazy(() => import('./pages').then(m => ({ default: m.AgendaPage })));
+src/_deprecated/router.tsx:45:const DesignSystemShowcase = lazy(() => import('./pages/DesignSystemShowcase'));
+src-tauri/src/core/tests_engine.rs:45:    async fn test_engine_double_init() -> Result<(), Box<dyn std::error::Error>> {
+src-tauri/src/core/boot_orchestrator.rs:9:// Event TITANE_READY émis quand système complet ready
+src-tauri/src/core/boot_orchestrator.rs:172:        log::info!("║     TITANE∞ BOOT COMPLETE — SYSTEM READY                    ║");
+src/pages/ProgressionPage.tsx:185:// v24.3.1 FIX: Add missing default export for lazy loading
+src-tauri/src/avatar/immersive_avatar_engine.rs:758:    fn test_prosody_prepare_text_double_r() {
+src-tauri/src/avatar/fullbody/fullbody_engine.rs:407:        // Vérifier état geste et décider action (éviter double borrow)
+src-tauri/src/avatar/fullbody/fullbody_engine.rs:750:lazy_static::lazy_static! {
+### 16 storage/undefined (top 80)
+src/api/tauriClient.ts:159:  return typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
+src-tauri/tauri.conf.json:121:            { "command": "get_runtime_config" },
+src-tauri/tauri.conf.json:287:            { "command": "persistent_memory_write_entry" },
+src-tauri/tauri.conf.json:288:            { "command": "persistent_memory_create_summary" },
+src-tauri/tauri.conf.json:289:            { "command": "persistent_memory_create_bundle" },
+src-tauri/tauri.conf.json:290:            { "command": "persistent_memory_add_to_bundle" },
+src-tauri/tauri.conf.json:291:            { "command": "persistent_memory_promote_entry" },
+src-tauri/tauri.conf.json:292:            { "command": "persistent_memory_archive_entry" },
+src-tauri/tauri.conf.json:293:            { "command": "persistent_memory_delete_entry" },
+src-tauri/tauri.conf.json:294:            { "command": "persistent_memory_export" },
+src-tauri/tauri.conf.json:503:            { "command": "titan_persistence_init" },
+src-tauri/tauri.conf.json:504:            { "command": "titan_persist_event" },
+src-tauri/tauri.conf.json:510:            { "command": "titan_get_persistence_status" },
+src/__tests__/useAudioStreaming.test.ts:49:    forceStop: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+src/__tests__/api/tauriClient.test.ts:26:    const res = await tauri<string>('my_cmd', undefined, validator);
+src/__tests__/api/tauriClient.test.ts:35:    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+src/__tests__/api/tauriClient.test.ts:49:    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+src/__tests__/api/tauriClient.test.ts:63:    const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+src/__tests__/api/tauriClient.test.ts:64:    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+src/__tests__/api/tauriClient.test.ts:88:    const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+src/__tests__/api/tauriClient.test.ts:89:    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+src/__tests__/chatModes.config.test.ts:202:      expect(validateModeId(undefined)).toBe(false);
+src/test/integration.test.ts:38:    ServiceMetrics.endMetric(metricId, true, undefined, 0);
+src/test/integration.test.ts:63:    ServiceMetrics.endMetric(metricId, true, undefined, 2); // 2 retries
+src/test/integration.test.ts:109:    ServiceMetrics.endMetric(metricId, true, undefined, 0);
+src/test/integration.test.ts:114:    ServiceMetrics.endMetric(metricId, true, undefined, 0);
+src/test/integration.test.ts:139:      ServiceMetrics.endMetric(metricId, true, undefined, 0);
+src/test/integration.test.ts:152:    ServiceMetrics.endMetric(metricId, true, undefined, 0);
+src/test/integration.test.ts:166:    ServiceMetrics.endMetric(metricId, true, undefined, 0);
+src/test/setup.ts:30:  if (typeof Response !== 'undefined') {
+src/test/setup.ts:48:  if (typeof URL !== 'undefined' && input instanceof URL) return input.toString();
+src/test/setup.ts:426:      return undefined;
+src/test/setup.ts:473:      return undefined;
+src/test/setup.ts:491:      return undefined;
+src/test/setup.ts:498:      return undefined;
+src/test/setup.ts:500:      return undefined;
+src/test/setup.ts:618:// Mock Tauri API (évite erreurs "window.__TAURI__ undefined")
+src/test/serviceInvoker.test.ts:241:      undefined
+src/test/singularityStore.test.ts:7: * - Persistence (localStorage)
+src/test/singularityStore.test.ts:24:    // Clear localStorage
+src/test/singularityStore.test.ts:25:    localStorage.clear();
+src/test/singularityStore.test.ts:104:    it('should return undefined for non-existent engine', () => {
+src/test/singularityStore.test.ts:113:    it('should persist mode to localStorage', () => {
+src/test/singularityStore.test.ts:120:      const stored = JSON.parse(localStorage.getItem('singularity-storage') || '{}');
+src/test/singularityStore.test.ts:124:    it('should persist theme to localStorage', () => {
+src/test/singularityStore.test.ts:131:      const stored = JSON.parse(localStorage.getItem('singularity-storage') || '{}');
+src/test/singularityStore.test.ts:135:    it('should restore state from localStorage', () => {
+src/test/singularityStore.test.ts:137:      localStorage.setItem(
+src/test/singularityStore.test.ts:138:        'singularity-storage',
+src-tauri/gen/schemas/capabilities.json:1:{"audio-tts":{"identifier":"audio-tts","description":"Capability pour le système Audio/TTS/ASR TITANE∞ v19.3","local":true,"windows":["main"],"permissions":["core:default"]},"chat-ai":{"identifier":"chat-ai","description":"Capability pour le Chat IA TITANE∞ (Gemini, Ollama, Local)","remote":{"urls":["https://generativelanguage.googleapis.com/**","http://localhost:11434/**","http://127.0.0.1:11434/**"]},"local":true,"windows":["main"],"permissions":["core:default"]},"developer-mode":{"identifier":"developer-mode","description":"Capability pour le Developer Mode TITANE∞ (Kevin only)","local":true,"windows":["main"],"permissions":["core:default"]},"persistence":{"identifier":"persistence","description":"Capability pour le système de persistence TITANE∞ (Event Sourcing + Snapshots)","local":true,"windows":["main"],"permissions":["core:default"]},"self-heal":{"identifier":"self-heal","description":"Capability pour le Self-Healing et l'autonomie TITANE∞","local":true,"windows":["main"],"permissions":["core:default"]},"singularity":{"identifier":"singularity","description":"Capability pour le Singularity Engine TITANE∞ (état global unifié)","local":true,"windows":["main"],"permissions":["core:default"]}}
+src/__tests__/apps/devtools/sections/__snapshots__/OmegaPipeline.test.tsx.snap:249:            title="undefined: complete"
+src/__tests__/apps/devtools/sections/__snapshots__/OmegaPipeline.test.tsx.snap:253:            title="undefined: complete"
+src/__tests__/apps/devtools/sections/__snapshots__/OmegaPipeline.test.tsx.snap:257:            title="undefined: complete"
+src/__tests__/apps/devtools/sections/__snapshots__/OmegaPipeline.test.tsx.snap:281:            title="undefined: complete"
+src/__tests__/apps/devtools/sections/__snapshots__/OmegaPipeline.test.tsx.snap:285:            title="undefined: complete"
+src/__tests__/apps/devtools/sections/__snapshots__/OmegaPipeline.test.tsx.snap:289:            title="undefined: complete"
+src/__tests__/apps/Settings/Settings.test.tsx:45:      expect(main).toHaveAttribute('aria-labelledby', 'settings-title');
+src/__tests__/hooks/useVoice.test.tsx:16:    speak: vi.fn(async () => undefined),
+src/__tests__/hooks/useVoice.test.tsx:17:    stop: vi.fn(async () => undefined),
+src/__tests__/hooks/useVoice.test.tsx:24:    (window as any).SpeechRecognition = undefined;
+src/__tests__/hooks/useVoice.test.tsx:25:    (window as any).webkitSpeechRecognition = undefined;
+src/__tests__/test-globals.d.ts:19:// Augmenter les types React Testing Library pour accepter undefined
+src/__tests__/test-globals.d.ts:37:// Type helper pour forcer l'acceptation de valeurs undefined dans les tests
+src/__tests__/apps/Settings/__snapshots__/Settings.test.tsx.snap:5:  aria-labelledby="settings-title"
+src/__tests__/apps/Settings/__snapshots__/Settings.test.tsx.snap:17:    aria-labelledby="general-settings"
+src/__tests__/apps/Settings/__snapshots__/Settings.test.tsx.snap:31:    aria-labelledby="appearance-settings"
+src/__tests__/chat-ia-stability.test.ts:68:    stream: undefined,
+src/__tests__/chat-ia-stability.test.ts:180:      .mockResolvedValue(undefined);
+src/__tests__/chat-ia-stability.test.ts:189:  it('SCÉNARIO A: Messages utilisateur + IA doivent persister', async () => {
+src/__tests__/chat-ia-stability.test.ts:237:    console.log('✅ SCÉNARIO A: SUCCÈS - Tous les messages persistent');
+src/__tests__/hooks/useMediaQuery.test.tsx:86:      let listener: ((e: any) => void) | undefined;
+src/__tests__/hooks/useIdentity.test.tsx:12:    localStorage.clear();
+src/pages/ChatPage.tsx:22:  if (typeof window === 'undefined') {
+src/pages/ChatPage.tsx:26:  const stored = window.localStorage.getItem(PREFERRED_PROVIDER_STORAGE_KEY);
+src/pages/ChatPage.tsx:35:    if (typeof window === 'undefined') {
+src/pages/ChatPage.tsx:39:    window.localStorage.setItem(PREFERRED_PROVIDER_STORAGE_KEY, selectedProvider);
+src/__tests__/hooks/useWindowControls.test.tsx:19:    return undefined;
+src/pages/DevTools.tsx:320:          latestError={error ? String(error) : undefined}
+src/__tests__/hooks/useLocalStorage.test.tsx:12:    localStorage.clear();
+src/__tests__/hooks/useLocalStorage.test.tsx:22:    it('should load existing value from localStorage', () => {
+### 17 todo/stub (top 80)
+src-tauri/tauri.conf.json:565:            { "_comment": "P2-001 AUDIT FIX (2026-03-06): identity stubs" },
+e2e/desktop/online-chat-proof.wdio.test.js:156:    // ANTI_LIE: reject mock path — window.__TITANE_E2E_CHAT_MOCK__ must be false in proof runs
+e2e/desktop/online-chat-proof.wdio.test.js:159:      `FALSE_PASS: response is a mock stub ([MOCK_OK] prefix). Provider: ${String(response?.meta?.provider_used ?? response?.metadata?.provider_used ?? 'unknown')}`
+e2e/desktop/online-chat-proof.wdio.test.js:162:    // ANTI_LIE: reject generic/empty degraded stubs
+e2e/desktop/online-chat-proof.wdio.test.js:163:    const STUB_PATTERNS = ['[MOCK_OK]', 'e2e-mock', 'stub', 'placeholder'];
+e2e/desktop/online-chat-proof.wdio.test.js:167:        `FALSE_PASS: response contains stub marker "${pattern}"`
+e2e/desktop/online-chat-proof.wdio.test.js:174:      `ANSWER_TOO_SHORT: assistantText has ${assistantText.trim().length} chars — likely stub or empty fallback`
+e2e/desktop/online-chat-proof.wdio.test.js:195:    // Provider must be explicit and non-mock for REAL_CHAT_CHAIN proofs
+e2e/desktop/online-chat-proof.wdio.test.js:203:      'e2e-mock',
+e2e/desktop/online-chat-proof.wdio.test.js:204:      'PROVIDER_MOCK: provider_used must not be e2e-mock'
+e2e/desktop/online-chat-proof.wdio.test.js:209:      // D2 honest degraded path: do not fake topical answer; require explicit degraded wording
+tests/integration/control_panel_integration.test.ts:9:const mockedInvoke = vi.mocked(invoke);
+tests/integration/control_panel_integration.test.ts:12:  mockedInvoke.mockReset();
+tests/integration/control_panel_integration.test.ts:18:    const mockSystemInfo = {
+tests/integration/control_panel_integration.test.ts:27:    mockedInvoke.mockResolvedValueOnce(mockSystemInfo);
+tests/integration/control_panel_integration.test.ts:30:    expect(systemInfo).toEqual(mockSystemInfo);
+tests/integration/control_panel_integration.test.ts:33:    const mockDiagnostic = '✅ Système: OK\n✅ Mémoire: OK';
+tests/integration/control_panel_integration.test.ts:34:    mockedInvoke.mockResolvedValueOnce(mockDiagnostic);
+tests/integration/control_panel_integration.test.ts:51:    mockedInvoke.mockResolvedValueOnce(currentConfig);
+tests/integration/control_panel_integration.test.ts:63:    mockedInvoke.mockResolvedValueOnce(undefined);
+tests/integration/control_panel_integration.test.ts:67:    mockedInvoke.mockResolvedValueOnce(newConfig);
+tests/integration/control_panel_integration.test.ts:85:    mockedInvoke.mockResolvedValueOnce(initialStatus);
+tests/integration/control_panel_integration.test.ts:91:    mockedInvoke.mockResolvedValueOnce(undefined);
+tests/integration/control_panel_integration.test.ts:102:    mockedInvoke.mockResolvedValueOnce(activeStatus);
+tests/integration/control_panel_integration.test.ts:120:    mockedInvoke.mockResolvedValueOnce(initialStats);
+tests/integration/control_panel_integration.test.ts:126:    mockedInvoke.mockResolvedValueOnce(undefined);
+tests/integration/control_panel_integration.test.ts:135:    mockedInvoke.mockResolvedValueOnce(cleanedStats);
+tests/integration/control_panel_integration.test.ts:145:    const mockModules = [
+tests/integration/control_panel_integration.test.ts:162:    mockedInvoke.mockResolvedValueOnce(mockModules);
+tests/integration/control_panel_integration.test.ts:169:    mockedInvoke.mockResolvedValueOnce(undefined);
+tests/integration/control_panel_integration.test.ts:173:    const updatedModules = [{ ...mockModules[0] }, { ...mockModules[1], enabled: false }];
+tests/integration/control_panel_integration.test.ts:175:    mockedInvoke.mockResolvedValueOnce(updatedModules);
+tests/integration/control_panel_integration.test.ts:192:    mockedInvoke.mockResolvedValueOnce(updateInfo);
+tests/integration/control_panel_integration.test.ts:198:    mockedInvoke.mockResolvedValueOnce(undefined);
+tests/integration/control_panel_integration.test.ts:208:    mockedInvoke.mockResolvedValueOnce(updatedInfo);
+tests/integration/control_panel_integration.test.ts:219:    mockedInvoke.mockRejectedValueOnce('Network error');
+tests/integration/control_panel_integration.test.ts:224:    const mockSystemInfo = {
+tests/integration/control_panel_integration.test.ts:233:    mockedInvoke.mockResolvedValueOnce(mockSystemInfo);
+tests/integration/control_panel_integration.test.ts:236:    expect(result).toEqual(mockSystemInfo);
+tests/integration/devops-pipeline.test.ts:18:const tauriInvoke = vi.mocked(invoke);
+tests/integration/devops-pipeline.test.ts:57:      tauriInvoke.mockResolvedValueOnce({
+tests/integration/devops-pipeline.test.ts:221:      const mockAnalysis: ScreenAnalysis = {
+tests/integration/devops-pipeline.test.ts:254:        const action = await VisualDevOps.proposeAction(mockAnalysis, actionType);
+tests/integration/devops-pipeline.test.ts:269:      const mockAnalysis: ScreenAnalysis = {
+tests/integration/devops-pipeline.test.ts:294:      const action = await VisualDevOps.proposeAction(mockAnalysis, 'generate_script');
+tests/integration/devops-pipeline.test.ts:315:      tauriInvoke.mockRejectedValue(new Error('Backend unavailable'));
+tests/integration/devops-pipeline.test.ts:412:      vi.mocked(invoke).mockResolvedValueOnce({
+tests/integration/devops-pipeline.test.ts:440:      const mockAnalysis: ScreenAnalysis = {
+tests/integration/devops-pipeline.test.ts:464:      await VisualDevOps.proposeAction(mockAnalysis, 'build');
+tests/integration/devops-pipeline.test.ts:498:      vi.mocked(invoke).mockResolvedValueOnce({
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:90:    const placeholderMatch = inputCandidates.find(el => {
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:91:      const ph = (el.getAttribute('placeholder') || '').toLowerCase();
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:94:    if (placeholderMatch) return placeholderMatch;
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:149:        placeholder: el.getAttribute('placeholder') || null,
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:164:    const placeholderMatch = inputCandidates.find(el => {
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:165:      const ph = (el.getAttribute('placeholder') || '').toLowerCase();
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:168:    if (placeholderMatch) return buildMeta(placeholderMatch, 'placeholder:message|chat');
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:352:            placeholder: input.placeholder,
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:458:        const placeholderMatch = inputCandidates.find(el => {
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:459:          const ph = (el.getAttribute('placeholder') || '').toLowerCase();
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:462:        if (placeholderMatch) return placeholderMatch;
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:499:          placeholder: el.getAttribute('placeholder') || null,
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:515:        const placeholderMatch = inputCandidates.find(el => {
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:516:          const ph = (el.getAttribute('placeholder') || '').toLowerCase();
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:519:        if (placeholderMatch) return buildMeta(placeholderMatch, 'placeholder:message|chat');
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:676:                placeholder: input.placeholder,
+tests/integration/full-pipeline.test.ts:9: * Deterministic, fully mocked coverage of the autonomous stack.
+tests/integration/full-pipeline.test.ts:241:  const auto_scan = vi.fn().mockResolvedValue({
+tests/integration/full-pipeline.test.ts:510:      pipeline.autonomyEngine.auto_scan.mockResolvedValueOnce({
+tests/integration/full-pipeline.test.ts:526:      pipeline.autonomyEngine.auto_scan.mockResolvedValueOnce({
+tests/integration/full-pipeline.test.ts:534:      pipeline.autonomyEngine.auto_detect.mockResolvedValueOnce({
+tests/integration/full-pipeline.test.ts:540:      pipeline.autonomyEngine.auto_fix.mockResolvedValueOnce({
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:132:      'textarea[placeholder], input[type="text"][placeholder], ' +
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:530:        'textarea[placeholder]',
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:544:            placeholder: el.placeholder || '',
+src/__tests__/api/tauriClient.test.ts:5:vi.mock('@/lib/security', () => ({
+src/__tests__/api/tauriClient.test.ts:23:    secureInvokeMock.mockResolvedValueOnce('ok');
+src/__tests__/api/tauriClient.test.ts:35:    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+src/__tests__/api/tauriClient.test.ts:36:    secureInvokeMock.mockRejectedValueOnce(new Error('boom'));
+src/__tests__/api/tauriClient.test.ts:43:    consoleError.mockRestore();
+### 18 data-testid (top 120)
+e2e/runtime-validation/chat-ar20.spec.ts:24:  '#chat-input-textarea, textarea.chat-input, [data-testid="chat-input"]';
+e2e/runtime-validation/chat-ar20.spec.ts:26:  'button.chat-send-btn, button.chat-send-omega, [data-testid="send-button"]';
+e2e/runtime-validation/chat-ar20.spec.ts:28:const ASSISTANT_MESSAGE_SELECTOR = `${MESSAGE_CONTAINER_SELECTOR} .message-bubble.message-assistant .message-text, [data-testid="assistant-message"]`;
+e2e/desktop/ui-driver.wdio.js:9:const testId = id => `[data-testid="${id}"]`;
+e2e/desktop/ui-driver.wdio.js:493:    const chatSelectors = [testId('chat-input'), '[data-testid="tab-conversation"]'];
+e2e/desktop/ui-ultra-smoke.e2e.js:50:    await clickAllTabs(['[data-testid="tab-conversation"]']);
+e2e/desktop/ui-ultra-smoke.e2e.js:56:    await clickAllTabs(['[data-testid="tab-admin-audio"]']);
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:80:    // Priority 1: data-testid contains "chat"
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:81:    const testIdCandidates = Array.from(document.querySelectorAll('[data-testid]'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:82:      .filter(el => (el.getAttribute('data-testid') || '').toLowerCase().includes('chat'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:150:        dataTestId: el.getAttribute('data-testid') || null,
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:155:    const testIdCandidates = Array.from(document.querySelectorAll('[data-testid]'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:156:      .filter(el => (el.getAttribute('data-testid') || '').toLowerCase().includes('chat'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:159:      return buildMeta(testIdCandidates[0], 'data-testid:chat');
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:203:    // Priority 1: data-testid contains "send"
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:204:    const byTestId = Array.from(document.querySelectorAll('[data-testid]')).find(el =>
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:205:      (el.getAttribute('data-testid') || '').toLowerCase().includes('send')
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:247:        dataTestId: el.getAttribute('data-testid') || null,
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:252:    const byTestId = Array.from(document.querySelectorAll('[data-testid]')).find(el =>
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:253:      (el.getAttribute('data-testid') || '').toLowerCase().includes('send')
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:255:    if (byTestId) return buildMeta(byTestId, 'data-testid:send');
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:281:    // Priority 1: data-testid
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:283:      document.querySelectorAll('[data-testid="assistant-message"]')
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:310:    // Priority 1: data-testid
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:311:    const byTestId = document.querySelector('[data-testid="nav-chat"]');
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:450:        const testIdCandidates = Array.from(document.querySelectorAll('[data-testid]'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:451:          .filter(el => (el.getAttribute('data-testid') || '').toLowerCase().includes('chat'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:500:          dataTestId: el.getAttribute('data-testid') || null,
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:506:        const testIdCandidates = Array.from(document.querySelectorAll('[data-testid]'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:507:          .filter(el => (el.getAttribute('data-testid') || '').toLowerCase().includes('chat'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:510:          return buildMeta(testIdCandidates[0], 'data-testid:chat');
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:551:        const byTestId = Array.from(document.querySelectorAll('[data-testid]')).find(el =>
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:552:          (el.getAttribute('data-testid') || '').toLowerCase().includes('send')
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:590:            dataTestId: el.getAttribute('data-testid') || null,
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:595:        const byTestId = Array.from(document.querySelectorAll('[data-testid]')).find(el =>
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:596:          (el.getAttribute('data-testid') || '').toLowerCase().includes('send')
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:598:        if (byTestId) return buildSendMeta(byTestId, 'data-testid:send');
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:619:        let messages = Array.from(document.querySelectorAll('[data-testid="assistant-message"]'));
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:641:        const byTestId = document.querySelector('[data-testid="nav-chat"]');
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:755:        '[data-testid="tab-conversation"]',
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:756:        '[data-testid="nav-chat"]',
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:757:        '[data-testid*="conversation"]',
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:758:        '[data-testid*="chat"]',
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:776:        const testId = (el.getAttribute('data-testid') || '').toLowerCase();
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:1187:    const dataTestIds = Array.from(document.querySelectorAll('[data-testid]'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:1188:      .map(el => el.getAttribute('data-testid'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:1277:      const testId = getAttr(el, 'data-testid');
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:112:        '[data-testid="splash"], .loading-screen, #loading, ' +
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:126:        '[role="tab"], .tab-button, .nav-tab, button[data-tab], [data-testid*="tab"]'
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:133:        '[data-testid="chat-input"], [role="textbox"], ' +
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:137:      'button[type="submit"], button[data-testid="send"], ' +
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:153:    const memoryInd = !!document.querySelector('[data-memory], [data-testid*="memory"]');
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:155:      '[data-orchestrator], [data-testid*="orchestrator"]'
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:158:      '[data-testid="chat"], .chat-container, #chat'
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:162:      '[data-testid="reasoning-progress"], [class*="reasoning"], ' +
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:398:        '[data-testid*="tab"]',
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:531:        '[data-testid="chat-input"]',
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:587:        '[data-testid="send"]',
+e2e/desktop/ai-verification.full.e2e.js:141:  const bubbleTrigger = await $('[data-testid="chat-bubble-trigger"]');
+e2e/desktop/ai-verification.full.e2e.js:147:      open: '[data-testid="chat-bubble-trigger"]',
+e2e/desktop/ai-verification.full.e2e.js:335:          const bubbleTrigger = await $('[data-testid="chat-bubble-trigger"]');
+e2e/desktop/ui-ultra-full.e2e.js:19:  const trigger = await $('[data-testid="btn-mode-builder"]');
+e2e/desktop/ui-ultra-full.e2e.js:38:    return page.tabs.filter(tab => tab !== '[data-testid="tab-admin-audio"]');
+e2e/desktop/ui-ultra-full.e2e.js:92:    await clickAllTabs(['[data-testid="tab-conversation"]']);
+e2e/desktop/ui-ultra-full.e2e.js:114:    const userMessagesBefore = await $$('[data-testid="chat-message-user"]');
+e2e/desktop/ui-ultra-full.e2e.js:122:    await clickAllTabs(['[data-testid="tab-conversation"]']);
+e2e/desktop/ui-ultra-full.e2e.js:126:        const input = await $('[data-testid="chat-input"]');
+e2e/desktop/ui-ultra-full.e2e.js:132:          return (await $$('[data-testid="chat-message-user"]')).length >= userBefore;
+e2e/desktop/ui-ultra-full.e2e.js:135:        const messagesAfter = await $$('[data-testid="chat-message-user"]');
+e2e/desktop/ui-ultra-full.e2e.js:151:    const userAfter = (await $$('[data-testid="chat-message-user"]')).length;
+e2e/desktop/ui-ultra-full.e2e.js:160:    const providerSelect = await $('[data-testid="select-chat-provider"]');
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:85:    const input = document.querySelector('[data-testid="chat-input"]');
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:86:    const send = document.querySelector('[data-testid="chat-send"]');
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:87:    const loading = document.querySelector('[data-testid="chat-loading"]');
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:88:    const error = document.querySelector('[data-testid="chat-error"]');
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:89:    const ready = document.querySelector('[data-testid="chat-ready"]');
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:90:    const reasoning = document.querySelector('[data-testid="reasoning-progress"]');
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:92:      '[data-testid="reasoning-status-label"]'
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:94:    const health = document.querySelector('[data-testid="btn-health-check"]');
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:98:        '[data-testid="chat-message-user"] [data-testid="chat-message-content"]'
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:104:        '[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]'
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:110:      document.querySelectorAll('[data-testid="chat-message-assistant"]')
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:118:            '[data-testid="chat-runtime-tag"], .conversation-tag'
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:141:      document.querySelector('[data-testid*="debug" i]') ||
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:175:        '[data-testid="reasoning-topology-node"]'
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:192:      document.querySelectorAll('button, [role="tab"], a, [data-testid*="chat" i]')
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:201:      const testId = (node.getAttribute('data-testid') || '').toLowerCase();
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:213:      testId: chatCandidate.getAttribute('data-testid'),
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:283:    const inputSelector = '[data-testid="chat-input"]';
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:284:    const sendSelector = '[data-testid="chat-send"]';
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:441:        const button = document.querySelector('[data-testid="btn-health-check"]');
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:42:        data-testid="tabs-component"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:45:          data-testid="tabs-list"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:48:            data-testid="tab-dashboard"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:55:            data-testid="tab-metrics"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:62:            data-testid="tab-logs"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:69:            data-testid="tab-engines"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:76:            data-testid="tab-memory"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:83:            data-testid="tab-pipeline"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:90:            data-testid="tab-errors"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:98:          data-testid="tabs-content"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:107:                data-testid="section-dashboard"
+e2e/desktop/page-objects/uiPages.po.js:6:    root: '[data-testid="page-titane"]',
+e2e/desktop/page-objects/uiPages.po.js:8:      '[data-testid="tab-conversation"]',
+e2e/desktop/page-objects/uiPages.po.js:9:      '[data-testid="tab-overview"]',
+e2e/desktop/page-objects/uiPages.po.js:10:      '[data-testid="tab-vision"]',
+e2e/desktop/page-objects/uiPages.po.js:11:      '[data-testid="tab-identity"]',
+e2e/desktop/page-objects/uiPages.po.js:12:      '[data-testid="tab-memory"]',
+e2e/desktop/page-objects/uiPages.po.js:13:      '[data-testid="tab-memory-evolution"]',
+e2e/desktop/page-objects/uiPages.po.js:14:      '[data-testid="tab-progression"]',
+e2e/desktop/page-objects/uiPages.po.js:15:      '[data-testid="tab-transformation"]',
+e2e/desktop/page-objects/uiPages.po.js:22:    root: '[data-testid="page-time"]',
+e2e/desktop/page-objects/uiPages.po.js:24:      '[data-testid="tab-time-now"]',
+e2e/desktop/page-objects/uiPages.po.js:25:      '[data-testid="tab-time-agenda"]',
+e2e/desktop/page-objects/uiPages.po.js:26:      '[data-testid="tab-time-timeline"]',
+e2e/desktop/page-objects/uiPages.po.js:27:      '[data-testid="tab-time-snapshots"]',
+e2e/desktop/page-objects/uiPages.po.js:28:      '[data-testid="tab-time-intelligence"]',
+e2e/desktop/page-objects/uiPages.po.js:29:      '[data-testid="tab-time-flow"]',
+e2e/desktop/page-objects/uiPages.po.js:36:    root: '[data-testid="page-stats"]',
+e2e/desktop/page-objects/uiPages.po.js:43:    root: '[data-testid="page-admin"]',

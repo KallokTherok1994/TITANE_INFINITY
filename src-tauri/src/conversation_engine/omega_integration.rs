@@ -8,6 +8,8 @@ use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
+use crate::ai::AIRequest;
+use crate::ai::router::AIRouter;
 use crate::omega::{OmegaConfig, OmegaPipeline, PipelineInput, PipelineOutput};
 use crate::singularity::singularity_state::{ChatContext, SingularityState};
 
@@ -28,6 +30,8 @@ pub struct OmegaConversationBridge {
     french_mastery: Arc<FrenchMasteryProcessor>,
     /// Singularity Meta-Processing Engine
     singularity: Arc<RwLock<SingularityState>>,
+    /// Real AI Router — replaces OMEGA mock TextGen with actual provider call
+    ai_router: Option<Arc<RwLock<AIRouter>>>,
 }
 
 /// Configuration for OMEGA-Conversation bridge
@@ -56,7 +60,11 @@ impl Default for OmegaBridgeConfig {
 
 impl OmegaConversationBridge {
     /// Create new bridge with configuration
-    pub fn new(config: OmegaBridgeConfig, singularity: Arc<RwLock<SingularityState>>) -> Self {
+    pub fn new(
+        config: OmegaBridgeConfig,
+        singularity: Arc<RwLock<SingularityState>>,
+        ai_router: Option<Arc<RwLock<AIRouter>>>,
+    ) -> Self {
         let omega_config = OmegaConfig {
             parallel_execution: config.parallel_execution,
             max_parallel_tasks: 4,
@@ -76,6 +84,7 @@ impl OmegaConversationBridge {
             config,
             french_mastery,
             singularity,
+            ai_router,
         }
     }
 
@@ -213,13 +222,9 @@ impl OmegaConversationBridge {
         PipelineInput {
             request_id,
             text: request.user_message.clone(),
-            context: vec![], // Implementation: Load conversation context from UnifiedMemory
-            // - Query: UNIFIED_MEMORY.read().await.search(&request.conversation_id)
-            // - Recent messages: Retrieve last 10 messages from STM for immediate context
-            // - Long-term context: Semantic search in LTM for relevant past conversations
-            // - Format: Vec<String> with "[User]: {msg}" and "[Assistant]: {reply}" pairs
-            // - Token limit: Truncate to ~2000 tokens to fit in LLM context window
-            // - Summarization: If conversation too long, use summarizer.rs to compress
+            // PATCH-011: inject conversation history from request.history (loaded by commands.rs)
+            // This wires STM/LTM context into the OMEGA pipeline for multi-turn memory.
+            context: request.history.clone().unwrap_or_default(),
             preferences,
             timestamp: chrono::Utc::now().timestamp_millis(),
             priority: 5, // Normal priority
@@ -254,6 +259,79 @@ impl OmegaConversationBridge {
     ) -> Result<ConversationResponse, ConversationEngineError> {
         let start = std::time::Instant::now();
 
+        // ✅ REAL AI CALL: Replace OMEGA mock TextGen with actual provider response
+        // The OMEGA DefaultTaskHandler::execute() is a stub — wire real AIRouter here.
+        let (real_response_text, real_provider_name) = if let Some(router_lock) = &self.ai_router {
+            // Build prompt: system_prompt already contains LTM history injected by frontend.
+            // If no custom_system_prompt, inject backend request.history directly (canonical fallback).
+            // Token budget: truncate history entries to max 200 chars each to prevent overflow.
+            let prompt = {
+                let base = request.custom_system_prompt.as_deref().unwrap_or("").trim();
+                let history_block = if !base.contains("## CONVERSATION_HISTORY") {
+                    // Backend history not yet in prompt — inject it (canonical backend path)
+                    if let Some(hist) = &request.history {
+                        if !hist.is_empty() {
+                            let truncated: Vec<String> = hist.iter()
+                                .map(|line| {
+                                    if line.len() > 200 {
+                                        format!("{}…", &line[..200])
+                                    } else {
+                                        line.clone()
+                                    }
+                                })
+                                .collect();
+                            format!("\n\n## CONVERSATION_HISTORY\n{}", truncated.join("\n"))
+                        } else {
+                            String::new()
+                        }
+                    } else {
+                        String::new()
+                    }
+                } else {
+                    String::new() // already present via frontend injection
+                };
+
+                if base.is_empty() && history_block.is_empty() {
+                    format!("User: {}", request.user_message)
+                } else if base.is_empty() {
+                    format!("{}\n\nUser: {}", history_block.trim(), request.user_message)
+                } else {
+                    format!("{}{}\n\nUser: {}", base, history_block, request.user_message)
+                }
+            };
+            let provider_pref = request.ai_config.as_ref().and_then(|c| match c.provider_preference {
+                ProviderPreference::Local | ProviderPreference::Ollama => Some("local".to_string()),
+                _ => None,
+            });
+            let default_max_tokens = match request.ai_config.as_ref().map(|c| &c.provider_preference) {
+                Some(ProviderPreference::Local | ProviderPreference::Ollama) => 512,
+                _ => 2000,
+            };
+
+            let ai_request = AIRequest {
+                prompt,
+                temperature: request.ai_config.as_ref().map(|c| c.temperature).unwrap_or(0.7),
+                max_tokens: request.ai_config.as_ref().and_then(|c| c.max_tokens).unwrap_or(default_max_tokens),
+                stream: false,
+                provider_preference: provider_pref,
+            };
+            match router_lock.read().await.query(ai_request).await {
+                Ok(ai_resp) => {
+                    log::info!(
+                        "[OMEGA-BRIDGE] ✅ Real AI call succeeded | provider={:?} | tokens={}",
+                        ai_resp.provider, ai_resp.tokens
+                    );
+                    (ai_resp.content, format!("{:?}", ai_resp.provider))
+                }
+                Err(e) => {
+                    log::warn!("[OMEGA-BRIDGE] ⚠️ Real AI call failed ({}), using OMEGA output", e);
+                    (omega_result.processed_text.clone(), omega_result.model.clone())
+                }
+            }
+        } else {
+            (omega_result.processed_text.clone(), omega_result.model.clone())
+        };
+
         // Parse intent from OMEGA metadata
         let detected_intention = match omega_result.intent.to_lowercase().as_str() {
             "question" => Intention::Question,
@@ -278,7 +356,7 @@ impl OmegaConversationBridge {
         // Apply FrenchMastery post-processing (preserve quality)
         let french_request = FrenchMasteryRequest {
             context: format!("Mode: {:?}, Intent: {}", request.mode, omega_result.intent),
-            draft_response: omega_result.processed_text.clone(),
+            draft_response: real_response_text.clone(),
             mode: ProcessingMode::Optimization,
             constraints: PostProcessingConstraints::default(),
         };
@@ -387,7 +465,7 @@ impl OmegaConversationBridge {
 
         // Build metadata
         let total_latency = start.elapsed().as_millis() as u64 + omega_result.latency_ms;
-        let provider_used = format!("{} (OMEGA+Singularity)", omega_result.model);
+        let provider_used = format!("{} (OMEGA+Singularity)", real_provider_name);
         let metadata = ConversationMetadata {
             timestamp: chrono::Utc::now().timestamp_millis() as u64,
             provider_used: provider_used.clone(),
@@ -396,6 +474,8 @@ impl OmegaConversationBridge {
             memory_effect: MemoryEffect::New, // OMEGA provides new information
             links_to_contexts: omega_result.sources.clone(),
             provider_meta: Some(build_success_meta(&provider_used, total_latency as u128)),
+            profile_used: "omega".to_string(),
+            memory_sources_injected: omega_result.sources.len(),
         };
 
         log::info!(
@@ -466,7 +546,7 @@ mod tests {
     #[tokio::test]
     async fn test_omega_bridge_initialization() {
         let bridge =
-            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity());
+            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity(), None);
         let result = bridge.initialize().await;
         assert!(
             result.is_ok(),
@@ -477,7 +557,7 @@ mod tests {
     #[tokio::test]
     async fn test_omega_bridge_health_check() {
         let bridge =
-            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity());
+            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity(), None);
         let _ = bridge.initialize().await;
 
         let health = bridge.health_check().await;
@@ -487,7 +567,7 @@ mod tests {
     #[tokio::test]
     async fn test_omega_bridge_quick_process() {
         let bridge =
-            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity());
+            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity(), None);
         let _ = bridge.initialize().await;
 
         let result = bridge.quick_process("Hello OMEGA").await;
@@ -500,7 +580,7 @@ mod tests {
             enabled: false,
             ..Default::default()
         };
-        let bridge = OmegaConversationBridge::new(config, create_test_singularity());
+        let bridge = OmegaConversationBridge::new(config, create_test_singularity(), None);
 
         let health = bridge.health_check().await;
         assert!(!health.enabled, "OMEGA should be disabled");
@@ -510,7 +590,7 @@ mod tests {
     #[tokio::test]
     async fn test_omega_bridge_conversion() {
         let bridge =
-            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity());
+            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity(), None);
 
         let request = ConversationRequest {
             user_message: "Test message".to_string(),
@@ -519,6 +599,7 @@ mod tests {
             ai_config: None,
             emotion_context: None,
             custom_system_prompt: None,
+            history: None,
         };
 
         let omega_input = bridge.convert_to_omega_input(&request);
@@ -534,7 +615,7 @@ mod tests {
     async fn test_omega_to_conversation_response_conversion() {
         // R05 P2: Test direct OMEGA → ConversationResponse conversion
         let bridge =
-            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity());
+            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity(), None);
         let _ = bridge.initialize().await;
 
         let request = ConversationRequest {
@@ -544,6 +625,7 @@ mod tests {
             ai_config: None,
             emotion_context: None,
             custom_system_prompt: None,
+            history: None,
         };
 
         // Simulate OMEGA result

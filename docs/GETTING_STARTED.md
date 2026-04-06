@@ -1,3 +1,5 @@
+> ⚠️ **LEGACY** — This guide is outdated (v24.2.0). See canonical guides: [docs/dev/en/environment-setup.md](./dev/en/environment-setup.md) (EN) | [docs/dev/fr/setup-environnement.md](./dev/fr/setup-environnement.md) (FR)
+
 # 🚀 Getting Started with TITANE∞ Documentation
 
 **Your Complete Guide to TITANE∞ Documentation Ecosystem**
@@ -28,14 +30,14 @@
 ### 👨‍💻 I'm a **Developer** (Want to Contribute or Extend)
 
 **Start here:**
-1. 👥 [**CONTRIBUTING Guide**](../CONTRIBUTING.md) — Code standards + workflow + PR process
+1. 👥 [**CONTRIBUTING Guide**](00_core/CONTRIBUTING.md) — Code standards + workflow + PR process
 2. 🛠️ [Development Setup](./04_guides/development/SETUP.md) — Dev environment configuration
 3. 🧪 [Testing Guide](./04_guides/development/TESTING.md) — Testing strategy
 
 **Architecture understanding:**
 - 🏗️ [Architecture Current v24](./01_architecture/ARCHITECTURE_CURRENT_v24.md) — System overview
-- 🔄 [Data Flow Chat](./02_ARCHITECTURE/DATA_FLOW_CHAT.md) — Chat message flow
-- ⚙️ [OMEGA Pipeline Detailed](./02_ARCHITECTURE/OMEGA_PIPELINE_DETAILED.md) — AI pipeline stages
+- 🔄 [Data Flow Chat](01_architecture/DATA_FLOW_CHAT.md) — Chat message flow
+- ⚙️ [OMEGA Pipeline Detailed](01_architecture/OMEGA_PIPELINE_DETAILED.md) — AI pipeline stages
 
 **API Reference:**
 - 📚 [Modules Index](./05_modules/INDEX.md) — 14/14 modules documented (100%)
@@ -102,7 +104,7 @@
 **Architecture deep-dive:**
 - 📊 [Modules Index](./05_modules/INDEX.md) — 14 modules dependency graph
 - 🏗️ [Architecture Reality](./02_ARCHITECTURE/) — Factual architecture v24.2.0
-- 📈 [Evolution Report](../DOCUMENTATION_EVOLUTION_REPORT.md) — Phase 0-7 progression
+- 📈 [Evolution Report](archive/sessions/DOCUMENTATION_EVOLUTION_REPORT.md) — Phase 0-7 progression
 
 **Strategic documents:**
 - 📋 [Pre-Update Analysis](./00_core/PRE_UPDATE_ANALYSIS.md) — Baseline (1,724 files)
@@ -182,14 +184,14 @@
 - 🔧 [Fix Installation Issues](./04_guides/advanced/TROUBLESHOOTING.md#diagnostic-rapide)
 
 ### Development
-- 👥 [How to Contribute](../CONTRIBUTING.md)
+- 👥 [How to Contribute](00_core/CONTRIBUTING.md)
 - 🧪 [Run Tests](./04_guides/development/TESTING.md)
-- 📝 [Git Conventions](../CONTRIBUTING.md#conventions-git)
+- 📝 [Git Conventions](00_core/CONTRIBUTING.md#conventions-git)
 
 ### Architecture & Design
 - 🏗️ [System Architecture](./01_architecture/ARCHITECTURE_CURRENT_v24.md)
-- 🔄 [Chat Data Flow](./02_ARCHITECTURE/DATA_FLOW_CHAT.md)
-- ⚙️ [OMEGA Pipeline](./02_ARCHITECTURE/OMEGA_PIPELINE_DETAILED.md)
+- 🔄 [Chat Data Flow](01_architecture/DATA_FLOW_CHAT.md)
+- ⚙️ [OMEGA Pipeline](01_architecture/OMEGA_PIPELINE_DETAILED.md)
 
 ### API Reference
 - 📚 [All Modules (14/14)](./05_modules/INDEX.md)
@@ -230,7 +232,7 @@
 - 💬 Ask in [GitHub Discussions](https://github.com/KallokTherok1994/TITANE_INFINITY/discussions)
 
 **Code Contribution:**
-- 👥 Read [CONTRIBUTING.md](../CONTRIBUTING.md)
+- 👥 Read [CONTRIBUTING.md](00_core/CONTRIBUTING.md)
 - 📧 Email: dev@titane-infinity.ai (fictif)
 
 **Can't Find What You Need?**
@@ -261,7 +263,7 @@
 1. **Choose your role above** (User, Developer, DevOps, Performance, Architect)
 2. **Follow the quick start** for your role
 3. **Explore related docs** as needed
-4. **Contribute improvements** via [CONTRIBUTING.md](../CONTRIBUTING.md)
+4. **Contribute improvements** via [CONTRIBUTING.md](00_core/CONTRIBUTING.md)
 
 ---
 

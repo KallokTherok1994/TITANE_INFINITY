@@ -19,61 +19,42 @@ import { chatMemoryCompactor } from '@/services/chatMemoryCompactor';
 import { conversationStorage } from '@/services/conversation/conversationStorage';
 import type { ChatMode } from '@/services/ai/chatTypes';
 import type { AIMessage, AIProviderName, AIResponse } from '@/services/ai/types';
+import { cognitiveKernel } from '@/services/ai/cognitiveKernel';
+import { awardExperience as awardExperienceToDomain } from '@/services/experienceService';
 import type { HarmonizedMessage } from '@/types/cognitiveKernel';
 import type { DevSudoResult } from '@/modules/devSudo/devSudoIntegration';
 import type { CameraChatIntegrationResult } from '@/modules/camera/cameraChatIntegration';
-import { hybridTTS } from '@/services/tts/hybridTTS';
+import { audioService } from '@/features/audio-center/services/audioService';
+import { messageSpeechController } from '@/services/tts/messageSpeechController';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
 // ✨ v24.2.1 - Streaming Debounce for Performance
 import { createStreamingBatcher } from '@/utils/streamingDebounce';
-import type {
+import {
+  chatService,
   ChatMessage as BackendChatMessage,
   ChatResponse,
   StreamConfig,
 } from '@/services/api/chat';
 import { XPSource, XP_REWARDS } from '../types/experience';
 
-let _chatServicePromise: Promise<{
-  sendMessageLegacy: (
-    messages: BackendChatMessage[],
-    config: StreamConfig
-  ) => Promise<ChatResponse>;
-}> | null = null;
-
-const loadChatService = async () => {
-  if (!_chatServicePromise) {
-    _chatServicePromise = import('@/services/api/chat').then(m => m.chatService);
-  }
-  return _chatServicePromise;
-};
-
 import { useVisionStore } from '@/stores/useVisionStore';
 import { useRequestInFlightStore } from '@/stores/useRequestInFlightStore';
 
-let _cognitiveKernelPromise: Promise<{
+type CognitiveKernelTools = {
   harmonizeChatMessages: (messages: unknown) => unknown;
   harmonizeError: (error: unknown) => { message: string; type: string; recovery: string };
-}> | null = null;
-
-type CognitiveKernelModule = {
-  cognitiveKernel: {
-    harmonizeChatMessages: (messages: unknown) => unknown;
-    harmonizeError: (error: unknown) => {
-      message: string;
-      type: string;
-      recovery: string;
-    };
-  };
 };
 
-const loadCognitiveKernel = async () => {
+let _cognitiveKernelPromise: Promise<CognitiveKernelTools> | null = null;
+
+const loadCognitiveKernel = async (): Promise<CognitiveKernelTools> => {
   if (!_cognitiveKernelPromise) {
-    _cognitiveKernelPromise = import('@/services/ai/cognitiveKernel').then(m => {
-      const kernel = (m as unknown as CognitiveKernelModule).cognitiveKernel;
-      return {
-        harmonizeChatMessages: kernel.harmonizeChatMessages.bind(kernel),
-        harmonizeError: kernel.harmonizeError.bind(kernel),
-      };
+    _cognitiveKernelPromise = Promise.resolve({
+      harmonizeChatMessages: (messages: unknown) =>
+        cognitiveKernel.harmonizeChatMessages(
+          (messages as Partial<HarmonizedMessage>[]) ?? []
+        ),
+      harmonizeError: cognitiveKernel.harmonizeError.bind(cognitiveKernel),
     });
   }
   return _cognitiveKernelPromise;
@@ -104,15 +85,17 @@ const loadUserPreferencesEngine = async () => {
   return _userPreferencesEnginePromise;
 };
 
-let _experienceToolsPromise: Promise<{
+type ExperienceTools = {
   gainXP: (amount: number, source?: string, description?: string) => void;
   awardExperience: (
     domainId: string,
     amount: number,
     source: XPSource,
     metadata?: Record<string, unknown>
-  ) => Promise<void>;
-}> | null = null;
+  ) => Promise<unknown>;
+};
+
+let _experienceToolsPromise: Promise<ExperienceTools> | null = null;
 
 type ExperienceXPModule = {
   XP: {
@@ -120,26 +103,13 @@ type ExperienceXPModule = {
   };
 };
 
-type ExperienceServiceModule = {
-  awardExperience: (
-    domainId: string,
-    amount: number,
-    source: XPSource,
-    metadata?: Record<string, unknown>
-  ) => Promise<void>;
-};
-
-const loadExperienceTools = async () => {
+const loadExperienceTools = async (): Promise<ExperienceTools> => {
   if (!_experienceToolsPromise) {
-    _experienceToolsPromise = Promise.all([
-      import('@/core/experience/XP_ENGINE'),
-      import('@/services/experienceService'),
-    ]).then(([xp, svc]) => {
+    _experienceToolsPromise = import('@/core/experience/XP_ENGINE').then(xp => {
       const XP = (xp as unknown as ExperienceXPModule).XP;
-      const awardExperience = (svc as unknown as ExperienceServiceModule).awardExperience;
       return {
         gainXP: XP.gain.bind(XP),
-        awardExperience,
+        awardExperience: awardExperienceToDomain,
       };
     });
   }
@@ -235,7 +205,7 @@ type ChatEngineResponse = AIResponse & {
 
 type MaybeAIMessage = Partial<AIMessage> | null | undefined;
 
-const COGNITIVE_KERNEL_FALLBACK = {
+const COGNITIVE_KERNEL_FALLBACK: CognitiveKernelTools = {
   harmonizeChatMessages: (messages: unknown) => messages,
   harmonizeError: (error: unknown) => {
     const message = error instanceof Error ? error.message : String(error);
@@ -244,7 +214,7 @@ const COGNITIVE_KERNEL_FALLBACK = {
 };
 
 // ✨ v24.3.0 - Cloud Providers Integration (OpenAI/Gemini/Anthropic)
-// ✨ v26.3.0 - Added GitHub Copilot provider
+// ✨ v30.0.0 - Added GitHub Copilot provider
 export type ProviderPreference =
   | 'auto'
   | 'local'
@@ -355,7 +325,7 @@ const normalizeMessages = (
  */
 function deduplicateMessages(messages: AIMessage[]): AIMessage[] {
   // ✨ v24.3.6: Skip dedup for small arrays (common case)
-  if (messages.length < 5) return messages;
+  if (messages.length < 3) return messages;
 
   const seen = new Set<string>();
   return messages.filter(msg => {
@@ -621,6 +591,70 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       window.removeEventListener('storage', handleStorage);
     };
   }, []);
+
+  // P0 PATCH — Backend restore: if messages empty after mount and conversationId known,
+  // attempt to reload history from backend SQLite (conversation_os_v1.db).
+  // This closes the localStorage↔SQLite disconnect for the case where localStorage
+  // messages were lost but the conversation_id is still known.
+  // Safe: chatService.loadConversationHistory never throws, returns [] on any failure.
+  useEffect(() => {
+    if (messages.length > 0) return; // Already have messages — no restore needed
+    const conversationId = _conversationId;
+    if (!conversationId || conversationId.trim() === '') return;
+
+    const loadConversationHistory =
+      typeof chatService.loadConversationHistory === 'function'
+        ? chatService.loadConversationHistory.bind(chatService)
+        : null;
+
+    if (!loadConversationHistory) {
+      chatLogger.info(
+        '[useChat] Backend restore unavailable on current chatService instance'
+      );
+      return;
+    }
+
+    let cancelled = false;
+    loadConversationHistory(conversationId)
+      .then(restored => {
+        if (cancelled) return;
+        if (restored.length === 0) {
+          chatLogger.info(
+            '[useChat] Backend restore: no history found for conversation_id=' +
+              conversationId
+          );
+          return;
+        }
+        // P1 PATCH — Deduplication guard: filter restored messages against any already present
+        // to prevent doubles if useEffect re-fires with same conversationId
+        const existingKeys = new Set(
+          messages.map(m => `${m.role}:${m.timestamp}:${m.content.slice(0, 40)}`)
+        );
+        const deduped = restored.filter(
+          m => !existingKeys.has(`${m.role}:${m.timestamp}:${m.content.slice(0, 40)}`)
+        );
+        if (deduped.length === 0) {
+          chatLogger.info(
+            '[useChat] Backend restore: all messages already present, skipping'
+          );
+          return;
+        }
+        chatLogger.info(
+          `[useChat] Backend restore: ${deduped.length} message(s) restored for conversation_id=` +
+            conversationId
+        );
+        setMessages(deduped);
+        messagesRef.current = deduped;
+      })
+      .catch(error => {
+        if (cancelled) return;
+        chatLogger.warn('[useChat] Backend restore failed non-fatally', error);
+      });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [_conversationId]); // intentionally omit messages/setMessages to run once per conversationId
 
   // ✨ v24.3.7 - Optimized provider availability with Promise.allSettled + individual timeouts
   // 🔒 v26.2.1 - CRITICAL FIX H1: Race condition protection with guard
@@ -1195,6 +1229,9 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           chatLogger.warn(
             '⚠️ OMEGA FAILSAFE: isLoading reset forcé après timeout backend'
           );
+          setError(
+            'IPC_TIMEOUT: Le traitement dépasse le délai autorisé. Mode local/fallback disponible, réessaie.'
+          );
           setIsLoading(false);
           setRequestInFlight(false);
           operationLockRef.current = false;
@@ -1390,7 +1427,17 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
               }
             }
           } catch (monitoringError) {
-            // Silent monitoring failure
+            chatLogger.debug(
+              '⚠️ monitoring.trackEvent failed (non-critical, chat unaffected)',
+              {
+                error:
+                  monitoringError instanceof Error
+                    ? monitoringError.message
+                    : String(monitoringError),
+                targetUiId,
+                context,
+              }
+            );
           }
 
           const fallbackMessage: AIMessage = mutate({
@@ -1628,12 +1675,13 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
         if (backendHistory.length > 0) {
           const firstCandidate = providerCandidates[0];
-          // ✅ FIX AUDIT: Utiliser conversationId persistant depuis state
-          // NOTE: Ne pas passer conversationId au chemin legacy : le backend peut se bloquer
-          // avec "Duplicate conversation detected" et ne jamais répondre (2e message vide).
+          // IMPROVE-007: Pass _conversationId so ChatWindow history accumulates in SQLite.
+          // The SelfHealing duplicate-window (2s) only blocks rapid double-submits, not
+          // normal sequential messages. Passing the ID enables cross-turn LTM for ChatWindow.
           const requestConfig: StreamConfig = {
             provider: firstCandidate ?? 'auto',
             requestId,
+            conversationId: _conversationId || undefined,
           };
           for (const candidate of providerCandidates) {
             try {
@@ -1641,9 +1689,10 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
               attemptedProviders.push(candidate);
 
               const response = await withTimeout(
-                (await loadChatService()).sendMessageLegacy(backendHistory, {
+                chatService.sendMessageLegacy(backendHistory, {
                   provider: candidate,
                   requestId,
+                  conversationId: _conversationId || undefined,
                 }),
                 `legacy:${candidate}`
               );
@@ -1731,9 +1780,35 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
               ? chatServiceResponse.content
               : '';
 
+          const metadataReason = String(
+            (chatServiceResponse.metadata as Record<string, unknown> | undefined)
+              ?.reason_code ??
+              (chatServiceResponse.metadata as Record<string, unknown> | undefined)
+                ?.reason ??
+              ''
+          ).toLowerCase();
+
+          const backendNoProviderError =
+            /no ai provider available/i.test(legacyContent) ||
+            /ai error:/i.test(legacyContent) ||
+            metadataReason.includes('fallback_offline') ||
+            metadataReason.includes('policy_blocked');
+
           // ✅ v26.2.3 CRITICAL FIX: Détecter réponse vide du backend
-          if (legacyContent.trim().length === 0) {
+          if (legacyContent.trim().length === 0 || backendNoProviderError) {
             chatLogger.warn('⚠️ Backend returned empty content - triggering fallback');
+            if (backendNoProviderError) {
+              chatLogger.warn(
+                '⚠️ Backend provider error payload detected - switching to local recovery',
+                {
+                  provider: chatServiceResponse.provider,
+                  metadataReason,
+                }
+              );
+              if (preferredProviderState !== 'auto') {
+                updatePreferredProvider('auto');
+              }
+            }
             // Ne pas créer finalResponse, laisser le fallback s'activer
             finalResponse = null;
             aggregatedContent = '';
@@ -1777,6 +1852,17 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         // ✅ v26.2.3 - CRITICAL FIX: Fallback robuste si aucun provider disponible
         if (!finalResponse) {
           chatLogger.warn('⚠️ No finalResponse - creating fallback response');
+
+          // If a pinned provider is unavailable, recover to AUTO for the next turns.
+          if (preferredProviderState !== 'auto') {
+            chatLogger.warn(
+              '🔄 Switching preferred provider to auto after no-provider fallback',
+              {
+                previousProvider: preferredProviderState,
+              }
+            );
+            updatePreferredProvider('auto');
+          }
 
           // Déterminer le message approprié selon la cause
           const fallbackContent = (() => {
@@ -1854,6 +1940,14 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
         }
 
         const provider = finalResponse.provider || 'tauri-backend';
+
+        // LOCK1 — PROVIDER_DISPLAY_TRUTH: extract actual provider from backend metadata.
+        // Source of truth is finalResponse.metadata.provider_used (set by backend).
+        const backendMeta = finalResponse.metadata as Record<string, unknown> | undefined;
+        const actualProviderUsed: string =
+          (typeof backendMeta?.provider_used === 'string' && backendMeta.provider_used) ||
+          provider;
+
         const metadataPatch: Record<string, unknown> = {
           status: streamingError ? 'fallback' : 'success',
           duration: Date.now() - startTime,
@@ -1862,6 +1956,9 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
           mode: currentModeState,
           streamChunks: chunkCount,
           provider,
+          // LOCK1: actual vs requested provider for UI badge (truth, not preference)
+          providerUsed: actualProviderUsed,
+          requestedProvider: preferredProviderState,
         };
 
         const responseContent =
@@ -1974,9 +2071,16 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
         }
 
         // ✨ v24.2.1: Use ref for stable dependency
-        if (voiceEnabledRef.current && assistantMessage.content) {
+        if (
+          voiceEnabledRef.current &&
+          assistantMessage.content &&
+          audioService.getTTSSettings().autoReadAssistant
+        ) {
           try {
-            hybridTTS.speak(assistantMessage.content);
+            void messageSpeechController.playMessage(
+              `assistant-${assistantMessage.timestamp}`,
+              assistantMessage.content
+            );
           } catch (voiceError) {
             console.warn('[Chat] Voice warning:', voiceError);
           }

@@ -38,6 +38,7 @@ describe('UnifiedHealingFacade', () => {
   });
 
   afterEach(() => {
+    vi.clearAllTimers();
     vi.useRealTimers();
   });
 

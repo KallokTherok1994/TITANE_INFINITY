@@ -1,0 +1,17 @@
+ 85600760 deployment/latest/TITANE-Infinity_26.3.0_amd64.AppImage
+  9989722 deployment/latest/TITANE-Infinity_26.3.0_amd64.deb
+ 85580280 deployment/latest/TITANE-Infinity_26.4.0_amd64.AppImage
+  9967846 deployment/latest/TITANE-Infinity_26.4.0_amd64.deb
+100309496 deployment/latest/TITANE-Infinity_27.0.1_amd64.AppImage
+ 26319838 deployment/latest/TITANE-Infinity_27.0.1_amd64.deb
+ 89180664 deployment/latest/TITANE-Infinity_27.0.2_amd64.AppImage
+ 13760504 deployment/latest/TITANE-Infinity_27.0.2_amd64.deb
+ 89242104 deployment/latest/TITANE-Infinity_27.0.5_amd64.AppImage
+ 13810220 deployment/latest/TITANE-Infinity_27.0.5_amd64.deb
+ 91970040 deployment/latest/TITANE-Infinity_27.2.0_amd64.AppImage
+ 16899350 deployment/latest/TITANE-Infinity_27.2.0_amd64.deb
+ 85531128 deployment/latest/Titan-Stable_26.2.0_amd64.AppImage
+  9909578 deployment/latest/Titan-Stable_26.2.0_amd64.deb
+ 85572088 deployment/latest/Titan-Stable_27.0.0_amd64.AppImage
+ 88496632 deployment/latest/Titan-Stable_27.0.5_amd64.AppImage
+902140250 total

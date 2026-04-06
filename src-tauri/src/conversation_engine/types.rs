@@ -30,6 +30,12 @@ pub struct ConversationRequest {
     /// System prompt personnalisé (depuis InstructionMode frontend)
     #[serde(default)]
     pub custom_system_prompt: Option<String>,
+
+    /// Historique de conversation injecté (STM/LTM context — max 20 messages)
+    /// Format: ["[User]: message", "[Assistant]: reply", ...]
+    /// Populated by conversation_generate from load_conversation_history() SQLite.
+    #[serde(default)]
+    pub history: Option<Vec<String>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -413,6 +419,11 @@ pub struct ConversationMetadata {
     pub links_to_contexts: Vec<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub provider_meta: Option<ProviderDecisionMeta>,
+    // LOCK #1 PROOF: Profile runtime verification
+    #[serde(default)]
+    pub profile_used: String,
+    #[serde(default)]
+    pub memory_sources_injected: usize,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -1129,6 +1140,8 @@ mod tests {
             memory_effect: MemoryEffect::New,
             links_to_contexts: vec!["ctx1".to_string()],
             provider_meta: None,
+            profile_used: "test".to_string(),
+            memory_sources_injected: 1,
         };
         assert_eq!(metadata.timestamp, 1234567890);
         assert_eq!(metadata.tokens_used, 500);
@@ -1202,6 +1215,7 @@ mod tests {
             ai_config: None,
             emotion_context: None,
             custom_system_prompt: None,
+            history: None,
         };
         assert_eq!(request.user_message, "Hello");
         assert!(request.conversation_id.is_none());
@@ -1216,6 +1230,7 @@ mod tests {
             ai_config: Some(AIConfig::default()),
             emotion_context: Some(EmotionState::default()),
             custom_system_prompt: None,
+            history: None,
         };
         assert!(request.conversation_id.is_some());
         assert!(request.ai_config.is_some());
@@ -1239,6 +1254,8 @@ mod tests {
                 memory_effect: MemoryEffect::New,
                 links_to_contexts: vec![],
                 provider_meta: None,
+                profile_used: "test".to_string(),
+                memory_sources_injected: 0,
             },
         };
         assert_eq!(response.assistant_message, "Reply");

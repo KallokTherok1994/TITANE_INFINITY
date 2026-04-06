@@ -1,0 +1,5 @@
+UTC=2026-03-07T17:49:48Z
+PACK=proof_packs/TRUTH_HEAL_MAPS_2026-03-07_1249_0af062e88
+HEAD_SHA=0af062e88e26d4c05cfd985b4ec5624dd44a13d4
+HEAD_SHORT=0af062e88
+NOTE=clean companion file; original bootstrap_env.txt contains terminal control-prefix noise.

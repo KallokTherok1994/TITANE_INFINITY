@@ -1,0 +1,28 @@
+src/components/layout/AppShell.tsx:8: * TITANE∞ vΩ — AppShell Layout (Sans Sidebar)
+src/components/layout/AppShell.tsx:9: * Layout principal TopNav + contenu centré
+src/components/layout/AppShell.tsx:22:export interface AppShellProps {
+src/components/layout/AppShell.tsx:33:export const AppShell = ({
+src/components/layout/AppShell.tsx:38:}: AppShellProps): JSX.Element => {
+src/components/layout/AppShell.tsx:47:      {/* TopNav (remplace header + sidebar) */}
+src/App.tsx:14: *   React Router + AppShell + Living Engines + Code Splitting
+src/App.tsx:33:import { AppShell, TopNav, createTopNavItems } from '@components/layout';
+src/App.tsx:34:import { BackendDownIndicator } from '@/components/system/BackendDownIndicator'; // ✨ UI vΩ Phase F - Mode dégradé
+src/App.tsx:55:// Sidebar state removed in UI vΩ - Navigation moved to TopNav
+src/App.tsx:286:  // UI vΩ: Sidebar removed, TopNav navigation only
+src/App.tsx:805:  // ✨ UI vΩ: TopNav items - Navigation horizontale (max 5 visibles)
+src/App.tsx:856:  const topNavItems = useMemo(() => createTopNavItems(topNavSections), [topNavSections]);
+src/App.tsx:943:  // ✨ UI vΩ - Main app with TopNav (global navigation)
+src/App.tsx:945:    <AppShell
+src/App.tsx:947:        <TopNav
+src/App.tsx:956:      <BackendDownIndicator position="top" dismissible />
+src/App.tsx:958:        data-testid="app-ready"
+src/App.tsx:964:        data-testid="ipc-ready"
+src/App.tsx:1279:    </AppShell>
+src/components/layout/TopNav.tsx:8: * TITANE∞ vΩ — TopNav Component
+src/components/layout/TopNav.tsx:37:export interface TopNavItem {
+src/components/layout/TopNav.tsx:45:export interface TopNavProps {
+src/components/layout/TopNav.tsx:46:  items: TopNavItem[];
+src/components/layout/TopNav.tsx:69:export const TopNav: React.FC<TopNavProps> = ({
+src/components/layout/TopNav.tsx:338: * HELPER: Créer items TopNav depuis anciennes sections Menu
+src/components/layout/TopNav.tsx:350:export const createTopNavItems = (
+src/components/layout/TopNav.tsx:357:): TopNavItem[] => {

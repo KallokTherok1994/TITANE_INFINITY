@@ -1,0 +1,70 @@
+{
+  "scorecard_id": "MEMORY_TRUTH_SCORECARD",
+  "version": "v1",
+  "champion": "7973fbdec",
+  "champion_tag": "v28.0.0",
+  "date": "2026-03-20",
+  "scored_date": "2026-03-20",
+  "node_version": "v20.20.0",
+  "description": "Measures truth and integrity of memory save, recall, and injection operations",
+  "evidence": {
+    "unit_tests": "c4-memory.test.ts: 19/19 PASS",
+    "unit_total": "3351/3351 PASS",
+    "lock_history": "LOCK4 (backend sync before state update), G1 (injection UI truth) — both fixed and committed"
+  },
+  "metrics": [
+    {
+      "name": "memory_save_confirmed_before_state_update",
+      "target": 1.0,
+      "blocking": true,
+      "description": "Backend confirms save before frontend state update (LOCK4 regression guard)",
+      "champion_score": 1.0,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PASS — LOCK4 fix at 8f7da8dc1 confirmed, c4-memory tests 19/19 PASS"
+    },
+    {
+      "name": "recall_no_hallucinated_items",
+      "target": 1.0,
+      "blocking": true,
+      "description": "Recalled memory items were actually saved, no invented items returned",
+      "champion_score": 1.0,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PASS — c4-memory.test.ts passes; IPC contract enforced via TAURI_COMMANDS tests"
+    },
+    {
+      "name": "injection_ui_indicator_matches_trace",
+      "target": 1.0,
+      "blocking": true,
+      "description": "UI memory indicator shows 'active' ONLY when injection actually occurred in prompt trace (G1 regression guard)",
+      "champion_score": 1.0,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PASS — G1+G2+G3 fix at b7ed74cf1 confirmed; no-legacy-chat-send compliance test PASS"
+    },
+    {
+      "name": "memory_round_trip_complete",
+      "target": 1.0,
+      "blocking": true,
+      "description": "Save → DB → Recall → Inject round trip completes without silent failure",
+      "champion_score": 1.0,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PASS — c4-memory 19/19 PASS; Rust 4456/4456 PASS (includes memory_persistence tests)"
+    },
+    {
+      "name": "no_stale_memory_injection",
+      "target": 1.0,
+      "blocking": true,
+      "description": "Only relevant, non-expired memory items are injected",
+      "champion_score": 1.0,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PASS — memory_compactor.rs tests included in Rust 4456/4456 PASS"
+    }
+  ],
+  "blocking_regression_definition": "Any memory truth violation: false claim, missing save, stale injection, UI/trace mismatch",
+  "promotion_decision": "CHAMPION_BASELINE_ESTABLISHED",
+  "note": "Champion baseline established 2026-03-20. All blocking metrics PASS. Evidence: c4-memory 19/19 + Rust 4456/4456."
+}

@@ -1,0 +1,83 @@
+PROBE_ID=PROBE18_ROUTER_STATIC_ANALYSIS
+TIMESTAMP=2026-03-13T23:35:00Z
+BRANCH=v63_clean_promotion_window
+HEAD=4958c4c15
+ANALYSIS_TYPE=SOURCE_ARCHAEOLOGY
+VERDICT=ROOT_CAUSE_CONFIRMED
+STATUS=BLOCKED_ENV
+
+# ═══════════════════════════════════════════════════════════════
+# V69 ROOT CAUSE ANALYSIS — providerNetworkUsed=true co-observation
+# ═══════════════════════════════════════════════════════════════
+
+OBJECTIVE=Prove providerNetworkUsed=true in PASS run
+RESULT=IMPOSSIBLE_WITHOUT_EXTERNAL_API_KEY
+
+# ══ Routing chain traced ══
+FILE_AI_ROUTER=src-tauri/src/ai/router.rs
+AIRouter_new_gemini_client=gemini_api_key.map(|key| Arc::new(GeminiClient::new(key)))
+AIRouter_unified_ia_initial=None  # set via set_unified_ia() only
+GEMINI_KEY_ENV_VAR=n              # KEY_GEMINI = "n" (security/secrets_engine.rs)
+GEMINI_KEY_CONFIGURED=false       # env var "n" not set; no stored secret in test env
+UNIFIED_IA_CONFIGURED=false       # set_unified_ia() never called from app boot
+
+# ══ Cascade order (router.rs:query()) ══
+STEP_0=Cache check  → cache miss each probe
+STEP_1=UnifiedIA    → None (not configured) — SKIPPED
+STEP_2=Gemini       → None (no API key) — SKIPPED
+STEP_3=Ollama       → available → ALWAYS USED
+STEP_4=Offline      → never reached
+
+# ══ network_used assignment chain ══
+FILE_META_ACCUMULATOR=src-tauri/src/conversation_engine/meta_accumulator.rs
+FUNCTION=provider_class_from_id(provider_id: &str)
+OLLAMA_INPUT="Ollama"   # format!("{:?}", AIProvider::Ollama)
+OLLAMA_NORMALIZED="ollama"
+OLLAMA_CLASS=ProviderClass::Local
+NETWORK_USED_OLLAMA=false
+
+GEMINI_INPUT="Gemini"   # format!("{:?}", AIProvider::Gemini)
+GEMINI_NORMALIZED="gemini"
+GEMINI_CLASS=ProviderClass::Remote
+NETWORK_USED_GEMINI=true
+
+FORMULA=network_used = matches!(provider_class, ProviderClass::Remote)
+
+# ══ API Neutralizer chain ══
+FILE_NEUTRALIZER=src-tauri/src/conversation_engine/api_neutralizer.rs
+NEUTRALIZER_PROVIDER_FIELD=format!("{:?}", response.provider)
+# → Debug format of AIProvider enum → "Ollama", "Gemini", "UnifiedIA", "Offline"
+
+# ══ IPC → Frontend chain ══
+FILE_CONVO_ENGINE=src/services/conversationEngine.ts
+NETWORK_USED_FRONTEND=metadata['network_used'] || decision?.networkUsed ?? false
+FILE_CONVO_SECTION=src/components/sections/ConversationSection.tsx
+DOM_ATTR=data-provider-network-used={String(providerMeta.network_used)}
+
+# ══ V25 verdict logic ══
+FILE_V25=e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js
+PROVIDERNETWORKUSED_IN_VERDICT=NO  # rawNetwork does NOT gate classifyFinal()
+PASS_GATES=uiVisible + inputPresent + sendPresent + chatCycleComplete + noTimeout + noDegraded
+PROVIDERNETWORKUSED_ROLE=metadata_capture_only
+
+# ══ timeout-degraded path ══
+FILE_MOD=src-tauri/src/conversation_engine/mod.rs
+TIMEOUT_META_CALL=build_timeout_meta(network_available=true, timeout_ms)
+TIMEOUT_PROVIDER_USED="timeout-degraded"
+TIMEOUT_PROVIDER_CLASS=ProviderClass::Remote
+TIMEOUT_NETWORK_USED=true
+TIMEOUT_VERDICT=FAIL  # M.degradedDetected=true → classifyFinal → FAIL
+
+# ══ Conclusion ══
+CO_OBSERVATION_POSSIBLE=false
+REASON=No external API key (Gemini "n", OpenAI, Claude) configured in test environment
+OLLAMA_ALWAYS_WINS_FALLBACK=true
+
+# ══ What would be needed ══
+UNBLOCK_PATH_A=Configure env var "n" with valid Gemini API key
+UNBLOCK_PATH_B=Call AIRouter::set_unified_ia() with configured engine at boot
+UNBLOCK_PATH_C=Inject mock remote provider in test harness returning AIProvider::Gemini
+
+# ══ AutoHeal entry ══
+AUTOHEAL_RULE_APPENDED=true
+AUTOHEAL_TS=2026-03-13T23:35:00Z

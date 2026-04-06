@@ -1,0 +1,12 @@
+proof_packs/POST_PROD_UI_CHAIN_OF_TRUTH_V11_2026-03-11_0545_7701f7a94/artifacts/run1/wdio.log:156:[0-0] [PROOF] scenario=V11 run=run1
+proof_packs/POST_PROD_UI_CHAIN_OF_TRUTH_V11_2026-03-11_0545_7701f7a94/artifacts/run1/wdio.log:157:[0-0] [ASSISTANT_TEXT] [V11/run1] preuve UI 2026-03-11T05:43:28.112Z
+proof_packs/POST_PROD_UI_CHAIN_OF_TRUTH_V11_2026-03-11_0545_7701f7a94/artifacts/run1/wdio.log:170:[wry 0.54.2 linux #0-0] Session ID: 2fd4857a-bf72-478f-bcea-0b82318f85ce
+proof_packs/POST_PROD_UI_CHAIN_OF_TRUTH_V11_2026-03-11_0545_7701f7a94/artifacts/run1/wdio.log:176:[wry 0.54.2 linux #0-0] 1 passing (6.7s)
+proof_packs/POST_PROD_UI_CHAIN_OF_TRUTH_V11_2026-03-11_0545_7701f7a94/artifacts/run_visual2/wdio.log:347:[0-0] [V11_PROOF] run=run_visual2 response_head=[V11/run_visual2] UI runtime proof 2026-03-11T05:44:17.465Z
+proof_packs/POST_PROD_UI_CHAIN_OF_TRUTH_V11_2026-03-11_0545_7701f7a94/artifacts/run_visual2/wdio.log:349:[0-0] [V11_NO_IPC_FALLBACK] true
+proof_packs/POST_PROD_UI_CHAIN_OF_TRUTH_V11_2026-03-11_0545_7701f7a94/artifacts/run_visual2/wdio.log:362:[wry 0.54.2 linux #0-0] Session ID: 9624f3bc-c6f9-4f11-981d-940da8605ba7
+proof_packs/POST_PROD_UI_CHAIN_OF_TRUTH_V11_2026-03-11_0545_7701f7a94/artifacts/run_visual2/wdio.log:368:[wry 0.54.2 linux #0-0] 1 passing (6.2s)
+proof_packs/POST_PROD_UI_CHAIN_OF_TRUTH_V11_2026-03-11_0545_7701f7a94/artifacts/run_visual1/wdio.log:347:[0-0] [V11_PROOF] run=run_visual1 response_head=[V11/run_visual1] UI runtime proof 2026-03-11T05:44:08.579Z
+proof_packs/POST_PROD_UI_CHAIN_OF_TRUTH_V11_2026-03-11_0545_7701f7a94/artifacts/run_visual1/wdio.log:349:[0-0] [V11_NO_IPC_FALLBACK] true
+proof_packs/POST_PROD_UI_CHAIN_OF_TRUTH_V11_2026-03-11_0545_7701f7a94/artifacts/run_visual1/wdio.log:362:[wry 0.54.2 linux #0-0] Session ID: b1096a27-0723-445b-b4f0-4ae20a575162
+proof_packs/POST_PROD_UI_CHAIN_OF_TRUTH_V11_2026-03-11_0545_7701f7a94/artifacts/run_visual1/wdio.log:368:[wry 0.54.2 linux #0-0] 1 passing (6.1s)

@@ -1,0 +1,6 @@
+Reused canonical evidence source:
+proof_packs/POST_PROD_UI_CHAIN_OF_TRUTH_V11_2026-03-11_0545_7701f7a94/artifacts/
+
+Reason for reuse:
+- No product/runtime scope delta since V11 seal head.
+- Canonical base unchanged (MAIN).

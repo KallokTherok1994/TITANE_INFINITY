@@ -207,10 +207,10 @@ Before executing merges, verify:
 - [`AUDIT_FINAL_v26.2.1.md`](./AUDIT_FINAL_v26.2.1.md) - Latest audit
 - [`DEVOPS_GUIDE_v26.0.md`](./DEVOPS_GUIDE_v26.0.md) - DevOps procedures
 - [`DEPLOYMENT_GUIDE.md`](./DEPLOYMENT_GUIDE.md) - Deployment
-- [`../CHANGELOG.md`](../CHANGELOG.md) - Version history
+- [`../CHANGELOG.md`](90_release/CHANGELOG.md) - Version history
 
 **Scripts Documentation:**
-- [`../scripts/README.md`](../scripts/README.md) - All scripts
+- [`../scripts/README.md`](../README.md) - All scripts
 - Section "Branch Consolidation (v26.2.2)"
 
 ---

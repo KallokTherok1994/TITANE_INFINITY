@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v26.0 - MobileNav Component (Responsive Optimized)
+ * TITANE∞ v30.0.0 - MobileNav Component (Responsive Optimized)
  * Navigation mobile avec:
  * - Touch targets 44px WCAG AAA
  * - Safe area support (iOS notch)
@@ -47,7 +47,7 @@ export const MobileNav = ({
   className,
 }: MobileNavProps): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
-  // v26.0: Enhanced responsive hooks
+  // v30.0.0: Enhanced responsive hooks
   const { reducedMotion } = useResponsive();
 
   // Close menu on route change
@@ -74,7 +74,7 @@ export const MobileNav = ({
     };
   }, [isOpen]);
 
-  // v26.0: Memoized handlers
+  // v30.0.0: Memoized handlers
   const handleItemClick = useCallback(
     (item: SidebarItem) => {
       if (onItemClick) {
@@ -94,27 +94,27 @@ export const MobileNav = ({
       <div
         className={cn(
           'lg:hidden fixed top-0 left-0 right-0 z-fixed',
-          // v26.0: Safe area support for iOS notch
+          // v30.0.0: Safe area support for iOS notch
           'h-16 bg-bg-secondary border-b border-border-default',
           'flex items-center justify-between px-4',
-          // v26.0: GPU acceleration + reduced blur on mobile
+          // v30.0.0: GPU acceleration + reduced blur on mobile
           'backdrop-blur-sm will-change-transform',
           className
         )}
         style={{
-          // v26.0: Safe area padding for notch
+          // v30.0.0: Safe area padding for notch
           paddingTop: 'env(safe-area-inset-top, 0px)',
         }}
       >
         {/* Logo */}
         {logo && <div className="flex items-center">{logo}</div>}
 
-        {/* Burger Button - v26.0: 44px touch target */}
+        {/* Burger Button - v30.0.0: 44px touch target */}
         <button
           onClick={toggleMenu}
           className={cn(
-            // v26.0: WCAG AAA touch target 44x44px
-            'min-w-[44px] min-h-[44px] p-2 rounded-md text-text-primary',
+            // v30.0.0: WCAG AAA touch target 44x44px
+            'min-w-11 min-h-11 p-2 rounded-md text-text-primary',
             'hover:bg-bg-tertiary transition-colors',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500',
             'flex items-center justify-center'
@@ -169,14 +169,14 @@ export const MobileNav = ({
             aria-label="Menu principal mobile"
             className={cn(
               'lg:hidden fixed top-0 left-0 bottom-0 z-modal',
-              'w-[280px] max-w-[85vw]',
+              'w-70 max-w-[85vw]',
               'bg-bg-secondary border-r border-border-default shadow-2xl',
               'flex flex-col overflow-hidden',
-              // v26.0: GPU acceleration
+              // v30.0.0: GPU acceleration
               'will-change-transform'
             )}
             style={{
-              // v26.0: Safe area support
+              // v30.0.0: Safe area support
               paddingTop: 'env(safe-area-inset-top, 0px)',
               paddingBottom: 'env(safe-area-inset-bottom, 0px)',
             }}
@@ -200,9 +200,9 @@ export const MobileNav = ({
                   <motion.div
                     key={item.id}
                     className={cn(
-                      // v26.0: 44px min-height for touch targets
+                      // v30.0.0: 44px min-height for touch targets
                       'flex items-center gap-3 px-4 py-3 rounded-md cursor-pointer mb-2',
-                      'min-h-[44px] transition-all duration-200 text-sm',
+                      'min-h-11 transition-all duration-200 text-sm',
                       isActive
                         ? 'bg-bg-tertiary text-violet-400 border-l-3 border-violet-500'
                         : 'text-text-secondary hover:bg-bg-tertiary'
@@ -227,14 +227,14 @@ export const MobileNav = ({
               })}
             </nav>
 
-            {/* Footer with Close Button - v26.0: 44px touch target */}
+            {/* Footer with Close Button - v30.0.0: 44px touch target */}
             <div
               className="p-4 border-t border-border-default"
               style={{ paddingBottom: 'calc(16px + env(safe-area-inset-bottom, 0px))' }}
             >
               <button
                 onClick={closeMenu}
-                className="w-full btn btn-ghost min-h-[44px]"
+                className="w-full btn btn-ghost min-h-11"
                 aria-label="Fermer le menu"
               >
                 Fermer le menu

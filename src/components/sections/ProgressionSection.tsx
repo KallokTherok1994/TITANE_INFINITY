@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25.3.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ProgressionSection Component
@@ -12,10 +12,15 @@ import { Grid, Stack } from '@components/layout';
 import { Card } from '@/ui';
 import { XPProgressBar } from '@features/progression';
 import { AchievementCard } from '@/features/progression/AchievementCard';
-import { ACHIEVEMENTS } from '@/features/progression/achievements';
+import {
+  ACHIEVEMENTS,
+  resolveAchievements,
+  resolveTalents,
+} from '@/features/progression/achievements';
 import { TMetric, TBadge, TSectionHeader } from '@/design-system';
 import { spacing, fontSizes } from '@themes/tokens';
 import type { ProgressionState } from '@/cognitive/types';
+import { useCurrentChatModeId } from '@/stores/useChatModeStore';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -24,6 +29,7 @@ import type { ProgressionState } from '@/cognitive/types';
 export interface TitaneStats {
   totalXP: number;
   level: number;
+  chatMessageCount: number;
   memoryShortTerm: number;
   memoryMidTerm: number;
   memoryLongTerm: number;
@@ -40,27 +46,48 @@ interface ProgressionSectionProps {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
-  ({ progression: _progression, stats }) => {
-    // Current stats for achievement progress
+  ({ progression, stats }) => {
+    const currentModeId = useCurrentChatModeId();
+
+    // Real chatMessageCount from xpEngine state (canonical source — incremented per chat_message XP event)
+    const chatMessageCount = progression?.chatMessageCount ?? stats.chatMessageCount ?? 0;
+    const modesUsed = currentModeId ? 1 : 0;
+
+    // Current stats for achievement progress — mode progress now reflects the active canonical mode.
     const currentStats = useMemo(
       () => ({
         level: stats.level,
         totalXP: stats.totalXP,
-        messageCount: 1247,
-        modesUsed: 4,
+        messageCount: chatMessageCount,
+        modesUsed,
+        chatMessageCount,
       }),
-      [stats]
+      [stats, chatMessageCount, modesUsed]
     );
+
+    // Resolve achievements from real stats (level/XP/messages computed from xpEngine)
+    const resolvedAchievements = useMemo(
+      () =>
+        resolveAchievements(ACHIEVEMENTS, {
+          level: stats.level,
+          totalXP: stats.totalXP,
+          chatMessageCount,
+        }),
+      [stats.level, stats.totalXP, chatMessageCount]
+    );
+
+    // Resolve talents from real level threshold
+    const talents = useMemo(() => resolveTalents(stats.level), [stats.level]);
 
     // Filter achievements by category
     const categories = useMemo(
       () => ({
-        conversation: ACHIEVEMENTS.filter(a => a.category === 'conversation'),
-        progression: ACHIEVEMENTS.filter(a => a.category === 'progression'),
-        exploration: ACHIEVEMENTS.filter(a => a.category === 'exploration'),
-        mastery: ACHIEVEMENTS.filter(a => a.category === 'mastery'),
+        conversation: resolvedAchievements.filter(a => a.category === 'conversation'),
+        progression: resolvedAchievements.filter(a => a.category === 'progression'),
+        exploration: resolvedAchievements.filter(a => a.category === 'exploration'),
+        mastery: resolvedAchievements.filter(a => a.category === 'mastery'),
       }),
-      []
+      [resolvedAchievements]
     );
 
     return (
@@ -104,10 +131,19 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
           <Card>
             <h3 style={{ marginBottom: spacing[4] }}>Talents Débloqués</h3>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: spacing[2] }}>
-              <TBadge variant="success">Architecte</TBadge>
-              <TBadge variant="info">Optimiseur</TBadge>
-              <TBadge variant="info">Évolutionniste</TBadge>
-              <TBadge variant="success">Pédagogue</TBadge>
+              {talents.map(t => (
+                <TBadge
+                  key={t.label}
+                  variant={t.unlocked ? t.variant : 'default'}
+                  title={
+                    t.unlocked
+                      ? `Débloqué (niveau ≥ ${t.requiredLevel})`
+                      : `Verrouillé — niveau ${t.requiredLevel} requis`
+                  }
+                >
+                  {t.unlocked ? t.label : `🔒 ${t.label}`}
+                </TBadge>
+              ))}
             </div>
           </Card>
         </Grid>

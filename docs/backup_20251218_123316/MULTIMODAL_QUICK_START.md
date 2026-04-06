@@ -408,8 +408,8 @@ println!("Images stockées: {}", stats.0);
 
 ## 📖 Documentation Complète
 
-- **API Reference**: [TITANE_INFINITY_MULTIMODAL.md](docs/TITANE_INFINITY_MULTIMODAL.md)
-- **Implementation Summary**: [IMPLEMENTATION_SUMMARY_v15.md](IMPLEMENTATION_SUMMARY_v15.md)
+- **API Reference**: [TITANE_INFINITY_MULTIMODAL.md](../TITANE_INFINITY_MULTIMODAL.md)
+- **Implementation Summary**: [IMPLEMENTATION_SUMMARY_v15.md](../99_ARCHIVE/versions/v15/IMPLEMENTATION_SUMMARY_v15.md)
 - **Tests**: [multimodal_integration_test.rs](src-tauri/tests/multimodal_integration_test.rs)
 
 ---

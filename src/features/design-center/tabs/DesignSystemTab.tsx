@@ -8,6 +8,10 @@
 import React, { useState } from 'react';
 import { useUITheme } from '../providers/UIThemeProvider';
 import type { ColorTokens } from '../types/designCenter.types';
+import {
+  ensureReadableTextColor,
+  ensureReadableTextColorForBackgrounds,
+} from '../utils/contrast';
 
 // ============================================================================
 // COLOR PICKER COMPONENT
@@ -31,6 +35,7 @@ function ColorPicker({ label, colorKey, value, onChange }: ColorPickerProps) {
             value={value}
             onChange={e => onChange(colorKey, e.target.value)}
             className="dc-color-input"
+            data-testid={`design-color-${String(colorKey)}`}
           />
           <span className="dc-color-value">{value}</span>
         </div>
@@ -57,6 +62,33 @@ function ComponentPreview() {
     );
   }
 
+  const minContrast = tokens.contrast.level === 'high' ? 7 : 4.5;
+  const textOnSurface = ensureReadableTextColor(
+    tokens.colors.text,
+    tokens.colors.surface,
+    minContrast
+  );
+  const textMutedOnSurface = ensureReadableTextColor(
+    tokens.colors.textMuted,
+    tokens.colors.surface,
+    minContrast
+  );
+  const textOnPrimary = ensureReadableTextColor(
+    tokens.colors.text,
+    tokens.colors.primary,
+    minContrast
+  );
+  const textOnAccent = ensureReadableTextColor(
+    tokens.colors.text,
+    tokens.colors.accent,
+    minContrast
+  );
+  const textOnPreviewSurface = ensureReadableTextColorForBackgrounds(
+    tokens.colors.text,
+    [tokens.colors.background, tokens.colors.surface, tokens.colors.surfaceElevated],
+    minContrast
+  );
+
   return (
     <div className="dc-component-preview">
       <h4 className="dc-preview-title">Aperçu des Composants</h4>
@@ -68,7 +100,7 @@ function ComponentPreview() {
             className="dc-btn dc-btn-primary"
             style={{
               backgroundColor: tokens.colors.primary,
-              color: tokens.colors.text,
+              color: textOnPrimary,
               borderRadius: `${tokens.borders.radiusMd}px`,
               padding: `${tokens.spacing.sm}px ${tokens.spacing.md}px`,
             }}
@@ -79,7 +111,7 @@ function ComponentPreview() {
             className="dc-btn dc-btn-secondary"
             style={{
               backgroundColor: tokens.colors.surface,
-              color: tokens.colors.text,
+              color: textOnSurface,
               border: `${tokens.borders.width}px solid ${tokens.colors.border}`,
               borderRadius: `${tokens.borders.radiusMd}px`,
               padding: `${tokens.spacing.sm}px ${tokens.spacing.md}px`,
@@ -91,7 +123,7 @@ function ComponentPreview() {
             className="dc-btn dc-btn-accent"
             style={{
               backgroundColor: tokens.colors.accent,
-              color: tokens.colors.background,
+              color: textOnAccent,
               borderRadius: `${tokens.borders.radiusMd}px`,
               padding: `${tokens.spacing.sm}px ${tokens.spacing.md}px`,
             }}
@@ -113,10 +145,10 @@ function ComponentPreview() {
             boxShadow: tokens.shadows.enabled ? tokens.shadows.md : 'none',
           }}
         >
-          <h6 style={{ color: tokens.colors.text, margin: 0 }}>Titre de la Carte</h6>
+          <h6 style={{ color: textOnSurface, margin: 0 }}>Titre de la Carte</h6>
           <p
             style={{
-              color: tokens.colors.textMuted,
+              color: textMutedOnSurface,
               margin: `${tokens.spacing.sm}px 0 0`,
             }}
           >
@@ -133,7 +165,7 @@ function ComponentPreview() {
           className="dc-preview-input"
           style={{
             backgroundColor: tokens.colors.surface,
-            color: tokens.colors.text,
+            color: textOnSurface,
             border: `${tokens.borders.width}px solid ${tokens.colors.border}`,
             borderRadius: `${tokens.borders.radiusSm}px`,
             padding: `${tokens.spacing.sm}px ${tokens.spacing.md}px`,
@@ -148,7 +180,7 @@ function ComponentPreview() {
             className="dc-status"
             style={{
               backgroundColor: `${tokens.colors.success}20`,
-              color: tokens.colors.success,
+              color: textOnPreviewSurface,
               padding: `${tokens.spacing.xs}px ${tokens.spacing.sm}px`,
               borderRadius: `${tokens.borders.radiusSm}px`,
             }}
@@ -159,7 +191,7 @@ function ComponentPreview() {
             className="dc-status"
             style={{
               backgroundColor: `${tokens.colors.warning}20`,
-              color: tokens.colors.warning,
+              color: textOnPreviewSurface,
               padding: `${tokens.spacing.xs}px ${tokens.spacing.sm}px`,
               borderRadius: `${tokens.borders.radiusSm}px`,
             }}
@@ -170,7 +202,7 @@ function ComponentPreview() {
             className="dc-status"
             style={{
               backgroundColor: `${tokens.colors.error}20`,
-              color: tokens.colors.error,
+              color: textOnPreviewSurface,
               padding: `${tokens.spacing.xs}px ${tokens.spacing.sm}px`,
               borderRadius: `${tokens.borders.radiusSm}px`,
             }}
@@ -181,7 +213,7 @@ function ComponentPreview() {
             className="dc-status"
             style={{
               backgroundColor: `${tokens.colors.info}20`,
-              color: tokens.colors.info,
+              color: textOnPreviewSurface,
               padding: `${tokens.spacing.xs}px ${tokens.spacing.sm}px`,
               borderRadius: `${tokens.borders.radiusSm}px`,
             }}
@@ -500,7 +532,7 @@ export function DesignSystemTab() {
           transition: all 0.2s;
         }
         .dc-btn-action:hover { background: var(--color-surface-elevated, #1e1e1e); }
-        .dc-btn-save { background: var(--color-accent, #93b399); color: var(--color-background, #0f0f0f); }
+        .dc-btn-save { background: var(--color-accent, #93b399); color: var(--color-text-on-accent, #0f0f0f); }
         .dc-btn-undo { border-color: var(--color-warning, #a89f91); }
         .dc-btn-reset { border-color: var(--color-error, #8f7a7a); }
 

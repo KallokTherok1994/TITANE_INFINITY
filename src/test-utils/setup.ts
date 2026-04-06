@@ -11,6 +11,10 @@ import React from 'react';
 // Cleanup after each test automatically
 afterEach(() => {
   cleanup();
+  // Clear any CSS custom properties written to documentElement by component tests
+  // (e.g. UIThemeProvider) to prevent bleed across sequential test files.
+  document.documentElement.removeAttribute('style');
+  document.documentElement.removeAttribute('class');
 });
 
 // ═══════════════════════════════════════════════════════════════════

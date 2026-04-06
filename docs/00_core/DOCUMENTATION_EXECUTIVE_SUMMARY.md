@@ -395,7 +395,7 @@ grep "UnifiedMemory" docs/05_modules/backend/OMEGA_PIPELINE.md
 ### Pour Développeurs Frontend (TypeScript)
 
 **Workflow recommandé:**
-1. **Démarrage:** Lire [DATA_FLOW_CHAT.md](../02_ARCHITECTURE/DATA_FLOW_CHAT.md) pour flow messaging
+1. **Démarrage:** Lire [DATA_FLOW_CHAT.md](../01_architecture/DATA_FLOW_CHAT.md) pour flow messaging
 2. **Module spécifique:** Consulter `docs/05_modules/frontend/[MODULE].md`
 3. **API methods:** Section "API Reference" → TypeScript interfaces
 4. **Backend integration:** Section "Integrations" → Tauri commands
@@ -515,14 +515,14 @@ grep "Tauri" docs/05_modules/frontend/CHAT_ENGINE.md
 ## 📚 RELATED DOCUMENTATION
 
 ### Core Documents
-- [DOCUMENTATION_EVOLUTION_REPORT.md](../../DOCUMENTATION_EVOLUTION_REPORT.md) — Rapport détaillé phases 0-6D
+- [DOCUMENTATION_EVOLUTION_REPORT.md](../archive/sessions/DOCUMENTATION_EVOLUTION_REPORT.md) — Rapport détaillé phases 0-6D
 - [docs/05_modules/INDEX.md](../05_modules/INDEX.md) — Navigation modules master
 - [docs/04_guides/INDEX.md](../04_guides/INDEX.md) — Guides navigation
 
 ### Architecture
-- [DATA_FLOW_CHAT.md](../02_ARCHITECTURE/DATA_FLOW_CHAT.md) — Flow messaging complet
-- [OMEGA_PIPELINE_DETAILED.md](../02_ARCHITECTURE/OMEGA_PIPELINE_DETAILED.md) — Pipeline détaillé
-- [TAURI_COMMANDS_REFERENCE.md](../02_ARCHITECTURE/TAURI_COMMANDS_REFERENCE.md) — API commands
+- [DATA_FLOW_CHAT.md](../01_architecture/DATA_FLOW_CHAT.md) — Flow messaging complet
+- [OMEGA_PIPELINE_DETAILED.md](../01_architecture/OMEGA_PIPELINE_DETAILED.md) — Pipeline détaillé
+- [TAURI_COMMANDS_REFERENCE.md](../06_api/TAURI_COMMANDS_REFERENCE.md) — API commands
 
 ### Guides
 - [QUICKSTART.md](../04_guides/quickstart/QUICKSTART.md) — Quick start utilisateur

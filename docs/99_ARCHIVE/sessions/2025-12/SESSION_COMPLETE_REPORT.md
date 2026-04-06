@@ -122,9 +122,9 @@ cffffd45 ← origin/MAIN (point de départ)
 
 ### Documentation
 
-- [TEST_PHASE3_VALIDATION.md](TEST_PHASE3_VALIDATION.md) - Guide tests manuels
-- [PHASE4_PLAN_REINTRODUCTION.md](PHASE4_PLAN_REINTRODUCTION.md) - Plan détaillé
-- [PHASE4_COMPLETE_REPORT.md](PHASE4_COMPLETE_REPORT.md) - Rapport complet
+- [TEST_PHASE3_VALIDATION.md](../../tests/TEST_PHASE3_VALIDATION.md) - Guide tests manuels
+- [PHASE4_PLAN_REINTRODUCTION.md](../../phases/PHASE4_PLAN_REINTRODUCTION.md) - Plan détaillé
+- [PHASE4_COMPLETE_REPORT.md](../../phases/PHASE4_COMPLETE_REPORT.md) - Rapport complet
 
 ---
 

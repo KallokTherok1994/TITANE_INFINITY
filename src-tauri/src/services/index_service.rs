@@ -144,7 +144,7 @@ impl IndexService {
         let term = tantivy::Term::from_field_text(self.fields.text_hash, text_hash);
         let query = tantivy::query::TermQuery::new(term, tantivy::schema::IndexRecordOption::Basic);
         matches!(
-            searcher.search(&query, &TopDocs::with_limit(1)),
+            searcher.search(&query, &TopDocs::with_limit(1).order_by_score()),
             Ok(ref hits) if !hits.is_empty()
         )
     }
@@ -218,7 +218,7 @@ impl IndexService {
             .map_err(|e| IndexError::Read(format!("parse_query: {}", e)))?;
 
         let top_docs = searcher
-            .search(&query, &TopDocs::with_limit(k))
+            .search(&query, &TopDocs::with_limit(k).order_by_score())
             .map_err(|e| IndexError::Read(format!("search: {}", e)))?;
 
         let mut hits = Vec::with_capacity(top_docs.len());
@@ -268,7 +268,7 @@ impl IndexService {
                     return None;
                 }
                 let lower = trimmed.to_lowercase();
-                let score = terms.iter().filter(|t| lower.contains(t.as_str())).count();
+                let score = terms.iter().filter(|t| lower.contains(&t[..])).count();
                 if score == 0 {
                     return None;
                 }

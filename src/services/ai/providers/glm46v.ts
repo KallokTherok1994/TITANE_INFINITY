@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v26.3.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v26.3.0 — GLM-4.6V-FLASH PROVIDER
+ *   TITANE∞ v30.0.0 — GLM-4.6V-FLASH PROVIDER
  *   Provider local GLM-4.6V-Flash avec support multimodal
  *   Architecture: vLLM server + OpenAI-compatible API + Vision
  * ═══════════════════════════════════════════════════════════════════
@@ -13,12 +13,6 @@
 
 import type { AIProvider, AIMessage, AIResponse, AIConfig } from '../types';
 import { DEFAULT_AI_CONFIG } from '../types';
-import {
-  SecureAIService,
-  type SecureAIRequest,
-  type SecureAIResponse,
-  type ChatResponse,
-} from '@/lib/security';
 import { unifiedHealingFacade } from '../unifiedHealingFacade';
 import { createLogger } from '@/utils/logger';
 
@@ -77,7 +71,7 @@ function buildPromptWithVision(message: string, history: AIMessage[]): any {
   // Add system message
   messages.push({
     role: 'system',
-    content: `Tu es TITANE∞ v26.3.0, un système IA multimodal avancé avec capacités de vision.
+    content: `Tu es TITANE∞ v30.0.0, un système IA multimodal avancé avec capacités de vision.
 Tu peux analyser des images et répondre en français de manière professionnelle et précise.
 Lorsque tu vois une image, décris-la précisément et utilise cette information pour répondre.`,
   });
@@ -137,32 +131,14 @@ Lorsque tu vois une image, décris-la précisément et utilise cette information
  */
 async function checkEndpointHealth(): Promise<boolean> {
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
-
-    const response = await globalThis['fetch'](
-      // @network-allowed
-      // @network-allowed
-      `${GLM46V_CONFIG.baseUrl}/models`,
-      {
-        method: 'GET',
-        signal: controller.signal,
-        headers: { Accept: 'application/json' },
-      }
-    );
-
-    clearTimeout(timeout);
-
-    if (response.ok) {
-      const data = await response.json();
-      // Check if GLM-4.6V model is available
-      return (
-        Array.isArray(data.data) &&
-        data.data.some((model: any) => model.id === GLM46V_CONFIG.model)
-      );
-    }
-
-    return false;
+    // Tauri IPC: query backend for provider health
+    const { secureInvoke } = await import('@/lib/security');
+    const result = await secureInvoke('check_glm46v_health', {});
+    if (!result || typeof result !== 'object') return false;
+    const data = result as { available?: boolean; models?: string[] };
+    if (!data.available) return false;
+    if (!data.models || data.models.length === 0) return true;
+    return data.models.some(model => model.toLowerCase().includes('glm'));
   } catch (error) {
     handleGLM46VError(error, 'health_check');
     return false;
@@ -280,119 +256,49 @@ export const glm46vProvider: AIProvider = {
       throw error;
     }
 
-    // Secure AI Request
-    const secureRequest: SecureAIRequest = {
-      input: message,
-      provider: 'glm46v',
-      model: GLM46V_CONFIG.model,
-      userId: 'titane-user',
-      metadata: {
-        temperature: finalConfig.temperature,
-        maxTokens: finalConfig.maxTokens,
-        historyLength: history.length,
-        requestId: `glm46v-${Date.now()}`,
-      },
-    };
-
     try {
-      const secureResult: SecureAIResponse<ChatResponse> =
-        await SecureAIService.executeSecureChat(secureRequest, async sanitizedMessage => {
-          const controller = new AbortController();
-          const timeout = setTimeout(() => controller.abort(), finalConfig.timeout);
+      const payload = convertToGLM46VFormat(message, history);
 
-          try {
-            const payload = convertToGLM46VFormat(sanitizedMessage, history);
+      // Tauri IPC: call backend AI provider
+      const { secureInvoke } = await import('@/lib/security');
+      const result = await secureInvoke('chat_generate_glm46v', {
+        request: {
+          message: message,
+          history: history.map(m => ({
+            role: m.role,
+            content: typeof m.content === 'string' ? m.content : '',
+          })),
+          config: {
+            model: GLM46V_CONFIG.model,
+            temperature: finalConfig.temperature ?? 0.7,
+            max_tokens: finalConfig.maxTokens ?? 2048,
+          },
+        },
+      });
 
-            const response = await globalThis['fetch'](
-              // @network-allowed
-              // @network-allowed
-              `${GLM46V_CONFIG.baseUrl}/chat/completions`,
-              {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  model: GLM46V_CONFIG.model,
-                  messages: payload.messages,
-                  max_tokens: finalConfig.maxTokens,
-                  temperature: finalConfig.temperature,
-                  stream: false,
-                }),
-                signal: controller.signal,
-              }
-            );
-
-            clearTimeout(timeout);
-
-            if (!response.ok) {
-              throw new Error(`GLM-4.6V API error: ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            if (!data.choices?.[0]?.message?.content) {
-              throw new Error('GLM-4.6V: Empty response');
-            }
-
-            return {
-              content: data.choices[0].message.content.trim(),
-              role: 'assistant',
-              timestamp: Date.now(),
-              metadata: {
-                model: GLM46V_CONFIG.model,
-                tokens: data.usage?.total_tokens || 0,
-                finish_reason: data.choices[0].finish_reason,
-              },
-            };
-          } catch (error) {
-            clearTimeout(timeout);
-
-            if (error instanceof Error) {
-              if (error.name === 'AbortError') {
-                throw new Error('GLM-4.6V: Request timeout');
-              }
-              throw error;
-            }
-
-            throw new Error('GLM-4.6V: Unknown error');
-          }
-        });
-
-      // Security validation check
-      if (!secureResult.success) {
-        const errorMsg = secureResult.error || 'Security validation failed';
-
-        if (secureResult.rateLimitExceeded) {
-          const rateLimitError = new Error(`Rate limit exceeded — ${errorMsg}`);
-          handleGLM46VError(rateLimitError, 'rate_limit');
-          throw rateLimitError;
-        }
-
-        if (secureResult.sanitization?.isBlocked) {
-          const patterns = secureResult.sanitization.detectedPatterns.join(', ');
-          const sanitizationError = new Error(`Input blocked — Detected: ${patterns}`);
-          handleGLM46VError(sanitizationError, 'sanitization');
-          throw sanitizationError;
-        }
-
-        if (!secureResult.validation?.isValid) {
-          const validationError = new Error(`Response validation failed — ${errorMsg}`);
-          handleGLM46VError(validationError, 'validation');
-          throw validationError;
-        }
-
-        const securityError = new Error(errorMsg);
-        handleGLM46VError(securityError, 'security');
-        throw securityError;
+      if (!result || typeof result !== 'object') {
+        throw new Error('GLM-4.6V IPC error');
       }
 
-      // Success
+      const data = result as {
+        success?: boolean;
+        message?: { content?: string; model?: string; tokens?: number };
+      };
+
+      if (!data?.success) {
+        throw new Error('GLM-4.6V IPC error');
+      }
+
+      if (!data?.message?.content) {
+        throw new Error('GLM-4.6V: Empty response');
+      }
+
       const aiResponse: AIResponse = {
-        content: secureResult.response.content,
+        content: data.message.content.trim(),
         provider: 'glm46v',
         timestamp: Date.now(),
-        model: GLM46V_CONFIG.model,
+        model: data.message.model ?? GLM46V_CONFIG.model,
+        tokens: data.message.tokens,
       };
 
       return aiResponse;

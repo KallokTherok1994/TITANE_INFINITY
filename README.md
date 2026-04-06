@@ -2,18 +2,62 @@
 
 ![CI/CD Status](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci.yml/badge.svg?branch=MAIN)
 ![Mermaid Canon](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/mermaid-verify.yml/badge.svg?branch=MAIN)
+![Release v30.0.0](https://img.shields.io/badge/release-v30.0.0-brightgreen?logo=github)
 
-**Version:** v27.0.5  
-**Status:** Production Ready ✅  
+**Version:** v30.0.0 (repository authority)
+**Status:** ✅ Production Ready (v30.0.0 — MAJOR RELEASE STREAM)
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
+**Latest Release:** [v30.0.0-release-20260406](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260406) (April 6, 2026)
+**Latest Release:** [v30.0.0-release-20260405](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260405) (April 5, 2026)
 
-**Qualité (v27.0.5) :** Build + packaging validés, artefacts publiés (`deployment/latest`) — Production Ready ✅
+**Canal de release canonique:** v30.0.0
+
+**Qualité (v30.0.0) :** zero-regression eval harness, refreshed DEB/AppImage surfaces, stable deployment metadata alignment.
+
+**Documentation canonique :** [docs/README.md](docs/README.md) (source principale de navigation documentaire)
+
+**Statut d'autorité documentaire (LOCAL, 2026-04-05) :**
+
+- Source de version canonique du repo: `package.json` + `CHANGELOG.md` -> `30.0.0` (`PROVEN_BY_REPO`)
+- Release canonique vérifiée: `v30.0.0` (`PROVEN_BY_REPO` + `PROVEN_BY_CHANGELOG`)
+- Lignes binaires historiques documentées: `v28.90.0`, `v28.88.0`, `v27.2.0` (`PROVEN_BY_CANON_DOC`)
+- Politique de cohérence: version canonique et release courante `30.0.0`; les surfaces historiques restent archivées et identifiées par version
 
 ---
 
 ## 📦 Téléchargement
 
-### ✨ **Version Stable : v27.0.5** — Release stable
+### ✅ Release canonique courante: v30.0.0 (Major Release)
+
+**Status**: � PRODUCTION READY — CERTIFIED & DEPLOYED  
+**Certification ID**: `TITANE_INFINITY_RELEASE_20260405_121527_CERTIFIED`  
+**Release Date**: April 6, 2026  
+**Certification Scope**: Eval harness 35/35, stable packaging refresh, deployment metadata alignment
+
+Artefacts vérifiés (Linux amd64):
+
+- **AppImage**: `Titan-Stable_30.0.0_amd64.AppImage` (87M) — deployed in `deployment/latest/`
+- **DEB Package**: `Titan-Stable_30.0.0_amd64.deb` (17M) — deployed in `deployment/latest/`
+
+Checksums:
+
+```
+AppImage:  12ed61d6581f7d16d626a8da73dbba8c37b8f56b9f562deca878898170a60a84
+DEB:       2bcfc64e57f5f234a6fa43dd810e8240ba1a37c61faee934f8e136b83f04f880
+```
+
+**Release Notes & Installation**:
+
+- Full release notes: [CHANGELOG.md](CHANGELOG.md)
+- GitHub Release: https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260406
+- GitHub Release: https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260405
+- Deployment manifest: [deployment/latest/MANIFEST.json](deployment/latest/MANIFEST.json)
+- Checksums: [RELEASE_ARTIFACTS_CHECKSUMS_30.0.0.txt](RELEASE_ARTIFACTS_CHECKSUMS_30.0.0.txt)
+
+**Security**: MAXIMUM_HARDENED  
+**Authorization**: Token-gated (`GO_FOR_PROD_BUILD__TITANE_INFINITY` + `GO_FOR_PROD_DEPLOY__TITANE_INFINITY`)
+
+### ✨ **Archive binaire historique : v27.0.5**
 
 **Télécharger pour Linux (Debian/Ubuntu):**
 
@@ -22,16 +66,22 @@ wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0
 sudo dpkg -i TITANE-Infinity_27.0.5_amd64.deb
 ```
 
-**Points cles v27.0.5 :**
+**Points cles (historique) v27.0.5 :**
 
 - ✅ Warnings Rust audio corrigés (build release clean)
 - 🧠 Alignement complet des versions app/frontend/backend
-- 📦 Artefacts stables actualisés (AppImage/DEB/RPM)
+- 📦 Artefacts historiques de reference (AppImage/DEB/RPM)
 
 **Compatibilité :**  
 ✅ Ubuntu 20.04+ | ✅ Debian 11+ | ✅ Linux Mint 20+ | ✅ Pop!\_OS 20.04+
 
-📄 [Notes de release complètes](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v27.0.5) | 🔐 [Checksums](./deployment/latest/SHA256SUMS_v27.0.5.txt)
+📄 [Notes de release complètes](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v27.0.5)
+
+🔐 [Checksums v27.0.5][checksums-historiques-v2705]
+
+🔐 [Checksums historiques v28.88.0](./docs/90_release/PRODUCTION_RELEASE_v28.88.0.md)
+
+[checksums-historiques-v2705]: ./deployment/latest/SHA256SUMS_v27.0.5.txt
 
 ---
 
@@ -48,11 +98,29 @@ TITANE∞ est un **OS cognitif online-first** : votre double numérique évoluti
 
 ---
 
-## � Version Timeline
+## 🗓️ Version Timeline
 
-### Current Production (v27.x Series)
+### Historique de production (v29.x + v28.x + v27.x)
 
-- **v27.0.5-prod** (STABLE) — Production baseline
+- **v30.0.0** (Current Release Stream — 🚀)
+  - Status: ✅ CERTIFIED & DEPLOYED (2026-04-05)
+  - Tag: `v30.0.0-release-20260406`
+  - Tag: `v30.0.0-release-20260405`
+  - Gates: eval harness PASS, certified deployment PASS, deployment metadata aligned
+  - Proof: `CHANGELOG.md` + `deployment/latest/MANIFEST.json` + `RELEASE_ARTIFACTS_CHECKSUMS_30.0.0.txt`
+
+- **v28.88.0** (HISTORIQUE — previous sealed release)
+  - Status: ✅ SEALED (2026-03-21)
+  - Tag: `v28.88.0`
+  - Gates: tsc, eslint, vitest 3399/3399, pnpm build, cargo check, verify_instructions PASS=20
+  - Proof: `RELEASE_v28.88.0_SEALED.txt`
+
+- **v28.5.0** (HISTORIQUE)
+  - Status: ✅ RELEASED
+  - Tag: `v28.5.0`
+  - Proof: `RELEASE_v28.5.0_SEALED.txt`
+
+- **v27.0.5-prod** (HISTORIQUE) — Production binary baseline
   - Status: ✅ LIVE (99.99% uptime, 0 crashes)
   - Tag: 02bce9c7
   - Immutable production reference
@@ -61,25 +129,39 @@ TITANE∞ est un **OS cognitif online-first** : votre double numérique évoluti
   - Status: Documentation updates only (no binary deployment)
   - Date: 2026-02-18
 
-- **v27.2.0** (TYPESCRIPT STRICT - LATEST)
+- **v27.2.0** (TYPESCRIPT STRICT - HISTORIQUE)
   - Status: ✅ DEPLOYED (2026-02-23)
   - Commit: a14a111f
   - Change: Zero TypeScript errors (strict mode)
   - Risk: MINIMAL (type-only, zero runtime impact)
   - Lane: Strict Mode (P2)
 
+- **2026-03-03** (MAINTENANCE & PROOF SYNC)
+  - Status: ✅ DONE (no version bump)
+  - Commits: `25740b5d0`, `3895845c1`
+  - Change: TS blockers corrigés + pack `ORCH_VΩ_2026-03-03_1436_0cdf39d39` scellé
+  - Risk: LOW (stabilisation + documentation)
+
+- **2026-03-06** (PROD REDEPLOY + RUNTIME VALIDATION)
+  - Status: ✅ DONE (no version bump)
+  - Commits: `43c35be3f`, `be5ced801`
+  - Change: redeploy token-gated, smoke AppImage+Installed PASS, metadata `deployment/latest` resync
+  - Risk: LOW (operational validation + metadata coherence)
+  - Release note prep: [`RELEASE_NOTE_v27.2.0_POSTDEPLOY_2026-03-06.md`](docs/90_release/RELEASE_NOTE_v27.2.0_POSTDEPLOY_2026-03-06.md)
+
 ### Legacy Versions
 
-See [CHANGELOG.md](CHANGELOG.md) for v24.x-v26.x history.
+See [CHANGELOG.md](CHANGELOG.md) and [CHANGELOG v27.2.0 entry](docs/90_release/CHANGELOG_v27.2.0_ENTRY.md) for release history.
 
 ---
 
-## �🚀 Quick Start
+## 🚀 Quick Start
 
 ### Prérequis
 
 - **OS:** Ubuntu 24.04 LTS (recommandé) ou compatible Linux
-- **Node.js:** v20+ (LTS)
+- **Node.js:** v24+ (recommande)
+- **pnpm:** v10.30.2 (via Corepack)
 - **Rust:** 1.75+
 - **Tauri CLI:** v2.0+
 - **Git LFS:** requis (certains binaires toolchain sont versionnés via LFS)
@@ -129,6 +211,16 @@ TITANE∞ utilise un modèle de gouvernance strict avec **9 Gates constitutionne
 9. **G9: STOP_THE_LINE** — Block on gate failure (no bypass sans autorisation)
 
 **Stop-the-Line**: Any gate failure blocks deployment until resolved.
+
+### Native Desktop Freshness Pre-Gate
+
+Before native desktop certification and before PROD token usage, run:
+
+```bash
+bash scripts/verify/verify-native-binary-freshness.sh
+```
+
+Expected: `VERDICT=PASS` with a fresh binary class (`FRESH_RELEASE_BINARY`, `FRESH_DEBUG_BINARY`, or `FRESH_CERTIFIED_BINARY`).
 
 ### Append-Only Registry
 
@@ -191,8 +283,8 @@ Progressive rollout model (Strict & Perfection lanes only):
 2. **Wave 2 (25%)** — Early adopters, expanded monitoring (48h soak)
 3. **Wave 3 (100%)** — General availability (GA)
 
-**Current Stable**: v27.0.5-prod (99.99% uptime, 0 crashes)  
-**Latest Deployment**: v27.2.0 (TypeScript Strict Mode, 2026-02-23)
+**Repository Authority**: v30.0.0 (documentation canonique)  
+**Latest Canonical Release Stream**: v30.0.0 (`CHANGELOG.md` + `deployment/latest/MANIFEST.json`)
 
 ---
 
@@ -211,28 +303,28 @@ Progressive rollout model (Strict & Perfection lanes only):
 ### Corepack Quickstart (recommandé)
 
 ```bash
-# Activer Corepack et pnpm@9 pour cohérence outillage
+# Activer Corepack et pnpm@10.30.2 pour coherence outillage
 corepack enable
-corepack prepare pnpm@9 --activate
+corepack prepare pnpm@10.30.2 --activate
 ```
 
 ### Build Production (Titan-Stable)
 
 ```bash
 # Build production token-gated
-GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
+GO_FOR_PROD_BUILD__TITANE_INFINITY=GO_FOR_PROD_BUILD__TITANE_INFINITY corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
 
 # Ou via task VSCode: "🔵 Build Titan-Stable"
 ```
 
 ---
 
-## 📐 Architecture v27.0.5
+## 📐 Architecture v30.0.0
 
 ### 🗺️ Navigation (13 Centres Unifiés)
 
 ```
-TITANE∞ v27.0.5
+TITANE∞ v30.0.0
 
 📂 PRINCIPAL
 ├─ 💬 Chat IA → /chat
@@ -331,7 +423,7 @@ pnpm run dev              # Launch Titan-Dev (wrapper local complet)
 pnpm run dev:tauri        # Alias de dev (wrapper local complet)
 pnpm run dev:tauri:no-ollama  # Titan-Dev sans Ollama
 pnpm run build            # Build frontend
-GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json  # Build Titan-Stable
+GO_FOR_PROD_BUILD__TITANE_INFINITY=GO_FOR_PROD_BUILD__TITANE_INFINITY corepack pnpm exec tauri build --config src-tauri/tauri.conf.json  # Build Titan-Stable
 pnpm run lint             # ESLint + Prettier
 pnpm run test             # Run tests
 pnpm run test:rust        # Cargo tests
@@ -368,7 +460,7 @@ Ce dépôt est configuré avec des instructions personnalisées pour GitHub Copi
 
 - **[.github/copilot-instructions.md](.github/copilot-instructions.md)** — Protocole COPILOT-XS (règles générales)
 - **[.github/instructions/titane.instructions.md](.github/instructions/titane.instructions.md)** — Instructions détaillées du projet
-- **[.copilot-rules-permanent.md](.copilot-rules-permanent.md)** — Règles permanentes TITANE∞
+- **[.copilot-rules-permanent.md](docs/01_misc/.copilot-rules-permanent.md)** — Règles permanentes TITANE∞
 
 **Validation automatique :**
 
@@ -389,7 +481,7 @@ Pour plus d'informations : [COPILOT-XS README](.github/copilot-xs/README.md)
 
 ---
 
-## �️ Governance Pattern Rules
+## 🏛️ Governance Pattern Rules
 
 TITANE∞ implements **constitutional governance rules** to prevent accumulation of unmanaged subsystems and ensure clean archival of bounded governance patterns.
 
@@ -421,18 +513,18 @@ TITANE∞ implements **constitutional governance rules** to prevent accumulation
 
 ---
 
-## �📚 Documentation
+## 📚 Documentation
 
 > **🎯 NEW: World-Class Documentation (200% Coverage - Dec 2025)**  
-> **Quick Navigation:** [Getting Started](docs/GETTING_STARTED.md) • [Contributing](CONTRIBUTING.md) • [Master Index](docs/INDEX.md)
+> **Quick Navigation:** [Getting Started](docs/GETTING_STARTED.md) • [Contributing](docs/00_core/CONTRIBUTING.md) • [Master Index](docs/INDEX.md)
 
 ### 🚀 Start Here (New to TITANE∞?)
 
 **Role-Based Quick Start:**
 
 - **First Time User:** [Getting Started Guide](docs/GETTING_STARTED.md) → <2h to productivity
-- **Want to Contribute:** [Contributing Guide](CONTRIBUTING.md) → Onboarding <2h with validation
-- **Need API Reference:** [API Reference v24.30](docs/API_REFERENCE_v24.30.md) → 14 modules, comprehensive coverage
+- **Want to Contribute:** [Contributing Guide](docs/00_core/CONTRIBUTING.md) → Onboarding <2h with validation
+- **Need API Reference:** [API Index](docs/06_api/INDEX.md) → couverture API canonique
 
 ### 📖 Complete Documentation Structure (50 Documents, ~24,300 Lines)
 
@@ -523,13 +615,13 @@ pnpm run test:all
 
 ## 🤝 Contribution
 
-> **🎯 NEW: [Complete Contributing Guide](CONTRIBUTING.md) — Validated <2h onboarding**
+> **🎯 NEW: [Complete Contributing Guide](docs/00_core/CONTRIBUTING.md) — Validated <2h onboarding**
 
 ### Quick Start for Contributors
 
 **🎯 First Contribution in 3 Steps:**
 
-1. **Read:** [CONTRIBUTING.md](CONTRIBUTING.md) (15 min)
+1. **Read:** [CONTRIBUTING.md](docs/00_core/CONTRIBUTING.md) (15 min)
 2. **Setup:** Environment + dev runtime (30 min)
 3. **First PR:** Choose good-first-issue, code, test, submit (60 min)
 
@@ -594,7 +686,7 @@ git push origin feature/my-awesome-feature
 - **[Documentation Issue](.github/ISSUE_TEMPLATE/documentation.md)** — Fix docs
 
 **Before Submitting PR:**
-✅ Code follows [CONTRIBUTING.md](CONTRIBUTING.md) standards  
+✅ Code follows [CONTRIBUTING.md](docs/00_core/CONTRIBUTING.md) standards  
 ✅ All tests pass (`pnpm run test`)  
 ✅ ESLint/Prettier clean (`pnpm run lint`)  
 ✅ Documentation updated (if needed)  
@@ -610,10 +702,11 @@ git push origin feature/my-awesome-feature
 
 ---
 
-## 📊 Roadmap v24-v25
+## 📊 Roadmap Legacy v24-v25 (Archive)
 
-> **🎯 Phase actuelle : v27.0.5 — Release stable alignée et publiée (cf. [CHANGELOG](CHANGELOG.md))**  
-> **Statut :** Couverture documentation 200% ✅ — zéro dette technique
+> # **🎯 Phase actuelle : v30.0.0 — Major release canonique gouvernée (cf. [CHANGELOG](CHANGELOG.md))**
+>
+> > > > > > > **Statut :** Couverture documentation 200% ✅ — zéro dette technique
 
 ### ✅ Phase 0-7 Complete (Dec 2025)
 
@@ -643,7 +736,7 @@ git push origin feature/my-awesome-feature
 3. **Troubleshooting** (2-3 engineers, 10 issues, ≥80% resolution)
 4. **Performance** (1-2 engineers, ≥20% improvement)
 
-**Success Criteria:** (atteints v27.0.5)
+**Success Criteria:** (atteints sur la ligne historique v27)
 
 - ≥80% pass rate across all tests
 - ≥8/10 user satisfaction
@@ -740,8 +833,8 @@ git push origin feature/my-awesome-feature
 
 - 📖 **Documentation:** [Master Index](docs/INDEX.md) — Complete navigation (200% coverage)
 - 🚀 **Getting Started:** [Quick Start Guide](docs/GETTING_STARTED.md) — <2h to productivity
-- **API Reference:** [API Reference v24.30](docs/API_REFERENCE_v24.30.md) — 14 modules, comprehensive coverage
-- 💬 **Contributing:** [CONTRIBUTING.md](CONTRIBUTING.md) — <2h onboarding
+- **API Reference:** [API Index](docs/06_api/INDEX.md) — couverture API canonique
+- 💬 **Contributing:** [CONTRIBUTING.md](docs/00_core/CONTRIBUTING.md) — <2h onboarding
 
 ### 🐛 Report Issues
 
@@ -754,14 +847,14 @@ git push origin feature/my-awesome-feature
 **Before Reporting:**
 
 1. ✅ Search [existing issues](https://github.com/KallokTherok1994/TITANE_INFINITY/issues)
-2. ✅ Verify you're on latest version (v27.0.5)
+2. ✅ Verify repository authority version (`30.0.0`)
 3. ✅ Provide reproduction steps + environment details
 
 ### 💡 Feature Requests
 
 **Roadmap & Planning:**
 
-- Current Phase: **v27.0.5 — Stable release alignée (build + artefacts + docs)**
+- # Current Phase: **v30.0.0 — major release canonique (docs + versions + artefacts alignés)**
 - Next Phases: i18n → Interactive docs → Auto-sync → Advanced features
 
 **How to Propose:**
@@ -797,7 +890,7 @@ git push origin feature/my-awesome-feature
 - **GitHub:** [KallokTherok1994/TITANE_INFINITY](https://github.com/KallokTherok1994/TITANE_INFINITY)
 - **Issues:** Bug reports, feature requests
 - **Discussions:** General questions, ideas
-- **PRs:** Code contributions welcome (see [CONTRIBUTING.md](CONTRIBUTING.md))
+- **PRs:** Code contributions welcome (see [CONTRIBUTING.md](docs/00_core/CONTRIBUTING.md))
 
 ### 📧 Contact
 
@@ -833,10 +926,10 @@ TITANE∞ applique une politique **proof-driven** : aucune conclusion sans preuv
 
 ## 📜 License
 
-**Proprietary License** — © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+**Proprietary License** — © 2025-2026 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 
 Voir `LICENSE.md` pour détails.
 
 ---
 
-**TITANE∞ v27.0.5** — _Votre système d'exploitation cognitif_
+**TITANE∞ v30.0.0** — _Votre système d'exploitation cognitif_

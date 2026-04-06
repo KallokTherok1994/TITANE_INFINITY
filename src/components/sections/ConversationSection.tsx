@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25.3.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ConversationSection Component
@@ -18,7 +18,16 @@ import React, {
 } from 'react';
 import { useToast } from '@/hooks/useToast';
 import { useConversationEngine } from '@hooks/useConversationEngine';
-import type { ConversationMode } from '@/services/conversationEngine';
+import type {
+  ConversationMode,
+  ConversationProviderPreference,
+} from '@/services/conversationEngine';
+import {
+  buildConversationProviders,
+  DEFAULT_CONVERSATION_PROVIDER_READINESS,
+  isConversationProviderReady,
+  type ConversationProviderReadiness,
+} from './conversationProviderReadiness';
 import type { AnalyzedFile } from '@/components/chat/FileUploadButton';
 import { ThinkingPanel, useThinkingSteps } from '@/features/chat/ThinkingPanel';
 import {
@@ -30,6 +39,7 @@ import { hybridTTS } from '@/services/tts/hybridTTS';
 import { ChatProviderSelector } from '@/features/chat/ChatProviderSelector';
 import { ChatToolbar } from '@/components/chat/ChatToolbar';
 import { ModeBuilder, type CustomMode } from '@/components/conversation/ModeBuilder';
+import { registerCustomMode } from '@/config/chatModes.config';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import { TSectionHeader } from '@/design-system';
 import { Download, FileText, Copy, Trash2, Search } from 'lucide-react';
@@ -39,6 +49,19 @@ import { createLogger } from '@/utils/logger';
 import type { ProviderDecisionMeta, ReasonCode } from '@/types/providerMeta';
 import { webResearch } from '@/services/webResearchService';
 import type { ResearchOptions, ResearchReport } from '@/types/research';
+import { useLTMContext } from '@/hooks/useLTMContext';
+import {
+  buildArtifactActionContract,
+  buildProfessionalDocumentManifest,
+  resolveArtifactRoute,
+  validateNoFakeArtifactResponse,
+  type ProfessionalDocumentManifest,
+} from '@/features/chat/artifactIntent';
+import {
+  messageSpeechController,
+  useMessageSpeechState,
+  type MessageSpeechStatus,
+} from '@/services/tts/messageSpeechController';
 
 const pageLogger = createLogger('ConversationSection');
 
@@ -59,22 +82,36 @@ interface ConversationMessageItem {
   };
 }
 
-const AVAILABLE_PROVIDERS = [
-  { id: 'gemini', name: 'Gemini', icon: '✨', available: true },
-  { id: 'ollama', name: 'Ollama', icon: '🦙', available: true },
-  { id: 'openai', name: 'OpenAI', icon: '🤖', available: true },
-  { id: 'claude', name: 'Claude', icon: '🧠', available: true },
-];
+interface RuntimeSignals {
+  orchestratorState: string;
+  memoryState: string;
+}
+
+interface LatestAssistantRuntimeSnapshot {
+  providerMeta?: ProviderDecisionMeta;
+  tags: string[];
+  runtimeSignals: RuntimeSignals;
+}
 
 const BUILT_IN_CONVERSATION_MODES = [
-  { id: 'default', name: 'Normal', icon: '💬', description: 'Conversation standard' },
+  {
+    id: 'default',
+    name: 'Normal',
+    icon: '💬',
+    description: 'Conversation standard',
+  },
   {
     id: 'brainstorming',
     name: 'Brainstorming',
     icon: '💡',
     description: 'Idéation créative',
   },
-  { id: 'synthesis', name: 'Synthèse', icon: '📝', description: 'Résumé et analyse' },
+  {
+    id: 'synthesis',
+    name: 'Synthèse',
+    icon: '📝',
+    description: 'Résumé et analyse',
+  },
   {
     id: 'planning',
     name: 'Planification',
@@ -96,11 +133,145 @@ const BUILT_IN_CONVERSATION_MODES = [
 ];
 
 const CONVERSATION_SUGGESTIONS = [
-  { label: '💡 Brainstorm ideas', value: 'Help me brainstorm some ideas for...' },
+  {
+    label: '💡 Brainstorm ideas',
+    value: 'Help me brainstorm some ideas for...',
+  },
   { label: '📝 Summarize', value: 'Please summarize the key points...' },
   { label: '🔍 Analyze', value: 'Analyze this for me...' },
   { label: '💬 Explain', value: 'Explain this concept...' },
 ];
+
+const LOADING_INDICATOR_GRACE_MS = 1200;
+
+export function resolveConversationDisplayProvider(
+  selectedProvider: ConversationProviderPreference,
+  latestProviderUsed?: string | null
+): string {
+  if (latestProviderUsed && latestProviderUsed.trim()) {
+    return latestProviderUsed;
+  }
+
+  return (
+    buildConversationProviders().find(provider => provider.id === selectedProvider)
+      ?.name ?? selectedProvider
+  );
+}
+
+export function buildConversationRuntimeSummary(
+  requestedProviderLabel: string,
+  latestAssistantRuntime: LatestAssistantRuntimeSnapshot | null
+): string {
+  if (!latestAssistantRuntime) return '';
+
+  const provider = latestAssistantRuntime.providerMeta?.provider_used ?? 'unknown';
+  const mode = latestAssistantRuntime.providerMeta?.mode ?? 'unknown';
+  const reason = latestAssistantRuntime.providerMeta?.reason_code ?? 'UNKNOWN';
+  const networkUsed =
+    latestAssistantRuntime.providerMeta?.network_used === true ? 'true' : 'false';
+
+  const requestedPrefix =
+    requestedProviderLabel &&
+    requestedProviderLabel.trim() &&
+    requestedProviderLabel !== provider
+      ? `Requested: ${requestedProviderLabel} | `
+      : '';
+
+  return `${requestedPrefix}Provider: ${provider} | Mode: ${mode} | Reason: ${reason} | Network: ${networkUsed}`;
+}
+
+export function buildConversationLoadingLabel(
+  requestedProviderLabel: string,
+  currentModeLabel: string
+): string {
+  const providerLabel =
+    requestedProviderLabel && requestedProviderLabel.trim()
+      ? requestedProviderLabel
+      : 'Auto';
+  const modeLabel = currentModeLabel && currentModeLabel.trim() ? currentModeLabel : '—';
+
+  return `Route demandee: ${providerLabel} | Mode: ${modeLabel}`;
+}
+
+export function buildConversationRuntimeBadges(
+  requestedProviderLabel: string,
+  latestAssistantRuntime: LatestAssistantRuntimeSnapshot | null
+): string[] {
+  if (!latestAssistantRuntime) return [];
+
+  const providerMeta = latestAssistantRuntime.providerMeta;
+  const tags = latestAssistantRuntime.tags;
+
+  const values = [
+    requestedProviderLabel &&
+    providerMeta?.provider_used &&
+    requestedProviderLabel !== providerMeta.provider_used
+      ? `requested:${requestedProviderLabel}`
+      : null,
+    providerMeta?.provider_used,
+    providerMeta?.mode,
+    providerMeta?.provider_class,
+    providerMeta?.reason_code,
+    providerMeta?.policy && providerMeta.policy !== 'default'
+      ? `policy:${providerMeta.policy}`
+      : null,
+    ...tags,
+  ].filter((value): value is string => Boolean(value && value.trim()));
+
+  return Array.from(new Set(values)).slice(0, 8);
+}
+
+function getSpeechStatusLabel(status: MessageSpeechStatus, error: string | null): string {
+  switch (status) {
+    case 'loading':
+      return 'Préparation de la lecture...';
+    case 'speaking':
+      return 'Lecture en cours...';
+    case 'paused':
+      return 'Lecture en pause.';
+    case 'completed':
+      return 'Lecture terminée.';
+    case 'stopped':
+      return 'Lecture arrêtée.';
+    case 'error':
+      return error ? `Erreur audio: ${error}` : 'Erreur audio.';
+    default:
+      return 'Prêt pour la lecture audio.';
+  }
+}
+
+function deriveRuntimeSignals(
+  providerMeta?: ProviderDecisionMeta,
+  tags: string[] = []
+): RuntimeSignals {
+  let orchestratorState = 'unknown';
+  let memoryState = 'unknown';
+
+  for (const rawTag of tags) {
+    const tag = rawTag.toLowerCase();
+
+    if (tag.startsWith('orchestrator:')) {
+      orchestratorState = rawTag.split(':').slice(1).join(':').trim() || 'unknown';
+    }
+
+    if (tag.startsWith('memory:')) {
+      memoryState = rawTag.split(':').slice(1).join(':').trim() || 'unknown';
+    }
+
+    if (memoryState === 'unknown' && tag.includes('omega:memory')) {
+      memoryState = 'present';
+    }
+  }
+
+  if (
+    orchestratorState === 'unknown' &&
+    providerMeta?.provider_used?.toLowerCase().includes('omega')
+  ) {
+    orchestratorState = 'running';
+  }
+
+  return { orchestratorState, memoryState };
+}
 
 /**
  * Sanitize input pour sécurité renforcée (XSS prevention)
@@ -491,6 +662,48 @@ function deriveResearchProviderMeta(
   };
 }
 
+function mapReasonCodeToNodeStatus(
+  reasonCode?: ReasonCode
+): 'active' | 'done' | 'error' | 'blocked' {
+  if (!reasonCode || reasonCode === 'OK' || reasonCode === 'CACHE_HIT') {
+    return 'done';
+  }
+
+  if (
+    reasonCode === 'TIMEOUT' ||
+    reasonCode === 'POLICY_BLOCKED' ||
+    reasonCode === 'ALLOWLIST_DENIED' ||
+    reasonCode === 'TOOL_DENIED' ||
+    reasonCode === 'PROVIDER_UNAVAILABLE'
+  ) {
+    return 'blocked';
+  }
+
+  return 'error';
+}
+
+function formatRuntimeThinkingSummary(meta: ProviderDecisionMeta): string {
+  const attempts = Array.isArray(meta.attempts) ? meta.attempts : [];
+  const attemptsSummary =
+    attempts.length > 0
+      ? attempts
+          .slice(0, 4)
+          .map((attempt, index) => {
+            return `${index + 1}:${attempt.provider_id}/${attempt.outcome}/${attempt.reason_code}/${attempt.latency_ms}ms`;
+          })
+          .join(' | ')
+      : 'none';
+
+  return [
+    `mode=${meta.mode}`,
+    `provider=${meta.provider_used}`,
+    `reason=${meta.reason_code}`,
+    `network=${meta.network_used ? 'on' : 'off'}`,
+    `cache=${meta.cache_hit ? 'hit' : 'miss'}`,
+    `attempts=${attemptsSummary}`,
+  ].join(' ; ');
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // SUB-COMPONENTS
 // ═══════════════════════════════════════════════════════════════════════════
@@ -509,7 +722,17 @@ const ConversationMessage = memo(
     onRetry: (content: string) => void;
     onDelete: (id: string) => void;
   }) => {
+    const speechMessageId =
+      message.id ?? `${message.role}-${message.content.slice(0, 64)}`;
+    const speechState = useMessageSpeechState(
+      speechMessageId,
+      message.role === 'assistant' ? message.content : ''
+    );
     const providerMeta = message.metadata?.providerMeta;
+    const runtimeSignals = deriveRuntimeSignals(
+      providerMeta,
+      message.metadata?.tags ?? []
+    );
     const providerLabel = providerMeta?.provider_used;
     const modeLabel = providerMeta?.mode;
     const classLabel = providerMeta?.provider_class;
@@ -531,7 +754,41 @@ const ConversationMessage = memo(
     }, [message.id, onDelete]);
 
     return (
-      <div className={`conversation-message ${message.role}`}>
+      <div
+        className={`conversation-message ${message.role}`}
+        data-testid={`chat-message-${message.role}`}
+        data-provider-used={
+          message.role === 'assistant' ? providerLabel || undefined : undefined
+        }
+        data-provider-mode={
+          message.role === 'assistant' ? modeLabel || undefined : undefined
+        }
+        data-provider-reason={
+          message.role === 'assistant' ? reasonLabel || undefined : undefined
+        }
+        data-provider-class={
+          message.role === 'assistant' ? classLabel || undefined : undefined
+        }
+        data-network-used={
+          message.role === 'assistant' && providerMeta
+            ? String(providerMeta.network_used)
+            : undefined
+        }
+        data-orchestrator-state={
+          message.role === 'assistant' ? runtimeSignals.orchestratorState : undefined
+        }
+        data-memory-state={
+          message.role === 'assistant' ? runtimeSignals.memoryState : undefined
+        }
+        data-provider-network-used={
+          message.role === 'assistant' && providerMeta
+            ? String(providerMeta.network_used)
+            : undefined
+        }
+        data-provider-cache-hit={
+          message.role === 'assistant' && providerMeta ? String(cacheHit) : undefined
+        }
+      >
         <div className="conversation-message-avatar">
           {message.role === 'user' ? '👤' : '🧠'}
         </div>
@@ -543,32 +800,148 @@ const ConversationMessage = memo(
             {message.role === 'assistant' && providerMeta && (
               <div className="conversation-message-tags">
                 {providerLabel && (
-                  <span className="conversation-tag">{providerLabel}</span>
+                  <span className="conversation-tag" data-testid="chat-runtime-tag">
+                    {providerLabel}
+                  </span>
                 )}
-                {modeLabel && <span className="conversation-tag">{modeLabel}</span>}
-                {classLabel && <span className="conversation-tag">{classLabel}</span>}
-                {cacheHit && <span className="conversation-tag">CACHE</span>}
+                {modeLabel && (
+                  <span className="conversation-tag" data-testid="chat-runtime-tag">
+                    {modeLabel}
+                  </span>
+                )}
+                {classLabel && (
+                  <span className="conversation-tag" data-testid="chat-runtime-tag">
+                    {classLabel}
+                  </span>
+                )}
+                {cacheHit && (
+                  <span className="conversation-tag" data-testid="chat-runtime-tag">
+                    CACHE
+                  </span>
+                )}
                 {reasonLabel && reasonLabel !== 'OK' && (
-                  <span className="conversation-tag">{reasonLabel}</span>
+                  <span className="conversation-tag" data-testid="chat-runtime-tag">
+                    {reasonLabel}
+                  </span>
                 )}
               </div>
             )}
             {message.metadata?.tags && message.metadata.tags.length > 0 && (
               <div className="conversation-message-tags">
                 {message.metadata.tags.slice(0, 3).map((tag, i) => (
-                  <span key={i} className="conversation-tag">
+                  <span
+                    key={i}
+                    className="conversation-tag"
+                    data-testid="chat-runtime-tag"
+                  >
                     {tag}
                   </span>
                 ))}
               </div>
             )}
           </div>
-          <div className="conversation-message-text">{message.content}</div>
+          <div className="conversation-message-text" data-testid="chat-message-content">
+            {message.content}
+          </div>
           {message.metadata?.intention && (
             <div className="conversation-message-meta">
               <span className="meta-intention">{message.metadata.intention}</span>
             </div>
           )}
+
+          {message.role === 'assistant' &&
+            message.content &&
+            message.content.trim().length > 0 &&
+            speechState.canPlay && (
+              <div
+                className="conversation-message-audio"
+                data-testid="message-tts-controls"
+                data-message-id={speechMessageId}
+              >
+                <div
+                  className={`conversation-message-audio-status conversation-message-audio-status-${speechState.status}`}
+                  data-testid="message-tts-status"
+                >
+                  {getSpeechStatusLabel(speechState.status, speechState.error)}
+                </div>
+
+                <div className="conversation-message-audio-actions">
+                  {(speechState.status === 'idle' ||
+                    speechState.status === 'completed' ||
+                    speechState.status === 'stopped' ||
+                    speechState.status === 'error') && (
+                    <button
+                      type="button"
+                      className="conversation-message-action"
+                      onClick={() => {
+                        void messageSpeechController.playMessage(
+                          speechMessageId,
+                          message.content
+                        );
+                      }}
+                      data-testid="message-tts-read"
+                    >
+                      {speechState.status === 'completed' ||
+                      speechState.status === 'stopped'
+                        ? 'Relire'
+                        : 'Lire à haute voix'}
+                    </button>
+                  )}
+
+                  {speechState.status === 'loading' && (
+                    <button
+                      type="button"
+                      className="conversation-message-action"
+                      disabled
+                      data-testid="message-tts-loading"
+                    >
+                      Préparation...
+                    </button>
+                  )}
+
+                  {speechState.status === 'speaking' && speechState.supportsPause && (
+                    <button
+                      type="button"
+                      className="conversation-message-action"
+                      onClick={() => {
+                        void messageSpeechController.pause();
+                      }}
+                      data-testid="message-tts-pause"
+                    >
+                      Pause
+                    </button>
+                  )}
+
+                  {speechState.status === 'paused' && (
+                    <button
+                      type="button"
+                      className="conversation-message-action"
+                      onClick={() => {
+                        void messageSpeechController.resume();
+                      }}
+                      data-testid="message-tts-resume"
+                    >
+                      Reprendre
+                    </button>
+                  )}
+
+                  {(speechState.status === 'loading' ||
+                    speechState.status === 'speaking' ||
+                    speechState.status === 'paused') && (
+                    <button
+                      type="button"
+                      className="conversation-message-action danger"
+                      onClick={() => {
+                        void messageSpeechController.stop();
+                      }}
+                      data-testid="message-tts-stop"
+                    >
+                      Stop
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
 
           <div className="conversation-message-actions">
             <button
@@ -613,9 +986,39 @@ ConversationMessage.displayName = 'ConversationMessage';
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
 
+const isConversationProviderPreference = (
+  value: string
+): value is ConversationProviderPreference =>
+  value === 'auto' ||
+  value === 'gemini' ||
+  value === 'ollama' ||
+  value === 'openai' ||
+  value === 'claude' ||
+  value === 'local';
+
+const getInitialSelectedProvider = (): ConversationProviderPreference => {
+  if (typeof window === 'undefined') {
+    return 'ollama';
+  }
+
+  const stored = window.localStorage.getItem('omega-chat-preferred-provider');
+  const normalizedStored = stored?.trim() ?? '';
+  return isConversationProviderPreference(normalizedStored) ? normalizedStored : 'ollama';
+};
+
 export const ConversationSection: React.FC<ConversationSectionProps> = memo(() => {
   // ═══ HOOKS ═══
   const { success: toastSuccess, error: errorToast } = useToast();
+  const [selectedProvider, setSelectedProvider] =
+    useState<ConversationProviderPreference>(getInitialSelectedProvider);
+  const [providerReadiness, setProviderReadiness] =
+    useState<ConversationProviderReadiness>(DEFAULT_CONVERSATION_PROVIDER_READINESS);
+  const effectiveProviderPreference = isConversationProviderReady(
+    selectedProvider,
+    providerReadiness
+  )
+    ? selectedProvider
+    : 'ollama';
   const {
     messages,
     isLoading,
@@ -628,14 +1031,18 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     deleteMessage,
     healthReport,
     refreshHealth,
+    conversationId,
   } = useConversationEngine({
     mode: 'default',
+    providerPreference: effectiveProviderPreference,
     autoHealthCheck: false,
     maxMessages: 500,
   });
 
+  // PATCH-014: LTM wired to ConversationSection — refreshes after each message
+  const { historyCount: ltmCount, refresh: refreshLTM } = useLTMContext(conversationId);
+
   // ═══ STATE ═══
-  const [selectedProvider, setSelectedProvider] = useState('gemini');
   const [inputValue, setInputValue] = useState('');
   const [showModeBuilder, setShowModeBuilder] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(false);
@@ -645,6 +1052,13 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
   const [searchQuery, setSearchQuery] = useState('');
   const [filterRole, setFilterRole] = useState<'all' | 'user' | 'assistant'>('all');
   const [_cameraActive, setCameraActive] = useState(false);
+  const [loadingVisibleUntil, setLoadingVisibleUntil] = useState(0);
+  const [sendTraceState, setSendTraceState] = useState<
+    'idle' | 'dispatching' | 'responded' | 'errored'
+  >('idle');
+  const [sendTraceMeta, setSendTraceMeta] = useState('');
+  const [activeArtifactManifest, setActiveArtifactManifest] =
+    useState<ProfessionalDocumentManifest | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const sendingRef = useRef(false);
   const deferredSearchQuery = useDeferredValue(searchQuery);
@@ -686,16 +1100,95 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
       thinking.startThinking();
       try {
         await sendMessage(content);
+        void refreshLTM(); // PATCH-014: refresh LTM count after message
       } finally {
         thinking.stopThinking();
       }
     },
-    [isLoading, sendMessage, thinking]
+    [isLoading, sendMessage, thinking, refreshLTM]
   );
 
   const handleSuggestionClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     const value = e.currentTarget.dataset.value;
     if (value) setInputValue(value);
+  }, []);
+
+  const handleProviderChange = useCallback((provider: string) => {
+    if (isConversationProviderPreference(provider)) {
+      setSelectedProvider(provider);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    window.localStorage.setItem('omega-chat-preferred-provider', selectedProvider);
+  }, [selectedProvider]);
+
+  useEffect(() => {
+    const isTestEnv =
+      import.meta.env.MODE === 'test' ||
+      (typeof process !== 'undefined' && Boolean(process.env.VITEST));
+    if (isTestEnv) {
+      return;
+    }
+
+    let cancelled = false;
+    const withTimeout = <T,>(
+      promise: Promise<T>,
+      timeoutMs: number,
+      fallback: T
+    ): Promise<T> =>
+      Promise.race([
+        promise,
+        new Promise<T>(resolve => {
+          window.setTimeout(() => resolve(fallback), timeoutMs);
+        }),
+      ]);
+
+    void (async () => {
+      try {
+        const [openaiModule, geminiModule, claudeModule] = await Promise.all([
+          import('@/services/ai/providers/openai'),
+          import('@/services/ai/providers/gemini'),
+          import('@/services/ai/providers/claude'),
+        ]);
+
+        const checks = await Promise.allSettled([
+          withTimeout(openaiModule.openaiProvider.isAvailable(), 3000, false),
+          withTimeout(geminiModule.geminiProvider.isAvailable(), 3000, false),
+          withTimeout(claudeModule.claudeProvider.isAvailable(), 3000, false),
+        ]);
+
+        if (cancelled) {
+          return;
+        }
+
+        const openaiAvailable =
+          checks[0] && checks[0].status === 'fulfilled' ? checks[0].value : false;
+        const geminiAvailable =
+          checks[1] && checks[1].status === 'fulfilled' ? checks[1].value : false;
+        const claudeAvailable =
+          checks[2] && checks[2].status === 'fulfilled' ? checks[2].value : false;
+
+        setProviderReadiness(prev => ({
+          ...prev,
+          openai: openaiAvailable,
+          gemini: geminiAvailable,
+          claude: claudeAvailable,
+        }));
+      } catch (providerError) {
+        if (!cancelled) {
+          pageLogger.warn('Provider readiness check failed', providerError);
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // ═══ COMPUTED VALUES ═══
@@ -715,12 +1208,6 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     [conversationModes, currentMode]
   );
 
-  const selectedProviderLabel = useMemo(
-    () =>
-      AVAILABLE_PROVIDERS.find(p => p.id === selectedProvider)?.name ?? selectedProvider,
-    [selectedProvider]
-  );
-
   const conversationModeOptions = useMemo(
     () =>
       conversationModes.map(mode => (
@@ -733,6 +1220,157 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
 
   const hasMessages = messages.length > 0;
   const isHealthy = healthReport?.status === 'Healthy';
+  const showLoadingIndicator = isLoading || loadingVisibleUntil > Date.now();
+
+  const latestAssistantRuntime = useMemo(() => {
+    for (let i = messages.length - 1; i >= 0; i -= 1) {
+      const message = messages[i] as ConversationMessageItem;
+      if (message.role !== 'assistant') continue;
+
+      const providerMeta = message.metadata?.providerMeta;
+      const tags = message.metadata?.tags ?? [];
+      if (!providerMeta && tags.length === 0) continue;
+
+      const runtimeSignals = deriveRuntimeSignals(providerMeta, tags);
+
+      return {
+        providerMeta,
+        tags,
+        runtimeSignals,
+      };
+    }
+
+    return null;
+  }, [messages]);
+
+  const availableProviders = useMemo(
+    () => buildConversationProviders(providerReadiness),
+    [providerReadiness]
+  );
+
+  const selectedProviderReady = useMemo(
+    () => isConversationProviderReady(selectedProvider, providerReadiness),
+    [providerReadiness, selectedProvider]
+  );
+
+  const selectedProviderLabel = useMemo(
+    () => resolveConversationDisplayProvider(selectedProvider, null),
+    [selectedProvider]
+  );
+
+  const runtimeSummary = useMemo(
+    () => buildConversationRuntimeSummary(selectedProviderLabel, latestAssistantRuntime),
+    [latestAssistantRuntime, selectedProviderLabel]
+  );
+
+  const loadingSummary = useMemo(
+    () => buildConversationLoadingLabel(selectedProviderLabel, currentModeLabel),
+    [currentModeLabel, selectedProviderLabel]
+  );
+
+  const runtimeBadges = useMemo(
+    () => buildConversationRuntimeBadges(selectedProviderLabel, latestAssistantRuntime),
+    [latestAssistantRuntime, selectedProviderLabel]
+  );
+
+  useEffect(() => {
+    if (isLoading) {
+      setLoadingVisibleUntil(Date.now() + LOADING_INDICATOR_GRACE_MS);
+      return;
+    }
+
+    if (loadingVisibleUntil <= Date.now()) {
+      return;
+    }
+
+    const remainingMs = loadingVisibleUntil - Date.now();
+    const timerId = window.setTimeout(() => {
+      setLoadingVisibleUntil(0);
+    }, remainingMs);
+
+    return () => {
+      window.clearTimeout(timerId);
+    };
+  }, [isLoading, loadingVisibleUntil]);
+
+  const latestAssistantProviderMeta = useMemo(() => {
+    for (let i = messages.length - 1; i >= 0; i -= 1) {
+      const message = messages[i];
+      if (!message) continue;
+      if (message.role === 'assistant' && message.metadata?.providerMeta) {
+        return message.metadata.providerMeta;
+      }
+    }
+    return null;
+  }, [messages]);
+
+  const thinkingState: 'idle' | 'active' | 'done' | 'error' | 'blocked' =
+    thinking.isThinking ? 'active' : error ? 'error' : hasMessages ? 'done' : 'idle';
+
+  const runtimeProviderLabel = useMemo(
+    () =>
+      resolveConversationDisplayProvider(
+        selectedProvider,
+        latestAssistantProviderMeta?.provider_used ?? null
+      ),
+    [latestAssistantProviderMeta?.provider_used, selectedProvider]
+  );
+
+  const thinkingTopology = useMemo(() => {
+    const nodes: Array<{
+      id: string;
+      label: string;
+      status: 'active' | 'done' | 'error' | 'blocked';
+    }> = [
+      {
+        id: 'conversation-runtime',
+        label: 'conversation-runtime',
+        status: (thinking.isThinking ? 'active' : 'done') as
+          | 'active'
+          | 'done'
+          | 'error'
+          | 'blocked',
+      },
+    ];
+
+    if (!latestAssistantProviderMeta) {
+      return nodes;
+    }
+
+    const reasonStatus = mapReasonCodeToNodeStatus(
+      latestAssistantProviderMeta.reason_code
+    );
+
+    nodes.push({
+      id: `mode-${latestAssistantProviderMeta.mode.toLowerCase()}`,
+      label: `mode:${latestAssistantProviderMeta.mode}`,
+      status: reasonStatus,
+    });
+
+    nodes.push({
+      id: `provider-${latestAssistantProviderMeta.provider_used}`,
+      label: `provider:${latestAssistantProviderMeta.provider_used}`,
+      status: reasonStatus,
+    });
+
+    if (latestAssistantProviderMeta.reason_code !== 'OK') {
+      nodes.push({
+        id: `reason-${latestAssistantProviderMeta.reason_code.toLowerCase()}`,
+        label: `reason:${latestAssistantProviderMeta.reason_code}`,
+        status: reasonStatus,
+      });
+    }
+
+    latestAssistantProviderMeta.attempts.slice(0, 4).forEach((attempt, index) => {
+      nodes.push({
+        id: `attempt-${index + 1}-${attempt.provider_id}`,
+        label: `attempt${index + 1}:${attempt.provider_id}/${attempt.outcome}`,
+        status: mapReasonCodeToNodeStatus(attempt.reason_code),
+      });
+    });
+
+    return nodes;
+  }, [thinking.isThinking, latestAssistantProviderMeta]);
 
   const searchNeedle = useMemo(() => {
     const trimmed = deferredSearchQuery.trim();
@@ -795,7 +1433,10 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     try {
       const stored = localStorage.getItem('titane_custom_modes');
       if (stored) {
-        setCustomModes(JSON.parse(stored));
+        const modes: CustomMode[] = JSON.parse(stored);
+        setCustomModes(modes);
+        // Register each custom mode so getSystemPrompt() can resolve it at runtime
+        modes.forEach(m => registerCustomMode(m.id, m.systemPrompt));
       }
     } catch (error) {
       pageLogger.error('Erreur chargement modes custom', error);
@@ -809,6 +1450,8 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
   // ═══ MORE HANDLERS ═══
   const handleSaveCustomMode = useCallback((mode: CustomMode) => {
     setCustomModes(prev => [...prev, mode]);
+    // Register in runtime registry so getSystemPrompt() resolves this mode immediately
+    registerCustomMode(mode.id, mode.systemPrompt);
     pageLogger.debug('Mode personnalisé sauvegardé', mode);
   }, []);
 
@@ -827,6 +1470,98 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
 
     const messageText = sanitized;
     setInputValue('');
+
+    const artifactContract = buildArtifactActionContract(messageText);
+    if (artifactContract.intent !== 'ANSWER_ONLY') {
+      const route = resolveArtifactRoute(artifactContract, {
+        documentEditorAvailable: true,
+        codeEditorAvailable: false,
+      });
+      const manifest = buildProfessionalDocumentManifest(messageText, route.contract);
+      setActiveArtifactManifest(manifest);
+
+      const antiLie = validateNoFakeArtifactResponse(
+        messageText,
+        route.contract,
+        manifest
+      );
+      if (!antiLie.ok) {
+        await appendLocalExchange(
+          messageText,
+          `⛔ Requête fichier détectée, mais contrat artefact invalide: ${antiLie.violations.join(' | ')}`,
+          {
+            intention: 'artifact_intent_validation',
+            tags: ['artifact', 'anti-lie', 'blocked'],
+          }
+        );
+        sendingRef.current = false;
+        return;
+      }
+
+      if (route.status === 'BLOCKED') {
+        await appendLocalExchange(
+          messageText,
+          [
+            '⛔ Requête fichier comprise, mais ouverture éditeur non disponible depuis ce flux chat.',
+            `Intent: ${route.contract.intent}`,
+            `Motif: ${route.contract.blocked_reason ?? 'UNSPECIFIED_BLOCK'}`,
+            `Manifest: ${manifest.id}`,
+          ].join('\n'),
+          {
+            intention: 'artifact_route_blocked',
+            tags: ['artifact', 'OPEN_FROM_CHAT_UNPROVEN', 'blocked'],
+          }
+        );
+        errorToast('Demande fichier détectée, mais éditeur non ouvrable depuis le chat.');
+        sendingRef.current = false;
+        return;
+      }
+
+      const openedEditor = route.contract.open_editor;
+      if (openedEditor) {
+        setShowModeBuilder(true);
+      }
+
+      const draft = [
+        `# ${manifest.title}`,
+        '',
+        `- Manifest: ${manifest.id}`,
+        `- Kind: ${manifest.artifact_kind}`,
+        `- Grade: ${manifest.professional_grade}`,
+        `- Format: ${manifest.target_formats.join(', ')}`,
+        '',
+        '## Context',
+        manifest.sections[0]?.content ?? '',
+      ].join('\n');
+
+      await appendLocalExchange(
+        messageText,
+        [
+          '✅ Requête fichier comprise et routée vers la voie artefact.',
+          openedEditor
+            ? 'Éditeur ouvert: ModeBuilder affiché pour édition guidée.'
+            : 'Éditeur non requis pour cette requête, génération préparée côté chat.',
+          `Manifest: ${manifest.id}`,
+          '',
+          draft,
+        ].join('\n'),
+        {
+          intention: 'artifact_route_ready',
+          tags: [
+            'artifact',
+            'manifest',
+            openedEditor ? 'editor_opened_modebuilder' : 'no_editor_needed',
+          ],
+        }
+      );
+      toastSuccess(
+        openedEditor
+          ? 'Route artefact activée, éditeur ouvert avec manifeste canonique.'
+          : 'Route artefact activée avec manifeste canonique.'
+      );
+      sendingRef.current = false;
+      return;
+    }
 
     if (shouldHandoffToResearch(messageText)) {
       thinking.startThinking();
@@ -899,12 +1634,23 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
 
     thinking.startThinking();
     thinking.addStep('analysis', 'Analyse de votre message...');
+    setSendTraceState('dispatching');
+    setSendTraceMeta(`provider=${selectedProvider};len=${messageText.length}`);
 
     try {
       thinking.addStep('reasoning', 'Traitement par le pipeline OMEGA...');
       const response = await sendMessage(messageText);
+      setSendTraceState('responded');
+      setSendTraceMeta(
+        `provider=${response?.meta?.provider_used ?? 'unknown'};reason=${response?.meta?.reason_code ?? 'UNKNOWN'}`
+      );
 
       thinking.addStep('synthesis', 'Génération de la réponse...');
+
+      if (response?.meta) {
+        thinking.addStep('validation', formatRuntimeThinkingSummary(response.meta));
+      }
+
       thinking.stopThinking();
 
       if (audioEnabled && response?.assistant_message) {
@@ -921,6 +1667,8 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
       }
     } catch (err) {
       pageLogger.error('Send message error', err);
+      setSendTraceState('errored');
+      setSendTraceMeta(err instanceof Error ? err.message : String(err));
       thinking.stopThinking();
     } finally {
       sendingRef.current = false;
@@ -952,13 +1700,43 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     }
   }, [clearMessages]);
 
-  const handleExportJson = useCallback(() => {
-    downloadConversation('current', 'Conversation TITANE', messages);
-  }, [messages]);
+  const handleExportJson = useCallback(async () => {
+    const result = await downloadConversation('current', 'Conversation TITANE', messages);
+    if (result.ok) {
+      toastSuccess(
+        result.status === 'SAVED_TAURI'
+          ? `Conversation enregistrée (${result.path ?? 'chemin sélectionné'})`
+          : 'Conversation téléchargée via le navigateur.'
+      );
+      return;
+    }
 
-  const handleExportMarkdown = useCallback(() => {
-    downloadMarkdown('Conversation TITANE', messages);
-  }, [messages]);
+    if (result.status === 'SAVE_CANCELLED_HONEST') {
+      errorToast('Enregistrement annulé (aucun fichier écrit).');
+      return;
+    }
+
+    errorToast(`Échec export JSON: ${result.error ?? result.status}`);
+  }, [messages, toastSuccess, errorToast]);
+
+  const handleExportMarkdown = useCallback(async () => {
+    const result = await downloadMarkdown('Conversation TITANE', messages);
+    if (result.ok) {
+      toastSuccess(
+        result.status === 'SAVED_TAURI'
+          ? `Markdown enregistré (${result.path ?? 'chemin sélectionné'})`
+          : 'Markdown téléchargé via le navigateur.'
+      );
+      return;
+    }
+
+    if (result.status === 'SAVE_CANCELLED_HONEST') {
+      errorToast('Enregistrement annulé (aucun fichier écrit).');
+      return;
+    }
+
+    errorToast(`Échec export Markdown: ${result.error ?? result.status}`);
+  }, [messages, toastSuccess, errorToast]);
 
   const handleCopyAll = useCallback(async () => {
     const copySuccess = await copyToClipboard('Conversation TITANE', messages);
@@ -1105,10 +1883,13 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
 
   // ═══ RENDER ═══
   return (
-    <div className="titane-section titane-section-conversation">
+    <div
+      className="titane-section titane-section-conversation"
+      data-testid="page-conversation"
+    >
       <TSectionHeader
         title="💬 Communication & Intelligence"
-        subtitle="Interface conversationnelle multi-provider avec modes spécialisés"
+        subtitle={`Interface conversationnelle multi-provider avec modes spécialisés${ltmCount > 0 ? ` · 🗂 ${ltmCount} msg en mémoire LTM` : ''}`}
       />
 
       <div className="conversation-container">
@@ -1117,13 +1898,14 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
           <div className="conversation-toolbar-left">
             <ChatProviderSelector
               selectedProvider={selectedProvider}
-              onChange={setSelectedProvider}
-              providers={AVAILABLE_PROVIDERS}
+              onChange={handleProviderChange}
+              providers={availableProviders}
             />
 
             {/* Mode Selector */}
             <select
               className="conversation-mode-select"
+              data-testid="select-conversation-mode"
               value={currentMode}
               onChange={handleModeChange}
             >
@@ -1135,6 +1917,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Export JSON */}
             <button
               className="conversation-icon-btn"
+              data-testid="btn-export-json"
               onClick={handleExportJson}
               title="Exporter en JSON"
               disabled={!hasMessages}
@@ -1145,6 +1928,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Export Markdown */}
             <button
               className="conversation-icon-btn"
+              data-testid="btn-export-markdown"
               onClick={handleExportMarkdown}
               title="Exporter en Markdown"
               disabled={!hasMessages}
@@ -1155,6 +1939,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Copy to Clipboard */}
             <button
               className="conversation-icon-btn"
+              data-testid="btn-copy-chat"
               onClick={handleCopyAll}
               title="Copier dans le presse-papier"
               disabled={!hasMessages}
@@ -1165,6 +1950,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Audio Toggle */}
             <button
               className={`conversation-icon-btn ${audioEnabled ? 'active' : ''}`}
+              data-testid="toggle-audio-tts"
               onClick={toggleAudioEnabled}
               title="Audio (TTS)"
               aria-label={audioEnabled ? 'Désactiver audio (TTS)' : 'Activer audio (TTS)'}
@@ -1177,6 +1963,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Voice Input */}
             <button
               className={`conversation-icon-btn ${isRecording ? 'recording' : ''}`}
+              data-testid="toggle-voice-input"
               onClick={handleVoiceInput}
               title="Reconnaissance vocale"
               aria-label={
@@ -1192,6 +1979,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Mode Builder */}
             <button
               className="conversation-icon-btn"
+              data-testid="btn-mode-builder"
               onClick={toggleModeBuilder}
               title="Créer un mode personnalisé"
               aria-label="Créer un mode personnalisé"
@@ -1202,6 +1990,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Health Check */}
             <button
               className={`conversation-icon-btn ${isHealthy ? 'healthy' : ''}`}
+              data-testid="btn-health-check"
               onClick={refreshHealth}
               title={`Santé: ${healthReport?.status || 'Unknown'}`}
               aria-label={`Vérifier santé du système (Statut: ${healthReport?.status || 'Inconnu'})`}
@@ -1212,6 +2001,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Clear Chat */}
             <button
               className="conversation-icon-btn"
+              data-testid="btn-clear-chat"
               onClick={handleClearChat}
               title="Effacer l'historique"
               aria-label="Effacer l'historique du chat"
@@ -1227,6 +2017,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             <Search size={16} />
             <input
               type="search"
+              data-testid="input-conversation-search"
               placeholder="Rechercher..."
               value={searchQuery}
               onChange={handleSearchChange}
@@ -1236,6 +2027,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
 
           <select
             className="conversation-filters-role"
+            data-testid="select-conversation-role"
             value={filterRole}
             onChange={handleFilterRoleChange}
             aria-label="Filtrer par rôle"
@@ -1250,12 +2042,81 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
           </div>
         </div>
 
+        {selectedProvider !== 'auto' &&
+          selectedProvider !== 'local' &&
+          selectedProvider !== 'ollama' &&
+          !selectedProviderReady && (
+            <div
+              className="conversation-error"
+              data-testid="chat-provider-warning"
+              role="alert"
+            >
+              <strong>⚠️ Provider non configuré:</strong> {selectedProviderLabel}{' '}
+              n&apos;est pas disponible sur ce runtime. TITANE conservera ce choix sans
+              fallback silencieux et affichera un résultat dégradé tant que la clé API
+              n&apos;est pas ajoutée dans <strong>Admin → Gouvernance → Secrets</strong>.
+            </div>
+          )}
+
+        {latestAssistantRuntime && (
+          <div
+            className="conversation-runtime-panel"
+            data-testid="chat-runtime-state"
+            data-provider-mode={latestAssistantRuntime.providerMeta?.mode ?? 'unknown'}
+            data-provider-reason={
+              latestAssistantRuntime.providerMeta?.reason_code ?? 'UNKNOWN'
+            }
+            data-provider-used={
+              latestAssistantRuntime.providerMeta?.provider_used ?? 'unknown'
+            }
+            data-network-used={
+              latestAssistantRuntime.providerMeta
+                ? String(latestAssistantRuntime.providerMeta.network_used)
+                : 'false'
+            }
+            data-orchestrator-state={
+              latestAssistantRuntime.runtimeSignals.orchestratorState
+            }
+            data-memory-state={latestAssistantRuntime.runtimeSignals.memoryState}
+            data-gemini-configured={selectedProvider === 'gemini' ? 'true' : 'false'}
+            data-ollama-model={selectedProvider === 'ollama' ? 'gemma2:2b' : 'unknown'}
+            data-secrets-mode="governed"
+          >
+            <div
+              className="conversation-runtime-summary"
+              data-testid="chat-runtime-summary"
+            >
+              {runtimeSummary}
+            </div>
+            <div
+              className="conversation-runtime-summary"
+              data-testid="chat-artifact-manifest"
+            >
+              Artifact Manifest: {activeArtifactManifest?.id ?? 'none'}
+            </div>
+            <div className="conversation-runtime-badges">
+              {runtimeBadges.map((badge, index) => (
+                <span
+                  key={`${badge}-${index}`}
+                  className="conversation-runtime-badge"
+                  data-testid="chat-runtime-badge"
+                >
+                  {badge}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* ═══ THINKING PANEL ═══ */}
         <ThinkingPanel
           steps={thinking.steps}
           isThinking={thinking.isThinking}
+          state={thinkingState}
+          topology={thinkingTopology}
           compact={thinking.compact}
           inline={false}
+          provider={runtimeProviderLabel}
         />
 
         {/* ═══ MESSAGES AREA ═══ */}
@@ -1275,8 +2136,11 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
 
           {messageItems}
 
-          {isLoading && (
-            <div className="conversation-message assistant loading">
+          {showLoadingIndicator && (
+            <div
+              className="conversation-message assistant loading"
+              data-testid="chat-loading"
+            >
               <div className="conversation-message-avatar">🧠</div>
               <div className="conversation-message-content">
                 <div className="conversation-typing">
@@ -1284,13 +2148,21 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
                   <span></span>
                   <span></span>
                 </div>
-                <small style={{ color: colors.neutral[400] }}>TITANE réfléchit...</small>
+                <small style={{ color: colors.neutral[400] }}>
+                  TITANE traite votre message...
+                </small>
+                <small
+                  style={{ color: colors.neutral[500], display: 'block', marginTop: 4 }}
+                  data-testid="chat-loading-summary"
+                >
+                  {loadingSummary}
+                </small>
               </div>
             </div>
           )}
 
           {error && (
-            <div className="conversation-error">
+            <div className="conversation-error" data-testid="chat-error" role="alert">
               <strong>❌ Erreur:</strong> {error}
             </div>
           )}
@@ -1298,7 +2170,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
           <div ref={messagesEndRef} />
         </div>
 
-        {/* ═══ CHAT TOOLBAR (v25.5.0) ═══ */}
+        {/* ═══ CHAT TOOLBAR (v30.0.0) ═══ */}
         <ChatToolbar
           onFilesAnalyzed={handleFilesAnalyzed}
           onFileImport={handleFileImport}
@@ -1316,8 +2188,22 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
 
         {/* ═══ INPUT AREA ═══ */}
         <div className="conversation-input-container">
+          <div
+            data-testid="chat-send-trace"
+            data-state={sendTraceState}
+            data-meta={sendTraceMeta}
+            aria-hidden="true"
+            style={{ display: 'none' }}
+          />
+          <div
+            data-testid="chat-ready"
+            data-state={isLoading ? 'loading' : 'ready'}
+            aria-hidden="true"
+            style={{ display: 'none' }}
+          />
           <textarea
             className="conversation-input"
+            data-testid="chat-input"
             placeholder="Tapez votre message... (Entrée pour envoyer, Shift+Entrée pour nouvelle ligne)"
             value={inputValue}
             onChange={handleInputChange}
@@ -1327,6 +2213,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
           />
           <button
             className="conversation-send-btn"
+            data-testid="chat-send"
             onClick={handleSend}
             disabled={!inputValue.trim() || isLoading}
           >

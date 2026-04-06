@@ -27,6 +27,11 @@ interface CloudConfig {
   compression_enabled: boolean;
 }
 
+const AUTO_SYNC_BLOCKED_MESSAGE =
+  'La synchronisation automatique reste non prouvee en runtime dans cette build. Utilisez Push/Pull manuel.';
+const AUTO_SYNC_LEGACY_MESSAGE =
+  "Mode automatique detecte dans la configuration, mais aucune boucle runtime gouvernee n'est active.";
+
 const SyncConfig: React.FC<SyncConfigProps> = ({ status, onUpdate }) => {
   const [config, setConfig] = useState<CloudConfig>({
     backend: 'local_folder',
@@ -70,6 +75,15 @@ const SyncConfig: React.FC<SyncConfigProps> = ({ status, onUpdate }) => {
   const handleSave = async () => {
     setSaving(true);
     setMessage(null);
+
+    if (config.mode === 'auto') {
+      setMessage({
+        type: 'error',
+        text: "La synchronisation automatique n'est pas encore supportee de facon prouvee. Repassez en mode manuel ou desactive.",
+      });
+      setSaving(false);
+      return;
+    }
 
     try {
       await tauriClient.cloudUpdateConfig({
@@ -226,15 +240,18 @@ const SyncConfig: React.FC<SyncConfigProps> = ({ status, onUpdate }) => {
               <span>🖐️ Manuel</span>
             </label>
 
-            <label className={`option-pill ${config.mode === 'auto' ? 'selected' : ''}`}>
+            <label
+              className={`option-pill ${config.mode === 'auto' ? 'selected' : ''} disabled`}
+            >
               <input
                 type="radio"
                 name="mode"
                 value="auto"
                 checked={config.mode === 'auto'}
                 onChange={_e => setConfig({ ...config, mode: 'auto' })}
+                disabled
               />
-              <span>🔄 Automatique</span>
+              <span>🔄 Automatique (non prouve)</span>
             </label>
 
             <label
@@ -251,25 +268,13 @@ const SyncConfig: React.FC<SyncConfigProps> = ({ status, onUpdate }) => {
             </label>
           </div>
 
+          <div className="form-group" role="note">
+            <small>{AUTO_SYNC_BLOCKED_MESSAGE}</small>
+          </div>
+
           {config.mode === 'auto' && (
-            <div className="form-group">
-              <label>Intervalle de synchronisation automatique</label>
-              <div className="input-with-suffix">
-                <input
-                  type="number"
-                  min={60}
-                  max={86400}
-                  value={config.auto_sync_interval_secs}
-                  onChange={e =>
-                    setConfig({
-                      ...config,
-                      auto_sync_interval_secs: parseInt(e.target.value) || 300,
-                    })
-                  }
-                />
-                <span className="suffix">secondes</span>
-              </div>
-              <small>Minimum: 60s (1 min) — Maximum: 86400s (24h)</small>
+            <div className="form-group" role="alert">
+              <small>{AUTO_SYNC_LEGACY_MESSAGE}</small>
             </div>
           )}
         </section>
@@ -392,7 +397,11 @@ const SyncConfig: React.FC<SyncConfigProps> = ({ status, onUpdate }) => {
       </div>
 
       <div className="config-actions">
-        <button className="btn-primary" onClick={handleSave} disabled={saving}>
+        <button
+          className="btn-primary"
+          onClick={handleSave}
+          disabled={saving || config.mode === 'auto'}
+        >
           {saving ? 'Sauvegarde...' : '💾 Sauvegarder la configuration'}
         </button>
       </div>

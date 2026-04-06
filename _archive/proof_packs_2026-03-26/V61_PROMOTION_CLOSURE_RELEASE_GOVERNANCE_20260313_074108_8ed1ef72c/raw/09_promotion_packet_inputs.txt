@@ -1,0 +1,27 @@
+PHASE=5_PROMOTION_PACKET_INPUTS
+DATE_UTC=2026-03-13T11:44:20Z
+
+AUTHORITATIVE_REPO=/tmp/titane_v15_wt_20260311_080118
+SOURCE_V60_PACK=proof_packs/V60_IPC_ENTRY_CAPTURE_REAL_UI_STRONG_CLOSURE_20260313_015700_8ed1ef72c64abd90
+SOURCE_V61_PACK=proof_packs/V61_PROMOTION_CLOSURE_RELEASE_GOVERNANCE_20260313_074108_8ed1ef72c
+
+KEY_ARTIFACTS=
+- V60/raw/13_runtime_proof_rerun.exit
+- V60/raw/phase6_artifacts_rerun/v60_runtime_proof.json
+- V60/raw/23_autoheal_detect_recurrence_rerun.exit
+- V60/raw/24_verify_instructions_rerun.exit
+- V60/raw/25_verify_registry_rerun.exit
+- V60/VERDICT_RERUN.md
+- V60/VERDICT.md (with supersession notice)
+
+CRITICAL_GATE_SUMMARY=
+- realUiSendProven=true
+- ipcEntryCaptureProven=true
+- linkedCaptureProven=true
+- uiActivePayloadRouteContextPresent=true
+- uiActivePayloadModuleContextPresent=true
+
+GOVERNANCE_SUMMARY=PASS (rerun exits all 0)
+PROMOTION_EXECUTION_CONSTRAINTS=
+- Git workspace currently not clean for promotion commit.
+- PROD actions require explicit tokens by kernel doctrine.

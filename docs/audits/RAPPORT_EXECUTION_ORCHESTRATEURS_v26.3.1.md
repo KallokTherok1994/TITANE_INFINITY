@@ -12,7 +12,7 @@
 
 | # | Action | Priorité | Statut | Détails |
 |---|--------|----------|--------|---------|
-| 1 | Audit Complet Orchestrateurs | P0 | ✅ Complété | [docs/audits/AUDIT_ORCHESTRATEURS_v26.3.1.md](docs/audits/AUDIT_ORCHESTRATEURS_v26.3.1.md) |
+| 1 | Audit Complet Orchestrateurs | P0 | ✅ Complété | [docs/audits/AUDIT_ORCHESTRATEURS_v26.3.1.md](AUDIT_ORCHESTRATEURS_v26.3.1.md) |
 | 2 | Tests Boot Orchestrator | P0 | ✅ Déjà présents | 3 tests dans `boot_orchestrator.rs` |
 | 3 | Tests AI Orchestrator Neural | P1 | ✅ Créés | [src/__tests__/ai-orchestrator-neural-fixed.test.ts](src/__tests__/ai-orchestrator-neural-fixed.test.ts) |
 | 4 | Validation Zod AutoHealStatus | P1 | ✅ Implémentée | Runtime validation avec `AutoHealStatusSchema` |

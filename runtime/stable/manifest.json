@@ -1,6 +1,6 @@
 {
   "name": "titane-infinity-stable",
-  "version": "27.0.0",
+  "version": "30.0.0",
   "build_target": "production",
   "certification_level": "P3_STABLE_BUILD",
   "build_timestamp": null,
@@ -49,11 +49,11 @@
     "size_limit_mb": 100,
     "no_forbidden_content": true
   },
-  "last_validation": 1769720191.212202,
+  "last_validation": 1775476343.619611,
   "certification_status": "FORBIDDEN_SCAN_PASSED",
   "p3_3_forbidden_scan": {
     "status": "PASS",
-    "last_run": 1769720191.21221,
+    "last_run": 1775476343.619621,
     "violations": 0
   }
 }

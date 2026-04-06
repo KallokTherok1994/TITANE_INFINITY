@@ -64,9 +64,8 @@ pub async fn run_auto_evolution(
 
     // Get current state from SingularityEngine
     let (health_score, issues) = {
-        let engine_guard = state
-            .core_collection
-            .engine()
+        let engine = state.core_collection.engine();
+        let engine_guard = engine
             .lock()
             .map_err(|e| format!("Failed to lock SingularityEngine: {}", e))?;
 
@@ -76,15 +75,15 @@ pub async fn run_auto_evolution(
         let score = match health {
             crate::core::types::EngineHealth::Healthy => 1.0,
             crate::core::types::EngineHealth::Degraded => 0.7,
-            crate::core::types::EngineHealth::Critical => 0.4,
+            crate::core::types::EngineHealth::Failing => 0.4,
             crate::core::types::EngineHealth::Offline => 0.0,
         };
 
         let mut issues = Vec::new();
-        if singularity_state.sentinel.alert_count > 10 {
+        if singularity_state.system_health.alert_count > 10 {
             issues.push(format!(
                 "High alert count: {}",
-                singularity_state.sentinel.alert_count
+                singularity_state.system_health.alert_count
             ));
         }
         if singularity_state.memory.capacity_usage > 0.8 {
@@ -151,9 +150,8 @@ pub async fn evolution_health_check(
     log::info!("[Evolution v14] Running quick health check");
 
     let (overall, score, issues) = {
-        let engine_guard = state
-            .core_collection
-            .engine()
+        let engine = state.core_collection.engine();
+        let engine_guard = engine
             .lock()
             .map_err(|e| format!("Failed to lock SingularityEngine: {}", e))?;
 
@@ -163,15 +161,15 @@ pub async fn evolution_health_check(
         let (status, score) = match health {
             crate::core::types::EngineHealth::Healthy => ("Healthy".to_string(), 1.0),
             crate::core::types::EngineHealth::Degraded => ("Degraded".to_string(), 0.7),
-            crate::core::types::EngineHealth::Critical => ("Critical".to_string(), 0.4),
+            crate::core::types::EngineHealth::Failing => ("Critical".to_string(), 0.4),
             crate::core::types::EngineHealth::Offline => ("Offline".to_string(), 0.0),
         };
 
         let mut issues = Vec::new();
-        if singularity_state.sentinel.alert_count > 10 {
+        if singularity_state.system_health.alert_count > 10 {
             issues.push(format!(
                 "Sentinel: {} alerts",
-                singularity_state.sentinel.alert_count
+                singularity_state.system_health.alert_count
             ));
         }
         if singularity_state.memory.capacity_usage > 0.8 {

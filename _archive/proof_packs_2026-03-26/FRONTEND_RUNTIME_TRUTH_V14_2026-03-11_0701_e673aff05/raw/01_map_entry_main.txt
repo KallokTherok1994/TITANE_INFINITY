@@ -1,0 +1,7 @@
+10:console.log('[BOOT] main.tsx start');
+32:import './tauri-init-fix';
+35:import './tauri-protection-patch';
+38:import './utils/browserModeAdapter';
+1122:  //   ReactDOM.createRoot(rootElement).render(<AppMinimal />);
+1125:  ReactDOM.createRoot(rootElement).render(
+1147:        <App />

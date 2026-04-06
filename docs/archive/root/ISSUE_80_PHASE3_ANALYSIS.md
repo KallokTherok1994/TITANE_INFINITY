@@ -27,7 +27,7 @@ Duration:     ~35s
 1. **`titane_e2e.test.ts`** — 5 E2E tests (Vitest backend integration)
    - Condition: `skipIf(SKIP_E2E)` — require RUN_E2E_TESTS=1
    - Status: **Documenté** (Phase 1) — npm script `test:e2e:vitest` disponible
-   - Guide: [E2E_TESTING_GUIDE.md](./E2E_TESTING_GUIDE.md)
+   - Guide: [E2E_TESTING_GUIDE.md](../../01_misc/E2E_TESTING_GUIDE.md)
 
 2. **`floating.perf.test.ts`** — 11 Three.js WebGL performance tests
    - Condition: `skipIf(!hasThreeJSRenderer)` — require WebGL context
@@ -201,7 +201,7 @@ global.WebGLRenderingContext = class {
 - Garder E2E et WebGL tests skipped par défaut
 - ✅ Tous les tests "units" activés (2306)
 - ✅ npm scripts disponibles: `test:e2e:vitest` (E2E manual)
-- ✅ Guide complet: [E2E_TESTING_GUIDE.md](./E2E_TESTING_GUIDE.md)
+- ✅ Guide complet: [E2E_TESTING_GUIDE.md](../../01_misc/E2E_TESTING_GUIDE.md)
 
 **Option B: Coverage 100% (Symbolique)**
 

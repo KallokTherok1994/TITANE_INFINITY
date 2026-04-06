@@ -76,7 +76,8 @@
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 28px;
+  /* v29.0: padding réduit pour maximiser l'espace page */
+  padding: 16px 20px;
   position: relative;
 }
 

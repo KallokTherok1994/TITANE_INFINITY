@@ -1,0 +1,20 @@
+RUN: 2026-03-21T06:57:05Z → 07:29:00Z (31m53s)
+SUITES: 18 passed, 7 failed, 25 total
+
+FIXED by state-split fix (main.rs builder.manage lib-typed ChatOrchestratorState):
+  #0-8  diagnostic-tauri-api:   4 passing ✅ (was 1 FAIL TypeId mismatch)
+  #0-12 online-chat-proof:      1 passing ✅ (was 1 FAIL TypeId mismatch)
+
+REMAINING FAILURES:
+  #0-0  ui-ultra-full:          2 pass / 3 fail — BLOCKED_PROVIDER (Ollama timeout)
+  #0-1  (suite):                1 failing — nav/more-menu UI
+  #0-5  audio-tts:              1 failing — BLOCKED_ENV (no audio hardware)
+  #0-6  chat-ar20:              4 pass / 1 fail — BLOCKED_PROVIDER (Ollama timeout msg 3/20)
+  #0-11 online-chat-fix:        1 failing — BLOCKED_PROVIDER (Ollama timeout)
+  #0-15 total-dev:              2 pass / 1 fail — UI overflow nav
+  #0-18 ui-connectivity:        1 pass / 1 fail — UI overflow nav
+
+CLASSIFICATION:
+  BLOCKED_PROVIDER (Ollama intermittent): #0-0, #0-6, #0-11 → 5 test failures
+  BLOCKED_ENV (no audio hardware): #0-5 → 1 test failure
+  UI_NAV_OVERFLOW (more-menu pre-existing): #0-1, #0-15, #0-18 → 3 test failures

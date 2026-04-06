@@ -196,13 +196,20 @@ describe('useMemoryEngine', () => {
 
   test('should fetch stats on mount', async () => {
     const mockStats = {
-      total_entries: 150,
-      short_term: 50,
-      medium_term: 70,
-      long_term: 30,
-      total_size_bytes: 10240,
-      last_compression: null,
-      health_score: 0.85,
+      count_by_level: {
+        session: 50,
+        intermediate: 70,
+        long_term: 30,
+      },
+      total_size: 10240,
+      health: {
+        status: 'healthy',
+        corrupted_files: 0,
+        last_integrity_check: 0,
+        disk_space_percent: 42,
+        encryption_active: true,
+        last_backup: 0,
+      },
     };
 
     vi.mocked(secureInvoke).mockResolvedValue(mockStats);
@@ -214,11 +221,36 @@ describe('useMemoryEngine', () => {
     });
 
     expect(result.current.stats?.total_entries).toBe(150);
-    expect(result.current.stats?.health_score).toBe(0.85);
+    expect(result.current.stats?.health_score).toBeCloseTo(0.95, 2);
   });
 
   test('should save memory with auto-extraction', async () => {
-    vi.mocked(secureInvoke).mockResolvedValue(undefined);
+    vi.mocked(secureInvoke).mockImplementation(async command => {
+      if (command === 'persistent_memory_write_entry') {
+        return 'persistent-entry-1';
+      }
+
+      if (command === 'persistent_memory_get_stats') {
+        return {
+          count_by_level: {
+            session: 1,
+            intermediate: 0,
+            long_term: 0,
+          },
+          total_size: 256,
+          health: {
+            status: 'healthy',
+            corrupted_files: 0,
+            last_integrity_check: 0,
+            disk_space_percent: 35,
+            encryption_active: true,
+            last_backup: 0,
+          },
+        };
+      }
+
+      return null;
+    });
 
     const { result } = renderHook(() => useMemoryEngine());
 
@@ -227,18 +259,42 @@ describe('useMemoryEngine', () => {
       source: 'test',
     });
 
-    expect(id).toMatch(/^memory_short_\d+$/);
+    expect(id).toBe('persistent-entry-1');
     expect(secureInvoke).toHaveBeenCalledWith(
-      'memory_save_entry',
+      'persistent_memory_write_entry',
       expect.objectContaining({
-        key: id,
+        content: testContent,
+        level: 'session',
       }),
       undefined
     );
   });
 
   test('should extract tags from content', async () => {
-    vi.mocked(secureInvoke).mockResolvedValue(undefined);
+    vi.mocked(secureInvoke).mockImplementation(async command => {
+      if (command === 'persistent_memory_write_entry') {
+        return 'persistent-entry-2';
+      }
+      if (command === 'persistent_memory_get_stats') {
+        return {
+          count_by_level: {
+            session: 1,
+            intermediate: 0,
+            long_term: 0,
+          },
+          total_size: 128,
+          health: {
+            status: 'healthy',
+            corrupted_files: 0,
+            last_integrity_check: 0,
+            disk_space_percent: 20,
+            encryption_active: true,
+            last_backup: 0,
+          },
+        };
+      }
+      return null;
+    });
 
     const { result } = renderHook(() => useMemoryEngine());
 
@@ -248,33 +304,32 @@ describe('useMemoryEngine', () => {
     // Tags should be extracted from content
     const saveCall = vi
       .mocked(secureInvoke)
-      .mock.calls.find((call: unknown[]) => call[0] === 'memory_save_entry');
+      .mock.calls.find((call: unknown[]) => call[0] === 'persistent_memory_write_entry');
 
     expect(saveCall).toBeDefined();
 
-    const rawValue = (saveCall?.[1] as { value?: unknown } | undefined)?.value;
-    expect(typeof rawValue).toBe('string');
-    const savedEntry = JSON.parse(rawValue as string);
-
-    expect(savedEntry.tags).toBeDefined();
-    expect(savedEntry.tags.length).toBeGreaterThan(0);
+    const payload = saveCall?.[1] as { tags?: unknown } | undefined;
+    expect(Array.isArray(payload?.tags)).toBe(true);
+    expect((payload?.tags as unknown[])?.length).toBeGreaterThan(0);
   });
 
   test('should search memory context', async () => {
     const mockResults = {
       entries: [
         {
-          id: 'memory_short_1',
+          id: 'persistent-entry-3',
+          level: 'session',
+          content_type: 'message',
           content: 'Test memory entry',
-          type: 'short',
-          timestamp: Date.now(),
+          topic: 'general',
+          importance: 3,
           tags: ['test'],
-          intentions: ['Meta'],
-          emotions: { valence: 0, intensity: 0, energy: 0 },
+          metadata: { created_at: Date.now(), updated_at: Date.now() },
         },
       ],
-      relevance_scores: [0.95],
-      total_found: 1,
+      relevance_scores: { 'persistent-entry-3': 0.95 },
+      total_count: 1,
+      query_time: 1,
     };
 
     vi.mocked(secureInvoke).mockResolvedValue(mockResults);
@@ -285,6 +340,31 @@ describe('useMemoryEngine', () => {
 
     expect(results.length).toBe(1);
     expect(results[0].content).toBe('Test memory entry');
+  });
+
+  test('should reject legacy compression for persistent memory', async () => {
+    vi.mocked(secureInvoke).mockResolvedValue({
+      count_by_level: {
+        session: 2,
+        intermediate: 3,
+        long_term: 4,
+      },
+      total_size: 1024,
+      health: {
+        status: 'healthy',
+        corrupted_files: 0,
+        last_integrity_check: 0,
+        disk_space_percent: 18,
+        encryption_active: true,
+        last_backup: 0,
+      },
+    });
+
+    const { result } = renderHook(() => useMemoryEngine());
+
+    await expect(result.current.compressMemory()).rejects.toThrow(
+      /persistent memory compression is not available/i
+    );
   });
 });
 
@@ -311,9 +391,20 @@ describe('useSystemHealth', () => {
     };
 
     const mockMemStats = {
-      total_entries: 100,
-      total_size_bytes: 5120,
-      health_score: 0.9,
+      count_by_level: {
+        session: 40,
+        intermediate: 40,
+        long_term: 20,
+      },
+      total_size: 5120,
+      health: {
+        status: 'healthy',
+        corrupted_files: 0,
+        last_integrity_check: 0,
+        disk_space_percent: 10,
+        encryption_active: true,
+        last_backup: 0,
+      },
     };
 
     const mockSingState = {
@@ -354,9 +445,20 @@ describe('useSystemHealth', () => {
       error_rate: 0.15, // 15% - should trigger alert
     };
     const mockMemStats = {
-      total_entries: 80,
-      total_size_bytes: 4096,
-      health_score: 0.75,
+      count_by_level: {
+        session: 30,
+        intermediate: 30,
+        long_term: 20,
+      },
+      total_size: 4096,
+      health: {
+        status: 'degraded',
+        corrupted_files: 0,
+        last_integrity_check: 0,
+        disk_space_percent: 20,
+        encryption_active: true,
+        last_backup: 0,
+      },
     };
     const mockSingState = {
       engines: Array(18).fill({ name: 'test', status: 'active' }),
@@ -401,9 +503,20 @@ describe('useSystemHealth', () => {
       error_rate: 0.01,
     };
     const mockMemStats = {
-      total_entries: 100,
-      total_size_bytes: 5120,
-      health_score: 0.9,
+      count_by_level: {
+        session: 40,
+        intermediate: 40,
+        long_term: 20,
+      },
+      total_size: 5120,
+      health: {
+        status: 'healthy',
+        corrupted_files: 0,
+        last_integrity_check: 0,
+        disk_space_percent: 10,
+        encryption_active: true,
+        last_backup: 0,
+      },
     };
     const mockSingState = {
       engines: Array(18).fill({ name: 'test', status: 'active' }),
@@ -445,9 +558,20 @@ describe('useSystemHealth', () => {
       error_rate: 0.2, // High error rate triggers alerts
     };
     const mockMemStats = {
-      total_entries: 50,
-      total_size_bytes: 2048,
-      health_score: 0.4, // Low health score triggers alerts
+      count_by_level: {
+        session: 20,
+        intermediate: 20,
+        long_term: 10,
+      },
+      total_size: 2048,
+      health: {
+        status: 'critical',
+        corrupted_files: 1,
+        last_integrity_check: 0,
+        disk_space_percent: 30,
+        encryption_active: true,
+        last_backup: 0,
+      },
     };
     const mockSingState = {
       engines: Array(18).fill({ name: 'test', status: 'active' }),
@@ -494,9 +618,20 @@ describe('useSystemHealth', () => {
     };
 
     const mockMemStats = {
-      total_entries: 200,
-      total_size_bytes: 10240,
-      health_score: 0.5, // Degraded memory
+      count_by_level: {
+        session: 80,
+        intermediate: 80,
+        long_term: 40,
+      },
+      total_size: 10240,
+      health: {
+        status: 'degraded',
+        corrupted_files: 0,
+        last_integrity_check: 0,
+        disk_space_percent: 25,
+        encryption_active: true,
+        last_backup: 0,
+      },
     };
 
     const mockSingState = {
@@ -532,13 +667,20 @@ describe('Integration Tests', () => {
   test('should work together: save to memory + monitor health', async () => {
     // Mock pour useMemoryEngine (stats fetch on mount + save)
     const mockMemStats = {
-      total_entries: 100,
-      short_term: 40,
-      medium_term: 40,
-      long_term: 20,
-      total_size_bytes: 5120,
-      last_compression: null,
-      health_score: 0.85,
+      count_by_level: {
+        session: 40,
+        intermediate: 40,
+        long_term: 20,
+      },
+      total_size: 5120,
+      health: {
+        status: 'healthy',
+        corrupted_files: 0,
+        last_integrity_check: 0,
+        disk_space_percent: 18,
+        encryption_active: true,
+        last_backup: 0,
+      },
     };
 
     // Mock pour useSystemHealth (4 appels)
@@ -563,8 +705,8 @@ describe('Integration Tests', () => {
     let callCount = 0;
     vi.mocked(secureInvoke).mockImplementation(async (cmd: string) => {
       callCount++;
-      if (cmd === 'memory_get_stats') return mockMemStats;
-      if (cmd === 'memory_save_entry') return undefined;
+      if (cmd === 'persistent_memory_get_stats') return mockMemStats;
+      if (cmd === 'persistent_memory_write_entry') return 'persistent-entry-4';
       if (cmd === 'conversation_health_check') return mockConvHealth;
       if (cmd === 'engine_get_singularity_state') return mockSingState;
       if (cmd === 'get_system_health') return mockSysHealth;

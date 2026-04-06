@@ -1,0 +1,101 @@
+]633;E;{   echo "# 06_VERIFICATION_LOGS_X3"\x3b   echo\x3b   echo "- Date: $(date -Is)"\x3b   echo\x3b   for i in 1 2 3\x3b do     echo "## Run $i"\x3b     echo '```bash'\x3b     echo "$ bash scripts/verify_instructions.sh"\x3b     bash scripts/verify_instructions.sh\x3b     echo '```'\x3b     echo\x3b   done\x3b } > "$PACK_DIR/06_VERIFICATION_LOGS_X3.md";a0258488-a5d8-4511-8ac3-ba376a01c459]633;C# 06_VERIFICATION_LOGS_X3
+
+- Date: 2026-03-04T17:16:22-05:00
+
+## Run 1
+```bash
+$ bash scripts/verify_instructions.sh
+PASS: G_DOC_COPILOT_INSTRUCTIONS_PRESENT
+PASS: G_DOC_WORKFLOW_PRESENT
+PASS: G_DOC_CHECKLIST_PRESENT
+PASS: G_FRONTMATTER_docs-registry.instructions.md
+PASS: G_FRONTMATTER_frontend.instructions.md
+PASS: G_FRONTMATTER_tauri.instructions.md
+PASS: G_FRONTMATTER_tests-e2e.instructions.md
+PASS: G_FRONTMATTER_titane.instructions.md
+PASS: G_MERMAID_SYNTAX_MIN
+# 06_VERIFICATION_LOGS_X3
+
+- Date: 2026-03-04T17:16:22-05:00
+
+## Run 1
+
+```bash
+bash scripts/verify_instructions.sh
+PASS: G_DOC_COPILOT_INSTRUCTIONS_PRESENT
+PASS: G_DOC_WORKFLOW_PRESENT
+PASS: G_DOC_CHECKLIST_PRESENT
+PASS: G_FRONTMATTER_docs-registry.instructions.md
+PASS: G_FRONTMATTER_frontend.instructions.md
+PASS: G_FRONTMATTER_tauri.instructions.md
+PASS: G_FRONTMATTER_tests-e2e.instructions.md
+PASS: G_FRONTMATTER_titane.instructions.md
+PASS: G_MERMAID_SYNTAX_MIN
+PASS: G_AUTOHEAL_FILE_README.md
+PASS: G_AUTOHEAL_FILE_autoheal_rules.jsonl
+PASS: G_AUTOHEAL_FILE_apply_autoheal.sh
+PASS: G_AUTOHEAL_FILE_detect_recurrence.sh
+PASS: G_AUTOHEAL_JSONL_VALID
+PASS: G_MARKER_VERDICT_UNIQUE
+PASS: G_MARKER_STOPLINE
+PASS: G_MARKER_NO_SKIPS
+PASS: G_MARKER_PROOF_PACK
+PASS: G_MARKER_AUTOHEAL_CANONICAL_PATH
+PASS: G_AH_RECURRENCE_GUARD_PASS
+SUMMARY: PASS=20 FAIL=0
+```
+
+## Run 2
+
+```bash
+bash scripts/verify_instructions.sh
+PASS: G_DOC_COPILOT_INSTRUCTIONS_PRESENT
+PASS: G_DOC_WORKFLOW_PRESENT
+PASS: G_DOC_CHECKLIST_PRESENT
+PASS: G_FRONTMATTER_docs-registry.instructions.md
+PASS: G_FRONTMATTER_frontend.instructions.md
+PASS: G_FRONTMATTER_tauri.instructions.md
+PASS: G_FRONTMATTER_tests-e2e.instructions.md
+PASS: G_FRONTMATTER_titane.instructions.md
+PASS: G_MERMAID_SYNTAX_MIN
+PASS: G_AUTOHEAL_FILE_README.md
+PASS: G_AUTOHEAL_FILE_autoheal_rules.jsonl
+PASS: G_AUTOHEAL_FILE_apply_autoheal.sh
+PASS: G_AUTOHEAL_FILE_detect_recurrence.sh
+PASS: G_AUTOHEAL_JSONL_VALID
+PASS: G_MARKER_VERDICT_UNIQUE
+PASS: G_MARKER_STOPLINE
+PASS: G_MARKER_NO_SKIPS
+PASS: G_MARKER_PROOF_PACK
+PASS: G_MARKER_AUTOHEAL_CANONICAL_PATH
+PASS: G_AH_RECURRENCE_GUARD_PASS
+SUMMARY: PASS=20 FAIL=0
+```
+
+## Run 3
+
+```bash
+bash scripts/verify_instructions.sh
+PASS: G_DOC_COPILOT_INSTRUCTIONS_PRESENT
+PASS: G_DOC_WORKFLOW_PRESENT
+PASS: G_DOC_CHECKLIST_PRESENT
+PASS: G_FRONTMATTER_docs-registry.instructions.md
+PASS: G_FRONTMATTER_frontend.instructions.md
+PASS: G_FRONTMATTER_tauri.instructions.md
+PASS: G_FRONTMATTER_tests-e2e.instructions.md
+PASS: G_FRONTMATTER_titane.instructions.md
+PASS: G_MERMAID_SYNTAX_MIN
+PASS: G_AUTOHEAL_FILE_README.md
+PASS: G_AUTOHEAL_FILE_autoheal_rules.jsonl
+PASS: G_AUTOHEAL_FILE_apply_autoheal.sh
+PASS: G_AUTOHEAL_FILE_detect_recurrence.sh
+PASS: G_AUTOHEAL_JSONL_VALID
+PASS: G_MARKER_VERDICT_UNIQUE
+PASS: G_MARKER_STOPLINE
+PASS: G_MARKER_NO_SKIPS
+PASS: G_MARKER_PROOF_PACK
+PASS: G_MARKER_AUTOHEAL_CANONICAL_PATH
+PASS: G_AH_RECURRENCE_GUARD_PASS
+SUMMARY: PASS=20 FAIL=0
+```
+

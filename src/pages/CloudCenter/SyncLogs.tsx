@@ -19,6 +19,7 @@ const SyncLogs: React.FC = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'push' | 'pull' | 'error'>('all');
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const loadLogs = async () => {
     setLoading(true);
@@ -30,6 +31,11 @@ const SyncLogs: React.FC = () => {
       setTotalCount(result.total_count);
     } catch (err) {
       console.error('[SyncLogs] Failed to load:', err);
+      setLoadError(
+        err instanceof Error
+          ? err.message
+          : "Impossible de charger l'historique de synchronisation"
+      );
     } finally {
       setLoading(false);
     }
@@ -107,6 +113,38 @@ const SyncLogs: React.FC = () => {
 
   return (
     <div className="sync-logs">
+      {loadError && (
+        <div
+          role="alert"
+          style={{
+            padding: '8px 12px',
+            marginBottom: '12px',
+            background: 'rgba(220,38,38,0.12)',
+            border: '1px solid rgba(220,38,38,0.4)',
+            borderRadius: '6px',
+            color: '#ef4444',
+            fontSize: '0.85rem',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <span>❌ {loadError}</span>
+          <button
+            onClick={loadLogs}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: 'inherit',
+              fontSize: '0.8rem',
+              textDecoration: 'underline',
+            }}
+          >
+            Réessayer
+          </button>
+        </div>
+      )}
       <div className="logs-header">
         <div className="logs-info">
           <span className="logs-count">

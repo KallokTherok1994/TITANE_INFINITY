@@ -19,6 +19,7 @@ describe('useSystemHealth Hook', () => {
   });
 
   afterEach(() => {
+    vi.clearAllTimers();
     vi.useRealTimers();
   });
 
@@ -30,10 +31,21 @@ describe('useSystemHealth Hook', () => {
       avg_response_time_ms: 120,
       error_rate: 0,
     },
-    memory_get_stats: {
-      total_entries: 42,
-      total_size_bytes: 1024,
-      health_score: 95,
+    persistent_memory_get_stats: {
+      count_by_level: {
+        session: 12,
+        intermediate: 20,
+        long_term: 10,
+      },
+      total_size: 1024,
+      health: {
+        status: 'healthy',
+        corrupted_files: 0,
+        last_integrity_check: 0,
+        disk_space_percent: 10,
+        encryption_active: true,
+        last_backup: 0,
+      },
     },
     engine_get_singularity_state: {
       engines: Array.from({ length: 20 }, (_, index) => ({
@@ -113,6 +125,44 @@ describe('useSystemHealth Hook', () => {
 
       expect(result.current.health?.alerts.length).toBeGreaterThan(0);
     });
+
+    it('should not mark persistent memory alerts as auto-recoverable', async () => {
+      vi.mocked(secureInvoke).mockImplementation(async command => {
+        if (command === 'persistent_memory_get_stats') {
+          return {
+            count_by_level: {
+              session: 2,
+              intermediate: 3,
+              long_term: 4,
+            },
+            total_size: 1024,
+            health: {
+              status: 'critical',
+              corrupted_files: 0,
+              last_integrity_check: 0,
+              disk_space_percent: 50,
+              encryption_active: true,
+              last_backup: 0,
+            },
+          };
+        }
+
+        return mockHealthPayloads[command as keyof typeof mockHealthPayloads] ?? null;
+      });
+
+      const { result } = renderHook(() => useSystemHealth());
+
+      await act(async () => {
+        await result.current.refreshHealth();
+      });
+
+      const memoryAlert = result.current.health?.alerts.find(
+        alert => alert.component === 'memory'
+      );
+
+      expect(memoryAlert).toBeDefined();
+      expect(memoryAlert?.auto_recoverable).toBe(false);
+    });
   });
 
   describe('Network Status', () => {
@@ -124,6 +174,16 @@ describe('useSystemHealth Hook', () => {
       });
 
       expect(result.current.health?.system.network_status).toBe('online');
+    });
+  });
+
+  describe('Recovery', () => {
+    it('should reject legacy auto-recovery for persistent memory', async () => {
+      const { result } = renderHook(() => useSystemHealth());
+
+      await expect(result.current.triggerRecovery('memory')).rejects.toThrow(
+        /persistent memory auto-recovery is not available/i
+      );
     });
   });
 });

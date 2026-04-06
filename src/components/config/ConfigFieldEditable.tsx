@@ -21,6 +21,7 @@ export interface ConfigFieldEditableProps {
   editable?: boolean;
   onChange?: (value: string | number | boolean) => void;
   validationError?: string;
+  testId?: string;
 }
 
 export const ConfigFieldEditable: React.FC<ConfigFieldEditableProps> = ({
@@ -32,6 +33,7 @@ export const ConfigFieldEditable: React.FC<ConfigFieldEditableProps> = ({
   editable = false,
   onChange,
   validationError,
+  testId,
 }) => {
   const [localValue, setLocalValue] = useState(value);
   const [_isEditing, _setIsEditing] = useState(false);
@@ -88,6 +90,7 @@ export const ConfigFieldEditable: React.FC<ConfigFieldEditableProps> = ({
     if (valueType === 'boolean') {
       return (
         <select
+          data-testid={testId}
           value={String(localValue)}
           onChange={e => handleChange(e.target.value)}
           style={{
@@ -115,6 +118,7 @@ export const ConfigFieldEditable: React.FC<ConfigFieldEditableProps> = ({
       return (
         <input
           type="number"
+          data-testid={testId}
           value={String(localValue).replace(/ms$/, '')}
           onChange={e => handleChange(e.target.value)}
           style={{
@@ -139,6 +143,7 @@ export const ConfigFieldEditable: React.FC<ConfigFieldEditableProps> = ({
     return (
       <input
         type="text"
+        data-testid={testId}
         value={String(localValue)}
         onChange={e => handleChange(e.target.value)}
         placeholder={valueType === 'url' ? 'exemple.tld/ressource' : ''}

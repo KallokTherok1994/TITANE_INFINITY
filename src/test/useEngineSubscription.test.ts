@@ -61,6 +61,7 @@ describe('useEngineSubscription Hook', () => {
   });
 
   afterEach(() => {
+    vi.clearAllTimers();
     vi.useRealTimers();
   });
 

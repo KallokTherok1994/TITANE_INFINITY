@@ -1,5 +1,9 @@
 # 📚 TITANE∞ — Documentation Master Index
 
+> ⚠️ **Statut:** `LEGACY` (index historique conservé en append-only).
+> Source canonique de navigation actuelle: [`docs/README.md`](README.md).
+> Vérité version repo: `package.json` + `CHANGELOG.md` (`PROVEN_BY_REPO`).
+
 **Version:** v24.2.0  
 **Mise à jour:** 15 décembre 2025  
 **Status:** ✅ **PHASE 7 COMPLETE — 200% COVERAGE (API + OPERATIONAL)**
@@ -22,12 +26,12 @@
 **Quick Links:**
 - 🎯 [**Executive Summary**](./00_core/DOCUMENTATION_EXECUTIVE_SUMMARY.md) — Vue globale + métriques + roadmap Phase 0-6D ⭐
 - 🚀 [**Phase 7 Complete Report**](./00_core/PHASE_7_COMPLETE_REPORT.md) — Advanced Guides + Operational Excellence ⭐⭐⭐
-- 📊 [**Evolution Report**](../DOCUMENTATION_EVOLUTION_REPORT.md) — Rapport détaillé phases 0-6D
+- 📊 [**Evolution Report**](archive/sessions/DOCUMENTATION_EVOLUTION_REPORT.md) — Rapport détaillé phases 0-6D
 - 📚 [**Modules Index**](./05_modules/INDEX.md) — 14/14 modules core (100% coverage)
 - 📖 [**Guides Index**](./04_guides/INDEX.md) — 6 guides (quickstart + dev + advanced)
 - 🧭 [**Repo Structure Index**](./INDEX_REPO_STRUCTURE.md) — carte des dossiers + points d’entrée
 - 🎨 [**UI Index**](./ui/INDEX_UI.md) — pages, features, composants, hooks
-- 👥 [**Contributing Guide**](../CONTRIBUTING.md) — Onboarding contributeurs (standards + workflow)
+- 👥 [**Contributing Guide**](00_core/CONTRIBUTING.md) — Onboarding contributeurs (standards + workflow)
 
 **Latest Audits (2026-02-09):**
 - [docs/__AUDITS__/SNAPSHOT_INITIAL_2026-02-09T15:55:35Z.md](./__AUDITS__/SNAPSHOT_INITIAL_2026-02-09T15:55:35Z.md)
@@ -52,9 +56,9 @@
 | Document | Description | Lecteurs |
 |----------|-------------|----------|
 | [README.md](../README.md) | Vue d'ensemble + Quick Start | **Tous** 👥 |
-| [LICENSE.md](../LICENSE.md) | Licence propriétaire | Légal 📜 |
-| [CHANGELOG.md](../CHANGELOG.md) | Historique versions | Dev 👨‍💻 |
-| [DEVELOPER_GUIDE.md](../DEVELOPER_GUIDE.md) | Guide développeur complet | Dev 👨‍💻 |
+| [LICENSE.md](01_misc/LICENSE.md) | Licence propriétaire | Légal 📜 |
+| [CHANGELOG.md](90_release/CHANGELOG.md) | Historique versions | Dev 👨‍💻 |
+| [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md) | Guide développeur complet | Dev 👨‍💻 |
 
 ### Documentation Structurée (Phase 0-7 Complete)
 
@@ -63,7 +67,7 @@
 | **[docs/00_core/](./00_core/)** | Meta-documentation + Executive Summaries (Phase 6D + Phase 7) | ✅ **Complete** |
 | **[docs/04_guides/](./04_guides/)** | User + Developer + Advanced Guides (6 total) | ✅ **Complete Phase 7** ⭐⭐⭐ |
 | **[docs/05_modules/](./05_modules/)** | Core modules API (14/14) | ✅ **100% Coverage** ⭐ |
-| **[CONTRIBUTING.md](../CONTRIBUTING.md)** | Contributor onboarding (root) | ✅ **NEW Phase 7** 🎉 |
+| **[CONTRIBUTING.md](00_core/CONTRIBUTING.md)** | Contributor onboarding (root) | ✅ **NEW Phase 7** 🎉 |
 | [docs/01_architecture/](./01_architecture/) | Architecture technique | ✅ Complete |
 | [docs/02_ARCHITECTURE/](./02_ARCHITECTURE/) | Architecture reality | ✅ Complete |
 | [docs/06_api/](./06_api/) | Référence API | ✅ Complete |
@@ -208,8 +212,8 @@
 
 **Démarrage** :
 1. [README.md](../README.md) — Vue d'ensemble
-2. [Quick Start Guide](../QUICK_START_v∞.3.md) — Installation
-3. [Guide Run TITANE](../GUIDE_RUN_TITANE.md) — Lancement
+2. [Quick Start Guide](current/guides/QUICK_START_v∞.3.md) — Installation
+3. [Guide Run TITANE](99_ARCHIVE/guides/GUIDE_RUN_TITANE.md) — Lancement
 
 **Support** :
 - Troubleshooting → (à créer docs/04_guides/troubleshooting/)
@@ -224,7 +228,7 @@
 2. **[PHASE_7_REPORT.md](./00_core/PHASE_7_COMPLETE_REPORT.md)** — Advanced Guides + Operational Excellence ⭐⭐⭐
 3. **[Modules INDEX](./05_modules/INDEX.md)** — 14/14 modules core (100% coverage) 🎯
 4. **[Guides INDEX](./04_guides/INDEX.md)** — 6 guides (quickstart + dev + advanced) 📖
-5. **[CONTRIBUTING.md](../CONTRIBUTING.md)** — Onboarding contributeurs 👥
+5. **[CONTRIBUTING.md](00_core/CONTRIBUTING.md)** — Onboarding contributeurs 👥
 
 **Guides Pratiques:**
 - [QUICKSTART.md](./04_guides/quickstart/QUICKSTART.md) — Installation + premiers pas (5 min)
@@ -236,17 +240,17 @@
 
 **Architecture:**
 - [ARCHITECTURE_CURRENT_v24.md](./01_architecture/ARCHITECTURE_CURRENT_v24.md) — Architecture globale
-- [DATA_FLOW_CHAT.md](./02_ARCHITECTURE/DATA_FLOW_CHAT.md) — Chat flow end-to-end
-- [OMEGA_PIPELINE_DETAILED.md](./02_ARCHITECTURE/OMEGA_PIPELINE_DETAILED.md) — Pipeline 10 stages
+- [DATA_FLOW_CHAT.md](01_architecture/DATA_FLOW_CHAT.md) — Chat flow end-to-end
+- [OMEGA_PIPELINE_DETAILED.md](01_architecture/OMEGA_PIPELINE_DETAILED.md) — Pipeline 10 stages
 
 **API Reference:**
-- [TAURI_COMMANDS_REFERENCE.md](./02_ARCHITECTURE/TAURI_COMMANDS_REFERENCE.md) — 100+ commandes Tauri
+- [TAURI_COMMANDS_REFERENCE.md](06_api/TAURI_COMMANDS_REFERENCE.md) — 100+ commandes Tauri
 - [Backend Modules](./05_modules/backend/) — 11 modules Rust documentés
 - [Frontend Modules](./05_modules/frontend/) — 3 modules TypeScript documentés
 
 **Contribution:**
-- **[CONTRIBUTING.md](../CONTRIBUTING.md)** — Standards code + PR process + Git conventions ⭐ NEW
-- [DOCUMENTATION_EVOLUTION_REPORT.md](../DOCUMENTATION_EVOLUTION_REPORT.md) — Process & principes
+- **[CONTRIBUTING.md](00_core/CONTRIBUTING.md)** — Standards code + PR process + Git conventions ⭐ NEW
+- [DOCUMENTATION_EVOLUTION_REPORT.md](archive/sessions/DOCUMENTATION_EVOLUTION_REPORT.md) — Process & principes
 - [GLOSSARY.md](./00_core/GLOSSARY.md) — 45 termes techniques
 
 ---
@@ -256,7 +260,7 @@
 **Executive:**
 - **[EXECUTIVE_SUMMARY.md](./00_core/DOCUMENTATION_EXECUTIVE_SUMMARY.md)** — Métriques + roadmap + KPIs Phase 0-6D ⭐
 - **[PHASE_7_REPORT.md](./00_core/PHASE_7_COMPLETE_REPORT.md)** — Advanced Guides + Impact analysis Phase 7 ⭐⭐⭐
-- [DOCUMENTATION_EVOLUTION_REPORT.md](../DOCUMENTATION_EVOLUTION_REPORT.md) — Rapport détaillé phases 0-6D
+- [DOCUMENTATION_EVOLUTION_REPORT.md](archive/sessions/DOCUMENTATION_EVOLUTION_REPORT.md) — Rapport détaillé phases 0-6D
 
 **Baseline:**
 - [PRE_UPDATE_ANALYSIS.md](./00_core/PRE_UPDATE_ANALYSIS.md) — État initial (1,724 fichiers)
@@ -265,13 +269,13 @@
 
 **Architecture:**
 - [Modules INDEX](./05_modules/INDEX.md) — Coverage 100%, dependency graph
-- [DATA_FLOW_CHAT.md](./02_ARCHITECTURE/DATA_FLOW_CHAT.md) — Data flows
+- [DATA_FLOW_CHAT.md](01_architecture/DATA_FLOW_CHAT.md) — Data flows
 - [Architecture Reality](./02_ARCHITECTURE/) — Architecture factuelle v24.2.0
 
 **Operational Excellence:**
 - **[DEPLOYMENT.md](./04_guides/advanced/DEPLOYMENT.md)** — Production deployment (security + monitoring) ⭐ NEW
 - **[PERFORMANCE_OPTIMIZATION.md](./04_guides/advanced/PERFORMANCE_OPTIMIZATION.md)** — Performance budgets + optimization recipes ⭐ NEW
-- **[CONTRIBUTING.md](../CONTRIBUTING.md)** — Team onboarding + architecture guidelines ⭐ NEW
+- **[CONTRIBUTING.md](00_core/CONTRIBUTING.md)** — Team onboarding + architecture guidelines ⭐ NEW
 
 **Évolution:**
 - [Archives](./99_ARCHIVE/) — 1,428 fichiers archivés (25 catégories)
@@ -411,8 +415,8 @@
 - GitHub Issues → Label `documentation`
 
 **Contribuer code/documentation?**
-- **[CONTRIBUTING.md](../CONTRIBUTING.md)** — Onboarding contributeurs (standards + workflow + PR process) ⭐ NEW
-- Lire [DOCUMENTATION_EVOLUTION_REPORT.md](../DOCUMENTATION_EVOLUTION_REPORT.md) — Process + principes
+- **[CONTRIBUTING.md](00_core/CONTRIBUTING.md)** — Onboarding contributeurs (standards + workflow + PR process) ⭐ NEW
+- Lire [DOCUMENTATION_EVOLUTION_REPORT.md](archive/sessions/DOCUMENTATION_EVOLUTION_REPORT.md) — Process + principes
 - Respecter templates modules (voir [docs/05_modules/](./05_modules/))
 
 **Besoin aide troubleshooting?**
@@ -490,7 +494,7 @@ _Master Index — Documentation Evolution vΩ_ 🔮
 
 **Questions** : Voir [FAQ.md](./FAQ.md) (à créer)  
 **Bugs** : [GitHub Issues](https://github.com/KallokTherok1994/TITANE_INFINITY/issues)  
-**Contributing** : [CONTRIBUTING.md](./CONTRIBUTING.md) (à créer)
+**Contributing** : [CONTRIBUTING.md](00_core/CONTRIBUTING.md) (à créer)
 
 ---
 

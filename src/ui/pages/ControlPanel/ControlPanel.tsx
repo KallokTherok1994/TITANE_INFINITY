@@ -93,14 +93,19 @@ export const ControlPanel: React.FC = () => {
   const [activeSection, setActiveSection] = useState<ControlPanelSection>('system');
   const [systemInfo, setSystemInfo] = useState<SystemInfo | null>(null);
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const loadSystemInfo = useCallback(async () => {
     try {
       const info = (await tauriClient.getSystemInfo()) as SystemInfo;
       setSystemInfo(info);
+      setErrorMessage(null);
       setLoading(false);
     } catch (error) {
       console.error('Erreur chargement system info:', error);
+      setErrorMessage(
+        'Impossible de charger les informations système. Vérifiez les logs puis réessayez.'
+      );
       setLoading(false);
     }
   }, []);
@@ -147,6 +152,12 @@ export const ControlPanel: React.FC = () => {
       systemInfo={systemInfo || null}
     >
       <div className="cp-content">
+        {errorMessage && (
+          <div className="cp-card" role="alert" data-testid="cp-system-error">
+            <h3 className="cp-card-title">Erreur système</h3>
+            <p>{errorMessage}</p>
+          </div>
+        )}
         <Suspense fallback={<SectionLoader />}>{renderSection()}</Suspense>
       </div>
     </ControlPanelLayout>

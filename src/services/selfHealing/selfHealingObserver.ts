@@ -19,6 +19,7 @@
  * @created 2025-01-07
  */
 
+import { invoke } from '@tauri-apps/api/core';
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import {
   type HealingEvent,
@@ -425,51 +426,21 @@ export class SelfHealingObserver {
   }
 
   private installNetworkErrorHandler(): void {
-    // Intercepter fetch pour capturer les erreurs réseau
-    const originalFetch = window.fetch;
-
-    window.fetch = async (...args: Parameters<typeof fetch>) => {
-      const input = args[0];
-      let url = 'unknown';
-
-      if (typeof input === 'string') {
-        url = input;
-      } else if (input instanceof Request) {
-        url = input.url;
-      } else if (input instanceof URL) {
-        url = input.href;
-      }
-
-      try {
-        const response = await originalFetch(...args);
-
-        if (!response.ok && response.status >= 500) {
-          this.captureError({
-            type: 'network_failure',
-            source: 'network',
-            severity: 'medium',
-            message: `Network error: ${response.status} ${response.statusText}`,
-            context: {
-              networkUrl: url,
-              networkStatus: response.status,
-            },
-          });
-        }
-
-        return response;
-      } catch (error) {
-        this.captureError({
-          type: 'network_failure',
-          source: 'network',
-          severity: 'high',
-          message: error instanceof Error ? error.message : 'Network request failed',
-          context: {
-            networkUrl: url,
-          },
-        });
-        throw error;
-      }
+    const reportConnectivity = (online: boolean) => {
+      this.captureError({
+        type: 'network_failure',
+        source: 'network',
+        severity: online ? 'low' : 'high',
+        message: online ? 'Network connectivity restored' : 'Network connectivity lost',
+        context: {
+          networkStatus: online ? 200 : 0,
+          networkUrl: 'browser-connectivity',
+        },
+      });
     };
+
+    window.addEventListener('offline', () => reportConnectivity(false));
+    window.addEventListener('online', () => reportConnectivity(true));
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -786,7 +757,7 @@ export async function observedInvoke<T>(
   command: string,
   payload?: Record<string, unknown>
 ): Promise<T> {
-  const { invoke } = await import('@tauri-apps/api/core');
+  // invoke is now imported statically at the top
 
   try {
     return await invoke<T>(command, payload);

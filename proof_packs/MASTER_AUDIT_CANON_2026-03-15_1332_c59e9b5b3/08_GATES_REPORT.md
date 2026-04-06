@@ -1,0 +1,16 @@
+# 08_GATES_REPORT.md — Rapport des Gates
+
+(Voir docs/canon/GATES_REPORT_CANON.md pour le rapport complet)
+
+## Résumé Session
+
+| Statut | Count | Gates |
+|--------|-------|-------|
+| PASS | 2 | G_COMMANDS_SOURCE_OF_TRUTH, G_VERSION_SYNC |
+| QUALIFIED | 3 | G_RING_INTEGRITY, G_FRONTEND_NO_WEB, G_NETWORK_ONE_DOOR |
+| PARTIAL | 5 | G_BOOT_TRUTH, G_NO_LYING_FALLBACK, G_MEMORY_TRUTH, G_SECURITY_SECRETS_TRUTH, G_PROVIDER_PATH_TRUTH |
+| BLOCKED | 6 | G_E2E_RUNNER_AUTHORITY, G_E2E_NO_REAL_WRITES, G_BUILD_TRUTH, G_RELEASE_TRUST, G_TESTS_X3, G_BUILD_X3 |
+| FAIL | 0 | — |
+
+**Verdict Gate :** QUALIFIED
+**Aucune FAIL confirmée.**

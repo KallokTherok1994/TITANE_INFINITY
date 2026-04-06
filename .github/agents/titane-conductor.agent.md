@@ -69,21 +69,11 @@ Tu es le **Conductor** du projet TITANE_INFINITY, responsable de l'orchestration
 
 ## 🚫 Contraintes
 
-### Rust
-
-- ✅ async/await OBLIGATOIRE
-- ✅ Result<T, E> pour erreurs
-- ❌ ZERO unwrap() / expect()
-- ✅ Tests unitaires
-
-### TypeScript
-
-- ✅ Strict mode
-- ✅ Types explicites
-- ❌ ZERO any
-- ✅ Error handling try/catch
-
 ### Architecture
 
 - ✅ 9 moteurs (JAMAIS 14)
 - ✅ IPC Tauri uniquement
+
+### Rust / TypeScript
+
+Coding standards enforced by delegated subagents — see `implement-subagent` (apply) and `review-subagent` (verify).

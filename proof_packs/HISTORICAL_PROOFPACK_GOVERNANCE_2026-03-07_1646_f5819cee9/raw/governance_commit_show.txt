@@ -1,0 +1,5 @@
+d859691c8d8da01e9cff2a0157cd4f5dec340d5d docs(governance): normalize historical residue registries
+registry/heavy-artifacts-manifest.jsonl
+registry/local-only-historical-residue.jsonl
+registry/proofpack-index.jsonl
+scripts/autoheal/autoheal_rules.jsonl

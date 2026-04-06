@@ -10,10 +10,46 @@ import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import { invokeWithRetry, LONG_COMMAND_OPTIONS } from '@/lib/serviceInvoker';
 import { validateIpcPayload } from '@/lib/ipcContract';
 import { isIPCError } from '@/lib/errorClassification';
-import { monitoring } from '@/monitoring';
 import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 import { chatEngine } from '@/services/ai/chatEngine';
 import { getSystemPrompt } from '@/config/chatModes.config';
+import type { AIMessage } from '@/services/ai/types';
+
+type MonitoringBridge = {
+  trackRequest: () => void;
+  addBreadcrumb: (message: string, category?: string, data?: unknown) => void;
+  trackPipelineError: () => void;
+  trackPipelineLatency: (latency: number) => void;
+  trackError: (error: unknown, context?: unknown) => void;
+};
+
+const noopMonitoring: MonitoringBridge = {
+  trackRequest: () => {},
+  addBreadcrumb: () => {},
+  trackPipelineError: () => {},
+  trackPipelineLatency: () => {},
+  trackError: () => {},
+};
+
+let monitoringBridge: MonitoringBridge = noopMonitoring;
+
+void import('@/monitoring')
+  .then(mod => {
+    const candidate = (mod.monitoring ?? mod.default) as MonitoringBridge | undefined;
+    if (candidate) {
+      monitoringBridge = candidate;
+    }
+  })
+  .catch(() => {});
+
+const monitoring: MonitoringBridge = {
+  trackRequest: () => monitoringBridge.trackRequest(),
+  addBreadcrumb: (message, category, data) =>
+    monitoringBridge.addBreadcrumb(message, category, data),
+  trackPipelineError: () => monitoringBridge.trackPipelineError(),
+  trackPipelineLatency: latency => monitoringBridge.trackPipelineLatency(latency),
+  trackError: (error, context) => monitoringBridge.trackError(error, context),
+};
 
 const E2E_CHAT_MOCK_FLAG = '__TITANE_E2E_CHAT_MOCK__';
 const E2E_CHAT_CONV_SEQ = '__TITANE_E2E_CHAT_CONV_SEQ__';
@@ -291,6 +327,83 @@ class ChatService {
   }
 
   /**
+   * Restaure l'historique d'une conversation depuis le backend SQLite (conversation_os_v1.db).
+   * Retourne [] si aucune donnée n'existe pour ce conversation_id.
+   * Ne lance jamais d'exception — les échecs sont loggués et retournent [].
+   * P0 PATCH: ferme le bloqueur localStorage<->SQLite disconnect.
+   */
+  async loadConversationHistory(conversationId: string): Promise<AIMessage[]> {
+    if (!conversationId || conversationId.trim() === '') {
+      console.warn(
+        '[ChatService] loadConversationHistory: empty conversationId — returning []'
+      );
+      return [];
+    }
+    if (isE2EChatMockEnabled()) {
+      console.info('[ChatService] loadConversationHistory: E2E mock mode — returning []');
+      return [];
+    }
+    try {
+      const rows = await invokeWithRetry<
+        Array<{ role: string; content: string; timestamp: number }>
+      >(
+        'load_conversation_history',
+        { conversationId },
+        { ...LONG_COMMAND_OPTIONS, context: 'LoadConversationHistory' }
+      );
+      if (!Array.isArray(rows) || rows.length === 0) {
+        console.info(
+          '[ChatService] loadConversationHistory: no backend history for conversation_id=',
+          conversationId
+        );
+        return [];
+      }
+      const messages: AIMessage[] = rows
+        .filter(r => r.role === 'user' || r.role === 'assistant' || r.role === 'system')
+        .map(r => ({
+          role: r.role as 'user' | 'assistant' | 'system',
+          content: r.content,
+          timestamp: r.timestamp,
+          metadata: { source: 'backend-restore', conversationId },
+        }));
+      console.info(
+        `[ChatService] loadConversationHistory: restored ${messages.length} messages for conversation_id=`,
+        conversationId
+      );
+      return messages;
+    } catch (error) {
+      console.warn(
+        '[ChatService] loadConversationHistory failed (non-fatal, returning []):',
+        error
+      );
+      return [];
+    }
+  }
+
+  /**
+   * Liste les conversations restituables depuis le backend SQLite.
+   * Retourne [] si aucune donnée ou db absent (jamais d'erreur silencieuse).
+   * Permet la redécouverte si conversation_id perdu côté localStorage.
+   */
+  async listRestorableConversations(
+    limit?: number
+  ): Promise<Array<{ conversationId: string; messageCount: number; lastTs: number }>> {
+    if (!isTauriRuntimeAvailable()) return [];
+    try {
+      const rows = await invokeWithRetry<
+        Array<{ conversationId: string; messageCount: number; lastTs: number }>
+      >('list_restorable_conversations', limit !== undefined ? { limit } : {}, {
+        ...LONG_COMMAND_OPTIONS,
+        context: 'ListRestorableConversations',
+      });
+      return rows ?? [];
+    } catch (err) {
+      console.warn('[ChatService.listRestorableConversations] failed (non-fatal):', err);
+      return [];
+    }
+  }
+
+  /**
    * Envoi d'un message au Conversation Engine OMEGA.
    * Utilise l'ID de conversation pour maintenir le contexte.
    */
@@ -456,11 +569,21 @@ class ChatService {
           provider: backendResponse.metadata?.provider,
         });
 
+        // LOCK1-REPAIR: provider truth source = backendResponse.meta.provider_used
+        // backendResponse.metadata contains cognitive fields (intention/emotion/etc)
+        // backendResponse.meta contains the real ProviderDecisionMeta from the backend
+        const metaObj = backendResponse.meta as Record<string, unknown> | undefined;
+        const actualProvider: string =
+          (typeof metaObj?.provider_used === 'string' && metaObj.provider_used) ||
+          (typeof backendResponse.metadata?.provider === 'string' &&
+            backendResponse.metadata.provider) ||
+          'tauri-backend';
+
         return {
           content: backendResponse.content,
           finishReason: 'stop',
           model: config?.model || 'omega-pipeline',
-          provider: backendResponse.metadata?.provider || 'tauri-backend',
+          provider: actualProvider,
           latencyMs,
           frenchMasteryApplied: backendResponse.frenchMasteryApplied ?? true,
           metadata: {
@@ -470,6 +593,9 @@ class ChatService {
             timestamp: Date.now(),
             success: true,
             ...(backendResponse.metadata || {}),
+            // LOCK1-REPAIR: explicit canonical fields so downstream consumers have truth
+            provider_used: actualProvider,
+            provider_meta: backendResponse.meta,
           },
           omegaMetadata: backendResponse.metadata,
         };
@@ -1327,12 +1453,29 @@ class ChatService {
     }
 
     if (typeof raw === 'string') {
+      const trimmed = raw.trim();
+      if (!trimmed.startsWith('{') && !trimmed.startsWith('[')) {
+        return {
+          content: raw,
+        };
+      }
+
       try {
-        const parsed = JSON.parse(raw);
+        const parsed = JSON.parse(trimmed);
         return this.normalizeCompleteEvent(parsed);
       } catch (error) {
-        console.warn('[ChatService] Unable to parse completion payload:', error);
-        return null;
+        try {
+          const sanitized = trimmed
+            .replace(/\\u(?![0-9a-fA-F]{4})/g, '\\\\u')
+            .replace(/\\(?!["\\/bfnrtu])/g, '\\\\');
+          const parsed = JSON.parse(sanitized);
+          return this.normalizeCompleteEvent(parsed);
+        } catch (secondError) {
+          console.warn('[ChatService] Unable to parse completion payload:', secondError);
+          return {
+            content: raw,
+          };
+        }
       }
     }
 

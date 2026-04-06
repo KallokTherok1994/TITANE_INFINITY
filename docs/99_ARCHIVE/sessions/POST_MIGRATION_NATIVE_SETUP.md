@@ -254,7 +254,7 @@ sudo sysctl -p
 ## 📚 Documentation Associée
 
 - **[TAURI_SETUP_INSTRUCTIONS.md](./TAURI_SETUP_INSTRUCTIONS.md)** — Guide installation Tauri
-- **[QUICK_START_v17.3.0.md](./QUICK_START_v17.3.0.md)** — Démarrage rapide
+- **[QUICK_START_v17.3.0.md](../versions/v17/QUICK_START_v17.3.0.md)** — Démarrage rapide
 - **[ARCHITECTURE_v∞.md](./ARCHITECTURE_v∞.md)** — Architecture complète
 
 ---

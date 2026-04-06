@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
@@ -77,6 +77,28 @@ export const TransformationRoadmap: React.FC<TransformationRoadmapProps> = ({
 
   return (
     <div className="transformation-roadmap-container">
+      {/* Disclosure banner — données statiques curées, aucune connexion IPC live */}
+      <div
+        className="roadmap-disclosure-banner"
+        role="note"
+        aria-label="Source des données : roadmap statique curéee, mise à jour manuelle"
+        style={{
+          fontSize: '0.75rem',
+          color: '#94a3b8',
+          background: 'rgba(100,116,139,0.12)',
+          border: '1px solid rgba(100,116,139,0.25)',
+          borderRadius: '6px',
+          padding: '6px 12px',
+          marginBottom: '12px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
+        }}
+      >
+        📋 <strong>DISPLAY_ONLY</strong> — Roadmap statique curée manuellement. Aucune
+        connexion IPC live. Dernière mise à jour : 2026-03-18.
+      </div>
+
       {/* Header */}
       <div className="roadmap-header">
         <div className="header-info">
@@ -294,7 +316,10 @@ export const TransformationRoadmap: React.FC<TransformationRoadmapProps> = ({
   );
 };
 
-// Generate mock milestones
+/**
+ * DISPLAY_ONLY — Roadmap curée manuellement, aucune connexion IPC live.
+ * Les statuts reflètent l'état réel du code vérifié au 2026-03-18.
+ */
 function generateMockMilestones(): Milestone[] {
   return [
     {
@@ -320,15 +345,15 @@ function generateMockMilestones(): Milestone[] {
       name: 'Vision & Mémoire Advanced',
       description:
         'Amélioration des capacités perceptuelles et mémorielles avec visualisations.',
-      status: 'in-progress',
-      progress: 75,
+      status: 'completed',
+      progress: 100,
       features: [
         'VisionMetricsChart (3 types)',
         'DetectionOverlay Canvas',
         'MemoryTreeViewer D3',
-        'MemorySearchPanel sémantique',
+        'MemorySearchPanel sémantique + IPC',
       ],
-      quarter: 'Q1 2025',
+      quarter: 'Q3 2025',
       importance: 'critical',
     },
     {
@@ -336,16 +361,16 @@ function generateMockMilestones(): Milestone[] {
       version: 'v27.0',
       name: 'Identité & Transformation',
       description:
-        'Mode Matrix 6x6, Persona Editor, et Evolution Timeline pour personnalisation avancée.',
-      status: 'in-progress',
-      progress: 45,
+        'PersonaEditor câblé, Evolution XP certifié E2E, pipeline mémoire→chat, et roadmap visuelle.',
+      status: 'completed',
+      progress: 100,
       features: [
-        'ModeMatrix 36 modes',
-        'PersonaEditor avec sliders',
-        'EvolutionTimeline react-chrono',
+        'PersonaEditor → localStorage → systemPrompt [câblé v28.1]',
+        'Mémoire persistante 3 niveaux → chat',
+        'EvolutionTimeline + XP NaN guards certifiés',
         'TransformationRoadmap visual',
       ],
-      quarter: 'Q1 2025',
+      quarter: 'Q4 2025',
       importance: 'high',
     },
     {
@@ -353,15 +378,15 @@ function generateMockMilestones(): Milestone[] {
       version: 'v28.0',
       name: 'AI Multi-Provider Enhanced',
       description: 'Support avancé de multiples providers IA avec fallback intelligent.',
-      status: 'planned',
-      progress: 0,
+      status: 'in-progress',
+      progress: 20,
       features: [
-        'Support GPT-5, Claude Opus 4, Gemini Ultra',
-        'Fallback automatique',
-        'Cost optimization',
-        'Provider comparison dashboard',
+        'Ollama (local) opérationnel (ollama.rs)',
+        'Gemini provider actif (api_hub/gemini.rs)',
+        'Fallback automatique Auto/Gemini/Ollama (providers.rs)',
+        'Claude / cost optimization : planifié',
       ],
-      quarter: 'Q2 2025',
+      quarter: 'Q2 2026',
       importance: 'high',
     },
     {
@@ -369,15 +394,15 @@ function generateMockMilestones(): Milestone[] {
       version: 'v29.0',
       name: 'Voice & Audio Premium',
       description: 'Amélioration majeure des capacités audio avec TTS/STT avancés.',
-      status: 'planned',
-      progress: 0,
+      status: 'in-progress',
+      progress: 35,
       features: [
-        'TTS ultra-réaliste (ElevenLabs)',
-        'STT temps réel (Whisper v3)',
-        'Voice cloning',
-        'Audio analytics',
+        'TTS local Piper (fr_FR-siwis) opérationnel',
+        'STT Whisper streaming actif (whisper_streaming.rs)',
+        'Voice fingerprinting (voice_fingerprint.rs)',
+        'Hybrid TTS + fallback espeak live',
       ],
-      quarter: 'Q3 2025',
+      quarter: 'Q2 2026',
       importance: 'medium',
     },
     {
@@ -394,7 +419,7 @@ function generateMockMilestones(): Milestone[] {
         'Quantum memory architecture',
         'Meta-learning system',
       ],
-      quarter: 'Q4 2025',
+      quarter: 'Q1 2027',
       importance: 'critical',
     },
   ];

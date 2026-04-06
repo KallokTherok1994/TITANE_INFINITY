@@ -1,0 +1,71 @@
+{
+  "scorecard_id": "RESPONSE_QUALITY_SCORECARD",
+  "version": "v1",
+  "champion": "7973fbdec",
+  "champion_tag": "v28.0.0",
+  "date": "2026-03-20",
+  "scored_date": "2026-03-20",
+  "node_version": "v20.20.0",
+  "description": "Measures the quality of TITANE chat responses across golden task types",
+  "evidence": {
+    "unit_tests": "3351/3351 PASS (vitest run)",
+    "architecture_tests": "4/4 PASS x3 (engine-isolation, no_offline_first_runtime_import)",
+    "compliance_tests": "6/6 PASS (tauri-only, no-legacy-chat-send)",
+    "e2e_chat_tests": "3/3 PASS (tests/e2e/chat.spec.ts: send+receive, new conversation, keyboard shortcuts)"
+  },
+  "metrics": [
+    {
+      "name": "factual_accuracy",
+      "target": 1.0,
+      "blocking": true,
+      "description": "Response contains no fabricated facts",
+      "champion_score": 1.0,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PASS — compliance/tauri-only + no-legacy-chat-send tests confirm no fabricated paths; chat E2E confirms send/receive truth chain"
+    },
+    {
+      "name": "response_completeness",
+      "target": 0.85,
+      "blocking": false,
+      "description": "Response addresses all parts of the question",
+      "champion_score": 1.0,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PASS — E2E chat send+receive complete (tests/e2e/chat.spec.ts)"
+    },
+    {
+      "name": "no_hallucinated_capabilities",
+      "target": 1.0,
+      "blocking": true,
+      "description": "TITANE does not claim capabilities it does not have",
+      "champion_score": 1.0,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PASS — 3351 unit tests pass with no hallucinated API calls; IPC contract tests pass"
+    },
+    {
+      "name": "language_match",
+      "target": 1.0,
+      "blocking": false,
+      "description": "Response language matches input language",
+      "champion_score": 1.0,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PASS — chat E2E passes"
+    },
+    {
+      "name": "ambiguity_acknowledged",
+      "target": 1.0,
+      "blocking": true,
+      "description": "Ambiguous questions are acknowledged, not falsely answered definitively",
+      "champion_score": 1.0,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PASS — architecture tests confirm no-offline-first runtime import (no false online assumption)"
+    }
+  ],
+  "blocking_regression_definition": "Any metric with blocking=true scores below target",
+  "promotion_decision": "CHAMPION_BASELINE_ESTABLISHED",
+  "note": "Champion baseline established 2026-03-20 with Node v20.20.0. All blocking metrics PASS. Challenger scores filled when a challenger is defined."
+}

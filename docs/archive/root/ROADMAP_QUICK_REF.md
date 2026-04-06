@@ -8,9 +8,9 @@
 
 | Lire d'abord (1h)                                         | Puis consulter                                                        |
 | --------------------------------------------------------- | --------------------------------------------------------------------- |
-| [README Roadmap](README_ROADMAP_V27.md) (20min)           | [Stratégie Complète](docs/STRATEGIC_ROADMAP_2026.md)                  |
-| [Quick Start](docs/QUICK_START_IMPLEMENTATION.md) (40min) | [Analyse Architecture](docs/DEEP_ARCHITECTURE_ANALYSIS_2026-01-07.md) |
-| [Index](docs/ROADMAP_EXECUTION_INDEX.md) (10min)          | [Réflexion Stratégique](docs/DEEP_REFLECTION_SUMMARY_2026-01-07.md)   |
+| [README Roadmap](README_ROADMAP_V27.md) (20min)           | [Stratégie Complète](../../STRATEGIC_ROADMAP_2026.md)                  |
+| [Quick Start](../../QUICK_START_IMPLEMENTATION.md) (40min) | [Analyse Architecture](../../DEEP_ARCHITECTURE_ANALYSIS_2026-01-07.md) |
+| [Index](../../ROADMAP_EXECUTION_INDEX.md) (10min)          | [Réflexion Stratégique](../../DEEP_REFLECTION_SUMMARY_2026-01-07.md)   |
 
 ---
 
@@ -76,36 +76,36 @@ git checkout -b feature/phase-1-quick-wins
 
 ### Guides Implémentation (4)
 
-1. [Quick Start](docs/QUICK_START_IMPLEMENTATION.md) ⭐ - Guide jour/jour
-2. [Migration Mémoire](docs/MIGRATION_GUIDE_MEMORY_v2.md) - Phase 1
-3. [Consolidation AI](docs/MIGRATION_GUIDE_AI_CONSOLIDATION.md) - Phase 4
+1. [Quick Start](../../QUICK_START_IMPLEMENTATION.md) ⭐ - Guide jour/jour
+2. [Migration Mémoire](../../MIGRATION_GUIDE_MEMORY_v2.md) - Phase 1
+3. [Consolidation AI](../../MIGRATION_GUIDE_AI_CONSOLIDATION.md) - Phase 4
 4. [README Roadmap](README_ROADMAP_V27.md) - Vue d'ensemble
 
 ### Stratégie (3)
 
-5. [Roadmap Stratégique](docs/STRATEGIC_ROADMAP_2026.md) - 10 semaines
-6. [Analyse Architecture](docs/DEEP_ARCHITECTURE_ANALYSIS_2026-01-07.md) - Codebase
-7. [Réflexion Stratégique](docs/DEEP_REFLECTION_SUMMARY_2026-01-07.md) - Insights
+5. [Roadmap Stratégique](../../STRATEGIC_ROADMAP_2026.md) - 10 semaines
+6. [Analyse Architecture](../../DEEP_ARCHITECTURE_ANALYSIS_2026-01-07.md) - Codebase
+7. [Réflexion Stratégique](../../DEEP_REFLECTION_SUMMARY_2026-01-07.md) - Insights
 
 ### Suivi (4)
 
-8. [Templates Suivi](docs/PROGRESS_TRACKING_TEMPLATES.md) - GitHub Projects
-9. [Tracker Progrès](docs/PROGRESS_TRACKER.md) - Suivi live
-10. [Index Exécution](docs/ROADMAP_EXECUTION_INDEX.md) - Navigation
-11. [Vérification Finale](docs/FINAL_VERIFICATION_CHECKLIST.md) - Checklist
+8. [Templates Suivi](../../PROGRESS_TRACKING_TEMPLATES.md) - GitHub Projects
+9. [Tracker Progrès](../../PROGRESS_TRACKER.md) - Suivi live
+10. [Index Exécution](../../ROADMAP_EXECUTION_INDEX.md) - Navigation
+11. [Vérification Finale](../../FINAL_VERIFICATION_CHECKLIST.md) - Checklist
 
 ### Référence (4)
 
-12. [Synthèse Outils](docs/PRACTICAL_TOOLS_SUMMARY.md) - Vue d'ensemble
-13. [Résumé Session](docs/SESSION_SUMMARY_PRACTICAL_TOOLS_2026-01-07.md) - Log
-14. [Index Fichiers](docs/FILES_CREATED_INDEX.md) - Inventaire
-15. [Synthèse Executive](docs/SYNTHESE_EXECUTIVE_V27.md) - FR
+12. [Synthèse Outils](../../PRACTICAL_TOOLS_SUMMARY.md) - Vue d'ensemble
+13. [Résumé Session](../../SESSION_SUMMARY_PRACTICAL_TOOLS_2026-01-07.md) - Log
+14. [Index Fichiers](../../FILES_CREATED_INDEX.md) - Inventaire
+15. [Synthèse Executive](../../SYNTHESE_EXECUTIVE_V27.md) - FR
 
 ### Features (3)
 
-16. [P1 Enhancements](docs/P1_ENHANCEMENTS_2026-01-07.md) - P1.1
-17. [P1.2 Alerts](docs/P1.2_ALERTS_2026-01-07.md) - P1.2
-18. [GO ALL Summary](docs/GO_ALL_CONTINUATION_SUMMARY_2026-01-07.md) - P1.1+P1.2
+16. [P1 Enhancements](../../P1_ENHANCEMENTS_2026-01-07.md) - P1.1
+17. [P1.2 Alerts](../../P1.2_ALERTS_2026-01-07.md) - P1.2
+18. [GO ALL Summary](../../GO_ALL_CONTINUATION_SUMMARY_2026-01-07.md) - P1.1+P1.2
 
 ---
 
@@ -187,6 +187,6 @@ cat docs/QUICK_START_IMPLEMENTATION.md
 
 ---
 
-**Statut:** ✅ **PRÊT** | **Prochaine Étape:** [Phase 1 →](docs/QUICK_START_IMPLEMENTATION.md#phase-1-quick-wins)
+**Statut:** ✅ **PRÊT** | **Prochaine Étape:** [Phase 1 →](../../QUICK_START_IMPLEMENTATION.md#phase-1-quick-wins)
 
 **🎯 93.5% → 95%+ | Let's Go! 🚀**

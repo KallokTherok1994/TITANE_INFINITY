@@ -2,7 +2,7 @@
 # TITANE∞ v27.0.1 - Installation Script (AppImage)
 # Date: 6 février 2026
 
-set -e
+set -euo pipefail
 
 echo "╔════════════════════════════════════════════════════════════╗"
 echo "║          TITANE∞ v27.0.1 - Installation (AppImage)        ║"
@@ -16,20 +16,38 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Variables
-VERSION="27.0.1"
-APPIMAGE_NAME="TITANE-Infinity_${VERSION}_amd64.AppImage"
 INSTALL_DIR="$HOME/.local/bin"
 DESKTOP_DIR="$HOME/.local/share/applications"
 ICON_DIR="$HOME/.local/share/icons/hicolor/256x256/apps"
 
+APPIMAGE_PATH="$(ls -1t deployment/latest/*.AppImage runtime/stable/*.AppImage 2>/dev/null | head -n 1 || true)"
+APPIMAGE_NAME="$(basename "${APPIMAGE_PATH:-}")"
+VERSION="unknown"
+TARGET_BINARY_NAME="titane-infinity"
+TARGET_BINARY_PATH="$INSTALL_DIR/$TARGET_BINARY_NAME"
+SYSTEM_BINARY_PATH="/usr/bin/titane-infinity"
+if [[ "$APPIMAGE_NAME" =~ ([0-9]+\.[0-9]+\.[0-9]+) ]]; then
+    VERSION="${BASH_REMATCH[1]}"
+fi
+
 # Vérifications préliminaires
-if [ ! -f "deployment/latest/${APPIMAGE_NAME}" ]; then
+if [ -z "$APPIMAGE_PATH" ] || [ ! -f "$APPIMAGE_PATH" ]; then
     echo -e "${RED}✗ Erreur: AppImage introuvable!${NC}"
-    echo "  Chemin attendu: deployment/latest/${APPIMAGE_NAME}"
+    echo "  Aucun artefact .AppImage récent trouvé dans deployment/latest ou runtime/stable"
     exit 1
 fi
 
 echo -e "${GREEN}✓${NC} AppImage trouvée: ${APPIMAGE_NAME}"
+if [ -x "$SYSTEM_BINARY_PATH" ]; then
+    TARGET_BINARY_NAME="titane-infinity-appimage"
+    TARGET_BINARY_PATH="$INSTALL_DIR/$TARGET_BINARY_NAME"
+
+    if [ -e "$INSTALL_DIR/titane-infinity" ]; then
+        rm -f "$INSTALL_DIR/titane-infinity"
+    fi
+
+    echo -e "${YELLOW}⚠${NC} $SYSTEM_BINARY_PATH existe déjà — l'AppImage sera installée sous ${TARGET_BINARY_NAME} pour éviter de masquer la version DEB"
+fi
 
 # Créer les répertoires si nécessaire
 mkdir -p "$INSTALL_DIR"
@@ -39,9 +57,9 @@ mkdir -p "$ICON_DIR"
 # Copier l'AppImage
 echo ""
 echo "[1/4] Installation du binaire..."
-cp "deployment/latest/${APPIMAGE_NAME}" "$INSTALL_DIR/titane-infinity"
-chmod +x "$INSTALL_DIR/titane-infinity"
-echo -e "${GREEN}✓${NC} Binaire installé: $INSTALL_DIR/titane-infinity"
+cp "$APPIMAGE_PATH" "$TARGET_BINARY_PATH"
+chmod +x "$TARGET_BINARY_PATH"
+echo -e "${GREEN}✓${NC} Binaire installé: $TARGET_BINARY_PATH"
 
 # Copier l'icône
 echo ""
@@ -60,9 +78,9 @@ cat > "$DESKTOP_DIR/titane-infinity.desktop" << EOF
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=TITANE Infinity
+Name=TITANE∞ v${VERSION}
 Comment=TITANE∞ v${VERSION} - Cognitive Operating System
-Exec=$INSTALL_DIR/titane-infinity
+Exec=$TARGET_BINARY_PATH
 Icon=titane-infinity
 Terminal=false
 Categories=Development;Utility;
@@ -107,13 +125,16 @@ fi
 echo "✅ INSTALLATION COMPLÈTE"
 echo ""
 echo "📦 Package installé:"
-echo "   • Binaire: $INSTALL_DIR/titane-infinity"
+echo "   • Binaire: $TARGET_BINARY_PATH"
 echo "   • Desktop: $DESKTOP_DIR/titane-infinity.desktop"
 echo "   • Icône:   $ICON_DIR/titane-infinity.png"
 echo ""
 echo "🚀 Lancement:"
-echo "   • Terminal:        titane-infinity"
+echo "   • Terminal:        $TARGET_BINARY_NAME"
+if [ "$TARGET_BINARY_NAME" != "titane-infinity" ]; then
+    echo "   • System DEB:      titane-infinity (préservé)"
+fi
 echo "   • Menu:            Chercher 'TITANE' dans le lanceur"
-echo "   • Chemin complet:  $INSTALL_DIR/titane-infinity"
+echo "   • Chemin complet:  $TARGET_BINARY_PATH"
 echo ""
 echo "═══════════════════════════════════════════════════════════"

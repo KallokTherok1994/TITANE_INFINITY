@@ -1,0 +1,311 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`MemorySearchPanel Component > Snapshot > should match snapshot 1`] = `
+<div
+  class="memory-search-container"
+>
+  <div
+    class="memory-search-bar"
+  >
+    <svg
+      aria-hidden="true"
+      class="lucide lucide-search search-icon"
+      fill="none"
+      height="18"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="18"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="m21 21-4.34-4.34"
+      />
+      <circle
+        cx="11"
+        cy="11"
+        r="8"
+      />
+    </svg>
+    <input
+      aria-disabled="false"
+      class="search-input"
+      placeholder="Recherche sémantique dans la mémoire..."
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="memory-filters"
+  >
+    <select
+      aria-disabled="false"
+      class="filter-select"
+    >
+      <option
+        value="all"
+      >
+        Tous types
+      </option>
+      <option
+        value="short"
+      >
+        Court terme
+      </option>
+      <option
+        value="mid"
+      >
+        Moyen terme
+      </option>
+      <option
+        value="long"
+      >
+        Long terme
+      </option>
+    </select>
+    <select
+      aria-disabled="false"
+      class="filter-select"
+    >
+      <option
+        value="all"
+      >
+        Toutes dates
+      </option>
+      <option
+        value="today"
+      >
+        Aujourd'hui
+      </option>
+      <option
+        value="week"
+      >
+        Cette semaine
+      </option>
+      <option
+        value="month"
+      >
+        Ce mois
+      </option>
+    </select>
+    <div
+      class="results-count"
+    >
+      <svg
+        aria-hidden="true"
+        class="lucide lucide-funnel"
+        fill="none"
+        height="14"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="14"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z"
+        />
+      </svg>
+      <span>
+        2 résultats
+      </span>
+    </div>
+  </div>
+  <div
+    class="memory-tags"
+  >
+    <button
+      class="memory-tag "
+    >
+      <svg
+        aria-hidden="true"
+        class="lucide lucide-tag"
+        fill="none"
+        height="12"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="12"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"
+        />
+        <circle
+          cx="7.5"
+          cy="7.5"
+          fill="currentColor"
+          r=".5"
+        />
+      </svg>
+      architecture
+    </button>
+    <button
+      class="memory-tag "
+    >
+      <svg
+        aria-hidden="true"
+        class="lucide lucide-tag"
+        fill="none"
+        height="12"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="12"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"
+        />
+        <circle
+          cx="7.5"
+          cy="7.5"
+          fill="currentColor"
+          r=".5"
+        />
+      </svg>
+      session
+    </button>
+  </div>
+  <div
+    class="memory-results"
+  >
+    <div
+      class="memory-entry "
+      data-selected="false"
+      data-testid="memory-search-entry-1"
+    >
+      <div
+        class="entry-header"
+      >
+        <span
+          class="entry-type long"
+        >
+          💎 Long
+        </span>
+        <span
+          class="entry-date"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-clock"
+            fill="none"
+            height="12"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="12"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+            />
+            <path
+              d="M12 6v6l4 2"
+            />
+          </svg>
+          Aujourd'hui
+        </span>
+      </div>
+      <p
+        class="entry-content"
+      >
+        Architecture TITANE
+      </p>
+      <div
+        class="entry-tags"
+      >
+        <span
+          class="entry-tag"
+        >
+          architecture
+        </span>
+      </div>
+      <div
+        class="entry-relevance"
+      >
+        <div
+          class="relevance-bar"
+          style="width: 90%;"
+        />
+      </div>
+    </div>
+    <div
+      class="memory-entry "
+      data-selected="false"
+      data-testid="memory-search-entry-2"
+    >
+      <div
+        class="entry-header"
+      >
+        <span
+          class="entry-type short"
+        >
+          ⚡ Court
+        </span>
+        <span
+          class="entry-date"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-clock"
+            fill="none"
+            height="12"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="12"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+            />
+            <path
+              d="M12 6v6l4 2"
+            />
+          </svg>
+          Aujourd'hui
+        </span>
+      </div>
+      <p
+        class="entry-content"
+      >
+        Session active
+      </p>
+      <div
+        class="entry-tags"
+      >
+        <span
+          class="entry-tag"
+        >
+          session
+        </span>
+      </div>
+      <div
+        class="entry-relevance"
+      >
+        <div
+          class="relevance-bar"
+          style="width: 80%;"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;

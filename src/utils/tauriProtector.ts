@@ -6,6 +6,7 @@
  * Correction des erreurs "Cannot read properties of undefined (reading 'invoke')"
  */
 
+import { invoke } from '@tauri-apps/api/core';
 import type {
   AdaptiveLayer,
   CognitiveLayer,
@@ -162,6 +163,55 @@ export const createFallbackSingularityState = (): SingularityState => {
   };
 };
 
+const TOTAL_DEV_BROWSER_SESSION_KEY = 'titane_total_dev_browser_session_expiry';
+
+type TotalDevBrowserLockState = 'LOCKED' | 'UNLOCKED' | 'EXPIRED';
+
+const getNowUnix = () => Math.floor(Date.now() / 1000);
+
+const writeTotalDevBrowserExpiry = (expiry: number) => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  if (expiry > 0) {
+    window.sessionStorage.setItem(TOTAL_DEV_BROWSER_SESSION_KEY, String(expiry));
+  } else {
+    window.sessionStorage.removeItem(TOTAL_DEV_BROWSER_SESSION_KEY);
+  }
+};
+
+const getTotalDevBrowserLockState = (): {
+  lock_state: TotalDevBrowserLockState;
+  expires_at_unix?: number;
+  now_unix: number;
+  fallback: true;
+} => {
+  const now = getNowUnix();
+
+  // Browser fallback is intentionally never unlockable; clear any stale legacy session.
+  writeTotalDevBrowserExpiry(0);
+
+  return {
+    lock_state: 'LOCKED',
+    expires_at_unix: undefined,
+    now_unix: now,
+    fallback: true,
+  };
+};
+
+const getTotalDevBrowserUnlockResult = (_args?: TauriCommandArgs) => {
+  writeTotalDevBrowserExpiry(0);
+
+  return {
+    ok: false,
+    expires_at_unix: undefined,
+    lock_state: 'LOCKED',
+    error: 'TOTAL_DEV requires the Tauri runtime',
+    fallback: true,
+  };
+};
+
 const getTauriGlobal = (): TauriCoreBridge | undefined => {
   if (typeof window === 'undefined') {
     return undefined;
@@ -291,14 +341,14 @@ export class TauriInvokeProtector {
   /**
    * Invoke protégé avec fallback intelligent
    * ✅ v∞: Anti-debounce pour start_recording et autres commandes critiques
-   * ✨ v27+ FIX: Default timeout 10s → 60s pour IA requests complexes
    */
   async safeInvoke<T>(
     command: string,
     args?: TauriCommandArgs,
-    timeoutMs = 60000
+    _timeoutMs?: number
   ): Promise<T> {
     const cacheKey = `${command}:${JSON.stringify(args)}`;
+    const shouldUseResultCache = this.shouldUseResultCache(command);
 
     // ✅ ANTI-DEBOUNCE: For recording commands, prevent duplicate calls
     if (command === 'start_recording' || command === 'stop_recording') {
@@ -312,11 +362,7 @@ export class TauriInvokeProtector {
     }
 
     // Check cache first pour éviter appels répétés (skip for recording commands)
-    if (
-      command !== 'start_recording' &&
-      command !== 'stop_recording' &&
-      command !== 'cancel_recording'
-    ) {
+    if (shouldUseResultCache) {
       const cached = this.checkCache[cacheKey];
       if (cached && Date.now() - cached.timestamp < this.CACHE_DURATION) {
         return cached.result as T;
@@ -325,7 +371,7 @@ export class TauriInvokeProtector {
 
     try {
       // Create the invoke promise
-      const invokePromise = this.performInvoke<T>(command, args, timeoutMs, cacheKey);
+      const invokePromise = this.performInvoke<T>(command, args, cacheKey);
 
       // Track for anti-debounce
       if (command === 'start_recording' || command === 'stop_recording') {
@@ -350,7 +396,7 @@ export class TauriInvokeProtector {
         // En mode test, propager l'erreur pour permettre les assertions
         throw normalizedError;
       }
-      return this.createFallbackResponse<T>(command, normalizedError);
+      return this.createFallbackResponse<T>(command, normalizedError, args);
     }
   }
 
@@ -360,7 +406,6 @@ export class TauriInvokeProtector {
   private async performInvoke<T>(
     command: string,
     args: TauriCommandArgs,
-    timeoutMs: number,
     cacheKey: string
   ): Promise<T> {
     // ✅ v20.2: Don't re-check Tauri here - use cache state instead
@@ -372,7 +417,11 @@ export class TauriInvokeProtector {
         command,
         '- Tauri marked as unavailable'
       );
-      return this.createFallbackResponse<T>(command, 'Tauri not available (cached)');
+      return this.createFallbackResponse<T>(
+        command,
+        'Tauri not available (cached)',
+        args
+      );
     }
 
     // ✅ CRITICAL FIX v20.3: Use cached module if available, don't re-import
@@ -389,7 +438,11 @@ export class TauriInvokeProtector {
         if (this.isTestEnv) {
           throw new Error('Tauri invoke not available');
         }
-        return this.createFallbackResponse<T>(command, 'Tauri invoke not available');
+        return this.createFallbackResponse<T>(
+          command,
+          'Tauri invoke not available',
+          args
+        );
       }
       // Cache the module for future calls
       this.tauriModuleCache = tauriModule;
@@ -401,25 +454,18 @@ export class TauriInvokeProtector {
     try {
       console.log(`[TauriProtector] 🚀 Invoking: ${command} with args:`, args);
 
-      // Appel avec timeout - handle undefined args
+      // Appel direct - handle undefined args
       const invokeCall =
         args !== undefined && args !== null
           ? tauriModule.invoke<T>(command, args)
           : tauriModule.invoke<T>(command);
 
-      const result = await Promise.race([
-        invokeCall,
-        this.createTimeoutPromise<T>(timeoutMs),
-      ]);
+      const result = await invokeCall;
 
       console.log(`[TauriProtector] ✅ Invoke succeeded: ${command}`);
 
       // Cache du résultat positif (skip for recording commands)
-      if (
-        command !== 'start_recording' &&
-        command !== 'stop_recording' &&
-        command !== 'cancel_recording'
-      ) {
+      if (this.shouldUseResultCache(command)) {
         this.checkCache[cacheKey] = {
           result,
           timestamp: Date.now(),
@@ -439,9 +485,10 @@ export class TauriInvokeProtector {
   /**
    * Import sécurisé du module Tauri
    * ✅ v20.3: Cache le module importé pour éviter re-imports
+   * ✅ v38.0.0: Use static import at top-level for Rolldown optimization
    */
   private async safeTauriImport(): Promise<{
-    invoke: typeof import('@tauri-apps/api/core').invoke;
+    invoke: typeof invoke;
   } | null> {
     try {
       // ✅ If we've already imported and cached, return immediately
@@ -455,32 +502,30 @@ export class TauriInvokeProtector {
         return null;
       }
 
-      const module = await import('@tauri-apps/api/core');
-      if (module && typeof module.invoke === 'function') {
+      if (typeof invoke === 'function') {
         // Verify invoke is actually bound to the Tauri runtime
         // In browser mode, invoke exists but may not be callable
         try {
           // Quick sanity check: invoke should have a name
           if (
-            module.invoke.name &&
-            (module.invoke.name === 'invoke' ||
-              module.invoke.toString().includes('tauri'))
+            invoke.name &&
+            (invoke.name === 'invoke' || invoke.toString().includes('tauri'))
           ) {
             this.isTauriAvailable = true;
-            this.tauriModuleCache = { invoke: module.invoke };
+            this.tauriModuleCache = { invoke };
             console.log(
               '[TauriProtector] ✅ Successfully imported Tauri core module (verified)'
             );
-            return { invoke: module.invoke };
+            return { invoke };
           } else {
             console.warn(
               '[TauriProtector] Tauri invoke imported but signature suspicious:',
-              module.invoke.name
+              invoke.name
             );
             // Still cache it in case it's the real thing
             this.isTauriAvailable = true;
-            this.tauriModuleCache = { invoke: module.invoke };
-            return { invoke: module.invoke };
+            this.tauriModuleCache = { invoke };
+            return { invoke };
           }
         } catch (e) {
           // If we can even check the invoke function, that's a problem
@@ -501,18 +546,13 @@ export class TauriInvokeProtector {
   }
 
   /**
-   * Créer une Promise avec timeout
-   */
-  private createTimeoutPromise<T>(ms: number): Promise<T> {
-    return new Promise((_, reject) =>
-      setTimeout(() => reject(new Error(`Timeout after ${ms}ms`)), ms)
-    );
-  }
-
-  /**
    * Génère une réponse de fallback intelligente selon le type de commande
    */
-  private createFallbackResponse<T>(command: string | undefined, error: unknown): T {
+  private createFallbackResponse<T>(
+    command: string | undefined,
+    error: unknown,
+    args?: TauriCommandArgs
+  ): T {
     const safeCommand = command || 'unknown_command';
     if (safeCommand.includes('conversation_generate')) {
       console.log('[TauriProtector] Fallback engaged for conversation_generate');
@@ -521,6 +561,34 @@ export class TauriInvokeProtector {
     }
 
     const errorMessage = error instanceof Error ? error.message : String(error);
+
+    if (safeCommand === 'total_dev_session_status') {
+      return getTotalDevBrowserLockState() as T;
+    }
+
+    if (safeCommand === 'total_dev_unlock') {
+      return getTotalDevBrowserUnlockResult(args) as T;
+    }
+
+    if (safeCommand === 'total_dev_revoke') {
+      writeTotalDevBrowserExpiry(0);
+      return true as T;
+    }
+
+    if (
+      safeCommand === 'update_singularity_state' ||
+      safeCommand.startsWith('singularity_update_')
+    ) {
+      return {
+        ok: true,
+        content: {
+          command: safeCommand,
+          fallback: true,
+          timestamp: Date.now(),
+        },
+        error: null,
+      } as T;
+    }
 
     // Fallbacks spécifiques par type de commande
     if (safeCommand.includes('singularity_get_full_state')) {
@@ -566,6 +634,10 @@ export class TauriInvokeProtector {
         fallback: true,
         message: 'Backend offline - using local AI fallback',
       } as T;
+    }
+
+    if (safeCommand === 'create_new_conversation') {
+      return `fallback-${Date.now()}` as T;
     }
 
     if (safeCommand.includes('conversation_generate')) {
@@ -665,7 +737,7 @@ export class TauriInvokeProtector {
           mode: classification.type === 'timeout' ? 'OFFLINE' : 'ERROR',
           reason_code: classification.type === 'timeout' ? 'TIMEOUT' : 'FALLBACK_OFFLINE',
           latency_ms_total: 0,
-          timeout_ms: 30000,
+          timeout_ms: 0,
           retries: 0,
           attempts: [],
           network_used: false,
@@ -697,6 +769,22 @@ export class TauriInvokeProtector {
     }
 
     // [RETRAIT v27.0.5-prod] Fallback legacy chat command removed from protector
+
+    // ✅ FIX-ADMIN-HEALTH-CSV: Return canonical {ok:false} envelope so the
+    // useProductionHealthTelemetry hook's envelope check fires correctly and
+    // classifies the error as SOURCE_UNAVAILABLE instead of PARSER_ERROR.
+    if (safeCommand === 'read_production_week1_csv') {
+      return {
+        ok: false,
+        content: null,
+        error: {
+          message: errorMessage.startsWith('SOURCE_')
+            ? errorMessage
+            : `SOURCE_UNAVAILABLE: Tauri runtime non disponible — ${errorMessage}`,
+        },
+        fallback: true,
+      } as T;
+    }
 
     if (
       command &&
@@ -747,6 +835,23 @@ export class TauriInvokeProtector {
     this.isTauriAvailable = null;
     this.checkCache = {};
     console.log('[TauriProtector] Cache reset');
+  }
+
+  private shouldUseResultCache(command: string): boolean {
+    if (
+      command === 'start_recording' ||
+      command === 'stop_recording' ||
+      command === 'cancel_recording'
+    ) {
+      return false;
+    }
+
+    // Memory persistence reads must reflect writes immediately.
+    if (command.startsWith('persistent_memory_')) {
+      return false;
+    }
+
+    return true;
   }
 }
 

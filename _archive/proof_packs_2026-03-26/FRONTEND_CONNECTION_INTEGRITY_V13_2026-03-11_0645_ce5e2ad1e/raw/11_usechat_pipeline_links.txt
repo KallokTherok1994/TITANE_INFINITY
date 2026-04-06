@@ -1,0 +1,18 @@
+509:  const operationLockRef = useRef(false);
+917:      operationLockRef.current ||
+922:        lock: operationLockRef.current,
+1024:  const sendMessage = useCallback(
+1030:      const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+1150:      operationLockRef.current = true;
+1158:      setIsLoading(true);
+1161:      // ⭐ OMEGA FIX: Activer failsafe timeout APRÈS setIsLoading(true)
+1170:          setIsLoading(false);
+1172:          operationLockRef.current = false;
+1185:          requestId,
+1227:        requestId,
+1608:            requestId,
+1616:                chatService.sendMessageLegacy(backendHistory, {
+1618:                  requestId,
+1987:            requestId,
+2017:        setIsLoading(false);
+2019:        operationLockRef.current = false;

@@ -2,10 +2,20 @@ use super::types::{Mode, ProviderAttemptMeta, ProviderClass, ProviderDecisionMet
 
 const DEFAULT_TIMEOUT_MS: u64 = 20_000;
 
+fn env_flag_enabled(key: &str) -> bool {
+    match std::env::var(key) {
+        Ok(raw) => {
+            let normalized = raw.trim().to_ascii_lowercase();
+            matches!(normalized.as_str(), "1" | "true" | "yes" | "on")
+        }
+        Err(_) => false,
+    }
+}
+
 pub fn policy_from_env() -> String {
-    if std::env::var("OFFLINE_SIM").is_ok() {
+    if env_flag_enabled("OFFLINE_SIM") {
         "OFFLINE_SIM".to_string()
-    } else if std::env::var("FORCE_LOCAL_PROVIDER").is_ok() {
+    } else if env_flag_enabled("FORCE_LOCAL_PROVIDER") {
         "FORCE_LOCAL_PROVIDER".to_string()
     } else {
         "DEFAULT".to_string()
@@ -137,7 +147,7 @@ pub fn build_offline_meta(reason_code: ReasonCode, policy: &str) -> ProviderDeci
     )
 }
 
-pub fn build_timeout_meta(network_available: bool) -> ProviderDecisionMeta {
+pub fn build_timeout_meta(network_available: bool, timeout_ms: u64) -> ProviderDecisionMeta {
     // NO_LYING_FALLBACK: If network is available, do NOT claim offline mode
     // Use Remote mode with Timeout reason to indicate degraded service attempt
     let (provider_used, provider_class, mode, network_used) = if network_available {
@@ -158,7 +168,7 @@ pub fn build_timeout_meta(network_available: bool) -> ProviderDecisionMeta {
         network_used,
     )];
 
-    build_decision_meta(
+    let mut meta = build_decision_meta(
         provider_used,
         provider_class,
         mode,
@@ -168,5 +178,8 @@ pub fn build_timeout_meta(network_available: bool) -> ProviderDecisionMeta {
         attempts,
         network_used,
         false,
-    )
+    );
+
+    meta.timeout_ms = timeout_ms;
+    meta
 }

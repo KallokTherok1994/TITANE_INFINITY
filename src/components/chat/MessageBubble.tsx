@@ -19,6 +19,11 @@ import './MessageBubble.css';
 import { MarkdownContent } from './MarkdownContent';
 import { ChatFallback } from './ChatFallback';
 import { MessageReactions } from './MessageReactions'; // Sprint 6 Phase 3
+import {
+  messageSpeechController,
+  useMessageSpeechState,
+  type MessageSpeechStatus,
+} from '@/services/tts/messageSpeechController';
 
 interface MessageBubbleProps {
   role: 'user' | 'assistant' | 'system';
@@ -30,13 +35,14 @@ interface MessageBubbleProps {
 }
 
 /**
- * Formate un timestamp en heure locale
+ * Formate un timestamp en heure UTC
  */
 const formatTime = (ts: number): string => {
   const date = new Date(ts);
   return date.toLocaleTimeString('fr-FR', {
     hour: '2-digit',
     minute: '2-digit',
+    timeZone: 'UTC',
   });
 };
 
@@ -60,6 +66,33 @@ const AUTHOR_NAMES: Record<MessageBubbleProps['role'], string> = {
   user: 'Vous',
   system: 'Système',
   assistant: 'TITANE∞',
+};
+
+const getSpeechStatusLabel = (
+  status: MessageSpeechStatus,
+  provider: 'tauri' | 'webspeech' | null,
+  error: string | null
+): string => {
+  switch (status) {
+    case 'loading':
+      return provider === 'webspeech'
+        ? 'Préparation de la lecture Web Speech...'
+        : 'Préparation de la lecture desktop...';
+    case 'speaking':
+      return provider === 'webspeech'
+        ? 'Lecture en cours via Web Speech.'
+        : 'Lecture en cours sur le runtime desktop.';
+    case 'paused':
+      return 'Lecture en pause.';
+    case 'completed':
+      return 'Lecture terminée.';
+    case 'stopped':
+      return 'Lecture arrêtée.';
+    case 'error':
+      return error ? `Erreur audio: ${error}` : 'Erreur audio.';
+    default:
+      return 'Prêt pour la lecture audio.';
+  }
 };
 
 /**
@@ -89,6 +122,11 @@ export const MessageBubble = memo(function MessageBubble({
 }: MessageBubbleProps) {
   // État pour gérer le retry loading
   const [isRetrying, setIsRetrying] = useState(false);
+  const messageId = `${role}-${timestamp}`;
+  const speechState = useMessageSpeechState(
+    messageId,
+    role === 'assistant' ? content : ''
+  );
 
   // Memoize le temps formaté
   const formattedTime = useMemo(() => formatTime(timestamp), [timestamp]);
@@ -183,9 +221,133 @@ export const MessageBubble = memo(function MessageBubble({
         <div className="message-bubble-header">
           <span className="message-bubble-author">{AUTHOR_NAMES[role]}</span>
           <span className="message-bubble-time">{formattedTime}</span>
+          {/* LOCK1 — PROVIDER_DISPLAY_TRUTH: actual provider from backend, not localStorage */}
+          {role === 'assistant' && typeof metadata?.providerUsed === 'string' && (
+            <span
+              className={`message-provider-badge${
+                typeof metadata.requestedProvider === 'string' &&
+                metadata.requestedProvider !== 'auto' &&
+                metadata.providerUsed !== metadata.requestedProvider
+                  ? ' message-provider-badge-mismatch'
+                  : ''
+              }`}
+              data-testid={`message-provider-badge-${timestamp}`}
+              title={`Fournisseur réel: ${metadata.providerUsed}`}
+              aria-label={`Fournisseur utilisé: ${metadata.providerUsed as string}`}
+            >
+              {metadata.providerUsed as string}
+              {typeof metadata.requestedProvider === 'string' &&
+                metadata.requestedProvider !== 'auto' &&
+                metadata.providerUsed !== metadata.requestedProvider && (
+                  <span
+                    className="message-provider-mismatch-indicator"
+                    data-testid={`message-provider-mismatch-${timestamp}`}
+                    title={`Demandé: ${metadata.requestedProvider}, fallback: ${metadata.providerUsed as string}`}
+                    aria-label={`Avertissement: demandé ${metadata.requestedProvider}, utilisé ${metadata.providerUsed as string}`}
+                  >
+                    {' '}
+                    ⚠
+                  </span>
+                )}
+            </span>
+          )}
         </div>
 
         <div className="message-bubble-text">{messageContent}</div>
+
+        {role === 'assistant' &&
+          content &&
+          content.trim().length > 0 &&
+          speechState.canPlay && (
+            <div
+              className="message-bubble-audio"
+              data-testid={`message-tts-controls-${timestamp}`}
+            >
+              <div
+                className={`message-bubble-audio-status message-bubble-audio-status-${speechState.status}`}
+                data-testid={`message-tts-status-${timestamp}`}
+              >
+                {getSpeechStatusLabel(
+                  speechState.status,
+                  speechState.provider,
+                  speechState.error
+                )}
+              </div>
+
+              <div className="message-bubble-audio-actions">
+                {(speechState.status === 'idle' ||
+                  speechState.status === 'completed' ||
+                  speechState.status === 'stopped' ||
+                  speechState.status === 'error') && (
+                  <button
+                    type="button"
+                    className="message-bubble-audio-button message-bubble-audio-button-primary"
+                    onClick={() => {
+                      void messageSpeechController.playMessage(messageId, content);
+                    }}
+                    data-testid={`message-tts-read-${timestamp}`}
+                  >
+                    {speechState.status === 'completed' ||
+                    speechState.status === 'stopped'
+                      ? 'Relire'
+                      : 'Lire à haute voix'}
+                  </button>
+                )}
+
+                {speechState.status === 'loading' && (
+                  <button
+                    type="button"
+                    className="message-bubble-audio-button"
+                    disabled
+                    data-testid={`message-tts-loading-${timestamp}`}
+                  >
+                    Préparation audio...
+                  </button>
+                )}
+
+                {speechState.status === 'speaking' && speechState.supportsPause && (
+                  <button
+                    type="button"
+                    className="message-bubble-audio-button"
+                    onClick={() => {
+                      void messageSpeechController.pause();
+                    }}
+                    data-testid={`message-tts-pause-${timestamp}`}
+                  >
+                    Pause
+                  </button>
+                )}
+
+                {speechState.status === 'paused' && (
+                  <button
+                    type="button"
+                    className="message-bubble-audio-button"
+                    onClick={() => {
+                      void messageSpeechController.resume();
+                    }}
+                    data-testid={`message-tts-resume-${timestamp}`}
+                  >
+                    Reprendre
+                  </button>
+                )}
+
+                {(speechState.status === 'loading' ||
+                  speechState.status === 'speaking' ||
+                  speechState.status === 'paused') && (
+                  <button
+                    type="button"
+                    className="message-bubble-audio-button message-bubble-audio-button-secondary"
+                    onClick={() => {
+                      void messageSpeechController.stop();
+                    }}
+                    data-testid={`message-tts-stop-${timestamp}`}
+                  >
+                    Stop
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
 
         {/* Sprint 6 Phase 3: Message Reactions */}
         {role === 'assistant' && content && content.trim().length > 0 && (

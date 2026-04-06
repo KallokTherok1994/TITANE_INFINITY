@@ -1,0 +1,1095 @@
+src/__tests__/chatModes.config.test.ts:93:      // Admin requires level 5
+src/__tests__/chatModes.config.test.ts:116:      // Admin should only be in level 5
+src/__tests__/chatModes.config.test.ts:276:      // Admin should be global
+src/cognitive/progression/xpEngine.ts:514:  // RESET (Admin only)
+src/types/chatModes.ts:16:  | 'admin' // Administration système, configuration
+src/types/index.ts:20:  RouterDecision,
+src/__tests__/unifiedMemory.test.ts:27:  it('devrait router vers STM quand importance < 0.3', async () => {
+src/__tests__/unifiedMemory.test.ts:38:  it('devrait router vers MTM quand importance entre 0.3 et 0.7', async () => {
+src/__tests__/unifiedMemory.test.ts:53:  it('devrait router vers LTM quand importance > 0.7', async () => {
+src/__tests__/unifiedMemory.test.ts:65:  it('devrait router vers LTM quand importance = 0.7 exactement', async () => {
+src/types/conversation_os.ts:65: * Router decision about conversation intent
+src/types/conversation_os.ts:67:export interface RouterDecision {
+src/types/conversation_os.ts:155:  /** Router decision */
+src/types/conversation_os.ts:156:  router: RouterDecision;
+src/types/conversation_os.ts:169:    router_ms: number;
+src/__tests__/ui/ui-navigation.test.ts:10:import { BrowserRouter } from 'react-router-dom';
+src/__tests__/ui/ui-navigation.test.ts:38:        BrowserRouter,
+src/__tests__/ui/ui-navigation.test.ts:45:              currentRoute: '/titane',
+src/__tests__/ui/ui-navigation.test.ts:115:      React.createElement(BrowserRouter, null, React.createElement(TitanePage, null))
+src/__tests__/ui/ui-navigation.test.ts:130:      React.createElement(BrowserRouter, null, React.createElement(TitanePage, null))
+src/__tests__/ui/ui-navigation.test.ts:146:      React.createElement(BrowserRouter, null, React.createElement(TitanePage, null))
+src/__tests__/ui/ui-navigation.test.ts:195:      React.createElement(BrowserRouter, null, React.createElement(TitanePage, null))
+src/main.tsx:1021:        console.log('   → UI Router → MetaLayer');
+src/modules/TemporalFlowCenter.tsx:685:              <div>• 16:15-17:30 : Admin & communication</div>
+src/__tests__/services/adminEngine/adminEngine.test.ts:9: * Tests complets pour l'Admin & Monitoring Engine
+src/__tests__/services/adminEngine/adminEngine.test.ts:22:  AdminRole,
+src/__tests__/services/adminEngine/adminEngine.test.ts:25:  AdminVitals,
+src/__tests__/services/adminEngine/adminEngine.test.ts:27:  AdminSnapshot,
+src/__tests__/services/adminEngine/adminEngine.test.ts:28:  AdminLogRecord,
+src/__tests__/services/adminEngine/adminEngine.test.ts:29:  AdminEvent,
+src/__tests__/services/adminEngine/adminEngine.test.ts:30:  AdminActionDefinition,
+src/__tests__/services/adminEngine/adminEngine.test.ts:45:  generateAdminId,
+src/__tests__/services/adminEngine/adminEngine.test.ts:57:  createAdminEvent,
+src/__tests__/services/adminEngine/adminEngine.test.ts:66:  AdminEngine,
+src/__tests__/services/adminEngine/adminEngine.test.ts:67:  getAdminEngine,
+src/__tests__/services/adminEngine/adminEngine.test.ts:68:  resetAdminEngine,
+src/__tests__/services/adminEngine/adminEngine.test.ts:79:  resetAdminEngine();
+src/__tests__/services/adminEngine/adminEngine.test.ts:90:describe('Admin Engine - Types & Constantes', () => {
+src/__tests__/services/adminEngine/adminEngine.test.ts:213:describe('Admin Engine - Fonctions Utilitaires', () => {
+src/__tests__/services/adminEngine/adminEngine.test.ts:214:  describe('generateAdminId', () => {
+src/__tests__/services/adminEngine/adminEngine.test.ts:216:      const id1 = generateAdminId();
+src/__tests__/services/adminEngine/adminEngine.test.ts:217:      const id2 = generateAdminId();
+src/__tests__/services/adminEngine/adminEngine.test.ts:222:      const id = generateAdminId('test');
+src/__tests__/services/adminEngine/adminEngine.test.ts:227:      const id = generateAdminId();
+src/__tests__/services/adminEngine/adminEngine.test.ts:234:      const vitals: AdminVitals = {
+src/__tests__/services/adminEngine/adminEngine.test.ts:255:      const vitals: AdminVitals = {
+src/__tests__/services/adminEngine/adminEngine.test.ts:276:      const vitals: AdminVitals = {
+src/__tests__/services/adminEngine/adminEngine.test.ts:297:      const vitals: AdminVitals = {
+src/__tests__/services/adminEngine/adminEngine.test.ts:319:    const adminOnlyAction: AdminActionDefinition = {
+src/__tests__/services/adminEngine/adminEngine.test.ts:321:      displayName: 'Test Admin',
+src/__tests__/services/adminEngine/adminEngine.test.ts:335:    const devOrAdminAction: AdminActionDefinition = {
+src/__tests__/services/adminEngine/adminEngine.test.ts:341:    const allAction: AdminActionDefinition = {
+src/__tests__/services/adminEngine/adminEngine.test.ts:349:      expect(hasPermission('ADMIN', devOrAdminAction)).toBe(true);
+src/__tests__/services/adminEngine/adminEngine.test.ts:355:      expect(hasPermission('DEV', devOrAdminAction)).toBe(true);
+src/__tests__/services/adminEngine/adminEngine.test.ts:361:      expect(hasPermission('USER', devOrAdminAction)).toBe(false);
+src/__tests__/services/adminEngine/adminEngine.test.ts:388:      const action: AdminActionDefinition = {
+src/__tests__/services/adminEngine/adminEngine.test.ts:410:      const action: AdminActionDefinition = {
+src/__tests__/services/adminEngine/adminEngine.test.ts:440:      const vitals: AdminVitals = {
+src/__tests__/services/adminEngine/adminEngine.test.ts:469:      const vitals: AdminVitals = {
+src/__tests__/services/adminEngine/adminEngine.test.ts:609:  describe('createAdminEvent', () => {
+src/__tests__/services/adminEngine/adminEngine.test.ts:611:      const event = createAdminEvent(
+src/__tests__/services/adminEngine/adminEngine.test.ts:632:describe('Admin Engine - LogEngine', () => {
+src/__tests__/services/adminEngine/adminEngine.test.ts:682:      logEngine.info('admin', 'Admin message', { key: 'value' });
+src/__tests__/services/adminEngine/adminEngine.test.ts:797:describe('Admin Engine - ActionsEngine', () => {
+src/__tests__/services/adminEngine/adminEngine.test.ts:885:describe('Admin Engine - Facade', () => {
+src/__tests__/services/adminEngine/adminEngine.test.ts:886:  let adminEngine: AdminEngine;
+src/__tests__/services/adminEngine/adminEngine.test.ts:889:    adminEngine = getAdminEngine();
+src/__tests__/services/adminEngine/adminEngine.test.ts:973:describe('Admin Engine - Singleton', () => {
+src/__tests__/services/adminEngine/adminEngine.test.ts:974:  it('getAdminEngine devrait retourner la même instance', () => {
+src/__tests__/services/adminEngine/adminEngine.test.ts:975:    const engine1 = getAdminEngine();
+src/__tests__/services/adminEngine/adminEngine.test.ts:976:    const engine2 = getAdminEngine();
+src/__tests__/services/adminEngine/adminEngine.test.ts:980:  it('resetAdminEngine devrait créer une nouvelle instance', () => {
+src/__tests__/services/adminEngine/adminEngine.test.ts:981:    const engine1 = getAdminEngine();
+src/__tests__/services/adminEngine/adminEngine.test.ts:982:    resetAdminEngine();
+src/__tests__/services/adminEngine/adminEngine.test.ts:983:    const engine2 = getAdminEngine();
+src/__tests__/services/voice/voiceRouter.test.ts:74:describe('services/voice/voiceRouter', () => {
+src/__tests__/services/voice/voiceRouter.test.ts:92:    const { voiceRouter } = await import('../../../services/voice/voiceRouter');
+src/__tests__/services/voice/voiceRouter.test.ts:95:    const result = await voiceRouter.processVoiceTurn('   ', send);
+src/__tests__/services/voice/voiceRouter.test.ts:105:    const { voiceRouter } = await import('../../../services/voice/voiceRouter');
+src/__tests__/services/voice/voiceRouter.test.ts:123:    const resultPromise = voiceRouter.processVoiceTurn('salut', send, {
+src/__tests__/services/voice/voiceRouter.test.ts:164:    expect(voiceRouter.getState()).toBe('idle');
+src/__tests__/services/voice/voiceRouter.test.ts:171:    const { voiceRouter } = await import('../../../services/voice/voiceRouter');
+src/__tests__/services/voice/voiceRouter.test.ts:177:    const promise = voiceRouter.processVoiceTurn('salut', send, {
+src/__tests__/services/voice/voiceRouter.test.ts:194:    expect(voiceRouter.getState()).toBe('error');
+src/__tests__/services/voice/voiceRouter.test.ts:196:    expect(voiceRouter.getState()).toBe('idle');
+src/__tests__/services/voice/voiceRouter.test.ts:201:    const { voiceRouter } = await import('../../../services/voice/voiceRouter');
+src/__tests__/services/voice/voiceRouter.test.ts:217:    const turnPromise = voiceRouter.processVoiceTurn('salut', send, {
+src/__tests__/services/voice/voiceRouter.test.ts:221:    // Attendre que le router soit effectivement en "speaking".
+src/__tests__/services/voice/voiceRouter.test.ts:224:      if (voiceRouter.getState() === 'speaking') break;
+src/__tests__/services/voice/voiceRouter.test.ts:230:    expect(voiceRouter.getState()).toBe('speaking');
+src/__tests__/services/voice/voiceRouter.test.ts:233:    await voiceRouter.abort();
+src/__tests__/services/voice/voiceRouter.test.ts:238:    expect(voiceRouter.getState()).toBe('idle');
+src/__tests__/services/voice/voiceRouter.test.ts:250:    expect(voiceRouter.getState()).toBe('idle');
+src/modules/fusion/FusionEngine.ts:54:  | 'sudo' // SUDO commands, Admin
+src/modules/fusion/FusionEngine.ts:60:  | 'admin' // Admin tools, Logs
+src/modules/hybrid/HybridEngine.ts:260:      // Route vers la bonne action
+src/modules/devSudo/devSudoVisionHandlers.ts:921:### **Routes**:
+src/modules/devSudo/devSudoVisionHandlers.ts:932:function AppRoutes() {
+src/modules/devSudo/devSudoVisionHandlers.ts:935:      <Routes>
+src/modules/devSudo/devSudoVisionHandlers.ts:936:        <Route path="/audio" element={<AudioCenter />} />
+src/modules/devSudo/devSudoVisionHandlers.ts:937:        <Route path="/dev" element={<Developer />} />
+src/modules/devSudo/devSudoVisionHandlers.ts:938:      </Routes>
+src/design-system/motion.ts:88: * Usage: Dropdowns, menus
+src/modules/devSudo/devSudoHandler.ts:4409:  - Log Engine (Admin + UI + Evolution) ✓
+src/features/developer-mode/types.ts:93:  security_level: 'Standard' | 'Elevated' | 'Admin';
+src/modules/devSudo/devSudoExecutor.test.ts:154:          action: 'show-menu',
+src/modules/devSudo/devSudoExecutor.test.ts:156:          raw: 'show menu',
+src/modules/devSudo/devSudoExecutor.test.ts:175:          action: 'show-menu',
+src/modules/devSudo/devSudoExecutor.test.ts:177:          raw: 'show menu',
+src/modules/devSudo/devSudoExecutor.test.ts:391:        action: 'show-menu',
+src/modules/devSudo/devSudoExecutor.test.ts:393:        raw: 'show menu',
+src/modules/devSudo/devSudoExecutor.test.ts:409:          action: 'show-menu',
+src/modules/devSudo/devSudoExecutor.test.ts:411:          raw: 'show menu',
+src/features/production-health/ProductionHealthPanel.tsx:3: * Displays production health metrics in AdminPage tab
+src/hooks/useVoiceEngine.ts:29:import { voiceRouter } from '@/services/voice/voiceRouter';
+src/hooks/useVoiceEngine.ts:469:   * ✅ REFACTORÉ v19.3.1 : Pipeline complet IA + TTS via VoiceRouter
+src/hooks/useVoiceEngine.ts:470:   * Le VoiceRouter orchestre : Transcription → IA → TTS → Done
+src/hooks/useVoiceEngine.ts:475:        console.log('[useVoiceEngine] 🎙️ Processing turn with VoiceRouter...');
+src/hooks/useVoiceEngine.ts:477:        // Déléguer au VoiceRouter pour orchestration complète
+src/hooks/useVoiceEngine.ts:478:        const result = await voiceRouter.processVoiceTurn(transcript, chat.sendMessage, {
+src/hooks/useVoiceEngine.ts:482:          onStateChange: routerState => {
+src/hooks/useVoiceEngine.ts:483:            // Synchroniser l'état du hook avec le router
+src/hooks/useVoiceEngine.ts:484:            if (routerState === 'processing') {
+src/hooks/useVoiceEngine.ts:486:            } else if (routerState === 'speaking') {
+src/hooks/useVoiceEngine.ts:488:            } else if (routerState === 'done' || routerState === 'idle') {
+src/hooks/useVoiceEngine.ts:490:            } else if (routerState === 'error') {
+src/hooks/useVoiceEngine.ts:507:            console.error('[useVoiceEngine] ❌ VoiceRouter error:', error);
+src/hooks/useVoiceEngine.ts:627:   * ✅ REFACTORÉ v19.3.1 : Cancel avec VoiceRouter
+src/hooks/useVoiceEngine.ts:633:      // Abort VoiceRouter si tour en cours
+src/hooks/useVoiceEngine.ts:634:      await voiceRouter.abort();
+src/hooks/useVoiceEngine.ts:641:      // Stop TTS if speaking (redondant avec voiceRouter.abort, mais sécurité)
+src/modules/devSudo/devSudoHandler.test.ts:344:      const quickCommands = ['fix deps', 'restart', 'menu', 'fix all'];
+src/modules/devSudo/devSudoHandler.test.ts:378:        .map(() => parseDevSudoCommand('show menu')!);
+src/features/menu-editor/MenuEditor.tsx:6: *   MENU EDITOR — Éditeur de menu avec drag & drop
+src/features/menu-editor/MenuEditor.tsx:201:                    placeholder="Route (ex: /ma-page)"
+src/features/menu-editor/MenuEditor.tsx:316:              Enregistrer le menu
+src/modules/devSudo/devSudoBuiltins.ts:2325:  - Log Engine (Admin + UI + Evolution) ✓
+src/modules/devSudo/devSudoIDEHandlers.ts:672:  ✅ Routing: React Router functional
+src/modules/talkToTitane/AutoSaveConversationEngine.ts:173:        // - Source: window.location.pathname or React Router useLocation()
+src/hooks/useConversationEngine.ts:35:import { readActiveModuleContext } from '@/services/chat/moduleRouteContext';
+src/modules/vocalDev/VocalDevConsoleEngine.ts:453:      // 2. Route to appropriate handler
+src/modules/vocalDev/VocalDevConsoleEngine.ts:632:      // Route to Tauri backend dev command
+src/modules/vocalDev/VocalDevConsoleEngine.ts:660:      // Route to AI provider based on config
+src/components/twin/TwinEvolutionPanel.tsx:19:  isAdmin?: boolean;
+src/components/twin/TwinEvolutionPanel.tsx:28:  isAdmin = false,
+src/components/twin/TwinEvolutionPanel.tsx:119:        {isAdmin && (
+src/components/twin/TwinEvolutionPanel.tsx:124:            ⚙️ Admin
+src/components/twin/TwinEvolutionPanel.tsx:145:        {activeTab === 'admin' && isAdmin && (
+src/components/twin/TwinEvolutionPanel.tsx:146:          <AdminTab onRecalculate={recalculateFusion} onTransition={transitionPhase} />
+src/components/twin/TwinEvolutionPanel.tsx:439:interface AdminTabProps {
+src/components/twin/TwinEvolutionPanel.tsx:444:const AdminTab: React.FC<AdminTabProps> = ({ onRecalculate, onTransition }) => {
+src/components/twin/TwinEvolutionPanel.tsx:451:      console.log('[Admin] New fusion score:', score);
+src/components/twin/TwinEvolutionPanel.tsx:468:      <h3>⚙️ Administration Twin</h3>
+src/features/one-core/OneCorePage.tsx:14:import { useNavigate } from 'react-router-dom';
+src/_deprecated/router.tsx:12: *   This router is NOT used by the application.
+src/_deprecated/router.tsx:13: *   The canonical router is: src/AppRoutes.tsx (used via src/App.tsx)
+src/_deprecated/router.tsx:22:import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
+src/_deprecated/router.tsx:104:  const currentRoute = window.location.pathname;
+src/_deprecated/router.tsx:112:      currentRoute={currentRoute}
+src/_deprecated/router.tsx:125:const router = createBrowserRouter([
+src/_deprecated/router.tsx:253:export const TitaneRouter: React.FC = () => {
+src/_deprecated/router.tsx:254:  return <RouterProvider router={router} />;
+src/_deprecated/router.tsx:261:export default router;
+src/App.tsx:14: *   React Router + AppShell + Living Engines + Code Splitting
+src/App.tsx:20:  BrowserRouter,
+src/App.tsx:21:  Routes,
+src/App.tsx:22:  Route,
+src/App.tsx:26:} from 'react-router-dom';
+src/App.tsx:78:import { publishActiveModuleContext } from '@/services/chat/moduleRouteContext';
+src/App.tsx:160:const AdminPage = lazy(() =>
+src/App.tsx:161:  import('./features/admin').then(m => ({ default: m.AdminPage }))
+src/App.tsx:273: * APP ROUTER - Composant interne avec accès au router + Living Engines
+src/App.tsx:276:const AppRouter: React.FC = () => {
+src/App.tsx:291:        component: 'AppRouter',
+src/App.tsx:882:        description: 'Centre Admin Unifié',
+src/App.tsx:890:      // Dans menu "Plus"
+src/App.tsx:1000:          currentRoute={location.pathname}
+src/App.tsx:1023:        <Routes>
+src/App.tsx:1024:          {/* Main Routes v25.3.0 - TITANE Homepage */}
+src/App.tsx:1025:          <Route path="/" element={<Navigate to="/titane" replace />} />
+src/App.tsx:1027:          <Route
+src/App.tsx:1036:          <Route path="/chat" element={<Navigate to="/titane" replace />} />
+src/App.tsx:1037:          <Route path="/camera" element={<Navigate to="/titane" replace />} />
+src/App.tsx:1038:          <Route path="/evo" element={<Navigate to="/titane" replace />} />
+src/App.tsx:1039:          <Route path="/dashboard" element={<Navigate to="/titane" replace />} />
+src/App.tsx:1040:          <Route path="/evolution-center" element={<Navigate to="/titane" replace />} />
+src/App.tsx:1041:          <Route
+src/App.tsx:1045:          <Route
+src/App.tsx:1049:          <Route path="/progression" element={<Navigate to="/titane" replace />} />
+src/App.tsx:1050:          <Route path="/xp" element={<Navigate to="/titane" replace />} />
+src/App.tsx:1052:          <Route path="/cognitive" element={<Navigate to="/stats" replace />} />
+src/App.tsx:1053:          <Route
+src/App.tsx:1061:          <Route path="/experience" element={<Experience />} /> {/* ✨ v∞.D5 - Page XP */}
+src/App.tsx:1063:          <Route
+src/App.tsx:1072:          <Route path="/temporal-center" element={<Navigate to="/time" replace />} />
+src/App.tsx:1073:          <Route path="/agenda" element={<Navigate to="/time" replace />} />
+src/App.tsx:1074:          <Route path="/time-navigator" element={<Navigate to="/time" replace />} />
+src/App.tsx:1076:          <Route
+src/App.tsx:1079:              <ErrorBoundary context="AdminCenter">
+src/App.tsx:1080:                <AdminPage />
+src/App.tsx:1085:          <Route path="/system-center" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1086:          <Route path="/diagnostics" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1087:          <Route path="/devtools" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1088:          <Route path="/cluster" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1089:          <Route path="/introspection" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1090:          <Route path="/hypervision" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1091:          <Route path="/configuration" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1092:          <Route path="/design-center" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1093:          <Route path="/design-system" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1094:          <Route path="/settings" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1095:          <Route path="/governance-center" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1096:          <Route path="/governance" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1097:          <Route path="/secure" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1098:          <Route path="/audio-center" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1099:          <Route path="/audio" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1100:          <Route path="/voice" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1101:          <Route path="/tts" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1103:          <Route
+src/App.tsx:1114:          <Route
+src/App.tsx:1125:          <Route
+src/App.tsx:1134:          <Route
+src/App.tsx:1142:          <Route
+src/App.tsx:1147:          <Route path="/meta" element={<Navigate to="/orchestration-center" replace />} />
+src/App.tsx:1148:          <Route
+src/App.tsx:1152:          <Route
+src/App.tsx:1156:          <Route
+src/App.tsx:1160:          <Route
+src/App.tsx:1165:          <Route
+src/App.tsx:1174:          <Route path="/one-core" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1175:          <Route path="/command-center" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1176:          <Route path="/unified" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1177:          <Route path="/qa-monitoring" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1178:          <Route path="/qa" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1179:          <Route path="/monitoring" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1180:          <Route path="/tests" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1181:          <Route path="/developer-mode" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1182:          <Route path="/dev-mode" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1183:          <Route path="/devmode" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1184:          <Route path="/ia-dev" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1186:          <Route
+src/App.tsx:1191:          <Route
+src/App.tsx:1199:          <Route path="/reality" element={<Navigate to="/reality-center" replace />} />
+src/App.tsx:1200:          <Route path="/renderer" element={<Navigate to="/reality-center" replace />} />
+src/App.tsx:1202:          <Route
+src/App.tsx:1210:          <Route path="/hyper" element={<Navigate to="/hyper-center" replace />} />
+src/App.tsx:1211:          <Route path="/intelligence" element={<Navigate to="/hyper-center" replace />} />
+src/App.tsx:1213:          <Route
+src/App.tsx:1221:          <Route path="/quantum" element={<Navigate to="/quantum-center" replace />} />
+src/App.tsx:1223:          <Route
+src/App.tsx:1231:          <Route path="/identity" element={<Navigate to="/identity-center" replace />} />
+src/App.tsx:1232:          <Route path="/persona" element={<Navigate to="/identity-center" replace />} />
+src/App.tsx:1234:          <Route
+src/App.tsx:1242:          <Route
+src/App.tsx:1247:          <Route
+src/App.tsx:1255:          <Route path="/cloud-sync" element={<Navigate to="/cloud" replace />} />
+src/App.tsx:1256:          <Route path="/vault" element={<Navigate to="/cloud" replace />} />
+src/App.tsx:1257:          {/* ❌ SUPPRIMÉ v24.3.7: Route /multi-ai (deprecated stub) */}
+src/App.tsx:1259:          <Route path="/knowledge" element={<KnowledgeFusionPage />} />
+src/App.tsx:1260:          <Route path="/creation" element={<CreationStudio />} />
+src/App.tsx:1261:          <Route path="/evolution" element={<EvolutionMonitor />} />
+src/App.tsx:1263:          <Route
+src/App.tsx:1271:          {/* Engine Routes */}
+src/App.tsx:1273:          <Route path="/sentinel" element={<Sentinel />} />
+src/App.tsx:1274:          <Route path="/watchdog" element={<Watchdog />} />
+src/App.tsx:1275:          <Route path="/selfheal" element={<SelfHeal />} />
+src/App.tsx:1276:          <Route path="/adaptive" element={<AdaptiveEngine />} />
+src/App.tsx:1277:          <Route path="/memory" element={<Memory />} />
+src/App.tsx:1278:          <Route path="/research" element={<ResearchPage />} />
+src/App.tsx:1279:          {/* System Routes (Phase 9: lazy loaded) */}
+src/App.tsx:1280:          <Route path="/performance" element={<PerformanceTest />} />
+src/App.tsx:1282:          <Route path="*" element={<Navigate to="/" replace />} />
+src/App.tsx:1283:        </Routes>
+src/App.tsx:1334: * ThemeProvider > AnimationProvider > TitanStateProvider > BrowserRouter > AutoHealErrorBoundary
+src/App.tsx:1371:            <BrowserRouter>
+src/App.tsx:1373:                <AppRouter />
+src/App.tsx:1375:            </BrowserRouter>
+src/CARTE_POINTS_CRITIQUES.ts:62: *     <BrowserRouter>
+src/CARTE_POINTS_CRITIQUES.ts:64: *         <AppRouter />
+src/CARTE_POINTS_CRITIQUES.ts:66: *     </BrowserRouter>
+src/CARTE_POINTS_CRITIQUES.ts:71: *   ✅ Wrappers : ThemeProvider + BrowserRouter + ErrorBoundary
+src/CARTE_POINTS_CRITIQUES.ts:72: *   ✅ AppRouter qui affiche AppShell + Routes
+src/CARTE_POINTS_CRITIQUES.ts:86: * Composant : AppRouter
+src/CARTE_POINTS_CRITIQUES.ts:89: * Routes définies :
+src/CARTE_POINTS_CRITIQUES.ts:99: *     <Routes>
+src/CARTE_POINTS_CRITIQUES.ts:100: *       <Route path="/" element={<DashboardPage />} />
+src/CARTE_POINTS_CRITIQUES.ts:102: *     </Routes>
+src/features/governance-center/GovernanceCenterPage.tsx:193:            SuperAdmin: <strong>{SUPER_ADMIN.name}</strong>
+src/utils/autoHealClient.ts:153:    if (stack.includes('Router') || stack.includes('Route')) return 'router';
+src/utils/autoHealClient.ts:154:    if (stack.includes('Menu') || stack.includes('Navigation')) return 'router';
+src/utils/clearMenuCache.ts:3: * Force suppression du cache localStorage du menu
+src/utils/clearMenuCache.ts:8:    // Supprimer config menu
+src/utils/clearMenuCache.ts:9:    localStorage.removeItem('titane_menu_config');
+src/utils/clearMenuCache.ts:12:    const keysToRemove = ['titane_menu_sections', 'menu_config', 'navigation_config'];
+src/utils/clearMenuCache.ts:18:    console.log('✅ Cache menu nettoyé - Rechargez la page');
+src/utils/clearMenuCache.ts:20:    console.error('❌ Erreur nettoyage cache menu:', error);
+src/features/governance-center/types.ts:364: * Kevin Thibault est le seul superAdmin de TITANE∞
+src/features/governance-center/types.ts:375: * Vérifier si l'utilisateur actuel est Kevin (superAdmin)
+src/features/governance-center/types.ts:377:export function isSuperAdmin(userId?: string): boolean {
+src/utils/routePreloading.ts:9: *   import { useRoutePreloading, preloadRoute } from '@utils/routePreloading';
+src/utils/routePreloading.ts:12: *   useRoutePreloading();
+src/utils/routePreloading.ts:15: *   preloadRoute('@pages/centers/QuantumCenter');
+src/utils/routePreloading.ts:19:import { useLocation } from 'react-router';
+src/utils/routePreloading.ts:47:export const preloadRoute = (
+src/utils/routePreloading.ts:84:export const preloadRoutes = (
+src/utils/routePreloading.ts:88:  return Promise.all(paths.map(path => preloadRoute(path, priority)));
+src/utils/routePreloading.ts:101: *   useRoutePreloading();
+src/utils/routePreloading.ts:103:export const useRoutePreloading = () => {
+src/utils/routePreloading.ts:107:    const currentRoute = location.pathname;
+src/utils/routePreloading.ts:108:    const nextRoutes = ROUTE_CHUNKS[currentRoute] || [];
+src/utils/routePreloading.ts:110:    if (nextRoutes.length > 0) {
+src/utils/routePreloading.ts:112:      preloadRoutes(nextRoutes, 'low')
+src/utils/routePreloading.ts:115:            `✅ Preloaded ${nextRoutes.length} chunks for route: ${currentRoute}`
+src/utils/routePreloading.ts:159: * @param currentRoute - Current route path
+src/utils/routePreloading.ts:162:export const predictNextRoute = (
+src/utils/routePreloading.ts:163:  currentRoute: string,
+src/utils/routePreloading.ts:164:  userBehavior?: { lastRoute?: string; sessionDuration?: number }
+src/utils/routePreloading.ts:166:  const nextRoutes = ROUTE_CHUNKS[currentRoute] || [];
+src/utils/routePreloading.ts:174:  return nextRoutes;
+src/utils/routePreloading.ts:193:    await preloadRoutes(criticalChunks, 'high');
+src/utils/routePreloading.ts:206: * @param navigate - React Router navigate function
+src/utils/routePreloading.ts:214:  preloadRoute(path, 'high');
+src/utils/routePreloading.ts:217:  const nextRoutes = ROUTE_CHUNKS[path] || [];
+src/utils/routePreloading.ts:218:  if (nextRoutes.length > 0) {
+src/utils/routePreloading.ts:219:    preloadRoutes(nextRoutes, 'low');
+src/utils/routePreloading.ts:232: * @param path - Route path
+src/utils/routePreloading.ts:237:  preloadRoute(path, 'high');
+src/utils/routePreloading.ts:248:export const registerRouteChunks = (routeMap: Record<string, string[]>): void => {
+src/styles/css-vars.css:352:  /* ADMIN PANEL v25.4.2 — Admin-specific Variables                  */
+src/styles/css-vars.css:362:  /* Admin Design Panel (ADP) */
+src/features/governance-center/tabs/SecretsTab.tsx:795:            Kevin Thibault est le seul superAdmin autorisé à modifier les secrets
+src/features/governance-center/tabs/SecurityLogTab.tsx:376:            <div style={{ fontWeight: 600, color: '#ffc107' }}>Accès SuperAdmin</div>
+src/components/experience/XPBar.tsx:12:import { useNavigate } from 'react-router-dom';
+src/components/layout/__tests__/TopNav.test.tsx:16:  return render(<TopNav items={items} currentRoute="/" onNavigate={vi.fn()} />);
+src/components/layout/__tests__/TopNav.test.tsx:24:      expect(visibleButtons.length).toBeLessThanOrEqual(6); // 5 items + Plus menu
+src/components/layout/__tests__/TopNav.test.tsx:27:    it('should display Plus menu when more than 5 items', () => {
+src/components/layout/__tests__/TopNav.test.tsx:53:    it('should have aria-expanded on dropdown menu', () => {
+src/components/layout/__tests__/TopNav.test.tsx:69:    it('should toggle dropdown menu on click', () => {
+src/pages/TitanePage.tsx:27: * - TitanePage now acts as an orchestrator/router for tab switching
+src/components/admin/AdminDashboard.tsx:3: * TITANE∞ ADMIN ENGINE — Admin Dashboard Component
+src/components/admin/AdminDashboard.tsx:6: * @file        AdminDashboard.tsx
+src/components/admin/AdminDashboard.tsx:9: * Dashboard principal de l'Admin Engine
+src/components/admin/AdminDashboard.tsx:39:  AdminSnapshot,
+src/components/admin/AdminDashboard.tsx:40:  AdminRole,
+src/components/admin/AdminDashboard.tsx:43:  AdminView,
+src/components/admin/AdminDashboard.tsx:46:  getAdminEngine,
+src/components/admin/AdminDashboard.tsx:59:export interface AdminDashboardProps {
+src/components/admin/AdminDashboard.tsx:61:  userRole: AdminRole;
+src/components/admin/AdminDashboard.tsx:186:  activeView: AdminView;
+src/components/admin/AdminDashboard.tsx:187:  onViewChange: (view: AdminView) => void;
+src/components/admin/AdminDashboard.tsx:188:  userRole: AdminRole;
+src/components/admin/AdminDashboard.tsx:190:  const views: { id: AdminView; label: string; icon: React.ReactNode }[] = [
+src/components/admin/AdminDashboard.tsx:230:export const AdminDashboard: React.FC<AdminDashboardProps> = ({
+src/components/admin/AdminDashboard.tsx:236:  const [snapshot, setSnapshot] = useState<AdminSnapshot>(createEmptySnapshot());
+src/components/admin/AdminDashboard.tsx:237:  const [activeView, setActiveView] = useState<AdminView>('OVERVIEW');
+src/components/admin/AdminDashboard.tsx:242:  const adminEngine = useMemo(() => getAdminEngine(), []);
+src/components/admin/AdminDashboard.tsx:261:      console.error('[AdminDashboard] Erreur collecte snapshot:', error);
+src/components/admin/AdminDashboard.tsx:326:          <span>Accès Admin requis</span>
+src/components/admin/AdminDashboard.tsx:341:          <h2 className="text-xl font-bold text-[#C4C4C4]">Admin Dashboard</h2>
+src/components/admin/AdminDashboard.tsx:624:              <p className="text-sm">Voir AdminTimeline pour la timeline</p>
+src/components/admin/AdminDashboard.tsx:639:              <p className="text-sm">Voir AdminActions pour les actions admin</p>
+src/components/admin/AdminDashboard.tsx:646:              <p>Configuration Admin - À implémenter</p>
+src/components/admin/AdminDashboard.tsx:655:export default AdminDashboard;
+src/components/layout/TopNav.tsx:10: * Max 5 entrées visibles + menu "Plus" pour le reste
+src/components/layout/TopNav.tsx:47:  currentRoute: string;
+src/components/layout/TopNav.tsx:71:  currentRoute,
+src/components/layout/TopNav.tsx:90:  // Séparer items visibles vs menu "Plus"
+src/components/layout/TopNav.tsx:136:  // Fermer menu "Plus" si clic extérieur
+src/components/layout/TopNav.tsx:150:  // Fermer menu sur navigation
+src/components/layout/TopNav.tsx:153:  }, [currentRoute]);
+src/components/layout/TopNav.tsx:163:    return currentRoute === route || currentRoute.startsWith(route);
+src/components/layout/TopNav.tsx:256:                  role="menu"
+src/components/layout/TopNav.tsx:265:                        role="menuitem"
+src/components/layout/TopNav.tsx:351:  menuSections: Array<{
+src/components/layout/TopNav.tsx:358:  return menuSections.map(section => ({
+src/utils/lazyEngineLoader.tsx:323: *   return <Router />;
+src/utils/lazyEngineLoader.tsx:327: * ## Pattern 4: Route-Based Loading
+src/utils/lazyEngineLoader.tsx:329: * function Router() {
+src/utils/lazyEngineLoader.tsx:331: *     <Routes>
+src/utils/lazyEngineLoader.tsx:332: *       <Route path="/voice" element={
+src/utils/lazyEngineLoader.tsx:337: *     </Routes>
+src/components/admin/index.ts:3: * TITANE∞ ADMIN ENGINE — Admin Components Index
+src/components/admin/index.ts:9: * Point d'entrée pour les composants UI de l'Admin Engine
+src/components/admin/index.ts:14:export { AdminDashboard } from './AdminDashboard';
+src/components/admin/index.ts:15:export type { AdminDashboardProps } from './AdminDashboard';
+src/components/admin/index.ts:17:export { AdminActions } from './AdminActions';
+src/components/admin/index.ts:18:export type { AdminActionsProps } from './AdminActions';
+src/components/admin/index.ts:20:export { AdminTimeline } from './AdminTimeline';
+src/components/admin/index.ts:21:export type { AdminTimelineProps } from './AdminTimeline';
+src/components/layout/MobileNav.tsx:53:  // Close menu on route change
+src/components/layout/MobileNav.tsx:55:    const handleRouteChange = () => setIsOpen(false);
+src/components/layout/MobileNav.tsx:56:    window.addEventListener('popstate', handleRouteChange);
+src/components/layout/MobileNav.tsx:57:    return () => window.removeEventListener('popstate', handleRouteChange);
+src/components/layout/MobileNav.tsx:122:          aria-label={isOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+src/components/layout/MobileNav.tsx:124:          aria-controls="mobile-nav-menu"
+src/components/layout/MobileNav.tsx:167:            id="mobile-nav-menu"
+src/components/layout/MobileNav.tsx:238:                aria-label="Fermer le menu"
+src/components/layout/MobileNav.tsx:240:                Fermer le menu
+src/components/admin/AdminTimeline.tsx:3: * TITANE∞ ADMIN ENGINE — Admin Timeline Component
+src/components/admin/AdminTimeline.tsx:6: * @file        AdminTimeline.tsx
+src/components/admin/AdminTimeline.tsx:34:  AdminLogRecord,
+src/components/admin/AdminTimeline.tsx:35:  AdminEvent,
+src/components/admin/AdminTimeline.tsx:42:  getAdminEngine,
+src/components/admin/AdminTimeline.tsx:52:export interface AdminTimelineProps {
+src/components/admin/AdminTimeline.tsx:89:  log: AdminLogRecord;
+src/components/admin/AdminTimeline.tsx:182:  event: AdminEvent;
+src/components/admin/AdminTimeline.tsx:269:export const AdminTimeline: React.FC<AdminTimelineProps> = ({
+src/components/admin/AdminTimeline.tsx:275:  const [logs, setLogs] = useState<AdminLogRecord[]>([]);
+src/components/admin/AdminTimeline.tsx:276:  const [events, setEvents] = useState<AdminEvent[]>([]);
+src/components/admin/AdminTimeline.tsx:286:  const adminEngine = useMemo(() => getAdminEngine(), []);
+src/components/admin/AdminTimeline.tsx:361:      data: AdminLogRecord | AdminEvent;
+src/components/admin/AdminTimeline.tsx:508:                key={(item.data as AdminLogRecord).id}
+src/components/admin/AdminTimeline.tsx:509:                log={item.data as AdminLogRecord}
+src/components/admin/AdminTimeline.tsx:510:                isExpanded={expandedIds.has((item.data as AdminLogRecord).id)}
+src/components/admin/AdminTimeline.tsx:511:                onToggle={() => toggleExpanded((item.data as AdminLogRecord).id)}
+src/components/admin/AdminTimeline.tsx:515:                key={(item.data as AdminEvent).id}
+src/components/admin/AdminTimeline.tsx:516:                event={item.data as AdminEvent}
+src/components/admin/AdminTimeline.tsx:517:                isExpanded={expandedIds.has((item.data as AdminEvent).id)}
+src/components/admin/AdminTimeline.tsx:518:                onToggle={() => toggleExpanded((item.data as AdminEvent).id)}
+src/components/admin/AdminTimeline.tsx:528:export default AdminTimeline;
+src/components/admin/AdminActions.tsx:3: * TITANE∞ ADMIN ENGINE — Admin Actions Component
+src/components/admin/AdminActions.tsx:6: * @file        AdminActions.tsx
+src/components/admin/AdminActions.tsx:42:  AdminRole,
+src/components/admin/AdminActions.tsx:43:  AdminActionDefinition,
+src/components/admin/AdminActions.tsx:44:  AdminActionResult,
+src/components/admin/AdminActions.tsx:48:  getAdminEngine,
+src/components/admin/AdminActions.tsx:57:export interface AdminActionsProps {
+src/components/admin/AdminActions.tsx:59:  userRole: AdminRole;
+src/components/admin/AdminActions.tsx:60:  onActionExecuted?: (actionId: string, result: AdminActionResult) => void;
+src/components/admin/AdminActions.tsx:66:  result: AdminActionResult | null;
+src/components/admin/AdminActions.tsx:111:  action: AdminActionDefinition;
+src/components/admin/AdminActions.tsx:112:  userRole: AdminRole;
+src/components/admin/AdminActions.tsx:276:export const AdminActions: React.FC<AdminActionsProps> = ({
+src/components/admin/AdminActions.tsx:285:  const adminEngine = useMemo(() => getAdminEngine(), []);
+src/components/admin/AdminActions.tsx:347:    async (action: AdminActionDefinition) => {
+src/components/admin/AdminActions.tsx:360:        const errorResult: AdminActionResult = {
+src/components/admin/AdminActions.tsx:379:    (action: AdminActionDefinition) => {
+src/components/admin/AdminActions.tsx:397:    (action: AdminActionDefinition) => {
+src/components/admin/AdminActions.tsx:420:        <h2 className="text-xl font-bold text-[#C4C4C4]">Actions Admin</h2>
+src/components/admin/AdminActions.tsx:502:export default AdminActions;
+src/pages/TimePage.tsx:1031:              <div>• 16:15-17:30 : Admin & communication</div>
+src/pages/ResearchPage.tsx:16:import { useLocation } from 'react-router-dom';
+src/features/meta-dashboard/index.ts:6:export { MetaDashboardRouter } from './MetaDashboardRouter';
+src/features/meta-dashboard/index.ts:7:export { default as MetaDashboard } from './MetaDashboardRouter';
+src/features/meta-dashboard/MetaDashboardRouter.tsx:2: * TITANE∞ v24.2.1 — Meta-Dashboard Router
+src/features/meta-dashboard/MetaDashboardRouter.tsx:99:export const MetaDashboardRouter: React.FC = () => {
+src/features/meta-dashboard/MetaDashboardRouter.tsx:290:export default MetaDashboardRouter;
+src/features/meta-dashboard/MetaDashboardRouter.tsx:297: * import { MetaDashboardRouter } from '@/features/meta-dashboard';
+src/features/meta-dashboard/MetaDashboardRouter.tsx:299: * <Route path="/dashboard" element={<MetaDashboardRouter />} />
+src/components/Onboarding/ReadyStep.tsx:82:            text="Explorez les différents engines dans le menu latéral pour découvrir toutes les fonctionnalités"
+src/components/chat/ConversationsSidebar.css:216:.conversation-item__menu {
+src/components/chat/ConversationsSidebar.css:229:.conversation-item__menu-btn {
+src/components/chat/ConversationsSidebar.css:244:.conversation-item__menu-btn:hover {
+src/components/chat/ConversationsSidebar.css:248:.conversation-item__menu-btn:focus-visible {
+src/components/chat/ConversationsSidebar.css:253:.conversation-item__menu-btn--danger {
+src/components/chat/ConversationsSidebar.css:257:.conversation-item__menu-btn--danger:hover {
+src/components/chat/ChatModeSelector.css:82:.chat-mode-selector__menu {
+src/components/chat/ChatModeSelector.css:299:  .chat-mode-selector__menu {
+src/components/chat/ChatModeSelector.css:322:.chat-mode-selector__menu::-webkit-scrollbar {
+src/components/chat/ChatModeSelector.css:326:.chat-mode-selector__menu::-webkit-scrollbar-track {
+src/components/chat/ChatModeSelector.css:330:.chat-mode-selector__menu::-webkit-scrollbar-thumb {
+src/features/admin/index.ts:2: * TITANE∞ v25.2.2 — Admin Center Index
+src/features/admin/index.ts:7:export { AdminPage } from './AdminPage';
+src/features/admin/index.ts:8:export { ADMIN_TABS, type AdminTab, type AdminTabDefinition } from './types';
+src/features/admin/types.ts:2: * TITANE∞ v25.2.2 — Admin Center Types
+src/features/admin/types.ts:7:export type AdminTab =
+src/features/admin/types.ts:15:export interface AdminTabDefinition {
+src/features/admin/types.ts:16:  id: AdminTab;
+src/features/admin/types.ts:23:export const ADMIN_TABS: AdminTabDefinition[] = [
+src/features/admin/AdminPage.css:2: * TITANE∞ v25.2.2 — Admin Center Styles
+src/features/admin/AdminPage.css:12:  /* Colors - Admin Theme */
+src/components/chat/ChatModeSelector.tsx:165:          <div className="chat-mode-selector__menu" role="listbox">
+src/features/admin/AdminPage.tsx:2: * TITANE∞ v25.2.2 — Admin Center Page
+src/features/admin/AdminPage.tsx:20:import { type AdminTab, ADMIN_TABS } from './types';
+src/features/admin/AdminPage.tsx:21:import './AdminPage.css';
+src/features/admin/AdminPage.tsx:86:  tab: AdminTab;
+src/features/admin/AdminPage.tsx:94:          <ErrorBoundary context="AdminSystemCenter">
+src/features/admin/AdminPage.tsx:103:          <ErrorBoundary context="AdminConfigHub">
+src/features/admin/AdminPage.tsx:112:          <ErrorBoundary context="AdminAudioCenter">
+src/features/admin/AdminPage.tsx:121:          <ErrorBoundary context="AdminDesignCenter">
+src/features/admin/AdminPage.tsx:130:          <ErrorBoundary context="AdminGovernanceCenter">
+src/features/admin/AdminPage.tsx:139:          <ErrorBoundary context="AdminProductionHealth">
+src/features/admin/AdminPage.tsx:154:const AdminPageComponent: React.FC = () => {
+src/features/admin/AdminPage.tsx:155:  const [activeTab, setActiveTab] = useState<AdminTab>('system');
+src/features/admin/AdminPage.tsx:157:  const handleTabChange = useCallback((tab: AdminTab) => {
+src/features/admin/AdminPage.tsx:177:                Centre d&apos;Administration TITANE∞ — Système, Config, Audio, Design,
+src/features/admin/AdminPage.tsx:228:export const AdminPage = memo(AdminPageComponent);
+src/features/admin/AdminPage.tsx:229:AdminPage.displayName = 'AdminPage';
+src/features/admin/AdminPage.tsx:231:export default AdminPage;
+src/components/chat/ConversationsSidebar.tsx:174:                  <div className="conversation-item__menu">
+src/components/chat/ConversationsSidebar.tsx:177:                        className="conversation-item__menu-btn"
+src/components/chat/ConversationsSidebar.tsx:184:                        className="conversation-item__menu-btn"
+src/components/chat/ConversationsSidebar.tsx:191:                      className="conversation-item__menu-btn conversation-item__menu-btn--danger"
+src/config/chatModes.config.ts:138:const createAdminTools = (): ToolsPermissions => ({
+src/config/chatModes.config.ts:279:    label: 'Administrateur',
+src/config/chatModes.config.ts:285:    tools_allowed: createAdminTools(),
+src/config/chatModes.config.ts:383:    tools_allowed: createAdminTools(),
+src/ui/__tests__/Menu.test.tsx:15:import { BrowserRouter, MemoryRouter } from 'react-router-dom';
+src/ui/__tests__/Menu.test.tsx:20:vi.mock('react-router-dom', async () => {
+src/ui/__tests__/Menu.test.tsx:21:  const actual = await vi.importActual('react-router-dom');
+src/ui/__tests__/Menu.test.tsx:33:      <MemoryRouter initialEntries={[pathname]}>
+src/ui/__tests__/Menu.test.tsx:37:          currentRoute={pathname}
+src/ui/__tests__/Menu.test.tsx:40:      </MemoryRouter>
+src/ui/__tests__/Menu.test.tsx:64:        /menu principal|navigation principale/i
+src/ui/__tests__/Menu.test.tsx:68:    it('should mark menu items with role="menuitem"', () => {
+src/ui/__tests__/Menu.test.tsx:71:      const menuItems = screen.getAllByRole('menuitem');
+src/ui/__tests__/Menu.test.tsx:72:      expect(menuItems.length).toBeGreaterThan(0); // Menu has dynamic items
+src/ui/__tests__/Menu.test.tsx:78:      const titaneItem = screen.getByRole('menuitem', { name: /titane/i });
+src/ui/__tests__/Menu.test.tsx:85:      // Get all menu items and check that non-active ones don&apos;t have aria-current
+src/ui/__tests__/Menu.test.tsx:86:      const menuItems = screen.getAllByRole('menuitem');
+src/ui/__tests__/Menu.test.tsx:87:      const inactiveItems = menuItems.filter(
+src/ui/__tests__/Menu.test.tsx:97:        <MemoryRouter initialEntries={['/titane']}>
+src/ui/__tests__/Menu.test.tsx:101:            currentRoute="/titane"
+src/ui/__tests__/Menu.test.tsx:104:        </MemoryRouter>
+src/ui/__tests__/Menu.test.tsx:107:      let titaneItem = screen.getByRole('menuitem', { name: /titane/i });
+src/ui/__tests__/Menu.test.tsx:112:        <MemoryRouter initialEntries={['/stats']}>
+src/ui/__tests__/Menu.test.tsx:116:            currentRoute="/stats"
+src/ui/__tests__/Menu.test.tsx:119:        </MemoryRouter>
+src/ui/__tests__/Menu.test.tsx:122:      titaneItem = screen.getByRole('menuitem', { name: /titane/i });
+src/ui/__tests__/Menu.test.tsx:123:      const statsItem = screen.getByRole('menuitem', { name: /stats/i });
+src/ui/__tests__/Menu.test.tsx:132:      const toggleButton = screen.getByLabelText(/réduire le menu latéral/i);
+src/ui/__tests__/Menu.test.tsx:140:        <MemoryRouter initialEntries={['/titane']}>
+src/ui/__tests__/Menu.test.tsx:144:            currentRoute="/titane"
+src/ui/__tests__/Menu.test.tsx:147:        </MemoryRouter>
+src/ui/__tests__/Menu.test.tsx:150:      const toggleButton = screen.getByLabelText(/réduire le menu latéral/i);
+src/ui/__tests__/Menu.test.tsx:155:        <MemoryRouter initialEntries={['/titane']}>
+src/ui/__tests__/Menu.test.tsx:159:            currentRoute="/titane"
+src/ui/__tests__/Menu.test.tsx:162:        </MemoryRouter>
+src/ui/__tests__/Menu.test.tsx:165:      const toggleButtonAfter = screen.getByLabelText(/étendre le menu latéral/i);
+src/ui/__tests__/Menu.test.tsx:169:    it('should have descriptive aria-label on menu items', () => {
+src/ui/__tests__/Menu.test.tsx:172:      const titaneItem = screen.getByRole('menuitem', { name: /titane/i });
+src/ui/__tests__/Menu.test.tsx:181:      const menuItems = screen.getAllByRole('menuitem');
+src/ui/__tests__/Menu.test.tsx:184:      menuItems[0].focus();
+src/ui/__tests__/Menu.test.tsx:185:      expect(menuItems[0]).toHaveFocus();
+src/ui/__tests__/Menu.test.tsx:188:      fireEvent.keyDown(menuItems[0], { key: 'Tab' });
+src/ui/__tests__/Menu.test.tsx:191:      menuItems[1].focus();
+src/ui/__tests__/Menu.test.tsx:192:      expect(menuItems[1]).toHaveFocus();
+src/ui/__tests__/Menu.test.tsx:198:      const menuItems = screen.getAllByRole('menuitem');
+src/ui/__tests__/Menu.test.tsx:201:      menuItems[0].focus();
+src/ui/__tests__/Menu.test.tsx:204:      fireEvent.keyDown(menuItems[0], { key: 'ArrowDown' });
+src/ui/__tests__/Menu.test.tsx:208:        expect(menuItems[1]).toHaveFocus();
+src/ui/__tests__/Menu.test.tsx:215:      const menuItems = screen.getAllByRole('menuitem');
+src/ui/__tests__/Menu.test.tsx:218:      menuItems[1].focus();
+src/ui/__tests__/Menu.test.tsx:221:      fireEvent.keyDown(menuItems[1], { key: 'ArrowUp' });
+src/ui/__tests__/Menu.test.tsx:225:        expect(menuItems[0]).toHaveFocus();
+src/ui/__tests__/Menu.test.tsx:232:      const menuItems = screen.getAllByRole('menuitem');
+src/ui/__tests__/Menu.test.tsx:235:      menuItems[menuItems.length - 1].focus();
+src/ui/__tests__/Menu.test.tsx:238:      fireEvent.keyDown(menuItems[menuItems.length - 1], { key: 'ArrowDown' });
+src/ui/__tests__/Menu.test.tsx:242:        expect(menuItems[0]).toHaveFocus();
+src/ui/__tests__/Menu.test.tsx:249:      const menuItems = screen.getAllByRole('menuitem');
+src/ui/__tests__/Menu.test.tsx:252:      menuItems[0].focus();
+src/ui/__tests__/Menu.test.tsx:255:      fireEvent.keyDown(menuItems[0], { key: 'ArrowUp' });
+src/ui/__tests__/Menu.test.tsx:259:        expect(menuItems[menuItems.length - 1]).toHaveFocus();
+src/ui/__tests__/Menu.test.tsx:266:      // Use first available menu item
+src/ui/__tests__/Menu.test.tsx:267:      const menuItems = screen.getAllByRole('menuitem');
+src/ui/__tests__/Menu.test.tsx:268:      const firstItem = menuItems[0];
+src/ui/__tests__/Menu.test.tsx:281:      const statsItem = screen.getByRole('menuitem', { name: /stats/i });
+src/ui/__tests__/Menu.test.tsx:313:      const titaneItem = screen.getByRole('menuitem', { name: /titane/i });
+src/ui/__tests__/Menu.test.tsx:322:      const menuItems = screen.getAllByRole('menuitem');
+src/ui/__tests__/Menu.test.tsx:324:      menuItems.forEach(item => {
+src/ui/__tests__/Menu.test.tsx:335:    it('should have hover styles on menu items', () => {
+src/ui/__tests__/Menu.test.tsx:338:      const titaneItem = screen.getByRole('menuitem', { name: /titane/i });
+src/ui/__tests__/Menu.test.tsx:356:      const titaneItem = screen.getByRole('menuitem', { name: /titane/i });
+src/ui/__tests__/Menu.test.tsx:370:      const menuItems = screen.getAllByRole('menuitem');
+src/ui/__tests__/Menu.test.tsx:373:      menuItems[0].focus();
+src/ui/__tests__/Menu.test.tsx:376:      expect(document.activeElement).toBe(menuItems[0]);
+src/ui/__tests__/Menu.test.tsx:382:    // These tests need to be updated to match the new menu structure
+src/ui/__tests__/Menu.test.tsx:383:    it('should render menu items', () => {
+src/ui/__tests__/Menu.test.tsx:385:      const menuItems = screen.getAllByRole('menuitem');
+src/ui/__tests__/Menu.test.tsx:386:      expect(menuItems.length).toBeGreaterThan(0);
+src/ui/__tests__/Menu.test.tsx:389:    it('should have clickable menu items that navigate', () => {
+src/ui/__tests__/Menu.test.tsx:391:      const menuItems = screen.getAllByRole('menuitem');
+src/ui/__tests__/Menu.test.tsx:393:      // Click first menu item should trigger navigation
+src/ui/__tests__/Menu.test.tsx:394:      if (menuItems.length > 0) {
+src/ui/__tests__/Menu.test.tsx:395:        fireEvent.click(menuItems[0]);
+src/ui/__tests__/Menu.test.tsx:407:      // Should use menubar role for sections container
+src/ui/__tests__/Menu.test.tsx:408:      const menubar = container.querySelector('[role="menubar"]');
+src/ui/__tests__/Menu.test.tsx:409:      expect(menubar).toBeInTheDocument();
+src/ui/__tests__/Menu.test.tsx:411:      // Should have menuitem elements
+src/ui/__tests__/Menu.test.tsx:412:      const menuItems = screen.getAllByRole('menuitem');
+src/ui/__tests__/Menu.test.tsx:413:      expect(menuItems.length).toBeGreaterThan(0);
+src/ui/__tests__/Menu.test.tsx:421:      const toggleButton = screen.getByLabelText(/réduire le menu latéral/i);
+src/ui/__tests__/Menu.test.tsx:426:    it('should toggle menu visibility', () => {
+src/ui/__tests__/Menu.test.tsx:430:        <MemoryRouter initialEntries={['/titane']}>
+src/ui/__tests__/Menu.test.tsx:434:            currentRoute="/titane"
+src/ui/__tests__/Menu.test.tsx:437:        </MemoryRouter>
+src/ui/__tests__/Menu.test.tsx:440:      const toggleButton = screen.getByLabelText(/réduire le menu latéral/i);
+src/ui/__tests__/Menu.test.tsx:452:      const toggleButton = screen.getByLabelText(/réduire le menu latéral/i);
+src/ui/__tests__/Menu.test.tsx:474:      const menuItems = screen.getAllByRole('menuitem');
+src/ui/__tests__/Menu.test.tsx:475:      expect(menuItems.length).toBeGreaterThan(0);
+src/ui/__tests__/Menu.test.tsx:483:      const menuItems = container.querySelectorAll('[role="menuitem"]');
+src/ui/__tests__/Menu.test.tsx:485:      menuItems.forEach(item => {
+src/ui/AppLayout.tsx:25:  currentRoute: string;
+src/ui/AppLayout.tsx:32:  currentRoute,
+src/ui/AppLayout.tsx:42:  // Fermer le menu mobile lors de la navigation
+src/ui/AppLayout.tsx:47:  }, [currentRoute, isMobile]);
+src/ui/AppLayout.tsx:85:            aria-label="Fermer le menu"
+src/ui/AppLayout.tsx:105:            currentRoute={currentRoute}
+src/tests/activeListeningIntegration.test.ts:214:// Mock voiceRouter
+src/tests/activeListeningIntegration.test.ts:215:vi.mock('../services/voice/voiceRouter', () => ({
+src/tests/activeListeningIntegration.test.ts:216:  voiceRouter: {
+src/tests/activeListeningIntegration.test.ts:225:vi.mock('@/services/voice/voiceRouter', () => ({
+src/tests/activeListeningIntegration.test.ts:226:  voiceRouter: {
+src/visual-engine/hierarchy/UILayerManager.ts:66:  CONTEXT_MENU = 'context_menu',
+src/services/adminEngine/logEngine.ts:16:  AdminLogRecord,
+src/services/adminEngine/logEngine.ts:17:  AdminEvent,
+src/services/adminEngine/logEngine.ts:29:  createAdminEvent,
+src/services/adminEngine/logEngine.ts:42:  private logs: AdminLogRecord[] = [];
+src/services/adminEngine/logEngine.ts:43:  private events: AdminEvent[] = [];
+src/services/adminEngine/logEngine.ts:45:  private listeners: Set<(log: AdminLogRecord) => void> = new Set();
+src/services/adminEngine/logEngine.ts:46:  private eventListeners: Set<(event: AdminEvent) => void> = new Set();
+src/services/adminEngine/logEngine.ts:73:  ): AdminLogRecord {
+src/services/adminEngine/logEngine.ts:90:  addLog(record: AdminLogRecord): void {
+src/services/adminEngine/logEngine.ts:109:  ): AdminLogRecord {
+src/services/adminEngine/logEngine.ts:117:  ): AdminLogRecord {
+src/services/adminEngine/logEngine.ts:125:  ): AdminLogRecord {
+src/services/adminEngine/logEngine.ts:134:  ): AdminLogRecord {
+src/services/adminEngine/logEngine.ts:143:  ): AdminLogRecord {
+src/services/adminEngine/logEngine.ts:151:  ): AdminLogRecord {
+src/services/adminEngine/logEngine.ts:159:  ): AdminLogRecord {
+src/services/adminEngine/logEngine.ts:168:  ): AdminLogRecord {
+src/services/adminEngine/logEngine.ts:188:    impact: AdminEvent['impact'] = 'NONE',
+src/services/adminEngine/logEngine.ts:190:  ): AdminEvent {
+src/services/adminEngine/logEngine.ts:191:    const event = createAdminEvent(
+src/services/adminEngine/logEngine.ts:326:  ): AdminEvent[] {
+src/services/adminEngine/logEngine.ts:360:  getRecentLogs(count: number = 100): AdminLogRecord[] {
+src/services/adminEngine/logEngine.ts:367:  getRecentEvents(count: number = 50): AdminEvent[] {
+src/services/adminEngine/logEngine.ts:374:  getLogsByCorrelation(correlationId: string): AdminLogRecord[] {
+src/services/adminEngine/logEngine.ts:548:  onLog(callback: (log: AdminLogRecord) => void): () => void {
+src/services/adminEngine/logEngine.ts:556:  onEvent(callback: (event: AdminEvent) => void): () => void {
+src/services/adminEngine/logEngine.ts:561:  private notifyLogListeners(log: AdminLogRecord): void {
+src/services/adminEngine/logEngine.ts:571:  private notifyEventListeners(event: AdminEvent): void {
+src/services/adminEngine/logEngine.ts:605:      const logs = JSON.parse(json) as AdminLogRecord[];
+src/services/adminEngine/stateAggregator.ts:17:  AdminSnapshot,
+src/services/adminEngine/stateAggregator.ts:18:  AdminVitals,
+src/services/adminEngine/stateAggregator.ts:23:  AdminAnomaly,
+src/services/adminEngine/stateAggregator.ts:28:  generateAdminId,
+src/services/adminEngine/stateAggregator.ts:81: * Service d'agrégation d'état pour l'Admin Engine
+src/services/adminEngine/stateAggregator.ts:86:  private lastSnapshot: AdminSnapshot | null = null;
+src/services/adminEngine/stateAggregator.ts:89:  private listeners: Set<(snapshot: AdminSnapshot) => void> = new Set();
+src/services/adminEngine/stateAggregator.ts:126:  async collectSnapshot(): Promise<AdminSnapshot> {
+src/services/adminEngine/stateAggregator.ts:161:      const snapshot: AdminSnapshot = {
+src/services/adminEngine/stateAggregator.ts:162:        id: generateAdminId('snap'),
+src/services/adminEngine/stateAggregator.ts:197:  private async collectVitals(): Promise<AdminVitals> {
+src/services/adminEngine/stateAggregator.ts:384:  private async collectAnomalies(): Promise<AdminAnomaly[]> {
+src/services/adminEngine/stateAggregator.ts:385:    const anomalies: AdminAnomaly[] = [];
+src/services/adminEngine/stateAggregator.ts:389:      const perfAnomalies = await secureInvoke<AdminAnomaly[]>(
+src/services/adminEngine/stateAggregator.ts:401:      const healingAnomalies = await secureInvoke<AdminAnomaly[]>(
+src/services/adminEngine/stateAggregator.ts:529:  addListener(callback: (snapshot: AdminSnapshot) => void): () => void {
+src/services/adminEngine/stateAggregator.ts:537:  private notifyListeners(snapshot: AdminSnapshot): void {
+src/services/adminEngine/stateAggregator.ts:590:  getLastSnapshot(): AdminSnapshot | null {
+src/services/adminEngine/index.ts:9: * Point d'entrée principal de l'Admin & Monitoring Engine
+src/services/adminEngine/index.ts:25:  AdminRole,
+src/services/adminEngine/index.ts:31:  AdminView,
+src/services/adminEngine/index.ts:34:  AdminVitals,
+src/services/adminEngine/index.ts:36:  AdminSnapshot,
+src/services/adminEngine/index.ts:37:  AdminAnomaly,
+src/services/adminEngine/index.ts:38:  AdminLogRecord,
+src/services/adminEngine/index.ts:39:  AdminEvent,
+src/services/adminEngine/index.ts:42:  AdminActionDefinition,
+src/services/adminEngine/index.ts:44:  AdminActionRequest,
+src/services/adminEngine/index.ts:45:  AdminActionResult,
+src/services/adminEngine/index.ts:46:  AdminActionRecord,
+src/services/adminEngine/index.ts:47:  AdminDashboardState,
+src/services/adminEngine/index.ts:48:  AdminDashboardConfig,
+src/services/adminEngine/index.ts:54:  RustAdminTypes,
+src/services/adminEngine/index.ts:70:  generateAdminId,
+src/services/adminEngine/index.ts:82:  createAdminEvent,
+src/services/adminEngine/index.ts:107:  AdminSnapshot,
+src/services/adminEngine/index.ts:108:  AdminRole,
+src/services/adminEngine/index.ts:109:  AdminLogRecord,
+src/services/adminEngine/index.ts:110:  AdminEvent,
+src/services/adminEngine/index.ts:113:  AdminActionDefinition,
+src/services/adminEngine/index.ts:114:  AdminActionResult,
+src/services/adminEngine/index.ts:115:  AdminActionRecord,
+src/services/adminEngine/index.ts:123: * Facade principale de l'Admin Engine
+src/services/adminEngine/index.ts:126:export class AdminEngine {
+src/services/adminEngine/index.ts:143:   * Initialise l'Admin Engine
+src/services/adminEngine/index.ts:152:    this.logEngine.system('admin', 'Admin Engine initialisé');
+src/services/adminEngine/index.ts:180:  async getSnapshot(): Promise<AdminSnapshot> {
+src/services/adminEngine/index.ts:187:  getLastSnapshot(): AdminSnapshot | null {
+src/services/adminEngine/index.ts:194:  onSnapshotUpdate(callback: (snapshot: AdminSnapshot) => void): () => void {
+src/services/adminEngine/index.ts:212:  ): AdminLogRecord {
+src/services/adminEngine/index.ts:223:  ): AdminLogRecord {
+src/services/adminEngine/index.ts:231:  ): AdminLogRecord {
+src/services/adminEngine/index.ts:239:  ): AdminLogRecord {
+src/services/adminEngine/index.ts:248:  ): AdminLogRecord {
+src/services/adminEngine/index.ts:262:  getRecentLogs(count?: number): AdminLogRecord[] {
+src/services/adminEngine/index.ts:269:  onLog(callback: (log: AdminLogRecord) => void): () => void {
+src/services/adminEngine/index.ts:287:    impact?: AdminEvent['impact'],
+src/services/adminEngine/index.ts:289:  ): AdminEvent {
+src/services/adminEngine/index.ts:305:  getRecentEvents(count?: number): AdminEvent[] {
+src/services/adminEngine/index.ts:312:  onEvent(callback: (event: AdminEvent) => void): () => void {
+src/services/adminEngine/index.ts:325:    userRole: AdminRole,
+src/services/adminEngine/index.ts:328:  ): Promise<AdminActionResult> {
+src/services/adminEngine/index.ts:336:  getAvailableActions(role: AdminRole): AdminActionDefinition[] {
+src/services/adminEngine/index.ts:343:  getActionHistory(limit?: number): AdminActionRecord[] {
+src/services/adminEngine/index.ts:352:    role: AdminRole
+src/services/adminEngine/index.ts:402:let adminEngineInstance: AdminEngine | null = null;
+src/services/adminEngine/index.ts:405: * Récupère l'instance singleton de l'Admin Engine
+src/services/adminEngine/index.ts:407:export function getAdminEngine(): AdminEngine {
+src/services/adminEngine/index.ts:409:    adminEngineInstance = new AdminEngine();
+src/services/adminEngine/index.ts:417:export function resetAdminEngine(): void {
+src/services/adminEngine/index.ts:424:export default AdminEngine;
+src/services/adminEngine/adminEngine.config.ts:13: * 3. Admin Actions Engine — Catalogue actions safe, permissions
+src/services/adminEngine/adminEngine.config.ts:14: * 4. Admin Presentation Layer — Synthèse vitals, UI transformation
+src/services/adminEngine/adminEngine.config.ts:82:export type AdminRole = 'ADMIN' | 'DEV' | 'USER';
+src/services/adminEngine/adminEngine.config.ts:124:export interface AdminVitals {
+src/services/adminEngine/adminEngine.config.ts:212:export interface AdminSnapshot {
+src/services/adminEngine/adminEngine.config.ts:226:  vitals: AdminVitals;
+src/services/adminEngine/adminEngine.config.ts:232:  activeAnomalies: AdminAnomaly[];
+src/services/adminEngine/adminEngine.config.ts:235:  recentActions: AdminActionRecord[];
+src/services/adminEngine/adminEngine.config.ts:260:export interface AdminAnomaly {
+src/services/adminEngine/adminEngine.config.ts:299:export interface AdminLogRecord {
+src/services/adminEngine/adminEngine.config.ts:337:export interface AdminEvent {
+src/services/adminEngine/adminEngine.config.ts:418:  logs: AdminLogRecord[];
+src/services/adminEngine/adminEngine.config.ts:440:export interface AdminActionDefinition {
+src/services/adminEngine/adminEngine.config.ts:501:export interface AdminActionRequest {
+src/services/adminEngine/adminEngine.config.ts:506:  userRole: AdminRole;
+src/services/adminEngine/adminEngine.config.ts:524:export interface AdminActionResult {
+src/services/adminEngine/adminEngine.config.ts:562:export interface AdminActionRecord {
+src/services/adminEngine/adminEngine.config.ts:567:  request: AdminActionRequest;
+src/services/adminEngine/adminEngine.config.ts:570:  result: AdminActionResult;
+src/services/adminEngine/adminEngine.config.ts:583:export interface AdminDashboardState {
+src/services/adminEngine/adminEngine.config.ts:585:  snapshot: AdminSnapshot | null;
+src/services/adminEngine/adminEngine.config.ts:606:  logs: AdminLogRecord[];
+src/services/adminEngine/adminEngine.config.ts:609:  timeline: AdminEvent[];
+src/services/adminEngine/adminEngine.config.ts:612:  availableActions: AdminActionDefinition[];
+src/services/adminEngine/adminEngine.config.ts:615:  currentRole: AdminRole;
+src/services/adminEngine/adminEngine.config.ts:618:  activeView: AdminView;
+src/services/adminEngine/adminEngine.config.ts:627:export type AdminView =
+src/services/adminEngine/adminEngine.config.ts:638:export interface AdminDashboardConfig {
+src/services/adminEngine/adminEngine.config.ts:661:  rolePermissions: Record<AdminRole, string[]>;
+src/services/adminEngine/adminEngine.config.ts:762:export const ADMIN_ACTIONS_CATALOG: AdminActionDefinition[] = [
+src/services/adminEngine/adminEngine.config.ts:1102:export const DEFAULT_DASHBOARD_CONFIG: AdminDashboardConfig = {
+src/services/adminEngine/adminEngine.config.ts:1155:  admin: 'Admin Engine',
+src/services/adminEngine/adminEngine.config.ts:1221:export function generateAdminId(prefix: string = 'adm'): string {
+src/services/adminEngine/adminEngine.config.ts:1231:  vitals: AdminVitals,
+src/services/adminEngine/adminEngine.config.ts:1268:export function hasPermission(role: AdminRole, action: AdminActionDefinition): boolean {
+src/services/adminEngine/adminEngine.config.ts:1284:export function getActionsForRole(role: AdminRole): AdminActionDefinition[] {
+src/services/adminEngine/adminEngine.config.ts:1292:  action: AdminActionDefinition,
+src/services/adminEngine/adminEngine.config.ts:1293:  snapshot: AdminSnapshot
+src/services/adminEngine/adminEngine.config.ts:1344:  vitals: AdminVitals,
+src/services/adminEngine/adminEngine.config.ts:1442:export function createEmptySnapshot(): AdminSnapshot {
+src/services/adminEngine/adminEngine.config.ts:1444:  const emptyVitals: AdminVitals = {
+src/services/adminEngine/adminEngine.config.ts:1497:    id: generateAdminId('snap'),
+src/services/adminEngine/adminEngine.config.ts:1522:): AdminLogRecord {
+src/services/adminEngine/adminEngine.config.ts:1524:    id: generateAdminId('log'),
+src/services/adminEngine/adminEngine.config.ts:1539:export function createAdminEvent(
+src/services/adminEngine/adminEngine.config.ts:1546:  impact: AdminEvent['impact'] = 'NONE',
+src/services/adminEngine/adminEngine.config.ts:1548:): AdminEvent {
+src/services/adminEngine/adminEngine.config.ts:1550:    id: generateAdminId('evt'),
+src/services/adminEngine/adminEngine.config.ts:1572:export type RustAdminTypes = {
+src/services/adminEngine/adminEngine.config.ts:1578:  AdminRole: AdminRole;
+src/services/adminEngine/adminEngine.config.ts:1581:  AdminVitals: AdminVitals;
+src/services/adminEngine/adminEngine.config.ts:1583:  AdminSnapshot: AdminSnapshot;
+src/services/adminEngine/adminEngine.config.ts:1584:  AdminLogRecord: AdminLogRecord;
+src/services/adminEngine/adminEngine.config.ts:1585:  AdminEvent: AdminEvent;
+src/services/adminEngine/adminEngine.config.ts:1586:  AdminActionRequest: AdminActionRequest;
+src/services/adminEngine/adminEngine.config.ts:1587:  AdminActionResult: AdminActionResult;
+src/services/adminEngine/actionsEngine.ts:17:  AdminActionDefinition,
+src/services/adminEngine/actionsEngine.ts:18:  AdminActionRequest,
+src/services/adminEngine/actionsEngine.ts:19:  AdminActionResult,
+src/services/adminEngine/actionsEngine.ts:20:  AdminActionRecord,
+src/services/adminEngine/actionsEngine.ts:21:  AdminRole,
+src/services/adminEngine/actionsEngine.ts:22:  AdminSnapshot,
+src/services/adminEngine/actionsEngine.ts:27:  generateAdminId,
+src/services/adminEngine/actionsEngine.ts:40:  (request: AdminActionRequest, snapshot: AdminSnapshot): Promise<AdminActionResult>;
+src/services/adminEngine/actionsEngine.ts:44:  request: AdminActionRequest;
+src/services/adminEngine/actionsEngine.ts:45:  action: AdminActionDefinition;
+src/services/adminEngine/actionsEngine.ts:46:  snapshot: AdminSnapshot;
+src/services/adminEngine/actionsEngine.ts:60:  private actionHistory: AdminActionRecord[] = [];
+src/services/adminEngine/actionsEngine.ts:61:  private pendingActions: Map<string, AdminActionRequest> = new Map();
+src/services/adminEngine/actionsEngine.ts:77:    userRole: AdminRole,
+src/services/adminEngine/actionsEngine.ts:78:    snapshot: AdminSnapshot,
+src/services/adminEngine/actionsEngine.ts:81:  ): Promise<AdminActionResult> {
+src/services/adminEngine/actionsEngine.ts:82:    const correlationId = generateAdminId('act');
+src/services/adminEngine/actionsEngine.ts:128:    const request: AdminActionRequest = {
+src/services/adminEngine/actionsEngine.ts:201:  ): Promise<AdminActionResult> {
+src/services/adminEngine/actionsEngine.ts:217:  ): Promise<AdminActionResult> {
+src/services/adminEngine/actionsEngine.ts:340:  private recordAction(request: AdminActionRequest, result: AdminActionResult): void {
+src/services/adminEngine/actionsEngine.ts:341:    const record: AdminActionRecord = {
+src/services/adminEngine/actionsEngine.ts:342:      id: generateAdminId('rec'),
+src/services/adminEngine/actionsEngine.ts:360:  getActionHistory(limit?: number): AdminActionRecord[] {
+src/services/adminEngine/actionsEngine.ts:368:  getActionByCorrelation(correlationId: string): AdminActionRecord | undefined {
+src/services/adminEngine/actionsEngine.ts:375:  getPendingActions(): AdminActionRequest[] {
+src/services/adminEngine/actionsEngine.ts:386:  getAvailableActions(role: AdminRole): AdminActionDefinition[] {
+src/services/adminEngine/actionsEngine.ts:393:  getActionById(actionId: string): AdminActionDefinition | undefined {
+src/services/adminEngine/actionsEngine.ts:401:    category: AdminActionDefinition['category'],
+src/services/adminEngine/actionsEngine.ts:402:    role?: AdminRole
+src/services/adminEngine/actionsEngine.ts:403:  ): AdminActionDefinition[] {
+src/services/adminEngine/actionsEngine.ts:414:  searchActions(query: string, role?: AdminRole): AdminActionDefinition[] {
+src/services/adminEngine/actionsEngine.ts:442:  ): AdminActionResult {
+src/services/adminEngine/actionsEngine.ts:462:    role: AdminRole,
+src/services/adminEngine/actionsEngine.ts:463:    snapshot: AdminSnapshot
+src/services/monitoring/sentry.ts:469: * Export de React.useEffect, useLocation, etc. pour l'instrumentation React Router
+src/services/monitoring/sentry.ts:475:  createRoutesFromChildren,
+src/services/monitoring/sentry.ts:476:  matchRoutes,
+src/services/monitoring/sentry.ts:477:} from 'react-router-dom';
+src/services/monitoring/sentry.ts:479:export { React, useLocation, useNavigationType, createRoutesFromChildren, matchRoutes };
+src/services/evolutionEngine/evolutionEngine.config.ts:941:  admin: 'Admin Engine',
+src/services/monitoring/logger.ts:34:  /** Module/composant source (ex: 'ChatIA', 'AIRouter') */
+src/services/agents/agents.types.ts:68:  /** Administrateur (accès complet) */
+src/services/agents/agents.types.ts:69:  Admin = 'Admin',
+src/services/agents/agents.types.ts:190:  [AgentRole.Admin]: '👑 Administrateur',
+src/services/agents/agents.types.ts:208:  [AgentRole.Admin]: 'Administration complète du système',
+src/services/agents/agents.types.ts:226:  [AgentRole.Admin]: AgentIAPermission.AllExternal,
+src/services/lazy.ts:64:  const module = await import('./voice/voiceRouter');
+src/services/voice/voiceRouter.ts:17: *   📝 VoiceRouter.processVoiceTurn(transcript)
+src/services/voice/voiceRouter.ts:66:  onStateChange?: (state: VoiceRouterState) => void;
+src/services/voice/voiceRouter.ts:81:  onError?: (error: VoiceRouterError) => void;
+src/services/voice/voiceRouter.ts:85: * États du VoiceRouter
+src/services/voice/voiceRouter.ts:87:export type VoiceRouterState =
+src/services/voice/voiceRouter.ts:95: * Erreurs du VoiceRouter
+src/services/voice/voiceRouter.ts:97:export interface VoiceRouterError {
+src/services/voice/voiceRouter.ts:110:  error?: VoiceRouterError;
+src/services/voice/voiceRouter.ts:119:class VoiceRouterService {
+src/services/voice/voiceRouter.ts:120:  private currentState: VoiceRouterState = 'idle';
+src/services/voice/voiceRouter.ts:124:   * État actuel du router
+src/services/voice/voiceRouter.ts:126:  getState(): VoiceRouterState {
+src/services/voice/voiceRouter.ts:147:    console.log('\n🎙️ [VoiceRouter] ═══ Starting voice turn ═══');
+src/services/voice/voiceRouter.ts:157:      console.warn('[VoiceRouter] ⚠️ Empty transcript, aborting turn');
+src/services/voice/voiceRouter.ts:178:      console.log('[VoiceRouter] 🤖 Phase 1: Calling AI...');
+src/services/voice/voiceRouter.ts:187:        '[VoiceRouter] ✅ AI response received:',
+src/services/voice/voiceRouter.ts:196:        console.log('[VoiceRouter] 🎭 Phase 2: Analyzing emotion...');
+src/services/voice/voiceRouter.ts:204:          `[VoiceRouter] ✅ Emotion detected: ${analysisResult.intent.emotion} (intensity: ${analysisResult.intent.intensity.toFixed(2)})`
+src/services/voice/voiceRouter.ts:216:        console.log('[VoiceRouter] 🔊 Phase 3: Starting Emotional TTS...');
+src/services/voice/voiceRouter.ts:231:        console.log('[VoiceRouter] ✅ Emotional TTS completed');
+src/services/voice/voiceRouter.ts:240:        console.log('[VoiceRouter] 🔊 Phase 2: Starting TTS (no emotion)...');
+src/services/voice/voiceRouter.ts:253:        console.log('[VoiceRouter] ✅ TTS completed');
+src/services/voice/voiceRouter.ts:266:      console.log(`[VoiceRouter] 🎉 Voice turn completed in ${duration}ms`);
+src/services/voice/voiceRouter.ts:285:      console.error('[VoiceRouter] ❌ Voice turn failed:', error);
+src/services/voice/voiceRouter.ts:288:      const routerError: VoiceRouterError = {
+src/services/voice/voiceRouter.ts:300:      config.onError?.(routerError);
+src/services/voice/voiceRouter.ts:313:        error: routerError,
+src/services/voice/voiceRouter.ts:374:    state: VoiceRouterState,
+src/services/voice/voiceRouter.ts:375:    callback?: (state: VoiceRouterState) => void
+src/services/voice/voiceRouter.ts:381:      console.log(`[VoiceRouter] 🔄 State: ${prevState} → ${state}`);
+src/services/voice/voiceRouter.ts:390:    console.log('[VoiceRouter] 🛑 Aborting current voice turn');
+src/services/voice/voiceRouter.ts:407:   * Reset complet du router
+src/services/voice/voiceRouter.ts:410:    console.log('[VoiceRouter] 🔄 Resetting router');
+src/services/voice/voiceRouter.ts:417:export const voiceRouter = new VoiceRouterService();
+src/services/voice/voiceRouter.ts:418:export default voiceRouter;
+src/services/ai/gateway/types.ts:196:interface ProviderRouter {
+src/services/ai/gateway/types.ts:413: *   router.rs           // ProviderRouter impl
+src/services/ai/gateway/types.ts:484:  ProviderRouter,
+src/services/ai/unifiedHealingFacade.ts:132:   * Routes to simple or advanced healing based on severity
+src/services/voice/attentionEngine.ts:234:      // On passe directement en processing (sera géré par VoiceRouter)
+src/services/ai/types.ts:187: * Utilisé pour router les requêtes, gérer les clés, et afficher l'UI
+src/services/ai/ConversationManager.ts:99:    // 4. Route to appropriate AI backend (local LLM, OpenAI, Gemini, etc.)
+src/services/ai/ConversationManager.ts:285:   * Route request to appropriate AI backend
+src/ui/Menu.tsx:30:import { MenuEditor } from '../features/menu-editor/MenuEditor';
+src/ui/Menu.tsx:38:  titane: <Atom size={20} className="menu-lucide-icon" />,
+src/ui/Menu.tsx:39:  time: <Timer size={20} className="menu-lucide-icon" />,
+src/ui/Menu.tsx:40:  stats: <TrendingUp size={20} className="menu-lucide-icon" />,
+src/ui/Menu.tsx:41:  admin: <Settings size={20} className="menu-lucide-icon" />,
+src/ui/Menu.tsx:42:  dev: <Wrench size={20} className="menu-lucide-icon" />,
+src/ui/Menu.tsx:43:  fusion: <Sparkles size={20} className="menu-lucide-icon" />,
+src/ui/Menu.tsx:44:  optimization: <Zap size={20} className="menu-lucide-icon" />,
+src/ui/Menu.tsx:50:  currentRoute: string;
+src/ui/Menu.tsx:101:    description: 'Centre Admin Unifié - Système, Config, Audio, Design, Gouvernance',
+src/ui/Menu.tsx:134:  currentRoute,
+src/ui/Menu.tsx:137:  const menubarRef = useRef<HTMLDivElement | null>(null);
+src/ui/Menu.tsx:139:  const [menuSections, setMenuSections] = useState(() => {
+src/ui/Menu.tsx:142:    const storedVersion = localStorage.getItem('titane_menu_version');
+src/ui/Menu.tsx:146:      localStorage.removeItem('titane_menu_config');
+src/ui/Menu.tsx:147:      localStorage.removeItem('titane_menu_sections');
+src/ui/Menu.tsx:148:      localStorage.removeItem('menu_config');
+src/ui/Menu.tsx:150:      localStorage.removeItem('menuSections');
+src/ui/Menu.tsx:152:      localStorage.setItem('titane_menu_version', MENU_VERSION);
+src/ui/Menu.tsx:233:    const container = menubarRef.current;
+src/ui/Menu.tsx:237:      container.querySelectorAll<HTMLButtonElement>('[role="menuitem"]')
+src/ui/Menu.tsx:271:      '⚠️ Les modifications du menu ne sont plus persistées pour éviter les anciennes configurations'
+src/ui/Menu.tsx:278:        className="menu-container"
+src/ui/Menu.tsx:283:        <div className="menu-header">
+src/ui/Menu.tsx:285:            <div className="menu-brand">
+src/ui/Menu.tsx:291:                className="menu-brand-logo"
+src/ui/Menu.tsx:293:              <div className="menu-brand-info">
+src/ui/Menu.tsx:294:                <span className="menu-brand-text">TITANE∞</span>
+src/ui/Menu.tsx:295:                <span className="menu-brand-version">v25.4.2</span>
+src/ui/Menu.tsx:304:              className="menu-brand-logo-collapsed"
+src/ui/Menu.tsx:310:                className="menu-toggle"
+src/ui/Menu.tsx:312:                aria-label="Éditer le menu - Ouvrir l'éditeur de configuration du menu latéral"
+src/ui/Menu.tsx:313:                title="Éditer le menu"
+src/ui/Menu.tsx:314:                aria-describedby="menu-edit-description"
+src/ui/Menu.tsx:318:                <span id="menu-edit-description" className="sr-only">
+src/ui/Menu.tsx:320:                  menu
+src/ui/Menu.tsx:325:              className="menu-toggle"
+src/ui/Menu.tsx:328:                isCollapsed ? 'Étendre le menu latéral' : 'Réduire le menu latéral'
+src/ui/Menu.tsx:331:              aria-controls="menu-sections"
+src/ui/Menu.tsx:343:          className="menu-sections"
+src/ui/Menu.tsx:344:          id="menu-sections"
+src/ui/Menu.tsx:345:          role="menubar"
+src/ui/Menu.tsx:347:          ref={menubarRef}
+src/ui/Menu.tsx:349:          {menuSections
+src/ui/Menu.tsx:354:                className={`menu-item ${currentRoute === section.route ? 'active' : ''}`}
+src/ui/Menu.tsx:356:                role="menuitem"
+src/ui/Menu.tsx:358:                aria-current={currentRoute === section.route ? 'page' : undefined}
+src/ui/Menu.tsx:361:                  menuSections.filter(s => ('visible' in s ? s.visible !== false : true))
+src/ui/Menu.tsx:384:                <span className="menu-item-icon" aria-hidden="true">
+src/ui/Menu.tsx:388:                  <div className="menu-item-content">
+src/ui/Menu.tsx:389:                    <span className="menu-item-label">{section.label}</span>
+src/ui/Menu.tsx:390:                    <span className="menu-item-desc">{section.description}</span>
+src/ui/Menu.tsx:399:          <div className="menu-footer">
+src/ui/Menu.tsx:400:            <div className="menu-status">
+src/ui/Menu.tsx:401:              <div className={`menu-status-indicator ${aiStatusClass}`} />
+src/ui/Menu.tsx:402:              <span className="menu-status-text" data-testid="menu-status-ai">
+src/ui/Menu.tsx:413:          sections={menuSections}
+src/services/ai/chatModes.config.ts:724:  // MODE: ADMIN (Administration Système)
+src/services/ai/chatModes.config.ts:728:    label: 'Admin',
+src/services/voice/index.ts:14:export { voiceRouter } from './voiceRouter';
+src/services/ai/orchestrator.ts:811:    let routerLatencyMs = 0;
+src/services/ai/orchestrator.ts:911:      const routerStartTime = Date.now();
+src/services/ai/orchestrator.ts:929:      routerLatencyMs = Date.now() - routerStartTime;
+src/services/ai/orchestrator.ts:1143:            `[AI_SUMMARY] request_id=${requestId} latency_total=${totalResponseTime} latency_router=${routerLatencyMs} latency_provider=${providerLatency} attempt_count=${attempts} final_provider=${providerName} fallback_used=${fallbackUsed} error_code=none`
+src/services/ai/orchestrator.ts:1247:        `[AI_SUMMARY] request_id=${requestId} latency_total=${responseTime} latency_router=${routerLatencyMs} latency_provider=${lastProviderLatencyMs} attempt_count=${attempts} final_provider=${finalProviderUsed ?? 'none'} fallback_used=true error_code=${lastError?.message || 'unknown'}`
+src/services/ai/orchestrator.ts:1323:        `[AI_SUMMARY] request_id=${requestId} latency_total=${responseTime} latency_router=${routerLatencyMs} latency_provider=${lastProviderLatencyMs} attempt_count=${0} final_provider=${finalProviderUsed ?? 'none'} fallback_used=true error_code=${criticalError instanceof Error ? criticalError.message : String(criticalError)}`
+src/services/singularityBridgeVInfinity.ts:144:export interface AIRouterState {
+src/services/singularityBridgeVInfinity.ts:188:  ai: AIRouterState;
+src/ui/pages/Projects.tsx:85:    // Implementation: Router navigation with project context
+src/ui/pages/Projects.tsx:86:    // - Router: Use React Router&apos;s navigate('/chat', {state: {projectId}})
+src/ui/styles/Menu.css:24:.menu-container {
+src/ui/styles/Menu.css:45:.menu-header {
+src/ui/styles/Menu.css:56:.menu-brand {
+src/ui/styles/Menu.css:62:.menu-brand-logo {
+src/ui/styles/Menu.css:66:.menu-brand-logo-collapsed {
+src/ui/styles/Menu.css:70:.menu-brand-info {
+src/ui/styles/Menu.css:76:.menu-brand-text {
+src/ui/styles/Menu.css:108:.menu-brand-version {
+src/ui/styles/Menu.css:116:.menu-toggle {
+src/ui/styles/Menu.css:140:.menu-toggle:hover {
+src/ui/styles/Menu.css:154:.menu-toggle:active {
+src/ui/styles/Menu.css:165:.menu-sections {
+src/ui/styles/Menu.css:173:.menu-sections::-webkit-scrollbar {
+src/ui/styles/Menu.css:177:.menu-sections::-webkit-scrollbar-track {
+src/ui/styles/Menu.css:181:.menu-sections::-webkit-scrollbar-thumb {
+src/ui/styles/Menu.css:190:.menu-item {
+src/ui/styles/Menu.css:208:.menu-item:hover {
+src/ui/styles/Menu.css:225:.menu-item:hover .menu-item-icon {
+src/ui/styles/Menu.css:231:.menu-item:hover .menu-item-icon::before {
+src/ui/styles/Menu.css:249:.menu-item.active {
+src/ui/styles/Menu.css:268:.menu-item.active::before {
+src/ui/styles/Menu.css:306:.menu-item.active .menu-item-icon {
+src/ui/styles/Menu.css:312:.menu-item.active .menu-item-icon::before {
+src/ui/styles/Menu.css:348:.menu-item-icon {
+src/ui/styles/Menu.css:361:.menu-lucide-icon {
+src/ui/styles/Menu.css:368:.menu-item:hover .menu-lucide-icon {
+src/ui/styles/Menu.css:375:.menu-item.active .menu-lucide-icon {
+src/ui/styles/Menu.css:382:.menu-item-icon::before {
+src/ui/styles/Menu.css:400:.menu-item-content {
+src/ui/styles/Menu.css:407:.menu-item-label {
+src/ui/styles/Menu.css:416:.menu-item-desc {
+src/ui/styles/Menu.css:427:.menu-item.active .menu-item-label {
+src/ui/styles/Menu.css:454:.menu-item.active .menu-item-desc {
+src/ui/styles/Menu.css:463:.menu-footer {
+src/ui/styles/Menu.css:469:.menu-status {
+src/ui/styles/Menu.css:487:.menu-status-indicator {
+src/ui/styles/Menu.css:494:.menu-status-indicator.online {
+src/ui/styles/Menu.css:507:.menu-status-indicator.offline {
+src/ui/styles/Menu.css:528:.menu-status-text {
+src/ui/styles/Menu.css:540:.menu-container:has(.menu-toggle:only-child) .menu-item {
+src/ui/styles/Menu.css:545:.menu-container:has(.menu-toggle:only-child) .menu-item-icon {
+src/ui/styles/Menu.css:554:.menu-item:hover .menu-item-label {
+src/ui/styles/Menu.css:561:.menu-item:hover .menu-item-desc {
+src/ui/styles/Menu.css:570:  .menu-brand-text,
+src/ui/styles/Menu.css:571:  .menu-item.active .menu-item-label,
+src/ui/styles/Menu.css:572:  .menu-item:hover .menu-item-icon::before,
+src/ui/styles/Menu.css:573:  .menu-item.active .menu-item-icon::before {
+src/ui/styles/Menu.css:577:  .menu-item.active::before,
+src/ui/styles/Menu.css:578:  .menu-status-indicator {
+src/ui/styles/Menu.css:582:  .menu-item,
+src/ui/styles/Menu.css:583:  .menu-toggle {
+src/ui/styles/Menu.css:587:  .menu-item:hover,
+src/ui/styles/Menu.css:588:  .menu-toggle:hover {
+src/services/chat/chatMemorySingleDoor.ts:6:import type { ModuleRouteContext } from '@/services/chat/moduleRouteContext';
+src/services/chat/chatMemorySingleDoor.ts:44:    fromRoute?: string;
+src/services/chat/chatMemorySingleDoor.ts:78:  moduleContext: ModuleRouteContext | null;
+src/services/chat/chatMemorySingleDoor.ts:169:  moduleContext: ModuleRouteContext,
+src/services/chat/chatMemorySingleDoor.ts:271:      fromRoute: moduleContext.continuity.fromRoute,
+src/services/chat/moduleRouteContext.ts:2: * TITANE∞ v44 — Module Route Context Bridge
+src/services/chat/moduleRouteContext.ts:15:export interface ModuleRouteContext {
+src/services/chat/moduleRouteContext.ts:31:    fromRoute?: string;
+src/services/chat/moduleRouteContext.ts:36:interface ModuleRouteDefinition {
+src/services/chat/moduleRouteContext.ts:113:const MODULE_REGISTRY: Record<string, ModuleRouteDefinition> = {
+src/services/chat/moduleRouteContext.ts:149:    moduleName: 'Admin Center',
+src/services/chat/moduleRouteContext.ts:151:    pageTitle: 'Admin',
+src/services/chat/moduleRouteContext.ts:290:const UNKNOWN_DEFINITION: ModuleRouteDefinition = {
+src/services/chat/moduleRouteContext.ts:328:function normalizeRoute(pathname: string): { route: string; aliasResolvedFrom?: string } {
+src/services/chat/moduleRouteContext.ts:339:function getDefinition(route: string): ModuleRouteDefinition {
+src/services/chat/moduleRouteContext.ts:343:export function readActiveModuleContext(): ModuleRouteContext | null {
+src/services/chat/moduleRouteContext.ts:344:  return readJson<ModuleRouteContext>(STORAGE_ACTIVE_KEY);
+src/services/chat/moduleRouteContext.ts:347:export function readRecentModuleContexts(limit = 8): ModuleRouteContext[] {
+src/services/chat/moduleRouteContext.ts:348:  const history = readJson<ModuleRouteContext[]>(STORAGE_HISTORY_KEY) || [];
+src/services/chat/moduleRouteContext.ts:353:export function publishActiveModuleContext(pathname: string): ModuleRouteContext {
+src/services/chat/moduleRouteContext.ts:355:  const normalized = normalizeRoute(pathname);
+src/services/chat/moduleRouteContext.ts:359:  const changeType: ModuleRouteContext['continuity']['changeType'] = !previous
+src/services/chat/moduleRouteContext.ts:365:  const context: ModuleRouteContext = {
+src/services/chat/moduleRouteContext.ts:381:      fromRoute: previous?.route,
+src/services/chat/moduleRouteContext.ts:388:  const history = readJson<ModuleRouteContext[]>(STORAGE_HISTORY_KEY) || [];
+src/ui/pages/ControlPanel/ControlPanel.css:568: * MENU POSITION PREVIEW - Aperçu position menu
+src/ui/pages/ControlPanel/ControlPanel.css:570:.cp-menu-position-option {
+src/ui/pages/ControlPanel/ControlPanel.css:583:.cp-menu-position-option:hover {
+src/ui/pages/ControlPanel/ControlPanel.css:587:.cp-menu-position-option.active {
+src/ui/pages/ControlPanel/ControlPanel.css:637: * MENU STYLE SELECTOR - Sélecteur style menu
+src/ui/pages/ControlPanel/ControlPanel.css:639:.cp-menu-style-selector {
+src/ui/pages/ControlPanel/ControlPanel.css:644:.cp-menu-style-option {
+src/ui/pages/ControlPanel/ControlPanel.css:658:.cp-menu-style-option:hover {
+src/ui/pages/ControlPanel/ControlPanel.css:662:.cp-menu-style-option.active {
+src/ui/pages/ControlPanel/ControlPanel.css:687: * MENU PREVIEW - Aperçu du menu complet
+src/ui/pages/ControlPanel/ControlPanel.css:689:.cp-menu-preview {
+src/ui/pages/ControlPanel/ControlPanel.css:698:.cp-menu-left {
+src/ui/pages/ControlPanel/ControlPanel.css:702:.cp-menu-top {
+src/ui/pages/ControlPanel/ControlPanel.css:707:.cp-menu-hidden {
+src/ui/pages/ControlPanel/ControlPanel.css:712:.cp-menu-hidden::after {
+src/ui/pages/ControlPanel/ControlPanel.css:719:.cp-menu-hidden .cp-menu-mock {
+src/ui/pages/ControlPanel/ControlPanel.css:723:.cp-menu-mock {
+src/ui/pages/ControlPanel/ControlPanel.css:733:.cp-menu-preview.collapsed .cp-menu-mock {
+src/ui/pages/ControlPanel/ControlPanel.css:737:.cp-menu-icon {
+src/ui/pages/ControlPanel/ControlPanel.css:741:.cp-menu-text {
+src/ui/pages/ControlPanel/ControlPanel.css:746:.cp-menu-badge {
+src/ui/pages/ControlPanel/ControlPanel.css:963: * MENU POSITION SELECTOR - Sélecteur position menu
+src/ui/pages/ControlPanel/ControlPanel.css:965:.cp-menu-position-selector {
+src/ui/pages/ControlPanel/ControlPanel.css:1002:.cp-position-preview .menu-bar {
+src/ui/pages/ControlPanel/ControlPanel.css:1007:.cp-position-preview.left .menu-bar {
+src/ui/pages/ControlPanel/ControlPanel.css:1015:.cp-position-preview.top .menu-bar {
+src/ui/pages/ControlPanel/ControlPanel.css:1023:.cp-position-preview.hidden .menu-bar {
+src/ui/pages/ControlPanel/ControlPanel.css:1147:.cp-menu-preview {
+src/ui/pages/ControlPanel/ControlPanel.css:1155:.cp-menu-preview.left {
+src/ui/pages/ControlPanel/ControlPanel.css:1159:.cp-menu-preview.top {
+src/ui/pages/ControlPanel/ControlPanel.css:1163:.cp-menu-mock {
+src/ui/pages/ControlPanel/ControlPanel.css:1170:.cp-menu-preview.left .cp-menu-mock {
+src/ui/pages/ControlPanel/ControlPanel.css:1175:.cp-menu-preview.top .cp-menu-mock {
+src/ui/pages/ControlPanel/ControlPanel.css:1181:.cp-menu-mock-item {
+src/ui/pages/ControlPanel/ControlPanel.css:1192:.cp-menu-preview.left .cp-menu-mock-item {
+src/ui/pages/ControlPanel/ControlPanel.css:1268:  .cp-menu-position-selector {
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:41:  menu_position: 'left' | 'top' | 'hidden';
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:42:  menu_style: 'icons' | 'text' | 'both';
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:43:  menu_collapsed: boolean;
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:44:  show_menu_tooltips: boolean;
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:45:  show_menu_badges: boolean;
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:64:  menu_position: 'left',
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:65:  menu_style: 'both',
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:66:  menu_collapsed: false,
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:67:  show_menu_tooltips: true,
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:68:  show_menu_badges: true,
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:156:  'menu_collapsed' | 'show_menu_tooltips' | 'show_menu_badges'
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:159:    key: 'menu_collapsed',
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:161:    description: 'Démarrer avec le menu en mode compact',
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:165:    key: 'show_menu_tooltips',
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:171:    key: 'show_menu_badges',
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:184:  const [activeTab, setActiveTab] = useState<'interface' | 'dashboard' | 'menu'>(
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:269:  const menuToggles = useMemo(
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:271:      menu_collapsed: config.menu_collapsed,
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:272:      show_menu_tooltips: config.show_menu_tooltips,
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:273:      show_menu_badges: config.show_menu_badges,
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:275:    [config.menu_collapsed, config.show_menu_tooltips, config.show_menu_badges]
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:303:          className={`cp-tab ${activeTab === 'menu' ? 'active' : ''}`}
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:304:          onClick={() => setActiveTab('menu')}
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:612:      {activeTab === 'menu' && (
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:614:          {/* Position du menu */}
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:618:              <div className="cp-menu-position-selector">
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:620:                  className={`cp-menu-position-option ${config.menu_position === 'left' ? 'active' : ''}`}
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:621:                  onClick={() => updateConfig('menu_position', 'left')}
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:630:                  className={`cp-menu-position-option ${config.menu_position === 'top' ? 'active' : ''}`}
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:631:                  onClick={() => updateConfig('menu_position', 'top')}
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:640:                  className={`cp-menu-position-option ${config.menu_position === 'hidden' ? 'active' : ''}`}
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:641:                  onClick={() => updateConfig('menu_position', 'hidden')}
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:652:          {/* Style du menu */}
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:656:              <div className="cp-menu-style-selector">
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:658:                  className={`cp-menu-style-option ${config.menu_style === 'icons' ? 'active' : ''}`}
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:659:                  onClick={() => updateConfig('menu_style', 'icons')}
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:669:                  className={`cp-menu-style-option ${config.menu_style === 'text' ? 'active' : ''}`}
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:670:                  onClick={() => updateConfig('menu_style', 'text')}
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:679:                  className={`cp-menu-style-option ${config.menu_style === 'both' ? 'active' : ''}`}
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:680:                  onClick={() => updateConfig('menu_style', 'both')}
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:692:          {/* Options du menu */}
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:697:                'menu_collapsed' | 'show_menu_tooltips' | 'show_menu_badges'
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:699:                config={menuToggles}
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:706:          {/* Aperçu du menu */}
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:711:                className={`cp-menu-preview cp-menu-${config.menu_position} ${config.menu_collapsed ? 'collapsed' : ''}`}
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:713:                <div className="cp-menu-mock">
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:714:                  {config.menu_style !== 'text' && (
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:715:                    <span className="cp-menu-icon">🏠</span>
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:717:                  {config.menu_style !== 'icons' && !config.menu_collapsed && (
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:718:                    <span className="cp-menu-text">Accueil</span>
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:720:                  {config.show_menu_badges && <span className="cp-menu-badge">3</span>}
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:722:                <div className="cp-menu-mock">
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:723:                  {config.menu_style !== 'text' && (
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:724:                    <span className="cp-menu-icon">💬</span>
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:726:                  {config.menu_style !== 'icons' && !config.menu_collapsed && (
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:727:                    <span className="cp-menu-text">Chat</span>
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:730:                <div className="cp-menu-mock">
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:731:                  {config.menu_style !== 'text' && (
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:732:                    <span className="cp-menu-icon">⚙️</span>
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:734:                  {config.menu_style !== 'icons' && !config.menu_collapsed && (
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:735:                    <span className="cp-menu-text">Paramètres</span>

@@ -19,7 +19,6 @@ import { autoHealEngine } from '../autoHealEngine';
 import { createLogger } from '@/utils/logger';
 import { getSystemPrompt } from '@/config/chatModes.config';
 import { StatusCache } from '../statusCache';
-import { REQUEST_BUDGETS } from '@/config/aiTimeouts.config';
 import { validateIpcPayload } from '@/lib/ipcContract';
 
 const logger = createLogger('TauriChat');
@@ -35,7 +34,7 @@ const providersStatusCache = new StatusCache<ProviderStatus[]>({
  * ⚠️ LEGACY PROVIDER — TEST USE ONLY
  *
  * This provider is DEPRECATED for production use.
- * Forces provider='local' without checking ENABLE_EXTERNAL_AI gate.
+ * Uses provider='auto' by default and lets orchestrator decide.
  *
  * Modern production code uses:
  * - src/services/conversationEngine.ts (frontend service)
@@ -99,7 +98,6 @@ class TauriChatProvider implements AIProvider {
   private readonly CHECK_INTERVAL = 20000; // 20s cache (plus réactif)
   private errorCount = 0;
   private readonly MAX_ERRORS = 8; // Plus tolérant aux erreurs réseau
-  private readonly TIMEOUT_MS = REQUEST_BUDGETS.globalRequestMs; // Budget global max
 
   /**
    * Vérifie si le backend chat_orchestrator est disponible (OMEGA Protected)
@@ -126,13 +124,10 @@ class TauriChatProvider implements AIProvider {
     try {
       logger.debug('Checking backend availability...');
 
-      // OMEGA: Protected invoke with timeout
-      const status = await Promise.race([
-        safeInvokeTauri<ProviderStatus[]>(TAURI_COMMANDS.CHAT_CHECK_PROVIDERS),
-        new Promise<null>((_, reject) =>
-          setTimeout(() => reject(new Error('Backend check timeout')), 5000)
-        ),
-      ]).catch(error => {
+      // OMEGA: Protected invoke
+      const status = await safeInvokeTauri<ProviderStatus[]>(
+        TAURI_COMMANDS.CHAT_CHECK_PROVIDERS
+      ).catch(error => {
         this.handleInvokeError(error, 'isAvailable');
         return null;
       });
@@ -184,15 +179,15 @@ class TauriChatProvider implements AIProvider {
       // Construit la requête
       const conversationId = `conv_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
 
-      // ⚠️ LEGACY: This provider forces local mode and does NOT respect ENABLE_EXTERNAL_AI gate.
+      // ⚠️ LEGACY: Keep provider selection in AUTO and let backend orchestrator decide.
       // Modern code should use conversationEngine.ts (src/services/conversationEngine.ts) instead.
       // This provider is used ONLY in tests. Production UI uses conversationEngine → tauriClient IPC.
-      logger.warn('[LEGACY] TauriChatProvider forces provider=local (gate not checked)');
+      logger.warn('[LEGACY] TauriChatProvider uses provider=auto');
 
       const request: ChatRequest = {
         message: message.trim(),
         conversationId,
-        provider: 'local', // Local-first: force local-only in backend
+        provider: 'auto',
         streaming: false,
         systemPrompt: this.buildSystemPrompt(history),
         requestId,
@@ -201,10 +196,10 @@ class TauriChatProvider implements AIProvider {
       logger.debug('Request details', {
         message: message.substring(0, 50) + (message.length > 50 ? '...' : ''),
         historyLength: history.length,
-        provider: 'local (forced)',
+        provider: 'auto',
       });
 
-      // OMEGA: Protected invoke with timeout and retry
+      // OMEGA: Protected invoke and retry
       const payload = validateIpcPayload('conversation_generate', {
         args: {
           message: request.message,
@@ -216,12 +211,10 @@ class TauriChatProvider implements AIProvider {
         },
       }) as TauriCommandArgs;
 
-      const response = await Promise.race([
-        safeInvokeTauri<ChatResponse>('conversation_generate', payload, this.TIMEOUT_MS),
-        new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('Backend invoke timeout')), this.TIMEOUT_MS)
-        ),
-      ]);
+      const response = await safeInvokeTauri<ChatResponse>(
+        'conversation_generate',
+        payload
+      );
 
       if (!response?.success) {
         const error = response?.error || 'Backend returned error';
@@ -349,12 +342,9 @@ class TauriChatProvider implements AIProvider {
     return providersStatusCache
       .get(
         async () => {
-          const status = await Promise.race([
-            safeInvokeTauri<ProviderStatus[]>(TAURI_COMMANDS.CHAT_CHECK_PROVIDERS),
-            new Promise<ProviderStatus[]>((_, reject) =>
-              setTimeout(() => reject(new Error('Status check timeout')), 10000)
-            ),
-          ]);
+          const status = await safeInvokeTauri<ProviderStatus[]>(
+            TAURI_COMMANDS.CHAT_CHECK_PROVIDERS
+          );
 
           return Array.isArray(status) ? status : [];
         },
@@ -375,12 +365,9 @@ class TauriChatProvider implements AIProvider {
         throw new Error('Invalid API key format');
       }
 
-      await Promise.race([
-        safeInvokeTauri(TAURI_COMMANDS.CHAT_SET_GEMINI_KEY, { api_key: apiKey.trim() }),
-        new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('Set API key timeout')), 15000)
-        ),
-      ]);
+      await safeInvokeTauri(TAURI_COMMANDS.CHAT_SET_GEMINI_KEY, {
+        api_key: apiKey.trim(),
+      });
 
       logger.info('Gemini API key configured in backend');
     } catch (error) {

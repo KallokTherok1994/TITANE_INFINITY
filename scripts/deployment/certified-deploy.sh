@@ -1,6 +1,6 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════════════════════
-# TITANE∞ v26.4.0 — Post-Certification Deployment Pipeline
+# TITANE∞ v29.0.0 — Post-Certification Deployment Pipeline
 # Déploiement sécurisé après certification de production complète
 # Requires: GATE_RELEASE certification (81/81 tests PASS)
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -19,8 +19,8 @@
 #   --help              Afficher l'aide
 #
 # RÉSULTAT:
-#   deployment/latest/TITANE-Infinity_*.AppImage
-#   deployment/latest/TITANE-Infinity_*.deb  
+#   deployment/latest/Titan-Stable_*.AppImage
+#   deployment/latest/Titan-Stable_*.deb
 #   deployment/latest/MANIFEST.json (updated)
 #
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -225,9 +225,9 @@ execute_deployment() {
     
     # Deploy AppImage
     if [ "$TARGET_TYPE" = "appimage" ] || [ "$TARGET_TYPE" = "both" ]; then
-        local appimage_files=(runtime/stable/*.AppImage)
-        if [ -f "${appimage_files[0]}" ]; then
-            local appimage_src="${appimage_files[0]}"
+        local appimage_src
+        appimage_src=$(ls -1t runtime/stable/*.AppImage 2>/dev/null | head -n1 || true)
+        if [ -n "$appimage_src" ] && [ -f "$appimage_src" ]; then
             local appimage_name=$(basename "$appimage_src")
             local appimage_dest="$DEPLOY_PATH/$appimage_name"
             
@@ -244,9 +244,9 @@ execute_deployment() {
     
     # Deploy DEB
     if [ "$TARGET_TYPE" = "deb" ] || [ "$TARGET_TYPE" = "both" ]; then
-        local deb_files=(runtime/stable/*.deb)
-        if [ -f "${deb_files[0]}" ]; then
-            local deb_src="${deb_files[0]}"
+        local deb_src
+        deb_src=$(ls -1t runtime/stable/*.deb 2>/dev/null | head -n1 || true)
+        if [ -n "$deb_src" ] && [ -f "$deb_src" ]; then
             local deb_name=$(basename "$deb_src")
             local deb_dest="$DEPLOY_PATH/$deb_name"
             
@@ -275,29 +275,54 @@ update_deployment_manifest() {
     print_section "DEPLOYMENT MANIFEST UPDATE"
     
     local manifest_file="$DEPLOY_PATH/MANIFEST.json"
-    local version=$(cd "$PROJECT_ROOT" && jq -r '.version' package.json 2>/dev/null || echo "unknown")
+    local package_version=$(cd "$PROJECT_ROOT" && jq -r '.version' package.json 2>/dev/null || echo "unknown")
+    local version="$package_version"
     local commit=$(cd "$PROJECT_ROOT" && git rev-parse HEAD 2>/dev/null || echo "unknown")
     local branch=$(cd "$PROJECT_ROOT" && git branch --show-current 2>/dev/null || echo "unknown")
     
     # Calculate hashes
     local appimage_hash="none"
     local deb_hash="none"
+    local appimage_file=""
+    local deb_file=""
+    local appimage_name=""
+    local deb_name=""
     
     if [ -n "$DEPLOYED_APPIMAGE" ] && [ -f "$DEPLOYED_APPIMAGE" ]; then
-        appimage_hash=$(sha256sum "$DEPLOYED_APPIMAGE" | awk '{print $1}')
+        appimage_file="$DEPLOYED_APPIMAGE"
     else
-        local appimage_files=("$DEPLOY_PATH"/*.AppImage)
-        if [ -f "${appimage_files[0]}" ]; then
-            appimage_hash=$(sha256sum "${appimage_files[0]}" | awk '{print $1}')
-        fi
+        appimage_file=$(ls -1t "$DEPLOY_PATH"/*.AppImage 2>/dev/null | head -n1 || true)
     fi
-    
+    if [ -n "$appimage_file" ] && [ -f "$appimage_file" ]; then
+        appimage_hash=$(sha256sum "$appimage_file" | awk '{print $1}')
+        appimage_name=$(basename "$appimage_file")
+    fi
+
     if [ -n "$DEPLOYED_DEB" ] && [ -f "$DEPLOYED_DEB" ]; then
-        deb_hash=$(sha256sum "$DEPLOYED_DEB" | awk '{print $1}')
+        deb_file="$DEPLOYED_DEB"
     else
-        local deb_files=("$DEPLOY_PATH"/*.deb)
-        if [ -f "${deb_files[0]}" ]; then
-            deb_hash=$(sha256sum "${deb_files[0]}" | awk '{print $1}')
+        deb_file=$(ls -1t "$DEPLOY_PATH"/*.deb 2>/dev/null | head -n1 || true)
+    fi
+    if [ -n "$deb_file" ] && [ -f "$deb_file" ]; then
+        deb_hash=$(sha256sum "$deb_file" | awk '{print $1}')
+        deb_name=$(basename "$deb_file")
+    fi
+
+    # Prefer artifact version when available to keep manifest aligned with deployed binaries.
+    local artifact_version=""
+    local version_source_name=""
+    if [ -n "$appimage_name" ]; then
+        artifact_version=$(echo "$appimage_name" | sed -n 's/.*_\([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)_amd64\..*/\1/p')
+        version_source_name="$appimage_name"
+    fi
+    if [ -z "$artifact_version" ] && [ -n "$deb_name" ]; then
+        artifact_version=$(echo "$deb_name" | sed -n 's/.*_\([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)_amd64\..*/\1/p')
+        version_source_name="$deb_name"
+    fi
+    if [ -n "$artifact_version" ]; then
+        version="$artifact_version"
+        if [ "$package_version" != "$artifact_version" ]; then
+            warning "Version mismatch detected: package.json=$package_version, artifact($version_source_name)=$artifact_version"
         fi
     fi
     
@@ -336,7 +361,44 @@ update_deployment_manifest() {
 }
 EOF
     
+    # Keep checksum and size sidecars aligned with the deployed artifacts.
+    local checksums_file="$DEPLOY_PATH/CHECKSUMS.sha256"
+    local compat_checksums_file="$DEPLOY_PATH/CHECKSUMS.txt"
+    local sha_file="$DEPLOY_PATH/SHA256SUMS.txt"
+    local sizes_file="$DEPLOY_PATH/SIZES.txt"
+    : > "$checksums_file"
+
+    if [ "$appimage_hash" != "none" ] && [ -n "$appimage_name" ]; then
+        echo "$appimage_hash  $appimage_name" >> "$checksums_file"
+    fi
+    if [ "$deb_hash" != "none" ] && [ -n "$deb_name" ]; then
+        echo "$deb_hash  $deb_name" >> "$checksums_file"
+    fi
+    if [ -f "$DEPLOY_PATH/titane-infinity" ]; then
+        local binary_hash
+        binary_hash=$(sha256sum "$DEPLOY_PATH/titane-infinity" | awk '{print $1}')
+        echo "$binary_hash  titane-infinity" >> "$checksums_file"
+    fi
+    cp "$checksums_file" "$sha_file"
+    cp "$checksums_file" "$compat_checksums_file"
+
+    {
+        echo "# Artifact Sizes"
+        echo "# Generated: $(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+        if [ -n "$appimage_file" ] && [ -f "$appimage_file" ]; then
+            echo "$appimage_name: $(stat -c%s "$appimage_file") bytes ($(du -h "$appimage_file" | awk '{print $1}'))"
+        fi
+        if [ -n "$deb_file" ] && [ -f "$deb_file" ]; then
+            echo "$deb_name: $(stat -c%s "$deb_file") bytes ($(du -h "$deb_file" | awk '{print $1}'))"
+        fi
+        if [ -f "$DEPLOY_PATH/titane-infinity" ]; then
+            echo "titane-infinity: $(stat -c%s "$DEPLOY_PATH/titane-infinity") bytes ($(du -h "$DEPLOY_PATH/titane-infinity" | awk '{print $1}'))"
+        fi
+    } > "$sizes_file"
+
     success "Deployment manifest updated: MANIFEST.json"
+    success "Checksums updated: CHECKSUMS.sha256, SHA256SUMS.txt, CHECKSUMS.txt"
+    success "Sizes updated: SIZES.txt"
     info "Version: $version"
     info "Certification: TITANE_INFINITY_RELEASE_${TIMESTAMP}_CERTIFIED"
 }
@@ -347,7 +409,7 @@ EOF
 
 show_help() {
     cat << EOF
-TITANE∞ Certified Deployment Pipeline v26.4.0
+TITANE∞ Certified Deployment Pipeline v29.0.0
 
 USAGE:
     $0 [OPTIONS]
@@ -432,7 +494,7 @@ done
 # ─────────────────────────────────────────────────────────────────────────────
 
 main() {
-    print_header "TITANE∞ CERTIFIED DEPLOYMENT PIPELINE v26.4.0"
+    print_header "TITANE∞ CERTIFIED DEPLOYMENT PIPELINE v29.0.0"
     
     # Log configuration
     log "Deployment started: $(date)"
@@ -463,11 +525,15 @@ main() {
         log "${GREEN}  Manifest: $DEPLOY_PATH/MANIFEST.json${NC}"
         log "${GREEN}  Log: $LOG_FILE${NC}"
         
-        if ls "$DEPLOY_PATH"/*.AppImage >/dev/null 2>&1; then
-            log "${GREEN}  AppImage: $(ls "$DEPLOY_PATH"/*.AppImage | head -n1 | xargs basename)${NC}"
+        if [ -n "$DEPLOYED_APPIMAGE" ]; then
+            log "${GREEN}  AppImage: $(basename "$DEPLOYED_APPIMAGE")${NC}"
+        elif ls "$DEPLOY_PATH"/*.AppImage >/dev/null 2>&1; then
+            log "${GREEN}  AppImage: $(ls -1t "$DEPLOY_PATH"/*.AppImage | head -n1 | xargs basename)${NC}"
         fi
-        if ls "$DEPLOY_PATH"/*.deb >/dev/null 2>&1; then
-            log "${GREEN}  DEB: $(ls "$DEPLOY_PATH"/*.deb | head -n1 | xargs basename)${NC}"
+        if [ -n "$DEPLOYED_DEB" ]; then
+            log "${GREEN}  DEB: $(basename "$DEPLOYED_DEB")${NC}"
+        elif ls "$DEPLOY_PATH"/*.deb >/dev/null 2>&1; then
+            log "${GREEN}  DEB: $(ls -1t "$DEPLOY_PATH"/*.deb | head -n1 | xargs basename)${NC}"
         fi
         
         log ""

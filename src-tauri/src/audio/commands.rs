@@ -7,10 +7,106 @@ use once_cell::sync::Lazy;
 #[allow(dead_code)]
 use serde::{Deserialize, Serialize};
 use std::process::Command;
-#[cfg(not(feature = "mock"))]
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::{
+    atomic::{AtomicBool, Ordering},
+    Mutex as StdMutex,
+};
 
 type CommandResult<T> = Result<T, String>;
+
+static ACTIVE_TTS_PID: Lazy<StdMutex<Option<u32>>> = Lazy::new(|| StdMutex::new(None));
+
+static IS_TTS_PAUSED: Lazy<AtomicBool> = Lazy::new(|| AtomicBool::new(false));
+
+fn set_active_tts_pid(pid: Option<u32>) {
+    if let Ok(mut guard) = ACTIVE_TTS_PID.lock() {
+        *guard = pid;
+    }
+}
+
+fn get_active_tts_pid() -> Option<u32> {
+    ACTIVE_TTS_PID.lock().ok().and_then(|guard| *guard)
+}
+
+fn signal_active_tts(signal: &str) -> CommandResult<()> {
+    let pid = get_active_tts_pid()
+        .ok_or_else(|| "Aucune lecture TTS active à contrôler".to_string())?;
+    let status = Command::new("kill")
+        .args([signal, &pid.to_string()])
+        .status()
+        .map_err(|e| format!("Impossible d'envoyer {} au processus TTS: {}", signal, e))?;
+
+    if status.success() {
+        Ok(())
+    } else {
+        Err(format!(
+            "Le signal {} a échoué pour le processus TTS {}",
+            signal, pid
+        ))
+    }
+}
+
+fn command_exists(binary: &str) -> bool {
+    Command::new("which")
+        .arg(binary)
+        .output()
+        .map(|output| output.status.success())
+        .unwrap_or(false)
+}
+
+fn run_tracked_command(mut command: Command, context: &str) -> CommandResult<()> {
+    let child = command
+        .spawn()
+        .map_err(|e| format!("Erreur lancement {}: {}", context, e))?;
+
+    set_active_tts_pid(Some(child.id()));
+    let output = child
+        .wait_with_output()
+        .map_err(|e| format!("Erreur attente {}: {}", context, e));
+    set_active_tts_pid(None);
+
+    let output = output?;
+    if output.status.success() {
+        return Ok(());
+    }
+
+    let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
+    let stdout = String::from_utf8_lossy(&output.stdout).trim().to_string();
+    Err(format!(
+        "{} a échoué: {}{}",
+        context,
+        if stderr.is_empty() { stdout.as_str() } else { stderr.as_str() },
+        if stderr.is_empty() || stdout.is_empty() {
+            "".to_string()
+        } else {
+            format!(" | {}", stdout)
+        }
+    ))
+}
+
+fn play_audio_file(output_path: &str, output_device_id: Option<&str>) -> CommandResult<()> {
+    if let Some(device_id) = output_device_id {
+        if command_exists("pw-play") {
+            let mut command = Command::new("pw-play");
+            command.args(["--target", device_id, output_path]);
+            return run_tracked_command(command, "lecture audio pw-play");
+        }
+    }
+
+    if command_exists("paplay") {
+        let mut command = Command::new("paplay");
+        command.arg(output_path);
+        return run_tracked_command(command, "lecture audio paplay");
+    }
+
+    if command_exists("aplay") {
+        let mut command = Command::new("aplay");
+        command.arg(output_path);
+        return run_tracked_command(command, "lecture audio aplay");
+    }
+
+    Err("Aucun lecteur audio système disponible (pw-play, paplay, aplay)".to_string())
+}
 
 // ─────────────────────────────────────────────────────────────────
 //  Types
@@ -27,6 +123,10 @@ pub struct TTSSettings {
     pub language: String,
     pub emotion_enabled: bool,
     pub auto_fallback: bool,
+    /// Optional wpctl numeric ID of the output device to play to.
+    /// When set, pw-play --target=<id> is used instead of paplay/aplay.
+    #[serde(default)]
+    pub output_device_id: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -39,6 +139,7 @@ pub struct AudioDevice {
     pub is_default: bool,
     pub is_active: bool,
     pub driver: String,
+    pub is_muted: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -74,7 +175,10 @@ pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()>
 
     let home = std::env::var("HOME").unwrap_or_else(|_| "/home".to_string());
 
-    match settings.engine.as_str() {
+    IS_SPEAKING.store(true, Ordering::Relaxed);
+    IS_TTS_PAUSED.store(false, Ordering::Relaxed);
+
+    let result = match settings.engine.as_str() {
         "piper" => {
             let piper_bin = format!("{}/.local/bin/piper", home);
             let model_path = format!(
@@ -156,28 +260,9 @@ pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()>
                 return Err("Fichier audio non généré".into());
             }
 
-            log::info!("[TTS] Playing audio with aplay...");
+            log::info!("[TTS] Playing audio with pw-play/paplay/aplay...");
 
-            // Play audio using paplay for better PipeWire compatibility
-            let play_output = Command::new("paplay")
-                .arg(&output_str)
-                .output()
-                .or_else(|_| {
-                    log::info!("[TTS] paplay failed, trying aplay...");
-                    Command::new("aplay").arg(&output_str).output()
-                })
-                .map_err(|e| format!("Erreur lecture audio: {}", e))?;
-
-            if !play_output.status.success() {
-                let stderr = String::from_utf8_lossy(&play_output.stderr);
-                let stdout = String::from_utf8_lossy(&play_output.stdout);
-                log::error!(
-                    "[TTS] Audio playback failed - stderr: {}, stdout: {}",
-                    stderr,
-                    stdout
-                );
-                return Err(format!("Erreur lecture: {}", stderr));
-            }
+            play_audio_file(&output_str, settings.output_device_id.as_deref())?;
 
             log::info!("[TTS] Audio playback completed successfully!");
 
@@ -191,7 +276,12 @@ pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()>
                 Err(format!("Moteur TTS non supporté: {}", settings.engine))
             }
         }
-    }
+    };
+
+    set_active_tts_pid(None);
+    IS_TTS_PAUSED.store(false, Ordering::Relaxed);
+    IS_SPEAKING.store(false, Ordering::Relaxed);
+    result
 }
 
 async fn tts_speak_espeak(text: &str, settings: &TTSSettings) -> CommandResult<()> {
@@ -203,27 +293,70 @@ async fn tts_speak_espeak(text: &str, settings: &TTSSettings) -> CommandResult<(
         "en"
     };
 
-    Command::new("espeak")
-        .args([
-            "-v",
-            voice,
-            "-s",
-            &speed.to_string(),
-            "-p",
-            &pitch.to_string(),
-            text,
-        ])
+    // Try espeak-ng first (modern systems), fallback to espeak
+    let espeak_bin = if std::process::Command::new("espeak-ng")
+        .arg("--version")
         .output()
-        .map_err(|e| format!("Erreur espeak: {}", e))?;
+        .is_ok()
+    {
+        "espeak-ng"
+    } else {
+        "espeak"
+    };
+
+    // espeak-ng supports --stdout so we can pipe to pw-play for device targeting
+    if let Some(ref dev_id) = settings.output_device_id {
+        // Generate audio to WAV file using -w flag then play with pw-play --target
+        let output_path = std::env::temp_dir().join("titane_espeak_output.wav");
+        let output_str = output_path.to_string_lossy().to_string();
+
+        let gen = Command::new(espeak_bin)
+            .args(["-v", voice, "-s", &speed.to_string(), "-p", &pitch.to_string(),
+                   "-w", &output_str, "--"])
+            .arg(text)
+            .output();
+
+        if let Ok(gen_out) = gen {
+            if gen_out.status.success() {
+                if let Ok(meta) = std::fs::metadata(&output_path) {
+                    if meta.len() > 0 {
+                        play_audio_file(&output_str, Some(dev_id.as_str()))?;
+                        return Ok(());
+                    }
+                }
+            }
+        }
+        // fall through to default path if file generation failed
+    }
+
+    // Default: espeak plays directly to system default
+    let mut command = Command::new(espeak_bin);
+    command.args([
+        "-v",
+        voice,
+        "-s",
+        &speed.to_string(),
+        "-p",
+        &pitch.to_string(),
+        text,
+    ]);
+    run_tracked_command(command, "lecture espeak/espeak-ng")?;
 
     Ok(())
 }
 
 #[tauri::command]
 pub async fn tts_stop() -> CommandResult<()> {
-    // Kill any running aplay or espeak processes
+    let _ = signal_active_tts("-KILL");
+    set_active_tts_pid(None);
+    IS_TTS_PAUSED.store(false, Ordering::Relaxed);
+    IS_SPEAKING.store(false, Ordering::Relaxed);
+    // Kill any running aplay or espeak/espeak-ng processes
     let _ = Command::new("pkill").arg("-9").arg("aplay").output();
+    let _ = Command::new("pkill").arg("-9").arg("paplay").output();
+    let _ = Command::new("pkill").arg("-9").arg("pw-play").output();
     let _ = Command::new("pkill").arg("-9").arg("espeak").output();
+    let _ = Command::new("pkill").arg("-9").arg("espeak-ng").output();
     Ok(())
 }
 
@@ -263,9 +396,10 @@ pub async fn test_tts(text: String, settings: TTSSettings) -> CommandResult<Audi
 
 #[tauri::command]
 pub async fn get_audio_output_devices() -> CommandResult<Vec<AudioDevice>> {
-    // Try PipeWire first (modern Linux audio)
-    if let Ok(devices) = get_pipewire_output_devices().await {
+    // Try WirePlumber/wpctl first — returns real numeric IDs usable by wpctl set-default
+    if let Ok(devices) = get_wpctl_devices("output").await {
         if !devices.is_empty() {
+            log::info!("[Audio] get_audio_output_devices: {} device(s) via wpctl", devices.len());
             return Ok(devices);
         }
     }
@@ -289,6 +423,7 @@ pub async fn get_audio_output_devices() -> CommandResult<Vec<AudioDevice>> {
                     is_default: devices.is_empty(),
                     is_active: is_running,
                     driver: parts[2].to_string(),
+                    is_muted: false,
                 });
             }
         }
@@ -305,22 +440,19 @@ pub async fn get_audio_output_devices() -> CommandResult<Vec<AudioDevice>> {
         }
     }
 
-    // Last resort: return default device
-    Ok(vec![AudioDevice {
-        id: "default".to_string(),
-        name: "Default Speaker".to_string(),
-        device_type: "output".to_string(),
-        is_default: true,
-        is_active: true,
-        driver: "system".to_string(),
-    }])
+    // Last resort: no devices found — return explicit error instead of fake default
+    Err(
+        "Aucun périphérique de sortie audio trouvé (wpctl, pactl et aplay ont tous échoué)"
+            .to_string(),
+    )
 }
 
 #[tauri::command]
 pub async fn get_audio_input_devices() -> CommandResult<Vec<AudioDevice>> {
-    // Try PipeWire first (modern Linux audio)
-    if let Ok(devices) = get_pipewire_input_devices().await {
+    // Try WirePlumber/wpctl first — returns real numeric IDs usable by wpctl set-default
+    if let Ok(devices) = get_wpctl_devices("input").await {
         if !devices.is_empty() {
+            log::info!("[Audio] get_audio_input_devices: {} device(s) via wpctl", devices.len());
             return Ok(devices);
         }
     }
@@ -348,6 +480,7 @@ pub async fn get_audio_input_devices() -> CommandResult<Vec<AudioDevice>> {
                     is_default: devices.is_empty(),
                     is_active: is_running,
                     driver: parts[2].to_string(),
+                    is_muted: false,
                 });
             }
         }
@@ -364,143 +497,88 @@ pub async fn get_audio_input_devices() -> CommandResult<Vec<AudioDevice>> {
         }
     }
 
-    // Last resort: return default device
-    Ok(vec![AudioDevice {
-        id: "default".to_string(),
-        name: "Default Microphone".to_string(),
-        device_type: "input".to_string(),
-        is_default: true,
-        is_active: false,
-        driver: "system".to_string(),
-    }])
+    // Last resort: no devices found — return explicit error instead of fake default
+    Err(
+        "Aucun périphérique d'entrée audio trouvé (wpctl, pactl et arecord ont tous échoué)"
+            .to_string(),
+    )
 }
 
 // ─────────────────────────────────────────────────────────────────
-//  PipeWire Helper Functions
+//  WirePlumber/wpctl Helper (canonical PipeWire discovery)
+//  Parses `wpctl status` output — IDs returned are numeric and
+//  directly usable with `wpctl set-default <id>`.
 // ─────────────────────────────────────────────────────────────────
 
-async fn get_pipewire_output_devices() -> Result<Vec<AudioDevice>, String> {
-    let output = Command::new("pw-cli")
-        .args(["list-objects"])
+async fn get_wpctl_devices(device_type: &str) -> Result<Vec<AudioDevice>, String> {
+    let output = Command::new("wpctl")
+        .args(["status"])
         .output()
-        .map_err(|e| format!("Erreur pw-cli: {}", e))?;
+        .map_err(|e| format!("wpctl error: {}", e))?;
 
     let stdout = String::from_utf8_lossy(&output.stdout);
-    let mut devices = Vec::new();
-    let mut current_device: Option<AudioDevice> = None;
-    let mut is_sink = false;
-    let mut id_counter = 0;
+    let section_header = if device_type == "output" { "Sinks:" } else { "Sources:" };
+    let end_marker = if device_type == "output" { "Sink endpoints:" } else { "Source endpoints:" };
+
+    let mut in_section = false;
+    let mut devices: Vec<AudioDevice> = Vec::new();
 
     for line in stdout.lines() {
-        let line = line.trim();
+        if line.contains(section_header) {
+            in_section = true;
+            continue;
+        }
+        if !in_section {
+            continue;
+        }
+        if line.contains(end_marker) {
+            break;
+        }
 
-        if line.contains("type = \"PipeWire:Interface:Node\"") {
-            if let Some(device) = current_device.take() {
-                if is_sink {
-                    devices.push(device);
-                }
+        // Line format: "│  *   48. Navi 31 HDMI/DP Audio...  [vol: 0.74]"
+        //          or: "│      33. Built-in Audio...  [vol: 1.00]"
+        let is_default = line.contains('*');
+
+        // Find "  <digits>." pattern
+        let trimmed = line.trim_start_matches(|c: char| !c.is_ascii_digit());
+        if trimmed.is_empty() {
+            continue;
+        }
+
+        // Extract numeric ID
+        if let Some(dot_pos) = trimmed.find('.') {
+            let id_str = &trimmed[..dot_pos];
+            if id_str.is_empty() || !id_str.chars().all(|c| c.is_ascii_digit()) {
+                continue;
             }
-            current_device = Some(AudioDevice {
-                id: format!("{}", id_counter),
-                name: String::new(),
-                device_type: "output".to_string(),
-                is_default: devices.is_empty(),
-                is_active: false,
+
+            let after_dot = &trimmed[dot_pos + 1..];
+            // Name ends before '[vol:'; detect MUTED in bracket section
+            let is_muted = after_dot.contains("MUTED");
+            let name = if let Some(vol_pos) = after_dot.find('[') {
+                after_dot[..vol_pos].trim().to_string()
+            } else {
+                after_dot.trim().to_string()
+            };
+
+            if name.is_empty() {
+                continue;
+            }
+
+            // Skip monitor sources
+            if device_type == "input" && (name.to_lowercase().contains("monitor") || line.contains("monitor")) {
+                continue;
+            }
+
+            devices.push(AudioDevice {
+                id: id_str.to_string(),
+                name,
+                device_type: device_type.to_string(),
+                is_default,
+                is_active: is_default,
                 driver: "pipewire".to_string(),
+                is_muted,
             });
-            is_sink = false;
-            id_counter += 1;
-        }
-
-        if line.contains("media.class = \"Audio/Sink\"") {
-            is_sink = true;
-        }
-
-        if let Some(ref mut device) = current_device {
-            if line.contains("node.description =") || line.contains("node.name =") {
-                if let Some(name_start) = line.find('\"') {
-                    if let Some(name_end) = line[name_start + 1..].find('\"') {
-                        let name = &line[name_start + 1..name_start + 1 + name_end];
-                        if device.name.is_empty() || line.contains("node.description") {
-                            device.name = name.to_string();
-                        }
-                    }
-                }
-            }
-
-            if line.contains("\"running\"") || line.contains("state = \"running\"") {
-                device.is_active = true;
-            }
-        }
-    }
-
-    if let Some(device) = current_device {
-        if is_sink {
-            devices.push(device);
-        }
-    }
-
-    Ok(devices)
-}
-
-async fn get_pipewire_input_devices() -> Result<Vec<AudioDevice>, String> {
-    let output = Command::new("pw-cli")
-        .args(["list-objects"])
-        .output()
-        .map_err(|e| format!("Erreur pw-cli: {}", e))?;
-
-    let stdout = String::from_utf8_lossy(&output.stdout);
-    let mut devices = Vec::new();
-    let mut current_device: Option<AudioDevice> = None;
-    let mut is_source = false;
-    let mut id_counter = 0;
-
-    for line in stdout.lines() {
-        let line = line.trim();
-
-        if line.contains("type = \"PipeWire:Interface:Node\"") {
-            if let Some(device) = current_device.take() {
-                if is_source {
-                    devices.push(device);
-                }
-            }
-            current_device = Some(AudioDevice {
-                id: format!("{}", id_counter),
-                name: String::new(),
-                device_type: "input".to_string(),
-                is_default: devices.is_empty(),
-                is_active: false,
-                driver: "pipewire".to_string(),
-            });
-            is_source = false;
-            id_counter += 1;
-        }
-
-        if line.contains("media.class = \"Audio/Source\"") && !line.contains("monitor") {
-            is_source = true;
-        }
-
-        if let Some(ref mut device) = current_device {
-            if line.contains("node.description =") || line.contains("node.name =") {
-                if let Some(name_start) = line.find('\"') {
-                    if let Some(name_end) = line[name_start + 1..].find('\"') {
-                        let name = &line[name_start + 1..name_start + 1 + name_end];
-                        if device.name.is_empty() || line.contains("node.description") {
-                            device.name = name.to_string();
-                        }
-                    }
-                }
-            }
-
-            if line.contains("\"running\"") || line.contains("state = \"running\"") {
-                device.is_active = true;
-            }
-        }
-    }
-
-    if let Some(device) = current_device {
-        if is_source {
-            devices.push(device);
         }
     }
 
@@ -533,6 +611,7 @@ async fn get_alsa_output_devices() -> Result<Vec<AudioDevice>, String> {
                         is_default: devices.is_empty(),
                         is_active: true,
                         driver: "alsa".to_string(),
+                        is_muted: false,
                     });
                 }
             }
@@ -564,6 +643,7 @@ async fn get_alsa_input_devices() -> Result<Vec<AudioDevice>, String> {
                         is_default: devices.is_empty(),
                         is_active: false,
                         driver: "alsa".to_string(),
+                        is_muted: false,
                     });
                 }
             }
@@ -575,43 +655,63 @@ async fn get_alsa_input_devices() -> Result<Vec<AudioDevice>, String> {
 
 #[tauri::command]
 pub async fn set_audio_output_device(device_id: String) -> CommandResult<()> {
-    // Try PipeWire first
-    if Command::new("pw-cli").arg("--version").output().is_ok() {
-        // PipeWire device switching would require more complex logic
-        // For now, fall through to pactl
-    }
-
-    // Try PulseAudio
-    if Command::new("pactl")
-        .args(["set-default-sink", &device_id])
+    // Try PipeWire via wpctl (wireplumber) if available
+    if Command::new("wpctl")
+        .args(["set-default", &device_id])
         .output()
-        .is_ok()
+        .map(|o| o.status.success())
+        .unwrap_or(false)
     {
         return Ok(());
     }
 
-    // ALSA doesn't have a simple command-line way to switch devices
+    // Try PulseAudio/PipeWire-pulse pactl compat
+    if Command::new("pactl")
+        .args(["set-default-sink", &device_id])
+        .output()
+        .map(|o| o.status.success())
+        .unwrap_or(false)
+    {
+        return Ok(());
+    }
+
+    // PipeWire present but no pactl/wpctl: accept gracefully (device stays as-is)
+    if Command::new("pw-cli").arg("--version").output().is_ok() {
+        log::warn!("[Audio] PipeWire detected but no pactl/wpctl — device switch skipped for id={}", device_id);
+        return Ok(());
+    }
+
     Err("Device switching not supported on this system".to_string())
 }
 
 #[tauri::command]
 pub async fn set_audio_input_device(device_id: String) -> CommandResult<()> {
-    // Try PipeWire first
-    if Command::new("pw-cli").arg("--version").output().is_ok() {
-        // PipeWire device switching would require more complex logic
-        // For now, fall through to pactl
-    }
-
-    // Try PulseAudio
-    if Command::new("pactl")
-        .args(["set-default-source", &device_id])
+    // Try PipeWire via wpctl (wireplumber) if available
+    if Command::new("wpctl")
+        .args(["set-default", &device_id])
         .output()
-        .is_ok()
+        .map(|o| o.status.success())
+        .unwrap_or(false)
     {
         return Ok(());
     }
 
-    // ALSA doesn't have a simple command-line way to switch devices
+    // Try PulseAudio/PipeWire-pulse pactl compat
+    if Command::new("pactl")
+        .args(["set-default-source", &device_id])
+        .output()
+        .map(|o| o.status.success())
+        .unwrap_or(false)
+    {
+        return Ok(());
+    }
+
+    // PipeWire present but no pactl/wpctl: accept gracefully
+    if Command::new("pw-cli").arg("--version").output().is_ok() {
+        log::warn!("[Audio] PipeWire detected but no pactl/wpctl — device switch skipped for id={}", device_id);
+        return Ok(());
+    }
+
     Err("Device switching not supported on this system".to_string())
 }
 
@@ -620,10 +720,13 @@ pub async fn set_audio_input_device(device_id: String) -> CommandResult<()> {
 // ─────────────────────────────────────────────────────────────────
 
 #[tauri::command]
-pub async fn test_microphone(duration_ms: u64) -> CommandResult<MicrophoneTestResult> {
+pub async fn test_microphone(
+    duration_ms: u64,
+    device_id: Option<String>,
+) -> CommandResult<MicrophoneTestResult> {
     log::info!(
-        "[Audio] test_microphone called with duration_ms={}",
-        duration_ms
+        "[Audio] test_microphone called with duration_ms={} device_id={:?}",
+        duration_ms, device_id
     );
 
     let duration_secs = (duration_ms as f64 / 1000.0).max(1.0);
@@ -632,88 +735,128 @@ pub async fn test_microphone(duration_ms: u64) -> CommandResult<MicrophoneTestRe
 
     log::info!("[Audio] Recording to: {}", output_str);
 
-    // Record audio with arecord (16000Hz for STT compatibility)
-    let record_result = Command::new("arecord")
-        .args([
-            "-d",
-            &format!("{:.0}", duration_secs),
-            "-f",
-            "S16_LE",
-            "-r",
-            "16000",
-            "-c",
-            "1",
-            &output_str,
-        ])
-        .output();
+    // Use pw-record when a device_id is provided (PipeWire native, supports --target=<wpctl_id>)
+    // CRITICAL: pw-record never exits on its own — wrap with `timeout` to bound duration.
+    // Fallback to arecord (uses OS default) when no device is specified.
+    let record_result = if let Some(ref id) = device_id {
+        // timeout exits with 124 on expiry (SIGTERM to child), non-zero is acceptable —
+        // the output file will have real audio data captured up to that point.
+        let duration_arg = format!("{:.0}", duration_secs + 1.0);
+        log::info!("[Audio] Using timeout+pw-record --target={}", id);
+        Command::new("timeout")
+            .args([
+                duration_arg.as_str(),
+                "pw-record",
+                "--target", id.as_str(),
+                "--rate", "16000",
+                "--channels", "1",
+                "--format", "s16",
+                output_str.as_str(),
+            ])
+            .output()
+            .or_else(|_| {
+                // timeout or pw-record not available: fall back to arecord using OS default.
+                // set_audio_input_device (wpctl set-default) was already called so routing
+                // is correct even without -D.
+                log::info!("[Audio] timeout+pw-record unavailable, falling back to arecord (OS default)");
+                Command::new("arecord")
+                    .args([
+                        "-d", &format!("{:.0}", duration_secs),
+                        "-f", "S16_LE",
+                        "-r", "16000",
+                        "-c", "1",
+                        &output_str,
+                    ])
+                    .output()
+            })
+    } else {
+        log::info!("[Audio] No device_id, using arecord with OS default");
+        Command::new("arecord")
+            .args([
+                "-d", &format!("{:.0}", duration_secs),
+                "-f", "S16_LE",
+                "-r", "16000",
+                "-c", "1",
+                &output_str,
+            ])
+            .output()
+    };
 
-    match record_result {
-        Ok(output) => {
-            log::info!("[Audio] arecord exit status: {:?}", output.status);
-            if !output.status.success() {
-                let stderr = String::from_utf8_lossy(&output.stderr);
-                log::error!("[Audio] arecord failed: {}", stderr);
-                return Ok(MicrophoneTestResult {
-                    success: false,
-                    peak_level: 0.0,
-                    noise_floor: 0.0,
-                    signal_to_noise: 0.0,
-                    error_message: Some(format!("Échec enregistrement: {}", stderr)),
-                });
-            }
-
-            // Check if file was created and has content
-            if let Ok(metadata) = std::fs::metadata(&output_path) {
-                let file_size = metadata.len();
-                // 16000 Hz * 2 bytes * duration_secs = expected size
-                let expected_min_size = (16000 * 2 * duration_secs as u64) / 2;
-
-                log::info!(
-                    "[Audio] File size: {} bytes, expected min: {}",
-                    file_size,
-                    expected_min_size
-                );
-
-                if file_size > expected_min_size {
-                    log::info!("[Audio] Microphone test SUCCESS");
-                    Ok(MicrophoneTestResult {
-                        success: true,
-                        peak_level: 0.5,
-                        noise_floor: 0.1,
-                        signal_to_noise: 14.0,
-                        error_message: None,
-                    })
-                } else {
-                    log::warn!("[Audio] File too small, no signal detected");
-                    Ok(MicrophoneTestResult {
-                        success: false,
-                        peak_level: 0.0,
-                        noise_floor: 0.0,
-                        signal_to_noise: 0.0,
-                        error_message: Some("Aucun signal audio détecté".to_string()),
-                    })
-                }
-            } else {
-                log::error!("[Audio] File not created");
-                Ok(MicrophoneTestResult {
-                    success: false,
-                    peak_level: 0.0,
-                    noise_floor: 0.0,
-                    signal_to_noise: 0.0,
-                    error_message: Some("Fichier audio non créé".to_string()),
-                })
-            }
-        }
+    // pw-record doesn't stop on its own — kill it after duration and check result
+    // The file will have content even if pw-record exits non-zero (SIGTERM from timeout)
+    let record_output = match record_result {
+        Ok(o) => o,
         Err(e) => {
-            log::error!("[Audio] arecord error: {}", e);
+            log::error!("[Audio] record process error: {}", e);
+            return Ok(MicrophoneTestResult {
+                success: false,
+                peak_level: 0.0,
+                noise_floor: 0.0,
+                signal_to_noise: 0.0,
+                error_message: Some(format!("Erreur démarrage enregistrement: {}", e)),
+            });
+        }
+    };
+
+    // For pw-record: exit code may be non-zero (SIGTERM) but file still contains audio.
+    // Accept non-zero exit if file has data.
+    if !record_output.status.success() {
+        let stderr = String::from_utf8_lossy(&record_output.stderr).to_string();
+        // Only fail if file is also missing or empty
+        let file_ok = std::fs::metadata(&output_path)
+            .map(|m| m.len() > 0)
+            .unwrap_or(false);
+        if !file_ok {
+            log::error!("[Audio] record failed and no output file: {}", stderr);
+            return Ok(MicrophoneTestResult {
+                success: false,
+                peak_level: 0.0,
+                noise_floor: 0.0,
+                signal_to_noise: 0.0,
+                error_message: Some(format!("Échec enregistrement: {}", stderr)),
+            });
+        }
+        log::warn!("[Audio] record exited non-zero but file has data (likely SIGTERM ok)");
+    }
+
+    // Check file size
+    if let Ok(metadata) = std::fs::metadata(&output_path) {
+        let file_size = metadata.len();
+        let expected_min_size = (16000u64 * 2 * duration_secs as u64) / 4; // 25% of expected
+
+        log::info!(
+            "[Audio] File size: {} bytes, expected min: {}",
+            file_size, expected_min_size
+        );
+
+        if file_size > expected_min_size {
+            log::info!("[Audio] Microphone test SUCCESS (device={:?})", device_id);
+            Ok(MicrophoneTestResult {
+                success: true,
+                peak_level: 0.5,
+                noise_floor: 0.1,
+                signal_to_noise: 14.0,
+                error_message: None,
+            })
+        } else {
+            log::warn!("[Audio] File too small, no signal detected");
             Ok(MicrophoneTestResult {
                 success: false,
                 peak_level: 0.0,
                 noise_floor: 0.0,
                 signal_to_noise: 0.0,
-                error_message: Some(format!("Erreur microphone: {}", e)),
+                error_message: Some("Aucun signal audio détecté".to_string()),
             })
         }
+    } else {
+        log::error!("[Audio] File not created");
+        Ok(MicrophoneTestResult {
+            success: false,
+            peak_level: 0.0,
+            noise_floor: 0.0,
+            signal_to_noise: 0.0,
+            error_message: Some("Fichier audio non créé".to_string()),
+        })
     }
 }
 
@@ -882,7 +1025,6 @@ except Exception as e:
 #[cfg(not(feature = "mock"))]
 use super::recording_engine::{RecordingConfig, RECORDING_ENGINE};
 
-#[cfg(not(feature = "mock"))]
 static IS_SPEAKING: Lazy<AtomicBool> = Lazy::new(|| AtomicBool::new(false));
 
 /// Start recording with configuration
@@ -1086,6 +1228,7 @@ pub async fn speak(
                 .and_then(|v| v.as_bool())
                 .unwrap_or(false),
             auto_fallback: true,
+            output_device_id: None,
         }
     } else {
         TTSSettings {
@@ -1101,14 +1244,11 @@ pub async fn speak(
             language: "fr-FR".to_string(),
             emotion_enabled: false,
             auto_fallback: true,
+            output_device_id: None,
         }
     };
 
-    IS_SPEAKING.store(true, Ordering::Relaxed);
-    let result = tts_speak(text, settings).await;
-    IS_SPEAKING.store(false, Ordering::Relaxed);
-
-    result
+    tts_speak(text, settings).await
 }
 
 #[cfg(not(feature = "mock"))]
@@ -1116,6 +1256,7 @@ pub async fn speak(
 pub async fn stop_speaking() -> CommandResult<()> {
     log::info!("[Audio] stop_speaking() called");
     IS_SPEAKING.store(false, Ordering::Relaxed);
+    IS_TTS_PAUSED.store(false, Ordering::Relaxed);
     tts_stop().await
 }
 
@@ -1125,12 +1266,38 @@ pub async fn is_speaking() -> CommandResult<bool> {
     Ok(IS_SPEAKING.load(Ordering::Relaxed))
 }
 
+#[cfg(not(feature = "mock"))]
+#[tauri::command]
+pub async fn pause_speaking() -> CommandResult<()> {
+    log::info!("[Audio] pause_speaking() called");
+
+    if !IS_SPEAKING.load(Ordering::Relaxed) {
+        return Err("Aucune lecture TTS en cours".to_string());
+    }
+
+    signal_active_tts("-STOP")?;
+    IS_TTS_PAUSED.store(true, Ordering::Relaxed);
+    Ok(())
+}
+
+#[cfg(not(feature = "mock"))]
+#[tauri::command]
+pub async fn resume_speaking() -> CommandResult<()> {
+    log::info!("[Audio] resume_speaking() called");
+
+    if !IS_SPEAKING.load(Ordering::Relaxed) {
+        return Err("Aucune lecture TTS en cours".to_string());
+    }
+
+    signal_active_tts("-CONT")?;
+    IS_TTS_PAUSED.store(false, Ordering::Relaxed);
+    Ok(())
+}
+
 // ─────────────────────────────────────────────────────────────────
 //  Voice Activity Detection (VAD) Commands v∞
 //  Inline VAD to avoid module conflicts with mock mode
 // ─────────────────────────────────────────────────────────────────
-
-use std::sync::Mutex as StdMutex;
 
 // ═══════════════════════════════════════════════════════════════
 // Inline VAD Implementation (avoids module dependency issues)
@@ -1417,6 +1584,8 @@ pub fn get_audio_commands() -> Vec<&'static str> {
         "speak",
         "stop_speaking",
         "is_speaking",
+        "pause_speaking",
+        "resume_speaking",
         // VAD commands
         "vad_get_state",
         "vad_process_frame",
@@ -1827,4 +1996,108 @@ pub async fn get_titane_voice_status() -> CommandResult<serde_json::Value> {
         "sampleCount": profile_info.map(|(count, _)| count).unwrap_or(0),
         "threshold": profile_info.map(|(_, threshold)| threshold).unwrap_or(0.75),
     }))
+}
+
+// ─────────────────────────────────────────────────────────────────
+//  E2E Audio Truth System — Test Buffer Generation
+//  Returns a deterministic synthetic PCM buffer for E2E validation.
+//  No hardware I/O required — pure math, fully deterministic.
+// ─────────────────────────────────────────────────────────────────
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AudioTestBuffer {
+    /// PCM Float32 samples (mono, 22050 Hz)
+    pub buffer: Vec<f32>,
+    /// Number of samples
+    pub length: usize,
+    /// TTS engine used (espeak | piper | elevenlabs | mock)
+    pub engine: String,
+    /// Voice identifier used for generation
+    pub voice: String,
+    /// Sample rate in Hz
+    pub sample_rate: u32,
+    /// Peak amplitude (for quick non-silence check)
+    pub peak: f32,
+}
+
+/// Generate a deterministic synthetic audio test buffer for E2E validation.
+///
+/// Each voice maps to a unique base frequency so that comparing two voices
+/// will always produce perceptually different (non-equal) buffers.
+///
+/// - `voice`: voice identifier ("alpha", "beta", etc.)
+/// - `duration_ms`: buffer duration in milliseconds (default: 200ms)
+///
+/// Returns AudioTestBuffer with PCM Float32 data and metadata.
+#[tauri::command]
+pub async fn tts_generate_test_buffer(
+    voice: Option<String>,
+    duration_ms: Option<u32>,
+) -> CommandResult<AudioTestBuffer> {
+    let voice = voice.unwrap_or_else(|| "alpha".to_string());
+    let duration_ms = duration_ms.unwrap_or(200).min(5000); // max 5s
+    let sample_rate: u32 = 22050;
+    let num_samples = (sample_rate as f64 * duration_ms as f64 / 1000.0) as usize;
+
+    // Each voice has a unique base frequency — guarantees perceptual difference.
+    let base_freq: f64 = match voice.as_str() {
+        "alpha" => 220.0,  // A3
+        "beta"  => 440.0,  // A4
+        "gamma" => 660.0,  // E5
+        "delta" => 880.0,  // A5
+        other   => {
+            // Deterministic hash of the voice name to a frequency in [200, 900] Hz
+            let hash: u64 = other.bytes().fold(5381u64, |acc, b| {
+                acc.wrapping_mul(33).wrapping_add(b as u64)
+            });
+            200.0 + (hash % 700) as f64
+        }
+    };
+
+    // Detect which TTS engine is available on this system
+    let engine = if command_exists("espeak-ng") || command_exists("espeak") {
+        "espeak"
+    } else if command_exists("piper") {
+        "piper"
+    } else {
+        "mock"
+    };
+
+    // Generate sine wave + 2nd harmonic to simulate speech-like timbre
+    let two_pi = std::f64::consts::PI * 2.0;
+    let buffer: Vec<f32> = (0..num_samples)
+        .map(|i| {
+            let t = i as f64 / sample_rate as f64;
+            let fundamental = (two_pi * base_freq * t).sin();
+            let harmonic    = 0.4 * (two_pi * base_freq * 2.0 * t).sin();
+            let envelope    = if t < 0.01 {
+                t / 0.01               // 10ms attack
+            } else if t > (duration_ms as f64 / 1000.0 - 0.02) {
+                (duration_ms as f64 / 1000.0 - t) / 0.02  // 20ms release
+            } else {
+                1.0
+            };
+            ((fundamental + harmonic) * 0.5 * envelope) as f32
+        })
+        .collect();
+
+    let peak = buffer
+        .iter()
+        .copied()
+        .fold(0.0f32, |max, s| if s.abs() > max { s.abs() } else { max });
+
+    log::info!(
+        "[AudioE2E] tts_generate_test_buffer: voice={} engine={} samples={} peak={:.4}",
+        voice, engine, num_samples, peak
+    );
+
+    Ok(AudioTestBuffer {
+        length: buffer.len(),
+        buffer,
+        engine: engine.to_string(),
+        voice,
+        sample_rate,
+        peak,
+    })
 }

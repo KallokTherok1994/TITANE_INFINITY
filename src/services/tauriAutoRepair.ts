@@ -523,7 +523,7 @@ export class TauriAutoRepairEngine {
       }
 
       console.log('═══════════════════════════════════════════════════════════');
-      console.log(`REPAIR ENGINE: ${this.report.success ? '✅ SUCCESS' : '⚠️ PARTIAL'}`);
+      console.log(`REPAIR ENGINE: ${this.report.success ? '✅ DONE' : '⚠️ PARTIAL'}`);
       if (validation) {
         console.log(`Overall Health: ${validation.overall_health}%`);
       }

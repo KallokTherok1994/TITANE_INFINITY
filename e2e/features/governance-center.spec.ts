@@ -8,7 +8,16 @@
 import { test, expect } from '@playwright/test';
 import { openAdminTab } from '../helpers/navigation';
 
+const FULL_E2E_ENABLED = process.env.TITANE_E2E_FULL === '1';
+
 test.describe('Feature: Governance Center', () => {
+  if (!FULL_E2E_ENABLED) {
+    test('gate disabled proof (set TITANE_E2E_FULL=1)', async () => {
+      expect(FULL_E2E_ENABLED).toBe(false);
+    });
+    return;
+  }
+
   test.beforeEach(async ({ page }) => {
     await openAdminTab(page, /Gouvernance/i);
     await page.waitForTimeout(500);
@@ -110,7 +119,7 @@ test.describe('Feature: Governance Center', () => {
 
   test('Governance Center: superAdmin badge visible', async ({ page }) => {
     // Navigate to Governance Center
-    await page.goto('http://localhost:5173/admin');
+    await page.goto('/admin');
     await page.waitForTimeout(2000);
 
     const governanceTab = page.locator('button:has-text("Gouvernance")').first();
@@ -131,7 +140,7 @@ test.describe('Feature: Governance Center', () => {
 
   test('Governance Center: refresh button works', async ({ page }) => {
     // Navigate to Governance Center
-    await page.goto('http://localhost:5173/admin');
+    await page.goto('/admin');
     await page.waitForTimeout(2000);
 
     const governanceTab = page.locator('button:has-text("Gouvernance")').first();

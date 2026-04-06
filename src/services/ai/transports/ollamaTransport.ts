@@ -1,9 +1,8 @@
 /**
- * TITANE∞ v27.2Ω — Ollama Transport Layer (Dual Mode)
+ * TITANE∞ v30.0.0 — Ollama Transport Layer (Dual Mode)
  *
  * Universal Ollama transport supporting:
- * - Dev mode: HTTP fetch via Vite proxy (/api/ollama → local Ollama port)
- * - Production: Tauri IPC invoke ('ollama_generate')
+ * - Mode gouverné: IPC Tauri uniquement ('ollama_generate')
  *
  * This module provides the SINGLE SOURCE OF TRUTH for all Ollama communications.
  * NO OTHER code should call Ollama directly.
@@ -13,6 +12,7 @@ import { secureInvoke } from '@/lib/security';
 import { createLogger } from '@/utils/logger';
 import type { AiResult, AiOk, AiErr } from '../types';
 import { classifyError, isAbortError } from '@/lib/errorClassification';
+import { getProviderTimeout } from '@/config/aiTimeouts.config';
 
 const logger = createLogger('OllamaTransport');
 
@@ -28,7 +28,12 @@ function isTauriEnvironment(): boolean {
 }
 
 const IS_TAURI = isTauriEnvironment();
-const TRANSPORT_MODE = IS_TAURI ? 'IPC' : 'HTTP';
+const TRANSPORT_MODE = 'IPC';
+
+const HEALTH_CACHE_TTL_MS = 10_000;
+let lastHealthCheckTs = 0;
+let lastHealthCheckOk = false;
+let lastHealthError: string | null = null;
 
 logger.info(`🚀 Ollama Transport Mode: ${TRANSPORT_MODE}`);
 
@@ -57,100 +62,26 @@ export interface OllamaGenerateResponse {
   content: string;
   model: string;
   latency_ms?: number;
+  // Real Ollama runtime metrics (nanoseconds from Ollama API)
+  total_duration?: number;
+  load_duration?: number;
+  prompt_eval_count?: number;
+  prompt_eval_duration?: number;
+  eval_count?: number;
+  eval_duration?: number;
+  done_reason?: string;
 }
 
 // ============================================================
-// HTTP TRANSPORT (DEV MODE — VITE PROXY)
+// HTTP TRANSPORT
 // ============================================================
-
-const OLLAMA_API_BASE = '/api/ollama';
-const FETCH_TIMEOUT_MS = 30000; // 30s
-
-/**
- * Construit une URL relative pour le proxy Vite
- */
-function getOllamaURL(endpoint: string): string {
-  return `${OLLAMA_API_BASE}${endpoint}`;
-}
-
-/**
- * HTTP avec timeout
- */
-async function fetchWithTimeout(
-  url: string,
-  options: RequestInit,
-  timeoutMs: number
-): Promise<Response> {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
-
-  try {
-    const response = await globalThis['fetch'](url, {
-      // @network-allowed
-      ...options,
-      signal: controller.signal,
-    });
-    clearTimeout(timeout);
-    return response;
-  } catch (error) {
-    clearTimeout(timeout);
-    throw error;
-  }
-}
+// Désactivé en mode gouverné: toute requête réseau passe par IPC backend.
 
 /**
  * HTTP: Health check (/tags)
  */
 async function httpCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
-  try {
-    const response = await fetchWithTimeout(
-      getOllamaURL('/tags'),
-      {
-        method: 'GET',
-        headers: { Accept: 'application/json' },
-      },
-      8000 // 8s health check timeout
-    );
-
-    if (!response.ok) {
-      return {
-        ok: false,
-        provider: 'ollama',
-        error: {
-          code: 'OLLAMA_HTTP_ERROR',
-          message: `HTTP ${response.status}: ${response.statusText}`,
-          hint: 'Ollama indisponible. TITANE bascule en mode local.',
-          retryable: true,
-        },
-      };
-    }
-
-    const data = await response.json();
-    return {
-      ok: true,
-      provider: 'ollama',
-      content: data,
-    };
-  } catch (error) {
-    // ✅ IPC FIX (Ω∞.v1): Distinguish IPC errors from Ollama errors
-    const classification = classifyError(error);
-    const isAbort = isAbortError(error);
-
-    return {
-      ok: false,
-      provider: 'ollama',
-      error: {
-        code: isAbort
-          ? 'OLLAMA_ABORTED'
-          : classification.type === 'ipc'
-            ? 'IPC_CONTRACT_ERROR'
-            : 'OLLAMA_UNREACHABLE',
-        message: isAbort ? 'Requete annulee' : classification.message,
-        hint: classification.hint,
-        retryable: !isAbort && classification.retryable,
-      },
-    };
-  }
+  return ipcCheckHealth();
 }
 
 /**
@@ -159,85 +90,7 @@ async function httpCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
 async function httpGenerate(
   req: OllamaGenerateRequest
 ): Promise<AiResult<OllamaGenerateResponse>> {
-  try {
-    const timeoutMs = (req.timeout_secs || 30) * 1000;
-
-    const response = await fetchWithTimeout(
-      getOllamaURL('/generate'),
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: req.model,
-          prompt: req.prompt,
-          system: req.system,
-          stream: false,
-          options: {
-            temperature: req.temperature,
-            num_predict: req.max_tokens,
-          },
-        }),
-      },
-      timeoutMs
-    );
-
-    if (!response.ok) {
-      // HTTP errors from Ollama are provider-specific, not IPC
-      return {
-        ok: false,
-        provider: 'ollama',
-        error: {
-          code: 'OLLAMA_HTTP_ERROR',
-          message: `HTTP ${response.status}`,
-          hint: 'Ollama indisponible. TITANE bascule en mode local.',
-          retryable: response.status >= 500,
-        },
-      };
-    }
-
-    const data = await response.json();
-
-    if (!data.response) {
-      return {
-        ok: false,
-        provider: 'ollama',
-        error: {
-          code: 'OLLAMA_EMPTY_RESPONSE',
-          message: 'Réponse vide reçue du modèle',
-          hint: 'Réessaie ou choisis un autre modèle.',
-          retryable: true,
-        },
-      };
-    }
-
-    return {
-      ok: true,
-      provider: 'ollama',
-      content: {
-        content: data.response.trim(),
-        model: req.model,
-      },
-    };
-  } catch (error) {
-    // ✅ IPC FIX (Ω∞.v1): Distinguish IPC errors from Ollama errors
-    const classification = classifyError(error);
-    const isAbort = isAbortError(error);
-
-    return {
-      ok: false,
-      provider: 'ollama',
-      error: {
-        code: isAbort
-          ? 'OLLAMA_ABORTED'
-          : classification.type === 'ipc'
-            ? 'IPC_CONTRACT_ERROR'
-            : 'OLLAMA_UNREACHABLE',
-        message: isAbort ? 'Requete annulee' : classification.message,
-        hint: classification.hint,
-        retryable: !isAbort && classification.retryable,
-      },
-    };
-  }
+  return ipcGenerate(req);
 }
 
 // ============================================================
@@ -248,35 +101,35 @@ async function httpGenerate(
  * IPC: Health check (via tags command)
  */
 async function ipcCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
-  try {
-    // Tauri backend doesn't expose /tags via IPC, use generate as health check
-    const testResult = await secureInvoke<{
-      content: string;
-      latency_ms: number;
-      model: string;
-      error?: string;
-    }>('ollama_generate', {
-      req: {
-        model: 'gemma2:2b',
-        prompt: 'ping',
-        timeout_secs: 5,
-      },
-    });
-
-    if (testResult.error) {
-      // ✅ IPC FIX (Ω∞.v1): Classify backend error
-      const classification = classifyError(testResult.error);
+  const now = Date.now();
+  if (now - lastHealthCheckTs < HEALTH_CACHE_TTL_MS) {
+    if (lastHealthCheckOk) {
       return {
-        ok: false,
+        ok: true,
         provider: 'ollama',
-        error: {
-          code: classification.type === 'ipc' ? 'IPC_CONTRACT_ERROR' : 'OLLAMA_IPC_ERROR',
-          message: classification.message,
-          hint: classification.hint,
-          retryable: classification.retryable,
+        content: {
+          models: [{ name: 'gemma2:2b', modified_at: '', size: 0 }],
         },
       };
     }
+
+    return {
+      ok: false,
+      provider: 'ollama',
+      error: {
+        code: 'OLLAMA_IPC_FAILED',
+        message: lastHealthError ?? 'Ollama unavailable',
+        retryable: true,
+      },
+    };
+  }
+
+  try {
+    // Use lightweight backend ping command to avoid expensive /generate probes.
+    await secureInvoke<number>('ping_ollama');
+    lastHealthCheckTs = now;
+    lastHealthCheckOk = true;
+    lastHealthError = null;
 
     // Health check passed, return fake tags response
     return {
@@ -290,6 +143,9 @@ async function ipcCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
     // ✅ IPC FIX (Ω∞.v1): Distinguish IPC errors from Ollama errors
     const classification = classifyError(error);
     const isAbort = isAbortError(error);
+    lastHealthCheckTs = now;
+    lastHealthCheckOk = false;
+    lastHealthError = classification.message;
 
     return {
       ok: false,
@@ -315,18 +171,31 @@ async function ipcGenerate(
   req: OllamaGenerateRequest
 ): Promise<AiResult<OllamaGenerateResponse>> {
   try {
+    const defaultTimeoutSecs = Math.max(
+      1,
+      Math.ceil(getProviderTimeout('ollama') / 1000)
+    );
+
     const result = await secureInvoke<{
       content: string;
       latency_ms: number;
       model: string;
       error?: string;
+      total_duration?: number;
+      load_duration?: number;
+      prompt_eval_count?: number;
+      prompt_eval_duration?: number;
+      eval_count?: number;
+      eval_duration?: number;
+      done_reason?: string;
     }>('ollama_generate', {
       req: {
         model: req.model,
         prompt: req.prompt,
         system_prompt: req.system,
         temperature: req.temperature,
-        timeout_secs: req.timeout_secs || 30,
+        max_tokens: req.max_tokens,
+        timeout_secs: req.timeout_secs ?? defaultTimeoutSecs,
       },
     });
 
@@ -352,6 +221,13 @@ async function ipcGenerate(
         content: result.content,
         model: result.model,
         latency_ms: result.latency_ms,
+        total_duration: result.total_duration,
+        load_duration: result.load_duration,
+        prompt_eval_count: result.prompt_eval_count,
+        prompt_eval_duration: result.prompt_eval_duration,
+        eval_count: result.eval_count,
+        eval_duration: result.eval_duration,
+        done_reason: result.done_reason,
       },
     };
   } catch (error) {
@@ -385,7 +261,7 @@ async function ipcGenerate(
  */
 export async function ollamaCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
   logger.debug(`Health check via ${TRANSPORT_MODE}`);
-  return IS_TAURI ? ipcCheckHealth() : httpCheckHealth();
+  return ipcCheckHealth();
 }
 
 /**
@@ -398,7 +274,7 @@ export async function ollamaGenerate(
     model: req.model,
     promptLen: req.prompt.length,
   });
-  return IS_TAURI ? ipcGenerate(req) : httpGenerate(req);
+  return ipcGenerate(req);
 }
 
 /**

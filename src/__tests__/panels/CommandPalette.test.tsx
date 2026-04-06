@@ -1,95 +1,71 @@
 /**
- * Tests pour CommandPalette Component
- * Coverage: Palette commandes, Recherche, Actions, Shortcuts
+ * Tests panel DevTools (remplace ancien placeholder CommandPalette)
+ * Coverage: rendu, métriques, statut
  */
 
-/* eslint-disable react/jsx-no-undef */
-// Ce fichier teste un composant non encore implémenté - skip activé
-
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
-// import { CommandPalette } from '@/panels/CommandPalette'; // Component not implemented
+import { render, screen } from '@testing-library/react';
+import { DevToolsPanel } from '@/components/panels/DevToolsPanel';
 
-describe.skip('CommandPalette Component (NON IMPLÉMENTÉ - fichier inexistant)', () => {
-  const mockCommands = [
-    { id: 'open-settings', label: 'Open Settings', shortcut: 'Ctrl+,' },
-    { id: 'new-chat', label: 'New Chat', shortcut: 'Ctrl+N' },
-    { id: 'clear-memory', label: 'Clear Memory', shortcut: 'Ctrl+Shift+C' },
+vi.mock('@/hooks/useVisualState', () => ({
+  useVisualState: () => ({
+    visuals: {
+      background: '#111827',
+      accent: '#3b82f6',
+      glow: '0 0 4px #3b82f6',
+      primary: '#ffffff',
+    },
+    isTransitioning: false,
+  }),
+}));
+
+vi.mock('@/stores/visualStateStore', () => ({
+  useVisualStateStore: (selector: any) => selector({ engine: 'core' }),
+}));
+
+describe('DevToolsPanel Component', () => {
+  const engines = [
+    {
+      name: 'Memory',
+      status: 'active' as const,
+      metrics: [{ label: 'ops', value: 12 }],
+      description: 'Memory engine',
+    },
+    {
+      name: 'Voice',
+      status: 'idle' as const,
+      metrics: [{ label: 'latency', value: '24ms' }],
+      description: 'Voice engine',
+    },
   ];
-
-  const mockOnExecute = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   describe('Rendering', () => {
-    it('should render command palette', () => {
-      render(<CommandPalette isOpen commands={mockCommands} onExecute={mockOnExecute} />);
-      expect(screen.getByPlaceholderText(/search|command/i)).toBeInTheDocument();
+    it('should render panel title and engines', () => {
+      render(<DevToolsPanel engines={engines} />);
+      expect(screen.getByText(/omega engines/i)).toBeInTheDocument();
+      expect(screen.getByText('Memory')).toBeInTheDocument();
+      expect(screen.getByText('Voice')).toBeInTheDocument();
     });
 
-    it('should not render when closed', () => {
-      render(
-        <CommandPalette
-          isOpen={false}
-          commands={mockCommands}
-          onExecute={mockOnExecute}
-        />
-      );
-      expect(screen.queryByPlaceholderText(/search|command/i)).not.toBeInTheDocument();
+    it('should render active counter', () => {
+      render(<DevToolsPanel engines={engines} />);
+      expect(screen.getByText(/1 \/ 2 Active/i)).toBeInTheDocument();
     });
 
-    it('should display all commands', () => {
-      render(<CommandPalette isOpen commands={mockCommands} onExecute={mockOnExecute} />);
-      expect(screen.getByText('Open Settings')).toBeInTheDocument();
-      expect(screen.getByText('New Chat')).toBeInTheDocument();
-      expect(screen.getByText('Clear Memory')).toBeInTheDocument();
+    it('should render metrics labels and values', () => {
+      render(<DevToolsPanel engines={engines} />);
+      expect(screen.getByText('ops')).toBeInTheDocument();
+      expect(screen.getByText('12')).toBeInTheDocument();
+      expect(screen.getByText('latency')).toBeInTheDocument();
+      expect(screen.getByText('24ms')).toBeInTheDocument();
     });
 
-    it('should show shortcuts', () => {
-      render(<CommandPalette isOpen commands={mockCommands} onExecute={mockOnExecute} />);
-      expect(screen.getByText(/Ctrl\+,|Ctrl\+N/)).toBeTruthy();
-    });
-  });
-
-  describe('Search', () => {
-    it('should filter commands', () => {
-      render(<CommandPalette isOpen commands={mockCommands} onExecute={mockOnExecute} />);
-      const input = screen.getByPlaceholderText(/search|command/i);
-      fireEvent.change(input, { target: { value: 'settings' } });
-      expect(screen.getByText('Open Settings')).toBeInTheDocument();
-      expect(screen.queryByText('New Chat')).not.toBeInTheDocument();
-    });
-
-    it('should show no results message', () => {
-      render(<CommandPalette isOpen commands={mockCommands} onExecute={mockOnExecute} />);
-      const input = screen.getByPlaceholderText(/search|command/i);
-      fireEvent.change(input, { target: { value: 'nonexistent' } });
-      expect(screen.getByText(/no results|not found/i)).toBeTruthy();
-    });
-  });
-
-  describe('Command Execution', () => {
-    it('should execute command on click', () => {
-      render(<CommandPalette isOpen commands={mockCommands} onExecute={mockOnExecute} />);
-      fireEvent.click(screen.getByText('Open Settings'));
-      expect(mockOnExecute).toHaveBeenCalledWith('open-settings');
-    });
-
-    it('should execute command on Enter', () => {
-      render(<CommandPalette isOpen commands={mockCommands} onExecute={mockOnExecute} />);
-      const input = screen.getByPlaceholderText(/search|command/i);
-      fireEvent.keyDown(input, { key: 'Enter' });
-      expect(mockOnExecute).toHaveBeenCalled();
-    });
-  });
-
-  describe('Snapshot', () => {
     it('should match snapshot', () => {
-      const { container } = render(
-        <CommandPalette isOpen commands={mockCommands} onExecute={mockOnExecute} />
-      );
+      const { container } = render(<DevToolsPanel engines={engines} />);
       expect(container.firstChild).toMatchSnapshot();
     });
   });

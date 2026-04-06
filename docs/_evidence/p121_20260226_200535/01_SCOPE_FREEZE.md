@@ -1,4 +1,0 @@
-# 01_SCOPE_FREEZE.md
-
-Phase: P121
-Statut: FROZEN

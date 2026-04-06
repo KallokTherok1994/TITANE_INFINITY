@@ -165,9 +165,9 @@ engines/unified_memory/ltm.rs:         14 unwraps (3 prod, 11 test) ✅ FIXED
 
 ## 🔗 RELATED DOCUMENTATION
 
-- [SESSION_PIPELINE_v21_FINAL.md](SESSION_PIPELINE_v21_FINAL.md) - Previous pipeline fixes
+- [SESSION_PIPELINE_v21_FINAL.md](../old_sessions/2025-12-10/SESSION_PIPELINE_v21_FINAL.md) - Previous pipeline fixes
 - [PLAN DE CORRECTION VERS LA PERFECTION ABSOLUE](docs/) - Full 100/100 roadmap
-- [HUSKY_ESLINT_PIPELINE_FIX_v21.md](docs/HUSKY_ESLINT_PIPELINE_FIX_v21.md) - Pipeline setup
+- [HUSKY_ESLINT_PIPELINE_FIX_v21.md](../../HUSKY_ESLINT_PIPELINE_FIX_v21.md) - Pipeline setup
 
 ---
 

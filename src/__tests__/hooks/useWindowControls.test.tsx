@@ -44,6 +44,7 @@ describe('useWindowControls Hook', () => {
       });
 
       expect(result.current.zoomIn).toBeDefined();
+      expect(document.documentElement.style.zoom).toBe('0.825');
     });
 
     it('should zoom out', async () => {
@@ -54,6 +55,7 @@ describe('useWindowControls Hook', () => {
       });
 
       expect(result.current.zoomOut).toBeDefined();
+      expect(document.documentElement.style.zoom).toBe('0.675');
     });
 
     it('should reset zoom', async () => {
@@ -64,6 +66,7 @@ describe('useWindowControls Hook', () => {
       });
 
       expect(result.current.zoomReset).toBeDefined();
+      expect(document.documentElement.style.zoom).toBe('0.75');
     });
   });
 

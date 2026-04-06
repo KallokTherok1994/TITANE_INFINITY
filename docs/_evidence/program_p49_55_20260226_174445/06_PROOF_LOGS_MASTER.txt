@@ -1,3 +1,0 @@
-P49_55 proof logs
-- reports/p49_55_bootstrap_precheck_20260226T174445Z.log
-- reports/p49_55_execution_x3_20260226T174445Z.log

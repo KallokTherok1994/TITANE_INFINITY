@@ -1,3 +1,4 @@
+
 #![allow(dead_code)]
 use std::env;
 use std::time::Duration;
@@ -5,20 +6,74 @@ use std::time::Duration;
 use crate::core::http_types::{Client, StatusCode};
 use serde::{Deserialize, Serialize};
 
-const OLLAMA_BASE_URL: &str = "http://127.0.0.1:11434";
+const OLLAMA_BASE_URL_FALLBACK: &str = "http://127.0.0.1:11434";
 const DEFAULT_OLLAMA_MODEL: &str = "gemma2:2b";
 const OLLAMA_MODEL_ENV: &str = "TITANE_OLLAMA_MODEL";
+
+fn ollama_base_url() -> String {
+    std::env::var("OLLAMA_BASE_URL")
+        .or_else(|_| std::env::var("OLLAMA_URL"))
+        .unwrap_or_else(|_| OLLAMA_BASE_URL_FALLBACK.to_string())
+}
 
 #[derive(Serialize)]
 struct OllamaRequest<'a> {
     model: &'a str,
     prompt: &'a str,
     stream: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    options: Option<OllamaOptions>,
+}
+
+#[derive(Serialize)]
+struct OllamaOptions {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    num_ctx: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    temperature: Option<f32>,
+}
+
+/// Result returned by query_ollama — includes the model that actually responded
+/// and real Ollama runtime metrics.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct OllamaResult {
+    pub response: String,
+    pub model: String,
+    /// Effective context window sent to Ollama.
+    pub context_window_used: Option<u32>,
+    /// Total time in nanoseconds (Ollama native).
+    pub total_duration: Option<u64>,
+    /// Model load time in nanoseconds.
+    pub load_duration: Option<u64>,
+    /// Number of tokens in the prompt.
+    pub prompt_eval_count: Option<u32>,
+    /// Time spent evaluating the prompt (nanoseconds).
+    pub prompt_eval_duration: Option<u64>,
+    /// Number of tokens generated.
+    pub eval_count: Option<u32>,
+    /// Time spent generating tokens (nanoseconds).
+    pub eval_duration: Option<u64>,
+    /// Reason generation stopped (e.g. "stop").
+    pub done_reason: Option<String>,
 }
 
 #[derive(Deserialize)]
 struct OllamaResponse {
     response: String,
+    #[serde(default)]
+    total_duration: Option<u64>,
+    #[serde(default)]
+    load_duration: Option<u64>,
+    #[serde(default)]
+    prompt_eval_count: Option<u32>,
+    #[serde(default)]
+    prompt_eval_duration: Option<u64>,
+    #[serde(default)]
+    eval_count: Option<u32>,
+    #[serde(default)]
+    eval_duration: Option<u64>,
+    #[serde(default)]
+    done_reason: Option<String>,
 }
 
 #[derive(Deserialize)]
@@ -37,7 +92,7 @@ struct OllamaError {
     message: Option<String>,
 }
 
-pub async fn query_ollama(prompt: String) -> Result<String, String> {
+pub async fn query_ollama(prompt: String) -> Result<OllamaResult, String> {
     let trimmed_prompt = prompt.trim();
     if trimmed_prompt.is_empty() {
         return Err("Le prompt fourni est vide".to_string());
@@ -55,8 +110,19 @@ pub async fn query_ollama(prompt: String) -> Result<String, String> {
         .unwrap_or_else(|| DEFAULT_OLLAMA_MODEL.to_string());
 
     let response = send_generate(&client, &preferred_model, trimmed_prompt).await;
-    if let Ok(text) = response {
-        return Ok(text);
+    if let Ok((text, used_model, td, ld, pec, ped, ec, ed, dr)) = response {
+        return Ok(OllamaResult {
+            response: text,
+            model: used_model,
+            context_window_used: Some(8192),
+            total_duration: td,
+            load_duration: ld,
+            prompt_eval_count: pec,
+            prompt_eval_duration: ped,
+            eval_count: ec,
+            eval_duration: ed,
+            done_reason: dr,
+        });
     }
 
     let (status, payload) = response.err().unwrap_or_else(|| {
@@ -70,8 +136,19 @@ pub async fn query_ollama(prompt: String) -> Result<String, String> {
     if status == StatusCode::NOT_FOUND && payload.contains("model") && payload.contains("not found") {
         if let Ok(fallback_model) = pick_fallback_model(&client).await {
             if fallback_model != preferred_model {
-                if let Ok(text) = send_generate(&client, &fallback_model, trimmed_prompt).await {
-                    return Ok(text);
+                if let Ok((text, used_model, td, ld, pec, ped, ec, ed, dr)) = send_generate(&client, &fallback_model, trimmed_prompt).await {
+                    return Ok(OllamaResult {
+                        response: text,
+                        model: used_model,
+                        context_window_used: Some(8192),
+                        total_duration: td,
+                        load_duration: ld,
+                        prompt_eval_count: pec,
+                        prompt_eval_duration: ped,
+                        eval_count: ec,
+                        eval_duration: ed,
+                        done_reason: dr,
+                    });
                 }
             }
         }
@@ -80,15 +157,22 @@ pub async fn query_ollama(prompt: String) -> Result<String, String> {
     Err(format_ollama_error(status, payload))
 }
 
-async fn send_generate(client: &Client, model: &str, prompt: &str) -> Result<String, (StatusCode, String)> {
+/// Send a generate request to Ollama. Returns (response_text, model_used, metrics).
+async fn send_generate(client: &Client, model: &str, prompt: &str) -> Result<(String, String, Option<u64>, Option<u64>, Option<u32>, Option<u64>, Option<u32>, Option<u64>, Option<String>), (StatusCode, String)> {
+    let options = OllamaOptions {
+        num_ctx: Some(8192),  // Effective context window for gemma2:2b
+        temperature: None,
+    };
+
     let request_body = OllamaRequest {
         model,
         prompt,
         stream: false,
+        options: Some(options),
     };
 
     let response = client
-        .post(format!("{OLLAMA_BASE_URL}/api/generate"))
+        .post(format!("{}/api/generate", ollama_base_url()))
         .json(&request_body)
         .send()
         .await
@@ -109,12 +193,22 @@ async fn send_generate(client: &Client, model: &str, prompt: &str) -> Result<Str
         return Err((StatusCode::INTERNAL_SERVER_ERROR, "Réponse Ollama vide".to_string()));
     }
 
-    Ok(parsed.response)
+    Ok((
+        parsed.response,
+        model.to_string(),
+        parsed.total_duration,
+        parsed.load_duration,
+        parsed.prompt_eval_count,
+        parsed.prompt_eval_duration,
+        parsed.eval_count,
+        parsed.eval_duration,
+        parsed.done_reason,
+    ))
 }
 
 async fn pick_fallback_model(client: &Client) -> Result<String, String> {
     let response = client
-        .get(format!("{OLLAMA_BASE_URL}/api/tags"))
+        .get(format!("{}/api/tags", ollama_base_url()))
         .send()
         .await
         .map_err(|e| format!("Erreur requête Ollama tags: {e}"))?;

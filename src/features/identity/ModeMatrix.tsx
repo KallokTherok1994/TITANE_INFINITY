@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
@@ -32,12 +32,15 @@ interface ModeMatrixProps {
   currentMode?: string;
   onModeSelect?: (mode: Mode) => void;
   showLocked?: boolean;
+  /** IDs of modes available from the canonical chat mode store */
+  availableModeIds?: string[];
 }
 
 export const ModeMatrix: React.FC<ModeMatrixProps> = ({
-  currentMode = 'architect',
+  currentMode,
   onModeSelect,
   showLocked = true,
+  availableModeIds,
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedMode, setSelectedMode] = useState<Mode | null>(null);
@@ -381,8 +384,14 @@ export const ModeMatrix: React.FC<ModeMatrixProps> = ({
     },
   ];
 
+  // When availableModeIds is provided by canonical chat store, override static unlocked flags
+  const resolvedModes: Mode[] =
+    availableModeIds && availableModeIds.length > 0
+      ? modes.map(m => ({ ...m, unlocked: availableModeIds.includes(m.id) }))
+      : modes;
+
   // Filter modes
-  const filteredModes = modes.filter(mode => {
+  const filteredModes = resolvedModes.filter(mode => {
     if (selectedCategory === 'all') return showLocked || mode.unlocked;
     return mode.category === selectedCategory && (showLocked || mode.unlocked);
   });
@@ -414,7 +423,7 @@ export const ModeMatrix: React.FC<ModeMatrixProps> = ({
           onClick={() => setSelectedCategory('all')}
           aria-label="Filtrer par catégorie: Tous"
         >
-          Tous ({modes.filter(m => showLocked || m.unlocked).length})
+          Tous ({resolvedModes.filter(m => showLocked || m.unlocked).length})
         </button>
         {Object.entries(categoryConfig).map(([key, config]) => (
           <button
@@ -537,7 +546,7 @@ export const ModeMatrix: React.FC<ModeMatrixProps> = ({
         <div className="stat">
           <span className="stat-label">Modes débloqués:</span>
           <span className="stat-value">
-            {modes.filter(m => m.unlocked).length} / {modes.length}
+            {resolvedModes.filter(m => m.unlocked).length} / {resolvedModes.length}
           </span>
         </div>
         <div className="stat">

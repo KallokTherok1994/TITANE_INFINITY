@@ -199,8 +199,8 @@ async fn verify_design_system() -> Result<bool, String> {
             .ok()
             .map(PathBuf::from)
             .and_then(|p| p.parent().map(|pp| pp.to_path_buf())),
-        // Home dir fallback
-        dirs::home_dir().map(|h| h.join("Documents/TITANE_INFINITY")),
+        // Env override for non-standard installations
+        std::env::var("TITANE_WORKSPACE_DIR").ok().map(PathBuf::from),
     ];
 
     let ds_paths = vec![

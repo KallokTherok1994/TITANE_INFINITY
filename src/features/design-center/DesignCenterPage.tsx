@@ -6,8 +6,12 @@
  * © 2025 TITANE Team. All rights reserved.
  */
 
-import React, { useState } from 'react';
-import { UIThemeProvider, useUITheme } from './providers/UIThemeProvider';
+import React, { useCallback, useState } from 'react';
+import {
+  UIThemeProvider,
+  useUITheme,
+  useUIThemeOptional,
+} from './providers/UIThemeProvider';
 import { DesignSystemTab } from './tabs/DesignSystemTab';
 import { AppearanceTab } from './tabs/AppearanceTab';
 import { DESIGN_CENTER_TABS, type DesignCenterTab } from './types/designCenter.types';
@@ -36,7 +40,7 @@ function TabContent({ activeTab }: TabContentProps) {
 // ============================================================================
 
 function DesignCenterHeader() {
-  const { tokens, isLoading, error, isDirty } = useUITheme();
+  const { tokens, isLoading, error, isDirty, tokenSource } = useUITheme();
 
   return (
     <header className="dc-header">
@@ -50,9 +54,31 @@ function DesignCenterHeader() {
           </div>
         </div>
         <div className="dc-header-status">
-          {isLoading && <span className="dc-status-loading">⏳ Chargement...</span>}
-          {error && <span className="dc-status-error">⚠️ {error}</span>}
-          {!isLoading && !error && <span className="dc-status-ok">✓ Actif</span>}
+          {isLoading && (
+            <span className="dc-status-loading" data-testid="design-status-loading">
+              ⏳ Chargement...
+            </span>
+          )}
+          {error && (
+            <span className="dc-status-error" data-testid="design-status-error">
+              ⚠️ {error}
+            </span>
+          )}
+          {!isLoading && !error && isDirty && (
+            <span className="dc-status-warning" data-testid="design-status-dirty">
+              ⚠ Appliqué (non sauvegardé)
+            </span>
+          )}
+          {!isLoading && !error && !isDirty && tokenSource === 'fallback-local' && (
+            <span className="dc-status-warning" data-testid="design-status-fallback">
+              ⚠ Fallback local
+            </span>
+          )}
+          {!isLoading && !error && !isDirty && tokenSource === 'runtime' && (
+            <span className="dc-status-ok" data-testid="design-status-runtime-active">
+              ✓ Actif (runtime)
+            </span>
+          )}
         </div>
       </div>
     </header>
@@ -70,13 +96,51 @@ interface TabNavigationProps {
 }
 
 function TabNavigation({ tabs, activeTab, onTabChange }: TabNavigationProps) {
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLButtonElement>, tabIndex: number) => {
+      if (tabs.length === 0) {
+        return;
+      }
+
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        const nextIndex = (tabIndex + 1) % tabs.length;
+        onTabChange(tabs[nextIndex]?.id ?? tabs[0]!.id);
+      }
+
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        const previousIndex = (tabIndex - 1 + tabs.length) % tabs.length;
+        onTabChange(tabs[previousIndex]?.id ?? tabs[0]!.id);
+      }
+
+      if (event.key === 'Home') {
+        event.preventDefault();
+        onTabChange(tabs[0]!.id);
+      }
+
+      if (event.key === 'End') {
+        event.preventDefault();
+        onTabChange(tabs[tabs.length - 1]!.id);
+      }
+    },
+    [onTabChange, tabs]
+  );
+
   return (
-    <nav className="dc-tabs-nav">
-      {tabs.map(tab => (
+    <nav className="dc-tabs-nav" role="tablist" aria-label="Design Center tabs">
+      {tabs.map((tab, index) => (
         <button
           key={tab.id}
+          id={`dc-tab-${tab.id}`}
+          role="tab"
+          aria-selected={activeTab === tab.id}
+          aria-controls={`dc-panel-${tab.id}`}
+          tabIndex={activeTab === tab.id ? 0 : -1}
+          data-testid={`design-tab-${tab.id}`}
           className={`dc-tab-btn ${activeTab === tab.id ? 'active' : ''}`}
           onClick={() => onTabChange(tab.id)}
+          onKeyDown={event => handleKeyDown(event, index)}
           title={tab.description}
         >
           <span className="dc-tab-icon">{tab.icon}</span>
@@ -92,10 +156,13 @@ function TabNavigation({ tabs, activeTab, onTabChange }: TabNavigationProps) {
 // ============================================================================
 
 function DesignCenterContent() {
-  const [activeTab, setActiveTab] = useState(DESIGN_CENTER_TABS[0]?.id ?? 'templates');
+  const [activeTab, setActiveTab] = useState(
+    DESIGN_CENTER_TABS[0]?.id ?? 'design-system'
+  );
+  const activeTabIndex = DESIGN_CENTER_TABS.findIndex(tab => tab.id === activeTab);
 
   return (
-    <div className="dc-page">
+    <div className="dc-page" data-testid="page-design-center">
       <DesignCenterHeader />
 
       <TabNavigation
@@ -105,7 +172,15 @@ function DesignCenterContent() {
       />
 
       <main className="dc-main">
-        <TabContent activeTab={activeTab} />
+        <section
+          id={`dc-panel-${activeTab}`}
+          role="tabpanel"
+          aria-labelledby={`dc-tab-${activeTab}`}
+          data-testid={`design-panel-${activeTab}`}
+          tabIndex={activeTabIndex >= 0 ? 0 : -1}
+        >
+          <TabContent activeTab={activeTab} />
+        </section>
       </main>
 
       {/* Styles de la page */}
@@ -169,6 +244,7 @@ function DesignCenterContent() {
         .dc-status-loading { color: var(--color-info, #8899aa); }
         .dc-status-error { color: var(--color-error, #8f7a7a); }
         .dc-status-ok { color: var(--color-success, #93b399); }
+        .dc-status-warning { color: var(--color-warning, #a89f91); }
 
         /* Tab Navigation */
         .dc-tabs-nav {
@@ -197,6 +273,11 @@ function DesignCenterContent() {
         .dc-tab-btn:hover {
           color: var(--color-text, #e8e8e8);
           background: var(--color-surface-elevated, #1e1e1e);
+        }
+
+        .dc-tab-btn:focus-visible {
+          outline: 2px solid var(--color-border-focus, #5a5a5a);
+          outline-offset: 2px;
         }
 
         .dc-tab-btn.active {
@@ -312,6 +393,12 @@ function DesignCenterContent() {
 // ============================================================================
 
 export function DesignCenterPage() {
+  const existingThemeContext = useUIThemeOptional();
+
+  if (existingThemeContext) {
+    return <DesignCenterContent />;
+  }
+
   return (
     <UIThemeProvider>
       <DesignCenterContent />

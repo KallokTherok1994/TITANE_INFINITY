@@ -39,6 +39,9 @@ import { ErrorBoundary } from '../components/ErrorBoundary';
 import { xpEngine } from '@/cognitive/progression/xpEngine';
 import { Settings, TrendingUp, Brain, Database, Zap, Sprout } from 'lucide-react';
 import type { ProgressionState } from '@/cognitive/types';
+import { tauriClient } from '@/lib/tauriClient';
+import type { MemoryStats } from '@/services/memory/persistentMemory.config';
+import { normalizePersistentMemoryStats } from '@/services/memory/persistentMemory.normalize';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -69,6 +72,7 @@ export const EvoPage: React.FC = () => {
   // État
   const [activeTab, setActiveTab] = useState<TabId>('overview');
   const [progression, setProgression] = useState<ProgressionState | null>(null);
+  const [memoryStats, setMemoryStats] = useState<MemoryStats | null>(null);
   const [isEditing, setIsEditing] = useState(false);
 
   // Visual engines
@@ -91,17 +95,32 @@ export const EvoPage: React.FC = () => {
     loadProgression();
   }, []);
 
+  // Chargement stats mémoire
+  useEffect(() => {
+    const loadMemoryStats = async () => {
+      try {
+        const stats = normalizePersistentMemoryStats(
+          await tauriClient.persistentMemoryGetStats()
+        ) as MemoryStats;
+        setMemoryStats(stats);
+      } catch {
+        // Non-blocking: fallback → 0
+      }
+    };
+    loadMemoryStats();
+  }, []);
+
   // Stats calculées
   const stats: EvoStats = useMemo(
     () => ({
       totalXP: progression?.totalXP || 193000,
       level: progression?.level || 19,
-      memoryShortTerm: 247,
-      memoryMidTerm: 1832,
-      memoryLongTerm: 4521,
+      memoryShortTerm: memoryStats?.countByLevel['session'] ?? 0,
+      memoryMidTerm: memoryStats?.countByLevel['intermediate'] ?? 0,
+      memoryLongTerm: memoryStats?.countByLevel['long_term'] ?? 0,
       evolutionScore: 87,
     }),
-    [progression]
+    [progression, memoryStats]
   );
 
   return (
@@ -467,7 +486,7 @@ const IdentitySection: React.FC = () => {
               <div className="text-sm text-gray-400 mt-2">{dim.dimension}</div>
               <div className="w-full bg-gray-700 rounded-full h-2 mt-3">
                 <div
-                  className="h-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500"
+                  className="h-2 rounded-full bg-linear-to-r from-blue-500 to-cyan-500"
                   style={{ width: `${dim.value * 100}%` }}
                 />
               </div>
@@ -642,7 +661,7 @@ const MemoryMapSection: React.FC<MemoryMapSectionProps> = ({ stats }) => {
                 </div>
                 <div className="w-full bg-gray-700 rounded-full h-3">
                   <div
-                    className="h-3 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500"
+                    className="h-3 rounded-full bg-linear-to-r from-cyan-500 to-blue-500"
                     style={{ width: `${(stats.memoryShortTerm / 500) * 100}%` }}
                   />
                 </div>
@@ -1135,7 +1154,7 @@ const TransformationSection: React.FC = () => {
               </div>
               <div className="w-full bg-gray-700 rounded-full h-3">
                 <div
-                  className="h-3 rounded-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500"
+                  className="h-3 rounded-full bg-linear-to-r from-red-500 via-yellow-500 to-green-500"
                   style={{ width: `${line.progress}%` }}
                 />
               </div>

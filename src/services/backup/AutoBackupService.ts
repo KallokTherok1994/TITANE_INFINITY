@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v26.2 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ AUTO-BACKUP SERVICE v26.2
+ *   TITANE∞ AUTO-BACKUP SERVICE v30.0.0
  *   Sauvegarde automatique toutes les 6 heures
  *   Protection totale des données, mémoire et conversations
  * ═══════════════════════════════════════════════════════════════════
@@ -70,7 +70,7 @@ class AutoBackupService {
   private listeners: Set<(state: BackupState) => void> = new Set();
 
   async initialize(): Promise<void> {
-    console.log('[AutoBackup] Initializing Auto-Backup Service v26.2...');
+    console.log('[AutoBackup] Initializing Auto-Backup Service v30.0.0...');
     this.loadState();
     this.startBackupTimer();
     this.checkImmediateBackup();

@@ -1,0 +1,3 @@
+# VERDICT POINTER
+
+Voir `14_FINAL_VERDICT.md`.

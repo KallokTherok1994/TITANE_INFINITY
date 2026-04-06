@@ -17,7 +17,9 @@ import type { UserSpeed } from '../core/ARCHITECTURE_TYPES_v24-v∞';
 
 import { secureInvoke } from '@/lib/security';
 import { personaService } from './api';
-// REMOVED: core/persona supprimé en PHASE 1 (OPTION B)
+// ACTIVE: personaTauriBridge is the live persona expression path.
+// Called by useLivingEngines hook (imported in App.tsx) — initializes on Tauri, polls state every tick.
+// PersonaAgent/HarmoniaAgent (multi_agent_engine) are STUB_ONLY by PHASE 1 OPTION B — not this bridge.
 type PersonaState = any;
 type SystemState = any;
 

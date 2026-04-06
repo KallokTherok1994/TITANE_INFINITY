@@ -1,0 +1,2 @@
+{"ts":"2026-03-07T23:20:46Z","event":"DRIFT_RESOLUTION_2026-03-07_1811_d859691c8","status":"BLOCKED","details":"Two-file drift stop-line resolved with KEEP decisions; final pipeline resume remains blocked by inherited non-drift gates."}
+{"ts":"2026-03-07T23:38:57Z","event":"FINAL_RESUME_POST_DRIFT_2026-03-07_1826_d859691c8","status":"BLOCKED","details":"Drift remains frozen KEEP/KEEP; inherited non-drift gates rerun and remain blocking (BLOCKED_GATES + BLOCKED_ENV)."}

@@ -7,81 +7,85 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useVoice } from '@/hooks/useVoice';
 
-vi.mock('@tauri-apps/api/core', () => ({
-  invoke: vi.fn(),
+vi.mock('@/services/tts/hybridTTS', () => ({
+  hybridTTS: {
+    getStatus: vi.fn(async () => ({
+      available: true,
+      provider: 'tauri',
+    })),
+    speak: vi.fn(async () => undefined),
+    stop: vi.fn(async () => undefined),
+  },
 }));
 
-describe.skip('useVoice Hook (NON IMPLÉMENTÉ - hook commenté dans index.ts)', () => {
+describe('useVoice Hook', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    (window as any).SpeechRecognition = undefined;
+    (window as any).webkitSpeechRecognition = undefined;
   });
 
   describe('Initialization', () => {
     it('should initialize in idle state', () => {
       const { result } = renderHook(() => useVoice());
-      expect(result.current.isRecording).toBe(false);
+      expect(result.current.state.isListening).toBe(false);
+      expect(result.current.state.isSpeaking).toBe(false);
     });
 
-    it('should have startRecording function', () => {
+    it('should expose listening actions', () => {
       const { result } = renderHook(() => useVoice());
-      expect(typeof result.current.startRecording).toBe('function');
-    });
-
-    it('should have stopRecording function', () => {
-      const { result } = renderHook(() => useVoice());
-      expect(typeof result.current.stopRecording).toBe('function');
+      expect(typeof result.current.startListening).toBe('function');
+      expect(typeof result.current.stopListening).toBe('function');
     });
   });
 
-  describe('Recording', () => {
-    it('should start recording', async () => {
+  describe('Listening/TTS', () => {
+    it('should set error when SpeechRecognition is unavailable', async () => {
       const { result } = renderHook(() => useVoice());
 
       await act(async () => {
-        await result.current.startRecording();
+        await result.current.startListening();
       });
 
-      expect(result.current.isRecording).toBe(true);
+      expect(result.current.state.error).toMatch(/not supported/i);
     });
 
-    it('should stop recording', async () => {
+    it('should stop listening without crashing', async () => {
       const { result } = renderHook(() => useVoice());
 
       await act(async () => {
-        await result.current.startRecording();
-        await result.current.stopRecording();
+        await result.current.stopListening();
       });
 
-      expect(result.current.isRecording).toBe(false);
+      expect(result.current.state.isListening).toBe(false);
     });
 
-    it('should handle transcription', async () => {
+    it('should speak text without setting error', async () => {
       const { result } = renderHook(() => useVoice());
 
       await act(async () => {
-        await result.current.startRecording();
-        await result.current.stopRecording();
+        await result.current.speak('Bonjour TITANE');
       });
 
-      expect(result.current.transcript).toBeDefined();
+      expect(result.current.state.error).toBeNull();
     });
   });
 
   describe('Error Handling', () => {
-    it('should handle recording errors', async () => {
+    it('should clear error and transcript state', async () => {
       const { result } = renderHook(() => useVoice());
 
-      // Simuler erreur
-      const tauriCore = await import('@tauri-apps/api/core');
-      vi.mocked(tauriCore.invoke).mockRejectedValueOnce(new Error('No microphone'));
-
       await act(async () => {
-        try {
-          await result.current.startRecording();
-        } catch (e) {
-          expect(result.current.error).toBeDefined();
-        }
+        await result.current.startListening();
       });
+
+      act(() => {
+        result.current.clearError();
+        result.current.clearTranscript();
+      });
+
+      expect(result.current.state.error).toBeNull();
+      expect(result.current.state.transcript).toBe('');
     });
   });
 });

@@ -1,0 +1,20 @@
+0af062e88 fix(e2e): close required-scope runtime gaps
+8b04d72f3 Add GitHub Actions workflow for Python package with Conda
+a1704b48e Add GitHub Actions workflow for Rust project
+757ae4d4c merge: ci unblock readiness post blocked_ci
+56fc7d124 fix(ci): install alsa dev package in unified build verification
+552318415 fix(ci): stabilize SystemHealthMonitor snapshot whitespace
+86fd1387b fix(ui): normalize timestamp formatting for deterministic snapshots (AH-0075)
+a87f0a4a3 fix(ci): stabilize vitest snapshots with UTC runtime (AH-0074)
+e4d3a6bd9 chore(ci): enforce prettier compliance for unified pipeline (AH-0073)
+5b490d07d chore(registry): sync artifacts for workflow changes (AH-0072)
+6947ffb58 fix(ci): unblock constitution comment + p0 secret scan guards
+deaff64fd fix(e2e): stabilize chat-state persistence after page switch (AH-0061)
+05f19a2a4 fix(ci): soften rust-docker clippy gate
+5fddd42e4 fix(ci): install clippy in rust-docker workflow
+60c1a566d fix(ci): restore mock-compatible tauri command registration
+47779f2df fix(ci): ensure tauri dist resource in rust-docker
+4f5f073da fix(ci): add alsa dev dependency for rust-docker
+68bcc6eb9 fix(ci): install linker deps for rust-docker
+13578aa5d fix(ci): raise rust-docker toolchain to 1.88
+186fe020c fix(ci): bump rust-docker toolchain to support edition2024

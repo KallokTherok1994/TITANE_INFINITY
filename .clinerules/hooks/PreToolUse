@@ -11,13 +11,12 @@ if [[ "$tool_name" == "execute_command" ]]; then
   command=$(echo "$input" | jq -r '.preToolUse.parameters.command // ""')
   
   # Détecter les tentatives de build production
-  if echo "$command" | grep -qiE 'npm run build|tauri build|build\.sh|Build Titan-Stable'; then
-    error_msg="⚠️ VIOLATION CRITIQUE: Tentative de déploiement production non autorisée.\n"
-    error_msg+="Le déploiement production nécessite:\n"
-    error_msg+="1. Tests CLI: 100/100 passés\n"
-    error_msg+="2. Approbation explicite écrite de Kevin Thibault\n"
-    error_msg+="3. Confirmation 'GO FOR PRODUCTION DEPLOY'\n"
-    error_msg+="Mode de travail autorisé: '🟢 Launch Titan-Dev' uniquement"
+  if echo "$command" | grep -qiE 'tauri build|Build Titan-Stable|build:production'; then
+    error_msg="VIOLATION CRITIQUE (Rule 11): Build/déploiement production non autorisé.\n"
+    error_msg+="Tokens exacts requis:\n"
+    error_msg+="  GO_FOR_PROD_BUILD__TITANE_INFINITY\n"
+    error_msg+="  GO_FOR_PROD_DEPLOY__TITANE_INFINITY\n"
+    error_msg+="Sans ces tokens exacts: BLOCKED_APPROVAL."
     
     jq -n --arg msg "$error_msg" '{"cancel": true, "errorMessage": $msg}'
     exit 0
@@ -33,19 +32,13 @@ if [[ "$tool_name" == "execute_command" ]]; then
   fi
 fi
 
-# Bloquer la création de fichiers .js dans un projet TypeScript
+# Écriture de fichiers — vérification secrets uniquement
 if [[ "$tool_name" == "write_to_file" ]]; then
+  # Empêcher l'écriture de secrets dans src/** (avertissement non-bloquant)
   file_path=$(echo "$input" | jq -r '.preToolUse.parameters.path // ""')
-  
-  if [[ "$file_path" == *.js ]] && [[ -f "tsconfig.json" ]]; then
-    jq -n '{"cancel": true, "errorMessage": "JavaScript files not allowed in TypeScript project. Use .ts or .tsx extension."}'
-    exit 0
-  fi
-  
-  # Empêcher l'écriture de secrets
   content=$(echo "$input" | jq -r '.preToolUse.parameters.content // ""')
-  if echo "$content" | grep -qiE 'API[_-]?KEY|SECRET|PASSWORD|TOKEN.*=.*[a-zA-Z0-9]{20,}'; then
-    context="SECURITY WARNING: Possible secret detected in file write. Use environment variables instead."
+  if [[ "$file_path" =~ ^src/ ]] && echo "$content" | grep -qiE 'API[_-]?KEY|SECRET|PASSWORD|TOKEN.*=.*[a-zA-Z0-9]{20,}'; then
+    context="SECURITY WARNING: Secret potentiel détecté dans src/. Utiliser les variables d'environnement."
     jq -n --arg ctx "$context" '{"cancel": false, "contextModification": $ctx}'
     exit 0
   fi

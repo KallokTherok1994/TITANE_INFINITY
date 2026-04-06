@@ -1,0 +1,93 @@
+{
+  "scorecard_id": "AUTOHEAL_TRUTH_SCORECARD",
+  "version": "v1",
+  "champion": "7973fbdec",
+  "champion_tag": "v28.0.0",
+  "date": "2026-03-20",
+  "scored_date": "2026-03-20",
+  "node_version": "v20.20.0",
+  "description": "Verifies that auto-heal operations are truthful and do not mask failures",
+  "evidence": {
+    "detect_recurrence": "PASS — G_AH_RULE_CAPTURED_FOR_EACH_FIX, G_AH_RECURRENCE_GUARD_PASS, entries=459",
+    "verify_instructions": "PASS — 20/0 (includes G_AUTOHEAL_JSONL_VALID, G_MARKER_AUTOHEAL_CANONICAL_PATH)",
+    "unit_tests": "3351/3351 PASS (no forbidden autoheal patterns in unit test suite)"
+  },
+  "metrics": [
+    {
+      "name": "failure_reproduced_before_heal",
+      "target": 1.0,
+      "blocking": true,
+      "description": "No heal applied without first reproducing the failure",
+      "champion_score": 1.0,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PASS — autoheal_rules.jsonl 459 entries, all with symptom + root_cause fields; detect_recurrence PASS"
+    },
+    {
+      "name": "heal_bounded_not_broad",
+      "target": 1.0,
+      "blocking": true,
+      "description": "Heal fix is minimal and scoped, not a broad refactor",
+      "champion_score": 1.0,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PASS — kernel Rule 1 (minimal patch) enforced; session produced 0 gratuitous refactors"
+    },
+    {
+      "name": "autoheal_entry_appended",
+      "target": 1.0,
+      "blocking": true,
+      "description": "Every heal produces an entry in autoheal_rules.jsonl",
+      "champion_score": 1.0,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PASS — 2 entries appended this session (AH-2026-03-20-MISSING-EVAL-INFRA, v2); detect_recurrence PASS"
+    },
+    {
+      "name": "detect_recurrence_passes",
+      "target": 1.0,
+      "blocking": true,
+      "description": "detect_recurrence.sh passes after each heal entry",
+      "champion_score": 1.0,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PASS — executed: PASS G_AH_RULE_CAPTURED_FOR_EACH_FIX + G_AH_RECURRENCE_GUARD_PASS"
+    },
+    {
+      "name": "no_expected_output_rewrite",
+      "target": 1.0,
+      "blocking": true,
+      "description": "No eval expected outputs rewritten to make tests pass (forbidden auto-heal)",
+      "champion_score": 1.0,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PASS — no test files modified this session; 3351 tests pass unchanged"
+    },
+    {
+      "name": "no_threshold_lowering_without_proof",
+      "target": 1.0,
+      "blocking": true,
+      "description": "No scorecard threshold lowered without documented justification",
+      "champion_score": 1.0,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PASS — all scorecard thresholds set at 1.0 for blocking; no changes made to reduce threshold"
+    },
+    {
+      "name": "no_masking_runtime_as_ui_success",
+      "target": 1.0,
+      "blocking": true,
+      "description": "No runtime failure converted into UI-only success display",
+      "champion_score": 1.0,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PASS — G4 pre-existing failure explicitly documented (not masked); no production code modified"
+    }
+  ],
+  "pre_existing_failures_noted": {
+    "G4_PROVIDER_DECISION_CERTIFIED": "FAIL — pre-existing, missing docs/_evidence/FIX_CHAT_PROVIDER_GOV_P3. Not introduced by this session. Confirmed by git stash test."
+  },
+  "blocking_regression_definition": "Any forbidden auto-heal action detected = AUTOHEAL_MASKING_RISK",
+  "promotion_decision": "CHAMPION_BASELINE_ESTABLISHED",
+  "note": "Champion baseline established 2026-03-20. All metrics PASS. G4 pre-existing failure noted but not masked."
+}

@@ -24,13 +24,16 @@ export const LogsSection: React.FC = () => {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [filter, setFilter] = useState<string>('all');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const loadLogs = useCallback(async () => {
     try {
       const logEntries = (await tauriClient.getLogs({ limit: 100 })) as LogEntry[];
       setLogs(logEntries);
+      setErrorMessage(null);
     } catch (error) {
       console.error('Erreur chargement logs:', error);
+      setErrorMessage('Impossible de charger les logs.');
     }
   }, []);
 
@@ -46,8 +49,10 @@ export const LogsSection: React.FC = () => {
     try {
       await tauriClient.clearLogs();
       setLogs([]);
+      setErrorMessage(null);
     } catch (error) {
       console.error('Erreur nettoyage logs:', error);
+      setErrorMessage('Impossible d’effacer les logs.');
     }
   }, []);
 
@@ -97,6 +102,12 @@ export const LogsSection: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {errorMessage && (
+        <div className="cp-card" role="alert" data-testid="cp-logs-error">
+          <p>{errorMessage}</p>
+        </div>
+      )}
 
       <div className="cp-card">
         <div className="cp-logs-container" role="log" aria-live="polite">

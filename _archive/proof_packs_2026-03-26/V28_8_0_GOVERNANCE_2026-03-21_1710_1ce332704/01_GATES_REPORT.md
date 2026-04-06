@@ -1,0 +1,16 @@
+# Gates — v28.8.0
+
+| Gate | Status | Evidence |
+|------|--------|----------|
+| G_TSC | PASS | tsc --noEmit exit 0 |
+| G_VITEST | PASS | 3399/3399 |
+| G_CARGO_TEST | PASS | 4463/4463 |
+| G_NATIVE_BINARY_FRESHNESS | PASS | FRESH_RELEASE_BINARY |
+| G_VERIFY_INSTRUCTIONS | PASS | PASS=20 FAIL=0 |
+| G_AH_RECURRENCE | PASS | G_AH_RECURRENCE_GUARD_PASS (516 entries) |
+| G_ARTIFACTS_PRESENT | PASS | AppImage 88M + deb 18M + rpm 18M |
+| G_CHECKSUMS_RECORDED | PASS | RELEASE_ARTIFACTS_CHECKSUMS_28.8.0.txt |
+| G_SEAL_FILE | PASS | RELEASE_v28.8.0_SEALED.txt |
+| G_ROLLBACK | PASS | git revert HEAD |
+
+All 10 gates: PASS

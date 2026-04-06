@@ -8,6 +8,9 @@
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
  */
 
+import { invoke } from '@tauri-apps/api/core';
+import { tauriClient } from '@/lib/tauriClient';
+
 export interface IdentityValue {
   id: string;
   label: string;
@@ -281,7 +284,6 @@ export async function loadIdentityMatrix(): Promise<{
   isFallback: boolean;
 }> {
   try {
-    const { invoke } = await import('@tauri-apps/api/core');
     const loaded = await invoke<IdentityMatrix>('identity_get_matrix');
 
     if (validateIdentityMatrix(loaded)) {
@@ -317,8 +319,7 @@ export async function saveIdentityMatrix(matrix: IdentityMatrix): Promise<void> 
     throw new Error('Invalid identity matrix structure');
   }
 
-  const { invoke } = await import('@tauri-apps/api/core');
-  await invoke('identity_set_matrix', { matrix });
+  await tauriClient.identitySetMatrix({ matrix });
 }
 
 /**

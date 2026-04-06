@@ -19,9 +19,6 @@
             "core:window:allow-close",
             "core:webview:default",
             "core:app:default",
-            "clipboard-manager:default",
-            "clipboard-manager:allow-read-text",
-            "clipboard-manager:allow-write-text",
             "dialog:default",
             "dialog:allow-open",
             "dialog:allow-save",
@@ -396,6 +393,9 @@
               "command": "get_audio_output_devices"
             },
             {
+              "command": "test_microphone"
+            },
+            {
               "command": "get_cognitive_state"
             },
             {
@@ -469,6 +469,9 @@
             },
             {
               "command": "identity_list_voice_profiles"
+            },
+            {
+              "command": "identity_get_active_voice_profile"
             },
             {
               "command": "identity_set_active_voice_profile"

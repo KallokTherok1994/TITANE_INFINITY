@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.2.0 — MAIN STYLESHEET (TITANIUM DARK)
+ * TITANE∞ v29.0.0 — MAIN STYLESHEET (TITANIUM DARK)
  *
  * CRITICAL: ALL @import statements MUST be at the TOP of this file
  * PostCSS strict mode requires @import before any other rules
@@ -38,8 +38,17 @@
 
 html {
   scroll-behavior: smooth;
-  zoom: 75%;
+  /* zoom: 75% — desktop layout density setting.
+     On mobile (Android/Tauri mobile), width=device-width viewport handles scaling.
+     Media query prevents mobile layout breakage. */
   overflow-x: auto;
+}
+
+/* Desktop-only zoom for dense UI layout */
+@media (min-width: 768px) {
+  html {
+    zoom: 75%;
+  }
 }
 
 body {

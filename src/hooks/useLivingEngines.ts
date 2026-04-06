@@ -117,11 +117,32 @@ export const useLivingEngines = (updateInterval = 100) => {
 
   // Initialize Persona Engine (Tauri or TypeScript fallback)
   useEffect(() => {
+    const initWithTimeout = async (
+      promise: Promise<void>,
+      timeoutMs: number
+    ): Promise<void> => {
+      let timeoutId: ReturnType<typeof setTimeout> | null = null;
+      try {
+        await Promise.race([
+          promise,
+          new Promise<void>((_, reject) => {
+            timeoutId = setTimeout(() => {
+              reject(new Error(`Persona init timeout after ${timeoutMs}ms`));
+            }, timeoutMs);
+          }),
+        ]);
+      } finally {
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+      }
+    };
+
     const init = async () => {
       try {
         // Try Tauri bridge first
         if (personaTauriBridge.isTauriEnvironment()) {
-          await personaTauriBridge.initialize();
+          await initWithTimeout(personaTauriBridge.initialize(), 4000);
           console.log('🌟 TITANE∞ v24 - Persona Engine (Rust/Tauri) Initialized');
         } else {
           // Fallback to TypeScript engine
@@ -136,6 +157,22 @@ export const useLivingEngines = (updateInterval = 100) => {
           { component: 'PersonaEngine' },
           error as Error
         );
+
+        try {
+          await personaEngine.initialize();
+        } catch {
+          // Keep boot non-blocking even if fallback init fails
+        }
+
+        setEnginesState(prev => ({
+          ...prev,
+          initialized: true,
+          systemState: 'warning',
+        }));
+
+        if (typeof window !== 'undefined') {
+          window.__TITANE_EMIT_BOOT_MARKER__?.('BOOT:ORCHESTRATOR_DEGRADED');
+        }
       }
     };
 

@@ -22,7 +22,7 @@ After achieving **200% documentation coverage** (100% API + 100% Operational), w
 
 ### 1. 👥 [Contributor Onboarding Test](CONTRIBUTOR_ONBOARDING_TEST.md)
 
-**Validates:** [CONTRIBUTING.md](../../CONTRIBUTING.md)
+**Validates:** [CONTRIBUTING.md](../CONTRIBUTING.md)
 
 **Participants:** 3-5 new contributors  
 **Timeline:** 1 week  

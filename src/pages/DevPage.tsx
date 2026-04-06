@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v25.4.0 — DEV PAGE (Fusion Complete)
+ * TITANE∞ v30.0.0 — DEV PAGE (Fusion Complete)
  * Centre unifié développement: Dev Mode + ONE CORE + QA & Tests + Orchestration
  *
  * Fusion de 4 modules → 1 module DEV (8 sections)
@@ -10,6 +10,7 @@
 
 import { tauriClient } from '@/lib/tauriClient';
 import React, { useState, useEffect, useCallback, memo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { logger } from '@/lib/logger';
 import { useDeveloperMode } from '@/features/developer-mode/useDeveloperMode';
@@ -23,26 +24,32 @@ import type {
   SystemMetrics,
 } from '@/features/qa-monitoring/types';
 import type { OneCoreState } from '@/features/one-core/types';
-// ✨ v25.4.1 - Web Vitals monitoring (planned for future implementation)
-// ✨ v25.6.0 - Ultimate Optimization Dashboard (Phase 12)
+// ✨ v30.0.0 - Web Vitals monitoring remains deferred until a dedicated proof-backed rollout
+// ✨ v30.0.0 - Ultimate Optimization Dashboard (Phase 12)
 import { UltimateOptimizationDashboard } from '@/components/optimization/UltimateOptimizationDashboard';
 import './DevPage.css';
+import { StatsSystemPanels } from './Stats';
+// LOCK3 — SYSTEM_HEALTH_POLLING: backend-sourced health truth on DevPage mount
+import { startSystemHealthPolling } from '@/services/systemHealthPoller';
+import { useSystemHealth } from '@/stores/systemStore.selectors';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
 
-type SectionId =
-  | 'overview'
-  | 'devtools'
-  | 'command-center'
-  | 'system-commands'
-  | 'qa-tests'
-  | 'orchestration'
-  | 'security'
-  | 'metrics'
-  | 'optimization'
-  | 'diagnostic';
+type SectionId = 'overview' | 'diagnostics' | 'operations' | 'validation' | 'security';
+
+const VALID_SECTIONS: SectionId[] = [
+  'overview',
+  'diagnostics',
+  'operations',
+  'validation',
+  'security',
+];
+
+const isSectionId = (value: string | null): value is SectionId => {
+  return value !== null && VALID_SECTIONS.includes(value as SectionId);
+};
 
 interface OrchestrationState {
   multiAi: {
@@ -112,7 +119,9 @@ const OverviewSection = memo<{
   oneCoreState: OneCoreState | null;
   qaState: QASystemState | null;
   orchestration: OrchestrationState | null;
-}>(({ oneCoreState, qaState, orchestration }) => {
+  // LOCK3: backend-sourced health truth (null = not yet fetched)
+  backendHealth: import('../services/tauri/backend-v17.2.types').HealthStatus | null;
+}>(({ oneCoreState, qaState, orchestration, backendHealth }) => {
   const globalHealth = oneCoreState
     ? Math.round(
         (oneCoreState.global_health * 100 +
@@ -173,6 +182,30 @@ const OverviewSection = memo<{
           icon="🔔"
           variant={qaState && qaState.active_alerts > 0 ? 'warning' : 'success'}
         />
+        {/* LOCK3: backend-sourced health truth badge */}
+        <StatCard
+          label="Santé Backend"
+          value={backendHealth ?? '…'}
+          icon={
+            backendHealth === 'Healthy'
+              ? '✅'
+              : backendHealth === 'Warning'
+                ? '⚠️'
+                : backendHealth === 'Critical'
+                  ? '🔴'
+                  : '⏳'
+          }
+          variant={
+            backendHealth === 'Healthy'
+              ? 'success'
+              : backendHealth === 'Warning'
+                ? 'warning'
+                : backendHealth === 'Critical'
+                  ? 'error'
+                  : 'info'
+          }
+          data-testid="system-health-backend"
+        />
       </div>
 
       {oneCoreState && (
@@ -204,7 +237,9 @@ const OverviewSection = memo<{
 OverviewSection.displayName = 'OverviewSection';
 
 // SECTION 2: Dev Tools
-const DevToolsSection = memo(() => {
+const DevToolsSection = memo<{
+  onExecute: (command: string) => void;
+}>(({ onExecute }) => {
   const _devMode = useDeveloperMode();
   const [selectedOperation, setSelectedOperation] = useState<string>('patch');
 
@@ -227,6 +262,7 @@ const DevToolsSection = memo(() => {
         {operations.map(op => (
           <button
             key={op.id}
+            data-testid={`btn-dev-operation-${op.id}`}
             className={`dev-operation-card ${selectedOperation === op.id ? 'dev-operation-card--active' : ''}`}
             onClick={() => setSelectedOperation(op.id)}
           >
@@ -242,7 +278,11 @@ const DevToolsSection = memo(() => {
         <p className="dev-operation-info">
           Utilisez DevModeEngine pour exécuter des opérations de développement avancées.
         </p>
-        <button className="dev-btn dev-btn--primary">
+        <button
+          className="dev-btn dev-btn--primary"
+          data-testid="btn-dev-execute-operation"
+          onClick={() => onExecute(selectedOperation)}
+        >
           Exécuter {operations.find(op => op.id === selectedOperation)?.name}
         </button>
       </div>
@@ -329,6 +369,7 @@ const SystemCommandsSection = memo<{
         {commands.map(cmd => (
           <button
             key={cmd.id}
+            data-testid={`btn-dev-command-${cmd.id}`}
             className={`dev-command-btn ${cmd.danger ? 'dev-command-btn--danger' : 'dev-command-btn--primary'}`}
             onClick={() => onExecute(cmd.id)}
           >
@@ -404,6 +445,7 @@ const QATestsSection = memo<{
             </div>
             <button
               className="dev-btn dev-btn--small dev-btn--primary"
+              data-testid={`btn-dev-run-suite-${suite.id}`}
               onClick={() => onRunSuite(suite.id)}
             >
               Exécuter
@@ -471,12 +513,13 @@ const OrchestrationSection = memo<{
           <h3>🎛️ Meta</h3>
           <div className="dev-orch-stat">
             <span className="dev-orch-label">Awareness</span>
-            <span className="dev-orch-value">{state.meta.awareness_level}</span>
+            {/* v29.0: optional chaining — state.meta peut être absent si IPC partiel */}
+            <span className="dev-orch-value">{state.meta?.awareness_level ?? 'N/A'}</span>
           </div>
           <div className="dev-orch-stat">
             <span className="dev-orch-label">Health</span>
             <span className="dev-orch-value">
-              {(state.meta.system_health.overall_score * 100).toFixed(1)}%
+              {((state.meta?.system_health?.overall_score ?? 0) * 100).toFixed(1)}%
             </span>
           </div>
         </div>
@@ -529,6 +572,7 @@ const SecuritySection = memo<{
               <p className="dev-alert-message">{alert.message}</p>
               <button
                 className="dev-btn dev-btn--small"
+                data-testid={`btn-dev-ack-alert-${alert.id}`}
                 onClick={() => onAcknowledge(alert.id)}
               >
                 Acquitter
@@ -555,10 +599,16 @@ const MetricsSection = memo<{
         <h2>📈 Metrics & Diagnostics</h2>
       </header>
 
-      {/* ✨ v25.4.1 - Web Vitals Performance Dashboard (planned for future) */}
+      {/* v29.0: Web Vitals — DISPLAY_ONLY, monitoring IPC non câblé */}
       <div className="dev-performance-vitals">
-        <h3>⚡ Core Web Vitals (Google Standards)</h3>
-        <p className="dev-coming-soon">Performance monitoring coming soon...</p>
+        <h3>⚡ Core Web Vitals</h3>
+        <p
+          className="dev-coming-soon"
+          style={{ color: 'rgba(203,213,225,0.6)', fontSize: '0.8rem' }}
+        >
+          Monitoring Web Vitals non disponible — nécessite intégration IPC
+          system_metrics_live (DISPLAY_ONLY)
+        </p>
       </div>
 
       {metrics && (
@@ -597,13 +647,24 @@ MetricsSection.displayName = 'MetricsSection';
 // ═══════════════════════════════════════════════════════════════════════════
 
 function DevPageContent(): JSX.Element {
-  const [activeSection, setActiveSection] = useState<SectionId>('overview');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeSection, setActiveSection] = useState<SectionId>(() => {
+    const requestedSection = searchParams.get('tab');
+    return isSectionId(requestedSection) ? requestedSection : 'overview';
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Hooks
   const oneCore = useOneCore();
   const qa = useQAMonitoring();
+  // LOCK3 — SYSTEM_HEALTH_POLLING: backend health truth (replaces static guesses)
+  const backendHealth = useSystemHealth();
+
+  useEffect(() => {
+    const poller = startSystemHealthPolling(10_000);
+    return () => poller.stop();
+  }, []);
 
   // States
   const [oneCoreState, setOneCoreState] = useState<OneCoreState | null>(null);
@@ -612,6 +673,7 @@ function DevPageContent(): JSX.Element {
   const [suites, setSuites] = useState<TestSuite[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [orchestration, setOrchestration] = useState<OrchestrationState | null>(null);
+  const [orchestrationDegraded, setOrchestrationDegraded] = useState(false);
 
   // Load data
   const loadData = useCallback(async () => {
@@ -638,8 +700,10 @@ function DevPageContent(): JSX.Element {
         const orchState =
           (await tauriClient.orchestrationGetUnifiedState()) as OrchestrationState;
         setOrchestration(orchState);
+        setOrchestrationDegraded(false);
       } catch {
-        // Fallback mock data
+        // Fallback: données statiques — affichage dégradé signalé dans l'UI
+        setOrchestrationDegraded(true);
         setOrchestration({
           multiAi: {
             bestProvider: 'claude',
@@ -676,6 +740,28 @@ function DevPageContent(): JSX.Element {
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  const updateActiveSection = useCallback(
+    (nextSection: SectionId) => {
+      setActiveSection(nextSection);
+      setSearchParams(
+        prev => {
+          const next = new URLSearchParams(prev);
+          next.set('tab', nextSection);
+          return next;
+        },
+        { replace: true }
+      );
+    },
+    [setSearchParams]
+  );
+
+  useEffect(() => {
+    const requestedSection = searchParams.get('tab');
+    if (isSectionId(requestedSection) && requestedSection !== activeSection) {
+      setActiveSection(requestedSection);
+    }
+  }, [activeSection, searchParams]);
 
   // Handlers
   const handleExecuteCommand = useCallback(
@@ -753,25 +839,24 @@ function DevPageContent(): JSX.Element {
 
   const sections = [
     { id: 'overview' as const, label: "Vue d'ensemble", icon: '🎯' },
-    { id: 'diagnostic' as const, label: 'Diagnostic Online', icon: '🌐' },
-    { id: 'devtools' as const, label: 'Dev Tools', icon: '💻' },
-    { id: 'command-center' as const, label: 'Command Center', icon: '🎯' },
-    { id: 'system-commands' as const, label: 'System Commands', icon: '📊' },
-    { id: 'qa-tests' as const, label: 'QA & Tests', icon: '🧪' },
-    { id: 'orchestration' as const, label: 'Orchestration', icon: '🔥' },
+    { id: 'diagnostics' as const, label: 'Diagnostics', icon: '🌐' },
+    { id: 'operations' as const, label: 'Opérations', icon: '⚙️' },
+    { id: 'validation' as const, label: 'Validation', icon: '🧪' },
     { id: 'security' as const, label: 'Security', icon: '🛡️' },
-    { id: 'metrics' as const, label: 'Metrics', icon: '📈' },
-    { id: 'optimization' as const, label: 'Ultimate Optimization', icon: '⚡' },
   ];
 
   return (
-    <div className="dev-page">
+    <div className="dev-page" data-testid="page-dev">
       <header className="dev-header">
         <div className="dev-header-content">
-          <h1>🔧 DEV Center</h1>
-          <span className="dev-version">TITANE∞ v25.4.0 • DEV Fusion</span>
+          <h1>🔧 DEV Cockpit</h1>
+          <span className="dev-version">TITANE∞ v30.0.0 • 5 tabs fusionnés</span>
         </div>
-        <button className="dev-btn dev-btn--primary" onClick={loadData}>
+        <button
+          className="dev-btn dev-btn--primary"
+          data-testid="btn-dev-refresh"
+          onClick={loadData}
+        >
           🔄 Rafraîchir
         </button>
       </header>
@@ -780,8 +865,9 @@ function DevPageContent(): JSX.Element {
         {sections.map(section => (
           <button
             key={section.id}
+            data-testid={`tab-dev-${section.id}`}
             className={`dev-tab ${activeSection === section.id ? 'dev-tab--active' : ''}`}
-            onClick={() => setActiveSection(section.id)}
+            onClick={() => updateActiveSection(section.id)}
           >
             <span className="dev-tab-icon">{section.icon}</span>
             <span className="dev-tab-label">{section.label}</span>
@@ -795,32 +881,60 @@ function DevPageContent(): JSX.Element {
             oneCoreState={oneCoreState}
             qaState={qaState}
             orchestration={orchestration}
+            backendHealth={backendHealth}
           />
         )}
-        {activeSection === 'diagnostic' && <OnlineDiagnostic />}
-        {activeSection === 'devtools' && <DevToolsSection />}
-        {activeSection === 'command-center' && (
-          <CommandCenterSection state={oneCoreState} />
+        {/* v29.0: Diagnostics = Diagnostic Online + Metrics + Stats Moteurs + Orchestration */}
+        {activeSection === 'diagnostics' && (
+          <div data-testid="page-dev-diagnostics" className="dev-fusion-section">
+            <div data-testid="page-dev-diagnostic">
+              <OnlineDiagnostic />
+            </div>
+            <MetricsSection metrics={metrics} oneCoreMetrics={oneCoreState} />
+            {/* v29.1: STATS fusionné ici — Nexus · Helios · Harmonia · Cognitif */}
+            <div className="dev-section" data-testid="page-dev-stats-panels">
+              <header className="dev-section-header">
+                <h2>📊 Métriques Moteurs</h2>
+                <span className="dev-version">Nexus · Helios · Harmonia · Cognitif</span>
+              </header>
+              <StatsSystemPanels />
+            </div>
+            {orchestrationDegraded && (
+              <div
+                role="alert"
+                style={{
+                  padding: '6px 10px',
+                  marginBottom: '8px',
+                  background: 'rgba(245,158,11,0.12)',
+                  border: '1px solid rgba(245,158,11,0.4)',
+                  borderRadius: '6px',
+                  color: '#f59e0b',
+                  fontSize: '0.8rem',
+                }}
+              >
+                ⚠️ Orchestration — données statiques (IPC indisponible)
+              </div>
+            )}
+            <OrchestrationSection state={orchestration} />
+          </div>
         )}
-        {activeSection === 'system-commands' && (
-          <SystemCommandsSection onExecute={handleExecuteCommand} />
+        {/* v29.0: Operations = Dev Tools + Command Center + System Commands + Optimization */}
+        {activeSection === 'operations' && (
+          <div data-testid="page-dev-operations" className="dev-fusion-section">
+            <SystemCommandsSection onExecute={handleExecuteCommand} />
+            <CommandCenterSection state={oneCoreState} />
+            <DevToolsSection onExecute={handleExecuteCommand} />
+            <div className="dev-section">
+              <UltimateOptimizationDashboard />
+            </div>
+          </div>
         )}
-        {activeSection === 'qa-tests' && (
+        {/* v29.0: Validation = QA & Tests */}
+        {activeSection === 'validation' && (
           <QATestsSection state={qaState} suites={suites} onRunSuite={handleRunSuite} />
-        )}
-        {activeSection === 'orchestration' && (
-          <OrchestrationSection state={orchestration} />
         )}
         {activeSection === 'security' && (
           <SecuritySection alerts={alerts} onAcknowledge={handleAcknowledgeAlert} />
-        )}
-        {activeSection === 'metrics' && (
-          <MetricsSection metrics={metrics} oneCoreMetrics={oneCoreState} />
-        )}
-        {activeSection === 'optimization' && (
-          <div className="dev-section">
-            <UltimateOptimizationDashboard />
-          </div>
         )}
       </main>
     </div>

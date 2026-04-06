@@ -169,7 +169,7 @@ Maturité Production:  95,0% → 95%+  (CIBLE!)
 
 | Document | Objectif | Temps | Priorité |
 |----------|----------|-------|----------|
-| **[README Roadmap](../README_ROADMAP_V27.md)** | Vue d'ensemble | 20 min | ⭐⭐⭐⭐⭐ |
+| **[README Roadmap](archive/root/README_ROADMAP_V27.md)** | Vue d'ensemble | 20 min | ⭐⭐⭐⭐⭐ |
 | **[Quick Start](./QUICK_START_IMPLEMENTATION.md)** | Guide jour par jour | 40 min | ⭐⭐⭐⭐⭐ |
 | **[Index Exécution](./ROADMAP_EXECUTION_INDEX.md)** | Navigation | 10 min | ⭐⭐⭐⭐⭐ |
 

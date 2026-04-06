@@ -51,7 +51,7 @@ docs/super-prompts/
    - Architecture visuelle
    - Workflows détaillés
 
-3. **[CHANGELOG.md](./CHANGELOG.md)** (5 min)
+3. **[CHANGELOG.md](../90_release/CHANGELOG__CHANGELOG.md.md)** (5 min)
    - Historique des versions
    - Évolution des prompts
 
@@ -223,7 +223,7 @@ docs/super-prompts/
 | Je veux comprendre le système | [README.md](./README.md) |
 | Je préfère les visuels | [VISUAL_GUIDE.md](./VISUAL_GUIDE.md) |
 | Je veux créer un nouveau prompt | [TEMPLATE_SUPER_PROMPT.md](./TEMPLATE_SUPER_PROMPT.md) |
-| Je cherche l'historique | [CHANGELOG.md](./CHANGELOG.md) |
+| Je cherche l'historique | [CHANGELOG.md](../90_release/CHANGELOG__CHANGELOG.md.md) |
 | J'ai un problème spécifique | [CHEAT_SHEET.md](./CHEAT_SHEET.md) → Troubleshooting |
 
 ---
@@ -255,7 +255,7 @@ docs/super-prompts/
 
 1. [README.md](./README.md) (10 min) → Vue d'ensemble
 2. [VISUAL_GUIDE.md](./VISUAL_GUIDE.md) (15 min) → Comprendre visuellement
-3. [CHANGELOG.md](./CHANGELOG.md) (5 min) → État d'avancement
+3. [CHANGELOG.md](../90_release/CHANGELOG__CHANGELOG.md.md) (5 min) → État d'avancement
 
 **Temps total** : 30 min
 
@@ -280,7 +280,7 @@ Pour créer un nouveau super prompt :
 3. Remplir toutes les sections
 4. Tester sur un projet sandbox
 5. Mettre à jour [README.md](./README.md) (index)
-6. Mettre à jour [CHANGELOG.md](./CHANGELOG.md)
+6. Mettre à jour [CHANGELOG.md](../90_release/CHANGELOG__CHANGELOG.md.md)
 7. Pull Request
 
 ---
@@ -290,7 +290,7 @@ Pour créer un nouveau super prompt :
 Pour toute question ou problème :
 
 1. **Lire d'abord** : [CHEAT_SHEET.md](./CHEAT_SHEET.md) → Troubleshooting
-2. **Vérifier** : [CHANGELOG.md](./CHANGELOG.md) → Problèmes connus
+2. **Vérifier** : [CHANGELOG.md](../90_release/CHANGELOG__CHANGELOG.md.md) → Problèmes connus
 3. **Chercher** : Issues GitHub du projet
 4. **Créer** : Nouvelle issue si problème non documenté
 
