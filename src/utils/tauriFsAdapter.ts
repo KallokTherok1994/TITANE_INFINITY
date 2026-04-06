@@ -1,11 +1,11 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v29.0.0 — FILESYSTEM ADAPTER (Tauri v2 Plugin Architecture)
+ * TITANE∞ v30.0.0 — FILESYSTEM ADAPTER (Tauri v2 Plugin Architecture)
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * Adaptateur compatible Node.js fs pour environnement Tauri/Browser
  *
- * STRATÉGIE v29.0.0:
+ * STRATÉGIE v30.0.0:
  * - Runtime Tauri: Utilise @tauri-apps/plugin-fs (Tauri v2) pour vraies opérations filesystem
  * - Fallback Browser: localStorage pour développement sans Tauri
  * - API compatible Node.js fs/promises pour migration transparente

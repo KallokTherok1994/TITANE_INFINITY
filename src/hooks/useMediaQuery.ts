@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v29.0.0 — useMediaQuery Hook
+ * TITANE∞ v30.0.0 — useMediaQuery Hook
  * Responsive media query matching
  */
 

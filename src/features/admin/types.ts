@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v29.0.0 — Admin Center Types
+ * TITANE∞ v30.0.0 — Admin Center Types
  * Module ADMIN unifié - Types & Interfaces
  * © 2025 TITANE Team. All rights reserved.
  */

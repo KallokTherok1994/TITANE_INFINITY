@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v29.0.0 — Card Component (Titanium Dark)
+ * TITANE∞ v30.0.0 — Card Component (Titanium Dark)
  * Container component with Titanium Dark design system
  * Elevated surface with subtle shadows and borders
  * @license MIT

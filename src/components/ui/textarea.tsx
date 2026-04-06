@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v29.0.0 — Textarea Component (Titanium Dark)
+ * TITANE∞ v30.0.0 — Textarea Component (Titanium Dark)
  * Multi-line text input with Titanium Dark design system
  * WCAG 2.2 AA compliant with auto-resize support
  * @license MIT

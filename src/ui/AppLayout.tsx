@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v29.0.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v29.0.0 — APP LAYOUT OPTIMISÉ
+ *   TITANE∞ v30.0.0 — APP LAYOUT OPTIMISÉ
  *   Layout responsive avec useResponsive hook
  * ═══════════════════════════════════════════════════════════════
  */
@@ -16,7 +16,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu } from './Menu';
 import { GlobalExpBar } from '../components/experience/GlobalExpBar';
-// ✨ v29.0.0 - Responsive Hook
+// ✨ v30.0.0 - Responsive Hook
 import { useIsMobile } from '@/hooks/useResponsive';
 import './styles/AppLayout.css';
 
@@ -36,7 +36,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // ✨ v29.0.0 - Utilise le hook responsive centralisé
+  // ✨ v30.0.0 - Utilise le hook responsive centralisé
   const isMobile = useIsMobile();
 
   // Fermer le menu mobile lors de la navigation

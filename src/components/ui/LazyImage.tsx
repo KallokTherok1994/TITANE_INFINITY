@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v29.0.0 — LazyImage Component (Titanium Dark)
+ * TITANE∞ v30.0.0 — LazyImage Component (Titanium Dark)
  * Lazy-loaded image with Titanium Dark design system
  * Optimizes performance with Intersection Observer
  * @license MIT

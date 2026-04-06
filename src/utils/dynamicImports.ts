@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v29.0.0 — Dynamic Import Wrappers
+ * TITANE∞ v30.0.0 — Dynamic Import Wrappers
  * © 2025 TITANE Team. All rights reserved.
  *
  * 🔧 Wrappers pour éviter les problèmes de Vite dep-scan

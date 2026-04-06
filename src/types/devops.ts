@@ -1,5 +1,5 @@
 /**
- * TITANE∞ DevOps Types v29.0.0
+ * TITANE∞ DevOps Types v30.0.0
  *
  * @module types/devops
  * @description Types pour VisualDevOpsEngine et LocalAgentEngine

@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v29.0.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v29.0.0 — CHAT PAGE OMEGA (UI ANTI-CRASH)
+ *   TITANE∞ v30.0.0 — CHAT PAGE OMEGA (UI ANTI-CRASH)
  *   v22Ω AI Performance Optimizations: -40% latency, stream batching
  *   Protection render • État stable • Récupération auto
  *   Keyboard shortcuts, Focus trap, Code splitting
@@ -45,9 +45,9 @@ import useVAD, { useVADWithTTS, useBargeInHandler } from '../../hooks/useVAD';
 // Phase 2 v24.7.4: Keyboard shortcuts & Focus trap
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
-// ✨ v29.0.0: Responsive Chat Layout wrapper
+// ✨ v30.0.0: Responsive Chat Layout wrapper
 import { ResponsiveChatLayout } from '../../layouts/ResponsiveChatLayout';
-// ✨ v29.0.0: OMEGA Reflection Panel v2 - Compact mode
+// ✨ v30.0.0: OMEGA Reflection Panel v2 - Compact mode
 import { ThinkingPanel } from '../../features/chat/ThinkingPanel';
 import { useExperience } from '../../hooks/useExperience';
 import './styles/Chat.css';
@@ -1331,7 +1331,7 @@ const ChatComponent: React.FC = () => {
       <ResponsiveChatLayout>
         <div
           className="chat-page"
-          data-omega-version="v29.0.0"
+          data-omega-version="v30.0.0"
           data-state-version={pageState.stateVersion}
         >
           {/* Enhanced Header with Status Bar + OMEGA Protection */}
@@ -1767,7 +1767,7 @@ const ChatComponent: React.FC = () => {
               >
                 <div className="chat-settings-header">
                   <h2 id="settings-title" className="chat-settings-title">
-                    Paramètres OMEGA v29.0.0
+                    Paramètres OMEGA v30.0.0
                   </h2>
                   <button
                     className="chat-settings-close"
@@ -1873,7 +1873,7 @@ const ChatComponent: React.FC = () => {
                     <div className="chat-setting-item">
                       <label className="chat-setting-label">Version OMEGA</label>
                       <div className="chat-setting-value">
-                        v29.0.0 (État: v{pageState.stateVersion})
+                        v30.0.0 (État: v{pageState.stateVersion})
                       </div>
                     </div>
                     <div className="chat-setting-item">

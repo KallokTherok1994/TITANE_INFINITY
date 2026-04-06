@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v29.0.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ConversationSection Component
@@ -2170,7 +2170,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
           <div ref={messagesEndRef} />
         </div>
 
-        {/* ═══ CHAT TOOLBAR (v29.0.0) ═══ */}
+        {/* ═══ CHAT TOOLBAR (v30.0.0) ═══ */}
         <ChatToolbar
           onFilesAnalyzed={handleFilesAnalyzed}
           onFileImport={handleFileImport}

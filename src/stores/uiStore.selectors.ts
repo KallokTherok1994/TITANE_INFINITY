@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v29.0.0 — UI Store Selectors
+ * TITANE∞ v30.0.0 — UI Store Selectors
  * Optimized selectors with shallow equality for uiStore
  * Prevents unnecessary rerenders by selecting only needed slices
  */

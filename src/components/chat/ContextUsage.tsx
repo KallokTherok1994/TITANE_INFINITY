@@ -2,7 +2,7 @@
  * TITANE∞ — Context Usage Display
  * Affiche l'utilisation du contexte (tokens) et les alertes
  *
- * v29.0.0 (Sprint 6 Phase 3)
+ * v30.0.0 (Sprint 6 Phase 3)
  */
 
 import React, { useMemo } from 'react';

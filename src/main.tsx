@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v29.0.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025-2026 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -40,7 +40,7 @@ import './utils/browserModeAdapter';
 // ✨ Phase 4 (Week 6): Initialize runtime log level manager
 import './config/logLevelConfig';
 
-// TITANE∞ v29.0.0 - Main Entry Point - Certification P10.4→P11 PASS
+// TITANE∞ v30.0.0 - Main Entry Point - Certification P10.4→P11 PASS
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { logger } from './lib/logger';
@@ -51,13 +51,13 @@ import { SingularityBridge } from './services/singularityBridge';
 import { SingularityConnections } from './services/singularityConnections';
 // import AppMinimal from './AppMinimal'; // 🔍 DEBUG: Minimal test app
 
-// ✨ v29.0.0 OPT-9 - Monitoring lazy-loaded (non-blocking initialization)
+// ✨ v30.0.0 OPT-9 - Monitoring lazy-loaded (non-blocking initialization)
 // Moved to async initialization in bootstrap() below
 
 // ✅ v8.0 DESIGN SYSTEM - Tailwind CSS + TITANE∞ Tokens
 import './index.css'; // 🎨 v8.0: Tailwind CSS + Design Tokens (css-vars.css)
 
-// ✨ v29.0.0 RESPONSIVE DESIGN SYSTEM - Mobile-First Tokens & Utilities
+// ✨ v30.0.0 RESPONSIVE DESIGN SYSTEM - Mobile-First Tokens & Utilities
 import './design-system/responsive-tokens.css'; // 🎯 Fluid spacing, typography, layout
 import './design-system/responsive-utilities.css'; // 🛠️ Utility classes (grid-responsive, btn-touch, etc.)
 
@@ -870,7 +870,7 @@ console.log('║  🌌 TITANE∞ v19 - BOOT SEQUENCE                            
 console.log('║  Timestamp: ' + new Date().toISOString() + '                  ║');
 console.log('╚════════════════════════════════════════════════════════════════╝\n');
 
-// ✨ v29.0.0 Phase 5 - Monitoring Infrastructure (Priority 1)
+// ✨ v30.0.0 Phase 5 - Monitoring Infrastructure (Priority 1)
 console.log('[1/7] 🔍 Monitoring: Initializing (Web Vitals, Errors, Performance)...');
 if (import.meta.env.PROD) {
   // Load monitoring in background after First Contentful Paint

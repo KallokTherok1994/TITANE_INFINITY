@@ -346,8 +346,8 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'load_conversation',
   'chat_set_gemini_key',
   'chat_stream_message',
-  'chat_mode_change', // ✅ v29.0.0 — Chat mode switching
-  'chat_mode_sync', // ✅ v29.0.0 — Chat mode sync
+  'chat_mode_change', // ✅ v30.0.0 — Chat mode switching
+  'chat_mode_sync', // ✅ v30.0.0 — Chat mode sync
   'chat_generate_suggestions', // ✅ v∞ Suggestions IA
   'generate_response',
   'stream_response',
@@ -501,7 +501,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'devops_stats',
 
   // ═══════════════════════════════════════════════════════════════
-  // TOTAL_DEV — GOD DEV Governed Space (v29.0.0)
+  // TOTAL_DEV — GOD DEV Governed Space (v30.0.0)
   // ═══════════════════════════════════════════════════════════════
   'total_dev_unlock',
   'total_dev_session_status',
@@ -582,7 +582,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'voice_check_interruption',
   'voice_test_pipeline',
   'voice_get_available_models',
-  'calibrate_titane_voice', // ✅ v29.0.0 — TITANE voice calibration
+  'calibrate_titane_voice', // ✅ v30.0.0 — TITANE voice calibration
 
   // ═══════════════════════════════════════════════════════════════
   // PERSISTENCE ENGINE v∞.MPE
@@ -844,7 +844,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'context_link_conversations',
 
   // ═══════════════════════════════════════════════════════════════
-  // VISUAL DEVOPS ENGINE (v29.0.0)
+  // VISUAL DEVOPS ENGINE (v30.0.0)
   // ═══════════════════════════════════════════════════════════════
   'visual_devops_analyze_screen',
   'visual_devops_detect_elements',
@@ -1003,18 +1003,18 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'evolution_reject_suggestion',
   'evolution_create_action',
 
-  // v29.0.0 — Evolution persistence and data submission
+  // v30.0.0 — Evolution persistence and data submission
   'evolution_save_state',
   'submit_evolution_data',
 
   // ═══════════════════════════════════════════════════════════════
-  // KNOWLEDGE VAULT (v29.0.0)
+  // KNOWLEDGE VAULT (v30.0.0)
   // ═══════════════════════════════════════════════════════════════
   'knowledge_ingest',
   'knowledge_save_state',
 
   // ═══════════════════════════════════════════════════════════════
-  // AGENDA / TIME CENTER (v29.0.0)
+  // AGENDA / TIME CENTER (v30.0.0)
   // ═══════════════════════════════════════════════════════════════
   'agenda_save_event',
   'agenda_save_events',
@@ -1022,7 +1022,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'agenda_sync',
 
   // ═══════════════════════════════════════════════════════════════
-  // PROGRESSION / XP (v29.0.0)
+  // PROGRESSION / XP (v30.0.0)
   // ═══════════════════════════════════════════════════════════════
   'progression_save_state',
 
@@ -1142,7 +1142,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'get_onboarding_preferences',
 
   // ═══════════════════════════════════════════════════════════════
-  // OMEGA CONVERSATION ENGINE (v29.0.0)
+  // OMEGA CONVERSATION ENGINE (v30.0.0)
   // Pipeline de conversation 12 étapes - Cerveau IA TITANE
   // ═══════════════════════════════════════════════════════════════
   'create_new_conversation',
@@ -1156,7 +1156,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'conversation_behavioral_check',
 
   // ═══════════════════════════════════════════════════════════════
-  // LITERARY ENGINE (v29.0.0)
+  // LITERARY ENGINE (v30.0.0)
   // Moteur littéraire OMEGA pour style et ton
   // ═══════════════════════════════════════════════════════════════
   'literary_engine_process',
@@ -1164,7 +1164,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'literary_engine_get_style_profile',
 
   // ═══════════════════════════════════════════════════════════════
-  // ANTHOLOGY ENGINE (v29.0.0)
+  // ANTHOLOGY ENGINE (v30.0.0)
   // Intégration anthologie et ADN littéraire
   // ═══════════════════════════════════════════════════════════════
   'anthology_integrate_text',
@@ -1290,7 +1290,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'sync_evolution_state',
 
   // ═══════════════════════════════════════════════════════════════
-  // WINDOW CONTROLS (v29.0.0+)
+  // WINDOW CONTROLS (v30.0.0+)
   // Zoom + Fullscreen (CTRL+Scroll, F11, F12)
   // ═══════════════════════════════════════════════════════════════
   'window_get_zoom',
@@ -1379,7 +1379,7 @@ function maybeCleanupCallTracking(now: number): void {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// v29.0.0 - LOCAL NETWORK SECURITY MODE
+// v30.0.0 - LOCAL NETWORK SECURITY MODE
 // Pour réseau domestique sécurisé privé - restrictions réduites
 // ═══════════════════════════════════════════════════════════════
 

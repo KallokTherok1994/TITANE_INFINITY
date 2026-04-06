@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v29.0.0 — Dialog Component (Titanium Dark)
+ * TITANE∞ v30.0.0 — Dialog Component (Titanium Dark)
  * Modal dialog with Titanium Dark design system
  * WCAG 2.2 AA compliant with focus trap and keyboard support
  * @license MIT

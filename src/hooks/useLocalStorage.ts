@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v29.0.0 — useLocalStorage Hook
+ * TITANE∞ v30.0.0 — useLocalStorage Hook
  * Persistent state with localStorage
  */
 

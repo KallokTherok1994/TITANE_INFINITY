@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v29.0.0 — WEBASSEMBLY COMPUTE MODULE
+ * TITANE∞ v30.0.0 — WEBASSEMBLY COMPUTE MODULE
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * High-performance computation offloading to WebAssembly

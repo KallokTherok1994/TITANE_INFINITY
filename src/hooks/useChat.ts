@@ -214,7 +214,7 @@ const COGNITIVE_KERNEL_FALLBACK: CognitiveKernelTools = {
 };
 
 // ✨ v24.3.0 - Cloud Providers Integration (OpenAI/Gemini/Anthropic)
-// ✨ v29.0.0 - Added GitHub Copilot provider
+// ✨ v30.0.0 - Added GitHub Copilot provider
 export type ProviderPreference =
   | 'auto'
   | 'local'

@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v29.0.0 — INDEXEDDB PERFORMANCE OPTIMIZER
+ * TITANE∞ v30.0.0 — INDEXEDDB PERFORMANCE OPTIMIZER
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * Advanced IndexedDB optimization engine

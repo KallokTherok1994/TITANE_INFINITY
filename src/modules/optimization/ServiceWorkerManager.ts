@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v29.0.0 — SERVICE WORKER MANAGER
+ * TITANE∞ v30.0.0 — SERVICE WORKER MANAGER
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * Client-side service worker management

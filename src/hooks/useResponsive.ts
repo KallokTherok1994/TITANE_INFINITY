@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v29.0.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v29.0.0 — useResponsive Hook
+ *   TITANE∞ v30.0.0 — useResponsive Hook
  *   Responsive design hook leveraging ContextDetector engine
  *   Provides reactive breakpoint, device type, and screen info
  * ═══════════════════════════════════════════════════════════════════

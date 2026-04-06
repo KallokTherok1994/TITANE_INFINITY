@@ -8,14 +8,14 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v29.0.0 - Logo Component (Arc Reactor Emerald Core)
+ * TITANE∞ v30.0.0 - Logo Component (Arc Reactor Emerald Core)
  * Logo officiel du système TITANE∞ — Réacteur Arc Émeraude
  * Style Iron Man avec coeur émeraude ultra-lumineux
  * ═══════════════════════════════════════════════════════════════
  */
 
 import React from 'react';
-// v29.0.0: Nouveau logo Arc Reactor Émeraude
+// v30.0.0: Nouveau logo Arc Reactor Émeraude
 import titaneLogoEmerald from '@/assets/titane-arc-emerald.svg';
 // Legacy: Ancien logo cyan (conservé pour fallback)
 import titaneLegacy from '@/assets/titane-reactor-awen.svg';
