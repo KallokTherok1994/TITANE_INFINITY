@@ -218,7 +218,9 @@ describe('SC6: ALLOWED_COMMANDS includes all production IPC commands', () => {
       }
     }
     for (const cmd of requiredCommands) {
-      expect(allowed.has(cmd), `tauri.conf.json allow list must include '${cmd}'`).toBe(true);
+      expect(allowed.has(cmd), `tauri.conf.json allow list must include '${cmd}'`).toBe(
+        true
+      );
     }
   });
 });
