@@ -1,0 +1,91 @@
+name: ci-guardrails
+
+on:
+  push:
+    branches-ignore:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-guardrails-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  structural-gates:
+    name: Structural Gates (G0, G3, G5, G6, G7, G9, G13)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Make check scripts executable
+        run: chmod +x checks/*.sh scripts/*.sh
+
+      - name: G0 — Proof pack templates complete
+        run: bash checks/check_G0_PROOF_PACK_COMPLETE.sh
+
+      - name: G3 — UI no direct network calls
+        run: bash checks/check_G3_UI_NO_NETWORK_DIRECT.sh
+
+      - name: G4 — One door network backend
+        run: bash checks/check_G4_ONE_DOOR_NETWORK_BACKEND.sh
+
+      - name: G5 — Allowlist deny-by-default
+        run: bash checks/check_G5_ALLOWLIST_DENY_BY_DEFAULT.sh
+
+      - name: G6 — Truth consistency (versions)
+        run: bash checks/check_G6_TRUTH_CONSISTENCY.sh
+
+      - name: G7 — Router bounded
+        run: bash checks/check_G7_ROUTER_BOUNDED.sh
+
+      - name: G9 — Tools policy enforced
+        run: bash checks/check_G9_TOOLS_POLICY_ENFORCED.sh
+
+      - name: G13 — Support bundle exportable
+        run: bash checks/check_G13_SUPPORT_BUNDLE_EXPORTABLE.sh
+
+      - name: Upload proof packs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: proof-packs-${{ github.sha }}
+          path: proof_packs/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  blocked-gates-notice:
+    name: Blocked Gates Notice (G1, G2, G8, G10, G11, G12)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Make check scripts executable
+        run: chmod +x checks/*.sh
+
+      - name: G1 — Build Tauri x3 (BLOCKED_RUNNER — requires VS Code)
+        run: bash checks/check_G1_BUILD_TAURI_X3.sh
+
+      - name: G2 — Tests x3 (BLOCKED_RUNNER — requires VS Code)
+        run: bash checks/check_G2_TESTS_X3.sh
+
+      - name: G8 — Memory isolation (BLOCKED_RUNNER — requires E2E harness)
+        run: bash checks/check_G8_MEMORY_ISOLATION.sh
+
+      - name: G10 — Red team x3 (BLOCKED_INSTRUMENTATION)
+        run: bash checks/check_G10_REDTEAM_X3.sh
+
+      - name: G11 — Evals regression (BLOCKED_INSTRUMENTATION)
+        run: bash checks/check_G11_EVALS_REGRESSION_NONE.sh
+
+      - name: G12 — Supply chain signed (BLOCKED_INSTRUMENTATION)
+        run: bash checks/check_G12_SUPPLY_CHAIN_SIGNED.sh

@@ -192,6 +192,8 @@ deployment/latest/builds/target-p9/
 data/research/evidence/*.txt
 data/research/evidence/*.json
 
+# Proof packs — runtime evidence (generated; not committed by default)
+proof_packs/
 # Runtime state pointers
 .last_prod_isolation_pack
 .last_vnext_pack
