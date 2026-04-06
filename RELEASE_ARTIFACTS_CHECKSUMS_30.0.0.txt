@@ -1,6 +1,20 @@
 # TITANE∞ v30.0.0 — Release Artifacts Checksums
 # Generated: 2026-04-06
 # Status: PENDING_BUILD
+# Certification: PENDING
+
+# AppImage (Linux universal)
+Titan-Stable_30.0.0_amd64.AppImage: PENDING_BUILD
+
+# DEB (Debian/Ubuntu)
+Titan-Stable_30.0.0_amd64.deb: PENDING_BUILD
+
+# Binary
+titane-infinity: PENDING_BUILD
+
+# This file will be updated with real SHA256 checksums after the production build.
+# Build command: pnpm run build:production
+# Governance: verify_instructions.sh must PASS before build authorization
 
 AppImage: PENDING
 DEB: PENDING
