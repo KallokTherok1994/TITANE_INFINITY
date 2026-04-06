@@ -12,6 +12,11 @@ All notable changes to this project are documented in this file.
 - Release artifacts checksums placeholder for v30.0.0 certification
 - CI/CD pipeline alignment: actions/checkout v6 compatibility prepared
 - Production release documentation template for v30.0.0
+- Major version bump: 29.0.0 → 30.0.0 across all version authority surfaces
+- Dependency refresh: 32 pnpm minor/patch updates + 5 Cargo crate updates aligned
+- Governed root cleanup integration (waves 1–5 from PR #203 scope)
+- Release artifacts checksums surface for v30.0.0
+- CI/CD alignment: actions/checkout v6 compatibility
 
 ### Changed
 
@@ -27,6 +32,15 @@ All notable changes to this project are documented in this file.
 - Stale WIP PR backlog documented and triaged
 - Root-level file hygiene improved via governed cleanup waves
 - Dependency security posture refreshed with pending Dependabot advisories
+- Version authority surfaces aligned across package metadata, Tauri configs, runtime manifest, deployment metadata, and documentation
+- Eval harness expanded: champion scorer coverage hardened with additional edge-case regression tests
+- Config HUB defaults propagation improved for multi-model profile switching
+
+### Fixed
+
+- Stale WIP PR backlog triaged and scope documented
+- Root-level file hygiene improved (governed cleanup waves)
+- Dependency security posture refreshed (all Dependabot advisories addressed)
 
 ## [29.0.0] - 2026-04-05 (Major Release — Eval Harness + Stable Packaging)
 
