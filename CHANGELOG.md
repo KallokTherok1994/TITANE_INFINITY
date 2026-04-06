@@ -12,23 +12,12 @@ All notable changes to this project are documented in this file.
 - Release artifacts checksums surface for v30.0.0 build certification
 - Production release documentation: `docs/90_release/PRODUCTION_RELEASE_v30.0.0.md`
 - CI/CD pipeline alignment: actions/checkout v6 compatibility (PR #124)
-- Dependency refresh cycle: 32 pnpm minor/patch updates + 5 Cargo crate updates queued
-- Governed root cleanup integration (waves 1–5 scope aligned)
-- Release artifacts checksums placeholder for v30.0.0 certification
-- CI/CD pipeline alignment: actions/checkout v6 compatibility prepared
-- Production release documentation template for v30.0.0
-- Major version bump: 29.0.0 → 30.0.0 across all version authority surfaces
-- Dependency refresh: 32 pnpm minor/patch updates + 5 Cargo crate updates aligned
-- Governed root cleanup integration (waves 1–5 from PR #203 scope)
-- Release artifacts checksums surface for v30.0.0
-- CI/CD alignment: actions/checkout v6 compatibility
 
 ### Changed
 
 - Canonical release stream promoted to `30.0.0`
 - Version authority surfaces aligned across package.json, Cargo.toml, tauri.conf.json, runtime manifests, deployment metadata, README, and docs
 - Eval harness coverage extended with additional edge-case regression tests from V29
-- Eval harness coverage extended with additional edge-case regression tests
 - Config HUB defaults propagation hardened for multi-model profile switching
 - Build pipeline: Vite + Rolldown + Tauri v2 production chain verified for V30
 
@@ -38,19 +27,6 @@ All notable changes to this project are documented in this file.
 - Stale WIP PR backlog documented and triaged (PRs #154–#165)
 - Root-level file hygiene improved via governed cleanup waves
 - Dependency security posture refreshed with pending Dependabot advisories addressed
-- Version drift eliminated across all 6+ version-bearing surfaces
-- Stale WIP PR backlog documented and triaged
-- Root-level file hygiene improved via governed cleanup waves
-- Dependency security posture refreshed with pending Dependabot advisories
-- Version authority surfaces aligned across package metadata, Tauri configs, runtime manifest, deployment metadata, and documentation
-- Eval harness expanded: champion scorer coverage hardened with additional edge-case regression tests
-- Config HUB defaults propagation improved for multi-model profile switching
-
-### Fixed
-
-- Stale WIP PR backlog triaged and scope documented
-- Root-level file hygiene improved (governed cleanup waves)
-- Dependency security posture refreshed (all Dependabot advisories addressed)
 
 ## [29.0.0] - 2026-04-05 (Major Release — Eval Harness + Stable Packaging)
 
