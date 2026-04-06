@@ -346,6 +346,8 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'load_conversation',
   'chat_set_gemini_key',
   'chat_stream_message',
+  'chat_mode_change', // ✅ v29.0.0 — Chat mode switching
+  'chat_mode_sync', // ✅ v29.0.0 — Chat mode sync
   'chat_generate_suggestions', // ✅ v∞ Suggestions IA
   'generate_response',
   'stream_response',
@@ -580,6 +582,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'voice_check_interruption',
   'voice_test_pipeline',
   'voice_get_available_models',
+  'calibrate_titane_voice', // ✅ v29.0.0 — TITANE voice calibration
 
   // ═══════════════════════════════════════════════════════════════
   // PERSISTENCE ENGINE v∞.MPE
@@ -999,6 +1002,29 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'evolution_approve_suggestion',
   'evolution_reject_suggestion',
   'evolution_create_action',
+
+  // v29.0.0 — Evolution persistence and data submission
+  'evolution_save_state',
+  'submit_evolution_data',
+
+  // ═══════════════════════════════════════════════════════════════
+  // KNOWLEDGE VAULT (v29.0.0)
+  // ═══════════════════════════════════════════════════════════════
+  'knowledge_ingest',
+  'knowledge_save_state',
+
+  // ═══════════════════════════════════════════════════════════════
+  // AGENDA / TIME CENTER (v29.0.0)
+  // ═══════════════════════════════════════════════════════════════
+  'agenda_save_event',
+  'agenda_save_events',
+  'agenda_delete_event',
+  'agenda_sync',
+
+  // ═══════════════════════════════════════════════════════════════
+  // PROGRESSION / XP (v29.0.0)
+  // ═══════════════════════════════════════════════════════════════
+  'progression_save_state',
 
   // ═══════════════════════════════════════════════════════════════
   // META & ORCHESTRATION (v24.4+)

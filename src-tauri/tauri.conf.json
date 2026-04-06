@@ -21,7 +21,9 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "resources": ["../dist"],
+    "resources": [
+      "../dist"
+    ],
     "copyright": "Copyright © 2025 TITANE",
     "category": "DeveloperTool",
     "shortDescription": "TITANE∞ v29.0.0 - Stable Release",
@@ -77,7 +79,9 @@
         {
           "identifier": "main-capability",
           "description": "Capability for the main window",
-          "windows": ["main"],
+          "windows": [
+            "main"
+          ],
           "permissions": [
             "core:default",
             "core:event:default",
@@ -3234,13 +3238,45 @@
             },
             {
               "command": "total_dev_unlock"
+            },
+            {
+              "command": "agenda_save_event"
+            },
+            {
+              "command": "agenda_sync"
+            },
+            {
+              "command": "calibrate_titane_voice"
+            },
+            {
+              "command": "chat_mode_change"
+            },
+            {
+              "command": "chat_mode_sync"
+            },
+            {
+              "command": "evolution_save_state"
+            },
+            {
+              "command": "knowledge_ingest"
+            },
+            {
+              "command": "knowledge_save_state"
+            },
+            {
+              "command": "progression_save_state"
+            },
+            {
+              "command": "submit_evolution_data"
             }
           ]
         },
         {
           "identifier": "avatar-floating-capability",
           "description": "Capability for the floating avatar window",
-          "windows": ["avatar-floating"],
+          "windows": [
+            "avatar-floating"
+          ],
           "permissions": [
             "core:default",
             "core:event:default",
