@@ -1,4 +1,5 @@
 # Patchset Summary
+
 <!-- APPEND-ONLY: Add new entries below with ## timestamp header -->
 
 ## Template — Fill in per session
@@ -11,9 +12,9 @@
 
 ### Patches Applied
 
-| # | Description | File(s) | Ring | Test proof |
-|---|-------------|---------|------|------------|
-| 1 | `{{DESC}}` | `{{FILE}}` | `Ring N` | `{{PROOF}}` |
+| #   | Description | File(s)    | Ring     | Test proof  |
+| --- | ----------- | ---------- | -------- | ----------- |
+| 1   | `{{DESC}}`  | `{{FILE}}` | `Ring N` | `{{PROOF}}` |
 
 ### Invariants verified
 
@@ -28,4 +29,5 @@
 - [ ] I9 Rollback documented
 
 ---
+
 <!-- Append new entries above this line -->

@@ -1,4 +1,5 @@
 # Proof Pack — README
+
 <!-- APPEND-ONLY: Do not delete or modify existing entries -->
 
 ## Structure
@@ -38,13 +39,13 @@ proof_packs/<session_id>/
 
 ## Status values
 
-| Status | Meaning |
-|--------|---------|
-| `PASS` | Gate passed with proof |
-| `FAIL` | Gate failed — stop-the-line |
-| `BLOCKED_RUNNER` | Cannot run — environment not ready |
+| Status                    | Meaning                                  |
+| ------------------------- | ---------------------------------------- |
+| `PASS`                    | Gate passed with proof                   |
+| `FAIL`                    | Gate failed — stop-the-line              |
+| `BLOCKED_RUNNER`          | Cannot run — environment not ready       |
 | `BLOCKED_INSTRUMENTATION` | Cannot measure — instrumentation missing |
-| `WARN` | Observation requiring review |
+| `WARN`                    | Observation requiring review             |
 
 ## Generating a proof pack
 

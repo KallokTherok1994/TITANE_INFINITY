@@ -1,4 +1,5 @@
 # Root Cause Analysis
+
 <!-- APPEND-ONLY: Add new entries below with ## timestamp header -->
 
 ## Template — Fill in per session
@@ -28,4 +29,5 @@
 > Minimal change required. Reference the patchset.
 
 ---
+
 <!-- Append new entries above this line -->

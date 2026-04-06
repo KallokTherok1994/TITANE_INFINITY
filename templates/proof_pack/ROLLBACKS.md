@@ -1,4 +1,5 @@
 # Rollbacks
+
 <!-- APPEND-ONLY: Add new rollback entries below with ## timestamp header -->
 
 ## Template — Fill in per session
@@ -18,8 +19,8 @@ git restore -- <file1> <file2>
 
 #### Per-file rollbacks
 
-| File | Restore command |
-|------|-----------------|
+| File       | Restore command           |
+| ---------- | ------------------------- |
 | `{{FILE}}` | `git restore -- {{FILE}}` |
 
 ### Verification after rollback
@@ -34,4 +35,5 @@ bash scripts/run_all.sh
 > State any side effects or dependencies to be aware of during rollback.
 
 ---
+
 <!-- Append new rollback entries above this line -->

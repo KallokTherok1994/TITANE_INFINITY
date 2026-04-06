@@ -1,4 +1,5 @@
 # Changelog — Files Modified
+
 <!-- APPEND-ONLY: Add new entries below with ## timestamp header -->
 
 ## Template — Fill in per session
@@ -9,8 +10,8 @@
 
 ### Files Changed
 
-| File | Action | Ring | Reason |
-|------|--------|------|--------|
+| File            | Action              | Ring     | Reason       |
+| --------------- | ------------------- | -------- | ------------ |
 | `{{FILE_PATH}}` | `ADD/MODIFY/DELETE` | `Ring N` | `{{REASON}}` |
 
 ### Diff Summary
@@ -26,4 +27,5 @@ git diff --stat HEAD~1
 See `ROLLBACKS.md` for per-file restore commands.
 
 ---
+
 <!-- Append new entries above this line -->

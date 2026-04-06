@@ -1,4 +1,5 @@
 # Phase P5 — Router & Tools
+
 <!-- APPEND-ONLY -->
 
 ## Objectives
@@ -21,4 +22,4 @@
 ## Violations found
 
 | File | Pattern | Status |
-|------|---------|--------|
+| ---- | ------- | ------ |

@@ -1,4 +1,5 @@
 # Phase P7 — RAG
+
 <!-- APPEND-ONLY -->
 
 ## Objectives
