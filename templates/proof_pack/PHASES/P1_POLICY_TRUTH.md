@@ -1,4 +1,5 @@
 # Phase P1 — Policy & Truth
+
 <!-- APPEND-ONLY -->
 
 ## Objectives
@@ -20,5 +21,5 @@
 
 ## Policy violations found
 
-| ID | File | Violation | Fix |
-|----|------|-----------|-----|
+| ID  | File | Violation | Fix |
+| --- | ---- | --------- | --- |

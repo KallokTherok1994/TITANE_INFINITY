@@ -1,4 +1,5 @@
 # Phase P6 — Evals & Red Team
+
 <!-- APPEND-ONLY -->
 
 ## Status: BLOCKED_INSTRUMENTATION (until VS Code execution)

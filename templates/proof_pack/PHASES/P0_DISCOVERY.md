@@ -1,4 +1,5 @@
 # Phase P0 — Discovery
+
 <!-- APPEND-ONLY -->
 
 ## Objectives
@@ -21,6 +22,6 @@
 
 ## Findings
 
-| ID | Severity | Description | Ring |
-|----|----------|-------------|------|
-| F-001 | P0/P1/P2 | `{{DESC}}` | `Ring N` |
+| ID    | Severity | Description | Ring     |
+| ----- | -------- | ----------- | -------- |
+| F-001 | P0/P1/P2 | `{{DESC}}`  | `Ring N` |

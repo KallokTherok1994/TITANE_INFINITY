@@ -1,4 +1,5 @@
 # Next Actions
+
 <!-- APPEND-ONLY: Add new entries below with ## timestamp header -->
 
 ## Template — Fill in per session
@@ -8,14 +9,14 @@
 
 ### Action 1
 
-| Field | Value |
-|-------|-------|
-| **ID** | `NA-001` |
-| **Description** | `{{DESCRIPTION}}` |
-| **Assignee** | `{{ASSIGNEE}}` |
-| **Deadline** | `{{DEADLINE}}` |
-| **Proof required** | `{{PROOF_FILE}}` |
-| **Status** | `OPEN` / `DONE` / `BLOCKED` |
+| Field              | Value                       |
+| ------------------ | --------------------------- |
+| **ID**             | `NA-001`                    |
+| **Description**    | `{{DESCRIPTION}}`           |
+| **Assignee**       | `{{ASSIGNEE}}`              |
+| **Deadline**       | `{{DEADLINE}}`              |
+| **Proof required** | `{{PROOF_FILE}}`            |
+| **Status**         | `OPEN` / `DONE` / `BLOCKED` |
 
 ### Rules
 
@@ -25,4 +26,5 @@
 - BLOCKED actions must state cause and unblocking condition.
 
 ---
+
 <!-- Append new entries above this line -->

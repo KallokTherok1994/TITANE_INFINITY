@@ -1,4 +1,5 @@
 # Phase P2 — Kernel Gates
+
 <!-- APPEND-ONLY -->
 
 ## Objectives
@@ -20,8 +21,8 @@
 ## Kernel gate results
 
 | Gate | Status | Notes |
-|------|--------|-------|
-| G0 | | |
-| G7 | | |
-| G8 | | |
-| G9 | | |
+| ---- | ------ | ----- |
+| G0   |        |       |
+| G7   |        |       |
+| G8   |        |       |
+| G9   |        |       |
