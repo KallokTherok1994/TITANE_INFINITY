@@ -1,4 +1,4 @@
 # Artifact Sizes
-# Generated: 2026-04-06T01:19:52Z
+# Generated: 2026-04-06T12:07:06Z
 Titan-Stable_29.0.0_amd64.AppImage: 90270200 bytes (87M)
-Titan-Stable_29.0.0_amd64.deb: 17481408 bytes (17M)
+Titan-Stable_29.0.0_amd64.deb: 17480668 bytes (17M)
