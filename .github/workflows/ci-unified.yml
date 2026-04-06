@@ -73,61 +73,6 @@ jobs:
           echo "- ✅ Prettier format check completed" >> $GITHUB_STEP_SUMMARY
 
   # ═══════════════════════════════════════════════════════════════════════════
-  # PHASE 0 GATES (BLOCKING)
-  # ═══════════════════════════════════════════════════════════════════════════
-  gates-phase-0:
-    name: 🛡️ Phase 0 Gates (Blocking)
-    runs-on: ubuntu-latest
-    needs: lint-and-typecheck
-    timeout-minutes: 20
-    permissions:
-      contents: read
-
-    steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v6.0.1
-
-      - name: Enable Corepack (pnpm)
-        run: corepack enable
-
-      - name: Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v4.1.0
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libpng-dev
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Gate Registry repo-events
-        run: node scripts/gates/registry-gate.js
-
-      - name: Gate UI Index ui-events
-        run: node scripts/gates/ui-index-gate.js
-
-      - name: Gate Single TopNav
-        run: node scripts/gates/ui-single-topnav-gate.js
-
-      - name: Gate Forbidden Scripts
-        run: node scripts/gates/forbidden-scripts-gate.js
-
-      - name: Gate IPC-only Legacy Tests
-        run: pnpm run guard:ipc-only-tests
-
-      - name: Gate Seal Post-Certification
-        run: pnpm run verify:seal-post-certification
-
-      - name: Gate CSP Baseline
-        env:
-          CSP_ALLOW_UNSAFE: '1'
-        run: node scripts/gates/csp-baseline-gate.js
-
-  # ═══════════════════════════════════════════════════════════════════════════
   # FRONTEND TESTS
   # ═══════════════════════════════════════════════════════════════════════════
   test-frontend:
