@@ -73,29 +73,25 @@ import { publishActiveModuleContext } from '@/services/chat/moduleRouteContext';
 import { SingularityConnections } from '@/services/singularityConnections';
 
 /**
- * 🔐 POLITIQUE DE SÉCURITÉ ENVIRONNEMENT - RESTRICTIONS DÉSACTIVÉES
+ * 🔐 POLITIQUE DE SÉCURITÉ ENVIRONNEMENT - FALLBACK GOUVERNÉ
  *
- * Mode OUVERT TOTAL:
- *   - ✅ Tauri dev: Autorisé
- *   - ✅ Browser dev: Autorisé
- *   - ✅ Tauri prod: Autorisé
- *   - ✅ Browser prod: Autorisé
- *   - ✅ HTTP: Autorisé
- *   - ✅ Tous contextes: Autorisés sans restriction
- *   - Note: Aucun blocage, aucun warning - Fonctionnement total
+ * Mode gouverné:
+ *   - ✅ Tauri dev/prod: chemin nominal autorisé
+ *   - ✅ Browser dev/prod: fallback local limité et explicite
+ *   - ⚠️ Les indisponibilités backend restent visibles via logs/UI
+ *   - 🚫 Aucun faux état "open", "complete" ou déverrouillage simulé
  */
 if (typeof window !== 'undefined') {
   const env = detectEnvironment();
 
-  // Log environnement (informatif uniquement, aucune restriction)
+  // Log environnement non-bloquant; les erreurs restent visibles dans l'UI.
   logEnvironmentWarnings();
 
-  // 🔓 RESTRICTIONS DÉSACTIVÉES: Aucun blocage dans aucun contexte
-  // L'application fonctionne librement en Tauri, HTTP, dev ou prod
-  logger.info('TITANE∞ démarré - Mode ouvert (restrictions désactivées)', {
+  logger.info('TITANE∞ démarré - fallback gouverné', {
     component: 'Environment',
     origin: env.origin,
     mode: env.isDev ? 'Development' : 'Production',
+    runtime: env.isTauri ? 'Tauri' : 'Browser',
   });
 }
 
@@ -311,15 +307,13 @@ const AppRouter: React.FC = () => {
   // 🔧 vΩ.3 PROD-BOOT FIX: Override checkingOnboarding to false ALWAYS to prevent loader hang
   // 🧪 E2E MODE: Skip carousel in dev mode (port 1420 = E2E tests OR dev server)
   const isDev = import.meta.env.DEV;
-  const [onboardingComplete, setOnboardingComplete] = useState<boolean>(true); // Force true for now (dev)
+  const [onboardingComplete, setOnboardingComplete] = useState<boolean>(isDev);
   const [checkingOnboarding, setCheckingOnboarding] = useState<boolean>(false);
 
-  // vΩ.3: Garantir checkingOnboarding = false SANS JAMAIS bloquer - spinner ne s'affiche pas
+  // Garder le rendu non bloquant sans forcer un faux état "complete" hors mode dev explicite.
   useEffect(() => {
-    // Immédiate reset - force UI to show, même si backend tardive
     setCheckingOnboarding(false);
 
-    // 🧪 DEV MODE: Skip onboarding check in development (E2E tests + local dev)
     if (isDev) {
       logger.info('Dev mode detected - bypassing onboarding check', {
         component: 'App',
@@ -328,10 +322,10 @@ const AppRouter: React.FC = () => {
       return;
     }
 
-    // Puis check le backend EN ARRIÈRE-PLAN UNIQUEMENT (ne modifie pas checkingOnboarding)
+    let onboardingResolved = false;
+
     const checkOnboarding = async () => {
       try {
-        // En mode navigateur, vérifier d'abord le localStorage
         if (typeof localStorage !== 'undefined') {
           const browserModeFlag = localStorage.getItem('titane_browser_mode') === '1';
           const browserMode = browserModeFlag && !isTauriRuntimeAvailable();
@@ -347,28 +341,29 @@ const AppRouter: React.FC = () => {
               component: 'Onboarding',
               status: localComplete ? 'Complete' : 'Not started',
             });
-            setOnboardingComplete(localComplete || true);
+            onboardingResolved = true;
+            setOnboardingComplete(localComplete);
             return;
           }
         }
 
-        // Mode Tauri : interroger le backend
         const isComplete = await secureInvoke<boolean>('is_onboarding_complete');
         logger.info('Onboarding status (Tauri mode)', {
           component: 'Onboarding',
           status: isComplete ? 'Complete' : 'Not started',
         });
+        onboardingResolved = true;
         setOnboardingComplete(isComplete);
       } catch (error) {
-        logger.warn('Failed to check onboarding status, assuming complete', {
+        logger.warn('Failed to check onboarding status; keeping onboarding required', {
           component: 'Onboarding',
           error,
         });
-        setOnboardingComplete(true);
+        onboardingResolved = true;
+        setOnboardingComplete(false);
       }
     };
 
-    // Add timeout to prevent infinite loading
     const timeoutDuration =
       typeof window !== 'undefined' &&
       localStorage.getItem('titane_browser_mode') === '1' &&
@@ -377,13 +372,18 @@ const AppRouter: React.FC = () => {
         : 5000;
 
     const timeoutId = setTimeout(() => {
-      logger.warn('Onboarding check timeout, assuming complete', {
+      if (onboardingResolved) {
+        return;
+      }
+
+      logger.warn('Onboarding check timeout; keeping onboarding required', {
         component: 'Onboarding',
       });
-      setOnboardingComplete(true);
+      onboardingResolved = true;
+      setOnboardingComplete(false);
     }, timeoutDuration);
 
-    checkOnboarding();
+    void checkOnboarding();
 
     return () => {
       clearTimeout(timeoutId);

@@ -164,22 +164,10 @@ export const createFallbackSingularityState = (): SingularityState => {
 };
 
 const TOTAL_DEV_BROWSER_SESSION_KEY = 'titane_total_dev_browser_session_expiry';
-const TOTAL_DEV_BROWSER_UNLOCK_HASH =
-  '895d3d67cc9d3b3698b59e35818c7ac9f06c3fe710c48e69a80908ca5ad999a8';
 
 type TotalDevBrowserLockState = 'LOCKED' | 'UNLOCKED' | 'EXPIRED';
 
 const getNowUnix = () => Math.floor(Date.now() / 1000);
-
-const readTotalDevBrowserExpiry = (): number => {
-  if (typeof window === 'undefined') {
-    return 0;
-  }
-
-  const raw = window.sessionStorage.getItem(TOTAL_DEV_BROWSER_SESSION_KEY);
-  const expiry = Number(raw ?? 0);
-  return Number.isFinite(expiry) ? expiry : 0;
-};
 
 const writeTotalDevBrowserExpiry = (expiry: number) => {
   if (typeof window === 'undefined') {
@@ -200,58 +188,26 @@ const getTotalDevBrowserLockState = (): {
   fallback: true;
 } => {
   const now = getNowUnix();
-  const expiry = readTotalDevBrowserExpiry();
 
-  if (!expiry) {
-    return {
-      lock_state: 'LOCKED',
-      expires_at_unix: undefined,
-      now_unix: now,
-      fallback: true,
-    };
-  }
-
-  if (now >= expiry) {
-    writeTotalDevBrowserExpiry(0);
-    return {
-      lock_state: 'EXPIRED',
-      expires_at_unix: expiry,
-      now_unix: now,
-      fallback: true,
-    };
-  }
+  // Browser fallback is intentionally never unlockable; clear any stale legacy session.
+  writeTotalDevBrowserExpiry(0);
 
   return {
-    lock_state: 'UNLOCKED',
-    expires_at_unix: expiry,
+    lock_state: 'LOCKED',
+    expires_at_unix: undefined,
     now_unix: now,
     fallback: true,
   };
 };
 
-const getTotalDevBrowserUnlockResult = (args?: TauriCommandArgs) => {
-  const token = typeof args?.token === 'string' ? args.token : '';
-
-  if (token === TOTAL_DEV_BROWSER_UNLOCK_HASH) {
-    const expiresAt = getNowUnix() + 3600;
-    writeTotalDevBrowserExpiry(expiresAt);
-
-    return {
-      ok: true,
-      session_token: `tdsk_browser_${token.slice(0, 16)}`,
-      expires_at_unix: expiresAt,
-      lock_state: 'UNLOCKED',
-      error: undefined,
-      fallback: true,
-    };
-  }
+const getTotalDevBrowserUnlockResult = (_args?: TauriCommandArgs) => {
+  writeTotalDevBrowserExpiry(0);
 
   return {
     ok: false,
-    session_token: undefined,
     expires_at_unix: undefined,
     lock_state: 'LOCKED',
-    error: 'Token invalide',
+    error: 'TOTAL_DEV requires the Tauri runtime',
     fallback: true,
   };
 };

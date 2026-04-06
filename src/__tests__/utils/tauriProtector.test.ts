@@ -46,4 +46,30 @@ describe('TauriProtector memory truth', () => {
 
     expect(invokeMock).toHaveBeenCalledTimes(1);
   });
+
+  it('keeps TOTAL_DEV browser fallback locked even when a browser token is provided', () => {
+    const result = (
+      tauriProtector as unknown as {
+        createFallbackResponse: (
+          command: string,
+          error: unknown,
+          args?: Record<string, unknown>
+        ) => {
+          ok: boolean;
+          lock_state: string;
+          fallback: boolean;
+          session_token?: string;
+        };
+      }
+    ).createFallbackResponse('total_dev_unlock', new Error('invoke unavailable'), {
+      token: '895d3d67cc9d3b3698b59e35818c7ac9f06c3fe710c48e69a80908ca5ad999a8',
+    });
+
+    expect(result).toMatchObject({
+      ok: false,
+      lock_state: 'LOCKED',
+      fallback: true,
+    });
+    expect(result).not.toHaveProperty('session_token');
+  });
 });

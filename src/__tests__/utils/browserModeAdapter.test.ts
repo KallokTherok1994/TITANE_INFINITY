@@ -24,10 +24,12 @@ describe('browserModeAdapter', () => {
     expect(localStorage.getItem('titane_browser_mode')).toBeNull();
   });
 
-  it('enables browser mode when Tauri is not available', async () => {
+  it('enables browser mode without faking onboarding or open-security flags', async () => {
     await import('@/utils/browserModeAdapter');
 
     expect(localStorage.getItem('titane_browser_mode')).toBe('1');
-    expect(localStorage.getItem('titane_onboarding_complete')).toBe('1');
+    expect(localStorage.getItem('titane_onboarding_complete')).toBeNull();
+    expect(localStorage.getItem('titane_security_mode')).toBeNull();
+    expect(localStorage.getItem('titane_restrictions_disabled')).toBeNull();
   });
 });
