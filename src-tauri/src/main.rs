@@ -1,8 +1,8 @@
-// TITANE_INFINITY v28.0.0 — Proprietary License
+// TITANE_INFINITY v29.0.0 — Proprietary License
 // © 2025-2026 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v28.0.0 — MAIN ENTRY POINT (Singularity Architecture)
+//   TITANE∞ v29.0.0 — MAIN ENTRY POINT (Singularity Architecture)
 //   Tests 93.0% Production Ready + UI Enhanced + COPILOT-XS Compliant
 //   20 Engines Unified + OMEGA Pipeline + Production Ready
 // ═══════════════════════════════════════════════════════════════
@@ -306,7 +306,7 @@ mod commands {
         include!("commands/ollama_command.rs");
     }
 
-    // ✨ TOTAL_DEV v28.1.0 — GOD DEV secure space (unlock, git, console, file)
+    // ✨ TOTAL_DEV v29.0.0 — GOD DEV secure space (unlock, git, console, file)
     pub mod total_dev_commands {
         include!("commands/total_dev_commands.rs");
     }
@@ -2882,7 +2882,7 @@ fn main() {
             legacy_ai_bridge::vector_store_insert,
             legacy_ai_bridge::vector_store_update,
 
-            // ✨ TOTAL_DEV v28.1.0 — 6 handlers GOD DEV
+            // ✨ TOTAL_DEV v29.0.0 — 6 handlers GOD DEV
             commands::total_dev_commands::total_dev_unlock,
             commands::total_dev_commands::total_dev_session_status,
             commands::total_dev_commands::total_dev_revoke,

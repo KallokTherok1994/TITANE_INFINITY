@@ -341,7 +341,7 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("devops_stats");
 
     // ═══════════════════════════════════════════════════════════════
-    // TOTAL_DEV v28.1.0 — GOD DEV secure space
+    // TOTAL_DEV v29.0.0 — GOD DEV secure space
     // ═══════════════════════════════════════════════════════════════
     commands.insert("total_dev_unlock");
     commands.insert("total_dev_session_status");
@@ -541,23 +541,23 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("pipeline_validate");
 
     // ═══════════════════════════════════════════════════════════════
-    // HTTP COMMANDS (v28.88+)
+    // HTTP COMMANDS (v29.0.0+)
     // ═══════════════════════════════════════════════════════════════
     commands.insert("http_request");
 
     // ═══════════════════════════════════════════════════════════════
-    // AVATAR ASSET COMMANDS (v28.88+)
+    // AVATAR ASSET COMMANDS (v29.0.0+)
     // ═══════════════════════════════════════════════════════════════
     commands.insert("avatar_load_asset");
     commands.insert("avatar_list_assets");
 
     // ═══════════════════════════════════════════════════════════════
-    // VOICE DSP COMMANDS (v28.88+)
+    // VOICE DSP COMMANDS (v29.0.0+)
     // ═══════════════════════════════════════════════════════════════
     commands.insert("voice_extract_mfcc");
 
     // ═══════════════════════════════════════════════════════════════
-    // TEMPORAL COMMANDS (v28.88+)
+    // TEMPORAL COMMANDS (v29.0.0+)
     // ═══════════════════════════════════════════════════════════════
     commands.insert("temporal_get_today_state");
     commands.insert("temporal_save_today_blocks");
@@ -566,13 +566,13 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("temporal_update_energy");
 
     // ═══════════════════════════════════════════════════════════════
-    // DASHBOARD METRICS COMMANDS (v28.88+)
+    // DASHBOARD METRICS COMMANDS (v29.0.0+)
     // ═══════════════════════════════════════════════════════════════
     commands.insert("dashboard_get_metrics");
     commands.insert("dashboard_get_realtime_stats");
 
     // ═══════════════════════════════════════════════════════════════
-    // IDENTITY COMMANDS (v28.88+)
+    // IDENTITY COMMANDS (v29.0.0+)
     // ═══════════════════════════════════════════════════════════════
     commands.insert("identity_get_matrix");
     commands.insert("identity_save_matrix");

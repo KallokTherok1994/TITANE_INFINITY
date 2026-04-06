@@ -499,7 +499,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'devops_stats',
 
   // ═══════════════════════════════════════════════════════════════
-  // TOTAL_DEV — GOD DEV Governed Space (v28.1.0)
+  // TOTAL_DEV — GOD DEV Governed Space (v29.0.0)
   // ═══════════════════════════════════════════════════════════════
   'total_dev_unlock',
   'total_dev_session_status',

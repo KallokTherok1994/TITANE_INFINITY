@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v25.4.0 — DEV PAGE (Fusion Complete)
+ * TITANE∞ v29.0.0 — DEV PAGE (Fusion Complete)
  * Centre unifié développement: Dev Mode + ONE CORE + QA & Tests + Orchestration
  *
  * Fusion de 4 modules → 1 module DEV (8 sections)
@@ -850,7 +850,7 @@ function DevPageContent(): JSX.Element {
       <header className="dev-header">
         <div className="dev-header-content">
           <h1>🔧 DEV Cockpit</h1>
-          <span className="dev-version">TITANE∞ v28.88.0 • 5 tabs fusionnés</span>
+          <span className="dev-version">TITANE∞ v29.0.0 • 5 tabs fusionnés</span>
         </div>
         <button
           className="dev-btn dev-btn--primary"

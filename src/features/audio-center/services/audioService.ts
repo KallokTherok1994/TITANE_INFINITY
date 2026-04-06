@@ -1,13 +1,13 @@
 /**
- * TITANE_INFINITY v28.0.0 — Proprietary License
+ * TITANE_INFINITY v29.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v28.0.0 — AUDIO SERVICE
+ *   TITANE∞ v29.0.0 — AUDIO SERVICE
  *   Service audio avec gestion TTS, devices et tests
- *   🎤 Audio Permission Fix Applied v28.0.0
+ *   🎤 Audio permission fix active in Tauri runtime
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -16,7 +16,7 @@ import { detectEnvironment } from '@/core/tauri/environment';
 
 // Tauri client adapter for this service.
 // Audio I/O device methods use __TAURI__ directly to avoid getUserMedia()
-// permission issues in WebKitGTK (v28.0.0 audio permission fix).
+// permission issues in WebKitGTK (audio permission fix).
 // All other IPC calls delegate to tauriClient so they can be properly mocked.
 const simpleTauriClient = {
   async getAudioInputDevices() {
@@ -169,7 +169,7 @@ class AudioService {
 
   constructor() {
     this.config = this.loadConfig();
-    // 🎤 AUDIO FIX v28.0.0: Simplified environment detection
+    // 🎤 AUDIO FIX: Simplified environment detection
     this.isTauri = isTauriEnvironment;
     const normalizedTTS = this.normalizeRuntimeCompatibleTTS(this.config.tts);
     if (
