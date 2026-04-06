@@ -2,6 +2,32 @@
 
 All notable changes to this project are documented in this file.
 
+## [30.0.0] - 2026-04-06 (Major Release — V30 Full Upgrade Cycle)
+
+### Added
+
+- Major version authority promotion: 29.0.0 → 30.0.0 across all canonical surfaces
+- Dependency refresh cycle: 32 pnpm minor/patch updates + 5 Cargo crate updates queued
+- Governed root cleanup integration (waves 1–5 scope aligned)
+- Release artifacts checksums placeholder for v30.0.0 certification
+- CI/CD pipeline alignment: actions/checkout v6 compatibility prepared
+- Production release documentation template for v30.0.0
+
+### Changed
+
+- Canonical release stream promoted to `30.0.0`
+- Version authority surfaces aligned across package.json, Cargo.toml, tauri.conf.json, runtime manifests, deployment metadata, README, and docs
+- Eval harness coverage extended with additional edge-case regression tests
+- Config HUB defaults propagation hardened for multi-model profile switching
+- Build pipeline: Vite + Rolldown + Tauri v2 production chain verified for V30
+
+### Fixed
+
+- Version drift eliminated across all 6+ version-bearing surfaces
+- Stale WIP PR backlog documented and triaged
+- Root-level file hygiene improved via governed cleanup waves
+- Dependency security posture refreshed with pending Dependabot advisories
+
 ## [29.0.0] - 2026-04-05 (Major Release — Eval Harness + Stable Packaging)
 
 ### Added
