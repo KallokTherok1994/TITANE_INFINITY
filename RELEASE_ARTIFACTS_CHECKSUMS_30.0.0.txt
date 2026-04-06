@@ -1,0 +1,6 @@
+# TITANE∞ v30.0.0 — Release Artifacts Checksums
+# Generated: 2026-04-06
+# Status: PENDING_BUILD
+
+AppImage: PENDING
+DEB: PENDING
