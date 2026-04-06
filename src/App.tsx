@@ -70,7 +70,6 @@ import { useWindowControls } from './hooks/useWindowControls'; // ✨ v29.0.0 - 
 import { useZoomControl } from './hooks/useZoomControl'; // ✨ Sprint 6 Phase 3 - Zoom control
 import { ToastProvider } from './components/providers/ToastProvider'; // ✨ M1 - Toast notifications via Sonner
 import { publishActiveModuleContext } from '@/services/chat/moduleRouteContext';
-import { SingularityConnections } from '@/services/singularityConnections';
 
 /**
  * 🔐 POLITIQUE DE SÉCURITÉ ENVIRONNEMENT - FALLBACK GOUVERNÉ
@@ -95,19 +94,17 @@ if (typeof window !== 'undefined') {
   });
 }
 
+// ✨ v30 - Chat page (main feature)
+const ChatPage = lazy(() =>
+  import('./pages/ChatPage').then(m => ({ default: m.ChatPage }))
+);
+
 // ✨ v24.3.0 - Lazy loaded pages (code splitting)
 const TimePage = lazy(() =>
   import('./pages/TimePage').then(m => ({ default: m.TimePage }))
 );
 const Experience = lazy(() =>
   import('./pages/Experience').then(m => ({ default: m.Experience }))
-);
-
-// ✨ v24 - Performance: Lazy load SingularityMonitor
-const SingularityMonitor = lazy(() =>
-  import('./components/SingularityMonitor').then(m => ({
-    default: m.SingularityMonitor,
-  }))
 );
 
 // v24.3.0 - CognitiveLayoutControl déplacé dans ADMIN (ConfigurationHub)
@@ -138,13 +135,8 @@ const PerformanceTest = lazy(() =>
   }))
 );
 const KnowledgeFusionPage = lazy(() => import('./ui/pages/KnowledgeFusionPage'));
-const CreationStudio = lazy(() => import('./ui/pages/CreationStudio'));
-const EvolutionMonitor = lazy(() => import('./ui/pages/EvolutionMonitor'));
 
 // ✨ v24.3.0 - Core pages
-const AdminPage = lazy(() =>
-  import('./features/admin').then(m => ({ default: m.AdminPage }))
-);
 const TitanePage = lazyWithTimeout(
   () => import('./pages/TitanePage').then(m => ({ default: m.TitanePage })),
   {
@@ -159,23 +151,6 @@ const OrchestrationMetaCenter = lazy(() =>
   }))
 );
 const DevPage = lazy(() => import('./pages/DevPage').then(m => ({ default: m.DevPage })));
-const PerfectFusionDashboard = lazy(() =>
-  import('./components/fusion/PerfectFusionDashboard').then(m => ({
-    default: m.default,
-  }))
-);
-const UltimateOptimizationDashboard = lazy(() =>
-  import('./components/optimization/UltimateOptimizationDashboard').then(m => ({
-    default: m.UltimateOptimizationDashboard,
-  }))
-);
-
-// ✨ v24.3.0 - Center modules
-const RealityCenter = lazy(() =>
-  import('./components/RealityCenter/RealityCenter').then(m => ({
-    default: m.default,
-  }))
-);
 
 // ✨ v29.0.0 CONSOLE MONITOR DASHBOARD - Dev-only monitoring UI
 const ConsoleMonitorDashboard = lazy(() =>
