@@ -1,7 +1,9 @@
-SHA256 v29.0.0
+# SHA256 v30.0.0 — PENDING_BUILD
 # CURRENT canonical stable deployment artifacts (AppImage + DEB)
-12ed61d6581f7d16d626a8da73dbba8c37b8f56b9f562deca878898170a60a84  Titan-Stable_29.0.0_amd64.AppImage
-2bcfc64e57f5f234a6fa43dd810e8240ba1a37c61faee934f8e136b83f04f880  Titan-Stable_29.0.0_amd64.deb
-# Additional build-output proofs kept for traceability (not a second active deployment matrix)
-6c97bf651898025a507bcf389754add788633c0968629baca9e4d836ad802035  TITANE-Infinity_29.0.0_amd64.deb
-eb55ddf88f4360f93b0f83325d0d544721790885d2807f17e91dbdfd5c04472e  TITANE-Infinity-29.0.0-1.x86_64.rpm
+# These will be populated after the production build completes.
+# Build command: pnpm run build:production
+PENDING_BUILD  Titan-Stable_30.0.0_amd64.AppImage
+PENDING_BUILD  Titan-Stable_30.0.0_amd64.deb
+# Additional build-output proofs — PENDING_BUILD
+PENDING_BUILD  TITANE-Infinity_30.0.0_amd64.deb
+PENDING_BUILD  TITANE-Infinity-30.0.0-1.x86_64.rpm

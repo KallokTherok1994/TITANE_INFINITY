@@ -1,6 +1,7 @@
 {
   "name": "titane-infinity",
   "version": "30.0.0",
+  "description": "TITANE∞ v30.0.0 - Major Release: Full Version Upgrade Cycle — V30 Authority Promotion",
   "description": "TITANE∞ v30.0.0 - Major release with full version authority promotion and governed upgrade cycle",
   "description": "TITANE∞ v30.0.0 - Major release with full upgrade cycle, dependency refresh, and governed root cleanup",
   "type": "module",

@@ -1,2 +1,5 @@
-74616a4f80015c3fb1037e8dff3d47924088f9a05c68eb28a321e3f0d647eb17  Titan-Stable_29.0.0_amd64.AppImage
-f2fd24d963a534c23701cfd228601d3db1ab54682aa88354ac97c03f97ff89f2  Titan-Stable_29.0.0_amd64.deb
+# SHA256 checksums for v30.0.0 artifacts — PENDING_BUILD
+# These will be populated after the production build completes.
+# Build command: pnpm run build:production
+PENDING_BUILD  Titan-Stable_30.0.0_amd64.AppImage
+PENDING_BUILD  Titan-Stable_30.0.0_amd64.deb
