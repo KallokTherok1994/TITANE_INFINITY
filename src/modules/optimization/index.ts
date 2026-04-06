@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v29.0.0 — OPTIMIZATION MODULE EXPORTS
+ * TITANE∞ v30.0.0 — OPTIMIZATION MODULE EXPORTS
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * Unified exports for Phase 12 optimization modules

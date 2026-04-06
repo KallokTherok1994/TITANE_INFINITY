@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v29.0.0 — Audio Transcription Service
+ * TITANE∞ v30.0.0 — Audio Transcription Service
  * © 2025 Humain Total / Kevin Thibault / TITANE Team
  *
  * Service de transcription audio utilisant Whisper

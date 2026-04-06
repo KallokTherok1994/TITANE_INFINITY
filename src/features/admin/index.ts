@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v29.0.0 — Admin Center Index
+ * TITANE∞ v30.0.0 — Admin Center Index
  * Exports pour le module ADMIN unifié
  * © 2025 TITANE Team. All rights reserved.
  */

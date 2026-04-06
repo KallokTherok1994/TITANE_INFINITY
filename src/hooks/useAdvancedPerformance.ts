@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v29.0.0 — useAdvancedPerformance Hook
+ * TITANE∞ v30.0.0 — useAdvancedPerformance Hook
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * Hook React pour monitoring de performance avancé

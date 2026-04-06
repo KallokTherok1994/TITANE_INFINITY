@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v29.0.0 — GPU ACCELERATOR V2 WITH WEBGPU
+ * TITANE∞ v30.0.0 — GPU ACCELERATOR V2 WITH WEBGPU
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * Advanced GPU acceleration with WebGPU compute shaders

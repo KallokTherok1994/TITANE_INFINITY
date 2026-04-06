@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v29.0.0 — TOTAL_DEV PAGE
+ * TITANE∞ v30.0.0 — TOTAL_DEV PAGE
  * GOD DEV TITANE — Espace de développement souverain
  *
  * Architecture: Ring 1 → IPC canonique → Rust backends
@@ -94,7 +94,7 @@ interface ConsoleEntry {
 // ARCHITECTURE CONTEXT INJECTION
 // Used as system prompt prefix for QWEN-Coder
 // ─────────────────────────────────────────────────────────────────
-const TOTAL_DEV_SYSTEM_PROMPT = `Tu es GOD DEV TITANE — l'agent de développement souverain de TITANE∞ v29.0.0.
+const TOTAL_DEV_SYSTEM_PROMPT = `Tu es GOD DEV TITANE — l'agent de développement souverain de TITANE∞ v30.0.0.
 
 ARCHITECTURE CANONIQUE:
 - 4-Ring strict: Ring0=Tauri/Rust, Ring1=IPC commands, Ring2=Services TS, Ring3=UI/React
@@ -998,7 +998,7 @@ export const TotalDevPage: React.FC = () => {
         <div className="total-dev-header-meta">
           <LockBadge lockState={lockState} expiresAt={expiresAt} />
           <span className="total-dev-meta-item">Provider: qwen2.5-coder</span>
-          <span className="total-dev-meta-item">v29.0.0</span>
+          <span className="total-dev-meta-item">v30.0.0</span>
           {expiresLabel && (
             <span className="total-dev-meta-item">Expire: {expiresLabel}</span>
           )}
@@ -1062,7 +1062,7 @@ export const TotalDevPage: React.FC = () => {
 
       {/* FOOTER ─────────────────────────────────────────── */}
       <footer className="total-dev-footer">
-        <span>TITANE∞ v29.0.0 · TOTAL_DEV · Ring1→IPC→Rust</span>
+        <span>TITANE∞ v30.0.0 · TOTAL_DEV · Ring1→IPC→Rust</span>
         <span>
           {lockState === 'UNLOCKED'
             ? '🔓 Session active — tous les pouvoirs GOD DEV disponibles'

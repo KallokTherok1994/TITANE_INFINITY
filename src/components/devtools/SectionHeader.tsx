@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v29.0.0 — SectionHeader Component
+ * TITANE∞ v30.0.0 — SectionHeader Component
  * Header for DevTools sections
  */
 

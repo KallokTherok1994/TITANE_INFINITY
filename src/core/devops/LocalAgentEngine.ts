@@ -1,5 +1,5 @@
 /**
- * TITANE∞ LocalAgentEngine v29.0.0
+ * TITANE∞ LocalAgentEngine v30.0.0
  *
  * @module core/devops/LocalAgentEngine
  * @description Agent DevOps local ultra-puissant pour orchestration build/test/deploy
@@ -60,7 +60,7 @@ class LocalAgentEngine {
   private readonly CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
   private constructor() {
-    console.log('[LocalAgentEngine] Initialized v29.0.0');
+    console.log('[LocalAgentEngine] Initialized v30.0.0');
   }
 
   public static getInstance(): LocalAgentEngine {

@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v29.0.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v29.0.0 — GLM-4.6V-FLASH PROVIDER
+ *   TITANE∞ v30.0.0 — GLM-4.6V-FLASH PROVIDER
  *   Provider local GLM-4.6V-Flash avec support multimodal
  *   Architecture: vLLM server + OpenAI-compatible API + Vision
  * ═══════════════════════════════════════════════════════════════════
@@ -71,7 +71,7 @@ function buildPromptWithVision(message: string, history: AIMessage[]): any {
   // Add system message
   messages.push({
     role: 'system',
-    content: `Tu es TITANE∞ v29.0.0, un système IA multimodal avancé avec capacités de vision.
+    content: `Tu es TITANE∞ v30.0.0, un système IA multimodal avancé avec capacités de vision.
 Tu peux analyser des images et répondre en français de manière professionnelle et précise.
 Lorsque tu vois une image, décris-la précisément et utilise cette information pour répondre.`,
   });

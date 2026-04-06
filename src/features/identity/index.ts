@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v29.0.0 — Identity Feature
+ * TITANE∞ v30.0.0 — Identity Feature
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 

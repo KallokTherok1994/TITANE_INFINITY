@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v29.0.0 — Advanced Boot Recovery System
+ * TITANE∞ v30.0.0 — Advanced Boot Recovery System
  * © 2025 TITANE Team. All rights reserved.
  *
  * 🚀 SYSTÈME DE RÉCUPÉRATION DE BOOT AVANCÉ
@@ -419,7 +419,7 @@ class TitaneBootRecovery {
           <div style="margin-top: 30px; text-align: center; font-size: 0.9rem; opacity: 0.6;">
             Boot History: ${this.bootAttempts.length} attempts | 
             Strategy: minimal | 
-            Version: v29.0.0
+            Version: v30.0.0
           </div>
         </div>
       `;
@@ -616,7 +616,7 @@ class TitaneBootRecovery {
   private generateBootDiagnostics(): string {
     const recent = this.bootAttempts.slice(0, 5);
     const diagnostics = [
-      `Boot Recovery System v29.0.0`,
+      `Boot Recovery System v30.0.0`,
       `Current Time: ${new Date().toISOString()}`,
       `User Agent: ${navigator.userAgent.substring(0, 80)}...`,
       `Memory Usage: ${(performance as any).memory?.usedJSHeapSize ? Math.round((performance as any).memory.usedJSHeapSize / 1024 / 1024) + 'MB' : 'N/A'}`,

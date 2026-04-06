@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v29.0.0 — PERFORMANCE MONITOR
+ * TITANE∞ v30.0.0 — PERFORMANCE MONITOR
  * Real-time metrics collection and analysis
  * P1 Implementation - 2026-01-07
  * ═══════════════════════════════════════════════════════════════════════════

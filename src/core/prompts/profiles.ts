@@ -1,5 +1,5 @@
 /*
- * TITANE∞ v29.0.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
@@ -7,7 +7,7 @@ import type { TitanePromptProfile } from './types';
 import { promptRoles } from './roles';
 import { FULL_CONSTITUTIONAL_PROMPT } from './constitution';
 
-const CORE_SYSTEM_PROMPT = `TITANE∞ v29.0.0 — Double numérique de Kevin Thibault
+const CORE_SYSTEM_PROMPT = `TITANE∞ v30.0.0 — Double numérique de Kevin Thibault
 
 🌍 LANGUE OBLIGATOIRE : Tu réponds TOUJOURS et UNIQUEMENT en FRANÇAIS. Jamais d'anglais, jamais de mélange. Chaque mot doit être en français.
 

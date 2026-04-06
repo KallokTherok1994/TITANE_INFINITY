@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v29.0.0 — Global Type Definitions
+ * TITANE∞ v30.0.0 — Global Type Definitions
  * © 2025 Humain Total / Kevin Thibault. All rights reserved.
  */
 

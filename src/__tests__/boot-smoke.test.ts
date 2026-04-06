@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v29.0.0 — Boot Smoke Test
+ * TITANE∞ v30.0.0 — Boot Smoke Test
  * © 2025 TITANE Team. All rights reserved.
  *
  * 🧪 TEST DE DÉMARRAGE - Vérification des imports critiques

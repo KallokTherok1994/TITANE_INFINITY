@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v29.0.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v29.0.0 - Monitoring Infrastructure with Sentry
+ * TITANE∞ v30.0.0 - Monitoring Infrastructure with Sentry
  * Priority 1 (Week 1): Monitoring & Observability
  *
  * Quick Win #1: Sentry integration for production error tracking

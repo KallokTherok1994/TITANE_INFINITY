@@ -2,7 +2,7 @@
  * TITANE∞ — Tool Result Display Component
  * Affiche les résultats des appels d'outils
  *
- * v29.0.0 (Sprint 6)
+ * v30.0.0 (Sprint 6)
  */
 
 import React, { memo } from 'react';

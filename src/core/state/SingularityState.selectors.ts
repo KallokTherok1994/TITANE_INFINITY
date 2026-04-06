@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v29.0.0 — Singularity State Selectors
+ * TITANE∞ v30.0.0 — Singularity State Selectors
  * Optimized selectors with shallow equality for SingularityState
  * Prevents unnecessary rerenders by selecting only needed slices
  */

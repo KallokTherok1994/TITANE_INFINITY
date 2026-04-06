@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v29.0.0 — Online Capabilities Diagnostic
+ * TITANE∞ v30.0.0 — Online Capabilities Diagnostic
  * Displays Internet + AI Provider status
  */
 

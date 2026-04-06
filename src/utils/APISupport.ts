@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v29.0.0 — API Support Detection & Safety
+ * TITANE∞ v30.0.0 — API Support Detection & Safety
  * © 2025 Humain Total / Kevin Thibault / TITANE Team
  *
  * Détection et validation de support pour les APIs media/capture

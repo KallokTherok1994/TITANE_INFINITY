@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v29.0.0 — Advanced Boot Health Monitor
+ * TITANE∞ v30.0.0 — Advanced Boot Health Monitor
  * © 2025 TITANE Team. All rights reserved.
  *
  * 🔍 MONITORING AVANCÉ DU SYSTÈME DE BOOT
