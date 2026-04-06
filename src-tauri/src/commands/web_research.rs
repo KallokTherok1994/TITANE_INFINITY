@@ -553,6 +553,7 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
             .parse::<u32>()
             .map(RateLimitProfile::Custom)
             .unwrap_or(RateLimitProfile::Default),
+        None => RateLimitProfile::Default,
     };
 
     let mut rate_svc = RateLimitService::new(rate_profile);
