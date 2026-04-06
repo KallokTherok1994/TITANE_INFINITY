@@ -1,20 +1,20 @@
 {
   "deployment": {
-    "timestamp": "2026-04-05 16:17:58 UTC",
+    "timestamp": "2026-04-06 01:19:52 UTC",
     "version": "29.0.0",
-    "commit": "2b90dab4a87116c64f5f99b655386030dda48a19",
-    "branch": "MAIN",
-    "certification": "TITANE_INFINITY_RELEASE_20260405_121527_CERTIFIED",
+    "commit": "cb23ee7fec42f97ba623d99b68d6207c459919f5",
+    "branch": "tauri-3-upgrade",
+    "certification": "TITANE_INFINITY_RELEASE_20260405_211709_CERTIFIED",
     "deployment_type": "post_certification"
   },
   "artifacts": {
     "appimage": {
       "available": true,
-      "sha256": "12ed61d6581f7d16d626a8da73dbba8c37b8f56b9f562deca878898170a60a84"
+      "sha256": "70706d56419c1e86db3feab17dcc36f08c3ab995044b1acb17e44a6b21a8223b"
     },
     "deb": {
       "available": true,
-      "sha256": "2bcfc64e57f5f234a6fa43dd810e8240ba1a37c61faee934f8e136b83f04f880"
+      "sha256": "b419031516c1aa1ece271d2989c585157185c8bd186ff7099ab7d8775727fe9c"
     }
   },
   "certification": {
