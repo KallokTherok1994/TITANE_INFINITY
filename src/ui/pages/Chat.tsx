@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v24.3.0 — Proprietary License
+ * TITANE∞ v29.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
@@ -45,9 +45,9 @@ import useVAD, { useVADWithTTS, useBargeInHandler } from '../../hooks/useVAD';
 // Phase 2 v24.7.4: Keyboard shortcuts & Focus trap
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
-// ✨ v25.7.4: Responsive Chat Layout wrapper
+// ✨ v29.0.0: Responsive Chat Layout wrapper
 import { ResponsiveChatLayout } from '../../layouts/ResponsiveChatLayout';
-// ✨ v26.2: OMEGA Reflection Panel v2 - Compact mode
+// ✨ v29.0.0: OMEGA Reflection Panel v2 - Compact mode
 import { ThinkingPanel } from '../../features/chat/ThinkingPanel';
 import { useExperience } from '../../hooks/useExperience';
 import './styles/Chat.css';

@@ -34,7 +34,7 @@ const OrchestrationIntelligenceCenter: React.FC = () => {
     <div className="orchestration-intelligence-center p-6 space-y-6">
       {/* Header */}
       <div className="header mb-8">
-        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold mb-2 bg-linear-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
           🔥 Orchestration & Intelligence Center
         </h1>
         <p className="text-gray-400">

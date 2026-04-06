@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25.2.2 — Admin Center Page
+ * TITANE∞ v29.0.0 — Admin Center Page
  *
  * 🎯 MODULE ADMIN UNIFIÉ - Fusion de 5 modules:
  *   1. Centre Système (⚙️)
@@ -215,7 +215,7 @@ const AdminPageComponent: React.FC = () => {
             </div>
           </div>
           <div className="admin-header-badge">
-            <span className="admin-version">v25.2.2</span>
+            <span className="admin-version">v29.0.0</span>
           </div>
         </div>
       </motion.header>

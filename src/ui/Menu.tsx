@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v29.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -12,7 +12,7 @@
  *   Module TITANE - LE CŒUR DU SYSTÈME (fusion Chat IA + Vision + EVO)
  *   7 sections: TITANE, TIME, STATS, ADMIN, DEV, FUSION, OPTIMIZE
  *   Icons: Lucide React (Atom, Timer, TrendingUp, Settings, Wrench, Sparkles, Zap)
- *   Logo: Arc Reactor Émeraude v25.4.2
+ *   Logo: Arc Reactor Émeraude v29.0.0
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -33,7 +33,7 @@ import { safeInvoke } from '@/utils/invoke';
 import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 import './styles/Menu.css';
 
-// ✨ v25.4.2 - Icon mapping for Lucide icons (professional, themeable)
+// ✨ v29.0.0 - Icon mapping for Lucide icons (professional, themeable)
 const MENU_ICONS: Record<string, React.ReactNode> = {
   titane: <Atom size={20} className="menu-lucide-icon" />,
   time: <Timer size={20} className="menu-lucide-icon" />,
@@ -68,7 +68,7 @@ interface ProviderStatus {
 }
 
 const MENU_SECTIONS: MenuSection[] = [
-  // ⚡ v25.3.0 TITANE - LE CŒUR DU SYSTÈME (Fusion Chat IA + Vision + EVO)
+  // ⚡ v29.0.0 TITANE - LE CŒUR DU SYSTÈME (Fusion Chat IA + Vision + EVO)
   {
     id: 'titane',
     icon: '⚛️',
@@ -77,7 +77,7 @@ const MENU_SECTIONS: MenuSection[] = [
       'Le Cœur du Système - Conversation, Vision, Overview, Identité, Mémoire, Évolution, Progression, Transformation',
     route: '/titane',
   },
-  // ✨ v25.1 TIME - FUSION TEMPORELLE ULTIME (Temporal Flow + Agenda + Time Navigator)
+  // ✨ v29.0.0 TIME - FUSION TEMPORELLE ULTIME (Temporal Flow + Agenda + Time Navigator)
   {
     id: 'time',
     icon: '⏱️',
@@ -85,7 +85,7 @@ const MENU_SECTIONS: MenuSection[] = [
     description: 'Centre Temporel - Agenda, Navigation, Snapshots, Intelligence, Flow',
     route: '/time',
   },
-  // ✨ v25.2.0 → v29.1: STATS fusionné dans DEV Cockpit > Diagnostics
+  // ✨ STATS fusionné dans DEV Cockpit > Diagnostics
   {
     id: 'stats',
     icon: '📈',
@@ -93,7 +93,7 @@ const MENU_SECTIONS: MenuSection[] = [
     description: 'Métriques moteurs fusionnées dans DEV Cockpit > Diagnostics',
     route: '/dev',
   },
-  // ✨ v25.2 ADMIN - FUSION (Système + Config + Audio + Design + Gouvernance)
+  // ✨ v29.0.0 ADMIN - FUSION (Système + Config + Audio + Design + Gouvernance)
   {
     id: 'admin',
     icon: '⚙️',
@@ -101,7 +101,7 @@ const MENU_SECTIONS: MenuSection[] = [
     description: 'Centre Admin Unifié - Système, Config, Audio, Design, Gouvernance',
     route: '/admin',
   },
-  // ⚡ v25.4.0 DEV - FUSION COMPLÈTE (Dev Mode + ONE CORE + QA & Tests + Orchestration)
+  // ⚡ v29.0.0 DEV - FUSION COMPLÈTE (Dev Mode + ONE CORE + QA & Tests + Orchestration)
   {
     id: 'dev',
     icon: '🛠️',
@@ -110,7 +110,7 @@ const MENU_SECTIONS: MenuSection[] = [
       'Centre DEV Unifié - Dev Tools, Command Center, QA & Tests, Orchestration, Sécurité, Métriques',
     route: '/dev',
   },
-  // ✨ v25.3.2 FUSION - Perfect Backend/Frontend Integration Dashboard
+  // ✨ v29.0.0 FUSION - Perfect Backend/Frontend Integration Dashboard
   {
     id: 'fusion',
     icon: '✨',
@@ -118,7 +118,7 @@ const MENU_SECTIONS: MenuSection[] = [
     description: 'Dashboard Fusion Backend/Frontend - Singularity, Memory, Health Sync',
     route: '/fusion',
   },
-  // ⚡ v25.6.0 OPTIMIZE - Ultimate Performance Dashboard (GPU/WASM/Cache/IndexedDB)
+  // ⚡ v29.0.0 OPTIMIZE - Ultimate Performance Dashboard (GPU/WASM/Cache/IndexedDB)
   {
     id: 'optimization',
     icon: '⚡',
@@ -137,7 +137,7 @@ export const Menu: React.FC<MenuProps> = ({
   const menubarRef = useRef<HTMLDivElement | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [menuSections, setMenuSections] = useState(() => {
-    // v25.4.2: Migration one-time only (not every mount) - FUSION + OPTIMIZE ajoutés
+    // v29.0.0: Migration one-time only (not every mount) - FUSION + OPTIMIZE ajoutés
     const MENU_VERSION = 'v29.0.0';
     const storedVersion = localStorage.getItem('titane_menu_version');
 
@@ -151,7 +151,7 @@ export const Menu: React.FC<MenuProps> = ({
       localStorage.removeItem('sidebar_config');
       localStorage.setItem('titane_menu_version', MENU_VERSION);
 
-      console.log('🔧 Menu v25.4.1 - Migration one-time completed');
+      console.log('🔧 Menu v29.0.0 - Migration one-time completed');
       console.log(
         '📋 Sections actives:',
         MENU_SECTIONS.length,
@@ -259,7 +259,7 @@ export const Menu: React.FC<MenuProps> = ({
   };
 
   const handleSaveMenu = (newSections: MenuSection[]) => {
-    // v25.2.1: DÉSACTIVER la sauvegarde localStorage pour éviter persistance anciennes sections
+    // v29.0.0: DÉSACTIVER la sauvegarde localStorage pour éviter persistance anciennes sections
     // L'utilisateur peut réorganiser visuellement mais pas sauvegarder définitivement
     setMenuSections(newSections);
     console.log(
@@ -279,7 +279,7 @@ export const Menu: React.FC<MenuProps> = ({
         role="navigation"
         aria-label="Menu principal de navigation TITANE∞"
       >
-        {/* Header avec toggle - Logo Arc Reactor Émeraude v25.4.2 */}
+        {/* Header avec toggle - Logo Arc Reactor Émeraude v29.0.0 */}
         <div className="menu-header">
           {!isCollapsed ? (
             <div className="menu-brand">

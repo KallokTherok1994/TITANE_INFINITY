@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25.4.1 — Web Vitals Monitoring
+ * TITANE∞ v29.0.0 — Web Vitals Monitoring
  * Real-time Core Web Vitals tracking with Google thresholds
  */
 

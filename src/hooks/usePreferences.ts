@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.2.0 — User Preferences Hook
+ * TITANE∞ v29.0.0 — User Preferences Hook
  * © 2025 Humain Total / Kevin Thibault / TITANE Team
  *
  * Gestion des préférences utilisateur avec persistence localStorage

@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v25.3.2 — Proprietary License
+ * TITANE∞ v29.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v25.3.2 — USE SYSTEM HEALTH (Unified Dashboard Hook)
+ *   TITANE∞ v29.0.0 — USE SYSTEM HEALTH (Unified Dashboard Hook)
  *   Health monitoring: Conversation + Memory + Singularity + System
  *   Real-time metrics, alerts, auto-recovery
  * ═══════════════════════════════════════════════════════════════════

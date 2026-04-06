@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v25.5.0 — Proprietary License
+ * TITANE∞ v29.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v25.5.0 — CHAT TOOLBAR COMPLET
+ *   TITANE∞ v29.0.0 — CHAT TOOLBAR COMPLET
  *   Barre d'outils complète pour le Chat IA avec TOUTES les fonctions:
  *   - Import fichiers (📎)
  *   - Capture d'écran (📸)

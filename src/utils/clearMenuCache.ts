@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25.2.1 — Clear Menu Cache Utility
+ * TITANE∞ v29.0.0 — Clear Menu Cache Utility
  * Force suppression du cache localStorage du menu
  */
 

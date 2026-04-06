@@ -24,8 +24,8 @@ import type {
   SystemMetrics,
 } from '@/features/qa-monitoring/types';
 import type { OneCoreState } from '@/features/one-core/types';
-// ✨ v25.4.1 - Web Vitals monitoring (planned for future implementation)
-// ✨ v25.6.0 - Ultimate Optimization Dashboard (Phase 12)
+// ✨ v29.0.0 - Web Vitals monitoring remains deferred until a dedicated proof-backed rollout
+// ✨ v29.0.0 - Ultimate Optimization Dashboard (Phase 12)
 import { UltimateOptimizationDashboard } from '@/components/optimization/UltimateOptimizationDashboard';
 import './DevPage.css';
 import { StatsSystemPanels } from './Stats';

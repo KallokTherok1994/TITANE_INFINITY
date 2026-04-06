@@ -841,7 +841,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'context_link_conversations',
 
   // ═══════════════════════════════════════════════════════════════
-  // VISUAL DEVOPS ENGINE (v25.5)
+  // VISUAL DEVOPS ENGINE (v29.0.0)
   // ═══════════════════════════════════════════════════════════════
   'visual_devops_analyze_screen',
   'visual_devops_detect_elements',
@@ -1116,7 +1116,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'get_onboarding_preferences',
 
   // ═══════════════════════════════════════════════════════════════
-  // OMEGA CONVERSATION ENGINE (v26.2)
+  // OMEGA CONVERSATION ENGINE (v29.0.0)
   // Pipeline de conversation 12 étapes - Cerveau IA TITANE
   // ═══════════════════════════════════════════════════════════════
   'create_new_conversation',
@@ -1130,7 +1130,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'conversation_behavioral_check',
 
   // ═══════════════════════════════════════════════════════════════
-  // LITERARY ENGINE (v26.2)
+  // LITERARY ENGINE (v29.0.0)
   // Moteur littéraire OMEGA pour style et ton
   // ═══════════════════════════════════════════════════════════════
   'literary_engine_process',
@@ -1138,7 +1138,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'literary_engine_get_style_profile',
 
   // ═══════════════════════════════════════════════════════════════
-  // ANTHOLOGY ENGINE (v26.2)
+  // ANTHOLOGY ENGINE (v29.0.0)
   // Intégration anthologie et ADN littéraire
   // ═══════════════════════════════════════════════════════════════
   'anthology_integrate_text',
@@ -1264,7 +1264,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'sync_evolution_state',
 
   // ═══════════════════════════════════════════════════════════════
-  // WINDOW CONTROLS (v26.2.0+)
+  // WINDOW CONTROLS (v29.0.0+)
   // Zoom + Fullscreen (CTRL+Scroll, F11, F12)
   // ═══════════════════════════════════════════════════════════════
   'window_get_zoom',
@@ -1353,7 +1353,7 @@ function maybeCleanupCallTracking(now: number): void {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// v26.2 - LOCAL NETWORK SECURITY MODE
+// v29.0.0 - LOCAL NETWORK SECURITY MODE
 // Pour réseau domestique sécurisé privé - restrictions réduites
 // ═══════════════════════════════════════════════════════════════
 

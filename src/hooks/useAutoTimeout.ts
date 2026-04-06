@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.2.0 — Auto-Timeout Hook
+ * TITANE∞ v29.0.0 — Auto-Timeout Hook
  * © 2025 Humain Total / Kevin Thibault / TITANE Team
  *
  * Hook pour arrêter automatiquement les opérations longues

@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v25.6.0 — WEBASSEMBLY COMPUTE MODULE
+ * TITANE∞ v29.0.0 — WEBASSEMBLY COMPUTE MODULE
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * High-performance computation offloading to WebAssembly
@@ -10,7 +10,7 @@
  * - Rust-compiled WASM modules
  * - Automatic fallback to JavaScript
  *
- * @version 25.6.0
+ * @version 29.0.0
  * @created 2025-12-17
  * @phase 12 - Ultimate Optimization
  */

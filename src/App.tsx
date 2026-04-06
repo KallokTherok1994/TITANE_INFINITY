@@ -52,9 +52,9 @@ import { useAppInitialization } from './hooks/useAppInitialization';
 import { useTopNavigation } from './hooks/useTopNavigation';
 // ✨ OPT-12: connectCacheToSingularity lazy-loaded below (removed static import)
 // ✨ OPT-7: i18n is now lazy-loaded in useEffect below (removed static import)
-// ✨ v25.4.1 - A11Y & Performance monitoring (utilities planned for future implementation)
+// ✨ v29.0.0 - A11Y & performance utilities remain intentionally deferred
 // consoleMonitor init moved to useAppInitialization hook
-// ✨ v25.3.1 + P3: Lazy-load Aura components (heavy graphics)
+// ✨ v29.0.0 + P3: Lazy-load Aura components (heavy graphics)
 const QuantumParticles = lazy(() =>
   import('./components/aura/QuantumParticles').then(m => ({
     default: m.QuantumParticles,
@@ -66,7 +66,7 @@ const AuraControlPanel = lazy(() =>
   }))
 );
 import { useAura } from './hooks/useAuraOrchestrator';
-import { useWindowControls } from './hooks/useWindowControls'; // ✨ v26.2.1 - Window zoom & fullscreen controls
+import { useWindowControls } from './hooks/useWindowControls'; // ✨ v29.0.0 - Window zoom & fullscreen controls
 import { useZoomControl } from './hooks/useZoomControl'; // ✨ Sprint 6 Phase 3 - Zoom control
 import { ToastProvider } from './components/providers/ToastProvider'; // ✨ M1 - Toast notifications via Sonner
 import { publishActiveModuleContext } from '@/services/chat/moduleRouteContext';
@@ -181,14 +181,14 @@ const RealityCenter = lazy(() =>
   }))
 );
 
-// ✨ v26.1 CONSOLE MONITOR DASHBOARD - Dev-only monitoring UI
+// ✨ v29.0.0 CONSOLE MONITOR DASHBOARD - Dev-only monitoring UI
 const ConsoleMonitorDashboard = lazy(() =>
   import('./components/dev/ConsoleMonitorDashboard').then(m => ({
     default: m.ConsoleMonitorDashboard,
   }))
 );
 
-// ✨ v26.2 PREDICTIVE DASHBOARD - ML-like error prediction & correlation
+// ✨ v29.0.0 PREDICTIVE DASHBOARD - ML-like error prediction & correlation
 const PredictiveDashboard = lazy(() =>
   import('./components/dev/PredictiveDashboard').then(m => ({
     default: m.PredictiveDashboard,
@@ -301,7 +301,7 @@ const AppRouter: React.FC = () => {
   const toasts = useToasts();
   const { removeToast } = useToastActions();
 
-  // ✨ v26.2.1 - Window zoom & fullscreen controls (CTRL+scroll, F11)
+  // ✨ v29.0.0 - Window zoom & fullscreen controls (CTRL+scroll, F11)
   useWindowControls({ enableZoom: true, enableFullscreen: true });
 
   // ✨ Sprint 6 Phase 3 - Keyboard zoom controls (Ctrl+Plus/Minus/0)
@@ -392,7 +392,7 @@ const AppRouter: React.FC = () => {
 
   useAppInitialization();
 
-  // ✨ v25.4.1 - A11Y & Performance: Keyboard shortcuts and Web Vitals planned
+  // ✨ v29.0.0 - A11Y & performance: keyboard shortcuts and Web Vitals planned
 
   // 🌟 Initialize Living Engines v21-v24
   const livingEngines = useLivingEngines(100); // Update every 100ms
@@ -527,9 +527,9 @@ const AppRouter: React.FC = () => {
       {/* Phase 9: Suspense boundary for lazy-loaded routes */}
       <Suspense fallback={<PageLoadingFallback />}>
         <Routes>
-          {/* Main Routes v25.3.0 - TITANE Homepage */}
+          {/* Main Routes — TITANE Homepage */}
           <Route path="/" element={<Navigate to="/titane" replace />} />
-          {/* ⚡ v25.3.0 TITANE - LE CŒUR DU SYSTÈME (Fusion Chat IA + Vision + EVO) */}
+          {/* ⚡ TITANE - LE CŒUR DU SYSTÈME (Chat IA + Vision + EVO unifiés) */}
           <Route
             path="/titane"
             element={
@@ -538,7 +538,7 @@ const AppRouter: React.FC = () => {
               </ErrorBoundary>
             }
           />
-          {/* Redirections vers TITANE (fusion v25.3.0) */}
+          {/* Redirections vers TITANE */}
           <Route path="/chat" element={<Navigate to="/titane" replace />} />
           <Route path="/camera" element={<Navigate to="/titane" replace />} />
           <Route path="/evo" element={<Navigate to="/titane" replace />} />
@@ -554,15 +554,15 @@ const AppRouter: React.FC = () => {
           />
           <Route path="/progression" element={<Navigate to="/titane" replace />} />
           <Route path="/xp" element={<Navigate to="/experience" replace />} />
-          {/* ❌ v25.2.1 → v29.1: /cognitive redirigé vers /dev?tab=diagnostics (Stats fusionné DEV Cockpit) */}
+          {/* /cognitive redirigé vers DEV Cockpit > Diagnostics */}
           <Route
             path="/cognitive"
             element={<Navigate to="/dev?tab=diagnostics" replace />}
           />
-          {/* ✅ v29.1: /stats fusionné dans DEV Cockpit > Diagnostics */}
+          {/* /stats fusionné dans DEV Cockpit > Diagnostics */}
           <Route path="/stats" element={<Navigate to="/dev?tab=diagnostics" replace />} />
           <Route path="/experience" element={<Experience />} /> {/* ✨ v∞.D5 - Page XP */}
-          {/* ✨ v25.1 TIME CENTER - Fusion Temporal Flow + Agenda + Time Navigator */}
+          {/* ✨ v29.0.0 TIME CENTER - Temporal Flow + Agenda + Time Navigator */}
           <Route
             path="/time"
             element={
@@ -575,7 +575,7 @@ const AppRouter: React.FC = () => {
           <Route path="/temporal-center" element={<Navigate to="/time" replace />} />
           <Route path="/agenda" element={<Navigate to="/time" replace />} />
           <Route path="/time-navigator" element={<Navigate to="/time" replace />} />
-          {/* ✨ v25.2.2 ADMIN CENTER - Module ADMIN Unifié */}
+          {/* ✨ v29.0.0 ADMIN CENTER - Module ADMIN unifié */}
           <Route
             path="/admin"
             element={
@@ -638,7 +638,7 @@ const AppRouter: React.FC = () => {
           <Route path="/audio" element={<Navigate to="/admin?tab=audio" replace />} />
           <Route path="/voice" element={<Navigate to="/admin?tab=audio" replace />} />
           <Route path="/tts" element={<Navigate to="/admin?tab=audio" replace />} />
-          {/* ✨ v25.3.2 - FUSION DASHBOARD - Perfect Backend/Frontend Integration */}
+          {/* ✨ v29.0.0 - FUSION DASHBOARD - Perfect Backend/Frontend Integration */}
           <Route
             path="/fusion"
             element={
@@ -649,7 +649,7 @@ const AppRouter: React.FC = () => {
               </ErrorBoundary>
             }
           />
-          {/* ✨ v25.6.0 - ULTIMATE OPTIMIZATION - Phase 12: GPU/WASM/Cache/IndexedDB */}
+          {/* ✨ v29.0.0 - ULTIMATE OPTIMIZATION - Phase 12: GPU/WASM/Cache/IndexedDB */}
           <Route
             path="/optimization"
             element={
@@ -838,7 +838,7 @@ const AppRouter: React.FC = () => {
             }
           />
           {/* Engine Routes */}
-          {/* ❌ SUPPRIMÉ v25.2.1: /helios, /nexus, /harmonia → fusionnés dans /stats */}
+          {/* Routes historiques fusionnées vers les surfaces DEV/TITANE actives */}
           <Route path="/sentinel" element={<Sentinel />} />
           <Route path="/watchdog" element={<Watchdog />} />
           <Route path="/selfheal" element={<SelfHeal />} />
@@ -882,7 +882,7 @@ const AppRouter: React.FC = () => {
       {/* MASQUÉ - Analyse UI */}
       {/* <PhysiologicalPanel /> */}
 
-      {/* ✨ v25.4.1 - Keyboard Shortcuts Help: Planned for future release */}
+      {/* ✨ v29.0.0 - Keyboard Shortcuts Help: Planned for future release */}
 
       {/* ✨ v19.5.2 - Toast Notifications System */}
       <ToastContainer
@@ -923,21 +923,21 @@ const App: React.FC = () => {
         <UIThemeProvider>
           <AnimationProvider fpsThreshold={40} cpuThreshold={80}>
             <TitanStateProvider>
-              {/* ✨ v26.1 - Console Monitor Dashboard (Dev only) */}
+              {/* ✨ v29.0.0 - Console Monitor Dashboard (Dev only) */}
               {import.meta.env.DEV && (
                 <Suspense fallback={null}>
                   <ConsoleMonitorDashboard />
                 </Suspense>
               )}
 
-              {/* ✨ v26.2 - Predictive AI Dashboard (Dev only) */}
+              {/* ✨ v29.0.0 - Predictive AI Dashboard (Dev only) */}
               {import.meta.env.DEV && (
                 <Suspense fallback={null}>
                   <PredictiveDashboard />
                 </Suspense>
               )}
 
-              {/* ✨ v25.3.1 - Quantum Particles Background (Global) - Connected to Aura Orchestrator */}
+              {/* ✨ v29.0.0 - Quantum Particles Background (Global) - Connected to Aura Orchestrator */}
               <AuraConnectedParticles />
 
               <BrowserRouter>

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.2.0 — Badge Component (Titanium Dark)
+ * TITANE∞ v29.0.0 — Badge Component (Titanium Dark)
  * Small label/tag component with Titanium Dark design system
  * Monochrome approach with semantic color variants
  * @license MIT

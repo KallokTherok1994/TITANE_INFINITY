@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.4.0 — useOmegaPipeline Hook
+ * TITANE∞ v29.0.0 — useOmegaPipeline Hook
  * Omega pipeline orchestration
  */
 

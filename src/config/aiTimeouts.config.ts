@@ -59,12 +59,12 @@ export const UI_TIMEOUTS = {
 /**
  * Cache TTL values (ms)
  * ✨ v24.3.6: Optimized TTLs to reduce redundant computations
- * ✨ v26.3.0: Further optimizations for LTM integration and recovery boost
+ * ✨ v29.0.0: Further optimizations for LTM integration and recovery boost
  */
 export const CACHE_TTL = {
-  metrics: 10000, // ✨ v26.3.0: Increased from 5s to 10s - further reduce metric calls by 50%
-  providerAvailability: 300000, // ✨ v26.3.0: Increased from 60s to 5min (already 5min in AVAILABILITY_CACHE)
-  quickFailCooldown: 30000, // ✨ v26.3.0: Increased from 10s to 30s - reduce retry noise, allow recovery
+  metrics: 10000, // ✨ v29.0.0: Increased from 5s to 10s - further reduce metric calls by 50%
+  providerAvailability: 300000, // ✨ v29.0.0: Increased from 60s to 5min (already 5min in AVAILABILITY_CACHE)
+  quickFailCooldown: 30000, // ✨ v29.0.0: Increased from 10s to 30s - reduce retry noise, allow recovery
 } as const;
 
 /**

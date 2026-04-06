@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v28.5.0 — Proprietary License
+ * TITANE∞ v29.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v28.5.0 — OLLAMA PROVIDER (REAL IMPLEMENTATION)
+ *   TITANE∞ v29.0.0 — OLLAMA PROVIDER (REAL IMPLEMENTATION)
  *   Provider Ollama avec vraie connexion API
  *   ✨ LTM Integration: Memory Context Injection
  *   ✨ Streaming support avec timeout adaptatif

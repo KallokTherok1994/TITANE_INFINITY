@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.2.0 — Skeleton Loader Component (Titanium Dark)
+ * TITANE∞ v29.0.0 — Skeleton Loader Component (Titanium Dark)
  * Loading skeleton with Titanium Dark design system
  * Improves perceived performance during content loading
  * @license MIT

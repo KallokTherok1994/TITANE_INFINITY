@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25.4.2 — DEV Page Styles (Tech Enhanced)
+ * TITANE∞ v29.0.0 — DEV Page Styles (Tech Enhanced)
  * © 2025 Kevin Thibault — Licence MIT
  */
 
@@ -132,7 +132,7 @@
   display: flex;
   gap: 0.5rem;
   padding: 0.75rem 2rem;
-  /* Glass tech tabs bar - v25.4.2 optimisé */
+  /* Glass tech tabs bar - v29.0.0 optimisé */
   background: linear-gradient(
     180deg,
     rgba(22, 26, 36, 0.95) 0%,

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.2.0 — Button Component (Titanium Dark)
+ * TITANE∞ v29.0.0 — Button Component (Titanium Dark)
  * Interactive button with Titanium Dark design system
  * WCAG 2.2 AA compliant with 3px focus indicators
  * @license MIT

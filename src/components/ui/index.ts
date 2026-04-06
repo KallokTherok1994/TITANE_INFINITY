@@ -15,7 +15,7 @@ export * from './icon-button';
 export * from './switch';
 export * from './tabs';
 
-// v26.2.3 UI/UX Enhancement Components
+// v29.0.0 UI/UX Enhancement Components
 export { Toast } from './Toast';
 export { ToastContainer, useToast } from './ToastContainer';
 export {
