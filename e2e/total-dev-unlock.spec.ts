@@ -10,7 +10,9 @@ test.describe('TOTAL_DEV Unlock Flow', () => {
     await page.waitForSelector('[data-testid="total-dev-header"]', { timeout: 10000 });
   });
 
-  test('Browser fallback stays locked even with correct password outside Tauri', async ({ page }) => {
+  test('Browser fallback stays locked even with correct password outside Tauri', async ({
+    page,
+  }) => {
     const lockBadge = page.locator('[data-testid="lock-badge"]');
     const errorMsg = page.locator('.total-dev-unlock-error');
 
@@ -29,7 +31,9 @@ test.describe('TOTAL_DEV Unlock Flow', () => {
     await expect(lockBadge).toContainText('LOCKED');
   });
 
-  test('Unlock with incorrect password stays locked in browser fallback', async ({ page }) => {
+  test('Unlock with incorrect password stays locked in browser fallback', async ({
+    page,
+  }) => {
     const lockBadge = page.locator('[data-testid="lock-badge"]');
     const errorMsg = page.locator('.total-dev-unlock-error');
 

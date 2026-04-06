@@ -51,7 +51,9 @@ const gotoWithRetry = async (page: Page, url: string, maxAttempts = 3) => {
     } catch (error) {
       lastError = error;
       const message = error instanceof Error ? error.message : String(error);
-      const isTransientConnectionError = /ERR_CONNECTION_REFUSED|ECONNREFUSED/.test(message);
+      const isTransientConnectionError = /ERR_CONNECTION_REFUSED|ECONNREFUSED/.test(
+        message
+      );
 
       if (!isTransientConnectionError || attempt === maxAttempts) {
         throw error;
