@@ -18,7 +18,7 @@ Toute modification de l'allowlist stable doit être documentée et justifiée.
 
 ## 📊 Surface Stable Actuelle
 
-### 1. COMMANDS (Tauri Invoke) - 217 Commands Total
+### 1. COMMANDS (Tauri Invoke) - 218 Commands Total
 ```json
 // src-tauri/allowlist.whitelist.stable.json (Production Allowlist)
 {
@@ -128,7 +128,7 @@ Toute modification de l'allowlist stable doit être documentée et justifiée.
 #### 1.1 Sync complémentaire — stable allowlist documentée (2026-04-06)
 
 > Alignement append-only avec `src-tauri/allowlist.whitelist.stable.json` pour la surface active `v29.0.0`.  
-> Référence : `217` entrées allowlist brutes / `204` noms de commandes uniques.
+> Référence : `218` entrées allowlist brutes / `204` noms de commandes uniques.
 
 ```json
           "ai_check_ollama_status",                // STABLE: documented sync 2026-04-06
@@ -271,7 +271,7 @@ Toute modification de l'allowlist stable doit être documentée et justifiée.
           "window_zoom_reset",                // STABLE: documented sync 2026-04-06
 ```
 
-**Total Commands** : 217 commands  
+**Total Commands** : 218 commands  
 **Classification** :
 - **READ** : lecture données/état système
 - **WRITE** : modification données utilisateur
