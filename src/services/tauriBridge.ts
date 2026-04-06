@@ -34,7 +34,9 @@ const logger = createLogger('[TAURI-BRIDGE]');
 // LOGGING & DEBUG
 // ═══════════════════════════════════════════════════════════════
 
-const DEBUG_MODE = import.meta.env.DEV;
+const DEBUG_MODE = Boolean(
+  (import.meta as ImportMeta & { env?: { DEV?: boolean } }).env?.DEV
+);
 
 function logCommand(command: string, params?: Record<string, unknown>): void {
   if (DEBUG_MODE) {

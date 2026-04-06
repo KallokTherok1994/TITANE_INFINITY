@@ -1,0 +1,4 @@
+beeeab935 fix(diagnostics): LOCK3 — system health polling from backend truth
+a73459f3b fix(storage): LOCK2 — unify conversation ID to canonical key titane_active_conversation_id
+0dd11f69e fix(ui): LOCK1 — display actual provider from ProviderDecisionMeta
+b7ed74cf1 fix(truth): G1+G2+G3 — memory injection truth, history load markers, E2E harness stability

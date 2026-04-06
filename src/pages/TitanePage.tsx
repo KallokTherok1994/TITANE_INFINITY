@@ -31,14 +31,15 @@
  */
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Container, Stack } from '@components/layout';
 import { createLogger } from '@/utils/logger';
-import { useToast } from '@/hooks/useToast';
 import { useVisualEngines } from '@hooks/useVisualEngines';
 import { xpEngine } from '@/cognitive/progression/xpEngine';
 import type { ProgressionState } from '@/cognitive/types';
 import { tauriClient } from '@/lib/tauriClient';
 import type { MemoryStats } from '@/services/memory/persistentMemory.config';
+import { normalizePersistentMemoryStats } from '@/services/memory/persistentMemory.normalize';
 
 // Section Components (Phase 3C Extracted)
 import {
@@ -77,6 +78,22 @@ type TabId =
   | 'progression'
   | 'transformation'
   | 'symbiose';
+
+const VALID_TABS: TabId[] = [
+  'conversation',
+  'vision',
+  'overview',
+  'identity',
+  'memory-map',
+  'memory-evolution',
+  'progression',
+  'transformation',
+  'symbiose',
+];
+
+const isTabId = (value: string | null): value is TabId => {
+  return value !== null && VALID_TABS.includes(value as TabId);
+};
 
 const TAB_PANEL_IDS: Record<TabId, string> = {
   conversation: 'titane-panel-conversation',
@@ -120,12 +137,15 @@ const TAB_LABEL_IDS: Record<TabId, string> = {
  * in src/components/sections/ for better maintainability and testability.
  */
 export const TitanePage: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   // ═══ STATE ═══
-  const [activeTab, setActiveTab] = useState<TabId>('conversation');
+  const [activeTab, setActiveTab] = useState<TabId>(() => {
+    const requestedTab = searchParams.get('tab');
+    return isTabId(requestedTab) ? requestedTab : 'conversation';
+  });
   const [progression, setProgression] = useState<ProgressionState | null>(null);
-  const [_isEditing, _setIsEditing] = useState(false);
   const [memoryStats, setMemoryStats] = useState<MemoryStats | null>(null);
-  const { success: toastSuccess, error: errorToast } = useToast();
 
   // LOCK2: titane_active_conversation_id is canonical; legacy key migrated on boot.
   const [conversationId] = useState<string>(() => {
@@ -160,7 +180,9 @@ export const TitanePage: React.FC = () => {
   useEffect(() => {
     const loadMemoryStats = async () => {
       try {
-        const stats = (await tauriClient.persistentMemoryGetStats()) as MemoryStats;
+        const stats = normalizePersistentMemoryStats(
+          await tauriClient.persistentMemoryGetStats()
+        ) as MemoryStats;
         setMemoryStats(stats);
       } catch {
         // Non-blocking: hardcoded fallback values will be used
@@ -174,6 +196,7 @@ export const TitanePage: React.FC = () => {
     () => ({
       totalXP: progression?.totalXP ?? 0,
       level: progression?.level ?? 1,
+      chatMessageCount: progression?.chatMessageCount ?? 0,
       memoryShortTerm: memoryStats?.countByLevel?.['session'] ?? 0,
       memoryMidTerm: memoryStats?.countByLevel?.['intermediate'] ?? 0,
       memoryLongTerm: memoryStats?.countByLevel?.['long_term'] ?? 0,
@@ -184,20 +207,42 @@ export const TitanePage: React.FC = () => {
     [progression, memoryStats]
   );
 
+  const updateActiveTab = useCallback(
+    (nextTab: TabId) => {
+      setActiveTab(nextTab);
+      setSearchParams(
+        prev => {
+          const next = new URLSearchParams(prev);
+          next.set('tab', nextTab);
+          return next;
+        },
+        { replace: true }
+      );
+    },
+    [setSearchParams]
+  );
+
+  useEffect(() => {
+    const requestedTab = searchParams.get('tab');
+    if (isTabId(requestedTab) && requestedTab !== activeTab) {
+      setActiveTab(requestedTab);
+    }
+  }, [activeTab, searchParams]);
+
   // ═══ TAB HANDLERS ═══
   const tabHandlers = useMemo(
     () => ({
-      conversation: () => setActiveTab('conversation'),
-      vision: () => setActiveTab('vision'),
-      overview: () => setActiveTab('overview'),
-      identity: () => setActiveTab('identity'),
-      memoryMap: () => setActiveTab('memory-map'),
-      memoryEvolution: () => setActiveTab('memory-evolution'),
-      progression: () => setActiveTab('progression'),
-      transformation: () => setActiveTab('transformation'),
-      symbiose: () => setActiveTab('symbiose'),
+      conversation: () => updateActiveTab('conversation'),
+      vision: () => updateActiveTab('vision'),
+      overview: () => updateActiveTab('overview'),
+      identity: () => updateActiveTab('identity'),
+      memoryMap: () => updateActiveTab('memory-map'),
+      memoryEvolution: () => updateActiveTab('memory-evolution'),
+      progression: () => updateActiveTab('progression'),
+      transformation: () => updateActiveTab('transformation'),
+      symbiose: () => updateActiveTab('symbiose'),
     }),
-    []
+    [updateActiveTab]
   );
 
   // ═══ RENDER ACTIVE SECTION ═══
@@ -218,7 +263,7 @@ export const TitanePage: React.FC = () => {
       case 'progression':
         return <ProgressionSection progression={progression} stats={stats} />;
       case 'transformation':
-        return <TransformationSection />;
+        return <TransformationSection stats={stats} />;
       case 'symbiose':
         return <TwinEvolutionPanel isAdmin={true} compact={false} />;
       default:
@@ -396,7 +441,9 @@ export const TitanePage: React.FC = () => {
             aria-labelledby={TAB_LABEL_IDS[activeTab]}
             tabIndex={0}
           >
-            {renderActiveSection()}
+            <ErrorBoundary context={`TitaneTab:${activeTab}`}>
+              {renderActiveSection()}
+            </ErrorBoundary>
           </div>
         </Stack>
       </Container>

@@ -1,0 +1,7 @@
+- package.json: 28.10.0 ✓
+- Cargo.toml: 28.10.0 ✓
+- RELEASE_v28.10.0_SEALED.txt: present ✓
+- RELEASE_ARTIFACTS_CHECKSUMS_28.10.0.txt: present ✓
+- AppImage: TITANE-Infinity_28.10.0_amd64.AppImage 88M ✓
+- git status: CLEAN ✓
+- HEAD: c5c5c839e ✓

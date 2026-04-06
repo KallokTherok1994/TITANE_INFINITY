@@ -51,12 +51,9 @@ pub mod engine_trait; // ✅ v24 - Engine trait + OrchestratorEngine (stable, in
 pub mod error; // ✅ v24 - Unified TitaneError enum (stable, in use)
 pub mod errors;
 pub mod meta; // ✅ Meta-Cognition & Deep Sync v18 (NEW)
-pub mod narrative; // ✅ NarrativeEngine v22 (NEW)
 pub mod qa; // ✅ QA Engine v19.8 (NEW)
 pub mod shared; // ✅ Shared types and utilities
 pub mod singularity; // ✅ SingularityState v∞ v20 (NEW)
-pub mod singularity_cortex; // ✅ Singularity Cortex OS v∞ — SUPER PROMPT #7 (NEW)
-pub mod singularity_fusion;
 pub mod fusion; // ✅ FIX-014: Fusion Engine (fusion_merge/fusion_sync)
 pub mod runtime_real; // ✅ FIX-016: Real runtime state commands (memory KV, toggles, logs, selfheal, XP)
 pub mod streaming; // ✅ v21.1Ω - Streaming IPC for real-time responses (NEW)
@@ -165,7 +162,6 @@ pub mod engines; // ✅ Engines Core (QA, Monitoring, Developer Mode)
 // ═══════════════════════════════════════════════════════════════
 
 pub mod cluster; // ✅ Node-Cluster
-pub mod creation; // ✅ Mode Création
 pub mod evolution; // ✅ Auto-Évolution
 pub mod hypervision; // ✅ HyperVision
 pub mod introspection; // ✅ Introspection
@@ -188,9 +184,6 @@ pub mod design_center; // ✅ Centre Design & Apparence Unifié (Design System M
 // ═══════════════════════════════════════════════════════════════
 
 pub mod cognitive_learning; // ✅ Auto-Apprentissage
-pub mod hyper_evolution; // ✅ HyperEvolution
-pub mod meta_creation; // ✅ Méta-Création
-pub mod neuro_symbolic; // ✅ NeuroSymbolic
 pub mod self_repair; // ✅ Auto-Réparation
                      // pub mod singularity;        // ⚠️ Deprecated - Use top-level singularity v∞ (v20)
 
@@ -241,12 +234,6 @@ pub mod identity; // ✅ System Identity Engine v∞ (Matrix, Voice, Tone, Mode,
 // ═══════════════════════════════════════════════════════════════
 
 pub mod meta_orchestrator; // ✅ Meta Orchestrator v∞ (Awareness, Resources, Priority Scheduler)
-
-// ═══════════════════════════════════════════════════════════════
-// REALITY RENDERING LAYER v∞ (OPUS #19)
-// ═══════════════════════════════════════════════════════════════
-
-pub mod reality_renderer; // ✅ Reality Renderer v∞ (Scene, Physics, Lighting, Spatial)
 
 // ═══════════════════════════════════════════════════════════════
 // HYPER-INTELLIGENCE ENGINE v∞ (OPUS #20)
@@ -338,18 +325,6 @@ pub mod performance; // ✅ Performance & Parallelism Engine vΩ (Scheduler, Thr
 // ═══════════════════════════════════════════════════════════════
 
 pub mod harmonic_os; // ✅ Harmonic OS vΩ (Synchronisation Globale, H-Field, Régulation Auto)
-
-// ═══════════════════════════════════════════════════════════════
-// COGNITIVE GRAVITY ENGINE vΩ (SUPER PROMPT #24)
-// ═══════════════════════════════════════════════════════════════
-
-pub mod cognitive_gravity; // ✅ Cognitive Gravity vΩ (Attracteurs, Anti-Attracteurs, Champ Gravitationnel)
-
-// ═══════════════════════════════════════════════════════════════
-// HARMONIC + GRAVITY INTEGRATION vΩ
-// ═══════════════════════════════════════════════════════════════
-
-pub mod harmonic_gravity_integration; // ✅ Integration Harmonic OS + Cognitive Gravity
 
 // ═══════════════════════════════════════════════════════════════
 // CONVERSATION OS #∞ (SUPER PROMPT #9)

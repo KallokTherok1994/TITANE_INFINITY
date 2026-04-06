@@ -12,6 +12,17 @@
 
 import { tauriClient } from '@/lib/tauriClient';
 import { getSystemPrompt } from '@/config/chatModes.config';
+import { userPreferencesEngine } from '@/services/userPreferencesEngine';
+import { classifyMode, resolveMode } from '@/services/ai/omegaModeClassifier';
+import {
+  RESPONSE_PROFILES,
+  type ResponseProfileId,
+  type InferenceState,
+} from '@/services/ai/responsePolicy';
+import {
+  buildDiscernmentDecision,
+  type DiscernmentDecision,
+} from '@/services/ai/discernmentContract';
 import type {
   OnlineDecision,
   ProviderDecisionMeta,
@@ -19,14 +30,37 @@ import type {
   ReasonCode,
 } from '@/types/providerMeta';
 import {
+  validateProviderDecisionMeta,
+  validatePromptBudget,
+  truncateWithBudget,
+  DEFAULT_PROMPT_BUDGET,
+  type ValidatedProviderDecisionMeta,
+  type PromptBudgetConfig,
+} from '@/schemas/ipcTruthContracts';
+import {
   formatContextEnvelopeForSystemPrompt,
   type ChatContextEnvelope,
 } from '@/services/chat/chatMemorySingleDoor';
 import { xpEngine } from '@/cognitive/progression/xpEngine';
 import { useEvolutionStore } from '@/stores/evolutionStore';
+import { aiOrchestrator } from '@/services/ai/orchestrator';
 
 const E2E_CHAT_MOCK_FLAG = '__TITANE_E2E_CHAT_MOCK__';
 const E2E_CHAT_CONV_SEQ = '__TITANE_E2E_CHAT_CONV_SEQ__';
+const STATIC_PROMPT_CONTEXT_TTL_MS = 2000;
+
+interface StaticPromptContextSnapshot {
+  mode: ConversationMode;
+  systemPrompt: string;
+  personaContext: string;
+  userPreferencesContext: string;
+  cognitiveContext: string;
+}
+
+let staticPromptContextCache: {
+  data: StaticPromptContextSnapshot;
+  timestamp: number;
+} | null = null;
 
 const getWindowRecord = (): Record<string, unknown> | null => {
   if (typeof window === 'undefined') {
@@ -93,6 +127,14 @@ export interface ConversationRequest {
   emotion_context?: EmotionState;
 }
 
+export type ConversationProviderPreference =
+  | 'auto'
+  | 'gemini'
+  | 'ollama'
+  | 'openai'
+  | 'claude'
+  | 'local';
+
 export interface ConversationResponse {
   assistant_message: string;
   conversation_id: string;
@@ -104,6 +146,9 @@ export interface ConversationResponse {
   metadata: ConversationMetadata;
   meta?: ProviderDecisionMeta;
   decision?: OnlineDecision;
+  discernment?: DiscernmentDecision;
+  /** OMEGA_AUTO_ORCHESTRATION_CHAIN trace meta — present when auto-classification ran */
+  omega_trace_meta?: OmegaTraceMeta;
 }
 
 export interface ConversationMetadata {
@@ -113,6 +158,20 @@ export interface ConversationMetadata {
   tokens_used: number;
   memory_effect: MemoryEffect;
   links_to_contexts: string[];
+}
+
+/** Trace metadata emitted by OMEGA_AUTO_ORCHESTRATION_CHAIN (Lock #1) */
+export interface OmegaTraceMeta {
+  canonical_mode: string;
+  profile_id: string;
+  effort_level: string;
+  model_class: string;
+  classifier_confidence: number;
+  classifier_reason_code: string;
+  classifier_signals: string[];
+  resolved_backend_mode: string;
+  provider_used: string;
+  fallback_used: boolean;
 }
 
 interface OmegaGenerateResponse {
@@ -246,6 +305,37 @@ function isMemoryEffect(val: unknown): val is MemoryEffect {
   return val === 'New' || val === 'Recall' || val === 'Connect' || val === 'Evolve';
 }
 
+function isExplicitMemoryQuery(message: string): boolean {
+  const normalized = message.toLowerCase();
+  const personalFactPatterns = [
+    'quel est mon',
+    'quelle est ma',
+    'quels sont mes',
+    'quelles sont mes',
+    "je t'ai donné mon",
+    'je t’ai donné mon',
+    "je ne t'ai jamais donné mon",
+    'je ne t’ai jamais donné mon',
+    'tu connais mon',
+    'tu connais ma',
+    'mon code fantôme',
+    'mon code fantome',
+  ];
+
+  return (
+    normalized.includes('remember') ||
+    normalized.includes('recall') ||
+    normalized.includes('history') ||
+    normalized.includes('memorise') ||
+    normalized.includes('mémorise') ||
+    normalized.includes('rappelle') ||
+    normalized.includes('souviens') ||
+    normalized.includes('memoire') ||
+    normalized.includes('mémoire') ||
+    personalFactPatterns.some(pattern => normalized.includes(pattern))
+  );
+}
+
 function normalizeConversationMetadata(meta: unknown): ConversationMetadata {
   const m = (meta ?? {}) as Record<string, unknown>;
 
@@ -318,6 +408,55 @@ function readPersonaContext(): string {
   }
 }
 
+function readCognitiveContext(): string {
+  try {
+    const stored = localStorage.getItem('titane_cognitive_state');
+    if (!stored) return '';
+    const state = JSON.parse(stored) as {
+      flowActive?: boolean;
+      energy?: number;
+      mode?: string;
+    };
+    if (!state) return '';
+    const parts: string[] = [];
+    if (state.flowActive) parts.push('Flow actif');
+    if (typeof state.energy === 'number') parts.push(`Énergie: ${state.energy}%`);
+    if (state.mode) parts.push(`Mode cognitif: ${state.mode}`);
+    if (parts.length === 0) return '';
+    return `\n[ÉTAT COGNITIF: ${parts.join(' | ')}]`;
+  } catch {
+    return '';
+  }
+}
+
+export function getStaticPromptContext(
+  mode: ConversationMode,
+  now = Date.now()
+): StaticPromptContextSnapshot {
+  if (
+    staticPromptContextCache &&
+    staticPromptContextCache.data.mode === mode &&
+    now - staticPromptContextCache.timestamp < STATIC_PROMPT_CONTEXT_TTL_MS
+  ) {
+    return staticPromptContextCache.data;
+  }
+
+  const snapshot: StaticPromptContextSnapshot = {
+    mode,
+    systemPrompt: getSystemPrompt(mode),
+    personaContext: readPersonaContext(),
+    userPreferencesContext: userPreferencesEngine.generateContextForAI(),
+    cognitiveContext: readCognitiveContext(),
+  };
+
+  staticPromptContextCache = { data: snapshot, timestamp: now };
+  return snapshot;
+}
+
+export function resetStaticPromptContextCache(): void {
+  staticPromptContextCache = null;
+}
+
 /**
  * Traiter un message à travers le Conversation Engine v∞
  */
@@ -327,6 +466,7 @@ export async function processMessage(
     conversationId?: string;
     mode?: ConversationMode;
     emotionContext?: EmotionState;
+    providerPreference?: ConversationProviderPreference;
     contextEnvelope?: ChatContextEnvelope;
   }
 ): Promise<ConversationResponse> {
@@ -381,33 +521,49 @@ export async function processMessage(
   // Le protector tentera Tauri en premier, puis Ollama en fallback si besoin
   console.log('[conversationEngine] 🚀 Envoi du message via secureInvoke');
 
-  // Open-online default: keep provider orchestration in AUTO mode.
-  const provider = 'auto';
+  const provider = options?.providerPreference ?? 'auto';
 
-  const baseSystemPrompt = getSystemPrompt(options?.mode ?? 'default');
+  // OMEGA_AUTO_ORCHESTRATION_CHAIN: auto mode classification (Lock #1)
+  const modeClassification = classifyMode({
+    message: userMessage,
+    userExplicitMode: options?.mode ?? 'default',
+  });
+  const resolvedConversationMode = resolveMode(
+    modeClassification,
+    options?.mode ?? 'default'
+  );
+
+  const conversationMode = resolvedConversationMode;
+  const staticPromptContext = getStaticPromptContext(conversationMode);
   const contextualPrompt = options?.contextEnvelope
     ? formatContextEnvelopeForSystemPrompt(options.contextEnvelope)
     : '';
-  const personaContext = readPersonaContext();
 
   // Inject persistent 3-level memory context (non-blocking)
   let persistentMemoryContext = '';
-  let persistentMemoryStatus: 'loaded' | 'empty' | 'unavailable' = 'unavailable';
-  try {
-    const memResult = (await tauriClient.persistentMemoryGetContext({
-      modeId: options?.mode || 'default',
-      query: userMessage,
-    })) as { context: string; usedEntries: string[] } | null;
-    if (memResult?.context) {
-      persistentMemoryContext = `## PERSISTENT_MEMORY_CONTEXT\n${memResult.context}`;
-      persistentMemoryStatus = 'loaded';
-    } else {
-      persistentMemoryStatus = 'empty';
+  let persistentMemoryStatus: 'loaded' | 'empty' | 'unavailable' | 'skipped' =
+    'unavailable';
+  if (isExplicitMemoryQuery(userMessage)) {
+    // Memory-focused prompts are handled by the backend memory lane.
+    // Skipping this frontend prefetch avoids duplicate recall pressure before IPC.
+    persistentMemoryStatus = 'skipped';
+  } else {
+    try {
+      const memResult = (await tauriClient.persistentMemoryGetContext({
+        modeId: options?.mode || 'default',
+        query: userMessage,
+      })) as { context: string; usedEntries: string[] } | null;
+      if (memResult?.context) {
+        persistentMemoryContext = `## PERSISTENT_MEMORY_CONTEXT\n${memResult.context}`;
+        persistentMemoryStatus = 'loaded';
+      } else {
+        persistentMemoryStatus = 'empty';
+      }
+    } catch (error) {
+      // No silent fallback: keep processing but surface explicit status.
+      persistentMemoryStatus = 'unavailable';
+      console.warn('[conversationEngine] persistentMemoryGetContext unavailable', error);
     }
-  } catch (error) {
-    // No silent fallback: keep processing but surface explicit status.
-    persistentMemoryStatus = 'unavailable';
-    console.warn('[conversationEngine] persistentMemoryGetContext unavailable', error);
   }
 
   const persistentMemoryStatusContext = `## PERSISTENT_MEMORY_STATUS\nstatus=${persistentMemoryStatus}`;
@@ -429,54 +585,80 @@ export async function processMessage(
     // Non-blocking: proceed without progression context if unavailable
   }
 
-  // Inject cognitive state from localStorage (set by CognitiveEngineSection)
-  const readCognitiveContext = (): string => {
-    try {
-      const stored = localStorage.getItem('titane_cognitive_state');
-      if (!stored) return '';
-      const state = JSON.parse(stored) as {
-        flowActive?: boolean;
-        energy?: number;
-        mode?: string;
-      };
-      if (!state) return '';
-      const parts: string[] = [];
-      if (state.flowActive) parts.push('Flow actif');
-      if (typeof state.energy === 'number') parts.push(`Énergie: ${state.energy}%`);
-      if (state.mode) parts.push(`Mode cognitif: ${state.mode}`);
-      if (parts.length === 0) return '';
-      return `\n[ÉTAT COGNITIF: ${parts.join(' | ')}]`;
-    } catch {
-      return '';
-    }
-  };
-  const cognitiveContext = readCognitiveContext();
-
   // IMPROVE-002: LTM history is now loaded and injected by the backend (commands.rs → omega_integration.rs).
   // Frontend no longer loads history per-message to avoid double SQLite queries.
   // Use useLTMContext() in UI components for display purposes only.
   // The backend dedup guard in convert_to_conversation_response() ensures no duplication.
 
   const systemPrompt = [
-    baseSystemPrompt,
+    staticPromptContext.systemPrompt,
     contextualPrompt,
-    personaContext,
+    staticPromptContext.personaContext,
+    staticPromptContext.userPreferencesContext,
     persistentMemoryContext,
     persistentMemoryStatusContext,
     progressionContext,
-    cognitiveContext,
+    staticPromptContext.cognitiveContext,
   ]
     .filter(Boolean)
     .join('\n\n');
+  // ═══════════════════════════════════════════════════════════════════
+  // PROMPT BUDGET VALIDATION — anti-explosion guard (Crash Lock #1)
+  // Validates user message + system prompt sizes BEFORE IPC call.
+  // ═══════════════════════════════════════════════════════════════════
+  const budgetValidation = validatePromptBudget({
+    message: userMessage,
+    systemPrompt,
+  });
+
+  // Truncate user message if it exceeds budget (soft limit — warn but continue)
+  const userMessageBudget = truncateWithBudget(
+    userMessage,
+    DEFAULT_PROMPT_BUDGET.maxUserMessageChars,
+    'user_message'
+  );
+
+  // Truncate system prompt if it exceeds budget (soft limit — warn but continue)
+  const systemPromptBudget = truncateWithBudget(
+    systemPrompt,
+    DEFAULT_PROMPT_BUDGET.maxSystemPromptChars,
+    'system_prompt'
+  );
+
+  if (!budgetValidation.ok) {
+    console.warn(
+      '[PROMPT_BUDGET] ⚠️ Budget violations detected, applying truncation:',
+      budgetValidation.violations
+    );
+  }
+
   const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
+  // OMEGA: wire classifier profile → ai_config temperature + maxTokens
+  const classifierProfile = RESPONSE_PROFILES[modeClassification.profileId];
+  const classifierTemperature = classifierProfile?.temperature ?? 0.7;
+  const classifierMaxTokens = classifierProfile?.maxTokens;
+
   const payload = {
-    message: userMessage,
+    message: userMessageBudget.text,
     conversationId,
-    mode: options?.mode || 'default',
+    mode: resolvedConversationMode,
     provider,
-    systemPrompt,
+    systemPrompt: systemPromptBudget.text,
     requestId,
+    classifierMeta: {
+      canonical_mode: modeClassification.canonicalMode,
+      profile_id: modeClassification.profileId,
+      effort_level: modeClassification.effortLevel,
+      model_class: modeClassification.modelClass,
+      confidence: modeClassification.confidence,
+      reason_code: modeClassification.reasonCode,
+    },
+    aiConfig: {
+      temperature: classifierTemperature,
+      max_tokens: classifierMaxTokens,
+      provider_preference: provider,
+    },
     ...(options?.contextEnvelope ? { contextEnvelope: options.contextEnvelope } : {}),
   };
 
@@ -484,10 +666,14 @@ export async function processMessage(
     mode: options?.mode || 'default',
     provider_requested: provider,
     conversation_id: conversationId,
-    message_length: userMessage.length,
+    message_length: userMessageBudget.text.length,
     module_id: options?.contextEnvelope?.moduleContext.moduleId || 'unknown',
     has_context_envelope: Boolean(options?.contextEnvelope),
     request_id: requestId,
+    budget_ok: budgetValidation.ok,
+    budget_violations: budgetValidation.violations.length,
+    user_message_truncated: userMessageBudget.wasTruncated,
+    system_prompt_truncated: systemPromptBudget.wasTruncated,
   });
 
   // Preflight guard — required args must be set before IPC
@@ -506,7 +692,172 @@ export async function processMessage(
     );
   }
 
-  const raw = (await tauriClient.conversationGenerate(payload)) as OmegaGenerateResponse;
+  let raw: OmegaGenerateResponse;
+  try {
+    raw = (await tauriClient.conversationGenerate(payload)) as OmegaGenerateResponse;
+  } catch (tauriError) {
+    // ═══ FALLBACK ORCHESTRATOR: Quand Tauri IPC échoue, tenter aiOrchestrator directement ═══
+    // Ollama est disponible en local mais le backend Tauri ne l'est pas → utiliser l'orchestrator frontend
+    const errorMsg =
+      tauriError instanceof Error ? tauriError.message : String(tauriError);
+    console.warn(
+      '[conversationEngine] ⚠️ Tauri IPC failed, falling back to aiOrchestrator:',
+      errorMsg
+    );
+
+    try {
+      const aiConfig = {
+        preferredProvider: (provider === 'ollama'
+          ? 'ollama'
+          : provider === 'local'
+            ? 'local'
+            : provider === 'gemini'
+              ? 'gemini'
+              : 'auto') as 'auto' | 'ollama' | 'local' | 'gemini' | 'openai' | 'claude',
+      };
+
+      const orchestratorResponse = await aiOrchestrator.generate(
+        userMessage,
+        [],
+        aiConfig
+      );
+
+      const latencyMs =
+        typeof orchestratorResponse.metadata?.totalResponseTime === 'number'
+          ? orchestratorResponse.metadata.totalResponseTime
+          : 0;
+      const orchestratorProvider =
+        orchestratorResponse.provider ||
+        (typeof orchestratorResponse.metadata?.selectedProvider === 'string'
+          ? orchestratorResponse.metadata.selectedProvider
+          : undefined) ||
+        'ollama';
+
+      raw = {
+        content: orchestratorResponse.content,
+        conversationId: conversationId,
+        messageId: `msg-${Date.now()}`,
+        latencyMs,
+        provider: orchestratorProvider,
+        metadata: {
+          provider_used: orchestratorProvider,
+          latency_ms: latencyMs,
+          mode: 'LOCAL',
+          reason_code: 'OK',
+          fallback_used: true,
+          network_used: false,
+          cache_hit: false,
+          policy: 'conversation_engine_orchestrator_fallback',
+        },
+      };
+
+      console.log('[conversationEngine] ✅ Orchestrator fallback succeeded:', {
+        provider: orchestratorProvider,
+        latencyMs,
+        contentLength: orchestratorResponse.content?.length,
+      });
+    } catch (orchestratorError) {
+      const orchErrorMsg =
+        orchestratorError instanceof Error
+          ? orchestratorError.message
+          : String(orchestratorError);
+      console.error(
+        '[conversationEngine] ❌ Orchestrator fallback also failed:',
+        orchErrorMsg
+      );
+      throw new Error(
+        `Backend et orchestrator indisponibles. Tauri: ${errorMsg}. Orchestrator: ${orchErrorMsg}`
+      );
+    }
+  }
+
+  // ═══ DETECT TAURI PROTECTOR FALLBACK OBJECT (silent fallback) ═══
+  // tauriProtector returns a mock object instead of throwing, which bypasses the catch block above.
+  // We must detect this and attempt the orchestrator fallback to access titane-local.
+  const rawMetaCheck = (raw as Record<string, unknown>)?.meta as
+    | Record<string, unknown>
+    | undefined;
+  const rawProviderCheck = (raw as Record<string, unknown>)?.provider as
+    | string
+    | undefined;
+  const isTauriProtectorFallback =
+    rawMetaCheck?.policy === 'tauri_protector_runtime_fallback' ||
+    rawMetaCheck?.reason_code === 'FALLBACK_OFFLINE' ||
+    (rawProviderCheck === 'fallback' && rawMetaCheck?.mode === 'ERROR');
+
+  if (isTauriProtectorFallback) {
+    const fallbackReason = rawMetaCheck?.reason_code || 'UNKNOWN';
+    console.warn(
+      `[conversationEngine] ⚠️ TauriProtector returned silent fallback (${fallbackReason}), attempting orchestrator fallback...`
+    );
+
+    try {
+      const aiConfig = {
+        preferredProvider: (provider === 'ollama'
+          ? 'ollama'
+          : provider === 'local'
+            ? 'local'
+            : provider === 'gemini'
+              ? 'gemini'
+              : 'auto') as 'auto' | 'ollama' | 'local' | 'gemini' | 'openai' | 'claude',
+      };
+
+      const orchestratorResponse = await aiOrchestrator.generate(
+        userMessage,
+        [],
+        aiConfig
+      );
+
+      const latencyMs =
+        typeof orchestratorResponse.metadata?.totalResponseTime === 'number'
+          ? orchestratorResponse.metadata.totalResponseTime
+          : 0;
+      const orchestratorProvider =
+        orchestratorResponse.provider ||
+        (typeof orchestratorResponse.metadata?.selectedProvider === 'string'
+          ? orchestratorResponse.metadata.selectedProvider
+          : undefined) ||
+        'ollama';
+
+      raw = {
+        content: orchestratorResponse.content,
+        conversationId: conversationId,
+        messageId: `msg-${Date.now()}`,
+        latencyMs,
+        provider: orchestratorProvider,
+        metadata: {
+          provider_used: orchestratorProvider,
+          latency_ms: latencyMs,
+          mode: 'LOCAL',
+          reason_code: 'OK',
+          fallback_used: true,
+          network_used: false,
+          cache_hit: false,
+          policy: 'conversation_engine_orchestrator_fallback',
+        },
+      };
+
+      console.log(
+        '[conversationEngine] ✅ Orchestrator fallback succeeded after tauriProtector silent fallback:',
+        {
+          provider: orchestratorProvider,
+          latencyMs,
+          contentLength: orchestratorResponse.content?.length,
+        }
+      );
+    } catch (orchestratorError) {
+      const orchErrorMsg =
+        orchestratorError instanceof Error
+          ? orchestratorError.message
+          : String(orchestratorError);
+      console.error(
+        '[conversationEngine] ❌ Orchestrator fallback also failed after tauriProtector silent fallback:',
+        orchErrorMsg
+      );
+      // Continue with the original tauriProtector fallback response if orchestrator also fails
+      // (the original fallback message is already in raw.content)
+    }
+  }
 
   // Guard: CONTRACT_VIOLATION_CLAMPED — l'IPC a échoué côté Tauri (args invalides ou Tauri indisponible)
   // Plutôt que d'afficher l'erreur technique comme message assistant, on lève une vraie erreur
@@ -534,6 +885,20 @@ export async function processMessage(
     normalizeProviderMeta(metadata['providerMeta']) ||
     normalizeProviderMeta(metadata['meta']) ||
     deriveFallbackProviderMeta(metadata, decision);
+
+  // P2.1: Anti-lie monotonicity gate — validate provider meta at IPC boundary
+  if (providerMeta) {
+    const metaValidation = validateProviderDecisionMeta(providerMeta);
+    if (!metaValidation.ok) {
+      console.error(
+        '[conversationEngine] ❌ IPC TRUTH CONTRACT VIOLATION — ProviderDecisionMeta invalid:',
+        metaValidation.errors
+      );
+      // Do not throw: log and continue with validated meta to avoid breaking the user experience.
+      // The error is surfaced to observability for fixing upstream.
+    }
+  }
+
   const cognitiveTagsRaw = metadata['cognitiveTags'];
   const cognitiveTags = Array.isArray(cognitiveTagsRaw)
     ? cognitiveTagsRaw.filter((v): v is string => typeof v === 'string')
@@ -575,6 +940,30 @@ export async function processMessage(
     );
   }
 
+  // Minimal discernment decision (frontend stub, not authoritative)
+  const inferenceState: InferenceState =
+    detectedIntention === 'Clarification' ? 'CLARIFY_REQUIRED' : 'SAFE_TO_INFER';
+  const taskType: 'question' | 'instruction' | 'multi-step' | 'code' | 'data' =
+    detectedIntention === 'Action' ? 'instruction' : 'question';
+  const memoryAvailable = persistentMemoryStatus === 'loaded';
+  const webAvailable =
+    typeof navigator !== 'undefined' ? navigator.onLine === true : false;
+  const toolAvailable = false; // frontend has no direct tool lane
+  const providerAvailable =
+    typeof normalizedMetadata.provider_used === 'string' &&
+    normalizedMetadata.provider_used !== 'fallback';
+
+  const discernmentDecision = buildDiscernmentDecision({
+    profileId: modeClassification.profileId as ResponseProfileId,
+    inferenceState,
+    taskType,
+    memoryAvailable,
+    webAvailable,
+    toolAvailable,
+    providerAvailable,
+    safetyMode: 'normal',
+  });
+
   const response: ConversationResponse = {
     assistant_message: content,
     conversation_id:
@@ -599,6 +988,19 @@ export async function processMessage(
     metadata: normalizedMetadata,
     meta: providerMeta,
     decision,
+    discernment: discernmentDecision,
+    omega_trace_meta: {
+      canonical_mode: modeClassification.canonicalMode,
+      profile_id: modeClassification.profileId,
+      effort_level: modeClassification.effortLevel,
+      model_class: modeClassification.modelClass,
+      classifier_confidence: modeClassification.confidence,
+      classifier_reason_code: modeClassification.reasonCode,
+      classifier_signals: modeClassification.signals,
+      resolved_backend_mode: resolvedConversationMode,
+      provider_used: normalizedMetadata.provider_used,
+      fallback_used: Boolean(metadata['fallback_used']),
+    },
   };
 
   console.log('[conversationEngine] 📥 Backend response:', {

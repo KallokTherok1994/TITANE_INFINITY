@@ -1,0 +1,664 @@
+]633;E;{   echo "# BOOTSTRAP_CAPTURE"\x3b   echo "DATE=$(date -Iseconds)"\x3b   echo "PWD=$PWD"\x3b   echo\x3b   echo "## git status --short --branch"\x3b git status --short --branch\x3b   echo\x3b   echo "## git rev-parse --short HEAD"\x3b git rev-parse --short HEAD\x3b   echo\x3b   echo "## git log -20 --oneline"\x3b git log -20 --oneline\x3b   echo\x3b   echo "## node -v"\x3b node -v\x3b   echo\x3b   echo "## pnpm -v"\x3b pnpm -v\x3b   echo\x3b   echo "## cargo -V"\x3b cargo -V\x3b   echo\x3b   echo "## rustc -V"\x3b rustc -V\x3b   echo\x3b   echo "## pnpm -s run"\x3b pnpm -s run\x3b   echo\x3b   echo "## ls src"\x3b ls -1 src || true\x3b   echo\x3b   echo "## ls src-tauri"\x3b ls -1 src-tauri || true\x3b   echo\x3b   echo "## ls e2e"\x3b ls -1 e2e || true\x3b   echo\x3b   echo "## ls tests"\x3b ls -1 tests || true\x3b   echo\x3b   echo "## ls scripts"\x3b ls -1 scripts || true\x3b } > "$pp/raw/bootstrap_capture.txt";63aeaa0b-d239-4c93-9b98-1f9e07b2c996]633;C# BOOTSTRAP_CAPTURE
+DATE=2026-03-16T15:58:53-04:00
+PWD=/home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+## git status --short --branch
+## MAIN...origin/MAIN
+?? proof_packs/TITANE_MASTER_FUSION_V2_2026-03-16_1558_ce22c1f4f/
+
+## git rev-parse --short HEAD
+ce22c1f4f
+
+## git log -20 --oneline
+ce22c1f4f fix(deploy): resync deployment/latest v28 checksum and size indexes
+4e0ddc44b fix(packaging): remove stale v27.2.0 metadata from tauri bundle config
+04ffc0681 docs(proof): PROD release v28.0.0 sealed (2 E2E cycles + deployment ready)
+ca545df1b docs(proof): add proof-pack for AH-E2E-TIMEOUT-010 hardening cycle
+b7b2552bc fix(e2e): harden E2E specs against wry 0.54.2 WebKit session timeouts
+ff6340b49 fix(e2e): correct infinite loop in ai-verification sendPrompt detection
+c2ecb83ba docs(proof): add post-push smoke addendum
+5a8835c59 test(e2e): harden online chat proof send path
+b6f13f1e0 release(prod): v28.0.0 DONE — AppImage + DEB certified deploy
+8c17c2e98 style(chat): prettier format fix for prod build gate
+32b2273f4 seal(chat-memory): G_BUILD_X3 PASS — cargo check clean + proof pack SEALED
+ad944465a fix(chat-memory-ultimate): P0/P1 — list_restorable + dedup guard + V6 + tests x3 + proof pack
+6b4dc42ec fix(chat-memory): P0 audit — load_conversation_history + ghost cmds + send_message + validators
+5869384d5 fix(vision): remove decorative overlay mock + seal truth addendum
+1d5518b15 audit(ui): certification intégrale UI P1 — ERROR_NOT_SURFACED + MOCK_LEAK fixes
+9a322f7a9 fix(e2e+fmt): session crash false PASS → throw + prettier pass
+223716fe7 chore(fmt+e2e): prettier pass + e2e robustness improvements
+87ad502c5 chore(deploy): resync latest metadata to stable 28.0.0
+5b71a826c fix(audio+design): audio chain causal fix + design system global propagation
+8b79240ce fix(runtime): filter stable artifact export
+
+## node -v
+v24.0.0
+
+## pnpm -v
+10.30.2
+
+## cargo -V
+cargo 1.94.0 (85eff7c80 2026-01-15)
+
+## rustc -V
+rustc 1.94.0 (4a4ef493e 2026-03-02)
+
+## pnpm -s run
+Lifecycle scripts:
+  preinstall
+    node scripts/install/enforce-package-manager.cjs
+  start
+    echo '🔒 TAURI-ONLY MODE: Use pnpm run dev instead' && exit 1
+  test
+    cross-env TZ=UTC NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run
+  prepare
+    husky
+
+Commands available via "pnpm run":
+  dev
+    tauri dev
+  dev:tauri
+    node scripts/launch/dev_tauri_monitor.mjs
+  dev:tauri:raw
+    bash scripts/launch/deploy_full_local_dev.sh
+  dev:tauri:no-ollama
+    bash scripts/launch/deploy_full_local_dev.sh --no-ollama
+  ollama:start
+    ollama serve
+  ollama:status
+    curl -s http://127.0.0.1:11434/api/tags | jq . 2>/dev/null || echo 'Ollama not running'
+  ollama:pull
+    ollama pull llama3.2:latest
+  ollama:bundle
+    bash scripts/prepare-ollama-bundle.sh
+  build
+    vite build
+  postbuild
+    bash scripts/post-build.sh
+  build:prod-safe
+    NPM_CONFIG_IGNORE_SCRIPTS=1 vite build
+  build:prod-safe:verify
+    node scripts/guards/guard-prod-safe-build.mjs
+  guard:ollama-proxy
+    bash scripts/guard/guard-ollama-proxy.sh
+  guard:ipc-only-tests
+    bash scripts/guard/guard-ipc-only-tests.sh
+  guard:dev-bridge
+    node scripts/guard/guard-dev-bridge.mjs
+  guard:ipc-contract
+    cross-env NODE_OPTIONS='--max-old-space-size=8192 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run tests/contract/tauri-ipc-contract.test.ts
+  build:tauri:e2e
+    pnpm run guard:ollama-proxy && bash scripts/e2e/require-e2e-build-authorization.sh && vite build && tauri build --config src-tauri/tauri.conf.json
+  build:production
+    pnpm run lint && pnpm run format:check && pnpm run ollama:bundle && vite build && tauri build && bash scripts/post-build.sh
+  android:init
+    tauri android init
+  android:dev
+    tauri android dev
+  android:build
+    tauri android build --features custom-protocol,mock
+  android:build:debug
+    tauri android build --debug --features custom-protocol,mock
+  preview
+    echo '🔒 TAURI-ONLY MODE' && exit 1
+  lint
+    eslint "src/**/*.{ts,tsx,js,jsx}"
+  lint:fix
+    eslint "src/**/*.{ts,tsx,js,jsx}" --fix
+  lint:staged
+    lint-staged
+  format
+    prettier --write .
+  format:check
+    prettier --check .
+  check
+    tsc --noEmit
+  verify
+    pnpm run lint && pnpm run format:check && pnpm run check && pnpm run test:all && pnpm run verify:tauri-only && pnpm run verify:online-first && pnpm run verify:invariants-governed && pnpm run verify:network-guard && pnpm run guard:ipc-only-tests && pnpm run verify:seal-post-certification && pnpm run verify:instructions && pnpm run verify:docs:mermaid && pnpm run verify:tauri-configs
+  verify:final100
+    pnpm run check && pnpm run lint && pnpm run format:check && pnpm run verify:tauri-only
+  verify:prod-boot
+    node scripts/gates/vite-base-relative-gate.cjs
+  verify:tauri-only
+    bash scripts/verify/enforce-tauri-only.sh
+  verify:online-first
+    bash scripts/verify/enforce-online-first.sh
+  verify:invariants-governed
+    bash scripts/verify/enforce-invariants-governed.sh
+  verify:network-guard
+    bash scripts/guards/guard-network-policy.sh
+  verify:command-whitelist-sync
+    bash scripts/verify/verify-command-whitelist-sync.sh
+  verify:seal-post-certification
+    bash scripts/verify/verify-seal-post-certification.sh
+  verify:instructions
+    bash scripts/verify/verify-copilot-instructions.sh
+  render:docs:mermaid
+    bash scripts/verify/mermaid-render-sync.sh
+  verify:docs:mermaid
+    bash scripts/verify/verify-mermaid-diagrams.sh
+  verify:docs:mermaid:change
+    bash scripts/verify/mermaid-change-request-guard.sh
+  verify:docs:mermaid:diff
+    bash scripts/verify/mermaid-diff-intel.sh
+  verify:docs:mermaid:status
+    bash scripts/verify/mermaid-status-report.sh --check
+  op:mermaid
+    pnpm run verify:docs:mermaid:change && pnpm run render:docs:mermaid && pnpm run verify:docs:mermaid && bash scripts/verify/mermaid-hash-registry.sh --check && bash scripts/verify/verify-mermaid-drift.sh --strict --allowlist docs/diagrams/DRIFT_ALLOWLIST.txt && bash scripts/verify/mermaid-no-self-hash-guard.sh
+  op:mermaid:pack
+    bash scripts/verify/mermaid-proof-pack.sh
+  verify:tauri-configs
+    bash scripts/verify/validate-tauri-configs.sh
+  verify:remediation-permissions
+    node scripts/gates/remediation-permissions-widening-gate.js
+  verify:autopr-v2
+    node scripts/gates/autopr-v2-policy-gate.js
+  verify:staged-patch-v2
+    bash scripts/verify/staged-patch-v2-workflow.sh
+  verify:proof-requirements-v2
+    bash scripts/verify/proof-requirements-v2.sh
+  verify:lab-runner-v2
+    bash scripts/verify/lab-runner-v2.sh
+  verify:scorecard-ci-gate-v2
+    bash scripts/verify/scorecard-ci-gate-v2.sh
+  verify:tauri-bundle-type
+    bash scripts/verify/verify-tauri-bundle-type-warning.sh
+  test:watch
+    cross-env TZ=UTC NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest --watch
+  test:coverage
+    cross-env TZ=UTC NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run --coverage && pnpm run test:coverage:check
+  test:coverage:unit
+    cross-env TZ=UTC NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run -c vitest.unit.config.ts --coverage
+  test:coverage:integration
+    cross-env TZ=UTC NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run -c vitest.integration.config.ts --coverage
+  test:coverage:check
+    bash scripts/verify/verify-coverage.sh
+  test:coverage:report
+    cross-env NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run --coverage && echo 'Open coverage/index.html in browser'
+  e2e:desktop:ensure
+    bash scripts/e2e/ensure-webkit-webdriver.sh
+  e2e:desktop:run
+    node scripts/e2e/run-desktop-suite.js
+  e2e:desktop:proof:online-chat
+    bash scripts/e2e/run-online-chat-proof-ui.sh
+  e2e:desktop
+    pnpm run guard:ollama-proxy && bash scripts/e2e/require-e2e-build-authorization.sh && pnpm run e2e:desktop:ensure && pnpm run e2e:desktop:run
+  test:e2e
+    playwright test e2e
+  test:e2e:playwright
+    playwright test e2e
+  test:e2e:vitest
+    bash -c 'if [[ "${TITANE_E2E_TAURI:-}" != "1" ]]; then echo "SKIP: Vitest E2E (src/tests/e2e) nécessite un contexte Tauri réel. Relance avec TITANE_E2E_TAURI=1"; exit 0; fi; cross-env RUN_E2E_TESTS=1 NODE_OPTIONS="--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs" vitest run src/tests/e2e/titane_e2e.test.ts'
+  test:browser
+    vitest --config vitest.browser.config.ts --run
+  test:browser:ui
+    vitest --config vitest.browser.config.ts --ui
+  test:browser:watch
+    vitest --config vitest.browser.config.ts
+  test:dev-bridge:contract
+    node scripts/dev/dev-bridge-contract-test.mjs
+  test:100
+    pnpm run test && pnpm run test:browser
+  test:100:full
+    pnpm run test && cross-env RUN_E2E_TESTS=1 pnpm run test:e2e:vitest && pnpm run test:browser
+  test:rust
+    mkdir -p dist && cd src-tauri && cargo test --lib
+  test:tauri
+    pnpm run test:rust
+  test:architecture
+    cross-env NODE_OPTIONS='--max-old-space-size=8192 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run src/__tests__/architecture
+  test:compliance
+    cross-env NODE_OPTIONS='--max-old-space-size=8192 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run src/__tests__/compliance
+  test:omega
+    cross-env NODE_OPTIONS='--max-old-space-size=8192 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run src/__tests__/*omega*.test.ts
+  test:all
+    cross-env NODE_OPTIONS='--max-old-space-size=8192' pnpm run test && pnpm run test:rust && pnpm run test:architecture && pnpm run test:compliance
+  test:all:full
+    pnpm run test:all && pnpm run test:e2e:playwright
+  audit
+    pnpm audit && cd src-tauri && cargo audit
+  audit:master
+    ./scripts/audit/00-master-audit.sh
+  audit:security
+    ./scripts/audit/01-security-audit.sh
+  audit:architecture
+    ./scripts/audit/02-architecture-audit.sh
+  audit:performance
+    ./scripts/audit/03-performance-measure.sh
+  audit:coverage
+    ./scripts/audit/04-test-coverage.sh
+  audit:deployment
+    ./scripts/audit/05-deployment-audit.sh
+  audit:auto-fix
+    ./scripts/audit/06-auto-fix.sh
+  audit:quality-gates
+    ./scripts/audit/07-quality-gates.sh
+  clean
+    rm -rf node_modules target dist
+  clean:vite
+    rm -rf node_modules/.vite dist/.vite-cache
+  clean:all
+    rm -rf node_modules/.vite dist node_modules target
+  titane
+    ./titane.sh
+  titane:clean
+    ./titane.sh clean
+  titane:repair
+    ./titane.sh repair
+  titane:fix
+    ./titane.sh fix
+  titane:build
+    ./titane.sh build
+  titane:deploy
+    ./titane.sh deploy
+  titane:full
+    ./titane.sh full
+  titane:health
+    ./titane.sh health
+  titane:dev
+    node scripts/dev/dev-bridge.mjs
+  gate:dist-assets
+    node scripts/gate-dist-assets.mjs
+  gate:appimage-index
+    node scripts/gate-appimage-index.mjs
+  gate:prod-boot
+    bash scripts/gate-prod-boot.sh
+  gate:all
+    pnpm run gate:dist-assets && pnpm run gate:appimage-index
+  stopline:rebuild-proof
+    bash scripts/stopline_rebuild_proof.sh
+  stopline:latest
+    bash scripts/stopline_latest_report.sh
+  reviewer:normalize
+    node scripts/reviewer_gate_normalize.js
+  auto-heal
+    ./scripts/maintenance/auto-heal.sh
+  auto-fix
+    pnpm run lint -- --fix && pnpm run format
+  storybook
+    storybook dev -p 6006
+  build-storybook
+    storybook build
+  docs
+    typedoc
+  docs:serve
+    echo '🔒 TAURI-ONLY MODE' && exit 1
+  copilot-xs:validate
+    node .github/copilot-xs/scripts/validate.js
+  copilot-xs:precommit
+    node .github/copilot-xs/scripts/precommit.js
+  copilot-xs:status
+    node .github/copilot-xs/scripts/agent-status.js
+  copilot-xs:security-scan
+    node .github/copilot-xs/scripts/security-scan.js
+  copilot-xs:test
+    pnpm run copilot-xs:validate && pnpm run test:all
+  cline:install
+    bash .clinerules/install-hooks.sh
+  cline:test-hooks
+    bash -c 'echo Testing hooks... && .clinerules/hooks/TaskStart < tests/fixtures/hook-test-input.json'
+  cline:logs
+    tail -f .clinerules/logs/operations.log
+  cline:verify
+    bash -c 'for hook in TaskStart PreToolUse PostToolUse UserPromptSubmit; do echo "Testing $hook..."; test -x .clinerules/hooks/$hook && echo "✅ $hook" || echo "❌ $hook"; done'
+  registry:log
+    node scripts/registry/log-event.js
+  registry:snapshot
+    node scripts/registry/rebuild-snapshot.js
+  registry:dashboard
+    node scripts/registry/render-dashboard.js
+  registry:cycle:start
+    node scripts/registry/start-cycle.js
+  registry:cycle:close
+    node scripts/registry/close-cycle.js
+  verify:registry:sync
+    node scripts/verify/registry-sync.js
+  verify:registry:integrity
+    node scripts/verify/registry-integrity.js
+  verify:registry:quality
+    node scripts/verify/registry-quality.js
+  verify:registry
+    pnpm -s verify:registry:sync && pnpm -s verify:registry:integrity && pnpm -s verify:registry:quality
+  run:x3:tests
+    bash scripts/lib/run_x3_profile.sh tests
+  run:x3:build
+    bash scripts/lib/run_x3_profile.sh build
+  run:x3:network
+    bash scripts/lib/run_x3_profile.sh network
+
+## ls src
+a11y
+AGENTS.md
+api
+AppMinimal.tsx
+apps
+App.tsx
+assets
+boot-diagnostics.ts
+CARTE_POINTS_CRITIQUES.ts
+cognitive
+components
+config
+constants
+context
+contexts
+core
+data
+_deprecated
+design-system
+dev
+effects
+engines
+entry.ts
+features
+hooks
+i18n
+index.css
+layouts
+lib
+main.tsx
+mocks
+modules
+monitoring
+omnis-final-validation.ts
+os
+pages
+particles
+quantum
+security
+services
+setupTests.ts
+stores
+stories
+styles
+tauri-init-fix.ts
+tauri-protection-patch.ts
+test
+__tests__
+tests
+test-utils
+themes
+types
+ui
+utils
+visual-engine
+vite-env.d.ts
+
+## ls src-tauri
+=
+AGENTS.md
+allowlist.whitelist.stable.json
+benches
+build.rs
+capabilities
+Cargo.lock
+Cargo.toml
+data
+gen
+icons
+memory
+reports
+resources
+SHA256SUMS_v19.5.2
+src
+target
+tauri.base.json
+tauri.conf.json
+test-chat-quick.sh
+tests
+vault
+
+## ls e2e
+AGENTS.md
+beta-smoke.test.js
+chat-provider-decision-certification.spec.ts
+chat-provider-decision-certification-structural.spec.ts
+critical
+desktop
+features
+feedback-loop.spec.ts
+fixtures
+helpers
+omega-pipeline-e2e.spec.ts
+onboarding.test.ts
+runtime-validation
+smoke.test.ts
+user-flows.test.ts
+
+## ls tests
+a11y
+chat
+cognitive-engines-e2e.test.ts
+contract
+e2e
+fixtures
+glm46v-integration.test.ts
+integration
+mocks
+performance
+phase2
+phase3
+phase4
+phase5
+phase6
+polyfills
+release
+run_all_autonomous_tests.sh
+run_all_tests.sh
+security
+setup.ts
+ui-navigation.test.tsx
+unit
+verification
+
+## ls scripts
+activate-node24.sh
+advanced-diagnostic.sh
+AGENTS.md
+analyze-memory-migration.sh
+audit
+audit-charts.sh
+audit-complete.sh
+audit_no_frontend_network.sh
+auto
+auto-all.sh
+autobuild_full.sh
+auto_fix.sh
+autoheal
+auto-replace-console.sh
+auto-test-phase3.sh
+benchmark.sh
+beta-doctor.js
+beta-doctor.sh
+brotli-compress.mjs
+build
+build-fast.sh
+build-in-docker.sh
+build_optimized.sh
+build_titane.sh
+_canon_build_cmd.txt
+certification
+check-allowlist-alignment.mjs
+check_forbidden_files.sh
+checklist-interactive.sh
+checks
+check_structure.sh
+check_system.sh
+ci
+clean_build.sh
+cleanup
+cleanup-console-logs.sh
+cleanup_ds_legacy.sh
+command_surface_diff.py
+commit-session.sh
+convert-debugger-liveos.py
+convert-ipc-features.mjs
+core
+create-release-v27.0.2.sh
+day1_auto_launch.sh
+day1_launch.sh
+deploy-complete.sh
+deployment
+deploy-orchestrator.py
+deploy-production.sh
+deploy_titane.sh
+dev
+dev-clean.sh
+diagnostic
+docs
+doctor.cjs
+e2e
+env
+explore-concepts.sh
+feedback
+final-build.sh
+finalize_100_percent.sh
+final-validation.sh
+final_validation.sh
+fix
+fix_all_remaining.sh
+fix_jsx_apostrophes.py
+fix-jsx-apostrophes.sh
+fix-jsx-batch.py
+fix_p0_issues.sh
+fix-pipeline.js
+fix-prod-v27.0.2.sh
+fix_rust_modules.sh
+fix_security_and_ts.sh
+fix_ts_errors.sh
+fix_typescript_complete.sh
+fix-unwrap-patterns.sh
+gate3_smoke.sh
+gate-appimage-index.mjs
+gate-dist-assets.mjs
+gate-prod-boot.sh
+gates
+git
+governance
+guard
+guard_ipc_provider_meta.cjs
+guards
+health
+images
+init-copilot-xs.sh
+install
+install-all.sh
+install-appimage.sh
+install-deps.sh
+install-tauri-driver.sh
+integrate-fusion-dashboard.sh
+launch
+lib
+maintenance
+map_refresh.sh
+memory_profiling.sh
+merge-all-branches.sh
+merge-dev-to-main.sh
+migrate-console-to-logger.cjs
+monitor_chat_logs.sh
+network
+ollama
+ops
+optimize-frontend-quick.sh
+optimize_vscode.sh
+phases
+pipeline
+post-build.sh
+prepare-ollama-bundle.sh
+profile-runtime.sh
+progress-tracker.sh
+publish
+qa
+quick-auto.sh
+quick-boot-test.sh
+quick-test-v3.sh
+quick-verify.sh
+registry
+remote
+repair_backend.sh
+reviewer_gate_normalize.js
+run_all.ps1
+run_all.sh
+run_e2e_tauri.sh
+run-e2e-tests.sh
+run_final.ps1
+run_final.sh
+run-vite-build.mjs
+run-vitest.mjs
+security
+setup
+setup-branch-protection.sh
+setup-dev.sh
+setup-gemini.sh
+setup-monitoring.sh
+show-summary.sh
+smoke
+stopline_latest_report.sh
+stopline_rebuild_proof.sh
+system-check.sh
+systemd
+tauri
+test
+test-100-percent-suite.sh
+test-all.sh
+test-apis-openai-anthropic.sh
+test_audio.sh
+test-chat-fallback-live.sh
+test-chat-fix.sh
+test_chat_ia.sh
+test-final-e2e.sh
+test-final-integration.sh
+test_perfection_chat_ia.sh
+tests
+test-ui-polish.sh
+test-wrapper.sh
+titane_autofix_frontend.sh
+titane_autofix.sh
+titane-infinity.desktop
+titane_installer.sh
+titane_production_analyze.sh
+titane_production_observe.sh
+titane_resilience_guard.sh
+tools
+ultimate-health.sh
+ultra-diagnostic.sh
+update-desktop-icon.sh
+utils
+v24_auto_observer.sh
+v24_check_progress.sh
+v24_measure_2h_memory.sh
+v26_daily_check.sh
+v26_deployment_verify.sh
+validate-all.sh
+validate_all.sh
+validate-apis-complete.sh
+validate-auto-heal.sh
+validate-boot.sh
+validate-chat-fallback-fix.sh
+validate-chat-pipeline.sh
+validate-fusion-complete.sh
+validate-integration-v3.sh
+validate-phase3.sh
+validate-phase4.sh
+validate-production.sh
+validate_production.sh
+validate-super-prompts-v21.1.sh
+validate-tauri-only.sh
+validate-v35.0.0.sh
+validate-webkit-fix.sh
+validators
+verify
+verify-and-merge-branches.sh
+verify_backend.sh
+verify-branch-sync.sh
+verify_ds_tokens.sh
+verify_env.sh
+verify_frontend_structure.sh
+verify_git_secure.sh
+verify_import_hygiene.sh
+verify_instructions.sh
+verify_memory_integrity.sh
+verify-security-disabled.sh
+verify_singularity_v∞.sh
+verify_system.sh
+verify_tauri_local_only.sh

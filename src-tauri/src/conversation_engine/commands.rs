@@ -713,19 +713,32 @@ pub async fn conversation_generate(
         if parts.is_empty() { None } else { Some(parts.join("\n\n")) }
     };
 
+    let configured_provider = match effective_provider.as_deref() {
+        Some("gemini") => ProviderPreference::Gemini,
+        Some("ollama") => ProviderPreference::Ollama,
+        Some("local") => ProviderPreference::Local,
+        Some("openai") => ProviderPreference::OpenAI,
+        Some("claude" | "anthropic") => ProviderPreference::Claude,
+        _ => ProviderPreference::Auto,
+    };
+
     let request = ConversationRequest {
         user_message: message.clone(),
         conversation_id: Some(conversation_id.clone()),
         mode: conversation_mode,
-        ai_config: effective_provider.map(|p| {
-            let provider_pref = match p.as_str() {
+        ai_config: Some({
+            let provider_pref = effective_provider
+                .as_deref()
+                .map(|p| match p {
                 "gemini" => super::types::ProviderPreference::Gemini,
                 "ollama" => super::types::ProviderPreference::Ollama,
                 "openai" | "gpt" => super::types::ProviderPreference::OpenAI,
                 "claude" | "anthropic" => super::types::ProviderPreference::Claude,
                 "local" => super::types::ProviderPreference::Local,
-                _ => super::types::ProviderPreference::Auto,
-            };
+                _ => configured_provider.clone(),
+            })
+                .unwrap_or(configured_provider);
+
             AIConfig {
                 temperature: 0.7,
                 max_tokens: None,
@@ -1310,6 +1323,8 @@ mod tests {
                 memory_effect: MemoryEffect::New,
                 links_to_contexts: vec![],
                 provider_meta: Some(provider_meta),
+                profile_used: "test".to_string(),
+                memory_sources_injected: 0,
             },
         }
     }

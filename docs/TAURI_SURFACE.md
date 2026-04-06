@@ -3,6 +3,7 @@
 **Version** : 1.0.0  
 **Status** : 🔒 SEALED (Production Certification P0-2)  
 **Date** : 15 janvier 2026  
+**Last Updated** : 2026-04-06 (stable allowlist sync `v30.0.0`)  
 
 ---
 
@@ -17,7 +18,7 @@ Toute modification de l'allowlist stable doit être documentée et justifiée.
 
 ## 📊 Surface Stable Actuelle
 
-### 1. COMMANDS (Tauri Invoke) - 216 Commands Total
+### 1. COMMANDS (Tauri Invoke) - 218 Commands Total
 ```json
 // src-tauri/allowlist.whitelist.stable.json (Production Allowlist)
 {
@@ -124,7 +125,153 @@ Toute modification de l'allowlist stable doit être documentée et justifiée.
 }
 ```
 
-**Total Commands** : 216 commands  
+#### 1.1 Sync complémentaire — stable allowlist documentée (2026-04-06)
+
+> Alignement append-only avec `src-tauri/allowlist.whitelist.stable.json` pour la surface active `v30.0.0`.  
+> Référence : `218` entrées allowlist brutes / `204` noms de commandes uniques.
+
+```json
+          "ai_check_ollama_status",                // STABLE: documented sync 2026-04-06
+          "chat_generate_openai",                // STABLE: documented sync 2026-04-06
+          "chat_get_providers_status",                // STABLE: documented sync 2026-04-06
+          "cloud_get_devices",                // STABLE: documented sync 2026-04-06
+          "cloud_get_status",                // STABLE: documented sync 2026-04-06
+          "cloud_get_sync_history",                // STABLE: documented sync 2026-04-06
+          "cloud_list_backups",                // STABLE: documented sync 2026-04-06
+          "cognitive_get_state",                // STABLE: documented sync 2026-04-06
+          "conversation_generate",                // STABLE: documented sync 2026-04-06
+          "conversation_health_check",                // STABLE: documented sync 2026-04-06
+          "conversation_memory_stats",                // STABLE: documented sync 2026-04-06
+          "conversation_reset",                // STABLE: documented sync 2026-04-06
+          "cp_get_design_config",                // STABLE: documented sync 2026-04-06
+          "cp_get_modules_status",                // STABLE: documented sync 2026-04-06
+          "cp_toggle_module",                // STABLE: documented sync 2026-04-06
+          "create_new_conversation",                // STABLE: documented sync 2026-04-06
+          "engine_health",                // STABLE: documented sync 2026-04-06
+          "engine_init",                // STABLE: documented sync 2026-04-06
+          "engine_metrics",                // STABLE: documented sync 2026-04-06
+          "engine_modules",                // STABLE: documented sync 2026-04-06
+          "engine_singularity_reset",                // STABLE: documented sync 2026-04-06
+          "engine_stop",                // STABLE: documented sync 2026-04-06
+          "engine_tick",                // STABLE: documented sync 2026-04-06
+          "engines_build_get_result",                // STABLE: documented sync 2026-04-06
+          "engines_build_get_status",                // STABLE: documented sync 2026-04-06
+          "engines_monitoring_get_dashboard",                // STABLE: documented sync 2026-04-06
+          "engines_monitoring_get_health",                // STABLE: documented sync 2026-04-06
+          "engines_monitoring_get_metrics",                // STABLE: documented sync 2026-04-06
+          "evolution_get_stats",                // STABLE: documented sync 2026-04-06
+          "exp_get_categories",                // STABLE: documented sync 2026-04-06
+          "exp_get_global_state",                // STABLE: documented sync 2026-04-06
+          "exp_get_projects",                // STABLE: documented sync 2026-04-06
+          "exp_get_talents",                // STABLE: documented sync 2026-04-06
+          "get_all_configs",                // STABLE: documented sync 2026-04-06
+          "get_audio_input_devices",                // STABLE: documented sync 2026-04-06
+          "get_audio_output_devices",                // STABLE: documented sync 2026-04-06
+          "get_cognitive_state",                // STABLE: documented sync 2026-04-06
+          "get_core_info",                // STABLE: documented sync 2026-04-06
+          "get_dashboard_metrics",                // STABLE: documented sync 2026-04-06
+          "get_engines_status",                // STABLE: documented sync 2026-04-06
+          "get_event_stream",                // STABLE: documented sync 2026-04-06
+          "get_helios_metrics",                // STABLE: documented sync 2026-04-06
+          "get_logs",                // STABLE: documented sync 2026-04-06
+          "get_module_health",                // STABLE: documented sync 2026-04-06
+          "get_system_logs",                // STABLE: documented sync 2026-04-06
+          "get_system_metrics",                // STABLE: documented sync 2026-04-06
+          "get_system_state",                // STABLE: documented sync 2026-04-06
+          "get_travel_stats",                // STABLE: documented sync 2026-04-06
+          "harmonia_get_state",                // STABLE: documented sync 2026-04-06
+          "hyper_get_insights",                // STABLE: documented sync 2026-04-06
+          "hyper_get_thoughts",                // STABLE: documented sync 2026-04-06
+          "identity_disable_rule",                // STABLE: documented sync 2026-04-06
+          "identity_enable_rule",                // STABLE: documented sync 2026-04-06
+          "identity_get_active_rules",                // STABLE: documented sync 2026-04-06
+          "identity_get_active_voice_profile",                // STABLE: documented sync 2026-04-06
+          "identity_get_available_modes",                // STABLE: documented sync 2026-04-06
+          "identity_get_coherence_score",                // STABLE: documented sync 2026-04-06
+          "identity_get_current_mode",                // STABLE: documented sync 2026-04-06
+          "identity_get_current_tone",                // STABLE: documented sync 2026-04-06
+          "identity_get_matrix",                // STABLE: documented sync 2026-04-06
+          "identity_get_personality_snapshot",                // STABLE: documented sync 2026-04-06
+          "identity_list_voice_profiles",                // STABLE: documented sync 2026-04-06
+          "identity_set_active_voice_profile",                // STABLE: documented sync 2026-04-06
+          "identity_set_mode",                // STABLE: documented sync 2026-04-06
+          "list_config_presets",                // STABLE: documented sync 2026-04-06
+          "list_conversations",                // STABLE: documented sync 2026-04-06
+          "list_snapshots",                // STABLE: documented sync 2026-04-06
+          "memory_evolve_full",                // STABLE: documented sync 2026-04-06
+          "memory_get_active_projects",                // STABLE: documented sync 2026-04-06
+          "memory_get_active_rituals",                // STABLE: documented sync 2026-04-06
+          "memory_get_all_keys",                // STABLE: documented sync 2026-04-06
+          "memory_get_clusters",                // STABLE: documented sync 2026-04-06
+          "memory_get_entry",                // STABLE: documented sync 2026-04-06
+          "memory_get_knowledge",                // STABLE: documented sync 2026-04-06
+          "memory_get_recent_decisions",                // STABLE: documented sync 2026-04-06
+          "memory_get_stats",                // STABLE: documented sync 2026-04-06
+          "memory_get_timeline",                // STABLE: documented sync 2026-04-06
+          "memory_save_chat_interaction",                // STABLE: documented sync 2026-04-06
+          "memory_search",                // STABLE: documented sync 2026-04-06
+          "mesh_get_stats",                // STABLE: documented sync 2026-04-06
+          "multi_ai_get_state",                // STABLE: documented sync 2026-04-06
+          "nexus_get_state",                // STABLE: documented sync 2026-04-06
+          "one_core_get_engine_status",                // STABLE: documented sync 2026-04-06
+          "one_core_get_event_history",                // STABLE: documented sync 2026-04-06
+          "one_core_get_metrics",                // STABLE: documented sync 2026-04-06
+          "one_core_get_state",                // STABLE: documented sync 2026-04-06
+          "one_core_list_commands",                // STABLE: documented sync 2026-04-06
+          "orchestrator_get_metrics",                // STABLE: documented sync 2026-04-06
+          "orchestrator_get_state",                // STABLE: documented sync 2026-04-06
+          "orchestrator_init",                // STABLE: documented sync 2026-04-06
+          "orchestrator_run_cycle",                // STABLE: documented sync 2026-04-06
+          "orchestrator_set_mode",                // STABLE: documented sync 2026-04-06
+          "performance_get_metrics",                // STABLE: documented sync 2026-04-06
+          "qa_get_hardening_config",                // STABLE: documented sync 2026-04-06
+          "qa_get_logs",                // STABLE: documented sync 2026-04-06
+          "qa_get_performance_report",                // STABLE: documented sync 2026-04-06
+          "qa_get_state",                // STABLE: documented sync 2026-04-06
+          "qa_get_system_metrics",                // STABLE: documented sync 2026-04-06
+          "qa_get_test_result",                // STABLE: documented sync 2026-04-06
+          "qa_list_alerts",                // STABLE: documented sync 2026-04-06
+          "qa_list_monitors",                // STABLE: documented sync 2026-04-06
+          "qa_list_test_suites",                // STABLE: documented sync 2026-04-06
+          "reality_get_state",                // STABLE: documented sync 2026-04-06
+          "sc_get_cluster_peers",                // STABLE: documented sync 2026-04-06
+          "sc_get_cluster_status",                // STABLE: documented sync 2026-04-06
+          "sc_get_diagnostic_status",                // STABLE: documented sync 2026-04-06
+          "sc_get_env",                // STABLE: documented sync 2026-04-06
+          "sc_get_log_stats",                // STABLE: documented sync 2026-04-06
+          "sc_get_logs",                // STABLE: documented sync 2026-04-06
+          "sc_hypervision_get_anomalies",                // STABLE: documented sync 2026-04-06
+          "sc_hypervision_get_layers",                // STABLE: documented sync 2026-04-06
+          "sc_hypervision_get_metrics",                // STABLE: documented sync 2026-04-06
+          "sc_hypervision_get_state",                // STABLE: documented sync 2026-04-06
+          "selfheal_force_evaluation",                // STABLE: documented sync 2026-04-06
+          "selfheal_get_health",                // STABLE: documented sync 2026-04-06
+          "selfheal_get_prediction",                // STABLE: documented sync 2026-04-06
+          "selfheal_get_state",                // STABLE: documented sync 2026-04-06
+          "send_audio_chunk",                // STABLE: documented sync 2026-04-06
+          "set_audio_input_device",                // STABLE: documented sync 2026-04-06
+          "set_audio_output_device",                // STABLE: documented sync 2026-04-06
+          "singularity_self_check",                // STABLE: documented sync 2026-04-06
+          "test_microphone",                // STABLE: documented sync 2026-04-06
+          "titan_get_persistence_status",                // STABLE: documented sync 2026-04-06
+          "titan_state_get",                // STABLE: documented sync 2026-04-06
+          "tts_speak",                // STABLE: documented sync 2026-04-06
+          "update_chat_engine_config",                // STABLE: documented sync 2026-04-06
+          "vad_configure",                // STABLE: documented sync 2026-04-06
+          "vad_get_state",                // STABLE: documented sync 2026-04-06
+          "vad_process_frame",                // STABLE: documented sync 2026-04-06
+          "vad_reset",                // STABLE: documented sync 2026-04-06
+          "window_get_zoom",                // STABLE: documented sync 2026-04-06
+          "window_is_fullscreen",                // STABLE: documented sync 2026-04-06
+          "window_set_fullscreen",                // STABLE: documented sync 2026-04-06
+          "window_set_zoom",                // STABLE: documented sync 2026-04-06
+          "window_toggle_fullscreen",                // STABLE: documented sync 2026-04-06
+          "window_zoom_in",                // STABLE: documented sync 2026-04-06
+          "window_zoom_out",                // STABLE: documented sync 2026-04-06
+          "window_zoom_reset",                // STABLE: documented sync 2026-04-06
+```
+
+**Total Commands** : 218 commands  
 **Classification** :
 - **READ** : lecture données/état système
 - **WRITE** : modification données utilisateur
@@ -154,7 +301,7 @@ img-src 'self' data: asset: tauri:;
 font-src 'self' data: tauri:;
 ```
 
-**Surface Réseau** : ZÉRO (local-first strict)
+**Surface Réseau directe UI → externe** : ZÉRO (doctrine active : online-first gouverné via gateway canonique + fallback local obligatoire)
 
 ---
 
@@ -237,6 +384,11 @@ info!("[AUDIT] Memory vault unlock attempt by user");
 ---
 
 ## 🔄 Évolution Historique
+
+### v29.0.0 (sync documentaire surface stable) - 6 avril 2026
+- **Alignement** : ajout append-only des commandes stables manquantes depuis `src-tauri/allowlist.whitelist.stable.json`
+- **Impact** : synchronisation documentaire de la surface P0-2 sans élargissement runtime supplémentaire dans ce patch
+- **Preuve locale** : `bash scripts/security/surface-guard.sh`
 
 ### v26.3.1 (PHASE 6) - 15 janvier 2026
 - **Ajout** : `unlock_memory_vault`, `lock_memory_vault` 

@@ -1,0 +1,6 @@
+pack=proof_packs/AUTHORIZED_TRIGGER_ACTIVATION_2026-03-07_0838_757ae4d4c
+short_sha=757ae4d4c
+branch=MAIN
+active_complementary_states=STANDBY_CONFIRMED,WAKE_PROTOCOL_READY,GOVERNED_IDLE_CONFIRMED
+canonical_baseline=757ae4d4c
+trigger_signal_file=raw/trigger_signal_capture.txt

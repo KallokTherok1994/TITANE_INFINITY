@@ -1,0 +1,30 @@
+src/types/web-speech-api.d.ts:69:  AudioContext?: typeof AudioContext;
+src/types/web-speech-api.d.ts:70:  webkitAudioContext?: typeof AudioContext;
+src/engines/spatial/holophonicEngine.ts:196:  private audioContext: AudioContext | null;
+src/engines/spatial/holophonicEngine.ts:227:      const AudioContextClass =
+src/engines/spatial/holophonicEngine.ts:230:            typeof globalThis & { webkitAudioContext?: typeof AudioContext }
+src/engines/spatial/holophonicEngine.ts:231:        ).AudioContext ||
+src/engines/spatial/holophonicEngine.ts:234:            typeof globalThis & { webkitAudioContext?: typeof AudioContext }
+src/engines/spatial/holophonicEngine.ts:235:        ).webkitAudioContext;
+src/engines/spatial/holophonicEngine.ts:236:      if (!AudioContextClass) {
+src/engines/spatial/holophonicEngine.ts:237:        throw new Error('AudioContext not supported');
+src/engines/spatial/holophonicEngine.ts:239:      this.audioContext = new AudioContextClass();
+src/engines/spatial/holophonicEngine.ts:413:    // Nécessiterait MediaDevices.getUserMedia ou Web Audio API extensions
+src/engines/spatial/holophonicEngine.ts:451:  public getContext(): AudioContext | null {
+src/core/realtime/RealTimeExecutionEngine.ts:499:      const audioContext = new AudioContext();
+src/core/realtime/RealTimeExecutionEngine.ts:562:  private audioContext: AudioContext | null = null;
+src/core/realtime/RealTimeExecutionEngine.ts:566:    if (typeof window !== 'undefined' && window.AudioContext) {
+src/core/realtime/RealTimeExecutionEngine.ts:567:      this.audioContext = new AudioContext();
+src/utils/APISupport.ts:26:   * Vérifier si getUserMedia (caméra/micro) est supportée
+src/utils/APISupport.ts:30:      return !!navigator.mediaDevices?.getUserMedia;
+src/utils/APISupport.ts:61:   * Vérifier si MediaRecorder est disponible
+src/utils/APISupport.ts:64:  supportsMediaRecorder(): boolean {
+src/utils/APISupport.ts:67:      window.MediaRecorder &&
+src/utils/APISupport.ts:68:      navigator.mediaDevices?.getUserMedia
+src/utils/APISupport.ts:86:    return !!(typeof window !== 'undefined' && window.speechSynthesis);
+src/utils/APISupport.ts:174:      mediaRecorder: this.supportsMediaRecorder(),
+src/lib/notificationSystem.ts:187:      const AudioContextClass =
+src/lib/notificationSystem.ts:188:        window.AudioContext ||
+src/lib/notificationSystem.ts:189:        (window as typeof window & { webkitAudioContext?: typeof AudioContext })
+src/lib/notificationSystem.ts:190:          .webkitAudioContext;
+src/lib/notificationSystem.ts:191:      if (!AudioContextClass) return;

@@ -321,7 +321,7 @@ export interface GovernanceState {
   geminiStatus: GeminiKeyStatus | null;
   openaiStatus: GeminiKeyStatus | null;
   anthropicStatus: GeminiKeyStatus | null;
-  copilotStatus: GeminiKeyStatus | null; // ✨ v26.3 - GitHub Copilot
+  copilotStatus: GeminiKeyStatus | null; // ✨ v30.0.0 - GitHub Copilot
   ollamaStatus: OllamaStatus | null;
 
   // Politiques

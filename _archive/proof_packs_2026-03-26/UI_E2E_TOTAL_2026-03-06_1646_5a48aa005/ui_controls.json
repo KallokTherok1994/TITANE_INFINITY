@@ -1,0 +1,47 @@
+{
+	"pack": "UI_E2E_TOTAL_2026-03-06_1646_5a48aa005",
+	"source": [
+		"e2e/desktop/ui-driver.wdio.js",
+		"e2e/desktop/ui-ultra-smoke.e2e.js",
+		"e2e/desktop/ui-ultra-full.e2e.js"
+	],
+	"controls": {
+		"readiness": [
+			"[data-testid=\"app-ready\"]",
+			"[data-testid=\"ipc-ready\"]",
+			"[data-testid=\"chat-ready\"]"
+		],
+		"navigation": [
+			"[data-testid=\"nav-top-main\"]",
+			"[data-testid=\"btn-nav-more\"]",
+			"[data-testid=\"nav-titane\"]",
+			"[data-testid=\"nav-time\"]",
+			"[data-testid=\"nav-stats\"]",
+			"[data-testid=\"nav-admin\"]",
+			"[data-testid=\"nav-dev\"]"
+		],
+		"chat": [
+			"[data-testid=\"chat-input\"]",
+			"[data-testid=\"chat-send\"]",
+			"[data-testid=\"chat-message-user\"]",
+			"[data-testid=\"chat-message-assistant\"]",
+			"[data-testid=\"chat-error\"]",
+			"[data-testid=\"chat-loading\"]",
+			"[data-testid=\"select-chat-provider\"]"
+		],
+		"forms": [
+			"input[type=\"text\"]",
+			"input[type=\"search\"]",
+			"input[type=\"email\"]",
+			"input[type=\"url\"]",
+			"input[type=\"tel\"]",
+			"input[type=\"number\"]",
+			"input[type=\"password\"]",
+			"textarea",
+			"input[type=\"checkbox\"]"
+		],
+		"modal_drawer": [
+			"[data-testid=\"btn-mode-builder\"]"
+		]
+	}
+}

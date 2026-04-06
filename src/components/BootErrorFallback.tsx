@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.3.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * 🔥 BOOT ERROR FALLBACK
@@ -218,7 +218,7 @@ export function BootErrorFallback({
       </div>
 
       <p style={{ color: '#666', fontSize: '0.8rem', marginTop: '2rem' }}>
-        TITANE∞ v26.3.0 | Appuyez sur F12 pour ouvrir DevTools
+        TITANE∞ v30.0.0 | Appuyez sur F12 pour ouvrir DevTools
       </p>
 
       <style

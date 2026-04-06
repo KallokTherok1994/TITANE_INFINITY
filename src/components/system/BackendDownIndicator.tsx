@@ -119,6 +119,12 @@ export const BackendDownIndicator: React.FC<BackendDownIndicatorProps> = ({
               </h3>
 
               <p className="text-sm text-yellow-200/90 leading-relaxed">
+                {unavailableReason === 'all-backends-down' && (
+                  <>
+                    Le backend Rust et Ollama local sont tous les deux indisponibles.
+                    Vérifiez les logs puis redémarrez l'application et le service Ollama.
+                  </>
+                )}
                 {unavailableReason === 'ollama-offline' && (
                   <>
                     Le serveur Ollama local est hors ligne. Veuillez démarrer Ollama pour

@@ -5,8 +5,8 @@
  */
 
 import React from 'react';
-import { describe, it, expect, beforeEach } from 'vitest';
-import { render, screen, act } from '@testing-library/react';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { render, screen, act, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { TitanePage } from '../../pages/TitanePage';
 import { AppShell } from '../../components/layout/AppShell';
@@ -18,6 +18,49 @@ import {
   navigationRegistry,
 } from '../../types/ui-layout-contract';
 
+const primeChatStorage = () => {
+  const conversationId = 'conv-ui-nav-test';
+  const now = Date.now();
+
+  window.localStorage.setItem('titane_active_conversation_id', conversationId);
+  window.localStorage.setItem(
+    `titane_conversation_${conversationId}`,
+    JSON.stringify({
+      id: conversationId,
+      title: 'UI navigation test conversation',
+      created_at: new Date(now).toISOString(),
+      updated_at: new Date(now).toISOString(),
+      messages: [
+        {
+          role: 'assistant',
+          content: 'Navigation test ready',
+          timestamp: now,
+          metadata: { uiId: 'ui-nav-seed-1' },
+        },
+      ],
+    })
+  );
+  window.localStorage.setItem(
+    'titane_chat_mode_default',
+    JSON.stringify({
+      mode: 'default',
+      messages: [],
+      compressed: [],
+      lastCompacted: now,
+    })
+  );
+};
+
+const renderWithRouter = async (ui: React.ReactElement) => {
+  primeChatStorage();
+  render(React.createElement(BrowserRouter, null, ui));
+
+  await act(async () => {
+    await Promise.resolve();
+    await Promise.resolve();
+  });
+};
+
 // ═══════════════════════════════════════════════════════════════
 // TEST 1: SINGLE TOPNAV (CONSTITUTION ARTICLE 1)
 // ═══════════════════════════════════════════════════════════════
@@ -27,34 +70,30 @@ describe('UI Navigation — Single TopNav (Article 1)', () => {
     navigationRegistry.reset();
   });
 
-  const renderTopNavShell = () => {
+  const renderTopNavShell = async () => {
     const items: TopNavItem[] = [
       { id: 'titane', label: 'TITANE', icon: '⚡', route: '/titane' },
       { id: 'time', label: 'TIME', icon: '🕐', route: '/time' },
     ];
 
-    render(
+    await renderWithRouter(
       React.createElement(
-        BrowserRouter,
-        null,
-        React.createElement(
-          AppShell,
-          {
-            topNav: React.createElement(TopNav, {
-              items,
-              currentRoute: '/titane',
-              onNavigate: () => undefined,
-              maxVisibleItems: 5,
-            }),
-          },
-          React.createElement('div', null)
-        )
+        AppShell,
+        {
+          topNav: React.createElement(TopNav, {
+            items,
+            currentRoute: '/titane',
+            onNavigate: () => undefined,
+            maxVisibleItems: 5,
+          }),
+        },
+        React.createElement('div', null)
       )
     );
   };
 
-  it('renders exactly one TopNav component globally', () => {
-    renderTopNavShell();
+  it('renders exactly one TopNav component globally', async () => {
+    await renderTopNavShell();
 
     // Chercher toutes les navigations globales
     const navElements = screen.queryAllByRole('navigation', {
@@ -62,6 +101,35 @@ describe('UI Navigation — Single TopNav (Article 1)', () => {
     });
 
     expect(navElements).toHaveLength(1);
+  });
+
+  it('marks the More menu active when the current route belongs to an overflow item', async () => {
+    const items: TopNavItem[] = [
+      { id: 'titane', label: 'TITANE', icon: '⚡', route: '/titane' },
+      { id: 'time', label: 'TIME', icon: '🕐', route: '/time' },
+      { id: 'admin', label: 'ADMIN', icon: '⚙️', route: '/admin' },
+      { id: 'dev', label: 'DEV', icon: '🛠️', route: '/dev' },
+      { id: 'fusion', label: 'FUSION', icon: '✨', route: '/fusion' },
+      { id: 'optimization', label: 'OPTIMIZE', icon: '⚡', route: '/optimization' },
+    ];
+
+    await renderWithRouter(
+      React.createElement(TopNav, {
+        items,
+        currentRoute: '/optimization',
+        onNavigate: () => undefined,
+        maxVisibleItems: 5,
+      })
+    );
+
+    const moreButton = screen.getByTestId('btn-nav-more');
+    expect(moreButton).toHaveAttribute('aria-current', 'page');
+
+    fireEvent.click(moreButton);
+    expect(screen.getByTestId('nav-optimization')).toHaveAttribute(
+      'aria-current',
+      'page'
+    );
   });
 
   it('programmatic check: countTopNavInstances === 1', () => {
@@ -110,10 +178,8 @@ describe('UI Navigation — Tabs Not Navbar-Like (Article 2)', () => {
     navigationRegistry.reset();
   });
 
-  it('TitanePage tabs do not have TopNav-like backdrop-filter', () => {
-    render(
-      React.createElement(BrowserRouter, null, React.createElement(TitanePage, null))
-    );
+  it('TitanePage tabs do not have TopNav-like backdrop-filter', async () => {
+    await renderWithRouter(React.createElement(TitanePage, null));
 
     const tablist = screen.getByRole('tablist', {
       name: /sections principales titane/i,
@@ -125,10 +191,8 @@ describe('UI Navigation — Tabs Not Navbar-Like (Article 2)', () => {
     expect(styles.backdropFilter).toMatch(/^(none|)$/);
   });
 
-  it('TitanePage tabs do not have excessive box-shadow', () => {
-    render(
-      React.createElement(BrowserRouter, null, React.createElement(TitanePage, null))
-    );
+  it('TitanePage tabs do not have excessive box-shadow', async () => {
+    await renderWithRouter(React.createElement(TitanePage, null));
 
     const tablist = screen.getByRole('tablist');
     const styles = window.getComputedStyle(tablist);
@@ -141,10 +205,8 @@ describe('UI Navigation — Tabs Not Navbar-Like (Article 2)', () => {
     }
   });
 
-  it('TitanePage tabs are not sticky by default', () => {
-    render(
-      React.createElement(BrowserRouter, null, React.createElement(TitanePage, null))
-    );
+  it('TitanePage tabs are not sticky by default', async () => {
+    await renderWithRouter(React.createElement(TitanePage, null));
 
     const tablist = screen.getByRole('tablist');
     const styles = window.getComputedStyle(tablist);
@@ -191,15 +253,16 @@ describe('UI Navigation — Scroll Behavior (Article 3)', () => {
   });
 
   it('scrolling does not reveal double sticky headers', async () => {
-    render(
-      React.createElement(BrowserRouter, null, React.createElement(TitanePage, null))
-    );
+    await renderWithRouter(React.createElement(TitanePage, null));
 
     // Simulate scroll
     window.scrollTo(0, 500);
 
     // Wait for any potential sticky effects
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+    });
 
     // Count sticky elements
     const stickyElements = document.querySelectorAll(
@@ -266,17 +329,23 @@ describe('UI Navigation — Layout Compliance', () => {
   });
 
   it('warns when local-tabs are sticky', () => {
-    navigationRegistry.register({
-      id: 'tabs-sticky',
-      region: 'local-tabs',
-      componentName: 'StickyTabs',
-      scope: 'local',
-      isSticky: true, // Violation
-    });
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
-    const report = checkLayoutCompliance();
+    try {
+      navigationRegistry.register({
+        id: 'tabs-sticky',
+        region: 'local-tabs',
+        componentName: 'StickyTabs',
+        scope: 'local',
+        isSticky: true, // Violation
+      });
 
-    // Should have warnings (not critical)
-    expect(report.warnings).toBeGreaterThan(0);
+      const report = checkLayoutCompliance();
+
+      // Should have warnings (not critical)
+      expect(report.warnings).toBeGreaterThan(0);
+    } finally {
+      warnSpy.mockRestore();
+    }
   });
 });

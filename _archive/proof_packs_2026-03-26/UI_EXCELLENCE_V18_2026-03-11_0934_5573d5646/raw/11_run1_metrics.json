@@ -1,0 +1,69 @@
+{
+  "runId": "run1",
+  "timestamp": "2026-03-11T13:38:12.759Z",
+  "titane": {
+    "q8": {
+      "noCriticalOverlay": true,
+      "zoomComputed": "0.75",
+      "chatMessagesVisible": true
+    },
+    "frictions": [
+      {
+        "symptom": "No dedicated focus-visible rule for tab buttons",
+        "category": "FRICTION_ACCESSIBILITY_PERCEPTIBLE",
+        "fixability": "SAFE_AUTO_FIX",
+        "criticality": "P1",
+        "surface": "titane-inline-tabs",
+        "impact": "Keyboard focus coherence and discoverability reduced",
+        "id": "FX-FOCUS-TABS-001"
+      }
+    ],
+    "q2": {
+      "inputContrast": 21,
+      "selectedTabReadable": true
+    },
+    "q4": {
+      "contentReflowReasonable": true,
+      "pagePadding": "16px",
+      "headerPadding": "24px"
+    },
+    "q5": {
+      "sendDisabledAtIdle": true,
+      "tabFocusRulePresent": false,
+      "inputPresent": true,
+      "sendPresent": true
+    },
+    "q1": {
+      "headingCount": 3,
+      "hierarchySpreadPx": 12,
+      "primaryTitlePresent": true
+    },
+    "meta": {
+      "url": "tauri://localhost/titane",
+      "viewport": {
+        "w": 1400,
+        "h": 900
+      }
+    },
+    "q6": {
+      "selectedTabCount": 1,
+      "tablistPresent": true,
+      "tabsCount": 8,
+      "tabpanelBound": true
+    },
+    "q3": {
+      "shellHeaderPresent": true,
+      "activeVsInactiveDistinct": true,
+      "tabsUniformRadius": true
+    },
+    "q7": {
+      "visibleActionButtons": 104,
+      "noWhiteScreen": true
+    }
+  },
+  "admin": {
+    "hasSettingsKeyword": true,
+    "buttonCount": 107,
+    "titleText": "⚡ TITANE"
+  }
+}

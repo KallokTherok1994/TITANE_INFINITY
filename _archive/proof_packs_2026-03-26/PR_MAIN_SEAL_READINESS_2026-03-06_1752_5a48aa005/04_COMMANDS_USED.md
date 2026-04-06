@@ -1,0 +1,22 @@
+# 04 Commands Used
+
+- `git status --short --branch`
+- `git status --porcelain`
+- `git diff --name-only`
+- `git diff --stat`
+- `git diff --cached --name-only`
+- `git diff --cached --stat`
+- `git rev-parse --short HEAD`
+- `git branch --show-current`
+- `git log -20 --oneline`
+- `gh pr status`
+- `gh pr view --json state,isDraft,mergeable,reviewDecision,statusCheckRollup,headRefName,baseRefName,url`
+- `gh run list --limit 10`
+- `gh run list -R KallokTherok1994/TITANE_INFINITY --limit 10 --json databaseId,workflowName,headBranch,status,conclusion,url`
+- `gh api repos/KallokTherok1994/TITANE_INFINITY/branches/MAIN/protection`
+- `bash scripts/verify_instructions.sh`
+- `bash scripts/autoheal/detect_recurrence.sh`
+- `bash scripts/gates/g_frontend_no_web.sh`
+- `bash scripts/gates/g_network_one_door.sh`
+- `bash scripts/gates/g_no_test_skips.sh`
+- `grep -F 'VERDICT: PASS' proof_packs/UI_E2E_TOTAL_2026-03-06_1646_5a48aa005/16_VERDICT.md`

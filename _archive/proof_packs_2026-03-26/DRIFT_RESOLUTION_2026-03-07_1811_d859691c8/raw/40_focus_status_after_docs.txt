@@ -1,0 +1,5 @@
+ M registry/closure-events.jsonl
+ M registry/proofpack-index.jsonl
+ M runtime/stable/manifest.json
+ M titane-infinity.desktop
+?? proof_packs/DRIFT_RESOLUTION_2026-03-07_1811_d859691c8/

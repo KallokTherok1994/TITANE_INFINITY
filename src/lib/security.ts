@@ -97,6 +97,7 @@ export const VOID_COMMANDS = new Set<string>([
   // Persistence commands that return ()
   'titan_persist_event',
   'titan_force_snapshot',
+  'titan_force_snapshot_current',
   'titan_persistence_init',
   'titan_persistence_shutdown',
   // Logging commands that return ()
@@ -345,6 +346,8 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'load_conversation',
   'chat_set_gemini_key',
   'chat_stream_message',
+  'chat_mode_change', // ✅ v30.0.0 — Chat mode switching
+  'chat_mode_sync', // ✅ v30.0.0 — Chat mode sync
   'chat_generate_suggestions', // ✅ v∞ Suggestions IA
   'generate_response',
   'stream_response',
@@ -498,6 +501,16 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'devops_stats',
 
   // ═══════════════════════════════════════════════════════════════
+  // TOTAL_DEV — GOD DEV Governed Space (v30.0.0)
+  // ═══════════════════════════════════════════════════════════════
+  'total_dev_unlock',
+  'total_dev_session_status',
+  'total_dev_revoke',
+  'total_dev_git_op',
+  'total_dev_run_command',
+  'total_dev_read_file',
+
+  // ═══════════════════════════════════════════════════════════════
   // SECURE COMMANDS (v∞)
   // ═══════════════════════════════════════════════════════════════
   'secure_import_file',
@@ -569,12 +582,14 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'voice_check_interruption',
   'voice_test_pipeline',
   'voice_get_available_models',
+  'calibrate_titane_voice', // ✅ v30.0.0 — TITANE voice calibration
 
   // ═══════════════════════════════════════════════════════════════
   // PERSISTENCE ENGINE v∞.MPE
   // ═══════════════════════════════════════════════════════════════
   'titan_persist_event',
   'titan_force_snapshot',
+  'titan_force_snapshot_current',
   'titan_load_state',
   'titan_get_events_since',
   'titan_list_snapshots',
@@ -829,7 +844,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'context_link_conversations',
 
   // ═══════════════════════════════════════════════════════════════
-  // VISUAL DEVOPS ENGINE (v25.5)
+  // VISUAL DEVOPS ENGINE (v30.0.0)
   // ═══════════════════════════════════════════════════════════════
   'visual_devops_analyze_screen',
   'visual_devops_detect_elements',
@@ -988,6 +1003,29 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'evolution_reject_suggestion',
   'evolution_create_action',
 
+  // v30.0.0 — Evolution persistence and data submission
+  'evolution_save_state',
+  'submit_evolution_data',
+
+  // ═══════════════════════════════════════════════════════════════
+  // KNOWLEDGE VAULT (v30.0.0)
+  // ═══════════════════════════════════════════════════════════════
+  'knowledge_ingest',
+  'knowledge_save_state',
+
+  // ═══════════════════════════════════════════════════════════════
+  // AGENDA / TIME CENTER (v30.0.0)
+  // ═══════════════════════════════════════════════════════════════
+  'agenda_save_event',
+  'agenda_save_events',
+  'agenda_delete_event',
+  'agenda_sync',
+
+  // ═══════════════════════════════════════════════════════════════
+  // PROGRESSION / XP (v30.0.0)
+  // ═══════════════════════════════════════════════════════════════
+  'progression_save_state',
+
   // ═══════════════════════════════════════════════════════════════
   // META & ORCHESTRATION (v24.4+)
   // ═══════════════════════════════════════════════════════════════
@@ -1104,7 +1142,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'get_onboarding_preferences',
 
   // ═══════════════════════════════════════════════════════════════
-  // OMEGA CONVERSATION ENGINE (v26.2)
+  // OMEGA CONVERSATION ENGINE (v30.0.0)
   // Pipeline de conversation 12 étapes - Cerveau IA TITANE
   // ═══════════════════════════════════════════════════════════════
   'create_new_conversation',
@@ -1118,7 +1156,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'conversation_behavioral_check',
 
   // ═══════════════════════════════════════════════════════════════
-  // LITERARY ENGINE (v26.2)
+  // LITERARY ENGINE (v30.0.0)
   // Moteur littéraire OMEGA pour style et ton
   // ═══════════════════════════════════════════════════════════════
   'literary_engine_process',
@@ -1126,7 +1164,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'literary_engine_get_style_profile',
 
   // ═══════════════════════════════════════════════════════════════
-  // ANTHOLOGY ENGINE (v26.2)
+  // ANTHOLOGY ENGINE (v30.0.0)
   // Intégration anthologie et ADN littéraire
   // ═══════════════════════════════════════════════════════════════
   'anthology_integrate_text',
@@ -1252,7 +1290,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'sync_evolution_state',
 
   // ═══════════════════════════════════════════════════════════════
-  // WINDOW CONTROLS (v26.2.0+)
+  // WINDOW CONTROLS (v30.0.0+)
   // Zoom + Fullscreen (CTRL+Scroll, F11, F12)
   // ═══════════════════════════════════════════════════════════════
   'window_get_zoom',
@@ -1341,7 +1379,7 @@ function maybeCleanupCallTracking(now: number): void {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// v26.2 - LOCAL NETWORK SECURITY MODE
+// v30.0.0 - LOCAL NETWORK SECURITY MODE
 // Pour réseau domestique sécurisé privé - restrictions réduites
 // ═══════════════════════════════════════════════════════════════
 
@@ -2068,28 +2106,5 @@ export function getSecurityStats() {
 // ═══════════════════════════════════════════════════════════════
 // v19.0 PHASE 2: AI SECURITY MODULES
 // ═══════════════════════════════════════════════════════════════
-
-export { AIInputSanitizer, type SanitizationResult } from './security/AIInputSanitizer';
-export {
-  AIResponseValidator,
-  type AIValidationResult,
-  ChatResponseSchema,
-  StreamingChunkSchema,
-  MetaModeResponseSchema,
-  type ChatResponse,
-  type StreamingChunk,
-  type MetaModeResponse,
-} from './security/AIResponseValidator';
-export {
-  AIRateLimiter,
-  globalAIRateLimiter,
-  type RateLimitConfig,
-  type RateLimitStatus,
-  type RequestMetrics,
-} from './security/AIRateLimiter';
-export {
-  SecureAIService,
-  type SecureAIRequest,
-  type SecureAIResponse,
-  type SecureAIServiceFunction,
-} from './security/SecureAIService';
+// NOTE: AI security modules (AIInputSanitizer, AIResponseValidator, AIRateLimiter)
+// are not yet implemented. Remove these exports when modules are created.

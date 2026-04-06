@@ -25,6 +25,8 @@ export interface ChatContextEnvelope {
   routeContext: {
     route: string;
     aliasResolvedFrom?: string;
+    pageState?: string;
+    fullRoute?: string;
     updatedAt: number;
   };
   moduleContext: {
@@ -227,6 +229,7 @@ function buildTags(
   return Array.from(
     new Set([
       `route:${moduleContext.route}`,
+      ...(moduleContext.pageState ? [`page:${moduleContext.pageState}`] : []),
       `module:${moduleContext.moduleId}`,
       `truth:${moduleContext.dataTruthClass}`,
       `mode:${mode}`,
@@ -253,6 +256,8 @@ export function formatContextEnvelopeForSystemPrompt(
   return [
     '## CONTEXT_ENVELOPE_V44',
     `route=${envelope.routeContext.route}`,
+    `full_route=${envelope.routeContext.fullRoute ?? envelope.routeContext.route}`,
+    `page_state=${envelope.routeContext.pageState ?? 'none'}`,
     `module=${envelope.moduleContext.moduleId} (${envelope.moduleContext.moduleName})`,
     `module_type=${envelope.moduleContext.moduleType}`,
     `truth_class=${envelope.moduleContext.dataTruthClass}`,
@@ -306,6 +311,8 @@ export function buildChatContextEnvelope(
     routeContext: {
       route: moduleContext.route,
       aliasResolvedFrom: moduleContext.aliasResolvedFrom,
+      pageState: moduleContext.pageState,
+      fullRoute: moduleContext.fullRoute,
       updatedAt: moduleContext.updatedAt,
     },
     moduleContext: {

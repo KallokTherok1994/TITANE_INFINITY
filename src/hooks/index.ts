@@ -7,7 +7,7 @@
 // TITANE∞ v24.3.0 - Hooks Central Export
 // ═══════════════════════════════════════════════════════════════
 
-// ═══ v25.7.4 RESPONSIVE DESIGN HOOKS ═══
+// ═══ v30.0.0 RESPONSIVE DESIGN HOOKS ═══
 export {
   useResponsive,
   useIsMobile,
@@ -22,7 +22,7 @@ export {
   type Device,
 } from './useResponsive';
 
-// ═══ v25.3.2 PERFECT FUSION HOOKS ═══
+// ═══ v30.0.0 PERFECT FUSION HOOKS ═══
 export {
   useSingularitySync,
   type SingularitySyncOptions,
@@ -59,7 +59,7 @@ export {
   type UseSystemHealthReturn,
 } from './useSystemHealth';
 
-// ═══ MISSING HOOKS EXPORTS (v26.4.0 Phase 2) ═══
+// ═══ MISSING HOOKS EXPORTS (v30.0.0 Phase 2) ═══
 export { useFusionEngine } from './useFusionEngine';
 export { useWindowControls } from './useWindowControls';
 export { useKeyboardShortcuts } from './useKeyboardShortcuts';
@@ -129,7 +129,7 @@ export type {
 
 // Connection & Providers
 export { useConnection } from './useConnection';
-export type { ConnectionStatus } from './useConnection';
+export type { ConnectionStatus, ConnectionState } from './useConnection';
 
 // System Vitals
 export { useVitals } from './useVitals';
@@ -796,3 +796,6 @@ export { useToast, type ToastType, type ToastOptions } from './useToast';
 export { useTwinIdentity } from './useTwinIdentity';
 export { useTwinEvolution } from './useTwinEvolution';
 export { useTwinBehavior } from './useTwinBehavior';
+
+// ═══ PHASE 2.3.3 — STORE SYNCHRONIZATION ═══
+export { useStoreSync } from './useStoreSync';

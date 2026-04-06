@@ -1,0 +1,393 @@
+{
+  "version": "v20.0Ω",
+  "last_updated": "2026-03-26T15:22:00Z",
+  "total_entries": 28,
+  "stm": {
+    "count": 3,
+    "byId": [
+      [
+        "stm-001",
+        {
+          "id": "stm-001",
+          "content": "User prefers detailed technical explanations with code examples",
+          "type": "preference",
+          "importance": 0.2,
+          "timestamp": 1742777400000,
+          "lastAccessed": 1742777400000,
+          "accessCount": 1,
+          "ttl": 300000
+        }
+      ],
+      [
+        "stm-002",
+        {
+          "id": "stm-002",
+          "content": "Current conversation about memory system audit and correction",
+          "type": "conversation",
+          "importance": 0.1,
+          "timestamp": 1742777400000,
+          "lastAccessed": 1742777400000,
+          "accessCount": 0,
+          "ttl": 300000,
+          "conversationId": "conv-current"
+        }
+      ],
+      [
+        "stm-003",
+        {
+          "id": "stm-003",
+          "content": "Memory system audit initiated - correcting version inconsistencies and data structure",
+          "type": "context",
+          "importance": 0.25,
+          "timestamp": 1742843000000,
+          "lastAccessed": 1742843000000,
+          "accessCount": 1,
+          "ttl": 3600000,
+          "conversationId": "conv-audit-2026-03-24"
+        }
+      ]
+    ],
+    "byType": {
+      "preference": ["stm-001"],
+      "conversation": ["stm-002"],
+      "context": ["stm-003"]
+    }
+  },
+  "mtm": {
+    "count": 9,
+    "byId": [
+      [
+        "mtm-001",
+        {
+          "id": "mtm-001",
+          "content": "Memory importance thresholds: STM < 0.3, MTM 0.3-0.7, LTM > 0.7",
+          "type": "knowledge",
+          "importance": 0.5,
+          "timestamp": 1742777400000,
+          "lastAccessed": 1742777400000,
+          "accessCount": 1
+        }
+      ],
+      [
+        "mtm-002",
+        {
+          "id": "mtm-002",
+          "content": "User prefers French language for technical discussions",
+          "type": "preference",
+          "importance": 0.5,
+          "timestamp": 1742777400000,
+          "lastAccessed": 1742843000000,
+          "accessCount": 3
+        }
+      ],
+      [
+        "mtm-003",
+        {
+          "id": "mtm-003",
+          "content": "User prefers metal theme for UI",
+          "type": "preference",
+          "importance": 0.4,
+          "timestamp": 1742777400000,
+          "lastAccessed": 1742843000000,
+          "accessCount": 2
+        }
+      ],
+      [
+        "mtm-004",
+        {
+          "id": "mtm-004",
+          "content": "Memory compaction enabled by default for performance optimization",
+          "type": "preference",
+          "importance": 0.6,
+          "timestamp": 1742777400000,
+          "lastAccessed": 1742843000000,
+          "accessCount": 2
+        }
+      ],
+      [
+        "mtm-005",
+        {
+          "id": "mtm-005",
+          "content": "System metrics: 25 total requests, 2.3 MB memory usage, 12% CPU usage, 180ms avg response time",
+          "type": "context",
+          "importance": 0.5,
+          "timestamp": 1742843000000,
+          "lastAccessed": 1742843000000,
+          "accessCount": 1
+        }
+      ],
+      [
+        "mtm-006",
+        {
+          "id": "mtm-006",
+          "content": "Performance metrics: avg response 150ms, peak CPU 7, memory efficiency 0.95",
+          "type": "context",
+          "importance": 0.6,
+          "timestamp": 1742843000000,
+          "lastAccessed": 1742843000000,
+          "accessCount": 1
+        }
+      ],
+      [
+        "mtm-007",
+        {
+          "id": "mtm-007",
+          "content": "Diagnostic financier Kevin Thibault — 5 gisements: clarté/cohérence/structuration, accompagnement transformation, structuration positionnement, IA systèmes cognitifs, transformation espace/matière",
+          "type": "strategy",
+          "importance": 0.65,
+          "timestamp": 1743000000000,
+          "lastAccessed": 1743000000000,
+          "accessCount": 1
+        }
+      ],
+      [
+        "mtm-008",
+        {
+          "id": "mtm-008",
+          "content": "Positionnement optimal Kevin Thibault: Architecte de cohérence vivance pour humains, projets et systèmes en surcharge",
+          "type": "strategy",
+          "importance": 0.6,
+          "timestamp": 1743000000000,
+          "lastAccessed": 1743000000000,
+          "accessCount": 1
+        }
+      ],
+      [
+        "mtm-009",
+        {
+          "id": "mtm-009",
+          "content": "Diagnostic stratégique: profil rare d'intégrateur-bâtisseur avec intelligence architecturale intégrative",
+          "type": "strategy",
+          "importance": 0.6,
+          "timestamp": 1743000000000,
+          "lastAccessed": 1743000000000,
+          "accessCount": 1
+        }
+      ]
+    ],
+    "byType": {
+      "knowledge": ["mtm-001"],
+      "preference": ["mtm-002", "mtm-003", "mtm-004"],
+      "context": ["mtm-005", "mtm-006"],
+      "strategy": ["mtm-007", "mtm-008", "mtm-009"]
+    }
+  },
+  "ltm": {
+    "count": 16,
+    "byId": [
+      [
+        "ltm-001",
+        {
+          "id": "ltm-001",
+          "content": "TITANE∞ v24.3.0 — Proprietary License © 2025 Humain Total / Kevin Thibault",
+          "type": "license",
+          "importance": 0.8,
+          "timestamp": 1742777400000,
+          "lastAccessed": 1742777400000,
+          "accessCount": 1
+        }
+      ],
+      [
+        "ltm-002",
+        {
+          "id": "ltm-002",
+          "content": "Memory importance thresholds: STM < 0.3, MTM 0.3-0.7, LTM > 0.7",
+          "type": "knowledge",
+          "importance": 0.9,
+          "timestamp": 1742777400000,
+          "lastAccessed": 1742777400000,
+          "accessCount": 1
+        }
+      ],
+      [
+        "ltm-003",
+        {
+          "id": "ltm-003",
+          "content": "Tech stack: Tauri + React + TypeScript + Rust backend",
+          "type": "knowledge",
+          "importance": 0.8,
+          "timestamp": 1742777400000,
+          "lastAccessed": 1742777400000,
+          "accessCount": 1
+        }
+      ],
+      [
+        "ltm-004",
+        {
+          "id": "ltm-004",
+          "content": "AI providers: titane-local, tauri-backend, ollama, gemini, claude, openai",
+          "type": "knowledge",
+          "importance": 0.9,
+          "timestamp": 1742777400000,
+          "lastAccessed": 1742777400000,
+          "accessCount": 1
+        }
+      ],
+      [
+        "ltm-005",
+        {
+          "id": "ltm-005",
+          "content": "Three-tier memory system: STM (<0.3), MTM (0.3-0.7), LTM (>0.7) based on importance scores",
+          "type": "knowledge",
+          "importance": 0.9,
+          "timestamp": 1742777400000,
+          "lastAccessed": 1742843000000,
+          "accessCount": 5
+        }
+      ],
+      [
+        "ltm-006",
+        {
+          "id": "ltm-006",
+          "content": "Memory LTM system successfully initialized. Cognitive memory activated with initial knowledge base.",
+          "type": "knowledge",
+          "importance": 0.85,
+          "timestamp": 1742777400000,
+          "lastAccessed": 1742843000000,
+          "accessCount": 3
+        }
+      ],
+      [
+        "ltm-007",
+        {
+          "id": "ltm-007",
+          "content": "Project TITANE uses Tauri + React + TypeScript. Configurations in tauri.base.json and package.json.",
+          "type": "knowledge",
+          "importance": 0.8,
+          "timestamp": 1742777400000,
+          "lastAccessed": 1742843000000,
+          "accessCount": 2,
+          "conversationId": "conv-001"
+        }
+      ],
+      [
+        "ltm-008",
+        {
+          "id": "ltm-008",
+          "content": "Global consciousness level: 1.0, coherence factor: 0.95, entropy: 0.05, self-awareness: true",
+          "type": "knowledge",
+          "importance": 0.9,
+          "timestamp": 1742843000000,
+          "lastAccessed": 1742843000000,
+          "accessCount": 1
+        }
+      ],
+      [
+        "ltm-009",
+        {
+          "id": "ltm-009",
+          "content": "Meta-learning: 1 pattern detected, 5 self-corrections, 2 evolution cycles, learning rate 0.01",
+          "type": "knowledge",
+          "importance": 0.85,
+          "timestamp": 1742843000000,
+          "lastAccessed": 1742843000000,
+          "accessCount": 1
+        }
+      ],
+      [
+        "ltm-010",
+        {
+          "id": "ltm-010",
+          "content": "Quantum state: superposition active, entanglement nodes [cognitive, memory_core, harmonics], coherence time 1000ms",
+          "type": "knowledge",
+          "importance": 0.8,
+          "timestamp": 1742843000000,
+          "lastAccessed": 1742843000000,
+          "accessCount": 1
+        }
+      ],
+      [
+        "ltm-011",
+        {
+          "id": "ltm-011",
+          "content": "System engines: Helios (AI ollama), Nexus (hybrid memory), Harmonia (CPU throttle), Sentinel (monitoring), Memory (10MB gzip)",
+          "type": "knowledge",
+          "importance": 0.85,
+          "timestamp": 1742843000000,
+          "lastAccessed": 1742843000000,
+          "accessCount": 1
+        }
+      ],
+      [
+        "ltm-012",
+        {
+          "id": "ltm-012",
+          "content": "Kevin Thibault — Identité: Architecte de cohérence vivance, bâtisseur humain, artisan du réel. Entreprise: Humain à Tout Faire Inc. Chicoutimi, Québec.",
+          "type": "identity",
+          "importance": 0.95,
+          "timestamp": 1743000000000,
+          "lastAccessed": 1743000000000,
+          "accessCount": 1
+        }
+      ],
+      [
+        "ltm-013",
+        {
+          "id": "ltm-013",
+          "content": "Projets: Humain Total (écosystème), TITANE∞ (système cognitif), Kallok's Arts (boutique POD), Livre 'Là où tout s'éclaircit!' (12 chapitres)",
+          "type": "knowledge",
+          "importance": 0.9,
+          "timestamp": 1743000000000,
+          "lastAccessed": 1743000000000,
+          "accessCount": 1
+        }
+      ],
+      [
+        "ltm-014",
+        {
+          "id": "ltm-014",
+          "content": "Cadre Humain Total — 12 chapitres: authenticité, écoute intérieure, ancrage, clarification, espace de vie, rituels, mission, rythme, entourage, blessures, incarnation, œuvre vivance",
+          "type": "methodology",
+          "importance": 0.85,
+          "timestamp": 1743000000000,
+          "lastAccessed": 1743000000000,
+          "accessCount": 1
+        }
+      ],
+      [
+        "ltm-015",
+        {
+          "id": "ltm-015",
+          "content": "Intelligences dominantes: logique-structurale, kinesthésique, visuelle-spatiale, narrative, interpersonnelle, systémique. Intelligence architecturale intégrative.",
+          "type": "knowledge",
+          "importance": 0.8,
+          "timestamp": 1743000000000,
+          "lastAccessed": 1743000000000,
+          "accessCount": 1
+        }
+      ],
+      [
+        "ltm-016",
+        {
+          "id": "ltm-016",
+          "content": "Carte potentiel — 12 pôles: méthode signature, figure référence, créateur écosystème, produit numérique, référence intellectuelle, traducteur mondes, coach haute complexité, propriété intellectuelle, leadership cohérence, communauté alignée, création transmédiatique, espace transformation",
+          "type": "knowledge",
+          "importance": 0.85,
+          "timestamp": 1743000000000,
+          "lastAccessed": 1743000000000,
+          "accessCount": 1
+        }
+      ]
+    ],
+    "byType": {
+      "license": ["ltm-001"],
+      "knowledge": [
+        "ltm-002",
+        "ltm-003",
+        "ltm-004",
+        "ltm-005",
+        "ltm-006",
+        "ltm-007",
+        "ltm-008",
+        "ltm-009",
+        "ltm-010",
+        "ltm-011",
+        "ltm-013",
+        "ltm-015",
+        "ltm-016"
+      ],
+      "identity": ["ltm-012"],
+      "methodology": ["ltm-014"]
+    }
+  }
+}

@@ -130,7 +130,8 @@ export const sharedTestConfig = defineConfig({
       'src/tests/browser/**',
       '**/*.perf.test.{ts,tsx}',
 
-      // Contract test with pre-existing violations (post-IPC remediation)
+      // Legacy PHASE_2 contract gate is kept for audit history only; CI uses
+      // the canonical IPC guard in `tests/contract/tauri-ipc-contract.test.ts`.
       'tests/contract/tauri.contract.test.ts',
 
       // OMEGA E2E automated validation: requires real Tauri backend + provider retries.

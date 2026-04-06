@@ -1,0 +1,9 @@
+]633;E;{   echo "SOURCE_PACK_EXISTS=$(test -d proof_packs/UI_E2E_TOTAL_2026-03-06_1646_5a48aa005 && echo YES || echo NO)"\x3b   echo "SOURCE_VERDICT_EXISTS=$(test -f proof_packs/UI_E2E_TOTAL_2026-03-06_1646_5a48aa005/16_VERDICT.md && echo YES || echo NO)"\x3b   echo "SOURCE_VERDICT_PASS=$(rg -n 'VERDICT: PASS|`VERDICT: PASS`' proof_packs/UI_E2E_TOTAL_2026-03-06_1646_5a48aa005/16_VERDICT.md -S >/dev/null && echo YES || echo NO)"\x3b   echo "SOURCE_X3_LOG_EXISTS=$(test -f proof_packs/UI_E2E_TOTAL_2026-03-06_1646_5a48aa005/08_TESTS_X3.log && echo YES || echo NO)"\x3b   echo "SOURCE_FULL_POSTFIX3_SUMMARY=$(rg -n 'SUMMARY\\\\|id=full_postfix3\\\\|pass=3\\\\|fail=0\\\\|status=PASS' proof_packs/UI_E2E_TOTAL_2026-03-06_1646_5a48aa005/08_TESTS_X3.log -S >/dev/null && echo YES || echo NO)"\x3b   echo "SOURCE_SMOKE_POSTFIX3_SUMMARY=$(rg -n 'SUMMARY\\\\|id=smoke_postfix3\\\\|pass=3\\\\|fail=0\\\\|status=PASS' proof_packs/UI_E2E_TOTAL_2026-03-06_1646_5a48aa005/08_TESTS_X3.log -S >/dev/null && echo YES || echo NO)"\x3b   echo "SOURCE_GATE_NETWORK_POSTFIX=$(rg -n 'G_NETWORK_ONE_DOOR: PASS' proof_packs/UI_E2E_TOTAL_2026-03-06_1646_5a48aa005/gate_network_one_door_postfix.log -S >/dev/null && echo YES || echo NO)"\x3b   echo "SOURCE_GATE_FRONTEND_POSTFIX=$(rg -n 'G_FRONTEND_NO_WEB: PASS' proof_packs/UI_E2E_TOTAL_2026-03-06_1646_5a48aa005/gate_frontend_no_web_postfix.log -S >/dev/null && echo YES || echo NO)"\x3b   echo "SOURCE_GATE_NOSKIPS_POSTFIX=$(rg -n 'G_NO_TEST_SKIPS: PASS' proof_packs/UI_E2E_TOTAL_2026-03-06_1646_5a48aa005/gate_no_test_skips_postfix.log -S >/dev/null && echo YES || echo NO)"\x3b } > "$PACK/raw_baseline_checks.txt";830e6420-725f-4004-a97e-db958a2aa03c]633;CSOURCE_PACK_EXISTS=YES
+SOURCE_VERDICT_EXISTS=YES
+SOURCE_VERDICT_PASS=YES
+SOURCE_X3_LOG_EXISTS=YES
+SOURCE_FULL_POSTFIX3_SUMMARY=YES
+SOURCE_SMOKE_POSTFIX3_SUMMARY=YES
+SOURCE_GATE_NETWORK_POSTFIX=YES
+SOURCE_GATE_FRONTEND_POSTFIX=YES
+SOURCE_GATE_NOSKIPS_POSTFIX=YES

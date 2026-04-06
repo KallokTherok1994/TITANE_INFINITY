@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v25.4.0 — DEV PAGE (Fusion Complete)
+ * TITANE∞ v30.0.0 — DEV PAGE (Fusion Complete)
  * Centre unifié développement: Dev Mode + ONE CORE + QA & Tests + Orchestration
  *
  * Fusion de 4 modules → 1 module DEV (8 sections)
@@ -10,6 +10,7 @@
 
 import { tauriClient } from '@/lib/tauriClient';
 import React, { useState, useEffect, useCallback, memo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { logger } from '@/lib/logger';
 import { useDeveloperMode } from '@/features/developer-mode/useDeveloperMode';
@@ -23,8 +24,8 @@ import type {
   SystemMetrics,
 } from '@/features/qa-monitoring/types';
 import type { OneCoreState } from '@/features/one-core/types';
-// ✨ v25.4.1 - Web Vitals monitoring (planned for future implementation)
-// ✨ v25.6.0 - Ultimate Optimization Dashboard (Phase 12)
+// ✨ v30.0.0 - Web Vitals monitoring remains deferred until a dedicated proof-backed rollout
+// ✨ v30.0.0 - Ultimate Optimization Dashboard (Phase 12)
 import { UltimateOptimizationDashboard } from '@/components/optimization/UltimateOptimizationDashboard';
 import './DevPage.css';
 import { StatsSystemPanels } from './Stats';
@@ -37,6 +38,18 @@ import { useSystemHealth } from '@/stores/systemStore.selectors';
 // ═══════════════════════════════════════════════════════════════════════════
 
 type SectionId = 'overview' | 'diagnostics' | 'operations' | 'validation' | 'security';
+
+const VALID_SECTIONS: SectionId[] = [
+  'overview',
+  'diagnostics',
+  'operations',
+  'validation',
+  'security',
+];
+
+const isSectionId = (value: string | null): value is SectionId => {
+  return value !== null && VALID_SECTIONS.includes(value as SectionId);
+};
 
 interface OrchestrationState {
   multiAi: {
@@ -634,7 +647,11 @@ MetricsSection.displayName = 'MetricsSection';
 // ═══════════════════════════════════════════════════════════════════════════
 
 function DevPageContent(): JSX.Element {
-  const [activeSection, setActiveSection] = useState<SectionId>('overview');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeSection, setActiveSection] = useState<SectionId>(() => {
+    const requestedSection = searchParams.get('tab');
+    return isSectionId(requestedSection) ? requestedSection : 'overview';
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -724,6 +741,28 @@ function DevPageContent(): JSX.Element {
     loadData();
   }, [loadData]);
 
+  const updateActiveSection = useCallback(
+    (nextSection: SectionId) => {
+      setActiveSection(nextSection);
+      setSearchParams(
+        prev => {
+          const next = new URLSearchParams(prev);
+          next.set('tab', nextSection);
+          return next;
+        },
+        { replace: true }
+      );
+    },
+    [setSearchParams]
+  );
+
+  useEffect(() => {
+    const requestedSection = searchParams.get('tab');
+    if (isSectionId(requestedSection) && requestedSection !== activeSection) {
+      setActiveSection(requestedSection);
+    }
+  }, [activeSection, searchParams]);
+
   // Handlers
   const handleExecuteCommand = useCallback(
     async (command: string) => {
@@ -811,7 +850,7 @@ function DevPageContent(): JSX.Element {
       <header className="dev-header">
         <div className="dev-header-content">
           <h1>🔧 DEV Cockpit</h1>
-          <span className="dev-version">TITANE∞ v29.0 • 5 tabs fusionnés</span>
+          <span className="dev-version">TITANE∞ v30.0.0 • 5 tabs fusionnés</span>
         </div>
         <button
           className="dev-btn dev-btn--primary"
@@ -828,7 +867,7 @@ function DevPageContent(): JSX.Element {
             key={section.id}
             data-testid={`tab-dev-${section.id}`}
             className={`dev-tab ${activeSection === section.id ? 'dev-tab--active' : ''}`}
-            onClick={() => setActiveSection(section.id)}
+            onClick={() => updateActiveSection(section.id)}
           >
             <span className="dev-tab-icon">{section.icon}</span>
             <span className="dev-tab-label">{section.label}</span>

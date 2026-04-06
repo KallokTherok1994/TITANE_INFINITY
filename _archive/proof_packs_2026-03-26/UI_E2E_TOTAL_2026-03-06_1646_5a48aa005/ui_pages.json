@@ -1,0 +1,89 @@
+{
+	"pack": "UI_E2E_TOTAL_2026-03-06_1646_5a48aa005",
+	"source": "e2e/desktop/page-objects/uiPages.po.js",
+	"pages": [
+		{
+			"id": "titane",
+			"route": "/titane",
+			"navTestId": "nav-titane",
+			"root": "[data-testid=\"page-titane\"]",
+			"tabs": [
+				"[data-testid=\"tab-conversation\"]",
+				"[data-testid=\"tab-overview\"]",
+				"[data-testid=\"tab-vision\"]",
+				"[data-testid=\"tab-identity\"]",
+				"[data-testid=\"tab-memory\"]",
+				"[data-testid=\"tab-memory-evolution\"]",
+				"[data-testid=\"tab-progression\"]",
+				"[data-testid=\"tab-transformation\"]"
+			]
+		},
+		{
+			"id": "time",
+			"route": "/time",
+			"navTestId": "nav-time",
+			"root": "[data-testid=\"page-time\"]",
+			"tabs": [
+				"[data-testid=\"tab-time-now\"]",
+				"[data-testid=\"tab-time-agenda\"]",
+				"[data-testid=\"tab-time-timeline\"]",
+				"[data-testid=\"tab-time-snapshots\"]",
+				"[data-testid=\"tab-time-intelligence\"]",
+				"[data-testid=\"tab-time-flow\"]"
+			]
+		},
+		{
+			"id": "stats",
+			"route": "/stats",
+			"navTestId": "nav-stats",
+			"root": "[data-testid=\"page-stats\"]",
+			"tabs": []
+		},
+		{
+			"id": "admin",
+			"route": "/admin",
+			"navTestId": "nav-admin",
+			"root": "[data-testid=\"page-admin\"]",
+			"tabs": [
+				"[data-testid=\"tab-admin-system\"]",
+				"[data-testid=\"tab-admin-config\"]",
+				"[data-testid=\"tab-admin-audio\"]",
+				"[data-testid=\"tab-admin-design\"]",
+				"[data-testid=\"tab-admin-governance\"]",
+				"[data-testid=\"tab-admin-production-health\"]"
+			]
+		},
+		{
+			"id": "dev",
+			"route": "/dev",
+			"navTestId": "nav-dev",
+			"root": "[data-testid=\"page-dev\"]",
+			"tabs": [
+				"[data-testid=\"tab-dev-overview\"]",
+				"[data-testid=\"tab-dev-diagnostic\"]",
+				"[data-testid=\"tab-dev-devtools\"]",
+				"[data-testid=\"tab-dev-command-center\"]",
+				"[data-testid=\"tab-dev-system-commands\"]",
+				"[data-testid=\"tab-dev-qa-tests\"]",
+				"[data-testid=\"tab-dev-orchestration\"]",
+				"[data-testid=\"tab-dev-security\"]",
+				"[data-testid=\"tab-dev-metrics\"]",
+				"[data-testid=\"tab-dev-optimization\"]"
+			]
+		},
+		{
+			"id": "fusion",
+			"route": "/fusion",
+			"navTestId": "nav-fusion",
+			"root": "[data-testid=\"page-fusion\"]",
+			"tabs": []
+		},
+		{
+			"id": "optimization",
+			"route": "/optimization",
+			"navTestId": "nav-optimization",
+			"root": "[data-testid=\"page-optimization\"]",
+			"tabs": []
+		}
+	]
+}

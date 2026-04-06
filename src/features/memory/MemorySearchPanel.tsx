@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
@@ -10,6 +10,7 @@
 
 import React, { useState, useMemo, useCallback } from 'react';
 import { Search, Filter, Clock, Tag } from 'lucide-react';
+import { useDebounce } from '@/hooks/useDebounce';
 import './MemorySearchPanel.css';
 
 interface MemoryEntry {
@@ -24,31 +25,53 @@ interface MemoryEntry {
 interface MemorySearchPanelProps {
   entries?: MemoryEntry[];
   onEntryClick?: (entry: MemoryEntry) => void;
+  allowIllustrativeFallback?: boolean;
+  selectedEntryId?: string | null;
+  isLoading?: boolean;
 }
 
 export const MemorySearchPanel: React.FC<MemorySearchPanelProps> = ({
   entries,
   onEntryClick,
+  allowIllustrativeFallback = false,
+  selectedEntryId: controlledSelectedEntryId,
+  isLoading = false,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
   const [selectedType, setSelectedType] = useState<string>('all');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [dateRange, setDateRange] = useState<string>('all');
+  const [internalSelectedEntryId, setInternalSelectedEntryId] = useState<string | null>(
+    null
+  );
 
-  // Mock entries si pas de données (Tauri inactif)
-  const isMockData = entries === undefined;
+  // Les données illustratives ne doivent jamais apparaitre par défaut en runtime.
+  const isMockData = allowIllustrativeFallback && entries === undefined;
   const memoryEntries = useMemo(() => {
-    if (entries) return entries;
-    return generateMockEntries();
-  }, [entries]);
+    if (entries !== undefined) return entries;
+    return isMockData ? generateMockEntries() : [];
+  }, [entries, isMockData]);
+
+  const hasActiveFilters =
+    debouncedSearchQuery.trim().length > 0 ||
+    selectedType !== 'all' ||
+    selectedTags.length > 0 ||
+    dateRange !== 'all';
+  const isBootstrappingMemory = isLoading && memoryEntries.length === 0;
+  const isEmptyPersistentMemory = memoryEntries.length === 0 && !isMockData;
+  const resolvedSelectedEntryId =
+    controlledSelectedEntryId !== undefined
+      ? controlledSelectedEntryId
+      : internalSelectedEntryId;
 
   // Filtrer entrées
   const filteredEntries = useMemo(() => {
     let filtered = memoryEntries;
 
     // Filtre par recherche
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
+    if (debouncedSearchQuery) {
+      const query = debouncedSearchQuery.toLowerCase();
       filtered = filtered.filter(
         entry =>
           entry.content.toLowerCase().includes(query) ||
@@ -84,7 +107,7 @@ export const MemorySearchPanel: React.FC<MemorySearchPanelProps> = ({
     }
 
     return filtered.sort((a, b) => (b.relevance || 0) - (a.relevance || 0));
-  }, [memoryEntries, searchQuery, selectedType, selectedTags, dateRange]);
+  }, [memoryEntries, debouncedSearchQuery, selectedType, selectedTags, dateRange]);
 
   // All available tags
   const availableTags = useMemo(() => {
@@ -125,6 +148,8 @@ export const MemorySearchPanel: React.FC<MemorySearchPanelProps> = ({
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
           className="search-input"
+          disabled={isEmptyPersistentMemory || isBootstrappingMemory}
+          aria-disabled={isEmptyPersistentMemory || isBootstrappingMemory}
         />
         {searchQuery && (
           <button
@@ -144,6 +169,8 @@ export const MemorySearchPanel: React.FC<MemorySearchPanelProps> = ({
           className="filter-select"
           value={selectedType}
           onChange={e => setSelectedType(e.target.value)}
+          disabled={isEmptyPersistentMemory || isBootstrappingMemory}
+          aria-disabled={isEmptyPersistentMemory || isBootstrappingMemory}
         >
           <option value="all">Tous types</option>
           <option value="short">Court terme</option>
@@ -156,6 +183,8 @@ export const MemorySearchPanel: React.FC<MemorySearchPanelProps> = ({
           className="filter-select"
           value={dateRange}
           onChange={e => setDateRange(e.target.value)}
+          disabled={isEmptyPersistentMemory || isBootstrappingMemory}
+          aria-disabled={isEmptyPersistentMemory || isBootstrappingMemory}
         >
           <option value="all">Toutes dates</option>
           <option value="today">Aujourd&apos;hui</option>
@@ -166,9 +195,28 @@ export const MemorySearchPanel: React.FC<MemorySearchPanelProps> = ({
         {/* Results count */}
         <div className="results-count">
           <Filter size={14} />
-          <span>{filteredEntries.length} résultats</span>
+          <span>
+            {isBootstrappingMemory
+              ? 'Chargement...'
+              : isEmptyPersistentMemory
+                ? '0 entrée mémoire'
+                : `${filteredEntries.length} résultats`}
+          </span>
         </div>
       </div>
+
+      {isBootstrappingMemory && (
+        <div className="memory-search-disabled-note" role="status">
+          Chargement de l&apos;index mémoire persistant...
+        </div>
+      )}
+
+      {!isBootstrappingMemory && isEmptyPersistentMemory && (
+        <div className="memory-search-disabled-note" role="status">
+          La recherche sémantique restera inactive tant qu&apos;aucune mémoire réelle
+          n&apos;aura été consolidée.
+        </div>
+      )}
 
       {/* Tags */}
       {availableTags.length > 0 && (
@@ -200,18 +248,43 @@ export const MemorySearchPanel: React.FC<MemorySearchPanelProps> = ({
             </span>
           </div>
         )}
-        {filteredEntries.length === 0 ? (
+        {isBootstrappingMemory ? (
+          <div className="no-results" role="status">
+            <Search size={48} className="no-results-icon" />
+            <p>Chargement de la mémoire persistante</p>
+            <small>Les résultats apparaîtront dès que l&apos;index réel sera prêt.</small>
+          </div>
+        ) : filteredEntries.length === 0 ? (
           <div className="no-results">
             <Search size={48} className="no-results-icon" />
-            <p>Aucun résultat trouvé</p>
-            <small>Essayez d&apos;autres mots-clés ou filtres</small>
+            <p>
+              {memoryEntries.length === 0 && !hasActiveFilters
+                ? 'Aucune entrée mémoire indexée'
+                : 'Aucun résultat trouvé'}
+            </p>
+            <small>
+              {isEmptyPersistentMemory && !hasActiveFilters
+                ? "La recherche sémantique s'activera dès qu'une entrée réelle sera consolidée."
+                : "Essayez d'autres mots-clés ou filtres"}
+            </small>
           </div>
         ) : (
           filteredEntries.map(entry => (
             <div
               key={entry.id}
-              className="memory-entry"
-              onClick={() => onEntryClick?.(entry)}
+              data-testid={`memory-search-entry-${entry.id}`}
+              data-selected={resolvedSelectedEntryId === entry.id ? 'true' : 'false'}
+              className={`memory-entry ${
+                resolvedSelectedEntryId === entry.id ? 'selected' : ''
+              }`}
+              onClick={() => {
+                if (controlledSelectedEntryId === undefined) {
+                  setInternalSelectedEntryId(prev =>
+                    prev === entry.id ? null : entry.id
+                  );
+                }
+                onEntryClick?.(entry);
+              }}
             >
               <div className="entry-header">
                 <span className={`entry-type ${entry.type}`}>

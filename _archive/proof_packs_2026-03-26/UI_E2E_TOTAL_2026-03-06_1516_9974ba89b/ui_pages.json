@@ -1,0 +1,274 @@
+[
+  {
+    "name": "AdaptiveEngine",
+    "file": "src/pages/AdaptiveEngine.tsx",
+    "route": "/adaptive",
+    "critical": false,
+    "status": "partially_testable",
+    "risk": "low"
+  },
+  {
+    "name": "AgendaPage",
+    "file": "src/pages/AgendaPage.tsx",
+    "route": null,
+    "critical": false,
+    "status": "partially_testable",
+    "risk": "low"
+  },
+  {
+    "name": "CameraPage",
+    "file": "src/pages/CameraPage.tsx",
+    "route": null,
+    "critical": false,
+    "status": "partially_testable",
+    "risk": "low"
+  },
+  {
+    "name": "ChatPage",
+    "file": "src/pages/ChatPage.tsx",
+    "route": null,
+    "critical": true,
+    "status": "partially_testable",
+    "risk": "high"
+  },
+  {
+    "name": "CognitivePage",
+    "file": "src/pages/CognitivePage.tsx",
+    "route": null,
+    "critical": false,
+    "status": "partially_testable",
+    "risk": "low"
+  },
+  {
+    "name": "ConfigurationHub",
+    "file": "src/pages/ConfigurationHub.tsx",
+    "route": null,
+    "critical": true,
+    "status": "testable",
+    "risk": "high"
+  },
+  {
+    "name": "DashboardPage",
+    "file": "src/pages/DashboardPage.tsx",
+    "route": null,
+    "critical": true,
+    "status": "partially_testable",
+    "risk": "high"
+  },
+  {
+    "name": "DesignSystemPage",
+    "file": "src/pages/DesignSystemPage.tsx",
+    "route": null,
+    "critical": false,
+    "status": "partially_testable",
+    "risk": "low"
+  },
+  {
+    "name": "DesignSystemShowcase",
+    "file": "src/pages/DesignSystemShowcase.tsx",
+    "route": null,
+    "critical": false,
+    "status": "partially_testable",
+    "risk": "low"
+  },
+  {
+    "name": "DevPage",
+    "file": "src/pages/DevPage.tsx",
+    "route": null,
+    "critical": false,
+    "status": "testable",
+    "risk": "low"
+  },
+  {
+    "name": "DevTools",
+    "file": "src/pages/DevTools.tsx",
+    "route": null,
+    "critical": true,
+    "status": "partially_testable",
+    "risk": "high"
+  },
+  {
+    "name": "DevToolsLazy",
+    "file": "src/pages/DevToolsLazy.tsx",
+    "route": null,
+    "critical": false,
+    "status": "partially_testable",
+    "risk": "low"
+  },
+  {
+    "name": "DevToolsTabs",
+    "file": "src/pages/DevToolsTabs.tsx",
+    "route": null,
+    "critical": false,
+    "status": "partially_testable",
+    "risk": "low"
+  },
+  {
+    "name": "EvoPage",
+    "file": "src/pages/EvoPage.tsx",
+    "route": null,
+    "critical": false,
+    "status": "partially_testable",
+    "risk": "low"
+  },
+  {
+    "name": "EvolutionCenterPage",
+    "file": "src/pages/EvolutionCenterPage.tsx",
+    "route": null,
+    "critical": false,
+    "status": "partially_testable",
+    "risk": "low"
+  },
+  {
+    "name": "Experience",
+    "file": "src/pages/Experience.tsx",
+    "route": "/experience",
+    "critical": false,
+    "status": "partially_testable",
+    "risk": "low"
+  },
+  {
+    "name": "Harmonia",
+    "file": "src/pages/Harmonia.tsx",
+    "route": null,
+    "critical": false,
+    "status": "partially_testable",
+    "risk": "low"
+  },
+  {
+    "name": "Helios",
+    "file": "src/pages/Helios.tsx",
+    "route": null,
+    "critical": false,
+    "status": "partially_testable",
+    "risk": "low"
+  },
+  {
+    "name": "Memory",
+    "file": "src/pages/Memory.tsx",
+    "route": "/memory",
+    "critical": true,
+    "status": "partially_testable",
+    "risk": "high"
+  },
+  {
+    "name": "MonitoringDashboard",
+    "file": "src/pages/MonitoringDashboard.tsx",
+    "route": null,
+    "critical": true,
+    "status": "partially_testable",
+    "risk": "high"
+  },
+  {
+    "name": "Nexus",
+    "file": "src/pages/Nexus.tsx",
+    "route": null,
+    "critical": true,
+    "status": "partially_testable",
+    "risk": "high"
+  },
+  {
+    "name": "OrchestrationMetaCenter",
+    "file": "src/pages/OrchestrationMetaCenter.tsx",
+    "route": null,
+    "critical": true,
+    "status": "partially_testable",
+    "risk": "high"
+  },
+  {
+    "name": "PerformanceTest",
+    "file": "src/pages/PerformanceTest.tsx",
+    "route": "/performance",
+    "critical": false,
+    "status": "partially_testable",
+    "risk": "low"
+  },
+  {
+    "name": "ProgressionPage",
+    "file": "src/pages/ProgressionPage.tsx",
+    "route": null,
+    "critical": false,
+    "status": "partially_testable",
+    "risk": "low"
+  },
+  {
+    "name": "ResearchPage",
+    "file": "src/pages/ResearchPage.tsx",
+    "route": "/research",
+    "critical": false,
+    "status": "testable",
+    "risk": "low"
+  },
+  {
+    "name": "SecureSettings",
+    "file": "src/pages/SecureSettings.tsx",
+    "route": null,
+    "critical": true,
+    "status": "partially_testable",
+    "risk": "high"
+  },
+  {
+    "name": "SelfHeal",
+    "file": "src/pages/SelfHeal.tsx",
+    "route": "/selfheal",
+    "critical": true,
+    "status": "partially_testable",
+    "risk": "high"
+  },
+  {
+    "name": "Sentinel",
+    "file": "src/pages/Sentinel.tsx",
+    "route": "/sentinel",
+    "critical": true,
+    "status": "partially_testable",
+    "risk": "high"
+  },
+  {
+    "name": "Settings",
+    "file": "src/pages/Settings.tsx",
+    "route": null,
+    "critical": true,
+    "status": "partially_testable",
+    "risk": "high"
+  },
+  {
+    "name": "Stats",
+    "file": "src/pages/Stats.tsx",
+    "route": null,
+    "critical": false,
+    "status": "testable",
+    "risk": "low"
+  },
+  {
+    "name": "TimeNavigator",
+    "file": "src/pages/TimeNavigator.tsx",
+    "route": null,
+    "critical": false,
+    "status": "partially_testable",
+    "risk": "low"
+  },
+  {
+    "name": "TimePage",
+    "file": "src/pages/TimePage.tsx",
+    "route": null,
+    "critical": false,
+    "status": "testable",
+    "risk": "medium"
+  },
+  {
+    "name": "TitanePage",
+    "file": "src/pages/TitanePage.tsx",
+    "route": null,
+    "critical": false,
+    "status": "testable",
+    "risk": "low"
+  },
+  {
+    "name": "Watchdog",
+    "file": "src/pages/Watchdog.tsx",
+    "route": "/watchdog",
+    "critical": true,
+    "status": "partially_testable",
+    "risk": "high"
+  }
+]

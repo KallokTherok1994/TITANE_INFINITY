@@ -40,14 +40,14 @@ describe('InputValidator', () => {
       expect(validated).toBe('Message avec espaces');
     });
 
-    it('devrait tronquer message trop long (> 10000 chars)', () => {
-      const longMessage = 'a'.repeat(10001);
+    it('devrait tronquer message trop long (> 32000 chars)', () => {
+      const longMessage = 'a'.repeat(32001);
       const validated = inputValidator.validate(longMessage);
-      expect(validated.length).toBe(10000);
+      expect(validated.length).toBe(32000);
     });
 
-    it('devrait accepter message exactement 10000 chars', () => {
-      const maxMessage = 'a'.repeat(10000);
+    it('devrait accepter message exactement 32000 chars', () => {
+      const maxMessage = 'a'.repeat(32000);
       expect(() => inputValidator.validate(maxMessage)).not.toThrow();
     });
 

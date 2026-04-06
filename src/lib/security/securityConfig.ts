@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.4.0 — Security Configuration
+ * TITANE∞ v30.0.0 — Security Configuration
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * Configuration centralisée de sécurité - Mode PERMISSIF

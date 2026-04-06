@@ -1,0 +1,3 @@
+022a1a14b109c1067199320bbb53db8ed73f01c804e27968bb0c0523fec52175  runtime/stable/TITANE-Infinity_27.2.0_amd64.deb
+a10936fc895b7067e4709c2a19b359a42515b0e81eb7b7f4e0766798480e46dd  runtime/stable/Titan-Stable_27.0.5_amd64.AppImage
+eb868f7ebcb7cf0abe0ae02f95645e3882c5d92898c398950baecc43ec519b52  runtime/stable/Titan-Stable_27.0.5_amd64.deb

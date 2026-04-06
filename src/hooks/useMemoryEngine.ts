@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v25.3.2 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v25.3.2 — USE MEMORY ENGINE (Pipeline Hook)
+ *   TITANE∞ v30.0.0 — USE MEMORY ENGINE (Pipeline Hook)
  *   Système mémoire unifié: Court/Moyen/Long terme
  *   Auto-save conversations, tags extraction, context retrieval
  * ═══════════════════════════════════════════════════════════════════
@@ -13,6 +13,16 @@
 
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
+import type {
+  MemoryContentType as PersistentMemoryContentType,
+  MemoryEntry as PersistentMemoryEntry,
+  MemoryLevel as PersistentMemoryLevel,
+  MemoryStats as PersistentMemoryStats,
+} from '@/services/memory/persistentMemory.config';
+import {
+  normalizePersistentMemoryReadResponse,
+  normalizePersistentMemoryStats,
+} from '@/services/memory/persistentMemory.normalize';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
@@ -69,6 +79,87 @@ export interface UseMemoryEngineReturn {
   clearMemory: (type?: MemoryType) => Promise<void>;
   refreshStats: () => Promise<void>;
   compressMemory: () => Promise<void>;
+}
+
+const DEFAULT_MEMORY_MODE = 'default';
+const ALL_PERSISTENT_LEVELS: PersistentMemoryLevel[] = [
+  'session',
+  'intermediate',
+  'long_term',
+];
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
+}
+
+function toPersistentLevel(type: MemoryType): PersistentMemoryLevel {
+  switch (type) {
+    case 'short':
+      return 'session';
+    case 'medium':
+      return 'intermediate';
+    case 'long':
+      return 'long_term';
+  }
+}
+
+function toLegacyType(level: PersistentMemoryLevel): MemoryType {
+  switch (level) {
+    case 'session':
+      return 'short';
+    case 'intermediate':
+      return 'medium';
+    case 'long_term':
+      return 'long';
+  }
+}
+
+function toPersistentContentType(type: MemoryType): PersistentMemoryContentType {
+  switch (type) {
+    case 'short':
+      return 'message';
+    case 'medium':
+      return 'summary';
+    case 'long':
+      return 'knowledge';
+  }
+}
+
+function deriveLegacyHealthScore(stats: PersistentMemoryStats): number {
+  const baseScore =
+    stats.health.status === 'healthy'
+      ? 0.95
+      : stats.health.status === 'degraded'
+        ? 0.65
+        : stats.health.status === 'critical'
+          ? 0.3
+          : 0.5;
+
+  const corruptionPenalty = Math.min(0.3, stats.health.corruptedFiles * 0.1);
+  const diskPenalty =
+    stats.health.diskSpacePercent >= 95
+      ? 0.2
+      : stats.health.diskSpacePercent >= 85
+        ? 0.1
+        : 0;
+
+  return clamp(baseScore - corruptionPenalty - diskPenalty, 0, 1);
+}
+
+function toLegacyStats(stats: PersistentMemoryStats): MemoryStats {
+  const shortTerm = stats.countByLevel.session ?? 0;
+  const mediumTerm = stats.countByLevel.intermediate ?? 0;
+  const longTerm = stats.countByLevel.long_term ?? 0;
+
+  return {
+    total_entries: shortTerm + mediumTerm + longTerm,
+    short_term: shortTerm,
+    medium_term: mediumTerm,
+    long_term: longTerm,
+    total_size_bytes: stats.totalSize,
+    last_compression: stats.health.lastIntegrityCheck || null,
+    health_score: deriveLegacyHealthScore(stats),
+  };
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -296,11 +387,35 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
     []
   );
 
+  const mapPersistentEntryToLegacy = useCallback(
+    (entry: PersistentMemoryEntry): MemoryEntry => ({
+      id: entry.id,
+      content: entry.content,
+      type: toLegacyType(entry.level),
+      timestamp: entry.metadata?.createdAt ?? entry.metadata?.updatedAt ?? Date.now(),
+      tags: entry.tags ?? [],
+      intentions: memoizedDetectIntentions(entry.content),
+      emotions: memoizedAnalyzeEmotions(entry.content),
+      metadata: {
+        level: entry.level,
+        topic: entry.topic,
+        contentType: entry.contentType,
+        importance: entry.importance,
+        status: 'status' in entry ? entry.status : undefined,
+        title: 'title' in entry ? entry.title : undefined,
+        persistentMetadata: entry.metadata,
+      },
+    }),
+    [memoizedAnalyzeEmotions, memoizedDetectIntentions]
+  );
+
   // ═══ REFRESH STATS ═══
   const refreshStats = useCallback(async () => {
     try {
-      const memoryStats = (await tauriClient.memoryGetStats()) as MemoryStats;
-      setStats(memoryStats);
+      const persistentStats = normalizePersistentMemoryStats(
+        await tauriClient.persistentMemoryGetStats()
+      );
+      setStats(toLegacyStats(persistentStats));
       setError(null);
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Failed to get stats');
@@ -320,26 +435,65 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
       setError(null);
 
       try {
-        const entry: MemoryEntry = {
-          id: `memory_${type}_${Date.now()}`,
+        const id = await tauriClient.persistentMemoryWriteEntry({
           content,
-          type,
-          timestamp: Date.now(),
-          tags: memoizedExtractTags(content),
-          intentions: memoizedDetectIntentions(content),
-          emotions: memoizedAnalyzeEmotions(content),
-          metadata,
-        };
-
-        await tauriClient.memorySaveEntry({
-          key: entry.id,
-          value: JSON.stringify(entry),
+          level: toPersistentLevel(type),
+          topic:
+            metadata?.topic === 'coding' ||
+            metadata?.topic === 'project' ||
+            metadata?.topic === 'personal' ||
+            metadata?.topic === 'technical' ||
+            metadata?.topic === 'creative' ||
+            metadata?.topic === 'learning' ||
+            metadata?.topic === 'decisions' ||
+            metadata?.topic === 'preferences' ||
+            metadata?.topic === 'automation' ||
+            metadata?.topic === 'system'
+              ? metadata.topic
+              : metadata?.source === 'singularity' || metadata?.source === 'system'
+                ? 'system'
+                : 'general',
+          importance:
+            typeof metadata?.importance === 'number' &&
+            metadata.importance >= 1 &&
+            metadata.importance <= 5
+              ? metadata.importance
+              : 3,
+          contentType:
+            metadata?.contentType === 'message' ||
+            metadata?.contentType === 'summary' ||
+            metadata?.contentType === 'knowledge' ||
+            metadata?.contentType === 'preference' ||
+            metadata?.contentType === 'project_context' ||
+            metadata?.contentType === 'code_snippet' ||
+            metadata?.contentType === 'decision' ||
+            metadata?.contentType === 'reference' ||
+            metadata?.contentType === 'identity' ||
+            metadata?.contentType === 'automation_result' ||
+            metadata?.contentType === 'milestone'
+              ? metadata.contentType
+              : toPersistentContentType(type),
+          tags: Array.from(
+            new Set([
+              ...memoizedExtractTags(content),
+              ...(Array.isArray(metadata?.tags)
+                ? metadata.tags.filter((tag): tag is string => typeof tag === 'string')
+                : []),
+            ])
+          ),
+          title: typeof metadata?.title === 'string' ? metadata.title : undefined,
+          projectId:
+            typeof metadata?.projectId === 'string' ? metadata.projectId : undefined,
+          modeId:
+            typeof metadata?.modeId === 'string' ? metadata.modeId : DEFAULT_MEMORY_MODE,
         });
 
         // Refresh stats après save
         await refreshStats();
 
-        return entry.id;
+        return typeof id === 'string' && id.length > 0
+          ? id
+          : `memory_${type}_${Date.now()}`;
       } catch (err) {
         const error = err instanceof Error ? err : new Error('Failed to save memory');
         setError(error);
@@ -359,39 +513,16 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
       setError(null);
 
       try {
-        // Backend search (si disponible)
-        try {
-          const result = (await tauriClient.memorySearch({
+        const result = normalizePersistentMemoryReadResponse(
+          await tauriClient.persistentMemoryRead({
+            levels: ALL_PERSISTENT_LEVELS,
+            currentMode: DEFAULT_MEMORY_MODE,
             query,
-            max_results: maxResults,
-          })) as MemorySearchResult;
-          return result.entries;
-        } catch {
-          // Fallback: get all + filter locally
-          const allKeys = (await tauriClient.memoryGetAllKeys()) as string[];
-          const memories: MemoryEntry[] = [];
-
-          for (const key of allKeys.slice(0, maxResults)) {
-            const value = (await tauriClient.memoryGetEntry({
-              key,
-            })) as string | null;
-            if (value) {
-              try {
-                const entry: MemoryEntry = JSON.parse(value);
-                if (
-                  entry.content.toLowerCase().includes(query.toLowerCase()) ||
-                  entry.tags.some(tag => tag.includes(query.toLowerCase()))
-                ) {
-                  memories.push(entry);
-                }
-              } catch {
-                // Skip invalid entries
-              }
-            }
-          }
-
-          return memories;
-        }
+            limit: maxResults,
+            includeSummaries: false,
+          })
+        );
+        return result.entries.map(mapPersistentEntryToLegacy).slice(0, maxResults);
       } catch (err) {
         const error = err instanceof Error ? err : new Error('Failed to search memory');
         setError(error);
@@ -410,13 +541,17 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
     setError(null);
 
     try {
-      const value = (await tauriClient.memoryGetEntry({
-        key: id,
-      })) as string | null;
-      if (!value) return null;
+      const response = normalizePersistentMemoryReadResponse(
+        await tauriClient.persistentMemoryRead({
+          levels: ALL_PERSISTENT_LEVELS,
+          currentMode: DEFAULT_MEMORY_MODE,
+          limit: 500,
+          includeSummaries: false,
+        })
+      );
 
-      const entry: MemoryEntry = JSON.parse(value);
-      return entry;
+      const entry = response.entries.find(candidate => candidate.id === id);
+      return entry ? mapPersistentEntryToLegacy(entry) : null;
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Failed to get memory');
       setError(error);
@@ -434,7 +569,7 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
       setError(null);
 
       try {
-        await tauriClient.memoryDeleteEntry({ key: id });
+        await tauriClient.persistentMemoryDeleteEntry({ entryId: id });
         await refreshStats();
       } catch (err) {
         const error = err instanceof Error ? err : new Error('Failed to delete memory');
@@ -455,17 +590,17 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
       setError(null);
 
       try {
-        if (type) {
-          // Clear specific type
-          const allKeys = (await tauriClient.memoryGetAllKeys()) as string[];
-          for (const key of allKeys) {
-            if (key.includes(`_${type}_`)) {
-              await tauriClient.memoryDeleteEntry({ key });
-            }
-          }
-        } else {
-          // Clear all
-          await tauriClient.memoryClearAll();
+        const response = normalizePersistentMemoryReadResponse(
+          await tauriClient.persistentMemoryRead({
+            levels: type ? [toPersistentLevel(type)] : ALL_PERSISTENT_LEVELS,
+            currentMode: DEFAULT_MEMORY_MODE,
+            limit: 1000,
+            includeSummaries: false,
+          })
+        );
+
+        for (const entry of response.entries) {
+          await tauriClient.persistentMemoryDeleteEntry({ entryId: entry.id });
         }
 
         await refreshStats();
@@ -487,8 +622,9 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
     setError(null);
 
     try {
-      await tauriClient.memoryCompress();
-      await refreshStats();
+      throw new Error(
+        'Persistent memory compression is not available through the legacy memory evolution engine.'
+      );
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Failed to compress memory');
       setError(error);

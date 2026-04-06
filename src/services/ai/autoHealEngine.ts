@@ -616,14 +616,14 @@ class AutoHealEngine {
       case 'restart':
       case 'reset':
       case 'reconnect':
-      case 'restore':
+      case 'restore': {
         current.failureCount = Math.max(0, current.failureCount - 1);
-        if (current.failureCount === 0) {
-          current.status = 'healthy';
-        } else if (current.failureCount < 3) {
-          current.status = 'degraded';
+        const recoveredStatus = current.failureCount === 0 ? 'healthy' : 'degraded';
+        if (current.failureCount < 3) {
+          current.status = recoveredStatus;
         }
         break;
+      }
 
       case 'isolate':
         current.status = 'offline';

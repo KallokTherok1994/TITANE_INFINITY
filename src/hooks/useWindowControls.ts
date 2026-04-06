@@ -1,4 +1,4 @@
-// TITANE_INFINITY v26.2.0 — Window Controls Hook
+// TITANE_INFINITY v30.0.0 — Window Controls Hook
 // Zoom (CTRL+Scroll) & Fullscreen (F11) keyboard shortcuts
 
 import { useEffect, useCallback } from 'react';

@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v28.1.0 — TOTAL_DEV PAGE
+ * TITANE∞ v30.0.0 — TOTAL_DEV PAGE
  * GOD DEV TITANE — Espace de développement souverain
  *
  * Architecture: Ring 1 → IPC canonique → Rust backends
@@ -16,6 +16,15 @@ import { secureInvoke } from '@/lib/security';
 import { TAURI_COMMANDS } from '@/core/commands/TAURI_COMMANDS';
 import { logger } from '@/lib/logger';
 import './TotalDevPage.css';
+
+// Fonction utilitaire pour calculer le hash SHA-256
+const sha256 = async (input: string): Promise<string> => {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(input);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+};
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -85,7 +94,7 @@ interface ConsoleEntry {
 // ARCHITECTURE CONTEXT INJECTION
 // Used as system prompt prefix for QWEN-Coder
 // ─────────────────────────────────────────────────────────────────
-const TOTAL_DEV_SYSTEM_PROMPT = `Tu es GOD DEV TITANE — l'agent de développement souverain de TITANE∞ v28.1.0.
+const TOTAL_DEV_SYSTEM_PROMPT = `Tu es GOD DEV TITANE — l'agent de développement souverain de TITANE∞ v30.0.0.
 
 ARCHITECTURE CANONIQUE:
 - 4-Ring strict: Ring0=Tauri/Rust, Ring1=IPC commands, Ring2=Services TS, Ring3=UI/React
@@ -121,21 +130,47 @@ Tu réponds en français. Tu cites les fichiers touchés. Tu classes chaque risq
 // HOOKS
 // ─────────────────────────────────────────────────────────────────
 
+const normalizeLockState = (
+  status: Partial<SessionStatus> | null | undefined
+): LockState => {
+  const candidate =
+    typeof status?.lock_state === 'string' ? status.lock_state.toUpperCase() : '';
+
+  if (
+    candidate === 'LOCKED' ||
+    candidate === 'UNLOCKED' ||
+    candidate === 'EXPIRED' ||
+    candidate === 'CHECKING'
+  ) {
+    return candidate;
+  }
+
+  return 'LOCKED';
+};
+
+const normalizeExpiry = (status: Partial<SessionStatus> | null | undefined): number => {
+  return typeof status?.expires_at_unix === 'number' &&
+    Number.isFinite(status.expires_at_unix)
+    ? status.expires_at_unix
+    : 0;
+};
+
 function useLockState() {
   const [lockState, setLockState] = useState<LockState>('CHECKING');
   const [expiresAt, setExpiresAt] = useState<number>(0);
 
   const checkSession = useCallback(async () => {
     try {
-      const status = await secureInvoke<SessionStatus>(
+      const status = await secureInvoke<Partial<SessionStatus>>(
         TAURI_COMMANDS.TOTAL_DEV_SESSION_STATUS,
         {}
       );
-      const ls = status.lock_state as LockState;
-      setLockState(ls);
-      setExpiresAt(status.expires_at_unix ?? 0);
+
+      setLockState(normalizeLockState(status));
+      setExpiresAt(normalizeExpiry(status));
     } catch {
       setLockState('LOCKED');
+      setExpiresAt(0);
     }
   }, []);
 
@@ -201,10 +236,12 @@ const UnlockPanel = memo<{
     setLoading(true);
     setError('');
     try {
-      // Le token brut est envoyé via IPC → comparaison SHA-256 côté Rust
-      // Jamais stocké ni loggé côté frontend
+      // Calculer le hash SHA-256 du mot de passe avant envoi
+      const tokenHash = await sha256(inputValue);
+
+      // Envoyer le hash au backend pour comparaison
       const result = await secureInvoke<UnlockResult>(TAURI_COMMANDS.TOTAL_DEV_UNLOCK, {
-        token: inputValue,
+        token: tokenHash,
       });
       if (result.ok && result.expires_at_unix) {
         logger.info('TOTAL_DEV unlocked', { component: 'TotalDevPage' });
@@ -728,12 +765,12 @@ const GitPanel = memo<{ lockState: LockState }>(({ lockState }) => {
           commit
         </button>
         <button
-          onClick={() => runGit('push', ['origin', 'MAIN'])}
+          onClick={() => runGit('push', ['origin', 'HEAD'])}
           disabled={loading || lockState !== 'UNLOCKED'}
           className="total-dev-btn total-dev-btn--git-danger"
-          title="Push vers origin MAIN — requiert auth SSH/HTTPS"
+          title="Push vers origin/HEAD — suit la branche courante et requiert auth SSH/HTTPS"
         >
-          push MAIN
+          push HEAD
         </button>
       </div>
 
@@ -862,8 +899,14 @@ const DevActionsPanel = memo<{ lockState: LockState }>(({ lockState }) => {
     { label: '🧪 pnpm test', cmd: 'pnpm run test' },
     { label: '✅ pnpm check', cmd: 'pnpm run check' },
     { label: '🔍 pnpm lint', cmd: 'pnpm run lint' },
-    { label: '🦀 cargo check', cmd: 'cargo check' },
-    { label: '🦀 cargo clippy', cmd: 'cargo clippy' },
+    {
+      label: '🦀 cargo check',
+      cmd: 'cargo check --manifest-path src-tauri/Cargo.toml',
+    },
+    {
+      label: '🦀 cargo clippy',
+      cmd: 'cargo clippy --manifest-path src-tauri/Cargo.toml',
+    },
     { label: '📦 pnpm build', cmd: 'pnpm run build' },
     { label: '🧪 test:100', cmd: 'pnpm run test:100' },
     { label: '🔒 verify:invariants', cmd: 'pnpm run verify:invariants-governed' },
@@ -955,7 +998,7 @@ export const TotalDevPage: React.FC = () => {
         <div className="total-dev-header-meta">
           <LockBadge lockState={lockState} expiresAt={expiresAt} />
           <span className="total-dev-meta-item">Provider: qwen2.5-coder</span>
-          <span className="total-dev-meta-item">v28.1.0</span>
+          <span className="total-dev-meta-item">v30.0.0</span>
           {expiresLabel && (
             <span className="total-dev-meta-item">Expire: {expiresLabel}</span>
           )}
@@ -1019,7 +1062,7 @@ export const TotalDevPage: React.FC = () => {
 
       {/* FOOTER ─────────────────────────────────────────── */}
       <footer className="total-dev-footer">
-        <span>TITANE∞ v28.1.0 · TOTAL_DEV · Ring1→IPC→Rust</span>
+        <span>TITANE∞ v30.0.0 · TOTAL_DEV · Ring1→IPC→Rust</span>
         <span>
           {lockState === 'UNLOCKED'
             ? '🔓 Session active — tous les pouvoirs GOD DEV disponibles'

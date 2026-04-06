@@ -1,0 +1,56 @@
+    pub use titane_infinity::audio::{AudioConfig, AudioError, AudioResult};
+    
+    pub mod capture {
+        include!("audio/capture.rs");
+    }
+    pub mod recording_engine {
+        include!("audio/recording_engine.rs");
+    }
+    pub mod commands {
+        include!("audio/commands.rs");
+
+        #[cfg(feature = "mock")]
+        #[tauri::command]
+        pub async fn speak(
+            _text: String,
+            _config: Option<serde_json::Value>,
+            _use_online: Option<bool>,
+        ) -> Result<(), String> {
+            Ok(())
+        }
+
+        #[cfg(feature = "mock")]
+        #[tauri::command]
+        pub async fn start_recording(_config: Option<serde_json::Value>) -> Result<String, String> {
+            Ok("mock-recording-id".to_string())
+        }
+
+        #[cfg(feature = "mock")]
+        #[tauri::command]
+        pub async fn stop_recording() -> Result<serde_json::Value, String> {
+            Ok(serde_json::json!({
+                "transcript": "",
+                "confidence": 0.0,
+                "duration": 0.0,
+                "filePath": null,
+                "error": "mock-mode",
+            }))
+        }
+
+        #[cfg(feature = "mock")]
+        #[tauri::command]
+        pub async fn cancel_recording() -> Result<(), String> {
+            Ok(())
+        }
+    }
+}
+
+// Secure Commands v∞ (Super-Prompts H, I, J, K) - API Key Management
+mod secure_commands {
+    include!("secure_commands.rs");
+}
+
+// Runtime Config Bridge v∞ (Frontend configuration without secrets)
+mod runtime_config {
+    include!("runtime_config.rs");
+}

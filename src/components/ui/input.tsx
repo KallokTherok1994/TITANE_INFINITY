@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.2.0 — Input Component (Titanium Dark)
+ * TITANE∞ v30.0.0 — Input Component (Titanium Dark)
  * Text input with Titanium Dark design system
  * WCAG 2.2 AA compliant with proper label association
  * @license MIT

@@ -1,0 +1,24 @@
+{
+  "version": "28.0.0",
+  "build_date": "2026-03-20",
+  "build_head": "7ad4c05a4",
+  "build_type": "PROD",
+  "tokens": [
+    "GO_FOR_PROD_BUILD__TITANE_INFINITY",
+    "GO_FOR_PROD_DEPLOY__TITANE_INFINITY"
+  ],
+  "artifacts": [
+    {
+      "name": "TITANE-Infinity_28.0.0_amd64.AppImage",
+      "size": "90M",
+      "sha256": "326d2a72a5d9f1c06fda6b047d0a395d4011aea67e9ae4e7006de1759d5d0a43"
+    },
+    {
+      "name": "TITANE-Infinity_28.0.0_amd64.deb",
+      "size": "21M",
+      "sha256": "ca35153cf15926b5a406ee364cb06e991b5e3e75f01c3241c61dbb6b6aca896d"
+    }
+  ],
+  "pipeline": "lint + format:check + ollama:bundle + vite build + tauri build + post-build",
+  "pre_build_gates": "check + lint + format:check + test:100 + verify_instructions + detect_recurrence"
+}

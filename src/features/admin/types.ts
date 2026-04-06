@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25.2.2 — Admin Center Types
+ * TITANE∞ v30.0.0 — Admin Center Types
  * Module ADMIN unifié - Types & Interfaces
  * © 2025 TITANE Team. All rights reserved.
  */
@@ -10,7 +10,7 @@ export type AdminTab =
   | 'audio' // Audio & Voix
   | 'design' // Design (Gesign)
   | 'governance' // Gouvernance & Sécurité
-  | 'production-health'; // V25 Week 1 Production Telemetry (V26)
+  | 'production-health'; // Production telemetry panel (V29)
 
 export interface AdminTabDefinition {
   id: AdminTab;
@@ -61,6 +61,6 @@ export const ADMIN_TABS: AdminTabDefinition[] = [
     label: 'Santé Prod',
     icon: '📊',
     description: 'Métriques production Week 1 - Observabilité temps réel',
-    badge: 'V26',
+    badge: 'V29',
   },
 ];

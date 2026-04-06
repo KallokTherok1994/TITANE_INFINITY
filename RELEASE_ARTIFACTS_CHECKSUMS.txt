@@ -1,2 +1,9 @@
-8c63d7cc57a6cc14a0398069bbf3b728d1b9c5ebae6b93f7f1c292a3c9e4bf03  src-tauri/target/release/bundle/appimage/TITANE-Infinity_27.0.1_amd64.AppImage
-4b2c8410f0b162755937f9e0a696e30ed71c6b96fff1f8f66c41e3047c40e71e  src-tauri/target/release/bundle/deb/TITANE-Infinity_27.0.1_amd64.deb
+# SHA256 v30.0.0 — PENDING_BUILD
+# CURRENT canonical stable deployment artifacts (AppImage + DEB)
+# These will be populated after the production build completes.
+# Build command: pnpm run build:production
+PENDING_BUILD  Titan-Stable_30.0.0_amd64.AppImage
+PENDING_BUILD  Titan-Stable_30.0.0_amd64.deb
+# Additional build-output proofs — PENDING_BUILD
+PENDING_BUILD  TITANE-Infinity_30.0.0_amd64.deb
+PENDING_BUILD  TITANE-Infinity-30.0.0-1.x86_64.rpm

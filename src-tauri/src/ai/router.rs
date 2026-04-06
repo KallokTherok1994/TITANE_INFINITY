@@ -38,6 +38,20 @@ pub struct AIRouter {
 }
 
 impl AIRouter {
+    fn determine_status(
+        has_internet: bool,
+        has_gemini_available: bool,
+        has_ollama_available: bool,
+    ) -> AIRouterStatus {
+        if has_internet && has_gemini_available {
+            AIRouterStatus::Online
+        } else if has_ollama_available {
+            AIRouterStatus::Degraded
+        } else {
+            AIRouterStatus::Offline
+        }
+    }
+
     /// Create new AIRouter v20.1 with UnifiedIA support + Cache
     pub fn new(gemini_api_key: Option<String>, ollama_model: Option<String>) -> Self {
         let gemini_client = gemini_api_key.map(|key| Arc::new(GeminiClient::new(key)));
@@ -73,20 +87,13 @@ impl AIRouter {
     /// Update router status based on available providers
     async fn update_status(&self) {
         let has_internet = self.check_internet().await;
-        let has_gemini = self
-            .gemini_client
-            .as_ref()
-            .map(|c| c.is_available())
-            .is_some();
+        let has_gemini = match &self.gemini_client {
+            Some(client) => client.is_available().await,
+            None => false,
+        };
         let has_ollama = self.ollama_client.is_available().await;
 
-        let new_status = if has_internet && has_gemini {
-            AIRouterStatus::Online
-        } else if has_ollama {
-            AIRouterStatus::Degraded
-        } else {
-            AIRouterStatus::Offline
-        };
+        let new_status = Self::determine_status(has_internet, has_gemini, has_ollama);
 
         *self.status.write().await = new_status;
     }
@@ -103,8 +110,21 @@ impl AIRouter {
             result
         };
 
-        // Check Gemini
-        let has_gemini = self.gemini_client.is_some() && has_internet;
+        // Check Gemini avec cache pour éviter un statut "online" décoratif.
+        let has_gemini = if self.gemini_client.is_some() && has_internet {
+            if let Some(cached) = self.cache.get_provider_status("gemini").await {
+                cached
+            } else {
+                let result = match &self.gemini_client {
+                    Some(client) => client.is_available().await,
+                    None => false,
+                };
+                self.cache.set_provider_status("gemini", result).await;
+                result
+            }
+        } else {
+            false
+        };
 
         // Check Ollama avec cache
         let has_ollama = if let Some(cached) = self.cache.get_provider_status("ollama").await {
@@ -115,13 +135,7 @@ impl AIRouter {
             result
         };
 
-        let new_status = if has_internet && has_gemini {
-            AIRouterStatus::Online
-        } else if has_ollama {
-            AIRouterStatus::Degraded
-        } else {
-            AIRouterStatus::Offline
-        };
+        let new_status = Self::determine_status(has_internet, has_gemini, has_ollama);
 
         *self.status.write().await = new_status;
     }
@@ -409,9 +423,11 @@ impl AIRouter {
         };
         let ollama_available = self.cache.get_provider_status("ollama").await.unwrap_or(false);
         let ollama_models = self.ollama_client.get_available_models();
+        let effective_status =
+            Self::determine_status(has_internet, gemini_available, ollama_available);
 
         serde_json::json!({
-            "status": format!("{:?}", *self.status.read().await),
+            "status": format!("{:?}", effective_status),
             "internet": has_internet,
             "gemini": {
                 "configured": self.gemini_client.is_some(),
@@ -441,5 +457,40 @@ mod tests {
         let status = router.get_status().await;
         // Should return some status
         let _ = format!("{:?}", status);
+    }
+
+    #[test]
+    fn test_determine_status_requires_real_gemini_availability() {
+        assert!(matches!(
+            AIRouter::determine_status(true, true, false),
+            AIRouterStatus::Online
+        ));
+        assert!(matches!(
+            AIRouter::determine_status(true, false, true),
+            AIRouterStatus::Degraded
+        ));
+        assert!(matches!(
+            AIRouter::determine_status(true, false, false),
+            AIRouterStatus::Offline
+        ));
+    }
+
+    #[tokio::test]
+    async fn test_health_check_uses_effective_status() {
+        let router = AIRouter::new(None, None);
+        router.cache.set_provider_status("internet", true).await;
+        router.cache.set_provider_status("ollama", true).await;
+
+        let health = router.health_check().await;
+
+        assert_eq!(health.get("status").and_then(|v| v.as_str()), Some("Degraded"));
+        assert_eq!(health.get("internet").and_then(|v| v.as_bool()), Some(true));
+        assert_eq!(
+            health
+                .get("ollama")
+                .and_then(|v| v.get("available"))
+                .and_then(|v| v.as_bool()),
+            Some(true)
+        );
     }
 }

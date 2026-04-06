@@ -1,0 +1,11 @@
+proof_packs/POST_PROD_UI_CHAIN_OF_TRUTH_V11_2026-03-11_0545_7701f7a94/artifacts/run_visual1/screens:
+total 1,5M
+-rw-rw-r-- 1 titane-os titane-os 501K mars  11 01:44 run_visual1-after-input.png
+-rw-rw-r-- 1 titane-os titane-os 531K mars  11 01:44 run_visual1-after-response.png
+-rw-rw-r-- 1 titane-os titane-os 497K mars  11 01:44 run_visual1-before-input.png
+
+proof_packs/POST_PROD_UI_CHAIN_OF_TRUTH_V11_2026-03-11_0545_7701f7a94/artifacts/run_visual2/screens:
+total 1,4M
+-rw-rw-r-- 1 titane-os titane-os 437K mars  11 01:44 run_visual2-after-input.png
+-rw-rw-r-- 1 titane-os titane-os 448K mars  11 01:44 run_visual2-after-response.png
+-rw-rw-r-- 1 titane-os titane-os 490K mars  11 01:44 run_visual2-before-input.png

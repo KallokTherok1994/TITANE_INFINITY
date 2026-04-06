@@ -1,0 +1,137 @@
+# PRETTIER INVESTIGATION
+Timestamp UTC: 2026-03-04T21:38:31Z
+
+## .prettierignore content
+node_modules
+dist
+build
+target
+*.log
+*.lock
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.svg
+*.webp
+*.gif
+*.woff
+*.woff2
+*.ttf
+*.eot
+.git
+.husky
+.vscode
+deployment
+proof_packs
+docs/_evidence
+runs/**
+.idea
+
+# Archives historiques (do not format)
+_archive/
+archives/
+
+# Fichiers de rapport historiques (anciens rapports, do not format)
+TITANE_*.md
+BETA_*.md
+PHASE_*.md
+*_REPORT*.md
+*_REPORT*.ts
+*_REPORT*.tsx
+COMPLETION_*.md
+DEPLOYMENT_*.md
+DISTRIBUTION_*.md
+FINAL_*.md
+SESSION_*.md
+FIX_*.md
+PATCH_*.md
+PRODUCTION_*.md
+RELEASE_*.md
+PROOFS.md
+CONSTITUTION_*.md
+CHARTER_*.md
+AUDIT_*.md
+*_AUDIT_*.md
+ARTIFACTS_*.md
+*_PORTAL_*.md
+*_STATUS*.md
+TEST_*.md
+GATE_*.md
+C1_*.md
+C2_*.md
+C7_*.md
+CHAT_*.md
+*_E2E_*.md
+DIAGNOSTIC_*.md
+CORRECTION_*.md
+CONSOLE_*.md
+DEEP_*.md
+EXECUTIVE_*.md
+EVOLUTION_*.md
+
+# Fichiers Markdown trop lourds (éviter SIGKILL Prettier)
+TITANE_MEMORY_OS*.md
+TITANE_DEVTOOLS_OS_REPORT.md
+TITANE_KERNEL_v20Ω_REPORT.md
+docs/**
+**/AUDIT_*.md
+**/ARCHITECTURE_*.md
+**/ANALYSE_*.md
+
+# Fichiers générés
+src-tauri/target
+src-tauri/Cargo.lock
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build artifacts
+.next
+.nuxt
+.output
+.vercel
+.netlify
+
+# Test files (old reports)
+src/__tests__/c1-contracts.test.ts
+src/__tests__/c2-anti-silence.test.tsx
+src/__tests__/c3-latency.test.ts
+src/__tests__/c4-memory.test.ts
+src/__tests__/c5-observability.test.ts
+src/__tests__/c6-baseline.test.ts
+
+# Script files (reports embedded)
+scripts/gate-dist-assets.mjs
+scripts/**/*REPORT*.ts
+scripts/**/*REPORT*.js
+
+# CI/workflow files (complex, generated)
+.github/workflows/ci.yml
+
+# Other specific files
+E2E_TIER1_RESULTS_ANALYSIS.md
+REPORTS_INDEX_SESSION_2.md
+baseline_measurements_real_w1.json
+OPTIMIZATION_TARGETS_W1.md
+runtime/registry/**
+**/wdio_caps.json
+
+## File count by type
+- Total files: 246919
+- .github/workflows: 46
+- Total non-ignored: 16564
+
+## Prettier config
+{
+  "semi": true,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "trailingComma": "es5",
+  "printWidth": 90,
+  "arrowParens": "avoid",
+  "endOfLine": "lf",
+  "bracketSpacing": true,
+  "jsxSingleQuote": false,
+  "plugins": []
+}

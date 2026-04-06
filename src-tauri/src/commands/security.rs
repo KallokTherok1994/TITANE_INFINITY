@@ -341,6 +341,16 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("devops_stats");
 
     // ═══════════════════════════════════════════════════════════════
+    // TOTAL_DEV v29.0.0 — GOD DEV secure space
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("total_dev_unlock");
+    commands.insert("total_dev_session_status");
+    commands.insert("total_dev_revoke");
+    commands.insert("total_dev_git_op");
+    commands.insert("total_dev_run_command");
+    commands.insert("total_dev_read_file");
+
+    // ═══════════════════════════════════════════════════════════════
     // SECURE COMMANDS (v∞)
     // ═══════════════════════════════════════════════════════════════
     commands.insert("secure_import_file");
@@ -529,6 +539,44 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("pipeline_resume");
     commands.insert("pipeline_reset");
     commands.insert("pipeline_validate");
+
+    // ═══════════════════════════════════════════════════════════════
+    // HTTP COMMANDS (v29.0.0+)
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("http_request");
+
+    // ═══════════════════════════════════════════════════════════════
+    // AVATAR ASSET COMMANDS (v29.0.0+)
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("avatar_load_asset");
+    commands.insert("avatar_list_assets");
+
+    // ═══════════════════════════════════════════════════════════════
+    // VOICE DSP COMMANDS (v29.0.0+)
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("voice_extract_mfcc");
+
+    // ═══════════════════════════════════════════════════════════════
+    // TEMPORAL COMMANDS (v29.0.0+)
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("temporal_get_today_state");
+    commands.insert("temporal_save_today_blocks");
+    commands.insert("temporal_get_timeline_events");
+    commands.insert("temporal_add_timeline_event");
+    commands.insert("temporal_update_energy");
+
+    // ═══════════════════════════════════════════════════════════════
+    // DASHBOARD METRICS COMMANDS (v29.0.0+)
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("dashboard_get_metrics");
+    commands.insert("dashboard_get_realtime_stats");
+
+    // ═══════════════════════════════════════════════════════════════
+    // IDENTITY COMMANDS (v29.0.0+)
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("identity_get_matrix");
+    commands.insert("identity_save_matrix");
+    commands.insert("identity_update_preference");
 
     commands
 }

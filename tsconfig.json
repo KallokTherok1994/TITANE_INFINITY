@@ -17,20 +17,19 @@
     "jsx": "react-jsx",
 
     /* Path aliases */
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@components/*": ["src/components/*"],
-      "@types/*": ["src/types/*"],
-      "@utils/*": ["src/utils/*"],
-      "@hooks/*": ["src/hooks/*"],
-      "@a11y/*": ["src/a11y/*"],
-      "@apps/*": ["src/apps/*"],
-      "@themes/*": ["src/themes/*"],
-      "@services/*": ["src/services/*"],
-      "@stores/*": ["src/stores/*"],
-      "@features/*": ["src/features/*"],
-      "@cognitive/*": ["src/cognitive/*"]
+      "@/*": ["./src/*"],
+      "@components/*": ["./src/components/*"],
+      "@types/*": ["./src/types/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@a11y/*": ["./src/a11y/*"],
+      "@apps/*": ["./src/apps/*"],
+      "@themes/*": ["./src/themes/*"],
+      "@services/*": ["./src/services/*"],
+      "@stores/*": ["./src/stores/*"],
+      "@features/*": ["./src/features/*"],
+      "@cognitive/*": ["./src/cognitive/*"]
     },
 
     /* Linting - Enhanced Strict (Progressive) */

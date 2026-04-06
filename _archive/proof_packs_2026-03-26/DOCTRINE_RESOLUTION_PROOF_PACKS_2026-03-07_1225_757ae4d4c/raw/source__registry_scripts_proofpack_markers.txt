@@ -1,0 +1,1 @@
+scripts/verify/registry-integrity.js:57:        assert(ts >= lastTs, 'timestamps non-monotones (append-only suspect)');

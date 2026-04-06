@@ -266,7 +266,7 @@ check_architecture() {
     local ring_violations=0
     
     # Check Ring 2 (Engines) - should not import from Services (Ring 3)
-    if grep -r "from.*services" src/engines/ --include="*.ts" 2>/dev/null | grep -v "test" | grep -q "services"; then
+    if grep -rq "from.*services" src/engines/ --include="*.ts" 2>/dev/null; then
         ((++ring_violations))
     fi
     

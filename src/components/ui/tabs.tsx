@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.4.0 — Tabs Component (Titanium Dark)
+ * TITANE∞ v30.0.0 — Tabs Component (Titanium Dark)
  * Tab navigation with Titanium Dark design system + composable primitives
  * WCAG 2.2 AA compliant with full keyboard support
  * @license MIT

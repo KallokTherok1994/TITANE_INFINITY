@@ -1,0 +1,4 @@
+WORKSPACE_STATUS=CLEAN_BY_DOCTRINE
+tracked_drift_count=0
+untracked_nonproof_count=0
+HYGIENE_GATE=PASS

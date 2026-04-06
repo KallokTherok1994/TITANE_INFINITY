@@ -12,9 +12,12 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { tauriClient } from '@/lib/tauriClient';
 import { useToast } from '@/hooks/useToast';
+import { useTimeAgenda } from '@/hooks/useTimeAgenda';
+import type { AgendaEvent } from '@/engines/time';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import { TBadge, TMetric, TSectionHeader } from '../design-system';
 import './TimePage.css';
@@ -24,6 +27,12 @@ import './TimePage.css';
 // ═══════════════════════════════════════════════════════════════════
 
 type TabId = 'now' | 'agenda' | 'timeline' | 'snapshots' | 'cognitive';
+
+const VALID_TABS: TabId[] = ['now', 'agenda', 'timeline', 'snapshots', 'cognitive'];
+
+const isTabId = (value: string | null): value is TabId => {
+  return value !== null && VALID_TABS.includes(value as TabId);
+};
 
 interface TimeBlock {
   id: string;
@@ -77,94 +86,265 @@ interface FlowState {
   totalFlowToday: number; // minutes
 }
 
+interface CognitiveStateSnapshot {
+  flowActive: boolean;
+  energy: number;
+  mode: string;
+  updatedAt: number;
+  segment?: string;
+  todayFocusMinutes?: number;
+}
+
+const isSameCalendarDay = (left: Date, right: Date): boolean => {
+  return (
+    left.getFullYear() === right.getFullYear() &&
+    left.getMonth() === right.getMonth() &&
+    left.getDate() === right.getDate()
+  );
+};
+
+const getEventDurationMinutes = (event: AgendaEvent): number => {
+  return Math.max(
+    0,
+    Math.round(
+      (new Date(event.endDateTime).getTime() - new Date(event.startDateTime).getTime()) /
+        60000
+    )
+  );
+};
+
+const formatAgendaTime = (isoDateTime: string): string => {
+  return new Date(isoDateTime).toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+};
+
+const mapAgendaCategoryToBlockType = (
+  category: AgendaEvent['category']
+): TimeBlock['type'] => {
+  switch (category) {
+    case 'meeting':
+      return 'meeting';
+    case 'break':
+      return 'break';
+    case 'creative':
+      return 'creative';
+    case 'personal':
+    case 'routine':
+      return 'admin';
+    default:
+      return 'focus';
+  }
+};
+
+const mapAgendaPriority = (priority: AgendaEvent['priority']): TimeBlock['priority'] => {
+  switch (priority) {
+    case 'critical':
+    case 'urgent':
+    case 'high':
+      return 'high';
+    case 'medium':
+      return 'medium';
+    default:
+      return 'low';
+  }
+};
+
+const mapAgendaEventToTimeBlock = (event: AgendaEvent): TimeBlock => ({
+  id: event.id,
+  start: formatAgendaTime(event.startDateTime),
+  end: formatAgendaTime(event.endDateTime),
+  title: event.title,
+  type: mapAgendaCategoryToBlockType(event.category),
+  priority: mapAgendaPriority(event.priority),
+  energy: Math.round((event.energyRequired ?? 0.75) * 100),
+});
+
+const readStoredCognitiveState = (
+  fallbackEnergy: number,
+  currentSegment: string,
+  todayFocusMinutes: number,
+  isWorkHours: boolean
+): CognitiveStateSnapshot => {
+  const fallback: CognitiveStateSnapshot = {
+    flowActive: false,
+    energy: fallbackEnergy,
+    mode: isWorkHours ? 'planning' : 'recovery',
+    updatedAt: Date.now(),
+    segment: currentSegment,
+    todayFocusMinutes,
+  };
+
+  if (typeof window === 'undefined') {
+    return fallback;
+  }
+
+  try {
+    const raw = window.localStorage.getItem('titane_cognitive_state');
+    if (!raw) {
+      return fallback;
+    }
+
+    const parsed = JSON.parse(raw) as Partial<CognitiveStateSnapshot> | null;
+    if (!parsed) {
+      return fallback;
+    }
+
+    return {
+      flowActive: parsed.flowActive === true,
+      energy:
+        typeof parsed.energy === 'number' && Number.isFinite(parsed.energy)
+          ? parsed.energy
+          : fallbackEnergy,
+      mode:
+        typeof parsed.mode === 'string' && parsed.mode.trim()
+          ? parsed.mode
+          : fallback.mode,
+      updatedAt:
+        typeof parsed.updatedAt === 'number' && Number.isFinite(parsed.updatedAt)
+          ? parsed.updatedAt
+          : Date.now(),
+      segment:
+        typeof parsed.segment === 'string' && parsed.segment.trim()
+          ? parsed.segment
+          : currentSegment,
+      todayFocusMinutes:
+        typeof parsed.todayFocusMinutes === 'number' &&
+        Number.isFinite(parsed.todayFocusMinutes)
+          ? parsed.todayFocusMinutes
+          : todayFocusMinutes,
+    };
+  } catch {
+    return fallback;
+  }
+};
+
 // ═══════════════════════════════════════════════════════════════════
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════
 
 export const TimePage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<TabId>('now');
-  const [currentDate] = useState<Date>(new Date());
-  const [currentEnergy] = useState<number>(72);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState<TabId>(() => {
+    const requestedTab = searchParams.get('tab');
+    return isTabId(requestedTab) ? requestedTab : 'now';
+  });
+  const {
+    timeState,
+    events: agendaEvents,
+    energyState,
+    agendaMeta,
+    loading: agendaLoading,
+    initialized: agendaInitialized,
+    currentDate,
+    currentView,
+    setCurrentView,
+    goToToday,
+    goToPrevious,
+    goToNext,
+    viewEvents,
+    weekGrid,
+    createQuickEvent,
+    toggleEnergyOverlay,
+    toggleFocusBlocks,
+    stats: agendaStats,
+    refresh: refreshAgenda,
+  } = useTimeAgenda();
+
   const [snapshots, setSnapshots] = useState<Snapshot[]>([]);
   const [selectedSnapshot, setSelectedSnapshot] = useState<Snapshot | null>(null);
   const [stats, setStats] = useState<TravelStats | null>(null);
   const [loading, setLoading] = useState(false);
-  const [flowState] = useState<FlowState>({
-    isInFlow: false,
-    flowIntensity: 0,
-    flowDuration: 0,
-    lastFlowSession: null,
-    totalFlowToday: 0,
-  });
+  const [syncError, setSyncError] = useState<string | null>(null);
 
-  // Mock data
-  const todayBlocks: TimeBlock[] = [
-    {
-      id: '1',
-      start: '09:00',
-      end: '11:00',
-      title: 'Deep Work - Architecture v25',
-      type: 'focus',
-      priority: 'high',
-      energy: 85,
-    },
-    {
-      id: '2',
-      start: '11:00',
-      end: '11:30',
-      title: 'Pause récupération',
-      type: 'break',
-      priority: 'medium',
-      energy: 60,
-    },
-    {
-      id: '3',
-      start: '14:00',
-      end: '16:00',
-      title: 'Réunion stratégique',
-      type: 'meeting',
-      priority: 'high',
-      energy: 70,
-    },
-    {
-      id: '4',
-      start: '16:30',
-      end: '18:00',
-      title: 'Création contenu',
-      type: 'creative',
-      priority: 'medium',
-      energy: 65,
-    },
-  ];
+  const currentEnergy = useMemo(() => {
+    const rawLevel = energyState?.currentEnergyLevel ?? agendaStats.currentEnergy ?? 0.72;
+    return Math.max(0, Math.min(100, Math.round(rawLevel * 100)));
+  }, [energyState?.currentEnergyLevel, agendaStats.currentEnergy]);
 
-  // Load snapshots & stats
+  const todayBlocks = useMemo(
+    () =>
+      agendaEvents
+        .filter(event => isSameCalendarDay(new Date(event.startDateTime), currentDate))
+        .sort((left, right) => left.startDateTime.localeCompare(right.startDateTime))
+        .map(mapAgendaEventToTimeBlock),
+    [agendaEvents, currentDate]
+  );
+
+  const todayFocusMinutes = useMemo(
+    () =>
+      agendaEvents
+        .filter(
+          event =>
+            isSameCalendarDay(new Date(event.startDateTime), currentDate) &&
+            ['focus', 'work', 'creative', 'learning'].includes(event.category)
+        )
+        .reduce((total, event) => total + getEventDurationMinutes(event), 0),
+    [agendaEvents, currentDate]
+  );
+
+  const updateActiveTab = useCallback(
+    (nextTab: TabId) => {
+      setActiveTab(nextTab);
+      setSearchParams(
+        prev => {
+          const next = new URLSearchParams(prev);
+          next.set('tab', nextTab);
+          return next;
+        },
+        { replace: true }
+      );
+    },
+    [setSearchParams]
+  );
+
   useEffect(() => {
-    loadSnapshots();
-    loadStats();
-    const interval = setInterval(loadStats, REFRESH_INTERVALS.SLOW);
-    return () => clearInterval(interval);
-  }, []);
+    const requestedTab = searchParams.get('tab');
+    if (isTabId(requestedTab) && requestedTab !== activeTab) {
+      setActiveTab(requestedTab);
+    }
+  }, [activeTab, searchParams]);
 
-  const loadSnapshots = async () => {
+  const loadSnapshots = useCallback(async () => {
     try {
       setLoading(true);
       const response = (await tauriClient.listSnapshots()) as Snapshot[];
       setSnapshots(response.sort((a, b) => b.timestamp - a.timestamp));
+      setSyncError(prev =>
+        prev === 'Impossible de charger les snapshots système.' ? null : prev
+      );
     } catch (error) {
       console.error('Failed to load snapshots:', error);
+      setSyncError('Impossible de charger les snapshots système.');
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const loadStats = async () => {
+  const loadStats = useCallback(async () => {
     try {
       const response = (await tauriClient.getTravelStats()) as TravelStats;
       setStats(response);
+      setSyncError(prev =>
+        prev === 'Impossible de synchroniser les métriques temporelles.' ? null : prev
+      );
     } catch (error) {
       console.error('Failed to load stats:', error);
+      setSyncError('Impossible de synchroniser les métriques temporelles.');
     }
-  };
+  }, []);
+
+  // Load snapshots & stats
+  useEffect(() => {
+    void refreshAgenda();
+    void loadSnapshots();
+    void loadStats();
+    const interval = setInterval(() => {
+      void loadStats();
+    }, REFRESH_INTERVALS.SLOW);
+    return () => clearInterval(interval);
+  }, [loadSnapshots, loadStats, refreshAgenda]);
 
   return (
     <div
@@ -184,8 +364,21 @@ export const TimePage: React.FC = () => {
         </p>
       </div>
 
+      {syncError && (
+        <div
+          className="rounded-lg border border-amber-600 bg-amber-900/30 px-4 py-3 text-sm text-amber-100"
+          data-testid="time-sync-error"
+        >
+          ⚠️ {syncError}
+        </div>
+      )}
+
       {/* Navigation Tabs */}
-      <div className="tabs flex gap-2 border-b border-gray-700 pb-4 overflow-x-auto">
+      <div
+        className="tabs flex gap-2 border-b border-gray-700 pb-4 overflow-x-auto"
+        role="tablist"
+        aria-label="Sections temporelles TIME"
+      >
         {[
           { id: 'now', label: '⚡ Maintenant', desc: "Aujourd'hui" },
           { id: 'agenda', label: '📅 Agenda', desc: 'Planning' },
@@ -196,7 +389,11 @@ export const TimePage: React.FC = () => {
           <button
             key={tab.id}
             data-testid={`tab-time-${tab.id}`}
-            onClick={() => setActiveTab(tab.id as TabId)}
+            onClick={() => updateActiveTab(tab.id as TabId)}
+            role="tab"
+            aria-selected={activeTab === tab.id}
+            aria-controls={`time-panel-${tab.id}`}
+            id={`time-tab-${tab.id}`}
             className={`px-4 py-2 rounded-lg transition-all whitespace-nowrap ${
               activeTab === tab.id
                 ? 'bg-blue-600 text-white'
@@ -210,16 +407,46 @@ export const TimePage: React.FC = () => {
       </div>
 
       {/* Content Sections */}
-      <div className="content">
+      <div
+        className="content"
+        role="tabpanel"
+        id={`time-panel-${activeTab}`}
+        aria-labelledby={`time-tab-${activeTab}`}
+      >
         {activeTab === 'now' && (
           <NowSection
-            currentDate={currentDate}
+            currentDate={
+              new Date(timeState?.currentDateTime ?? currentDate.toISOString())
+            }
             currentEnergy={currentEnergy}
             todayBlocks={todayBlocks}
+            currentSegment={agendaStats.currentSegment}
+            isWorkHours={agendaStats.isWorkHours}
+            timeZone={timeState?.timeZone ?? 'Local'}
+            eventsToday={agendaStats.eventsToday}
           />
         )}
-        {activeTab === 'agenda' && <AgendaSection />}
-        {activeTab === 'timeline' && <TimelineSection />}
+        {activeTab === 'agenda' && (
+          <AgendaSection
+            currentDate={currentDate}
+            currentView={currentView === 'month' ? 'month' : 'week'}
+            setView={view => setCurrentView(view)}
+            weekGrid={weekGrid}
+            viewEvents={viewEvents}
+            loading={agendaLoading}
+            initialized={agendaInitialized}
+            onPrevious={goToPrevious}
+            onNext={goToNext}
+            onGoToToday={goToToday}
+            onCreateQuickEvent={createQuickEvent}
+            agendaMeta={agendaMeta}
+            onToggleEnergyOverlay={toggleEnergyOverlay}
+            onToggleFocusBlocks={toggleFocusBlocks}
+          />
+        )}
+        {activeTab === 'timeline' && (
+          <TimelineSection agendaEvents={agendaEvents} snapshots={snapshots} />
+        )}
         {activeTab === 'snapshots' && (
           <SnapshotsSection
             snapshots={snapshots}
@@ -228,9 +455,17 @@ export const TimePage: React.FC = () => {
             stats={stats}
             loading={loading}
             loadSnapshots={loadSnapshots}
+            loadStats={loadStats}
           />
         )}
-        {activeTab === 'cognitive' && <CognitiveEngineSection flowState={flowState} />}
+        {activeTab === 'cognitive' && (
+          <CognitiveEngineSection
+            energyPercent={currentEnergy}
+            currentSegment={agendaStats.currentSegment}
+            todayFocusMinutes={todayFocusMinutes}
+            isWorkHours={agendaStats.isWorkHours}
+          />
+        )}
       </div>
     </div>
   );
@@ -244,12 +479,20 @@ interface NowSectionProps {
   currentDate: Date;
   currentEnergy: number;
   todayBlocks: TimeBlock[];
+  currentSegment: string;
+  isWorkHours: boolean;
+  timeZone: string;
+  eventsToday: number;
 }
 
 const NowSection: React.FC<NowSectionProps> = ({
   currentDate,
   currentEnergy,
   todayBlocks,
+  currentSegment,
+  isWorkHours,
+  timeZone,
+  eventsToday,
 }) => {
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('fr-FR', {
@@ -281,7 +524,7 @@ const NowSection: React.FC<NowSectionProps> = ({
       {/* Contexte actuel */}
       <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
         <h3 className="text-xl font-semibold mb-4 text-blue-400">📍 Contexte Actuel</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           <div className="bg-gray-900 p-4 rounded">
             <div className="text-sm text-gray-400 mb-1">Date</div>
             <div className="text-lg font-medium">{formatDate(currentDate)}</div>
@@ -305,6 +548,20 @@ const NowSection: React.FC<NowSectionProps> = ({
                   style={{ width: `${currentEnergy}%` }}
                 />
               </div>
+            </div>
+          </div>
+          <div className="bg-gray-900 p-4 rounded" data-testid="time-current-segment">
+            <div className="text-sm text-gray-400 mb-1">Segment</div>
+            <div className="text-lg font-medium">{currentSegment}</div>
+            <div className="text-xs text-gray-500 mt-1">
+              {isWorkHours ? 'Heures productives actives' : 'Hors plage de travail'}
+            </div>
+          </div>
+          <div className="bg-gray-900 p-4 rounded">
+            <div className="text-sm text-gray-400 mb-1">Fuseau & charge</div>
+            <div className="text-lg font-medium">{timeZone}</div>
+            <div className="text-xs text-gray-500 mt-1">
+              {eventsToday} événement(s) synchronisé(s) aujourd&apos;hui
             </div>
           </div>
         </div>
@@ -350,7 +607,7 @@ const NowSection: React.FC<NowSectionProps> = ({
           {todayBlocks.map(block => (
             <div
               key={block.id}
-              className="flex items-center gap-4 p-4 bg-gray-900 rounded-lg hover:bg-gray-850 transition-colors"
+              className="flex items-center gap-4 p-4 bg-gray-900 rounded-lg hover:bg-gray-800 transition-colors"
             >
               <div className="text-sm font-mono text-gray-400 w-24">
                 {block.start} - {block.end}
@@ -400,62 +657,222 @@ const NowSection: React.FC<NowSectionProps> = ({
 // SECTION 2: AGENDA (Planning intelligent)
 // ═══════════════════════════════════════════════════════════════════
 
-const AgendaSection: React.FC = () => {
-  const [view, setView] = useState<'week' | 'month'>('week');
+interface AgendaSectionProps {
+  currentDate: Date;
+  currentView: 'week' | 'month';
+  setView: (view: 'week' | 'month') => void;
+  weekGrid: { date: Date; events: AgendaEvent[] }[];
+  viewEvents: AgendaEvent[];
+  loading: boolean;
+  initialized: boolean;
+  onPrevious: () => void;
+  onNext: () => void;
+  onGoToToday: () => void;
+  onCreateQuickEvent: (title: string, startOffset?: number) => Promise<AgendaEvent>;
+  agendaMeta: {
+    showEnergyOverlay: boolean;
+    showFocusBlocks: boolean;
+  };
+  onToggleEnergyOverlay: () => void;
+  onToggleFocusBlocks: () => void;
+}
+
+const AgendaSection: React.FC<AgendaSectionProps> = ({
+  currentDate,
+  currentView,
+  setView,
+  weekGrid,
+  viewEvents,
+  loading,
+  initialized,
+  onPrevious,
+  onNext,
+  onGoToToday,
+  onCreateQuickEvent,
+  agendaMeta,
+  onToggleEnergyOverlay,
+  onToggleFocusBlocks,
+}) => {
+  const { success, error: errorToast } = useToast();
+  const [planningPrompt, setPlanningPrompt] = useState('');
+
+  const monthEvents = useMemo(
+    () =>
+      [...viewEvents].sort((left, right) =>
+        left.startDateTime.localeCompare(right.startDateTime)
+      ),
+    [viewEvents]
+  );
+
+  const handleGeneratePlan = useCallback(async () => {
+    const title = planningPrompt.trim() || 'Bloc Focus TITANE';
+    try {
+      await onCreateQuickEvent(title, 60);
+      success('Bloc agenda synchronisé avec succès.');
+      setPlanningPrompt('');
+    } catch (error) {
+      errorToast(`Impossible de créer le bloc: ${String(error)}`);
+    }
+  }, [errorToast, onCreateQuickEvent, planningPrompt, success]);
 
   return (
     <div className="agenda-section space-y-6">
       <TSectionHeader
         title="📅 Agenda"
-        subtitle="Planning semaine et mois - Time-blocking intelligent"
+        subtitle="Planning synchronisé semaine/mois - Time-blocking intelligent"
       />
 
-      {/* View Selector */}
-      <div className="flex gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <button
           data-testid="btn-time-view-week"
           onClick={() => setView('week')}
-          className={`px-4 py-2 rounded ${view === 'week' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'}`}
+          className={`px-4 py-2 rounded ${currentView === 'week' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'}`}
         >
           📅 Semaine
         </button>
         <button
           data-testid="btn-time-view-month"
           onClick={() => setView('month')}
-          className={`px-4 py-2 rounded ${view === 'month' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'}`}
+          className={`px-4 py-2 rounded ${currentView === 'month' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'}`}
         >
           📆 Mois
         </button>
+        <div className="flex-1" />
+        <button
+          data-testid="btn-time-prev-range"
+          onClick={onPrevious}
+          className="px-3 py-2 rounded bg-gray-800 text-gray-200 hover:bg-gray-700"
+        >
+          ← Précédent
+        </button>
+        <button
+          data-testid="btn-time-today"
+          onClick={onGoToToday}
+          className="px-3 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
+        >
+          Aujourd&apos;hui
+        </button>
+        <button
+          data-testid="btn-time-next-range"
+          onClick={onNext}
+          className="px-3 py-2 rounded bg-gray-800 text-gray-200 hover:bg-gray-700"
+        >
+          Suivant →
+        </button>
       </div>
 
-      {/* Agenda View */}
-      {view === 'week' && (
-        <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-          <h3 className="text-xl font-semibold mb-4 text-blue-400">
-            Semaine du 16-22 Décembre 2025
+      <div className="flex flex-wrap gap-2 text-sm">
+        <button
+          data-testid="btn-time-toggle-energy"
+          onClick={onToggleEnergyOverlay}
+          className={`px-3 py-2 rounded ${agendaMeta.showEnergyOverlay ? 'bg-emerald-700 text-white' : 'bg-gray-800 text-gray-300'}`}
+        >
+          {agendaMeta.showEnergyOverlay
+            ? '🔋 Overlay énergie actif'
+            : '🔋 Overlay énergie inactif'}
+        </button>
+        <button
+          data-testid="btn-time-toggle-focus"
+          onClick={onToggleFocusBlocks}
+          className={`px-3 py-2 rounded ${agendaMeta.showFocusBlocks ? 'bg-purple-700 text-white' : 'bg-gray-800 text-gray-300'}`}
+        >
+          {agendaMeta.showFocusBlocks
+            ? '🎯 Blocs focus visibles'
+            : '🎯 Blocs focus masqués'}
+        </button>
+      </div>
+
+      <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <h3 className="text-xl font-semibold text-blue-400">
+            {currentView === 'week'
+              ? `Semaine du ${currentDate.toLocaleDateString('fr-FR')}`
+              : `Mois de ${currentDate.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}`}
           </h3>
-          <div className="text-gray-400 text-center py-12">
-            <div className="text-6xl mb-4">📆</div>
-            <div>Vue semaine avec time-blocks et énergie</div>
-            <div className="text-sm mt-2">
-              (Composant calendrier semaine à implémenter)
-            </div>
-          </div>
+          <span className="text-xs text-gray-400">
+            {initialized ? 'Synchronisation agenda active' : 'Initialisation agenda…'}
+          </span>
         </div>
-      )}
 
-      {view === 'month' && (
-        <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-          <h3 className="text-xl font-semibold mb-4 text-blue-400">Décembre 2025</h3>
+        {loading && !initialized ? (
           <div className="text-gray-400 text-center py-12">
-            <div className="text-6xl mb-4">📆</div>
-            <div>Vue calendrier mois avec jalons et projets majeurs</div>
-            <div className="text-sm mt-2">(Composant calendrier mois à implémenter)</div>
+            Synchronisation de l&apos;agenda…
           </div>
-        </div>
-      )}
+        ) : currentView === 'week' ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+            {weekGrid.map(({ date, events }) => (
+              <div
+                key={date.toISOString()}
+                className="rounded-lg border border-gray-700 bg-gray-900 p-4"
+                data-testid={`time-weekday-${date.toISOString().slice(0, 10)}`}
+              >
+                <div className="mb-3">
+                  <div className="text-sm text-gray-400">
+                    {date.toLocaleDateString('fr-FR', { weekday: 'long' })}
+                  </div>
+                  <div className="text-base font-semibold text-white">
+                    {date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
+                  </div>
+                </div>
 
-      {/* Création intelligente */}
+                {events.length === 0 ? (
+                  <div className="text-sm text-gray-500">Aucun événement synchronisé</div>
+                ) : (
+                  <div className="space-y-2">
+                    {events.map(event => (
+                      <div
+                        key={event.id}
+                        className="rounded border border-blue-800 bg-blue-900/20 p-3"
+                        data-testid="time-agenda-event"
+                      >
+                        <div className="text-sm font-semibold text-white">
+                          {event.title}
+                        </div>
+                        <div className="text-xs text-blue-200">
+                          {formatAgendaTime(event.startDateTime)} →{' '}
+                          {formatAgendaTime(event.endDateTime)}
+                        </div>
+                        <div className="mt-1 text-xs text-gray-300">
+                          {event.category} · priorité {event.priority}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : monthEvents.length === 0 ? (
+          <div className="text-gray-400 text-center py-12">
+            Aucun événement synchronisé pour cette période.
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {monthEvents.map(event => (
+              <div
+                key={event.id}
+                className="flex items-start justify-between gap-4 rounded-lg border border-gray-700 bg-gray-900 p-4"
+              >
+                <div>
+                  <div className="font-semibold text-white">{event.title}</div>
+                  <div className="text-sm text-gray-400">
+                    {new Date(event.startDateTime).toLocaleDateString('fr-FR', {
+                      weekday: 'long',
+                      day: 'numeric',
+                      month: 'long',
+                    })}
+                  </div>
+                </div>
+                <div className="text-sm text-blue-300">
+                  {formatAgendaTime(event.startDateTime)} →{' '}
+                  {formatAgendaTime(event.endDateTime)}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
         <h3 className="text-xl font-semibold mb-4 text-blue-400">
           🤖 Création Intelligente
@@ -464,18 +881,22 @@ const AgendaSection: React.FC = () => {
           <input
             type="text"
             data-testid="input-time-planning-prompt"
-            placeholder="Ex: Planifie 3 blocs de 90min pour TITANE v25 cette semaine"
+            placeholder="Ex: Planifie un bloc focus TITANE cette semaine"
+            value={planningPrompt}
+            onChange={event => setPlanningPrompt(event.target.value)}
             className="w-full p-3 bg-gray-900 rounded border border-gray-700 text-gray-100 placeholder-gray-500"
           />
           <div className="flex gap-2">
             <button
               data-testid="btn-time-generate-plan"
+              onClick={() => void handleGeneratePlan()}
               className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white transition-colors"
             >
               ✨ Générer avec IA
             </button>
             <button
               data-testid="btn-time-add-manual"
+              onClick={() => void onCreateQuickEvent('Nouvel événement manuel', 30)}
               className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded text-white transition-colors"
             >
               ➕ Ajouter manuellement
@@ -484,9 +905,8 @@ const AgendaSection: React.FC = () => {
         </div>
         <div className="mt-4 p-4 bg-blue-900/20 rounded border border-blue-800">
           <div className="text-sm text-blue-300">
-            💡 TITANE analysera ton temps disponible, tes niveaux d&apos;énergie
-            habituels, et l&apos;importance du projet pour proposer les meilleurs
-            créneaux.
+            💡 TITANE synchronise maintenant les blocs visibles avec l&apos;agenda réel et
+            le contexte énergétique.
           </div>
         </div>
       </div>
@@ -498,15 +918,19 @@ const AgendaSection: React.FC = () => {
 // SECTION 3: TIMELINE (Navigation temporelle)
 // ═══════════════════════════════════════════════════════════════════
 
-const TimelineSection: React.FC = () => {
-  // DISPLAY_ONLY — événements curated, aucune connexion IPC live
+interface TimelineSectionProps {
+  agendaEvents: AgendaEvent[];
+  snapshots: Snapshot[];
+}
+
+const TimelineSection: React.FC<TimelineSectionProps> = ({ agendaEvents, snapshots }) => {
   const [filterPeriod, setFilterPeriod] = React.useState<
     'all' | 'past' | 'present' | 'future'
   >('all');
   const [filterType, setFilterType] = React.useState<string>('all');
   const PROJECT_ORIGIN = new Date('2025-10-20');
 
-  const mockEvents: TimelineEvent[] = [
+  const curatedEvents: TimelineEvent[] = [
     {
       id: '1',
       date: new Date('2025-10-20'),
@@ -573,38 +997,87 @@ const TimelineSection: React.FC = () => {
     },
   ];
 
+  const liveEvents = React.useMemo<TimelineEvent[]>(() => {
+    const agendaTimeline: TimelineEvent[] = agendaEvents.map(event => {
+      const timelineType: TimelineEvent['type'] =
+        event.category === 'meeting'
+          ? 'project'
+          : event.category === 'focus' || event.category === 'work'
+            ? 'titane'
+            : 'life';
+
+      const timelineImportance: TimelineEvent['importance'] =
+        event.priority === 'critical' || event.priority === 'urgent'
+          ? 'critical'
+          : event.priority === 'high'
+            ? 'high'
+            : event.priority === 'medium'
+              ? 'medium'
+              : 'low';
+
+      return {
+        id: `agenda-${event.id}`,
+        date: new Date(event.startDateTime),
+        title: event.title,
+        type: timelineType,
+        description: `Agenda synchronisé · ${event.category} · priorité ${event.priority}`,
+        importance: timelineImportance,
+      };
+    });
+
+    const snapshotTimeline: TimelineEvent[] = snapshots.map(snapshot => ({
+      id: `snapshot-${snapshot.id}`,
+      date: new Date(snapshot.timestamp * 1000),
+      title: `Snapshot ${snapshot.version}`,
+      type: 'milestone' as const,
+      description: `Niveau ${snapshot.context.level} · XP ${snapshot.context.xp} · ${snapshot.context.personaMood}`,
+      importance: 'high' as const,
+    }));
+
+    return [...agendaTimeline, ...snapshotTimeline];
+  }, [agendaEvents, snapshots]);
+
+  const allEvents = React.useMemo(
+    () =>
+      [...curatedEvents, ...liveEvents].sort(
+        (a, b) => a.date.getTime() - b.date.getTime()
+      ),
+    [liveEvents]
+  );
+
   const now = new Date();
   const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
-  // Filtered events by period and type
   const visibleEvents = React.useMemo(() => {
-    return mockEvents
-      .filter(e => {
-        if (filterType !== 'all' && e.type !== filterType) return false;
-        if (filterPeriod === 'past')
-          return e.date < now && Math.abs(e.date.getTime() - now.getTime()) > ONE_WEEK_MS;
-        if (filterPeriod === 'present')
-          return Math.abs(e.date.getTime() - now.getTime()) <= ONE_WEEK_MS;
-        if (filterPeriod === 'future')
-          return e.date > now && Math.abs(e.date.getTime() - now.getTime()) > ONE_WEEK_MS;
-        return true;
-      })
-      .sort((a, b) => a.date.getTime() - b.date.getTime());
-  }, [filterPeriod, filterType]);
+    return allEvents.filter(e => {
+      if (filterType !== 'all' && e.type !== filterType) return false;
+      if (filterPeriod === 'past') {
+        return e.date < now && Math.abs(e.date.getTime() - now.getTime()) > ONE_WEEK_MS;
+      }
+      if (filterPeriod === 'present') {
+        return Math.abs(e.date.getTime() - now.getTime()) <= ONE_WEEK_MS;
+      }
+      if (filterPeriod === 'future') {
+        return e.date > now && Math.abs(e.date.getTime() - now.getTime()) > ONE_WEEK_MS;
+      }
+      return true;
+    });
+  }, [allEvents, filterPeriod, filterType, now]);
 
-  // Dynamic stats derived from real events
-  const totalEvents = mockEvents.length;
-  const milestonesCount = mockEvents.filter(e => e.importance === 'critical').length;
+  const totalEvents = allEvents.length;
+  const milestonesCount = allEvents.filter(
+    e => e.importance === 'critical' || e.type === 'milestone'
+  ).length;
   const daysSinceOrigin = Math.floor(
     (now.getTime() - PROJECT_ORIGIN.getTime()) / (1000 * 60 * 60 * 24)
   );
-  const futureEvents = mockEvents.filter(e => e.date > now);
+  const futureEvents = allEvents.filter(e => e.date > now).slice(0, 6);
 
   return (
     <div className="timeline-section space-y-6">
       <TSectionHeader
         title="🧭 Navigation Temporelle"
-        subtitle="Timeline vivante — Passé, présent, futur (DISPLAY_ONLY — curated)"
+        subtitle="Timeline synchronisée — événements live + milestones TITANE"
       />
 
       {/* Timeline Controls */}
@@ -729,9 +1202,9 @@ const TimelineSection: React.FC = () => {
         </div>
       </div>
 
-      {/* Stats Timeline — dynamiques dérivées des événements curated */}
+      {/* Stats Timeline — dynamiques dérivées des événements synchronisés */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <TMetric label="Événements Curated" value={String(totalEvents)} icon="📊" />
+        <TMetric label="Événements synchronisés" value={String(totalEvents)} icon="📊" />
         <TMetric label="Milestones Critiques" value={String(milestonesCount)} icon="🎯" />
         <TMetric label="Jours depuis Origine" value={String(daysSinceOrigin)} icon="⏱️" />
       </div>
@@ -773,6 +1246,7 @@ interface SnapshotsSectionProps {
   stats: TravelStats | null;
   loading: boolean;
   loadSnapshots: () => Promise<void>;
+  loadStats: () => Promise<void>;
 }
 
 const SnapshotsSection: React.FC<SnapshotsSectionProps> = ({
@@ -782,6 +1256,7 @@ const SnapshotsSection: React.FC<SnapshotsSectionProps> = ({
   stats,
   loading,
   loadSnapshots,
+  loadStats,
 }) => {
   const { success, error: errorToast } = useToast();
   const formatDate = (timestamp: number): string => {
@@ -818,7 +1293,10 @@ const SnapshotsSection: React.FC<SnapshotsSectionProps> = ({
 
     try {
       await tauriClient.deleteSnapshot({ snapshot_id: snapshot.id });
-      loadSnapshots();
+      if (selectedSnapshot?.id === snapshot.id) {
+        setSelectedSnapshot(null);
+      }
+      await Promise.all([loadSnapshots(), loadStats()]);
     } catch (error) {
       errorToast(`Erreur: ${error}`);
     }
@@ -827,7 +1305,7 @@ const SnapshotsSection: React.FC<SnapshotsSectionProps> = ({
   const handleCreateSnapshot = async () => {
     try {
       await tauriClient.titanForceSnapshot({ reason: 'manual_time_page' });
-      await loadSnapshots();
+      await Promise.all([loadSnapshots(), loadStats()]);
       success('Snapshot créé avec succès.');
     } catch (error) {
       errorToast(`Erreur création snapshot: ${error}`);
@@ -1014,27 +1492,85 @@ const SnapshotsSection: React.FC<SnapshotsSectionProps> = ({
 // ═══════════════════════════════════════════════════════════════════
 
 interface CognitiveEngineSectionProps {
-  flowState: FlowState;
+  energyPercent: number;
+  currentSegment: string;
+  todayFocusMinutes: number;
+  isWorkHours: boolean;
 }
 
-const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({ flowState }) => {
-  const [flowActive, setFlowActive] = React.useState(false);
+const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({
+  energyPercent,
+  currentSegment,
+  todayFocusMinutes,
+  isWorkHours,
+}) => {
+  const [cognitiveState, setCognitiveState] = React.useState<CognitiveStateSnapshot>(() =>
+    readStoredCognitiveState(
+      energyPercent,
+      currentSegment,
+      todayFocusMinutes,
+      isWorkHours
+    )
+  );
 
-  // Persist cognitive state to localStorage for chat pipeline
   React.useEffect(() => {
-    try {
-      localStorage.setItem(
-        'titane_cognitive_state',
-        JSON.stringify({
-          flowActive,
-          energy: 72,
-          mode: flowActive ? 'deep-work' : 'normal',
-        })
-      );
-    } catch {
-      // non-blocking
-    }
-  }, [flowActive]);
+    setCognitiveState(prev => {
+      const next = {
+        ...prev,
+        energy: energyPercent,
+        mode: prev.flowActive ? 'deep-work' : isWorkHours ? 'planning' : 'recovery',
+        segment: currentSegment,
+        todayFocusMinutes,
+      };
+
+      try {
+        localStorage.setItem('titane_cognitive_state', JSON.stringify(next));
+      } catch {
+        // non-blocking
+      }
+
+      return JSON.stringify(prev) === JSON.stringify(next) ? prev : next;
+    });
+  }, [energyPercent, currentSegment, todayFocusMinutes, isWorkHours]);
+
+  const flowState = React.useMemo<FlowState>(() => {
+    const flowDuration = cognitiveState.flowActive
+      ? Math.max(1, Math.round((Date.now() - cognitiveState.updatedAt) / 60000))
+      : 0;
+
+    return {
+      isInFlow: cognitiveState.flowActive,
+      flowIntensity: cognitiveState.flowActive ? energyPercent : 0,
+      flowDuration,
+      lastFlowSession: cognitiveState.updatedAt
+        ? new Date(cognitiveState.updatedAt)
+        : null,
+      totalFlowToday: todayFocusMinutes,
+    };
+  }, [cognitiveState, energyPercent, todayFocusMinutes]);
+
+  const handleToggleFlow = React.useCallback(() => {
+    setCognitiveState(prev => {
+      const nextFlowActive = !prev.flowActive;
+      const next = {
+        ...prev,
+        flowActive: nextFlowActive,
+        energy: energyPercent,
+        mode: nextFlowActive ? 'deep-work' : isWorkHours ? 'planning' : 'recovery',
+        segment: currentSegment,
+        todayFocusMinutes,
+        updatedAt: Date.now(),
+      };
+
+      try {
+        localStorage.setItem('titane_cognitive_state', JSON.stringify(next));
+      } catch {
+        // non-blocking
+      }
+
+      return next;
+    });
+  }, [energyPercent, currentSegment, todayFocusMinutes, isWorkHours]);
 
   return (
     <div className="cognitive-engine-section space-y-6">
@@ -1047,19 +1583,25 @@ const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({ flowSta
       <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 flex items-center justify-between">
         <div>
           <div className="font-semibold text-white">
-            {flowActive ? '🌊 Session Flow active' : '⏸️ Aucune session Flow'}
+            {cognitiveState.flowActive
+              ? '🌊 Session Flow active'
+              : '⏸️ Aucune session Flow'}
           </div>
           <div className="text-sm text-gray-400">
-            {flowActive
+            {cognitiveState.flowActive
               ? 'Mode deep-work engagé'
               : 'Démarre une session pour activer le mode cognitif'}
           </div>
+          <div className="text-xs text-gray-500 mt-1">
+            Segment actif: {currentSegment} · Mode: {cognitiveState.mode}
+          </div>
         </div>
         <button
-          onClick={() => setFlowActive(v => !v)}
-          className={`px-4 py-2 rounded-lg font-medium transition-all ${flowActive ? 'bg-red-700 hover:bg-red-600 text-white' : 'bg-green-700 hover:bg-green-600 text-white'}`}
+          data-testid="btn-time-flow-toggle"
+          onClick={handleToggleFlow}
+          className={`px-4 py-2 rounded-lg font-medium transition-all ${cognitiveState.flowActive ? 'bg-red-700 hover:bg-red-600 text-white' : 'bg-green-700 hover:bg-green-600 text-white'}`}
         >
-          {flowActive ? '⏹ Arrêter Session' : '▶ Démarrer Session Flow'}
+          {cognitiveState.flowActive ? '⏹ Arrêter Session' : '▶ Démarrer Session Flow'}
         </button>
       </div>
 

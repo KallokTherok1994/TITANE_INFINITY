@@ -15,6 +15,8 @@ export type ModuleDataTruthClass =
 export interface ModuleRouteContext {
   route: string;
   aliasResolvedFrom?: string;
+  pageState?: string;
+  fullRoute?: string;
   moduleId: string;
   moduleName: string;
   moduleType: string;
@@ -58,8 +60,8 @@ const ROUTE_ALIASES: Record<string, string> = {
   '/cognitive-evolution': '/titane',
   '/identity-memory-evolution': '/titane',
   '/progression': '/titane',
-  '/xp': '/titane',
-  '/cognitive': '/stats',
+  '/xp': '/experience',
+  '/cognitive': '/dev',
   '/temporal-center': '/time',
   '/agenda': '/time',
   '/time-navigator': '/time',
@@ -121,6 +123,17 @@ const MODULE_REGISTRY: Record<string, ModuleRouteDefinition> = {
     actions: ['send_message', 'switch_mode', 'switch_provider', 'refresh_runtime_truth'],
     limits: ['provider-quality-conditional', 'module-context-not-global-by-default'],
     memoryKeys: ['titane_chat_mode_*', 'conversationId', 'runtime.providerMeta'],
+  },
+  '/experience': {
+    moduleId: 'experience_page',
+    moduleName: 'Experience Page',
+    moduleType: 'progression',
+    pageTitle: 'Experience',
+    capabilities: ['xp-progression', 'level-metrics', 'milestone-visibility'],
+    dataTruthClass: 'MIXED_LIVE_AND_STATIC',
+    actions: ['read_progression_state'],
+    limits: ['read-mostly-dashboard'],
+    memoryKeys: ['xp_progression_filters'],
   },
   '/stats': {
     moduleId: 'stats_cognitive',
@@ -241,10 +254,18 @@ const MODULE_REGISTRY: Record<string, ModuleRouteDefinition> = {
     moduleName: 'Memory Evolution',
     moduleType: 'memory',
     pageTitle: 'Memory Evolution',
-    capabilities: ['hierarchy-health', 'clustering', 'repair', 'backup'],
+    capabilities: [
+      'hierarchy-health',
+      'cluster-observability',
+      'persistent-bridge-visibility',
+    ],
     dataTruthClass: 'LIVE_TAURI',
-    actions: ['memory_parse', 'memory_synthesize', 'memory_check_repair'],
-    limits: ['operation-latency-variable'],
+    actions: ['memory_get_clusters', 'memory_get_status', 'persistent_memory_get_stats'],
+    limits: [
+      'legacy-memory-evolution-isolated-from-persistent-ltm',
+      'write-actions-blocked-until-persistent-bridge-exists',
+      'operation-latency-variable',
+    ],
     memoryKeys: ['memory_evolution_pipeline_state'],
   },
   '/memory': {
@@ -252,10 +273,18 @@ const MODULE_REGISTRY: Record<string, ModuleRouteDefinition> = {
     moduleName: 'Memory Page',
     moduleType: 'memory',
     pageTitle: 'Memory',
-    capabilities: ['memory-list', 'memory-save', 'memory-clear'],
+    capabilities: ['memory-list', 'memory-search', 'memory-tree', 'memory-stats'],
     dataTruthClass: 'LIVE_TAURI_SERVICE_BRIDGE',
-    actions: ['memory_get_state', 'save_chat_interaction', 'memory_clear'],
-    limits: ['legacy-memory-endpoints-coexist'],
+    actions: [
+      'persistent_memory_read',
+      'persistent_memory_get_stats',
+      'persistent_memory_write_entry',
+      'persistent_memory_delete_entry',
+    ],
+    limits: [
+      'persistent-bootstrap-latency-visible',
+      'search-disabled-when-no-persistent-entries',
+    ],
     memoryKeys: ['memory_entries_ui_state'],
   },
   '/research': {
@@ -284,6 +313,83 @@ const MODULE_REGISTRY: Record<string, ModuleRouteDefinition> = {
     ],
     limits: ['requires-initialization-and-passphrase'],
     memoryKeys: ['cloud_sync_status', 'device_identity'],
+  },
+  '/fusion': {
+    moduleId: 'fusion_center',
+    moduleName: 'Fusion Center',
+    moduleType: 'integration',
+    pageTitle: 'Fusion',
+    capabilities: ['backend-frontend-health', 'state-fusion', 'observability'],
+    dataTruthClass: 'LIVE_TAURI_WITH_FALLBACK',
+    actions: ['refresh_fusion_state'],
+    limits: ['dashboard-health-depends-on-runtime'],
+    memoryKeys: ['fusion_dashboard_state'],
+  },
+  '/optimization': {
+    moduleId: 'optimization_center',
+    moduleName: 'Optimization Center',
+    moduleType: 'performance',
+    pageTitle: 'Optimization',
+    capabilities: ['perf-insights', 'cache-health', 'runtime-optimization'],
+    dataTruthClass: 'MIXED_LIVE_AND_STATIC',
+    actions: ['refresh_performance_metrics'],
+    limits: ['some-panels-derive-from-local-metrics'],
+    memoryKeys: ['optimization_dashboard_state'],
+  },
+  '/total-dev': {
+    moduleId: 'total_dev_center',
+    moduleName: 'Total Dev Center',
+    moduleType: 'operations',
+    pageTitle: 'Total Dev',
+    capabilities: ['advanced-dev-ops', 'restricted-tools', 'deep-diagnostics'],
+    dataTruthClass: 'LIVE_TAURI_WITH_FALLBACK',
+    actions: ['refresh_total_dev_state'],
+    limits: ['restricted-surface'],
+    memoryKeys: ['total_dev_state'],
+  },
+  '/knowledge': {
+    moduleId: 'knowledge_page',
+    moduleName: 'Knowledge Page',
+    moduleType: 'knowledge',
+    pageTitle: 'Knowledge',
+    capabilities: ['knowledge-import', 'knowledge-fusion'],
+    dataTruthClass: 'MIXED_LIVE_AND_STATIC',
+    actions: ['knowledge_refresh'],
+    limits: ['page-lazy-loaded'],
+    memoryKeys: ['knowledge_ui_state'],
+  },
+  '/creation': {
+    moduleId: 'creation_studio',
+    moduleName: 'Creation Studio',
+    moduleType: 'creation',
+    pageTitle: 'Creation',
+    capabilities: ['creation-tools', 'asset-generation'],
+    dataTruthClass: 'MIXED_LIVE_AND_STATIC',
+    actions: ['creation_refresh'],
+    limits: ['page-lazy-loaded'],
+    memoryKeys: ['creation_ui_state'],
+  },
+  '/evolution': {
+    moduleId: 'evolution_monitor',
+    moduleName: 'Evolution Monitor',
+    moduleType: 'monitoring',
+    pageTitle: 'Evolution',
+    capabilities: ['evolution-overview', 'monitoring'],
+    dataTruthClass: 'MIXED_LIVE_AND_STATIC',
+    actions: ['evolution_refresh'],
+    limits: ['page-lazy-loaded'],
+    memoryKeys: ['evolution_ui_state'],
+  },
+  '/performance': {
+    moduleId: 'performance_test',
+    moduleName: 'Performance Test',
+    moduleType: 'performance',
+    pageTitle: 'Performance',
+    capabilities: ['performance-probe', 'render-metrics'],
+    dataTruthClass: 'MIXED_LIVE_AND_STATIC',
+    actions: ['run_performance_probe'],
+    limits: ['diagnostic-only-page'],
+    memoryKeys: ['performance_test_state'],
   },
 };
 
@@ -325,15 +431,31 @@ function writeJson(key: string, value: unknown): void {
   }
 }
 
-function normalizeRoute(pathname: string): { route: string; aliasResolvedFrom?: string } {
-  const route = pathname.split('?')[0] || '/';
+function normalizeRoute(pathWithState: string): {
+  route: string;
+  aliasResolvedFrom?: string;
+  pageState?: string;
+  fullRoute: string;
+} {
+  const [rawPath, ...queryParts] = pathWithState.split('?');
+  const route = rawPath || '/';
+  const pageState = queryParts.length > 0 ? queryParts.join('?') : undefined;
   const canonical = ROUTE_ALIASES[route];
 
   if (!canonical) {
-    return { route };
+    return {
+      route,
+      pageState,
+      fullRoute: pageState ? `${route}?${pageState}` : route,
+    };
   }
 
-  return { route: canonical, aliasResolvedFrom: route };
+  return {
+    route: canonical,
+    aliasResolvedFrom: route,
+    pageState,
+    fullRoute: pageState ? `${canonical}?${pageState}` : canonical,
+  };
 }
 
 function getDefinition(route: string): ModuleRouteDefinition {
@@ -350,9 +472,9 @@ export function readRecentModuleContexts(limit = 8): ModuleRouteContext[] {
   return history.slice(-limit);
 }
 
-export function publishActiveModuleContext(pathname: string): ModuleRouteContext {
+export function publishActiveModuleContext(pathWithState: string): ModuleRouteContext {
   const previous = readActiveModuleContext();
-  const normalized = normalizeRoute(pathname);
+  const normalized = normalizeRoute(pathWithState);
   const definition = getDefinition(normalized.route);
   const now = Date.now();
 
@@ -365,6 +487,8 @@ export function publishActiveModuleContext(pathname: string): ModuleRouteContext
   const context: ModuleRouteContext = {
     route: normalized.route,
     aliasResolvedFrom: normalized.aliasResolvedFrom,
+    pageState: normalized.pageState,
+    fullRoute: normalized.fullRoute,
     moduleId: definition.moduleId,
     moduleName: definition.moduleName,
     moduleType: definition.moduleType,

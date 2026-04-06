@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v26.3.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025-2026 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -40,22 +40,24 @@ import './utils/browserModeAdapter';
 // ✨ Phase 4 (Week 6): Initialize runtime log level manager
 import './config/logLevelConfig';
 
-// TITANE∞ v26.3.0 - Main Entry Point - Certification P10.4→P11 PASS
+// TITANE∞ v30.0.0 - Main Entry Point - Certification P10.4→P11 PASS
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { logger } from './lib/logger';
 import { setErrorToastDispatcher } from './lib/errorHandler';
 import { useUIStore } from './stores/uiStore';
 import App from './App'; // ✅ App principal réactivé (AppMinimal validé)
+import { SingularityBridge } from './services/singularityBridge';
+import { SingularityConnections } from './services/singularityConnections';
 // import AppMinimal from './AppMinimal'; // 🔍 DEBUG: Minimal test app
 
-// ✨ v25.3.0 OPT-9 - Monitoring lazy-loaded (non-blocking initialization)
+// ✨ v30.0.0 OPT-9 - Monitoring lazy-loaded (non-blocking initialization)
 // Moved to async initialization in bootstrap() below
 
 // ✅ v8.0 DESIGN SYSTEM - Tailwind CSS + TITANE∞ Tokens
 import './index.css'; // 🎨 v8.0: Tailwind CSS + Design Tokens (css-vars.css)
 
-// ✨ v25.7.4 RESPONSIVE DESIGN SYSTEM - Mobile-First Tokens & Utilities
+// ✨ v30.0.0 RESPONSIVE DESIGN SYSTEM - Mobile-First Tokens & Utilities
 import './design-system/responsive-tokens.css'; // 🎯 Fluid spacing, typography, layout
 import './design-system/responsive-utilities.css'; // 🛠️ Utility classes (grid-responsive, btn-touch, etc.)
 
@@ -868,7 +870,7 @@ console.log('║  🌌 TITANE∞ v19 - BOOT SEQUENCE                            
 console.log('║  Timestamp: ' + new Date().toISOString() + '                  ║');
 console.log('╚════════════════════════════════════════════════════════════════╝\n');
 
-// ✨ v26.2.0 Phase 5 - Monitoring Infrastructure (Priority 1)
+// ✨ v30.0.0 Phase 5 - Monitoring Infrastructure (Priority 1)
 console.log('[1/7] 🔍 Monitoring: Initializing (Web Vitals, Errors, Performance)...');
 if (import.meta.env.PROD) {
   // Load monitoring in background after First Contentful Paint
@@ -933,18 +935,56 @@ singularityEngine.initialize().then(() => {
 */
 
 // 🌟 v15: Initialize SingularityBridge
-// 🔴 DÉSACTIVÉ PERMANENT - Mode navigateur uniquement
-/*
+const getSingularityPollingIntervalMs = (): number => {
+  const defaultIntervalMs = import.meta.env.DEV ? 5000 : 0;
+
+  if (typeof window === 'undefined') {
+    return defaultIntervalMs;
+  }
+
+  const envEnabled =
+    String(import.meta.env.VITE_SINGULARITY_POLLING_ENABLED ?? '') === '1';
+  const storedEnabled = window.localStorage.getItem('titane_singularity_polling_enabled');
+  const lsEnabled = storedEnabled === '1' || storedEnabled === 'true';
+  const enabled = envEnabled || lsEnabled;
+
+  const envIntervalRaw = import.meta.env.VITE_SINGULARITY_POLLING_INTERVAL_MS;
+  const envIntervalMs =
+    typeof envIntervalRaw === 'string' && envIntervalRaw.trim().length > 0
+      ? Number(envIntervalRaw)
+      : NaN;
+
+  const lsIntervalRaw = window.localStorage.getItem(
+    'titane_singularity_polling_interval_ms'
+  );
+  const lsIntervalMs = lsIntervalRaw ? Number(lsIntervalRaw) : NaN;
+
+  const candidate = Number.isFinite(envIntervalMs)
+    ? envIntervalMs
+    : Number.isFinite(lsIntervalMs)
+      ? lsIntervalMs
+      : defaultIntervalMs;
+
+  if (!enabled) {
+    return 0;
+  }
+
+  if (!Number.isFinite(candidate) || candidate <= 0) {
+    return 5000;
+  }
+
+  return Math.max(1000, Math.floor(candidate));
+};
+
 SingularityBridge.initialize()
   .then(() => {
     console.log('✅ SingularityBridge initialized (Rust ↔ React sync active)');
 
-    // Log initial state
-    SingularityBridge.getGlobalCoherence().then(coherence => {
+    void SingularityBridge.getGlobalCoherence().then(coherence => {
       console.log('🔗 Backend Coherence:', (coherence * 100).toFixed(1) + '%');
     });
 
-    SingularityBridge.isCritical().then(critical => {
+    void SingularityBridge.isCritical().then(critical => {
       if (critical) {
         console.warn('⚠️  System in CRITICAL state!');
       } else {
@@ -952,60 +992,6 @@ SingularityBridge.initialize()
       }
     });
 
-    const getSingularityPollingIntervalMs = (): number => {
-      // Default behavior:
-      // - Dev: keep legacy polling (5s) for fast feedback.
-      // - Prod: no background polling by default (event-driven only).
-      const defaultIntervalMs = import.meta.env.DEV ? 5000 : 0;
-
-      if (typeof window === 'undefined') {
-        return defaultIntervalMs;
-      }
-
-      // Explicit opt-in knobs.
-      // - Env: VITE_SINGULARITY_POLLING_ENABLED=1
-      // - Env: VITE_SINGULARITY_POLLING_INTERVAL_MS=5000
-      // - LocalStorage: titane_singularity_polling_enabled=true
-      // - LocalStorage: titane_singularity_polling_interval_ms=5000
-      const envEnabled =
-        String(import.meta.env.VITE_SINGULARITY_POLLING_ENABLED ?? '') === '1';
-      const storedEnabled = window.localStorage.getItem(
-        'titane_singularity_polling_enabled'
-      );
-      const lsEnabled = storedEnabled === '1' || storedEnabled === 'true';
-      const enabled = envEnabled || lsEnabled;
-
-      const envIntervalRaw = import.meta.env.VITE_SINGULARITY_POLLING_INTERVAL_MS;
-      const envIntervalMs =
-        typeof envIntervalRaw === 'string' && envIntervalRaw.trim().length > 0
-          ? Number(envIntervalRaw)
-          : NaN;
-
-      const lsIntervalRaw = window.localStorage.getItem(
-        'titane_singularity_polling_interval_ms'
-      );
-      const lsIntervalMs = lsIntervalRaw ? Number(lsIntervalRaw) : NaN;
-
-      const candidate = Number.isFinite(envIntervalMs)
-        ? envIntervalMs
-        : Number.isFinite(lsIntervalMs)
-          ? lsIntervalMs
-          : defaultIntervalMs;
-
-      // If polling isn't explicitly enabled, force event-driven.
-      if (!enabled) {
-        return 0;
-      }
-
-      // Guard rails: minimum 1s if enabled.
-      if (!Number.isFinite(candidate) || candidate <= 0) {
-        return 5000;
-      }
-
-      return Math.max(1000, Math.floor(candidate));
-    };
-
-    // 🔗 v15: Start subsystem connections (Helios, Memory, Persona, AutoHeal, UI)
     const singularityIntervalMs = getSingularityPollingIntervalMs();
     SingularityConnections.start(singularityIntervalMs)
       .then(() => {
@@ -1037,8 +1023,6 @@ SingularityBridge.initialize()
       err as Error
     );
   });
-*/
-console.log('🔴 SingularityBridge: DÉSACTIVÉ PERMANENT (mode navigateur uniquement)');
 
 // Phase 8: Initialize Performance Monitoring - DÉSACTIVÉ pour debug
 /*

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.4.0 — EventStream Component
+ * TITANE∞ v30.0.0 — EventStream Component
  * Display realtime system events
  */
 

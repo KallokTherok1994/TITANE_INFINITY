@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.2.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * 🌐 BROWSER MODE ADAPTER
@@ -21,40 +21,54 @@ export const isBrowserMode = (): boolean => {
   return !(w.__TAURI__ || w.__TAURI_INTERNALS__);
 };
 
-export const configureBrowserMode = (): void => {
-  if (!isBrowserMode()) {
+const clearBrowserModeFlags = (): void => {
+  if (typeof localStorage === 'undefined') {
     return;
   }
 
-  logger.info('Browser mode detected - applying adaptations (NO RESTRICTIONS)', {
+  localStorage.removeItem('titane_browser_mode');
+  localStorage.removeItem('titane_ollama_enabled');
+  localStorage.removeItem('titane_auto_backup_enabled');
+  localStorage.removeItem('titane_auto_audit_enabled');
+  localStorage.removeItem('titane_onboarding_complete');
+  localStorage.removeItem('titane_security_mode');
+  localStorage.removeItem('titane_restrictions_disabled');
+};
+
+export const configureBrowserMode = (): void => {
+  if (!isBrowserMode()) {
+    clearBrowserModeFlags();
+    return;
+  }
+
+  logger.info('Browser mode detected - applying degraded fallback', {
     component: 'BrowserModeAdapter',
   });
 
-  // 🔓 MODE OUVERT: Configuration adaptée mais sans restrictions
+  // 🌐 Mode navigateur : garder un fallback explicite, sans faux état "open" ou "complete"
   if (typeof localStorage !== 'undefined') {
-    // Mode navigateur : pas de Tauri backend
     localStorage.setItem('titane_browser_mode', '1');
 
-    // 🔓 ACTIVER tous les services même sans backend (fallback graceful)
+    // Conserver uniquement les bascules purement locales utiles au mode web.
     localStorage.setItem('titane_ollama_enabled', '1');
     localStorage.setItem('titane_auto_backup_enabled', '1');
     localStorage.setItem('titane_auto_audit_enabled', '1');
 
-    // Marquer l'onboarding comme complété pour éviter les appels au backend
-    localStorage.setItem('titane_onboarding_complete', '1');
-
-    // 🔓 Désactiver toutes les restrictions de sécurité
-    localStorage.setItem('titane_security_mode', 'open');
-    localStorage.setItem('titane_restrictions_disabled', '1');
+    // Nettoyer les anciens drapeaux fail-open issus du fallback navigateur legacy.
+    localStorage.removeItem('titane_onboarding_complete');
+    localStorage.removeItem('titane_security_mode');
+    localStorage.removeItem('titane_restrictions_disabled');
   }
 
-  // Informer l'utilisateur - Mode ouvert
-  console.log('🌐 TITANE∞ - Mode Navigateur (Restrictions désactivées)');
-  console.log('✅ Toutes fonctionnalités activées (fallback graceful)');
-  console.log('🔓 Mode ouvert - Aucune restriction de sécurité');
+  console.log('🌐 TITANE∞ - Mode Navigateur (fallback dégradé)');
+  console.log('ℹ️ Backend Tauri indisponible - fonctionnalités limitées au mode local');
 };
 
 // Auto-configure au chargement du module
-if (isBrowserMode()) {
+if (typeof window !== 'undefined') {
+  window.addEventListener('tauri-ready', () => {
+    clearBrowserModeFlags();
+  });
+
   configureBrowserMode();
 }

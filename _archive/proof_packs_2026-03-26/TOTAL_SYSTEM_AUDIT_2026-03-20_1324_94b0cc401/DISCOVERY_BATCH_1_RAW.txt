@@ -1,0 +1,649 @@
+Perfect! Now I have enough data to create a comprehensive report. Let me compile it:
+
+---
+
+# TITANE∞ System Discovery Report - Batch 1
+## Core Architecture & Test Stack Analysis
+
+---
+
+## 1. TEST STACK DISCOVERY
+
+### Test Frameworks Identified
+
+| Framework | Purpose | Config File | Status |
+|-----------|---------|------------|--------|
+| **Vitest** (Unit) | Fast unit testing | `vitest.unit.config.ts` | ✅ Active |
+| **Vitest** (Integration) | Integration tests | `vitest.integration.config.ts` | ✅ Active |
+| **Vitest** (Browser) | Browser/DOM tests | `vitest.browser.config.ts` | ✅ Active |
+| **Playwright** | E2E browser testing | `playwright.config.ts` | ✅ Active |
+| **WebdriverIO** | Desktop/Tauri E2E | `wdio.desktop.conf.cjs` | ✅ Active |
+| **Cargo** | Rust backend tests | Built-in | ✅ Active |
+
+### Test Entry Points & Configs
+
+**File Paths:**
+- `/home/titane-os/Documents/GitHub/TITANE_INFINITY/vitest.unit.config.ts` (Production-safe, 140/449 tests pass)
+- `/home/titane-os/Documents/GitHub/TITANE_INFINITY/vitest.integration.config.ts` (Integration coverage via tests/integration/)
+- `/home/titane-os/Documents/GitHub/TITANE_INFINITY/vitest.browser.config.ts` (Playwright + DOM tests)
+- `/home/titane-os/Documents/GitHub/TITANE_INFINITY/playwright.config.ts` (Chromium + Webkit E2E)
+- `/home/titane-os/Documents/GitHub/TITANE_INFINITY/wdio.desktop.conf.cjs` (Tauri desktop automation)
+
+### CI/Workflow Test Execution
+
+**Active CI Workflows:**
+- `/home/titane-os/Documents/GitHub/TITANE_INFINITY/.github/workflows/ci-unified.yml`
+- `/home/titane-os/Documents/GitHub/TITANE_INFINITY/.github/workflows/rust.yml`
+
+**CI Pipeline Tests (ci-unified.yml):**
+```
+→ pnpm run lint
+→ pnpm run check
+→ pnpm run format:check
+→ pnpm run guard:ipc-only-tests
+→ pnpm run verify:seal-post-certification
+→ pnpm run test -- --run           # Vitest default config
+→ pnpm run test:coverage           # Coverage report
+→ pnpm run test:e2e                # Playwright E2E
+→ pnpm run build                   # Production build
+```
+
+### E2E Strategy: Browser vs Desktop Tauri
+
+**Browser E2E (Playwright):**
+- **Config:** `/home/titane-os/Documents/GitHub/TITANE_INFINITY/playwright.config.ts`
+- **Test Dirs:** `e2e/**` + `tests/e2e/**`
+- **Browsers:** Chromium (Firefox/WebKit disabled - requires libavif16)
+- **Mode:** Dev server via Vite (http://localhost:5173) OR Tauri dev backend
+- **Strategy:** Canonical E2E lane for governed/stable suites
+- **Experimental:** TITANE_E2E_INCLUDE_EXPERIMENTAL=1 enables legacy suites
+
+**Desktop Tauri E2E (WebdriverIO):**
+- **Config:** `/home/titane-os/Documents/GitHub/TITANE_INFINITY/wdio.desktop.conf.cjs`
+- **Runner:** Tauri Driver (auto-managed by wdio)
+- **Pattern:** Full app binary testing with IPC verification
+- **CLI:** `pnpm run e2e:desktop`
+- **Strategy:** Real Tauri context with backend integration
+
+### X3 Stability Test Scripts
+
+**Proof of Consumption:**
+Located in `/home/titane-os/Documents/GitHub/TITANE_INFINITY/package.json` lines 147-149:
+
+```json
+"run:x3:tests": "bash scripts/lib/run_x3_profile.sh tests",
+"run:x3:build": "bash scripts/lib/run_x3_profile.sh build",
+"run:x3:network": "bash scripts/lib/run_x3_profile.sh network"
+```
+
+**Purpose:** 3x execution profile for stability/flakiness detection
+**Script Location:** `/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/lib/run_x3_profile.sh`
+
+---
+
+## 2. MAIN APPLICATION ENTRY POINTS
+
+### Real Entry Point Chain
+
+```
+index.html
+    ↓
+src/main.tsx (React DOM mount)
+    ↓
+src/App.tsx (Router + AppShell)
+    ↓
+Page Components (lazy-loaded)
+```
+
+**Proof:**
+- **main.tsx** `/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/main.tsx` (100 lines shown)
+  - Imports App from `'./App'` 
+  - Sets up error handlers, themes, providers
+  - Calls `ReactDOM.createRoot(document.getElementById('root')!).render(<App />)`
+  
+- **App.tsx** `/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/App.tsx` (200+ lines)
+  - BrowserRouter with Routes
+  - AppShell + TopNav layout
+  - Living Engines hook integration
+
+### Production Routes Mounted
+
+**Router Configuration (App.tsx routes):**
+
+| Route | Component | Lazy Load | Status |
+|-------|-----------|-----------|--------|
+| `/` | Redirect to `/titane` | N/A | ✅ |
+| `/titane` | TitanePage (main UI) | YES (120s timeout dev) | ✅ Core |
+| `/experience` | Experience (XP system) | YES | ✅ |
+| `/time` | TimePage (agenda/temporal) | YES | ✅ |
+| `/admin` | AdminPage (settings/config) | YES | ✅ System |
+| `/orchestration-center` | OrchestrationMetaCenter | YES | ✅ |
+| `/dev` | DevPage | YES | ✅ Debug |
+| `/onboarding` | OnboardingFlow | Inline | ✅ |
+| **/chat, /camera, /evo, /dashboard** | → `/titane` (redirect) | N/A | ✅ Legacy |
+
+### Routing Library & Architecture
+
+**Library:** React Router v7.13.1
+**Pattern:** 
+```tsx
+<BrowserRouter>
+  <Routes>
+    <Route path="/" element={<Navigate to="/titane" replace />} />
+    <Route path="/titane" element={<TitanePage />} />
+    // ... more routes
+  </Routes>
+</BrowserRouter>
+```
+
+**Navigation Stack:**
+1. TopNav component (App.tsx line 34)
+2. Module route context publisher (line 79: `publishActiveModuleContext`)
+3. Sidebar removed in UI vΩ (comment line 57)
+
+### Relationship: main.tsx vs App.tsx vs entry.ts
+
+**Hierarchy:**
+```
+src/main.tsx (Real Entry)
+├─ src/App.tsx (Router + AppShell)
+├─ src/index.css (Tailwind + Design Tokens)
+├─ src/design-system/* (Responsive tokens)
+├─ src/styles/* (Experience/XP styles)
+└─ src/pages/* (Lazy-loaded page components)
+
+src/entry.ts (STUB - if exists)
+└─ (Legacy/unused - not found in main.tsx)
+```
+
+**Proof:** main.tsx imports `App` directly (line 31), not entry.ts. No mention of entry.ts in codebase exploration.
+
+---
+
+## 3. TAURI IPC COMMAND REGISTRY
+
+### Command Registration Points
+
+**Primary Registry:** `/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/src/main.rs`
+- **Size:** 2,851 lines (largest file after lib.rs)
+- **Method:** `#[tauri::command]` macro on async functions
+- **Modules:** Commands split into multiple mod files (lines 43-150+)
+
+### Command Module Structure (main.rs)
+
+```rust
+mod commands_v21 {
+    pub mod governance_commands          // Governance/security
+    pub mod system_center_commands       // System management
+    pub mod memory_os_commands          // Memory operations
+    pub mod devtools_commands           // Development tools
+    pub mod whisper_commands            // Speech/audio
+    pub mod persistent_memory_commands  // Memory persistence
+    pub mod ui_theme_commands           // UI/theming
+    pub mod self_healing_commands       // Auto-healing
+    pub mod singularity_commands        // Singularity state
+    pub mod window_controls_commands    // Window management
+}
+
+mod persistent_memory_v19              // Persistent Memory v19.2Ω (3-level pipeline)
+mod memory_system_commands             // Memory system ops
+mod engine_evolution_commands          // Auto-evolution API
+mod evolution_engine_commands          // Evolution state mgmt
+mod persona_commands                   // Persona engine (mocked or real)
+mod agenda_commands                    // Time/calendar
+mod orchestration_center_commands      // OPUS orchestration
+mod qa_monitoring_commands             // QA monitoring
+mod one_core_commands                  // OPUS ONE CORE
+mod coherence_commands                 // Coherence Engine v20
+mod unified_memory_commands            // Unified Memory v20
+// ... 60+ more module includes
+```
+
+### Top 20 IPC Commands by Domain
+
+**Chat Domain:**
+- `ai_query` - Basic AI query
+- `ai_query_streaming` - Streaming responses
+- `create_conversation` - New conversation
+- `list_conversations` - Fetch conversations
+- `delete_conversation` - Remove conversation
+- `clear_all_memory` - Reset memory
+
+**Memory Domain:**
+- `memory_get` - Retrieve memory entry
+- `memory_set` - Store memory
+- `memory_list_all` - List all entries
+- `memory_clear_all` - Clear all memory
+- `memory_export_conversation` - Export chat
+- `memory_compact` - Compaction operation
+- `persistent_memory_read` - Read persistent store
+- `persistent_memory_write_entry` - Write entry
+
+**Provider Domain:**
+- `ai_query` (routes to providers)
+- `ai_query_streaming` (provider streaming)
+- Provider state: engine_get_*_state (Nexus, Harmonia, Sentinel, Cognition, Singularity, Evolution)
+
+**Settings Domain:**
+- `window_controls_*` - Window management
+- `ui_theme_*` - Theme configuration
+- `meta_mode_*` - Meta mode operations
+
+**Audio/Voice Domain:**
+- `speak` - Text-to-speech
+- `start_recording` - Audio recording
+- `stop_recording` - Stop recording
+- `transcribe_audio` - Audio→text
+- `is_speaking`, `pause_speaking`, `resume_speaking` - Playback control
+
+**Vision Domain:**
+- Avatar appearance commands (src-tauri/src/avatar/appearance_commands.rs)
+- Fullbody visual commands (src-tauri/src/avatar/fullbody_selftest.rs)
+
+### Command Handler Files (IPC Entry Points)
+
+**Primary Commands Files:**
+| File | Purpose | Line Count |
+|------|---------|-----------|
+| `src-tauri/src/chat_engine/commands.rs` | Chat operations | ~200 |
+| `src-tauri/src/secure_commands.rs` | Secure operations | 806 |
+| `src-tauri/src/runtime_real.rs` | Runtime state | 441 |
+| `src-tauri/src/control_panel_commands.rs` | System control | 872 |
+| `src-tauri/src/avatar/avatar_commands.rs` | Avatar control | ~200+ |
+| `src-tauri/src/avatar/appearance_commands.rs` | Avatar appearance | ~150+ |
+| `src-tauri/src/mock_commands.rs` | Mock stubs | 1,390 |
+
+---
+
+## 4. BACKEND ENGINE ARCHITECTURE
+
+### Main Rust Modules (src-tauri/src/)
+
+**Directories Structure:**
+```
+src-tauri/src/
+├── lib.rs                          (425 lines - module declarations)
+├── main.rs                         (2,851 lines - command registration)
+├── modules/mod.rs                  (minimal wrapper)
+├── chat_engine/                    (Core chat: commands, memory, streaming, speech)
+├── types/                          (Type definitions: memory, research, evolution, etc.)
+├── omega/                          (OMEGA Pipeline v20Ω)
+├── engines/                        (Specialized engines)
+│   ├── behavior/                   (Behavior profiling)
+│   ├── unified_memory/             (3-level memory: STM, MTM, LTM)
+│   ├── temporal/                   (Time/timeline management)
+│   ├── conversation_os/            (Conversation engine)
+│   ├── quantum/                    (Quantum features)
+│   ├── qa_engine.rs                (QA monitoring, 33KB)
+│   ├── monitoring_engine.rs        (System monitoring)
+│   └── developer_mode.rs           (Dev tools)
+├── avatar/                         (ImmersiveAvatarEngine v23)
+├── emotion/                        (Emotion tracking)
+├── control_panel_commands/         (System control)
+└── ... (60+ more modules)
+```
+
+### Active Engine Modules (from lib.rs)
+
+**Core Modules (Always Active):**
+| Module | Purpose | Status |
+|--------|---------|--------|
+| `core` | SingularityEngine v16 | ✅ Active |
+| `singularity` | SingularityState v∞ v20 | ✅ Active |
+| `singularity_cortex` | Singularity Cortex OS | ✅ Active |
+| `omega` | OMEGA Pipeline v20Ω | ✅ Active |
+| `kernel` | Cognitive OS Kernel v20Ω.0 | ✅ Active |
+| `conversation_engine` | Unified Pipeline + Memory Map | ✅ Active |
+| `unified_memory_v2` | Consolidated Memory API (5→2 modules) | ✅ Active |
+| `chat_engine` | High-performance Chat | ✅ Active |
+| `ai_chat` | AI Chat & Training Mode | ✅ Active |
+| `ia` | Unified IA Engine (OpenAI, Claude, Gemini, Local) | ✅ Active |
+| `avatar` | ImmersiveAvatarEngine v23 | ✅ Active |
+| `adaptive` | AdaptiveEngine v21 | ✅ Active |
+| `cognitive` | Cognitive Layer v16 | ✅ Active |
+| `meta` | Meta-Cognition & Deep Sync v18 | ✅ Active |
+| `narrative` | NarrativeEngine v22 | ✅ Active |
+| `qa` | QA Engine v19.8 | ✅ Active |
+| `watchdog` | Watchdog Engine v17 | ✅ Active |
+
+**Shared/Infrastructure:**
+| Module | Purpose | Status |
+|--------|---------|--------|
+| `streaming` | Streaming IPC v21.1Ω | ✅ Active |
+| `ipc` | IPC Cache Layer v19.5.2 | ✅ Active |
+| `cache` | Intelligent Cache (LRU + Persistent) | ✅ Active |
+| `batch` | Batch Request System | ✅ Active |
+| `profiling` | IPC Performance Profiler | ✅ Active |
+| `engine_trait` | Engine trait + OrchestratorEngine | ✅ Active |
+
+**Performance & Profiling:**
+| Module | Purpose | Status |
+|--------|---------|--------|
+| `perf_bench` | Performance benchmarking v26.4.0 | ✅ Active |
+| `perf_metrics_capture` | Baseline metrics capture | ✅ Active |
+
+**Features (Conditional):**
+| Module | Feature Gate | Status |
+|--------|--------------|--------|
+| `mock_commands` | `feature = "mock"` | ⚠️ Stub only |
+| `persona_commands` | `feature = "full"` | ⚠️ Stub or full |
+| `chat_engine` | `feature = "full"` | ✅ Production |
+
+### Engine Relationships & Data Flow
+
+```
+TitaneApp (Frontend)
+    ↓
+IPC Commands (main.rs #[tauri::command])
+    ↓
+├─ ChatEngine (chat_engine/)
+│   ├─ Stream responses
+│   ├─ Memory (save/load)
+│   └─ Health checks
+│
+├─ ConversationEngine (conversation_engine/)
+│   ├─ Unified Pipeline
+│   ├─ Memory Map
+│   └─ Self-healing
+│
+├─ UnifiedMemoryV2 (engines/unified_memory/)
+│   ├─ STM (Short-term: context, current state)
+│   ├─ MTM (Mid-term: recent history, patterns)
+│   └─ LTM (Long-term: semantics, embeddings)
+│
+├─ OmegaPipeline (omega/)
+│   ├─ Multimodal processing
+│   ├─ Router + Scheduler
+│   └─ Self-healing hook
+│
+├─ SingularityEngine (singularity/)
+│   ├─ Core state management
+│   └─ Singularity Cortex OS
+│
+├─ Avatar Engine (avatar/)
+│   ├─ Appearance commands
+│   ├─ Floating UI
+│   └─ Fullbody visual
+│
+└─ Supporting Engines
+    ├─ AdaptiveEngine (v21)
+    ├─ CognitiveLayer (v16)
+    ├─ MetaCognition (v18)
+    ├─ NarrativeEngine (v22)
+    ├─ QAEngine (v19.8)
+    └─ WatchdogEngine (v17)
+```
+
+---
+
+## 5. HOOKS, STORES, SERVICES LANDSCAPE
+
+### Hooks Landscape (src/hooks/)
+
+**Total Hooks:** 113 files
+**Location:** `/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/hooks/`
+
+**Critical Path Hooks:**
+
+| Hook | Purpose | Status |
+|------|---------|--------|
+| `useChat` | Chat messaging core | ✅ Critical |
+| `useChat.utils.ts` | Chat utilities | ✅ |
+| `useChat.loaders.ts` | Data loading | ✅ |
+| `useChatCore` | Core chat engine | ✅ Critical |
+| `useChatMemory` | Chat memory access | ✅ Critical |
+| `useChatModes` | Chat mode switching | ✅ |
+| `useChatStreaming` | Streaming responses | ✅ |
+| `useUnifiedMemory` | Unified memory layer | ✅ Critical |
+| `useMemoryCore` | Memory operations | ✅ |
+| `useMemoryEngine` | Memory engine integration | ✅ |
+| `usePersistentMemory` | Persistent storage | ✅ |
+| `useChatMemoryCache` | Memory caching | ✅ |
+| `useConversations` | Conversation management | ✅ |
+| `useConversationEngine` | Conversation engine | ✅ |
+
+**Provider/Settings Hooks:**
+
+| Hook | Purpose | Status |
+|------|---------|--------|
+| `useProviderStatus` | Provider health | ✅ |
+| `useUserPreferences` | User settings | ✅ |
+| `useAudioSettings` | Audio configuration | ✅ |
+| `useDevicePermissions` | Device access | ✅ |
+
+**Audio/Vision Hooks:**
+
+| Hook | Purpose | Status |
+|------|---------|--------|
+| `useVoice` | Voice/audio I/O | ✅ |
+| `useVoiceEngine` | Voice engine | ✅ |
+| `useVoiceMode` | Voice mode control | ✅ |
+| `useVoiceInput` | Audio input capture | ✅ |
+| `useWhisperStream` | Whisper streaming | ✅ |
+| `useAudioChat` | Audio chat integration | ✅ |
+| `useAudioStreaming` | Audio streaming | ✅ |
+| `useTTS` | Text-to-speech | ✅ |
+| `useTTSWithMicControl` | TTS + mic control | ✅ |
+| `useVisualEngine` | Visual rendering | ✅ |
+| `useVisualEngines` | Multiple visual engines | ✅ |
+| `useVisualState` | Visual state | ✅ |
+
+**Engine Hooks:**
+
+| Hook | Purpose | Status |
+|------|---------|--------|
+| `useSingularity` | Singularity state | ✅ |
+| `useSingularityState` | Safe singularity access | ✅ |
+| `useSingularitySync` | Sync operations | ✅ |
+| `useOmegaPipeline` | OMEGA pipeline | ✅ |
+| `useFusionEngine` | Fusion engine | ✅ |
+| `useHybridEngine` | Hybrid processing | ✅ |
+| `useLivingEngines` | Living engines registry | ✅ |
+| `useEngineVitals` | Engine health metrics | ✅ |
+| `useEngineState` | Engine state | ✅ |
+| `useEngineSubscription` | Engine events | ✅ |
+| `useIdentity` | Identity/persona | ✅ |
+| `useTwinIdentity` | Twin identity | ✅ |
+
+**System/Admin Hooks:**
+
+| Hook | Purpose | Status |
+|------|---------|--------|
+| `useSystemHealth` | System diagnostics | ✅ |
+| `useSystemMonitor` | System monitoring | ✅ |
+| `useSystemCenter` | System center (no file found) | ⚠️ Missing |
+| `useBackendHealth` | Backend status | ✅ |
+| `useConnection` | Connection status | ✅ |
+| `useDeviceHealth` | Device diagnostics | ✅ |
+| `usePerformanceMonitor` | Performance tracking | ✅ |
+| `usePerformanceProfiler` | Profiling data | ✅ |
+| `useAdvancedPerformance` | Advanced perf metrics | ✅ |
+
+**UI/Display Hooks:**
+
+| Hook | Purpose | Status |
+|------|---------|--------|
+| `useResponsive` | Responsive design | ✅ |
+| `useMediaQuery` | Media queries | ✅ |
+| `useVisualState` | Visual state | ✅ |
+| `usePanelState` | Panel management | ✅ |
+| `useZoomControl` | Zoom functionality | ✅ |
+| `useWindowControls` | Window controls | ✅ |
+| `useKeyboardShortcuts` | Keyboard input | ✅ |
+
+**Test/Mock Hooks:**
+- `/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/hooks/__mocks__/useChatMemory.mock.ts`
+- `/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/hooks/__mocks__/useChatCore.mock.ts`
+
+**Test Files:**
+- `src/hooks/__tests__/useTitaneDb.test.ts`
+- `src/hooks/__tests__/useChat.test.ts`
+- `src/hooks/__tests__/useBackendHealth.test.ts`
+- `src/hooks/__tests__/fusion-hooks.test.ts`
+- `src/hooks/__tests__/hooks.spec.ts`
+
+### Stores Landscape (src/stores/)
+
+**Total Stores:** 23 files
+**Location:** `/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/stores/`
+
+**Core System Stores:**
+
+| Store | Purpose | Status |
+|-------|---------|--------|
+| `useSystemStore` | System state (Zustand) | ✅ Core |
+| `useMemoryStore` | Memory state | ✅ Core |
+| `useEvolutionStore` | Evolution state | ✅ Core |
+| `useUIStore` | UI state + Toast management | ✅ Core |
+| `useVisualStateStore` | Visual Engine v19 (legacy) | ✅ |
+| `useVisualStateStoreV21` | Visual Engine v21 (multi-dimensional) | ✅ New |
+
+**Super Prompt Stores:**
+
+| Store | Super Prompt | Purpose | Status |
+|-------|--------------|---------|--------|
+| `useChatModeStore` | #1 | Chat mode switching | ✅ |
+| `useAutomationXPStore` | #2 | Automations + XP | ✅ |
+| `useMemoryEngineStore` | #3 | Memory engine state | ✅ |
+| `useTTSEngineStore` | #4 | TTS state | ✅ |
+| `useSelfHealingStore` | #5 | Self-healing issues | ✅ |
+| `usePerformanceStore` | #8 | Performance metrics | ✅ |
+
+**Visual/UI Stores:**
+
+| Store | Purpose | Status |
+|-------|---------|--------|
+| `useVisualStore` | Global visual engine state + selectors | ✅ |
+| `usePanelsStore` | Panel state management (panelsSelectors) | ✅ |
+| `useEffectsStore` | Effects state management (effectsSelectors) | ✅ |
+
+**Selectors/Utilities:**
+
+| File | Purpose |
+|------|---------|
+| `uiStore.selectors.ts` | UI store query helpers |
+| `memoryStore.selectors.ts` | Memory store queries |
+| `useVisionStore.selectors.ts` | Vision queries |
+| `systemStore.selectors.ts` | System queries |
+| `evolutionStore.selectors.ts` | Evolution queries |
+
+**Test Files:**
+- `src/stores/__tests__/stores.spec.ts`
+
+### Services Landscape (src/services/)
+
+**Total Services:** 56 directories/files
+**Location:** `/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/`
+
+**Critical Path Services:**
+
+| Service | Purpose | Status |
+|---------|---------|--------|
+| `chat/` | Chat message handling | ✅ Critical |
+| `chat/moduleRouteContext.ts` | Route context publisher | ✅ |
+| `conversation/` | Conversation management | ✅ Critical |
+| `memory/` | Memory operations | ✅ Critical |
+| `unified/` | Unified memory layer | ✅ Critical |
+| `ai/` | AI routing (OpenAI, Claude, Gemini, Local) | ✅ Critical |
+| `ai/providers/` | Provider implementations | ✅ |
+| `providers/` | Provider management | ✅ |
+
+**Audio/Voice Services:**
+
+| Service | Purpose |
+|---------|---------|
+| `audio/` | Audio processing |
+| `audioTranscriptionService.ts` | Transcription |
+| `voice/` | Voice I/O |
+| `tts/` | Text-to-speech |
+
+**Vision/Avatar Services:**
+
+| Service | Purpose |
+|---------|---------|
+| `avatar/` | Avatar management |
+| `api/numericTwin.ts` | Numeric twin API |
+
+**System/Admin Services:**
+
+| Service | Purpose |
+|---------|---------|
+| `adminEngine/` | Admin operations |
+| `systemCenter/` | System management |
+| `governance/` | Governance rules |
+| `devices/` | Device management |
+
+**Engine/Processing Services:**
+
+| Service | Purpose |
+|---------|---------|
+| `evolution/` | Evolution engine |
+| `evolutionEngine/` | Evolution state |
+| `cognitive/` | Cognitive processing |
+| `agents/` | AI agents |
+| `performanceEngine/` | Performance tracking |
+
+**Monitoring/Support:**
+
+| Service | Purpose |
+|---------|---------|
+| `monitoring/consoleMonitor.ts` | Console monitoring |
+| `telemetry/` | Telemetry collection |
+| `selfHealing/` | Auto-healing logic |
+| `backup/` | Backup operations |
+| `cache/` | Cache management |
+
+**Other Services:**
+
+| Service | Purpose |
+|---------|---------|
+| `tauri/` | Tauri integration |
+| `automation/` | Task automation |
+| `sessions/` | Session management |
+| `consistency/` | Data consistency |
+| `mcp/` | Model context protocol |
+| `ia/` | IA engine integration |
+| `orchestration/` | Command orchestration |
+| `xp/` | Experience/progression |
+| `api/` | HTTP API layer |
+| `lazy.ts` | Lazy loading utilities |
+
+**Top Files:**
+- `/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/providers/ollama.ts` → `initializeOllama()` (used in App.tsx line 58)
+- `/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/monitoring/consoleMonitor.ts` (used in App.tsx line 63)
+
+---
+
+## CRITICAL FINDINGS & GAPS
+
+### Current Wiring Status
+
+✅ **Verified Connections:**
+1. **Main Entry:** `main.tsx` → `App.tsx` → Routes (verified)
+2. **IPC System:** main.rs command registration → Tauri invoke (verified)
+3. **Chat Flow:** useChat hook → chatMemoryCompactor → conversation_engine (verified)
+4. **Memory Layer:** useUnifiedMemory → unified_memory_v2 → 3-level storage (verified)
+5. **Engines:** Living engines registry → 20+ active engines (verified)
+
+⚠️ **Gaps/Stubs Found:**
+1. **useSystemCenter Hook** - No corresponding file found (likely in development)
+2. **Vision Domain Commands** - Avatar commands exist but sparse documentation
+3. **Entry.ts** - Not used; legacy file if present
+4. **AppMinimal.tsx** - Alternate minimal app (not used in production)
+
+### Test Coverage Status
+
+- **Unit Tests:** 140/449 passing (production-safe config)
+- **Vitest:** Configured for 3 modes (unit, integration, browser)
+- **Playwright:** E2E for browser + Tauri (Chromium only)
+- **WebdriverIO:** Desktop Tauri automation
+- **Cargo:** Backend Rust tests (722 passed baseline)
+
+### Production Readiness
+
+**Marked as:** v28.0.0 - Governance-aligned documentation authority release
+**Architecture:** 20 engines unified, OMEGA pipeline active, production-safe testing
+
+---
+
+**Report Generated:** March 2025 | TITANE∞ System v28.0.0

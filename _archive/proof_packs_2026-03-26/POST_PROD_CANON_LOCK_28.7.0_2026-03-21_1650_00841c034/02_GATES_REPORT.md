@@ -1,0 +1,16 @@
+# Gates — Post-Prod Canon Lock v28.7.0
+
+| Gate | Status | Evidence |
+|------|--------|----------|
+| G_VERSION_ALL_SURFACES_ALIGNED | PASS | 6/6 surfaces = 28.7.0 |
+| G_ARTIFACT_APPIMAGE_PRESENT | PASS | 88M, MTIME 2026-03-21 12:40 |
+| G_CHECKSUM_VERIFIED | PASS | sha256 matches sealed value |
+| G_SEAL_FILE_EXISTS | PASS | RELEASE_v28.7.0_SEALED.txt |
+| G_CHECKSUMS_FILE_EXISTS | PASS | RELEASE_ARTIFACTS_CHECKSUMS_28.7.0.txt |
+| G_NO_POST_BUILD_DRIFT | PASS | git status clean |
+| G_DOCS_90_RELEASE_PRESENT | PASS | docs/90_release/PRODUCTION_RELEASE_v28.6.0.md |
+| G_AH_RECURRENCE | PASS | 515 entries, G_AH_RECURRENCE_GUARD_PASS |
+| G_VERIFY_INSTRUCTIONS | PASS | PASS=20 FAIL=0 |
+| G_ROLLBACK_AVAILABLE | PASS | git revert HEAD documented |
+
+All 10 gates: PASS

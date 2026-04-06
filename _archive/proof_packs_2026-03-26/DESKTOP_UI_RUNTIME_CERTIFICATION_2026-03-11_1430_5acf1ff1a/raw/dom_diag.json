@@ -1,0 +1,65 @@
+{
+  "rootChildSummary": [
+    {
+      "cls": "loading-splash",
+      "id": "",
+      "tag": "div"
+    }
+  ],
+  "classesSample": [
+    "loading-splash",
+    "skip-link"
+  ],
+  "href": "tauri://localhost#/titane",
+  "bodyChildSummary": [
+    {
+      "cls": "skip-link",
+      "id": "",
+      "tag": "a"
+    },
+    {
+      "cls": "",
+      "id": "root",
+      "tag": "div"
+    }
+  ],
+  "tags": [
+    "a",
+    "body",
+    "div",
+    "head",
+    "html",
+    "link",
+    "meta",
+    "script",
+    "style",
+    "title"
+  ],
+  "allFocusVisibleRules": [
+    ".chat-toolbar-btn:focus-visible",
+    ".toast__close:focus-visible",
+    ".cognitive-layout-control :focus-visible",
+    ".xp-bar-wrapper:focus-visible",
+    ".titanium-focus-ring:focus-visible",
+    ":focus-visible",
+    "a:focus-visible",
+    ":focus-visible",
+    ":focus:not(:focus-visible)",
+    ".btn:focus-visible",
+    ".btn-primary:focus-visible",
+    ".btn-secondary:focus-visible",
+    ".btn-ghost:focus-visible",
+    ".focus-visible\\:shadow-focus:focus-visible",
+    ".focus-visible\\:outline-none:focus-visible",
+    ".focus-visible\\:ring-2:focus-visible",
+    ".focus-visible\\:ring-current:focus-visible",
+    ".focus-visible\\:ring-violet-500:focus-visible",
+    ".focus-visible\\:ring-offset-2:focus-visible"
+  ],
+  "hasFocusVisibleTabRule": false,
+  "classesCount": 2,
+  "roles": [],
+  "buttons": [],
+  "ariaSel": [],
+  "inputs": []
+}

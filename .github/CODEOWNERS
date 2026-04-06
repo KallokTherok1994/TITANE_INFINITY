@@ -1,0 +1,55 @@
+# CODEOWNERS — TITANE_INFINITY
+# Governs mandatory review routing for critical paths.
+# Syntax: <pattern> <owner> [<owner> ...]
+# Owner = @username or @org/team
+# Last matching rule wins.
+
+# ── Default owner for all files ─────────────────────────────────────────────
+*                                   @KallokTherok1994
+
+# ── Tauri production runtime (Ring 4 / OS boundary) ─────────────────────────
+src-tauri/                          @KallokTherok1994
+src-tauri/tauri.conf.json           @KallokTherok1994
+src-tauri/capabilities/             @KallokTherok1994
+src-tauri/Cargo.toml                @KallokTherok1994
+src-tauri/Cargo.lock                @KallokTherok1994
+
+# ── IPC canonical contract ──────────────────────────────────────────────────
+src/lib/tauriCommands.ts            @KallokTherok1994
+src/lib/tauriClient.ts              @KallokTherok1994
+
+# ── Frontend services (conversation engine, API) ────────────────────────────
+src/services/                       @KallokTherok1994
+
+# ── CI/CD supply chain ──────────────────────────────────────────────────────
+.github/workflows/                  @KallokTherok1994
+.github/CODEOWNERS                  @KallokTherok1994
+.github/dependabot.yml              @KallokTherok1994
+
+# ── Governance gates ────────────────────────────────────────────────────────
+scripts/gates/                      @KallokTherok1994
+scripts/autoheal/                   @KallokTherok1994
+scripts/verify/                     @KallokTherok1994
+scripts/security/                   @KallokTherok1994
+
+# ── SBOM and supply-chain artifacts ─────────────────────────────────────────
+sbom/                               @KallokTherok1994
+
+# ── Deployment and release ──────────────────────────────────────────────────
+deployment/                         @KallokTherok1994
+scripts/deployment/                 @KallokTherok1994
+
+# ── Security documentation ──────────────────────────────────────────────────
+docs/SECRETS.md                     @KallokTherok1994
+docs/SECURITY.md                    @KallokTherok1994
+docs/SECURITY_HARDENING.md          @KallokTherok1994
+docs/20_GITHUB_NATIVE_SECURITY_MATRIX.md  @KallokTherok1994
+docs/21_DEPENDENCY_TRUTH_MATRIX.md  @KallokTherok1994
+docs/22_SBOM_AND_ATTESTATION_MATRIX.md    @KallokTherok1994
+docs/23_RULESETS_AND_OWNERSHIP_MATRIX.md  @KallokTherok1994
+docs/24_ACTIONS_HARDENING_MATRIX.md       @KallokTherok1994
+docs/25_SLSA_SSDF_MAPPING.md              @KallokTherok1994
+
+# ── Tauri base config ───────────────────────────────────────────────────────
+tauri.base.json                     @KallokTherok1994
+src-tauri/tauri.base.json           @KallokTherok1994

@@ -138,30 +138,17 @@ export const XP_REWARDS = {
 // HELPER FUNCTIONS
 // ─────────────────────────────────────────────────────────────────
 
-/**
- * Calculer le niveau basé sur XP (formule: floor(sqrt(xp / 100)))
- */
-export const calculateLevel = (xp: number): number => {
-  return Math.floor(Math.sqrt(xp / 100));
-};
+// ─────────────────────────────────────────────────────────────────
+// CANONICAL XP FUNCTIONS (unified source)
+// ─────────────────────────────────────────────────────────────────
 
-/**
- * Calculer XP requis pour le prochain niveau
- */
-export const xpForNextLevel = (currentLevel: number): number => {
-  return (currentLevel + 1) ** 2 * 100;
-};
+import {
+  calculateLevel,
+  xpForNextLevel,
+  calculateProgress,
+} from '../services/xp/xpCanonical';
 
-/**
- * Calculer progression vers le prochain niveau (0-1)
- */
-export const calculateProgress = (currentXp: number, currentLevel: number): number => {
-  const currentLevelXp = currentLevel ** 2 * 100;
-  const nextLevelXp = xpForNextLevel(currentLevel);
-  const xpInCurrentLevel = currentXp - currentLevelXp;
-  const xpNeededForNextLevel = nextLevelXp - currentLevelXp;
-  return xpInCurrentLevel / xpNeededForNextLevel;
-};
+export { calculateLevel, xpForNextLevel, calculateProgress };
 
 // ─────────────────────────────────────────────────────────────────
 // DEFAULT STATE

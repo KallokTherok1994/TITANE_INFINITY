@@ -1,0 +1,23 @@
+# 05 — ROUTE / PAGE / TAB / MODULE MAP
+
+## ROUTE_MODULE_CONTEXT_MATRIX
+
+| Route/Page | Module/Tab | Contexte attendu | Source réelle | Atteint chat? | Preuve | Statut |
+|------------|-----------|-----------------|---------------|---------------|--------|--------|
+| /titane | ConversationSection + 7 onglets | moduleContext={moduleId:'titane'} | publishActiveModuleContext('/titane') → localStorage → readActiveModuleContext() → buildChatContextEnvelope() → context_envelope dans conversation_generate | OUI | App.tsx:296 appelle publishActiveModuleContext(location.pathname) à chaque navigation | PROVEN |
+| /chat (alias → /titane) | ChatPage | moduleContext={moduleId:'titane'} | Alias résolu via ROUTE_ALIASES dans moduleRouteContext.ts | OUI (via alias) | ROUTE_ALIASES['/chat'] = '/titane' | PARTIAL |
+| /twins | TwinsPage → TwinEvolutionPanel | Aucun contexte chat attendu | N/A | NON | Aucune import de useChat/chatService | KNOWN |
+| /time | TimePage | timePage cognitive state → localStorage | localStorage.setItem (ligne 1023 TimePage.tsx "persist cognitive state") | NON — localStorage seulement, pas context_envelope | TimePage.tsx ligne 1023 | PARTIAL |
+| /memory | Memory.tsx | useLTMContext() affichage seul | localStorage active conversation_id → useLTMContext | UI display only | Memory.tsx lignes 28-34 | PARTIAL |
+| /camera (alias → /titane) | TitanePage VisionSection | moduleContext={moduleId:'titane'} | Alias résolu | OUI (via alias) | ROUTE_ALIASES['/camera'] = '/titane' | PARTIAL |
+| /evo (alias → /titane) | TitanePage | moduleContext={moduleId:'titane'} | Alias résolu | OUI (via alias) | ROUTE_ALIASES['/evo'] = '/titane' | PARTIAL |
+| /dashboard (alias → /titane) | TitanePage | moduleContext={moduleId:'titane'} | Alias résolu | OUI (via alias) | ROUTE_ALIASES | PARTIAL |
+
+## Constats principaux
+
+1. **publishActiveModuleContext** est appelé dans App.tsx à chaque changement de route (useEffect sur `location`) → moduleContext est réellement mis à jour dans localStorage.
+2. **readActiveModuleContext()** est consommé dans `useConversationEngine.ts` via `buildSingleDoorEnvelope()` → `context_envelope` est transmis à `conversation_generate`.
+3. **extract_context_binding()** dans commands.rs extrait correctement moduleId, moduleName, route du context_envelope.
+4. **TIME** n'injecte pas de contexte dans chat — stockage localStorage uniquement pour état cognitif.
+5. **TWINS** n'a aucune connexion au pipeline chat.
+6. **Memory page** utilise useLTMContext uniquement pour affichage, pas d'écriture.

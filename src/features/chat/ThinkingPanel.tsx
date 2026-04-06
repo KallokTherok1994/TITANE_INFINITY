@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
@@ -62,6 +62,11 @@ interface OmegaMemoryTrace {
   systemPromptSources: string[];
 }
 
+interface ThinkingAction {
+  label: string;
+  status: 'done' | 'skipped' | 'error';
+}
+
 interface ThinkingPanelProps {
   isThinking: boolean;
   steps?: ThinkingStep[];
@@ -79,6 +84,9 @@ interface ThinkingPanelProps {
   autoHealed?: boolean;
   messageLength?: number;
   responseLength?: number;
+  // ── OMEGA v4.1: Reasoning & Actions ──────────────────────────
+  reasoningSummary?: string | null;
+  actionsPerformed?: ThinkingAction[];
 }
 
 type ViewMode = 'essentiel' | 'detaille' | 'expert';
@@ -99,6 +107,8 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
   autoHealed,
   messageLength,
   responseLength,
+  reasoningSummary,
+  actionsPerformed,
 }) => {
   const resolvedState: 'idle' | 'active' | 'done' | 'error' | 'blocked' =
     state ??
@@ -455,6 +465,32 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                 · Commandes IPC : conversation_generate (toujours)
               </span>
             </div>
+            {/* ── OMEGA v4.1: Reasoning summary ──────────────────── */}
+            {reasoningSummary && !isThinking && (
+              <div className="oj-summary-row">
+                <Brain size={14} className="oj-icon-blue" />
+                <span className="oj-summary-label">Raisonnement :</span>
+                <span className="oj-summary-value">{reasoningSummary}</span>
+              </div>
+            )}
+            {/* ── OMEGA v4.1: Actions effectuées ─────────────────── */}
+            {actionsPerformed && actionsPerformed.length > 0 && !isThinking && (
+              <div className="oj-summary-row">
+                <Layers size={14} className="oj-icon-blue" />
+                <span className="oj-summary-label">Actions :</span>
+                <span className="oj-summary-value">
+                  {actionsPerformed.map((action, i) => (
+                    <span key={i}>
+                      {i > 0 && ' · '}
+                      {action.status === 'done' && '✓ '}
+                      {action.status === 'skipped' && '— '}
+                      {action.status === 'error' && '✗ '}
+                      {action.label}
+                    </span>
+                  ))}
+                </span>
+              </div>
+            )}
           </div>
 
           {/* ── Timeline des étapes (Détaillé / Expert) ─────────────── */}

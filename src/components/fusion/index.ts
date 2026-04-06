@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v25.3.2 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v25.3.2 — PERFECT FUSION COMPONENTS EXPORTS
+ *   TITANE∞ v30.0.0 — PERFECT FUSION COMPONENTS EXPORTS
  *   Export centralisé pour le dashboard de fusion
  * ═══════════════════════════════════════════════════════════════════
  */

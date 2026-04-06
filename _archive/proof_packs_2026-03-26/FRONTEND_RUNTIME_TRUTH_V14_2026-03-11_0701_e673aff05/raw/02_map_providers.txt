@@ -1,0 +1,21 @@
+20:  BrowserRouter,
+30:import { ThemeProvider } from './themes/ThemeProvider';
+31:import { AnimationProvider } from './contexts/AnimationContext';
+32:import { TitanStateProvider } from './context/TitanStateContext'; // ✨ v∞.MPE - Persistence
+40:import { AutoHealErrorBoundary } from './components/AutoHealErrorBoundary';
+77:import { ToastProvider } from './components/providers/ToastProvider'; // ✨ M1 - Toast notifications via Sonner
+276:const AppRouter: React.FC = () => {
+1286: * ThemeProvider > AnimationProvider > TitanStateProvider > BrowserRouter > AutoHealErrorBoundary
+1299:    <ToastProvider>
+1303:      <ThemeProvider>
+1304:        <AnimationProvider fpsThreshold={40} cpuThreshold={80}>
+1305:          <TitanStateProvider>
+1323:            <BrowserRouter>
+1324:              <AutoHealErrorBoundary>
+1325:                <AppRouter />
+1326:              </AutoHealErrorBoundary>
+1327:            </BrowserRouter>
+1328:          </TitanStateProvider>
+1329:        </AnimationProvider>
+1330:      </ThemeProvider>
+1331:    </ToastProvider>

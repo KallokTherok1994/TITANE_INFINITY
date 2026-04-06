@@ -5,7 +5,7 @@
 
 /**
  * Timeouts API et réseau (ms)
- * ✨ v27+ FIX: Augmentés de 25s → 60s pour requests IA complexes
+ * ✨ v30.0.0 FIX: Augmentés de 25s → 60s pour les requêtes IA complexes
  */
 export const API_TIMEOUTS = {
   /** Timeout par défaut pour les appels API (60s) */

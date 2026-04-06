@@ -1,0 +1,32 @@
+]633;E;{   echo '--- diff stat tail ---'\x3b   tail -n 20 "$BOOT/04_git_diff_release_head_stat.txt"\x3b   echo '--- scan counts ---'\x3b   cat "$BOOT/19_scan_counts.txt"\x3b } > "$BOOT/22_diff_tail_and_scan_counts.txt";823cce96-0443-43de-843a-f78fa998234e]633;C--- diff stat tail ---
+ src/ui/pages/EvolutionMonitor.tsx                  |     14 +-
+ src/ui/pages/HyperEvolutionDashboard.tsx           |      2 +-
+ src/ui/pages/HyperVisionDashboard.tsx              |     14 +-
+ src/ui/pages/IntrospectionDashboard.tsx            |     18 +-
+ src/ui/pages/KnowledgeFusionPage.tsx               |     10 +-
+ src/ui/pages/NodeClusterDashboard.tsx              |     14 +-
+ src/utils/invoke.ts                                |    138 +-
+ src/utils/secureSecrets.ts                         |      4 +-
+ src/utils/tauriProtector.ts                        |     24 +-
+ tests/contract/tauri-ipc-contract.test.ts          |      4 +-
+ titane-infinity.desktop                            |      6 +-
+ .../__pycache__/tts_api_server.cpython-312.pyc     |    Bin 0 -> 16175 bytes
+ tts-service/cache/audio/0ec364c83a0bd445.wav       |      3 +
+ tts-service/cache/audio/616c56acd5cd1df4.wav       |      3 +
+ vite.config.ts                                     |     66 +-
+ vitest.browser.config.ts                           |      5 +-
+ wdio.desktop.conf.cjs                              |     41 +-
+ 32170 files changed, 1134319 insertions(+), 1211692 deletions(-)
+warning: détection exhaustive de renommage annulée à cause d'un trop grand nombre de fichiers.
+warning: vous souhaitez peut-être régler la variable diff.renameLimit à au moins 26423 et réessayer le commande.
+--- scan counts ---
+]633;E;for i in 09 10 11 12 13 14 15 16 17 18\x3b do   f=$(ls "$BOOT"/${i}_*.txt)\x3b   e=$(cat "$BOOT"/${i}_*.exit)\x3b   c=$(wc -l < "$f")\x3b   echo "${i}|exit=${e}|lines=${c}|file=$(basename "$f")"\x3b done > "$BOOT/19_scan_counts.txt";823cce96-0443-43de-843a-f78fa998234e]633;C09|exit=0|lines=9223|file=09_rg_admin_src.txt
+10|exit=0|lines=1095|file=10_rg_router_src.txt
+11|exit=0|lines=18331|file=11_rg_invoke_src.txt
+12|exit=0|lines=10726|file=12_rg_tauri_commands.txt
+13|exit=0|lines=7928|file=13_rg_provider_omega.txt
+14|exit=0|lines=96|file=14_rg_audio.txt
+15|exit=0|lines=666|file=15_rg_boot_double.txt
+16|exit=0|lines=5234|file=16_rg_storage_undefined.txt
+17|exit=0|lines=2861|file=17_rg_todo_stub.txt
+18|exit=0|lines=473|file=18_rg_data_testid.txt

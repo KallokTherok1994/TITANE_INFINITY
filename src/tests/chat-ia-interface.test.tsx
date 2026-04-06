@@ -14,6 +14,22 @@ vi.mock('../hooks/useChat', () => ({
   useChat: vi.fn(),
 }));
 
+// Mock du hook useBackendHealth pour garantir anyBackendAvailable=true en test
+vi.mock('../hooks/useBackendHealth', () => ({
+  useBackendHealth: () => ({
+    anyBackendAvailable: true,
+    unavailableReason: null,
+  }),
+}));
+
+// Mock des sélecteurs SingularityState
+vi.mock('../core/state/SingularityState.selectors', () => ({
+  useAIActions: () => ({
+    setAIStatus: vi.fn(),
+    setAIError: vi.fn(),
+  }),
+}));
+
 // Mock du panneau de vitals (évite les hooks système/Tauri)
 vi.mock('../components/VitalsPanel', () => ({
   VitalsPanel: ({ currentMode }: { currentMode?: string }) => (
@@ -23,7 +39,10 @@ vi.mock('../components/VitalsPanel', () => ({
 
 // Mock des composants enfants
 vi.mock('../hooks/useConnection', () => ({
-  useConnection: () => ({ status: { online: true, provider: 'Gemini' } }),
+  useConnection: () => ({
+    status: { online: true, provider: 'Gemini' },
+    connectionState: 'ONLINE',
+  }),
 }));
 
 const mockSingularityStore = {

@@ -14,6 +14,7 @@
       "titan_persistence_init",
       "titan_persist_event",
       "titan_force_snapshot",
+      "titan_force_snapshot_current",
       "titan_load_state",
       "titan_get_events_since",
       "titan_list_snapshots",

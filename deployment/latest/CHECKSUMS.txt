@@ -1,3 +1,5 @@
-e1e42db442ac7414818cdc7ce6a1dbc94e1e131cd99212d10af0a267266eaa35  TITANE-Infinity_28.0.0_amd64.AppImage
-be6ad3d675b37e9c8095818eaa1d70ea78f50ade2e8b6ab3050e083b40350fe5  TITANE-Infinity_28.0.0_amd64.deb
-45e5dcc0de6d20afd7db3ab07d69b882b3b2fb37db5f04d2b3acf56a84cbc0e0  Titan-Stable_28.0.0_amd64.deb
+# SHA256 checksums for v30.0.0 artifacts — PENDING_BUILD
+# These will be populated after the production build completes.
+# Build command: pnpm run build:production
+PENDING_BUILD  Titan-Stable_30.0.0_amd64.AppImage
+PENDING_BUILD  Titan-Stable_30.0.0_amd64.deb

@@ -1,0 +1,5 @@
+TITANE∞ v27.2.0 - V69 Sealed Post-Prod Truth Closure	Latest	v27.2.0-v69-sealed-20260313	2026-03-13T23:42:56Z
+TITANE Infinity v27.2.0-prod-release-20260302		v27.2.0-prod-release-20260302	2026-03-02T23:10:34Z
+v27.2.0-postseal-hardening-20260301 — Post-seal Hardening		v27.2.0-postseal-hardening-20260301	2026-03-01T15:36:59Z
+v27.2.0-rc-seal-20260301 — RC Seal Post-Certification		v27.2.0-rc-seal-20260301	2026-03-01T15:20:08Z
+v27.5.1-docs-rz-seal — R→Z documentation sealing (x3)		v27.5.1-docs-rz-seal	2026-02-27T22:53:34Z

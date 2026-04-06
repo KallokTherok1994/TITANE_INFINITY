@@ -72,6 +72,56 @@ fn build_http_client_with_secs(timeout_secs: u64) -> Result<Client, TAPIError> {
     build_http_client_with_timeout(std::time::Duration::from_secs(timeout_secs))
 }
 
+async fn has_cloud_network_connectivity() -> bool {
+    matches!(
+        tokio::time::timeout(
+            std::time::Duration::from_secs(3),
+            tokio::net::TcpStream::connect("www.google.com:443"),
+        )
+        .await,
+        Ok(Ok(_))
+    )
+}
+
+async fn is_cloud_provider_configured(
+    provider: &str,
+    state: &ChatOrchestratorState,
+) -> bool {
+    match provider {
+        "openai" => state.openai_api_key.read().await.is_some(),
+        "anthropic" => state.anthropic_api_key.read().await.is_some(),
+        "gemini" => state.gemini_api_key.read().await.is_some(),
+        _ => false,
+    }
+}
+
+fn unavailable_reason(
+    provider: &str,
+    configured: bool,
+    cloud_network_available: bool,
+    allow_ollama_probe: bool,
+) -> String {
+    match provider {
+        "gemini" | "openai" | "anthropic" => {
+            if !configured {
+                "API key not configured".to_string()
+            } else if !cloud_network_available {
+                "Network unavailable".to_string()
+            } else {
+                "Provider unreachable".to_string()
+            }
+        }
+        "ollama" => {
+            if allow_ollama_probe {
+                "Ollama unreachable".to_string()
+            } else {
+                "Ollama probe disabled".to_string()
+            }
+        }
+        _ => "Provider unavailable".to_string(),
+    }
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // STRUCTURES
 // ─────────────────────────────────────────────────────────────────────────────
@@ -329,6 +379,7 @@ async fn is_provider_available(
     provider: &str,
     state: &ChatOrchestratorState,
     allow_ollama_probe: bool,
+    cloud_network_available: Option<bool>,
 ) -> bool {
     const CACHE_DURATION_MS: u64 = 30000; // 30s
     const MAX_FAILURES: u32 = 3;
@@ -350,17 +401,13 @@ async fn is_provider_available(
 
     // Cache expiré ou première vérification, faire un heartbeat
     let is_available = match provider {
-        "openai" => {
-            let api_key = state.openai_api_key.read().await;
-            api_key.is_some()
-        }
-        "anthropic" => {
-            let api_key = state.anthropic_api_key.read().await;
-            api_key.is_some()
-        }
-        "gemini" => {
-            let api_key = state.gemini_api_key.read().await;
-            api_key.is_some() // Simplifié: si clé présente, considérer disponible
+        "openai" | "anthropic" | "gemini" => {
+            let configured = is_cloud_provider_configured(provider, state).await;
+            let network_available = match cloud_network_available {
+                Some(value) => value,
+                None => has_cloud_network_connectivity().await,
+            };
+            configured && network_available
         }
         "ollama" => {
             if !allow_ollama_probe {
@@ -588,7 +635,8 @@ pub async fn chat_send_message(
         let allow_ollama_probe = provider == "ollama"
             && (requested_provider == "ollama"
                 || (requested_provider == "auto" && ollama_auto_enabled));
-        let is_available = is_provider_available(&provider, &state, allow_ollama_probe).await;
+        let is_available =
+            is_provider_available(&provider, &state, allow_ollama_probe, None).await;
         println!(
             "[CHAT ROUTER] ⚡ Provider {} availability = {}",
             provider, is_available
@@ -1666,32 +1714,33 @@ pub async fn chat_check_providers(
     // Keys are read inside is_provider_available() checks below
 
     let allow_ollama_probe = is_ollama_auto_enabled();
+    let cloud_network_available = has_cloud_network_connectivity().await;
     let existing = state.provider_status.read().await.clone();
     let mut updated = Vec::with_capacity(existing.len());
 
     for mut entry in existing {
         let start = std::time::Instant::now();
-        let available = is_provider_available(&entry.provider, &state, allow_ollama_probe).await;
+        let available = is_provider_available(
+            &entry.provider,
+            &state,
+            allow_ollama_probe,
+            Some(cloud_network_available),
+        )
+        .await;
         let latency_ms = start.elapsed().as_millis() as u64;
+        let configured = is_cloud_provider_configured(&entry.provider, &state).await;
 
         entry.available = available;
         entry.latency_ms = if available { latency_ms } else { 0 };
         entry.error = if available {
             None
         } else {
-            Some(match entry.provider.as_str() {
-                "gemini" => "API key not configured".to_string(),
-                "openai" => "API key not configured".to_string(),
-                "anthropic" => "API key not configured".to_string(),
-                "ollama" => {
-                    if allow_ollama_probe {
-                        "Ollama unreachable".to_string()
-                    } else {
-                        "Ollama probe disabled".to_string()
-                    }
-                }
-                _ => "Provider unavailable".to_string(),
-            })
+            Some(unavailable_reason(
+                &entry.provider,
+                configured,
+                cloud_network_available,
+                allow_ollama_probe,
+            ))
         };
 
         if available {
@@ -1805,7 +1854,7 @@ pub async fn chat_stream_message(
         "ollama" => true,
         "auto" => {
             if is_ollama_auto_enabled() {
-                is_provider_available("ollama", state.inner(), true).await
+                is_provider_available("ollama", state.inner(), true, None).await
             } else {
                 false
             }
@@ -2220,6 +2269,30 @@ fn get_timestamp() -> u64 {
 #[cfg(test)]
 mod smoke_tests {
     use super::*;
+
+    #[test]
+    fn unavailable_reason_distinguishes_config_from_network() {
+        assert_eq!(
+            unavailable_reason("gemini", false, false, false),
+            "API key not configured"
+        );
+        assert_eq!(
+            unavailable_reason("gemini", true, false, false),
+            "Network unavailable"
+        );
+        assert_eq!(
+            unavailable_reason("gemini", true, true, false),
+            "Provider unreachable"
+        );
+        assert_eq!(
+            unavailable_reason("ollama", false, false, true),
+            "Ollama unreachable"
+        );
+        assert_eq!(
+            unavailable_reason("ollama", false, false, false),
+            "Ollama probe disabled"
+        );
+    }
 
     #[tokio::test]
     #[ignore]

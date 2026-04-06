@@ -33,6 +33,21 @@ export const PageLoadingFallback = ({
       setIsLongLoading(true);
     }, LONG_LOADING_TIMEOUT_MS);
 
+    const isTauriDesktop =
+      typeof window !== 'undefined' &&
+      Boolean(
+        (window as Window & { __TAURI__?: unknown; __TAURI_INTERNALS__?: unknown })
+          .__TAURI__ ||
+        (window as Window & { __TAURI__?: unknown; __TAURI_INTERNALS__?: unknown })
+          .__TAURI_INTERNALS__
+      );
+
+    if (isTauriDesktop) {
+      return () => {
+        window.clearTimeout(timer);
+      };
+    }
+
     const autoRecoveryTimer = window.setTimeout(() => {
       try {
         const raw = window.localStorage.getItem(AUTO_RECOVERY_KEY);
@@ -100,6 +115,19 @@ export const PageLoadingFallback = ({
               Récupération automatique déjà tentée. Relance manuelle recommandée.
             </div>
           )}
+          {!autoRecoveryBlocked &&
+            typeof window !== 'undefined' &&
+            Boolean(
+              (window as Window & { __TAURI__?: unknown; __TAURI_INTERNALS__?: unknown })
+                .__TAURI__ ||
+              (window as Window & { __TAURI__?: unknown; __TAURI_INTERNALS__?: unknown })
+                .__TAURI_INTERNALS__
+            ) && (
+              <div style={{ marginBottom: '0.5rem' }}>
+                En mode desktop Tauri, aucun rechargement automatique n’est forcé pour
+                éviter les boucles de redémarrage silencieuses.
+              </div>
+            )}
           <button
             type="button"
             onClick={handleReload}

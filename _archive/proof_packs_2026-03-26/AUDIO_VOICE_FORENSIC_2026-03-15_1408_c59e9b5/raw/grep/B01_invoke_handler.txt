@@ -1,0 +1,2 @@
+1249:        .invoke_handler(tauri::generate_handler![
+1889:            // but were missing from generate_handler! (allowlisted in tauri.conf.json)

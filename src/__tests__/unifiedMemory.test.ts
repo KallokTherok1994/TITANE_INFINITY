@@ -294,14 +294,14 @@ describe('UnifiedMemory - Cleanup & Expiration', () => {
     vi.useRealTimers();
   });
 
-  it('devrait respecter la limite de 20 entrées dans STM', async () => {
-    // Try to store 25 entries in STM (limit is 20)
-    for (let i = 0; i < 25; i++) {
+  it('devrait respecter la limite de 50 entrées dans STM', async () => {
+    // Try to store 55 entries in STM (limit is 50)
+    for (let i = 0; i < 55; i++) {
       await unifiedMemory.store(`STM Message ${i}`, 'user', 0.1, 'conv-1', ['quick']);
     }
 
     const stats = unifiedMemory.getStats();
-    expect(stats.stm.totalEntries).toBeLessThanOrEqual(20);
+    expect(stats.stm.totalEntries).toBeLessThanOrEqual(50);
   });
 
   it('devrait respecter la limite de 100 entrées dans MTM', async () => {
@@ -326,7 +326,7 @@ describe('UnifiedMemory - Statistics', () => {
     const stats = unifiedMemory.getStats();
 
     expect(stats.stm.totalEntries).toBe(2);
-    expect(stats.stm.maxEntries).toBe(20);
+    expect(stats.stm.maxEntries).toBe(50);
     expect(stats.stm.ttl).toBe('5min');
 
     expect(stats.mtm.totalEntries).toBe(1);

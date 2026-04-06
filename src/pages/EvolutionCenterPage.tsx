@@ -240,6 +240,7 @@ function EvolutionCenterPageContent(): JSX.Element {
         setEvolution(evolutionState);
 
         // Get memory state
+        await MemoryEngine.initialize();
         const memoryState = MemoryEngine.getState();
         setMemory(memoryState);
 

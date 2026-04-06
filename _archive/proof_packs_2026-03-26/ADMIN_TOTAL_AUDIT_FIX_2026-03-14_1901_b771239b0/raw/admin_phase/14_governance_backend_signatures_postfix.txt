@@ -1,0 +1,14 @@
+81:pub async fn get_ia_policies() -> Result<SecureResponse<Vec<IAPolicy>>, String> {
+94:pub async fn save_ia_policies(policies: Vec<IAPolicy>) -> Result<SecureResponse<()>, String> {
+111:pub async fn toggle_ia_policy(
+114:) -> Result<SecureResponse<bool>, String> {
+140:pub async fn create_ia_policy(policy: IAPolicy) -> Result<SecureResponse<IAPolicy>, String> {
+156:pub async fn delete_ia_policy(policy_id: String) -> Result<SecureResponse<()>, String> {
+174:pub async fn get_permission_matrix() -> Result<SecureResponse<PermissionMatrix>, String> {
+197:pub async fn clear_permission_audit() -> Result<SecureResponse<()>, String> {
+216:pub async fn get_security_log(
+218:) -> Result<SecureResponse<Vec<SecurityLogEntry>>, String> {
+236:pub async fn append_security_log(
+238:) -> Result<SecureResponse<SecurityLogEntry>, String> {
+260:pub async fn export_security_log(format: String) -> Result<SecureResponse<String>, String> {
+292:pub async fn clear_security_log() -> Result<SecureResponse<()>, String> {

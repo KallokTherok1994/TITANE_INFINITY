@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v25.3.1 — AURA ORCHESTRATOR HOOK
+ *   TITANE∞ v30.0.0 — AURA ORCHESTRATOR HOOK
  *   Système de gestion et synchronisation globale des effets Aura
  * ═══════════════════════════════════════════════════════════════
  */

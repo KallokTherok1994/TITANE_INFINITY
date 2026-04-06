@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.3.0 — Consciousness Dashboard
+ * TITANE∞ v30.0.0 — Consciousness Dashboard
  * © 2025 TITANE Team. All rights reserved.
  *
  * 🧠 TABLEAU DE BORD DE CONSCIENCE QUANTIQUE

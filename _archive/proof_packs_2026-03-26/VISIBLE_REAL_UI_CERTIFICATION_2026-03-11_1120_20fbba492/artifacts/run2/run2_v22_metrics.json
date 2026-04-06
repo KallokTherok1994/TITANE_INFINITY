@@ -1,0 +1,179 @@
+{
+  "runId": "run2",
+  "modeDecision": "MODE_B_REAL_UI",
+  "rootRendered": true,
+  "whiteScreen": false,
+  "actualVisibleFrontendConfirmed": true,
+  "actualTargetVersion": "27.2.0",
+  "mainAligned": true,
+  "splash": {
+    "exists": false,
+    "visible": false
+  },
+  "boot": {
+    "entryTs": false,
+    "mainTsx": true,
+    "ready": true
+  },
+  "tabsCount": 6,
+  "selectedTabCount": 1,
+  "tabSwitchWorked": true,
+  "inputPresent": true,
+  "inputTyped": true,
+  "sendPresent": true,
+  "sendEnabledAfterTyping": false,
+  "sendClicked": false,
+  "visibleUiChangeAfterSend": false,
+  "secondarySurfaceOpened": true,
+  "returnedToPrimarySurface": true,
+  "backendSyncState": "CONNECTED",
+  "orchestratorSyncState": "NOT_DETECTABLE_FROM_DOM",
+  "providerState": "NOT_DETECTABLE_FROM_DOM",
+  "memoryState": "NOT_DETECTABLE_FROM_DOM",
+  "aiChatState": "ABSENT",
+  "modulesState": "MODULES_LOADED",
+  "reasoningProgressState": "ABSENT",
+  "tabFocusRulePresent": true,
+  "reflowReasonable": true,
+  "potentialDoubleScroll": true,
+  "contrastRatioInput": null,
+  "frictions": [
+    "CHAT_INPUT_NOT_VISIBLE",
+    "SEND_BUTTON_NOT_VISIBLE",
+    "REASONING_PROGRESS_ABSENT",
+    "SEND_DISABLED_AFTER_TYPING"
+  ],
+  "blockers": [],
+  "harnessRisks": [],
+  "dominantClassification": "FAIL_LAYOUT_OR_REFLOW",
+  "screenshots": [
+    {
+      "label": "s1_t0_post_boot",
+      "file": "run2_s1_t0_post_boot.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_CERTIFICATION_2026-03-11_1120_20fbba492/artifacts/run2/screens/run2_s1_t0_post_boot.png"
+    },
+    {
+      "label": "s1_post_nav_titane",
+      "file": "run2_s1_post_nav_titane.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_CERTIFICATION_2026-03-11_1120_20fbba492/artifacts/run2/screens/run2_s1_post_nav_titane.png"
+    },
+    {
+      "label": "s2_start",
+      "file": "run2_s2_start.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_CERTIFICATION_2026-03-11_1120_20fbba492/artifacts/run2/screens/run2_s2_start.png"
+    },
+    {
+      "label": "s2_before_hash_nav",
+      "file": "run2_s2_before_hash_nav.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_CERTIFICATION_2026-03-11_1120_20fbba492/artifacts/run2/screens/run2_s2_before_hash_nav.png"
+    },
+    {
+      "label": "s2_after_nav_time",
+      "file": "run2_s2_after_nav_time.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_CERTIFICATION_2026-03-11_1120_20fbba492/artifacts/run2/screens/run2_s2_after_nav_time.png"
+    },
+    {
+      "label": "s2_after_nav_stats",
+      "file": "run2_s2_after_nav_stats.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_CERTIFICATION_2026-03-11_1120_20fbba492/artifacts/run2/screens/run2_s2_after_nav_stats.png"
+    },
+    {
+      "label": "s2_returned_titane",
+      "file": "run2_s2_returned_titane.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_CERTIFICATION_2026-03-11_1120_20fbba492/artifacts/run2/screens/run2_s2_returned_titane.png"
+    },
+    {
+      "label": "s2_final",
+      "file": "run2_s2_final.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_CERTIFICATION_2026-03-11_1120_20fbba492/artifacts/run2/screens/run2_s2_final.png"
+    },
+    {
+      "label": "s3_before_chat",
+      "file": "run2_s3_before_chat.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_CERTIFICATION_2026-03-11_1120_20fbba492/artifacts/run2/screens/run2_s3_before_chat.png"
+    },
+    {
+      "label": "s3_after_typing",
+      "file": "run2_s3_after_typing.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_CERTIFICATION_2026-03-11_1120_20fbba492/artifacts/run2/screens/run2_s3_after_typing.png"
+    },
+    {
+      "label": "s3_final",
+      "file": "run2_s3_final.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_CERTIFICATION_2026-03-11_1120_20fbba492/artifacts/run2/screens/run2_s3_final.png"
+    },
+    {
+      "label": "s4_start",
+      "file": "run2_s4_start.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_CERTIFICATION_2026-03-11_1120_20fbba492/artifacts/run2/screens/run2_s4_start.png"
+    },
+    {
+      "label": "s4_secondary_opened",
+      "file": "run2_s4_secondary_opened.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_CERTIFICATION_2026-03-11_1120_20fbba492/artifacts/run2/screens/run2_s4_secondary_opened.png"
+    },
+    {
+      "label": "s4_done",
+      "file": "run2_s4_done.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_CERTIFICATION_2026-03-11_1120_20fbba492/artifacts/run2/screens/run2_s4_done.png"
+    },
+    {
+      "label": "s5_returned_primary",
+      "file": "run2_s5_returned_primary.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_CERTIFICATION_2026-03-11_1120_20fbba492/artifacts/run2/screens/run2_s5_returned_primary.png"
+    },
+    {
+      "label": "s5_final",
+      "file": "run2_s5_final.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_CERTIFICATION_2026-03-11_1120_20fbba492/artifacts/run2/screens/run2_s5_final.png"
+    }
+  ],
+  "jsCriticalErrors": [],
+  "ipcAvailable": true,
+  "currentUrl": "tauri://localhost/titane",
+  "pageTitle": "TITANE∞ v26.3.0 - Cognitive Operating System",
+  "zoom": 2,
+  "navAudit": {
+    "navItems": [
+      {
+        "visible": true,
+        "text": "TITANE",
+        "tag": "BUTTON"
+      },
+      {
+        "visible": true,
+        "text": "TIME",
+        "tag": "BUTTON"
+      },
+      {
+        "visible": true,
+        "text": "STATS",
+        "tag": "BUTTON"
+      },
+      {
+        "visible": true,
+        "text": "ADMIN",
+        "tag": "BUTTON"
+      },
+      {
+        "visible": true,
+        "text": "DEV",
+        "tag": "BUTTON"
+      },
+      {
+        "visible": true,
+        "text": "Plus",
+        "tag": "BUTTON"
+      }
+    ],
+    "found": [
+      "[role=\"tab\"]",
+      "[data-testid*=\"tab\"]",
+      "nav button",
+      "[role=\"navigation\"] button",
+      "[class*=\"nav\"] button"
+    ],
+    "navElTag": "NAV"
+  },
+  "bodyText": "Aller au contenu principal\n\nTITANE∞\n\nTITANE\n\nTIME\n\nSTATS\n\nADMIN\n\nDEV\n\nPlus\nIA: --\n×\nBOOT BEACON\nstage: BOOT:BEFORE_ORCHESTRATOR_INIT\nisTauri: true\nrootChildren: 3\nhref: tauri://localhost/titane\nkeys: F12/Ctrl+Shift+I, Ctrl+Alt+D"
+}

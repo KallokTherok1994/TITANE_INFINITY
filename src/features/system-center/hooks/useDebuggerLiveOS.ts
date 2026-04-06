@@ -364,12 +364,13 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
           id: 'high_memory',
           category: 'HighMemory',
           level: metrics.heliosMetrics.memory_usage > 0.95 ? 'Critical' : 'High',
-          description: `Utilisation mémoire élevée: ${(metrics.heliosMetrics.memory_usage * 100).toFixed(1)}%`,
+          description: `Utilisation mémoire système élevée: ${(metrics.heliosMetrics.memory_usage * 100).toFixed(1)}%`,
           detected_at: Date.now(),
           metrics: { memory_usage: metrics.heliosMetrics.memory_usage },
           threshold: { memory_usage: 0.85 },
-          mitigation: 'Nettoyer la mémoire ou redémarrer les services',
-          auto_fixable: true,
+          mitigation:
+            'Réduire la charge active ou augmenter les ressources; memory_prune ne cible que le MemoryCore legacy.',
+          auto_fixable: false,
         });
         riskScore += 25;
       }
@@ -412,7 +413,9 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
         recommendations.push('Optimiser les processus actifs');
       }
       if (factors.some(f => f.category === 'HighMemory')) {
-        recommendations.push('Nettoyer la mémoire ou augmenter les ressources');
+        recommendations.push(
+          'Réduire la charge mémoire système; le prune legacy ne corrige pas la LTM persistante.'
+        );
       }
       if (factors.some(f => f.category === 'StateInconsistency')) {
         recommendations.push("Vérifier l'intégrité du système");
@@ -478,8 +481,10 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
 
       // ✅ Get memory state (WHITELIST)
       const memoryState = (await tauriClient.memoryGetState()) as {
-        usage_percent: number;
-        active_connections: number;
+        snapshots_count?: number;
+        log_entries_count?: number;
+        timeline_events?: number;
+        storage_size_mb?: number;
       };
 
       return {
@@ -490,8 +495,11 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
         intensity: (cognitiveState.intensity as number) || 0,
         active_kernels: (cognitiveState.active_kernels as string[]) || [],
         memory_state: {
-          usage_percent: memoryState.usage_percent || 0,
-          active_connections: memoryState.active_connections || 0,
+          source: 'legacy_memory_core',
+          snapshots_count: memoryState.snapshots_count || 0,
+          log_entries_count: memoryState.log_entries_count || 0,
+          timeline_events: memoryState.timeline_events || 0,
+          storage_size_mb: memoryState.storage_size_mb || 0,
         },
         singularity,
         decision_context: cognitiveState.context as Record<string, unknown> | undefined,
@@ -945,12 +953,7 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
         for (const risk of risksToFix) {
           try {
             // Apply fixes based on category
-            if (risk.category === 'HighMemory') {
-              // ✅ Use whitelist commands
-              await tauriClient.memoryPrune();
-              fixes_applied++;
-              fixed_risks.push(risk.id);
-            } else if (risk.category === 'StateInconsistency') {
+            if (risk.category === 'StateInconsistency') {
               // Try to sync singularity
               await tauriClient.singularitySelfCheck();
               fixes_applied++;
@@ -973,7 +976,10 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
           recommendations:
             fixes_applied > 0
               ? ["Réexécuter l'évaluation des risques pour vérifier les améliorations"]
-              : ['Aucun fix automatique disponible'],
+              : [
+                  'Aucun fix automatique disponible',
+                  'Les alertes mémoire système nécessitent une action manuelle; memory_prune agit seulement sur le MemoryCore legacy.',
+                ],
           duration_ms: endTime - startTime,
         };
 

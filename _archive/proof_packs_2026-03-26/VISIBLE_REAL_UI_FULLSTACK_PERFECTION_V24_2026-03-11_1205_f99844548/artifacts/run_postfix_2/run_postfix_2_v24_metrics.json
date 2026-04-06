@@ -1,0 +1,219 @@
+{
+  "runId": "run_postfix_2",
+  "modeDecision": "MODE_B_REAL_UI",
+  "rootRendered": true,
+  "whiteScreen": false,
+  "actualVisibleFrontendConfirmed": true,
+  "actualTargetVersion": "27.2.0",
+  "mainAligned": true,
+  "splash": {
+    "exists": false,
+    "visible": false
+  },
+  "boot": {
+    "entryTs": false,
+    "mainTsx": true,
+    "ready": true
+  },
+  "tabsCount": 8,
+  "selectedTabCount": 1,
+  "tabSwitchWorked": true,
+  "inputPresent": true,
+  "inputTyped": true,
+  "sendPresent": true,
+  "sendEnabledAfterTyping": true,
+  "sendClicked": true,
+  "sendActivationPath": "NATIVE_SETTER_INPUTEVENT",
+  "sendHarnessDiagnosis": "HARNESS_DEFECT_JS_VALUE_NOT_REACT",
+  "visibleUiChangeAfterSend": true,
+  "secondarySurfaceOpened": true,
+  "returnedToPrimarySurface": true,
+  "backendSyncState": "CONNECTED",
+  "orchestratorSyncState": "NOT_DETECTABLE_FROM_DOM",
+  "providerState": "NOT_DETECTABLE_FROM_DOM",
+  "memoryState": "PRESENT",
+  "aiChatState": "INPUT_VISIBLE",
+  "modulesState": "MODULES_LOADED",
+  "reasoningProgressState": "ABSENT",
+  "reasoningProgressTestIdPresent": false,
+  "reasoningProgressDataState": null,
+  "reasoningProgressHasTopology": false,
+  "tabFocusRulePresent": true,
+  "reflowReasonable": true,
+  "potentialDoubleScroll": true,
+  "contrastRatioInput": null,
+  "frictions": [
+    "REASONING_PROGRESS_ABSENT",
+    "SEND_TYPING_PATH_REQUIRES_NATIVE_SETTER",
+    "ERROR_ELEMENTS_IN_DOM"
+  ],
+  "blockers": [],
+  "harnessRisks": [
+    "WEBDRIVER_SETVALUE_FAILED"
+  ],
+  "dominantClassification": "FAIL_LAYOUT_OR_REFLOW",
+  "dominantCategory": "UI_VISIBILITY_DEFECT",
+  "dominantSeverity": "P1",
+  "dominantFixability": "SAFE_AUTO_FIX",
+  "issueClassifications": [
+    {
+      "problem": "REASONING_PROGRESS_ABSENT",
+      "category": "UI_VISIBILITY_DEFECT",
+      "severity": "P1",
+      "fixability": "SAFE_AUTO_FIX"
+    },
+    {
+      "problem": "SEND_TYPING_PATH_REQUIRES_NATIVE_SETTER",
+      "category": "NON_BLOCKING_FRICTION",
+      "severity": "P3",
+      "fixability": "SAFE_AUTO_FIX"
+    },
+    {
+      "problem": "ERROR_ELEMENTS_IN_DOM",
+      "category": "NON_BLOCKING_FRICTION",
+      "severity": "P3",
+      "fixability": "SAFE_AUTO_FIX"
+    },
+    {
+      "problem": "WEBDRIVER_SETVALUE_FAILED",
+      "category": "HARNESS_DEFECT",
+      "severity": "P2",
+      "fixability": "SAFE_AUTO_FIX"
+    }
+  ],
+  "screenshots": [
+    {
+      "label": "s1_t0_post_boot",
+      "file": "run_postfix_2_s1_t0_post_boot.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_FULLSTACK_PERFECTION_V24_2026-03-11_1205_f99844548/artifacts/run_postfix_2/screens/run_postfix_2_s1_t0_post_boot.png"
+    },
+    {
+      "label": "s1_post_nav_titane",
+      "file": "run_postfix_2_s1_post_nav_titane.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_FULLSTACK_PERFECTION_V24_2026-03-11_1205_f99844548/artifacts/run_postfix_2/screens/run_postfix_2_s1_post_nav_titane.png"
+    },
+    {
+      "label": "s2_start",
+      "file": "run_postfix_2_s2_start.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_FULLSTACK_PERFECTION_V24_2026-03-11_1205_f99844548/artifacts/run_postfix_2/screens/run_postfix_2_s2_start.png"
+    },
+    {
+      "label": "s2_before_hash_nav",
+      "file": "run_postfix_2_s2_before_hash_nav.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_FULLSTACK_PERFECTION_V24_2026-03-11_1205_f99844548/artifacts/run_postfix_2/screens/run_postfix_2_s2_before_hash_nav.png"
+    },
+    {
+      "label": "s2_after_nav_time",
+      "file": "run_postfix_2_s2_after_nav_time.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_FULLSTACK_PERFECTION_V24_2026-03-11_1205_f99844548/artifacts/run_postfix_2/screens/run_postfix_2_s2_after_nav_time.png"
+    },
+    {
+      "label": "s2_after_nav_stats",
+      "file": "run_postfix_2_s2_after_nav_stats.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_FULLSTACK_PERFECTION_V24_2026-03-11_1205_f99844548/artifacts/run_postfix_2/screens/run_postfix_2_s2_after_nav_stats.png"
+    },
+    {
+      "label": "s2_returned_titane",
+      "file": "run_postfix_2_s2_returned_titane.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_FULLSTACK_PERFECTION_V24_2026-03-11_1205_f99844548/artifacts/run_postfix_2/screens/run_postfix_2_s2_returned_titane.png"
+    },
+    {
+      "label": "s2_final",
+      "file": "run_postfix_2_s2_final.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_FULLSTACK_PERFECTION_V24_2026-03-11_1205_f99844548/artifacts/run_postfix_2/screens/run_postfix_2_s2_final.png"
+    },
+    {
+      "label": "s3_before_chat",
+      "file": "run_postfix_2_s3_before_chat.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_FULLSTACK_PERFECTION_V24_2026-03-11_1205_f99844548/artifacts/run_postfix_2/screens/run_postfix_2_s3_before_chat.png"
+    },
+    {
+      "label": "s3_after_typing_native_setter",
+      "file": "run_postfix_2_s3_after_typing_native_setter.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_FULLSTACK_PERFECTION_V24_2026-03-11_1205_f99844548/artifacts/run_postfix_2/screens/run_postfix_2_s3_after_typing_native_setter.png"
+    },
+    {
+      "label": "s3_after_send",
+      "file": "run_postfix_2_s3_after_send.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_FULLSTACK_PERFECTION_V24_2026-03-11_1205_f99844548/artifacts/run_postfix_2/screens/run_postfix_2_s3_after_send.png"
+    },
+    {
+      "label": "s3_final",
+      "file": "run_postfix_2_s3_final.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_FULLSTACK_PERFECTION_V24_2026-03-11_1205_f99844548/artifacts/run_postfix_2/screens/run_postfix_2_s3_final.png"
+    },
+    {
+      "label": "s4_start",
+      "file": "run_postfix_2_s4_start.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_FULLSTACK_PERFECTION_V24_2026-03-11_1205_f99844548/artifacts/run_postfix_2/screens/run_postfix_2_s4_start.png"
+    },
+    {
+      "label": "s4_secondary_opened",
+      "file": "run_postfix_2_s4_secondary_opened.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_FULLSTACK_PERFECTION_V24_2026-03-11_1205_f99844548/artifacts/run_postfix_2/screens/run_postfix_2_s4_secondary_opened.png"
+    },
+    {
+      "label": "s4_done",
+      "file": "run_postfix_2_s4_done.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_FULLSTACK_PERFECTION_V24_2026-03-11_1205_f99844548/artifacts/run_postfix_2/screens/run_postfix_2_s4_done.png"
+    },
+    {
+      "label": "s5_returned_primary",
+      "file": "run_postfix_2_s5_returned_primary.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_FULLSTACK_PERFECTION_V24_2026-03-11_1205_f99844548/artifacts/run_postfix_2/screens/run_postfix_2_s5_returned_primary.png"
+    },
+    {
+      "label": "s5_final",
+      "file": "run_postfix_2_s5_final.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_FULLSTACK_PERFECTION_V24_2026-03-11_1205_f99844548/artifacts/run_postfix_2/screens/run_postfix_2_s5_final.png"
+    }
+  ],
+  "jsCriticalErrors": [],
+  "ipcAvailable": true,
+  "currentUrl": "tauri://localhost/titane",
+  "pageTitle": "TITANE∞ v26.3.0 - Cognitive Operating System",
+  "zoom": 2,
+  "navAudit": {
+    "navItems": [
+      {
+        "visible": true,
+        "text": "TITANE",
+        "tag": "BUTTON"
+      },
+      {
+        "visible": true,
+        "text": "TIME",
+        "tag": "BUTTON"
+      },
+      {
+        "visible": true,
+        "text": "STATS",
+        "tag": "BUTTON"
+      },
+      {
+        "visible": true,
+        "text": "ADMIN",
+        "tag": "BUTTON"
+      },
+      {
+        "visible": true,
+        "text": "DEV",
+        "tag": "BUTTON"
+      },
+      {
+        "visible": true,
+        "text": "Plus",
+        "tag": "BUTTON"
+      }
+    ],
+    "found": [
+      "[role=\"tab\"]",
+      "[data-testid*=\"tab\"]",
+      "nav button",
+      "[role=\"navigation\"] button",
+      "[class*=\"nav\"] button"
+    ],
+    "navElTag": "NAV"
+  },
+  "bodyText": "Aller au contenu principal\n\nTITANE∞\n\nTITANE\n\nTIME\n\nSTATS\n\nADMIN\n\nDEV\n\nPlus\nIA: 80%\n🧠 Cognitive Layout\n↶\n↷\n\n▲\n\nAdaptation auto\n\n\n×\nBOOT BEACON\nstage: BOOT:BEFORE_ORCHESTRATOR_INIT\nisTauri: true\nrootChildren: 3\nhref: tauri://localhost/titane\nkeys: F12/Ctrl+Shift+I, Ctrl+Alt+D"
+}

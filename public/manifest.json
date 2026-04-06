@@ -1,7 +1,7 @@
 {
-  "name": "TITANE INFINITY",
-  "short_name": "TITANE",
-  "description": "Cognitive Operating System v26 - Intelligence Augmentee",
+  "name": "TITANE∞ v30.0.0",
+  "short_name": "TITANE∞",
+  "description": "TITANE∞ v30.0.0 - Cognitive Operating System, stable desktop release",
   "start_url": "/",
   "display": "standalone",
   "orientation": "any",
@@ -13,16 +13,16 @@
   "categories": ["productivity", "utilities", "developer tools"],
   "icons": [
     {
-      "src": "/vite.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/titane-icon.png",
+      "sizes": "256x256",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/vite.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "maskable"
+      "src": "/titane-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ],
   "screenshots": [],

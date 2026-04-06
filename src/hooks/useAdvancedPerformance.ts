@@ -1,11 +1,11 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v25.5.0 — useAdvancedPerformance Hook
+ * TITANE∞ v30.0.0 — useAdvancedPerformance Hook
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * Hook React pour monitoring de performance avancé
  *
- * @version 25.5.0
+ * @version 29.0.0
  * @created 2025-12-16
  */
 

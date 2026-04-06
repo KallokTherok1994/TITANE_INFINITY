@@ -238,6 +238,7 @@ describe('useAdaptiveFPS Hook', () => {
   });
 
   afterEach(() => {
+    vi.clearAllTimers();
     vi.restoreAllMocks();
     vi.useRealTimers();
   });
@@ -304,6 +305,7 @@ describe('useEffects Hook', () => {
   });
 
   afterEach(() => {
+    vi.clearAllTimers();
     vi.restoreAllMocks();
     vi.useRealTimers();
   });

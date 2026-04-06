@@ -1,0 +1,14 @@
+## MAIN...origin/MAIN [devant 1]
+ M e2e/desktop/ui-ultra-full.e2e.js
+ M scripts/autoheal/autoheal_rules.jsonl
+ M titane-infinity.desktop
+?? proof_packs/PR_CI_UNBLOCK_2026-03-06_1847_5a48aa005/
+?? proof_packs/PR_MAIN_SEAL_READINESS_2026-03-06_1752_5a48aa005/
+?? proof_packs/UI_E2E_TOTAL_2026-03-06_1646_5a48aa005/
+
+ M e2e/desktop/ui-ultra-full.e2e.js
+ M scripts/autoheal/autoheal_rules.jsonl
+ M titane-infinity.desktop
+?? proof_packs/PR_CI_UNBLOCK_2026-03-06_1847_5a48aa005/
+?? proof_packs/PR_MAIN_SEAL_READINESS_2026-03-06_1752_5a48aa005/
+?? proof_packs/UI_E2E_TOTAL_2026-03-06_1646_5a48aa005/

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25.3.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * IdentitySection Component
@@ -11,6 +11,7 @@ import React, { memo, useCallback } from 'react';
 import { Grid } from '@components/layout';
 import { Card } from '@/ui';
 import { TSectionHeader } from '@/design-system';
+import { SectionLoadingFallback } from './SectionLoadingFallback';
 import { colors, spacing, fontSizes } from '@themes/tokens';
 import { detectEnvironment } from '@/core/tauri/environment';
 import {
@@ -70,7 +71,15 @@ export const IdentitySection: React.FC<IdentitySectionProps> = memo(() => {
       <Grid columns={2} gap={4}>
         <Card>
           <h3 style={{ marginBottom: spacing[4] }}>Matrice de Modes</h3>
-          <React.Suspense fallback={null}>
+          <React.Suspense
+            fallback={
+              <SectionLoadingFallback
+                label="Matrice de modes"
+                note="Chargement des modes d’identité…"
+                testId="loading-identity-modes"
+              />
+            }
+          >
             <LazyModeMatrix
               currentMode={currentModeId ?? undefined}
               onModeSelect={handleModeSelect}
@@ -80,7 +89,15 @@ export const IdentitySection: React.FC<IdentitySectionProps> = memo(() => {
 
         <Card>
           <h3 style={{ marginBottom: spacing[4] }}>Personnalité TITANE</h3>
-          <React.Suspense fallback={null}>
+          <React.Suspense
+            fallback={
+              <SectionLoadingFallback
+                label="Personnalité TITANE"
+                note="Chargement de l’éditeur de persona…"
+                testId="loading-persona-editor"
+              />
+            }
+          >
             <LazyPersonaEditor />
           </React.Suspense>
         </Card>
@@ -108,7 +125,15 @@ export const IdentitySection: React.FC<IdentitySectionProps> = memo(() => {
       <Card style={{ marginTop: spacing[4] }}>
         <h3 style={{ marginBottom: spacing[4] }}>Identity Center</h3>
         {env.isTauri ? (
-          <React.Suspense fallback={null}>
+          <React.Suspense
+            fallback={
+              <SectionLoadingFallback
+                label="Identity Center"
+                note="Chargement du centre d’identité…"
+                testId="loading-identity-center"
+              />
+            }
+          >
             <LazyIdentityCenter />
           </React.Suspense>
         ) : (

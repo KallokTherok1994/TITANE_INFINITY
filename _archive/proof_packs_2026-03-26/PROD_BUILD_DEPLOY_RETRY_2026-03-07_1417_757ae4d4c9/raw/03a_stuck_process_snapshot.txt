@@ -1,0 +1,4 @@
+ 508186  507880 S+         03:21  0.0  0.0 /bin/bash ./runtime/stable/build.sh
+ 509960  508186 Sl+        01:50  0.1  0.2 node /home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/corepack pnpm exec tauri build --config runtime/stable/tauri.conf.json
+ 510176  509960 Sl+        01:49  0.0  0.1 node ./node_modules/.bin/../@tauri-apps/cli/tauri.js build --config runtime/stable/tauri.conf.json
+ 517085  516663 S+   441077234-00:18:40 0.0  0.0 rg 508186|509960|510310|runtime/stable/build.sh|tauri build|vite.js build

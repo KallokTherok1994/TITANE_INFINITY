@@ -41,6 +41,12 @@ if [[ "$tool_name" =~ ^(write_to_file|execute_command)$ ]]; then
   echo "$timestamp: $tool_name (${execution_time}ms) success=$success" >> "$log_dir/operations.log"
 fi
 
+# Anti-loop: si l'outil a réussi, confirmer explicitement que
+# le résultat est terminal. Vide = repo propre = décision finale.
+if [[ "$success" == "true" && "$tool_name" =~ ^(write_to_file|execute_command)$ ]]; then
+  context+="\nVERIFY_STATE: Repo check complete. Empty output = clean. No re-check needed."
+fi
+
 if [[ -n "$context" ]]; then
   jq -n --arg ctx "$context" '{"cancel": false, "contextModification": $ctx}'
 else

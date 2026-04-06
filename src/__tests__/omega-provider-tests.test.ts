@@ -20,6 +20,7 @@ import { aiOrchestrator } from '../services/ai/orchestrator';
 import { autoHealEngine } from '../services/ai/autoHealEngine';
 import type { AIMessage } from '../services/ai/types';
 import * as tauriCore from '@tauri-apps/api/core';
+import { tauriProtector } from '@/utils/tauriProtector';
 
 // ═══════════════════════════════════════════════════════════════════
 // OMEGA TEST SUITE 1: GEMINI PROVIDER DOWN
@@ -117,15 +118,7 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 2: Tauri Backend Down', () => {
   });
 
   it('should handle Tauri invoke timeout gracefully', async () => {
-    // Mock invoke timeout
-    const mockInvoke = vi.fn().mockRejectedValue(new Error('Backend invoke timeout'));
-    vi.mock('../../../core/commands/TAURI_COMMANDS', () => ({
-      TAURI_COMMANDS: {
-        CHAT_SEND_MESSAGE: 'chat_send_message',
-        CHAT_GET_PROVIDERS_STATUS: 'chat_get_providers_status',
-      },
-      invokeTauri: mockInvoke,
-    }));
+    vi.spyOn(tauriCore, 'invoke').mockRejectedValue(new Error('Backend invoke timeout'));
 
     const result = await aiOrchestrator.generate('Test tauri timeout', []);
 
@@ -139,14 +132,15 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 2: Tauri Backend Down', () => {
       resetErrors?: () => void;
     };
     resettableProvider.resetErrors?.();
+    tauriProtector.reset();
 
-    // Simulate multiple failures
+    vi.spyOn(tauriCore, 'invoke').mockRejectedValue(new Error('Backend invoke timeout'));
+
     for (let i = 0; i < 6; i++) {
-      const available = await tauriChatProvider.isAvailable();
-      if (i >= 5) {
-        expect(available).toBe(false);
-      }
+      await tauriChatProvider.generate(`Test tauri failure ${i}`, []).catch(() => null);
     }
+
+    expect(await tauriChatProvider.isAvailable()).toBe(false);
   });
 
   it('should auto-heal Tauri backend errors', async () => {

@@ -29,6 +29,19 @@ interface VaultStatusProps {
   onRefresh: () => void;
 }
 
+const getSyncModeLabel = (mode: CloudStatus['sync_mode']): string => {
+  switch (mode) {
+    case 'Manual':
+      return '🖐️ Manuel';
+    case 'Auto':
+      return '🔄 Automatique (config seule, non prouve)';
+    case 'Disabled':
+      return '⛔ Desactive';
+    default:
+      return 'N/A';
+  }
+};
+
 const VaultStatus: React.FC<VaultStatusProps> = ({ status, onRefresh }) => {
   const [backups, setBackups] = useState<BackupInfo[]>([]);
   const [isHealing, setIsHealing] = useState(false);
@@ -227,10 +240,7 @@ const VaultStatus: React.FC<VaultStatusProps> = ({ status, onRefresh }) => {
               <div className="detail-row">
                 <span className="detail-label">Mode:</span>
                 <span className="detail-value">
-                  {status?.sync_mode === 'Manual' && '🖐️ Manuel'}
-                  {status?.sync_mode === 'Auto' && '🔄 Automatique'}
-                  {status?.sync_mode === 'Disabled' && '⛔ Désactivé'}
-                  {!status?.sync_mode && 'N/A'}
+                  {getSyncModeLabel(status?.sync_mode ?? null)}
                 </span>
               </div>
             </div>

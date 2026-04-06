@@ -96,7 +96,7 @@ export interface ClassifiedError {
 // ────────────────────────────────────────────────────────────────
 
 export function classifyError(error: unknown, context?: ErrorContext): ClassifiedError {
-  // TimeoutError - ✨ v26.2.1: Enhanced messaging for cloud agent timeouts
+  // TimeoutError - ✨ v30.0.0: Enhanced messaging for cloud agent timeouts
   if (error instanceof TimeoutError) {
     const provider = String(context?.metadata?.provider ?? '').toLowerCase();
     const isCloudAgent = ['openai', 'claude', 'gemini', 'anthropic'].includes(provider);

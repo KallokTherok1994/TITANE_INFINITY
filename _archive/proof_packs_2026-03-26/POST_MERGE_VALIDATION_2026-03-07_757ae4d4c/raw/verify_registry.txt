@@ -1,0 +1,16 @@
+
+> titane-infinity@27.2.0 verify:registry /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> pnpm -s verify:registry:sync && pnpm -s verify:registry:integrity && pnpm -s verify:registry:quality
+
+📋 TITANE∞ Registry Sync Verification
+
+📂 Changed files: 43
+
+⚠️ Watched files changed (3):
+   - .github/workflows/ci-unified.yml
+   - .github/workflows/constitution-audit.yml
+   - .github/workflows/rust-docker.yml
+
+✅ Registry artifacts updated (events + snapshot + dashboard)
+✅ registry-integrity: PASS
+✅ registry-quality: PASS

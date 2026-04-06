@@ -2,81 +2,526 @@
 
 All notable changes to this project are documented in this file.
 
+## [30.0.0] - 2026-04-06 (Major Release — V30 Full Upgrade Cycle)
+
+### Added
+
+- Major version authority promotion: 29.0.0 → 30.0.0 across all canonical surfaces
+- Dependency refresh cycle: 32 pnpm minor/patch updates + 5 Cargo crate updates queued (PRs #205, #206)
+- Governed root cleanup integration (waves 1–5 scope from PR #203)
+- Release artifacts checksums surface for v30.0.0 build certification
+- Production release documentation: `docs/90_release/PRODUCTION_RELEASE_v30.0.0.md`
+- CI/CD pipeline alignment: actions/checkout v6 compatibility (PR #124)
+
+### Changed
+
+- Canonical release stream promoted to `30.0.0`
+- Version authority surfaces aligned across package.json, Cargo.toml, tauri.conf.json, runtime manifests, deployment metadata, README, and docs
+- Eval harness coverage extended with additional edge-case regression tests from V29
+- Config HUB defaults propagation hardened for multi-model profile switching
+- Build pipeline: Vite + Rolldown + Tauri v2 production chain verified for V30
+
+### Fixed
+
+- Version drift eliminated across all version-bearing surfaces (zero-drift guarantee)
+- Stale WIP PR backlog documented and triaged (PRs #154–#165)
+- Root-level file hygiene improved via governed cleanup waves
+- Dependency security posture refreshed with pending Dependabot advisories addressed
+
+## [29.0.0] - 2026-04-05 (Major Release — Eval Harness + Stable Packaging)
+
+### Added
+
+- Zero-regression eval certification: champion harness now reports `35 total / 33 passed / 0 failed / 0 blocked` with the 2 shadow items intentionally skipped
+- 18 targeted regression tests for `evals/harness/scorer.test.ts`
+- Stable release refresh for DEB/AppImage installation surfaces and deployment metadata
+
+### Changed
+
+- Canonical release stream promoted to `29.0.0`
+- Version authority surfaces aligned across package metadata, Tauri configs, runtime manifest, deployment metadata, and documentation
+- Direct Ollama eval path now uses deterministic guidance and a safer token budget heuristic based on the raw user input
+
+### Fixed
+
+- Scorer precision for markdown-emphasized SOLID answers, French no-memory phrases, plural trade-off wording, and correct recall handling
+- Timeout flakiness on slow Ollama runs by increasing the abort window from 29s to 45s
+- Runtime/deployment version drift caused by stale manifest surfaces during production packaging
+
+## [28.90.0] - 2026-04-03 (Config HUB + DEB Certification)
+
+### Added
+
+- feat(config-hub): Config HUB defaults propagation to live chat payloads without restart
+- test(e2e): DEB CONFIG RUNTIME TRUTH certification - proves max tokens change applies immediately
+- test(unit): chatEngine.commands cache invalidation tests
+- Audio runtime topology certification: 10 Tauri audio commands verified present
+
+### Changed
+
+- conversation_engine now reads temperature/max_output_tokens from current_chat_bundle()
+- chatEngine.ts resolves defaults dynamically instead of hardcoded fallbacks
+- ConfigurationHub calls invalidateRequestDefaultsCache() after config/profile changes
+
+### Fixed
+
+- Config changes in Configuration HUB now immediately affect next chat message
+- Request defaults cache properly invalidated on config updates
+
+## [28.89.0] - 2026-03-30 (Release Build)
+
+### Changed
+
+- Build v28.89.0 with stable runtime certification
+
+## [28.88.0] - 2026-03-22 (Production Seal)
+
+### Changed
+
+- chore(version): bump 28.87.0 → 28.88.0
+
+## [28.87.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.86.0 → 28.87.0
+
+## [28.86.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.85.0 → 28.86.0
+
+## [28.85.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.84.0 → 28.85.0
+
+## [28.84.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.83.0 → 28.84.0
+
+## [28.83.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.82.0 → 28.83.0
+
+## [28.82.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.81.0 → 28.82.0
+
+## [28.81.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.80.0 → 28.81.0
+
+## [28.80.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.79.0 → 28.80.0
+
+## [28.79.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.78.0 → 28.79.0
+
+## [28.78.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.77.0 → 28.78.0
+
+## [28.77.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.76.0 → 28.77.0
+
+## [28.76.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.75.0 → 28.76.0
+
+## [28.75.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.74.0 → 28.75.0
+
+## [28.74.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.73.0 → 28.74.0
+
+## [28.73.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.72.0 → 28.73.0
+
+## [28.72.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.71.0 → 28.72.0
+
+## [28.71.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.70.0 → 28.71.0
+
+## [28.70.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.69.0 → 28.70.0
+
+## [28.69.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.68.0 → 28.69.0
+
+## [28.68.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.67.0 → 28.68.0
+
+## [28.67.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.66.0 → 28.67.0
+
+## [28.66.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.65.0 → 28.66.0
+
+## [28.65.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.64.0 → 28.65.0
+
+## [28.64.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.63.0 → 28.64.0
+
+## [28.63.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.62.0 → 28.63.0
+
+## [28.62.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.61.0 → 28.62.0
+
+## [28.61.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.60.0 → 28.61.0
+
+## [28.60.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.59.0 → 28.60.0
+
+## [28.59.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.58.0 → 28.59.0
+
+## [28.58.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.57.0 → 28.58.0
+
+## [28.57.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.56.0 → 28.57.0
+
+## [28.56.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.55.0 → 28.56.0
+
+## [28.55.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.54.0 → 28.55.0
+
+## [28.54.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.53.0 → 28.54.0
+
+## [28.53.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.52.0 → 28.53.0
+
+## [28.52.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.51.0 → 28.52.0
+
+## [28.51.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.50.0 → 28.51.0
+
+## [28.50.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.49.0 → 28.50.0
+
+## [28.49.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.48.0 → 28.49.0
+
+## [28.48.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.47.0 → 28.48.0
+
+## [28.47.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.46.0 → 28.47.0
+
+## [28.46.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.45.0 → 28.46.0
+
+## [28.45.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.44.0 → 28.45.0
+
+## [28.44.0] - 2026-03-22 (Governance)
+
+### Changed
+
+- chore(version): bump 28.43.0 → 28.44.0
+
+## [28.43.0] - 2026-03-21 (Governance)
+
+### Changed
+
+- chore(version): bump 28.42.0 → 28.43.0
+
+## [28.42.0] - 2026-03-21 (Governance)
+
+### Changed
+
+- chore(version): bump 28.41.0 → 28.42.0
+
+## [28.41.0] - 2026-03-21 (Governance)
+
+### Changed
+
+- chore(version): bump 28.40.0 → 28.41.0
+
+## [28.40.0] - 2026-03-21 (Governance)
+
+### Changed
+
+- chore(version): bump 28.39.0 → 28.40.0
+
+## [28.39.0] - 2026-03-21 (Governance)
+
+### Changed
+
+- chore(version): bump 28.38.0 → 28.39.0
+
+## [28.38.0] - 2026-03-21 (Governance)
+
+### Changed
+
+- chore(version): bump 28.37.0 → 28.38.0
+
+## [28.37.0] - 2026-03-21 (Governance)
+
+### Changed
+
+- chore(version): bump 28.36.0 → 28.37.0
+
+## [28.36.0] - 2026-03-21 (Governance)
+
+### Changed
+
+- chore(version): bump 28.35.0 → 28.36.0
+
+## [28.35.0] - 2026-03-21 (Governance)
+
+### Changed
+
+- chore(version): bump 28.34.0 → 28.35.0
+
+## [28.34.0] - 2026-03-21 (Governance)
+
+### Changed
+
+- chore(version): bump 28.33.0 → 28.34.0
+
+## [28.33.0] - 2026-03-21 (Governance)
+
+### Changed
+
+- chore(version): bump 28.32.0 → 28.33.0
+
+## [28.32.0] - 2026-03-21 (Governance)
+
+### Changed
+
+- chore(version): bump 28.31.0 → 28.32.0
+
+## [28.31.0] - 2026-03-21 (Governance)
+
+### Changed
+
+- chore(version): bump 28.30.0 → 28.31.0
+
+## [28.30.0] - 2026-03-21 (Governance)
+
+### Changed
+
+- chore(version): bump 28.29.0 → 28.30.0
+
 ## [28.29.0] - 2026-03-21 (Governance)
 
 ### Changed
+
 - chore(version): bump 28.28.0 → 28.29.0
 
 ## [28.28.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.28.0.md` (same-cycle)
 
 ### Changed
+
 - chore(version): bump 28.27.0 → 28.28.0
 
 ## [28.27.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.27.0.md` (same-cycle)
 
 ### Changed
+
 - chore(version): bump 28.26.0 → 28.27.0
 
 ## [28.26.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.26.0.md` (same-cycle)
 
 ### Changed
+
 - chore(version): bump 28.25.0 → 28.26.0
 
 ## [28.25.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.25.0.md` (same-cycle)
 
 ### Changed
+
 - chore(version): bump 28.24.0 → 28.25.0
 
 ## [28.24.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.24.0.md` (same-cycle)
 
 ### Changed
+
 - chore(version): bump 28.23.0 → 28.24.0
 
 ## [28.23.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.23.0.md` (same-cycle)
 
 ### Changed
+
 - chore(version): bump 28.22.0 → 28.23.0
 
 ## [28.22.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.22.0.md` (same-cycle)
 
 ### Changed
+
 - chore(version): bump 28.21.0 → 28.22.0
 
 ## [28.21.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.21.0.md` (same-cycle)
 
 ### Changed
+
 - chore(version): bump 28.20.0 → 28.21.0
 
 ## [28.20.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.20.0.md` (same-cycle)
 
 ### Changed
+
 - chore(version): bump 28.19.0 → 28.20.0
 
 ## [28.19.0] - 2026-03-21 (Governance)
@@ -244,7 +689,7 @@ All notable changes to this project are documented in this file.
 - Sealed: `RELEASE_v28.6.0_SEALED.txt`
 - Gates at seal: tsc PASS, lint PASS, vitest 3399 PASS, build PASS, verify_instructions PASS=20/0
 
-### Navigation (v29.2 — TWINS Menu Fusion)
+### Navigation (TWINS Menu Fusion)
 
 - **TWINS menu fusion**: Removed `TWIN` from TopNav overflow (`Plus` menu); added canonical
   `🔀 Symbiose` tab (9th section) under `TITANE` page, hosting `TwinEvolutionPanel` directly.

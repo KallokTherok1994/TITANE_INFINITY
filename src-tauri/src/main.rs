@@ -1,8 +1,8 @@
-// TITANE_INFINITY v28.0.0 — Proprietary License
+// TITANE_INFINITY v29.0.0 — Proprietary License
 // © 2025-2026 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v28.0.0 — MAIN ENTRY POINT (Singularity Architecture)
+//   TITANE∞ v29.0.0 — MAIN ENTRY POINT (Singularity Architecture)
 //   Tests 93.0% Production Ready + UI Enhanced + COPILOT-XS Compliant
 //   20 Engines Unified + OMEGA Pipeline + Production Ready
 // ═══════════════════════════════════════════════════════════════
@@ -171,8 +171,7 @@ mod web_research_commands {
     include!("commands/web_research.rs");
 }
 mod audio {
-    // Re-export types from lib for inline modules
-    pub use titane_infinity::audio::{AudioConfig, AudioError, AudioResult};
+    // Audio types are used directly in audio/*.rs modules via titane_infinity::audio
     
     pub mod capture {
         include!("audio/capture.rs");
@@ -307,9 +306,13 @@ mod commands {
         include!("commands/ollama_command.rs");
     }
 
-    // ✨ TOTAL_DEV v28.1.0 — GOD DEV secure space (unlock, git, console, file)
+    // ✨ TOTAL_DEV v29.0.0 — GOD DEV secure space (unlock, git, console, file)
     pub mod total_dev_commands {
         include!("commands/total_dev_commands.rs");
+    }
+
+    pub mod http_commands {
+        include!("commands/http_commands.rs");
     }
 }
 
@@ -673,11 +676,6 @@ mod overdrive {
     }
 }
 
-// Singularity State v∞ (5-layer unified state)
-mod singularity_state {
-    include!("singularity_state/mod.rs");
-}
-
 // Security modules
 mod security {
     pub mod secrets_engine {
@@ -848,7 +846,7 @@ mod ollama;
 mod onboarding;
 
 // Configuration Management System v19.5.2 (Phase 2 - Configuration Hub)
-mod config;
+pub mod config;
 
 // ═══════════════════════════════════════════════════════════════
 // SUPPORT MODULES (v21.5 AUTO-FIX) - Types, Memory, Utils
@@ -862,9 +860,6 @@ mod utils;
 // Immersive Avatar Engine v23
 mod avatar;
 
-// SINGULARITY-FUSION vΩ (AutoHeal/AutoFix/CrashGuard/Performance/Pipeline)
-mod singularity_fusion;
-
 // System Center v∞ (Diagnostics, DevTools, Cluster)
 use titane_infinity::system_center;
 use titane_infinity::design_center;
@@ -874,9 +869,6 @@ use titane_infinity::cognitive::{
     AnalysisEngine, ConsistencyEngine, EvolutionCognitiveEngine, IntegrationEngine,
 };
 use tokio::sync::Mutex;
-
-// Singularity Cortex OS v∞ (SUPER PROMPT #7)
-use titane_infinity::singularity_cortex::api::SingularityCortexState;
 
 // Multi-IA Orchestrator v∞ (SUPER PROMPT #8)
 use titane_infinity::ai::orchestrator_multi::OrchestratorState;
@@ -902,7 +894,6 @@ use titane_infinity::ai::orchestrator_multi::OrchestratorState;
 // Use persistence module from lib.rs (includes all commands)
 use titane_infinity::persistence;
 use titane_infinity::time_commands; // FIX-011
-use titane_infinity::reality_renderer; // FIX-012
 // [FIX-013] Bulk handler registrations
 use titane_infinity::memory_evolution;
 use titane_infinity::cloud;
@@ -910,7 +901,6 @@ use titane_infinity::cluster;
 use titane_infinity::hyper_intelligence;
 use titane_infinity::meta_orchestrator;
 use titane_infinity::evolution;
-use titane_infinity::creation;
 use titane_infinity::introspection;
 use titane_infinity::knowledge;
 
@@ -940,8 +930,12 @@ impl CognitiveSystemState {
 }
 
 #[tauri::command]
-async fn ollama_query(prompt: String) -> Result<String, String> {
-    ollama::query_ollama(prompt).await
+async fn ollama_query(prompt: String) -> Result<serde_json::Value, String> {
+    let result = ollama::query_ollama(prompt).await?;
+    Ok(serde_json::json!({
+        "response": result.response,
+        "model": result.model
+    }))
 }
 
 // mod security; // DISABLED: Using library instead
@@ -1125,9 +1119,6 @@ fn main() {
         security_manager,
     };
 
-    // Initialize Singularity Cortex OS v∞ (SUPER PROMPT #7)
-    let singularity_cortex = SingularityCortexState::new();
-
     // Initialize Multi-IA Orchestrator v∞ (SUPER PROMPT #8)
     let multi_ai_orchestrator = OrchestratorState::new();
 
@@ -1136,7 +1127,6 @@ fn main() {
 
     let builder = tauri::Builder::default()
         .manage(app_state)
-        .manage(singularity_cortex)
         .manage(multi_ai_orchestrator)
         .manage(secrets_engine)
         .manage(copilot_state) // ✨ v26.3: Copilot State
@@ -1145,12 +1135,6 @@ fn main() {
         .manage(memory_core)
         .manage(core_singularity_state)
         .manage(avatar::AvatarEngineGlobal::default())
-        .manage(singularity_fusion::AutoFixState::default())
-        .manage(singularity_fusion::AutoHealState::default())
-        .manage(singularity_fusion::CrashGuardState::default())
-        .manage(singularity_fusion::PerformanceState::default())
-        .manage(singularity_fusion::UnifiedPipelineState::default())
-        .manage(singularity_fusion::FusionEngineState::default())
         .manage(state_bridge_commands::FrontendStateStore::default())
         // ✅ AUDIT FIX (2026-03-06): Identity Engine State — required by identity_* commands
         .manage(titane_infinity::identity::commands::IdentityEngineState::default())
@@ -1214,10 +1198,6 @@ fn main() {
                 log::info!("✅ AUTH OS v∞ initialized successfully");
             }
 
-            // Initialize SingularityEngine with app_handle
-            let singularity_engine = Arc::new(singularity_state::SingularityEngine::new(app.handle().clone()));
-            app.manage(singularity_engine.clone());
-
             let option1_db_state = commands::db_commands::Option1DbAppState::try_new(&app.handle())
                 .map_err(|err| format!("Option1 DB init failed: {}", err.message))?;
             app.manage(option1_db_state);
@@ -1259,8 +1239,20 @@ fn main() {
                 })
             );
 
-            app.manage(conversation_engine);
+            app.manage(conversation_engine.clone());
             log::info!("✅ OMEGA Conversation Engine v19.5.2 initialized");
+
+            // ✅ FIX(omega-init): Initialize OMEGA bridge async — required before first
+            //    process_through_omega() call. PipelineState::initialized defaults to false
+            //    so every message would fail with "Pipeline not initialized" and fall back
+            //    to the legacy 3646-char prompt path (slow). This spawn completes in <1ms.
+            tauri::async_runtime::spawn(async move {
+                if let Err(e) = conversation_engine.omega_bridge.initialize().await {
+                    log::warn!("[OMEGA] Bridge initialization failed: {}", e);
+                } else {
+                    log::info!("[OMEGA] ✅ OMEGA pipeline bridge initialized — fast path active");
+                }
+            });
 
             // ✅ AUTOFIX(memory-chat): PersistentMemoryState v19.2Ω — required by
             //    persistent_memory_read/get_stats/get_context/write_entry IPC commands
@@ -1777,98 +1769,6 @@ fn main() {
             avatar::fullbody_commands::fullbody_get_stats,
             avatar::fullbody_selftest::fullbody_run_selftest,
 
-            // SINGULARITY-FUSION (AutoFix/AutoHeal/CrashGuard/Performance/Pipeline)
-            singularity_fusion::autofix_detect_rust_warnings,
-            singularity_fusion::autofix_detect_typescript_errors,
-            singularity_fusion::autofix_detect_react_hook_violations,
-            singularity_fusion::autofix_detect_invalid_states,
-            singularity_fusion::autofix_fix_issue,
-            singularity_fusion::autofix_fix_all,
-            singularity_fusion::autofix_get_history,
-            singularity_fusion::autofix_get_stats,
-            singularity_fusion::autofix_reset,
-            singularity_fusion::autofix_rust_warning,
-            singularity_fusion::autofix_typescript_error,
-            singularity_fusion::autofix_reset_state,
-            singularity_fusion::autofix_restart_pipeline,
-            singularity_fusion::autofix_restart_tauri_command,
-            singularity_fusion::autofix_resync_lipsync,
-            singularity_fusion::autofix_add_mutex,
-
-            singularity_fusion::autoheal_detect_broken,
-            singularity_fusion::autoheal_detect_broken_modules,
-            singularity_fusion::autoheal_reset_cognitive,
-            singularity_fusion::autoheal_init_cognitive,
-            singularity_fusion::autoheal_reset_adaptive,
-            singularity_fusion::autoheal_clear_narrative,
-            singularity_fusion::autoheal_init_narrative,
-            singularity_fusion::autoheal_stop_avatar,
-            singularity_fusion::autoheal_reload_avatar,
-            singularity_fusion::autoheal_start_avatar,
-            singularity_fusion::autoheal_clear_tts_queue,
-            singularity_fusion::autoheal_init_tts,
-            singularity_fusion::autoheal_resync_lipsync,
-            singularity_fusion::autoheal_rebuild_memory_index,
-            singularity_fusion::autoheal_validate_memory,
-            singularity_fusion::autoheal_stop_pipeline,
-            singularity_fusion::autoheal_clear_pipeline,
-            singularity_fusion::autoheal_start_pipeline,
-            singularity_fusion::autoheal_heal_cognitive_module,
-            singularity_fusion::autoheal_heal_avatar_module,
-            singularity_fusion::autoheal_heal_tts_module,
-            singularity_fusion::autoheal_heal_lipsync_module,
-            singularity_fusion::autoheal_heal_memory_module,
-            singularity_fusion::autoheal_heal_pipeline,
-            singularity_fusion::autoheal_resync_state,
-            singularity_fusion::autoheal_get_history,
-            singularity_fusion::autoheal_reset,
-
-            singularity_fusion::crashguard_detect_threats,
-            singularity_fusion::crashguard_clear_memory,
-            singularity_fusion::crashguard_kill_thread,
-            singularity_fusion::crashguard_restart_module,
-            singularity_fusion::crashguard_emergency_shutdown,
-            singularity_fusion::crashguard_reset_pipeline,
-            singularity_fusion::crashguard_emergency_rollback,
-            singularity_fusion::crashguard_get_active_threats,
-            singularity_fusion::crashguard_get_stats,
-
-            singularity_fusion::performance_get_metrics,
-            singularity_fusion::performance_throttle_cpu,
-            singularity_fusion::performance_optimize_gpu,
-            singularity_fusion::performance_reduce_render_quality,
-            singularity_fusion::performance_compress_memory,
-            singularity_fusion::performance_reset_optimizations,
-
-            singularity_fusion::pipeline_analyze_intention,
-            singularity_fusion::pipeline_generate_cognitive_response,
-            singularity_fusion::pipeline_prepare_tts,
-            singularity_fusion::pipeline_prepare_avatar_animation,
-            singularity_fusion::pipeline_get_stats,
-            singularity_fusion::pipeline_pause,
-            singularity_fusion::pipeline_resume,
-            singularity_fusion::pipeline_reset,
-            singularity_fusion::pipeline_validate,
-
-            // Singularity State Commands (SINGULARITY API v21 REPAIR - 18 commands)
-            singularity_state::commands::singularity_get_state,
-            singularity_state::commands::singularity_get_full_state,
-            singularity_state::commands::singularity_get_physical,
-            singularity_state::commands::singularity_get_cognitive,
-            singularity_state::commands::singularity_get_symbolic,
-            singularity_state::commands::singularity_get_adaptive,
-            singularity_state::commands::singularity_get_meta,
-            singularity_state::commands::singularity_get_global_coherence,
-            singularity_state::commands::singularity_is_critical,
-            singularity_state::commands::singularity_update_physical,
-            singularity_state::commands::singularity_update_cognitive,
-            singularity_state::commands::singularity_update_symbolic,
-            singularity_state::commands::singularity_update_adaptive,
-            singularity_state::commands::singularity_update_meta,
-            singularity_state::commands::singularity_update_full_state,
-            singularity_state::commands::sync_singularity, // ✅ v∞.FIX - Auto-sync command
-            singularity_state::commands::singularity_save_state,
-            singularity_state::commands::singularity_load_state,
             // System Center Diagnostics (v∞)
             system_center::diagnostics::sc_run_quick_diagnostics,
             system_center::diagnostics::sc_run_full_diagnostics,
@@ -1995,12 +1895,18 @@ fn main() {
             audio::commands::vad_test,
             // E2E Audio Truth System
             audio::commands::tts_generate_test_buffer,
-            // Audio Capture Commands (6) - ✅ AH-0093 FIX: audio-capture feature (default)
+            // Audio Capture Commands (6) - opt-in feature (requires libasound2-dev)
+            #[cfg(feature = "audio-capture")]
             audio::commands::audio_capture_start,
+            #[cfg(feature = "audio-capture")]
             audio::commands::audio_capture_stop,
+            #[cfg(feature = "audio-capture")]
             audio::commands::audio_capture_status,
+            #[cfg(feature = "audio-capture")]
             audio::commands::audio_capture_get_chunk,
+            #[cfg(feature = "audio-capture")]
             audio::commands::audio_capture_export_wav,
+            #[cfg(feature = "audio-capture")]
             audio::commands::audio_list_devices,
             // Helios API Commands (System Monitoring) - ONLY get_helios_state
             api::helios_api::get_helios_state,
@@ -2197,6 +2103,7 @@ fn main() {
             persistence::commands::titan_persistence_init,
             persistence::commands::titan_persist_event,
             persistence::commands::titan_force_snapshot,
+            persistence::commands::titan_force_snapshot_current,
             persistence::commands::titan_get_persistence_status,
             persistence::commands::titan_check_integrity,
             persistence::commands::titan_compact_journal,
@@ -2216,10 +2123,6 @@ fn main() {
             // Time-travel commands [FIX-011] — get_travel_stats + delete_snapshot were unregistered
             time_commands::get_travel_stats,
             time_commands::delete_snapshot,
-            // Reality renderer commands [FIX-012] — realitySetRenderConfig called without catch
-            reality_renderer::commands::reality_set_render_config,
-            reality_renderer::commands::reality_get_state,
-            reality_renderer::commands::reality_init,
             persistence::commands::titan_reset_module,
             persistence::commands::titan_dump_raw_state,
             persistence::commands::titan_run_full_integrity_check,
@@ -2459,16 +2362,6 @@ fn main() {
             // R11: REAL BACKENDS now registered (existed but unregistered)
             // ═══════════════════════════════════════════════════════════════
 
-            // singularity_fusion::fusion_engine commands
-            singularity_fusion::fusion_engine::singularity_get_fusion_state,
-            singularity_fusion::fusion_engine::singularity_perform_sync,
-            singularity_fusion::fusion_engine::singularity_check_integrity,
-            singularity_fusion::fusion_engine::singularity_create_snapshot,
-            singularity_fusion::fusion_engine::singularity_restore_snapshot,
-            singularity_fusion::fusion_engine::singularity_get_metrics,
-            singularity_fusion::fusion_engine::singularity_get_diagnostics,
-            singularity_fusion::fusion_engine::singularity_reset,
-
             // singularity::coherence
             titane_infinity::singularity::coherence::singularity_check_coherence,
 
@@ -2596,9 +2489,6 @@ fn main() {
             evolution::evolution_loop::evolution_run_cycle,
             evolution::evolution_loop::evolution_get_stats,
 
-            // creation
-            creation::generator::create_module,
-
             // introspection
             introspection::scanner::introspection_scan,
             introspection::scanner::introspection_auto_fix,
@@ -2712,11 +2602,6 @@ fn main() {
             titane_infinity::singularity::singularity_commands::singularity_snapshot,
             titane_infinity::singularity::singularity_commands::singularity_sync,
 
-            // reality_renderer extras — module already imported
-            reality_renderer::commands::reality_add_entity,
-            reality_renderer::commands::reality_render_frame,
-            reality_renderer::commands::reality_toggle_physics,
-
             // time_commands extras — module already imported
             time_commands::list_snapshots,
             time_commands::restore_snapshot,
@@ -2736,10 +2621,6 @@ fn main() {
 
             // onboarding — OnboardingState already managed
             onboarding::reset_onboarding,
-
-            // hyper_evolution
-            titane_infinity::hyper_evolution::accelerator::hyper_accelerate,
-            titane_infinity::hyper_evolution::predictor::hyper_predict_issues,
 
             // [FIX-014] NO_HANDLER stubs (legacy_ai_bridge)
             legacy_ai_bridge::agenda_save_event,
@@ -2856,13 +2737,16 @@ fn main() {
             legacy_ai_bridge::vector_store_insert,
             legacy_ai_bridge::vector_store_update,
 
-            // ✨ TOTAL_DEV v28.1.0 — 6 handlers GOD DEV
+            // ✨ TOTAL_DEV v29.0.0 — 6 handlers GOD DEV
             commands::total_dev_commands::total_dev_unlock,
             commands::total_dev_commands::total_dev_session_status,
             commands::total_dev_commands::total_dev_revoke,
             commands::total_dev_commands::total_dev_git_op,
             commands::total_dev_commands::total_dev_run_command,
             commands::total_dev_commands::total_dev_read_file,
+
+            // Governed network gateway — frontend httpClient now routes via IPC
+            commands::http_commands::http_request,
         ])
         .run(tauri::generate_context!())
         .unwrap_or_else(|e| {

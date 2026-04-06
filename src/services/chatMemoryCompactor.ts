@@ -22,8 +22,8 @@ const logger = createLogger('[MEMORY-COMPACTOR]');
 
 const STORAGE_KEY_PREFIX = 'titane_chat_mode_';
 const __MAX_MESSAGES_PER_MODE = 50; // Reserved for future use
-const COMPRESSION_THRESHOLD = 30; // Compresser si > 30 messages
-const COMPRESSION_TARGET = 20; // Garder 20 messages après compression
+const COMPRESSION_THRESHOLD = 70; // Compresser si > 70 messages
+const COMPRESSION_TARGET = 50; // Garder 50 messages après compression
 
 // ✨ v24.3.7: requestIdleCallback polyfill for Safari/older browsers
 const scheduleIdleTask =

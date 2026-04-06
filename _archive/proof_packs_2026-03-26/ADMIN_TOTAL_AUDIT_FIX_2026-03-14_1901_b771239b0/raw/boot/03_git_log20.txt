@@ -1,0 +1,20 @@
+936d25f26 fix(ui): WAVE A — conversation-first layout optimization
+163d70828 chore(autoheal): capture E2E session recovery rules (AR20 + Phase H)
+ca036dc8b fix(ui): remove floating CognitiveLayout panel, rehome into Admin
+b771239b0 merge(clean): absorb v26.4.0-sprint-3 into MAIN (ours, no tree change)
+5f54630ed merge(clean): absorb v15_total_audit_20260311_080118 into MAIN (ours, no tree change)
+a7fd309e4 merge(clean): absorb ui/doc-only-final-seal into MAIN (ours, no tree change)
+95ea2c17f merge(clean): absorb ui/doc-only-cleanroom into MAIN (ours, no tree change)
+5262054b7 merge(clean): absorb test/phase0-gate-enforcement-proof into MAIN (ours, no tree change)
+d8bfb997c merge(clean): absorb repro-build-closure-20260308-1744-c96c4f9b1 into MAIN (ours, no tree change)
+5b8ecb1fe merge(clean): absorb rc-clean-integration-20260308-2217-c96c4f9b1 into MAIN (ours, no tree change)
+f6c091f90 merge(clean): absorb p2/sync-fastfs-to-main-20260216_122357 into MAIN (ours, no tree change)
+282dbe3b9 merge(clean): absorb p2/bundle-phase2a-fastfs into MAIN (ours, no tree change)
+f41b5bd8d merge(clean): absorb ops/worktree-cleanup-snapshot-20260209-1350 into MAIN (ours, no tree change)
+2d828366c merge(clean): absorb ops/main-pre-rebase-20260209-1350 into MAIN (ours, no tree change)
+6739df515 merge(clean): absorb copilot/vscode-mlnton06-iove into MAIN (ours, no tree change)
+860b442e6 merge(clean): absorb copilot/main-sync-20260304_075901 into MAIN (ours, no tree change)
+796627808 merge(clean): absorb chore/hors-scope-snapshot into MAIN (ours, no tree change)
+1ed54ac00 chore(format): normalize README, WDIO tests/config, and tauri client formatting
+358281f14 deploy(prod): PROD BUILD v28.0.0 — tauri bundle + deploy artifacts sealed
+1959a261d deploy(latest): update run1 normalized binary + sha256 hash

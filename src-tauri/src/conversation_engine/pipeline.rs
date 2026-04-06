@@ -248,6 +248,7 @@ impl ConversationPipeline {
         };
 
         let final_latency = start.elapsed().as_millis() as u64;
+        let memory_sources_injected = cognitive_summary.links.len();
 
         // 🔍 LOG SORTIE PIPELINE OMEGA
         log::info!(
@@ -275,6 +276,8 @@ impl ConversationPipeline {
                 memory_effect: cognitive_summary.memory_effect,
                 links_to_contexts: cognitive_summary.links,
                 provider_meta: Some(build_success_meta(&provider_used, final_latency as u128)),
+                profile_used: "default".to_string(),
+                memory_sources_injected,
             },
         })
     }
@@ -425,10 +428,15 @@ impl ConversationPipeline {
             super::types::ProviderPreference::Auto => None,
         };
 
+        let default_max_tokens = match config.provider_preference {
+            super::types::ProviderPreference::Local | super::types::ProviderPreference::Ollama => 512,
+            _ => 2000,
+        };
+
         let ai_request = AIRequest {
             prompt,
             temperature: config.temperature,
-            max_tokens: config.max_tokens.unwrap_or(2000),
+            max_tokens: config.max_tokens.unwrap_or(default_max_tokens),
             stream: false,
             provider_preference: provider_pref,
         };

@@ -46,7 +46,7 @@ import './DeveloperModePage.css';
 // ═══════════════════════════════════════════════════════════════════════════════
 
 function DeveloperModePageContent(): JSX.Element {
-  // ✨ v25.7.4 - Responsive hook
+  // ✨ v30.0.0 - Responsive hook
   useResponsive();
 
   const { state, loading, error, enable, disable } = useDeveloperMode();

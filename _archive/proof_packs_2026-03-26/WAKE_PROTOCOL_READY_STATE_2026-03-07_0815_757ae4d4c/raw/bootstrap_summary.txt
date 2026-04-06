@@ -1,0 +1,7 @@
+pack=proof_packs/WAKE_PROTOCOL_READY_STATE_2026-03-07_0815_757ae4d4c
+short_sha=757ae4d4c
+date=2026-03-07
+time=0815
+active_baseline=STANDBY_CONFIRMED
+canonical_baseline=757ae4d4c
+sentinel_pack=proof_packs/SENTINEL_STANDBY_MODE_2026-03-07_1305_757ae4d4c

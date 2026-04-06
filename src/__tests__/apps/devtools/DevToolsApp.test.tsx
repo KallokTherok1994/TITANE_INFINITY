@@ -171,7 +171,8 @@ describe('DevToolsApp', () => {
     it('should have header with elevated background', () => {
       const { container } = render(<DevToolsApp />);
 
-      const header = container.querySelector('.flex-shrink-0.border-b');
+      const header = container.querySelector('.shrink-0.border-b');
+      expect(header).toBeInTheDocument();
       expect(header).toHaveStyle({
         background: 'var(--bg-elevated, #0b0d0f)',
       });

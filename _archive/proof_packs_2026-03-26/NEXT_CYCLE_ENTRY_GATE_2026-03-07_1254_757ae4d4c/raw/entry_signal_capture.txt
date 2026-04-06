@@ -1,0 +1,4 @@
+ENTRY_SIGNAL_SOURCE: user request NEXT_CYCLE_ENTRY_GATE__SCOPE_OR_DRIFT_ONLY
+ENTRY_SIGNAL_TEXT: decide whether a new cycle may open, with only two valid doors (explicit new scope or proven drift), otherwise keep baseline closed.
+EXPLICIT_NEW_SCOPE_IN_REQUEST: none provided
+PROVEN_DRIFT_EVIDENCE_IN_REQUEST: none provided

@@ -1,0 +1,58 @@
+src/components/sections/ConversationSection.tsx:40:import { webResearch } from '@/services/webResearchService';
+src/components/sections/ConversationSection.tsx:644:    appendLocalExchange,
+src/components/sections/ConversationSection.tsx:706:        await sendMessage(content);
+src/components/sections/ConversationSection.tsx:833:  const handleSend = useCallback(async () => {
+src/components/sections/ConversationSection.tsx:869:        const report = await webResearch({ question: handoff.q }, options);
+src/components/sections/ConversationSection.tsx:874:        await appendLocalExchange(messageText, assistantReply, {
+src/components/sections/ConversationSection.tsx:889:        await appendLocalExchange(
+src/components/sections/ConversationSection.tsx:923:      const response = await sendMessage(messageText);
+src/components/sections/ConversationSection.tsx:950:    appendLocalExchange,
+src/components/sections/ConversationSection.tsx:961:        handleSend();
+src/components/sections/ConversationSection.tsx:964:    [handleSend]
+src/components/sections/ConversationSection.tsx:1026:      sendMessage(
+src/components/sections/ConversationSection.tsx:1038:      sendMessage(`📎 Fichiers: ${fileNames}\n\nAnalyse ces fichiers.`);
+src/components/sections/ConversationSection.tsx:1046:      sendMessage('📸 [Capture ecran]\n\nAnalyse cette capture.');
+src/components/sections/ConversationSection.tsx:1054:      sendMessage(`👁️ [Image]\n\n${prompt || 'Analyse cette image.'}`);
+src/components/sections/ConversationSection.tsx:1066:      sendMessage(`🎤 [Audio - ${sizeMB} MB]\n\nTranscris ce message.`);
+src/components/sections/ConversationSection.tsx:1073:      sendMessage(`📝 Transcription:\n\n"${text}"\n\nAnalyse ce contenu.`);
+src/components/sections/ConversationSection.tsx:1362:            data-testid="chat-input"
+src/components/sections/ConversationSection.tsx:1372:            data-testid="chat-send"
+src/components/sections/ConversationSection.tsx:1373:            onClick={handleSend}
+src/hooks/useChat.ts:9: *   sendMessage() mathématiquement impossible à briser
+src/hooks/useChat.ts:394:  handleSend: () => Promise<void>;
+src/hooks/useChat.ts:597:    // Unit tests: skip provider availability checks (these call Tauri/secureInvoke).
+src/hooks/useChat.ts:2061:  const handleSend = useCallback(async () => {
+src/hooks/useChat.ts:2065:    await sendMessage(trimmedInput);
+src/hooks/useChat.ts:2177:    handleSend,
+src/services/api/chat.ts:10:import { invokeWithRetry, LONG_COMMAND_OPTIONS } from '@/lib/serviceInvoker';
+src/services/api/chat.ts:309:      const response = await invokeWithRetry<StartConversationResponse>(
+src/services/api/chat.ts:332:  async sendMessage(
+src/services/api/chat.ts:439:      const backendResponse = await invokeWithRetry<any>(
+src/services/api/chat.ts:603:    return this.sendMessage(lastMessage.content, conversationId, config);
+src/services/api/chat.ts:950:      const rawResult = await invokeWithRetry<unknown>(
+src/services/api/chat.ts:1041:      return await invokeWithRetry<string[]>(
+src/services/api/chat.ts:1062:      return await invokeWithRetry(
+src/services/api/chat.ts:1083:      return await invokeWithRetry<ChatMessage[]>(
+src/services/api/chat.ts:1099:      await invokeWithRetry<void>(
+src/services/api/chat.ts:1117:      return await invokeWithRetry<ChatMessage[]>(
+src/services/api/chat.ts:1133:      return await invokeWithRetry<string>(
+src/services/webResearchService.ts:24:export async function webResearch(
+src/services/webResearchService.ts:28:  return tauri<ResearchReport>('web_research', { query, options });
+src/api/tauriClient.ts:15:import { secureInvoke } from '@/lib/security';
+src/api/tauriClient.ts:20: * Wraps secureInvoke with:
+src/api/tauriClient.ts:38: * const status = await tauri<SystemStatus>('get_system_status');
+src/api/tauriClient.ts:41: * await tauri<MemoryState>('memory_get_state', {}, isMemoryState);
+src/api/tauriClient.ts:44:export async function tauri<T>(
+src/api/tauriClient.ts:50:    const result = await secureInvoke<T>(cmd, payload ?? {}, {}, validator);
+src/api/tauriClient.ts:70: * Includes all security protections from secureInvoke.
+src/api/tauriClient.ts:98:      return await tauri<T>(cmd, payload, validator);
+src/api/tauriClient.ts:123: * by secureInvoke validations.
+src/api/tauriClient.ts:145:    tauri<T>(cmd, payload, validator)
+src/lib/security.ts:1740: * const state = await secureInvoke<MemoryState>('memory_get_state');
+src/lib/security.ts:1743: * await secureInvoke('memory_save_entry', {
+src/lib/security.ts:1749: * const report = await secureInvoke<HardeningReport>(
+src/lib/security.ts:1779:export async function secureInvoke<T>(
+src/lib/security.ts:1804:    monitoring.addBreadcrumb('secureInvoke start', 'tauri', {
+src/lib/security.ts:1959:      monitoring.addBreadcrumb('secureInvoke success', 'tauri', {
+src/lib/security.ts:1975:    console.error(`[Security] ✗ secureInvoke("${command}") failed:`, normalized.message);
+src/lib/security.ts:2000:  const report = await secureInvoke<HardeningReport>(

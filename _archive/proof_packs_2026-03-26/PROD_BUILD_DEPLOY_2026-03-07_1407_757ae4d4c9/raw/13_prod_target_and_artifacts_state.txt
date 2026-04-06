@@ -1,0 +1,8 @@
+]633;E;{   echo "PACKAGE_VERSION=$(jq -r '.version' package.json)"\x3b   echo "CURRENT_BRANCH=$(git branch --show-current)"\x3b   echo "CURRENT_HEAD=$(git rev-parse HEAD)"\x3b   echo "BUILD_ATTEMPT_3_EXIT_CODE=$(cat "$PACK_DIR/raw/12_build_attempt3.exitcode")"\x3b   echo "APPIMAGE_IN_RUNTIME_STABLE_COUNT=$(find runtime/stable -maxdepth 1 -type f -name '*.AppImage' | wc -l | tr -d ' ')"\x3b   echo "DEB_IN_RUNTIME_STABLE_COUNT=$(find runtime/stable -maxdepth 1 -type f -name '*.deb' | wc -l | tr -d ' ')"\x3b   echo "APPIMAGE_IN_TARGET_BUNDLE_COUNT=$(find src-tauri/target/release/bundle/appimage -type f -name '*.AppImage' 2>/dev/null | wc -l | tr -d ' ')"\x3b   echo "DEB_IN_TARGET_BUNDLE_COUNT=$(find src-tauri/target/release/bundle/deb -type f -name '*.deb' 2>/dev/null | wc -l | tr -d ' ')"\x3b } > "$PACK_DIR/raw/13_prod_target_and_artifacts_state.txt";d7a296b9-3d89-412b-9330-9e4b6ba4e104]633;CPACKAGE_VERSION=27.2.0
+CURRENT_BRANCH=MAIN
+CURRENT_HEAD=757ae4d4c9ac195202240bb294c3a17143af9532
+BUILD_ATTEMPT_3_EXIT_CODE=1
+APPIMAGE_IN_RUNTIME_STABLE_COUNT=0
+DEB_IN_RUNTIME_STABLE_COUNT=0
+APPIMAGE_IN_TARGET_BUNDLE_COUNT=1
+DEB_IN_TARGET_BUNDLE_COUNT=1

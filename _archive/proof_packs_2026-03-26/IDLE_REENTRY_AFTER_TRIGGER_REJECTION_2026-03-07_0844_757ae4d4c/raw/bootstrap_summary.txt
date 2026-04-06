@@ -1,0 +1,5 @@
+pack=proof_packs/IDLE_REENTRY_AFTER_TRIGGER_REJECTION_2026-03-07_0844_757ae4d4c
+short_sha=757ae4d4c
+canonical_baseline=757ae4d4c
+previous_activation_verdict=TRIGGER_REJECTED
+complementary_states=STANDBY_CONFIRMED,WAKE_PROTOCOL_READY,GOVERNED_IDLE_CONFIRMED

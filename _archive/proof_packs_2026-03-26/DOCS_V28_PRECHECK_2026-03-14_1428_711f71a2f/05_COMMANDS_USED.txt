@@ -1,0 +1,15 @@
+git status --short
+git status
+git rev-parse --short HEAD
+git branch --show-current
+git remote -v
+git fetch --all --prune
+git branch -r
+git rev-parse --short origin/MAIN || true
+git rev-parse --short origin/main || true
+git log --oneline --decorate -20
+git diff --stat HEAD..origin/MAIN || true
+git diff --stat origin/MAIN..HEAD || true
+git ls-files --others --exclude-standard
+find . -type d \( -name .git -o -name node_modules -o -name dist -o -name proof_packs -o -path './deployment/latest/builds' \) -prune -o -type f \( -iname 'README.md' -o -iname 'README*.md' \) -print | sort
+rg -n '(?i)v27|v28|stable|latest|production ready' README.md docs/README.md docs/diagrams/README.md docs/INDEX.md docs/INDEX_REPO_STRUCTURE.md docs/ui/INDEX_UI.md package.json CHANGELOG.md

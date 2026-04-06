@@ -419,6 +419,11 @@ pub struct ConversationMetadata {
     pub links_to_contexts: Vec<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub provider_meta: Option<ProviderDecisionMeta>,
+    // LOCK #1 PROOF: Profile runtime verification
+    #[serde(default)]
+    pub profile_used: String,
+    #[serde(default)]
+    pub memory_sources_injected: usize,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -1135,6 +1140,8 @@ mod tests {
             memory_effect: MemoryEffect::New,
             links_to_contexts: vec!["ctx1".to_string()],
             provider_meta: None,
+            profile_used: "test".to_string(),
+            memory_sources_injected: 1,
         };
         assert_eq!(metadata.timestamp, 1234567890);
         assert_eq!(metadata.tokens_used, 500);
@@ -1247,6 +1254,8 @@ mod tests {
                 memory_effect: MemoryEffect::New,
                 links_to_contexts: vec![],
                 provider_meta: None,
+                profile_used: "test".to_string(),
+                memory_sources_injected: 0,
             },
         };
         assert_eq!(response.assistant_message, "Reply");

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.2.0 — Toast Notification Component (Titanium Dark)
+ * TITANE∞ v30.0.0 — Toast Notification Component (Titanium Dark)
  * Toast notifications with Titanium Dark design system
  * WCAG 2.2 AA compliant with auto-dismiss
  * @license MIT

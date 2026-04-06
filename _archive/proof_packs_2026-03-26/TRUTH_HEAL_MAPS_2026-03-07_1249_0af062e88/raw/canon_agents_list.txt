@@ -1,0 +1,5 @@
+./docs/AGENTS.md
+./e2e/AGENTS.md
+./scripts/AGENTS.md
+./src/AGENTS.md
+./src-tauri/AGENTS.md

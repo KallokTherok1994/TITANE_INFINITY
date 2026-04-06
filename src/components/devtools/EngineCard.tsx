@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.4.0 — EngineCard Component
+ * TITANE∞ v30.0.0 — EngineCard Component
  * Display engine information card
  */
 

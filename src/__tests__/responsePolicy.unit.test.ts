@@ -136,12 +136,12 @@ describe('ResponsePolicy — Sélection dynamique du profil', () => {
     expect(result.profileId).toBe('DIRECT');
   });
 
-  it('mode "omega" → DEEP par défaut du mode', () => {
+  it('mode "omega" → OMEGA par défaut du mode', () => {
     const result = selectResponseProfile({
       message: 'comment vas-tu?',
       mode: 'omega',
     });
-    expect(result.profileId).toBe('DEEP');
+    expect(result.profileId).toBe('OMEGA');
   });
 
   it('mode "audit" → ARCHITECT par défaut du mode', () => {
@@ -267,9 +267,15 @@ describe('ResponsePolicy — Estimation de complexité', () => {
 
 describe('ResponsePolicy — getEffectiveProfile', () => {
   it('modeMaxTokens supérieur au profil → retourne modeMaxTokens', () => {
-    // Omega mode a 4000 tokens, DEEP en a 4000 aussi
-    const { profile } = getEffectiveProfile('omega', 'test', 4000, 0.6);
-    expect(profile.maxTokens).toBe(4000);
+    // OMEGA mode est actuellement configuré à 16000 tokens.
+    // Message suffisamment long pour ne pas déclencher Rule 7 (short_message_direct)
+    const { profile } = getEffectiveProfile(
+      'omega',
+      'donne-moi toutes les options disponibles',
+      4000,
+      0.6
+    );
+    expect(profile.maxTokens).toBe(16000);
   });
 
   it('modeMaxTokens inférieur au profil DEEP → profil DEEP gagne', () => {
@@ -357,7 +363,9 @@ describe('ResponsePolicy — Invariants de vérité', () => {
   });
 
   it('I15: DIRECT a la longueur la plus basse (pas de répétition padding)', () => {
-    expect(RESPONSE_PROFILES.DIRECT.maxTokens).toBeLessThan(1000);
+    expect(RESPONSE_PROFILES.DIRECT.maxTokens).toBeLessThan(
+      RESPONSE_PROFILES.BALANCED.maxTokens
+    );
   });
 
   it('I3/I4: aucun profil ne prétend faire du "deep reasoning" sans preuve', () => {
@@ -375,6 +383,6 @@ describe('ResponsePolicy — Invariants de vérité', () => {
     const { RESPONSE_POLICY_VERSION, RESPONSE_POLICY_DATE } =
       await import('@/services/ai/responsePolicy');
     expect(RESPONSE_POLICY_VERSION).toBeTruthy();
-    expect(RESPONSE_POLICY_DATE).toBe('2026-03-17');
+    expect(RESPONSE_POLICY_DATE).toBe('2026-03-31');
   });
 });

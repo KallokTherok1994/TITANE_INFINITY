@@ -10,7 +10,12 @@ const testId = id => `[data-testid="${id}"]`;
 
 function isSessionInvalidError(error) {
   const message = String(error?.message || '').toLowerCase();
-  return message.includes('invalid session id');
+  return (
+    message.includes('invalid session id') ||
+    message.includes('no such window') ||
+    message.includes('invalidated') ||
+    message.includes('page crash or hang')
+  );
 }
 
 function isTransientInteractionError(error) {
@@ -51,6 +56,57 @@ async function waitForAnyDisplayed(selectors, timeout = DEFAULT_TIMEOUT) {
       timeout,
       interval: 200,
       timeoutMsg: `none of selectors became visible: ${selectors.join(', ')}`,
+    }
+  );
+}
+
+async function waitForChatInputReady(timeout = DEFAULT_TIMEOUT) {
+  await browser.waitUntil(
+    async () => {
+      const input = await $(testId('chat-input'));
+      if (!(await input.isExisting()) || !(await input.isDisplayed())) {
+        return false;
+      }
+
+      if (await input.isEnabled()) {
+        return true;
+      }
+
+      const err = await $(testId('chat-error'));
+      return (await err.isExisting()) && (await err.isDisplayed());
+    },
+    {
+      timeout,
+      interval: 250,
+      timeoutMsg: `chat input stayed busy/disabled after ${timeout}ms`,
+    }
+  );
+}
+
+async function waitForChatCycleSettled(timeout = DEFAULT_TIMEOUT) {
+  await browser.waitUntil(
+    async () => {
+      const err = await $(testId('chat-error'));
+      if ((await err.isExisting()) && (await err.isDisplayed())) {
+        return true;
+      }
+
+      const input = await $(testId('chat-input'));
+      if (!(await input.isExisting()) || !(await input.isDisplayed())) {
+        return false;
+      }
+
+      if (!(await input.isEnabled())) {
+        return false;
+      }
+
+      const loading = await $(testId('chat-loading'));
+      return !(await loading.isExisting()) || !(await loading.isDisplayed());
+    },
+    {
+      timeout,
+      interval: 250,
+      timeoutMsg: `chat cycle did not settle after ${timeout}ms`,
     }
   );
 }
@@ -227,9 +283,24 @@ async function setElementValueSafely(element, value) {
   );
 }
 
-async function setValueSafely(selector, value) {
+async function setValueSafely(selector, value, timeout = DEFAULT_TIMEOUT) {
+  await browser.waitUntil(
+    async () => {
+      const candidate = await $(selector);
+      return (
+        (await candidate.isExisting()) &&
+        (await candidate.isDisplayed()) &&
+        (await candidate.isEnabled())
+      );
+    },
+    {
+      timeout,
+      interval: 200,
+      timeoutMsg: `element ("${selector}") still not enabled after ${timeout}ms`,
+    }
+  );
+
   const el = await $(selector);
-  await el.waitForEnabled({ timeout: 5000 });
   await setElementValueSafely(el, value);
 }
 
@@ -252,8 +323,7 @@ export async function captureFailureScreenshot(testName = 'unknown') {
   try {
     await browser.saveScreenshot(screenshotPath);
   } catch (error) {
-    const message = String(error?.message || '').toLowerCase();
-    if (message.includes('invalid session id')) {
+    if (isSessionInvalidError(error)) {
       return null;
     }
     throw error;
@@ -267,9 +337,32 @@ export async function waitForDisplayed(selector, timeout = DEFAULT_TIMEOUT) {
   return el;
 }
 
+async function recoverBrowserSession(startUrl = 'tauri://localhost') {
+  try {
+    await browser.reloadSession();
+  } catch {
+    // Best effort only.
+  }
+
+  await browser.url(startUrl);
+}
+
 export async function openApp() {
-  await browser.url('tauri://localhost');
-  await waitForDisplayed('body', DEFAULT_TIMEOUT);
+  const startUrl = 'tauri://localhost';
+
+  for (let attempt = 1; attempt <= 2; attempt += 1) {
+    try {
+      await browser.url(startUrl);
+      await waitForDisplayed('body', DEFAULT_TIMEOUT);
+      return;
+    } catch (error) {
+      if (attempt >= 2 || !isSessionInvalidError(error)) {
+        throw error;
+      }
+
+      await recoverBrowserSession(startUrl);
+    }
+  }
 }
 
 export async function waitAppReady() {
@@ -364,7 +457,7 @@ export async function gotoTopNavPage(page) {
   }
 
   if (!navigated) {
-    await browser.url(`tauri://localhost/#${page.route}`);
+    await browser.url(`tauri://localhost${page.route}`);
   }
 
   await browser.waitUntil(
@@ -490,6 +583,8 @@ export async function fillAllVisibleInputs(sample = 'e2e-sample') {
 }
 
 export async function sendChatAndAssertNoSilence(message, timeoutMs = 45000) {
+  const chatSettleTimeout = Math.max(DEFAULT_TIMEOUT, timeoutMs, 120000);
+
   const ensureChatSurfaceVisible = async () => {
     const chatSelectors = [testId('chat-input'), '[data-testid="tab-conversation"]'];
 
@@ -566,7 +661,8 @@ export async function sendChatAndAssertNoSilence(message, timeoutMs = 45000) {
   const send = await $(testId('chat-send'));
 
   await input.waitForExist({ timeout: DEFAULT_TIMEOUT });
-  await setValueSafely(testId('chat-input'), message);
+  await waitForChatInputReady(chatSettleTimeout);
+  await setValueSafely(testId('chat-input'), message, chatSettleTimeout);
 
   await browser.waitUntil(
     async () => {
@@ -666,9 +762,17 @@ export async function sendChatAndAssertNoSilence(message, timeoutMs = 45000) {
       timeoutMsg: 'No-silence contract failed: no assistant message and no visible error',
     }
   );
+
+  try {
+    await waitForChatCycleSettled(chatSettleTimeout);
+  } catch {
+    // Best-effort only: the next send path independently waits for a re-enabled input.
+  }
 }
 
 export async function retryLatestUserMessageAndAssertNoSilence(timeoutMs = 45000) {
+  const chatSettleTimeout = Math.max(DEFAULT_TIMEOUT, timeoutMs, 120000);
+
   const retrySelectors = [
     `${testId('chat-message-user')} button[title="Renvoyer ce message"]`,
     `${testId('chat-message-user')} button.conversation-message-action`,
@@ -702,6 +806,8 @@ export async function retryLatestUserMessageAndAssertNoSilence(timeoutMs = 45000
     ? (await $$(userSelector)).length
     : 0;
   const bodyBefore = (await $('body').getText()) || '';
+
+  await waitForChatInputReady(chatSettleTimeout);
 
   let clicked = false;
   for (let i = retryButtons.length - 1; i >= 0; i -= 1) {
@@ -759,6 +865,12 @@ export async function retryLatestUserMessageAndAssertNoSilence(timeoutMs = 45000
       timeoutMsg: 'retry action did not produce visible acknowledgement',
     }
   );
+
+  try {
+    await waitForChatCycleSettled(chatSettleTimeout);
+  } catch {
+    // Best-effort only: the next send path independently waits for a re-enabled input.
+  }
 
   return { present: true, triggered: true };
 }

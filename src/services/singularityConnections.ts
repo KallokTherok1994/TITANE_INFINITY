@@ -405,14 +405,18 @@ export class SingularityConnections {
   //   UI ROUTER → META LAYER
   // ═══════════════════════════════════════════════════════════
 
-  static async syncUIState(): Promise<void> {
+  static async syncUIState(pathWithState?: string): Promise<void> {
     // Note: singularity_get_meta not available yet
     // Using client-side data gracefully
     try {
       const current = await SingularityBridge.getMeta();
 
-      // Get current route from window.location
-      const activePage = window.location.pathname;
+      // Get current route + tab state from window.location unless explicitly provided
+      const activePage =
+        pathWithState ?? `${window.location.pathname}${window.location.search}`;
+
+      const previousRuntime = current?.runtime ?? {};
+      const inferredBuild = import.meta.env.DEV ? 'dev' : 'stable';
 
       const updated: MetaLayer = {
         ...current,
@@ -424,12 +428,23 @@ export class SingularityConnections {
           last_interaction: null, // ✅ v∞.FIX - Backend will populate timestamp
         },
         runtime: {
-          ...current.runtime,
-          version: '17.3.0',
-          build: 'dev',
+          ...previousRuntime,
+          version:
+            typeof previousRuntime.version === 'string' &&
+            previousRuntime.version.trim().length > 0
+              ? previousRuntime.version
+              : 'unknown',
+          build:
+            typeof previousRuntime.build === 'string' &&
+            previousRuntime.build.trim().length > 0
+              ? previousRuntime.build
+              : inferredBuild,
           environment: import.meta.env.MODE,
           uptime: Math.floor(performance.now() / 1000), // ✅ v∞.FIX - Convert ms to seconds (u64)
-          restart_count: 0,
+          restart_count:
+            typeof previousRuntime.restart_count === 'number'
+              ? previousRuntime.restart_count
+              : 0,
         },
         runtime_health: this.calculateRuntimeHealth(),
       };

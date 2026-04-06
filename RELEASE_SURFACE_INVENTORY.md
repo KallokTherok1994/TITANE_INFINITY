@@ -1,8 +1,8 @@
-# RELEASE SURFACE INVENTORY — TITANE∞ v28.5.0
+# RELEASE SURFACE INVENTORY — TITANE∞ (Historical baseline v28.5.0 + current addendum v29.0.0)
 
 Generated: 2026-03-21
 Session: REPO_OFFICIALIZATION_28_5_0
-Canonical target version: **28.5.0**
+Historical baseline version: **28.5.0**
 
 ---
 
@@ -84,4 +84,84 @@ Canonical target version: **28.5.0**
 | `Titan-Stable_*.amd64.deb` | ✅ Built + checksummed | ⏳ Pending build |
 
 > Binary artifacts for v28.5.0 are pending build and gate completion.
+
+---
+
+## Addendum — 2026-04-05 — TITANE∞ v29.0.0 Major Release Refresh
+
+Session: `PROD_RELEASE_29_0_0`
+Canonical target version: **29.0.0**
+
+### Updated Current Surfaces
+
+| File / Surface | Version found | Action |
+|---|---|---|
+| `package.json` | `29.0.0` | KEEP_AS_CANON |
+| `src-tauri/Cargo.toml` | `29.0.0` | KEEP_AS_CANON |
+| `src-tauri/tauri.conf.json` | `29.0.0` | KEEP_AS_CANON |
+| `runtime/stable/tauri.conf.json` | `29.0.0` | KEEP_AS_CANON |
+| `runtime/stable/manifest.json` | `29.0.0` | KEEP_AS_CANON |
+| `README.md` / `docs/README.md` | `v29.0.0` | KEEP_AS_CANON |
+| `deployment/latest/MANIFEST.json` | `29.0.0` | UPDATED_TO_29_0_0 |
+| `deployment/latest/CHECKSUMS.sha256` / `CHECKSUMS.txt` / `SHA256SUMS.txt` | `29.0.0` hashes | UPDATED_TO_29_0_0 |
+| `deployment/latest/SIZES.txt` | `29.0.0` sizes | UPDATED_TO_29_0_0 |
+| `RELEASE_ARTIFACTS_CHECKSUMS_29.0.0.txt` | `29.0.0` | ADDED_AS_PROOF |
+
+### Artifact Status Summary — v29.0.0
+
+| Artifact | Status |
+|---|---|
+| `Titan-Stable_29.0.0_amd64.AppImage` | ✅ Built + deployed + checksummed |
+| `Titan-Stable_29.0.0_amd64.deb` | ✅ Built + deployed + checksummed |
+| `TITANE-Infinity_29.0.0_amd64.deb` | ✅ Built + checksummed |
+| `TITANE-Infinity-29.0.0-1.x86_64.rpm` | ✅ Built + checksummed |
+
+> v29.0.0 is the active canonical release stream for repository + deployment metadata as of 2026-04-05.
+> Current stable deployment truth remains `AppImage + DEB`; any additional DEB/RPM checksum rows are retained as secondary build-output proof, not as a second active deployment matrix.
 > No artifact checksums can be claimed for v28.5.0 without actual build proof.
+
+---
+
+## Addendum — 2026-04-06 — TITANE∞ v30.0.0 Major Release
+
+Session: `PROD_RELEASE_30_0_0`
+Canonical target version: **30.0.0**
+
+### Updated Current Surfaces
+
+| File / Surface | Version | Action |
+|---|---|---|
+| `package.json` | `30.0.0` | UPDATED_TO_30_0_0 |
+| `src-tauri/Cargo.toml` | `30.0.0` | UPDATED_TO_30_0_0 |
+| `src-tauri/tauri.conf.json` | `30.0.0` | UPDATED_TO_30_0_0 |
+| `runtime/stable/tauri.conf.json` | `30.0.0` | UPDATED_TO_30_0_0 |
+| `runtime/stable/manifest.json` | `30.0.0` | UPDATED_TO_30_0_0 |
+| `README.md` / `docs/README.md` | `v30.0.0` | UPDATED_TO_30_0_0 |
+| `deployment/latest/MANIFEST.json` | `30.0.0` | UPDATED_TO_30_0_0 |
+| `deployment/latest/CHECKSUMS.txt` / `SHA256SUMS.txt` | `30.0.0` artifact names | UPDATED_TO_30_0_0 |
+| `deployment/latest/SIZES.txt` | `30.0.0` artifact names | UPDATED_TO_30_0_0 |
+## Addendum — 2026-04-06 — TITANE∞ v30.0.0 Major Release Upgrade Cycle
+
+Canonical target version: **30.0.0**
+
+| File | Version | Status |
+|---|---|---|
+| `package.json` | `30.0.0` | KEEP_AS_CANON |
+| `src-tauri/Cargo.toml` | `30.0.0` | KEEP_AS_CANON |
+| `src-tauri/tauri.conf.json` | `30.0.0` | KEEP_AS_CANON |
+| `tauri.base.json` | `30.0.0` | KEEP_AS_CANON |
+| `runtime/stable/tauri.conf.json` | `30.0.0` | KEEP_AS_CANON |
+| `runtime/stable/manifest.json` | `30.0.0` | KEEP_AS_CANON |
+| `README.md` / `docs/README.md` | `v30.0.0` | KEEP_AS_CANON |
+| `RELEASE_ARTIFACTS_CHECKSUMS_30.0.0.txt` | `30.0.0` | ADDED_AS_PROOF |
+
+### Artifact Status Summary — v30.0.0
+
+| Artifact | Status |
+|---|---|
+| `Titan-Stable_30.0.0_amd64.AppImage` | ⏳ PENDING_BUILD |
+| `Titan-Stable_30.0.0_amd64.deb` | ⏳ PENDING_BUILD |
+
+> v30.0.0 is the active canonical release stream for repository + deployment metadata as of 2026-04-06.
+> Build tokens required: GO_FOR_PROD_BUILD__TITANE_INFINITY
+> v30.0.0 is the active canonical release stream as of 2026-04-06. Artifacts pending build.

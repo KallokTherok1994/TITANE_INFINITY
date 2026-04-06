@@ -1,6 +1,6 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════════════════════
-# TITANE∞ v26.4.0 — Post-Certification Deployment Pipeline
+# TITANE∞ v29.0.0 — Post-Certification Deployment Pipeline
 # Déploiement sécurisé après certification de production complète
 # Requires: GATE_RELEASE certification (81/81 tests PASS)
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -19,8 +19,8 @@
 #   --help              Afficher l'aide
 #
 # RÉSULTAT:
-#   deployment/latest/TITANE-Infinity_*.AppImage
-#   deployment/latest/TITANE-Infinity_*.deb  
+#   deployment/latest/Titan-Stable_*.AppImage
+#   deployment/latest/Titan-Stable_*.deb
 #   deployment/latest/MANIFEST.json (updated)
 #
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -363,6 +363,7 @@ EOF
     
     # Keep checksum and size sidecars aligned with the deployed artifacts.
     local checksums_file="$DEPLOY_PATH/CHECKSUMS.sha256"
+    local compat_checksums_file="$DEPLOY_PATH/CHECKSUMS.txt"
     local sha_file="$DEPLOY_PATH/SHA256SUMS.txt"
     local sizes_file="$DEPLOY_PATH/SIZES.txt"
     : > "$checksums_file"
@@ -379,6 +380,7 @@ EOF
         echo "$binary_hash  titane-infinity" >> "$checksums_file"
     fi
     cp "$checksums_file" "$sha_file"
+    cp "$checksums_file" "$compat_checksums_file"
 
     {
         echo "# Artifact Sizes"
@@ -395,7 +397,7 @@ EOF
     } > "$sizes_file"
 
     success "Deployment manifest updated: MANIFEST.json"
-    success "Checksums updated: CHECKSUMS.sha256, SHA256SUMS.txt"
+    success "Checksums updated: CHECKSUMS.sha256, SHA256SUMS.txt, CHECKSUMS.txt"
     success "Sizes updated: SIZES.txt"
     info "Version: $version"
     info "Certification: TITANE_INFINITY_RELEASE_${TIMESTAMP}_CERTIFIED"
@@ -407,7 +409,7 @@ EOF
 
 show_help() {
     cat << EOF
-TITANE∞ Certified Deployment Pipeline v26.4.0
+TITANE∞ Certified Deployment Pipeline v29.0.0
 
 USAGE:
     $0 [OPTIONS]
@@ -492,7 +494,7 @@ done
 # ─────────────────────────────────────────────────────────────────────────────
 
 main() {
-    print_header "TITANE∞ CERTIFIED DEPLOYMENT PIPELINE v26.4.0"
+    print_header "TITANE∞ CERTIFIED DEPLOYMENT PIPELINE v29.0.0"
     
     # Log configuration
     log "Deployment started: $(date)"
