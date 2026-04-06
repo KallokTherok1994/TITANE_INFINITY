@@ -15,27 +15,18 @@ import { tauriClient } from '@/lib/tauriClient';
 import { detectEnvironment } from '@/core/tauri/environment';
 
 // Tauri client adapter for this service.
-// Audio I/O device methods use __TAURI__ directly to avoid getUserMedia()
-// permission issues in WebKitGTK (audio permission fix).
-// All other IPC calls delegate to tauriClient so they can be properly mocked.
+// Audio device calls stay on the canonical IPC door through `tauriClient`
+// so the WebKitGTK permission fix remains Tauri-only without raw core calls
+// inside feature code.
 const simpleTauriClient = {
-  async getAudioInputDevices() {
-    if (typeof window !== 'undefined' && (window as any).__TAURI__) {
-      return (window as any).__TAURI__.core.invoke('get_audio_input_devices');
-    }
-    throw new Error('Tauri not available');
+  async getAudioInputDevices(params?: any) {
+    return tauriClient.getAudioInputDevices(params);
   },
-  async getAudioOutputDevices() {
-    if (typeof window !== 'undefined' && (window as any).__TAURI__) {
-      return (window as any).__TAURI__.core.invoke('get_audio_output_devices');
-    }
-    throw new Error('Tauri not available');
+  async getAudioOutputDevices(params?: any) {
+    return tauriClient.getAudioOutputDevices(params);
   },
-  async testMicrophone(params: any, _options?: any) {
-    if (typeof window !== 'undefined' && (window as any).__TAURI__) {
-      return (window as any).__TAURI__.core.invoke('test_microphone', params);
-    }
-    throw new Error('Tauri not available');
+  async testMicrophone(params: any, options?: any) {
+    return tauriClient.testMicrophone(params, options);
   },
   async identityGetActiveVoiceProfile() {
     return tauriClient.identityGetActiveVoiceProfile();
