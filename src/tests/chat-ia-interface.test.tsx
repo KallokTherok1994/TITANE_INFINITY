@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v19.2Ω — VERIFICATION COMPLÈTE CHAT IA INTERFACE
+ * TITANE∞ v30.0.0 — VERIFICATION COMPLÈTE CHAT IA INTERFACE
  * Test complet du Chat IA en mode interface pour identifier tous les blocages
  */
 
@@ -105,7 +105,7 @@ describe('🧪 CHAT IA INTERFACE - VERIFICATION COMPLÈTE', () => {
   test('2️⃣ Input et bouton envoi présents', () => {
     render(<ChatWindow />);
 
-    const input = screen.getByPlaceholderText(/Posez votre question/i);
+    const input = screen.getByLabelText('Message à envoyer');
     const sendButton = screen.getByRole('button', { name: /Envoyer le message/ });
 
     expect(input).toBeInTheDocument();
@@ -115,7 +115,7 @@ describe('🧪 CHAT IA INTERFACE - VERIFICATION COMPLÈTE', () => {
   test('3️⃣ Saisie de message et envoi fonctionnel', async () => {
     render(<ChatWindow />);
 
-    const input = screen.getByPlaceholderText(/Posez votre question/i);
+    const input = screen.getByLabelText('Message à envoyer');
     const sendButton = screen.getByRole('button', { name: /Envoyer le message/ });
 
     // Saisir un message
@@ -200,7 +200,7 @@ describe('🧪 CHAT IA INTERFACE - VERIFICATION COMPLÈTE', () => {
   test('8️⃣ Envoi avec Entrée (sans Shift)', async () => {
     render(<ChatWindow />);
 
-    const input = screen.getByPlaceholderText(/Posez votre question/i);
+    const input = screen.getByLabelText('Message à envoyer');
 
     fireEvent.change(input, { target: { value: 'Message rapide' } });
     fireEvent.keyDown(input, { key: 'Enter', shiftKey: false });
@@ -213,7 +213,7 @@ describe('🧪 CHAT IA INTERFACE - VERIFICATION COMPLÈTE', () => {
   test('9️⃣ Nouvelle ligne avec Shift+Entrée', () => {
     render(<ChatWindow />);
 
-    const input = screen.getByPlaceholderText(/Posez votre question/i);
+    const input = screen.getByLabelText('Message à envoyer');
 
     fireEvent.change(input, { target: { value: 'Message multi\nligne' } });
     fireEvent.keyDown(input, { key: 'Enter', shiftKey: true });
