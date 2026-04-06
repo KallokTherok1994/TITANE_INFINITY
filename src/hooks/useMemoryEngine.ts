@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v25.3.2 — Proprietary License
+ * TITANE∞ v29.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v25.3.2 — USE MEMORY ENGINE (Pipeline Hook)
+ *   TITANE∞ v29.0.0 — USE MEMORY ENGINE (Pipeline Hook)
  *   Système mémoire unifié: Court/Moyen/Long terme
  *   Auto-save conversations, tags extraction, context retrieval
  * ═══════════════════════════════════════════════════════════════════

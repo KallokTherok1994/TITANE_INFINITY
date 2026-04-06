@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.4.0 — LogFilters Component
+ * TITANE∞ v29.0.0 — LogFilters Component
  * Filter controls for log viewer
  */
 

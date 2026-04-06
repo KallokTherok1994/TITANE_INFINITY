@@ -1,8 +1,8 @@
-# RELEASE SURFACE INVENTORY — TITANE∞ v28.5.0
+# RELEASE SURFACE INVENTORY — TITANE∞ (Historical baseline v28.5.0 + current addendum v29.0.0)
 
 Generated: 2026-03-21
 Session: REPO_OFFICIALIZATION_28_5_0
-Canonical target version: **28.5.0**
+Historical baseline version: **28.5.0**
 
 ---
 
@@ -117,4 +117,5 @@ Canonical target version: **29.0.0**
 | `TITANE-Infinity-29.0.0-1.x86_64.rpm` | ✅ Built + checksummed |
 
 > v29.0.0 is the active canonical release stream for repository + deployment metadata as of 2026-04-05.
+> Current stable deployment truth remains `AppImage + DEB`; any additional DEB/RPM checksum rows are retained as secondary build-output proof, not as a second active deployment matrix.
 > No artifact checksums can be claimed for v28.5.0 without actual build proof.

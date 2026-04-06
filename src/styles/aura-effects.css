@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v25.4.2 — AURA EFFECTS SYSTEM (Base)
+ *   TITANE∞ v29.0.0 — AURA EFFECTS SYSTEM (Base)
  *   Effets Aura dynamiques pour interface technologique moderne
  * ═══════════════════════════════════════════════════════════════
  *
@@ -30,7 +30,7 @@
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
-  /* AURA COLORS - Harmonisé v25.4.2 */
+  /* AURA COLORS - Harmonisé v29.0.0 */
   --aura-violet: rgba(139, 92, 246, 0.6); /* #8b5cf6 - UI Principal */
   --aura-violet-light: rgba(168, 85, 247, 0.4); /* #a855f7 - Accent */
   --aura-violet-intense: rgba(124, 58, 237, 0.7); /* #7c3aed - Intense */

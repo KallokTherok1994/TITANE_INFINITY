@@ -31,4 +31,5 @@ regexes = [
   '''your_(gemini|openai|anthropic|elevenlabs)_api_key_here''',
   '''\*\*\*MASKED\*\*\*''',
   '''abc123''',
+  '''895d3d67cc9d3b3698b59e35818c7ac9f06c3fe710c48e69a80908ca5ad999a8''', # historical false-positive test fixture from commit a6c8d7704
 ]

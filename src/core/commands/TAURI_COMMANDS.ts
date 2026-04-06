@@ -207,7 +207,7 @@ export const TAURI_COMMANDS = {
   FULLBODY_RUN_SELFTEST: 'fullbody_run_selftest',
 
   // ═══════════════════════════════════════════════════════════════
-  // TOTAL_DEV v28.1.0 — GOD DEV secure space
+  // TOTAL_DEV v29.0.0 — GOD DEV secure space
   // ═══════════════════════════════════════════════════════════════
   TOTAL_DEV_UNLOCK: 'total_dev_unlock',
   TOTAL_DEV_SESSION_STATUS: 'total_dev_session_status',

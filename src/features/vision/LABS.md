@@ -7,7 +7,7 @@
 ## Raison
 
 Ce module dépend de runtimes ML optionnels (ONNX/ort, vision models) non chargés par défaut.
-Pas de proof runtime suffisant en production v28.88.0.
+Pas de proof runtime suffisant en production v29.0.0.
 
 ## Promotion
 

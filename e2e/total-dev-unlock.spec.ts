@@ -10,60 +10,43 @@ test.describe('TOTAL_DEV Unlock Flow', () => {
     await page.waitForSelector('[data-testid="total-dev-header"]', { timeout: 10000 });
   });
 
-  test('Unlock with correct password Kanele1994', async ({ page }) => {
-    // Verify initial LOCKED state
+  test('Browser fallback stays locked even with correct password outside Tauri', async ({
+    page,
+  }) => {
     const lockBadge = page.locator('[data-testid="lock-badge"]');
+    const errorMsg = page.locator('.total-dev-unlock-error');
+
     await expect(lockBadge).toContainText('LOCKED');
 
-    // Find password input and fill with correct password
     const passwordInput = page.locator('input[type="password"]').first();
     await expect(passwordInput).toBeVisible();
     await passwordInput.fill('Kanele1994');
 
-    // Click UNLOCK button
     const unlockBtn = page.locator('button[data-testid="total-dev-unlock-btn"]');
     await expect(unlockBtn).toBeEnabled();
     await unlockBtn.click();
 
-    // Wait for unlock to complete (badge should change to UNLOCKED)
-    await page.waitForTimeout(2000);
-
-    // Verify badge now shows UNLOCKED
-    await expect(lockBadge).toContainText('UNLOCKED');
-
-    // Verify tabs are now visible (unlocked state)
-    const consoleTab = page.locator('button[data-testid="total-dev-tab-console"]');
-    const gitTab = page.locator('button[data-testid="total-dev-tab-git"]');
-    const filesTab = page.locator('button[data-testid="total-dev-tab-files"]');
-    const actionsTab = page.locator('button[data-testid="total-dev-tab-actions"]');
-
-    await expect(consoleTab).toBeVisible();
-    await expect(gitTab).toBeVisible();
-    await expect(filesTab).toBeVisible();
-    await expect(actionsTab).toBeVisible();
+    await expect(errorMsg).toBeVisible();
+    await expect(errorMsg).toContainText('TOTAL_DEV requires the Tauri runtime');
+    await expect(lockBadge).toContainText('LOCKED');
   });
 
-  test('Unlock fails with incorrect password', async ({ page }) => {
-    // Verify initial LOCKED state
+  test('Unlock with incorrect password stays locked in browser fallback', async ({
+    page,
+  }) => {
     const lockBadge = page.locator('[data-testid="lock-badge"]');
+    const errorMsg = page.locator('.total-dev-unlock-error');
+
     await expect(lockBadge).toContainText('LOCKED');
 
-    // Fill with wrong password
     const passwordInput = page.locator('input[type="password"]').first();
     await passwordInput.fill('wrongpassword');
 
     const unlockBtn = page.locator('button[data-testid="total-dev-unlock-btn"]');
     await unlockBtn.click();
 
-    // Wait for error message
-    await page.waitForTimeout(1000);
-
-    // Verify still LOCKED
-    await expect(lockBadge).toContainText('LOCKED');
-
-    // Verify error message appears
-    const errorMsg = page.locator('.total-dev-unlock-error');
     await expect(errorMsg).toBeVisible();
-    await expect(errorMsg).toContainText('Token invalide');
+    await expect(errorMsg).toContainText('TOTAL_DEV requires the Tauri runtime');
+    await expect(lockBadge).toContainText('LOCKED');
   });
 });

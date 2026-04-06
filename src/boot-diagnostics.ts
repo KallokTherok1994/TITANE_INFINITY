@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.3.0 - Boot Diagnostics
+ * TITANE∞ v29.0.0 - Boot Diagnostics
  *
  * Detects and logs what's happening during application startup
  * to help diagnose unexpected shutdowns

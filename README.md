@@ -77,7 +77,7 @@ sudo dpkg -i TITANE-Infinity_27.0.5_amd64.deb
 
 🔐 [Checksums v27.0.5][checksums-historiques-v2705]
 
-🔐 [Checksums courants v28.88.0](./docs/90_release/PRODUCTION_RELEASE_v28.88.0.md)
+🔐 [Checksums historiques v28.88.0](./docs/90_release/PRODUCTION_RELEASE_v28.88.0.md)
 
 [checksums-historiques-v2705]: ./deployment/latest/SHA256SUMS_v27.0.5.txt
 

@@ -2,7 +2,7 @@
  * TITANE∞ — Message Reactions Component
  * Affiche et gère les réactions aux messages
  *
- * v26.4.0 (Sprint 6 Phase 3)
+ * v29.0.0 (Sprint 6 Phase 3)
  */
 
 import React, { useState, useCallback, useMemo } from 'react';

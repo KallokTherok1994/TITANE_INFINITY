@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.4.0 — DevTools Types
+ * TITANE∞ v29.0.0 — DevTools Types
  * Type definitions for DevTools components
  */
 

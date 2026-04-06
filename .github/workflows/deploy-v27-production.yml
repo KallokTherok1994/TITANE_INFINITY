@@ -1,4 +1,4 @@
-name: 🚀 Auto-Deploy v27.0.0-PRODUCTION
+name: 🚀 Auto-Deploy v29.0.0-STABLE
 
 on:
   push:
@@ -23,6 +23,7 @@ permissions:
 env:
   RUST_BACKTRACE: full
   NODE_ENV: production
+  PNPM_VERSION: '10.30.2'
 
 jobs:
   validate:
@@ -43,14 +44,13 @@ jobs:
           echo "commit=$COMMIT" >> $GITHUB_OUTPUT
           echo "✅ Version: $VERSION @ $COMMIT"
 
-      - name: 📦 Validate artifacts exist
+      - name: 📦 Validate stable artifacts exist
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           DEPLOY_DIR="deployment/latest"
-          ls -lh "$DEPLOY_DIR/TITANE-Infinity_${VERSION}_amd64.deb"
-          ls -lh "$DEPLOY_DIR/TITANE-Infinity-${VERSION}-1.x86_64.rpm"
-          ls -lh "$DEPLOY_DIR/TITANE-Infinity_${VERSION}_amd64.AppImage"
+          ls -lh "$DEPLOY_DIR/Titan-Stable_${VERSION}_amd64.deb"
+          ls -lh "$DEPLOY_DIR/Titan-Stable_${VERSION}_amd64.AppImage"
 
   test:
     name: 🧪 Run Final100 Tests
@@ -69,8 +69,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libpng-dev
 
-      - name: Install pnpm
-        run: npm install -g pnpm
+      - name: Enable Corepack (pnpm)
+        run: |
+          corepack enable
+          corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
 
       - name: Install native dependencies (build)
         run: |
@@ -107,8 +109,10 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Install pnpm
-        run: npm install -g pnpm
+      - name: Enable Corepack (pnpm)
+        run: |
+          corepack enable
+          corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
 
       - name: Install system dependencies
         run: |
@@ -123,33 +127,33 @@ jobs:
         with:
           toolchain: stable
 
-      - name: 🛠️ Build Tauri bundles
-        run: pnpm exec tauri build --config src-tauri/tauri.conf.json
+      - name: 🛠️ Build stable V29 bundles
+        run: |
+          export GO_FOR_PROD_BUILD__TITANE_INFINITY=GO_FOR_PROD_BUILD__TITANE_INFINITY
+          export TITANE_BUILD_ASSUME_YES=1
+          bash runtime/stable/build.sh
 
-      - name: 📋 Verify built artifacts
+      - name: 📋 Verify built stable artifacts
         run: |
           VERSION="${{ needs.validate.outputs.version }}"
-          ls -lh "src-tauri/target/release/bundle/deb/TITANE-Infinity_${VERSION}_amd64.deb"
-          ls -lh "src-tauri/target/release/bundle/rpm/TITANE-Infinity-${VERSION}-1.x86_64.rpm"
-          ls -lh "src-tauri/target/release/bundle/appimage/TITANE-Infinity_${VERSION}_amd64.AppImage"
+          ls -lh "runtime/stable/Titan-Stable_${VERSION}_amd64.deb"
+          ls -lh "runtime/stable/Titan-Stable_${VERSION}_amd64.AppImage"
 
       - name: 📎 Upload deployment artifacts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: TITANE-Infinity-${{ needs.validate.outputs.version }}-bundles
+          name: Titan-Stable-${{ needs.validate.outputs.version }}-bundles
           path: |
-            src-tauri/target/release/bundle/deb/TITANE-Infinity_${{ needs.validate.outputs.version }}_amd64.deb
-            src-tauri/target/release/bundle/rpm/TITANE-Infinity-${{ needs.validate.outputs.version }}-1.x86_64.rpm
-            src-tauri/target/release/bundle/appimage/TITANE-Infinity_${{ needs.validate.outputs.version }}_amd64.AppImage
+            runtime/stable/Titan-Stable_${{ needs.validate.outputs.version }}_amd64.deb
+            runtime/stable/Titan-Stable_${{ needs.validate.outputs.version }}_amd64.AppImage
 
       - name: 📤 Create/Update Release
         uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            src-tauri/target/release/bundle/deb/TITANE-Infinity_${{ needs.validate.outputs.version }}_amd64.deb
-            src-tauri/target/release/bundle/rpm/TITANE-Infinity-${{ needs.validate.outputs.version }}-1.x86_64.rpm
-            src-tauri/target/release/bundle/appimage/TITANE-Infinity_${{ needs.validate.outputs.version }}_amd64.AppImage
+            runtime/stable/Titan-Stable_${{ needs.validate.outputs.version }}_amd64.deb
+            runtime/stable/Titan-Stable_${{ needs.validate.outputs.version }}_amd64.AppImage
           draft: false
           prerelease: false
           tag_name: ${{ github.ref_name }}

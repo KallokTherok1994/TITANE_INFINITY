@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v27.2Ω — Ollama Transport Layer (Dual Mode)
+ * TITANE∞ v29.0.0 — Ollama Transport Layer (Dual Mode)
  *
  * Universal Ollama transport supporting:
  * - Mode gouverné: IPC Tauri uniquement ('ollama_generate')

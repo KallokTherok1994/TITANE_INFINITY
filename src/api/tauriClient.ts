@@ -14,6 +14,33 @@
 
 import { secureInvoke } from '@/lib/security';
 
+type TauriIpcEnvelope<T> = {
+  ok: boolean;
+  content?: T;
+  error?: unknown;
+};
+
+function unwrapTauriResult<T>(result: T | TauriIpcEnvelope<T>): T {
+  if (result && typeof result === 'object' && 'ok' in result) {
+    const envelope = result as TauriIpcEnvelope<T>;
+
+    if (!envelope.ok) {
+      const reason =
+        envelope.error instanceof Error
+          ? envelope.error.message
+          : typeof envelope.error === 'string'
+            ? envelope.error
+            : 'Unknown IPC error';
+
+      throw new Error(reason);
+    }
+
+    return envelope.content as T;
+  }
+
+  return result as T;
+}
+
 /**
  * Unified Tauri command invocation with type safety
  *
@@ -47,8 +74,13 @@ export async function tauri<T>(
   validator?: (val: unknown) => val is T
 ): Promise<T> {
   try {
-    const result = await secureInvoke<T>(cmd, payload ?? {}, {}, validator);
-    return result;
+    const result = await secureInvoke<T | TauriIpcEnvelope<T>>(
+      cmd,
+      payload ?? {},
+      {},
+      validator as ((val: unknown) => val is T | TauriIpcEnvelope<T>) | undefined
+    );
+    return unwrapTauriResult(result);
   } catch (error: unknown) {
     // Format error message consistently
     const errorMessage =

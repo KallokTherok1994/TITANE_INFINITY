@@ -244,9 +244,9 @@ export class GovernanceConnector {
 
     // Local et Tauri sont toujours configurés
     this.config.providers.local.isConfigured = true;
-    this.config.providers.local.isHealthy = true;
+    this.config.providers.local.isHealthy = this.config.providers.local.isConfigured;
     this.config.providers.tauri.isConfigured = true;
-    this.config.providers.tauri.isHealthy = true;
+    this.config.providers.tauri.isHealthy = this.config.providers.tauri.isConfigured;
 
     this.saveConfig();
   }
@@ -388,9 +388,9 @@ export class GovernanceConnector {
   markProviderHealthy(id: ProviderId): void {
     const provider = this.config.providers[id];
     if (provider) {
-      provider.isHealthy = true;
       provider.lastChecked = Date.now();
       provider.error = undefined;
+      provider.isHealthy = provider.isConfigured && provider.isActive && !provider.error;
       this.saveConfig();
     }
   }

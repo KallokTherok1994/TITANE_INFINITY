@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.3.0 — Boot Safety Lock
+ * TITANE∞ v29.0.0 — Boot Safety Lock
  * © 2025 TITANE Team. All rights reserved.
  *
  * 🔒 VERROU GLOBAL DE BOOT

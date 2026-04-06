@@ -7,7 +7,7 @@
 // TITANE∞ v24.3.0 - Hooks Central Export
 // ═══════════════════════════════════════════════════════════════
 
-// ═══ v25.7.4 RESPONSIVE DESIGN HOOKS ═══
+// ═══ v29.0.0 RESPONSIVE DESIGN HOOKS ═══
 export {
   useResponsive,
   useIsMobile,
@@ -22,7 +22,7 @@ export {
   type Device,
 } from './useResponsive';
 
-// ═══ v25.3.2 PERFECT FUSION HOOKS ═══
+// ═══ v29.0.0 PERFECT FUSION HOOKS ═══
 export {
   useSingularitySync,
   type SingularitySyncOptions,
@@ -59,7 +59,7 @@ export {
   type UseSystemHealthReturn,
 } from './useSystemHealth';
 
-// ═══ MISSING HOOKS EXPORTS (v26.4.0 Phase 2) ═══
+// ═══ MISSING HOOKS EXPORTS (v29.0.0 Phase 2) ═══
 export { useFusionEngine } from './useFusionEngine';
 export { useWindowControls } from './useWindowControls';
 export { useKeyboardShortcuts } from './useKeyboardShortcuts';

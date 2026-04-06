@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v28.88.0 — Proprietary License
+ * TITANE_INFINITY v29.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v28.88.0 — APP COMPONENT - PRODUCTION READY
+ *   TITANE∞ v29.0.0 — APP COMPONENT - PRODUCTION READY
  *   v22Ω AI Performance Optimizations: 12 optimizations (-40% latency)
  *   Build 11.5s, Tests 1964 passed, Boot ~2s, 20 Engines Unified
  *   React Router + AppShell + Living Engines + Code Splitting
@@ -52,9 +52,9 @@ import { useAppInitialization } from './hooks/useAppInitialization';
 import { useTopNavigation } from './hooks/useTopNavigation';
 // ✨ OPT-12: connectCacheToSingularity lazy-loaded below (removed static import)
 // ✨ OPT-7: i18n is now lazy-loaded in useEffect below (removed static import)
-// ✨ v25.4.1 - A11Y & Performance monitoring (utilities planned for future implementation)
+// ✨ v29.0.0 - A11Y & performance utilities remain intentionally deferred
 // consoleMonitor init moved to useAppInitialization hook
-// ✨ v25.3.1 + P3: Lazy-load Aura components (heavy graphics)
+// ✨ v29.0.0 + P3: Lazy-load Aura components (heavy graphics)
 const QuantumParticles = lazy(() =>
   import('./components/aura/QuantumParticles').then(m => ({
     default: m.QuantumParticles,
@@ -66,36 +66,32 @@ const AuraControlPanel = lazy(() =>
   }))
 );
 import { useAura } from './hooks/useAuraOrchestrator';
-import { useWindowControls } from './hooks/useWindowControls'; // ✨ v26.2.1 - Window zoom & fullscreen controls
+import { useWindowControls } from './hooks/useWindowControls'; // ✨ v29.0.0 - Window zoom & fullscreen controls
 import { useZoomControl } from './hooks/useZoomControl'; // ✨ Sprint 6 Phase 3 - Zoom control
 import { ToastProvider } from './components/providers/ToastProvider'; // ✨ M1 - Toast notifications via Sonner
 import { publishActiveModuleContext } from '@/services/chat/moduleRouteContext';
 import { SingularityConnections } from '@/services/singularityConnections';
 
 /**
- * 🔐 POLITIQUE DE SÉCURITÉ ENVIRONNEMENT - RESTRICTIONS DÉSACTIVÉES
+ * 🔐 POLITIQUE DE SÉCURITÉ ENVIRONNEMENT - FALLBACK GOUVERNÉ
  *
- * Mode OUVERT TOTAL:
- *   - ✅ Tauri dev: Autorisé
- *   - ✅ Browser dev: Autorisé
- *   - ✅ Tauri prod: Autorisé
- *   - ✅ Browser prod: Autorisé
- *   - ✅ HTTP: Autorisé
- *   - ✅ Tous contextes: Autorisés sans restriction
- *   - Note: Aucun blocage, aucun warning - Fonctionnement total
+ * Mode gouverné:
+ *   - ✅ Tauri dev/prod: chemin nominal autorisé
+ *   - ✅ Browser dev/prod: fallback local limité et explicite
+ *   - ⚠️ Les indisponibilités backend restent visibles via logs/UI
+ *   - 🚫 Aucun faux état "open", "complete" ou déverrouillage simulé
  */
 if (typeof window !== 'undefined') {
   const env = detectEnvironment();
 
-  // Log environnement (informatif uniquement, aucune restriction)
+  // Log environnement non-bloquant; les erreurs restent visibles dans l'UI.
   logEnvironmentWarnings();
 
-  // 🔓 RESTRICTIONS DÉSACTIVÉES: Aucun blocage dans aucun contexte
-  // L'application fonctionne librement en Tauri, HTTP, dev ou prod
-  logger.info('TITANE∞ démarré - Mode ouvert (restrictions désactivées)', {
+  logger.info('TITANE∞ démarré - fallback gouverné', {
     component: 'Environment',
     origin: env.origin,
     mode: env.isDev ? 'Development' : 'Production',
+    runtime: env.isTauri ? 'Tauri' : 'Browser',
   });
 }
 
@@ -181,14 +177,14 @@ const RealityCenter = lazy(() =>
   }))
 );
 
-// ✨ v26.1 CONSOLE MONITOR DASHBOARD - Dev-only monitoring UI
+// ✨ v29.0.0 CONSOLE MONITOR DASHBOARD - Dev-only monitoring UI
 const ConsoleMonitorDashboard = lazy(() =>
   import('./components/dev/ConsoleMonitorDashboard').then(m => ({
     default: m.ConsoleMonitorDashboard,
   }))
 );
 
-// ✨ v26.2 PREDICTIVE DASHBOARD - ML-like error prediction & correlation
+// ✨ v29.0.0 PREDICTIVE DASHBOARD - ML-like error prediction & correlation
 const PredictiveDashboard = lazy(() =>
   import('./components/dev/PredictiveDashboard').then(m => ({
     default: m.PredictiveDashboard,
@@ -253,7 +249,7 @@ const SkillManager = lazy(() =>
   import('./ui/pages/Skills/SkillManager').then(m => ({ default: m.default }))
 );
 
-// ✨ TOTAL_DEV v28.1.0 — GOD DEV sovereign space (unlock-gated)
+// ✨ TOTAL_DEV v29.0.0 — GOD DEV sovereign space (unlock-gated)
 const TotalDevPage = lazy(() =>
   import('./pages/TotalDevPage').then(m => ({ default: m.TotalDevPage }))
 );
@@ -301,7 +297,7 @@ const AppRouter: React.FC = () => {
   const toasts = useToasts();
   const { removeToast } = useToastActions();
 
-  // ✨ v26.2.1 - Window zoom & fullscreen controls (CTRL+scroll, F11)
+  // ✨ v29.0.0 - Window zoom & fullscreen controls (CTRL+scroll, F11)
   useWindowControls({ enableZoom: true, enableFullscreen: true });
 
   // ✨ Sprint 6 Phase 3 - Keyboard zoom controls (Ctrl+Plus/Minus/0)
@@ -311,15 +307,13 @@ const AppRouter: React.FC = () => {
   // 🔧 vΩ.3 PROD-BOOT FIX: Override checkingOnboarding to false ALWAYS to prevent loader hang
   // 🧪 E2E MODE: Skip carousel in dev mode (port 1420 = E2E tests OR dev server)
   const isDev = import.meta.env.DEV;
-  const [onboardingComplete, setOnboardingComplete] = useState<boolean>(true); // Force true for now (dev)
+  const [onboardingComplete, setOnboardingComplete] = useState<boolean>(isDev);
   const [checkingOnboarding, setCheckingOnboarding] = useState<boolean>(false);
 
-  // vΩ.3: Garantir checkingOnboarding = false SANS JAMAIS bloquer - spinner ne s'affiche pas
+  // Garder le rendu non bloquant sans forcer un faux état "complete" hors mode dev explicite.
   useEffect(() => {
-    // Immédiate reset - force UI to show, même si backend tardive
     setCheckingOnboarding(false);
 
-    // 🧪 DEV MODE: Skip onboarding check in development (E2E tests + local dev)
     if (isDev) {
       logger.info('Dev mode detected - bypassing onboarding check', {
         component: 'App',
@@ -328,10 +322,10 @@ const AppRouter: React.FC = () => {
       return;
     }
 
-    // Puis check le backend EN ARRIÈRE-PLAN UNIQUEMENT (ne modifie pas checkingOnboarding)
+    let onboardingResolved = false;
+
     const checkOnboarding = async () => {
       try {
-        // En mode navigateur, vérifier d'abord le localStorage
         if (typeof localStorage !== 'undefined') {
           const browserModeFlag = localStorage.getItem('titane_browser_mode') === '1';
           const browserMode = browserModeFlag && !isTauriRuntimeAvailable();
@@ -347,28 +341,29 @@ const AppRouter: React.FC = () => {
               component: 'Onboarding',
               status: localComplete ? 'Complete' : 'Not started',
             });
-            setOnboardingComplete(localComplete || true);
+            onboardingResolved = true;
+            setOnboardingComplete(localComplete);
             return;
           }
         }
 
-        // Mode Tauri : interroger le backend
         const isComplete = await secureInvoke<boolean>('is_onboarding_complete');
         logger.info('Onboarding status (Tauri mode)', {
           component: 'Onboarding',
           status: isComplete ? 'Complete' : 'Not started',
         });
+        onboardingResolved = true;
         setOnboardingComplete(isComplete);
       } catch (error) {
-        logger.warn('Failed to check onboarding status, assuming complete', {
+        logger.warn('Failed to check onboarding status; keeping onboarding required', {
           component: 'Onboarding',
           error,
         });
-        setOnboardingComplete(true);
+        onboardingResolved = true;
+        setOnboardingComplete(false);
       }
     };
 
-    // Add timeout to prevent infinite loading
     const timeoutDuration =
       typeof window !== 'undefined' &&
       localStorage.getItem('titane_browser_mode') === '1' &&
@@ -377,13 +372,18 @@ const AppRouter: React.FC = () => {
         : 5000;
 
     const timeoutId = setTimeout(() => {
-      logger.warn('Onboarding check timeout, assuming complete', {
+      if (onboardingResolved) {
+        return;
+      }
+
+      logger.warn('Onboarding check timeout; keeping onboarding required', {
         component: 'Onboarding',
       });
-      setOnboardingComplete(true);
+      onboardingResolved = true;
+      setOnboardingComplete(false);
     }, timeoutDuration);
 
-    checkOnboarding();
+    void checkOnboarding();
 
     return () => {
       clearTimeout(timeoutId);
@@ -392,7 +392,7 @@ const AppRouter: React.FC = () => {
 
   useAppInitialization();
 
-  // ✨ v25.4.1 - A11Y & Performance: Keyboard shortcuts and Web Vitals planned
+  // ✨ v29.0.0 - A11Y & performance: keyboard shortcuts and Web Vitals planned
 
   // 🌟 Initialize Living Engines v21-v24
   const livingEngines = useLivingEngines(100); // Update every 100ms
@@ -527,9 +527,9 @@ const AppRouter: React.FC = () => {
       {/* Phase 9: Suspense boundary for lazy-loaded routes */}
       <Suspense fallback={<PageLoadingFallback />}>
         <Routes>
-          {/* Main Routes v25.3.0 - TITANE Homepage */}
+          {/* Main Routes — TITANE Homepage */}
           <Route path="/" element={<Navigate to="/titane" replace />} />
-          {/* ⚡ v25.3.0 TITANE - LE CŒUR DU SYSTÈME (Fusion Chat IA + Vision + EVO) */}
+          {/* ⚡ TITANE - LE CŒUR DU SYSTÈME (Chat IA + Vision + EVO unifiés) */}
           <Route
             path="/titane"
             element={
@@ -538,7 +538,7 @@ const AppRouter: React.FC = () => {
               </ErrorBoundary>
             }
           />
-          {/* Redirections vers TITANE (fusion v25.3.0) */}
+          {/* Redirections vers TITANE */}
           <Route path="/chat" element={<Navigate to="/titane" replace />} />
           <Route path="/camera" element={<Navigate to="/titane" replace />} />
           <Route path="/evo" element={<Navigate to="/titane" replace />} />
@@ -554,15 +554,15 @@ const AppRouter: React.FC = () => {
           />
           <Route path="/progression" element={<Navigate to="/titane" replace />} />
           <Route path="/xp" element={<Navigate to="/experience" replace />} />
-          {/* ❌ v25.2.1 → v29.1: /cognitive redirigé vers /dev?tab=diagnostics (Stats fusionné DEV Cockpit) */}
+          {/* /cognitive redirigé vers DEV Cockpit > Diagnostics */}
           <Route
             path="/cognitive"
             element={<Navigate to="/dev?tab=diagnostics" replace />}
           />
-          {/* ✅ v29.1: /stats fusionné dans DEV Cockpit > Diagnostics */}
+          {/* /stats fusionné dans DEV Cockpit > Diagnostics */}
           <Route path="/stats" element={<Navigate to="/dev?tab=diagnostics" replace />} />
           <Route path="/experience" element={<Experience />} /> {/* ✨ v∞.D5 - Page XP */}
-          {/* ✨ v25.1 TIME CENTER - Fusion Temporal Flow + Agenda + Time Navigator */}
+          {/* ✨ v29.0.0 TIME CENTER - Temporal Flow + Agenda + Time Navigator */}
           <Route
             path="/time"
             element={
@@ -575,7 +575,7 @@ const AppRouter: React.FC = () => {
           <Route path="/temporal-center" element={<Navigate to="/time" replace />} />
           <Route path="/agenda" element={<Navigate to="/time" replace />} />
           <Route path="/time-navigator" element={<Navigate to="/time" replace />} />
-          {/* ✨ v25.2.2 ADMIN CENTER - Module ADMIN Unifié */}
+          {/* ✨ v29.0.0 ADMIN CENTER - Module ADMIN unifié */}
           <Route
             path="/admin"
             element={
@@ -638,7 +638,7 @@ const AppRouter: React.FC = () => {
           <Route path="/audio" element={<Navigate to="/admin?tab=audio" replace />} />
           <Route path="/voice" element={<Navigate to="/admin?tab=audio" replace />} />
           <Route path="/tts" element={<Navigate to="/admin?tab=audio" replace />} />
-          {/* ✨ v25.3.2 - FUSION DASHBOARD - Perfect Backend/Frontend Integration */}
+          {/* ✨ v29.0.0 - FUSION DASHBOARD - Perfect Backend/Frontend Integration */}
           <Route
             path="/fusion"
             element={
@@ -649,7 +649,7 @@ const AppRouter: React.FC = () => {
               </ErrorBoundary>
             }
           />
-          {/* ✨ v25.6.0 - ULTIMATE OPTIMIZATION - Phase 12: GPU/WASM/Cache/IndexedDB */}
+          {/* ✨ v29.0.0 - ULTIMATE OPTIMIZATION - Phase 12: GPU/WASM/Cache/IndexedDB */}
           <Route
             path="/optimization"
             element={
@@ -700,7 +700,7 @@ const AppRouter: React.FC = () => {
             path="/cognitive-state"
             element={<Navigate to="/orchestration-center" replace />}
           />
-          {/* ✨ v25.4.0 DEV CENTER - Fusion Complete (4 modules → 1) */}
+          {/* ✨ v29.0.0 DEV CENTER - Fusion Complete (4 modules → 1) */}
           <Route
             path="/dev"
             element={
@@ -709,7 +709,7 @@ const AppRouter: React.FC = () => {
               </ErrorBoundary>
             }
           />
-          {/* ✨ TOTAL_DEV v28.1.0 — GOD DEV sovereign space */}
+          {/* ✨ TOTAL_DEV v29.0.0 — GOD DEV sovereign space */}
           <Route
             path="/total-dev"
             element={
@@ -838,7 +838,7 @@ const AppRouter: React.FC = () => {
             }
           />
           {/* Engine Routes */}
-          {/* ❌ SUPPRIMÉ v25.2.1: /helios, /nexus, /harmonia → fusionnés dans /stats */}
+          {/* Routes historiques fusionnées vers les surfaces DEV/TITANE actives */}
           <Route path="/sentinel" element={<Sentinel />} />
           <Route path="/watchdog" element={<Watchdog />} />
           <Route path="/selfheal" element={<SelfHeal />} />
@@ -882,7 +882,7 @@ const AppRouter: React.FC = () => {
       {/* MASQUÉ - Analyse UI */}
       {/* <PhysiologicalPanel /> */}
 
-      {/* ✨ v25.4.1 - Keyboard Shortcuts Help: Planned for future release */}
+      {/* ✨ v29.0.0 - Keyboard Shortcuts Help: Planned for future release */}
 
       {/* ✨ v19.5.2 - Toast Notifications System */}
       <ToastContainer
@@ -923,21 +923,21 @@ const App: React.FC = () => {
         <UIThemeProvider>
           <AnimationProvider fpsThreshold={40} cpuThreshold={80}>
             <TitanStateProvider>
-              {/* ✨ v26.1 - Console Monitor Dashboard (Dev only) */}
+              {/* ✨ v29.0.0 - Console Monitor Dashboard (Dev only) */}
               {import.meta.env.DEV && (
                 <Suspense fallback={null}>
                   <ConsoleMonitorDashboard />
                 </Suspense>
               )}
 
-              {/* ✨ v26.2 - Predictive AI Dashboard (Dev only) */}
+              {/* ✨ v29.0.0 - Predictive AI Dashboard (Dev only) */}
               {import.meta.env.DEV && (
                 <Suspense fallback={null}>
                   <PredictiveDashboard />
                 </Suspense>
               )}
 
-              {/* ✨ v25.3.1 - Quantum Particles Background (Global) - Connected to Aura Orchestrator */}
+              {/* ✨ v29.0.0 - Quantum Particles Background (Global) - Connected to Aura Orchestrator */}
               <AuraConnectedParticles />
 
               <BrowserRouter>

@@ -95,7 +95,7 @@ export const TopNav: React.FC<TopNavProps> = ({
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
   const moreMenuRef = useRef<HTMLDivElement>(null);
 
-  // ✨ v27 AI Provider Status Indicator
+  // ✨ v29.0.0 AI Provider Status Indicator
   const [aiStatus, setAiStatus] = useState<{
     percent: number | null;
     available: number;
@@ -110,7 +110,7 @@ export const TopNav: React.FC<TopNavProps> = ({
   const visibleItems = items.slice(0, maxVisibleItems);
   const moreItems = items.slice(maxVisibleItems);
 
-  // ✨ v27 - Polling providers status every 30s
+  // ✨ v29.0.0 - Polling providers status every 30s
   useEffect(() => {
     let active = true;
 
@@ -329,7 +329,7 @@ export const TopNav: React.FC<TopNavProps> = ({
 
       {/* Actions secondaires */}
       <div className="flex items-center gap-3 shrink-0">
-        {/* ✨ v27 AI Provider Status Indicator */}
+        {/* ✨ v29.0.0 AI Provider Status Indicator */}
         {aiStatus.percent !== null && (
           <div
             className={cn(

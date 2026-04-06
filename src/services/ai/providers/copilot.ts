@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v26.3 — Proprietary License
+ * TITANE∞ v29.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v26.3 — COPILOT PROVIDER
+ *   TITANE∞ v29.0.0 — COPILOT PROVIDER
  *   GitHub Copilot / Models API via backend Rust
  *   Unified AI Provider Architecture
  * ═══════════════════════════════════════════════════════════════════
@@ -73,7 +73,7 @@ export async function getCopilotKeyStatusCached(): Promise<{
 }
 
 /**
- * Provider GitHub Copilot (v26.3)
+ * Provider GitHub Copilot (v29.0.0)
  * Utilise backend Rust via chat_generate_copilot command
  */
 export const copilotProvider: AIProvider = {

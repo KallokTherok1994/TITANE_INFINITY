@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v25.6.0 — SERVICE WORKER MANAGER
+ * TITANE∞ v29.0.0 — SERVICE WORKER MANAGER
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * Client-side service worker management
@@ -9,7 +9,7 @@
  * - Performance monitoring
  * - Background sync coordination
  *
- * @version 25.6.0
+ * @version 29.0.0
  * @created 2025-12-17
  * @phase 12 - Ultimate Optimization
  */

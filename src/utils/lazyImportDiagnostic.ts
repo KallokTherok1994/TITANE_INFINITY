@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.3.0 — Proprietary License
+ * TITANE∞ v29.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * 🔍 LAZY IMPORT DIAGNOSTIC UTILITY (ENHANCED)
@@ -43,7 +43,7 @@ export const lazyWithDiagnostic = <T extends React.ComponentType<any>>(
       const startTime = performance.now();
       const module = await factory();
       const loadTime = performance.now() - startTime;
-      console.log(`[LAZY-SUCCESS] ${label} chargé en ${loadTime.toFixed(2)}ms`);
+      console.log(`[LAZY-READY] ${label} chargé en ${loadTime.toFixed(2)}ms`);
       return module;
     } catch (error: any) {
       console.error(`[LAZY-IMPORT-FAIL] ${label}:`, {
@@ -94,7 +94,7 @@ export const lazyWithTimeout = <T extends React.ComponentType<any>>(
         const loadPromise = factory();
         const result = await Promise.race([loadPromise, timeoutPromise]);
 
-        console.log(`[LAZY-SUCCESS] ${label} chargé (tentative ${attempt + 1})`);
+        console.log(`[LAZY-READY] ${label} chargé (tentative ${attempt + 1})`);
         return result;
       } catch (error: any) {
         lastError = error;

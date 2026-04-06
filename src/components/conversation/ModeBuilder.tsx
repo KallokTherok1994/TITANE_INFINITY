@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25.3.0 — Proprietary License
+ * TITANE∞ v29.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
@@ -128,7 +128,7 @@ export const ModeBuilder: React.FC<ModeBuilderProps> = ({ onClose, onSave }) => 
     setIsGenerating(true);
 
     try {
-      // ✅ v25.4.2: Appel au backend Tauri pour générer le prompt via IA
+      // ✅ v29.0.0: Appel au backend Tauri pour générer le prompt via IA
       const response = (await tauriClient.generateModePrompt({
         request: {
           concept: concept.trim(),

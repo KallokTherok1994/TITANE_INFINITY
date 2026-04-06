@@ -75,8 +75,8 @@ jobs:
               'availability_status': 'AVAILABLE',
               'distribution_ready': True,
               'deployment_artifacts': {
-                  'appimage': 'TITANE-Infinity_26.3.0_amd64.AppImage',
-                  'deb_package': 'TITANE-Infinity_26.3.0_amd64.deb',
+                  'appimage': 'Titan-Stable_29.0.0_amd64.AppImage',
+                  'deb_package': 'Titan-Stable_29.0.0_amd64.deb',
                   'binary': 'titane-infinity',
                   'launcher': 'launch-titane.sh'
               },
@@ -84,7 +84,7 @@ jobs:
                   'os': ['Linux x86_64', 'Ubuntu 20.04+', 'Debian 11+'],
                   'memory': '4GB RAM minimum, 8GB recommended',
                   'storage': '1GB available space',
-                  'network': 'Optional (fully local-first)'
+                  'network': 'Optional (online-first governed with mandatory local fallback)'
               },
               'localization': {
                   'supported_languages': ['English', 'French'],
@@ -231,7 +231,7 @@ jobs:
       - name: '🌟 Display Global Distribution Status'
         run: |
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo "🌐 TITANE∞ v26.3.0 - Global Distribution Status"
+          echo "🌐 TITANE∞ v29.0.0 - Global Distribution Status"
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
           if [[ -f "reports/global/distribution-summary.json" ]]; then
@@ -268,7 +268,7 @@ jobs:
       - name: '🎉 World Conquest Status'
         run: |
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo "🏆 TITANE∞ v26.3.0 - WORLD CONQUEST STATUS"
+          echo "🏆 TITANE∞ v29.0.0 - WORLD CONQUEST STATUS"
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           echo ""
           echo "🌟 System Status: ABSOLUTE PERFECTION ACHIEVED"

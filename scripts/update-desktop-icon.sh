@@ -22,6 +22,7 @@ PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 ICON_DIR="$PROJECT_DIR/src-tauri/icons"
 DESKTOP_FILE="$PROJECT_DIR/titane-infinity.desktop"
 DESKTOP_INSTALL_DIR="$HOME/.local/share/applications"
+LAUNCHER_SCRIPT="$PROJECT_DIR/launch-titane.sh"
 
 extract_version_from_path() {
     local artifact_path="$1"
@@ -67,6 +68,7 @@ fi
 
 # Assurer les répertoires de logs attendus par l'action "Logs"
 mkdir -p "$HOME/.titane/logs"
+chmod +x "$LAUNCHER_SCRIPT" 2>/dev/null || true
 
 # Si on lance une AppImage, vérifier si FUSE est utilisable.
 # En environnement restreint, le montage AppImage peut échouer ("Operation not permitted");
@@ -126,7 +128,7 @@ Version=1.0
 Type=Application
 Name=$APP_NAME
 Comment=🏛️ Cognitive OS - Multi-Provider AI - Production Perfect
-Exec=$EXEC_BASE
+Exec=$LAUNCHER_SCRIPT
 Icon=$ICON_PATH
 Terminal=false
 Categories=Development;Utility;AI;
@@ -137,7 +139,7 @@ Actions=DevMode;Logs;Config;
 
 [Desktop Action DevMode]
 Name=🔧 Developer Mode
-Exec=$EXEC_BASE --dev
+Exec=$LAUNCHER_SCRIPT --dev
 
 [Desktop Action Logs]
 Name=📋 View Logs

@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v25.6.0 — GPU ACCELERATOR V2 WITH WEBGPU
+ * TITANE∞ v29.0.0 — GPU ACCELERATOR V2 WITH WEBGPU
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * Advanced GPU acceleration with WebGPU compute shaders
@@ -10,7 +10,7 @@
  * - Zero-copy data transfer
  * - Auto-detection & fallback to WebGL
  *
- * @version 25.6.0
+ * @version 29.0.0
  * @created 2025-12-17
  * @phase 12 - Ultimate Optimization
  */

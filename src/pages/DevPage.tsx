@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v25.4.0 — DEV PAGE (Fusion Complete)
+ * TITANE∞ v29.0.0 — DEV PAGE (Fusion Complete)
  * Centre unifié développement: Dev Mode + ONE CORE + QA & Tests + Orchestration
  *
  * Fusion de 4 modules → 1 module DEV (8 sections)
@@ -24,8 +24,8 @@ import type {
   SystemMetrics,
 } from '@/features/qa-monitoring/types';
 import type { OneCoreState } from '@/features/one-core/types';
-// ✨ v25.4.1 - Web Vitals monitoring (planned for future implementation)
-// ✨ v25.6.0 - Ultimate Optimization Dashboard (Phase 12)
+// ✨ v29.0.0 - Web Vitals monitoring remains deferred until a dedicated proof-backed rollout
+// ✨ v29.0.0 - Ultimate Optimization Dashboard (Phase 12)
 import { UltimateOptimizationDashboard } from '@/components/optimization/UltimateOptimizationDashboard';
 import './DevPage.css';
 import { StatsSystemPanels } from './Stats';
@@ -850,7 +850,7 @@ function DevPageContent(): JSX.Element {
       <header className="dev-header">
         <div className="dev-header-content">
           <h1>🔧 DEV Cockpit</h1>
-          <span className="dev-version">TITANE∞ v28.88.0 • 5 tabs fusionnés</span>
+          <span className="dev-version">TITANE∞ v29.0.0 • 5 tabs fusionnés</span>
         </div>
         <button
           className="dev-btn dev-btn--primary"

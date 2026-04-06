@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.2.0 — IconButton Component (Titanium Dark)
+ * TITANE∞ v29.0.0 — IconButton Component (Titanium Dark)
  * Icon-only button with Titanium Dark design system
  * WCAG 2.2 AA compliant - requires aria-label
  * @license MIT

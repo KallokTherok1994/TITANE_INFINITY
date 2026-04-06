@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v25.3.1 — AURA CONTROL PANEL
+ *   TITANE∞ v29.0.0 — AURA CONTROL PANEL
  *   Panneau de contrôle utilisateur pour configuration Aura
  * ═══════════════════════════════════════════════════════════════
  */

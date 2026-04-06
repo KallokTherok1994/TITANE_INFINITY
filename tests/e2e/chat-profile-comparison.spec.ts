@@ -37,11 +37,46 @@ const enableChatMeasurementMode = async (page: Page) => {
 };
 
 const getChatInput = (page: Page) =>
-  page.getByPlaceholder(/Tapez votre message|type your message/i).first() ||
-  page.locator('textarea.conversation-input').first();
+  page.locator('[data-testid="chat-input"], textarea.conversation-input').first();
 
-const getSendButton = (page: Page) =>
-  page.getByRole('button', { name: /Envoyer|Send/i }).first();
+const getSendButton = (page: Page) => page.getByTestId('chat-send');
+
+const gotoWithRetry = async (page: Page, url: string, maxAttempts = 3) => {
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    try {
+      await page.goto(url, { waitUntil: 'load', timeout: 30000 });
+      return;
+    } catch (error) {
+      lastError = error;
+      const message = error instanceof Error ? error.message : String(error);
+      const isTransientConnectionError = /ERR_CONNECTION_REFUSED|ECONNREFUSED/.test(
+        message
+      );
+
+      if (!isTransientConnectionError || attempt === maxAttempts) {
+        throw error;
+      }
+
+      console.warn(
+        `[PROFILE-COMPARISON] transient dev-server restart during goto, retry ${attempt}/${maxAttempts}`
+      );
+      await page.waitForTimeout(1500);
+    }
+  }
+
+  throw lastError instanceof Error ? lastError : new Error(String(lastError));
+};
+
+const openConversationSurface = async (page: Page) => {
+  await enableChatMeasurementMode(page);
+  await gotoWithRetry(page, '/');
+  await expect(page.getByTestId('page-titane')).toBeVisible({ timeout: 60000 });
+  await page.getByTestId('tab-conversation').click();
+  await expect(page.getByTestId('page-conversation')).toBeVisible({ timeout: 15000 });
+  await expect(getChatInput(page)).toBeVisible({ timeout: 15000 });
+};
 
 /**
  * Extract response metadata from network traffic or page state
@@ -91,13 +126,14 @@ test.describe('Profile Comparison: DIRECT vs DEEP vs ARCHITECT', () => {
     page: Page,
     profile: 'DIRECT' | 'DEEP' | 'ARCHITECT'
   ): Promise<ChatResponseMetadata> {
+    await openConversationSurface(page);
     const chatInput = getChatInput(page);
+    const assistantMessages = page.getByTestId('chat-message-assistant');
+    const assistantCountBefore = await assistantMessages.count();
 
     // Set profile mode via UI if available, or via context
     // TODO: Add profile selector to chat UI
     // For now, use system prompt injection or mode selection
-
-    await expect(chatInput).toBeVisible({ timeout: 15000 });
 
     // Inject profile selection via eval
     await page.evaluate(prof => {
@@ -108,15 +144,16 @@ test.describe('Profile Comparison: DIRECT vs DEEP vs ARCHITECT', () => {
     await chatInput.fill(TEST_QUERY);
     await getSendButton(page).click({ force: true });
 
-    // Wait for response
-    await expect(page.locator('[data-testid="chat-response"]')).toBeVisible({
+    // Wait for a new assistant response
+    await expect(assistantMessages).toHaveCount(assistantCountBefore + 1, {
       timeout: 60000,
     });
     const latency = Date.now() - startTime;
 
     // Capture response content
-    const responseText = await page
-      .locator('[data-testid="chat-response"]:last-child')
+    const responseText = await assistantMessages
+      .last()
+      .getByTestId('chat-message-content')
       .textContent();
     const responseLength = responseText?.split(' ').length ?? 0;
     const charCount = responseText?.length ?? 0;

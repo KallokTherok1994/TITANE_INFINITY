@@ -2,7 +2,7 @@
  * TITANE∞ — Conversation Export/Import UI Component
  * Permet d'exporter et importer des conversations
  *
- * v26.4.0 (Sprint 6)
+ * v29.0.0 (Sprint 6)
  */
 
 import React, { useRef, useState } from 'react';

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.2.0 — Switch Component (Titanium Dark)
+ * TITANE∞ v29.0.0 — Switch Component (Titanium Dark)
  * Toggle switch with Titanium Dark design system
  * WCAG 2.2 AA compliant with keyboard support
  * @license MIT

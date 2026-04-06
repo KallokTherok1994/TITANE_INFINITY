@@ -1,6 +1,6 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════════════════════
-# TITANE∞ v26.4.0 — Post-Certification Deployment Pipeline
+# TITANE∞ v29.0.0 — Post-Certification Deployment Pipeline
 # Déploiement sécurisé après certification de production complète
 # Requires: GATE_RELEASE certification (81/81 tests PASS)
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -19,8 +19,8 @@
 #   --help              Afficher l'aide
 #
 # RÉSULTAT:
-#   deployment/latest/TITANE-Infinity_*.AppImage
-#   deployment/latest/TITANE-Infinity_*.deb  
+#   deployment/latest/Titan-Stable_*.AppImage
+#   deployment/latest/Titan-Stable_*.deb
 #   deployment/latest/MANIFEST.json (updated)
 #
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -409,7 +409,7 @@ EOF
 
 show_help() {
     cat << EOF
-TITANE∞ Certified Deployment Pipeline v26.4.0
+TITANE∞ Certified Deployment Pipeline v29.0.0
 
 USAGE:
     $0 [OPTIONS]
@@ -494,7 +494,7 @@ done
 # ─────────────────────────────────────────────────────────────────────────────
 
 main() {
-    print_header "TITANE∞ CERTIFIED DEPLOYMENT PIPELINE v26.4.0"
+    print_header "TITANE∞ CERTIFIED DEPLOYMENT PIPELINE v29.0.0"
     
     # Log configuration
     log "Deployment started: $(date)"

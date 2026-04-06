@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.4.0 — Dashboard Feature
+ * TITANE∞ v29.0.0 — Dashboard Feature
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 

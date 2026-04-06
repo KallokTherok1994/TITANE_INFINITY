@@ -152,10 +152,10 @@ jobs:
           export PATH="$PWD/.tools/node/current/bin:$PATH"
           pnpm install --frozen-lockfile || pnpm install --no-lockfile
 
-      - name: Run contract tests (TS ↔ Tauri)
+      - name: Run canonical IPC contract guard
         run: |
           export PATH="$PWD/.tools/node/current/bin:$PATH"
-          pnpm test -- --run tests/contract/tauri.contract.test.ts
+          pnpm run guard:ipc-contract
 
       - name: Check contract tests coverage
         run: |

@@ -1,4 +1,4 @@
-name: TITANE∞ Release Pipeline v26.3.0
+name: TITANE∞ Release Pipeline v29.0.0
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag to release (e.g., v26.2.0)'
+        description: 'Tag to release (e.g., v29.0.0)'
         required: true
         type: string
 
@@ -354,4 +354,4 @@ jobs:
           find artifacts/ -type f \( -name "*.deb" -o -name "*.AppImage" -o -name "*.msi" -o -name "*.dmg" \) 2>/dev/null | wc -l | xargs echo "- Total files:" >> $GITHUB_STEP_SUMMARY || echo "- Files: 0" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
-          echo "🚀 Built with TITANE∞ v26.3.0 - Modernized Release Pipeline" >> $GITHUB_STEP_SUMMARY
+          echo "🚀 Built with TITANE∞ v29.0.0 - Modernized Release Pipeline" >> $GITHUB_STEP_SUMMARY
