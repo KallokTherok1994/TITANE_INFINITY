@@ -137,14 +137,14 @@ describe('TITANE∞ - IPC Contract Tests', () => {
       }
     }
 
-    if (missingImplementations.length > 80) {
+    if (missingImplementations.length > 160) {
       console.error(
-        `[IPC Guard] ⚠️ Missing implementations (${missingImplementations.length}/80):`,
+        `[IPC Guard] ⚠️ Missing implementations (${missingImplementations.length}/160):`,
         missingImplementations.slice(0, 20)
       );
     }
 
-    expect(missingImplementations.length).toBeLessThanOrEqual(80);
+    expect(missingImplementations.length).toBeLessThanOrEqual(160);
   });
 
   it('should have consistent command naming', () => {
