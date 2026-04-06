@@ -10,6 +10,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { secureInvoke } from '@/lib/security';
 
 // Simple Tauri detection without external dependencies
 const isTauriEnvironment = typeof window !== 'undefined' && '__TAURI__' in window;
@@ -100,12 +101,12 @@ interface MicrophoneTestResult {
 
 async function checkMicrophoneTauri(): Promise<DevicePermission> {
   try {
-    // Simple Tauri invoke without security wrapper
-    if (typeof window !== 'undefined' && (window as any).__TAURI__) {
-      const { invoke } = (window as any).__TAURI__.core;
-      const result = await invoke('test_microphone', {
-        durationMs: 500, // Test court de 500ms
-      });
+    // Use secureInvoke (Tauri v2 compatible) instead of direct __TAURI__.core access
+    if (isTauriEnvironment) {
+      const result = await secureInvoke<{ success: boolean; message?: string }>(
+        'test_microphone',
+        { durationMs: 500 }
+      );
 
       return {
         type: 'microphone',
