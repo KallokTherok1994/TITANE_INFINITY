@@ -1582,11 +1582,10 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
       // Improve reliability
       stats.reliability = Math.min(100, stats.reliability + 1);
 
-      // Update status based on performance
-      if (stats.reliability > 95) {
-        stats.status = 'healthy';
-      } else if (stats.reliability > 80) {
-        stats.status = 'degraded';
+      // Update status based on derived performance signals
+      if (stats.reliability > 80) {
+        const derivedStatus = stats.reliability > 95 ? 'healthy' : 'degraded';
+        stats.status = derivedStatus;
       }
     } else {
       stats.failureCount++;
