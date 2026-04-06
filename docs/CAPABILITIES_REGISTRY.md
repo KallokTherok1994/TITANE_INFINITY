@@ -78,7 +78,7 @@ EXPERIMENTAL ──→ QUALIFIED ──→ STABLE ──→ DEPRECATED ──→
 
 | Statut | Count | Détail |
 |--------|-------|--------|
-| **STABLE** | 217 | Commands production-ready avec rétrocompatibilité |
+| **STABLE** | 218 | Commands production-ready avec rétrocompatibilité |
 | **QUALIFIED** | 2 | Commands avec API figée, tests complets, prêts pour STABLE |
 | **EXPERIMENTAL** | 0 | Commands en développement, API instable |
 | **DEPRECATED** | 0 | Commands marqués obsolètes, migration path définie |
@@ -119,7 +119,7 @@ command: <nom>
 
 ## Couche STABLE
 
-**Total commands stable**: 217 (au 2026-04-05) - **Grandfathered PHASE 5 → PHASE 6**
+**Total commands stable**: 218 (au 2026-04-06) - **Grandfathered PHASE 5 → PHASE 6**
 
 *Note: Toutes les commands ci-dessous ont été automatiquement promues **STABLE** lors de la migration PHASE 5 → PHASE 6 avec grandfathering. Aucune re-qualification requise.*
 
@@ -438,6 +438,7 @@ Commands added to satisfy drift gate (append-only):
 - `get_all_configs`
 - `get_audio_input_devices`
 - `get_audio_output_devices`
+- `test_microphone`
 - `get_cognitive_state`
 - `get_core_info`
 - `get_dashboard_metrics`
