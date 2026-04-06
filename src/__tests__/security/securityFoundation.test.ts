@@ -171,3 +171,54 @@ describe('SC5: Tauri command surface is documented', () => {
     expect(count).toBeLessThanOrEqual(20);
   });
 });
+
+// ═══════════════════════════════════════════════════════════════════
+// SC6: ALLOWED_COMMANDS COMPLETENESS — v29.0.0 fix validation
+// Verifies that the commands added in the IPC whitelist gap fix are
+// present in both ALLOWED_COMMANDS and the tauri.conf.json allow list.
+// ═══════════════════════════════════════════════════════════════════
+
+describe('SC6: ALLOWED_COMMANDS includes all production IPC commands', () => {
+  const securityPath = join(process.cwd(), 'src/lib/security.ts');
+  const configPath = join(process.cwd(), 'src-tauri/tauri.conf.json');
+
+  // Commands added in the v29.0.0 IPC whitelist gap fix (AH-2026-04-06-IPC-WHITELIST-ALLOWLIST-060)
+  const requiredCommands = [
+    'agenda_save_event',
+    'agenda_save_events',
+    'agenda_delete_event',
+    'agenda_sync',
+    'calibrate_titane_voice',
+    'chat_mode_change',
+    'chat_mode_sync',
+    'evolution_save_state',
+    'submit_evolution_data',
+    'knowledge_ingest',
+    'knowledge_save_state',
+    'progression_save_state',
+  ];
+
+  it('security.ts ALLOWED_COMMANDS contains all required production commands', () => {
+    const raw = readFileSync(securityPath, 'utf-8');
+    for (const cmd of requiredCommands) {
+      expect(raw, `ALLOWED_COMMANDS must include '${cmd}'`).toContain(`'${cmd}'`);
+    }
+  });
+
+  it('tauri.conf.json allow list contains all required production commands', () => {
+    const raw = readFileSync(configPath, 'utf-8');
+    const parsed = JSON.parse(raw);
+    const caps = parsed?.app?.security?.capabilities ?? [];
+    const allowed = new Set<string>();
+    for (const cap of caps) {
+      for (const entry of cap.allow ?? []) {
+        if (typeof entry?.command === 'string') {
+          allowed.add(entry.command);
+        }
+      }
+    }
+    for (const cmd of requiredCommands) {
+      expect(allowed.has(cmd), `tauri.conf.json allow list must include '${cmd}'`).toBe(true);
+    }
+  });
+});
