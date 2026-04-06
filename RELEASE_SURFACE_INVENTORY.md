@@ -140,6 +140,19 @@ Canonical target version: **30.0.0**
 | `deployment/latest/MANIFEST.json` | `30.0.0` | UPDATED_TO_30_0_0 |
 | `deployment/latest/CHECKSUMS.txt` / `SHA256SUMS.txt` | `30.0.0` artifact names | UPDATED_TO_30_0_0 |
 | `deployment/latest/SIZES.txt` | `30.0.0` artifact names | UPDATED_TO_30_0_0 |
+## Addendum — 2026-04-06 — TITANE∞ v30.0.0 Major Release Upgrade Cycle
+
+Canonical target version: **30.0.0**
+
+| File | Version | Status |
+|---|---|---|
+| `package.json` | `30.0.0` | KEEP_AS_CANON |
+| `src-tauri/Cargo.toml` | `30.0.0` | KEEP_AS_CANON |
+| `src-tauri/tauri.conf.json` | `30.0.0` | KEEP_AS_CANON |
+| `tauri.base.json` | `30.0.0` | KEEP_AS_CANON |
+| `runtime/stable/tauri.conf.json` | `30.0.0` | KEEP_AS_CANON |
+| `runtime/stable/manifest.json` | `30.0.0` | KEEP_AS_CANON |
+| `README.md` / `docs/README.md` | `v30.0.0` | KEEP_AS_CANON |
 | `RELEASE_ARTIFACTS_CHECKSUMS_30.0.0.txt` | `30.0.0` | ADDED_AS_PROOF |
 
 ### Artifact Status Summary — v30.0.0
@@ -151,3 +164,4 @@ Canonical target version: **30.0.0**
 
 > v30.0.0 is the active canonical release stream for repository + deployment metadata as of 2026-04-06.
 > Build tokens required: GO_FOR_PROD_BUILD__TITANE_INFINITY
+> v30.0.0 is the active canonical release stream as of 2026-04-06. Artifacts pending build.

@@ -15,3 +15,6 @@ titane-infinity: PENDING_BUILD
 # This file will be updated with real SHA256 checksums after the production build.
 # Build command: pnpm run build:production
 # Governance: verify_instructions.sh must PASS before build authorization
+
+AppImage: PENDING
+DEB: PENDING

@@ -8,6 +8,7 @@
 **Status:** ✅ Production Ready (v30.0.0 — MAJOR RELEASE STREAM)
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
 **Latest Release:** [v30.0.0-release-20260406](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260406) (April 6, 2026)
+**Latest Release:** [v30.0.0-release-20260405](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260405) (April 5, 2026)
 
 **Canal de release canonique:** v30.0.0
 
@@ -49,6 +50,7 @@ DEB:       2bcfc64e57f5f234a6fa43dd810e8240ba1a37c61faee934f8e136b83f04f880
 
 - Full release notes: [CHANGELOG.md](CHANGELOG.md)
 - GitHub Release: https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260406
+- GitHub Release: https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260405
 - Deployment manifest: [deployment/latest/MANIFEST.json](deployment/latest/MANIFEST.json)
 - Checksums: [RELEASE_ARTIFACTS_CHECKSUMS_30.0.0.txt](RELEASE_ARTIFACTS_CHECKSUMS_30.0.0.txt)
 
@@ -103,6 +105,7 @@ TITANE∞ est un **OS cognitif online-first** : votre double numérique évoluti
 - **v30.0.0** (Current Release Stream — 🚀)
   - Status: ✅ CERTIFIED & DEPLOYED (2026-04-05)
   - Tag: `v30.0.0-release-20260406`
+  - Tag: `v30.0.0-release-20260405`
   - Gates: eval harness PASS, certified deployment PASS, deployment metadata aligned
   - Proof: `CHANGELOG.md` + `deployment/latest/MANIFEST.json` + `RELEASE_ARTIFACTS_CHECKSUMS_30.0.0.txt`
 
