@@ -12,6 +12,7 @@
  */
 
 import { useEffect } from 'react';
+import { toast } from 'sonner';
 import { initializeOllama } from '../services/ai/providers/ollama';
 import { consoleMonitor } from '../services/monitoring/consoleMonitor';
 import { presenceOS } from '../engines/presence/_stubs';
@@ -90,6 +91,11 @@ export const useAppInitialization = (): void => {
         { component: 'App', service: 'Ollama' },
         error as Error
       );
+      toast.warning('Ollama non disponible', {
+        description:
+          "Le moteur IA local est inaccessible. Vérifiez qu'Ollama est installé et démarré (ollama serve).",
+        duration: 8000,
+      });
     });
   }, []);
 
