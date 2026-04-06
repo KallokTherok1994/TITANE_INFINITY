@@ -373,9 +373,13 @@ Que peux-tu en dire?`
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Posez votre question... (Shift+Enter pour nouvelle ligne)"
+            placeholder={
+              !anyBackendAvailable
+                ? 'Moteurs IA indisponibles...'
+                : 'Posez votre question... (Shift+Enter pour nouvelle ligne)'
+            }
             rows={1}
-            disabled={isLoading}
+            disabled={isLoading || !anyBackendAvailable}
             aria-label="Message à envoyer"
             aria-invalid={!!error}
           />
@@ -383,10 +387,20 @@ Que peux-tu en dire?`
             type="submit"
             className="send-button"
             onClick={handleSend}
-            disabled={!input.trim() || isLoading}
-            aria-label={isLoading ? 'Envoi en cours' : 'Envoyer le message'}
+            disabled={!input.trim() || isLoading || !anyBackendAvailable}
+            aria-label={
+              !anyBackendAvailable
+                ? 'Moteurs IA indisponibles'
+                : isLoading
+                  ? 'Envoi en cours'
+                  : 'Envoyer le message'
+            }
             aria-busy={isLoading}
-            title="Envoyer (Enter)"
+            title={
+              !anyBackendAvailable
+                ? 'Moteurs IA indisponibles — vérifiez Ollama ou le backend Tauri'
+                : 'Envoyer (Enter)'
+            }
           >
             <span aria-hidden="true">{isLoading ? '⏳' : '📨'}</span>
           </button>
