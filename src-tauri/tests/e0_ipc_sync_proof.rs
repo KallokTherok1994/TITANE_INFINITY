@@ -33,10 +33,10 @@ impl Default for SyncStatus {
 
 // Minimal sync_now implementation matching sync_service.rs logic
 fn sync_now_test(_reason: &str, has_url: bool, has_token: bool) -> SyncStatus {
-    let mut status = SyncStatus::default();
-    status.phase = SyncPhase::Syncing;
-    status.last_error_code = None;
-    status.last_error_message = None;
+    let mut status = SyncStatus {
+        phase: SyncPhase::Syncing,
+        ..Default::default()
+    };
 
     if !has_url || !has_token {
         status.phase = SyncPhase::Error;
