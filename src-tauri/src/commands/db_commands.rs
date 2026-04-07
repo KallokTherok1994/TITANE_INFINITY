@@ -1,6 +1,5 @@
 use serde::Deserialize;
 use serde_json::{json, Value};
-use std::path::PathBuf;
 use std::sync::Arc;
 use tauri::{AppHandle, Manager, State};
 
