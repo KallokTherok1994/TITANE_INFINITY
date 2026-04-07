@@ -311,7 +311,7 @@ export class StateAggregator {
         { skipWhitelistCheck: true }
       );
 
-      for (const rs of rustStatuses) {
+      for (const rs of Array.isArray(rustStatuses) ? rustStatuses : []) {
         const moduleId = rs.module_id as TitaneModule;
         modules[moduleId] = {
           moduleId,
@@ -391,7 +391,7 @@ export class StateAggregator {
         {},
         { skipWhitelistCheck: true }
       );
-      anomalies.push(...perfAnomalies);
+      anomalies.push(...(Array.isArray(perfAnomalies) ? perfAnomalies : []));
     } catch {
       // Performance Engine non disponible
     }
@@ -403,7 +403,7 @@ export class StateAggregator {
         {},
         { skipWhitelistCheck: true }
       );
-      anomalies.push(...healingAnomalies);
+      anomalies.push(...(Array.isArray(healingAnomalies) ? healingAnomalies : []));
     } catch {
       // Self-Healing Engine non disponible
     }
@@ -426,7 +426,7 @@ export class StateAggregator {
         {},
         { skipWhitelistCheck: true }
       );
-      return mode as SystemMode;
+      return (mode ?? 'NORMAL') as SystemMode;
     } catch {
       return 'NORMAL';
     }
