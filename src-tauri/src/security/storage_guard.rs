@@ -106,6 +106,15 @@ impl StorageGuard {
 
     /// Valide et résout un chemin relatif vers chemin absolu sécurisé
     pub fn validate_and_resolve(&self, relative_path: &str) -> Result<PathBuf, String> {
+        // Normaliser la racine sandbox pour des comparaisons robustes (notamment Windows).
+        let sandbox_root = if self.data_root.exists() {
+            self.data_root
+                .canonicalize()
+                .unwrap_or_else(|_| self.data_root.clone())
+        } else {
+            self.data_root.clone()
+        };
+
         // 1. Vérifications basiques
         if relative_path.is_empty() {
             return Err("Empty path".into());
@@ -128,7 +137,7 @@ impl StorageGuard {
 
         // 3. Interdire chemins absolus (sauf si data_root)
         let path = Path::new(relative_path);
-        if path.is_absolute() && !path.starts_with(&self.data_root) {
+        if path.is_absolute() && !path.starts_with(&sandbox_root) {
             if self.policy.security_logging {
                 eprintln!(
                     "[SECURITY:STORAGE] BLOCKED: Absolute path outside sandbox: {}",
@@ -161,10 +170,10 @@ impl StorageGuard {
                             .canonicalize()
                             .map_err(|e| format!("Canonicalize parent failed: {}", e))?;
 
-                        if !canonical_parent.starts_with(&self.data_root) {
+                        if !canonical_parent.starts_with(&sandbox_root) {
                             return Err(format!(
                                 "Path escapes sandbox: {:?} not in {:?}",
-                                canonical_parent, self.data_root
+                                canonical_parent, sandbox_root
                             ));
                         }
                     }
@@ -172,7 +181,7 @@ impl StorageGuard {
                 full_path.clone()
             };
 
-            if canonical.exists() && !canonical.starts_with(&self.data_root) {
+            if canonical.exists() && !canonical.starts_with(&sandbox_root) {
                 if self.policy.security_logging {
                     eprintln!(
                         "[SECURITY:STORAGE] BLOCKED: Path escapes sandbox: {:?}",
@@ -181,7 +190,7 @@ impl StorageGuard {
                 }
                 return Err(format!(
                     "Path escapes sandbox: {:?} not in {:?}",
-                    canonical, self.data_root
+                    canonical, sandbox_root
                 ));
             }
         }
