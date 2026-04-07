@@ -261,7 +261,7 @@ mod tests {
         // But actual may be 6 due to initialization. Accept both.
         let count = stm.eviction_count();
         assert!(
-            count >= 5 && count <= 6,
+            (5..=6).contains(&count),
             "Should have 5-6 evictions, got {}",
             count
         );

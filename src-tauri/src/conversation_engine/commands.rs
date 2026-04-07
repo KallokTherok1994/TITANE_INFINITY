@@ -803,7 +803,7 @@ pub async fn conversation_generate(
                     "openai" | "gpt" => super::types::ProviderPreference::OpenAI,
                     "claude" | "anthropic" => super::types::ProviderPreference::Claude,
                     "local" => super::types::ProviderPreference::Local,
-                    _ => configured_provider.clone(),
+                    _ => configured_provider,
                 })
                 .unwrap_or(configured_provider);
 

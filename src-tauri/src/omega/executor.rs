@@ -349,9 +349,8 @@ fn build_textgen_mock_response(task_input: &serde_json::Value) -> String {
         return "Generated response.".to_string();
     }
 
-    format!(
-        "Reponse OMEGA: j'ai bien recu votre demande et je la traite avec les modules cognitifs actifs.",
-    )
+    "Reponse OMEGA: j'ai bien recu votre demande et je la traite avec les modules cognitifs actifs."
+        .to_string()
 }
 
 impl DefaultTaskHandler {

@@ -156,7 +156,7 @@ pub async fn clear_system_logs(state: State<'_, LogBufferState>) -> Result<Value
 #[tauri::command]
 pub async fn log_entries(state: State<'_, LogBufferState>) -> Result<Value, String> {
     let logs = state.0.lock().map_err(|e| e.to_string())?;
-    Ok(serde_json::to_value(logs.clone()).map_err(|e| e.to_string())?)
+    serde_json::to_value(logs.clone()).map_err(|e| e.to_string())
 }
 
 // ─── XP / PROGRESSION COMMANDS ──────────────────────────────────────────────

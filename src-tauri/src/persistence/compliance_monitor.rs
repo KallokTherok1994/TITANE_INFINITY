@@ -176,11 +176,7 @@ fn hash_string(value: &str) -> String {
 }
 
 fn absolute_delta(left: u64, right: u64) -> u64 {
-    if left >= right {
-        left - right
-    } else {
-        right - left
-    }
+    left.abs_diff(right)
 }
 
 #[cfg(test)]

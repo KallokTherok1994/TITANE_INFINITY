@@ -29,12 +29,6 @@ pub fn provider_class_from_id(provider_id: &str) -> ProviderClass {
         || normalized.contains("offline")
     {
         ProviderClass::Local
-    } else if normalized.contains("openai")
-        || normalized.contains("gemini")
-        || normalized.contains("claude")
-        || normalized.contains("anthropic")
-    {
-        ProviderClass::Remote
     } else {
         ProviderClass::Remote
     }

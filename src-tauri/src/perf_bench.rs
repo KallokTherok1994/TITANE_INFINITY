@@ -37,7 +37,7 @@ impl PerfBench {
 
         self.metrics
             .entry(name.to_string())
-            .or_insert_with(Vec::new)
+            .or_default()
             .push(metric);
     }
 
@@ -86,6 +86,17 @@ impl PerfBench {
     }
 }
 
+// BASELINE METRICS CAPTURE (Week 1, Day 1)
+// Run: cargo test -- --nocapture perf_bench
+// Expected: Establish baseline for all critical operations
+pub fn capture_baseline() {
+    let bench = PerfBench::new();
+
+    // Will be populated with real measurements
+    println!("📊 Baseline metrics framework ready for Week 1 measurements");
+    println!("{}", bench.report());
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -109,15 +120,4 @@ mod tests {
         assert!(report.contains("operation"));
         assert!(report.contains("55.000ms"));
     }
-}
-
-// BASELINE METRICS CAPTURE (Week 1, Day 1)
-// Run: cargo test -- --nocapture perf_bench
-// Expected: Establish baseline for all critical operations
-pub fn capture_baseline() {
-    let bench = PerfBench::new();
-
-    // Will be populated with real measurements
-    println!("📊 Baseline metrics framework ready for Week 1 measurements");
-    println!("{}", bench.report());
 }

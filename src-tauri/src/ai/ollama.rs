@@ -63,7 +63,7 @@ fn ollama_request_timeout() -> Duration {
     std::env::var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV)
         .ok()
         .and_then(|v| v.trim().parse::<u64>().ok())
-        .filter(|&s| s >= 10 && s <= 300)
+        .filter(|&s| (10..=300).contains(&s))
         .map(Duration::from_secs)
         .unwrap_or(Duration::from_secs(OLLAMA_REQUEST_TIMEOUT_SECS_DEFAULT))
 }
