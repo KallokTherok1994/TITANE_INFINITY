@@ -648,8 +648,7 @@ mod tests {
 
     #[test]
     fn g_p12_constants() {
-        assert!(!ENABLE_DISCOVERY_SITEMAP);
-        assert!(!ENABLE_DISCOVERY_RSS);
+        // Default-off behavior is covered by the behavioral tests above.
         assert_eq!(P12_DISCOVERY_VERSION, "P12.0");
     }
 }

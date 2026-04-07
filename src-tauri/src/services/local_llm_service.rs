@@ -150,7 +150,7 @@ mod tests {
 
     #[test]
     fn test_constants() {
-        assert!(!ENABLE_LOCAL_LLM);
+        // Default-off behavior is proven via is_available() test above.
         assert_eq!(LOCAL_LLM_MODE, "NONE");
         assert_eq!(P10_VERSION, "P10.0");
     }

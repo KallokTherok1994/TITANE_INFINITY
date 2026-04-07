@@ -396,8 +396,7 @@ fn make_snippet(body: &str, query: &str, max_len: usize) -> String {
     let end = body
         .char_indices()
         .map(|(i, _)| i)
-        .filter(|&i| i <= end)
-        .next_back()
+        .rfind(|&i| i <= end)
         .unwrap_or(body.len());
 
     let snip = body[start..end].trim();
