@@ -1,20 +1,21 @@
 # TITANE∞ v30.0.0 — Release Artifacts Checksums
-# Generated: 2026-04-06
-# Status: PENDING_BUILD
-# Certification: PENDING
+# Generated: 2026-04-07
+# Status: CERTIFIED
+# Certification: TITANE_INFINITY_RELEASE_20260407_175255_CERTIFIED
 
 # AppImage (Linux universal)
-Titan-Stable_30.0.0_amd64.AppImage: PENDING_BUILD
+Titan-Stable_30.0.0_amd64.AppImage: 599e317f4cde58cb0d9b9efca65e62e0d06f0c7f030ee23c20cd55a56322214e
+# Size: 89852408 bytes
 
 # DEB (Debian/Ubuntu)
-Titan-Stable_30.0.0_amd64.deb: PENDING_BUILD
+Titan-Stable_30.0.0_amd64.deb: 83c5ba6bb43e0ccd059c94efbc4f75b18c42592e193a9544c94e688cbdf41633
+# Size: 17018768 bytes
 
 # Binary
-titane-infinity: PENDING_BUILD
+titane-infinity: 693cffd589dc13c20e352fbe788d0bd123a278852195472fc5a4b23aefef5841
+# Size: 40659592 bytes
 
-# This file will be updated with real SHA256 checksums after the production build.
-# Build command: pnpm run build:production
-# Governance: verify_instructions.sh must PASS before build authorization
-
-AppImage: PENDING
-DEB: PENDING
+# Evidence
+AppImage: 599e317f4cde58cb0d9b9efca65e62e0d06f0c7f030ee23c20cd55a56322214e
+DEB: 83c5ba6bb43e0ccd059c94efbc4f75b18c42592e193a9544c94e688cbdf41633
+Binary: 693cffd589dc13c20e352fbe788d0bd123a278852195472fc5a4b23aefef5841
