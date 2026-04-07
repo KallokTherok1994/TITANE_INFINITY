@@ -317,7 +317,7 @@ mod tests {
 
     #[test]
     fn g_dedup_citations_same_url() {
-        let passages = vec![
+        let passages = [
             make_passage(
                 "https://same.example.com/page",
                 "First passage from this URL",
@@ -457,7 +457,7 @@ mod tests {
 
     #[test]
     fn test_build_citations_locator_text_populated() {
-        let passages = vec![RetrievedPassage {
+        let passages = [RetrievedPassage {
             url: "https://example.com/p".to_string(),
             passage: "test passage for locator".to_string(),
             score: 5,
@@ -472,7 +472,7 @@ mod tests {
 
     #[test]
     fn test_build_citations_locator_text_none_when_no_indices() {
-        let passages = vec![make_passage(
+        let passages = [make_passage(
             "https://example.com/q",
             "test passage no index",
             3,
