@@ -1,8 +1,5 @@
-export default function AdminPage() {
-  return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Admin</h1>
-      <p className="text-gray-400 mt-2">Section en cours de développement.</p>
-    </div>
-  );
-}
+/**
+ * TITANE∞ v30.0.0 — Admin Center Page (router entry point)
+ * Delegates to the unified Admin feature module.
+ */
+export { AdminPage as default } from '@/features/admin';
