@@ -260,7 +260,7 @@ mod ltm_consumption_proof {
                 run
             );
             assert!(
-                recalled[0].content.contains(&format!("STABLE")),
+                recalled[0].content.contains("STABLE"),
                 "Run {}: recalled content should contain STABLE",
                 run
             );

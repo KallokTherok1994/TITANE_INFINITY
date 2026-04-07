@@ -644,6 +644,7 @@ pub async fn persistent_memory_get_context(
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// Écrire une entrée mémoire
+#[allow(clippy::too_many_arguments)]
 #[tauri::command]
 pub async fn persistent_memory_write_entry(
     state: State<'_, PersistentMemoryState>,
