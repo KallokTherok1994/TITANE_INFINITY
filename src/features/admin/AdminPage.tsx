@@ -205,7 +205,9 @@ const AdminPageComponent: React.FC = () => {
       >
         <div className="admin-header-content">
           <div className="admin-header-title">
-            <span className="admin-header-icon">👑</span>
+            <span className="admin-header-icon" aria-hidden="true">
+              👑
+            </span>
             <div>
               <h1>ADMIN</h1>
               <p className="admin-header-subtitle">
@@ -221,16 +223,22 @@ const AdminPageComponent: React.FC = () => {
       </motion.header>
 
       {/* Tab Navigation */}
-      <nav className="admin-tabs">
+      <nav className="admin-tabs" role="tablist" aria-label="Onglets Administration">
         {ADMIN_TABS.map(tab => (
           <button
             key={tab.id}
+            role="tab"
+            aria-selected={activeTab === tab.id}
+            aria-controls={`admin-tabpanel-${tab.id}`}
+            id={`admin-tab-${tab.id}`}
             data-testid={`tab-admin-${tab.id}`}
             className={`admin-tab ${activeTab === tab.id ? 'admin-tab--active' : ''}`}
             onClick={() => handleTabChange(tab.id)}
             title={tab.description}
           >
-            <span className="admin-tab-icon">{tab.icon}</span>
+            <span className="admin-tab-icon" aria-hidden="true">
+              {tab.icon}
+            </span>
             <div className="admin-tab-content">
               <span className="admin-tab-label">{tab.label}</span>
               {tab.badge && <span className="admin-tab-badge">{tab.badge}</span>}
@@ -240,7 +248,13 @@ const AdminPageComponent: React.FC = () => {
       </nav>
 
       {/* Tab Content */}
-      <main className="admin-content" data-testid="page-admin-content">
+      <main
+        className="admin-content"
+        data-testid="page-admin-content"
+        role="tabpanel"
+        id={`admin-tabpanel-${activeTab}`}
+        aria-labelledby={`admin-tab-${activeTab}`}
+      >
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
