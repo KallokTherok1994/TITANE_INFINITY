@@ -51,7 +51,7 @@ impl VisionEngine {
     pub fn new(config: crate::multimodal::config::MultimodalConfig) -> Self {
         Self { config }
     }
-    
+
     /// Analyze image from path
     pub async fn analyze_image(&self, path: &str) -> MultimodalResult<VisionAnalysis> {
         log::info!("🔍 Vision Engine: Analyzing image from path: {}", path);
@@ -65,11 +65,15 @@ impl VisionEngine {
 
     /// Analyze image from bytes
     pub async fn analyze_image_bytes(&self, bytes: &[u8]) -> MultimodalResult<VisionAnalysis> {
-        log::info!("🔍 Vision Engine: Analyzing image from bytes ({} bytes)", bytes.len());
+        log::info!(
+            "🔍 Vision Engine: Analyzing image from bytes ({} bytes)",
+            bytes.len()
+        );
 
         // Load image from memory
-        let img = image::load_from_memory(bytes)
-            .map_err(|e| MultimodalError::VisionError(format!("Failed to load image from bytes: {}", e)))?;
+        let img = image::load_from_memory(bytes).map_err(|e| {
+            MultimodalError::VisionError(format!("Failed to load image from bytes: {}", e))
+        })?;
 
         self.analyze_image_internal(img).await
     }
@@ -84,9 +88,15 @@ impl VisionEngine {
             image::ColorType::L8 => "Grayscale8",
             image::ColorType::La8 => "GrayscaleAlpha8",
             _ => "Unknown",
-        }.to_string();
+        }
+        .to_string();
 
-        log::debug!("📐 Image dimensions: {}x{}, format: {}", width, height, format);
+        log::debug!(
+            "📐 Image dimensions: {}x{}, format: {}",
+            width,
+            height,
+            format
+        );
 
         // Preprocess: Resize if needed
         let processed_img = self.preprocess_image(img)?;
@@ -102,7 +112,11 @@ impl VisionEngine {
         // Calculate brightness and contrast
         let brightness = self.calculate_brightness_impl(&processed_img);
         let contrast = self.calculate_contrast_impl(&processed_img);
-        log::debug!("💡 Brightness: {:.3}, Contrast: {:.3}", brightness, contrast);
+        log::debug!(
+            "💡 Brightness: {:.3}, Contrast: {:.3}",
+            brightness,
+            contrast
+        );
 
         // OCR (placeholder - would require tesseract)
         let ocr_text = if self.config.ocr_enabled {
@@ -118,7 +132,12 @@ impl VisionEngine {
             vec![DetectedObject {
                 label: "placeholder".to_string(),
                 confidence: 0.0,
-                bbox: BoundingBox { x: 0, y: 0, width: 0, height: 0 },
+                bbox: BoundingBox {
+                    x: 0,
+                    y: 0,
+                    width: 0,
+                    height: 0,
+                },
             }]
         } else {
             vec![]
@@ -150,7 +169,7 @@ impl VisionEngine {
             metadata,
         })
     }
-    
+
     /// Preprocess image (resize if too large)
     fn preprocess_image(&self, img: DynamicImage) -> MultimodalResult<DynamicImage> {
         let (width, height) = img.dimensions();
@@ -160,7 +179,13 @@ impl VisionEngine {
             return Ok(img);
         }
 
-        log::debug!("🔄 Resizing image from {}x{} to fit {}x{}", width, height, max_width, max_height);
+        log::debug!(
+            "🔄 Resizing image from {}x{} to fit {}x{}",
+            width,
+            height,
+            max_width,
+            max_height
+        );
 
         // Calculate aspect-preserving dimensions
         let aspect_ratio = width as f32 / height as f32;
@@ -172,7 +197,8 @@ impl VisionEngine {
             ((max_height as f32 * aspect_ratio) as u32, max_height)
         };
 
-        let resized = img.resize_exact(new_width, new_height, image::imageops::FilterType::Lanczos3);
+        let resized =
+            img.resize_exact(new_width, new_height, image::imageops::FilterType::Lanczos3);
         Ok(resized)
     }
 
@@ -230,21 +256,19 @@ impl VisionEngine {
         for y in 1..(height - 1) {
             for x in 1..(width - 1) {
                 // Sobel operators
-                let gx =
-                    gray.get_pixel(x + 1, y - 1)[0] as i32 * -1 +
-                    gray.get_pixel(x + 1, y)[0] as i32 * -2 +
-                    gray.get_pixel(x + 1, y + 1)[0] as i32 * -1 +
-                    gray.get_pixel(x - 1, y - 1)[0] as i32 * 1 +
-                    gray.get_pixel(x - 1, y)[0] as i32 * 2 +
-                    gray.get_pixel(x - 1, y + 1)[0] as i32 * 1;
+                let gx = gray.get_pixel(x + 1, y - 1)[0] as i32 * -1
+                    + gray.get_pixel(x + 1, y)[0] as i32 * -2
+                    + gray.get_pixel(x + 1, y + 1)[0] as i32 * -1
+                    + gray.get_pixel(x - 1, y - 1)[0] as i32 * 1
+                    + gray.get_pixel(x - 1, y)[0] as i32 * 2
+                    + gray.get_pixel(x - 1, y + 1)[0] as i32 * 1;
 
-                let gy =
-                    gray.get_pixel(x - 1, y + 1)[0] as i32 * -1 +
-                    gray.get_pixel(x, y + 1)[0] as i32 * -2 +
-                    gray.get_pixel(x + 1, y + 1)[0] as i32 * -1 +
-                    gray.get_pixel(x - 1, y - 1)[0] as i32 * 1 +
-                    gray.get_pixel(x, y - 1)[0] as i32 * 2 +
-                    gray.get_pixel(x + 1, y - 1)[0] as i32 * 1;
+                let gy = gray.get_pixel(x - 1, y + 1)[0] as i32 * -1
+                    + gray.get_pixel(x, y + 1)[0] as i32 * -2
+                    + gray.get_pixel(x + 1, y + 1)[0] as i32 * -1
+                    + gray.get_pixel(x - 1, y - 1)[0] as i32 * 1
+                    + gray.get_pixel(x, y - 1)[0] as i32 * 2
+                    + gray.get_pixel(x + 1, y - 1)[0] as i32 * 1;
 
                 let magnitude = ((gx * gx + gy * gy) as f32).sqrt();
 
@@ -277,7 +301,10 @@ impl VisionEngine {
     }
 
     /// Extract dominant colors using k-means clustering
-    fn extract_dominant_colors_impl(&self, img: &DynamicImage) -> MultimodalResult<Vec<(u8, u8, u8)>> {
+    fn extract_dominant_colors_impl(
+        &self,
+        img: &DynamicImage,
+    ) -> MultimodalResult<Vec<(u8, u8, u8)>> {
         let rgb = img.to_rgb8();
         let pixels: Vec<_> = rgb.pixels().collect();
 
@@ -308,10 +335,9 @@ impl VisionEngine {
                 let mut closest = 0;
 
                 for (i, centroid) in centroids.iter().enumerate() {
-                    let dist =
-                        (pixel[0] as f32 - centroid.0).powi(2) +
-                        (pixel[1] as f32 - centroid.1).powi(2) +
-                        (pixel[2] as f32 - centroid.2).powi(2);
+                    let dist = (pixel[0] as f32 - centroid.0).powi(2)
+                        + (pixel[1] as f32 - centroid.1).powi(2)
+                        + (pixel[2] as f32 - centroid.2).powi(2);
 
                     if dist < min_dist {
                         min_dist = dist;
@@ -357,9 +383,7 @@ impl VisionEngine {
         for pixel in pixels {
             // ITU-R BT.709 formula
             let luminance =
-                0.2126 * pixel[0] as f32 +
-                0.7152 * pixel[1] as f32 +
-                0.0722 * pixel[2] as f32;
+                0.2126 * pixel[0] as f32 + 0.7152 * pixel[1] as f32 + 0.0722 * pixel[2] as f32;
             total_luminance += luminance;
             count += 1;
         }
@@ -380,9 +404,7 @@ impl VisionEngine {
         let mut luminances = Vec::new();
         for pixel in pixels {
             let luminance =
-                0.2126 * pixel[0] as f32 +
-                0.7152 * pixel[1] as f32 +
-                0.0722 * pixel[2] as f32;
+                0.2126 * pixel[0] as f32 + 0.7152 * pixel[1] as f32 + 0.0722 * pixel[2] as f32;
             luminances.push(luminance);
         }
 
@@ -393,10 +415,8 @@ impl VisionEngine {
         let mean: f32 = luminances.iter().sum::<f32>() / luminances.len() as f32;
 
         // Calculate standard deviation
-        let variance: f32 = luminances
-            .iter()
-            .map(|&l| (l - mean).powi(2))
-            .sum::<f32>() / luminances.len() as f32;
+        let variance: f32 =
+            luminances.iter().map(|&l| (l - mean).powi(2)).sum::<f32>() / luminances.len() as f32;
 
         let std_dev = variance.sqrt();
 
@@ -428,8 +448,11 @@ mod tests {
         // Create test image
         let img = create_test_image();
         let mut bytes = Vec::new();
-        img.write_to(&mut std::io::Cursor::new(&mut bytes), image::ImageFormat::Png)
-            .expect("should encode test image to PNG bytes");
+        img.write_to(
+            &mut std::io::Cursor::new(&mut bytes),
+            image::ImageFormat::Png,
+        )
+        .expect("should encode test image to PNG bytes");
 
         let result = engine.analyze_image_bytes(&bytes).await;
         assert!(result.is_ok());
@@ -502,16 +525,16 @@ mod tests {
         let engine = VisionEngine::new(config);
 
         // Create a bright image (all white)
-        let bright_img = DynamicImage::ImageRgb8(
-            ImageBuffer::from_fn(50, 50, |_, _| Rgb([255, 255, 255]))
-        );
+        let bright_img =
+            DynamicImage::ImageRgb8(ImageBuffer::from_fn(50, 50, |_, _| Rgb([255, 255, 255])));
         let brightness = engine.calculate_brightness_impl(&bright_img);
-        assert!(brightness > 0.9, "Brightness should be high for white image");
+        assert!(
+            brightness > 0.9,
+            "Brightness should be high for white image"
+        );
 
         // Create a dark image (all black)
-        let dark_img = DynamicImage::ImageRgb8(
-            ImageBuffer::from_fn(50, 50, |_, _| Rgb([0, 0, 0]))
-        );
+        let dark_img = DynamicImage::ImageRgb8(ImageBuffer::from_fn(50, 50, |_, _| Rgb([0, 0, 0])));
         let darkness = engine.calculate_brightness_impl(&dark_img);
         assert!(darkness < 0.1, "Brightness should be low for black image");
     }
@@ -522,24 +545,24 @@ mod tests {
         let engine = VisionEngine::new(config);
 
         // High contrast image (black and white stripes)
-        let high_contrast = DynamicImage::ImageRgb8(
-            ImageBuffer::from_fn(50, 50, |x, _| {
-                if x < 25 {
-                    Rgb([0, 0, 0])
-                } else {
-                    Rgb([255, 255, 255])
-                }
-            })
-        );
+        let high_contrast = DynamicImage::ImageRgb8(ImageBuffer::from_fn(50, 50, |x, _| {
+            if x < 25 {
+                Rgb([0, 0, 0])
+            } else {
+                Rgb([255, 255, 255])
+            }
+        }));
         let contrast_high = engine.calculate_contrast_impl(&high_contrast);
 
         // Low contrast image (all gray)
-        let low_contrast = DynamicImage::ImageRgb8(
-            ImageBuffer::from_fn(50, 50, |_, _| Rgb([128, 128, 128]))
-        );
+        let low_contrast =
+            DynamicImage::ImageRgb8(ImageBuffer::from_fn(50, 50, |_, _| Rgb([128, 128, 128])));
         let contrast_low = engine.calculate_contrast_impl(&low_contrast);
 
-        assert!(contrast_high > contrast_low, "High contrast image should have higher contrast value");
+        assert!(
+            contrast_high > contrast_low,
+            "High contrast image should have higher contrast value"
+        );
     }
 
     #[test]

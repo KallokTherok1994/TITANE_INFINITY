@@ -16,5 +16,8 @@ fn option1_ipc_contract_error_shape() {
         IpcResponse::failure(DbError::new("DB_BUSY", "busy"));
     assert!(!response.ok);
     assert!(response.content.is_none());
-    assert_eq!(response.error.as_ref().map(|e| e.code.as_str()), Some("DB_BUSY"));
+    assert_eq!(
+        response.error.as_ref().map(|e| e.code.as_str()),
+        Some("DB_BUSY")
+    );
 }

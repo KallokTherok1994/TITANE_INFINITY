@@ -1,8 +1,7 @@
+use serde::{Deserialize, Serialize};
 /// Performance metrics capture for baseline establishment
 /// Week 1 Track A: Capture baseline measurements for optimization targeting
-
 use std::time::Instant;
-use serde::{Deserialize, Serialize};
 
 /// Baseline metrics for a single operation
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -54,11 +53,11 @@ impl PerfMetricsCapture {
     /// Capture metrics for chat API provider cascade
     pub fn capture_provider_cascade(&mut self) -> OperationMetric {
         let start = Instant::now();
-        
+
         // Simulate provider cascade call (local -> tauri -> gemini/ollama)
         // This will be replaced with actual measurements
         let simulated_duration = 42.5; // baseline from Phase 4 Sprint 1+2
-        let memory_allocated = 12.3;   // MB
+        let memory_allocated = 12.3; // MB
         let memory_freed = 10.1;
         let cache_hits = 8;
         let cache_misses = 2;
@@ -121,37 +120,35 @@ impl PerfMetricsCapture {
     /// Generate baseline metrics report
     pub fn generate_baseline_report(&self) -> BaselineMetricsReport {
         let mut summary = MetricsSummary::default();
-        
+
         if !self.operations.is_empty() {
             summary.total_operations = self.operations.len();
-            
+
             // Calculate statistics
             let total_duration: f64 = self.operations.iter().map(|m| m.duration_ms).sum();
             summary.avg_duration_ms = total_duration / self.operations.len() as f64;
-            
-            summary.max_duration_ms = self.operations.iter()
+
+            summary.max_duration_ms = self
+                .operations
+                .iter()
                 .map(|m| m.duration_ms)
                 .fold(0.0, f64::max);
-            
-            summary.min_duration_ms = self.operations.iter()
+
+            summary.min_duration_ms = self
+                .operations
+                .iter()
                 .map(|m| m.duration_ms)
                 .fold(f64::INFINITY, f64::min);
-            
-            summary.total_memory_mb = self.operations.iter()
-                .map(|m| m.memory_allocated_mb)
-                .sum();
-            
-            summary.total_cache_hits = self.operations.iter()
-                .map(|m| m.cache_hits)
-                .sum();
-            
-            summary.total_cache_misses = self.operations.iter()
-                .map(|m| m.cache_misses)
-                .sum();
-            
-            let total_cache_ops = summary.total_cache_hits as f64 
-                + summary.total_cache_misses as f64;
-            
+
+            summary.total_memory_mb = self.operations.iter().map(|m| m.memory_allocated_mb).sum();
+
+            summary.total_cache_hits = self.operations.iter().map(|m| m.cache_hits).sum();
+
+            summary.total_cache_misses = self.operations.iter().map(|m| m.cache_misses).sum();
+
+            let total_cache_ops =
+                summary.total_cache_hits as f64 + summary.total_cache_misses as f64;
+
             if total_cache_ops > 0.0 {
                 summary.cache_hit_rate = summary.total_cache_hits as f64 / total_cache_ops;
             }
@@ -192,7 +189,7 @@ mod tests {
         let mut capture = PerfMetricsCapture::new();
         let metric = capture.capture_provider_cascade();
         capture.record(metric.clone());
-        
+
         assert_eq!(metric.name, "provider_cascade");
         assert!(metric.duration_ms > 0.0);
         assert_eq!(capture.operations_count(), 1);
@@ -203,7 +200,7 @@ mod tests {
         let mut capture = PerfMetricsCapture::new();
         let metric = capture.capture_memory_allocation();
         capture.record(metric.clone());
-        
+
         assert_eq!(metric.name, "memory_allocation");
         assert!(metric.memory_allocated_mb > 0.0);
     }
@@ -219,9 +216,9 @@ mod tests {
         capture.record(memory_metric);
         capture.record(cache_metric);
         capture.record(query_metric);
-        
+
         let report = capture.generate_baseline_report();
-        
+
         assert_eq!(report.summary.total_operations, 4);
         assert!(report.summary.avg_duration_ms > 0.0);
         assert!(report.summary.total_memory_mb > 0.0);
@@ -233,7 +230,7 @@ mod tests {
         let mut capture = PerfMetricsCapture::new();
         let metric = capture.capture_provider_cascade();
         capture.record(metric);
-        
+
         let json = capture.export_json();
         assert!(json.contains("provider_cascade"));
         assert!(json.contains("26.4.0-baseline-w1"));

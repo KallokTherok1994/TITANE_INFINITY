@@ -3,10 +3,10 @@
 //! Super Prompt #11 — Apprentissage sur l'apprentissage, adaptation de stratégies
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
-use tokio::sync::RwLock;
 use super::introspection::IntrospectionReport;
 use super::strategy::Strategy;
+use serde::{Deserialize, Serialize};
+use tokio::sync::RwLock;
 
 /// Stratégie d'apprentissage
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -147,7 +147,8 @@ impl MetaLearningEngine {
         state.metrics.learning_rate = (state.metrics.learning_rate + improvement) / 2.0;
 
         // Mettre à jour l'expertise du domaine
-        let current_expertise = state.domain_expertise
+        let current_expertise = state
+            .domain_expertise
             .get(&entry.domain)
             .copied()
             .unwrap_or(0.0);
@@ -156,7 +157,9 @@ impl MetaLearningEngine {
         } else {
             (current_expertise - 0.05).max(0.0)
         };
-        state.domain_expertise.insert(entry.domain.clone(), new_expertise);
+        state
+            .domain_expertise
+            .insert(entry.domain.clone(), new_expertise);
 
         // Ajouter à l'historique
         state.history.push(entry);
@@ -165,7 +168,8 @@ impl MetaLearningEngine {
         }
 
         // Mettre à jour les scores de stratégie
-        self.update_strategy_scores(strategy, introspection.confidence).await;
+        self.update_strategy_scores(strategy, introspection.confidence)
+            .await;
     }
 
     /// Infère la stratégie d'apprentissage utilisée
@@ -213,7 +217,9 @@ impl MetaLearningEngine {
         }
 
         // Sélectionner la stratégie avec le meilleur score
-        scores.scores.iter()
+        scores
+            .scores
+            .iter()
             .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(std::cmp::Ordering::Equal))
             .map(|(strategy, _)| strategy.clone())
             .unwrap_or(LearningStrategy::Adaptive)

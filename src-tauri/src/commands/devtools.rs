@@ -8,11 +8,11 @@ use crate::cognitive::{
     mental::CognitiveMode,
     state::{CenterCoherence, CognitiveState, SystemRecommendation},
 };
+use crate::compat::plugin_system::{core_module::CoreHealth, registry::CoreRegistry};
 use crate::devtools::{
     logging::{LogCollector, LogEntry, LogFilters, LogLevel},
     metrics::{MetricPoint, MetricSeries, MetricStats, MetricsCollector},
 };
-use crate::compat::plugin_system::{core_module::CoreHealth, registry::CoreRegistry};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tauri::State;

@@ -8,11 +8,11 @@ use std::sync::Arc;
 use tauri::State;
 use uuid::Uuid;
 
-use crate::overdrive::chat_orchestrator::ChatOrchestratorState;
+use crate::engines::conversation_os::policy::{NetState, PolicyContext};
 use crate::engines::conversation_os::{
     MemoryEngine, PolicyEngine, ResilienceEngine, RouterEngine, SearchEngine,
 };
-use crate::engines::conversation_os::policy::{NetState, PolicyContext};
+use crate::overdrive::chat_orchestrator::ChatOrchestratorState;
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 use crate::services::search_gateway::SearchGatewayService;
 
@@ -73,7 +73,9 @@ fn resolve_conversation_os_db_path_from_env(
         .join("TITANE_INFINITY/runtime/memory/conversation_os_v1.db")
 }
 
-fn resolve_conversation_os_db_path(db_path_override: Option<std::path::PathBuf>) -> std::path::PathBuf {
+fn resolve_conversation_os_db_path(
+    db_path_override: Option<std::path::PathBuf>,
+) -> std::path::PathBuf {
     resolve_conversation_os_db_path_from_env(
         db_path_override,
         std::env::var("TITANE_CONVOS_DB_PATH").ok(),
@@ -163,18 +165,23 @@ fn extract_context_binding(context_envelope: Option<&serde_json::Value>) -> serd
 }
 
 #[cfg(all(not(feature = "mock"), feature = "full"))]
-async fn run_governed_search(query: &str, max_results: usize) -> Result<Vec<crate::engines::conversation_os::search::RawSearchResult>, String> {
+async fn run_governed_search(
+    query: &str,
+    max_results: usize,
+) -> Result<Vec<crate::engines::conversation_os::search::RawSearchResult>, String> {
     let gateway = SearchGatewayService::default_governed();
     let results = gateway.search(query, max_results).await?;
     Ok(results
         .into_iter()
-        .map(|result| crate::engines::conversation_os::search::RawSearchResult {
-            title: Some(result.title),
-            url: Some(result.url),
-            description: Some(result.snippet),
-            snippet: None,
-            source: result.source,
-        })
+        .map(
+            |result| crate::engines::conversation_os::search::RawSearchResult {
+                title: Some(result.title),
+                url: Some(result.url),
+                description: Some(result.snippet),
+                snippet: None,
+                source: result.source,
+            },
+        )
         .collect())
 }
 
@@ -183,8 +190,14 @@ async fn run_governed_search(query: &str, max_results: usize) -> Result<Vec<crat
 // → this stub is ALWAYS active in default/dev builds regardless of BRAVE_API_KEY.
 // To enable real Brave search: build with --features full --no-default-features (or remove mock).
 #[cfg(not(all(not(feature = "mock"), feature = "full")))]
-async fn run_governed_search(_query: &str, _max_results: usize) -> Result<Vec<crate::engines::conversation_os::search::RawSearchResult>, String> {
-    Err("CREDENTIALS_MISSING: SearchGatewayService unavailable without full backend features".to_string())
+async fn run_governed_search(
+    _query: &str,
+    _max_results: usize,
+) -> Result<Vec<crate::engines::conversation_os::search::RawSearchResult>, String> {
+    Err(
+        "CREDENTIALS_MISSING: SearchGatewayService unavailable without full backend features"
+            .to_string(),
+    )
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -542,7 +555,11 @@ pub async fn conversation_generate(
         Some("local".to_string())
     } else if !policy_verdict.allow_external_ai {
         // Policy gate: external AI not allowed (offline/blocked/no-credentials)
-        if provider.as_deref().map(|p| matches!(p, "gemini" | "openai" | "gpt" | "claude" | "anthropic")).unwrap_or(false) {
+        if provider
+            .as_deref()
+            .map(|p| matches!(p, "gemini" | "openai" | "gpt" | "claude" | "anthropic"))
+            .unwrap_or(false)
+        {
             log::warn!(
                 "[Ω:CMD] ⚠️ Policy gate: external AI blocked (allow_external_ai=false) | reason={:?} | forcing local",
                 policy_verdict.block_reason
@@ -560,12 +577,17 @@ pub async fn conversation_generate(
         Ok(rows) => {
             const MAX_MESSAGES: usize = 20;
             const MAX_CONTENT_CHARS: usize = 300;
-            let formatted: Vec<String> = rows.iter()
+            let formatted: Vec<String> = rows
+                .iter()
                 .take(MAX_MESSAGES)
                 .filter_map(|row| {
                     let role = row.get("role")?.as_str()?;
                     let content = row.get("content")?.as_str()?;
-                    let prefix = if role == "user" { "[User]" } else { "[Assistant]" };
+                    let prefix = if role == "user" {
+                        "[User]"
+                    } else {
+                        "[Assistant]"
+                    };
                     // Token budget: truncate long messages
                     let truncated = if content.len() > MAX_CONTENT_CHARS {
                         format!("{}…", &content[..MAX_CONTENT_CHARS])
@@ -580,12 +602,17 @@ pub async fn conversation_generate(
                 history_load_status = "loaded".to_string();
                 log::info!(
                     "[Ω:CMD] ✅ LTM context: {} msgs loaded for conv_id={}",
-                    formatted.len(), &conversation_id[..conversation_id.len().min(16)]
+                    formatted.len(),
+                    &conversation_id[..conversation_id.len().min(16)]
                 );
             } else {
                 history_load_status = "empty".to_string();
             }
-            if formatted.is_empty() { None } else { Some(formatted) }
+            if formatted.is_empty() {
+                None
+            } else {
+                Some(formatted)
+            }
         }
         Err(e) => {
             history_load_status = "error".to_string();
@@ -629,26 +656,30 @@ pub async fn conversation_generate(
                 (String::new(), Vec::new())
             } else {
                 let ids: Vec<String> = recalled.iter().map(|i| i.id.clone()).collect();
-                let lines: Vec<String> = recalled.iter().map(|item| {
-                let tier_label = match item.tier {
-                        crate::core::MemoryTier::ShortTerm => "STM",
-                        crate::core::MemoryTier::MediumTerm => "MTM",
-                        crate::core::MemoryTier::LongTerm => "LTM",
-                    };
-                    let content_trunc = if item.content.len() > MEMORY_ITEM_CHAR_CAP {
-                        format!("{}…", &item.content[..MEMORY_ITEM_CHAR_CAP])
-                    } else {
-                        item.content.clone()
-                    };
-                    format!("[{tier_label}|{:.2}] {content_trunc}", item.importance)
-                }).collect();
+                let lines: Vec<String> = recalled
+                    .iter()
+                    .map(|item| {
+                        let tier_label = match item.tier {
+                            crate::core::MemoryTier::ShortTerm => "STM",
+                            crate::core::MemoryTier::MediumTerm => "MTM",
+                            crate::core::MemoryTier::LongTerm => "LTM",
+                        };
+                        let content_trunc = if item.content.len() > MEMORY_ITEM_CHAR_CAP {
+                            format!("{}…", &item.content[..MEMORY_ITEM_CHAR_CAP])
+                        } else {
+                            item.content.clone()
+                        };
+                        format!("[{tier_label}|{:.2}] {content_trunc}", item.importance)
+                    })
+                    .collect();
                 let block = format!(
                     "\n\n## MEMORY_CONTEXT\n{}\n## END_MEMORY_CONTEXT",
                     lines.join("\n")
                 );
                 log::info!(
                     "[Ω:CMD] 🧠 Memory recall: {} items injected | ids={:?}",
-                    ids.len(), ids
+                    ids.len(),
+                    ids
                 );
                 (block, ids)
             }
@@ -664,21 +695,48 @@ pub async fn conversation_generate(
         if recent.is_empty() {
             String::new()
         } else {
-            let lines: Vec<String> = recent.iter().rev().map(|(u, a)| {
-                let u_trunc = if u.len() > 120 { format!("{}…", &u[..120]) } else { u.clone() };
-                let a_trunc = if a.len() > 120 { format!("{}…", &a[..120]) } else { a.clone() };
-                format!("[User]: {u_trunc}\n[TITANE]: {a_trunc}")
-            }).collect();
+            let lines: Vec<String> = recent
+                .iter()
+                .rev()
+                .map(|(u, a)| {
+                    let u_trunc = if u.len() > 120 {
+                        format!("{}…", &u[..120])
+                    } else {
+                        u.clone()
+                    };
+                    let a_trunc = if a.len() > 120 {
+                        format!("{}…", &a[..120])
+                    } else {
+                        a.clone()
+                    };
+                    format!("[User]: {u_trunc}\n[TITANE]: {a_trunc}")
+                })
+                .collect();
             format!("\n\n## STM_RECENT_TURNS\n{}", lines.join("\n"))
         }
     };
 
     // Inject TIME + TWINS context into system_prompt when available
-    let cognitive_flow = context_binding.get("cognitiveFlowActive").and_then(|v| v.as_bool()).unwrap_or(false);
-    let cognitive_mode = context_binding.get("cognitiveMode").and_then(|v| v.as_str()).unwrap_or("normal");
-    let twins_score = context_binding.get("twinsFusionScore").and_then(|v| v.as_f64()).unwrap_or(0.0);
-    let twins_trend = context_binding.get("twinsTrend").and_then(|v| v.as_str()).unwrap_or("unknown");
-    let twins_phase = context_binding.get("twinsPhase").and_then(|v| v.as_str()).unwrap_or("unknown");
+    let cognitive_flow = context_binding
+        .get("cognitiveFlowActive")
+        .and_then(|v| v.as_bool())
+        .unwrap_or(false);
+    let cognitive_mode = context_binding
+        .get("cognitiveMode")
+        .and_then(|v| v.as_str())
+        .unwrap_or("normal");
+    let twins_score = context_binding
+        .get("twinsFusionScore")
+        .and_then(|v| v.as_f64())
+        .unwrap_or(0.0);
+    let twins_trend = context_binding
+        .get("twinsTrend")
+        .and_then(|v| v.as_str())
+        .unwrap_or("unknown");
+    let twins_phase = context_binding
+        .get("twinsPhase")
+        .and_then(|v| v.as_str())
+        .unwrap_or("unknown");
 
     let has_time_context = cognitive_flow || cognitive_mode != "normal";
     let has_twins_context = twins_score > 0.0 && twins_trend != "unknown";
@@ -686,10 +744,16 @@ pub async fn conversation_generate(
     let system_prompt = {
         let base = system_prompt.unwrap_or_default();
         let mut parts: Vec<String> = Vec::new();
-        if !base.is_empty() { parts.push(base); }
-        if !stm_context_block.is_empty() { parts.push(stm_context_block); }
+        if !base.is_empty() {
+            parts.push(base);
+        }
+        if !stm_context_block.is_empty() {
+            parts.push(stm_context_block);
+        }
         // ✅ FIX: inject UnifiedMemory recall results into prompt
-        if !memory_recall_block.is_empty() { parts.push(memory_recall_block.clone()); }
+        if !memory_recall_block.is_empty() {
+            parts.push(memory_recall_block.clone());
+        }
         if has_time_context || has_twins_context {
             let mut ctx_lines: Vec<String> = Vec::new();
             if has_time_context {
@@ -710,7 +774,11 @@ pub async fn conversation_generate(
             }
             parts.push(format!("[{}]", ctx_lines.join(" | ")));
         }
-        if parts.is_empty() { None } else { Some(parts.join("\n\n")) }
+        if parts.is_empty() {
+            None
+        } else {
+            Some(parts.join("\n\n"))
+        }
     };
 
     let configured_provider = match effective_provider.as_deref() {
@@ -730,13 +798,13 @@ pub async fn conversation_generate(
             let provider_pref = effective_provider
                 .as_deref()
                 .map(|p| match p {
-                "gemini" => super::types::ProviderPreference::Gemini,
-                "ollama" => super::types::ProviderPreference::Ollama,
-                "openai" | "gpt" => super::types::ProviderPreference::OpenAI,
-                "claude" | "anthropic" => super::types::ProviderPreference::Claude,
-                "local" => super::types::ProviderPreference::Local,
-                _ => configured_provider.clone(),
-            })
+                    "gemini" => super::types::ProviderPreference::Gemini,
+                    "ollama" => super::types::ProviderPreference::Ollama,
+                    "openai" | "gpt" => super::types::ProviderPreference::OpenAI,
+                    "claude" | "anthropic" => super::types::ProviderPreference::Claude,
+                    "local" => super::types::ProviderPreference::Local,
+                    _ => configured_provider,
+                })
                 .unwrap_or(configured_provider);
 
             AIConfig {
@@ -818,7 +886,10 @@ pub async fn conversation_generate(
     }))
 }
 
-fn ensure_provider_meta(metadata: &ConversationMetadata, latency_ms_total: u128) -> ProviderDecisionMeta {
+fn ensure_provider_meta(
+    metadata: &ConversationMetadata,
+    latency_ms_total: u128,
+) -> ProviderDecisionMeta {
     if let Some(meta) = metadata.provider_meta.clone() {
         if !meta.provider_used.is_empty() {
             return meta;
@@ -899,8 +970,7 @@ fn persist_conversation_os_artifacts_with_path(
     let db_path = resolve_conversation_os_db_path(db_path_override);
 
     if let Some(parent) = db_path.parent() {
-        std::fs::create_dir_all(parent)
-            .map_err(|err| format!("create db dir failed: {}", err))?;
+        std::fs::create_dir_all(parent).map_err(|err| format!("create db dir failed: {}", err))?;
     }
 
     let db = DbService::new(db_path).map_err(|err| err.to_string())?;
@@ -1017,7 +1087,9 @@ fn persist_conversation_os_artifacts_with_path(
             .get("memory")
             .and_then(|value| value.get("snapshot_state"))
             .cloned()
-            .unwrap_or_else(|| serde_json::json!({ "conversation_id": conversation_id, "request_id": req_id }))
+            .unwrap_or_else(
+                || serde_json::json!({ "conversation_id": conversation_id, "request_id": req_id }),
+            )
             .to_string();
 
         let snapshot = create_snapshot(
@@ -1076,8 +1148,7 @@ fn persist_conversation_os_artifacts_with_path(
     let db_path = resolve_conversation_os_db_path(db_path_override);
 
     if let Some(parent) = db_path.parent() {
-        std::fs::create_dir_all(parent)
-            .map_err(|err| format!("create db dir failed: {}", err))?;
+        std::fs::create_dir_all(parent).map_err(|err| format!("create db dir failed: {}", err))?;
     }
 
     let conn = Connection::open(db_path).map_err(|err| format!("open db failed: {}", err))?;
@@ -1252,7 +1323,9 @@ fn persist_conversation_os_artifacts_with_path(
             .get("memory")
             .and_then(|value| value.get("snapshot_state"))
             .cloned()
-            .unwrap_or_else(|| serde_json::json!({ "conversation_id": conversation_id, "request_id": req_id }))
+            .unwrap_or_else(
+                || serde_json::json!({ "conversation_id": conversation_id, "request_id": req_id }),
+            )
             .to_string();
 
         conn.execute(
@@ -1306,7 +1379,10 @@ mod tests {
     use std::fs;
     use std::path::PathBuf;
 
-    fn sample_response(provider_used: &str, provider_meta: ProviderDecisionMeta) -> ConversationResponse {
+    fn sample_response(
+        provider_used: &str,
+        provider_meta: ProviderDecisionMeta,
+    ) -> ConversationResponse {
         ConversationResponse {
             assistant_message: "OK".to_string(),
             conversation_id: "conv-1".to_string(),
@@ -1339,7 +1415,10 @@ mod tests {
         if let Some(parent) = path.parent() {
             let _ = fs::create_dir_all(parent);
         }
-        let _ = fs::write(path, serde_json::to_string_pretty(value).unwrap_or_else(|_| "{}".to_string()));
+        let _ = fs::write(
+            path,
+            serde_json::to_string_pretty(value).unwrap_or_else(|_| "{}".to_string()),
+        );
     }
 
     #[test]
@@ -1412,10 +1491,8 @@ mod tests {
 
     #[test]
     fn conversation_os_persistence_stores_events_and_sources() {
-        let db_path = std::env::temp_dir().join(format!(
-            "titane-conversation-os-{}.db",
-            Uuid::new_v4()
-        ));
+        let db_path =
+            std::env::temp_dir().join(format!("titane-conversation-os-{}.db", Uuid::new_v4()));
 
         let trace = serde_json::json!({
             "phase": "test",
@@ -1529,9 +1606,7 @@ mod tests {
 
         let event_kinds: Vec<String> = {
             let mut stmt = conn
-                .prepare(
-                    "SELECT kind FROM events WHERE conversation_id = ?1 ORDER BY ts ASC",
-                )
+                .prepare("SELECT kind FROM events WHERE conversation_id = ?1 ORDER BY ts ASC")
                 .expect("prepare event kinds query");
 
             stmt.query_map(["conv-single"], |row| row.get(0))
@@ -1655,7 +1730,9 @@ mod tests {
         for (index, _prompt) in prompts.iter().enumerate() {
             let req_id = format!("req{}", index + 1);
             let ids = build_memory_used_ids("conv-recall", &req_id, true, false);
-            assert!(ids.iter().any(|id| id.starts_with("evt_user_conv-recall_req")));
+            assert!(ids
+                .iter()
+                .any(|id| id.starts_with("evt_user_conv-recall_req")));
             assert!(ids.iter().any(|id| id.starts_with("snap_conv-recall_req")));
             assert!(!ids.iter().any(|id| id.contains("external")));
         }
@@ -2056,7 +2133,10 @@ pub async fn load_conversation_history(
     let conn = match Connection::open(&db_path) {
         Ok(c) => c,
         Err(e) => {
-            log::warn!("[load_conversation_history] open db failed: {} — returning []", e);
+            log::warn!(
+                "[load_conversation_history] open db failed: {} — returning []",
+                e
+            );
             return Ok(vec![]);
         }
     };
@@ -2081,7 +2161,11 @@ pub async fn load_conversation_history(
         .map_err(|e| format!("[load_conversation_history] query failed: {}", e))?
         .filter_map(|r| r.ok())
         .filter_map(|(kind, payload_str, ts)| {
-            let role = if kind == "user_message" { "user" } else { "assistant" };
+            let role = if kind == "user_message" {
+                "user"
+            } else {
+                "assistant"
+            };
             let payload: serde_json::Value = serde_json::from_str(&payload_str).ok()?;
             let content = payload.get("message")?.as_str()?;
             Some(serde_json::json!({

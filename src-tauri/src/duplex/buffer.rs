@@ -1,9 +1,9 @@
+use std::sync::atomic::{AtomicUsize, Ordering};
 /**
  * 🔄 Circular Buffer - Buffer circulaire pour audio streaming
  * Lock-free, haute performance
  */
 use std::sync::Arc;
-use std::sync::atomic::{AtomicUsize, Ordering};
 
 pub struct CircularBuffer {
     data: Arc<Vec<f32>>,
@@ -26,7 +26,7 @@ impl CircularBuffer {
     pub fn write(&self, samples: &[f32]) -> usize {
         let write_pos = self.write_pos.load(Ordering::Relaxed);
         let read_pos = self.read_pos.load(Ordering::Relaxed);
-        
+
         let available = if write_pos >= read_pos {
             self.capacity - (write_pos - read_pos)
         } else {
@@ -34,7 +34,7 @@ impl CircularBuffer {
         };
 
         let to_write = samples.len().min(available);
-        
+
         // Implementation: True lock-free circular buffer write with atomic operations
         // - Algorithm: Single-producer single-consumer (SPSC) lock-free queue
         // - Write: Copy samples[0..to_write] to internal buffer starting at write_pos
@@ -44,10 +44,10 @@ impl CircularBuffer {
         // - Memory ordering: Release ensures writes visible before pos update, Acquire on read
         // - Overflow prevention: Check available space before write to prevent data corruption
         // - Library alternative: crossbeam::queue::ArrayQueue for production-grade lock-free queue
-        
+
         let new_write_pos = (write_pos + to_write) % self.capacity;
         self.write_pos.store(new_write_pos, Ordering::Relaxed);
-        
+
         to_write
     }
 
@@ -55,7 +55,7 @@ impl CircularBuffer {
     pub fn read(&self, buffer: &mut [f32]) -> usize {
         let write_pos = self.write_pos.load(Ordering::Relaxed);
         let read_pos = self.read_pos.load(Ordering::Relaxed);
-        
+
         let available = if write_pos >= read_pos {
             write_pos - read_pos
         } else {
@@ -63,7 +63,7 @@ impl CircularBuffer {
         };
 
         let to_read = buffer.len().min(available);
-        
+
         // Implementation: Lock-free circular buffer read with atomic synchronization
         // - Read operation: Copy internal buffer[read_pos..read_pos+to_read] to output buffer
         //   * Use std::ptr::copy_nonoverlapping for zero-copy performance
@@ -73,10 +73,10 @@ impl CircularBuffer {
         // - Wait-free guarantee: Reader never blocks, returns available data immediately
         // - Cache efficiency: Sequential memory access pattern for optimal CPU cache usage
         // - Production: Consider crossbeam::channel for multi-producer/consumer scenarios
-        
+
         let new_read_pos = (read_pos + to_read) % self.capacity;
         self.read_pos.store(new_read_pos, Ordering::Relaxed);
-        
+
         to_read
     }
 
@@ -84,7 +84,7 @@ impl CircularBuffer {
     pub fn available(&self) -> usize {
         let write_pos = self.write_pos.load(Ordering::Relaxed);
         let read_pos = self.read_pos.load(Ordering::Relaxed);
-        
+
         if write_pos >= read_pos {
             write_pos - read_pos
         } else {
@@ -134,16 +134,16 @@ mod tests {
     #[test]
     fn test_circular_buffer_write_read() {
         let buffer = CircularBuffer::new(1024);
-        
+
         let samples = vec![0.1, 0.2, 0.3, 0.4, 0.5];
         let written = buffer.write(&samples);
-        
+
         assert_eq!(written, 5);
         assert_eq!(buffer.available(), 5);
-        
+
         let mut read_buffer = vec![0.0; 5];
         let read = buffer.read(&mut read_buffer);
-        
+
         assert_eq!(read, 5);
         assert_eq!(buffer.available(), 0);
     }
@@ -151,10 +151,10 @@ mod tests {
     #[test]
     fn test_circular_buffer_overflow() {
         let buffer = CircularBuffer::new(10);
-        
+
         let samples = vec![0.1; 15];
         let written = buffer.write(&samples);
-        
+
         // Devrait écrire seulement 10
         assert_eq!(written, 10);
         assert!(buffer.is_full());
@@ -163,14 +163,14 @@ mod tests {
     #[test]
     fn test_circular_buffer_reset() {
         let buffer = CircularBuffer::new(1024);
-        
+
         let samples = vec![0.1; 100];
         buffer.write(&samples);
-        
+
         assert_eq!(buffer.available(), 100);
-        
+
         buffer.reset();
-        
+
         assert_eq!(buffer.available(), 0);
         assert!(buffer.is_empty());
     }

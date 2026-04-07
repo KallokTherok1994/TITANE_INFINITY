@@ -689,9 +689,9 @@ pub fn automation_validate(
         .lock()
         .map_err(|e| TAPIError::internal(format!("Lock error: {}", e)))?;
 
-    let config = configs.get(&request.automation_id).ok_or_else(|| {
-        TAPIError::not_found(&request.automation_id)
-    })?;
+    let config = configs
+        .get(&request.automation_id)
+        .ok_or_else(|| TAPIError::not_found(&request.automation_id))?;
 
     let cooldowns = state
         .cooldowns

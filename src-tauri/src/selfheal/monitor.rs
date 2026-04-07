@@ -21,7 +21,7 @@ pub struct SystemMonitor {
 struct ModuleHealth {
     name: String,
     status: HealthStatus,
-    last_check: u64,      // ms since epoch
+    last_check: u64, // ms since epoch
     response_time_ms: u64,
     error_count: u32,
 }
@@ -44,8 +44,15 @@ impl SystemMonitor {
 
         // Initialiser les modules à surveiller
         let modules = vec![
-            "ASR", "TTS", "Ollama", "Gemini", "Memory",
-            "Duplex", "Wakeword", "Emotion", "Interruptibility"
+            "ASR",
+            "TTS",
+            "Ollama",
+            "Gemini",
+            "Memory",
+            "Duplex",
+            "Wakeword",
+            "Emotion",
+            "Interruptibility",
         ];
 
         let mut health_map = self.module_health.write().await;
@@ -119,11 +126,13 @@ impl SystemMonitor {
     async fn update_global_health(&self) {
         let health_map = self.module_health.read().await;
 
-        let critical_count = health_map.values()
+        let critical_count = health_map
+            .values()
             .filter(|h| matches!(h.status, HealthStatus::Critical))
             .count();
 
-        let degraded_count = health_map.values()
+        let degraded_count = health_map
+            .values()
             .filter(|h| matches!(h.status, HealthStatus::Degraded))
             .count();
 

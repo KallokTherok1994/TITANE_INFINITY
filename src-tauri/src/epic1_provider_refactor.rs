@@ -70,9 +70,7 @@ impl ProviderCascade {
 
     /// Try providers in sequence until one succeeds
     pub async fn cascade_send(&mut self, message: &str) -> ProviderResult<String> {
-        let mut last_error = ProviderError::InternalError(
-            "No providers configured".to_string()
-        );
+        let mut last_error = ProviderError::InternalError("No providers configured".to_string());
 
         for provider in self.providers.iter_mut() {
             match provider.send_message(message).await {
@@ -80,11 +78,7 @@ impl ProviderCascade {
                     return Ok(response);
                 }
                 Err(e) => {
-                    eprintln!(
-                        "Provider {} failed: {}, trying next...",
-                        provider.name(),
-                        e
-                    );
+                    eprintln!("Provider {} failed: {}, trying next...", provider.name(), e);
                     last_error = e;
                 }
             }
@@ -104,10 +98,10 @@ impl ProviderCascade {
 
 // EPIC 1 MIGRATION PLAN:
 // Week 1-2: Convert all provider calls from expect() to Result
-// 
+//
 // Files to update:
 // - gemini_provider/src/lib.rs (200+ expect() calls)
-// - ollama_provider/src/lib.rs (100+ expect() calls)  
+// - ollama_provider/src/lib.rs (100+ expect() calls)
 // - local_provider/src/lib.rs (50+ expect() calls)
 // - trait_lib/src/provider.rs (interface definition)
 //
@@ -127,9 +121,7 @@ mod tests {
     impl Provider for MockProvider {
         async fn send_message(&mut self, message: &str) -> ProviderResult<String> {
             if message.is_empty() {
-                Err(ProviderError::InvalidResponse(
-                    "Empty message".to_string(),
-                ))
+                Err(ProviderError::InvalidResponse("Empty message".to_string()))
             } else {
                 Ok(format!("Response: {}", message))
             }

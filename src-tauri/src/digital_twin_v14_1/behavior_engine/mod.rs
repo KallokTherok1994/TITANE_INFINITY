@@ -3,9 +3,9 @@
 
 #![allow(dead_code)]
 
+use chrono::Timelike;
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, VecDeque};
-use chrono::Timelike;
 
 /// Moteur comportemental
 pub struct BehaviorEngine {
@@ -73,10 +73,10 @@ impl BehaviorEngine {
 
         // Analyse cycles temporels
         self.analyze_time_patterns();
-        
+
         // Analyse séquences d'actions
         self.analyze_action_sequences();
-        
+
         // Analyse réactions émotionnelles
         self.analyze_emotional_patterns();
     }
@@ -98,7 +98,7 @@ impl BehaviorEngine {
                     frequency: 0.8,
                     description: format!("Peak activity at hour {}", peak_hour),
                     discovered_at: chrono::Utc::now(),
-                }
+                },
             );
         }
     }
@@ -106,9 +106,9 @@ impl BehaviorEngine {
     fn analyze_action_sequences(&mut self) {
         // Analyser séquences communes
         let recent: Vec<&BehaviorObservation> = self.interactions.iter().rev().take(50).collect();
-        
+
         let mut sequences: HashMap<String, usize> = HashMap::new();
-        
+
         for window in recent.windows(2) {
             if let [first, second] = window {
                 for action1 in &first.detected_actions {
@@ -130,7 +130,7 @@ impl BehaviorEngine {
                         frequency: count as f32 / 50.0,
                         description: seq,
                         discovered_at: chrono::Utc::now(),
-                    }
+                    },
                 );
             }
         }
@@ -185,7 +185,7 @@ impl BehaviorEngine {
 
     fn generate_action_preferences(&self) -> HashMap<String, f32> {
         let mut preferences = HashMap::new();
-        
+
         for obs in &self.interactions {
             for action in &obs.detected_actions {
                 *preferences.entry(action.clone()).or_insert(0.0) += 1.0;

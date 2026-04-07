@@ -150,7 +150,6 @@ impl VectorIndex for HnswVectorIndex {
 
         let mut results: Vec<SearchResult> = hnsw
             .search(&query_point, &mut search)
-            .into_iter()
             .filter_map(|item| {
                 let internal_idx = *item.value;
                 let id = self.reverse_map.get(&internal_idx)?;

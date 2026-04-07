@@ -9,11 +9,11 @@
 //
 // © 2026 Kevin Thibault / TITANE Team. Tous droits réservés.
 
+use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::time::{SystemTime, UNIX_EPOCH};
-use chrono::Utc;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & STRUCTURES
@@ -47,7 +47,7 @@ impl IACache {
                 .duration_since(UNIX_EPOCH)
                 .unwrap_or_default()
                 .as_secs() as i64;
-            
+
             if now < entry.expires_at {
                 return Some(entry.response.clone());
             } else {
@@ -62,34 +62,42 @@ impl IACache {
             .duration_since(UNIX_EPOCH)
             .unwrap_or_default()
             .as_secs() as i64;
-        
+
         let expires_at = now + (24 * 3600); // 24 hours TTL
-        
-        let mut cache = self.responses.lock()
+
+        let mut cache = self
+            .responses
+            .lock()
             .map_err(|e| format!("Failed to acquire cache lock: {}", e))?;
-        
+
         // Simple LRU: remove oldest entry if cache is full
         if cache.len() >= 1000 {
-            if let Some(oldest_key) = cache.iter()
+            if let Some(oldest_key) = cache
+                .iter()
                 .min_by_key(|(_, v)| v.created_at)
                 .map(|(k, _)| k.clone())
             {
                 cache.remove(&oldest_key);
             }
         }
-        
-        cache.insert(key, CachedIAResponse {
-            response,
-            tokens_used: tokens,
-            created_at: now,
-            expires_at,
-        });
-        
+
+        cache.insert(
+            key,
+            CachedIAResponse {
+                response,
+                tokens_used: tokens,
+                created_at: now,
+                expires_at,
+            },
+        );
+
         Ok(())
     }
 
     pub fn clear(&self) -> Result<(), String> {
-        let mut cache = self.responses.lock()
+        let mut cache = self
+            .responses
+            .lock()
             .map_err(|e| format!("Failed to acquire cache lock: {}", e))?;
         cache.clear();
         Ok(())
@@ -120,32 +128,41 @@ pub struct VoiceLibrary {
 impl VoiceLibrary {
     pub fn new() -> Self {
         let mut voices = HashMap::new();
-        
+
         // Default voices
-        voices.insert("nova".to_string(), VoiceConfig {
-            id: "nova".to_string(),
-            name: "Nova".to_string(),
-            language: "en".to_string(),
-            default_speed: 1.0,
-            default_pitch: 1.0,
-        });
-        
-        voices.insert("echo".to_string(), VoiceConfig {
-            id: "echo".to_string(),
-            name: "Echo".to_string(),
-            language: "en".to_string(),
-            default_speed: 1.0,
-            default_pitch: 0.8,
-        });
-        
-        voices.insert("fable".to_string(), VoiceConfig {
-            id: "fable".to_string(),
-            name: "Fable".to_string(),
-            language: "en".to_string(),
-            default_speed: 0.9,
-            default_pitch: 1.0,
-        });
-        
+        voices.insert(
+            "nova".to_string(),
+            VoiceConfig {
+                id: "nova".to_string(),
+                name: "Nova".to_string(),
+                language: "en".to_string(),
+                default_speed: 1.0,
+                default_pitch: 1.0,
+            },
+        );
+
+        voices.insert(
+            "echo".to_string(),
+            VoiceConfig {
+                id: "echo".to_string(),
+                name: "Echo".to_string(),
+                language: "en".to_string(),
+                default_speed: 1.0,
+                default_pitch: 0.8,
+            },
+        );
+
+        voices.insert(
+            "fable".to_string(),
+            VoiceConfig {
+                id: "fable".to_string(),
+                name: "Fable".to_string(),
+                language: "en".to_string(),
+                default_speed: 0.9,
+                default_pitch: 1.0,
+            },
+        );
+
         Self { voices }
     }
 
@@ -229,16 +246,20 @@ fn fusion_generate_ia_response_internal(
         return Err("Max tokens must be 1-4096".to_string());
     }
 
-    let model = request.model.clone().unwrap_or_else(|| "claude-haiku".to_string());
+    let model = request
+        .model
+        .clone()
+        .unwrap_or_else(|| "claude-haiku".to_string());
     let enable_cache = request.enable_cache.unwrap_or(true);
 
     let start_time = Utc::now();
 
     // Check cache if enabled
     if enable_cache {
-        let cache_key = request.cache_key.clone().unwrap_or_else(|| {
-            format!("{}:{}:{}", model, request.prompt, temperature)
-        });
+        let cache_key = request
+            .cache_key
+            .clone()
+            .unwrap_or_else(|| format!("{}:{}:{}", model, request.prompt, temperature));
 
         if let Some(cached_response) = state.ia_cache.get(&cache_key) {
             let generation_time_ms = Utc::now()
@@ -271,9 +292,10 @@ fn fusion_generate_ia_response_internal(
 
     // Cache the response if enabled
     if enable_cache {
-        let cache_key = request.cache_key.clone().unwrap_or_else(|| {
-            format!("{}:{}:{}", model, request.prompt, temperature)
-        });
+        let cache_key = request
+            .cache_key
+            .clone()
+            .unwrap_or_else(|| format!("{}:{}:{}", model, request.prompt, temperature));
         let _ = state.ia_cache.set(cache_key, response.clone(), tokens_used);
     }
 
@@ -366,7 +388,9 @@ fn fusion_prepare_tts_internal(
     }
 
     let voice_id = request.voice.clone().unwrap_or_else(|| "nova".to_string());
-    let voice = state.voice_library.get(&voice_id)
+    let voice = state
+        .voice_library
+        .get(&voice_id)
         .ok_or_else(|| format!("Voice '{}' not found", voice_id))?;
 
     let enable_streaming = request.enable_streaming.unwrap_or(false);
@@ -374,11 +398,11 @@ fn fusion_prepare_tts_internal(
     // Calculate buffer size and duration
     // Estimate: ~100 bytes per word at MP3 128kbps
     let word_count = request.text.split_whitespace().count() as u32;
-    
+
     // Duration in seconds: words / average_speech_rate(150 wpm) * speed_factor
     let base_duration_seconds = (word_count as f32 / 150.0) / speed;
     let duration_ms = (base_duration_seconds * 1000.0) as u32;
-    
+
     // Buffer size estimation
     let bytes_per_second = match format.as_str() {
         "mp3" => 16000,  // 128 kbps
@@ -386,9 +410,9 @@ fn fusion_prepare_tts_internal(
         "wav" => 172800, // 16-bit, 44.1kHz stereo
         _ => 16000,
     };
-    
+
     let buffer_size = (base_duration_seconds * bytes_per_second as f32) as usize;
-    
+
     // Calculate chunks for streaming (1 chunk ≈ 100ms of audio)
     let chunks_prepared = if enable_streaming {
         ((duration_ms + 99) / 100) as u32

@@ -272,7 +272,12 @@ impl IndexService {
                 if score == 0 {
                     return None;
                 }
-                Some((score, para_idx as u32, start.min(u32::MAX as usize) as u32, trimmed))
+                Some((
+                    score,
+                    para_idx as u32,
+                    start.min(u32::MAX as usize) as u32,
+                    trimmed,
+                ))
             })
             .collect();
 

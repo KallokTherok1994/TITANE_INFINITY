@@ -3,10 +3,10 @@
 //! Super Prompt #11 — Transfert de connaissances entre domaines
 //! ═══════════════════════════════════════════════════════════════════════════════
 
+use super::abstraction::Concept;
+use super::AGIContext;
 use serde::{Deserialize, Serialize};
 use tokio::sync::RwLock;
-use super::AGIContext;
-use super::abstraction::Concept;
 
 /// Contexte de transfert
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
@@ -87,31 +87,37 @@ impl Default for DomainMappings {
         let mut mappings = std::collections::HashMap::new();
 
         // Mappings prédéfinis entre domaines
-        mappings.insert("programming".to_string(), vec![
-            DomainMapping {
-                target: "software_engineering".to_string(),
-                similarity: 0.9,
-                common_concepts: vec!["code".to_string(), "algorithm".to_string()],
-            },
-            DomainMapping {
-                target: "mathematics".to_string(),
-                similarity: 0.6,
-                common_concepts: vec!["logic".to_string(), "algorithm".to_string()],
-            },
-        ]);
+        mappings.insert(
+            "programming".to_string(),
+            vec![
+                DomainMapping {
+                    target: "software_engineering".to_string(),
+                    similarity: 0.9,
+                    common_concepts: vec!["code".to_string(), "algorithm".to_string()],
+                },
+                DomainMapping {
+                    target: "mathematics".to_string(),
+                    similarity: 0.6,
+                    common_concepts: vec!["logic".to_string(), "algorithm".to_string()],
+                },
+            ],
+        );
 
-        mappings.insert("machine_learning".to_string(), vec![
-            DomainMapping {
-                target: "statistics".to_string(),
-                similarity: 0.7,
-                common_concepts: vec!["probability".to_string(), "distribution".to_string()],
-            },
-            DomainMapping {
-                target: "programming".to_string(),
-                similarity: 0.8,
-                common_concepts: vec!["algorithm".to_string(), "optimization".to_string()],
-            },
-        ]);
+        mappings.insert(
+            "machine_learning".to_string(),
+            vec![
+                DomainMapping {
+                    target: "statistics".to_string(),
+                    similarity: 0.7,
+                    common_concepts: vec!["probability".to_string(), "distribution".to_string()],
+                },
+                DomainMapping {
+                    target: "programming".to_string(),
+                    similarity: 0.8,
+                    common_concepts: vec!["algorithm".to_string(), "optimization".to_string()],
+                },
+            ],
+        );
 
         Self { mappings }
     }
@@ -137,7 +143,9 @@ impl TransferEngine {
         let mut result = TransferResult::default();
 
         if context.domain.is_empty() {
-            result.warnings.push("No target domain specified".to_string());
+            result
+                .warnings
+                .push("No target domain specified".to_string());
             return result;
         }
 
@@ -145,14 +153,18 @@ impl TransferEngine {
         let domain_similarity = self.calculate_domain_similarity(context).await;
 
         if domain_similarity < 0.3 {
-            result.warnings.push("Domains are too different for effective transfer".to_string());
+            result
+                .warnings
+                .push("Domains are too different for effective transfer".to_string());
             result.confidence = 0.3;
             return result;
         }
 
         // Transférer chaque concept
         for concept in concepts {
-            let transferred = self.transfer_concept(concept, context, domain_similarity).await;
+            let transferred = self
+                .transfer_concept(concept, context, domain_similarity)
+                .await;
             result.transferred_items.push(transferred);
         }
 
@@ -160,12 +172,15 @@ impl TransferEngine {
         result.adaptations_needed = self.identify_adaptations(concepts, context);
 
         // Calculer le succès global
-        let success_count = result.transferred_items.iter()
+        let success_count = result
+            .transferred_items
+            .iter()
             .filter(|t| t.success)
             .count();
 
         result.success = success_count as f32 / result.transferred_items.len().max(1) as f32 > 0.5;
-        result.confidence = domain_similarity * (success_count as f32 / result.transferred_items.len().max(1) as f32);
+        result.confidence = domain_similarity
+            * (success_count as f32 / result.transferred_items.len().max(1) as f32);
 
         // Enregistrer le transfert
         self.record_transfer(context, &result).await;
@@ -181,7 +196,10 @@ impl TransferEngine {
         if let Some(domain_maps) = mappings.mappings.get(&context.domain) {
             // Si on a des connaissances préalables, chercher une correspondance
             for prior in &context.prior_knowledge {
-                if let Some(mapping) = domain_maps.iter().find(|m| m.target.contains(prior) || prior.contains(&m.target)) {
+                if let Some(mapping) = domain_maps
+                    .iter()
+                    .find(|m| m.target.contains(prior) || prior.contains(&m.target))
+                {
                     return mapping.similarity;
                 }
             }
@@ -222,21 +240,20 @@ impl TransferEngine {
         // Adapter le contenu
         let adapted_content = match adaptation_level {
             AdaptationLevel::Direct => concept.description.clone(),
-            AdaptationLevel::Minor => format!("{} (adapted for {})", concept.description, context.domain),
+            AdaptationLevel::Minor => {
+                format!("{} (adapted for {})", concept.description, context.domain)
+            }
             AdaptationLevel::Moderate => format!(
                 "In the context of {}: {}",
-                context.domain,
-                concept.description
+                context.domain, concept.description
             ),
             AdaptationLevel::Major => format!(
                 "Reimagined for {}: Based on the concept of '{}', consider...",
-                context.domain,
-                concept.name
+                context.domain, concept.name
             ),
             AdaptationLevel::Complete => format!(
                 "New interpretation for {}: Starting from '{}' principles...",
-                context.domain,
-                concept.name
+                context.domain, concept.name
             ),
         };
 
@@ -260,8 +277,15 @@ impl TransferEngine {
         }
 
         // Adaptations basées sur les concepts à haut niveau d'abstraction
-        let high_level_concepts: Vec<_> = concepts.iter()
-            .filter(|c| matches!(c.level, super::abstraction::AbstractionLevel::High | super::abstraction::AbstractionLevel::VeryHigh))
+        let high_level_concepts: Vec<_> = concepts
+            .iter()
+            .filter(|c| {
+                matches!(
+                    c.level,
+                    super::abstraction::AbstractionLevel::High
+                        | super::abstraction::AbstractionLevel::VeryHigh
+                )
+            })
             .collect();
 
         if !high_level_concepts.is_empty() {
@@ -279,7 +303,9 @@ impl TransferEngine {
         let mut history = self.transfer_history.write().await;
 
         history.push(TransferRecord {
-            source_domain: context.prior_knowledge.first()
+            source_domain: context
+                .prior_knowledge
+                .first()
                 .cloned()
                 .unwrap_or_else(|| "unknown".to_string()),
             target_domain: context.domain.clone(),
@@ -297,7 +323,8 @@ impl TransferEngine {
     /// Récupère l'historique des transferts
     pub async fn get_history(&self, limit: usize) -> Vec<(String, String, bool)> {
         let history = self.transfer_history.read().await;
-        history.iter()
+        history
+            .iter()
             .rev()
             .take(limit)
             .map(|r| (r.source_domain.clone(), r.target_domain.clone(), r.success))
@@ -350,15 +377,13 @@ mod tests {
             ..Default::default()
         };
 
-        let concepts = vec![
-            Concept {
-                id: "1".to_string(),
-                name: "algorithm".to_string(),
-                description: "A step-by-step procedure".to_string(),
-                confidence: 0.8,
-                ..Default::default()
-            }
-        ];
+        let concepts = vec![Concept {
+            id: "1".to_string(),
+            name: "algorithm".to_string(),
+            description: "A step-by-step procedure".to_string(),
+            confidence: 0.8,
+            ..Default::default()
+        }];
 
         let result = engine.apply(&context, &concepts).await;
         assert!(!result.transferred_items.is_empty());

@@ -17,12 +17,13 @@ impl EmotionalSynchronizer {
             stress_history: VecDeque::with_capacity(50),
         }
     }
-    
+
     /// Synchroniser avec l'état émotionnel actuel de Kevin
     pub fn synchronize(&mut self, state: &KevinState) {
-        self.emotional_history.push_back(state.emotional_tone.clone());
+        self.emotional_history
+            .push_back(state.emotional_tone.clone());
         self.stress_history.push_back(state.stress_level);
-        
+
         if self.emotional_history.len() > 50 {
             self.emotional_history.pop_front();
         }
@@ -30,17 +31,17 @@ impl EmotionalSynchronizer {
             self.stress_history.pop_front();
         }
     }
-    
+
     /// Détecter une dégradation émotionnelle
     pub fn detect_emotional_degradation(&self) -> bool {
         if self.stress_history.len() < 3 {
             return false;
         }
-        
+
         let recent: Vec<f32> = self.stress_history.iter().rev().take(3).copied().collect();
         recent[0] > recent[1] && recent[1] > recent[2]
     }
-    
+
     /// Moyenne du stress récent
     pub fn average_recent_stress(&self) -> f32 {
         if self.stress_history.is_empty() {

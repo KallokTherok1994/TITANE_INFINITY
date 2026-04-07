@@ -12,8 +12,8 @@ pub mod french_mastery;
 pub mod intent;
 pub mod literary_engine;
 pub mod memory;
-pub mod multilayer_memory;
 mod meta_accumulator;
+pub mod multilayer_memory;
 pub mod omega_integration; // R05 P1: OMEGA Pipeline integration
 pub mod pipeline;
 pub mod realism;
@@ -172,7 +172,9 @@ impl ConversationEngineState {
         request: ConversationRequest,
     ) -> Result<ConversationResponse, ConversationEngineError> {
         if is_offline_sim_enabled() {
-            log::warn!("[CONV-ENGINE] 🟡 OFFLINE_SIM enabled — returning deterministic offline response");
+            log::warn!(
+                "[CONV-ENGINE] 🟡 OFFLINE_SIM enabled — returning deterministic offline response"
+            );
             return self.create_offline_sim_response().await;
         }
 
@@ -353,7 +355,8 @@ impl ConversationEngineState {
             .unwrap_or(0);
 
         Ok(ConversationResponse {
-            assistant_message: "Mode OFFLINE_SIM actif. Réponse hors ligne déterministe.".to_string(),
+            assistant_message: "Mode OFFLINE_SIM actif. Réponse hors ligne déterministe."
+                .to_string(),
             conversation_id: uuid::Uuid::new_v4().to_string(),
             message_id: uuid::Uuid::new_v4().to_string(),
             detected_intention: Intention::Question,
@@ -367,7 +370,10 @@ impl ConversationEngineState {
                 tokens_used: 0,
                 memory_effect: MemoryEffect::New,
                 links_to_contexts: vec![],
-                provider_meta: Some(build_offline_meta(ReasonCode::FallbackOffline, "OFFLINE_SIM")),
+                provider_meta: Some(build_offline_meta(
+                    ReasonCode::FallbackOffline,
+                    "OFFLINE_SIM",
+                )),
                 profile_used: "offline_sim".to_string(),
                 memory_sources_injected: 0,
             },
@@ -434,7 +440,10 @@ mod tests {
             unsafe {
                 std::env::set_var("OFFLINE_SIM", value);
             }
-            assert!(!is_offline_sim_enabled(), "value '{value}' must disable OFFLINE_SIM");
+            assert!(
+                !is_offline_sim_enabled(),
+                "value '{value}' must disable OFFLINE_SIM"
+            );
         }
 
         if let Some(v) = previous {
@@ -457,7 +466,10 @@ mod tests {
             unsafe {
                 std::env::set_var("OFFLINE_SIM", value);
             }
-            assert!(is_offline_sim_enabled(), "value '{value}' must enable OFFLINE_SIM");
+            assert!(
+                is_offline_sim_enabled(),
+                "value '{value}' must enable OFFLINE_SIM"
+            );
         }
 
         if let Some(v) = previous {

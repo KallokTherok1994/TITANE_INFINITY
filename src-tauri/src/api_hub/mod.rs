@@ -284,7 +284,8 @@ impl APIHub {
                     .ok_or(APIHubError::ProviderNotAvailable(Provider::Anthropic))?;
                 provider.execute(&request).await?
             }
-            Provider::Copilot => { // ✅ P0 FIX
+            Provider::Copilot => {
+                // ✅ P0 FIX
                 return Err(APIHubError::ProviderNotAvailable(Provider::Copilot));
             }
             Provider::Local => {

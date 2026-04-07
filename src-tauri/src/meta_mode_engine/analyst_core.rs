@@ -8,7 +8,7 @@ impl AnalystCore {
     pub fn new() -> Self {
         Self
     }
-    
+
     /// Exécution analyste
     pub fn execute(&self, input: &str) -> String {
         format!(

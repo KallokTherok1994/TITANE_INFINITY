@@ -3,20 +3,20 @@
 
 #![allow(dead_code)]
 
-pub mod identity_model;
-pub mod cognitive_map;
-pub mod decision_engine;
-pub mod preference_model;
-pub mod style_engine;
-pub mod context_sync;
-pub mod memory_bridge;
-pub mod anticipation;
 pub mod alignment;
+pub mod anticipation;
+pub mod cognitive_map;
+pub mod context_sync;
+pub mod decision_engine;
+pub mod identity_model;
+pub mod memory_bridge;
+pub mod preference_model;
 pub mod selfheal;
+pub mod style_engine;
 
-pub mod emotion_engine;
-pub mod behavior_engine;
 pub mod auto_evolution;
+pub mod behavior_engine;
+pub mod emotion_engine;
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -94,7 +94,11 @@ impl DigitalTwin {
     }
 
     /// Analyse une interaction et met à jour l'état
-    pub fn analyze_interaction(&mut self, input: &str, context: HashMap<String, String>) -> TwinResponse {
+    pub fn analyze_interaction(
+        &mut self,
+        input: &str,
+        context: HashMap<String, String>,
+    ) -> TwinResponse {
         // Analyse émotionnelle
         let emotion = if self.config.enable_emotion_analysis {
             self.emotion_engine.analyze(input)
@@ -121,7 +125,11 @@ impl DigitalTwin {
         self.current_state.last_update = chrono::Utc::now();
     }
 
-    fn generate_response(&self, emotion: &emotion_engine::EmotionalAnalysis, context: &HashMap<String, String>) -> TwinResponse {
+    fn generate_response(
+        &self,
+        emotion: &emotion_engine::EmotionalAnalysis,
+        context: &HashMap<String, String>,
+    ) -> TwinResponse {
         TwinResponse {
             adapted_tone: self.adapt_tone(emotion),
             adapted_complexity: self.adapt_complexity(emotion),
@@ -161,7 +169,11 @@ impl DigitalTwin {
         }
     }
 
-    fn generate_suggestions(&self, emotion: &emotion_engine::EmotionalAnalysis, _context: &HashMap<String, String>) -> Vec<String> {
+    fn generate_suggestions(
+        &self,
+        emotion: &emotion_engine::EmotionalAnalysis,
+        _context: &HashMap<String, String>,
+    ) -> Vec<String> {
         let mut suggestions = Vec::new();
 
         if emotion.stress_level > 0.7 {
@@ -189,7 +201,7 @@ impl DigitalTwin {
 
         self.auto_evolution.learn_from_interactions(
             self.behavior_engine.get_patterns(),
-            self.emotion_engine.get_history()
+            self.emotion_engine.get_history(),
         );
 
         let new_version = self.auto_evolution.increment_version();

@@ -6,17 +6,17 @@
 //   Exposes multimodal capabilities to Tauri frontend
 // ═══════════════════════════════════════════════════════════════
 
+use crate::multimodal::audio3d::{Audio3DAnalysis, Audio3DEngine};
 use crate::multimodal::config::{MultimodalConfig, MultimodalError, MultimodalResult};
+use crate::multimodal::image_memory::{ImageMemoryEntry, ImageMemoryStore, ImageMetadata};
+use crate::multimodal::multimodal_context::MultimodalContext;
+use crate::multimodal::multimodal_fusion::{FusionResult, MultimodalFusionEngine};
 use crate::multimodal::vision::{VisionAnalysis, VisionEngine};
 use crate::multimodal::vision_models::{VisionModel, VisionModelManager};
-use crate::multimodal::audio3d::{Audio3DAnalysis, Audio3DEngine};
-use crate::multimodal::image_memory::{ImageMemoryEntry, ImageMemoryStore, ImageMetadata};
-use crate::multimodal::multimodal_fusion::{FusionResult, MultimodalFusionEngine};
-use crate::multimodal::multimodal_context::MultimodalContext;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
-use tokio::sync::RwLock;
 use tauri::State;
+use tokio::sync::RwLock;
 
 /// Multimodal State Manager for Tauri
 pub struct MultimodalState {
@@ -327,11 +327,7 @@ pub async fn fuse_multimodal(
     // Build context
     let context = state_guard
         .fusion_engine
-        .build_context(
-            request.text,
-            request.image_bytes,
-            request.audio_samples,
-        )
+        .build_context(request.text, request.image_bytes, request.audio_samples)
         .await
         .map_err(|e| format!("Context build error: {}", e))?;
 
@@ -442,7 +438,10 @@ mod tests {
         let dynamic = image::DynamicImage::ImageRgb8(img);
         let mut bytes = Vec::new();
         dynamic
-            .write_to(&mut std::io::Cursor::new(&mut bytes), image::ImageFormat::Png)
+            .write_to(
+                &mut std::io::Cursor::new(&mut bytes),
+                image::ImageFormat::Png,
+            )
             .expect("test image should encode as PNG");
         bytes
     }

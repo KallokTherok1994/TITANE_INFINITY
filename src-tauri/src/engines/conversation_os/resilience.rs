@@ -208,11 +208,11 @@ impl RateLimiter {
 }
 
 /// ResilienceEngine: Manages circuit breakers, backoffs, and rate limits
-/// 
+///
 /// **Ring:** 2 (Engines)  
 /// **Status:** EXPERIMENTAL  
 /// **Purity:** ✅ No I/O, pure state management  
-/// 
+///
 /// Provides resilience patterns:
 /// - Circuit breaker (fail fast)
 /// - Exponential backoff (retry with delay)
@@ -227,9 +227,9 @@ impl ResilienceEngine {
     /// Create new ResilienceEngine with default config
     pub fn new() -> Self {
         ResilienceEngine {
-            backoff: BackoffState::new(1000, 60000), // 1s → 60s
+            backoff: BackoffState::new(1000, 60000),   // 1s → 60s
             circuit: CircuitBreaker::new(5, 2, 30000), // 5 failures, 30s timeout
-            rate_limiter: RateLimiter::new(100, 10), // 100 tokens, 10/s refill
+            rate_limiter: RateLimiter::new(100, 10),   // 100 tokens, 10/s refill
         }
     }
 
@@ -401,7 +401,7 @@ mod tests {
     #[test]
     fn test_resilience_engine_integration() {
         let mut engine = ResilienceEngine::new();
-        
+
         // Should allow initial request
         let (allowed, reason) = engine.is_request_allowed(1);
         assert!(allowed);
@@ -423,9 +423,9 @@ mod tests {
         let mut engine = ResilienceEngine::new();
         engine.record_failure();
         engine.record_failure();
-        
+
         engine.record_success();
-        
+
         assert_eq!(engine.circuit.failure_count, 0);
         assert_eq!(engine.backoff.attempt, 0);
     }

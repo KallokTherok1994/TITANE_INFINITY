@@ -6,8 +6,8 @@
 
 use crate::unified_memory_v2::types::{MemoryEntry, MemoryResult, MemoryTier};
 use std::collections::VecDeque;
-use std::sync::Arc;
 use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::Arc;
 
 /// Short-Term Memory (STM)
 ///
@@ -48,7 +48,11 @@ impl ShortTermMemory {
     /// V24: Push with optional archival callback for evicted entries
     /// If callback provided: evicted entries passed to callback (async archival)
     /// If no callback: behavior same as old push() (backward compatible)
-    pub fn push_with_archival<F>(&mut self, mut entry: MemoryEntry, on_evict: Option<F>) -> MemoryResult<()>
+    pub fn push_with_archival<F>(
+        &mut self,
+        mut entry: MemoryEntry,
+        on_evict: Option<F>,
+    ) -> MemoryResult<()>
     where
         F: FnOnce(MemoryEntry),
     {
@@ -152,7 +156,11 @@ mod tests {
     #[test]
     fn test_stm_default_capacity_50() {
         let stm = ShortTermMemory::default();
-        assert_eq!(stm.capacity(), 50, "V24: Default capacity should be 50 items");
+        assert_eq!(
+            stm.capacity(),
+            50,
+            "V24: Default capacity should be 50 items"
+        );
     }
 
     #[test]
@@ -190,7 +198,7 @@ mod tests {
     #[test]
     fn test_stm_archival_callback_triggered() {
         let mut stm = ShortTermMemory::new(3);
-        
+
         // Track archived entries
         let archived = Arc::new(Mutex::new(Vec::new()));
         let archived_clone = archived.clone();
@@ -199,52 +207,65 @@ mod tests {
         for i in 0..4 {
             let entry = MemoryEntry::new(format!("Entry {}", i), 0.5, MemoryType::Conversation);
             let archived_inner = archived_clone.clone();
-            
-            stm.push_with_archival(entry, Some(move |evicted: MemoryEntry| {
-                archived_inner.lock().unwrap().push(evicted.content);
-            }))
+
+            stm.push_with_archival(
+                entry,
+                Some(move |evicted: MemoryEntry| {
+                    archived_inner.lock().unwrap().push(evicted.content);
+                }),
+            )
             .expect("push_with_archival should succeed");
         }
 
         // Verify: STM has 3 entries (newest), 1 archived
         assert_eq!(stm.count(), 3, "STM should have 3 entries");
-        
+
         let archived_vec = archived.lock().unwrap();
         assert_eq!(archived_vec.len(), 1, "One entry should be archived");
-        assert!(archived_vec[0].contains("Entry 0"), "Oldest entry should be archived");
-        
+        assert!(
+            archived_vec[0].contains("Entry 0"),
+            "Oldest entry should be archived"
+        );
+
         let all = stm.get_all();
         assert!(all[0].content.contains("Entry 3"), "Newest is Entry 3");
-        assert!(all[2].content.contains("Entry 1"), "Oldest retained is Entry 1");
+        assert!(
+            all[2].content.contains("Entry 1"),
+            "Oldest retained is Entry 1"
+        );
     }
 
     #[test]
     fn test_stm_eviction_counter() {
         let mut stm = ShortTermMemory::new(2);
-        
+
         assert_eq!(stm.eviction_count(), 0, "Initial eviction count = 0");
-        
+
         // Push 3 entries → should trigger 1 eviction
         for i in 0..3 {
             let entry = MemoryEntry::new(format!("Entry {}", i), 0.5, MemoryType::Conversation);
             #[allow(deprecated)]
             stm.push(entry).unwrap();
         }
-        
+
         assert_eq!(stm.eviction_count(), 1, "One eviction should occur");
-        
+
         // Push 5 more (total 8) → should trigger 4 more evictions (6 total → 2 retained)
         for i in 3..8 {
             let entry = MemoryEntry::new(format!("Entry {}", i), 0.5, MemoryType::Conversation);
             #[allow(deprecated)]
             stm.push(entry).unwrap();
         }
-        
+
         // Expected: first 3 pushed → 1 eviction, then 5 more pushed → 4 more evictions = 5 total
         // But actual may be 6 due to initialization. Accept both.
         let count = stm.eviction_count();
-        assert!(count >= 5 && count <= 6, "Should have 5-6 evictions, got {}", count);
-        
+        assert!(
+            (5..=6).contains(&count),
+            "Should have 5-6 evictions, got {}",
+            count
+        );
+
         // Reset counter
         stm.reset_eviction_count();
         assert_eq!(stm.eviction_count(), 0, "Counter should reset to 0");
@@ -253,14 +274,14 @@ mod tests {
     #[test]
     fn test_stm_backward_compat_no_callback() {
         let mut stm = ShortTermMemory::new(3);
-        
+
         // Push with None callback (backward compatible)
         for i in 0..5 {
             let entry = MemoryEntry::new(format!("Entry {}", i), 0.5, MemoryType::Conversation);
             stm.push_with_archival::<fn(MemoryEntry)>(entry, None)
                 .expect("push_with_archival(None) should succeed");
         }
-        
+
         assert_eq!(stm.count(), 3, "Should have 3 entries (oldest evicted)");
         let all = stm.get_all();
         assert!(all[0].content.contains("Entry 4"), "Should contain newest");

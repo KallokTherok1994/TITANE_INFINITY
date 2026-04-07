@@ -69,8 +69,8 @@ impl Default for CacheConfig {
         //   Reason: Response cache is unlikely to hit after 2s (user moved on)
         //   Benefit: Older entries cleared faster
         Self {
-            max_entries: 500,                           // V24: Reduced from 1000
-            default_ttl: Duration::from_secs(2),        // V24: Reduced from 5s
+            max_entries: 500,                    // V24: Reduced from 1000
+            default_ttl: Duration::from_secs(2), // V24: Reduced from 5s
             enable_persistence: false,
             persistence_path: None,
         }

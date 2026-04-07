@@ -7,16 +7,17 @@ use std::collections::HashMap;
 pub fn generate_legal_content(
     config: &GenerationConfig,
     template: &templates::Template,
-    params: HashMap<String, String>
+    params: HashMap<String, String>,
 ) -> Result<DocumentContent> {
-    let title = params.get("title")
+    let title = params
+        .get("title")
         .cloned()
         .unwrap_or_else(|| generate_default_title(&config.doc_type));
-    
+
     let parties = extract_parties(&params);
     let executive_summary = generate_legal_summary(&config.doc_type, &parties);
     let objectives = generate_legal_objectives(&config.doc_type);
-    
+
     // Sections légales standard
     let mut sections = vec![
         generate_preamble_section(&parties),
@@ -30,13 +31,13 @@ pub fn generate_legal_content(
         generate_dispute_section(&params),
         generate_general_provisions_section(),
     ];
-    
+
     // Clauses obligatoires selon le type de document
     let mandatory_clauses = generate_mandatory_clauses(&config.doc_type, &parties);
-    
+
     // Adaptation selon le template
     sections = adapt_sections_to_template(sections, template);
-    
+
     Ok(DocumentContent {
         title,
         executive_summary,
@@ -60,17 +61,29 @@ fn generate_default_title(doc_type: &DocumentType) -> String {
 
 fn extract_parties(params: &HashMap<String, String>) -> Vec<Party> {
     let party1 = Party {
-        name: params.get("party1_name").cloned().unwrap_or_else(|| "Partie 1".to_string()),
-        role: params.get("party1_role").cloned().unwrap_or_else(|| "Fournisseur".to_string()),
+        name: params
+            .get("party1_name")
+            .cloned()
+            .unwrap_or_else(|| "Partie 1".to_string()),
+        role: params
+            .get("party1_role")
+            .cloned()
+            .unwrap_or_else(|| "Fournisseur".to_string()),
         address: params.get("party1_address").cloned(),
     };
-    
+
     let party2 = Party {
-        name: params.get("party2_name").cloned().unwrap_or_else(|| "Partie 2".to_string()),
-        role: params.get("party2_role").cloned().unwrap_or_else(|| "Client".to_string()),
+        name: params
+            .get("party2_name")
+            .cloned()
+            .unwrap_or_else(|| "Partie 2".to_string()),
+        role: params
+            .get("party2_role")
+            .cloned()
+            .unwrap_or_else(|| "Client".to_string()),
         address: params.get("party2_address").cloned(),
     };
-    
+
     vec![party1, party2]
 }
 
@@ -143,7 +156,11 @@ fn format_party(party: &Party) -> String {
         "{}, en sa qualité de {} {}",
         party.name,
         party.role,
-        party.address.as_ref().map(|a| format!(", ayant son siège à {}", a)).unwrap_or_default()
+        party
+            .address
+            .as_ref()
+            .map(|a| format!(", ayant son siège à {}", a))
+            .unwrap_or_default()
     )
 }
 
@@ -165,7 +182,7 @@ fn generate_scope_section(params: &HashMap<String, String>) -> Section {
     let scope = params.get("scope").cloned().unwrap_or_else(|| 
         "Le présent accord s'applique à l'ensemble des relations professionnelles entre les Parties.".to_string()
     );
-    
+
     Section {
         id: "scope".to_string(),
         title: "Portée et Interprétation".to_string(),
@@ -192,8 +209,7 @@ fn generate_obligations_section(parties: &[Party], _params: &HashMap<String, Str
             - Fournir les informations nécessaires à l'exécution\n\
             - Effectuer les paiements selon les modalités convenues\n\
             - Respecter les droits de propriété intellectuelle",
-            parties[0].name,
-            parties[1].name
+            parties[0].name, parties[1].name
         ),
         subsections: vec![],
         level: 1,
@@ -251,8 +267,11 @@ fn generate_ip_section(parties: &[Party]) -> Section {
 }
 
 fn generate_termination_section(params: &HashMap<String, String>) -> Section {
-    let duration = params.get("duration").cloned().unwrap_or_else(|| "12 mois".to_string());
-    
+    let duration = params
+        .get("duration")
+        .cloned()
+        .unwrap_or_else(|| "12 mois".to_string());
+
     Section {
         id: "termination".to_string(),
         title: "Durée et Résiliation".to_string(),
@@ -269,8 +288,11 @@ fn generate_termination_section(params: &HashMap<String, String>) -> Section {
 }
 
 fn generate_dispute_section(params: &HashMap<String, String>) -> Section {
-    let jurisdiction = params.get("jurisdiction").cloned().unwrap_or_else(|| "Québec, Canada".to_string());
-    
+    let jurisdiction = params
+        .get("jurisdiction")
+        .cloned()
+        .unwrap_or_else(|| "Québec, Canada".to_string());
+
     Section {
         id: "dispute".to_string(),
         title: "Règlement des Différends".to_string(),
@@ -330,29 +352,28 @@ fn generate_mandatory_clauses(doc_type: &DocumentType, parties: &[Party]) -> Vec
     }
 }
 
-fn adapt_sections_to_template(sections: Vec<Section>, _template: &templates::Template) -> Vec<Section> {
+fn adapt_sections_to_template(
+    sections: Vec<Section>,
+    _template: &templates::Template,
+) -> Vec<Section> {
     // Adaptation intelligente selon le template
     sections
 }
 
 fn generate_legal_annexes(_params: &HashMap<String, String>) -> Vec<Annex> {
-    vec![
-        Annex {
-            id: "annex_a".to_string(),
-            title: "Annexe A - Définitions complémentaires".to_string(),
-            content: "Termes techniques et définitions spécifiques au contexte.".to_string(),
-            format: "text".to_string(),
-        },
-    ]
+    vec![Annex {
+        id: "annex_a".to_string(),
+        title: "Annexe A - Définitions complémentaires".to_string(),
+        content: "Termes techniques et définitions spécifiques au contexte.".to_string(),
+        format: "text".to_string(),
+    }]
 }
 
 fn generate_legal_references() -> Vec<Reference> {
-    vec![
-        Reference {
-            title: "Code civil".to_string(),
-            source: "Gouvernement".to_string(),
-            url: None,
-            date: Some("2024".to_string()),
-        },
-    ]
+    vec![Reference {
+        title: "Code civil".to_string(),
+        source: "Gouvernement".to_string(),
+        url: None,
+        date: Some("2024".to_string()),
+    }]
 }

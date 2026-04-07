@@ -46,27 +46,42 @@ impl EmotionEngine {
         let input_lower = input.to_lowercase();
 
         // Détection calme/serein
-        if input_lower.contains("calme") || input_lower.contains("serein") || input_lower.contains("zen") {
+        if input_lower.contains("calme")
+            || input_lower.contains("serein")
+            || input_lower.contains("zen")
+        {
             return "calm".to_string();
         }
 
         // Détection surcharge/stress
-        if input_lower.contains("trop") || input_lower.contains("surcharge") || input_lower.contains("débordé") {
+        if input_lower.contains("trop")
+            || input_lower.contains("surcharge")
+            || input_lower.contains("débordé")
+        {
             return "overwhelmed".to_string();
         }
 
         // Détection fatigue
-        if input_lower.contains("fatigué") || input_lower.contains("épuisé") || input_lower.contains("crevé") {
+        if input_lower.contains("fatigué")
+            || input_lower.contains("épuisé")
+            || input_lower.contains("crevé")
+        {
             return "tired".to_string();
         }
 
         // Détection motivation
-        if input_lower.contains("motivé") || input_lower.contains("excité") || input_lower.contains("prêt") {
+        if input_lower.contains("motivé")
+            || input_lower.contains("excité")
+            || input_lower.contains("prêt")
+        {
             return "motivated".to_string();
         }
 
         // Détection confusion
-        if input_lower.contains("perdu") || input_lower.contains("confus") || input_lower.contains("flou") {
+        if input_lower.contains("perdu")
+            || input_lower.contains("confus")
+            || input_lower.contains("flou")
+        {
             return "confused".to_string();
         }
 
@@ -74,7 +89,14 @@ impl EmotionEngine {
     }
 
     fn calculate_intensity(&self, input: &str) -> f32 {
-        let markers = ["!!!", "vraiment", "trop", "très", "extrêmement", "totalement"];
+        let markers = [
+            "!!!",
+            "vraiment",
+            "trop",
+            "très",
+            "extrêmement",
+            "totalement",
+        ];
         let mut intensity: f32 = 0.5;
 
         for marker in markers {
@@ -87,7 +109,14 @@ impl EmotionEngine {
     }
 
     fn detect_stress(&self, input: &str) -> f32 {
-        let stress_words = ["stress", "anxieux", "angoisse", "pression", "urgence", "débordé"];
+        let stress_words = [
+            "stress",
+            "anxieux",
+            "angoisse",
+            "pression",
+            "urgence",
+            "débordé",
+        ];
         let mut stress: f32 = 0.0;
 
         for word in stress_words {
@@ -102,7 +131,8 @@ impl EmotionEngine {
     fn estimate_cognitive_load(&self, input: &str) -> f32 {
         // Heuristique basée sur complexité syntaxique
         let word_count = input.split_whitespace().count();
-        let avg_word_length = input.chars().filter(|c| !c.is_whitespace()).count() as f32 / word_count.max(1) as f32;
+        let avg_word_length =
+            input.chars().filter(|c| !c.is_whitespace()).count() as f32 / word_count.max(1) as f32;
 
         let complexity = (word_count as f32 / 50.0 + avg_word_length / 10.0) / 2.0;
         complexity.min(1.0)
@@ -157,8 +187,13 @@ impl EmotionEngine {
         }
 
         let recent: Vec<&EmotionalAnalysis> = self.history.iter().rev().take(3).collect();
-        let avg_stress: f32 = recent.iter().map(|a| a.stress_level).sum::<f32>() / recent.len() as f32;
-        let variance = recent.iter().map(|a| (a.stress_level - avg_stress).powi(2)).sum::<f32>() / recent.len() as f32;
+        let avg_stress: f32 =
+            recent.iter().map(|a| a.stress_level).sum::<f32>() / recent.len() as f32;
+        let variance = recent
+            .iter()
+            .map(|a| (a.stress_level - avg_stress).powi(2))
+            .sum::<f32>()
+            / recent.len() as f32;
 
         (1.0 - variance).clamp(0.0, 1.0)
     }

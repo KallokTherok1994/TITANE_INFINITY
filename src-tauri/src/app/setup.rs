@@ -4,15 +4,12 @@
 // ═══════════════════════════════════════════════════════════════
 
 use crate::{
-    compat::plugin_system::core_system::CoreCollection,
-    engine::AutoEvolutionEngine,
-    utils::{AppResult, log_info},
-    devtools::{
-        logging::LogCollector,
-        metrics::MetricsCollector,
-    },
-    compat::plugin_system::CoreRegistry,
     cognitive::engine::CognitiveEngine,
+    compat::plugin_system::core_system::CoreCollection,
+    compat::plugin_system::CoreRegistry,
+    devtools::{logging::LogCollector, metrics::MetricsCollector},
+    engine::AutoEvolutionEngine,
+    utils::{log_info, AppResult},
 };
 use std::path::PathBuf;
 use std::sync::Arc;
@@ -29,7 +26,10 @@ pub struct TitaneApp {
 
 impl TitaneApp {
     pub async fn new(_app_data_dir: PathBuf) -> AppResult<Self> {
-        log_info("Setup", "Initializing TITANE∞ v14 (legacy compatibility mode)");
+        log_info(
+            "Setup",
+            "Initializing TITANE∞ v14 (legacy compatibility mode)",
+        );
 
         // Create stub cores for backward compatibility
         let cores = CoreCollection::new();
@@ -47,10 +47,16 @@ impl TitaneApp {
         let core_registry = Arc::new(RwLock::new(CoreRegistry::new()));
 
         // Initialize cognitive engine
-        log_info("Setup", "Initializing cognitive engine with three centers...");
+        log_info(
+            "Setup",
+            "Initializing cognitive engine with three centers...",
+        );
         let cognitive_engine = Arc::new(RwLock::new(CognitiveEngine::new()));
 
-        log_info("Setup", "TITANE∞ v14 initialized successfully (legacy compat mode)");
+        log_info(
+            "Setup",
+            "TITANE∞ v14 initialized successfully (legacy compat mode)",
+        );
 
         Ok(Self {
             cores,

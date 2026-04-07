@@ -11,7 +11,7 @@ pub struct MultimodalConfig {
     pub vision_enabled: bool,
     pub audio3d_enabled: bool,
     pub image_embeddings_enabled: bool,
-    pub vision_model: String, // "CLIP" | "SigLIP" | "ViT"
+    pub vision_model: String,       // "CLIP" | "SigLIP" | "ViT"
     pub max_image_size: (u32, u32), // (width, height)
     pub embedding_dimension: usize,
     pub ocr_enabled: bool,
@@ -51,11 +51,11 @@ impl MultimodalError {
     pub fn VisionError(msg: String) -> Self {
         MultimodalError(format!("VisionError: {}", msg))
     }
-    
+
     pub fn Audio3DError(msg: String) -> Self {
         MultimodalError(format!("Audio3DError: {}", msg))
     }
-    
+
     pub fn EmbeddingError(msg: String) -> Self {
         MultimodalError(format!("EmbeddingError: {}", msg))
     }

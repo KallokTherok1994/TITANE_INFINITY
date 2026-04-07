@@ -5,8 +5,8 @@
 
 use crate::ai::providers::{AiProvider, ProviderResult};
 use crate::ai::{AIError, AiMetadata, AiMode, AiRequest, AiResponse};
-use async_trait::async_trait;
 use crate::core::http_types::Client;
+use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
 use std::time::Instant;
 

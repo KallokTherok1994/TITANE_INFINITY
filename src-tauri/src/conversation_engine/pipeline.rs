@@ -18,9 +18,9 @@ use super::emotion::EmotionAnalyzer;
 use super::french_mastery::{
     FrenchMasteryProcessor, FrenchMasteryRequest, PostProcessingConstraints, ProcessingMode,
 };
-use super::meta_accumulator::build_success_meta;
 use super::intent::IntentAnalyzer;
 use super::memory::ConversationMemoryEngine;
+use super::meta_accumulator::build_success_meta;
 use super::self_healing::SelfHealingConversation;
 use super::types::*;
 use super::ConversationEngineError;
@@ -429,7 +429,9 @@ impl ConversationPipeline {
         };
 
         let default_max_tokens = match config.provider_preference {
-            super::types::ProviderPreference::Local | super::types::ProviderPreference::Ollama => 512,
+            super::types::ProviderPreference::Local | super::types::ProviderPreference::Ollama => {
+                512
+            }
             _ => 2000,
         };
 

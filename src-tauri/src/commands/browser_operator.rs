@@ -109,10 +109,7 @@ const DEFAULT_SENSITIVE_PATTERNS: &[&str] = &[
     "/dashboard/settings",
 ];
 
-const DEFAULT_DENIED_DOMAINS: &[&str] = &[
-    "malware.com",
-    "phishing.com",
-];
+const DEFAULT_DENIED_DOMAINS: &[&str] = &["malware.com", "phishing.com"];
 
 const SESSION_TTL_SECS: u64 = 1800; // 30 minutes
 const DEFAULT_MAX_ACTIONS: u32 = 50;
@@ -202,7 +199,10 @@ fn is_domain_allowed(domain: &str, allowed_domains: &[String]) -> bool {
         // Subdomain match: *.example.com matches sub.example.com
         if allowed.starts_with("*.") {
             let base = &allowed[2..];
-            if domain.ends_with(base) && (domain.len() == base.len() || domain[..domain.len() - base.len() - 1].contains('.')) {
+            if domain.ends_with(base)
+                && (domain.len() == base.len()
+                    || domain[..domain.len() - base.len() - 1].contains('.'))
+            {
                 return true;
             }
         }
@@ -294,7 +294,10 @@ pub async fn browser_open_session(
 
     // Store session
     {
-        let mut sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+        let mut sessions = state
+            .sessions
+            .lock()
+            .map_err(|e| format!("Lock error: {}", e))?;
         sessions.insert(session_id.clone(), session.clone());
     }
 
@@ -314,7 +317,10 @@ pub async fn browser_close_session(
     state: tauri::State<'_, BrowserOperatorState>,
     session_id: String,
 ) -> Result<bool, String> {
-    let mut sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+    let mut sessions = state
+        .sessions
+        .lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
 
     if let Some(mut session) = sessions.remove(&session_id) {
         session.status = BrowserSessionStatus::Stopped;
@@ -331,7 +337,10 @@ pub async fn browser_get_session_status(
     state: tauri::State<'_, BrowserOperatorState>,
     session_id: String,
 ) -> Result<BrowserSession, String> {
-    let sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+    let sessions = state
+        .sessions
+        .lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
 
     sessions
         .get(&session_id)
@@ -349,7 +358,10 @@ pub async fn browser_navigate(
     let now = now_iso();
 
     // Get session
-    let mut sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+    let mut sessions = state
+        .sessions
+        .lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
     let session = sessions
         .get_mut(&session_id)
         .ok_or_else(|| format!("Session not found: {}", session_id))?;
@@ -397,9 +409,14 @@ pub async fn browser_navigate(
     };
 
     // Check denied domains
-    let default_denied: Vec<String> = DEFAULT_DENIED_DOMAINS.iter().map(|s| s.to_string()).collect();
-    if is_domain_denied(&domain, &session.allowed_domains.iter().cloned().collect::<Vec<_>>())
-        || is_domain_denied(&domain, &default_denied)
+    let default_denied: Vec<String> = DEFAULT_DENIED_DOMAINS
+        .iter()
+        .map(|s| s.to_string())
+        .collect();
+    if is_domain_denied(
+        &domain,
+        &session.allowed_domains.iter().cloned().collect::<Vec<_>>(),
+    ) || is_domain_denied(&domain, &default_denied)
     {
         session.status = BrowserSessionStatus::Blocked;
         return Ok(BrowserRelayResult {
@@ -436,7 +453,10 @@ pub async fn browser_navigate(
     }
 
     // Check sensitive patterns
-    let default_sensitive: Vec<String> = DEFAULT_SENSITIVE_PATTERNS.iter().map(|s| s.to_string()).collect();
+    let default_sensitive: Vec<String> = DEFAULT_SENSITIVE_PATTERNS
+        .iter()
+        .map(|s| s.to_string())
+        .collect();
     if is_sensitive_url(&url, &default_sensitive) {
         session.handoff_pending = true;
         session.status = BrowserSessionStatus::Idle;
@@ -478,7 +498,12 @@ pub async fn browser_navigate(
     session.actions_count += 1;
     session.current_url = Some(url.clone());
 
-    let result = navigate_with_playwright(&url, &session_id, session.max_actions - session.actions_count).await;
+    let result = navigate_with_playwright(
+        &url,
+        &session_id,
+        session.max_actions - session.actions_count,
+    )
+    .await;
 
     session.status = BrowserSessionStatus::Idle;
 
@@ -493,7 +518,10 @@ pub async fn browser_read(
 ) -> Result<BrowserRelayResult, String> {
     let now = now_iso();
 
-    let mut sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+    let mut sessions = state
+        .sessions
+        .lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
     let session = sessions
         .get_mut(&session_id)
         .ok_or_else(|| format!("Session not found: {}", session_id))?;
@@ -544,7 +572,12 @@ pub async fn browser_read(
         });
     }
 
-    let result = read_with_playwright(&current_url, &session_id, session.max_actions - session.actions_count).await;
+    let result = read_with_playwright(
+        &current_url,
+        &session_id,
+        session.max_actions - session.actions_count,
+    )
+    .await;
     session.status = BrowserSessionStatus::Idle;
 
     Ok(result)
@@ -559,7 +592,10 @@ pub async fn browser_extract(
 ) -> Result<BrowserRelayResult, String> {
     let now = now_iso();
 
-    let mut sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+    let mut sessions = state
+        .sessions
+        .lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
     let session = sessions
         .get_mut(&session_id)
         .ok_or_else(|| format!("Session not found: {}", session_id))?;
@@ -610,7 +646,13 @@ pub async fn browser_extract(
         });
     }
 
-    let result = extract_with_playwright(&current_url, &selector, &session_id, session.max_actions - session.actions_count).await;
+    let result = extract_with_playwright(
+        &current_url,
+        &selector,
+        &session_id,
+        session.max_actions - session.actions_count,
+    )
+    .await;
     session.status = BrowserSessionStatus::Idle;
 
     Ok(result)
@@ -629,10 +671,16 @@ pub async fn browser_get_config() -> Result<BrowserOperatorConfig, String> {
         navigation_timeout_ms: 30000,
         default_domain_policy: DomainPolicy {
             allowed_domains: vec![],
-            denied_domains: DEFAULT_DENIED_DOMAINS.iter().map(|s| s.to_string()).collect(),
+            denied_domains: DEFAULT_DENIED_DOMAINS
+                .iter()
+                .map(|s| s.to_string())
+                .collect(),
             require_https: false,
             max_pages_per_session: 50,
-            sensitive_patterns: DEFAULT_SENSITIVE_PATTERNS.iter().map(|s| s.to_string()).collect(),
+            sensitive_patterns: DEFAULT_SENSITIVE_PATTERNS
+                .iter()
+                .map(|s| s.to_string())
+                .collect(),
         },
     })
 }
@@ -694,9 +742,9 @@ const {{ chromium }} = require('playwright');
 
                     // Check for sensitive content in title
                     let title_lower = title.as_deref().unwrap_or("").to_lowercase();
-                    let is_sensitive = DEFAULT_SENSITIVE_PATTERNS.iter().any(|p| {
-                        title_lower.contains(&p.replace('/', ""))
-                    });
+                    let is_sensitive = DEFAULT_SENSITIVE_PATTERNS
+                        .iter()
+                        .any(|p| title_lower.contains(&p.replace('/', "")));
 
                     if is_sensitive {
                         BrowserRelayResult {
@@ -706,7 +754,10 @@ const {{ chromium }} = require('playwright');
                             title,
                             content: None,
                             structured_data: None,
-                            block_reason: Some("Page title suggests sensitive content — handoff required".to_string()),
+                            block_reason: Some(
+                                "Page title suggests sensitive content — handoff required"
+                                    .to_string(),
+                            ),
                             handoff_required: true,
                             actions_remaining,
                             session_id: session_id.to_string(),
@@ -755,7 +806,10 @@ const {{ chromium }} = require('playwright');
                     title: None,
                     content: None,
                     structured_data: None,
-                    block_reason: Some(format!("Playwright output parse failed: {}", stderr.trim())),
+                    block_reason: Some(format!(
+                        "Playwright output parse failed: {}",
+                        stderr.trim()
+                    )),
                     handoff_required: false,
                     actions_remaining,
                     session_id: session_id.to_string(),
@@ -935,11 +989,14 @@ const {{ chromium }} = require('playwright');
             if let Ok(parsed) = serde_json::from_str::<serde_json::Value>(stdout.trim()) {
                 if parsed["ok"].as_bool().unwrap_or(false) {
                     let elements = parsed["elements"].clone();
-                    let content_summary = elements.as_array()
-                        .map(|arr| arr.iter()
-                            .filter_map(|e| e["text"].as_str())
-                            .collect::<Vec<_>>()
-                            .join("\n---\n"))
+                    let content_summary = elements
+                        .as_array()
+                        .map(|arr| {
+                            arr.iter()
+                                .filter_map(|e| e["text"].as_str())
+                                .collect::<Vec<_>>()
+                                .join("\n---\n")
+                        })
                         .unwrap_or_default();
 
                     BrowserRelayResult {
@@ -947,7 +1004,11 @@ const {{ chromium }} = require('playwright');
                         category: BrowserRelayCategory::Extraction,
                         url: url.to_string(),
                         title: parsed["title"].as_str().map(|s| s.to_string()),
-                        content: if content_summary.is_empty() { None } else { Some(content_summary) },
+                        content: if content_summary.is_empty() {
+                            None
+                        } else {
+                            Some(content_summary)
+                        },
                         structured_data: Some(serde_json::json!({
                             "selector": selector,
                             "elements": elements,

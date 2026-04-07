@@ -5,9 +5,9 @@
 // to reduce memory footprint by ~30%
 // ═══════════════════════════════════════════════════════════════
 
+use parking_lot::RwLock;
 use serde_json::Value as JsonValue;
 use std::sync::Arc;
-use parking_lot::RwLock;
 
 /// LZ4 compression codec for JSON-serializable data
 /// Fallback to uncompressed if compression ratio < 10% gain
@@ -34,8 +34,8 @@ impl CompressionCodec {
 
     /// Compress JSON data; fallback to uncompressed if ratio < 10% gain
     pub fn compress(&self, data: &JsonValue) -> Result<CompressionPayload, String> {
-        let json_bytes = serde_json::to_vec(data)
-            .map_err(|e| format!("JSON serialization failed: {}", e))?;
+        let json_bytes =
+            serde_json::to_vec(data).map_err(|e| format!("JSON serialization failed: {}", e))?;
 
         let compressed = lz4::block::compress(&json_bytes, None, false)
             .map_err(|e| format!("LZ4 compression failed: {}", e))?;

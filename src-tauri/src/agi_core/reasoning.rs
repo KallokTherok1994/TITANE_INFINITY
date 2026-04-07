@@ -3,8 +3,8 @@
 //! Super Prompt #11 — Chaînes de raisonnement et inférence logique
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
 use super::AGIContext;
+use serde::{Deserialize, Serialize};
 
 /// Chaîne de raisonnement
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
@@ -142,7 +142,10 @@ impl ReasoningEngine {
         }
 
         if !context.prior_knowledge.is_empty() {
-            premises.push(format!("Prior knowledge: {} items", context.prior_knowledge.len()));
+            premises.push(format!(
+                "Prior knowledge: {} items",
+                context.prior_knowledge.len()
+            ));
         }
 
         // Analyser l'input pour des patterns logiques
@@ -173,13 +176,19 @@ impl ReasoningEngine {
         // Inférences basées sur les étapes précédentes
         for step in steps {
             if step.confidence > 0.7 {
-                inferences.push(format!("Strong support from step {}: {}", step.order, step.conclusion));
+                inferences.push(format!(
+                    "Strong support from step {}: {}",
+                    step.order, step.conclusion
+                ));
             }
         }
 
         // Inférences basées sur le contexte
         if !context.constraints.is_empty() {
-            inferences.push(format!("Must satisfy {} constraints", context.constraints.len()));
+            inferences.push(format!(
+                "Must satisfy {} constraints",
+                context.constraints.len()
+            ));
         }
 
         let step_type = if inferences.len() > 3 {
@@ -196,17 +205,14 @@ impl ReasoningEngine {
             conclusion: "Inference phase complete".to_string(),
             confidence: 0.8,
             supporting_evidence: inferences,
-            counterarguments: vec![
-                "Some inferences may be incomplete".to_string(),
-            ],
+            counterarguments: vec!["Some inferences may be incomplete".to_string()],
         }
     }
 
     /// Tire une conclusion
     fn draw_conclusion(&self, steps: &[ReasoningStep]) -> ReasoningStep {
-        let avg_confidence: f32 = steps.iter()
-            .map(|s| s.confidence)
-            .sum::<f32>() / steps.len() as f32;
+        let avg_confidence: f32 =
+            steps.iter().map(|s| s.confidence).sum::<f32>() / steps.len() as f32;
 
         let conclusion = if avg_confidence > 0.8 {
             "High confidence conclusion: proceed with recommendation".to_string()
@@ -223,9 +229,7 @@ impl ReasoningEngine {
             inference: format!("Average confidence across steps: {:.2}", avg_confidence),
             conclusion,
             confidence: avg_confidence,
-            supporting_evidence: steps.iter()
-                .map(|s| s.conclusion.clone())
-                .collect(),
+            supporting_evidence: steps.iter().map(|s| s.conclusion.clone()).collect(),
             counterarguments: Vec::new(),
         }
     }
@@ -259,12 +263,14 @@ impl ReasoningEngine {
         }
 
         // Basé sur les contre-arguments
-        let counterargument_count: usize = chain.steps.iter()
-            .map(|s| s.counterarguments.len())
-            .sum();
+        let counterargument_count: usize =
+            chain.steps.iter().map(|s| s.counterarguments.len()).sum();
 
         if counterargument_count > 0 {
-            alternatives.push(format!("{} counterarguments to consider", counterargument_count));
+            alternatives.push(format!(
+                "{} counterarguments to consider",
+                counterargument_count
+            ));
         }
 
         alternatives
@@ -287,7 +293,9 @@ impl ReasoningEngine {
         }
 
         // Vérifier la cohérence des confiances
-        let confidence_drop: f32 = chain.steps.windows(2)
+        let confidence_drop: f32 = chain
+            .steps
+            .windows(2)
             .map(|w| (w[0].confidence - w[1].confidence).max(0.0))
             .sum();
 
@@ -512,7 +520,10 @@ mod tests {
         let chain = engine.reason("What is this?", &context).await;
 
         // Should detect question
-        assert!(chain.steps[0].supporting_evidence.iter().any(|e| e.contains("Is question: true")));
+        assert!(chain.steps[0]
+            .supporting_evidence
+            .iter()
+            .any(|e| e.contains("Is question: true")));
     }
 
     #[tokio::test]
@@ -520,10 +531,15 @@ mod tests {
         let engine = ReasoningEngine::new(10);
         let context = AGIContext::default();
 
-        let chain = engine.reason("This happened because of that", &context).await;
+        let chain = engine
+            .reason("This happened because of that", &context)
+            .await;
 
         // Should detect causal relationship
-        assert!(chain.steps[1].supporting_evidence.iter().any(|e| e.contains("Causal")));
+        assert!(chain.steps[1]
+            .supporting_evidence
+            .iter()
+            .any(|e| e.contains("Causal")));
     }
 
     #[tokio::test]
@@ -534,7 +550,10 @@ mod tests {
         let chain = engine.reason("If this then that", &context).await;
 
         // Should detect conditional
-        assert!(chain.steps[1].supporting_evidence.iter().any(|e| e.contains("Conditional")));
+        assert!(chain.steps[1]
+            .supporting_evidence
+            .iter()
+            .any(|e| e.contains("Conditional")));
     }
 
     #[test]
@@ -552,7 +571,10 @@ mod tests {
 
         let result = engine.verify(&chain);
         assert!(!result.valid);
-        assert!(result.issues.iter().any(|i| i.contains("exceeds maximum depth")));
+        assert!(result
+            .issues
+            .iter()
+            .any(|i| i.contains("exceeds maximum depth")));
     }
 
     #[test]
@@ -566,20 +588,18 @@ mod tests {
             alternatives: vec!["Alt".to_string()],
             timestamp: 99999,
         };
-        let json = serde_json::to_string(&chain)
-            .expect("should serialize reasoning chain to json");
-        let restored: ReasoningChain = serde_json::from_str(&json)
-            .expect("should deserialize reasoning chain");
+        let json = serde_json::to_string(&chain).expect("should serialize reasoning chain to json");
+        let restored: ReasoningChain =
+            serde_json::from_str(&json).expect("should deserialize reasoning chain");
         assert_eq!(restored.id, "ser-test");
     }
 
     #[test]
     fn test_serialization_reasoning_type() {
         let rt = ReasoningType::Probabilistic;
-        let json = serde_json::to_string(&rt)
-            .expect("should serialize reasoning type to json");
-        let restored: ReasoningType = serde_json::from_str(&json)
-            .expect("should deserialize reasoning type");
+        let json = serde_json::to_string(&rt).expect("should serialize reasoning type to json");
+        let restored: ReasoningType =
+            serde_json::from_str(&json).expect("should deserialize reasoning type");
         assert_eq!(restored, ReasoningType::Probabilistic);
     }
 }

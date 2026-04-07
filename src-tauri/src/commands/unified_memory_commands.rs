@@ -3,15 +3,13 @@
 //   Phase 2 Fusion #2: Memory #5 + MemoryModule + Singularity Memory
 // ═══════════════════════════════════════════════════════════════
 
+use serde::{Deserialize, Serialize};
+use std::sync::Arc;
+use tauri::State;
+use titane_infinity::cache::middleware::{cached_invoke, CacheStrategy};
+use titane_infinity::core::modules::unified_memory::{MemoryItem, MemoryStats, MemoryType};
 #[allow(dead_code)]
 use titane_infinity::core::state::SingularityState;
-use titane_infinity::core::modules::unified_memory::{
-    MemoryStats, MemoryItem, MemoryType,
-};
-use titane_infinity::cache::middleware::{cached_invoke, CacheStrategy};
-use serde::{Deserialize, Serialize};
-use tauri::State;
-use std::sync::Arc;
 use tokio::sync::RwLock;
 
 // ═══════════════════════════════════════════════════════════════
@@ -91,12 +89,15 @@ pub async fn memory_store(
         _ => MemoryType::Conversation, // Default
     };
 
-    let memory_id = state.memory.store(
-        request.content,
-        memory_type,
-        request.importance,
-        request.tags,
-    ).map_err(|e| format!("Failed to store memory: {:?}", e))?;
+    let memory_id = state
+        .memory
+        .store(
+            request.content,
+            memory_type,
+            request.importance,
+            request.tags,
+        )
+        .map_err(|e| format!("Failed to store memory: {:?}", e))?;
 
     Ok(memory_id)
 }

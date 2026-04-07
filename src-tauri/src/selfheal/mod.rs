@@ -43,8 +43,8 @@ pub enum IssueType {
 pub struct SystemIncident {
     pub id: String,
     pub issue_type: IssueType,
-    pub detected_at: u64,          // ms since epoch
-    pub resolved_at: Option<u64>,  // ms since epoch
+    pub detected_at: u64,         // ms since epoch
+    pub resolved_at: Option<u64>, // ms since epoch
     pub auto_recovered: bool,
     pub recovery_duration_ms: Option<u64>,
 }

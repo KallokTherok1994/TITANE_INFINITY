@@ -1,4 +1,4 @@
-use crate::security::{RateLimiter, AuditLogger};
+use crate::security::{AuditLogger, RateLimiter};
 
 pub struct AppState {
     pub rate_limiter: RateLimiter,
@@ -8,9 +8,7 @@ pub struct AppState {
 impl AppState {
     pub fn new() -> TitaneResult<Self> {
         let rate_limiter = RateLimiter::new(100, 60); // 100 req/min
-        let audit_logger = AuditLogger::new(
-            app_dir.join("logs").join("audit.log")
-        );
+        let audit_logger = AuditLogger::new(app_dir.join("logs").join("audit.log"));
 
         Ok(Self {
             rate_limiter,

@@ -173,7 +173,10 @@ impl ChatMemoryManager {
         tasks.insert(conversation_id, handle);
     }
 
-    pub async fn flush_conversation_now(&self, conversation_id: &str) -> Result<(), ChatEngineError> {
+    pub async fn flush_conversation_now(
+        &self,
+        conversation_id: &str,
+    ) -> Result<(), ChatEngineError> {
         if let Some(handle) = self.flush_tasks.lock().await.remove(conversation_id) {
             handle.abort();
         }

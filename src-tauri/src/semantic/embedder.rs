@@ -9,9 +9,9 @@ pub struct Embedder {
 
 #[derive(Debug, Clone)]
 pub enum EmbeddingModel {
-    Local,              // Modèle local (sentence-transformers)
-    Gemini,             // API Gemini
-    Ollama,             // Ollama local
+    Local,  // Modèle local (sentence-transformers)
+    Gemini, // API Gemini
+    Ollama, // Ollama local
 }
 
 impl Embedder {
@@ -21,7 +21,7 @@ impl Embedder {
             dimensions,
         }
     }
-    
+
     /// Génère un embedding pour un texte
     pub async fn embed(&self, text: &str) -> Result<Vec<f32>> {
         match self.model_type {
@@ -30,7 +30,7 @@ impl Embedder {
             EmbeddingModel::Ollama => self.embed_ollama(text).await,
         }
     }
-    
+
     /// Génère des embeddings pour plusieurs textes en batch
     pub async fn embed_batch(&self, texts: &[&str]) -> Result<Vec<Vec<f32>>> {
         let mut embeddings = Vec::new();
@@ -39,7 +39,7 @@ impl Embedder {
         }
         Ok(embeddings)
     }
-    
+
     async fn embed_local(&self, text: &str) -> Result<Vec<f32>> {
         // INTEGRATION: Local sentence-transformers via ONNX Runtime
         // Model: all-MiniLM-L6-v2 (384-dim, 80MB, multilingual)
@@ -55,7 +55,7 @@ impl Embedder {
         // For now, simulated embedding
         Ok(self.generate_simulated_embedding(text))
     }
-    
+
     async fn embed_gemini(&self, text: &str) -> Result<Vec<f32>> {
         // INTEGRATION: Gemini Embedding API (text-embedding-004, 768-dim)
         // Endpoint: https://generativelanguage.googleapis.com/v1/models/text-embedding-004:embedContent
@@ -69,7 +69,7 @@ impl Embedder {
         // For now, simulated embedding
         Ok(self.generate_simulated_embedding(text))
     }
-    
+
     async fn embed_ollama(&self, text: &str) -> Result<Vec<f32>> {
         // INTEGRATION: Ollama local embedding API (mxbai-embed-large, 1024-dim)
         // Endpoint: http://localhost:11434/api/embeddings
@@ -83,28 +83,28 @@ impl Embedder {
         // For now, simulated embedding
         Ok(self.generate_simulated_embedding(text))
     }
-    
+
     /// Génère un embedding simulé basé sur des heuristiques simples
     /// (À remplacer par un vrai modèle en production)
     fn generate_simulated_embedding(&self, text: &str) -> Vec<f32> {
         use std::collections::hash_map::DefaultHasher;
         use std::hash::{Hash, Hasher};
-        
+
         let mut hasher = DefaultHasher::new();
         text.hash(&mut hasher);
         let hash = hasher.finish();
-        
+
         // Génération d'un vecteur déterministe à partir du hash
         let mut embedding = Vec::with_capacity(self.dimensions);
         let mut seed = hash;
-        
+
         for _ in 0..self.dimensions {
             // Générateur pseudo-aléatoire simple
             seed = seed.wrapping_mul(1103515245).wrapping_add(12345);
             let value = ((seed / 65536) % 32768) as f32 / 32768.0;
             embedding.push(value);
         }
-        
+
         // Normalisation L2
         let norm: f32 = embedding.iter().map(|x| x * x).sum::<f32>().sqrt();
         if norm > 0.0 {
@@ -112,24 +112,24 @@ impl Embedder {
                 *val /= norm;
             }
         }
-        
+
         embedding
     }
-    
+
     /// Calcule la similarité cosinus entre deux embeddings
     pub fn cosine_similarity(&self, a: &[f32], b: &[f32]) -> f32 {
         if a.len() != b.len() {
             return 0.0;
         }
-        
+
         let dot_product: f32 = a.iter().zip(b.iter()).map(|(x, y)| x * y).sum();
         let norm_a: f32 = a.iter().map(|x| x * x).sum::<f32>().sqrt();
         let norm_b: f32 = b.iter().map(|x| x * x).sum::<f32>().sqrt();
-        
+
         if norm_a == 0.0 || norm_b == 0.0 {
             return 0.0;
         }
-        
+
         dot_product / (norm_a * norm_b)
     }
 }

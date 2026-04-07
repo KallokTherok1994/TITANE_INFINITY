@@ -1,4 +1,3 @@
-
 #![allow(dead_code)]
 use std::env;
 use std::time::Duration;
@@ -133,10 +132,13 @@ pub async fn query_ollama(prompt: String) -> Result<OllamaResult, String> {
     });
 
     // Fallback automatique si le modèle par défaut n'existe pas.
-    if status == StatusCode::NOT_FOUND && payload.contains("model") && payload.contains("not found") {
+    if status == StatusCode::NOT_FOUND && payload.contains("model") && payload.contains("not found")
+    {
         if let Ok(fallback_model) = pick_fallback_model(&client).await {
             if fallback_model != preferred_model {
-                if let Ok((text, used_model, td, ld, pec, ped, ec, ed, dr)) = send_generate(&client, &fallback_model, trimmed_prompt).await {
+                if let Ok((text, used_model, td, ld, pec, ped, ec, ed, dr)) =
+                    send_generate(&client, &fallback_model, trimmed_prompt).await
+                {
                     return Ok(OllamaResult {
                         response: text,
                         model: used_model,
@@ -158,9 +160,26 @@ pub async fn query_ollama(prompt: String) -> Result<OllamaResult, String> {
 }
 
 /// Send a generate request to Ollama. Returns (response_text, model_used, metrics).
-async fn send_generate(client: &Client, model: &str, prompt: &str) -> Result<(String, String, Option<u64>, Option<u64>, Option<u32>, Option<u64>, Option<u32>, Option<u64>, Option<String>), (StatusCode, String)> {
+async fn send_generate(
+    client: &Client,
+    model: &str,
+    prompt: &str,
+) -> Result<
+    (
+        String,
+        String,
+        Option<u64>,
+        Option<u64>,
+        Option<u32>,
+        Option<u64>,
+        Option<u32>,
+        Option<u64>,
+        Option<String>,
+    ),
+    (StatusCode, String),
+> {
     let options = OllamaOptions {
-        num_ctx: Some(8192),  // Effective context window for gemma2:2b
+        num_ctx: Some(8192), // Effective context window for gemma2:2b
         temperature: None,
     };
 
@@ -176,7 +195,12 @@ async fn send_generate(client: &Client, model: &str, prompt: &str) -> Result<(St
         .json(&request_body)
         .send()
         .await
-        .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, format!("Erreur requête Ollama: {e}")))?;
+        .map_err(|e| {
+            (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Erreur requête Ollama: {e}"),
+            )
+        })?;
 
     let status = response.status();
     if !status.is_success() {
@@ -184,13 +208,18 @@ async fn send_generate(client: &Client, model: &str, prompt: &str) -> Result<(St
         return Err((status, error_payload));
     }
 
-    let parsed: OllamaResponse = response
-        .json()
-        .await
-        .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, format!("Erreur parsing réponse Ollama: {e}")))?;
+    let parsed: OllamaResponse = response.json().await.map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Erreur parsing réponse Ollama: {e}"),
+        )
+    })?;
 
     if parsed.response.trim().is_empty() {
-        return Err((StatusCode::INTERNAL_SERVER_ERROR, "Réponse Ollama vide".to_string()));
+        return Err((
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "Réponse Ollama vide".to_string(),
+        ));
     }
 
     Ok((

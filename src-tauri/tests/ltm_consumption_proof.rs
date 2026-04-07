@@ -76,14 +76,21 @@ mod ltm_consumption_proof {
         // 3. Verify entries.json exists and contains the fact
         assert!(entries_path.exists(), "entries.json should exist");
         let raw = std::fs::read_to_string(&entries_path).expect("should read entries.json");
-        assert!(raw.contains("ZEPHYR-7X3-KOI"), "entries.json should contain improbable fact");
+        assert!(
+            raw.contains("ZEPHYR-7X3-KOI"),
+            "entries.json should contain improbable fact"
+        );
 
         // 4. Create UnifiedMemory and load persistent entries
         let mut mem = UnifiedMemory::new();
         mem.init().expect("UnifiedMemory should init");
 
         // Verify STM is empty before load
-        assert_eq!(mem.get_stm_items().len(), 0, "STM should be empty before load");
+        assert_eq!(
+            mem.get_stm_items().len(),
+            0,
+            "STM should be empty before load"
+        );
 
         // 5. Load persistent entries into UnifiedMemory
         mem.load_persistent_entries(&base_path);
@@ -145,11 +152,18 @@ mod ltm_consumption_proof {
         mem.load_persistent_entries(&base_path);
 
         // Verify STM is still empty
-        assert_eq!(mem.get_stm_items().len(), 0, "STM should be empty after loading empty entries");
+        assert_eq!(
+            mem.get_stm_items().len(),
+            0,
+            "STM should be empty after loading empty entries"
+        );
 
         // Recall for a fact that was never saved
         let recalled = mem.recall("NONEXISTENT_FACT_XYZ", 10);
-        assert!(recalled.is_empty(), "Recall should return empty for unsaved fact");
+        assert!(
+            recalled.is_empty(),
+            "Recall should return empty for unsaved fact"
+        );
 
         println!("[LTM_CONSUMPTION_PROOF] SC3 PASS: unsaved fact correctly not claimed");
     }
@@ -193,7 +207,10 @@ mod ltm_consumption_proof {
 
         // Read back and verify content
         let raw = std::fs::read_to_string(&entries_path).expect("read entries");
-        assert!(raw.contains("BELIER"), "entries.json should contain written fact");
+        assert!(
+            raw.contains("BELIER"),
+            "entries.json should contain written fact"
+        );
 
         println!("[LTM_CONSUMPTION_PROOF] SC1 PASS: persistence baseline verified");
     }
@@ -237,7 +254,11 @@ mod ltm_consumption_proof {
             mem.load_persistent_entries(&base_path);
 
             let recalled = mem.recall(&format!("run{}", run), 10);
-            assert!(!recalled.is_empty(), "Run {}: recall should return results", run);
+            assert!(
+                !recalled.is_empty(),
+                "Run {}: recall should return results",
+                run
+            );
             assert!(
                 recalled[0].content.contains(&format!("STABLE")),
                 "Run {}: recalled content should contain STABLE",

@@ -24,20 +24,21 @@ pub fn policy_from_env() -> String {
 
 pub fn provider_class_from_id(provider_id: &str) -> ProviderClass {
     let normalized = provider_id.to_lowercase();
-    if normalized.contains("ollama") || normalized.contains("local") || normalized.contains("offline") {
-        ProviderClass::Local
-    } else if normalized.contains("openai")
-        || normalized.contains("gemini")
-        || normalized.contains("claude")
-        || normalized.contains("anthropic")
+    if normalized.contains("ollama")
+        || normalized.contains("local")
+        || normalized.contains("offline")
     {
-        ProviderClass::Remote
+        ProviderClass::Local
     } else {
         ProviderClass::Remote
     }
 }
 
-pub fn mode_from(provider_class: ProviderClass, provider_id: &str, reason_code: ReasonCode) -> Mode {
+pub fn mode_from(
+    provider_class: ProviderClass,
+    provider_id: &str,
+    reason_code: ReasonCode,
+) -> Mode {
     if reason_code == ReasonCode::FallbackOffline || provider_id == "offline" {
         return Mode::Offline;
     }
@@ -152,18 +153,32 @@ pub fn build_timeout_meta(network_available: bool, timeout_ms: u64) -> ProviderD
     // Use Remote mode with Timeout reason to indicate degraded service attempt
     let (provider_used, provider_class, mode, network_used) = if network_available {
         // Network exists but provider timed out: use Remote mode to signal degraded state
-        ("timeout-degraded".to_string(), ProviderClass::Remote, Mode::Remote, true)
+        (
+            "timeout-degraded".to_string(),
+            ProviderClass::Remote,
+            Mode::Remote,
+            true,
+        )
     } else {
         // No network: true offline fallback is justified
-        ("offline".to_string(), ProviderClass::Local, Mode::Offline, false)
+        (
+            "offline".to_string(),
+            ProviderClass::Local,
+            Mode::Offline,
+            false,
+        )
     };
-    
+
     let reason_code = ReasonCode::Timeout;
     let attempts = vec![build_attempt(
         provider_used.clone(),
         provider_class.clone(),
         0,
-        if network_available { "timeout" } else { "timeout_no_network" },
+        if network_available {
+            "timeout"
+        } else {
+            "timeout_no_network"
+        },
         reason_code.clone(),
         network_used,
     )];

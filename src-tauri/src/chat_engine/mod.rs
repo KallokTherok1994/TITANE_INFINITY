@@ -16,12 +16,12 @@ use speech::{SpeechOrchestrator, SpeechTask};
 use streaming::{chunk_text, new_stream_channel, StreamReceiver, StreamSender};
 
 use crate::ai::router::AIRouter;
+use crate::ia::unified_engine::UnifiedIAEngine;
 use crate::memory::model::Conversation;
 use crate::memory::MemoryEntry;
 use crate::security::secrets_engine::SecureSecretsEngine;
 use crate::tts::local_tts::LocalTTS;
 use crate::tts::online_tts::OnlineTTS;
-use crate::ia::unified_engine::UnifiedIAEngine;
 
 use tokio::sync::RwLock;
 use tokio::time;
@@ -92,7 +92,8 @@ impl ChatEngine {
         // Stage 1: bounded memory fetch.
         let context_entries = time::timeout(
             cfg.memory_fetch_timeout,
-            self.memory.context_window(&conversation_id, cfg.memory_context_tokens),
+            self.memory
+                .context_window(&conversation_id, cfg.memory_context_tokens),
         )
         .await
         .map_err(|_| ChatEngineError::Timeout("Memory fetch timed out".to_string()))??;
@@ -203,7 +204,8 @@ impl ChatEngine {
         // Stage 1: bounded memory fetch.
         let context_entries = time::timeout(
             cfg.memory_fetch_timeout,
-            self.memory.context_window(&conversation_id, cfg.memory_context_tokens),
+            self.memory
+                .context_window(&conversation_id, cfg.memory_context_tokens),
         )
         .await
         .map_err(|_| ChatEngineError::Timeout("Memory fetch timed out".to_string()))??;

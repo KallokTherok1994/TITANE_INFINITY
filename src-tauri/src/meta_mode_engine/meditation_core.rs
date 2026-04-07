@@ -8,12 +8,12 @@ impl MeditationCore {
     pub fn new() -> Self {
         Self
     }
-    
+
     /// Exécution méditation TITANE ZÉRO
     pub fn execute(&self) -> String {
         self.titane_zero_sequence()
     }
-    
+
     fn titane_zero_sequence(&self) -> String {
         r#"🧘 TITANE ZÉRO — Méditation profonde
 
@@ -31,6 +31,7 @@ Le silence absolu. L'espace vide. ZÉRO.
 
 Phase 5 : RETOUR
 Reviens doucement. Respire. Tu es centré, aligné, présent.
-"#.to_string()
+"#
+        .to_string()
     }
 }

@@ -356,14 +356,20 @@ mod tests {
         // Manually insert records for testing
         {
             let mut records = profiler.records.lock().unwrap();
-            records.insert("fast_command".to_string(), vec![ExecutionRecord {
-                duration_ms: 10,
-                timestamp: 0,
-            }]);
-            records.insert("slow_command".to_string(), vec![ExecutionRecord {
-                duration_ms: 100,
-                timestamp: 0,
-            }]);
+            records.insert(
+                "fast_command".to_string(),
+                vec![ExecutionRecord {
+                    duration_ms: 10,
+                    timestamp: 0,
+                }],
+            );
+            records.insert(
+                "slow_command".to_string(),
+                vec![ExecutionRecord {
+                    duration_ms: 100,
+                    timestamp: 0,
+                }],
+            );
         }
 
         let metrics = profiler.get_all_metrics();
@@ -380,10 +386,19 @@ mod tests {
 
         {
             let mut records = profiler.records.lock().unwrap();
-            records.insert("cmd1".to_string(), vec![
-                ExecutionRecord { duration_ms: 50, timestamp: 0 },
-                ExecutionRecord { duration_ms: 100, timestamp: 0 },
-            ]);
+            records.insert(
+                "cmd1".to_string(),
+                vec![
+                    ExecutionRecord {
+                        duration_ms: 50,
+                        timestamp: 0,
+                    },
+                    ExecutionRecord {
+                        duration_ms: 100,
+                        timestamp: 0,
+                    },
+                ],
+            );
         }
 
         let summary = profiler.get_summary();
@@ -399,10 +414,13 @@ mod tests {
 
         {
             let mut records = profiler.records.lock().unwrap();
-            records.insert("test".to_string(), vec![ExecutionRecord {
-                duration_ms: 50,
-                timestamp: 0,
-            }]);
+            records.insert(
+                "test".to_string(),
+                vec![ExecutionRecord {
+                    duration_ms: 50,
+                    timestamp: 0,
+                }],
+            );
         }
 
         profiler.reset();
@@ -469,10 +487,13 @@ mod tests {
         // Even if we manually add records, metrics should return None when disabled
         {
             let mut records = profiler.records.lock().unwrap();
-            records.insert("test".to_string(), vec![ExecutionRecord {
-                duration_ms: 50,
-                timestamp: 0,
-            }]);
+            records.insert(
+                "test".to_string(),
+                vec![ExecutionRecord {
+                    duration_ms: 50,
+                    timestamp: 0,
+                }],
+            );
         }
 
         let metrics = profiler.get_command_metrics("test");
@@ -602,10 +623,13 @@ mod tests {
 
         {
             let mut records = profiler.records.lock().unwrap();
-            records.insert("single_cmd".to_string(), vec![ExecutionRecord {
-                duration_ms: 42,
-                timestamp: 1000,
-            }]);
+            records.insert(
+                "single_cmd".to_string(),
+                vec![ExecutionRecord {
+                    duration_ms: 42,
+                    timestamp: 1000,
+                }],
+            );
         }
 
         let metrics = profiler.get_command_metrics("single_cmd").unwrap();
@@ -676,14 +700,20 @@ mod tests {
 
         {
             let mut records = profiler.records.lock().unwrap();
-            records.insert("cmd1".to_string(), vec![ExecutionRecord {
-                duration_ms: 50,
-                timestamp: 0,
-            }]);
-            records.insert("cmd2".to_string(), vec![ExecutionRecord {
-                duration_ms: 100,
-                timestamp: 0,
-            }]);
+            records.insert(
+                "cmd1".to_string(),
+                vec![ExecutionRecord {
+                    duration_ms: 50,
+                    timestamp: 0,
+                }],
+            );
+            records.insert(
+                "cmd2".to_string(),
+                vec![ExecutionRecord {
+                    duration_ms: 100,
+                    timestamp: 0,
+                }],
+            );
         }
 
         assert_eq!(profiler.get_all_metrics().len(), 2);
@@ -703,11 +733,23 @@ mod tests {
 
         {
             let mut records = profiler.records.lock().unwrap();
-            records.insert("avg_test".to_string(), vec![
-                ExecutionRecord { duration_ms: 10, timestamp: 0 },
-                ExecutionRecord { duration_ms: 20, timestamp: 0 },
-                ExecutionRecord { duration_ms: 30, timestamp: 0 },
-            ]);
+            records.insert(
+                "avg_test".to_string(),
+                vec![
+                    ExecutionRecord {
+                        duration_ms: 10,
+                        timestamp: 0,
+                    },
+                    ExecutionRecord {
+                        duration_ms: 20,
+                        timestamp: 0,
+                    },
+                    ExecutionRecord {
+                        duration_ms: 30,
+                        timestamp: 0,
+                    },
+                ],
+            );
         }
 
         let metrics = profiler.get_command_metrics("avg_test").unwrap();
@@ -732,10 +774,19 @@ mod tests {
         {
             let mut records = profiler.records.lock().unwrap();
             // Test with just 2 values
-            records.insert("two_values".to_string(), vec![
-                ExecutionRecord { duration_ms: 10, timestamp: 0 },
-                ExecutionRecord { duration_ms: 20, timestamp: 0 },
-            ]);
+            records.insert(
+                "two_values".to_string(),
+                vec![
+                    ExecutionRecord {
+                        duration_ms: 10,
+                        timestamp: 0,
+                    },
+                    ExecutionRecord {
+                        duration_ms: 20,
+                        timestamp: 0,
+                    },
+                ],
+            );
         }
 
         let metrics = profiler.get_command_metrics("two_values").unwrap();

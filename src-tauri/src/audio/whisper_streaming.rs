@@ -367,7 +367,7 @@ impl WhisperStreamingEngine {
             tokio::task::spawn_blocking(move || shell_guard_cloned.execute_asr_whisper(&temp_path))
                 .await
                 .map_err(|e| AudioError::ProcessingError(e.to_string()))?
-                .map_err(|e| AudioError::ProcessingError(e))?;
+                .map_err(AudioError::ProcessingError)?;
 
         // Cleanup temp file
         let _ = std::fs::remove_file(&temp_path_for_cleanup);

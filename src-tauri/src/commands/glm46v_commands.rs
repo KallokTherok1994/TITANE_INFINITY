@@ -83,7 +83,11 @@ pub async fn chat_generate_glm46v(
         message: request.message.clone(),
         conversation_id: None,
         provider: "glm46v".to_string(),
-        model: request.config.as_ref().and_then(|c| c.model.clone()).unwrap_or_else(|| "THUDM/glm-4v-9b".to_string()),
+        model: request
+            .config
+            .as_ref()
+            .and_then(|c| c.model.clone())
+            .unwrap_or_else(|| "THUDM/glm-4v-9b".to_string()),
         streaming: false,
         images: None, // GLM-4.6V handles images via multimodal content
         system_prompt: None,

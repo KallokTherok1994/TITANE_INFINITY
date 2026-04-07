@@ -7,7 +7,12 @@ use titane_infinity::services::db::db_migrations::apply_migrations;
 
 fn temp_db_path(name: &str) -> PathBuf {
     let mut path = std::env::temp_dir();
-    path.push(format!("{}_{}_{}.sqlite", name, std::process::id(), uuid::Uuid::new_v4()));
+    path.push(format!(
+        "{}_{}_{}.sqlite",
+        name,
+        std::process::id(),
+        uuid::Uuid::new_v4()
+    ));
     path
 }
 

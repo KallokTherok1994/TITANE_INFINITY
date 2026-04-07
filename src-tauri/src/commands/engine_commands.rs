@@ -3,9 +3,9 @@
 //   Frontend-accessible commands for engine states & modules
 // ═══════════════════════════════════════════════════════════════
 
-use tauri::State;
-use serde::{Serialize, Deserialize};
 use crate::ai::ai_chat::AIChatState;
+use serde::{Deserialize, Serialize};
+use tauri::State;
 
 // ═══════════════════════════════════════════════════════════════
 //   TYPES — Serializable state structures
@@ -178,19 +178,26 @@ pub async fn engine_get_singularity_state(
 
 /// Initialize Singularity Engine (idempotent)
 #[tauri::command]
-pub async fn engine_init_singularity(
-    ai_chat: State<'_, AIChatState>,
-) -> Result<String, String> {
+pub async fn engine_init_singularity(ai_chat: State<'_, AIChatState>) -> Result<String, String> {
     let mut state = ai_chat.singularity_state.write().await;
 
     // Initialize all modules
-    state.nexus.init(&mut *state).await
+    state
+        .nexus
+        .init(&mut *state)
+        .await
         .map_err(|e| format!("Nexus init error: {:?}", e))?;
 
-    state.harmonia.init(&mut *state).await
+    state
+        .harmonia
+        .init(&mut *state)
+        .await
         .map_err(|e| format!("Harmonia init error: {:?}", e))?;
 
-    state.sentinel.init(&mut *state).await
+    state
+        .sentinel
+        .init(&mut *state)
+        .await
         .map_err(|e| format!("Sentinel init error: {:?}", e))?;
 
     Ok("Singularity Engine initialized ✅".to_string())
@@ -198,19 +205,26 @@ pub async fn engine_init_singularity(
 
 /// Execute engine tick (update all modules)
 #[tauri::command]
-pub async fn engine_tick(
-    ai_chat: State<'_, AIChatState>,
-) -> Result<String, String> {
+pub async fn engine_tick(ai_chat: State<'_, AIChatState>) -> Result<String, String> {
     let mut state = ai_chat.singularity_state.write().await;
 
     // Tick all modules
-    state.nexus.tick(&mut *state).await
+    state
+        .nexus
+        .tick(&mut *state)
+        .await
         .map_err(|e| format!("Nexus tick error: {:?}", e))?;
 
-    state.harmonia.tick(&mut *state).await
+    state
+        .harmonia
+        .tick(&mut *state)
+        .await
         .map_err(|e| format!("Harmonia tick error: {:?}", e))?;
 
-    state.sentinel.tick(&mut *state).await
+    state
+        .sentinel
+        .tick(&mut *state)
+        .await
         .map_err(|e| format!("Sentinel tick error: {:?}", e))?;
 
     state.last_sync_ms = chrono::Utc::now().timestamp_millis() as u64;

@@ -2,8 +2,8 @@
 // Zoom & Fullscreen functionality
 // NOTE: Zoom handled client-side via CSS, server tracks state
 
-use tauri::{command, Emitter, Window};
 use std::sync::Mutex;
+use tauri::{command, Emitter, Window};
 
 // Global zoom state per window
 lazy_static::lazy_static! {
@@ -14,7 +14,9 @@ lazy_static::lazy_static! {
 #[command]
 pub async fn window_get_zoom(window: Window) -> Result<f64, String> {
     let label = window.label().to_string();
-    let levels = ZOOM_LEVELS.lock().map_err(|e| format!("Lock error: {}", e))?;
+    let levels = ZOOM_LEVELS
+        .lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
     Ok(*levels.get(&label).unwrap_or(&1.0))
 }
 
@@ -22,19 +24,21 @@ pub async fn window_get_zoom(window: Window) -> Result<f64, String> {
 #[command]
 pub async fn window_set_zoom(window: Window, level: f64) -> Result<(), String> {
     let clamped_level = level.clamp(0.5, 5.0); // Clamp between 50% and 500%
-    
+
     // Store zoom level
     let label = window.label().to_string();
     {
-        let mut levels = ZOOM_LEVELS.lock().map_err(|e| format!("Lock error: {}", e))?;
+        let mut levels = ZOOM_LEVELS
+            .lock()
+            .map_err(|e| format!("Lock error: {}", e))?;
         levels.insert(label, clamped_level);
     }
-    
+
     // Emit event to frontend to apply CSS zoom
     window
         .emit("zoom-change", clamped_level)
         .map_err(|e| format!("Failed to emit zoom event: {}", e))?;
-    
+
     Ok(())
 }
 
@@ -68,11 +72,11 @@ pub async fn window_toggle_fullscreen(window: Window) -> Result<bool, String> {
     let is_fullscreen = window
         .is_fullscreen()
         .map_err(|e| format!("Failed to check fullscreen state: {}", e))?;
-    
+
     window
         .set_fullscreen(!is_fullscreen)
         .map_err(|e| format!("Failed to toggle fullscreen: {}", e))?;
-    
+
     Ok(!is_fullscreen)
 }
 

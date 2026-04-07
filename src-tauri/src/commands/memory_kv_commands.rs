@@ -36,33 +36,40 @@ impl MemoryKVStore {
     }
 
     fn path(app: &tauri::AppHandle) -> Result<PathBuf, TitaneError> {
-        let dir = app
-            .path()
-            .app_data_dir()
-            .map_err(|e| TitaneError::InternalError(format!("Failed to resolve app_data_dir: {e}")))?;
+        let dir = app.path().app_data_dir().map_err(|e| {
+            TitaneError::InternalError(format!("Failed to resolve app_data_dir: {e}"))
+        })?;
         Ok(dir.join("memory_kv_store.json"))
     }
 
-    fn load_from_disk(app: &tauri::AppHandle) -> Result<HashMap<String, MemoryKVEntry>, TitaneError> {
+    fn load_from_disk(
+        app: &tauri::AppHandle,
+    ) -> Result<HashMap<String, MemoryKVEntry>, TitaneError> {
         let path = Self::path(app)?;
         if !path.exists() {
             return Ok(HashMap::new());
         }
         let text = std::fs::read_to_string(&path)
             .map_err(|e| TitaneError::InternalError(format!("Failed to read KV store: {e}")))?;
-        let parsed: HashMap<String, MemoryKVEntry> = serde_json::from_str(&text)
-            .map_err(|e| TitaneError::InternalError(format!("Failed to parse KV store JSON: {e}")))?;
+        let parsed: HashMap<String, MemoryKVEntry> = serde_json::from_str(&text).map_err(|e| {
+            TitaneError::InternalError(format!("Failed to parse KV store JSON: {e}"))
+        })?;
         Ok(parsed)
     }
 
-    fn save_to_disk(app: &tauri::AppHandle, data: &HashMap<String, MemoryKVEntry>) -> Result<(), TitaneError> {
+    fn save_to_disk(
+        app: &tauri::AppHandle,
+        data: &HashMap<String, MemoryKVEntry>,
+    ) -> Result<(), TitaneError> {
         let path = Self::path(app)?;
         if let Some(parent) = path.parent() {
-            std::fs::create_dir_all(parent)
-                .map_err(|e| TitaneError::InternalError(format!("Failed to create KV store dir: {e}")))?;
+            std::fs::create_dir_all(parent).map_err(|e| {
+                TitaneError::InternalError(format!("Failed to create KV store dir: {e}"))
+            })?;
         }
-        let text = serde_json::to_string_pretty(data)
-            .map_err(|e| TitaneError::InternalError(format!("Failed to serialize KV store: {e}")))?;
+        let text = serde_json::to_string_pretty(data).map_err(|e| {
+            TitaneError::InternalError(format!("Failed to serialize KV store: {e}"))
+        })?;
         std::fs::write(&path, text)
             .map_err(|e| TitaneError::InternalError(format!("Failed to write KV store: {e}")))?;
         Ok(())
@@ -79,7 +86,12 @@ impl MemoryKVStore {
         Ok(())
     }
 
-    pub fn set(&self, app: &tauri::AppHandle, key: String, value: serde_json::Value) -> Result<(), TitaneError> {
+    pub fn set(
+        &self,
+        app: &tauri::AppHandle,
+        key: String,
+        value: serde_json::Value,
+    ) -> Result<(), TitaneError> {
         self.ensure_loaded(app)?;
         let mut guard = self
             .entries
@@ -95,7 +107,11 @@ impl MemoryKVStore {
         Self::save_to_disk(app, &guard)
     }
 
-    pub fn get(&self, app: &tauri::AppHandle, key: &str) -> Result<Option<MemoryKVEntry>, TitaneError> {
+    pub fn get(
+        &self,
+        app: &tauri::AppHandle,
+        key: &str,
+    ) -> Result<Option<MemoryKVEntry>, TitaneError> {
         self.ensure_loaded(app)?;
         let guard = self
             .entries

@@ -193,7 +193,10 @@ fn check_tooling_available() -> bool {
     {
         // Windows uses PowerShell
         std::process::Command::new("powershell")
-            .args(["-Command", "Get-Process | Where-Object {$_.MainWindowTitle} | Select-Object -First 1"])
+            .args([
+                "-Command",
+                "Get-Process | Where-Object {$_.MainWindowTitle} | Select-Object -First 1",
+            ])
             .stdout(std::process::Stdio::piped())
             .stderr(std::process::Stdio::piped())
             .output()
@@ -209,12 +212,16 @@ fn check_tooling_available() -> bool {
 
 fn is_denied_process(process_name: &str) -> bool {
     let proc_lower = process_name.to_lowercase();
-    DEFAULT_DENIED_PROCESSES.iter().any(|d| proc_lower.contains(&d.to_lowercase()))
+    DEFAULT_DENIED_PROCESSES
+        .iter()
+        .any(|d| proc_lower.contains(&d.to_lowercase()))
 }
 
 fn is_sensitive_title(title: &str) -> bool {
     let title_lower = title.to_lowercase();
-    DEFAULT_SENSITIVE_PATTERNS.iter().any(|p| title_lower.contains(&p.to_lowercase()))
+    DEFAULT_SENSITIVE_PATTERNS
+        .iter()
+        .any(|p| title_lower.contains(&p.to_lowercase()))
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -576,7 +583,10 @@ pub async fn desktop_open_session(
     };
 
     {
-        let mut sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+        let mut sessions = state
+            .sessions
+            .lock()
+            .map_err(|e| format!("Lock error: {}", e))?;
         sessions.insert(session_id.clone(), session.clone());
     }
 
@@ -595,7 +605,10 @@ pub async fn desktop_close_session(
     state: tauri::State<'_, DesktopOperatorState>,
     session_id: String,
 ) -> Result<bool, String> {
-    let mut sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+    let mut sessions = state
+        .sessions
+        .lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
 
     if let Some(mut session) = sessions.remove(&session_id) {
         session.status = DesktopSessionStatus::Stopped;
@@ -612,7 +625,10 @@ pub async fn desktop_get_session_status(
     state: tauri::State<'_, DesktopOperatorState>,
     session_id: String,
 ) -> Result<DesktopSession, String> {
-    let sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+    let sessions = state
+        .sessions
+        .lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
 
     sessions
         .get(&session_id)
@@ -628,13 +644,19 @@ pub async fn desktop_get_active_window(
 ) -> Result<DesktopPerceptionResult, String> {
     let now = now_iso();
 
-    let mut sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+    let mut sessions = state
+        .sessions
+        .lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
     let session = sessions
         .get_mut(&session_id)
         .ok_or_else(|| format!("Session not found: {}", session_id))?;
 
     // Check scope
-    if !session.allowed_surfaces.contains(&"active_window_read".to_string()) {
+    if !session
+        .allowed_surfaces
+        .contains(&"active_window_read".to_string())
+    {
         return Ok(DesktopPerceptionResult {
             ok: false,
             category: DesktopPerceptionCategory::ForbiddenSensitive,
@@ -659,7 +681,9 @@ pub async fn desktop_get_active_window(
             action: "get_active_window".to_string(),
             active_window: None,
             windows: None,
-            block_reason: Some("Desktop tooling not available (wmctrl/xdotool/osascript)".to_string()),
+            block_reason: Some(
+                "Desktop tooling not available (wmctrl/xdotool/osascript)".to_string(),
+            ),
             handoff_required: false,
             actions_remaining: session.max_actions - session.actions_count,
             session_id: session_id.clone(),
@@ -710,7 +734,10 @@ pub async fn desktop_get_active_window(
                     action: "get_active_window".to_string(),
                     active_window: None,
                     windows: None,
-                    block_reason: Some(format!("Process '{}' is in denied list", window_info.process_name)),
+                    block_reason: Some(format!(
+                        "Process '{}' is in denied list",
+                        window_info.process_name
+                    )),
                     handoff_required: false,
                     actions_remaining: session.max_actions - session.actions_count,
                     session_id: session_id.clone(),
@@ -727,7 +754,9 @@ pub async fn desktop_get_active_window(
                     action: "get_active_window".to_string(),
                     active_window: None,
                     windows: None,
-                    block_reason: Some("Window title suggests sensitive content — handoff required".to_string()),
+                    block_reason: Some(
+                        "Window title suggests sensitive content — handoff required".to_string(),
+                    ),
                     handoff_required: true,
                     actions_remaining: session.max_actions - session.actions_count,
                     session_id: session_id.clone(),
@@ -773,13 +802,19 @@ pub async fn desktop_list_windows(
 ) -> Result<DesktopPerceptionResult, String> {
     let now = now_iso();
 
-    let mut sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+    let mut sessions = state
+        .sessions
+        .lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
     let session = sessions
         .get_mut(&session_id)
         .ok_or_else(|| format!("Session not found: {}", session_id))?;
 
     // Check scope
-    if !session.allowed_surfaces.contains(&"window_list_read".to_string()) {
+    if !session
+        .allowed_surfaces
+        .contains(&"window_list_read".to_string())
+    {
         return Ok(DesktopPerceptionResult {
             ok: false,
             category: DesktopPerceptionCategory::ForbiddenSensitive,
@@ -887,8 +922,14 @@ pub async fn desktop_get_config() -> Result<DesktopOperatorConfig, String> {
             "window_list_read".to_string(),
             "window_focus_read".to_string(),
         ],
-        denied_processes: DEFAULT_DENIED_PROCESSES.iter().map(|s| s.to_string()).collect(),
-        sensitive_patterns: DEFAULT_SENSITIVE_PATTERNS.iter().map(|s| s.to_string()).collect(),
+        denied_processes: DEFAULT_DENIED_PROCESSES
+            .iter()
+            .map(|s| s.to_string())
+            .collect(),
+        sensitive_patterns: DEFAULT_SENSITIVE_PATTERNS
+            .iter()
+            .map(|s| s.to_string())
+            .collect(),
     })
 }
 
@@ -902,7 +943,10 @@ pub async fn desktop_pause_session(
     state: tauri::State<'_, DesktopOperatorState>,
     session_id: String,
 ) -> Result<DesktopSession, String> {
-    let mut sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+    let mut sessions = state
+        .sessions
+        .lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
 
     let session = sessions
         .get_mut(&session_id)
@@ -929,7 +973,10 @@ pub async fn desktop_resume_session(
     state: tauri::State<'_, DesktopOperatorState>,
     session_id: String,
 ) -> Result<DesktopSession, String> {
-    let mut sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+    let mut sessions = state
+        .sessions
+        .lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
 
     let session = sessions
         .get_mut(&session_id)
@@ -944,9 +991,7 @@ pub async fn desktop_resume_session(
             log::info!("[DesktopOperator] Session resumed: {}", session_id);
             Ok(session.clone())
         }
-        _ => {
-            Ok(session.clone())
-        }
+        _ => Ok(session.clone()),
     }
 }
 
@@ -957,7 +1002,10 @@ pub async fn desktop_handoff_session(
     session_id: String,
     reason: Option<String>,
 ) -> Result<DesktopSession, String> {
-    let mut sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+    let mut sessions = state
+        .sessions
+        .lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
 
     let session = sessions
         .get_mut(&session_id)
@@ -984,7 +1032,10 @@ pub async fn desktop_kill_switch(
     session_id: String,
     reason: Option<String>,
 ) -> Result<bool, String> {
-    let mut sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+    let mut sessions = state
+        .sessions
+        .lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
 
     if let Some(mut session) = sessions.remove(&session_id) {
         session.status = DesktopSessionStatus::Stopped;
@@ -1010,7 +1061,10 @@ pub async fn desktop_get_control_status(
     state: tauri::State<'_, DesktopOperatorState>,
     session_id: String,
 ) -> Result<serde_json::Value, String> {
-    let sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+    let sessions = state
+        .sessions
+        .lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
 
     let session = sessions
         .get(&session_id)

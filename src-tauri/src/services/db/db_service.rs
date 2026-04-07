@@ -1,9 +1,9 @@
 use rusqlite::params;
 use serde_json::json;
 use std::sync::Arc;
+use std::sync::MutexGuard;
 use std::time::{SystemTime, UNIX_EPOCH};
 use uuid::Uuid;
-use std::sync::MutexGuard;
 
 use super::db_state::DbState;
 use super::db_types::{DbError, DbResult};

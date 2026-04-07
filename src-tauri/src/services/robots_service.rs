@@ -6,8 +6,8 @@
 
 use crate::services::cache_service::{CacheError, CacheService};
 use crate::services::fetch_service::FetchService;
-use crate::services::network_policy::AppliedPolicy;
 use crate::services::network_policy::extract_domain;
+use crate::services::network_policy::AppliedPolicy;
 use crate::types::research::{RobotsEvent, RobotsStatus};
 
 // ─────────────────────────────────────────────────────────────────

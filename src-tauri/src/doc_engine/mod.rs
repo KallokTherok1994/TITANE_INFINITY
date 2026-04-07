@@ -1,17 +1,17 @@
 // TITANE∞ v13 - Document Generation Engine
 // Moteur de génération documentaire professionnel multi-domaines
 
-pub mod generator;
-pub mod legal;
 pub mod admin;
-pub mod technical;
 pub mod editorial;
+pub mod export;
+pub mod formatter;
+pub mod generator;
 pub mod html;
+pub mod legal;
+pub mod storage;
+pub mod technical;
 pub mod templates;
 pub mod validator;
-pub mod formatter;
-pub mod export;
-pub mod storage;
 pub mod versioning;
 
 use serde::{Deserialize, Serialize};
@@ -28,7 +28,7 @@ pub enum DocumentType {
     TermsOfService,
     PrivacyPolicy,
     LegalNotice,
-    
+
     // Documents professionnels
     Audit,
     BusinessPlan,
@@ -36,13 +36,13 @@ pub enum DocumentType {
     SOP,
     InternalManual,
     TechnicalSpec,
-    
+
     // Documents techniques
     Architecture,
     APIDoc,
     SystemDesign,
     Script,
-    
+
     // Documents éditoriaux
     BookChapter,
     TrainingModule,
@@ -226,19 +226,19 @@ pub struct ExportResult {
 pub enum DocEngineError {
     #[error("Erreur de génération: {0}")]
     GenerationError(String),
-    
+
     #[error("Erreur de validation: {0}")]
     ValidationError(String),
-    
+
     #[error("Erreur d'export: {0}")]
     ExportError(String),
-    
+
     #[error("Erreur de stockage: {0}")]
     StorageError(String),
-    
+
     #[error("Erreur de template: {0}")]
     TemplateError(String),
-    
+
     #[error("Configuration invalide: {0}")]
     InvalidConfig(String),
 }

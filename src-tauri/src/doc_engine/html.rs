@@ -10,5 +10,7 @@ pub fn generate_html_from_markdown(_markdown: &str) -> Result<String> {
     // - Sanitization: Use ammonia crate to sanitize HTML output (XSS protection)
     // - Syntax highlighting: Integrate syntect for code blocks
     // - Alternative: comrak crate (GitHub Flavored Markdown)
-    Ok(String::from("<html><body>HTML generation pending implementation</body></html>"))
+    Ok(String::from(
+        "<html><body>HTML generation pending implementation</body></html>",
+    ))
 }

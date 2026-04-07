@@ -9,8 +9,8 @@
 use super::manifest::{FileEntry, UpdateManifest};
 use super::migration::MigrationScript;
 use super::release_policy::{
-    enforce_migration_signature_policy, enforce_post_update_gates_v2,
-    enforce_pre_update_policy, PostUpdateGatesV2, ReleaseRing, SignedUpdatesPolicy,
+    enforce_migration_signature_policy, enforce_post_update_gates_v2, enforce_pre_update_policy,
+    PostUpdateGatesV2, ReleaseRing, SignedUpdatesPolicy,
 };
 use crate::security::encryption::SigningKeypair;
 use sha2::{Digest, Sha256};

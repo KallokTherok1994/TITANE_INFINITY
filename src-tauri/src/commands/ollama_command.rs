@@ -1,11 +1,10 @@
+use crate::ollama::query_ollama;
 /**
  * TITANE∞ — Unified Ollama Provider Command
  * Centralized Tauri command for all Ollama interactions
  * Replaces scattered direct HTTP calls throughout codebase
  */
-
 use serde::{Deserialize, Serialize};
-use crate::ollama::query_ollama;
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct OllamaRequest {

@@ -5,8 +5,8 @@
 
 use crate::ai::providers::{AiProvider, ProviderResult};
 use crate::ai::{AIError, AiMetadata, AiMode, AiRequest, AiResponse};
-use async_trait::async_trait;
 use crate::core::http_types::Client;
+use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
 use std::time::Instant;
 
@@ -28,8 +28,8 @@ impl LocalProvider {
         Self {
             ollama_url: ollama_url.unwrap_or_else(Self::default_ollama_url),
             client: Client::new(),
-            model_fast: "gemma2:2b".to_string(),  // ✨ Use installed model (was "llama3")
-            model_quality: "mistral:latest".to_string(),  // ✨ Use explicit tag
+            model_fast: "gemma2:2b".to_string(), // ✨ Use installed model (was "llama3")
+            model_quality: "mistral:latest".to_string(), // ✨ Use explicit tag
         }
     }
 

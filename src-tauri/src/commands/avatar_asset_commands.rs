@@ -25,9 +25,7 @@ pub struct AvatarAssetData {
 
 /// Charger un asset 3D pour l'avatar
 #[tauri::command]
-pub async fn avatar_load_asset(
-    request: AvatarAssetRequest,
-) -> Result<AvatarAssetData, String> {
+pub async fn avatar_load_asset(request: AvatarAssetRequest) -> Result<AvatarAssetData, String> {
     // Permission check
     PERMISSION_GUARD
         .require("system_read", Role::User, "avatar_load_asset")
@@ -57,8 +55,8 @@ pub async fn avatar_load_asset(
         .map_err(|e| format!("Failed to read asset metadata: {}", e))?;
 
     // Compute checksum
-    let content = std::fs::read(&mesh_path)
-        .map_err(|e| format!("Failed to read asset file: {}", e))?;
+    let content =
+        std::fs::read(&mesh_path).map_err(|e| format!("Failed to read asset file: {}", e))?;
     let checksum = format!("{:x}", md5::compute(&content));
 
     let texture_exists = texture_path.exists();
@@ -70,9 +68,7 @@ pub async fn avatar_load_asset(
         } else {
             None
         },
-        material_type: request
-            .format
-            .unwrap_or_else(|| "pbr".to_string()),
+        material_type: request.format.unwrap_or_else(|| "pbr".to_string()),
         file_size: metadata.len(),
         checksum,
     })

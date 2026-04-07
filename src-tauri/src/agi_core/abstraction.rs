@@ -3,8 +3,8 @@
 //! Super Prompt #11 — Extraction de concepts et niveaux d'abstraction
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
 use super::reasoning::ReasoningChain;
+use serde::{Deserialize, Serialize};
 
 /// Concept abstrait
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -137,7 +137,11 @@ impl AbstractionEngine {
 
         // Identifier les noms propres (capitalisés)
         for word in &words {
-            if word.chars().next().map(|c| c.is_uppercase()).unwrap_or(false)
+            if word
+                .chars()
+                .next()
+                .map(|c| c.is_uppercase())
+                .unwrap_or(false)
                 && word.len() > 2
                 && !["The", "This", "That", "What", "How", "Why", "When"].contains(word)
             {
@@ -194,7 +198,11 @@ impl AbstractionEngine {
     /// Déduplique et enrichit les concepts
     fn deduplicate_and_enrich(&self, concepts: &mut Vec<Concept>) {
         // Trier par confiance décroissante
-        concepts.sort_by(|a, b| b.confidence.partial_cmp(&a.confidence).unwrap_or(std::cmp::Ordering::Equal));
+        concepts.sort_by(|a, b| {
+            b.confidence
+                .partial_cmp(&a.confidence)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
 
         // Dédupliquer par nom (garder la plus haute confiance)
         let mut seen = std::collections::HashSet::new();
@@ -236,7 +244,9 @@ impl AbstractionEngine {
             level: new_level,
             related_concepts: vec![concept.id.clone()],
             instances: vec![concept.name.clone()],
-            properties: concept.properties.iter()
+            properties: concept
+                .properties
+                .iter()
                 .filter(|p| p.is_essential)
                 .cloned()
                 .collect(),
@@ -268,10 +278,11 @@ impl AbstractionEngine {
 
     /// Trouve les concepts similaires
     pub fn find_similar(&self, concept: &Concept, all_concepts: &[Concept]) -> Vec<Concept> {
-        all_concepts.iter()
+        all_concepts
+            .iter()
             .filter(|c| {
-                c.id != concept.id &&
-                (c.level == concept.level || self.adjacent_levels(&c.level, &concept.level))
+                c.id != concept.id
+                    && (c.level == concept.level || self.adjacent_levels(&c.level, &concept.level))
             })
             .take(5)
             .cloned()
@@ -313,10 +324,18 @@ mod tests {
         let engine = AbstractionEngine::new();
         let reasoning = ReasoningChain::default();
 
-        let concepts = engine.extract("This is about software architecture and design patterns", &reasoning).await;
+        let concepts = engine
+            .extract(
+                "This is about software architecture and design patterns",
+                &reasoning,
+            )
+            .await;
 
         assert!(!concepts.is_empty());
-        assert!(concepts.iter().any(|c| c.name == "software" || c.name == "architecture" || c.name == "design" || c.name == "pattern"));
+        assert!(concepts.iter().any(|c| c.name == "software"
+            || c.name == "architecture"
+            || c.name == "design"
+            || c.name == "pattern"));
     }
 
     #[test]

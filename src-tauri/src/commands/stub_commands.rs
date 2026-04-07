@@ -16,8 +16,7 @@ pub async fn fs_exists(path: String) -> Result<bool, String> {
 
 #[tauri::command]
 pub async fn read_json_file(path: String) -> Result<Value, String> {
-    let raw = std::fs::read_to_string(&path)
-        .map_err(|e| format!("read_json_file: {e}"))?;
+    let raw = std::fs::read_to_string(&path).map_err(|e| format!("read_json_file: {e}"))?;
     serde_json::from_str(&raw).map_err(|e| format!("read_json_file parse: {e}"))
 }
 

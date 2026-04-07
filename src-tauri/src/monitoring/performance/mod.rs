@@ -100,7 +100,12 @@ impl PerformanceDiagnostics {
 
         // Recalculate average
         if !self.cpu_history.samples.is_empty() {
-            let sum: f64 = self.cpu_history.samples.iter().map(|s| s.usage_percent).sum();
+            let sum: f64 = self
+                .cpu_history
+                .samples
+                .iter()
+                .map(|s| s.usage_percent)
+                .sum();
             self.cpu_metrics.average_usage_percent = sum / self.cpu_history.samples.len() as f64;
         }
     }

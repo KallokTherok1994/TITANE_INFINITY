@@ -73,9 +73,7 @@ impl VectorStore {
         let points_vec: Vec<VectorPoint> = self.points.values().cloned().collect();
         let values: Vec<String> = points_vec.iter().map(|p| p.id.clone()).collect();
 
-        let hnsw = Builder::default()
-            .seed(42)
-            .build(points_vec, values);
+        let hnsw = Builder::default().seed(42).build(points_vec, values);
 
         self.hnsw_index = Some(hnsw);
         Ok(())
@@ -144,12 +142,14 @@ impl VectorStore {
     pub fn save(&self) -> Result<(), VectorStoreError> {
         // Crée le répertoire si nécessaire
         if let Some(parent) = self.index_path.parent() {
-            std::fs::create_dir_all(parent).map_err(|e| VectorStoreError::IoError(e.to_string()))?;
+            std::fs::create_dir_all(parent)
+                .map_err(|e| VectorStoreError::IoError(e.to_string()))?;
         }
 
         // Sauvegarde les points
         let points_path = self.index_path.with_extension("points.json");
-        let file = File::create(&points_path).map_err(|e| VectorStoreError::IoError(e.to_string()))?;
+        let file =
+            File::create(&points_path).map_err(|e| VectorStoreError::IoError(e.to_string()))?;
         let writer = BufWriter::new(file);
         serde_json::to_writer(writer, &self.points)
             .map_err(|e| VectorStoreError::SerializationError(e.to_string()))?;
@@ -167,12 +167,15 @@ impl VectorStore {
     /// Charge l'index depuis le disque
     pub fn load(index_path: PathBuf) -> Result<Self, VectorStoreError> {
         let points_path = index_path.with_extension("points.json");
-        
+
         if !points_path.exists() {
-            return Err(VectorStoreError::IoError("Index file not found".to_string()));
+            return Err(VectorStoreError::IoError(
+                "Index file not found".to_string(),
+            ));
         }
 
-        let file = File::open(&points_path).map_err(|e| VectorStoreError::IoError(e.to_string()))?;
+        let file =
+            File::open(&points_path).map_err(|e| VectorStoreError::IoError(e.to_string()))?;
         let reader = BufReader::new(file);
         let points: HashMap<String, VectorPoint> = serde_json::from_reader(reader)
             .map_err(|e| VectorStoreError::SerializationError(e.to_string()))?;

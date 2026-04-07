@@ -70,13 +70,16 @@ pub async fn memory_get_entry(
     state: State<'_, MemoryKvState>,
     key: String,
 ) -> Result<Option<String>, String> {
-    Ok(state.0.lock().map_err(|e| e.to_string())?.get(&key).cloned())
+    Ok(state
+        .0
+        .lock()
+        .map_err(|e| e.to_string())?
+        .get(&key)
+        .cloned())
 }
 
 #[tauri::command]
-pub async fn memory_get_all_keys(
-    state: State<'_, MemoryKvState>,
-) -> Result<Vec<String>, String> {
+pub async fn memory_get_all_keys(state: State<'_, MemoryKvState>) -> Result<Vec<String>, String> {
     Ok(state
         .0
         .lock()
@@ -153,7 +156,7 @@ pub async fn clear_system_logs(state: State<'_, LogBufferState>) -> Result<Value
 #[tauri::command]
 pub async fn log_entries(state: State<'_, LogBufferState>) -> Result<Value, String> {
     let logs = state.0.lock().map_err(|e| e.to_string())?;
-    Ok(serde_json::to_value(logs.clone()).map_err(|e| e.to_string())?)
+    serde_json::to_value(logs.clone()).map_err(|e| e.to_string())
 }
 
 // ─── XP / PROGRESSION COMMANDS ──────────────────────────────────────────────
@@ -178,7 +181,9 @@ pub async fn xp_sync_state(
         data.level = v;
     }
     data.last_synced_ms = now_ms();
-    Ok(serde_json::json!({ "ok": true, "xp": data.xp, "level": data.level, "last_synced_ms": data.last_synced_ms }))
+    Ok(
+        serde_json::json!({ "ok": true, "xp": data.xp, "level": data.level, "last_synced_ms": data.last_synced_ms }),
+    )
 }
 
 // ─── SELFHEAL COMMANDS ───────────────────────────────────────────────────────
@@ -438,4 +443,3 @@ pub async fn secure_store_key(
     map.insert(key.clone(), value);
     Ok(serde_json::json!({ "ok": true, "stored_key": key }))
 }
-

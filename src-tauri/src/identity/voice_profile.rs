@@ -278,7 +278,8 @@ impl VoicePresets {
         let mut profile = VoiceProfile::default();
         profile.id = "titane-clarity-fr".to_string();
         profile.name = "TITANE Clarity".to_string();
-        profile.description = "Voix formelle, claire et précise pour les explications techniques".to_string();
+        profile.description =
+            "Voix formelle, claire et précise pour les explications techniques".to_string();
         profile.characteristics.pitch = 180.0;
         profile.characteristics.rate = 140.0;
         profile.characteristics.warmth = 0.4;
@@ -292,7 +293,8 @@ impl VoicePresets {
         let mut profile = VoiceProfile::default();
         profile.id = "titane-warm-fr".to_string();
         profile.name = "TITANE Warm".to_string();
-        profile.description = "Voix chaleureuse et amicale, pensée pour un accompagnement fluide".to_string();
+        profile.description =
+            "Voix chaleureuse et amicale, pensée pour un accompagnement fluide".to_string();
         profile.characteristics.pitch = 210.0;
         profile.characteristics.rate = 145.0;
         profile.characteristics.warmth = 0.9;
@@ -306,7 +308,8 @@ impl VoicePresets {
         let mut profile = VoiceProfile::default();
         profile.id = "titane-dynamic-fr".to_string();
         profile.name = "TITANE Dynamic".to_string();
-        profile.description = "Voix dynamique et enthousiaste pour les messages d\'élan".to_string();
+        profile.description =
+            "Voix dynamique et enthousiaste pour les messages d\'élan".to_string();
         profile.characteristics.pitch = 220.0;
         profile.characteristics.rate = 170.0;
         profile.characteristics.emphasis = 0.7;
@@ -320,7 +323,8 @@ impl VoicePresets {
         let mut profile = VoiceProfile::default();
         profile.id = "titane-calm-fr".to_string();
         profile.name = "TITANE Calm".to_string();
-        profile.description = "Voix apaisante, naturelle et reposante pour les guidances longues".to_string();
+        profile.description =
+            "Voix apaisante, naturelle et reposante pour les guidances longues".to_string();
         profile.characteristics.pitch = 190.0;
         profile.characteristics.rate = 120.0;
         profile.characteristics.warmth = 0.8;

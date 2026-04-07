@@ -2,8 +2,8 @@
 // Purpose: Measure performance baseline and optimization impact
 // Created: 2026-01-19 Sprint Launch
 
-use std::time::{Duration, Instant};
 use std::collections::HashMap;
+use std::time::{Duration, Instant};
 
 #[derive(Debug, Clone)]
 pub struct PerfMetric {
@@ -37,7 +37,7 @@ impl PerfBench {
 
         self.metrics
             .entry(name.to_string())
-            .or_insert_with(Vec::new)
+            .or_default()
             .push(metric);
     }
 
@@ -61,7 +61,8 @@ impl PerfBench {
                 .sum::<f64>()
                 / metrics.len() as f64;
 
-            let avg_memory = metrics.iter().map(|m| m.memory_mb).sum::<f64>() / metrics.len() as f64;
+            let avg_memory =
+                metrics.iter().map(|m| m.memory_mb).sum::<f64>() / metrics.len() as f64;
 
             output.push_str(&format!(
                 "{}: avg={:.3}ms, memory={:.2}MB, samples={}\n",
@@ -83,6 +84,17 @@ impl PerfBench {
     pub fn is_baseline_captured(&self) -> bool {
         self.baseline_captured
     }
+}
+
+// BASELINE METRICS CAPTURE (Week 1, Day 1)
+// Run: cargo test -- --nocapture perf_bench
+// Expected: Establish baseline for all critical operations
+pub fn capture_baseline() {
+    let bench = PerfBench::new();
+
+    // Will be populated with real measurements
+    println!("📊 Baseline metrics framework ready for Week 1 measurements");
+    println!("{}", bench.report());
 }
 
 #[cfg(test)]
@@ -108,15 +120,4 @@ mod tests {
         assert!(report.contains("operation"));
         assert!(report.contains("55.000ms"));
     }
-}
-
-// BASELINE METRICS CAPTURE (Week 1, Day 1)
-// Run: cargo test -- --nocapture perf_bench
-// Expected: Establish baseline for all critical operations
-pub fn capture_baseline() {
-    let bench = PerfBench::new();
-
-    // Will be populated with real measurements
-    println!("📊 Baseline metrics framework ready for Week 1 measurements");
-    println!("{}", bench.report());
 }

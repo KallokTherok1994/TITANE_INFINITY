@@ -1,12 +1,11 @@
+use crate::core::http_types::Client;
 /// Gemini Provider Refactoring for v27.0 Epic 1
 /// Target: Convert ~200 expect() calls to Result-based error handling
-/// 
+///
 /// MIGRATION PHASE 1: Refactor Gemini provider API to use Result types
 /// This module provides the refactored Gemini provider implementation
 /// that replaces panics with proper error handling.
-
 use crate::epic1_provider_refactor::{Provider, ProviderError, ProviderResult};
-use crate::core::http_types::Client;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 
@@ -79,9 +78,9 @@ impl GeminiProvider {
         let client = Client::builder()
             .timeout(Duration::from_secs(config.timeout_secs))
             .build()
-            .map_err(|e| ProviderError::ConnectionFailed(
-                format!("Failed to create HTTP client: {}", e)
-            ))?;
+            .map_err(|e| {
+                ProviderError::ConnectionFailed(format!("Failed to create HTTP client: {}", e))
+            })?;
 
         Ok(GeminiProvider {
             config,
@@ -94,20 +93,21 @@ impl GeminiProvider {
     fn validate_config(&self) -> ProviderResult<()> {
         if self.config.api_key.is_empty() {
             return Err(ProviderError::InvalidResponse(
-                "Gemini API key is empty".to_string()
+                "Gemini API key is empty".to_string(),
             ));
         }
 
         if self.config.model.is_empty() {
             return Err(ProviderError::InvalidResponse(
-                "Gemini model is not configured".to_string()
+                "Gemini model is not configured".to_string(),
             ));
         }
 
         if self.config.temperature < 0.0 || self.config.temperature > 2.0 {
-            return Err(ProviderError::InvalidResponse(
-                format!("Invalid temperature: {}. Must be 0.0-2.0", self.config.temperature)
-            ));
+            return Err(ProviderError::InvalidResponse(format!(
+                "Invalid temperature: {}. Must be 0.0-2.0",
+                self.config.temperature
+            )));
         }
 
         Ok(())
@@ -123,17 +123,18 @@ impl GeminiProvider {
 
     /// Parse Gemini response with error handling
     fn parse_response(&self, response: &GeminiResponse) -> ProviderResult<String> {
-        response.candidates
+        response
+            .candidates
             .first()
             .ok_or(ProviderError::InvalidResponse(
-                "No candidates in Gemini response".to_string()
+                "No candidates in Gemini response".to_string(),
             ))?
             .content
             .parts
             .first()
             .map(|part| part.text.clone())
             .ok_or(ProviderError::InvalidResponse(
-                "No text content in Gemini response".to_string()
+                "No text content in Gemini response".to_string(),
             ))
     }
 
@@ -141,7 +142,7 @@ impl GeminiProvider {
     fn check_rate_limit(&self, status: u16) -> ProviderResult<()> {
         match status {
             429 => Err(ProviderError::RateLimited(
-                "Gemini API rate limit exceeded".to_string()
+                "Gemini API rate limit exceeded".to_string(),
             )),
             _ => Ok(()),
         }
@@ -168,24 +169,19 @@ impl Provider for GeminiProvider {
             },
         };
 
-        let response = self.client
+        let response = self
+            .client
             .post(&self.build_api_url())
             .json(&request)
             .send()
             .await
             .map_err(|e| {
                 if e.is_timeout() {
-                    ProviderError::RequestTimeout(
-                        format!("Gemini request timeout: {}", e)
-                    )
+                    ProviderError::RequestTimeout(format!("Gemini request timeout: {}", e))
                 } else if e.is_connect() {
-                    ProviderError::ConnectionFailed(
-                        format!("Gemini connection failed: {}", e)
-                    )
+                    ProviderError::ConnectionFailed(format!("Gemini connection failed: {}", e))
                 } else {
-                    ProviderError::ApiError(
-                        format!("Gemini API error: {}", e)
-                    )
+                    ProviderError::ApiError(format!("Gemini API error: {}", e))
                 }
             })?;
 
@@ -193,17 +189,15 @@ impl Provider for GeminiProvider {
         self.check_rate_limit(status)?;
 
         if status != 200 {
-            return Err(ProviderError::ApiError(
-                format!("Gemini API returned status {}", status)
-            ));
+            return Err(ProviderError::ApiError(format!(
+                "Gemini API returned status {}",
+                status
+            )));
         }
 
-        let gemini_response: GeminiResponse = response
-            .json()
-            .await
-            .map_err(|e| ProviderError::InvalidResponse(
-                format!("Failed to parse Gemini response: {}", e)
-            ))?;
+        let gemini_response: GeminiResponse = response.json().await.map_err(|e| {
+            ProviderError::InvalidResponse(format!("Failed to parse Gemini response: {}", e))
+        })?;
 
         self.parse_response(&gemini_response)
     }
@@ -225,23 +219,25 @@ impl Provider for GeminiProvider {
             },
         };
 
-        let response = self.client
+        let response = self
+            .client
             .post(&self.build_api_url())
             .json(&health_request)
             .send()
             .await
-            .map_err(|e| ProviderError::ConnectionFailed(
-                format!("Gemini health check failed: {}", e)
-            ))?;
+            .map_err(|e| {
+                ProviderError::ConnectionFailed(format!("Gemini health check failed: {}", e))
+            })?;
 
         if response.status().as_u16() == 200 {
             self.health_status = true;
             Ok(())
         } else {
             self.health_status = false;
-            Err(ProviderError::ConnectionFailed(
-                format!("Gemini health check returned status {}", response.status().as_u16())
-            ))
+            Err(ProviderError::ConnectionFailed(format!(
+                "Gemini health check returned status {}",
+                response.status().as_u16()
+            )))
         }
     }
 
@@ -316,7 +312,7 @@ mod tests {
         };
 
         let provider = GeminiProvider::new(config).unwrap();
-        
+
         let response = GeminiResponse {
             candidates: vec![GeminiCandidate {
                 content: GeminiContent {
@@ -344,10 +340,8 @@ mod tests {
         };
 
         let provider = GeminiProvider::new(config).unwrap();
-        
-        let response = GeminiResponse {
-            candidates: vec![],
-        };
+
+        let response = GeminiResponse { candidates: vec![] };
 
         let result = provider.parse_response(&response);
         assert!(result.is_err());
@@ -367,7 +361,7 @@ mod tests {
         let result = provider.check_rate_limit(429);
         assert!(result.is_err());
         match result.unwrap_err() {
-            ProviderError::RateLimited(_) => {},
+            ProviderError::RateLimited(_) => {}
             _ => panic!("Expected RateLimited error"),
         }
     }

@@ -1,3 +1,5 @@
+use serde::{Deserialize, Serialize};
+use std::sync::Arc;
 #[allow(dead_code)]
 /**
  * ═══════════════════════════════════════════════════════════════════
@@ -6,9 +8,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 use tauri::State;
-use std::sync::Arc;
 use tokio::sync::RwLock;
-use serde::{Deserialize, Serialize};
 
 use titane_infinity::multi_agents::{
     AgentConfig, AgentIAPermission, AgentPermissionManager, AgentRole,
@@ -116,7 +116,10 @@ pub async fn get_agent(
 
     match manager.get_agent(&agent_id) {
         Some(agent) => Ok(CommandResult::ok(agent.clone())),
-        None => Ok(CommandResult::err(format!("Agent '{}' not found", agent_id))),
+        None => Ok(CommandResult::err(format!(
+            "Agent '{}' not found",
+            agent_id
+        ))),
     }
 }
 

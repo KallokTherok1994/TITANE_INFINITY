@@ -4,8 +4,8 @@
 // ═══════════════════════════════════════════════════════════════
 
 use super::{TTSError, TTSRequest, TTSResult};
-use crate::security::shell_guard::ShellGuard;
 use crate::core::http_types::Client;
+use crate::security::shell_guard::ShellGuard;
 
 pub struct OnlineTTS {
     api_key: Option<String>,
@@ -46,7 +46,8 @@ impl OnlineTTS {
             urlencoding::encode(&request.text)
         );
 
-        let response = self.client
+        let response = self
+            .client
             .get(&url)
             .send()
             .await

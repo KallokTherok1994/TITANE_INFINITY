@@ -322,7 +322,7 @@ impl MemoryHealthEngine {
 
         // Estimer le temps de recovery
         let estimated_recovery_time_ms = Some(
-            (status.events_persisted as u64).saturating_mul(10), // ~10ms par event
+            status.events_persisted.saturating_mul(10), // ~10ms par event
         );
 
         let health = MemoryHealth {

@@ -8,8 +8,8 @@ use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
-use crate::ai::AIRequest;
 use crate::ai::router::AIRouter;
+use crate::ai::AIRequest;
 use crate::omega::{OmegaConfig, OmegaPipeline, PipelineInput, PipelineOutput};
 use crate::singularity::singularity_state::{ChatContext, SingularityState};
 
@@ -271,7 +271,8 @@ impl OmegaConversationBridge {
                     // Backend history not yet in prompt — inject it (canonical backend path)
                     if let Some(hist) = &request.history {
                         if !hist.is_empty() {
-                            let truncated: Vec<String> = hist.iter()
+                            let truncated: Vec<String> = hist
+                                .iter()
                                 .map(|line| {
                                     if line.len() > 200 {
                                         format!("{}…", &line[..200])
@@ -296,22 +297,40 @@ impl OmegaConversationBridge {
                 } else if base.is_empty() {
                     format!("{}\n\nUser: {}", history_block.trim(), request.user_message)
                 } else {
-                    format!("{}{}\n\nUser: {}", base, history_block, request.user_message)
+                    format!(
+                        "{}{}\n\nUser: {}",
+                        base, history_block, request.user_message
+                    )
                 }
             };
-            let provider_pref = request.ai_config.as_ref().and_then(|c| match c.provider_preference {
-                ProviderPreference::Local | ProviderPreference::Ollama => Some("local".to_string()),
-                _ => None,
-            });
-            let default_max_tokens = match request.ai_config.as_ref().map(|c| &c.provider_preference) {
-                Some(ProviderPreference::Local | ProviderPreference::Ollama) => 512,
-                _ => 2000,
-            };
+            let provider_pref =
+                request
+                    .ai_config
+                    .as_ref()
+                    .and_then(|c| match c.provider_preference {
+                        ProviderPreference::Local | ProviderPreference::Ollama => {
+                            Some("local".to_string())
+                        }
+                        _ => None,
+                    });
+            let default_max_tokens =
+                match request.ai_config.as_ref().map(|c| &c.provider_preference) {
+                    Some(ProviderPreference::Local | ProviderPreference::Ollama) => 512,
+                    _ => 2000,
+                };
 
             let ai_request = AIRequest {
                 prompt,
-                temperature: request.ai_config.as_ref().map(|c| c.temperature).unwrap_or(0.7),
-                max_tokens: request.ai_config.as_ref().and_then(|c| c.max_tokens).unwrap_or(default_max_tokens),
+                temperature: request
+                    .ai_config
+                    .as_ref()
+                    .map(|c| c.temperature)
+                    .unwrap_or(0.7),
+                max_tokens: request
+                    .ai_config
+                    .as_ref()
+                    .and_then(|c| c.max_tokens)
+                    .unwrap_or(default_max_tokens),
                 stream: false,
                 provider_preference: provider_pref,
             };
@@ -319,17 +338,27 @@ impl OmegaConversationBridge {
                 Ok(ai_resp) => {
                     log::info!(
                         "[OMEGA-BRIDGE] ✅ Real AI call succeeded | provider={:?} | tokens={}",
-                        ai_resp.provider, ai_resp.tokens
+                        ai_resp.provider,
+                        ai_resp.tokens
                     );
                     (ai_resp.content, format!("{:?}", ai_resp.provider))
                 }
                 Err(e) => {
-                    log::warn!("[OMEGA-BRIDGE] ⚠️ Real AI call failed ({}), using OMEGA output", e);
-                    (omega_result.processed_text.clone(), omega_result.model.clone())
+                    log::warn!(
+                        "[OMEGA-BRIDGE] ⚠️ Real AI call failed ({}), using OMEGA output",
+                        e
+                    );
+                    (
+                        omega_result.processed_text.clone(),
+                        omega_result.model.clone(),
+                    )
                 }
             }
         } else {
-            (omega_result.processed_text.clone(), omega_result.model.clone())
+            (
+                omega_result.processed_text.clone(),
+                omega_result.model.clone(),
+            )
         };
 
         // Parse intent from OMEGA metadata
@@ -545,8 +574,11 @@ mod tests {
 
     #[tokio::test]
     async fn test_omega_bridge_initialization() {
-        let bridge =
-            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity(), None);
+        let bridge = OmegaConversationBridge::new(
+            OmegaBridgeConfig::default(),
+            create_test_singularity(),
+            None,
+        );
         let result = bridge.initialize().await;
         assert!(
             result.is_ok(),
@@ -556,8 +588,11 @@ mod tests {
 
     #[tokio::test]
     async fn test_omega_bridge_health_check() {
-        let bridge =
-            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity(), None);
+        let bridge = OmegaConversationBridge::new(
+            OmegaBridgeConfig::default(),
+            create_test_singularity(),
+            None,
+        );
         let _ = bridge.initialize().await;
 
         let health = bridge.health_check().await;
@@ -566,8 +601,11 @@ mod tests {
 
     #[tokio::test]
     async fn test_omega_bridge_quick_process() {
-        let bridge =
-            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity(), None);
+        let bridge = OmegaConversationBridge::new(
+            OmegaBridgeConfig::default(),
+            create_test_singularity(),
+            None,
+        );
         let _ = bridge.initialize().await;
 
         let result = bridge.quick_process("Hello OMEGA").await;
@@ -589,8 +627,11 @@ mod tests {
 
     #[tokio::test]
     async fn test_omega_bridge_conversion() {
-        let bridge =
-            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity(), None);
+        let bridge = OmegaConversationBridge::new(
+            OmegaBridgeConfig::default(),
+            create_test_singularity(),
+            None,
+        );
 
         let request = ConversationRequest {
             user_message: "Test message".to_string(),
@@ -614,8 +655,11 @@ mod tests {
     #[tokio::test]
     async fn test_omega_to_conversation_response_conversion() {
         // R05 P2: Test direct OMEGA → ConversationResponse conversion
-        let bridge =
-            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity(), None);
+        let bridge = OmegaConversationBridge::new(
+            OmegaBridgeConfig::default(),
+            create_test_singularity(),
+            None,
+        );
         let _ = bridge.initialize().await;
 
         let request = ConversationRequest {

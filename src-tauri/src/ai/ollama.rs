@@ -5,8 +5,8 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 use super::{AIError, AIProvider, AIRequest, AIResponse, AIResult};
-use crate::security::shell_guard::ShellGuard;
 use crate::core::http_types::Client;
+use crate::security::shell_guard::ShellGuard;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Mutex;
@@ -63,7 +63,7 @@ fn ollama_request_timeout() -> Duration {
     std::env::var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV)
         .ok()
         .and_then(|v| v.trim().parse::<u64>().ok())
-        .filter(|&s| s >= 10 && s <= 300)
+        .filter(|&s| (10..=300).contains(&s))
         .map(Duration::from_secs)
         .unwrap_or(Duration::from_secs(OLLAMA_REQUEST_TIMEOUT_SECS_DEFAULT))
 }
@@ -609,7 +609,10 @@ impl OllamaClient {
             let body_trimmed = truncate_for_log(body.trim(), 220);
             let body_lower = body_trimmed.to_lowercase();
 
-            if status.as_u16() == 404 && body_lower.contains("model") && body_lower.contains("not found") {
+            if status.as_u16() == 404
+                && body_lower.contains("model")
+                && body_lower.contains("not found")
+            {
                 return Err(AIError::APIError(format!(
                     "OLLAMA_MODEL_NOT_FOUND:model={} body={}",
                     model, body_trimmed
@@ -714,10 +717,7 @@ mod tests {
 
     #[test]
     fn test_select_fallback_model_prefers_family_then_first() {
-        let models = vec![
-            "llama3.1:latest".to_string(),
-            "mistral:latest".to_string(),
-        ];
+        let models = vec!["llama3.1:latest".to_string(), "mistral:latest".to_string()];
 
         let selected = select_fallback_model("llama3:latest", &models);
         assert_eq!(selected.as_deref(), Some("llama3.1:latest"));

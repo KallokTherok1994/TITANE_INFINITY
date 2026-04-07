@@ -74,19 +74,22 @@ pub fn fusion_update_state(request: UpdateStateRequest) -> Result<UpdateStateRes
     fusion_update_state_internal(request)
 }
 
-fn fusion_update_state_internal(request: UpdateStateRequest) -> Result<UpdateStateResponse, String> {
+fn fusion_update_state_internal(
+    request: UpdateStateRequest,
+) -> Result<UpdateStateResponse, String> {
     let mut state = request.current_state.clone();
 
-    let state_object = state.as_object_mut().ok_or_else(|| {
-        "Current state must be a JSON object".to_string()
-    })?;
+    let state_object = state
+        .as_object_mut()
+        .ok_or_else(|| "Current state must be a JSON object".to_string())?;
 
-    let meta_entry = state_object
-        .entry("meta")
-        .or_insert_with(|| json!({}));
+    let meta_entry = state_object.entry("meta").or_insert_with(|| json!({}));
 
     if let Some(meta_obj) = meta_entry.as_object_mut() {
-        meta_obj.insert("timestamp".to_string(), json!(Utc::now().timestamp_millis()));
+        meta_obj.insert(
+            "timestamp".to_string(),
+            json!(Utc::now().timestamp_millis()),
+        );
         if let Some(score) = request.coherence_score {
             meta_obj.insert("coherence_score".to_string(), json!(score));
         }
@@ -127,9 +130,7 @@ fn fusion_update_state_internal(request: UpdateStateRequest) -> Result<UpdateSta
 
 /// Analyze pipeline stats and suggest optimizations
 #[tauri::command]
-pub fn fusion_auto_optimize(
-    request: AutoOptimizeRequest,
-) -> Result<AutoOptimizeResponse, String> {
+pub fn fusion_auto_optimize(request: AutoOptimizeRequest) -> Result<AutoOptimizeResponse, String> {
     fusion_auto_optimize_internal(request)
 }
 

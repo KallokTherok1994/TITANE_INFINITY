@@ -8,7 +8,7 @@ impl CreatorCore {
     pub fn new() -> Self {
         Self
     }
-    
+
     /// Exécution création
     pub fn execute(&self, input: &str) -> String {
         format!(

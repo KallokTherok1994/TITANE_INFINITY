@@ -35,9 +35,13 @@ impl ImageEmbeddingEngine {
             max_cache_size: 1000,
         }
     }
-    
+
     /// Generate image embedding
-    pub async fn embed_image(&self, image_id: String, image: &[u8]) -> MultimodalResult<ImageEmbedding> {
+    pub async fn embed_image(
+        &self,
+        image_id: String,
+        image: &[u8],
+    ) -> MultimodalResult<ImageEmbedding> {
         // Check cache
         {
             let cache = self.cache.read().await;
@@ -45,13 +49,13 @@ impl ImageEmbeddingEngine {
                 return Ok(cached.clone());
             }
         }
-        
+
         // Generate embedding
         let manager = self.model_manager.read().await;
         let embedding = manager.embed_image(image).await?;
         let model = format!("{:?}", manager.current_model());
         drop(manager);
-        
+
         let image_embedding = ImageEmbedding {
             image_id: image_id.clone(),
             embedding,
@@ -59,7 +63,7 @@ impl ImageEmbeddingEngine {
             timestamp: chrono::Utc::now().timestamp(),
             metadata: serde_json::json!({}),
         };
-        
+
         // Store in cache
         {
             let mut cache = self.cache.write().await;
@@ -71,12 +75,15 @@ impl ImageEmbeddingEngine {
             }
             cache.insert(image_id, image_embedding.clone());
         }
-        
+
         Ok(image_embedding)
     }
-    
+
     /// Batch embed images
-    pub async fn embed_batch(&self, images: Vec<(String, Vec<u8>)>) -> MultimodalResult<Vec<ImageEmbedding>> {
+    pub async fn embed_batch(
+        &self,
+        images: Vec<(String, Vec<u8>)>,
+    ) -> MultimodalResult<Vec<ImageEmbedding>> {
         let mut results = Vec::new();
         for (id, img) in images {
             let embedding = self.embed_image(id, &img).await?;
@@ -84,13 +91,13 @@ impl ImageEmbeddingEngine {
         }
         Ok(results)
     }
-    
+
     /// Clear cache
     pub async fn clear_cache(&self) {
         let mut cache = self.cache.write().await;
         cache.clear();
     }
-    
+
     /// Get cache stats
     pub async fn cache_stats(&self) -> (usize, usize) {
         let cache = self.cache.read().await;
@@ -102,21 +109,27 @@ impl ImageEmbeddingEngine {
 mod tests {
     use super::*;
     use crate::multimodal::vision_models::{VisionModel, VisionModelManager};
-    
+
     #[tokio::test]
     async fn test_image_embedding_basic() {
-        let manager = Arc::new(RwLock::new(VisionModelManager::new(VisionModel::CLIP, true)));
+        let manager = Arc::new(RwLock::new(VisionModelManager::new(
+            VisionModel::CLIP,
+            true,
+        )));
         let engine = ImageEmbeddingEngine::new(manager);
         let result = engine.embed_image("test".to_string(), &[0u8; 100]).await;
         assert!(result.is_ok());
     }
-    
+
     #[tokio::test]
     async fn test_embedding_cache() {
-        let manager = Arc::new(RwLock::new(VisionModelManager::new(VisionModel::CLIP, true)));
+        let manager = Arc::new(RwLock::new(VisionModelManager::new(
+            VisionModel::CLIP,
+            true,
+        )));
         let engine = ImageEmbeddingEngine::new(manager);
         let id = "test_cache".to_string();
-        
+
         let _ = engine.embed_image(id.clone(), &[0u8; 100]).await;
         let (size, _) = engine.cache_stats().await;
         assert_eq!(size, 1);

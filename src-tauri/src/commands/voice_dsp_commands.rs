@@ -26,9 +26,7 @@ pub struct MFCCResponse {
 
 /// Extraire les coefficients MFCC d'un signal audio
 #[tauri::command]
-pub async fn voice_extract_mfcc(
-    request: MFCCRequest,
-) -> Result<MFCCResponse, String> {
+pub async fn voice_extract_mfcc(request: MFCCRequest) -> Result<MFCCResponse, String> {
     // Permission check
     PERMISSION_GUARD
         .require("system_read", Role::User, "voice_extract_mfcc")

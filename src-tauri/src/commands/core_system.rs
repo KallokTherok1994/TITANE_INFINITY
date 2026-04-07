@@ -6,16 +6,14 @@
 use crate::{
     core::helios_module::HeliosCoreModule,
     plugin_system::{
-        registry::CoreRegistry,
-        orchestrator::CoreOrchestrator,
-        core_module::CoreModule,
+        core_module::CoreModule, orchestrator::CoreOrchestrator, registry::CoreRegistry,
     },
     types::HeliosState,
 };
+use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tauri::State;
 use tokio::sync::RwLock;
-use serde::{Serialize, Deserialize};
 
 // ═══════════════════════════════════════════════════════════════
 // TYPE DEFINITIONS
@@ -77,7 +75,7 @@ pub async fn get_core_system_status(
                         message: health.message,
                         uptime_seconds: health.uptime_seconds,
                     });
-                },
+                }
                 Err(e) => {
                     health_summary.push(CoreHealthSummary {
                         name: name.clone(),
@@ -107,7 +105,9 @@ pub async fn initialize_all_cores(
     let orchestrator = CoreOrchestrator::new(registry.inner().clone());
 
     let start = crate::core::utils::now_ms();
-    let report = orchestrator.initialize_all().await
+    let report = orchestrator
+        .initialize_all()
+        .await
         .map_err(|e| format!("Initialization failed: {}", e))?;
     let duration = crate::core::utils::elapsed_ms(start);
 
@@ -128,7 +128,9 @@ pub async fn shutdown_all_cores(
     let orchestrator = CoreOrchestrator::new(registry.inner().clone());
 
     let start = crate::core::utils::now_ms();
-    let report = orchestrator.shutdown_all().await
+    let report = orchestrator
+        .shutdown_all()
+        .await
         .map_err(|e| format!("Shutdown failed: {}", e))?;
     let duration = crate::core::utils::elapsed_ms(start);
 
@@ -148,11 +150,13 @@ pub async fn get_helios_metrics(
 ) -> Result<HeliosState, String> {
     let reg = registry.read().await;
 
-    let helios = reg.get_core("Helios")
+    let helios = reg
+        .get_core("Helios")
         .ok_or_else(|| "Helios core not found in registry".to_string())?;
 
     // Downcast to HeliosCoreModule to access collect()
-    let helios_module = helios.as_any()
+    let helios_module = helios
+        .as_any()
         .downcast_ref::<HeliosCoreModule>()
         .ok_or_else(|| "Failed to downcast to HeliosCoreModule".to_string())?;
 
@@ -168,10 +172,12 @@ pub async fn get_helios_state_cached(
 ) -> Result<Option<HeliosState>, String> {
     let reg = registry.read().await;
 
-    let helios = reg.get_core("Helios")
+    let helios = reg
+        .get_core("Helios")
         .ok_or_else(|| "Helios core not found in registry".to_string())?;
 
-    let helios_module = helios.as_any()
+    let helios_module = helios
+        .as_any()
         .downcast_ref::<HeliosCoreModule>()
         .ok_or_else(|| "Failed to downcast to HeliosCoreModule".to_string())?;
 
@@ -189,10 +195,13 @@ pub async fn check_core_health(
 ) -> Result<CoreHealthSummary, String> {
     let reg = registry.read().await;
 
-    let module = reg.get_core(&core_name)
+    let module = reg
+        .get_core(&core_name)
         .ok_or_else(|| format!("Core '{}' not found", core_name))?;
 
-    let health = module.health_check().await
+    let health = module
+        .health_check()
+        .await
         .map_err(|e| format!("Health check failed: {}", e))?;
 
     Ok(CoreHealthSummary {
@@ -214,10 +223,13 @@ pub async fn get_core_metrics_by_name(
 ) -> Result<std::collections::HashMap<String, f64>, String> {
     let reg = registry.read().await;
 
-    let module = reg.get_core(&core_name)
+    let module = reg
+        .get_core(&core_name)
         .ok_or_else(|| format!("Core '{}' not found", core_name))?;
 
-    module.metrics().await
+    module
+        .metrics()
+        .await
         .map_err(|e| format!("Failed to get metrics: {}", e))
 }
 
@@ -234,14 +246,12 @@ mod tests {
         let status = CoreSystemStatus {
             total_cores: 1,
             initialized_cores: vec!["Helios".to_string()],
-            health_summary: vec![
-                CoreHealthSummary {
-                    name: "Helios".to_string(),
-                    is_healthy: true,
-                    message: "All systems operational".to_string(),
-                    uptime_seconds: 100,
-                }
-            ],
+            health_summary: vec![CoreHealthSummary {
+                name: "Helios".to_string(),
+                is_healthy: true,
+                message: "All systems operational".to_string(),
+                uptime_seconds: 100,
+            }],
         };
 
         let json = serde_json::to_string(&status).expect("CoreSystemStatus should serialize");

@@ -5,14 +5,14 @@
 // Ring: 2 (Engines — Pure logic, deterministic, no I/O)
 // ═══════════════════════════════════════════════════════════════
 
-pub mod router;
+pub mod memory;
 pub mod policy;
 pub mod resilience;
-pub mod memory;
+pub mod router;
 pub mod search;
 
-pub use router::RouterEngine;
+pub use memory::MemoryEngine;
 pub use policy::PolicyEngine;
 pub use resilience::ResilienceEngine;
-pub use memory::MemoryEngine;
+pub use router::RouterEngine;
 pub use search::SearchEngine;

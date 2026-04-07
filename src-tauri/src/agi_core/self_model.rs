@@ -159,7 +159,10 @@ impl SelfModelEngine {
                 name: "real_time_data".to_string(),
                 description: "Cannot access real-time external data".to_string(),
                 severity: LimitationSeverity::Moderate,
-                workarounds: vec!["Use cached data".to_string(), "Request user input".to_string()],
+                workarounds: vec![
+                    "Use cached data".to_string(),
+                    "Request user input".to_string(),
+                ],
                 improvable: true,
             },
             Limitation {
@@ -228,15 +231,22 @@ impl SelfModelEngine {
     /// Récupère la proficience d'une capacité
     pub async fn get_proficiency(&self, name: &str) -> Option<f32> {
         let model = self.model.read().await;
-        model.capabilities.iter()
+        model
+            .capabilities
+            .iter()
             .find(|c| c.name == name)
             .map(|c| c.proficiency)
     }
 
     /// Récupère les limitations par sévérité
-    pub async fn get_limitations_by_severity(&self, severity: LimitationSeverity) -> Vec<Limitation> {
+    pub async fn get_limitations_by_severity(
+        &self,
+        severity: LimitationSeverity,
+    ) -> Vec<Limitation> {
         let model = self.model.read().await;
-        model.limitations.iter()
+        model
+            .limitations
+            .iter()
             .filter(|l| l.severity == severity)
             .cloned()
             .collect()
@@ -273,7 +283,9 @@ impl SelfModelEngine {
         let mut missing = Vec::new();
 
         for req in required_capabilities {
-            let has_capability = model.capabilities.iter()
+            let has_capability = model
+                .capabilities
+                .iter()
                 .any(|c| c.name == *req && c.proficiency > 0.5);
 
             if !has_capability {

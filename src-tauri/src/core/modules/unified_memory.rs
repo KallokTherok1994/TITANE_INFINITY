@@ -576,10 +576,7 @@ impl UnifiedMemory {
             // File: <storage_path>/<item_id>.mem — JSON for cross-session survival.
             if let Ok(json) = serde_json::to_string(&item) {
                 if let Err(e) = std::fs::write(&metadata.file_path, json.as_bytes()) {
-                    eprintln!(
-                        "[MEMORY] ⚠️ LTM disk write failed for {}: {}",
-                        item.id, e
-                    );
+                    eprintln!("[MEMORY] ⚠️ LTM disk write failed for {}: {}", item.id, e);
                     // Remove from index if write failed to avoid stale ghost entries
                     self.ltm.index.remove(&item.id);
                 }
@@ -784,7 +781,10 @@ impl UnifiedMemory {
         let now = Self::current_timestamp();
 
         // Collect existing STM + MTM ids to skip duplicates
-        let existing_ids: std::collections::HashSet<String> = self.stm.items.iter()
+        let existing_ids: std::collections::HashSet<String> = self
+            .stm
+            .items
+            .iter()
             .map(|i| i.id.clone())
             .chain(self.mtm.items.iter().map(|i| i.id.clone()))
             .chain(self.ltm.index.keys().cloned())
@@ -800,7 +800,8 @@ impl UnifiedMemory {
                 continue;
             }
 
-            let content_str = entry.get("content")
+            let content_str = entry
+                .get("content")
                 .and_then(|v| v.as_str())
                 .unwrap_or("")
                 .to_string();
@@ -809,26 +810,29 @@ impl UnifiedMemory {
                 continue;
             }
 
-            let importance_raw = entry.get("importance")
+            let importance_raw = entry
+                .get("importance")
                 .and_then(|v| v.as_u64())
                 .unwrap_or(3) as f32;
             let importance = (importance_raw / 5.0).clamp(0.0, 1.0);
 
-            let tags: MemoryTags = entry.get("tags")
+            let tags: MemoryTags = entry
+                .get("tags")
                 .and_then(|v| v.as_array())
-                .map(|arr| arr.iter()
-                    .filter_map(|t| t.as_str().map(|s| s.to_string()))
-                    .collect())
+                .map(|arr| {
+                    arr.iter()
+                        .filter_map(|t| t.as_str().map(|s| s.to_string()))
+                        .collect()
+                })
                 .unwrap_or_default();
 
-            let created_at = entry.get("metadata")
+            let created_at = entry
+                .get("metadata")
                 .and_then(|m| m.get("created_at"))
                 .and_then(|v| v.as_u64())
                 .unwrap_or(now);
 
-            let memory_type = match entry.get("content_type")
-                .and_then(|v| v.as_str())
-            {
+            let memory_type = match entry.get("content_type").and_then(|v| v.as_str()) {
                 Some("knowledge") => MemoryType::Knowledge,
                 Some("decision") => MemoryType::Decision,
                 Some("project_context") => MemoryType::Project,
@@ -856,7 +860,10 @@ impl UnifiedMemory {
         }
 
         if loaded > 0 {
-            println!("[MEMORY] 🔄 Loaded {} persistent memory entries into UnifiedMemory STM", loaded);
+            println!(
+                "[MEMORY] 🔄 Loaded {} persistent memory entries into UnifiedMemory STM",
+                loaded
+            );
         }
     }
 

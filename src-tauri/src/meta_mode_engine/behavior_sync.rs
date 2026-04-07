@@ -2,7 +2,7 @@
 //! 🎯 BEHAVIORAL SYNCHRONIZATION ENGINE
 //! Synchronisation comportementale avec patterns Kevin
 
-use std::collections::{VecDeque, HashMap};
+use std::collections::{HashMap, VecDeque};
 
 pub struct BehaviorSynchronizer {
     interaction_patterns: VecDeque<String>,
@@ -16,22 +16,22 @@ impl BehaviorSynchronizer {
             word_frequency: HashMap::new(),
         }
     }
-    
+
     /// Synchroniser avec le comportement actuel
     pub fn synchronize(&mut self, input: &str) {
         self.interaction_patterns.push_back(input.to_string());
-        
+
         if self.interaction_patterns.len() > 100 {
             self.interaction_patterns.pop_front();
         }
-        
+
         // Analyser fréquence des mots
         for word in input.split_whitespace() {
             let normalized = word.to_lowercase();
             *self.word_frequency.entry(normalized).or_insert(0) += 1;
         }
     }
-    
+
     /// Détecter les mots récurrents (patterns comportementaux)
     pub fn get_recurring_words(&self, threshold: usize) -> Vec<String> {
         self.word_frequency

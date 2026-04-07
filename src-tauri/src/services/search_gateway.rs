@@ -30,7 +30,11 @@ impl SearchGatewayService {
 
     /// Perform search with Brave provider only.
     /// If BRAVE_API_KEY is missing, return explicit CREDENTIALS_MISSING error.
-    pub async fn search(&self, query: &str, max_results: usize) -> Result<Vec<SearchResult>, String> {
+    pub async fn search(
+        &self,
+        query: &str,
+        max_results: usize,
+    ) -> Result<Vec<SearchResult>, String> {
         let brave_api_key = std::env::var("BRAVE_API_KEY")
             .ok()
             .map(|value| value.trim().to_string())

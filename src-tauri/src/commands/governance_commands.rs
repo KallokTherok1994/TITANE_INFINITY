@@ -112,7 +112,11 @@ pub async fn toggle_ia_policy(
     policy_id: String,
     enabled: bool,
 ) -> Result<SecureResponse<bool>, String> {
-    log::debug!("[GOVERNANCE] toggle_ia_policy: {} -> {}", policy_id, enabled);
+    log::debug!(
+        "[GOVERNANCE] toggle_ia_policy: {} -> {}",
+        policy_id,
+        enabled
+    );
 
     let mut state = IA_POLICIES
         .lock()
@@ -132,7 +136,10 @@ pub async fn toggle_ia_policy(
         );
         Ok(SecureResponse::success(true))
     } else {
-        Ok(SecureResponse::error(format!("Policy not found: {}", policy_id)))
+        Ok(SecureResponse::error(format!(
+            "Policy not found: {}",
+            policy_id
+        )))
     }
 }
 
@@ -284,7 +291,10 @@ pub async fn export_security_log(format: String) -> Result<SecureResponse<String
             }
             Ok(SecureResponse::success(csv))
         }
-        _ => Ok(SecureResponse::error(format!("Unsupported format: {}", format))),
+        _ => Ok(SecureResponse::error(format!(
+            "Unsupported format: {}",
+            format
+        ))),
     }
 }
 

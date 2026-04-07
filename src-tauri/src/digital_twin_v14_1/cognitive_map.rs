@@ -20,12 +20,15 @@ impl CognitiveMap {
     }
 
     pub fn add_concept(&mut self, name: String, description: String) {
-        self.concepts.insert(name.clone(), Concept {
-            name,
-            description,
-            strength: 0.5,
-            last_accessed: chrono::Utc::now(),
-        });
+        self.concepts.insert(
+            name.clone(),
+            Concept {
+                name,
+                description,
+                strength: 0.5,
+                last_accessed: chrono::Utc::now(),
+            },
+        );
     }
 
     pub fn connect(&mut self, from: String, to: String, relation_type: String) {

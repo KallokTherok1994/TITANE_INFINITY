@@ -6,27 +6,30 @@
 //! L'AGI Core est le noyau d'intelligence générale de TITANE∞.
 //! Il gère: introspection, meta-cognition, auto-amélioration, stratégie, évolution.
 
+pub mod abstraction;
+pub mod diagnostics;
+pub mod evolution;
 pub mod introspection;
 pub mod meta_learning;
+pub mod multimodal_perception;
+pub mod reasoning;
 pub mod self_model;
 pub mod strategy;
-pub mod evolution;
-pub mod reasoning;
-pub mod abstraction;
-pub mod transfer;
-pub mod diagnostics;
-pub mod multimodal_perception; // SUPER PROMPT #15 - Phase 7
+pub mod transfer; // SUPER PROMPT #15 - Phase 7
 
-pub use introspection::{IntrospectionEngine, IntrospectionReport, CognitiveState};
-pub use meta_learning::{MetaLearningEngine, LearningStrategy, LearningMetrics};
-pub use self_model::{SelfModelEngine, SelfModel, Capability, Limitation};
-pub use strategy::{StrategyOptimizer, Strategy, StrategyScore};
-pub use evolution::{EvolutionEngine, EvolutionPlan, EvolutionMetrics};
-pub use reasoning::{ReasoningEngine, ReasoningChain, ReasoningStep};
-pub use abstraction::{AbstractionEngine, Concept, AbstractionLevel};
-pub use transfer::{TransferEngine, TransferContext, TransferResult};
+pub use abstraction::{AbstractionEngine, AbstractionLevel, Concept};
 pub use diagnostics::{AGIDiagnostics, AGIEvent, AGIHealth};
-pub use multimodal_perception::{MultimodalAGIContext, MultimodalPerceptionEngine, PerceptiveIntrospection, MultimodalPerceptionStats};
+pub use evolution::{EvolutionEngine, EvolutionMetrics, EvolutionPlan};
+pub use introspection::{CognitiveState, IntrospectionEngine, IntrospectionReport};
+pub use meta_learning::{LearningMetrics, LearningStrategy, MetaLearningEngine};
+pub use multimodal_perception::{
+    MultimodalAGIContext, MultimodalPerceptionEngine, MultimodalPerceptionStats,
+    PerceptiveIntrospection,
+};
+pub use reasoning::{ReasoningChain, ReasoningEngine, ReasoningStep};
+pub use self_model::{Capability, Limitation, SelfModel, SelfModelEngine};
+pub use strategy::{Strategy, StrategyOptimizer, StrategyScore};
+pub use transfer::{TransferContext, TransferEngine, TransferResult};
 
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -108,27 +111,39 @@ impl AGICore {
     }
 
     /// Processus de méta-raisonnement complet
-    pub async fn meta_reason(&self, input: &str, context: &AGIContext) -> Result<AGIResponse, AGIError> {
+    pub async fn meta_reason(
+        &self,
+        input: &str,
+        context: &AGIContext,
+    ) -> Result<AGIResponse, AGIError> {
         let start = std::time::Instant::now();
 
         // 1. Introspection: Analyser l'état cognitif actuel
         let introspection = self.introspection.analyze(&self.state, context).await;
-        self.diagnostics.emit(AGIEvent::IntrospectionComplete(introspection.clone())).await;
+        self.diagnostics
+            .emit(AGIEvent::IntrospectionComplete(introspection.clone()))
+            .await;
 
         // 2. Raisonnement: Construire une chaîne de raisonnement
         let reasoning_chain = self.reasoning_engine.reason(input, context).await;
-        self.diagnostics.emit(AGIEvent::ReasoningComplete(reasoning_chain.clone())).await;
+        self.diagnostics
+            .emit(AGIEvent::ReasoningComplete(reasoning_chain.clone()))
+            .await;
 
         // 3. Abstraction: Identifier les concepts de haut niveau
-        let concepts = self.abstraction_engine.extract(input, &reasoning_chain).await;
+        let concepts = self
+            .abstraction_engine
+            .extract(input, &reasoning_chain)
+            .await;
 
         // 4. Stratégie: Sélectionner la meilleure approche
-        let strategy = self.strategy_optimizer.select(
-            &introspection,
-            &reasoning_chain,
-            &concepts,
-        ).await;
-        self.diagnostics.emit(AGIEvent::StrategySelected(strategy.clone())).await;
+        let strategy = self
+            .strategy_optimizer
+            .select(&introspection, &reasoning_chain, &concepts)
+            .await;
+        self.diagnostics
+            .emit(AGIEvent::StrategySelected(strategy.clone()))
+            .await;
 
         // 5. Meta-Learning: Apprendre de l'interaction
         if self.config.meta_learning_enabled {
@@ -149,13 +164,17 @@ impl AGICore {
         // 8. Evolution: Planifier les améliorations
         if self.config.evolution_enabled {
             let evolution_plan = self.evolution_engine.plan(&introspection).await;
-            self.diagnostics.emit(AGIEvent::EvolutionPlanned(evolution_plan)).await;
+            self.diagnostics
+                .emit(AGIEvent::EvolutionPlanned(evolution_plan))
+                .await;
         }
 
         let duration = start.elapsed();
-        self.diagnostics.emit(AGIEvent::MetaReasoningComplete {
-            duration_ms: duration.as_millis() as u64,
-        }).await;
+        self.diagnostics
+            .emit(AGIEvent::MetaReasoningComplete {
+                duration_ms: duration.as_millis() as u64,
+            })
+            .await;
 
         Ok(AGIResponse {
             reasoning_chain,

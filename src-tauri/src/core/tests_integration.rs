@@ -8,14 +8,14 @@ mod integration_tests {
     use crate::{
         core::helios_module::HeliosCoreModule,
         plugin_system::{
-            registry::CoreRegistry,
-            orchestrator::CoreOrchestrator,
             core_module::{CoreConfig, CoreModule},
+            orchestrator::CoreOrchestrator,
+            registry::CoreRegistry,
         },
     };
+    use std::collections::HashMap;
     use std::sync::Arc;
     use tokio::sync::RwLock;
-    use std::collections::HashMap;
 
     #[tokio::test]
     async fn test_helios_full_lifecycle() {
@@ -40,7 +40,9 @@ mod integration_tests {
             .expect("initialize_all should succeed");
         assert_eq!(init_report.successful_modules.len(), 1);
         assert_eq!(init_report.failed_modules.len(), 0);
-        assert!(init_report.successful_modules.contains(&"Helios".to_string()));
+        assert!(init_report
+            .successful_modules
+            .contains(&"Helios".to_string()));
 
         // 5. Check health
         let health = helios
@@ -107,7 +109,7 @@ mod integration_tests {
         {
             let reg = registry.read().await;
             let deps = reg.get_dependencies("Helios");
-            assert_eq!(deps.len(), 0);  // Helios has no dependencies
+            assert_eq!(deps.len(), 0); // Helios has no dependencies
         }
     }
 
@@ -132,9 +134,7 @@ mod integration_tests {
 
         for _ in 0..5 {
             let helios_clone = helios.clone();
-            let handle = tokio::spawn(async move {
-                helios_clone.collect().await
-            });
+            let handle = tokio::spawn(async move { helios_clone.collect().await });
             handles.push(handle);
         }
 
@@ -266,9 +266,10 @@ mod integration_tests {
             name: "Helios".to_string(),
             enabled: true,
             priority: 200,
-            settings: HashMap::from([
-                ("collection_interval_seconds".to_string(), "30".to_string()),
-            ]),
+            settings: HashMap::from([(
+                "collection_interval_seconds".to_string(),
+                "30".to_string(),
+            )]),
         };
 
         let result = helios.reconfigure(&new_config).await;

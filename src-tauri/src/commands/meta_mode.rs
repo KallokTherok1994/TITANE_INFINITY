@@ -2,7 +2,9 @@
 //! Commandes Tauri exposant le Meta-Mode Engine au frontend
 
 use crate::auto_evolution_v15::{AutoEvolutionEngine, KevinMetrics};
-use crate::meta_mode_engine::{KevinState, MetaModeConfig, MetaModeEngine, MetaModeResponse, TitaneMode};
+use crate::meta_mode_engine::{
+    KevinState, MetaModeConfig, MetaModeEngine, MetaModeResponse, TitaneMode,
+};
 use chrono::{DateTime, Utc};
 use tauri::State;
 use tokio::sync::RwLock;
@@ -112,7 +114,8 @@ pub async fn meta_mode_process(
     state: State<'_, MetaModeState>,
 ) -> Result<InteractionResponse, String> {
     let response = {
-        let mut engine: tokio::sync::RwLockWriteGuard<'_, MetaModeEngine> = state.engine.write().await;
+        let mut engine: tokio::sync::RwLockWriteGuard<'_, MetaModeEngine> =
+            state.engine.write().await;
         engine.process_interaction(&request.input, &request.context)
     };
 

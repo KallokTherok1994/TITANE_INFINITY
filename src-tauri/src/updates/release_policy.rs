@@ -74,7 +74,10 @@ impl std::fmt::Display for ReleasePolicyError {
         match self {
             Self::EmptyManifestSignature => write!(f, "Manifest signature is required"),
             Self::MigrationSignatureRequired => {
-                write!(f, "Migration signature must be verified when migration exists")
+                write!(
+                    f,
+                    "Migration signature must be verified when migration exists"
+                )
             }
             Self::DowngradeBlocked {
                 from_version,
@@ -84,10 +87,17 @@ impl std::fmt::Display for ReleasePolicyError {
             }
             Self::EmptyDescription => write!(f, "Manifest description must be non-empty"),
             Self::StableRequiresFiles => {
-                write!(f, "Stable ring requires at least one file in update manifest")
+                write!(
+                    f,
+                    "Stable ring requires at least one file in update manifest"
+                )
             }
             Self::VersionNotUpdated { expected, actual } => {
-                write!(f, "Version gate failed: expected {}, got {}", expected, actual)
+                write!(
+                    f,
+                    "Version gate failed: expected {}, got {}",
+                    expected, actual
+                )
             }
         }
     }
@@ -106,8 +116,7 @@ pub fn enforce_pre_update_policy(
     }
 
     if !policy.allow_downgrade
-        && compare_versions(&manifest.version, current_version)
-            == std::cmp::Ordering::Less
+        && compare_versions(&manifest.version, current_version) == std::cmp::Ordering::Less
     {
         return Err(ReleasePolicyError::DowngradeBlocked {
             from_version: current_version.to_string(),
@@ -159,8 +168,14 @@ fn compare_versions(left: &str, right: &str) -> std::cmp::Ordering {
 fn parse_semver_like(version: &str) -> (u64, u64, u64) {
     let clean = version.trim().trim_start_matches('v');
     let mut parts = clean.split('.');
-    let major = parts.next().and_then(|v| v.parse::<u64>().ok()).unwrap_or(0);
-    let minor = parts.next().and_then(|v| v.parse::<u64>().ok()).unwrap_or(0);
+    let major = parts
+        .next()
+        .and_then(|v| v.parse::<u64>().ok())
+        .unwrap_or(0);
+    let minor = parts
+        .next()
+        .and_then(|v| v.parse::<u64>().ok())
+        .unwrap_or(0);
     let patch_str = parts.next().unwrap_or("0");
     let patch = patch_str
         .split('-')
@@ -228,6 +243,9 @@ mod tests {
         let candidate = manifest("1.2.0");
 
         let result = enforce_post_update_gates_v2(&ring, "1.2.0", "1.1.9", &candidate, &gates);
-        assert!(matches!(result, Err(ReleasePolicyError::VersionNotUpdated { .. })));
+        assert!(matches!(
+            result,
+            Err(ReleasePolicyError::VersionNotUpdated { .. })
+        ));
     }
 }

@@ -409,8 +409,7 @@ mod tests {
         ];
         let out = generate_answer_with_llm_hook("hook test", &passages, 5);
         assert_eq!(
-            out.strategy,
-            STRATEGY_EXTRACTIVE,
+            out.strategy, STRATEGY_EXTRACTIVE,
             "Hook must fall back to EXTRACTIVE_FALLBACK when LLM disabled"
         );
         assert!(!out.citations.is_empty());
@@ -473,7 +472,11 @@ mod tests {
 
     #[test]
     fn test_build_citations_locator_text_none_when_no_indices() {
-        let passages = vec![make_passage("https://example.com/q", "test passage no index", 3)];
+        let passages = vec![make_passage(
+            "https://example.com/q",
+            "test passage no index",
+            3,
+        )];
         let refs: Vec<&RetrievedPassage> = passages.iter().collect();
         let citations = build_citations(&refs, "2026-01-01T00:00:00Z");
         assert_eq!(citations.len(), 1);

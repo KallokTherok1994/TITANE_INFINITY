@@ -5,9 +5,9 @@
 //   Le client HTTP est FORBIDDEN partout ailleurs dans le chemin WebResearch.
 // ═══════════════════════════════════════════════════════════════
 
+use crate::core::http_types::{Client, Policy, Response};
 use crate::services::network_policy::{check_domain, extract_domain, AppliedPolicy, PolicyError};
 use crate::types::research::NetworkEvent;
-use crate::core::http_types::{Client, Policy, Response};
 use std::time::{Duration, Instant};
 
 /// Error types for FetchService

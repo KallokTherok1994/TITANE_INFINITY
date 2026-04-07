@@ -5,9 +5,9 @@
 // Expected: 2-3x latency reduction for repeated queries
 // ═══════════════════════════════════════════════════════════════
 
-use std::sync::Arc;
 use parking_lot::RwLock;
 use std::collections::HashMap;
+use std::sync::Arc;
 use std::time::{Duration, Instant};
 
 /// Streaming response cache for OMEGA v2 tokens
@@ -47,17 +47,13 @@ impl StreamingResponseCache {
     }
 
     /// Cache a complete streaming response (token sequence)
-    pub fn cache_stream(
-        &self,
-        query_hash: String,
-        tokens: Vec<String>,
-        ttl: Duration,
-    ) {
+    pub fn cache_stream(&self, query_hash: String, tokens: Vec<String>, ttl: Duration) {
         let mut cache = self.cache.write();
-        
+
         // Evict oldest entry if cache gets too large (1000 entries)
         if cache.entries.len() >= 1000 {
-            if let Some(oldest_key) = cache.entries
+            if let Some(oldest_key) = cache
+                .entries
                 .iter()
                 .min_by_key(|(_, stream)| stream.created_at)
                 .map(|(k, _)| k.clone())
@@ -209,9 +205,21 @@ mod tests {
         let cache = StreamingResponseCache::new();
 
         // 3 cache writes, then 2 hits + 1 miss
-        cache.cache_stream("q1".to_string(), vec!["token1".to_string()], Duration::from_secs(60));
-        cache.cache_stream("q2".to_string(), vec!["token2".to_string()], Duration::from_secs(60));
-        cache.cache_stream("q3".to_string(), vec!["token3".to_string()], Duration::from_secs(60));
+        cache.cache_stream(
+            "q1".to_string(),
+            vec!["token1".to_string()],
+            Duration::from_secs(60),
+        );
+        cache.cache_stream(
+            "q2".to_string(),
+            vec!["token2".to_string()],
+            Duration::from_secs(60),
+        );
+        cache.cache_stream(
+            "q3".to_string(),
+            vec!["token3".to_string()],
+            Duration::from_secs(60),
+        );
 
         let _ = cache.get_stream("q1");
         let _ = cache.get_stream("q2");

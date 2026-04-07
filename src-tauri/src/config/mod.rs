@@ -203,8 +203,8 @@ pub async fn get_audio_device_config(app: AppHandle) -> Result<AudioDeviceConfig
     let config_path = data_dir.join("audio_device_config.json");
 
     if config_path.exists() {
-        let content = std::fs::read_to_string(&config_path)
-            .map_err(|e| format!("Read error: {}", e))?;
+        let content =
+            std::fs::read_to_string(&config_path).map_err(|e| format!("Read error: {}", e))?;
         serde_json::from_str::<AudioDeviceConfig>(&content)
             .map_err(|e| format!("Parse error: {}", e))
     } else {
@@ -226,19 +226,18 @@ pub async fn save_audio_device_config(
         .app_data_dir()
         .map_err(|e| format!("app_data_dir error: {}", e))?;
 
-    std::fs::create_dir_all(&data_dir)
-        .map_err(|e| format!("mkdir error: {}", e))?;
+    std::fs::create_dir_all(&data_dir).map_err(|e| format!("mkdir error: {}", e))?;
 
     let config_path = data_dir.join("audio_device_config.json");
-    let content = serde_json::to_string_pretty(&config)
-        .map_err(|e| format!("Serialize error: {}", e))?;
+    let content =
+        serde_json::to_string_pretty(&config).map_err(|e| format!("Serialize error: {}", e))?;
 
-    std::fs::write(&config_path, content)
-        .map_err(|e| format!("Write error: {}", e))?;
+    std::fs::write(&config_path, content).map_err(|e| format!("Write error: {}", e))?;
 
     log::info!(
         "[CONFIG] audio_device_config saved: input={} output={}",
-        config.input_device_id, config.output_device_id
+        config.input_device_id,
+        config.output_device_id
     );
     Ok(())
 }

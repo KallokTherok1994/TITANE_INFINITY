@@ -11,8 +11,8 @@ use crate::secure_engine::{purge_env_key, zeroize_string};
 use crate::security::permission_guard::PERMISSION_GUARD;
 use crate::security::permissions::Role;
 use crate::security::sandbox::FileImportSandbox;
-use crate::security::validation::PayloadValidator;
 use crate::security::secrets_engine::{KEY_COPILOT, KEY_GEMINI, KEY_OPENAI};
+use crate::security::validation::PayloadValidator;
 use serde::{Deserialize, Serialize};
 use tauri::State;
 
@@ -473,14 +473,10 @@ pub async fn get_secrets_status(
 
     for secret in KNOWN_SECRETS {
         let configured = secrets.has_secret(secret.key).unwrap_or(false);
-        let masked_value = secrets
-            .get_secret(secret.key)
-            .ok()
-            .flatten()
-            .map(|value| {
-                let zero = zeroize_string(value);
-                mask_secret_for_display(zero.as_str())
-            });
+        let masked_value = secrets.get_secret(secret.key).ok().flatten().map(|value| {
+            let zero = zeroize_string(value);
+            mask_secret_for_display(zero.as_str())
+        });
 
         statuses.push(SecretStatus {
             key: secret.key.to_string(),

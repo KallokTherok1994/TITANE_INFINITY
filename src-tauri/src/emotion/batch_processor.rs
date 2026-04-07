@@ -6,8 +6,8 @@
 // ═══════════════════════════════════════════════════════════════
 
 use super::{AudioFeatures, Emotion, EmotionalState};
-use std::sync::Arc;
 use parking_lot::RwLock;
+use std::sync::Arc;
 
 /// Batch emotion processor using vectorized operations
 #[derive(Clone)]
@@ -57,8 +57,8 @@ impl BatchEmotionProcessor {
         let mut stats = self.stats.write();
         stats.total_batches += 1;
         stats.total_features += batch_size as u64;
-        stats.avg_batch_time_ms = 
-            (stats.avg_batch_time_ms * (stats.total_batches - 1) as f64 + elapsed_ms) 
+        stats.avg_batch_time_ms = (stats.avg_batch_time_ms * (stats.total_batches - 1) as f64
+            + elapsed_ms)
             / stats.total_batches as f64;
 
         results
@@ -74,7 +74,7 @@ impl BatchEmotionProcessor {
                 // Low pitch + low energy = negative
                 let pitch_norm = (f.pitch - 80.0).max(0.0) / 300.0; // Normalize 80-380 Hz
                 let energy_norm = (f.energy - 0.2).max(0.0) / 0.8; // Normalize 0.2-1.0
-                
+
                 // Weighted combination
                 let valence = (pitch_norm * 0.6 + energy_norm * 0.4 - 0.5) * 2.0;
                 valence.clamp(-1.0, 1.0)
@@ -91,7 +91,7 @@ impl BatchEmotionProcessor {
                 let energy_contrib = f.energy; // 0-1
                 let variance_contrib = (f.pitch_variance / 50.0).min(1.0); // Normalize variance
                 let rate_contrib = (f.speech_rate / 8.0).min(1.0); // Normalize rate (words/sec)
-                
+
                 // Weighted combination
                 let intensity = energy_contrib * 0.4 + variance_contrib * 0.3 + rate_contrib * 0.3;
                 intensity.clamp(0.0, 1.0)
@@ -105,10 +105,14 @@ impl BatchEmotionProcessor {
         features
             .iter()
             .map(|f| {
-                let pitch_strength = if f.pitch > 80.0 && f.pitch < 400.0 { 1.0 } else { 0.5 };
+                let pitch_strength = if f.pitch > 80.0 && f.pitch < 400.0 {
+                    1.0
+                } else {
+                    0.5
+                };
                 let energy_strength = if f.energy > 0.3 { 1.0 } else { 0.6 };
                 let consistency = 1.0 - ((f.pitch_variance / 100.0).min(1.0)); // Lower variance = higher confidence
-                
+
                 // Weighted combination
                 let confidence = (pitch_strength * 0.3 + energy_strength * 0.3 + consistency * 0.4)
                     .clamp(0.0, 1.0);
@@ -121,13 +125,31 @@ impl BatchEmotionProcessor {
     fn map_emotion(&self, valence: f32, intensity: f32) -> Emotion {
         match (valence, intensity) {
             (v, i) if i < 0.3 => {
-                if v > 0.2 { Emotion::Calm } else if v < -0.2 { Emotion::Tired } else { Emotion::Neutral }
+                if v > 0.2 {
+                    Emotion::Calm
+                } else if v < -0.2 {
+                    Emotion::Tired
+                } else {
+                    Emotion::Neutral
+                }
             }
             (v, i) if i > 0.7 => {
-                if v > 0.3 { Emotion::Excited } else if v < -0.3 { Emotion::Angry } else { Emotion::Frustrated }
+                if v > 0.3 {
+                    Emotion::Excited
+                } else if v < -0.3 {
+                    Emotion::Angry
+                } else {
+                    Emotion::Frustrated
+                }
             }
             (v, _) => {
-                if v > 0.3 { Emotion::Happy } else if v < -0.3 { Emotion::Sad } else { Emotion::Neutral }
+                if v > 0.3 {
+                    Emotion::Happy
+                } else if v < -0.3 {
+                    Emotion::Sad
+                } else {
+                    Emotion::Neutral
+                }
             }
         }
     }
@@ -202,7 +224,7 @@ mod tests {
     #[test]
     fn test_batch_statistics() {
         let processor = BatchEmotionProcessor::new();
-        
+
         // Process multiple batches
         for _ in 0..5 {
             let features = create_test_features(20);
@@ -236,7 +258,7 @@ mod tests {
     #[test]
     fn test_vectorized_performance() {
         let processor = BatchEmotionProcessor::new();
-        
+
         // Large batch
         let large_features = create_test_features(1000);
         let start = std::time::Instant::now();
@@ -244,7 +266,7 @@ mod tests {
         let elapsed = start.elapsed();
 
         println!("1000-feature batch processed in: {:?}", elapsed);
-        
+
         // Should be reasonably fast (vectorized)
         assert!(elapsed.as_millis() < 100); // Adjust threshold as needed
     }

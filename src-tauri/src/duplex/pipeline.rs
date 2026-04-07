@@ -6,9 +6,9 @@
 use std::sync::{Arc, Mutex};
 use tokio::sync::mpsc;
 
-use super::audio_input::{AudioInput, AudioChunk};
+use super::audio_input::{AudioChunk, AudioInput};
 use super::audio_output::{AudioOutput, OutputChunk};
-use super::sync::{DuplexSync, DuplexState};
+use super::sync::{DuplexState, DuplexSync};
 use crate::wakeword::{WakewordListener, WakewordTrigger};
 
 pub struct DuplexPipeline {
@@ -53,13 +53,18 @@ impl DuplexPipeline {
 
         tokio::spawn(async move {
             while let Some(trigger) = wakeword_rx.recv().await {
-                println!("[Pipeline] Wakeword détecté: {} ({:.0}%)",
-                    trigger.keyword, trigger.confidence * 100.0);
+                println!(
+                    "[Pipeline] Wakeword détecté: {} ({:.0}%)",
+                    trigger.keyword,
+                    trigger.confidence * 100.0
+                );
 
-                let _ = event_tx_clone.send(PipelineEvent::WakewordDetected {
-                    keyword: trigger.keyword.clone(),
-                    confidence: trigger.confidence,
-                }).await;
+                let _ = event_tx_clone
+                    .send(PipelineEvent::WakewordDetected {
+                        keyword: trigger.keyword.clone(),
+                        confidence: trigger.confidence,
+                    })
+                    .await;
 
                 // Activer input audio
                 if let Err(e) = audio_input_clone.start().await {
@@ -82,17 +87,21 @@ impl DuplexPipeline {
                     is_user_speaking = true;
                     sync_clone.user_started_speaking();
 
-                    let _ = event_tx_clone.send(PipelineEvent::UserStartedSpeaking {
-                        timestamp: chunk.timestamp,
-                    }).await;
+                    let _ = event_tx_clone
+                        .send(PipelineEvent::UserStartedSpeaking {
+                            timestamp: chunk.timestamp,
+                        })
+                        .await;
                 } else if !chunk.has_voice && is_user_speaking && audio_buffer.len() > 10 {
                     // Fin de parole détectée
                     is_user_speaking = false;
                     sync_clone.user_stopped_speaking();
 
-                    let _ = event_tx_clone.send(PipelineEvent::UserStoppedSpeaking {
-                        timestamp: chunk.timestamp,
-                    }).await;
+                    let _ = event_tx_clone
+                        .send(PipelineEvent::UserStoppedSpeaking {
+                            timestamp: chunk.timestamp,
+                        })
+                        .await;
 
                     // Implementation: Real-time ASR integration in audio pipeline
                     // - ASR: Use crate::audio::asr::ASREngine for transcription
@@ -102,9 +111,11 @@ impl DuplexPipeline {
                     // - Fallback: Use mock_asr() if ASR unavailable or disabled
                     let transcription = Self::mock_asr(&audio_buffer).await;
 
-                    let _ = event_tx_clone.send(PipelineEvent::TranscriptionReady {
-                        text: transcription,
-                    }).await;
+                    let _ = event_tx_clone
+                        .send(PipelineEvent::TranscriptionReady {
+                            text: transcription,
+                        })
+                        .await;
 
                     audio_buffer.clear();
                 }
