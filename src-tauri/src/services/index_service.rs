@@ -391,14 +391,13 @@ fn make_snippet(body: &str, query: &str, max_len: usize) -> String {
     let start = body
         .char_indices()
         .map(|(i, _)| i)
-        .filter(|&i| i >= start)
-        .next()
+        .find(|&i| i >= start)
         .unwrap_or(body.len());
     let end = body
         .char_indices()
         .map(|(i, _)| i)
         .filter(|&i| i <= end)
-        .last()
+        .next_back()
         .unwrap_or(body.len());
 
     let snip = body[start..end].trim();

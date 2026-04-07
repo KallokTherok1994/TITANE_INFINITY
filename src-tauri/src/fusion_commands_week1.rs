@@ -417,7 +417,7 @@ fn fusion_adjust_styles_internal(
 
     // Apply animation duration
     if let Some(duration) = request.animation_duration {
-        if duration <= 2000 && duration >= 50 {
+        if (50..=2000).contains(&duration) {
             if duration != styles.animation_duration {
                 styles.animation_duration = duration;
                 applied_changes.push("animation_duration".to_string());
@@ -442,7 +442,7 @@ fn fusion_adjust_styles_internal(
 
     // Apply font size
     if let Some(size) = request.font_size {
-        if size >= 8 && size <= 32 {
+        if (8..=32).contains(&size) {
             if size != styles.font_size {
                 styles.font_size = size;
                 applied_changes.push("font_size".to_string());

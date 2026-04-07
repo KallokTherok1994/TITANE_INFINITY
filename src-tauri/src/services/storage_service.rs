@@ -38,7 +38,7 @@ impl StorageService {
         self.storage_guard
             .safe_write_string(&file_path, &json)
             .await
-            .map_err(|e| AppError::Io(e))?;
+            .map_err(AppError::Io)?;
 
         Ok(())
     }
@@ -53,7 +53,7 @@ impl StorageService {
             .storage_guard
             .safe_read_string(&file_path)
             .await
-            .map_err(|e| AppError::Io(e))?;
+            .map_err(AppError::Io)?;
 
         let data = serde_json::from_str(&json)
             .map_err(|e| AppError::Parse(format!("Failed to deserialize: {}", e)))?;
@@ -77,7 +77,7 @@ impl StorageService {
         self.storage_guard
             .safe_delete(&file_path)
             .await
-            .map_err(|e| AppError::Io(e))?;
+            .map_err(AppError::Io)?;
 
         Ok(())
     }
@@ -89,7 +89,7 @@ impl StorageService {
             .storage_guard
             .safe_list_dir("")
             .await
-            .map_err(|e| AppError::Io(e))?;
+            .map_err(AppError::Io)?;
 
         let keys: Vec<String> = files
             .iter()

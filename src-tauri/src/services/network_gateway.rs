@@ -171,6 +171,7 @@ impl NetworkGatewayService {
         Ok(())
     }
 
+    #[allow(clippy::too_many_arguments)]
     fn build_network_meta(
         &self,
         url: &str,

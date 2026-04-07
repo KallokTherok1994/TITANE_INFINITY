@@ -237,12 +237,12 @@ fn fusion_generate_ia_response_internal(
     }
 
     let temperature = request.temperature.unwrap_or(0.7);
-    if temperature < 0.0 || temperature > 2.0 {
+    if !(0.0..=2.0).contains(&temperature) {
         return Err("Temperature must be 0.0-2.0".to_string());
     }
 
     let max_tokens = request.max_tokens.unwrap_or(256);
-    if max_tokens < 1 || max_tokens > 4096 {
+    if !(1..=4096).contains(&max_tokens) {
         return Err("Max tokens must be 1-4096".to_string());
     }
 
@@ -373,12 +373,12 @@ fn fusion_prepare_tts_internal(
     }
 
     let speed = request.speed.unwrap_or(1.0);
-    if speed < 0.5 || speed > 2.0 {
+    if !(0.5..=2.0).contains(&speed) {
         return Err("Speed must be 0.5-2.0".to_string());
     }
 
     let pitch = request.pitch.unwrap_or(1.0);
-    if pitch < 0.5 || pitch > 2.0 {
+    if !(0.5..=2.0).contains(&pitch) {
         return Err("Pitch must be 0.5-2.0".to_string());
     }
 
@@ -415,7 +415,7 @@ fn fusion_prepare_tts_internal(
 
     // Calculate chunks for streaming (1 chunk ≈ 100ms of audio)
     let chunks_prepared = if enable_streaming {
-        ((duration_ms + 99) / 100) as u32
+        (duration_ms + 99) / 100
     } else {
         0
     };
@@ -439,18 +439,10 @@ fn fusion_prepare_tts_internal(
 // ═══════════════════════════════════════════════════════════════════════════
 
 /// Global Fusion state for Week 2 (extends Week 1)
+#[derive(Default)]
 pub struct FusionWeek2State {
     pub ia_cache: IACache,
     pub voice_library: VoiceLibrary,
-}
-
-impl Default for FusionWeek2State {
-    fn default() -> Self {
-        Self {
-            ia_cache: IACache::default(),
-            voice_library: VoiceLibrary::default(),
-        }
-    }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

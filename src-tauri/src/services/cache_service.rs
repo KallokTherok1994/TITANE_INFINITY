@@ -222,6 +222,7 @@ impl CacheService {
     /// Write response bytes to cache.
     /// Returns (CacheEntry, CacheEvent).
     /// Dedup: if blob_hash already exists on disk, blob write is skipped.
+    #[allow(clippy::too_many_arguments)]
     pub fn write(
         &self,
         url: &str,
