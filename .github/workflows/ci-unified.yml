@@ -287,11 +287,12 @@ jobs:
       - name: 📊 Summary
         if: always()
         run: |
+          $check_result = if ($LASTEXITCODE -eq 0) { "✅" } else { "❌" }
           echo "## 🪟 Rust Backend Check (Windows)" >> $env:GITHUB_STEP_SUMMARY
           echo "" >> $env:GITHUB_STEP_SUMMARY
-          echo "- cargo check completed on windows-latest" >> $env:GITHUB_STEP_SUMMARY
-          echo "- cargo test completed on windows-latest" >> $env:GITHUB_STEP_SUMMARY
-          echo "- Rust: ${{ env.RUST_VERSION }}" >> $env:GITHUB_STEP_SUMMARY
+          echo "- cargo check: $check_result" >> $env:GITHUB_STEP_SUMMARY
+          echo "- cargo test: $check_result" >> $env:GITHUB_STEP_SUMMARY
+          echo "- Rust: stable (windows-latest)" >> $env:GITHUB_STEP_SUMMARY
         shell: pwsh
 
   # ═══════════════════════════════════════════════════════════════════════════
