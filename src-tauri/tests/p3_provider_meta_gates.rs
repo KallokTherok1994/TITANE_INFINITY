@@ -130,12 +130,14 @@ fn assert_meta(meta: &ProviderDecisionMeta) {
             | ReasonCode::ToolDenied
             | ReasonCode::Unknown
     ));
-    assert!(meta.attempts.len() >= 1, "attempts empty");
+    assert!(!meta.attempts.is_empty(), "attempts empty");
 }
 
 #[tokio::test]
 async fn test_p3_ar20_meta_x3() {
-    let _lock = test_lock();
+    {
+        let _lock = test_lock();
+    }
     let _offline = EnvGuard::set("OFFLINE_SIM", "1");
 
     for run in 1..=3 {
@@ -149,7 +151,9 @@ async fn test_p3_ar20_meta_x3() {
 
 #[tokio::test]
 async fn test_p3_offline5_offlinesim_x3() {
-    let _lock = test_lock();
+    {
+        let _lock = test_lock();
+    }
     let _offline = EnvGuard::set("OFFLINE_SIM", "1");
 
     for run in 1..=3 {
@@ -192,7 +196,9 @@ async fn test_p3_offline5_offlinesim_x3() {
 
 #[tokio::test]
 async fn test_p3_stability_burst_x3() {
-    let _lock = test_lock();
+    {
+        let _lock = test_lock();
+    }
     let _offline = EnvGuard::set("OFFLINE_SIM", "1");
 
     for run in 1..=3 {
@@ -230,7 +236,9 @@ async fn test_p3_stability_burst_x3() {
 
 #[tokio::test]
 async fn test_p3_determinism_signature_x3() {
-    let _lock = test_lock();
+    {
+        let _lock = test_lock();
+    }
     let _offline = EnvGuard::set("OFFLINE_SIM", "1");
 
     let engine = build_engine();
