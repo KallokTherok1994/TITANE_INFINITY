@@ -128,7 +128,12 @@ use std::env;
 
 /// Global audit logger instance
 pub static GLOBAL_AUDIT_LOGGER: Lazy<AuditLogger> = Lazy::new(|| {
-    let log_dir = env::var("TITANE_LOG_DIR").unwrap_or_else(|_| "/tmp/titane_logs".to_string());
+    let log_dir = env::var("TITANE_LOG_DIR").unwrap_or_else(|_| {
+        std::env::temp_dir()
+            .join("titane_logs")
+            .to_string_lossy()
+            .into_owned()
+    });
     let log_file = PathBuf::from(log_dir).join("audit.log");
     AuditLogger::new(log_file)
 });

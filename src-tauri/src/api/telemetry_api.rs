@@ -1,12 +1,11 @@
 /**
  * Ring 3: Tauri Command Layer
- * Reads production CSV at /tmp/titane_production_week1.csv
+ * Reads production CSV from temp dir (titane_production_week1.csv)
  * Parses metrics + applies thresholds
  * Returns ProductionHealthSummary
  */
 use serde::{Deserialize, Serialize};
 use std::fs;
-use std::path::Path;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -38,24 +37,28 @@ pub struct ProductionHealthSummary {
     pub notes: Option<String>,
 }
 
-const CSV_PATH: &str = "/tmp/titane_production_week1.csv";
+const CSV_FILENAME: &str = "titane_production_week1.csv";
 const MAX_CSV_SIZE: usize = 2 * 1024 * 1024;
 
 const THRESHOLD_GREEN_MAX_MB: f64 = 213.0;
 const THRESHOLD_RED_MIN_MB: f64 = 240.0;
 
+fn csv_path() -> std::path::PathBuf {
+    std::env::temp_dir().join(CSV_FILENAME)
+}
+
 #[tauri::command]
 pub async fn read_production_week1_csv() -> Result<ProductionHealthSummary, String> {
-    let csv_path = Path::new(CSV_PATH);
+    let path = csv_path();
 
-    if !csv_path.exists() {
+    if !path.exists() {
         return Err(format!(
             "SOURCE_UNAVAILABLE: {} absent — aucune collecte de télémétrie active",
-            CSV_PATH
+            path.display()
         ));
     }
 
-    let content = fs::read_to_string(csv_path).map_err(|e| format!("Failed to read CSV: {}", e))?;
+    let content = fs::read_to_string(&path).map_err(|e| format!("Failed to read CSV: {}", e))?;
 
     if content.len() > MAX_CSV_SIZE {
         return Err("CSV file too large".to_string());

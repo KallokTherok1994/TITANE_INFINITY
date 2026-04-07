@@ -20,7 +20,7 @@ impl Option1DbAppState {
         let app_data_dir = app
             .path()
             .app_data_dir()
-            .unwrap_or_else(|_| PathBuf::from("/tmp/titane"));
+            .unwrap_or_else(|_| std::env::temp_dir().join("titane"));
         let db_path = app_data_dir.join("option1_libsql_local.db");
         let db_state = DbState::new(db_path)?;
         let db = Arc::new(Option1DbService::new(db_state));
