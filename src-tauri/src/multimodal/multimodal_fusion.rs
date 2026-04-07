@@ -23,9 +23,9 @@ pub struct FusionResult {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum FusionStrategy {
-    EarlyFusion,   // Fuse at feature level
-    LateFusion,    // Fuse at decision level
-    HybridFusion,  // Mixed approach
+    EarlyFusion,  // Fuse at feature level
+    LateFusion,   // Fuse at decision level
+    HybridFusion, // Mixed approach
 }
 
 /// Multimodal Fusion Engine
@@ -47,7 +47,7 @@ impl MultimodalFusionEngine {
             image_memory,
         }
     }
-    
+
     /// Build multimodal context from inputs
     pub async fn build_context(
         &self,
@@ -56,17 +56,17 @@ impl MultimodalFusionEngine {
         audio: Option<Vec<f32>>,
     ) -> MultimodalResult<MultimodalContext> {
         let mut context = MultimodalContext::new();
-        
+
         // Add text
         if let Some(t) = text {
             context = context.with_text(t);
         }
-        
+
         // Add vision analysis
         if let Some(img) = image {
             let vision_analysis = self.vision_engine.analyze_image_bytes(&img).await?;
             context = context.with_vision(vision_analysis);
-            
+
             // Cross-modal search: find similar images
             // Implementation: Generate image embedding and semantic search
             // - Model: CLIP (ViT-B/32) for joint image-text embeddings with ONNX Runtime
@@ -76,16 +76,16 @@ impl MultimodalFusionEngine {
             // - Cross-modal: Can search images using text queries via CLIP's shared embedding space
             // - Libraries: image crate for preprocessing, ort for ONNX inference
         }
-        
+
         // Add audio 3D analysis
         if let Some(aud) = audio {
             let audio_analysis = self.audio3d_engine.analyze_audio_frame(&aud).await?;
             context = context.with_audio3d(audio_analysis);
         }
-        
+
         Ok(context)
     }
-    
+
     /// Fuse signals with confidence weighting
     pub async fn fuse_signals(
         &self,
@@ -112,7 +112,7 @@ impl MultimodalFusionEngine {
         // Calculate confidence from each modality
         let text_conf = if context.text.is_some() { 1.0 } else { 0.0 };
         let vision_conf = if let Some(ref v) = context.vision_analysis {
-            (v.brightness + v.contrast) / 2.0  // Simple quality metric
+            (v.brightness + v.contrast) / 2.0 // Simple quality metric
         } else {
             0.0
         };
@@ -124,9 +124,7 @@ impl MultimodalFusionEngine {
 
         // Weighted fusion
         let fused_confidence =
-            text_conf * norm_text +
-            vision_conf * norm_vision +
-            audio_conf * norm_audio;
+            text_conf * norm_text + vision_conf * norm_vision + audio_conf * norm_audio;
 
         // Determine dominant modality
         let dominant = if norm_text > norm_vision && norm_text > norm_audio {
@@ -167,16 +165,18 @@ impl MultimodalFusionEngine {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[tokio::test]
     async fn test_multimodal_fusion_basic() {
         let config = crate::multimodal::config::MultimodalConfig::default();
         let vision_engine = Arc::new(VisionEngine::new(config));
         let audio3d_engine = Arc::new(Audio3DEngine::new(44100, 1024));
         let image_memory = Arc::new(ImageMemoryStore::new(100));
-        
+
         let fusion = MultimodalFusionEngine::new(vision_engine, audio3d_engine, image_memory);
-        let result = fusion.build_context(Some("test".to_string()), None, None).await;
+        let result = fusion
+            .build_context(Some("test".to_string()), None, None)
+            .await;
         assert!(result.is_ok());
     }
 }

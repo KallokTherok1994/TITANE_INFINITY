@@ -10,9 +10,9 @@ pub struct Citation {
     pub title: String,
     pub url: String,
     pub snippet: String,
-    pub source: String,      // "brave_search", "perplexity", etc.
-    pub timestamp: String,   // ISO8601
-    pub relevance: f32,      // 0.0..1.0
+    pub source: String,    // "brave_search", "perplexity", etc.
+    pub timestamp: String, // ISO8601
+    pub relevance: f32,    // 0.0..1.0
 }
 
 /// Raw search result (from external API)
@@ -46,11 +46,11 @@ impl Default for NormalizationOptions {
 }
 
 /// SearchEngine: Normalizes raw search results to Citations
-/// 
+///
 /// **Ring:** 2 (Engines)  
 /// **Status:** EXPERIMENTAL  
 /// **Purity:** ✅ No I/O, no state, pure transformation  
-/// 
+///
 /// Responsibilities:
 /// - Transform raw API results to Citation format
 /// - Deduplicate by URL
@@ -65,14 +65,14 @@ impl SearchEngine {
     }
 
     /// Normalize raw search results to Citations
-    /// 
+    ///
     /// # Arguments
     /// * `raw_results` - Raw results from search API
     /// * `options` - Normalization options
-    /// 
+    ///
     /// # Returns
     /// Vec<Citation> with normalized, deduplicated results
-    /// 
+    ///
     /// # Examples
     /// ```
     /// use titane_infinity::engines::conversation_os::search::{NormalizationOptions, RawSearchResult, SearchEngine};
@@ -146,13 +146,17 @@ impl SearchEngine {
         }
 
         // Sort by relevance (descending)
-        citations.sort_by(|a, b| b.relevance.partial_cmp(&a.relevance).unwrap_or(std::cmp::Ordering::Equal));
+        citations.sort_by(|a, b| {
+            b.relevance
+                .partial_cmp(&a.relevance)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
 
         citations
     }
 
     /// Calculate relevance score for a result
-    /// 
+    ///
     /// Heuristics:
     /// - Snippet length (longer = more relevant, up to a point)
     /// - Title presence (has title = +0.1)
@@ -190,7 +194,7 @@ impl SearchEngine {
     }
 
     /// Merge multiple search sources
-    /// 
+    ///
     /// Combines results from multiple APIs, deduplicates, ranks
     pub fn merge_sources(
         &self,
@@ -309,7 +313,10 @@ mod tests {
         let raw = vec![RawSearchResult {
             title: Some("No URL Result".to_string()),
             url: None,
-            description: Some("This result has no URL and should be skipped by the normalization process".to_string()),
+            description: Some(
+                "This result has no URL and should be skipped by the normalization process"
+                    .to_string(),
+            ),
             snippet: None,
             source: "brave_search".to_string(),
         }];
@@ -322,10 +329,10 @@ mod tests {
         let engine = SearchEngine::new();
         let short_snippet = "Short text here";
         let long_snippet = "This is a much longer snippet with significantly more content that should score higher in the relevance calculation algorithm";
-        
+
         let score_short = engine.calculate_relevance(short_snippet, None);
         let score_long = engine.calculate_relevance(long_snippet, Some("Title"));
-        
+
         assert!(score_long > score_short);
     }
 
@@ -351,7 +358,8 @@ mod tests {
             "https://two.com",
             "This is a result from the second search source with a good description",
         )];
-        let citations = engine.merge_sources(vec![source1, source2], NormalizationOptions::default());
+        let citations =
+            engine.merge_sources(vec![source1, source2], NormalizationOptions::default());
         assert_eq!(citations.len(), 2);
     }
 

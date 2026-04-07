@@ -226,7 +226,13 @@ impl VaultBridge {
         let mut providers: Vec<Provider> = state.entries.keys().copied().collect();
 
         // Ajouter ceux de l'environnement
-        for provider in [Provider::OpenAI, Provider::Gemini, Provider::Anthropic, Provider::Copilot] { // ✅ P0 FIX
+        for provider in [
+            Provider::OpenAI,
+            Provider::Gemini,
+            Provider::Anthropic,
+            Provider::Copilot,
+        ] {
+            // ✅ P0 FIX
             if !providers.contains(&provider) && self.get_env_key(provider).is_some() {
                 providers.push(provider);
             }

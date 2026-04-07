@@ -205,8 +205,7 @@ pub async fn engines_devmode_validate_patch(
 /// Apply a validated patch
 #[command]
 pub async fn engines_devmode_apply_patch(patch: PatchAction) -> Result<PatchResult, String> {
-    crate::engines::developer_mode::dev_mode_apply_patch(patch, "Kevin Thibault".to_string())
-        .await
+    crate::engines::developer_mode::dev_mode_apply_patch(patch, "Kevin Thibault".to_string()).await
 }
 
 /// Preview changes before applying
@@ -219,12 +218,9 @@ pub async fn engines_devmode_preview(patch: PatchAction) -> Result<serde_json::V
 /// Rollback last change
 #[command]
 pub async fn engines_devmode_rollback(patch_id: String) -> Result<bool, String> {
-    crate::engines::developer_mode::dev_mode_rollback_patch(
-        patch_id,
-        "Kevin Thibault".to_string(),
-    )
-    .await
-    .map(|res| res.success)
+    crate::engines::developer_mode::dev_mode_rollback_patch(patch_id, "Kevin Thibault".to_string())
+        .await
+        .map(|res| res.success)
 }
 
 /// Get patch history

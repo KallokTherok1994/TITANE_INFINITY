@@ -34,14 +34,14 @@ pub struct PolicyVerdict {
 }
 
 /// PolicyEngine: Hard rules enforcement for Conversation OS
-/// 
+///
 /// Evaluates network state, credentials, allowlist, and user preferences
 /// to produce a policy verdict that governs what actions are allowed.
-/// 
+///
 /// **Ring:** 2 (Engines)  
 /// **Status:** EXPERIMENTAL  
 /// **Purity:** ✅ No I/O, no state, deterministic  
-/// 
+///
 /// # Hard Rules:
 /// 1. OFFLINE → block external AI, allow local Ollama only
 /// 2. BLOCKED → hard_block = true, nothing allowed
@@ -58,15 +58,15 @@ impl PolicyEngine {
     }
 
     /// Evaluate policy based on context and produce verdict
-    /// 
+    ///
     /// # Arguments
     /// * `context` - PolicyContext with net_state, credentials, allowlist, preferences
     /// * `wants_search` - Whether user wants web search (from RouterEngine)
     /// * `wants_external_ai` - Whether user wants external AI (Gemini, etc.)
-    /// 
+    ///
     /// # Returns
     /// PolicyVerdict with allow flags and block reason
-    /// 
+    ///
     /// # Examples
     /// ```
     /// use titane_infinity::engines::conversation_os::policy::{NetState, PolicyContext, PolicyEngine};
@@ -193,17 +193,17 @@ impl PolicyEngine {
     }
 
     /// Check if endpoint is in allowlist
-    /// 
+    ///
     /// # Arguments
     /// * `endpoint` - Endpoint URL to check
     /// * `allowlist` - List of allowed endpoints
-    /// 
+    ///
     /// # Returns
     /// true if endpoint is allowed, false otherwise
     pub fn is_endpoint_allowed(&self, endpoint: &str, allowlist: &[String]) -> bool {
-        allowlist.iter().any(|allowed| {
-            endpoint.starts_with(allowed) || allowed == "*" || allowed == endpoint
-        })
+        allowlist
+            .iter()
+            .any(|allowed| endpoint.starts_with(allowed) || allowed == "*" || allowed == endpoint)
     }
 }
 

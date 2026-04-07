@@ -5,7 +5,6 @@
  * TRACKER #14
  * ═══════════════════════════════════════════════════════════════════════════
  */
-
 use aes_gcm::{
     aead::{Aead, KeyInit, OsRng},
     Aes256Gcm, Nonce,
@@ -84,7 +83,8 @@ impl SecurityEngine {
 
         let nonce = Nonce::from_slice(&[0u8; NONCE_SIZE]); // Should be random in production
 
-        let ciphertext = cipher.encrypt(nonce, plaintext)
+        let ciphertext = cipher
+            .encrypt(nonce, plaintext)
             .map_err(|e| TitaneError::InternalError(format!("Encryption failed: {}", e)))?;
 
         Ok(ciphertext)
@@ -97,7 +97,8 @@ impl SecurityEngine {
 
         let nonce = Nonce::from_slice(&[0u8; NONCE_SIZE]);
 
-        let plaintext = cipher.decrypt(nonce, ciphertext)
+        let plaintext = cipher
+            .decrypt(nonce, ciphertext)
             .map_err(|e| TitaneError::InternalError(format!("Decryption failed: {}", e)))?;
 
         Ok(plaintext)
@@ -122,7 +123,8 @@ impl SecurityEngine {
         let encoded = fs::read_to_string(&self.vault_path)
             .map_err(|e| TitaneError::FileReadFailed(e.to_string()))?;
 
-        let encrypted = general_purpose::STANDARD.decode(&encoded)
+        let encrypted = general_purpose::STANDARD
+            .decode(&encoded)
             .map_err(|e| TitaneError::DeserializationFailed(e.to_string()))?;
 
         let decrypted = self.decrypt(&encrypted)?;
@@ -144,7 +146,8 @@ impl SecurityEngine {
             let encoded = fs::read_to_string(&key_path)
                 .map_err(|e| TitaneError::FileReadFailed(e.to_string()))?;
 
-            let key = general_purpose::STANDARD.decode(&encoded)
+            let key = general_purpose::STANDARD
+                .decode(&encoded)
                 .map_err(|e| TitaneError::DeserializationFailed(e.to_string()))?;
 
             Ok(key)
@@ -188,30 +191,30 @@ mod tests {
     #[test]
     fn test_security_engine_init() {
         let test_dir = get_test_dir();
-        let mut engine = SecurityEngine::new(test_dir)
-            .expect("SecurityEngine::new should succeed");
+        let mut engine = SecurityEngine::new(test_dir).expect("SecurityEngine::new should succeed");
         assert!(engine.init().is_ok());
     }
 
     #[test]
     fn test_set_and_get_secret() {
         let test_dir = get_test_dir();
-        let mut engine = SecurityEngine::new(test_dir)
-            .expect("SecurityEngine::new should succeed");
+        let mut engine = SecurityEngine::new(test_dir).expect("SecurityEngine::new should succeed");
         engine.init().expect("init should succeed");
 
         engine
             .set_secret("api_key", "sk-test-123456")
             .expect("set_secret should succeed");
 
-        assert_eq!(engine.get_secret("api_key"), Some(&"sk-test-123456".to_string()));
+        assert_eq!(
+            engine.get_secret("api_key"),
+            Some(&"sk-test-123456".to_string())
+        );
     }
 
     #[test]
     fn test_delete_secret() {
         let test_dir = get_test_dir();
-        let mut engine = SecurityEngine::new(test_dir)
-            .expect("SecurityEngine::new should succeed");
+        let mut engine = SecurityEngine::new(test_dir).expect("SecurityEngine::new should succeed");
         engine.init().expect("init should succeed");
 
         engine
@@ -231,8 +234,8 @@ mod tests {
 
         // Create and save secret
         {
-            let mut engine = SecurityEngine::new(test_dir.clone())
-                .expect("SecurityEngine::new should succeed");
+            let mut engine =
+                SecurityEngine::new(test_dir.clone()).expect("SecurityEngine::new should succeed");
             engine.init().expect("init should succeed");
             engine
                 .set_secret("persist_key", "persist_value")
@@ -241,19 +244,21 @@ mod tests {
 
         // Load in new instance
         {
-            let mut engine = SecurityEngine::new(test_dir)
-                .expect("SecurityEngine::new should succeed");
+            let mut engine =
+                SecurityEngine::new(test_dir).expect("SecurityEngine::new should succeed");
             engine.init().expect("init should succeed");
 
-            assert_eq!(engine.get_secret("persist_key"), Some(&"persist_value".to_string()));
+            assert_eq!(
+                engine.get_secret("persist_key"),
+                Some(&"persist_value".to_string())
+            );
         }
     }
 
     #[test]
     fn test_list_secrets() {
         let test_dir = get_test_dir();
-        let mut engine = SecurityEngine::new(test_dir)
-            .expect("SecurityEngine::new should succeed");
+        let mut engine = SecurityEngine::new(test_dir).expect("SecurityEngine::new should succeed");
         engine.init().expect("init should succeed");
 
         engine

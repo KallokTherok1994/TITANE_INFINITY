@@ -200,7 +200,9 @@ async fn verify_design_system() -> Result<bool, String> {
             .map(PathBuf::from)
             .and_then(|p| p.parent().map(|pp| pp.to_path_buf())),
         // Env override for non-standard installations
-        std::env::var("TITANE_WORKSPACE_DIR").ok().map(PathBuf::from),
+        std::env::var("TITANE_WORKSPACE_DIR")
+            .ok()
+            .map(PathBuf::from),
     ];
 
     let ds_paths = vec![

@@ -90,7 +90,7 @@ impl EmotionAdaptor {
     /// Génère un prompt système adapté à l'émotion
     pub fn generate_emotion_prompt(emotion: &EmotionalState) -> String {
         let config = Self::adapt_to_emotion(emotion);
-        
+
         let tone_instruction = match config.tone {
             ResponseTone::Empathetic => "Sois empathique et compréhensif. Montre que tu comprends ce que ressent l'utilisateur.",
             ResponseTone::Calm => "Reste calme et apaisant. Aide à désamorcer la tension.",
@@ -123,7 +123,7 @@ impl EmotionAdaptor {
     /// Ajuste les paramètres TTS selon l'émotion
     pub fn get_tts_params(emotion: &EmotionalState) -> TTSParams {
         let config = Self::adapt_to_emotion(emotion);
-        
+
         // Ajuster pitch et intonation
         let pitch = match emotion.primary_emotion {
             Emotion::Happy | Emotion::Excited => 1.1,
@@ -143,8 +143,8 @@ impl EmotionAdaptor {
             pitch,
             volume,
             pause_duration_ms: match emotion.intensity {
-                i if i > 0.7 => 200,  // Pauses plus courtes si intense
-                i if i < 0.3 => 400,  // Pauses plus longues si calme
+                i if i > 0.7 => 200, // Pauses plus courtes si intense
+                i if i < 0.3 => 400, // Pauses plus longues si calme
                 _ => 300,
             },
         }
@@ -161,24 +161,14 @@ impl EmotionAdaptor {
     /// Suggère des phrases d'ouverture adaptées
     pub fn suggest_opening_phrase(emotion: &EmotionalState) -> String {
         match emotion.primary_emotion {
-            Emotion::Happy | Emotion::Excited => {
-                "Je vois que tu es motivé ! ".to_string()
-            }
-            Emotion::Sad => {
-                "Je comprends que ce n'est pas facile en ce moment. ".to_string()
-            }
+            Emotion::Happy | Emotion::Excited => "Je vois que tu es motivé ! ".to_string(),
+            Emotion::Sad => "Je comprends que ce n'est pas facile en ce moment. ".to_string(),
             Emotion::Angry | Emotion::Frustrated => {
                 "Je comprends ta frustration. Voyons comment je peux t'aider. ".to_string()
             }
-            Emotion::Anxious => {
-                "Pas de panique, on va y aller étape par étape. ".to_string()
-            }
-            Emotion::Confused => {
-                "Laisse-moi clarifier les choses. ".to_string()
-            }
-            Emotion::Tired => {
-                "Je vais faire simple. ".to_string()
-            }
+            Emotion::Anxious => "Pas de panique, on va y aller étape par étape. ".to_string(),
+            Emotion::Confused => "Laisse-moi clarifier les choses. ".to_string(),
+            Emotion::Tired => "Je vais faire simple. ".to_string(),
             _ => String::new(),
         }
     }

@@ -2,8 +2,8 @@
 // Purpose: Measure performance baseline and optimization impact
 // Created: 2026-01-19 Sprint Launch
 
-use std::time::{Duration, Instant};
 use std::collections::HashMap;
+use std::time::{Duration, Instant};
 
 #[derive(Debug, Clone)]
 pub struct PerfMetric {
@@ -61,7 +61,8 @@ impl PerfBench {
                 .sum::<f64>()
                 / metrics.len() as f64;
 
-            let avg_memory = metrics.iter().map(|m| m.memory_mb).sum::<f64>() / metrics.len() as f64;
+            let avg_memory =
+                metrics.iter().map(|m| m.memory_mb).sum::<f64>() / metrics.len() as f64;
 
             output.push_str(&format!(
                 "{}: avg={:.3}ms, memory={:.2}MB, samples={}\n",

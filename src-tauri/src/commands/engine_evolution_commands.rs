@@ -6,7 +6,10 @@
 use tauri::State;
 use titane_infinity::{
     engine::AutoEvolutionEngine,
-    types::{EvolutionReport, EvolutionState, HealthStatus, HarmoniaState, HeliosState, NexusState, SentinelState},
+    types::{
+        EvolutionReport, EvolutionState, HarmoniaState, HealthStatus, HeliosState, NexusState,
+        SentinelState,
+    },
     utils::AppResult,
 };
 
@@ -19,7 +22,9 @@ pub async fn run_evolution(
     let nexus = NexusState::default();
     let harmonia = HarmoniaState::default();
     let sentinel = SentinelState::default();
-    evolution.evolve(&helios, &nexus, &harmonia, &sentinel).await
+    evolution
+        .evolve(&helios, &nexus, &harmonia, &sentinel)
+        .await
 }
 
 /// Get current evolution state snapshot.
@@ -39,5 +44,7 @@ pub async fn quick_health_check(
     let nexus = NexusState::default();
     let harmonia = HarmoniaState::default();
     let sentinel = SentinelState::default();
-    evolution.quick_health_check(&helios, &nexus, &harmonia, &sentinel).await
+    evolution
+        .quick_health_check(&helios, &nexus, &harmonia, &sentinel)
+        .await
 }

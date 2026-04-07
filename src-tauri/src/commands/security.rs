@@ -314,7 +314,7 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("start_recording");
     commands.insert("stop_recording");
     commands.insert("transcribe_audio");
-    commands.insert("force_reset_voice");  // ✅ v∞.7 Emergency reset
+    commands.insert("force_reset_voice"); // ✅ v∞.7 Emergency reset
 
     // ═══════════════════════════════════════════════════════════════
     // AUDIO CENTER COMMANDS (v19.2+)

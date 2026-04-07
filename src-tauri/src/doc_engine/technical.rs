@@ -6,16 +6,17 @@ use std::collections::HashMap;
 pub fn generate_technical_content(
     config: &GenerationConfig,
     template: &templates::Template,
-    params: HashMap<String, String>
+    params: HashMap<String, String>,
 ) -> Result<DocumentContent> {
-    let title = params.get("title")
+    let title = params
+        .get("title")
         .cloned()
         .unwrap_or_else(|| generate_default_tech_title(&config.doc_type));
-    
+
     let executive_summary = generate_tech_summary(&config.doc_type, &params);
     let objectives = generate_tech_objectives(&config.doc_type);
     let sections = generate_tech_sections(&config.doc_type, &params, template)?;
-    
+
     Ok(DocumentContent {
         title,
         executive_summary,
@@ -38,8 +39,11 @@ fn generate_default_tech_title(doc_type: &DocumentType) -> String {
 }
 
 fn generate_tech_summary(doc_type: &DocumentType, params: &HashMap<String, String>) -> String {
-    let system_name = params.get("system_name").map(|s| s.as_str()).unwrap_or("le système");
-    
+    let system_name = params
+        .get("system_name")
+        .map(|s| s.as_str())
+        .unwrap_or("le système");
+
     match doc_type {
         DocumentType::Architecture => {
             format!(
@@ -100,7 +104,7 @@ fn generate_tech_objectives(doc_type: &DocumentType) -> Vec<String> {
 fn generate_tech_sections(
     doc_type: &DocumentType,
     params: &HashMap<String, String>,
-    _template: &templates::Template
+    _template: &templates::Template,
 ) -> Result<Vec<Section>> {
     match doc_type {
         DocumentType::Architecture => generate_architecture_sections(params),
@@ -136,7 +140,8 @@ fn generate_architecture_sections(params: &HashMap<String, String>) -> Result<Ve
                 |-----------|----------------|-------------|\n\
                 | [Composant 1] | [Description] | [Tech stack] |\n\n\
                 **2.3 Interactions**\n\n\
-                Description des flux de communication entre composants.".to_string(),
+                Description des flux de communication entre composants."
+                .to_string(),
             subsections: vec![],
             level: 1,
         },
@@ -150,7 +155,8 @@ fn generate_architecture_sections(params: &HashMap<String, String>) -> Result<Ve
                 - Structure: [Description]\n\
                 - Réplication et sauvegarde: [Stratégie]\n\n\
                 **3.3 Flux de données**\n\n\
-                Description du cheminement des données dans le système.".to_string(),
+                Description du cheminement des données dans le système."
+                .to_string(),
             subsections: vec![],
             level: 1,
         },
@@ -161,7 +167,8 @@ fn generate_architecture_sections(params: &HashMap<String, String>) -> Result<Ve
                 **Backend:** [Technologies]\n\n\
                 **Base de données:** [Technologies]\n\n\
                 **Infrastructure:** [Technologies]\n\n\
-                **Outils de développement:** [Technologies]".to_string(),
+                **Outils de développement:** [Technologies]"
+                .to_string(),
             subsections: vec![],
             level: 1,
         },
@@ -174,7 +181,8 @@ fn generate_architecture_sections(params: &HashMap<String, String>) -> Result<Ve
                 **5.2 Standards de code**\n\n\
                 Conventions et bonnes pratiques à respecter.\n\n\
                 **5.3 Patterns de communication**\n\n\
-                REST, GraphQL, WebSockets, etc.".to_string(),
+                REST, GraphQL, WebSockets, etc."
+                .to_string(),
             subsections: vec![],
             level: 1,
         },
@@ -186,7 +194,8 @@ fn generate_architecture_sections(params: &HashMap<String, String>) -> Result<Ve
                 **6.2 Protection des données**\n\n\
                 Chiffrement, conformité RGPD, etc.\n\n\
                 **6.3 Audit et monitoring**\n\n\
-                Traçabilité et détection d'anomalies.".to_string(),
+                Traçabilité et détection d'anomalies."
+                .to_string(),
             subsections: vec![],
             level: 1,
         },
@@ -198,7 +207,8 @@ fn generate_architecture_sections(params: &HashMap<String, String>) -> Result<Ve
                 **7.2 Optimisations**\n\n\
                 Caching, CDN, lazy loading, etc.\n\n\
                 **7.3 Monitoring des performances**\n\n\
-                Métriques et alertes.".to_string(),
+                Métriques et alertes."
+                .to_string(),
             subsections: vec![],
             level: 1,
         },
@@ -210,7 +220,8 @@ fn generate_architecture_sections(params: &HashMap<String, String>) -> Result<Ve
                 **8.2 Environnements**\n\n\
                 Dev, Staging, Production.\n\n\
                 **8.3 Rollback et disaster recovery**\n\n\
-                Procédures de restauration.".to_string(),
+                Procédures de restauration."
+                .to_string(),
             subsections: vec![],
             level: 1,
         },
@@ -296,7 +307,8 @@ fn generate_api_endpoints_doc(_params: &HashMap<String, String>) -> String {
     **POST /users**\n\n\
     Crée un nouvel utilisateur.\n\n\
     **Corps de la requête:**\n\
-    ```json\n{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\"\n}\n```".to_string()
+    ```json\n{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\"\n}\n```"
+        .to_string()
 }
 
 fn generate_system_design_sections(_params: &HashMap<String, String>) -> Result<Vec<Section>> {
@@ -352,23 +364,19 @@ fn generate_generic_tech_sections(_params: &HashMap<String, String>) -> Result<V
 }
 
 fn generate_tech_annexes(_params: &HashMap<String, String>) -> Vec<Annex> {
-    vec![
-        Annex {
-            id: "api_schemas".to_string(),
-            title: "Annexe A - Schémas OpenAPI".to_string(),
-            content: "Spécification OpenAPI complète.".to_string(),
-            format: "yaml".to_string(),
-        },
-    ]
+    vec![Annex {
+        id: "api_schemas".to_string(),
+        title: "Annexe A - Schémas OpenAPI".to_string(),
+        content: "Spécification OpenAPI complète.".to_string(),
+        format: "yaml".to_string(),
+    }]
 }
 
 fn generate_tech_references(_params: &HashMap<String, String>) -> Vec<Reference> {
-    vec![
-        Reference {
-            title: "RFC 7231 - HTTP/1.1 Semantics".to_string(),
-            source: "IETF".to_string(),
-            url: Some("https://tools.ietf.org/html/rfc7231".to_string()),
-            date: None,
-        },
-    ]
+    vec![Reference {
+        title: "RFC 7231 - HTTP/1.1 Semantics".to_string(),
+        source: "IETF".to_string(),
+        url: Some("https://tools.ietf.org/html/rfc7231".to_string()),
+        date: None,
+    }]
 }

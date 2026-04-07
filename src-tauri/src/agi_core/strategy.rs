@@ -3,11 +3,11 @@
 //! Super Prompt #11 — Sélection et optimisation de stratégies
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
-use tokio::sync::RwLock;
+use super::abstraction::Concept;
 use super::introspection::IntrospectionReport;
 use super::reasoning::ReasoningChain;
-use super::abstraction::Concept;
+use serde::{Deserialize, Serialize};
+use tokio::sync::RwLock;
 
 /// Stratégie
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
@@ -260,23 +260,29 @@ impl StrategyOptimizer {
         }
 
         // Ajuster selon les concepts
-        if concepts.iter().any(|c| c.level == super::abstraction::AbstractionLevel::High) {
+        if concepts
+            .iter()
+            .any(|c| c.level == super::abstraction::AbstractionLevel::High)
+        {
             if strategy.approach == "analogical" {
                 score += 0.1;
             }
         }
 
         // Ajuster selon l'historique
-        let recent_executions: Vec<_> = history.iter()
+        let recent_executions: Vec<_> = history
+            .iter()
             .filter(|e| e.strategy_id == strategy.id)
             .rev()
             .take(5)
             .collect();
 
         if !recent_executions.is_empty() {
-            let success_rate: f32 = recent_executions.iter()
+            let success_rate: f32 = recent_executions
+                .iter()
                 .map(|e| if e.success { 1.0 } else { 0.0 })
-                .sum::<f32>() / recent_executions.len() as f32;
+                .sum::<f32>()
+                / recent_executions.len() as f32;
 
             score = score * 0.7 + success_rate * 0.3;
         }
@@ -312,13 +318,15 @@ impl StrategyOptimizer {
     pub async fn score(&self, strategy: &Strategy) -> StrategyScore {
         let history = self.history.read().await;
 
-        let executions: Vec<_> = history.iter()
+        let executions: Vec<_> = history
+            .iter()
             .filter(|e| e.strategy_id == strategy.id)
             .collect();
 
-        let (success_count, total_duration) = executions.iter().fold((0u32, 0u64), |(sc, td), e| {
-            (sc + if e.success { 1 } else { 0 }, td + e.duration_ms)
-        });
+        let (success_count, total_duration) =
+            executions.iter().fold((0u32, 0u64), |(sc, td), e| {
+                (sc + if e.success { 1 } else { 0 }, td + e.duration_ms)
+            });
 
         let effectiveness = if executions.is_empty() {
             strategy.confidence
@@ -386,14 +394,18 @@ mod tests {
         let reasoning = ReasoningChain::default();
         let concepts = Vec::new();
 
-        let strategy = optimizer.select(&introspection, &reasoning, &concepts).await;
+        let strategy = optimizer
+            .select(&introspection, &reasoning, &concepts)
+            .await;
         assert!(!strategy.id.is_empty());
     }
 
     #[tokio::test]
     async fn test_record_execution() {
         let optimizer = StrategyOptimizer::new();
-        optimizer.record_execution("analytical", true, 100, 0.9).await;
+        optimizer
+            .record_execution("analytical", true, 100, 0.9)
+            .await;
 
         let strategies = optimizer.get_all().await;
         let analytical = strategies

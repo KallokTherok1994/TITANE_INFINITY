@@ -1,6 +1,5 @@
 /// Gemini Provider Extensions for v27.0 Epic 1 Day 3
 /// Adds streaming support and retry logic with exponential backoff
-
 use crate::epic1_provider_refactor::{Provider, ProviderError, ProviderResult};
 use crate::gemini_provider_refactor::GeminiProvider;
 use std::time::Duration;
@@ -81,12 +80,12 @@ impl GeminiProvider {
         // For Gemini API v1beta, streaming is done via SSE
         // This is a simplified implementation that simulates streaming
         // by breaking the response into chunks
-        
+
         let full_response = self.send_message(message).await?;
-        
+
         // Simulate streaming by chunking the response
         let chunks = chunk_response(&full_response);
-        
+
         Ok(chunks)
     }
 
@@ -137,21 +136,25 @@ fn should_retry(error: &ProviderError) -> bool {
 fn chunk_response(response: &str) -> Vec<StreamChunk> {
     let mut chunks = Vec::new();
     let words: Vec<&str> = response.split_whitespace().collect();
-    
+
     // Simulate streaming by chunking words
     let chunk_size = 10; // words per chunk
-    
+
     for (i, word_chunk) in words.chunks(chunk_size).enumerate() {
         let is_final = i == (words.len() / chunk_size);
         let text = word_chunk.join(" ");
-        
+
         chunks.push(StreamChunk {
             text: if i == 0 { text } else { format!(" {}", text) },
             is_final,
-            finish_reason: if is_final { Some("STOP".to_string()) } else { None },
+            finish_reason: if is_final {
+                Some("STOP".to_string())
+            } else {
+                None
+            },
         });
     }
-    
+
     chunks
 }
 
@@ -170,29 +173,44 @@ mod tests {
 
     #[test]
     fn test_should_retry_logic() {
-        assert!(should_retry(&ProviderError::RequestTimeout("test".to_string())));
-        assert!(should_retry(&ProviderError::ConnectionFailed("test".to_string())));
-        assert!(should_retry(&ProviderError::RateLimited("test".to_string())));
-        assert!(should_retry(&ProviderError::ApiError("status 500".to_string())));
-        assert!(!should_retry(&ProviderError::ApiError("status 400".to_string())));
-        assert!(!should_retry(&ProviderError::InvalidResponse("test".to_string())));
-        assert!(!should_retry(&ProviderError::InternalError("test".to_string())));
+        assert!(should_retry(&ProviderError::RequestTimeout(
+            "test".to_string()
+        )));
+        assert!(should_retry(&ProviderError::ConnectionFailed(
+            "test".to_string()
+        )));
+        assert!(should_retry(&ProviderError::RateLimited(
+            "test".to_string()
+        )));
+        assert!(should_retry(&ProviderError::ApiError(
+            "status 500".to_string()
+        )));
+        assert!(!should_retry(&ProviderError::ApiError(
+            "status 400".to_string()
+        )));
+        assert!(!should_retry(&ProviderError::InvalidResponse(
+            "test".to_string()
+        )));
+        assert!(!should_retry(&ProviderError::InternalError(
+            "test".to_string()
+        )));
     }
 
     #[test]
     fn test_chunk_response() {
         let response = "This is a test response with multiple words that should be chunked";
         let chunks = chunk_response(response);
-        
+
         assert!(!chunks.is_empty());
         assert!(chunks.last().unwrap().is_final);
-        
+
         // Reconstruct response
-        let reconstructed: String = chunks.iter()
+        let reconstructed: String = chunks
+            .iter()
             .map(|c| c.text.clone())
             .collect::<Vec<_>>()
             .join("");
-        
+
         assert_eq!(reconstructed, response);
     }
 
@@ -203,7 +221,7 @@ mod tests {
             is_final: false,
             finish_reason: None,
         };
-        
+
         assert_eq!(chunk.text, "Hello world");
         assert!(!chunk.is_final);
         assert!(chunk.finish_reason.is_none());
@@ -216,16 +234,16 @@ mod tests {
             is_final: true,
             finish_reason: Some("STOP".to_string()),
         };
-        
+
         assert!(chunk.is_final);
         assert_eq!(chunk.finish_reason.unwrap(), "STOP");
     }
 }
 
 // EPIC 1 MIGRATION NOTES — DAY 3 GEMINI COMPLETION:
-// 
+//
 // This module adds critical production-ready features:
-// 
+//
 // 1. Retry Logic with Exponential Backoff
 //    - Configurable max retries (default: 3)
 //    - Exponential backoff: 500ms → 1s → 2s → 4s → 8s → 10s cap

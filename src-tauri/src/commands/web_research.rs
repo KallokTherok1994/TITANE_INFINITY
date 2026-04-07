@@ -4,9 +4,8 @@
 //   Ring 3 orchestrator — Policy → Robots → RateLimit → Cache → Fetch → Extract → Index → RAG
 // ═══════════════════════════════════════════════════════════════
 
-use crate::services::discovery_service::DiscoveryService;
-use crate::services::vector_service;
 use crate::services::cache_service::CacheService;
+use crate::services::discovery_service::DiscoveryService;
 use crate::services::extract_service::ExtractService;
 use crate::services::fetch_service::{FetchError, FetchService};
 use crate::services::index_service::{IndexService, IndexWriteResult};
@@ -17,6 +16,7 @@ use crate::services::rate_limit_service::{
     apply_rate_limit_delay, RateLimitProfile, RateLimitService,
 };
 use crate::services::robots_service::{RobotsErrorPolicy, RobotsService};
+use crate::services::vector_service;
 use crate::types::research::{
     CacheEvent, CacheEventKind, Citation, ExtractEvent, ExtractQuality, ExtractStatus, IndexEvent,
     IndexQueryStatus, IndexWriteStatus, NetworkEvent, RateLimitAction, RateLimitEvent,
@@ -76,7 +76,7 @@ const M_RAG_SKIP: &str = "RAG_SKIPPED_P6";
 const M_CITATIONS_BUILD_OK: &str = "CITATIONS_BUILD_OK";
 const M_CITATIONS_EMPTY_P6: &str = "CITATIONS_EMPTY_OK_P6";
 const M_CITATIONS_EMPTY: &str = "CITATIONS_EMPTY_OK_P6"; // alias for skip paths
-// P7 discovery + vector markers
+                                                         // P7 discovery + vector markers
 const M_DISCOVERY_START: &str = "DISCOVERY_START";
 const M_DISCOVERY_SEED_OK: &str = "DISCOVERY_SEED_OK";
 const M_DISCOVERY_BREADTH_LIMIT: &str = "DISCOVERY_BREADTH_LIMIT_ENFORCED";
@@ -881,8 +881,11 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
         if options.seed_urls.is_some() {
             if let Some(ref html_bytes) = html_bytes_for_extract {
                 if let Ok(html_str) = std::str::from_utf8(html_bytes) {
-                    let disc =
-                        DiscoveryService::discover(target_url, html_str, max_pages.saturating_sub(1));
+                    let disc = DiscoveryService::discover(
+                        target_url,
+                        html_str,
+                        max_pages.saturating_sub(1),
+                    );
                     if disc.budget_enforced {
                         markers.push(M_DISCOVERY_BREADTH_LIMIT.to_string());
                     }
@@ -1877,7 +1880,8 @@ mod tests {
         let body = "First paragraph about TITANE research.\n\
                     Second paragraph unrelated content.\n\
                     Third paragraph TITANE engine evidence.";
-        let passages = IndexService::retrieve_passages(body, "TITANE", 5, "https://loc.example.com/page");
+        let passages =
+            IndexService::retrieve_passages(body, "TITANE", 5, "https://loc.example.com/page");
 
         for passage in &passages {
             assert!(
@@ -1929,7 +1933,7 @@ mod tests {
 
     #[tokio::test]
     async fn g_discovery_domain_lock_pipeline() {
-        use crate::services::discovery_service::{DiscoveryService, extract_domain};
+        use crate::services::discovery_service::{extract_domain, DiscoveryService};
 
         let html = r#"<html><body>
             <a href="https://example.com/internal">internal</a>
@@ -1961,15 +1965,13 @@ mod tests {
             "Vector must be disabled by default"
         );
 
-        let passages = vec![
-            RetrievedPassage {
-                url: "https://a.com".to_string(),
-                passage: "TITANE research engine test passage alpha".to_string(),
-                score: 3,
-                paragraph_index: Some(0),
-                char_start: Some(0),
-            },
-        ];
+        let passages = vec![RetrievedPassage {
+            url: "https://a.com".to_string(),
+            passage: "TITANE research engine test passage alpha".to_string(),
+            score: 3,
+            paragraph_index: Some(0),
+            char_start: Some(0),
+        }];
         // rerank_passages is pure — no network, no HTTP client
         let result = vector_service::rerank_passages("TITANE", &passages, 5);
         assert_eq!(result.len(), 1, "Rerank of 1 passage should return 1");

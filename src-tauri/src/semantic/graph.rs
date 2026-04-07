@@ -69,7 +69,8 @@ impl KnowledgeGraph {
     }
 
     pub fn find_related(&self, node_id: &str) -> Vec<&KnowledgeNode> {
-        let related_ids: Vec<&str> = self.edges
+        let related_ids: Vec<&str> = self
+            .edges
             .iter()
             .filter(|e| e.from_id == node_id)
             .map(|e| e.to_id.as_str())

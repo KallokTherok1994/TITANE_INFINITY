@@ -25,9 +25,7 @@ impl ChatState {
         Self {
             history: Arc::new(Mutex::new(Vec::new())),
             api_key: Arc::new(Mutex::new(None)),
-            client: Client::builder()
-                .build()
-                .unwrap_or_else(|_| Client::new()),
+            client: Client::builder().build().unwrap_or_else(|_| Client::new()),
         }
     }
 }

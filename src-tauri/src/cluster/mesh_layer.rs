@@ -16,8 +16,8 @@ macro_rules! lock_or_recover {
     };
 }
 
-use std::sync::{Arc, Mutex};
 use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::{Arc, Mutex};
 use tokio::net::UdpSocket;
 use tokio::time::{interval, Duration};
 

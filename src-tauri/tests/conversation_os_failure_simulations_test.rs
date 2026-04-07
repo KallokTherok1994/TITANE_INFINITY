@@ -126,10 +126,9 @@ fn failure_simulation_matrix_complete_engine_level() {
     assert_eq!(server_500_meta.reason_code, ReasonCode::ProviderDown);
 
     // allowlist violation
-    assert!(!policy.is_endpoint_allowed(
-        "https://evil.example",
-        &online_context().endpoint_allowlist
-    ));
+    assert!(
+        !policy.is_endpoint_allowed("https://evil.example", &online_context().endpoint_allowlist)
+    );
 
     // missing/revoked API key simulations
     let mut no_key_ctx = online_context();
@@ -158,7 +157,10 @@ fn failure_simulation_matrix_complete_engine_level() {
     let (second_allowed, reason) = budget.is_request_allowed(1);
     assert!(first_allowed);
     assert!(!second_allowed);
-    assert!(reason.unwrap_or_default().to_lowercase().contains("rate limit"));
+    assert!(reason
+        .unwrap_or_default()
+        .to_lowercase()
+        .contains("rate limit"));
 
     // explicit offline fallback remains visible (no silence)
     let offline_meta = decision_meta(

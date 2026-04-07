@@ -3,7 +3,7 @@
 //   System Monitoring Commands
 // ═══════════════════════════════════════════════════════════════
 
-use crate::core::{HeliosCore};
+use crate::core::HeliosCore;
 use crate::types::HeliosState;
 use crate::utils::AppResult;
 
@@ -11,4 +11,3 @@ use crate::utils::AppResult;
 pub async fn get_helios_state(helios: tauri::State<'_, HeliosCore>) -> AppResult<HeliosState> {
     helios.collect().await
 }
-

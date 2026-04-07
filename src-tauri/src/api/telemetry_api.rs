@@ -4,7 +4,6 @@
  * Parses metrics + applies thresholds
  * Returns ProductionHealthSummary
  */
-
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::Path;
@@ -56,8 +55,7 @@ pub async fn read_production_week1_csv() -> Result<ProductionHealthSummary, Stri
         ));
     }
 
-    let content = fs::read_to_string(csv_path)
-        .map_err(|e| format!("Failed to read CSV: {}", e))?;
+    let content = fs::read_to_string(csv_path).map_err(|e| format!("Failed to read CSV: {}", e))?;
 
     if content.len() > MAX_CSV_SIZE {
         return Err("CSV file too large".to_string());
@@ -216,13 +214,21 @@ mod tests {
     #[test]
     fn test_parse_too_few_columns_returns_parser_error() {
         let err = parse_csv_line("2026-01-01T00:00:00Z,180.0").unwrap_err();
-        assert!(err.starts_with("PARSER_ERROR"), "expected PARSER_ERROR prefix, got: {}", err);
+        assert!(
+            err.starts_with("PARSER_ERROR"),
+            "expected PARSER_ERROR prefix, got: {}",
+            err
+        );
     }
 
     #[test]
     fn test_parse_non_numeric_rss_returns_parser_error() {
         let err = parse_csv_line("2026-01-01T00:00:00Z,abc,192.0").unwrap_err();
-        assert!(err.starts_with("PARSER_ERROR"), "expected PARSER_ERROR, got: {}", err);
+        assert!(
+            err.starts_with("PARSER_ERROR"),
+            "expected PARSER_ERROR, got: {}",
+            err
+        );
     }
 
     #[test]
@@ -250,7 +256,11 @@ mod tests {
     fn test_summarize_empty_csv_returns_source_empty() {
         let csv = "timestamp,rss_initial_mb,rss_current_mb\n";
         let err = parse_and_summarize(csv).unwrap_err();
-        assert!(err.starts_with("SOURCE_EMPTY"), "expected SOURCE_EMPTY, got: {}", err);
+        assert!(
+            err.starts_with("SOURCE_EMPTY"),
+            "expected SOURCE_EMPTY, got: {}",
+            err
+        );
     }
 
     #[test]
@@ -266,7 +276,11 @@ mod tests {
         let csv = "timestamp;rss_initial_mb;rss_current_mb\n\
                    2026-01-01T00:00:00Z;180.0;192.0\n";
         let err = parse_and_summarize(csv).unwrap_err();
-        assert!(err.starts_with("SCHEMA_DRIFT"), "expected SCHEMA_DRIFT, got: {}", err);
+        assert!(
+            err.starts_with("SCHEMA_DRIFT"),
+            "expected SCHEMA_DRIFT, got: {}",
+            err
+        );
     }
 
     #[test]

@@ -5,9 +5,9 @@
 // Expected: 20-30% latency improvement on action transitions
 // ═══════════════════════════════════════════════════════════════
 
+use parking_lot::RwLock;
 use std::collections::HashMap;
 use std::sync::Arc;
-use parking_lot::RwLock;
 
 /// Action prediction engine for proactive asset preloading
 #[derive(Clone)]
@@ -50,13 +50,14 @@ impl ActionPrefetcher {
     pub fn record_action(&self, action_sequence: String, next_action: String) {
         let mut model = self.transitions.write();
 
-        let probabilities = model
-            .patterns
-            .entry(action_sequence)
-            .or_insert_with(|| ActionProbabilities {
-                next_actions: HashMap::new(),
-                total: 0,
-            });
+        let probabilities =
+            model
+                .patterns
+                .entry(action_sequence)
+                .or_insert_with(|| ActionProbabilities {
+                    next_actions: HashMap::new(),
+                    total: 0,
+                });
 
         *probabilities.next_actions.entry(next_action).or_insert(0) += 1;
         probabilities.total += 1;

@@ -24,9 +24,7 @@ pub struct DashboardMetrics {
 
 /// Obtenir les métriques du dashboard pour les graphiques
 #[tauri::command]
-pub async fn dashboard_get_metrics(
-    time_range: Option<String>,
-) -> Result<DashboardMetrics, String> {
+pub async fn dashboard_get_metrics(time_range: Option<String>) -> Result<DashboardMetrics, String> {
     PERMISSION_GUARD
         .require("system_read", Role::User, "dashboard_get_metrics")
         .await
@@ -110,11 +108,17 @@ fn get_memory_usage() -> f64 {
             let mut available = 0u64;
             for line in content.lines() {
                 if line.starts_with("MemTotal:") {
-                    total = line.split_whitespace().nth(1)
-                        .and_then(|v| v.parse().ok()).unwrap_or(0);
+                    total = line
+                        .split_whitespace()
+                        .nth(1)
+                        .and_then(|v| v.parse().ok())
+                        .unwrap_or(0);
                 } else if line.starts_with("MemAvailable:") {
-                    available = line.split_whitespace().nth(1)
-                        .and_then(|v| v.parse().ok()).unwrap_or(0);
+                    available = line
+                        .split_whitespace()
+                        .nth(1)
+                        .and_then(|v| v.parse().ok())
+                        .unwrap_or(0);
                 }
             }
             if total > 0 {

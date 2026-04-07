@@ -3,9 +3,9 @@
 // ║ Analyse multi-dimensionnelle des états système pour régulation adaptative   ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
-use crate::types::shared::ModuleHealthInfo as ModuleHealth;
 use crate::shared::utils::clamp;
 use crate::system::memory::MemoryModule;
+use crate::types::shared::ModuleHealthInfo as ModuleHealth;
 /// Rapport d'analyse adaptative du système
 #[derive(Debug, Clone)]
 pub struct AdaptiveReport {

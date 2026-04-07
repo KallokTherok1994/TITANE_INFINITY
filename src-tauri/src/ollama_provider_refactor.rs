@@ -1,13 +1,12 @@
+use crate::core::http_types::Client;
 /// Ollama Provider Refactoring for v27.0 Epic 1
 /// Target: Convert ~100 expect() calls to Result-based error handling
-/// 
+///
 /// MIGRATION PHASE 2: Refactor Ollama provider API to use Result types
 /// This module provides the refactored Ollama provider implementation
 /// following the patterns established in Gemini provider.
-
 use crate::epic1_provider_refactor::{Provider, ProviderError, ProviderResult};
 use async_trait::async_trait;
-use crate::core::http_types::Client;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 
@@ -94,9 +93,9 @@ impl OllamaProvider {
         let client = Client::builder()
             .timeout(Duration::from_secs(config.timeout_secs))
             .build()
-            .map_err(|e| ProviderError::ConnectionFailed(
-                format!("Failed to create HTTP client: {}", e)
-            ))?;
+            .map_err(|e| {
+                ProviderError::ConnectionFailed(format!("Failed to create HTTP client: {}", e))
+            })?;
 
         Ok(OllamaProvider {
             config,
@@ -109,25 +108,26 @@ impl OllamaProvider {
     fn validate_config(config: &OllamaConfig) -> ProviderResult<()> {
         if config.base_url.is_empty() {
             return Err(ProviderError::InvalidResponse(
-                "Ollama base URL is empty".to_string()
+                "Ollama base URL is empty".to_string(),
             ));
         }
 
         if config.model.is_empty() {
             return Err(ProviderError::InvalidResponse(
-                "Ollama model name is empty".to_string()
+                "Ollama model name is empty".to_string(),
             ));
         }
 
         if config.temperature < 0.0 || config.temperature > 2.0 {
-            return Err(ProviderError::InvalidResponse(
-                format!("Invalid temperature: {} (must be 0.0-2.0)", config.temperature)
-            ));
+            return Err(ProviderError::InvalidResponse(format!(
+                "Invalid temperature: {} (must be 0.0-2.0)",
+                config.temperature
+            )));
         }
 
         if config.num_ctx == 0 {
             return Err(ProviderError::InvalidResponse(
-                "Context size must be greater than 0".to_string()
+                "Context size must be greater than 0".to_string(),
             ));
         }
 
@@ -161,7 +161,7 @@ impl OllamaProvider {
                 return Ok(response.response);
             } else {
                 return Err(ProviderError::InvalidResponse(
-                    "Incomplete response (done=false)".to_string()
+                    "Incomplete response (done=false)".to_string(),
                 ));
             }
         }
@@ -172,9 +172,10 @@ impl OllamaProvider {
         }
 
         // Failed to parse as either response or error
-        Err(ProviderError::InvalidResponse(
-            format!("Failed to parse response: {}", response_text)
-        ))
+        Err(ProviderError::InvalidResponse(format!(
+            "Failed to parse response: {}",
+            response_text
+        )))
     }
 
     /// Check if error is rate limit
@@ -185,27 +186,22 @@ impl OllamaProvider {
     /// Map HTTP status to provider error
     fn map_http_error(&self, status: u16, body: &str) -> ProviderError {
         if self.check_rate_limit(status) {
-            return ProviderError::RateLimited(
-                format!("Ollama rate limit exceeded (status: {})", status)
-            );
+            return ProviderError::RateLimited(format!(
+                "Ollama rate limit exceeded (status: {})",
+                status
+            ));
         }
 
         match status {
-            400 => ProviderError::InvalidResponse(
-                format!("Bad request: {}", body)
-            ),
-            401 | 403 => ProviderError::ApiError(
-                format!("Authentication failed (status: {})", status)
-            ),
-            404 => ProviderError::ApiError(
-                format!("Model not found: {}", self.config.model)
-            ),
-            500..=599 => ProviderError::InternalError(
-                format!("Server error (status: {}): {}", status, body)
-            ),
-            _ => ProviderError::ApiError(
-                format!("HTTP error {}: {}", status, body)
-            ),
+            400 => ProviderError::InvalidResponse(format!("Bad request: {}", body)),
+            401 | 403 => {
+                ProviderError::ApiError(format!("Authentication failed (status: {})", status))
+            }
+            404 => ProviderError::ApiError(format!("Model not found: {}", self.config.model)),
+            500..=599 => {
+                ProviderError::InternalError(format!("Server error (status: {}): {}", status, body))
+            }
+            _ => ProviderError::ApiError(format!("HTTP error {}: {}", status, body)),
         }
     }
 
@@ -226,7 +222,7 @@ impl Provider for OllamaProvider {
         // Validate input
         if message.is_empty() {
             return Err(ProviderError::InvalidResponse(
-                "Message cannot be empty".to_string()
+                "Message cannot be empty".to_string(),
             ));
         }
 
@@ -235,24 +231,25 @@ impl Provider for OllamaProvider {
         let request_payload = self.build_request(message);
 
         // Send request
-        let response = self.client
+        let response = self
+            .client
             .post(&endpoint)
             .json(&request_payload)
             .send()
             .await
             .map_err(|e| {
                 if e.is_timeout() {
-                    ProviderError::RequestTimeout(
-                        format!("Request to Ollama timed out after {}s", self.config.timeout_secs)
-                    )
+                    ProviderError::RequestTimeout(format!(
+                        "Request to Ollama timed out after {}s",
+                        self.config.timeout_secs
+                    ))
                 } else if e.is_connect() {
-                    ProviderError::ConnectionFailed(
-                        format!("Failed to connect to Ollama at {}", self.config.base_url)
-                    )
+                    ProviderError::ConnectionFailed(format!(
+                        "Failed to connect to Ollama at {}",
+                        self.config.base_url
+                    ))
                 } else {
-                    ProviderError::InternalError(
-                        format!("Request failed: {}", e)
-                    )
+                    ProviderError::InternalError(format!("Request failed: {}", e))
                 }
             })?;
 
@@ -265,9 +262,7 @@ impl Provider for OllamaProvider {
 
         // Parse response
         let response_text = response.text().await.map_err(|e| {
-            ProviderError::InvalidResponse(
-                format!("Failed to read response body: {}", e)
-            )
+            ProviderError::InvalidResponse(format!("Failed to read response body: {}", e))
         })?;
 
         self.parse_response(&response_text)
@@ -277,7 +272,7 @@ impl Provider for OllamaProvider {
         // Check if provider is marked as healthy
         if !self.health_status {
             return Err(ProviderError::InternalError(
-                "Provider is marked as unhealthy".to_string()
+                "Provider is marked as unhealthy".to_string(),
             ));
         }
 
@@ -285,25 +280,26 @@ impl Provider for OllamaProvider {
         let health_client = Client::builder()
             .timeout(Duration::from_secs(5))
             .build()
-            .map_err(|e| ProviderError::ConnectionFailed(
-                format!("Health check client creation failed: {}", e)
-            ))?;
+            .map_err(|e| {
+                ProviderError::ConnectionFailed(format!(
+                    "Health check client creation failed: {}",
+                    e
+                ))
+            })?;
 
         let health_url = format!("{}/api/tags", self.config.base_url);
-        let response = health_client
-            .get(&health_url)
-            .send()
-            .await
-            .map_err(|e| ProviderError::ConnectionFailed(
-                format!("Health check failed: {}", e)
-            ))?;
+        let response =
+            health_client.get(&health_url).send().await.map_err(|e| {
+                ProviderError::ConnectionFailed(format!("Health check failed: {}", e))
+            })?;
 
         if response.status().is_success() {
             Ok(())
         } else {
-            Err(ProviderError::ApiError(
-                format!("Health check returned status {}", response.status())
-            ))
+            Err(ProviderError::ApiError(format!(
+                "Health check returned status {}",
+                response.status()
+            )))
         }
     }
 
@@ -322,7 +318,7 @@ impl Provider for OllamaProvider {
 }
 
 // MIGRATION NOTES:
-// 
+//
 // This refactoring eliminates ~100 expect() calls that previously existed in:
 // 1. Configuration validation (10 expect() → Result validation)
 // 2. HTTP client creation (5 expect() → map_err)
@@ -399,7 +395,7 @@ mod tests {
         let mut provider = OllamaProvider::new(config).unwrap();
         let result = provider.send_message("").await;
         assert!(result.is_err());
-        
+
         if let Err(ProviderError::InvalidResponse(msg)) = result {
             assert!(msg.contains("empty"));
         } else {
@@ -411,7 +407,7 @@ mod tests {
     fn test_ollama_parse_valid_response() {
         let config = OllamaConfig::default();
         let provider = OllamaProvider::new(config).unwrap();
-        
+
         let response_json = r#"{
             "model": "llama2",
             "created_at": "2024-01-01T00:00:00Z",
@@ -423,7 +419,7 @@ mod tests {
             "prompt_eval_count": 10,
             "eval_count": 20
         }"#;
-        
+
         let result = provider.parse_response(response_json);
         assert!(result.is_ok());
         assert_eq!(result.unwrap(), "Test response");
@@ -433,14 +429,14 @@ mod tests {
     fn test_ollama_parse_incomplete_response() {
         let config = OllamaConfig::default();
         let provider = OllamaProvider::new(config).unwrap();
-        
+
         let response_json = r#"{
             "model": "llama2",
             "created_at": "2024-01-01T00:00:00Z",
             "response": "Partial response",
             "done": false
         }"#;
-        
+
         let result = provider.parse_response(response_json);
         assert!(result.is_err());
     }
@@ -449,12 +445,12 @@ mod tests {
     fn test_ollama_parse_error_response() {
         let config = OllamaConfig::default();
         let provider = OllamaProvider::new(config).unwrap();
-        
+
         let error_json = r#"{"error": "Model not found"}"#;
-        
+
         let result = provider.parse_response(error_json);
         assert!(result.is_err());
-        
+
         if let Err(ProviderError::ApiError(msg)) = result {
             assert_eq!(msg, "Model not found");
         } else {

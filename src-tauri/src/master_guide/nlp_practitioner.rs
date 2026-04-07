@@ -26,20 +26,25 @@ impl NLPPractitioner {
     /// Suggère des recadrages (reframes)
     pub fn suggest_reframes(&self) -> Vec<String> {
         vec![
-            "Recadrage de sens : Et si cet obstacle était une opportunité d'apprentissage ?".to_string(),
-            "Recadrage de contexte : Dans quel contexte ce comportement pourrait-il être utile ?".to_string(),
-            "Recadrage d'intention : Quelle intention positive se cache derrière cette réaction ?".to_string(),
+            "Recadrage de sens : Et si cet obstacle était une opportunité d'apprentissage ?"
+                .to_string(),
+            "Recadrage de contexte : Dans quel contexte ce comportement pourrait-il être utile ?"
+                .to_string(),
+            "Recadrage d'intention : Quelle intention positive se cache derrière cette réaction ?"
+                .to_string(),
         ]
     }
 
     /// Recadrage cognitif
     pub fn reframe(&self, belief: &str) -> ReframingResponse {
         let reframed = if belief.contains("Je ne peux pas") {
-            "Qu'est-ce qui t'empêche de... ? Qu'est-ce que tu pourrais faire à la place ?".to_string()
+            "Qu'est-ce qui t'empêche de... ? Qu'est-ce que tu pourrais faire à la place ?"
+                .to_string()
         } else if belief.contains("Je dois") {
             "Qu'est-ce qui se passerait si tu ne le faisais pas ? Qu'est-ce que tu choisis vraiment ?".to_string()
         } else if belief.contains("C'est impossible") {
-            "Qu'est-ce qui rendrait cela possible ? Quelle serait la première petite étape ?".to_string()
+            "Qu'est-ce qui rendrait cela possible ? Quelle serait la première petite étape ?"
+                .to_string()
         } else {
             "Quelle autre façon de voir cette situation pourrait t'être utile ?".to_string()
         };
@@ -47,7 +52,8 @@ impl NLPPractitioner {
         ReframingResponse {
             original_belief: belief.to_string(),
             reframed_perspective: reframed,
-            empowering_question: "Qu'est-ce que tu remarques en voyant cela autrement ?".to_string(),
+            empowering_question: "Qu'est-ce que tu remarques en voyant cela autrement ?"
+                .to_string(),
         }
     }
 
@@ -67,7 +73,9 @@ impl NLPPractitioner {
 
         // Distorsion
         if statement.contains("il me fait") {
-            questions.push("Comment exactement cette personne te fait-elle ressentir cela ?".to_string());
+            questions.push(
+                "Comment exactement cette personne te fait-elle ressentir cela ?".to_string(),
+            );
         }
 
         // Nominalisation
@@ -87,10 +95,12 @@ impl NLPPractitioner {
         AnchoringGuide {
             resource: resource.to_string(),
             steps: vec![
-                "1. Rappelle-toi un moment où tu as pleinement ressenti cette ressource".to_string(),
+                "1. Rappelle-toi un moment où tu as pleinement ressenti cette ressource"
+                    .to_string(),
                 "2. Revois la scène avec tous les détails sensoriels".to_string(),
                 "3. Intensifie le ressenti en respirant profondément".to_string(),
-                "4. Au pic de l'expérience, crée un geste simple (toucher ton poignet par exemple)".to_string(),
+                "4. Au pic de l'expérience, crée un geste simple (toucher ton poignet par exemple)"
+                    .to_string(),
                 "5. Répète 3 fois pour renforcer l'ancrage".to_string(),
                 "6. Teste en refaisant le geste et en observant ce qui se passe".to_string(),
             ],

@@ -47,7 +47,8 @@ impl AutoEvolution {
         // Apprendre depuis patterns émotionnels
         if emotions.len() > 10 {
             let recent: Vec<&EmotionalAnalysis> = emotions.iter().rev().take(20).collect();
-            let avg_stress: f32 = recent.iter().map(|e| e.stress_level).sum::<f32>() / recent.len() as f32;
+            let avg_stress: f32 =
+                recent.iter().map(|e| e.stress_level).sum::<f32>() / recent.len() as f32;
 
             if avg_stress > 0.7 {
                 self.learn_rule(
@@ -61,8 +62,11 @@ impl AutoEvolution {
         // Enregistrer événement d'apprentissage
         self.evolution_log.push(EvolutionEvent {
             event_type: "learning".to_string(),
-            description: format!("Learned from {} patterns and {} emotional states", 
-                patterns.len(), emotions.len()),
+            description: format!(
+                "Learned from {} patterns and {} emotional states",
+                patterns.len(),
+                emotions.len()
+            ),
             version: self.current_version.clone(),
             timestamp: chrono::Utc::now(),
         });
@@ -76,21 +80,21 @@ impl AutoEvolution {
                 confidence,
                 learned_at: chrono::Utc::now(),
                 application_count: 0,
-            }
+            },
         );
     }
 
     /// Incrémente la version
     pub fn increment_version(&mut self) -> String {
         let parts: Vec<&str> = self.current_version.split('.').collect();
-        
+
         if parts.len() == 3 {
             let major: u32 = parts[0].parse().unwrap_or(14);
             let minor: u32 = parts[1].parse().unwrap_or(1);
             let patch: u32 = parts[2].parse().unwrap_or(0);
 
             let new_version = format!("{}.{}.{}", major, minor, patch + 1);
-            
+
             self.evolution_log.push(EvolutionEvent {
                 event_type: "version_increment".to_string(),
                 description: format!("Evolved from {} to {}", self.current_version, new_version),
@@ -106,7 +110,11 @@ impl AutoEvolution {
     }
 
     /// Détecte erreur et corrige
-    pub fn detect_and_correct_error(&mut self, error_type: &str, context: &str) -> CorrectionResult {
+    pub fn detect_and_correct_error(
+        &mut self,
+        error_type: &str,
+        context: &str,
+    ) -> CorrectionResult {
         let correction = self.generate_correction(error_type, context);
 
         self.evolution_log.push(EvolutionEvent {

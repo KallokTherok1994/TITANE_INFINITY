@@ -12,7 +12,7 @@ pub struct SystemMap {
 impl SystemMap {
     pub fn new() -> Self {
         let mut capabilities = HashMap::new();
-        
+
         capabilities.insert(
             TitaneMode::TherapeuteHumaniste,
             vec![
@@ -21,7 +21,7 @@ impl SystemMap {
                 "conscience Gestalt".to_string(),
             ],
         );
-        
+
         capabilities.insert(
             TitaneMode::CoachProfessionnelICF,
             vec![
@@ -30,7 +30,7 @@ impl SystemMap {
                 "objectifs SMART".to_string(),
             ],
         );
-        
+
         capabilities.insert(
             TitaneMode::PNLMasterPractitioner,
             vec![
@@ -39,7 +39,7 @@ impl SystemMap {
                 "ancrages ressources".to_string(),
             ],
         );
-        
+
         capabilities.insert(
             TitaneMode::DigitalTwin,
             vec![
@@ -48,12 +48,12 @@ impl SystemMap {
                 "auto-évolution".to_string(),
             ],
         );
-        
+
         Self {
             mode_capabilities: capabilities,
         }
     }
-    
+
     /// Obtenir les capacités d'un mode
     pub fn get_capabilities(&self, mode: &TitaneMode) -> Option<&Vec<String>> {
         self.mode_capabilities.get(mode)

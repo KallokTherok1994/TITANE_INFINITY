@@ -5,8 +5,8 @@ use aes_gcm::{
     aead::{Aead, KeyInit},
     Aes256Gcm, Nonce,
 };
+use argon2::password_hash::{rand_core::OsRng, SaltString};
 use argon2::{Argon2, PasswordHasher};
-use argon2::password_hash::{SaltString, rand_core::OsRng};
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -36,7 +36,7 @@ impl SemanticStorage {
     fn derive_key(password: &str) -> Result<Vec<u8>, String> {
         let salt = SaltString::generate(&mut OsRng);
         let argon2 = Argon2::default();
-        
+
         let password_hash = argon2
             .hash_password(password.as_bytes(), &salt)
             .map_err(|e| format!("Key derivation failed: {}", e))?;
@@ -46,8 +46,8 @@ impl SemanticStorage {
     }
 
     pub fn save<T: Serialize>(&self, filename: &str, data: &T) -> Result<(), String> {
-        let json = serde_json::to_string(data)
-            .map_err(|e| format!("Serialization failed: {}", e))?;
+        let json =
+            serde_json::to_string(data).map_err(|e| format!("Serialization failed: {}", e))?;
 
         let data_bytes = if let Some(key) = &self.encryption_key {
             self.encrypt(json.as_bytes(), key)?
@@ -57,21 +57,18 @@ impl SemanticStorage {
 
         let filepath = self.storage_path.join(filename);
         if let Some(parent) = filepath.parent() {
-            fs::create_dir_all(parent)
-                .map_err(|e| format!("Failed to create directory: {}", e))?;
+            fs::create_dir_all(parent).map_err(|e| format!("Failed to create directory: {}", e))?;
         }
 
-        fs::write(&filepath, data_bytes)
-            .map_err(|e| format!("Failed to write file: {}", e))?;
+        fs::write(&filepath, data_bytes).map_err(|e| format!("Failed to write file: {}", e))?;
 
         Ok(())
     }
 
     pub fn load<T: for<'de> Deserialize<'de>>(&self, filename: &str) -> Result<T, String> {
         let filepath = self.storage_path.join(filename);
-        
-        let data_bytes = fs::read(&filepath)
-            .map_err(|e| format!("Failed to read file: {}", e))?;
+
+        let data_bytes = fs::read(&filepath).map_err(|e| format!("Failed to read file: {}", e))?;
 
         let json_bytes = if let Some(key) = &self.encryption_key {
             self.decrypt(&data_bytes, key)?
@@ -79,35 +76,33 @@ impl SemanticStorage {
             data_bytes
         };
 
-        let json = String::from_utf8(json_bytes)
-            .map_err(|e| format!("Invalid UTF-8: {}", e))?;
+        let json = String::from_utf8(json_bytes).map_err(|e| format!("Invalid UTF-8: {}", e))?;
 
-        serde_json::from_str(&json)
-            .map_err(|e| format!("Deserialization failed: {}", e))
+        serde_json::from_str(&json).map_err(|e| format!("Deserialization failed: {}", e))
     }
 
     fn encrypt(&self, data: &[u8], key: &[u8]) -> Result<Vec<u8>, String> {
-        let cipher = Aes256Gcm::new_from_slice(key)
-            .map_err(|e| format!("Cipher creation failed: {}", e))?;
+        let cipher =
+            Aes256Gcm::new_from_slice(key).map_err(|e| format!("Cipher creation failed: {}", e))?;
 
         let nonce = Nonce::from_slice(b"unique nonce"); // Implementation: Cryptographically secure random nonce
-                                                         // - Use: rand::thread_rng().gen::<[u8; 12]>() for 96-bit random nonce
-                                                         // - Library: rand = "0.8" with OsRng for true randomness
-                                                         // - Per-encryption: Generate new nonce for EVERY encryption operation
-                                                         // - Storage: Prepend nonce to ciphertext: [nonce(12) | ciphertext | tag(16)]
-                                                         // - CRITICAL: Never reuse nonce with same key (breaks AES-GCM security)
-        
+                                                        // - Use: rand::thread_rng().gen::<[u8; 12]>() for 96-bit random nonce
+                                                        // - Library: rand = "0.8" with OsRng for true randomness
+                                                        // - Per-encryption: Generate new nonce for EVERY encryption operation
+                                                        // - Storage: Prepend nonce to ciphertext: [nonce(12) | ciphertext | tag(16)]
+                                                        // - CRITICAL: Never reuse nonce with same key (breaks AES-GCM security)
+
         cipher
             .encrypt(nonce, data)
             .map_err(|e| format!("Encryption failed: {}", e))
     }
 
     fn decrypt(&self, data: &[u8], key: &[u8]) -> Result<Vec<u8>, String> {
-        let cipher = Aes256Gcm::new_from_slice(key)
-            .map_err(|e| format!("Cipher creation failed: {}", e))?;
+        let cipher =
+            Aes256Gcm::new_from_slice(key).map_err(|e| format!("Cipher creation failed: {}", e))?;
 
         let nonce = Nonce::from_slice(b"unique nonce");
-        
+
         cipher
             .decrypt(nonce, data)
             .map_err(|e| format!("Decryption failed: {}", e))

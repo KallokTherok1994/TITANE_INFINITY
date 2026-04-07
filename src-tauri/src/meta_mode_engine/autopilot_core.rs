@@ -8,7 +8,7 @@ impl AutopilotCore {
     pub fn new() -> Self {
         Self
     }
-    
+
     /// Exécution autopilot
     pub fn execute(&self, input: &str, autonomy_level: f32) -> String {
         if autonomy_level > 0.7 {
@@ -17,7 +17,7 @@ impl AutopilotCore {
             self.guided_execution(input)
         }
     }
-    
+
     fn autonomous_execution(&self, input: &str) -> String {
         format!(
             "🚀 Autopilot activé : avancement autonome sur '{}'.\n\n\
@@ -31,7 +31,7 @@ impl AutopilotCore {
             input
         )
     }
-    
+
     fn guided_execution(&self, input: &str) -> String {
         format!(
             "🚀 Autopilot guidé : Je propose une première étape pour '{}'.\n\

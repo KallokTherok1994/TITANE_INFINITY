@@ -3,11 +3,11 @@
 //! Commandes Tauri pour la persistence 100% SAVE
 //! ═══════════════════════════════════════════════════════════════════════════════
 
+#[cfg(all(not(feature = "mock"), feature = "full"))]
+use crate::commands::ai_chat::AIChatState;
 use crate::core::SingularityState;
 use crate::persistence::{IntegrityReport, PersistenceStatus, TitanEvent, PERSISTENCE_ENGINE};
 use serde::{Deserialize, Serialize};
-#[cfg(all(not(feature = "mock"), feature = "full"))]
-use crate::commands::ai_chat::AIChatState;
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 use tauri::State;
 
@@ -112,9 +112,7 @@ pub async fn titan_force_snapshot(state_json: String) -> Result<(), String> {
 /// Forcer un snapshot depuis l'état courant du moteur v14
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 #[tauri::command]
-pub async fn titan_force_snapshot_current(
-    ai_chat: State<'_, AIChatState>,
-) -> Result<(), String> {
+pub async fn titan_force_snapshot_current(ai_chat: State<'_, AIChatState>) -> Result<(), String> {
     let engine = ai_chat.core_collection.engine();
     let snapshot_state = {
         let engine = engine

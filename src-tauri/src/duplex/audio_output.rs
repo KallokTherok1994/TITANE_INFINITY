@@ -1,9 +1,9 @@
+use std::sync::atomic::{AtomicBool, AtomicU8, Ordering};
 /**
  * 🔊 Audio Output - Sortie TTS streaming avec atténuation intelligente
  * Réduit volume si humain parle, coupe si interruption
  */
 use std::sync::{Arc, Mutex};
-use std::sync::atomic::{AtomicBool, AtomicU8, Ordering};
 use tokio::sync::mpsc;
 
 pub struct AudioOutput {

@@ -27,46 +27,51 @@ impl MultimodalEventEmitter {
     pub fn new(app_handle: AppHandle) -> Self {
         Self { app_handle }
     }
-    
+
     pub fn emit_vision_complete(&self, image_id: String, success: bool) {
         let _ = self.app_handle.emit(
             "multimodal_event",
             MultimodalEvent::VisionAnalysisComplete { image_id, success },
         );
     }
-    
+
     pub fn emit_embedding_generated(&self, image_id: String, dimension: usize) {
         let _ = self.app_handle.emit(
             "multimodal_event",
-            MultimodalEvent::ImageEmbeddingGenerated { image_id, dimension },
+            MultimodalEvent::ImageEmbeddingGenerated {
+                image_id,
+                dimension,
+            },
         );
     }
-    
+
     pub fn emit_audio3d_complete(&self, intensity: f32, patterns: usize) {
         let _ = self.app_handle.emit(
             "multimodal_event",
-            MultimodalEvent::Audio3DAnalysisComplete { intensity, patterns },
+            MultimodalEvent::Audio3DAnalysisComplete {
+                intensity,
+                patterns,
+            },
         );
     }
-    
+
     pub fn emit_cross_modal_search(&self, query: String, results: usize) {
         let _ = self.app_handle.emit(
             "multimodal_event",
             MultimodalEvent::CrossModalSearchComplete { query, results },
         );
     }
-    
+
     pub fn emit_context_built(&self, modalities: Vec<String>) {
         let _ = self.app_handle.emit(
             "multimodal_event",
             MultimodalEvent::MultimodalContextBuilt { modalities },
         );
     }
-    
+
     pub fn emit_error(&self, message: String) {
-        let _ = self.app_handle.emit(
-            "multimodal_event",
-            MultimodalEvent::Error { message },
-        );
+        let _ = self
+            .app_handle
+            .emit("multimodal_event", MultimodalEvent::Error { message });
     }
 }

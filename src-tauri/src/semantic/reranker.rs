@@ -58,7 +58,7 @@ impl ContextualReranker {
 
         for result in results.iter_mut() {
             let scores = self.calculate_composite_score(result, query_context);
-            
+
             let explanation = if self.config.enable_explainability {
                 self.generate_explanation(&scores)
             } else {
@@ -77,7 +77,11 @@ impl ContextualReranker {
 
         // Trie par score composite décroissant
         // FIX: Handle NaN values safely to prevent panic
-        ranked_results.sort_by(|a, b| b.composite_score.partial_cmp(&a.composite_score).unwrap_or(std::cmp::Ordering::Equal));
+        ranked_results.sort_by(|a, b| {
+            b.composite_score
+                .partial_cmp(&a.composite_score)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
 
         ranked_results
     }
@@ -89,18 +93,18 @@ impl ContextualReranker {
         query_context: Option<&str>,
     ) -> CompositeScores {
         let vector_score = result.similarity * self.config.vector_similarity_weight;
-        
+
         let context_score = self.calculate_context_score(&result.metadata, query_context)
             * self.config.context_weight;
-        
-        let recency_score = self.calculate_recency_score(&result.metadata)
-            * self.config.recency_weight;
-        
-        let authority_score = self.calculate_authority_score(&result.metadata)
-            * self.config.authority_weight;
-        
-        let graph_score = self.calculate_graph_score(&result.metadata)
-            * self.config.graph_position_weight;
+
+        let recency_score =
+            self.calculate_recency_score(&result.metadata) * self.config.recency_weight;
+
+        let authority_score =
+            self.calculate_authority_score(&result.metadata) * self.config.authority_weight;
+
+        let graph_score =
+            self.calculate_graph_score(&result.metadata) * self.config.graph_position_weight;
 
         let total = vector_score + context_score + recency_score + authority_score + graph_score;
 
@@ -132,9 +136,10 @@ impl ContextualReranker {
                 // Matching partiel
                 let context_lower = context.to_lowercase();
                 let doc_context_lower = doc_context.to_lowercase();
-                
-                if doc_context_lower.contains(&context_lower) 
-                    || context_lower.contains(&doc_context_lower) {
+
+                if doc_context_lower.contains(&context_lower)
+                    || context_lower.contains(&doc_context_lower)
+                {
                     return 0.7;
                 }
 
@@ -242,7 +247,10 @@ impl ContextualReranker {
             return None;
         }
 
-        Some(format!("Ce résultat est pertinent car : {}", parts.join(", ")))
+        Some(format!(
+            "Ce résultat est pertinent car : {}",
+            parts.join(", ")
+        ))
     }
 
     /// Élimine les faux positifs évidents
@@ -309,7 +317,7 @@ mod tests {
     #[test]
     fn test_reranker_basic() {
         let reranker = ContextualReranker::new(RerankerConfig::default());
-        
+
         let results = vec![
             create_test_result("doc1", 0.8),
             create_test_result("doc2", 0.9),
@@ -317,7 +325,7 @@ mod tests {
         ];
 
         let ranked = reranker.rerank(results, Some("development"));
-        
+
         assert_eq!(ranked.len(), 3);
         assert!(ranked[0].composite_score >= ranked[1].composite_score);
     }
@@ -359,7 +367,7 @@ mod tests {
     #[test]
     fn test_filter_false_positives() {
         let reranker = ContextualReranker::new(RerankerConfig::default());
-        
+
         let results = vec![
             RankedResult {
                 id: "good".to_string(),

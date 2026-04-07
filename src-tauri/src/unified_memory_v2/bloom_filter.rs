@@ -5,10 +5,10 @@
 // Expected: 50x faster "not in memory" checks
 // ═══════════════════════════════════════════════════════════════
 
+use parking_lot::RwLock;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 use std::sync::Arc;
-use parking_lot::RwLock;
 
 /// Bloom filter for fast membership testing
 /// False positives possible, false negatives impossible
@@ -59,7 +59,7 @@ impl BloomFilter {
     /// Returns false if element is definitely NOT in filter
     pub fn contains<T: Hash>(&self, item: &T) -> bool {
         let bits = self.bits.read();
-        
+
         for i in 0..self.hash_functions {
             let idx = self.hash(item, i) % bits.len();
             if !bits[idx] {
@@ -211,7 +211,10 @@ mod tests {
 
         let occupancy = filter.occupancy();
         assert!(occupancy > initial_occupancy);
-        println!("Bloom filter occupancy after 100 inserts: {:.2}%", occupancy * 100.0);
+        println!(
+            "Bloom filter occupancy after 100 inserts: {:.2}%",
+            occupancy * 100.0
+        );
     }
 
     #[test]
@@ -233,7 +236,7 @@ mod tests {
 
         let fpp = (actual_false_positives as f64) / 500.0;
         println!("Actual FPP: {:.4}, Target: 0.01", fpp);
-        
+
         // Should be close to target FPP
         assert!(fpp < 0.05); // Allow some margin
     }

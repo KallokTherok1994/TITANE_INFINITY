@@ -258,7 +258,7 @@ pub async fn ai_query_streaming(
 
     // Generate unique response ID for chunking correlation
     let response_id = Uuid::new_v4().to_string();
-    
+
     // Emit start event
     let _ = window.emit(
         "ai_response_start",
@@ -272,12 +272,12 @@ pub async fn ai_query_streaming(
     // V24: Chunk response by words (50-word chunks)
     const CHUNK_SIZE_WORDS: usize = 50;
     let words: Vec<&str> = response.content.split_whitespace().collect();
-    let chunks: Vec<Vec<&str>> = words
-        .chunks(CHUNK_SIZE_WORDS)
-        .map(|c| c.to_vec())
-        .collect();
+    let chunks: Vec<Vec<&str>> = words.chunks(CHUNK_SIZE_WORDS).map(|c| c.to_vec()).collect();
 
-    log::info!("[AI Chat v24] Response chunked into {} chunks", chunks.len());
+    log::info!(
+        "[AI Chat v24] Response chunked into {} chunks",
+        chunks.len()
+    );
 
     // Emit chunks progressively
     for (i, chunk_words) in chunks.iter().enumerate() {

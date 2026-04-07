@@ -6,8 +6,8 @@
 pub mod ipc_profiler;
 
 pub use ipc_profiler::{
-    get_ipc_metrics, get_ipc_summary, reset_ipc_metrics, CommandMetrics, IPCProfiler,
-    ProfileGuard, ProfilerSummary,
+    get_ipc_metrics, get_ipc_summary, reset_ipc_metrics, CommandMetrics, IPCProfiler, ProfileGuard,
+    ProfilerSummary,
 };
 
 use serde::{Deserialize, Serialize};

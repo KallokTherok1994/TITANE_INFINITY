@@ -10,11 +10,11 @@ use crate::multimodal::{
     audio3d::Audio3DEngine,
     config::MultimodalConfig,
     image_memory::ImageMemoryStore,
-    multimodal_fusion::{MultimodalFusionEngine, FusionResult},
+    multimodal_fusion::{FusionResult, MultimodalFusionEngine},
     vision::VisionEngine,
-    vision_models::{VisionModelManager, VisionModel},
+    vision_models::{VisionModel, VisionModelManager},
 };
-use crate::omega::{OmegaError, OmegaResult, PipelineInput, PipelineOutput, OutputMetadata};
+use crate::omega::{OmegaError, OmegaResult, OutputMetadata, PipelineInput, PipelineOutput};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::RwLock;

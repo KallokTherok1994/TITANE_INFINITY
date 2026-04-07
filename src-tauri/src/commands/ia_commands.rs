@@ -3,6 +3,9 @@
 //   Secure commands for AI key management and generation
 // ═══════════════════════════════════════════════════════════════
 
+use crate::security::secrets_engine::{
+    SecretsError, SecureSecretsEngine, KEY_CLAUDE, KEY_GEMINI, KEY_OPENAI,
+};
 use log::{error, info};
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
@@ -11,9 +14,6 @@ use tauri::State;
 #[allow(dead_code)]
 use titane_infinity::ia::{IAEngine, UnifiedIAEngine, UnifiedIARequest, UnifiedMessage};
 use titane_infinity::profiling::ipc_profiler::IPCProfiler;
-use crate::security::secrets_engine::{
-    SecretsError, SecureSecretsEngine, KEY_CLAUDE, KEY_GEMINI, KEY_OPENAI,
-};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetAPIKeyRequest {

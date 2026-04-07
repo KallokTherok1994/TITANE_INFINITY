@@ -3,12 +3,12 @@
 
 #![allow(dead_code)]
 
-pub mod humanistic_psychology;
-pub mod professional_coaching;
-pub mod nlp_practitioner;
-pub mod gentle_hypnosis;
 pub mod deep_meditation;
+pub mod gentle_hypnosis;
 pub mod guidance_engine;
+pub mod humanistic_psychology;
+pub mod nlp_practitioner;
+pub mod professional_coaching;
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -115,7 +115,7 @@ impl MasterGuide {
 
     fn detect_emotional_state(&self, input: &str) -> String {
         let input_lower = input.to_lowercase();
-        
+
         if input_lower.contains("stress") || input_lower.contains("anxieux") {
             "stressed".to_string()
         } else if input_lower.contains("confus") || input_lower.contains("perdu") {
@@ -129,7 +129,7 @@ impl MasterGuide {
 
     fn detect_intention(&self, input: &str) -> String {
         let input_lower = input.to_lowercase();
-        
+
         if input_lower.contains("comprendre") || input_lower.contains("pourquoi") {
             "understanding".to_string()
         } else if input_lower.contains("décider") || input_lower.contains("choisir") {
@@ -141,13 +141,20 @@ impl MasterGuide {
         }
     }
 
-    fn detect_implicit_needs(&self, _input: &str, _context: &HashMap<String, String>) -> Vec<String> {
+    fn detect_implicit_needs(
+        &self,
+        _input: &str,
+        _context: &HashMap<String, String>,
+    ) -> Vec<String> {
         vec!["clarity".to_string(), "support".to_string()]
     }
 
     fn validate(&self, perception: &Perception) -> Validation {
         Validation {
-            acknowledgment: format!("Je sens que tu es dans un état {}", perception.emotional_state),
+            acknowledgment: format!(
+                "Je sens que tu es dans un état {}",
+                perception.emotional_state
+            ),
             empathy: "Je reconnais ce que tu traverses".to_string(),
         }
     }
@@ -169,7 +176,11 @@ impl MasterGuide {
         }
     }
 
-    fn generate_guidance(&mut self, exploration: &Exploration, context: &HashMap<String, String>) -> Guidance {
+    fn generate_guidance(
+        &mut self,
+        exploration: &Exploration,
+        context: &HashMap<String, String>,
+    ) -> Guidance {
         let mut practices = Vec::new();
         let mut visualizations = Vec::new();
         let mut tools = Vec::new();

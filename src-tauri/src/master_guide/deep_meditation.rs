@@ -113,7 +113,9 @@ impl DeepMeditation {
                 "Visualise l'énergie qui circule avec le mouvement".to_string(),
                 "Répète 9 fois en restant présent".to_string(),
             ],
-            integration: "Sens l'énergie qui circule. Reste connecté à cette sensation après la pratique.".to_string(),
+            integration:
+                "Sens l'énergie qui circule. Reste connecté à cette sensation après la pratique."
+                    .to_string(),
         }
     }
 
@@ -121,7 +123,8 @@ impl DeepMeditation {
     pub fn vipassana_guidance(&self) -> VipassanaGuide {
         VipassanaGuide {
             name: "Vipassana - Voir les choses telles qu'elles sont".to_string(),
-            core_teaching: "Anicca (impermanence), Dukkha (insatisfaction), Anatta (non-soi)".to_string(),
+            core_teaching: "Anicca (impermanence), Dukkha (insatisfaction), Anatta (non-soi)"
+                .to_string(),
             practice: vec![
                 "Observe ta respiration au niveau des narines ou de l'abdomen".to_string(),
                 "Quand une sensation apparaît, note-la : 'sensation'".to_string(),
@@ -130,7 +133,8 @@ impl DeepMeditation {
                 "Reviens toujours à la respiration".to_string(),
                 "Observe l'impermanence de tout ce qui apparaît".to_string(),
             ],
-            insight: "Tout apparaît et disparaît. Rien n'est permanent. Tu n'es pas tes pensées.".to_string(),
+            insight: "Tout apparaît et disparaît. Rien n'est permanent. Tu n'es pas tes pensées."
+                .to_string(),
         }
     }
 
@@ -163,7 +167,8 @@ impl DeepMeditation {
                 "Expire par la bouche pendant 8 secondes".to_string(),
                 "Répète 4 cycles".to_string(),
             ],
-            effects: "Activation du système parasympathique. Réduction immédiate du stress.".to_string(),
+            effects: "Activation du système parasympathique. Réduction immédiate du stress."
+                .to_string(),
         }
     }
 

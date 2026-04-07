@@ -7,9 +7,9 @@
 // ═══════════════════════════════════════════════════════════════
 
 use crate::agi_core::{AGIContext, AGIError};
-use crate::multimodal::vision::VisionAnalysis;
 use crate::multimodal::audio3d::Audio3DAnalysis;
 use crate::multimodal::multimodal_fusion::FusionResult;
+use crate::multimodal::vision::VisionAnalysis;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -100,7 +100,9 @@ impl MultimodalAGIContext {
 
     /// Get dominant modality
     pub fn dominant_modality(&self) -> Option<String> {
-        self.fusion.as_ref().map(|f| format!("{:?}", f.dominant_modality))
+        self.fusion
+            .as_ref()
+            .map(|f| format!("{:?}", f.dominant_modality))
     }
 }
 
@@ -302,7 +304,10 @@ impl MultimodalPerceptionEngine {
         if let Some(ref vision) = context.vision {
             enhanced.push_str(&format!(
                 "\n[VISUAL CONTEXT] Image: {}x{}, brightness={:.2}, {} dominant colors detected",
-                vision.width, vision.height, vision.brightness, vision.dominant_colors.len()
+                vision.width,
+                vision.height,
+                vision.brightness,
+                vision.dominant_colors.len()
             ));
         }
 
@@ -355,12 +360,16 @@ impl MultimodalPerceptionEngine {
         } else {
             // Learn from failures
             if context.perceptual_confidence < 0.5 {
-                lessons.push("Low perceptual confidence may indicate insufficient sensory data".to_string());
+                lessons.push(
+                    "Low perceptual confidence may indicate insufficient sensory data".to_string(),
+                );
             }
 
             if let Some(ref vision) = context.vision {
                 if vision.brightness < 0.3 || vision.contrast < 0.3 {
-                    lessons.push("Poor image quality may require preprocessing or rejection".to_string());
+                    lessons.push(
+                        "Poor image quality may require preprocessing or rejection".to_string(),
+                    );
                 }
             }
         }
@@ -378,7 +387,8 @@ impl MultimodalPerceptionEngine {
                 suggestions.push("Consider brightness adjustment or better lighting".to_string());
             }
             if vision.contrast < 0.4 {
-                suggestions.push("Consider contrast enhancement or histogram equalization".to_string());
+                suggestions
+                    .push("Consider contrast enhancement or histogram equalization".to_string());
             }
         }
 
@@ -392,7 +402,8 @@ impl MultimodalPerceptionEngine {
         // Fusion improvements
         if let Some(ref fusion) = context.fusion {
             if fusion.confidence < 0.6 {
-                suggestions.push("Consider adjusting modality weights for better fusion".to_string());
+                suggestions
+                    .push("Consider adjusting modality weights for better fusion".to_string());
             }
         }
 
@@ -573,7 +584,9 @@ mod tests {
         let suggestions = engine.suggest_improvements(&context).await;
 
         assert!(!suggestions.is_empty());
-        assert!(suggestions.iter().any(|s| s.contains("brightness") || s.contains("contrast")));
+        assert!(suggestions
+            .iter()
+            .any(|s| s.contains("brightness") || s.contains("contrast")));
     }
 
     #[tokio::test]

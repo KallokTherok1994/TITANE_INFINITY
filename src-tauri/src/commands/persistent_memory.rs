@@ -965,13 +965,12 @@ pub async fn persistent_memory_create_summary(
         .join("entries.json");
     if intermediate_path.exists() {
         let content = fs::read_to_string(&intermediate_path).map_err(|e| e.to_string())?;
-        let entries: Vec<PersistentMemoryEntry> = serde_json::from_str(&content).unwrap_or_default();
+        let entries: Vec<PersistentMemoryEntry> =
+            serde_json::from_str(&content).unwrap_or_default();
         pool.extend(entries);
     }
-    let source_entries: Vec<&PersistentMemoryEntry> = pool
-        .iter()
-        .filter(|e| entry_ids.contains(&e.id))
-        .collect();
+    let source_entries: Vec<&PersistentMemoryEntry> =
+        pool.iter().filter(|e| entry_ids.contains(&e.id)).collect();
 
     if source_entries.is_empty() {
         return Err("No source entries found".to_string());
@@ -1355,7 +1354,11 @@ fn filter_entries_for_context_mode(
             MemoryLevel::LongTerm => permissions.can_read_long_term,
         })
         .filter(|entry| permissions.allowed_topics.contains(&entry.topic))
-        .filter(|entry| permissions.allowed_content_types.contains(&entry.content_type))
+        .filter(|entry| {
+            permissions
+                .allowed_content_types
+                .contains(&entry.content_type)
+        })
         .filter(|entry| entry.importance <= permissions.max_importance)
         .collect()
 }

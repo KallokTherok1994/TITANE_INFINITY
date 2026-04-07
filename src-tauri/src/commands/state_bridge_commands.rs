@@ -3,8 +3,8 @@
 //   Minimal, deterministic commands required by frontend OS bridges
 // ═══════════════════════════════════════════════════════════════════
 
-use crate::core::{HeliosCore, MemoryCore};
 use crate::core::tapi_error::TAPIError;
+use crate::core::{HeliosCore, MemoryCore};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::collections::HashMap;
@@ -51,7 +51,9 @@ pub async fn ping() -> Result<String, String> {
 ///
 /// Used by System Center + Visual Sync to read basic load metrics.
 #[tauri::command]
-pub async fn get_system_state(helios: State<'_, HeliosCore>) -> Result<crate::types::HeliosState, String> {
+pub async fn get_system_state(
+    helios: State<'_, HeliosCore>,
+) -> Result<crate::types::HeliosState, String> {
     let mut state = helios.collect().await.map_err(|e| e.to_string())?;
 
     state.uptime_seconds = APP_START.elapsed().as_secs();
@@ -220,7 +222,9 @@ pub async fn system_get_status(
 
 /// StateBridge: get complete KV state.
 #[tauri::command]
-pub async fn get_state(store: State<'_, FrontendStateStore>) -> Result<HashMap<String, Value>, String> {
+pub async fn get_state(
+    store: State<'_, FrontendStateStore>,
+) -> Result<HashMap<String, Value>, String> {
     let map = store.inner.read().await;
     Ok(map.clone())
 }
@@ -240,13 +244,7 @@ pub async fn set_state(
         map.insert(key.clone(), value.clone());
     }
 
-    let _ = app.emit(
-        "state:update",
-        StateUpdateEvent {
-            key,
-            value,
-        },
-    );
+    let _ = app.emit("state:update", StateUpdateEvent { key, value });
 
     Ok(true)
 }

@@ -4,11 +4,11 @@
 //   Phase 8: Singularity Integration
 // ═══════════════════════════════════════════════════════════════
 
+use serde::{Deserialize, Serialize};
+use std::sync::Arc;
 #[allow(dead_code)]
 use tauri::State;
-use std::sync::Arc;
 use tokio::sync::RwLock;
-use serde::{Deserialize, Serialize};
 
 use titane_infinity::singularity::ia_context::{
     IAContext, IAEngineMetrics, IAGlobalStats, IARequestRecord, IAStatus,
@@ -82,7 +82,10 @@ pub async fn set_active_ia_engine(
     }
 
     ctx.set_active_engine(engine.clone());
-    Ok(CommandResult::ok(format!("Active engine set to '{}'", engine)))
+    Ok(CommandResult::ok(format!(
+        "Active engine set to '{}'",
+        engine
+    )))
 }
 
 /// Met à jour la liste des moteurs disponibles
@@ -284,7 +287,8 @@ pub async fn reset_ia_engine_metrics(
     let mut ctx = context.write().await;
 
     if ctx.engine_metrics.contains_key(&engine) {
-        ctx.engine_metrics.insert(engine.clone(), IAEngineMetrics::default());
+        ctx.engine_metrics
+            .insert(engine.clone(), IAEngineMetrics::default());
         ctx.updated_at = chrono::Utc::now().to_rfc3339();
         Ok(CommandResult::ok(format!("Metrics reset for '{}'", engine)))
     } else {

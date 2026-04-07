@@ -1,6 +1,6 @@
+use crate::core::http_types::Client;
 use crate::epic1_provider_refactor::{Provider, ProviderError, ProviderResult};
 use async_trait::async_trait;
-use crate::core::http_types::Client;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 
@@ -52,9 +52,9 @@ impl LocalProvider {
         let client = Client::builder()
             .timeout(Duration::from_secs(config.timeout_secs))
             .build()
-            .map_err(|e| ProviderError::ConnectionFailed(
-                format!("Failed to create HTTP client: {}", e),
-            ))?;
+            .map_err(|e| {
+                ProviderError::ConnectionFailed(format!("Failed to create HTTP client: {}", e))
+            })?;
 
         let provider = LocalProvider {
             config,
@@ -86,9 +86,10 @@ impl LocalProvider {
         }
 
         if !(0.0..=2.0).contains(&self.config.temperature) {
-            return Err(ProviderError::InvalidResponse(
-                format!("Invalid temperature: {} (must be 0.0-2.0)", self.config.temperature),
-            ));
+            return Err(ProviderError::InvalidResponse(format!(
+                "Invalid temperature: {} (must be 0.0-2.0)",
+                self.config.temperature
+            )));
         }
 
         if self.config.timeout_secs == 0 {
@@ -153,25 +154,21 @@ impl LocalProvider {
 
     fn map_http_error(&self, status: u16, body: &str) -> ProviderError {
         if status == 429 {
-            return ProviderError::RateLimited(
-                format!("Local provider rate limited (status: {})", status),
-            );
+            return ProviderError::RateLimited(format!(
+                "Local provider rate limited (status: {})",
+                status
+            ));
         }
 
         match status {
             400 => ProviderError::ApiError(format!("Bad request: {}", body)),
-            401 | 403 => ProviderError::ApiError(format!(
-                "Authentication failed (status: {})",
-                status
-            )),
-            404 => ProviderError::ApiError(format!(
-                "Model not found: {}",
-                self.select_model()
-            )),
-            500..=599 => ProviderError::InternalError(format!(
-                "Server error (status: {}): {}",
-                status, body
-            )),
+            401 | 403 => {
+                ProviderError::ApiError(format!("Authentication failed (status: {})", status))
+            }
+            404 => ProviderError::ApiError(format!("Model not found: {}", self.select_model())),
+            500..=599 => {
+                ProviderError::InternalError(format!("Server error (status: {}): {}", status, body))
+            }
             _ => ProviderError::ApiError(format!("HTTP error {}: {}", status, body)),
         }
     }
@@ -244,20 +241,18 @@ impl Provider for LocalProvider {
         let health_client = Client::builder()
             .timeout(Duration::from_secs(5))
             .build()
-            .map_err(|e| ProviderError::ConnectionFailed(format!(
-                "Health check client creation failed: {}",
-                e
-            )))?;
+            .map_err(|e| {
+                ProviderError::ConnectionFailed(format!(
+                    "Health check client creation failed: {}",
+                    e
+                ))
+            })?;
 
         let url = format!("{}/api/tags", self.config.base_url);
-        let response = health_client
-            .get(&url)
-            .send()
-            .await
-            .map_err(|e| ProviderError::ConnectionFailed(format!(
-                "Health check failed: {}",
-                e
-            )))?;
+        let response =
+            health_client.get(&url).send().await.map_err(|e| {
+                ProviderError::ConnectionFailed(format!("Health check failed: {}", e))
+            })?;
 
         if response.status().is_success() {
             Ok(())
@@ -274,10 +269,7 @@ impl Provider for LocalProvider {
     }
 
     fn capabilities(&self) -> Vec<String> {
-        vec![
-            "text_generation".to_string(),
-            "local_inference".to_string(),
-        ]
+        vec!["text_generation".to_string(), "local_inference".to_string()]
     }
 }
 

@@ -6,7 +6,6 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use sysinfo::System;
 
-
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct SystemHealth {
     pub health: String,

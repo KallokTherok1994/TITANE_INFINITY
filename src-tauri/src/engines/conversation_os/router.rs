@@ -27,9 +27,9 @@ pub struct RouterDecision {
 }
 
 /// RouterEngine: Deterministic intent classifier
-/// 
+///
 /// Analyzes user message and produces RouterDecision with intent + flags.
-/// 
+///
 /// **Ring:** 2 (Engines)  
 /// **Status:** EXPERIMENTAL  
 /// **Purity:** ✅ No I/O, no state, deterministic  
@@ -42,18 +42,18 @@ impl RouterEngine {
     }
 
     /// Classify user message into RouterDecision
-    /// 
+    ///
     /// Uses deterministic heuristics:
     /// - Keywords: "search", "find", "code", "write", etc.
     /// - Patterns: Question marks, imperative verbs, code blocks
     /// - Length: Short = chat, long = question
-    /// 
+    ///
     /// # Arguments
     /// * `message` - User message (trimmed)
-    /// 
+    ///
     /// # Returns
     /// RouterDecision with intent, flags, confidence
-    /// 
+    ///
     /// # Examples
     /// ```
     /// use titane_infinity::engines::conversation_os::router::{Intent, RouterEngine};
@@ -72,11 +72,24 @@ impl RouterEngine {
         // Extract keywords
         let mut keywords = Vec::new();
         for keyword in &[
-            "search", "find", "look up", "google",
-            "code", "write", "function", "implement",
-            "remember", "recall", "history",
-            "memorise", "mémorise", "rappelle", "souviens",
-            "save", "store", "write to",
+            "search",
+            "find",
+            "look up",
+            "google",
+            "code",
+            "write",
+            "function",
+            "implement",
+            "remember",
+            "recall",
+            "history",
+            "memorise",
+            "mémorise",
+            "rappelle",
+            "souviens",
+            "save",
+            "store",
+            "write to",
         ] {
             if msg_lower.contains(keyword) {
                 keywords.push(keyword.to_string());
@@ -131,11 +144,7 @@ impl RouterEngine {
             || msg_lower.starts_with("where")
             || msg_lower.starts_with("who")
         {
-            (
-                Intent::Question,
-                0.75,
-                "Question word at start".to_string(),
-            )
+            (Intent::Question, 0.75, "Question word at start".to_string())
         } else if word_count <= 5 && !msg_trimmed.ends_with('?') {
             (
                 Intent::Chat,
@@ -170,19 +179,15 @@ impl RouterEngine {
         };
 
         // Set flags based on intent
-        let wants_search = matches!(
-            intent,
-            Intent::Search | Intent::Question
-        ) && (msg_lower.contains("search")
-            || msg_lower.contains("find")
-            || msg_lower.contains("latest")
-            || msg_lower.contains("current")
-            || msg_lower.contains("recent"));
+        let wants_search = matches!(intent, Intent::Search | Intent::Question)
+            && (msg_lower.contains("search")
+                || msg_lower.contains("find")
+                || msg_lower.contains("latest")
+                || msg_lower.contains("current")
+                || msg_lower.contains("recent"));
 
-        let wants_memory = matches!(
-            intent,
-            Intent::Clarification | Intent::Question
-        ) || msg_lower.contains("remember")
+        let wants_memory = matches!(intent, Intent::Clarification | Intent::Question)
+            || msg_lower.contains("remember")
             || msg_lower.contains("recall")
             || msg_lower.contains("memorise")
             || msg_lower.contains("mémorise")
@@ -282,7 +287,10 @@ mod tests {
         let decision = engine.classify("Rappelle exactement le code, le nom et la couleur.");
         assert_eq!(decision.intent, Intent::Clarification);
         assert!(decision.wants_memory);
-        assert!(decision.keywords.iter().any(|keyword| keyword == "rappelle"));
+        assert!(decision
+            .keywords
+            .iter()
+            .any(|keyword| keyword == "rappelle"));
     }
 
     #[test]

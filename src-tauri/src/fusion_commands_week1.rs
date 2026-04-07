@@ -9,9 +9,9 @@
 //
 // © 2026 Kevin Thibault / TITANE Team. Tous droits réservés.
 
+use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
-use chrono::Utc;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & STRUCTURES
@@ -60,14 +60,14 @@ pub struct ModuleActivationResponse {
 /// UI Style configuration
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UIStyleConfig {
-    pub theme: String, // "light", "dark", "auto"
+    pub theme: String,        // "light", "dark", "auto"
     pub accent_color: String, // hex color
     pub primary_color: String,
     pub secondary_color: String,
-    pub border_radius: u32, // pixels
+    pub border_radius: u32,      // pixels
     pub animation_duration: u32, // milliseconds
     pub font_family: String,
-    pub font_size: u32, // pixels
+    pub font_size: u32,         // pixels
     pub contrast_level: String, // "normal", "high", "maximum"
     pub enable_animations: bool,
     pub enable_transitions: bool,
@@ -78,8 +78,8 @@ impl Default for UIStyleConfig {
     fn default() -> Self {
         Self {
             theme: "auto".to_string(),
-            accent_color: "#06b6d4".to_string(), // cyan
-            primary_color: "#1e3a8a".to_string(), // blue
+            accent_color: "#06b6d4".to_string(),    // cyan
+            primary_color: "#1e3a8a".to_string(),   // blue
             secondary_color: "#475569".to_string(), // slate
             border_radius: 8,
             animation_duration: 300,
@@ -157,7 +157,9 @@ fn fusion_activate_modules_internal(
     request: ActivateModulesRequest,
     state: &FusionWeek1State,
 ) -> Result<ModuleActivationResponse, String> {
-    let mut modules = state.modules.lock()
+    let mut modules = state
+        .modules
+        .lock()
         .map_err(|e| format!("Failed to acquire module lock: {}", e))?;
 
     let previous_state = modules.clone();
@@ -329,7 +331,9 @@ fn fusion_adjust_styles_internal(
     request: AdjustStylesRequest,
     state: &FusionWeek1State,
 ) -> Result<StyleAdjustmentResponse, String> {
-    let mut styles = state.styles.lock()
+    let mut styles = state
+        .styles
+        .lock()
         .map_err(|e| format!("Failed to acquire styles lock: {}", e))?;
 
     let previous_style = styles.clone();
@@ -345,7 +349,10 @@ fn fusion_adjust_styles_internal(
                 requires_reload = true;
             }
         } else {
-            return Err(format!("Invalid theme: '{}'. Must be 'light', 'dark', or 'auto'", theme));
+            return Err(format!(
+                "Invalid theme: '{}'. Must be 'light', 'dark', or 'auto'",
+                theme
+            ));
         }
     }
 
@@ -357,7 +364,10 @@ fn fusion_adjust_styles_internal(
                 applied_changes.push("accent_color".to_string());
             }
         } else {
-            return Err(format!("Invalid accent color: '{}'. Must be hex format (#RRGGBB)", color));
+            return Err(format!(
+                "Invalid accent color: '{}'. Must be hex format (#RRGGBB)",
+                color
+            ));
         }
     }
 
@@ -370,7 +380,10 @@ fn fusion_adjust_styles_internal(
                 requires_reload = true;
             }
         } else {
-            return Err(format!("Invalid primary color: '{}'. Must be hex format (#RRGGBB)", color));
+            return Err(format!(
+                "Invalid primary color: '{}'. Must be hex format (#RRGGBB)",
+                color
+            ));
         }
     }
 
@@ -383,7 +396,10 @@ fn fusion_adjust_styles_internal(
                 requires_reload = true;
             }
         } else {
-            return Err(format!("Invalid secondary color: '{}'. Must be hex format (#RRGGBB)", color));
+            return Err(format!(
+                "Invalid secondary color: '{}'. Must be hex format (#RRGGBB)",
+                color
+            ));
         }
     }
 
@@ -444,7 +460,10 @@ fn fusion_adjust_styles_internal(
                 applied_changes.push("contrast_level".to_string());
             }
         } else {
-            return Err(format!("Invalid contrast level: '{}'. Must be 'normal', 'high', or 'maximum'", contrast));
+            return Err(format!(
+                "Invalid contrast level: '{}'. Must be 'normal', 'high', or 'maximum'",
+                contrast
+            ));
         }
     }
 
@@ -480,7 +499,10 @@ fn fusion_adjust_styles_internal(
     let new_style = styles.clone();
 
     let message = if !applied_changes.is_empty() {
-        format!("Successfully applied {} style change(s)", applied_changes.len())
+        format!(
+            "Successfully applied {} style change(s)",
+            applied_changes.len()
+        )
     } else {
         "No style changes requested".to_string()
     };
@@ -523,7 +545,9 @@ mod tests {
 
         assert!(response.success);
         assert_eq!(response.deactivated_modules.len(), 1);
-        assert!(response.deactivated_modules.contains(&"memory_sync".to_string()));
+        assert!(response
+            .deactivated_modules
+            .contains(&"memory_sync".to_string()));
         assert!(!response.new_state.memory_sync);
     }
 

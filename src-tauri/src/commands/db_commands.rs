@@ -135,10 +135,7 @@ pub fn db_get_snapshot(
 }
 
 #[tauri::command]
-pub fn db_kv_set(
-    state: State<'_, Option1DbAppState>,
-    request: KvSetRequest,
-) -> IpcResponse<Value> {
+pub fn db_kv_set(state: State<'_, Option1DbAppState>, request: KvSetRequest) -> IpcResponse<Value> {
     match state.db().kv_set(&request.key, &request.value_json) {
         Ok(_) => IpcResponse::success(json!({ "saved": true })),
         Err(e) => IpcResponse::failure(e),
@@ -146,10 +143,7 @@ pub fn db_kv_set(
 }
 
 #[tauri::command]
-pub fn db_kv_get(
-    state: State<'_, Option1DbAppState>,
-    request: KvGetRequest,
-) -> IpcResponse<Value> {
+pub fn db_kv_get(state: State<'_, Option1DbAppState>, request: KvGetRequest) -> IpcResponse<Value> {
     match state.db().kv_get(&request.key) {
         Ok(value) => IpcResponse::success(json!({ "value_json": value })),
         Err(e) => IpcResponse::failure(e),

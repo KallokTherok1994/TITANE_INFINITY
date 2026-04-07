@@ -202,11 +202,15 @@ fn check_grep_available() -> bool {
 
 fn is_forbidden_command(command: &str) -> bool {
     let cmd_lower = command.to_lowercase();
-    DEFAULT_FORBIDDEN_COMMANDS.iter().any(|f| cmd_lower.contains(&f.to_lowercase()))
+    DEFAULT_FORBIDDEN_COMMANDS
+        .iter()
+        .any(|f| cmd_lower.contains(&f.to_lowercase()))
 }
 
 fn is_sensitive_extension(path: &str) -> bool {
-    DEFAULT_SENSITIVE_EXTENSIONS.iter().any(|ext| path.ends_with(ext))
+    DEFAULT_SENSITIVE_EXTENSIONS
+        .iter()
+        .any(|ext| path.ends_with(ext))
 }
 
 fn is_scope_allowed(scope: &str, allowed_scopes: &[String]) -> bool {
@@ -268,7 +272,10 @@ pub async fn ide_open_session(
     };
 
     {
-        let mut sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+        let mut sessions = state
+            .sessions
+            .lock()
+            .map_err(|e| format!("Lock error: {}", e))?;
         sessions.insert(session_id.clone(), session.clone());
     }
 
@@ -288,7 +295,10 @@ pub async fn ide_close_session(
     state: tauri::State<'_, IDEOperatorState>,
     session_id: String,
 ) -> Result<bool, String> {
-    let mut sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+    let mut sessions = state
+        .sessions
+        .lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
 
     if let Some(mut session) = sessions.remove(&session_id) {
         session.status = IDESessionStatus::Stopped;
@@ -305,7 +315,10 @@ pub async fn ide_get_session_status(
     state: tauri::State<'_, IDEOperatorState>,
     session_id: String,
 ) -> Result<IDESession, String> {
-    let sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+    let sessions = state
+        .sessions
+        .lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
 
     sessions
         .get(&session_id)
@@ -321,7 +334,10 @@ pub async fn ide_repo_inventory(
 ) -> Result<IDERelayResult, String> {
     let now = now_iso();
 
-    let mut sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+    let mut sessions = state
+        .sessions
+        .lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
     let session = sessions
         .get_mut(&session_id)
         .ok_or_else(|| format!("Session not found: {}", session_id))?;
@@ -438,7 +454,10 @@ pub async fn ide_file_read(
 ) -> Result<IDERelayResult, String> {
     let now = now_iso();
 
-    let mut sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+    let mut sessions = state
+        .sessions
+        .lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
     let session = sessions
         .get_mut(&session_id)
         .ok_or_else(|| format!("Session not found: {}", session_id))?;
@@ -605,7 +624,10 @@ pub async fn ide_grep_search(
 ) -> Result<IDERelayResult, String> {
     let now = now_iso();
 
-    let mut sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+    let mut sessions = state
+        .sessions
+        .lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
     let session = sessions
         .get_mut(&session_id)
         .ok_or_else(|| format!("Session not found: {}", session_id))?;
@@ -669,7 +691,12 @@ pub async fn ide_grep_search(
     let search_path = path.unwrap_or_else(|| workspace.clone());
 
     let output = std::process::Command::new("grep")
-        .args(["-rn", "--include=*.{ts,tsx,rs,js,json,md,toml}", &pattern, &search_path])
+        .args([
+            "-rn",
+            "--include=*.{ts,tsx,rs,js,json,md,toml}",
+            &pattern,
+            &search_path,
+        ])
         .stdout(std::process::Stdio::piped())
         .stderr(std::process::Stdio::piped())
         .output();
@@ -724,7 +751,10 @@ pub async fn ide_git_status(
 ) -> Result<IDERelayResult, String> {
     let now = now_iso();
 
-    let mut sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+    let mut sessions = state
+        .sessions
+        .lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
     let session = sessions
         .get_mut(&session_id)
         .ok_or_else(|| format!("Session not found: {}", session_id))?;
@@ -841,7 +871,10 @@ pub async fn ide_git_diff(
 ) -> Result<IDERelayResult, String> {
     let now = now_iso();
 
-    let mut sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+    let mut sessions = state
+        .sessions
+        .lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
     let session = sessions
         .get_mut(&session_id)
         .ok_or_else(|| format!("Session not found: {}", session_id))?;
@@ -962,7 +995,10 @@ pub async fn ide_safe_command(
 ) -> Result<IDERelayResult, String> {
     let now = now_iso();
 
-    let mut sessions = state.sessions.lock().map_err(|e| format!("Lock error: {}", e))?;
+    let mut sessions = state
+        .sessions
+        .lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
     let session = sessions
         .get_mut(&session_id)
         .ok_or_else(|| format!("Session not found: {}", session_id))?;
@@ -1004,12 +1040,31 @@ pub async fn ide_safe_command(
 
     // Allowlist for safe commands
     const ALLOWED_PREFIXES: &[&str] = &[
-        "ls", "pwd", "cat", "head", "tail", "wc", "find",
-        "git status", "git diff", "git log", "git branch", "git rev-parse",
-        "node -v", "pnpm -v", "cargo -V", "rustc -V",
-        "pnpm run build", "pnpm run test", "pnpm run lint", "pnpm run check",
-        "cargo check", "cargo clippy",
-        "uname", "free", "df",
+        "ls",
+        "pwd",
+        "cat",
+        "head",
+        "tail",
+        "wc",
+        "find",
+        "git status",
+        "git diff",
+        "git log",
+        "git branch",
+        "git rev-parse",
+        "node -v",
+        "pnpm -v",
+        "cargo -V",
+        "rustc -V",
+        "pnpm run build",
+        "pnpm run test",
+        "pnpm run lint",
+        "pnpm run check",
+        "cargo check",
+        "cargo clippy",
+        "uname",
+        "free",
+        "df",
     ];
 
     let trimmed = command.trim();
@@ -1024,7 +1079,10 @@ pub async fn ide_safe_command(
             action: "safe_command".to_string(),
             content: None,
             structured_data: None,
-            block_reason: Some(format!("Command not in allowlist: '{}'. Use ls, cat, git, pnpm, cargo.", trimmed)),
+            block_reason: Some(format!(
+                "Command not in allowlist: '{}'. Use ls, cat, git, pnpm, cargo.",
+                trimmed
+            )),
             handoff_required: false,
             actions_remaining: session.max_actions - session.actions_count,
             session_id: session_id.clone(),
@@ -1056,7 +1114,11 @@ pub async fn ide_safe_command(
     let parts: Vec<&str> = trimmed.splitn(2, ' ').collect();
     let program = parts[0];
     let rest = if parts.len() > 1 { parts[1] } else { "" };
-    let args: Vec<&str> = if rest.is_empty() { vec![] } else { rest.split_whitespace().collect() };
+    let args: Vec<&str> = if rest.is_empty() {
+        vec![]
+    } else {
+        rest.split_whitespace().collect()
+    };
 
     let output = std::process::Command::new(program)
         .args(&args)
@@ -1125,7 +1187,13 @@ pub async fn ide_get_config() -> Result<IDEOperatorConfig, String> {
             "safe_command".to_string(),
             "patch_prepare".to_string(),
         ],
-        forbidden_commands: DEFAULT_FORBIDDEN_COMMANDS.iter().map(|s| s.to_string()).collect(),
-        sensitive_extensions: DEFAULT_SENSITIVE_EXTENSIONS.iter().map(|s| s.to_string()).collect(),
+        forbidden_commands: DEFAULT_FORBIDDEN_COMMANDS
+            .iter()
+            .map(|s| s.to_string())
+            .collect(),
+        sensitive_extensions: DEFAULT_SENSITIVE_EXTENSIONS
+            .iter()
+            .map(|s| s.to_string())
+            .collect(),
     })
 }

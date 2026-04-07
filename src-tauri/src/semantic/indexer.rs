@@ -73,7 +73,8 @@ impl DocumentIndexer {
         if !sections.is_empty() {
             // Si des sections sont détectées, chunk par section
             for (section_title, section_content, start_pos) in sections {
-                let section_chunks = self.chunk_section(&section_content, start_pos, Some(section_title));
+                let section_chunks =
+                    self.chunk_section(&section_content, start_pos, Some(section_title));
                 chunks.extend(section_chunks);
             }
         } else {
@@ -149,7 +150,7 @@ impl DocumentIndexer {
                         chunk_start,
                         section_title.clone(),
                     ));
-                    
+
                     // Démarre un nouveau chunk avec overlap
                     let overlap_text = self.get_overlap(&current_chunk);
                     current_chunk = overlap_text + "\n\n" + &paragraph;
@@ -235,7 +236,7 @@ impl DocumentIndexer {
         let chars: Vec<char> = text.chars().collect();
         let overlap_size = self.config.chunk_overlap.min(chars.len());
         let start = chars.len().saturating_sub(overlap_size);
-        
+
         chars[start..].iter().collect()
     }
 
@@ -279,7 +280,9 @@ impl IndexManager {
         doc_type: String,
         metadata: HashMap<String, String>,
     ) -> String {
-        let doc = self.indexer.index_document(id.clone(), title, content, doc_type, metadata);
+        let doc = self
+            .indexer
+            .index_document(id.clone(), title, content, doc_type, metadata);
         self.documents.insert(id.clone(), doc);
         id
     }
@@ -338,19 +341,10 @@ impl IndexManager {
     }
 
     /// Recherche des documents par métadonnées
-    pub fn search_by_metadata(
-        &self,
-        key: &str,
-        value: &str,
-    ) -> Vec<&IndexedDocument> {
+    pub fn search_by_metadata(&self, key: &str, value: &str) -> Vec<&IndexedDocument> {
         self.documents
             .values()
-            .filter(|doc| {
-                doc.metadata
-                    .get(key)
-                    .map(|v| v == value)
-                    .unwrap_or(false)
-            })
+            .filter(|doc| doc.metadata.get(key).map(|v| v == value).unwrap_or(false))
             .collect()
     }
 
@@ -371,7 +365,7 @@ mod tests {
     fn test_detect_sections() {
         let indexer = DocumentIndexer::new(IndexerConfig::default());
         let content = "# Introduction\nCeci est l'intro.\n\n# Chapitre 1\nContenu du chapitre 1.";
-        
+
         let sections = indexer.detect_sections(content);
         assert_eq!(sections.len(), 2);
         assert_eq!(sections[0].0, "Introduction");
@@ -399,7 +393,7 @@ mod tests {
     #[test]
     fn test_index_manager() {
         let mut manager = IndexManager::new(IndexerConfig::default());
-        
+
         let id = manager.add_document(
             "doc1".to_string(),
             "Test Document".to_string(),

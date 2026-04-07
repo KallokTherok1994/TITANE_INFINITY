@@ -8,7 +8,7 @@ impl StrategistCore {
     pub fn new() -> Self {
         Self
     }
-    
+
     /// Exécution stratégiste
     pub fn execute(&self, input: &str) -> String {
         format!(

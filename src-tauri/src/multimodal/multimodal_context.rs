@@ -14,16 +14,16 @@ use serde::{Deserialize, Serialize};
 pub struct MultimodalContext {
     /// Text input (original)
     pub text: Option<String>,
-    
+
     /// Vision analysis (if image provided)
     pub vision: Option<VisionAnalysis>,
-    
+
     /// Audio 3D analysis (if audio provided)
     pub audio3d: Option<Audio3DAnalysis>,
-    
+
     /// Vector search results (cross-modal)
     pub vector_hits: Vec<MultimodalMemoryHit>,
-    
+
     /// Fusion metadata
     pub fusion_metadata: FusionMetadata,
 }
@@ -69,33 +69,37 @@ impl MultimodalContext {
             },
         }
     }
-    
+
     pub fn with_text(mut self, text: String) -> Self {
         self.text = Some(text);
         self.fusion_metadata.primary_modality = Modality::Text;
         self
     }
-    
+
     pub fn with_vision(mut self, vision: VisionAnalysis) -> Self {
         self.vision = Some(vision);
-        self.fusion_metadata.secondary_modalities.push(Modality::Image);
+        self.fusion_metadata
+            .secondary_modalities
+            .push(Modality::Image);
         self
     }
-    
+
     pub fn with_audio3d(mut self, audio3d: Audio3DAnalysis) -> Self {
         self.audio3d = Some(audio3d);
-        self.fusion_metadata.secondary_modalities.push(Modality::Audio);
+        self.fusion_metadata
+            .secondary_modalities
+            .push(Modality::Audio);
         self
     }
-    
+
     pub fn add_vector_hit(&mut self, hit: MultimodalMemoryHit) {
         self.vector_hits.push(hit);
     }
-    
+
     pub fn is_multimodal(&self) -> bool {
         !self.fusion_metadata.secondary_modalities.is_empty()
     }
-    
+
     pub fn modality_count(&self) -> usize {
         1 + self.fusion_metadata.secondary_modalities.len()
     }

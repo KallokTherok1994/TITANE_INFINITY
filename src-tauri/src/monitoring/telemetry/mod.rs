@@ -46,12 +46,7 @@ impl TelemetryExporter {
 
     /// Get recent events
     pub fn get_recent_events(&self, count: usize) -> Vec<TelemetryEvent> {
-        self.events
-            .iter()
-            .rev()
-            .take(count)
-            .cloned()
-            .collect()
+        self.events.iter().rev().take(count).cloned().collect()
     }
 
     /// Export all events as JSON
@@ -62,7 +57,10 @@ impl TelemetryExporter {
     /// Export for OpenTelemetry (placeholder)
     pub fn export_opentelemetry(&self) -> Result<String, String> {
         // FUTUR: Implement OpenTelemetry export format
-        Ok(format!("OpenTelemetry export: {} events", self.events.len()))
+        Ok(format!(
+            "OpenTelemetry export: {} events",
+            self.events.len()
+        ))
     }
 
     /// Export for Prometheus (placeholder)

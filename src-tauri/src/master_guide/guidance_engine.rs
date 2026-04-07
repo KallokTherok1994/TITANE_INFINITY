@@ -96,8 +96,12 @@ impl GuidanceEngine {
         let crisis_keywords = ["suicide", "me faire du mal", "plus envie de vivre"];
         let medical_keywords = ["dépression sévère", "trouble", "diagnostic"];
 
-        let is_crisis = crisis_keywords.iter().any(|k| content.to_lowercase().contains(k));
-        let is_medical = medical_keywords.iter().any(|k| content.to_lowercase().contains(k));
+        let is_crisis = crisis_keywords
+            .iter()
+            .any(|k| content.to_lowercase().contains(k));
+        let is_medical = medical_keywords
+            .iter()
+            .any(|k| content.to_lowercase().contains(k));
 
         if is_crisis {
             TherapeuticAlert {

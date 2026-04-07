@@ -1,12 +1,11 @@
+use crate::overdrive::chat_orchestrator::ChatOrchestratorState;
+use crate::services::network_gateway::{NetworkGatewayConfig, NetworkGatewayService};
 /**
  * TITANE∞ v27 — Diagnostic Commands
  * Online capabilities verification + Internet connectivity check
  */
-
 use serde::{Deserialize, Serialize};
 use tauri::State;
-use crate::overdrive::chat_orchestrator::ChatOrchestratorState;
-use crate::services::network_gateway::{NetworkGatewayConfig, NetworkGatewayService};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct InternetConnectivity {
@@ -239,7 +238,8 @@ async fn check_anthropic_connectivity() -> ProviderOnlineStatus {
 }
 
 async fn check_ollama_connectivity() -> ProviderOnlineStatus {
-    let mut status = check_provider_connectivity("Ollama (Local)", "http://localhost:11434/api/tags").await;
+    let mut status =
+        check_provider_connectivity("Ollama (Local)", "http://localhost:11434/api/tags").await;
     if !status.can_reach {
         status.error = status
             .error

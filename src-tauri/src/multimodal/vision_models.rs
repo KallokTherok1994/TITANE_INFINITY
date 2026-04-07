@@ -31,7 +31,7 @@ impl VisionModel {
             _ => VisionModel::CLIP, // Default fallback
         }
     }
-    
+
     pub fn embedding_dimension(&self) -> usize {
         match self {
             VisionModel::CLIP => 512,
@@ -39,7 +39,7 @@ impl VisionModel {
             VisionModel::ViT => 768,
         }
     }
-    
+
     pub fn supports_text(&self) -> bool {
         matches!(self, VisionModel::CLIP | VisionModel::SigLIP)
     }
@@ -58,15 +58,15 @@ impl VisionModelManager {
             cpu_fallback,
         }
     }
-    
+
     pub fn current_model(&self) -> VisionModel {
         self.current_model
     }
-    
+
     pub fn switch_model(&mut self, model: VisionModel) {
         self.current_model = model;
     }
-    
+
     /// Generate image embedding
     pub async fn embed_image(&self, image: &[u8]) -> MultimodalResult<Vec<f32>> {
         #[cfg(feature = "onnx")]
@@ -121,16 +121,16 @@ impl VisionModelManager {
 
         Ok(normalized)
     }
-    
+
     #[cfg(feature = "onnx")]
     async fn embed_image_onnx(&self, image_bytes: &[u8]) -> MultimodalResult<Vec<f32>> {
         // Load and preprocess image
         let img = image::load_from_memory(image_bytes)
             .map_err(|e| MultimodalError::VisionError(format!("Image load: {}", e)))?;
-        
+
         let resized = img.resize_exact(224, 224, image::imageops::FilterType::Lanczos3);
         let rgb = resized.to_rgb8();
-        
+
         // Normalize to ImageNet stats
         let mut tensor = vec![0.0f32; 1 * 3 * 224 * 224];
         for y in 0..224 {
@@ -142,7 +142,7 @@ impl VisionModelManager {
                 tensor[2 * 224 * 224 + idx] = (pixel[2] as f32 / 255.0 - 0.406) / 0.225;
             }
         }
-        
+
         // Implementation: ONNX Runtime inference for vision embeddings
         // - Load model: Session::builder()?.with_model_from_file("models/clip-vit-base.onnx")?
         // - Prepare input: CowArray::from(Array::from_shape_vec((1, 3, 224, 224), tensor)?)
@@ -155,13 +155,14 @@ impl VisionModelManager {
         let dim = self.current_model.embedding_dimension();
         Ok(tensor.into_iter().take(dim).collect())
     }
-    
+
     /// Generate text embedding (for cross-modal search)
     pub async fn embed_text(&self, text: &str) -> MultimodalResult<Vec<f32>> {
         if !self.current_model.supports_text() {
-            return Err(MultimodalError::VisionError(
-                format!("{:?} does not support text embeddings", self.current_model)
-            ));
+            return Err(MultimodalError::VisionError(format!(
+                "{:?} does not support text embeddings",
+                self.current_model
+            )));
         }
 
         #[cfg(feature = "onnx")]
@@ -203,12 +204,12 @@ impl VisionModelManager {
 
         Ok(normalized)
     }
-    
+
     #[cfg(feature = "onnx")]
     async fn embed_text_onnx(&self, text: &str) -> MultimodalResult<Vec<f32>> {
         // Simple tokenization
         let tokens: Vec<&str> = text.split_whitespace().collect();
-        
+
         // Implementation: ONNX text encoder for CLIP cross-modal search
         // - Load tokenizer: CLIPTokenizer from transformers-tokenizers-rs or custom vocab
         // - Tokenize: Convert text to input_ids (max_length=77, padding/truncation)
@@ -218,11 +219,15 @@ impl VisionModelManager {
         // - Extract pooled output: [1, 512] embedding vector from last hidden state
         // - Normalize: L2 norm for cosine similarity with vision embeddings
         // - Cosine similarity: dot(vision_emb, text_emb) for cross-modal search
-        let hash = text.chars().fold(0u64, |a, c| a.wrapping_mul(31).wrapping_add(c as u64));
+        let hash = text
+            .chars()
+            .fold(0u64, |a, c| a.wrapping_mul(31).wrapping_add(c as u64));
         let dim = self.current_model.embedding_dimension();
-        Ok((0..dim).map(|i| ((hash.wrapping_add(i as u64) % 1000) as f32) / 1000.0).collect())
+        Ok((0..dim)
+            .map(|i| ((hash.wrapping_add(i as u64) % 1000) as f32) / 1000.0)
+            .collect())
     }
-    
+
     /// Check if GPU is available
     pub fn gpu_available(&self) -> bool {
         // Implementation: Runtime GPU detection for ONNX acceleration
@@ -244,16 +249,15 @@ mod tests {
     use image::{ImageBuffer, Rgb};
 
     fn create_test_image_bytes() -> Vec<u8> {
-        let img: ImageBuffer<Rgb<u8>, Vec<u8>> = ImageBuffer::from_fn(50, 50, |x, y| {
-            Rgb([
-                (x * 5) as u8,
-                (y * 5) as u8,
-                128,
-            ])
-        });
+        let img: ImageBuffer<Rgb<u8>, Vec<u8>> =
+            ImageBuffer::from_fn(50, 50, |x, y| Rgb([(x * 5) as u8, (y * 5) as u8, 128]));
         let dynamic_img = image::DynamicImage::ImageRgb8(img);
         let mut bytes = Vec::new();
-        dynamic_img.write_to(&mut std::io::Cursor::new(&mut bytes), image::ImageFormat::Png)
+        dynamic_img
+            .write_to(
+                &mut std::io::Cursor::new(&mut bytes),
+                image::ImageFormat::Png,
+            )
             .expect("Test image should serialize to PNG bytes");
         bytes
     }
@@ -300,7 +304,10 @@ mod tests {
 
         // Embedding should be L2 normalized
         let norm: f32 = embedding1.iter().map(|x| x * x).sum::<f32>().sqrt();
-        assert!((norm - 1.0).abs() < 0.01, "Embedding should be L2 normalized");
+        assert!(
+            (norm - 1.0).abs() < 0.01,
+            "Embedding should be L2 normalized"
+        );
     }
 
     #[tokio::test]
@@ -362,7 +369,11 @@ mod tests {
 
         // Embeddings should be in reasonable range after normalization
         for &val in &embedding {
-            assert!(val >= -1.5 && val <= 1.5, "Embedding value {} out of range", val);
+            assert!(
+                val >= -1.5 && val <= 1.5,
+                "Embedding value {} out of range",
+                val
+            );
         }
     }
 }

@@ -16,7 +16,7 @@ impl WakewordEngine {
     pub fn new(sample_rate: u32) -> Self {
         // Buffer pour 500ms d'audio
         let buffer_size = (sample_rate as f32 * 0.5) as usize;
-        
+
         Self {
             buffer: VecDeque::with_capacity(buffer_size),
             buffer_size,
@@ -60,11 +60,8 @@ impl WakewordEngine {
     /// Vérifier présence de voix (VAD)
     fn has_voice_activity(&self) -> bool {
         // Calculer énergie RMS
-        let energy: f32 = self.buffer
-            .iter()
-            .map(|&s| s * s)
-            .sum::<f32>()
-            / self.buffer.len() as f32;
+        let energy: f32 =
+            self.buffer.iter().map(|&s| s * s).sum::<f32>() / self.buffer.len() as f32;
 
         let rms = energy.sqrt();
         rms > self.vad_threshold
@@ -83,16 +80,16 @@ impl WakewordEngine {
         //   * Threshold: DTW distance < 50.0 for positive match
         // - Alternative: Cross-correlation in frequency domain for speed
         // - Libraries: rustfft for FFT, ndarray for matrix operations
-        
+
         let buffer_vec: Vec<f32> = self.buffer.iter().copied().collect();
-        
+
         // Normaliser les deux signaux
         let buffer_norm = Self::normalize(&buffer_vec);
         let pattern_norm = Self::normalize(&self.pattern);
 
         // Corrélation croisée
         let correlation = Self::cross_correlation(&buffer_norm, &pattern_norm);
-        
+
         correlation.abs()
     }
 
@@ -109,39 +106,36 @@ impl WakewordEngine {
         // - Load at runtime: Read from embedded file with include_bytes!()
         // - Phonetic breakdown: "TI-TA-NE" = 3 syllables, ~0.6s total duration
         // - Alternative: Use TTS engine to generate synthetic samples for data augmentation
-        
+
         let mut pattern = Vec::new();
-        
+
         // "TI" - attaque forte
         for i in 0..800 {
             pattern.push((i as f32 / 800.0 * std::f32::consts::PI * 2.0).sin() * 0.5);
         }
-        
+
         // "TA" - pic énergétique
         for i in 0..600 {
             pattern.push((i as f32 / 600.0 * std::f32::consts::PI * 3.0).sin() * 0.8);
         }
-        
+
         // "NE" - décroissance
         for i in 0..600 {
             pattern.push((i as f32 / 600.0 * std::f32::consts::PI * 2.0).sin() * 0.3);
         }
-        
+
         pattern
     }
 
     /// Normaliser un signal
     fn normalize(signal: &[f32]) -> Vec<f32> {
         let mean = signal.iter().sum::<f32>() / signal.len() as f32;
-        let variance = signal.iter()
-            .map(|&x| (x - mean).powi(2))
-            .sum::<f32>() / signal.len() as f32;
+        let variance =
+            signal.iter().map(|&x| (x - mean).powi(2)).sum::<f32>() / signal.len() as f32;
         let std_dev = variance.sqrt();
 
         if std_dev > 0.0 {
-            signal.iter()
-                .map(|&x| (x - mean) / std_dev)
-                .collect()
+            signal.iter().map(|&x| (x - mean) / std_dev).collect()
         } else {
             signal.to_vec()
         }
@@ -150,7 +144,7 @@ impl WakewordEngine {
     /// Corrélation croisée
     fn cross_correlation(signal: &[f32], pattern: &[f32]) -> f32 {
         let min_len = signal.len().min(pattern.len());
-        
+
         let sum: f32 = signal[..min_len]
             .iter()
             .zip(&pattern[..min_len])
@@ -223,7 +217,7 @@ mod tests {
         let engine_44k = WakewordEngine::new(44100);
 
         // Buffer size proportionnel au sample rate (500ms)
-        assert_eq!(engine_8k.buffer_size, 4000);  // 8000 * 0.5
+        assert_eq!(engine_8k.buffer_size, 4000); // 8000 * 0.5
         assert_eq!(engine_44k.buffer_size, 22050); // 44100 * 0.5
     }
 
@@ -339,9 +333,8 @@ mod tests {
 
         // Variance should be close to 1
         let mean = normalized.iter().sum::<f32>() / normalized.len() as f32;
-        let variance = normalized.iter()
-            .map(|&x| (x - mean).powi(2))
-            .sum::<f32>() / normalized.len() as f32;
+        let variance =
+            normalized.iter().map(|&x| (x - mean).powi(2)).sum::<f32>() / normalized.len() as f32;
 
         assert!((variance - 1.0).abs() < 0.01);
     }

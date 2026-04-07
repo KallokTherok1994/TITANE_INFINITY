@@ -6,12 +6,12 @@
 //   Rust Tauri handlers for dev operations
 // ═══════════════════════════════════════════════════════════════════════════
 
+use serde::{Deserialize, Serialize};
+use std::fs;
+use std::io::{BufRead, BufReader};
+use std::path::Path;
 #[allow(dead_code)]
 use std::process::{Command as ProcessCommand, Stdio};
-use std::io::{BufRead, BufReader};
-use std::fs;
-use std::path::Path;
-use serde::{Deserialize, Serialize};
 use tauri::command;
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -74,7 +74,8 @@ pub async fn dev_run_command(command: String) -> Result<CommandResult, String> {
 
             let stdout = if let Some(stdout) = child.stdout.take() {
                 let reader = BufReader::new(stdout);
-                reader.lines()
+                reader
+                    .lines()
                     .collect::<Result<Vec<_>, _>>()
                     .unwrap_or_default()
                     .join("\n")
@@ -84,7 +85,8 @@ pub async fn dev_run_command(command: String) -> Result<CommandResult, String> {
 
             let stderr = if let Some(stderr) = child.stderr.take() {
                 let reader = BufReader::new(stderr);
-                reader.lines()
+                reader
+                    .lines()
                     .collect::<Result<Vec<_>, _>>()
                     .unwrap_or_default()
                     .join("\n")
@@ -93,7 +95,11 @@ pub async fn dev_run_command(command: String) -> Result<CommandResult, String> {
             };
 
             let exit_code = status.code().unwrap_or(-1);
-            let error = if !stderr.is_empty() { Some(stderr) } else { None };
+            let error = if !stderr.is_empty() {
+                Some(stderr)
+            } else {
+                None
+            };
 
             Ok(CommandResult {
                 output: stdout,
@@ -188,7 +194,12 @@ pub async fn dev_apply_patch(
     line_end: usize,
     new_code: String,
 ) -> Result<CommandResult, String> {
-    log::info!("🩹 [Hybrid] Applying patch to {}: lines {}-{}", file, line_start, line_end);
+    log::info!(
+        "🩹 [Hybrid] Applying patch to {}: lines {}-{}",
+        file,
+        line_start,
+        line_end
+    );
 
     let path = Path::new(&file);
     if !path.exists() {
@@ -218,7 +229,10 @@ pub async fn dev_apply_patch(
     fs::write(&file, new_content).map_err(|e| e.to_string())?;
 
     Ok(CommandResult {
-        output: format!("✅ Patch applied to {} (lines {}-{})", file, line_start, line_end),
+        output: format!(
+            "✅ Patch applied to {} (lines {}-{})",
+            file, line_start, line_end
+        ),
         exit_code: 0,
         error: None,
     })
@@ -270,18 +284,16 @@ pub async fn hybrid_analyze_code(target: String) -> Result<Vec<CodeDiagnostic>, 
     // - Rust: Use clippy via cargo-clippy programmatically
     // - Integration: Parse compiler output for diagnostics
     // Current: Mock diagnostics for dev console
-    
-    let diagnostics = vec![
-        CodeDiagnostic {
-            target: target.clone(),
-            health: "healthy".to_string(),
-            issues: vec![],
-            suggestions: vec![
-                "Consider adding more tests".to_string(),
-                "Documentation could be improved".to_string(),
-            ],
-        },
-    ];
+
+    let diagnostics = vec![CodeDiagnostic {
+        target: target.clone(),
+        health: "healthy".to_string(),
+        issues: vec![],
+        suggestions: vec![
+            "Consider adding more tests".to_string(),
+            "Documentation could be improved".to_string(),
+        ],
+    }];
 
     Ok(diagnostics)
 }

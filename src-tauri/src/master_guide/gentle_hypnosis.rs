@@ -29,7 +29,8 @@ impl GentleHypnosis {
         vec![
             "Visualisation : Imagine-toi dans un lieu de sécurité et de calme...".to_string(),
             "Métaphore : Comme une rivière qui trouve son chemin naturellement...".to_string(),
-            "Suggestion indirecte : Tu pourrais remarquer que ta respiration devient plus douce...".to_string(),
+            "Suggestion indirecte : Tu pourrais remarquer que ta respiration devient plus douce..."
+                .to_string(),
         ]
     }
 

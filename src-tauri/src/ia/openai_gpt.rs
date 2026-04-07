@@ -4,8 +4,8 @@
 //   Models: GPT-4, GPT-4 Turbo, GPT-4o, o3, o1
 // ═══════════════════════════════════════════════════════════════
 
-use log::{debug, error, info, warn};
 use crate::core::http_types::Client;
+use log::{debug, error, info, warn};
 use serde::{Deserialize, Serialize};
 use std::time::Instant;
 

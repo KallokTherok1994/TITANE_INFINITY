@@ -26,11 +26,11 @@ pub struct MemoryRelevance {
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq)]
 pub enum ContextDepth {
-    None,       // No context needed
-    Shallow,    // Last 3 turns
-    Medium,     // Last 10 turns
-    Deep,       // Last 20 turns + snapshot
-    Full,       // Full STM + LTM search
+    None,    // No context needed
+    Shallow, // Last 3 turns
+    Medium,  // Last 10 turns
+    Deep,    // Last 20 turns + snapshot
+    Full,    // Full STM + LTM search
 }
 
 impl ContextDepth {
@@ -46,11 +46,11 @@ impl ContextDepth {
 }
 
 /// MemoryEngine: Decides what context to fetch based on intent
-/// 
+///
 /// **Ring:** 2 (Engines)  
 /// **Status:** EXPERIMENTAL  
 /// **Purity:** ✅ No I/O, no state, pure decision logic  
-/// 
+///
 /// Analyzes user message and intent to determine:
 /// - STM depth (how many recent turns to fetch)
 /// - Whether to fetch latest snapshot
@@ -64,11 +64,11 @@ impl MemoryEngine {
     }
 
     /// Assess memory relevance based on message content
-    /// 
+    ///
     /// # Arguments
     /// * `message` - User message
     /// * `wants_memory` - Flag from RouterEngine
-    /// 
+    ///
     /// # Returns
     /// MemoryRelevance with depth assessment
     pub fn assess_relevance(&self, message: &str, wants_memory: bool) -> MemoryRelevance {
@@ -98,9 +98,7 @@ impl MemoryEngine {
         }
 
         // Follow-up questions
-        if msg_lower.contains("elaborate")
-            || msg_lower.contains("explain further")
-        {
+        if msg_lower.contains("elaborate") || msg_lower.contains("explain further") {
             return MemoryRelevance {
                 needs_context: true,
                 context_depth: ContextDepth::Medium,
@@ -141,12 +139,12 @@ impl MemoryEngine {
     }
 
     /// Create memory fetch plan
-    /// 
+    ///
     /// # Arguments
     /// * `relevance` - Memory relevance assessment
     /// * `conversation_id` - Current conversation ID
     /// * `enable_ltm` - Whether LTM (vector search) is available
-    /// 
+    ///
     /// # Returns
     /// MemoryFetchPlan with fetch instructions
     pub fn create_fetch_plan(
@@ -196,7 +194,7 @@ impl MemoryEngine {
     }
 
     /// Helper: Decide full memory strategy
-    /// 
+    ///
     /// Combines assess_relevance + create_fetch_plan
     pub fn decide_memory_strategy(
         &self,
@@ -210,7 +208,7 @@ impl MemoryEngine {
     }
 
     /// Analyze if message refers to previous turn
-    /// 
+    ///
     /// Used to determine if immediate context (last turn) is sufficient
     pub fn refers_to_previous_turn(&self, message: &str) -> bool {
         let msg_lower = message.to_lowercase();

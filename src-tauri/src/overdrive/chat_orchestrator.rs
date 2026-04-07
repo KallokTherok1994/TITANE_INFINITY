@@ -6,10 +6,10 @@
 
 // PLAN v25.x: Migrer vers conversation_engine::conversation_generate (OMEGA v2)
 
+use crate::core::http_types::Client;
 use crate::core::tapi_error::TAPIError;
 use crate::core::{MemoryItem, MemoryType, UnifiedMemory};
 use futures_util::StreamExt;
-use crate::core::http_types::Client;
 use serde::{Deserialize, Serialize};
 use std::env;
 use std::sync::Arc;
@@ -59,9 +59,7 @@ fn calculate_adaptive_timeout(message_length: usize, is_local: bool) -> u64 {
     }
 }
 
-fn build_http_client_with_timeout(
-    timeout: std::time::Duration,
-) -> Result<Client, TAPIError> {
+fn build_http_client_with_timeout(timeout: std::time::Duration) -> Result<Client, TAPIError> {
     Client::builder()
         .timeout(timeout)
         .build()
@@ -83,10 +81,7 @@ async fn has_cloud_network_connectivity() -> bool {
     )
 }
 
-async fn is_cloud_provider_configured(
-    provider: &str,
-    state: &ChatOrchestratorState,
-) -> bool {
+async fn is_cloud_provider_configured(provider: &str, state: &ChatOrchestratorState) -> bool {
     match provider {
         "openai" => state.openai_api_key.read().await.is_some(),
         "anthropic" => state.anthropic_api_key.read().await.is_some(),
@@ -273,17 +268,13 @@ pub async fn bootstrap_api_keys(
     state: &ChatOrchestratorState,
     secrets_engine: &crate::security::secrets_engine::SecureSecretsEngine,
 ) {
-    log::info!("[ChatOrchestrator] 🔑 bootstrap_api_keys() called - loading keys from SecureSecretsEngine");
-    
+    log::info!(
+        "[ChatOrchestrator] 🔑 bootstrap_api_keys() called - loading keys from SecureSecretsEngine"
+    );
+
     // Read stored API keys from SecureSecretsEngine
-    let gemini_key = secrets_engine
-        .get_secret("gemini_api_key")
-        .ok()
-        .flatten();
-    let openai_key = secrets_engine
-        .get_secret("openai_api_key")
-        .ok()
-        .flatten();
+    let gemini_key = secrets_engine.get_secret("gemini_api_key").ok().flatten();
+    let openai_key = secrets_engine.get_secret("openai_api_key").ok().flatten();
     let anthropic_key = secrets_engine
         .get_secret("anthropic_api_key")
         .ok()
@@ -296,21 +287,21 @@ pub async fn bootstrap_api_keys(
     } else {
         log::warn!("[ChatOrchestrator] ⚠️  No Gemini API key found in SecureSecretsEngine");
     }
-    
+
     if let Some(key) = openai_key {
         *state.openai_api_key.write().await = Some(key);
         log::info!("[ChatOrchestrator] ✅ OpenAI API key loaded from SecureSecretsEngine");
     } else {
         log::warn!("[ChatOrchestrator] ⚠️  No OpenAI API key found in SecureSecretsEngine");
     }
-    
+
     if let Some(key) = anthropic_key {
         *state.anthropic_api_key.write().await = Some(key);
         log::info!("[ChatOrchestrator] ✅ Anthropic API key loaded from SecureSecretsEngine");
     } else {
         log::warn!("[ChatOrchestrator] ⚠️  No Anthropic API key found in SecureSecretsEngine");
     }
-    
+
     log::info!("[ChatOrchestrator] 🔑 bootstrap_api_keys() completed");
 }
 
@@ -635,8 +626,7 @@ pub async fn chat_send_message(
         let allow_ollama_probe = provider == "ollama"
             && (requested_provider == "ollama"
                 || (requested_provider == "auto" && ollama_auto_enabled));
-        let is_available =
-            is_provider_available(&provider, &state, allow_ollama_probe, None).await;
+        let is_available = is_provider_available(&provider, &state, allow_ollama_probe, None).await;
         println!(
             "[CHAT ROUTER] ⚡ Provider {} availability = {}",
             provider, is_available
@@ -1511,13 +1501,19 @@ pub async fn chat_memory_restore(
         let bytes = match std::fs::read(&path) {
             Ok(b) => b,
             Err(e) => {
-                eprintln!("[MEMORY RESTORE] ⚠️ Cannot read backup file {:?}: {}", path, e);
+                eprintln!(
+                    "[MEMORY RESTORE] ⚠️ Cannot read backup file {:?}: {}",
+                    path, e
+                );
                 skipped += 1;
                 continue;
             }
         };
         if serde_json::from_slice::<MemoryItem>(&bytes).is_err() {
-            eprintln!("[MEMORY RESTORE] ⚠️ Corrupt backup file {:?}: skipping", path);
+            eprintln!(
+                "[MEMORY RESTORE] ⚠️ Corrupt backup file {:?}: skipping",
+                path
+            );
             skipped += 1;
             continue;
         }
@@ -2303,7 +2299,7 @@ mod smoke_tests {
             message: "Réponds uniquement: OK".to_string(),
             conversation_id: Some("smoke-test-ollama".to_string()),
             provider: "ollama".to_string(),
-                        model: Some("gemma2:2b".to_string()),
+            model: Some("gemma2:2b".to_string()),
             streaming: false,
             images: None,
             system_prompt: Some("Réponds uniquement: OK".to_string()),

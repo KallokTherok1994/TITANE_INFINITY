@@ -6,8 +6,8 @@
 // Allow .unwrap() in tests only (this is a common pattern in Rust testing)
 #![cfg_attr(test, allow(clippy::unwrap_used))]
 
-use log::{debug, error, info};
 use crate::core::http_types::{header, Client};
+use log::{debug, error, info};
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 

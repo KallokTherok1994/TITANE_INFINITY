@@ -259,7 +259,11 @@ impl AIRouter {
 
         // 2. Try Gemini if available
         if let Some(gemini) = &self.gemini_client {
-            let internet_available = self.cache.get_provider_status("internet").await.unwrap_or(false);
+            let internet_available = self
+                .cache
+                .get_provider_status("internet")
+                .await
+                .unwrap_or(false);
             if internet_available {
                 info!("[AI Router v20.1] Trying Gemini API (secondary)");
                 match gemini.query(&request).await {
@@ -284,11 +288,13 @@ impl AIRouter {
         }
 
         // 3. Fallback to Ollama
-        let ollama_available_cached = self.cache.get_provider_status("ollama").await.unwrap_or(false);
+        let ollama_available_cached = self
+            .cache
+            .get_provider_status("ollama")
+            .await
+            .unwrap_or(false);
         if !ollama_available_cached {
-            warn!(
-                "[AI Router v20.1] Ollama cache says unavailable - forcing direct final attempt"
-            );
+            warn!("[AI Router v20.1] Ollama cache says unavailable - forcing direct final attempt");
         }
 
         info!("[AI Router v20.1] Routing to Ollama (final local fallback)");
@@ -336,7 +342,10 @@ impl AIRouter {
             }
             AIProvider::Ollama => self.ollama_client.query(&request).await,
             AIProvider::Offline => Err(AIError::NoProviderAvailable),
-            AIProvider::UnifiedIA => self.query_with_unified_engine(request, IAEngine::Claude).await,
+            AIProvider::UnifiedIA => {
+                self.query_with_unified_engine(request, IAEngine::Claude)
+                    .await
+            }
         }
     }
 
@@ -357,17 +366,15 @@ impl AIRouter {
             };
 
             match unified_ia.generate(unified_request).await {
-                Ok(unified_response) => {
-                    Ok(AIResponse {
-                        content: unified_response.content,
-                        tokens: unified_response.tokens_used,
-                        provider: AIProvider::UnifiedIA,
-                        timestamp: std::time::SystemTime::now()
-                            .duration_since(std::time::UNIX_EPOCH)
-                            .unwrap_or_else(|_| std::time::Duration::from_secs(0))
-                            .as_secs() as i64,
-                    })
-                }
+                Ok(unified_response) => Ok(AIResponse {
+                    content: unified_response.content,
+                    tokens: unified_response.tokens_used,
+                    provider: AIProvider::UnifiedIA,
+                    timestamp: std::time::SystemTime::now()
+                        .duration_since(std::time::UNIX_EPOCH)
+                        .unwrap_or_else(|_| std::time::Duration::from_secs(0))
+                        .as_secs() as i64,
+                }),
                 Err(e) => Err(AIError::APIError(e)),
             }
         } else {
@@ -416,12 +423,20 @@ impl AIRouter {
     }
 
     pub async fn health_check(&self) -> serde_json::Value {
-        let has_internet = self.cache.get_provider_status("internet").await.unwrap_or(false);
+        let has_internet = self
+            .cache
+            .get_provider_status("internet")
+            .await
+            .unwrap_or(false);
         let gemini_available = match &self.gemini_client {
             Some(c) => c.is_available().await,
             None => false,
         };
-        let ollama_available = self.cache.get_provider_status("ollama").await.unwrap_or(false);
+        let ollama_available = self
+            .cache
+            .get_provider_status("ollama")
+            .await
+            .unwrap_or(false);
         let ollama_models = self.ollama_client.get_available_models();
         let effective_status =
             Self::determine_status(has_internet, gemini_available, ollama_available);
@@ -483,7 +498,10 @@ mod tests {
 
         let health = router.health_check().await;
 
-        assert_eq!(health.get("status").and_then(|v| v.as_str()), Some("Degraded"));
+        assert_eq!(
+            health.get("status").and_then(|v| v.as_str()),
+            Some("Degraded")
+        );
         assert_eq!(health.get("internet").and_then(|v| v.as_bool()), Some(true));
         assert_eq!(
             health

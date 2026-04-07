@@ -66,8 +66,7 @@ pub async fn coherence_get_state(
 pub async fn coherence_check_system(
     singularity: State<'_, Arc<RwLock<SingularityState>>>,
 ) -> Result<CoherenceReport, String> {
-    let mut state: tokio::sync::RwLockWriteGuard<'_, SingularityState> =
-        singularity.write().await;
+    let mut state: tokio::sync::RwLockWriteGuard<'_, SingularityState> = singularity.write().await;
 
     // Clone state for coherence check (avoids borrow issues)
     let state_snapshot = state.clone();
@@ -82,8 +81,7 @@ pub async fn coherence_check_system(
 pub async fn coherence_validate_connections(
     singularity: State<'_, Arc<RwLock<SingularityState>>>,
 ) -> Result<ConnectionReport, String> {
-    let mut state: tokio::sync::RwLockWriteGuard<'_, SingularityState> =
-        singularity.write().await;
+    let mut state: tokio::sync::RwLockWriteGuard<'_, SingularityState> = singularity.write().await;
 
     // Clone state for validation
     let state_snapshot = state.clone();

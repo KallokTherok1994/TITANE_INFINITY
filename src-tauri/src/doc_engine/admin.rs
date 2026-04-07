@@ -6,16 +6,17 @@ use std::collections::HashMap;
 pub fn generate_admin_content(
     config: &GenerationConfig,
     template: &templates::Template,
-    params: HashMap<String, String>
+    params: HashMap<String, String>,
 ) -> Result<DocumentContent> {
-    let title = params.get("title")
+    let title = params
+        .get("title")
         .cloned()
         .unwrap_or_else(|| generate_default_admin_title(&config.doc_type));
-    
+
     let executive_summary = generate_admin_summary(&config.doc_type, &params);
     let objectives = generate_admin_objectives(&config.doc_type);
     let sections = generate_admin_sections(&config.doc_type, &params, template)?;
-    
+
     Ok(DocumentContent {
         title,
         executive_summary,
@@ -38,8 +39,11 @@ fn generate_default_admin_title(doc_type: &DocumentType) -> String {
 }
 
 fn generate_admin_summary(doc_type: &DocumentType, params: &HashMap<String, String>) -> String {
-    let context = params.get("context").map(|s| s.as_str()).unwrap_or("l'organisation");
-    
+    let context = params
+        .get("context")
+        .map(|s| s.as_str())
+        .unwrap_or("l'organisation");
+
     match doc_type {
         DocumentType::Audit => {
             format!(
@@ -109,7 +113,7 @@ fn generate_admin_objectives(doc_type: &DocumentType) -> Vec<String> {
 fn generate_admin_sections(
     doc_type: &DocumentType,
     params: &HashMap<String, String>,
-    _template: &templates::Template
+    _template: &templates::Template,
 ) -> Result<Vec<Section>> {
     match doc_type {
         DocumentType::Audit => generate_audit_sections(params),
@@ -224,7 +228,8 @@ fn generate_business_plan_sections(params: &HashMap<String, String>) -> Result<V
             title: "3. Analyse de Marché".to_string(),
             content: "**3.1 Marché cible**\n\n[Description]\n\n\
                 **3.2 Analyse concurrentielle**\n\n[Analyse]\n\n\
-                **3.3 Opportunités et tendances**\n\n[Opportunités]".to_string(),
+                **3.3 Opportunités et tendances**\n\n[Opportunités]"
+                .to_string(),
             subsections: vec![],
             level: 1,
         },
@@ -240,7 +245,8 @@ fn generate_business_plan_sections(params: &HashMap<String, String>) -> Result<V
             title: "5. Modèle d'Affaires".to_string(),
             content: "**5.1 Proposition de valeur**\n\n[Description]\n\n\
                 **5.2 Sources de revenus**\n\n[Revenus]\n\n\
-                **5.3 Structure de coûts**\n\n[Coûts]".to_string(),
+                **5.3 Structure de coûts**\n\n[Coûts]"
+                .to_string(),
             subsections: vec![],
             level: 1,
         },
@@ -264,7 +270,8 @@ fn generate_business_plan_sections(params: &HashMap<String, String>) -> Result<V
             content: "**8.1 Prévisions de revenus**\n\n[Tableaux]\n\n\
                 **8.2 Prévisions de dépenses**\n\n[Tableaux]\n\n\
                 **8.3 Flux de trésorerie**\n\n[Projections]\n\n\
-                **8.4 Seuil de rentabilité**\n\n[Analyse]".to_string(),
+                **8.4 Seuil de rentabilité**\n\n[Analyse]"
+                .to_string(),
             subsections: vec![],
             level: 1,
         },
@@ -291,7 +298,8 @@ fn generate_analysis_sections(_params: &HashMap<String, String>) -> Result<Vec<S
             id: "swot".to_string(),
             title: "2. Analyse SWOT".to_string(),
             content: "**Forces** | **Faiblesses**\n--- | ---\n[Forces] | [Faiblesses]\n\n\
-                **Opportunités** | **Menaces**\n--- | ---\n[Opportunités] | [Menaces]".to_string(),
+                **Opportunités** | **Menaces**\n--- | ---\n[Opportunités] | [Menaces]"
+                .to_string(),
             subsections: vec![],
             level: 1,
         },
@@ -386,23 +394,19 @@ fn generate_generic_admin_sections(_params: &HashMap<String, String>) -> Result<
 }
 
 fn generate_admin_annexes(_params: &HashMap<String, String>) -> Vec<Annex> {
-    vec![
-        Annex {
-            id: "data".to_string(),
-            title: "Annexe A - Données et Métriques".to_string(),
-            content: "Tableaux de données détaillés.".to_string(),
-            format: "table".to_string(),
-        },
-    ]
+    vec![Annex {
+        id: "data".to_string(),
+        title: "Annexe A - Données et Métriques".to_string(),
+        content: "Tableaux de données détaillés.".to_string(),
+        format: "table".to_string(),
+    }]
 }
 
 fn generate_admin_references(_params: &HashMap<String, String>) -> Vec<Reference> {
-    vec![
-        Reference {
-            title: "Standards professionnels".to_string(),
-            source: "Organisation professionnelle".to_string(),
-            url: None,
-            date: Some("2024".to_string()),
-        },
-    ]
+    vec![Reference {
+        title: "Standards professionnels".to_string(),
+        source: "Organisation professionnelle".to_string(),
+        url: None,
+        date: Some("2024".to_string()),
+    }]
 }

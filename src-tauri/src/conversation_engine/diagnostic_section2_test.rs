@@ -66,10 +66,7 @@ mod diagnostic_section2 {
         println!("  3. Conversation continues with other providers");
         println!("  4. OR fallback to builtin if all providers down");
 
-        assert!(
-            true,
-            "Test stub - requires Ollama mock/integration"
-        );
+        assert!(true, "Test stub - requires Ollama mock/integration");
     }
 }
 

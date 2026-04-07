@@ -1,9 +1,9 @@
+use std::sync::atomic::{AtomicBool, Ordering};
 /**
  * 🎤 Audio Input - Capture continue streaming pour full duplex
  * Ne se coupe jamais, même pendant output
  */
 use std::sync::{Arc, Mutex};
-use std::sync::atomic::{AtomicBool, Ordering};
 use tokio::sync::mpsc;
 
 pub struct AudioInput {
@@ -38,8 +38,11 @@ impl AudioInput {
         }
 
         self.is_active.store(true, Ordering::Relaxed);
-        println!("[AudioInput] Capture continue démarrée ({}Hz, {}ms chunks)", 
-            self.sample_rate, (self.chunk_size as f32 / self.sample_rate as f32 * 1000.0) as u32);
+        println!(
+            "[AudioInput] Capture continue démarrée ({}Hz, {}ms chunks)",
+            self.sample_rate,
+            (self.chunk_size as f32 / self.sample_rate as f32 * 1000.0) as u32
+        );
 
         let is_active = Arc::clone(&self.is_active);
         let audio_tx = self.audio_tx.clone();
@@ -56,12 +59,12 @@ impl AudioInput {
                 // - Alternative: Use portaudio-rs for more control over latency/buffer size
                 // - Performance: ~5-10ms latency with optimized buffer size
                 let chunk = Self::capture_mock_chunk(chunk_size).await;
-                
+
                 if let Err(e) = audio_tx.send(chunk).await {
                     eprintln!("[AudioInput] Chunk send error: {}", e);
                     break;
                 }
-                
+
                 tokio::time::sleep(tokio::time::Duration::from_millis(50)).await;
             }
             println!("[AudioInput] Capture arrêtée");
@@ -81,19 +84,17 @@ impl AudioInput {
     }
 
     // ===== MOCK =====
-    
+
     async fn capture_mock_chunk(size: usize) -> AudioChunk {
         use rand::Rng;
         let mut rng = rand::thread_rng();
-        
+
         // Simuler audio avec bruit + voix occasionnelle
-        let samples: Vec<f32> = (0..size)
-            .map(|_| rng.gen_range(-0.1..0.1))
-            .collect();
-        
+        let samples: Vec<f32> = (0..size).map(|_| rng.gen_range(-0.1..0.1)).collect();
+
         let energy = Self::calculate_energy(&samples);
         let has_voice = energy > 0.02;
-        
+
         AudioChunk {
             samples,
             timestamp: chrono::Utc::now().timestamp_millis(),
@@ -116,17 +117,17 @@ mod tests {
     async fn test_audio_input_start_stop() {
         let (tx, _rx) = mpsc::channel(10);
         let input = AudioInput::new(16000, tx);
-        
+
         assert!(!input.is_active());
-        
+
         input
             .start()
             .await
             .expect("audio input should start without errors");
         assert!(input.is_active());
-        
+
         tokio::time::sleep(tokio::time::Duration::from_millis(200)).await;
-        
+
         input.stop();
         assert!(!input.is_active());
     }

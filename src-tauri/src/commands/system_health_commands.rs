@@ -3,13 +3,13 @@
 //   Phase 2 Fusion #3: Helios + Sentinel + Self-Heal
 // ═══════════════════════════════════════════════════════════════
 
+use serde::{Deserialize, Serialize};
+use std::sync::Arc;
+use tauri::State;
+use titane_infinity::cache::middleware::{cached_invoke, CacheStrategy};
+use titane_infinity::core::modules::system_health::HealthReport;
 #[allow(dead_code)]
 use titane_infinity::core::state::SingularityState;
-use titane_infinity::core::modules::system_health::HealthReport;
-use titane_infinity::cache::middleware::{cached_invoke, CacheStrategy};
-use serde::{Deserialize, Serialize};
-use tauri::State;
-use std::sync::Arc;
 use tokio::sync::RwLock;
 
 // ═══════════════════════════════════════════════════════════════
@@ -85,7 +85,7 @@ pub async fn health_check_system(
     let mem = state_lock.system_health.memory_usage;
     let disk = state_lock.system_health.disk_usage;
     drop(state_lock); // Explicit drop to release read lock
-    
+
     // Return formatted response without recursive self-reference
     Ok(format!(
         "Health check complete: {:.1}% (CPU: {:.1}%, RAM: {:.1}%, Disk: {:.1}%)",
@@ -125,8 +125,15 @@ pub async fn health_set_auto_heal(
 ) -> Result<String, String> {
     let mut state = singularity.write().await;
     state.system_health.auto_heal_enabled = enabled;
-    
-    Ok(format!("Auto-heal: {}", if enabled { "ENABLED ✅" } else { "DISABLED ❌" }))
+
+    Ok(format!(
+        "Auto-heal: {}",
+        if enabled {
+            "ENABLED ✅"
+        } else {
+            "DISABLED ❌"
+        }
+    ))
 }
 
 /// Get system metrics only (lightweight)
@@ -135,7 +142,7 @@ pub async fn health_get_metrics(
     singularity: State<'_, Arc<RwLock<SingularityState>>>,
 ) -> Result<serde_json::Value, String> {
     let state = singularity.read().await;
-    
+
     Ok(serde_json::json!({
         "cpu": state.system_health.cpu_usage,
         "memory": state.system_health.memory_usage,
@@ -172,10 +179,10 @@ pub async fn system_optimize(
 ) -> Result<String, String> {
     let mut state = singularity.write().await;
     let original_score = state.system_health.global_health;
-    
+
     // Simulate optimization by incrementing metrics slightly
     state.system_health.global_health = (original_score * 1.05).min(1.0);
-    
+
     Ok(format!(
         "System optimized: {:.1}% → {:.1}%",
         original_score * 100.0,

@@ -5,10 +5,10 @@
 // Expected: 40% reduction in IPC latency variance
 // ═══════════════════════════════════════════════════════════════
 
+use parking_lot::Mutex;
 use std::collections::VecDeque;
 use std::sync::Arc;
 use std::time::Instant;
-use parking_lot::Mutex;
 
 /// IPC message batch for efficient transport
 #[derive(Clone, Debug)]
@@ -45,8 +45,8 @@ struct BatchStats {
 impl IPCBatcher {
     pub fn new() -> Self {
         Self::with_config(BatchConfig {
-            max_batch_size: 64,      // Batch up to 64 messages
-            max_wait_ms: 10,         // Or wait max 10ms
+            max_batch_size: 64,         // Batch up to 64 messages
+            max_wait_ms: 10,            // Or wait max 10ms
             compression_threshold: 512, // Compress batches >512 bytes
         })
     }
@@ -175,7 +175,11 @@ impl BatchedIPC {
             })
             .collect();
 
-        format!("{{\"batch\":[{}],\"count\":{}}}", messages.join(","), self.messages.len())
+        format!(
+            "{{\"batch\":[{}],\"count\":{}}}",
+            messages.join(","),
+            self.messages.len()
+        )
     }
 
     /// Estimate serialized size
@@ -242,7 +246,7 @@ mod tests {
     #[test]
     fn test_time_based_batching() {
         use std::time::Duration;
-        
+
         let batcher = IPCBatcher::with_config(BatchConfig {
             max_batch_size: 1000,
             max_wait_ms: 100,

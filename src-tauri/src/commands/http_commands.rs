@@ -49,9 +49,9 @@ fn is_url_allowed(url: &str) -> bool {
         return true;
     }
 
-    ALLOWED_DOMAINS.iter().any(|domain| {
-        host == *domain || host.ends_with(&format!(".{}", domain))
-    })
+    ALLOWED_DOMAINS
+        .iter()
+        .any(|domain| host == *domain || host.ends_with(&format!(".{}", domain)))
 }
 
 /// Proxy HTTP sécurisé via Tauri IPC

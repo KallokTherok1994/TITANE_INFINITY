@@ -41,11 +41,11 @@ fn sync_now_test(_reason: &str, has_url: bool, has_token: bool) -> SyncStatus {
     if !has_url || !has_token {
         status.phase = SyncPhase::Error;
         status.last_sync_ts = Some(
-        std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_millis() as i64
-    );
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_millis() as i64,
+        );
         status.last_error_code = Some("SYNC_MISSING_CONFIG".to_string());
         status.last_error_message = Some("Missing Turso configuration".to_string());
         return status;
@@ -59,7 +59,7 @@ fn sync_now_test(_reason: &str, has_url: bool, has_token: bool) -> SyncStatus {
         std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .unwrap()
-            .as_millis() as i64
+            .as_millis() as i64,
     );
     status.last_error_code = None;
     status.last_error_message = None;
@@ -94,15 +94,17 @@ fn e0_sync_now_with_turso_env_vars_proves_idle_phase() {
 
     // Run sync_now x3 as per E0 contract
     for run in 1..=3 {
-        let status = sync_now_test(
-            &format!("e0-ipc-proof-run-{}", run),
-            has_url,
-            has_token,
-        );
+        let status = sync_now_test(&format!("e0-ipc-proof-run-{}", run), has_url, has_token);
 
         println!("E0 PROOF RUN {}: phase={:?}", run, status.phase);
-        println!("E0 PROOF RUN {}: last_error_code={:?}", run, status.last_error_code);
-        println!("E0 PROOF RUN {}: last_sync_ts={:?}", run, status.last_sync_ts);
+        println!(
+            "E0 PROOF RUN {}: last_error_code={:?}",
+            run, status.last_error_code
+        );
+        println!(
+            "E0 PROOF RUN {}: last_sync_ts={:?}",
+            run, status.last_sync_ts
+        );
 
         // E0 contract: SyncStatus.phase == Idle
         assert_eq!(

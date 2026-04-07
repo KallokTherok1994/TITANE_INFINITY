@@ -98,11 +98,7 @@ fn now_iso() -> String {
     match naive {
         Some(dt) => {
             let utc = chrono::DateTime::<chrono::Utc>::from_naive_utc_and_offset(dt, chrono::Utc);
-            format!(
-                "{}.{:03}Z",
-                utc.format("%Y-%m-%dT%H:%M:%S"),
-                millis
-            )
+            format!("{}.{:03}Z", utc.format("%Y-%m-%dT%H:%M:%S"), millis)
         }
         None => format!("{}.{}Z", secs, millis),
     }
@@ -541,9 +537,7 @@ pub async fn capability_registry_get(name: String) -> Result<Option<CapabilityIn
 
 /// Retourne les capabilities par status
 #[tauri::command]
-pub async fn capability_registry_by_status(
-    status: String,
-) -> Result<Vec<CapabilityInfo>, String> {
+pub async fn capability_registry_by_status(status: String) -> Result<Vec<CapabilityInfo>, String> {
     let registry = build_static_registry();
     let filtered: Vec<CapabilityInfo> = registry
         .into_iter()

@@ -20,24 +20,24 @@ impl DigitalTwinBridge {
             ],
         }
     }
-    
+
     /// Fusionner une réponse avec le style Kevin+
     pub fn fuse_with_kevin_style(&self, base_response: &str, state: &KevinState) -> String {
         // Ajouter clarté si cognitive_load élevé
         let mut fused = base_response.to_string();
-        
+
         if state.cognitive_load > 0.6 {
             fused = format!("🔹 Clarification : {}", fused);
         }
-        
+
         if state.stress_level > 0.6 {
             fused = format!("🌿 [Ton apaisant] {}", fused);
         }
-        
+
         if state.energy_level > 0.7 {
             fused = format!("⚡ {}", fused);
         }
-        
+
         fused
     }
 }

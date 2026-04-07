@@ -189,21 +189,31 @@ fn assert_unlocked() -> Result<(), String> {
 
 /// Opérations git gouvernées — TOTAL_DEV unlocked required
 #[tauri::command]
-pub async fn total_dev_git_op(
-    op: String,
-    args: Vec<String>,
-) -> Result<TotalDevGitResult, String> {
+pub async fn total_dev_git_op(op: String, args: Vec<String>) -> Result<TotalDevGitResult, String> {
     assert_unlocked()?;
 
     // Allowlist stricte des opérations git autorisées
     const ALLOWED_GIT_OPS: &[&str] = &[
-        "status", "diff", "log", "add", "restore", "commit", "push",
-        "branch", "stash", "show", "rev-parse", "fetch",
+        "status",
+        "diff",
+        "log",
+        "add",
+        "restore",
+        "commit",
+        "push",
+        "branch",
+        "stash",
+        "show",
+        "rev-parse",
+        "fetch",
     ];
 
     if !ALLOWED_GIT_OPS.contains(&op.as_str()) {
         log::warn!("TOTAL_DEV git op rejected (not in allowlist): {}", op);
-        return Err(format!("Opération git non autorisée: '{}'. Autorisées: {:?}", op, ALLOWED_GIT_OPS));
+        return Err(format!(
+            "Opération git non autorisée: '{}'. Autorisées: {:?}",
+            op, ALLOWED_GIT_OPS
+        ));
     }
 
     // Validation args: refus des patterns dangereux
@@ -219,7 +229,9 @@ pub async fn total_dev_git_op(
 
     log::info!("TOTAL_DEV git {} {:?} in {}", op, args, workspace);
 
-    let output = cmd.output().map_err(|e| format!("git spawn error: {}", e))?;
+    let output = cmd
+        .output()
+        .map_err(|e| format!("git spawn error: {}", e))?;
 
     let stdout = String::from_utf8_lossy(&output.stdout).to_string();
     let stderr = String::from_utf8_lossy(&output.stderr).to_string();
@@ -230,7 +242,11 @@ pub async fn total_dev_git_op(
     Ok(TotalDevGitResult {
         ok: output.status.success(),
         content: stdout,
-        error: if stderr.is_empty() { None } else { Some(stderr) },
+        error: if stderr.is_empty() {
+            None
+        } else {
+            Some(stderr)
+        },
         exit_code,
         op,
     })
@@ -248,30 +264,61 @@ pub async fn total_dev_run_command(command: String) -> Result<TotalDevConsoleRes
     // Allowlist étendue TOTAL_DEV (vs devops_run limité)
     const ALLOWED_COMMANDS: &[&str] = &[
         // Navigation
-        "pwd", "ls", "ls -la", "ls -lah",
+        "pwd",
+        "ls",
+        "ls -la",
+        "ls -lah",
         // Git (via git op)
-        "git status", "git diff", "git log --oneline -10", "git log --oneline -20",
-        "git branch", "git rev-parse --short HEAD",
+        "git status",
+        "git diff",
+        "git log --oneline -10",
+        "git log --oneline -20",
+        "git branch",
+        "git rev-parse --short HEAD",
         // Node/pnpm
-        "node -v", "pnpm -v", "pnpm run build", "pnpm run test",
-        "pnpm run lint", "pnpm run check", "pnpm run format:check",
-        "pnpm run test:100", "pnpm run test:rust", "pnpm run verify",
-        "pnpm run verify:tauri-only", "pnpm run verify:invariants-governed",
+        "node -v",
+        "pnpm -v",
+        "pnpm run build",
+        "pnpm run test",
+        "pnpm run lint",
+        "pnpm run check",
+        "pnpm run format:check",
+        "pnpm run test:100",
+        "pnpm run test:rust",
+        "pnpm run verify",
+        "pnpm run verify:tauri-only",
+        "pnpm run verify:invariants-governed",
         // Cargo/Rust
-        "cargo -V", "rustc -V", "cargo check", "cargo build", "cargo clippy",
+        "cargo -V",
+        "rustc -V",
+        "cargo check",
+        "cargo build",
+        "cargo clippy",
         "cargo test --manifest-path src-tauri/Cargo.toml",
         // E2E
-        "pnpm run e2e:desktop", "pnpm run e2e:desktop:run",
+        "pnpm run e2e:desktop",
+        "pnpm run e2e:desktop:run",
         // System info
-        "uname -a", "free -h", "df -h",
+        "uname -a",
+        "free -h",
+        "df -h",
         // Tauri
-        "pnpm run build:tauri:e2e", "pnpm run build:production",
+        "pnpm run build:tauri:e2e",
+        "pnpm run build:production",
     ];
 
     let trimmed = command.trim().to_string();
 
     // Vérifier si commande dans allowlist OU commence par un préfixe autorisé
-    let allowed_prefixes = ["git ", "cargo ", "pnpm run ", "node ", "ls ", "cat src", "cat src-tauri"];
+    let allowed_prefixes = [
+        "git ",
+        "cargo ",
+        "pnpm run ",
+        "node ",
+        "ls ",
+        "cat src",
+        "cat src-tauri",
+    ];
 
     let is_allowed = ALLOWED_COMMANDS.contains(&trimmed.as_str())
         || allowed_prefixes.iter().any(|p| trimmed.starts_with(p));
@@ -289,7 +336,11 @@ pub async fn total_dev_run_command(command: String) -> Result<TotalDevConsoleRes
     let parts: Vec<&str> = trimmed.splitn(2, ' ').collect();
     let program = parts[0];
     let rest = if parts.len() > 1 { parts[1] } else { "" };
-    let args: Vec<&str> = if rest.is_empty() { vec![] } else { rest.split_whitespace().collect() };
+    let args: Vec<&str> = if rest.is_empty() {
+        vec![]
+    } else {
+        rest.split_whitespace().collect()
+    };
 
     let workspace = workspace_dir();
 
@@ -304,12 +355,20 @@ pub async fn total_dev_run_command(command: String) -> Result<TotalDevConsoleRes
     let stderr = String::from_utf8_lossy(&output.stderr).to_string();
     let exit_code = output.status.code().unwrap_or(-1);
 
-    log::info!("TOTAL_DEV console exit {} ({} chars stdout)", exit_code, stdout.len());
+    log::info!(
+        "TOTAL_DEV console exit {} ({} chars stdout)",
+        exit_code,
+        stdout.len()
+    );
 
     Ok(TotalDevConsoleResult {
         ok: output.status.success(),
         content: stdout,
-        stderr: if stderr.is_empty() { None } else { Some(stderr) },
+        stderr: if stderr.is_empty() {
+            None
+        } else {
+            Some(stderr)
+        },
         exit_code,
         command_id,
         started_at,
@@ -348,7 +407,10 @@ pub async fn total_dev_read_file(path: String) -> Result<TotalDevFileResult, Str
         .unwrap_or_else(|_| Path::new(&workspace).to_path_buf());
 
     if !canonical_path.starts_with(&canonical_workspace) {
-        log::warn!("TOTAL_DEV file read BLOCKED (path outside workspace): {}", resolved);
+        log::warn!(
+            "TOTAL_DEV file read BLOCKED (path outside workspace): {}",
+            resolved
+        );
         return Err("Accès refusé: chemin hors du workspace TITANE".to_string());
     }
 
@@ -378,7 +440,10 @@ pub async fn total_dev_read_file(path: String) -> Result<TotalDevFileResult, Str
     let content = if size < 200_000 {
         fs::read_to_string(&canonical_path).ok()
     } else {
-        Some(format!("[Fichier trop volumineux pour lecture directe: {} bytes]", size))
+        Some(format!(
+            "[Fichier trop volumineux pour lecture directe: {} bytes]",
+            size
+        ))
     };
 
     let lines = content.as_ref().map(|c| c.lines().count());

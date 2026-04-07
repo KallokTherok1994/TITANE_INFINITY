@@ -1,9 +1,9 @@
 // TITANE∞ v16.0 — AUTO-HEAL MODULE
 // Module automatique de surveillance et réparation
 
+use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
 use std::time::{SystemTime, UNIX_EPOCH};
-use serde::{Deserialize, Serialize};
 use tauri::State;
 
 // ============================================================================
@@ -76,19 +76,18 @@ fn log_event(
             events.remove(0);
         }
     } else {
-        log::warn!("[AUTO-HEAL] events mutex poisoned; event dropped: {} | {} | {}", module, event_type, description);
+        log::warn!(
+            "[AUTO-HEAL] events mutex poisoned; event dropped: {} | {} | {}",
+            module,
+            event_type,
+            description
+        );
     }
 
     println!("[AUTO-HEAL] {} | {} | {}", module, event_type, description);
 }
 
-fn log_action(
-    state: &AutoHealState,
-    module: &str,
-    action: &str,
-    result: &str,
-    success: bool,
-) {
+fn log_action(state: &AutoHealState, module: &str, action: &str, result: &str, success: bool) {
     let action_log = HealAction {
         timestamp: current_timestamp(),
         module: module.to_string(),
@@ -104,10 +103,21 @@ fn log_action(
             actions.remove(0);
         }
     } else {
-        log::warn!("[AUTO-HEAL] actions mutex poisoned; action dropped: {} | {} | {} | {}", module, action, result, success);
+        log::warn!(
+            "[AUTO-HEAL] actions mutex poisoned; action dropped: {} | {} | {} | {}",
+            module,
+            action,
+            result,
+            success
+        );
     }
 
-    println!("[AUTO-HEAL] Action: {} → {} ({})", action, result, if success { "✓" } else { "✗" });
+    println!(
+        "[AUTO-HEAL] Action: {} → {} ({})",
+        action,
+        result,
+        if success { "✓" } else { "✗" }
+    );
 }
 
 // ============================================================================
@@ -118,13 +128,7 @@ fn diagnose_system(state: &AutoHealState) -> Vec<String> {
     let mut issues = Vec::new();
 
     // Vérifier état de la mémoire (simulation)
-    log_event(
-        state,
-        "System",
-        "scan",
-        "Diagnostic mémoire...",
-        "info",
-    );
+    log_event(state, "System", "scan", "Diagnostic mémoire...", "info");
 
     // Vérifier modules critiques
     let critical_modules = vec!["chat_ia", "router", "webview", "ipc"];
@@ -193,33 +197,15 @@ fn repair_module(state: &AutoHealState, module: &str) -> bool {
             true
         }
         "webview" => {
-            log_action(
-                state,
-                "webview",
-                "reload",
-                "WebView rechargé",
-                true,
-            );
+            log_action(state, "webview", "reload", "WebView rechargé", true);
             true
         }
         "ipc" => {
-            log_action(
-                state,
-                "ipc",
-                "reconnect",
-                "IPC reconnecté",
-                true,
-            );
+            log_action(state, "ipc", "reconnect", "IPC reconnecté", true);
             true
         }
         _ => {
-            log_action(
-                state,
-                module,
-                "unknown",
-                "Module inconnu",
-                false,
-            );
+            log_action(state, module, "unknown", "Module inconnu", false);
             false
         }
     };
@@ -251,11 +237,7 @@ fn repair_all(state: &AutoHealState) -> Vec<String> {
 
     for module in modules {
         let success = repair_module(state, module);
-        results.push(format!(
-            "{}: {}",
-            module,
-            if success { "✓" } else { "✗" }
-        ));
+        results.push(format!("{}: {}", module, if success { "✓" } else { "✗" }));
     }
 
     results
@@ -277,13 +259,19 @@ pub async fn auto_heal_scan(state: State<'_, AutoHealState>) -> Result<HealRepor
 
     let issues = diagnose_system(&state);
 
-    let events = state.events.lock()
+    let events = state
+        .events
+        .lock()
         .unwrap_or_else(|e| e.into_inner())
         .clone();
-    let actions = state.actions.lock()
+    let actions = state
+        .actions
+        .lock()
         .unwrap_or_else(|e| e.into_inner())
         .clone();
-    let last_scan = state.last_scan.lock()
+    let last_scan = state
+        .last_scan
+        .lock()
         .unwrap_or_else(|e| e.into_inner())
         .clone();
 
@@ -337,13 +325,19 @@ pub async fn auto_heal_repair(
 
 #[tauri::command]
 pub async fn auto_heal_get_logs(state: State<'_, AutoHealState>) -> Result<HealReport, String> {
-    let events = state.events.lock()
+    let events = state
+        .events
+        .lock()
         .unwrap_or_else(|e| e.into_inner())
         .clone();
-    let actions = state.actions.lock()
+    let actions = state
+        .actions
+        .lock()
         .unwrap_or_else(|e| e.into_inner())
         .clone();
-    let last_scan = state.last_scan.lock()
+    let last_scan = state
+        .last_scan
+        .lock()
         .unwrap_or_else(|e| e.into_inner())
         .clone();
 
@@ -363,13 +357,7 @@ pub fn setup_panic_handler(state: AutoHealState) {
     std::panic::set_hook(Box::new(move |panic_info| {
         let msg = panic_info.to_string();
 
-        log_event(
-            &state,
-            "Panic",
-            "panic_detected",
-            &msg,
-            "critical",
-        );
+        log_event(&state, "Panic", "panic_detected", &msg, "critical");
 
         // Tentative de réparation automatique
         repair_all(&state);

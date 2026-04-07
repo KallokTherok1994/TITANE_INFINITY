@@ -5,9 +5,7 @@ use std::collections::HashMap;
 
 /// Normalise un texte pour la recherche
 pub fn normalize_text(text: &str) -> String {
-    text.to_lowercase()
-        .trim()
-        .to_string()
+    text.to_lowercase().trim().to_string()
 }
 
 /// Extrait les mots-clés d'un texte

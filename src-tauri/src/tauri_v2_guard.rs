@@ -33,10 +33,10 @@ impl<T: 'static> AssertStatic for T {}
 #[test]
 fn test_chat_orchestrator_state_is_send_sync() {
     use crate::overdrive::chat_orchestrator::ChatOrchestratorState;
-    
+
     fn assert_send<T: Send>() {}
     fn assert_sync<T: Sync>() {}
-    
+
     assert_send::<ChatOrchestratorState>();
     assert_sync::<ChatOrchestratorState>();
 }
@@ -44,10 +44,10 @@ fn test_chat_orchestrator_state_is_send_sync() {
 #[test]
 fn test_semantic_kernel_state_is_send_sync() {
     use crate::overdrive::semantic_kernel::SemanticKernelState;
-    
+
     fn assert_send<T: Send>() {}
     fn assert_sync<T: Sync>() {}
-    
+
     assert_send::<SemanticKernelState>();
     assert_sync::<SemanticKernelState>();
 }
@@ -55,10 +55,10 @@ fn test_semantic_kernel_state_is_send_sync() {
 #[test]
 fn test_meta_mode_state_is_send_sync() {
     use crate::commands::meta_mode::MetaModeState;
-    
+
     fn assert_send<T: Send>() {}
     fn assert_sync<T: Sync>() {}
-    
+
     assert_send::<MetaModeState>();
     assert_sync::<MetaModeState>();
 }
@@ -66,10 +66,10 @@ fn test_meta_mode_state_is_send_sync() {
 #[test]
 fn test_exp_fusion_state_is_send_sync() {
     use crate::commands::exp_fusion::ExpFusionState;
-    
+
     fn assert_send<T: Send>() {}
     fn assert_sync<T: Sync>() {}
-    
+
     assert_send::<ExpFusionState>();
     assert_sync::<ExpFusionState>();
 }
@@ -77,10 +77,10 @@ fn test_exp_fusion_state_is_send_sync() {
 #[test]
 fn test_evolution_state_is_send_sync() {
     use crate::commands::evolution::EvolutionState;
-    
+
     fn assert_send<T: Send>() {}
     fn assert_sync<T: Sync>() {}
-    
+
     assert_send::<EvolutionState>();
     assert_sync::<EvolutionState>();
 }
@@ -96,19 +96,19 @@ fn test_evolution_state_is_send_sync() {
 fn test_no_std_mutex_in_code() {
     // Ce test échouera à la compilation si std::sync::Mutex est importé
     // dans un contexte async dans les modules principaux
-    
+
     // Vérifie que le code source ne contient pas de patterns dangereux
     let code_check = std::fs::read_to_string("src/overdrive/chat_orchestrator.rs")
         .expect("Failed to read chat_orchestrator.rs");
-    
+
     assert!(
         !code_check.contains("std::sync::Mutex"),
         "ERREUR: std::sync::Mutex détecté dans chat_orchestrator.rs"
     );
-    
+
     let code_check2 = std::fs::read_to_string("src/overdrive/semantic_kernel.rs")
         .expect("Failed to read semantic_kernel.rs");
-    
+
     assert!(
         !code_check2.contains("std::sync::Mutex"),
         "ERREUR: std::sync::Mutex détecté dans semantic_kernel.rs"
@@ -126,7 +126,7 @@ fn test_no_async_recursion() {
         "src/commands/exp_fusion.rs",
         "src/commands/evolution.rs",
     ];
-    
+
     for module in modules {
         if let Ok(content) = std::fs::read_to_string(module) {
             assert!(
@@ -147,19 +147,18 @@ fn test_no_async_recursion() {
 async fn test_command_futures_are_send() {
     use crate::overdrive::chat_orchestrator;
     use crate::overdrive::semantic_kernel;
-    
+
     // Cette fonction ne compile que si F: Send
     fn assert_future_send<F: std::future::Future + Send>(_f: F) {}
-    
+
     // Créer des states de test
     let chat_state = chat_orchestrator::init();
     let semantic_state = semantic_kernel::init();
-    
+
     // Ces appels ne compilent que si les futures sont Send
     // (nous ne les exécutons pas, juste vérifions le type)
-    let _: PhantomData<_> = PhantomData::<
-        fn() -> std::pin::Pin<Box<dyn std::future::Future<Output = ()> + Send>>
-    >;
+    let _: PhantomData<_> =
+        PhantomData::<fn() -> std::pin::Pin<Box<dyn std::future::Future<Output = ()> + Send>>>;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -169,9 +168,9 @@ async fn test_command_futures_are_send() {
 #[tokio::test]
 async fn test_chat_orchestrator_initialization() {
     use crate::overdrive::chat_orchestrator;
-    
+
     let state = chat_orchestrator::init();
-    
+
     // Vérifier que l'init est async-safe
     // (pas de panic, pas de deadlock)
     assert!(true, "ChatOrchestrator init successful");
@@ -180,9 +179,9 @@ async fn test_chat_orchestrator_initialization() {
 #[tokio::test]
 async fn test_semantic_kernel_initialization() {
     use crate::overdrive::semantic_kernel;
-    
+
     let state = semantic_kernel::init();
-    
+
     // Vérifier que l'init est async-safe
     assert!(true, "SemanticKernel init successful");
 }
@@ -190,9 +189,9 @@ async fn test_semantic_kernel_initialization() {
 #[tokio::test]
 async fn test_meta_mode_initialization() {
     use crate::commands::meta_mode::MetaModeState;
-    
+
     let state = MetaModeState::new();
-    
+
     // Vérifier que l'init est async-safe
     assert!(true, "MetaModeState init successful");
 }
@@ -205,12 +204,12 @@ async fn test_meta_mode_initialization() {
 async fn test_concurrent_state_access() {
     use crate::overdrive::chat_orchestrator;
     use tokio::task;
-    
+
     let state = std::sync::Arc::new(chat_orchestrator::init());
-    
+
     // Lancer plusieurs tâches concurrentes
     let mut handles = vec![];
-    
+
     for i in 0..10 {
         let state_clone = state.clone();
         let handle = task::spawn(async move {
@@ -220,12 +219,12 @@ async fn test_concurrent_state_access() {
         });
         handles.push(handle);
     }
-    
+
     // Attendre toutes les tâches
     for handle in handles {
         handle.await.expect("Task panicked");
     }
-    
+
     assert!(true, "Concurrent access successful");
 }
 
@@ -236,13 +235,13 @@ async fn test_concurrent_state_access() {
 #[tokio::test]
 async fn test_no_memory_leak_in_state() {
     use crate::overdrive::chat_orchestrator;
-    
+
     // Créer et détruire plusieurs fois
     for _ in 0..100 {
         let _state = chat_orchestrator::init();
         // State est drop automatiquement
     }
-    
+
     assert!(true, "No memory leak detected");
 }
 

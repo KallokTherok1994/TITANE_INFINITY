@@ -3,9 +3,9 @@
 //! Super Prompt #11 — Auto-amélioration et évolution cognitive
 //! ═══════════════════════════════════════════════════════════════════════════════
 
+use super::introspection::IntrospectionReport;
 use serde::{Deserialize, Serialize};
 use tokio::sync::RwLock;
-use super::introspection::IntrospectionReport;
 
 /// Métriques d'évolution
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
@@ -191,7 +191,9 @@ impl EvolutionEngine {
         let mut state = self.state.write().await;
 
         // Trouver le plan
-        let plan_idx = state.active_plans.iter()
+        let plan_idx = state
+            .active_plans
+            .iter()
             .position(|p| p.id == plan_id)
             .ok_or("Plan not found")?;
 
@@ -255,7 +257,9 @@ impl EvolutionEngine {
     /// Récupère l'historique des plans complétés
     pub async fn get_completed_plans(&self, limit: usize) -> Vec<EvolutionPlan> {
         let state = self.state.read().await;
-        state.completed_plans.iter()
+        state
+            .completed_plans
+            .iter()
             .rev()
             .take(limit)
             .cloned()

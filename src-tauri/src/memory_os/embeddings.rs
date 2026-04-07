@@ -2,8 +2,8 @@
 //   EMBEDDINGS ENGINE — OpenAI / Gemini / Local
 // ═══════════════════════════════════════════════════════════════
 
-use crate::memory_os::types::{MemoryOSError, MemoryOSResult};
 use crate::core::http_types::Client;
+use crate::memory_os::types::{MemoryOSError, MemoryOSResult};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -105,7 +105,8 @@ impl EmbeddingEngine {
         // RING-2 GATE: external HTTP only when VITE_ENABLE_EXTERNAL_AI=1
         if std::env::var("VITE_ENABLE_EXTERNAL_AI").as_deref() != Ok("1") {
             return Err(MemoryOSError::EmbeddingError(
-                "External AI disabled (set VITE_ENABLE_EXTERNAL_AI=1 to enable OpenAI embeddings)".to_string(),
+                "External AI disabled (set VITE_ENABLE_EXTERNAL_AI=1 to enable OpenAI embeddings)"
+                    .to_string(),
             ));
         }
         let api_key = self.config.api_key.as_ref().ok_or_else(|| {
@@ -158,7 +159,8 @@ impl EmbeddingEngine {
         // RING-2 GATE: external HTTP only when VITE_ENABLE_EXTERNAL_AI=1
         if std::env::var("VITE_ENABLE_EXTERNAL_AI").as_deref() != Ok("1") {
             return Err(MemoryOSError::EmbeddingError(
-                "External AI disabled (set VITE_ENABLE_EXTERNAL_AI=1 to enable Gemini embeddings)".to_string(),
+                "External AI disabled (set VITE_ENABLE_EXTERNAL_AI=1 to enable Gemini embeddings)"
+                    .to_string(),
             ));
         }
         let api_key = self.config.api_key.as_ref().ok_or_else(|| {

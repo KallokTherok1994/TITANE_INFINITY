@@ -6,10 +6,10 @@ use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use tokio::sync::RwLock;
 
 use titane_infinity::ai::router::AIRouter;
-use titane_infinity::conversation_engine::{ConversationEngineState, ConversationRequest};
 use titane_infinity::conversation_engine::types::{
     AIConfig, Mode, ProviderDecisionMeta, ProviderPreference, ReasonCode,
 };
+use titane_infinity::conversation_engine::{ConversationEngineState, ConversationRequest};
 use titane_infinity::singularity::singularity_state::SingularityState;
 
 static TEST_LOCK: OnceLock<Mutex<()>> = OnceLock::new();
@@ -57,14 +57,21 @@ fn unique_storage_dir() -> PathBuf {
 fn build_engine() -> ConversationEngineState {
     let storage_dir = unique_storage_dir();
     let password = "p3-test-passphrase".to_string();
-    let ai_router = Arc::new(RwLock::new(AIRouter::new(None, Some("gemma2:2b".to_string()))));
+    let ai_router = Arc::new(RwLock::new(AIRouter::new(
+        None,
+        Some("gemma2:2b".to_string()),
+    )));
     let singularity_state = Arc::new(RwLock::new(SingularityState::default()));
 
     ConversationEngineState::new(storage_dir, password, ai_router, singularity_state)
         .expect("ConversationEngineState init failed")
 }
 
-async fn run_request(engine: &ConversationEngineState, message: &str, preference: ProviderPreference) {
+async fn run_request(
+    engine: &ConversationEngineState,
+    message: &str,
+    preference: ProviderPreference,
+) {
     let request = ConversationRequest {
         user_message: message.to_string(),
         conversation_id: None,
@@ -93,28 +100,35 @@ async fn run_request(engine: &ConversationEngineState, message: &str, preference
 
 fn assert_meta(meta: &ProviderDecisionMeta) {
     assert!(!meta.provider_used.is_empty(), "provider_used empty");
-    assert!(matches!(meta.provider_class, titane_infinity::conversation_engine::types::ProviderClass::Local
-        | titane_infinity::conversation_engine::types::ProviderClass::Remote
-        | titane_infinity::conversation_engine::types::ProviderClass::Hybrid));
-    assert!(matches!(meta.mode, Mode::Local | Mode::Remote | Mode::Offline | Mode::Cached | Mode::Error));
-    assert!(matches!(meta.reason_code,
+    assert!(matches!(
+        meta.provider_class,
+        titane_infinity::conversation_engine::types::ProviderClass::Local
+            | titane_infinity::conversation_engine::types::ProviderClass::Remote
+            | titane_infinity::conversation_engine::types::ProviderClass::Hybrid
+    ));
+    assert!(matches!(
+        meta.mode,
+        Mode::Local | Mode::Remote | Mode::Offline | Mode::Cached | Mode::Error
+    ));
+    assert!(matches!(
+        meta.reason_code,
         ReasonCode::Ok
-        | ReasonCode::PolicyLocalOnly
-        | ReasonCode::PolicyRemoteAllowed
-        | ReasonCode::AllowlistDenied
-        | ReasonCode::ProviderDown
-        | ReasonCode::Timeout
-        | ReasonCode::RateLimit
-        | ReasonCode::InvalidConfig
-        | ReasonCode::NetworkError
-        | ReasonCode::FallbackOffline
-        | ReasonCode::CacheHit
-        | ReasonCode::CacheMiss
-        | ReasonCode::SerializationDropped
-        | ReasonCode::ProviderUnavailable
-        | ReasonCode::ToolRequired
-        | ReasonCode::ToolDenied
-        | ReasonCode::Unknown
+            | ReasonCode::PolicyLocalOnly
+            | ReasonCode::PolicyRemoteAllowed
+            | ReasonCode::AllowlistDenied
+            | ReasonCode::ProviderDown
+            | ReasonCode::Timeout
+            | ReasonCode::RateLimit
+            | ReasonCode::InvalidConfig
+            | ReasonCode::NetworkError
+            | ReasonCode::FallbackOffline
+            | ReasonCode::CacheHit
+            | ReasonCode::CacheMiss
+            | ReasonCode::SerializationDropped
+            | ReasonCode::ProviderUnavailable
+            | ReasonCode::ToolRequired
+            | ReasonCode::ToolDenied
+            | ReasonCode::Unknown
     ));
     assert!(meta.attempts.len() >= 1, "attempts empty");
 }
@@ -168,7 +182,10 @@ async fn test_p3_offline5_offlinesim_x3() {
             assert_meta(&meta);
             assert!(matches!(meta.mode, Mode::Offline), "mode not OFFLINE");
             assert!(matches!(meta.reason_code, ReasonCode::FallbackOffline));
-            assert!(!meta.network_used, "network_used should be false in OFFLINE_SIM");
+            assert!(
+                !meta.network_used,
+                "network_used should be false in OFFLINE_SIM"
+            );
         }
     }
 }
@@ -196,13 +213,11 @@ async fn test_p3_stability_burst_x3() {
                 history: None,
             };
 
-            let response = tokio::time::timeout(
-                Duration::from_secs(10),
-                engine.process_message(request),
-            )
-            .await
-            .expect("process_message timeout")
-            .expect("process_message failed");
+            let response =
+                tokio::time::timeout(Duration::from_secs(10), engine.process_message(request))
+                    .await
+                    .expect("process_message timeout")
+                    .expect("process_message failed");
 
             let meta = response
                 .metadata

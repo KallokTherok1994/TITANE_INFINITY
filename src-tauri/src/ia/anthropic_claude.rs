@@ -4,8 +4,8 @@
 //   Models: Claude 3.5 Sonnet, Claude 3 Opus, Claude 3 Haiku
 // ═══════════════════════════════════════════════════════════════
 
-use log::{debug, error, info, warn};
 use crate::core::http_types::Client;
+use log::{debug, error, info, warn};
 use serde::{Deserialize, Serialize};
 use std::time::Instant;
 

@@ -1,16 +1,16 @@
 // TITANE∞ v13 - Semantic Search Engine
 // Moteur de recherche sémantique avec indexation vectorielle et graphe de connaissance
 
+pub mod context;
 pub mod embedder;
-pub mod vector_store;
+pub mod graph;
 pub mod indexer;
 pub mod query;
 pub mod reranker;
-pub mod graph;
-pub mod context;
-pub mod storage;
 pub mod selfheal;
+pub mod storage;
 pub mod utils;
+pub mod vector_store;
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -85,10 +85,10 @@ pub struct DateRange {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum SearchIntent {
-    Informational,      // Cherche à comprendre
-    Navigational,       // Cherche un document spécifique
-    Transactional,      // Cherche à accomplir une action
-    Exploratory,        // Exploration conceptuelle
+    Informational, // Cherche à comprendre
+    Navigational,  // Cherche un document spécifique
+    Transactional, // Cherche à accomplir une action
+    Exploratory,   // Exploration conceptuelle
 }
 
 /// Résultat de recherche
@@ -169,16 +169,16 @@ pub struct KnowledgeGraph {
 pub enum SemanticError {
     #[error("Erreur d'indexation: {0}")]
     IndexingError(String),
-    
+
     #[error("Erreur de recherche: {0}")]
     SearchError(String),
-    
+
     #[error("Erreur d'embedding: {0}")]
     EmbeddingError(String),
-    
+
     #[error("Erreur de graphe: {0}")]
     GraphError(String),
-    
+
     #[error("Erreur de stockage: {0}")]
     StorageError(String),
 }

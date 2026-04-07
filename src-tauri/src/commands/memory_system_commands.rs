@@ -6,15 +6,20 @@ pub async fn memory_save_entry(entry: String) -> Result<(), String> {
     log::debug!("💾 Command: memory_save_entry (length: {})", entry.len());
     #[cfg(all(not(feature = "mock"), feature = "full"))]
     {
-        titane_infinity::system::memory::save_entry(titane_infinity::system::memory::MemoryEntry {
-            content: entry,
-            timestamp: 0,
-        })?;
+        titane_infinity::system::memory::save_entry(
+            titane_infinity::system::memory::MemoryEntry {
+                content: entry,
+                timestamp: 0,
+            },
+        )?;
     }
     #[cfg(any(feature = "mock", not(feature = "full")))]
     {
         // In non-full builds, log and accept the entry (no encrypted storage available)
-        log::info!("💾 memory_save_entry (mock/stub): accepted {} bytes", entry.len());
+        log::info!(
+            "💾 memory_save_entry (mock/stub): accepted {} bytes",
+            entry.len()
+        );
         let _ = entry;
     }
     Ok(())

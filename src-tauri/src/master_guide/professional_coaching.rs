@@ -28,19 +28,36 @@ impl ProfessionalCoaching {
     pub fn suggest_tools(&self, context: &HashMap<String, String>) -> Vec<String> {
         let mut tools = Vec::new();
 
-        if context.get("intention").is_some_and(|i| i.contains("objectif")) {
+        if context
+            .get("intention")
+            .is_some_and(|i| i.contains("objectif"))
+        {
             tools.push("SMART Goals : Formule un objectif Spécifique, Mesurable, Atteignable, Réaliste, Temporel".to_string());
         }
 
-        if context.get("intention").is_some_and(|i| i.contains("décision")) {
-            tools.push("GROW Model : Goal (objectif), Reality (réalité), Options, Way forward (action)".to_string());
+        if context
+            .get("intention")
+            .is_some_and(|i| i.contains("décision"))
+        {
+            tools.push(
+                "GROW Model : Goal (objectif), Reality (réalité), Options, Way forward (action)"
+                    .to_string(),
+            );
         }
 
-        if context.get("situation").is_some_and(|s| s.contains("changement")) {
-            tools.push("Roue de la Vie : Évalue ton niveau de satisfaction dans chaque domaine".to_string());
+        if context
+            .get("situation")
+            .is_some_and(|s| s.contains("changement"))
+        {
+            tools.push(
+                "Roue de la Vie : Évalue ton niveau de satisfaction dans chaque domaine"
+                    .to_string(),
+            );
         }
 
-        tools.push("Questions puissantes : Qu'est-ce qui serait différent si tu réussissais ?".to_string());
+        tools.push(
+            "Questions puissantes : Qu'est-ce qui serait différent si tu réussissais ?".to_string(),
+        );
 
         tools
     }
@@ -75,7 +92,8 @@ impl ProfessionalCoaching {
                 "Quelles sont toutes les options possibles ?".to_string(),
                 "Qu'est-ce que tu pourrais faire d'autre ?".to_string(),
             ],
-            way_forward: "Quelle action concrète vas-tu poser dans les prochaines 24h ?".to_string(),
+            way_forward: "Quelle action concrète vas-tu poser dans les prochaines 24h ?"
+                .to_string(),
         }
     }
 

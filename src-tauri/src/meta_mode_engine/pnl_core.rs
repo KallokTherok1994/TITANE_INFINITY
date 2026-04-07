@@ -8,7 +8,7 @@ impl PnlCore {
     pub fn new() -> Self {
         Self
     }
-    
+
     /// Exécution PNL
     pub fn execute(&self, input: &str, confusion: bool) -> String {
         if confusion {
@@ -17,14 +17,14 @@ impl PnlCore {
             self.metamodel_question(input)
         }
     }
-    
+
     fn cognitive_reframing(&self, input: &str) -> String {
         format!(
             "🧠 Et si on voyait ça autrement : {} → [nouvelle perspective PNL]",
             input
         )
     }
-    
+
     fn metamodel_question(&self, _input: &str) -> String {
         "🧠 Précisément, qu'est-ce que ça signifie pour toi ? [méta-modèle]".to_string()
     }

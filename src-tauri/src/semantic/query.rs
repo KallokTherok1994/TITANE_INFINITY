@@ -1,8 +1,8 @@
 // TITANE∞ v13 - Query Engine
 // Moteur de recherche avec détection d'intention et expansion de requête
 
+use crate::semantic::vector_store::{SearchResultKNN, VectorStore};
 use crate::semantic::{SearchFilters, SearchIntent, SearchQuery, SearchResult};
-use crate::semantic::vector_store::{VectorStore, SearchResultKNN};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -15,7 +15,6 @@ macro_rules! lock_or_recover {
         })
     };
 }
-
 
 /// Configuration du query engine
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -62,7 +61,10 @@ impl QueryEngine {
     ) -> Result<Vec<SearchResultKNN>, QueryError> {
         // Détecte l'intention si activé
         let intent = if self.config.enable_intent_detection {
-            query.intent.clone().or_else(|| Some(self.detect_intent(&query.text)))
+            query
+                .intent
+                .clone()
+                .or_else(|| Some(self.detect_intent(&query.text)))
         } else {
             query.intent.clone()
         };
@@ -80,12 +82,15 @@ impl QueryEngine {
         // Recherche dans le vector store
         let mut results = if let Some(filters) = &query.filters {
             // Recherche avec filtres
-            vector_store.search_filtered(query_embedding, k, |metadata| {
-                self.apply_filters(metadata, filters)
-            }).map_err(|e| QueryError::VectorStoreError(e.to_string()))?
+            vector_store
+                .search_filtered(query_embedding, k, |metadata| {
+                    self.apply_filters(metadata, filters)
+                })
+                .map_err(|e| QueryError::VectorStoreError(e.to_string()))?
         } else {
             // Recherche sans filtres
-            vector_store.search_knn(query_embedding, k)
+            vector_store
+                .search_knn(query_embedding, k)
                 .map_err(|e| QueryError::VectorStoreError(e.to_string()))?
         };
 
@@ -103,7 +108,14 @@ impl QueryEngine {
         let query_lower = query.to_lowercase();
 
         // Mots-clés pour chaque intention
-        let informational_keywords = ["quoi", "comment", "pourquoi", "qu'est-ce", "définition", "expliquer"];
+        let informational_keywords = [
+            "quoi",
+            "comment",
+            "pourquoi",
+            "qu'est-ce",
+            "définition",
+            "expliquer",
+        ];
         let navigational_keywords = ["trouver", "chercher", "document", "fichier", "page"];
         let transactional_keywords = ["créer", "générer", "faire", "produire", "exécuter"];
         let exploratory_keywords = ["explorer", "découvrir", "voir", "lister", "tout"];
@@ -168,7 +180,7 @@ impl QueryEngine {
     fn calculate_k(&self, intent: &Option<SearchIntent>) -> usize {
         match intent {
             Some(SearchIntent::Navigational) => self.config.default_k / 2, // Plus précis
-            Some(SearchIntent::Exploratory) => self.config.default_k * 2, // Plus large
+            Some(SearchIntent::Exploratory) => self.config.default_k * 2,  // Plus large
             _ => self.config.default_k,
         }
     }
@@ -223,14 +235,42 @@ impl QueryEngine {
         let mut map = HashMap::new();
 
         // Synonymes français courants
-        map.insert("document".to_string(), vec!["fichier".to_string(), "doc".to_string()]);
-        map.insert("recherche".to_string(), vec!["chercher".to_string(), "trouver".to_string()]);
-        map.insert("créer".to_string(), vec!["générer".to_string(), "produire".to_string(), "faire".to_string()]);
-        map.insert("projet".to_string(), vec!["travail".to_string(), "tâche".to_string()]);
-        map.insert("erreur".to_string(), vec!["bug".to_string(), "problème".to_string()]);
-        map.insert("fonction".to_string(), vec!["méthode".to_string(), "procédure".to_string()]);
-        map.insert("données".to_string(), vec!["data".to_string(), "informations".to_string()]);
-        map.insert("système".to_string(), vec!["plateforme".to_string(), "infrastructure".to_string()]);
+        map.insert(
+            "document".to_string(),
+            vec!["fichier".to_string(), "doc".to_string()],
+        );
+        map.insert(
+            "recherche".to_string(),
+            vec!["chercher".to_string(), "trouver".to_string()],
+        );
+        map.insert(
+            "créer".to_string(),
+            vec![
+                "générer".to_string(),
+                "produire".to_string(),
+                "faire".to_string(),
+            ],
+        );
+        map.insert(
+            "projet".to_string(),
+            vec!["travail".to_string(), "tâche".to_string()],
+        );
+        map.insert(
+            "erreur".to_string(),
+            vec!["bug".to_string(), "problème".to_string()],
+        );
+        map.insert(
+            "fonction".to_string(),
+            vec!["méthode".to_string(), "procédure".to_string()],
+        );
+        map.insert(
+            "données".to_string(),
+            vec!["data".to_string(), "informations".to_string()],
+        );
+        map.insert(
+            "système".to_string(),
+            vec!["plateforme".to_string(), "infrastructure".to_string()],
+        );
 
         map
     }
@@ -332,9 +372,11 @@ mod tests {
     fn test_expand_query() {
         let engine = QueryEngine::new(QueryConfig::default());
         let expanded = engine.expand_query("créer un document");
-        
+
         assert!(expanded.len() > 1);
-        assert!(expanded.iter().any(|q| q.contains("générer") || q.contains("fichier")));
+        assert!(expanded
+            .iter()
+            .any(|q| q.contains("générer") || q.contains("fichier")));
     }
 
     #[test]
@@ -361,7 +403,7 @@ mod tests {
     fn test_suggest_queries() {
         let engine = QueryEngine::new(QueryConfig::default());
         let suggestions = engine.suggest_queries("doc");
-        
+
         assert!(!suggestions.is_empty());
         assert!(suggestions.iter().any(|s| s.contains("doc")));
     }

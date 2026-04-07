@@ -3,10 +3,10 @@
 //! Super Prompt #11 — Auto-analyse cognitive et conscience de soi
 //! ═══════════════════════════════════════════════════════════════════════════════
 
+use super::{AGIContext, AGICoreState};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use super::{AGICoreState, AGIContext};
 
 /// État cognitif actuel
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
@@ -130,11 +130,8 @@ impl IntrospectionEngine {
         let confidence = self.calculate_confidence(cognitive_load, uncertainty);
 
         // Générer les recommandations
-        let recommendations = self.generate_recommendations(
-            cognitive_load,
-            uncertainty,
-            &weaknesses,
-        );
+        let recommendations =
+            self.generate_recommendations(cognitive_load, uncertainty, &weaknesses);
 
         let report = IntrospectionReport {
             cognitive_state: current_state.cognitive_state.clone(),
@@ -167,7 +164,9 @@ impl IntrospectionEngine {
         let mut report = self.analyze(state, &context).await;
 
         // Analyse additionnelle
-        report.strengths.push("Deep analysis capability".to_string());
+        report
+            .strengths
+            .push("Deep analysis capability".to_string());
 
         // Analyser les patterns dans l'historique
         let history = self.history.read().await;
@@ -176,9 +175,9 @@ impl IntrospectionEngine {
             let avg_load: f32 = recent.iter().map(|r| r.cognitive_load).sum::<f32>() / 3.0;
 
             if avg_load > 0.7 {
-                report.recommendations.push(
-                    "Sustained high cognitive load - consider rest".to_string()
-                );
+                report
+                    .recommendations
+                    .push("Sustained high cognitive load - consider rest".to_string());
             }
         }
 

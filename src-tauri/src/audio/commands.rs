@@ -29,8 +29,8 @@ fn get_active_tts_pid() -> Option<u32> {
 }
 
 fn signal_active_tts(signal: &str) -> CommandResult<()> {
-    let pid = get_active_tts_pid()
-        .ok_or_else(|| "Aucune lecture TTS active à contrôler".to_string())?;
+    let pid =
+        get_active_tts_pid().ok_or_else(|| "Aucune lecture TTS active à contrôler".to_string())?;
     let status = Command::new("kill")
         .args([signal, &pid.to_string()])
         .status()
@@ -75,7 +75,11 @@ fn run_tracked_command(mut command: Command, context: &str) -> CommandResult<()>
     Err(format!(
         "{} a échoué: {}{}",
         context,
-        if stderr.is_empty() { stdout.as_str() } else { stderr.as_str() },
+        if stderr.is_empty() {
+            stdout.as_str()
+        } else {
+            stderr.as_str()
+        },
         if stderr.is_empty() || stdout.is_empty() {
             "".to_string()
         } else {
@@ -311,8 +315,17 @@ async fn tts_speak_espeak(text: &str, settings: &TTSSettings) -> CommandResult<(
         let output_str = output_path.to_string_lossy().to_string();
 
         let gen = Command::new(espeak_bin)
-            .args(["-v", voice, "-s", &speed.to_string(), "-p", &pitch.to_string(),
-                   "-w", &output_str, "--"])
+            .args([
+                "-v",
+                voice,
+                "-s",
+                &speed.to_string(),
+                "-p",
+                &pitch.to_string(),
+                "-w",
+                &output_str,
+                "--",
+            ])
             .arg(text)
             .output();
 
@@ -399,7 +412,10 @@ pub async fn get_audio_output_devices() -> CommandResult<Vec<AudioDevice>> {
     // Try WirePlumber/wpctl first — returns real numeric IDs usable by wpctl set-default
     if let Ok(devices) = get_wpctl_devices("output").await {
         if !devices.is_empty() {
-            log::info!("[Audio] get_audio_output_devices: {} device(s) via wpctl", devices.len());
+            log::info!(
+                "[Audio] get_audio_output_devices: {} device(s) via wpctl",
+                devices.len()
+            );
             return Ok(devices);
         }
     }
@@ -452,7 +468,10 @@ pub async fn get_audio_input_devices() -> CommandResult<Vec<AudioDevice>> {
     // Try WirePlumber/wpctl first — returns real numeric IDs usable by wpctl set-default
     if let Ok(devices) = get_wpctl_devices("input").await {
         if !devices.is_empty() {
-            log::info!("[Audio] get_audio_input_devices: {} device(s) via wpctl", devices.len());
+            log::info!(
+                "[Audio] get_audio_input_devices: {} device(s) via wpctl",
+                devices.len()
+            );
             return Ok(devices);
         }
     }
@@ -517,8 +536,16 @@ async fn get_wpctl_devices(device_type: &str) -> Result<Vec<AudioDevice>, String
         .map_err(|e| format!("wpctl error: {}", e))?;
 
     let stdout = String::from_utf8_lossy(&output.stdout);
-    let section_header = if device_type == "output" { "Sinks:" } else { "Sources:" };
-    let end_marker = if device_type == "output" { "Sink endpoints:" } else { "Source endpoints:" };
+    let section_header = if device_type == "output" {
+        "Sinks:"
+    } else {
+        "Sources:"
+    };
+    let end_marker = if device_type == "output" {
+        "Sink endpoints:"
+    } else {
+        "Source endpoints:"
+    };
 
     let mut in_section = false;
     let mut devices: Vec<AudioDevice> = Vec::new();
@@ -566,7 +593,9 @@ async fn get_wpctl_devices(device_type: &str) -> Result<Vec<AudioDevice>, String
             }
 
             // Skip monitor sources
-            if device_type == "input" && (name.to_lowercase().contains("monitor") || line.contains("monitor")) {
+            if device_type == "input"
+                && (name.to_lowercase().contains("monitor") || line.contains("monitor"))
+            {
                 continue;
             }
 
@@ -677,7 +706,10 @@ pub async fn set_audio_output_device(device_id: String) -> CommandResult<()> {
 
     // PipeWire present but no pactl/wpctl: accept gracefully (device stays as-is)
     if Command::new("pw-cli").arg("--version").output().is_ok() {
-        log::warn!("[Audio] PipeWire detected but no pactl/wpctl — device switch skipped for id={}", device_id);
+        log::warn!(
+            "[Audio] PipeWire detected but no pactl/wpctl — device switch skipped for id={}",
+            device_id
+        );
         return Ok(());
     }
 
@@ -708,7 +740,10 @@ pub async fn set_audio_input_device(device_id: String) -> CommandResult<()> {
 
     // PipeWire present but no pactl/wpctl: accept gracefully
     if Command::new("pw-cli").arg("--version").output().is_ok() {
-        log::warn!("[Audio] PipeWire detected but no pactl/wpctl — device switch skipped for id={}", device_id);
+        log::warn!(
+            "[Audio] PipeWire detected but no pactl/wpctl — device switch skipped for id={}",
+            device_id
+        );
         return Ok(());
     }
 
@@ -726,7 +761,8 @@ pub async fn test_microphone(
 ) -> CommandResult<MicrophoneTestResult> {
     log::info!(
         "[Audio] test_microphone called with duration_ms={} device_id={:?}",
-        duration_ms, device_id
+        duration_ms,
+        device_id
     );
 
     let duration_secs = (duration_ms as f64 / 1000.0).max(1.0);
@@ -747,10 +783,14 @@ pub async fn test_microphone(
             .args([
                 duration_arg.as_str(),
                 "pw-record",
-                "--target", id.as_str(),
-                "--rate", "16000",
-                "--channels", "1",
-                "--format", "s16",
+                "--target",
+                id.as_str(),
+                "--rate",
+                "16000",
+                "--channels",
+                "1",
+                "--format",
+                "s16",
                 output_str.as_str(),
             ])
             .output()
@@ -758,13 +798,19 @@ pub async fn test_microphone(
                 // timeout or pw-record not available: fall back to arecord using OS default.
                 // set_audio_input_device (wpctl set-default) was already called so routing
                 // is correct even without -D.
-                log::info!("[Audio] timeout+pw-record unavailable, falling back to arecord (OS default)");
+                log::info!(
+                    "[Audio] timeout+pw-record unavailable, falling back to arecord (OS default)"
+                );
                 Command::new("arecord")
                     .args([
-                        "-d", &format!("{:.0}", duration_secs),
-                        "-f", "S16_LE",
-                        "-r", "16000",
-                        "-c", "1",
+                        "-d",
+                        &format!("{:.0}", duration_secs),
+                        "-f",
+                        "S16_LE",
+                        "-r",
+                        "16000",
+                        "-c",
+                        "1",
                         &output_str,
                     ])
                     .output()
@@ -773,10 +819,14 @@ pub async fn test_microphone(
         log::info!("[Audio] No device_id, using arecord with OS default");
         Command::new("arecord")
             .args([
-                "-d", &format!("{:.0}", duration_secs),
-                "-f", "S16_LE",
-                "-r", "16000",
-                "-c", "1",
+                "-d",
+                &format!("{:.0}", duration_secs),
+                "-f",
+                "S16_LE",
+                "-r",
+                "16000",
+                "-c",
+                "1",
                 &output_str,
             ])
             .output()
@@ -826,7 +876,8 @@ pub async fn test_microphone(
 
         log::info!(
             "[Audio] File size: {} bytes, expected min: {}",
-            file_size, expected_min_size
+            file_size,
+            expected_min_size
         );
 
         if file_size > expected_min_size {
@@ -2042,11 +2093,11 @@ pub async fn tts_generate_test_buffer(
 
     // Each voice has a unique base frequency — guarantees perceptual difference.
     let base_freq: f64 = match voice.as_str() {
-        "alpha" => 220.0,  // A3
-        "beta"  => 440.0,  // A4
-        "gamma" => 660.0,  // E5
-        "delta" => 880.0,  // A5
-        other   => {
+        "alpha" => 220.0, // A3
+        "beta" => 440.0,  // A4
+        "gamma" => 660.0, // E5
+        "delta" => 880.0, // A5
+        other => {
             // Deterministic hash of the voice name to a frequency in [200, 900] Hz
             let hash: u64 = other.bytes().fold(5381u64, |acc, b| {
                 acc.wrapping_mul(33).wrapping_add(b as u64)
@@ -2070,11 +2121,11 @@ pub async fn tts_generate_test_buffer(
         .map(|i| {
             let t = i as f64 / sample_rate as f64;
             let fundamental = (two_pi * base_freq * t).sin();
-            let harmonic    = 0.4 * (two_pi * base_freq * 2.0 * t).sin();
-            let envelope    = if t < 0.01 {
-                t / 0.01               // 10ms attack
+            let harmonic = 0.4 * (two_pi * base_freq * 2.0 * t).sin();
+            let envelope = if t < 0.01 {
+                t / 0.01 // 10ms attack
             } else if t > (duration_ms as f64 / 1000.0 - 0.02) {
-                (duration_ms as f64 / 1000.0 - t) / 0.02  // 20ms release
+                (duration_ms as f64 / 1000.0 - t) / 0.02 // 20ms release
             } else {
                 1.0
             };
@@ -2089,7 +2140,10 @@ pub async fn tts_generate_test_buffer(
 
     log::info!(
         "[AudioE2E] tts_generate_test_buffer: voice={} engine={} samples={} peak={:.4}",
-        voice, engine, num_samples, peak
+        voice,
+        engine,
+        num_samples,
+        peak
     );
 
     Ok(AudioTestBuffer {

@@ -47,7 +47,10 @@ impl ComplianceMonitor {
 
         let status = if violations.is_empty() {
             ComplianceStatus::Compliant
-        } else if violations.iter().all(|code| code.contains("STALE") || code.contains("MISSING")) {
+        } else if violations
+            .iter()
+            .all(|code| code.contains("STALE") || code.contains("MISSING"))
+        {
             ComplianceStatus::Warning
         } else {
             ComplianceStatus::Violation
@@ -74,14 +77,19 @@ pub struct StorageDriftReport {
 pub struct StorageDriftDetector;
 
 impl StorageDriftDetector {
-    pub fn detect(expected: &StorageSnapshot, actual: &StorageSnapshot, threshold_ratio: f64) -> StorageDriftReport {
+    pub fn detect(
+        expected: &StorageSnapshot,
+        actual: &StorageSnapshot,
+        threshold_ratio: f64,
+    ) -> StorageDriftReport {
         let mut reason_codes = Vec::new();
 
         let event_delta = absolute_delta(expected.event_count, actual.event_count);
         let size_delta = absolute_delta(expected.event_log_size_bytes, actual.event_log_size_bytes);
         let snapshot_delta = absolute_delta(expected.snapshot_count, actual.snapshot_count);
 
-        let expected_weighted = expected.event_count
+        let expected_weighted = expected
+            .event_count
             .saturating_add(expected.event_log_size_bytes / 1024)
             .saturating_add(expected.snapshot_count.saturating_mul(10));
 
@@ -123,7 +131,12 @@ pub struct PurgeProofV2 {
 }
 
 impl PurgeProofV2 {
-    pub fn generate(timestamp_ms: u64, before_count: u64, after_count: u64, purged_ids: &[String]) -> Self {
+    pub fn generate(
+        timestamp_ms: u64,
+        before_count: u64,
+        after_count: u64,
+        purged_ids: &[String],
+    ) -> Self {
         let mut ids = purged_ids.to_vec();
         ids.sort();
 
@@ -186,7 +199,10 @@ mod tests {
         });
 
         assert!(matches!(report.status, ComplianceStatus::Violation));
-        assert!(report.violations.iter().any(|v| v == "SCHEMA_VERSION_MISMATCH"));
+        assert!(report
+            .violations
+            .iter()
+            .any(|v| v == "SCHEMA_VERSION_MISMATCH"));
     }
 
     #[test]

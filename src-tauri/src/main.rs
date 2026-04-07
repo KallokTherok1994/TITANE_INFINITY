@@ -1370,7 +1370,7 @@ fn main() {
                 log::info!("[Ollama] ═══════════════════════════════════════════════════");
                 log::info!("[Ollama] PROD FIX v27.0.2: Enhanced Auto-Start Routine");
                 log::info!("[Ollama] ═══════════════════════════════════════════════════");
-                
+
                 // STEP 1: Check if Ollama already running
                 if let Ok(status) = titane_infinity::ai::ollama::ai_check_ollama_status().await {
                     if status.available {
@@ -1378,9 +1378,9 @@ fn main() {
                         return;
                     }
                 }
-                
+
                 log::warn!("[Ollama] ⚠️ Ollama endpoint not responding. Attempting to start...");
-                
+
                 // STEP 2: Try bundled binary (AppImage/custom builds)
                 if let Ok(resource_dir) = app_handle.path().resource_dir() {
                     let bundled_paths = vec![
@@ -1389,7 +1389,7 @@ fn main() {
                         resource_dir.join("bin/ollama"),
                         resource_dir.join("../ollama"),
                     ];
-                    
+
                     for ollama_path in bundled_paths {
                         if ollama_path.exists() {
                             log::info!("[Ollama] 🔍 Found bundled binary at: {:?}", ollama_path);
@@ -1413,7 +1413,7 @@ fn main() {
                         }
                     }
                 }
-                
+
                 // STEP 3: Try system `ollama` command (Linux/macOS)
                 log::info!("[Ollama] 🔍 Trying system ollama command...");
                 match ProcessCommand::new("ollama")
@@ -1433,7 +1433,7 @@ fn main() {
                         log::warn!("[Ollama] ❌ System ollama failed: {}", err);
                     }
                 }
-                
+
                 // STEP 4: Final warning and instructions
                 log::error!("[Ollama] ═══════════════════════════════════════════════════");
                 log::error!("[Ollama] ❌ CRITICAL: Could not auto-start Ollama");
@@ -1573,7 +1573,7 @@ fn main() {
                             || std::env::var("TITANE_DEVTOOLS")
                                 .ok()
                                 .is_some_and(|v| v == "1" || v == "true");
-                        
+
                         // Note: open_devtools() method may not be available in all Tauri versions
                         // Skipping auto-open devtools for now - not critical for production
                         if devtools_enabled {
@@ -1745,7 +1745,7 @@ fn main() {
             overdrive::chat_orchestrator::chat_get_memory_stats, // R04 FIX
             overdrive::chat_orchestrator::chat_memory_backup,    // LTM backup coverage
             overdrive::chat_orchestrator::chat_memory_restore,   // LTM restore coverage
-            
+
             // Diagnostic Commands v27 (Online capabilities check)
             diagnostic_commands::check_online_capabilities,
             // P1: WebResearch Engine (EXPERIMENTAL — stub, no network)

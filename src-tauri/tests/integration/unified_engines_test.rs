@@ -3,12 +3,12 @@
 //   P3-1: End-to-end tests for the consolidated engine architecture
 // ═══════════════════════════════════════════════════════════════
 
-use titane_infinity::core::modules::coherence::CoherenceEngine;
-use titane_infinity::core::modules::unified_memory::UnifiedMemory;
-use titane_infinity::core::modules::system_health::SystemHealth;
-use titane_infinity::cache::{IntelligentCache, CacheConfig, CacheKey};
-use titane_infinity::batch::{BatchRequest, execute_batch};
 use std::time::Duration;
+use titane_infinity::batch::{execute_batch, BatchRequest};
+use titane_infinity::cache::{CacheConfig, CacheKey, IntelligentCache};
+use titane_infinity::core::modules::coherence::CoherenceEngine;
+use titane_infinity::core::modules::system_health::SystemHealth;
+use titane_infinity::core::modules::unified_memory::UnifiedMemory;
 
 // ────────────────────────────────────────────────────────────────
 // Coherence Engine Tests
@@ -28,10 +28,10 @@ fn test_coherence_engine_health_check() {
 
     // Health should be valid enum variant
     match health {
-        titane_infinity::core::modules::coherence::HealthStatus::Optimal |
-        titane_infinity::core::modules::coherence::HealthStatus::Good |
-        titane_infinity::core::modules::coherence::HealthStatus::Degraded |
-        titane_infinity::core::modules::coherence::HealthStatus::Critical => {}
+        titane_infinity::core::modules::coherence::HealthStatus::Optimal
+        | titane_infinity::core::modules::coherence::HealthStatus::Good
+        | titane_infinity::core::modules::coherence::HealthStatus::Degraded
+        | titane_infinity::core::modules::coherence::HealthStatus::Critical => {}
     }
 }
 
@@ -129,11 +129,13 @@ fn test_cache_invalidation_pattern() {
     cache.invalidate_pattern("health_");
 
     // Health entries should be gone
-    let health: Option<serde_json::Value> = cache.get(&CacheKey::new("health_get_state", serde_json::json!({})));
+    let health: Option<serde_json::Value> =
+        cache.get(&CacheKey::new("health_get_state", serde_json::json!({})));
     assert!(health.is_none());
 
     // Memory entry should still exist
-    let memory: Option<serde_json::Value> = cache.get(&CacheKey::new("memory_get_state", serde_json::json!({})));
+    let memory: Option<serde_json::Value> =
+        cache.get(&CacheKey::new("memory_get_state", serde_json::json!({})));
     assert!(memory.is_some());
 }
 
@@ -224,7 +226,11 @@ fn test_cache_performance_under_load() {
     // Insert 100 entries
     for i in 0..100 {
         let key = CacheKey::new(&format!("test_{}", i), serde_json::json!({"i": i}));
-        cache.set(key, serde_json::json!({"value": i}), Duration::from_secs(60));
+        cache.set(
+            key,
+            serde_json::json!({"value": i}),
+            Duration::from_secs(60),
+        );
     }
 
     // Verify all entries are accessible
@@ -244,10 +250,26 @@ async fn test_batch_performance_timing() {
     use tokio::time::Instant;
 
     let requests = vec![
-        BatchRequest { id: "1".to_string(), command: "health_get_state".to_string(), params: serde_json::json!({}) },
-        BatchRequest { id: "2".to_string(), command: "memory_get_state".to_string(), params: serde_json::json!({}) },
-        BatchRequest { id: "3".to_string(), command: "coherence_get_state".to_string(), params: serde_json::json!({}) },
-        BatchRequest { id: "4".to_string(), command: "cache_get_metrics".to_string(), params: serde_json::json!({}) },
+        BatchRequest {
+            id: "1".to_string(),
+            command: "health_get_state".to_string(),
+            params: serde_json::json!({}),
+        },
+        BatchRequest {
+            id: "2".to_string(),
+            command: "memory_get_state".to_string(),
+            params: serde_json::json!({}),
+        },
+        BatchRequest {
+            id: "3".to_string(),
+            command: "coherence_get_state".to_string(),
+            params: serde_json::json!({}),
+        },
+        BatchRequest {
+            id: "4".to_string(),
+            command: "cache_get_metrics".to_string(),
+            params: serde_json::json!({}),
+        },
     ];
 
     let start = Instant::now();
@@ -255,7 +277,11 @@ async fn test_batch_performance_timing() {
     let elapsed = start.elapsed();
 
     // Batch should complete quickly (< 100ms for mock commands)
-    assert!(elapsed.as_millis() < 100, "Batch took too long: {}ms", elapsed.as_millis());
+    assert!(
+        elapsed.as_millis() < 100,
+        "Batch took too long: {}ms",
+        elapsed.as_millis()
+    );
     assert_eq!(result.success_count, 4);
 }
 
@@ -287,7 +313,10 @@ fn test_cache_with_all_engine_data() {
     // Simulate storing data from all 9 engines
     let engine_data = vec![
         ("coherence_state", serde_json::json!({"coherence": 0.95})),
-        ("memory_state", serde_json::json!({"stm": 10, "mtm": 20, "ltm": 100})),
+        (
+            "memory_state",
+            serde_json::json!({"stm": 10, "mtm": 20, "ltm": 100}),
+        ),
         ("health_state", serde_json::json!({"global": 0.98})),
         ("adaptive_state", serde_json::json!({"learning_rate": 0.01})),
         ("watchdog_state", serde_json::json!({"alerts": 0})),

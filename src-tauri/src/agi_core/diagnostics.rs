@@ -3,12 +3,12 @@
 //! Super Prompt #11 — Diagnostic et monitoring de l'AGI Core
 //! ═══════════════════════════════════════════════════════════════════════════════
 
+use super::evolution::EvolutionPlan;
+use super::introspection::IntrospectionReport;
+use super::reasoning::ReasoningChain;
+use super::strategy::Strategy;
 use serde::{Deserialize, Serialize};
 use tokio::sync::RwLock;
-use super::introspection::IntrospectionReport;
-use super::strategy::Strategy;
-use super::evolution::EvolutionPlan;
-use super::reasoning::ReasoningChain;
 
 /// Événement AGI
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -22,24 +22,13 @@ pub enum AGIEvent {
     /// Plan d'évolution créé
     EvolutionPlanned(EvolutionPlan),
     /// Meta-raisonnement complet
-    MetaReasoningComplete {
-        duration_ms: u64,
-    },
+    MetaReasoningComplete { duration_ms: u64 },
     /// Erreur
-    Error {
-        component: String,
-        message: String,
-    },
+    Error { component: String, message: String },
     /// Avertissement
-    Warning {
-        component: String,
-        message: String,
-    },
+    Warning { component: String, message: String },
     /// Métrique enregistrée
-    MetricRecorded {
-        name: String,
-        value: f64,
-    },
+    MetricRecorded { name: String, value: f64 },
     /// État de santé mis à jour
     HealthUpdated(AGIHealth),
 }
@@ -164,12 +153,15 @@ impl AGIDiagnostics {
             }
             AGIEvent::MetricRecorded { name, value } => {
                 let mut metrics = self.metrics.write().await;
-                let history = metrics.entry(name.clone()).or_insert_with(MetricHistory::new);
+                let history = metrics
+                    .entry(name.clone())
+                    .or_insert_with(MetricHistory::new);
                 history.record(timestamp, *value);
             }
             AGIEvent::MetaReasoningComplete { duration_ms } => {
                 let mut metrics = self.metrics.write().await;
-                let history = metrics.entry("meta_reasoning_duration".to_string())
+                let history = metrics
+                    .entry("meta_reasoning_duration".to_string())
                     .or_insert_with(MetricHistory::new);
                 history.record(timestamp, *duration_ms as f64);
             }
@@ -183,9 +175,7 @@ impl AGIDiagnostics {
         let error_penalty = (health.recent_errors as f32 * 0.1).min(0.5);
         let warning_penalty = (health.recent_warnings as f32 * 0.02).min(0.2);
 
-        health.overall_health = (1.0 - error_penalty - warning_penalty)
-            .max(0.0)
-            .min(1.0);
+        health.overall_health = (1.0 - error_penalty - warning_penalty).max(0.0).min(1.0);
 
         health.timestamp = Self::now();
     }
@@ -193,7 +183,8 @@ impl AGIDiagnostics {
     /// Récupère les événements récents
     pub async fn get_recent(&self, limit: usize) -> Vec<AGIEvent> {
         let events = self.events.read().await;
-        events.iter()
+        events
+            .iter()
             .rev()
             .take(limit)
             .map(|r| r.event.clone())
@@ -203,7 +194,8 @@ impl AGIDiagnostics {
     /// Récupère les événements par type
     pub async fn get_by_type(&self, event_type: &str, limit: usize) -> Vec<AGIEvent> {
         let events = self.events.read().await;
-        events.iter()
+        events
+            .iter()
             .rev()
             .filter(|r| self.event_type_matches(&r.event, event_type))
             .take(limit)
@@ -247,7 +239,8 @@ impl AGIDiagnostics {
     /// Récupère toutes les métriques
     pub async fn get_all_metrics(&self) -> Vec<MetricSummary> {
         let metrics = self.metrics.read().await;
-        metrics.iter()
+        metrics
+            .iter()
             .map(|(name, h)| MetricSummary {
                 name: name.clone(),
                 current: h.values.last().map(|(_, v)| *v).unwrap_or(0.0),
@@ -286,13 +279,17 @@ impl AGIDiagnostics {
             total_events: events.len(),
             event_counts,
             metric_count: metrics.len(),
-            uptime_estimate: Self::now() - events.first().map(|e| e.timestamp).unwrap_or(Self::now()),
+            uptime_estimate: Self::now()
+                - events.first().map(|e| e.timestamp).unwrap_or(Self::now()),
             timestamp: Self::now(),
         }
     }
 
     /// Compte les événements par type
-    fn count_events_by_type(&self, events: &[AGIEventRecord]) -> std::collections::HashMap<String, usize> {
+    fn count_events_by_type(
+        &self,
+        events: &[AGIEventRecord],
+    ) -> std::collections::HashMap<String, usize> {
         let mut counts = std::collections::HashMap::new();
 
         for record in events {
@@ -365,9 +362,9 @@ mod tests {
     async fn test_emit_event() {
         let diagnostics = AGIDiagnostics::new();
 
-        diagnostics.emit(AGIEvent::MetaReasoningComplete {
-            duration_ms: 100,
-        }).await;
+        diagnostics
+            .emit(AGIEvent::MetaReasoningComplete { duration_ms: 100 })
+            .await;
 
         let events = diagnostics.get_recent(10).await;
         assert_eq!(events.len(), 1);
@@ -377,10 +374,12 @@ mod tests {
     async fn test_error_tracking() {
         let diagnostics = AGIDiagnostics::new();
 
-        diagnostics.emit(AGIEvent::Error {
-            component: "test".to_string(),
-            message: "test error".to_string(),
-        }).await;
+        diagnostics
+            .emit(AGIEvent::Error {
+                component: "test".to_string(),
+                message: "test error".to_string(),
+            })
+            .await;
 
         let health = diagnostics.get_health().await;
         assert_eq!(health.recent_errors, 1);
@@ -391,10 +390,12 @@ mod tests {
     async fn test_metric_recording() {
         let diagnostics = AGIDiagnostics::new();
 
-        diagnostics.emit(AGIEvent::MetricRecorded {
-            name: "test_metric".to_string(),
-            value: 100.0,
-        }).await;
+        diagnostics
+            .emit(AGIEvent::MetricRecorded {
+                name: "test_metric".to_string(),
+                value: 100.0,
+            })
+            .await;
 
         let metric = diagnostics.get_metric("test_metric").await;
         assert!(metric.is_some());
@@ -410,9 +411,9 @@ mod tests {
     async fn test_generate_report() {
         let diagnostics = AGIDiagnostics::new();
 
-        diagnostics.emit(AGIEvent::MetaReasoningComplete {
-            duration_ms: 50,
-        }).await;
+        diagnostics
+            .emit(AGIEvent::MetaReasoningComplete { duration_ms: 50 })
+            .await;
 
         let report = diagnostics.generate_report().await;
         assert_eq!(report.total_events, 1);

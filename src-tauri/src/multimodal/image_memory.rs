@@ -47,26 +47,34 @@ impl ImageMemoryStore {
             max_entries,
         }
     }
-    
+
     /// Store image with embedding
     pub async fn store_image(&self, entry: ImageMemoryEntry) -> MultimodalResult<String> {
         let mut entries = self.entries.write().await;
-        
+
         // Evict oldest if at capacity
         if entries.len() >= self.max_entries {
-            entries.sort_by(|a, b| a.importance.partial_cmp(&b.importance).unwrap_or(std::cmp::Ordering::Equal));
+            entries.sort_by(|a, b| {
+                a.importance
+                    .partial_cmp(&b.importance)
+                    .unwrap_or(std::cmp::Ordering::Equal)
+            });
             entries.remove(0);
         }
-        
+
         let id = entry.id.clone();
         entries.push(entry);
         Ok(id)
     }
-    
+
     /// Search by image embedding (k-NN)
-    pub async fn search_by_image_embedding(&self, query_embedding: &[f32], k: usize) -> MultimodalResult<Vec<ImageMemoryEntry>> {
+    pub async fn search_by_image_embedding(
+        &self,
+        query_embedding: &[f32],
+        k: usize,
+    ) -> MultimodalResult<Vec<ImageMemoryEntry>> {
         let entries = self.entries.read().await;
-        
+
         // Calculate similarities
         let mut scored: Vec<(f32, ImageMemoryEntry)> = entries
             .iter()
@@ -75,33 +83,38 @@ impl ImageMemoryStore {
                 (similarity, entry.clone())
             })
             .collect();
-        
+
         // Sort by similarity (descending)
         scored.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap_or(std::cmp::Ordering::Equal));
-        
+
         // Take top k
         Ok(scored.into_iter().take(k).map(|(_, entry)| entry).collect())
     }
-    
+
     /// Cross-modal search (text query → image results)
-    pub async fn search_cross_modal(&self, text_query: &str, text_embedding: &[f32], k: usize) -> MultimodalResult<Vec<ImageMemoryEntry>> {
+    pub async fn search_cross_modal(
+        &self,
+        text_query: &str,
+        text_embedding: &[f32],
+        k: usize,
+    ) -> MultimodalResult<Vec<ImageMemoryEntry>> {
         // Same as image search but using text embedding
         self.search_by_image_embedding(text_embedding, k).await
     }
-    
+
     /// Get by ID
     pub async fn get(&self, id: &str) -> Option<ImageMemoryEntry> {
         let entries = self.entries.read().await;
         entries.iter().find(|e| e.id == id).cloned()
     }
-    
+
     /// Remove by ID
     pub async fn remove(&self, id: &str) -> MultimodalResult<()> {
         let mut entries = self.entries.write().await;
         entries.retain(|e| e.id != id);
         Ok(())
     }
-    
+
     /// Get stats
     pub async fn stats(&self) -> (usize, usize) {
         let entries = self.entries.read().await;
@@ -131,7 +144,10 @@ impl ImageMemoryStore {
             entry.importance = importance.clamp(0.0, 1.0);
             Ok(())
         } else {
-            Err(MultimodalError::VisionError(format!("Image {} not found", id)))
+            Err(MultimodalError::VisionError(format!(
+                "Image {} not found",
+                id
+            )))
         }
     }
 
@@ -147,15 +163,15 @@ fn cosine_similarity(a: &[f32], b: &[f32]) -> f32 {
     if a.len() != b.len() {
         return 0.0;
     }
-    
+
     let dot: f32 = a.iter().zip(b.iter()).map(|(x, y)| x * y).sum();
     let norm_a: f32 = a.iter().map(|x| x * x).sum::<f32>().sqrt();
     let norm_b: f32 = b.iter().map(|x| x * x).sum::<f32>().sqrt();
-    
+
     if norm_a == 0.0 || norm_b == 0.0 {
         return 0.0;
     }
-    
+
     dot / (norm_a * norm_b)
 }
 
@@ -338,7 +354,11 @@ mod tests {
         let store = ImageMemoryStore::new(100);
         for i in 0..5 {
             store
-                .store_image(create_test_entry(&format!("img{}", i), vec![0.0; 512], vec![]))
+                .store_image(create_test_entry(
+                    &format!("img{}", i),
+                    vec![0.0; 512],
+                    vec![],
+                ))
                 .await
                 .expect("store_image should succeed");
         }

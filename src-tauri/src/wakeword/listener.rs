@@ -1,9 +1,9 @@
+use std::sync::atomic::{AtomicBool, Ordering};
 /**
  * 🎯 Wakeword Listener - Écoute passive continue pour détecter "TITANE"
  * Ultra-léger, <200ms latence, zéro envoi réseau
  */
 use std::sync::{Arc, Mutex};
-use std::sync::atomic::{AtomicBool, Ordering};
 use tokio::sync::mpsc;
 
 pub struct WakewordListener {
@@ -38,9 +38,9 @@ impl WakewordListener {
         }
 
         self.is_listening.store(true, Ordering::Relaxed);
-        
+
         println!("[Wakeword] Écoute passive activée - Attendant 'TITANE'...");
-        
+
         let is_listening = Arc::clone(&self.is_listening);
         let is_active = Arc::clone(&self.is_active);
         let trigger_tx = self.trigger_tx.clone();
@@ -58,21 +58,24 @@ impl WakewordListener {
                 // - Thread safety: Use crossbeam::channel to send audio chunks to detection thread
                 // - Error handling: Reconnect on device disconnect, fallback to mock on error
                 // let audio_buffer = capture_audio_chunk().await;
-                
+
                 // Simuler détection hotword (remplacer par vrai engine)
                 let detected = Self::detect_wakeword_mock(sensitivity).await;
-                
+
                 if let Some(trigger) = detected {
-                    println!("[Wakeword] ✅ DÉTECTÉ: '{}' (confidence: {:.2}%)", 
-                        trigger.keyword, trigger.confidence * 100.0);
-                    
+                    println!(
+                        "[Wakeword] ✅ DÉTECTÉ: '{}' (confidence: {:.2}%)",
+                        trigger.keyword,
+                        trigger.confidence * 100.0
+                    );
+
                     is_active.store(true, Ordering::Relaxed);
-                    
+
                     if let Err(e) = trigger_tx.send(trigger).await {
                         eprintln!("[Wakeword] Erreur envoi trigger: {}", e);
                     }
                 }
-                
+
                 tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
             }
         });
@@ -105,11 +108,14 @@ impl WakewordListener {
     /// Ajuster la sensibilité (0.0 - 1.0)
     pub fn set_sensitivity(&mut self, sensitivity: f32) {
         self.sensitivity = sensitivity.clamp(0.0, 1.0);
-        println!("[Wakeword] Sensibilité ajustée: {:.0}%", self.sensitivity * 100.0);
+        println!(
+            "[Wakeword] Sensibilité ajustée: {:.0}%",
+            self.sensitivity * 100.0
+        );
     }
 
     // ===== MOCK - À remplacer par vrai moteur =====
-    
+
     async fn detect_wakeword_mock(sensitivity: f32) -> Option<WakewordTrigger> {
         // Simuler détection aléatoire pour tests
         // Implementation: Replace with production-grade wakeword engines
@@ -123,10 +129,10 @@ impl WakewordListener {
         //   * Model: tiny.en (39MB) or base.en (74MB) for low latency
         //   * Accuracy: 98%+ but higher CPU usage (not ideal for continuous listening)
         // - Hybrid approach: Silero VAD (lightweight) → Porcupine (accurate) pipeline
-        
+
         use rand::Rng;
         let mut rng = rand::thread_rng();
-        
+
         // 1% chance de détecter le mot (pour simulation)
         if rng.gen_bool(0.01) {
             Some(WakewordTrigger {

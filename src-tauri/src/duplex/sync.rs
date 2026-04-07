@@ -1,9 +1,9 @@
+use std::sync::atomic::{AtomicBool, Ordering};
 /**
  * ⚡ Duplex Sync - Synchronisation entrée/sortie full duplex
  * Gère interruptions, atténuation automatique, coordination pipelines
  */
 use std::sync::{Arc, Mutex};
-use std::sync::atomic::{AtomicBool, Ordering};
 
 pub struct DuplexSync {
     is_user_speaking: Arc<AtomicBool>,
@@ -79,7 +79,8 @@ impl DuplexSync {
 
     /// Obtenir niveau atténuation (0.0-1.0)
     pub fn get_attenuation(&self) -> f32 {
-        self.attenuation_level.lock()
+        self.attenuation_level
+            .lock()
             .map(|level| *level)
             .unwrap_or(1.0) // Fallback sûr en cas d'erreur
     }

@@ -7,16 +7,17 @@ use std::collections::HashMap;
 pub fn generate_editorial_content(
     config: &GenerationConfig,
     template: &templates::Template,
-    params: HashMap<String, String>
+    params: HashMap<String, String>,
 ) -> Result<DocumentContent> {
-    let title = params.get("title")
+    let title = params
+        .get("title")
         .cloned()
         .unwrap_or_else(|| "Chapitre sans titre".to_string());
-    
+
     let editorial_type = determine_editorial_type(&config.doc_type);
     let executive_summary = generate_editorial_intro(&title, &editorial_type, &params);
     let objectives = extract_editorial_objectives(&params, &editorial_type);
-    
+
     let sections = match config.doc_type {
         DocumentType::BookChapter => generate_chapter_sections(&params, template),
         DocumentType::TrainingModule => generate_training_sections(&params, template),
@@ -24,7 +25,7 @@ pub fn generate_editorial_content(
         DocumentType::Guide => generate_guide_sections(&params, template),
         _ => generate_generic_editorial_sections(&params, template),
     }?;
-    
+
     Ok(DocumentContent {
         title,
         executive_summary,
@@ -55,10 +56,17 @@ enum EditorialType {
     Generic,
 }
 
-fn generate_editorial_intro(title: &str, editorial_type: &EditorialType, params: &HashMap<String, String>) -> String {
+fn generate_editorial_intro(
+    title: &str,
+    editorial_type: &EditorialType,
+    params: &HashMap<String, String>,
+) -> String {
     let context = params.get("context").map(|s| s.as_str()).unwrap_or("");
-    let target_audience = params.get("target_audience").map(|s| s.as_str()).unwrap_or("lecteurs");
-    
+    let target_audience = params
+        .get("target_audience")
+        .map(|s| s.as_str())
+        .unwrap_or("lecteurs");
+
     match editorial_type {
         EditorialType::Chapter => {
             format!(
@@ -98,14 +106,18 @@ fn generate_editorial_intro(title: &str, editorial_type: &EditorialType, params:
     }
 }
 
-fn extract_editorial_objectives(params: &HashMap<String, String>, editorial_type: &EditorialType) -> Vec<String> {
+fn extract_editorial_objectives(
+    params: &HashMap<String, String>,
+    editorial_type: &EditorialType,
+) -> Vec<String> {
     if let Some(objectives) = params.get("objectives") {
-        return objectives.split(';')
+        return objectives
+            .split(';')
             .map(|s| s.trim().to_string())
             .filter(|s| !s.is_empty())
             .collect();
     }
-    
+
     // Objectifs par défaut selon le type
     match editorial_type {
         EditorialType::Chapter => vec![
@@ -130,42 +142,46 @@ fn extract_editorial_objectives(params: &HashMap<String, String>, editorial_type
     }
 }
 
-fn generate_chapter_sections(params: &HashMap<String, String>, _template: &templates::Template) -> Result<Vec<Section>> {
+fn generate_chapter_sections(
+    params: &HashMap<String, String>,
+    _template: &templates::Template,
+) -> Result<Vec<Section>> {
     let mut sections = vec![];
-    
+
     // 1. Introduction forte
     sections.push(Section {
         id: "intro".to_string(),
         title: "Introduction".to_string(),
-        content: params.get("intro")
+        content: params
+            .get("intro")
             .cloned()
             .unwrap_or_else(|| generate_strong_opening(params)),
         subsections: vec![],
         level: 1,
     });
-    
+
     // 2. Concepts fondamentaux
     sections.push(Section {
         id: "concepts".to_string(),
         title: "Concepts Fondamentaux".to_string(),
-        content: params.get("concepts")
-            .cloned()
-            .unwrap_or_else(|| "Exploration des concepts clés qui structurent ce chapitre.".to_string()),
+        content: params.get("concepts").cloned().unwrap_or_else(|| {
+            "Exploration des concepts clés qui structurent ce chapitre.".to_string()
+        }),
         subsections: generate_concept_subsections(params),
         level: 1,
     });
-    
+
     // 3. Méthodologie / Framework
     sections.push(Section {
         id: "methodology".to_string(),
         title: "Méthodologie et Framework".to_string(),
-        content: params.get("methodology")
-            .cloned()
-            .unwrap_or_else(|| "Présentation du framework structuré pour appliquer ces concepts.".to_string()),
+        content: params.get("methodology").cloned().unwrap_or_else(|| {
+            "Présentation du framework structuré pour appliquer ces concepts.".to_string()
+        }),
         subsections: vec![],
         level: 1,
     });
-    
+
     // 4. Applications pratiques
     sections.push(Section {
         id: "applications".to_string(),
@@ -174,20 +190,25 @@ fn generate_chapter_sections(params: &HashMap<String, String>, _template: &templ
         subsections: generate_example_subsections(params),
         level: 1,
     });
-    
+
     // 5. Outils et ressources
     sections.push(Section {
         id: "tools".to_string(),
         title: "Outils et Ressources".to_string(),
-        content: params.get("tools")
-            .cloned()
-            .unwrap_or_else(|| "Ensemble d'outils pour faciliter l'application des concepts.".to_string()),
+        content: params.get("tools").cloned().unwrap_or_else(|| {
+            "Ensemble d'outils pour faciliter l'application des concepts.".to_string()
+        }),
         subsections: vec![],
         level: 1,
     });
-    
+
     // 6. Exercices pratiques
-    if params.contains_key("exercises") || params.get("include_exercises").map(|s| s == "true").unwrap_or(true) {
+    if params.contains_key("exercises")
+        || params
+            .get("include_exercises")
+            .map(|s| s == "true")
+            .unwrap_or(true)
+    {
         sections.push(Section {
             id: "exercises".to_string(),
             title: "Exercices Pratiques".to_string(),
@@ -196,7 +217,7 @@ fn generate_chapter_sections(params: &HashMap<String, String>, _template: &templ
             level: 1,
         });
     }
-    
+
     // 7. Synthèse
     sections.push(Section {
         id: "synthesis".to_string(),
@@ -205,22 +226,26 @@ fn generate_chapter_sections(params: &HashMap<String, String>, _template: &templ
         subsections: vec![],
         level: 1,
     });
-    
+
     // 8. Conclusion
     sections.push(Section {
         id: "conclusion".to_string(),
         title: "Conclusion".to_string(),
-        content: params.get("conclusion")
+        content: params
+            .get("conclusion")
             .cloned()
             .unwrap_or_else(|| generate_strong_conclusion(params)),
         subsections: vec![],
         level: 1,
     });
-    
+
     Ok(sections)
 }
 
-fn generate_training_sections(params: &HashMap<String, String>, _template: &templates::Template) -> Result<Vec<Section>> {
+fn generate_training_sections(
+    params: &HashMap<String, String>,
+    _template: &templates::Template,
+) -> Result<Vec<Section>> {
     Ok(vec![
         Section {
             id: "objectives".to_string(),
@@ -260,7 +285,10 @@ fn generate_training_sections(params: &HashMap<String, String>, _template: &temp
     ])
 }
 
-fn generate_article_sections(params: &HashMap<String, String>, _template: &templates::Template) -> Result<Vec<Section>> {
+fn generate_article_sections(
+    params: &HashMap<String, String>,
+    _template: &templates::Template,
+) -> Result<Vec<Section>> {
     Ok(vec![
         Section {
             id: "context".to_string(),
@@ -286,7 +314,10 @@ fn generate_article_sections(params: &HashMap<String, String>, _template: &templ
     ])
 }
 
-fn generate_guide_sections(params: &HashMap<String, String>, _template: &templates::Template) -> Result<Vec<Section>> {
+fn generate_guide_sections(
+    params: &HashMap<String, String>,
+    _template: &templates::Template,
+) -> Result<Vec<Section>> {
     Ok(vec![
         Section {
             id: "prerequisites".to_string(),
@@ -312,21 +343,25 @@ fn generate_guide_sections(params: &HashMap<String, String>, _template: &templat
     ])
 }
 
-fn generate_generic_editorial_sections(params: &HashMap<String, String>, template: &templates::Template) -> Result<Vec<Section>> {
+fn generate_generic_editorial_sections(
+    params: &HashMap<String, String>,
+    template: &templates::Template,
+) -> Result<Vec<Section>> {
     let mut sections = vec![];
-    
+
     for (idx, section_template) in template.sections.iter().enumerate() {
         sections.push(Section {
             id: format!("section_{}", idx + 1),
             title: section_template.title.clone(),
-            content: params.get(&section_template.id)
+            content: params
+                .get(&section_template.id)
                 .cloned()
                 .unwrap_or_else(|| section_template.default_content.clone()),
             subsections: vec![],
             level: 1,
         });
     }
-    
+
     Ok(sections)
 }
 
@@ -343,27 +378,23 @@ fn generate_strong_conclusion(_params: &HashMap<String, String>) -> String {
 }
 
 fn generate_concept_subsections(_params: &HashMap<String, String>) -> Vec<Section> {
-    vec![
-        Section {
-            id: "concept_1".to_string(),
-            title: "Premier concept fondamental".to_string(),
-            content: "Explication détaillée du premier concept.".to_string(),
-            subsections: vec![],
-            level: 2,
-        },
-    ]
+    vec![Section {
+        id: "concept_1".to_string(),
+        title: "Premier concept fondamental".to_string(),
+        content: "Explication détaillée du premier concept.".to_string(),
+        subsections: vec![],
+        level: 2,
+    }]
 }
 
 fn generate_example_subsections(_params: &HashMap<String, String>) -> Vec<Section> {
-    vec![
-        Section {
-            id: "example_1".to_string(),
-            title: "Exemple 1 : Application en contexte professionnel".to_string(),
-            content: "Description détaillée d'un cas d'application concret.".to_string(),
-            subsections: vec![],
-            level: 2,
-        },
-    ]
+    vec![Section {
+        id: "example_1".to_string(),
+        title: "Exemple 1 : Application en contexte professionnel".to_string(),
+        content: "Description détaillée d'un cas d'application concret.".to_string(),
+        subsections: vec![],
+        level: 2,
+    }]
 }
 
 fn generate_exercises(_params: &HashMap<String, String>) -> String {
@@ -372,7 +403,8 @@ fn generate_exercises(_params: &HashMap<String, String>) -> String {
     **Exercice 2 : Application pratique**\n\
     Dans votre contexte actuel, identifiez...\n\n\
     **Exercice 3 : Création d'un plan d'action**\n\
-    Élaborez un plan concret pour intégrer...".to_string()
+    Élaborez un plan concret pour intégrer..."
+        .to_string()
 }
 
 fn generate_training_exercises(_params: &HashMap<String, String>) -> String {
@@ -381,7 +413,8 @@ fn generate_training_exercises(_params: &HashMap<String, String>) -> String {
     **Exercice pratique 2**\n\
     À partir du cas présenté...\n\n\
     **Mini-projet**\n\
-    Réalisez une application complète...".to_string()
+    Réalisez une application complète..."
+        .to_string()
 }
 
 fn generate_synthesis(_params: &HashMap<String, String>) -> String {
@@ -394,7 +427,8 @@ fn generate_synthesis(_params: &HashMap<String, String>) -> String {
     1. Relire les sections essentielles\n\
     2. Compléter les exercices pratiques\n\
     3. Appliquer dans un contexte réel\n\
-    4. Approfondir avec les ressources complémentaires".to_string()
+    4. Approfondir avec les ressources complémentaires"
+        .to_string()
 }
 
 fn generate_editorial_annexes(_params: &HashMap<String, String>) -> Vec<Annex> {
@@ -415,12 +449,10 @@ fn generate_editorial_annexes(_params: &HashMap<String, String>) -> Vec<Annex> {
 }
 
 fn generate_editorial_references(_params: &HashMap<String, String>) -> Vec<Reference> {
-    vec![
-        Reference {
-            title: "Référence 1".to_string(),
-            source: "Source académique".to_string(),
-            url: None,
-            date: Some("2024".to_string()),
-        },
-    ]
+    vec![Reference {
+        title: "Référence 1".to_string(),
+        source: "Source académique".to_string(),
+        url: None,
+        date: Some("2024".to_string()),
+    }]
 }

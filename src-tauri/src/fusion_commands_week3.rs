@@ -9,8 +9,8 @@
 //
 // © 2026 Kevin Thibault / TITANE Team. Tous droits réservés.
 
-use serde::{Deserialize, Serialize};
 use chrono::Utc;
+use serde::{Deserialize, Serialize};
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & STRUCTURES
@@ -247,7 +247,8 @@ fn fusion_animate_avatar_internal(
         });
     }
 
-    let duration = compute_animation_duration(&request.lipsync.durations, &request.lipsync.timestamps);
+    let duration =
+        compute_animation_duration(&request.lipsync.durations, &request.lipsync.timestamps);
 
     Ok(AnimateAvatarResponse {
         success: true,
