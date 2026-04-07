@@ -135,12 +135,13 @@ impl StorageGuard {
             return Err("Path traversal detected (..)".into());
         }
 
-        // 3. Interdire chemins absolus (sauf si data_root)
+        // 3. Interdire chemins absolus/rootés hors sandbox
         let path = Path::new(relative_path);
-        if path.is_absolute() && !path.starts_with(&sandbox_root) {
+        let is_rooted_path = path.is_absolute() || path.has_root();
+        if is_rooted_path && !path.starts_with(&sandbox_root) {
             if self.policy.security_logging {
                 eprintln!(
-                    "[SECURITY:STORAGE] BLOCKED: Absolute path outside sandbox: {}",
+                    "[SECURITY:STORAGE] BLOCKED: Absolute/rooted path outside sandbox: {}",
                     relative_path
                 );
             }
@@ -148,14 +149,21 @@ impl StorageGuard {
         }
 
         // 4. Construction chemin complet
-        let full_path = if path.is_absolute() {
+        let full_path = if is_rooted_path {
             path.to_path_buf()
         } else {
-            self.data_root.join(relative_path)
+            sandbox_root.join(relative_path)
         };
 
         // 5. Vérification finale sandbox (si activé)
         if self.policy.fs_sandbox_enabled {
+            if !full_path.starts_with(&sandbox_root) {
+                return Err(format!(
+                    "Path escapes sandbox: {:?} not in {:?}",
+                    full_path, sandbox_root
+                ));
+            }
+
             // Tenter canonicalisation (résout symlinks, ..)
             // Note: échoue si le fichier n'existe pas encore, donc on vérifie aussi le parent
             let canonical = if full_path.exists() {
