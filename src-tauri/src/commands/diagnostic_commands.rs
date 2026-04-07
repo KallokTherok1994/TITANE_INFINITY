@@ -178,10 +178,7 @@ async fn check_internet_connectivity() -> InternetConnectivity {
     // Check DNS resolution
     let dns_resolvable = tokio::task::block_in_place(|| {
         tokio::runtime::Handle::current().block_on(async {
-            match std::net::ToSocketAddrs::to_socket_addrs("google.com:443") {
-                Ok(_) => true,
-                Err(_) => false,
-            }
+            std::net::ToSocketAddrs::to_socket_addrs("google.com:443").is_ok()
         })
     });
 
@@ -193,7 +190,7 @@ async fn check_internet_connectivity() -> InternetConnectivity {
         ("GitHub", "https://www.github.com"),
     ] {
         let start = std::time::Instant::now();
-        match gateway.head_status(*url).await {
+        match gateway.head_status(url).await {
             Ok(status) if (200..400).contains(&status) => {
                 let latency = start.elapsed().as_millis() as u64;
                 log::debug!("[Diagnostics] {} reachable ({} ms)", name, latency);

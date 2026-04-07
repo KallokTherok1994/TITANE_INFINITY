@@ -1211,7 +1211,7 @@ fn main() {
         .manage(titane_infinity::identity::commands::IdentityEngineState::default())
         // ✅ P2-002 AUDIT FIX (2026-03-06): AIChatState — required by ai_query, ai_query_streaming,
         //    get_conversation_history, and memory_* legacy commands
-        .manage(legacy_ai_bridge::AIChatState::default());
+        .manage(legacy_ai_bridge::AIChatState);
 
     // EXP FUSION ENGINE (XP/EXP UI)
     let builder = builder.manage(ExpFusionState::new());
@@ -1228,9 +1228,7 @@ fn main() {
     ));
     // PERSONA ENGINE — R9: PersonaEngine state for persona_* commands
     #[cfg(any(feature = "mock", not(feature = "full")))]
-    let builder = builder.manage(std::sync::Mutex::new(
-        persona_commands::PersonaEngine::default(),
-    ));
+    let builder = builder.manage(std::sync::Mutex::new(persona_commands::PersonaEngine));
     #[cfg(all(not(feature = "mock"), feature = "full"))]
     let builder = builder.manage(std::sync::Mutex::new(
         titane_infinity::system::persona_engine::PersonaEngine::default(),
@@ -1279,7 +1277,7 @@ fn main() {
                 log::info!("✅ AUTH OS v∞ initialized successfully");
             }
 
-            let option1_db_state = commands::db_commands::Option1DbAppState::try_new(&app.handle())
+            let option1_db_state = commands::db_commands::Option1DbAppState::try_new(app.handle())
                 .map_err(|err| format!("Option1 DB init failed: {}", err.message))?;
             app.manage(option1_db_state);
 

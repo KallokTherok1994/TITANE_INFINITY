@@ -65,7 +65,7 @@ impl DiscoveryService {
     /// Returns a `DiscoveryResult` with normalized, deduped, domain-locked URLs.
     pub fn discover(seed_url: &str, html_body: &str, max_pages: usize) -> DiscoveryResult {
         let seed_domain = extract_domain(seed_url).unwrap_or_else(|| seed_url.to_string());
-        let cap = max_pages.min(DISCOVERY_MAX_PAGES_HARD_CAP).max(1);
+        let cap = max_pages.clamp(1, DISCOVERY_MAX_PAGES_HARD_CAP);
 
         let raw_links = extract_links(html_body);
         let mut seen: HashSet<String> = HashSet::new();
@@ -167,9 +167,7 @@ fn extract_attr_value(rest: &str) -> String {
         rest[1..1 + end].trim().to_string()
     } else {
         // Unquoted value — ends at space, >, or >
-        let end = rest
-            .find(|c: char| c == ' ' || c == '>' || c == '\t' || c == '\n' || c == '"')
-            .unwrap_or(rest.len());
+        let end = rest.find([' ', '>', '\t', '\n', '"']).unwrap_or(rest.len());
         rest[..end].trim().to_string()
     }
 }

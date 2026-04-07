@@ -51,7 +51,7 @@ pub struct RagOutput {
 /// - No LLM, no network — EXTRACTIVE_FALLBACK strategy only
 /// - Citations: 1 per unique URL, excerpt ≤ 25 words
 pub fn generate_answer(query: &str, passages: &[RetrievedPassage], top_k: usize) -> RagOutput {
-    let k = top_k.min(DEFAULT_RAG_TOP_K).max(1);
+    let k = top_k.clamp(1, DEFAULT_RAG_TOP_K);
 
     // Sort by score descending
     let mut sorted = passages.to_vec();

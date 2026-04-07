@@ -14,7 +14,7 @@ use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::sync::Mutex;
 use tauri::{AppHandle, Manager, State};
 use uuid::Uuid;
@@ -644,6 +644,7 @@ pub async fn persistent_memory_get_context(
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// Écrire une entrée mémoire
+#[allow(clippy::too_many_arguments)]
 #[tauri::command]
 pub async fn persistent_memory_write_entry(
     state: State<'_, PersistentMemoryState>,
@@ -674,7 +675,7 @@ pub async fn persistent_memory_write_entry(
 
     // Auto-classification si non fourni
     let final_topic = topic.unwrap_or(MemoryTopic::General);
-    let final_importance = importance.unwrap_or(3).min(5).max(1);
+    let final_importance = importance.unwrap_or(3).clamp(1, 5);
     let final_content_type = content_type.unwrap_or(MemoryContentType::Message);
 
     let entry = PersistentMemoryEntry {
@@ -1382,7 +1383,7 @@ pub(crate) fn contains_sensitive_data(content: &str) -> bool {
 
 /// Sauvegarder une entrée dans un fichier
 pub(crate) fn save_entry_to_file(
-    base_path: &PathBuf,
+    base_path: &Path,
     level: &MemoryLevel,
     entry: PersistentMemoryEntry,
     encrypt: bool,
@@ -1433,7 +1434,7 @@ pub(crate) fn save_entry_to_file(
 }
 
 /// Charger les résumés
-fn load_summaries(base_path: &PathBuf) -> Result<Vec<MemorySummary>, String> {
+fn load_summaries(base_path: &Path) -> Result<Vec<MemorySummary>, String> {
     let path = base_path.join("summaries").join("summaries.json");
     if !path.exists() {
         return Ok(Vec::new());
@@ -1443,7 +1444,7 @@ fn load_summaries(base_path: &PathBuf) -> Result<Vec<MemorySummary>, String> {
 }
 
 /// Charger les bundles
-fn load_bundles(base_path: &PathBuf) -> Result<Vec<MemoryBundle>, String> {
+fn load_bundles(base_path: &Path) -> Result<Vec<MemoryBundle>, String> {
     let path = base_path.join("bundles").join("bundles.json");
     if !path.exists() {
         return Ok(Vec::new());

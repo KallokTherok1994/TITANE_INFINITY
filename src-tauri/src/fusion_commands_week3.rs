@@ -125,7 +125,7 @@ fn fusion_process_lipsync_internal(
     }
 
     let fps = request.fps.unwrap_or(60);
-    if fps < 15 || fps > 120 {
+    if !(15..=120).contains(&fps) {
         return Err("FPS must be 15-120".to_string());
     }
 
@@ -184,7 +184,7 @@ fn fusion_animate_avatar_internal(
     }
 
     let fps = request.fps.unwrap_or(60);
-    if fps < 15 || fps > 120 {
+    if !(15..=120).contains(&fps) {
         return Err("FPS must be 15-120".to_string());
     }
 
@@ -283,9 +283,8 @@ fn estimate_duration_ms(word_count: u32) -> u32 {
 
 fn build_phonemes(text: &str, intensity: f32, enable_smoothing: bool) -> Vec<LipSyncPhoneme> {
     let mut phonemes = Vec::new();
-    let mut index = 0;
 
-    for word in text.split_whitespace() {
+    for (index, word) in text.split_whitespace().enumerate() {
         let ch = word.chars().next().unwrap_or('m').to_ascii_lowercase();
         let (sound, viseme) = map_char_to_phoneme(ch);
         let base_intensity = if enable_smoothing {
@@ -301,7 +300,6 @@ fn build_phonemes(text: &str, intensity: f32, enable_smoothing: bool) -> Vec<Lip
             viseme,
             intensity: final_intensity,
         });
-        index += 1;
     }
 
     if phonemes.is_empty() {

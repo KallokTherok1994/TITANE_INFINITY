@@ -427,6 +427,7 @@ pub fn create_provider_decision(
 }
 
 /// Create SourceRow with automatic SHA256
+#[allow(clippy::too_many_arguments)]
 pub fn create_source(
     id: String,
     ts: i64,

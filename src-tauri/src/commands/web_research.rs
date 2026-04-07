@@ -91,18 +91,10 @@ const DEFAULT_SANDBOX_ROOT: &str = "data/research";
 // RAG CONTEXT (carries the P6 answer + citations across make_report call)
 // ─────────────────────────────────────────────────────────────────
 
+#[derive(Default)]
 struct RagContext {
     answer: Option<String>,
     citations: Vec<Citation>,
-}
-
-impl Default for RagContext {
-    fn default() -> Self {
-        RagContext {
-            answer: None,
-            citations: vec![],
-        }
-    }
 }
 
 // ─────────────────────────────────────────────────────────────────
