@@ -172,7 +172,9 @@ mod web_research_commands {
 }
 mod audio {
     // Audio types are used directly in audio/*.rs modules via titane_infinity::audio
-    
+    #[cfg(feature = "audio-capture")]
+    pub use titane_infinity::audio::{AudioConfig, AudioError, AudioResult};
+
     pub mod capture {
         include!("audio/capture.rs");
     }
