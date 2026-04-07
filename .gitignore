@@ -186,6 +186,8 @@ deployment/latest/certification/master_runs/
 deployment/latest/builds/target-run-*/
 deployment/latest/builds/target-p8/
 deployment/latest/builds/target-p9/
+deployment/latest/builds/pnpm-cache-*/
+deployment/latest/builds/.tools/
 /-
 
 # P1: WebResearch Engine sandbox — generated evidence reports (not committed)
