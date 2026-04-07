@@ -1,4 +1,4 @@
-name: TITANE∞ Release Pipeline v29.0.0
+name: TITANE∞ Release Pipeline v30.0.0
 
 on:
   push:

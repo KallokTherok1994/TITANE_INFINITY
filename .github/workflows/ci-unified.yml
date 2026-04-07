@@ -222,23 +222,28 @@ jobs:
           workspaces: src-tauri
           cache-on-failure: true
 
+      - name: 🎨 Cargo fmt check
+        working-directory: src-tauri
+        run: cargo fmt --all -- --check
+
       - name: ✔️ Cargo check
         working-directory: src-tauri
-        run: cargo check --verbose
+        run: cargo check --locked --verbose
 
       - name: Run Cargo tests
         working-directory: src-tauri
-        run: cargo test --verbose
+        run: cargo test --locked --verbose
 
       - name: Run Clippy (linter)
         working-directory: src-tauri
-        run: cargo clippy --all-targets --all-features -- -W clippy::all
+        run: cargo clippy --all-targets --all-features -- -D warnings
 
       - name: 📊 Summary
         if: always()
         run: |
           echo "## 🦀 Rust Backend Tests Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Cargo fmt check completed" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Cargo tests completed" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Clippy analysis completed" >> $GITHUB_STEP_SUMMARY
           echo "- Rust: ${{ env.RUST_VERSION }}" >> $GITHUB_STEP_SUMMARY
