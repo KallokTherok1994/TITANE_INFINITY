@@ -223,6 +223,7 @@ const AdminPageComponent: React.FC = () => {
       </motion.header>
 
       {/* Tab Navigation */}
+      <nav className="admin-tabs" role="tablist" aria-label="Onglets Admin">
       <nav className="admin-tabs" role="tablist" aria-label="Onglets Administration">
         {ADMIN_TABS.map(tab => (
           <button
@@ -235,13 +236,21 @@ const AdminPageComponent: React.FC = () => {
             className={`admin-tab ${activeTab === tab.id ? 'admin-tab--active' : ''}`}
             onClick={() => handleTabChange(tab.id)}
             title={tab.description}
+            role="tab"
+            aria-selected={activeTab === tab.id}
+            aria-controls={`admin-tabpanel-${tab.id}`}
+            id={`admin-tab-${tab.id}`}
           >
             <span className="admin-tab-icon" aria-hidden="true">
               {tab.icon}
             </span>
             <div className="admin-tab-content">
               <span className="admin-tab-label">{tab.label}</span>
-              {tab.badge && <span className="admin-tab-badge">{tab.badge}</span>}
+              {tab.badge && (
+                <span className="admin-tab-badge" aria-hidden="true">
+                  {tab.badge}
+                </span>
+              )}
             </div>
           </button>
         ))}
@@ -264,6 +273,9 @@ const AdminPageComponent: React.FC = () => {
             exit="exit"
             transition={{ duration: 0.2 }}
             className="admin-content-wrapper"
+            role="tabpanel"
+            id={`admin-tabpanel-${activeTab}`}
+            aria-labelledby={`admin-tab-${activeTab}`}
           >
             <TabContent tab={activeTab} />
           </motion.div>
