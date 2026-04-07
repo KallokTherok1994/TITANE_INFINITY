@@ -205,7 +205,6 @@ function GovernanceCenterPageContent(): JSX.Element {
       {/* Onglets */}
       <nav
         role="tablist"
-        aria-label="Onglets Gouvernance"
         aria-label="Onglets Gouvernance & Sécurité"
         style={{
           display: 'flex',
@@ -224,10 +223,6 @@ function GovernanceCenterPageContent(): JSX.Element {
             aria-controls={`gov-tabpanel-${tab.id}`}
             id={`gov-tab-${tab.id}`}
             onClick={() => governance.setActiveTab(tab.id)}
-            role="tab"
-            aria-selected={governance.activeTab === tab.id}
-            aria-controls={`gov-tabpanel-${tab.id}`}
-            id={`gov-tab-${tab.id}`}
             style={{
               display: 'flex',
               alignItems: 'center',
