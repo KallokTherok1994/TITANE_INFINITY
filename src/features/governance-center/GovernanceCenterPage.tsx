@@ -204,6 +204,9 @@ function GovernanceCenterPageContent(): JSX.Element {
 
       {/* Onglets */}
       <nav
+        role="tablist"
+        aria-label="Onglets Gouvernance"
+        aria-label="Onglets Gouvernance & Sécurité"
         style={{
           display: 'flex',
           gap: '4px',
@@ -216,7 +219,15 @@ function GovernanceCenterPageContent(): JSX.Element {
         {GOVERNANCE_TABS.map(tab => (
           <button
             key={tab.id}
+            role="tab"
+            aria-selected={governance.activeTab === tab.id}
+            aria-controls={`gov-tabpanel-${tab.id}`}
+            id={`gov-tab-${tab.id}`}
             onClick={() => governance.setActiveTab(tab.id)}
+            role="tab"
+            aria-selected={governance.activeTab === tab.id}
+            aria-controls={`gov-tabpanel-${tab.id}`}
+            id={`gov-tab-${tab.id}`}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -234,7 +245,7 @@ function GovernanceCenterPageContent(): JSX.Element {
               transition: 'all 0.2s',
             }}
           >
-            <span>{tab.icon}</span>
+            <span aria-hidden="true">{tab.icon}</span>
             <span>{tab.label}</span>
           </button>
         ))}
@@ -243,6 +254,7 @@ function GovernanceCenterPageContent(): JSX.Element {
       {/* Erreur globale */}
       {governance.error && (
         <div
+          role="alert"
           style={{
             padding: '12px 16px',
             borderRadius: '8px',
@@ -256,6 +268,7 @@ function GovernanceCenterPageContent(): JSX.Element {
           <span>❌ {governance.error}</span>
           <button
             onClick={() => governance.setError(null)}
+            aria-label="Fermer l'erreur"
             style={{
               background: 'none',
               border: 'none',
@@ -270,7 +283,12 @@ function GovernanceCenterPageContent(): JSX.Element {
       )}
 
       {/* Contenu de l'onglet */}
-      <main style={{ flex: 1, minHeight: 0, overflow: 'auto' }}>
+      <main
+        role="tabpanel"
+        id={`gov-tabpanel-${governance.activeTab}`}
+        aria-labelledby={`gov-tab-${governance.activeTab}`}
+        style={{ flex: 1, minHeight: 0, overflow: 'auto' }}
+      >
         {governance.loading &&
         governance.activeTab === 'secrets' &&
         !governance.geminiStatus ? (
@@ -316,6 +334,7 @@ function GovernanceCenterPageContent(): JSX.Element {
         <button
           onClick={governance.refreshAll}
           disabled={governance.loading}
+          aria-label="Actualiser toutes les données"
           style={{
             background: 'none',
             border: 'none',
