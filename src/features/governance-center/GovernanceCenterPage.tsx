@@ -206,6 +206,7 @@ function GovernanceCenterPageContent(): JSX.Element {
       <nav
         role="tablist"
         aria-label="Onglets Gouvernance"
+        aria-label="Onglets Gouvernance & Sécurité"
         style={{
           display: 'flex',
           gap: '4px',
@@ -218,6 +219,10 @@ function GovernanceCenterPageContent(): JSX.Element {
         {GOVERNANCE_TABS.map(tab => (
           <button
             key={tab.id}
+            role="tab"
+            aria-selected={governance.activeTab === tab.id}
+            aria-controls={`gov-tabpanel-${tab.id}`}
+            id={`gov-tab-${tab.id}`}
             onClick={() => governance.setActiveTab(tab.id)}
             role="tab"
             aria-selected={governance.activeTab === tab.id}
