@@ -61,7 +61,6 @@ jobs:
         uses: actions/setup-node@v4.1.0
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
 
       - name: 🔧 Enable Corepack (pnpm)
         run: corepack enable
@@ -112,7 +111,7 @@ jobs:
       - name: 📤 Upload Linux artifacts
         uses: actions/upload-artifact@v6
         with:
-          name: linux-x86_64-${{ github.ref_name }}
+          name: linux-x86_64-${{ github.event.inputs.tag || github.ref_name }}
           path: |
             src-tauri/target/release/bundle/deb/*.deb
             src-tauri/target/release/bundle/appimage/*.AppImage
@@ -148,7 +147,6 @@ jobs:
         uses: actions/setup-node@v4.1.0
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
 
       - name: 🔧 Enable Corepack (pnpm)
         run: corepack enable
@@ -196,7 +194,7 @@ jobs:
       - name: 📤 Upload Windows artifacts
         uses: actions/upload-artifact@v6
         with:
-          name: windows-x86_64-${{ github.ref_name }}
+          name: windows-x86_64-${{ github.event.inputs.tag || github.ref_name }}
           path: |
             src-tauri/target/release/bundle/msi/*.msi
             src-tauri/target/release/bundle/msi/SHA256SUMS.txt
@@ -238,7 +236,6 @@ jobs:
         uses: actions/setup-node@v4.1.0
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
 
       - name: 🔧 Enable Corepack (pnpm)
         run: corepack enable
@@ -278,7 +275,7 @@ jobs:
       - name: 📤 Upload macOS artifacts
         uses: actions/upload-artifact@v6
         with:
-          name: macos-${{ matrix.target }}-${{ github.ref_name }}
+          name: macos-${{ matrix.target }}-${{ github.event.inputs.tag || github.ref_name }}
           path: |
             src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg
             src-tauri/target/${{ matrix.target }}/release/bundle/dmg/SHA256SUMS.txt
@@ -322,7 +319,7 @@ jobs:
       - name: 📝 Generate release notes
         id: release_notes
         run: |
-          VERSION="${GITHUB_REF#refs/tags/}"
+          VERSION="${{ github.event.inputs.tag || github.ref_name }}"
           FILE="RELEASE_NOTES_${VERSION}.md"
           if [ -f "$FILE" ]; then
             cp "$FILE" release_notes.md
@@ -340,7 +337,7 @@ jobs:
       - name: 🚀 Create GitHub Release
         uses: softprops/action-gh-release@v2.2.0
         with:
-          name: TITANE∞ ${{ github.ref_name }}
+          name: TITANE∞ ${{ github.event.inputs.tag || github.ref_name }}
           body_path: release_notes.md
           draft: false
           prerelease: false
@@ -359,8 +356,8 @@ jobs:
         run: |
           echo "### 🎉 Release Created Successfully!" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Version:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
-          echo "**URL:** https://github.com/${{ github.repository }}/releases/tag/${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ github.event.inputs.tag || github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** https://github.com/${{ github.repository }}/releases/tag/${{ github.event.inputs.tag || github.ref_name }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Artifacts included:**" >> $GITHUB_STEP_SUMMARY
           find artifacts/ -type f \( -name "*.deb" -o -name "*.AppImage" -o -name "*.msi" -o -name "*.dmg" \) 2>/dev/null | wc -l | xargs echo "- Total files:" >> $GITHUB_STEP_SUMMARY || echo "- Files: 0" >> $GITHUB_STEP_SUMMARY
