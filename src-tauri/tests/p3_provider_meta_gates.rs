@@ -1,9 +1,9 @@
 use std::fs;
 use std::path::PathBuf;
-use std::sync::{Arc, Mutex, OnceLock};
+use std::sync::{Arc, OnceLock};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
-use tokio::sync::RwLock;
+use tokio::sync::{Mutex, MutexGuard, RwLock};
 
 use titane_infinity::ai::router::AIRouter;
 use titane_infinity::conversation_engine::types::{
@@ -14,11 +14,8 @@ use titane_infinity::singularity::singularity_state::SingularityState;
 
 static TEST_LOCK: OnceLock<Mutex<()>> = OnceLock::new();
 
-fn test_lock() -> std::sync::MutexGuard<'static, ()> {
-    TEST_LOCK
-        .get_or_init(|| Mutex::new(()))
-        .lock()
-        .expect("test lock poisoned")
+async fn test_lock() -> MutexGuard<'static, ()> {
+    TEST_LOCK.get_or_init(|| Mutex::new(())).lock().await
 }
 
 struct EnvGuard {
@@ -135,9 +132,7 @@ fn assert_meta(meta: &ProviderDecisionMeta) {
 
 #[tokio::test]
 async fn test_p3_ar20_meta_x3() {
-    {
-        let _lock = test_lock();
-    }
+    let _lock = test_lock().await;
     let _offline = EnvGuard::set("OFFLINE_SIM", "1");
 
     for run in 1..=3 {
@@ -151,9 +146,7 @@ async fn test_p3_ar20_meta_x3() {
 
 #[tokio::test]
 async fn test_p3_offline5_offlinesim_x3() {
-    {
-        let _lock = test_lock();
-    }
+    let _lock = test_lock().await;
     let _offline = EnvGuard::set("OFFLINE_SIM", "1");
 
     for run in 1..=3 {
@@ -196,9 +189,7 @@ async fn test_p3_offline5_offlinesim_x3() {
 
 #[tokio::test]
 async fn test_p3_stability_burst_x3() {
-    {
-        let _lock = test_lock();
-    }
+    let _lock = test_lock().await;
     let _offline = EnvGuard::set("OFFLINE_SIM", "1");
 
     for run in 1..=3 {
@@ -236,9 +227,7 @@ async fn test_p3_stability_burst_x3() {
 
 #[tokio::test]
 async fn test_p3_determinism_signature_x3() {
-    {
-        let _lock = test_lock();
-    }
+    let _lock = test_lock().await;
     let _offline = EnvGuard::set("OFFLINE_SIM", "1");
 
     let engine = build_engine();
