@@ -21,8 +21,8 @@
 use tauri::{Listener, Manager};
 
 // TITANE∞ command modules
-use std::sync::Arc;
 use std::process::{Command as ProcessCommand, Stdio};
+use std::sync::Arc;
 
 // EXP Fusion Engine (used by frontend XP/EXP UI)
 use crate::commands::exp_fusion::ExpFusionState;
@@ -103,21 +103,41 @@ mod persona_commands {
 
 #[cfg(any(feature = "mock", not(feature = "full")))]
 mod persona_commands {
-    use tauri::State;
     use std::sync::Mutex;
+    use tauri::State;
     #[derive(Default)]
     pub struct PersonaEngine;
     pub type PersonaMutex = Mutex<PersonaEngine>;
     #[tauri::command]
-    pub async fn persona_get_state(_engine: State<'_, PersonaMutex>) -> Result<serde_json::Value, String> { Ok(serde_json::json!({})) }
+    pub async fn persona_get_state(
+        _engine: State<'_, PersonaMutex>,
+    ) -> Result<serde_json::Value, String> {
+        Ok(serde_json::json!({}))
+    }
     #[tauri::command]
-    pub async fn persona_get_multipliers(_engine: State<'_, PersonaMutex>) -> Result<serde_json::Value, String> { Ok(serde_json::json!({})) }
+    pub async fn persona_get_multipliers(
+        _engine: State<'_, PersonaMutex>,
+    ) -> Result<serde_json::Value, String> {
+        Ok(serde_json::json!({}))
+    }
     #[tauri::command]
-    pub async fn persona_react(_engine: State<'_, PersonaMutex>, _event: String) -> Result<serde_json::Value, String> { Ok(serde_json::json!({})) }
+    pub async fn persona_react(
+        _engine: State<'_, PersonaMutex>,
+        _event: String,
+    ) -> Result<serde_json::Value, String> {
+        Ok(serde_json::json!({}))
+    }
     #[tauri::command]
-    pub async fn persona_update(_engine: State<'_, PersonaMutex>, _data: serde_json::Value) -> Result<(), String> { Ok(()) }
+    pub async fn persona_update(
+        _engine: State<'_, PersonaMutex>,
+        _data: serde_json::Value,
+    ) -> Result<(), String> {
+        Ok(())
+    }
     #[tauri::command]
-    pub async fn persona_reset(_engine: State<'_, PersonaMutex>) -> Result<(), String> { Ok(()) }
+    pub async fn persona_reset(_engine: State<'_, PersonaMutex>) -> Result<(), String> {
+        Ok(())
+    }
 }
 
 // Agenda commands (agenda_load_events, agenda_save_events, agenda_delete_event)
@@ -324,8 +344,8 @@ mod commands {
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 mod legacy_ai_bridge {
     pub use titane_infinity::commands::ai_chat::{
-        ai_query, ai_query_streaming, clear_all_memory, create_conversation,
-        delete_conversation, list_conversations, AIChatState,
+        ai_query, ai_query_streaming, clear_all_memory, create_conversation, delete_conversation,
+        list_conversations, AIChatState,
     };
     pub use titane_infinity::commands::engine_commands::{
         engine_get_cognition_state, engine_get_evolution_state, engine_get_harmonia_state,
@@ -337,6 +357,9 @@ mod legacy_ai_bridge {
         memory_set,
     };
     // [FIX-016] Real engines/vector_store handlers (full mode)
+    pub use titane_infinity::api::vector_store_api::{
+        check_sqlite_available, vector_store_delete, vector_store_insert, vector_store_update,
+    };
     pub use titane_infinity::commands::engines_commands::{
         engines_build_cancel, engines_build_clean, engines_build_get_result,
         engines_build_get_status, engines_build_start, engines_devmode_analyze_file,
@@ -344,9 +367,6 @@ mod legacy_ai_bridge {
         engines_devmode_disable, engines_devmode_enable, engines_devmode_get_history,
         engines_devmode_get_state, engines_devmode_preview, engines_devmode_restore_backup,
         engines_devmode_rollback, engines_devmode_validate_patch, engines_monitoring_get_health,
-    };
-    pub use titane_infinity::api::vector_store_api::{
-        check_sqlite_available, vector_store_delete, vector_store_insert, vector_store_update,
     };
     // [FIX-016] Real runtime state commands (always-available real implementations)
     pub use titane_infinity::ai::ollama::{
@@ -356,10 +376,10 @@ mod legacy_ai_bridge {
         ai_status, chat_mode_change, chat_mode_sync, clear_event_stream, clear_memory_cache,
         clear_system_logs, conversation_reset, get_engine_health, get_engines_status,
         get_event_stream, get_persistence_status, get_system_logs, log_entries,
-        memory_delete_entry, memory_get_all_keys, memory_get_entry, memory_scan, multi_ai_get_state,
-        restart_cores, run_system_diagnostic, selfheal_force_evaluation, selfheal_get_health,
-        selfheal_get_prediction, selfheal_get_state, test_ai_local, titan_state_get,
-        toggle_safe_mode, toggle_singularity, xp_get_state, xp_sync_state,
+        memory_delete_entry, memory_get_all_keys, memory_get_entry, memory_scan,
+        multi_ai_get_state, restart_cores, run_system_diagnostic, selfheal_force_evaluation,
+        selfheal_get_health, selfheal_get_prediction, selfheal_get_state, test_ai_local,
+        titan_state_get, toggle_safe_mode, toggle_singularity, xp_get_state, xp_sync_state,
     };
 }
 
@@ -417,7 +437,10 @@ mod legacy_ai_bridge {
                 "tokens": 0,
             }),
         );
-        Ok(serde_json::json!({ "response_id": response_id, "status": "streaming_complete" }).to_string())
+        Ok(
+            serde_json::json!({ "response_id": response_id, "status": "streaming_complete" })
+                .to_string(),
+        )
     }
 
     #[tauri::command]
@@ -447,32 +470,44 @@ mod legacy_ai_bridge {
     }
 
     #[tauri::command]
-    pub async fn engine_get_nexus_state(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+    pub async fn engine_get_nexus_state(
+        _state: State<'_, AIChatState>,
+    ) -> Result<serde_json::Value, String> {
         Ok(serde_json::json!({ "health": "mock" }))
     }
 
     #[tauri::command]
-    pub async fn engine_get_harmonia_state(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+    pub async fn engine_get_harmonia_state(
+        _state: State<'_, AIChatState>,
+    ) -> Result<serde_json::Value, String> {
         Ok(serde_json::json!({ "health": "mock" }))
     }
 
     #[tauri::command]
-    pub async fn engine_get_sentinel_state(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+    pub async fn engine_get_sentinel_state(
+        _state: State<'_, AIChatState>,
+    ) -> Result<serde_json::Value, String> {
         Ok(serde_json::json!({ "health": "mock" }))
     }
 
     #[tauri::command]
-    pub async fn engine_get_cognition_state(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+    pub async fn engine_get_cognition_state(
+        _state: State<'_, AIChatState>,
+    ) -> Result<serde_json::Value, String> {
         Ok(serde_json::json!({ "health": "mock" }))
     }
 
     #[tauri::command]
-    pub async fn engine_get_singularity_state(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+    pub async fn engine_get_singularity_state(
+        _state: State<'_, AIChatState>,
+    ) -> Result<serde_json::Value, String> {
         Ok(serde_json::json!({ "health": "mock" }))
     }
 
     #[tauri::command]
-    pub async fn engine_get_evolution_state(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+    pub async fn engine_get_evolution_state(
+        _state: State<'_, AIChatState>,
+    ) -> Result<serde_json::Value, String> {
         Ok(serde_json::json!({ "status": "mock" }))
     }
 
@@ -485,7 +520,9 @@ mod legacy_ai_bridge {
     // SingularityMonitor polls these every 1s; without them every tick logs an error.
     // Stubs return honest DEGRADED/empty values (not mocked as healthy).
     #[tauri::command]
-    pub async fn engine_metrics(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+    pub async fn engine_metrics(
+        _state: State<'_, AIChatState>,
+    ) -> Result<serde_json::Value, String> {
         Ok(serde_json::json!({
             "ticks": 0u64,
             "stability": 0.5f32,
@@ -497,12 +534,16 @@ mod legacy_ai_bridge {
     }
 
     #[tauri::command]
-    pub async fn engine_health(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+    pub async fn engine_health(
+        _state: State<'_, AIChatState>,
+    ) -> Result<serde_json::Value, String> {
         Ok(serde_json::json!({ "status": "Degraded" }))
     }
 
     #[tauri::command]
-    pub async fn engine_modules(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+    pub async fn engine_modules(
+        _state: State<'_, AIChatState>,
+    ) -> Result<serde_json::Value, String> {
         Ok(serde_json::json!([]))
     }
 
@@ -510,7 +551,9 @@ mod legacy_ai_bridge {
     // Real handlers in commands/engines_commands.rs use crate::engines which can't be included
     // from main.rs context. Stubs return honest DEGRADED data until engines module is wired.
     #[tauri::command]
-    pub async fn engines_monitoring_get_metrics(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+    pub async fn engines_monitoring_get_metrics(
+        _state: State<'_, AIChatState>,
+    ) -> Result<serde_json::Value, String> {
         Ok(serde_json::json!({
             "cpu_usage": 0.0,
             "ram_usage": 0.0,
@@ -523,7 +566,9 @@ mod legacy_ai_bridge {
     }
 
     #[tauri::command]
-    pub async fn engines_monitoring_get_dashboard(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+    pub async fn engines_monitoring_get_dashboard(
+        _state: State<'_, AIChatState>,
+    ) -> Result<serde_json::Value, String> {
         Ok(serde_json::json!({
             "status": "degraded",
             "engines": [],
@@ -539,7 +584,9 @@ mod legacy_ai_bridge {
     }
 
     #[tauri::command]
-    pub async fn system_recovery(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+    pub async fn system_recovery(
+        _state: State<'_, AIChatState>,
+    ) -> Result<serde_json::Value, String> {
         Ok(serde_json::json!({ "success": false, "reason": "system_recovery_not_wired" }))
     }
 
@@ -808,25 +855,47 @@ mod meta_mode_commands {
     #[derive(Default)]
     pub struct MetaModeState;
     impl MetaModeState {
-        pub fn new() -> Self { Self }
+        pub fn new() -> Self {
+            Self
+        }
     }
 
     #[tauri::command]
-    pub async fn meta_mode_process(_request: serde_json::Value) -> Result<serde_json::Value, String> {
-        Ok(serde_json::json!({"active_mode":"STANDARD","content":"[mock]","mode_justification":"mock","adapted_tone":"neutral","adapted_depth":"normal","adapted_speed":"normal"}))
+    pub async fn meta_mode_process(
+        _request: serde_json::Value,
+    ) -> Result<serde_json::Value, String> {
+        Ok(
+            serde_json::json!({"active_mode":"STANDARD","content":"[mock]","mode_justification":"mock","adapted_tone":"neutral","adapted_depth":"normal","adapted_speed":"normal"}),
+        )
     }
     #[tauri::command]
-    pub async fn meta_mode_get_current_mode() -> Result<String, String> { Ok("STANDARD".into()) }
+    pub async fn meta_mode_get_current_mode() -> Result<String, String> {
+        Ok("STANDARD".into())
+    }
     #[tauri::command]
-    pub async fn meta_mode_list_modes() -> Result<Vec<String>, String> { Ok(vec!["STANDARD".into()]) }
+    pub async fn meta_mode_list_modes() -> Result<Vec<String>, String> {
+        Ok(vec!["STANDARD".into()])
+    }
     #[tauri::command]
-    pub async fn meta_mode_get_history() -> Result<Vec<String>, String> { Ok(vec![]) }
+    pub async fn meta_mode_get_history() -> Result<Vec<String>, String> {
+        Ok(vec![])
+    }
     #[tauri::command]
-    pub async fn meta_mode_get_stats(_state: State<'_, MetaModeState>) -> Result<serde_json::Value, String> { Ok(serde_json::json!({})) }
+    pub async fn meta_mode_get_stats(
+        _state: State<'_, MetaModeState>,
+    ) -> Result<serde_json::Value, String> {
+        Ok(serde_json::json!({}))
+    }
     #[tauri::command]
-    pub async fn meta_mode_reset(_state: State<'_, MetaModeState>) -> Result<String, String> { Ok("ok".into()) }
+    pub async fn meta_mode_reset(_state: State<'_, MetaModeState>) -> Result<String, String> {
+        Ok("ok".into())
+    }
     #[tauri::command]
-    pub async fn meta_mode_get_kevin_state(_state: State<'_, MetaModeState>) -> Result<serde_json::Value, String> { Ok(serde_json::json!({})) }
+    pub async fn meta_mode_get_kevin_state(
+        _state: State<'_, MetaModeState>,
+    ) -> Result<serde_json::Value, String> {
+        Ok(serde_json::json!({}))
+    }
 }
 
 // Multi-Agents Commands v19.5.2 - Agent permissions management
@@ -863,8 +932,8 @@ mod utils;
 mod avatar;
 
 // System Center v∞ (Diagnostics, DevTools, Cluster)
-use titane_infinity::system_center;
 use titane_infinity::design_center;
+use titane_infinity::system_center;
 
 // Cognitive system (always available)
 use titane_infinity::cognitive::{
@@ -896,15 +965,15 @@ use titane_infinity::ai::orchestrator_multi::OrchestratorState;
 // Use persistence module from lib.rs (includes all commands)
 use titane_infinity::persistence;
 use titane_infinity::time_commands; // FIX-011
-// [FIX-013] Bulk handler registrations
-use titane_infinity::memory_evolution;
+                                    // [FIX-013] Bulk handler registrations
 use titane_infinity::cloud;
 use titane_infinity::cluster;
-use titane_infinity::hyper_intelligence;
-use titane_infinity::meta_orchestrator;
 use titane_infinity::evolution;
+use titane_infinity::hyper_intelligence;
 use titane_infinity::introspection;
 use titane_infinity::knowledge;
+use titane_infinity::memory_evolution;
+use titane_infinity::meta_orchestrator;
 
 /// Cognitive System State (v16)
 pub struct CognitiveSystemState {
@@ -1147,21 +1216,31 @@ fn main() {
     // EXP FUSION ENGINE (XP/EXP UI)
     let builder = builder.manage(ExpFusionState::new());
     // NUMERIC TWIN ENGINE — TWINS_AUDIT 2026-03-15 (RC-002 fix)
-    let builder = builder.manage(titane_infinity::numeric_twin::twin_commands::NumericTwinState::default());
+    let builder =
+        builder.manage(titane_infinity::numeric_twin::twin_commands::NumericTwinState::default());
     // META-MODE ENGINE — R7 fix: register state so meta_mode_* commands can resolve
     let builder = builder.manage(meta_mode_commands::MetaModeState::new());
     // AUTO-EVOLUTION ENGINE — R8 unlock: needed by run_evolution/quick_health_check
     let builder = builder.manage(titane_infinity::engine::AutoEvolutionEngine::new());
     // EVOLUTION ENGINE COMMANDS — R9: EvolutionState for evolution_start/stop etc.
-    let builder = builder.manage(std::sync::Mutex::new(titane_infinity::evolution::evolution_commands::EvolutionEngineStore::new()));
+    let builder = builder.manage(std::sync::Mutex::new(
+        titane_infinity::evolution::evolution_commands::EvolutionEngineStore::new(),
+    ));
     // PERSONA ENGINE — R9: PersonaEngine state for persona_* commands
     #[cfg(any(feature = "mock", not(feature = "full")))]
-    let builder = builder.manage(std::sync::Mutex::new(persona_commands::PersonaEngine::default()));
+    let builder = builder.manage(std::sync::Mutex::new(
+        persona_commands::PersonaEngine::default(),
+    ));
     #[cfg(all(not(feature = "mock"), feature = "full"))]
-    let builder = builder.manage(std::sync::Mutex::new(titane_infinity::system::persona_engine::PersonaEngine::default()));
+    let builder = builder.manage(std::sync::Mutex::new(
+        titane_infinity::system::persona_engine::PersonaEngine::default(),
+    ));
     // [FIX-014] States required by newly-registered commands
-    let builder = builder.manage(titane_infinity::singularity::singularity_commands::SingularityStateGlobal::default());
-    let builder = builder.manage(titane_infinity::adaptive::adaptive_commands::AdaptiveEngineGlobal::new());
+    let builder = builder.manage(
+        titane_infinity::singularity::singularity_commands::SingularityStateGlobal::default(),
+    );
+    let builder =
+        builder.manage(titane_infinity::adaptive::adaptive_commands::AdaptiveEngineGlobal::new());
     let builder = builder.manage(titane_infinity::overdrive::memory_engine::init());
     let builder = builder.manage(titane_infinity::fusion::FusionEngineState::default());
 

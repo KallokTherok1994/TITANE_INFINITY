@@ -63,11 +63,7 @@ impl DiscoveryService {
     /// - `max_pages`: Maximum URLs to return (budget gate)
     ///
     /// Returns a `DiscoveryResult` with normalized, deduped, domain-locked URLs.
-    pub fn discover(
-        seed_url: &str,
-        html_body: &str,
-        max_pages: usize,
-    ) -> DiscoveryResult {
+    pub fn discover(seed_url: &str, html_body: &str, max_pages: usize) -> DiscoveryResult {
         let seed_domain = extract_domain(seed_url).unwrap_or_else(|| seed_url.to_string());
         let cap = max_pages.min(DISCOVERY_MAX_PAGES_HARD_CAP).max(1);
 
@@ -127,7 +123,10 @@ fn extract_links(html: &str) -> Vec<String> {
 
     while pos < lower.len() {
         // Find next <a
-        if let Some(tag_start) = lower[pos..].find("<a ").or_else(|| lower[pos..].find("<a\t")) {
+        if let Some(tag_start) = lower[pos..]
+            .find("<a ")
+            .or_else(|| lower[pos..].find("<a\t"))
+        {
             let tag_abs = pos + tag_start;
             // Find href= within the tag
             if let Some(href_pos) = lower[tag_abs..].find("href=") {
@@ -183,7 +182,11 @@ fn resolve_url(base: &str, href: &str) -> String {
     }
     // Protocol-relative
     if href.starts_with("//") {
-        let scheme = if base.starts_with("https://") { "https:" } else { "http:" };
+        let scheme = if base.starts_with("https://") {
+            "https:"
+        } else {
+            "http:"
+        };
         return format!("{}{}", scheme, href);
     }
     // Absolute path
@@ -260,10 +263,42 @@ fn is_non_html_extension(url: &str) -> bool {
     let ext = path.rsplit('.').next().unwrap_or("").to_lowercase();
     matches!(
         ext.as_str(),
-        "pdf" | "zip" | "gz" | "tar" | "jpg" | "jpeg" | "png" | "gif" | "webp" | "svg" | "ico"
-            | "mp4" | "mp3" | "avi" | "mkv" | "ogg" | "webm" | "woff" | "woff2" | "ttf"
-            | "eot" | "otf" | "css" | "js" | "json" | "xml" | "csv" | "xlsx" | "docx" | "pptx"
-            | "exe" | "dmg" | "deb" | "rpm" | "apk" | "bin"
+        "pdf"
+            | "zip"
+            | "gz"
+            | "tar"
+            | "jpg"
+            | "jpeg"
+            | "png"
+            | "gif"
+            | "webp"
+            | "svg"
+            | "ico"
+            | "mp4"
+            | "mp3"
+            | "avi"
+            | "mkv"
+            | "ogg"
+            | "webm"
+            | "woff"
+            | "woff2"
+            | "ttf"
+            | "eot"
+            | "otf"
+            | "css"
+            | "js"
+            | "json"
+            | "xml"
+            | "csv"
+            | "xlsx"
+            | "docx"
+            | "pptx"
+            | "exe"
+            | "dmg"
+            | "deb"
+            | "rpm"
+            | "apk"
+            | "bin"
     )
 }
 
@@ -392,10 +427,7 @@ mod tests {
             .iter()
             .map(|href| format!(r#"<a href="{}">link</a>"#, href))
             .collect();
-        format!(
-            "<html><body>{}</body></html>",
-            anchors.join("\n")
-        )
+        format!("<html><body>{}</body></html>", anchors.join("\n"))
     }
 
     // ── G_DISCOVERY_BUDGET_ENFORCED ───────────────────────────────
@@ -415,7 +447,10 @@ mod tests {
             "Budget not enforced: got {} urls, expected <= 2",
             result.urls.len()
         );
-        assert!(result.budget_enforced, "budget_enforced must be true when candidates > max_pages");
+        assert!(
+            result.budget_enforced,
+            "budget_enforced must be true when candidates > max_pages"
+        );
     }
 
     // ── G_DISCOVERY_DOMAIN_LOCK ───────────────────────────────────
@@ -540,7 +575,10 @@ mod tests {
         let xml = r#"<?xml version="1.0"?><urlset><url><loc>https://example.com/page</loc></url></urlset>"#;
         let result = parse_sitemap_urls(xml, "example.com", 10);
         assert_eq!(result.format, "sitemap");
-        assert!(result.urls.is_empty(), "Sitemap must be empty when feature disabled");
+        assert!(
+            result.urls.is_empty(),
+            "Sitemap must be empty when feature disabled"
+        );
     }
 
     #[test]
@@ -552,9 +590,17 @@ mod tests {
             <url><loc>https://other.com/page</loc></url>
         </urlset>"#;
         let result = parse_sitemap_urls(xml, "example.com", 10);
-        assert_eq!(result.urls.len(), 2, "Only same-domain URLs should be included");
-        assert!(result.urls.contains(&"https://example.com/page-a".to_string()));
-        assert!(result.urls.contains(&"https://example.com/page-b".to_string()));
+        assert_eq!(
+            result.urls.len(),
+            2,
+            "Only same-domain URLs should be included"
+        );
+        assert!(result
+            .urls
+            .contains(&"https://example.com/page-a".to_string()));
+        assert!(result
+            .urls
+            .contains(&"https://example.com/page-b".to_string()));
         std::env::remove_var("ENABLE_DISCOVERY_SITEMAP");
     }
 
@@ -581,7 +627,10 @@ mod tests {
         std::env::remove_var("ENABLE_DISCOVERY_RSS");
         let xml = r#"<rss version="2.0"><channel><item><link>https://example.com/news</link></item></channel></rss>"#;
         let result = parse_rss_urls(xml, "example.com", 10);
-        assert!(result.urls.is_empty(), "RSS must be empty when feature disabled");
+        assert!(
+            result.urls.is_empty(),
+            "RSS must be empty when feature disabled"
+        );
     }
 
     #[test]

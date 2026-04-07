@@ -21,7 +21,7 @@
 //
 // ═══════════════════════════════════════════════════════════════
 
-use rusqlite::{Connection, Result as SqliteResult, params};
+use rusqlite::{params, Connection, Result as SqliteResult};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::path::PathBuf;
@@ -95,7 +95,7 @@ impl DbService {
     /// Create new DbService with schema initialization
     pub fn new(db_path: PathBuf) -> SqliteResult<Self> {
         let conn = Connection::open(db_path)?;
-        
+
         // Create tables (idempotent)
         conn.execute_batch(
             r#"
@@ -265,7 +265,7 @@ impl DbService {
         let mut stmt = conn.prepare(
             "SELECT id, ts, session_id, kind, payload_json, sha256 FROM events WHERE session_id = ?1 ORDER BY ts DESC LIMIT ?2"
         )?;
-        
+
         let rows = stmt.query_map(params![session_id, limit], |row| {
             Ok(EventRow {
                 id: row.get(0)?,
@@ -290,7 +290,7 @@ impl DbService {
         let mut stmt = conn.prepare(
             "SELECT id, ts, session_id, summary_fr, state_json, sha256 FROM snapshots WHERE session_id = ?1 ORDER BY ts DESC LIMIT 1"
         )?;
-        
+
         let mut rows = stmt.query(params![session_id])?;
         if let Some(row) = rows.next()? {
             Ok(Some(SnapshotRow {
@@ -312,7 +312,7 @@ impl DbService {
         let mut stmt = conn.prepare(
             "SELECT id, ts, session_id, provider, url, title, snippet, retrieved_at, sha256 FROM sources WHERE session_id = ?1 ORDER BY ts DESC LIMIT ?2"
         )?;
-        
+
         let rows = stmt.query_map(params![session_id, limit], |row| {
             Ok(SourceRow {
                 id: row.get(0)?,
@@ -340,7 +340,7 @@ impl DbService {
         let mut stmt = conn.prepare(
             "SELECT id, ts, session_id, class, detail_json, sha256 FROM failures WHERE session_id = ?1 ORDER BY ts DESC LIMIT ?2"
         )?;
-        
+
         let rows = stmt.query_map(params![session_id, limit], |row| {
             Ok(FailureRow {
                 id: row.get(0)?,
@@ -510,7 +510,7 @@ mod tests {
     #[test]
     fn test_db_service_insert_and_get() -> SqliteResult<()> {
         let db = DbService::new(PathBuf::from(":memory:"))?;
-        
+
         let event = create_event(
             "evt_test".to_string(),
             get_timestamp_ms(),
@@ -611,7 +611,7 @@ mod tests {
         // This test documents that UPDATE is not provided in the API
         // (no update method exists)
         let db = DbService::new(PathBuf::from(":memory:"))?;
-        
+
         let event = create_event(
             "evt_immutable".to_string(),
             get_timestamp_ms(),

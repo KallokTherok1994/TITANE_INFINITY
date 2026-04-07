@@ -38,8 +38,12 @@ impl Option1SyncService {
 
         let db_state = self.db.state();
         let gate = db_state.try_enter()?;
-        let has_url = std::env::var("TURSO_DATABASE_URL").ok().filter(|v| !v.is_empty());
-        let has_token = std::env::var("TURSO_AUTH_TOKEN").ok().filter(|v| !v.is_empty());
+        let has_url = std::env::var("TURSO_DATABASE_URL")
+            .ok()
+            .filter(|v| !v.is_empty());
+        let has_token = std::env::var("TURSO_AUTH_TOKEN")
+            .ok()
+            .filter(|v| !v.is_empty());
 
         if has_url.is_none() || has_token.is_none() {
             let err = DbError::new(
@@ -50,7 +54,10 @@ impl Option1SyncService {
             self.db.update_sync_meta_guarded(
                 &gate,
                 false,
-                Some(json!({"code": err.code, "message": err.message, "details": err.details}).to_string()),
+                Some(
+                    json!({"code": err.code, "message": err.message, "details": err.details})
+                        .to_string(),
+                ),
             )?;
 
             if let Ok(mut s) = self.status.lock() {

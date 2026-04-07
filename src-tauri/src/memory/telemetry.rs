@@ -25,7 +25,10 @@ pub fn resolve_memory_dir() -> PathBuf {
         };
 
         E2E_GUARD_LOG.call_once(|| {
-            log::info!("[E2E Guard] TITANE_E2E=1 -> memory dir: {}", resolved.display());
+            log::info!(
+                "[E2E Guard] TITANE_E2E=1 -> memory dir: {}",
+                resolved.display()
+            );
         });
 
         return resolved;
@@ -82,9 +85,7 @@ fn is_truthy_env(var_name: &str) -> bool {
 }
 
 fn e2e_guard_dir() -> PathBuf {
-    env::temp_dir()
-        .join("titane-infinity")
-        .join("memory-e2e")
+    env::temp_dir().join("titane-infinity").join("memory-e2e")
 }
 
 fn is_disallowed_e2e_dir(path: &Path) -> bool {
@@ -271,7 +272,10 @@ mod tests {
             .lock()
             .expect("ENV_LOCK mutex should not be poisoned");
         let custom_dir = env::temp_dir().join("titane_e2e_custom");
-        std::env::set_var("TITANE_MEMORY_DIR", custom_dir.to_string_lossy().to_string());
+        std::env::set_var(
+            "TITANE_MEMORY_DIR",
+            custom_dir.to_string_lossy().to_string(),
+        );
         std::env::set_var("TITANE_E2E", "true");
 
         let dir = resolve_memory_dir();
@@ -287,7 +291,10 @@ mod tests {
             .lock()
             .expect("ENV_LOCK mutex should not be poisoned");
         let default_dir = fallback_memory_dir();
-        std::env::set_var("TITANE_MEMORY_DIR", default_dir.to_string_lossy().to_string());
+        std::env::set_var(
+            "TITANE_MEMORY_DIR",
+            default_dir.to_string_lossy().to_string(),
+        );
         std::env::set_var("TITANE_E2E", "yes");
 
         let dir = resolve_memory_dir();

@@ -44,10 +44,7 @@ pub fn rerank_passages(
         return vec![];
     }
 
-    let input: Vec<&RetrievedPassage> = candidates
-        .iter()
-        .take(VECTOR_RERANK_INPUT_SIZE)
-        .collect();
+    let input: Vec<&RetrievedPassage> = candidates.iter().take(VECTOR_RERANK_INPUT_SIZE).collect();
 
     let query_tokens = tokenize(query);
     let query_tf = term_frequencies(&query_tokens);
@@ -132,7 +129,8 @@ fn compute_idf(corpus: &[Vec<String>]) -> HashMap<String, f32> {
 fn tfidf_vector(tf: &HashMap<String, f32>, idf: &HashMap<String, f32>) -> HashMap<String, f32> {
     tf.iter()
         .filter_map(|(term, &tf_val)| {
-            idf.get(term).map(|&idf_val| (term.clone(), tf_val * idf_val))
+            idf.get(term)
+                .map(|&idf_val| (term.clone(), tf_val * idf_val))
         })
         .collect()
 }
@@ -180,8 +178,16 @@ mod tests {
         // rerank_passages is pure — no network calls by construction.
         // This test validates determinism (same inputs → same outputs).
         let passages = vec![
-            make_passage("https://a.com/p", "TITANE vector rerank alpha beta gamma", 3),
-            make_passage("https://b.com/p", "research engine local index delta epsilon", 2),
+            make_passage(
+                "https://a.com/p",
+                "TITANE vector rerank alpha beta gamma",
+                3,
+            ),
+            make_passage(
+                "https://b.com/p",
+                "research engine local index delta epsilon",
+                2,
+            ),
             make_passage("https://c.com/p", "TITANE alpha gamma zeta", 5),
         ];
         let r1 = rerank_passages("TITANE alpha", &passages, 2);
@@ -199,7 +205,13 @@ mod tests {
     #[test]
     fn g_rerank_returns_top_k() {
         let passages: Vec<RetrievedPassage> = (0..10)
-            .map(|i| make_passage(&format!("https://x.com/p{}", i), &format!("text passage {}", i), i))
+            .map(|i| {
+                make_passage(
+                    &format!("https://x.com/p{}", i),
+                    &format!("text passage {}", i),
+                    i,
+                )
+            })
             .collect();
         let result = rerank_passages("text passage", &passages, 3);
         assert!(result.len() <= 3, "rerank must return at most top_k");

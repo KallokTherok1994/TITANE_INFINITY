@@ -3,8 +3,8 @@
 // Governed network access with allowlist, budgets, timeouts.
 // ═══════════════════════════════════════════════════════════════
 
-use crate::services::network_policy::{check_domain, extract_domain, AppliedPolicy, PolicyError};
 use crate::core::http_types::{Client, Policy};
+use crate::services::network_policy::{check_domain, extract_domain, AppliedPolicy, PolicyError};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::collections::HashMap;
@@ -48,7 +48,9 @@ impl std::fmt::Display for NetworkGatewayError {
             NetworkGatewayError::RequestBudgetExceeded(msg) => {
                 write!(f, "RequestBudgetExceeded: {}", msg)
             }
-            NetworkGatewayError::ByteBudgetExceeded(msg) => write!(f, "ByteBudgetExceeded: {}", msg),
+            NetworkGatewayError::ByteBudgetExceeded(msg) => {
+                write!(f, "ByteBudgetExceeded: {}", msg)
+            }
             NetworkGatewayError::NetworkError(msg) => write!(f, "NetworkError: {}", msg),
             NetworkGatewayError::SerializationError(msg) => {
                 write!(f, "SerializationError: {}", msg)
@@ -353,9 +355,15 @@ impl NetworkGatewayService {
     pub async fn telemetry(&self) -> HashMap<String, String> {
         let runtime = self.runtime.lock().await;
         let mut map = HashMap::new();
-        map.insert("requests_used".to_string(), runtime.requests_used.to_string());
+        map.insert(
+            "requests_used".to_string(),
+            runtime.requests_used.to_string(),
+        );
         map.insert("bytes_used".to_string(), runtime.bytes_used.to_string());
-        map.insert("max_requests".to_string(), self.policy.max_requests.to_string());
+        map.insert(
+            "max_requests".to_string(),
+            self.policy.max_requests.to_string(),
+        );
         map.insert(
             "max_bytes_total".to_string(),
             self.policy.max_bytes_total.to_string(),
@@ -429,7 +437,10 @@ mod tests {
             512,
         );
 
-        assert_eq!(meta.url, "https://api.search.brave.com/res/v1/web/search?q=rust");
+        assert_eq!(
+            meta.url,
+            "https://api.search.brave.com/res/v1/web/search?q=rust"
+        );
         assert_eq!(meta.domain.as_deref(), Some("api.search.brave.com"));
         assert_eq!(meta.method, "GET");
         assert_eq!(meta.status_code, 200);

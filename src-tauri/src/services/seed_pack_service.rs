@@ -175,7 +175,10 @@ mod tests {
 
     #[test]
     fn g_p12_seed_pack_valid_json() {
-        let json = sample_pack_json("test-pack", &["https://example.com/a", "https://example.com/b"]);
+        let json = sample_pack_json(
+            "test-pack",
+            &["https://example.com/a", "https://example.com/b"],
+        );
         let result = SeedPackService::from_json(&json);
         assert!(result.is_ok(), "Valid pack should load: {:?}", result.err());
         let r = result.unwrap();
