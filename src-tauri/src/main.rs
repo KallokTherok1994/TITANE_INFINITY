@@ -913,9 +913,6 @@ mod fusion;
 
 mod ollama;
 
-// Onboarding System v19.5.2 (Phase 1 - Quick Wins)
-mod onboarding;
-
 // Configuration Management System v19.5.2 (Phase 2 - Configuration Hub)
 pub mod config;
 
@@ -1261,7 +1258,6 @@ fn main() {
     let builder = builder.manage(titane_infinity::overdrive::chat_orchestrator::init());
 
     builder
-        .manage(std::sync::Mutex::new(onboarding::OnboardingState::default()))
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
         .setup(move |app| {
@@ -2211,11 +2207,6 @@ fn main() {
             persistence::commands::titan_memory_doctor_compact,
             persistence::commands::titan_memory_doctor_export,
 
-            // Onboarding commands
-            onboarding::is_onboarding_complete,
-            onboarding::complete_onboarding,
-            onboarding::get_onboarding_preferences,
-
             // Fusion Backend Commands (Week 1)
             fusion_commands_week1::fusion_activate_modules,
             fusion_commands_week1::fusion_adjust_styles,
@@ -2697,9 +2688,6 @@ fn main() {
 
             // overdrive::memory_engine — MemoryEngineState now managed
             titane_infinity::overdrive::memory_engine::memory_search,
-
-            // onboarding — OnboardingState already managed
-            onboarding::reset_onboarding,
 
             // [FIX-014] NO_HANDLER stubs (legacy_ai_bridge)
             legacy_ai_bridge::agenda_save_event,

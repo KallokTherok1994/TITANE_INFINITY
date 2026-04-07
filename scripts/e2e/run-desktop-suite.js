@@ -26,6 +26,10 @@ const WDIO_CONFIG = path.resolve(ROOT, 'wdio.desktop.conf.cjs');
 const TAURI_BINARY_PATH = process.env.TAURI_BINARY_PATH || '';
 const WDIO_SPEC = process.env.WDIO_SPEC || '';
 const E2E_FORCE_LOCAL_PROVIDER = process.env.E2E_FORCE_LOCAL_PROVIDER !== '0';
+const E2E_OLLAMA_MODEL = process.env.TITANE_E2E_OLLAMA_MODEL || 'gemma2:2b';
+const E2E_OLLAMA_REQUEST_TIMEOUT_SECS = process.env.OLLAMA_REQUEST_TIMEOUT_SECS || '90';
+const E2E_AI_VERIFY_RESPONSE_TIMEOUT_MS =
+  process.env.AI_VERIFY_RESPONSE_TIMEOUT_MS || '150000';
 
 await fs.mkdir(REPORTS, { recursive: true });
 await fs.writeFile(DIAG_LOG, '');
@@ -145,6 +149,9 @@ await appendDiag(`TAURI_BINARY_PATH: ${TAURI_BINARY_PATH || '<unset>'}`);
 await appendDiag(
   `FORCE_LOCAL_PROVIDER for desktop E2E: ${E2E_FORCE_LOCAL_PROVIDER ? 'enabled' : 'disabled'}`
 );
+await appendDiag(
+  `E2E Ollama profile: model=${E2E_OLLAMA_MODEL} requestTimeout=${E2E_OLLAMA_REQUEST_TIMEOUT_SECS}s responseTimeout=${E2E_AI_VERIFY_RESPONSE_TIMEOUT_MS}ms`
+);
 await appendDiag(`tauri-driver args: ${['tauri-driver', ...tauriArgs].join(' ')}`);
 
 const nativePolicy = resolveNativeBinaryPolicy({
@@ -184,6 +191,10 @@ if (WDIO_SPEC) {
 await appendDiag(`wdio command: pnpm ${wdioArgs.join(' ')}`);
 const wdio = spawnLogged('pnpm', wdioArgs, WDIO_LOG, {
   ...(E2E_FORCE_LOCAL_PROVIDER ? { FORCE_LOCAL_PROVIDER: '1' } : {}),
+  TITANE_E2E_OLLAMA_MODEL: E2E_OLLAMA_MODEL,
+  OLLAMA_DEFAULT_MODEL: E2E_OLLAMA_MODEL,
+  OLLAMA_REQUEST_TIMEOUT_SECS: E2E_OLLAMA_REQUEST_TIMEOUT_SECS,
+  AI_VERIFY_RESPONSE_TIMEOUT_MS: E2E_AI_VERIFY_RESPONSE_TIMEOUT_MS,
 });
 
 const shutdown = () => {

@@ -140,15 +140,6 @@
               "command": "boot_marker_log"
             },
             {
-              "command": "is_onboarding_complete"
-            },
-            {
-              "command": "complete_onboarding"
-            },
-            {
-              "command": "get_onboarding_preferences"
-            },
-            {
               "command": "get_helios_state"
             },
             {

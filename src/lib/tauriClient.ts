@@ -611,13 +611,6 @@ class TauriClient {
     );
   }
 
-  async completeOnboarding(params?: unknown): Promise<unknown> {
-    return await this.invoke(
-      TAURI_COMMANDS.COMPLETE_ONBOARDING,
-      (params as Record<string, unknown>) || {}
-    );
-  }
-
   async confirmSelfHealingAction(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.CONFIRM_SELF_HEALING_ACTION,
@@ -1210,13 +1203,6 @@ class TauriClient {
   async getModuleHealth(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.GET_MODULE_HEALTH,
-      (params as Record<string, unknown>) || {}
-    );
-  }
-
-  async getOnboardingPreferences(params?: unknown): Promise<unknown> {
-    return await this.invoke(
-      TAURI_COMMANDS.GET_ONBOARDING_PREFERENCES,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -2120,13 +2106,6 @@ class TauriClient {
   async resetMemory(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.RESET_MEMORY,
-      (params as Record<string, unknown>) || {}
-    );
-  }
-
-  async resetOnboarding(params?: unknown): Promise<unknown> {
-    return await this.invoke(
-      TAURI_COMMANDS.RESET_ONBOARDING,
       (params as Record<string, unknown>) || {}
     );
   }

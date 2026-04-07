@@ -30,7 +30,6 @@ const clearBrowserModeFlags = (): void => {
   localStorage.removeItem('titane_ollama_enabled');
   localStorage.removeItem('titane_auto_backup_enabled');
   localStorage.removeItem('titane_auto_audit_enabled');
-  localStorage.removeItem('titane_onboarding_complete');
   localStorage.removeItem('titane_security_mode');
   localStorage.removeItem('titane_restrictions_disabled');
 };
@@ -55,7 +54,6 @@ export const configureBrowserMode = (): void => {
     localStorage.setItem('titane_auto_audit_enabled', '1');
 
     // Nettoyer les anciens drapeaux fail-open issus du fallback navigateur legacy.
-    localStorage.removeItem('titane_onboarding_complete');
     localStorage.removeItem('titane_security_mode');
     localStorage.removeItem('titane_restrictions_disabled');
   }

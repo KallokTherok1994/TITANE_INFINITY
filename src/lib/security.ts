@@ -1137,9 +1137,6 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // CONVERSATIONS (v24.4+)
   // ═══════════════════════════════════════════════════════════════
   'delete_conversation',
-  'complete_onboarding',
-  'is_onboarding_complete',
-  'get_onboarding_preferences',
 
   // ═══════════════════════════════════════════════════════════════
   // OMEGA CONVERSATION ENGINE (v30.0.0)

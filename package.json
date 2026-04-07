@@ -302,7 +302,7 @@
       "diff@>=6.0.0 <8.0.3": ">=8.0.3",
       "source-map@0.8.0-beta.0": ">=0.7.4",
       "sourcemap-codec@1.4.8": ">=1.4.8",
-      "minimatch@9.0.9>brace-expansion": "5.0.5",
+      "minimatch@9.0.9>brace-expansion": "2.0.3",
       "picomatch@<2.3.2": ">=2.3.2",
       "picomatch@>=4.0.0 <4.0.4": ">=4.0.4",
       "serialize-javascript@<7.0.5": ">=7.0.5",

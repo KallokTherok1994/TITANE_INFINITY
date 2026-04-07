@@ -74,7 +74,12 @@ const AI_VERIFY_SCRIPT_TIMEOUT_MS = parsePositiveInt(
 
 const AI_VERIFY_RESPONSE_TIMEOUT_MS = parsePositiveInt(
   process.env.AI_VERIFY_RESPONSE_TIMEOUT_MS,
-  90000
+  150000
+);
+
+const AI_VERIFY_SEND_READY_TIMEOUT_MS = parsePositiveInt(
+  process.env.AI_VERIFY_SEND_READY_TIMEOUT_MS,
+  8000
 );
 
 const AI_VERIFY_MAX_CONSECUTIVE_ERRORS = parsePositiveInt(
@@ -354,6 +359,48 @@ async function getMessageCount(selector) {
   return browser.execute(sel => document.querySelectorAll(sel).length, selector);
 }
 
+async function waitForSendPathReady(selectors, prompt) {
+  await browser.waitUntil(
+    async () => {
+      const inputState = await browser.execute(
+        (inputSelector, sendSelector) => {
+          const input = document.querySelector(inputSelector);
+          if (!input) return { value: null, ready: false };
+
+          const value = typeof input.value === 'string' ? input.value : '';
+          const send = sendSelector ? document.querySelector(sendSelector) : null;
+          const disabled = send
+            ? send.hasAttribute('disabled') ||
+              send.getAttribute('aria-disabled') === 'true'
+            : false;
+
+          return {
+            value,
+            ready: value.trim().length > 0 && !disabled,
+          };
+        },
+        selectors.input,
+        selectors.send
+      );
+
+      if (String(prompt || '').trim().length === 0) {
+        return inputState?.value === '';
+      }
+
+      return (
+        inputState?.ready &&
+        typeof inputState.value === 'string' &&
+        inputState.value.trim() === String(prompt).trim()
+      );
+    },
+    {
+      timeout: AI_VERIFY_SEND_READY_TIMEOUT_MS,
+      interval: 150,
+      timeoutMsg: 'chat input did not activate send path after value injection',
+    }
+  );
+}
+
 async function sendPrompt(selectors, prompt) {
   try {
     if (!selectors) {
@@ -377,12 +424,31 @@ async function sendPrompt(selectors, prompt) {
       (sel, value) => {
         const el = document.querySelector(sel);
         if (!el) return;
-        const setter = Object.getOwnPropertyDescriptor(
-          window.HTMLTextAreaElement.prototype,
-          'value'
-        )?.set;
-        setter?.call(el, value);
-        el.dispatchEvent(new Event('input', { bubbles: true }));
+
+        const normalized = String(value ?? '');
+        const proto =
+          window.HTMLTextAreaElement?.prototype || window.HTMLInputElement?.prototype;
+        const setter = proto ? Object.getOwnPropertyDescriptor(proto, 'value')?.set : null;
+
+        if (setter) {
+          setter.call(el, normalized);
+        } else {
+          el.value = normalized;
+        }
+
+        try {
+          el.dispatchEvent(
+            new InputEvent('input', {
+              bubbles: true,
+              composed: true,
+              data: normalized,
+              inputType: 'insertText',
+            })
+          );
+        } catch {
+          el.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+
         el.dispatchEvent(new Event('change', { bubbles: true }));
         el.focus();
       },
@@ -390,45 +456,53 @@ async function sendPrompt(selectors, prompt) {
       prompt
     );
 
+    try {
+      await waitForSendPathReady(selectors, prompt);
+    } catch (error) {
+      return {
+        prompt,
+        response: null,
+        error: error?.message || 'CHAT_SEND_PATH_NOT_READY',
+      };
+    }
+
     const sendTriggered = await browser.execute(
       (inputSelector, sendSelector) => {
         const input = document.querySelector(inputSelector);
-        const send = document.querySelector(sendSelector);
+        const send = sendSelector ? document.querySelector(sendSelector) : null;
         if (send) {
           const disabled =
             send.hasAttribute('disabled') ||
             send.getAttribute('aria-disabled') === 'true';
           if (!disabled) {
-            send.dispatchEvent(
-              new MouseEvent('click', {
-                bubbles: true,
-                cancelable: true,
-                composed: true,
-              })
-            );
+            try {
+              send.click();
+            } catch {
+              send.dispatchEvent(
+                new MouseEvent('click', {
+                  bubbles: true,
+                  cancelable: true,
+                  composed: true,
+                })
+              );
+            }
             return true;
           }
         }
 
         if (!input) return false;
-        const down = new KeyboardEvent('keydown', {
+        const keyConfig = {
           key: 'Enter',
           code: 'Enter',
           keyCode: 13,
           which: 13,
           bubbles: true,
           cancelable: true,
-        });
-        const up = new KeyboardEvent('keyup', {
-          key: 'Enter',
-          code: 'Enter',
-          keyCode: 13,
-          which: 13,
-          bubbles: true,
-          cancelable: true,
-        });
-        input.dispatchEvent(down);
-        input.dispatchEvent(up);
+        };
+        input.focus();
+        input.dispatchEvent(new KeyboardEvent('keydown', keyConfig));
+        input.dispatchEvent(new KeyboardEvent('keypress', keyConfig));
+        input.dispatchEvent(new KeyboardEvent('keyup', keyConfig));
         return true;
       },
       selectors.input,

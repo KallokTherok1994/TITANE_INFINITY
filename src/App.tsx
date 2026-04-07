@@ -15,9 +15,9 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import React, { useEffect, useState, Suspense, lazy, useCallback } from 'react';
+import React, { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { secureInvoke } from '@/lib/security';
+
 import { useLivingEngines } from './hooks';
 import { logger } from './lib/logger';
 import { ThemeProvider } from './themes/ThemeProvider';
@@ -41,7 +41,6 @@ import {
 import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 // ✨ OPT-10: autoAuditEngine lazy-loaded below (removed static import)
 import { TitaneLogo } from './components/branding/TitaneLogo'; // ✨ v∞ - Logo Reactor
-import { OnboardingFlow } from './components/Onboarding'; // ✨ v19.5.2 - User Onboarding System
 import { PageLoadingFallback } from './ui/components/PageLoadingFallback'; // ✨ v19.5.2 - Enhanced loading
 // ✨ OPT-10: initializeMicroInteractions lazy-loaded below (removed static import)
 import { ToastContainer } from './ui/components/Toast'; // ✨ v19.5.2 - Toast notifications
@@ -289,93 +288,6 @@ const AppRouter: React.FC = () => {
   // ✨ Sprint 6 Phase 3 - Keyboard zoom controls (Ctrl+Plus/Minus/0)
   useZoomControl();
 
-  // ✨ v19.5.2 - User Onboarding State
-  // 🔧 vΩ.3 PROD-BOOT FIX: Override checkingOnboarding to false ALWAYS to prevent loader hang
-  // 🧪 E2E MODE: Skip carousel in dev mode (port 1420 = E2E tests OR dev server)
-  const isDev = import.meta.env.DEV;
-  const [onboardingComplete, setOnboardingComplete] = useState<boolean>(isDev);
-  const [checkingOnboarding, setCheckingOnboarding] = useState<boolean>(false);
-
-  // Garder le rendu non bloquant sans forcer un faux état "complete" hors mode dev explicite.
-  useEffect(() => {
-    setCheckingOnboarding(false);
-
-    if (isDev) {
-      logger.info('Dev mode detected - bypassing onboarding check', {
-        component: 'App',
-      });
-      setOnboardingComplete(true);
-      return;
-    }
-
-    let onboardingResolved = false;
-
-    const checkOnboarding = async () => {
-      try {
-        if (typeof localStorage !== 'undefined') {
-          const browserModeFlag = localStorage.getItem('titane_browser_mode') === '1';
-          const browserMode = browserModeFlag && !isTauriRuntimeAvailable();
-
-          if (browserModeFlag && !browserMode) {
-            localStorage.removeItem('titane_browser_mode');
-          }
-
-          if (browserMode) {
-            const localComplete =
-              localStorage.getItem('titane_onboarding_complete') === '1';
-            logger.info('Onboarding status (browser mode)', {
-              component: 'Onboarding',
-              status: localComplete ? 'Complete' : 'Not started',
-            });
-            onboardingResolved = true;
-            setOnboardingComplete(localComplete);
-            return;
-          }
-        }
-
-        const isComplete = await secureInvoke<boolean>('is_onboarding_complete');
-        logger.info('Onboarding status (Tauri mode)', {
-          component: 'Onboarding',
-          status: isComplete ? 'Complete' : 'Not started',
-        });
-        onboardingResolved = true;
-        setOnboardingComplete(isComplete);
-      } catch (error) {
-        logger.warn('Failed to check onboarding status; keeping onboarding required', {
-          component: 'Onboarding',
-          error,
-        });
-        onboardingResolved = true;
-        setOnboardingComplete(false);
-      }
-    };
-
-    const timeoutDuration =
-      typeof window !== 'undefined' &&
-      localStorage.getItem('titane_browser_mode') === '1' &&
-      !isTauriRuntimeAvailable()
-        ? 1000
-        : 5000;
-
-    const timeoutId = setTimeout(() => {
-      if (onboardingResolved) {
-        return;
-      }
-
-      logger.warn('Onboarding check timeout; keeping onboarding required', {
-        component: 'Onboarding',
-      });
-      onboardingResolved = true;
-      setOnboardingComplete(false);
-    }, timeoutDuration);
-
-    void checkOnboarding();
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, []);
-
   useAppInitialization();
 
   // ✨ v30.0.0 - A11Y & performance: keyboard shortcuts and Web Vitals planned
@@ -406,83 +318,6 @@ const AppRouter: React.FC = () => {
   // ✨ UI vΩ: TopNav items + navigation (extracted to useTopNavigation hook)
   const { topNavSections, topNavItems, handleNavigate } = useTopNavigation();
 
-  // ✨ v19.5.2 - Handler onboarding completion
-  // ✨ v24.2.1: useCallback for stable reference
-  const handleOnboardingComplete = useCallback(async () => {
-    console.log('✅ [ONBOARDING] User completed onboarding flow');
-    setOnboardingComplete(true);
-  }, []);
-
-  // ✨ v19.5.2 - Show loading while checking onboarding status
-  if (checkingOnboarding) {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100vh',
-          background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-          color: '#00d4ff',
-          fontSize: '1.5rem',
-          fontWeight: '600',
-          gap: '1.5rem',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.75rem',
-          }}
-        >
-          <span
-            style={{
-              animation: 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-            }}
-          >
-            ⚡
-          </span>
-          <span>TITANE∞ Initialisation...</span>
-        </div>
-        <div
-          style={{
-            width: '300px',
-            height: '4px',
-            background: 'rgba(0, 212, 255, 0.2)',
-            borderRadius: '2px',
-            overflow: 'hidden',
-          }}
-        >
-          <div
-            style={{
-              width: '50%',
-              height: '100%',
-              background: 'linear-gradient(90deg, transparent, #00d4ff, transparent)',
-              animation: 'shimmer 2s infinite',
-            }}
-          />
-        </div>
-        <style>{`
-          @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.1); }
-          }
-          @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(300%); }
-          }
-        `}</style>
-      </div>
-    );
-  }
-
-  // ✨ v19.5.2 - Show onboarding if not complete
-  if (!onboardingComplete) {
-    return <OnboardingFlow onComplete={handleOnboardingComplete} />;
-  }
-
   // ✨ UI vΩ - Main app with TopNav (global navigation)
   return (
     <AppShell
@@ -499,7 +334,7 @@ const AppRouter: React.FC = () => {
       <BackendDownIndicator position="top" dismissible />
       <div
         data-testid="app-ready"
-        data-state={!checkingOnboarding && onboardingComplete ? 'ready' : 'loading'}
+        data-state="ready"
         aria-hidden="true"
         style={{ display: 'none' }}
       />
