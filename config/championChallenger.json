@@ -1,32 +1,40 @@
 {
   "$schema": "../docs/schemas/championChallenger.schema.json",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "lock": "#2",
-  "description": "Champion/Challenger registry — OMEGA Lock #2. Tracks current champion providers per canonical mode and registered challengers for A/B comparison.",
-  "updated": "2026-04-04",
+  "description": "Champion/Challenger registry — OMEGA Lock #2. OLLAMA CHAMPION mode: Ollama is the primary champion for ALL canonical modes, with cloud providers as challengers. Comparison enabled at 5% to monitor quality.",
+  "updated": "2026-04-07",
   "champions": {
-    "DIRECT": { "provider": "ollama", "model": "gemma2:2b", "confidence_threshold": 0.8 },
+    "DIRECT": { "provider": "ollama", "model": "llama3.2:latest", "confidence_threshold": 0.8 },
     "CLARIFY_LIGHT": {
       "provider": "ollama",
-      "model": "gemma2:2b",
+      "model": "llama3.2:latest",
       "confidence_threshold": 0.68
     },
     "DEEP_REASONING": {
-      "provider": "gemini",
-      "model": "opus",
+      "provider": "ollama",
+      "model": "llama3.1:latest",
+      "confidence_threshold": 0.82
+    },
+    "ARCHITECT": {
+      "provider": "ollama",
+      "model": "llama3.1:latest",
+      "confidence_threshold": 0.84
+    },
+    "REPAIR": { "provider": "ollama", "model": "llama3.2:latest", "confidence_threshold": 0.8 },
+    "CERTIFY": {
+      "provider": "ollama",
+      "model": "llama3.1:latest",
       "confidence_threshold": 0.85
     },
-    "ARCHITECT": { "provider": "gemini", "model": "opus", "confidence_threshold": 0.87 },
-    "REPAIR": { "provider": "ollama", "model": "gemma2:2b", "confidence_threshold": 0.8 },
-    "CERTIFY": { "provider": "gemini", "model": "opus", "confidence_threshold": 0.88 },
     "EXPLORATION": {
       "provider": "ollama",
-      "model": "gemma2:2b",
+      "model": "llama3.2:latest",
       "confidence_threshold": 0.67
     },
     "SHADOW_LEARNING": {
       "provider": "ollama",
-      "model": "gemma2:2b",
+      "model": "llama3.2:latest",
       "confidence_threshold": 1.0
     }
   },
@@ -35,30 +43,55 @@
       {
         "provider": "gemini",
         "model": "haiku",
-        "rationale": "Lower latency for simple queries"
+        "rationale": "Lower latency for simple queries (cloud fallback)"
       }
     ],
     "DEEP_REASONING": [
-      { "provider": "claude", "model": "opus", "rationale": "Stronger chain-of-thought" }
+      { "provider": "gemini", "model": "opus", "rationale": "Cloud fallback for complex chain-of-thought when Ollama unavailable" },
+      { "provider": "claude", "model": "opus", "rationale": "Alternative cloud fallback" }
     ],
     "ARCHITECT": [
       {
+        "provider": "gemini",
+        "model": "opus",
+        "rationale": "Cloud fallback for system design synthesis"
+      },
+      {
         "provider": "claude",
         "model": "opus",
-        "rationale": "Better system design synthesis"
+        "rationale": "Alternative cloud fallback"
       }
     ],
     "CERTIFY": [
       {
+        "provider": "gemini",
+        "model": "opus",
+        "rationale": "Cloud fallback when reasoning_effort=max required"
+      },
+      {
         "provider": "openai",
         "model": "opus",
-        "rationale": "Native reasoning_effort=max support"
+        "rationale": "Alternative cloud fallback with native reasoning_effort=max"
+      }
+    ],
+    "REPAIR": [
+      {
+        "provider": "gemini",
+        "model": "haiku",
+        "rationale": "Cloud fallback for code repair tasks"
+      }
+    ],
+    "EXPLORATION": [
+      {
+        "provider": "gemini",
+        "model": "haiku",
+        "rationale": "Cloud fallback for ideation"
       }
     ]
   },
   "comparison": {
-    "enabled": false,
-    "sample_rate": 0.0,
+    "enabled": true,
+    "sample_rate": 0.05,
     "max_parallel_calls": 1,
     "log_divergence": true,
     "metrics": ["latency_ms", "token_count", "accuracy_score", "honesty_score"]
