@@ -190,6 +190,8 @@ impl LocalTTS {
     fn speak_coqui(&self, request: &TTSRequest) -> TTSResult<()> {
         // ✅ SECURED: Use ShellGuard (tts command needs to be whitelisted)
         // NOTE: 'tts' is NOT in default whitelist - will fail unless added to policy
+        let out_path = std::env::temp_dir().join("titane_tts.wav");
+        let out_path_str = out_path.to_string_lossy();
         self.shell_guard
             .execute_verified(
                 "tts",
@@ -199,7 +201,7 @@ impl LocalTTS {
                     "--language_idx",
                     "fr",
                     "--out_path",
-                    "/tmp/titane_tts.wav",
+                    &out_path_str,
                 ],
             )
             .map_err(|e| TTSError::AudioError(e))?;

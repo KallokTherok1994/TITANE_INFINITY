@@ -77,22 +77,33 @@ export const SystemCenterPage: React.FC = () => {
       </motion.header>
 
       {/* Tab Navigation */}
-      <nav className="sc-tabs">
+      <nav className="sc-tabs" role="tablist" aria-label="Onglets Centre Système">
         {SYSTEM_CENTER_TABS.map(tab => (
           <button
             key={tab.id}
+            role="tab"
+            aria-selected={activeTab === tab.id}
+            aria-controls={`sc-tabpanel-${tab.id}`}
+            id={`sc-tab-${tab.id}`}
             className={`sc-tab ${activeTab === tab.id ? 'sc-tab--active' : ''}`}
             onClick={() => handleTabChange(tab.id)}
             title={tab.description}
           >
-            <span className="sc-tab-icon">{tab.icon}</span>
+            <span className="sc-tab-icon" aria-hidden="true">
+              {tab.icon}
+            </span>
             <span className="sc-tab-label">{tab.label}</span>
           </button>
         ))}
       </nav>
 
       {/* Tab Content */}
-      <main className="sc-content">
+      <main
+        className="sc-content"
+        role="tabpanel"
+        id={`sc-tabpanel-${activeTab}`}
+        aria-labelledby={`sc-tab-${activeTab}`}
+      >
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}

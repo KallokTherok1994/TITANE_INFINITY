@@ -187,7 +187,8 @@ impl UnifiedMemory {
                 .join("ltm");
         }
 
-        PathBuf::from("/tmp/titane")
+        std::env::temp_dir()
+            .join("titane")
             .join("unified_memory")
             .join("ltm")
     }

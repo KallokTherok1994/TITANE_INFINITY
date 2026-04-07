@@ -1279,7 +1279,7 @@ fn main() {
 
             // 🎯 Initialize OMEGA Conversation Engine (v19.5.2)
             let storage_dir = app.path().app_data_dir()
-                .unwrap_or_else(|_| std::path::PathBuf::from("/tmp/titane"));
+                .unwrap_or_else(|_| std::env::temp_dir().join("titane"));
             let password = std::env::var("TITANE_SECRETS_PASSPHRASE")
                 .unwrap_or_else(|_| "default-dev-passphrase-change-in-production".to_string());
 

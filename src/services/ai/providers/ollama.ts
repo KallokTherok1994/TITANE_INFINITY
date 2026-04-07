@@ -30,10 +30,14 @@ const runtimeEnv = (
     env?: { VITE_OLLAMA_MODEL?: string };
   }
 ).env;
-const DEFAULT_OLLAMA_MODEL = runtimeEnv?.VITE_OLLAMA_MODEL?.trim() || 'gemma2:2b';
+// OLLAMA CHAMPION mode: llama3.2:latest is the default (lightweight, fast).
+// For DEEP_REASONING / ARCHITECT / CERTIFY modes, the canonical kernel routes to llama3.1:latest
+// (configured via config/championChallenger.json).
+// Override via VITE_OLLAMA_MODEL env var for custom model selection.
+const DEFAULT_OLLAMA_MODEL = runtimeEnv?.VITE_OLLAMA_MODEL?.trim() || 'llama3.2:latest';
 
 // ═══════════════════════════════════════════════════════════════
-// CONFIGURATION
+// CONFIGURATION — OLLAMA CHAMPION
 // ═══════════════════════════════════════════════════════════════
 
 const OLLAMA_CONFIG = {
@@ -44,7 +48,8 @@ const OLLAMA_CONFIG = {
   maxRetries: 3,
   maxErrors: 5,
   temperature: 0.7,
-  numCtx: 8192, // v25.1.0: Increased to support DEVELOPED responses (6144 tokens output + system prompt)
+  // OLLAMA CHAMPION: 8192 tokens — supports full DEVELOPED responses + system prompt
+  numCtx: 8192,
 };
 
 // ═══════════════════════════════════════════════════════════════
