@@ -164,6 +164,18 @@ jobs:
         with:
           workspaces: src-tauri
 
+      - name: 📁 Ensure dist directory exists
+        run: New-Item -ItemType Directory -Force -Path dist | Out-Null
+        shell: pwsh
+
+      - name: ✔️ Cargo check (Windows)
+        working-directory: src-tauri
+        run: cargo check --locked --verbose
+
+      - name: 🧪 Cargo test (Windows)
+        working-directory: src-tauri
+        run: cargo test --locked --verbose
+
       - name: 🏗️ Build frontend
         run: pnpm run build
 

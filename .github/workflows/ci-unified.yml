@@ -249,6 +249,52 @@ jobs:
           echo "- Rust: ${{ env.RUST_VERSION }}" >> $GITHUB_STEP_SUMMARY
 
   # ═══════════════════════════════════════════════════════════════════════════
+  # RUST BACKEND CHECK (Windows) — compilation gate only
+  # ═══════════════════════════════════════════════════════════════════════════
+  test-backend-windows:
+    name: 🪟 Rust Backend Check (Windows)
+    runs-on: windows-latest
+    needs: lint-and-typecheck
+    timeout-minutes: 30
+    permissions:
+      contents: read
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v6.0.1
+
+      - name: 📁 Ensure dist directory exists
+        run: New-Item -ItemType Directory -Force -Path dist | Out-Null
+        shell: pwsh
+
+      - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: 💾 Cache Cargo dependencies
+        uses: Swatinem/rust-cache@v2.7.3
+        with:
+          workspaces: src-tauri
+          cache-on-failure: true
+
+      - name: ✔️ Cargo check (Windows)
+        working-directory: src-tauri
+        run: cargo check --locked --verbose
+
+      - name: 🧪 Cargo test (Windows)
+        working-directory: src-tauri
+        run: cargo test --locked --verbose
+
+      - name: 📊 Summary
+        if: always()
+        run: |
+          echo "## 🪟 Rust Backend Check (Windows)" >> $env:GITHUB_STEP_SUMMARY
+          echo "" >> $env:GITHUB_STEP_SUMMARY
+          echo "- cargo check completed on windows-latest" >> $env:GITHUB_STEP_SUMMARY
+          echo "- cargo test completed on windows-latest" >> $env:GITHUB_STEP_SUMMARY
+          echo "- Rust: ${{ env.RUST_VERSION }}" >> $env:GITHUB_STEP_SUMMARY
+        shell: pwsh
+
+  # ═══════════════════════════════════════════════════════════════════════════
   # E2E TESTS (Playwright)
   # ═══════════════════════════════════════════════════════════════════════════
   test-e2e:
@@ -475,6 +521,7 @@ jobs:
         lint-and-typecheck,
         test-frontend,
         test-backend,
+        test-backend-windows,
         test-e2e,
         build-verification,
         security-audit,
@@ -493,7 +540,8 @@ jobs:
           echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
           echo "| Lint & Type Check | ${{ needs.lint-and-typecheck.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Frontend Tests | ${{ needs.test-frontend.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Backend Tests | ${{ needs.test-backend.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Backend Tests (Linux) | ${{ needs.test-backend.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Backend Check (Windows) | ${{ needs.test-backend-windows.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| E2E Tests | ${{ needs.test-e2e.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Build Verification | ${{ needs.build-verification.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Security Audit | ${{ needs.security-audit.result }} |" >> $GITHUB_STEP_SUMMARY
@@ -513,7 +561,8 @@ jobs:
         if: |
           needs.lint-and-typecheck.result == 'failure' ||
           needs.test-frontend.result == 'failure' ||
-          needs.test-backend.result == 'failure'
+          needs.test-backend.result == 'failure' ||
+          needs.test-backend-windows.result == 'failure'
         run: |
           echo "❌ One or more required jobs failed"
           exit 1
