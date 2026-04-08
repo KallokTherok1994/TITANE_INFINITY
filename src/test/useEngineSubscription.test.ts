@@ -87,6 +87,12 @@ describe('useEngineSubscription Hook', () => {
     expect(result.current).toEqual(storeSlice);
   });
 
+  it('should disable global core auto-refresh for command-only engine subscriptions', () => {
+    renderHook(() => useEngineSubscription('helios'));
+
+    expect(mockedUseTitaneCore).toHaveBeenCalledWith(false);
+  });
+
   it('should fetch engine data on mount and update loading flags', async () => {
     const mockData = { status: 'active', uptime: 1000 };
     coreMock.getNexusGraph.mockResolvedValue(mockData);

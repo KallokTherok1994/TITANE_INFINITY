@@ -55,7 +55,7 @@ export function useEngineSubscription(engine: EngineType): UseEngineSubscription
     getWatchdogData,
     getSelfHealData,
     getAdaptiveData,
-  } = useTitaneCore();
+  } = useTitaneCore(false);
 
   useEffect(() => {
     const commandMap: Record<
