@@ -10,7 +10,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { tauriClient } from '../services/tauriClient';
 import type { ProviderStatus } from '../services/tauriClient';
 
@@ -43,66 +43,96 @@ export function useProviderStatus(
   const [providers, setProviders] = useState<ProviderStatus[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [activeProvider, setActiveProvider] = useState<string | null>(null);
+  const mountedRef = useRef(true);
+  const requestInFlightRef = useRef<Promise<void> | null>(null);
+
+  const runProviderRequest = useCallback(
+    async (
+      requestFactory: () => Promise<ProviderStatus[]>,
+      successLog: (statuses: ProviderStatus[]) => void,
+      failureMessage: string
+    ): Promise<void> => {
+      if (requestInFlightRef.current) {
+        return requestInFlightRef.current;
+      }
+
+      const request = (async () => {
+        if (mountedRef.current) {
+          setIsLoading(true);
+          setError(null);
+        }
+
+        try {
+          const statuses = await requestFactory();
+
+          if (mountedRef.current) {
+            setProviders(statuses);
+          }
+
+          if (import.meta.env.DEV) {
+            successLog(statuses);
+          }
+        } catch (err) {
+          const errorMsg = err instanceof Error ? err.message : failureMessage;
+
+          if (mountedRef.current) {
+            setError(errorMsg);
+          }
+
+          if (import.meta.env.DEV) {
+            console.error(`❌ ${failureMessage}:`, err);
+          }
+        } finally {
+          requestInFlightRef.current = null;
+
+          if (mountedRef.current) {
+            setIsLoading(false);
+          }
+        }
+      })();
+
+      requestInFlightRef.current = request;
+      return request;
+    },
+    []
+  );
 
   /**
    * Refresh provider status (rapide, cache backend)
    */
   const refresh = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const statuses = await tauriClient.chatGetProvidersStatus({
-        timeout: 10000,
-        retries: 0, // Pas de retry pour status (temps réel)
-      });
-
-      setProviders(statuses);
-
-      // Note: Active provider now computed via useMemo as derived state
-      // (v33.0.0 optimization - eliminates redundant filter/reduce)
-
-      console.log(`✅ Provider status refreshed (${statuses.length} providers)`);
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Provider status error';
-      setError(errorMsg);
-      console.error('❌ Provider status refresh failed:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+    await runProviderRequest(
+      () =>
+        tauriClient.chatGetProvidersStatus({
+          timeout: 10000,
+          retries: 0, // Pas de retry pour status (temps réel)
+        }),
+      statuses => {
+        console.log(`✅ Provider status refreshed (${statuses.length} providers)`);
+      },
+      'Provider status error'
+    );
+  }, [runProviderRequest]);
 
   /**
    * Check all providers (lent, test réseau complet)
    */
   const checkAll = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const statuses = await tauriClient.chatCheckProviders({
-        timeout: 15000,
-        retries: 1,
-      });
-
-      setProviders(statuses);
-
-      // Note: Active provider now computed via useMemo as derived state
-      // (v33.0.0 optimization - eliminates redundant filter/reduce)
-
-      const available = statuses.filter(p => p.available);
-      console.log(
-        `✅ Provider check complete (${available.length}/${statuses.length} available)`
-      );
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Provider check error';
-      setError(errorMsg);
-      console.error('❌ Provider check failed:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+    await runProviderRequest(
+      () =>
+        tauriClient.chatCheckProviders({
+          timeout: 15000,
+          retries: 1,
+        }),
+      statuses => {
+        const available = statuses.filter(p => p.available);
+        console.log(
+          `✅ Provider check complete (${available.length}/${statuses.length} available)`
+        );
+      },
+      'Provider check error'
+    );
+  }, [runProviderRequest]);
 
   // ═══ MEMOIZED ACTIVE PROVIDER DETECTION (v33.0.0 Phase 2 optimization) ═══
   // Previously computed twice in refresh/checkAll callbacks
@@ -116,22 +146,39 @@ export function useProviderStatus(
     return fastest.provider;
   }, [providers]);
 
+  useEffect(() => {
+    mountedRef.current = true;
+
+    return () => {
+      mountedRef.current = false;
+      requestInFlightRef.current = null;
+    };
+  }, []);
+
   // Auto-refresh optionnel
   useEffect(() => {
-    if (autoRefresh) {
-      console.log(`🔄 Auto-refresh providers enabled (${refreshInterval}ms)`);
-
-      // Initial check
-      refresh();
-
-      // Interval
-      const interval = setInterval(refresh, refreshInterval);
-
-      return () => {
-        clearInterval(interval);
-        console.log('🛑 Auto-refresh providers stopped');
-      };
+    if (!autoRefresh) {
+      return;
     }
+
+    if (import.meta.env.DEV) {
+      console.log(`🔄 Auto-refresh providers enabled (${refreshInterval}ms)`);
+    }
+
+    // Initial check
+    void refresh();
+
+    // Interval
+    const interval = setInterval(() => {
+      void refresh();
+    }, refreshInterval);
+
+    return () => {
+      clearInterval(interval);
+      if (import.meta.env.DEV) {
+        console.log('🛑 Auto-refresh providers stopped');
+      }
+    };
   }, [autoRefresh, refreshInterval, refresh]);
 
   return {
