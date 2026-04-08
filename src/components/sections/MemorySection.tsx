@@ -111,9 +111,9 @@ function mapRuntimeKnowledgeToMemoryEntry(entry: RuntimeKnowledgeEntry): MemoryE
     content: entry.content,
     topic: mapKnowledgeTopic(entry.category),
     importance: entry.relevance >= 0.85 ? 5 : entry.relevance >= 0.65 ? 4 : 3,
-    tags: Array.from(new Set(['knowledge-base', entry.category, ...entry.tags])).filter(
-      Boolean
-    ),
+    tags: Array.from(
+      new Set(['knowledge-base', entry.category, ...(entry.tags ?? [])])
+    ).filter(Boolean),
     status: 'active',
     metadata: {
       createdAt,
