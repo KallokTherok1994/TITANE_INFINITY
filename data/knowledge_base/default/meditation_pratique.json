@@ -1,0 +1,117 @@
+{
+  "version": "v30.0.0",
+  "category": "meditation_pratique",
+  "description": "Méditation pratique — types de méditation (MBSR, vipassana, metta, TM, Nidra), neurosciences (DMN, cortisol, matière grise), protocoles pratiques (cohérence cardiaque, 4-7-8, body scan, visualisation), obstacles et solutions, intégration moderne",
+  "meditation_pratique": {
+    "introduction": "La méditation est la pratique millénaire que les neurosciences modernes ont officiellement réhabilitée. Ce n'est pas de la relaxation passive — c'est un entraînement actif de l'attention et de la conscience. Comme la musculation pour le corps, la méditation construit literalement une architecture cérébrale différente.",
+    "neurosciences_meditation": {
+      "changements_structurels": {
+        "cortex_prefrontal": "Épaississement après 8 semaines MBSR (Sara Lazar, Harvard 2005) — régulation émotionnelle, prise de décision",
+        "hippocampe": "Augmentation de densité — apprentissage et mémoire. Particulièrement dans les régions liées à la pleine conscience.",
+        "amygdale": "Réduction de volume ET de réactivité — moins d'hypervigilance et de réactions de peur automatiques",
+        "insula": "Meilleure interception (conscience du corps interne) — empathie, régulation émotionnelle",
+        "corps_calleux": "Meilleure connectivité hémisphères — plus de cohérence cérébrale"
+      },
+      "default_mode_network": {
+        "définition": "Réseau qui s'active quand l'esprit vagabonde (rumination, regrets, anticipation) — actif ~47% du temps chez les non-méditants (Killingsworth & Gilbert, 2010)",
+        "meditation_et_DMN": "La méditation régulière réduit l'activité du DMN au repos — moins de rumination automatique",
+        "citation": "'A wandering mind is an unhappy mind' — Killingsworth & Gilbert"
+      },
+      "hormones_neurotransmetteurs": {
+        "cortisol": "Réduction mesurée de 20-30% après 8 semaines MBSR",
+        "serotonine": "Augmentation — régulation de l'humeur",
+        "GABA": "Augmentation — réduction anxiété",
+        "DHEA": "Augmentation — hormone anti-vieillissement"
+      }
+    },
+    "types_meditation": {
+      "mindfulness_MBSR": {
+        "auteur": "Jon Kabat-Zinn — MBSR (Mindfulness-Based Stress Reduction), UMass Medical 1979",
+        "principe": "Observer les expériences présentes (sensation, émotion, pensée) sans jugement",
+        "protocole_MBSR": "8 semaines, 45 min/jour + session de groupe. Standard thérapeutique.",
+        "niveau_preuve": "Le mieux documenté — méta-analyses pour douleur chronique, anxiété, dépression, sommeil, immunité",
+        "pratique_simple": "S'asseoir, observer la respiration, noter quand l'esprit part, revenir sans jugement — répéter."
+      },
+      "vipassana": {
+        "origine": "Tradition theravada — 'voir les choses telles qu'elles sont'",
+        "technique": "Observation fine des sensations corporelles (méthode Goenka) — impermanence, non-attachement",
+        "retraite_10j": "S'immerger dans le silence complet 10 jours. Expérience transformatrice intense — pas pour débutants.",
+        "pratique_quotidienne": "Scan corporel systématique. 1-2h/jour dans la tradition. En pratique moderne: 20-30 min."
+      },
+      "metta_loving_kindness": {
+        "définition": "Méditation de bienveillance aimante — développer l'amour inconditionnel pour soi et les autres",
+        "protocole": "Visualiser soi → être aimé → être neutre → être difficile → tous les êtres. Répéter phrases: 'Puisses-tu être heureux, en bonne santé, en paix'",
+        "preuves": "Augmentation émotions positives (Fredrickson et al., 2008). Réduction self-criticism. Amélioration relations."
+      },
+      "meditation_transcendantale": {
+        "technique": "Répétition silencieuse d'un mantra personnel. 20 min × 2/jour.",
+        "preuves": "Réduction hypertension artérielle bien documentée (AHA). Réduction anxiété.",
+        "coût": "Formation payante (~1000€) — point de friction. Des mantras libres existent."
+      },
+      "yoga_nidra": {
+        "définition": "Sommeil yogique conscient — état hypnagogique guidé",
+        "protocole": "Allongé, guide audio, rotation de conscience dans le corps",
+        "bénéfices": "30 min = 4h de sommeil (réclamé, sur-évalué mais effet régénérateur réel). Excellent pour burn-out.",
+        "pratique": "Idéal le soir ou en récupération. Nombreux guides gratuits."
+      },
+      "meditation_contemplative": {
+        "définition": "Observation des pensées sans s'y attacher — les voir passer comme des nuages",
+        "tradition": "Zen, bouddhisme tibétain. Dzogchen (Tibétain) — conscience naturelle sans effort.",
+        "pratique_moderne": "Open monitoring vs focused attention — les deux sont complémentaires"
+      }
+    },
+    "protocoles_pratiques": {
+      "coherence_cardiaque": {
+        "définition": "Technique de régulation du système nerveux autonome par la respiration rythmée",
+        "protocole_365": "3 fois/jour, 6 respirations/minute, 5 minutes (inspirez 5s, expirez 5s)",
+        "effets": "Réduction cortisol immédiate (-7%), amélioration variabilité cardiaque (HRV), équilibre sympathique/parasympathique",
+        "timing_optimal": "Matin (cortisol awakening response), midi, soir",
+        "outils": "Application Respirelax, CardioZen, Elite HRV avec capteur"
+      },
+      "respiration_4_7_8": {
+        "technique": "Dr Andrew Weil. Inspirer 4s, retenir 7s, expirer 8s (×4 cycles)",
+        "effet": "Activation parasympathique rapide. Utile avant sommeil, en situation de stress aigu.",
+        "mécanisme": "La rétention + expiration longue active le nerf vague → frein parasympathique"
+      },
+      "body_scan": {
+        "définition": "Balayer consciemment toutes les zones du corps de bas en haut (ou inversement)",
+        "durée": "10-45 min selon profondeur",
+        "bénéfices": "Connexion corps-esprit, réduction tension, amélioration proprioception, préparation au sommeil",
+        "pratique": "Allongé ou assis. Descendre l'attention zone par zone. Observer sans chercher à changer."
+      },
+      "visualisation": {
+        "définition": "Création d'images mentales vivantes — buts, performance, états désirés",
+        "neuroscience": "Active les mêmes circuits que l'action réelle (mirror neurons). Utilisé par les athlètes olympiques.",
+        "types": {
+          "outcome": "Visualiser le résultat (podium, discours réussi)",
+          "process": "Visualiser les actions précises menant au résultat (plus efficace)"
+        },
+        "pratique": "5-15 min matin. Détails sensoriels (voir/entendre/ressentir dans la visualisation)."
+      },
+      "pleine_conscience_informelle": {
+        "définition": "Appliquer la pleine conscience aux activités quotidiennes",
+        "pratiques": ["Marche méditative (attentif à chaque pas, sensation des pieds)", "Repas conscient (goût, texture, mastiquer lentement)", "Douche en pleine conscience", "Écoute profonde sans préparer sa réponse"]
+      }
+    },
+    "obstacles_solutions": {
+      "je_narrive_pas_a_ne_pas_penser": "Le but n'est PAS de ne pas penser. Le but est d'observer les pensées sans s'y perdre. Chaque retour = un rep.",
+      "manque_de_temps": "5 min de méditation intentionnelle > 0 min. Cohérence cardiaque 5 min × 3/jour = protocol complet.",
+      "ennui": "L'ennui est de la résistance — rester avec est le travail. Ou changer de technique.",
+      "agitation": "Méditer debout ou en marchant. Corps scan actif. Yoga Nidra.",
+      "sommeil": "Si l'objectif est le sommeil, pratiquer couché. Si l'objectif est l'entraînement attention, s'asseoir.",
+      "apps_recommandées": {
+        "Waking_Up": "Sam Harris — neuroscientifique/philosophe. Rigoureux et non-mystique.",
+        "Insight_Timer": "Gratuit, milliers de guidances, minuteur",
+        "Petit_Bambou": "En français — parcours structurés",
+        "Breathwrk": "Spécialisé techniques respiratoires"
+      }
+    },
+    "integration_vie_moderne": {
+      "matin": "10-20 min avant de toucher le téléphone — définit le ton de la journée",
+      "midday_reset": "5 min cohérence cardiaque ou respiration 4-7-8 — reset du système nerveux à mi-journée",
+      "soir": "Body scan ou Yoga Nidra — transition vers le sommeil",
+      "progression": "Semaines 1-2: 5 min/jour → Semaines 3-4: 10 min → Mois 2+: 15-20 min",
+      "apport_TITANE": "TITANE peut guider Kevin dans une session de cohérence cardiaque ou body scan à voix haute quand cela est pertinent"
+    }
+  }
+}

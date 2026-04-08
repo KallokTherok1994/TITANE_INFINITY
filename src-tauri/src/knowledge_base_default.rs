@@ -83,6 +83,16 @@ const COHERENCE_IDENTITAIRE: &str =
     include_str!("../../data/knowledge_base/default/coherence_identitaire.json");
 const REALISME_CONVERSATIONNEL: &str =
     include_str!("../../data/knowledge_base/default/realisme_conversationnel.json");
+// ── v30.0.0 expansion — phase 7 (nutrition avancée, callisthénie, méditation, yoga) ─
+const NUTRITION_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/nutrition_avancee.json");
+const CALISTHENIE: &str =
+    include_str!("../../data/knowledge_base/default/calisthenie.json");
+const MEDITATION_PRATIQUE: &str =
+    include_str!("../../data/knowledge_base/default/meditation_pratique.json");
+const YOGA_PRATIQUE: &str =
+    include_str!("../../data/knowledge_base/default/yoga_pratique.json");
+
 // ── v30.0.0 expansion — phase 6 (approfondissement santé naturelle & communication) ──
 const ENERGETIQUE_SOINS_CORPS: &str =
     include_str!("../../data/knowledge_base/default/energetique_soins_corps.json");
@@ -234,6 +244,11 @@ impl DefaultKnowledgeBase {
         ("communication_avancee", COMMUNICATION_AVANCEE),
         ("bien_etre_mental_stress", BIEN_ETRE_MENTAL_STRESS),
         ("sante_corps_naturelle", SANTE_CORPS_NATURELLE),
+        // v30.0.0 expansion — phase 7 (nutrition avancée, callisthénie, méditation, yoga)
+        ("nutrition_avancee", NUTRITION_AVANCEE),
+        ("calisthenie", CALISTHENIE),
+        ("meditation_pratique", MEDITATION_PRATIQUE),
+        ("yoga_pratique", YOGA_PRATIQUE),
         // v30.0.0 expansion — phase 6 (approfondissement santé naturelle & communication)
         ("energetique_soins_corps", ENERGETIQUE_SOINS_CORPS),
         ("sante_feminine_naturelle", SANTE_FEMININE_NATURELLE),
@@ -410,8 +425,8 @@ mod tests {
             result.errors
         );
         assert_eq!(
-            result.entries_loaded, 57,
-            "Must have exactly 57 default knowledge categories"
+            result.entries_loaded, 61,
+            "Must have exactly 61 default knowledge categories"
         );
     }
 
@@ -432,6 +447,7 @@ mod tests {
             "ai_providers_guide",
             "apprentissage_evolution",
             "bien_etre_mental_stress",
+            "calisthenie",
             "capabilities_matrix",
             "cloud_multimodal",
             "coaching_leadership",
@@ -456,12 +472,14 @@ mod tests {
             "learning_prompts",
             "longevite_anti_aging",
             "medecine_hollistique",
+            "meditation_pratique",
             "memory_os_detail",
             "memory_system_deep",
             "meta_mode_titane",
             "meta_orchestrateur",
             "naturopathie_fondamentaux",
             "numeric_twin_detail",
+            "nutrition_avancee",
             "nutrition_sante_naturelle",
             "omega_pipeline_detail",
             "operational_knowledge",
@@ -485,6 +503,7 @@ mod tests {
             "style_expression_kevin",
             "system_architecture",
             "troubleshooting_faq",
+            "yoga_pratique",
         ];
         for cat in &expected {
             assert!(

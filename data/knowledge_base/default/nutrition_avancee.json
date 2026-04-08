@@ -1,0 +1,133 @@
+{
+  "version": "v30.0.0",
+  "category": "nutrition_avancee",
+  "description": "Nutrition avancée — macronutriments/micronutriments, chrono-nutrition, index glycémique, régimes comparés (cétogène/carnivore/méditerranéen/MIND), jeûne intermittent (16:8/5:2/OMAD), microbiote intestinal, gut-brain axis, alimentation anti-inflammatoire, supplémentation ciblée",
+  "nutrition_avancee": {
+    "introduction": "La nutrition est à la fois la science la plus fondamentale pour la santé et le domaine où les mythes prolifèrent le plus. TITANE aborde ce sujet avec rigueur : distinguer ce qui est bien établi scientifiquement, ce qui est empirique et prometteur, et ce qui est du marketing. La meilleure alimentation est celle qu'on tient sur le long terme.",
+    "macronutriments": {
+      "proteines": {
+        "rôle": "Construction et réparation musculaire, enzymes, hormones (insuline, testostérone), immunité, satiété",
+        "besoins": {
+          "sédentaire": "0.8g/kg de poids corporel (recommandation OMS minimale)",
+          "actif": "1.6-2.0g/kg — meta-analyse Morton et al. 2018 (diminishing returns au-delà de 2.2g/kg)",
+          "sport_force": "1.8-2.2g/kg",
+          "senior": "1.2-1.6g/kg — résistance anabolique age-related"
+        },
+        "sources_optimales": {
+          "animales": "Œufs (score DIAAS: 1.13), viande maigre, poisson, produits laitiers. Profil d'acides aminés complet.",
+          "végétales": "Légumineuses + céréales complètes = profil complet. Soja (tofu, tempeh) = meilleure source végétale. Seitan, pois chiches, lentilles.",
+          "leucine": "Acide aminé clé pour la synthèse protéique musculaire (MPS) — 2-3g/repas pour activer mTOR"
+        },
+        "timing": "La fenêtre anabolique est plus large qu'on ne croit (3-6h). Distribuer les protéines sur 3-4 repas > concentrer sur 1-2."
+      },
+      "glucides": {
+        "rôle": "Carburant préférentiel du cerveau et des muscles lors d'efforts intenses (glycolyse). Pas essentiels au sens strict (néoglucogenèse possible) mais hautement pratiques.",
+        "index_glycémique": {
+          "définition": "Mesure l'impact d'un aliment sur la glycémie par rapport au glucose pur (IG=100)",
+          "limites": "L'IG seul est insuffisant — la charge glycémique (IG × quantité glucides) est plus pertinente",
+          "pratique": "Préférer les glucides complexes, riches en fibres, combinés aux protéines/lipides pour abaisser la réponse glycémique"
+        },
+        "fibres": {
+          "solubles": "Pectine (pomme), beta-glucane (avoine, champignons) — viscosité, ralentissement absorption, microbiote",
+          "insolubles": "Cellulose (légumes) — transit, volume des selles",
+          "recommandation": "30-40g/jour. La plupart des Occidentaux en consomment 15-20g."
+        }
+      },
+      "lipides": {
+        "rôle": "Hormones stéroïdiennes (testostérone, cortisol, estrogènes), membranes cellulaires, absorption vitamines ADEK, satiété, cerveau (60% lipides)",
+        "catégories": {
+          "saturés": "Beurre, huile coco, viande grasse — nécessaires pour la production de testostérone. Ni demoniser ni abuser. Aucun lien direct saturés→cardio prouvé (étude PREDIMED).",
+          "monoinsaturés": "Huile d'olive extra-vierge, avocat, amandes — base de l'alimentation méditerranéenne. Anti-inflammatoire.",
+          "polyinsaturés_omega3": {
+            "ALA": "Végétal (lin, chia, chanvre) — précurseur peu converti",
+            "EPA_DHA": "Poissons gras, algues — directement utiles. Anti-inflammatoires, cerveau, cardiovasculaire. Viser ratio oméga-6/oméga-3 ≤ 4:1",
+            "dose": "1-3g EPA+DHA/jour en prévention, 3-4g en contexte anti-inflammatoire"
+          },
+          "à_éviter": "Graisses trans industrielles (huiles partiellement hydrogénées) — inflammatoires. Disparues en grande partie de l'industrie depuis 2018."
+        }
+      }
+    },
+    "micronutriments_cles": {
+      "vitamine_D3": "Voir immunite_prevention_naturelle. Aussi cruciale pour testostérone, humeur, os.",
+      "magnesium": {
+        "carence": "Estimée à 70% de la population — sols appauvris",
+        "rôle": "300+ réactions enzymatiques. Énergie (ATP), sommeil, muscle, stress, glucose",
+        "formes": "Bisglycinate (meilleur tolérance), malate (énergie), thréonate (cerveau), citrate"
+      },
+      "zinc": "Testostérone, immunité, synthèse protéique, goût/odorat. Bisglycinate ou citrate. Attention: antagoniste cuivre à haute dose.",
+      "vitamine_B12": "Névralgique pour végétaliens — supplémentation obligatoire",
+      "fer": "Héminique (viande rouge) très biodisponible vs non-héminique (végétal) + vitamine C améliore absorption",
+      "iode": "Thyroïde — carence silencieuse fréquente. Algues, sel iodé, poissons.",
+      "selenium": "Thyroïde, antioxydant, fertilité masculine. Noix du Brésil: 1-2/jour = dose idéale."
+    },
+    "regimes_comparés": {
+      "mediteraneen": {
+        "base": "Légumes, légumineuses, fruits, huile d'olive EVOO, poissons, peu de viande rouge, vin rouge modéré",
+        "preuves": "Le mieux documenté en termes de longévité et santé cardiovasculaire. PREDIMED (2013).",
+        "pour_qui": "Quasi universel — sain, savoureux, socialement facile à tenir"
+      },
+      "cetogene": {
+        "définition": "< 50g glucides/jour → cétose (le foie produit des cétones comme carburant alternatif)",
+        "bénéfices_prouvés": "Épilepsie réfractaire (thérapeutique établie), perte de masse grasse rapide, réduction appétit",
+        "bénéfices_discutés": "Performance cognitive, clarté mentale, résistance à l'insuline",
+        "risques": "Adaptation difficile (keto flu), microbiote, os à long terme, sociali difficile",
+        "pour_qui": "Résistance à l'insuline/SOPK/diabète type 2 (avec suivi), perte de poids rapide, thérapeutique épilepsie"
+      },
+      "carnivore": {
+        "définition": "Uniquement viande, poisson, œufs — élimination de tous les végétaux",
+        "rationnel": "Élimine tous les anti-nutriments végétaux (lectines, oxalates, phytates) — rémission rapportée de maladies auto-immunes",
+        "risques": "Absence de fibres (microbiote), manque de vitamine C à long terme, impact environnemental, preuves scientifiques très limitées",
+        "approche_TITANE": "Régime expérimental avec témoignages positifs — pas de contre-indication absolue à court terme mais preuves de sécurité long terme manquantes"
+      },
+      "MIND": {
+        "définition": "Mediterranean-DASH Intervention for Neurodegenerative Delay — hybride Med + DASH pour la santé cérébrale",
+        "aliments_clés": "Légumes verts à feuilles (6x/sem), baies (2x/sem), noix (5x/sem), légumineuses (4x/sem), poissons (1x/sem), volaille (2x/sem), huile olive",
+        "preuves": "Réduction risque Alzheimer de 35-53% selon adhérence (Morris et al., 2015)"
+      }
+    },
+    "jeune_intermittent": {
+      "principes": "Alternance de fenêtres d'alimentation et de jeûne — plus simple que la restriction calorique permanente",
+      "protocoles": {
+        "16_8": "Manger dans une fenêtre de 8h, jeûner 16h. Le plus populaire et praticable. Ex: 12h-20h.",
+        "5_2": "5 jours normaux + 2 jours non-consécutifs à 500-600 kcal. Dr Michael Mosley.",
+        "OMAD": "One Meal A Day — une seule fenêtre de 1h/jour. Très contraignant, risque de déficits.",
+        "jeune_24h": "1-2x/semaine — protokol Eat Stop Eat (Brad Pilon). Activation autophagie significative."
+      },
+      "bénéfices": ["Simplification (moins de repas à préparer)", "Sensibilité insuline améliorée", "Autophagie activée à partir de 16-18h", "Perte masse grasse préservant la masse musculaire si protéines suffisantes"],
+      "contre_indications": "Troubles alimentaires (anorexie/boulimie), grossesse, allaitement, diabète type 1, mineurs, sous-poids",
+      "JI_vs_sport": "Entraînement à jeun: ok pour cardio modéré. Pour la force/hypertrophie: consommer protéines post-effort même dans la fenêtre."
+    },
+    "microbiote_intestinal": {
+      "définition": "3.8 × 10^13 micro-organismes dans le tractus digestif — autant que de cellules humaines",
+      "fonctions": ["Digestion des fibres en AGCC (butyrate, propionate, acétate)", "Synthèse vitamines K2 et B", "Modulation immunitaire (70% du système immunitaire = intestin)", "Production neurotransmetteurs (90% de la sérotonine = intestin)", "Barrière contre pathogènes"],
+      "gut_brain_axis": "L'intestin et le cerveau communiquent bi-directionnellement via le nerf vague, les hormones et les métabolites bactériens. Dysbiose → inflammation cérébrale, troubles humeur, dépression.",
+      "nourrir_microbiote": {
+        "prébiotiques": "Fibres fermentescibles: inuline (chicorée, artichaut), FOS (poireau, oignon, ail), resistant starch (banane verte, pommes de terre refroidies, légumineuses cuites froides)",
+        "probiotiques_alimentaires": "Yaourt (L. acidophilus, B. bifidum), kéfir, choucroute, kimchi, kombucha, miso, tempeh — diversité > quantité",
+        "polyphénols": "Réduisent l'inflammation intestinale, nourrissent Akkermansia muciniphila (marqueur santé métabolique)"
+      },
+      "dysbiose_signes": "Ballonnements chroniques, alternance constipation/diarrhée, brouillard cognitif, fatigue post-repas, intolérances multiples"
+    },
+    "supplementation_ciblee": {
+      "bases_incontournables": {
+        "vitamine_D3_K2": "D3 2000-5000 UI + K2-MK7 100-200µg (évite dépôts calcium hors os)",
+        "omega3": "1-3g EPA+DHA",
+        "magnesium": "300-400mg bisglycinate le soir",
+        "creatine": "3-5g/jour — le supplément le plus étudié (1000+ études). Performance, cerveau, muscle, neuroprotection. Vegan indispensable."
+      },
+      "conditionnels": {
+        "zinc": "Si pas de viande/fruits de mer réguliers. 15-25mg",
+        "B12": "Obligatoire si végétalien",
+        "fer": "Sur analyse sanguine seulement — toxique en excès",
+        "proteines_whey": "Si besoin de compléter les apports. Whey isolate = meilleure digestion. Pea protein = alternative végétalienne comparable."
+      },
+      "erreurs_fréquentes": [
+        "Prendre du fer sans bilan (surdosage dangereux)",
+        "Multivitamines génériques à faible biodisponibilité",
+        "Compléments 'brûle-graisses' sans preuves (et potentiellement dangereux)",
+        "Protéines en poudre avec additifs (aspartame, sucralose en excès)",
+        "Oublier les synergies: D3 + K2 + Mg + Oméga-3 fonctionnent ensemble"
+      ]
+    }
+  }
+}
