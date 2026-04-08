@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — DIAGNOSTIC COMMANDS
+//   TITANE∞ v30.0.0 — DIAGNOSTIC COMMANDS
 //   Backend self-check and validation
 // ═══════════════════════════════════════════════════════════════
 

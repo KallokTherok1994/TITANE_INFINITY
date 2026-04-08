@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v14.0 — Memory Compactor Module
+ * TITANE∞ v30.0.0 — Memory Compactor Module
  * ═════════════════════════════════════════
  *
  * Compression cognitive: tri, nettoyage, optimisation mémoire

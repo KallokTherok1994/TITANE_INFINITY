@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v24.3.0 — UNIFIED MEMORY API v2
+//   TITANE∞ v30.0.0 — UNIFIED MEMORY API v2
 //   Phase 2 Simplification: Consolidation de 5 modules → 2 modules
 //   Architecture: Unified API + Neural Implementation
 //   v22Ω AI Performance Optimizations Compatible

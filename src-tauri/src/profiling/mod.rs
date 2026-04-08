@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v19.5.0 — Profiling Module
+//   TITANE∞ v30.0.0 — Profiling Module
 //   Performance monitoring and metrics collection
 // ═══════════════════════════════════════════════════════════════
 

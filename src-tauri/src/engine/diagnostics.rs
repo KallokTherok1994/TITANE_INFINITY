@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17.2.0 — ENGINE: DIAGNOSTICS
+//   TITANE∞ v30.0.0 — ENGINE: DIAGNOSTICS
 //   System Analysis & Issue Detection
 // ═══════════════════════════════════════════════════════════════
 

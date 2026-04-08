@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v19.2 — AUDIO COMMANDS
+//   TITANE∞ v30.0.0 — AUDIO COMMANDS
 //   Commandes Tauri pour Audio Center (TTS, devices, tests, VAD)
 // ═══════════════════════════════════════════════════════════════
 

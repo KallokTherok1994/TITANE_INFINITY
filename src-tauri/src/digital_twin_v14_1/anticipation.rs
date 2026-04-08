@@ -1,4 +1,4 @@
-// TITANE∞ v14.1 - Anticipation Engine
+// TITANE∞ v30.0.0 - Anticipation Engine
 pub struct AnticipationEngine;
 
 impl AnticipationEngine {

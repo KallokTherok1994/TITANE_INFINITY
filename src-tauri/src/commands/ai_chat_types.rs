@@ -1,4 +1,4 @@
-// TITANE∞ v14 - AI Chat Types
+// TITANE∞ v30.0.0 - AI Chat Types
 // Shared types for frontend-backend communication
 
 use serde::{Deserialize, Serialize};

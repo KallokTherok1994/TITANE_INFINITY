@@ -1,6 +1,6 @@
 use crate::cognitive::security::*;
 /**
- * TITANE∞ v17 - Watchdog Scanner
+ * TITANE∞ v30.0.0 - Watchdog Scanner
  *
  * Détection d'anomalies dans le système cognitif:
  * - Cognitive load incohérent

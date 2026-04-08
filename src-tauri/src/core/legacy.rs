@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — LEGACY COMPATIBILITY
+//   TITANE∞ v30.0.0 — LEGACY COMPATIBILITY
 //   Backward compatibility adapters for old API
 // ═══════════════════════════════════════════════════════════════
 

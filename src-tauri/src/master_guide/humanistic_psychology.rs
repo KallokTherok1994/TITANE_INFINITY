@@ -1,4 +1,4 @@
-// TITANE∞ v14.1 - Psychologie Humaniste
+// TITANE∞ v30.0.0 - Psychologie Humaniste
 // Approche Rogers / Maslow / Gestalt
 
 #![allow(dead_code)]

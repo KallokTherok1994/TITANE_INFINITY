@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v29.0.0 — TOTAL_DEV BACKEND COMMANDS
+//   TITANE∞ v30.0.0 — TOTAL_DEV BACKEND COMMANDS
 //   GOD DEV space: secure unlock, git ops, extended console, file chains
 //
 //   Security contract:

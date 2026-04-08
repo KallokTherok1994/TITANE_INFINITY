@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════
-// WHISPER STREAMING COMMANDS - TITANE∞ v21.5.3
+// WHISPER STREAMING COMMANDS - TITANE∞ v30.0.0
 // ═══════════════════════════════════════════════════════════════════
 
 use crate::error::TitaneError;

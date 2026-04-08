@@ -1,4 +1,4 @@
-//! TITANE∞ v11.0 - Macros utilitaires pour normalisation f32
+//! TITANE∞ v30.0.0 - Macros utilitaires pour normalisation f32
 //! Macros harmonisées pour manipulations f32 avec validation intégrée
 
 /// Macro nudge! - Pousse une valeur vers le centre 0.5 progressivement

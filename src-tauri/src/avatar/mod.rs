@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v23–v24 — AVATAR MODULE
+//   TITANE∞ v30.0.0 — AVATAR MODULE
 //   Immersive Avatar Engine + Full-Body Engine + Commands + Self-Test
 // ═══════════════════════════════════════════════════════════════════════════════
 

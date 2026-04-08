@@ -1,4 +1,4 @@
-// TITANE∞ v13 - Contextual Reranker
+// TITANE∞ v30.0.0 - Contextual Reranker
 // Reranking contextuel des résultats de recherche avec scoring composite
 
 use crate::semantic::vector_store::SearchResultKNN;

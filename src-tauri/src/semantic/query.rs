@@ -1,4 +1,4 @@
-// TITANE∞ v13 - Query Engine
+// TITANE∞ v30.0.0 - Query Engine
 // Moteur de recherche avec détection d'intention et expansion de requête
 
 use crate::semantic::vector_store::{SearchResultKNN, VectorStore};

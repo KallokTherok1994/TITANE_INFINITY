@@ -1,4 +1,4 @@
-// TITANE∞ v16 - Cognitive Commands
+// TITANE∞ v30.0.0 - Cognitive Commands
 // Tauri commands for cognitive layer interaction
 
 use crate::cognitive::{

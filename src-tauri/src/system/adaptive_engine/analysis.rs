@@ -1,5 +1,5 @@
 // ╔══════════════════════════════════════════════════════════════════════════════╗
-// ║ TITANE∞ v8.0 - Adaptive Engine Analysis Module                              ║
+// ║ TITANE∞ v30.0.0 - Adaptive Engine Analysis Module                              ║
 // ║ Analyse multi-dimensionnelle des états système pour régulation adaptative   ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 

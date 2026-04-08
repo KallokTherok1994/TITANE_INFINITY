@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — EVOLUTION COMMANDS
+//   TITANE∞ v30.0.0 — EVOLUTION COMMANDS
 //   Tauri commands for Auto-Evolution system
 // ═══════════════════════════════════════════════════════════════
 

@@ -1,4 +1,4 @@
-// TITANE∞ v14.1 - Emotion Engine
+// TITANE∞ v30.0.0 - Emotion Engine
 // Perception émotionnelle en temps réel (voix + texte)
 
 #![allow(dead_code)]

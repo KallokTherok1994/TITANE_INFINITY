@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// TITANE∞ v16 — OVERDRIVE PROJECT AUTOPILOT
+// TITANE∞ v30.0.0 — OVERDRIVE PROJECT AUTOPILOT
 // ═══════════════════════════════════════════════════════════════════════════
 // Moteur de gestion intelligente de projets + autopilot nocturne
 // ═══════════════════════════════════════════════════════════════════════════

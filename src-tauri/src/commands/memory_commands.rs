@@ -1,4 +1,4 @@
-// TITANE∞ v15 — MEMORY COMMANDS
+// TITANE∞ v30.0.0 — MEMORY COMMANDS
 // Frontend-accessible memory management commands
 // Architecture v15: Clean, documented, production-ready
 

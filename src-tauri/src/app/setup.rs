@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — APP: SETUP
+//   TITANE∞ v30.0.0 — APP: SETUP
 //   Application Initialization & Configuration (v14 simplified)
 // ═══════════════════════════════════════════════════════════════
 
@@ -28,7 +28,7 @@ impl TitaneApp {
     pub async fn new(_app_data_dir: PathBuf) -> AppResult<Self> {
         log_info(
             "Setup",
-            "Initializing TITANE∞ v14 (legacy compatibility mode)",
+            "Initializing TITANE∞ v30.0.0 (legacy compatibility mode)",
         );
 
         // Create stub cores for backward compatibility
@@ -55,7 +55,7 @@ impl TitaneApp {
 
         log_info(
             "Setup",
-            "TITANE∞ v14 initialized successfully (legacy compat mode)",
+            "TITANE∞ v30.0.0 initialized successfully (legacy compat mode)",
         );
 
         Ok(Self {

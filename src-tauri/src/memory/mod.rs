@@ -1,4 +1,4 @@
-// TITANE∞ v17 - Memory Module with Security Hardening
+// TITANE∞ v30.0.0 - Memory Module with Security Hardening
 // Persistent conversation storage with encryption + SHA256 validation
 // Architecture v17: Clean, documented, versioning support, security hardened
 // Encrypted persistent conversational memory with AES-256-GCM + Argon2id

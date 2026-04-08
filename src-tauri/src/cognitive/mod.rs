@@ -1,4 +1,4 @@
-// TITANE∞ v17 - Cognitive Module
+// TITANE∞ v30.0.0 - Cognitive Module
 // Advanced reasoning, meta-cognition, self-optimization
 // Legacy v15 + New v16 engines coexist + v17 security hardening
 

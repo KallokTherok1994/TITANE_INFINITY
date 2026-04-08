@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v19.5.0 — IPC Performance Profiler
+//   TITANE∞ v30.0.0 — IPC Performance Profiler
 //   Measure and track IPC latency for all Tauri commands
 // ═══════════════════════════════════════════════════════════════
 

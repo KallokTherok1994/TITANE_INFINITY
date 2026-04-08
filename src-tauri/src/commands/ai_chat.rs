@@ -1,4 +1,4 @@
-// TITANE∞ v15 - AI Chat Commands
+// TITANE∞ v30.0.0 - AI Chat Commands
 // Tauri commands for AI interaction and Voice Mode
 // Clean architecture v15: Unified SingularityEngine, documented, production-ready
 // V24 OPTIMIZATION: Response streaming support for memory efficiency

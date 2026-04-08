@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v21.1Ω — MULTI-LEVEL CACHING SYSTEM
+//   TITANE∞ v30.0.0 — MULTI-LEVEL CACHING SYSTEM
 //   Super-Prompt B2: L1 (memory) + L2 (compressed) + L3 (disk)
 // ═══════════════════════════════════════════════════════════════
 

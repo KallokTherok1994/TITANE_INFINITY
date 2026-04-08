@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17.2.0 — UTILS: CONSTANTS
+//   TITANE∞ v30.0.0 — UTILS: CONSTANTS
 //   Global Constants for Backend Configuration
 // ═══════════════════════════════════════════════════════════════
 

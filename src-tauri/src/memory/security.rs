@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17.0 — MEMORY SECURITY HARDENING
+//   TITANE∞ v30.0.0 — MEMORY SECURITY HARDENING
 //   SHA256 verification, double validation, rollback, timeouts
 // ═══════════════════════════════════════════════════════════════
 

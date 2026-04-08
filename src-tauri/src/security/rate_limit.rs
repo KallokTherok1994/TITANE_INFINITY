@@ -4,7 +4,7 @@
 use crate::error::{TitaneError, TitaneResult};
 use once_cell::sync::Lazy;
 /**
- * TITANE∞ v19.5 — Rate Limiting Backend (REPAIRED vΩ)
+ * TITANE∞ v30.0.0 — Rate Limiting Backend (REPAIRED vΩ)
  *
  * Production-grade rate limiting pour toutes les commandes Tauri
  * Protection contre spam, brute-force, et abus

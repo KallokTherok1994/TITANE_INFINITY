@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════
-// SINGULARITY EXTRA COMMANDS - TITANE∞ v21.5.3
+// SINGULARITY EXTRA COMMANDS - TITANE∞ v30.0.0
 // ═══════════════════════════════════════════════════════════════════
 
 use crate::error::TitaneError;

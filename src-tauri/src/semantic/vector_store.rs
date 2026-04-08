@@ -1,4 +1,4 @@
-// TITANE∞ v13 - Vector Store with HNSW
+// TITANE∞ v30.0.0 - Vector Store with HNSW
 // Stockage vectoriel haute performance avec index HNSW (Hierarchical Navigable Small World)
 
 use instant_distance::{Builder, HnswMap, Point, Search};

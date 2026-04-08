@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17.2.0 — TYPES: SENTINEL
+//   TITANE∞ v30.0.0 — TYPES: SENTINEL
 //   Anomaly Detection & Security Monitoring
 // ═══════════════════════════════════════════════════════════════
 

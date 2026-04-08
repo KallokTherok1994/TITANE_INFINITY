@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — CORE MODULE
+//   TITANE∞ v30.0.0 — CORE MODULE
 //   Unified core system for SingularityEngine
 // ═══════════════════════════════════════════════════════════════
 

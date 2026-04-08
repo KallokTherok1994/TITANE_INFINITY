@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v21 — ADAPTIVE COMMANDS
+//   TITANE∞ v30.0.0 — ADAPTIVE COMMANDS
 //   Commandes Tauri pour l'optimisation adaptative
 // ═══════════════════════════════════════════════════════════════════════════════
 

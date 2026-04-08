@@ -1,4 +1,4 @@
-// TITANE∞ v13 - Document Generation Engine
+// TITANE∞ v30.0.0 - Document Generation Engine
 // Moteur de génération documentaire professionnel multi-domaines
 
 pub mod admin;

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v24.2 — NEURAL MEMORY (Private Implementation)
+//   TITANE∞ v30.0.0 — NEURAL MEMORY (Private Implementation)
 //   Phase 2 Simplification: Implémentation neuronale STM→MTM→LTM
 //   Architecture: Hiérarchique, Vectorisée, Auto-Évolutive
 // ═══════════════════════════════════════════════════════════════

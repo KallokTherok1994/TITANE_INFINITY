@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// TITANE∞ v26.3 — COPILOT COMMANDS
+// TITANE∞ v30.0.0 — COPILOT COMMANDS
 // Tauri commands for GitHub Copilot provider integration
 // ═══════════════════════════════════════════════════════════════════════════
 

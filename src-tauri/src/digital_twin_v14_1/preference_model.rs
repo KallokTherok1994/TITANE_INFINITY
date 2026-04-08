@@ -1,4 +1,4 @@
-// TITANE∞ v14.1 - Preference Model
+// TITANE∞ v30.0.0 - Preference Model
 use std::collections::HashMap;
 
 pub struct PreferenceModel {

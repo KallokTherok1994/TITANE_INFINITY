@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v24 — SECURITY ENGINE
+ * TITANE∞ v30.0.0 — SECURITY ENGINE
  * API key/secret encryption + secure storage
  * TRACKER #14
  * ═══════════════════════════════════════════════════════════════════════════

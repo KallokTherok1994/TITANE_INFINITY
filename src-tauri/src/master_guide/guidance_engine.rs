@@ -1,4 +1,4 @@
-// TITANE∞ v14.1 - Guidance Engine
+// TITANE∞ v30.0.0 - Guidance Engine
 // Moteur de fusion holistique
 
 #![allow(dead_code)]

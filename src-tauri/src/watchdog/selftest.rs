@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v17 - Watchdog Self-Test
+ * TITANE∞ v30.0.0 - Watchdog Self-Test
  *
  * Tests automatisés pour validation watchdog system
  */

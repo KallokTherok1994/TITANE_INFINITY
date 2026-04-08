@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17.0 — GLOBAL HARDENING SELF-TEST
+//   TITANE∞ v30.0.0 — GLOBAL HARDENING SELF-TEST
 //   Validation complète de tous les systèmes de sécurité
 // ═══════════════════════════════════════════════════════════════
 

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// TITANE∞ v19.3.0 — CENTRE D'ÉVOLUTION COGNITIVE (OPUS #4)
+// TITANE∞ v30.0.0 — CENTRE D'ÉVOLUTION COGNITIVE (OPUS #4)
 // Commandes unifiées: Progression + Knowledge + Evolution + Memory
 // ═══════════════════════════════════════════════════════════════════════════
 

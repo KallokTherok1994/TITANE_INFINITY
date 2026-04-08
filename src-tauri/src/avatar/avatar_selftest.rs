@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v23 — AVATAR SELF-TEST
+//   TITANE∞ v30.0.0 — AVATAR SELF-TEST
 //   10 tests complets pour ImmersiveAvatarEngine
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -143,7 +143,7 @@ pub async fn avatar_run_selftest() -> Result<String, String> {
 
     let summary = format!(
         "\n╔══════════════════════════════════════════════════════════════╗\n\
-         ║     TITANE∞ v23 — AVATAR ENGINE SELF-TEST REPORT            ║\n\
+         ║     TITANE∞ v30.0.0 — AVATAR ENGINE SELF-TEST REPORT            ║\n\
          ╚══════════════════════════════════════════════════════════════╝\n\n\
          Tests Passed: {}/{}\n\
          Tests Failed: {}\n\

@@ -1,4 +1,4 @@
-// TITANE∞ v12 - Voice Activity Detection (VAD)
+// TITANE∞ v30.0.0 - Voice Activity Detection (VAD)
 // Detects when user is speaking vs silence
 
 const VAD_THRESHOLD: f32 = 0.02; // Energy threshold for speech detection

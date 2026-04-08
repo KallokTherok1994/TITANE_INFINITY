@@ -50,7 +50,7 @@ impl DocumentGenerator {
             version: "1.0.0".to_string(),
             created_at: chrono::Utc::now(),
             updated_at: chrono::Utc::now(),
-            author: "TITANE∞ v13".to_string(),
+            author: "TITANE∞ v30.0.0".to_string(),
             tags: self.extract_tags(&config),
             category: self.get_category(&config.doc_type),
         };

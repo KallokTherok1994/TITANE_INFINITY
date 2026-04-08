@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v17 - Cognitive Security Module
+ * TITANE∞ v30.0.0 - Cognitive Security Module
  *
  * Hardening complet du CognitiveEngine:
  * - Validation structurelle

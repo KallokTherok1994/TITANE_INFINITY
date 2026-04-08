@@ -1,5 +1,5 @@
 // ╔══════════════════════════════════════════════════════════════════════════════╗
-// ║ TITANE∞ v8.0 - Adaptive Engine Regulation Module                            ║
+// ║ TITANE∞ v30.0.0 - Adaptive Engine Regulation Module                            ║
 // ║ Régulation douce et progressive des états adaptatifs                        ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 

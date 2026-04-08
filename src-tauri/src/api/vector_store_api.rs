@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════
-//!   TITANE∞ v19.5.2 — VECTOR STORE API (Backend Rust)
+//!   TITANE∞ v30.0.0 — VECTOR STORE API (Backend Rust)
 //!   Migration from TypeScript SQLiteVectorStore to Rust
 //!   
 //!   Features:

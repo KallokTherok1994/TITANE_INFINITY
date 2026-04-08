@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v19.8 - QA ENGINE CORE
+//   TITANE∞ v30.0.0 - QA ENGINE CORE
 //   Système de tests automatisés complet pour tous les modules
 // ═══════════════════════════════════════════════════════════════
 

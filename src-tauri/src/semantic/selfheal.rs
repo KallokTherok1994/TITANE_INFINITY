@@ -1,4 +1,4 @@
-// TITANE∞ v13 - Semantic SelfHeal
+// TITANE∞ v30.0.0 - Semantic SelfHeal
 // Auto-réparation de l'index sémantique
 
 use serde::{Deserialize, Serialize};

@@ -1,4 +1,4 @@
-// TITANE∞ v14.1 - Decision Engine
+// TITANE∞ v30.0.0 - Decision Engine
 // Moteur de décision structurée
 
 #![allow(dead_code)]

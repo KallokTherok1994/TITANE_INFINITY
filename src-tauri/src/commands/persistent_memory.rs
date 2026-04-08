@@ -1,4 +1,4 @@
-// TITANE∞ v19.2Ω — PERSISTENT MEMORY COMMANDS
+// TITANE∞ v30.0.0 — PERSISTENT MEMORY COMMANDS
 // © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 //
 // Système de Mémoire Persistante 3-Niveaux:

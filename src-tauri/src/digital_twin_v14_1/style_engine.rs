@@ -1,4 +1,4 @@
-// TITANE∞ v14.1 - Style Engine
+// TITANE∞ v30.0.0 - Style Engine
 pub struct StyleEngine;
 
 impl StyleEngine {

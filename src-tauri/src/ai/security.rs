@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v24.20 Phase 8 — AI ROUTER SECURITY HARDENING
+//   TITANE∞ v30.0.0 Phase 8 — AI ROUTER SECURITY HARDENING
 //   Timeout strict, filtrage prompts, validation réponses, pare-feu
 //   Optimization: Static pattern arrays (no heap allocations)
 // ═══════════════════════════════════════════════════════════════

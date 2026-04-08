@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — COMPAT: Memory module stub
+//   TITANE∞ v30.0.0 — COMPAT: Memory module stub
 // ═══════════════════════════════════════════════════════════════
 
 use serde::{Deserialize, Serialize};

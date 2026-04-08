@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17.3.0 — TYPES: MEMORY CHAT
+//   TITANE∞ v30.0.0 — TYPES: MEMORY CHAT
 //   Types pour intégration Chat IA ↔ Memory Core
 // ═══════════════════════════════════════════════════════════════
 

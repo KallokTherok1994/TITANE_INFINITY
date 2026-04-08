@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17.2.0 — APP: MAIN ENTRY POINT
+//   TITANE∞ v30.0.0 — APP: MAIN ENTRY POINT
 //   Tauri Application Bootstrap
 // ═══════════════════════════════════════════════════════════════
 

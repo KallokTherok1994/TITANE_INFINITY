@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// TITANE∞ v21 — CHAT GENERATE COMMANDS
+// TITANE∞ v30.0.0 — CHAT GENERATE COMMANDS
 // Tauri commands for AI provider-specific generation
 // Phase 1: Standardisation API — Réactivation Gemini + OpenAI + Claude
 // ═══════════════════════════════════════════════════════════════════════════

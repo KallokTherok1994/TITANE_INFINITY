@@ -1,4 +1,4 @@
-// TITANE∞ v14.1 - Auto Evolution Engine
+// TITANE∞ v30.0.0 - Auto Evolution Engine
 // Apprentissage continu + auto-amélioration versionnée
 
 #![allow(dead_code)]

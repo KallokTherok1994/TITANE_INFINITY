@@ -1,4 +1,4 @@
-// TITANE∞ v14.1 - Hypnose Conversationnelle Douce
+// TITANE∞ v30.0.0 - Hypnose Conversationnelle Douce
 // Hypnose Ericksonienne adaptée
 
 #![allow(dead_code)]

@@ -592,7 +592,7 @@ pub fn run_fullbody_selftest() -> FullBodySelfTestReport {
     let mut report = FullBodySelfTestReport::new();
 
     println!("\n╔═══════════════════════════════════════════════════════════════╗");
-    println!("║  TITANE∞ v24 — Full-Body Avatar Engine Self-Tests            ║");
+    println!("║  TITANE∞ v30.0.0 — Full-Body Avatar Engine Self-Tests            ║");
     println!("╚═══════════════════════════════════════════════════════════════╝\n");
 
     // Run all tests

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// TITANE∞ v29.0.0 — GLM-4.6V-FLASH COMMANDS
+// TITANE∞ v30.0.0 — GLM-4.6V-FLASH COMMANDS
 // Tauri commands for GLM-4.6V-Flash local AI provider
 // Local-first: vLLM server + OpenAI-compatible API + Vision support
 // ═══════════════════════════════════════════════════════════════════════════

@@ -1,6 +1,6 @@
 use crate::cognitive::security::*;
 /**
- * TITANE∞ v17 - Cognitive Commands
+ * TITANE∞ v30.0.0 - Cognitive Commands
  *
  * Commandes Tauri pour système cognitif
  */

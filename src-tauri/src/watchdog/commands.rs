@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v17 - Watchdog Commands
+ * TITANE∞ v30.0.0 - Watchdog Commands
  *
  * Commandes Tauri pour watchdog system
  */

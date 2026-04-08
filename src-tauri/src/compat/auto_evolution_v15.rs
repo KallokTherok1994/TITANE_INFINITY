@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — COMPAT: AutoEvolution stub
+//   TITANE∞ v30.0.0 — COMPAT: AutoEvolution stub
 // ═══════════════════════════════════════════════════════════════
 
 use serde::{Deserialize, Serialize};

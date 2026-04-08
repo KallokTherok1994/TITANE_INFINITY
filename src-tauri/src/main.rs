@@ -1,8 +1,8 @@
-// TITANE_INFINITY v29.0.0 — Proprietary License
+// TITANE_INFINITY v30.0.0 — Proprietary License
 // © 2025-2026 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v29.0.0 — MAIN ENTRY POINT (Singularity Architecture)
+//   TITANE∞ v30.0.0 — MAIN ENTRY POINT (Singularity Architecture)
 //   Tests 93.0% Production Ready + UI Enhanced + COPILOT-XS Compliant
 //   20 Engines Unified + OMEGA Pipeline + Production Ready
 // ═══════════════════════════════════════════════════════════════
@@ -2824,5 +2824,5 @@ fn main() {
             std::process::exit(1);
         });
 
-    log::info!("TITANE∞ v19.5.2 shutdown - Security System offline");
+    log::info!("TITANE∞ v30.0.0 shutdown - Security System offline");
 }

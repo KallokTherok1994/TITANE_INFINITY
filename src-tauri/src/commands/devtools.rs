@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v17.2.0 — DevTools API Commands
+//   TITANE∞ v30.0.0 — DevTools API Commands
 //   Tauri commands for observability: logging, metrics, core discovery, cognitive state
 // ═══════════════════════════════════════════════════════════════════════════════
 

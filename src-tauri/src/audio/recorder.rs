@@ -1,4 +1,4 @@
-// TITANE∞ v12 - Audio Recorder
+// TITANE∞ v30.0.0 - Audio Recorder
 // Continuous microphone recording with circular buffer
 
 use super::{AudioConfig, AudioError, AudioResult};

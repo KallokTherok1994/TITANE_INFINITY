@@ -1,4 +1,4 @@
-// TITANE∞ v15 - Memory Model
+// TITANE∞ v30.0.0 - Memory Model
 // Data structures for conversations and messages
 // Clean architecture v15: JSON serialization, documented
 // Data structures for conversational memory

@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════
-//!   TITANE∞ v24.3.0 — LIB CONFIGURATION
+//!   TITANE∞ v30.0.0 — LIB CONFIGURATION
 //!   Unified backend architecture - Singularity + OMEGA Pipeline
 //! ═══════════════════════════════════════════════════════════════
 

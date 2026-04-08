@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// TITANE∞ v17 — OVERDRIVE SEMANTIC KERNEL
+// TITANE∞ v30.0.0 — OVERDRIVE SEMANTIC KERNEL
 // ═══════════════════════════════════════════════════════════════════════════
 // Kernel sémantique pour compréhension avancée et génération contextuelle
 // ═══════════════════════════════════════════════════════════════════════════

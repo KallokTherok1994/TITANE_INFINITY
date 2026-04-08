@@ -3,7 +3,7 @@
 
 use crate::error::TitaneResult;
 /**
- * TITANE∞ v19.5 — Audit Logging (REPAIRED vΩ)
+ * TITANE∞ v30.0.0 — Audit Logging (REPAIRED vΩ)
  *
  * Production-grade audit logging pour traçabilité complète
  * Logs structurés JSON avec rotation automatique

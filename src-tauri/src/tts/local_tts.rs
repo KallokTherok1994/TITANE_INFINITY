@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17.3.0 - Local TTS (SECURED)
+//   TITANE∞ v30.0.0 - Local TTS (SECURED)
 //   Offline text-to-speech with ShellGuard protection
 // ═══════════════════════════════════════════════════════════════
 

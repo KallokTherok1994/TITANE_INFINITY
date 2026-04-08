@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — COMPATIBILITY MODULE
+//   TITANE∞ v30.0.0 — COMPATIBILITY MODULE
 //   Stubs for removed legacy systems + v12↔v14 bridge
 // ═══════════════════════════════════════════════════════════════
 
