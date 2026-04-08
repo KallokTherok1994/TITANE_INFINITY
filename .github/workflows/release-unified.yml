@@ -323,6 +323,15 @@ jobs:
           fi
           cat release_notes.md
 
+      - name: 🏷️ Normalize checksum asset names
+        run: |
+          find artifacts -type f -name 'SHA256SUMS.txt' | sort | while read -r file; do
+            artifact_dir="$(basename "$(dirname "$file")")"
+            target="$(dirname "$file")/${artifact_dir}-SHA256SUMS.txt"
+            mv "$file" "$target"
+            echo "renamed $file -> $target"
+          done
+
       - name: 🚀 Create GitHub Release
         uses: softprops/action-gh-release@v2.2.0
         with:
@@ -332,13 +341,12 @@ jobs:
           body_path: release_notes.md
           draft: false
           prerelease: false
-          overwrite_files: true
           files: |
             artifacts/**/*.deb
             artifacts/**/*.AppImage
             artifacts/**/*.msi
             artifacts/**/*.dmg
-            artifacts/**/SHA256SUMS.txt
+            artifacts/**/*SHA256SUMS.txt
           fail_on_unmatched_files: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
