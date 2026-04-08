@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — UI Mode System
+ * TITANE∞ v30.0.0 — UI Mode System
  * Système de modes visuels adaptatifs
  *
  * Permet à l'UI de fonctionner en différents modes :

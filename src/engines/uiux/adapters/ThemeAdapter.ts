@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — Theme Adapter
+ * TITANE∞ v30.0.0 — Theme Adapter
  * Adaptation du thème visuel
  */
 

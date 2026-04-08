@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v27 — Voice Services Barrel Export
+ * TITANE∞ v30.0.0 — Voice Services Barrel Export
  *
  * Central export point for voice services lazy loading.
  * Modules in this directory have conflicting type names, so we export instances only.

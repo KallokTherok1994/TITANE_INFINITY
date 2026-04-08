@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.3.0 — CAMERA DYNAMISM ENGINE (YOLO OPT-1: Three.js lazy)
+//   TITANE∞ v30.0.0 — CAMERA DYNAMISM ENGINE (YOLO OPT-1: Three.js lazy)
 //   Intelligent camera with vocal zoom, breathing parallax, 3 modes
 // ═══════════════════════════════════════════════════════════════════════════
 

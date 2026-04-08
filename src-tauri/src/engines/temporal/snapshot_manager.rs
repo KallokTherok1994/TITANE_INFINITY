@@ -1,4 +1,4 @@
-//! TITANE∞ v20Ω — Snapshot Manager
+//! TITANE∞ v30.0.0 — Snapshot Manager
 //! Gestionnaire de snapshots avec LRU cache
 
 use super::StateSnapshot;

@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17 - Service Invoker (SECURED)
+ * TITANE∞ v30.0.0 - Service Invoker (SECURED)
  * Retry, timeout, et error handling pour tous les services Tauri
  * Avec intégration du module security (whitelist, anti-injection, anti-loop)
  * ═══════════════════════════════════════════════════════════════

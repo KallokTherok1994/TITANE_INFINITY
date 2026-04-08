@@ -1,4 +1,4 @@
-//! TITANE∞ v20Ω — Probability Engine
+//! TITANE∞ v30.0.0 — Probability Engine
 //! Calcul des probabilités bayésiennes
 
 use super::{PredictedAction, UserEvent};

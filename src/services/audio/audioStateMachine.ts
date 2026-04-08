@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v19.3.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.3 — AUDIO STATE MACHINE
+ *   TITANE∞ v30.0.0 — AUDIO STATE MACHINE
  *   [P1.1] Machine à états centralisée pour le pipeline audio
  *
  *   États: idle → user_speaking → ai_thinking → ai_speaking → idle

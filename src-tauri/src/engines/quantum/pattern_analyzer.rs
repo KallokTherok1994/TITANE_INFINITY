@@ -1,4 +1,4 @@
-//! TITANE∞ v20Ω — Pattern Analyzer
+//! TITANE∞ v30.0.0 — Pattern Analyzer
 //! Analyse des patterns comportementaux
 
 use super::{PredictedAction, UserEvent};

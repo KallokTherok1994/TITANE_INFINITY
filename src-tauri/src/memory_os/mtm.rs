@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1 — MID-TERM MEMORY (MTM)
+//   TITANE∞ v30.0.0 — MID-TERM MEMORY (MTM)
 //   Super Prompt #12: Consolidation, sorting by importance × recency
 //   Target: <3ms consolidation, 50-200 items
 // ═══════════════════════════════════════════════════════════════

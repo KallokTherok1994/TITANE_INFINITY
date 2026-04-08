@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v19.0 — AI Response Validator
+ * TITANE∞ v30.0.0 — AI Response Validator
  *
  * Validation des réponses IA avant affichage/traitement
  * Protection contre: réponses malformées, JSON invalid, XSS dans markdown, data leaking

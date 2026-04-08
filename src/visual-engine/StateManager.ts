@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v19.3.0 — Visual State Manager
+ * TITANE_INFINITY v30.0.0 — Visual State Manager
  * Manages visual state transitions with smooth 500ms interpolation
  *
  * Features:

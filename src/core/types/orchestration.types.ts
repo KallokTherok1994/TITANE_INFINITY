@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25 — Orchestration Types
+ * TITANE∞ v30.0.0 — Orchestration Types
  * Types transversaux pour l'orchestration système
  *
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.

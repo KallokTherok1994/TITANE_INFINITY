@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.3.0 — VOICE REACTION SYSTEM
+//   TITANE∞ v30.0.0 — VOICE REACTION SYSTEM
 //   YOLO OPT-1: Lazy-loaded Three.js
 //   Real-time physical reactions to voice (head, torso, breathing)
 // ═════════════════════════════════════════════════════════════════════════════

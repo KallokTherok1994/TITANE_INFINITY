@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v15 — AI STREAMING CHAT CLIENT
+ * TITANE∞ v30.0.0 — AI STREAMING CHAT CLIENT
  * Client IA avec support streaming réel via Tauri events
  * ═══════════════════════════════════════════════════════════════
  */

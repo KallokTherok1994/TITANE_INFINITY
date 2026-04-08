@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20Ω — CORE LOOP
+//   TITANE∞ v30.0.0 — CORE LOOP
 //   Main event loop orchestrating all kernel components
 //   Super Prompt #11 — Phase 4
 // ═══════════════════════════════════════════════════════════════
@@ -91,7 +91,7 @@ impl CoreLoop {
     pub async fn run(&mut self) -> TitaneResult<()> {
         // Broadcast kernel start
         let _ = self.event_tx.send(KernelEvent::KernelStarted {
-            version: "v20Ω.0".to_string(),
+            version: "v30.0.0".to_string(),
             timestamp: chrono::Utc::now().timestamp_millis(),
         });
 

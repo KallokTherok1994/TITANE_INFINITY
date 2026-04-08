@@ -1,12 +1,12 @@
 /**
- * TITANE_INFINITY v24.1.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * See LICENSE.md for full legal terms (FR/EN).
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v24.1 — PARLER-TTS LOCAL BRIDGE
+ *   TITANE∞ v30.0.0 — PARLER-TTS LOCAL BRIDGE
  *   Service bridge TypeScript → API Python Parler-TTS locale
  *   Remplace ElevenLabs par solution 100% locale Apache-2.0
  * ═══════════════════════════════════════════════════════════════════

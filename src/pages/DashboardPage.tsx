@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v16.0.0 - Dashboard Page
+ * TITANE∞ v30.0.0 - Dashboard Page
  * Vue d&apos;ensemble du système avec métriques réelles
  * + INTÉGRATION: PersonaMoodIndicator + Visual Engines
  * Real stats: 407 Tauri commands, 294 Rust modules, 355 TS files
@@ -147,7 +147,7 @@ export const DashboardPage = (): JSX.Element => {
           showDetails
         />
 
-        {/* Stats Grid - TITANE∞ v19.3 Real Metrics */}
+        {/* Stats Grid - TITANE∞ v30.0.0 Real Metrics */}
         <Grid columns={3} gap={4}>
           <Card variant="glass" elevation="lg" hoverable>
             <Stack direction="vertical" gap={2}>

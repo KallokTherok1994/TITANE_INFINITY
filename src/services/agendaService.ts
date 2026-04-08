@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- * TITANE∞ v24.2.0 — AGENDA SERVICE
+ * TITANE∞ v30.0.0 — AGENDA SERVICE
  * Services layer pour AgendaEngine (conformité ARCHITECTURE_RINGS)
  * ═══════════════════════════════════════════════════════════════════
  *

@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v24.2.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v24.2.0 - Metrics Card Component
+ * TITANE∞ v30.0.0 - Metrics Card Component
  * Carte d'affichage pour une métrique
  * ═══════════════════════════════════════════════════════════════
  */

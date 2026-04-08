@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v19.4.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.4 — ADAPTIVE THRESHOLD ENGINE
+ *   TITANE∞ v30.0.0 — ADAPTIVE THRESHOLD ENGINE
  *
  *   Ajuste automatiquement les seuils de détection
  *   selon le bruit ambiant et les faux positifs

@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v19.2Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2Ω — OMEGA PHASE 7Ω - AUTOMATED VALIDATION
+ *   TITANE∞ v30.0.0 — OMEGA PHASE 7Ω - AUTOMATED VALIDATION
  *   Tests End-to-End complets pour validation finale OMEGA
  *   Garantit infaillibilité sous conditions réelles d'utilisation
  * ═══════════════════════════════════════════════════════════════════

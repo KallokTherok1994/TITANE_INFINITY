@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — Hover Magnetism
+ * TITANE∞ v30.0.0 — Hover Magnetism
  * Micro-interaction : magnétisme de la souris sur éléments importants
  *
  * Les éléments attirent légèrement le curseur lorsqu'il passe à proximité,

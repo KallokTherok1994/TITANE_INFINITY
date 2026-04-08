@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v15.3 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v15 - TAURI API TYPES
+ * TITANE∞ v30.0.0 - TAURI API TYPES
  * Types TypeScript stricts pour toutes les commandes Tauri
  * ═══════════════════════════════════════════════════════════════
  */

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v24.12 — USE FLOATING WINDOW HOOK
+//   TITANE∞ v30.0.0 — USE FLOATING WINDOW HOOK
 //   React Hook for Floating Avatar Window Management
 // ═══════════════════════════════════════════════════════════════════════════════
 

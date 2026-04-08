@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — Performance Detector
+ * TITANE∞ v30.0.0 — Performance Detector
  * Détection des performances d'affichage
  */
 

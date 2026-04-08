@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v8.0 — Class Names Utility
+ * TITANE∞ v30.0.0 — Class Names Utility
  *
  * Utility function for conditional class names with Tailwind CSS
  * Based on clsx + tailwind-merge pattern

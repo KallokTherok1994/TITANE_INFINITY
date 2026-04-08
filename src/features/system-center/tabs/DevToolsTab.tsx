@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20.1 — DevTools OS Tab
+ * TITANE∞ v30.0.0 — DevTools OS Tab
  *
  * Enhanced DevTools with:
  * - Live Debugger (OMEGA + Singularity + Engines timing)

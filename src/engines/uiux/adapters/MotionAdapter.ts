@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — Motion Adapter
+ * TITANE∞ v30.0.0 — Motion Adapter
  * Adaptation des animations et transitions
  */
 

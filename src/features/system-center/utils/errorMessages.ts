@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — Error Message Utilities
+ * TITANE∞ v30.0.0 — Error Message Utilities
  *
  * Transforme les erreurs techniques en messages utilisateur clairs
  *

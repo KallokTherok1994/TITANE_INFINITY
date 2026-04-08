@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26 - Test Utilities Type Declarations
+ * TITANE∞ v30.0.0 - Test Utilities Type Declarations
  * Explicit type exports for TypeScript strict mode
  */
 

@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v21 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v21 — GEMINI PROVIDER (✅ RÉACTIVÉ Phase 1)
+ *   TITANE∞ v30.0.0 — GEMINI PROVIDER (✅ RÉACTIVÉ Phase 1)
  *   Provider Google Gemini via backend Rust API
  *   Phase 1 Standardisation API — Audit v21
  *   ✨ LTM Integration: Memory Context Injection

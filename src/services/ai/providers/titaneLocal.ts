@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v19.2Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2Ω — TITANE LOCAL AI PROVIDER (NOYAU AUTONOME)
+ *   TITANE∞ v30.0.0 — TITANE LOCAL AI PROVIDER (NOYAU AUTONOME)
  *   Provider infaillible - Dernier rempart - Toujours opérationnel
  *   PHASE 4Ω: Isolation totale + Jamais indisponible + Jamais erreur
  *   v28.87.0: Intégration LTM complète avec MemoryContext unifié
@@ -23,10 +23,10 @@ const isDev = Boolean(runtimeEnv?.DEV);
 const isTestEnv = typeof process !== 'undefined' && Boolean(process.env?.VITEST);
 
 /**
- * Base de connaissances TITANE∞ v19.2Ω
+ * Base de connaissances TITANE∞ v30.0.0
  */
 const TITANE_KNOWLEDGE = {
-  identity: 'TITANE∞ v19.2Ω',
+  identity: 'TITANE∞ v30.0.0',
   version: 'v19.2Ω',
   nature: "Système d'auto-évolution cognitive local - Noyau Autonome",
 
@@ -59,9 +59,9 @@ const TITANE_KNOWLEDGE = {
 
   responses: {
     greeting: [
-      "Je suis TITANE∞ v19.2Ω, système cognitif autonome avec architecture anti-silence. Comment puis-je t'assister ?",
+      "Je suis TITANE∞ v30.0.0, système cognitif autonome avec architecture anti-silence. Comment puis-je t'assister ?",
       'Bonjour. TITANE∞ opérationnel en mode noyau autonome. Tous systèmes en ligne.',
-      'Systèmes core actifs. TITANE∞ v19.2Ω à ton écoute en mode infaillible.',
+      'Systèmes core actifs. TITANE∞ v30.0.0 à ton écoute en mode infaillible.',
     ],
 
     status: [
@@ -406,7 +406,7 @@ Que souhaites-tu explorer ?`;
   const questionEcho = buildQuestionEcho(message);
   const memoryInsight = extractMemoryInsight(history);
   const identitySignature =
-    '\n\n— TITANE∞ v19.2Ω | noyau cognitif autonome | système intelligent auto-guéri';
+    '\n\n— TITANE∞ v30.0.0 | noyau cognitif autonome | système intelligent auto-guéri';
 
   const memoryNote = memoryInsight ? `\n\n🧠 **Mémoire** : ${memoryInsight}` : '';
 
@@ -454,7 +454,7 @@ Que souhaites-tu explorer ?`;
  */
 export const titaneLocalProvider: AIProvider = {
   name: 'titane-local',
-  description: 'TITANE∞ v19.2Ω Noyau Autonome OMEGA',
+  description: 'TITANE∞ v30.0.0 Noyau Autonome OMEGA',
 
   async isAvailable(): Promise<boolean> {
     return true; // ═══ TOUJOURS DISPONIBLE - NOYAU OMEGA ═══
@@ -554,7 +554,7 @@ export const titaneLocalProvider: AIProvider = {
 
       return {
         content:
-          "🔄 **Auto-réparation OMEGA engagée**. Noyau TITANE∞ v19.2Ω restauré automatiquement.\n\nJe reste pleinement opérationnel pour t'assister avec l'architecture OMEGA, diagnostic, ou toute question technique.\n\n⚡ **Garantie OMEGA** : Ce provider ne peut jamais échouer complètement.",
+          "🔄 **Auto-réparation OMEGA engagée**. Noyau TITANE∞ v30.0.0 restauré automatiquement.\n\nJe reste pleinement opérationnel pour t'assister avec l'architecture OMEGA, diagnostic, ou toute question technique.\n\n⚡ **Garantie OMEGA** : Ce provider ne peut jamais échouer complètement.",
         provider: 'titane-local',
         model: 'titane-emergency-v19.2Ω',
         timestamp: Date.now(),

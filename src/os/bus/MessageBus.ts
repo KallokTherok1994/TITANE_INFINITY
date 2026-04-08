@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — Message Bus
+ * TITANE∞ v30.0.0 — Message Bus
  * Bus de messages pour la communication inter-composants
  */
 

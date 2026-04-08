@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20Ω — KERNEL SIGNALS
+//   TITANE∞ v30.0.0 — KERNEL SIGNALS
 //   Signal bus for inter-component communication
 //   Super Prompt #11 — Phase 5
 // ═══════════════════════════════════════════════════════════════

@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v15 - Phase 8: Performance Budget
+ * TITANE∞ v30.0.0 - Phase 8: Performance Budget
  * Core Web Vitals monitoring & budget enforcement
  * ═══════════════════════════════════════════════════════════════
  */

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.3.0 — STUDIO LIGHTING RIG (YOLO OPT-1: Three.js lazy)
+//   TITANE∞ v30.0.0 — STUDIO LIGHTING RIG (YOLO OPT-1: Three.js lazy)
 //   Professional 3-point lighting with appearance style adaptation
 // ═══════════════════════════════════════════════════════════════════════════
 

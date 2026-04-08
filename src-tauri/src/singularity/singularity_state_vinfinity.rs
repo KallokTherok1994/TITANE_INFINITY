@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v20 — SINGULARITYSTATE v∞
+//   TITANE∞ v30.0.0 — SINGULARITYSTATE v∞
 //   Le modèle final, unique, complet, cohérent, auto-réparateur, auto-validé
 //   Source de vérité globale — 20 moteurs fusionnés en 1 état
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -214,7 +214,7 @@ pub struct NarrativeState {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-//   SINGULARITYSTATE v∞ — STRUCTURE FINALE
+//   SINGULARITYSTATE v30.0.0 — STRUCTURE FINALE
 // ═══════════════════════════════════════════════════════════════════════════════
 
 /// L'état final, unique, complet du système TITANE∞

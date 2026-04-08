@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.0 — PHASE 1 STABILISATION: OMEGA PIPELINE TESTS
+//   TITANE∞ v30.0.0 — PHASE 1 STABILISATION: OMEGA PIPELINE TESTS
 //   Tests complets pour omega/pipeline.rs
 //   Pattern moderne: Result<(), Box<dyn Error>> + ? operator
 // ═══════════════════════════════════════════════════════════════

@@ -1,12 +1,12 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v15 - UI Components Index
+// TITANE∞ v30.0.0 - UI Components Index
 export { Button } from './Button';
 export { Panel } from './Panel';
 export { Card } from './Card';
@@ -29,7 +29,7 @@ export type { SelectOption } from './Select';
 export { Toggle } from './Toggle';
 export type { ToggleOption } from './Toggle';
 
-// TITANE∞ v19 - Enhanced UI Components
+// TITANE∞ v30.0.0 - Enhanced UI Components
 export { Toast, ToastContainer, createToastId } from './Toast';
 export type {
   ToastProps,

@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v20.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v25.0 — useTTSWithMicControl TESTS
+ *   TITANE∞ v30.0.0 — useTTSWithMicControl TESTS
  *   [P0-6] Tests unitaires hook auto-mute microphone pendant TTS
  *
  *   Objectif Coverage: >80%

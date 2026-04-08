@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.2.0 — Design System Showcase
+ * TITANE∞ v30.0.0 — Design System Showcase
  * Interactive reference for Titanium Dark components
  * Demonstrates all component variants and states
  */
@@ -401,7 +401,7 @@ export default function DesignSystemShowcase() {
         {/* Footer */}
         <footer className="text-center pt-8 border-t border-titanium-border-default">
           <p className="text-sm text-titanium-text-tertiary">
-            TITANE∞ v26.2.0 • Titanium Dark Design System
+            TITANE∞ v30.0.0 • Titanium Dark Design System
           </p>
           <p className="text-xs text-titanium-text-disabled mt-2">
             WCAG 2.2 AA Compliant • Monochrome Premium UI

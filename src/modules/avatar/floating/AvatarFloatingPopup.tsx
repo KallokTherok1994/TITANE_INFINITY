@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v24.12 — AVATAR FLOATING POPUP COMPONENT
+//   TITANE∞ v30.0.0 — AVATAR FLOATING POPUP COMPONENT
 //   Controls Popup for Floating Avatar Window
 // ═══════════════════════════════════════════════════════════════════════════════
 

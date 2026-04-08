@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1 — MEMORY OS API COMMANDS
+//   TITANE∞ v30.0.0 — MEMORY OS API COMMANDS
 //   Super Prompt #12: Tauri IPC commands for Memory OS
 //   Frontend integration for React DevTools
 // ═══════════════════════════════════════════════════════════════

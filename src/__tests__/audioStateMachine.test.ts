@@ -1,12 +1,12 @@
 // @ts-nocheck
 /**
- * TITANE_INFINITY v20.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v20.0 — AUDIO STATE MACHINE TESTS
+ *   TITANE∞ v30.0.0 — AUDIO STATE MACHINE TESTS
  *   [P0-5] Tests unitaires + intégration State Machine audio
  *
  *   Objectif Coverage: >70%

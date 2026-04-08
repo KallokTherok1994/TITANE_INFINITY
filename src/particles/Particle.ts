@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v19.3.0 — Particle Class
+ * TITANE_INFINITY v30.0.0 — Particle Class
  * Individual particle with physics simulation
  *
  * Features:

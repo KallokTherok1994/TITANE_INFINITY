@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.0 — UNIFIED MEMORY COMMANDS
+//   TITANE∞ v30.0.0 — UNIFIED MEMORY COMMANDS
 //   Phase 2 Fusion #2: Memory #5 + MemoryModule + Singularity Memory
 // ═══════════════════════════════════════════════════════════════
 

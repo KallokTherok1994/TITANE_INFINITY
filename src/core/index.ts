@@ -1,12 +1,12 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// ⚡ TITANE∞ v21-v24 — CORE ENGINES MASTER INDEX
+// ⚡ TITANE∞ v30.0.0 — CORE ENGINES MASTER INDEX
 // Export centralisé de tous les moteurs (Phase 6-10)
 
 // ══════════════════════════════════════════════════════════════

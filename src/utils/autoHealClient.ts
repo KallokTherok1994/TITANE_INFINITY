@@ -1,4 +1,4 @@
-// TITANE∞ v16.0 — Auto-Heal Client Frontend
+// TITANE∞ v30.0.0 — Auto-Heal Client Frontend
 // Client TypeScript pour interagir avec le système Auto-Heal
 
 import { secureInvoke } from '@/lib/security';

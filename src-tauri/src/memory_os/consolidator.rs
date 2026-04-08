@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1 — MEMORY CONSOLIDATOR
+//   TITANE∞ v30.0.0 — MEMORY CONSOLIDATOR
 //   Super Prompt #12: Auto-consolidation STM → MTM → LTM
 //   Target: <5ms consolidation cycle
 // ═══════════════════════════════════════════════════════════════

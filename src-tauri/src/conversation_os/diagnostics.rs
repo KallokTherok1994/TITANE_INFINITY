@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — CONVERSATION DIAGNOSTICS
+//! TITANE∞ v30.0.0 — CONVERSATION DIAGNOSTICS
 //! Super Prompt #9 — Diagnostics et événements du Conversation OS
 //! ═══════════════════════════════════════════════════════════════════════════════
 

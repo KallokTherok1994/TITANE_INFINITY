@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v15 - Phase 5: Optimized Icon Exports
+ * TITANE∞ v30.0.0 - Phase 5: Optimized Icon Exports
  * Tree-shakeable imports for lucide-react
  * ═══════════════════════════════════════════════════════════════
  */

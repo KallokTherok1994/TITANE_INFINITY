@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v25.4.2 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v25.4.2 — FUSION HOOKS TESTS
+ *   TITANE∞ v30.0.0 — FUSION HOOKS TESTS
  *   Tests unitaires complets pour useSingularitySync, useMemoryEngine,
  *   et useSystemHealth avec mocks appropriés
  * ═══════════════════════════════════════════════════════════════════

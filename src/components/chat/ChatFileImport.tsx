@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v18 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v18.0 — CHAT FILE IMPORT
+ *   TITANE∞ v30.0.0 — CHAT FILE IMPORT
  *   Composant d'importation de fichiers dans le Chat IA
  *   Drag & Drop + Analyse automatique + Award XP Memory
  * ═══════════════════════════════════════════════════════════════════

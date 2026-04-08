@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v24.2.1 — Debounced Storage Utilities
+ * TITANE∞ v30.0.0 — Debounced Storage Utilities
  * Prevents excessive localStorage writes with intelligent batching
  * © 2025 Humain Total / Kevin Thibault / TITANE Team
  */

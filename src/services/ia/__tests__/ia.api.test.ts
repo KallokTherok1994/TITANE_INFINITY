@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v19.3Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.3Ω — IA SERVICE API TESTS
+ *   TITANE∞ v30.0.0 — IA SERVICE API TESTS
  *   AUTOFIX Phase D: Proactive tests for API key validation
  * ═══════════════════════════════════════════════════════════════════
  */

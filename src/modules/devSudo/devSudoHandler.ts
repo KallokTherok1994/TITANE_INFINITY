@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v25.3.0 — DEV-SUDO MODE HANDLER (YOLO OPT-5: Lazy handlers)
+ *   TITANE∞ v30.0.0 — DEV-SUDO MODE HANDLER (YOLO OPT-5: Lazy handlers)
  *   Détection et exécution des commandes développeur dans le Chat IA
  *   Super Prompt #7: MASTER DEV ENGINE — Full IDE Mode
  *   Super Prompt #8: SINGULARITY MIND ENGINE — Cerveau métacognitif

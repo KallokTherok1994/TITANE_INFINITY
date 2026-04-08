@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.0 — COHERENCE ENGINE (UNIFIED)
+//   TITANE∞ v30.0.0 — COHERENCE ENGINE (UNIFIED)
 //   Fusion: Nexus Engine + ConsistencyEngine (Moteur #2)
 //   Date: 6 Décembre 2025
 // ═══════════════════════════════════════════════════════════════

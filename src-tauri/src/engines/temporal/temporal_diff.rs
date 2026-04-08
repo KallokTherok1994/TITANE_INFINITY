@@ -1,4 +1,4 @@
-//! TITANE∞ v20Ω — Temporal Diff
+//! TITANE∞ v30.0.0 — Temporal Diff
 //! Calcul des différences entre états
 
 use serde::{Deserialize, Serialize};

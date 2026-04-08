@@ -1,12 +1,12 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v15 - Panel Component
+// TITANE∞ v30.0.0 - Panel Component
 import { ReactNode } from 'react';
 import './Panel.css';
 

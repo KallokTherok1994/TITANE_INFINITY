@@ -1,12 +1,12 @@
 // @ts-nocheck
 /**
- * TITANE∞ v22Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v22Ω — LEGACY UNIFIED MEMORY HELPER
+ *   TITANE∞ v30.0.0 — LEGACY UNIFIED MEMORY HELPER
  *   Tests de comportement pour le helper local base sur importance
  *
  *   NOTE 2026-03:

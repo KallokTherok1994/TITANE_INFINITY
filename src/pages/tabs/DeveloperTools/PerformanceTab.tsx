@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25.7.5 — Performance Tab
+ * TITANE∞ v30.0.0 — Performance Tab
  */
 
 import { LazyCognitiveModuleCard } from '../../DevToolsLazy';

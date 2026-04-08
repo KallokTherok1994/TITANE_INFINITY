@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v19.0.0 — TAURI BRIDGE CENTRALISÉ + EVENT SUBSCRIPTIONS
+ * TITANE∞ v30.0.0 — TAURI BRIDGE CENTRALISÉ + EVENT SUBSCRIPTIONS
  * Service unique pour toutes les commandes Tauri ↔ React + Event System
  * ═══════════════════════════════════════════════════════════════
  */

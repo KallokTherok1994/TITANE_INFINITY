@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * 🗺️ TITANE∞ v15 - CARTE DES POINTS CRITIQUES D'AFFICHAGE
+ * 🗺️ TITANE∞ v30.0.0 - CARTE DES POINTS CRITIQUES D'AFFICHAGE
  * ═══════════════════════════════════════════════════════════════
  *
  * Ce fichier documente les emplacements clés à vérifier en cas

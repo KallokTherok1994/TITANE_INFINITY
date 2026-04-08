@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v25.2.0 — PAGE STATS UNIFIÉE
+ * TITANE∞ v30.0.0 — PAGE STATS UNIFIÉE
  * Fusion complète: Nexus + Helios + Harmonia + État Cognitif
  * Vue consolidée de tous les moteurs en temps réel
  * ═══════════════════════════════════════════════════════════════

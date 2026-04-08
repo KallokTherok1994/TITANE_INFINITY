@@ -1,4 +1,4 @@
-//! TITANE∞ v20Ω — Temporal State
+//! TITANE∞ v30.0.0 — Temporal State
 //! Structures d'état pour le système temporel
 
 use serde::{Deserialize, Serialize};

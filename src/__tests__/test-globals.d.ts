@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.4.0 — Global Test Type Augmentations
+ * TITANE∞ v30.0.0 — Global Test Type Augmentations
  *
  * Ce fichier désactive les checks TypeScript stricts pour les tests,
  * ce qui est une pratique standard dans les projets production.

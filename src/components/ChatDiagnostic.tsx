@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v19.2 — Chat IA Diagnostic Center
+ * TITANE∞ v30.0.0 — Chat IA Diagnostic Center
  * Nouvel espace de tests & audits intégrés au DevTools
  */
 

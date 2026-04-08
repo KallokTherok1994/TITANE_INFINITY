@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1 — LONG-TERM MEMORY (LTM)
+//   TITANE∞ v30.0.0 — LONG-TERM MEMORY (LTM)
 //   Super Prompt #12: Persistent, indexed, compressed storage
 //   Target: <15ms search, unlimited capacity
 // ═══════════════════════════════════════════════════════════════

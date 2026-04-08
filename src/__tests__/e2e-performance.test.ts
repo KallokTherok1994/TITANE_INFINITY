@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v19.2Ω — E2E Performance Tests
+ * TITANE∞ v30.0.0 — E2E Performance Tests
  * Tests for performance metrics and load handling
  */
 

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20Ω — KERNEL INTEGRATION WITH MEMORY OS
+//   TITANE∞ v30.0.0 — KERNEL INTEGRATION WITH MEMORY OS
 //   Super Prompt #11 Phase 9B — Memory + Kernel Bridge
 // ═══════════════════════════════════════════════════════════════
 

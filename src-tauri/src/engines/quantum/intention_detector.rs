@@ -1,4 +1,4 @@
-//! TITANE∞ v20Ω — Intention Detector
+//! TITANE∞ v30.0.0 — Intention Detector
 //! Détection des intentions utilisateur
 
 use super::{PredictedAction, UserEvent};

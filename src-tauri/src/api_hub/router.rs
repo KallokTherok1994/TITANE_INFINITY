@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — API ROUTER
+//! TITANE∞ v30.0.0 — API ROUTER
 //! Super Prompt #17 — Routage intelligent vers le meilleur provider
 //! Intégration Temporelle — Temporal Intelligence v2
 //! ═══════════════════════════════════════════════════════════════════════════════

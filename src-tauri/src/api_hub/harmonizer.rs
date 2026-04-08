@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — RESPONSE HARMONIZER
+//! TITANE∞ v30.0.0 — RESPONSE HARMONIZER
 //! Super Prompt #17 — Harmonisation des réponses multi-providers
 //! ═══════════════════════════════════════════════════════════════════════════════
 

@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v25.3.2 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v25.3.2 — USE SINGULARITY SYNC (Fusion Hook)
+ *   TITANE∞ v30.0.0 — USE SINGULARITY SYNC (Fusion Hook)
  *   Sync bidirectionnelle Frontend ↔ Backend Singularity State
  *   Auto-merge, conflict resolution, performance optimized
  * ═══════════════════════════════════════════════════════════════════

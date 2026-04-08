@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20Ω — KERNEL EVENTS
+//   TITANE∞ v30.0.0 — KERNEL EVENTS
 //   Event system for kernel operations and monitoring
 //   Super Prompt #11 — Phase 5
 // ═══════════════════════════════════════════════════════════════

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v24.2.1 — Adaptive Polling Utility
+ * TITANE∞ v30.0.0 — Adaptive Polling Utility
  * Dynamically adjusts polling intervals based on activity and visibility
  * Reduces CPU/network usage when user is idle or tab is hidden
  * © 2025 Humain Total / Kevin Thibault / TITANE Team

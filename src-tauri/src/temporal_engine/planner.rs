@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — TEMPORAL PLANNER
+//! TITANE∞ v30.0.0 — TEMPORAL PLANNER
 //! Super Prompt #18 — Planification intelligente et gestion des tâches
 //! ═══════════════════════════════════════════════════════════════════════════════
 

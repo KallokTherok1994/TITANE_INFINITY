@@ -1,12 +1,12 @@
 /**
- * TITANE∞ v19 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v19 - Page Loading Fallback for Suspense boundaries
+// TITANE∞ v30.0.0 - Page Loading Fallback for Suspense boundaries
 import React, { useEffect, useState } from 'react';
 import { Skeleton, SkeletonText, SkeletonAvatar } from './Skeleton';
 import './PageLoadingFallback.css';

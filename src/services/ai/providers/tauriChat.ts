@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v19.2Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2Ω — TAURI CHAT PROVIDER OMEGA (ISOLATION)
+ *   TITANE∞ v30.0.0 — TAURI CHAT PROVIDER OMEGA (ISOLATION)
  *   PHASE 4Ω: Protection invoke() • Timeout handling • Error isolation
  *   Provider utilisant le backend Rust avec protection maximale
  * ═══════════════════════════════════════════════════════════════════

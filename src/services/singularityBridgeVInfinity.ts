@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v20 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- * TITANE∞ v20 — SINGULARITY BRIDGE v∞
+ * TITANE∞ v30.0.0 — SINGULARITY BRIDGE v∞
  * API TypeScript pour SingularityState v∞ (20 moteurs unifiés)
  * ═══════════════════════════════════════════════════════════════════
  *

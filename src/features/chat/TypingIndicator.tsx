@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v21 Phase 4 - Typing Indicator
+ * TITANE∞ v30.0.0 Phase 4 - Typing Indicator
  * Indicateur de saisie animé pour Chat IA
  * ═══════════════════════════════════════════════════════════════
  */

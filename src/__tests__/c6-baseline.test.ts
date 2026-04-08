@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v27.0.0 — PHASE C6 TEST BASELINE
+ * TITANE∞ v30.0.0 — PHASE C6 TEST BASELINE
  * ═════════════════════════════════════════════════════════════════════════════
  * Checklist for PHASE C6: TEST BASELINE (GATE_TESTS)
  * Validates: All existing tests still pass, no regressions

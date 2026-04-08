@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v19.0 — UI LOGGER TESTS
+ * TITANE∞ v30.0.0 — UI LOGGER TESTS
  * Tests unitaires pour UILogger: throttling, sanitization, storage
  * ═══════════════════════════════════════════════════════════════
  */

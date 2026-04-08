@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20Ω — GOVERNANCE ENGINE
+//   TITANE∞ v30.0.0 — GOVERNANCE ENGINE
 //   Internal policies and operational rules
 //   Super Prompt #11 — Phase 8
 // ═══════════════════════════════════════════════════════════════

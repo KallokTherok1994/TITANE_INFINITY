@@ -1,7 +1,7 @@
 #![allow(unused_imports)]
 #![allow(dead_code)]
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.6Ω — AGENT SYSTEM vΩ
+//   TITANE∞ v30.0.0 — AGENT SYSTEM vΩ
 //   Super Prompt #19: Multi-Agent Cognitive Architecture
 //   Multi-agents internes, rôles, collaboration cognitive
 // ═══════════════════════════════════════════════════════════════
@@ -59,7 +59,7 @@ pub use config::AgentSystemConfig;
 pub use diagnostics::{AgentDiagnostics, AgentEvent};
 
 // Version info
-pub const AGENT_SYSTEM_VERSION: &str = "v20.6Ω";
+pub const AGENT_SYSTEM_VERSION: &str = "v30.0.0";
 pub const AGENT_SYSTEM_NAME: &str = "TITANE∞ Agent System vΩ";
 
 /// Performance targets

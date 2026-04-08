@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — PROVIDER REGISTRY
+//! TITANE∞ v30.0.0 — PROVIDER REGISTRY
 //! Super Prompt #17 — Registre des providers et leurs capacités
 //! ═══════════════════════════════════════════════════════════════════════════════
 

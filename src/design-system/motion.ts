@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ═══════════════════════════════════════════════════════════════════
- * TITANE∞ v15 - Motion System (Framer Motion Variants)
+ * TITANE∞ v30.0.0 - Motion System (Framer Motion Variants)
  * ═══════════════════════════════════════════════════════════════════
  *
  * Système d'animations unifié avec throttling performance adaptatif.

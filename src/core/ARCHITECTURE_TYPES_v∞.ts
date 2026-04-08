@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v18.0.0 — ARCHITECTURE TYPES v∞
+ * TITANE∞ v30.0.0 — ARCHITECTURE TYPES v∞
  * Types unifiés pour tous les moteurs et états
  * ═══════════════════════════════════════════════════════════════
  */

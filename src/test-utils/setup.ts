@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25 - Vitest Global Setup
+ * TITANE∞ v30.0.0 - Vitest Global Setup
  * Automatic test environment configuration
  */
 

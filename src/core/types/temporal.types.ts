@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25 — Temporal Types
+ * TITANE∞ v30.0.0 — Temporal Types
  * Types transversaux pour le système temporel
  *
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.

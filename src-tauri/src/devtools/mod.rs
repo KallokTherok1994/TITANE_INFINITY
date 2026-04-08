@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1 — DEVTOOLS OS MODULE
+//   TITANE∞ v30.0.0 — DEVTOOLS OS MODULE
 //   Système de télémétrie, logs, métriques, debugging, analyse
 //   Super Prompt #9: Observabilité complète et outils développeur
 // ═══════════════════════════════════════════════════════════════

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1 — FORGETTING ENGINE
+//   TITANE∞ v30.0.0 — FORGETTING ENGINE
 //   Super Prompt #12: Decay-based importance reduction
 //   L'oubli est basé sur: récence, importance, utilité prédite, similarité
 // ═══════════════════════════════════════════════════════════════

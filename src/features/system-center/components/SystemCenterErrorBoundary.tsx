@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — System Center Error Boundary
+ * TITANE∞ v30.0.0 — System Center Error Boundary
  *
  * Error boundary personnalisé pour le Centre Système avec UX améliorée
  *

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.0 — SYSTEM HEALTH COMMANDS
+//   TITANE∞ v30.0.0 — SYSTEM HEALTH COMMANDS
 //   Phase 2 Fusion #3: Helios + Sentinel + Self-Heal
 // ═══════════════════════════════════════════════════════════════
 

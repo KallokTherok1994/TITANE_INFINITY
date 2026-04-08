@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20.0 — Feedback Components Export
+ * TITANE∞ v30.0.0 — Feedback Components Export
  * Super Prompt #2: Frontend Polish & UX Mastering
  */
 

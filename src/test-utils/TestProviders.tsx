@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25 - Test Providers
+ * TITANE∞ v30.0.0 - Test Providers
  * React Test Wrapper with all necessary providers
  * Fixes: "Cannot read properties of null (reading 'useCallback')"
  */

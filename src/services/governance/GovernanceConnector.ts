@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v20.0Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v20.0Ω — Governance Connector
+ *   TITANE∞ v30.0.0 — Governance Connector
  *   Interface unifiée pour la configuration et validation des providers
  *   Phase 1 minimal : Vérification clés API, activation providers
  * ═══════════════════════════════════════════════════════════════

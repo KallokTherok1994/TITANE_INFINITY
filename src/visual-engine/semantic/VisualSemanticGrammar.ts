@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — Visual Semantic Grammar
+ * TITANE∞ v30.0.0 — Visual Semantic Grammar
  * Le langage visuel de TITANE∞
  *
  * Ce fichier définit la "grammaire" qui traduit les états internes

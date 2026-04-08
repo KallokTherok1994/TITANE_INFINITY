@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v18.0.0 — TAURI COMMANDS REGISTRY
+ * TITANE∞ v30.0.0 — TAURI COMMANDS REGISTRY
  * Registre centralisé de toutes les commandes Tauri ↔ React
  * ═══════════════════════════════════════════════════════════════
  */

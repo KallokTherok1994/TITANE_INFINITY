@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v19.2Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2Ω — SYSTÈME DE MÉMOIRE PERSISTANTE LOCALE
+ *   TITANE∞ v30.0.0 — SYSTÈME DE MÉMOIRE PERSISTANTE LOCALE
  *   Architecture Hiérarchique à 3 Niveaux + Memory Engine
  * ═══════════════════════════════════════════════════════════════════════════════
  *

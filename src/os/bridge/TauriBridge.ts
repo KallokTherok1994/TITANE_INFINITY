@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — Tauri Bridge
+ * TITANE∞ v30.0.0 — Tauri Bridge
  * Pont de communication avec le backend Rust
  */
 

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.3.0 — AUDIO-VISUAL SYNC ENGINE (YOLO OPT-1: Three.js lazy)
+//   TITANE∞ v30.0.0 — AUDIO-VISUAL SYNC ENGINE (YOLO OPT-1: Three.js lazy)
 //   Central coordination pipeline: Audio → Phonemes → Morphs → Expressions → Render
 // ═══════════════════════════════════════════════════════════════════════════
 

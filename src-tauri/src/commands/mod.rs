@@ -1,5 +1,5 @@
 // ╔══════════════════════════════════════════════════════════════════════════════╗
-// ║ TITANE∞ v20.0 - Tauri Commands Central Hub (Phase 2 Fusion #1)             ║
+// ║ TITANE∞ v30.0.0 - Tauri Commands Central Hub (Phase 2 Fusion #1)             ║
 // ║ Unified command handlers for frontend-backend communication                 ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 

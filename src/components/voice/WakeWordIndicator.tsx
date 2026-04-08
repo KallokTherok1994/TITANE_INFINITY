@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v19.4.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.4 — WAKE WORD INDICATOR
+ *   TITANE∞ v30.0.0 — WAKE WORD INDICATOR
  *
  *   Indicateur visuel pour les états d'attention wake word:
  *   - inactive: transparent

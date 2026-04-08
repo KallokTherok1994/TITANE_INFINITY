@@ -1,9 +1,9 @@
 /**
- * TITANE∞ v17 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v17 - Frontend Security Module
+ * TITANE∞ v30.0.0 - Frontend Security Module
  * Type guards, validation, anti-injection, command whitelist
  * ═══════════════════════════════════════════════════════════════════════════
  */

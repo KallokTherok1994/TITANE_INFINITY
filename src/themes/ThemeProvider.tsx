@@ -3,7 +3,7 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ═══════════════════════════════════════════════════════════════════
- * TITANE∞ v16 - Theme Provider (Legacy)
+ * TITANE∞ v30.0.0 - Theme Provider (Legacy)
  * ═══════════════════════════════════════════════════════════════════
  *
  * @deprecated Ce provider est conservé pour compatibilité.

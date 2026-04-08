@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v19.3.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.3 — AUDIO SETTINGS & DIAGNOSTICS ENGINE
+ *   TITANE∞ v30.0.0 — AUDIO SETTINGS & DIAGNOSTICS ENGINE
  *   Moteur central de gestion des périphériques audio, permissions
  *   et diagnostics pour tout le système voix TITANE∞
  * ═══════════════════════════════════════════════════════════════════

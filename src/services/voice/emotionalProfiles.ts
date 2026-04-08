@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v19.3.1 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.3.1 — EMOTIONAL PROFILES
+ *   TITANE∞ v30.0.0 — EMOTIONAL PROFILES
  *
  *   Profils émotionnels prédéfinis pour la voix de TITANE∞
  *   Chaque profil définit une "personnalité vocale" cohérente

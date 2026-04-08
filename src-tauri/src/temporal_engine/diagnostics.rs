@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — TEMPORAL DIAGNOSTICS
+//! TITANE∞ v30.0.0 — TEMPORAL DIAGNOSTICS
 //! Super Prompt #18 — Diagnostics du système temporel
 //! ═══════════════════════════════════════════════════════════════════════════════
 

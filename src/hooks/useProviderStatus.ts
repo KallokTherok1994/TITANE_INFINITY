@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v15 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v15 — USE PROVIDER STATUS
+ *   TITANE∞ v30.0.0 — USE PROVIDER STATUS
  *   Hook: Status providers IA temps réel
  * ═══════════════════════════════════════════════════════════════════
  */

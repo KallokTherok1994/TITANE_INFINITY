@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — Living UI System
+ * TITANE∞ v30.0.0 — Living UI System
  * Système UI vivant, auto-adaptatif, auto-cohérent
  *
  * Export centralisé de tous les composants du système UI organique

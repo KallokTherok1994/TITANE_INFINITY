@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21.0.0 — Visual Engine Integration Example
+ * TITANE∞ v30.0.0 — Visual Engine Integration Example
  *
  * This file demonstrates how to integrate the Visual Engine v21
  * into App.tsx or any root component.

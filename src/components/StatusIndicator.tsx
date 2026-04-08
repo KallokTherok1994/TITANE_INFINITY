@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v22Ω — StatusIndicator Component (Stub)
+ * TITANE∞ v30.0.0 — StatusIndicator Component (Stub)
  * Minimal status indicator showing connection state
  */
 

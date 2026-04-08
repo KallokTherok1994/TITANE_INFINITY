@@ -1,9 +1,9 @@
 /**
- * TITANE∞ v19.3Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.3Ω — ANTHROPIC CLAUDE PROVIDER (SECURE BACKEND PROXY)
+ *   TITANE∞ v30.0.0 — ANTHROPIC CLAUDE PROVIDER (SECURE BACKEND PROXY)
  *   Intégration Claude via backend Tauri sécurisé
  *   Aucune clé API exposée côté frontend
  * ═══════════════════════════════════════════════════════════════════

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — OS Unified Integration
+ * TITANE∞ v30.0.0 — OS Unified Integration
  * Point d'entrée de l'intégration système unifiée
  */
 

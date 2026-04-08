@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v15 - Phase 5: Metrics Cache
+ * TITANE∞ v30.0.0 - Phase 5: Metrics Cache
  * Intelligent caching for ServiceMetrics queries
  * ═══════════════════════════════════════════════════════════════
  */

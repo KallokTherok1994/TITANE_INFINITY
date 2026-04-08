@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — UI/UX Adaptive Engine
+ * TITANE∞ v30.0.0 — UI/UX Adaptive Engine
  * Exports du moteur d'adaptation UI/UX
  */
 

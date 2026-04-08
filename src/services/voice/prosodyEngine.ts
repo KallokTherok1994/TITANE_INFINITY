@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v19.3.1 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.3.1 — PROSODY ENGINE
+ *   TITANE∞ v30.0.0 — PROSODY ENGINE
  *
  *   Mapping de l'intention émotionnelle vers paramètres prosodiques
  *   Génération SSML pour expressivité vocale avancée

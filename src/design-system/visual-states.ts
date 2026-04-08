@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v21.0.0 — Visual States Design System ULTIMATE
+ * TITANE_INFINITY v30.0.0 — Visual States Design System ULTIMATE
  * Visual states for TITANE Visual Engine v21
  *
  * Defines color schemes, animations, and visual characteristics

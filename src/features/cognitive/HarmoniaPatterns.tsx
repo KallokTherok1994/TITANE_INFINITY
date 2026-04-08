@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v15 - Harmonia Patterns Visualization
+ * TITANE∞ v30.0.0 - Harmonia Patterns Visualization
  * Visualisation des patterns comportementaux Harmonia
  * ═══════════════════════════════════════════════════════════════
  */

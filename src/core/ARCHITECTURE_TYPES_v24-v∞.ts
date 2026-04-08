@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -7,7 +7,7 @@
  */
 
 /**
- * TITANE∞ v24-v∞ — ARCHITECTURE TYPES CONSOLIDÉE
+ * TITANE∞ v30.0.0 — ARCHITECTURE TYPES CONSOLIDÉE
  *
  * Définitions TypeScript pour les 20 engines du système vivant complet
  * Ce fichier sert de contrat d'interface pour toute l'architecture

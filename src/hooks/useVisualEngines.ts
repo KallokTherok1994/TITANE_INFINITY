@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -7,7 +7,7 @@
  */
 
 /**
- * TITANE∞ v24.3.0 — useVisualEngines Hook
+ * TITANE∞ v30.0.0 — useVisualEngines Hook
  *
  * Applique automatiquement CSS variables selon système state
  * Active les engines visuels via variables CSS globales

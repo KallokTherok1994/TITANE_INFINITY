@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — Debugger Live OS Hook
+ * TITANE∞ v30.0.0 — Debugger Live OS Hook
  *
  * Hook unifié pour le débogage temps réel du système TITANE∞
  *

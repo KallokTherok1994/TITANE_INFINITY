@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v19.0 — UI LOGGER TESTS (INTEGRATION)
+ * TITANE∞ v30.0.0 — UI LOGGER TESTS (INTEGRATION)
  * Tests d'intégration manuels pour UILogger
  * ═══════════════════════════════════════════════════════════════
  */
@@ -165,7 +165,7 @@ function testExport() {
  */
 export function runUILoggerTests() {
   console.log('\n╔════════════════════════════════════════════════════════════════╗');
-  console.log('║  🧪 TITANE∞ v19.0 — UI LOGGER INTEGRATION TESTS              ║');
+  console.log('║  🧪 TITANE∞ v30.0.0 — UI LOGGER INTEGRATION TESTS              ║');
   console.log('╚════════════════════════════════════════════════════════════════╝');
 
   const results = {

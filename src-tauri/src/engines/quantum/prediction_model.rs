@@ -1,4 +1,4 @@
-//! TITANE∞ v20Ω — Prediction Model
+//! TITANE∞ v30.0.0 — Prediction Model
 //! Modèle de prédiction basé sur l'historique
 
 use super::UserEvent;

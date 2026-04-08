@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v21 — ADAPTIVE BRIDGE
+ *   TITANE∞ v30.0.0 — ADAPTIVE BRIDGE
  *   TypeScript API pour l'AdaptiveOptimizationEngine
  *   Auto-optimisation et apprentissage interne
  * ═══════════════════════════════════════════════════════════════════

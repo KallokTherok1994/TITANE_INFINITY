@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v19.3.0 — Audio Waveform Effect
+ * TITANE_INFINITY v30.0.0 — Audio Waveform Effect
  * Animated audio visualization bars
  *
  * Features:

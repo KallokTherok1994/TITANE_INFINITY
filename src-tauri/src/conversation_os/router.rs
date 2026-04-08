@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — CONVERSATION ROUTER
+//! TITANE∞ v30.0.0 — CONVERSATION ROUTER
 //! Super Prompt #9 — Routage du pipeline conversationnel
 //! ═══════════════════════════════════════════════════════════════════════════════
 

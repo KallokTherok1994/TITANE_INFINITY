@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v21.0.0 — Visual Engine ULTIMATE
+ * TITANE_INFINITY v30.0.0 — Visual Engine ULTIMATE
  * Next-generation visual orchestrator with multi-dimensional state system
  *
  * Features v21:

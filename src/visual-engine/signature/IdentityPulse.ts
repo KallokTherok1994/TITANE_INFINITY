@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — Identity Pulse
+ * TITANE∞ v30.0.0 — Identity Pulse
  * Pulsation identitaire unique du noyau TITANE∞
  *
  * Cette pulsation "vivante" est la signature visuelle de TITANE∞ :

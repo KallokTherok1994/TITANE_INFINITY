@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20.0 — LogLine Component
+ * TITANE∞ v30.0.0 — LogLine Component
  * Super Prompt #3: DevTools UI Advanced Suite
  * @license MIT
  */

@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — ANTHROPIC PROVIDER
+//! TITANE∞ v30.0.0 — ANTHROPIC PROVIDER
 //! Super Prompt #17 — Intégration Anthropic Claude (Analyse, Safety, Reasoning)
 //! ═══════════════════════════════════════════════════════════════════════════════
 

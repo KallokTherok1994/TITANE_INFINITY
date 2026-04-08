@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v19.0 — AI Rate Limiter
+ * TITANE∞ v30.0.0 — AI Rate Limiter
  *
  * Rate limiting & monitoring pour appels API IA
  * Protection contre: DoS, coûts excessifs, abus, token overuse

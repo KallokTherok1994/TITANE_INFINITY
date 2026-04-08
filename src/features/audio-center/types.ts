@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v19.2.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2 — AUDIO CENTER TYPES
+ *   TITANE∞ v30.0.0 — AUDIO CENTER TYPES
  *   Types pour configuration audio, TTS et microphone
  * ═══════════════════════════════════════════════════════════════════
  */

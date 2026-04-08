@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v21 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v21 — API RESPONSE CACHE (Phase 3)
+ *   TITANE∞ v30.0.0 — API RESPONSE CACHE (Phase 3)
  *   Cache LRU intelligent pour réduire coûts API
  *   Audit v21 - Optimisation Performance
  * ═══════════════════════════════════════════════════════════════════

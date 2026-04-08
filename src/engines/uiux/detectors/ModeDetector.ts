@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — Mode Detector
+ * TITANE∞ v30.0.0 — Mode Detector
  * Détection automatique du mode utilisateur
  */
 

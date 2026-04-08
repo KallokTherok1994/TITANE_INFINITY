@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v19.3.0 — Visual Effects Exports
+ * TITANE_INFINITY v30.0.0 — Visual Effects Exports
  * Central export for all visual effects components
  */
 

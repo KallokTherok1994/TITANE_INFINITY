@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1 — MEMORY OS vΩ (Neural Memory System)
+//   TITANE∞ v30.0.0 — MEMORY OS vΩ (Neural Memory System)
 //   Super Prompt #12 + #6-7-8: Hierarchical, Vectorized, Auto-Evolutionary
 //   Architecture: STM → MTM → LTM with Neural Consolidation + Vector Search
 // ═══════════════════════════════════════════════════════════════

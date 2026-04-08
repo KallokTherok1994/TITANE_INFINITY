@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.3.1 - Test de régression pour affichage des messages de fallback
+ * TITANE∞ v30.0.0 - Test de régression pour affichage des messages de fallback
  *
  * Ce test garantit que les messages de fallback s'affichent correctement
  * même quand tous les providers IA échouent.

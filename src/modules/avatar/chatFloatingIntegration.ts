@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v24.12 — CHAT INTEGRATION FOR FLOATING WINDOW
+//   TITANE∞ v30.0.0 — CHAT INTEGRATION FOR FLOATING WINDOW
 //   Connects floatingWindowChatHandler with existing chat system
 // ═══════════════════════════════════════════════════════════════════════════
 

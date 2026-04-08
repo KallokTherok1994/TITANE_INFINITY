@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// TITANE∞ v20.1 — AI ROUTER CACHE
+// TITANE∞ v30.0.0 — AI ROUTER CACHE
 // Cache LRU pour réponses AI et statuts provider
 // Gains: ~90% latence routing sur requêtes identiques
 // ═══════════════════════════════════════════════════════════════════════════

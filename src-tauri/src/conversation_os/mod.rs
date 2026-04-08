@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — CONVERSATION OS #∞ (Presence Engine)
+//! TITANE∞ v30.0.0 — CONVERSATION OS #∞ (Presence Engine)
 //! Super Prompt #9 — Intelligence Interactionnelle, Cohérence Narrative, Style
 //! ═══════════════════════════════════════════════════════════════════════════════
 //!

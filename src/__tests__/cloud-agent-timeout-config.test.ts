@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.2.1 - Cloud Agent Timeout Configuration Tests
+ * TITANE∞ v30.0.0 - Cloud Agent Timeout Configuration Tests
  * Tests to verify timeout values are correctly configured
  * ✨ OMEGA_CHAT_PERF: updated to 52s/50s/2 model, cloud providers 30s
  */

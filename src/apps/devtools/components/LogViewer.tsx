@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v22.0 — LogViewer Component
+ * TITANE∞ v30.0.0 — LogViewer Component
  * Real-time log streaming with advanced filtering capabilities
  */
 

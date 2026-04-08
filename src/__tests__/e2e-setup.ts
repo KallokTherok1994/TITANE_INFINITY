@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v19.2Ω — E2E Test Setup Helpers
+ * TITANE∞ v30.0.0 — E2E Test Setup Helpers
  * Shared setup and teardown for e2e tests
  */
 

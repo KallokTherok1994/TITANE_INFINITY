@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v15 — APP LAYOUT (Structure Principale)
+ *   TITANE∞ v30.0.0 — APP LAYOUT (Structure Principale)
  *   Layout moderne avec Sidebar + Header + XPBar + Content
  * ═══════════════════════════════════════════════════════════════════
  */

@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v18 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v18 — CENTRALIZED TAURI COMMANDS
+ *   TITANE∞ v30.0.0 — CENTRALIZED TAURI COMMANDS
  *   Table unique de toutes les commandes Backend → Frontend
  *   Synchronisé avec src-tauri/src/main.rs
  * ═══════════════════════════════════════════════════════════════════

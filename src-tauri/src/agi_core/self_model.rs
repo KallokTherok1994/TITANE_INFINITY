@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — SELF-MODEL ENGINE
+//! TITANE∞ v30.0.0 — SELF-MODEL ENGINE
 //! Super Prompt #11 — Modèle de soi, capacités et limitations
 //! ═══════════════════════════════════════════════════════════════════════════════
 
@@ -99,7 +99,7 @@ impl SelfModelEngine {
         // Initialiser l'identité
         model.identity = Identity {
             name: "TITANE∞".to_string(),
-            version: "v20Ω".to_string(),
+            version: "v30.0.0".to_string(),
             purpose: "Cognitive Intelligence System".to_string(),
             personality_traits: vec![
                 "analytical".to_string(),

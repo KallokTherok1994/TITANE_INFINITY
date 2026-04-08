@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v19.3.0 — Adaptive DevTools Panel
+ * TITANE_INFINITY v30.0.0 — Adaptive DevTools Panel
  * Development tools with OMEGA engine cards
  *
  * Features:

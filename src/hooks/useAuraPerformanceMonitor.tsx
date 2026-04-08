@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v25.3.1 — AURA PERFORMANCE MONITOR
+ *   TITANE∞ v30.0.0 — AURA PERFORMANCE MONITOR
  *   Monitoring FPS + auto-adjustment performance
  * ═══════════════════════════════════════════════════════════════
  */

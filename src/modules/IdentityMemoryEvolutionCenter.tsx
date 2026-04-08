@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v24 — IDENTITY & MEMORY EVOLUTION CENTER
+ * TITANE∞ v30.0.0 — IDENTITY & MEMORY EVOLUTION CENTER
  *
  * Centre unifié fusionnant 4 modules:
  * - Identité Système (matrice identitaire, valeurs, rôles)

@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v19.2Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2Ω — FILE UPLOAD BUTTON
+ *   TITANE∞ v30.0.0 — FILE UPLOAD BUTTON
  *   Bouton d'import de fichiers avec drag & drop pour analyse IA
  *   Features: Multi-fichiers, Preview, Classification automatique
  *   + Sauvegarde permanente mémoire IA + Attribution XP

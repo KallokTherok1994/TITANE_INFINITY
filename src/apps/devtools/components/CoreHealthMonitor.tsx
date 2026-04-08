@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v22.0 — CoreHealthMonitor Component
+ * TITANE∞ v30.0.0 — CoreHealthMonitor Component
  * 9-engine health monitoring dashboard
  */
 

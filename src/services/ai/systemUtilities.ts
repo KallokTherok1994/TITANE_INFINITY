@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v20Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v20Ω+ — AI SYSTEM UTILITIES (TDZ CRISIS FIX v26.3.1)
+ *   TITANE∞ v30.0.0 — AI SYSTEM UTILITIES (TDZ CRISIS FIX v26.3.1)
  *   Séparation des fonctions utilitaires pour éviter dépendances circulaires
  *   lors de la bundlification Vite (services-ai chunk).
  *

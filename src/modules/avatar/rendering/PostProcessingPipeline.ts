@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.3.0 — POST-PROCESSING PIPELINE (YOLO OPT-1: Three.js lazy)
+//   TITANE∞ v30.0.0 — POST-PROCESSING PIPELINE (YOLO OPT-1: Three.js lazy)
 //   TAA, Bloom, Vignette for premium visual quality
 //   NOTE: Nécessite three-stdlib ou three@latest pour imports postprocessing
 // ═══════════════════════════════════════════════════════════════════════════

@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v19.2Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2Ω — SYSTÈME DE MODES CHAT IA PROFESSIONNEL
+ *   TITANE∞ v30.0.0 — SYSTÈME DE MODES CHAT IA PROFESSIONNEL
  *   Architecture modulaire, sécurisée, extensible
  * ═══════════════════════════════════════════════════════════════════════════════
  */

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1 — VECTOR STORE
+//   TITANE∞ v30.0.0 — VECTOR STORE
 //   Super Prompt #12: Embedding-based semantic search
 //   Target: <10ms query, 384-dim vectors
 // ═══════════════════════════════════════════════════════════════

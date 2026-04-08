@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v15 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v15 — PERFORMANCE MONITOR
+ *   TITANE∞ v30.0.0 — PERFORMANCE MONITOR
  *   Hook: Monitoring performance temps réel + throttling intelligent
  * ═══════════════════════════════════════════════════════════════
  */

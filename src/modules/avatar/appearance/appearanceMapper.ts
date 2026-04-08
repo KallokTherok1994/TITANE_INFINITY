@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v24.6 — Appearance Mapper
+ * TITANE∞ v30.0.0 — Appearance Mapper
  *
  * Maps abstract style definitions to concrete 3D assets (meshes, textures, materials).
  * Provides intelligent fallback system for missing assets.

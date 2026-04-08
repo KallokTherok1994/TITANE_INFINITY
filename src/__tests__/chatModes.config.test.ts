@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v19.2Ω — Tests: Chat Modes System
+ * TITANE∞ v30.0.0 — Tests: Chat Modes System
  * Tests unitaires pour le système de modes
  */
 

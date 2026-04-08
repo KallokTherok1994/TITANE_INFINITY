@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v24.7.4 - Phase 2: Focus Trap Hook
+ * TITANE∞ v30.0.0 - Phase 2: Focus Trap Hook
  *
  * Accessibility-focused hook for trapping keyboard focus within modals and dialogs
  *

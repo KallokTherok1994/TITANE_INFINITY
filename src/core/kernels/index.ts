@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v1.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v1.0 — CORE KERNELS INDEX
+ *   TITANE∞ v30.0.0 — CORE KERNELS INDEX
  *   Export centralisé des 3 kernels cognitifs
  *
  *   NOTE: Fichiers dans core/kernels/ supprimés - réexports depuis

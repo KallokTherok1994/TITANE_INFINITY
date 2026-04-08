@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v26.2.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v26.2.0 - Chat Page Component
+ * TITANE∞ v30.0.0 - Chat Page Component
  * Page principale du Chat IA avec Error Boundary (Phase 4)
  * ═══════════════════════════════════════════════════════════════
  */

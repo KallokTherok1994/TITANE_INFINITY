@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v19.2Ω — Evolution IA Config Tests
+ * TITANE∞ v30.0.0 — Evolution IA Config Tests
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 

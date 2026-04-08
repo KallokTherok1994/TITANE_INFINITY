@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.0 — SINGULARITY STATE
+//   TITANE∞ v30.0.0 — SINGULARITY STATE
 //   Global unified state for SingularityEngine (Phase 2 Fusions)
 // ═══════════════════════════════════════════════════════════════
 

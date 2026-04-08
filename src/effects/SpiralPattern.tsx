@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v19.3.0 — Spiral Pattern Effect
+ * TITANE_INFINITY v30.0.0 — Spiral Pattern Effect
  * Rotating spiral visualization
  *
  * Features:

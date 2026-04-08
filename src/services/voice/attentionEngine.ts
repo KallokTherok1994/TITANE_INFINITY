@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v19.5.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.5 — ATTENTION ENGINE (Cognitive v2.0)
+ *   TITANE∞ v30.0.0 — ATTENTION ENGINE (Cognitive v2.0)
  *
  *   Gère les états d'attention de TITANE∞
  *   Machine à états pour wake word → commande → réponse

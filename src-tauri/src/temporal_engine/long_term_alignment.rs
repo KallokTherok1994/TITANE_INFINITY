@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — LONG TERM ALIGNMENT
+//! TITANE∞ v30.0.0 — LONG TERM ALIGNMENT
 //! Super Prompt #18 — Alignement et objectifs long terme
 //! ═══════════════════════════════════════════════════════════════════════════════
 

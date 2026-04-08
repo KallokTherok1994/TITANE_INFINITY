@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — GOUVERNANCE CONSTITUTIONNELLE
+//! TITANE∞ v30.0.0 — GOUVERNANCE CONSTITUTIONNELLE
 //! Super Prompt #13 — Mécanismes de gouvernance et prise de décision
 //! ═══════════════════════════════════════════════════════════════════════════════
 

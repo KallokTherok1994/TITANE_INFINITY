@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20.0 — LoaderSpinner Component
+ * TITANE∞ v30.0.0 — LoaderSpinner Component
  * Super Prompt #2: Frontend Polish & UX Mastering
  * @license MIT
  */

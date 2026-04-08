@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — E2E Tests for v21 Hooks
+ * TITANE∞ v30.0.0 — E2E Tests for v21 Hooks
  * Comprehensive tests for useVisualState, usePanelState, useAdaptiveFPS, useEffects
  */
 

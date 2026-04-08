@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.0 — PERFORMANCE MONITOR
+//   TITANE∞ v30.0.0 — PERFORMANCE MONITOR
 //   Real-time FPS, CPU, GPU, RAM profiling with dynamic resolution scaling
 // ═══════════════════════════════════════════════════════════════════════════
 

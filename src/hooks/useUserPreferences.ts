@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v19.2.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2 — USE USER PREFERENCES HOOK
+ *   TITANE∞ v30.0.0 — USE USER PREFERENCES HOOK
  *   Hook React pour accéder au système de préférences utilisateur
  * ═══════════════════════════════════════════════════════════════════
  */

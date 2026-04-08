@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.3.0 — PBR MATERIAL SYSTEM
+//   TITANE∞ v30.0.0 — PBR MATERIAL SYSTEM
 //   YOLO OPT-1: Lazy-loaded Three.js
 //   Physically-Based Rendering materials for avatar (skin, cloth, hair)
 // ═════════════════════════════════════════════════════════════════════════════

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v19.2Ω — E2E Test Utilities
+ * TITANE∞ v30.0.0 — E2E Test Utilities
  * Shared utilities for end-to-end testing
  */
 

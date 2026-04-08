@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v19.0 — Secure AI Service Wrapper (STUB)
+ * TITANE∞ v30.0.0 — Secure AI Service Wrapper (STUB)
  *
  * Wrapper sécurisé pour tous les appels IA
  * Combine: sanitization input, validation output, rate limiting, monitoring

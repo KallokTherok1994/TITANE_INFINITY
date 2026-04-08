@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v19.5.3 - Tauri Vector Store Adapter
+ * TITANE_INFINITY v30.0.0 - Tauri Vector Store Adapter
  *
  * Adaptateur pour VectorStore utilisant le backend Rust via Tauri
  * Remplace SQLiteVectorStore pour le mode navigateur

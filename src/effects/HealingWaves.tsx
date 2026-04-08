@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v19.3.0 — Healing Waves Effect
+ * TITANE_INFINITY v30.0.0 — Healing Waves Effect
  * Expanding ripple waves for healing visualization
  *
  * Features:

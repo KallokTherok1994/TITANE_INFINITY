@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — Focus Glow
+ * TITANE∞ v30.0.0 — Focus Glow
  * Micro-interaction : halo lumineux synchronisé avec Identity Pulse sur focus
  *
  * Ajoute un glow pulsant aux éléments focalisés,

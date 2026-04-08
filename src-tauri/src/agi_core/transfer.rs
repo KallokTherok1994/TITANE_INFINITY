@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — TRANSFER ENGINE
+//! TITANE∞ v30.0.0 — TRANSFER ENGINE
 //! Super Prompt #11 — Transfert de connaissances entre domaines
 //! ═══════════════════════════════════════════════════════════════════════════════
 

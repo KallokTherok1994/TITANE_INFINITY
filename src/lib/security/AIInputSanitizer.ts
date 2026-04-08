@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v19.0 — AI Input Sanitizer
+ * TITANE∞ v30.0.0 — AI Input Sanitizer
  *
  * Sanitization & validation des entrées utilisateur avant envoi aux services IA
  * Protection contre: prompt injection, jailbreak, XSS, code execution, data leaking

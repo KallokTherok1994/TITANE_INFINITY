@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v26.0.0 — DEV-SUDO BUILT-IN HANDLERS
+ *   TITANE∞ v30.0.0 — DEV-SUDO BUILT-IN HANDLERS
  *   Core command handlers that are always loaded
  *   Extracted from monolithic devSudoHandler.ts (Phase 2 Day 1)
  * ═══════════════════════════════════════════════════════════════════════════

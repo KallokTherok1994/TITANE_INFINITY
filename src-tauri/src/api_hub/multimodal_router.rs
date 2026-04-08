@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — MULTIMODAL ROUTER
+//! TITANE∞ v30.0.0 — MULTIMODAL ROUTER
 //! Super Prompt #17 — Routage et fusion multimodale inter-providers
 //! ═══════════════════════════════════════════════════════════════════════════════
 

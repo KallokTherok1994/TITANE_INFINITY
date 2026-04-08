@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v27.0.0 — PHASE C5 OBSERVABILITY TESTS
+ * TITANE∞ v30.0.0 — PHASE C5 OBSERVABILITY TESTS
  * ═════════════════════════════════════════════════════════════════════════════
  * Test Suite for PHASE C5: OBSERVABILITY (GATE_TRACE)
  * Validates: Summary line format + request ID propagation

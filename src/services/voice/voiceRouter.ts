@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v19.3.1 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.3.1 — VOICE ROUTER (Voice Intelligence Bridge)
+ *   TITANE∞ v30.0.0 — VOICE ROUTER (Voice Intelligence Bridge)
  *
  *   Le chaînon manquant entre ASR → Chat IA → TTS → VoiceEngine
  *   NOW WITH EMOTIONAL INTELLIGENCE!

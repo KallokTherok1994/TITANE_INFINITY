@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v19.8 - TESTS END-TO-END
+//   TITANE∞ v30.0.0 - TESTS END-TO-END
 //   Scénarios d'usage complets pour validation système
 //   NOTE: These tests require a running Tauri backend
 //   Skip in CI/unit test runs, run manually for E2E validation

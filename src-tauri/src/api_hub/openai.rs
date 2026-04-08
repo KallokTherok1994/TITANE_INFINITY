@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — OPENAI PROVIDER
+//! TITANE∞ v30.0.0 — OPENAI PROVIDER
 //! Super Prompt #17 — Intégration OpenAI (GPT, DALL-E, Whisper, Embeddings)
 //! ═══════════════════════════════════════════════════════════════════════════════
 

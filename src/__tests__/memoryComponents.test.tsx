@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v19.2Ω - Memory Components Tests
+ * TITANE∞ v30.0.0 - Memory Components Tests
  * Tests pour MemoryViewer et MemoryDashboard
  */
 

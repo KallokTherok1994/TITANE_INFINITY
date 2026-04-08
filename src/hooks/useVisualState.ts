@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v19.3.0 — useVisualState Hook
+ * TITANE_INFINITY v30.0.0 — useVisualState Hook
  * React hook for managing visual states with TITANE Visual Engine
  *
  * Features:

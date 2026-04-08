@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v21 - effectsStore (Zustand)
+ * TITANE∞ v30.0.0 - effectsStore (Zustand)
  * Store global pour gestion d'état des effets visuels
  *
  * Features:

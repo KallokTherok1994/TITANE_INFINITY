@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v19.2Ω — E2E API Integration Tests
+ * TITANE∞ v30.0.0 — E2E API Integration Tests
  * Tests for backend API integration and orchestration
  */
 

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v27.0.0 — PHASE C2 ANTI-SILENCE TESTS
+ * TITANE∞ v30.0.0 — PHASE C2 ANTI-SILENCE TESTS
  * ═════════════════════════════════════════════════════════════════════════════
  * Test Suite for PHASE C2: UI ANTI-SILENCE (GATE_UI)
  * Validates: MessageBubble never goes silent + useChat always provides feedback

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — UI/UX Adaptive Engine Types
+ * TITANE∞ v30.0.0 — UI/UX Adaptive Engine Types
  * Définitions de types pour le système adaptatif
  */
 

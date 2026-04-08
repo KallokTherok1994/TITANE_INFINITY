@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.3.0 — THREE.JS LAZY LOADER
+//   TITANE∞ v30.0.0 — THREE.JS LAZY LOADER
 //   YOLO OPT-1: Lazy-load Three.js (-400 KB gzip)
 //   Charge Three.js dynamiquement uniquement quand avatar activé
 // ═══════════════════════════════════════════════════════════════════════════

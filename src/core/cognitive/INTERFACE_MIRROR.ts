@@ -1,12 +1,12 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// ⚡ TITANE∞ v23 — Interface Mirror
+// ⚡ TITANE∞ v30.0.0 — Interface Mirror
 // Miroir cognitif : L’interface reflète l’état utilisateur et système
 
 import { cognitiveEngine, CognitiveState } from './COGNITIVE_ENGINE';

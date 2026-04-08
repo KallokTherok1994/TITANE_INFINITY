@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v19.0 — AI CHAT CLIENT SÉCURISÉ
+ * TITANE∞ v30.0.0 — AI CHAT CLIENT SÉCURISÉ
  * Client centralisé pour chat AI avec:
  * - Sanitization input (prompt injection, XSS, code execution)
  * - Validation output (JSON schema, XSS detection)
@@ -104,7 +104,7 @@ const circuitBreaker = new CircuitBreaker(5, 60000, 30000);
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v19 CHAT SERVICE — ENVOI MESSAGE SÉCURISÉ
+ * TITANE∞ v30.0.0 CHAT SERVICE — ENVOI MESSAGE SÉCURISÉ
  * ═══════════════════════════════════════════════════════════════
  * 1. Sanitize input (prompt injection, XSS, code execution)
  * 2. Rate limit check (50 req/min, 100k tokens/min, 1$/min)

@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v19.3.0 — Glitch Effect
+ * TITANE_INFINITY v30.0.0 — Glitch Effect
  * RGB split and displacement glitch effect
  *
  * Features:

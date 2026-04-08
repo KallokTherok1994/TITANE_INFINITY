@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20Ω — RESOURCE MANAGER
+//   TITANE∞ v30.0.0 — RESOURCE MANAGER
 //   System resource monitoring and limits
 //   Super Prompt #11 — Phase 2
 // ═══════════════════════════════════════════════════════════════

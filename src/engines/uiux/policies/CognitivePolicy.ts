@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — Cognitive Policy
+ * TITANE∞ v30.0.0 — Cognitive Policy
  * Politique de réduction de charge cognitive
  */
 

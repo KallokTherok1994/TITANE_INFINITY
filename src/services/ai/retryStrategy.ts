@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v21 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v21 — RETRY STRATEGY (Phase 2)
+ *   TITANE∞ v30.0.0 — RETRY STRATEGY (Phase 2)
  *   Stratégie de retry unifiée pour tous les providers IA
  *   Audit v21 - Harmonisation retry logic
  * ═══════════════════════════════════════════════════════════════════

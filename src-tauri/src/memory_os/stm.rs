@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1 — SHORT-TERM MEMORY (STM)
+//   TITANE∞ v30.0.0 — SHORT-TERM MEMORY (STM)
 //   Super Prompt #12: Ultra-fast, bounded, FIFO eviction
 //   Target: <1ms push, max 20 items
 // ═══════════════════════════════════════════════════════════════

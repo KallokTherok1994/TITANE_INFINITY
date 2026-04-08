@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v19.3.0 — Energy Arcs Effect
+ * TITANE_INFINITY v30.0.0 — Energy Arcs Effect
  * Animated energy arcs between points
  *
  * Features:

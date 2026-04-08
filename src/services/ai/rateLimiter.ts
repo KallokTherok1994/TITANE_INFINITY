@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v24.5 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v24.5 — FRONTEND RATE LIMITER
+ *   TITANE∞ v30.0.0 — FRONTEND RATE LIMITER
  *   Protects against API quota exhaustion
  *   Implements Token Bucket + Sliding Window algorithms
  * ═══════════════════════════════════════════════════════════════════

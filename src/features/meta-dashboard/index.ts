@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v24.2.1 — Meta-Dashboard Feature
+ * TITANE∞ v30.0.0 — Meta-Dashboard Feature
  * Barrel export for unified monitoring dashboard
  */
 

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20.0 — LogFilters Component
+ * TITANE∞ v30.0.0 — LogFilters Component
  * Super Prompt #3: DevTools UI Advanced Suite
  * @license MIT
  */

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v19.2Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
@@ -11,7 +11,7 @@
  * route through src/services/ai/orchestrator.ts.
  * This file is preserved for reference only. Do not add features here.
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2Ω — AI ORCHESTRATOR OMEGA (NEURAL ORDER v∞.Ω)
+ *   TITANE∞ v30.0.0 — AI ORCHESTRATOR OMEGA (NEURAL ORDER v∞.Ω)
  *   PHASE 3Ω: Orchestrator neural • Isolation absolue • Auto-heal intégré
  *   Architecture: Local-first → Sandbox providers → Fallback garanti → Never throw
  *   Pipeline: Validate → Neural Selection → Isolated Execution → Auto-Heal → Normalize

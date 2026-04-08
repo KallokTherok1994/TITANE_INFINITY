@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — Behavior Detector
+ * TITANE∞ v30.0.0 — Behavior Detector
  * Détection des patterns comportementaux utilisateur
  */
 
