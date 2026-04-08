@@ -1,5 +1,5 @@
 import { act, renderHook, waitFor } from '@/test-utils';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const saveResolvers: Array<() => void> = [];
 const saveMessageMock = vi.fn(() => {
@@ -75,6 +75,10 @@ describe('useConversationEngine fallback meta truth', () => {
     saveResolvers.splice(0, saveResolvers.length);
   });
 
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('classifies network failures as offline network errors', async () => {
     const { buildConversationFallbackMeta } =
       await import('@/hooks/useConversationEngine');
@@ -98,6 +102,54 @@ describe('useConversationEngine fallback meta truth', () => {
     expect(meta.mode).toBe('ERROR');
     expect(meta.provider_used).toBe('ollama');
     expect(meta.provider_class).toBe('local');
+  });
+
+  it('avoids overlapping health checks while a previous probe is still pending', async () => {
+    vi.useFakeTimers();
+
+    let releaseHealthCheck:
+      | ((report: {
+          status: string;
+          anomalies_detected: string[];
+          repairs_applied: string[];
+          coherence_score: number;
+        }) => void)
+      | null = null;
+
+    const { healthCheck } = await import('@/services/conversationEngine');
+    vi.mocked(healthCheck).mockImplementationOnce(
+      () =>
+        new Promise(resolve => {
+          releaseHealthCheck = resolve;
+        })
+    );
+
+    const { useConversationEngine } = await import('@/hooks/useConversationEngine');
+    renderHook(() => useConversationEngine({ autoHealthCheck: true }));
+
+    await act(async () => {
+      vi.advanceTimersByTime(30000);
+      await Promise.resolve();
+    });
+
+    expect(vi.mocked(healthCheck)).toHaveBeenCalledTimes(1);
+
+    await act(async () => {
+      vi.advanceTimersByTime(30000);
+      await Promise.resolve();
+    });
+
+    expect(vi.mocked(healthCheck)).toHaveBeenCalledTimes(1);
+
+    await act(async () => {
+      releaseHealthCheck?.({
+        status: 'Healthy',
+        anomalies_detected: [],
+        repairs_applied: [],
+        coherence_score: 1,
+      });
+      await Promise.resolve();
+    });
   });
 
   it('does not wait for slow persistence before calling processMessage', async () => {
