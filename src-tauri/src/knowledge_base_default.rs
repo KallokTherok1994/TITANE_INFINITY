@@ -83,6 +83,22 @@ const COHERENCE_IDENTITAIRE: &str =
     include_str!("../../data/knowledge_base/default/coherence_identitaire.json");
 const REALISME_CONVERSATIONNEL: &str =
     include_str!("../../data/knowledge_base/default/realisme_conversationnel.json");
+// ── v30.0.0 expansion — phase 11 (organisation/finance/e-commerce/SEO/devweb/branding/marketing) ─
+const ORGANISATION_PERSONNELLE: &str =
+    include_str!("../../data/knowledge_base/default/organisation_personnelle.json");
+const FINANCE_ENTREPRISE: &str =
+    include_str!("../../data/knowledge_base/default/finance_entreprise.json");
+const ECOMMERCE_FONDAMENTAUX: &str =
+    include_str!("../../data/knowledge_base/default/ecommerce_fondamentaux.json");
+const SEO_REFERENCEMENT: &str =
+    include_str!("../../data/knowledge_base/default/seo_referencement.json");
+const DEVELOPPEMENT_WEB: &str =
+    include_str!("../../data/knowledge_base/default/developpement_web.json");
+const BRANDING_IDENTITE: &str =
+    include_str!("../../data/knowledge_base/default/branding_identite.json");
+const MARKETING_DIGITAL: &str =
+    include_str!("../../data/knowledge_base/default/marketing_digital.json");
+
 // ── v30.0.0 expansion — phase 10 (administration, communication, stratégie) ─
 const ADMINISTRATION_PUBLIQUE: &str =
     include_str!("../../data/knowledge_base/default/administration_publique.json");
@@ -298,6 +314,14 @@ impl DefaultKnowledgeBase {
         ("communication_avancee", COMMUNICATION_AVANCEE),
         ("bien_etre_mental_stress", BIEN_ETRE_MENTAL_STRESS),
         ("sante_corps_naturelle", SANTE_CORPS_NATURELLE),
+        // v30.0.0 expansion — phase 11 (organisation/finance/e-commerce/SEO/devweb/branding/marketing)
+        ("organisation_personnelle", ORGANISATION_PERSONNELLE),
+        ("finance_entreprise", FINANCE_ENTREPRISE),
+        ("ecommerce_fondamentaux", ECOMMERCE_FONDAMENTAUX),
+        ("seo_referencement", SEO_REFERENCEMENT),
+        ("developpement_web", DEVELOPPEMENT_WEB),
+        ("branding_identite", BRANDING_IDENTITE),
+        ("marketing_digital", MARKETING_DIGITAL),
         // v30.0.0 expansion — phase 10 (administration, communication, stratégie)
         ("administration_publique", ADMINISTRATION_PUBLIQUE),
         ("management_administration", MANAGEMENT_ADMINISTRATION),
@@ -506,8 +530,8 @@ mod tests {
             result.errors
         );
         assert_eq!(
-            result.entries_loaded, 85,
-            "Must have exactly 85 default knowledge categories"
+            result.entries_loaded, 92,
+            "Must have exactly 92 default knowledge categories"
         );
     }
 
@@ -531,6 +555,7 @@ mod tests {
             "analyse_professionnelle",
             "apprentissage_evolution",
             "bien_etre_mental_stress",
+            "branding_identite",
             "calisthenie",
             "capabilities_matrix",
             "chronobiologie_rythmes",
@@ -545,14 +570,17 @@ mod tests {
             "constitution_ethics",
             "conversation_engine_detail",
             "developpement_personnel",
+            "developpement_web",
             "digital_twin_symbiosis",
             "digital_twin_v14_detail",
             "droit_immobilier_notarial",
             "droit_notarial_fondamentaux",
+            "ecommerce_fondamentaux",
             "ecriture_expression_creatrice",
             "energetique_soins_corps",
             "engines_catalog",
             "entrepreneuriat_mindset",
+            "finance_entreprise",
             "finances_personnelles",
             "frontend_modules",
             "gestion_projet_avancee",
@@ -566,6 +594,7 @@ mod tests {
             "longevite_anti_aging",
             "management_administration",
             "management_qualite",
+            "marketing_digital",
             "medecine_hollistique",
             "meditation_pratique",
             "memory_os_detail",
@@ -581,6 +610,7 @@ mod tests {
             "nutrition_sante_naturelle",
             "omega_pipeline_detail",
             "operational_knowledge",
+            "organisation_personnelle",
             "performance_cognitive",
             "philosophie_cognitive",
             "plantes_medicinales_aromatherapie",
@@ -598,6 +628,7 @@ mod tests {
             "sante_corps_naturelle",
             "sante_feminine_naturelle",
             "security_privacy",
+            "seo_referencement",
             "services_backend",
             "sexualite_intimite",
             "singularity_os_detail",

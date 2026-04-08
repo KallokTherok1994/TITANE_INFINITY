@@ -1,0 +1,82 @@
+{
+  "version": "v30.0.0",
+  "category": "marketing_digital",
+  "description": "Marketing digital — stratégie digitale (owned/earned/paid media), réseaux sociaux (stratégie de contenu/algorithmes/plateformes), publicité digitale payante (Google Ads/Meta Ads/LinkedIn Ads/programmatique), email marketing (automation/séquences/délivrabilité), content marketing (SEO content/pillar pages/hub&spoke), marketing d'influence, analytics et mesure (GA4/attribution/KPI), entonnoir de conversion (TOFU/MOFU/BOFU), growth hacking",
+  "marketing_digital": {
+    "introduction": "Le marketing digital est l'ensemble des actions marketing exploitant les canaux numériques pour attirer, convertir, fidéliser et transformer les clients en ambassadeurs. Il se distingue par sa mesurabilité, sa capacité de ciblage précis et son optimisation en temps réel. TITANE maîtrise l'ensemble des leviers digitaux.",
+    "cadre_stratégique": {
+      "POEM": {
+        "Paid": "Publicité achetée: Google Ads, Meta Ads, influenceurs sponsorisés. Contrôle total, résultats rapides, coût proportionnel au volume.",
+        "Owned": "Canaux propriétaires: site web, blog, newsletter, app mobile, podcasts. Actifs à long terme, ROI croissant dans le temps.",
+        "Earned": "Couverture gratuite: SEO organique, mentions presse, partages sociaux, avis clients. Non contrôlable mais très crédible."
+      },
+      "entonnoir_TOFU_MOFU_BOFU": {
+        "TOFU_Top_of_Funnel": "Notoriété. Cibles: prospects froids. Contenus: blog articles, vidéos YouTube, infographies, podcasts. Objectif: attirer un maximum de trafic qualifié.",
+        "MOFU_Middle_of_Funnel": "Considération. Cibles: prospects chauds. Contenus: guides PDF, webinaires, comparatifs, études de cas, newsletter. Objectif: capturer les leads.",
+        "BOFU_Bottom_of_Funnel": "Conversion. Cibles: prospects prêts à acheter. Contenus: témoignages clients, essai gratuit, démo, offre limitée. Objectif: transformer en clients."
+      }
+    },
+    "réseaux_sociaux": {
+      "stratégie_de_contenu": {
+        "calendrier_éditorial": "Planifier 4-6 semaines à l'avance. Mix de contenus: éducatif/inspirationnel/divertissant/promotionnel (règle 80/20: 80% valeur, 20% promotion max).",
+        "formats_performants": "Vidéos courtes (Reels/TikTok) > Carrousels > Images fixes > Texte seul. La vidéo génère 3× plus d'engagement en moyenne.",
+        "fréquence": "LinkedIn: 3-5x/sem. Instagram: 4-7x/sem (Reels), 1-2 Stories/jour. TikTok: 1-3x/jour. Cohérence > intensité.",
+        "algorithmes": "Tous les algorithmes favorisent: le taux d'engagement (likes+commentaires+partages+sauvegardes) dans les premières heures, la durée de visionnage (vidéos), les interactions conversations (commentaires > likes)."
+      },
+      "plateformes_2024": {
+        "LinkedIn": "B2B, personal branding, recrutement. Texte long performant. Articles publiés. Newsletters. Audience professionnelle.",
+        "Instagram": "B2C lifestyle, e-commerce, créateurs. Reels + Stories + Shopping tags. Collaboration avec influenceurs.",
+        "TikTok": "18-35 ans principalement mais s'étend. Algorithme le plus équitable (chance de viralité pour les nouveaux comptes). Court format vidéo. Tendances musicales.",
+        "YouTube": "Deuxième moteur de recherche mondial. Long format (tutos, vlogs) + Shorts. SEO YouTube critique: titre + description + tags + miniature.",
+        "X_Twitter": "Tech, actualités, opinions. Threads performants. Mouvant depuis le rachat par Elon Musk."
+      }
+    },
+    "publicité_digitale_payante": {
+      "Google_Ads": {
+        "Search": "Annonces textuelles sur les requêtes de recherche. Intention d'achat forte. CPC moyen: 0,50€-5€ selon secteur. Quality Score (pertinence annonce/landing page/CTR historique) détermine CPC réel et position.",
+        "Display": "Bannières sur le réseau Display Google (>2M de sites). Awareness + retargeting. CPM moyen: 0,5-3€.",
+        "Shopping": "Flux produits pour e-commerce. Très visuel. Idéal pour les retailers. Google Merchant Center requis.",
+        "YouTube_Ads": "Pré-roll (skippable/non-skippable), Discovery, Bumper 6 sec. CPV moyen: 0,01-0,05€."
+      },
+      "Meta_Ads": {
+        "ciblage": "Le plus précis: intérêts, comportements, démographie, audiences personnalisées (clients existants), audiences similaires (Lookalike 1-10%). iOS 14+ a réduit la précision.",
+        "formats": "Image unique + Carrousel + Vidéo + Collection + Instant Experience. Stories + Reels = formats croissants.",
+        "structure_de_campagne": "Campagne (objectif) → Ensemble de publicités (audience + budget + placement) → Publicité (créatif). Broad targeting + Creative-led strategy tendance actuelle."
+      },
+      "LinkedIn_Ads": {
+        "forces": "Ciblage professionnel ultra-précis (poste, secteur, entreprise, niveau d'expérience). Idéal B2B.",
+        "coûts": "CPC moyen: 5-15€. Expensive mais qualifié. Lead Gen Forms performants (pré-remplis avec infos LinkedIn)."
+      }
+    },
+    "email_marketing": {
+      "délivrabilité": "SPF + DKIM + DMARC obligatoires. Double opt-in recommandé. Taux d'ouverture moyen: 20-30%. Taux de clic: 2-5%.",
+      "séquences_automation": {
+        "bienvenue": "5 emails en 2 semaines: valeur + histoire marque + ressources + offre + nurturing",
+        "lead_nurturing": "Séquence éducative sur 4-8 semaines avant proposition commerciale",
+        "réactivation": "Inactifs 90+ jours: 3 emails + suppression si pas de réaction (protège la délivrabilité)"
+      },
+      "outils": "Klaviyo (e-commerce, segmentation avancée) | ActiveCampaign (CRM + email) | Mailchimp (généraliste, gratuit jusqu'à 500 contacts) | Brevo/Sendinblue (FR, bon rapport qualité/prix) | ConvertKit (créateurs)"
+    },
+    "content_marketing": {
+      "pillar_pages": "Page longue et exhaustive sur un sujet parent (ex: 'Guide complet du SEO'). Liée à des cluster pages secondaires (ex: 'SEO technique', 'Netlinking'). Architecture hub & spoke.",
+      "ROI_content": "Content marketing coûte 62% moins cher que le marketing traditionnel et génère 3× plus de leads (CMI). Résultats différés (6-18 mois pour le SEO) mais composés dans le temps.",
+      "types_de_contenu": "Articles de blog (SEO) + Vidéos YouTube + Podcast + Infographies (partages) + Études de cas (conversion) + Livres blancs (génération de leads) + Newsletters (fidélisation)"
+    },
+    "analytics_et_mesure": {
+      "GA4": "Google Analytics 4. Modèle événement-based (vs sessions en UA). Exploration (funnels, cohortes, chemins). Paramétrage des conversions. BigQuery export pour l'analyse avancée.",
+      "attribution": "Comment attribuer la conversion au bon canal? Last Click (biaisé vers le bas de funnel) | Data-Driven (ML, recommandé) | Linear | Time Decay. Vérité entre les modèles.",
+      "KPI_marketing_digital": {
+        "acquisition": "Sessions, nouveaux utilisateurs, taux de rebond, sources de trafic",
+        "conversion": "Taux de conversion, CPL (Coût par Lead), CPA (Coût par Acquisition)",
+        "rétention": "Taux de rétention, LTV, NPS",
+        "contenu": "Pages vues, temps moyen sur page, taux de scroll, partages"
+      }
+    },
+    "growth_hacking": {
+      "définition": "Approche orientée croissance rapide via des expériences data-driven. Le growth hacker = mi-marketer, mi-développeur.",
+      "framework_AARRR": "Acquisition → Activation → Rétention → Referral → Revenue (Pirate Metrics de Dave McClure)",
+      "boucles_virales": "Referral programs (Dropbox: espace supplémentaire pour chaque invitation) + Partage social dans le produit + Contenu généré utilisateurs",
+      "product_led_growth": "Le produit lui-même est le principal moteur d'acquisition. Free tier + upgrade naturel. Ex: Slack, Notion, Figma, Zoom."
+    }
+  }
+}

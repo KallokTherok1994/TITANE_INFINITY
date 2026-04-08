@@ -1,0 +1,63 @@
+{
+  "version": "v30.0.0",
+  "category": "seo_referencement",
+  "description": "SEO et référencement naturel — fondamentaux (comment fonctionnent les moteurs de recherche/crawl/indexation/ranking), SEO on-page (balises/contenu/structure/mots-clés/NLP), SEO off-page (netlinking/backlinks/autorité de domaine/E-E-A-T), SEO technique (Core Web Vitals/vitesse/mobile-first/structured data/XML sitemap/robots.txt/canonicalisation), recherche de mots-clés (outils/intention de recherche), SEO local (Google Business Profile), mesure et outils (GSC/Semrush/Ahrefs/Screaming Frog)",
+  "seo_referencement": {
+    "introduction": "Le SEO (Search Engine Optimization) est l'art d'optimiser un site web pour qu'il apparaisse en tête des résultats de recherche naturels (non payants). Un bon SEO génère un trafic qualifié, durable et à coût marginal décroissant — l'un des actifs numériques les plus précieux. TITANE maîtrise ce domaine de bout en bout.",
+    "fonctionnement_moteurs": {
+      "crawl": "Les crawlers (Googlebot) découvrent et lisitent les pages en suivant les liens. Budget de crawl limité: les sites lents ou mal structurés ne sont pas entièrement explorés.",
+      "indexation": "Pages valides stockées dans l'index Google. Condition: page accessible (pas bloquée par robots.txt ou noindex), contenu unique et substantiel.",
+      "ranking": "Algorithme Google: >200 facteurs. Principaux: pertinence contenu (sémantique) + autorité du domaine (backlinks) + expérience utilisateur (Core Web Vitals) + E-E-A-T."
+    },
+    "seo_on_page": {
+      "recherche_mots_clés": {
+        "intention_de_recherche": "Informationnelle (savoir) | Navigationnelle (trouver un site) | Commerciale (comparer) | Transactionnelle (acheter). Aligner le contenu sur l'intention.",
+        "outils": "Google Keyword Planner (gratuit) + Google Search Console (requêtes réelles) + Semrush + Ahrefs + Ubersuggest + AnswerThePublic (questions) + Google Autocomplete + People Also Ask",
+        "longue_traîne": "Mots-clés de 3+ mots, moins concurrentiels, plus ciblés. Représentent 70% des recherches. Idéaux pour les sites récents."
+      },
+      "balises_HTML": {
+        "title": "Balise titre: 50-60 caractères. Mot-clé principal en début. Unique par page. Facteur de ranking fort.",
+        "meta_description": "160 caractères max. Pas de ranking direct mais impact CTR (taux de clic). Appel à l'action.",
+        "H1": "Un seul H1 par page. Contient le mot-clé principal. Résume le sujet de la page.",
+        "H2_H3": "Structure logique du contenu. Mots-clés secondaires et questions des internautes.",
+        "URL": "Courtes, descriptives, tirets (pas underscore). Ex: /guide-seo-debutants/ pas /page?id=42"
+      },
+      "contenu": {
+        "EEAT": "Experience, Expertise, Authoritativeness, Trustworthiness — critères d'évaluation Google depuis les 'Helpful Content Updates'. Mettre en avant l'auteur, les sources, les preuves.",
+        "longueur": "Pas de taille idéale absolue. Couvrir le sujet mieux que les concurrents. Analyser les SERP pour calibrer (si les top 10 font 1500 mots en moyenne, viser 2000+ avec plus de valeur).",
+        "maillage_interne": "Liens entre pages du même site. Distribue le 'link juice', aide le crawl, améliore l'UX. Ancres descriptives."
+      }
+    },
+    "seo_off_page": {
+      "backlinks": "Liens entrants depuis d'autres sites. Facteur de ranking #1 hors on-page. Qualité > quantité: 1 lien depuis un site DA 80 > 100 liens DA 10.",
+      "acquisition_backlinks": ["Guest posting (articles invités sur sites pertinents)", "Digital PR (études originales/infographies que les journalistes vont citer)", "HARO/Qwoted (répondre aux demandes de journalistes)", "Broken link building (remplacer des liens morts chez des sites tiers)", "Témoignages clients avec lien"],
+      "ancres": "Texte de l'ancre doit être naturel et varié: ancre de marque + ancre générique + ancre exact match (limité pour éviter la sur-optimisation).",
+      "domaine_autorité": "DA/DR (Moz/Ahrefs) — score de 0 à 100. Augmente avec les backlinks de qualité. Indicateur relatif, pas officiel Google."
+    },
+    "seo_technique": {
+      "Core_Web_Vitals": {
+        "LCP": "Largest Contentful Paint — temps d'affichage du plus grand élément visible. Cible: <2,5s.",
+        "INP": "Interaction to Next Paint (remplace FID). Réactivité aux interactions. Cible: <200ms.",
+        "CLS": "Cumulative Layout Shift — stabilité visuelle de la page. Cible: <0,1."
+      },
+      "mobile_first": "Google indexe d'abord la version mobile. Le site doit être 100% fonctionnel et rapide sur mobile. Responsive design obligatoire.",
+      "structured_data": "Schema.org JSON-LD. Enrichit les résultats (rich snippets): étoiles, FAQ, recettes, événements. Améliore le CTR sans garantir le ranking.",
+      "XML_sitemap": "Liste toutes les URLs importantes. Soumettre dans Google Search Console. Mettre à jour automatiquement.",
+      "robots_txt": "Fichier texte indiquant aux crawlers les pages à ignorer. Ne pas bloquer les CSS/JS (Google en a besoin pour render).",
+      "canonicalisation": "Balise canonical pour éviter le duplicate content entre variantes d'URL (www/non-www, http/https, paramètres UTM).",
+      "HTTPS": "SSL obligatoire. Google pénalise les sites non-HTTPS. Certificat Let's Encrypt gratuit via hébergeur."
+    },
+    "seo_local": {
+      "Google_Business_Profile": "Fiche Google My Business: complète à 100% (catégories, horaires, photos, attributs). Demander les avis clients. Répondre à tous les avis (bons et mauvais).",
+      "citations_NAP": "Name/Address/Phone cohérents partout sur le web (Pages Jaunes, Yelp, Tripadvisor, annuaires sectoriels).",
+      "pages_locales": "Si plusieurs établissements: une page dédiée par ville/agence avec contenu unique."
+    },
+    "outils_seo": {
+      "Google_Search_Console": "Gratuit. Requêtes/clics/impressions/positions. Erreurs d'indexation. Rapport Core Web Vitals. Incontournable.",
+      "Google_Analytics_4": "Trafic, comportement utilisateurs, conversions. Nécessite configuration des événements et objectifs.",
+      "Semrush": "Analyse concurrentielle, research mots-clés, audit technique, suivi positions. ~130€/mois.",
+      "Ahrefs": "Référence pour l'analyse de backlinks, exploration de mots-clés, Content Explorer. ~100€/mois.",
+      "Screaming_Frog": "Crawler desktop gratuit jusqu'à 500 URLs. Audit technique: balises, redirections, liens cassés, duplicate content."
+    }
+  }
+}
