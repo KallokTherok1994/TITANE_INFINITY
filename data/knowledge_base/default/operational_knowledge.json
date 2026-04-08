@@ -72,8 +72,6 @@
       "verification": "Commande de vérification + résultat attendu",
       "prevention": "Guard/test ajouté pour éviter la récurrence"
     },
-    "last_known_id": "AH-2026-04-08-V30-RUST-REMAINING-021",
-    "total_entries": "699+",
     "after_adding": ["bash scripts/autoheal/detect_recurrence.sh", "bash scripts/verify_instructions.sh"]
   },
   "quality_gates": {

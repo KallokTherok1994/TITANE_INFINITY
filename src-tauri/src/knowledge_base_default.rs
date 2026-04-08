@@ -7,6 +7,7 @@
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use std::sync::OnceLock;
 
 // ─────────────────────────────────────────────────────────────────
 // EMBEDDED DEFAULT KNOWLEDGE (compile-time inclusion)
@@ -27,6 +28,12 @@ const RESPONSE_GUIDELINES: &str =
     include_str!("../../data/knowledge_base/default/response_guidelines.json");
 const OPERATIONAL_KNOWLEDGE: &str =
     include_str!("../../data/knowledge_base/default/operational_knowledge.json");
+
+// ─────────────────────────────────────────────────────────────────
+// LAZY STATIC CACHE — parsed once, reused on every call
+// ─────────────────────────────────────────────────────────────────
+
+static KB_CACHE: OnceLock<(HashMap<String, KnowledgeBaseEntry>, Vec<String>)> = OnceLock::new();
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -77,47 +84,51 @@ impl DefaultKnowledgeBase {
 
     /// Load all default knowledge entries from embedded JSON.
     ///
-    /// Returns a map of `category_id → KnowledgeBaseEntry`.
+    /// Results are parsed once and cached via `OnceLock`. Subsequent calls
+    /// return a clone of the cached data without re-parsing.
     /// Parse errors are collected and returned separately.
     pub fn load_all() -> (HashMap<String, KnowledgeBaseEntry>, Vec<String>) {
-        let mut entries: HashMap<String, KnowledgeBaseEntry> = HashMap::new();
-        let mut errors: Vec<String> = Vec::new();
+        let cached = KB_CACHE.get_or_init(|| {
+            let mut entries: HashMap<String, KnowledgeBaseEntry> = HashMap::new();
+            let mut errors: Vec<String> = Vec::new();
 
-        for (id, json_str) in Self::SOURCES {
-            match serde_json::from_str::<serde_json::Value>(json_str) {
-                Ok(value) => {
-                    let category = value
-                        .get("category")
-                        .and_then(|v| v.as_str())
-                        .unwrap_or(id)
-                        .to_string();
-                    let version = value
-                        .get("version")
-                        .and_then(|v| v.as_str())
-                        .unwrap_or("v30.0.0")
-                        .to_string();
-                    let description = value
-                        .get("description")
-                        .and_then(|v| v.as_str())
-                        .unwrap_or("")
-                        .to_string();
+            for (id, json_str) in Self::SOURCES {
+                match serde_json::from_str::<serde_json::Value>(json_str) {
+                    Ok(value) => {
+                        let category = value
+                            .get("category")
+                            .and_then(|v| v.as_str())
+                            .unwrap_or(id)
+                            .to_string();
+                        let version = value
+                            .get("version")
+                            .and_then(|v| v.as_str())
+                            .unwrap_or("v30.0.0")
+                            .to_string();
+                        let description = value
+                            .get("description")
+                            .and_then(|v| v.as_str())
+                            .unwrap_or("")
+                            .to_string();
 
-                    let entry = KnowledgeBaseEntry {
-                        id: id.to_string(),
-                        category: category.clone(),
-                        version,
-                        description,
-                        content: value,
-                    };
-                    entries.insert(category, entry);
-                }
-                Err(e) => {
-                    errors.push(format!("Failed to parse '{}': {}", id, e));
+                        let entry = KnowledgeBaseEntry {
+                            id: id.to_string(),
+                            category: category.clone(),
+                            version,
+                            description,
+                            content: value,
+                        };
+                        entries.insert(category, entry);
+                    }
+                    Err(e) => {
+                        errors.push(format!("Failed to parse '{}': {}", id, e));
+                    }
                 }
             }
-        }
 
-        (entries, errors)
+            (entries, errors)
+        });
+        cached.clone()
     }
 
     /// Initialize the default knowledge base and return a result summary.
