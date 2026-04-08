@@ -4,8 +4,8 @@
  * Coverage: Health display, Thresholds, Alerts, History
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { CoreHealthMonitor } from '@/components/devtools/CoreHealthMonitor';
 import { secureInvoke } from '@/lib/security';
 
@@ -54,6 +54,10 @@ describe('CoreHealthMonitor Component', () => {
         metrics: buildMetrics(45, 65),
       };
     });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   describe('Rendering', () => {
@@ -111,6 +115,50 @@ describe('CoreHealthMonitor Component', () => {
       await waitFor(() => {
         expect(screen.getAllByText(/cpu:/i).length).toBeGreaterThan(0);
         expect(screen.getAllByText(/memory:/i).length).toBeGreaterThan(0);
+      });
+    });
+
+    it('should avoid overlapping auto-refresh cycles while a previous health batch is still pending', async () => {
+      vi.useFakeTimers();
+
+      let releaseBatch: (() => void) | null = null;
+      const pendingBatch = new Promise<void>(resolve => {
+        releaseBatch = resolve;
+      });
+
+      mockSecureInvoke.mockImplementation(
+        async (_command: string, payload: any) => {
+          const core = payload?.core_name ?? 'unknown';
+          await pendingBatch;
+          return {
+            name: core,
+            version: '1.0.0',
+            status: 'healthy',
+            dependencies: [],
+            metrics: buildMetrics(45, 65),
+          };
+        }
+      );
+
+      render(<CoreHealthMonitor refreshInterval={10} />);
+
+      await act(async () => {
+        await Promise.resolve();
+      });
+
+      const initialCallCount = mockSecureInvoke.mock.calls.length;
+      expect(initialCallCount).toBeGreaterThan(0);
+
+      await act(async () => {
+        vi.advanceTimersByTime(50);
+        await Promise.resolve();
+      });
+
+      expect(mockSecureInvoke).toHaveBeenCalledTimes(initialCallCount);
+
+      await act(async () => {
+        releaseBatch?.();
+        await Promise.resolve();
       });
     });
   });
