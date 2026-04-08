@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag to release (e.g., v29.0.0)'
+        description: 'Tag to release (e.g., v30.0.0)'
         required: true
         type: string
 
@@ -323,10 +323,13 @@ jobs:
       - name: 🚀 Create GitHub Release
         uses: softprops/action-gh-release@v2.2.0
         with:
+          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
+          target_commitish: ${{ github.sha }}
           name: TITANE∞ ${{ github.event.inputs.tag || github.ref_name }}
           body_path: release_notes.md
           draft: false
           prerelease: false
+          overwrite_files: true
           files: |
             artifacts/**/*.deb
             artifacts/**/*.AppImage
@@ -349,4 +352,4 @@ jobs:
           find artifacts/ -type f \( -name "*.deb" -o -name "*.AppImage" -o -name "*.msi" -o -name "*.dmg" \) 2>/dev/null | wc -l | xargs echo "- Total files:" >> $GITHUB_STEP_SUMMARY || echo "- Files: 0" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
-          echo "🚀 Built with TITANE∞ v29.0.0 - Modernized Release Pipeline" >> $GITHUB_STEP_SUMMARY
+          echo "🚀 Built with TITANE∞ v30.0.0 - Modernized Release Pipeline" >> $GITHUB_STEP_SUMMARY
