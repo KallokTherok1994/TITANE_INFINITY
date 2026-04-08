@@ -190,6 +190,48 @@ describe('useAudioStreaming', () => {
     });
   });
 
+  it('avoids overlapping stats polling while the previous stats request is still pending', async () => {
+    let releaseStats:
+      | ((value: { availableSamples: number; totalWritten: number; isActive: boolean }) => void)
+      | null = null;
+
+    vi.mocked(audioStreamingService.getStats).mockImplementationOnce(
+      () =>
+        new Promise(resolve => {
+          releaseStats = resolve;
+        })
+    );
+
+    const { result, unmount } = renderHook(() => useAudioStreaming());
+
+    await act(async () => {
+      await result.current.startStreaming();
+    });
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(500);
+    });
+
+    expect(audioStreamingService.getStats).toHaveBeenCalledTimes(1);
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(500);
+    });
+
+    expect(audioStreamingService.getStats).toHaveBeenCalledTimes(1);
+
+    await act(async () => {
+      releaseStats?.({
+        availableSamples: 42,
+        totalWritten: 100,
+        isActive: true,
+      });
+      await Promise.resolve();
+    });
+
+    unmount();
+  });
+
   it('stopStreaming retourne le résultat, reset l’état, et appelle onStreamingComplete', async () => {
     const onStreamingComplete = vi.fn();
     const { result } = renderHook(() => useAudioStreaming({ onStreamingComplete }));

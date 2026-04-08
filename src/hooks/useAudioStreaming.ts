@@ -67,6 +67,7 @@ export function useAudioStreaming(
 
   const statsIntervalRef = useRef<number | null>(null);
   const isMountedRef = useRef(true);
+  const statsRequestRef = useRef<Promise<void> | null>(null);
 
   // ✨ v24.2.1 FIX: Store callbacks in refs to prevent re-subscription on every render
   const onStateChangeRef = useRef(options.onStateChange);
@@ -88,6 +89,7 @@ export function useAudioStreaming(
       if (statsIntervalRef.current !== null) {
         window.clearInterval(statsIntervalRef.current);
       }
+      statsRequestRef.current = null;
     };
   }, []);
 
@@ -116,21 +118,31 @@ export function useAudioStreaming(
   // Start monitoring stats when streaming
   useEffect(() => {
     if (isStreaming) {
-      statsIntervalRef.current = window.setInterval(async () => {
+      statsIntervalRef.current = window.setInterval(() => {
         if (!isMountedRef.current) return;
+        if (statsRequestRef.current) return;
 
-        try {
-          const currentStats = await audioStreamingService.getStats();
-          setStats(currentStats);
-        } catch (err) {
-          console.error('[useAudioStreaming] Stats error:', err);
-        }
+        const request = (async () => {
+          try {
+            const currentStats = await audioStreamingService.getStats();
+            if (isMountedRef.current) {
+              setStats(currentStats);
+            }
+          } catch (err) {
+            console.error('[useAudioStreaming] Stats error:', err);
+          } finally {
+            statsRequestRef.current = null;
+          }
+        })();
+
+        statsRequestRef.current = request;
       }, STATS_UPDATE_INTERVAL_MS);
     } else {
       if (statsIntervalRef.current !== null) {
         window.clearInterval(statsIntervalRef.current);
         statsIntervalRef.current = null;
       }
+      statsRequestRef.current = null;
       setStats(null);
     }
 
@@ -139,6 +151,7 @@ export function useAudioStreaming(
         window.clearInterval(statsIntervalRef.current);
         statsIntervalRef.current = null;
       }
+      statsRequestRef.current = null;
     };
   }, [isStreaming]);
 
