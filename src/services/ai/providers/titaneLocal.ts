@@ -318,7 +318,7 @@ function generateResponse(
   } else {
     // ═══ RÉPONSE GÉNÉRALE OMEGA ═══
     responseMode = 'general-omega';
-    baseResponse = `Je suis ${TITANE_KNOWLEDGE.identity}, noyau cognitif autonome avec architecture OMEGA v19.2Ω.
+    baseResponse = `Je suis ${TITANE_KNOWLEDGE.identity}, noyau cognitif autonome avec architecture OMEGA v30.0.0Ω.
 
 🔍 **Analyse de ta question** : "${message.substring(0, 80)}${message.length > 80 ? '...' : ''}"
 
@@ -400,7 +400,7 @@ Que souhaites-tu explorer ?`;
   } else if (analysis.intent === 'technical') {
     responseMode = 'technical';
     specialNote =
-      '\n\n🔧 **Diagnostic technique** : Je peux analyser logs système, modules core, et proposer auto-réparations basées sur OMEGA v19.2Ω.';
+      '\n\n🔧 **Diagnostic technique** : Je peux analyser logs système, modules core, et proposer auto-réparations basées sur OMEGA v30.0.0Ω.';
   }
 
   const questionEcho = buildQuestionEcho(message);
@@ -430,7 +430,7 @@ Que souhaites-tu explorer ?`;
       omega_enhanced: true,
       local_only: true,
       autonomous: true,
-      version: 'v19.2Ω',
+      version: 'v30.0.0Ω',
       memory_context_source: injectedMemoryBlock
         ? 'system-history'
         : memoryContext
@@ -448,7 +448,7 @@ Que souhaites-tu explorer ?`;
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *  PROVIDER TITANE LOCAL v19.2Ω - NOYAU OMEGA INFAILLIBLE
+ *  PROVIDER TITANE LOCAL v30.0.0Ω - NOYAU OMEGA INFAILLIBLE
  *  Toujours disponible • Jamais d'erreur • Fallback garanti
  * ═══════════════════════════════════════════════════════════════════
  */
@@ -469,9 +469,9 @@ export const titaneLocalProvider: AIProvider = {
       if (!cleanMessage) {
         return {
           content:
-            '⚡ Message vide détecté. Noyau OMEGA v19.2Ω à ton écoute - Que souhaites-tu savoir ?',
+            '⚡ Message vide détecté. Noyau OMEGA v30.0.0Ω à ton écoute - Que souhaites-tu savoir ?',
           provider: 'titane-local',
-          model: 'titane-local-v19.2Ω',
+          model: 'titane-local-v30.0.0Ω',
           timestamp: Date.now(),
           metadata: {
             mode: 'omega-safe',
@@ -533,13 +533,13 @@ export const titaneLocalProvider: AIProvider = {
       return {
         content,
         provider: 'titane-local',
-        model: 'titane-local-v19.2Ω',
+        model: 'titane-local-v30.0.0Ω',
         timestamp: Date.now(),
         metadata: {
           ...metadata,
           cognitive_delay: Math.round(cognitiveDelay),
           total_response_time: totalResponseTime,
-          omega_version: 'v19.2Ω',
+          omega_version: 'v30.0.0Ω',
           infallible: true,
           local_only: true,
           autonomous: true,

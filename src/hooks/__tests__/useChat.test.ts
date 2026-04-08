@@ -427,6 +427,15 @@ describe('useChat - KERNEL OMNIS Tests', () => {
       expect(stats.pipelineHealth).toBeDefined();
       expect(['optimal', 'stable', 'degraded', 'error']).toContain(stats.pipelineHealth);
     });
+
+    it('should expose the v30 OMEGA engine version', () => {
+      const { result } = renderHook(() => useChat());
+
+      expect(result.current.omnisStats.engineVersion).toBe('omega-v30.0.0');
+      expect(result.current.getDebugInfo().engineStats.engineVersion).toBe(
+        'omega-v30.0.0'
+      );
+    });
   });
 
   describe('Error Handling', () => {

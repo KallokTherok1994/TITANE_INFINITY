@@ -441,7 +441,7 @@ class ChatService {
             typeof engineResponse.metadata?.finishReason === 'string'
               ? engineResponse.metadata.finishReason
               : 'stop',
-          model: engineResponse.model ?? 'titane-local-v19.2Ω',
+          model: engineResponse.model ?? 'titane-local-v30.0.0Ω',
           provider: engineResponse.provider,
           latencyMs: Date.now() - startedAt,
           metadata: {

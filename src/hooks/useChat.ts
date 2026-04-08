@@ -2247,7 +2247,7 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
       successCount,
       errorCount,
       successRate,
-      engineVersion: 'omega-v19.2',
+      engineVersion: 'omega-v30.0.0',
       failureCount: errorCount,
       autoHealCount,
       pipelineHealth,

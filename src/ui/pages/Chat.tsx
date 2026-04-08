@@ -28,7 +28,7 @@ import {
 } from '../../hooks/useChat';
 // P1-A OPTIMIZATION: Use VirtualizedMessageList for 50+ messages performance
 import { VirtualizedMessageList } from '../../components/chat/VirtualizedMessageList';
-// OMEGA v19.2Ω: MessageListOptimized as fallback (commented for P1 test)
+// OMEGA v30.0.0Ω: MessageListOptimized as fallback (commented for P1 test)
 // import { MessageListOptimized as MessageList } from '../../components/chat/MessageListOptimized';
 // import { MessageListSimple as MessageList } from '../../components/chat/MessageListSimple';
 // import { MessageList } from '../../components/chat/MessageList';

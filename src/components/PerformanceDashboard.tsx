@@ -125,7 +125,7 @@ export const PerformanceDashboard: React.FC<{ compact?: boolean }> = ({
     <div className="performance-dashboard">
       {/* Header */}
       <div className="dashboard-header">
-        <h3>⚡ Performance Dashboard v24.3.2</h3>
+        <h3>⚡ Performance Dashboard v30.0.0</h3>
         <button onClick={refreshMetrics} disabled={isRefreshing} className="refresh-btn">
           {isRefreshing ? '🔄 Refreshing...' : '🔄 Refresh'}
         </button>

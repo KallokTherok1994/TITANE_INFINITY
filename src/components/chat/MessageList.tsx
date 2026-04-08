@@ -216,9 +216,9 @@ export const MessageList = React.memo(function MessageList({
         <div className="message-list-container" ref={containerRef}>
           <div className="message-list-empty">
             <div className="message-list-empty-icon">🟣</div>
-            <h3 className="message-list-empty-title">TITANE∞ Chat IA OMEGA v19.2Ω</h3>
+            <h3 className="message-list-empty-title">TITANE∞ Chat IA OMEGA v30.0.0Ω</h3>
             <p className="message-list-empty-text">
-              Système cognitif avec architecture anti-crash. Providers intelligents
+              Système cognitif v30 avec architecture anti-crash. Providers intelligents
               sélectionnés automatiquement pour une fiabilité maximale.
             </p>
             <div className="message-list-empty-providers">

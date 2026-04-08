@@ -189,7 +189,7 @@ export interface ChatEngineResponse extends AIResponse {
 }
 
 // ─────────────────────────────────────────────────────────────────
-// CHAT ENGINE OMEGA v19.2Ω - FlowEngine Reconstruction
+// CHAT ENGINE OMEGA v30.0.0Ω - FlowEngine Reconstruction
 // ─────────────────────────────────────────────────────────────────
 
 /** Modes for which response caching is disabled (creative/generative variability required) */

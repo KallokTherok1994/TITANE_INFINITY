@@ -90,8 +90,8 @@ export class SingularityBridge {
       // 2. Listen for layer updates (événements Tauri)
       await this.setupEventListeners();
 
-      // v24.20: Event-driven sync (no more setInterval polling)
-      console.log('[SingularityBridge] v24.20: Event-driven delta sync enabled');
+      // v30.0.0: Event-driven sync (no more setInterval polling)
+      console.log('[SingularityBridge] v30.0.0: Event-driven delta sync enabled');
 
       this.initialized = true;
       console.log('[SingularityBridge] ✅ Initialized successfully');
@@ -254,13 +254,13 @@ export class SingularityBridge {
     const unlisten6 = await listen<SingularityState>(
       'singularity:full:updated',
       event => {
-        console.log('[SingularityBridge] v24.20: Full state update (rare)');
+        console.log('[SingularityBridge] v30.0.0: Full state update (rare)');
         this.state = event.payload;
         this.notifySubscribers();
       }
     );
 
-    // v24.20: Delta updates (payload < 5KB instead of 500KB)
+    // v30.0.0: Delta updates (payload < 5KB instead of 500KB)
     const unlisten7 = await listen<Partial<SingularityState>>(
       'singularity:delta:updated',
       event => {
@@ -268,7 +268,7 @@ export class SingularityBridge {
           // Merge delta into current state (only changed fields)
           this.state = { ...this.state, ...event.payload };
           console.log(
-            '[SingularityBridge] v24.20: Delta update applied',
+            '[SingularityBridge] v30.0.0: Delta update applied',
             Object.keys(event.payload)
           );
           this.notifySubscribers();
