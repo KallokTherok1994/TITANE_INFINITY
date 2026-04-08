@@ -3,7 +3,7 @@
 //   Phase 7: OS Cognitif Unifié — Frontend Integration
 // ═══════════════════════════════════════════════════════════════
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { secureInvoke } from '@/lib/security';
 
 // ═══════════════════════════════════════════════════════════════
@@ -117,6 +117,8 @@ export function useSingularityState(
 
   // Auto-refresh control
   const [autoRefreshEnabled, setAutoRefreshEnabled] = useState<boolean>(autoRefresh);
+  const refreshInFlightRef = useRef(false);
+  const hasLoadedOnceRef = useRef(false);
 
   // ═══════════════════════════════════════════════════════════════
   //   ACTIONS
@@ -126,32 +128,36 @@ export function useSingularityState(
    * Refresh full Singularity state from backend
    */
   const refreshState = useCallback(async () => {
+    if (refreshInFlightRef.current) {
+      return;
+    }
+
+    refreshInFlightRef.current = true;
+    const shouldShowLoading = !hasLoadedOnceRef.current;
+
     try {
-      setLoading(true);
+      if (shouldShowLoading) {
+        setLoading(true);
+      }
       setError(null);
 
-      // Get full unified state
+      // Get full unified state once and hydrate granular slices from it.
       const state = await secureInvoke<SingularityState>('engine_get_singularity_state');
       setSingularityState(state);
+      setNexusState(state.nexus);
+      setHarmoniaState(state.harmonia);
+      setSentinelState(state.sentinel);
+      setCognitionState(state.cognition);
 
-      // Get individual module states (optional, for granular access)
-      const [nexus, harmonia, sentinel, cognition, evolution] = await Promise.all([
-        secureInvoke<NexusState>('engine_get_nexus_state'),
-        secureInvoke<HarmoniaState>('engine_get_harmonia_state'),
-        secureInvoke<SentinelState>('engine_get_sentinel_state'),
-        secureInvoke<CognitionState>('engine_get_cognition_state'),
-        secureInvoke<EvolutionState>('engine_get_evolution_state'),
-      ]);
-
-      setNexusState(nexus);
-      setHarmoniaState(harmonia);
-      setSentinelState(sentinel);
-      setCognitionState(cognition);
+      // Evolution remains a dedicated endpoint.
+      const evolution = await secureInvoke<EvolutionState>('engine_get_evolution_state');
       setEvolutionState(evolution);
+      hasLoadedOnceRef.current = true;
     } catch (err) {
       console.error('[useSingularityState] Refresh failed:', err);
       setError(err instanceof Error ? err.message : String(err));
     } finally {
+      refreshInFlightRef.current = false;
       setLoading(false);
     }
   }, []);
