@@ -10,7 +10,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { tauriClient } from '../services/tauriClient';
 import type { SingularityState } from '../types/singularityState';
 
@@ -30,6 +30,17 @@ export function useEngineState(
   const [state, setState] = useState<SingularityState | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const mountedRef = useRef(true);
+  const stateRequestRef = useRef<Promise<SingularityState | null> | null>(null);
+
+  useEffect(() => {
+    mountedRef.current = true;
+
+    return () => {
+      mountedRef.current = false;
+      stateRequestRef.current = null;
+    };
+  }, []);
 
   /**
    * Récupère l'état Singularity complet depuis le backend Tauri
@@ -37,35 +48,55 @@ export function useEngineState(
   const fetchState = useCallback(async () => {
     if (!enabled) return null;
 
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const data = await tauriClient.getSingularityState();
-
-      // Data est déjà au bon format SingularityState depuis le backend
-      setState(data as SingularityState);
-      setIsLoading(false);
-
-      return data as SingularityState;
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : 'Failed to fetch engine state';
-      console.error('❌ [useEngineState] Fetch error:', err);
-
-      setError(errorMessage);
-      setIsLoading(false);
-      setState(null);
-
-      return null;
+    if (stateRequestRef.current) {
+      return stateRequestRef.current;
     }
+
+    let request: Promise<SingularityState | null> | null = null;
+    request = (async () => {
+      if (mountedRef.current) {
+        setIsLoading(true);
+        setError(null);
+      }
+
+      try {
+        const data = await tauriClient.getSingularityState();
+
+        if (mountedRef.current) {
+          // Data est déjà au bon format SingularityState depuis le backend
+          setState(data as SingularityState);
+          setIsLoading(false);
+        }
+
+        return data as SingularityState;
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : 'Failed to fetch engine state';
+        console.error('❌ [useEngineState] Fetch error:', err);
+
+        if (mountedRef.current) {
+          setError(errorMessage);
+          setIsLoading(false);
+          setState(null);
+        }
+
+        return null;
+      } finally {
+        if (stateRequestRef.current === request) {
+          stateRequestRef.current = null;
+        }
+      }
+    })();
+
+    stateRequestRef.current = request;
+    return request;
   }, [enabled]);
 
   /**
    * Force le rafraîchissement de l'état
    */
   const refresh = useCallback(() => {
-    fetchState();
+    void fetchState();
   }, [fetchState]);
 
   // Poll automatique de l'état à intervalle régulier
@@ -73,10 +104,12 @@ export function useEngineState(
     if (!enabled) return;
 
     // Première récupération immédiate
-    fetchState();
+    void fetchState();
 
     // Poll régulier
-    const interval = setInterval(fetchState, pollInterval);
+    const interval = setInterval(() => {
+      void fetchState();
+    }, pollInterval);
 
     return () => clearInterval(interval);
   }, [fetchState, pollInterval, enabled]);
