@@ -1,0 +1,111 @@
+{
+  "version": "v30.0.0",
+  "category": "nutrition_sante_naturelle",
+  "description": "Nutrition et santé naturelle — macronutriments, micronutriments, alimentation anti-inflammatoire, index glycémique, microbiote intestinal, chrono-nutrition, jeûne intermittent, superaliments",
+  "nutrition_sante_naturelle": {
+    "introduction": "L'alimentation est le levier de santé le plus puissant et le plus accessible. Ce qu'on mange quotidiennement modifie l'expression des gènes (épigénétique), l'inflammation systémique, le microbiote et la neurochimie. TITANE aborde la nutrition avec pragmatisme: pas de régimes extrêmes, des principes stables et adaptables.",
+    "macronutriments": {
+      "protéines": {
+        "rôle": "Briques de construction — muscles, enzymes, anticorps, neurotransmetteurs, hormones",
+        "besoins": "0.8-1.2g/kg pour sédentaire; 1.6-2.2g/kg pour actif/sportif",
+        "sources_qualité": {
+          "animales": "Œufs (profil acides aminés complet), viande de qualité, poissons gras, fromages de qualité",
+          "végétales": "Légumineuses + céréales = profil complet (riz + lentilles), graines de chanvre, tofu"
+        },
+        "timing": "Répartition sur la journée plus efficace que tout concentrer en un repas"
+      },
+      "glucides": {
+        "rôle": "Carburant principal, fibres, support du microbiote",
+        "distinction": {
+          "complexes_fibreux": "Légumes, légumineuses, céréales complètes — digestion lente, effet satiétant",
+          "simples_raffinés": "Sucre blanc, pain blanc, jus industriels — pic glycémique, énergie courte"
+        },
+        "fibres": "30g/jour recommandés — la plupart des Occidentaux en consomment la moitié",
+        "résistantes": "Amidon résistant (patate douce refroidie, légumineuses) — prébiotique, nourriture du microbiote"
+      },
+      "lipides": {
+        "rôle": "Membranes cellulaires, hormones stéroïdiennes, cerveau (60% de lipides), absorption vitamines ADEK",
+        "types": {
+          "oméga_3": "Anti-inflammatoire — poissons gras (sardine, maquereau, saumon sauvage), lin, chia, noix",
+          "oméga_6": "Pro-inflammatoire en excès — huiles végétales raffinées (tournesol, maïs, soja). Ratio idéal O6/O3 ≤ 4:1",
+          "saturés": "Stable à la chaleur — beurre, ghee, huile de coco. Modération recommandée.",
+          "trans_industriels": "À éviter totalement — huiles hydrogénées, margarines industrielles"
+        },
+        "acides_gras_essentiels": "Le corps ne les synthétise pas — doivent venir de l'alimentation (EPA, DHA, ALA)"
+      }
+    },
+    "micronutriments_essentiels": {
+      "vitamine_D3": {
+        "rôle": "Immunité, os, humeur, expression de 2000+ gènes, prévention maladies auto-immunes",
+        "source": "Soleil (UVB, avant 10h/après 16h en été) > complémentation D3+K2",
+        "carence": "70-80% des Européens sont en insuffisance — bilan sanguin (25-OH-D) recommandé",
+        "optimal": "60-80 ng/mL sérique (vs 20-30 'suffisant' des références officielles conservatrices)"
+      },
+      "magnesium": {
+        "rôle": "Cofacteur de 300+ enzymes, relaxation musculaire, sommeil, résistance au stress",
+        "carence": "Très fréquente — stress, alcool, sucre, alimentation transformée épuisent les réserves",
+        "formes": "Bisglycinate ou citrate (bonne biodisponibilité) vs oxyde (peu absorbé)"
+      },
+      "zinc": {
+        "rôle": "Immunité, cicatrisation, peau, testostérone, sens du goût/odorat",
+        "sources": "Huîtres, viande rouge, graines de courge, légumineuses (avec vitamine C pour absorption)"
+      },
+      "fer": {
+        "rôle": "Transport oxygène, énergie, immunité",
+        "carence": "Très fréquente chez femmes — fatigue, essoufflement, pâleur",
+        "absorption": "Fer héminique (viandes) mieux absorbé que non-héminique (végétal). Vitamine C augmente l'absorption végétale."
+      },
+      "B12": {
+        "rôle": "Neurologique, formation globules rouges, ADN",
+        "risque": "Végétariens/vég ans DOIVENT supplémenter — aucune source végétale fiable"
+      },
+      "probiotiques_prebiotiques": {
+        "probiotiques": "Bactéries vivantes bénéfiques — kéfir, yaourt, kimchi, kombucha, sauerkraut non pasteurisé",
+        "prébiotiques": "Nourriture des bactéries — inuline (chicorée, topinambour), FOS, amidon résistant, fibres solubles"
+      }
+    },
+    "alimentation_anti_inflammatoire": {
+      "inflammation_chronique": "Silencieuse, systémique — cause racine de la majorité des maladies chroniques (cardiovasculaires, diabète, cancer, Alzheimer)",
+      "augmente_inflammation": ["Sucres raffinés et HFCS", "Huiles végétales riches en oméga-6", "Aliments ultra-transformés", "Alcool en excès", "Gluten chez les sensibles", "Produits laitiers chez les intolérants"],
+      "réduit_inflammation": {
+        "curcuma": "Curcumine — un des anti-inflammatoires naturels les plus étudiés. Biodisponibilité × 20 avec poivre noir + matière grasse",
+        "poissons_gras": "EPA/DHA oméga-3 — anti-inflammatoires directs",
+        "légumes_colorés": "Antioxydants, polyphénols (flavonoïdes, caroténoïdes)",
+        "baies": "Anthocyanes — myrtilles, framboises, cassis",
+        "huile_olive_extra_vierge": "Oléocanthal — mécanisme similaire à l'ibuprofène",
+        "thé_vert": "EGCG (épigallocatéchine gallate) — antioxydant et anti-inflammatoire",
+        "ail_oignon": "Allicine, quercétine — immunomodulateurs"
+      }
+    },
+    "index_glycemique_charge": {
+      "IG": "Vitesse à laquelle un aliment élève la glycémie — 0 à 100 (glucose = 100)",
+      "CG": "Charge glycémique = IG × quantité de glucides / 100 — plus représentatif de l'impact réel",
+      "hyperglycemie_chronique": "Inflammation, glycation des protéines, insulinorésistance, stockage graisseux, dégénérescence cérébrale",
+      "réduire_IG_repas": [
+        "Ajouter des fibres, protéines et graisses (ralentissent la digestion)",
+        "Vinaigre de cidre avant le repas (réduit IG de 20-30%)",
+        "Cuire al dente (IG plus bas que bien cuit)",
+        "Refroidir l'amidon (patate douce froide vs chaude)"
+      ]
+    },
+    "microbiote": {
+      "définition": "Communauté de 38 billions de micro-organismes dans l'intestin — plus de cellules microbiennes que de cellules humaines",
+      "rôles": ["Immunité (70% du système immunitaire dans l'intestin)", "Synthèse vitamines (K2, B12, B7)", "Production sérotonine (90% dans l'intestin)", "Digestion des fibres → acides gras à chaîne courte (butyrate)", "Axe intestin-cerveau — influence humeur et cognition"],
+      "dysbiose": "Déséquilibre microbiote — lié aux maladies inflammatoires, obésité, anxiété, dépression",
+      "améliorer": [
+        "Diversité alimentaire (>30 aliments végétaux/semaine)",
+        "Fermentés (kéfir, yaourt, kimchi)",
+        "Fibres prébiotiques",
+        "Éviter antibiotiques non nécessaires",
+        "Réduire stress (axe intestin-cerveau bidirectionnel)"
+      ]
+    },
+    "chrono_nutrition": {
+      "principe": "Le corps a des fenêtres métaboliques optimales pour chaque type d'apport — manger les bons aliments au bon moment",
+      "matin": "Protéines + lipides — pic de cortisol matinal = énergie disponible, sensibilité à l'insuline haute",
+      "midi": "Repas le plus copieux — pic enzymatique digestif",
+      "soir": "Glucides complexes légers + légumes — aide à la sécrétion de sérotonine/mélatonine (tryptophane)",
+      "circadian_eating": "Fenêtre alimentaire de 8-10h alignée sur le rythme lumière/obscurité — bénéfices métaboliques indépendants du jeûne"
+    }
+  }
+}

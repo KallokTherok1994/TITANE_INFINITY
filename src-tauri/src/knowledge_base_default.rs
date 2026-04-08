@@ -83,6 +83,23 @@ const COHERENCE_IDENTITAIRE: &str =
     include_str!("../../data/knowledge_base/default/coherence_identitaire.json");
 const REALISME_CONVERSATIONNEL: &str =
     include_str!("../../data/knowledge_base/default/realisme_conversationnel.json");
+// ── v30.0.0 expansion — phase 5 (développement personnel, naturopathie, médecine naturelle) ──
+const DEVELOPPEMENT_PERSONNEL: &str =
+    include_str!("../../data/knowledge_base/default/developpement_personnel.json");
+const NATUROPATHIE_FONDAMENTAUX: &str =
+    include_str!("../../data/knowledge_base/default/naturopathie_fondamentaux.json");
+const MEDECINE_HOLLISTIQUE: &str =
+    include_str!("../../data/knowledge_base/default/medecine_hollistique.json");
+const NUTRITION_SANTE_NATURELLE: &str =
+    include_str!("../../data/knowledge_base/default/nutrition_sante_naturelle.json");
+const PLANTES_MEDICINALES_AROMATHERAPIE: &str =
+    include_str!("../../data/knowledge_base/default/plantes_medicinales_aromatherapie.json");
+const COMMUNICATION_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/communication_avancee.json");
+const BIEN_ETRE_MENTAL_STRESS: &str =
+    include_str!("../../data/knowledge_base/default/bien_etre_mental_stress.json");
+const SANTE_CORPS_NATURELLE: &str =
+    include_str!("../../data/knowledge_base/default/sante_corps_naturelle.json");
 // ── v30.0.0 expansion — phase 4 (communication & psychologie FR) ────────────
 const COMMUNICATION_INTERPERSONNELLE: &str =
     include_str!("../../data/knowledge_base/default/communication_interpersonnelle.json");
@@ -190,6 +207,15 @@ impl DefaultKnowledgeBase {
         ("communication_persuasion", COMMUNICATION_PERSUASION),
         ("psychologie_relations", PSYCHOLOGIE_RELATIONS),
         ("psychologie_performance", PSYCHOLOGIE_PERFORMANCE),
+        // v30.0.0 expansion — phase 5 (développement personnel, naturopathie, médecine naturelle, communication avancée)
+        ("developpement_personnel", DEVELOPPEMENT_PERSONNEL),
+        ("naturopathie_fondamentaux", NATUROPATHIE_FONDAMENTAUX),
+        ("medecine_hollistique", MEDECINE_HOLLISTIQUE),
+        ("nutrition_sante_naturelle", NUTRITION_SANTE_NATURELLE),
+        ("plantes_medicinales_aromatherapie", PLANTES_MEDICINALES_AROMATHERAPIE),
+        ("communication_avancee", COMMUNICATION_AVANCEE),
+        ("bien_etre_mental_stress", BIEN_ETRE_MENTAL_STRESS),
+        ("sante_corps_naturelle", SANTE_CORPS_NATURELLE),
     ];
 
     /// Load all default knowledge entries from embedded JSON.
@@ -357,8 +383,8 @@ mod tests {
             result.errors
         );
         assert_eq!(
-            result.entries_loaded, 41,
-            "Must have exactly 41 default knowledge categories"
+            result.entries_loaded, 49,
+            "Must have exactly 49 default knowledge categories"
         );
     }
 
@@ -378,13 +404,16 @@ mod tests {
             "agents_multi_systeme",
             "ai_providers_guide",
             "apprentissage_evolution",
+            "bien_etre_mental_stress",
             "capabilities_matrix",
             "cloud_multimodal",
             "coherence_identitaire",
+            "communication_avancee",
             "communication_interpersonnelle",
             "communication_persuasion",
             "constitution_ethics",
             "conversation_engine_detail",
+            "developpement_personnel",
             "digital_twin_symbiosis",
             "digital_twin_v14_detail",
             "engines_catalog",
@@ -394,14 +423,18 @@ mod tests {
             "intelligence_emotionnelle",
             "ipc_commands_catalog",
             "learning_prompts",
+            "medecine_hollistique",
             "memory_os_detail",
             "memory_system_deep",
             "meta_mode_titane",
             "meta_orchestrateur",
+            "naturopathie_fondamentaux",
             "numeric_twin_detail",
+            "nutrition_sante_naturelle",
             "omega_pipeline_detail",
             "operational_knowledge",
             "philosophie_cognitive",
+            "plantes_medicinales_aromatherapie",
             "psychologie_cognitive",
             "psychologie_comportementale",
             "psychologie_emotionnelle",
@@ -410,6 +443,7 @@ mod tests {
             "psychologie_relations",
             "realisme_conversationnel",
             "response_guidelines",
+            "sante_corps_naturelle",
             "security_privacy",
             "services_backend",
             "singularity_os_detail",

@@ -1,0 +1,94 @@
+{
+  "version": "v30.0.0",
+  "category": "naturopathie_fondamentaux",
+  "description": "Naturopathie — 5 piliers fondamentaux, terrain naturopathique, vis medicatrix naturae, vitalité, émonctoires, drainage, jeûne, bilan terrain",
+  "naturopathie_fondamentaux": {
+    "introduction": "La naturopathie est une médecine traditionnelle qui considère l'organisme comme un système doté d'une force vitale intrinsèque capable d'autoguérison. Elle agit sur les causes profondes, pas les symptômes isolés. TITANE aborde ce domaine avec rigueur scientifique ET respect des traditions — en distinguant clairement ce qui est validé scientifiquement de ce qui relève des pratiques traditionnelles.",
+    "principes_fondateurs": {
+      "vis_medicatrix_naturae": "Force guérisseuse de la nature — l'organisme tend naturellement vers l'équilibre et la guérison. Le rôle du praticien: soutenir, pas imposer.",
+      "tolle_causam": "Traiter la cause, pas seulement le symptôme. La douleur est un signal, pas le problème.",
+      "primum_non_nocere": "D'abord ne pas nuire — choisir les approches les plus douces avant les plus agressives.",
+      "docere": "Le praticien comme éducateur — transmettre les outils pour que la personne se prenne en charge.",
+      "tolle_totum": "Traiter la personne entière — corps, psyché, environnement, style de vie.",
+      "prevenir": "La prévention est supérieure à la guérison — agir avant la maladie."
+    },
+    "cinq_piliers": {
+      "alimentation": {
+        "principe": "L'alimentation est le premier médicament. Ce qu'on mange quotidiennement détermine la qualité du terrain.",
+        "vivante": "Préférer les aliments peu transformés, proches de leur état naturel",
+        "légumes_fruits": "Base — fibres, vitamines, antioxydants, phytonutriments",
+        "éviter": "Ultra-transformés, sucres raffinés, graisses trans, additifs",
+        "lien_terrain": "L'alimentation module le microbiote, l'inflammation, l'acidité tissulaire"
+      },
+      "mouvement": {
+        "principe": "Le corps est fait pour bouger — la sédentarité est une pathologie moderne",
+        "lymphe": "Le système lymphatique n'a pas de pompe — le mouvement EST la pompe",
+        "types": "Mouvement quotidien léger + efforts réguliers + stretching/mobilité",
+        "nature": "Marcher en nature — effet mesurable sur le cortisol, l'inflammation et le bien-être (shinrin-yoku)"
+      },
+      "sommeil": {
+        "principe": "Le sommeil est la réparation principale — sans sommeil de qualité, aucune autre intervention ne peut compenser",
+        "phases": "REM (consolidation mémoire, émotion) + non-REM profond (réparation cellulaire, croissance)",
+        "hygiène_sommeil": [
+          "Heure de coucher régulière (même le weekend)",
+          "Obscurité totale (mélatonine)",
+          "Température fraîche (18-20°C optimal)",
+          "Pas d'écran 1h avant — la lumière bleue bloque la mélatonine",
+          "Pas de stimulants après 14h"
+        ]
+      },
+      "psyche": {
+        "principe": "L'état psychique détermine la biologie — stress chronique = inflammation systémique = terrain dégradé",
+        "outils": "Méditation, cohérence cardiaque, thérapie, connexion sociale, créativité, nature",
+        "psychosomatique": "Chaque tension émotionnelle non résolue s'exprime tôt ou tard dans le corps"
+      },
+      "environnement": {
+        "principe": "L'environnement quotidien conditionne la biologie — air, eau, perturbateurs endocriniens, EMF, nature",
+        "toxines": "Réduire l'exposition aux perturbateurs endocriniens (plastiques, pesticides, produits ménagers)",
+        "eau": "L'eau de qualité est fondamentale — minéralisation, filtration",
+        "nature": "Exposition régulière à la nature réduit le cortisol, améliore l'immunité (bactéries du sol, phytoncides)"
+      }
+    },
+    "terrain_naturopathique": {
+      "définition": "Le 'terrain' est l'état global de l'organisme — son niveau de vitalité, sa capacité d'adaptation et sa susceptibilité aux maladies",
+      "facteurs_terrain": {
+        "hérédité": "Prédispositions génétiques — non modifiables mais compensables par le mode de vie (épigénétique)",
+        "toxémie": "Accumulation de déchets métaboliques et exogènes non éliminés",
+        "carences": "Déficits en nutriments essentiels (vitamines, minéraux, oligoéléments)",
+        "dysbiose": "Déséquilibre du microbiote — impacte immunité, humeur, métabolisme",
+        "stress_oxydatif": "Excès de radicaux libres vs capacité antioxydante"
+      },
+      "vitalite": {
+        "définition": "Force vitale disponible — ce qui détermine la capacité du corps à se défendre et à se réparer",
+        "évaluer": "Niveau d'énergie au réveil, qualité du sommeil, résistance aux infections, récupération après effort",
+        "soutenir": "Alimentation vivante, jeûne, gestion du stress, sommeil, mouvement"
+      }
+    },
+    "emonctoirtes_drainage": {
+      "définition": "Les émonctoires sont les organes d'élimination des toxines — portes de sortie des déchets",
+      "cinq_principaux": {
+        "foie": "Principal organe de détox — métabolise toxines, hormones, médicaments. Soutien: chardon-marie, artichaut, chicorée",
+        "reins": "Filtrent le sang, éliminent les déchets via l'urine. Soutien: hydratation, ortie, piloselle",
+        "intestins": "Élimination des déchets digestifs, passage des nutriments. Soutien: fibres, probiotiques, mouvement",
+        "poumons": "Élimination du CO2, voie d'élimination des composés volatils. Soutien: respiration profonde, cohérence cardiaque",
+        "peau": "Émonctoire de suppléance — sudation (sauna, exercice). Soutien: brossage à sec, bains dérivatifs"
+      },
+      "drainage": "Soutenir les émonctoires avant et pendant toute cure pour éviter les réactions de détox",
+      "ordre": "Toujours ouvrir les émonctoires avant de mobiliser les toxines profondément"
+    },
+    "jeune_et_restriction": {
+      "jeûne_intermittent": {
+        "16_8": "16h jeûne, fenêtre alimentaire 8h — le plus courant, compatible avec la vie sociale",
+        "5_2": "5 jours normaux, 2 jours à 500-600 kcal",
+        "bénéfices_recherchés": ["Autophagie (nettoyage cellulaire)", "Sensibilité à l'insuline", "Réduction inflammation", "Longévité (AMPK, sirtuines)"],
+        "contre-indications": "Femmes enceintes/allaitantes, troubles alimentaires, diabétiques insulino-dépendants — consultation médicale préalable"
+      },
+      "jeûne_hydrique": {
+        "description": "Jeûne avec eau seulement — 24h à plusieurs jours",
+        "bénéfices": "Autophagie maximale, réinitialisation métabolique, régénération immunitaire",
+        "précautions": "Doit être encadré pour les durées longues — supervision médicale au-delà de 3 jours"
+      },
+      "avertissement_TITANE": "TITANE présente ces pratiques à titre informatif. Toute démarche de jeûne prolongé doit être accompagnée par un professionnel de santé compétent."
+    }
+  }
+}

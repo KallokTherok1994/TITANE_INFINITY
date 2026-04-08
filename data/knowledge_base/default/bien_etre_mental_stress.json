@@ -1,0 +1,125 @@
+{
+  "version": "v30.0.0",
+  "category": "bien_etre_mental_stress",
+  "description": "Bien-être mental — stress (HPA axis, cortisol, allostasie), burnout (3 dimensions Maslach), méditation (types: pleine conscience, TM, yoga nidra), cohérence cardiaque, régulation système nerveux, sommeil optimisé, anxiété",
+  "bien_etre_mental_stress": {
+    "introduction": "Le bien-être mental n'est pas l'absence de stress ou d'émotions difficiles — c'est la capacité à traverser les turbulences et à retrouver l'équilibre. TITANE accompagne Kevin dans cette dimension avec sensibilité et sans minimiser ses expériences.",
+    "stress_physiologie": {
+      "hpa_axis": {
+        "définition": "Axe Hypothalamus-Hypophyse-Corticosurrénales — le système central de réponse au stress",
+        "cascade": "Perception menace → Hypothalamus libère CRH → Hypophyse libère ACTH → Surrénales libèrent Cortisol",
+        "cortisol": {
+          "rôle_adaptatif": "Anti-inflammatoire, mobilisation énergie, vigilance — essentiel à court terme",
+          "cortisol_chronique": "Immunosuppression, destruction musculaire, résistance insuline, atrophie hippocampe, anxiété",
+          "rythme_normal": "Pic le matin (7-9h → énergie), décroit la journée, minimal le soir (prépare le sommeil)"
+        },
+        "réponse_aiguë": "Fight-or-flight (sympathique) → utile pour vraies menaces",
+        "problème_moderne": "Le cerveau ne distingue pas tigre et réunion difficile — active la même réponse pour des milliers de 'tigres' quotidiens non physiques"
+      },
+      "allostasie": {
+        "définition": "Maintien de la stabilité par le changement adaptatif — le corps s'adapte au stress chronique",
+        "charge_allostatique": "Prix payé par le corps pour ces adaptations continues — s'accumule et épuise les systèmes",
+        "réduire": "Sommeil, méditation, exercice, connexion sociale, temps en nature, sens"
+      },
+      "types_stress": {
+        "eustress": "Stress positif — motivation, engagement, flow, challenge. Nécessaire et bénéfique.",
+        "distress": "Stress négatif chronique — épuisement, inflammation, dégradation santé",
+        "recadrage": "Kelly McGonigal: le stress est nuisible si on croit qu'il l'est. Recadrer en défi change la biologie."
+      }
+    },
+    "burnout": {
+      "auteur": "Christina Maslach — Maslach Burnout Inventory (MBI)",
+      "trois_dimensions": {
+        "épuisement_émotionnel": "Sentiment d'être drainé de ses ressources — 'Je n'ai plus rien à donner'",
+        "dépersonnalisation": "Détachement cynique vis-à-vis du travail et des personnes — mécanisme de protection",
+        "sentiment_inefficacité": "Perte du sentiment de compétence et d'accomplissement — 'Rien de ce que je fais ne sert à rien'"
+      },
+      "stades": {
+        "1_enthousiasme": "Idéalisme, investissement excessif, ignorer les besoins personnels",
+        "2_stagnation": "On s'aperçoit que les récompenses ne viennent pas comme espéré",
+        "3_frustration": "Questionnement de la valeur du travail, irritabilité, détachement début",
+        "4_apathie": "Retrait émotionnel, cynisme, minimum vital",
+        "5_burnout": "Effondrement physique et émotionnel — arrêt souvent nécessaire"
+      },
+      "prévention": [
+        "Limites claires (heures, disponibilité, charge)",
+        "Ressources récupératrices régulières (pas seulement les vacances)",
+        "Autonomie dans le travail",
+        "Sens et valeurs alignés",
+        "Soutien social au travail"
+      ],
+      "récupération": "Lente et non-linéaire — 6-18 mois typiquement. Nécessite accompagnement professionnel.",
+      "apport_TITANE": "Détecter les signaux précoces de burnout dans les messages de Kevin — adapter le registre (ne pas ajouter de charge) et orienter vers le soutien approprié"
+    },
+    "meditation": {
+      "pleine_conscience": {
+        "auteur": "Jon Kabat-Zinn — MBSR (Mindfulness-Based Stress Reduction)",
+        "définition": "Attention portée délibérément au moment présent, sans jugement",
+        "pratique_de_base": "Assis confortablement, attention sur la respiration. Quand l'esprit s'éloigne (il le fera toujours), ramener doucement l'attention. Répéter.",
+        "effets_prouvés": "Réduction stress (meta-analyses), anxiété, dépression légère. Changements structuraux cérébraux après 8 semaines.",
+        "types_pratiques": {
+          "formelle": "Session dédiée 10-20 min minimum. Assis, allongé, en marche.",
+          "informelle": "Un seul acte fait avec pleine attention — manger, marcher, laver la vaisselle"
+        }
+      },
+      "meditation_transcendantale": {
+        "technique": "Mantra silencieux 20 min × 2/jour",
+        "études": "Très documentée pour réduction hypertension, stress, anxiété. Approche payante (formation)"
+      },
+      "yoga_nidra": {
+        "définition": "Méditation guidée au seuil du sommeil — état de conscience hypnagogique",
+        "bénéfices": "Récupération profonde, libération tensions inconscientes, qualité sommeil",
+        "praticité": "30 min de yoga nidra = 2-3h de sommeil selon certaines études sur la récupération"
+      },
+      "self_compassion": {
+        "auteur": "Kristin Neff",
+        "composantes": ["Mindfulness (observer la souffrance sans éviter ni dramatiser)", "Humanité commune (tout le monde souffre — pas seul)", "Bienveillance envers soi (parler à soi comme à un ami)"],
+        "apport_TITANE": "L'auto-compassion n'est pas de la faiblesse — c'est le fondement de la résilience. TITANE ne valide jamais l'auto-flagellation excessive de Kevin."
+      }
+    },
+    "coherence_cardiaque": {
+      "définition": "État de synchronisation entre rythme cardiaque, respiration et cerveau émotionnel",
+      "base_scientifique": "HeartMath Institute — la variabilité de la fréquence cardiaque (VFC) reflète l'état du système nerveux autonome",
+      "protocole_365": {
+        "description": "3 fois par jour, 6 respirations par minute, 5 minutes",
+        "technique": "Inspirer 5 secondes → expirer 5 secondes. Visualiser l'air entrer et sortir par le cœur.",
+        "effets": "Réduction cortisol, amélioration VFC, clarté mentale, réduction anxiété — effets mesurables en 3 semaines"
+      },
+      "resonance_cardiaque": "À 6 respirations/minute, le rythme cardiaque se synchronise avec la respiration — cohérence maximale"
+    },
+    "systeme_nerveux": {
+      "sns_pns": {
+        "sympathique": "Fight-or-flight — accélère tout (cœur, respiration, cortisol). Pour les urgences.",
+        "parasympathique": "Rest-and-digest — ralentit, récupère, répare. Activé par la respiration profonde, le toucher, la nature."
+      },
+      "nerf_vague": {
+        "définition": "10e nerf crânien — le grand régulateur parasympathique. Connecte cerveau, cœur, intestins.",
+        "tonus_vagal": "VFC élevée = bon tonus vagal = bonne régulation. Indicateur de santé global.",
+        "stimuler": [
+          "Chant/humming/gargarisme",
+          "Respiration lente et profonde (expiration > inspiration)",
+          "Froid visage/eau froide",
+          "Cohérence cardiaque",
+          "Connexion sociale positive",
+          "Rire authentique"
+        ]
+      },
+      "cycle_activation": "Le système nerveux a besoin de cycles activation/désactivation — pas d'activation continue. Les pauses ne sont pas du temps perdu mais une nécessité biologique."
+    },
+    "sommeil_optimise": {
+      "architecture": {
+        "cycles": "4-6 cycles de 90 min par nuit — ne pas les tronquer",
+        "NREM_profond": "Cycles 1-2 — réparation physique, hormone de croissance, consolidation mémoire procédurale",
+        "REM": "Cycles 3-4 — traitement émotionnel, créativité, consolidation mémoire déclarative",
+        "importance_REM": "Manquer le sommeil de fin de nuit (REM) = déficit émotionnel"
+      },
+      "melatonine": {
+        "hormone": "Hormone du sommeil — secrétée par la glande pinéale à l'obscurité",
+        "lumière_bleue": "Bloque la mélatonine — écrans le soir retardent l'endormissement de 1-2h",
+        "complémentation": "0.5-1mg suffisent (pas 5-10mg les formules communes — l'excès désensibilise les récepteurs)"
+      },
+      "température": "La température centrale doit baisser de 0.5-1°C pour s'endormir — chambre fraîche (16-19°C), pas de bain chaud juste avant",
+      "apport_TITANE": "Si Kevin mentionne des troubles du sommeil → explorer hygène du sommeil en premier avant toute supplémentation"
+    }
+  }
+}

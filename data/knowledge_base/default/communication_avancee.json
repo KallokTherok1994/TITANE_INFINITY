@@ -1,0 +1,136 @@
+{
+  "version": "v30.0.0",
+  "category": "communication_avancee",
+  "description": "Communication avancée — prise de parole en public (5 piliers), présentation impactante, storytelling professionnel, communication digitale, personal branding, leadership communicationnel, influence éthique",
+  "communication_avancee": {
+    "introduction": "La communication avancée transforme la compétence de base (être compris) en pouvoir d'impact (inspirer, mobiliser, diriger). C'est un levier de multiplication — une idée excellente mal communiquée meurt; une idée ordinaire bien communiquée change le monde. TITANE accompagne Kevin dans tous les contextes: 1-à-1, équipe, public, digital.",
+    "prise_de_parole_public": {
+      "cinq_piliers": {
+        "contenu": "Avoir quelque chose à dire — pas juste parler. Message central clair (elevator pitch de l'idée).",
+        "structure": "Organisation logique et émotionnelle — début accrocheur, développement progressif, fin mémorable",
+        "voix": "Débit, volume, pauses, intonation — 38% de l'impact selon Mehrabian",
+        "corps": "Posture, gestes, regard — 55% de l'impact. Power pose avant (Amy Cuddy: 2 min → cortisol ↓, testostérone ↑)",
+        "connexion": "Regarder les individus, pas la salle. Inclure le public (questions, participations, histoires)."
+      },
+      "anxiété_de_scène": {
+        "réalité": "75% des gens ont peur de parler en public — c'est la peur #1 devant la mort",
+        "recadrage": "Ce n'est pas de la peur — c'est de l'énergie disponible. Même physiologie que l'excitation.",
+        "techniques": [
+          "Préparation rigoureuse — la confiance vient de la maîtrise, pas de la personnalité",
+          "Respiration avant — 4 temps in, 6 temps out → active le parasympathique",
+          "Focus sur le service — 'Qu'est-ce que mon audience va recevoir?' pas 'Comment je vais paraître?'",
+          "Exposure progressive — parler devant 5, puis 20, puis 100..."
+        ]
+      },
+      "règle_10_20_30": {
+        "auteur": "Guy Kawasaki",
+        "définition": "Maximum 10 slides, 20 minutes, 30pt de police minimum",
+        "principe": "Moins est plus — une idée forte par slide, aucun texte que l'audience lit pendant que tu parles"
+      },
+      "ouverture_impactante": {
+        "techniques": [
+          "Question provocatrice ('Combien d'entre vous ont déjà...')",
+          "Statistique choc ('Chaque seconde, X...')",
+          "Histoire personnelle courte et concrète",
+          "Déclaration contre-intuitive",
+          "Silence de 3-5 secondes avant de commencer"
+        ]
+      },
+      "conclusion_mémorable": {
+        "règle": "La dernière impression est la plus durable — ne jamais terminer par 'Voilà c'est tout'",
+        "techniques": [
+          "Revenir à l'histoire d'ouverture (boucle fermée)",
+          "Call to action clair et spécifique",
+          "Citation puissante",
+          "Question qui reste dans la tête"
+        ]
+      }
+    },
+    "storytelling_professionnel": {
+      "pourquoi": "Les histoires sont 22 fois plus mémorables que les faits seuls (Jerome Bruner, Stanford)",
+      "structure_STAR": {
+        "S": "Situation — contexte et personnage",
+        "T": "Tension — le problème, l'obstacle, l'enjeu",
+        "A": "Action — ce qui a été fait pour résoudre",
+        "R": "Résolution — résultat + leçon / transformation"
+      },
+      "histoire_vulnérable": "Les histoires qui montrent la faiblesse, l'échec et la leçon créent plus de connexion que les histoires de succès pur",
+      "détails_sensoriels": "Inclure des détails sensoriels concrets — 'Il était 23h, la salle vide, la pluie contre les vitres...' active le cerveau narratif de l'auditeur",
+      "tension_narrative": "Sans tension, pas d'histoire — la tension c'est ce qui garde l'attention"
+    },
+    "communication_digitale": {
+      "écrit_asynchrone": {
+        "email_efficace": [
+          "Objet = résumé de l'action attendue ('Décision nécessaire: budget Q2 avant vendredi')",
+          "BLUF — la conclusion en premier",
+          "Une seule demande par email",
+          "Paragraphes courts (3-4 lignes max)",
+          "Call to action clair en dernière ligne"
+        ],
+        "slack_teams": [
+          "Messages courts et directs — pas d'essais",
+          "Utiliser les threads pour ne pas polluer les canaux",
+          "@mentions ciblées",
+          "Répondre en emoji pour les confirmations simples"
+        ]
+      },
+      "visio_conférence": [
+        "Caméra ON — connexion humaine",
+        "Éclairage face (lumière dans le dos = silhouette)",
+        "Fond neutre ou virtuel propre",
+        "Son > image en qualité",
+        "Couper le micro quand on n'est pas en train de parler (>3 personnes)"
+      ],
+      "réseaux_sociaux_pro": {
+        "LinkedIn": "Contenu: expertise + humanité + valeur. Storytelling personnel > contenu théorique froid.",
+        "consistance": "Publier régulièrement bat publier parfaitement. 3x/semaine régulier > 1x/mois parfait"
+      }
+    },
+    "personal_branding": {
+      "définition": "La gestion délibérée et stratégique de la perception qu'ont les autres de soi professionnellement",
+      "fondements": {
+        "authenticité": "Le personal branding fabriqué se détecte — partir de qui on est réellement",
+        "clarté": "Être clair sur sa valeur ajoutée unique et son audience cible",
+        "consistance": "Cohérence entre toutes les plateformes et interactions"
+      },
+      "axes_identité_pro": {
+        "expertise": "Dans quel domaine es-tu une référence ou veux-tu le devenir?",
+        "perspective": "Quelle vision unique apportes-tu à ce domaine?",
+        "style": "Comment communiques-tu — ton, format, énergie?"
+      },
+      "apport_TITANE": "TITANE peut aider Kevin à clarifier son positionnement, formuler son message central et développer sa présence en ligne"
+    },
+    "leadership_communicationnel": {
+      "écoute_dirigeante": {
+        "principe": "Les meilleurs leaders écoutent plus qu'ils ne parlent — ils posent les bonnes questions",
+        "questions_puissantes": [
+          "'Qu'est-ce qui t'empêche d'avancer?'",
+          "'Qu'est-ce qui serait différent si tu avais complètement réussi?'",
+          "'Qu'est-ce que tu n'as pas encore essayé?'",
+          "'De quoi as-tu besoin de ma part?'"
+        ]
+      },
+      "feedback_leadership": {
+        "fréquence": "Feedback fréquent et en temps réel > évaluation annuelle unique",
+        "positif_spécifique": "Ne jamais sous-estimer l'impact d'un 'Je t'ai vu faire X, c'était vraiment bien parce que Y'",
+        "difficile": "Modèle SBI (voir communication_interpersonnelle). Toujours en privé."
+      },
+      "communication_changement": {
+        "résistance": "La résistance au changement est naturelle — ne pas la combattre mais la comprendre (Prochaska)",
+        "coaliser": "KOTTER — créer une urgence, construire une coalition, communiquer la vision, permettre l'action",
+        "bottom_up": "Les équipes qui participent à la conception d'un changement le portent mieux"
+      }
+    },
+    "influence_ethique": {
+      "distinction": "Influence éthique = aider l'autre à prendre la meilleure décision pour lui. Manipulation = exploiter ses failles pour le faire décider dans mon intérêt.",
+      "leviers_éthiques": [
+        "Partager les informations complètes — y compris les inconvénients",
+        "Expliquer les raisons plutôt qu'imposer",
+        "Proposer des choix réels — pas des faux dilemmes",
+        "Respecter le non — la relation est plus importante que la transaction",
+        "Agir d'abord dans l'intérêt de l'autre"
+      ],
+      "apport_TITANE": "TITANE n'utilise jamais la manipulation — il influence par la valeur, la clarté et le care authentique"
+    }
+  }
+}
