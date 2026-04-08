@@ -83,6 +83,24 @@ const COHERENCE_IDENTITAIRE: &str =
     include_str!("../../data/knowledge_base/default/coherence_identitaire.json");
 const REALISME_CONVERSATIONNEL: &str =
     include_str!("../../data/knowledge_base/default/realisme_conversationnel.json");
+// ── v30.0.0 expansion — phase 8 (musculation, sommeil, chronobiologie, cognitif, productivité, finances, entrepreneuriat, sexualité) ─
+const MUSCULATION_FORCE: &str =
+    include_str!("../../data/knowledge_base/default/musculation_force.json");
+const SOMMEIL_OPTIMISE: &str =
+    include_str!("../../data/knowledge_base/default/sommeil_optimise.json");
+const CHRONOBIOLOGIE_RYTHMES: &str =
+    include_str!("../../data/knowledge_base/default/chronobiologie_rythmes.json");
+const PERFORMANCE_COGNITIVE: &str =
+    include_str!("../../data/knowledge_base/default/performance_cognitive.json");
+const GESTION_TEMPS_PRODUCTIVITE: &str =
+    include_str!("../../data/knowledge_base/default/gestion_temps_productivite.json");
+const FINANCES_PERSONNELLES: &str =
+    include_str!("../../data/knowledge_base/default/finances_personnelles.json");
+const ENTREPRENEURIAT_MINDSET: &str =
+    include_str!("../../data/knowledge_base/default/entrepreneuriat_mindset.json");
+const SEXUALITE_INTIMITE: &str =
+    include_str!("../../data/knowledge_base/default/sexualite_intimite.json");
+
 // ── v30.0.0 expansion — phase 7 (nutrition avancée, callisthénie, méditation, yoga) ─
 const NUTRITION_AVANCEE: &str =
     include_str!("../../data/knowledge_base/default/nutrition_avancee.json");
@@ -244,6 +262,15 @@ impl DefaultKnowledgeBase {
         ("communication_avancee", COMMUNICATION_AVANCEE),
         ("bien_etre_mental_stress", BIEN_ETRE_MENTAL_STRESS),
         ("sante_corps_naturelle", SANTE_CORPS_NATURELLE),
+        // v30.0.0 expansion — phase 8 (musculation, sommeil, chronobiologie, cognitif, productivité, finances, entrepreneuriat, sexualité)
+        ("musculation_force", MUSCULATION_FORCE),
+        ("sommeil_optimise", SOMMEIL_OPTIMISE),
+        ("chronobiologie_rythmes", CHRONOBIOLOGIE_RYTHMES),
+        ("performance_cognitive", PERFORMANCE_COGNITIVE),
+        ("gestion_temps_productivite", GESTION_TEMPS_PRODUCTIVITE),
+        ("finances_personnelles", FINANCES_PERSONNELLES),
+        ("entrepreneuriat_mindset", ENTREPRENEURIAT_MINDSET),
+        ("sexualite_intimite", SEXUALITE_INTIMITE),
         // v30.0.0 expansion — phase 7 (nutrition avancée, callisthénie, méditation, yoga)
         ("nutrition_avancee", NUTRITION_AVANCEE),
         ("calisthenie", CALISTHENIE),
@@ -425,8 +452,8 @@ mod tests {
             result.errors
         );
         assert_eq!(
-            result.entries_loaded, 61,
-            "Must have exactly 61 default knowledge categories"
+            result.entries_loaded, 69,
+            "Must have exactly 69 default knowledge categories"
         );
     }
 
@@ -449,6 +476,7 @@ mod tests {
             "bien_etre_mental_stress",
             "calisthenie",
             "capabilities_matrix",
+            "chronobiologie_rythmes",
             "cloud_multimodal",
             "coaching_leadership",
             "coherence_identitaire",
@@ -463,7 +491,10 @@ mod tests {
             "ecriture_expression_creatrice",
             "energetique_soins_corps",
             "engines_catalog",
+            "entrepreneuriat_mindset",
+            "finances_personnelles",
             "frontend_modules",
+            "gestion_temps_productivite",
             "hyper_intelligence",
             "identity_profile",
             "immunite_prevention_naturelle",
@@ -477,12 +508,14 @@ mod tests {
             "memory_system_deep",
             "meta_mode_titane",
             "meta_orchestrateur",
+            "musculation_force",
             "naturopathie_fondamentaux",
             "numeric_twin_detail",
             "nutrition_avancee",
             "nutrition_sante_naturelle",
             "omega_pipeline_detail",
             "operational_knowledge",
+            "performance_cognitive",
             "philosophie_cognitive",
             "plantes_medicinales_aromatherapie",
             "psychologie_cognitive",
@@ -498,7 +531,9 @@ mod tests {
             "sante_feminine_naturelle",
             "security_privacy",
             "services_backend",
+            "sexualite_intimite",
             "singularity_os_detail",
+            "sommeil_optimise",
             "spiritualite_sens_existence",
             "style_expression_kevin",
             "system_architecture",

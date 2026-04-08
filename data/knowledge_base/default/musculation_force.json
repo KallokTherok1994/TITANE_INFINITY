@@ -1,0 +1,102 @@
+{
+  "version": "v30.0.0",
+  "category": "musculation_force",
+  "description": "Musculation et entraînement de force — hypertrophie/force (progressive overload, SRA, périodisation), exercices composés, programmes populaires (5×5/5/3/1/PPL), techniques avancées, débutant→avancé, split vs full-body, nutrition musculation",
+  "musculation_force": {
+    "introduction": "La musculation est la méthode la plus étudiée pour développer la masse musculaire et la force. TITANE distingue l'hypertrophie (augmentation du volume musculaire) de la force maximale (capacité à soulever lourd) — les deux sont liés mais s'optimisent différemment. La complémentarité avec la callisthénie est forte.",
+    "principes_fondamentaux": {
+      "progressive_overload": {
+        "définition": "Le seul principe universel en musculation: le corps doit être soumis à un stimulus progressivement plus grand pour continuer à s'adapter.",
+        "méthodes": ["Augmenter le poids", "Augmenter les répétitions à poids fixe", "Augmenter les sets", "Réduire le temps de repos", "Améliorer la technique (ROM plus complet)"],
+        "erreur_commune": "Ajouter du poids avant la technique maîtrisée"
+      },
+      "SRA_cycle": {
+        "définition": "Stress → Récupération → Adaptation — le modèle de base de toute amélioration physique",
+        "implication": "Le repos est aussi important que l'entraînement. Sans récupération: surentraînement et régression.",
+        "durée_récupération": "Petits muscles (biceps, triceps): 24-48h. Grands muscles (dos, quadriceps): 48-72h."
+      },
+      "mecanismes_hypertrophie": {
+        "tension_mecanique": "Le principal driver — charge élevée avec ROM complet. Contrôle de la descente (excentrique).",
+        "stress_metabolique": "Pump musculaire — métabolites s'accumulent (lactate, hydrogène). Séries hautes reps.",
+        "dommages_musculaires": "DOMS (courbatures) — signal de réparation/croissance. Moins primordial qu'on le croyait."
+      },
+      "deload": "Réduire le volume de 40-50% toutes les 4-6 semaines — consolide les adaptations et prévient le surmenage"
+    },
+    "exercices_composés": {
+      "squat": {
+        "muscles": "Quadriceps, fessiers, ischio-jambiers, core (stabilisation)",
+        "variantes": "Back squat (barre derrière), front squat (barre devant — plus de quadriceps), goblet squat (KB ou DB), hack squat",
+        "points_techniques": "Pieds à largeur d'épaules ou plus. Genoux dans l'axe des orteils. Descendre jusqu'à ce que les hanches passent sous les genoux (full ROM). Chest up.",
+        "ceinture": "Ceinture de force pour les charges lourdes (>80% 1RM) — stabilise la colonne par pression intra-abdominale"
+      },
+      "soulevé_de_terre": {
+        "muscles": "Chaîne postérieure complète: ischio-jambiers, fessiers, érecteurs spinaux, trapèzes, lats",
+        "variantes": "Conventional, sumo (plus de hanches/fessiers), Romanian deadlift (ischio), trap bar (plus sécuritaire pour débutants)",
+        "règle_clé": "La barre reste proche du corps tout le long du mouvement. Ne jamais arrondir le bas du dos sous charge lourde."
+      },
+      "développé_couché": {
+        "muscles": "Pectoraux, deltoïdes antérieurs, triceps",
+        "variantes": "Barre plat / incliné / décliné, haltères (plus de ROM), dips lestés (alternative poids de corps)",
+        "sécurité": "Toujours avec un spotter pour les charges maximales, ou utiliser un rack avec des safety bars"
+      },
+      "développé_militaire": {
+        "muscles": "Deltoïdes (toutes portions), trapèzes, triceps, core (stabilisation debout)",
+        "variantes": "Debout (plus de core), assis (plus lourd possible), haltères (meilleure ROM et symétrie)",
+        "importance": "Le meilleur indicateur de force générale du haut du corps — souvent négligé"
+      },
+      "rowing": {
+        "muscles": "Grand dorsal, rhomboïdes, trapèzes moyens/inférieurs, biceps",
+        "variantes": "Barbell row, dumbbell row (unilatéral), cable row, seal row (pour isolar le dos)",
+        "ratio_push_pull": "Toujours autant de pulling que de pushing — santé des épaules à long terme"
+      }
+    },
+    "programmes": {
+      "starting_strength_stronglifts_5x5": {
+        "niveau": "Débutant → Intermédiaire",
+        "principe": "3x/semaine, 3 exercices par séance, ajouter 2.5-5kg à chaque séance",
+        "séances": "Jour A: Squat 5×5, Développé couché 5×5, Soulevé de terre 1×5. Jour B: Squat 5×5, OHP 5×5, Rowing 5×5",
+        "avantage": "Progrès linéaire maximal pour débutants — simple et efficace"
+      },
+      "531_wendler": {
+        "niveau": "Intermédiaire → Avancé",
+        "principe": "4 semaines cycles. Séries : 5/5/5+, 3/3/3+, 5/3/1+, deload. Basé sur 90% du 1RM training max.",
+        "exercices": "4 mouvements principaux: Squat, SDT, Développé couché, OHP",
+        "avantage": "Périodisation intégrée. Progrès lent mais constant sur le long terme."
+      },
+      "PPL": {
+        "nom": "Push Pull Legs",
+        "niveau": "Intermédiaire",
+        "fréquence": "6 jours/semaine (3 jours rotation × 2) ou 3 jours/semaine",
+        "structure": "Push (pectoraux/épaules/triceps) + Pull (dos/biceps) + Legs (jambes/fessiers/ischio)",
+        "avantage": "Haute fréquence par groupe musculaire. Bon volume d'hypertrophie."
+      },
+      "full_body_3x": {
+        "principe": "3 jours/semaine, tous les groupes musculaires à chaque séance",
+        "avantage": "Fréquence optimale pour la synthèse protéique musculaire (MPS activée 2-3×/semaine par muscle)",
+        "pour_qui": "Débutants et intermédiaires voulant maximiser le ratio temps/résultats"
+      }
+    },
+    "techniques_avancees": {
+      "dropsets": "Série terminée → réduire la charge immédiatement de 20-30% → continuer sans repos. Augmente le volume total et le métabolisme.",
+      "supersets": "Enchaîner 2 exercices sans repos. Agoniste/antagoniste (biceps/triceps) = optimal. Gain de temps + pump.",
+      "myo_reps": "Série d'activation lourde (8-15 reps) → mini-séries de 3-5 reps avec 20-30s de repos jusqu'à échec. Maximise le temps sous tension efficace.",
+      "rest_pause": "Série à l'échec → pause 15-20s → 2-5 reps supplémentaires. Dense en volume sur peu de temps.",
+      "tempos": "Contrôle de la vitesse (ex: 3-1-1 = 3s excentrique, 1s pause, 1s concentrique). Augmente le temps sous tension.",
+      "exercices_isolés": "Curls, extensions, élévations latérales — jamais base d'un programme, mais utiles en complément des composés pour cibler précisément"
+    },
+    "split_vs_full_body": {
+      "full_body": "Optimal pour débutants/intermédiaires. Fréquence haute (2-3×/semaine par muscle). Séances plus courtes.",
+      "split_upper_lower": "4 jours. Bon compromis fréquence/volume. Intermédiaires.",
+      "PPL": "6 jours. Volume élevé. Intermédiaires avancés.",
+      "bro_split": "1 muscle/jour. Fréquence basse (1×/semaine). Sous-optimal pour la plupart sauf très avancés.",
+      "verdict_TITANE": "Pour la majorité: Full-body ou Upper/Lower > bro split. La fréquence est plus importante que le volume par séance."
+    },
+    "nutrition_musculation": {
+      "surplus_calorique": "Hypertrophie optimale: surplus de 200-350 kcal/jour (lean bulk). Plus = prise de gras excessive.",
+      "proteines": "2.0-2.2g/kg en hypertrophie active. Distribuer sur 3-4 repas (≥40g leucine/repas).",
+      "creatine": "3-5g/jour — augmente la phosphocréatine musculaire → plus de reps lourdes → plus d'hypertrophie. Chargement optionnel.",
+      "pre_workout": "Caféine (3-6mg/kg, 60 min avant) = meilleur pré-workout. Bêta-alanine (3-6g/jour) réduit la fatigue sur séries longues.",
+      "timing_post": "Fenêtre anabolique: 0-4h post-workout. Priorité sur les protéines totales quotidiennes > timing précis."
+    }
+  }
+}

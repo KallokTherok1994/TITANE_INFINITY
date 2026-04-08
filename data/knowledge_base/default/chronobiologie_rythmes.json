@@ -1,0 +1,80 @@
+{
+  "version": "v30.0.0",
+  "category": "chronobiologie_rythmes",
+  "description": "Chronobiologie et rythmes circadiens — horloge SCN, zeitgebers (lumière/alimentation/température/exercice), mélatonine/cortisol, jet lag protocols, chrono-nutrition, rythmes ultradiens, productivité selon chronotype",
+  "chronobiologie_rythmes": {
+    "introduction": "La chronobiologie est la science des rythmes biologiques. Votre corps n'est pas un moteur qui tourne à puissance constante — il oscille. Savoir QUAND faire quoi (s'alimenter, s'entraîner, travailler, se coucher) est aussi important que le QUOI. Cette discipline réconcilie neurosciences, endocrinologie et pharmacologie.",
+    "horloge_circadienne": {
+      "SCN": {
+        "définition": "Noyau suprachiasmatique — horloge maîtresse dans l'hypothalamus. Contient ~20 000 neurones.",
+        "cycle": "Période naturelle légèrement > 24h (24.15h en moyenne) — resynchronisée chaque jour par des signaux externes (zeitgebers)",
+        "gènes_horloge": "CLOCK, BMAL1, PER1-3, CRY1-2 — forment des boucles de rétroaction transcriptionnelle. Prix Nobel 2017 (Hall, Rosbash, Young)."
+      },
+      "zeitgebers": {
+        "lumière": "Zeitgeber primaire. Les cellules ganglionnaires rétiniennes (ipRGC, mélanopsine) envoient le signal directement au SCN. Plus puissant le matin.",
+        "alimentation": "Horloges périphériques (foie, pancréas, intestin) synchronisées principalement par l'alimentation — indépendamment du SCN",
+        "température": "Bain froid le matin → vigilance. Bain chaud le soir → endormissement.",
+        "exercice": "Décale l'horloge selon l'heure: exercice matin → avance de phase (couche-tôt). Exercice soir → retard de phase.",
+        "contacts_sociaux": "Repas en famille, horaires de travail — zeitgebers secondaires importants"
+      }
+    },
+    "hormones_circadiennes": {
+      "cortisol": {
+        "pic": "Cortisol awakening response (CAR) — monte de 50-100% dans les 30-45 min après le réveil. Maximum entre 8-9h.",
+        "rôle": "Mobilise l'énergie, active le système immunitaire, améliore la vigilance et la mémoire",
+        "optimiser": "S'exposer à la lumière vive et faire de l'exercice le matin amplifie le CAR",
+        "éviter": "Caféine dans les 90 min suivant le réveil — masque le cortisol naturel et crée une dépendance fonctionnelle"
+      },
+      "mélatonine": {
+        "début": "Onset 2-3h avant l'heure de coucher habituelle (dim light melatonin onset DLMO)",
+        "pic": "2-3h du matin environ",
+        "inhibition": "La lumière bleue/verte (450-530nm) la supprime. La lumière rouge/ambrée ne l'affecte pas.",
+        "déclin": "Vers 6-7h du matin avec la lumière du jour"
+      },
+      "testosterone": {
+        "pic": "Tôt le matin (7-8h) — jusqu'à 25-30% plus haut que l'après-midi",
+        "implication": "Les séances de force le matin profitent du pic de testostérone"
+      },
+      "GH_hormone_de_croissance": {
+        "pic": "Sécrétion pulsatile — pulsation majeure 1-2h après endormissement (sommeil profond N3)",
+        "implication": "Coucher tôt optimise la récupération musculaire. Repas riche en sucres 2-3h avant le coucher atténue la sécrétion de GH."
+      }
+    },
+    "chronotype_et_performance": {
+      "lion": {
+        "pic_cognitif": "8h-12h",
+        "pic_physique": "7h-11h",
+        "stratégie": "Tâches de haut niveau cognitif le matin. Tâches routinières l'après-midi."
+      },
+      "ours": {
+        "pic_cognitif": "10h-14h puis 15h-18h",
+        "pic_physique": "14h-18h",
+        "stratégie": "Deep work matin tardif à midi. Entraînement physique en milieu d'après-midi."
+      },
+      "loup": {
+        "pic_cognitif": "12h-20h",
+        "pic_physique": "17h-21h",
+        "stratégie": "Éviter les réunions importantes tôt. Entraînement intense en fin d'après-midi/soir."
+      }
+    },
+    "chrono_nutrition": {
+      "fenetre_alimentaire": "Manger dans une fenêtre de 8-12h alignée sur le jour — réduit risques métaboliques vs alimentation nocturne",
+      "premier_repas": "Attendre 1-2h après le réveil idéalement (laisse le cortisol awakening response agir sans insulin spike qui l'atténue)",
+      "dernier_repas": "2-3h avant le coucher — laisse la digestion se terminer et protège la sécrétion de GH nocturne",
+      "protéines_le_matin": "Repas riche en protéines (et tyrosine) → précurseurs dopamine/noradrénaline → vigilance",
+      "glucides_le_soir": "Repas plus riche en glucides complexes le soir → sérotonine/tryptophane → relaxation, facilite l'endormissement",
+      "alcool_et_rythme": "L'alcool fragmente le rythme circadien en plus de détruire le REM"
+    },
+    "rythmes_ultradiens": {
+      "cycle_90_min_éveil": "Le cerveau oscille en cycles de ~90-120 min même en état de veille (BRAC: Basic Rest Activity Cycle). Après chaque cycle: baisse de vigilance et attention.",
+      "exploitation": "Travailler par blocs de 90 min sur des tâches difficiles → pause de 15-20 min. Aligne le travail sur les pics naturels d'élan neurologique.",
+      "signaux_fin_de_cycle": "Bâillements, perte de focus, envie de bouger, esprit qui vagabonde — signaux naturels de transition"
+    },
+    "jet_lag": {
+      "stratégie_est": "Vol vers l'Est (décalage difficile — avancer l'horloge). Lumière vive le matin à destination. Mélatonine 0.5mg le soir à l'heure locale. Éviter sieste longue à l'arrivée.",
+      "stratégie_ouest": "Vol vers l'Ouest (décalage plus facile — retarder l'horloge). Lumière vive le soir à destination.",
+      "pré_adaptation": "Décaler l'heure de coucher de 30-60 min/jour 3-5 jours avant le vol dans la direction du voyage",
+      "jet_lag_social": "Décalage entre semaine et week-end de > 2h → équivalent physiologique d'un vol Paris-Istanbul chaque lundi"
+    }
+  }
+}

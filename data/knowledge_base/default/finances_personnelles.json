@@ -1,0 +1,82 @@
+{
+  "version": "v30.0.0",
+  "category": "finances_personnelles",
+  "description": "Finances personnelles — budgeting (50/30/20/méthode enveloppes), épargne d'urgence, dette (avalanche vs snowball), investissement (ETF/DCA/PEA en France), immobilier locatif, FIRE, psychologie de l'argent (Morgan Housel), erreurs fréquentes",
+  "finances_personnelles": {
+    "introduction": "Les finances personnelles sont une compétence que l'école n'enseigne pas. TITANE aborde ce sujet avec pragmatisme: pas de schémas de richesse rapide, mais des principes éprouvés qui fonctionnent à long terme pour la majorité. La liberté financière est un objectif réaliste avec de la rigueur et du temps.",
+    "fondations": {
+      "épargne_urgence": {
+        "principe": "Avoir 3-6 mois de dépenses essentielles sur un compte liquide et sécurisé avant d'investir",
+        "pourquoi": "Sans filet, tout investissement peut être liquidé au pire moment lors d'une urgence",
+        "où": "Livret A (en France) ou LDDS — disponible, sécurisé, légèrement rémunéré"
+      },
+      "budget_50_30_20": {
+        "principe": "50% besoins essentiels (logement/nourriture/transport), 30% désirs, 20% épargne/investissement",
+        "avantage": "Simple, flexible, ne requiert pas de comptabilité détaillée",
+        "adaptation": "En France avec charges élevées: 60% besoins, 20% désirs, 20% épargne est plus réaliste"
+      },
+      "méthode_enveloppes": "Allouer physiquement (ou numériquement) le budget par catégorie chaque mois. Quand l'enveloppe est vide, on arrête. Excellent pour stopper les dépenses impulsives.",
+      "automatisation": "Le secret de la rigueur financière: automatiser l'épargne et l'investissement le jour du salaire. Ce qui n'arrive pas sur le compte courant n'est pas disponible à dépenser."
+    },
+    "gestion_dette": {
+      "méthode_avalanche": {
+        "principe": "Rembourser en priorité la dette au taux d'intérêt le plus élevé (carte crédit, crédit conso)",
+        "avantage": "Mathématiquement optimal — minimise le coût total des intérêts"
+      },
+      "méthode_snowball": {
+        "principe": "Rembourser en priorité la plus petite dette (indépendamment du taux)",
+        "avantage": "Victoires rapides → motivation. Dave Ramsey. Mieux pour les profils psychologiquement découragés."
+      },
+      "dette_bonne_vs_mauvaise": {
+        "mauvaise": "Crédit conso, découvert, crédit revolving — taux 15-20%+. À éliminer en priorité absolue.",
+        "neutre_à_bonne": "Crédit immobilier à taux bas — effet de levier sur un actif potentiellement productif",
+        "règle": "Ne jamais emprunter pour financer la consommation. Uniquement pour des actifs (immobilier, outils de production)."
+      }
+    },
+    "investissement": {
+      "principe_fondateur": "Temps dans le marché > timing du marché. L'investisseur moyen sous-performe le marché en essayant de le timer.",
+      "ETF_monde": {
+        "définition": "Exchange Traded Fund — fonds indiciel coté. Réplique un indice (MSCI World, S&P 500, CAC 40).",
+        "avantage": "Diversification immédiate, frais minimes (0.10-0.20%), liquidité quotidienne",
+        "performance": "MSCI World: ~10%/an sur 30 ans en $ (6-7% en € réel après inflation)"
+      },
+      "DCA": {
+        "définition": "Dollar Cost Averaging — investir une somme fixe à intervalles réguliers (ex: 200€ le 1er de chaque mois)",
+        "avantage": "Élimine le risque de market timing. Achète plus de parts quand les marchés baissent.",
+        "psychologie": "Automatiser pour éliminer les décisions émotionnelles lors des corrections de marché"
+      },
+      "PEA": {
+        "définition": "Plan d'Épargne en Actions — enveloppe fiscale française. Exonération d'imposition sur les plus-values après 5 ans.",
+        "plafond": "150 000€ de versements. Investissement limité aux actions/ETF européens (mais ETF MSCI World synthétiques éligibles).",
+        "priorité": "Remplir le PEA avant le CTO (compte-titres ordinaire) pour l'avantage fiscal"
+      },
+      "assurance_vie": "2ème enveloppe fiscale française. Accès à plus d'actifs (fonds €, SCPI, ETF). Succession facilitée.",
+      "LMNP": "Loueur Meublé Non Professionnel — statut fiscal avantageux pour l'investissement immobilier locatif",
+      "erreurs_investissement": [
+        "Vendre lors d'une correction (panique)",
+        "Investir dans des actions individuelles sans diversification",
+        "Crypto-monnaies comme investissement principal (volatilité extrême)",
+        "Frais élevés (OPCVM gérés activement à 2%+ = sous-performance presque certaine)"
+      ]
+    },
+    "FIRE_movement": {
+      "définition": "Financial Independence / Retire Early — atteindre l'indépendance financière avant l'âge officiel de la retraite",
+      "règle_des_4_pourcents": "Avec un portefeuille de 25× ses dépenses annuelles, on peut retirer 4%/an indéfiniment (Trinity Study, 1998)",
+      "variantes": {
+        "Lean_FIRE": "Indépendance avec un budget minimal (< 25 000€/an)",
+        "Fat_FIRE": "Indépendance avec un style de vie confortable (> 80 000€/an)",
+        "Barista_FIRE": "Portefeuille partiel + travail à temps partiel pour combler l'écart"
+      },
+      "critique": "Le contexte France 2024 (inflation, rendements obligataires, fiscalité) peut nécessiter une règle de 3-3.5% pour plus de sécurité"
+    },
+    "psychologie_de_l_argent": {
+      "Morgan_Housel": "The Psychology of Money (2020) — l'intelligence financière compte moins que le comportement financier à long terme",
+      "biais_comportementaux": {
+        "aversion_à_la_perte": "La douleur d'une perte est 2× plus forte que le plaisir d'un gain équivalent. Conduit à vendre trop tôt.",
+        "biais_de_recence": "Surpondérer les événements récents. Investir massivement après un bull market ou vendre après un crash.",
+        "effet_de_dotation": "Surévaluer ce qu'on possède déjà"
+      },
+      "règle_or": "La richesse est ce qu'on ne voit pas (épargne accumulée). L'apparence de richesse est ce qu'on montre (voiture, vêtements). Confondre les deux est la principale erreur."
+    }
+  }
+}
