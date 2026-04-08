@@ -1,0 +1,83 @@
+{
+  "version": "v30.0.0",
+  "category": "memory_system_deep",
+  "description": "Système mémoire TITANE∞ en profondeur: Memory OS, STM/MTM/LTM, embeddings HNSW, semantic search, vector store",
+  "memory_os": {
+    "description": "Système d'exploitation mémoriel unifié v30.0.0. Orchestrateur de toutes les couches mémoire.",
+    "path": "src-tauri/src/memory_os/",
+    "modules": ["stm", "mtm", "ltm", "api", "core", "config", "clustering", "consolidator", "forgetting", "indexer", "context", "embeddings", "semantic_search", "similarity", "vector_hnsw", "vector_index", "vector_store", "multimodal_memory", "memory_signals", "memory_state"],
+    "layers": {
+      "STM": {
+        "name": "Short-Term Memory",
+        "description": "Mémoire à court terme. Contexte de la session en cours.",
+        "ttl": "<1h",
+        "max_entries": 100,
+        "storage": "In-memory (RAM)",
+        "eviction": "LRU (Least Recently Used)",
+        "use_cases": ["contexte de conversation active", "résultats de recherche récents", "état UI temporaire", "résultats IPC en cache"]
+      },
+      "MTM": {
+        "name": "Medium-Term Memory",
+        "description": "Mémoire à moyen terme. Informations pertinentes de la semaine.",
+        "ttl": "<7 jours",
+        "max_entries": 10000,
+        "storage": "SQLite chiffré AES-256-GCM",
+        "eviction": "Bloom filter + scoring de pertinence",
+        "use_cases": ["historique de conversations récentes", "préférences utilisateur", "contexte de projets en cours", "patterns d'utilisation"]
+      },
+      "LTM": {
+        "name": "Long-Term Memory (Neural)",
+        "description": "Mémoire à long terme permanente. Stockage neural avec embeddings sémantiques.",
+        "ttl": "Permanent",
+        "max_entries": "Illimité (compression automatique)",
+        "storage": "SQLite + Tantivy BM25 + HNSW Vector Index",
+        "encryption": "AES-256-GCM",
+        "use_cases": ["connaissance accumulée", "profil utilisateur enrichi", "patterns comportementaux", "mémoire épisodique", "faits importants"]
+      }
+    },
+    "vector_store": {
+      "algorithm": "HNSW (Hierarchical Navigable Small World)",
+      "library": "instant-distance",
+      "embedding_dim": 1536,
+      "embedding_providers": ["OpenAI text-embedding-3-small", "Local SentenceTransformers", "Ollama nomic-embed-text"],
+      "operations": ["insert", "update", "delete", "search_knn", "search_radius"],
+      "ipc_commands": ["vector_store_insert", "vector_store_update", "vector_store_delete", "check_sqlite_available"]
+    },
+    "semantic_search": {
+      "description": "Recherche sémantique hybride BM25 + embeddings vectoriels",
+      "bm25_engine": "Tantivy (Rust native)",
+      "hybrid_ranking": "RRF (Reciprocal Rank Fusion) — combine BM25 et score cosinus",
+      "path": "src-tauri/src/semantic/",
+      "modules": ["embedder", "indexer", "query", "reranker", "selfheal", "storage", "vector_store", "utils"],
+      "capabilities": ["full_text_search", "semantic_similarity", "hybrid_search", "reranking", "context_retrieval"]
+    },
+    "consolidation": {
+      "description": "Consolidation automatique STM→MTM→LTM. Processus de cristallisation mémorielle.",
+      "trigger": "Automatique après fermeture de session ou manuellement via IPC",
+      "process": [
+        "1. Scoring de pertinence de chaque entrée STM",
+        "2. Génération d'embeddings pour les entrées à haute pertinence",
+        "3. Déduplication via similarité cosinus (threshold: 0.95)",
+        "4. Insertion dans MTM avec métadonnées enrichies",
+        "5. Promotion vers LTM des entrées MTM avec score élevé après 7j",
+        "6. Compression des anciennes entrées LTM (résumé auto)"
+      ],
+      "ipc_command": "memory_export_conversation"
+    },
+    "bloom_filter": {
+      "description": "Filtre Bloom pour lookup ultra-rapide avant accès SQLite",
+      "false_positive_rate": "0.1%",
+      "benefit": "Évite les I/O disque pour les clés inexistantes (~95% des requêtes)"
+    },
+    "persistent_memory_v19": {
+      "description": "PersistentMemoryState v19.2Ω — mémoire persistante haute disponibilité",
+      "ipc_commands": ["persistent_memory_read", "persistent_memory_get_stats", "persistent_memory_get_bundles", "persistent_memory_get_context", "persistent_memory_write_entry", "persistent_memory_create_summary", "persistent_memory_create_bundle", "persistent_memory_export", "persistent_memory_promote_entry", "persistent_memory_archive_entry", "persistent_memory_delete_entry", "persistent_memory_add_to_bundle"]
+    },
+    "memory_encryption": {
+      "algorithm": "AES-256-GCM",
+      "key_derivation": "Argon2id (pour cloud sync)",
+      "passphrase_env": "TITANE_SECRETS_PASSPHRASE",
+      "scope": "Toutes les entrées MTM et LTM sont chiffrées au repos"
+    }
+  }
+}

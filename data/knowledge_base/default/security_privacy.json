@@ -1,0 +1,66 @@
+{
+  "version": "v30.0.0",
+  "category": "security_privacy",
+  "description": "Sécurité et confidentialité TITANE∞ — chiffrement, auth, sandbox, CSP, secrets engine, permissions",
+  "security_engine": {
+    "description": "Moteur de sécurité multicouche TITANE∞",
+    "path": "src-tauri/src/security/",
+    "modules": {
+      "secrets_engine": "Gestionnaire de secrets chiffré — stockage sécurisé clés API, credentials",
+      "security_engine": "Moteur sécurité central — validation, audit, threat detection",
+      "encryption": "AES-256-GCM + Argon2id (dérivation clé) + X25519 (cloud sync)",
+      "permission_guard": "Validation permissions avant chaque opération sensible",
+      "permissions": "Catalogue des permissions et niveaux d'accès",
+      "pre_boot_validation": "Validation intégrité avant démarrage — vérifie hash des binaires critiques",
+      "audit": "Journalisation immuable des événements de sécurité",
+      "rate_limit": "Rate limiting par commande IPC — protège contre les abus",
+      "sandbox": "Isolation processus — Tauri CSP strict, no eval, no inline scripts",
+      "csp": "Content Security Policy — whitelist explicite des sources autorisées",
+      "shell_guard": "Validation commandes shell — aucune exécution de code arbitraire",
+      "storage_guard": "Validation accès filesystem — limité au dossier app_data"
+    },
+    "hardening": {
+      "ipc_command": "run_hardening_selftest",
+      "checks": ["CSP headers", "Tauri allowlist", "IPC validation", "filesystem permissions", "network gateway", "rate limits"]
+    }
+  },
+  "tauri_security": {
+    "runtime": "Tauri-only production runtime — pas d'Electron, pas de Node.js en production",
+    "allowlist": "Capabilities explicitement listées dans tauri.conf.json — principe du moindre privilège",
+    "ipc_validation": "Chaque commande IPC est validée: types, tailles, origines",
+    "csp": "Content Security Policy stricte — default-src 'self', aucun eval, aucun inline script",
+    "filesystem": "app_data_dir uniquement — aucun accès root, aucun traversal path",
+    "network": "One Door Network — UI → IPC → Services → Network Gateway → External",
+    "change_policy": "Toute modification de capabilities/allowlist requiert tests + rollback explicite",
+    "frontend_network": "Aucun appel réseau direct depuis UI sans approbation. Aucun fetch/HTTP non approuvé."
+  },
+  "secrets_engine": {
+    "description": "SecureSecretsEngine — gestionnaire de secrets chiffré",
+    "storage": "Chiffré AES-256-GCM sur disque dans app_data_dir",
+    "passphrase_env": "TITANE_SECRETS_PASSPHRASE",
+    "managed_secrets": ["OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GEMINI_API_KEY", "OLLAMA_BASE_URL", "GitHub tokens", "Encryption keys"],
+    "ipc_commands": ["secrets_store", "secrets_retrieve", "secrets_delete", "secrets_list_keys", "secrets_export_encrypted"],
+    "bootstrap": "Les clés API sont bootstrappées depuis SecureSecretsEngine vers ChatOrchestrator au démarrage (main.rs:1346-1350)"
+  },
+  "encryption_standards": {
+    "at_rest": "AES-256-GCM — toutes les données SQLite sensibles",
+    "in_transit": "TLS 1.3 pour APIs externes (Tauri HTTP client)",
+    "key_derivation": "Argon2id (mémoire intensive) pour cloud sync",
+    "signature": "X25519 pour vérification d'intégrité cloud",
+    "key_rotation": "Support rotation de clés sans perte de données"
+  },
+  "privacy_model": {
+    "principle": "Privacy by Design — la confidentialité est architecturale, pas accessoire",
+    "data_minimization": "Ne collecter que les données strictement nécessaires",
+    "local_first": "Toutes les données primaires stockées localement. Cloud sync optionnel et chiffré.",
+    "no_telemetry": "Aucune télémétrie vers serveurs tiers sans consentement explicite",
+    "right_to_erasure": "Commande IPC pour suppression complète de toutes les données utilisateur",
+    "user_data_scope": "L'utilisateur possède et contrôle toutes ses données. TITANE est un outil, pas un service cloud."
+  },
+  "auth": {
+    "path": "src-tauri/src/auth/",
+    "description": "Module d'authentification optionnel",
+    "method": "Local biometric ou PIN — aucune authentification cloud obligatoire",
+    "session": "Tokens de session locaux — expiration configurable"
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "version": "v30.0.0",
+  "category": "cloud_multimodal",
+  "description": "Cloud sync chiffré et capacités multimodales TITANE∞ — vision, audio 3D, wakeword, synchronisation",
+  "cloud_sync": {
+    "description": "CloudSyncEngine — synchronisation multi-device chiffrée de bout en bout",
+    "path": "src-tauri/src/cloud/",
+    "modules": ["cloud_crypto", "cloud_sync_engine", "cloud_vault", "commands"],
+    "encryption": "AES-256-GCM chiffrement des données + Argon2id dérivation de clé + X25519 signature",
+    "backends": {
+      "LocalFolder": "Dossier local partagé via Syncthing, Nextcloud, ou tout outil de sync",
+      "S3Private": "S3 privé: MinIO self-hosted, Backblaze B2, AWS S3",
+      "P2P": "WebRTC P2P (futur — roadmap)"
+    },
+    "sync_modes": {
+      "OnDemand": "Synchronisation manuelle sur demande",
+      "OnChange": "Synchronisation automatique à chaque modification",
+      "Periodic": "Synchronisation périodique (cron)"
+    },
+    "conflict_resolution": {
+      "LastWriteWins": "La dernière modification gagne",
+      "ManualResolve": "Conflit présenté à l'utilisateur pour résolution manuelle",
+      "ServerWins": "La version distante prime"
+    },
+    "vault": {
+      "description": "CloudVault — container chiffré pour synchronisation",
+      "versioning": "Révisions incrémentales avec changelog",
+      "device_identity": "Chaque appareil a une identité unique",
+      "multi_device": "Support Android + Desktop simultanément"
+    },
+    "ipc_commands": ["cloud_sync_status", "cloud_sync_push", "cloud_sync_pull", "cloud_vault_read", "cloud_vault_write", "cloud_vault_list", "cloud_set_config", "cloud_sync_history"],
+    "route": "/cloud"
+  },
+  "multimodal": {
+    "description": "Capacités multimodales TITANE∞ — vision, audio 3D, fusion sensorielle",
+    "path": "src-tauri/src/multimodal/",
+    "modules": {
+      "vision": {
+        "description": "Vision computationnelle — analyse d'images, OCR, description scènes",
+        "capabilities": ["image_analysis", "scene_description", "text_recognition", "object_detection"],
+        "models": ["GPT-4 Vision", "Gemini 1.5 Pro (multimodal natif)", "Local CLIP"],
+        "ipc_commands": ["vision_analyze_image", "vision_describe_scene", "vision_extract_text"]
+      },
+      "audio3d": {
+        "description": "Audio 3D spatial — traitement audio immersif",
+        "capabilities": ["spatial_audio", "3d_sound_positioning", "audio_enhancement"]
+      },
+      "image_embeddings": {
+        "description": "Embeddings d'images pour recherche sémantique multimodale",
+        "model": "CLIP (Contrastive Language-Image Pre-Training)"
+      },
+      "multimodal_fusion": {
+        "description": "Fusion sémantique texte+image+audio dans un espace vectoriel commun",
+        "benefit": "Recherche cross-modale — trouver images par texte et vice-versa"
+      }
+    }
+  },
+  "wakeword": {
+    "description": "Détection wakeword hors-ligne — activation vocale sans cloud",
+    "path": "src-tauri/src/wakeword/",
+    "modules": ["engine", "listener"],
+    "default_word": "TITANE",
+    "model": "Whisper tiny (local, embarqué)",
+    "offline": true,
+    "privacy": "100% local — aucun audio envoyé au cloud pour la détection",
+    "sensitivity": "Configurable — évite les faux positifs"
+  },
+  "voice_tts": {
+    "description": "Text-To-Speech et reconnaissance vocale",
+    "path": "src-tauri/src/tts/",
+    "tts_engines": ["System TTS (native OS)", "Whisper (transcription)", "Local neural TTS (optionnel)"],
+    "whisper": {
+      "description": "OpenAI Whisper pour transcription speech-to-text",
+      "model": "whisper-tiny à whisper-large (selon ressources)",
+      "offline": "Oui — modèle embarqué",
+      "ipc_commands": ["whisper_transcribe", "whisper_status"]
+    },
+    "voice_dsp": {
+      "description": "Traitement signal audio — filtrage bruit, normalisation, VAD",
+      "features": ["noise_reduction", "voice_activity_detection", "audio_normalization"]
+    }
+  },
+  "desktop_perception": {
+    "description": "Perception bureau — analyse de l'écran et du contexte desktop",
+    "path": "src-tauri/src/commands/desktop_perception.rs",
+    "capabilities": ["screen_capture", "window_analysis", "clipboard_access"],
+    "privacy": "Uniquement avec permission explicite de Kevin"
+  }
+}

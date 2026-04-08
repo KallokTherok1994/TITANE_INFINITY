@@ -28,6 +28,27 @@ const RESPONSE_GUIDELINES: &str =
     include_str!("../../data/knowledge_base/default/response_guidelines.json");
 const OPERATIONAL_KNOWLEDGE: &str =
     include_str!("../../data/knowledge_base/default/operational_knowledge.json");
+// ── v30.0.0 expansion ──────────────────────────────────────────────────────
+const CONSTITUTION_ETHICS: &str =
+    include_str!("../../data/knowledge_base/default/constitution_ethics.json");
+const MEMORY_SYSTEM_DEEP: &str =
+    include_str!("../../data/knowledge_base/default/memory_system_deep.json");
+const AI_PROVIDERS_GUIDE: &str =
+    include_str!("../../data/knowledge_base/default/ai_providers_guide.json");
+const FRONTEND_MODULES: &str =
+    include_str!("../../data/knowledge_base/default/frontend_modules.json");
+const DIGITAL_TWIN_SYMBIOSIS: &str =
+    include_str!("../../data/knowledge_base/default/digital_twin_symbiosis.json");
+const SECURITY_PRIVACY: &str =
+    include_str!("../../data/knowledge_base/default/security_privacy.json");
+const CLOUD_MULTIMODAL: &str =
+    include_str!("../../data/knowledge_base/default/cloud_multimodal.json");
+const TROUBLESHOOTING_FAQ: &str =
+    include_str!("../../data/knowledge_base/default/troubleshooting_faq.json");
+const LEARNING_PROMPTS: &str =
+    include_str!("../../data/knowledge_base/default/learning_prompts.json");
+const SERVICES_BACKEND: &str =
+    include_str!("../../data/knowledge_base/default/services_backend.json");
 
 // ─────────────────────────────────────────────────────────────────
 // LAZY STATIC CACHE — parsed once, reused on every call
@@ -80,6 +101,17 @@ impl DefaultKnowledgeBase {
         ("capabilities_matrix", CAPABILITIES_MATRIX),
         ("response_guidelines", RESPONSE_GUIDELINES),
         ("operational_knowledge", OPERATIONAL_KNOWLEDGE),
+        // v30.0.0 expansion
+        ("constitution_ethics", CONSTITUTION_ETHICS),
+        ("memory_system_deep", MEMORY_SYSTEM_DEEP),
+        ("ai_providers_guide", AI_PROVIDERS_GUIDE),
+        ("frontend_modules", FRONTEND_MODULES),
+        ("digital_twin_symbiosis", DIGITAL_TWIN_SYMBIOSIS),
+        ("security_privacy", SECURITY_PRIVACY),
+        ("cloud_multimodal", CLOUD_MULTIMODAL),
+        ("troubleshooting_faq", TROUBLESHOOTING_FAQ),
+        ("learning_prompts", LEARNING_PROMPTS),
+        ("services_backend", SERVICES_BACKEND),
     ];
 
     /// Load all default knowledge entries from embedded JSON.
@@ -247,8 +279,8 @@ mod tests {
             result.errors
         );
         assert_eq!(
-            result.entries_loaded, 7,
-            "Must have exactly 7 default knowledge categories"
+            result.entries_loaded, 17,
+            "Must have exactly 17 default knowledge categories"
         );
     }
 
@@ -265,13 +297,23 @@ mod tests {
         let cats = DefaultKnowledgeBase::list_categories();
         assert!(!cats.is_empty(), "Must have at least one category");
         let expected = vec![
+            "ai_providers_guide",
             "capabilities_matrix",
+            "cloud_multimodal",
+            "constitution_ethics",
+            "digital_twin_symbiosis",
             "engines_catalog",
+            "frontend_modules",
             "identity_profile",
             "ipc_commands_catalog",
+            "learning_prompts",
+            "memory_system_deep",
             "operational_knowledge",
             "response_guidelines",
+            "security_privacy",
+            "services_backend",
             "system_architecture",
+            "troubleshooting_faq",
         ];
         for cat in &expected {
             assert!(

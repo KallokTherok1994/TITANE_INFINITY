@@ -1,0 +1,88 @@
+{
+  "version": "v30.0.0",
+  "category": "services_backend",
+  "description": "Services backend Rust TITANE∞ — cache multicouche, DB, RAG, monitoring, cluster, selfheal",
+  "cache_system": {
+    "description": "Cache multicouche haute performance",
+    "path": "src-tauri/src/cache/",
+    "layers": {
+      "L1_memory": "Cache en mémoire — HashMap<String, CacheEntry>. Sub-ms. Limité à ~1000 entrées.",
+      "L2_sqlite": "Cache persistant SQLite — ms. Survit aux redémarrages. Illimité.",
+      "L3_lru": "LRU policy sur L1 — éviction automatique des entrées les moins utilisées"
+    },
+    "cache_multilevel": "src-tauri/src/cache_multilevel.rs — API unifiée multi-niveaux",
+    "eviction": "TTL configurable par entrée + LRU global",
+    "use_cases": ["Réponses IA récentes", "Résultats de recherche", "Status providers", "Métriques système"]
+  },
+  "database": {
+    "description": "Base de données SQLite locale — données structurées",
+    "engine": "SQLite via rusqlite",
+    "encryption": "SQLCipher (AES-256) — données sensibles chiffrées au repos",
+    "path": "app_data_dir/titane.db",
+    "main_tables": {
+      "conversations": "Historique conversations (id, timestamp, messages_json, provider, metadata)",
+      "memory_entries": "Entrées mémoire MTM/LTM (id, content, embedding, category, importance, timestamps)",
+      "embeddings_cache": "Cache embeddings vectoriels (content_hash, vector_data, model)",
+      "user_preferences": "Préférences utilisateur (key, value, updated_at)",
+      "audit_log": "Journal d'audit sécurité (action, actor, timestamp, result)"
+    },
+    "ipc_commands": ["db_execute_query", "db_get_stats", "db_optimize", "db_backup"]
+  },
+  "rag_service": {
+    "description": "Retrieval Augmented Generation — enrichit les prompts avec contexte mémorisé",
+    "path": "src/services/ragService.ts",
+    "pipeline": [
+      "1. Génération embedding de la requête",
+      "2. Recherche HNSW k-NN dans le vector store (k=5)",
+      "3. Reranking BM25 + sémantique (RRF)",
+      "4. Construction du contexte enrichi",
+      "5. Injection dans le prompt avant appel provider"
+    ],
+    "chunking": "Documents découpés en chunks de 512 tokens avec overlap 64 tokens",
+    "benefit": "Réponses contextuellement riches basées sur la mémoire accumulée"
+  },
+  "monitoring_system": {
+    "description": "Système de monitoring temps réel",
+    "path": "src-tauri/src/monitoring/",
+    "modules": ["metrics", "health_scheduler", "qa_engine", "monitoring_engine", "behavior"],
+    "metrics_collected": ["CPU usage", "RAM usage", "IPC latency", "Provider response time", "Error rate", "Memory STM/MTM size", "Cache hit rate"],
+    "health_checks": "Vérifications périodiques automatiques (configurable, défaut: 30s)",
+    "ipc_commands": ["monitoring_get_metrics", "monitoring_get_health", "system_get_metrics", "system_get_health"]
+  },
+  "watchdog": {
+    "description": "Processus watchdog — surveille et redémarre les composants défaillants",
+    "path": "src-tauri/src/watchdog/",
+    "monitored": ["ChatOrchestrator", "OllamaProvider", "MemoryOS", "SemanticKernel"],
+    "action_on_failure": "Tentatives de restart (3x), puis alerte + rapport AutoHeal",
+    "ipc_commands": ["watchdog_get_status", "watchdog_start", "watchdog_stop", "watchdog_restart_component"]
+  },
+  "cluster_system": {
+    "description": "Support multi-instances et clustering (pour usage avancé)",
+    "path": "src-tauri/src/cluster/",
+    "use_case": "Distribuer la charge entre plusieurs instances TITANE sur LAN",
+    "note": "Usage expérimental — majoritairement single-instance en production v30"
+  },
+  "self_repair": {
+    "description": "Auto-réparation système — détection et correction automatique des anomalies",
+    "path": "src-tauri/src/selfheal/ + src-tauri/src/self_repair/",
+    "modules": ["auto_heal", "recovery", "diagnostics", "healing"],
+    "workflow": [
+      "1. Détection anomalie (watchdog ou monitoring)",
+      "2. Diagnostic automatique (rule matching)",
+      "3. Application du fix (depuis autoheal_rules.jsonl)",
+      "4. Vérification post-fix",
+      "5. Rapport + entrée AutoHeal si nouveau pattern"
+    ],
+    "ipc_commands": ["self_healing_get_status", "self_healing_run_diagnostics", "self_healing_apply_fix"]
+  },
+  "resilience": {
+    "description": "Résilience système — circuit breakers, retry, graceful degradation",
+    "path": "src-tauri/src/resilience/",
+    "patterns": {
+      "circuit_breaker": "Coupe automatiquement un provider qui échoue >3x consécutivement",
+      "retry_with_backoff": "Retry exponentiel (1s, 2s, 4s, max 30s)",
+      "graceful_degradation": "Si provider premium indisponible → fallback Ollama sans interruption UI",
+      "timeout": "Timeout configurable par commande (défaut: 30s)"
+    }
+  }
+}
