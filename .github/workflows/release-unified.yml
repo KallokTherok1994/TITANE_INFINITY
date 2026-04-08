@@ -332,29 +332,37 @@ jobs:
             echo "renamed $file -> $target"
           done
 
-      - name: 🚀 Create GitHub Release
-        uses: softprops/action-gh-release@v2.2.0
-        with:
-          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
-          target_commitish: ${{ github.sha }}
-          name: TITANE∞ ${{ github.event.inputs.tag || github.ref_name }}
-          body_path: release_notes.md
-          draft: false
-          prerelease: false
-          files: |
-            artifacts/**/*.deb
-            artifacts/**/*.AppImage
-            artifacts/**/*.msi
-            artifacts/**/*.dmg
-            artifacts/**/*SHA256SUMS.txt
-          fail_on_unmatched_files: false
+      - name: 🚀 Publish GitHub Release via CLI
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ github.event.inputs.tag || github.ref_name }}
+          RELEASE_TITLE: TITANE∞ ${{ github.event.inputs.tag || github.ref_name }}
+          RELEASE_TARGET: ${{ github.sha }}
+        run: |
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release edit "$RELEASE_TAG" \
+              --title "$RELEASE_TITLE" \
+              --notes-file release_notes.md
+          else
+            gh release create "$RELEASE_TAG" \
+              --title "$RELEASE_TITLE" \
+              --notes-file release_notes.md \
+              --target "$RELEASE_TARGET"
+          fi
+
+          find artifacts/ -type f \( -name "*.deb" -o -name "*.AppImage" -o -name "*.msi" -o -name "*.dmg" -o -name "*SHA256SUMS.txt" \) -print0 \
+            | while IFS= read -r -d '' file; do
+                gh release upload "$RELEASE_TAG" "$file" --clobber
+              done
 
       - name: 📊 Release summary
         if: always()
         run: |
-          echo "### 🎉 Release Created Successfully!" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ job.status }}" = "success" ]; then
+            echo "### 🎉 Release Created Successfully!" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### ⚠️ Release publication finished with status: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          fi
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Version:** ${{ github.event.inputs.tag || github.ref_name }}" >> $GITHUB_STEP_SUMMARY
           echo "**URL:** https://github.com/${{ github.repository }}/releases/tag/${{ github.event.inputs.tag || github.ref_name }}" >> $GITHUB_STEP_SUMMARY
