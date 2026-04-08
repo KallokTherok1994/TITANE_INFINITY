@@ -28,6 +28,7 @@ interface PollingState {
   lastActivityAt: number;
   isVisible: boolean;
   timerId: ReturnType<typeof setTimeout> | null;
+  inFlightPromise: Promise<void> | null;
 }
 
 /**
@@ -71,6 +72,29 @@ export function createAdaptivePolling(
     lastActivityAt: Date.now(),
     isVisible: typeof document !== 'undefined' ? !document.hidden : true,
     timerId: null,
+    inFlightPromise: null,
+  };
+
+  const runCallback = async (): Promise<void> => {
+    if (state.inFlightPromise) {
+      return state.inFlightPromise;
+    }
+
+    let request: Promise<void> | null = null;
+    request = (async () => {
+      try {
+        await callback();
+      } catch (error) {
+        console.error('[AdaptivePolling] Callback error:', error);
+      } finally {
+        if (state.inFlightPromise === request) {
+          state.inFlightPromise = null;
+        }
+      }
+    })();
+
+    state.inFlightPromise = request;
+    return request;
   };
 
   /**
@@ -115,12 +139,7 @@ export function createAdaptivePolling(
     state.timerId = setTimeout(async () => {
       if (!state.isRunning) return;
 
-      try {
-        await callback();
-      } catch (error) {
-        console.error('[AdaptivePolling] Callback error:', error);
-      }
-
+      await runCallback();
       scheduleNext();
     }, state.currentInterval);
   };
@@ -163,7 +182,7 @@ export function createAdaptivePolling(
       onIntervalChange?.(baseIntervalMs);
 
       // Execute immediately when becoming visible
-      Promise.resolve(callback()).catch(console.error);
+      void runCallback();
       scheduleNext();
     }
   };
@@ -188,7 +207,7 @@ export function createAdaptivePolling(
     }
 
     // Execute immediately, then schedule next
-    Promise.resolve(callback()).catch(console.error);
+    void runCallback();
     scheduleNext();
   };
 
@@ -226,11 +245,7 @@ export function createAdaptivePolling(
   const executeNow = async (): Promise<void> => {
     state.lastActivityAt = Date.now();
 
-    try {
-      await callback();
-    } catch (error) {
-      console.error('[AdaptivePolling] Callback error:', error);
-    }
+    await runCallback();
 
     // Reschedule if running
     if (state.isRunning && state.timerId) {
