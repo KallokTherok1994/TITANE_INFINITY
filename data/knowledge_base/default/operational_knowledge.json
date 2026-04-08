@@ -1,0 +1,99 @@
+{
+  "version": "v30.0.0",
+  "category": "operational_knowledge",
+  "description": "Connaissances opérationnelles: démarrage, commandes, conventions, best practices TITANE∞",
+  "startup_sequence": {
+    "description": "Ordre d'initialisation au démarrage de l'application Tauri",
+    "steps": [
+      "1. Auth OS init (auth::init_auth) — système d'authentification unifié",
+      "2. Option1 DB State init — base de données SQLite option1",
+      "3. AI Router init — routeur multi-providers avec modèle Ollama par défaut (gemma2:2b)",
+      "4. SingularityState init — état global conscience centrale",
+      "5. ConversationEngine OMEGA init — pipeline 10 étapes (storage_dir + password)",
+      "6. OMEGA pipeline bridge init (async) — active la voie rapide <1ms",
+      "7. PersistentMemoryState init — mémoire persistante v19.2Ω",
+      "8. Providers init (async) — initialisation providers IA en arrière-plan",
+      "9. API Keys bootstrap — injection clés API depuis SecureSecretsEngine",
+      "10. Ollama auto-start (desktop uniquement) — tente bundled puis system",
+      "11. Default Knowledge Base init — charge la base de connaissance embarquée (ce module)"
+    ]
+  },
+  "canonical_commands": {
+    "check_all": "pnpm run check",
+    "verify_instructions": "pnpm run verify:instructions",
+    "verify_layers": "bash scripts/verify/verify_instruction_layers.sh",
+    "detect_recurrence": "bash scripts/autoheal/detect_recurrence.sh",
+    "verify_instructions_sh": "bash scripts/verify_instructions.sh",
+    "build_frontend": "pnpm build",
+    "build_tauri_debug": "cargo build --manifest-path src-tauri/Cargo.toml",
+    "build_tauri_release": "cargo build --release --manifest-path src-tauri/Cargo.toml",
+    "run_tests": "cargo test --manifest-path src-tauri/Cargo.toml",
+    "run_clippy": "cargo clippy --manifest-path src-tauri/Cargo.toml -- -D warnings",
+    "run_fmt": "cargo fmt --manifest-path src-tauri/Cargo.toml",
+    "run_fmt_check": "cargo fmt --manifest-path src-tauri/Cargo.toml -- --check"
+  },
+  "key_files": {
+    "kernel_instructions": ".github/copilot-instructions.md",
+    "autoheal_registry": "scripts/autoheal/autoheal_rules.jsonl",
+    "tauri_config": "src-tauri/tauri.conf.json",
+    "cargo_toml": "src-tauri/Cargo.toml",
+    "main_rs": "src-tauri/src/main.rs",
+    "lib_rs": "src-tauri/src/lib.rs",
+    "app_tsx": "src/App.tsx",
+    "security_ts": "src/lib/security.ts",
+    "default_knowledge_base": "data/knowledge_base/default/",
+    "seed_packs": "data/research/seeds/"
+  },
+  "ai_providers_config": {
+    "priority_online": ["OpenAI GPT-4", "Anthropic Claude", "Google Gemini"],
+    "priority_local": ["Ollama (port 11434)", "Local models"],
+    "default_local_model": "gemma2:2b",
+    "ollama_host": "127.0.0.1",
+    "ollama_port": 11434,
+    "fallback_chain": "Provider unavailable → next in chain → local Ollama → error explicite (jamais silence)",
+    "env_vars": {
+      "OLLAMA_DEFAULT_MODEL": "Modèle Ollama par défaut (défaut: gemma2:2b)",
+      "OLLAMA_MODEL": "Alias OLLAMA_DEFAULT_MODEL",
+      "OLLAMA_BASE_URL": "URL base Ollama (Android: pointer vers serveur LAN)",
+      "TITANE_SECRETS_PASSPHRASE": "Passphrase pour SecureSecretsEngine",
+      "ENABLE_SEED_PACKS": "Activer/désactiver seed packs P12 (défaut: true)"
+    }
+  },
+  "autoheal_convention": {
+    "description": "Registre append-only des fixes automatiques — NE PAS modifier les entrées existantes",
+    "format": "JSONL (une entrée JSON par ligne)",
+    "id_format": "AH-YYYY-MM-DD-DESCRIPTION-NNN",
+    "required_fields": {
+      "id": "Identifiant unique (format ci-dessus)",
+      "timestamp": "ISO 8601",
+      "trigger": "Ce qui a causé le fix",
+      "signature": "Symptôme observable / marker d'erreur",
+      "fix_applied": "Description précise du fix",
+      "verification": "Commande de vérification + résultat attendu",
+      "prevention": "Guard/test ajouté pour éviter la récurrence"
+    },
+    "last_known_id": "AH-2026-04-08-V30-RUST-REMAINING-021",
+    "total_entries": "699+",
+    "after_adding": ["bash scripts/autoheal/detect_recurrence.sh", "bash scripts/verify_instructions.sh"]
+  },
+  "quality_gates": {
+    "rust": "cargo clippy -- -D warnings (0 warnings en release)",
+    "typescript": "TypeScript strict mode (0 erreurs)",
+    "tests": "cargo test (3399/3399 PASS)",
+    "e2e": "wdio + tauri-driver (23 tests PASS)",
+    "fmt": "cargo fmt -- --check (0 diffs)"
+  },
+  "prod_tokens": {
+    "description": "Tokens requis pour actions PROD — ne jamais les simuler",
+    "build": "GO_FOR_PROD_BUILD__TITANE_INFINITY",
+    "deploy": "GO_FOR_PROD_DEPLOY__TITANE_INFINITY"
+  },
+  "rollback_commands": {
+    "instructions": "git restore -- .github/copilot-instructions.md .github/instructions/titane.instructions.md",
+    "prompts_agents": "git restore -- .github/prompts .github/agents src/AGENTS.md src-tauri/AGENTS.md e2e/AGENTS.md docs/AGENTS.md scripts/AGENTS.md",
+    "verify": "git restore -- scripts/verify governance",
+    "src": "git restore -- src",
+    "src_tauri": "git restore -- src-tauri",
+    "e2e": "git restore -- e2e scripts/e2e wdio*.conf*"
+  }
+}

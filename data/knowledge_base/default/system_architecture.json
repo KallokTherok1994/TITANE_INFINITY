@@ -1,0 +1,81 @@
+{
+  "version": "v30.0.0",
+  "category": "system_architecture",
+  "description": "Architecture 4-Ring, One Door Network, IPC Contract TITANE∞",
+  "architecture": {
+    "model": "4-Ring + One Door Network",
+    "rings": {
+      "ring1": {
+        "name": "Hardware / OS",
+        "description": "Couche matérielle et système d'exploitation. Accès direct au hardware.",
+        "no_imports_from": ["ring2", "ring3", "ring4"]
+      },
+      "ring2": {
+        "name": "Tauri Core / IPC Gateway",
+        "description": "Runtime Tauri (v2.10.1), pont IPC Rust↔Frontend. Seul point d'entrée réseau autorisé pour l'UI.",
+        "no_imports_from": ["ring3", "ring4"]
+      },
+      "ring3": {
+        "name": "Services Backend (Rust)",
+        "description": "Moteurs cognitifs, services, AI Router, Unified Memory. Toute logique métier. 150+ modules.",
+        "no_imports_from": ["ring4"]
+      },
+      "ring4": {
+        "name": "UI / Modules Frontend",
+        "description": "React/TypeScript, features, engines frontend. Interface utilisateur. 200+ modules.",
+        "allowed_network": "via IPC uniquement → Ring2 → Ring3"
+      }
+    },
+    "one_door_network": {
+      "description": "Tout appel réseau passe obligatoirement par: UI → IPC canonique → Services → Network Gateway → Externe",
+      "rule": "Aucun accès réseau direct depuis l'UI sans passer par IPC. Aucune URL hardcodée sans env override.",
+      "gateway": "src-tauri/src/services/network_gateway.rs",
+      "policy": "src-tauri/src/services/network_policy.rs"
+    },
+    "ipc_contract": {
+      "format": "{ ok: bool, content: T, error: Option<String> }",
+      "rule": "Zéro silence — toujours retourner ok=true ou ok=false avec error explicite",
+      "no_lying_fallback": true,
+      "no_silent_failure": true,
+      "array_safety": "Toujours vérifier Array.isArray avant d'itérer une réponse IPC — secureInvoke peut retourner un objet fallback"
+    },
+    "runtime": {
+      "name": "Tauri",
+      "version": "v2.10.1",
+      "production_only": true,
+      "no_electron": true,
+      "no_web_server": true,
+      "capabilities_dir": "src-tauri/capabilities/"
+    },
+    "tech_stack": {
+      "frontend": "React 19.2.4 + TypeScript strict mode (0 erreurs)",
+      "backend": "Rust 1.70+ MSRV (Edition 2021)",
+      "database": [
+        "SQLite via rusqlite (persistence principale)",
+        "Tantivy BM25 (indexation full-text)",
+        "Vector Store HNSW via instant-distance (embeddings sémantiques)"
+      ],
+      "ai_providers": ["OpenAI GPT-4/GPT-3.5-turbo", "Anthropic Claude", "Google Gemini", "Ollama local (port 11434)", "Modèles locaux"],
+      "encryption": "AES-256-GCM (toutes données sensibles, mémoire, cloud sync)",
+      "package_manager": "pnpm v10.30.2 (enforced — npm/yarn interdits)"
+    },
+    "modules": {
+      "backend_rust_count": 150,
+      "frontend_ts_count": 200,
+      "ipc_commands_count": 1231,
+      "capabilities_files": 8,
+      "cognitive_engines": 20
+    },
+    "key_invariants": [
+      "Tauri-only production runtime — jamais Electron ou serveur web standalone",
+      "4-Ring: pas d'import inversé entre rings (Ring4 → Ring3 interdit sans IPC)",
+      "One Door: tout réseau via IPC → Gateway uniquement",
+      "IPC contract: { ok, content, error } — zéro silence, zéro fallback menteur",
+      "Minimal patch: changement le plus petit et sûr possible",
+      "Proof first: pas de DONE/SEALED sans preuves exécutables",
+      "Online-first governed avec fallback local obligatoire et opérationnel",
+      "AutoHeal: une entrée obligatoire par fix dans autoheal_rules.jsonl",
+      "NO_SKIPS: aucun check obligatoire ne peut être sauté par narrative"
+    ]
+  }
+}

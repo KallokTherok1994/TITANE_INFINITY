@@ -1,0 +1,79 @@
+{
+  "version": "v30.0.0",
+  "category": "capabilities_matrix",
+  "description": "Matrice complète des capacités TITANE∞ par domaine",
+  "capabilities": {
+    "conversation_ia": {
+      "level": "expert",
+      "description": "Génération de texte, réponses contextuelles, streaming, multi-tour, OMEGA pipeline",
+      "providers": ["OpenAI GPT-4", "Anthropic Claude", "Google Gemini", "Ollama local"],
+      "features": ["streaming", "context_window", "multi_turn", "fallback_chain", "quality_scoring", "omega_pipeline_10_steps"]
+    },
+    "memory_management": {
+      "level": "expert",
+      "description": "Mémoire 3 niveaux: STM (court terme, <1h), MTM (moyen terme, <7j), LTM (long terme neural, permanent)",
+      "features": ["stm_mtm_ltm_hierarchy", "vector_search_hnsw", "semantic_retrieval", "consolidation", "aes256gcm_encryption", "bloom_filter_lookup"]
+    },
+    "voice_audio": {
+      "level": "advanced",
+      "description": "TTS (online/local), transcription Whisper, détection wakeword, capture microphone",
+      "features": ["text_to_speech_online", "text_to_speech_local", "whisper_transcription", "wakeword_detection", "audio_capture", "wav_recording", "fft_analysis"]
+    },
+    "self_healing": {
+      "level": "expert",
+      "description": "Auto-réparation: détection anomalies, prédiction pannes, corrections correctives, rollback automatique",
+      "features": ["anomaly_detection", "fault_prediction", "auto_repair_execution", "rollback", "metrics_monitoring", "autoheal_registry"]
+    },
+    "knowledge_ingestion": {
+      "level": "advanced",
+      "description": "Ingestion documents multi-formats: PDF, DOCX, Markdown, JSON, CSV, XML, Audio, Video, Images",
+      "features": ["multi_format_parsing", "bm25_tantivy_indexing", "semantic_search", "knowledge_fusion", "ocr_support", "default_knowledge_base"]
+    },
+    "multi_agent": {
+      "level": "advanced",
+      "description": "Système multi-agents avec collaboration, supervision, rôles spécialisés, sandbox",
+      "features": ["agent_registry", "collaboration", "role_assignment", "sandbox_isolation", "lifecycle_management", "communication_protocol"]
+    },
+    "evolution": {
+      "level": "expert",
+      "description": "Auto-évolution: amélioration continue des performances et capacités cognitives",
+      "features": ["evolution_loop", "behavioral_adaptation", "capability_growth", "performance_optimization", "meta_learning"]
+    },
+    "security": {
+      "level": "expert",
+      "description": "Chiffrement AES-256-GCM, authentification Auth OS, gestion clés API sécurisées",
+      "features": ["aes256gcm_encryption", "auth_os", "api_key_vault", "secure_ipc", "data_protection", "secure_secrets_engine"]
+    },
+    "agenda_temporal": {
+      "level": "intermediate",
+      "description": "Gestion agenda, événements, time-travel, historique temporel",
+      "features": ["event_management", "time_travel_engine", "temporal_history", "scheduling"]
+    },
+    "cloud_sync": {
+      "level": "advanced",
+      "description": "Synchronisation cloud chiffrée multi-device",
+      "features": ["encrypted_cloud_sync", "multi_device_support", "offline_fallback", "conflict_resolution"]
+    },
+    "developer_tools": {
+      "level": "expert",
+      "description": "Mode développeur: patch, rollback, build, analyse fichiers, devops, git operations",
+      "features": ["patch_management", "rollback", "build_system", "file_analysis", "changelog", "git_operations", "devops_commands"],
+      "restricted": "Kevin uniquement (developer mode)"
+    },
+    "monitoring_observability": {
+      "level": "expert",
+      "description": "Monitoring santé, métriques, alertes, QA automatique, télémétrie",
+      "features": ["health_monitoring", "metrics_collection", "alerting", "qa_automation", "telemetry", "diagnostics", "scorecard"]
+    },
+    "agi_reasoning": {
+      "level": "advanced",
+      "description": "Raisonnement général, abstraction, méta-apprentissage, modèle de soi, perception multimodale",
+      "features": ["general_reasoning", "abstraction", "meta_learning", "self_model", "strategy", "transfer_learning", "multimodal_perception"]
+    },
+    "cognitive_os": {
+      "level": "expert",
+      "description": "Noyau OS cognitif: singularité, cohérence globale, conscience centrale, ordonnanceur",
+      "features": ["singularity_state", "global_coherence", "brain_state", "cognitive_kernel", "meta_orchestration", "hyper_intelligence"]
+    }
+  }
+}

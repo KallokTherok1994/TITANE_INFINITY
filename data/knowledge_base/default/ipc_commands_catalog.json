@@ -1,0 +1,189 @@
+{
+  "version": "v30.0.0",
+  "category": "ipc_commands_catalog",
+  "description": "Catalogue des commandes IPC Tauri disponibles (1231+ commandes). Contract: { ok, content, error }",
+  "contract": "{ ok: bool, content: T, error: Option<String> }",
+  "total_commands": 1231,
+  "categories": {
+    "system_core": {
+      "description": "Commandes système fondamentales",
+      "commands": [
+        {"name": "get_system_status", "returns": "Vec<ModuleHealth>", "description": "Statut santé de tous les modules"},
+        {"name": "run_system_diagnostic", "returns": "String", "description": "Diagnostic complet du système"},
+        {"name": "restart_cores", "returns": "void", "description": "Redémarrer les cores système"},
+        {"name": "engine_tick", "returns": "void", "description": "Tick du moteur principal"},
+        {"name": "get_engine_health", "returns": "String", "description": "Santé des moteurs"},
+        {"name": "get_engines_status", "returns": "String", "description": "Statut de tous les moteurs"},
+        {"name": "helios_get_metrics", "returns": "String", "description": "Métriques Helios"},
+        {"name": "nexus_get_graph", "returns": "String", "description": "Graphe Nexus"},
+        {"name": "harmonia_get_flows", "returns": "String", "description": "Flux Harmonia"},
+        {"name": "sentinel_get_alerts", "returns": "String", "description": "Alertes Sentinel"},
+        {"name": "watchdog_get_logs", "returns": "Vec<String>", "description": "Logs watchdog"},
+        {"name": "watchdog_get_data", "returns": "String", "description": "Données watchdog"},
+        {"name": "adaptive_get_data", "returns": "String", "description": "Données adaptive engine"},
+        {"name": "toggle_safe_mode", "returns": "void", "description": "Activer/désactiver mode sécurisé"},
+        {"name": "toggle_singularity", "returns": "void", "description": "Activer/désactiver singularity"}
+      ]
+    },
+    "ai_chat": {
+      "description": "IA, génération, conversation (200+ commandes)",
+      "commands": [
+        {"name": "ai_query", "params": ["prompt: String", "temperature: f32", "max_tokens: u32"], "returns": "String", "description": "Requête IA synchrone"},
+        {"name": "ai_query_streaming", "params": ["window", "prompt: String", "temperature: f32", "max_tokens: u32"], "returns": "String", "description": "Requête IA streaming"},
+        {"name": "conversation_generate", "returns": "String", "description": "Génération via OMEGA pipeline (10 étapes)"},
+        {"name": "chat_stream_message", "returns": "streaming", "description": "Message chat en streaming"},
+        {"name": "chat_create_conversation", "params": ["title: String"], "returns": "String"},
+        {"name": "chat_get_conversation", "returns": "String"},
+        {"name": "chat_delete_conversation", "returns": "void"},
+        {"name": "chat_check_providers", "returns": "Value", "description": "Vérifier disponibilité providers"},
+        {"name": "chat_get_providers_status", "returns": "Value", "description": "Statut détaillé providers"},
+        {"name": "chat_set_gemini_key", "returns": "void"},
+        {"name": "ollama_generate", "returns": "String", "description": "Génération via Ollama local"},
+        {"name": "ollama_query", "returns": "String"},
+        {"name": "test_ollama", "returns": "bool"},
+        {"name": "ping_ollama", "returns": "bool"},
+        {"name": "ai_generate_local", "returns": "String"},
+        {"name": "ai_scan_local_models", "returns": "Vec<String>"},
+        {"name": "ai_set_local_model", "params": ["model: String"], "returns": "void"},
+        {"name": "ai_status", "returns": "Value", "description": "Statut global IA"},
+        {"name": "validate_chat_message", "params": ["message: String"], "returns": "bool"},
+        {"name": "chat_get_memory_stats", "returns": "Value"},
+        {"name": "chat_memory_backup", "returns": "String"},
+        {"name": "chat_memory_restore", "params": ["backup: String"], "returns": "void"},
+        {"name": "chat_mode_change", "params": ["mode: String"], "returns": "void"},
+        {"name": "chat_mode_sync", "returns": "void"},
+        {"name": "conversation_reset", "returns": "void"}
+      ]
+    },
+    "memory": {
+      "description": "Opérations mémoire STM/MTM/LTM (100+ commandes)",
+      "commands": [
+        {"name": "memory_save_entry", "params": ["entry: String"], "returns": "void"},
+        {"name": "memory_load_entries", "returns": "String"},
+        {"name": "memory_get_entry", "params": ["key: String"], "returns": "String"},
+        {"name": "memory_set", "params": ["key: String", "value: String"], "returns": "void"},
+        {"name": "memory_get", "params": ["key: String"], "returns": "String"},
+        {"name": "memory_scan", "returns": "String", "description": "Scanner toute la mémoire"},
+        {"name": "memory_get_all_keys", "returns": "Vec<String>"},
+        {"name": "memory_delete_entry", "params": ["key: String"], "returns": "void"},
+        {"name": "memory_clear", "returns": "void"},
+        {"name": "memory_get_state", "returns": "String"},
+        {"name": "memory_list_all", "returns": "Vec<String>"},
+        {"name": "memory_export_conversation", "returns": "String"},
+        {"name": "clear_memory_cache", "returns": "void"},
+        {"name": "clear_all_memory", "returns": "void"}
+      ]
+    },
+    "singularity": {
+      "description": "État Singularité — conscience centrale (18 commandes)",
+      "commands": [
+        {"name": "singularity_get_full_state", "returns": "SingularityState"},
+        {"name": "singularity_get_physical", "returns": "PhysicalState"},
+        {"name": "singularity_get_cognitive", "returns": "CognitiveState"},
+        {"name": "singularity_get_global_coherence", "returns": "f32"},
+        {"name": "singularity_is_critical", "returns": "bool"},
+        {"name": "get_singularity_state", "returns": "String"},
+        {"name": "sync_singularity", "returns": "void"},
+        {"name": "singularity_get", "returns": "String"},
+        {"name": "singularity_set", "params": ["key: String", "value: String"], "returns": "void"},
+        {"name": "singularity_diff", "returns": "String"},
+        {"name": "singularity_hash", "returns": "String"},
+        {"name": "singularity_sync", "returns": "void"},
+        {"name": "singularity_meta", "returns": "String"},
+        {"name": "singularity_integrity", "returns": "bool"},
+        {"name": "singularity_repair", "returns": "void"},
+        {"name": "singularity_export_json", "returns": "String"},
+        {"name": "singularity_snapshot", "returns": "String"},
+        {"name": "singularity_selftest_full", "returns": "SelfTestResult"}
+      ]
+    },
+    "audio": {
+      "description": "Audio, TTS, transcription (70+ commandes)",
+      "commands": [
+        {"name": "speak", "params": ["text: String", "config: Value", "use_online: bool"], "returns": "void"},
+        {"name": "stop_speaking", "returns": "void"},
+        {"name": "is_speaking", "returns": "bool"},
+        {"name": "pause_speaking", "returns": "void"},
+        {"name": "resume_speaking", "returns": "void"},
+        {"name": "start_recording", "params": ["config: Value"], "returns": "String"},
+        {"name": "stop_recording", "returns": "Value"},
+        {"name": "cancel_recording", "returns": "void"},
+        {"name": "is_recording", "returns": "bool"},
+        {"name": "transcribe_audio", "params": ["audio_data: Vec<u8>"], "returns": "String"},
+        {"name": "get_recording_status", "returns": "Value"}
+      ]
+    },
+    "selfheal": {
+      "description": "Auto-réparation et santé système (40+ commandes)",
+      "commands": [
+        {"name": "selfheal_get_data", "returns": "String"},
+        {"name": "selfheal_get_health", "returns": "HealthReport"},
+        {"name": "selfheal_get_state", "returns": "HealingState"},
+        {"name": "selfheal_get_prediction", "returns": "PredictionReport"},
+        {"name": "selfheal_force_evaluation", "returns": "void"},
+        {"name": "quick_health_check", "returns": "HealthStatus"}
+      ]
+    },
+    "evolution": {
+      "description": "Auto-évolution cognitive (40+ commandes)",
+      "commands": [
+        {"name": "evolution_get_state", "returns": "EvolutionState"},
+        {"name": "evolution_start", "returns": "void"},
+        {"name": "evolution_stop", "returns": "void"},
+        {"name": "run_evolution", "returns": "EvolutionResult"},
+        {"name": "get_evolution_state", "returns": "String"}
+      ]
+    },
+    "knowledge": {
+      "description": "Base de connaissance et ingestion (30+ commandes)",
+      "commands": [
+        {"name": "parse_document", "params": ["path: String"], "returns": "KnowledgeDocument"},
+        {"name": "detect_file_format", "params": ["path: String"], "returns": "FileFormat"},
+        {"name": "knowledge_ingest", "params": ["content: String", "format: String"], "returns": "void"},
+        {"name": "knowledge_save_state", "returns": "void"},
+        {"name": "knowledge_base_get_all", "returns": "String", "description": "Get full default knowledge base"},
+        {"name": "knowledge_base_get_category", "params": ["category: String"], "returns": "String"},
+        {"name": "knowledge_base_list_categories", "returns": "Vec<String>"},
+        {"name": "knowledge_base_validate", "returns": "bool"}
+      ]
+    },
+    "xp_state": {
+      "description": "État XP et progression",
+      "commands": [
+        {"name": "xp_get_state", "returns": "XpState"},
+        {"name": "xp_sync_state", "returns": "void"},
+        {"name": "titan_state_get", "returns": "TitanState"}
+      ]
+    },
+    "logs_events": {
+      "description": "Logs et événements système",
+      "commands": [
+        {"name": "get_system_logs", "returns": "Vec<String>"},
+        {"name": "log_entries", "returns": "Vec<LogEntry>"},
+        {"name": "get_event_stream", "returns": "Vec<Event>"},
+        {"name": "clear_system_logs", "returns": "void"},
+        {"name": "clear_event_stream", "returns": "void"}
+      ]
+    },
+    "vector_store": {
+      "description": "Opérations vector store HNSW",
+      "commands": [
+        {"name": "vector_store_insert", "params": ["id: String", "embedding: Vec<f32>", "metadata: Value"], "returns": "void"},
+        {"name": "vector_store_update", "params": ["id: String", "embedding: Vec<f32>"], "returns": "void"},
+        {"name": "vector_store_delete", "params": ["id: String"], "returns": "void"},
+        {"name": "check_sqlite_available", "returns": "bool"}
+      ]
+    },
+    "agenda": {
+      "description": "Agenda et événements temporels (30+ commandes)",
+      "commands": [
+        {"name": "agenda_load_events", "returns": "Vec<AgendaEvent>"},
+        {"name": "agenda_save_events", "params": ["events: Vec<AgendaEvent>"], "returns": "void"},
+        {"name": "agenda_delete_event", "params": ["id: String"], "returns": "void"},
+        {"name": "agenda_create_event", "params": ["event: AgendaEvent"], "returns": "String"},
+        {"name": "agenda_get_events", "returns": "Vec<AgendaEvent>"},
+        {"name": "agenda_update_event", "params": ["event: AgendaEvent"], "returns": "void"}
+      ]
+    }
+  }
+}
