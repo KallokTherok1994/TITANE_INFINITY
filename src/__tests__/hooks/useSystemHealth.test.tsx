@@ -103,6 +103,40 @@ describe('useSystemHealth Hook', () => {
 
       expect(secureInvoke).toHaveBeenCalled();
     });
+
+    it('should avoid overlapping monitoring refreshes while a previous cycle is still in flight', async () => {
+      let resolveConversation: ((value: typeof mockHealthPayloads.conversation_health_check) => void) | null = null;
+
+      vi.mocked(secureInvoke).mockImplementation((command: string) => {
+        if (command === 'conversation_health_check') {
+          return new Promise(resolve => {
+            resolveConversation = resolve as typeof resolveConversation;
+          });
+        }
+
+        return Promise.resolve(
+          mockHealthPayloads[command as keyof typeof mockHealthPayloads] ?? null
+        );
+      });
+
+      const { result } = renderHook(() => useSystemHealth());
+
+      act(() => {
+        result.current.startMonitoring(10);
+        vi.advanceTimersByTime(50);
+      });
+
+      expect(
+        vi
+          .mocked(secureInvoke)
+          .mock.calls.filter(([command]) => command === 'conversation_health_check')
+      ).toHaveLength(1);
+
+      await act(async () => {
+        resolveConversation?.(mockHealthPayloads.conversation_health_check);
+        await Promise.resolve();
+      });
+    });
   });
 
   describe('Alerts', () => {
