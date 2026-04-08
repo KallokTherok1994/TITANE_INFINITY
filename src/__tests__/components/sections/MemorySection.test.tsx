@@ -1,10 +1,12 @@
 import React from 'react';
 import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemorySection } from '@/components/sections/MemorySection';
 
 const mockUsePersistentMemory = vi.fn();
 const mockUseLTMContext = vi.fn();
+const mockGetKnowledge = vi.fn();
+const mockGetAllEntries = vi.fn();
 
 vi.mock('@/hooks/usePersistentMemory', () => ({
   usePersistentMemory: (options: unknown) => mockUsePersistentMemory(options),
@@ -12,6 +14,16 @@ vi.mock('@/hooks/usePersistentMemory', () => ({
 
 vi.mock('@/hooks/useLTMContext', () => ({
   useLTMContext: (conversationId: unknown) => mockUseLTMContext(conversationId),
+}));
+
+vi.mock('@/services/api/memory', () => ({
+  memoryService: {
+    getKnowledge: (...args: unknown[]) => mockGetKnowledge(...args),
+  },
+}));
+
+vi.mock('@/services/api/defaultKnowledgeBase', () => ({
+  getAllEntries: (...args: unknown[]) => mockGetAllEntries(...args),
 }));
 
 vi.mock('@/components/chat/MemoryDashboard', () => ({
@@ -128,6 +140,9 @@ describe('MemorySection', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
+    mockGetKnowledge.mockResolvedValue([]);
+    mockGetAllEntries.mockResolvedValue([]);
+
     mockUseLTMContext.mockReturnValue({
       historyCount: 4,
     });
@@ -187,9 +202,9 @@ describe('MemorySection', () => {
       })
     );
 
-    expect(screen.getByText('7')).toBeInTheDocument();
+    expect(await screen.findByText('7')).toBeInTheDocument();
     expect(
-      screen.getByText(/historique conversationnel, distinct de la ltm/i)
+      await screen.findByText(/historique conversationnel, distinct de la ltm/i)
     ).toBeInTheDocument();
     expect(await screen.findByTestId('memory-dashboard')).toHaveTextContent(
       'dashboard:admin:selected:none'
@@ -241,15 +256,79 @@ describe('MemorySection', () => {
     );
 
     expect(
-      screen.getByText(/aucune mémoire persistante consolidée/i)
+      await screen.findByText(/aucune mémoire persistante consolidée/i)
     ).toBeInTheDocument();
     expect(
-      screen.getByText(
+      await screen.findByText(
         /les cartes, l'arbre et la recherche restent donc volontairement vides/i
       )
     ).toBeInTheDocument();
     expect(await screen.findByTestId('memory-search-panel')).toHaveTextContent(
       'entries:0'
+    );
+  });
+
+  it('surfaces knowledge-base content inside the memory page even when persistent entries are still empty', async () => {
+    mockUseLTMContext.mockReturnValue({
+      historyCount: 0,
+    });
+
+    mockUsePersistentMemory.mockReturnValue({
+      entries: [],
+      stats: {
+        countByLevel: {
+          session: 0,
+          intermediate: 0,
+          long_term: 0,
+        },
+      },
+      isLoading: false,
+      lastUpdate: 789,
+    });
+
+    mockGetKnowledge.mockResolvedValue([
+      {
+        id: 'kb-runtime-1',
+        title: 'Architecture TITANE',
+        category: 'system',
+        content: 'Le noyau TITANE orchestre la mémoire et les connaissances.',
+        relevance: 0.9,
+        lastAccessed: '2026-04-08T00:00:00.000Z',
+        tags: ['architecture', 'memoire'],
+      },
+    ]);
+    mockGetAllEntries.mockResolvedValue([
+      {
+        id: 'default-kb-1',
+        category: 'identity_profile',
+        version: '30.0.0',
+        description: 'Profil identitaire système',
+        content: {
+          summary: 'Identité persistante TITANE∞',
+        },
+      },
+    ]);
+
+    render(
+      <MemorySection
+        stats={{
+          totalXP: 0,
+          level: 1,
+          memoryShortTerm: 0,
+          memoryMidTerm: 0,
+          memoryLongTerm: 0,
+          evolutionScore: 0,
+        }}
+        conversationId="conv-kb"
+      />
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByText(/aucune mémoire persistante consolidée/i)).not.toBeInTheDocument();
+    });
+
+    expect(await screen.findByTestId('memory-search-panel')).toHaveTextContent(
+      'entries:2'
     );
   });
 

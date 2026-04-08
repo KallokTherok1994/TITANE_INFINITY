@@ -40,6 +40,8 @@ export interface MemoryDashboardProps {
   selectedEntryId?: string | null;
   /** Mode compact */
   compact?: boolean;
+  /** Entrées mémoire additionnelles déjà consolidées côté page (ex: bases de connaissances) */
+  additionalEntries?: MemoryEntry[];
 }
 
 type ViewMode = 'grid' | 'list' | 'timeline';
@@ -358,6 +360,7 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
   onEntrySelect,
   selectedEntryId: controlledSelectedEntryId,
   compact = false,
+  additionalEntries = [],
 }) => {
   // État local
   const [selectedLevel, setSelectedLevel] = useState<MemoryLevel | 'all'>('all');
@@ -385,9 +388,71 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
     enableCache: true,
   });
 
+  const mergedEntries = useMemo(() => {
+    const seen = new Set<string>();
+    return [...entries, ...additionalEntries].filter(entry => {
+      if (seen.has(entry.id)) {
+        return false;
+      }
+      seen.add(entry.id);
+      return true;
+    });
+  }, [entries, additionalEntries]);
+
+  const derivedCounts = useMemo(
+    () => ({
+      session: mergedEntries.filter(entry => entry.level === 'session').length,
+      intermediate: mergedEntries.filter(entry => entry.level === 'intermediate').length,
+      long_term: mergedEntries.filter(entry => entry.level === 'long_term').length,
+    }),
+    [mergedEntries]
+  );
+
+  const resolvedStats = useMemo(() => {
+    if (!stats && mergedEntries.length === 0) {
+      return null;
+    }
+
+    const computedSizeByLevel = mergedEntries.reduce(
+      (acc, entry) => {
+        const approxSize = entry.content.length;
+        acc[entry.level] += approxSize;
+        return acc;
+      },
+      {
+        session: 0,
+        intermediate: 0,
+        long_term: 0,
+      }
+    );
+
+    return {
+      ...(stats ?? {}),
+      countByLevel: {
+        session: Math.max(stats?.countByLevel?.session ?? 0, derivedCounts.session),
+        intermediate: Math.max(
+          stats?.countByLevel?.intermediate ?? 0,
+          derivedCounts.intermediate
+        ),
+        long_term: Math.max(stats?.countByLevel?.long_term ?? 0, derivedCounts.long_term),
+      },
+      sizeByLevel: {
+        session: Math.max(stats?.sizeByLevel?.session ?? 0, computedSizeByLevel.session),
+        intermediate: Math.max(
+          stats?.sizeByLevel?.intermediate ?? 0,
+          computedSizeByLevel.intermediate
+        ),
+        long_term: Math.max(
+          stats?.sizeByLevel?.long_term ?? 0,
+          computedSizeByLevel.long_term
+        ),
+      },
+    } as MemoryStats;
+  }, [stats, mergedEntries, derivedCounts]);
+
   // Filtrage et tri
   const filteredEntries = useMemo(() => {
-    let result = [...entries];
+    let result = [...mergedEntries];
 
     // Filtre par niveau
     if (selectedLevel !== 'all') {
@@ -426,8 +491,8 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
     });
 
     return result;
-  }, [entries, selectedLevel, selectedTopic, searchQuery, sortBy]);
-  const hasPersistentEntries = entries.length > 0;
+  }, [mergedEntries, selectedLevel, selectedTopic, searchQuery, sortBy]);
+  const hasPersistentEntries = mergedEntries.length > 0;
   const hasActiveFilters =
     searchQuery.trim().length > 0 || selectedLevel !== 'all' || selectedTopic !== 'all';
   const isEmptyPersistentMemory = !isLoading && !hasPersistentEntries;
@@ -484,7 +549,7 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
       </div>
 
       {/* Stats */}
-      {!compact && <StatsPanel stats={stats} isLoading={isLoading} />}
+      {!compact && <StatsPanel stats={resolvedStats} isLoading={isLoading} />}
 
       {/* Filtres */}
       <FilterBar
@@ -562,11 +627,15 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
       {/* Compteurs rapides */}
       {!compact && (
         <div className="flex items-center justify-center gap-4 pt-2 border-t border-gray-800">
-          <span className="text-xs text-gray-500">Session: {sessionCount}</span>
           <span className="text-xs text-gray-500">
-            Intermédiaire: {intermediateCount}
+            Session: {Math.max(sessionCount, derivedCounts.session)}
           </span>
-          <span className="text-xs text-gray-500">Long terme: {longTermCount}</span>
+          <span className="text-xs text-gray-500">
+            Intermédiaire: {Math.max(intermediateCount, derivedCounts.intermediate)}
+          </span>
+          <span className="text-xs text-gray-500">
+            Long terme: {Math.max(longTermCount, derivedCounts.long_term)}
+          </span>
         </div>
       )}
     </div>
