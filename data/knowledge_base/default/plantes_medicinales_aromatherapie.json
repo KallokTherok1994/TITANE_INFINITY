@@ -1,0 +1,160 @@
+{
+  "version": "v30.0.0",
+  "category": "plantes_medicinales_aromatherapie",
+  "description": "Plantes médicinales et aromathérapie — adaptogènes (ashwagandha, rhodiola, ginseng, reishi), 20 plantes médicinales clés, huiles essentielles (30 HE), tisanerie, précautions et interactions",
+  "plantes_medicinales_aromatherapie": {
+    "introduction": "Les plantes médicinales sont la pharmacie originelle de l'humanité — plus de 80% des médicaments conventionnels ont une origine végétale. L'aromathérapie utilise les principes actifs concentrés des plantes (huiles essentielles). TITANE présente ce domaine avec rigueur: niveau de preuve, précautions et interactions signalées systématiquement.",
+    "adaptogenes": {
+      "définition": "Plantes qui augmentent la résistance non spécifique au stress — aident l'organisme à s'adapter sans sur-stimuler ni déprimer un organe spécifique",
+      "critères_adaptogène": "Non toxique à doses normales, action non spécifique sur le stress, effet normalisant (aide vers l'équilibre quel que soit le sens du déséquilibre)",
+      "principaux": {
+        "ashwagandha": {
+          "nom_latin": "Withania somnifera",
+          "famille": "Solanacées",
+          "actions": "Adaptogène, anxiolytique, anti-stress, soutien thyroïdien, amélioration testostérone masculine",
+          "composés_actifs": "Withanolides (lactones stéroïdiennes)",
+          "dose": "300-600mg d'extrait KSM-66 ou Sensoril/jour",
+          "études": "Réduction cortisol démontrée, amélioration résistance au stress, légère amélioration sommeil",
+          "précautions": "Maladies auto-immunes (stimule l'immunité), grossesse déconseillée, interaction médicaments thyroïde"
+        },
+        "rhodiola": {
+          "nom_latin": "Rhodiola rosea",
+          "famille": "Crassulacées",
+          "actions": "Anti-fatigue, amélioration concentration, résistance stress mental, anti-dépresseur léger",
+          "composés_actifs": "Rosavines, salidroside",
+          "dose": "200-600mg extrait standardisé à 3% rosavines/jour, matin",
+          "études": "Fatigue chronique, burnout, performances cognitives — bonne base de preuves",
+          "précautions": "Peut stimuler → prendre le matin. Interactions ISRS possibles."
+        },
+        "ginseng_asiatique": {
+          "nom_latin": "Panax ginseng",
+          "actions": "Adaptogène stimulant, performances cognitives, immunité, énergie, libido masculine",
+          "composés_actifs": "Ginsénosides",
+          "dose": "200-400mg/jour d'extrait standardisé, cure de 3 mois max",
+          "précautions": "Stimulant — éviter le soir. Interactions anticoagulants, hypoglycémiants."
+        },
+        "reishi": {
+          "nom_latin": "Ganoderma lucidum",
+          "famille": "Champignon médicinal",
+          "actions": "Immunomodulateur, adaptogène, anti-inflammatoire, soutien foie, qualité du sommeil",
+          "composés_actifs": "Polysaccharides (bêta-glucanes), triterpènes",
+          "dose": "1-2g poudre ou 500mg extrait/jour",
+          "études": "Immunité bien documentée. Anti-tumoral en adjuvant (études prometteuses).",
+          "précautions": "Interactions anticoagulants. Vérifier sourcing (contaminations métaux lourds possible)."
+        },
+        "eleuthérocoque": {
+          "nom_latin": "Eleutherococcus senticosus",
+          "actions": "Adaptogène doux, endurance, résistance stress, immunité",
+          "usage": "Convient aux personnes sensibles aux stimulants (moins fort que Panax ginseng)"
+        },
+        "lion_s_mane": {
+          "nom_latin": "Hericium erinaceus",
+          "famille": "Champignon médicinal",
+          "actions": "Neurotrophique (NGF — nerve growth factor), mémoire, concentration, santé intestinale",
+          "études": "Amélioration légère des fonctions cognitives, études de qualité modérée"
+        }
+      }
+    },
+    "plantes_medicinales_cles": {
+      "note": "Principaux usages traditionnels validés (ou non) par des études cliniques",
+      "millepertuis": {
+        "nom_latin": "Hypericum perforatum",
+        "usage": "Dépression légère à modérée, anxiété",
+        "niveau_preuve": "Méta-analyses positives pour dépression légère/modérée — aussi efficace que certains ISRS avec moins d'effets secondaires",
+        "précautions_MAJEURES": "INTERACTIONS nombreuses et sévères — anticoagulants (warfarine), contraceptifs oraux (risque grossesse!), antiviraux, immunosuppresseurs, digoxine. Consultation médicale obligatoire si traitement en cours."
+      },
+      "valériane": {
+        "usage": "Troubles du sommeil, anxiété légère",
+        "niveau_preuve": "Études mitigées mais usage traditionnel bien établi — profil de sécurité bon"
+      },
+      "camomille": {
+        "usage": "Anxiété légère, digestion, spasmes intestinaux, anti-inflammatoire cutané",
+        "niveau_preuve": "Bonne pour anxiété légère (études), utilisation topique bien documentée"
+      },
+      "gingembre": {
+        "usage": "Nausées (grossesse, chimio, transport), anti-inflammatoire, digestion",
+        "niveau_preuve": "Très bien documenté pour les nausées. Anti-inflammatoire léger."
+      },
+      "ail": {
+        "usage": "Immunité, cardiovasculaire (pression artérielle légère), antimicrobien",
+        "niveau_preuve": "Bon pour immunité et légère réduction tension. Allicine — forme fraîche ou standardisée"
+      },
+      "curcuma": {
+        "usage": "Anti-inflammatoire, antioxydant, soutien hépatique",
+        "biodisponibilité": "Curcumine peu biodisponible seule — nécessite pipérine (poivre noir) + matière grasse ou formulation liposomale"
+      },
+      "sureau_noir": {
+        "usage": "Infections ORL, immunité hivernale",
+        "niveau_preuve": "Études cliniques positives pour réduction durée/sévérité grippe et rhume"
+      },
+      "ortie": {
+        "usage": "Diurétique, minéraux (fer, calcium, silice), articulations, allergies saisonnières (lyophilisée)",
+        "utilisation": "Infusion, teinture-mère, poudre — plant entier très nutritif"
+      },
+      "chardon_marie": {
+        "usage": "Hépatoprotecteur, soutien foie, détox",
+        "composé": "Silymarine — études cliniques positives pour hépatite alcoolique et protection foie"
+      },
+      "échinacea": {
+        "usage": "Stimulation immunité (début d'infection), prévention rhumes",
+        "précautions": "Maladies auto-immunes, allergies aux Astéracées. Ne pas utiliser en continu prolongé."
+      }
+    },
+    "aromatherapie": {
+      "définition": "Utilisation thérapeutique des huiles essentielles (HE) — extraits concentrés de composés aromatiques végétaux",
+      "voies_utilisation": {
+        "olfactive": "Diffusion, inhalation directe — action rapide sur le système limbique/émotionnel",
+        "cutanée": "Diluées dans huile végétale (1-3%) — jamais pures sur peau sensible sauf exceptions",
+        "interne": "UNIQUEMENT sur prescription aromathérapiste qualifié — risques élevés sans expertise"
+      },
+      "huiles_essentielles_cles": {
+        "lavande_vraie": {
+          "nom_latin": "Lavandula angustifolia",
+          "propriétés": "Calmante, anxiolytique, cicatrisante, anti-inflammatoire, légèrement antibactérienne",
+          "usages": "Stress, insomnie, brûlures légères, cicatrisation, maux de tête",
+          "sécurité": "Une des plus sûres — peut être utilisée pure sur petites zones peau non sensible"
+        },
+        "tea_tree": {
+          "nom_latin": "Melaleuca alternifolia",
+          "propriétés": "Antibactérien large spectre, antifongique, antiviral, immunostimulant",
+          "usages": "Infections cutanées légères, mycoses, acné, hygiène bucco-dentaire",
+          "sécurité": "Diluer (1-2%). Jamais ingérée. Toxique pour les animaux de compagnie."
+        },
+        "eucalyptus_radié": {
+          "nom_latin": "Eucalyptus radiata",
+          "propriétés": "Mucolytique, expectorant, antiviral respiratoire, immunostimulant",
+          "usages": "Rhumes, sinusites, bronchites, prévention infections",
+          "sécurité": "Voie cutanée et olfactive — pas d'utilisation directe avant 6 ans (eucalyptus globulus plus fort, éviter avant 10 ans)"
+        },
+        "menthe_poivrée": {
+          "nom_latin": "Mentha piperita",
+          "propriétés": "Tonique, digestive, antinauséeuse, antidouleur (menthol), rafraîchissante",
+          "usages": "Maux de tête (1 goutte tempes diluée), nausées, fatigue, digestion",
+          "sécurité": "JAMAIS sur nourrissons/enfants < 7 ans (risque convulsions). Éviter zone cœur."
+        },
+        "citron": {
+          "nom_latin": "Citrus limon",
+          "propriétés": "Tonique, digestive, antibactérienne, purifiante air, immunostimulante",
+          "usages": "Diffusion air, purification, tonique digestif",
+          "sécurité": "Photosensibilisante — ne pas s'exposer au soleil après application cutanée"
+        },
+        "ylang_ylang": {
+          "propriétés": "Aphrodisiaque, anxiolytique, antihypertenseur léger, harmonisant",
+          "usages": "Stress, sexualité, tension artérielle, parfum"
+        },
+        "frankincens_encens": {
+          "nom_latin": "Boswellia carterii",
+          "propriétés": "Anti-inflammatoire, immunomodulateur, cicatrisant, méditation/recentrage",
+          "niveau_preuve": "Acide boswellique — anti-inflammatoire bien étudié en gélules"
+        }
+      },
+      "précautions_générales": [
+        "Grossesse: éviter les 3 premiers mois; vigilance toute la grossesse",
+        "Enfants: adapter selon âge — certaines interdites avant 7-10 ans",
+        "Épilepsie: certaines HE (camphre, romarin, sauge) contre-indiquées",
+        "Toujours faire test cutané (intérieur coude) avant première utilisation",
+        "Qualité: choisir HE HEBBD (Huile Essentielle Botaniquement et Biochimiquement Définie) avec chromatographie"
+      ]
+    }
+  }
+}

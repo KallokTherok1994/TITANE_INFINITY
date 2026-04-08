@@ -1,0 +1,121 @@
+{
+  "version": "v30.0.0",
+  "category": "psychologie_performance",
+  "description": "Psychologie de la performance — flow (canal optimal), mindset Dweck (fixe vs croissance), auto-efficacité Bandura (4 sources), zone proximale développement Vygotsky, peak performance",
+  "psychologie_performance": {
+    "introduction": "La psychologie de la performance explore les conditions mentales et comportementales qui permettent d'atteindre l'excellence durable — pas le sprint, l'optimum soutenable. C'est le domaine au cœur de l'accompagnement TITANE pour Kevin.",
+    "mindset_dweck": {
+      "auteur": "Carol Dweck (2006) — 'Mindset: The New Psychology of Success'",
+      "mindset_fixe": {
+        "croyance": "L'intelligence et les talents sont innés et fixes",
+        "comportements": [
+          "Éviter les défis (risque d'exposer ses limites)",
+          "Abandonner face aux obstacles",
+          "Voir l'effort comme signe de manque de talent",
+          "Ignorer les critiques utiles",
+          "Se sentir menacé par le succès des autres"
+        ],
+        "phrases_typiques": "'Je suis nul en maths', 'Je ne suis pas créatif', 'C'est dans mes gènes'"
+      },
+      "mindset_croissance": {
+        "croyance": "Les capacités se développent par l'effort, les stratégies et l'aide des autres",
+        "comportements": [
+          "Embrasser les défis (opportunités d'apprendre)",
+          "Persister face aux obstacles",
+          "Voir l'effort comme le chemin vers la maîtrise",
+          "Intégrer les critiques comme information utile",
+          "S'inspirer du succès des autres"
+        ],
+        "phrases_typiques": "'Je n'y arrive pas encore', 'Je vais apprendre comment', 'Qu'est-ce que j'apprends de cet échec?'"
+      },
+      "mot_magique": "Le mot 'encore' — 'Je n'y arrive pas encore' transforme un état fixe en processus évolutif",
+      "transition": {
+        "comment_développer": [
+          "Reformuler les épreuves comme informations (pas verdicts)",
+          "Valoriser le processus et l'effort, pas seulement le résultat",
+          "Étudier comment les experts ont appris — pas seulement leurs succès",
+          "Rechercher activement le feedback difficile"
+        ]
+      },
+      "apport_TITANE": "Adopter le mindset de croissance dans toutes les réponses. Jamais dire 'tu ne peux pas' — dire 'voici comment tu pourrais'. Valoriser l'effort et le processus de Kevin."
+    },
+    "auto_efficacite_bandura": {
+      "auteur": "Albert Bandura (1977) — Social Cognitive Theory",
+      "définition": "Croyance en sa propre capacité à accomplir une tâche spécifique dans un domaine précis — ≠ confiance globale en soi",
+      "impact": "L'auto-efficacité détermine: si on essaie, combien d'effort on met, combien de temps on persiste face aux obstacles",
+      "quatre_sources": {
+        "expériences_de_maîtrise": {
+          "description": "Les succès passés dans des tâches similaires — la source la plus puissante",
+          "développer": "Créer des succès progressifs (décomposer pour réussir des étapes plus petites)",
+          "apport_TITANE": "Rappeler à Kevin ses succès passés pertinents avant une tâche difficile"
+        },
+        "expériences_vicariantes": {
+          "description": "Observer des pairs similaires réussir — 'Si lui peut le faire, je peux aussi'",
+          "développer": "Montrer des modèles crédibles (pas trop éloignés — le génie inaccessible ne rassure pas)",
+          "apport_TITANE": "Citer des exemples de personnes avec un profil similaire qui ont réussi"
+        },
+        "persuasion_sociale": {
+          "description": "Être encouragé par des personnes en qui on a confiance",
+          "efficacité": "Moins puissante que l'expérience directe mais amplifie les deux premières",
+          "apport_TITANE": "Encouragements ciblés et crédibles — 'J'ai vu ta progression sur X, ce projet s'y aligne'"
+        },
+        "états_physiologiques_émotionnels": {
+          "description": "Interpréter ses états corporels (stress, excitation) comme signal de capacité ou d'incapacité",
+          "recadrage": "Le stress avant un défi peut être interprété comme de l'énergie disponible (pas de la peur)",
+          "apport_TITANE": "Aider Kevin à interpréter ses signaux physiologiques de façon constructive"
+        }
+      }
+    },
+    "zone_proximale_developpement": {
+      "auteur": "Lev Vygotsky (1978)",
+      "définition": "L'espace entre ce qu'on peut faire seul et ce qu'on peut faire avec aide",
+      "trois_zones": {
+        "maîtrisée": "Ce qu'on fait facilement seul — pas de croissance ici, mais confiance",
+        "proximale_ZPD": "Ce qu'on peut faire avec soutien — zone d'apprentissage optimal",
+        "hors_portée": "Ce qui est actuellement inatteignable — génère frustration et découragement"
+      },
+      "échafaudage": "Soutien temporaire ajusté précisément à la ZPD — ni trop ni trop peu",
+      "apport_TITANE": "Calibrer les défis proposés à Kevin à l'intérieur de sa ZPD. Ni trop facile (ennui), ni trop difficile (découragement). Ajuster progressivement."
+    },
+    "etats_optimaux_performance": {
+      "condition_prerequises": [
+        "Sommeil suffisant (7-9h pour adultes — la cognition chute dramatiquement sans)",
+        "Exercice régulier (neurogénèse, BDNF, régulation émotionnelle)",
+        "Alimentation stable (pas de pics/chutes glycémiques pendant le travail profond)",
+        "Environnement low-interruption (chaque interruption = 23 minutes pour retrouver le focus)"
+      ],
+      "deep_work": {
+        "auteur": "Cal Newport (2016)",
+        "définition": "Travail cognitif intense et sans distraction qui pousse les capacités au maximum",
+        "distinguer_shallow_work": "Tâches non cognitives, interruptibles, faible valeur additive",
+        "principes": [
+          "Sessions de travail profond bloquées dans l'agenda",
+          "Rituals de démarrage et de clôture",
+          "Pas de réseaux sociaux pendant les sessions",
+          "Mesurer les heures de deep work"
+        ]
+      },
+      "récupération_active": {
+        "principe": "La performance durable nécessite des cycles effort/récupération (comme le sport)",
+        "ultradian_rhythms": "Cycles naturels de ~90 minutes d'attention haute puis baisse — travailler avec le cycle",
+        "récupération": "Pauses courtes (5-10 min), changement d'activité, sommeil réparateur"
+      },
+      "performance_sous_pression": {
+        "loi_yerkes_dodson": "Performance optimale à un niveau d'activation moyen — trop peu (ennui) ou trop (panique) la dégrade",
+        "techniques": [
+          "Respiration cohérente cardiaque (4-4-4-4 ou 5-5)",
+          "Restructuration cognitive du stress en énergie",
+          "Pre-performance routines (rituals ancrant l'état optimal)",
+          "Focus sur le processus, pas le résultat pendant la performance"
+        ]
+      }
+    },
+    "apprentissage_accelere": {
+      "feynman_technique": "Expliquer un concept comme à un enfant de 12 ans → identifier les lacunes → compléter",
+      "interleaving": "Alterner plusieurs sujets/compétences plutôt que bloquer (apprentissage moins confortable mais plus durable)",
+      "retrieval_practice": "Se tester plutôt que relire — rappel actif crée des connexions plus robustes",
+      "spacing_effect": "Espacer les sessions d'apprentissage dans le temps (courbe d'oubli d'Ebbinghaus)",
+      "apport_TITANE": "Proposer des récapitulatifs sous forme de questions (retrieval practice). Espacer les rappels des concepts importants. Utiliser des analogies pour l'enseignement (Feynman)."
+    }
+  }
+}

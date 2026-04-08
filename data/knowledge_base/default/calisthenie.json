@@ -1,0 +1,142 @@
+{
+  "version": "v30.0.0",
+  "category": "calisthenie",
+  "description": "Callisthénie — fondamentaux, progressions (push-up→planche, pull-up→muscle-up, pistol squat), skills avancés (handstand, front lever, back lever, human flag), programmation, mobilité, nutrition pour la force",
+  "calisthenie": {
+    "introduction": "La callisthénie est l'art de maîtriser le poids de son corps — une approche qui développe simultanément la force, la coordination, la mobilité et la conscience corporelle. Contrairement à la musculation classique, elle nécessite zéro équipement mais beaucoup de patience et de progression méthodique.",
+    "principes_fondamentaux": {
+      "principe_1_progressivité": "La callisthénie repose sur des progressions: chaque skill a une chaîne de variantes du plus facile au plus difficile. Ne pas brûler les étapes.",
+      "principe_2_tension": "Apprendre à générer une tension corporelle globale (full body tension) — clé de tous les skills statiques",
+      "principe_3_fréquence": "Le corps répond bien à une haute fréquence (3-5x/semaine par muscle) en callisthénie, car les charges absolues sont plus faibles",
+      "principe_4_technique": "La technique prime sur la répétition. 5 pull-ups parfaits > 15 pull-ups bâclés.",
+      "gainage_fondation": "Tout commence par le gainage (hollow body, planche). Ces positions sont la fondation de TOUS les skills avancés."
+    },
+    "positions_fondatrices": {
+      "hollow_body": {
+        "description": "Corps creusé: lombaires plaquées au sol, jambes levées à 30-45°, bras tendus vers l'arrière. Activation maximale de la chaîne antérieure.",
+        "importance": "Position de base des gymnastes. Fondation du muscle-up, des prises de barres, du front lever.",
+        "progression": "1. Genoux fléchis à 90° → 2. Jambes tendues hautes → 3. Jambes basses → 4. Bras tendus (plus difficile)"
+      },
+      "arch_body": {
+        "description": "Corps arqué: position opposée au hollow. Extension de toute la chaîne postérieure.",
+        "importance": "Fondation du back lever, du bridge"
+      }
+    },
+    "progressions_principales": {
+      "push_vers_handstand_push_up": {
+        "niveau_1": "Knee push-up (genoux au sol)",
+        "niveau_2": "Push-up standard (alignement parfait, full range)",
+        "niveau_3": "Decline push-up (pieds surélevés → transition vers HSPU)",
+        "niveau_4": "Pike push-up (hanches hautes, forme inversée)",
+        "niveau_5": "Wall handstand hold (maintien contre mur)",
+        "niveau_6": "Wall HSPU (handstand push-up contre mur)",
+        "niveau_7": "Freestanding HSPU (libre)"
+      },
+      "pull_up_vers_muscle_up": {
+        "prérequis": "Maîtriser 15+ pull-ups stricts, dips lestés",
+        "niveau_1": "Dead hang (tenir suspendu 30-60s — épaules actives)",
+        "niveau_2": "Scapular pull (rétracter les omoplates depuis le hang — avant-bras passifs)",
+        "niveau_3": "Negative pull-up (descente lente 5-8s)",
+        "niveau_4": "Pull-up strict (full ROM, pas de kipping)",
+        "niveau_5": "Chest-to-bar pull-up (poitrine qui touche la barre)",
+        "niveau_6": "Muscle-up (transition: pull-up → dip en haut de la barre)",
+        "erreurs": "Ne pas tenter le muscle-up sans chest-to-bar solide. Le kipping muscle-up est un skill différent."
+      },
+      "squat_vers_pistol": {
+        "prérequis": "Mobilité cheville, flexibilité ischio-jambiers, équilibre",
+        "niveau_1": "Box squat (s'asseoir sur une surface haute)",
+        "niveau_2": "Goblet squat (avec poids à l'avant pour contrepoids)",
+        "niveau_3": "Assisted pistol (tenu à un support)",
+        "niveau_4": "Elevated pistol (talon surélevé si mobilité cheville limitée)",
+        "niveau_5": "Pistol squat complet (libre, 1 jambe, full ROM)"
+      },
+      "dips": {
+        "niveau_1": "Bench dip (mains derrière sur un banc)",
+        "niveau_2": "Parallel bar dip",
+        "niveau_3": "Ring dip (anneaux instables — plus difficile)",
+        "note": "Dips = exercice de poussée vertical qui complète les pull-ups"
+      }
+    },
+    "skills_statiques_avances": {
+      "handstand": {
+        "description": "Équilibre sur les mains libre",
+        "prérequis": "Épaules mobiles (180°+), force de poussée, proprioception",
+        "progression": {
+          "étape_1": "Box shoulder stretch, wrist warm-up (quotidien)",
+          "étape_2": "Wall handstand: apprendre l'alignement (poignets sous épaules, corps tendu)",
+          "étape_3": "Chest-to-wall handstand (plus aligné que back-to-wall)",
+          "étape_4": "Kick up + wall catch",
+          "étape_5": "Freestanding holds (commencer par 2-3s, construire)"
+        },
+        "balance": "La balance se fait par les doigts (pression différentielle), pas par les épaules"
+      },
+      "front_lever": {
+        "description": "Corps horizontal suspendu à une barre, face vers le haut",
+        "muscles": "Grand dorsal, biceps, abdominaux, épaules (avant)",
+        "progression": {
+          "étape_1": "Tucked front lever (genoux ramenés sur la poitrine)",
+          "étape_2": "Advanced tucked (jambes à 90°)",
+          "étape_3": "One leg extended",
+          "étape_4": "Straddle front lever (jambes écartées)",
+          "étape_5": "Full front lever"
+        }
+      },
+      "planche": {
+        "description": "Corps horizontal suspendu par les mains, face vers le sol",
+        "difficulté": "L'un des skills les plus difficiles — nécessite 2-5 ans d'entraînement sérieux",
+        "muscles": "Avant-bras, biceps, deltoïde antérieur, pectoraux, coracobrachiaux",
+        "progression": {
+          "étape_1": "Frog stand (équilibre sur les coudes)",
+          "étape_2": "Tuck planche (genoux sur les triceps)",
+          "étape_3": "Advanced tuck planche",
+          "étape_4": "Straddle planche",
+          "étape_5": "Full planche (corps horizontal parfait)"
+        }
+      },
+      "back_lever": {
+        "description": "Corps horizontal suspendu dos en bas",
+        "difficulté": "Moins difficile que front lever — bon skill d'entrée vers les levers",
+        "progression": "Skin the cat → Tuck back lever → Straddle → Full"
+      },
+      "human_flag": {
+        "description": "Corps horizontal tenu latéralement sur un poteau vertical",
+        "muscles": "Deltoïdes, grand dorsal, obliques, fessiers",
+        "progression": "Poteau incliné → Horizontal sur 1-2s → Full hold"
+      }
+    },
+    "programmation": {
+      "débutant": {
+        "fréquence": "3x/semaine. Jour 1: Push (poussée). Jour 2: Pull (traction). Jour 3: Legs + Core.",
+        "volume": "3-4 exercices × 3-4 sets × 6-10 reps. Priorité: maîtrise technique.",
+        "durée_séance": "45-60 min"
+      },
+      "intermédiaire": {
+        "fréquence": "4x/semaine ou 3x full-body (plus efficace en callisthénie que split strict)",
+        "focus": "Introduire 1-2 progressions de skill (15-20 min/séance). Ex: 3× pull-up work + 3× handstand work.",
+        "volume": "Augmenter progressivement. Ajouter lestage si reps > 12."
+      },
+      "skills_vs_strength": "Les skills statiques (handstand, planche) s'entraînent différemment: courtes holds (3-10s) répétées, fraîcheur neurale nécessaire — toujours en début de séance.",
+      "repos": "Au moins 48h entre sessions sollicitant les mêmes groupes. Tendons = plus lents à s'adapter que les muscles — respecter ce délai."
+    },
+    "mobilite_prehab": {
+      "importance": "La mobilité est aussi importante que la force en callisthénie — sans mobilité épaule/cheville/hanche, les progressions stagnent",
+      "routines_clés": {
+        "épaules": "Dislocates (barre de bambou), shoulder CARs, wall slides, sleeper stretch",
+        "poignets": "Wrist circles, wrist push-ups, finger extensions — CRUCIAL avant toute session de poussée",
+        "cheville": "Ankle circles, ankle rocks, calf stretching — pour pistol squat"
+      },
+      "blessures_fréquentes": {
+        "golfers_elbow": "Inflammation médiale du coude — souvent sur-sollicitation en pull. Repos + exercices excentriques (reverse wrist curl)",
+        "tendinite_épaule": "Progresser trop vite. Maintenir le ratio push/pull équilibré.",
+        "poignets": "Ne pas négliger l'échauffement. Progresser la mise en charge."
+      }
+    },
+    "nutrition_calisthenie": {
+      "objectif": "En callisthénie, le poids corporel est la charge — être léger et fort est l'objectif, pas forcément avoir de la masse",
+      "proteines": "1.8-2.2g/kg — synthèse protéique et récupération tendineuse",
+      "creatine": "3-5g/jour — améliore la performance en force maximale et explosive",
+      "collagene": "10-15g de gélatine/collagène + vitamine C avant l'entraînement — support tendineux et ligamentaire (Shaw et al., 2017)",
+      "poids_de_forme": "Pour les skills avancés, viser un poids de forme (% gras bas) améliore le ratio force/poids — principal levier pour progresser"
+    }
+  }
+}

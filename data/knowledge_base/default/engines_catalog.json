@@ -1,0 +1,204 @@
+{
+  "version": "v30.0.0",
+  "category": "engines_catalog",
+  "description": "Catalogue exhaustif de tous les moteurs cognitifs TITANE∞",
+  "engines": [
+    {
+      "id": "singularity",
+      "name": "SingularityEngine",
+      "path": "src-tauri/src/singularity/",
+      "role": "État global unifié du système, conscience centrale. Coordonne tous les autres moteurs. Point unique de vérité pour l'état système.",
+      "capabilities": ["state_management", "coherence_control", "brain_state", "emotion_control", "style_control", "evolution", "reasoning", "fusion", "integrity_check", "snapshot"],
+      "ipc_commands": ["singularity_get_full_state", "singularity_get_physical", "singularity_get_cognitive", "singularity_get_global_coherence", "singularity_is_critical", "get_singularity_state", "sync_singularity", "singularity_get", "singularity_set", "singularity_diff", "singularity_hash", "singularity_sync", "singularity_meta", "singularity_integrity", "singularity_repair", "singularity_export_json", "singularity_snapshot", "singularity_selftest_full"],
+      "status": "active",
+      "version": "v30.0.0"
+    },
+    {
+      "id": "cognitive",
+      "name": "CognitiveEngine",
+      "path": "src-tauri/src/cognitive/",
+      "role": "Couche cognitive — apprentissage, analyse, contexte, cohérence. Gère le graphe de contexte et l'évolution cognitive.",
+      "capabilities": ["context_graph", "cognitive_analysis", "consistency_check", "mental_model", "self_test", "evolution", "integration", "security"],
+      "ipc_commands": ["engine_get_cognition_state", "cognitive_analyze", "cognitive_context_get", "cognitive_evolution_tick"],
+      "status": "active",
+      "version": "v30.0.0"
+    },
+    {
+      "id": "omega",
+      "name": "OMEGA Pipeline",
+      "path": "src-tauri/src/omega/",
+      "role": "Pipeline de traitement intelligent multi-étapes. 10 étapes: Validation → Routing → Context → Execution → Memory → Quality → Merge → Filter → Format → Output. Actif par défaut pour tous les messages.",
+      "capabilities": ["multi_stage_pipeline", "adaptive_routing", "context_enrichment", "quality_check", "response_merge", "self_healing", "multimodal", "guardrails", "diagnostics"],
+      "ipc_commands": ["omega_pipeline_process", "omega_get_state", "omega_diagnostics"],
+      "status": "active",
+      "version": "v30.0.0"
+    },
+    {
+      "id": "unified_memory_v2",
+      "name": "UnifiedMemory v2",
+      "path": "src-tauri/src/unified_memory_v2/",
+      "role": "Système de mémoire unifié avec 3 niveaux: STM (court terme, <1h), MTM (moyen terme, <7j), LTM (long terme neural, permanent). Chiffrement AES-256-GCM. Filtre Bloom pour recherche rapide.",
+      "capabilities": ["short_term_memory", "medium_term_memory", "long_term_memory", "encryption", "persistence", "bloom_filter", "consolidation", "vector_search"],
+      "ipc_commands": ["memory_save_entry", "memory_load_entries", "memory_clear", "memory_get_state", "memory_get", "memory_set", "memory_get_entry", "memory_delete_entry", "memory_get_all_keys", "memory_scan", "memory_list_all", "memory_export_conversation"],
+      "status": "active",
+      "version": "v30.0.0"
+    },
+    {
+      "id": "ai_router",
+      "name": "AIRouter Multi-Provider",
+      "path": "src-tauri/src/ai/",
+      "role": "Orchestrateur multi-providers IA. Gère OpenAI, Claude/Anthropic, Gemini, Ollama (local) et moteur propriétaire. Routage intelligent, fallback automatique, cache LRU, évaluation qualité.",
+      "capabilities": ["multi_provider_routing", "fallback_chain", "response_fusion", "quality_evaluation", "cache_lru", "streaming", "local_llm"],
+      "providers": ["openai", "claude", "gemini", "ollama", "local", "titane_engine"],
+      "ipc_commands": ["ai_query", "ai_query_streaming", "ai_generate_local", "ai_scan_local_models", "ai_set_local_model", "test_ollama", "ping_ollama", "ollama_query", "ollama_generate", "chat_set_gemini_key", "chat_check_providers", "chat_get_providers_status", "ai_status"],
+      "status": "active",
+      "version": "v30.0.0"
+    },
+    {
+      "id": "conversation_engine",
+      "name": "ConversationEngine",
+      "path": "src-tauri/src/conversation_engine/",
+      "role": "Moteur de conversation haute performance. Génération streaming, intégration mémoire, self-healing, fallback multi-providers. Cœur de l'expérience chat TITANE.",
+      "capabilities": ["streaming_generation", "memory_integration", "self_healing", "multi_provider_fallback", "context_management", "conversation_history"],
+      "ipc_commands": ["conversation_generate", "conversation_reset", "chat_stream_message", "chat_create_conversation", "chat_get_conversation", "chat_delete_conversation", "validate_chat_message"],
+      "status": "active",
+      "version": "v30.0.0"
+    },
+    {
+      "id": "evolution",
+      "name": "EvolutionEngine",
+      "path": "src-tauri/src/evolution/",
+      "role": "Auto-évolution du système. Boucle évolutive qui améliore les performances, adapte les comportements, et fait évoluer les capacités cognitives au fil du temps.",
+      "capabilities": ["auto_evolution", "behavioral_adaptation", "performance_optimization", "capability_growth"],
+      "ipc_commands": ["evolution_get_state", "evolution_start", "evolution_stop", "run_evolution", "get_evolution_state", "quick_health_check"],
+      "status": "active",
+      "version": "v30.0.0"
+    },
+    {
+      "id": "kernel_os",
+      "name": "KernelOS",
+      "path": "src-tauri/src/kernel/",
+      "role": "Noyau OS cognitif v30.0.0. Boucle principale, runtime, ordonnanceur, gestion ressources, priorités, événements, signaux, watchdog, gouvernance.",
+      "capabilities": ["core_loop", "runtime", "scheduling", "resource_management", "priority_management", "event_system", "signals", "watchdog", "governance"],
+      "ipc_commands": ["kernel_get_state", "kernel_tick", "kernel_diagnostics"],
+      "status": "active",
+      "version": "v30.0.0"
+    },
+    {
+      "id": "meta_orchestrator",
+      "name": "MetaOrchestrator",
+      "path": "src-tauri/src/meta_orchestrator/",
+      "role": "Orchestrateur méta-cognitif (OPUS #18). Conscience globale, gouverneur de ressources, ordonnanceur de priorités.",
+      "capabilities": ["meta_awareness", "resource_governance", "priority_scheduling", "cross_engine_coordination"],
+      "ipc_commands": ["meta_orchestrator_get_state", "meta_orchestrator_tick"],
+      "status": "active",
+      "version": "v30.0.0"
+    },
+    {
+      "id": "hyper_intelligence",
+      "name": "HyperIntelligence",
+      "path": "src-tauri/src/hyper_intelligence/",
+      "role": "Hyper-intelligence cognitive (OPUS #20). Raisonnement avancé, créativité, cognition étendue.",
+      "capabilities": ["advanced_reasoning", "creativity", "extended_cognition", "meta_learning"],
+      "ipc_commands": ["hyper_intelligence_get_state", "hyper_intelligence_reason"],
+      "status": "active",
+      "version": "v30.0.0"
+    },
+    {
+      "id": "self_heal",
+      "name": "SelfHealEngine",
+      "path": "src-tauri/src/healing/",
+      "role": "Auto-réparation: détection anomalies, prédiction pannes, exécution réparations correctives, collecte métriques. Garde le système stable et performant.",
+      "capabilities": ["anomaly_detection", "fault_prediction", "auto_repair", "metrics_collection", "health_monitoring"],
+      "ipc_commands": ["selfheal_get_data", "selfheal_get_health", "selfheal_get_state", "selfheal_get_prediction", "selfheal_force_evaluation"],
+      "status": "active",
+      "version": "v30.0.0"
+    },
+    {
+      "id": "identity",
+      "name": "IdentityEngine",
+      "path": "src-tauri/src/identity/",
+      "role": "Système d'identité complet: matrice identité, profil vocal, moteur tonalité, système modes, personnalité, règles comportementales.",
+      "capabilities": ["identity_matrix", "voice_profile", "tone_engine", "mode_system", "personality", "behavioral_rules"],
+      "ipc_commands": ["identity_get_state", "identity_set_mode", "identity_get_profile"],
+      "status": "active",
+      "version": "v30.0.0"
+    },
+    {
+      "id": "agi_core",
+      "name": "AGICoreEngine",
+      "path": "src-tauri/src/agi_core/",
+      "role": "AGI Core — raisonnement général, abstraction, méta-apprentissage, modèle de soi, stratégie, transfert d'apprentissage, évolution, introspection, perception multimodale.",
+      "capabilities": ["general_reasoning", "abstraction", "meta_learning", "self_model", "strategy", "transfer_learning", "evolution", "introspection", "multimodal_perception"],
+      "status": "active",
+      "version": "v30.0.0"
+    },
+    {
+      "id": "audio",
+      "name": "AudioEngine",
+      "path": "src-tauri/src/audio/",
+      "role": "Capture et lecture audio, transcription vocale (Whisper). Support entrée microphone et sortie haut-parleur.",
+      "capabilities": ["audio_capture", "audio_playback", "voice_transcription", "fft_analysis", "wav_recording"],
+      "ipc_commands": ["speak", "stop_speaking", "is_speaking", "pause_speaking", "resume_speaking", "start_recording", "stop_recording", "cancel_recording", "is_recording", "transcribe_audio", "get_recording_status"],
+      "status": "active",
+      "version": "v30.0.0"
+    },
+    {
+      "id": "security",
+      "name": "SecurityEngine",
+      "path": "src-tauri/src/security/",
+      "role": "Sécurité globale: chiffrement AES-256-GCM, authentification, gestion clés API, protection données sensibles.",
+      "capabilities": ["encryption", "authentication", "api_key_management", "data_protection", "secure_storage"],
+      "status": "active",
+      "version": "v30.0.0"
+    },
+    {
+      "id": "knowledge",
+      "name": "KnowledgeEngine",
+      "path": "src-tauri/src/knowledge/",
+      "role": "Fusion de connaissances: parsing universel (PDF, DOCX, Markdown, JSON, CSV, XML, Audio, Video), indexation Tantivy BM25, recherche sémantique.",
+      "capabilities": ["universal_parsing", "document_indexing", "semantic_search", "knowledge_fusion", "format_detection"],
+      "ipc_commands": ["parse_document", "detect_file_format", "knowledge_ingest", "knowledge_save_state"],
+      "status": "active",
+      "version": "v30.0.0"
+    },
+    {
+      "id": "numeric_twin",
+      "name": "NumericTwin",
+      "path": "src-tauri/src/numeric_twin/",
+      "role": "Jumeau numérique — Avatar TITANE∞. 6 sous-moteurs de symbiose Kevin ↔ TITANE.",
+      "capabilities": ["digital_twin", "avatar_simulation", "symbiosis_modeling", "kevin_titane_sync"],
+      "status": "active",
+      "version": "v30.0.0"
+    },
+    {
+      "id": "agenda",
+      "name": "AgendaEngine",
+      "path": "src-tauri/src/agenda/",
+      "role": "Système temps/agenda/énergie. Gestion événements, persistence, synchronisation.",
+      "capabilities": ["event_management", "temporal_scheduling", "energy_tracking"],
+      "ipc_commands": ["agenda_load_events", "agenda_save_events", "agenda_delete_event", "agenda_create_event", "agenda_get_events", "agenda_update_event"],
+      "status": "active",
+      "version": "v30.0.0"
+    },
+    {
+      "id": "watchdog",
+      "name": "WatchdogEngine",
+      "path": "src-tauri/src/watchdog/",
+      "role": "Surveillance système et logging. Capture tous les événements système pour diagnostic.",
+      "capabilities": ["system_surveillance", "log_capture", "event_monitoring"],
+      "ipc_commands": ["watchdog_get_logs", "watchdog_get_data"],
+      "status": "active",
+      "version": "v30.0.0"
+    },
+    {
+      "id": "agent_system",
+      "name": "AgentSystem",
+      "path": "src-tauri/src/agent_system/",
+      "role": "Système multi-agents: collaboration, supervision, rôles spécialisés, sandbox isolation, cycle de vie.",
+      "capabilities": ["multi_agent", "agent_registry", "supervision", "role_assignment", "collaboration", "communication", "sandbox"],
+      "status": "active",
+      "version": "v30.0.0"
+    }
+  ]
+}

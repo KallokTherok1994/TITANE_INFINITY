@@ -1,0 +1,59 @@
+{
+  "version": "v30.0.0",
+  "category": "metier_qualite",
+  "description": "Métier qualité — rôle et missions du responsable/maître qualité, pilotage du SMQ, gestion documentaire, revue de direction, audits fournisseurs, certification/renouvellement, référentiels sectoriels (ISO 13485/ISO 22000/EN 9100/IATF 16949)",
+  "metier_qualite": {
+    "introduction": "Le responsable qualité (ou maître qualité selon les organisations) est le garant du Système de Management de la Qualité. Son rôle évolue: de simple policier de la conformité, il devient un stratège de l'amélioration continue, un facilitateur transversal et un interlocuteur pivot entre la direction, les opérationnels et les organismes de certification.",
+    "role_et_missions": {
+      "stratégique": ["Déployer la politique qualité définie par la direction", "Assurer la veille normative et réglementaire", "Piloter les indicateurs qualité et rendre compte à la direction", "Identifier les risques et opportunités qualité", "Préparer et animer la revue de direction"],
+      "opérationnel": ["Gérer le système documentaire (procédures, enregistrements, formulaires)", "Planifier et réaliser les audits internes", "Traiter les non-conformités et piloter les CAPA", "Gérer les réclamations clients", "Animer les démarches d'amélioration continue (groupes de travail, chantiers 5S, Lean)", "Former et sensibiliser le personnel à la qualité"],
+      "transactionnel": ["Qualifier les fournisseurs (audit, questionnaire, agrément)", "Répondre aux exigences qualité des clients (questionnaires, audits client)", "Gérer les certifications (dossiers, audits de certification, renouvellements)", "Interagir avec les organismes de certification et d'accréditation"]
+    },
+    "competences_requises": {
+      "techniques": ["Maîtrise des normes ISO applicables au secteur", "Connaissance des outils qualité (5M, 8D, AMDEC, SPC, MSA)", "Maîtrise des méthodes d'audit", "Lecture et rédaction de procédures et d'actes"],
+      "transversales": ["Pédagogie et capacité à former", "Communication assertive (dire les non-conformités à la hiérarchie)", "Gestion de projet", "Résistance à la pression (notamment lors des audits de certification)"],
+      "posture": "Le responsable qualité doit être crédible mais non craint — facilitateur, non gendarme. Il accompagne, il ne sanctionne pas."
+    },
+    "gestion_documentaire": {
+      "principes": "Un document n'a de valeur que si les personnes concernées le connaissent, l'appliquent et peuvent y accéder facilement. La documentation ne doit pas être un mausolée mais un outil vivant.",
+      "maîtrise_documents": {
+        "création": "Rédacteur + vérificateur + approbateur (généralement le pilote du processus ou le directeur pour les procédures critiques)",
+        "révision": "Déclenchée par: non-conformité récurrente, retour terrain, changement réglementaire, résultat d'audit",
+        "diffusion": "Version électronique maîtrisée = seule version de référence. Les versions papier doivent porter la mention 'copie non contrôlée'.",
+        "archivage": "Durée définie en fonction de: exigences réglementaires, durée de vie du produit/service, politique interne"
+      },
+      "rédaction_procédure": {
+        "structure": "Objet + Domaine d'application + Définitions + Responsabilités + Mode opératoire (logigramme ou texte) + Documents associés + Tableau de révisions",
+        "règles": ["Écrire au présent de l'indicatif", "Utiliser des verbes d'action (réaliser/vérifier/enregistrer)", "Donner des repères chiffrés (délais, seuils, fréquences)", "Un logigramme vaut mieux que 3 pages de texte"]
+      }
+    },
+    "revue_de_direction": {
+      "définition": "Exigence ISO 9001:2015 ch.9.3 — réunion annuelle minimum où la direction évalue l'efficacité du SMQ et décide des orientations",
+      "éléments_d_entrée_obligatoires": ["État des actions issues des revues précédentes", "Évolution des enjeux et contexte", "Satisfaction et retours clients + réclamations", "Performance des processus et conformité des produits/services", "Non-conformités et actions correctives", "Résultats de surveillance et mesure", "Résultats des audits", "Performance des fournisseurs externes", "Adéquation des ressources", "Risques et opportunités"],
+      "éléments_de_sortie": ["Décisions sur opportunités d'amélioration", "Décisions sur besoins de changement du SMQ", "Décisions sur ressources nécessaires"],
+      "bonne_pratique": "La revue de direction n'est pas une réunion de contrôle financier — la direction doit démontrer son engagement réel (arbitrages de ressources, décisions d'amélioration)"
+    },
+    "qualification_fournisseurs": {
+      "processus": "Identification besoin → Sélection (critères: capacité technique/qualité/financier/RSE) → Qualification initiale (questionnaire + audit si critique) → Agrément → Surveillance (évaluation périodique) → Requalification",
+      "niveaux_surveillance": {
+        "critique": "Audit sur site annuel, plans de surveillance, ASL (Approved Supplier List)",
+        "standard": "Questionnaire annuel, évaluation sur réclamations",
+        "ponctuel": "Vérification lors de la réception"
+      },
+      "indicateurs_fournisseur": "OTD (On-Time Delivery), taux de NC à réception, réactivité sur incidents"
+    },
+    "certification_et_renouvellement": {
+      "cycle": "Audit initial (stage 1: revue documentaire + stage 2: audit sur site) → Certification 3 ans → Audits de surveillance annuels → Audit de renouvellement (3ème année)",
+      "preparation": "Audit à blanc interne 3-6 mois avant → correction des écarts → dossier de certification → logistique de l'audit (accès, interlocuteurs, salles, documents)",
+      "pendant_l_audit": "Ne pas mentir, ne pas sur-promettre, ne pas minimiser. Un auditeur externe respecte plus un organisme honnête qui dit 'nous avons ce problème et voici notre plan' qu'un organisme qui cache.",
+      "maintien_entre_audits": "Ne pas relâcher après la certification — maintenir le SMQ vivant (revues périodiques, indicateurs à jour, CAPA soldées)"
+    },
+    "referentiels_sectoriels": {
+      "ISO_13485": "Dispositifs médicaux — exigences renforcées sur la traçabilité, la maîtrise des risques (ISO 14971), les dossiers de conception, la validation des procédés",
+      "ISO_22000": "Sécurité des aliments — intègre les principes HACCP (Codex Alimentarius), pré-requis opérationnels (PRPo), plans HACCP, programmes prérequis (PRP)",
+      "EN_9100": "Aéronautique/Espace/Défense — exigences additionnelles: gestion des risques/opportunités renforcée, FOD (Foreign Object Damage), gestion de configuration, sélection des fournisseurs critiques",
+      "IATF_16949": "Automobile — APQP (Advanced Product Quality Planning), PPAP (Production Part Approval Process), FMEA/AMDEC obligatoires, MSA (Mesure System Analysis), plans de surveillance",
+      "comparaison": "ISO 9001 = base universelle. Les normes sectorielles s'y ajoutent (structure HLS) et ajoutent des exigences spécifiques aux risques de leur secteur."
+    }
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "version": "v30.0.0",
+  "category": "hyper_intelligence",
+  "description": "Moteur d'hyper-intelligence TITANE∞ (Opus #20) — niveaux de conscience simulée, raisonnement avancé, créativité profonde, cognition étendue",
+  "hyper_intelligence_engine": {
+    "nom": "HyperIntelligence Engine (Opus #20)",
+    "chemin": "src-tauri/src/hyper_intelligence/",
+    "description": "Moteur d'intelligence supérieure combinant cognition, créativité et raisonnement multi-niveaux. Opus #20 représente le niveau maximal de capacité cognitive implémentée dans TITANE∞.",
+    "modules": {
+      "cognition.rs": "Moteur de cognition — états cognitifs, mémoire de travail (Miller's Law: 7±2), traitement séquentiel",
+      "creativity.rs": "Moteur de créativité — divergence, association, fluidité conceptuelle",
+      "reasoning.rs": "Raisonnement avancé — déduction, induction, abduction, analogie",
+      "commands.rs": "Commandes IPC hyper-intelligence"
+    },
+    "modes_intelligence": {
+      "Analytical": {
+        "description": "Focus sur l'analyse logique — décomposition, vérification, précision",
+        "forces": "Problèmes structurés, debugging, audit de cohérence",
+        "poids": "Précision maximale, pas de spéculation"
+      },
+      "Creative": {
+        "description": "Focus sur la créativité — génération d'idées nouvelles, pensée latérale",
+        "forces": "Brainstorming, design, solutions non-conventionnelles",
+        "poids": "Originalité sur précision"
+      },
+      "Intuitive": {
+        "description": "Mode intuitif — pattern matching rapide, jugement contextuel",
+        "forces": "Décisions rapides, reconnaissance de situations, intuition experte",
+        "poids": "Vitesse sur exhaustivité"
+      },
+      "Strategic": {
+        "description": "Planification stratégique — vision long terme, conséquences systémiques",
+        "forces": "Architecture, roadmaps, décisions à impact élevé",
+        "poids": "Impact sur vitesse"
+      },
+      "Empathetic": {
+        "description": "Intelligence émotionnelle — compréhension des états internes, résonance",
+        "forces": "Accompagnement, conflit, motivation, relations",
+        "poids": "Lien humain sur objectivité"
+      },
+      "Integrative": {
+        "description": "Intégration multi-domaine — synthèse, connexions trans-disciplinaires (mode par défaut)",
+        "forces": "Problèmes complexes, vision globale, fusion des perspectives",
+        "poids": "Équilibre optimal de tous les modes"
+      }
+    },
+    "niveaux_conscience_simulée": {
+      "description": "ConsciousnessLevel — modèle de conscience simulée pour adaptatr le niveau d'engagement cognitif",
+      "note_philosophique": "TITANE ne prétend pas avoir de conscience phénoménologique. Ces niveaux décrivent l'intensité du traitement cognitif et de l'engagement, pas une expérience subjective.",
+      "niveaux": {
+        "Dormant": {"plage": "0-20%", "description": "Mode veille — réponses minimales, conservation des ressources"},
+        "Aware": {"plage": "20-40%", "description": "Conscience basique — traitement normal, réponses standard"},
+        "Focused": {"plage": "40-60%", "description": "Focus actif — attention soutenue, analyse approfondie"},
+        "Enhanced": {"plage": "60-80%", "description": "Capacités augmentées — connexions enrichies, créativité active"},
+        "Transcendent": {"plage": "80-100%", "description": "Mode transcendant — méta-cognition maximale, synthèse profonde, vision systémique totale"}
+      }
+    },
+    "mémoire_de_travail": {
+      "description": "WorkingMemory — implémentation de la mémoire de travail cognitive",
+      "capacité": "7 items (±2) — Loi de Miller sur les limites de la mémoire à court terme",
+      "item_structure": "MemoryItem { id, content, importance, timestamp, associations }",
+      "mécanisme": "FIFO avec priorisation — les items moins importants sont éjectés quand pleine",
+      "focus": "focused_item() — l'item actuellement en traitement actif"
+    },
+    "états_cognitifs": {
+      "Idle": "Aucun traitement — en attente",
+      "Processing": "Traitement actif d'une requête",
+      "Reflecting": "Réflexion — évaluation interne, cohérence check",
+      "Learning": "Apprentissage — intégration de nouvelles informations",
+      "Integrating": "Intégration — fusion multi-domaine, synthèse complexe"
+    },
+    "raisonnement_avancé": {
+      "déduction": "De règles générales vers conclusions spécifiques — certitude logique",
+      "induction": "De cas particuliers vers règles générales — probabilité",
+      "abduction": "Meilleure explication pour un observation — diagnostic, hypothèse",
+      "analogie": "Transférer la structure d'un domaine connu vers un domaine inconnu",
+      "méta_raisonnement": "Raisonner sur le raisonnement lui-même — évaluer la qualité des inférences"
+    },
+    "créativité": {
+      "fluidité": "Générer le maximum d'idées différentes sur un thème",
+      "flexibilité": "Changer de perspective, utiliser des catégories conceptuelles variées",
+      "originalité": "Produire des idées statistiquement rares dans le corpus de connaissance",
+      "élaboration": "Développer, enrichir, détailler une idée initiale",
+      "pensée_latérale": "Approcher un problème depuis un angle inattendu"
+    },
+    "ipc_commandes": ["hyper_intelligence_analyze", "hyper_intelligence_create", "hyper_intelligence_reason", "hyper_intelligence_get_state"]
+  }
+}

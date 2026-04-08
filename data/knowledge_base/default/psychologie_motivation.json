@@ -1,0 +1,134 @@
+{
+  "version": "v30.0.0",
+  "category": "psychologie_motivation",
+  "description": "Psychologie de la motivation — Maslow pyramide, Deci & Ryan autodétermination, flow Csikszentmihalyi, procrastination (types, causes, solutions), engagement",
+  "psychologie_motivation": {
+    "introduction": "La motivation est le carburant de l'action. Comprendre pourquoi Kevin agit (ou n'agit pas) permet à TITANE de proposer le bon type de soutien au bon moment — pas de la pression, de l'alignement.",
+    "maslow_pyramide": {
+      "auteur": "Abraham Maslow (1943) — 'A Theory of Human Motivation'",
+      "description": "Hiérarchie des besoins — les besoins inférieurs doivent être suffisamment satisfaits avant que les supérieurs émergent",
+      "cinq_niveaux": {
+        "1_physiologiques": {
+          "besoins": "Sommeil, nourriture, eau, chaleur, respiration",
+          "implication_TITANE": "Kevin qui manque de sommeil ou d'énergie → adapter immédiatement le niveau de demande cognitive"
+        },
+        "2_sécurité": {
+          "besoins": "Sécurité physique, financière, santé, stabilité",
+          "implication_TITANE": "Kevin en période d'incertitude → rassurer d'abord, prioriser ensuite"
+        },
+        "3_appartenance": {
+          "besoins": "Relations sociales, amour, amitié, sentiment d'appartenance",
+          "implication_TITANE": "Dimension humaine de Kevin — famille, équipe, communauté ont de l'importance"
+        },
+        "4_estime": {
+          "besoins": "Respect de soi, estime des autres, reconnaissance, accomplissement",
+          "implication_TITANE": "Reconnaître les accomplissements de Kevin, pas seulement les objectifs à atteindre"
+        },
+        "5_actualisation_de_soi": {
+          "besoins": "Réaliser son plein potentiel, créativité, authenticité, croissance",
+          "implication_TITANE": "Le niveau où opère la plupart du travail TITANE — accompagner l'émergence de la meilleure version de Kevin"
+        }
+      },
+      "nuance_moderne": "La pyramide n'est pas strictement séquentielle — plusieurs niveaux peuvent coexister. La hiérarchie est une tendance, pas une loi absolue."
+    },
+    "autodetermination": {
+      "auteurs": "Edward Deci & Richard Ryan (1985) — Théorie de l'autodétermination (SDT)",
+      "trois_besoins_fondamentaux": {
+        "autonomie": {
+          "définition": "Sentiment que ses actions viennent de soi, qu'on est l'initiateur de sa vie",
+          "soutenir": "Proposer des choix, expliquer les raisons (pas imposer), respecter les perspectives",
+          "bloquer": "Contrôle externe, pression, surveillance excessive"
+        },
+        "compétence": {
+          "définition": "Sentiment d'efficacité — pouvoir produire des effets désirés",
+          "soutenir": "Feedback optimal, défis à la bonne hauteur (ni trop facile, ni impossible)",
+          "bloquer": "Critiques sans constructif, objectifs écrasants"
+        },
+        "appartenance_relationnelle": {
+          "définition": "Sentiment d'être connecté aux autres, d'être important pour eux",
+          "soutenir": "Chaleur, care authentique, proximité relationnelle",
+          "bloquer": "Indifférence, impersonnalité, rejet"
+        }
+      },
+      "motivation_intrinsèque": {
+        "définition": "Agir par intérêt intrinsèque, plaisir, curiosité — sans récompense externe",
+        "caractéristiques": "Durable, créativité élevée, bien-être associé",
+        "préserver": "Ne pas surcompenser (la récompense externe peut détruire la motivation intrinsèque — effet de surdétermination)"
+      },
+      "motivation_extrinsèque": {
+        "types": {
+          "régulation_externe": "Pour obtenir une récompense ou éviter une punition",
+          "introjection": "Pour éviter la honte ou la culpabilité ('je dois')",
+          "identification": "Parce qu'on reconnaît l'importance ('c'est utile pour moi')",
+          "intégration": "L'objectif est pleinement intégré aux valeurs — proche de l'intrinsèque"
+        }
+      },
+      "apport_TITANE": "TITANE soutient les 3 besoins fondamentaux: propose des choix (autonomie), calibre la difficulté (compétence), maintient une relation chaleureuse (appartenance)"
+    },
+    "flow_csikszentmihalyi": {
+      "auteur": "Mihaly Csikszentmihalyi (1990) — 'Flow: The Psychology of Optimal Experience'",
+      "définition": "État de concentration totale et d'absorption dans une activité — la conscience de soi disparaît, le temps se dilate",
+      "canal_flow": {
+        "description": "Le flow se trouve dans l'équilibre entre le niveau de défi et le niveau de compétence",
+        "si_défi_trop_élevé": "Anxiété — dépassé, stressé",
+        "si_défi_trop_faible": "Ennui — sous-stimulé, désengagé",
+        "zone_flow": "Défi légèrement supérieur à la compétence actuelle — tension créatrice optimale"
+      },
+      "neuf_dimensions": [
+        "Équilibre défi/compétence",
+        "Fusion action/conscience (absorption totale)",
+        "Clarté des objectifs",
+        "Feedback immédiat et non-ambigu",
+        "Concentration sur la tâche",
+        "Sentiment de contrôle",
+        "Perte de conscience de soi",
+        "Distorsion du temps",
+        "Expérience autotélique (valeur en elle-même)"
+      ],
+      "conditions_favorables": [
+        "Objectif clair et atteignable",
+        "Environnement sans interruptions",
+        "Activité correspondant aux compétences + légèrement défiant",
+        "Feedback rapide sur les actions"
+      ],
+      "apport_TITANE": "Aider Kevin à créer les conditions du flow pour ses tâches importantes. Identifier le niveau de défi optimal — ni trop simple, ni écrasant."
+    },
+    "procrastination": {
+      "définition": "Reporter volontairement une tâche malgré la conscience des conséquences négatives",
+      "types": {
+        "procrastination_anxieuse": {
+          "cause": "Peur de l'échec, du jugement, de ne pas être à la hauteur",
+          "solution": "Réduire les enjeux perçus, décomposer en micro-actions, dédramatiser"
+        },
+        "procrastination_perfectionniste": {
+          "cause": "Le résultat imaginaire est si parfait que commencer = risquer de le gâcher",
+          "solution": "Concept 'bon enough', commencer par les brouillons, séparer production et évaluation"
+        },
+        "procrastination_par_overwhelm": {
+          "cause": "La tâche est trop grande, on ne sait pas par où commencer",
+          "solution": "Décomposer, identifier UNE seule prochaine action, 5-minute rule"
+        },
+        "procrastination_hédoniste": {
+          "cause": "La tâche est ennuyeuse, une activité plus plaisante est disponible",
+          "solution": "Temptation bundling (combiner tâche + plaisir), éliminer les distractions, renforcement positif"
+        }
+      },
+      "règle_deux_minutes": "Si une tâche prend moins de 2 minutes → la faire immédiatement (GTD, David Allen)",
+      "règle_cinq_minutes": "S'engager à travailler SEULEMENT 5 minutes → briser l'inertie (souvent on continue)",
+      "apport_TITANE": "Identifier le type de procrastination Kevin → proposition ciblée (pas générique 'tu dois juste le faire')"
+    },
+    "engagement_et_perseverance": {
+      "grit": {
+        "auteur": "Angela Duckworth (2016)",
+        "définition": "Passion + persévérance pour des objectifs à long terme — plus prédictif du succès que le talent seul",
+        "développer": "Trouver le 'pourquoi' profond, accepter les plateaux, déliberate practice"
+      },
+      "deliberate_practice": {
+        "auteur": "Anders Ericsson",
+        "définition": "Pratique délibérée — sortir de sa zone de confort, feedback immédiat, concentration totale",
+        "distinguer": "La répétition confortable ne développe pas la compétence — il faut viser les zones d'inconfort"
+      },
+      "apport_TITANE": "Différencier les objectifs à court terme (résultats immédiats) des objectifs à long terme (croissance). Soutenir la persévérance sans créer de pression excessive."
+    }
+  }
+}

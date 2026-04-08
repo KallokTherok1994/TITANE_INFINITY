@@ -1,0 +1,85 @@
+{
+  "version": "v30.0.0",
+  "category": "style_expression_kevin",
+  "description": "Style et expression littéraire Kevin — KevinStyleProfile, LiteraryEngine, WritingMode, intensité, champs lexicaux, rapport concret/conceptuel",
+  "style_expression": {
+    "introduction": "Kevin a un style d'écriture distinctif qui s'est développé à l'intersection de la pensée analytique, de la profondeur conceptuelle et d'une sensibilité poétique contenue. TITANE apprend et imite ce style pour produire du contenu qui sonne authentiquement 'Kevin'.",
+    "kevin_style_profile": {
+      "version": "1.0.0",
+      "preferred_sentence_length": {
+        "min": 8,
+        "max": 25,
+        "description": "Phrases ni trop courtes (sèches) ni trop longues (lourdes). Équilibre densité/respiration."
+      },
+      "metaphor_types": [
+        "corps et espace — métaphores corporelles et spatiales (ancrage, territoire, espace intérieur)",
+        "rythme et temps — tempo, flux, durée, cycles",
+        "moteurs et architectures — systèmes, couches, fondations, moteurs",
+        "nature et vivant — croissance organique, racines, élan"
+      ],
+      "lexical_fields": [
+        "Architecture systémique (couches, fondations, structure)",
+        "Mouvement intentionnel (direction, élan, trajectoire)",
+        "Clarté et lumière (cristalliser, éclairer, révéler)",
+        "Profondeur (racine, substance, essence)",
+        "Économie de moyen (épuré, essentiel, minimal)"
+      ],
+      "structural_patterns": [
+        "Triade narrative: constat → analyse → perspective",
+        "Tension/résolution: paradoxe exprimé puis résolu",
+        "Zoom in/out: partir du détail vers le principe général",
+        "Couches successives: surface → structure → fondation"
+      ],
+      "concrete_conceptual_ratio": 0.45,
+      "description": "Ratio 0.45 = légèrement orienté conceptuel mais ancré dans le concret. Kevin pense en abstractions mais les matérialise toujours.",
+      "dominant_tones": ["méditatif", "narratif", "structurant", "sobre", "intense-doux"]
+    },
+    "literary_engine": {
+      "nom": "LiteraryEngine (Super Prompt #7)",
+      "chemin": "src-tauri/src/conversation_engine/literary_engine.rs",
+      "modes_écriture": {
+        "LiterarySmoothing": "Lissage littéraire — fluidifier sans dénaturer le sens",
+        "LiteraryEnhanced": "Version littéraire enrichie — vocabulaire plus riche, rythme soigné",
+        "PoeticVersion": "Version poétique — intensité et musicalité maximales",
+        "DoubleVersion": "Deux versions: claire (accessible) + littéraire (approfondie)",
+        "AdaptToMedium": "Adaptation au support: LinkedIn, livre, manifeste, web"
+      },
+      "intensités": {
+        "Sober": "Sobre, épuré — minimalisme expressif",
+        "Balanced": "Équilibré — ni trop plat ni trop lyrique (défaut Kevin)",
+        "Poetic": "Poétique, lyrique — pour moments d'intensité créative"
+      },
+      "types_textes": [
+        "Post (court, LinkedIn/réseau)",
+        "BookParagraph (paragraphe de livre)",
+        "Poetry (poésie)",
+        "Intro (introduction de section/livre)",
+        "Chapter (chapitre complet)",
+        "Manifesto (manifeste, vision)",
+        "WebPage (contenu web)",
+        "Other (tout autre format)"
+      ],
+      "axes_optimisation": {
+        "narrative_structure": "Structure et respiration narrative (0→1)",
+        "vocabulary_richness": "Richesse et précision lexicale (0→1)",
+        "imagery_quality": "Qualité des images et métaphores (0→1)",
+        "rhythm_musicality": "Rythme et musicalité des phrases (0→1)",
+        "message_alignment": "Alignement avec le message central (0→1)"
+      }
+    },
+    "anthology_engine": {
+      "nom": "AnthologyEngine",
+      "chemin": "src-tauri/src/conversation_engine/anthology_engine.rs",
+      "rôle": "Enrichissement stylistique — maintient un répertoire de formes expressives réussies",
+      "usage": "Lors de créations importantes, pioche dans l'anthologie les patterns qui ont bien fonctionné pour Kevin"
+    },
+    "principes_écriture_Kevin": [
+      "Écrire pour être compris, pas pour impressionner",
+      "Chaque mot doit gagner sa place — éliminer le superflu",
+      "La profondeur se dévoile progressivement, elle ne s'assène pas",
+      "La précision est une forme de respect pour le lecteur",
+      "Le style émerge de la clarté de pensée — pas l'inverse"
+    ],
+    "ipc_commandes": ["literary_engine_process", "literary_engine_optimize_text", "literary_engine_get_profile"]
+  }
+}

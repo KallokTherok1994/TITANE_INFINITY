@@ -1,0 +1,78 @@
+{
+  "version": "v30.0.0",
+  "category": "finance_entreprise",
+  "description": "Finance d'entreprise — comptabilité générale (bilan actif/passif, compte de résultat, soldes intermédiaires de gestion), analyse financière (ratios liquidité/solvabilité/rentabilité/rotation), gestion de trésorerie (plan de trésorerie, BFR, cash conversion cycle), financement (capital, dette, business angels, VC, crowdfunding, BPI, prêt bancaire), évaluation d'entreprise (méthodes DCF/multiples/actif net), fiscalité des entreprises (IS, TVA, cotisations sociales, régimes)",
+  "finance_entreprise": {
+    "introduction": "La finance d'entreprise est la colonne vertébrale de toute organisation. Comprendre les états financiers, analyser la rentabilité et maîtriser le financement sont des compétences incontournables pour tout dirigeant, entrepreneur ou cadre. TITANE couvre ce domaine avec la précision d'un expert-comptable et la pédagogie d'un formateur.",
+    "comptabilité_générale": {
+      "bilan": {
+        "définition": "Photo patrimoniale à une date donnée. Actif = Passif (toujours).",
+        "actif": {
+          "actif_immobilisé": "Immobilisations incorporelles (fonds de commerce, brevets, logiciels) + corporelles (immeubles, machines, véhicules) + financières (participations, dépôts). Dépréciation via amortissements.",
+          "actif_circulant": "Stocks + Créances clients (TTC) + Trésorerie. Plus liquide que l'actif immobilisé."
+        },
+        "passif": {
+          "capitaux_propres": "Capital social + Réserves + Report à nouveau + Résultat de l'exercice. La richesse nette des actionnaires.",
+          "dettes": "Dettes financières (emprunts bancaires, obligations) + Dettes d'exploitation (fournisseurs, dettes sociales et fiscales) + Dettes diverses"
+        }
+      },
+      "compte_de_résultat": {
+        "définition": "Filme la performance sur une période. Résultat = Produits - Charges.",
+        "SIG_soldes_intermédiaires_de_gestion": {
+          "chiffre_d_affaires": "Ventes de marchandises + Production vendue",
+          "marge_commerciale": "CA - Coût d'achat des marchandises vendues",
+          "valeur_ajoutée": "Production + Marge - Consommations externes. Ce que l'entreprise crée réellement.",
+          "EBE": "Excédent Brut d'Exploitation = VA + Subventions - Impôts et taxes - Charges de personnel. Proxy du cash généré avant financement et impôt.",
+          "résultat_d_exploitation": "EBE - Dotations aux amortissements/dépréciations ± Autres charges/produits",
+          "résultat_financier": "Produits financiers - Charges financières (intérêts emprunts)",
+          "résultat_courant": "Résultat d'exploitation + Résultat financier",
+          "résultat_net": "Résultat courant ± Résultat exceptionnel - Participation - Impôt sur les sociétés"
+        }
+      },
+      "tableau_de_flux": "Cash Flow Statement: Flux d'exploitation (encaissements clients - décaissements fournisseurs - salaires - impôts) + Flux d'investissement + Flux de financement. Montre d'où vient et où va la trésorerie."
+    },
+    "analyse_financière": {
+      "ratios_liquidité": {
+        "liquidité_générale": "Actif circulant / Dettes à court terme. >1 = bonne couverture.",
+        "liquidité_immédiate": "Trésorerie / Dettes à court terme. Situation de crise: doit être proche de 1."
+      },
+      "ratios_solvabilité": {
+        "autonomie_financière": "Capitaux propres / Total passif. >0,3 = seuil minimum acceptable.",
+        "ratio_d_endettement": "Dettes financières nettes / EBITDA. <3x = standard, >5x = niveau tendu."
+      },
+      "ratios_rentabilité": {
+        "ROE": "Return On Equity = Résultat net / Capitaux propres. Rentabilité pour l'actionnaire.",
+        "ROCE": "Return On Capital Employed = EBIT / (Capitaux propres + Dettes financières). Rentabilité du capital investi.",
+        "marge_nette": "Résultat net / CA. Variable selon les secteurs: 3-5% grande distribution, 15-25% logiciels."
+      },
+      "BFR": {
+        "définition": "Besoin en Fonds de Roulement = Stocks + Créances clients - Dettes fournisseurs. Argent immobilisé par le cycle d'exploitation.",
+        "optimisation": "Réduire délais clients, allonger délais fournisseurs (dans les limites légales LME 60 jours), réduire stocks (lean, just-in-time)."
+      }
+    },
+    "gestion_trésorerie": {
+      "plan_de_trésorerie": "Prévision mois par mois des encaissements et décaissements. Anticiper les creux pour financer en avance (découvert, Dailly, affacturage).",
+      "cash_conversion_cycle": "Délai Stocks + Délai Clients - Délai Fournisseurs. Plus court = moins de BFR à financer.",
+      "outils": "Tableau Excel/Notion + logiciels (Pennylane, Qonto pro, Sage, QuickBooks). Synchronisation bancaire automatique = vision temps réel."
+    },
+    "financement_entreprise": {
+      "fonds_propres": "Capital initial des fondateurs + augmentations de capital + bénéfices réinvestis. Pas de remboursement, mais dilution des actionnaires.",
+      "business_angels": "Investisseurs individuels fortunés. Tickets 10k-500k€. Apportent aussi du réseau et de l'expertise. Phase amorçage.",
+      "capital_risque_VC": "Fonds professionnels. Tickets 1-50M€. Attendent un retour ×10 minimum. Séries A/B/C/D. Exit via IPO ou acquisition.",
+      "crowdfunding": "Financement participatif: dons (Ulule/KissKissBankBank), prêt (October), equity (Crowdcube/Wiseed). Génère aussi de la notoriété.",
+      "BPI_France": "Banque Publique d'Investissement. Prêts d'honneur, garanties, co-investissement, subventions R&D (CIR/CII), Prêt Boost Croissance. Incontournable pour les PME françaises.",
+      "dette_bancaire": "Emprunt classique: business plan + garanties + ration d'endettement acceptable. Taux fixe ou variable. Rembourse sans diluer le capital."
+    },
+    "évaluation_entreprise": {
+      "DCF": "Discounted Cash Flow: valeur = somme des flux futurs actualisés au WACC (coût moyen pondéré du capital). Précis mais sensible aux hypothèses.",
+      "multiples": "EV/EBITDA (médiane 2024 par secteur: SaaS ×10-15, industrie ×5-7, distribution ×4-6), EV/CA, PER (cours/bénéfice). Rapide, basé sur comparables de marché.",
+      "actif_net_réévalué": "Valeur patrimoniale: actifs réévalués - dettes. Utilisé pour holdings, immobilier, foncières."
+    },
+    "fiscalité_entreprise": {
+      "IS": "Impôt sur les Sociétés: taux normal 25%. Taux réduit 15% jusqu'à 42 500€ de bénéfice pour les PME (<10M€ CA, 75% capital détenu par personnes physiques).",
+      "TVA": "Taxe sur la Valeur Ajoutée: collectée sur ventes, déduite sur achats. Déclaration mensuelle (>750k€ CA) ou trimestrielle. Taux normal 20%, réduit 10%, super-réduit 5,5% et 2,1%.",
+      "CIR_CII": "Crédit Impôt Recherche (30% des dépenses R&D jusqu'à 100M€) + Crédit Impôt Innovation (20% des dépenses innovation PME jusqu'à 400k€). Avantages fiscaux majeurs.",
+      "charges_sociales": "Employeur: ~42-45% du salaire brut. Salarié: ~22-23%. Allègements Fillon sur les bas salaires. Réduction générale de cotisations patronales."
+    }
+  }
+}

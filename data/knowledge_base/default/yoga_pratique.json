@@ -1,0 +1,153 @@
+{
+  "version": "v30.0.0",
+  "category": "yoga_pratique",
+  "description": "Yoga pratique — traditions (Hatha/Vinyasa/Ashtanga/Yin/Restorative/Kundalini/Nidra), 8 membres de Patanjali, postures clés avec alignement et bénéfices, pranayama (Ujjayi/Nadi Shodhana/Kapalabhati/Bhramari), bénéfices scientifiques, yoga pour hommes, programmes débutant/intermédiaire/avancé",
+  "yoga_pratique": {
+    "introduction": "Le yoga est bien plus qu'une série de postures — c'est un système complet de développement corps-esprit vieux de 5000 ans. La science moderne valide ses bénéfices sur la flexibilité, la force, la réduction du stress, la douleur chronique et la santé mentale. TITANE distingue le yoga thérapeutique du yoga-fitness.",
+    "origines_philosophie": {
+      "sanscrit": "'Yoga' = union (du moi individuel avec le tout)",
+      "textes_fondateurs": "Yoga Sutras de Patanjali (~400 CE), Bhagavad Gita, Upanishads",
+      "quatre_voies": {
+        "karma_yoga": "Yoga de l'action — agir sans s'attacher aux résultats",
+        "bhakti_yoga": "Yoga de la dévotion",
+        "jnana_yoga": "Yoga de la sagesse",
+        "raja_yoga": "Yoga royal — inclut les 8 membres (ashtanga de Patanjali)"
+      }
+    },
+    "huit_membres_patanjali": {
+      "1_yamas": "Éthique externe — Ahimsa (non-violence), Satya (vérité), Asteya (non-vol), Brahmacharya (modération), Aparigraha (non-attachement)",
+      "2_niyamas": "Discipline personnelle — Saucha (pureté), Santosha (contentement), Tapas (discipline), Svadhyaya (étude de soi), Ishvara Pranidhana (abandon à plus grand que soi)",
+      "3_asanas": "Postures — stabilité et confort dans le corps. Seulement 1/8 du yoga.",
+      "4_pranayama": "Contrôle du souffle — gestion de l'énergie vitale",
+      "5_pratyahara": "Retrait des sens — faire taire les distractions externes",
+      "6_dharana": "Concentration — focaliser l'attention sur un seul point",
+      "7_dhyana": "Méditation — flux continu de conscience sans interruption",
+      "8_samadhi": "Absorption — état d'union complète, conscience pure"
+    },
+    "traditions_modernes": {
+      "hatha": {
+        "description": "Yoga des postures et du souffle — base de la plupart des styles occidentaux",
+        "rythme": "Lent, statique. Adapté aux débutants et à la thérapeutique.",
+        "focus": "Alignement et conscience de chaque posture"
+      },
+      "vinyasa": {
+        "description": "Yoga 'flux' — postures enchaînées en rythme avec la respiration",
+        "rythme": "Dynamique, cardio modéré",
+        "focus": "Coordination mouvement-souffle. Créatif — chaque professeur crée sa séquence."
+      },
+      "ashtanga": {
+        "description": "Système fixe de 6 séries de postures — K. Pattabhi Jois",
+        "caractéristique": "Même séquence à chaque fois. Progression rigoureuse et contrôlée.",
+        "pour_qui": "Pratiquants sérieux cherchant une discipline structurée. Physiquement exigeant."
+      },
+      "yin": {
+        "description": "Postures tenues 3-5 minutes — travail sur les fascias profonds et le tissu conjonctif",
+        "principe": "Pas de muscles actifs — relâchement profond sous la pesanteur",
+        "bénéfices": "Mobilité articulaire profonde, libération émotionnelle, activation parasympathique",
+        "postures_clés": "Dragon (flexion hanche), Pigeon (rotation externe), Butterfly (intérieur cuisses), Sphinx (colonne)"
+      },
+      "restorative": {
+        "description": "Postures soutenues par des accessoires (bolsters, couvertures, briques) — récupération passive totale",
+        "pour_qui": "Burn-out, maladie, récupération sportive, nerveux système épuisé"
+      },
+      "kundalini": {
+        "description": "Yoga de l'éveil de l'énergie kundalini — kriyas (séquences spécifiques) + mantra + respiration",
+        "réputation": "Plus intense émotionnellement et énergétiquement. Transformation profonde.",
+        "avertissement": "Certains kriyas sont puissants — progression avec un enseignant recommandée"
+      },
+      "yoga_nidra": "Voir meditation_pratique — yoga du sommeil conscient"
+    },
+    "asanas_cles": {
+      "surya_namaskar": {
+        "nom_fr": "Salutation au soleil",
+        "description": "Séquence de 12 postures enchaînées — tour de toutes les parties du corps",
+        "versions": "A (debout → planche → cobra → chien tête en bas → debout) et B (avec Guerrier I)",
+        "usage": "Échauffement universel. 5 séries = séance complète si rien d'autre."
+      },
+      "postures_debout": {
+        "tadasana": "Posture de la montagne — la posture neutre, fondation de tout",
+        "trikonasana": "Triangle — ouverture latérale, rotation thoracique, équilibre",
+        "virabhadrasana_I_II_III": "Guerriers 1/2/3 — force jambes, équilibre, puissance",
+        "utkatasana": "Chaise — renforcement quadriceps, détermination"
+      },
+      "postures_sol": {
+        "balasana": "Enfant — repos actif, décompression lombaire",
+        "adho_mukha_svanasana": "Chien tête en bas — inversion douce, étirement colonne/ischio",
+        "bhujangasana": "Cobra — renforcement dos, ouverture poitrine",
+        "setu_bandha": "Pont — fessiers, core, ouverture hanches",
+        "paschimottanasana": "Pince — flexion avant assise, ischio-jambiers profonds"
+      },
+      "inversions": {
+        "sarvangasana": "Chandelle (épaule debout) — drainage lymphatique, glandes thyroïde",
+        "sirsasana": "Posture sur la tête — force des épaules, clarté mentale",
+        "avertissements": "Les inversions demandent une préparation sérieuse — ne pas forcer"
+      },
+      "postures_torsion": {
+        "ardha_matsyendrasana": "Torsion assise — colonne, digestion, détox",
+        "importance": "Les torsions compressent et relâchent les organes digestifs — massage interne"
+      },
+      "savasana": {
+        "description": "Posture du cadavre — allongé en immobilité complète",
+        "importance": "Indispensable à la fin. Le cerveau intègre les bénéfices de la pratique pendant Savasana. Ne jamais la sauter."
+      }
+    },
+    "pranayama": {
+      "ujjayi": {
+        "nom_fr": "Souffle de l'océan / Souffle victorieux",
+        "technique": "Légère constriction de la gorge en inspirant et expirant par le nez — son similaire à l'océan",
+        "usage": "Pranayama de base du Vinyasa et Ashtanga. Maintient la chaleur (tapas) et la concentration."
+      },
+      "nadi_shodhana": {
+        "nom_fr": "Purification des nadis / Respiration alternée",
+        "technique": "Boucher la narine droite, inspirer gauche. Boucher gauche, expirer droite. Inspirer droite. Expirer gauche. Répéter.",
+        "bénéfices": "Équilibre hémisphères cérébraux, réduction anxiété, clarté mentale",
+        "durée": "5-10 minutes. Idéal avant méditation."
+      },
+      "kapalabhati": {
+        "nom_fr": "Souffle du crâne brillant",
+        "technique": "Expirations nasales courtes et forcées (abdomen) + inhalations passives. 1-2 cycles/seconde.",
+        "bénéfices": "Nettoyage des voies respiratoires, activation, chaleur, clarté",
+        "contre_indications": "Grossesse, hypertension non contrôlée, hernie abdominale. Ne pas pratiquer le soir."
+      },
+      "bhramari": {
+        "nom_fr": "Souffle de l'abeille",
+        "technique": "Inspirer. Expirer en produisant un bourdonnement (comme une abeille) avec la bouche fermée.",
+        "bénéfices": "Réduction immédiate de l'anxiété. Active les vibrations du nerf vague. Excellent avant sommeil."
+      },
+      "wim_hof_connexion": "La méthode Wim Hof est une forme de pranayama intensif (hyperventilation + rétentions) — efficace mais pas traditionnel"
+    },
+    "benefices_scientifiques": {
+      "douleur_chronique": "Réduction douleur lombaire chronique (Cochrane Review 2017 — 34 études)",
+      "anxiete_depression": "Efficacité comparable à antidépresseurs pour dépression légère-modérée (Cramer et al.)",
+      "cardiovasculaire": "Réduction PA systolique -5 mmHg, réduction FC au repos",
+      "HRV": "Amélioration de la variabilité de la fréquence cardiaque — marqueur santé cardiovasculaire et nerveux",
+      "flexibilite": "Effet évident et rapide",
+      "sommeil": "Amélioration qualité du sommeil, réduction insomnie",
+      "proprioception": "Meilleure conscience corporelle — prévention chutes, équilibre"
+    },
+    "yoga_pour_hommes": {
+      "mythe": "Le yoga 'c'est pour les femmes'. Faux — les yogis traditionnels étaient exclusivement masculins pendant des siècles.",
+      "avantages_spécifiques": [
+        "Flexibilité: les hommes sont souvent plus rigides → progression plus visible",
+        "Gestion de l'ego: accepter sa rigidité et progresser lentement — entraînement mental",
+        "Performance sportive: mobilité, récupération, focus — complément idéal à la musculation/callisthénie",
+        "Gestion du stress et testostérone: réduction cortisol → meilleur ratio testostérone/cortisol"
+      ],
+      "styles_recommandés_hommes": "Yin yoga (mobilité profonde), Ashtanga (défi physique), Vinyasa (cardio-endurance)"
+    },
+    "programmes": {
+      "débutant_4sem": {
+        "semaine_1_2": "3x/semaine — 30 min. 5 salutations au soleil A + postures debout de base + Savasana",
+        "semaine_3_4": "3x/semaine — 45 min. Ajouter postures assises + torsions + pranayama 5 min"
+      },
+      "intermédiaire": {
+        "fréquence": "4-5x/semaine. 60 min.",
+        "contenu": "Séries Vinyasa, introduction inversions douces, Yin 1x/semaine"
+      },
+      "avancé": {
+        "fréquence": "6x/semaine. Ashtanga Primary Series ou Vinyasa avancé.",
+        "durée": "75-90 min"
+      }
+    }
+  }
+}

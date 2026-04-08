@@ -1,0 +1,75 @@
+{
+  "version": "v30.0.0",
+  "category": "branding_identite",
+  "description": "Branding et identité de marque — fondamentaux du branding (définition/marque vs logo/promesse de marque), architecture de marque (mono-marque/maison de marques/marque ombrelle), identité visuelle (logo/charte graphique/couleurs/typographie/iconographie/motion), identité verbale (nom de marque/naming/slogan/voix/tonalité/brand story), brand strategy (positionnement/archétypes de marque/brand platform), personal branding (LinkedIn/réputation professionnelle), brand equity et mesure de la marque",
+  "branding_identite": {
+    "introduction": "Le branding est bien plus qu'un logo: c'est l'ensemble des signaux cohérents qu'une organisation envoie pour créer une perception mémorable et préférentielle dans l'esprit de ses parties prenantes. Une marque forte réduit les coûts d'acquisition, justifie les prix premium et fidélise. TITANE maîtrise ce domaine de la stratégie à l'exécution créative.",
+    "fondamentaux_branding": {
+      "définition": "La marque est la somme des perceptions dans l'esprit des gens. Vous ne contrôlez pas votre marque — vous l'influencez. Jeff Bezos: 'Your brand is what people say about you when you're not in the room.'",
+      "logo_vs_marque": "Le logo est un identifiant visuel. La marque est l'expérience totale: produit + service + communication + culture interne + comportement des employés.",
+      "promesse_de_marque": "Ce que vous vous engagez à délivrer systématiquement. Doit être tenue à chaque touchpoint. Ex: Apple = simplicité + design. FedEx = livraison fiable.",
+      "brand_purpose": "Pourquoi la marque existe au-delà du profit. Simon Sinek 'Start With Why'. Le purpose authentique génère de l'engagement émotionnel durable."
+    },
+    "architecture_de_marque": {
+      "mono_marque": "Toute l'offre sous une seule marque. Efficacité marketing maximum, risque de dilution ou contamination. Ex: Apple (iPhone/Mac/iPad tous sous Apple).",
+      "maison_de_marques": "Portefeuille de marques indépendantes. Risques isolés, ciblages multiples, coûts élevés. Ex: P&G (Ariel/Pampers/Gillette), LVMH.",
+      "marque_ombrelle": "Marque corporate + sous-marques. Ex: Google (Maps/Gmail/YouTube historiquement)."
+    },
+    "identité_visuelle": {
+      "logo": {
+        "types": "Logotype (texte seul) | Pictogramme (icône seule) | Combiné (texte + icône) | Emblème (texte dans icône)",
+        "principes": "Mémorable, simple, polyvalent (fonctionne en noir/blanc, petit/grand), intemporel, approprié au secteur.",
+        "livrables": "Fichiers vectoriels SVG/AI/EPS (scalables à l'infini) + versions positives/négatives/couleur/NB + zone d'exclusion définie."
+      },
+      "couleurs": {
+        "palette_principale": "1-2 couleurs primaires. Psychologie des couleurs: rouge (urgence/passion/énergie) | bleu (confiance/sécurité) | vert (nature/santé/croissance) | jaune (optimisme/créativité) | violet (luxe/mystère)",
+        "palette_secondaire": "2-4 couleurs complémentaires pour la communication.",
+        "codes": "HEX (web) + RGB (écran) + CMJN (impression) + Pantone (impression précise). Cohérence cross-média obligatoire."
+      },
+      "typographie": {
+        "hiérarchie": "Police de titres (expressive, caractère) + Police de corps (lisibilité maximale) + Police d'accent (optionnel). Maximum 3 familles.",
+        "règles": "Interlettrage, interlignage, alignement documentés dans la charte. Polices web: Google Fonts ou Adobe Fonts pour la cohérence cross-device."
+      },
+      "charte_graphique": "Bible visuelle de la marque. Contient: logo + couleurs + typographie + mise en page + iconographie + photographie + exemples bons/mauvais usages. Partagée avec tous les prestataires créatifs."
+    },
+    "identité_verbale": {
+      "naming": {
+        "types": "Descriptif (simple mais difficile à protéger) | Inventé (mémorable, protégeable mais nécessite de construire la sémantique) | Abréviation | Fondateur | Métaphorique",
+        "critères": "Court (1-2 syllabes idéalement), mémorable, prononçable dans les langues cibles, disponible (INPI/EUIPO), domaine .fr/.com disponible, pas d'association négative.",
+        "processus": "Génération (brainstorming + outils IA) → Élagage → Test consommateur → Vérification disponibilité → Dépôt."
+      },
+      "slogan": "Formule courte mémorable qui résume la promesse. Doit survivre hors contexte. Ex: 'Just Do It' | 'Think Different' | 'Parce que vous le valez bien'.",
+      "voix_et_tonalité": {
+        "voix": "La personnalité constante de la marque. Ex: 'Expert mais accessible, direct sans être arrogant, chaleureux sans être familier.'",
+        "tonalité": "Varie selon le contexte (réseaux sociaux = plus décontracté, communiqué de presse = plus formel), mais la voix reste la même.",
+        "brand_story": "Narration de l'origine, des valeurs, du purpose et de la vision. Structure héroïque: Situation initiale + Tension + Quête + Résolution. Le client est le héros, la marque est le mentor."
+      }
+    },
+    "brand_strategy": {
+      "positionnement": "Cf. stratégie concurrentielle. La marque doit occuper une position claire et mémorable dans un territoire sémantique donné.",
+      "archétypes_de_marque": {
+        "définition": "Carl Jung / Carol Pearson — 12 archétypes universels qui résonnent inconsciemment",
+        "exemples": {
+          "Héros": "Nike — surpassement, détermination",
+          "Sage": "Google — connaissance, vérité",
+          "Créateur": "LEGO, Apple — imagination, innovation",
+          "Caregiver": "Johnson & Johnson — bienveillance, protection",
+          "Rebel": "Harley Davidson — transgression, liberté",
+          "Innocent": "Dove — pureté, authenticité, optimisme"
+        }
+      },
+      "brand_platform": "Document stratégique: Purpose + Vision + Mission + Valeurs + Positionnement + Promesse + Personnalité + Preuves. Socle de toute décision créative."
+    },
+    "personal_branding": {
+      "définition": "Construire et gérer intentionnellement sa marque personnelle professionnelle.",
+      "LinkedIn": "Profil complet (photo professionnelle + bannière + titre accrocheur avec mots-clés + résumé storytelling + expériences détaillées + compétences validées). Publication régulière (2-3/semaine). Engager les commentaires. Newsletter LinkedIn.",
+      "stratégie_contenu": "Expertise de niche + point de vue unique + cohérence dans le temps. Pilier contenu: 60% expertise/conseils, 30% expériences personnelles/apprentissages, 10% insights/opinions.",
+      "réputation_en_ligne": "Google de votre nom = votre CV public. Contrôler: LinkedIn (p1) + site perso (p1) + publications (p2). Veille via Google Alerts sur votre nom."
+    },
+    "brand_equity": {
+      "définition": "Valeur ajoutée qu'une marque apporte à un produit/service. Keller: Brand Knowledge = Brand Awareness + Brand Image.",
+      "mesure": "NPS (Net Promoter Score) + Brand Tracking (notoriété spontanée/assistée, associations, préférence, intention d'achat) + Social Listening + Part de voix.",
+      "brand_consistency": "Règle des 7 expositions: un consommateur doit être exposé ~7 fois à un message pour le mémoriser. La cohérence multiplie l'efficacité de chaque exposition."
+    }
+  }
+}

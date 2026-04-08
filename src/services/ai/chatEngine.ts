@@ -69,6 +69,7 @@ import {
   getSystemPromptForSkill,
   getActiveSkillId,
 } from '@/services/skills/activation/skillActivator';
+import { getCompactIndex as getDefaultKbIndex } from '@/services/api/defaultKnowledgeBase';
 
 // Type-safe correction interface
 interface _CorrectionInfo {
@@ -210,6 +211,11 @@ class ChatEngineOmega {
   // 🆕 P1: DEPRECATED - Use conversationLifecycle.getActiveConversation() instead
   private conversationIds: Map<ChatMode, string> = new Map();
   private providerPreference: ProviderPreference = 'auto';
+  // Default knowledge base: compact index injected into system prompt
+  private _defaultKbIndex: string = '';
+  private _defaultKbLoaded: boolean = false;
+  // Promise lock: prevents concurrent IPC calls when two requests race at startup
+  private _kbLoadPromise: Promise<void> | null = null;
 
   /**
    * PHASE 1Ω: Configure le mode avec reset cognitif OMEGA
@@ -250,6 +256,25 @@ class ChatEngineOmega {
 
   setProvider(provider: ProviderPreference): void {
     this.providerPreference = provider;
+  }
+
+  /**
+   * Lazy-load the compact knowledge base index for system-prompt injection.
+   * Called once per ChatEngine instance; result is cached in _defaultKbIndex.
+   * A Promise lock prevents concurrent IPC calls when two requests race at startup.
+   */
+  private async _ensureDefaultKbLoaded(): Promise<void> {
+    if (this._defaultKbLoaded) return;
+    if (this._kbLoadPromise) return this._kbLoadPromise;
+    this._kbLoadPromise = (async () => {
+      try {
+        this._defaultKbIndex = await getDefaultKbIndex();
+      } catch {
+        this._defaultKbIndex = '';
+      }
+      this._defaultKbLoaded = true;
+    })();
+    return this._kbLoadPromise;
   }
 
   private isBackendAvailable(): boolean {
@@ -665,6 +690,7 @@ class ChatEngineOmega {
 
       // Build system prompt with cognitive context
       // v26.0.0: Only inject memory block if kernel decided to use it
+      await this._ensureDefaultKbLoaded();
       let systemPrompt = this.buildSystemPrompt(
         modeConfig,
         shouldInjectMemory ? context : { sources: [], data: {} },
@@ -2414,6 +2440,7 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
         emotionState: finalConfig.emotionState || this.config.emotionState,
         memory: context.sources.length > 0 ? context : undefined,
       };
+      await this._ensureDefaultKbLoaded();
       const systemPrompt = this.buildSystemPrompt(modeConfig, context, promptContext);
 
       const backendStream = this.tryBackendStream({
@@ -2791,11 +2818,16 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
         }
       }
 
+      // ═══ DEFAULT KNOWLEDGE BASE: inject compact index ═══
+      const kbBlock = this._defaultKbIndex
+        ? `\n\n📚 Base de connaissances intégrée TITANE∞ (${this._defaultKbIndex.split("\n").length} catégories) :\n${this._defaultKbIndex}`
+        : '';
+
       const stablePrefix = skillInjection
-        ? `${skillInjection}\n\n${personaInjection ? `${basePrompt}${personaInjection}` : basePrompt}`
+        ? `${skillInjection}\n\n${personaInjection ? `${basePrompt}${personaInjection}` : basePrompt}${kbBlock}`
         : personaInjection
-          ? `${basePrompt}${personaInjection}`
-          : basePrompt;
+          ? `${basePrompt}${personaInjection}${kbBlock}`
+          : `${basePrompt}${kbBlock}`;
 
       // ═══ VOLATILE SUFFIX (per-request, changes every turn) ═══
       let volatileSuffix = '';

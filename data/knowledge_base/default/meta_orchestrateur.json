@@ -1,0 +1,106 @@
+{
+  "version": "v30.0.0",
+  "category": "meta_orchestrateur",
+  "description": "Meta-Orchestrateur TITANE∞ — superviseur global, conscience système, allocation ressources, niveaux d'awareness, priorités dynamiques",
+  "meta_orchestrateur": {
+    "nom": "MetaOrchestrator Engine (Super Prompt Opus #18)",
+    "chemin": "src-tauri/src/meta_orchestrator/",
+    "description": "Superviseur global de TOUS les sous-systèmes TITANE∞. Maintient la conscience globale du système, alloue les ressources dynamiquement, gère les priorités et garantit la cohérence systémique.",
+    "modules": {
+      "awareness.rs": "Conscience système — monitoring global, détection d'anomalies",
+      "priority_scheduler.rs": "Scheduler de priorités — file dynamique CRITICAL/HIGH/NORMAL/LOW/BACKGROUND",
+      "resource_governor.rs": "Gouverneur de ressources — CPU, RAM, threads, quotas par sous-système",
+      "commands.rs": "Commandes IPC orchestrateur"
+    },
+    "niveaux_awareness": {
+      "Dormant": {
+        "description": "Système en veille minimale",
+        "ressources": "5% CPU, 10% RAM allouée",
+        "monitoring": "Heartbeat toutes les 30s uniquement"
+      },
+      "Minimal": {
+        "description": "Conscience minimale — fonctions essentielles uniquement",
+        "ressources": "15% CPU, 30% RAM",
+        "monitoring": "Checks toutes les 10s"
+      },
+      "Standard": {
+        "description": "Fonctionnement normal — mode par défaut",
+        "ressources": "30% CPU, 50% RAM",
+        "monitoring": "Checks toutes les 5s"
+      },
+      "Elevated": {
+        "description": "Attention accrue — anticipation de pics de charge",
+        "ressources": "50% CPU, 70% RAM",
+        "monitoring": "Checks toutes les 2s"
+      },
+      "HyperAware": {
+        "description": "Surveillance maximale — incident détecté ou charge critique",
+        "ressources": "70% CPU, 85% RAM",
+        "monitoring": "Checks continus"
+      },
+      "Transcendent": {
+        "description": "Mode méta-cognitif — réflexion sur le fonctionnement du système lui-même",
+        "ressources": "Usage optimal — pas de gaspillage",
+        "monitoring": "Auto-observation profonde — diagnostics complets"
+      }
+    },
+    "modes_orchestration": {
+      "Minimal": "Ressources minimales — mode batterie/économie",
+      "Balanced": "Équilibre performance/ressources — mode par défaut",
+      "Performance": "Priorité performance — toutes ressources disponibles mobilisées",
+      "PowerSave": "Économie d'énergie — mobile/battery, fonctions essentielles uniquement"
+    },
+    "allocation_ressources": {
+      "description": "ResourceGovernor — allocation dynamique des ressources entre sous-systèmes",
+      "sous_systèmes_gérés": [
+        {"nom": "SingularityOS", "priorité": "CRITICAL", "quota_cpu": "20%", "quota_ram": "15%"},
+        {"nom": "MemoryOS", "priorité": "HIGH", "quota_cpu": "15%", "quota_ram": "25%"},
+        {"nom": "OmegaPipeline", "priorité": "HIGH", "quota_cpu": "20%", "quota_ram": "10%"},
+        {"nom": "SemanticSearch", "priorité": "NORMAL", "quota_cpu": "10%", "quota_ram": "20%"},
+        {"nom": "AgentSystem", "priorité": "NORMAL", "quota_cpu": "15%", "quota_ram": "10%"},
+        {"nom": "Monitoring", "priorité": "LOW", "quota_cpu": "5%", "quota_ram": "5%"},
+        {"nom": "CloudSync", "priorité": "BACKGROUND", "quota_cpu": "5%", "quota_ram": "5%"}
+      ],
+      "surcharge": "Si CPU >80%: suspendre tâches BACKGROUND, ralentir NORMAL. Si CPU >95%: alerte + mode Emergency."
+    },
+    "état_global": {
+      "métriques_suivies": [
+        "initialized: bool",
+        "awareness_level: AwarenessLevel",
+        "system_health: {cpu_percent, ram_percent, active_engines, error_count, uptime}",
+        "active_engines: Vec<EngineStatus>",
+        "resource_allocation: allocation par sous-système",
+        "priority_queue: tâches en attente avec priorités",
+        "orchestration_mode: Minimal/Balanced/Performance/PowerSave",
+        "last_cycle_ms: durée du dernier cycle d'orchestration",
+        "total_cycles: cycles depuis démarrage",
+        "uptime_seconds: temps depuis démarrage"
+      ]
+    },
+    "cycle_orchestration": {
+      "description": "Le MetaOrchestrator tourne en boucle permanente en arrière-plan",
+      "fréquence_défaut": "1Hz (1 cycle/seconde) en mode Standard",
+      "étapes_cycle": [
+        "1. Collecte métriques tous sous-systèmes (CPU, RAM, queues)",
+        "2. Évaluation de l'état de santé global",
+        "3. Ajustement AwarenessLevel si nécessaire",
+        "4. Réévaluation des priorités de la file",
+        "5. Allocation ressources selon priorités",
+        "6. Déclenchement d'actions correctives si anomalie",
+        "7. Mise à jour state + log"
+      ]
+    },
+    "détection_anomalies": {
+      "types": [
+        "CPU >95% prolongé (>10s) → Emergency mode",
+        "RAM >90% → garbage collection forcée + compression caches",
+        "Provider IA non répondant → circuit breaker + fallback",
+        "IPC queue saturée (>1000 requêtes en attente) → rate limiting",
+        "Cognitive drift >0.3 → reset partiel SingularityOS",
+        "Violation sandbox agent → suspension agent + alerte Guardian"
+      ],
+      "escalade": "Anomalie critique non résolue en 3 cycles → Stop-the-Line + rapport AutoHeal obligatoire"
+    },
+    "ipc_commandes": ["meta_orchestrator_get_state", "meta_orchestrator_set_mode", "meta_orchestrator_get_health", "meta_orchestrator_list_engines", "meta_orchestrator_adjust_awareness"]
+  }
+}

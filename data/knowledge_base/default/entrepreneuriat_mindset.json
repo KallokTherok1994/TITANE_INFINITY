@@ -1,0 +1,63 @@
+{
+  "version": "v30.0.0",
+  "category": "entrepreneuriat_mindset",
+  "description": "Entrepreneuriat et mindset fondateur — lean startup (MVP/build-measure-learn), ikigai, side hustle→business, 1000 true fans, product-market fit, bootstrapping vs levée de fonds, mindset fondateur (stoïcisme + anti-fragilité Taleb), marketing organique",
+  "entrepreneuriat_mindset": {
+    "introduction": "L'entrepreneuriat n'est pas réservé aux startups de la Silicon Valley — c'est une façon de créer de la valeur et de l'autonomie. TITANE distingue le entrepreneuriat de style de vie (indépendance + revenus suffisants) du VC-backed (hypercroissance + sortie). Les deux sont valides mais nécessitent des stratégies très différentes.",
+    "lean_startup": {
+      "auteur": "Eric Ries — The Lean Startup (2011)",
+      "boucle_BML": {
+        "Build": "Construire le MVP (Minimum Viable Product) — la version la plus simple validant une hypothèse clé",
+        "Measure": "Mesurer les réactions réelles des vrais utilisateurs (pas des enquêtes)",
+        "Learn": "Apprendre ce qui est validé ou infirmé → pivoter ou persévérer"
+      },
+      "MVP": "Le produit minimum qui permet d'apprendre, pas le produit minimum vendable. Ex: landing page, manuel en PDF, prototype papier.",
+      "validated_learning": "L'unité de progrès en startup = connaissance validée sur les hypothèses business — pas les features livrées",
+      "pivot_vs_persevere": "Pivoter = changer de stratégie en préservant les insights. Persévérer = continuer si les signaux sont positifs."
+    },
+    "product_market_fit": {
+      "définition": "PMF: le produit répond à un besoin réel suffisamment intense pour qu'un marché se forme naturellement",
+      "signe_positif": "Croissance organique, rétention élevée, utilisateurs déçus si le produit disparaissait (>40% 'très déçus' = PMF)",
+      "avant_PMF": "Ne pas scale — acquisition payante avant PMF = gaspillage",
+      "test_maman": "Rob Fitzpatrick — poser des questions sur le passé (comportements réels), pas l'avenir (intentions)"
+    },
+    "1000_true_fans": {
+      "auteur": "Kevin Kelly — 1000 True Fans (2008)",
+      "principe": "Un créateur n'a besoin que de 1000 vrais fans (qui achèteraient tout ce qu'il produit) pour vivre de sa création. 1000 fans × 100€/an = 100 000€.",
+      "implication": "Pas besoin d'être viral — construire une communauté petite et dédiée est suffisant. La niche est une force.",
+      "plateformes": "Substack, Patreon, Gumroad, Podia — monétiser directement l'audience sans intermédiaire"
+    },
+    "bootstrapping_vs_VC": {
+      "bootstrapping": {
+        "définition": "Se financer soi-même et par les revenus du produit",
+        "avantages": "100% de contrôle, pas de dilution, décisions long terme, liberté totale",
+        "convient_à": "SaaS, services, info-produits, niches B2B spécifiques"
+      },
+      "VC_backed": {
+        "définition": "Financement par venture capital en échange de parts",
+        "avantages": "Capital pour hypercroissance, réseau, crédibilité",
+        "inconvénients": "Dilution, pression de croissance, objectif sortie (IPO/acquisition) imposé"
+      },
+      "conseil_TITANE": "90% des entrepreneurs devraient boostraper. Les VC conviennent aux marchés de type 'winner takes all' nécessitant de battre des concurrents bien financés."
+    },
+    "side_hustle_to_business": {
+      "étape_1": "Valider l'idée sans quitter son emploi — premières ventes avant d'investir du temps",
+      "étape_2": "Atteindre 50% du revenu salarial en revenus parallèles avant de sauter",
+      "étape_3": "Quitter avec 6-12 mois de trésorerie personnelle de sécurité",
+      "règle": "Ne jamais quitter son emploi pour 'se consacrer à l'idée' — quitter quand le marché a validé l'idée par de vrais euros"
+    },
+    "mindset_fondateur": {
+      "stoicisme": "Ce qu'on ne contrôle pas (marché, concurrents, macroéconomie) ≠ ce qu'on contrôle (actions, réponses, effort). Memento Mori = urgence d'agir.",
+      "antifragilite_Taleb": "Concevoir son business pour gagner de l'expérience des chocs et incertitudes — pas juste être robuste.",
+      "amor_fati": "Aimer ce qui arrive, y compris les échecs — chaque tentative échouée est du capital informationnel",
+      "identité_découplée": "Ne pas confondre l'échec d'une idée avec l'échec de sa personne — Jim Collins: la grandeur vient de la capacité à supporter l'incertitude sans perdre de vue le cap",
+      "biais_action": "Agir avec des informations imparfaites > attendre la certitude. La certitude n'arrive jamais."
+    },
+    "marketing_organique": {
+      "contenu": "SEO, blog, LinkedIn, YouTube — construire une audience qui cherche ce qu'on fait",
+      "réseau": "Le meilleur marketing = les relations. Servir généreusement, le réseau suit.",
+      "positioning": "Devenir LA référence pour un problème spécifique dans une niche précise > être généraliste moyen",
+      "storytelling": "Les humains achètent des histoires, pas des features. 'Jobs to be done' framework: quelle transformation le client cherche-t-il?"
+    }
+  }
+}

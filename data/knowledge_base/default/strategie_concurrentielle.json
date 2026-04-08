@@ -1,0 +1,64 @@
+{
+  "version": "v30.0.0",
+  "category": "strategie_concurrentielle",
+  "description": "Stratégie concurrentielle et intelligence économique — veille stratégique (concurrentielle/technologique/réglementaire), analyse concurrentielle (benchmarking/positionnement/mapping), intelligence économique (IE), KPI stratégiques, pricing stratégique, stratégies de différenciation approfondie, avantage concurrentiel durable",
+  "strategie_concurrentielle": {
+    "introduction": "La stratégie concurrentielle consiste à comprendre son environnement compétitif avec une précision chirurgicale et à construire des positions défendables dans le temps. Elle repose sur une veille permanente, une analyse rigoureuse et des décisions rapides. TITANE maîtrise l'intelligence économique et l'analyse concurrentielle au niveau professionnel.",
+    "intelligence_economique": {
+      "définition": "Ensemble des actions coordonnées de recherche, de traitement et de diffusion d'informations utiles aux acteurs économiques. Inclut la protection des informations sensibles et l'influence.",
+      "trois_piliers": {
+        "veille": "Collecte et analyse systématique d'informations sur l'environnement (concurrents, marchés, technologies, réglementations, tendances sociales)",
+        "protection": "Sécurisation des informations stratégiques propres (secrets d'affaires, R&D, fichiers clients). Sensibilisation des équipes, PSSI, clause de confidentialité.",
+        "influence": "Capacité à faire valoir ses positions auprès des décideurs publics et privés de façon éthique et transparente (cf. lobbying)"
+      },
+      "cadre_légal": "Loi Portant Mesures pour la Croissance et la Transformation des Entreprises (PACTE 2019) + loi Macron 2016 → protection des secrets d'affaires transposée par directive UE 2016/943."
+    },
+    "veille_strategique": {
+      "types": {
+        "concurrentielle": "Surveiller les concurrents directs et indirects: nouveaux produits/services, prix, campagnes marketing, recrutements, dépôts de brevets, communiqués financiers",
+        "technologique": "Brevets, publications scientifiques, startups émergentes dans le secteur, investissements R&D des concurrents",
+        "réglementaire": "Projets de loi, directives européennes, jurisprudence, positions des autorités de régulation",
+        "sociétale": "Tendances de consommation, évolutions démographiques, opinion publique, RSE/ESG"
+      },
+      "outils": {
+        "gratuits": "Google Alerts, LinkedIn Sales Navigator, INPI (brevets FR), EUR-Lex (droit UE), Légifrance, BODACC (actes commerciaux), rapports annuels publics, OpenDataSoft",
+        "payants": "Xerfi, Factiva, Bloomberg, Statista, Kantar, Semrush (digital), Cision (presse)"
+      },
+      "processus_OSINT": "Open Source Intelligence: sources ouvertes accessibles légalement. Collecter → Filtrer → Analyser → Diffuser aux décideurs concernés dans un délai utile."
+    },
+    "analyse_concurrentielle": {
+      "benchmarking": {
+        "interne": "Comparer les performances entre unités d'une même organisation",
+        "concurrentiel": "Comparer avec les meilleurs concurrents directs",
+        "sectoriel": "Comparer avec d'autres secteurs sur des pratiques transposables",
+        "processus": "Identifier → Mesurer → Analyser les écarts → Adapter → Implémenter → Mesurer à nouveau"
+      },
+      "mapping_concurrentiel": "Représentation visuelle des acteurs sur 2 axes (ex: prix/qualité, innovation/accessibilité). Identifier les zones vides = opportunités de positionnement.",
+      "profil_concurrent": "Pour chaque concurrent clé: produits/services, prix, canaux, parts de marché estimées, forces/faiblesses, stratégie apparente, capacités financières, culture.",
+      "war_gaming": "Simulation de décisions stratégiques en se mettant dans la peau d'un concurrent. Permet d'anticiper ses réactions à nos décisions."
+    },
+    "pricing_strategique": {
+      "approches": {
+        "par_les_coûts": "Prix = coût + marge cible. Sécurisé mais ignore le marché.",
+        "par_le_marché": "S'aligner sur le prix du secteur. Stratégie suiveuse.",
+        "par_la_valeur": "Prix fondé sur la valeur perçue par le client. Nécessite une compréhension profonde du WTP (Willingness To Pay). La plus rentable si bien exécutée.",
+        "psychologique": "Prix magiques (9,99 vs 10€), ancrage (présenter le prix élevé en premier), bundle (package)."
+      },
+      "premium_vs_penetration": {
+        "prix_de_pénétration": "Entrer bas pour gagner rapidement des parts de marché. Risque: guerre des prix, difficile de remonter les prix.",
+        "prix_premium": "Entrer haut pour signaler la qualité et positionner la marque. Nécessite une différenciation réelle et perçue."
+      },
+      "yield_management": "Tarification dynamique selon la demande (transports, hôtellerie, e-commerce). Maximise le revenu par unité disponible."
+    },
+    "avantage_concurrentiel_durable": {
+      "ressources_VRIN": "Valeur (crée de la valeur pour le client) / Rareté (non disponible chez tous les concurrents) / Imitabilité difficile (coûts d'imitation élevés) / Non-substituable",
+      "barrières_à_l_imitation": ["Complexité causale (difficile à comprendre pourquoi ça marche)", "Économies d'échelle (coût d'entrée prohibitif)", "Effet de réseau (plus les utilisateurs sont nombreux, plus la valeur augmente)", "Actifs complémentaires (brevets + distribution + marque)", "Culture organisationnelle distinctive"],
+      "erosion": "Tout avantage concurrentiel s'érode. Le maintenir exige: investissement continu en R&D, défense des parts de marché, surveillance des substituts, fidélisation des talents clés."
+    },
+    "positionnement": {
+      "définition": "La place distinctive qu'une offre occupe dans l'esprit des clients cibles par rapport à la concurrence.",
+      "formule_positioning_statement": "Pour [cible], [notre offre] est [catégorie] qui [bénéfice unique] parce que [preuve].",
+      "repositionnement": "Nécessaire quand: le marché évolue, le positionnement est dépassé, une opportunité apparaît. Risqué car peut désorienter les clients actuels. Graduel ou rupture selon l'urgence."
+    }
+  }
+}

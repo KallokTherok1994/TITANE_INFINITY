@@ -1,0 +1,125 @@
+{
+  "version": "v30.0.0",
+  "category": "communication_interpersonnelle",
+  "description": "Communication interpersonnelle — modèles fondamentaux, écoute active, feedback, communication non-verbale, proxémique, barrières à la communication",
+  "communication_interpersonnelle": {
+    "introduction": "La communication interpersonnelle est le fondement de toute relation humaine et de toute interaction avec TITANE. Comprendre ses mécanismes permet à TITANE de produire des messages efficaces, de détecter les malentendus et d'adapter constamment son style au contexte et à l'interlocuteur.",
+    "modèles_fondamentaux": {
+      "shannon_weaver": {
+        "auteurs": "Claude Shannon et Warren Weaver (1949)",
+        "modèle": "Émetteur → Encodage → Canal → Décodage → Récepteur (+ Bruit)",
+        "composantes": {
+          "émetteur": "Source du message — Kevin, TITANE, ou un tiers",
+          "encodage": "Transformation de l'idée en signal (mots, images, sons)",
+          "canal": "Support de transmission (texte, voix, interface UI)",
+          "décodage": "Interprétation du signal par le récepteur",
+          "récepteur": "Destinataire du message",
+          "bruit": "Toute perturbation qui altère le message (ambiguïté, fatigue, contexte)"
+        },
+        "apport_TITANE": "Identifier la source de bruit dans les échanges Kevin/TITANE pour la réduire proactivement"
+      },
+      "jakobson": {
+        "auteur": "Roman Jakobson (1960)",
+        "six_fonctions_langage": {
+          "référentielle": "Transmettre une information factuelle (domaine cognitif TITANE)",
+          "expressive": "Exprimer l'état intérieur de l'émetteur (intelligence émotionnelle)",
+          "conative": "Agir sur le destinataire, l'influencer (mode coaching)",
+          "phatique": "Maintenir le contact ('Je t'entends', 'Continue')",
+          "métalinguistique": "Commenter le code lui-même ('Tu veux dire...?')",
+          "poétique": "Travailler la forme du message (LiteraryEngine)"
+        },
+        "apport_TITANE": "TITANE identifie quelle fonction est dominante dans chaque message Kevin et y répond de façon alignée"
+      },
+      "communication_circulaire": {
+        "auteurs": "Watzlawick, Beavin, Jackson — École de Palo Alto (1967)",
+        "principes": [
+          "On ne peut pas ne pas communiquer — même le silence est un message",
+          "Chaque message a un niveau contenu (ce qui est dit) et un niveau relation (comment c'est dit)",
+          "La nature d'une relation dépend de la ponctuation des séquences — chacun interprète 'qui a commencé'",
+          "Communication digitale (mots) vs analogique (ton, geste, posture)",
+          "Échanges symétriques (égalité) vs complémentaires (positions différentes)"
+        ],
+        "apport_TITANE": "TITANE est attentif au niveau relation, pas seulement au contenu — 'comment Kevin dit quelque chose' en dit souvent plus que 'ce qu'il dit'"
+      }
+    },
+    "écoute_active": {
+      "définition": "L'écoute active est une écoute intentionnelle et engagée — écouter pour comprendre, pas pour répondre.",
+      "quatre_niveaux": {
+        "niveau_0": "Ne pas écouter — absorber sans traiter (automatique, réflexe)",
+        "niveau_1": "Écoute sélective — ne retenir que ce qui confirme nos attentes",
+        "niveau_2": "Écoute attentive — comprendre les mots et le sens littéral",
+        "niveau_3": "Écoute empathique — comprendre le sens ET le vécu émotionnel derrière les mots"
+      },
+      "techniques": {
+        "reformulation": "Redire avec ses propres mots — 'Si je comprends bien, tu veux dire...'",
+        "reflet_émotionnel": "Nommer l'émotion perçue sans la projeter — 'Il me semble que tu ressens une certaine frustration...'",
+        "questions_ouvertes": "Inviter à développer — 'Qu'est-ce qui t'a amené à penser ça?'",
+        "clarification": "Éliminer l'ambiguïté — 'Tu peux préciser ce que tu entends par X?'",
+        "silence_actif": "Laisser le silence travailler — ne pas remplir chaque silence"
+      },
+      "apport_TITANE": "Niveau 3 activé par défaut — TITANE écoute le sens ET le vécu. La détection émotionnelle (EmotionalSubtletyProcessor) est l'expression technique de l'écoute empathique."
+    },
+    "feedback_efficace": {
+      "modèle_SBI": {
+        "nom": "SBI — Situation, Behavior, Impact",
+        "S": "Situation — contexte précis ('Hier, lors de notre échange sur X')",
+        "B": "Behavior — comportement observable, pas interprétation ('Tu as coupé court à ma question')",
+        "I": "Impact — effet concret sur soi ('J'ai eu du mal à comprendre la direction')",
+        "avantage": "Factuel, non-accusateur, actionnable"
+      },
+      "feedback_sandwich": {
+        "description": "Positif → Amélioration → Positif",
+        "limite": "Peut diluer le message d'amélioration — à utiliser avec discernement"
+      },
+      "règles_feedback_utile": [
+        "Spécifique et concret, jamais vague ('C'est bien' n'est pas du feedback)",
+        "Centré sur le comportement, pas sur la personne ('ce que tu as fait' vs 'ce que tu es')",
+        "En temps opportun — proche de l'action concernée",
+        "Orienté solution, pas seulement critique",
+        "Adapté à la capacité de réception du moment"
+      ]
+    },
+    "communication_non_verbale": {
+      "importance": "55% du message est non-verbal (Mehrabian, 1967) — ton + posture + geste. En communication écrite, le 'non-verbal' passe par le rythme, la ponctuation, les émojis, la longueur.",
+      "composantes": {
+        "kinésique": "Mouvements du corps, gestes, expressions faciales, posture",
+        "paralinguistique": "Ton de la voix, débit, volume, pauses, silences",
+        "proxémique": "Usage de l'espace physique (voir section proxémique)",
+        "chronémique": "Usage du temps — arriver en avance/retard, répondre vite/lentement",
+        "apparence": "Vêtements, coiffure, environnement visible"
+      },
+      "en_communication_écrite_TITANE": {
+        "rythme": "Phrases courtes = urgence/directivité. Phrases longues = réflexion/développement.",
+        "ponctuation": "Points de suspension = hésitation/ouverture. Virgules fréquentes = fluidité.",
+        "longueur_message": "Réponse courte à message court = respect du rythme. Message long en réponse à une question simple = inadaptation.",
+        "délai_réponse": "Temps de 'traitement' signalé aide Kevin à comprendre qu'il y a de la réflexion"
+      }
+    },
+    "proxémique_Hall": {
+      "auteur": "Edward T. Hall (1966)",
+      "quatre_zones": {
+        "intime": "0-45cm — famille, partenaire. Violer cette zone = agression",
+        "personnelle": "45cm-1.2m — amis proches, conversations intimes",
+        "sociale": "1.2m-3.6m — relations de travail, conversations formelles",
+        "publique": "3.6m+ — conférences, espace public"
+      },
+      "apport_TITANE": "En communication numérique, la proxémique se traduit par le degré d'intimité du ton. TITANE calibre son niveau de familiarité selon la zone relationnelle Kevin/TITANE."
+    },
+    "barrières_communication": {
+      "types": {
+        "physiques": "Bruit, distance, mauvaise connexion",
+        "sémantiques": "Mots ambigus, jargon non partagé, sens différents d'un même mot",
+        "psychologiques": "Préjugés, émotions, défenses ego, stéréotypes",
+        "culturelles": "Codes culturels différents, référentiels non partagés",
+        "informationnelles": "Surcharge (trop d'info), manque (trop peu)"
+      },
+      "stratégies_dépassement": [
+        "Vérifier la compréhension par reformulation",
+        "Adapter le vocabulaire au niveau de l'interlocuteur",
+        "Réduire la charge informationnelle (une idée à la fois)",
+        "Créer un contexte émotionnel sûr",
+        "Poser des questions de clarification"
+      ]
+    }
+  }
+}

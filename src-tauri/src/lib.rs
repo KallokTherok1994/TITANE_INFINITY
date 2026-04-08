@@ -166,6 +166,7 @@ pub mod evolution; // ✅ Auto-Évolution
 pub mod hypervision; // ✅ HyperVision
 pub mod introspection; // ✅ Introspection
 pub mod knowledge; // ✅ Knowledge Fusion
+pub mod knowledge_base_default; // ✅ Default Knowledge Base v30.0.0 — pre-seeded at installation
 
 // ═══════════════════════════════════════════════════════════════
 // SYSTEM CENTER MODULE v∞ (Unified Observability)

@@ -1,0 +1,115 @@
+{
+  "version": "v30.0.0",
+  "category": "apprentissage_evolution",
+  "description": "Apprentissage continu et évolution cognitive de TITANE∞ — KnowledgeGrowth, ReinforcementLoop, EvolutionEngine, XP, méta-apprentissage",
+  "apprentissage_continu": {
+    "philosophie": "TITANE n'est pas statique. Chaque interaction enrichit sa compréhension de Kevin, de ses patterns, de ses préférences et des domaines qu'ils explorent ensemble. L'évolution est bidirectionnelle: Kevin grandit avec TITANE, TITANE s'affine avec Kevin.",
+    "niveaux_apprentissage": {
+      "L1_immédiat": {
+        "nom": "Apprentissage immédiat (session)",
+        "mécanisme": "STM enrichie à chaque échange. Pattern recognition en temps réel.",
+        "durée": "Session active (RAM)",
+        "exemple": "TITANE adapte son style après feedback implicite (longueur message, relance)"
+      },
+      "L2_court_terme": {
+        "nom": "Apprentissage à court terme (semaine)",
+        "mécanisme": "MTM — consolidation des patterns de session. ReinforcementLoop.",
+        "durée": "7 jours (SQLite chiffré)",
+        "exemple": "TITANE note que Kevin préfère les réponses concises les matins"
+      },
+      "L3_long_terme": {
+        "nom": "Apprentissage profond (permanent)",
+        "mécanisme": "LTM neural — cristallisation dans les embeddings HNSW. KnowledgeGrowth.",
+        "durée": "Permanent",
+        "exemple": "Profil Kevin complet: valeurs, domaines d'expertise, style de pensée, objectifs de vie"
+      },
+      "L4_méta": {
+        "nom": "Méta-apprentissage (évolution du système)",
+        "mécanisme": "EvolutionEngine — améliore les modèles de traitement eux-mêmes",
+        "durée": "Cumulatif depuis installation",
+        "exemple": "CoherenceController s'affine, ModeSelector apprend quels modes Kevin apprécie"
+      }
+    },
+    "knowledge_growth_engine": {
+      "description": "KnowledgeGrowthEngine — expansion et consolidation des domaines de connaissance",
+      "chemin": "src-tauri/src/cognitive_learning/knowledge_growth.rs",
+      "métriques": {
+        "total_knowledge_units": "Nombre total d'unités de connaissance accumulées",
+        "growth_rate": "Taux de croissance (% nouvelles unités par session)",
+        "consolidation_level": "Degré d'interconnexion entre les domaines (0.0→1.0)",
+        "domains_covered": "Domaines actifs: Architecture, UI/UX, Backend, IA, Design System, +"
+      },
+      "processus_croissance": [
+        "1. Extraction des faits saillants de chaque interaction",
+        "2. Classification par domaine et sous-domaine",
+        "3. Mise en relation avec connaissances existantes (SemanticMap)",
+        "4. Consolidation si répétition ≥3 fois (cristallisation)",
+        "5. Dépréciation des connaissances non utilisées >90 jours (forgetting curve)"
+      ]
+    },
+    "reinforcement_loop": {
+      "description": "ReinforcementLoop — renforcement des patterns efficaces, atténuation des inefficaces",
+      "chemin": "src-tauri/src/cognitive_learning/reinforcement_loop.rs",
+      "mécanisme": "Chaque pattern a: strength (0.0→1.0), success_rate, usage_count. Succès: +0.1 strength. Échec: -0.05 strength.",
+      "patterns_types": [
+        "Patterns de style (ton, longueur, structure)",
+        "Patterns de mode (quel mode marche pour quel contexte Kevin)",
+        "Patterns de mémoire (quelle information retenir pour Kevin)",
+        "Patterns de provider (quel modèle pour quel type de tâche)"
+      ],
+      "top_patterns": "GetTopPatterns(limit=10) — les patterns les plus renforcés guident les décisions futures"
+    },
+    "semantic_map": {
+      "description": "SemanticMap — carte des associations entre concepts",
+      "chemin": "src-tauri/src/cognitive_learning/semantic_map.rs",
+      "structure": "Graphe orienté: nœuds=concepts, arêtes=relations avec poids de corrélation",
+      "utilité": "Enrichit le RAG, anticipe les besoins connexes, génère des suggestions proactives",
+      "exemple": "Kevin parle de 'React' → TITANE associe automatiquement TypeScript, Vite, shadcn/ui, tests Vitest"
+    },
+    "association_engine": {
+      "description": "AssociationEngine — génère des associations créatives et inattendues",
+      "chemin": "src-tauri/src/cognitive_learning/association_engine.rs",
+      "inspiration": "Pensée analogique — comme le cerveau humain qui relie des domaines distants",
+      "utilité": "Insights créatifs, solutions non-conventionnelles, connexions inter-domaines"
+    },
+    "evolution_engine": {
+      "description": "EvolutionEngine (SingularityOS) — système XP et auto-amélioration",
+      "chemin": "src-tauri/src/singularity/evolution_engine.rs",
+      "système_xp": {
+        "niveau_initial": 1.0,
+        "xp_par_interaction_réussie": "+1 à +10 selon complexité",
+        "formule_niveau": "level = sqrt(xp / 100)",
+        "cap_maximum": "Pas de cap — croissance infinie",
+        "xp_pour_next_level": "100 × niveau_actuel"
+      },
+      "métriques_évolution": {
+        "total_interactions": "Compteur global",
+        "successful_interactions": "Interactions sans erreur ni relance",
+        "avg_coherence": "Score moyen CoherenceController",
+        "avg_style_stability": "Stabilité du style entre sessions",
+        "mode_effectiveness": "Taux de succès par mode conversationnel",
+        "memory_relevance_trend": "Tendance de pertinence du contexte injecté",
+        "latency_trend": "Tendance des latences (amélioration?)",
+        "cognitive_drift": "Dérive cognitive — doit rester proche de 0"
+      },
+      "snapshot_évolution": "EvolutionSnapshot pris toutes les 100 interactions — historique de progression"
+    },
+    "summarizer": {
+      "description": "Summarizer — résumé automatique des conversations longues pour compression mémorielle",
+      "chemin": "src-tauri/src/cognitive_learning/summarizer.rs",
+      "quand": "Quand une conversation dépasse 50 échanges OU avant promotion LTM",
+      "output": "Résumé de 3-5 phrases capturant les décisions clés, faits importants, contexte"
+    },
+    "memory_builder": {
+      "description": "MemoryBuilder — construit les entrées mémoire structurées depuis les conversations brutes",
+      "chemin": "src-tauri/src/cognitive_learning/memory_builder.rs",
+      "structure_sortie": "MemoryEntry { content, category, importance(0→1), embeddings, tags, timestamp }"
+    },
+    "conseils_optimisation": [
+      "Donner du feedback explicite ('c'est parfait', 'trop long', 'plus technique') accélère l'apprentissage",
+      "Les corrections explicites créent des patterns forts (reinforcement négatif + positif)",
+      "Les sessions régulières maintiennent la cohérence MTM sans gap de consolidation",
+      "Utiliser persistent_memory_write_entry pour ancrer des faits importants immédiatement"
+    ]
+  }
+}

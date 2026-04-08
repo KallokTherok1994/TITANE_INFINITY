@@ -1,0 +1,97 @@
+{
+  "version": "v30.0.0",
+  "category": "troubleshooting_faq",
+  "description": "FAQ, erreurs communes, patterns de résolution et diagnostic TITANE∞",
+  "startup_issues": {
+    "ollama_not_starting": {
+      "symptom": "TITANE indique 'Ollama indisponible' au démarrage",
+      "causes": ["Ollama non installé", "Port 11434 bloqué", "Modèle par défaut non téléchargé"],
+      "solutions": [
+        "Vérifier: curl http://localhost:11434/api/tags",
+        "Installer Ollama: https://ollama.ai/download",
+        "Télécharger modèle: ollama pull gemma2:2b",
+        "Configurer OLLAMA_BASE_URL si Ollama sur autre host"
+      ],
+      "ipc_check": "test_ollama → { ok: true/false }"
+    },
+    "api_key_missing": {
+      "symptom": "Provider IA retourne 401 Unauthorized",
+      "solution": "Configurer la clé via l'UI Admin > Config ou IPC secrets_store",
+      "ipc_command": "secrets_store { key: 'OPENAI_API_KEY', value: 'sk-...' }"
+    },
+    "ipc_command_not_found": {
+      "symptom": "tauri: command not found — erreur console",
+      "cause": "Commande non enregistrée dans invoke_handler de main.rs",
+      "solution": "Vérifier que la commande est dans la liste tauri::generate_handler![...] de main.rs",
+      "fallback": "TauriProtector.secureInvoke() retourne null — toujours vérifier Array.isArray() avant itération"
+    },
+    "memory_high": {
+      "symptom": "Utilisation RAM >1GB",
+      "causes": ["STM non purgée", "LTM index trop grand", "Leak de provider actif"],
+      "solutions": [
+        "memory_clear_stm — purger la STM",
+        "memory_compact — compacter l'index LTM",
+        "Redémarrer TITANE (libère tous les providers)",
+        "Vérifier watchdog: watchdog_get_status"
+      ]
+    },
+    "db_locked": {
+      "symptom": "SQLite: database is locked",
+      "cause": "Deux processus TITANE ouverts simultanément ou crash précédent",
+      "solution": "Tuer tous les processus TITANE, vérifier absence de fichier .lock dans app_data_dir"
+    }
+  },
+  "performance_issues": {
+    "slow_response": {
+      "symptom": "Réponses IA >10 secondes",
+      "diagnostic": [
+        "Vérifier le provider actif (provider_get_active)",
+        "Tester latence: test_ollama / ping_gemini",
+        "Vérifier si Overdrive est actif (overdrive mode)",
+        "Vérifier cpu/memory: system_get_metrics"
+      ],
+      "solutions": [
+        "Passer à un modèle plus léger (gemma2:2b au lieu de llama3.1:70b)",
+        "Activer streaming pour perception de fluidité",
+        "Activer le cache LRU (ai_enable_cache)",
+        "Vérifier rate limits provider (max RPM)"
+      ]
+    },
+    "ipc_timeout": {
+      "symptom": "IPC timeout après 30s",
+      "cause": "Commande lourde sans timeout ou provider non répondant",
+      "solution": "Toutes les commandes IPC doivent avoir un timeout côté Rust. Utiliser tauri::async_runtime::timeout()"
+    }
+  },
+  "common_errors": {
+    "BLOCKED": "Invariant architectural violé. Voir logs pour détail. Ne pas contourner — résoudre la cause racine.",
+    "FAIL": "Gate ou test échoué. Voir stderr/logs. Corriger le problème avant de continuer.",
+    "STOP_THE_LINE": "Action critique bloquée. Nécessite analyse et preuve avant de continuer.",
+    "IPC_NULL_RESPONSE": "secureInvoke a retourné null. Vérifier TauriProtector et que la commande est enregistrée.",
+    "RING_VIOLATION": "Import interdit détecté (ex: Ring1 importe Ring4). Corriger l'architecture 4-Ring.",
+    "MISSING_PROOF": "Aucune preuve exécutable pour le résultat annoncé. Fournir output de commande réelle."
+  },
+  "diagnostic_commands": {
+    "system_health": "system_get_health → rapport complet santé système",
+    "ipc_catalog": "ipc_catalog_list → liste toutes les commandes disponibles avec status",
+    "memory_status": "memory_get_system_status → état STM/MTM/LTM + statistiques",
+    "provider_status": "ai_get_provider_status → provider actif, latence, disponibilité",
+    "engine_status": "singularity_get_status + omega_get_status + one_core_get_engine_status",
+    "constitution_check": "constitution_check_action → valider une action vs principes",
+    "watchdog": "watchdog_get_status → CPU, mémoire, processus surveillés",
+    "kb_validate": "knowledge_base_validate → valider l'intégrité de la base de connaissance"
+  },
+  "architecture_rules": {
+    "ring_boundaries": "Ring1(Core) → Ring2(Services) → Ring3(Engines) → Ring4(UI/OS). Jamais l'inverse.",
+    "one_door": "Toutes les requêtes réseau: UI → IPC → Services → NetworkGateway → External. Pas de fetch direct en UI.",
+    "ipc_contract": "{ ok: bool, content: T | null, error: string | null } — jamais de silence ni de faux succès.",
+    "no_skips": "NO_SKIPS policy: les gates obligatoires ne peuvent pas être contournées par narrative.",
+    "minimal_patch": "Le plus petit changement sûr qui résout le problème."
+  },
+  "autoheal_workflow": {
+    "trigger": "Chaque bug fixé → une entrée AutoHeal dans scripts/autoheal/autoheal_rules.jsonl",
+    "format": "{ id, date, scope, symptom, root_cause, fix, prevention_test, commands, files_changed, rollback }",
+    "validation": "bash scripts/autoheal/detect_recurrence.sh → doit finir PASS: G_AH_RECURRENCE_GUARD_PASS",
+    "verify": "bash scripts/verify_instructions.sh → doit finir SUMMARY: PASS=23 FAIL=0"
+  }
+}

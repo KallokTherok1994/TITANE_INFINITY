@@ -1,0 +1,65 @@
+{
+  "version": "v30.0.0",
+  "category": "communication_crise",
+  "description": "Communication de crise — définition et types de crises (accidentelle/intentionnelle/structurelle), cellule de crise, plan de communication de crise (PCC), dark site, gestion des médias en crise, réseaux sociaux en crise, porte-parole, post-crise et retour d'expérience (RETEX)",
+  "communication_crise": {
+    "introduction": "Une crise est un événement soudain ou progressif qui menace l'intégrité, la réputation ou la survie d'une organisation. La communication de crise ne s'improvise pas: elle se prépare avant, se pilote pendant, et se capitalise après. TITANE maîtrise ce domaine avec la rigueur des professionnels du risque.",
+    "typologies_de_crises": {
+      "par_origine": {
+        "accidentelle": "Accidents industriels, catastrophes naturelles, incidents techniques. L'organisation est souvent victime.",
+        "intentionnelle": "Attaques cyber, sabotage, terrorisme, fraude interne, bad buzz provoqué. L'organisation est clairement visée.",
+        "structurelle": "Crise née d'un dysfonctionnement durable: mauvaise gouvernance, produit défectueux chronique, culture toxique révélée."
+      },
+      "par_vitesse": {
+        "crise_soudaine": "Explosion d'une usine, crash aérien, cyberattaque. Pas le temps de réfléchir — les plans préparés s'activent.",
+        "crise_rampante": "Scandale financier, affaire judiciaire, contentieux collectif. Se développe lentement mais peut exploser à tout moment."
+      },
+      "signaux_faibles": "Surveiller: augmentation des plaintes clients, tensions sociales internes, articles négatifs isolés, procédures judiciaires en cours, audit critique non traité. Un signal faible non traité devient souvent une crise forte."
+    },
+    "cellule_de_crise": {
+      "composition": "Dirigeant (décideur) + juriste + directeur communication + directeur technique/opérationnel + DRH si crise RH + expert externe si nécessaire. Pas plus de 7-8 personnes.",
+      "rôle": "Prendre les décisions, coordonner les actions, valider les messages. Réunion toutes les 2-4h en phase aiguë.",
+      "logistique": "Salle dédiée (physique ou virtuelle), canaux de communication sécurisés, accès aux informations clés, hotline dédiée, log des décisions et chronologie."
+    },
+    "plan_de_communication_de_crise": {
+      "éléments_obligatoires": [
+        "Analyse des scénarios de crise probables et leur gravité",
+        "Organigramme de crise avec suppléants désignés",
+        "Contacts d'urgence (médias, autorités, parties prenantes)",
+        "Messages pré-rédigés (holding statements) par scénario",
+        "Procédure d'activation de la cellule de crise",
+        "Dark site (site web de crise prêt à être activé)",
+        "Plan média (liste journalistes, porte-paroles habilités, protocole d'interview)"
+      ],
+      "mise_à_jour": "Réviser le PCC tous les 12 mois et après chaque crise. Le tester par simulation (exercice de crise à blanc).",
+      "holding_statement": "Premier communiqué publié dans les 30-60 minutes: 'Nous avons pris connaissance de [situation]. La sécurité de [personnes concernées] est notre priorité absolue. Nous sommes en train de [actions en cours]. Nous reviendrons avec des informations complémentaires dans [délai].' — Reconnaître sans admettre la faute, montrer l'action."
+    },
+    "principes_communication_en_crise": {
+      "vitesse": "La première heure est critique. Dans le vide d'information, les rumeurs s'installent. Mieux vaut un message incomplet mais rapide qu'un message parfait trop tard.",
+      "vérité": "Ne jamais mentir. Un mensonge découvert aggrave la crise de façon exponentielle (cf. Johnson & Johnson Tylenol 1982 vs Volkswagen Dieselgate 2015).",
+      "empathie": "Reconnaître les victimes et leur douleur AVANT de parler des mesures prises. L'ordre compte: Empathie → Faits → Actions.",
+      "cohérence": "Un seul porte-parole officiel par canal. Les messages internes doivent être alignés avec les messages externes. Les employés sont des relais potentiels.",
+      "proactivité": "Anticiper les questions difficiles. Communiquer régulièrement même quand on n'a pas d'information nouvelle ('On ne sait pas encore X, mais on fait Y')."
+    },
+    "réseaux_sociaux_en_crise": {
+      "spécificités": "Vitesse de propagation 10x supérieure. Perte de contrôle de la narration. Les screenshots sont permanents.",
+      "monitoring": "Mettre en place une veille en temps réel dès la détection de crise (Mention, Brandwatch, TweetDeck). Identifier les influenceurs qui amplifient.",
+      "réponse": "Répondre aux critiques de bonne foi, pas aux trolls. Centraliser les réponses (ne pas laisser les équipes répondre individuellement). Prendre la conversation en DM si possible pour les cas sensibles.",
+      "dark_site": "Version simplifiée du site web activée en crise. Contient: message de la direction, FAQ, contact presse, ressources pour les victimes. Doit être prêt avant la crise."
+    },
+    "porte_parole": {
+      "sélection": "Pas nécessairement le PDG (sa présence est un signal de gravité). Choisir selon la nature de la crise: expert technique pour crise technique, DRH pour crise sociale.",
+      "formation": "Media training obligatoire avant toute prise de parole. Simulation d'interviews difficiles, travail sur le langage non-verbal, gestion des questions pièges.",
+      "techniques": {
+        "bridging": "'C'est une question importante, mais ce qui est essentiel ici c'est...' — pour revenir aux messages clés",
+        "flagging": "'Le point crucial à retenir c'est...' — pour souligner un message",
+        "blocking": "'Je ne suis pas en mesure de confirmer [cela], en revanche je peux vous dire...' — pour écarter une question sans refuser"
+      }
+    },
+    "post_crise_RETEX": {
+      "bilan_communication": "Analyser: Was the communication fast enough? Consistent? Empathetic? What messages resonated?",
+      "réparation_réputation": "Plan de communication positif post-crise: témoignages, actions concrètes, engagement RSE renforcé, audit externe de crédibilité",
+      "mise_à_jour_plan": "Mettre à jour le PCC avec les leçons apprises. Former les nouveaux porte-paroles. Tester les dispositifs révisés."
+    }
+  }
+}

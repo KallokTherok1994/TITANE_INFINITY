@@ -1,0 +1,93 @@
+{
+  "version": "v30.0.0",
+  "category": "redaction_professionnelle",
+  "description": "Rédaction professionnelle — types de documents (note/rapport/mémo/CR/synthèse), structure pyramidale inversée, clarté/concision/précision, style administratif français, email professionnel, relecture/correction",
+  "redaction_professionnelle": {
+    "introduction": "La rédaction professionnelle est une compétence transversale fondamentale dans tout environnement de travail. Rédiger avec clarté, précision et efficacité distingue les professionnels qui avancent. TITANE aborde ce domaine avec la rigueur du monde administratif et juridique français.",
+    "types_de_documents": {
+      "note_de_service": {
+        "définition": "Document interne à une organisation, à sens unique (hiérarchie → collaborateurs)",
+        "structure": "En-tête (émetteur/destinataires/objet/date) + corps court + signature. Pas de formule de politesse.",
+        "ton": "Direct, impératif ou informatif. 1 page maximum.",
+        "usage": "Instruction, information pratique, procédure"
+      },
+      "rapport": {
+        "définition": "Document d'analyse ou de compte rendu remis à une autorité",
+        "structure": {
+          "page_de_garde": "Titre, auteur, destinataire, date, référence",
+          "sommaire": "Obligatoire dès 5 pages",
+          "introduction": "Contexte, problématique, annonce du plan",
+          "développement": "Constats → analyse → recommandations",
+          "conclusion": "Synthèse et propositions concrètes",
+          "annexes": "Documents justificatifs numérotés"
+        },
+        "règle_d_or": "Le rapport répond à une commande. Toujours partir de la commande pour définir l'angle."
+      },
+      "note_de_synthèse": {
+        "définition": "Résumé structuré et objectif d'un ensemble de documents sur un sujet",
+        "principe": "Synthétiser ≠ résumer. Synthétiser = restructurer l'information de façon thématique avec un fil directeur personnel.",
+        "structure": "Introduction (reformulation sujet + annonce plan) + développement (2-3 axes thématiques) + conclusion (bilan factuel).",
+        "piège": "Ne jamais exprimer un avis personnel dans une note de synthèse pure"
+      },
+      "compte_rendu": {
+        "types": "CR de réunion (fidèle aux échanges) vs relevé de décisions (uniquement les décisions et actions)",
+        "structure_CR_réunion": "Date/heure/lieu, présents/excusés/absents, ordre du jour, déroulement point par point, tour de table éventuel, date prochaine réunion",
+        "principe": "Objectivité absolue — retranscrire ce qui a été dit, non ce qu'on pense qu'ils voulaient dire",
+        "délai": "Distribuer dans les 48h maximum"
+      },
+      "mémo": {
+        "définition": "Note interne courte (1 page max) à destination d'une ou plusieurs personnes",
+        "usage": "Rappel, information urgente, prise de position rapide",
+        "format": "À: / De: / Objet: / Date: / Corps (3-5 §) maximum"
+      },
+      "email_professionnel": {
+        "objet": "Précis et complet — doit permettre de classer sans ouvrir. 'Réunion client Dupont - CR 07/04' > 'Suite réunion'",
+        "structure": "Formule d'appel + contexte (1 phrase) + corps structuré + action attendue + formule de politesse adaptée au grade",
+        "longueur": "< 5 lignes si possible. Au-delà: utiliser un fichier joint.",
+        "formules_de_politesse": {
+          "supérieur": "Je vous prie d'agréer, Madame/Monsieur [titre], l'expression de mes salutations respectueuses.",
+          "pair": "Cordialement,",
+          "client_externe": "Avec mes sincères salutations,"
+        }
+      }
+    },
+    "structure_et_logique": {
+      "pyramide_inversée": {
+        "principe": "L'information la plus importante en premier (conclusion/décision) — le lecteur professionnel lit le début puis décide s'il continue",
+        "application": "Email, rapport, note: commencer par la réponse, puis développer le raisonnement",
+        "contraire": "Style académique (contexte → développement → conclusion) = inadapté en environnement professionnel"
+      },
+      "SPRI": {
+        "définition": "Situation → Problème → Résolution → Information — structure narrative pour mettre en contexte",
+        "usage": "Notes de problématique, pitch d'une situation à un décideur"
+      },
+      "plan_en_deux_parties": "Standard français en analyse: 1ère partie constats/diagnostic, 2ème partie préconisations/solutions. Sous-parties équilibrées.",
+      "transitions": "Mots de liaison logiques: ainsi/en effet/cependant/par conséquent/néanmoins/en revanche — jamais 'mais' en début de phrase en style formel"
+    },
+    "style_administratif_français": {
+      "clarté": "Une phrase = une idée. Longueur idéale: 15-25 mots. Éviter les imbrications de relatives.",
+      "précision": "Nommer exactement les entités (articles de loi, dates, références). Ne jamais écrire 'le texte' — écrire 'l'article L.1234-5 du Code civil'.",
+      "concision": "Supprimer les chevilles inutiles: 'il convient de noter que', 'comme indiqué précédemment', 'afin de pouvoir'.",
+      "impersonnel": "Préférer les tournures impersonnelles ou passives: 'Il est rappelé que' > 'Je rappelle que' dans les documents officiels.",
+      "vocabulaire": {
+        "favoriser": ["Le présent document a pour objet", "Il y a lieu de", "En l'état actuel", "À toutes fins utiles", "Sous réserve de"],
+        "éviter": ["En fait", "Clairement", "Évidemment", "Bien entendu", "En gros"]
+      }
+    },
+    "relecture_et_correction": {
+      "protocole_CQFD": {
+        "C": "Cohérence — le document répond-il à l'objectif initial?",
+        "Q": "Qualité de l'argument — les preuves/chiffres sont-ils exacts et sourcés?",
+        "F": "Forme — orthographe, grammaire, ponctuation, mise en page",
+        "D": "Destinataire — le niveau de langue et le contenu sont-ils adaptés au lecteur?"
+      },
+      "outils": "Antidote (logiciel de correction français le plus avancé), Bescherelle en ligne, dictionnaire juridique Dalloz",
+      "erreurs_fréquentes": [
+        "Accord du participe passé avec avoir (COD avant le verbe)",
+        "Confusion entre 'dont' et 'duquel' (antécédent précédé d'une préposition)",
+        "Mal-ponctuation des incises (virgules autour de la proposition incise)",
+        "Majuscules abusives aux titres de fonctions (le directeur général, pas le Directeur Général)"
+      ]
+    }
+  }
+}

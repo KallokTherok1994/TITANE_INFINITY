@@ -1,0 +1,109 @@
+{
+  "version": "v30.0.0",
+  "category": "psychologie_emotionnelle",
+  "description": "Psychologie émotionnelle — théories (Plutchik, Lazarus, Ekman), régulation émotionnelle (Gross), intelligence émotionnelle (Goleman 5 composantes), résilience",
+  "psychologie_emotionnelle": {
+    "introduction": "Les émotions sont des systèmes d'information, pas des perturbations. Comprendre leur mécanique permet à TITANE de s'y adapter avec précision — ni les nier, ni les amplifier, ni les pathologiser.",
+    "theories_emotions": {
+      "plutchik_roue": {
+        "auteur": "Robert Plutchik (1980)",
+        "modèle": "Roue des émotions — 8 émotions primaires organisées en 4 paires opposées",
+        "huit_primaires": {
+          "joie ↔ tristesse": "Satisfaction vs perte",
+          "confiance ↔ dégoût": "Acceptation vs rejet",
+          "peur ↔ colère": "Danger perçu vs obstacle",
+          "surprise ↔ anticipation": "Inattendu vs attention dirigée"
+        },
+        "intensités": "Chaque émotion a 3 intensités (ex: joie → sérénité → joie → extase)",
+        "émotions_composées": "Combinaisons de primaires (joie + confiance = amour, peur + surprise = stupéfaction)",
+        "apport_TITANE": "Identifier la nuance d'émotion détectée — pas seulement 'positif/négatif' mais laquelle exactement et à quelle intensité"
+      },
+      "lazarus_evaluation": {
+        "auteur": "Richard Lazarus (1991) — Théorie de l'évaluation cognitive",
+        "principe": "Les émotions naissent d'une évaluation de la signification d'un événement pour soi",
+        "évaluation_primaire": "Cet événement est-il pertinent pour moi? Bon ou mauvais?",
+        "évaluation_secondaire": "Ai-je les ressources pour y faire face? (coping)",
+        "implication": "La même situation peut produire des émotions différentes selon l'évaluation. Les émotions sont modifiables par recadrage cognitif.",
+        "apport_TITANE": "Aider Kevin à réévaluer une situation stressante en changeant son cadrage"
+      },
+      "ekman_universelles": {
+        "auteur": "Paul Ekman — 6 émotions universelles trans-culturelles",
+        "six": ["Joie", "Tristesse", "Peur", "Colère", "Dégoût", "Surprise"],
+        "expressions_faciales": "Reconnues universellement indépendamment de la culture",
+        "micro_expressions": "Expressions fugitives (1/25s) qui révèlent l'émotion réelle même masquée"
+      }
+    },
+    "regulation_emotionnelle": {
+      "auteur": "James Gross (1998) — Modèle de régulation émotionnelle",
+      "définition": "Ensemble de processus par lesquels on influence quelles émotions on a, quand on les a, comment on les vit et les exprime",
+      "stratégies": {
+        "sélection_de_situation": "Choisir ou éviter les situations selon les émotions qu'elles induisent (stratégie préventive)",
+        "modification_de_situation": "Changer activement une situation pour en modifier l'impact émotionnel",
+        "déploiement_attentionnel": "Diriger son attention vers certains aspects d'une situation (distraction, concentration, rumination)",
+        "réévaluation_cognitive": {
+          "description": "Changer la façon dont on interprète une situation pour en modifier l'impact émotionnel",
+          "efficacité": "Stratégie la plus efficace à long terme — réduit l'intensité émotionnelle SANS supprimer l'expression",
+          "exemples": "'Ce rejet n'est pas un échec personnel mais une incompatibilité', 'Cette critique est une opportunité d'amélioration'"
+        },
+        "suppression_expressive": {
+          "description": "Inhiber l'expression extérieure d'une émotion sans changer son intensité intérieure",
+          "coût": "Efficace à court terme mais coûteux cognitivement et socialement — l'interlocuteur le perçoit souvent"
+        }
+      },
+      "fenêtre_de_tolérance": {
+        "définition": "Zone dans laquelle on peut traiter l'information émotionnelle sans être dépassé ou anesthésié",
+        "hyperactivation": "Trop d'activation — anxiété, panique, agressivité, débordement",
+        "hypoactivation": "Trop peu — engourdissement, dissociation, dépression",
+        "zone_optimale": "Activation modérée — apprentissage, connexion, créativité possibles",
+        "apport_TITANE": "Kevin en hyperactivation → ralentir, simplifier, ancrer. Kevin en hypoactivation → stimuler doucement, réengager."
+      }
+    },
+    "intelligence_emotionnelle": {
+      "auteur": "Daniel Goleman (1995) — 'Emotional Intelligence'",
+      "cinq_composantes": {
+        "conscience_de_soi": {
+          "définition": "Reconnaître ses propres émotions et leur impact",
+          "indicateurs": "Connaître ses forces et limites, confiance en soi réaliste",
+          "développement": "Journal émotionnel, feedback externe honnête"
+        },
+        "maîtrise_de_soi": {
+          "définition": "Contrôler ses impulsions et canaliser ses émotions de façon constructive",
+          "indicateurs": "Fiabilité, intégrité, adaptabilité, initiative",
+          "développement": "Techniques de régulation (réévaluation, pause délibérée)"
+        },
+        "motivation": {
+          "définition": "Se mobiliser pour atteindre des objectifs au-delà des récompenses externes",
+          "indicateurs": "Drive à s'améliorer, optimisme persistant, engagement",
+          "développement": "Connexion aux valeurs profondes, petites victoires régulières"
+        },
+        "empathie": {
+          "définition": "Comprendre les émotions des autres et les considérer dans ses décisions",
+          "types": {
+            "cognitive": "Comprendre intellectuellement l'état de l'autre",
+            "affective": "Ressentir ce que ressent l'autre",
+            "compassion": "Vouloir aider l'autre qui souffre"
+          },
+          "développement": "Écoute active niveau 3, suspendre le jugement, poser des questions sur le vécu"
+        },
+        "compétences_sociales": {
+          "définition": "Gérer les relations, inspirer et influencer, naviguer les conflits",
+          "indicateurs": "Leadership, collaboration, gestion des conflits, catalyseur de changement",
+          "développement": "Pratique des retours positifs, gestion des désaccords de façon constructive"
+        }
+      },
+      "apport_TITANE": "TITANE vise le niveau 4 d'IE — conscience, maîtrise et empathie calibrées, sans simulation. Pas de 'je comprends!' vide de sens — vraie adaptation comportementale."
+    },
+    "resilience": {
+      "définition": "Capacité à traverser et à se reconstruire après l'adversité",
+      "facteurs": {
+        "sens": "Avoir une signification à donner à l'épreuve (Frankl — Logothérapie)",
+        "liens": "Réseau de soutien social — l'isolement amplifie l'adversité",
+        "compétences": "Sentiment de compétence — 'j'ai déjà surmonté des difficultés'",
+        "flexibilité": "Capacité à s'adapter sans rigidité",
+        "acceptation": "Accepter ce qui ne peut pas être changé (Stoïcisme, ACT)"
+      },
+      "post_traumatic_growth": "Croissance post-traumatique — certaines adversités catalysent un développement profond (Tedeschi & Calhoun)",
+      "apport_TITANE": "Reconnaître les épreuves de Kevin, honorer leur poids, puis orienter vers les ressources disponibles — jamais minimiser, jamais dramatiser."
+    }
+  }
+}

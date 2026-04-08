@@ -1,0 +1,79 @@
+{
+  "version": "v30.0.0",
+  "category": "sommeil_optimise",
+  "description": "Sommeil optimisé — architecture (cycles NREM/REM), chronotypes, hygiène du sommeil, suppléments, SAOS/insomnie, polyphasique, tracking (HRV/Oura/Whoop), chronobiologie",
+  "sommeil_optimise": {
+    "introduction": "Le sommeil est le levier de performance n°1 sous-estimé. 8h de sommeil de qualité = meilleure récupération musculaire, consolidation mémorielle, équilibre hormonal, immunité et humeur. Aucun supplément, entraînement ou alimentation ne compense un sommeil insuffisant.",
+    "architecture_du_sommeil": {
+      "cycles": "Un cycle dure ~90 minutes. Une nuit de 7.5h = 5 cycles. Toujours compter en multiples de 1.5h.",
+      "stades": {
+        "N1": "Endormissement léger (5% de la nuit). Transition veille/sommeil.",
+        "N2": "Sommeil léger (45%). Consolidation mémorielle procédurale. Fuseaux du sommeil (spindles).",
+        "N3_sommeil_profond": "Sommeil lent profond (25%). Récupération physique MAXIMALE. GH (hormone de croissance) libérée. Prédomine en 1ère moitié de la nuit.",
+        "REM_sommeil_paradoxal": "Rêves (25%). Consolidation mémorielle émotionnelle et déclarative. Régulation émotionnelle. Prédomine en 2ème moitié de la nuit."
+      },
+      "implication_pratique": "Aller dormir plus tôt = plus de sommeil profond (récupération physique). Dormir plus longtemps = plus de REM (mémoire, émotions)."
+    },
+    "chronotypes": {
+      "définition": "Prédisposition génétique (gène CLOCK, PER3) pour les horaires d'éveil et de sommeil",
+      "types": {
+        "lion": "Couche-tôt/lève-tôt. Pic de productivité matin. 15-20% de la population.",
+        "ours": "Calé sur cycle solaire. Productif en milieu de matinée et après-midi. 55% de la population.",
+        "loup": "Couche-tard/lève-tard. Pic de productivité tardif. 15-20%.",
+        "dauphin": "Sommeil léger et fragmenté. Souvent anxieux. 10%."
+      },
+      "outil": "Questionnaire Horne-Östberg (MEQ) pour identifier son chronotype",
+      "conseil": "Aligner ses horaires de travail sur son chronotype améliore la productivité de 30-40%"
+    },
+    "hygiene_du_sommeil": {
+      "lumière": {
+        "matin": "S'exposer à la lumière vive (soleil direct ou lampe 10 000 lux) dans les 30-60 min après le réveil — ancre le cortisol awakening response et la mélatonine du soir (10-14h plus tard)",
+        "soir": "Éviter la lumière bleue 2h avant le coucher. Lunettes orange/rouges ou mode nuit. La lumière vive retarde la mélatonine de 2-3h.",
+        "chambre": "Obscurité totale pour dormir — le moindre photon perturbe la mélatonine"
+      },
+      "température": "La température corporelle doit baisser de 0.5-1°C pour s'endormir. Chambre idéale: 16-19°C. Douche chaude le soir paradoxalement aide: vasodilatation périphérique → baisse température centrale.",
+      "régularité": "L'horaire de réveil fixe est PLUS important que l'heure du coucher — il synchronise l'horloge circadienne. Même le week-end (décalage max: 1h).",
+      "caféine": "Demi-vie: 5-6h. Dernière consommation idéale: 14h (si coucher 23h). Après la coupure = accumulation d'adénosine masquée qui dégrade la qualité du sommeil profond même si on s'endort.",
+      "alcool": "Aide à s'endormir mais détruit le REM et fragmente le sommeil — illusion de récupération.",
+      "exercice": "Favorise le sommeil profond. Idéalement le matin ou midi. Exercice intense le soir (< 3h avant coucher) peut retarder l'endormissement."
+    },
+    "supplements_sommeil": {
+      "magnesium_bisglycinate": "300-400mg avant coucher — réduit le cortisol, active le GABA, améliore le sommeil profond. Sûr sur le long terme.",
+      "melatonine": {
+        "rôle": "Signal circadien — pas un somnifère. Déclenche l'endormissement, ne le provoque pas.",
+        "dose": "0.2-0.5mg est souvent plus efficace que les doses commerciales (3-10mg qui peuvent désensibiliser)",
+        "usage": "Jet lag, décalage du rythme, travail posté — pas usage quotidien long terme",
+        "timing": "30-60 min avant l'heure de coucher cible"
+      },
+      "L_theanine": "200mg seul ou avec caféine (1:2) — réduit l'anxiété, améliore la qualité de sommeil. Sans accoutumance.",
+      "ashwagandha": "300-600mg KSM-66 le soir — adaptogène. Réduit cortisol, améliore sommeil sur 8 semaines.",
+      "glycine": "3g avant coucher — baisse la température corporelle centrale. Améliore le sommeil profond.",
+      "CBD": "Preuves encore limitées mais prometteur pour l'anxiété et le sommeil. Légal en France < 0.3% THC."
+    },
+    "pathologies_courantes": {
+      "insomnie": {
+        "types": "Initiale (s'endormir), maintien (rester endormi), terminale (réveil précoce)",
+        "traitement_TCC": "TCC-I (Thérapie Cognitivo-Comportementale de l'Insomnie) = traitement de 1ère ligne, supérieur aux somnifères à long terme",
+        "techniques": "Restriction de sommeil, contrôle du stimulus, hygiène du sommeil, restructuration cognitive"
+      },
+      "SAOS": {
+        "nom": "Syndrome d'Apnées Obstructives du Sommeil",
+        "prévalence": "4% des hommes adultes — très sous-diagnostiqué",
+        "symptômes": "Ronflement, pauses respiratoires observées, fatigue diurne inexpliquée, maux de tête matinaux",
+        "traitement": "PPC (pression positive continue) — extrêmement efficace. Perte de poids si surpoids associé."
+      },
+      "dette_de_sommeil": "S'accumule mais ne se rembourse pas complètement (surtout le sommeil profond perdu). Ne pas compter sur le week-end pour 'rattraper'."
+    },
+    "sommeil_polyphasique": {
+      "monophasique": "Standard occidental — 1 bloc de 7-9h. Optimal pour la majorité.",
+      "sieste": "20 min (nap-café: avaler caféine juste avant → efficacité maximale au réveil) ou 90 min (cycle complet). Idéale 13-15h.",
+      "biphasique": "Nuit + sieste — pratique ancestrale (dans les pays latins). Bénéfices documentés pour la santé cardiovasculaire.",
+      "everyman_uberman": "Schémas polyphasiques extrêmes — pas de preuves de bénéfices. Souvent insoutenables socialement."
+    },
+    "tracking": {
+      "HRV": "Variabilité de fréquence cardiaque — meilleur marqueur de récupération. Haute HRV = système nerveux équilibré. Mesurer le matin au réveil (cohérence cardiaque passive).",
+      "outils": "Oura Ring (précision clinique), Whoop (athlètes), Garmin/Apple Watch (accessible). App gratuite: Elite HRV avec ceinture cardiaque.",
+      "signaux_sous_recuperation": "HRV en baisse persistante, FC repos élevée, humeur irritable, performance en baisse — réduire intensité d'entraînement"
+    }
+  }
+}

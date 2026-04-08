@@ -1,0 +1,73 @@
+{
+  "version": "v30.0.0",
+  "category": "gestion_temps_productivite",
+  "description": "Gestion du temps et productivité — GTD David Allen, Time Blocking, Eisenhower matrix, second brain Tiago Forte (PARA), outils (Notion/Obsidian/Todoist), batching, energy management, loi de Parkinson, 80/20",
+  "gestion_temps_productivite": {
+    "introduction": "La productivité n'est pas travailler plus longtemps — c'est produire plus de valeur par heure d'énergie focalisée. TITANE distingue la gestion du temps (calendrier) de la gestion de l'énergie (états internes) — les deux sont nécessaires.",
+    "systemes_gestion_taches": {
+      "GTD_getting_things_done": {
+        "auteur": "David Allen — Getting Things Done (2001)",
+        "principe": "L'esprit est fait pour avoir des idées, pas pour les stocker. Tout externaliser dans un système de confiance.",
+        "5_étapes": {
+          "1_capture": "Collecter TOUT ce qui sollicite l'attention dans une inbox (physique ou numérique)",
+          "2_clarifier": "Pour chaque item: est-ce actionnable? Si non: supprimer/archiver/incuber. Si oui: prochaine action définie.",
+          "3_organiser": "Trier par contexte (appels, email, maison, ville) ou projet",
+          "4_réviser": "Weekly review: vider inbox, revoir projets, planifier la semaine",
+          "5_exécuter": "Travailler depuis les listes, pas depuis la mémoire"
+        },
+        "weekly_review": "La pratique GTD la plus importante — 1h/semaine maximum. Sans elle, le système s'effondre."
+      },
+      "time_blocking": {
+        "principe": "Assigner chaque tâche à un bloc de temps précis dans le calendrier — évite les décisions en temps réel",
+        "deep_blocks": "Blocs de 90-120 min pour le travail profond. Blocs courts (15-30 min) pour les tâches légères.",
+        "buffer": "Toujours inclure des blocs buffer de 15-20% — les imprévus sont inévitables",
+        "avantage": "Réalisme forcé — oblige à prioriser quand l'agenda est plein"
+      },
+      "matrice_eisenhower": {
+        "Q1_urgent_important": "Crises, deadlines, urgences — traiter immédiatement mais réduire par la planification",
+        "Q2_non_urgent_important": "Planification, développement, prévention, relations — LE quadrant de la vie intentionnelle",
+        "Q3_urgent_non_important": "Interruptions, certaines réunions — déléguer ou limiter",
+        "Q4_non_urgent_non_important": "Distractions — éliminer",
+        "conseil": "Passer 60-70% du temps en Q2 est le secret des personnes hautement efficaces (Covey)"
+      }
+    },
+    "principes_fondamentaux": {
+      "loi_parkinson": "Le travail s'étire pour remplir le temps disponible. Solution: se fixer des deadlines courtes (timeboxing).",
+      "loi_80_20_pareto": "80% des résultats viennent de 20% des actions. Identifier les 20% à haute valeur et les surpondérer.",
+      "single_tasking": "Le multi-tasking n'existe pas pour les tâches cognitives — c'est du task-switching rapide qui coûte 20-40% d'efficacité (American Psychological Association).",
+      "no_is_the_default": "Chaque oui est un non à quelque chose d'autre. Filtrer les engagements par rapport aux priorités de Q2.",
+      "energy_management": "Aligner les tâches difficiles sur les pics d'énergie (chronotype). Ne pas planifier du deep work quand on est à plat."
+    },
+    "second_brain": {
+      "auteur": "Tiago Forte — Building a Second Brain (2022)",
+      "principe": "Externaliser la mémoire de travail dans un système numérique pour libérer le cerveau pour la créativité et la réflexion",
+      "methode_CODE": {
+        "C_Capture": "Capturer l'information digne d'attention (pas tout)",
+        "O_Organize": "Organiser par projet/domaine, pas par sujet",
+        "D_Distill": "Distiller l'essentiel (progressive summarization — gras, puis surligné, puis résumé)",
+        "E_Express": "Exprimer = partager, créer, produire depuis sa base de connaissances"
+      },
+      "methode_PARA": {
+        "P_Projets": "Objectifs avec deadline (max 10-15 actifs)",
+        "A_Domaines": "Sphères de responsabilité sans deadline (santé, finances, famille)",
+        "R_Ressources": "Sujets d'intérêt pour référence future",
+        "A_Archives": "Tout ce qui n'est plus actif mais garde sa valeur"
+      }
+    },
+    "outils": {
+      "gestion_taches": {
+        "Todoist": "Simple, puissant, cross-plateforme. Parfait pour GTD.",
+        "Notion": "Base de données flexible. Idéal pour PARA et second brain.",
+        "Obsidian": "Markdown local-first avec graphe de liens — excellent pour la pensée et la connaissance personnelle.",
+        "Things_3": "Interface Mac/iOS exceptionnelle pour GTD (macOS seulement)"
+      },
+      "calendrier": "Google Calendar / Fantastical pour time blocking. Couleurs par type de tâche.",
+      "capture": "Inbox unique: papier, email, app de capture (Readwise, Matter pour les articles, Instapaper)"
+    },
+    "batching": {
+      "définition": "Regrouper les tâches similaires en un seul bloc pour réduire le coût de changement de contexte",
+      "exemples": ["Répondre à tous les emails en 2-3 slots/jour (pas en continu)", "Appels téléphoniques tous regroupés", "Courses/admin en un seul moment", "Création de contenu en sessions dédiées"],
+      "avantage": "Réduit le temps de 'warm-up' cognitif nécessaire à chaque changement de tâche"
+    }
+  }
+}

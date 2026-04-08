@@ -1,0 +1,139 @@
+{
+  "version": "v30.0.0",
+  "category": "sante_corps_naturelle",
+  "description": "Santé du corps par l'approche naturelle — mouvement comme médecine, respiration (Wim Hof, box breathing), rythme circadien, axe intestin-cerveau, détoxification naturelle, inflammation chronique, récupération",
+  "sante_corps_naturelle": {
+    "introduction": "Le corps humain est un système extraordinairement adaptatif — il répond directement à comment on le traite quotidiennement. Le mouvement, la respiration, le rythme circadien et l'alimentation sont des leviers qui n'ont pas de brevet et dont l'efficacité est scientifiquement documentée. TITANE mobilise ces connaissances pour aider Kevin à optimiser son énergie, sa vitalité et sa longévité.",
+    "mouvement_medecine": {
+      "citation": "'Exercise is the single most powerful tool you have to optimize your brain function' — John Ratey, 'Spark'",
+      "sedentarité": {
+        "données": "La position assise prolongée est associée à un risque cardiovasculaire, métabolique et cognitif accru — indépendamment de l'exercice par ailleurs",
+        "règle_30_3": "Se lever et bouger 3 minutes toutes les 30-45 minutes de sédentarité",
+        "NEAT": "Non-Exercise Activity Thermogenesis — toutes les dépenses caloriques hors exercice structuré. Marcher, escaliers, jardiner — peut représenter 300-2000 kcal/jour"
+      },
+      "types_exercice": {
+        "LISS": {
+          "définition": "Low Intensity Steady State — effort modéré continu (marche rapide, vélo léger, natation douce)",
+          "bénéfices": "Santé cardiovasculaire, récupération active, réduction cortisol, longévité",
+          "fréquence": "Tous les jours si possible — 30-45 min"
+        },
+        "HIIT": {
+          "définition": "High Intensity Interval Training — alternance effort maximal/récupération",
+          "bénéfices": "VO2max, sensibilité insuline, mitochondries, BDNF (cerveau), temps efficace",
+          "protocole": "20-40s effort maximal + 60-120s récupération × 6-10 rounds",
+          "précautions": "2-3x/semaine max — nécessite récupération complète. Contre-indiqué si cortisol déjà élevé (burnout)"
+        },
+        "force_fonctionnelle": {
+          "pourquoi": "La masse musculaire est l'organe de longévité — métabolisme, sensibilité insuline, mobilité, os, résilience",
+          "principes": "Mouvements composés (squat, deadlift, push, pull, hinge, carry), progression de charge",
+          "fréquence": "2-3x/semaine — les muscles grandissent pendant la récupération, pas l'entraînement"
+        },
+        "mobilité_flexibilité": {
+          "différence": "Flexibilité = amplitude passive. Mobilité = force dans cette amplitude.",
+          "importance": "Prévention blessures, posture, qualité de vie à long terme, récupération",
+          "pratiques": "Yoga, pilates, étirements actifs, foam rolling, FRC (Functional Range Conditioning)"
+        }
+      },
+      "bdnf": {
+        "définition": "Brain-Derived Neurotrophic Factor — protéine qui favorise la croissance et survie des neurones",
+        "exercice_→_bdnf": "L'exercice aérobique est le stimulant le plus puissant du BDNF connu",
+        "effets": "Mémoire, apprentissage, humeur, protection contre Alzheimer"
+      },
+      "nature": {
+        "shinrin_yoku": "Bain de forêt japonais — 2h en forêt réduisent cortisol, pression artérielle, inflammation",
+        "phytoncides": "Composés volatils des arbres — stimulent les NK cells (cellules immunitaires)",
+        "attention_restoration": "La nature restaure la fatigue attentionnelle — attention involontaire vs volontaire (Kaplan)"
+      }
+    },
+    "respiration": {
+      "importance": "La respiration est le seul système autonome qu'on peut contrôler consciemment — porte d'accès directe au système nerveux autonome",
+      "respiration_fonctionnelle": {
+        "par_le_nez": "Le nez filtre, humidifie, réchauffe, et produit du NO (oxyde nitrique) — vasodilatateur. La bouche respire mais n'est pas conçue pour la respiration permanente.",
+        "diaphragmatique": "Le diaphragme est le muscle principal de la respiration — la respiration thoracique haute active le système sympathique",
+        "BOLT_score": "Body Oxygen Level Test — retenir souffle après expiration normale, mesurer jusqu'à premier désir de respirer. >40s = excellent. <20s = défavorable."
+      },
+      "techniques": {
+        "box_breathing": {
+          "protocole": "4 temps inspirer – 4 temps retenir – 4 temps expirer – 4 temps retenir",
+          "usage": "Concentration, gestion stress aigu, cohérence (Navy SEALs)",
+          "effet": "Équilibre sympathique/parasympathique — ni trop excitant ni trop calmant"
+        },
+        "4_7_8": {
+          "protocole": "Inspirer 4s – Retenir 7s – Expirer 8s",
+          "usage": "Endormissement, anxiété, colère",
+          "mécanisme": "L'expiration longue stimule fortement le parasympathique"
+        },
+        "wim_hof": {
+          "auteur": "Wim Hof — 'The Iceman'",
+          "technique": "30-40 respirations profondes rapides → expiration + rétention → inspiration + rétention",
+          "effets_rapportés": "Énergie, résistance au froid, immunité, alcalinisation sanguine",
+          "études": "Étude Radboud 2014 — modification réponse immunitaire démontrée. Effets à confirmer à plus grande échelle.",
+          "précautions": "NE JAMAIS pratiquer dans l'eau (risque syncope), voiture, ou debout. Femmes enceintes, épilepsie: éviter."
+        },
+        "cohérence_cardiaque_respiration": "5-5 ou 4-6 (voir bien_etre_mental_stress)"
+      }
+    },
+    "rythme_circadien": {
+      "définition": "Horloge biologique interne de ~24h qui régule presque toutes les fonctions physiologiques",
+      "maître_horloge": "Noyau suprachiasmatique (NSC) dans l'hypothalamus — synchronisé principalement par la lumière",
+      "lumière_et_cortisol": {
+        "matin": "Lumière vive le matin → synchronise l'horloge, fixe le pic cortisol (SAEM — Cortisol Awakening Response). Sortir dans les 30-60 min du lever.",
+        "soir": "Lumière bleue artificielle le soir → décale l'horloge, retarde mélatonine. Lunettes filtrantes ou mode nuit dès 20h."
+      },
+      "fenêtre_alimentaire": "Manger dans une fenêtre de 8-10h alignée sur le jour (pas manger la nuit même si réveillé) — améliore métabolisme indépendamment des calories",
+      "temperature": "La température corporelle centrale suit l'horloge circadienne — pic en début d'après-midi (performances physiques), descend le soir (sommeil)",
+      "chrono_medicine": "La même substance a des effets différents selon l'heure — médicaments, sport, alimentation, suppléments ont des horaires optimaux"
+    },
+    "axe_intestin_cerveau": {
+      "définition": "Communication bidirectionnelle entre le système digestif et le cerveau — via nerf vague, immunité, hormones et neurotransmetteurs",
+      "chiffres_clés": [
+        "90% de la sérotonine produite dans l'intestin",
+        "70% du système immunitaire dans la muqueuse intestinale (GALT)",
+        "500 millions de neurones dans l'intestin — 'second cerveau'"
+      ],
+      "dysbiose_et_cerveau": "Déséquilibre microbiote → inflammation → perméabilité intestinale → neuroinflammation → humeur, cognition, anxiété",
+      "leaky_gut": {
+        "définition": "Hyperperméabilité intestinale — jonctions serrées desserrées permettent passage de macromolécules",
+        "causes": "Stress chronique, gluten chez sensibles, AINS, alcool, dysbiose, alimentation ultra-transformée",
+        "réparer": "Glutamine, zinc, butyrate, collagène, fermentés, élimination des irritants"
+      },
+      "nourriture_cerveau": {
+        "precurseurs_neurotransmetteurs": {
+          "sérotonine": "Tryptophane (dinde, œufs, noix de cajou) + vitamine B6 + magnésium",
+          "dopamine": "Tyrosine (amandes, avocats, bananes) + fer + B6",
+          "GABA": "Glutamine + fermentés (soutiennent la production)"
+        }
+      }
+    },
+    "inflammation_chronique": {
+      "définition": "Réponse immunitaire de bas grade activée en permanence — pas de cause aiguë, mais feu couvant constant",
+      "marqueurs": "CRP, IL-6, TNF-α, homocystéine — bilan inflammatoire possible",
+      "causes_majeures": [
+        "Alimentation ultra-transformée, excès sucre, oméga-6",
+        "Sédentarité",
+        "Stress chronique",
+        "Manque de sommeil",
+        "Dysbiose intestinale",
+        "Exposition toxines environnementales",
+        "Infection chronique à bas bruit"
+      ],
+      "maladies_associées": "Cardiovasculaires, diabète T2, Alzheimer, cancers, dépression, maladies auto-immunes — toutes liées à l'inflammation chronique",
+      "réduire": ["Alimentation anti-inflammatoire (voir nutrition_sante_naturelle)", "Exercice régulier modéré", "Sommeil suffisant", "Gestion stress chronique", "Curcumine, oméga-3, resvératrol, quercétine (suppléments anti-inflammatoires naturels)"]
+    },
+    "récupération": {
+      "active_vs_passive": {
+        "passive": "Sommeil, repos total — nécessaire et irremplaçable",
+        "active": "Activité légère qui accélère la récupération — marche, étirements, piscine douce, yoga",
+        "massage_foam_rolling": "Réduit les DOMS (courbatures), améliore la mobilité, active le parasympathique"
+      },
+      "sauna": {
+        "bénéfices": "HSP (Heat Shock Proteins), cardiovasculaire, détox sudorale, croissance hormone, récupération musculaire",
+        "protocole": "3-4x/semaine × 15-20min à 80-100°C — études Laukkanen (Finlande)"
+      },
+      "bain_froid_cryothérapie": {
+        "bénéfices": "Réduction inflammation, dopamine +250%, noradrénaline +300%, récupération musculaire",
+        "protocole": "3-5 min dans eau <15°C ou douche froide terminale (30-90s)"
+      }
+    }
+  }
+}

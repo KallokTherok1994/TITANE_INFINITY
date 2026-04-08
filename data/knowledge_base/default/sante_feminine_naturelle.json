@@ -1,0 +1,110 @@
+{
+  "version": "v30.0.0",
+  "category": "sante_feminine_naturelle",
+  "description": "Santé féminine naturelle — cycle féminin (4 phases), syncing cyclique, fertilité naturelle, SOPK, endométriose, ménopause, hormones féminines, périnatalité naturelle",
+  "sante_feminine_naturelle": {
+    "introduction": "La santé féminine est profondément cyclique — le corps d'une femme suit des rythmes hormonaux qui influencent l'énergie, la cognition, les émotions et les besoins physiologiques. Comprendre ces cycles permet de travailler avec le corps plutôt que contre lui. TITANE aborde ce domaine avec sensibilité et rigueur scientifique.",
+    "cycle_menstruel": {
+      "durée_normale": "21-35 jours (moyenne 28j, mais toute variation régulière est normale)",
+      "quatre_phases": {
+        "menstruation": {
+          "jours": "1-5",
+          "hormones": "Estrogènes et progestérone au plus bas. FSH commence à monter.",
+          "physiologie": "Desquamation de l'endomètre. Corps en état de détox et repos.",
+          "énergie": "Basse — c'est le moment du repos, de l'introspection, du ralentissement",
+          "syncing": "Tâches légères, méditation, bain chaud, repos renforcé, journal"
+        },
+        "phase_folliculaire": {
+          "jours": "6-13",
+          "hormones": "FSH → croissance follicules → estrogènes montent",
+          "physiologie": "Endomètre se reconstruit. Ovule mature dans un follicule.",
+          "énergie": "Montante — clarté mentale, sociabilité, envie d'apprendre, optimisme",
+          "syncing": "Projets nouveaux, apprentissage, networking, exercice plus intense"
+        },
+        "ovulation": {
+          "jours": "14 (variable)",
+          "hormones": "Pic estrogènes → pic LH → ovulation",
+          "physiologie": "Libération de l'ovule. Température basale monte de ~0.3-0.5°C.",
+          "énergie": "Maximale — communication aisée, confiance, attractivité perçue accrue",
+          "syncing": "Présentations importantes, conversations difficiles, créativité maximum"
+        },
+        "phase_luteale": {
+          "jours": "15-28",
+          "hormones": "Progestérone monte puis chute. Corps jaune → si pas de fécondation → régresse.",
+          "physiologie": "Corps se prépare soit à la grossesse, soit à la menstruation",
+          "énergie": "Décroissante — focus intérieur, sens du détail, plus sélective socialement",
+          "spf": "Syndrome pré-menstruel possible (irritabilité, ballonnements, sensibilité seins) si déséquilibre hormonal",
+          "syncing": "Tâches de fond, édition, détails, réduction des engagements"
+        }
+      },
+      "température_basale": "Mesurée au réveil avant de se lever — outil de connaissance du cycle. Avec graphe, on distingue les 2 phases."
+    },
+    "hormones_feminines": {
+      "estrogènes": {
+        "formes": "E1 (estrone), E2 (estradiol — principale), E3 (estriol — grossesse)",
+        "rôles": "Développement féminin, cycle, os, peau, cardiovasculaire, humeur (sérotonine)",
+        "excès_dominant": "SPM intense, fibromes, endométriose, risque cancer hormonosensible — souvent lié à: surpoids, stress, perturbateurs endocriniens, déficit progestérone"
+      },
+      "progestérone": {
+        "rôle": "Équilibre estrogènes, soutien grossesse, effet calmant (GABA-ergique), thyroïde",
+        "déficit": "Anxiété, insomnie, fausse couche précoce, SPM sévère"
+      },
+      "testosterone_feminine": {
+        "rôle": "Libido, énergie, muscle, motivation, confiance",
+        "note": "Présente chez la femme (en quantité moindre) — cruciale pour le bien-être"
+      },
+      "equilibre_hormonal_naturel": [
+        "Réduire la dominance estrogénique: crucifères (DIM), fibres (élimination), réduire perturbateurs endocriniens",
+        "Soutenir la progestérone: gattilier (agnus castus), magnésium, zinc, réduire stress",
+        "Soutenir l'axe thyroïde: iode, sélénium, L-tyrosine"
+      ]
+    },
+    "troubles_frequents": {
+      "SPM": {
+        "définition": "Syndrome pré-menstruel — symptômes émotionnels et physiques les 1-2 semaines avant les règles",
+        "PMDD": "Forme sévère (TDPM) — dépression, anxiété, irritabilité invalidantes. Nécessite suivi médical.",
+        "approche_naturelle": ["Magnésium bisglycinate", "Vitamine B6", "Acides gras oméga-3", "Réduction caféine/alcool", "Exercice aérobique", "Gattilier (études positives)"]
+      },
+      "endometriose": {
+        "définition": "Tissu similaire à l'endomètre hors de l'utérus — inflammation cyclique, douleur, infertilité possible",
+        "prévalence": "1 femme sur 10 — souvent non diagnostiquée pendant des années",
+        "approche_naturelle_COMPLEMENTAIRE": "Anti-inflammatoire (omega-3, curcuma, éviction gluten si sensible), soutien foie (élimination estrogènes), gestion douleur (acupuncture, ostéopathie viscérale). JAMAIS en remplacement du suivi gynécologique.",
+        "avertissement": "L'endométriose nécessite un diagnostic médical. Le traitement naturel est complémentaire, pas alternatif."
+      },
+      "SOPK": {
+        "définition": "Syndrome des ovaires polykystiques — dysrégulation hormonale (androgènes élevés, anovulation possible, résistance insuline fréquente)",
+        "prévalence": "5-10% des femmes en âge de procréer",
+        "approche_naturelle": ["Régime à IG bas (résistance insuline)", "Inositol (myo-inositol + D-chiro-inositol)", "N-acétyl-cystéine", "Cannelle", "Exercice de résistance"],
+        "avertissement": "Consultation gynécologique et bilan hormonal nécessaires"
+      },
+      "ménopause": {
+        "définition": "Arrêt définitif des menstruations — 12 mois consécutifs sans règles (moyenne 51 ans)",
+        "perimenopause": "Transition hormonale 2-10 ans avant — cycles irréguliers, premières bouffées de chaleur",
+        "symptômes": "Bouffées de chaleur, sueurs nocturnes, sécheresse vaginale, troubles du sommeil, sautes d'humeur, brouillard cognitif",
+        "approche_naturelle": {
+          "isoflavones": "Phytoestrogènes soja/trèfle rouge — preuves modérées pour bouffées de chaleur",
+          "sauge_officinale": "Tradition bien établie pour bouffées de chaleur et sueurs",
+          "maca": "Adaptogène — études positives sur symptômes ménopausiques",
+          "sommeil": "Mélatonine, valériane, magnésium — très important en péri-ménopause",
+          "os": "Calcium alimentaire + D3 + K2 + exercice de résistance — prévention ostéoporose"
+        }
+      }
+    },
+    "perinatalite_naturelle": {
+      "grossesse": {
+        "suppléments_essentiels": "Acide folique (avant conception), iode, fer, D3, oméga-3 (DHA)",
+        "aliments_à_éviter": "Charcuteries crues (listéria), poissons riches mercure, alcool (aucune dose sûre), fromages au lait cru",
+        "mouvement": "30 min/jour d'activité modérée recommandée (sauf contre-indication médicale)"
+      },
+      "allaitement": {
+        "bénéfices_mère": "Ocytocine → involution utérine, lien, réduction risque cancers hormono-sensibles",
+        "bénéfices_enfant": "Immunité, microbiote optimal, réduction obésité/allergies",
+        "soutien": "Galactogènes naturels: fenugrec, fenouil, ortie (preuves limitées mais usage traditionnel répandu)"
+      },
+      "post_partum": {
+        "dépression": "Baby blues (2-3j normaux) vs dépression post-partum (semaines/mois — consultation médicale nécessaire)",
+        "récupération_physique": "Rééducation périnéale (obligatoire en France), remineralisation, sommeil fragmenté à compenser"
+      }
+    }
+  }
+}

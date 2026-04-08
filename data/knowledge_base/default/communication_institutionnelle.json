@@ -1,0 +1,63 @@
+{
+  "version": "v30.0.0",
+  "category": "communication_institutionnelle",
+  "description": "Communication institutionnelle et organisationnelle — identité et image (marque, réputation, brand territory), communication interne (descendante/ascendante/transversale/outils), communication externe (relations presse, lobbying, relations institutionnelles), plan de communication, discours et prise de parole en public, communication de direction",
+  "communication_institutionnelle": {
+    "introduction": "La communication institutionnelle est la façon dont une organisation se raconte, se positionne et interagit avec ses parties prenantes. Elle vise à construire et maintenir une réputation cohérente, à fédérer les parties internes, et à influencer les parties externes. Elle précède et sous-tend la communication de crise.",
+    "identité_et_image": {
+      "identité_organisationnelle": "Ce que l'organisation est réellement: missions, valeurs, culture, histoire, compétences distinctives. Socle stable.",
+      "image": "La perception que les parties prenantes ont de l'organisation. Peut diverger de l'identité.",
+      "réputation": "Cumul des perceptions dans le temps. Plus difficile à construire et à reconstruire. Actif immatériel majeur.",
+      "brand_territory": "Territoire de marque: ensemble des valeurs, codes visuels, tonalité, univers sémantique qui définissent la marque. Guideline pour tous les messages.",
+      "charte_éditoriale": "Formalise la voix de l'organisation: ton (sérieux/bienveillant/expert/accessible), vocabulaire autorisé/prohibé, formats, longueurs, codes typographiques."
+    },
+    "communication_interne": {
+      "enjeux": "Engager les collaborateurs, aligner sur la stratégie, prévenir les rumeurs, créer du lien social. En période de changement, elle est aussi critique que la décision elle-même.",
+      "flux": {
+        "descendante": "Direction → collaborateurs. Risque: communication 'en cascade' qui s'appauvrit. Contrer avec des messages clés standardisés pour tous les niveaux.",
+        "ascendante": "Collaborateurs → direction. Boîtes à idées, enquêtes de satisfaction interne, réunions remontées de terrain. Nécessite de montrer qu'on a entendu.",
+        "transversale": "Entre services. Favorisée par les intranets, outils collaboratifs, communautés de pratiques."
+      },
+      "outils": {
+        "synchrones": "Réunions d'équipe, visioconférences, town halls (all-hands meetings), séminaires",
+        "asynchrones": "Intranet, newsletter interne, email direction, affichage, journal interne, vidéo direction",
+        "collaboratifs": "Teams, Slack, Notion, SharePoint — espaces partagés pour projets transverses"
+      },
+      "enquête_engagement": "Baromètre social annuel — mesure l'engagement, la satisfaction, la perception de la direction. Obligatoire de communiquer les résultats et les suites données.",
+      "onboarding": "L'intégration d'un nouveau collaborateur = premier moment de communication interne. Détermine l'engagement futur. Kit d'accueil + mentor + parcours découverte."
+    },
+    "communication_externe": {
+      "relations_presse": {
+        "communiqué_de_presse": "Maximum 1 page A4. Qui/Quoi/Quand/Pourquoi en premier § (pyramide inversée). Contact presse en pied. Embargo si nécessaire.",
+        "dossier_de_presse": "Communiqué + biographies dirigeants + fiche organisation + chiffres clés + visuels HD disponibles. Pour les événements importants.",
+        "conférence_de_presse": "Pour les annonces majeures uniquement. Préparation Q&A difficiles obligatoire. Porte-parole unique et préparé.",
+        "journalistes": "Construire des relations de confiance dans la durée. Disponibilité, réactivité, transparence. Ne jamais mentir à un journaliste."
+      },
+      "lobbying_relations_institutionnelles": {
+        "définition": "Défense d'intérêts auprès des décideurs publics (législatif, exécutif, agences). Régulé en France depuis 2017 (Loi Sapin II, Registre des représentants d'intérêts — HATVP).",
+        "bonnes_pratiques": "Transparence des positions, argumentation factuelle, connaissance approfondie du processus législatif et réglementaire, relation dans la durée.",
+        "non_lobbying": "Ne pas confondre avec la communication de crise ou les relations presse"
+      },
+      "RSE_communication": "Communication sur les engagements RSE: attention au greenwashing (allégations non fondées = risque réputationnel et juridique depuis la loi Climat 2021). Privilégier reporting factuel (GRI, DPEF pour grandes entreprises)."
+    },
+    "plan_de_communication": {
+      "structure": {
+        "1_diagnostic": "Analyse de la situation actuelle (SWOT communication), parties prenantes, image perçue vs souhaitée",
+        "2_objectifs": "SMART — notoriété/compréhension/adhésion/comportement. Un objectif = un message = une cible.",
+        "3_cibles": "Segmentation des publics (primaires/secondaires). Personas si communication grand public.",
+        "4_messages": "Message principal + messages déclinés par cible. Hiérarchie et cohérence.",
+        "5_canaux": "Choix des canaux selon la cible, le message, le budget et le moment",
+        "6_budget": "Répartition par canal et action. Règle des 70/20/10: 70% channels éprouvés, 20% innovations, 10% expériences.",
+        "7_calendrier": "Rétro-planning avec jalons et responsabilités",
+        "8_évaluation": "KPI de communication: portée, engagement, mémorisation, changement d'attitude"
+      }
+    },
+    "prise_de_parole_publique": {
+      "préparation": "Connaître son auditoire. Définir 1-3 messages clés. Structure: accroche forte + développement + conclusion mémorable. Répéter à voix haute.",
+      "accroche": "Question rhétorique, chiffre choc, anecdote, citation, paradoxe. Les 30 premières secondes déterminent l'écoute.",
+      "langage_non_verbal": "Posture ouverte, contact visuel (balayage, pas fixation), gestes concordants avec les mots, voix modulée (débit/volume/silences).",
+      "gestion_des_questions": "Reformuler pour gagner du temps et s'assurer de la compréhension. La question difficile: reconnaître la légitimité de la question avant de répondre. Bridge: 'C'est une question importante — ce qui m'importe aussi c'est...'",
+      "PowerPoint": "Règle du 10-20-30 (Guy Kawasaki): 10 slides max, 20 minutes max, 30 points minimum. Un message visuel par slide. Pas de texte à lire sur le slide (c'est dans les notes)."
+    }
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "version": "v30.0.0",
+  "category": "droit_immobilier_notarial",
+  "description": "Droit immobilier notarial — avant-contrats (PUV vs compromis), conditions suspensives, délai SRU L271-1, DPU, diagnostics obligatoires, calcul frais de notaire, TVA immobilière, plus-values, droits de préemption, publicité foncière",
+  "droit_immobilier_notarial": {
+    "publicité_foncière": {
+      "définition": "Système français d'enregistrement des droits réels immobiliers. Tenu par le Service de la Publicité Foncière (SPF, ex-Conservation des hypothèques).",
+      "opposabilité_aux_tiers": "Un droit immobilier n'est opposable aux tiers que s'il est publié au SPF. Principe d'opposabilité et non de validité (le droit existe entre les parties même non publié).",
+      "actes_publiables": "Ventes, donations, hypothèques, IPPD, privilèges immobiliers, baux longue durée (>12 ans), servitudes conventionnelles",
+      "délai_publication": "1 mois pour les mutations (ventes). À défaut, risque de conflit en cas de double vente."
+    },
+    "droits_de_preemption": {
+      "DPU": {
+        "définition": "Droit de Préemption Urbain — communes dotées d'un PLU peuvent acheter en priorité tout bien vendu dans les zones définies",
+        "délai": "2 mois à compter de la DIA (Déclaration d'Intention d'Aliéner) déposée par le notaire en mairie",
+        "exerce_ou_renonce": "La commune renonce ou exerce au prix déclaré (ou judiciaire en cas de désaccord de prix)",
+        "dérogations": "Ventes entre proches parents, donations, successions — généralement hors champ du DPU"
+      },
+      "SAFER": {
+        "définition": "Société d'Aménagement Foncier et d'Établissement Rural — préemption sur les biens ruraux (terres agricoles)",
+        "délai": "3 mois à compter de la notification",
+        "objectif": "Maintenir les terres en exploitation agricole et lutter contre la spéculation foncière"
+      },
+      "locataire": "Bail d'habitation (loi 89): droit de préemption du locataire lors de la vente du logement loué. Délai: 2 mois (non-professionnel) ou 4 mois si financement. Congé pour vente = notification préalable obligatoire 6 mois avant.",
+      "communes_HLM": "Les bailleurs sociaux ont un droit de préemption dans certaines conditions (ventes dans périmètre DALO)"
+    },
+    "fiscalité_immobilière": {
+      "droits_mutation_titre_onéreux": {
+        "taux_standard": "5,80665% (= 5,09% département + 0,71665% commune + frais d'assiette État) sur biens anciens",
+        "immeubles_neufs_TVA": "TVA 20% + droits réduits 0,715% (ou 0,71665%). Le vendeur professionnel assujetti à la TVA.",
+        "primo_accédants": "Pas d'exonération au niveau national mais certains départements accordent des réductions"
+      },
+      "plus_values_immobilières": {
+        "calcul": "Prix de cession - Prix d'acquisition (+ frais acquisition réels ou forfait 7,5% + travaux réels ou forfaits selon durée)",
+        "abattements_durée": {
+          "avant_6_ans": "0% d'abattement",
+          "IR_après_22_ans": "Exonération totale d'IR",
+          "prélèvements_sociaux_après_30_ans": "Exonération totale des prélèvements sociaux (17,2%)"
+        },
+        "taux": "IR 19% + prélèvements sociaux 17,2% = 36,2% sans abattement. Sur-taxe pour PV >50 000€.",
+        "exonérations": "Résidence principale (totale), première vente pour loger une résidence principale (conditionnelle), retraités sous plafonds de revenus"
+      },
+      "taxe_foncière": "Due par le propriétaire au 1er janvier. Calculée sur la valeur locative cadastrale × taux communal. En cas de vente, proratisation courante dans l'acte (non légalement obligatoire mais pratique généralisée)."
+    },
+    "copropriété": {
+      "loi_de_référence": "Loi du 10 juillet 1965 + décret du 17 mars 1967 — régit les droits et obligations des copropriétaires",
+      "documents_à_communiquer_acheteur": "Règlement de copropriété + état descriptif de division + procès-verbaux des 3 dernières AG + relevé de charges des 2 dernières années + carnet d'entretien + diagnostic technique global (DTG si > 10 ans)",
+      "charges": {
+        "courantes": "Charges générales (entretien parties communes) + charges spéciales (ascenseur, chauffage collectif)",
+        "quote_part": "Définie par les tantièmes attribués à chaque lot dans le règlement"
+      },
+      "pré-état_daté": "Document établi par le syndic avant la vente: fonds de travaux, procédures en cours, impayés, appels de fonds votés. Obligatoire.",
+      "loi_Carrez": "Mention de la superficie privative nette en m² (loi 96-1107) dans tout acte de vente en copropriété. Inexactitude > 5% = action en réduction du prix dans l'année."
+    },
+    "calcul_frais_notaire_simulation": {
+      "composantes": {
+        "émoluments": "Part notariale réglementée (barème dégressif) + TVA 20%",
+        "droits_enregistrement_taxe_publicité": "DMO (Droits de Mutation à titre Onéreux) = partie la plus importante pour les biens anciens",
+        "débours": "Frais SPF, géomètre, diagnostics avancés, frais divers",
+        "contribution_sécurité_immobilière": "0,10% du prix depuis 2013 (plafond 4€/tranche de 100€)"
+      },
+      "estimation": "Pour un bien ancien à 200 000€: ~7-8% = ~14 000-16 000€ total 'frais notaire' dont environ 12 000-13 000€ vont à l'État (DMTO). Pour un bien neuf avec TVA: 2-3%.",
+      "bon_à_savoir": "Les 'frais de notaire' sont en réalité à 80% des impôts et taxes. Les émoluments du notaire ne représentent qu'environ 1% du prix de vente."
+    }
+  }
+}

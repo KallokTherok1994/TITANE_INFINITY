@@ -1,0 +1,122 @@
+{
+  "version": "v30.0.0",
+  "category": "omega_pipeline_detail",
+  "description": "OMEGA Pipeline TITANE∞ — orchestration complète, 10 étapes, routeur d'intent, exécuteur, garde-fous, diagnostics",
+  "omega_pipeline": {
+    "nom": "OMEGA Pipeline v30.0.0",
+    "chemin": "src-tauri/src/omega/",
+    "super_prompt": "#15 — Complete pipeline orchestration",
+    "tagline": "Router → Executor → Merger → Guardrails → Output",
+    "modules": {
+      "pipeline.rs": "Pipeline principal — orchestrateur de toutes les étapes",
+      "router.rs": "Routeur d'intentions — classification <2ms, 11 types d'intents",
+      "executor.rs": "Exécuteur — délègue aux providers IA ou handlers spécialisés",
+      "merger.rs": "Fusionneur — combine résultats multi-providers (MergeResult)",
+      "guardrails.rs": "Garde-fous — score sécurité minimum, filtres contenus",
+      "scheduler.rs": "Scheduler de tâches — parallélisme, rate limiting, file de priorité",
+      "diagnostics.rs": "Diagnostics pipeline — latences, taux réussite, erreurs",
+      "adaptive_router.rs": "Routeur adaptatif — apprend des patterns pour améliorer le routing",
+      "context_v2.rs": "Contexte v2 — enrichissement du contexte inter-étapes",
+      "events.rs": "Événements pipeline — observabilité en temps réel",
+      "memory_bridge.rs": "Pont mémoire — injecte STM/MTM dans le contexte pipeline",
+      "multimodal.rs": "Support multimodal — texte + image + audio dans le pipeline",
+      "parallel_omega.rs": "Exécution parallèle — plusieurs tasks simultanées avec merge",
+      "self_healing_hook.rs": "Hook auto-guérison — détecte et corrige les dérives pipeline"
+    },
+    "étapes_pipeline": [
+      {
+        "étape": 1,
+        "nom": "Validation d'entrée",
+        "composant": "Guardrails (pré-check)",
+        "rôle": "Vérifier taille, format, sécurité de la requête entrante",
+        "sortie": "Requête validée ou rejetée avec erreur explicite",
+        "latence_cible": "<1ms"
+      },
+      {
+        "étape": 2,
+        "nom": "Classification d'intention",
+        "composant": "Router",
+        "rôle": "Identifier le type de requête (Query/Task/Help/Emotional/Creative/Debug/Explanation/Meta/Command/Conversation)",
+        "sortie": "Intent + confidence score + suggested_skill",
+        "latence_cible": "<2ms"
+      },
+      {
+        "étape": 3,
+        "nom": "Routage vers handler",
+        "composant": "AdaptiveRouter",
+        "rôle": "Sélectionner le(s) provider(s) et handler(s) optimaux selon l'intent",
+        "logique": "Score par provider (qualité × disponibilité × coût × latence). Top-k providers sélectionnés.",
+        "latence_cible": "<1ms"
+      },
+      {
+        "étape": 4,
+        "nom": "Enrichissement contexte",
+        "composant": "ContextV2 + MemoryBridge",
+        "rôle": "Injecter le contexte mémoire pertinent (RAG: top-5 LTM + MTM courant)",
+        "sortie": "Prompt enrichi avec contexte sémantique",
+        "latence_cible": "<10ms"
+      },
+      {
+        "étape": 5,
+        "nom": "Exécution",
+        "composant": "Executor",
+        "rôle": "Appeler le(s) provider(s) IA sélectionnés (avec timeout et retry)",
+        "support": "Streaming SSE pour affichage progressif, mode synchrone pour tâches batch",
+        "latence_cible": "Variable (100ms→10s selon provider et complexité)"
+      },
+      {
+        "étape": 6,
+        "nom": "Mise à jour mémoire",
+        "composant": "MemoryBridge (post-execution)",
+        "rôle": "Sauvegarder échange dans STM. Évaluer si promotion MTM/LTM.",
+        "latence_cible": "<5ms (asynchrone)"
+      },
+      {
+        "étape": 7,
+        "nom": "Évaluation qualité",
+        "composant": "Diagnostics + EvolutionEngine",
+        "rôle": "Scorer la réponse (pertinence, cohérence, complétude). Alimenter l'évolution.",
+        "latence_cible": "<3ms (asynchrone)"
+      },
+      {
+        "étape": 8,
+        "nom": "Fusion multi-providers",
+        "composant": "Merger",
+        "rôle": "Si plusieurs providers appelés en parallèle: fusionner les résultats (best-of, interpolation)",
+        "stratégie": "MergeResult: prendre la réponse avec le score de confiance le plus élevé",
+        "latence_cible": "<2ms"
+      },
+      {
+        "étape": 9,
+        "nom": "Filtrage sécurité",
+        "composant": "Guardrails (post-check)",
+        "rôle": "Vérifier la réponse finale: pas de données sensibles, respect des principes",
+        "min_safety_score": 0.7,
+        "latence_cible": "<2ms"
+      },
+      {
+        "étape": 10,
+        "nom": "Formatage et sortie",
+        "composant": "Pipeline output",
+        "rôle": "Formater selon le type demandé (Markdown, JSON, texte brut). Retourner via IPC.",
+        "format": "{ ok: bool, content: string, error: string | null, metadata: OutputMetadata }",
+        "latence_cible": "<1ms"
+      }
+    ],
+    "scheduler": {
+      "max_tâches_parallèles": 4,
+      "rate_limit": "100 req/s max",
+      "timeout_défaut": "30s par tâche",
+      "file_priorité": "CRITICAL > HIGH > NORMAL > LOW > BACKGROUND"
+    },
+    "guardrails_config": {
+      "score_sécurité_minimum": 0.7,
+      "filtres": ["injection prompt", "données personnelles", "violation constitution", "contenu nuisible"],
+      "action_si_violation": "Rejeter la réponse + logguer + incrémenter compteur violations"
+    },
+    "diagnostics": {
+      "métriques_collectées": ["latence_par_étape_ms", "taux_réussite", "fréquence_erreurs", "provider_utilisé", "taille_contexte_tokens"],
+      "ipc_commandes": ["omega_get_status", "omega_get_diagnostics", "omega_get_metrics"]
+    }
+  }
+}

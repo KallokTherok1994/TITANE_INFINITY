@@ -1,0 +1,68 @@
+{
+  "version": "v30.0.0",
+  "category": "sexualite_intimite",
+  "description": "Sexualité et intimité masculine — santé sexuelle (testostérone/libido/érection), rétention séminale (débat scientifique nuancé), tantra et sexualité consciente, CNV appliquée à l'intimité, pornographie impact cérébral, masculinité intégrale",
+  "sexualite_intimite": {
+    "introduction": "La sexualité est un domaine central du bien-être masculin — souvent tabou, souvent mal informé. TITANE aborde ce sujet avec honnêteté scientifique, sans morale imposée ni jugement. L'objectif est l'épanouissement et la connexion authentique.",
+    "sante_sexuelle_masculine": {
+      "testostérone_et_libido": {
+        "lien": "La testostérone est le principal moteur de la libido masculine. Un taux bas = libido basse, fatigue, humeur dépressive.",
+        "optimiser_naturellement": ["Musculation/force lourde (squat, SDT) — élève la T de 20-30% post-séance", "Dormir 7-9h (T produite principalement en sommeil profond)", "Réduire le stress chronique (cortisol = antagoniste de la T)", "Zinc, vitamine D3, magnésium", "Maintenir un poids sain (excès de graisse viscérale → conversion T en œstrogènes par aromatase)", "Lumière solaire le matin"],
+        "ennemis": ["Alcool > 2 verres/jour (-15% T)", "Obésité viscérale", "Perturbateurs endocriniens (BPA, phtalates, pesticides)", "Sédentarité", "Stress chronique"]
+      },
+      "dysfonction_érectile": {
+        "prévalence": "40% des hommes de 40 ans ont des troubles érectiles occasionnels — sous-déclaré.",
+        "causes": {
+          "vasculaire": "70% des cas organiques — artères pénines bouchées souvent avant les coronaires (signal cardiovasculaire précoce)",
+          "psychologique": "Anxiété de performance, stress, dépression — souvent chevauchent",
+          "pornographie": "PIED (Porn-Induced ED) — désensibilisation dopaminergique de plus en plus documentée chez les jeunes"
+        },
+        "approche": "Exercice cardio régulier (premier traitement), arrêt tabac, optimisation T, réduction alcool, psychothérapie si composante psychologique. PDE5i (Viagra/Cialis) sur prescription si indiqué."
+      }
+    },
+    "retention_séminale": {
+      "contexte": "Pratique de continence sexuelle masculine — ne pas éjaculer pendant des périodes prolongées",
+      "NoFap_SR_distinction": {
+        "NoFap": "Arrêt de la masturbation/pornographie — vise à lutter contre la dépendance porno et récupérer la sensibilité dopaminergique",
+        "semen_retention": "Abstinence d'éjaculation y compris lors des rapports — tradition tantrique et taoïste"
+      },
+      "preuves_scientifiques": {
+        "testostérone": "Étude Jiang et al. 2003: pic T au jour 7 d'abstinence (+45.7%). Cet effet disparaît après, la T revient à la normale.",
+        "dopamine": "Réinitialisation progressive des récepteurs D2 dopaminergiques après abstinence de pornographie — effet le mieux documenté",
+        "superpuissances": "Les claims de 'superpouvoirs' (focus, confiance, magnétisme) ne sont pas scientifiquement validés — effets subjectifs réels mais mécanismes non établis"
+      },
+      "verdict_TITANE": "L'arrêt de la pornographie a des bénéfices bien documentés. La rétention séminale stricte reste anecdotique scientifiquement — libre à chacun d'expérimenter."
+    },
+    "pornographie_impact_cerebral": {
+      "mécanisme": "Pornographie → sursaut de dopamine → désensibilisation des récepteurs D2 → besoin d'escalade (contenu plus extrême) → perte de sensibilité à la stimulation réelle",
+      "analogie": "Même mécanisme que la tolérance aux drogues — pas une métaphore, le même circuit neuronal (striatum, noyau accumbens)",
+      "preuves": "Kühn & Gallinat (2014) — volume striatum réduit chez consommateurs fréquents de pornographie.",
+      "récupération": "90 jours d'abstinence = reboot partiel des circuits dopaminergiques selon les témoignages (NoFap) — études longitudinales en cours",
+      "approche_saine": "Récupérer la sensibilité à la stimulation réelle et à l'intimité authentique"
+    },
+    "sexualite_consciente_tantra": {
+      "tantra_occidental": "Version occidentalisée: présence totale, connexion avec le partenaire, retarder l'éjaculation pour prolonger l'expérience",
+      "techniques": {
+        "karezza": "Rapport sexuel sans éjaculation — connexion et présence. Pratique tantra/taoïste.",
+        "respiration_synchrone": "Synchroniser la respiration avec le partenaire — ancrage et connexion",
+        "edging": "Approcher le seuil d'éjaculation puis reculer — prolongement de l'expérience"
+      },
+      "bénéfices_rapportés": "Connexion émotionnelle plus profonde, présence accrue, durabilité de la relation"
+    },
+    "intimite_emotionnelle": {
+      "vulnérabilité": "Brené Brown — la vraie intimité nécessite d'oser être vu. Pas de connexion sans vulnérabilité.",
+      "CNV_appliquée": "Communication Non-Violente dans l'intimité: 1. Observation (sans jugement) 2. Sentiment 3. Besoin 4. Demande concrète. Ex: 'Quand tu regardes ton téléphone pendant nos repas (obs.), je me sens mis de côté (sentiment), j'ai besoin de connexion (besoin), pourrais-tu le poser pendant le repas? (demande)'",
+      "conversation_directe": "Exprimer ses désirs et limites clairement — la plupart des tensions en intimité viennent du manque de communication explicite",
+      "Gottman_intimite": "Chaque tentative de connexion (bid) mérite une réponse (turning toward). Ignorer les bids érode l'intimité progressivement."
+    },
+    "masculinite_integrale": {
+      "définition": "Ken Wilber/David Deida — intégrer les polarités masculine/féminine en soi plutôt que les réprimer",
+      "force_douce": "La vraie masculinité intègre la force, la direction, la protection ET la tendresse, l'empathie, la vulnérabilité — pas une performance de dureté",
+      "deida_3_stades": {
+        "stade_1": "Dépendance — chercher l'approbation externe pour valider la masculinité",
+        "stade_2": "Indépendance — masculinité forte mais froide, déconnectée",
+        "stade_3": "Transcendance — masculinité enracinée qui peut s'ouvrir pleinement"
+      }
+    }
+  }
+}

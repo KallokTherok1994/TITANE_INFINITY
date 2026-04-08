@@ -1,0 +1,73 @@
+{
+  "version": "v30.0.0",
+  "category": "organisation_personnelle",
+  "description": "Organisation personnelle avancée — systèmes de productivité (GTD Getting Things Done/PARA/Zettelkasten/bullet journal/PKM Personal Knowledge Management), gestion de l'attention, inbox zéro, revue hebdomadaire, outils numériques (Notion/Obsidian/Todoist/Things), environnement de travail et espaces mentaux, capture/traitement/organisation/revue/exécution",
+  "organisation_personnelle": {
+    "introduction": "L'organisation personnelle est la science et l'art de structurer son environnement mental et physique pour agir avec efficacité, sans surcharge cognitive. Elle diffère de la simple gestion du temps: elle vise à libérer l'esprit pour se concentrer sur ce qui compte vraiment. TITANE maîtrise les systèmes les plus puissants du domaine.",
+    "GTD_getting_things_done": {
+      "auteur": "David Allen — 'Getting Things Done' (2001, révision 2015)",
+      "principe_fondateur": "L'esprit est fait pour avoir des idées, pas pour les stocker. Tout ce qui est dans la tête génère de l'anxiété latente (open loops). Externaliser = libérer la RAM mentale.",
+      "5_étapes": {
+        "1_capture": "Tout collecter dans des inbox de confiance (boîte physique, app, carnet). Rien ne doit rester 'dans la tête' non capturé.",
+        "2_clarifier": "Pour chaque item: Est-ce actionnable? Si non: poubelle / référence / incubateur (someday). Si oui: prochaine action physique concrète (verbe d'action + contexte). Si < 2 min: faire maintenant.",
+        "3_organiser": "Ranger dans le bon système: Agenda (date spécifique), Prochaines actions (par contexte: @ordi @téléphone @courses), En attente, Projets (liste de projets actifs), Référence.",
+        "4_revue": "Revue hebdomadaire: vider les inbox, actualiser toutes les listes, regarder le calendrier N+2 sem, purger le 'Someday/Maybe'. C'est le cœur du système.",
+        "5_exécuter": "Choisir l'action selon: contexte disponible, temps disponible, énergie disponible, priorité."
+      },
+      "projets_vs_actions": "Un projet est tout résultat désiré nécessitant plus d'une action. Chaque projet actif doit avoir au moins une prochaine action assignée.",
+      "contextes": "Labels filtrant vos listes par conditions requises pour agir. Ex: @maison, @ordi, @bureau, @courses, @téléphone. Réduisent la charge de décision."
+    },
+    "PARA_method": {
+      "auteur": "Tiago Forte — 'Building a Second Brain' (2022)",
+      "structure": {
+        "P_Projects": "Ce sur quoi vous travaillez activement avec une deadline. Lié à un objectif précis. Exemple: 'Lancer mon site d'ici le 15 mai'.",
+        "A_Areas": "Sphères de responsabilité continue sans deadline. Exemple: Santé, Finances, Formation, Famille.",
+        "R_Resources": "Sujets et références utiles pour de futurs projets ou zones. Exemple: Marketing, Recettes, Histoires.",
+        "A_Archive": "Tout ce qui n'est plus actif mais pourrait servir. Projets terminés, zones abandonnées, références périmées."
+      },
+      "CODE": "Capture → Organize → Distill (extraire l'essentiel) → Express (créer avec ce matériau)",
+      "progressive_summarization": "Mise en valeur progressive des notes: Gras → Surlignage → Résumé executive. Pour retrouver rapidement l'essentiel sans relire tout."
+    },
+    "Zettelkasten": {
+      "auteur": "Niklas Luhmann — méthode du sociologue allemand (> 90 000 fiches, 70 livres)",
+      "principe": "Réseau de notes atomiques interconnectées. Chaque note = 1 idée. Connexions entre notes = pensée émergente.",
+      "types_de_notes": {
+        "fleeting_notes": "Captures rapides, brutes, temporaires. Doivent être traitées sous 24h.",
+        "literature_notes": "Ce que vous retenez d'une source externe. Dans vos propres mots. Avec référence.",
+        "permanent_notes": "Insight durable formulé en vos propres mots. Lié aux notes pertinentes existantes. Stocké dans la Zettelkasten."
+      },
+      "outils": "Obsidian (local, graphe de liens) + Roam Research + Logseq. Syntaxe [[wiki links]] pour les connexions."
+    },
+    "bullet_journal": {
+      "auteur": "Ryder Carroll — 'The Bullet Journal Method' (2018)",
+      "modules": "Index + Futur Log (année) + Monthly Log + Daily Log + Collections (thématiques)",
+      "notation": "• Tâche | ○ Événement | — Note | > Migré | < Planifié | × Fait | ~ Abandonné",
+      "migration": "Processus mensuel: revoir chaque tâche non faite, décider: faire/migrer/supprimer. Évite l'accumulation inutile.",
+      "forces": "Offline, flexible, adapté aux pensées non-linéaires. Fusionne agenda + journal + liste de tâches."
+    },
+    "PKM_personal_knowledge_management": {
+      "définition": "Système pour capturer, organiser, connecter et utiliser ses connaissances personnelles.",
+      "outils_phares": {
+        "Notion": "Base de données flexible, excellent pour les projets et wikis. Polyvalent mais peut devenir complexe.",
+        "Obsidian": "Markdown local, graphe de connaissances, parfait pour Zettelkasten. Propriété totale des données.",
+        "Todoist": "Gestion des tâches. Puissant pour GTD avec sous-projets, étiquettes, priorités, récurrences.",
+        "Things_3": "macOS/iOS only. Très élégant, intégration agenda, zones + projets. Idéal pour GTD visuel."
+      }
+    },
+    "inbox_zéro": {
+      "principe": "Vider son inbox email tous les jours sans nécessairement traiter tous les emails — l'inbox n'est pas un système de stockage.",
+      "méthode": "Pour chaque email: Delete / Delegate (forward) / Respond (si <2 min) / Defer (transformer en tâche) / Do.",
+      "batch_processing": "Traiter les emails en 2-3 sessions fixes par jour (ex: 9h + 12h30 + 17h). Désactiver les notifications en dehors."
+    },
+    "revue_hebdomadaire": {
+      "étapes": [
+        "Vider toutes les captures (inbox physique, numérique, carnet)",
+        "Actualiser les listes de projets (avancement, prochaines actions)",
+        "Revoir le calendrier (3 semaines passées + 2 semaines à venir)",
+        "Purger le 'Someday/Maybe' (supprimer ce qui n'est plus pertinent)",
+        "Définir les 3 priorités de la semaine à venir"
+      ],
+      "durée_idéale": "45-90 minutes. Idéalement le vendredi après-midi ou dimanche soir. La revue hebdomadaire est l'investissement le plus rentable en organisation."
+    }
+  }
+}

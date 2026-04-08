@@ -1,0 +1,141 @@
+{
+  "version": "v30.0.0",
+  "category": "psychologie_cognitive",
+  "description": "Psychologie cognitive — biais cognitifs (25 essentiels), systèmes de pensée Kahneman, charge cognitive, heuristiques, mémoire de travail, apprentissage",
+  "psychologie_cognitive": {
+    "introduction": "La psychologie cognitive étudie comment nous percevons, traitons et mémorisons l'information. TITANE s'appuie sur ces modèles pour anticiper les erreurs de raisonnement de Kevin, adapter la présentation de l'information, et éviter de surcharger la mémoire de travail.",
+    "systemes_pensee_kahneman": {
+      "auteur": "Daniel Kahneman (2011) — 'Thinking, Fast and Slow'",
+      "systeme_1": {
+        "caractéristiques": "Rapide, automatique, inconscient, émotionnel, intuitif",
+        "opère": "En pilote automatique — reconnaît des patterns, prend des décisions rapides",
+        "avantages": "Efficace, économe en énergie, adapté aux situations connues",
+        "limites": "Source principale des biais cognitifs — saute aux conclusions",
+        "exemples": "Compléter '2 + 2 =', reconnaître un visage familier, conduire un itinéraire habituel"
+      },
+      "systeme_2": {
+        "caractéristiques": "Lent, délibéré, conscient, logique, analytique",
+        "opère": "En mode réflexif — analyse, calcule, raisonne",
+        "avantages": "Précis, peut détecter les erreurs du Système 1",
+        "limites": "Consommateur d'énergie mentale, sujet à la fatigue décisionnelle",
+        "exemples": "Calculer 17 × 24, analyser un argument complexe, apprendre une nouvelle compétence"
+      },
+      "apport_TITANE": "Kevin est en Système 1 (fatigué, rapide) → simplifier, structurer. Kevin en Système 2 (analytique) → approfondir, challenger."
+    },
+    "memoire_de_travail": {
+      "theorie": "George Miller (1956) — 'The Magical Number Seven, Plus or Minus Two'",
+      "capacite": "7 ± 2 éléments simultanément (moderne: plutôt 4 ± 1)",
+      "chunking": "Regrouper les informations en unités signifiantes pour contourner la limite",
+      "implication_TITANE": [
+        "Maximum 3-5 points par réponse",
+        "Utiliser des titres et listes pour réduire la charge",
+        "Résumer les points importants en fin de réponse longue",
+        "Préférer les analogies aux abstractions pures"
+      ]
+    },
+    "biais_cognitifs_essentiels": {
+      "introduction": "Les biais cognitifs sont des raccourcis mentaux qui s'écartent de la logique pure. Connaître les 25 biais les plus impactants permet à TITANE de les identifier dans les messages de Kevin et d'adapter sa réponse.",
+      "biais_confirmation": {
+        "définition": "Chercher, interpréter et mémoriser les informations qui confirment nos croyances préexistantes",
+        "exemple": "Ne lire que les avis positifs d'une décision déjà prise",
+        "contre": "Chercher activement les arguments contraires. TITANE propose des contre-exemples avec douceur."
+      },
+      "biais_ancrage": {
+        "définition": "S'appuyer excessivement sur la première information reçue",
+        "exemple": "Voir 100€ barré à 70€ et penser faire une affaire",
+        "contre": "Recalibrer à partir de références indépendantes"
+      },
+      "biais_disponibilite": {
+        "définition": "Surestimer la probabilité d'événements faciles à rappeler (récents, marquants)",
+        "exemple": "Surestimer les risques d'accident d'avion après en avoir vu un aux infos",
+        "contre": "Chercher des statistiques objectives, pas des exemples mémorables"
+      },
+      "biais_dunning_kruger": {
+        "définition": "Les moins compétents surestiment leur compétence; les plus compétents sous-estiment la leur",
+        "apport_TITANE": "Calibrer le niveau de confiance exprimée dans les réponses selon le domaine — jamais feindre une certitude excessive"
+      },
+      "biais_retrospectif": {
+        "définition": "'Je le savais depuis le début' — réinterpréter le passé à la lumière du résultat connu",
+        "apport_TITANE": "Aider Kevin à distinguer bonne décision de bon résultat"
+      },
+      "effet_halo": {
+        "définition": "Une qualité positive (ou négative) déborde sur l'évaluation globale d'une personne/chose",
+        "exemple": "Trouver quelqu'un plus compétent parce qu'il est bien habillé"
+      },
+      "biais_statu_quo": {
+        "définition": "Préférer l'état actuel des choses par aversion aux pertes",
+        "apport_TITANE": "Aider Kevin à évaluer objectivement un changement malgré l'inertie"
+      },
+      "aversion_perte": {
+        "auteurs": "Kahneman & Tversky",
+        "définition": "Perdre 100€ fait plus de peine que gagner 100€ fait de plaisir (facteur ~2x)",
+        "apport_TITANE": "Formuler les options en termes de gains plutôt que de pertes si Kevin est en mode décision difficile"
+      },
+      "sunk_cost_fallacy": {
+        "définition": "Continuer une action à cause des ressources déjà investies plutôt que de sa valeur future",
+        "exemple": "Finir un mauvais livre parce qu'on a déjà lu 300 pages",
+        "apport_TITANE": "Aider Kevin à distinguer investissement passé et valeur future"
+      },
+      "biais_planification": {
+        "auteur": "Kahneman & Tversky",
+        "définition": "Sous-estimer systématiquement le temps, coûts et risques nécessaires à un projet",
+        "contre": "Référence externe (outside view): 'Combien de temps prennent des projets similaires?'"
+      },
+      "effet_mere_exposition": {
+        "auteur": "Robert Zajonc",
+        "définition": "Apprécier davantage ce qui nous est familier, simplement parce qu'on y est exposé",
+        "apport_TITANE": "La répétition cohérente d'une idée dans les réponses augmente son acceptabilité"
+      },
+      "biais_représentativité": {
+        "définition": "Juger une probabilité selon la ressemblance avec un prototype, pas les statistiques",
+        "exemple": "Penser qu'un homme calme et ordonné est sûrement bibliothécaire plutôt qu'agriculteur"
+      },
+      "effet_de_cadrage": {
+        "auteurs": "Tversky & Kahneman",
+        "définition": "La façon dont une option est présentée (gain vs perte) influence la décision",
+        "apport_TITANE": "Choisir le cadrage qui sert le mieux les objectifs de Kevin"
+      },
+      "illusion_de_contrôle": {
+        "définition": "Surestimer sa capacité à influencer des événements aléatoires",
+        "exemple": "Croire qu'on lance mieux les dés en soufflant dessus"
+      },
+      "point_aveugle": {
+        "définition": "Voir les biais des autres mais pas les siens",
+        "apport_TITANE": "TITANE doit signaler ses propres limites et incertitudes"
+      },
+      "autres_biais_importants": {
+        "biais_attribution_fondamentale": "Attribuer les actions des autres à leur caractère, les siennes aux circonstances",
+        "biais_survie": "Ne voir que les succès (les échecs ont disparu du champ de vision)",
+        "illusion_fréquence": "Voir partout quelque chose auquel on vient de prêter attention (effet Baader-Meinhof)",
+        "effet_spotlight": "Croire que les autres remarquent plus nos erreurs qu'ils ne le font vraiment",
+        "biais_optimisme": "Croire que les événements négatifs toucheront moins soi que les autres",
+        "normalcy_bias": "Sous-estimer la probabilité et l'impact d'une catastrophe rare",
+        "biais_ingroup": "Favoriser les membres de son groupe, dévaluer les autres",
+        "effet_zeigarnik": "Mieux mémoriser les tâches inachevées que les achevées",
+        "illusion_savoir": "Croire comprendre quelque chose alors qu'on en a seulement une représentation superficielle",
+        "effet_faux_consensus": "Surestimer la mesure dans laquelle nos opinions sont partagées par les autres"
+      }
+    },
+    "heuristiques": {
+      "définition": "Raccourcis mentaux qui permettent de prendre des décisions rapides avec peu d'information",
+      "representativite": "Juger par ressemblance au prototype (rapide mais imprécis)",
+      "disponibilite": "Juger par facilité de rappel (récence, intensité émotionnelle)",
+      "ancrage_ajustement": "Partir d'un point de référence et ajuster insuffisamment",
+      "affect": "Se fier à son ressenti pour évaluer — si ça 'semble bien', c'est probablement bon",
+      "apport_TITANE": "Identifier quelle heuristique Kevin utilise et compléter avec des données objectives si nécessaire"
+    },
+    "charge_cognitive": {
+      "definition": "Effort mental requis pour traiter et maintenir une information en mémoire de travail",
+      "intrinsèque": "Complexité inhérente de la tâche (ne peut pas être réduite)",
+      "extrinsèque": "Charge liée à la présentation — peut être réduite par un bon design",
+      "germane": "Charge utile — formation de nouveaux schémas, apprentissage réel",
+      "principes_réduction_charge_extrinsèque": [
+        "Une idée par paragraphe",
+        "Titres et sous-titres pour l'orientation",
+        "Analogies familières pour les concepts abstraits",
+        "Pas plus de 3-5 options en même temps",
+        "Progression du simple vers le complexe"
+      ]
+    }
+  }
+}

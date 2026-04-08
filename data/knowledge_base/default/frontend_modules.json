@@ -1,0 +1,104 @@
+{
+  "version": "v30.0.0",
+  "category": "frontend_modules",
+  "description": "Modules frontend React/TypeScript TITANE∞ — pages, features, services, routing",
+  "tech_stack": {
+    "framework": "React 19.2.4",
+    "language": "TypeScript (strict mode, 0 erreurs)",
+    "bundler": "Vite 6.x",
+    "ui_components": "shadcn/ui + Radix UI + Tailwind CSS",
+    "state_management": "Zustand + React Context",
+    "routing": "React Router v6",
+    "animation": "Framer Motion",
+    "icons": "Lucide React",
+    "charts": "Recharts",
+    "design_system": "Monochrome — noir/blanc/gris, contraste maximal, minimaliste"
+  },
+  "routing": {
+    "description": "Toutes les routes sont définies dans src/App.tsx avec lazy loading",
+    "main_routes": [
+      {"path": "/titane", "component": "TitanePage", "description": "Page principale TITANE — chat IA + contrôles"},
+      {"path": "/experience", "component": "Experience", "description": "Tableau de bord XP et progression"},
+      {"path": "/time", "component": "TimePage", "description": "Centre temporel, agenda, time-travel"},
+      {"path": "/admin", "component": "AdminPage", "description": "Panneau admin (tabs: system/config/audio/qa)"},
+      {"path": "/dev", "component": "DevPage", "description": "Outils développeur (tabs: overview/diagnostics/operations/validation)"},
+      {"path": "/knowledge", "component": "KnowledgeFusionPage", "description": "Base de connaissance et fusion documentaire"},
+      {"path": "/cloud", "component": "CloudCenter", "description": "Cloud sync chiffré multi-device"},
+      {"path": "/sentinel", "component": "Sentinel", "description": "Moniteur de sécurité"},
+      {"path": "/watchdog", "component": "Watchdog", "description": "Logs système watchdog"},
+      {"path": "/selfheal", "component": "SelfHeal", "description": "Auto-réparation et santé système"},
+      {"path": "/adaptive", "component": "AdaptiveEngine", "description": "Moteur adaptatif"},
+      {"path": "/memory", "component": "Memory", "description": "Visualisation et gestion mémoire"},
+      {"path": "/research", "component": "ResearchPage", "description": "Recherche et seed packs"},
+      {"path": "/skills", "component": "SkillManager", "description": "Gestion des compétences"},
+      {"path": "/evolution", "component": "EvolutionMonitor", "description": "Moniteur d'évolution"},
+      {"path": "/creation", "component": "CreationStudio", "description": "Studio de création"},
+      {"path": "/reality-center", "component": "RealityCenter", "description": "Centre réalité augmentée/perception"},
+      {"path": "/hyper-center", "component": "HyperCenter", "description": "Hyper-intelligence cognitive"},
+      {"path": "/quantum-center", "component": "QuantumCenter", "description": "Moteur probabiliste quantique"},
+      {"path": "/identity-center", "component": "IdentityCenter", "description": "Gestion identité et persona"},
+      {"path": "/orchestration-center", "component": "OrchestrationMetaCenter", "description": "Centre orchestration méta-cognitif"},
+      {"path": "/singularity", "component": "SingularityMonitor", "description": "Moniteur singularité — conscience centrale"},
+      {"path": "/performance", "component": "PerformanceTest", "description": "Benchmarking performances IPC"}
+    ]
+  },
+  "features": {
+    "description": "Modules feature par domaine sous src/features/",
+    "modules": {
+      "chat": "Interface chat IA principale — messages, streaming, historique",
+      "admin": "Panneau d'administration complet",
+      "cognitive": "Interface cognitive — analyse, contexte, cohérence",
+      "conversation": "Gestion des conversations — création, navigation, export",
+      "dashboard": "Métriques et tableau de bord",
+      "design-center": "Système de design, tokens, thèmes",
+      "developer-mode": "Mode développeur — outils avancés Kevin",
+      "evolution": "Interface évolution cognitive",
+      "governance-center": "Centre de gouvernance constitutionnelle",
+      "identity": "Gestion identité et persona",
+      "kernel": "Interface noyau cognitif",
+      "memory": "Visualisation mémoire STM/MTM/LTM",
+      "meta-dashboard": "Dashboard méta-cognitif orchestrateur",
+      "one-core": "Interface moteur central unifiée",
+      "production-health": "Santé production et alertes",
+      "progression": "Progression XP, niveaux, accomplissements",
+      "qa-monitoring": "Monitoring QA automatique",
+      "system-center": "Centre système unifié (diagnostics, DevTools, cluster)",
+      "transformation": "Module transformation et adaptation comportementale",
+      "vision": "Perception visuelle et multimodale"
+    }
+  },
+  "services": {
+    "description": "Services TypeScript sous src/services/ — pont UI ↔ IPC",
+    "key_services": {
+      "omegaClient.ts": "Client OMEGA pipeline — envoie messages via IPC conversation_generate",
+      "conversationEngine.ts": "Moteur conversation côté frontend — gère état, historique, providers",
+      "aiChatClient.ts": "Client IA multi-provider — wrapping des appels ai_query/streaming",
+      "ragService.ts": "Service RAG (Retrieval Augmented Generation) — enrichit prompts avec contexte mémoire",
+      "agendaService.ts": "Service agenda — CRUD événements via IPC agenda_*",
+      "autoAuditEngine.ts": "Moteur audit automatique — health checks périodiques",
+      "evolutionEngine/": "Service évolution — pilote boucle évolutive côté TS",
+      "memory/": "Services mémoire — lecture/écriture STM/MTM/LTM",
+      "chat/": "Services chat — messages, streaming, contexte, moduleRouteContext",
+      "governance/": "Services gouvernance — validation actions vs constitution",
+      "monitoring/": "Services monitoring — métriques, alertes, health",
+      "performanceEngine/": "Benchmarking et optimisation performances",
+      "providers/": "Adaptateurs providers IA (OpenAI, Claude, Gemini, Ollama, Local)"
+    }
+  },
+  "ipc_client": {
+    "description": "Couche IPC côté frontend",
+    "tauri_protector": "src/utils/tauriProtector.ts — secureInvoke() avec guards",
+    "contract": "{ ok: bool, content: T, error: string | null }",
+    "null_safety": "Toujours Array.isArray() avant d'itérer. secureInvoke peut retourner null si commande indisponible.",
+    "fallback": "TauriProtector retourne des objets fallback (pas des arrays) pour commandes unavailable — guarded"
+  },
+  "design_system": {
+    "path": "src/features/design-center/",
+    "theme": "Monochrome — noir profond (#09090b), blanc pur (#fafafa), gris (#18181b, #27272a, #71717a)",
+    "glassmorphism": "backdrop-blur, bg-opacity pour panneaux flottants",
+    "typography": "Inter (sans-serif), JetBrains Mono (code)",
+    "animations": "Framer Motion — transitions fluides 300ms ease",
+    "responsive": "Mobile-first (Tauri desktop + Android)",
+    "data_testid": "Sélecteurs stables data-testid= pour tests E2E"
+  }
+}

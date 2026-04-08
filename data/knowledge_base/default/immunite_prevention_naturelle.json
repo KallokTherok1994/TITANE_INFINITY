@@ -1,0 +1,93 @@
+{
+  "version": "v30.0.0",
+  "category": "immunite_prevention_naturelle",
+  "description": "Immunité et prévention naturelle — immunité innée/adaptative, 20 stratégies naturelles de renforcement, microbiote et immunité, psychoimmunologie, maladies auto-immunes approche holistique",
+  "immunite_prevention_naturelle": {
+    "introduction": "Le système immunitaire est à la fois notre armée de défense et un système de reconnaissance de soi. Son bon fonctionnement dépend d'un équilibre délicat — trop peu d'activité = infections ; trop = auto-immunité. Le mode de vie est le levier principal de cet équilibre.",
+    "systeme_immunitaire": {
+      "immunite_innee": {
+        "définition": "Première ligne de défense — non spécifique. Réagit immédiatement (< 4h).",
+        "acteurs": ["Barrières physiques (peau, muqueuses)", "Cellules NK (Natural Killer)", "Macrophages", "Neutrophiles", "Système du complément"],
+        "inflammation": "La réponse inflammatoire aiguë est normale et nécessaire — c'est l'inflammation CHRONIQUE qui est pathologique"
+      },
+      "immunite_adaptative": {
+        "définition": "Réponse spécifique — se souvient des pathogènes rencontrés. Plus lente (jours) mais précise.",
+        "lymphocytes_B": "Produisent les anticorps (immunoglobulines IgG, IgM, IgA, IgE)",
+        "lymphocytes_T": {
+          "T_helper": "Cd4+ — chefs d'orchestre de la réponse immunitaire",
+          "T_cytotoxiques": "CD8+ — tuent les cellules infectées et cancéreuses",
+          "T_reg": "Cellules régulatrices — empêchent l'auto-immunité"
+        },
+        "mémoire": "Les vaccins et les infections créent une mémoire immunitaire — réponse plus rapide lors d'une 2e rencontre"
+      }
+    },
+    "facteurs_affectant_immunite": {
+      "affaiblissent": [
+        "Stress chronique (cortisol immunosuppresseur)",
+        "Manque de sommeil (< 6h: x4 risque rhume — Carnegie Mellon)",
+        "Malnutrition (déficits zinc, D3, C, A, sélénium)",
+        "Sédentarité",
+        "Alcool excessif",
+        "Tabac",
+        "Dysbiose intestinale",
+        "Isolement social (Cacioppo)"
+      ],
+      "renforcent": [
+        "Sommeil suffisant (7-9h)",
+        "Exercice modéré régulier",
+        "Alimentation diversifiée riche en polyphénols",
+        "Connexion sociale positive",
+        "Gestion du stress (méditation, cohérence cardiaque)",
+        "Exposition naturelle (soleil, nature, bactéries du sol)",
+        "Microbiote optimal"
+      ]
+    },
+    "strategies_naturelles": {
+      "vitamine_D3": {
+        "rôle_immunitaire": "Modulation de l'immunité innée et adaptative — carence multiplie risque infections respiratoires",
+        "recommandation": "Maintenir 60-80 ng/mL. Supplémenter en hiver (minimum 2000 UI/j adulte)"
+      },
+      "zinc": {
+        "rôle": "Développement et activation lymphocytes T, barrière muqueuse",
+        "forme": "Bisglycinate ou citrate de zinc — 15-25mg/j en prévention, 40-50mg/j court terme infection"
+      },
+      "vitamine_C": {
+        "rôle": "Antioxydant, stimulation neutrophiles et lymphocytes, synthèse collagène (barrières muqueuses)",
+        "dose_préventive": "500-1000mg/j",
+        "dose_thérapeutique": "2-4g/j en infection aiguë (liposomale si troubles digestifs)"
+      },
+      "sureau_noir": "Sambucol / Elderberry — réduction durée et sévérité grippe/rhume démontrée en méta-analyses",
+      "beta_glucanes": "Polysaccharides des champignons médicinaux (reishi, shiitake, maitake) — activateurs de macrophages et NK cells",
+      "probiotiques_infections": "Lactobacillus rhamnosus GG et acidophilus — réduction infections respiratoires hautes et durée",
+      "exercise_immunit": "30-45min d'exercice modéré — mobilisation temporaire des cellules immunitaires. Mais : exercice intense épuise (fenêtre immunosuppression post-effort)",
+      "sommeil_immunite": "Production de cytokines pendant le sommeil profond — les vaccins sont plus efficaces si on dort bien après",
+      "exposition_froid": "Exposition au froid (Wim Hof, douche froide) — noradrénaline → anti-inflammatoire, NK cells + (études limitées mais prometteuses)"
+    },
+    "maladies_auto_immunes": {
+      "mécanisme": "Le système immunitaire attaque les propres tissus — erreur de reconnaissance du 'soi'",
+      "prévalence": "5-8% de la population. Prédomine chez les femmes (75%)",
+      "facteurs_déclenchants": {
+        "génétique": "Prédisposition (HLA-DR)",
+        "intestin": "Hyperperméabilité intestinale — théorie du 'gut-brain-immune axis'",
+        "stress": "Trauma + stress sévère comme déclencheurs documentés",
+        "infections": "Certains virus comme déclencheurs (EBV, COVID-19)"
+      },
+      "approche_naturelle_COMPLEMENTAIRE": {
+        "alimentation": "Anti-inflammatoire stricte. Élimination provisoire gluten et laitages (test 3 mois).",
+        "intestin": "Restaurer perméabilité intestinale (glutamine, zinc, probiotiques, aliments fermentés)",
+        "D3": "Rôle immunorégulateur crucial — maintenir 80 ng/mL dans les pathologies auto-immunes",
+        "stress": "Gestion du stress PRIORITAIRE — le stress active les flambées",
+        "omega_3": "Anti-inflammatoire systémique — 3-4g EPA+DHA/j dans les pathologies actives"
+      },
+      "avertissement": "Toute approche naturelle pour une maladie auto-immune est COMPLEMENTAIRE au traitement médical, jamais alternatif. Ne jamais modifier un traitement immunosuppresseur sans consultation."
+    },
+    "psychoimmunologie": {
+      "définition": "Étude des interactions entre le système nerveux, le système endocrinien et le système immunitaire",
+      "PNI": "Psycho-Neuro-Immunologie — champ scientifique établi depuis les années 1980 (Robert Ader)",
+      "stress_→_immunite": "Stress aigu → immunostimulation (cortisol). Stress chronique → immunosuppression, inflammation",
+      "émotions_→_immunite": "Les émotions positives (gratitude, amour, joie) libèrent des neuropeptides favorables à l'immunité (candace pert)",
+      "méditation_NK": "8 semaines MBSR → augmentation activité NK cells mesurée",
+      "placebo": "L'effet placebo est réel et mesurable sur le système immunitaire — la croyance guérit partiellement"
+    }
+  }
+}

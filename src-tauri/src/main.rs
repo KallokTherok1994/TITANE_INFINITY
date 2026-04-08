@@ -1334,6 +1334,25 @@ fn main() {
             app.manage(persistent_memory_v19::PersistentMemoryState::new(app.handle()));
             log::info!("✅ PersistentMemoryState v19.2Ω initialized");
 
+            // ✅ DEFAULT KNOWLEDGE BASE v30.0.0 — Pre-seeded knowledge at installation time
+            // Loads embedded JSON knowledge (engines, IPC commands, architecture, identity,
+            // capabilities, response guidelines, operational knowledge) — no network required.
+            {
+                let kb_result = titane_infinity::knowledge_base_default::DefaultKnowledgeBase::initialize();
+                if kb_result.success {
+                    log::info!(
+                        "✅ Default Knowledge Base v30.0.0 initialized ({} categories)",
+                        kb_result.entries_loaded
+                    );
+                } else {
+                    log::warn!(
+                        "⚠️  Default Knowledge Base initialized with {} warnings: {:?}",
+                        kb_result.errors.len(),
+                        kb_result.errors
+                    );
+                }
+            }
+
             // Initialize providers asynchronously within Tauri's async runtime
             let chat_orch_clone = chat_orchestrator.clone();
             tauri::async_runtime::spawn(async move {
@@ -2566,6 +2585,12 @@ fn main() {
             // knowledge
             knowledge::parser::parse_document,
             knowledge::parser::detect_file_format,
+
+            // knowledge_base_default — pre-seeded default knowledge base
+            titane_infinity::knowledge_base_default::knowledge_base_get_all,
+            titane_infinity::knowledge_base_default::knowledge_base_get_category,
+            titane_infinity::knowledge_base_default::knowledge_base_list_categories,
+            titane_infinity::knowledge_base_default::knowledge_base_validate,
 
             // security::hardening
             titane_infinity::security::hardening::run_hardening_selftest,

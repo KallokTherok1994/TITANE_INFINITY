@@ -1,0 +1,143 @@
+{
+  "version": "v30.0.0",
+  "category": "developpement_personnel",
+  "description": "Développement personnel — valeurs, vision, mission, ikigai, objectifs SMART/OKR, zones de génie, gestion du temps (Eisenhower, GTD, Pomodoro), morning routine, journaling, identité intentionnelle",
+  "developpement_personnel": {
+    "introduction": "Le développement personnel est la démarche consciente de devenir la meilleure version de soi — pas par obligation ou comparaison, mais par alignement avec ses valeurs profondes. TITANE accompagne Kevin dans cette démarche comme un partenaire de croissance, pas comme un coach prescriptif.",
+    "fondements_identite": {
+      "valeurs_fondamentales": {
+        "définition": "Principes directeurs internes qui guident les décisions et définissent ce qui est non-négociable",
+        "pourquoi_important": "Les valeurs non conscientes créent des conflits internes ('je veux X mais j'agis comme Y'). Les valeurs conscientes sont une boussole.",
+        "identifier_ses_valeurs": [
+          "Quand te sens-tu le plus vivant, le plus 'toi'?",
+          "Qu'est-ce qui te met en colère — la colère pointe souvent une valeur bafouée",
+          "Quelles décisions regrettes-tu le moins?",
+          "Si tu avais 6 mois à vivre, comment les passerais-tu?"
+        ],
+        "exercice_top10": "Lister 30 valeurs candidates, réduire à 10, puis à 5. Ces 5 sont le cœur.",
+        "valeurs_communes": ["Liberté", "Famille", "Création", "Impact", "Intégrité", "Santé", "Excellence", "Connexion", "Croissance", "Aventure", "Sagesse", "Équité"],
+        "apport_TITANE": "Référencer les valeurs Kevin pour aligner les suggestions et projets — jamais proposer quelque chose qui contredit ses valeurs déclarées"
+      },
+      "vision_mission": {
+        "vision": "Image vivante et émotionnelle du futur souhaité (5-10 ans). QUI tu seras, PAS ce que tu auras.",
+        "mission": "Raison d'être — ce que tu apportes au monde, pourquoi tu fais ce que tu fais",
+        "différence": "La vision est la destination. La mission est le chemin et la méthode.",
+        "formule_vision": "'En [date], je suis quelqu'un qui [qualités], qui [actions régulières], créant [impact] pour [qui]'",
+        "visualisation": "Le cerveau ne distingue pas bien l'imaginé du réel — visualiser active les mêmes circuits que vivre"
+      },
+      "ikigai": {
+        "origine": "Concept japonais — 'raison d'être', ce qui donne sens à la vie",
+        "quatre_cercles": {
+          "ce_que_j_aime": "Passions, activités qui créent le flow",
+          "ce_pour_quoi_je_suis_doué": "Compétences, talents naturels développés",
+          "ce_dont_le_monde_a_besoin": "Besoins réels, problèmes à résoudre",
+          "ce_pour_quoi_on_peut_être_payé": "Valeur économique, marché"
+        },
+        "intersections": {
+          "passion": "Amour + Talent (mais peut-être pas viable économiquement)",
+          "mission": "Amour + Besoin du monde (mais peut-être pas payé)",
+          "vocation": "Talent + Besoin (mais peut-être pas passionné)",
+          "profession": "Talent + Paiement (mais peut-être vide de sens)"
+        },
+        "ikigai_vrai": "À l'intersection des 4 — rare, mais la boussole ultime"
+      }
+    },
+    "objectifs_performance": {
+      "SMART": {
+        "auteur": "George T. Doran (1981)",
+        "définition": "Cadre de formulation d'objectifs efficaces",
+        "S": "Spécifique — précis, concret, pas vague ('lire plus' → 'lire 20 pages/jour')",
+        "M": "Mesurable — indicateur quantifiable pour savoir si atteint",
+        "A": "Atteignable — ambitieux mais réaliste dans le contexte actuel",
+        "R": "Relevant — aligné sur la vision et les valeurs",
+        "T": "Temporel — date limite définie",
+        "limite": "SMART est nécessaire mais pas suffisant — sans émotion et signification, un objectif SMART reste froid"
+      },
+      "OKR": {
+        "auteurs": "Andy Grove (Intel) popularisé par John Doerr chez Google",
+        "structure": {
+          "O": "Objective — qualitatif, inspirant, ambitieux. 'Ce que tu veux accomplir'",
+          "KR": "Key Results — 3-5 résultats mesurables qui prouvent que O est atteint"
+        },
+        "exemple": {
+          "O": "Devenir une référence dans mon domaine",
+          "KR1": "Publier 12 articles de fond d'ici fin d'année",
+          "KR2": "Obtenir 3 invitations à parler en conférence",
+          "KR3": "Atteindre 1000 abonnés engagés sur la newsletter"
+        },
+        "cadence": "Trimestriel pour les OKR — réévaluation régulière",
+        "règle_70_percent": "Atteindre 70% d'un OKR ambitieux est un succès — 100% signifie que l'objectif n'était pas assez ambitieux"
+      },
+      "zones_de_génie": {
+        "auteur": "Gay Hendricks — 'The Big Leap'",
+        "quatre_zones": {
+          "incompétence": "Activités pour lesquelles on manque de compétence — déléguer ou éviter",
+          "compétence": "Bien faire mais sans passion — faire si nécessaire mais limiter",
+          "excellence": "Faire très bien, souvent reconnu — piège confortable mais pas épanouissant",
+          "génie": "Activités uniques — au croisement talent naturel + amour + valeur ajoutée unique. La zone de la contribution maximale."
+        },
+        "upper_limit_problem": "Quand on approche le génie, on sabote — inconscient peur de trop réussir",
+        "apport_TITANE": "Aider Kevin à identifier ses activités de génie et à structurer sa vie autour d'elles — pas juste optimiser la zone excellence"
+      }
+    },
+    "gestion_temps_energie": {
+      "matrice_eisenhower": {
+        "auteur": "Dwight D. Eisenhower → popularisé par Stephen Covey",
+        "quatre_quadrants": {
+          "Q1_urgent_important": "Crises, urgences, deadlines imminentes — FAIRE maintenant",
+          "Q2_non_urgent_important": "Prévention, planification, relations, développement — PLANIFIER (zone la plus précieuse)",
+          "Q3_urgent_non_important": "Interruptions, réunions non nécessaires — DÉLÉGUER ou dire non",
+          "Q4_non_urgent_non_important": "Distractions, scroll infini — ÉLIMINER"
+        },
+        "règle": "Les gens très productifs vivent majoritairement en Q2. La réactivité force à vivre en Q1."
+      },
+      "GTD": {
+        "auteur": "David Allen — 'Getting Things Done'",
+        "principe": "Le cerveau est fait pour avoir des idées, pas pour les stocker",
+        "cinq_étapes": [
+          "1. Capture — Tout externaliser dans un inbox unique",
+          "2. Clarify — Chaque item: actionnable? OUI → 2min? faire. Non → déléguer/planifier. NON → référence/archive/corbeille",
+          "3. Organize — Mettre dans le bon système (calendrier, projet, someday)",
+          "4. Reflect — Revue hebdomadaire systématique",
+          "5. Engage — Agir en faisant confiance au système"
+        ],
+        "revue_hebdomadaire": "Pilier GTD — 1-2h/semaine pour vider l'inbox, réaligner, planifier la semaine"
+      },
+      "pomodoro": {
+        "auteur": "Francesco Cirillo (1987)",
+        "principe": "Travailler 25 minutes → pause 5 min (= 1 pomodoro). Après 4 pomodoros → pause longue 15-30 min.",
+        "avantages": "Force les pauses (cerveaux ont besoin de récupération), rend le travail tangible, réduit la procrastination",
+        "adapter": "Certaines personnes fonctionnent mieux avec 45/15 — calibrer"
+      },
+      "time_blocking": {
+        "définition": "Réserver des blocs de temps dans l'agenda pour des types de tâches spécifiques",
+        "avantage": "Réduit la prise de décision quotidienne, protège le temps de deep work",
+        "exemple": "Lundi 9-11h: deep work non-interruptible. 14-16h: réunions/communications."
+      }
+    },
+    "routines_pratiques": {
+      "morning_routine": {
+        "pourquoi": "Les premières heures de la journée définissent le ton cognitif et émotionnel de toute la journée",
+        "éléments_fondamentaux": {
+          "éveil_progressif": "Pas d'écran les 30 premières minutes — laisser le cortisol matinal naturel agir",
+          "hydratation": "500ml eau au réveil — le corps est déshydraté après 7-8h",
+          "mouvement": "10-30 min mouvement — active la circulation, libère des endorphines",
+          "intention": "5 min d'intention/journaling — ancrer dans les valeurs et objectifs",
+          "nourriture": "Petit-déjeuner adapté à la biologie — pas universel"
+        },
+        "exemple_SAVERS_Hal_Elrod": "Silence (méditation) + Affirmations + Visualisation + Exercice + Lecture + Scribing (écriture)"
+      },
+      "journaling": {
+        "définition": "Pratique d'écriture réflexive régulière — outil de traitement cognitif et émotionnel",
+        "types": {
+          "brain_dump": "Écrire tout ce qui passe dans la tête sans filtre — vider le bruit mental",
+          "gratitude": "3-5 choses spécifiques pour lesquelles on est reconnaissant — recalibre le biais négatif",
+          "clarification": "Questions + réponses sur un défi ou décision",
+          "bilan": "Fin de journée: 3 victoires, 1 apprentissage, 1 amélioration",
+          "stoïcien": "Matin: anticiper les obstacles. Soir: premeditatio malorum et révision de journée"
+        },
+        "recherche": "James Pennebaker — l'écriture expressive réduit le stress, améliore le système immunitaire, renforce le sens"
+      }
+    }
+  }
+}

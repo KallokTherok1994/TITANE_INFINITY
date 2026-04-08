@@ -1,0 +1,79 @@
+{
+  "version": "v30.0.0",
+  "category": "administration_publique",
+  "description": "Administration publique française — organisation de l'État (central/déconcentré/décentralisé), collectivités territoriales, établissements publics, droit administratif (acte administratif/recours/responsabilité), fonction publique (statut/concours/carrière/droits et obligations), finances publiques (budget de l'État/LOLF/comptabilité publique), commande publique (marchés publics/procédures/CCAG)",
+  "administration_publique": {
+    "introduction": "L'administration publique française repose sur des principes constitutionnels (égalité, continuité, adaptabilité) et une organisation complexe issue de siècles d'histoire. La connaître est indispensable pour travailler avec elle, pour elle, ou dans ses interstices. TITANE couvre ce domaine avec la précision requise pour les professionnels (juristes, cadres territoriaux, notaires, responsables qualité dans le secteur public).",
+    "organisation_de_l_etat": {
+      "administration_centrale": {
+        "définition": "Ministères et services centraux dont la compétence s'étend à tout le territoire national. Siège à Paris.",
+        "types": "Ministères, directions générales (ex: DGFIP, DGCL), secrétariats généraux, inspections générales (IGA, IGF, IGAS)"
+      },
+      "administration_déconcentrée": {
+        "définition": "Services de l'État implantés en régions et départements, placés sous l'autorité du préfet",
+        "acteurs": "Préfets (représentants de l'État dans les départements et régions), sous-préfets, DRFIP, DREAL, DDPP, ARS (agences régionales de santé)",
+        "principe": "Déconcentration ≠ décentralisation. Dans la déconcentration, les services locaux restent sous tutelle hiérarchique du ministre."
+      },
+      "décentralisation": {
+        "définition": "Transfert de compétences de l'État vers des personnes morales de droit public distinctes (collectivités territoriales). Contrôle de légalité a posteriori, non de tutelle.",
+        "collectivités": "Communes (36 000), EPCI (intercommunalités), départements (101), régions (18), collectivités à statut particulier (Métropole de Lyon, Corse, outre-mer)",
+        "compétences_principales": {
+          "communes": "Urbanisme (PLU), voirie communale, écoles maternelles et primaires, CCAS, police municipale",
+          "départements": "Action sociale (RSA, aide à l'autonomie), collèges, routes départementales, sapeurs-pompiers (SDIS)",
+          "régions": "Lycées, formation professionnelle, développement économique, transports régionaux (TER)"
+        }
+      },
+      "établissements_publics": {
+        "définition": "Personnes morales de droit public spécialisées (principe de spécialité). Sous tutelle d'une ou plusieurs collectivités.",
+        "EPA": "Établissement Public Administratif — soumis au droit public. Ex: universités, CNRS, Pôle Emploi",
+        "EPIC": "Établissement Public Industriel et Commercial — règles mixtes (public pour tutelle, droit privé pour personnel et contrats). Ex: SNCF, RATP, EDF historique"
+      }
+    },
+    "droit_administratif": {
+      "acte_administratif": {
+        "acte_unilatéral": "Décision prise sans accord du destinataire. Obligatoire de motivation pour les décisions individuelles défavorables (loi DCRA 1979).",
+        "acte_réglementaire": "Portée générale et impersonnelle. Ex: décrets, arrêtés ministériels, préfectoraux",
+        "contrat_administratif": "Soumis au droit public quand il comporte des clauses exorbitantes du droit commun ou est confié à une personne publique"
+      },
+      "recours_contentieux": {
+        "recours_pour_excès_de_pouvoir": "REP — annulation d'un acte illégal. Délai: 2 mois à compter de la publication/notification. Juge administratif compétent.",
+        "recours_de_pleine_juridiction": "RPJ (plein contentieux) — condamnation à indemnisation + annulation possible",
+        "référé_suspension": "Référé administratif urgent — suspension d'un acte en cas d'urgence + doute sérieux sur légalité (art. L521-1 CJA)",
+        "juridictions": "Tribunal administratif (1er degré) → Cour Administrative d'Appel → Conseil d'État (cassation + juge de fond en 1er et dernier ressort pour les actes réglementaires nationaux)"
+      },
+      "responsabilité_administrative": {
+        "faute_de_service": "Faute imputable au service — engage la responsabilité de la personne publique",
+        "faute_personnelle": "Faute détachable du service (faute grave, faute personnelle d'un agent) — responsabilité personnelle de l'agent",
+        "responsabilité_sans_faute": "Rupture d'égalité devant les charges publiques, risque exceptionnel créé par l'administration"
+      }
+    },
+    "fonction_publique": {
+      "trois_versants": {
+        "FPE": "Fonction Publique d'État — agents des ministères et établissements publics nationaux",
+        "FPT": "Fonction Publique Territoriale — agents des collectivités et établissements publics locaux (CNFPT)",
+        "FPH": "Fonction Publique Hospitalière — agents des hôpitaux publics, EHPAD, etc."
+      },
+      "statut_général": "Loi n°83-634 du 13 juillet 1983 (droits et obligations communs) + lois spécifiques par versant. Loi de transformation de la fonction publique 2019 (loi LTFP) = réformes importantes (contrat, mobilité, rupture conventionnelle).",
+      "carrière": {
+        "corps_cadres_d_emploi": "Regroupements de fonctionnaires par filière et grade. A (encadrement/conception), B (application), C (exécution).",
+        "avancement": "Avancement d'échelon (ancienneté) + avancement de grade (inscription tableau annuel) + promotion interne (concours internes, examens pro)",
+        "concours": "Recrutement de droit commun. Concours externe (diplôme), interne (ancienneté), 3ème voie (expérience professionnelle privée)"
+      },
+      "droits_et_obligations": {
+        "droits": "Liberté d'opinion, droit syndical, droit de grève (avec restrictions dans certains corps), participation, formation",
+        "obligations": "Obéissance hiérarchique (sauf ordre manifestement illégal), neutralité et laïcité, secret professionnel, discrétion, non-cumul d'activités (assouplissements loi 2019), probité"
+      }
+    },
+    "finances_publiques": {
+      "LOLF": "Loi Organique relative aux Lois de Finances (1er août 2001). Révolution de la gestion publique: logique de performance (objectifs → indicateurs → résultats) vs logique de moyens ancienne. Budget organisé en missions/programmes/actions.",
+      "cycle_budgétaire": "Préparation (arbitrages interministériels, printemps N-1) → Adoption (vote PLF par parlement, avant 31 déc) → Exécution (ordonnateurs + comptables publics) → Contrôle (Cour des comptes, contrôleurs budgétaires)",
+      "séparation_ordonnateur_comptable": "L'ordonnateur engage et liquide les dépenses. Le comptable public (payeur) vérifie la régularité avant paiement. Responsabilité personnelle et pécuniaire du comptable.",
+      "commande_publique": {
+        "codes": "Code de la Commande Publique (2019) — fusion code des marchés publics, ordonnances DSP et concessions",
+        "seuils": "Pas de mise en concurrence obligatoire sous 40 000€ HT. Procédure adaptée (MAPA) jusqu'aux seuils européens (~5,4 M€ travaux / ~221 000€ fournitures/services État / ~280 000€ collectivités). Au-delà: AO ouvert ou restreint, appel d'offres.",
+        "principes": "Liberté d'accès à la commande publique, égalité de traitement des candidats, transparence des procédures (art. L3-1 CCP)",
+        "CCAG": "Cahiers des Clauses Administratives Générales — socle contractuel standard par type de marché (travaux/FCS/TIC/MI/PI). Révision 2021."
+      }
+    }
+  }
+}

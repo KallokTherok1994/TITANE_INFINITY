@@ -1,0 +1,73 @@
+{
+  "version": "v30.0.0",
+  "category": "performance_cognitive",
+  "description": "Performance cognitive et biohacking mental — nootropiques (créatine/caféine/bacopa/lion's mane), états de flow (Csikszentmihalyi), deep work (Cal Newport), mémoire (spaced repetition/Anki), techniques d'apprentissage (Feynman/Pomodoro/interleaving), neuroplasticité adulte, BDNF",
+  "performance_cognitive": {
+    "introduction": "Le cerveau est plastique tout au long de la vie — il se reconfigure en fonction de ce à quoi on l'expose. La performance cognitive n'est pas fixée génétiquement: sommeil, exercice, alimentation, pratiques mentales et apprentissage la façonnent activement. TITANE aborde ce sujet avec la rigueur des neurosciences, sans céder aux promesses marketing.",
+    "neuroplasticite_adulte": {
+      "définition": "Capacité du cerveau à se réorganiser structurellement et fonctionnellement en réponse à l'expérience",
+      "BDNF": {
+        "définition": "Brain-Derived Neurotrophic Factor — protéine de croissance neuronale. 'Engrais du cerveau'.",
+        "stimuler_BDNF": ["Exercice cardio (le plus puissant — +200-300% après 30 min d'intensité modérée)", "Jeûne intermittent", "Curcumine (1g + pipérine pour biodisponibilité)", "Sommeil profond", "Apprentissage de nouvelles compétences"]
+      },
+      "hippocampe": "Zone de neurogenèse adulte continue (Harvey et al.) — exercice cardio régulier augmente sa taille de 2% par an vs atrophie liée au stress chronique",
+      "myelinisation": "Répétition délibérée myélinise les circuits neuronaux (gaine de myéline → vitesse × 100) — principe derrière la maîtrise"
+    },
+    "nootropiques": {
+      "créatine": {
+        "usage_cognitif": "Non seulement musculaire — 3-5g/jour améliore la mémoire de travail et le raisonnement, surtout chez végétariens/végétaliens (cerveau utilise la phosphocréatine)",
+        "études": "Rae et al. 2003 — amélioration mémoire +20% et vitesse de traitement"
+      },
+      "caféine": {
+        "mécanisme": "Antagoniste de l'adénosine — bloque la fatigue sans l'éliminer. Synergie avec L-théanine (2:1).",
+        "dose_optimale": "3-6mg/kg. Au-delà: anxiété et effets contre-productifs.",
+        "L_theanine_synergie": "200mg L-théanine + 100mg caféine = focus amélioré + anxiété réduite vs caféine seule. Études multiples.",
+        "tolérance": "Faire des pauses hebdomadaires (1-2 jours) ou mensuelles pour maintenir l'efficacité"
+      },
+      "bacopa_monnieri": {
+        "usage": "Adaptogène ayurvédique — améliore la mémoire déclarative et la vitesse de traitement après 8-12 semaines",
+        "dose": "300-600mg d'extrait standardisé (55% bacosides) avec un repas gras",
+        "important": "Effets pas immédiats — courbe longue (3 mois minimum)"
+      },
+      "lion_s_mane": {
+        "usage": "Champignon médicinal. Stimule NGF (Nerve Growth Factor) et BDNF. Améliore la clarté mentale et la mémoire.",
+        "dose": "500-3000mg/jour d'extrait double extraction",
+        "études": "Mori et al. 2009 — amélioration cognitive chez seniors avec MCI après 16 semaines"
+      },
+      "oméga3_DHA": "Le DHA est le principal acide gras des membranes neuronales — fluidité membranaire et transmission synaptique",
+      "vitamines_B": "B1, B6, B9 (folate), B12 — cofacteurs de la synthèse des neurotransmetteurs. Déficience B12 = déclin cognitif",
+      "à_éviter": ["Racétams sans supervision (piracétam/aniracétam) — preuves insuffisantes en adultes sains", "Modafinil hors prescription — dépendance possible, effets long terme inconnus", "Energy drinks avec taurine/sucre — pics/creux énergétiques contre-productifs"]
+    },
+    "etat_de_flow": {
+      "définition": "Csikszentmihalyi — état d'absorption totale où le challenge correspond exactement aux capacités. 'Optimal experience'.",
+      "conditions": {
+        "challenge_skill_ratio": "Tâche légèrement en dehors de la zone de confort (10-15% au-delà des capacités actuelles)",
+        "objectif_clair": "Savoir précisément ce qu'on fait et pourquoi",
+        "feedback_immédiat": "Savoir si on progresse en temps réel",
+        "élimination_distractions": "Téléphone + notifications coupés. Environnement contrôlé."
+      },
+      "flow_triggers": ["Nouveauté et imprévisibilité", "Enjeux élevés (deep play)", "Environnement riche et dense en informations", "Incarnation physique (sport, musique, artisanat)"]
+    },
+    "deep_work": {
+      "définition": "Cal Newport — travail cognitif intense sans distraction sur une tâche difficile et de valeur",
+      "principes": {
+        "blocs_protégés": "Planifier des blocs de 90-120 min de travail profond sans interruption",
+        "retraite_temporaire": "Pour les tâches les plus importantes: séquestration totale (pas de wifi, espace dédié)",
+        "rituels": "Heure fixe, lieu dédié, rituel d'entrée (signale au cerveau le mode focus)",
+        "vs_shallow_work": "Emails, réunions, tâches routinières = shallow work. Ne doit pas empiéter sur le deep work."
+      }
+    },
+    "memoire_et_apprentissage": {
+      "spaced_repetition": {
+        "principe": "Revoir l'information juste avant qu'elle soit oubliée — optimal gap augmente à chaque révision réussie",
+        "algorithme": "SM-2 (Anki), FSRS (algorithme moderne 2022) — calcul automatique des intervalles optimaux",
+        "outil": "Anki (gratuit, open source) — le meilleur outil de mémorisation long terme. Utilisé par les médecins, les polyglottes, les passeurs de barreaux.",
+        "règle_20": "Une carte Anki = une seule information simple. La granularité est clé."
+      },
+      "technique_feynman": "1. Expliquer le concept comme à un enfant. 2. Identifier les lacunes. 3. Revenir à la source. 4. Simplifier encore. La formulation simple = compréhension réelle.",
+      "interleaving": "Alterner les sujets pendant l'apprentissage (vs blocked practice) — moins agréable à court terme mais 40-50% plus efficace à long terme (Rohrer et al.).",
+      "active_recall": "Tester la mémoire (fermer le livre, essayer de restituer) > relire passif. Effet de test documenté depuis Ebbinghaus.",
+      "pomodoro": "25 min de focus + 5 min de pause × 4 → pause longue 25-30 min. Maintient la vigilance et prévient la fatigue mentale."
+    }
+  }
+}

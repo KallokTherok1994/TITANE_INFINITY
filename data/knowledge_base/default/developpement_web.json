@@ -1,0 +1,68 @@
+{
+  "version": "v30.0.0",
+  "category": "developpement_web",
+  "description": "Développement web — fondamentaux (HTML5/CSS3/JavaScript ES2024), frameworks front-end (React/Vue/Svelte/Next.js/Nuxt), CSS avancé (Flexbox/Grid/Tailwind/animations), développement back-end (Node.js/Python FastAPI/PHP Laravel/bases de données SQL/NoSQL), APIs REST et GraphQL, hébergement et déploiement (Vercel/Netlify/VPS/Docker/CI-CD), performance web, accessibilité (WCAG), sécurité web (OWASP Top 10), développement mobile (React Native/Flutter/PWA)",
+  "developpement_web": {
+    "introduction": "Le développement web est le moteur de l'économie numérique. Comprendre ses fondamentaux, ses paradigmes et ses meilleures pratiques est indispensable pour créer des expériences numériques performantes, accessibles et sécurisées. TITANE maîtrise ce domaine du code au déploiement en production.",
+    "fondamentaux_web": {
+      "HTML5": {
+        "sémantique": "Balises sémantiques obligatoires: <header><nav><main><section><article><aside><footer>. Améliore SEO + accessibilité.",
+        "formulaires": "Types input modernes: date/email/tel/range/color. Attributs: required/pattern/autocomplete/placeholder.",
+        "APIs_web": "Fetch API, Web Workers, Service Workers, localStorage/sessionStorage, WebSockets, Geolocation, Web Notifications."
+      },
+      "CSS3": {
+        "Flexbox": "Layout 1D. display: flex. Propriétés clés: justify-content/align-items/flex-direction/gap/flex-wrap. Indispensable pour les navbars et les composants.",
+        "Grid": "Layout 2D. display: grid. grid-template-columns/rows, grid-area, fr unit, repeat(), minmax(). Pour les layouts de pages complexes.",
+        "responsive": "Mobile-first approach. Breakpoints: 640px(sm)/768px(md)/1024px(lg)/1280px(xl). Media queries min-width.",
+        "animations": "transitions + @keyframes + animation. Préférer transform/opacity (GPU accelerated) à width/height/top (reflows).",
+        "Tailwind_CSS": "Utility-first CSS. Rapid prototyping. Purge CSS pour production. JIT mode. Remplace les conventions BEM/SMACSS."
+      },
+      "JavaScript_ES2024": {
+        "modernes": "let/const, arrow functions, destructuring, spread/rest, template literals, optional chaining (?.), nullish coalescing (??), async/await, modules ES6 (import/export).",
+        "DOM": "querySelector/querySelectorAll, addEventListener, classList, dataset, fetch(). Préférer les event listeners délégués pour les performances.",
+        "TypeScript": "Surcouche typée de JS. Types statiques = moins de bugs, meilleure DX. Incontournable en équipe et sur les gros projets."
+      }
+    },
+    "frameworks_frontend": {
+      "React": "Librairie Facebook (Meta). Virtual DOM. Composants fonctionnels + Hooks (useState/useEffect/useContext/useReducer). Écosystème immense. Courbe d'apprentissage modérée.",
+      "Next_js": "Framework React pour le web moderne. SSR (Server-Side Rendering) + SSG (Static Site Generation) + App Router (Server Components). Déploiement natif sur Vercel. Standard pour les apps React en production.",
+      "Vue_js": "Framework progressif. Options API → Composition API (Vue 3). Plus accessible pour les débutants. Nuxt.js = Next.js de Vue.",
+      "Svelte_SvelteKit": "Compilateur (pas de Virtual DOM). Code plus lisible, bundle plus petit. SvelteKit = solution full-stack. Popularité croissante.",
+      "Astro": "Pour les sites orientés contenu (blogs, e-commerce). Islands architecture. HTML par défaut, JS uniquement où nécessaire. Excellent SEO + performance."
+    },
+    "backend": {
+      "Node_js_Express": "JavaScript côté serveur. Express.js = framework minimaliste. Fastify = alternative plus rapide. Idéal pour APIs REST et microservices.",
+      "Python_FastAPI": "Typage avec Pydantic, documentation auto OpenAPI, async natif. Le framework Python API le plus moderne et performant.",
+      "PHP_Laravel": "Framework PHP dominant. Convention over configuration. Eloquent ORM, Artisan CLI, migrations, Blade templates. Hébergement économique.",
+      "bases_de_données": {
+        "SQL": "PostgreSQL (recommandé: ACID, JSON support, puissant) | MySQL (populaire, bien supporté) | SQLite (local/embarqué). ORMs: Prisma (JS) / SQLAlchemy (Python) / Eloquent (PHP).",
+        "NoSQL": "MongoDB (document, JSON natif) | Redis (cache, sessions, queues) | Firestore (Google, temps réel) | Supabase (PostgreSQL as a service open-source)."
+      }
+    },
+    "APIs": {
+      "REST": "Architectural style. Méthodes HTTP: GET/POST/PUT/PATCH/DELETE. Status codes: 200/201/400/401/403/404/422/500. JSON. Versioning: /api/v1/.",
+      "GraphQL": "Requêtes flexibles (client demande exactement ce dont il a besoin). Idéal quand les clients ont des besoins variés. Complexité accrue côté serveur.",
+      "authentification": "JWT (JSON Web Tokens) + Refresh tokens | OAuth 2.0 (connexion Google/GitHub/...) | Sessions serveur. Librairies: Auth.js (Next.js), Passport.js, Better-Auth."
+    },
+    "déploiement_hébergement": {
+      "Vercel": "Plateforme Next.js native. Zero-config. Preview deployments automatiques sur chaque PR. Gratuit jusqu'à usage modéré. Ideal pour front-end + API routes.",
+      "Netlify": "Concurrent de Vercel. Excellents pour les sites Jamstack. Forms intégrés, Identity, Edge Functions.",
+      "VPS": "Serveur Virtuel Privé (Hetzner/OVH/DigitalOcean). Plus contrôle, moins managé. Stack classique: Linux + Nginx/Caddy + Docker + Let's Encrypt.",
+      "Docker": "Containerisation. dockerfile + docker-compose. Reproducibilité totale entre dev/staging/prod. Kubernetes pour orchestration à grande échelle.",
+      "CI_CD": "GitHub Actions (gratuit pour repos publics). Workflow: push → tests → lint → build → deploy. Convention: feature branch → PR → review → merge → déploiement auto."
+    },
+    "performance_web": {
+      "métriques": "Core Web Vitals (LCP/INP/CLS) + TTFB (Time To First Byte) + FCP (First Contentful Paint). Mesure: Lighthouse (DevTools), PageSpeed Insights, WebPageTest.",
+      "optimisations": ["Images: WebP/AVIF + lazy loading + srcset + CDN image (Cloudinary/Imgix)", "Code splitting: charger uniquement le JS nécessaire à la page", "Caching: HTTP cache headers + Service Worker + CDN edge cache", "Minification + compression Gzip/Brotli", "Fonts: variable fonts + preload + swap display"]
+    },
+    "accessibilité_WCAG": {
+      "principes_POUR": "Perceptible / Opérable / Compréhensible / Robuste",
+      "pratiques_clés": ["Attributs alt sur toutes les images", "Labels sur tous les champs de formulaire", "Contraste couleur minimum 4,5:1 (AA)", "Navigation clavier complète (focus visible, Tab order logique)", "ARIA labels pour les composants interactifs complexes"],
+      "outils_test": "axe DevTools (extension Chrome) + Lighthouse accessibility audit + lecteur d'écran (NVDA/VoiceOver)"
+    },
+    "sécurité_OWASP": {
+      "Top_10_2021": ["A1: Broken Access Control", "A2: Cryptographic Failures (HTTPS, hash des mots de passe avec bcrypt/argon2)", "A3: Injection (SQL injection — utiliser des requêtes préparées/ORM)", "A5: Security Misconfiguration", "A7: XSS Cross-Site Scripting (échapper les sorties, CSP headers)", "A8: Software integrity failures (vérifier les dépendances npm audit)"],
+      "pratiques": "Jamais de secrets dans le code source (variables d'environnement .env + .gitignore). CORS correctement configuré. Rate limiting sur les APIs."
+    }
+  }
+}

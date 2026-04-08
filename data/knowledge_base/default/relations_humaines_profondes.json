@@ -1,0 +1,107 @@
+{
+  "version": "v30.0.0",
+  "category": "relations_humaines_profondes",
+  "description": "Relations humaines profondes — intimité émotionnelle, 5 langages de l'amour (Gary Chapman), 4 cavaliers de Gottman + antidotes, attachement amoureux adulte (4 styles), relation consciente, CNV au couple, solitude vs isolement",
+  "relations_humaines_profondes": {
+    "introduction": "Les relations humaines sont le terreau du bonheur et de la souffrance. Comprendre les mécanismes de la connexion, de l'attachement et du conflit permet de construire des relations plus profondes, plus vraies et plus durables. TITANE aborde ce domaine avec sensibilité — chaque relation de Kevin est unique, ces modèles sont des outils de compréhension, pas des jugements.",
+    "intimite_emotionnelle": {
+      "définition": "État de connexion profonde où l'on peut être vu et connu dans sa vraie nature — sans masque, sans performance",
+      "conditions": ["Sécurité émotionnelle — savoir qu'on ne sera pas rejeté ou ridiculisé", "Vulnérabilité consentie — s'ouvrir progressivement", "Réciprocité — l'autre s'ouvre aussi", "Présence totale — pas de téléphone, pas de distractions"],
+      "vulnerabilite": {
+        "auteur": "Brené Brown — 'Daring Greatly'",
+        "définition": "Se montrer tel qu'on est, avec ses incertitudes et ses limites — sans garantie du résultat",
+        "paradoxe": "Ce que nous percevons comme notre plus grande faiblesse (montrer nos doutes, nos peurs) est ce qui crée les connexions les plus profondes",
+        "shield": "Les armures que nous portons (ironie, détachement, perfectionnisme, humour défensif) protègent de la douleur mais aussi de la connexion"
+      },
+      "écoute_empathique": {
+        "niveaux": {
+          "0": "Pas d'écoute — on attend son tour de parler",
+          "1": "Écoute sélective — on entend ce qui confirme nos idées",
+          "2": "Écoute active — on comprend les mots et le sens",
+          "3": "Écoute empathique — on ressent l'état émotionnel de l'autre et on le reflète"
+        },
+        "bloqueurs": ["Conseiller immédiatement", "Minimiser ('c'est rien')", "Changer de sujet", "Se comparer ('moi aussi j'ai...')"]
+      }
+    },
+    "cinq_langages_amour": {
+      "auteur": "Gary Chapman — 'The 5 Love Languages' (1992)",
+      "principe": "Nous exprimons et ressentons l'amour de 5 façons différentes. Parler le mauvais langage = l'autre ne se sent pas aimé même si tu aimes.",
+      "langages": {
+        "paroles_valorisantes": "Compliments, encouragements, expressions verbales d'affection et d'appréciation. 'Je t'admire pour...' 'Tu as fait quelque chose d'extraordinaire quand...'",
+        "temps_de_qualité": "Attention totale — pas juste être dans la même pièce. Activité partagée, conversations profondes, présence pleine.",
+        "cadeaux": "Symboles tangibles d'amour — pas nécessairement coûteux. Ce qui compte c'est la pensée et le timing.",
+        "services_rendus": "Faire des choses pour l'autre — préparer un repas, réparer quelque chose, prendre en charge une tâche qu'il/elle déteste.",
+        "toucher_physique": "Câlins, main tenue, contact physique affectueux. Peut être primaire même hors contexte sexuel."
+      },
+      "identifier_son_langage": [
+        "Qu'est-ce que tu demandes le plus souvent à ton partenaire?",
+        "De quoi te plains-tu le plus?",
+        "Comment exprimes-tu spontanément ton amour aux autres?"
+      ],
+      "application": "Connaître son langage ET celui de l'autre — adapter l'expression de l'amour à ce que l'autre reçoit vraiment"
+    },
+    "gottman_couple": {
+      "auteur": "John & Julie Gottman — 40 ans de recherche, plus de 3000 couples",
+      "quatre_cavaliers": {
+        "critique": "Attaquer le caractère de l'autre ('Tu es toujours...', 'Tu ne fais jamais...') — différent d'une plainte sur un comportement",
+        "mépris": "Le prédicteur le plus puissant de divorce — sarcasme, ironie cruelle, yeux levés au ciel, humiliation. Communique 'tu es inférieur à moi'.",
+        "attitude_défensive": "Se défendre immédiatement plutôt qu'entendre le message. 'C'est pas ma faute, c'est toi qui...'",
+        "mur_des_pleurs": "Retrait émotionnel et physique de la conversation. Monologue chez l'un, silence chez l'autre."
+      },
+      "antidotes": {
+        "vs_critique": "Plainte douce — parler en 'je': 'Je me sens... quand... j'ai besoin de...'",
+        "vs_mépris": "Culture d'appréciation — exprimer régulièrement la gratitude et l'admiration sincère",
+        "vs_défensive": "Prendre de la responsabilité — même une petite partie: 'Tu as raison sur ce point...'",
+        "vs_mur": "Faire une pause consciente (20 min minimum) pour revenir calme — pas fuir"
+      },
+      "ratio_magique": "5:1 — pour chaque interaction négative dans une relation saine, 5 interactions positives",
+      "fondations": "Connaissance intime de l'autre ('love maps'), tendresse et admiration, se tourner vers l'autre (vs se détourner)"
+    },
+    "attachement_adulte": {
+      "base": "John Bowlby (enfance) → Mary Ainsworth (étude de Strange Situation) → Hazan & Shaver (amour adulte)",
+      "quatre_styles_adultes": {
+        "sécure": {
+          "prévalence": "~55-60%",
+          "caractéristiques": "À l'aise avec l'intimité et l'autonomie, fait confiance, gère bien la distance temporaire",
+          "comportement_conflit": "Peut s'exprimer clairement, reste présent, cherche la résolution"
+        },
+        "anxieux_préoccupé": {
+          "prévalence": "~20%",
+          "caractéristiques": "Peur de l'abandon, besoin de réassurance constant, hypervigilant aux signaux de rejet",
+          "comportement_conflit": "Escalade émotionnelle, cherche la fusion, proteste l'attachement"
+        },
+        "évitant_détaché": {
+          "prévalence": "~20-25%",
+          "caractéristiques": "Inconfort avec l'intimité, valorise l'indépendance, minimise les besoins émotionnels",
+          "comportement_conflit": "Se retire, réprime les émotions, 'ce n'est pas grave'"
+        },
+        "désorganisé": {
+          "prévalence": "~5%",
+          "caractéristiques": "Oscillation entre désir d'intimité et peur — souvent lié à trauma d'attachement",
+          "origine": "Figure d'attachement source de sécurité ET de peur"
+        }
+      },
+      "attirance_paradoxale": "L'anxieux et l'évitant s'attirent souvent — le système d'activation anxieux / désactivation évitant crée de la chimie et de la frustration",
+      "sécurisation": "L'attachement est modifiable — thérapie, relation sécurisante, conscience de ses patterns"
+    },
+    "cnv_couple": {
+      "application": "La CNV (Rosenberg) appliquée au couple nécessite de ralentir le moment de réactivité pour passer à l'observation",
+      "timing": "Ne jamais initier une conversation difficile en état d'activation émotionnelle haute — attendre le calme",
+      "conversation_difficile": [
+        "1. Choisir le bon moment (pas épuisé, pas en public)",
+        "2. Commencer par 'Je...' jamais 'Tu...'",
+        "3. Nommer son émotion (pas son accusation)",
+        "4. Exprimer son besoin",
+        "5. Faire une demande concrète",
+        "6. Écouter la réponse sans se défendre"
+      ]
+    },
+    "solitude_vs_isolement": {
+      "solitude": "Choix d'être seul pour se ressourcer — essentielle et nourrissante. L'introversion est un superpouvoir.",
+      "isolement": "État subi, déconnexion involontaire — corrélé à inflammation, dépression, déclin cognitif (Cacioppo)",
+      "cacioppo": "La solitude chronique est aussi néfaste pour la santé que fumer 15 cigarettes par jour",
+      "besoins_connection": "Même les très introvertis ont besoin de connexion profonde — qualité plutôt que quantité",
+      "apport_TITANE": "Si Kevin exprime de l'isolement, TITANE répond avec présence, jamais avec minimisation"
+    }
+  }
+}

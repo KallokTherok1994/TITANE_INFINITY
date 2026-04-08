@@ -1,0 +1,92 @@
+{
+  "version": "v30.0.0",
+  "category": "spiritualite_sens_existence",
+  "description": "Spiritualité et sens de l'existence — logothérapie Frankl, spiritualité laïque vs religieuse, pratiques contemplatives, mort et finitude (Heidegger/Yalom), résilience post-traumatique, gratitude profonde, altruisme",
+  "spiritualite_sens_existence": {
+    "introduction": "La dimension spirituelle et existentielle est souvent le parent pauvre de la santé holistique — trop facilement associée à la religion ou au New Age. Pourtant, la question du sens est universelle et scientifiquement liée au bien-être, à la résilience et même à la longévité. TITANE aborde ce domaine sans dogme et avec respect de la vision de Kevin.",
+    "logotherapie_frankl": {
+      "auteur": "Viktor Frankl — psychiatre, survivant d'Auschwitz. 'Man's Search for Meaning' (1946)",
+      "principe": "La recherche de sens est la motivation primaire de l'être humain — plus que le plaisir (Freud) ou le pouvoir (Adler)",
+      "vide_existentiel": "L'absence de sens crée la 'névrose noogénique' — dépression, addictions, agressivité",
+      "trois_voies_du_sens": {
+        "création": "Ce qu'on crée ou accomplit (œuvre, travail, projet)",
+        "expérience": "Ce qu'on reçoit — amour, beauté, vérité",
+        "attitude": "La position qu'on prend face à une souffrance inévitable — la liberté ultime"
+      },
+      "citation": "'On peut tout ôter à un être humain sauf la dernière des libertés humaines — choisir son attitude face à n'importe quelle circonstance'",
+      "tragique_triade": "La culpabilité, la souffrance et la mort — Frankl montre comment trouver du sens même dans ces trois",
+      "apport_TITANE": "Quand Kevin traverse une épreuve, TITANE peut explorer avec lui le sens possible dans la souffrance — sans minimiser, mais en ouvrant la perspective"
+    },
+    "spiritualite_laique": {
+      "définition": "Expérience de connexion à quelque chose de plus grand que soi, de transcendance et de sens — sans nécessairement de cadre religieux",
+      "formes": {
+        "nature": "Expérience du sublime — forêt, montagne, océan, étoiles. Déclenche l'humilité et la connexion.",
+        "art_musique": "L'art comme portail vers l'expérience du beau et de l'humain universel",
+        "contemplation": "Méditation, silence, retraite — exploration intérieure",
+        "service": "Se mettre au service de quelque chose de plus grand — cause, communauté, humanité",
+        "amour": "L'amour profond comme expérience spirituelle fondamentale"
+      },
+      "neuroscience": {
+        "experience_awe": "L'émerveillement (awe) — Dacher Keltner. Produit diminution ego, pro-socialité, sens, bien-être durable",
+        "DMN": "Default Mode Network — actif pendant la contemplation, le sens, la connexion à soi profond"
+      }
+    },
+    "mort_finitude": {
+      "introduction": "La conscience de la mort est ce qui distingue l'humain — et peut être une source de sens ou d'angoisse selon comment on l'approche",
+      "heidegger": {
+        "être_pour_la_mort": "Prendre conscience de sa propre finitude 'authentiqueement' libère l'existence de la banalité",
+        "dasein": "Être-là — le fait d'exister au milieu du monde avec une conscience de sa temporalité"
+      },
+      "yalom": {
+        "auteur": "Irvin Yalom — 'Staring at the Sun'",
+        "concerns_ultimes": "Les 4 préoccupations fondamentales: mort, liberté, isolement, non-sens",
+        "éveil_mort": "Les patients atteints de cancer rapportent souvent un éveil — gratitude, priorités clarifiées, vie plus riche",
+        "vivre_face_mort": "Mémore mori comme outil — penser à sa mort pour vivre plus pleinement"
+      },
+      "stoicisme_mort": {
+        "memento_mori": "Rappel quotidien de la finitude — pratique stoïcienne (Marcus Aurelius)",
+        "premeditatio": "Pré-visualiser la perte pour apprécier ce qu'on a — différent de l'anxiété morbide"
+      }
+    },
+    "resilience_post_traumatique": {
+      "PTG": {
+        "définition": "Post-Traumatic Growth — changement psychologique positif résultant d'un événement très difficile",
+        "auteur": "Richard Tedeschi & Lawrence Calhoun (1990s)",
+        "domaines_croissance": [
+          "Relation aux autres (plus de profondeur et d'intimité)",
+          "Nouvelles possibilités (vie reorientée, nouvelles voies)",
+          "Force personnelle (je suis plus fort que je ne croyais)",
+          "Appréciation de la vie (ce qui compte vraiment)",
+          "Changement spirituel/existentiel (sens plus profond)"
+        ]
+      },
+      "facteurs_résilience": {
+        "sens": "Donner un sens à l'épreuve — Frankl: celui qui a un 'pourquoi' supporte presque tous les 'comment'",
+        "soutien": "Connexion sociale — pas besoin de nombreux soutiens, un seul lien profond change tout",
+        "régulation": "Capacité à réguler ses émotions sans les fuir ni être submergé",
+        "action": "Agir, même petitement — le sentiment de contrôle réduit l'impuissance apprise",
+        "auto_compassion": "Ne pas se juger sévèrement — Neff (voir bien_etre_mental_stress)"
+      }
+    },
+    "gratitude_profonde": {
+      "science": "Robert Emmons (UC Davis) — pratique régulière de gratitude: humeur +25%, sommeil, immunité, relations",
+      "trois_niveaux": {
+        "superficiel": "'Je suis reconnaissant pour... le soleil, mon café' — utile mais limité",
+        "intermédiaire": "Reconnaître les dons cachés — les épreuves qui ont forgé, les leçons apprises",
+        "profond": "Gratitude pour l'existence elle-même — le fait d'être vivant, conscient, là"
+      },
+      "pratique": "Journal de gratitude: 3 choses SPÉCIFIQUES + pourquoi. Éviter les automatismes.",
+      "différence_positivité": "La gratitude ne nie pas la souffrance — elle coexiste. Ce n'est pas du toxic positivity."
+    },
+    "altruisme_connexion": {
+      "science": "L'altruisme et le service génèrent de l'ocytocine, réduisent le stress, améliorent le sens et la longévité",
+      "helper_high": "Sentiment d'euphorie après avoir aidé — libération ocytocine + endorphines",
+      "compassion_empathy": {
+        "empathie": "Ressentir CE QUE ressent l'autre — peut mener à la détresse par contagion émotionnelle",
+        "compassion": "Vouloir soulager la souffrance de l'autre tout en restant ancré — plus durable et plus utile",
+        "fatigue_compassion": "Épuisement empathique — se protéger par la pleine conscience et les limites"
+      },
+      "apport_TITANE": "TITANE choisit la compassion (présence ancrée) plutôt que l'empathie fusionnelle — il reste stable pour mieux soutenir Kevin"
+    }
+  }
+}

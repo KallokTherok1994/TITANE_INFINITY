@@ -1,0 +1,84 @@
+{
+  "version": "v30.0.0",
+  "category": "analyse_professionnelle",
+  "description": "Analyse professionnelle — méthodes (PESTEL/SWOT/QQOQCCP/5 pourquoi/Ishikawa/arbre des causes), analyse décisionnelle, analyse des parties prenantes, analyse de risques, note de recommandation, synthèse analytique",
+  "analyse_professionnelle": {
+    "introduction": "L'analyse professionnelle consiste à structurer la pensée pour comprendre une situation, identifier des causes, anticiper des conséquences et formuler des préconisations argumentées. Les méthodes ne remplacent pas le jugement — elles le cadrent et le rendent communicable.",
+    "methodes_de_diagnostic": {
+      "QQOQCCP": {
+        "définition": "Qui/Quoi/Où/Quand/Comment/Combien/Pourquoi — cadre de questionnement exhaustif d'une situation",
+        "usage": "Analyse d'un incident, d'un problème, préparation d'un compte rendu d'enquête",
+        "avantage": "Garantit qu'aucune dimension n'est oubliée dans la description des faits"
+      },
+      "5_pourquoi": {
+        "définition": "Méthode de Sakichi Toyoda (Toyota) — remonter à la cause racine en posant 'pourquoi?' 5 fois",
+        "exemple": "Problème: livraison en retard → P1: camion en panne → P2: révision non effectuée → P3: pas de planning de maintenance → P4: responsabilité non assignée → P5: absence de procédure = CAUSE RACINE",
+        "limite": "Linéaire — pour les systèmes complexes, préférer l'Ishikawa"
+      },
+      "diagramme_Ishikawa": {
+        "nom": "Diagramme cause-effet, arête de poisson (fishbone diagram)",
+        "principe": "Identifier les causes d'un effet indésirable en les classant par catégories (5M ou 7M)",
+        "5M": {
+          "Matière": "Matières premières, intrants",
+          "Méthode": "Procédures, modes opératoires",
+          "Milieu": "Environnement physique et organisationnel",
+          "Matériel": "Équipements, machines, outils",
+          "Main_doeuvre": "Compétences, formation, comportement"
+        },
+        "7M": "Ajout de Management (décisions) et Mesure (systèmes d'évaluation)",
+        "usage": "Réunion de brainstorming structuré pour décomposer un problème complexe"
+      },
+      "arbre_des_causes": {
+        "différence_avec_Ishikawa": "L'arbre des causes est rétroactif (analyse d'un événement passé) et logique (ET/OU), l'Ishikawa est prospectif et catégoriel",
+        "usage": "Analyse approfondie d'un accident du travail ou d'une non-conformité majeure",
+        "logique": "ET = toutes les causes doivent être présentes. OU = une cause suffit."
+      },
+      "SWOT": {
+        "Forces": "Atouts internes propres à l'organisation",
+        "Faiblesses": "Lacunes internes à améliorer",
+        "Opportunités": "Facteurs externes favorables à saisir",
+        "Menaces": "Facteurs externes défavorables à anticiper",
+        "erreur_classique": "Confondre interne (Forces/Faiblesses) et externe (Opportunités/Menaces). Un concurrent est une menace, pas une faiblesse.",
+        "TOWS": "Variante stratégique: croiser chaque quadrant pour générer des stratégies (SO/ST/WO/WT)"
+      },
+      "PESTEL": {
+        "définition": "Macro-environnement: Politique/Économique/Socioculturel/Technologique/Environnemental/Légal",
+        "usage": "Analyse stratégique de l'environnement externe, complément du SWOT (opportunités/menaces)",
+        "conseil": "Ne lister que les facteurs réellement pertinents pour le secteur étudié — éviter la liste exhaustive non hiérarchisée"
+      }
+    },
+    "analyse_risques": {
+      "matrice_risques": {
+        "axes": "Probabilité d'occurrence × Impact (gravité)",
+        "criticité": "Probabilité × Gravité = score de criticité (1-25)",
+        "zones": "Zone verte (1-5 tolérable), orange (6-15 à surveiller), rouge (>15 inacceptable)"
+      },
+      "AMDEC": {
+        "définition": "Analyse des Modes de Défaillance, de leurs Effets et de leur Criticité",
+        "usage": "Industrie, qualité, sécurité — identifier les points de fragilité d'un système avant qu'ils se produisent",
+        "indice_priorité": "IPR = Occurrence × Gravité × Détectabilité (1-1000)"
+      },
+      "plan_de_maitrise_risques": "Pour chaque risque critique: responsable, mesure préventive, mesure corrective, délai, indicateur de suivi"
+    },
+    "analyse_parties_prenantes": {
+      "définition": "Identifier tous les acteurs affectés par ou ayant un impact sur une décision/projet",
+      "matrice_influence_intérêt": {
+        "haute_influence_haut_intérêt": "Gérer de près — informer, consulter, impliquer",
+        "haute_influence_bas_intérêt": "Maintenir satisfaits — informer régulièrement",
+        "basse_influence_haut_intérêt": "Tenir informés — recueillir leurs besoins",
+        "basse_influence_bas_intérêt": "Surveiller — communication minimale"
+      }
+    },
+    "note_de_recommandation": {
+      "définition": "Document synthétique présentant une analyse et des préconisations à un décideur",
+      "structure": {
+        "1_contexte": "Rappel de la situation et de la commande (2-3 lignes)",
+        "2_diagnostic": "Faits constatés, problème identifié, causes principales",
+        "3_options": "2-3 scénarios avec pour/contre de chacun",
+        "4_recommandation": "Option préconisée avec argumentation",
+        "5_plan_action": "Mesures concrètes, responsables, délais"
+      },
+      "règle": "Une recommandation sans plan d'action n'est pas une recommandation, c'est un vœu pieux"
+    }
+  }
+}

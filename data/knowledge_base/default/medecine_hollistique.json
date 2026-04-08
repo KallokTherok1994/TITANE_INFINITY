@@ -1,0 +1,91 @@
+{
+  "version": "v30.0.0",
+  "category": "medecine_hollistique",
+  "description": "Médecine holistique — approche corps/âme/esprit, Médecine Traditionnelle Chinoise (yin/yang, 5 éléments, méridiens, qi), Ayurveda (3 doshas), ostéopathie, homéopathie, médecine fonctionnelle, acupuncture",
+  "medecine_hollistique": {
+    "introduction": "La médecine holistique regroupe les approches qui considèrent l'être humain comme un tout indissociable — corps, psyché et esprit. Elle complète (sans remplacer) la médecine conventionnelle, particulièrement pour les conditions chroniques, la prévention et l'optimisation de la vitalité. TITANE présente ces traditions avec leur richesse ET leurs limites scientifiques actuelles.",
+    "paradigme_holistique": {
+      "principe": "La maladie est un signal d'un déséquilibre systémique — elle a un sens, une cause et une histoire",
+      "vs_allopathie": "L'allopathie isole et traite le symptôme. Le holistique cherche la cause profonde dans le terrain global.",
+      "complémentarité": "Les deux ont leur place — urgences/chirurgie → allopathie indispensable. Maladies chroniques/prévention → approches holistiques précieuses",
+      "corps_psyche_esprit": {
+        "corps": "Support physique — alimentation, mouvement, sommeil, environnement",
+        "psyche": "Dimension émotionnelle et cognitive — pensées, croyances, émotions non résolues, relations",
+        "esprit": "Dimension existentielle — sens, appartenance, connexion à quelque chose de plus grand que soi"
+      }
+    },
+    "medecine_traditionnelle_chinoise": {
+      "âge": "Plus de 3000 ans de pratique documentée",
+      "concepts_fondamentaux": {
+        "qi": {
+          "définition": "Énergie vitale qui circule dans le corps et dans la nature",
+          "qualités": "Peut être déficient (manque), stagnant (bloqué), en excès ou pervers (pathogène)",
+          "soutenir": "Alimentation adaptée, mouvement (qi gong, tai chi), acupuncture, sommeil"
+        },
+        "yin_yang": {
+          "principe": "Toute réalité est polarisée — yin (froid, humide, nuit, repos, féminin) et yang (chaud, sec, jour, activité, masculin)",
+          "santé": "La santé est l'équilibre dynamique entre yin et yang — jamais une absence de l'un",
+          "déséquilibre": "Excès yang → chaleur, inflammation, hyperactivité. Excès yin → froid, fatigue, stagnation"
+        },
+        "cinq_elements": {
+          "bois": "Foie/Vésicule biliaire — planification, vision, colère, printemps",
+          "feu": "Cœur/Intestin grêle — joie, connexion, été",
+          "terre": "Rate/Estomac — réflexion, digestion, inquiétude, intersaisons",
+          "métal": "Poumons/Gros intestin — inspiration, deuil, automne",
+          "eau": "Reins/Vessie — peur, volonté profonde, hiver"
+        },
+        "meridiens": "14 canaux d'énergie traversant le corps sur lesquels circule le qi — l'acupuncture agit sur ces points"
+      },
+      "pratiques": ["Acupuncture (aiguilles sur points)", "Moxibustion (chaleur sur points)", "Cupping/ventouses", "Tui na (massage)", "Qi gong (exercice énergétique)", "Diétothérapie chinoise"],
+      "niveau_preuve": "Acupuncture: efficacité démontrée pour douleurs chroniques, nausées chimio, migraines. D'autres indications en cours d'étude."
+    },
+    "ayurveda": {
+      "origine": "Inde — 5000 ans. Littéralement 'science de la vie'",
+      "trois_doshas": {
+        "vata": {
+          "éléments": "Air + Espace",
+          "qualités": "Léger, sec, froid, mobile, irrégulier",
+          "en_équilibre": "Créativité, enthousiasme, flexibilité",
+          "en_excès": "Anxiété, insomnie, constipation, peau sèche, pensées dispersées",
+          "soutenir": "Chaleur, routine régulière, huiles, aliments chauds et nourrissants"
+        },
+        "pitta": {
+          "éléments": "Feu + Eau",
+          "qualités": "Chaud, huileux, net, tranchant, intense",
+          "en_équilibre": "Intelligence, ambition, leadership, digestion forte",
+          "en_excès": "Colère, inflammation, acidité, perfectionnisme excessif",
+          "soutenir": "Fraîcheur, douceur, éviter aliments épicés, pratiques apaisantes"
+        },
+        "kapha": {
+          "éléments": "Terre + Eau",
+          "qualités": "Lourd, froid, lent, huileux, stable",
+          "en_équilibre": "Force, endurance, loyauté, calme, amour inconditionnel",
+          "en_excès": "Léthargie, prise de poids, attachement excessif, dépression",
+          "soutenir": "Stimulation, mouvement vigoureux, épices légères, alimentation légère"
+        }
+      },
+      "prakriti": "Constitution naturelle — proportion relative des 3 doshas à la naissance. Détermine le terrain de base.",
+      "vikriti": "État actuel — comment les doshas sont déséquilibrés maintenant. L'objectif est de revenir à la prakriti.",
+      "dinacharya": "Routine quotidienne ayurvédique — lever avant le soleil, langue grattée, huile tirée (oil pulling), exercise adapté au dosha, alimentation selon rythme circadien"
+    },
+    "osteopathie": {
+      "fondateur": "Andrew Taylor Still (1874)",
+      "principe": "La structure gouverne la fonction — toute restriction de mobilité du corps impacte la fonction des organes et systèmes",
+      "postulats": [
+        "Le corps est une unité — tout est connecté",
+        "Le corps a sa propre pharmacie — il peut se guérir si les obstacles sont levés",
+        "La structure et la fonction sont interdépendantes"
+      ],
+      "techniques": ["Manipulation ostéoarticulaire", "Techniques myofasciales", "Ostéopathie cranio-sacrée", "Techniques viscérales"],
+      "niveau_preuve": "Efficacité reconnue pour lombalgies, cervicalgies, maux de tête de tension. Bonne sécurité avec praticien formé."
+    },
+    "medecine_fonctionnelle": {
+      "définition": "Médecine qui cherche les causes racines des maladies chroniques — fonctions biologiques, non organes isolés",
+      "approche": "Bilan approfondi: génétique, microbiote, hormones, inflammation, toxicité, stress — puis plan personnalisé",
+      "différence_allopathie": "L'allopathie nomme la maladie (diagnostic) et prescrit pour le diagnostic. La médecine fonctionnelle demande 'pourquoi' et agit sur les mécanismes.",
+      "outils": "Tests fonctionnels avancés, correction nutrionnelle, phytothérapie, lifestyle medicine",
+      "apport_TITANE": "Paradigme très utile pour accompagner Kevin dans la compréhension des causes profondes de ses problèmes de santé récurrents"
+    },
+    "avertissement_responsabilite": "TITANE présente ces traditions à titre éducatif et informatif. Ces approches ne remplacent pas un diagnostic médical conventionnel. En cas de symptômes persistants ou graves, consulter un médecin est prioritaire. TITANE ne prescrit pas."
+  }
+}

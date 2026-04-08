@@ -1,0 +1,77 @@
+{
+  "version": "v30.0.0",
+  "category": "digital_twin_v14_detail",
+  "description": "Digital Twin Engine v14.1 TITANE∞ — perception émotionnelle, analyse comportementale, auto-évolution, carte cognitive, IdentityModel Kevin",
+  "digital_twin_v14": {
+    "nom": "Digital Twin Engine v14.1",
+    "chemin": "src-tauri/src/digital_twin_v14_1/",
+    "version": "14.1.0",
+    "description": "Le Digital Twin v14 est le jumeau numérique de PREMIÈRE génération — axé sur la modélisation identitaire, la perception émotionnelle et l'analyse comportementale en temps réel. Il précède le NumericTwin vΩ∞ dans la hiérarchie évolutive.",
+    "modules": {
+      "identity_model.rs": "IdentityModel — modèle complet de l'identité Kevin",
+      "cognitive_map.rs": "CognitiveMap — carte cognitive de Kevin",
+      "emotion_engine/": "Moteur d'analyse émotionnelle en temps réel",
+      "behavior_engine/": "Moteur d'analyse comportementale",
+      "auto_evolution/": "Auto-évolution du jumeau dans le temps",
+      "anticipation.rs": "AnticipationEngine — prédiction des besoins",
+      "decision_engine.rs": "Moteur de décision basé sur le profil Kevin",
+      "preference_model.rs": "Modèle de préférences",
+      "alignment.rs": "Alignement valeurs/comportements",
+      "style_engine.rs": "Moteur de style adaptatif",
+      "memory_bridge.rs": "Pont vers Memory OS",
+      "context_sync.rs": "Synchronisation du contexte en temps réel",
+      "selfheal.rs": "Auto-guérison du jumeau si dérive détectée"
+    },
+    "identity_model_Kevin": {
+      "traits_cognitifs": {
+        "analytical": {"score": 0.9, "description": "Kevin analyse avant d'agir"},
+        "structured": {"score": 0.85, "description": "Pense en systèmes et en couches"},
+        "calm": {"score": 0.8, "description": "Reste posé sous pression"},
+        "clarity_oriented": {"score": 0.95, "description": "La clarté est non-négociable"},
+        "pragmatic": {"score": 0.9, "description": "Préfère ce qui marche"}
+      },
+      "patterns_de_pensée": [
+        {"nom": "simple_to_complex", "fréquence": 0.9, "description": "Partir du simple vers le complexe"},
+        {"nom": "structured_reasoning", "fréquence": 0.95, "description": "Raisonnement structuré et logique"},
+        {"nom": "impact_first", "fréquence": 0.85, "description": "Identifier l'impact avant les détails"},
+        {"nom": "layers_thinking", "fréquence": 0.8, "description": "Construire en couches successives"}
+      ],
+      "valeurs_Kevin": ["Clarté", "Cohérence", "Simplicité", "Efficacité", "Alignement"],
+      "style_communication": {
+        "préfère": "Direct, structuré, dense (pas de bavardage)",
+        "évite": "Verbosité, approximations, excès de précautions",
+        "ton_préféré": "Chaleureux mais professionnel, sobre"
+      }
+    },
+    "twin_state": {
+      "description": "TwinState — état instantané du jumeau (mis à jour à chaque interaction)",
+      "paramètres": {
+        "emotional_state": "neutral / stressed / excited / tired / focused / frustrated",
+        "cognitive_load": "0.0→1.0 — charge mentale estimée",
+        "energy_level": "0.0→1.0 — niveau d'énergie (défaut: 0.7)",
+        "clarity_index": "0.0→1.0 — clarté cognitive (défaut: 0.8)",
+        "coherence_score": "0.0→1.0 — cohérence état/discours (défaut: 0.9)"
+      },
+      "mise_à_jour": "Après chaque message de Kevin — analyse NLP légère sur le texte"
+    },
+    "config": {
+      "enable_emotion_analysis": true,
+      "enable_behavior_tracking": true,
+      "enable_auto_evolution": true,
+      "emotional_sensitivity": 0.8,
+      "adaptation_speed": 0.5,
+      "description": "Sensibilité émotionnelle 0.8 (haute) — détecte les nuances. Adaptation 0.5 (moderate) — ne change pas trop vite pour éviter l'instabilité."
+    },
+    "carte_cognitive": {
+      "description": "CognitiveMap — représentation des domaines de connaissance Kevin et leurs interconnexions",
+      "usage": "Anticipe les associations d'idées, suggère des connexions non exprimées",
+      "domaines_Kevin": ["Architecture logicielle", "IA et ML", "Design systems", "Psychologie", "Croissance personnelle", "Management", "Philosophie pratique", "Écriture", "Musique"]
+    },
+    "auto_évolution": {
+      "description": "AutoEvolution — le jumeau s'améliore au fil des interactions",
+      "mécanisme": "À chaque session: recalibrer les scores de traits, mettre à jour les préférences, ajouter de nouveaux patterns observés",
+      "garde_fou": "Les valeurs fondamentales (stabilité=1.0) ne changent jamais — l'identité profonde est stable"
+    },
+    "relation_numeric_twin": "Le DigitalTwin v14 alimente le NumericTwin vΩ∞ en données — v14 observe, vΩ modélise et anticipe."
+  }
+}

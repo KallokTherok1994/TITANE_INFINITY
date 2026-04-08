@@ -1,0 +1,66 @@
+{
+  "version": "v30.0.0",
+  "category": "gestion_projet_avancee",
+  "description": "Gestion de projet avancée — méthodes (Waterfall/Prince2/Agile Scrum/SAFe/PMI-PMBOK), triangle QCD, charte projet, WBS, GANTT, gestion des risques projet, gestion des parties prenantes, suivi et contrôle (EVM), clôture projet, PMO (Project Management Office), gestion de portefeuille projets",
+  "gestion_projet_avancee": {
+    "introduction": "La gestion de projet est une discipline structurée qui permet de mener à bien des réalisations uniques dans des contraintes de temps, de coût et de qualité. Elle est transversale à tous les secteurs: informatique, BTP, industrie, administration, conseil, notariat. TITANE en couvre les aspects fondamentaux et avancés.",
+    "triangle_QCD": {
+      "Qualité": "Spécifications, périmètre, conformité aux exigences",
+      "Coût": "Budget alloué et consommé",
+      "Délai": "Calendrier et jalons",
+      "tension": "Les 3 contraintes sont interdépendantes. Modifier l'une impacte les autres. Le chef de projet arbitre en permanence. Certains ajoutent le R (Risques) = QCDR."
+    },
+    "cycle_de_vie_projet": {
+      "initiation": "Faisabilité, business case, désignation du chef de projet, charte projet",
+      "planification": "WBS, planning (Gantt/PERT), budget, plan de management des risques, plan de communication, plan qualité",
+      "exécution": "Production des livrables, management des équipes, gestion des parties prenantes, reporting",
+      "contrôle": "Surveillance des indicateurs, gestion des changements, replanification si nécessaire",
+      "clôture": "Réception des livrables, bilan projet, RETEX, archivage, libération des ressources"
+    },
+    "méthodes_de_gestion": {
+      "Waterfall": "Phases séquentielles: Spécifications → Conception → Développement → Test → Déploiement. Adapté aux projets stables, bien définis, avec peu de changements attendus (ex: BTP, infrastructure).",
+      "Agile_Scrum": {
+        "sprints": "Itérations courtes (1-4 semaines) livrant des incréments de valeur fonctionnels",
+        "cérémonies": "Sprint Planning + Daily Standup + Sprint Review + Sprint Retrospective",
+        "rôles": "Product Owner (PO, priorise le backlog) + Scrum Master (facilitation, removal d'obstacles) + équipe de développement (auto-organisée)",
+        "backlog": "Product Backlog (toutes les user stories classées par priorité) → Sprint Backlog (stories sélectionnées pour le sprint en cours)"
+      },
+      "Prince2": "Framework britannique structuré en 7 principes, 7 thèmes, 7 processus. Très utilisé dans la fonction publique UK et internationale. Rôles précis (Project Board, Project Manager, Team Manager).",
+      "PMBOK": "Guide du PMI (Project Management Institute) — 10 domaines de connaissance (Intégration, Périmètre, Calendrier, Coûts, Qualité, Ressources, Communications, Risques, Approvisionnements, Parties prenantes)."
+    },
+    "outils_planification": {
+      "charte_projet": "Document d'autorisation du projet: objectifs, périmètre, livrables, jalons, budget indicatif, parties prenantes, chef de projet désigné.",
+      "WBS": "Work Breakdown Structure — décomposition hiérarchique de tout le travail en livrables et sous-livrables. Règle des 100%: le WBS doit représenter 100% du périmètre.",
+      "Gantt": "Représentation temporelle des tâches. Dépendances Fin-Début/Fin-Fin/Début-Début. Chemin critique = séquence de tâches dont le retard impacte directement la date de fin.",
+      "PERT": "Program Evaluation Review Technique — réseau de tâches avec estimations optimiste/probable/pessimiste. Durée espérée = (O + 4M + P) / 6.",
+      "matrice_RACI": "Responsible/Accountable/Consulted/Informed — pour clarifier les responsabilités sur chaque livrable/décision."
+    },
+    "gestion_risques_projet": {
+      "processus": "Identification → Qualification (probabilité × impact) → Traitement → Surveillance",
+      "strategies_traitement": {
+        "évitement": "Modifier le plan pour éliminer le risque",
+        "transfert": "Assurance, sous-traitance (transfert du risque à un tiers)",
+        "atténuation": "Mesures pour réduire probabilité ou impact",
+        "acceptation": "Prévoir une provision (réserve de contingence) pour gérer si le risque survient"
+      },
+      "registre_des_risques": "Tableau maintenu à jour: ID + Description + Probabilité + Impact + Score + Responsable + Mesure + Statut"
+    },
+    "earned_value_management": {
+      "définition": "EVM — méthode de suivi intégrée coût/délai par rapport au plan",
+      "indicateurs": {
+        "PV": "Planned Value — valeur planifiée du travail à date",
+        "EV": "Earned Value — valeur du travail réellement accompli à date",
+        "AC": "Actual Cost — coût réel dépensé à date",
+        "SV": "Schedule Variance = EV - PV (négatif = en retard)",
+        "CV": "Cost Variance = EV - AC (négatif = dépassement)",
+        "SPI": "Schedule Performance Index = EV/PV (<1 retard)",
+        "CPI": "Cost Performance Index = EV/AC (<1 dépassement)"
+      }
+    },
+    "PMO": {
+      "définition": "Project Management Office — entité organisationnelle centralisant les standards, méthodes, outils de gestion de projets",
+      "types": "PMO support (ressources/méthodes) vs PMO contrôle (standards et conformité) vs PMO directif (pilote directement les projets)",
+      "gestion_de_portefeuille": "Sélection et priorisation des projets selon la valeur stratégique et les ressources disponibles. Arbitrages entre projets concurrents pour les mêmes ressources."
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "version": "v30.0.0",
+  "category": "ecommerce_fondamentaux",
+  "description": "E-commerce fondamentaux — modèles de business (B2C/B2B/C2C/D2C/dropshipping/abonnement), plateformes (Shopify/WooCommerce/PrestaShop/Magento/Amazon/Etsy), UX et optimisation de la conversion (tunnel d'achat, checkout, CRO), logistique et fulfillment (stock propre vs 3PL vs dropshipping), marketing e-commerce (acquisition, rétention, email/SMS marketing, retargeting), marketplace strategy, métriques clés (AOV/LTV/CAC/taux de conversion/panier abandonné)",
+  "ecommerce_fondamentaux": {
+    "introduction": "L'e-commerce est devenu un pilier incontournable du commerce mondial (>5 000 Mds$ en 2023). Créer une boutique en ligne ne suffit plus: il faut maîtriser l'acquisition, la conversion, la rétention et la logistique pour bâtir un business rentable. TITANE couvre ce domaine avec une approche opérationnelle.",
+    "modèles_business": {
+      "B2C": "Business to Consumer. La majorité des boutiques en ligne. Volumes importants, marges variables, relation directe avec le client final.",
+      "B2B": "Business to Business. Commandes plus importantes, cycles plus longs, relation contractuelle, prix souvent négociés. Plateformes spécialisées (Alibaba, Ankorstore).",
+      "D2C": "Direct to Consumer. Marque qui vend en direct sans intermédiaire. Contrôle de la relation client et des marges (ex: Gymshark, Sézane).",
+      "dropshipping": "Pas de stock: la commande est transmise directement au fournisseur qui expédie. Faibles barrières à l'entrée, marges réduites, contrôle qualité limité. Fournisseurs: AliExpress, Spocket, Printful.",
+      "abonnement": "Revenus récurrents prédictibles. LTV élevée. Nécessite une valeur continue délivrée au client. Ex: box beauté, logiciels SaaS, presse numérique."
+    },
+    "plateformes": {
+      "Shopify": "SaaS leader. Simple à démarrer, écosystème d'apps riche, hébergé. Idéal PME et D2C. Frais de transaction 0,5-2% (sauf Shopify Payments). Plans 39-399$/mois.",
+      "WooCommerce": "Plugin WordPress open-source. Gratuit mais hébergement + plugins payants. Très flexible, grande communauté. Nécessite maintenance technique.",
+      "PrestaShop": "Open-source FR, forte communauté européenne. Entre WooCommerce et Magento en complexité. Bon choix pour les PME avec une équipe technique.",
+      "Magento_Adobe_Commerce": "Enterprise level. Très puissant, très complexe, très cher. Pour les grands comptes (>5M€ CA e-commerce).",
+      "marketplaces": {
+        "Amazon": "Portée massive, but forte concurrence et marges compressées (fees 8-15% + FBA). Indispensable pour de nombreux secteurs. Attention à la dépendance.",
+        "Etsy": "Artisanat, vintage, créations. Communauté engagée, acheteurs sensibles à l'authenticité.",
+        "Cdiscount_Fnac_Darty": "Marketplaces FR importantes pour les catégories électronique, maison, loisirs."
+      }
+    },
+    "UX_conversion": {
+      "tunnel_d_achat": "Homepage → Catégorie → Fiche produit → Panier → Checkout → Confirmation. Chaque étape peut faire fuir le client. Analyser les drop-off points.",
+      "fiche_produit": "Images HD multiples (dont lifestyle et zoom) + titre avec mots-clés + description bénéfices (pas seulement caractéristiques) + avis clients + FAQ + livraison/retour en évidence.",
+      "checkout_optimisation": ["Guest checkout obligatoire (ne pas forcer la création de compte)", "Progression visible (étapes)", "Maximum 3 étapes", "Paiements multiples (CB + PayPal + Apple Pay + BNPL)", "Récapitulatif total TTC toujours visible", "Badge de confiance (SSL, garanties, retours)"],
+      "panier_abandonné": "~70% des paniers sont abandonnés. Séquence email automatique: J+1 (rappel), J+3 (code promo), J+7 (dernière chance). Récupère 5-15% des paniers abandonnés.",
+      "CRO": "Conversion Rate Optimization. A/B tests (titre, CTA, images, prix, placement). Outils: Google Optimize, VWO, Hotjar (enregistrements sessions, heatmaps). Améliorer le taux de conversion de 1% double souvent les revenus."
+    },
+    "logistique_fulfillment": {
+      "stock_propre": "Meilleure maîtrise qualité, délais et image. Nécessite entrepôt + préparation de commandes + transporteurs. Coûts fixes élevés.",
+      "3PL": "Third-Party Logistics. Externaliser stockage + préparation + expédition à un prestataire logistique (ex: Rakuten Super Logistics, Mondial Relay, Colissimo Pro, Shipbob). Coûts variables mais moins de contrôle.",
+      "Amazon_FBA": "Fulfilled By Amazon. Stocker ses produits dans les entrepôts Amazon qui gère livraison + SAV. Éligible Prime. Fees significatifs mais conversion améliorée.",
+      "expédition": "Stratégie livraison gratuite (souvent sur commandes >X€) + délais affichés honnêtement + tracking + gestion des retours (légalement 14 jours en UE pour la vente à distance)."
+    },
+    "métriques_clés": {
+      "taux_de_conversion": "Commandes / Visiteurs uniques. E-commerce moyen: 1-3%. Excellence: >5%. Varie beaucoup par secteur et source de trafic.",
+      "AOV": "Average Order Value. Augmenter via upsell, cross-sell, bundle, seuil livraison gratuite.",
+      "LTV": "Lifetime Value = AOV × Fréquence d'achat annuelle × Durée de vie client (années). Clé pour évaluer le budget d'acquisition acceptable.",
+      "CAC": "Customer Acquisition Cost = Budget marketing / Nombre de nouveaux clients. Règle: LTV doit être >3× CAC.",
+      "ROAS": "Return On Ad Spend = CA généré / Budget pub. Benchmarks: Google Shopping ROAS 4-8×, Facebook Ads 2-5×.",
+      "taux_de_rétention": "% de clients qui rachètent. Augmenter via loyalty programs, email marketing, recommandations personnalisées."
+    },
+    "marketing_ecommerce": {
+      "acquisition": "SEO (trafic organique) + Google Shopping/Search Ads (intention d'achat forte) + Meta Ads (découverte) + Influenceurs/UGC + Marketplace listing",
+      "email_marketing": "ROI moyen email: 42:1. Séquences clés: bienvenue (5 emails), abandon panier (3), post-achat (upsell + avis), réengagement inactifs. Outils: Klaviyo (e-commerce spécialisé), Mailchimp, Brevo.",
+      "BNPL": "Buy Now Pay Later (Alma, Klarna, Scalapay). Augmente le panier moyen de 30-50% mais coûts 2-6% par transaction."
+    }
+  }
+}
