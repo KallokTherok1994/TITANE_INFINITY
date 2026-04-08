@@ -1,0 +1,71 @@
+{
+  "version": "v30.0.0",
+  "category": "redaction_actes_juridiques",
+  "description": "Rédaction d'actes juridiques — structure d'un acte authentique (comparution/exposé/convention/clauses/signatures), clauses types, rédaction des conditions suspensives, style juridique français (formules solennelles/présent indicatif/définitions inter partes/références légales), relecture critique, erreurs fréquentes et responsabilité du rédacteur",
+  "redaction_actes_juridiques": {
+    "introduction": "La rédaction d'actes juridiques — et notariaux en particulier — est une discipline à la frontière du droit substantiel et de la linguistique précise. Un acte mal rédigé crée du contentieux. Un acte bien rédigé prévient les litiges, protège les parties, et résiste à l'épreuve du temps et de l'interprétation judiciaire.",
+    "structure_acte_authentique": {
+      "intitulé": "Nature de l'acte en majuscules + date + nom du notaire + résidence",
+      "comparution": "Identité complète de chaque comparant: NOM Prénom, né(e) le XX/XX/XXXX à [ville], de nationalité [X], demeurant [adresse complète]. Pour les personnes morales: dénomination + SIREN + siège + représentant avec pouvoir.",
+      "déclaration_capacité": "Le notaire déclare avoir vérifié l'identité des comparants et leur capacité (majorité, non mise sous tutelle/curatelle).",
+      "exposé_ou_énonciation": "Contexte factuel nécessaire à la compréhension de la convention: origine de propriété, situation hypothécaire, situation locative, diagnostics...",
+      "ceci_exposé": "Formule de transition entre l'exposé et la convention: 'Ceci exposé, les parties ont convenu et arrêté ce qui suit:'",
+      "convention": "Corps de l'acte — les stipulations contractuelles proprement dites. Organisées en articles numérotés et titrés.",
+      "clauses_fiscales": "Mention des textes fiscaux applicables, des régimes de TVA, des droits d'enregistrement. Déclaration sincère d'estimation de valeur.",
+      "lecture_approbation": "Mention légale: 'Et lecture faite, les comparants ont approuvé le présent acte et ont signé avec le notaire soussigné.'",
+      "signatures": "Toutes les parties + le(s) notaire(s). Paraphe sur chaque page pour les actes longs."
+    },
+    "clauses_importantes": {
+      "entrée_en_jouissance": "Date à laquelle l'acheteur prend possession du bien. Généralement: 'Ce jour, avec le paiement du prix et la remise des clés.' Important de distinguer jouissance et transfert de propriété (rétroactif si conditions suspensives).",
+      "garanties_légales": {
+        "garantie_éviction": "Le vendeur garantit l'acheteur contre tout trouble de droit (revendication par un tiers) de son fait personnel ou du fait d'un tiers",
+        "garantie_vices_cachés": "Art. 1641 CC — défauts cachés qui rendent le bien impropre à l'usage ou qui en diminuent tellement l'usage que l'acheteur ne l'aurait pas acquis ou l'aurait acquis à moindre prix. Délai: 2 ans à compter de la découverte.",
+        "clause_non_garantie": "Possible pour les vices cachés entre particuliers avisés, non pour les ventes professionnels/consommateurs, non si le vendeur connaissait le vice."
+      },
+      "clause_pénale": "Fixe à l'avance le montant des dommages et intérêts en cas d'inexécution. Peut être révisée par le juge (art. 1231-5 CC) si manifestement excessive ou dérisoire.",
+      "clause_résolutoire": "Prévoit la résolution automatique du contrat (de plein droit) en cas d'inexécution. Doit être expresse. Dans les baux: obligatoire clause résolutoire de plein droit pour défaut de paiement.",
+      "condition_suspensive_financement": {
+        "rédaction_type": "La présente vente est conclue sous la condition suspensive de l'obtention par l'acquéreur d'un ou plusieurs prêts immobiliers d'un montant total minimum de [X€], à un taux annuel effectif global maximum de [X%], sur une durée maximum de [X] mois.",
+        "délai": "Généralement 45 à 60 jours. Délai légal minimum de 30 jours (L312-16 Code de la consommation)."
+      }
+    },
+    "style_juridique_français": {
+      "présent_indicatif": "Temps canonique de la convention: 'Le vendeur vend et cède... L'acquéreur acquiert et accepte...' Éviter le futur qui créerait une ambiguïté (engagement ou constat).",
+      "formules_solennelles": {
+        "vente": "Le vendeur vend et cède, à titre de vente, à l'acquéreur qui accepte...",
+        "donation": "Le donateur donne et cède, en avancement de part successorale / hors part successorale, au donataire présent et acceptant...",
+        "prêt": "Le prêteur a prêté et remis, ce dont le débiteur donne bonne et valable quittance..."
+      },
+      "définitions_inter_partes": "Définir les termes au début de l'acte: 'La société... ci-après dénommée le VENDEUR... M./Mme... ci-après dénommé(e) l'ACQUÉREUR...'",
+      "références_légales": "Toujours mentionner l'article de loi ou le texte réglementaire applicable. 'Conformément aux dispositions de l'article 1641 du Code civil...' Pas de paraphrase vague.",
+      "précision_chiffrée": "Prix en lettres ET en chiffres, obligatoirement. Dates en toutes lettres dans le corps: 'le sept avril deux mil vingt-six'.",
+      "éviter": ["'Etc.' (liste doit être exhaustive ou explicitement indicative)", "'Il est bien entendu que' (inutile)", "'Clause de style' = formule non négociée, souvent copiée-collée sans adaptation — danger réel", "Les phrases de plus de 60 mots (lisibilité et interprétation)"]
+    },
+    "relecture_critique_acte": {
+      "avant_signature": [
+        "Identité et capacité de tous les comparants (vérifier CNI/passeport en cours de validité)",
+        "Origine de propriété complète sur 30 ans minimum (chaîne de titres)",
+        "Situation hypothécaire (état d'inscription ou certificat de radiation)",
+        "Situation locative actuelle (bail en cours? congé régulier délivré?)",
+        "Conformité des diagnostics (validité, périmètre correct)",
+        "Prix en lettres = prix en chiffres",
+        "Conditions suspensives: délais, montants, taux, exacts et cohérents",
+        "Frais à la charge de qui (acheteur en général, mais exceptions négociables)",
+        "Désignation du bien: références cadastrales, adresse, surface Carrez si copropriété"
+      ],
+      "cohérence_interne": "L'exposé doit être cohérent avec la convention. Les références aux annexes doivent correspondre aux annexes jointes."
+    },
+    "responsabilité_du_rédacteur": {
+      "obligation_de_résultat": "Le notaire a une obligation de résultat pour la validité formelle de l'acte et une obligation de moyens renforcée pour le conseil.",
+      "action_en_responsabilité": "Prescrite par 5 ans à compter de la connaissance du dommage. Tribunal judiciaire compétent.",
+      "exemples_fautes": [
+        "Omission de purger le droit de préemption → nullité de la vente possible",
+        "Erreur dans la désignation du bien → litige sur ce qui a été vendu",
+        "Absence de détection d'une hypothèque non radiée → trouble de jouissance pour l'acheteur",
+        "Conseil insuffisant sur les conséquences fiscales d'une opération → préjudice fiscal",
+        "Omission d'attirer l'attention sur un vice apparent du titre"
+      ],
+      "assurance_RCP": "Obligatoire. La Caisse de garantie du notariat (gérée par le CSN) couvre les clients en dernier ressort si l'assurance personnelle est insuffisante."
+    }
+  }
+}

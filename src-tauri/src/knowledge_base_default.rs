@@ -83,6 +83,24 @@ const COHERENCE_IDENTITAIRE: &str =
     include_str!("../../data/knowledge_base/default/coherence_identitaire.json");
 const REALISME_CONVERSATIONNEL: &str =
     include_str!("../../data/knowledge_base/default/realisme_conversationnel.json");
+// ── v30.0.0 expansion — phase 9 (rédaction pro, analyse, qualité, notariat) ─
+const REDACTION_PROFESSIONNELLE: &str =
+    include_str!("../../data/knowledge_base/default/redaction_professionnelle.json");
+const ANALYSE_PROFESSIONNELLE: &str =
+    include_str!("../../data/knowledge_base/default/analyse_professionnelle.json");
+const MANAGEMENT_QUALITE: &str =
+    include_str!("../../data/knowledge_base/default/management_qualite.json");
+const METIER_QUALITE: &str =
+    include_str!("../../data/knowledge_base/default/metier_qualite.json");
+const DROIT_NOTARIAL_FONDAMENTAUX: &str =
+    include_str!("../../data/knowledge_base/default/droit_notarial_fondamentaux.json");
+const ACTES_NOTARIAUX: &str =
+    include_str!("../../data/knowledge_base/default/actes_notariaux.json");
+const DROIT_IMMOBILIER_NOTARIAL: &str =
+    include_str!("../../data/knowledge_base/default/droit_immobilier_notarial.json");
+const REDACTION_ACTES_JURIDIQUES: &str =
+    include_str!("../../data/knowledge_base/default/redaction_actes_juridiques.json");
+
 // ── v30.0.0 expansion — phase 8 (musculation, sommeil, chronobiologie, cognitif, productivité, finances, entrepreneuriat, sexualité) ─
 const MUSCULATION_FORCE: &str =
     include_str!("../../data/knowledge_base/default/musculation_force.json");
@@ -262,6 +280,15 @@ impl DefaultKnowledgeBase {
         ("communication_avancee", COMMUNICATION_AVANCEE),
         ("bien_etre_mental_stress", BIEN_ETRE_MENTAL_STRESS),
         ("sante_corps_naturelle", SANTE_CORPS_NATURELLE),
+        // v30.0.0 expansion — phase 9 (rédaction pro, analyse, qualité, notariat)
+        ("redaction_professionnelle", REDACTION_PROFESSIONNELLE),
+        ("analyse_professionnelle", ANALYSE_PROFESSIONNELLE),
+        ("management_qualite", MANAGEMENT_QUALITE),
+        ("metier_qualite", METIER_QUALITE),
+        ("droit_notarial_fondamentaux", DROIT_NOTARIAL_FONDAMENTAUX),
+        ("actes_notariaux", ACTES_NOTARIAUX),
+        ("droit_immobilier_notarial", DROIT_IMMOBILIER_NOTARIAL),
+        ("redaction_actes_juridiques", REDACTION_ACTES_JURIDIQUES),
         // v30.0.0 expansion — phase 8 (musculation, sommeil, chronobiologie, cognitif, productivité, finances, entrepreneuriat, sexualité)
         ("musculation_force", MUSCULATION_FORCE),
         ("sommeil_optimise", SOMMEIL_OPTIMISE),
@@ -452,8 +479,8 @@ mod tests {
             result.errors
         );
         assert_eq!(
-            result.entries_loaded, 69,
-            "Must have exactly 69 default knowledge categories"
+            result.entries_loaded, 77,
+            "Must have exactly 77 default knowledge categories"
         );
     }
 
@@ -470,8 +497,10 @@ mod tests {
         let cats = DefaultKnowledgeBase::list_categories();
         assert!(!cats.is_empty(), "Must have at least one category");
         let expected = vec![
+            "actes_notariaux",
             "agents_multi_systeme",
             "ai_providers_guide",
+            "analyse_professionnelle",
             "apprentissage_evolution",
             "bien_etre_mental_stress",
             "calisthenie",
@@ -488,6 +517,8 @@ mod tests {
             "developpement_personnel",
             "digital_twin_symbiosis",
             "digital_twin_v14_detail",
+            "droit_immobilier_notarial",
+            "droit_notarial_fondamentaux",
             "ecriture_expression_creatrice",
             "energetique_soins_corps",
             "engines_catalog",
@@ -502,12 +533,14 @@ mod tests {
             "ipc_commands_catalog",
             "learning_prompts",
             "longevite_anti_aging",
+            "management_qualite",
             "medecine_hollistique",
             "meditation_pratique",
             "memory_os_detail",
             "memory_system_deep",
             "meta_mode_titane",
             "meta_orchestrateur",
+            "metier_qualite",
             "musculation_force",
             "naturopathie_fondamentaux",
             "numeric_twin_detail",
@@ -525,6 +558,8 @@ mod tests {
             "psychologie_performance",
             "psychologie_relations",
             "realisme_conversationnel",
+            "redaction_actes_juridiques",
+            "redaction_professionnelle",
             "relations_humaines_profondes",
             "response_guidelines",
             "sante_corps_naturelle",

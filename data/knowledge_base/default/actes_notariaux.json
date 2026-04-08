@@ -1,0 +1,72 @@
+{
+  "version": "v30.0.0",
+  "category": "actes_notariaux",
+  "description": "Actes notariaux — vente immobilière (promesse/compromis/acte authentique/SRU/conditions suspensives), donation, testament notarié, PACS, contrat de mariage (régimes matrimoniaux), succession (déclaration/attestation immobilière/acte de notoriété), SCI, prêt notarié",
+  "actes_notariaux": {
+    "vente_immobiliere": {
+      "chronologie": "Avant-contrat (promesse ou compromis) → Délai SRU 10 jours → Purge droits de préemption → Obtention financement → Réitération par acte authentique",
+      "promesse_unilatérale_de_vente": {
+        "définition": "Le vendeur s'engage à vendre, l'acheteur a une option — il peut lever ou non la promesse dans le délai stipulé",
+        "indemnité_immobilisation": "Versée par l'acheteur (généralement 5-10% du prix) — il la perd s'il ne lève pas l'option sans cause prévue",
+        "avantage_acheteur": "Aucune obligation d'achat — protection maximale",
+        "enregistrement": "Obligatoire aux impôts dans les 10 jours si plus de 18 mois, à peine de nullité"
+      },
+      "compromis_de_vente": {
+        "définition": "Synallagmatique — vendeur ET acheteur s'engagent réciproquement. Vaut vente en principe.",
+        "versement_initial": "Dépôt de garantie (généralement 5-10%) versé chez le notaire en compte séquestre",
+        "avantage_vendeur": "Les deux parties sont liées — moins de risque de désistement acheteur",
+        "rétractation": "Seul l'acheteur non-professionnel bénéficie du délai SRU de 10 jours"
+      },
+      "droit_SRU": "Art. L271-1 CCH — délai de rétractation de 10 jours pour l'acheteur non-professionnel d'un bien immobilier à usage d'habitation. Délai de rigueur, commence le lendemain de la 1ère présentation de la lettre recommandée.",
+      "conditions_suspensives": {
+        "financement": "Acheteur a droit à un délai minimum de 30 jours pour obtenir son prêt (souvent 45-60 jours en pratique). Si refus justifié: résolution sans pénalité.",
+        "urbanisme": "Purge des droits de préemption: DPU (30 jours délai préfecture/mairie), SAFER (rural, 3 mois), droits de préemption HLM",
+        "autres": "Obtention d'un permis, état de la copropriété, résultats diagnostics"
+      },
+      "acte_authentique": "Réitération du compromis devant notaire. Lecture intégrale de l'acte. Remise des clés et du prix. Publication au Service de Publicité Foncière (SPF) dans le mois.",
+      "diagnostics_obligatoires": "DPE, amiante (si avant 1997), plomb (CREP, si avant 1949), électricité (si > 15 ans), gaz (si > 15 ans), ERP (état des risques et pollutions), termites (zones arrêtées), mesurage Carrez (copropriété), assainissement non collectif, mérule (zones arrêtées)"
+    },
+    "succession": {
+      "acte_de_notoriété": "Acte établissant la qualité d'héritier — dresse la liste des héritiers légaux. Nécessaire pour débloquer les comptes bancaires et procéder au partage.",
+      "attestation_immobilière": "Acte notarié constatant le transfert de propriété des biens immobiliers aux héritiers. Publiée au SPF. Obligatoire pour vendre un bien reçu par succession.",
+      "déclaration_de_succession": "Formulaire fiscal (2705) déposé aux impôts dans les 6 mois du décès (en France). Calcul des droits de succession.",
+      "abattements_2024": {
+        "en_ligne_directe": "100 000€ par enfant (renouvelable tous les 15 ans)",
+        "entre_époux_partenaires_PACS": "Exonération totale de droits de succession depuis 2007",
+        "frères_sœurs": "15 932€",
+        "neveux_nièces": "7 967€",
+        "non_parent": "1 594€"
+      },
+      "réserve_héréditaire": "Part minimale que les héritiers réservataires (descendants, à défaut conjoint) doivent recevoir. 1 enfant = 1/2. 2 enfants = 2/3. 3 enfants et + = 3/4. Quotité disponible = ce dont on peut disposer librement.",
+      "partage": "Amiable (accord de tous les héritiers, acte notarié) ou judiciaire (TJ en cas de désaccord)"
+    },
+    "donation": {
+      "donation_simple": "Don manuel (biens meubles, pas d'acte notarié obligatoire mais déclaration fiscale) vs donation notariée (immeubles, fonds de commerce, actes avec condition).",
+      "donation_partage": "Don fait par le donateur avec répartition entre les héritiers. Fige les valeurs à la date de la donation pour le rapport à la succession (avantage fiscal considérable en cas d'appréciation du bien).",
+      "donation_entre_époux": "Ou 'institution contractuelle' — avantage le conjoint survivant en lui permettant de choisir entre usufruit total, pleine propriété de la quotité disponible, ou 1/4 en pleine propriété + 3/4 en usufruit.",
+      "rapports_et_réductions": "Les donations antérieures peuvent être rapportées à la succession ou réduites si elles excèdent la quotité disponible."
+    },
+    "contrats_de_mariage": {
+      "séparation_de_biens": "Chaque époux reste propriétaire de ses biens présents et futurs. Pas de masse commune. Protection en cas de dettes professionnelles d'un époux.",
+      "communauté_réduite_aux_acquêts": "Régime légal (sans contrat). Biens propres antérieurs + reçus par donation/succession restent propres. Les acquêts (biens acquis pendant le mariage) sont communs.",
+      "communauté_universelle": "Tous les biens (présents et futurs, y compris reçus par donation/succession) sont communs. Souvent assortie d'une clause d'attribution intégrale au survivant.",
+      "participation_aux_acquêts": "Régime hybride: séparation pendant le mariage, participation à la liquidation. Complexe."
+    },
+    "PACS": {
+      "régime_patrimonial": "Séparation de biens par défaut (depuis 2007). Possible de choisir l'indivision par convention.",
+      "droits_succession_PACS": "Exonération totale de droits de succession (depuis 2007). Mais pas de vocation successorale légale — prévoir testament notarié.",
+      "dissolution": "Par mariage, décès ou déclaration conjointe/unilatérale en mairie"
+    },
+    "SCI": {
+      "utilité": "Société Civile Immobilière — outil de gestion patrimoniale. Permet transmission progressive par donation de parts, évite indivision, facilite financement multi-associés.",
+      "acte_constitutif": "Statuts notariés (ou sous seing privé) + enregistrement + publication légale + immatriculation RCS. Capital librement fixé.",
+      "SCI_IS_vs_IR": "SCI à l'IR: transparence fiscale (résultats imposés chez associés). SCI à l'IS: impôt société sur les bénéfices, possibilité d'amortissement du bien, mais double imposition à la revente.",
+      "limitation": "Pas d'activité commerciale (sinon requalification). Obligations comptables et de tenue de registres."
+    },
+    "pret_notarial": {
+      "acte_de_pret": "Prêt hypothécaire ou cautionné par acte notarié — confère force exécutoire à la banque (saisie directe en cas de défaut)",
+      "hypothèque": "Sûreté réelle sur immeuble. Inscription au SPF. Premier rang = priorité en cas de saisie. IPPD (Inscription de Privilège de Prêteur de Deniers) = plus économique pour les biens anciens.",
+      "PPD_vs_hypotheque": "L'IPPD est moins chère (pas de taxe de publicité foncière) car elle prend date du jour de la vente et non du prêt. Disponible seulement pour les biens existants, pas les constructions."
+    }
+  }
+}

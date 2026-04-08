@@ -1,0 +1,55 @@
+{
+  "version": "v30.0.0",
+  "category": "droit_notarial_fondamentaux",
+  "description": "Droit notarial — statut du notaire (officier ministériel), authenticité vs sous-seing privé, force exécutoire, conservation des minutes, compétences, déontologie, Chambre/CSN, tarification réglementée (émoluments/honoraires/débours/taxes)",
+  "droit_notarial_fondamentaux": {
+    "introduction": "Le notaire est un professionnel du droit unique dans le système juridique français: officier public nommé par le Garde des Sceaux, il exerce une profession libérale réglementée et détient une délégation de puissance publique pour conférer à ses actes la valeur d'authenticité. Sa mission est triple: conseiller juridique, rédacteur d'actes authentiques, et conservateur des archives privées.",
+    "statut_et_nomination": {
+      "officier_ministeriel": "Le notaire est un officier ministériel: il détient une délégation de l'État pour authentifier les actes. Ce n'est pas un fonctionnaire mais un professionnel libéral qui finance son office.",
+      "nomination": "Nommé par arrêté du Garde des Sceaux (Ministre de la Justice), sur proposition du Conseil Supérieur du Notariat, après inscription sur une liste d'aptitude.",
+      "numerus_clausus": "Le nombre d'offices notariaux était régulé jusqu'à la loi Macron (2015) qui a ouvert la profession à de nouvelles nominations dans des zones dites de libre installation.",
+      "clercs_et_collaborateurs": "Le notaire emploie des clercs (collaborateurs qualifiés selon ancienneté: 1er clerc/habilité = peut rédiger des actes par délégation) et des formalistes (spécialistes des formalités)."
+    },
+    "acte_authentique": {
+      "définition": "L'acte authentique est dressé par un officier public compétent, dans les formes légales. Il fait foi jusqu'à inscription en faux de ce que l'officier public y a constaté personnellement.",
+      "vs_sous_seing_prive": {
+        "acte_sous_seing_privé": "Rédigé par les parties elles-mêmes ou par un tiers non officier public. N'a pas force exécutoire. Date certaine seulement par enregistrement ou décès d'un signataire.",
+        "acte_authentique": "Rédigé par le notaire. Force probante supérieure (foi jusqu'à inscription en faux). Date certaine erga omnes. Force exécutoire (sans jugement préalable)."
+      },
+      "force_exécutoire": "L'acte notarié revêtu de la formule exécutoire (grosse) permet une exécution forcée directe (saisie, expulsion) sans passer par un tribunal. Particulièrement important dans les prêts et les baux.",
+      "force_probante": "Ce que le notaire atteste avoir vu ou entendu personnellement ne peut être contesté que par inscription en faux (procédure devant le TGI, lourde et rare). Les déclarations des parties font seulement foi jusqu'à preuve contraire.",
+      "minute": "L'original de l'acte authentique — conservé indéfiniment à l'office notarial (ou aux Archives départementales après 75 ans). Le notaire en délivre des expéditions (copies authentiques) et des copies simples."
+    },
+    "compétences_du_notaire": {
+      "matérielle": "Droit de la famille (mariage, PACS, succession, donation), droit immobilier (vente, prêt, bail commercial), droit des sociétés (statuts, cessions de parts), droit rural, droit du crédit",
+      "territoriale": "Le notaire est compétent sur tout le territoire national (sauf exceptions: actes de l'état civil → officier d'état civil). La territorialité est une survivance historique, aujourd'hui largement assouplie.",
+      "monopole": "Le notaire a le monopole de certains actes: ventes immobilières authentiques, contrats de mariage, donations, testaments notariés, actes de société nécessitant publicité foncière",
+      "hors_monopole": "Les baux d'habitation, testaments olographes, cessions de fonds de commerce (sauf si immeubles inclus) peuvent se faire sans notaire"
+    },
+    "deontologie": {
+      "impartialité": "Le notaire est impartial — il conseille TOUTES les parties à l'acte, pas seulement celle qui le rémunère. Cette obligation le distingue fondamentalement de l'avocat.",
+      "secret_professionnel": "Secret professionnel absolu, sauf exceptions légales (anti-blanchiment, suspicion de terrorisme). Levée partielle possible avec accord des clients.",
+      "obligation_de_conseil": "Obligation de conseil et d'information envers toutes les parties. Sa responsabilité civile professionnelle peut être engagée en cas de manquement. Il doit attirer l'attention sur les risques de l'opération envisagée.",
+      "conflit_d_intérêts": "Obligation de déclarer les conflits d'intérêts et, le cas échéant, de se récuser",
+      "assurance": "Obligation d'assurance responsabilité civile professionnelle. La Caisse des Dépôts et Consignations garantit les fonds détenus par les notaires (CARPA notarial)."
+    },
+    "organisation_professionnelle": {
+      "CSN": "Conseil Supérieur du Notariat — organisme représentatif national. Réglemente, négocie avec l'État, gère la caisse de garantie et les systèmes informatiques professionnels (MICEN, Authentification, Genapi).",
+      "chambres_notariales": "Chambre départementale (contrôle et discipline de 1er niveau) + Conseil régional (appels, formations) + CSN (national). Tous les notaires y cotisent obligatoirement.",
+      "CRPCEN": "Caisse de Retraite et de Prévoyance des Clercs et Employés de Notaires — régime spécial obligatoire pour les salariés d'office"
+    },
+    "tarification": {
+      "émoluments": "Rémunération réglementée par l'État (Décret du 26 février 2016, régulièrement actualisé). Calculée sur la valeur de l'acte selon un barème dégressif. Identique quel que soit le notaire.",
+      "honoraires": "Pour les actes hors tarification réglementée (consultations, négociations immobilières, actes de conseil): librement négociés, avec devis préalable obligatoire.",
+      "débours": "Sommes avancées par le notaire pour le compte des clients: droits de mutation, taxes, frais de publication au service de la publicité foncière (SPF), géomètre, diagnostics. À distinguer des émoluments.",
+      "droits_enregistrement": "Droits d'enregistrement et TVA collectés pour l'État — la plus grande partie des 'frais de notaire' revient en réalité au Trésor public.",
+      "barème_vente_immobilière": {
+        "tranche_1": "De 0 à 6 500€: 3,945%",
+        "tranche_2": "De 6 500 à 17 000€: 1,627%",
+        "tranche_3": "De 17 000 à 60 000€: 1,085%",
+        "tranche_4": "Au-delà de 60 000€: 0,814%",
+        "note": "Barème indicatif — consulter le simulateur officiel des notaires de France (immonotaires.fr). TVA 20% s'applique sur les émoluments depuis 2012."
+      }
+    }
+  }
+}
