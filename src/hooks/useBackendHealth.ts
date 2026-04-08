@@ -63,6 +63,100 @@ const HEALTH_CHECK_INTERVAL = 30000;
 /** Timeout pour chaque check individuel (5s) */
 const CHECK_TIMEOUT = 5000;
 
+interface SharedBackendSnapshot {
+  tauriStatus: BackendServiceStatus;
+  ollamaStatus: BackendServiceStatus;
+  lastCheck: number;
+}
+
+const INITIAL_SHARED_SNAPSHOT: SharedBackendSnapshot = {
+  tauriStatus: 'unknown',
+  ollamaStatus: 'unknown',
+  lastCheck: 0,
+};
+
+let sharedSnapshot: SharedBackendSnapshot = INITIAL_SHARED_SNAPSHOT;
+let sharedInterval: ReturnType<typeof setInterval> | null = null;
+let sharedCheckPromise: Promise<void> | null = null;
+let sharedSubscriberCount = 0;
+let sharedSessionId = 0;
+const snapshotListeners = new Set<(snapshot: SharedBackendSnapshot) => void>();
+
+function emitSharedSnapshot(): void {
+  snapshotListeners.forEach(listener => listener(sharedSnapshot));
+}
+
+async function runSharedHealthCheck(
+  checkTauriHealth: () => Promise<boolean>,
+  checkOllamaHealth: () => Promise<boolean>
+): Promise<void> {
+  if (sharedCheckPromise) {
+    return sharedCheckPromise;
+  }
+
+  const sessionAtStart = sharedSessionId;
+
+  sharedSnapshot = {
+    ...sharedSnapshot,
+    tauriStatus: 'checking',
+    ollamaStatus: 'checking',
+  };
+  emitSharedSnapshot();
+
+  logger.debug('[BackendHealth] 🔍 Checking all backends...');
+
+  sharedCheckPromise = (async () => {
+    const [tauriAvailable, ollamaAvailable] = await Promise.all([
+      checkTauriHealth(),
+      checkOllamaHealth(),
+    ]);
+
+    if (sessionAtStart !== sharedSessionId) {
+      return;
+    }
+
+    sharedSnapshot = {
+      tauriStatus: tauriAvailable ? 'available' : 'unavailable',
+      ollamaStatus: ollamaAvailable ? 'available' : 'unavailable',
+      lastCheck: Date.now(),
+    };
+
+    logger.info('[BackendHealth] ✅ Health check complete', {
+      tauri: tauriAvailable,
+      ollama: ollamaAvailable,
+    });
+
+    emitSharedSnapshot();
+  })().finally(() => {
+    sharedCheckPromise = null;
+  });
+
+  return sharedCheckPromise;
+}
+
+function startSharedPolling(
+  checkTauriHealth: () => Promise<boolean>,
+  checkOllamaHealth: () => Promise<boolean>
+): void {
+  if (!sharedInterval) {
+    void runSharedHealthCheck(checkTauriHealth, checkOllamaHealth);
+    sharedInterval = setInterval(() => {
+      void runSharedHealthCheck(checkTauriHealth, checkOllamaHealth);
+    }, HEALTH_CHECK_INTERVAL);
+  }
+}
+
+function stopSharedPolling(): void {
+  if (sharedInterval) {
+    clearInterval(sharedInterval);
+    sharedInterval = null;
+  }
+
+  sharedSessionId += 1;
+  sharedCheckPromise = null;
+  sharedSnapshot = INITIAL_SHARED_SNAPSHOT;
+}
+
 // ─────────────────────────────────────────────────────────────────
 // HOOK
 // ─────────────────────────────────────────────────────────────────
@@ -80,9 +174,13 @@ const CHECK_TIMEOUT = 5000;
  * ```
  */
 export function useBackendHealth(): BackendHealthState {
-  const [tauriStatus, setTauriStatus] = useState<BackendServiceStatus>('unknown');
-  const [ollamaStatus, setOllamaStatus] = useState<BackendServiceStatus>('unknown');
-  const [lastCheck, setLastCheck] = useState<number>(0);
+  const [tauriStatus, setTauriStatus] = useState<BackendServiceStatus>(
+    sharedSnapshot.tauriStatus
+  );
+  const [ollamaStatus, setOllamaStatus] = useState<BackendServiceStatus>(
+    sharedSnapshot.ollamaStatus
+  );
+  const [lastCheck, setLastCheck] = useState<number>(sharedSnapshot.lastCheck);
 
   /**
    * Vérifie la santé du backend Tauri
@@ -126,24 +224,7 @@ export function useBackendHealth(): BackendHealthState {
    * Vérifie tous les backends en parallèle
    */
   const checkAllBackends = useCallback(async (): Promise<void> => {
-    setTauriStatus('checking');
-    setOllamaStatus('checking');
-
-    logger.debug('[BackendHealth] 🔍 Checking all backends...');
-
-    const [tauriAvailable, ollamaAvailable] = await Promise.all([
-      checkTauriHealth(),
-      checkOllamaHealth(),
-    ]);
-
-    setTauriStatus(tauriAvailable ? 'available' : 'unavailable');
-    setOllamaStatus(ollamaAvailable ? 'available' : 'unavailable');
-    setLastCheck(Date.now());
-
-    logger.info('[BackendHealth] ✅ Health check complete', {
-      tauri: tauriAvailable,
-      ollama: ollamaAvailable,
-    });
+    await runSharedHealthCheck(checkTauriHealth, checkOllamaHealth);
   }, [checkTauriHealth, checkOllamaHealth]);
 
   /**
@@ -159,16 +240,26 @@ export function useBackendHealth(): BackendHealthState {
   // ─────────────────────────────────────────────────────────────────
 
   useEffect(() => {
-    // Check initial
-    void checkAllBackends();
+    const handleSnapshot = (snapshot: SharedBackendSnapshot) => {
+      setTauriStatus(snapshot.tauriStatus);
+      setOllamaStatus(snapshot.ollamaStatus);
+      setLastCheck(snapshot.lastCheck);
+    };
 
-    // Polling périodique
-    const interval = setInterval(() => {
-      void checkAllBackends();
-    }, HEALTH_CHECK_INTERVAL);
+    snapshotListeners.add(handleSnapshot);
+    sharedSubscriberCount += 1;
+    handleSnapshot(sharedSnapshot);
+    startSharedPolling(checkTauriHealth, checkOllamaHealth);
 
-    return () => clearInterval(interval);
-  }, [checkAllBackends]);
+    return () => {
+      snapshotListeners.delete(handleSnapshot);
+      sharedSubscriberCount = Math.max(0, sharedSubscriberCount - 1);
+
+      if (sharedSubscriberCount === 0) {
+        stopSharedPolling();
+      }
+    };
+  }, [checkOllamaHealth, checkTauriHealth]);
 
   // ─────────────────────────────────────────────────────────────────
   // COMPUTED STATE

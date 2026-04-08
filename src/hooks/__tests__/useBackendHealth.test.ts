@@ -29,6 +29,7 @@ describe('useBackendHealth Hook', () => {
 
   afterEach(() => {
     vi.clearAllTimers();
+    vi.useRealTimers();
   });
 
   describe('Initialization', () => {
@@ -109,12 +110,15 @@ describe('useBackendHealth Hook', () => {
       renderHook(() => useBackendHealth());
 
       await act(async () => {
+        await Promise.resolve();
+      });
+
+      await act(async () => {
         vi.advanceTimersByTime(30000);
+        await Promise.resolve();
       });
 
       expect(getTauriMock().isAvailable.mock.calls.length).toBeGreaterThanOrEqual(2);
-
-      vi.useRealTimers();
     });
 
     it('should have recheck function', () => {
@@ -131,6 +135,16 @@ describe('useBackendHealth Hook', () => {
         expect(['checking', 'available', 'unavailable']).toContain(
           result.current.tauriStatus
         );
+      });
+    });
+
+    it('should share a single startup health check across multiple hook instances', async () => {
+      renderHook(() => useBackendHealth());
+      renderHook(() => useBackendHealth());
+
+      await waitFor(() => {
+        expect(getTauriMock().isAvailable).toHaveBeenCalledTimes(1);
+        expect(getOllamaMock().isAvailable).toHaveBeenCalledTimes(1);
       });
     });
   });
