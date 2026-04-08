@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -7,7 +7,7 @@
  */
 
 // ╔══════════════════════════════════════════════════════════════════════════════╗
-// ║ TITANE∞ v15.0 - Core System Hook (Optimized)                                ║
+// ║ TITANE∞ v30.0.0 - Core System Hook (Optimized)                                ║
 // ║ React hook for TITANE∞ backend communication via Tauri v2                   ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 

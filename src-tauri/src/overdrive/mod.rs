@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// TITANE∞ v24.3.0 — OVERDRIVE MODULE
+// TITANE∞ v30.0.0 — OVERDRIVE MODULE
 // ═══════════════════════════════════════════════════════════════════════════
 // Module principal exportant les sous-modules Overdrive actifs
 // Note: memory_compactor consolidated into crate::memory_compactor (root level)
@@ -37,7 +37,7 @@ pub struct OverdriveState {
 
 pub fn init() -> OverdriveState {
     println!("═══════════════════════════════════════════════════════════════════════════");
-    println!("  TITANE∞ v24 — OVERDRIVE ENGINE INITIALIZATION");
+    println!("  TITANE∞ v30.0.0 — OVERDRIVE ENGINE INITIALIZATION");
     println!("═══════════════════════════════════════════════════════════════════════════");
 
     let auto_heal_state = auto_heal::init();

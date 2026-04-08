@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — API INTEGRATIONS HUB
+//! TITANE∞ v30.0.0 — API INTEGRATIONS HUB
 //! Super Prompt #17 — Hub d'orchestration multimodale inter-IA
 //! ═══════════════════════════════════════════════════════════════════════════════
 //!

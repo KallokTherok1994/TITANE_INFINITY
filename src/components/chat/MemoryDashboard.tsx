@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v19.2Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2Ω — TABLEAU DE BORD MÉMOIRE PERSISTANTE
+ *   TITANE∞ v30.0.0 — TABLEAU DE BORD MÉMOIRE PERSISTANTE
  *   Dashboard complet pour visualiser et gérer la mémoire 3-niveaux
  * ═══════════════════════════════════════════════════════════════════════════════
  */

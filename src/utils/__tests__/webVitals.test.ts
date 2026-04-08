@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25.4.2 — Unit Tests
+ * TITANE∞ v30.0.0 — Unit Tests
  * Tests pour webVitals.ts (v25.4.1)
  *
  * Test coverage:

@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — ANTICIPATOR ENGINE
+//! TITANE∞ v30.0.0 — ANTICIPATOR ENGINE
 //! Super Prompt #18 — Anticipation et prédiction temporelle
 //! ═══════════════════════════════════════════════════════════════════════════════
 

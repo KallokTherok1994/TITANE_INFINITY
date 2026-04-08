@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1 — DEVTOOLS API COMMANDS
+//   TITANE∞ v30.0.0 — DEVTOOLS API COMMANDS
 //   Tauri IPC commands for DevTools OS
 //   Super Prompt #9: Live Debugger, Memory, Metrics, Analyzer
 // ═══════════════════════════════════════════════════════════════

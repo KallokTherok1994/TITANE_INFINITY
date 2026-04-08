@@ -1,12 +1,12 @@
 /**
- * TITANE∞ v19 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v19 - Skeleton Loading Component
+// TITANE∞ v30.0.0 - Skeleton Loading Component
 import './Skeleton.css';
 
 export type SkeletonVariant = 'text' | 'circular' | 'rectangular' | 'rounded';

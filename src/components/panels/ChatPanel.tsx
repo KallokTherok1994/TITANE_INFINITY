@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — Adaptive Chat Panel
+ * TITANE∞ v30.0.0 — Adaptive Chat Panel
  * Chat interface with visual state adaptation
  *
  * Features v21:

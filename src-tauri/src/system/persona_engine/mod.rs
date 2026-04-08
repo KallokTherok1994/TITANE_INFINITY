@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// TITANE∞ v24 — PERSONA ENGINE (Rust Backend)
+// TITANE∞ v30.0.0 — PERSONA ENGINE (Rust Backend)
 // Non-anthropomorphic personality system with mood, behavior, and memory
 // ═══════════════════════════════════════════════════════════════════════════
 

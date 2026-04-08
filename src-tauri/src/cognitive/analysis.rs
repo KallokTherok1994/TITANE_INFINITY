@@ -1,4 +1,4 @@
-// TITANE∞ v16 - Analysis Engine
+// TITANE∞ v30.0.0 - Analysis Engine
 // Intelligent scanning and anomaly detection
 
 use serde::{Deserialize, Serialize};

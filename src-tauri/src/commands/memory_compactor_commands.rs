@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v14.0 — Memory Compactor Commands
+ * TITANE∞ v30.0.0 — Memory Compactor Commands
  * ══════════════════════════════════════════
  *
  * Commandes Tauri pour compacter et valider la mémoire

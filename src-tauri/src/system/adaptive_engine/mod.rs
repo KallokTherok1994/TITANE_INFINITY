@@ -1,5 +1,5 @@
 // ╔══════════════════════════════════════════════════════════════════════════════╗
-// ║ TITANE∞ v8.0 - Moteur Adaptatif Intégral (MAI)                              ║
+// ║ TITANE∞ v30.0.0 - Moteur Adaptatif Intégral (MAI)                              ║
 // ║ Système d'analyse et régulation adaptative multi-dimensionnelle             ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 

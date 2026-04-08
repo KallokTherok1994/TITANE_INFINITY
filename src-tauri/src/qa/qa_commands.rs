@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v19.8 - QA COMMANDS
+//   TITANE∞ v30.0.0 - QA COMMANDS
 //   Commandes Tauri pour système de tests automatisés
 // ═══════════════════════════════════════════════════════════════
 

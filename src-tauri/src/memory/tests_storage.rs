@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.0 — PHASE 1 STABILISATION: MEMORY STORAGE TESTS
+//   TITANE∞ v30.0.0 — PHASE 1 STABILISATION: MEMORY STORAGE TESTS
 //   Tests complets pour memory/storage.rs
 //   Pattern moderne: Result<(), Box<dyn Error>> + ? operator
 // ═══════════════════════════════════════════════════════════════

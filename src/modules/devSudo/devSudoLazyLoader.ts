@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v25.3.0 — DEV-SUDO LAZY LOADER (YOLO OPT-5)
+ *   TITANE∞ v30.0.0 — DEV-SUDO LAZY LOADER (YOLO OPT-5)
  *   Domain-based lazy-loading for DevSudo handlers (13K lines split)
  *   Reduces bundle principal by ~150 KB gzip
  * ═══════════════════════════════════════════════════════════════════════════

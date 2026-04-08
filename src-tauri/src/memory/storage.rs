@@ -1,4 +1,4 @@
-// TITANE∞ v15 - Memory Storage
+// TITANE∞ v30.0.0 - Memory Storage
 // Persistent conversation storage with encryption and compaction
 // Architecture v15: Clean, documented, production-ready
 // Encrypted persistent storage for conversations

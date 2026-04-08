@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v23 — IMMERSIVE AVATAR ENGINE (Backend Core)
+//   TITANE∞ v30.0.0 — IMMERSIVE AVATAR ENGINE (Backend Core)
 //   Synthèse vocale immersive + Lip-sync + Expression dynamique
 // ═══════════════════════════════════════════════════════════════════════════════
 

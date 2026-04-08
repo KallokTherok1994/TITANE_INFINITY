@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.0 — COHERENCE COMMANDS
+//   TITANE∞ v30.0.0 — COHERENCE COMMANDS
 //   Tauri commands for CoherenceEngine (Unified Coordination + Coherence)
 //   Fusion: Nexus + ConsistencyEngine
 // ═══════════════════════════════════════════════════════════════

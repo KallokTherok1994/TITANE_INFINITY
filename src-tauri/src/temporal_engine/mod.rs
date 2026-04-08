@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — TEMPORAL INTELLIGENCE ENGINE v2
+//! TITANE∞ v30.0.0 — TEMPORAL INTELLIGENCE ENGINE v2
 //! Super Prompt #18 — Orchestration temporelle cognitive
 //! ═══════════════════════════════════════════════════════════════════════════════
 //!

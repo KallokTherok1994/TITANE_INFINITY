@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v19.2Ω — XP Extended Config Tests
+ * TITANE∞ v30.0.0 — XP Extended Config Tests
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 

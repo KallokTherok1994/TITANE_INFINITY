@@ -1,4 +1,4 @@
-// TITANE∞ v13 - Knowledge Graph
+// TITANE∞ v30.0.0 - Knowledge Graph
 // Graphe de connaissance pour relations sémantiques
 
 use serde::{Deserialize, Serialize};

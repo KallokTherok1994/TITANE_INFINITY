@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1 — UNIFIED MEMORY SYSTEM (PERFORMANCE OPTIMIZED)
+//   TITANE∞ v30.0.0 — UNIFIED MEMORY SYSTEM (PERFORMANCE OPTIMIZED)
 //   Phase 2 Fusion #2: Memory Engine #5 + Memory Module + Singularity Memory
 //   SUPER PROMPT #3 v20.1: Bounded STM, VecDeque, Index lookup, SmallVec
 // ═══════════════════════════════════════════════════════════════

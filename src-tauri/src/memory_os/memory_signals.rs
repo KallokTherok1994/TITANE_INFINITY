@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1 — MEMORY SIGNALS
+//   TITANE∞ v30.0.0 — MEMORY SIGNALS
 //   Super Prompt #12: Memory events for Kernel vΩ integration
 //   Signals flow: Memory OS → Kernel → OMEGA Pipeline
 // ═══════════════════════════════════════════════════════════════

@@ -1,4 +1,4 @@
-// TITANE∞ v20.1 - AI Router with Performance Cache
+// TITANE∞ v30.0.0 - AI Router with Performance Cache
 // Intelligent routing with automatic fallback (Gemini → Ollama → Offline)
 // Architecture v20.1: simplified, maintainable, documented, CACHE-OPTIMIZED
 

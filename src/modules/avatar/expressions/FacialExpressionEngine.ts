@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.0 — FACIAL EXPRESSION ENGINE v2
+//   TITANE∞ v30.0.0 — FACIAL EXPRESSION ENGINE v2
 //   Dynamic expressions + micro-gestures for ultra-realistic avatar
 // ═══════════════════════════════════════════════════════════════════════════
 

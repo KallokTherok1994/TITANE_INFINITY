@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — SYSTEM HEALTH & SELF-HEALING ENGINE vΩ
+//! TITANE∞ v30.0.0 — SYSTEM HEALTH & SELF-HEALING ENGINE vΩ
 //! Super Prompt #4 + #17 — Monitoring Total • Auto-Healing • Sécurité • Résilience
 //! ═══════════════════════════════════════════════════════════════════════════════
 

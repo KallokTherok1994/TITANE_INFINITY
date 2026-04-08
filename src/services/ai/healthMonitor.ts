@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v20Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v20Ω+ — AI HEALTH MONITOR
+ *   TITANE∞ v30.0.0 — AI HEALTH MONITOR
  *   Surveillance continue de la santé du sous-système IA
  *   Auto-reporting, alertes, recommandations
  * ═══════════════════════════════════════════════════════════════════

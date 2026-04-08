@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v15 - XP Progress Bar
+ * TITANE∞ v30.0.0 - XP Progress Bar
  * Barre de progression d'expérience avec animation
  * ═══════════════════════════════════════════════════════════════
  */

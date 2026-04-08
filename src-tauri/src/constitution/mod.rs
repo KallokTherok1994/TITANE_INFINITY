@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — CONSTITUTION (Master Prompt v∞)
+//! TITANE∞ v30.0.0 — CONSTITUTION (Master Prompt v∞)
 //! Super Prompt #13 — Système de gouvernance constitutionnelle TITANE∞
 //! ═══════════════════════════════════════════════════════════════════════════════
 //!

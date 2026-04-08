@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25.5.0 — Performance Module Exports
+ * TITANE∞ v30.0.0 — Performance Module Exports
  * Centralized exports for performance monitoring system
  */
 

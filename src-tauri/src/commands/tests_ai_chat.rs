@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.0 — PHASE 1 STABILISATION: AI CHAT TESTS
+//   TITANE∞ v30.0.0 — PHASE 1 STABILISATION: AI CHAT TESTS
 //   Tests complets pour commands/ai_chat.rs
 //   Pattern moderne: Result<(), Box<dyn Error>> + ? operator
 // ═══════════════════════════════════════════════════════════════

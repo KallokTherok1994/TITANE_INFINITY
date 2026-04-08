@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v24 — PERFORMANCE TEST PAGE
+ *   TITANE∞ v30.0.0 — PERFORMANCE TEST PAGE
  *   Test automatisé des performances Living Engines
  * ═══════════════════════════════════════════════════════════════
  */
@@ -146,7 +146,7 @@ export const PerformanceTest = () => {
             marginBottom: '0.5rem',
           }}
         >
-          ⚡ Performance Test — TITANE∞ v24
+          ⚡ Performance Test — TITANE∞ v30.0.0
         </h1>
         <p style={{ color: '#8892a6', fontSize: '0.95rem' }}>
           Real-time performance monitoring with Living Engines (100ms update interval)

@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v19.4.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.4 — INTERRUPTION CONTROLLER
+ *   TITANE∞ v30.0.0 — INTERRUPTION CONTROLLER
  *
  *   Gère les interruptions vocales (barge-in)
  *   Permet d'interrompre TITANE∞ pendant qu'il parle

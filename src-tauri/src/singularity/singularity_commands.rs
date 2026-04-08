@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v20 — SINGULARITY COMMANDS v∞
+//   TITANE∞ v30.0.0 — SINGULARITY COMMANDS v30
 //   API Tauri pour l'état global SingularityState v∞
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -15,7 +15,7 @@ use tokio::sync::Mutex;
 //   ÉTAT GLOBAL PARTAGÉ
 // ═══════════════════════════════════════════════════════════════════════════════
 
-/// État global du système TITANE∞ v20
+/// État global du système TITANE∞ v30.0.0
 ///
 /// Accessible depuis toutes les commandes Tauri via State<SingularityStateGlobal>
 pub struct SingularityStateGlobal {

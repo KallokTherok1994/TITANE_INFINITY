@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v15 — NEXUS MODULE
+//   TITANE∞ v30.0.0 — NEXUS MODULE
 //   Central coordination and orchestration
 // ═══════════════════════════════════════════════════════════════
 

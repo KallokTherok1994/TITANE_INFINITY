@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v24.3.1 — Performance Tests
+ * TITANE∞ v30.0.0 — Performance Tests
  * Tests des optimisations de cache et streaming
  */
 

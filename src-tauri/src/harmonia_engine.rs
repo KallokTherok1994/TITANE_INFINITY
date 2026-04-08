@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v14.0 — Harmonia Engine (CPU Monitoring)
+ * TITANE∞ v30.0.0 — Harmonia Engine (CPU Monitoring)
  * ═══════════════════════════════════════════════════
  *
  * Module Rust pour surveiller la charge CPU et équilibrer les watchers

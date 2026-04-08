@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — GEMINI PROVIDER
+//! TITANE∞ v30.0.0 — GEMINI PROVIDER
 //! Super Prompt #17 — Intégration Google Gemini (Vision, Long Context, Multimodal)
 //! ═══════════════════════════════════════════════════════════════════════════════
 

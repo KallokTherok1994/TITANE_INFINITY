@@ -1,4 +1,4 @@
-// TITANE∞ v13 - Context Integration
+// TITANE∞ v30.0.0 - Context Integration
 // Intégration du contexte Helios
 
 use serde::{Deserialize, Serialize};

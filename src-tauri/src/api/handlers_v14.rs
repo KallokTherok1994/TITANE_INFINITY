@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — API HANDLERS V14
+//   TITANE∞ v30.0.0 — API HANDLERS V14
 //   Unified Tauri command handlers for SingularityEngine architecture
 // ═══════════════════════════════════════════════════════════════
 

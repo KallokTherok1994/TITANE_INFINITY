@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -7,7 +7,7 @@
  */
 
 // ╔══════════════════════════════════════════════════════════════════════════════╗
-// ║ TITANE∞ v17.0 - Tauri Client Wrapper (SECURED)                            ║
+// ║ TITANE∞ v30.0.0 - Tauri Client Wrapper (SECURED)                            ║
 // ║ Type-safe communication layer with automatic error handling                 ║
 // ║ Intégration module security: whitelist, anti-injection, anti-loop          ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝

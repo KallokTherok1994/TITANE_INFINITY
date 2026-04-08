@@ -1,4 +1,4 @@
-//! TITANE∞ v10 - Utilitaires de conversion et clamping
+//! TITANE∞ v30.0.0 - Utilitaires de conversion et clamping
 //! Norme: États internes = f32, Calculs = f64, Conversions explicites
 
 use std::time::{SystemTime, UNIX_EPOCH};

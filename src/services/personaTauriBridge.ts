@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -10,7 +10,7 @@ import type { UserSpeed } from '../core/ARCHITECTURE_TYPES_v24-v∞';
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v24 — PERSONA ENGINE TAURI BRIDGE
+ *   TITANE∞ v30.0.0 — PERSONA ENGINE TAURI BRIDGE
  *   TypeScript bridge to Rust Persona Engine via Tauri
  * ═══════════════════════════════════════════════════════════════
  */

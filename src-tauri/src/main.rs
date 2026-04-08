@@ -1,8 +1,8 @@
-// TITANE_INFINITY v29.0.0 — Proprietary License
+// TITANE_INFINITY v30.0.0 — Proprietary License
 // © 2025-2026 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v29.0.0 — MAIN ENTRY POINT (Singularity Architecture)
+//   TITANE∞ v30.0.0 — MAIN ENTRY POINT (Singularity Architecture)
 //   Tests 93.0% Production Ready + UI Enhanced + COPILOT-XS Compliant
 //   20 Engines Unified + OMEGA Pipeline + Production Ready
 // ═══════════════════════════════════════════════════════════════
@@ -2660,7 +2660,7 @@ fn main() {
             titane_infinity::adaptive::adaptive_commands::adaptive_run_optimization,
             titane_infinity::adaptive::adaptive_commands::adaptive_set_mode,
 
-            // singularity — SingularityStateGlobal state now managed
+            // singularity — SingularityStateGlobal state now managed (v30.0.0)
             titane_infinity::singularity::singularity_commands::singularity_diff,
             titane_infinity::singularity::singularity_commands::singularity_export_json,
             titane_infinity::singularity::singularity_commands::singularity_get,
@@ -2671,6 +2671,7 @@ fn main() {
             titane_infinity::singularity::singularity_commands::singularity_set,
             titane_infinity::singularity::singularity_commands::singularity_snapshot,
             titane_infinity::singularity::singularity_commands::singularity_sync,
+            titane_infinity::singularity::singularity_selftest::singularity_selftest_full,
 
             // time_commands extras — module already imported
             time_commands::list_snapshots,
@@ -2823,5 +2824,5 @@ fn main() {
             std::process::exit(1);
         });
 
-    log::info!("TITANE∞ v19.5.2 shutdown - Security System offline");
+    log::info!("TITANE∞ v30.0.0 shutdown - Security System offline");
 }

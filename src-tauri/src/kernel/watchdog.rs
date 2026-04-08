@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20Ω — KERNEL WATCHDOG
+//   TITANE∞ v30.0.0 — KERNEL WATCHDOG
 //   Anomaly detection and system health monitoring
 //   Super Prompt #11 — Phase 7
 // ═══════════════════════════════════════════════════════════════

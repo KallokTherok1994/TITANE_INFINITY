@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25.7.5 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 

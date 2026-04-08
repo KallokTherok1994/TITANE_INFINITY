@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v22.0.0 - Enhanced LogViewer Component
+ * TITANE∞ v30.0.0 - Enhanced LogViewer Component
  * Real-time log stream with filtering, search, and export
  */
 

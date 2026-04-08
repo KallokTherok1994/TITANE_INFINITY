@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — PRINCIPES CONSTITUTIONNELS
+//! TITANE∞ v30.0.0 — PRINCIPES CONSTITUTIONNELS
 //! Super Prompt #13 — Principes fondamentaux du système
 //! ═══════════════════════════════════════════════════════════════════════════════
 

@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v19.2Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2Ω — UTILITAIRES MÉMOIRE PERSISTANTE
+ *   TITANE∞ v30.0.0 — UTILITAIRES MÉMOIRE PERSISTANTE
  *   Scoring, Classification, Helpers Résumés (READ-ONLY Frontend)
  * ═══════════════════════════════════════════════════════════════════════════════
  *

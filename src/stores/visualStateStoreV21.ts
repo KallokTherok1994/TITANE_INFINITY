@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v21.0.0 — Visual State Store ULTIMATE
+ * TITANE_INFINITY v30.0.0 — Visual State Store ULTIMATE
  * Zustand store for global visual engine v21 state management
  *
  * Features v21:

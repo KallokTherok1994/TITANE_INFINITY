@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v24.2.1 — Meta-Dashboard Router
+ * TITANE∞ v30.0.0 — Meta-Dashboard Router
  *
  * Quick Win: Unified entry point for all monitoring dashboards
  * Timeline: 2-3 hours

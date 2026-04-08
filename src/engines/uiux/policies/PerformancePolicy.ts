@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — Performance Policy
+ * TITANE∞ v30.0.0 — Performance Policy
  * Politique d'optimisation des performances
  */
 

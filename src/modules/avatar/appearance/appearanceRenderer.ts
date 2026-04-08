@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v24.6 — Appearance Renderer
+ * TITANE∞ v30.0.0 — Appearance Renderer
  *
  * Integrates appearance system with 3D rendering engine.
  * Manages asset loading, material application, and avatar updates.

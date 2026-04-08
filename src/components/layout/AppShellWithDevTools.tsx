@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20.0 — AppShell with DevTools
+ * TITANE∞ v30.0.0 — AppShell with DevTools
  * Super Prompt #3: DevTools UI Advanced Suite — Phase 5
  * @license MIT
  */

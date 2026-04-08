@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v24.2.0 — Système de Logging Structuré
+ * TITANE∞ v30.0.0 — Système de Logging Structuré
  *
  * Remplace les console.log dispersés par un logger centralisé
  * avec niveaux, contexte, et configuration par environnement.

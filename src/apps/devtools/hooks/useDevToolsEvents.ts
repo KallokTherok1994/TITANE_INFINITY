@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20.0 — DevTools Tauri Events Hooks
+ * TITANE∞ v30.0.0 — DevTools Tauri Events Hooks
  * Super Prompt #3: DevTools UI Advanced Suite — Phase 4
  * @license MIT
  */

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1 — LIVE DEBUGGER ENGINE
+//   TITANE∞ v30.0.0 — LIVE DEBUGGER ENGINE
 //   DevTools OS — Real-time engine event tracking
 //   Super Prompt #9: Non-intrusive pipeline observation
 // ═══════════════════════════════════════════════════════════════

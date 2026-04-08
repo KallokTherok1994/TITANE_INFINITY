@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20Ω — COGNITIVE PRIORITIES
+//   TITANE∞ v30.0.0 — COGNITIVE PRIORITIES
 //   Task prioritization for cognitive workload distribution
 //   Super Prompt #11 — Phase 3
 // ═══════════════════════════════════════════════════════════════

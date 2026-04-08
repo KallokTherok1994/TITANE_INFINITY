@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17.0 — SINGULARITY SECURITY HARDENING
+//   TITANE∞ v30.0.0 — SINGULARITY SECURITY HARDENING
 //   Self-check, structural validation, watchdog, STRICT mode
 // ═══════════════════════════════════════════════════════════════
 

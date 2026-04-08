@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — Visual Engine Exports
+ * TITANE∞ v30.0.0 — Visual Engine Exports
  * Central export for all visual engine components
  */
 

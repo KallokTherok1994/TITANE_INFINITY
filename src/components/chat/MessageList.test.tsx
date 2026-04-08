@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v24.3.0 — MessageList regression tests
+ * TITANE∞ v30.0.0 — MessageList regression tests
  * v24.3.0: Use waitFor for lazy-loaded markdown content
  */
 

@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v19.3.1 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.3.1 — EMOTIONAL INTENT TYPES
+ *   TITANE∞ v30.0.0 — EMOTIONAL INTENT TYPES
  *
  *   Types et interfaces pour le moteur émotionnel vocal
  *   Permet à TITANE∞ de parler avec intention, émotion et nuances

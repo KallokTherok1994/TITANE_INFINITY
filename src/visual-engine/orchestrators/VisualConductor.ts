@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — Visual Conductor
+ * TITANE∞ v30.0.0 — Visual Conductor
  * Orchestrateur événementiel du système visuel
  *
  * Le Visual Conductor est le cerveau qui :

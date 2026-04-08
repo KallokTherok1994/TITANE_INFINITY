@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v1.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v1.0 — CORE SERVICES INDEX
+ *   TITANE∞ v30.0.0 — CORE SERVICES INDEX
  *   Export centralisé des 6 services essentiels
  *
  *   NOTE: Fichiers dans core/services/ supprimés - réexports depuis

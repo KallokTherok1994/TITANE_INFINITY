@@ -1,4 +1,4 @@
-// TITANE∞ v25.4.2 - AI Prompt Generator Command
+// TITANE∞ v30.0.0 - AI Prompt Generator Command
 // Génération de system prompts via IA (Ollama local)
 
 use serde::{Deserialize, Serialize};

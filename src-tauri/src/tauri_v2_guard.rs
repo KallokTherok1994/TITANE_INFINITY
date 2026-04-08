@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// TITANE∞ v17 — TAURI V2 GUARD
+// TITANE∞ v30.0.0 — TAURI V2 GUARD
 // Tests automatiques pour garantir compatibilité Tauri v2
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -252,7 +252,7 @@ async fn test_no_memory_leak_in_state() {
 #[test]
 fn test_summary_report() {
     println!("\n═══════════════════════════════════════════════════════════");
-    println!("  TITANE∞ v17 — TAURI V2 GUARD TEST SUITE");
+    println!("  TITANE∞ v30.0.0 — TAURI V2 GUARD TEST SUITE");
     println!("═══════════════════════════════════════════════════════════");
     println!();
     println!("✅ All states are Send + Sync");

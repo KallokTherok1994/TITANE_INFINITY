@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — AGENT SUPERVISOR
+//! TITANE∞ v30.0.0 — AGENT SUPERVISOR
 //! Super Prompt #19 — Supervision et orchestration des agents
 //! ═══════════════════════════════════════════════════════════════════════════════
 

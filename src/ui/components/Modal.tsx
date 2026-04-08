@@ -1,12 +1,12 @@
 /**
- * TITANE∞ v19 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v19 - Modal Component with Focus Trap (WCAG 2.1 compliant)
+// TITANE∞ v30.0.0 - Modal Component with Focus Trap (WCAG 2.1 compliant)
 import { ReactNode, useEffect, useRef, useCallback } from 'react';
 import { Icons } from '../Icons';
 import './Modal.css';

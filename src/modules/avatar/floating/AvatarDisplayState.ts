@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v24.12 — AVATAR DISPLAY STATE (Frontend)
+//   TITANE∞ v30.0.0 — AVATAR DISPLAY STATE (Frontend)
 //   TypeScript Types & State Management
 // ═══════════════════════════════════════════════════════════════════════════════
 

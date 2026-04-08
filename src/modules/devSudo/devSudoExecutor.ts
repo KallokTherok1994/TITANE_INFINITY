@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v26.0.0 — DEV-SUDO EXECUTOR
+ *   TITANE∞ v30.0.0 — DEV-SUDO EXECUTOR
  *   Main command execution dispatcher with lazy-loaded handlers
  *   Extracted from monolithic devSudoHandler.ts (Phase 2 Day 1)
  * ═══════════════════════════════════════════════════════════════════════════

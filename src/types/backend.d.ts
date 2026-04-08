@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v19.5.3 - Backend Types (Generated from Rust)
+ * TITANE_INFINITY v30.0.0 - Backend Types (Generated from Rust)
  *
  * Types TypeScript correspondant aux structures Rust du backend Tauri
  * Ces types sont utilisés par BackendClient.ts pour le bridge Frontend <-> Backend

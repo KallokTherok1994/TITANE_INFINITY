@@ -1,4 +1,4 @@
-// TITANE∞ v19.2Ω — Proprietary License
+// TITANE∞ v30.0.0 — Proprietary License
 // © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 // TAURI WHITELIST FIX - get_system_health command
 /// Phase 7 OMNIS: Auto-Heal Integration

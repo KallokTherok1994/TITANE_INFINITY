@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20.0 — MemoryTree Component
+ * TITANE∞ v30.0.0 — MemoryTree Component
  * Super Prompt #3: DevTools UI Advanced Suite
  * @license MIT
  */

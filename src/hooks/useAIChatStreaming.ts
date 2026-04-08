@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v19.0.0 — AI CHAT STREAMING HOOK
+ * TITANE∞ v30.0.0 — AI CHAT STREAMING HOOK
  * Hook React pour gérer streaming token-by-token avec typing indicators
  * ═══════════════════════════════════════════════════════════════
  */

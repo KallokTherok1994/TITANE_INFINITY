@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v19.2Ω — Test Direct Chat IA (Sans Mocks)
+ * TITANE∞ v30.0.0 — Test Direct Chat IA (Sans Mocks)
  * Vérification réelle du Chat IA sans simulation pour identifier les vrais blocages
  */
 

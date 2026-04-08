@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — REASONING ENGINE
+//! TITANE∞ v30.0.0 — REASONING ENGINE
 //! Super Prompt #11 — Chaînes de raisonnement et inférence logique
 //! ═══════════════════════════════════════════════════════════════════════════════
 

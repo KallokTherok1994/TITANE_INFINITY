@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25 — Identity & Memory Types
+ * TITANE∞ v30.0.0 — Identity & Memory Types
  * Types transversaux pour identité et mémoire
  *
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.

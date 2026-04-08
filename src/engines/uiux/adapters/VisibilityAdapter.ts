@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — Visibility Adapter
+ * TITANE∞ v30.0.0 — Visibility Adapter
  * Gestion de la visibilité des éléments UI
  */
 

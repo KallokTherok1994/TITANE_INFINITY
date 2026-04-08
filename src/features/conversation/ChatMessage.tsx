@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v15 - Chat Message
+ * TITANE∞ v30.0.0 - Chat Message
  * Message de chat avec support streaming et metadata cognitive
  * ═══════════════════════════════════════════════════════════════
  */

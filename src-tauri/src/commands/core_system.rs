@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17.2.0 — Core System Commands
+//   TITANE∞ v30.0.0 — Core System Commands
 //   Tauri commands for interacting with the modular core system
 // ═══════════════════════════════════════════════════════════════
 

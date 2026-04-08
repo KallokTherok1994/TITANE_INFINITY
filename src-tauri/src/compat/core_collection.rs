@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — CORE COLLECTION BRIDGE
+//   TITANE∞ v30.0.0 — CORE COLLECTION BRIDGE
 //   Compatibility layer v12 ↔ v14
 // ═══════════════════════════════════════════════════════════════
 

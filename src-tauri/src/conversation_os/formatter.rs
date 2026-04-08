@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — RESPONSE FORMATTER
+//! TITANE∞ v30.0.0 — RESPONSE FORMATTER
 //! Super Prompt #9 — Formatage et mise en forme des réponses
 //! ═══════════════════════════════════════════════════════════════════════════════
 

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17.3.0 — SERVICES: STORAGE (SECURED)
+//   TITANE∞ v30.0.0 — SERVICES: STORAGE (SECURED)
 //   JSON persistence with StorageGuard protection
 // ═══════════════════════════════════════════════════════════════
 

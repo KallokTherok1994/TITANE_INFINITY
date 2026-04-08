@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — AGI CORE (Meta-Raisonnement)
+//! TITANE∞ v30.0.0 — AGI CORE (Meta-Raisonnement)
 //! Super Prompt #11 — Intelligence Artificielle Générale: Introspection, Meta-Learning, Evolution
 //! ═══════════════════════════════════════════════════════════════════════════════
 //!
@@ -326,7 +326,7 @@ impl std::error::Error for AGIError {}
 // VERSION
 // ═══════════════════════════════════════════════════════════════
 
-pub const AGI_CORE_VERSION: &str = "v20Ω.0";
+pub const AGI_CORE_VERSION: &str = "v30.0.0";
 pub const AGI_CORE_CODENAME: &str = "Meta-Reasoning Core";
 
 #[cfg(test)]

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.0 — CORE ENGINE TESTS (Phase 1.5)
+//   TITANE∞ v30.0.0 — CORE ENGINE TESTS (Phase 1.5)
 //   Tests unitaires et d'intégration pour SingularityEngine
 // ═══════════════════════════════════════════════════════════════
 

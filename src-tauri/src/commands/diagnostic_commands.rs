@@ -1,7 +1,7 @@
 use crate::overdrive::chat_orchestrator::ChatOrchestratorState;
 use crate::services::network_gateway::{NetworkGatewayConfig, NetworkGatewayService};
 /**
- * TITANE∞ v27 — Diagnostic Commands
+ * TITANE∞ v30.0.0 — Diagnostic Commands
  * Online capabilities verification + Internet connectivity check
  */
 use serde::{Deserialize, Serialize};

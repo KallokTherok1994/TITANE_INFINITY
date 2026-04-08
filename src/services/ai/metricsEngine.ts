@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v20Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v20Ω — METRICS ENGINE (INSTRUMENTATION LOCALE)
+ *   TITANE∞ v30.0.0 — METRICS ENGINE (INSTRUMENTATION LOCALE)
  *   Capture métrique sans données sensibles
  *   Métriques : latence, succès, providers, fallbacks
  * ═══════════════════════════════════════════════════════════════════

@@ -1,4 +1,4 @@
-// TITANE∞ v16 - Integration Engine
+// TITANE∞ v30.0.0 - Integration Engine
 // Data fusion and context management
 
 use serde::{Deserialize, Serialize};

@@ -1,4 +1,4 @@
-//! TITANE∞ v20Ω — Quantum State
+//! TITANE∞ v30.0.0 — Quantum State
 //! État quantique et superposition de prédictions
 
 use super::{PredictedAction, UserEvent};

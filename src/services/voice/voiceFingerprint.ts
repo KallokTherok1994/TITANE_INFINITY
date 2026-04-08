@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v19.5.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.5 — VOICE FINGERPRINT LEARNING SYSTEM
+ *   TITANE∞ v30.0.0 — VOICE FINGERPRINT LEARNING SYSTEM
  *
  *   Système d'apprentissage de l'empreinte vocale personnelle:
  *   - Analyse MFCC (Mel-Frequency Cepstral Coefficients)

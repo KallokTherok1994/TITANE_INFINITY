@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v20.0Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v20.0Ω — Memory Bridge
+ *   TITANE∞ v30.0.0 — Memory Bridge
  *   Pont entre les conversations chat et le système de mémoire unifiée
  *   Connecté au UnifiedMemoryService pour STM/MTM/LTM
  * ═══════════════════════════════════════════════════════════════

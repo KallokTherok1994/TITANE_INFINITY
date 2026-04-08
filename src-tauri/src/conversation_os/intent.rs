@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — INTENT DETECTION ENGINE
+//! TITANE∞ v30.0.0 — INTENT DETECTION ENGINE
 //! Super Prompt #9 — Détection et classification des intentions utilisateur
 //! ═══════════════════════════════════════════════════════════════════════════════
 

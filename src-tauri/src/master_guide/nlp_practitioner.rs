@@ -1,4 +1,4 @@
-// TITANE∞ v14.1 - PNL Éthique
+// TITANE∞ v30.0.0 - PNL Éthique
 // Praticien PNL (Programmation Neuro-Linguistique)
 
 #![allow(dead_code)]

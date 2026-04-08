@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — Titane OS
+ * TITANE∞ v30.0.0 — Titane OS
  * Système d'exploitation cognitif unifié
  */
 

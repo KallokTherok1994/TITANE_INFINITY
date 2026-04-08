@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v21.5 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v21.5 — COGNITIVE CACHE CONNECTOR (Sprint 1)
+ *   TITANE∞ v30.0.0 — COGNITIVE CACHE CONNECTOR (Sprint 1)
  *   Connecte apiCache au SingularityKernel pour invalidation intelligente
  * ═══════════════════════════════════════════════════════════════════
  */

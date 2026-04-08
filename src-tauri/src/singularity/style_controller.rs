@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1Ω — SINGULARITY OS - STYLE CONTROLLER
+//   TITANE∞ v30.0.0 — SINGULARITY OS - STYLE CONTROLLER
 //   Super Prompt #13: Adaptive conversation style management
 //   Controls tone, structure, density, tempo of responses
 // ═══════════════════════════════════════════════════════════════

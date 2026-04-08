@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v28 — AI Timeouts Configuration (OMEGA_CHAT_PERF 2026-03-15)
+ * TITANE∞ v30.0.0 — AI Timeouts Configuration (OMEGA_CHAT_PERF 2026-03-15)
  * Centralized timeout values aligned with ChatProfile FAST/BALANCED/DEEP.
  *
  * ROOT CAUSE FIX: PROVIDER_TIMEOUTS.ollama was 8000ms — local LLMs cannot

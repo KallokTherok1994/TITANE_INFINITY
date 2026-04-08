@@ -1,4 +1,4 @@
-// TITANE∞ v14.1 - Méditation Profonde TITANE ZÉRO
+// TITANE∞ v30.0.0 - Méditation Profonde TITANE ZÉRO
 // Techniques de méditation avancées
 
 #![allow(dead_code)]

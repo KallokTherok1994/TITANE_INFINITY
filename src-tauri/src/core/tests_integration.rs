@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17.2.0 — INTEGRATION TEST
+//   TITANE∞ v30.0.0 — INTEGRATION TEST
 //   Test complet du système modulaire avec Helios
 // ═══════════════════════════════════════════════════════════════
 

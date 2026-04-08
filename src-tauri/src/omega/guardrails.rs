@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1Ω — OMEGA PIPELINE - GUARDRAILS
+//   TITANE∞ v30.0.0 — OMEGA PIPELINE - GUARDRAILS
 //   Super Prompt #15: Safety guardrails and content filtering
 //   Final safety check before output with identity integration
 // ═══════════════════════════════════════════════════════════════

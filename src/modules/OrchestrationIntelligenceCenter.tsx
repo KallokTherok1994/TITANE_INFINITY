@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v24 — ORCHESTRATION & INTELLIGENCE CENTER
+ * TITANE∞ v30.0.0 — ORCHESTRATION & INTELLIGENCE CENTER
  *
  * Centre unifié fusionnant 6 modules:
  * - QA Monitoring (surveillance système)

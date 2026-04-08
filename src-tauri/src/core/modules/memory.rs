@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v15 — MEMORY MODULE
+//   TITANE∞ v30.0.0 — MEMORY MODULE
 //   Persistent memory and state management
 // ═══════════════════════════════════════════════════════════════
 

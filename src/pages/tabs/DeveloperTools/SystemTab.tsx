@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25.7.5 — System Tab
+ * TITANE∞ v30.0.0 — System Tab
  */
 
 import {

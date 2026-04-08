@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v25.1 — TIME CENTER
+ * TITANE∞ v30.0.0 — TIME CENTER
  *
  * Centre unifié fusionnant 3 modules en un seul super-centre temporel:
  * - Temporal Flow Center (Agenda + Navigation temporelle)
@@ -966,7 +966,7 @@ const TimelineSection: React.FC<TimelineSectionProps> = ({ agendaEvents, snapsho
     {
       id: '5',
       date: new Date('2026-01-28'),
-      title: 'TITANE v25 — Fusion Chat+Vision+EVO',
+      title: 'TITANE v30.0.0 — Fusion Chat+Vision+EVO',
       type: 'titane',
       description: 'TitanePage unifiée 8 sections',
       importance: 'critical',
@@ -974,7 +974,7 @@ const TimelineSection: React.FC<TimelineSectionProps> = ({ agendaEvents, snapsho
     {
       id: '6',
       date: new Date('2026-02-14'),
-      title: 'TITANE v26 — Mémoire & Pipeline Chat',
+      title: 'TITANE v30.0.0 — Mémoire & Pipeline Chat',
       type: 'titane',
       description: 'Mémoire 3 niveaux → systemPrompt, XP NaN guards',
       importance: 'critical',
@@ -982,7 +982,7 @@ const TimelineSection: React.FC<TimelineSectionProps> = ({ agendaEvents, snapsho
     {
       id: '7',
       date: new Date('2026-04-01'),
-      title: 'TITANE v28 — Multi-Provider AI',
+      title: 'TITANE v30.0.0 — Multi-Provider AI',
       type: 'titane',
       description: 'Claude, Gemini, fallback intelligent',
       importance: 'high',

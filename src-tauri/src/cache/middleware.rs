@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v19.5.2 — Cache Middleware for Tauri Commands
+//   TITANE∞ v30.0.0 — Cache Middleware for Tauri Commands
 //   P2-2: Intelligent caching integration with IPC
 // ═══════════════════════════════════════════════════════════════
 

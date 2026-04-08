@@ -1,4 +1,4 @@
-// TITANE∞ v16 — HANDLERS FACTORY
+// TITANE∞ v30.0.0 — HANDLERS FACTORY
 // Conditional command handlers based on build configuration
 // Architecture v16: Cognitive Layer + v15 Core
 

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v14.0 — Harmonia Commands
+ * TITANE∞ v30.0.0 — Harmonia Commands
  * ═══════════════════════════════════
  *
  * Commandes Tauri pour monitoring CPU et throttling

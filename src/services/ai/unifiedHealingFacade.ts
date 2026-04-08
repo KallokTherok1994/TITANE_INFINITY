@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v27 — UNIFIED HEALING FACADE
+ * TITANE∞ v30.0.0 — UNIFIED HEALING FACADE
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * @description Façade unifiée qui orchestre les deux architectures de healing:

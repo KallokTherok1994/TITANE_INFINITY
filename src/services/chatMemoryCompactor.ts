@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v15 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v15 — MEMORY COMPACTOR FOR CHAT
+ *   TITANE∞ v30.0.0 — MEMORY COMPACTOR FOR CHAT
  *   Compression intelligente de l'historique chat par mode
  * ═══════════════════════════════════════════════════════════════════
  */

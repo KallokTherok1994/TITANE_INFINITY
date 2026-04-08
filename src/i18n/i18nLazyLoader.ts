@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v25.3.0 — i18n LAZY LOADER (YOLO OPT-7)
+ *   TITANE∞ v30.0.0 — i18n LAZY LOADER (YOLO OPT-7)
  *   Lazy-load i18n initialization to reduce initial bundle
  *   Impact: -30 KB gzip estimated
  * ═══════════════════════════════════════════════════════════════════════════

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — Adaptive Panels Exports
+ * TITANE∞ v30.0.0 — Adaptive Panels Exports
  * Central export for all adaptive panel components
  */
 

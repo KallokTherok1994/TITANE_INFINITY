@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — ABSTRACTION ENGINE
+//! TITANE∞ v30.0.0 — ABSTRACTION ENGINE
 //! Super Prompt #11 — Extraction de concepts et niveaux d'abstraction
 //! ═══════════════════════════════════════════════════════════════════════════════
 

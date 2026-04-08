@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1Ω — SINGULARITY OS - COHERENCE CONTROLLER
+//   TITANE∞ v30.0.0 — SINGULARITY OS - COHERENCE CONTROLLER
 //   Super Prompt #13: Internal fusion and coherence management
 //   Fuses context, reasoning, memory, style, emotion, constraints
 // ═══════════════════════════════════════════════════════════════

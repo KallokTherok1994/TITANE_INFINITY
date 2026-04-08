@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — CONVERSATION SAFETY
+//! TITANE∞ v30.0.0 — CONVERSATION SAFETY
 //! Super Prompt #9 — Sécurité conversationnelle et filtrage
 //! ═══════════════════════════════════════════════════════════════════════════════
 

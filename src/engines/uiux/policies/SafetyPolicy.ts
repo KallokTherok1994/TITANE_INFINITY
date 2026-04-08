@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — Safety Policy
+ * TITANE∞ v30.0.0 — Safety Policy
  * Politique de sécurité et accessibilité
  */
 

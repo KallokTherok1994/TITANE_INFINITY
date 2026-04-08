@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v19.2Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2Ω — SYSTÈME D'AUTOMATIONS CHAT IA
+ *   TITANE∞ v30.0.0 — SYSTÈME D'AUTOMATIONS CHAT IA
  *   Automations déclenchables depuis le Chat, sécurisées, traçables
  * ═══════════════════════════════════════════════════════════════════════════════
  *

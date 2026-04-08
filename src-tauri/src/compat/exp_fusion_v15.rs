@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — COMPAT: ExpFusion stub
+//   TITANE∞ v30.0.0 — COMPAT: ExpFusion stub
 // ═══════════════════════════════════════════════════════════════
 
 use serde::{Deserialize, Serialize};

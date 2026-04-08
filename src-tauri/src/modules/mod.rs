@@ -1,4 +1,4 @@
-// TITANE∞ v17.2.0 - Internal Modules (Legacy)
+// TITANE∞ v30.0.0 - Internal Modules (Legacy)
 // Phase 2 cleanup: All v12 modules removed
 // Functionality migrated to plugin_system/cores/
 

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1 — MEMORY OS UNIFIED INTERFACE
+//   TITANE∞ v30.0.0 — MEMORY OS UNIFIED INTERFACE
 //   Super Prompt #12: Neural Memory System Main Interface
 //   Target: <20ms recall, <5ms store, <300MB RAM
 // ═══════════════════════════════════════════════════════════════

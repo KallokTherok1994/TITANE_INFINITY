@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — Ripple Effect
+ * TITANE∞ v30.0.0 — Ripple Effect
  * Effet ripple interactif pour feedback visuel
  *
  * Crée un effet d'ondulation (ripple) sur click/tap

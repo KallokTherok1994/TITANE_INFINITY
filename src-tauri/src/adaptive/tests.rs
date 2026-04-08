@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v21 — ADAPTIVE ENGINE SELF-TESTS (Simplified)
+//   TITANE∞ v30.0.0 — ADAPTIVE ENGINE SELF-TESTS (Simplified)
 //   Validation minimale pour compilation
 // ═══════════════════════════════════════════════════════════════════════════════
 

@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v15 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v15 — USE VITALS HOOK
+ * TITANE∞ v30.0.0 — USE VITALS HOOK
  * Hook React pour monitoring vitals système temps réel
  * ✨ v24.2.1: Adaptive polling based on activity/visibility
  * ═══════════════════════════════════════════════════════════════

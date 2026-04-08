@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17.2.0 — UTILS: LOGGING SYSTEM
+//   TITANE∞ v30.0.0 — UTILS: LOGGING SYSTEM
 //   Unified, Simple, Controlled Logging
 // ═══════════════════════════════════════════════════════════════
 

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════
-// GOVERNANCE COMMANDS - TITANE∞ v21.5.3
+// GOVERNANCE COMMANDS - TITANE∞ v30.0.0
 // ═══════════════════════════════════════════════════════════════════
 //
 // Commandes pour la gestion des politiques IA, permissions et audit.

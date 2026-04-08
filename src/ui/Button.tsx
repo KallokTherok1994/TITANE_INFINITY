@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v8.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v8.0 - Button Component (Tailwind CSS)
+ * TITANE∞ v30.0.0 - Button Component (Tailwind CSS)
  * Primitive UI avec variants, sizes, states
  * Migration: Inline styles → Tailwind classes
  * ═══════════════════════════════════════════════════════════════

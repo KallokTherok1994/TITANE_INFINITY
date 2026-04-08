@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 //! ╔═══════════════════════════════════════════════════════════════════════════╗
-//! ║                   TITANE∞ v14.1 — META-MODE ENGINE                        ║
+//! ║                   TITANE∞ v30.0.0 — META-MODE ENGINE                        ║
 //! ║              Système d'accompagnement multidisciplinaire intelligent       ║
 //! ╚═══════════════════════════════════════════════════════════════════════════╝
 //!
@@ -47,7 +47,7 @@ use emotional_sync::EmotionalSynchronizer;
 use mode_detection::ModeDetector;
 use mode_transition::ModeTransitioner;
 
-/// **Mode actif dans TITANE∞ v14.1**
+/// **Mode actif dans TITANE∞ v30.0.0**
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
 pub enum TitaneMode {
     // Modes d'accompagnement humain

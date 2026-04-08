@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v24.12 — FLOATING WINDOW ENGINE (Frontend)
+//   TITANE∞ v30.0.0 — FLOATING WINDOW ENGINE (Frontend)
 //   Tauri Invoke Functions for Display State Management
 // ═══════════════════════════════════════════════════════════════════════════════
 

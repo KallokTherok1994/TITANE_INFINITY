@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.4.0 — Test Utilities: Extended Component Props
+ * TITANE∞ v30.0.0 — Test Utilities: Extended Component Props
  *
  * Ce fichier étend les props des composants pour permettre aux tests
  * de passer des données mockées directement via props, même si le composant

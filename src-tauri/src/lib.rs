@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════
-//!   TITANE∞ v24.3.0 — LIB CONFIGURATION
+//!   TITANE∞ v30.0.0 — LIB CONFIGURATION
 //!   Unified backend architecture - Singularity + OMEGA Pipeline
 //! ═══════════════════════════════════════════════════════════════
 
@@ -69,16 +69,16 @@ pub mod perf_bench; // ✅ v26.4.0 - Performance benchmarking framework (NEW)
 pub mod perf_metrics_capture; // ✅ v26.4.0 - Baseline metrics capture (NEW)
 
 // ═══════════════════════════════════════════════════════════════
-// KERNEL v20Ω.0 (Super Prompt #11)
+// KERNEL v30.0.0 (Super Prompt #11)
 // ═══════════════════════════════════════════════════════════════
 
-pub mod kernel; // ✅ Cognitive OS Kernel v20Ω.0 (NEW)
+pub mod kernel; // ✅ Cognitive OS Kernel v30.0.0 (NEW)
 
 // ═══════════════════════════════════════════════════════════════
-// OMEGA PIPELINE v20Ω (Super Prompt #15)
+// OMEGA PIPELINE v30.0.0 (Super Prompt #15)
 // ═══════════════════════════════════════════════════════════════
 
-pub mod omega; // ✅ Omega Pipeline v20Ω (NEW)
+pub mod omega; // ✅ Omega Pipeline v30.0.0
 
 // ═══════════════════════════════════════════════════════════════
 // PROFILING & MONITORING v19.5 (NEW)
@@ -337,7 +337,7 @@ pub mod conversation_os; // ✅ Conversation OS #∞ (Intent, Narrative, Persona
 // ═══════════════════════════════════════════════════════════════
 
 // TEMPORARILY COMMENTED: API incomplete (Phase 1 Stabilisation)
-// pub mod agi_core; // ✅ AGI Core v20Ω (Introspection, Meta-Learning, Self-Model, Strategy, Evolution, Reasoning)
+// pub mod agi_core; // ✅ AGI Core v30.0.0 (Introspection, Meta-Learning, Self-Model, Strategy, Evolution, Reasoning)
 
 // ═══════════════════════════════════════════════════════════════
 // CONSTITUTION (SUPER PROMPT #13)

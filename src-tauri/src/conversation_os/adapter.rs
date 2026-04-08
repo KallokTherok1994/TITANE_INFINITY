@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — RESPONSE ADAPTER
+//! TITANE∞ v30.0.0 — RESPONSE ADAPTER
 //! Super Prompt #9 — Adaptation des réponses au canal et contexte
 //! ═══════════════════════════════════════════════════════════════════════════════
 

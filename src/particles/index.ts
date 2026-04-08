@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v19.3.0 — Particle System Exports
+ * TITANE_INFINITY v30.0.0 — Particle System Exports
  * Central export for particle system components
  */
 

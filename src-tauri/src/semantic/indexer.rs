@@ -1,4 +1,4 @@
-// TITANE∞ v13 - Intelligent Document Indexer
+// TITANE∞ v30.0.0 - Intelligent Document Indexer
 // Indexation intelligente avec chunking sémantique et hiérarchisation
 
 use crate::semantic::{DocumentChunk, IndexedDocument};

@@ -1,4 +1,4 @@
-// TITANE∞ v15 - Gemini AI Provider
+// TITANE∞ v30.0.0 - Gemini AI Provider
 // Google Gemini API integration with streaming support
 // Clean architecture v15: documented, production-ready
 

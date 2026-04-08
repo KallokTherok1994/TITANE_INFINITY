@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v19.3.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.3 — HYBRID TTS SERVICE
+ *   TITANE∞ v30.0.0 — HYBRID TTS SERVICE
  *   Service TTS hybride avec fallback Web Speech API
  *   Priorité: Tauri Backend → Web Speech API → Silence
  *   [P0.4] Intégration anti-echo avec événements TTS

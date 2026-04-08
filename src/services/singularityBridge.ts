@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -10,7 +10,7 @@ import { secureInvoke } from '@/lib/security';
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- * TITANE∞ v15 — SINGULARITY BRIDGE (TypeScript)
+ * TITANE∞ v30.0.0 — SINGULARITY BRIDGE (TypeScript)
  * Pont bidirectionnel Rust Backend ↔ React Frontend
  * ═══════════════════════════════════════════════════════════════════
  *

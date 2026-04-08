@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17.3.0 - Online TTS (SECURED)
+//   TITANE∞ v30.0.0 - Online TTS (SECURED)
 //   Cloud TTS with ShellGuard protection
 // ═══════════════════════════════════════════════════════════════
 

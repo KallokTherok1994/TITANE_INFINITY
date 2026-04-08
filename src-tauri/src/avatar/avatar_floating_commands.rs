@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v24.12 — AVATAR FLOATING WINDOW COMMANDS
+//   TITANE∞ v30.0.0 — AVATAR FLOATING WINDOW COMMANDS
 //   Tauri Backend Commands for Floating Window Management
 // ═══════════════════════════════════════════════════════════════════════════════
 

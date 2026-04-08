@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1Ω — SINGULARITY OS (Conversation Brain)
+//   TITANE∞ v30.0.0 — SINGULARITY OS (Conversation Brain)
 //   Super Prompt #13: The unified cognitive core
 //   Processes messages → Produces optimal, stable, contextualized responses
 // ═══════════════════════════════════════════════════════════════

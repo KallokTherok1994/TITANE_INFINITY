@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v19.0.0 — SINGULARITY STATE FRONTEND
+ * TITANE∞ v30.0.0 — SINGULARITY STATE FRONTEND
  * État global unifié avec persistence localStorage
  * ═══════════════════════════════════════════════════════════════
  */

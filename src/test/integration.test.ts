@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v15 - Integration Tests Phase 3 Robustness
+ * TITANE∞ v30.0.0 - Integration Tests Phase 3 Robustness
  * Tests serviceInvoker + serviceMetrics
  * ═══════════════════════════════════════════════════════════════
  */

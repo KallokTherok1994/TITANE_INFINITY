@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — useTitaneSphere Hook
+ * TITANE∞ v30.0.0 — useTitaneSphere Hook
  * React hook pour gérer l'état du noyau visuel
  *
  * Synchronise automatiquement avec l'état cognitif global

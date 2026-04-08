@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v∞.19.3Ω — IA Context State
+//   TITANE∞ v30.0.0 — IA Context State
 //   State tracking for Multi-Agents + Unified IA Engine
 //   Phase 8: Integration with Singularity System
 // ═══════════════════════════════════════════════════════════════
@@ -157,7 +157,7 @@ impl Default for IAContext {
                 "gemini".to_string(),
                 "local".to_string(),
             ],
-            version: "v∞.19.3Ω".to_string(),
+            version: "v30.0.0".to_string(),
             updated_at: chrono::Utc::now().to_rfc3339(),
         }
     }

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v24.12 — AVATAR FLOATING WINDOW COMPONENT
+//   TITANE∞ v30.0.0 — AVATAR FLOATING WINDOW COMPONENT
 //   React Component for Floating Avatar Window with Three.js Rendering
 // ═══════════════════════════════════════════════════════════════════════════════
 

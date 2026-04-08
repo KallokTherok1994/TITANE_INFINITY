@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v26.3 — GITHUB COPILOT PROVIDER
+//! TITANE∞ v30.0.0 — GITHUB COPILOT PROVIDER
 //! HTTP client pour GitHub Copilot / GitHub Models API
 //! ═══════════════════════════════════════════════════════════════════════════════
 

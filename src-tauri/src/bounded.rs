@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v21.1Ω — BOUNDED COLLECTIONS FOR MEMORY SAFETY
+//   TITANE∞ v30.0.0 — BOUNDED COLLECTIONS FOR MEMORY SAFETY
 //   Super-Prompt C1: Replace unbounded collections with bounded
 // ═══════════════════════════════════════════════════════════════
 

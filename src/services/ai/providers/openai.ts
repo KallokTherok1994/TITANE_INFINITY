@@ -1,9 +1,9 @@
 /**
- * TITANE∞ v19.3Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.3Ω — OPENAI PROVIDER (SECURE BACKEND PROXY)
+ *   TITANE∞ v30.0.0 — OPENAI PROVIDER (SECURE BACKEND PROXY)
  *   Intégration GPT-4 / GPT-4o via backend Tauri sécurisé
  *   Aucune clé API exposée côté frontend
  * ═══════════════════════════════════════════════════════════════════

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17.2.0 — API: SYSTEM
+//   TITANE∞ v30.0.0 — API: SYSTEM
 //   Comprehensive System State Commands (Phase 2b migrated)
 // ═══════════════════════════════════════════════════════════════
 

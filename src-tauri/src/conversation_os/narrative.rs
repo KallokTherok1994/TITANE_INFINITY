@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — NARRATIVE ENGINE
+//! TITANE∞ v30.0.0 — NARRATIVE ENGINE
 //! Super Prompt #9 — Gestion du fil narratif et continuité conversationnelle
 //! ═══════════════════════════════════════════════════════════════════════════════
 

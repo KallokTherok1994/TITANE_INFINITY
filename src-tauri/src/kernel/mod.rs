@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20Ω — KERNEL MODULE
+//   TITANE∞ v30.0.0 — KERNEL MODULE
 //   OS Kernel — Runtime, Scheduler, Core Loop & Governance
 //   Super Prompt #11: Cognitive Operating System Foundation
 // ═══════════════════════════════════════════════════════════════
@@ -55,5 +55,5 @@ pub use integrations::{
 // VERSION
 // ═══════════════════════════════════════════════════════════════
 
-pub const KERNEL_VERSION: &str = "v20Ω.0";
+pub const KERNEL_VERSION: &str = "v30.0.0";
 pub const KERNEL_CODENAME: &str = "Cognitive OS Kernel";

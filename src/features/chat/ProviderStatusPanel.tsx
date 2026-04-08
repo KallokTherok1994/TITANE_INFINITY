@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v21 Phase 4 - Provider Status Panel
+ * TITANE∞ v30.0.0 Phase 4 - Provider Status Panel
  * Indicateurs de santé dérivés du backend réel
  * ═══════════════════════════════════════════════════════════════
  */

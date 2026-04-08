@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v24.7.4 - Phase 2: Keyboard Shortcuts Hook
+ * TITANE∞ v30.0.0 - Phase 2: Keyboard Shortcuts Hook
  *
  * Global keyboard shortcuts system for enhanced accessibility and power user UX
  *

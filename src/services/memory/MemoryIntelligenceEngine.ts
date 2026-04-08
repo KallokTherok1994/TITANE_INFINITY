@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20.0Ω — Memory Intelligence Engine
+ * TITANE∞ v30.0.0 — Memory Intelligence Engine
  * ═══════════════════════════════════════════════════════════════
  *
  * Moteur d'intelligence mémoire qui:

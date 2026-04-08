@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v19.3.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.3 — VOICE CONVERSATION COMPONENT (UNIFIED)
+ *   TITANE∞ v30.0.0 — VOICE CONVERSATION COMPONENT (UNIFIED)
  *   Mode conversation audio live avec TITANE
  *   Utilise useVoiceEngine (100% Tauri backend, pas de Web Speech API)
  * ═══════════════════════════════════════════════════════════════════

@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v19.0 — UI LOGGER SÉCURISÉ
+ * TITANE∞ v30.0.0 — UI LOGGER SÉCURISÉ
  * ═══════════════════════════════════════════════════════════════
  * Logger dédié UI avec:
  * - Isolation logs frontend vs backend

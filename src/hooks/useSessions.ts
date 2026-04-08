@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v20.0Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v20.0Ω — useSessions Hook
+ *   TITANE∞ v30.0.0 — useSessions Hook
  *   Hook React pour la gestion des sessions de conversation
  *   Phase 1 minimal
  * ═══════════════════════════════════════════════════════════════

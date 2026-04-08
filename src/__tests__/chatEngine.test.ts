@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v22Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v22Ω — CHAT ENGINE TESTS
+ *   TITANE∞ v30.0.0 — CHAT ENGINE TESTS
  *   Tests unitaires pour chatEngine.ts
  * ═══════════════════════════════════════════════════════════════════
  */

@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v22Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v22Ω — COGNITIVE KERNEL (ÉMERGENCE COGNITIVE)
+ *   TITANE∞ v30.0.0 — COGNITIVE KERNEL (ÉMERGENCE COGNITIVE)
  *   Noyau cognitif interne pour intelligence émergente
  *   - Champ cognitif local (principes systémiques)
  *   - États cognitifs internes (santé, intention, mémoire)

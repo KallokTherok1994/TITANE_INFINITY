@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v22.0 — EventStream Component
+ * TITANE∞ v30.0.0 — EventStream Component
  * Real-time event streaming with filtering and replay
  */
 

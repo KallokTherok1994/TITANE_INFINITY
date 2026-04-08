@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v19.3.0 — useParticles Hook
+ * TITANE_INFINITY v30.0.0 — useParticles Hook
  * React hook for managing particle system with canvas
  *
  * Features:

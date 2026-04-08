@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v19.4.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.4 — ACTIVE LISTENING EXPORTS
+ *   TITANE∞ v30.0.0 — ACTIVE LISTENING EXPORTS
  *
  *   Export central pour Super Prompt v∞.3
  * ═══════════════════════════════════════════════════════════════════

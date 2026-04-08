@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — ENGINE COMMANDS
+//   TITANE∞ v30.0.0 — ENGINE COMMANDS
 //   Frontend-accessible commands for engine states & modules
 // ═══════════════════════════════════════════════════════════════
 

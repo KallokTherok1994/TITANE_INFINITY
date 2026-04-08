@@ -1,4 +1,4 @@
-// TITANE∞ v16 - Consistency Engine
+// TITANE∞ v30.0.0 - Consistency Engine
 // Coherence management and contradiction resolution
 
 use serde::{Deserialize, Serialize};

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v19.3.1 — WHISPER STREAMING ENGINE
+//   TITANE∞ v30.0.0 — WHISPER STREAMING ENGINE
 //   Real-time incremental speech recognition with partial/final events
 //   Architecture: Audio chunks → Whisper incremental → Tauri events
 // ═══════════════════════════════════════════════════════════════

@@ -2,7 +2,7 @@ pub mod alerts;
 pub mod commands;
 pub mod fixer;
 /**
- * TITANE∞ v17 - Watchdog Engine Module
+ * TITANE∞ v30.0.0 - Watchdog Engine Module
  *
  * Moteur de surveillance et auto-réparation du système cognitif
  */

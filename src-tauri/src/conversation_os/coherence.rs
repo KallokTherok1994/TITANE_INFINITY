@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — COHERENCE ENGINE
+//! TITANE∞ v30.0.0 — COHERENCE ENGINE
 //! Super Prompt #9 — Vérification de cohérence narrative et logique
 //! ═══════════════════════════════════════════════════════════════════════════════
 

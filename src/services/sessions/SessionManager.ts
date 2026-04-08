@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v20.0Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v20.0Ω — Session Manager
+ *   TITANE∞ v30.0.0 — Session Manager
  *   Gestion des sessions de conversation avec persistence localStorage
  *   Phase 1 minimal : CRUD sessions, métadonnées, export
  *   ✨ v24.2.1: Debounced storage to reduce I/O on frequent updates

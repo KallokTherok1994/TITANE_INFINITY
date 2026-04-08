@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v19.2Ω — E2E UI Integration Tests
+ * TITANE∞ v30.0.0 — E2E UI Integration Tests
  * Tests for UI component integration and user interactions
  */
 

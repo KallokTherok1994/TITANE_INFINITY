@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v24.3.0 - useControlPanelSection Hook
+ * TITANE∞ v30.0.0 - useControlPanelSection Hook
  * Generic hook for control panel sections with Tauri IPC
  */
 

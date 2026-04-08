@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20.0 — Components Index
+ * TITANE∞ v30.0.0 — Components Index
  * Super Prompt #3: DevTools UI Advanced Suite
  * @license MIT
  */

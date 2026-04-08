@@ -866,7 +866,7 @@ if (typeof window !== 'undefined') {
 // 🚀 BOOT SEQUENCE START
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 console.log('\n╔════════════════════════════════════════════════════════════════╗');
-console.log('║  🌌 TITANE∞ v19 - BOOT SEQUENCE                             ║');
+console.log('║  🌌 TITANE∞ v30.0.0 - BOOT SEQUENCE                             ║');
 console.log('║  Timestamp: ' + new Date().toISOString() + '                  ║');
 console.log('╚════════════════════════════════════════════════════════════════╝\n');
 

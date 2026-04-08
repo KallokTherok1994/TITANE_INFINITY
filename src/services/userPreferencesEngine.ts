@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v19.2.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2 — USER PREFERENCES ENGINE
+ *   TITANE∞ v30.0.0 — USER PREFERENCES ENGINE
  *   Système d'apprentissage des préférences utilisateur
  *   - Suit les interactions et choix de l'utilisateur
  *   - Mémorise les préférences au fil des conversations

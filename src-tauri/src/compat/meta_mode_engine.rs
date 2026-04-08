@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — COMPAT: MetaModeEngine stub
+//   TITANE∞ v30.0.0 — COMPAT: MetaModeEngine stub
 // ═══════════════════════════════════════════════════════════════
 
 use serde::{Deserialize, Serialize};

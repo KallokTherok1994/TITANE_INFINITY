@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — COMPAT: PluginSystem stub
+//   TITANE∞ v30.0.0 — COMPAT: PluginSystem stub
 // ═══════════════════════════════════════════════════════════════
 
 use crate::core::legacy::{HarmoniaCore, HeliosCore, MemoryCore, NexusCore, SentinelCore};

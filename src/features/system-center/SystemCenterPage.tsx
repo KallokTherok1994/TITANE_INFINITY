@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v24.3.0 — System Center Page
+ * TITANE∞ v30.0.0 — System Center Page
  *
  * Page principale du Centre Système unifié avec 5 onglets :
  * - Diagnostics

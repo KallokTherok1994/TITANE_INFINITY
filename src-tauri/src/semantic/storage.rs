@@ -1,4 +1,4 @@
-// TITANE∞ v13 - Semantic Storage
+// TITANE∞ v30.0.0 - Semantic Storage
 // Stockage persistant chiffré pour l'index sémantique
 
 use aes_gcm::{

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// TITANE∞ v24 — PERSONA ENGINE COMMANDS (Tauri API)
+// TITANE∞ v30.0.0 — PERSONA ENGINE COMMANDS (Tauri API)
 // Tauri commands to expose Persona Engine to frontend
 // ═══════════════════════════════════════════════════════════════════════════
 

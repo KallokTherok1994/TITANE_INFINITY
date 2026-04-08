@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25 - Test Utilities
+ * TITANE∞ v30.0.0 - Test Utilities
  * Central export for all test utilities
  */
 

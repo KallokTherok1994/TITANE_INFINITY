@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v24.5 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v24.5 — CIRCUIT BREAKER PATTERN
+ *   TITANE∞ v30.0.0 — CIRCUIT BREAKER PATTERN
  *   Prevents cascade failures when providers go down
  *   States: CLOSED (normal) → OPEN (failing) → HALF_OPEN (testing)
  * ═══════════════════════════════════════════════════════════════════

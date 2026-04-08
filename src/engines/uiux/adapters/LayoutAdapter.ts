@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — Layout Adapter
+ * TITANE∞ v30.0.0 — Layout Adapter
  * Adaptation dynamique du layout
  */
 

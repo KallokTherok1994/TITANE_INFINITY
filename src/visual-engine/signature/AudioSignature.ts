@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — Audio Signature (Stub)
+ * TITANE∞ v30.0.0 — Audio Signature (Stub)
  * Signature sonore optionnelle (désactivée par défaut)
  *
  * Architecture pour future implémentation audio :

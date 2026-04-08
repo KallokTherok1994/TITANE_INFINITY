@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v17.2.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.2.0 - Backend Types (Comprehensive)
+ * TITANE∞ v30.0.0 - Backend Types (Comprehensive)
  * Complete TypeScript type definitions for all Tauri commands and interfaces
  * ═══════════════════════════════════════════════════════════════
  */

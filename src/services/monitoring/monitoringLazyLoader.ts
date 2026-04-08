@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25.3.0 — OPT-9: Monitoring Lazy Loader
+ * TITANE∞ v30.0.0 — OPT-9: Monitoring Lazy Loader
  * Lazy-load monitoring infrastructure to reduce main bundle
  *
  * Pattern: Promise-based singleton with loading state tracking

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.2.1 — Tests pour Fixes Critiques Chat IA
+ * TITANE∞ v30.0.0 — Tests pour Fixes Critiques Chat IA
  * Tests H1 (race condition provider checks) et H2 (memory leak pending saves)
  */
 

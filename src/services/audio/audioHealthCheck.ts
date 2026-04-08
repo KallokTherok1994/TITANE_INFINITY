@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v19.3.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.3 — AUDIO HEALTH CHECK (Self-Healing Ready)
+ *   TITANE∞ v30.0.0 — AUDIO HEALTH CHECK (Self-Healing Ready)
  *   [P1.5] Système de diagnostic audio pour Self-Healing Engine
  *
  *   Vérifie: micro, VAD, TTS, state machine, latences

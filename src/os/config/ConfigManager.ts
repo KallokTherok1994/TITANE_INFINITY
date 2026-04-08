@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — Config Manager
+ * TITANE∞ v30.0.0 — Config Manager
  * Gestion de la configuration système
  */
 

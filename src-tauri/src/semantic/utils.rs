@@ -1,4 +1,4 @@
-// TITANE∞ v13 - Semantic Utils
+// TITANE∞ v30.0.0 - Semantic Utils
 // Utilitaires pour le moteur sémantique
 
 use std::collections::HashMap;

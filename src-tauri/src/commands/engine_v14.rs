@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — TAURI COMMANDS
+//   TITANE∞ v30.0.0 — TAURI COMMANDS
 //   Tauri commands for SingularityEngine v14
 // ═══════════════════════════════════════════════════════════════
 

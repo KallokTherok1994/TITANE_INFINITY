@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v25.5.0 — ADVANCED PERFORMANCE MONITOR
+ * TITANE∞ v30.0.0 — ADVANCED PERFORMANCE MONITOR
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * Système de monitoring de performance avancé avec:

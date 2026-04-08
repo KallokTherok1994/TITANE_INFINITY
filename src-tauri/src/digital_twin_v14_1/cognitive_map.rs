@@ -1,4 +1,4 @@
-// TITANE∞ v14.1 - Cognitive Map
+// TITANE∞ v30.0.0 - Cognitive Map
 // Carte cognitive dynamique
 
 #![allow(dead_code)]

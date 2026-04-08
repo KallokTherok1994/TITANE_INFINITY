@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25 — Core Types Index
+ * TITANE∞ v30.0.0 — Core Types Index
  * Export centralisé de tous les types transversaux
  *
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.

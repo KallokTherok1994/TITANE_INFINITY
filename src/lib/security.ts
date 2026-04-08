@@ -1,9 +1,9 @@
 /**
- * TITANE∞ v17 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v17 - Frontend Security Module
+ * TITANE∞ v30.0.0 - Frontend Security Module
  * Type guards, validation, anti-injection, command whitelist
  * ═══════════════════════════════════════════════════════════════════════════
  */
@@ -427,6 +427,19 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'singularity_update_full_state',
   'singularity_save_state',
   'singularity_load_state',
+
+  // SINGULARITY v∞/v30 Unified State Commands
+  'singularity_get',
+  'singularity_set',
+  'singularity_diff',
+  'singularity_hash',
+  'singularity_sync',
+  'singularity_meta',
+  'singularity_integrity',
+  'singularity_repair',
+  'singularity_export_json',
+  'singularity_snapshot',
+  'singularity_selftest_full',
 
   // ═══════════════════════════════════════════════════════════════
   // NEXUS - Validation

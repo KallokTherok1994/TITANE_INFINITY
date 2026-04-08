@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — Service Registry
+ * TITANE∞ v30.0.0 — Service Registry
  * Registre des services applicatifs
  */
 

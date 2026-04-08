@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v22Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v22Ω — STUB ENGINES VALIDATION
+ *   TITANE∞ v30.0.0 — STUB ENGINES VALIDATION
  *   Tests pour vérifier safe defaults des stubs (PHASE 1 deletions)
  * ═══════════════════════════════════════════════════════════════════
  */

@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v26.0.0 — DEV-SUDO PATTERNS
+ *   TITANE∞ v30.0.0 — DEV-SUDO PATTERNS
  *   Pattern detection for 138 dev-sudo commands
  *   Extracted from monolithic devSudoHandler.ts (Phase 2 refactoring)
  * ═══════════════════════════════════════════════════════════════════════════

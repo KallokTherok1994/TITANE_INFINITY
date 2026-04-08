@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — Tauri Command Mapper & API Repair Engine
+ * TITANE∞ v30.0.0 — Tauri Command Mapper & API Repair Engine
  *
  * Résout automatiquement les problèmes de commandes "not found"
  * en mappant vers les vraies commandes backend disponibles

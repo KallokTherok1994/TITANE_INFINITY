@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v24.12 — FLOATING WINDOW CHAT HANDLER
+//   TITANE∞ v30.0.0 — FLOATING WINDOW CHAT HANDLER
 //   NLP Command Parser for Avatar Floating Window Control
 // ═══════════════════════════════════════════════════════════════════════════
 

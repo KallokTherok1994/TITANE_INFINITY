@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v19.3.1 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.3.1 — EMOTIONAL TTS RENDERER
+ *   TITANE∞ v30.0.0 — EMOTIONAL TTS RENDERER
  *
  *   Couche de rendu TTS émotionnel
  *   Utilise hybridTTS avec injection prosodique

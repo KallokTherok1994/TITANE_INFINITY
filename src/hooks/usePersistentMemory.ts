@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v19.2Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2Ω — HOOK MÉMOIRE PERSISTANTE 3-NIVEAUX (READ-ONLY)
+ *   TITANE∞ v30.0.0 — HOOK MÉMOIRE PERSISTANTE 3-NIVEAUX (READ-ONLY)
  *   Accès Frontend à la Mémoire Hiérarchique via Tauri Commands
  * ═══════════════════════════════════════════════════════════════════════════════
  *

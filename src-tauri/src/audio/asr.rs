@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17.3.0 - ASR (SECURED)
+//   TITANE∞ v30.0.0 - ASR (SECURED)
 //   Speech recognition with ShellGuard protection
 // ═══════════════════════════════════════════════════════════════
 

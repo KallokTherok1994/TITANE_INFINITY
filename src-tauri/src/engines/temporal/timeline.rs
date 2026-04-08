@@ -1,4 +1,4 @@
-//! TITANE∞ v20Ω — Timeline
+//! TITANE∞ v30.0.0 — Timeline
 //! Gestion de la timeline temporelle
 
 use serde::{Deserialize, Serialize};

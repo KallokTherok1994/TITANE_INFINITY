@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.3.0 — APPEARANCE FLOATING INTEGRATION (YOLO OPT-1: Three.js lazy)
+//   TITANE∞ v30.0.0 — APPEARANCE FLOATING INTEGRATION (YOLO OPT-1: Three.js lazy)
 //   Connect AppearanceEngine v24.9 with Three.js Materials
 // ═══════════════════════════════════════════════════════════════════════════
 

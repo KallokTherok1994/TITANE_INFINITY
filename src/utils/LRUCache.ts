@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v24.2.1 — LRU Cache Implementation
+ * TITANE∞ v30.0.0 — LRU Cache Implementation
  * Efficient bounded cache with automatic eviction
  * © 2025 Humain Total / Kevin Thibault / TITANE Team
  */

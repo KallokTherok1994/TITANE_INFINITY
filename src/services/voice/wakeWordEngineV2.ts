@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v19.5.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.5 — WAKE WORD ENGINE v2.0 (COGNITIVE)
+ *   TITANE∞ v30.0.0 — WAKE WORD ENGINE v2.0 (COGNITIVE)
  *
  *   Détection wake word cognitive avec:
  *   - Voice Fingerprint Learning (adaptation timbre personnel)

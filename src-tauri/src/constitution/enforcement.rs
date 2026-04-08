@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — ENFORCEMENT ENGINE
+//! TITANE∞ v30.0.0 — ENFORCEMENT ENGINE
 //! Super Prompt #13 — Application des règles constitutionnelles et sanctions
 //! ═══════════════════════════════════════════════════════════════════════════════
 

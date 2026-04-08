@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — Context Detector
+ * TITANE∞ v30.0.0 — Context Detector
  * Détection du contexte d'affichage et d'interaction
  */
 

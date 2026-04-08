@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20.0Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
@@ -14,7 +14,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v20.0Ω — Unified Memory Service
+ *   TITANE∞ v30.0.0 — Unified Memory Service
  *   Service unifié pour gérer la mémoire à trois niveaux (STM/MTM/LTM)
  *   Connecté aux fichiers mémoire JSON et au MemoryBridge
  * ═══════════════════════════════════════════════════════════════

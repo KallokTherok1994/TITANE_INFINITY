@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v17 - Watchdog Alerts
+ * TITANE∞ v30.0.0 - Watchdog Alerts
  *
  * Système d'alertes à trois niveaux
  */

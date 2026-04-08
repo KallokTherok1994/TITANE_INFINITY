@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — HEALING EXECUTOR
+//! TITANE∞ v30.0.0 — HEALING EXECUTOR
 //! Super Prompt #4 — Exécution des actions de réparation avec historique
 //! ═══════════════════════════════════════════════════════════════════════════════
 

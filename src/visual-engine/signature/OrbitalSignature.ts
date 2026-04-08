@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — Orbital Signature
+ * TITANE∞ v30.0.0 — Orbital Signature
  * Mouvement orbital unique et signature de TITANE∞
  *
  * Les anneaux orbitaux suivent une chorégraphie unique :

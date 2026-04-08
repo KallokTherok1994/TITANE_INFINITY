@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// TITANE∞ v19.5.0 — CENTRE D'ORCHESTRATION COGNITIVE (OPUS #5/6/7)
+// TITANE∞ v30.0.0 — CENTRE D'ORCHESTRATION COGNITIVE (OPUS #5/6/7)
 // Fusion: Multi-AI + Nexus + Harmonia + Timeline + Cognitive State
 // ═══════════════════════════════════════════════════════════════════════════
 

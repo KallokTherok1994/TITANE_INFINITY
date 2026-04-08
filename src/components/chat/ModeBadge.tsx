@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v19.2Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v24.7 — MODE BADGE
+ *   TITANE∞ v30.0.0 — MODE BADGE
  *   Badge indicateur du mode actif avec tooltip
  *   Optimisé avec React.memo et useMemo pour performance
  * ═══════════════════════════════════════════════════════════════════════════════

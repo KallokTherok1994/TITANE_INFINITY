@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25 — System Types
+ * TITANE∞ v30.0.0 — System Types
  * Types transversaux pour configuration système
  *
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.

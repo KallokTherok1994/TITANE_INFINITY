@@ -1,4 +1,4 @@
-// TITANE∞ v18.2 — Proprietary License
+// TITANE∞ v30.0.0 — Proprietary License
 // © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 
 //! META MONITORING MODULE

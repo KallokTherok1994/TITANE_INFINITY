@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v19.8 - TESTS DE RÉGRESSION
+//   TITANE∞ v30.0.0 - TESTS DE RÉGRESSION
 //   Détection automatique de régressions système
 // ═══════════════════════════════════════════════════════════════
 

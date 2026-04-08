@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v23 — AVATAR COMMANDS (Tauri API)
+//   TITANE∞ v30.0.0 — AVATAR COMMANDS (Tauri API)
 //   Exposition des fonctionnalités avatar au frontend
 // ═══════════════════════════════════════════════════════════════════════════════
 

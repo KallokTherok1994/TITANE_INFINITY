@@ -1,4 +1,4 @@
-//! TITANE∞ v20Ω — Temporal Engine
+//! TITANE∞ v30.0.0 — Temporal Engine
 //! Moteur de gestion temporelle et undo/redo
 
 mod snapshot_manager;

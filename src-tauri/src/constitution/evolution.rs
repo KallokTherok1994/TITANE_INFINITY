@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — CONSTITUTIONAL EVOLUTION ENGINE
+//! TITANE∞ v30.0.0 — CONSTITUTIONAL EVOLUTION ENGINE
 //! Super Prompt #13 — Système d'amendements et évolution constitutionnelle
 //! ═══════════════════════════════════════════════════════════════════════════════
 

@@ -1,7 +1,7 @@
 use crate::error::TitaneError;
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v24 — ENGINE TRAIT & ORCHESTRATOR
+ * TITANE∞ v30.0.0 — ENGINE TRAIT & ORCHESTRATOR
  * Unified engine interface + orchestration
  * TRACKER #13
  * ═══════════════════════════════════════════════════════════════════════════

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v17.7 - Backend Global Self-Test
+ * TITANE∞ v30.0.0 - Backend Global Self-Test
  *
  * Test d'intégrité complet du backend Rust
  * Valide tous les engines, systèmes critiques, sécurité

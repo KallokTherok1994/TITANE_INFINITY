@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v26.2.0 — CONTEXT WINDOW MANAGER
+ * TITANE∞ v30.0.0 — CONTEXT WINDOW MANAGER
  * Intelligent token management to prevent API failures
  * P0 Security Fix - 2026-01-07
  * ═══════════════════════════════════════════════════════════════════════════

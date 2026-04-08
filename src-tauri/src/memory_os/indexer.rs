@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1 — MEMORY INDEXER
+//   TITANE∞ v30.0.0 — MEMORY INDEXER
 //   Super Prompt #12: Fast lookup indices for memory system
 //   Target: <5ms index lookup
 // ═══════════════════════════════════════════════════════════════

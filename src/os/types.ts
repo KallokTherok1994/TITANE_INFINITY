@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — OS Types
+ * TITANE∞ v30.0.0 — OS Types
  * Types pour l'intégration système
  */
 

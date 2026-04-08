@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v16 — SINGULARITY ENGINE (Cognitive Layer)
+//   TITANE∞ v30.0.0 — SINGULARITY ENGINE (Cognitive Layer)
 //   Unified engine: Nexus + Harmonia + Sentinel + Memory + Cognitive v16
 // ═══════════════════════════════════════════════════════════════
 

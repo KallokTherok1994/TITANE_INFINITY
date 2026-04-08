@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — Debugger Live OS Types
+ * TITANE∞ v30.0.0 — Debugger Live OS Types
  *
  * Types pour le système de débogage en temps réel
  *

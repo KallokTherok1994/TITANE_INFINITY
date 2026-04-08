@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — Visual Event Model (VEM)
+ * TITANE∞ v30.0.0 — Visual Event Model (VEM)
  * Modèle événementiel unifié pour le système visuel
  *
  * Le VEM déclare TOUS les événements visuels de TITANE∞ :

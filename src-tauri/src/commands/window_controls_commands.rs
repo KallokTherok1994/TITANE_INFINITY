@@ -1,4 +1,4 @@
-// TITANE_INFINITY v26.2.0 — Window Controls Commands
+// TITANE_INFINITY v30.0.0 — Window Controls Commands
 // Zoom & Fullscreen functionality
 // NOTE: Zoom handled client-side via CSS, server tracks state
 

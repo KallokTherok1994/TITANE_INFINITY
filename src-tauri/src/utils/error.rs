@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17.2.0 — UTILS: ERROR TYPES
+//   TITANE∞ v30.0.0 — UTILS: ERROR TYPES
 //   AppError, AppResult - Unified Error Handling
 // ═══════════════════════════════════════════════════════════════
 

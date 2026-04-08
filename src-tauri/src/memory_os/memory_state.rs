@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1 — MEMORY STATE (Data Models)
+//   TITANE∞ v30.0.0 — MEMORY STATE (Data Models)
 //   Super Prompt #12: Core memory structures and types
 // ═══════════════════════════════════════════════════════════════
 

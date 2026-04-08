@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — State Bridge
+ * TITANE∞ v30.0.0 — State Bridge
  * Synchronisation d'état entre frontend et backend
  */
 

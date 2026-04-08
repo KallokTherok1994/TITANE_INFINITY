@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v19.2Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
@@ -8,7 +8,7 @@ import { circuitBreaker } from './circuitBreaker';
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2Ω — AUTO-HEAL ENGINE (NOUVEAU MODULE)
+ *   TITANE∞ v30.0.0 — AUTO-HEAL ENGINE (NOUVEAU MODULE)
  *   PHASE 6Ω: Error detection, classification, health tracking + circuit-breaker-backed recovery.
  *   Pipeline: detectError() → classify() → action() → circuitBreaker.reset/recordFailure() → update-health-label() → log()
  *   Recovery actions (restart/purge/reset/reconnect/isolate) are wired to circuitBreaker.

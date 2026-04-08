@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v19.3.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.3 — UNIFIED VOICE HOOK
+ *   TITANE∞ v30.0.0 — UNIFIED VOICE HOOK
  *
  *   ⚠️ DEPRECATED: Ce hook utilise Web Speech API qui ne fonctionne pas sur Linux.
  *

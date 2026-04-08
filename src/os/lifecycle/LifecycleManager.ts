@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — Lifecycle Manager
+ * TITANE∞ v30.0.0 — Lifecycle Manager
  * Gestion du cycle de vie de l'application
  */
 

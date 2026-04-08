@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1Ω — SINGULARITY OS - REASONING ENGINE
+//   TITANE∞ v30.0.0 — SINGULARITY OS - REASONING ENGINE
 //   Super Prompt #13: Chain-of-thought controlled reasoning
 //   Thoughts are controlled, compressed, never exposed raw
 // ═══════════════════════════════════════════════════════════════

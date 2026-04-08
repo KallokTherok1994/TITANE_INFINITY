@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.3.0 — BODY GESTURE FLUIDITY ENGINE (YOLO OPT-1: Three.js lazy)
+//   TITANE∞ v30.0.0 — BODY GESTURE FLUIDITY ENGINE (YOLO OPT-1: Three.js lazy)
 //   Enhanced IK smoother, posture dynamics, gesture-voice synchronization
 // ═══════════════════════════════════════════════════════════════════════════
 

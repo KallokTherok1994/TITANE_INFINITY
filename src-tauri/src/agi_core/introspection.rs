@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — INTROSPECTION ENGINE
+//! TITANE∞ v30.0.0 — INTROSPECTION ENGINE
 //! Super Prompt #11 — Auto-analyse cognitive et conscience de soi
 //! ═══════════════════════════════════════════════════════════════════════════════
 

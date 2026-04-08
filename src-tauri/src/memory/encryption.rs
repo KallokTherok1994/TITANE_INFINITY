@@ -1,4 +1,4 @@
-// TITANE∞ v15 - Memory Encryption
+// TITANE∞ v30.0.0 - Memory Encryption
 // AES-256-GCM encryption for conversation data
 // Clean architecture v15: documented, production-ready
 // AES-256-GCM encryption with Argon2id key derivation

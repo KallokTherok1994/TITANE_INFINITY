@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — EMOTION ENGINE
+//! TITANE∞ v30.0.0 — EMOTION ENGINE
 //! Super Prompt #9 — Détection et gestion des émotions dans la conversation
 //! ═══════════════════════════════════════════════════════════════════════════════
 

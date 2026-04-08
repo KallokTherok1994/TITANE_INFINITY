@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.0 — LIP-SYNC PRECISION ENGINE v2
+//   TITANE∞ v30.0.0 — LIP-SYNC PRECISION ENGINE v2
 //   Ultra-precise phoneme-to-morph mapping with ElevenLabs integration
 // ═══════════════════════════════════════════════════════════════════════════
 

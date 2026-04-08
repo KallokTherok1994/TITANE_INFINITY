@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26 - Test Utilities Ambient Module Declaration
+ * TITANE∞ v30.0.0 - Test Utilities Ambient Module Declaration
  * Resolves TypeScript strict mode re-export detection issues
  */
 

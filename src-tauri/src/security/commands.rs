@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v19.3 — Security Commands
+ * TITANE∞ v30.0.0 — Security Commands
  *
  * Commandes Tauri pour rate limiting, audit logging, et sécurité
  */

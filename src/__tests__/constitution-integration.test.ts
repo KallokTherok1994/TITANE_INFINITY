@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25.3.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
@@ -20,7 +20,7 @@ import {
   CONSTITUTIONAL_CONFIG,
 } from '../core/prompts/constitution';
 
-describe('🏛️ Constitution TITANE∞ v1.0 — Intégration Chat IA', () => {
+describe('🏛️ Constitution TITANE∞ v30.0.0 — Intégration Chat IA', () => {
   describe('⚖️ Loi #2 — Clarity Audit Detection', () => {
     it('détecte demandes complexes nécessitant audit', () => {
       const complexMessages = [

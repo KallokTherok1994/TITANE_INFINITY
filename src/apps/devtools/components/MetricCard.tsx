@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20.0 — MetricCard Component
+ * TITANE∞ v30.0.0 — MetricCard Component
  * Super Prompt #3: DevTools UI Advanced Suite
  * @license MIT
  */

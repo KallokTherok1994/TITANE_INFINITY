@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25 - Hook Test Utilities
+ * TITANE∞ v30.0.0 - Hook Test Utilities
  * Wrapper for testing React hooks with proper context
  */
 

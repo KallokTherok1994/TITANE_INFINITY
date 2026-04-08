@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v19.4.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.4 — VOICE CONTROL PANEL WITH WAKE WORD
+ *   TITANE∞ v30.0.0 — VOICE CONTROL PANEL WITH WAKE WORD
  *
  *   Panneau de contrôle unifié pour la voix:
  *   - Mode push-to-talk classique

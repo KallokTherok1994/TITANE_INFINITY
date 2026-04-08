@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v15 — SENTINEL MODULE
+//   TITANE∞ v30.0.0 — SENTINEL MODULE
 //   System monitoring and protection
 // ═══════════════════════════════════════════════════════════════
 

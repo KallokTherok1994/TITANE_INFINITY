@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — Particle Signature
+ * TITANE∞ v30.0.0 — Particle Signature
  * Distribution et émission de particules signature
  *
  * Système de particules unique à TITANE∞ :

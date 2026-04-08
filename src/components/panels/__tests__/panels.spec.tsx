@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — E2E Tests for Adaptive Panels
+ * TITANE∞ v30.0.0 — E2E Tests for Adaptive Panels
  * Comprehensive tests for ChatPanel, MemoryPanel, GovernancePanel
  */
 

@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v24.3.0 - Metrics Types
+ * TITANE∞ v30.0.0 - Metrics Types
  * Type definitions for service metrics tracking
  * ═══════════════════════════════════════════════════════════════
  */

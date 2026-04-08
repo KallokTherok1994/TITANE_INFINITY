@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — META-LEARNING ENGINE
+//! TITANE∞ v30.0.0 — META-LEARNING ENGINE
 //! Super Prompt #11 — Apprentissage sur l'apprentissage, adaptation de stratégies
 //! ═══════════════════════════════════════════════════════════════════════════════
 

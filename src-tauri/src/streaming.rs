@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v21.1Ω — STREAMING IPC FOR REAL-TIME RESPONSES
+//   TITANE∞ v30.0.0 — STREAMING IPC FOR REAL-TIME RESPONSES
 //   Super-Prompt B3: Reduce TTFT from 430ms to <100ms
 // ═══════════════════════════════════════════════════════════════
 

@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v24 — ORCHESTRATION META CENTER (Fusion Complete)
+ * TITANE∞ v30.0.0 — ORCHESTRATION META CENTER (Fusion Complete)
  * Centre unifié d'orchestration: Meta + Cognitive + Engines
  * Phase #9 — Complete
  *

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20Ω — COGNITIVE SCHEDULER
+//   TITANE∞ v30.0.0 — COGNITIVE SCHEDULER
 //   Priority-based task scheduling with load management
 //   Super Prompt #11 — Phase 3
 // ═══════════════════════════════════════════════════════════════

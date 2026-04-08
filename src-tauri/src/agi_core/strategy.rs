@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — STRATEGY OPTIMIZER
+//! TITANE∞ v30.0.0 — STRATEGY OPTIMIZER
 //! Super Prompt #11 — Sélection et optimisation de stratégies
 //! ═══════════════════════════════════════════════════════════════════════════════
 

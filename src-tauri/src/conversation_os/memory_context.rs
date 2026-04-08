@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — MEMORY CONTEXT ENGINE
+//! TITANE∞ v30.0.0 — MEMORY CONTEXT ENGINE
 //! Super Prompt #9 — Intégration mémoire et contexte conversationnel
 //! ═══════════════════════════════════════════════════════════════════════════════
 

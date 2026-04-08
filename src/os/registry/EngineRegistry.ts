@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — Engine Registry
+ * TITANE∞ v30.0.0 — Engine Registry
  * Registre des moteurs cognitifs
  */
 

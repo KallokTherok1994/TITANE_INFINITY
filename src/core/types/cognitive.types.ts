@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25 — Cognitive Types
+ * TITANE∞ v30.0.0 — Cognitive Types
  * Types transversaux pour le système cognitif
  *
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — Micro-Interactions Index
+ * TITANE∞ v30.0.0 — Micro-Interactions Index
  * Centralise toutes les micro-interactions globales
  *
  * Export unifié pour faciliter l'usage dans l'application

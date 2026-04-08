@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v20Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v20Ω — SELF-VALIDATION ENGINE
+ *   TITANE∞ v30.0.0 — SELF-VALIDATION ENGINE
  *   Tests automatisés du sous-système IA
  * ═══════════════════════════════════════════════════════════════════
  */
@@ -16,7 +16,7 @@ import { IAService } from '@/services/ia/ia.api';
 import { metricsEngine } from '@/services/ai/metricsEngine';
 import { autoHealEngine } from '@/services/ai/autoHealEngine';
 
-describe('TITANE∞ v20Ω — Self-Validation Suite', () => {
+describe('TITANE∞ v30.0.0 — Self-Validation Suite', () => {
   describe('Phase F.1 — Orchestrator Health', () => {
     it('should have all providers initialized', async () => {
       const status = await aiOrchestrator.getProvidersStatus();

@@ -1,4 +1,4 @@
-// TITANE∞ v14.1 - Coaching Professionnel
+// TITANE∞ v30.0.0 - Coaching Professionnel
 // Standards ICF (International Coaching Federation)
 
 #![allow(dead_code)]

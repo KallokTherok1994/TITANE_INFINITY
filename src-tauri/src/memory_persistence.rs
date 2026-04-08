@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════
-//! TITANE∞ v24.6 - Memory Persistence Module (SECURE)
+//! TITANE∞ v30.0.0 - Memory Persistence Module (SECURE)
 //! Classification automatique + stockage chiffré + déduplication SHA256
 //! ═══════════════════════════════════════════════════════════════════
 

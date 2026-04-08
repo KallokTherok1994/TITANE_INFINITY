@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v20.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v20.0 — VOICE FINGERPRINTING TAURI INTEGRATION
+ *   TITANE∞ v30.0.0 — VOICE FINGERPRINTING TAURI INTEGRATION
  *   P0-2: Layer 3 Anti-Feedback (MFCC-based acoustic detection)
  *
  *   Connects frontend to Rust voice_fingerprint.rs backend

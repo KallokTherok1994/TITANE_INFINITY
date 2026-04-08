@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — TEMPORAL ENGINE INTEGRATIONS
+//! TITANE∞ v30.0.0 — TEMPORAL ENGINE INTEGRATIONS
 //! Super Prompt #18 — Intégrations avec Kernel, OMEGA, Memory, AGI
 //! ═══════════════════════════════════════════════════════════════════════════════
 

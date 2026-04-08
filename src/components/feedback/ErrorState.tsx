@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20.0 — ErrorState Component
+ * TITANE∞ v30.0.0 — ErrorState Component
  * Super Prompt #2: Frontend Polish & UX Mastering
  * @license MIT
  */

@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — CHARTE DES DROITS
+//! TITANE∞ v30.0.0 — CHARTE DES DROITS
 //! Super Prompt #13 — Droits fondamentaux des utilisateurs et du système
 //! ═══════════════════════════════════════════════════════════════════════════════
 

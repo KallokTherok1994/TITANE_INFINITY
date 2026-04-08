@@ -1,12 +1,12 @@
 // @ts-nocheck
 /**
- * TITANE∞ v22Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v22Ω — COGNITIVE KERNEL VALIDATION TESTS
+ *   TITANE∞ v30.0.0 — COGNITIVE KERNEL VALIDATION TESTS
  *   Tests unitaires pour le noyau cognitif
  * ═══════════════════════════════════════════════════════════════════
  */

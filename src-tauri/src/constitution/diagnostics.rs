@@ -1,5 +1,5 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v20Ω — CONSTITUTIONAL DIAGNOSTICS
+//! TITANE∞ v30.0.0 — CONSTITUTIONAL DIAGNOSTICS
 //! Super Prompt #13 — Surveillance et diagnostic de santé constitutionnelle
 //! ═══════════════════════════════════════════════════════════════════════════════
 

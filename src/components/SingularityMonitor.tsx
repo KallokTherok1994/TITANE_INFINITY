@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- * TITANE∞ v15 — SINGULARITY ENGINE MONITOR
+ * TITANE∞ v30.0.0 — SINGULARITY ENGINE MONITOR
  * Composant pour monitorer le SingularityEngine v15 en temps réel
  * ═══════════════════════════════════════════════════════════════════
  */

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — Event Bus
+ * TITANE∞ v30.0.0 — Event Bus
  * Bus d'événements central
  */
 

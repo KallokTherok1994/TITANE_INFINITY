@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v22.0.0 - Enhanced MetricsDisplay Component
+ * TITANE∞ v30.0.0 - Enhanced MetricsDisplay Component
  * Real-time metrics visualization with charts and trends
  */
 

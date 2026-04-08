@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1 — MEMORY INSPECTOR
+//   TITANE∞ v30.0.0 — MEMORY INSPECTOR
 //   DevTools OS — Memory system exploration and debugging
 //   Super Prompt #9: STM/MTM/LTM inspection, search, export
 // ═══════════════════════════════════════════════════════════════

@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v1.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v1.0 — UNIFIED MEMORY SYSTEM (LEGACY LOCAL HELPER)
+ *   TITANE∞ v30.0.0 — UNIFIED MEMORY SYSTEM (LEGACY LOCAL HELPER)
  *   Architecture STM / MTM / LTM minimale et stable
  *
  *   STM (Short-Term Memory)  : 50 derniers messages, expire 5min

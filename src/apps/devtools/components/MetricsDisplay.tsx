@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v22.0 — MetricsDisplay Component
+ * TITANE∞ v30.0.0 — MetricsDisplay Component
  * Real-time dashboard metrics (CSS-only version, Chart.js removed)
  */
 

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20Ω — KERNEL RUNTIME
+//   TITANE∞ v30.0.0 — KERNEL RUNTIME
 //   Stable async runtime with thread pool and timeout guarantees
 //   Super Prompt #11 — Phase 2
 // ═══════════════════════════════════════════════════════════════

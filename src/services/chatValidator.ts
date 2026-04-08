@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v15 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v15 — NEXUS & SENTINEL CHAT VALIDATOR
+ *   TITANE∞ v30.0.0 — NEXUS & SENTINEL CHAT VALIDATOR
  *   Validation cohérence + détection anomalies dans réponses IA
  * ═══════════════════════════════════════════════════════════════════
  */

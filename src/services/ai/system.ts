@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v20Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v20Ω+ — AI SYSTEM EXPORTS
+ *   TITANE∞ v30.0.0 — AI SYSTEM EXPORTS
  *   Point d'entrée centralisé pour le sous-système IA complet
  * ═══════════════════════════════════════════════════════════════════
  */

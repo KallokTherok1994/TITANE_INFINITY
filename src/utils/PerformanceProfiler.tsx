@@ -1,6 +1,6 @@
 /**
  * ╔═══════════════════════════════════════════════════════════════════╗
- * ║   TITANE∞ v19.5.2 — React Performance Profiler                    ║
+ * ║   TITANE∞ v30.0.0 — React Performance Profiler                    ║
  * ║   PHASE 4.3: Runtime performance measurement component            ║
  * ╚═══════════════════════════════════════════════════════════════════╝
  */

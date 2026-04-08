@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v25.3.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   CONSTITUTION TITANE∞ v1.0 — INTÉGRATION CHAT IA
+ *   CONSTITUTION TITANE∞ v30.0.0 — INTÉGRATION CHAT IA
  *   Synthèse des Super Prompts #12 (Constitution) + #1-#11 (Lois)
  *   Référence: SUPER_PROMPT_12.md + AUDIT_FINAL_13.md
  * ═══════════════════════════════════════════════════════════════════

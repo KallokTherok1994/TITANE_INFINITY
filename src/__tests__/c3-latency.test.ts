@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v27.0.0 — PHASE C3 LATENCY BOUNDARIES TESTS
+ * TITANE∞ v30.0.0 — PHASE C3 LATENCY BOUNDARIES TESTS
  * ═════════════════════════════════════════════════════════════════════════════
  * Test Suite for PHASE C3: LATENCY BOUNDARIES (GATE_LATENCY)
  * Validates: Global timeout (52s), per-provider timeout (50s), max retries (2)

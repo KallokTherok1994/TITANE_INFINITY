@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v27.0.0 — PHASE C4 MEMORY METRICS TESTS
+ * TITANE∞ v30.0.0 — PHASE C4 MEMORY METRICS TESTS
  * ═════════════════════════════════════════════════════════════════════════════
  * Test Suite for PHASE C4: MEMORY METRICS (GATE_MEMORY)
  * Validates: Memory timing + injection bounds

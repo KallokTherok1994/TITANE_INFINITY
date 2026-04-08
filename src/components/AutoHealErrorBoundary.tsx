@@ -1,4 +1,4 @@
-// TITANE∞ v16.0 — Auto-Heal Error Boundary React
+// TITANE∞ v30.0.0 — Auto-Heal Error Boundary React
 import { Component, ErrorInfo, ReactNode } from 'react';
 import { logger } from '@/lib/logger';
 import { autoHealClient } from '../utils/autoHealClient';

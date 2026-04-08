@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v19.5.2 — Batch Request System
+//   TITANE∞ v30.0.0 — Batch Request System
 //   P2-3: Batch multiple IPC calls into single request
 // ═══════════════════════════════════════════════════════════════
 

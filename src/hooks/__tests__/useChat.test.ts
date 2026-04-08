@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v26.2.3+ — Test Suite
+ * TITANE∞ v30.0.0 — Test Suite
  * Tests unitaires pour useChat.ts (KERNEL OMNIS)
  *
  * Coverage ciblée:

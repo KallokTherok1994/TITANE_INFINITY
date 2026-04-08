@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v19.2.0 - Feature Flags Configuration
+ * TITANE∞ v30.0.0 - Feature Flags Configuration
  * ═══════════════════════════════════════════════
  *
  * Contrôle centralisé des features optionnelles et appels externes

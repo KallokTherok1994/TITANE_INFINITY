@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — UI Layer Hierarchy System
+ * TITANE∞ v30.0.0 — UI Layer Hierarchy System
  * Système hiérarchique de gestion des couches UI
  *
  * Ce système définit l'architecture en couches de TITANE∞ UI,

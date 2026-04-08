@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1 — ANALYZER ENGINE
+//   TITANE∞ v30.0.0 — ANALYZER ENGINE
 //   DevTools OS — Cognitive audit and structural analysis
 //   Super Prompt #9: Coherence, risks, stability, recommendations
 // ═══════════════════════════════════════════════════════════════

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17.0 — TAURI BRIDGE SECURITY HARDENING
+//   TITANE∞ v30.0.0 — TAURI BRIDGE SECURITY HARDENING
 //   Command whitelist, secure invoke, parameter/response validation
 // ═══════════════════════════════════════════════════════════════
 

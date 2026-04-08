@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1Ω — OMEGA PIPELINE v20Ω + vFinal Extensions
+//   TITANE∞ v30.0.0 — OMEGA PIPELINE v30.0.0
 //   Super Prompt #4 + #15 + #8: Final optimized cognitive pipeline
 //   Router → Executor → Merger → Guardrails → Output + Self-Healing
 //   NEW: Context v2, Memory Bridge, Adaptive Router, Events

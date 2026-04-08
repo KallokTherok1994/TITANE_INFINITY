@@ -1,4 +1,4 @@
-// TITANE∞ v13 - Semantic Search Engine
+// TITANE∞ v30.0.0 - Semantic Search Engine
 // Moteur de recherche sémantique avec indexation vectorielle et graphe de connaissance
 
 pub mod context;

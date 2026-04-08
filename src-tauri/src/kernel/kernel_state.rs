@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20Ω — KERNEL STATE
+//   TITANE∞ v30.0.0 — KERNEL STATE
 //   Source of truth for kernel internal state
 //   Super Prompt #11 — Phase 6
 // ═══════════════════════════════════════════════════════════════

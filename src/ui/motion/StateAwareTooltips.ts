@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — State-Aware Tooltips
+ * TITANE∞ v30.0.0 — State-Aware Tooltips
  * Micro-interaction : tooltips colorés selon le contexte cognitif
  *
  * Tooltips intelligents qui s'adaptent à l'état cognitif + émotionnel

@@ -1,4 +1,4 @@
-// TITANE∞ v14.1 - SelfHeal Twin
+// TITANE∞ v30.0.0 - SelfHeal Twin
 pub struct SelfHealTwin;
 
 impl SelfHealTwin {

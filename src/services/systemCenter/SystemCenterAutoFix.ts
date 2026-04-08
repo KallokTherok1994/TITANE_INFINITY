@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v21.0.0 — Proprietary License
+ * TITANE_INFINITY v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
@@ -748,7 +748,7 @@ if (${error.componentName?.toLowerCase() || 'component'}Error) {
    - Fallback states (useState defaults)
    - Guard clauses (typeof checks)
    - ErrorBoundary wrappers
-4. Régénérer UI elements avec structure TITANE∞ v21
+4. Régénérer UI elements avec structure TITANE∞ v30.0.0
 5. Tester rendu isolé
 6. Log dans devtools_autofix_history
 

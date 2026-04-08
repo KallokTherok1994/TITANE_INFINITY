@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — Tauri Auto-Repair Engine
+ * TITANE∞ v30.0.0 — Tauri Auto-Repair Engine
  *
  * Système de réparation automatique pour résoudre tous les problèmes
  * TauriProtector / Singularity / Memory / Helios / Integrity

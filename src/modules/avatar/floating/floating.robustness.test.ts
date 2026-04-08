@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v24.12 — FLOATING WINDOW ROBUSTNESS TESTS
+//   TITANE∞ v30.0.0 — FLOATING WINDOW ROBUSTNESS TESTS
 //   Stress testing, edge cases, recovery scenarios
 // ═══════════════════════════════════════════════════════════════════════════
 

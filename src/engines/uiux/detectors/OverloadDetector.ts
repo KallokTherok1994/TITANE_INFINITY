@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — Overload Detector
+ * TITANE∞ v30.0.0 — Overload Detector
  * Détection de surcharge cognitive utilisateur
  */
 

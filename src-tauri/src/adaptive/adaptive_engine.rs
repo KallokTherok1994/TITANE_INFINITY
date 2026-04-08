@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v21 — ADAPTIVE OPTIMIZATION ENGINE
+//   TITANE∞ v30.0.0 — ADAPTIVE OPTIMIZATION ENGINE
 //   Surcouche d'intelligence adaptative au-dessus de SingularityState v∞
 //   Auto-optimisation continue basée sur l'observation des performances réelles
 // ═══════════════════════════════════════════════════════════════════════════════

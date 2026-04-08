@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v24.3.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v24.3.0 — CHAT ENGINE OMEGA (FlowEngine Reconstruction)
+ *   TITANE∞ v30.0.0 — CHAT ENGINE OMEGA (FlowEngine Reconstruction)
  *   Pipeline infaillible • Validation multi-niveaux • Auto-guérison
  *   Architecture: UI → useChat → chatEngine → orchestrator → providers → normalize → UI
  *   v22Ω AI Performance Optimizations: Parallel loading, -40% latency
@@ -1281,7 +1281,7 @@ Format: [Audit complet] + [Réponse utilisateur]
     if (this.pipelineFailures <= 2) {
       emergencyContent = `🔄 **Auto-réparation OMEGA engagée** (Incident #${this.pipelineFailures})
 
-Le système cognitif TITANE∞ v19.2Ω s'est automatiquement restauré. Je reste pleinement opérationnel.
+Le système cognitif TITANE∞ v30.0.0 s'est automatiquement restauré. Je reste pleinement opérationnel.
 
 **Ta question** : "${message.substring(0, 100)}${message.length > 100 ? '...' : ''}"
 
@@ -2616,7 +2616,7 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
       return [
         {
           role: 'system',
-          content: systemPrompt || `TITANE∞ v19.2Ω - Mode ${modeConfig.name} (Emergency)`,
+          content: systemPrompt || `TITANE∞ v30.0.0 - Mode ${modeConfig.name} (Emergency)`,
           timestamp: Date.now(),
         },
         ...history.slice(-3), // Minimal history
@@ -2817,7 +2817,7 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
         : stablePrefix;
     } catch (error) {
       logger.warn('buildSystemPrompt failed', { error });
-      return `TITANE∞ v19.2Ω - Mode ${modeConfig.name} (Emergency Mode)`;
+      return `TITANE∞ v30.0.0 - Mode ${modeConfig.name} (Emergency Mode)`;
     }
   }
 
@@ -3151,7 +3151,7 @@ Profil: OMEGA — Puissance maximale, aucun compromis.
    */
   private calculateImportance(mode: ChatMode, message: string): number {
     const modeImportance: Record<ChatMode, number> = {
-      // Modes TITANE∞ v21
+      // Modes TITANE∞ v30.0.0
       reflection: 0.8,
       creation: 0.7,
       strategy: 0.7,

@@ -1,4 +1,4 @@
-// TITANE∞ v14.1 - Digital Twin Engine
+// TITANE∞ v30.0.0 - Digital Twin Engine
 // Jumeau numérique vivant avec perception émotionnelle, analyse comportementale et auto-évolution
 
 #![allow(dead_code)]

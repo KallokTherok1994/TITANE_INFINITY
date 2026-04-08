@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v24 — USE LIVING ENGINES HOOK (Tauri-Ready)
+ *   TITANE∞ v30.0.0 — USE LIVING ENGINES HOOK (Tauri-Ready)
  *   Hook React pour synchroniser Persona Engine (Rust ou TypeScript)
  * ═══════════════════════════════════════════════════════════════
  */
@@ -143,11 +143,11 @@ export const useLivingEngines = (updateInterval = 100) => {
         // Try Tauri bridge first
         if (personaTauriBridge.isTauriEnvironment()) {
           await initWithTimeout(personaTauriBridge.initialize(), 4000);
-          console.log('🌟 TITANE∞ v24 - Persona Engine (Rust/Tauri) Initialized');
+          console.log('🌟 TITANE∞ v30.0.0 - Persona Engine (Rust/Tauri) Initialized');
         } else {
           // Fallback to TypeScript engine
           await personaEngine.initialize();
-          console.log('🌟 TITANE∞ v24 - Persona Engine (TypeScript) Initialized');
+          console.log('🌟 TITANE∞ v30.0.0 - Persona Engine (TypeScript) Initialized');
         }
 
         setEnginesState(prev => ({ ...prev, initialized: true }));

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v27.0.0 — C1 CONTRACT VALIDATION TESTS
+ * TITANE∞ v30.0.0 — C1 CONTRACT VALIDATION TESTS
  * ═════════════════════════════════════════════════════════════════════════════
  * Test Suite for PHASE C1: CONTRACT ENFORCEMENT (GATE_CONTRACT)
  * Validates: system_prompt non-null + provider enum strict type safety

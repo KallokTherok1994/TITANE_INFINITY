@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v19.0.0 — ENGINE SUBSCRIPTION HOOK
+ * TITANE∞ v30.0.0 — ENGINE SUBSCRIPTION HOOK
  * Hook React pour s'abonner aux mises à jour des engines (remplace polling)
  * ═══════════════════════════════════════════════════════════════
  */

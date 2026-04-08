@@ -1,6 +1,6 @@
 use crate::cognitive::security::*;
 /**
- * TITANE∞ v17 - Cognitive Self-Test
+ * TITANE∞ v30.0.0 - Cognitive Self-Test
  *
  * Tests automatisés pour validation cognitive system
  */

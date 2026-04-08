@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v20Ω — Density Adapter
+ * TITANE∞ v30.0.0 — Density Adapter
  * Adaptation de la densité d'information
  */
 

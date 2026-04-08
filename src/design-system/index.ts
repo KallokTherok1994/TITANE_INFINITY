@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21.0.0 — Design System
+ * TITANE∞ v30.0.0 — Design System
  * Complete design system with v21 multi-dimensional visual states
  *
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.

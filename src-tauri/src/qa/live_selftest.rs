@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v19.8 - LIVE SELF-TEST ENGINE
+//   TITANE∞ v30.0.0 - LIVE SELF-TEST ENGINE
 //   Micro-tests périodiques avec auto-réparation
 // ═══════════════════════════════════════════════════════════════
 

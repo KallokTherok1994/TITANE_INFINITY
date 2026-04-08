@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v21 — E2E Tests for Zustand Stores
+ * TITANE∞ v30.0.0 — E2E Tests for Zustand Stores
  * Comprehensive tests for visualStore, panelsStore, effectsStore
  */
 

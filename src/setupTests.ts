@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v25.4.2 — Test Setup Configuration
+ * TITANE∞ v30.0.0 — Test Setup Configuration
  * Configures testing environment for React components
  */
 

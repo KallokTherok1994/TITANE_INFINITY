@@ -1,4 +1,4 @@
-// TITANE∞ v14.1 - Behavior Engine
+// TITANE∞ v30.0.0 - Behavior Engine
 // Observation des patterns comportementaux + cartographie dynamique
 
 #![allow(dead_code)]
