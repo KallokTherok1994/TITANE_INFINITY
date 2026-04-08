@@ -50,6 +50,7 @@ export function useHyperVision(
   const [error, setError] = useState<string | null>(null);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const refreshCycleInFlightRef = useRef(false);
 
   const refreshState = useCallback(async () => {
     try {
@@ -96,6 +97,20 @@ export function useHyperVision(
     }
   }, []);
 
+  const refreshAll = useCallback(async () => {
+    if (refreshCycleInFlightRef.current) {
+      return;
+    }
+
+    refreshCycleInFlightRef.current = true;
+
+    try {
+      await Promise.all([refreshMetrics(), refreshLayers(), refreshAnomalies()]);
+    } finally {
+      refreshCycleInFlightRef.current = false;
+    }
+  }, [refreshAnomalies, refreshLayers, refreshMetrics]);
+
   const startMonitoring = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -105,10 +120,16 @@ export function useHyperVision(
       setState(result);
       setIsMonitoring(true);
 
+      await refreshAll();
+
       // Start polling
-      if (autoRefresh && !intervalRef.current) {
-        intervalRef.current = setInterval(async () => {
-          await Promise.all([refreshMetrics(), refreshLayers(), refreshAnomalies()]);
+      if (autoRefresh) {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+        }
+
+        intervalRef.current = setInterval(() => {
+          void refreshAll();
         }, refreshInterval);
       }
     } catch (err) {
@@ -118,7 +139,7 @@ export function useHyperVision(
     } finally {
       setIsLoading(false);
     }
-  }, [autoRefresh, refreshInterval, refreshMetrics, refreshLayers, refreshAnomalies]);
+  }, [autoRefresh, refreshAll, refreshInterval]);
 
   const stopMonitoring = useCallback(async () => {
     try {

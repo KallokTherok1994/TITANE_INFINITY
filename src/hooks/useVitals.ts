@@ -65,6 +65,8 @@ export function useVitals(options: UseVitalsOptions = {}): UseVitalsReturn {
   // ✨ v24.2.1: Track current polling interval for debugging
   const [currentInterval, setCurrentInterval] = useState(pollInterval);
   const pollingRef = useRef<ReturnType<typeof createAdaptivePolling> | null>(null);
+  const mountedRef = useRef(true);
+  const vitalsRequestRef = useRef<Promise<SystemVitals | null> | null>(null);
 
   /**
    * Récupère les vitals système
@@ -72,43 +74,60 @@ export function useVitals(options: UseVitalsOptions = {}): UseVitalsReturn {
   const fetchVitals = useCallback(async () => {
     if (!enabled) return;
 
-    setState(prev => ({ ...prev, isLoading: true, error: null }));
-
-    try {
-      const vitalsData = await tauriClient.getSystemVitals();
-
-      // Parser les vitals (format peut varier selon le backend)
-      const vitals: SystemVitals = {
-        cpu: typeof vitalsData.cpu_usage === 'number' ? vitalsData.cpu_usage : 0,
-        memory: typeof vitalsData.memory_usage === 'number' ? vitalsData.memory_usage : 0,
-        disk: typeof vitalsData.disk_usage === 'number' ? vitalsData.disk_usage : 0,
-        uptime: typeof vitalsData.uptime === 'number' ? vitalsData.uptime : 0,
-        timestamp: Date.now(),
-      };
-
-      setState(prev => {
-        const newHistory = [...prev.history, vitals].slice(-MAX_HISTORY);
-        return {
-          current: vitals,
-          history: newHistory,
-          isLoading: false,
-          error: null,
-        };
-      });
-
-      return vitals;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch vitals';
-      console.error('❌ Vitals fetch error:', err);
-
-      setState(prev => ({
-        ...prev,
-        isLoading: false,
-        error: errorMessage,
-      }));
-
-      return null;
+    if (vitalsRequestRef.current) {
+      return vitalsRequestRef.current;
     }
+
+    if (mountedRef.current) {
+      setState(prev => ({ ...prev, isLoading: true, error: null }));
+    }
+
+    const request = (async () => {
+      try {
+        const vitalsData = await tauriClient.getSystemVitals();
+
+        // Parser les vitals (format peut varier selon le backend)
+        const vitals: SystemVitals = {
+          cpu: typeof vitalsData.cpu_usage === 'number' ? vitalsData.cpu_usage : 0,
+          memory: typeof vitalsData.memory_usage === 'number' ? vitalsData.memory_usage : 0,
+          disk: typeof vitalsData.disk_usage === 'number' ? vitalsData.disk_usage : 0,
+          uptime: typeof vitalsData.uptime === 'number' ? vitalsData.uptime : 0,
+          timestamp: Date.now(),
+        };
+
+        if (mountedRef.current) {
+          setState(prev => {
+            const newHistory = [...prev.history, vitals].slice(-MAX_HISTORY);
+            return {
+              current: vitals,
+              history: newHistory,
+              isLoading: false,
+              error: null,
+            };
+          });
+        }
+
+        return vitals;
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Failed to fetch vitals';
+        console.error('❌ Vitals fetch error:', err);
+
+        if (mountedRef.current) {
+          setState(prev => ({
+            ...prev,
+            isLoading: false,
+            error: errorMessage,
+          }));
+        }
+
+        return null;
+      } finally {
+        vitalsRequestRef.current = null;
+      }
+    })();
+
+    vitalsRequestRef.current = request;
+    return request;
   }, [enabled]);
 
   /**
@@ -160,6 +179,15 @@ export function useVitals(options: UseVitalsOptions = {}): UseVitalsReturn {
     return state.current.cpu > 80 || state.current.memory > 90 || state.current.disk > 95;
   }, [state]);
 
+  useEffect(() => {
+    mountedRef.current = true;
+
+    return () => {
+      mountedRef.current = false;
+      vitalsRequestRef.current = null;
+    };
+  }, []);
+
   // ✨ v24.2.1: Adaptive polling - slows down when idle or tab hidden
   useEffect(() => {
     if (!enabled) return;
@@ -196,8 +224,10 @@ export function useVitals(options: UseVitalsOptions = {}): UseVitalsReturn {
       };
     } else {
       // Fallback to fixed interval polling
-      fetchVitals();
-      const interval = setInterval(fetchVitals, pollInterval);
+      void fetchVitals();
+      const interval = setInterval(() => {
+        void fetchVitals();
+      }, pollInterval);
       return () => clearInterval(interval);
     }
   }, [pollInterval, enabled, adaptive, fetchVitals]);

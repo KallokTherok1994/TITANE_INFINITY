@@ -10,7 +10,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { tauriClient, type ProviderStatus } from '../services/tauriClient';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import { logger } from '@/lib/logger';
@@ -63,58 +63,84 @@ export function useConnection(): UseConnectionReturn {
   });
 
   const [isChecking, setIsChecking] = useState(false);
+  const mountedRef = useRef(true);
+  const checkInFlightRef = useRef<Promise<boolean> | null>(null);
 
   /**
    * Vérifie le statut de tous les providers
    */
   const checkConnection = useCallback(async () => {
-    setIsChecking(true);
+    if (checkInFlightRef.current) {
+      return checkInFlightRef.current;
+    }
+
     const startTime = Date.now();
 
-    try {
-      // Récupère le statut de tous les providers via Tauri
-      const providers = await tauriClient.chatCheckProviders();
-      const latency = Date.now() - startTime;
+    const request = (async () => {
+      if (mountedRef.current) {
+        setIsChecking(true);
+      }
 
-      // Trouve le premier provider disponible (cascade: gemini → ollama → local)
-      const availableProvider = providers.find(p => {
-        if (!p) return false;
-        return p.available;
-      });
-      const online = providers.some(p => {
-        if (!p) return false;
-        return p.available && p.provider !== 'local';
-      });
+      try {
+        // Récupère le statut de tous les providers via Tauri
+        const providers = await tauriClient.chatCheckProviders();
+        const latency = Date.now() - startTime;
 
-      setStatus({
-        online,
-        lastCheck: Date.now(),
-        provider: availableProvider?.provider ?? 'none',
-        availableProviders: providers,
-        latency,
-      });
+        // Trouve le premier provider disponible (cascade: gemini → ollama → local)
+        const availableProvider = providers.find(p => {
+          if (!p) return false;
+          return p.available;
+        });
+        const online = providers.some(p => {
+          if (!p) return false;
+          return p.available && p.provider !== 'local';
+        });
 
-      console.log(
-        `🔗 Connection check: ${providers.length} providers, best: ${availableProvider?.provider ?? 'none'}`
-      );
+        if (mountedRef.current) {
+          setStatus({
+            online,
+            lastCheck: Date.now(),
+            provider: availableProvider?.provider ?? 'none',
+            availableProviders: providers,
+            latency,
+          });
+        }
 
-      return online;
-    } catch (err) {
-      logger.error('Connection check error', { component: 'Connection' }, err as Error);
+        if (import.meta.env.DEV) {
+          logger.debug('Connection check complete', {
+            component: 'Connection',
+            providersCount: providers.length,
+            bestProvider: availableProvider?.provider ?? 'none',
+            latency,
+          });
+        }
 
-      // Honest failure state: do not invent a healthy local provider when backend truth is unavailable.
-      setStatus({
-        online: false,
-        lastCheck: Date.now(),
-        provider: 'none',
-        availableProviders: [],
-        latency: 0,
-      });
+        return online;
+      } catch (err) {
+        logger.error('Connection check error', { component: 'Connection' }, err as Error);
 
-      return false;
-    } finally {
-      setIsChecking(false);
-    }
+        // Honest failure state: do not invent a healthy local provider when backend truth is unavailable.
+        if (mountedRef.current) {
+          setStatus({
+            online: false,
+            lastCheck: Date.now(),
+            provider: 'none',
+            availableProviders: [],
+            latency: 0,
+          });
+        }
+
+        return false;
+      } finally {
+        checkInFlightRef.current = null;
+        if (mountedRef.current) {
+          setIsChecking(false);
+        }
+      }
+    })();
+
+    checkInFlightRef.current = request;
+    return request;
   }, []);
 
   /**
@@ -141,14 +167,25 @@ export function useConnection(): UseConnectionReturn {
     }
   }, [status.availableProviders]);
 
+  useEffect(() => {
+    mountedRef.current = true;
+
+    return () => {
+      mountedRef.current = false;
+      checkInFlightRef.current = null;
+    };
+  }, []);
+
   // Auto-check on mount
   useEffect(() => {
-    checkConnection();
+    void checkConnection();
   }, [checkConnection]);
 
   // Auto-check every 30 seconds
   useEffect(() => {
-    const interval = setInterval(checkConnection, REFRESH_INTERVALS.SLOW);
+    const interval = setInterval(() => {
+      void checkConnection();
+    }, REFRESH_INTERVALS.SLOW);
     return () => clearInterval(interval);
   }, [checkConnection]);
 

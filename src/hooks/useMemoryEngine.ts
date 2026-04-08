@@ -11,7 +11,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
 import type {
   MemoryContentType as PersistentMemoryContentType,
@@ -287,6 +287,8 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
   const [stats, setStats] = useState<MemoryStats | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+  const mountedRef = useRef(true);
+  const statsRefreshPromiseRef = useRef<Promise<void> | null>(null);
 
   // ═══ MEMOIZED ANALYSIS FUNCTIONS (v33.0.0 optimization) ═══
   // These were previously recalculated on every saveToMemory call
@@ -410,19 +412,47 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
   );
 
   // ═══ REFRESH STATS ═══
-  const refreshStats = useCallback(async () => {
-    try {
-      const persistentStats = normalizePersistentMemoryStats(
-        await tauriClient.persistentMemoryGetStats()
-      );
-      setStats(toLegacyStats(persistentStats));
-      setError(null);
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error('Failed to get stats');
-      setError(error);
-      console.error('[useMemoryEngine] Stats error:', error);
+  const runRefreshStats = useCallback(async (force = false): Promise<void> => {
+    if (statsRefreshPromiseRef.current) {
+      if (!force) {
+        return statsRefreshPromiseRef.current;
+      }
+
+      await statsRefreshPromiseRef.current;
     }
+
+    let request: Promise<void> | null = null;
+
+    request = (async () => {
+      try {
+        const persistentStats = normalizePersistentMemoryStats(
+          await tauriClient.persistentMemoryGetStats()
+        );
+
+        if (mountedRef.current) {
+          setStats(toLegacyStats(persistentStats));
+          setError(null);
+        }
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error('Failed to get stats');
+        if (mountedRef.current) {
+          setError(error);
+        }
+        console.error('[useMemoryEngine] Stats error:', error);
+      } finally {
+        if (statsRefreshPromiseRef.current === request) {
+          statsRefreshPromiseRef.current = null;
+        }
+      }
+    })();
+
+    statsRefreshPromiseRef.current = request;
+    return request;
   }, []);
+
+  const refreshStats = useCallback(async () => {
+    await runRefreshStats(false);
+  }, [runRefreshStats]);
 
   // ═══ SAVE TO MEMORY ═══
   const saveToMemory = useCallback(
@@ -489,7 +519,7 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
         });
 
         // Refresh stats après save
-        await refreshStats();
+        await runRefreshStats(true);
 
         return typeof id === 'string' && id.length > 0
           ? id
@@ -570,7 +600,7 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
 
       try {
         await tauriClient.persistentMemoryDeleteEntry({ entryId: id });
-        await refreshStats();
+        await runRefreshStats(true);
       } catch (err) {
         const error = err instanceof Error ? err : new Error('Failed to delete memory');
         setError(error);
@@ -603,7 +633,7 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
           await tauriClient.persistentMemoryDeleteEntry({ entryId: entry.id });
         }
 
-        await refreshStats();
+        await runRefreshStats(true);
       } catch (err) {
         const error = err instanceof Error ? err : new Error('Failed to clear memory');
         setError(error);
@@ -635,12 +665,23 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
     }
   }, [refreshStats]);
 
+  useEffect(() => {
+    mountedRef.current = true;
+
+    return () => {
+      mountedRef.current = false;
+      statsRefreshPromiseRef.current = null;
+    };
+  }, []);
+
   // ═══ AUTO-REFRESH STATS ═══
   useEffect(() => {
-    refreshStats();
+    void refreshStats();
 
     // Refresh toutes les 30s
-    const interval = setInterval(refreshStats, 30000);
+    const interval = setInterval(() => {
+      void refreshStats();
+    }, 30000);
 
     return () => clearInterval(interval);
   }, [refreshStats]);

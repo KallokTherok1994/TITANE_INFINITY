@@ -1,5 +1,5 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useDebuggerLiveOS } from '@/features/system-center/hooks/useDebuggerLiveOS';
 import { tauriClient } from '@/lib/tauriClient';
@@ -20,6 +20,11 @@ vi.mock('@/lib/tauriClient', () => ({
 }));
 
 describe('useDebuggerLiveOS', () => {
+  afterEach(() => {
+    vi.clearAllTimers();
+    vi.useRealTimers();
+  });
+
   beforeEach(() => {
     vi.clearAllMocks();
 
@@ -57,6 +62,55 @@ describe('useDebuggerLiveOS', () => {
       storage_size_mb: 2.5,
     });
     vi.mocked(tauriClient.memoryPrune).mockResolvedValue(0);
+  });
+
+  it('avoids overlapping live-monitor refreshes while the previous capture is still pending', async () => {
+    vi.useFakeTimers();
+
+    let releaseHealthCheck: ((value: { healthy: boolean; status: string }) => void) | null =
+      null;
+
+    vi.mocked(tauriClient.getSystemHealth)
+      .mockResolvedValueOnce({
+        healthy: true,
+        status: 'healthy',
+      })
+      .mockImplementationOnce(
+        () =>
+          new Promise(resolve => {
+            releaseHealthCheck =
+              resolve as (value: { healthy: boolean; status: string }) => void;
+          })
+      );
+
+    const { result } = renderHook(() => useDebuggerLiveOS());
+
+    await act(async () => {
+      await result.current.start('LiveMonitor', {
+        autoRefresh: true,
+        refreshInterval: 100,
+      });
+    });
+
+    expect(tauriClient.getSystemHealth).toHaveBeenCalledTimes(1);
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(100);
+    });
+
+    expect(tauriClient.getSystemHealth).toHaveBeenCalledTimes(2);
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(100);
+    });
+
+    expect(tauriClient.getSystemHealth).toHaveBeenCalledTimes(2);
+
+    await act(async () => {
+      releaseHealthCheck?.({ healthy: true, status: 'healthy' });
+      await Promise.resolve();
+      await result.current.stop();
+    });
   });
 
   it('marks HighMemory as manual-only and does not call memoryPrune auto-fix', async () => {

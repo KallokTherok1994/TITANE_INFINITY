@@ -87,6 +87,12 @@ describe('useEngineSubscription Hook', () => {
     expect(result.current).toEqual(storeSlice);
   });
 
+  it('should disable global core auto-refresh for command-only engine subscriptions', () => {
+    renderHook(() => useEngineSubscription('helios'));
+
+    expect(mockedUseTitaneCore).toHaveBeenCalledWith(false);
+  });
+
   it('should fetch engine data on mount and update loading flags', async () => {
     const mockData = { status: 'active', uptime: 1000 };
     coreMock.getNexusGraph.mockResolvedValue(mockData);
@@ -130,6 +136,33 @@ describe('useEngineSubscription Hook', () => {
     await advanceTimers(5000);
 
     expect(coreMock.getNexusGraph).toHaveBeenCalledTimes(2);
+  });
+
+  it('should avoid overlapping polling requests while the previous engine fetch is still pending', async () => {
+    let releaseRequest: ((value: { status: string }) => void) | null = null;
+
+    coreMock.getWatchdogData.mockImplementation(
+      () =>
+        new Promise(resolve => {
+          releaseRequest = resolve;
+        })
+    );
+
+    const { unmount } = renderHook(() => useEngineSubscription('watchdog'));
+    await flushAsyncUpdates();
+
+    expect(coreMock.getWatchdogData).toHaveBeenCalledTimes(1);
+
+    await advanceTimers(2000);
+
+    expect(coreMock.getWatchdogData).toHaveBeenCalledTimes(1);
+
+    await act(async () => {
+      releaseRequest?.({ status: 'active' });
+      await Promise.resolve();
+    });
+
+    unmount();
   });
 
   it('should cleanup polling on unmount', async () => {

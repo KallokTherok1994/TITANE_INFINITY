@@ -211,7 +211,11 @@ export function useConversationEngine(
 
   // Refs
   const isProcessingRef = useRef(false);
+  const mountedRef = useRef(true);
   const healthCheckIntervalRef = useRef<number | null>(null);
+  const healthCheckPromiseRef = useRef<Promise<ConversationHealthReport | null> | null>(
+    null
+  );
 
   // ✅ IMPORT MEMORY SYSTEM
   const { saveMessage } = useChatMemory({ mode: currentMode });
@@ -264,6 +268,55 @@ export function useConversationEngine(
     loadStoredMessages();
   }, [currentMode]);
 
+  useEffect(() => {
+    mountedRef.current = true;
+
+    return () => {
+      mountedRef.current = false;
+      healthCheckPromiseRef.current = null;
+
+      if (healthCheckIntervalRef.current) {
+        clearInterval(healthCheckIntervalRef.current);
+        healthCheckIntervalRef.current = null;
+      }
+    };
+  }, []);
+
+  const runHealthCheck = useCallback(async (): Promise<ConversationHealthReport | null> => {
+    if (healthCheckPromiseRef.current) {
+      return healthCheckPromiseRef.current;
+    }
+
+    let request: Promise<ConversationHealthReport | null> | null = null;
+    request = (async () => {
+      try {
+        const report = await healthCheck();
+
+        if (mountedRef.current) {
+          setHealthReport(report);
+        }
+
+        if (report.status === 'Critical') {
+          console.warn(
+            '[ConversationEngine] État critique détecté, auto-réparation en cours...'
+          );
+        }
+
+        return report;
+      } catch (err) {
+        console.error('[ConversationEngine] Health check failed:', err);
+        return null;
+      } finally {
+        if (healthCheckPromiseRef.current === request) {
+          healthCheckPromiseRef.current = null;
+        }
+      }
+    })();
+
+    healthCheckPromiseRef.current = request;
+    return request;
+  }, []);
+
   // ═══ HEALTH CHECK AUTOMATIQUE ═══
   useEffect(() => {
     const envEnabled = import.meta.env.VITE_CONVERSATION_HEALTHCHECK_ENABLED === '1';
@@ -280,41 +333,26 @@ export function useConversationEngine(
       options.autoHealthCheck === true ||
       (options.autoHealthCheck !== false && enabledByDefault);
 
-    if (enabled) {
-      // Health check périodique
-      healthCheckIntervalRef.current = window.setInterval(async () => {
-        try {
-          const report = await healthCheck();
-          setHealthReport(report);
-
-          // Auto-repair si critique
-          if (report.status === 'Critical') {
-            console.warn(
-              '[ConversationEngine] État critique détecté, auto-réparation en cours...'
-            );
-          }
-        } catch (err) {
-          console.error('[ConversationEngine] Health check failed:', err);
-        }
-      }, DEFAULT_HEALTH_CHECK_INTERVAL_MS);
+    if (!enabled) {
+      return;
     }
+
+    healthCheckIntervalRef.current = window.setInterval(() => {
+      void runHealthCheck();
+    }, DEFAULT_HEALTH_CHECK_INTERVAL_MS);
 
     return () => {
       if (healthCheckIntervalRef.current) {
         clearInterval(healthCheckIntervalRef.current);
+        healthCheckIntervalRef.current = null;
       }
     };
-  }, [options.autoHealthCheck]);
+  }, [options.autoHealthCheck, runHealthCheck]);
 
   // ═══ REFRESH HEALTH ═══
   const refreshHealth = useCallback(async () => {
-    try {
-      const report = await healthCheck();
-      setHealthReport(report);
-    } catch (err) {
-      console.error('[ConversationEngine] Health check error:', err);
-    }
-  }, []);
+    await runHealthCheck();
+  }, [runHealthCheck]);
 
   const buildSingleDoorEnvelope = useCallback((): ChatContextEnvelope | null => {
     const activeModuleContext = readActiveModuleContext();

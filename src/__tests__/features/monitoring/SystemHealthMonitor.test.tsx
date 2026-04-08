@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import { SystemHealthMonitor } from '@/components/monitoring/SystemHealthMonitor';
 import { secureInvoke } from '@/lib/security';
 
@@ -43,6 +43,7 @@ describe('SystemHealthMonitor Component', () => {
   afterEach(() => {
     vi.restoreAllMocks();
     vi.clearAllMocks();
+    vi.useRealTimers();
   });
 
   describe('Rendering', () => {
@@ -79,6 +80,50 @@ describe('SystemHealthMonitor Component', () => {
 
       render(<SystemHealthMonitor />);
       expect(await screen.findByText(/unknown error/i)).toBeInTheDocument();
+    });
+
+    it('should avoid overlapping metrics polls while the previous refresh is still pending', async () => {
+      vi.useFakeTimers();
+
+      let releaseMetrics: ((value: typeof mockMetrics) => void) | null = null;
+
+      mockSecureInvoke.mockImplementation((command: string) => {
+        if (command === 'get_system_metrics') {
+          return new Promise(resolve => {
+            releaseMetrics = resolve as typeof releaseMetrics;
+          });
+        }
+        if (command === 'get_engines_status') {
+          return Promise.resolve(mockEngines);
+        }
+        return Promise.reject(new Error('Unknown command'));
+      });
+
+      const { unmount } = render(<SystemHealthMonitor refreshInterval={1000} />);
+
+      await act(async () => {
+        await Promise.resolve();
+      });
+
+      expect(
+        mockSecureInvoke.mock.calls.filter(([command]) => command === 'get_system_metrics')
+      ).toHaveLength(1);
+
+      await act(async () => {
+        vi.advanceTimersByTime(1000);
+        await Promise.resolve();
+      });
+
+      expect(
+        mockSecureInvoke.mock.calls.filter(([command]) => command === 'get_system_metrics')
+      ).toHaveLength(1);
+
+      await act(async () => {
+        releaseMetrics?.(mockMetrics);
+        await Promise.resolve();
+      });
+
+      unmount();
     });
   });
 

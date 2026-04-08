@@ -11,7 +11,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
 import { normalizePersistentMemoryStats } from '@/services/memory/persistentMemory.normalize';
 
@@ -281,12 +281,17 @@ export function useSystemHealth(): UseSystemHealthReturn {
   const [health, setHealth] = useState<UnifiedHealth | null>(null);
   const [isMonitoring, setIsMonitoring] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [monitoringInterval, setMonitoringInterval] = useState<NodeJS.Timeout | null>(
-    null
-  );
+  const monitoringIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const refreshInFlightRef = useRef(false);
 
   // ═══ REFRESH HEALTH ═══
   const refreshHealth = useCallback(async () => {
+    if (refreshInFlightRef.current) {
+      return;
+    }
+
+    refreshInFlightRef.current = true;
+
     try {
       // Fetch all health metrics in parallel
       const [convHealthRaw, memStats, singState, sysHealth] = await Promise.all([
@@ -406,35 +411,38 @@ export function useSystemHealth(): UseSystemHealthReturn {
       const error = err instanceof Error ? err : new Error('Failed to refresh health');
       setError(error);
       console.error('[useSystemHealth] Refresh error:', error);
+    } finally {
+      refreshInFlightRef.current = false;
     }
   }, []);
 
   // ═══ START MONITORING ═══
   const startMonitoring = useCallback(
     (intervalMs = DEFAULT_MONITORING_INTERVAL_MS) => {
-      if (monitoringInterval) {
-        clearInterval(monitoringInterval);
+      if (monitoringIntervalRef.current) {
+        clearInterval(monitoringIntervalRef.current);
       }
 
       // Initial refresh
-      refreshHealth();
+      void refreshHealth();
 
       // Start interval
-      const interval = setInterval(refreshHealth, intervalMs);
-      setMonitoringInterval(interval);
+      monitoringIntervalRef.current = setInterval(() => {
+        void refreshHealth();
+      }, intervalMs);
       setIsMonitoring(true);
     },
-    [refreshHealth, monitoringInterval]
+    [refreshHealth]
   );
 
   // ═══ STOP MONITORING ═══
   const stopMonitoring = useCallback(() => {
-    if (monitoringInterval) {
-      clearInterval(monitoringInterval);
-      setMonitoringInterval(null);
+    if (monitoringIntervalRef.current) {
+      clearInterval(monitoringIntervalRef.current);
+      monitoringIntervalRef.current = null;
     }
     setIsMonitoring(false);
-  }, [monitoringInterval]);
+  }, []);
 
   // ═══ RESOLVE ALERT ═══
   const resolveAlert = useCallback(async (alertId: string): Promise<void> => {
@@ -485,11 +493,12 @@ export function useSystemHealth(): UseSystemHealthReturn {
   // ═══ CLEANUP ═══
   useEffect(() => {
     return () => {
-      if (monitoringInterval) {
-        clearInterval(monitoringInterval);
+      if (monitoringIntervalRef.current) {
+        clearInterval(monitoringIntervalRef.current);
+        monitoringIntervalRef.current = null;
       }
     };
-  }, [monitoringInterval]);
+  }, []);
 
   // ═══ MEMOIZED DERIVED STATE ═══
   const alertCount = useMemo(() => health?.alerts.length ?? 0, [health?.alerts.length]);

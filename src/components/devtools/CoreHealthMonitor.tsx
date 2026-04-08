@@ -3,7 +3,7 @@
  * Real-time monitoring of 9 core engines health status
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
 
 interface CoreHealth {
@@ -41,71 +41,96 @@ export const CoreHealthMonitor: React.FC<CoreHealthMonitorProps> = ({
 }) => {
   const [coresHealth, setCoresHealth] = useState<Map<string, CoreHealth>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
+  const mountedRef = useRef(true);
+  const refreshInFlightRef = useRef(false);
 
-  useEffect(() => {
-    const fetchCoresHealth = async () => {
-      try {
-        // Fetch health for each core
-        const healthPromises = NINE_CORES.map(async coreName => {
-          try {
-            const info = (await tauriClient.getCoreInfo({
-              core_name: coreName.toLowerCase(),
-            })) as {
-              name: string;
-              version: string;
-              status: string;
-              dependencies: string[];
-              metrics: Array<{ name: string; value: number; unit: string }>;
-            };
+  const fetchCoresHealth = useCallback(async () => {
+    if (refreshInFlightRef.current) {
+      return;
+    }
 
-            // Parse metrics
-            const cpuMetric = info.metrics.find(m => m.name.includes('cpu'));
-            const memMetric = info.metrics.find(m => m.name.includes('memory'));
-            const opsMetric = info.metrics.find(m => m.name.includes('operations'));
+    refreshInFlightRef.current = true;
 
-            const health: CoreHealth = {
+    try {
+      // Fetch health for each core
+      const healthPromises = NINE_CORES.map(async coreName => {
+        try {
+          const info = (await tauriClient.getCoreInfo({
+            core_name: coreName.toLowerCase(),
+          })) as {
+            name: string;
+            version: string;
+            status: string;
+            dependencies: string[];
+            metrics: Array<{ name: string; value: number; unit: string }>;
+          };
+
+          // Parse metrics
+          const cpuMetric = info.metrics.find(m => m.name.includes('cpu'));
+          const memMetric = info.metrics.find(m => m.name.includes('memory'));
+          const opsMetric = info.metrics.find(m => m.name.includes('operations'));
+
+          const health: CoreHealth = {
+            name: coreName,
+            status: info.status as CoreHealth['status'],
+            uptime: Math.random() * 86400, // Mock uptime for now
+            metrics: {
+              cpu_percent: cpuMetric?.value ?? 0,
+              memory_mb: memMetric?.value ?? 0,
+              operations_total: opsMetric?.value ?? 0,
+            },
+          };
+
+          return [coreName, health] as const;
+        } catch (error) {
+          // Fallback if core not implemented yet
+          return [
+            coreName,
+            {
               name: coreName,
-              status: info.status as CoreHealth['status'],
-              uptime: Math.random() * 86400, // Mock uptime for now
+              status: 'unknown' as const,
+              uptime: 0,
               metrics: {
-                cpu_percent: cpuMetric?.value ?? 0,
-                memory_mb: memMetric?.value ?? 0,
-                operations_total: opsMetric?.value ?? 0,
+                cpu_percent: 0,
+                memory_mb: 0,
+                operations_total: 0,
               },
-            };
+            },
+          ] as const;
+        }
+      });
 
-            return [coreName, health] as const;
-          } catch (error) {
-            // Fallback if core not implemented yet
-            return [
-              coreName,
-              {
-                name: coreName,
-                status: 'unknown' as const,
-                uptime: 0,
-                metrics: {
-                  cpu_percent: 0,
-                  memory_mb: 0,
-                  operations_total: 0,
-                },
-              },
-            ] as const;
-          }
-        });
-
-        const results = await Promise.all(healthPromises);
+      const results = await Promise.all(healthPromises);
+      if (mountedRef.current) {
         setCoresHealth(new Map(results));
         setIsLoading(false);
-      } catch (error) {
-        console.error('Failed to fetch cores health:', error);
+      }
+    } catch (error) {
+      console.error('Failed to fetch cores health:', error);
+      if (mountedRef.current) {
         setIsLoading(false);
       }
-    };
+    } finally {
+      refreshInFlightRef.current = false;
+    }
+  }, []);
 
-    fetchCoresHealth();
-    const interval = setInterval(fetchCoresHealth, refreshInterval);
+  useEffect(() => {
+    mountedRef.current = true;
+
+    return () => {
+      mountedRef.current = false;
+      refreshInFlightRef.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    void fetchCoresHealth();
+    const interval = setInterval(() => {
+      void fetchCoresHealth();
+    }, refreshInterval);
     return () => clearInterval(interval);
-  }, [refreshInterval]);
+  }, [fetchCoresHealth, refreshInterval]);
 
   // Get status indicator
   const getStatusIndicator = (status: CoreHealth['status']): string => {

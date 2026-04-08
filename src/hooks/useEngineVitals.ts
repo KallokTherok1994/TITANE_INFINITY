@@ -10,7 +10,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { tauriClient } from '../services/tauriClient';
 
 export interface EngineVitals {
@@ -90,13 +90,15 @@ export function useEngineVitals(
   const [vitals, setVitals] = useState<EngineVitals | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const refreshInFlightRef = useRef(false);
 
   /**
    * Refresh engine vitals
    */
   const refresh = useCallback(async () => {
-    if (!enabled) return;
+    if (!enabled || refreshInFlightRef.current) return;
 
+    refreshInFlightRef.current = true;
     setIsLoading(true);
     setError(null);
 
@@ -140,20 +142,26 @@ export function useEngineVitals(
 
       setVitals(engineVitals);
 
-      console.log('✅ Engine vitals refreshed:', {
-        harmonia: `${engineVitals.harmonia.load}%`,
-        helios: `${engineVitals.helios.health}%`,
-        nexus: `${engineVitals.nexus.coherence}%`,
-        sentinel: `${engineVitals.sentinel.errors} errors`,
-      });
+      if (import.meta.env.DEV) {
+        console.debug('[useEngineVitals] refreshed', {
+          harmonia: `${engineVitals.harmonia.load}%`,
+          helios: `${engineVitals.helios.health}%`,
+          nexus: `${engineVitals.nexus.coherence}%`,
+          sentinel: `${engineVitals.sentinel.errors} errors`,
+        });
+      }
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Engine vitals error';
       setError(errorMsg);
-      console.error('❌ Engine vitals refresh failed:', err);
+
+      if (import.meta.env.DEV) {
+        console.error('[useEngineVitals] refresh failed:', err);
+      }
 
       // Fallback: vitals par défaut
       setVitals(DEFAULT_VITALS);
     } finally {
+      refreshInFlightRef.current = false;
       setIsLoading(false);
     }
   }, [enabled]);
@@ -236,7 +244,6 @@ export function useEngineVitals(
 
     return () => {
       clearInterval(interval);
-      console.log('🛑 Engine vitals polling stopped');
     };
   }, [refresh, pollInterval, enabled]);
 

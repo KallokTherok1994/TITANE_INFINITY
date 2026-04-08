@@ -3,7 +3,7 @@
  * 9-engine health monitoring dashboard
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
 import './CoreHealthMonitor.css';
 
@@ -29,27 +29,48 @@ interface CoreHealthResponse {
 export const CoreHealthMonitor: React.FC = () => {
   const [cores, setCores] = useState<CoreInfo[]>([]);
   const [autoRefresh, setAutoRefresh] = useState(true);
+  const mountedRef = useRef(true);
+  const refreshInFlightRef = useRef(false);
 
   // Fetch core health
-  const fetchCoreHealth = async () => {
+  const fetchCoreHealth = useCallback(async () => {
+    if (refreshInFlightRef.current) {
+      return;
+    }
+
+    refreshInFlightRef.current = true;
+
     try {
       const response = (await tauriClient.getCoreInfo()) as CoreHealthResponse;
-      if (response.success && response.data) {
+      if (response.success && response.data && mountedRef.current) {
         setCores(response.data);
       }
     } catch (error) {
       console.error('Failed to fetch core health:', error);
+    } finally {
+      refreshInFlightRef.current = false;
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    mountedRef.current = true;
+
+    return () => {
+      mountedRef.current = false;
+      refreshInFlightRef.current = false;
+    };
+  }, []);
 
   // Auto-refresh
   useEffect(() => {
-    fetchCoreHealth();
+    void fetchCoreHealth();
     if (autoRefresh) {
-      const interval = setInterval(fetchCoreHealth, 3000);
+      const interval = setInterval(() => {
+        void fetchCoreHealth();
+      }, 3000);
       return () => clearInterval(interval);
     }
-  }, [autoRefresh]);
+  }, [autoRefresh, fetchCoreHealth]);
 
   // Restart failing cores
   const restartFailingCores = async () => {

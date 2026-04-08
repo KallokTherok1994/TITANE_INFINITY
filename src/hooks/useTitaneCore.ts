@@ -11,7 +11,7 @@
 // ║ React hook for TITANE∞ backend communication via Tauri v2                   ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { tauri } from '../api/tauriClient';
 import type {
   SystemStatus,
@@ -29,28 +29,54 @@ export function useTitaneCore(autoRefresh: boolean = true) {
   const [systemStatus, setSystemStatus] = useState<SystemStatus | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const mountedRef = useRef(true);
+  const inFlightStatusPromiseRef = useRef<Promise<SystemStatus> | null>(null);
 
   const getSystemStatus = useCallback(async (): Promise<SystemStatus> => {
-    try {
-      setLoading(true);
-      setError(null);
-      const modules = await tauri<ModuleHealth[]>('get_system_health');
-      const status: SystemStatus = {
-        modules,
-        uptime: 0,
-        status: 'operational',
-        timestamp: Date.now(),
-      };
-      setSystemStatus(status);
-      return status;
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : 'Failed to get system status';
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setLoading(false);
+    if (inFlightStatusPromiseRef.current) {
+      return inFlightStatusPromiseRef.current;
     }
+
+    const request = (async () => {
+      try {
+        if (mountedRef.current) {
+          setLoading(true);
+          setError(null);
+        }
+
+        const modules = await tauri<ModuleHealth[]>('get_system_health');
+        const status: SystemStatus = {
+          modules,
+          uptime: 0,
+          status: 'operational',
+          timestamp: Date.now(),
+        };
+
+        if (mountedRef.current) {
+          setSystemStatus(status);
+        }
+
+        return status;
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : 'Failed to get system status';
+
+        if (mountedRef.current) {
+          setError(errorMessage);
+        }
+
+        throw err;
+      } finally {
+        inFlightStatusPromiseRef.current = null;
+
+        if (mountedRef.current) {
+          setLoading(false);
+        }
+      }
+    })();
+
+    inFlightStatusPromiseRef.current = request;
+    return request;
   }, []);
 
   const getHeliosMetrics = useCallback(async (): Promise<HeliosMetrics> => {
@@ -98,18 +124,29 @@ export function useTitaneCore(autoRefresh: boolean = true) {
   }, []);
 
   useEffect(() => {
+    mountedRef.current = true;
+
+    return () => {
+      mountedRef.current = false;
+      inFlightStatusPromiseRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
     if (!autoRefresh) return;
 
     // ⚠️ FIX CRASH: Attendre que Tauri soit prêt avant d'appeler les commandes
     const initTimeout = setTimeout(() => {
       getSystemStatus().catch(err => {
         console.warn('[TITANE] Failed to fetch initial system status:', err);
-        setError('Connexion au backend en cours...');
+        if (mountedRef.current) {
+          setError('Connexion au backend en cours...');
+        }
       });
     }, 100); // Délai de 100ms pour laisser Tauri s'initialiser
 
     const interval = setInterval(() => {
-      getSystemStatus().catch(err => {
+      void getSystemStatus().catch(err => {
         console.warn('[TITANE] Failed to refresh system status:', err);
       });
     }, 5000);

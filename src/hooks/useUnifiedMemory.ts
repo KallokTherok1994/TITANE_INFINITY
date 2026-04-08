@@ -87,6 +87,8 @@ export function useUnifiedMemory(
   });
 
   const statsIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const mountedRef = useRef(true);
+  const statsRequestRef = useRef<Promise<void> | null>(null);
 
   /**
    * Refresh statistics
@@ -94,36 +96,57 @@ export function useUnifiedMemory(
   const refreshStats = useCallback(async (): Promise<void> => {
     if (!memory) return;
 
-    try {
-      const stats = await memory.getStats();
-      setState(prev => ({ ...prev, stats }));
-    } catch (error) {
-      console.error('[useUnifiedMemory] Failed to refresh stats:', error);
+    if (statsRequestRef.current) {
+      return statsRequestRef.current;
     }
+
+    const request = (async () => {
+      try {
+        const stats = await memory.getStats();
+        if (mountedRef.current) {
+          setState(prev => ({ ...prev, stats }));
+        }
+      } catch (error) {
+        console.error('[useUnifiedMemory] Failed to refresh stats:', error);
+      } finally {
+        statsRequestRef.current = null;
+      }
+    })();
+
+    statsRequestRef.current = request;
+    return request;
   }, [memory]);
 
   // Initialize
   useEffect(() => {
+    mountedRef.current = true;
+
     if (!memory) {
       setState(prev => ({ ...prev, isInitialized: false }));
-      return;
+      return () => {
+        mountedRef.current = false;
+      };
     }
 
     setState(prev => ({ ...prev, isInitialized: true }));
 
     // Initial stats fetch
-    refreshStats();
+    void refreshStats();
 
     // ✨ v24.3.7: Use validated interval (min 5s) to prevent excessive operations
     if (safeRefreshInterval > 0) {
-      statsIntervalRef.current = setInterval(refreshStats, safeRefreshInterval);
+      statsIntervalRef.current = setInterval(() => {
+        void refreshStats();
+      }, safeRefreshInterval);
     }
 
     // Cleanup on unmount
     return () => {
+      mountedRef.current = false;
       if (statsIntervalRef.current) {
         clearInterval(statsIntervalRef.current);
       }
+      statsRequestRef.current = null;
     };
   }, [memory, safeRefreshInterval, refreshStats]);
 
@@ -366,38 +389,67 @@ export function useUnifiedMemoryStats(
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const mountedRef = useRef(true);
+  const refreshRequestRef = useRef<Promise<void> | null>(null);
 
   const refresh = useCallback(async (): Promise<void> => {
     if (!memory) return;
 
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const newStats = await memory.getStats();
-      setStats(newStats);
-      setIsLoading(false);
-    } catch (err) {
-      setError(err as Error);
-      setIsLoading(false);
+    if (refreshRequestRef.current) {
+      return refreshRequestRef.current;
     }
+
+    const request = (async () => {
+      if (mountedRef.current) {
+        setIsLoading(true);
+        setError(null);
+      }
+
+      try {
+        const newStats = await memory.getStats();
+        if (mountedRef.current) {
+          setStats(newStats);
+          setIsLoading(false);
+        }
+      } catch (err) {
+        if (mountedRef.current) {
+          setError(err as Error);
+          setIsLoading(false);
+        }
+      } finally {
+        refreshRequestRef.current = null;
+      }
+    })();
+
+    refreshRequestRef.current = request;
+    return request;
   }, [memory]);
 
   useEffect(() => {
-    if (!memory) return;
+    mountedRef.current = true;
+
+    if (!memory) {
+      return () => {
+        mountedRef.current = false;
+      };
+    }
 
     // Initial fetch
-    refresh();
+    void refresh();
 
     // Setup interval
     if (refreshInterval > 0) {
-      intervalRef.current = setInterval(refresh, refreshInterval);
+      intervalRef.current = setInterval(() => {
+        void refresh();
+      }, refreshInterval);
     }
 
     return () => {
+      mountedRef.current = false;
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
+      refreshRequestRef.current = null;
     };
   }, [memory, refreshInterval, refresh]);
 
