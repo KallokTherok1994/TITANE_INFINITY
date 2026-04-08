@@ -113,6 +113,10 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
   const refreshIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const traceBuffer = useRef<TraceEntry[]>([]);
   const snapshotBuffer = useRef<OSSnapshot[]>([]);
+  const mountedRef = useRef(true);
+  const isActiveRef = useRef(state.is_active);
+  const modeRef = useRef<DebuggerMode>(state.mode);
+  const autoRefreshPromiseRef = useRef<Promise<void> | null>(null);
 
   // ─────────────────────────────────────────────────────────────────
   // UTILITIES
@@ -237,18 +241,31 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
   }, []);
 
   const refreshLiveMetrics = useCallback(async () => {
-    if (!state.is_active || state.mode !== 'LiveMonitor') return;
+    if (!isActiveRef.current || modeRef.current !== 'LiveMonitor') return;
 
-    try {
-      const metrics = await captureLiveMetrics();
-      setState(prev => ({
-        ...prev,
-        liveMetrics: metrics,
-      }));
-    } catch (err) {
-      handleError(err);
+    if (autoRefreshPromiseRef.current) {
+      return autoRefreshPromiseRef.current;
     }
-  }, [state.is_active, state.mode, captureLiveMetrics, handleError]);
+
+    const request = (async () => {
+      try {
+        const metrics = await captureLiveMetrics();
+        if (mountedRef.current) {
+          setState(prev => ({
+            ...prev,
+            liveMetrics: metrics,
+          }));
+        }
+      } catch (err) {
+        handleError(err);
+      } finally {
+        autoRefreshPromiseRef.current = null;
+      }
+    })();
+
+    autoRefreshPromiseRef.current = request;
+    return request;
+  }, [captureLiveMetrics, handleError]);
 
   // ─────────────────────────────────────────────────────────────────
   // MODE: DEEP TRACE
@@ -749,6 +766,9 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
           ...config,
         };
 
+        isActiveRef.current = true;
+        modeRef.current = mode;
+
         setState({
           mode,
           config: newConfig,
@@ -803,14 +823,18 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
         if (newConfig.autoRefresh && newConfig.refreshInterval) {
           refreshIntervalRef.current = setInterval(() => {
             if (mode === 'LiveMonitor') {
-              refreshLiveMetrics();
+              void refreshLiveMetrics();
             } else if (mode === 'RiskAssessment') {
-              assessRisks().then(assessment => {
-                setState(prev => ({ ...prev, riskAssessment: assessment }));
+              void assessRisks().then(assessment => {
+                if (mountedRef.current) {
+                  setState(prev => ({ ...prev, riskAssessment: assessment }));
+                }
               });
             } else if (mode === 'VisualSync') {
-              captureVisualSyncState().then(syncState => {
-                setState(prev => ({ ...prev, visualSync: syncState }));
+              void captureVisualSyncState().then(syncState => {
+                if (mountedRef.current) {
+                  setState(prev => ({ ...prev, visualSync: syncState }));
+                }
               });
             }
           }, newConfig.refreshInterval);
@@ -840,6 +864,7 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
       }
 
       const uptime = state.started_at ? Date.now() - state.started_at : 0;
+      isActiveRef.current = false;
 
       setState(prev => ({
         ...prev,
@@ -1115,10 +1140,19 @@ ${trace.result ? `Result: ${JSON.stringify(trace.result, null, 2)}` : ''}
   // ─────────────────────────────────────────────────────────────────
 
   useEffect(() => {
+    isActiveRef.current = state.is_active;
+    modeRef.current = state.mode;
+  }, [state.is_active, state.mode]);
+
+  useEffect(() => {
+    mountedRef.current = true;
+
     return () => {
+      mountedRef.current = false;
       if (refreshIntervalRef.current) {
         clearInterval(refreshIntervalRef.current);
       }
+      autoRefreshPromiseRef.current = null;
     };
   }, []);
 
