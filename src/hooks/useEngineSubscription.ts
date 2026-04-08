@@ -78,34 +78,52 @@ export function useEngineSubscription(engine: EngineType): UseEngineSubscription
     }
 
     let mounted = true;
+    let requestInFlight: Promise<void> | null = null;
 
     const fetchData = async () => {
       if (!mounted) return;
-      setEngineLoading(engine, true);
-      try {
-        const data = await config.fn();
-        if (mounted && data) {
-          // Backend validates data structure, type assertion needed for generic fn()
-          setEngineData(engine as EngineName, data as EngineDataMap[typeof engine]);
-        }
-      } catch (error) {
-        console.error(`[useEngineSubscription] Error fetching ${engine}:`, error);
-      } finally {
-        if (mounted) {
-          setEngineLoading(engine, false);
-        }
+
+      if (requestInFlight) {
+        return requestInFlight;
       }
+
+      let request: Promise<void> | null = null;
+      request = (async () => {
+        setEngineLoading(engine, true);
+        try {
+          const data = await config.fn();
+          if (mounted && data) {
+            // Backend validates data structure, type assertion needed for generic fn()
+            setEngineData(engine as EngineName, data as EngineDataMap[typeof engine]);
+          }
+        } catch (error) {
+          console.error(`[useEngineSubscription] Error fetching ${engine}:`, error);
+        } finally {
+          if (mounted) {
+            setEngineLoading(engine, false);
+          }
+          if (requestInFlight === request) {
+            requestInFlight = null;
+          }
+        }
+      })();
+
+      requestInFlight = request;
+      return request;
     };
 
     // Immediate first fetch
-    fetchData();
+    void fetchData();
 
     // Set up interval
-    const intervalId = window.setInterval(fetchData, config.interval);
+    const intervalId = window.setInterval(() => {
+      void fetchData();
+    }, config.interval);
 
     // Cleanup
     return () => {
       mounted = false;
+      requestInFlight = null;
       window.clearInterval(intervalId);
     };
   }, [
