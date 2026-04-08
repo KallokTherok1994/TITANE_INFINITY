@@ -6,7 +6,7 @@
  * © 2025 TITANE Team. All rights reserved.
  */
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
 import type {
   LogEntry,
@@ -41,26 +41,48 @@ export function useSystemLogs(
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<LogFilter>({ limit: 100 });
+  const mountedRef = useRef(true);
+  const refreshRequestRef = useRef<Promise<void> | null>(null);
 
   const refreshLogs = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const [logsResult, statsResult] = await Promise.all([
-        tauriClient.scGetLogs({ filter }) as Promise<LogEntry[]>,
-        tauriClient.scGetLogStats() as Promise<LogStats>,
-      ]);
-
-      setLogs(logsResult);
-      setStats(statsResult);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      setError(`Erreur chargement logs: ${message}`);
-      console.error('[useSystemLogs] Refresh failed:', err);
-    } finally {
-      setIsLoading(false);
+    if (refreshRequestRef.current) {
+      return refreshRequestRef.current;
     }
+
+    const request = (async () => {
+      if (mountedRef.current) {
+        setIsLoading(true);
+        setError(null);
+      }
+
+      try {
+        const [logsResult, statsResult] = await Promise.all([
+          tauriClient.scGetLogs({ filter }) as Promise<LogEntry[]>,
+          tauriClient.scGetLogStats() as Promise<LogStats>,
+        ]);
+
+        if (!mountedRef.current) {
+          return;
+        }
+
+        setLogs(logsResult);
+        setStats(statsResult);
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        if (mountedRef.current) {
+          setError(`Erreur chargement logs: ${message}`);
+        }
+        console.error('[useSystemLogs] Refresh failed:', err);
+      } finally {
+        if (mountedRef.current) {
+          setIsLoading(false);
+        }
+        refreshRequestRef.current = null;
+      }
+    })();
+
+    refreshRequestRef.current = request;
+    return request;
   }, [filter]);
 
   const clearLogs = useCallback(async () => {
@@ -88,11 +110,21 @@ export function useSystemLogs(
     [refreshLogs]
   );
 
+  useEffect(() => {
+    mountedRef.current = true;
+
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
   // Auto-refresh effect
   useEffect(() => {
     if (autoRefresh) {
-      refreshLogs();
-      const interval = setInterval(refreshLogs, refreshInterval);
+      void refreshLogs();
+      const interval = setInterval(() => {
+        void refreshLogs();
+      }, refreshInterval);
       return () => clearInterval(interval);
     }
   }, [autoRefresh, refreshInterval, refreshLogs]);
