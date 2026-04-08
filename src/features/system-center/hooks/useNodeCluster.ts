@@ -6,7 +6,7 @@
  * © 2025 TITANE Team. All rights reserved.
  */
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
 import type { ClusterStatus, ClusterStats, NodeInfo } from '../types/systemCenter.types';
 
@@ -36,31 +36,56 @@ export function useNodeCluster(
   const [isInitialized, setIsInitialized] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const mountedRef = useRef(true);
+  const statusRequestRef = useRef<Promise<void> | null>(null);
 
   const refreshStatus = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const result = (await tauriClient.scGetClusterStatus()) as ClusterStatus;
-      if (!result) {
-        setError('Cluster status unavailable');
-        return;
-      }
-      setStatus(result);
-      setIsInitialized(result.initialized);
-      setPeers(result.peers);
-
-      if (result.stats) {
-        setStats(result.stats);
-      }
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      setError(`Erreur statut cluster: ${message}`);
-      console.error('[useNodeCluster] Status refresh failed:', err);
-    } finally {
-      setIsLoading(false);
+    if (statusRequestRef.current) {
+      return statusRequestRef.current;
     }
+
+    const request = (async () => {
+      if (mountedRef.current) {
+        setIsLoading(true);
+        setError(null);
+      }
+
+      try {
+        const result = (await tauriClient.scGetClusterStatus()) as ClusterStatus;
+        if (!result) {
+          if (mountedRef.current) {
+            setError('Cluster status unavailable');
+          }
+          return;
+        }
+
+        if (!mountedRef.current) {
+          return;
+        }
+
+        setStatus(result);
+        setIsInitialized(result.initialized);
+        setPeers(result.peers);
+
+        if (result.stats) {
+          setStats(result.stats);
+        }
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        if (mountedRef.current) {
+          setError(`Erreur statut cluster: ${message}`);
+        }
+        console.error('[useNodeCluster] Status refresh failed:', err);
+      } finally {
+        if (mountedRef.current) {
+          setIsLoading(false);
+        }
+        statusRequestRef.current = null;
+      }
+    })();
+
+    statusRequestRef.current = request;
+    return request;
   }, []);
 
   const refreshPeers = useCallback(async () => {
@@ -108,9 +133,17 @@ export function useNodeCluster(
     }
   }, [refreshStatus]);
 
+  useEffect(() => {
+    mountedRef.current = true;
+
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
   // Initial load
   useEffect(() => {
-    refreshStatus();
+    void refreshStatus();
   }, [refreshStatus]);
 
   // Auto-refresh effect
