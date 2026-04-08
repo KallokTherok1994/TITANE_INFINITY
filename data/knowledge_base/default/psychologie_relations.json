@@ -1,0 +1,140 @@
+{
+  "version": "v30.0.0",
+  "category": "psychologie_relations",
+  "description": "Psychologie des relations — attachement (Bowlby, 4 styles adultes), CNV Marshall Rosenberg (4 étapes), confiance (5 composantes), empathie, gestion conflits (Thomas-Kilmann)",
+  "psychologie_relations": {
+    "introduction": "Les relations sont le tissu de la vie humaine. TITANE accompagne Kevin dans ses relations professionnelles, familiales et personnelles avec une compréhension des dynamiques profondes — sans jugement, avec discernement.",
+    "theorie_attachement": {
+      "auteur": "John Bowlby (1969) puis Mary Ainsworth — complété par Adult Attachment Theory",
+      "principe": "Les expériences relationnelles précoces avec les figures de soin créent des modèles internes opérants qui influencent toutes les relations ultérieures",
+      "quatre_styles_adultes": {
+        "secure": {
+          "description": "Confiance en soi ET en l'autre — peut dépendre des autres et être indépendant",
+          "origine": "Figures de soin disponibles et réactives",
+          "relations": "À l'aise avec l'intimité, résilience face aux séparations, communication directe",
+          "proportion": "~55% de la population"
+        },
+        "anxieux_préoccupé": {
+          "description": "Besoin intense de validation, peur de l'abandon, hypersensibilité aux signaux relationnels",
+          "origine": "Figures de soin inconsistantes (parfois disponibles, parfois pas)",
+          "relations": "Demande d'intimité intense, jalousie, rumination sur les conflits",
+          "proportion": "~20%"
+        },
+        "évitant_détaché": {
+          "description": "Inconfort avec l'intimité, valorisation de l'indépendance, déni des besoins affectifs",
+          "origine": "Figures de soin rejetantes ou émotionnellement indisponibles",
+          "relations": "Distance émotionnelle, inconfort avec les demandes d'intimité, retrait sous stress",
+          "proportion": "~25%"
+        },
+        "désorganisé_craintif": {
+          "description": "Désire ET craint l'intimité — la figure de soin était source de sécurité ET de danger",
+          "origine": "Traumas, maltraitance, deuils non résolus",
+          "relations": "Imprévisibilité, alternance entre approche et fuite, difficultés de régulation",
+          "proportion": "~5-10%"
+        }
+      },
+      "plasticité": "Les styles d'attachement ne sont pas figés — la sécurité acquise est possible (relations sécures, thérapie, réflexivité)",
+      "apport_TITANE": "Reconnaître les patterns relationnels de Kevin sans les étiqueter. Être une 'figure d'attachement' stable et prévisible — sécurisant par la constance."
+    },
+    "cnv_rosenberg": {
+      "auteur": "Marshall Rosenberg — Communication Non Violente (CNV)",
+      "définition": "Mode de communication centré sur la connexion humaine — exprimer clairement ses besoins et entendre ceux des autres sans jugement",
+      "quatre_étapes": {
+        "1_observation": {
+          "définition": "Décrire les faits observables sans évaluation ni interprétation",
+          "exemple_NON_CNV": "'Tu es toujours en retard' (jugement)",
+          "exemple_CNV": "'Lors des 3 dernières réunions, tu es arrivé 15-20 minutes après l'heure prévue' (fait observable)"
+        },
+        "2_sentiment": {
+          "définition": "Exprimer ce que l'on ressent (pas ce qu'on pense que l'autre a fait)",
+          "exemple_NON_CNV": "'Je me sens manipulé' (interprétation de l'intention de l'autre)",
+          "exemple_CNV": "'Je me sens frustré et incertain' (sentiment réel)",
+          "liste_sentiments": ["joie", "tristesse", "peur", "colère", "frustration", "enthousiasme", "anxiété", "soulagement", "confusion", "curiosité", "reconnaissance", "découragement"]
+        },
+        "3_besoin": {
+          "définition": "Nommer le besoin universel non satisfait derrière le sentiment",
+          "liste_besoins_universels": ["respect", "connexion", "sécurité", "autonomie", "clarté", "contribution", "jeu", "repos", "intégrité", "reconnaissance", "compréhension", "confiance", "cohérence"],
+          "exemple_CNV": "'...parce que j'ai besoin de fiabilité et de respect de nos engagements communs'"
+        },
+        "4_demande": {
+          "définition": "Formuler une demande concrète, réalisable et positive (pas une exigence)",
+          "caractéristiques": "Action spécifique, dans un délai précis, formulée positivement",
+          "exemple_NON_CNV": "'Arrête d'être en retard' (exigence négative vague)",
+          "exemple_CNV": "'Est-ce que tu peux m'envoyer un message si tu anticipes arriver après 17h?' (demande concrète et positive)"
+        }
+      },
+      "empathie_CNV": "La même structure peut être utilisée pour recevoir l'autre — deviner (ou demander) son observation, sentiment, besoin",
+      "apport_TITANE": "Utiliser la structure CNV quand Kevin décrit des conflits — aider à reformuler en O.S.B.D. pour trouver des solutions qui respectent tous les besoins."
+    },
+    "confiance": {
+      "modele_speed_of_trust": {
+        "auteur": "Stephen M.R. Covey — 'The Speed of Trust'",
+        "formule": "La confiance est la combinaison de caractère × compétence",
+        "quatre_noyaux": {
+          "intégrité": "Cohérence valeurs-paroles-actes",
+          "intention": "Motivations transparentes et bienveillantes",
+          "compétences": "Capacités et résultats démontrés",
+          "résultats": "Track record — ce qu'on a réellement accompli"
+        },
+        "impact": "Haute confiance = vitesse ↑, coût ↓. Faible confiance = vitesse ↓, coût ↑ (taxes de méfiance)"
+      },
+      "cinq_dysfonctions_équipe": {
+        "auteur": "Patrick Lencioni",
+        "base_de_tout": "L'absence de confiance est le fondement de tous les problèmes d'équipe",
+        "pyramide": ["1. Absence de confiance → 2. Peur des conflits → 3. Manque d'engagement → 4. Évitement des responsabilités → 5. Inattention aux résultats"]
+      },
+      "apport_TITANE": "TITANE construit la confiance par l'intégrité (dire ce qu'on fait, faire ce qu'on dit), la transparence sur les incertitudes, et la consistance dans le temps."
+    },
+    "gestion_conflits": {
+      "modele_thomas_kilmann": {
+        "auteurs": "Kenneth Thomas & Ralph Kilmann (1974)",
+        "deux_axes": {
+          "assertivité": "Défendre ses propres intérêts",
+          "coopération": "Considérer les intérêts des autres"
+        },
+        "cinq_styles": {
+          "compétition": {
+            "position": "Haute assertivité + faible coopération",
+            "description": "Défendre sa position sans compromis",
+            "quand_utile": "Urgence, décision impopulaire nécessaire, droits à défendre",
+            "risque": "Détérioration de la relation"
+          },
+          "accommodation": {
+            "position": "Faible assertivité + haute coopération",
+            "description": "Céder à l'autre, mettre de côté ses propres besoins",
+            "quand_utile": "La relation est plus importante que l'enjeu, on a tort",
+            "risque": "Ressentiment accumulé si chronique"
+          },
+          "évitement": {
+            "position": "Faible assertivité + faible coopération",
+            "description": "Se retirer du conflit sans l'adresser",
+            "quand_utile": "Enjeu trivial, temps de récupération nécessaire",
+            "risque": "Les problèmes s'accumulent"
+          },
+          "compromis": {
+            "position": "Assertivité moyenne + coopération moyenne",
+            "description": "Chacun cède quelque chose — solution acceptée des deux côtés",
+            "quand_utile": "Urgence, objectifs partiellement incompatibles",
+            "risque": "Les deux parties peuvent être insatisfaites"
+          },
+          "collaboration": {
+            "position": "Haute assertivité + haute coopération",
+            "description": "Trouver une solution qui satisfait pleinement les deux parties",
+            "quand_utile": "Enjeux importants, long terme, préservation de la relation",
+            "coût": "Temps et énergie élevés — réservé aux vrais enjeux"
+          }
+        }
+      },
+      "désaccord_constructif": {
+        "principe": "Un désaccord bien géré renforce la relation — il montre du respect mutuel et de la profondeur",
+        "règles": [
+          "Attaquer l'idée, pas la personne",
+          "Chercher à comprendre avant de réfuter",
+          "Reconnaître les points valides de l'autre",
+          "Proposer une alternative, pas seulement critiquer",
+          "Rester curieux plutôt que défensif"
+        ]
+      }
+    }
+  }
+}

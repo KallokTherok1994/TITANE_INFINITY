@@ -1,0 +1,107 @@
+{
+  "version": "v30.0.0",
+  "category": "communication_persuasion",
+  "description": "Communication persuasive — Cialdini 6 principes, rhétorique (logos/ethos/pathos), storytelling, cadrage (framing), ancrage, argumentation non-manipulatrice",
+  "communication_persuasion": {
+    "introduction": "La persuasion est l'art d'influencer la pensée ou l'action d'autrui de façon éthique. TITANE l'utilise pour aider Kevin à communiquer efficacement ses idées, pas pour le manipuler. Distinction fondamentale: persuasion (arguments légitimes) ≠ manipulation (exploiter les failles cognitives).",
+    "cialdini_six_principes": {
+      "auteur": "Robert Cialdini (1984) — 'Influence: The Psychology of Persuasion'",
+      "introduction": "6 leviers universels d'influence — issus d'une étude empirique de 3 ans sur les professionnels de la persuasion",
+      "reciprocite": {
+        "principe": "On se sent obligé de rendre ce qu'on a reçu",
+        "exemple": "Échantillon gratuit → sentiment d'obligation d'achat",
+        "usage_éthique": "Donner de la valeur en premier (contenu utile, aide réelle) crée une disposition favorable",
+        "contre_manipulation": "Identifier les cadeaux non demandés qui créent une obligation artificielle"
+      },
+      "engagement_coherence": {
+        "principe": "Une fois engagé publiquement, on agit pour rester cohérent avec cet engagement",
+        "foot_in_door": "Petite demande → grande demande (cohérence)",
+        "usage_éthique": "Aider Kevin à s'engager sur ses propres objectifs par écrit",
+        "contre_manipulation": "Refuser de s'engager sur des points non réfléchis sous pression sociale"
+      },
+      "preuve_sociale": {
+        "principe": "En incertitude, on regarde ce que font les autres",
+        "exemple": "Avis clients, 'le plus populaire', foule devant un restaurant",
+        "usage_éthique": "Citer des exemples concrets de ce qui a fonctionné pour des cas similaires",
+        "limite": "La foule peut se tromper — la majorité n'est pas toujours la vérité"
+      },
+      "autorite": {
+        "principe": "On fait davantage confiance aux experts et aux figures d'autorité",
+        "signaux": "Titres, expertises, expérience démontrée, tenue professionnelle",
+        "usage_éthique": "TITANE cite ses sources et nuance ses certitudes selon son niveau de confiance",
+        "garde_fou": "L'autorité doit être vérifiable — 'un expert anonyme' n'est pas une autorité"
+      },
+      "sympathie": {
+        "principe": "On accepte plus facilement les demandes de gens qu'on aime ou qui nous ressemblent",
+        "facteurs": "Attractivité physique, similarité, familiarité, compliments sincères, association à des choses positives",
+        "usage_éthique": "Construire une relation authentique — pas une sympathie performée",
+        "contre_manipulation": "Décider séparément de 'l'aime-t-on' et 'est-ce une bonne offre/idée'"
+      },
+      "rarete": {
+        "principe": "On désire plus ce qui est rare ou menacé de disparaître",
+        "exemple": "'Offre limitée à 48h', 'Dernières places disponibles'",
+        "usage_éthique": "Signaler une vraie opportunité temporelle — pas créer une fausse urgence",
+        "contre_manipulation": "Vérifier si la rareté est réelle avant d'agir sous pression"
+      }
+    },
+    "rhetorique_aristotelicienne": {
+      "auteur": "Aristote — 'Rhétorique'",
+      "trois_piliers": {
+        "logos": {
+          "définition": "La logique — arguments, preuves, raisonnements",
+          "outils": "Statistiques, faits vérifiables, démonstrations, analogies logiques",
+          "apport_TITANE": "Base de toute réponse TITANE — la logique vient en premier"
+        },
+        "ethos": {
+          "définition": "La crédibilité de l'orateur — son caractère, sa compétence, sa confiance",
+          "outils": "Expertise démontrée, cohérence, honnêteté sur les limites",
+          "apport_TITANE": "TITANE construit son ethos par la cohérence comportementale et la transparence sur ses incertitudes"
+        },
+        "pathos": {
+          "définition": "L'émotion — créer un état émotionnel favorable chez l'audience",
+          "outils": "Histoires, métaphores, ton, exemples concrets et humains",
+          "apport_TITANE": "Utilisé avec mesure — jamais pour manipuler, pour rendre accessible et engageant"
+        }
+      },
+      "kairos": "Le bon moment — même le meilleur argument au mauvais moment est inefficace"
+    },
+    "storytelling": {
+      "définition": "L'art de structurer les informations sous forme narrative pour les rendre mémorables et engageantes",
+      "pourquoi_efficace": "Notre cerveau est câblé pour les histoires — elles activent plus de zones cérébrales que les faits bruts (transport narratif)",
+      "structure_héros": {
+        "situation_initiale": "Le monde normal du héros",
+        "élément_perturbateur": "Ce qui change et crée un problème/opportunité",
+        "quête": "Ce que le héros doit accomplir",
+        "obstacles": "Les défis rencontrés (rendent l'histoire crédible)",
+        "résolution": "La transformation — comment le monde/le héros a changé",
+        "leçon": "Ce qu'on emporte"
+      },
+      "formule_pixar": "Il était une fois X. Chaque jour, Y. Jusqu'au jour où Z. À cause de ça, A. À cause de ça, B. Jusqu'à ce que finalement C. Et depuis ce jour, D.",
+      "apport_TITANE": "Structurer les explications complexes sous forme narrative. Commencer par un exemple concret avant la règle abstraite."
+    },
+    "cadrage_framing": {
+      "définition": "La façon dont un message est présenté (le cadre) influence l'interprétation et la décision",
+      "exemples": {
+        "médical": "'95% de chances de survie' vs '5% de risque de décès' — même statistique, effet différent",
+        "négoce": "'Ce produit coûte 3€ par jour' vs '1095€ par an' — même coût, perception différente"
+      },
+      "types_cadrages": {
+        "gain_vs_perte": "Présenter en termes de gain ('vous économiserez X') vs perte ('vous perdrez X')",
+        "positif_vs_négatif": "Verre à moitié plein vs à moitié vide",
+        "court_terme_vs_long_terme": "Impact immédiat vs conséquences durables",
+        "individuel_vs_collectif": "Bénéfice personnel vs impact sur les autres"
+      },
+      "apport_TITANE": "Choisir consciemment le cadrage qui sert le mieux les objectifs de Kevin — et l'indiquer explicitement quand pertinent"
+    },
+    "argumentation_éthique": {
+      "pyramide_minto": {
+        "auteur": "Barbara Minto — 'La logique au service de la communication'",
+        "principe": "Commencer par la conclusion (BLUF — Bottom Line Up Front), puis les arguments, puis les preuves",
+        "structure": "Conclusion → Argument 1 + preuves → Argument 2 + preuves → Argument 3 + preuves",
+        "avantage": "L'interlocuteur sait d'emblée où on va — réduit la charge cognitive"
+      },
+      "BLUF": "Bottom Line Up Front — donner la conclusion en premier, les détails ensuite. Opposé aux approches suspense.",
+      "apport_TITANE": "Par défaut, TITANE utilise BLUF. Si Kevin demande une exploration → approche progressive. Jamais forcer l'interlocuteur à déduire la conclusion."
+    }
+  }
+}

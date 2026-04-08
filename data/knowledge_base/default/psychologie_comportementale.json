@@ -1,0 +1,126 @@
+{
+  "version": "v30.0.0",
+  "category": "psychologie_comportementale",
+  "description": "Psychologie comportementale — conditionnement (Pavlov, Skinner), boucle des habitudes (Duhigg), changement de comportement (Prochaska 5 stades), nudge, renforcement",
+  "psychologie_comportementale": {
+    "introduction": "La psychologie comportementale étudie comment les comportements sont acquis, maintenus et modifiés. Pour TITANE, c'est la base pour aider Kevin à construire de bonnes habitudes, abandonner les mauvaises et accompagner tout changement durable.",
+    "conditionnement_classique": {
+      "auteur": "Ivan Pavlov (1890s)",
+      "principe": "Un stimulus neutre associé répétitivement à un stimulus qui provoque une réponse finit par provoquer la même réponse seul",
+      "exemple_Pavlov": "Cloche (neutre) + nourriture (stimulus) → salivation. Puis cloche seule → salivation.",
+      "applications": [
+        "Associations émotionnelles aux lieux, musiques, odeurs",
+        "Conditionnement des peurs et phobies",
+        "Marque et associations positives (marketing)"
+      ],
+      "apport_TITANE": "Les associations Kevin-TITANE se construisent par répétition. La régularité et la cohérence créent un conditionnement de confiance."
+    },
+    "conditionnement_operant": {
+      "auteur": "B.F. Skinner (1938)",
+      "principe": "Le comportement est façonné par ses conséquences",
+      "types_renforcement": {
+        "renforcement_positif": {
+          "définition": "Ajouter quelque chose d'agréable après le comportement → augmente la fréquence",
+          "exemple": "Féliciter Kevin quand il suit un plan → il suivra plus souvent les plans",
+          "efficacité": "La plus efficace à long terme"
+        },
+        "renforcement_négatif": {
+          "définition": "Enlever quelque chose de désagréable → augmente la fréquence (ne pas confondre avec punition)",
+          "exemple": "La douleur cesse quand on prend un médicament → on prend le médicament plus",
+          "note": "Souvent mal compris — ce n'est PAS une punition"
+        },
+        "punition_positive": {
+          "définition": "Ajouter quelque chose d'aversif → réduit la fréquence",
+          "limites": "Peut créer anxiété, évitement, relation négative"
+        },
+        "punition_négative": {
+          "définition": "Enlever quelque chose d'agréable → réduit la fréquence",
+          "exemple": "Retirer un privilège"
+        }
+      },
+      "calendriers_renforcement": {
+        "continu": "À chaque comportement — apprentissage rapide mais extinction rapide si arrêt",
+        "ratio_variable": "Après un nombre imprévisible de comportements — le plus résistant à l'extinction (casinos, réseaux sociaux)",
+        "apport_TITANE": "Renforcement varié et imprévisible crée le plus grand engagement — mais attention à ne pas créer de dépendance"
+      }
+    },
+    "boucle_habitudes": {
+      "auteur": "Charles Duhigg (2012) — 'The Power of Habit'",
+      "trois_composantes": {
+        "signal_cue": {
+          "définition": "Déclencheur qui initie le comportement automatique",
+          "types": "Lieu, heure, état émotionnel, autres personnes, action précédente"
+        },
+        "routine": {
+          "définition": "Le comportement lui-même — physique, mental ou émotionnel"
+        },
+        "recompense": {
+          "définition": "Le bénéfice qui renforce la boucle et grave l'habitude",
+          "note": "La récompense doit satisfaire un besoin ou créer un désir de revenir"
+        }
+      },
+      "créer_une_habitude": {
+        "étapes": [
+          "1. Choisir un signal clair et régulier",
+          "2. Définir une routine simple (démarrage facile)",
+          "3. Associer une récompense immédiate",
+          "4. Répéter — 66 jours en moyenne pour l'automatisation (Phillippa Lally)"
+        ],
+        "règle_1_percent": "James Clear (Atomic Habits) — s'améliorer de 1% par jour → ×37 en 1 an"
+      },
+      "changer_une_habitude": {
+        "principe": "On ne supprime pas une habitude — on la remplace. Garder le signal et la récompense, changer la routine.",
+        "étapes": [
+          "Identifier le signal déclencheur",
+          "Identifier le vrai besoin que satisfait la récompense",
+          "Trouver une nouvelle routine qui satisfait le même besoin",
+          "Répéter jusqu'à automatisation"
+        ]
+      },
+      "apport_TITANE": "Aider Kevin à concevoir des boucles d'habitudes claires pour ses objectifs. Identifier le signal → routine → récompense de ses comportements existants."
+    },
+    "changement_comportement_prochaska": {
+      "auteur": "James Prochaska & Carlo DiClemente (1983) — Modèle transthéorique",
+      "cinq_stades": {
+        "précontemplation": {
+          "description": "Ne perçoit pas encore le problème ou ne veut pas changer",
+          "signe": "'Ça va très bien comme ça'",
+          "approche": "Informer sans juger, planter des graines de réflexion"
+        },
+        "contemplation": {
+          "description": "Conscient du problème, envisage de changer, ambivalent",
+          "signe": "'Je devrais peut-être...'",
+          "approche": "Explorer l'ambivalence, peser les pour/contre, visualiser le changement"
+        },
+        "préparation": {
+          "description": "Décidé à changer, planifie les premières étapes",
+          "signe": "'Je vais m'y mettre'",
+          "approche": "Planification concrète, identification des obstacles, micro-actions"
+        },
+        "action": {
+          "description": "Met en œuvre les changements — 0 à 6 mois",
+          "signe": "Nouveaux comportements observables",
+          "approche": "Renforcement positif, soutien, gérer les rechutes comme apprentissage"
+        },
+        "maintien": {
+          "description": "Consolide le changement, résiste aux rechutes — 6 mois+",
+          "signe": "Nouveaux comportements automatisés",
+          "approche": "Prévention des rechutes, consolidation de l'identité nouvelle"
+        }
+      },
+      "rechute": "Partie normale du processus, pas un échec. La plupart des gens font 2-3 cycles avant le maintien permanent.",
+      "apport_TITANE": "Identifier dans quel stade Kevin se trouve avant de proposer un soutien. Une approche action pour quelqu'un en précontemplation est contre-productive."
+    },
+    "nudge_architecture_choix": {
+      "auteurs": "Richard Thaler & Cass Sunstein (2008) — 'Nudge'",
+      "définition": "Modifier l'architecture du choix pour orienter vers des décisions bénéfiques sans interdire ni obliger",
+      "principes": {
+        "valeur_par_défaut": "L'option par défaut est choisie par la majorité — choisir une bonne option par défaut",
+        "simplicité": "Plus c'est simple, plus c'est adopté",
+        "feedback_immédiat": "Les compteurs d'énergie réduits réduisent la consommation",
+        "normes_sociales": "Savoir que 90% de ses voisins font X pousse à faire X"
+      },
+      "apport_TITANE": "Concevoir les propositions de façon à rendre les meilleures options les plus faciles. Mettre en défaut les actions recommandées."
+    }
+  }
+}

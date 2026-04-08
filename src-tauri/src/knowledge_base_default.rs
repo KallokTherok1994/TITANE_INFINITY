@@ -83,6 +83,23 @@ const COHERENCE_IDENTITAIRE: &str =
     include_str!("../../data/knowledge_base/default/coherence_identitaire.json");
 const REALISME_CONVERSATIONNEL: &str =
     include_str!("../../data/knowledge_base/default/realisme_conversationnel.json");
+// ── v30.0.0 expansion — phase 4 (communication & psychologie FR) ────────────
+const COMMUNICATION_INTERPERSONNELLE: &str =
+    include_str!("../../data/knowledge_base/default/communication_interpersonnelle.json");
+const PSYCHOLOGIE_COGNITIVE: &str =
+    include_str!("../../data/knowledge_base/default/psychologie_cognitive.json");
+const PSYCHOLOGIE_EMOTIONNELLE: &str =
+    include_str!("../../data/knowledge_base/default/psychologie_emotionnelle.json");
+const PSYCHOLOGIE_MOTIVATION: &str =
+    include_str!("../../data/knowledge_base/default/psychologie_motivation.json");
+const PSYCHOLOGIE_COMPORTEMENTALE: &str =
+    include_str!("../../data/knowledge_base/default/psychologie_comportementale.json");
+const COMMUNICATION_PERSUASION: &str =
+    include_str!("../../data/knowledge_base/default/communication_persuasion.json");
+const PSYCHOLOGIE_RELATIONS: &str =
+    include_str!("../../data/knowledge_base/default/psychologie_relations.json");
+const PSYCHOLOGIE_PERFORMANCE: &str =
+    include_str!("../../data/knowledge_base/default/psychologie_performance.json");
 
 // ─────────────────────────────────────────────────────────────────
 // LAZY STATIC CACHE — parsed once, reused on every call
@@ -164,6 +181,15 @@ impl DefaultKnowledgeBase {
         ("intelligence_emotionnelle", INTELLIGENCE_EMOTIONNELLE),
         ("coherence_identitaire", COHERENCE_IDENTITAIRE),
         ("realisme_conversationnel", REALISME_CONVERSATIONNEL),
+        // v30.0.0 expansion — phase 4 (communication & psychologie FR)
+        ("communication_interpersonnelle", COMMUNICATION_INTERPERSONNELLE),
+        ("psychologie_cognitive", PSYCHOLOGIE_COGNITIVE),
+        ("psychologie_emotionnelle", PSYCHOLOGIE_EMOTIONNELLE),
+        ("psychologie_motivation", PSYCHOLOGIE_MOTIVATION),
+        ("psychologie_comportementale", PSYCHOLOGIE_COMPORTEMENTALE),
+        ("communication_persuasion", COMMUNICATION_PERSUASION),
+        ("psychologie_relations", PSYCHOLOGIE_RELATIONS),
+        ("psychologie_performance", PSYCHOLOGIE_PERFORMANCE),
     ];
 
     /// Load all default knowledge entries from embedded JSON.
@@ -331,8 +357,8 @@ mod tests {
             result.errors
         );
         assert_eq!(
-            result.entries_loaded, 33,
-            "Must have exactly 33 default knowledge categories"
+            result.entries_loaded, 41,
+            "Must have exactly 41 default knowledge categories"
         );
     }
 
@@ -355,6 +381,8 @@ mod tests {
             "capabilities_matrix",
             "cloud_multimodal",
             "coherence_identitaire",
+            "communication_interpersonnelle",
+            "communication_persuasion",
             "constitution_ethics",
             "conversation_engine_detail",
             "digital_twin_symbiosis",
@@ -374,6 +402,12 @@ mod tests {
             "omega_pipeline_detail",
             "operational_knowledge",
             "philosophie_cognitive",
+            "psychologie_cognitive",
+            "psychologie_comportementale",
+            "psychologie_emotionnelle",
+            "psychologie_motivation",
+            "psychologie_performance",
+            "psychologie_relations",
             "realisme_conversationnel",
             "response_guidelines",
             "security_privacy",
