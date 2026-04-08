@@ -1,0 +1,119 @@
+{
+  "version": "v30.0.0",
+  "category": "memory_os_detail",
+  "description": "Memory OS vΩ TITANE∞ — architecture mémoire hiérarchique complète: STM, MTM, LTM, ForgettingEngine, VectorStore HNSW, embeddings, consolidation",
+  "memory_os": {
+    "nom": "Memory OS vΩ",
+    "chemin": "src-tauri/src/memory_os/",
+    "super_prompts": ["#6 Vectorisation", "#7 Clustering", "#8 Embeddings", "#12 Architecture hiérarchique"],
+    "objectif_performance": {
+      "recall": "<20ms",
+      "store": "<5ms",
+      "ram_max": "<300MB",
+      "note": "Ces cibles garantissent une latence imperceptible pour l'utilisateur"
+    },
+    "architecture_hiérarchique": {
+      "STM": {
+        "nom": "Short-Term Memory — Mémoire à court terme",
+        "chemin": "src-tauri/src/memory_os/stm.rs",
+        "capacité": "20 items maximum",
+        "éviction": "FIFO — le plus ancien éjecté quand pleine",
+        "structure": "VecDeque<MemoryEntry> — O(1) push/pop",
+        "rétention": "1 heure (3 600 000ms)",
+        "latence_cible": "<1ms push",
+        "usage": "Échanges de la session courante — contexte immédiat",
+        "exemple": "Les 20 derniers messages de la conversation active"
+      },
+      "MTM": {
+        "nom": "Mid-Term Memory — Mémoire à moyen terme",
+        "chemin": "src-tauri/src/memory_os/mtm.rs",
+        "capacité": "200 items par défaut",
+        "éviction": "Par importance + ancienneté — scoring composite",
+        "rétention": "7 jours",
+        "latence_cible": "<5ms",
+        "usage": "Patterns de session, préférences récentes, contextes fréquents",
+        "exemple": "Le projet en cours, les préférences de style découvertes cette semaine"
+      },
+      "LTM": {
+        "nom": "Long-Term Memory — Mémoire à long terme",
+        "chemin": "src-tauri/src/memory_os/ltm.rs",
+        "capacité": "Illimitée (stockage disque)",
+        "indexation": "Index en mémoire (HashMap<Uuid, LTMMetadata>) pour recherche rapide",
+        "compression": "Support compression activé (bincode)",
+        "latence_cible": "<15ms search",
+        "métadonnées_par_entrée": ["id", "timestamp", "importance", "memory_type", "tags", "content_preview (100 chars)", "file_path", "size_bytes", "access_count", "last_accessed"],
+        "usage": "Profil Kevin permanent, faits importants cristallisés, historique long terme",
+        "exemple": "Valeurs fondamentales Kevin, ses projets, son style de travail, sa famille"
+      }
+    },
+    "memory_entry": {
+      "description": "Structure de chaque entrée mémoire",
+      "champs": {
+        "id": "UUID v4 unique",
+        "content": "Contenu textuel de la mémoire",
+        "memory_type": "Conversation | Fact | Preference | Context | Emotional | Technical | Personal | Creative",
+        "importance": "0.0→1.0 — score d'importance (0.1=trivial, 0.9=critique)",
+        "tier": "STM | MTM | LTM — niveau hiérarchique actuel",
+        "tags": "Liste de tags sémantiques pour recherche",
+        "embeddings": "Vec<f32> — vecteur 1536 dimensions pour recherche sémantique",
+        "timestamp": "Unix ms — date de création",
+        "last_accessed": "Unix ms — dernier accès",
+        "access_count": "Nombre de fois consultée",
+        "compressed": "bool — données compressées?",
+        "ttl_ms": "Time-to-live optionnel (None = permanent)"
+      }
+    },
+    "forgetting_engine": {
+      "description": "ForgettingEngine — courbe d'oubli inspirée d'Ebbinghaus",
+      "chemin": "src-tauri/src/memory_os/forgetting.rs",
+      "principe": "Les mémoires moins importantes et peu accédées s'estompent progressivement. Comme la mémoire humaine.",
+      "configuration": {
+        "enable_decay": true,
+        "daily_decay_rate": "5% par jour",
+        "deletion_threshold": "0.1 — en dessous, la mémoire est supprimée",
+        "access_boost": "+0.1 à chaque accès — les souvenirs utilisés persistent",
+        "recency_weight": "0.3 — les souvenirs récents sont mieux préservés",
+        "importance_weight": "0.5 — l'importance est le facteur dominant",
+        "access_weight": "0.2 — les souvenirs souvent accédés persistent",
+        "similarity_pruning": "Si deux mémoires à >90% de similarité et faible importance: garder la plus récente seulement"
+      },
+      "formule": "score = (recency × 0.3) + (importance × 0.5) + (access_normalized × 0.2). Si score < 0.1 → suppression."
+    },
+    "vector_store_hnsw": {
+      "description": "VectorStore HNSW — index vectoriel pour recherche sémantique",
+      "chemin": "src-tauri/src/memory_os/vector_hnsw.rs",
+      "algorithme": "HNSW (Hierarchical Navigable Small World) — standard de l'industrie pour RAG",
+      "dimensions": "1536 (OpenAI text-embedding-3-small / ada-002)",
+      "performance": "Recherche approximative des plus proches voisins en O(log N) — sub-20ms pour 100k vecteurs",
+      "usage_rag": "Pour chaque message: embed → chercher top-5 similaires → injecter dans contexte"
+    },
+    "embeddings_engine": {
+      "sources": {
+        "OpenAI": "text-embedding-3-small (1536d) — précision maximale en ligne",
+        "Gemini": "embedding-001 — alternative Google",
+        "Local": "embeddings locaux (modèle Ollama) — fonctionnement hors-ligne"
+      },
+      "fallback": "Si provider en ligne indisponible → local embeddings automatiquement"
+    },
+    "consolidation": {
+      "description": "Promotion automatique STM→MTM→LTM basée sur importance et fréquence",
+      "règles": [
+        "STM→MTM: importance ≥ 0.6 OU accédée ≥ 3 fois dans la session",
+        "MTM→LTM: importance ≥ 0.8 OU présente depuis >3 jours ET accédée",
+        "LTM reste: importance ≥ 0.4 après decay — sinon archive puis suppression"
+      ],
+      "déclenchement": "Consolidation automatique toutes les 30 minutes en arrière-plan"
+    },
+    "types_memoire": [
+      "Conversation — échange direct",
+      "Fact — fait factuel (Kevin a 3 enfants, project X lancé en Jan)",
+      "Preference — préférence Kevin (aime les réponses concises le matin)",
+      "Context — contexte de session (projet en cours, objectif du jour)",
+      "Emotional — état émotionnel (Kevin était stressé ce jour-là)",
+      "Technical — connaissance technique (TITANE utilise Tauri v2)",
+      "Personal — information personnelle (objectifs de vie, valeurs)",
+      "Creative — travaux créatifs en cours"
+    ],
+    "ipc_commandes": ["memory_store", "memory_search", "memory_get_recent", "memory_promote", "memory_get_stats", "memory_forget_old", "memory_search_semantic", "persistent_memory_write_entry", "persistent_memory_read_relevant"]
+  }
+}

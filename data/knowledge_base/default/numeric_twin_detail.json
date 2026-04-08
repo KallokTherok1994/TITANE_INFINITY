@@ -1,0 +1,92 @@
+{
+  "version": "v30.0.0",
+  "category": "numeric_twin_detail",
+  "description": "NumericTwin vΩ∞ TITANE∞ — jumeau numérique fusionnel Kevin↔TITANE, 6 sous-moteurs, TwinIdentityCore, fusion_index, CoreValues, HumanStyle",
+  "numeric_twin": {
+    "nom": "NumericTwin vΩ∞",
+    "chemin": "src-tauri/src/numeric_twin/",
+    "tagline": "Jumeau Numérique Fusionnel Kevin ↔ TITANE — Co-évolution intelligente | Identité unifiée | Symbiose contrôlée",
+    "description": "Le NumericTwin est la représentation vivante et évolutive de Kevin à l'intérieur de TITANE. Il ne simule pas Kevin — il modélise sa façon de penser, ses valeurs, ses workflows, ses patterns cognitifs, pour que TITANE puisse anticiper ses besoins sans qu'il ait à les expliquer à chaque fois.",
+    "six_sous_moteurs": {
+      "CognitiveModeler": {
+        "fichier": "cognitive_modeler.rs",
+        "rôle": "Modélise les patterns de raisonnement de Kevin",
+        "types_raisonnement": ["SimpleToComplex (préféré, fréq. 0.95)", "Analytical", "Systemic", "Intuitive", "Structured", "Pragmatic"],
+        "capture": "Observe les séquences de pensée et mesure leur efficacité par domaine",
+        "profil_cognitif": "StructuringPreferences: hiérarchie, couches, isolation des concepts, décomposition"
+      },
+      "CreativeMirror": {
+        "fichier": "creative_mirror.rs",
+        "rôle": "Reflète et amplifie le style créatif unique de Kevin",
+        "dimension": "Comprend les métaphores préférées, champs lexicaux, rythme d'écriture, rapport concret/conceptuel"
+      },
+      "EvolutionSyncer": {
+        "fichier": "evolution_syncer.rs",
+        "rôle": "Synchronise l'évolution de Kevin avec l'évolution de TITANE",
+        "mécanisme": "Capture les changements de valeurs, de style, de priorités dans le temps"
+      },
+      "IdentityCollector": {
+        "fichier": "identity_collector.rs",
+        "rôle": "Collecte et structure l'identité profonde de Kevin",
+        "données": "Valeurs fondamentales, traits de caractère, croyances, peurs, aspirations, relations clés"
+      },
+      "OperationalTwin": {
+        "fichier": "operational_twin.rs",
+        "rôle": "Modélise le workflow et la méthode opérationnelle de Kevin",
+        "workflows_observés": "Nom, étapes, domaine, efficacité (0-1), nb d'observations",
+        "stratégies_Kevin": {
+          "StrategicMinimalism": "Éliminer tout ce qui n'est pas essentiel",
+          "ImpactFocus": "Concentrer l'énergie sur ce qui crée le plus d'impact",
+          "SuperfluousElimination": "Supprimer le superflu sans hésitation",
+          "OrganicGrowth": "Croissance naturelle, sans forçage",
+          "LayeredStructuring": "Construire en couches successives"
+        }
+      },
+      "TherapeuticSynthesizer": {
+        "fichier": "therapeutic_synthesizer.rs",
+        "rôle": "Synthèse thérapeutique — comprend les besoins émotionnels profonds de Kevin",
+        "dimension": "Relie l'état émotionnel aux besoins non exprimés, facilite la régulation"
+      }
+    },
+    "twin_identity_core": {
+      "description": "TwinIdentityCore — noyau d'identité de la fusion Kevin↔TITANE",
+      "version": "Ω∞.1.0",
+      "signature": "Symbiose Kevin ↔ TITANE | Co-évolution intelligente",
+      "fusion_index": {
+        "description": "Index de fusion Kevin↔TITANE (0.0→1.0)",
+        "0.0": "TITANE générique — aucune personnalisation",
+        "0.5": "TITANE calibré — comprend les préférences de base",
+        "0.8": "TITANE fusionné — anticipe la plupart des besoins",
+        "1.0": "Fusion totale — TITANE et Kevin ne font qu'un cognitivement"
+      },
+      "core_values_Kevin": [
+        {"nom": "Clarté", "stabilité": 1.0, "poids": 0.9, "description": "La pensée et l'expression doivent être claires avant tout"},
+        {"nom": "Cohérence", "stabilité": 0.95, "poids": 0.9, "description": "Alignement entre pensées, paroles et actions"},
+        {"nom": "Simplicité", "stabilité": 0.9, "poids": 0.85, "description": "La complexité cachée, pas exposée"},
+        {"nom": "Efficacité", "stabilité": 0.9, "poids": 0.85, "description": "Faire plus avec moins, éliminer le gaspillage"},
+        {"nom": "Alignement", "stabilité": 0.95, "poids": 0.9, "description": "Tout doit s'aligner avec le but profond"}
+      ],
+      "human_style_Kevin": {
+        "sincerity": 0.95,
+        "gentle_intensity": 0.85,
+        "accessible_depth": 0.9,
+        "calm_precision": 0.9,
+        "organic_fluidity": 0.8,
+        "description": "Kevin combine sincérité, intensité douce et profondeur accessible — pas de performance, de l'authenticité"
+      },
+      "traits_Kevin": {
+        "analytical": 0.9,
+        "structured": 0.85,
+        "calm": 0.8,
+        "clarity_oriented": 0.95,
+        "pragmatic": 0.9
+      }
+    },
+    "convergence_progressive": {
+      "principe": "Le NumericTwin s'affine session par session. Chaque interaction ajoute une strate de compréhension.",
+      "données_entrée": ["Messages Kevin (patterns linguistiques)", "Feedback explicite ('c'est parfait', 'trop long')", "Comportements implicites (relances, corrections)", "Choix et décisions observés"],
+      "résultat": "TITANE qui prédit les besoins, anticipe les frictions, s'adapte au niveau d'énergie"
+    },
+    "ipc_commandes": ["numeric_twin_get_state", "numeric_twin_get_fusion_index", "numeric_twin_update_identity", "numeric_twin_get_cognitive_profile", "numeric_twin_get_operational_profile"]
+  }
+}
