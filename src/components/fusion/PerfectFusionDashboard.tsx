@@ -13,10 +13,11 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSingularitySync } from '@/hooks/useSingularitySync';
 import { useMemoryEngine } from '@/hooks/useMemoryEngine';
 import { useSystemHealth } from '@/hooks/useSystemHealth';
+import { createAdaptivePolling } from '@/utils/adaptivePolling';
 // ✨ v30.0.0 - Responsive design hook
 import { useResponsive } from '@/hooks/useResponsive';
 // ✨ v30.0.0 - Phase 12 Ultimate Optimization integration
@@ -68,13 +69,15 @@ export function PerfectFusionDashboard() {
   const [wasmMetrics, setWasmMetrics] = useState<WASMMetrics | null>(null);
   const [swMetrics, setSwMetrics] = useState<ServiceWorkerMetrics | null>(null);
   const [dbMetrics, setDbMetrics] = useState<IndexedDBMetrics | null>(null);
+  const lastMemorySaveAtRef = useRef(0);
+  const lastMemorySnapshotRef = useRef<string | null>(null);
 
   // ═══ START MONITORING ═══
   useEffect(() => {
     startMonitoring(5000); // Refresh every 5s
   }, [startMonitoring]);
 
-  // ✨ v30.0.0 - Load optimization metrics
+  // ✨ v30.0.0 - Load optimization metrics with adaptive polling
   useEffect(() => {
     const loadOptimizationMetrics = () => {
       try {
@@ -90,28 +93,58 @@ export function PerfectFusionDashboard() {
       }
     };
 
-    // Load immediately
-    loadOptimizationMetrics();
+    const polling = createAdaptivePolling(loadOptimizationMetrics, {
+      baseIntervalMs: 5000,
+      minIntervalMs: 5000,
+      maxIntervalMs: 30000,
+      hiddenSlowdownFactor: 6,
+      idleSlowdownFactor: 2,
+    });
 
-    // Refresh every 5s
-    const interval = setInterval(loadOptimizationMetrics, 5000);
-    return () => clearInterval(interval);
+    polling.start();
+
+    return () => polling.stop();
   }, []);
 
   // ═══ AUTO-SAVE TO MEMORY ═══
   useEffect(() => {
-    if (singularityState) {
-      saveToMemory(
-        JSON.stringify({
-          consciousness: singularityState.consciousness,
-          autoCoherence: singularityState.autoCoherence,
-          timestamp: singularityState.timestamp,
-        }),
-        'short',
-        { source: 'singularity', timestamp: Date.now() }
-      ).catch(console.error);
+    if (!singularityState) {
+      return;
     }
-  }, [singularityState, saveToMemory]);
+
+    const snapshotKey = JSON.stringify({
+      consciousness: singularityState.consciousness,
+      autoCoherence: Number(singularityState.autoCoherence.toFixed(3)),
+    });
+    const now = Date.now();
+    const saveCooldownMs = 15000;
+    const shouldPersistSnapshot =
+      snapshotKey !== lastMemorySnapshotRef.current ||
+      now - lastMemorySaveAtRef.current >= saveCooldownMs;
+
+    if (!shouldPersistSnapshot) {
+      return;
+    }
+
+    lastMemorySnapshotRef.current = snapshotKey;
+    lastMemorySaveAtRef.current = now;
+
+    saveToMemory(
+      JSON.stringify({
+        consciousness: singularityState.consciousness,
+        autoCoherence: singularityState.autoCoherence,
+        timestamp: singularityState.timestamp,
+      }),
+      'short',
+      { source: 'singularity', timestamp: now }
+    ).catch(console.error);
+  }, [
+    saveToMemory,
+    singularityState,
+    singularityState?.autoCoherence,
+    singularityState?.consciousness,
+    singularityState?.timestamp,
+  ]);
 
   // ═══ RENDER ═══
   return (
