@@ -21,7 +21,26 @@ interface PollerHandle {
 }
 
 let activePoller: ReturnType<typeof setInterval> | null = null;
+let activeFetchPromise: Promise<void> | null = null;
 let refCount = 0;
+
+function runFetchAll(failureMessage: string): Promise<void> {
+  if (activeFetchPromise) {
+    return activeFetchPromise;
+  }
+
+  let request: Promise<void> | null = null;
+  request = Promise.resolve(useSystemStore.getState().fetchAll())
+    .catch(err => logger.warn(failureMessage, err))
+    .finally(() => {
+      if (activeFetchPromise === request) {
+        activeFetchPromise = null;
+      }
+    });
+
+  activeFetchPromise = request;
+  return request;
+}
 
 /**
  * Start polling system health from the backend.
@@ -37,16 +56,10 @@ export function startSystemHealthPolling(
 
   if (!activePoller) {
     // Immediate first fetch
-    useSystemStore
-      .getState()
-      .fetchAll()
-      .catch(err => logger.warn('Initial health fetch failed (non-fatal)', err));
+    void runFetchAll('Initial health fetch failed (non-fatal)');
 
     activePoller = setInterval(() => {
-      useSystemStore
-        .getState()
-        .fetchAll()
-        .catch(err => logger.warn('Polling health fetch failed (non-fatal)', err));
+      void runFetchAll('Polling health fetch failed (non-fatal)');
     }, intervalMs);
 
     logger.info(`[LOCK3] System health polling started (interval=${intervalMs}ms)`);
@@ -58,6 +71,7 @@ export function startSystemHealthPolling(
       if (refCount === 0 && activePoller !== null) {
         clearInterval(activePoller);
         activePoller = null;
+        activeFetchPromise = null;
         logger.info('[LOCK3] System health polling stopped');
       }
     },
