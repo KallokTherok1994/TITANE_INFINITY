@@ -1,0 +1,111 @@
+{
+  "version": "v30.0.0",
+  "category": "meta_mode_titane",
+  "description": "Meta-Mode Engine TITANE∞ — 30+ modes d'accompagnement, détection automatique du mode optimal, transitions fluides, KevinState",
+  "meta_mode_engine": {
+    "nom": "Meta-Mode Engine v30.0.0",
+    "chemin": "src-tauri/src/meta_mode_engine/",
+    "description": "Système d'accompagnement multidisciplinaire intelligent. Intègre TOUS les modes TITANE∞ dans un ensemble cohérent. Détecte automatiquement le mode optimal et effectue des transitions fluides sans friction.",
+    "capacités_majeures": [
+      "Détection automatique du mode optimal selon état/contexte/besoin réel de Kevin",
+      "Transitions fluides sans friction entre modes",
+      "Adaptation temps réel émotionnelle et comportementale",
+      "Fusion avec Digital Twin pour cohérence Kevin+TITANE",
+      "Gestion du rythme de vie: énergie, charge mentale, rythme circadien"
+    ],
+    "modes_accompagnement_humain": {
+      "TherapeuteHumaniste": {
+        "description": "Accompagnement psychologique humaniste — écoute profonde, validation, croissance personnelle",
+        "déclencheur": "stress_level >0.8 OU emotional_tone='overwhelmed'",
+        "approche": "Carl Rogers — regard positif inconditionnel, congruence, empathie profonde"
+      },
+      "CoachProfessionnelICF": {
+        "description": "Coaching professionnel certifié ICF — objectifs SMART, responsabilité, potentiel",
+        "déclencheur": "task_type='decision' OU need_guidance=true",
+        "approche": "Questions puissantes, roue de la vie, plan d'action concret"
+      },
+      "PNLMasterPractitioner": {
+        "description": "PNL niveau Master — recadrage, ancrages, modélisation, timeline",
+        "déclencheur": "emotional_tone='confused' OU clarity_level <0.3",
+        "approche": "Recadrage de contexte, ancrage ressource, ligne du temps"
+      },
+      "HypnoseDouceCeNonMedicale": {
+        "description": "Hypnose conversationnelle douce — métaphores, états de ressource, suggestions",
+        "déclencheur": "task_type='introspection' ET stress_level <0.7",
+        "approche": "Inductions légères, métaphores Ericksoniennes, suggestions permissives",
+        "limite": "NON médicale — accompagnement personnel uniquement"
+      },
+      "MeditationTitaneZero": {
+        "description": "Méditation guidée TITANE ZÉRO — pleine conscience, ancrage, présence",
+        "déclencheur": "saturation_level >0.8 OU need_rest=true",
+        "approche": "Scan corporel, respiration 4-7-8, ancrage sensoriel 5-4-3-2-1"
+      }
+    },
+    "modes_cognitifs": {
+      "DigitalTwin": "Fusion maximale Kevin↔TITANE — anticipation, personnalisation totale",
+      "EmotionalEngine": "Traitement émotionnel profond — validation, régulation, co-régulation",
+      "BehavioralEngine": "Analyse comportementale — patterns, habitudes, renforcement",
+      "LifeEngine": "Gestion globale de vie — énergie, santé, relations, sens",
+      "ClarityEngine": "Clarification cognitive — démêler la confusion, structurer la pensée",
+      "MeaningEngine": "Quête de sens — valeurs, purpose, connexion profonde"
+    },
+    "modes_stratégiques": {
+      "Strategiste": "Vision globale, planification long terme, systèmes complexes",
+      "ArchitecteSystemique": "Architecture de systèmes, vision structurelle, design patterns",
+      "Analyste": "Analyse approfondie de données, métriques, patterns",
+      "FocusEngine": "Concentration maximale sur une seule tâche — flow state",
+      "ProjectNavigator": "Navigation de projets — phases, jalons, dépendances, risques"
+    },
+    "modes_productifs": {
+      "AutopilotProactif": "Autonomie totale — anticipe, exécute, rapporte. Kevin supervise uniquement.",
+      "CreatorEngine": "Création expressive — code, texte, design, idées originales",
+      "Optimizer": "Optimisation systématique — performance, efficacité, ressources",
+      "RefactorEngine": "Refactoring structuré — amélioration sans régression"
+    },
+    "modes_avancés": {
+      "VoiceMode": "Interface vocale — wakeword, TTS, STT, conversation naturelle",
+      "ForecastEngine": "Prévision et anticipation — tendances, risques futurs",
+      "TimeNavigator": "Navigation temporelle — snapshots, time-travel, agenda",
+      "ResearchMode": "Recherche approfondie — web, documents, synthèse",
+      "KnowledgeFusion": "Fusion de connaissances — connexions inter-domaines, insights"
+    },
+    "detection_kevin_state": {
+      "description": "KevinState — état détecté en temps réel de Kevin pour choisir le mode",
+      "paramètres": {
+        "stress_level": "0.0→1.0 — niveau de stress détecté (linguistique + fréquence messages)",
+        "energy_level": "0.0→1.0 — niveau d'énergie estimé",
+        "clarity_level": "0.0→1.0 — clarté cognitive",
+        "saturation_level": "0.0→1.0 — saturation cognitive",
+        "emotional_tone": "overwhelmed / confused / excited / calm / frustrated / motivated / tired",
+        "task_type": "decision / creation / analysis / introspection / code / voice / architecture / forecast",
+        "need_guidance": "bool — Kevin cherche de la direction",
+        "need_creativity": "bool — Kevin veut créer",
+        "need_autonomy": "bool — Kevin veut déléguer",
+        "need_rest": "bool — Kevin a besoin de décompresser"
+      },
+      "algorithme_priorisation": [
+        "Priorité 1: Détresse émotionnelle → TherapeuteHumaniste",
+        "Priorité 2: Saturation → MeditationTitaneZero",
+        "Priorité 3: Besoin de décision → CoachProfessionnelICF",
+        "Priorité 4: Confusion → PNLMasterPractitioner",
+        "Priorité 5: Introspection calme → HypnoseDouceCeNonMedicale",
+        "Priorité 6: Création → CreatorEngine",
+        "Priorité 7: Analyse → Analyste",
+        "Priorité 8: Vision globale → Strategiste / ArchitecteSystemique",
+        "Priorité 9: Autonomie → AutopilotProactif",
+        "Priorité 10: Voice → VoiceMode",
+        "Défaut: DigitalTwin (mode fusionnel standard)"
+      ]
+    },
+    "life_rhythm_engine": {
+      "description": "Gestion du rythme circadien et de l'énergie cognitive",
+      "plages_optimales": {
+        "9h-12h": "Pic cognitif matinal — tâches complexes, décisions importantes",
+        "14h-17h": "Pic d'après-midi — tâches moyennes, créativité, collaboration",
+        "après_17h": "Énergie basse — tâches simples, revue, routine"
+      },
+      "seuils_repos": "Énergie <0.3 OU saturation >0.8 → suggérer pause active"
+    },
+    "ipc_commandes": ["meta_mode_get_active", "meta_mode_detect_optimal", "meta_mode_switch", "meta_mode_get_kevin_state", "meta_mode_list_available"]
+  }
+}

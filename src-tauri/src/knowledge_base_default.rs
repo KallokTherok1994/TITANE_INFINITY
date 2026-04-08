@@ -28,7 +28,7 @@ const RESPONSE_GUIDELINES: &str =
     include_str!("../../data/knowledge_base/default/response_guidelines.json");
 const OPERATIONAL_KNOWLEDGE: &str =
     include_str!("../../data/knowledge_base/default/operational_knowledge.json");
-// ── v30.0.0 expansion ──────────────────────────────────────────────────────
+// ── v30.0.0 expansion — phase 1 ────────────────────────────────────────────
 const CONSTITUTION_ETHICS: &str =
     include_str!("../../data/knowledge_base/default/constitution_ethics.json");
 const MEMORY_SYSTEM_DEEP: &str =
@@ -49,6 +49,23 @@ const LEARNING_PROMPTS: &str =
     include_str!("../../data/knowledge_base/default/learning_prompts.json");
 const SERVICES_BACKEND: &str =
     include_str!("../../data/knowledge_base/default/services_backend.json");
+// ── v30.0.0 expansion — phase 2 (réflexion approfondie, en français) ───────
+const SINGULARITY_OS_DETAIL: &str =
+    include_str!("../../data/knowledge_base/default/singularity_os_detail.json");
+const OMEGA_PIPELINE_DETAIL: &str =
+    include_str!("../../data/knowledge_base/default/omega_pipeline_detail.json");
+const AGENTS_MULTI_SYSTEME: &str =
+    include_str!("../../data/knowledge_base/default/agents_multi_systeme.json");
+const META_MODE_TITANE: &str =
+    include_str!("../../data/knowledge_base/default/meta_mode_titane.json");
+const APPRENTISSAGE_EVOLUTION: &str =
+    include_str!("../../data/knowledge_base/default/apprentissage_evolution.json");
+const HYPER_INTELLIGENCE: &str =
+    include_str!("../../data/knowledge_base/default/hyper_intelligence.json");
+const META_ORCHESTRATEUR: &str =
+    include_str!("../../data/knowledge_base/default/meta_orchestrateur.json");
+const PHILOSOPHIE_COGNITIVE: &str =
+    include_str!("../../data/knowledge_base/default/philosophie_cognitive.json");
 
 // ─────────────────────────────────────────────────────────────────
 // LAZY STATIC CACHE — parsed once, reused on every call
@@ -101,7 +118,7 @@ impl DefaultKnowledgeBase {
         ("capabilities_matrix", CAPABILITIES_MATRIX),
         ("response_guidelines", RESPONSE_GUIDELINES),
         ("operational_knowledge", OPERATIONAL_KNOWLEDGE),
-        // v30.0.0 expansion
+        // v30.0.0 expansion — phase 1
         ("constitution_ethics", CONSTITUTION_ETHICS),
         ("memory_system_deep", MEMORY_SYSTEM_DEEP),
         ("ai_providers_guide", AI_PROVIDERS_GUIDE),
@@ -112,6 +129,15 @@ impl DefaultKnowledgeBase {
         ("troubleshooting_faq", TROUBLESHOOTING_FAQ),
         ("learning_prompts", LEARNING_PROMPTS),
         ("services_backend", SERVICES_BACKEND),
+        // v30.0.0 expansion — phase 2 (réflexion approfondie, en français)
+        ("singularity_os_detail", SINGULARITY_OS_DETAIL),
+        ("omega_pipeline_detail", OMEGA_PIPELINE_DETAIL),
+        ("agents_multi_systeme", AGENTS_MULTI_SYSTEME),
+        ("meta_mode_titane", META_MODE_TITANE),
+        ("apprentissage_evolution", APPRENTISSAGE_EVOLUTION),
+        ("hyper_intelligence", HYPER_INTELLIGENCE),
+        ("meta_orchestrateur", META_ORCHESTRATEUR),
+        ("philosophie_cognitive", PHILOSOPHIE_COGNITIVE),
     ];
 
     /// Load all default knowledge entries from embedded JSON.
@@ -279,8 +305,8 @@ mod tests {
             result.errors
         );
         assert_eq!(
-            result.entries_loaded, 17,
-            "Must have exactly 17 default knowledge categories"
+            result.entries_loaded, 25,
+            "Must have exactly 25 default knowledge categories"
         );
     }
 
@@ -297,21 +323,29 @@ mod tests {
         let cats = DefaultKnowledgeBase::list_categories();
         assert!(!cats.is_empty(), "Must have at least one category");
         let expected = vec![
+            "agents_multi_systeme",
             "ai_providers_guide",
+            "apprentissage_evolution",
             "capabilities_matrix",
             "cloud_multimodal",
             "constitution_ethics",
             "digital_twin_symbiosis",
             "engines_catalog",
             "frontend_modules",
+            "hyper_intelligence",
             "identity_profile",
             "ipc_commands_catalog",
             "learning_prompts",
             "memory_system_deep",
+            "meta_mode_titane",
+            "meta_orchestrateur",
+            "omega_pipeline_detail",
             "operational_knowledge",
+            "philosophie_cognitive",
             "response_guidelines",
             "security_privacy",
             "services_backend",
+            "singularity_os_detail",
             "system_architecture",
             "troubleshooting_faq",
         ];

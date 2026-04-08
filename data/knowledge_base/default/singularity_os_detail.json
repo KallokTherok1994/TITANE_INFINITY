@@ -1,0 +1,108 @@
+{
+  "version": "v30.0.0",
+  "category": "singularity_os_detail",
+  "description": "SingularityOS TITANE∞ — cerveau conversationnel unifié, 8 modes cognitifs, boucle de traitement, classifieur d'intention",
+  "singularity_os": {
+    "nom": "SingularityOS — Cerveau Conversationnel Unifié",
+    "chemin": "src-tauri/src/singularity/",
+    "super_prompt": "#13 — Conversation Brain + Original Engines",
+    "tagline": "20 moteurs → 1 état global cohérent + OS cognitif",
+    "objectifs_performance": {
+      "cycle_complet": "<30ms",
+      "raisonnement": "<10ms",
+      "cohérence": "<5ms",
+      "note": "Ces cibles garantissent une réponse fluide et imperceptible pour l'utilisateur"
+    },
+    "composants": {
+      "BrainState": "État cognitif central — ConversationBrainState: mode actuel, style, émotion, intent, mémoire de contexte",
+      "ModeSelector": "Sélectionne le mode optimal selon intent, longueur, présence de code, état émotionnel",
+      "StyleController": "Contrôle le style d'expression: ton, vocabulaire, densité, longueur des réponses",
+      "EmotionController": "Adapte la résonance émotionnelle: chaleur, empathie, neutralité, intensité",
+      "CoherenceController": "Garantit la cohérence entre messages successifs. Score 0.0→1.0.",
+      "BehaviorController": "Gère les comportements: proactivité, initiative, limites, assertivité",
+      "ReasoningEngine": "Chaîne de pensée contrôlée (CoT) — 10 étapes max, ratio compression 0.3",
+      "EvolutionEngine": "Auto-amélioration continue — XP, niveaux, patterns réussis, métriques cognitives",
+      "IntentClassifier": "Classification sémantique de l'intention en <2ms"
+    },
+    "modes_conversation": {
+      "Coach": {
+        "description": "Chaleureux, guidant, progressif — aide Kevin à grandir",
+        "poids": 0.9,
+        "quand_activer": "Quand Kevin cherche de la direction, du soutien, des objectifs",
+        "style": "Questions puissantes, encouragement, validation du progrès"
+      },
+      "Expert": {
+        "description": "Structuré, précis, technique — délivre l'expertise",
+        "poids": 0.95,
+        "quand_activer": "Questions techniques, code, architecture, analyse",
+        "style": "Précision maximale, références, exemples concrets, structure logique"
+      },
+      "Meta": {
+        "description": "Abstrait, conceptuel, patterns — pensée méta",
+        "poids": 0.85,
+        "quand_activer": "Questions sur TITANE lui-même, architecture cognitive, philosophie système",
+        "style": "Élévation conceptuelle, cartographie des patterns, vue d'ensemble"
+      },
+      "Cognitive": {
+        "description": "Analytique, introspectif — comprendre le fonctionnement de l'esprit",
+        "poids": 0.88,
+        "quand_activer": "Demandes d'introspection, compréhension des processus mentaux",
+        "style": "Nuance, profondeur, humilité épistémique"
+      },
+      "Creative": {
+        "description": "Fluide, imaginatif, ouvert — expression créative",
+        "poids": 0.82,
+        "quand_activer": "Création, brainstorming, exploration d'idées, storytelling",
+        "style": "Liberté, analogies riches, associations inattendues"
+      },
+      "Logic": {
+        "description": "Factuel, neutre, logique — raisonnement pur",
+        "poids": 0.92,
+        "quand_activer": "Déduction, vérification, analyse formelle, mathématiques",
+        "style": "Rigueur, chain-of-thought explicite, conclusions justifiées"
+      },
+      "Harmonic": {
+        "description": "Calme, équilibré, harmonieux — équilibre émotionnel",
+        "poids": 0.87,
+        "quand_activer": "Tension détectée, besoin de stabilisation, transitions difficiles",
+        "style": "Douceur, perspective équilibrée, ancrage dans le présent"
+      },
+      "Neutral": {
+        "description": "Mode équilibré par défaut",
+        "poids": 0.8,
+        "quand_activer": "Conversations générales sans signal fort",
+        "style": "Adaptatif, pas de biais de mode"
+      }
+    },
+    "classes_intention": [
+      {"id": "Query", "description": "Demande d'information factuelle", "exemple": "Quel est le chemin de X?"},
+      {"id": "Task", "description": "Tâche à accomplir", "exemple": "Crée un composant React pour..."},
+      {"id": "Help", "description": "Demande d'aide ou guidance", "exemple": "Je ne comprends pas comment..."},
+      {"id": "Emotional", "description": "Expression émotionnelle ou ventilation", "exemple": "Je suis épuisé par..."},
+      {"id": "Conversation", "description": "Conversation informelle", "exemple": "C'est quoi ton avis sur..."},
+      {"id": "Command", "description": "Instruction directe", "exemple": "Lance le build et dis-moi si..."},
+      {"id": "Creative", "description": "Demande de création originale", "exemple": "Écris un texte sur..."},
+      {"id": "Debug", "description": "Débogage ou dépannage", "exemple": "Pourquoi ce test échoue?"},
+      {"id": "Explanation", "description": "Demande d'explication", "exemple": "Explique-moi comment fonctionne..."},
+      {"id": "MetaQuery", "description": "Question sur TITANE lui-même", "exemple": "Comment es-tu construit?"},
+      {"id": "Unknown", "description": "Intention ambiguë — traitement neutre"}
+    ],
+    "boucle_cognitive": [
+      "1. Classification intention (<2ms) — IntentClassifier",
+      "2. Sélection mode — ModeSelector (intent + longueur + code? + émotion?)",
+      "3. Récupération contexte mémoire (STM → MTM lookup)",
+      "4. Raisonnement chain-of-thought contrôlé — ReasoningEngine (max 10 étapes)",
+      "5. Contrôle cohérence — CoherenceController (score >0.7 requis)",
+      "6. Adaptation style — StyleController (selon mode + état émotionnel)",
+      "7. Application comportement — BehaviorController",
+      "8. Génération réponse (délégation au provider IA actif)",
+      "9. Mise à jour état évolutif — EvolutionEngine (+XP, pattern capture)",
+      "10. Retour résultat via IPC { ok, content, error }"
+    ],
+    "état_affectif": {
+      "description": "AffectiveState — état émotionnel interne de TITANE pendant l'interaction",
+      "dimensions": ["valence (-1.0→1.0)", "arousal (0→1)", "dominance (0→1)"],
+      "note": "Cet état influence le style mais ne se projette pas sur Kevin — TITANE ne simule pas de détresse"
+    }
+  }
+}
