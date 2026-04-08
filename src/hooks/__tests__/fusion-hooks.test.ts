@@ -419,6 +419,71 @@ describe('useMemoryEngine', () => {
       /persistent memory compression is not available/i
     );
   });
+
+  test('should avoid overlapping periodic stats refreshes while a previous refresh is still pending', async () => {
+    vi.useFakeTimers();
+
+    let releaseStats: ((value: {
+      count_by_level: { session: number; intermediate: number; long_term: number };
+      total_size: number;
+      health: {
+        status: string;
+        corrupted_files: number;
+        last_integrity_check: number;
+        disk_space_percent: number;
+        encryption_active: boolean;
+        last_backup: number;
+      };
+    }) => void) | null = null;
+
+    vi.mocked(secureInvoke).mockImplementation(async command => {
+      if (command !== 'persistent_memory_get_stats') {
+        return null;
+      }
+
+      return await new Promise(resolve => {
+        releaseStats = resolve as typeof releaseStats;
+      });
+    });
+
+    const { unmount } = renderHook(() => useMemoryEngine());
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(vi.mocked(secureInvoke)).toHaveBeenCalledTimes(1);
+
+    await act(async () => {
+      vi.advanceTimersByTime(30000);
+      await Promise.resolve();
+    });
+
+    expect(vi.mocked(secureInvoke)).toHaveBeenCalledTimes(1);
+
+    await act(async () => {
+      releaseStats?.({
+        count_by_level: {
+          session: 1,
+          intermediate: 0,
+          long_term: 0,
+        },
+        total_size: 256,
+        health: {
+          status: 'healthy',
+          corrupted_files: 0,
+          last_integrity_check: 0,
+          disk_space_percent: 35,
+          encryption_active: true,
+          last_backup: 0,
+        },
+      });
+      await Promise.resolve();
+    });
+
+    unmount();
+    vi.useRealTimers();
+  });
 });
 
 describe('useSystemHealth', () => {
