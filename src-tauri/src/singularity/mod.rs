@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1Ω — SINGULARITY MODULE
+//   TITANE∞ v30.0.0 — SINGULARITY MODULE
 //   Super Prompt #13: Conversation Brain + Original Engines
 //   Architecture: 20 moteurs → 1 état global cohérent + OS cognitif
 // ═══════════════════════════════════════════════════════════════
@@ -22,7 +22,7 @@ pub mod singularity_commands;
 pub mod singularity_selftest;
 pub mod singularity_state_vinfinity;
 
-// Module v∞.19.3Ω (Phase 8 - IA Context)
+// Module v30.0.0 (Phase 8 - IA Context)
 pub mod ia_context;
 
 // ═══════════════════════════════════════════════════════════════

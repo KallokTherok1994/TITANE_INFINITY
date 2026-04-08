@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1Ω — OMEGA PIPELINE - SCHEDULER
+//   TITANE∞ v30.0.0 — OMEGA PIPELINE - SCHEDULER
 //   Super Prompt #15: Job scheduling and queue management
 //   Priority-based scheduling with rate limiting and backpressure
 // ═══════════════════════════════════════════════════════════════

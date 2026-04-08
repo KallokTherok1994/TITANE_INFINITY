@@ -2660,7 +2660,7 @@ fn main() {
             titane_infinity::adaptive::adaptive_commands::adaptive_run_optimization,
             titane_infinity::adaptive::adaptive_commands::adaptive_set_mode,
 
-            // singularity — SingularityStateGlobal state now managed
+            // singularity — SingularityStateGlobal state now managed (v30.0.0)
             titane_infinity::singularity::singularity_commands::singularity_diff,
             titane_infinity::singularity::singularity_commands::singularity_export_json,
             titane_infinity::singularity::singularity_commands::singularity_get,
@@ -2671,6 +2671,7 @@ fn main() {
             titane_infinity::singularity::singularity_commands::singularity_set,
             titane_infinity::singularity::singularity_commands::singularity_snapshot,
             titane_infinity::singularity::singularity_commands::singularity_sync,
+            titane_infinity::singularity::singularity_selftest::singularity_selftest_full,
 
             // time_commands extras — module already imported
             time_commands::list_snapshots,

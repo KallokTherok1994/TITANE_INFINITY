@@ -289,7 +289,7 @@ pub struct SingularityStateVInfinity {
     // 22. NARRATIVE ENGINE (v22)
     pub narrative: NarrativeState,
 
-    // 23. IA CONTEXT ENGINE (v∞.19.3Ω - Phase 8)
+    // 23. IA CONTEXT ENGINE (v30.0.0 - Phase 8)
     pub ia_context: super::ia_context::IAContext,
 
     // HASH GLOBAL D'INTÉGRITÉ

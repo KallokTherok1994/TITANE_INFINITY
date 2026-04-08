@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1Ω — OMEGA PIPELINE - MAIN PIPELINE
+//   TITANE∞ v30.0.0 — OMEGA PIPELINE - MAIN PIPELINE
 //   Super Prompt #15: Complete pipeline orchestration
 //   Router → Executor → Merger → Guardrails → Output
 // ═══════════════════════════════════════════════════════════════

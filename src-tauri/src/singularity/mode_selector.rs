@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1Ω — SINGULARITY OS - MODE SELECTOR
+//   TITANE∞ v30.0.0 — SINGULARITY OS - MODE SELECTOR
 //   Super Prompt #13: Intelligent conversation mode selection
 //   Selects optimal mode based on intent, context, and history
 // ═══════════════════════════════════════════════════════════════

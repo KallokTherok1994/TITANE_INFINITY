@@ -428,6 +428,19 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'singularity_save_state',
   'singularity_load_state',
 
+  // SINGULARITY v∞/v30 Unified State Commands
+  'singularity_get',
+  'singularity_set',
+  'singularity_diff',
+  'singularity_hash',
+  'singularity_sync',
+  'singularity_meta',
+  'singularity_integrity',
+  'singularity_repair',
+  'singularity_export_json',
+  'singularity_snapshot',
+  'singularity_selftest_full',
+
   // ═══════════════════════════════════════════════════════════════
   // NEXUS - Validation
   // ═══════════════════════════════════════════════════════════════

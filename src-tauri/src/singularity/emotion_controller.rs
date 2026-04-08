@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1Ω — SINGULARITY OS - EMOTION CONTROLLER
+//   TITANE∞ v30.0.0 — SINGULARITY OS - EMOTION CONTROLLER
 //   Super Prompt #13: Affective state management
 //   Emotion is never dramatic, but supports response quality
 // ═══════════════════════════════════════════════════════════════

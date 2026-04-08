@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20Ω — OMEGA PIPELINE - SELF-HEALING HOOK
+//   TITANE∞ v30.0.0 — OMEGA PIPELINE - SELF-HEALING HOOK
 //   Super Prompt #4: Integration du self-healing dans le pipeline
 //   Detection → Diagnosis → Repair → Learn
 // ═══════════════════════════════════════════════════════════════

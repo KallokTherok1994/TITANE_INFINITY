@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1Ω — OMEGA PIPELINE - ROUTER
+//   TITANE∞ v30.0.0 — OMEGA PIPELINE - ROUTER
 //   Super Prompt #15: Intent classification and routing
 //   Routes requests to appropriate handlers with <2ms latency
 // ═══════════════════════════════════════════════════════════════

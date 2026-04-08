@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1Ω — SINGULARITY OS - BEHAVIOR CONTROLLER
+//   TITANE∞ v30.0.0 — SINGULARITY OS - BEHAVIOR CONTROLLER
 //   Super Prompt #13: Response behavior and constraint management
 //   Controls what the system should/shouldn't do in responses
 // ═══════════════════════════════════════════════════════════════

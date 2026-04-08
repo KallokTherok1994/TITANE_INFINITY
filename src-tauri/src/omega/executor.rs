@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1Ω — OMEGA PIPELINE - EXECUTOR
+//   TITANE∞ v30.0.0 — OMEGA PIPELINE - EXECUTOR
 //   Super Prompt #15: Parallel task execution with timeouts
 //   Executes multiple cognitive tasks concurrently
 // ═══════════════════════════════════════════════════════════════
