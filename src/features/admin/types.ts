@@ -10,7 +10,7 @@ export type AdminTab =
   | 'audio' // Audio & Voix
   | 'design' // Design (Gesign)
   | 'governance' // Gouvernance & Sécurité
-  | 'production-health'; // Production telemetry panel (V29)
+  | 'production-health'; // Production telemetry panel (V30)
 
 export interface AdminTabDefinition {
   id: AdminTab;
@@ -61,6 +61,6 @@ export const ADMIN_TABS: AdminTabDefinition[] = [
     label: 'Santé Prod',
     icon: '📊',
     description: 'Métriques production Week 1 - Observabilité temps réel',
-    badge: 'V29',
+    badge: 'V30',
   },
 ];

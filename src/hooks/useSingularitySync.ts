@@ -51,6 +51,29 @@ export interface SingularitySyncReturn {
   resetMetrics: () => void; // Reset métriques
 }
 
+function getSingularityFingerprint(
+  state: SingularityState | null | undefined
+): string {
+  if (!state) {
+    return 'null';
+  }
+
+  return JSON.stringify({
+    timestamp: state.timestamp ?? 0,
+    consciousness: state.consciousness ?? 0,
+    autoCoherence: state.autoCoherence ?? 0,
+    formStability: state.formStability ?? 0,
+    evolutionCapacity: state.evolutionCapacity ?? 0,
+    expressionQuality: state.expressionQuality ?? 0,
+    signature: state.signature ?? '',
+    essence: state.essence ?? '',
+    unity: state.unity ?? null,
+    quantum: state.quantum ?? null,
+    convergence: state.convergence ?? null,
+    singularityField: state.singularityField ?? null,
+  });
+}
+
 // ═══════════════════════════════════════════════════════════════════
 // HOOK PRINCIPAL
 // ═══════════════════════════════════════════════════════════════════
@@ -83,6 +106,7 @@ export function useSingularitySync(
   const syncIntervalRef = useRef<number | null>(null);
   const isPausedRef = useRef(false);
   const syncTimesRef = useRef<number[]>([]);
+  const lastSyncedFingerprintRef = useRef<string>('null');
 
   // ═══ SYNC FUNCTION ═══
   const sync = useCallback(async () => {
@@ -143,12 +167,18 @@ export function useSingularitySync(
           break;
       }
 
-      // 4. Update frontend engine
-      singularityEngine.setState(mergedState);
-      setState(mergedState);
+      const mergedFingerprint = getSingularityFingerprint(mergedState);
+      const backendFingerprint = getSingularityFingerprint(backendState);
 
-      // 5. Push to backend (if bidirectional)
-      if (bidirectional) {
+      // 4. Update frontend engine only when state actually changed
+      if (mergedFingerprint !== lastSyncedFingerprintRef.current) {
+        singularityEngine.setState(mergedState);
+        setState(mergedState);
+        lastSyncedFingerprintRef.current = mergedFingerprint;
+      }
+
+      // 5. Push to backend only when merge produced a real delta
+      if (bidirectional && mergedFingerprint !== backendFingerprint) {
         await secureInvoke('singularity_update_full_state', {
           state: mergedState,
         });

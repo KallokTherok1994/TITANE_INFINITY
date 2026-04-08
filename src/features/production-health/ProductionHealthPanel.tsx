@@ -237,7 +237,7 @@ export const ProductionHealthPanel: React.FC = () => {
         </div>
 
         <div className="ph-footer">
-          <p className="ph-source">Source : CSV local (Tauri IPC) · Télémétrie V29</p>
+          <p className="ph-source">Source : CSV local (Tauri IPC) · Télémétrie V30</p>
         </div>
       </div>
     );

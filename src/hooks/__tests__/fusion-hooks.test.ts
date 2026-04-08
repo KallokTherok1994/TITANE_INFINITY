@@ -155,6 +155,59 @@ describe('useSingularitySync', () => {
     expect(result.current.metrics.isHealthy).toBe(true);
   });
 
+  test('should skip redundant backend writeback when state is already synchronized', async () => {
+    const syncedState = {
+      consciousness: 1,
+      autoCoherence: 0.72,
+      unity: { resonance: 0.9 },
+      quantum: { coherence: 0.88 },
+      convergence: { convergenceLevel: 0.73 },
+      overmind: {},
+      omnipresence: {},
+      selfReference: true,
+      autoStabilization: true,
+      expressionQuality: 0.81,
+      singularityField: {
+        energy: 0.76,
+        motion: 0.7,
+        symbolism: 0.84,
+        depth: 0.83,
+        presence: 0.87,
+      },
+      formStability: 0.84,
+      evolutionCapacity: 0.9,
+      signature: 'TITANE-SYNCED',
+      essence: 'Already synchronized state',
+      timestamp: 123456789,
+    };
+
+    vi.mocked(secureInvoke).mockImplementation(async command => {
+      if (command === 'singularity_get_full_state') {
+        return syncedState as unknown as SingularityState;
+      }
+
+      return undefined;
+    });
+    vi.mocked(singularityEngine.getState).mockReturnValue(
+      syncedState as unknown as SingularityState
+    );
+
+    const { result } = renderHook(() =>
+      useSingularitySync({ autoSync: false, bidirectional: true })
+    );
+
+    await act(async () => {
+      await result.current.sync();
+      await result.current.sync();
+    });
+
+    expect(secureInvoke).toHaveBeenCalledWith('singularity_get_full_state');
+    expect(secureInvoke).not.toHaveBeenCalledWith('singularity_update_full_state', {
+      state: expect.anything(),
+    });
+    expect(singularityEngine.setState).toHaveBeenCalledTimes(1);
+  });
+
   test('should handle sync errors gracefully', async () => {
     const mockError = new Error('Backend unavailable');
     vi.mocked(secureInvoke).mockRejectedValue(mockError);

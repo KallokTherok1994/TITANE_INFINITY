@@ -23,6 +23,7 @@ import {
 } from '@/modules/optimization';
 
 import './UltimateOptimizationDashboard.css';
+import { createAdaptivePolling } from '@/utils/adaptivePolling';
 
 interface UltimateOptimizationDashboardProps {
   className?: string;
@@ -111,12 +112,19 @@ export const UltimateOptimizationDashboard: React.FC<
 
     initialize();
 
-    // Refresh metrics every 2 seconds
-    const interval = setInterval(refreshMetrics, 2000);
+    const polling = createAdaptivePolling(refreshMetrics, {
+      baseIntervalMs: 2000,
+      minIntervalMs: 2000,
+      maxIntervalMs: 12000,
+      hiddenSlowdownFactor: 5,
+      idleSlowdownFactor: 2,
+    });
+
+    polling.start();
 
     return () => {
       mounted = false;
-      clearInterval(interval);
+      polling.stop();
     };
   }, [refreshMetrics]);
 

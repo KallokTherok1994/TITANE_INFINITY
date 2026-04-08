@@ -7,11 +7,12 @@
  * Impact: Visibilité totale sur cache, latence, hit rate
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { logger } from '@/lib/logger';
 import { responseCache } from '@/services/cache/responseCache';
 import { predictivePreloader } from '@/services/cache/predictivePreloader';
 import { cachePersistence } from '@/services/cache/cachePersistence';
+import { createAdaptivePolling } from '@/utils/adaptivePolling';
 
 interface PerformanceMetrics {
   cache: {
@@ -40,9 +41,16 @@ export const PerformanceDashboard: React.FC<{ compact?: boolean }> = ({
 }) => {
   const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const refreshInFlightRef = useRef(false);
 
-  const refreshMetrics = async () => {
+  const refreshMetrics = useCallback(async () => {
+    if (refreshInFlightRef.current) {
+      return;
+    }
+
+    refreshInFlightRef.current = true;
     setIsRefreshing(true);
+
     try {
       const cacheStats = responseCache.getStats();
       const preloaderStats = predictivePreloader.getStats();
@@ -60,18 +68,29 @@ export const PerformanceDashboard: React.FC<{ compact?: boolean }> = ({
         error as Error
       );
     } finally {
+      refreshInFlightRef.current = false;
       setIsRefreshing(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    refreshMetrics();
+    const polling = createAdaptivePolling(
+      async () => {
+        await refreshMetrics();
+      },
+      {
+        baseIntervalMs: 2000,
+        minIntervalMs: 2000,
+        maxIntervalMs: 12000,
+        hiddenSlowdownFactor: 5,
+        idleSlowdownFactor: 2,
+      }
+    );
 
-    // Auto-refresh every 2 seconds
-    const interval = setInterval(refreshMetrics, 2000);
+    polling.start();
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => polling.stop();
+  }, [refreshMetrics]);
 
   if (!metrics) {
     return (
