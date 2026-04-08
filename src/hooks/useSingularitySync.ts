@@ -107,129 +107,160 @@ export function useSingularitySync(
   const isPausedRef = useRef(false);
   const syncTimesRef = useRef<number[]>([]);
   const lastSyncedFingerprintRef = useRef<string>('null');
+  const mountedRef = useRef(true);
+  const syncPromiseRef = useRef<Promise<void> | null>(null);
+
+  useEffect(() => {
+    mountedRef.current = true;
+
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   // ═══ SYNC FUNCTION ═══
   const sync = useCallback(async () => {
-    if (isPausedRef.current || isSyncing) return;
+    if (isPausedRef.current) return;
+    if (syncPromiseRef.current) return syncPromiseRef.current;
 
-    const startTime = Date.now();
-    setIsSyncing(true);
-    setLastError(null);
+    const syncPromise = (async () => {
+      const startTime = Date.now();
 
-    try {
-      // 1. Fetch backend state
-      const backendState = await secureInvoke<SingularityState>(
-        'singularity_get_full_state'
-      );
-
-      // 2. Get frontend state
-      const frontendState = singularityEngine.getState();
-
-      // 3. Resolve conflicts based on strategy
-      let mergedState: SingularityState;
-
-      switch (conflictResolution) {
-        case 'frontend':
-          mergedState = frontendState;
-          break;
-
-        case 'backend':
-          mergedState = backendState;
-          break;
-
-        case 'merge':
-        default:
-          // Intelligent merge: prefer newest timestamp
-          mergedState = {
-            ...backendState,
-            ...frontendState,
-            // Unity: prefer backend (critical)
-            unity: backendState.unity,
-            // Quantum: merge fields
-            quantum: {
-              ...backendState.quantum,
-              ...frontendState.quantum,
-              coherence:
-                (backendState.quantum.coherence + frontendState.quantum.coherence) / 2,
-            },
-            // Convergence: average values
-            convergence: {
-              ...backendState.convergence,
-              ...frontendState.convergence,
-              convergenceLevel:
-                (backendState.convergence.convergenceLevel +
-                  frontendState.convergence.convergenceLevel) /
-                2,
-            },
-            // Timestamp: newest
-            timestamp: Math.max(backendState.timestamp, frontendState.timestamp),
-          };
-          break;
+      if (mountedRef.current) {
+        setIsSyncing(true);
+        setLastError(null);
       }
 
-      const mergedFingerprint = getSingularityFingerprint(mergedState);
-      const backendFingerprint = getSingularityFingerprint(backendState);
+      try {
+        // 1. Fetch backend state
+        const backendState = await secureInvoke<SingularityState>(
+          'singularity_get_full_state'
+        );
 
-      // 4. Update frontend engine only when state actually changed
-      if (mergedFingerprint !== lastSyncedFingerprintRef.current) {
-        singularityEngine.setState(mergedState);
-        setState(mergedState);
-        lastSyncedFingerprintRef.current = mergedFingerprint;
+        // 2. Get frontend state
+        const frontendState = singularityEngine.getState();
+
+        // 3. Resolve conflicts based on strategy
+        let mergedState: SingularityState;
+
+        switch (conflictResolution) {
+          case 'frontend':
+            mergedState = frontendState;
+            break;
+
+          case 'backend':
+            mergedState = backendState;
+            break;
+
+          case 'merge':
+          default:
+            // Intelligent merge: prefer newest timestamp
+            mergedState = {
+              ...backendState,
+              ...frontendState,
+              // Unity: prefer backend (critical)
+              unity: backendState.unity,
+              // Quantum: merge fields
+              quantum: {
+                ...backendState.quantum,
+                ...frontendState.quantum,
+                coherence:
+                  (backendState.quantum.coherence + frontendState.quantum.coherence) /
+                  2,
+              },
+              // Convergence: average values
+              convergence: {
+                ...backendState.convergence,
+                ...frontendState.convergence,
+                convergenceLevel:
+                  (backendState.convergence.convergenceLevel +
+                    frontendState.convergence.convergenceLevel) /
+                  2,
+              },
+              // Timestamp: newest
+              timestamp: Math.max(backendState.timestamp, frontendState.timestamp),
+            };
+            break;
+        }
+
+        const mergedFingerprint = getSingularityFingerprint(mergedState);
+        const backendFingerprint = getSingularityFingerprint(backendState);
+
+        // 4. Update frontend engine only when state actually changed
+        if (mergedFingerprint !== lastSyncedFingerprintRef.current) {
+          singularityEngine.setState(mergedState);
+          if (mountedRef.current) {
+            setState(mergedState);
+          }
+          lastSyncedFingerprintRef.current = mergedFingerprint;
+        }
+
+        // 5. Push to backend only when merge produced a real delta
+        if (bidirectional && mergedFingerprint !== backendFingerprint) {
+          await secureInvoke('singularity_update_full_state', {
+            state: mergedState,
+          });
+        }
+
+        // 6. Update metrics
+        const syncTime = Date.now() - startTime;
+        syncTimesRef.current.push(syncTime);
+        if (syncTimesRef.current.length > 100) {
+          syncTimesRef.current.shift(); // Keep last 100 syncs
+        }
+
+        const avgTime =
+          syncTimesRef.current.reduce((a, b) => a + b, 0) / syncTimesRef.current.length;
+
+        if (mountedRef.current) {
+          setMetrics(prev => ({
+            lastSync: Date.now(),
+            syncCount: prev.syncCount + 1,
+            errorCount: prev.errorCount,
+            avgSyncTime: avgTime,
+            isHealthy: avgTime < 100 && prev.errorCount / (prev.syncCount + 1) < 0.05, // <5% error rate
+          }));
+        }
+
+        // 7. Success callback
+        onSyncSuccess?.(mergedState);
+      } catch (error) {
+        const err = error instanceof Error ? error : new Error('Sync failed');
+        if (mountedRef.current) {
+          setLastError(err);
+
+          setMetrics(prev => ({
+            ...prev,
+            errorCount: prev.errorCount + 1,
+            isHealthy: false,
+          }));
+        }
+
+        onSyncError?.(err);
+        console.error('[useSingularitySync] Sync error:', err);
+      } finally {
+        syncPromiseRef.current = null;
+        if (mountedRef.current) {
+          setIsSyncing(false);
+        }
       }
+    })();
 
-      // 5. Push to backend only when merge produced a real delta
-      if (bidirectional && mergedFingerprint !== backendFingerprint) {
-        await secureInvoke('singularity_update_full_state', {
-          state: mergedState,
-        });
-      }
-
-      // 6. Update metrics
-      const syncTime = Date.now() - startTime;
-      syncTimesRef.current.push(syncTime);
-      if (syncTimesRef.current.length > 100) {
-        syncTimesRef.current.shift(); // Keep last 100 syncs
-      }
-
-      const avgTime =
-        syncTimesRef.current.reduce((a, b) => a + b, 0) / syncTimesRef.current.length;
-
-      setMetrics(prev => ({
-        lastSync: Date.now(),
-        syncCount: prev.syncCount + 1,
-        errorCount: prev.errorCount,
-        avgSyncTime: avgTime,
-        isHealthy: avgTime < 100 && prev.errorCount / (prev.syncCount + 1) < 0.05, // <5% error rate
-      }));
-
-      // 7. Success callback
-      onSyncSuccess?.(mergedState);
-    } catch (error) {
-      const err = error instanceof Error ? error : new Error('Sync failed');
-      setLastError(err);
-
-      setMetrics(prev => ({
-        ...prev,
-        errorCount: prev.errorCount + 1,
-        isHealthy: false,
-      }));
-
-      onSyncError?.(err);
-      console.error('[useSingularitySync] Sync error:', err);
-    } finally {
-      setIsSyncing(false);
-    }
-  }, [bidirectional, conflictResolution, isSyncing, onSyncError, onSyncSuccess]);
+    syncPromiseRef.current = syncPromise;
+    return syncPromise;
+  }, [bidirectional, conflictResolution, onSyncError, onSyncSuccess]);
 
   // ═══ AUTO-SYNC SETUP ═══
   useEffect(() => {
     if (!autoSync) return;
 
     // Initial sync
-    sync();
+    void sync();
 
     // Setup interval
-    syncIntervalRef.current = window.setInterval(sync, syncInterval);
+    syncIntervalRef.current = window.setInterval(() => {
+      void sync();
+    }, syncInterval);
 
     return () => {
       if (syncIntervalRef.current) {
@@ -250,7 +281,9 @@ export function useSingularitySync(
   const resumeSync = useCallback(() => {
     isPausedRef.current = false;
     if (autoSync && !syncIntervalRef.current) {
-      syncIntervalRef.current = window.setInterval(sync, syncInterval);
+      syncIntervalRef.current = window.setInterval(() => {
+        void sync();
+      }, syncInterval);
     }
   }, [autoSync, sync, syncInterval]);
 
