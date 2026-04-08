@@ -24,6 +24,7 @@ env:
   CARGO_TERM_COLOR: always
   NODE_VERSION: '24'
   RUST_VERSION: 'stable'
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
 
 jobs:
   # ============================================================================
@@ -58,7 +59,7 @@ jobs:
             patchelf
 
       - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v4.1.0
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -74,7 +75,7 @@ jobs:
           components: rustfmt, clippy
 
       - name: 💾 Cache Rust dependencies
-        uses: Swatinem/rust-cache@v2.7.3
+        uses: Swatinem/rust-cache@v2
         with:
           workspaces: src-tauri
           cache-on-failure: true
@@ -141,7 +142,7 @@ jobs:
         uses: actions/checkout@v6.0.1
 
       - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v4.1.0
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -155,7 +156,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: 💾 Cache Rust dependencies
-        uses: Swatinem/rust-cache@v2.7.3
+        uses: Swatinem/rust-cache@v2
         with:
           workspaces: src-tauri
 
@@ -227,7 +228,7 @@ jobs:
         uses: actions/checkout@v6.0.1
 
       - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v4.1.0
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -242,11 +243,8 @@ jobs:
         with:
           targets: ${{ matrix.target }}
 
-      - name: 💾 Cache Rust dependencies
-        uses: Swatinem/rust-cache@v2.7.3
-        with:
-          workspaces: src-tauri
-          key: ${{ matrix.target }}
+      - name: ℹ️ Skip Rust cache on macOS release runners
+        run: echo "Skipping rust-cache on macOS release runners to avoid transient GitHub cache service 400 warnings."
 
       - name: 🏗️ Build frontend
         run: pnpm run build
