@@ -46,6 +46,52 @@ let _allEntriesCache: KnowledgeBaseEntry[] | null = null;
 let _allEntriesLoadingPromise: Promise<KnowledgeBaseEntry[]> | null = null;
 let _compactIndexCache: string | null = null;
 
+const KB_STOP_WORDS = new Set([
+  'avec',
+  'dans',
+  'pour',
+  'that',
+  'this',
+  'quoi',
+  'avec',
+  'sans',
+  'mais',
+  'donc',
+  'comment',
+  'explique',
+  'titane',
+]);
+
+function normalizeText(value: string): string {
+  return value
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
+
+function flattenContent(value: unknown): string {
+  if (typeof value === 'string') return value;
+  if (typeof value === 'number' || typeof value === 'boolean') return String(value);
+  if (Array.isArray(value)) return value.map(item => flattenContent(item)).join(' ');
+  if (value && typeof value === 'object') {
+    return Object.values(value as Record<string, unknown>)
+      .map(item => flattenContent(item))
+      .join(' ');
+  }
+  return '';
+}
+
+function tokenizeQuery(query: string): string[] {
+  const normalized = normalizeText(query);
+  return [...new Set(normalized.split(/[^a-z0-9_]+/).filter(token => token.length >= 3 && !KB_STOP_WORDS.has(token)))];
+}
+
+function compactExcerpt(value: string, maxLength = 220): string {
+  const normalized = value.replace(/\s+/g, ' ').trim();
+  if (!normalized) return '';
+  return normalized.length > maxLength ? `${normalized.slice(0, maxLength - 1)}…` : normalized;
+}
+
 // ─────────────────────────────────────────────────────────────────
 // Public API
 // ─────────────────────────────────────────────────────────────────
@@ -157,13 +203,75 @@ export async function getCompactIndex(): Promise<string> {
     }
     const lines = entries
       .sort((a, b) => a.category.localeCompare(b.category))
-      .map(e => `• ${e.category}: ${e.description.substring(0, 80)}${e.description.length > 80 ? '…' : ''}`)
+      .map(
+        e =>
+          `• ${e.category}: ${e.description.substring(0, 80)}${e.description.length > 80 ? '…' : ''}`
+      )
       .join('\n');
     _compactIndexCache = lines;
   } catch {
     _compactIndexCache = '';
   }
   return _compactIndexCache;
+}
+
+/**
+ * Build a compact, query-relevant knowledge block for prompt injection.
+ * Reuses the cached entries loaded by `getCompactIndex()` when available.
+ */
+export async function getRelevantPromptContext(
+  query: string,
+  limit: number = 3
+): Promise<string> {
+  const tokens = tokenizeQuery(query);
+  if (tokens.length === 0) {
+    return '';
+  }
+
+  try {
+    const entries = await getAllEntries();
+    if (entries.length === 0) {
+      return '';
+    }
+
+    const ranked = entries
+      .map(entry => {
+        const categoryText = normalizeText(entry.category);
+        const descriptionText = normalizeText(entry.description);
+        const contentText = normalizeText(flattenContent(entry.content));
+
+        const score = tokens.reduce((total, token) => {
+          let nextScore = total;
+          if (categoryText.includes(token)) nextScore += 5;
+          if (descriptionText.includes(token)) nextScore += 3;
+          if (contentText.includes(token)) nextScore += 1;
+          return nextScore;
+        }, 0);
+
+        return {
+          entry,
+          score,
+          excerpt: compactExcerpt(flattenContent(entry.content)),
+        };
+      })
+      .filter(item => item.score > 0)
+      .sort((a, b) => b.score - a.score || a.entry.category.localeCompare(b.entry.category))
+      .slice(0, Math.max(1, limit));
+
+    if (ranked.length === 0) {
+      return '';
+    }
+
+    return [
+      '📚 Connaissances pertinentes TITANE∞ :',
+      ...ranked.map(({ entry, excerpt }) => {
+        const excerptBlock = excerpt ? ` | Extrait: ${excerpt}` : '';
+        return `• ${entry.category} — ${entry.description}${excerptBlock}`;
+      }),
+    ].join('\n');
+  } catch {
+    return '';
+  }
 }
 
 /**

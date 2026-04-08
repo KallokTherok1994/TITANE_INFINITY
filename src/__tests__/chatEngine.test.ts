@@ -14,6 +14,8 @@ import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
 import { chatEngine } from '@/services/ai/chatEngine';
 import { memoryIntegration } from '@/services/ai/memoryIntegration';
 import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
+import { chatEngineCommands } from '@/services/tauri/chatEngine.commands';
+import * as defaultKnowledgeBase from '@/services/api/defaultKnowledgeBase';
 
 const EMPTY_MEMORY_CONTEXT = {
   activeProjects: [],
@@ -304,5 +306,60 @@ describe('ChatEngine — deferred trace start', () => {
 
     expect(traceSpy).toHaveBeenCalledWith('conv_test', 4, 'Bonjour');
     expect(traceId).toBeUndefined();
+  });
+});
+
+describe('ChatEngine — default knowledge base integration', () => {
+  beforeEach(() => {
+    // @ts-expect-error: private state reset for deterministic test
+    chatEngine._defaultKbIndex = '';
+    // @ts-expect-error: private state reset for deterministic test
+    chatEngine._defaultKbLoaded = false;
+    // @ts-expect-error: private state reset for deterministic test
+    chatEngine._kbLoadPromise = null;
+    Object.defineProperty(window, '__TAURI_INTERNALS__', {
+      value: {},
+      configurable: true,
+    });
+  });
+
+  afterEach(() => {
+    // @ts-expect-error: cleanup injected backend marker for tests
+    delete window.__TAURI_INTERNALS__;
+  });
+
+  test('injects query-relevant knowledge-base excerpts into the backend system prompt', async () => {
+    vi.spyOn(memoryIntegration, 'loadContext').mockResolvedValue(EMPTY_MEMORY_CONTEXT);
+    vi.spyOn(memoryIntegration, 'loadPreferences').mockReturnValue([]);
+    vi.spyOn(memoryIntegration, 'saveInteraction').mockResolvedValue(undefined);
+    vi.spyOn(defaultKnowledgeBase, 'getCompactIndex').mockResolvedValue(
+      '• system_architecture: Architecture cœur TITANE∞'
+    );
+    vi.spyOn(defaultKnowledgeBase, 'getRelevantPromptContext').mockResolvedValue(
+      '📚 Connaissances pertinentes TITANE∞ :\n• system_architecture — Architecture cœur TITANE∞ | Extrait: One Door network governance'
+    );
+
+    const backendSpy = vi
+      .spyOn(chatEngineCommands, 'generateResponse')
+      .mockResolvedValue({
+        content: 'Réponse backend test',
+        provider: 'ollama',
+        conversationId: 'conv-kb',
+        messageId: 'msg-kb',
+        timestamp: Date.now(),
+        tokenCount: 42,
+        latencyMs: 12,
+      });
+
+    const response = await chatEngine.generate(
+      'Explique-moi l architecture système et le One Door de TITANE',
+      []
+    );
+
+    expect(response.content).toContain('Réponse backend test');
+    expect(backendSpy).toHaveBeenCalledTimes(1);
+    expect(backendSpy.mock.calls[0]?.[0]?.systemPrompt).toContain(
+      'One Door network governance'
+    );
   });
 });

@@ -69,7 +69,10 @@ import {
   getSystemPromptForSkill,
   getActiveSkillId,
 } from '@/services/skills/activation/skillActivator';
-import { getCompactIndex as getDefaultKbIndex } from '@/services/api/defaultKnowledgeBase';
+import {
+  getCompactIndex as getDefaultKbIndex,
+  getRelevantPromptContext as getDefaultKbPromptContext,
+} from '@/services/api/defaultKnowledgeBase';
 
 // Type-safe correction interface
 interface _CorrectionInfo {
@@ -691,11 +694,12 @@ class ChatEngineOmega {
       // Build system prompt with cognitive context
       // v26.0.0: Only inject memory block if kernel decided to use it
       await this._ensureDefaultKbLoaded();
+      const kbPromptContext = await getDefaultKbPromptContext(validatedMessage);
       let systemPrompt = this.buildSystemPrompt(
         modeConfig,
         shouldInjectMemory ? context : { sources: [], data: {} },
         promptContext,
-        ''
+        kbPromptContext
       );
 
       // Inject depth instructions into system prompt
@@ -2441,7 +2445,13 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
         memory: context.sources.length > 0 ? context : undefined,
       };
       await this._ensureDefaultKbLoaded();
-      const systemPrompt = this.buildSystemPrompt(modeConfig, context, promptContext);
+      const kbPromptContext = await getDefaultKbPromptContext(validatedMessage);
+      const systemPrompt = this.buildSystemPrompt(
+        modeConfig,
+        context,
+        promptContext,
+        kbPromptContext
+      );
 
       const backendStream = this.tryBackendStream({
         finalConfig,
