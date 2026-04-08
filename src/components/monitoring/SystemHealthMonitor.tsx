@@ -5,7 +5,7 @@
  */
 
 import { tauriClient } from '@/lib/tauriClient';
-import { useState, useEffect, useCallback, memo } from 'react';
+import { useState, useEffect, useCallback, memo, useRef } from 'react';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
@@ -41,26 +41,62 @@ export const SystemHealthMonitor = memo(function SystemHealthMonitor({
   const [engines, setEngines] = useState<EngineStatus[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<number>(0);
+  const mountedRef = useRef(true);
+  const metricsRequestRef = useRef<Promise<void> | null>(null);
+
+  useEffect(() => {
+    mountedRef.current = true;
+
+    return () => {
+      mountedRef.current = false;
+      metricsRequestRef.current = null;
+    };
+  }, []);
 
   // Fetch system metrics
   const fetchMetrics = useCallback(async () => {
-    try {
-      const result = (await tauriClient.getSystemMetrics()) as SystemMetrics;
-      setMetrics(result);
-      setLastUpdate(Date.now());
-      setError(null);
-    } catch (err) {
-      setMetrics(null);
-      setError(err instanceof Error ? err.message : 'Unknown error');
+    if (metricsRequestRef.current) {
+      return metricsRequestRef.current;
     }
+
+    let request: Promise<void> | null = null;
+    request = (async () => {
+      try {
+        const result = (await tauriClient.getSystemMetrics()) as SystemMetrics;
+        if (!mountedRef.current) {
+          return;
+        }
+        setMetrics(result);
+        setLastUpdate(Date.now());
+        setError(null);
+      } catch (err) {
+        if (!mountedRef.current) {
+          return;
+        }
+        setMetrics(null);
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        if (metricsRequestRef.current === request) {
+          metricsRequestRef.current = null;
+        }
+      }
+    })();
+
+    metricsRequestRef.current = request;
+    return request;
   }, []);
 
   // Fetch engine statuses
   const fetchEngines = useCallback(async () => {
     try {
       const result = (await tauriClient.getEnginesStatus()) as EngineStatus[];
-      setEngines(result);
+      if (mountedRef.current) {
+        setEngines(result);
+      }
     } catch {
+      if (!mountedRef.current) {
+        return;
+      }
       // Fallback avec engines mock
       setEngines([
         { name: 'SingularityEngine', status: 'active', lastUpdate: Date.now() },
@@ -72,11 +108,11 @@ export const SystemHealthMonitor = memo(function SystemHealthMonitor({
   }, []);
 
   useEffect(() => {
-    fetchMetrics();
-    fetchEngines();
+    void fetchMetrics();
+    void fetchEngines();
 
     const interval = setInterval(() => {
-      fetchMetrics();
+      void fetchMetrics();
     }, refreshInterval);
 
     return () => clearInterval(interval);
