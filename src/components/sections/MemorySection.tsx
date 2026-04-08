@@ -204,6 +204,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
     const [selectedEntryId, setSelectedEntryId] = useState<string | null>(null);
     const [knowledgeEntries, setKnowledgeEntries] = useState<MemoryEntry[]>([]);
     const [knowledgeLoaded, setKnowledgeLoaded] = useState(false);
+    const [knowledgeLoadWarning, setKnowledgeLoadWarning] = useState<string | null>(null);
     const [knowledgeSourceCounts, setKnowledgeSourceCounts] = useState({
       contextual: 0,
       defaults: 0,
@@ -236,20 +237,41 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
           return;
         }
 
+        const unavailableSources: string[] = [];
+
         const contextualEntries =
           runtimeKnowledgeResult.status === 'fulfilled'
             ? runtimeKnowledgeResult.value.map(mapRuntimeKnowledgeToMemoryEntry)
-            : [];
+            : (() => {
+                unavailableSources.push('index contextuel');
+                return [];
+              })();
+
         const defaultEntries =
           defaultKnowledgeResult.status === 'fulfilled'
             ? defaultKnowledgeResult.value.map(mapDefaultKnowledgeToMemoryEntry)
-            : [];
+            : (() => {
+                unavailableSources.push('base système');
+                return [];
+              })();
 
         setKnowledgeEntries(dedupeMemoryEntries([...contextualEntries, ...defaultEntries]));
         setKnowledgeSourceCounts({
           contextual: contextualEntries.length,
           defaults: defaultEntries.length,
         });
+        setKnowledgeLoadWarning(
+          unavailableSources.length > 0
+            ? `Certaines sources de connaissance sont temporairement indisponibles (${unavailableSources.join(', ')}). TITANE affiche la mémoire disponible et réessaiera automatiquement lors du prochain rafraîchissement.`
+            : null
+        );
+
+        if (unavailableSources.length > 0) {
+          pageLogger.debug('Knowledge surface degraded', {
+            unavailableSources,
+          });
+        }
+
         setKnowledgeLoaded(true);
       };
 
@@ -577,6 +599,25 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               &quot;mémorise&quot; ou laissez TITANE consolider un souvenir depuis une
               conversation réelle.
             </p>
+          </Card>
+        )}
+
+        {knowledgeLoadWarning && (
+          <Card
+            style={{
+              marginTop: spacing[6],
+              border: '1px solid rgba(245, 158, 11, 0.45)',
+              background: 'rgba(245, 158, 11, 0.08)',
+            }}
+          >
+            <div role="alert" aria-live="polite">
+              <h3 style={{ marginBottom: spacing[2], color: '#f59e0b' }}>
+                ⚠️ Surface connaissance partiellement dégradée
+              </h3>
+              <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
+                {knowledgeLoadWarning}
+              </p>
+            </div>
           </Card>
         )}
 

@@ -332,6 +332,46 @@ describe('MemorySection', () => {
     );
   });
 
+  it('shows a visible degradation warning when knowledge sources are unavailable', async () => {
+    mockUseLTMContext.mockReturnValue({
+      historyCount: 0,
+    });
+
+    mockUsePersistentMemory.mockReturnValue({
+      entries: [],
+      stats: {
+        countByLevel: {
+          session: 0,
+          intermediate: 0,
+          long_term: 0,
+        },
+      },
+      isLoading: false,
+      lastUpdate: 999,
+    });
+
+    mockGetKnowledge.mockRejectedValue(new Error('runtime kb offline'));
+    mockGetAllEntries.mockRejectedValue(new Error('default kb offline'));
+
+    render(
+      <MemorySection
+        stats={{
+          totalXP: 0,
+          level: 1,
+          memoryShortTerm: 0,
+          memoryMidTerm: 0,
+          memoryLongTerm: 0,
+          evolutionScore: 0,
+        }}
+        conversationId="conv-kb-warning"
+      />
+    );
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      /certaines sources de connaissance sont temporairement indisponibles/i
+    );
+  });
+
   it('shows a bootstrap loading state instead of an empty-memory verdict during the first persistent sync', async () => {
     mockUseLTMContext.mockReturnValue({
       historyCount: 0,
