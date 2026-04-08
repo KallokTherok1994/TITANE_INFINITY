@@ -83,6 +83,24 @@ const COHERENCE_IDENTITAIRE: &str =
     include_str!("../../data/knowledge_base/default/coherence_identitaire.json");
 const REALISME_CONVERSATIONNEL: &str =
     include_str!("../../data/knowledge_base/default/realisme_conversationnel.json");
+// ── v30.0.0 expansion — phase 6 (approfondissement santé naturelle & communication) ──
+const ENERGETIQUE_SOINS_CORPS: &str =
+    include_str!("../../data/knowledge_base/default/energetique_soins_corps.json");
+const SANTE_FEMININE_NATURELLE: &str =
+    include_str!("../../data/knowledge_base/default/sante_feminine_naturelle.json");
+const LONGEVITE_ANTI_AGING: &str =
+    include_str!("../../data/knowledge_base/default/longevite_anti_aging.json");
+const COACHING_LEADERSHIP: &str =
+    include_str!("../../data/knowledge_base/default/coaching_leadership.json");
+const RELATIONS_HUMAINES_PROFONDES: &str =
+    include_str!("../../data/knowledge_base/default/relations_humaines_profondes.json");
+const SPIRITUALITE_SENS_EXISTENCE: &str =
+    include_str!("../../data/knowledge_base/default/spiritualite_sens_existence.json");
+const IMMUNITE_PREVENTION_NATURELLE: &str =
+    include_str!("../../data/knowledge_base/default/immunite_prevention_naturelle.json");
+const ECRITURE_EXPRESSION_CREATRICE: &str =
+    include_str!("../../data/knowledge_base/default/ecriture_expression_creatrice.json");
+
 // ── v30.0.0 expansion — phase 5 (développement personnel, naturopathie, médecine naturelle) ──
 const DEVELOPPEMENT_PERSONNEL: &str =
     include_str!("../../data/knowledge_base/default/developpement_personnel.json");
@@ -216,6 +234,15 @@ impl DefaultKnowledgeBase {
         ("communication_avancee", COMMUNICATION_AVANCEE),
         ("bien_etre_mental_stress", BIEN_ETRE_MENTAL_STRESS),
         ("sante_corps_naturelle", SANTE_CORPS_NATURELLE),
+        // v30.0.0 expansion — phase 6 (approfondissement santé naturelle & communication)
+        ("energetique_soins_corps", ENERGETIQUE_SOINS_CORPS),
+        ("sante_feminine_naturelle", SANTE_FEMININE_NATURELLE),
+        ("longevite_anti_aging", LONGEVITE_ANTI_AGING),
+        ("coaching_leadership", COACHING_LEADERSHIP),
+        ("relations_humaines_profondes", RELATIONS_HUMAINES_PROFONDES),
+        ("spiritualite_sens_existence", SPIRITUALITE_SENS_EXISTENCE),
+        ("immunite_prevention_naturelle", IMMUNITE_PREVENTION_NATURELLE),
+        ("ecriture_expression_creatrice", ECRITURE_EXPRESSION_CREATRICE),
     ];
 
     /// Load all default knowledge entries from embedded JSON.
@@ -383,8 +410,8 @@ mod tests {
             result.errors
         );
         assert_eq!(
-            result.entries_loaded, 49,
-            "Must have exactly 49 default knowledge categories"
+            result.entries_loaded, 57,
+            "Must have exactly 57 default knowledge categories"
         );
     }
 
@@ -407,6 +434,7 @@ mod tests {
             "bien_etre_mental_stress",
             "capabilities_matrix",
             "cloud_multimodal",
+            "coaching_leadership",
             "coherence_identitaire",
             "communication_avancee",
             "communication_interpersonnelle",
@@ -416,13 +444,17 @@ mod tests {
             "developpement_personnel",
             "digital_twin_symbiosis",
             "digital_twin_v14_detail",
+            "ecriture_expression_creatrice",
+            "energetique_soins_corps",
             "engines_catalog",
             "frontend_modules",
             "hyper_intelligence",
             "identity_profile",
+            "immunite_prevention_naturelle",
             "intelligence_emotionnelle",
             "ipc_commands_catalog",
             "learning_prompts",
+            "longevite_anti_aging",
             "medecine_hollistique",
             "memory_os_detail",
             "memory_system_deep",
@@ -442,11 +474,14 @@ mod tests {
             "psychologie_performance",
             "psychologie_relations",
             "realisme_conversationnel",
+            "relations_humaines_profondes",
             "response_guidelines",
             "sante_corps_naturelle",
+            "sante_feminine_naturelle",
             "security_privacy",
             "services_backend",
             "singularity_os_detail",
+            "spiritualite_sens_existence",
             "style_expression_kevin",
             "system_architecture",
             "troubleshooting_faq",

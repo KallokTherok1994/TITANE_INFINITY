@@ -1,0 +1,71 @@
+{
+  "version": "v30.0.0",
+  "category": "ecriture_expression_creatrice",
+  "description": "Écriture et expression créatrice — journaling thérapeutique avancé, écriture expressive Pennebaker, Hero's Journey Campbell, mind mapping, écriture de vision, autobiographie narrative, poésie et métaphore",
+  "ecriture_expression_creatrice": {
+    "introduction": "L'écriture est une des technologies les plus puissantes de transformation personnelle — elle extériorise le monde intérieur, crée de la distance avec les expériences douloureuses, donne forme au chaos, et projette des visions. Elle n'est pas réservée aux 'écrivains'. TITANE peut devenir un partenaire d'écriture pour Kevin.",
+    "ecriture_expressive_pennebaker": {
+      "auteur": "James Pennebaker (Université du Texas) — recherches depuis 1986",
+      "principe": "Écrire sur ses expériences émotionnellement chargées active le traitement cognitif et émotionnel de façon thérapeutique",
+      "protocole": {
+        "durée": "20 minutes / session, 3-4 sessions sur 3-4 jours consécutifs",
+        "instructions": "Écrire sans censure sur l'épreuve la plus difficile de sa vie — émotions, pensées, impact. Ne pas se soucier de l'orthographe ou du style.",
+        "règle": "Ne montrer à personne — la confidentialité libère l'expression"
+      },
+      "bénéfices_mesurés": [
+        "Réduction marqueurs inflammatoires (IL-6)",
+        "Amélioration immunité (lymphocytes T)",
+        "Moins de consultations médicales dans les mois suivants",
+        "Meilleur équilibre émotionnel",
+        "Amélioration des résultats scolaires et professionnels"
+      ],
+      "mécanisme": "Mettre en mots crée une structure narrative — transforme une expérience chaotique en histoire cohérente, réduisant la charge cognitive qu'elle impose"
+    },
+    "journaling_avance": {
+      "différence_journal_intime": "Le journaling intentionnel a un objectif — pas juste raconter sa journée",
+      "types_avancés": {
+        "morning_pages": {
+          "auteur": "Julia Cameron — 'The Artist's Way'",
+          "technique": "3 pages de stream of consciousness au réveil, à la main, avant tout écran. Vider le bruit mental.",
+          "effet": "Débloque la créativité, révèle les schémas inconscients, nettoie le mental"
+        },
+        "questions_puissantes": "Choisir une question et écrire tout ce qui vient: 'Quelle est la chose que j'évite?' 'Qui est-ce que je voudrais être dans 10 ans?'",
+        "dialogue_avec_soi": "Écrire en se parlant à soi comme à quelqu'un d'autre — 'Kevin, qu'est-ce que tu ressens vraiment?'",
+        "lettre_future": "Lettre à soi dans 5-10 ans — vision incarnée",
+        "lettre_passé": "Lettre à soi plus jeune — compassion, intégration"
+      }
+    },
+    "heros_journey_campbell": {
+      "auteur": "Joseph Campbell — 'The Hero with a Thousand Faces' (1949). Influence George Lucas (Star Wars), Disney, littérature mondiale.",
+      "monomythe": "Toutes les grandes histoires humaines suivent une structure universelle — c'est notre structure psychique",
+      "etapes_simplifiées": {
+        "monde_ordinaire": "Situation de départ — équilibre fragile, problème latent",
+        "appel_aventure": "Événement qui perturbe le monde ordinaire — invitation au changement",
+        "refus": "Résistance initiale — peur du changement",
+        "mentor": "Guide qui donne confiance et outils pour partir",
+        "passage_seuil": "Engagement — point de non-retour",
+        "epreuves_alliés_ennemis": "Tests sur la route — qui suis-je vraiment?",
+        "caverne_profonde": "La confrontation avec la peur ou l'ombre la plus profonde",
+        "epreuve_suprême": "La mort symbolique — transformation radicale",
+        "récompense": "Ce qu'on rapporte de l'épreuve — sagesse, pouvoir, amour",
+        "chemin_retour": "Retour dans le monde ordinaire",
+        "résurrection": "Ultime test — la transformation est-elle tenue?",
+        "élixir": "Ce qu'on apporte au monde — le cadeau de la transformation"
+      },
+      "usage_personnel": "Cartographier sa propre vie comme une Héros Journey — identifier les appels refusés, les mentors, les épreuves. Outil puissant de sens-making.",
+      "apport_TITANE": "Peut aider Kevin à relire les événements difficiles de sa vie comme des étapes de son voyage — pas des fatalités"
+    },
+    "ecriture_vision": {
+      "définition": "Rédaction détaillée et sensorielle de la vie qu'on veut créer — comme si c'était déjà réel",
+      "puissance": "Engage les mêmes circuits cérébraux que la visualisation mentale. Plus détaillé = plus d'activation.",
+      "technique": "Écrire en présent, en 1ère personne, avec détails sensoriels: 'Je me réveille dans ma maison sur la montagne, je sens le café, j'entends...'",
+      "vision_board_écrit": "Plus efficace que les images seules pour beaucoup de personnes — le langage engage les systèmes de planification"
+    },
+    "metaphore_poesie": {
+      "rôle": "La métaphore accède à ce que les mots directs ne peuvent pas atteindre — contourner les défenses intellectuelles",
+      "poesie_therapeutique": "Écrire un poème sur une émotion — pas besoin de style, juste trouver l'image",
+      "exemple_exercice": "Décris ta colère comme si c'était un animal. Décris ton deuil comme un paysage.",
+      "narration_sens": "Viktor Frankl, Dan McAdams (Northwestern) — notre capacité à construire un récit de vie cohérent prédit notre bien-être psychologique"
+    }
+  }
+}

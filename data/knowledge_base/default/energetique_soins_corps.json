@@ -1,0 +1,84 @@
+{
+  "version": "v30.0.0",
+  "category": "energetique_soins_corps",
+  "description": "Soins énergétiques et corporels — réflexologie plantaire/palmaire, drainage lymphatique, massage thérapeutique (suédois, deep tissue, thaï), shiatsu, auriculothérapie, chakras, chromothérapie, lithothérapie",
+  "energetique_soins_corps": {
+    "introduction": "Les approches corporelles et énergétiques considèrent le corps comme un système où tensions physiques, blocages énergétiques et états émotionnels sont interdépendants. Ces pratiques sont souvent mal comprises — certaines sont bien documentées (massage, réflexologie), d'autres sont des traditions empiriques dont la validation scientifique reste partielle. TITANE les présente avec honnêteté.",
+    "reflexologie": {
+      "définition": "Technique de pression sur des zones réflexes des pieds, mains ou oreilles correspondant aux organes et systèmes du corps",
+      "origines": "Médecines chinoises et égyptiennes anciennes. Modernisée par Eunice Ingham (États-Unis, 1930s)",
+      "zones_réflexes_pieds": {
+        "orteils": "Tête, cerveau, sinus",
+        "voûte_plantaire": "Poumons, cœur, estomac, foie, pancréas, reins",
+        "talon": "Bassins, organes reproducteurs, sciatique",
+        "bord_interne": "Colonne vertébrale (de la nuque au coccyx)"
+      },
+      "bénéfices_rapportés": ["Relaxation profonde", "Amélioration circulation", "Soutien digestif", "Réduction anxiété légère", "Amélioration sommeil"],
+      "niveau_preuve": "Preuves limitées mais positives pour la relaxation et le bien-être. Insuffisant comme traitement primaire de maladies organiques.",
+      "contre_indications": "Blessures/plaies pieds, phlébites, grossesse (zones spécifiques à éviter)"
+    },
+    "drainage_lymphatique": {
+      "définition": "Technique de massage doux qui stimule la circulation du fluide lymphatique pour éliminer les déchets",
+      "base_physiologique": "Le système lymphatique collecte les déchets cellulaires et les toxines — il n'a pas de pompe (contrairement au sang). Le mouvement et les massages doux stimulent la circulation.",
+      "technique_vodder": {
+        "auteur": "Dr Emil Vodder (1932)",
+        "principe": "Mouvements circulaires doux, peu appuyés, suivant le sens de la circulation lymphatique (vers les ganglions)",
+        "pression": "Très légère — environ 30g/cm² (comme le poids d'une pièce de monnaie)"
+      },
+      "indications": ["Œdèmes lymphatiques", "Post-chirurgie/traitement cancer (avec suivi médical)", "Inflammation chronique", "Cellulite", "Fatigue chronique", "Sinusites récurrentes"],
+      "contre_indications": "Infections aiguës (fièvre), thrombose veineuse active, tumeurs non traitées, insuffisance cardiaque sévère",
+      "auto_drainage": "Peut être pratiqué seul sur le visage, les jambes — technique apprise avec un professionnel"
+    },
+    "massage_therapeutique": {
+      "suedois": {
+        "techniques": "Effleurage (glissement), pétrissage, friction, tapotement, vibration",
+        "effets": "Relaxation musculaire, circulation, réduction cortisol, libération endorphines",
+        "niveau_preuve": "Bien documenté pour réduction anxiété, douleurs musculaires, amélioration sommeil"
+      },
+      "deep_tissue": {
+        "définition": "Travail sur les couches profondes du tissu musculaire et du fascia",
+        "usage": "Tensions chroniques, douleurs lombaires, contractures",
+        "différence": "Plus de pression, frottements plus lents sur les fibres musculaires"
+      },
+      "thai": {
+        "définition": "Massage traditionnel thaïlandais — étirements passifs et pressions le long des 'sen' (lignes énergétiques)",
+        "pratiqué": "Au sol, habillé — 'yoga passif' pour le receveur"
+      },
+      "shiatsu": {
+        "origine": "Japon — 'shi' (doigt) 'atsu' (pression)",
+        "principe": "Pression des pouces/paumes sur les tsubos (points de méridiens) pour équilibrer le qi",
+        "effets_rapportés": "Relaxation, équilibre nerveux, réduction tensions"
+      }
+    },
+    "auriculo_therapie": {
+      "définition": "Technique de stimulation de points réflexes de l'oreille correspondant à l'ensemble du corps",
+      "base": "Paul Nogier (Lyon, 1950s) — cartographie de l'oreille comme projection inversée du fœtus",
+      "niveau_preuve": "Utilisée en médecine de la douleur (acupuncture auriculaire) — preuves modérées pour douleur et tabac"
+    },
+    "chakras": {
+      "définition": "Dans les traditions hindoues et yogiques — 7 centres d'énergie le long de la colonne vertébrale",
+      "sept_chakras": {
+        "muladhara": "Racine (base colonne) — sécurité, appartenance, survie. Couleur: rouge.",
+        "svadhisthana": "Sacré (bassin) — créativité, sexualité, émotions. Couleur: orange.",
+        "manipura": "Plexus solaire — pouvoir personnel, confiance, digestion. Couleur: jaune.",
+        "anahata": "Cœur — amour, compassion, relation. Couleur: vert.",
+        "vishuddha": "Gorge — expression, vérité, communication. Couleur: bleu ciel.",
+        "ajna": "3e œil (front) — intuition, sagesse, vision. Couleur: indigo.",
+        "sahasrara": "Couronne (sommet crâne) — conscience, spiritualité, connexion. Couleur: violet/blanc."
+      },
+      "approche_TITANE": "TITANE présente le système des chakras comme un cadre symbolique et métaphorique utile pour explorer les zones corporelles et thématiques de vie — pas comme une réalité anatomique mesurable. Sa valeur est dans l'introspection qu'il facilite."
+    },
+    "lithotherapie_chromotherapie": {
+      "lithothérapie": {
+        "définition": "Utilisation de cristaux et minéraux à des fins thérapeutiques ou méditatives",
+        "niveau_preuve": "Aucune preuve scientifique d'effets thérapeutiques propres aux pierres. L'effet bénéfique observé est attribué à l'effet placebo, à l'intentionnalité et au rituel de soin de soi.",
+        "usage_légitime": "Objet de méditation et d'ancrage, rituel de soin de soi, plaisir esthétique"
+      },
+      "chromothérapie": {
+        "définition": "Utilisation des couleurs pour influencer l'état physique et émotionnel",
+        "base_réelle": "La lumière et les couleurs ont des effets mesurables sur la physiologie (lumière bleue/mélatonine, luminothérapie/dépression saisonnière)",
+        "luminothérapie": "Lumière blanche à 10 000 lux — efficacité démontrée pour les troubles affectifs saisonniers (TAS)"
+      }
+    }
+  }
+}

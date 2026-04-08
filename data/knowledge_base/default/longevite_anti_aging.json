@@ -1,0 +1,94 @@
+{
+  "version": "v30.0.0",
+  "category": "longevite_anti_aging",
+  "description": "Longévité et anti-aging — 9 hallmarks du vieillissement, épigénétique, télomères, autophagie, sénescence, Blue Zones (5 zones + Power 9), stratégies de longévité scientifiques, médecine préventive",
+  "longevite_anti_aging": {
+    "introduction": "La science de la longévité a connu une révolution dans les années 2010-2020 — le vieillissement est désormais considéré comme un processus biologique modifiable, pas une fatalité. L'objectif n'est pas seulement de vivre plus longtemps, mais de prolonger la 'healthspan' — les années en bonne santé. TITANE aborde ce domaine avec rigueur : distinguer la science solide des suppléments marketing.",
+    "hallmarks_vieillissement": {
+      "origine": "López-Otín et al., Cell 2013 — mise à jour 2023 (12 hallmarks)",
+      "neuf_principaux": {
+        "instabilité_génomique": "Accumulation de dommages à l'ADN — mutations, translocations",
+        "attrition_telomeres": "Raccourcissement des télomères à chaque division cellulaire → sénescence",
+        "altérations_epigénétiques": "Changements méthylation/acétylation ADN → gènes mal exprimés",
+        "perte_protéostasie": "Accumulation de protéines mal repliées (Alzheimer, Parkinson)",
+        "deregulation_nutriments": "Perte de sensibilité à l'insuline, IGF-1, AMPK, mTOR dérégulé",
+        "dysfonction_mitochondriale": "Mitochondries moins efficaces, plus de ROS",
+        "senescence_cellulaire": "Cellules qui cessent de se diviser mais restent actives (pro-inflammatoire)",
+        "epuisement_cellules_souches": "Réparation tissulaire dégradée",
+        "communication_intercellulaire": "Inflammaging — inflammation chronique systémique de bas grade"
+      }
+    },
+    "epigenetique": {
+      "définition": "Modification de l'expression des gènes sans changement de séquence ADN — influencée par le mode de vie",
+      "mécanismes": "Méthylation ADN, modifications histones, ARN non-codants",
+      "clock_epigenetique": "Horloge Horvath — mesure l'âge biologique (différent de l'âge chronologique). Modifiable.",
+      "age_biologique": "Deux personnes de 50 ans peuvent avoir un âge biologique de 40 ou 60 selon leur hygiène de vie",
+      "leviers": [
+        "Exercice (ralentit le vieillissement épigénétique)",
+        "Jeûne/restriction calorique (active les sirtuines)",
+        "Alimentation méditerranéenne/anti-inflammatoire",
+        "Sommeil suffisant",
+        "Gestion du stress",
+        "Connexion sociale positive"
+      ]
+    },
+    "telomeres": {
+      "définition": "Capuchons protecteurs aux extrémités des chromosomes — se raccourcissent à chaque division",
+      "telomerase": "Enzyme qui reconstruit les télomères — active dans cellules souches et reproductrices, peu dans cellules somatiques",
+      "préserver_longueur": [
+        "Exercice aérobique (études positives)",
+        "Méditation (réduction stress chronique → moins d'oxydation)",
+        "Alimentation antioxydante",
+        "Réduire stress chronique (cortisol accélère attrition)"
+      ],
+      "mesure": "Tests commerciaux disponibles (TeloYears, SpectraCell) — indicateur de risque"
+    },
+    "autophagie": {
+      "définition": "Processus par lequel la cellule 'digère' ses propres composants endommagés — nettoyage cellulaire",
+      "Nobel": "Yoshinori Ohsumi — Nobel Médecine 2016 pour la découverte des mécanismes",
+      "bénéfices": "Élimination des protéines mal repliées, recyclage mitochondries déficientes (mitophagie), défense anti-infectieuse",
+      "stimuler": {
+        "jeûne": "16h+ de jeûne active significativement l'autophagie",
+        "exercice": "L'exercice intense active l'autophagie musculaire",
+        "AMPK": "Activée par la restriction calorique et la metformine — freine mTOR (inhibiteur autophagie)",
+        "spermidine": "Présente dans le germe de blé, soja fermenté, fromage vieilli — stimule autophagie"
+      },
+      "mTOR": "Kinase qui inhibe l'autophagie quand les nutriments sont abondants — jeûne et restriction protéique l'inhibent"
+    },
+    "blue_zones": {
+      "définition": "5 régions du monde avec concentration exceptionnelle de centenaires — identifiées par Dan Buettner (National Geographic)",
+      "cinq_zones": {
+        "sardaigne_italiane": "Hommes centenaires (ratio 1:1 avec femmes — unique au monde). Isolement géographique, cohésion familiale, vin cannonau, marche en terrain pentu.",
+        "okinawa_japon": "Femmes centenaires. Ikigai, moai (cercle social), hara hachi bu (80% de satiété), alimentation végétale et tofu.",
+        "loma_linda_californie": "Adventistes du 7e Jour. Végétarisme, Sabbat (repos complet hebdomadaire), communauté de valeurs.",
+        "nicoya_costa_rica": "Plan de Vida (raison de vivre), eau riche en calcium/magnésium, tortillas et haricots.",
+        "icaria_grèce": "Siestes régulières, vin local, herbes sauvages, communauté serrée."
+      },
+      "power_9_communs": {
+        "bouger_naturellement": "Marche, jardinage, travaux — pas de sport structuré, mais mouvement constant",
+        "raison_de_vivre": "Ikigai / plan de vida — avoir une raison de se lever le matin (+7 ans d'espérance de vie)",
+        "décompresser": "Rituels anti-stress quotidiens — prière, sieste, happy hour",
+        "règle_80_percent": "Arrêter de manger à 80% de satiété (hara hachi bu). Moins 20% de calories.",
+        "plantes_en_base": "Haricots, légumineuses, légumes en base. Viande rare et en petite quantité.",
+        "vin_avec_modération": "1-2 verres/jour avec des amis (pas seul) — spécifiquement dans 4 zones sur 5",
+        "communauté_de_valeurs": "Appartenance à une communauté spirituelle ou de valeurs (+4-14 ans)",
+        "famille_en_premier": "Engagement envers la famille — parents âgés à la maison, partenaire stable",
+        "tribu_bonne_santé": "S'entourer de personnes avec des comportements santé — l'obésité comme la santé sont contagieuses (Christakis)"
+      }
+    },
+    "strategies_longevite": {
+      "exercice": "Levier #1 incontestable — VO2max meilleur prédicteur de longévité (Peter Attia). Viser percentile 75e.",
+      "alimentation": "Restriction calorique légère (vs ad libitum), anti-inflammatoire, périodes de jeûne",
+      "sommeil": "7-9h qualité — déficit chronique accélère vieillissement biologique",
+      "connexion_sociale": "Robert Waldinger (Harvard) — la qualité des relations est le meilleur prédicteur de bonheur et longévité à 80 ans",
+      "supplements_prometteurs": {
+        "NMN_NR": "Précurseurs NAD+ — études sur animaux très positives, humains: études préliminaires prometteuses",
+        "resvératrol": "Polyphénol (raisin, cacao, baies) — activateur sirtuines. Biodisponibilité limitée à l'état brut.",
+        "rapamycin": "Inhibiteur mTOR — allongement vie animal démontré. Usage humain expérimental — pas en automédication.",
+        "metformine": "Anti-diabétique — études de longévité en cours (TAME trial). Prescription médicale uniquement.",
+        "quercétine_dasatinib": "Sénolytiques — élimination des cellules sénescentes. Stade de recherche active."
+      },
+      "avertissement": "La plupart des suppléments de longévité n'ont pas encore de preuves solides chez l'humain. Les leviers du style de vie restent les plus validés."
+    }
+  }
+}

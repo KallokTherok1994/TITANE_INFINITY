@@ -1,0 +1,109 @@
+{
+  "version": "v30.0.0",
+  "category": "coaching_leadership",
+  "description": "Coaching et leadership — modèles coaching (GROW, OSKAR), postures coach/mentor/thérapeute, leadership situationnel Blanchard, intelligence collective, facilitation, CNV en contexte professionnel, coaching d'équipe",
+  "coaching_leadership": {
+    "introduction": "Le coaching professionnel est une discipline distincte de la thérapie, du mentoring et de la formation — son objectif est de libérer le potentiel de l'individu, pas de le former ou de le traiter. Le leadership moderne intègre des compétences de coaching. TITANE peut adopter une posture de coaching avec Kevin quand c'est pertinent.",
+    "distinctions_fondamentales": {
+      "coaching_vs_mentoring": {
+        "coaching": "Le coach croit que la personne a les réponses en elle — il pose des questions puissantes pour les faire émerger. Pas d'expertise nécessaire dans le domaine.",
+        "mentoring": "Le mentor partage son expérience et ses conseils depuis sa propre expertise. Vertical (celui qui sait → celui qui apprend).",
+        "différence_clé": "Coaching = questions. Mentoring = réponses."
+      },
+      "coaching_vs_therapie": {
+        "therapie": "Focus sur le passé, la guérison des blessures, les pathologies",
+        "coaching": "Focus sur le présent et le futur, le potentiel, la performance",
+        "frontière": "Un coach n'entre pas dans le travail thérapeutique — référer si besoin"
+      },
+      "manager_coach": "Le manager qui maîtrise les techniques de coaching crée une culture d'autonomie et de croissance dans son équipe"
+    },
+    "modèles_coaching": {
+      "GROW": {
+        "auteur": "John Whitmore — 'Coaching for Performance'",
+        "popularité": "Le modèle le plus utilisé mondialement",
+        "structure": {
+          "G_Goal": "Quel est l'objectif de cette session? Et l'objectif à long terme?",
+          "R_Reality": "Quelle est la situation actuelle? Qu'est-ce qui se passe vraiment?",
+          "O_Options": "Quelles sont les options disponibles? Qu'est-ce qui a déjà été essayé?",
+          "W_Will": "Quelle action vas-tu prendre? Quand? Comment mesureras-tu le succès?"
+        },
+        "questions_types": {
+          "Goal": "'Sur une échelle de 1-10, où voudrais-tu être?' 'Qu'est-ce qui serait différent si tu avais réussi?'",
+          "Reality": "'Qu'est-ce qui se passe concrètement?' 'Qu'as-tu tenté jusqu'ici?'",
+          "Options": "'Si tu savais que tu ne pouvais pas échouer, que ferais-tu?' 'De quoi aurais-tu besoin?'",
+          "Will": "'Qu'est-ce que tu t'engages à faire?' 'Sur une échelle de 1-10, quel est ton niveau d'engagement?'"
+        }
+      },
+      "OSKAR": {
+        "auteur": "Mark McKergow & Paul Jackson — approche solutions focused",
+        "structure": {
+          "O_Outcome": "Résultat désiré — la destination",
+          "S_Scaling": "Echelle 1-10 — où es-tu? Où veux-tu être?",
+          "K_Know_how": "Qu'est-ce que tu sais déjà faire qui peut t'aider?",
+          "A_Affirm_Action": "Ce qui fonctionne déjà + première action concrète",
+          "R_Review": "Revue — qu'est-ce qui a changé?"
+        },
+        "différence_GROW": "OSKAR est orienté solutions (ce qui fonctionne) vs GROW qui analyse aussi le problème"
+      },
+      "questions_puissantes_coaching": [
+        "'Qu'est-ce qui t'empêche d'avancer?'",
+        "'Si ton meilleur ami était dans ta situation, que lui dirais-tu?'",
+        "'Qu'est-ce que ça changerait pour toi si tu réussissais?'",
+        "'Qu'est-ce que tu n'as pas encore osé te dire?'",
+        "'Dans 5 ans, si tu n'agis pas, comment te sentiras-tu?'",
+        "'Qu'est-ce qui compte vraiment pour toi dans tout ça?'"
+      ]
+    },
+    "leadership_situationnel": {
+      "auteur": "Paul Hersey & Ken Blanchard (1969)",
+      "principe": "Il n'y a pas un style de leadership universel — le bon style dépend de la compétence ET de la motivation de la personne pour une tâche spécifique",
+      "quatre_styles": {
+        "S1_directif": {
+          "profil": "D1 — Faible compétence + Forte motivation (enthousiaste débutant)",
+          "comportement": "Beaucoup de direction, peu de soutien. Expliquer quoi faire et comment."
+        },
+        "S2_entraîneur": {
+          "profil": "D2 — Compétence développée + Motivation variable (désenchanté)",
+          "comportement": "Beaucoup de direction ET de soutien. Expliquer le pourquoi, demander l'input."
+        },
+        "S3_soutien": {
+          "profil": "D3 — Haute compétence + Manque de confiance (capable mais hésitant)",
+          "comportement": "Peu de direction, beaucoup de soutien. Encourager, écouter, partager la décision."
+        },
+        "S4_délégation": {
+          "profil": "D4 — Haute compétence + Forte motivation (expert autonome)",
+          "comportement": "Peu de direction, peu de soutien. Déléguer avec responsabilité pleine."
+        }
+      },
+      "erreurs_fréquentes": [
+        "Utiliser le même style pour tout le monde",
+        "Déléguer à quelqu'un de D1 (panique/abandon)",
+        "Micro-manager un D4 (frustration/démotivation)"
+      ]
+    },
+    "intelligence_collective": {
+      "définition": "Capacité d'un groupe à générer des résultats supérieurs à ce que les individus peuvent produire seuls",
+      "conditions": ["Diversité cognitive (pas diversité décorative)", "Sécurité psychologique (Amy Edmondson)", "Processus de décision clair", "Facilitation neutre"],
+      "securite_psychologique": "Amy Edmondson (Harvard) — les équipes les plus performantes ne sont pas celles où tout le monde est d'accord, mais celles où on peut dire 'Je pense qu'on fait une erreur' sans peur",
+      "méthodes_facilitation": {
+        "world_cafe": "Petits groupes qui tournent sur des questions — émergence d'idées collective",
+        "open_space": "Agenda co-créé par les participants — ceux qui participent sont les bonnes personnes",
+        "liberating_structures": "33 microstructures de facilitation (Henri Lipmanowicz & Keith McCandless) — remplacent réunions classiques"
+      }
+    },
+    "coaching_equipe": {
+      "différence_coaching_individuel": "L'équipe est plus que la somme de ses membres — elle a sa propre dynamique, culture, patterns",
+      "modèle_lencioni": {
+        "auteur": "Patrick Lencioni — 'Les 5 dysfonctions d'une équipe'",
+        "pyramide_inversée": {
+          "confiance": "Base — sans vulnérabilité et confiance, impossible de se dire les vraies choses",
+          "conflit": "Sain et nécessaire — les équipes qui évitent le conflit font semblant",
+          "engagement": "Impossible sans débat réel",
+          "responsabilité": "Se tenir mutuellement responsable",
+          "résultats": "Focalisation collective sur les résultats, pas l'ego individuel"
+        }
+      },
+      "apport_TITANE": "Peut aider Kevin à diagnostiquer les dysfonctions de son équipe et à identifier les leviers d'action"
+    }
+  }
+}
