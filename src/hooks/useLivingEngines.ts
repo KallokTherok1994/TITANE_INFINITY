@@ -13,7 +13,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { logger } from '@/lib/logger';
 import type { PersonaState } from '@/types/singularityState';
 import type { MoodType } from '../core/ARCHITECTURE_TYPES_v24-v∞';
@@ -99,6 +99,8 @@ export interface LivingEnginesState {
  * Hook pour synchroniser Persona Engine avec UI
  */
 export const useLivingEngines = (updateInterval = 100) => {
+  const mountedRef = useRef(true);
+  const updateInFlightRef = useRef<Promise<void> | null>(null);
   const [enginesState, setEnginesState] = useState<LivingEnginesState>({
     systemState: 'stable',
     glow: 1.0,
@@ -150,7 +152,9 @@ export const useLivingEngines = (updateInterval = 100) => {
           console.log('🌟 TITANE∞ v30.0.0 - Persona Engine (TypeScript) Initialized');
         }
 
-        setEnginesState(prev => ({ ...prev, initialized: true }));
+        if (mountedRef.current) {
+          setEnginesState(prev => ({ ...prev, initialized: true }));
+        }
       } catch (error) {
         logger.error(
           'Error initializing Persona Engine',
@@ -164,11 +168,13 @@ export const useLivingEngines = (updateInterval = 100) => {
           // Keep boot non-blocking even if fallback init fails
         }
 
-        setEnginesState(prev => ({
-          ...prev,
-          initialized: true,
-          systemState: 'warning',
-        }));
+        if (mountedRef.current) {
+          setEnginesState(prev => ({
+            ...prev,
+            initialized: true,
+            systemState: 'warning',
+          }));
+        }
 
         if (typeof window !== 'undefined') {
           window.__TITANE_EMIT_BOOT_MARKER__?.('BOOT:ORCHESTRATOR_DEGRADED');
@@ -180,6 +186,9 @@ export const useLivingEngines = (updateInterval = 100) => {
 
     // Cleanup
     return () => {
+      mountedRef.current = false;
+      updateInFlightRef.current = null;
+
       if (!personaTauriBridge.isTauriEnvironment()) {
         personaEngine.destroy();
       }
@@ -202,55 +211,69 @@ export const useLivingEngines = (updateInterval = 100) => {
     const pollingEnabled = import.meta.env.DEV || envEnabled || userEnabled;
 
     const updateOnce = async () => {
-      try {
-        let personaState: PersonaState | null = null;
-        let visualMults = { glow: 1.0, motion: 1.0, depth: 0.5, sound: 0.5 };
-
-        // Try Tauri bridge first
-        if (personaTauriBridge.isTauriEnvironment()) {
-          personaState = await personaTauriBridge.getState();
-          const mults = await personaTauriBridge.getMultipliers();
-          if (mults) visualMults = mults;
-        } else {
-          // Fallback to TypeScript engine
-          personaState = personaEngine.getState();
-          visualMults = personaEngine.getVisualMultipliers();
-        }
-
-        if (!personaState) return;
-
-        // Simulate cognitive load from mood intensity
-        const cogLoad = personaState.intensity || 0.5;
-
-        // Simulate rhythm from presence (fallback to intensity)
-        const presenceLevel =
-          (personaState as unknown as { presenceLevel?: number }).presenceLevel ??
-          personaState.intensity ??
-          0.5;
-        const rhythm = presenceLevel * 0.8 + 0.2;
-
-        setEnginesState({
-          systemState: 'stable',
-          glow: visualMults.glow,
-          motion: visualMults.motion,
-          depth: visualMults.depth,
-          sound: visualMults.sound,
-          persona: personaState,
-          presenceLevel: presenceLevel,
-          cognitiveLoad: cogLoad,
-          rhythmScore: rhythm,
-          activeThreads: Math.max(1, Math.round(presenceLevel * 12)),
-          holoActive: true,
-          particleCount: Math.floor(Math.random() * 1000 + 500),
-          initialized: true,
-        });
-      } catch (error) {
-        logger.error(
-          'Error updating engines state',
-          { component: 'LivingEngines' },
-          error as Error
-        );
+      if (updateInFlightRef.current) {
+        return updateInFlightRef.current;
       }
+
+      let request: Promise<void> | null = null;
+      request = (async () => {
+        try {
+          let personaState: PersonaState | null = null;
+          let visualMults = { glow: 1.0, motion: 1.0, depth: 0.5, sound: 0.5 };
+
+          // Try Tauri bridge first
+          if (personaTauriBridge.isTauriEnvironment()) {
+            personaState = await personaTauriBridge.getState();
+            const mults = await personaTauriBridge.getMultipliers();
+            if (mults) visualMults = mults;
+          } else {
+            // Fallback to TypeScript engine
+            personaState = personaEngine.getState();
+            visualMults = personaEngine.getVisualMultipliers();
+          }
+
+          if (!personaState || !mountedRef.current) return;
+
+          // Simulate cognitive load from mood intensity
+          const cogLoad = personaState.intensity || 0.5;
+
+          // Simulate rhythm from presence (fallback to intensity)
+          const presenceLevel =
+            (personaState as unknown as { presenceLevel?: number }).presenceLevel ??
+            personaState.intensity ??
+            0.5;
+          const rhythm = presenceLevel * 0.8 + 0.2;
+
+          setEnginesState({
+            systemState: 'stable',
+            glow: visualMults.glow,
+            motion: visualMults.motion,
+            depth: visualMults.depth,
+            sound: visualMults.sound,
+            persona: personaState,
+            presenceLevel: presenceLevel,
+            cognitiveLoad: cogLoad,
+            rhythmScore: rhythm,
+            activeThreads: Math.max(1, Math.round(presenceLevel * 12)),
+            holoActive: true,
+            particleCount: Math.floor(Math.random() * 1000 + 500),
+            initialized: true,
+          });
+        } catch (error) {
+          logger.error(
+            'Error updating engines state',
+            { component: 'LivingEngines' },
+            error as Error
+          );
+        } finally {
+          if (updateInFlightRef.current === request) {
+            updateInFlightRef.current = null;
+          }
+        }
+      })();
+
+      updateInFlightRef.current = request;
+      return request;
     };
 
     void updateOnce();
