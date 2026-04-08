@@ -214,6 +214,8 @@ class ChatEngineOmega {
   // Default knowledge base: compact index injected into system prompt
   private _defaultKbIndex: string = '';
   private _defaultKbLoaded: boolean = false;
+  // Promise lock: prevents concurrent IPC calls when two requests race at startup
+  private _kbLoadPromise: Promise<void> | null = null;
 
   /**
    * PHASE 1Ω: Configure le mode avec reset cognitif OMEGA
@@ -259,15 +261,20 @@ class ChatEngineOmega {
   /**
    * Lazy-load the compact knowledge base index for system-prompt injection.
    * Called once per ChatEngine instance; result is cached in _defaultKbIndex.
+   * A Promise lock prevents concurrent IPC calls when two requests race at startup.
    */
   private async _ensureDefaultKbLoaded(): Promise<void> {
     if (this._defaultKbLoaded) return;
-    try {
-      this._defaultKbIndex = await getDefaultKbIndex();
-    } catch {
-      this._defaultKbIndex = '';
-    }
-    this._defaultKbLoaded = true;
+    if (this._kbLoadPromise) return this._kbLoadPromise;
+    this._kbLoadPromise = (async () => {
+      try {
+        this._defaultKbIndex = await getDefaultKbIndex();
+      } catch {
+        this._defaultKbIndex = '';
+      }
+      this._defaultKbLoaded = true;
+    })();
+    return this._kbLoadPromise;
   }
 
   private isBackendAvailable(): boolean {

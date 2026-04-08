@@ -43,6 +43,7 @@ export interface KnowledgeBaseEntry {
 
 let _categoriesCache: string[] | null = null;
 let _allEntriesCache: KnowledgeBaseEntry[] | null = null;
+let _allEntriesLoadingPromise: Promise<KnowledgeBaseEntry[]> | null = null;
 let _compactIndexCache: string | null = null;
 
 // ─────────────────────────────────────────────────────────────────
@@ -50,10 +51,16 @@ let _compactIndexCache: string | null = null;
 // ─────────────────────────────────────────────────────────────────
 
 /**
- * List all 92 category keys (fast, Rust side is a simple BTreeMap scan).
+ * List all 92 category keys.
+ * Derives from the entries cache when already loaded to avoid a second IPC call.
  */
 export async function listCategories(): Promise<string[]> {
   if (_categoriesCache) return _categoriesCache;
+  // Re-use loaded entries rather than making a second IPC call
+  if (_allEntriesCache) {
+    _categoriesCache = _allEntriesCache.map(e => e.category).sort();
+    return _categoriesCache;
+  }
   try {
     const cats = await invokeWithRetry<string[]>(
       'knowledge_base_list_categories',
@@ -70,22 +77,32 @@ export async function listCategories(): Promise<string[]> {
 /**
  * Return all entries as parsed objects.
  * The Rust side returns a JSON string; we parse it here.
+ * A module-level Promise guard prevents concurrent IPC calls.
  */
 export async function getAllEntries(): Promise<KnowledgeBaseEntry[]> {
   if (_allEntriesCache) return _allEntriesCache;
-  try {
-    const raw = await invokeWithRetry<string>(
-      'knowledge_base_get_all',
-      {},
-      { ...FAST_COMMAND_OPTIONS, context: 'DefaultKB' }
-    );
-    const parsed: Record<string, KnowledgeBaseEntry> =
-      typeof raw === 'string' ? JSON.parse(raw) : (raw as Record<string, KnowledgeBaseEntry>);
-    _allEntriesCache = Object.values(parsed);
-  } catch {
-    _allEntriesCache = [];
-  }
-  return _allEntriesCache;
+  // Guard: if a load is already in flight, wait for it instead of issuing a second IPC call
+  if (_allEntriesLoadingPromise) return _allEntriesLoadingPromise;
+  _allEntriesLoadingPromise = (async () => {
+    try {
+      const raw = await invokeWithRetry<string>(
+        'knowledge_base_get_all',
+        {},
+        { ...FAST_COMMAND_OPTIONS, context: 'DefaultKB' }
+      );
+      const parsed: Record<string, KnowledgeBaseEntry> =
+        typeof raw === 'string' ? JSON.parse(raw) : (raw as Record<string, KnowledgeBaseEntry>);
+      _allEntriesCache = Object.values(parsed);
+      // Populate categories cache from entries to avoid a second IPC call later
+      if (!_categoriesCache) {
+        _categoriesCache = _allEntriesCache.map(e => e.category).sort();
+      }
+    } catch {
+      _allEntriesCache = [];
+    }
+    return _allEntriesCache!;
+  })();
+  return _allEntriesLoadingPromise;
 }
 
 /**
@@ -125,9 +142,10 @@ export async function validate(): Promise<boolean> {
  * Build a compact index string for system-prompt injection.
  *
  * Format (one entry per line):
- *   • <category>: <description>
+ *   • <category>: <description up to 80 chars>
  *
- * Cached after first call (same for the entire session).
+ * 80-char limit keeps the total under ~2500 tokens while still providing
+ * meaningful descriptions. Cached after the first call (session-scoped).
  */
 export async function getCompactIndex(): Promise<string> {
   if (_compactIndexCache) return _compactIndexCache;
@@ -139,7 +157,7 @@ export async function getCompactIndex(): Promise<string> {
     }
     const lines = entries
       .sort((a, b) => a.category.localeCompare(b.category))
-      .map(e => `• ${e.category}: ${e.description.substring(0, 120)}${e.description.length > 120 ? '…' : ''}`)
+      .map(e => `• ${e.category}: ${e.description.substring(0, 80)}${e.description.length > 80 ? '…' : ''}`)
       .join('\n');
     _compactIndexCache = lines;
   } catch {
@@ -154,5 +172,6 @@ export async function getCompactIndex(): Promise<string> {
 export function resetCache(): void {
   _categoriesCache = null;
   _allEntriesCache = null;
+  _allEntriesLoadingPromise = null;
   _compactIndexCache = null;
 }
