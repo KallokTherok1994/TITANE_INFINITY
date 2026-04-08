@@ -18,7 +18,9 @@ import { createLogger } from '@/utils/logger';
 const logger = createLogger('InputValidator');
 
 export class InputValidator {
-  private readonly MAX_LENGTH = 32000;
+  // Align the UI validator with the Rust backend guard to prevent oversized requests
+  // from cascading into heavy fallback paths or local-model stalls.
+  private readonly MAX_LENGTH = 12000;
   private readonly MIN_LENGTH = 1;
 
   /**

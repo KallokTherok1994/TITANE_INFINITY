@@ -33,6 +33,30 @@ const DEFAULTS = {
   profile: 'balanced' as ChatPerformanceProfile,
 } as const;
 
+const SAFETY_LIMITS = {
+  // Keep frontend payloads aligned with the Rust validator to avoid oversized-request churn.
+  maxUserMessageChars: 12_000,
+  maxSystemPromptChars: 24_000,
+  maxOutputTokens: 8_096,
+} as const;
+
+function clampText(value: string | null | undefined, maxChars: number): string | null {
+  if (typeof value !== 'string') {
+    return null;
+  }
+
+  return value.length > maxChars ? value.slice(0, maxChars) : value;
+}
+
+function clampOutputTokens(value: number | undefined): number {
+  if (typeof value !== 'number' || !Number.isFinite(value)) {
+    return DEFAULTS.maxTokens;
+  }
+
+  const normalized = Math.floor(value);
+  return Math.min(Math.max(normalized, 1), SAFETY_LIMITS.maxOutputTokens);
+}
+
 interface IpcEnvelope<T> {
   ok: boolean;
   content: T | null;
@@ -202,10 +226,11 @@ function normalizeStreamChunk(payload: BackendStreamChunkPayload): StreamChunkPa
 function toBackendPayload(args: ChatRequestArgs): Record<string, unknown> {
   return {
     conversation_id: args.conversationId ?? null,
-    user_message: args.userMessage,
-    system_prompt: args.systemPrompt ?? null,
+    user_message:
+      clampText(args.userMessage, SAFETY_LIMITS.maxUserMessageChars) ?? '',
+    system_prompt: clampText(args.systemPrompt ?? null, SAFETY_LIMITS.maxSystemPromptChars),
     temperature: args.temperature ?? DEFAULTS.temperature,
-    max_output_tokens: args.maxOutputTokens ?? DEFAULTS.maxTokens,
+    max_output_tokens: clampOutputTokens(args.maxOutputTokens ?? DEFAULTS.maxTokens),
     provider: (args.provider ?? 'auto').toLowerCase(),
     enable_streaming: args.enableStreaming ?? false,
     profile: args.profile ?? DEFAULTS.profile,
