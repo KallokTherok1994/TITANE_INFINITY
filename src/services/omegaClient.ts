@@ -33,6 +33,8 @@ export class OmegaClient {
   /**
    * Vérifie la santé du pipeline OMEGA via le Conversation Engine.
    * Retourne un rapport de santé normalisé, ou null si indisponible.
+   * Note: latencyAvgMs et requestsProcessed ne sont pas encore exposés
+   * par l'IPC conversation_health_check — valeurs réservées pour V31.
    */
   static async health(): Promise<OmegaHealthReport | null> {
     try {
