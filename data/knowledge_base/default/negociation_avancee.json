@@ -1,0 +1,58 @@
+{
+  "version": "v30.0.0",
+  "category": "negociation_avancee",
+  "description": "Négociation avancée — théorie de la négociation (distributive vs intégrative), méthode Harvard (BATNA/ZOPA/intérêts vs positions), négociation commerciale (préparation/déroulement/conclusion), négociation sociale (accords collectifs/NAO), tactiques et contre-tactiques, négociation interculturelle, communication non-verbale en négociation",
+  "negociation_avancee": {
+    "introduction": "Négocier est l'une des compétences les plus précieuses et les moins enseignées. Tout le monde négocie en permanence: salaires, contrats, budgets, délais, accords familiaux. Les professionnels qui maîtrisent la négociation créent plus de valeur, évitent plus de conflits et construisent de meilleures relations. TITANE couvre ce domaine au niveau expert.",
+    "types_de_négociation": {
+      "distributive": "Partage d'un gâteau fixe. 'Win-Lose'. Chacun cherche à maximiser sa part. Typique: négociation de prix unique. Positionnement, ancrage, concessions progressives.",
+      "intégrative": "Créer plus de valeur pour toutes les parties. 'Win-Win'. Possible quand les parties ont des intérêts différents qui peuvent être combinés. Typique: contrat complexe avec plusieurs clauses, négociation sociale.",
+      "principe_clé": "En réalité, la plupart des négociations sont mixtes: distributives sur certains points, intégratives sur d'autres. La stratégie intégrative est généralement supérieure à long terme."
+    },
+    "methode_Harvard": {
+      "créateurs": "Roger Fisher, William Ury, Bruce Patton — 'Getting to Yes' (1981)",
+      "4_principes": {
+        "1_séparer_les_personnes_du_problème": "Être ferme sur les intérêts, souple avec les personnes. Attaquer le problème, pas l'interlocuteur.",
+        "2_se_concentrer_sur_les_intérêts": "Derrière chaque POSITION se cache un INTÉRÊT. Comprendre l'intérêt permet de trouver des solutions inattendues. Ex: deux sœurs veulent la même orange → l'une veut l'écorce (tarte), l'autre la pulpe (jus) = partage parfait impossible si on ne comprend pas les intérêts.",
+        "3_inventer_des_options_à_bénéfices_mutuels": "Brainstorming de solutions avant de négocier. Séparer invention et jugement. Plus d'options = plus de valeur créée.",
+        "4_utiliser_des_critères_objectifs": "Fonder l'accord sur des standards indépendants des volontés (marché, expertise, jurisprudence, précédents). Évite le bras de fer de volontés."
+      },
+      "BATNA": "Best Alternative To a Negotiated Agreement. Votre meilleure option si les négociations échouent. Connaître son BATNA = savoir quand accepter et quand partir.",
+      "ZOPA": "Zone Of Possible Agreement. Espace entre le prix minimum du vendeur et le prix maximum de l'acheteur. Si négatif: pas d'accord possible aux positions actuelles.",
+      "WATNA": "Worst Alternative To a Negotiated Agreement. Connaître aussi le pire scénario aide à calibrer les concessions."
+    },
+    "préparation_négociation": {
+      "analyse_des_parties": ["Quels sont les intérêts réels de l'autre partie?", "Quel est son BATNA probable?", "Qui décide vraiment?", "Quels sont ses contraintes (temps, budget, pression hiérarchique)?"],
+      "définir_ses_objectifs": "MIL: Must have (non-négociable) / Intend to get (objectif) / Like to have (bonus). Ne jamais commencer sans avoir clairement défini ces trois niveaux.",
+      "ancrage": "La première offre ancre la négociation. En général, celui qui ancre en premier obtient de meilleurs résultats — à condition que l'ancre soit crédible et justifiable.",
+      "agenda": "Contrôler l'ordre du jour et les conditions de la négociation fait partie de la négociation elle-même."
+    },
+    "tactiques_et_contre_tactiques": {
+      "bon_flic_mauvais_flic": "Un négociateur ferme + un conciliant → l'interlocuteur fait des concessions au 'bon flic'. Contre-tactique: identifier le pattern et ne pas s'y laisser prendre.",
+      "salami": "Demander des concessions progressives petites jusqu'à obtenir quelque chose de significatif. Contre-tactique: voir le tout, pas juste la dernière tranche.",
+      "limite_de_mandat": "'Je dois en référer à ma direction.' Pour gagner du temps ou tester. Contre-tactique: demander à négocier directement avec le décideur.",
+      "deadline_artificielle": "Créer une urgence fictive. Contre-tactique: vérifier la réalité de la deadline.",
+      "silence": "Après une offre, le silence est une pression puissante. La personne mal à l'aise avec le silence fait des concessions spontanées.",
+      "question_du_budget": "Demander tôt le budget disponible = ancre pour le vendeur. Contre-tactique: ne jamais donner son budget en premier."
+    },
+    "negociation_commerciale": {
+      "structure": "Prise de contact → Exploration des besoins → Proposition de valeur → Traitement des objections → Négociation des termes → Conclusion → Formalisation",
+      "objections": {
+        "prix": "'C'est trop cher' → Comprendre par rapport à quoi. Défendre la valeur avant de concéder sur le prix.",
+        "concurrence": "'Votre concurrent propose moins cher' → Demander à voir l'offre. Comparer sur tous les critères, pas seulement le prix.",
+        "délai": "'Vous livrez trop tard' → Identifier si c'est un vrai problème ou une tactique. Proposer un planning détaillé."
+      },
+      "conclusion": "Récapituler l'accord, vérifier que toutes les parties comprennent la même chose, formaliser rapidement par écrit."
+    },
+    "negociation_interculturelle": {
+      "cultures_à_haut_contexte": "Communication implicite, relations primordiales, indirect (Japon, Chine, pays arabes, Afrique sub-saharienne). Ne pas brusquer, laisser du temps aux relations.",
+      "cultures_à_bas_contexte": "Communication explicite, contrat prime, directe (USA, Allemagne, pays nordiques). Aller à l'essentiel, être précis.",
+      "erreurs_classiques": ["Croire que 'oui' signifie accord dans toutes les cultures", "Interpréter le silence comme un désaccord (certaines cultures c'est le contraire)", "Montrer son impatience (perçu comme faiblesse ou manque de respect selon les cultures)"]
+    },
+    "communication_non_verbale": {
+      "importance": "55% du message = posture + expression faciale. 38% = ton de la voix. 7% = mots (Albert Mehrabian — dans un contexte émotionnel).",
+      "signaux_à_lire": "Bras croisés (fermeture), regard fuyant (inconfort), inclinaison vers l'avant (intérêt), microexpressions de doute (sourcils froncés fugacement).",
+      "mirroring": "Refléter subtilement la posture et le rythme de l'interlocuteur renforce le rapport et la confiance."
+    }
+  }
+}

@@ -83,6 +83,24 @@ const COHERENCE_IDENTITAIRE: &str =
     include_str!("../../data/knowledge_base/default/coherence_identitaire.json");
 const REALISME_CONVERSATIONNEL: &str =
     include_str!("../../data/knowledge_base/default/realisme_conversationnel.json");
+// ── v30.0.0 expansion — phase 10 (administration, communication, stratégie) ─
+const ADMINISTRATION_PUBLIQUE: &str =
+    include_str!("../../data/knowledge_base/default/administration_publique.json");
+const MANAGEMENT_ADMINISTRATION: &str =
+    include_str!("../../data/knowledge_base/default/management_administration.json");
+const COMMUNICATION_INSTITUTIONNELLE: &str =
+    include_str!("../../data/knowledge_base/default/communication_institutionnelle.json");
+const COMMUNICATION_CRISE: &str =
+    include_str!("../../data/knowledge_base/default/communication_crise.json");
+const STRATEGIE_ENTREPRISE: &str =
+    include_str!("../../data/knowledge_base/default/strategie_entreprise.json");
+const STRATEGIE_CONCURRENTIELLE: &str =
+    include_str!("../../data/knowledge_base/default/strategie_concurrentielle.json");
+const GESTION_PROJET_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/gestion_projet_avancee.json");
+const NEGOCIATION_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/negociation_avancee.json");
+
 // ── v30.0.0 expansion — phase 9 (rédaction pro, analyse, qualité, notariat) ─
 const REDACTION_PROFESSIONNELLE: &str =
     include_str!("../../data/knowledge_base/default/redaction_professionnelle.json");
@@ -280,6 +298,15 @@ impl DefaultKnowledgeBase {
         ("communication_avancee", COMMUNICATION_AVANCEE),
         ("bien_etre_mental_stress", BIEN_ETRE_MENTAL_STRESS),
         ("sante_corps_naturelle", SANTE_CORPS_NATURELLE),
+        // v30.0.0 expansion — phase 10 (administration, communication, stratégie)
+        ("administration_publique", ADMINISTRATION_PUBLIQUE),
+        ("management_administration", MANAGEMENT_ADMINISTRATION),
+        ("communication_institutionnelle", COMMUNICATION_INSTITUTIONNELLE),
+        ("communication_crise", COMMUNICATION_CRISE),
+        ("strategie_entreprise", STRATEGIE_ENTREPRISE),
+        ("strategie_concurrentielle", STRATEGIE_CONCURRENTIELLE),
+        ("gestion_projet_avancee", GESTION_PROJET_AVANCEE),
+        ("negociation_avancee", NEGOCIATION_AVANCEE),
         // v30.0.0 expansion — phase 9 (rédaction pro, analyse, qualité, notariat)
         ("redaction_professionnelle", REDACTION_PROFESSIONNELLE),
         ("analyse_professionnelle", ANALYSE_PROFESSIONNELLE),
@@ -479,8 +506,8 @@ mod tests {
             result.errors
         );
         assert_eq!(
-            result.entries_loaded, 77,
-            "Must have exactly 77 default knowledge categories"
+            result.entries_loaded, 85,
+            "Must have exactly 85 default knowledge categories"
         );
     }
 
@@ -498,6 +525,7 @@ mod tests {
         assert!(!cats.is_empty(), "Must have at least one category");
         let expected = vec![
             "actes_notariaux",
+            "administration_publique",
             "agents_multi_systeme",
             "ai_providers_guide",
             "analyse_professionnelle",
@@ -510,6 +538,8 @@ mod tests {
             "coaching_leadership",
             "coherence_identitaire",
             "communication_avancee",
+            "communication_crise",
+            "communication_institutionnelle",
             "communication_interpersonnelle",
             "communication_persuasion",
             "constitution_ethics",
@@ -525,6 +555,7 @@ mod tests {
             "entrepreneuriat_mindset",
             "finances_personnelles",
             "frontend_modules",
+            "gestion_projet_avancee",
             "gestion_temps_productivite",
             "hyper_intelligence",
             "identity_profile",
@@ -533,6 +564,7 @@ mod tests {
             "ipc_commands_catalog",
             "learning_prompts",
             "longevite_anti_aging",
+            "management_administration",
             "management_qualite",
             "medecine_hollistique",
             "meditation_pratique",
@@ -543,6 +575,7 @@ mod tests {
             "metier_qualite",
             "musculation_force",
             "naturopathie_fondamentaux",
+            "negociation_avancee",
             "numeric_twin_detail",
             "nutrition_avancee",
             "nutrition_sante_naturelle",
@@ -570,6 +603,8 @@ mod tests {
             "singularity_os_detail",
             "sommeil_optimise",
             "spiritualite_sens_existence",
+            "strategie_concurrentielle",
+            "strategie_entreprise",
             "style_expression_kevin",
             "system_architecture",
             "troubleshooting_faq",

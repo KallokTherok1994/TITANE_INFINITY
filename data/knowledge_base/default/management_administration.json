@@ -1,0 +1,71 @@
+{
+  "version": "v30.0.0",
+  "category": "management_administration",
+  "description": "Management administratif — direction d'une organisation (publique ou privée), délégation, contrôle de gestion, tableaux de bord, pilotage par objectifs (MBO/OKR), conduite du changement, management d'équipe, gestion des conflits internes, réunion efficace, reporting",
+  "management_administration": {
+    "introduction": "Le management administratif est l'art d'organiser, diriger et contrôler une structure pour atteindre ses objectifs. Qu'il s'agisse d'une collectivité, d'une direction d'office notarial, d'un service qualité ou d'une PME, les principes fondamentaux convergent. TITANE maîtrise ce domaine en profondeur.",
+    "fonctions_management": {
+      "POCCC_Fayol": {
+        "Planifier": "Définir les objectifs et les moyens pour les atteindre",
+        "Organiser": "Structurer les ressources humaines, matérielles, financières",
+        "Commander": "Donner des directives claires et lisibles",
+        "Coordonner": "Harmoniser les actions des différentes unités",
+        "Contrôler": "Vérifier que les résultats correspondent aux objectifs"
+      },
+      "grille_Mintzberg": {
+        "rôles_interpersonnels": "Symbole (représentation), Leader (motivation/évaluation), Agent de liaison (réseau externe)",
+        "rôles_informationnels": "Observateur actif, diffuseur d'information, porte-parole",
+        "rôles_décisionnels": "Entrepreneur (innovation), régulateur des perturbations, répartiteur de ressources, négociateur"
+      }
+    },
+    "délégation": {
+      "définition": "Confier une mission à un collaborateur avec les moyens et l'autorité nécessaires. Le délégant conserve la responsabilité globale.",
+      "conditions_réussite": ["Déléguer sur la compétence avérée ou à développer", "Fixer des objectifs clairs (SMART)", "Donner les moyens (temps, budget, information, accès)", "Contrôler sans sur-contrôler (point d'étape, non micro-management)", "Donner du feedback (positif et correctif)"],
+      "délégation_de_signature": "Formelle, écrite, publiée. Délimitée dans son objet et sa durée. En droit public: arrêté de délégation de signature ≠ délégation de pouvoir (en droit public, la délégation de pouvoir dessaisit le délégant)."
+    },
+    "pilotage_par_objectifs": {
+      "MBO": "Management By Objectives (Drucker 1954) — fixer des objectifs avec le collaborateur, mesurer les résultats, évaluer l'écart.",
+      "OKR": {
+        "définition": "Objectives and Key Results — méthode Intel/Google",
+        "Objective": "Qualitatif, inspirant, ambitieux (stretchy goal)",
+        "Key_Results": "3-5 résultats mesurables, binaires ou quantifiés. Pas de tâches, des résultats.",
+        "cadence": "Trimestriel. Revue mensuelle. Retrospec annuelle.",
+        "score_idéal": "0.6-0.7 sur 1.0 — si 1.0 systématiquement, les objectifs ne sont pas assez ambitieux"
+      },
+      "entretien_annuel": "Outil de pilotage: bilan N-1 / objectifs N+1 / besoins formation / ambitions de développement. Ne doit pas être la seule occasion de feedback dans l'année."
+    },
+    "contrôle_de_gestion": {
+      "définition": "Processus par lequel les dirigeants influencent les membres de l'organisation pour mettre en œuvre les stratégies de manière efficace et efficiente.",
+      "tableau_de_bord": {
+        "définition": "Outil de pilotage synthétique rassemblant les indicateurs clés",
+        "BSC_Balanced_Scorecard": "4 axes de Kaplan & Norton: Financier (résultats) + Clients (satisfaction) + Processus internes (qualité/délais) + Apprentissage (RH/innovation)",
+        "construction": "1. Définir les axes stratégiques → 2. Choisir les indicateurs pertinents → 3. Fixer les cibles → 4. Mettre en place la collecte → 5. Analyser + décider"
+      },
+      "budget": "Plan d'action chiffré. Budget par objectifs > budget par reconduction. Analyse des écarts: écart sur volume + écart sur prix + écart sur efficience."
+    },
+    "conduite_du_changement": {
+      "modèle_Kotter_8_étapes": ["Créer un sentiment d'urgence", "Former une coalition directrice puissante", "Développer une vision et une stratégie", "Communiquer la vision du changement", "Responsabiliser les collaborateurs", "Générer des victoires à court terme", "Consolider les gains et produire plus de changements", "Ancrer les nouvelles pratiques dans la culture"],
+      "résistances_au_changement": {
+        "causes": "Peur de l'inconnu, perte de repères, perte de pouvoir, manque de confiance dans les initiateurs, surcharge cognitive",
+        "leviers": "Communication précoce et honnête, participation des acteurs (co-construction), formation, accompagnement individuel, managers de proximité = vecteur essentiel"
+      },
+      "courbe_de_deuil": "Kübler-Ross adaptée au changement organisationnel: déni → colère → marchandage → dépression → acceptation → intégration. Chacun avance à son rythme."
+    },
+    "gestion_conflits": {
+      "thomas_kilmann": {
+        "évitement": "Lose/Lose — ni assertivité ni coopération. Utile pour les conflits sans enjeu réel.",
+        "accommodation": "Lose/Win — coopérer en sacrifiant ses propres besoins. Utile pour préserver la relation.",
+        "compétition": "Win/Lose — affirmer son point de vue sans coopérer. Utile en urgence ou décision non négociable.",
+        "compromis": "Partiel Win/Partiel Win — chacun concède quelque chose. Rapide mais sous-optimal.",
+        "collaboration": "Win/Win — temps long mais solution durable. Nécessite confiance et volonté bilatérale."
+      },
+      "médiation": "Tiers impartial facilitant la résolution. Médiateur ne juge pas, ne décide pas. Médiation interne (RH) vs médiation externe. Accord de médiation = contrat entre les parties."
+    },
+    "réunion_efficace": {
+      "avant": "Ordre du jour précis envoyé au moins 48h avant. Participants limités aux décideurs/contributeurs nécessaires. Durée définie (maximum 90 minutes).",
+      "pendant": "Animateur ≠ décideur (idéalement). Cadrage en début: objectifs + règles + timing. Gestion des dérapages (hors sujet, monopolisation). Prise de décisions explicites.",
+      "après": "Relevé de décisions transmis sous 24h: décisions prises + actions (qui fait quoi pour quand). PAS de CR verbatim si non nécessaire.",
+      "réunion_à_distance": "Caméras allumées pour les réunions décisionnelles. Sondages/chat pour participation. Miro/Mural pour ateliers. Règle du silence = consentement à éviter."
+    }
+  }
+}

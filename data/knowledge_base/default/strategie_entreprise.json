@@ -1,0 +1,67 @@
+{
+  "version": "v30.0.0",
+  "category": "strategie_entreprise",
+  "description": "Stratégie d'entreprise — définition et niveaux de stratégie (corporate/business/fonctionnelle), analyse stratégique (chaîne de valeur Porter/forces concurrentielles/cycle de vie), vision/mission/valeurs, planification stratégique (BSC/OKR/Hoshin Kanri), croissance organique vs externe (M&A), innovation stratégique (océan bleu/disruption), gouvernance d'entreprise",
+  "strategie_entreprise": {
+    "introduction": "La stratégie est l'art de déployer les ressources d'une organisation pour atteindre ses objectifs à long terme dans un environnement concurrentiel incertain. Elle répond à trois questions: Où sommes-nous? Où voulons-nous aller? Comment y aller? TITANE aborde ce domaine avec la rigueur des grandes écoles de gestion.",
+    "niveaux_de_stratégie": {
+      "corporate": "Niveau groupe/holding — dans quels domaines d'activité doit-on être? (DAS). Arbitrages de portefeuille (matrice BCG/McKinsey). Décisions de diversification, fusion/acquisition, cession.",
+      "business": "Niveau domaine d'activité stratégique (DAS/SBU) — comment gagner face à la concurrence dans ce secteur? (stratégies génériques de Porter: domination par les coûts / différenciation / focalisation)",
+      "fonctionnelle": "Niveau fonctions (marketing, RH, finance, SI) — comment aligner chaque fonction sur la stratégie business?"
+    },
+    "diagnostic_stratégique": {
+      "analyse_interne": {
+        "chaîne_de_valeur_Porter": "Activités primaires (logistique entrante, production, logistique sortante, ventes, services) + Activités de soutien (infrastructure, RH, technologie, achats). Identifier les sources d'avantage concurrentiel dans la chaîne.",
+        "ressources_et_compétences": "Ressources tangibles (financières, physiques) + intangibles (marque, brevets, réputation) + compétences distinctives (savoir-faire rares, non imitables, non substituables = VRIN)",
+        "SWOT_interne": "Forces (ce que l'on fait bien) + Faiblesses (ce qui peut être exploité par les concurrents)"
+      },
+      "analyse_externe": {
+        "5_forces_Porter": {
+          "pouvoir_fournisseurs": "Concentration, switching costs, produits de substitution des inputs",
+          "pouvoir_clients": "Concentration, volume d'achat, différenciation produit, capacité d'intégration en amont",
+          "menace_entrants": "Barrières à l'entrée (économies d'échelle, capital, réglementation, différenciation, coûts de transfert)",
+          "menace_substituts": "Produits différents qui remplissent le même besoin (voiture vs TGV)",
+          "rivalité_intra_sectorielle": "Nombre et taille des acteurs, croissance du marché, coûts fixes, différenciation, barrières à la sortie"
+        },
+        "PESTEL": "Macro-environnement (Politique/Économique/Socioculturel/Technologique/Environnemental/Légal)",
+        "cycle_de_vie": "Introduction (investissements, pertes) → Croissance (parts de marché, marge croissante) → Maturité (stabilité, guerre des prix) → Déclin (désinvestissement ou repositionnement)"
+      }
+    },
+    "vision_mission_valeurs": {
+      "vision": "Où l'organisation veut-elle être dans 5-10 ans? Inspirante, ambitieuse, condensée (1-2 phrases). Ex: 'Être le leader européen de...' ou 'Rendre X accessible à tous.'",
+      "mission": "Pourquoi l'organisation existe-t-elle? Quelle valeur crée-t-elle pour qui? Socle stable même quand la stratégie évolue.",
+      "valeurs": "Principes non-négociables qui guident les décisions. 3-5 valeurs max (au-delà, elles perdent leur sens). Doivent être incarnées par la direction pour être crédibles.",
+      "cohérence": "Vision + Mission + Valeurs doivent être cohérents entre eux et se traduire dans les décisions RH, clients, opérationnelles."
+    },
+    "planification_stratégique": {
+      "processus_stratégique": "Diagnostic (où sommes-nous?) → Options stratégiques → Choix → Déploiement (BSC/OKR) → Contrôle (revues stratégiques)",
+      "BSC_Balanced_Scorecard": "Carte stratégique: traduit la vision en objectifs par axe (Financier/Clients/Processus/Apprentissage) avec indicateurs, cibles, initiatives",
+      "Hoshin_Kanri": "Méthode japonaise de déploiement de la stratégie (catchball) — alignement vertical et horizontal des objectifs jusqu'au terrain",
+      "revue_stratégique": "Annuelle minimum. Évaluer: les hypothèses initiales sont-elles toujours valides? Les objectifs sont-ils atteints? L'environnement a-t-il changé?"
+    },
+    "strategies_concurrentielles_Porter": {
+      "domination_par_les_coûts": "Produire au coût le plus bas du secteur. Nécessite: économies d'échelle, processus optimisés, volume. Ex: IKEA, Ryanair.",
+      "différenciation": "Offrir une valeur unique reconnue par les clients, justifiant un prix premium. Ex: Apple, LVMH, Tesla.",
+      "focalisation": "Se concentrer sur un segment ou une niche et y exceller (coûts ou différenciation). Ex: Ferrari, Hermès.",
+      "piège_du_milieu": "Tenter d'être à la fois low cost et différencié sans excellence dans aucun axe → résultats médiocres."
+    },
+    "croissance_et_diversification": {
+      "Ansoff": {
+        "pénétration_de_marché": "Produits existants × marchés existants — croissance organique via parts de marché",
+        "développement_de_marché": "Produits existants × nouveaux marchés — internationalisation, nouveaux segments",
+        "développement_de_produits": "Nouveaux produits × marchés existants — innovation",
+        "diversification": "Nouveaux produits × nouveaux marchés — diversification liée (synergies) vs non liée (conglomérat)"
+      },
+      "M_A": {
+        "motifs": "Accès rapide à une compétence, part de marché, technologie, territoire",
+        "risques": "Synergies surestimées, choc culturel, intégration post-acquisition (PMI) complexe. Statistique: 70% des M&A détruisent de la valeur.",
+        "Due_diligence": "Audit complet avant acquisition: financier, juridique, social, technologique, commercial, ESG"
+      }
+    },
+    "innovation_strategique": {
+      "ocean_bleu": "Chan Kim & Mauborgne — créer un espace de marché inexploré où la concurrence est non pertinente. ERAC (Éliminer/Réduire/Augmenter/Créer). Ex: Cirque du Soleil.",
+      "disruption_Christensen": "Innovations initialement moins bonnes sur les critères principaux mais moins chères, plus accessibles. Remontent en gamme jusqu'à détrôner le leader établi. Ex: Netflix vs Blockbuster.",
+      "business_model_canvas": "9 blocs: Segments clients, Proposition de valeur, Canaux, Relations clients, Sources de revenus, Ressources clés, Activités clés, Partenaires clés, Structure de coûts."
+    }
+  }
+}
