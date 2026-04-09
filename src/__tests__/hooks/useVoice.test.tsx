@@ -6,6 +6,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useVoice } from '@/hooks/useVoice';
+import { resetWarnOnceRegistryForTests } from '@/utils/deprecationWarnings';
 
 vi.mock('@/services/tts/hybridTTS', () => ({
   hybridTTS: {
@@ -21,6 +22,7 @@ vi.mock('@/services/tts/hybridTTS', () => ({
 describe('useVoice Hook', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    resetWarnOnceRegistryForTests();
     (window as any).SpeechRecognition = undefined;
     (window as any).webkitSpeechRecognition = undefined;
   });
@@ -36,6 +38,22 @@ describe('useVoice Hook', () => {
       const { result } = renderHook(() => useVoice());
       expect(typeof result.current.startListening).toBe('function');
       expect(typeof result.current.stopListening).toBe('function');
+    });
+
+    it('should emit the deprecation warning only once across multiple mounts', () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+      const first = renderHook(() => useVoice());
+      const second = renderHook(() => useVoice());
+
+      const deprecationCalls = warnSpy.mock.calls.filter(([message]) =>
+        String(message).includes('useVoice hook is deprecated')
+      );
+
+      expect(deprecationCalls).toHaveLength(1);
+
+      first.unmount();
+      second.unmount();
     });
   });
 

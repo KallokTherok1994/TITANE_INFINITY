@@ -24,11 +24,9 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-// Log deprecation warning on first import
-console.warn('[DEPRECATED] useVoiceMode hook is deprecated. Use useVoiceEngine instead.');
-
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { secureInvoke } from '@/lib/security';
+import { warnOncePerSession } from '@/utils/deprecationWarnings';
 import { voiceService } from '../services/api';
 import { getAIConfig } from '../config/offline-first';
 import { confirmCloudAPIUsage } from '../utils/cloudAPIConfirmation';
@@ -53,6 +51,13 @@ export interface UseVoiceModeReturn {
 }
 
 export function useVoiceMode(): UseVoiceModeReturn {
+  useEffect(() => {
+    warnOncePerSession(
+      'deprecated:useVoiceMode',
+      '[DEPRECATED] useVoiceMode hook is deprecated. Use useVoiceEngine instead.'
+    );
+  }, []);
+
   const [state, setState] = useState<VoiceState>({
     isRecording: false,
     isTranscribing: false,

@@ -21,9 +21,7 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { hybridTTS, type TTSConfig, type TTSStatus } from '../services/tts/hybridTTS';
-
-// Log deprecation warning on first import
-console.warn('[DEPRECATED] useVoice hook is deprecated. Use useVoiceEngine instead.');
+import { warnOncePerSession } from '@/utils/deprecationWarnings';
 
 // ═══ TYPES ═══
 
@@ -122,6 +120,13 @@ declare global {
 // ═══ MAIN HOOK ═══
 
 export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
+  useEffect(() => {
+    warnOncePerSession(
+      'deprecated:useVoice',
+      '[DEPRECATED] useVoice hook is deprecated. Use useVoiceEngine instead.'
+    );
+  }, []);
+
   const { language = 'fr-FR', continuous = false, interimResults = true } = options;
 
   // State

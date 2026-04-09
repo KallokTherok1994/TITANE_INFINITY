@@ -304,15 +304,17 @@ const AppRouter: React.FC = () => {
     emitBootMarker('BOOT:READY');
   }, [livingEngines.state.initialized]);
 
-  // Log living state (debug) - effet optimisé avec dépendances stables
   useEffect(() => {
-    if (!livingEngines.state.initialized) return;
+    if (!livingEngines.state.initialized || !import.meta.env.DEV) {
+      return;
+    }
 
-    console.log('🎭 Persona:', livingEngines.state.persona?.mood); // mood is MoodType string
-    console.log('⚡ Glow:', livingEngines.state.glow.toFixed(2));
-    console.log('🧠 Cognitive Load:', livingEngines.state.cognitiveLoad.toFixed(2));
-    // Note: Cet effet log uniquement à l'initialisation, pas à chaque update
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    logger.debug('Living engines initialized', {
+      component: 'AppRouter',
+      persona: livingEngines.state.persona?.mood ?? 'unknown',
+      glow: Number(livingEngines.state.glow.toFixed(2)),
+      cognitiveLoad: Number(livingEngines.state.cognitiveLoad.toFixed(2)),
+    });
   }, [livingEngines.state.initialized]);
 
   // ✨ UI vΩ: TopNav items + navigation (extracted to useTopNavigation hook)
@@ -728,12 +730,22 @@ const AppRouter: React.FC = () => {
  */
 const App: React.FC = () => {
   // ⭐ PHASE 2: BOOT DIAGNOSTIC MARKER
-  console.log('[BOOT] App render');
-  (window as any).__TITANE_BOOT__ = (window as any).__TITANE_BOOT__ || {};
-  (window as any).__TITANE_BOOT__.app_render = true;
-  (window as any).__TITANE_BOOT__.app_render_timestamp = Date.now();
-  (window as any).__TITANE_BOOT__.stage = '[BOOT] App render';
-  (window as any).__TITANE_BOOT__.timestamp = Date.now();
+  if (typeof window !== 'undefined') {
+    (window as any).__TITANE_BOOT__ = (window as any).__TITANE_BOOT__ || {};
+    const bootState = (window as any).__TITANE_BOOT__;
+
+    if (!bootState.app_render) {
+      bootState.app_render = true;
+      bootState.app_render_timestamp = Date.now();
+      bootState.stage = '[BOOT] App render';
+      bootState.timestamp = Date.now();
+    }
+
+    if (import.meta.env.DEV && !bootState.app_render_logged) {
+      logger.debug('[BOOT] App render', { component: 'App' });
+      bootState.app_render_logged = true;
+    }
+  }
 
   return (
     <ToastProvider>
