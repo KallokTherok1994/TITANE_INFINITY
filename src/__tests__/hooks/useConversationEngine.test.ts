@@ -185,4 +185,34 @@ describe('useConversationEngine fallback meta truth', () => {
       await sendPromise!;
     });
   });
+
+  it('flushes chat persistence after saving the assistant reply', async () => {
+    const { chatMemoryCompactor } = await import('@/services/chatMemoryCompactor');
+    const { useConversationEngine } = await import('@/hooks/useConversationEngine');
+    const { result } = renderHook(() =>
+      useConversationEngine({ autoHealthCheck: false })
+    );
+
+    await act(async () => {
+      await result.current.sendMessage('memo-check');
+    });
+
+    while (saveResolvers.length > 0) {
+      const resolve = saveResolvers.shift();
+      resolve?.();
+    }
+
+    await waitFor(() => {
+      expect(saveMessageMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          role: 'assistant',
+          content: 'ok:memo-check',
+        })
+      );
+    });
+
+    await waitFor(() => {
+      expect(chatMemoryCompactor.flushPendingSaves).toHaveBeenCalled();
+    });
+  });
 });

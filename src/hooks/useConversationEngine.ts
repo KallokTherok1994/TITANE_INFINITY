@@ -50,14 +50,29 @@ const RETRY_DELAY_BASE_MS = 1000;
 const DEFAULT_MAX_MESSAGES = 500;
 const DEFAULT_HEALTH_CHECK_INTERVAL_MS = 30000;
 
-function persistMessagesInBackground(
+function persistMessageInBackground(
   saveMessage: (message: AIMessage) => unknown,
-  messages: AIMessage[],
+  message: AIMessage,
   failureLabel: string
 ): void {
   void (async () => {
     try {
-      await Promise.all(messages.map(message => Promise.resolve(saveMessage(message))));
+      await Promise.resolve(saveMessage(message));
+      chatMemoryCompactor.flushPendingSaves();
+    } catch (persistError) {
+      console.warn(failureLabel, persistError);
+    }
+  })();
+}
+
+function persistAssistantMessageInBackground(
+  saveMessage: (message: AIMessage) => unknown,
+  assistantAIMessage: AIMessage,
+  failureLabel: string
+): void {
+  void (async () => {
+    try {
+      await saveMessage(assistantAIMessage);
       chatMemoryCompactor.flushPendingSaves();
     } catch (persistError) {
       console.warn(failureLabel, persistError);
@@ -430,9 +445,9 @@ export function useConversationEngine(
         timestamp: userMessage.timestamp,
         metadata: userMessage.metadata || {},
       };
-      persistMessagesInBackground(
+      persistMessageInBackground(
         saveMessage,
-        [userAIMessage],
+        userAIMessage,
         '[useConversationEngine] ⚠️ Failed to persist user message'
       );
 
@@ -538,9 +553,9 @@ Actions immédiates:
           timestamp: assistantMessage.timestamp,
           metadata: assistantMessage.metadata || {},
         };
-        persistMessagesInBackground(
+        persistAssistantMessageInBackground(
           saveMessage,
-          [assistantAIMessage],
+          assistantAIMessage,
           '[useConversationEngine] ⚠️ Failed to persist messages'
         );
 
@@ -609,9 +624,9 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
           timestamp: fallbackMessage.timestamp,
           metadata: fallbackMessage.metadata || {},
         };
-        persistMessagesInBackground(
+        persistAssistantMessageInBackground(
           saveMessage,
-          [assistantAIMessage],
+          assistantAIMessage,
           '[useConversationEngine] ⚠️ Failed to persist fallback message'
         );
 
@@ -689,10 +704,15 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
         timestamp: assistantMessage.timestamp,
         metadata: assistantMessage.metadata || {},
       };
-      persistMessagesInBackground(
+      persistMessageInBackground(
         saveMessage,
-        [userAIMessage, assistantAIMessage],
-        '[useConversationEngine] ⚠️ Failed to persist local exchange'
+        userAIMessage,
+        '[useConversationEngine] ⚠️ Failed to persist local user message'
+      );
+      persistAssistantMessageInBackground(
+        saveMessage,
+        assistantAIMessage,
+        '[useConversationEngine] ⚠️ Failed to persist local assistant message'
       );
     },
     [buildSingleDoorEnvelope, options.maxMessages, saveMessage, toContextBinding]
