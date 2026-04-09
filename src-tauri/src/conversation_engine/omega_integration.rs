@@ -16,7 +16,9 @@ use crate::singularity::singularity_state::{ChatContext, SingularityState};
 use super::french_mastery::{
     FrenchMasteryProcessor, FrenchMasteryRequest, PostProcessingConstraints, ProcessingMode,
 };
-use super::meta_accumulator::build_success_meta;
+use super::meta_accumulator::{
+    build_attempt, build_decision_meta, build_success_meta, policy_from_env,
+};
 use super::types::*;
 use super::ConversationEngineError;
 
@@ -261,7 +263,20 @@ impl OmegaConversationBridge {
 
         // ✅ REAL AI CALL: Replace OMEGA mock TextGen with actual provider response
         // The OMEGA DefaultTaskHandler::execute() is a stub — wire real AIRouter here.
-        let (real_response_text, real_provider_name) = if let Some(router_lock) = &self.ai_router {
+        let requested_provider_label = request
+            .ai_config
+            .as_ref()
+            .map(|config| match config.provider_preference {
+                ProviderPreference::Local => "local",
+                ProviderPreference::Ollama => "ollama",
+                ProviderPreference::Gemini => "gemini",
+                ProviderPreference::OpenAI => "openai",
+                ProviderPreference::Claude => "claude",
+                ProviderPreference::Auto => "auto",
+            })
+            .unwrap_or("auto");
+
+        let (real_response_text, real_provider_name, real_call_error) = if let Some(router_lock) = &self.ai_router {
             // Build prompt: system_prompt already contains LTM history injected by frontend.
             // If no custom_system_prompt, inject backend request.history directly (canonical fallback).
             // Token budget: truncate history entries to max 200 chars each to prevent overflow.
@@ -315,7 +330,7 @@ impl OmegaConversationBridge {
                     });
             let default_max_tokens =
                 match request.ai_config.as_ref().map(|c| &c.provider_preference) {
-                    Some(ProviderPreference::Local | ProviderPreference::Ollama) => 512,
+                    Some(ProviderPreference::Local | ProviderPreference::Ollama) => 160,
                     _ => 2000,
                 };
 
@@ -341,16 +356,25 @@ impl OmegaConversationBridge {
                         ai_resp.provider,
                         ai_resp.tokens
                     );
-                    (ai_resp.content, format!("{:?}", ai_resp.provider))
+                    (
+                        ai_resp.content,
+                        format!("{:?}", ai_resp.provider),
+                        None,
+                    )
                 }
                 Err(e) => {
+                    let error_message = e.to_string();
                     log::warn!(
-                        "[OMEGA-BRIDGE] ⚠️ Real AI call failed ({}), using OMEGA output",
-                        e
+                        "[OMEGA-BRIDGE] ⚠️ Real AI call failed ({}), exposing governed provider-unavailable fallback",
+                        error_message
                     );
                     (
-                        omega_result.processed_text.clone(),
-                        omega_result.model.clone(),
+                        format!(
+                            "Je n'ai pas pu joindre le provider demandé ({}) pour cette requête. Les modules cognitifs restent actifs, mais la génération IA réelle est temporairement indisponible.",
+                            requested_provider_label
+                        ),
+                        format!("{}-unavailable", requested_provider_label),
+                        Some(error_message),
                     )
                 }
             }
@@ -358,6 +382,7 @@ impl OmegaConversationBridge {
             (
                 omega_result.processed_text.clone(),
                 omega_result.model.clone(),
+                None,
             )
         };
 
@@ -494,7 +519,43 @@ impl OmegaConversationBridge {
 
         // Build metadata
         let total_latency = start.elapsed().as_millis() as u64 + omega_result.latency_ms;
-        let provider_used = format!("{} (OMEGA+Singularity)", real_provider_name);
+        let (provider_used, provider_meta) = if real_call_error.is_some() {
+            let provider_class = if matches!(requested_provider_label, "local" | "ollama") {
+                ProviderClass::Local
+            } else {
+                ProviderClass::Remote
+            };
+            let reason_code = ReasonCode::ProviderUnavailable;
+            let attempts = vec![build_attempt(
+                real_provider_name.clone(),
+                provider_class.clone(),
+                total_latency as u128,
+                "error",
+                reason_code.clone(),
+                false,
+            )];
+
+            (
+                real_provider_name.clone(),
+                build_decision_meta(
+                    real_provider_name.clone(),
+                    provider_class,
+                    Mode::Error,
+                    reason_code,
+                    total_latency as u128,
+                    policy_from_env(),
+                    attempts,
+                    false,
+                    false,
+                ),
+            )
+        } else {
+            let provider_used = format!("{} (OMEGA+Singularity)", real_provider_name);
+            (
+                provider_used.clone(),
+                build_success_meta(&provider_used, total_latency as u128),
+            )
+        };
         let metadata = ConversationMetadata {
             timestamp: chrono::Utc::now().timestamp_millis() as u64,
             provider_used: provider_used.clone(),
@@ -502,7 +563,7 @@ impl OmegaConversationBridge {
             tokens_used: omega_result.tokens as usize,
             memory_effect: MemoryEffect::New, // OMEGA provides new information
             links_to_contexts: omega_result.sources.clone(),
-            provider_meta: Some(build_success_meta(&provider_used, total_latency as u128)),
+            provider_meta: Some(provider_meta),
             profile_used: "omega".to_string(),
             memory_sources_injected: omega_result.sources.len(),
         };
