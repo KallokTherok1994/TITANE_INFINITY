@@ -226,9 +226,11 @@ function normalizeStreamChunk(payload: BackendStreamChunkPayload): StreamChunkPa
 function toBackendPayload(args: ChatRequestArgs): Record<string, unknown> {
   return {
     conversation_id: args.conversationId ?? null,
-    user_message:
-      clampText(args.userMessage, SAFETY_LIMITS.maxUserMessageChars) ?? '',
-    system_prompt: clampText(args.systemPrompt ?? null, SAFETY_LIMITS.maxSystemPromptChars),
+    user_message: clampText(args.userMessage, SAFETY_LIMITS.maxUserMessageChars) ?? '',
+    system_prompt: clampText(
+      args.systemPrompt ?? null,
+      SAFETY_LIMITS.maxSystemPromptChars
+    ),
     temperature: args.temperature ?? DEFAULTS.temperature,
     max_output_tokens: clampOutputTokens(args.maxOutputTokens ?? DEFAULTS.maxTokens),
     provider: (args.provider ?? 'auto').toLowerCase(),

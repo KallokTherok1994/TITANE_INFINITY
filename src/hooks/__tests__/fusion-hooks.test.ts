@@ -423,18 +423,20 @@ describe('useMemoryEngine', () => {
   test('should avoid overlapping periodic stats refreshes while a previous refresh is still pending', async () => {
     vi.useFakeTimers();
 
-    let releaseStats: ((value: {
-      count_by_level: { session: number; intermediate: number; long_term: number };
-      total_size: number;
-      health: {
-        status: string;
-        corrupted_files: number;
-        last_integrity_check: number;
-        disk_space_percent: number;
-        encryption_active: boolean;
-        last_backup: number;
-      };
-    }) => void) | null = null;
+    let releaseStats:
+      | ((value: {
+          count_by_level: { session: number; intermediate: number; long_term: number };
+          total_size: number;
+          health: {
+            status: string;
+            corrupted_files: number;
+            last_integrity_check: number;
+            disk_space_percent: number;
+            encryption_active: boolean;
+            last_backup: number;
+          };
+        }) => void)
+      | null = null;
 
     vi.mocked(secureInvoke).mockImplementation(async command => {
       if (command !== 'persistent_memory_get_stats') {

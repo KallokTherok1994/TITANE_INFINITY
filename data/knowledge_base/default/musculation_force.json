@@ -7,7 +7,13 @@
     "principes_fondamentaux": {
       "progressive_overload": {
         "définition": "Le seul principe universel en musculation: le corps doit être soumis à un stimulus progressivement plus grand pour continuer à s'adapter.",
-        "méthodes": ["Augmenter le poids", "Augmenter les répétitions à poids fixe", "Augmenter les sets", "Réduire le temps de repos", "Améliorer la technique (ROM plus complet)"],
+        "méthodes": [
+          "Augmenter le poids",
+          "Augmenter les répétitions à poids fixe",
+          "Augmenter les sets",
+          "Réduire le temps de repos",
+          "Améliorer la technique (ROM plus complet)"
+        ],
         "erreur_commune": "Ajouter du poids avant la technique maîtrisée"
       },
       "SRA_cycle": {

@@ -5,7 +5,11 @@
   "startup_issues": {
     "ollama_not_starting": {
       "symptom": "TITANE indique 'Ollama indisponible' au démarrage",
-      "causes": ["Ollama non installé", "Port 11434 bloqué", "Modèle par défaut non téléchargé"],
+      "causes": [
+        "Ollama non installé",
+        "Port 11434 bloqué",
+        "Modèle par défaut non téléchargé"
+      ],
       "solutions": [
         "Vérifier: curl http://localhost:11434/api/tags",
         "Installer Ollama: https://ollama.ai/download",

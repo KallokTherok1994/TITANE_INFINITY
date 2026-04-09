@@ -49,8 +49,19 @@
     "autoheal_discipline": {
       "rule": "Pour chaque fix appliqué: ajouter UNE entrée dans scripts/autoheal/autoheal_rules.jsonl",
       "format": "JSONL append-only, ID format: AH-YYYY-MM-DD-DESCRIPTION-NNN",
-      "required_fields": ["id", "timestamp", "trigger", "signature", "fix_applied", "verification", "prevention"],
-      "then_run": ["bash scripts/autoheal/detect_recurrence.sh", "bash scripts/verify_instructions.sh"]
+      "required_fields": [
+        "id",
+        "timestamp",
+        "trigger",
+        "signature",
+        "fix_applied",
+        "verification",
+        "prevention"
+      ],
+      "then_run": [
+        "bash scripts/autoheal/detect_recurrence.sh",
+        "bash scripts/verify_instructions.sh"
+      ]
     }
   }
 }

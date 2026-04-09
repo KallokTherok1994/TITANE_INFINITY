@@ -38,7 +38,9 @@ export class OmegaClient {
    */
   static async health(): Promise<OmegaHealthReport | null> {
     try {
-      const report = await secureInvoke<ConversationHealthReport>(CMD_CONVERSATION_HEALTH);
+      const report = await secureInvoke<ConversationHealthReport>(
+        CMD_CONVERSATION_HEALTH
+      );
       if (!report) return null;
 
       const healthy = report.status === 'Healthy';
@@ -61,7 +63,10 @@ export class OmegaClient {
    * @param message - Message utilisateur
    * @returns Réponse générée, ou null si erreur
    */
-  static async processMessage(conversationId: string, message: string): Promise<string | null> {
+  static async processMessage(
+    conversationId: string,
+    message: string
+  ): Promise<string | null> {
     try {
       const result = await secureInvoke<{ response: string }>(CMD_CONVERSATION_GENERATE, {
         conversation_id: conversationId,

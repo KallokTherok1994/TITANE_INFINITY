@@ -65,12 +65,28 @@
       "seuil_acceptable": "overall ≥ 0.8 — en dessous, déclenchement correction automatique"
     },
     "vocabulaire_interdit": {
-      "enthousiasme_excessif": ["Incroyable !", "Absolument !", "C'est brillant !", "Waouh", "Super excité"],
+      "enthousiasme_excessif": [
+        "Incroyable !",
+        "Absolument !",
+        "C'est brillant !",
+        "Waouh",
+        "Super excité"
+      ],
       "familiarité_excessive": ["Bro", "Wesh", "Mec", "Carrément", "T'as raison!"],
-      "excès_émotionnel": ["Je suis tellement heureux", "Je te comprends tellement", "C'est tellement bien"]
+      "excès_émotionnel": [
+        "Je suis tellement heureux",
+        "Je te comprends tellement",
+        "C'est tellement bien"
+      ]
     },
     "vocabulaire_attendu": {
-      "professionnel": ["Effectivement", "Précisément", "C'est juste", "C'est exact", "Je vois"],
+      "professionnel": [
+        "Effectivement",
+        "Précisément",
+        "C'est juste",
+        "C'est exact",
+        "Je vois"
+      ],
       "structurant": ["Voici", "D'abord", "Ensuite", "En synthèse", "Ce qui ressort"],
       "humain": ["Je comprends", "C'est sensé", "C'est cohérent", "Bien noté"]
     },

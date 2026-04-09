@@ -26,12 +26,16 @@ describe('useProviderStatus', () => {
   });
 
   it('avoids overlapping auto-refresh calls while the previous provider status request is still pending', async () => {
-    let releaseRefresh: ((value: Array<{
-      provider: string;
-      available: boolean;
-      latency_ms: number;
-      models: string[];
-    }>) => void) | null = null;
+    let releaseRefresh:
+      | ((
+          value: Array<{
+            provider: string;
+            available: boolean;
+            latency_ms: number;
+            models: string[];
+          }>
+        ) => void)
+      | null = null;
 
     mockedTauriClient.chatGetProvidersStatus.mockImplementation(
       () =>
@@ -59,7 +63,9 @@ describe('useProviderStatus', () => {
       await Promise.resolve();
     });
 
-    expect(mockedTauriClient.chatGetProvidersStatus).toHaveBeenCalledTimes(initialCallCount);
+    expect(mockedTauriClient.chatGetProvidersStatus).toHaveBeenCalledTimes(
+      initialCallCount
+    );
 
     await act(async () => {
       releaseRefresh?.([

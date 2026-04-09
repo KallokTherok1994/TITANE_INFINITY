@@ -106,7 +106,9 @@ describe('SystemHealthMonitor Component', () => {
       });
 
       expect(
-        mockSecureInvoke.mock.calls.filter(([command]) => command === 'get_system_metrics')
+        mockSecureInvoke.mock.calls.filter(
+          ([command]) => command === 'get_system_metrics'
+        )
       ).toHaveLength(1);
 
       await act(async () => {
@@ -115,7 +117,9 @@ describe('SystemHealthMonitor Component', () => {
       });
 
       expect(
-        mockSecureInvoke.mock.calls.filter(([command]) => command === 'get_system_metrics')
+        mockSecureInvoke.mock.calls.filter(
+          ([command]) => command === 'get_system_metrics'
+        )
       ).toHaveLength(1);
 
       await act(async () => {

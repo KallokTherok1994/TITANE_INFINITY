@@ -39,7 +39,12 @@
       "définitions_inter_partes": "Définir les termes au début de l'acte: 'La société... ci-après dénommée le VENDEUR... M./Mme... ci-après dénommé(e) l'ACQUÉREUR...'",
       "références_légales": "Toujours mentionner l'article de loi ou le texte réglementaire applicable. 'Conformément aux dispositions de l'article 1641 du Code civil...' Pas de paraphrase vague.",
       "précision_chiffrée": "Prix en lettres ET en chiffres, obligatoirement. Dates en toutes lettres dans le corps: 'le sept avril deux mil vingt-six'.",
-      "éviter": ["'Etc.' (liste doit être exhaustive ou explicitement indicative)", "'Il est bien entendu que' (inutile)", "'Clause de style' = formule non négociée, souvent copiée-collée sans adaptation — danger réel", "Les phrases de plus de 60 mots (lisibilité et interprétation)"]
+      "éviter": [
+        "'Etc.' (liste doit être exhaustive ou explicitement indicative)",
+        "'Il est bien entendu que' (inutile)",
+        "'Clause de style' = formule non négociée, souvent copiée-collée sans adaptation — danger réel",
+        "Les phrases de plus de 60 mots (lisibilité et interprétation)"
+      ]
     },
     "relecture_critique_acte": {
       "avant_signature": [

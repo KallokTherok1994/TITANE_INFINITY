@@ -19,9 +19,21 @@
       "name": "OpenAI",
       "status": "online_primary",
       "models": {
-        "gpt4": {"id": "gpt-4-turbo-preview", "context_window": 128000, "use_for": "Raisonnement complexe, code, analyse"},
-        "gpt4o": {"id": "gpt-4o", "context_window": 128000, "use_for": "Vision, multimodal, conversations longues"},
-        "gpt35": {"id": "gpt-3.5-turbo", "context_window": 16385, "use_for": "Tâches simples, faible coût"}
+        "gpt4": {
+          "id": "gpt-4-turbo-preview",
+          "context_window": 128000,
+          "use_for": "Raisonnement complexe, code, analyse"
+        },
+        "gpt4o": {
+          "id": "gpt-4o",
+          "context_window": 128000,
+          "use_for": "Vision, multimodal, conversations longues"
+        },
+        "gpt35": {
+          "id": "gpt-3.5-turbo",
+          "context_window": 16385,
+          "use_for": "Tâches simples, faible coût"
+        }
       },
       "env_key": "OPENAI_API_KEY",
       "endpoint": "https://api.openai.com/v1/chat/completions",
@@ -32,9 +44,21 @@
       "name": "Anthropic Claude",
       "status": "online_secondary",
       "models": {
-        "claude3_opus": {"id": "claude-3-opus-20240229", "context_window": 200000, "use_for": "Analyses profondes, écriture créative"},
-        "claude3_sonnet": {"id": "claude-3-5-sonnet-20241022", "context_window": 200000, "use_for": "Balance qualité/vitesse"},
-        "claude3_haiku": {"id": "claude-3-haiku-20240307", "context_window": 200000, "use_for": "Réponses rapides, faible coût"}
+        "claude3_opus": {
+          "id": "claude-3-opus-20240229",
+          "context_window": 200000,
+          "use_for": "Analyses profondes, écriture créative"
+        },
+        "claude3_sonnet": {
+          "id": "claude-3-5-sonnet-20241022",
+          "context_window": 200000,
+          "use_for": "Balance qualité/vitesse"
+        },
+        "claude3_haiku": {
+          "id": "claude-3-haiku-20240307",
+          "context_window": 200000,
+          "use_for": "Réponses rapides, faible coût"
+        }
       },
       "env_key": "ANTHROPIC_API_KEY",
       "endpoint": "https://api.anthropic.com/v1/messages",
@@ -45,13 +69,31 @@
       "name": "Google Gemini",
       "status": "online_tertiary",
       "models": {
-        "gemini15_pro": {"id": "gemini-1.5-pro", "context_window": 1000000, "use_for": "Contexte très long, multimodal"},
-        "gemini15_flash": {"id": "gemini-1.5-flash", "context_window": 1000000, "use_for": "Vitesse maximale"},
-        "gemini20_flash": {"id": "gemini-2.0-flash", "context_window": 1000000, "use_for": "Dernière génération rapide"}
+        "gemini15_pro": {
+          "id": "gemini-1.5-pro",
+          "context_window": 1000000,
+          "use_for": "Contexte très long, multimodal"
+        },
+        "gemini15_flash": {
+          "id": "gemini-1.5-flash",
+          "context_window": 1000000,
+          "use_for": "Vitesse maximale"
+        },
+        "gemini20_flash": {
+          "id": "gemini-2.0-flash",
+          "context_window": 1000000,
+          "use_for": "Dernière génération rapide"
+        }
       },
       "env_key": "GEMINI_API_KEY",
       "ipc_set_key": "chat_set_gemini_key",
-      "features": ["streaming", "multimodal", "grounding", "code_execution", "very_long_context"],
+      "features": [
+        "streaming",
+        "multimodal",
+        "grounding",
+        "code_execution",
+        "very_long_context"
+      ],
       "strength": "Contexte de 1M tokens, multimodal natif, intégration Google Search"
     },
     "ollama": {
@@ -64,25 +106,64 @@
       "env_base_url": "OLLAMA_BASE_URL",
       "auto_start": "Automatique au démarrage (desktop). Cherche: bundled binary → system ollama.",
       "recommended_models": [
-        {"id": "gemma2:2b", "size": "1.6GB", "use_for": "Usage général léger (défaut)"},
-        {"id": "gemma2:9b", "size": "5.5GB", "use_for": "Usage général avancé"},
-        {"id": "llama3.1:8b", "size": "4.7GB", "use_for": "Raisonnement, code"},
-        {"id": "mistral:7b", "size": "4.1GB", "use_for": "Conversation, instruction"},
-        {"id": "codellama:7b", "size": "3.8GB", "use_for": "Code uniquement"},
-        {"id": "nomic-embed-text", "size": "274MB", "use_for": "Embeddings sémantiques"},
-        {"id": "deepseek-r1:7b", "size": "4.7GB", "use_for": "Raisonnement chain-of-thought"},
-        {"id": "phi3:mini", "size": "2.2GB", "use_for": "Ultra léger, mobile/faible RAM"}
+        { "id": "gemma2:2b", "size": "1.6GB", "use_for": "Usage général léger (défaut)" },
+        { "id": "gemma2:9b", "size": "5.5GB", "use_for": "Usage général avancé" },
+        { "id": "llama3.1:8b", "size": "4.7GB", "use_for": "Raisonnement, code" },
+        { "id": "mistral:7b", "size": "4.1GB", "use_for": "Conversation, instruction" },
+        { "id": "codellama:7b", "size": "3.8GB", "use_for": "Code uniquement" },
+        {
+          "id": "nomic-embed-text",
+          "size": "274MB",
+          "use_for": "Embeddings sémantiques"
+        },
+        {
+          "id": "deepseek-r1:7b",
+          "size": "4.7GB",
+          "use_for": "Raisonnement chain-of-thought"
+        },
+        {
+          "id": "phi3:mini",
+          "size": "2.2GB",
+          "use_for": "Ultra léger, mobile/faible RAM"
+        }
       ],
-      "ipc_commands": ["test_ollama", "ping_ollama", "ollama_generate", "ollama_query", "ai_scan_local_models", "ai_set_local_model"],
+      "ipc_commands": [
+        "test_ollama",
+        "ping_ollama",
+        "ollama_generate",
+        "ollama_query",
+        "ai_scan_local_models",
+        "ai_set_local_model"
+      ],
       "android_note": "Sur Android: pas d'Ollama local — utiliser OLLAMA_BASE_URL pointant vers serveur LAN"
     }
   },
   "fallback_chain": [
-    {"order": 1, "provider": "openai", "condition": "OPENAI_API_KEY disponible ET serveur accessible"},
-    {"order": 2, "provider": "claude", "condition": "ANTHROPIC_API_KEY disponible ET serveur accessible"},
-    {"order": 3, "provider": "gemini", "condition": "GEMINI_API_KEY disponible ET serveur accessible"},
-    {"order": 4, "provider": "ollama", "condition": "Ollama process en cours sur port 11434"},
-    {"order": 5, "provider": "error", "condition": "Tous indisponibles → erreur explicite avec IPC { ok: false, error: '...' }"}
+    {
+      "order": 1,
+      "provider": "openai",
+      "condition": "OPENAI_API_KEY disponible ET serveur accessible"
+    },
+    {
+      "order": 2,
+      "provider": "claude",
+      "condition": "ANTHROPIC_API_KEY disponible ET serveur accessible"
+    },
+    {
+      "order": 3,
+      "provider": "gemini",
+      "condition": "GEMINI_API_KEY disponible ET serveur accessible"
+    },
+    {
+      "order": 4,
+      "provider": "ollama",
+      "condition": "Ollama process en cours sur port 11434"
+    },
+    {
+      "order": 5,
+      "provider": "error",
+      "condition": "Tous indisponibles → erreur explicite avec IPC { ok: false, error: '...' }"
+    }
   ],
   "streaming": {
     "description": "Toutes les réponses peuvent être streamées via événements Tauri",

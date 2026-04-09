@@ -36,7 +36,14 @@
         },
         "meridiens": "14 canaux d'énergie traversant le corps sur lesquels circule le qi — l'acupuncture agit sur ces points"
       },
-      "pratiques": ["Acupuncture (aiguilles sur points)", "Moxibustion (chaleur sur points)", "Cupping/ventouses", "Tui na (massage)", "Qi gong (exercice énergétique)", "Diétothérapie chinoise"],
+      "pratiques": [
+        "Acupuncture (aiguilles sur points)",
+        "Moxibustion (chaleur sur points)",
+        "Cupping/ventouses",
+        "Tui na (massage)",
+        "Qi gong (exercice énergétique)",
+        "Diétothérapie chinoise"
+      ],
       "niveau_preuve": "Acupuncture: efficacité démontrée pour douleurs chroniques, nausées chimio, migraines. D'autres indications en cours d'étude."
     },
     "ayurveda": {
@@ -76,7 +83,12 @@
         "Le corps a sa propre pharmacie — il peut se guérir si les obstacles sont levés",
         "La structure et la fonction sont interdépendantes"
       ],
-      "techniques": ["Manipulation ostéoarticulaire", "Techniques myofasciales", "Ostéopathie cranio-sacrée", "Techniques viscérales"],
+      "techniques": [
+        "Manipulation ostéoarticulaire",
+        "Techniques myofasciales",
+        "Ostéopathie cranio-sacrée",
+        "Techniques viscérales"
+      ],
       "niveau_preuve": "Efficacité reconnue pour lombalgies, cervicalgies, maux de tête de tension. Bonne sécurité avec praticien formé."
     },
     "medecine_fonctionnelle": {

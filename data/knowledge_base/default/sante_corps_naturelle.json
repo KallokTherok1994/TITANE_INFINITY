@@ -118,7 +118,13 @@
         "Infection chronique à bas bruit"
       ],
       "maladies_associées": "Cardiovasculaires, diabète T2, Alzheimer, cancers, dépression, maladies auto-immunes — toutes liées à l'inflammation chronique",
-      "réduire": ["Alimentation anti-inflammatoire (voir nutrition_sante_naturelle)", "Exercice régulier modéré", "Sommeil suffisant", "Gestion stress chronique", "Curcumine, oméga-3, resvératrol, quercétine (suppléments anti-inflammatoires naturels)"]
+      "réduire": [
+        "Alimentation anti-inflammatoire (voir nutrition_sante_naturelle)",
+        "Exercice régulier modéré",
+        "Sommeil suffisant",
+        "Gestion stress chronique",
+        "Curcumine, oméga-3, resvératrol, quercétine (suppléments anti-inflammatoires naturels)"
+      ]
     },
     "récupération": {
       "active_vs_passive": {

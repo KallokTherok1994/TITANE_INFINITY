@@ -20,7 +20,13 @@
     },
     "délégation": {
       "définition": "Confier une mission à un collaborateur avec les moyens et l'autorité nécessaires. Le délégant conserve la responsabilité globale.",
-      "conditions_réussite": ["Déléguer sur la compétence avérée ou à développer", "Fixer des objectifs clairs (SMART)", "Donner les moyens (temps, budget, information, accès)", "Contrôler sans sur-contrôler (point d'étape, non micro-management)", "Donner du feedback (positif et correctif)"],
+      "conditions_réussite": [
+        "Déléguer sur la compétence avérée ou à développer",
+        "Fixer des objectifs clairs (SMART)",
+        "Donner les moyens (temps, budget, information, accès)",
+        "Contrôler sans sur-contrôler (point d'étape, non micro-management)",
+        "Donner du feedback (positif et correctif)"
+      ],
       "délégation_de_signature": "Formelle, écrite, publiée. Délimitée dans son objet et sa durée. En droit public: arrêté de délégation de signature ≠ délégation de pouvoir (en droit public, la délégation de pouvoir dessaisit le délégant)."
     },
     "pilotage_par_objectifs": {
@@ -44,7 +50,16 @@
       "budget": "Plan d'action chiffré. Budget par objectifs > budget par reconduction. Analyse des écarts: écart sur volume + écart sur prix + écart sur efficience."
     },
     "conduite_du_changement": {
-      "modèle_Kotter_8_étapes": ["Créer un sentiment d'urgence", "Former une coalition directrice puissante", "Développer une vision et une stratégie", "Communiquer la vision du changement", "Responsabiliser les collaborateurs", "Générer des victoires à court terme", "Consolider les gains et produire plus de changements", "Ancrer les nouvelles pratiques dans la culture"],
+      "modèle_Kotter_8_étapes": [
+        "Créer un sentiment d'urgence",
+        "Former une coalition directrice puissante",
+        "Développer une vision et une stratégie",
+        "Communiquer la vision du changement",
+        "Responsabiliser les collaborateurs",
+        "Générer des victoires à court terme",
+        "Consolider les gains et produire plus de changements",
+        "Ancrer les nouvelles pratiques dans la culture"
+      ],
       "résistances_au_changement": {
         "causes": "Peur de l'inconnu, perte de repères, perte de pouvoir, manque de confiance dans les initiateurs, surcharge cognitive",
         "leviers": "Communication précoce et honnête, participation des acteurs (co-construction), formation, accompagnement individuel, managers de proximité = vecteur essentiel"

@@ -7,7 +7,13 @@
     "systeme_immunitaire": {
       "immunite_innee": {
         "définition": "Première ligne de défense — non spécifique. Réagit immédiatement (< 4h).",
-        "acteurs": ["Barrières physiques (peau, muqueuses)", "Cellules NK (Natural Killer)", "Macrophages", "Neutrophiles", "Système du complément"],
+        "acteurs": [
+          "Barrières physiques (peau, muqueuses)",
+          "Cellules NK (Natural Killer)",
+          "Macrophages",
+          "Neutrophiles",
+          "Système du complément"
+        ],
         "inflammation": "La réponse inflammatoire aiguë est normale et nécessaire — c'est l'inflammation CHRONIQUE qui est pathologique"
       },
       "immunite_adaptative": {

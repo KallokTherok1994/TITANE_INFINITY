@@ -63,7 +63,14 @@
       "SPM": {
         "définition": "Syndrome pré-menstruel — symptômes émotionnels et physiques les 1-2 semaines avant les règles",
         "PMDD": "Forme sévère (TDPM) — dépression, anxiété, irritabilité invalidantes. Nécessite suivi médical.",
-        "approche_naturelle": ["Magnésium bisglycinate", "Vitamine B6", "Acides gras oméga-3", "Réduction caféine/alcool", "Exercice aérobique", "Gattilier (études positives)"]
+        "approche_naturelle": [
+          "Magnésium bisglycinate",
+          "Vitamine B6",
+          "Acides gras oméga-3",
+          "Réduction caféine/alcool",
+          "Exercice aérobique",
+          "Gattilier (études positives)"
+        ]
       },
       "endometriose": {
         "définition": "Tissu similaire à l'endomètre hors de l'utérus — inflammation cyclique, douleur, infertilité possible",
@@ -74,7 +81,13 @@
       "SOPK": {
         "définition": "Syndrome des ovaires polykystiques — dysrégulation hormonale (androgènes élevés, anovulation possible, résistance insuline fréquente)",
         "prévalence": "5-10% des femmes en âge de procréer",
-        "approche_naturelle": ["Régime à IG bas (résistance insuline)", "Inositol (myo-inositol + D-chiro-inositol)", "N-acétyl-cystéine", "Cannelle", "Exercice de résistance"],
+        "approche_naturelle": [
+          "Régime à IG bas (résistance insuline)",
+          "Inositol (myo-inositol + D-chiro-inositol)",
+          "N-acétyl-cystéine",
+          "Cannelle",
+          "Exercice de résistance"
+        ],
         "avertissement": "Consultation gynécologique et bilan hormonal nécessaires"
       },
       "ménopause": {

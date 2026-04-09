@@ -51,9 +51,7 @@ export interface SingularitySyncReturn {
   resetMetrics: () => void; // Reset métriques
 }
 
-function getSingularityFingerprint(
-  state: SingularityState | null | undefined
-): string {
+function getSingularityFingerprint(state: SingularityState | null | undefined): string {
   if (!state) {
     return 'null';
   }
@@ -165,8 +163,7 @@ export function useSingularitySync(
                 ...backendState.quantum,
                 ...frontendState.quantum,
                 coherence:
-                  (backendState.quantum.coherence + frontendState.quantum.coherence) /
-                  2,
+                  (backendState.quantum.coherence + frontendState.quantum.coherence) / 2,
               },
               // Convergence: average values
               convergence: {

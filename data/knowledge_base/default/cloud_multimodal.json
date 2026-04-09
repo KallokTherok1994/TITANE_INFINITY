@@ -28,7 +28,16 @@
       "device_identity": "Chaque appareil a une identité unique",
       "multi_device": "Support Android + Desktop simultanément"
     },
-    "ipc_commands": ["cloud_sync_status", "cloud_sync_push", "cloud_sync_pull", "cloud_vault_read", "cloud_vault_write", "cloud_vault_list", "cloud_set_config", "cloud_sync_history"],
+    "ipc_commands": [
+      "cloud_sync_status",
+      "cloud_sync_push",
+      "cloud_sync_pull",
+      "cloud_vault_read",
+      "cloud_vault_write",
+      "cloud_vault_list",
+      "cloud_set_config",
+      "cloud_sync_history"
+    ],
     "route": "/cloud"
   },
   "multimodal": {
@@ -37,9 +46,18 @@
     "modules": {
       "vision": {
         "description": "Vision computationnelle — analyse d'images, OCR, description scènes",
-        "capabilities": ["image_analysis", "scene_description", "text_recognition", "object_detection"],
+        "capabilities": [
+          "image_analysis",
+          "scene_description",
+          "text_recognition",
+          "object_detection"
+        ],
         "models": ["GPT-4 Vision", "Gemini 1.5 Pro (multimodal natif)", "Local CLIP"],
-        "ipc_commands": ["vision_analyze_image", "vision_describe_scene", "vision_extract_text"]
+        "ipc_commands": [
+          "vision_analyze_image",
+          "vision_describe_scene",
+          "vision_extract_text"
+        ]
       },
       "audio3d": {
         "description": "Audio 3D spatial — traitement audio immersif",
@@ -68,7 +86,11 @@
   "voice_tts": {
     "description": "Text-To-Speech et reconnaissance vocale",
     "path": "src-tauri/src/tts/",
-    "tts_engines": ["System TTS (native OS)", "Whisper (transcription)", "Local neural TTS (optionnel)"],
+    "tts_engines": [
+      "System TTS (native OS)",
+      "Whisper (transcription)",
+      "Local neural TTS (optionnel)"
+    ],
     "whisper": {
       "description": "OpenAI Whisper pour transcription speech-to-text",
       "model": "whisper-tiny à whisper-large (selon ressources)",

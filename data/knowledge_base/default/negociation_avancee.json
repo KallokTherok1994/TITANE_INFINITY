@@ -22,7 +22,12 @@
       "WATNA": "Worst Alternative To a Negotiated Agreement. Connaître aussi le pire scénario aide à calibrer les concessions."
     },
     "préparation_négociation": {
-      "analyse_des_parties": ["Quels sont les intérêts réels de l'autre partie?", "Quel est son BATNA probable?", "Qui décide vraiment?", "Quels sont ses contraintes (temps, budget, pression hiérarchique)?"],
+      "analyse_des_parties": [
+        "Quels sont les intérêts réels de l'autre partie?",
+        "Quel est son BATNA probable?",
+        "Qui décide vraiment?",
+        "Quels sont ses contraintes (temps, budget, pression hiérarchique)?"
+      ],
       "définir_ses_objectifs": "MIL: Must have (non-négociable) / Intend to get (objectif) / Like to have (bonus). Ne jamais commencer sans avoir clairement défini ces trois niveaux.",
       "ancrage": "La première offre ancre la négociation. En général, celui qui ancre en premier obtient de meilleurs résultats — à condition que l'ancre soit crédible et justifiable.",
       "agenda": "Contrôler l'ordre du jour et les conditions de la négociation fait partie de la négociation elle-même."
@@ -47,7 +52,11 @@
     "negociation_interculturelle": {
       "cultures_à_haut_contexte": "Communication implicite, relations primordiales, indirect (Japon, Chine, pays arabes, Afrique sub-saharienne). Ne pas brusquer, laisser du temps aux relations.",
       "cultures_à_bas_contexte": "Communication explicite, contrat prime, directe (USA, Allemagne, pays nordiques). Aller à l'essentiel, être précis.",
-      "erreurs_classiques": ["Croire que 'oui' signifie accord dans toutes les cultures", "Interpréter le silence comme un désaccord (certaines cultures c'est le contraire)", "Montrer son impatience (perçu comme faiblesse ou manque de respect selon les cultures)"]
+      "erreurs_classiques": [
+        "Croire que 'oui' signifie accord dans toutes les cultures",
+        "Interpréter le silence comme un désaccord (certaines cultures c'est le contraire)",
+        "Montrer son impatience (perçu comme faiblesse ou manque de respect selon les cultures)"
+      ]
     },
     "communication_non_verbale": {
       "importance": "55% du message = posture + expression faciale. 38% = ton de la voix. 7% = mots (Albert Mehrabian — dans un contexte émotionnel).",

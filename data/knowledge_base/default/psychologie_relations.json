@@ -49,11 +49,38 @@
           "définition": "Exprimer ce que l'on ressent (pas ce qu'on pense que l'autre a fait)",
           "exemple_NON_CNV": "'Je me sens manipulé' (interprétation de l'intention de l'autre)",
           "exemple_CNV": "'Je me sens frustré et incertain' (sentiment réel)",
-          "liste_sentiments": ["joie", "tristesse", "peur", "colère", "frustration", "enthousiasme", "anxiété", "soulagement", "confusion", "curiosité", "reconnaissance", "découragement"]
+          "liste_sentiments": [
+            "joie",
+            "tristesse",
+            "peur",
+            "colère",
+            "frustration",
+            "enthousiasme",
+            "anxiété",
+            "soulagement",
+            "confusion",
+            "curiosité",
+            "reconnaissance",
+            "découragement"
+          ]
         },
         "3_besoin": {
           "définition": "Nommer le besoin universel non satisfait derrière le sentiment",
-          "liste_besoins_universels": ["respect", "connexion", "sécurité", "autonomie", "clarté", "contribution", "jeu", "repos", "intégrité", "reconnaissance", "compréhension", "confiance", "cohérence"],
+          "liste_besoins_universels": [
+            "respect",
+            "connexion",
+            "sécurité",
+            "autonomie",
+            "clarté",
+            "contribution",
+            "jeu",
+            "repos",
+            "intégrité",
+            "reconnaissance",
+            "compréhension",
+            "confiance",
+            "cohérence"
+          ],
           "exemple_CNV": "'...parce que j'ai besoin de fiabilité et de respect de nos engagements communs'"
         },
         "4_demande": {
@@ -81,7 +108,9 @@
       "cinq_dysfonctions_équipe": {
         "auteur": "Patrick Lencioni",
         "base_de_tout": "L'absence de confiance est le fondement de tous les problèmes d'équipe",
-        "pyramide": ["1. Absence de confiance → 2. Peur des conflits → 3. Manque d'engagement → 4. Évitement des responsabilités → 5. Inattention aux résultats"]
+        "pyramide": [
+          "1. Absence de confiance → 2. Peur des conflits → 3. Manque d'engagement → 4. Évitement des responsabilités → 5. Inattention aux résultats"
+        ]
       },
       "apport_TITANE": "TITANE construit la confiance par l'intégrité (dire ce qu'on fait, faire ce qu'on dit), la transparence sur les incertitudes, et la consistance dans le temps."
     },

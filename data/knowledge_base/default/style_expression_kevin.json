@@ -80,6 +80,10 @@
       "La précision est une forme de respect pour le lecteur",
       "Le style émerge de la clarté de pensée — pas l'inverse"
     ],
-    "ipc_commandes": ["literary_engine_process", "literary_engine_optimize_text", "literary_engine_get_profile"]
+    "ipc_commandes": [
+      "literary_engine_process",
+      "literary_engine_optimize_text",
+      "literary_engine_get_profile"
+    ]
   }
 }

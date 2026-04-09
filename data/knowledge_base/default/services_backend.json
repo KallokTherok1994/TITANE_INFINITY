@@ -12,7 +12,12 @@
     },
     "cache_multilevel": "src-tauri/src/cache_multilevel.rs — API unifiée multi-niveaux",
     "eviction": "TTL configurable par entrée + LRU global",
-    "use_cases": ["Réponses IA récentes", "Résultats de recherche", "Status providers", "Métriques système"]
+    "use_cases": [
+      "Réponses IA récentes",
+      "Résultats de recherche",
+      "Status providers",
+      "Métriques système"
+    ]
   },
   "database": {
     "description": "Base de données SQLite locale — données structurées",
@@ -44,17 +49,41 @@
   "monitoring_system": {
     "description": "Système de monitoring temps réel",
     "path": "src-tauri/src/monitoring/",
-    "modules": ["metrics", "health_scheduler", "qa_engine", "monitoring_engine", "behavior"],
-    "metrics_collected": ["CPU usage", "RAM usage", "IPC latency", "Provider response time", "Error rate", "Memory STM/MTM size", "Cache hit rate"],
+    "modules": [
+      "metrics",
+      "health_scheduler",
+      "qa_engine",
+      "monitoring_engine",
+      "behavior"
+    ],
+    "metrics_collected": [
+      "CPU usage",
+      "RAM usage",
+      "IPC latency",
+      "Provider response time",
+      "Error rate",
+      "Memory STM/MTM size",
+      "Cache hit rate"
+    ],
     "health_checks": "Vérifications périodiques automatiques (configurable, défaut: 30s)",
-    "ipc_commands": ["monitoring_get_metrics", "monitoring_get_health", "system_get_metrics", "system_get_health"]
+    "ipc_commands": [
+      "monitoring_get_metrics",
+      "monitoring_get_health",
+      "system_get_metrics",
+      "system_get_health"
+    ]
   },
   "watchdog": {
     "description": "Processus watchdog — surveille et redémarre les composants défaillants",
     "path": "src-tauri/src/watchdog/",
     "monitored": ["ChatOrchestrator", "OllamaProvider", "MemoryOS", "SemanticKernel"],
     "action_on_failure": "Tentatives de restart (3x), puis alerte + rapport AutoHeal",
-    "ipc_commands": ["watchdog_get_status", "watchdog_start", "watchdog_stop", "watchdog_restart_component"]
+    "ipc_commands": [
+      "watchdog_get_status",
+      "watchdog_start",
+      "watchdog_stop",
+      "watchdog_restart_component"
+    ]
   },
   "cluster_system": {
     "description": "Support multi-instances et clustering (pour usage avancé)",
@@ -73,7 +102,11 @@
       "4. Vérification post-fix",
       "5. Rapport + entrée AutoHeal si nouveau pattern"
     ],
-    "ipc_commands": ["self_healing_get_status", "self_healing_run_diagnostics", "self_healing_apply_fix"]
+    "ipc_commands": [
+      "self_healing_get_status",
+      "self_healing_run_diagnostics",
+      "self_healing_apply_fix"
+    ]
   },
   "resilience": {
     "description": "Résilience système — circuit breakers, retry, graceful degradation",

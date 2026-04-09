@@ -5,7 +5,16 @@
   "constitution": {
     "title": "Constitution TITANE∞ v30.0.0",
     "super_prompt": "#13 — Système de gouvernance constitutionnelle",
-    "modules": ["principles", "values", "rights", "governance", "limits", "enforcement", "evolution", "diagnostics"],
+    "modules": [
+      "principles",
+      "values",
+      "rights",
+      "governance",
+      "limits",
+      "enforcement",
+      "evolution",
+      "diagnostics"
+    ],
     "principles": {
       "fundamental": [
         {

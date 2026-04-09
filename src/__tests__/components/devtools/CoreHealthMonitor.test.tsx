@@ -126,19 +126,17 @@ describe('CoreHealthMonitor Component', () => {
         releaseBatch = resolve;
       });
 
-      mockSecureInvoke.mockImplementation(
-        async (_command: string, payload: any) => {
-          const core = payload?.core_name ?? 'unknown';
-          await pendingBatch;
-          return {
-            name: core,
-            version: '1.0.0',
-            status: 'healthy',
-            dependencies: [],
-            metrics: buildMetrics(45, 65),
-          };
-        }
-      );
+      mockSecureInvoke.mockImplementation(async (_command: string, payload: any) => {
+        const core = payload?.core_name ?? 'unknown';
+        await pendingBatch;
+        return {
+          name: core,
+          version: '1.0.0',
+          status: 'healthy',
+          dependencies: [],
+          metrics: buildMetrics(45, 65),
+        };
+      });
 
       render(<CoreHealthMonitor refreshInterval={10} />);
 

@@ -7,8 +7,21 @@
     "sante_sexuelle_masculine": {
       "testostérone_et_libido": {
         "lien": "La testostérone est le principal moteur de la libido masculine. Un taux bas = libido basse, fatigue, humeur dépressive.",
-        "optimiser_naturellement": ["Musculation/force lourde (squat, SDT) — élève la T de 20-30% post-séance", "Dormir 7-9h (T produite principalement en sommeil profond)", "Réduire le stress chronique (cortisol = antagoniste de la T)", "Zinc, vitamine D3, magnésium", "Maintenir un poids sain (excès de graisse viscérale → conversion T en œstrogènes par aromatase)", "Lumière solaire le matin"],
-        "ennemis": ["Alcool > 2 verres/jour (-15% T)", "Obésité viscérale", "Perturbateurs endocriniens (BPA, phtalates, pesticides)", "Sédentarité", "Stress chronique"]
+        "optimiser_naturellement": [
+          "Musculation/force lourde (squat, SDT) — élève la T de 20-30% post-séance",
+          "Dormir 7-9h (T produite principalement en sommeil profond)",
+          "Réduire le stress chronique (cortisol = antagoniste de la T)",
+          "Zinc, vitamine D3, magnésium",
+          "Maintenir un poids sain (excès de graisse viscérale → conversion T en œstrogènes par aromatase)",
+          "Lumière solaire le matin"
+        ],
+        "ennemis": [
+          "Alcool > 2 verres/jour (-15% T)",
+          "Obésité viscérale",
+          "Perturbateurs endocriniens (BPA, phtalates, pesticides)",
+          "Sédentarité",
+          "Stress chronique"
+        ]
       },
       "dysfonction_érectile": {
         "prévalence": "40% des hommes de 40 ans ont des troubles érectiles occasionnels — sous-déclaré.",

@@ -52,7 +52,13 @@
     },
     "avantage_concurrentiel_durable": {
       "ressources_VRIN": "Valeur (crée de la valeur pour le client) / Rareté (non disponible chez tous les concurrents) / Imitabilité difficile (coûts d'imitation élevés) / Non-substituable",
-      "barrières_à_l_imitation": ["Complexité causale (difficile à comprendre pourquoi ça marche)", "Économies d'échelle (coût d'entrée prohibitif)", "Effet de réseau (plus les utilisateurs sont nombreux, plus la valeur augmente)", "Actifs complémentaires (brevets + distribution + marque)", "Culture organisationnelle distinctive"],
+      "barrières_à_l_imitation": [
+        "Complexité causale (difficile à comprendre pourquoi ça marche)",
+        "Économies d'échelle (coût d'entrée prohibitif)",
+        "Effet de réseau (plus les utilisateurs sont nombreux, plus la valeur augmente)",
+        "Actifs complémentaires (brevets + distribution + marque)",
+        "Culture organisationnelle distinctive"
+      ],
       "erosion": "Tout avantage concurrentiel s'érode. Le maintenir exige: investissement continu en R&D, défense des parts de marché, surveillance des substituts, fidélisation des talents clés."
     },
     "positionnement": {

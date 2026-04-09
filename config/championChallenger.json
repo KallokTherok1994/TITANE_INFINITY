@@ -5,7 +5,11 @@
   "description": "Champion/Challenger registry — OMEGA Lock #2. OLLAMA CHAMPION mode: Ollama is the primary champion for ALL canonical modes, with cloud providers as challengers. Comparison enabled at 5% to monitor quality.",
   "updated": "2026-04-07",
   "champions": {
-    "DIRECT": { "provider": "ollama", "model": "llama3.2:latest", "confidence_threshold": 0.8 },
+    "DIRECT": {
+      "provider": "ollama",
+      "model": "llama3.2:latest",
+      "confidence_threshold": 0.8
+    },
     "CLARIFY_LIGHT": {
       "provider": "ollama",
       "model": "llama3.2:latest",
@@ -21,7 +25,11 @@
       "model": "llama3.1:latest",
       "confidence_threshold": 0.84
     },
-    "REPAIR": { "provider": "ollama", "model": "llama3.2:latest", "confidence_threshold": 0.8 },
+    "REPAIR": {
+      "provider": "ollama",
+      "model": "llama3.2:latest",
+      "confidence_threshold": 0.8
+    },
     "CERTIFY": {
       "provider": "ollama",
       "model": "llama3.1:latest",
@@ -47,7 +55,11 @@
       }
     ],
     "DEEP_REASONING": [
-      { "provider": "gemini", "model": "opus", "rationale": "Cloud fallback for complex chain-of-thought when Ollama unavailable" },
+      {
+        "provider": "gemini",
+        "model": "opus",
+        "rationale": "Cloud fallback for complex chain-of-thought when Ollama unavailable"
+      },
       { "provider": "claude", "model": "opus", "rationale": "Alternative cloud fallback" }
     ],
     "ARCHITECT": [

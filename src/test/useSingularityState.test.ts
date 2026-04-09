@@ -115,7 +115,9 @@ describe('useSingularityState', () => {
     });
 
     expect(
-      mockedSecureInvoke.mock.calls.filter(([command]) => command === 'engine_get_singularity_state')
+      mockedSecureInvoke.mock.calls.filter(
+        ([command]) => command === 'engine_get_singularity_state'
+      )
     ).toHaveLength(1);
 
     await act(async () => {

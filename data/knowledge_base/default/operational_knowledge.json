@@ -72,7 +72,10 @@
       "verification": "Commande de vérification + résultat attendu",
       "prevention": "Guard/test ajouté pour éviter la récurrence"
     },
-    "after_adding": ["bash scripts/autoheal/detect_recurrence.sh", "bash scripts/verify_instructions.sh"]
+    "after_adding": [
+      "bash scripts/autoheal/detect_recurrence.sh",
+      "bash scripts/verify_instructions.sh"
+    ]
   },
   "quality_gates": {
     "rust": "cargo clippy -- -D warnings (0 warnings en release)",

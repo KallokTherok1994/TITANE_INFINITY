@@ -90,7 +90,12 @@
       },
       "pleine_conscience_informelle": {
         "définition": "Appliquer la pleine conscience aux activités quotidiennes",
-        "pratiques": ["Marche méditative (attentif à chaque pas, sensation des pieds)", "Repas conscient (goût, texture, mastiquer lentement)", "Douche en pleine conscience", "Écoute profonde sans préparer sa réponse"]
+        "pratiques": [
+          "Marche méditative (attentif à chaque pas, sensation des pieds)",
+          "Repas conscient (goût, texture, mastiquer lentement)",
+          "Douche en pleine conscience",
+          "Écoute profonde sans préparer sa réponse"
+        ]
       }
     },
     "obstacles_solutions": {

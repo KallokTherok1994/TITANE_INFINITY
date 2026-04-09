@@ -25,7 +25,14 @@
     "UX_conversion": {
       "tunnel_d_achat": "Homepage → Catégorie → Fiche produit → Panier → Checkout → Confirmation. Chaque étape peut faire fuir le client. Analyser les drop-off points.",
       "fiche_produit": "Images HD multiples (dont lifestyle et zoom) + titre avec mots-clés + description bénéfices (pas seulement caractéristiques) + avis clients + FAQ + livraison/retour en évidence.",
-      "checkout_optimisation": ["Guest checkout obligatoire (ne pas forcer la création de compte)", "Progression visible (étapes)", "Maximum 3 étapes", "Paiements multiples (CB + PayPal + Apple Pay + BNPL)", "Récapitulatif total TTC toujours visible", "Badge de confiance (SSL, garanties, retours)"],
+      "checkout_optimisation": [
+        "Guest checkout obligatoire (ne pas forcer la création de compte)",
+        "Progression visible (étapes)",
+        "Maximum 3 étapes",
+        "Paiements multiples (CB + PayPal + Apple Pay + BNPL)",
+        "Récapitulatif total TTC toujours visible",
+        "Badge de confiance (SSL, garanties, retours)"
+      ],
       "panier_abandonné": "~70% des paniers sont abandonnés. Séquence email automatique: J+1 (rappel), J+3 (code promo), J+7 (dernière chance). Récupère 5-15% des paniers abandonnés.",
       "CRO": "Conversion Rate Optimization. A/B tests (titre, CTA, images, prix, placement). Outils: Google Optimize, VWO, Hotjar (enregistrements sessions, heatmaps). Améliorer le taux de conversion de 1% double souvent les revenus."
     },

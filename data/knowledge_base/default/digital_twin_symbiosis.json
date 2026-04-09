@@ -10,11 +10,19 @@
     "sub_engines": {
       "cognitive_modeler": {
         "description": "Modélise le style cognitif de Kevin — pensée, raisonnement, patterns mentaux",
-        "capabilities": ["style_analysis", "cognitive_pattern_recognition", "mental_model_building"]
+        "capabilities": [
+          "style_analysis",
+          "cognitive_pattern_recognition",
+          "mental_model_building"
+        ]
       },
       "creative_mirror": {
         "description": "Miroir créatif — amplifie et refléchit la créativité de Kevin",
-        "capabilities": ["creative_amplification", "style_mirroring", "inspiration_generation"]
+        "capabilities": [
+          "creative_amplification",
+          "style_mirroring",
+          "inspiration_generation"
+        ]
       },
       "evolution_syncer": {
         "description": "Synchronise l'évolution Kevin↔TITANE — co-adaptation bidirectionnelle",
@@ -22,7 +30,11 @@
       },
       "identity_collector": {
         "description": "Collecte et cristallise l'identité de Kevin au fil du temps",
-        "capabilities": ["identity_crystallization", "value_extraction", "personality_profiling"]
+        "capabilities": [
+          "identity_crystallization",
+          "value_extraction",
+          "personality_profiling"
+        ]
       },
       "operational_twin": {
         "description": "Jumeau opérationnel — anticipe les besoins et automatise les tâches récurrentes",
@@ -30,16 +42,37 @@
       },
       "therapeutic_synthesizer": {
         "description": "Synthétiseur thérapeutique — intègre psychologie humaniste, PNL, hypnose douce, méditation",
-        "capabilities": ["holistic_guidance", "emotional_support", "cognitive_reframing", "mindfulness"]
+        "capabilities": [
+          "holistic_guidance",
+          "emotional_support",
+          "cognitive_reframing",
+          "mindfulness"
+        ]
       }
     },
     "twin_identity_core": {
       "version": "Ω∞.1.0",
       "core_values": [
-        {"name": "Authenticité", "description": "Rester vrai à l'essence de Kevin", "stability": 0.95},
-        {"name": "Excellence", "description": "Viser le meilleur dans chaque interaction", "stability": 0.90},
-        {"name": "Croissance", "description": "Amélioration continue et co-évolution", "stability": 0.85},
-        {"name": "Bienveillance", "description": "Toujours agir pour le bien de Kevin", "stability": 0.98}
+        {
+          "name": "Authenticité",
+          "description": "Rester vrai à l'essence de Kevin",
+          "stability": 0.95
+        },
+        {
+          "name": "Excellence",
+          "description": "Viser le meilleur dans chaque interaction",
+          "stability": 0.9
+        },
+        {
+          "name": "Croissance",
+          "description": "Amélioration continue et co-évolution",
+          "stability": 0.85
+        },
+        {
+          "name": "Bienveillance",
+          "description": "Toujours agir pour le bien de Kevin",
+          "stability": 0.98
+        }
       ],
       "human_style": {
         "sincerity": "Haute — communication directe et authentique",
@@ -53,7 +86,14 @@
   "master_guide": {
     "description": "Guide Maître — moteur de guidance holistique TITANE∞",
     "path": "src-tauri/src/master_guide/",
-    "modules": ["guidance_engine", "deep_meditation", "gentle_hypnosis", "humanistic_psychology", "nlp_practitioner", "professional_coaching"],
+    "modules": [
+      "guidance_engine",
+      "deep_meditation",
+      "gentle_hypnosis",
+      "humanistic_psychology",
+      "nlp_practitioner",
+      "professional_coaching"
+    ],
     "approaches": {
       "humanistic_psychology": "Psychologie humaniste — croissance personnelle, actualisation de soi, écoute empathique",
       "professional_coaching": "Coaching professionnel — objectifs SMART, plans d'action, accountability",
@@ -65,7 +105,18 @@
     "adaptation": "La profondeur d'engagement est adaptée selon le niveau de confiance (trust_level) et l'intensité émotionnelle",
     "emotion_detection": {
       "module": "src-tauri/src/emotion/",
-      "detects": ["Happy", "Sad", "Angry", "Frustrated", "Excited", "Calm", "Anxious", "Confused", "Motivated", "Tired"],
+      "detects": [
+        "Happy",
+        "Sad",
+        "Angry",
+        "Frustrated",
+        "Excited",
+        "Calm",
+        "Anxious",
+        "Confused",
+        "Motivated",
+        "Tired"
+      ],
       "from": "Analyse audio (pitch, énergie, timbre) + texte sémantique",
       "output": "EmotionalState { valence: f32, intensity: f32, primary_emotion, confidence }"
     }
@@ -73,6 +124,20 @@
   "digital_twin_v14_1": {
     "description": "Digital Twin v14.1 — version antérieure, intégrée dans NumericTwin",
     "path": "src-tauri/src/digital_twin_v14_1/",
-    "sub_modules": ["behavior_engine", "cognitive_map", "emotion_engine", "identity_model", "auto_evolution", "anticipation", "context_sync", "decision_engine", "memory_bridge", "preference_model", "style_engine", "selfheal", "alignment"]
+    "sub_modules": [
+      "behavior_engine",
+      "cognitive_map",
+      "emotion_engine",
+      "identity_model",
+      "auto_evolution",
+      "anticipation",
+      "context_sync",
+      "decision_engine",
+      "memory_bridge",
+      "preference_model",
+      "style_engine",
+      "selfheal",
+      "alignment"
+    ]
   }
 }

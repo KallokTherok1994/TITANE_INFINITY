@@ -21,7 +21,9 @@ describe('useTitaneCore', () => {
   });
 
   it('avoids overlapping auto-refresh calls while a system status request is still in flight', async () => {
-    let resolveModules: ((value: Array<{ name: string; status: string }>) => void) | null = null;
+    let resolveModules:
+      | ((value: Array<{ name: string; status: string }>) => void)
+      | null = null;
 
     mockedTauri.mockImplementation(async command => {
       if (command !== 'get_system_health') {
@@ -29,7 +31,9 @@ describe('useTitaneCore', () => {
       }
 
       return await new Promise(resolve => {
-        resolveModules = resolve as (value: Array<{ name: string; status: string }>) => void;
+        resolveModules = resolve as (
+          value: Array<{ name: string; status: string }>
+        ) => void;
       });
     });
 

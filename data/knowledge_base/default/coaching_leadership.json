@@ -83,7 +83,12 @@
     },
     "intelligence_collective": {
       "définition": "Capacité d'un groupe à générer des résultats supérieurs à ce que les individus peuvent produire seuls",
-      "conditions": ["Diversité cognitive (pas diversité décorative)", "Sécurité psychologique (Amy Edmondson)", "Processus de décision clair", "Facilitation neutre"],
+      "conditions": [
+        "Diversité cognitive (pas diversité décorative)",
+        "Sécurité psychologique (Amy Edmondson)",
+        "Processus de décision clair",
+        "Facilitation neutre"
+      ],
       "securite_psychologique": "Amy Edmondson (Harvard) — les équipes les plus performantes ne sont pas celles où tout le monde est d'accord, mais celles où on peut dire 'Je pense qu'on fait une erreur' sans peur",
       "méthodes_facilitation": {
         "world_cafe": "Petits groupes qui tournent sur des questions — émergence d'idées collective",

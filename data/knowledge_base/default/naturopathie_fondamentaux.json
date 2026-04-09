@@ -80,7 +80,12 @@
       "jeûne_intermittent": {
         "16_8": "16h jeûne, fenêtre alimentaire 8h — le plus courant, compatible avec la vie sociale",
         "5_2": "5 jours normaux, 2 jours à 500-600 kcal",
-        "bénéfices_recherchés": ["Autophagie (nettoyage cellulaire)", "Sensibilité à l'insuline", "Réduction inflammation", "Longévité (AMPK, sirtuines)"],
+        "bénéfices_recherchés": [
+          "Autophagie (nettoyage cellulaire)",
+          "Sensibilité à l'insuline",
+          "Réduction inflammation",
+          "Longévité (AMPK, sirtuines)"
+        ],
         "contre-indications": "Femmes enceintes/allaitantes, troubles alimentaires, diabétiques insulino-dépendants — consultation médicale préalable"
       },
       "jeûne_hydrique": {

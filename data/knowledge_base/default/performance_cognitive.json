@@ -8,7 +8,13 @@
       "définition": "Capacité du cerveau à se réorganiser structurellement et fonctionnellement en réponse à l'expérience",
       "BDNF": {
         "définition": "Brain-Derived Neurotrophic Factor — protéine de croissance neuronale. 'Engrais du cerveau'.",
-        "stimuler_BDNF": ["Exercice cardio (le plus puissant — +200-300% après 30 min d'intensité modérée)", "Jeûne intermittent", "Curcumine (1g + pipérine pour biodisponibilité)", "Sommeil profond", "Apprentissage de nouvelles compétences"]
+        "stimuler_BDNF": [
+          "Exercice cardio (le plus puissant — +200-300% après 30 min d'intensité modérée)",
+          "Jeûne intermittent",
+          "Curcumine (1g + pipérine pour biodisponibilité)",
+          "Sommeil profond",
+          "Apprentissage de nouvelles compétences"
+        ]
       },
       "hippocampe": "Zone de neurogenèse adulte continue (Harvey et al.) — exercice cardio régulier augmente sa taille de 2% par an vs atrophie liée au stress chronique",
       "myelinisation": "Répétition délibérée myélinise les circuits neuronaux (gaine de myéline → vitesse × 100) — principe derrière la maîtrise"
@@ -36,7 +42,11 @@
       },
       "oméga3_DHA": "Le DHA est le principal acide gras des membranes neuronales — fluidité membranaire et transmission synaptique",
       "vitamines_B": "B1, B6, B9 (folate), B12 — cofacteurs de la synthèse des neurotransmetteurs. Déficience B12 = déclin cognitif",
-      "à_éviter": ["Racétams sans supervision (piracétam/aniracétam) — preuves insuffisantes en adultes sains", "Modafinil hors prescription — dépendance possible, effets long terme inconnus", "Energy drinks avec taurine/sucre — pics/creux énergétiques contre-productifs"]
+      "à_éviter": [
+        "Racétams sans supervision (piracétam/aniracétam) — preuves insuffisantes en adultes sains",
+        "Modafinil hors prescription — dépendance possible, effets long terme inconnus",
+        "Energy drinks avec taurine/sucre — pics/creux énergétiques contre-productifs"
+      ]
     },
     "etat_de_flow": {
       "définition": "Csikszentmihalyi — état d'absorption totale où le challenge correspond exactement aux capacités. 'Optimal experience'.",
@@ -46,7 +56,12 @@
         "feedback_immédiat": "Savoir si on progresse en temps réel",
         "élimination_distractions": "Téléphone + notifications coupés. Environnement contrôlé."
       },
-      "flow_triggers": ["Nouveauté et imprévisibilité", "Enjeux élevés (deep play)", "Environnement riche et dense en informations", "Incarnation physique (sport, musique, artisanat)"]
+      "flow_triggers": [
+        "Nouveauté et imprévisibilité",
+        "Enjeux élevés (deep play)",
+        "Environnement riche et dense en informations",
+        "Incarnation physique (sport, musique, artisanat)"
+      ]
     },
     "deep_work": {
       "définition": "Cal Newport — travail cognitif intense sans distraction sur une tâche difficile et de valeur",

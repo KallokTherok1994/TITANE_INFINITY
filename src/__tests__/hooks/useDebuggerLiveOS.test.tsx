@@ -67,8 +67,9 @@ describe('useDebuggerLiveOS', () => {
   it('avoids overlapping live-monitor refreshes while the previous capture is still pending', async () => {
     vi.useFakeTimers();
 
-    let releaseHealthCheck: ((value: { healthy: boolean; status: string }) => void) | null =
-      null;
+    let releaseHealthCheck:
+      | ((value: { healthy: boolean; status: string }) => void)
+      | null = null;
 
     vi.mocked(tauriClient.getSystemHealth)
       .mockResolvedValueOnce({
@@ -78,8 +79,10 @@ describe('useDebuggerLiveOS', () => {
       .mockImplementationOnce(
         () =>
           new Promise(resolve => {
-            releaseHealthCheck =
-              resolve as (value: { healthy: boolean; status: string }) => void;
+            releaseHealthCheck = resolve as (value: {
+              healthy: boolean;
+              status: string;
+            }) => void;
           })
       );
 

@@ -93,13 +93,24 @@
         "OMAD": "One Meal A Day — une seule fenêtre de 1h/jour. Très contraignant, risque de déficits.",
         "jeune_24h": "1-2x/semaine — protokol Eat Stop Eat (Brad Pilon). Activation autophagie significative."
       },
-      "bénéfices": ["Simplification (moins de repas à préparer)", "Sensibilité insuline améliorée", "Autophagie activée à partir de 16-18h", "Perte masse grasse préservant la masse musculaire si protéines suffisantes"],
+      "bénéfices": [
+        "Simplification (moins de repas à préparer)",
+        "Sensibilité insuline améliorée",
+        "Autophagie activée à partir de 16-18h",
+        "Perte masse grasse préservant la masse musculaire si protéines suffisantes"
+      ],
       "contre_indications": "Troubles alimentaires (anorexie/boulimie), grossesse, allaitement, diabète type 1, mineurs, sous-poids",
       "JI_vs_sport": "Entraînement à jeun: ok pour cardio modéré. Pour la force/hypertrophie: consommer protéines post-effort même dans la fenêtre."
     },
     "microbiote_intestinal": {
       "définition": "3.8 × 10^13 micro-organismes dans le tractus digestif — autant que de cellules humaines",
-      "fonctions": ["Digestion des fibres en AGCC (butyrate, propionate, acétate)", "Synthèse vitamines K2 et B", "Modulation immunitaire (70% du système immunitaire = intestin)", "Production neurotransmetteurs (90% de la sérotonine = intestin)", "Barrière contre pathogènes"],
+      "fonctions": [
+        "Digestion des fibres en AGCC (butyrate, propionate, acétate)",
+        "Synthèse vitamines K2 et B",
+        "Modulation immunitaire (70% du système immunitaire = intestin)",
+        "Production neurotransmetteurs (90% de la sérotonine = intestin)",
+        "Barrière contre pathogènes"
+      ],
       "gut_brain_axis": "L'intestin et le cerveau communiquent bi-directionnellement via le nerf vague, les hormones et les métabolites bactériens. Dysbiose → inflammation cérébrale, troubles humeur, dépression.",
       "nourrir_microbiote": {
         "prébiotiques": "Fibres fermentescibles: inuline (chicorée, artichaut), FOS (poireau, oignon, ail), resistant starch (banane verte, pommes de terre refroidies, légumineuses cuites froides)",

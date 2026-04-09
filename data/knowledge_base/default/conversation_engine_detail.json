@@ -6,7 +6,14 @@
     "nom": "ConversationEngine v∞",
     "chemin": "src-tauri/src/conversation_engine/",
     "architecture": "Pipeline unifié: Input → Preprocessing → Intent → Emotion → Generation → Memory → Sync",
-    "super_prompts_implémentés": ["#4 Réalisme conversationnel", "#5 Subtilité émotionnelle", "#6 Cohérence comportementale", "#7 Style littéraire", "#9 Maîtrise française", "#13 Pipeline OMEGA"],
+    "super_prompts_implémentés": [
+      "#4 Réalisme conversationnel",
+      "#5 Subtilité émotionnelle",
+      "#6 Cohérence comportementale",
+      "#7 Style littéraire",
+      "#9 Maîtrise française",
+      "#13 Pipeline OMEGA"
+    ],
     "modules": {
       "pipeline.rs": "ConversationPipeline — orchestrateur principal de tous les post-processeurs",
       "french_mastery.rs": "FrenchMasteryProcessor — post-traitement linguistique avancé en français",
@@ -32,9 +39,17 @@
         "Enrichment": "Enrichissement pédagogique — exemples, analogies",
         "Double": "Double version — synthèse courte + développée"
       },
-      "niveaux_techniques": ["Beginner (accessible)", "Intermediate (standard, défaut)", "Expert (maximal)"],
+      "niveaux_techniques": [
+        "Beginner (accessible)",
+        "Intermediate (standard, défaut)",
+        "Expert (maximal)"
+      ],
       "tons": ["Neutral (défaut)", "Warm (chaleureux)", "Professional (formel)"],
-      "longueurs": ["Short (<150 mots)", "Medium (150-400 mots, défaut)", "Long (>400 mots)"],
+      "longueurs": [
+        "Short (<150 mots)",
+        "Medium (150-400 mots, défaut)",
+        "Long (>400 mots)"
+      ],
       "garanties": "Orthographe irréprochable, concordance des temps, niveau de langue adapté, ponctuation correcte"
     },
     "pipeline_post_traitement": {

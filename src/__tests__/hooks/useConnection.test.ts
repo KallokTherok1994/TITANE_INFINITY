@@ -63,12 +63,16 @@ describe('useConnection truth helpers', () => {
   });
 
   it('avoids overlapping connection checks while a previous provider probe is still pending', async () => {
-    let releaseProbe: ((value: Array<{
-      provider: string;
-      available: boolean;
-      latency_ms: number;
-      models: string[];
-    }>) => void) | null = null;
+    let releaseProbe:
+      | ((
+          value: Array<{
+            provider: string;
+            available: boolean;
+            latency_ms: number;
+            models: string[];
+          }>
+        ) => void)
+      | null = null;
 
     mockedTauriClient.chatCheckProviders.mockImplementation(
       () =>

@@ -2653,7 +2653,8 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
       return [
         {
           role: 'system',
-          content: systemPrompt || `TITANE∞ v30.0.0 - Mode ${modeConfig.name} (Emergency)`,
+          content:
+            systemPrompt || `TITANE∞ v30.0.0 - Mode ${modeConfig.name} (Emergency)`,
           timestamp: Date.now(),
         },
         ...history.slice(-3), // Minimal history
@@ -2830,7 +2831,7 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
 
       // ═══ DEFAULT KNOWLEDGE BASE: inject compact index ═══
       const kbBlock = this._defaultKbIndex
-        ? `\n\n📚 Base de connaissances intégrée TITANE∞ (${this._defaultKbIndex.split("\n").length} catégories) :\n${this._defaultKbIndex}`
+        ? `\n\n📚 Base de connaissances intégrée TITANE∞ (${this._defaultKbIndex.split('\n').length} catégories) :\n${this._defaultKbIndex}`
         : '';
 
       const stablePrefix = skillInjection

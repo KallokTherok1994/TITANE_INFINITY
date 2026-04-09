@@ -70,7 +70,13 @@
       "concision": "Supprimer les chevilles inutiles: 'il convient de noter que', 'comme indiqué précédemment', 'afin de pouvoir'.",
       "impersonnel": "Préférer les tournures impersonnelles ou passives: 'Il est rappelé que' > 'Je rappelle que' dans les documents officiels.",
       "vocabulaire": {
-        "favoriser": ["Le présent document a pour objet", "Il y a lieu de", "En l'état actuel", "À toutes fins utiles", "Sous réserve de"],
+        "favoriser": [
+          "Le présent document a pour objet",
+          "Il y a lieu de",
+          "En l'état actuel",
+          "À toutes fins utiles",
+          "Sous réserve de"
+        ],
         "éviter": ["En fait", "Clairement", "Évidemment", "Bien entendu", "En gros"]
       }
     },

@@ -75,17 +75,57 @@
       }
     },
     "classes_intention": [
-      {"id": "Query", "description": "Demande d'information factuelle", "exemple": "Quel est le chemin de X?"},
-      {"id": "Task", "description": "Tâche à accomplir", "exemple": "Crée un composant React pour..."},
-      {"id": "Help", "description": "Demande d'aide ou guidance", "exemple": "Je ne comprends pas comment..."},
-      {"id": "Emotional", "description": "Expression émotionnelle ou ventilation", "exemple": "Je suis épuisé par..."},
-      {"id": "Conversation", "description": "Conversation informelle", "exemple": "C'est quoi ton avis sur..."},
-      {"id": "Command", "description": "Instruction directe", "exemple": "Lance le build et dis-moi si..."},
-      {"id": "Creative", "description": "Demande de création originale", "exemple": "Écris un texte sur..."},
-      {"id": "Debug", "description": "Débogage ou dépannage", "exemple": "Pourquoi ce test échoue?"},
-      {"id": "Explanation", "description": "Demande d'explication", "exemple": "Explique-moi comment fonctionne..."},
-      {"id": "MetaQuery", "description": "Question sur TITANE lui-même", "exemple": "Comment es-tu construit?"},
-      {"id": "Unknown", "description": "Intention ambiguë — traitement neutre"}
+      {
+        "id": "Query",
+        "description": "Demande d'information factuelle",
+        "exemple": "Quel est le chemin de X?"
+      },
+      {
+        "id": "Task",
+        "description": "Tâche à accomplir",
+        "exemple": "Crée un composant React pour..."
+      },
+      {
+        "id": "Help",
+        "description": "Demande d'aide ou guidance",
+        "exemple": "Je ne comprends pas comment..."
+      },
+      {
+        "id": "Emotional",
+        "description": "Expression émotionnelle ou ventilation",
+        "exemple": "Je suis épuisé par..."
+      },
+      {
+        "id": "Conversation",
+        "description": "Conversation informelle",
+        "exemple": "C'est quoi ton avis sur..."
+      },
+      {
+        "id": "Command",
+        "description": "Instruction directe",
+        "exemple": "Lance le build et dis-moi si..."
+      },
+      {
+        "id": "Creative",
+        "description": "Demande de création originale",
+        "exemple": "Écris un texte sur..."
+      },
+      {
+        "id": "Debug",
+        "description": "Débogage ou dépannage",
+        "exemple": "Pourquoi ce test échoue?"
+      },
+      {
+        "id": "Explanation",
+        "description": "Demande d'explication",
+        "exemple": "Explique-moi comment fonctionne..."
+      },
+      {
+        "id": "MetaQuery",
+        "description": "Question sur TITANE lui-même",
+        "exemple": "Comment es-tu construit?"
+      },
+      { "id": "Unknown", "description": "Intention ambiguë — traitement neutre" }
     ],
     "boucle_cognitive": [
       "1. Classification intention (<2ms) — IntentClassifier",

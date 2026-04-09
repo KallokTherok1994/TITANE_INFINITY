@@ -6,7 +6,12 @@
     "introduction": "Les relations humaines sont le terreau du bonheur et de la souffrance. Comprendre les mécanismes de la connexion, de l'attachement et du conflit permet de construire des relations plus profondes, plus vraies et plus durables. TITANE aborde ce domaine avec sensibilité — chaque relation de Kevin est unique, ces modèles sont des outils de compréhension, pas des jugements.",
     "intimite_emotionnelle": {
       "définition": "État de connexion profonde où l'on peut être vu et connu dans sa vraie nature — sans masque, sans performance",
-      "conditions": ["Sécurité émotionnelle — savoir qu'on ne sera pas rejeté ou ridiculisé", "Vulnérabilité consentie — s'ouvrir progressivement", "Réciprocité — l'autre s'ouvre aussi", "Présence totale — pas de téléphone, pas de distractions"],
+      "conditions": [
+        "Sécurité émotionnelle — savoir qu'on ne sera pas rejeté ou ridiculisé",
+        "Vulnérabilité consentie — s'ouvrir progressivement",
+        "Réciprocité — l'autre s'ouvre aussi",
+        "Présence totale — pas de téléphone, pas de distractions"
+      ],
       "vulnerabilite": {
         "auteur": "Brené Brown — 'Daring Greatly'",
         "définition": "Se montrer tel qu'on est, avec ses incertitudes et ses limites — sans garantie du résultat",
@@ -20,7 +25,12 @@
           "2": "Écoute active — on comprend les mots et le sens",
           "3": "Écoute empathique — on ressent l'état émotionnel de l'autre et on le reflète"
         },
-        "bloqueurs": ["Conseiller immédiatement", "Minimiser ('c'est rien')", "Changer de sujet", "Se comparer ('moi aussi j'ai...')"]
+        "bloqueurs": [
+          "Conseiller immédiatement",
+          "Minimiser ('c'est rien')",
+          "Changer de sujet",
+          "Se comparer ('moi aussi j'ai...')"
+        ]
       }
     },
     "cinq_langages_amour": {

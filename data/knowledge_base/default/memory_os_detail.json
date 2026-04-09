@@ -5,7 +5,12 @@
   "memory_os": {
     "nom": "Memory OS vΩ",
     "chemin": "src-tauri/src/memory_os/",
-    "super_prompts": ["#6 Vectorisation", "#7 Clustering", "#8 Embeddings", "#12 Architecture hiérarchique"],
+    "super_prompts": [
+      "#6 Vectorisation",
+      "#7 Clustering",
+      "#8 Embeddings",
+      "#12 Architecture hiérarchique"
+    ],
     "objectif_performance": {
       "recall": "<20ms",
       "store": "<5ms",
@@ -41,7 +46,18 @@
         "indexation": "Index en mémoire (HashMap<Uuid, LTMMetadata>) pour recherche rapide",
         "compression": "Support compression activé (bincode)",
         "latence_cible": "<15ms search",
-        "métadonnées_par_entrée": ["id", "timestamp", "importance", "memory_type", "tags", "content_preview (100 chars)", "file_path", "size_bytes", "access_count", "last_accessed"],
+        "métadonnées_par_entrée": [
+          "id",
+          "timestamp",
+          "importance",
+          "memory_type",
+          "tags",
+          "content_preview (100 chars)",
+          "file_path",
+          "size_bytes",
+          "access_count",
+          "last_accessed"
+        ],
         "usage": "Profil Kevin permanent, faits importants cristallisés, historique long terme",
         "exemple": "Valeurs fondamentales Kevin, ses projets, son style de travail, sa famille"
       }
@@ -114,6 +130,16 @@
       "Personal — information personnelle (objectifs de vie, valeurs)",
       "Creative — travaux créatifs en cours"
     ],
-    "ipc_commandes": ["memory_store", "memory_search", "memory_get_recent", "memory_promote", "memory_get_stats", "memory_forget_old", "memory_search_semantic", "persistent_memory_write_entry", "persistent_memory_read_relevant"]
+    "ipc_commandes": [
+      "memory_store",
+      "memory_search",
+      "memory_get_recent",
+      "memory_promote",
+      "memory_get_stats",
+      "memory_forget_old",
+      "memory_search_semantic",
+      "persistent_memory_write_entry",
+      "persistent_memory_read_relevant"
+    ]
   }
 }

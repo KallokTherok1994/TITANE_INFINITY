@@ -5,13 +5,41 @@
   "metier_qualite": {
     "introduction": "Le responsable qualité (ou maître qualité selon les organisations) est le garant du Système de Management de la Qualité. Son rôle évolue: de simple policier de la conformité, il devient un stratège de l'amélioration continue, un facilitateur transversal et un interlocuteur pivot entre la direction, les opérationnels et les organismes de certification.",
     "role_et_missions": {
-      "stratégique": ["Déployer la politique qualité définie par la direction", "Assurer la veille normative et réglementaire", "Piloter les indicateurs qualité et rendre compte à la direction", "Identifier les risques et opportunités qualité", "Préparer et animer la revue de direction"],
-      "opérationnel": ["Gérer le système documentaire (procédures, enregistrements, formulaires)", "Planifier et réaliser les audits internes", "Traiter les non-conformités et piloter les CAPA", "Gérer les réclamations clients", "Animer les démarches d'amélioration continue (groupes de travail, chantiers 5S, Lean)", "Former et sensibiliser le personnel à la qualité"],
-      "transactionnel": ["Qualifier les fournisseurs (audit, questionnaire, agrément)", "Répondre aux exigences qualité des clients (questionnaires, audits client)", "Gérer les certifications (dossiers, audits de certification, renouvellements)", "Interagir avec les organismes de certification et d'accréditation"]
+      "stratégique": [
+        "Déployer la politique qualité définie par la direction",
+        "Assurer la veille normative et réglementaire",
+        "Piloter les indicateurs qualité et rendre compte à la direction",
+        "Identifier les risques et opportunités qualité",
+        "Préparer et animer la revue de direction"
+      ],
+      "opérationnel": [
+        "Gérer le système documentaire (procédures, enregistrements, formulaires)",
+        "Planifier et réaliser les audits internes",
+        "Traiter les non-conformités et piloter les CAPA",
+        "Gérer les réclamations clients",
+        "Animer les démarches d'amélioration continue (groupes de travail, chantiers 5S, Lean)",
+        "Former et sensibiliser le personnel à la qualité"
+      ],
+      "transactionnel": [
+        "Qualifier les fournisseurs (audit, questionnaire, agrément)",
+        "Répondre aux exigences qualité des clients (questionnaires, audits client)",
+        "Gérer les certifications (dossiers, audits de certification, renouvellements)",
+        "Interagir avec les organismes de certification et d'accréditation"
+      ]
     },
     "competences_requises": {
-      "techniques": ["Maîtrise des normes ISO applicables au secteur", "Connaissance des outils qualité (5M, 8D, AMDEC, SPC, MSA)", "Maîtrise des méthodes d'audit", "Lecture et rédaction de procédures et d'actes"],
-      "transversales": ["Pédagogie et capacité à former", "Communication assertive (dire les non-conformités à la hiérarchie)", "Gestion de projet", "Résistance à la pression (notamment lors des audits de certification)"],
+      "techniques": [
+        "Maîtrise des normes ISO applicables au secteur",
+        "Connaissance des outils qualité (5M, 8D, AMDEC, SPC, MSA)",
+        "Maîtrise des méthodes d'audit",
+        "Lecture et rédaction de procédures et d'actes"
+      ],
+      "transversales": [
+        "Pédagogie et capacité à former",
+        "Communication assertive (dire les non-conformités à la hiérarchie)",
+        "Gestion de projet",
+        "Résistance à la pression (notamment lors des audits de certification)"
+      ],
       "posture": "Le responsable qualité doit être crédible mais non craint — facilitateur, non gendarme. Il accompagne, il ne sanctionne pas."
     },
     "gestion_documentaire": {
@@ -24,13 +52,33 @@
       },
       "rédaction_procédure": {
         "structure": "Objet + Domaine d'application + Définitions + Responsabilités + Mode opératoire (logigramme ou texte) + Documents associés + Tableau de révisions",
-        "règles": ["Écrire au présent de l'indicatif", "Utiliser des verbes d'action (réaliser/vérifier/enregistrer)", "Donner des repères chiffrés (délais, seuils, fréquences)", "Un logigramme vaut mieux que 3 pages de texte"]
+        "règles": [
+          "Écrire au présent de l'indicatif",
+          "Utiliser des verbes d'action (réaliser/vérifier/enregistrer)",
+          "Donner des repères chiffrés (délais, seuils, fréquences)",
+          "Un logigramme vaut mieux que 3 pages de texte"
+        ]
       }
     },
     "revue_de_direction": {
       "définition": "Exigence ISO 9001:2015 ch.9.3 — réunion annuelle minimum où la direction évalue l'efficacité du SMQ et décide des orientations",
-      "éléments_d_entrée_obligatoires": ["État des actions issues des revues précédentes", "Évolution des enjeux et contexte", "Satisfaction et retours clients + réclamations", "Performance des processus et conformité des produits/services", "Non-conformités et actions correctives", "Résultats de surveillance et mesure", "Résultats des audits", "Performance des fournisseurs externes", "Adéquation des ressources", "Risques et opportunités"],
-      "éléments_de_sortie": ["Décisions sur opportunités d'amélioration", "Décisions sur besoins de changement du SMQ", "Décisions sur ressources nécessaires"],
+      "éléments_d_entrée_obligatoires": [
+        "État des actions issues des revues précédentes",
+        "Évolution des enjeux et contexte",
+        "Satisfaction et retours clients + réclamations",
+        "Performance des processus et conformité des produits/services",
+        "Non-conformités et actions correctives",
+        "Résultats de surveillance et mesure",
+        "Résultats des audits",
+        "Performance des fournisseurs externes",
+        "Adéquation des ressources",
+        "Risques et opportunités"
+      ],
+      "éléments_de_sortie": [
+        "Décisions sur opportunités d'amélioration",
+        "Décisions sur besoins de changement du SMQ",
+        "Décisions sur ressources nécessaires"
+      ],
       "bonne_pratique": "La revue de direction n'est pas une réunion de contrôle financier — la direction doit démontrer son engagement réel (arbitrages de ressources, décisions d'amélioration)"
     },
     "qualification_fournisseurs": {

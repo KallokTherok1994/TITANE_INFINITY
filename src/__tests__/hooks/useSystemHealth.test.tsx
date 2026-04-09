@@ -93,19 +93,19 @@ describe('useSystemHealth Hook', () => {
     it('should start monitoring and update periodically', async () => {
       const { result } = renderHook(() => useSystemHealth());
 
-      act(() => {
+      await act(async () => {
         result.current.startMonitoring(1000);
-      });
-
-      act(() => {
         vi.advanceTimersByTime(1000);
+        await Promise.resolve();
       });
 
       expect(secureInvoke).toHaveBeenCalled();
     });
 
     it('should avoid overlapping monitoring refreshes while a previous cycle is still in flight', async () => {
-      let resolveConversation: ((value: typeof mockHealthPayloads.conversation_health_check) => void) | null = null;
+      let resolveConversation:
+        | ((value: typeof mockHealthPayloads.conversation_health_check) => void)
+        | null = null;
 
       vi.mocked(secureInvoke).mockImplementation((command: string) => {
         if (command === 'conversation_health_check') {
@@ -215,7 +215,13 @@ describe('useSystemHealth Hook', () => {
     it('should reject legacy auto-recovery for persistent memory', async () => {
       const { result } = renderHook(() => useSystemHealth());
 
-      await expect(result.current.triggerRecovery('memory')).rejects.toThrow(
+      await act(async () => {
+        await expect(result.current.triggerRecovery('memory')).rejects.toThrow(
+          /persistent memory auto-recovery is not available/i
+        );
+      });
+
+      expect(result.current.error?.message).toMatch(
         /persistent memory auto-recovery is not available/i
       );
     });

@@ -13,7 +13,13 @@
         "talon": "Bassins, organes reproducteurs, sciatique",
         "bord_interne": "Colonne vertébrale (de la nuque au coccyx)"
       },
-      "bénéfices_rapportés": ["Relaxation profonde", "Amélioration circulation", "Soutien digestif", "Réduction anxiété légère", "Amélioration sommeil"],
+      "bénéfices_rapportés": [
+        "Relaxation profonde",
+        "Amélioration circulation",
+        "Soutien digestif",
+        "Réduction anxiété légère",
+        "Amélioration sommeil"
+      ],
       "niveau_preuve": "Preuves limitées mais positives pour la relaxation et le bien-être. Insuffisant comme traitement primaire de maladies organiques.",
       "contre_indications": "Blessures/plaies pieds, phlébites, grossesse (zones spécifiques à éviter)"
     },
@@ -25,7 +31,14 @@
         "principe": "Mouvements circulaires doux, peu appuyés, suivant le sens de la circulation lymphatique (vers les ganglions)",
         "pression": "Très légère — environ 30g/cm² (comme le poids d'une pièce de monnaie)"
       },
-      "indications": ["Œdèmes lymphatiques", "Post-chirurgie/traitement cancer (avec suivi médical)", "Inflammation chronique", "Cellulite", "Fatigue chronique", "Sinusites récurrentes"],
+      "indications": [
+        "Œdèmes lymphatiques",
+        "Post-chirurgie/traitement cancer (avec suivi médical)",
+        "Inflammation chronique",
+        "Cellulite",
+        "Fatigue chronique",
+        "Sinusites récurrentes"
+      ],
       "contre_indications": "Infections aiguës (fièvre), thrombose veineuse active, tumeurs non traitées, insuffisance cardiaque sévère",
       "auto_drainage": "Peut être pratiqué seul sur le visage, les jambes — technique apprise avec un professionnel"
     },

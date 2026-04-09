@@ -54,10 +54,22 @@
       "Writer": ["ReadData", "WriteData", "CreateEntries"],
       "Executor": ["ExecuteTasks", "ReadData"],
       "Coordinator": ["ExecuteTasks", "AssignTasks", "ViewAgents", "ReadData"],
-      "Supervisor": ["ExecuteTasks", "AssignTasks", "ViewAgents", "ModifyAgents", "ReadData", "WriteData"],
+      "Supervisor": [
+        "ExecuteTasks",
+        "AssignTasks",
+        "ViewAgents",
+        "ModifyAgents",
+        "ReadData",
+        "WriteData"
+      ],
       "Admin": ["Toutes les permissions"],
       "ExternalAccess": ["AccessExternal", "ReadData"],
-      "SecurityOfficer": ["ViewAuditLogs", "ModifySecuritySettings", "ViewAgents", "ReadData"]
+      "SecurityOfficer": [
+        "ViewAuditLogs",
+        "ModifySecuritySettings",
+        "ViewAgents",
+        "ReadData"
+      ]
     },
     "collaboration": {
       "modes": {
@@ -80,18 +92,49 @@
         "Escalate": "Remonter à l'utilisateur si non résolvable",
         "Ignore": "Continuer sans cet agent (dégradation gracieuse)"
       },
-      "événements": ["AgentStarted", "AgentStopped", "AgentFailed", "AgentRecovered", "TaskAssigned", "TaskCompleted", "TaskFailed"]
+      "événements": [
+        "AgentStarted",
+        "AgentStopped",
+        "AgentFailed",
+        "AgentRecovered",
+        "TaskAssigned",
+        "TaskCompleted",
+        "TaskFailed"
+      ]
     },
     "sandbox": {
       "description": "Isolation de chaque agent — pas d'accès transversal non autorisé",
-      "restrictions": ["Pas d'accès filesystem hors quota alloué", "Pas d'appels réseau directs (via Gateway uniquement)", "Pas de modification d'agents autres sans permission Coordinator/Admin"],
+      "restrictions": [
+        "Pas d'accès filesystem hors quota alloué",
+        "Pas d'appels réseau directs (via Gateway uniquement)",
+        "Pas de modification d'agents autres sans permission Coordinator/Admin"
+      ],
       "violations": "SandboxViolation loguée + agent suspendu + alerte Guardian"
     },
     "cycle_de_vie": {
-      "états": ["Created", "Initializing", "Ready", "Busy", "Paused", "Stopping", "Terminated", "Failed"],
+      "états": [
+        "Created",
+        "Initializing",
+        "Ready",
+        "Busy",
+        "Paused",
+        "Stopping",
+        "Terminated",
+        "Failed"
+      ],
       "transitions": "Created → Initializing → Ready ⇄ Busy ⇄ Paused → Stopping → Terminated",
-      "événements": ["LifecycleEvent: AgentCreated, AgentStarted, AgentBusy, AgentIdle, AgentPaused, AgentTerminated, AgentFailed"]
+      "événements": [
+        "LifecycleEvent: AgentCreated, AgentStarted, AgentBusy, AgentIdle, AgentPaused, AgentTerminated, AgentFailed"
+      ]
     },
-    "ipc_commandes": ["agents_list", "agents_get_status", "agents_create", "agents_terminate", "agents_assign_task", "agents_get_diagnostics", "multi_agents_orchestrate"]
+    "ipc_commandes": [
+      "agents_list",
+      "agents_get_status",
+      "agents_create",
+      "agents_terminate",
+      "agents_assign_task",
+      "agents_get_diagnostics",
+      "multi_agents_orchestrate"
+    ]
   }
 }

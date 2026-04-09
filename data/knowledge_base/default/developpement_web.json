@@ -53,15 +53,34 @@
     },
     "performance_web": {
       "métriques": "Core Web Vitals (LCP/INP/CLS) + TTFB (Time To First Byte) + FCP (First Contentful Paint). Mesure: Lighthouse (DevTools), PageSpeed Insights, WebPageTest.",
-      "optimisations": ["Images: WebP/AVIF + lazy loading + srcset + CDN image (Cloudinary/Imgix)", "Code splitting: charger uniquement le JS nécessaire à la page", "Caching: HTTP cache headers + Service Worker + CDN edge cache", "Minification + compression Gzip/Brotli", "Fonts: variable fonts + preload + swap display"]
+      "optimisations": [
+        "Images: WebP/AVIF + lazy loading + srcset + CDN image (Cloudinary/Imgix)",
+        "Code splitting: charger uniquement le JS nécessaire à la page",
+        "Caching: HTTP cache headers + Service Worker + CDN edge cache",
+        "Minification + compression Gzip/Brotli",
+        "Fonts: variable fonts + preload + swap display"
+      ]
     },
     "accessibilité_WCAG": {
       "principes_POUR": "Perceptible / Opérable / Compréhensible / Robuste",
-      "pratiques_clés": ["Attributs alt sur toutes les images", "Labels sur tous les champs de formulaire", "Contraste couleur minimum 4,5:1 (AA)", "Navigation clavier complète (focus visible, Tab order logique)", "ARIA labels pour les composants interactifs complexes"],
+      "pratiques_clés": [
+        "Attributs alt sur toutes les images",
+        "Labels sur tous les champs de formulaire",
+        "Contraste couleur minimum 4,5:1 (AA)",
+        "Navigation clavier complète (focus visible, Tab order logique)",
+        "ARIA labels pour les composants interactifs complexes"
+      ],
       "outils_test": "axe DevTools (extension Chrome) + Lighthouse accessibility audit + lecteur d'écran (NVDA/VoiceOver)"
     },
     "sécurité_OWASP": {
-      "Top_10_2021": ["A1: Broken Access Control", "A2: Cryptographic Failures (HTTPS, hash des mots de passe avec bcrypt/argon2)", "A3: Injection (SQL injection — utiliser des requêtes préparées/ORM)", "A5: Security Misconfiguration", "A7: XSS Cross-Site Scripting (échapper les sorties, CSP headers)", "A8: Software integrity failures (vérifier les dépendances npm audit)"],
+      "Top_10_2021": [
+        "A1: Broken Access Control",
+        "A2: Cryptographic Failures (HTTPS, hash des mots de passe avec bcrypt/argon2)",
+        "A3: Injection (SQL injection — utiliser des requêtes préparées/ORM)",
+        "A5: Security Misconfiguration",
+        "A7: XSS Cross-Site Scripting (échapper les sorties, CSP headers)",
+        "A8: Software integrity failures (vérifier les dépendances npm audit)"
+      ],
       "pratiques": "Jamais de secrets dans le code source (variables d'environnement .env + .gitignore). CORS correctement configuré. Rate limiting sur les APIs."
     }
   }

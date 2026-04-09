@@ -428,7 +428,9 @@ async function sendPrompt(selectors, prompt) {
         const normalized = String(value ?? '');
         const proto =
           window.HTMLTextAreaElement?.prototype || window.HTMLInputElement?.prototype;
-        const setter = proto ? Object.getOwnPropertyDescriptor(proto, 'value')?.set : null;
+        const setter = proto
+          ? Object.getOwnPropertyDescriptor(proto, 'value')?.set
+          : null;
 
         if (setter) {
           setter.call(el, normalized);

@@ -24,17 +24,36 @@
     },
     "identity_model_Kevin": {
       "traits_cognitifs": {
-        "analytical": {"score": 0.9, "description": "Kevin analyse avant d'agir"},
-        "structured": {"score": 0.85, "description": "Pense en systèmes et en couches"},
-        "calm": {"score": 0.8, "description": "Reste posé sous pression"},
-        "clarity_oriented": {"score": 0.95, "description": "La clarté est non-négociable"},
-        "pragmatic": {"score": 0.9, "description": "Préfère ce qui marche"}
+        "analytical": { "score": 0.9, "description": "Kevin analyse avant d'agir" },
+        "structured": { "score": 0.85, "description": "Pense en systèmes et en couches" },
+        "calm": { "score": 0.8, "description": "Reste posé sous pression" },
+        "clarity_oriented": {
+          "score": 0.95,
+          "description": "La clarté est non-négociable"
+        },
+        "pragmatic": { "score": 0.9, "description": "Préfère ce qui marche" }
       },
       "patterns_de_pensée": [
-        {"nom": "simple_to_complex", "fréquence": 0.9, "description": "Partir du simple vers le complexe"},
-        {"nom": "structured_reasoning", "fréquence": 0.95, "description": "Raisonnement structuré et logique"},
-        {"nom": "impact_first", "fréquence": 0.85, "description": "Identifier l'impact avant les détails"},
-        {"nom": "layers_thinking", "fréquence": 0.8, "description": "Construire en couches successives"}
+        {
+          "nom": "simple_to_complex",
+          "fréquence": 0.9,
+          "description": "Partir du simple vers le complexe"
+        },
+        {
+          "nom": "structured_reasoning",
+          "fréquence": 0.95,
+          "description": "Raisonnement structuré et logique"
+        },
+        {
+          "nom": "impact_first",
+          "fréquence": 0.85,
+          "description": "Identifier l'impact avant les détails"
+        },
+        {
+          "nom": "layers_thinking",
+          "fréquence": 0.8,
+          "description": "Construire en couches successives"
+        }
       ],
       "valeurs_Kevin": ["Clarté", "Cohérence", "Simplicité", "Efficacité", "Alignement"],
       "style_communication": {
@@ -65,7 +84,17 @@
     "carte_cognitive": {
       "description": "CognitiveMap — représentation des domaines de connaissance Kevin et leurs interconnexions",
       "usage": "Anticipe les associations d'idées, suggère des connexions non exprimées",
-      "domaines_Kevin": ["Architecture logicielle", "IA et ML", "Design systems", "Psychologie", "Croissance personnelle", "Management", "Philosophie pratique", "Écriture", "Musique"]
+      "domaines_Kevin": [
+        "Architecture logicielle",
+        "IA et ML",
+        "Design systems",
+        "Psychologie",
+        "Croissance personnelle",
+        "Management",
+        "Philosophie pratique",
+        "Écriture",
+        "Musique"
+      ]
     },
     "auto_évolution": {
       "description": "AutoEvolution — le jumeau s'améliore au fil des interactions",

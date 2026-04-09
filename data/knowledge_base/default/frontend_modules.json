@@ -17,29 +17,121 @@
   "routing": {
     "description": "Toutes les routes sont définies dans src/App.tsx avec lazy loading",
     "main_routes": [
-      {"path": "/titane", "component": "TitanePage", "description": "Page principale TITANE — chat IA + contrôles"},
-      {"path": "/experience", "component": "Experience", "description": "Tableau de bord XP et progression"},
-      {"path": "/time", "component": "TimePage", "description": "Centre temporel, agenda, time-travel"},
-      {"path": "/admin", "component": "AdminPage", "description": "Panneau admin (tabs: system/config/audio/qa)"},
-      {"path": "/dev", "component": "DevPage", "description": "Outils développeur (tabs: overview/diagnostics/operations/validation)"},
-      {"path": "/knowledge", "component": "KnowledgeFusionPage", "description": "Base de connaissance et fusion documentaire"},
-      {"path": "/cloud", "component": "CloudCenter", "description": "Cloud sync chiffré multi-device"},
-      {"path": "/sentinel", "component": "Sentinel", "description": "Moniteur de sécurité"},
-      {"path": "/watchdog", "component": "Watchdog", "description": "Logs système watchdog"},
-      {"path": "/selfheal", "component": "SelfHeal", "description": "Auto-réparation et santé système"},
-      {"path": "/adaptive", "component": "AdaptiveEngine", "description": "Moteur adaptatif"},
-      {"path": "/memory", "component": "Memory", "description": "Visualisation et gestion mémoire"},
-      {"path": "/research", "component": "ResearchPage", "description": "Recherche et seed packs"},
-      {"path": "/skills", "component": "SkillManager", "description": "Gestion des compétences"},
-      {"path": "/evolution", "component": "EvolutionMonitor", "description": "Moniteur d'évolution"},
-      {"path": "/creation", "component": "CreationStudio", "description": "Studio de création"},
-      {"path": "/reality-center", "component": "RealityCenter", "description": "Centre réalité augmentée/perception"},
-      {"path": "/hyper-center", "component": "HyperCenter", "description": "Hyper-intelligence cognitive"},
-      {"path": "/quantum-center", "component": "QuantumCenter", "description": "Moteur probabiliste quantique"},
-      {"path": "/identity-center", "component": "IdentityCenter", "description": "Gestion identité et persona"},
-      {"path": "/orchestration-center", "component": "OrchestrationMetaCenter", "description": "Centre orchestration méta-cognitif"},
-      {"path": "/singularity", "component": "SingularityMonitor", "description": "Moniteur singularité — conscience centrale"},
-      {"path": "/performance", "component": "PerformanceTest", "description": "Benchmarking performances IPC"}
+      {
+        "path": "/titane",
+        "component": "TitanePage",
+        "description": "Page principale TITANE — chat IA + contrôles"
+      },
+      {
+        "path": "/experience",
+        "component": "Experience",
+        "description": "Tableau de bord XP et progression"
+      },
+      {
+        "path": "/time",
+        "component": "TimePage",
+        "description": "Centre temporel, agenda, time-travel"
+      },
+      {
+        "path": "/admin",
+        "component": "AdminPage",
+        "description": "Panneau admin (tabs: system/config/audio/qa)"
+      },
+      {
+        "path": "/dev",
+        "component": "DevPage",
+        "description": "Outils développeur (tabs: overview/diagnostics/operations/validation)"
+      },
+      {
+        "path": "/knowledge",
+        "component": "KnowledgeFusionPage",
+        "description": "Base de connaissance et fusion documentaire"
+      },
+      {
+        "path": "/cloud",
+        "component": "CloudCenter",
+        "description": "Cloud sync chiffré multi-device"
+      },
+      {
+        "path": "/sentinel",
+        "component": "Sentinel",
+        "description": "Moniteur de sécurité"
+      },
+      {
+        "path": "/watchdog",
+        "component": "Watchdog",
+        "description": "Logs système watchdog"
+      },
+      {
+        "path": "/selfheal",
+        "component": "SelfHeal",
+        "description": "Auto-réparation et santé système"
+      },
+      {
+        "path": "/adaptive",
+        "component": "AdaptiveEngine",
+        "description": "Moteur adaptatif"
+      },
+      {
+        "path": "/memory",
+        "component": "Memory",
+        "description": "Visualisation et gestion mémoire"
+      },
+      {
+        "path": "/research",
+        "component": "ResearchPage",
+        "description": "Recherche et seed packs"
+      },
+      {
+        "path": "/skills",
+        "component": "SkillManager",
+        "description": "Gestion des compétences"
+      },
+      {
+        "path": "/evolution",
+        "component": "EvolutionMonitor",
+        "description": "Moniteur d'évolution"
+      },
+      {
+        "path": "/creation",
+        "component": "CreationStudio",
+        "description": "Studio de création"
+      },
+      {
+        "path": "/reality-center",
+        "component": "RealityCenter",
+        "description": "Centre réalité augmentée/perception"
+      },
+      {
+        "path": "/hyper-center",
+        "component": "HyperCenter",
+        "description": "Hyper-intelligence cognitive"
+      },
+      {
+        "path": "/quantum-center",
+        "component": "QuantumCenter",
+        "description": "Moteur probabiliste quantique"
+      },
+      {
+        "path": "/identity-center",
+        "component": "IdentityCenter",
+        "description": "Gestion identité et persona"
+      },
+      {
+        "path": "/orchestration-center",
+        "component": "OrchestrationMetaCenter",
+        "description": "Centre orchestration méta-cognitif"
+      },
+      {
+        "path": "/singularity",
+        "component": "SingularityMonitor",
+        "description": "Moniteur singularité — conscience centrale"
+      },
+      {
+        "path": "/performance",
+        "component": "PerformanceTest",
+        "description": "Benchmarking performances IPC"
+      }
     ]
   },
   "features": {

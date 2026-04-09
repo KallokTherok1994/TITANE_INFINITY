@@ -66,7 +66,12 @@
     },
     "batching": {
       "définition": "Regrouper les tâches similaires en un seul bloc pour réduire le coût de changement de contexte",
-      "exemples": ["Répondre à tous les emails en 2-3 slots/jour (pas en continu)", "Appels téléphoniques tous regroupés", "Courses/admin en un seul moment", "Création de contenu en sessions dédiées"],
+      "exemples": [
+        "Répondre à tous les emails en 2-3 slots/jour (pas en continu)",
+        "Appels téléphoniques tous regroupés",
+        "Courses/admin en un seul moment",
+        "Création de contenu en sessions dédiées"
+      ],
       "avantage": "Réduit le temps de 'warm-up' cognitif nécessaire à chaque changement de tâche"
     }
   }

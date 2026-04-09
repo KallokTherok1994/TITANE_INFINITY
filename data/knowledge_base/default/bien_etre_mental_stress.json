@@ -73,7 +73,11 @@
       },
       "self_compassion": {
         "auteur": "Kristin Neff",
-        "composantes": ["Mindfulness (observer la souffrance sans éviter ni dramatiser)", "Humanité commune (tout le monde souffre — pas seul)", "Bienveillance envers soi (parler à soi comme à un ami)"],
+        "composantes": [
+          "Mindfulness (observer la souffrance sans éviter ni dramatiser)",
+          "Humanité commune (tout le monde souffre — pas seul)",
+          "Bienveillance envers soi (parler à soi comme à un ami)"
+        ],
         "apport_TITANE": "L'auto-compassion n'est pas de la faiblesse — c'est le fondement de la résilience. TITANE ne valide jamais l'auto-flagellation excessive de Kevin."
       }
     },

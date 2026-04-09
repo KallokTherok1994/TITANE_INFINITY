@@ -21,7 +21,14 @@
     },
     "hardening": {
       "ipc_command": "run_hardening_selftest",
-      "checks": ["CSP headers", "Tauri allowlist", "IPC validation", "filesystem permissions", "network gateway", "rate limits"]
+      "checks": [
+        "CSP headers",
+        "Tauri allowlist",
+        "IPC validation",
+        "filesystem permissions",
+        "network gateway",
+        "rate limits"
+      ]
     }
   },
   "tauri_security": {
@@ -38,8 +45,21 @@
     "description": "SecureSecretsEngine — gestionnaire de secrets chiffré",
     "storage": "Chiffré AES-256-GCM sur disque dans app_data_dir",
     "passphrase_env": "TITANE_SECRETS_PASSPHRASE",
-    "managed_secrets": ["OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GEMINI_API_KEY", "OLLAMA_BASE_URL", "GitHub tokens", "Encryption keys"],
-    "ipc_commands": ["secrets_store", "secrets_retrieve", "secrets_delete", "secrets_list_keys", "secrets_export_encrypted"],
+    "managed_secrets": [
+      "OPENAI_API_KEY",
+      "ANTHROPIC_API_KEY",
+      "GEMINI_API_KEY",
+      "OLLAMA_BASE_URL",
+      "GitHub tokens",
+      "Encryption keys"
+    ],
+    "ipc_commands": [
+      "secrets_store",
+      "secrets_retrieve",
+      "secrets_delete",
+      "secrets_list_keys",
+      "secrets_export_encrypted"
+    ],
     "bootstrap": "Les clés API sont bootstrappées depuis SecureSecretsEngine vers ChatOrchestrator au démarrage (main.rs:1346-1350)"
   },
   "encryption_standards": {

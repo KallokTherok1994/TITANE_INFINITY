@@ -192,7 +192,11 @@ describe('useAudioStreaming', () => {
 
   it('avoids overlapping stats polling while the previous stats request is still pending', async () => {
     let releaseStats:
-      | ((value: { availableSamples: number; totalWritten: number; isActive: boolean }) => void)
+      | ((value: {
+          availableSamples: number;
+          totalWritten: number;
+          isActive: boolean;
+        }) => void)
       | null = null;
 
     vi.mocked(audioStreamingService.getStats).mockImplementationOnce(

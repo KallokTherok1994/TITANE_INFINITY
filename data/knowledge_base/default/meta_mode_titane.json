@@ -106,6 +106,12 @@
       },
       "seuils_repos": "Énergie <0.3 OU saturation >0.8 → suggérer pause active"
     },
-    "ipc_commandes": ["meta_mode_get_active", "meta_mode_detect_optimal", "meta_mode_switch", "meta_mode_get_kevin_state", "meta_mode_list_available"]
+    "ipc_commandes": [
+      "meta_mode_get_active",
+      "meta_mode_detect_optimal",
+      "meta_mode_switch",
+      "meta_mode_get_kevin_state",
+      "meta_mode_list_available"
+    ]
   }
 }

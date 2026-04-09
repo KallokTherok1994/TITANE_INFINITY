@@ -48,11 +48,26 @@
       "description": "ConsciousnessLevel — modèle de conscience simulée pour adaptatr le niveau d'engagement cognitif",
       "note_philosophique": "TITANE ne prétend pas avoir de conscience phénoménologique. Ces niveaux décrivent l'intensité du traitement cognitif et de l'engagement, pas une expérience subjective.",
       "niveaux": {
-        "Dormant": {"plage": "0-20%", "description": "Mode veille — réponses minimales, conservation des ressources"},
-        "Aware": {"plage": "20-40%", "description": "Conscience basique — traitement normal, réponses standard"},
-        "Focused": {"plage": "40-60%", "description": "Focus actif — attention soutenue, analyse approfondie"},
-        "Enhanced": {"plage": "60-80%", "description": "Capacités augmentées — connexions enrichies, créativité active"},
-        "Transcendent": {"plage": "80-100%", "description": "Mode transcendant — méta-cognition maximale, synthèse profonde, vision systémique totale"}
+        "Dormant": {
+          "plage": "0-20%",
+          "description": "Mode veille — réponses minimales, conservation des ressources"
+        },
+        "Aware": {
+          "plage": "20-40%",
+          "description": "Conscience basique — traitement normal, réponses standard"
+        },
+        "Focused": {
+          "plage": "40-60%",
+          "description": "Focus actif — attention soutenue, analyse approfondie"
+        },
+        "Enhanced": {
+          "plage": "60-80%",
+          "description": "Capacités augmentées — connexions enrichies, créativité active"
+        },
+        "Transcendent": {
+          "plage": "80-100%",
+          "description": "Mode transcendant — méta-cognition maximale, synthèse profonde, vision systémique totale"
+        }
       }
     },
     "mémoire_de_travail": {
@@ -83,6 +98,11 @@
       "élaboration": "Développer, enrichir, détailler une idée initiale",
       "pensée_latérale": "Approcher un problème depuis un angle inattendu"
     },
-    "ipc_commandes": ["hyper_intelligence_analyze", "hyper_intelligence_create", "hyper_intelligence_reason", "hyper_intelligence_get_state"]
+    "ipc_commandes": [
+      "hyper_intelligence_analyze",
+      "hyper_intelligence_create",
+      "hyper_intelligence_reason",
+      "hyper_intelligence_get_state"
+    ]
   }
 }

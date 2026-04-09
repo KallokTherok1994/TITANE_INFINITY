@@ -53,13 +53,38 @@
     "allocation_ressources": {
       "description": "ResourceGovernor — allocation dynamique des ressources entre sous-systèmes",
       "sous_systèmes_gérés": [
-        {"nom": "SingularityOS", "priorité": "CRITICAL", "quota_cpu": "20%", "quota_ram": "15%"},
-        {"nom": "MemoryOS", "priorité": "HIGH", "quota_cpu": "15%", "quota_ram": "25%"},
-        {"nom": "OmegaPipeline", "priorité": "HIGH", "quota_cpu": "20%", "quota_ram": "10%"},
-        {"nom": "SemanticSearch", "priorité": "NORMAL", "quota_cpu": "10%", "quota_ram": "20%"},
-        {"nom": "AgentSystem", "priorité": "NORMAL", "quota_cpu": "15%", "quota_ram": "10%"},
-        {"nom": "Monitoring", "priorité": "LOW", "quota_cpu": "5%", "quota_ram": "5%"},
-        {"nom": "CloudSync", "priorité": "BACKGROUND", "quota_cpu": "5%", "quota_ram": "5%"}
+        {
+          "nom": "SingularityOS",
+          "priorité": "CRITICAL",
+          "quota_cpu": "20%",
+          "quota_ram": "15%"
+        },
+        { "nom": "MemoryOS", "priorité": "HIGH", "quota_cpu": "15%", "quota_ram": "25%" },
+        {
+          "nom": "OmegaPipeline",
+          "priorité": "HIGH",
+          "quota_cpu": "20%",
+          "quota_ram": "10%"
+        },
+        {
+          "nom": "SemanticSearch",
+          "priorité": "NORMAL",
+          "quota_cpu": "10%",
+          "quota_ram": "20%"
+        },
+        {
+          "nom": "AgentSystem",
+          "priorité": "NORMAL",
+          "quota_cpu": "15%",
+          "quota_ram": "10%"
+        },
+        { "nom": "Monitoring", "priorité": "LOW", "quota_cpu": "5%", "quota_ram": "5%" },
+        {
+          "nom": "CloudSync",
+          "priorité": "BACKGROUND",
+          "quota_cpu": "5%",
+          "quota_ram": "5%"
+        }
       ],
       "surcharge": "Si CPU >80%: suspendre tâches BACKGROUND, ralentir NORMAL. Si CPU >95%: alerte + mode Emergency."
     },
@@ -101,6 +126,12 @@
       ],
       "escalade": "Anomalie critique non résolue en 3 cycles → Stop-the-Line + rapport AutoHeal obligatoire"
     },
-    "ipc_commandes": ["meta_orchestrator_get_state", "meta_orchestrator_set_mode", "meta_orchestrator_get_health", "meta_orchestrator_list_engines", "meta_orchestrator_adjust_awareness"]
+    "ipc_commandes": [
+      "meta_orchestrator_get_state",
+      "meta_orchestrator_set_mode",
+      "meta_orchestrator_get_health",
+      "meta_orchestrator_list_engines",
+      "meta_orchestrator_adjust_awareness"
+    ]
   }
 }

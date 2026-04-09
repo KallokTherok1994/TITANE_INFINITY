@@ -111,11 +111,22 @@
     },
     "guardrails_config": {
       "score_sécurité_minimum": 0.7,
-      "filtres": ["injection prompt", "données personnelles", "violation constitution", "contenu nuisible"],
+      "filtres": [
+        "injection prompt",
+        "données personnelles",
+        "violation constitution",
+        "contenu nuisible"
+      ],
       "action_si_violation": "Rejeter la réponse + logguer + incrémenter compteur violations"
     },
     "diagnostics": {
-      "métriques_collectées": ["latence_par_étape_ms", "taux_réussite", "fréquence_erreurs", "provider_utilisé", "taille_contexte_tokens"],
+      "métriques_collectées": [
+        "latence_par_étape_ms",
+        "taux_réussite",
+        "fréquence_erreurs",
+        "provider_utilisé",
+        "taille_contexte_tokens"
+      ],
       "ipc_commandes": ["omega_get_status", "omega_get_diagnostics", "omega_get_metrics"]
     }
   }

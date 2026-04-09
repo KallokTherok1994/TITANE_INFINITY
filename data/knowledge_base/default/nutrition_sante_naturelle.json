@@ -66,7 +66,14 @@
     },
     "alimentation_anti_inflammatoire": {
       "inflammation_chronique": "Silencieuse, systémique — cause racine de la majorité des maladies chroniques (cardiovasculaires, diabète, cancer, Alzheimer)",
-      "augmente_inflammation": ["Sucres raffinés et HFCS", "Huiles végétales riches en oméga-6", "Aliments ultra-transformés", "Alcool en excès", "Gluten chez les sensibles", "Produits laitiers chez les intolérants"],
+      "augmente_inflammation": [
+        "Sucres raffinés et HFCS",
+        "Huiles végétales riches en oméga-6",
+        "Aliments ultra-transformés",
+        "Alcool en excès",
+        "Gluten chez les sensibles",
+        "Produits laitiers chez les intolérants"
+      ],
       "réduit_inflammation": {
         "curcuma": "Curcumine — un des anti-inflammatoires naturels les plus étudiés. Biodisponibilité × 20 avec poivre noir + matière grasse",
         "poissons_gras": "EPA/DHA oméga-3 — anti-inflammatoires directs",
@@ -90,7 +97,13 @@
     },
     "microbiote": {
       "définition": "Communauté de 38 billions de micro-organismes dans l'intestin — plus de cellules microbiennes que de cellules humaines",
-      "rôles": ["Immunité (70% du système immunitaire dans l'intestin)", "Synthèse vitamines (K2, B12, B7)", "Production sérotonine (90% dans l'intestin)", "Digestion des fibres → acides gras à chaîne courte (butyrate)", "Axe intestin-cerveau — influence humeur et cognition"],
+      "rôles": [
+        "Immunité (70% du système immunitaire dans l'intestin)",
+        "Synthèse vitamines (K2, B12, B7)",
+        "Production sérotonine (90% dans l'intestin)",
+        "Digestion des fibres → acides gras à chaîne courte (butyrate)",
+        "Axe intestin-cerveau — influence humeur et cognition"
+      ],
       "dysbiose": "Déséquilibre microbiote — lié aux maladies inflammatoires, obésité, anxiété, dépression",
       "améliorer": [
         "Diversité alimentaire (>30 aliments végétaux/semaine)",

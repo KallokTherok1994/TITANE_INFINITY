@@ -30,7 +30,13 @@
     },
     "seo_off_page": {
       "backlinks": "Liens entrants depuis d'autres sites. Facteur de ranking #1 hors on-page. Qualité > quantité: 1 lien depuis un site DA 80 > 100 liens DA 10.",
-      "acquisition_backlinks": ["Guest posting (articles invités sur sites pertinents)", "Digital PR (études originales/infographies que les journalistes vont citer)", "HARO/Qwoted (répondre aux demandes de journalistes)", "Broken link building (remplacer des liens morts chez des sites tiers)", "Témoignages clients avec lien"],
+      "acquisition_backlinks": [
+        "Guest posting (articles invités sur sites pertinents)",
+        "Digital PR (études originales/infographies que les journalistes vont citer)",
+        "HARO/Qwoted (répondre aux demandes de journalistes)",
+        "Broken link building (remplacer des liens morts chez des sites tiers)",
+        "Témoignages clients avec lien"
+      ],
       "ancres": "Texte de l'ancre doit être naturel et varié: ancre de marque + ancre générique + ancre exact match (limité pour éviter la sur-optimisation).",
       "domaine_autorité": "DA/DR (Moz/Ahrefs) — score de 0 à 100. Augmente avec les backlinks de qualité. Indicateur relatif, pas officiel Google."
     },

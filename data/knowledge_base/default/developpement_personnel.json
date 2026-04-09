@@ -15,7 +15,20 @@
           "Si tu avais 6 mois à vivre, comment les passerais-tu?"
         ],
         "exercice_top10": "Lister 30 valeurs candidates, réduire à 10, puis à 5. Ces 5 sont le cœur.",
-        "valeurs_communes": ["Liberté", "Famille", "Création", "Impact", "Intégrité", "Santé", "Excellence", "Connexion", "Croissance", "Aventure", "Sagesse", "Équité"],
+        "valeurs_communes": [
+          "Liberté",
+          "Famille",
+          "Création",
+          "Impact",
+          "Intégrité",
+          "Santé",
+          "Excellence",
+          "Connexion",
+          "Croissance",
+          "Aventure",
+          "Sagesse",
+          "Équité"
+        ],
         "apport_TITANE": "Référencer les valeurs Kevin pour aligner les suggestions et projets — jamais proposer quelque chose qui contredit ses valeurs déclarées"
       },
       "vision_mission": {

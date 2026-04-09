@@ -89,7 +89,8 @@ export function useVitals(options: UseVitalsOptions = {}): UseVitalsReturn {
         // Parser les vitals (format peut varier selon le backend)
         const vitals: SystemVitals = {
           cpu: typeof vitalsData.cpu_usage === 'number' ? vitalsData.cpu_usage : 0,
-          memory: typeof vitalsData.memory_usage === 'number' ? vitalsData.memory_usage : 0,
+          memory:
+            typeof vitalsData.memory_usage === 'number' ? vitalsData.memory_usage : 0,
           disk: typeof vitalsData.disk_usage === 'number' ? vitalsData.disk_usage : 0,
           uptime: typeof vitalsData.uptime === 'number' ? vitalsData.uptime : 0,
           timestamp: Date.now(),
@@ -109,7 +110,8 @@ export function useVitals(options: UseVitalsOptions = {}): UseVitalsReturn {
 
         return vitals;
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Failed to fetch vitals';
+        const errorMessage =
+          err instanceof Error ? err.message : 'Failed to fetch vitals';
         console.error('❌ Vitals fetch error:', err);
 
         if (mountedRef.current) {

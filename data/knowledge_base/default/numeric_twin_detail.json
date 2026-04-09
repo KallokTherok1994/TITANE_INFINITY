@@ -11,7 +11,14 @@
       "CognitiveModeler": {
         "fichier": "cognitive_modeler.rs",
         "rôle": "Modélise les patterns de raisonnement de Kevin",
-        "types_raisonnement": ["SimpleToComplex (préféré, fréq. 0.95)", "Analytical", "Systemic", "Intuitive", "Structured", "Pragmatic"],
+        "types_raisonnement": [
+          "SimpleToComplex (préféré, fréq. 0.95)",
+          "Analytical",
+          "Systemic",
+          "Intuitive",
+          "Structured",
+          "Pragmatic"
+        ],
         "capture": "Observe les séquences de pensée et mesure leur efficacité par domaine",
         "profil_cognitif": "StructuringPreferences: hiérarchie, couches, isolation des concepts, décomposition"
       },
@@ -60,11 +67,36 @@
         "1.0": "Fusion totale — TITANE et Kevin ne font qu'un cognitivement"
       },
       "core_values_Kevin": [
-        {"nom": "Clarté", "stabilité": 1.0, "poids": 0.9, "description": "La pensée et l'expression doivent être claires avant tout"},
-        {"nom": "Cohérence", "stabilité": 0.95, "poids": 0.9, "description": "Alignement entre pensées, paroles et actions"},
-        {"nom": "Simplicité", "stabilité": 0.9, "poids": 0.85, "description": "La complexité cachée, pas exposée"},
-        {"nom": "Efficacité", "stabilité": 0.9, "poids": 0.85, "description": "Faire plus avec moins, éliminer le gaspillage"},
-        {"nom": "Alignement", "stabilité": 0.95, "poids": 0.9, "description": "Tout doit s'aligner avec le but profond"}
+        {
+          "nom": "Clarté",
+          "stabilité": 1.0,
+          "poids": 0.9,
+          "description": "La pensée et l'expression doivent être claires avant tout"
+        },
+        {
+          "nom": "Cohérence",
+          "stabilité": 0.95,
+          "poids": 0.9,
+          "description": "Alignement entre pensées, paroles et actions"
+        },
+        {
+          "nom": "Simplicité",
+          "stabilité": 0.9,
+          "poids": 0.85,
+          "description": "La complexité cachée, pas exposée"
+        },
+        {
+          "nom": "Efficacité",
+          "stabilité": 0.9,
+          "poids": 0.85,
+          "description": "Faire plus avec moins, éliminer le gaspillage"
+        },
+        {
+          "nom": "Alignement",
+          "stabilité": 0.95,
+          "poids": 0.9,
+          "description": "Tout doit s'aligner avec le but profond"
+        }
       ],
       "human_style_Kevin": {
         "sincerity": 0.95,
@@ -84,9 +116,20 @@
     },
     "convergence_progressive": {
       "principe": "Le NumericTwin s'affine session par session. Chaque interaction ajoute une strate de compréhension.",
-      "données_entrée": ["Messages Kevin (patterns linguistiques)", "Feedback explicite ('c'est parfait', 'trop long')", "Comportements implicites (relances, corrections)", "Choix et décisions observés"],
+      "données_entrée": [
+        "Messages Kevin (patterns linguistiques)",
+        "Feedback explicite ('c'est parfait', 'trop long')",
+        "Comportements implicites (relances, corrections)",
+        "Choix et décisions observés"
+      ],
       "résultat": "TITANE qui prédit les besoins, anticipe les frictions, s'adapte au niveau d'énergie"
     },
-    "ipc_commandes": ["numeric_twin_get_state", "numeric_twin_get_fusion_index", "numeric_twin_update_identity", "numeric_twin_get_cognitive_profile", "numeric_twin_get_operational_profile"]
+    "ipc_commandes": [
+      "numeric_twin_get_state",
+      "numeric_twin_get_fusion_index",
+      "numeric_twin_update_identity",
+      "numeric_twin_get_cognitive_profile",
+      "numeric_twin_get_operational_profile"
+    ]
   }
 }
