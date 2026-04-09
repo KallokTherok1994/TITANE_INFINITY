@@ -118,6 +118,7 @@ onnx = ["ort"] # Enable ONNX Runtime for vision models (optional)
 tempfile = "3.8"
 criterion = { version = "0.8", features = ["html_reports"] }  # P2-1: IPC Benchmarks
 mockall = "0.14"
+zip = { version = "2.2", default-features = false, features = ["deflate"] }
 
 # Phase 9: Tests E2E & Stress
 [[test]]
