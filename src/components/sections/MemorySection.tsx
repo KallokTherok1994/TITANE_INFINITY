@@ -174,13 +174,18 @@ function mapDefaultKnowledgeToMemoryEntry(entry: KnowledgeBaseEntry): MemoryEntr
   };
 }
 
-function clampImportance(value: number | undefined, fallback: number = 3): 1 | 2 | 3 | 4 | 5 {
+function clampImportance(
+  value: number | undefined,
+  fallback: number = 3
+): 1 | 2 | 3 | 4 | 5 {
   return Math.min(5, Math.max(1, Math.round(value ?? fallback))) as 1 | 2 | 3 | 4 | 5;
 }
 
 function mapPersistentSummaryToMemoryEntry(summary: MemorySummary): MemoryEntry {
-  const createdAt = summary.generatedAt || summary.periodEnd || summary.periodStart || Date.now();
-  const expiresAt = Math.max(summary.periodEnd || createdAt, createdAt) + 30 * 24 * 60 * 60 * 1000;
+  const createdAt =
+    summary.generatedAt || summary.periodEnd || summary.periodStart || Date.now();
+  const expiresAt =
+    Math.max(summary.periodEnd || createdAt, createdAt) + 30 * 24 * 60 * 60 * 1000;
 
   return {
     id: `memory-summary:${summary.id}`,
@@ -386,7 +391,8 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
     );
 
     const consolidatedMemoryEntries = useMemo(
-      () => sortKnowledgeEntries(dedupeMemoryEntries([...summaryEntries, ...bundleEntries])),
+      () =>
+        sortKnowledgeEntries(dedupeMemoryEntries([...summaryEntries, ...bundleEntries])),
       [summaryEntries, bundleEntries]
     );
 
@@ -458,7 +464,10 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                 return [];
               })();
 
-        if (defaultKnowledgeResult.status === 'fulfilled' && defaultEntries.length === 0) {
+        if (
+          defaultKnowledgeResult.status === 'fulfilled' &&
+          defaultEntries.length === 0
+        ) {
           unavailableSources.push('base système');
         }
 
@@ -470,7 +479,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
         setKnowledgeDuplicateCount(
           Math.max(
             0,
-            contextualEntries.length + defaultEntries.length + vaultEntries.length -
+            contextualEntries.length +
+              defaultEntries.length +
+              vaultEntries.length -
               mergedKnowledgeEntries.length
           )
         );
@@ -513,7 +524,8 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
         if (surfaceRefreshPromiseRef.current) {
           const queued = queuedSurfaceRefreshRef.current;
           queuedSurfaceRefreshRef.current = {
-            vaultStateOverride: nextRequest.vaultStateOverride ?? queued?.vaultStateOverride,
+            vaultStateOverride:
+              nextRequest.vaultStateOverride ?? queued?.vaultStateOverride,
             forcePersistentRefresh:
               Boolean(nextRequest.forcePersistentRefresh) ||
               Boolean(queued?.forcePersistentRefresh),
@@ -992,7 +1004,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               >
                 {recentChatMemoryEntries.map(entry => {
                   const preview =
-                    'summary' in entry && typeof entry.summary === 'string' && entry.summary.trim()
+                    'summary' in entry &&
+                    typeof entry.summary === 'string' &&
+                    entry.summary.trim()
                       ? entry.summary
                       : entry.content;
 
@@ -1013,7 +1027,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                       <strong style={{ color: colors.neutral[400], display: 'block' }}>
                         {'title' in entry ? entry.title : entry.id}
                       </strong>
-                      <span style={{ color: colors.neutral[500], fontSize: fontSizes.sm }}>
+                      <span
+                        style={{ color: colors.neutral[500], fontSize: fontSizes.sm }}
+                      >
                         {preview.slice(0, 140)}
                         {preview.length > 140 ? '…' : ''}
                       </span>
@@ -1033,8 +1049,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               </h3>
               <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
                 {summaryEntries.length} résumé{summaryEntries.length > 1 ? 's' : ''} et{' '}
-                {bundleEntries.length} bundle{bundleEntries.length > 1 ? 's' : ''} enrichissent
-                la mémoire affichée pour refléter la totalité de la mémoire persistante de TITANE.
+                {bundleEntries.length} bundle{bundleEntries.length > 1 ? 's' : ''}{' '}
+                enrichissent la mémoire affichée pour refléter la totalité de la mémoire
+                persistante de TITANE.
               </p>
               <p
                 style={{
@@ -1043,8 +1060,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                   marginTop: spacing[2],
                 }}
               >
-                Dernière synchro visible: {lastSurfaceSyncLabel}. La page reste active et se
-                resynchronise automatiquement{isSurfaceSyncing ? ' — synchronisation en cours…' : ''}.
+                Dernière synchro visible: {lastSurfaceSyncLabel}. La page reste active et
+                se resynchronise automatiquement
+                {isSurfaceSyncing ? ' — synchronisation en cours…' : ''}.
               </p>
               <button
                 type="button"
@@ -1063,7 +1081,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                   opacity: isSurfaceSyncing ? 0.7 : 1,
                 }}
               >
-                {isSurfaceSyncing ? 'Synchronisation en cours…' : '🔄 Resynchroniser maintenant'}
+                {isSurfaceSyncing
+                  ? 'Synchronisation en cours…'
+                  : '🔄 Resynchroniser maintenant'}
               </button>
               <div
                 style={{
@@ -1110,11 +1130,12 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
                 {knowledgeSourceCounts.contextual} connaissance
                 {knowledgeSourceCounts.contextual > 1 ? 's' : ''} contextuelle
-                {knowledgeSourceCounts.contextual > 1 ? 's' : ''}, {knowledgeSourceCounts.defaults}{' '}
-                catégorie{knowledgeSourceCounts.defaults > 1 ? 's' : ''} système et{' '}
+                {knowledgeSourceCounts.contextual > 1 ? 's' : ''},{' '}
+                {knowledgeSourceCounts.defaults} catégorie
+                {knowledgeSourceCounts.defaults > 1 ? 's' : ''} système et{' '}
                 {knowledgeSourceCounts.vault} document
-                {knowledgeSourceCounts.vault > 1 ? 's' : ''} du vault local sont fusionnés en{' '}
-                {knowledgeEntries.length} entrée
+                {knowledgeSourceCounts.vault > 1 ? 's' : ''} du vault local sont fusionnés
+                en {knowledgeEntries.length} entrée
                 {knowledgeEntries.length > 1 ? 's' : ''} réellement cohérente
                 {knowledgeEntries.length > 1 ? 's' : ''}.
               </p>
@@ -1128,8 +1149,8 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                 >
                   {knowledgeDuplicateCount} doublon
                   {knowledgeDuplicateCount > 1 ? 's ont' : ' a'} été fusionné
-                  {knowledgeDuplicateCount > 1 ? 's' : ''} automatiquement pour garder
-                  une mémoire cohérente et réelle.
+                  {knowledgeDuplicateCount > 1 ? 's' : ''} automatiquement pour garder une
+                  mémoire cohérente et réelle.
                 </p>
               )}
               <div

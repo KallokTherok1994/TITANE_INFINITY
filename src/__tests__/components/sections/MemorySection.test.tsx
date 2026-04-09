@@ -561,8 +561,7 @@ describe('MemorySection', () => {
         version: '30.0.0',
         description: 'Architecture cœur TITANE∞',
         content: {
-          summary:
-            'TITANE orchestre la mémoire via 4 rings et la gouvernance One Door.',
+          summary: 'TITANE orchestre la mémoire via 4 rings et la gouvernance One Door.',
         },
       },
     ]);
@@ -737,7 +736,9 @@ describe('MemorySection', () => {
       />
     );
 
-    expect(await screen.findByText(/mémoires récentes issues du chat/i)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/mémoires récentes issues du chat/i)
+    ).toBeInTheDocument();
     expect(await screen.findByText(/retiens orion-482-lichen/i)).toBeInTheDocument();
   });
 

@@ -189,7 +189,11 @@ function buildKnowledgeEntryFromBundledJson(
   }
 
   const normalizedValue = rawValue as Record<string, unknown>;
-  const fallbackId = path.split('/').pop()?.replace(/\.json$/i, '') || 'unknown';
+  const fallbackId =
+    path
+      .split('/')
+      .pop()
+      ?.replace(/\.json$/i, '') || 'unknown';
 
   return {
     id:
@@ -197,11 +201,13 @@ function buildKnowledgeEntryFromBundledJson(
         ? normalizedValue.id
         : fallbackId,
     category:
-      typeof normalizedValue.category === 'string' && normalizedValue.category.trim().length > 0
+      typeof normalizedValue.category === 'string' &&
+      normalizedValue.category.trim().length > 0
         ? normalizedValue.category
         : fallbackId,
     version:
-      typeof normalizedValue.version === 'string' && normalizedValue.version.trim().length > 0
+      typeof normalizedValue.version === 'string' &&
+      normalizedValue.version.trim().length > 0
         ? normalizedValue.version
         : 'v30.0.0',
     description:

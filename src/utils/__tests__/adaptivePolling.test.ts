@@ -13,12 +13,16 @@ describe('createAdaptivePolling', () => {
   });
 
   it('does not overlap a pending callback with the next scheduled tick', async () => {
-    let releaseCallback: (() => void) | null = null;
+    const releaseCallbackRef: { current: (() => void) | null } = {
+      current: null,
+    };
 
     const callback = vi.fn(
       () =>
         new Promise<void>(resolve => {
-          releaseCallback = resolve;
+          releaseCallbackRef.current = () => {
+            resolve();
+          };
         })
     );
 
@@ -36,9 +40,7 @@ describe('createAdaptivePolling', () => {
     await vi.advanceTimersByTimeAsync(100);
     expect(callback).toHaveBeenCalledTimes(1);
 
-    if (releaseCallback) {
-      releaseCallback();
-    }
+    releaseCallbackRef.current?.();
     await Promise.resolve();
 
     await vi.advanceTimersByTimeAsync(100);

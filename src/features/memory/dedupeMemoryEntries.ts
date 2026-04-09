@@ -22,9 +22,7 @@ function normalizeMemoryText(value: unknown): string {
 function extractKnowledgeCategory(entry: LongTermMemoryEntry): string {
   const normalizedTags = (entry.tags ?? [])
     .map(tag => normalizeMemoryText(tag))
-    .filter(
-      tag => tag && !GENERIC_KNOWLEDGE_TAGS.has(tag) && !/^v?\d/.test(tag)
-    );
+    .filter(tag => tag && !GENERIC_KNOWLEDGE_TAGS.has(tag) && !/^v?\d/.test(tag));
 
   return (
     normalizedTags[0] ||
@@ -105,13 +103,16 @@ function mergeKnowledgeEntries(
       preferred.content.length >= alternate.content.length
         ? preferred.content
         : alternate.content,
-    tags: Array.from(new Set([...(existing.tags ?? []), ...(incoming.tags ?? [])])).filter(
-      Boolean
-    ),
+    tags: Array.from(
+      new Set([...(existing.tags ?? []), ...(incoming.tags ?? [])])
+    ).filter(Boolean),
     sourceEntryIds: Array.from(
       new Set([...(existing.sourceEntryIds ?? []), ...(incoming.sourceEntryIds ?? [])])
     ).filter(Boolean),
-    confidenceScore: Math.max(existing.confidenceScore ?? 0, incoming.confidenceScore ?? 0),
+    confidenceScore: Math.max(
+      existing.confidenceScore ?? 0,
+      incoming.confidenceScore ?? 0
+    ),
     metadata: {
       ...preferred.metadata,
       createdAt: Math.min(existing.metadata.createdAt, incoming.metadata.createdAt),
@@ -155,9 +156,9 @@ function mergeMemoryEntries(existing: MemoryEntry, incoming: MemoryEntry): Memor
 
   return {
     ...preferred,
-    tags: Array.from(new Set([...(existing.tags ?? []), ...(incoming.tags ?? [])])).filter(
-      Boolean
-    ),
+    tags: Array.from(
+      new Set([...(existing.tags ?? []), ...(incoming.tags ?? [])])
+    ).filter(Boolean),
     metadata: {
       ...preferred.metadata,
       createdAt: Math.min(existing.metadata.createdAt, incoming.metadata.createdAt),
