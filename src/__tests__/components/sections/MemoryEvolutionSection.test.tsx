@@ -10,11 +10,15 @@ vi.mock('@/core/tauri/environment', () => ({
 }));
 
 vi.mock('@/components/MemoryEvolution/MemoryEvolutionCenter', () => ({
-  default: () => <div data-testid="memory-evolution-center">mock-memory-evolution-center</div>,
+  default: () => (
+    <div data-testid="memory-evolution-center">mock-memory-evolution-center</div>
+  ),
 }));
 
 vi.mock('@/features/evolution/EvolutionTimeline', () => ({
-  EvolutionTimeline: () => <div data-testid="evolution-timeline">mock-evolution-timeline</div>,
+  EvolutionTimeline: () => (
+    <div data-testid="evolution-timeline">mock-evolution-timeline</div>
+  ),
 }));
 
 vi.mock('@/ui', () => ({

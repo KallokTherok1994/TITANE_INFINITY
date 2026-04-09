@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { invokeWithRetry } from '@/lib/serviceInvoker';
 import {
+  getAllEntries,
   getCompactIndex,
   getRelevantPromptContext,
   resetCache,
@@ -81,5 +82,15 @@ describe('defaultKnowledgeBase', () => {
     expect(compactIndex).toContain('system_architecture');
     expect(promptContext).toContain('system_architecture');
     expect(mockedInvokeWithRetry).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps a substantial bundled default knowledge base via fallback entries when IPC is unavailable', async () => {
+    mockedInvokeWithRetry.mockRejectedValueOnce(new Error('ipc unavailable'));
+
+    const entries = await getAllEntries();
+
+    expect(entries.length).toBeGreaterThan(50);
+    expect(entries.some(entry => entry.category === 'system_architecture')).toBe(true);
+    expect(entries.some(entry => entry.category === 'memory_system_deep')).toBe(true);
   });
 });

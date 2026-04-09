@@ -7,7 +7,7 @@
  * Handles: Memory architecture, tree visualization, semantic search
  */
 
-import React, { useState, useCallback, memo, useMemo, useEffect } from 'react';
+import React, { useState, useCallback, memo, useMemo, useEffect, useRef } from 'react';
 import { Grid } from '@components/layout';
 import { Card } from '@/ui';
 import { TMetric, TSectionHeader } from '@/design-system';
@@ -22,19 +22,28 @@ import {
   type KnowledgeBaseEntry,
 } from '@/services/api/defaultKnowledgeBase';
 import {
+  knowledgeVault,
+  type KnowledgeEntry as VaultKnowledgeEntry,
+  type KnowledgeVaultState,
+} from '@/cognitive/knowledge/knowledgeVault';
+import {
   buildPersistentMemoryTree,
   findMemoryTreeNodeByEntryId,
   type MemoryTreeNodeData,
 } from '@/features/memory/memoryTreeData';
+import { dedupeMemoryEntries } from '@/features/memory/dedupeMemoryEntries';
 import type {
+  MemoryBundle,
   MemoryEntry,
   MemoryStats,
+  MemorySummary,
   MemoryTopic,
 } from '@/services/memory/persistentMemory.config';
 import type { KnowledgeEntry as RuntimeKnowledgeEntry } from '@/services/memory/types';
 
 const pageLogger = createLogger('MemorySection');
 const MEMORY_SECTION_MODE = 'admin' as const;
+const noopAsync = async () => undefined;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -133,7 +142,8 @@ function mapRuntimeKnowledgeToMemoryEntry(entry: RuntimeKnowledgeEntry): MemoryE
 }
 
 function mapDefaultKnowledgeToMemoryEntry(entry: KnowledgeBaseEntry): MemoryEntry {
-  const content = flattenKnowledgeContent(entry.content) || entry.description || entry.category;
+  const content =
+    flattenKnowledgeContent(entry.content) || entry.description || entry.category;
   const createdAt = Date.now();
 
   return {
@@ -164,14 +174,138 @@ function mapDefaultKnowledgeToMemoryEntry(entry: KnowledgeBaseEntry): MemoryEntr
   };
 }
 
-function dedupeMemoryEntries(entries: MemoryEntry[]): MemoryEntry[] {
-  const seen = new Set<string>();
-  return entries.filter(entry => {
-    if (seen.has(entry.id)) {
-      return false;
+function clampImportance(value: number | undefined, fallback: number = 3): 1 | 2 | 3 | 4 | 5 {
+  return Math.min(5, Math.max(1, Math.round(value ?? fallback))) as 1 | 2 | 3 | 4 | 5;
+}
+
+function mapPersistentSummaryToMemoryEntry(summary: MemorySummary): MemoryEntry {
+  const createdAt = summary.generatedAt || summary.periodEnd || summary.periodStart || Date.now();
+  const expiresAt = Math.max(summary.periodEnd || createdAt, createdAt) + 30 * 24 * 60 * 60 * 1000;
+
+  return {
+    id: `memory-summary:${summary.id}`,
+    level: 'intermediate',
+    contentType: 'summary',
+    title: summary.title || `Résumé ${summary.summaryType}`,
+    content: summary.content,
+    originalContent: summary.content,
+    topic: summary.topic,
+    importance: clampImportance(summary.aggregatedImportance, 4),
+    tags: Array.from(
+      new Set(['memory-summary', summary.summaryType, ...(summary.keywords ?? [])])
+    ).filter(Boolean),
+    status: 'active',
+    metadata: {
+      createdAt,
+      updatedAt: createdAt,
+      lastAccessedAt: createdAt,
+      accessCount: Math.max(1, summary.sourceCount || 0),
+      source: 'auto_summary',
+      modeId: summary.primaryMode,
+      schemaVersion: '1.0.0',
+    },
+    sourceEntryIds: summary.sourceIds ?? [],
+    relevanceScore: Math.min(1, Math.max(0.1, (summary.aggregatedImportance || 3) / 5)),
+    expiresAt,
+    promotable: true,
+  };
+}
+
+function mapPersistentBundleToMemoryEntry(bundle: MemoryBundle): MemoryEntry {
+  const createdAt = bundle.createdAt || Date.now();
+  const updatedAt = bundle.updatedAt || createdAt;
+  const content = [
+    bundle.description,
+    bundle.entryIds.length > 0
+      ? `Ce bundle regroupe ${bundle.entryIds.length} entrée${bundle.entryIds.length > 1 ? 's' : ''} de mémoire.`
+      : 'Bundle mémoire prêt à recevoir des entrées.',
+    bundle.tags.length > 0 ? `Tags: ${bundle.tags.join(', ')}` : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  return {
+    id: `memory-bundle:${bundle.id}`,
+    level: 'long_term',
+    contentType: 'project_context',
+    title: bundle.name,
+    summary:
+      bundle.description ||
+      `${bundle.entryIds.length} entrée${bundle.entryIds.length > 1 ? 's' : ''} regroupée${bundle.entryIds.length > 1 ? 's' : ''}`,
+    content: content || bundle.name,
+    topic: bundle.topic,
+    importance: clampImportance(
+      bundle.entryIds.length >= 8 ? 5 : bundle.entryIds.length >= 4 ? 4 : 3,
+      3
+    ),
+    tags: Array.from(new Set(['memory-bundle', ...(bundle.tags ?? [])])).filter(Boolean),
+    status: 'active',
+    metadata: {
+      createdAt,
+      updatedAt,
+      lastAccessedAt: updatedAt,
+      accessCount: Math.max(1, bundle.entryIds.length || 0),
+      source: bundle.createdBy === 'user' ? 'manual_save' : 'system',
+      schemaVersion: '1.0.0',
+    },
+    sourceEntryIds: bundle.entryIds ?? [],
+    confidenceScore: 100,
+    userVerified: bundle.createdBy === 'user',
+    editable: bundle.createdBy === 'user',
+    version: 1,
+    versionHistory: [],
+  };
+}
+
+function mapVaultKnowledgeToMemoryEntry(entry: VaultKnowledgeEntry): MemoryEntry {
+  const createdAt = entry.indexedAt || entry.metadata.createdAt || Date.now();
+  const content = entry.content || entry.summary || entry.title || entry.path;
+
+  return {
+    id: `knowledge-vault:${entry.id}`,
+    level: 'long_term',
+    contentType: 'knowledge',
+    title: entry.title || entry.path,
+    summary: entry.summary || content.slice(0, 180),
+    content,
+    topic: mapKnowledgeTopic(entry.category),
+    importance: entry.relevanceScore >= 0.85 ? 5 : entry.relevanceScore >= 0.65 ? 4 : 3,
+    tags: Array.from(
+      new Set([
+        'knowledge-vault',
+        entry.category,
+        ...(entry.tags ?? []),
+        ...(entry.metadata.keywords ?? []),
+      ])
+    ).filter(Boolean),
+    status: 'active',
+    metadata: {
+      createdAt,
+      updatedAt: entry.metadata.modifiedAt || createdAt,
+      lastAccessedAt: entry.lastAccessedAt || createdAt,
+      accessCount: Math.max(1, entry.accessCount || 0),
+      source: 'import',
+      schemaVersion: '1.0.0',
+    },
+    sourceEntryIds: entry.path ? [entry.path] : [],
+    confidenceScore: Math.round((entry.relevanceScore || 0.5) * 100),
+    userVerified: true,
+    editable: true,
+    version: 1,
+    versionHistory: [],
+  };
+}
+
+function sortKnowledgeEntries(entries: MemoryEntry[]): MemoryEntry[] {
+  return [...entries].sort((a, b) => {
+    const accessDelta = (b.metadata.accessCount ?? 0) - (a.metadata.accessCount ?? 0);
+    if (accessDelta !== 0) {
+      return accessDelta;
     }
-    seen.add(entry.id);
-    return true;
+
+    const left = 'title' in a && a.title ? a.title : a.id;
+    const right = 'title' in b && b.title ? b.title : b.id;
+    return left.localeCompare(right);
   });
 }
 
@@ -208,7 +342,20 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
     const [knowledgeSourceCounts, setKnowledgeSourceCounts] = useState({
       contextual: 0,
       defaults: 0,
+      vault: 0,
     });
+    const [knowledgeDuplicateCount, setKnowledgeDuplicateCount] = useState(0);
+    const [showAllKnowledge, setShowAllKnowledge] = useState(false);
+    const [surfaceSyncTimestamp, setSurfaceSyncTimestamp] = useState<number | null>(null);
+    const [isSurfaceSyncing, setIsSurfaceSyncing] = useState(false);
+    const isMountedRef = useRef(true);
+    const hasObservedPersistentUpdateRef = useRef(false);
+    const vaultReadyRef = useRef(false);
+    const surfaceRefreshPromiseRef = useRef<Promise<void> | null>(null);
+    const queuedSurfaceRefreshRef = useRef<{
+      vaultStateOverride?: KnowledgeVaultState;
+      forcePersistentRefresh: boolean;
+    } | null>(null);
 
     // PATCH-014: Live LTM conversation history count from SQLite
     const { historyCount: ltmConvCount } = useLTMContext(conversationId ?? null);
@@ -216,24 +363,72 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
     // Load real memory entries for search panel
     const {
       entries: persistentEntries,
+      summaries: persistentSummaries = [],
+      bundles: persistentBundles = [],
       stats: persistentStats,
       isLoading: persistentMemoryLoading,
       lastUpdate: persistentMemoryLastUpdate,
+      refresh: refreshPersistentMemory = noopAsync,
     } = usePersistentMemory({
       modeId: MEMORY_SECTION_MODE,
       enableCache: true,
+      refreshInterval: 15000,
     });
 
-    useEffect(() => {
-      let isMounted = true;
+    const summaryEntries = useMemo(
+      () => persistentSummaries.map(mapPersistentSummaryToMemoryEntry),
+      [persistentSummaries]
+    );
 
-      const loadKnowledgeSurface = async () => {
-        const [runtimeKnowledgeResult, defaultKnowledgeResult] = await Promise.allSettled([
-          memoryService.getKnowledge(64),
-          getDefaultKnowledgeBaseEntries(),
-        ]);
+    const bundleEntries = useMemo(
+      () => persistentBundles.map(mapPersistentBundleToMemoryEntry),
+      [persistentBundles]
+    );
 
-        if (!isMounted) {
+    const consolidatedMemoryEntries = useMemo(
+      () => sortKnowledgeEntries(dedupeMemoryEntries([...summaryEntries, ...bundleEntries])),
+      [summaryEntries, bundleEntries]
+    );
+
+    const recentChatMemoryEntries = useMemo(
+      () =>
+        [...persistentEntries]
+          .filter(entry => {
+            const source = String(entry.metadata.source ?? '').toLowerCase();
+            return (
+              entry.contentType === 'message' ||
+              (entry.tags ?? []).includes('chat-interaction') ||
+              source.includes('chat')
+            );
+          })
+          .sort(
+            (left, right) =>
+              (right.metadata.updatedAt ?? right.metadata.createdAt ?? 0) -
+              (left.metadata.updatedAt ?? left.metadata.createdAt ?? 0)
+          )
+          .slice(0, 6),
+      [persistentEntries]
+    );
+
+    const loadKnowledgeSurface = useCallback(
+      async (vaultStateOverride?: KnowledgeVaultState) => {
+        const [runtimeKnowledgeResult, defaultKnowledgeResult, vaultKnowledgeResult] =
+          await Promise.allSettled([
+            memoryService.getKnowledge(64),
+            getDefaultKnowledgeBaseEntries(),
+            vaultStateOverride
+              ? Promise.resolve(vaultStateOverride)
+              : (async () => {
+                  if (!vaultReadyRef.current) {
+                    await knowledgeVault.initialize();
+                    vaultReadyRef.current = true;
+                  }
+
+                  return knowledgeVault.getState();
+                })(),
+          ]);
+
+        if (!isMountedRef.current) {
           return;
         }
 
@@ -255,10 +450,34 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                 return [];
               })();
 
-        setKnowledgeEntries(dedupeMemoryEntries([...contextualEntries, ...defaultEntries]));
+        const vaultEntries =
+          vaultKnowledgeResult.status === 'fulfilled'
+            ? vaultKnowledgeResult.value.entries.map(mapVaultKnowledgeToMemoryEntry)
+            : (() => {
+                unavailableSources.push('vault local');
+                return [];
+              })();
+
+        if (defaultKnowledgeResult.status === 'fulfilled' && defaultEntries.length === 0) {
+          unavailableSources.push('base système');
+        }
+
+        const mergedKnowledgeEntries = sortKnowledgeEntries(
+          dedupeMemoryEntries([...contextualEntries, ...defaultEntries, ...vaultEntries])
+        );
+
+        setKnowledgeEntries(mergedKnowledgeEntries);
+        setKnowledgeDuplicateCount(
+          Math.max(
+            0,
+            contextualEntries.length + defaultEntries.length + vaultEntries.length -
+              mergedKnowledgeEntries.length
+          )
+        );
         setKnowledgeSourceCounts({
           contextual: contextualEntries.length,
           defaults: defaultEntries.length,
+          vault: vaultEntries.length,
         });
         setKnowledgeLoadWarning(
           unavailableSources.length > 0
@@ -273,14 +492,116 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
         }
 
         setKnowledgeLoaded(true);
+        setSurfaceSyncTimestamp(Date.now());
+      },
+      []
+    );
+
+    const requestSurfaceSync = useCallback(
+      async ({
+        vaultStateOverride,
+        forcePersistentRefresh = false,
+      }: {
+        vaultStateOverride?: KnowledgeVaultState;
+        forcePersistentRefresh?: boolean;
+      } = {}) => {
+        const nextRequest = {
+          vaultStateOverride,
+          forcePersistentRefresh,
+        };
+
+        if (surfaceRefreshPromiseRef.current) {
+          const queued = queuedSurfaceRefreshRef.current;
+          queuedSurfaceRefreshRef.current = {
+            vaultStateOverride: nextRequest.vaultStateOverride ?? queued?.vaultStateOverride,
+            forcePersistentRefresh:
+              Boolean(nextRequest.forcePersistentRefresh) ||
+              Boolean(queued?.forcePersistentRefresh),
+          };
+          return surfaceRefreshPromiseRef.current;
+        }
+
+        const syncPromise = (async () => {
+          let currentRequest: typeof nextRequest | null = nextRequest;
+
+          if (isMountedRef.current) {
+            setIsSurfaceSyncing(true);
+          }
+
+          try {
+            while (currentRequest) {
+              queuedSurfaceRefreshRef.current = null;
+
+              if (currentRequest.forcePersistentRefresh) {
+                await refreshPersistentMemory();
+              }
+
+              await loadKnowledgeSurface(currentRequest.vaultStateOverride);
+              currentRequest = queuedSurfaceRefreshRef.current;
+            }
+          } finally {
+            if (isMountedRef.current) {
+              setIsSurfaceSyncing(false);
+            }
+            surfaceRefreshPromiseRef.current = null;
+          }
+        })();
+
+        surfaceRefreshPromiseRef.current = syncPromise;
+        return syncPromise;
+      },
+      [loadKnowledgeSurface, refreshPersistentMemory]
+    );
+
+    useEffect(() => {
+      isMountedRef.current = true;
+      void requestSurfaceSync();
+
+      const unsubscribeVault = knowledgeVault.subscribe(vaultState => {
+        void requestSurfaceSync({
+          vaultStateOverride: vaultState,
+          forcePersistentRefresh: true,
+        });
+      });
+
+      if (typeof window === 'undefined') {
+        return () => {
+          unsubscribeVault();
+          isMountedRef.current = false;
+        };
+      }
+
+      const handleWindowFocus = () => {
+        void requestSurfaceSync({ forcePersistentRefresh: true });
       };
 
-      void loadKnowledgeSurface();
+      const handleVisibilityChange = () => {
+        if (document.visibilityState === 'visible') {
+          void requestSurfaceSync({ forcePersistentRefresh: true });
+        }
+      };
+
+      window.addEventListener('focus', handleWindowFocus);
+      document.addEventListener('visibilitychange', handleVisibilityChange);
 
       return () => {
-        isMounted = false;
+        isMountedRef.current = false;
+        unsubscribeVault();
+        window.removeEventListener('focus', handleWindowFocus);
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
       };
-    }, []);
+    }, [requestSurfaceSync]);
+
+    useEffect(() => {
+      if (!hasObservedPersistentUpdateRef.current) {
+        hasObservedPersistentUpdateRef.current = true;
+        return;
+      }
+
+      if (persistentMemoryLastUpdate !== null) {
+        void requestSurfaceSync();
+      }
+    }, [persistentMemoryLastUpdate, requestSurfaceSync]);
 
     const isBootstrappingPersistentMemory =
       persistentMemoryLoading &&
@@ -288,11 +609,17 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
       persistentStats === null &&
       persistentEntries.length === 0;
 
-    const isBootstrappingKnowledgeSurface = !knowledgeLoaded && knowledgeEntries.length === 0;
+    const isBootstrappingKnowledgeSurface =
+      !knowledgeLoaded && knowledgeEntries.length === 0;
 
     const surfaceEntries = useMemo(
-      () => dedupeMemoryEntries([...persistentEntries, ...knowledgeEntries]),
-      [persistentEntries, knowledgeEntries]
+      () =>
+        dedupeMemoryEntries([
+          ...persistentEntries,
+          ...consolidatedMemoryEntries,
+          ...knowledgeEntries,
+        ]),
+      [persistentEntries, consolidatedMemoryEntries, knowledgeEntries]
     );
 
     const surfaceStats = useMemo(() => {
@@ -340,7 +667,10 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
           ),
         },
         sizeByLevel: {
-          session: Math.max(persistentStats?.sizeByLevel?.session ?? 0, computedSizes.session),
+          session: Math.max(
+            persistentStats?.sizeByLevel?.session ?? 0,
+            computedSizes.session
+          ),
           intermediate: Math.max(
             persistentStats?.sizeByLevel?.intermediate ?? 0,
             computedSizes.intermediate
@@ -374,6 +704,27 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
       relevance:
         e.metadata.accessCount > 0 ? Math.min(e.metadata.accessCount / 10, 1) : undefined,
     }));
+
+    const visibleKnowledgeEntries = useMemo(
+      () => (showAllKnowledge ? knowledgeEntries : knowledgeEntries.slice(0, 18)),
+      [knowledgeEntries, showAllKnowledge]
+    );
+
+    const lastSurfaceSyncLabel = useMemo(() => {
+      const timestamp = surfaceSyncTimestamp ?? persistentMemoryLastUpdate;
+      if (!timestamp) {
+        return 'Synchronisation initiale en cours';
+      }
+
+      return new Date(timestamp).toLocaleString('fr-FR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      });
+    }, [persistentMemoryLastUpdate, surfaceSyncTimestamp]);
 
     const memoryTreeData = useMemo(
       () =>
@@ -574,33 +925,33 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
         {!isBootstrappingPersistentMemory &&
           !isBootstrappingKnowledgeSurface &&
           !hasPersistentMemory && (
-          <Card
-            style={{
-              marginTop: spacing[6],
-              border: `1px solid ${colors.neutral[500]}`,
-            }}
-          >
-            <h3 style={{ marginBottom: spacing[2] }}>
-              Aucune mémoire persistante consolidée
-            </h3>
-            <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
-              La LTM persistante n&apos;a pas encore reçu d&apos;entrée réelle pour ce
-              contexte. Les cartes, l&apos;arbre et la recherche restent donc
-              volontairement vides.
-            </p>
-            <p
+            <Card
               style={{
-                fontSize: fontSizes.sm,
-                color: colors.neutral[500],
-                marginTop: spacing[2],
+                marginTop: spacing[6],
+                border: `1px solid ${colors.neutral[500]}`,
               }}
             >
-              Pour amorcer la mémoire, utilisez une interaction chat de type
-              &quot;mémorise&quot; ou laissez TITANE consolider un souvenir depuis une
-              conversation réelle.
-            </p>
-          </Card>
-        )}
+              <h3 style={{ marginBottom: spacing[2] }}>
+                Aucune mémoire persistante consolidée
+              </h3>
+              <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
+                La LTM persistante n&apos;a pas encore reçu d&apos;entrée réelle pour ce
+                contexte. Les cartes, l&apos;arbre et la recherche restent donc
+                volontairement vides.
+              </p>
+              <p
+                style={{
+                  fontSize: fontSizes.sm,
+                  color: colors.neutral[500],
+                  marginTop: spacing[2],
+                }}
+              >
+                Pour amorcer la mémoire, utilisez une interaction chat de type
+                &quot;mémorise&quot; ou laissez TITANE consolider un souvenir depuis une
+                conversation réelle.
+              </p>
+            </Card>
+          )}
 
         {knowledgeLoadWarning && (
           <Card
@@ -621,19 +972,15 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
           </Card>
         )}
 
-        {knowledgeEntries.length > 0 && (
+        {recentChatMemoryEntries.length > 0 && (
           <div style={{ marginTop: spacing[6] }}>
             <Card>
               <h3 style={{ marginBottom: spacing[2] }}>
-                📚 Bases de connaissances visibles dans la Mémoire
+                💬 Mémoires récentes issues du chat
               </h3>
               <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
-                {knowledgeSourceCounts.contextual} connaissance
-                {knowledgeSourceCounts.contextual > 1 ? 's' : ''} indexée
-                {knowledgeSourceCounts.contextual > 0 ? 's' : ''} et{' '}
-                {knowledgeSourceCounts.defaults} catégorie
-                {knowledgeSourceCounts.defaults > 1 ? 's' : ''} système sont maintenant
-                intégrées au flux mémoire affiché sur cette page.
+                Les dernières informations mémorisées depuis les conversations sont
+                affichées ici et restent sauvegardées de façon persistante.
               </p>
               <div
                 style={{
@@ -643,7 +990,90 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                   marginTop: spacing[4],
                 }}
               >
-                {knowledgeEntries.slice(0, 6).map(entry => (
+                {recentChatMemoryEntries.map(entry => {
+                  const preview =
+                    'summary' in entry && typeof entry.summary === 'string' && entry.summary.trim()
+                      ? entry.summary
+                      : entry.content;
+
+                  return (
+                    <button
+                      key={entry.id}
+                      type="button"
+                      onClick={() => selectPersistentEntry(entry)}
+                      style={{
+                        textAlign: 'left',
+                        padding: spacing[3],
+                        borderRadius: '10px',
+                        border: `1px solid ${colors.neutral[500]}`,
+                        background: 'transparent',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <strong style={{ color: colors.neutral[400], display: 'block' }}>
+                        {'title' in entry ? entry.title : entry.id}
+                      </strong>
+                      <span style={{ color: colors.neutral[500], fontSize: fontSizes.sm }}>
+                        {preview.slice(0, 140)}
+                        {preview.length > 140 ? '…' : ''}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </Card>
+          </div>
+        )}
+
+        {consolidatedMemoryEntries.length > 0 && (
+          <div style={{ marginTop: spacing[6] }}>
+            <Card>
+              <h3 style={{ marginBottom: spacing[2] }}>
+                🧩 Mémoire consolidée et synchronisée
+              </h3>
+              <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
+                {summaryEntries.length} résumé{summaryEntries.length > 1 ? 's' : ''} et{' '}
+                {bundleEntries.length} bundle{bundleEntries.length > 1 ? 's' : ''} enrichissent
+                la mémoire affichée pour refléter la totalité de la mémoire persistante de TITANE.
+              </p>
+              <p
+                style={{
+                  fontSize: fontSizes.sm,
+                  color: colors.neutral[500],
+                  marginTop: spacing[2],
+                }}
+              >
+                Dernière synchro visible: {lastSurfaceSyncLabel}. La page reste active et se
+                resynchronise automatiquement{isSurfaceSyncing ? ' — synchronisation en cours…' : ''}.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  void requestSurfaceSync({ forcePersistentRefresh: true });
+                }}
+                disabled={isSurfaceSyncing}
+                style={{
+                  marginTop: spacing[3],
+                  padding: `${spacing[2]} ${spacing[3]}`,
+                  borderRadius: '8px',
+                  border: `1px solid ${colors.neutral[500]}`,
+                  background: 'transparent',
+                  color: colors.neutral[400],
+                  cursor: isSurfaceSyncing ? 'wait' : 'pointer',
+                  opacity: isSurfaceSyncing ? 0.7 : 1,
+                }}
+              >
+                {isSurfaceSyncing ? 'Synchronisation en cours…' : '🔄 Resynchroniser maintenant'}
+              </button>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                  gap: spacing[3],
+                  marginTop: spacing[4],
+                }}
+              >
+                {consolidatedMemoryEntries.map(entry => (
                   <button
                     key={entry.id}
                     type="button"
@@ -671,6 +1101,92 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
           </div>
         )}
 
+        {knowledgeEntries.length > 0 && (
+          <div style={{ marginTop: spacing[6] }}>
+            <Card>
+              <h3 style={{ marginBottom: spacing[2] }}>
+                📚 Bases de connaissances visibles dans la Mémoire
+              </h3>
+              <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
+                {knowledgeSourceCounts.contextual} connaissance
+                {knowledgeSourceCounts.contextual > 1 ? 's' : ''} contextuelle
+                {knowledgeSourceCounts.contextual > 1 ? 's' : ''}, {knowledgeSourceCounts.defaults}{' '}
+                catégorie{knowledgeSourceCounts.defaults > 1 ? 's' : ''} système et{' '}
+                {knowledgeSourceCounts.vault} document
+                {knowledgeSourceCounts.vault > 1 ? 's' : ''} du vault local sont fusionnés en{' '}
+                {knowledgeEntries.length} entrée
+                {knowledgeEntries.length > 1 ? 's' : ''} réellement cohérente
+                {knowledgeEntries.length > 1 ? 's' : ''}.
+              </p>
+              {knowledgeDuplicateCount > 0 && (
+                <p
+                  style={{
+                    fontSize: fontSizes.sm,
+                    color: colors.neutral[500],
+                    marginTop: spacing[2],
+                  }}
+                >
+                  {knowledgeDuplicateCount} doublon
+                  {knowledgeDuplicateCount > 1 ? 's ont' : ' a'} été fusionné
+                  {knowledgeDuplicateCount > 1 ? 's' : ''} automatiquement pour garder
+                  une mémoire cohérente et réelle.
+                </p>
+              )}
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                  gap: spacing[3],
+                  marginTop: spacing[4],
+                }}
+              >
+                {visibleKnowledgeEntries.map(entry => (
+                  <button
+                    key={entry.id}
+                    type="button"
+                    onClick={() => selectPersistentEntry(entry)}
+                    style={{
+                      textAlign: 'left',
+                      padding: spacing[3],
+                      borderRadius: '10px',
+                      border: `1px solid ${colors.neutral[500]}`,
+                      background: 'transparent',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <strong style={{ color: colors.neutral[400], display: 'block' }}>
+                      {'title' in entry ? entry.title : entry.id}
+                    </strong>
+                    <span style={{ color: colors.neutral[500], fontSize: fontSizes.sm }}>
+                      {entry.content.slice(0, 140)}
+                      {entry.content.length > 140 ? '…' : ''}
+                    </span>
+                  </button>
+                ))}
+              </div>
+              {knowledgeEntries.length > 18 && (
+                <button
+                  type="button"
+                  onClick={() => setShowAllKnowledge(value => !value)}
+                  style={{
+                    marginTop: spacing[4],
+                    padding: `${spacing[2]} ${spacing[3]}`,
+                    borderRadius: '8px',
+                    border: `1px solid ${colors.neutral[500]}`,
+                    background: 'transparent',
+                    color: colors.neutral[400],
+                    cursor: 'pointer',
+                  }}
+                >
+                  {showAllKnowledge
+                    ? 'Réduire la liste des connaissances visibles'
+                    : `Afficher toutes les connaissances (${knowledgeEntries.length})`}
+                </button>
+              )}
+            </Card>
+          </div>
+        )}
+
         <div style={{ marginTop: spacing[6] }}>
           <Card>
             <h3 style={{ marginBottom: spacing[4] }}>📚 Dashboard Mémoire</h3>
@@ -688,7 +1204,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                 compact={true}
                 onEntrySelect={selectPersistentEntry}
                 selectedEntryId={selectedEntryId}
-                additionalEntries={knowledgeEntries}
+                additionalEntries={[...consolidatedMemoryEntries, ...knowledgeEntries]}
               />
             </React.Suspense>
           </Card>
@@ -711,7 +1227,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               onNodeClick={handleNodeClick}
               showAttributes={true}
               selectedEntryId={selectedEntryId}
-              isLoading={isBootstrappingPersistentMemory || isBootstrappingKnowledgeSurface}
+              isLoading={
+                isBootstrappingPersistentMemory || isBootstrappingKnowledgeSurface
+              }
             />
           </React.Suspense>
           {selectedNode && (
@@ -761,7 +1279,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               entries={searchEntries}
               onEntryClick={handleEntryClick}
               selectedEntryId={selectedEntryId}
-              isLoading={isBootstrappingPersistentMemory || isBootstrappingKnowledgeSurface}
+              isLoading={
+                isBootstrappingPersistentMemory || isBootstrappingKnowledgeSurface
+              }
             />
           </React.Suspense>
         </div>

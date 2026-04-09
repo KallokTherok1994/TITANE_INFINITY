@@ -30,8 +30,12 @@ async function ensureTauriPageLoaded() {
 
     const ok = await browser.execute(() => {
       const href = window.location.href || '';
-      const ready = document.readyState === 'interactive' || document.readyState === 'complete';
-      return ready && (href.startsWith('tauri://localhost') || href.startsWith('http://localhost'));
+      const ready =
+        document.readyState === 'interactive' || document.readyState === 'complete';
+      return (
+        ready &&
+        (href.startsWith('tauri://localhost') || href.startsWith('http://localhost'))
+      );
     });
 
     if (ok) return true;
@@ -61,7 +65,7 @@ async function navigateToMemoryRoute() {
 
   try {
     await browser.waitUntil(
-      async () => (await $('[data-testid="memory-section-root"]').isExisting()),
+      async () => await $('[data-testid="memory-section-root"]').isExisting(),
       {
         timeout: 8000,
         interval: 250,
@@ -99,7 +103,7 @@ async function navigateToMemoryRoute() {
     );
 
     await browser.waitUntil(
-      async () => (await $('[data-testid="memory-section-root"]').isExisting()),
+      async () => await $('[data-testid="memory-section-root"]').isExisting(),
       {
         timeout: 15000,
         interval: 250,
@@ -111,33 +115,35 @@ async function navigateToMemoryRoute() {
 
 async function waitForMemorySurface() {
   for (let attempt = 1; attempt <= 3; attempt += 1) {
-    await browser.waitUntil(
-      async () => {
-        const memoryTab = await $('[data-testid="tab-memory"]');
-        if (await memoryTab.isExisting()) {
-          const selected = await memoryTab.getAttribute('aria-selected');
-          if (selected !== 'true') {
-            await browser.execute(el => el?.click(), memoryTab).catch(() => {});
+    await browser
+      .waitUntil(
+        async () => {
+          const memoryTab = await $('[data-testid="tab-memory"]');
+          if (await memoryTab.isExisting()) {
+            const selected = await memoryTab.getAttribute('aria-selected');
+            if (selected !== 'true') {
+              await browser.execute(el => el?.click(), memoryTab).catch(() => {});
+            }
           }
+
+          const root = await $('[data-testid="memory-section-root"]');
+          if (await root.isExisting()) return true;
+
+          const bodyText = await $('body').getText();
+          return (
+            bodyText.includes('Memoire Triple') ||
+            bodyText.includes('Mémoire Triple') ||
+            bodyText.includes('Dashboard Mémoire') ||
+            bodyText.includes('Arbre de la Mémoire')
+          );
+        },
+        {
+          timeout: 8000,
+          interval: 300,
+          timeoutMsg: 'memory surface keywords not detected',
         }
-
-        const root = await $('[data-testid="memory-section-root"]');
-        if (await root.isExisting()) return true;
-
-        const bodyText = await $('body').getText();
-        return (
-          bodyText.includes('Memoire Triple') ||
-          bodyText.includes('Mémoire Triple') ||
-          bodyText.includes('Dashboard Mémoire') ||
-          bodyText.includes('Arbre de la Mémoire')
-        );
-      },
-      {
-        timeout: 8000,
-        interval: 300,
-        timeoutMsg: 'memory surface keywords not detected',
-      }
-    ).catch(() => false);
+      )
+      .catch(() => false);
 
     const root = await $('[data-testid="memory-section-root"]');
     if (await root.isExisting()) {
@@ -159,10 +165,14 @@ async function waitForMemorySurface() {
 }
 
 async function findFirstKnowledgeCardButton() {
-  const button = await browser.$(`//h3[contains(.,'Bases de connaissances visibles dans la Mémoire')]/ancestor::*[self::div or self::section][1]//button[1]`);
+  const button = await browser.$(
+    `//h3[contains(.,'Bases de connaissances visibles dans la Mémoire')]/ancestor::*[self::div or self::section][1]//button[1]`
+  );
   if (await button.isExisting()) return button;
 
-  return browser.$(`//h3[contains(.,'Bases de connaissances visibles dans la Mémoire')]/following::button[1]`);
+  return browser.$(
+    `//h3[contains(.,'Bases de connaissances visibles dans la Mémoire')]/following::button[1]`
+  );
 }
 
 async function activateTitaneMemoryTab(tabTestId, expectedSelector) {
@@ -187,14 +197,11 @@ async function activateTitaneMemoryTab(tabTestId, expectedSelector) {
   );
 
   if (expectedSelector) {
-    await browser.waitUntil(
-      async () => (await $(expectedSelector).isExisting()),
-      {
-        timeout: 15000,
-        interval: 250,
-        timeoutMsg: `${expectedSelector} not visible after activating ${tabTestId}`,
-      }
-    );
+    await browser.waitUntil(async () => await $(expectedSelector).isExisting(), {
+      timeout: 15000,
+      interval: 250,
+      timeoutMsg: `${expectedSelector} not visible after activating ${tabTestId}`,
+    });
   }
 }
 
@@ -267,7 +274,9 @@ describe('Memory page desktop E2E complete coverage', () => {
 
     await waitForMemorySurface();
 
-    const kbTitle = await $('//h3[contains(.,"Bases de connaissances visibles dans la Mémoire")]');
+    const kbTitle = await $(
+      '//h3[contains(.,"Bases de connaissances visibles dans la Mémoire")]'
+    );
     if (!(await kbTitle.isExisting())) {
       const root = await $('[data-testid="memory-section-root"]');
       const state = (await root.getAttribute('data-memory-surface-state')) || 'unknown';
@@ -288,7 +297,11 @@ describe('Memory page desktop E2E complete coverage', () => {
     await kbTitle.waitForDisplayed({ timeout: 15000 });
 
     const firstCardButton = await findFirstKnowledgeCardButton();
-    assert.equal(await firstCardButton.isExisting(), true, 'Knowledge card button missing');
+    assert.equal(
+      await firstCardButton.isExisting(),
+      true,
+      'Knowledge card button missing'
+    );
 
     await firstCardButton.click().catch(async () => {
       await browser.execute(el => el?.click(), firstCardButton);
@@ -298,9 +311,14 @@ describe('Memory page desktop E2E complete coverage', () => {
     await selectionState.waitForDisplayed({ timeout: 10000 });
     const selectionText = await selectionState.getText();
 
-    assert.ok(selectionText.toLowerCase().includes('synchronisee'), 'Memory tree selection state not updated');
+    assert.ok(
+      selectionText.toLowerCase().includes('synchronisee'),
+      'Memory tree selection state not updated'
+    );
 
-    const emptyBanner = await $('//h3[contains(.,"Aucune mémoire persistante consolidée")]');
+    const emptyBanner = await $(
+      '//h3[contains(.,"Aucune mémoire persistante consolidée")]'
+    );
     assert.equal(
       await emptyBanner.isExisting(),
       false,
@@ -323,14 +341,18 @@ describe('Memory page desktop E2E complete coverage', () => {
     await searchInput.waitForDisplayed({ timeout: 10000 });
 
     await searchInput.setValue('knowledge-base').catch(async () => {
-      await browser.execute((el, value) => {
-        if (!el) return;
-        const input = el;
-        input.focus();
-        input.value = value;
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-        input.dispatchEvent(new Event('change', { bubbles: true }));
-      }, searchInput, 'knowledge-base');
+      await browser.execute(
+        (el, value) => {
+          if (!el) return;
+          const input = el;
+          input.focus();
+          input.value = value;
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          input.dispatchEvent(new Event('change', { bubbles: true }));
+        },
+        searchInput,
+        'knowledge-base'
+      );
     });
     await browser.pause(600);
 

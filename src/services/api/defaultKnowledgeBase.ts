@@ -46,6 +46,65 @@ let _allEntriesCache: KnowledgeBaseEntry[] | null = null;
 let _allEntriesLoadingPromise: Promise<KnowledgeBaseEntry[]> | null = null;
 let _compactIndexCache: string | null = null;
 
+const BUNDLED_DEFAULT_KB_MODULES = import.meta.glob(
+  '../../../data/knowledge_base/default/*.json',
+  {
+    eager: true,
+  }
+) as Record<string, { default?: Record<string, unknown> } | Record<string, unknown>>;
+
+const DEFAULT_KB_FALLBACK_ENTRIES: KnowledgeBaseEntry[] = [
+  {
+    id: 'system_architecture',
+    category: 'system_architecture',
+    version: 'v30.0.0',
+    description: 'Architecture cœur TITANE∞ avec 4 rings et gouvernance One Door.',
+    content: {
+      architecture: {
+        rings: 4,
+        gateway: 'One Door network governance',
+      },
+    },
+  },
+  {
+    id: 'memory_system_deep',
+    category: 'memory_system_deep',
+    version: 'v30.0.0',
+    description: 'Architecture mémoire session / intermédiaire / long terme.',
+    content: {
+      layers: ['session', 'intermediate', 'long_term'],
+      guarantee: 'Mémoire visible sans réseau',
+    },
+  },
+  {
+    id: 'identity_profile',
+    category: 'identity_profile',
+    version: 'v30.0.0',
+    description: 'Identité système persistante et cohérente de TITANE∞.',
+    content: {
+      profile: 'Identité persistante TITANE∞',
+    },
+  },
+  {
+    id: 'response_guidelines',
+    category: 'response_guidelines',
+    version: 'v30.0.0',
+    description: 'Règles de réponse et garde-fous conversationnels.',
+    content: {
+      mode: 'Réponses fiables, concises et gouvernées',
+    },
+  },
+  {
+    id: 'security_privacy',
+    category: 'security_privacy',
+    version: 'v30.0.0',
+    description: 'Règles de sécurité, confidentialité et intégrité système.',
+    content: {
+      focus: ['privacy', 'integrity', 'zero silent failure'],
+    },
+  },
+];
+
 const KB_STOP_WORDS = new Set([
   'avec',
   'dans',
@@ -83,13 +142,89 @@ function flattenContent(value: unknown): string {
 
 function tokenizeQuery(query: string): string[] {
   const normalized = normalizeText(query);
-  return [...new Set(normalized.split(/[^a-z0-9_]+/).filter(token => token.length >= 3 && !KB_STOP_WORDS.has(token)))];
+  return [
+    ...new Set(
+      normalized
+        .split(/[^a-z0-9_]+/)
+        .filter(token => token.length >= 3 && !KB_STOP_WORDS.has(token))
+    ),
+  ];
 }
 
 function compactExcerpt(value: string, maxLength = 220): string {
   const normalized = value.replace(/\s+/g, ' ').trim();
   if (!normalized) return '';
-  return normalized.length > maxLength ? `${normalized.slice(0, maxLength - 1)}…` : normalized;
+  return normalized.length > maxLength
+    ? `${normalized.slice(0, maxLength - 1)}…`
+    : normalized;
+}
+
+function dedupeKnowledgeBaseEntries(entries: KnowledgeBaseEntry[]): KnowledgeBaseEntry[] {
+  const byCategory = new Map<string, KnowledgeBaseEntry>();
+
+  for (const entry of entries) {
+    const key = normalizeText(entry.category || entry.id);
+    if (!key) continue;
+    if (!byCategory.has(key)) {
+      byCategory.set(key, entry);
+    }
+  }
+
+  return Array.from(byCategory.values()).sort((a, b) =>
+    a.category.localeCompare(b.category)
+  );
+}
+
+function buildKnowledgeEntryFromBundledJson(
+  path: string,
+  rawModule: { default?: Record<string, unknown> } | Record<string, unknown>
+): KnowledgeBaseEntry | null {
+  const rawValue =
+    rawModule && typeof rawModule === 'object' && 'default' in rawModule
+      ? rawModule.default
+      : rawModule;
+
+  if (!rawValue || typeof rawValue !== 'object' || Array.isArray(rawValue)) {
+    return null;
+  }
+
+  const normalizedValue = rawValue as Record<string, unknown>;
+  const fallbackId = path.split('/').pop()?.replace(/\.json$/i, '') || 'unknown';
+
+  return {
+    id:
+      typeof normalizedValue.id === 'string' && normalizedValue.id.trim().length > 0
+        ? normalizedValue.id
+        : fallbackId,
+    category:
+      typeof normalizedValue.category === 'string' && normalizedValue.category.trim().length > 0
+        ? normalizedValue.category
+        : fallbackId,
+    version:
+      typeof normalizedValue.version === 'string' && normalizedValue.version.trim().length > 0
+        ? normalizedValue.version
+        : 'v30.0.0',
+    description:
+      typeof normalizedValue.description === 'string'
+        ? normalizedValue.description
+        : fallbackId,
+    content: JSON.parse(JSON.stringify(normalizedValue)),
+  };
+}
+
+function getFallbackEntries(): KnowledgeBaseEntry[] {
+  const bundledEntries = Object.entries(BUNDLED_DEFAULT_KB_MODULES)
+    .map(([path, rawModule]) => buildKnowledgeEntryFromBundledJson(path, rawModule))
+    .filter((entry): entry is KnowledgeBaseEntry => entry !== null);
+
+  if (bundledEntries.length > 0) {
+    return dedupeKnowledgeBaseEntries(bundledEntries);
+  }
+
+  return DEFAULT_KB_FALLBACK_ENTRIES.map(entry => ({
+    ...entry,
+    content: JSON.parse(JSON.stringify(entry.content)),
+  }));
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -115,7 +250,8 @@ export async function listCategories(): Promise<string[]> {
     );
     _categoriesCache = Array.isArray(cats) ? cats : [];
   } catch {
-    _categoriesCache = [];
+    const entries = await getAllEntries();
+    _categoriesCache = entries.map(e => e.category).sort();
   }
   return _categoriesCache;
 }
@@ -137,16 +273,23 @@ export async function getAllEntries(): Promise<KnowledgeBaseEntry[]> {
         { ...FAST_COMMAND_OPTIONS, context: 'DefaultKB' }
       );
       const parsed: Record<string, KnowledgeBaseEntry> =
-        typeof raw === 'string' ? JSON.parse(raw) : (raw as Record<string, KnowledgeBaseEntry>);
-      _allEntriesCache = Object.values(parsed);
-      // Populate categories cache from entries to avoid a second IPC call later
-      if (!_categoriesCache) {
-        _categoriesCache = _allEntriesCache.map(e => e.category).sort();
-      }
+        typeof raw === 'string'
+          ? JSON.parse(raw)
+          : (raw as Record<string, KnowledgeBaseEntry>);
+      _allEntriesCache = dedupeKnowledgeBaseEntries(Object.values(parsed));
     } catch {
-      _allEntriesCache = [];
+      _allEntriesCache = null;
     }
-    return _allEntriesCache!;
+
+    if (!_allEntriesCache || _allEntriesCache.length === 0) {
+      _allEntriesCache = getFallbackEntries();
+    }
+
+    if (!_categoriesCache) {
+      _categoriesCache = _allEntriesCache.map(e => e.category).sort();
+    }
+
+    return _allEntriesCache;
   })();
   return _allEntriesLoadingPromise;
 }
@@ -162,9 +305,14 @@ export async function getCategory(category: string): Promise<KnowledgeBaseEntry 
       { category },
       { ...FAST_COMMAND_OPTIONS, context: 'DefaultKB' }
     );
-    return typeof raw === 'string' ? (JSON.parse(raw) as KnowledgeBaseEntry) : (raw as KnowledgeBaseEntry);
+    return typeof raw === 'string'
+      ? (JSON.parse(raw) as KnowledgeBaseEntry)
+      : (raw as KnowledgeBaseEntry);
   } catch {
-    return null;
+    const entries = await getAllEntries();
+    return (
+      entries.find(entry => entry.category === category || entry.id === category) ?? null
+    );
   }
 }
 
@@ -255,7 +403,9 @@ export async function getRelevantPromptContext(
         };
       })
       .filter(item => item.score > 0)
-      .sort((a, b) => b.score - a.score || a.entry.category.localeCompare(b.entry.category))
+      .sort(
+        (a, b) => b.score - a.score || a.entry.category.localeCompare(b.entry.category)
+      )
       .slice(0, Math.max(1, limit));
 
     if (ranked.length === 0) {

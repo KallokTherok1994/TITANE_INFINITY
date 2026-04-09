@@ -23,6 +23,7 @@ import {
   MEMORY_TOPIC_LABELS,
   IMPORTANCE_COLORS,
 } from '@/services/memory/persistentMemory.config';
+import { dedupeMemoryEntries } from '@/features/memory/dedupeMemoryEntries';
 import type { ChatModeId } from '@/services/ai/chatModes.config';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -388,16 +389,10 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
     enableCache: true,
   });
 
-  const mergedEntries = useMemo(() => {
-    const seen = new Set<string>();
-    return [...entries, ...additionalEntries].filter(entry => {
-      if (seen.has(entry.id)) {
-        return false;
-      }
-      seen.add(entry.id);
-      return true;
-    });
-  }, [entries, additionalEntries]);
+  const mergedEntries = useMemo(
+    () => dedupeMemoryEntries([...entries, ...additionalEntries]),
+    [entries, additionalEntries]
+  );
 
   const derivedCounts = useMemo(
     () => ({

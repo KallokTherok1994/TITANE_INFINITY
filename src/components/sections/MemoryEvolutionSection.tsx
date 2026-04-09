@@ -44,7 +44,9 @@ export const MemoryEvolutionSection: React.FC<MemoryEvolutionSectionProps> = mem
       className="titane-section titane-section-memory-evolution"
       data-testid="memory-evolution-section-root"
       data-memory-evolution-mode={mode}
-      data-memory-evolution-surface-state={env.isTauri ? 'live-center' : 'browser-fallback'}
+      data-memory-evolution-surface-state={
+        env.isTauri ? 'live-center' : 'browser-fallback'
+      }
     >
       <TSectionHeader
         title="🔄 Évolution Mémoire"

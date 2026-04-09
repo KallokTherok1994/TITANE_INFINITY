@@ -297,40 +297,41 @@ export function useConversationEngine(
     };
   }, []);
 
-  const runHealthCheck = useCallback(async (): Promise<ConversationHealthReport | null> => {
-    if (healthCheckPromiseRef.current) {
-      return healthCheckPromiseRef.current;
-    }
-
-    let request: Promise<ConversationHealthReport | null> | null = null;
-    request = (async () => {
-      try {
-        const report = await healthCheck();
-
-        if (mountedRef.current) {
-          setHealthReport(report);
-        }
-
-        if (report.status === 'Critical') {
-          console.warn(
-            '[ConversationEngine] État critique détecté, auto-réparation en cours...'
-          );
-        }
-
-        return report;
-      } catch (err) {
-        console.error('[ConversationEngine] Health check failed:', err);
-        return null;
-      } finally {
-        if (healthCheckPromiseRef.current === request) {
-          healthCheckPromiseRef.current = null;
-        }
+  const runHealthCheck =
+    useCallback(async (): Promise<ConversationHealthReport | null> => {
+      if (healthCheckPromiseRef.current) {
+        return healthCheckPromiseRef.current;
       }
-    })();
 
-    healthCheckPromiseRef.current = request;
-    return request;
-  }, []);
+      let request: Promise<ConversationHealthReport | null> | null = null;
+      request = (async () => {
+        try {
+          const report = await healthCheck();
+
+          if (mountedRef.current) {
+            setHealthReport(report);
+          }
+
+          if (report.status === 'Critical') {
+            console.warn(
+              '[ConversationEngine] État critique détecté, auto-réparation en cours...'
+            );
+          }
+
+          return report;
+        } catch (err) {
+          console.error('[ConversationEngine] Health check failed:', err);
+          return null;
+        } finally {
+          if (healthCheckPromiseRef.current === request) {
+            healthCheckPromiseRef.current = null;
+          }
+        }
+      })();
+
+      healthCheckPromiseRef.current = request;
+      return request;
+    }, []);
 
   // ═══ HEALTH CHECK AUTOMATIQUE ═══
   useEffect(() => {

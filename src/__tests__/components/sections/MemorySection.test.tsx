@@ -7,6 +7,9 @@ const mockUsePersistentMemory = vi.fn();
 const mockUseLTMContext = vi.fn();
 const mockGetKnowledge = vi.fn();
 const mockGetAllEntries = vi.fn();
+const mockKnowledgeVaultGetState = vi.fn();
+const mockKnowledgeVaultInitialize = vi.fn();
+const mockKnowledgeVaultSubscribe = vi.fn(() => () => {});
 
 vi.mock('@/hooks/usePersistentMemory', () => ({
   usePersistentMemory: (options: unknown) => mockUsePersistentMemory(options),
@@ -24,6 +27,14 @@ vi.mock('@/services/api/memory', () => ({
 
 vi.mock('@/services/api/defaultKnowledgeBase', () => ({
   getAllEntries: (...args: unknown[]) => mockGetAllEntries(...args),
+}));
+
+vi.mock('@/cognitive/knowledge/knowledgeVault', () => ({
+  knowledgeVault: {
+    getState: () => mockKnowledgeVaultGetState(),
+    initialize: (...args: unknown[]) => mockKnowledgeVaultInitialize(...args),
+    subscribe: (...args: unknown[]) => mockKnowledgeVaultSubscribe(...args),
+  },
 }));
 
 vi.mock('@/components/chat/MemoryDashboard', () => ({
@@ -147,21 +158,58 @@ describe('MemorySection', () => {
       historyCount: 4,
     });
 
+    mockKnowledgeVaultGetState.mockReturnValue({
+      totalDocuments: 0,
+      totalSizeBytes: 0,
+      categoryCounts: {
+        'code-rust': 0,
+        'code-typescript': 0,
+        'code-react': 0,
+        'code-tauri': 0,
+        'code-python': 0,
+        'code-other': 0,
+        document: 0,
+        config: 0,
+        data: 0,
+        notes: 0,
+        snippet: 0,
+        unknown: 0,
+      },
+      lastIngestion: null,
+      indexVersion: '1.0.0',
+      entries: [],
+    });
+
     mockUsePersistentMemory.mockReturnValue({
       entries: [
         {
           id: 'ltm-1',
           level: 'long_term',
+          contentType: 'preference',
+          title: 'Préférence durable',
+          summary: 'Souvenir persistant',
           content: 'Souvenir persistant',
           topic: 'preferences',
           importance: 5,
           tags: ['memoire'],
+          status: 'active',
+          sourceEntryIds: [],
+          confidenceScore: 100,
+          userVerified: true,
+          editable: true,
+          version: 1,
+          versionHistory: [],
           metadata: {
             createdAt: 100,
+            updatedAt: 100,
             accessCount: 2,
+            source: 'system',
+            schemaVersion: '1.0.0',
           },
         },
       ],
+      summaries: [],
+      bundles: [],
       stats: {
         countByLevel: {
           session: 2,
@@ -173,6 +221,7 @@ describe('MemorySection', () => {
       },
       isLoading: false,
       lastUpdate: 123,
+      refresh: vi.fn(),
     });
   });
 
@@ -324,7 +373,9 @@ describe('MemorySection', () => {
     );
 
     await waitFor(() => {
-      expect(screen.queryByText(/aucune mémoire persistante consolidée/i)).not.toBeInTheDocument();
+      expect(
+        screen.queryByText(/aucune mémoire persistante consolidée/i)
+      ).not.toBeInTheDocument();
     });
 
     expect(await screen.findByTestId('memory-search-panel')).toHaveTextContent(
@@ -411,6 +462,531 @@ describe('MemorySection', () => {
     );
     expect(await screen.findByTestId('memory-search-panel')).toHaveTextContent(
       'entries:0:selected:none:loading:yes'
+    );
+  });
+
+  it('deduplicates overlapping knowledge coming from runtime and default sources', async () => {
+    mockUseLTMContext.mockReturnValue({
+      historyCount: 0,
+    });
+
+    mockUsePersistentMemory.mockReturnValue({
+      entries: [],
+      stats: {
+        countByLevel: {
+          session: 0,
+          intermediate: 0,
+          long_term: 0,
+        },
+      },
+      isLoading: false,
+      lastUpdate: 333,
+    });
+
+    mockGetKnowledge.mockResolvedValue([
+      {
+        id: 'kb-runtime-dup',
+        title: 'Architecture TITANE',
+        category: 'system_architecture',
+        content: 'TITANE orchestre la mémoire via 4 rings et One Door.',
+        relevance: 0.97,
+        lastAccessed: '2026-04-09T07:00:00.000Z',
+        tags: ['architecture', 'memory'],
+      },
+    ]);
+    mockGetAllEntries.mockResolvedValue([
+      {
+        id: 'system_architecture',
+        category: 'system_architecture',
+        version: '30.0.0',
+        description: 'Architecture cœur TITANE∞',
+        content: {
+          summary: 'TITANE orchestre la mémoire via 4 rings et One Door.',
+        },
+      },
+    ]);
+
+    render(
+      <MemorySection
+        stats={{
+          totalXP: 0,
+          level: 1,
+          memoryShortTerm: 0,
+          memoryMidTerm: 0,
+          memoryLongTerm: 0,
+          evolutionScore: 0,
+        }}
+        conversationId="conv-dedupe"
+      />
+    );
+
+    expect(await screen.findByTestId('memory-search-panel')).toHaveTextContent(
+      'entries:1'
+    );
+  });
+
+  it('fuses semantic duplicates even when the runtime and default categories differ', async () => {
+    mockUseLTMContext.mockReturnValue({
+      historyCount: 0,
+    });
+
+    mockUsePersistentMemory.mockReturnValue({
+      entries: [],
+      stats: {
+        countByLevel: {
+          session: 0,
+          intermediate: 0,
+          long_term: 0,
+        },
+      },
+      isLoading: false,
+      lastUpdate: 334,
+    });
+
+    mockGetKnowledge.mockResolvedValue([
+      {
+        id: 'kb-runtime-semantic',
+        title: 'Architecture TITANE',
+        category: 'system',
+        content: 'TITANE orchestre la mémoire via 4 rings et la gouvernance One Door.',
+        relevance: 0.91,
+        lastAccessed: '2026-04-09T07:10:00.000Z',
+        tags: ['architecture', 'memoire'],
+      },
+    ]);
+    mockGetAllEntries.mockResolvedValue([
+      {
+        id: 'system_architecture',
+        category: 'system_architecture',
+        version: '30.0.0',
+        description: 'Architecture cœur TITANE∞',
+        content: {
+          summary:
+            'TITANE orchestre la mémoire via 4 rings et la gouvernance One Door.',
+        },
+      },
+    ]);
+
+    render(
+      <MemorySection
+        stats={{
+          totalXP: 0,
+          level: 1,
+          memoryShortTerm: 0,
+          memoryMidTerm: 0,
+          memoryLongTerm: 0,
+          evolutionScore: 0,
+        }}
+        conversationId="conv-semantic-dedupe"
+      />
+    );
+
+    expect(await screen.findByTestId('memory-search-panel')).toHaveTextContent(
+      'entries:1'
+    );
+  });
+
+  it('surfaces knowledge-vault documents inside the memory page when available', async () => {
+    mockUseLTMContext.mockReturnValue({
+      historyCount: 0,
+    });
+
+    mockUsePersistentMemory.mockReturnValue({
+      entries: [],
+      summaries: [],
+      bundles: [],
+      stats: {
+        countByLevel: {
+          session: 0,
+          intermediate: 0,
+          long_term: 0,
+        },
+      },
+      isLoading: false,
+      lastUpdate: 335,
+      refresh: vi.fn(),
+    });
+
+    mockGetKnowledge.mockResolvedValue([]);
+    mockGetAllEntries.mockResolvedValue([]);
+    mockKnowledgeVaultGetState.mockReturnValue({
+      totalDocuments: 1,
+      totalSizeBytes: 2048,
+      categoryCounts: {
+        'code-rust': 0,
+        'code-typescript': 0,
+        'code-react': 0,
+        'code-tauri': 0,
+        'code-python': 0,
+        'code-other': 0,
+        document: 1,
+        config: 0,
+        data: 0,
+        notes: 0,
+        snippet: 0,
+        unknown: 0,
+      },
+      lastIngestion: 1775737312495,
+      indexVersion: '1.0.0',
+      entries: [
+        {
+          id: 'vault-doc-1',
+          title: 'Guide Mémoire Interne',
+          path: '/docs/guide-memoire.md',
+          category: 'document',
+          format: 'markdown',
+          summary: 'Guide interne de mémoire',
+          content: 'Guide interne de mémoire et base de connaissances TITANE.',
+          metadata: {
+            author: 'TITANE',
+            createdAt: 1775737312000,
+            modifiedAt: 1775737312000,
+            sizeBytes: 2048,
+            language: 'fr',
+            keywords: ['memoire', 'knowledge'],
+            lineCount: 12,
+            wordCount: 42,
+          },
+          status: 'indexed',
+          indexedAt: 1775737312495,
+          lastAccessedAt: 1775737312495,
+          accessCount: 3,
+          relevanceScore: 0.88,
+          tags: ['memoire', 'guide'],
+        },
+      ],
+    });
+
+    render(
+      <MemorySection
+        stats={{
+          totalXP: 0,
+          level: 1,
+          memoryShortTerm: 0,
+          memoryMidTerm: 0,
+          memoryLongTerm: 0,
+          evolutionScore: 0,
+        }}
+        conversationId="conv-vault"
+      />
+    );
+
+    expect(await screen.findByTestId('memory-search-panel')).toHaveTextContent(
+      'entries:1'
+    );
+  });
+
+  it('shows recently persisted chat memories so new chat knowledge is immediately visible', async () => {
+    mockUseLTMContext.mockReturnValue({
+      historyCount: 0,
+    });
+
+    mockUsePersistentMemory.mockReturnValue({
+      entries: [
+        {
+          id: 'chat-memory-1',
+          level: 'session',
+          contentType: 'message',
+          title: 'Retiens ORION-482-LICHEN',
+          summary: 'Code mémoire sauvegardé depuis le chat',
+          content: 'Utilisateur: Retiens ORION-482-LICHEN pour la suite.',
+          topic: 'general',
+          importance: 4,
+          tags: ['chat-interaction', 'default'],
+          status: 'active',
+          sourceEntryIds: [],
+          confidenceScore: 100,
+          userVerified: true,
+          editable: true,
+          version: 1,
+          versionHistory: [],
+          metadata: {
+            createdAt: 1700000000000,
+            updatedAt: 1700003600000,
+            accessCount: 2,
+            source: 'chat_user',
+            schemaVersion: '1.0.0',
+          },
+        },
+      ],
+      summaries: [],
+      bundles: [],
+      stats: {
+        countByLevel: {
+          session: 1,
+          intermediate: 0,
+          long_term: 0,
+        },
+      },
+      isLoading: false,
+      lastUpdate: 336,
+      refresh: vi.fn(),
+    });
+
+    render(
+      <MemorySection
+        stats={{
+          totalXP: 0,
+          level: 1,
+          memoryShortTerm: 0,
+          memoryMidTerm: 0,
+          memoryLongTerm: 0,
+          evolutionScore: 0,
+        }}
+        conversationId="conv-chat-visibility"
+      />
+    );
+
+    expect(await screen.findByText(/mémoires récentes issues du chat/i)).toBeInTheDocument();
+    expect(await screen.findByText(/retiens orion-482-lichen/i)).toBeInTheDocument();
+  });
+
+  it('includes summaries and bundles so the page exposes the full persistent memory surface', async () => {
+    mockUseLTMContext.mockReturnValue({
+      historyCount: 0,
+    });
+
+    mockUsePersistentMemory.mockReturnValue({
+      entries: [],
+      summaries: [
+        {
+          id: 'summary-weekly-1',
+          title: 'Synthèse hebdomadaire',
+          content: 'Résumé consolidé des apprentissages récents de TITANE.',
+          topic: 'learning',
+          periodStart: 1700000000000,
+          periodEnd: 1700003600000,
+          sourceCount: 3,
+          sourceIds: ['entry-1', 'entry-2', 'entry-3'],
+          keywords: ['synthese', 'learning'],
+          aggregatedImportance: 4,
+          generatedAt: 1700003600000,
+          summaryType: 'weekly',
+        },
+      ],
+      bundles: [
+        {
+          id: 'bundle-project-1',
+          name: 'Bundle projet mémoire',
+          description: 'Regroupe les éléments mémoire du projet actif.',
+          topic: 'project',
+          entryIds: ['entry-1', 'entry-2'],
+          tags: ['bundle', 'project'],
+          createdAt: 1700000000000,
+          updatedAt: 1700007200000,
+          createdBy: 'system',
+          color: '#4f46e5',
+          icon: '🧠',
+        },
+      ],
+      stats: {
+        countByLevel: {
+          session: 0,
+          intermediate: 1,
+          long_term: 1,
+        },
+        summaryCount: 1,
+        bundleCount: 1,
+      },
+      isLoading: false,
+      lastUpdate: 336,
+      refresh: vi.fn(),
+    });
+
+    render(
+      <MemorySection
+        stats={{
+          totalXP: 0,
+          level: 1,
+          memoryShortTerm: 0,
+          memoryMidTerm: 0,
+          memoryLongTerm: 0,
+          evolutionScore: 0,
+        }}
+        conversationId="conv-full-surface"
+      />
+    );
+
+    expect(await screen.findByTestId('memory-search-panel')).toHaveTextContent(
+      'entries:2'
+    );
+    expect(await screen.findByText(/synthèse hebdomadaire/i)).toBeInTheDocument();
+    expect(await screen.findByText(/bundle projet mémoire/i)).toBeInTheDocument();
+  });
+
+  it('refreshes the visible memory surface when the vault changes to stay synced live', async () => {
+    mockUseLTMContext.mockReturnValue({
+      historyCount: 0,
+    });
+
+    const refreshSpy = vi.fn();
+    mockUsePersistentMemory.mockReturnValue({
+      entries: [],
+      summaries: [],
+      bundles: [],
+      stats: {
+        countByLevel: {
+          session: 0,
+          intermediate: 0,
+          long_term: 0,
+        },
+      },
+      isLoading: false,
+      lastUpdate: 337,
+      refresh: refreshSpy,
+    });
+
+    let vaultState = {
+      totalDocuments: 0,
+      totalSizeBytes: 0,
+      categoryCounts: {
+        'code-rust': 0,
+        'code-typescript': 0,
+        'code-react': 0,
+        'code-tauri': 0,
+        'code-python': 0,
+        'code-other': 0,
+        document: 0,
+        config: 0,
+        data: 0,
+        notes: 0,
+        snippet: 0,
+        unknown: 0,
+      },
+      lastIngestion: null,
+      indexVersion: '1.0.0',
+      entries: [] as Array<Record<string, unknown>>,
+    };
+
+    mockKnowledgeVaultGetState.mockImplementation(() => vaultState);
+
+    let vaultListener: ((state: typeof vaultState) => void) | undefined;
+    mockKnowledgeVaultSubscribe.mockImplementation(listener => {
+      vaultListener = listener as typeof vaultListener;
+      return () => {
+        vaultListener = undefined;
+      };
+    });
+
+    render(
+      <MemorySection
+        stats={{
+          totalXP: 0,
+          level: 1,
+          memoryShortTerm: 0,
+          memoryMidTerm: 0,
+          memoryLongTerm: 0,
+          evolutionScore: 0,
+        }}
+        conversationId="conv-live-sync"
+      />
+    );
+
+    expect(await screen.findByTestId('memory-search-panel')).toHaveTextContent(
+      'entries:0'
+    );
+
+    vaultState = {
+      ...vaultState,
+      totalDocuments: 1,
+      lastIngestion: 1775737312495,
+      entries: [
+        {
+          id: 'vault-live-1',
+          title: 'Mémoire live',
+          path: '/docs/live-memory.md',
+          category: 'document',
+          format: 'markdown',
+          summary: 'Document synchronisé à chaud',
+          content: 'Document synchronisé à chaud dans la mémoire TITANE.',
+          metadata: {
+            author: 'TITANE',
+            createdAt: 1775737312000,
+            modifiedAt: 1775737312000,
+            sizeBytes: 512,
+            language: 'fr',
+            keywords: ['memoire', 'sync'],
+            lineCount: 4,
+            wordCount: 12,
+          },
+          status: 'indexed',
+          indexedAt: 1775737312495,
+          lastAccessedAt: 1775737312495,
+          accessCount: 1,
+          relevanceScore: 0.76,
+          tags: ['live', 'memoire'],
+        },
+      ],
+    };
+
+    await waitFor(async () => {
+      vaultListener?.(vaultState);
+      expect(await screen.findByTestId('memory-search-panel')).toHaveTextContent(
+        'entries:1'
+      );
+    });
+    expect(refreshSpy).toHaveBeenCalled();
+  });
+
+  it('avoids overlapping knowledge-surface syncs while a previous refresh is still pending', async () => {
+    mockUseLTMContext.mockReturnValue({
+      historyCount: 0,
+    });
+
+    mockUsePersistentMemory.mockReturnValue({
+      entries: [],
+      summaries: [],
+      bundles: [],
+      stats: {
+        countByLevel: {
+          session: 0,
+          intermediate: 0,
+          long_term: 0,
+        },
+      },
+      isLoading: false,
+      lastUpdate: 338,
+      refresh: vi.fn(),
+    });
+
+    let releaseKnowledge: ((value: []) => void) | null = null;
+    mockGetKnowledge.mockImplementation(
+      () =>
+        new Promise(resolve => {
+          releaseKnowledge = resolve as typeof releaseKnowledge;
+        })
+    );
+    mockGetAllEntries.mockResolvedValue([]);
+
+    render(
+      <MemorySection
+        stats={{
+          totalXP: 0,
+          level: 1,
+          memoryShortTerm: 0,
+          memoryMidTerm: 0,
+          memoryLongTerm: 0,
+          evolutionScore: 0,
+        }}
+        conversationId="conv-no-overlap"
+      />
+    );
+
+    await waitFor(() => {
+      expect(mockGetKnowledge).toHaveBeenCalledTimes(1);
+      expect(mockGetAllEntries).toHaveBeenCalledTimes(1);
+    });
+
+    fireEvent(window, new Event('focus'));
+    fireEvent(document, new Event('visibilitychange'));
+
+    expect(mockGetKnowledge).toHaveBeenCalledTimes(1);
+    expect(mockGetAllEntries).toHaveBeenCalledTimes(1);
+
+    releaseKnowledge?.([]);
+
+    expect(await screen.findByTestId('memory-search-panel')).toHaveTextContent(
+      'entries:0'
     );
   });
 
