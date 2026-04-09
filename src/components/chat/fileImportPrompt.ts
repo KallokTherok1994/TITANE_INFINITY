@@ -26,7 +26,8 @@ function buildContentExcerpt(
   const rawContent =
     (typeof file.content === 'string' && file.content.trim().length > 0
       ? file.content
-      : file.preview || '')?.trim() || '';
+      : file.preview || ''
+    )?.trim() || '';
 
   if (!rawContent) {
     return { excerpt: '', truncated: false };

@@ -74,7 +74,8 @@ function looksBinaryLike(content: string): boolean {
 
   for (const char of content) {
     const code = char.charCodeAt(0);
-    const isControlCharacter = code < 32 && char !== '\n' && char !== '\r' && char !== '\t';
+    const isControlCharacter =
+      code < 32 && char !== '\n' && char !== '\r' && char !== '\t';
 
     if (isControlCharacter || code === 65533) {
       suspiciousChars += 1;

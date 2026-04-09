@@ -201,7 +201,8 @@ async function activateTitaneMemoryTab(tabTestId, expectedSelector) {
 
   await browser
     .execute(
-      el => el?.scrollIntoView?.({ block: 'center', inline: 'center', behavior: 'instant' }),
+      el =>
+        el?.scrollIntoView?.({ block: 'center', inline: 'center', behavior: 'instant' }),
       tab
     )
     .catch(() => {});

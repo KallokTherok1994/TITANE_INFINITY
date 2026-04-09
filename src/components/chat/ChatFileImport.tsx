@@ -166,7 +166,8 @@ export const ChatFileImport: React.FC<ChatFileImportProps> = ({
               component: 'ChatFileImport',
               action: 'handleFileImport',
               filename: file.name,
-              error: vaultError instanceof Error ? vaultError.message : String(vaultError),
+              error:
+                vaultError instanceof Error ? vaultError.message : String(vaultError),
             });
           }
 

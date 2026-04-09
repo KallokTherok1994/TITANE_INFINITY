@@ -97,7 +97,9 @@ function persistConversationHistoryInBackground(
   void (async () => {
     try {
       await Promise.resolve(
-        replaceMessages(conversationMessages.map(message => toPersistentAIMessage(message)))
+        replaceMessages(
+          conversationMessages.map(message => toPersistentAIMessage(message))
+        )
       );
       chatMemoryCompactor.flushPendingSaves();
     } catch (persistError) {
