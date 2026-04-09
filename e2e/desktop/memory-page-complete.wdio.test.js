@@ -165,6 +165,39 @@ async function findFirstKnowledgeCardButton() {
   return browser.$(`//h3[contains(.,'Bases de connaissances visibles dans la Mémoire')]/following::button[1]`);
 }
 
+async function activateTitaneMemoryTab(tabTestId, expectedSelector) {
+  await browser.url('tauri://localhost/titane?tab=memory-map').catch(() => {});
+  const tab = await $(`[data-testid="${tabTestId}"]`);
+  await tab.waitForDisplayed({ timeout: 10000 });
+
+  await tab.click().catch(async () => {
+    await browser.execute(el => el?.click(), tab);
+  });
+
+  await browser.waitUntil(
+    async () => {
+      const selected = await tab.getAttribute('aria-selected');
+      return selected === 'true';
+    },
+    {
+      timeout: 8000,
+      interval: 200,
+      timeoutMsg: `${tabTestId} did not become active`,
+    }
+  );
+
+  if (expectedSelector) {
+    await browser.waitUntil(
+      async () => (await $(expectedSelector).isExisting()),
+      {
+        timeout: 15000,
+        interval: 250,
+        timeoutMsg: `${expectedSelector} not visible after activating ${tabTestId}`,
+      }
+    );
+  }
+}
+
 describe('Memory page desktop E2E complete coverage', () => {
   before(async function () {
     const loaded = await ensureTauriPageLoaded();
@@ -312,6 +345,47 @@ describe('Memory page desktop E2E complete coverage', () => {
       name: 'semantic-search-interaction',
       status: 'PASS',
       resultCountText,
+    });
+  });
+
+  it('keeps both memory tabs conform inside the TITANE page', async function () {
+    this.timeout(30000);
+
+    await activateTitaneMemoryTab(
+      'tab-memory-evolution',
+      '[data-testid="memory-evolution-section-root"]'
+    );
+
+    const evolutionRoot = await $('[data-testid="memory-evolution-section-root"]');
+    const evolutionMode = await evolutionRoot.getAttribute('data-memory-evolution-mode');
+    assert.ok(
+      evolutionMode === 'tauri' || evolutionMode === 'browser',
+      `Unexpected evolution mode: ${evolutionMode}`
+    );
+
+    const truthBanner = await $('[data-testid="memory-evolution-truth-banner"]');
+    await truthBanner.waitForDisplayed({ timeout: 15000 });
+    const truthState = await truthBanner.getAttribute('data-state');
+
+    assert.equal(
+      await $('[data-testid="tab-memory-evolution"]').getAttribute('aria-selected'),
+      'true',
+      'Memory evolution tab should be active'
+    );
+
+    await activateTitaneMemoryTab('tab-memory', '[data-testid="memory-section-root"]');
+
+    assert.equal(
+      await $('[data-testid="tab-memory"]').getAttribute('aria-selected'),
+      'true',
+      'Memory map tab should be active after switching back'
+    );
+
+    report.checks.push({
+      name: 'memory-tabs-conformance',
+      status: 'PASS',
+      evolutionMode,
+      truthState,
     });
   });
 });

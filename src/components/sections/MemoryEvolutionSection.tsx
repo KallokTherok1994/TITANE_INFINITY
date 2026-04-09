@@ -37,9 +37,15 @@ const LazyEvolutionTimeline = React.lazy(() =>
 
 export const MemoryEvolutionSection: React.FC<MemoryEvolutionSectionProps> = memo(() => {
   const env = detectEnvironment();
+  const mode = env.isTauri ? 'tauri' : 'browser';
 
   return (
-    <div className="titane-section titane-section-memory-evolution">
+    <div
+      className="titane-section titane-section-memory-evolution"
+      data-testid="memory-evolution-section-root"
+      data-memory-evolution-mode={mode}
+      data-memory-evolution-surface-state={env.isTauri ? 'live-center' : 'browser-fallback'}
+    >
       <TSectionHeader
         title="🔄 Évolution Mémoire"
         subtitle="Dynamiques internes et journal évolutif"
