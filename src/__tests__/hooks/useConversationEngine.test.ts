@@ -110,6 +110,69 @@ describe('useConversationEngine fallback meta truth', () => {
     expect(meta.provider_class).toBe('local');
   });
 
+  it('surfaces a governed provider recovery message when the backend reports provider unavailability', async () => {
+    processMessageMock.mockResolvedValueOnce({
+      assistant_message: 'backend provider unavailable',
+      conversation_id: 'conv-provider-recovery',
+      message_id: 'assistant-provider-recovery',
+      detected_intention: 'Meta' as const,
+      detected_emotion: { valence: 0, intensity: 0.2, energy: 0.1 },
+      cognitive_tags: ['provider-recovery'],
+      cognitive_summary: 'provider recovery path',
+      metadata: {
+        timestamp: Date.now(),
+        provider_used: 'local-unavailable',
+        latency_ms: 18,
+        tokens_used: 0,
+        memory_effect: 'New' as const,
+        links_to_contexts: [],
+      },
+      meta: {
+        provider_used: 'local-unavailable',
+        provider_class: 'local' as const,
+        mode: 'ERROR' as const,
+        reason_code: 'PROVIDER_UNAVAILABLE' as const,
+        latency_ms_total: 18,
+        timeout_ms: 30000,
+        retries: 0,
+        attempts: [],
+        network_used: false,
+        cache_hit: false,
+        policy: 'provider-recovery-test',
+      },
+    });
+
+    const { useConversationEngine } = await import('@/hooks/useConversationEngine');
+    const { result } = renderHook(() =>
+      useConversationEngine({
+        autoHealthCheck: false,
+        providerPreference: 'ollama',
+      })
+    );
+
+    let response: Awaited<ReturnType<typeof result.current.sendMessage>> | null = null;
+    await act(async () => {
+      response = await result.current.sendMessage('teste le provider local');
+    });
+
+    expect(response?.meta?.reason_code).toBe('PROVIDER_UNAVAILABLE');
+    expect(response?.meta?.provider_used).toBe('local-unavailable');
+
+    await waitFor(() => {
+      expect(result.current.messages.at(-1)?.content).toContain(
+        'mode récupération provider'
+      );
+    });
+
+    expect(result.current.messages.at(-1)?.metadata?.providerMeta).toEqual(
+      expect.objectContaining({
+        provider_used: 'local-unavailable',
+        reason_code: 'PROVIDER_UNAVAILABLE',
+        mode: 'ERROR',
+      })
+    );
+  });
+
   it('avoids overlapping health checks while a previous probe is still pending', async () => {
     vi.useFakeTimers();
 

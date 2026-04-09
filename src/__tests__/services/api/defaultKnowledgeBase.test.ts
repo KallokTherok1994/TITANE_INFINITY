@@ -84,6 +84,21 @@ describe('defaultKnowledgeBase', () => {
     expect(mockedInvokeWithRetry).toHaveBeenCalledTimes(1);
   });
 
+  it('falls back to bundled knowledge entries when the IPC payload is malformed', async () => {
+    mockedInvokeWithRetry.mockResolvedValueOnce('{not-json');
+
+    const entries = await getAllEntries();
+    const promptContext = await getRelevantPromptContext(
+      'architecture mémoire profonde TITANE',
+      2
+    );
+
+    expect(entries.length).toBeGreaterThan(50);
+    expect(entries.some(entry => entry.category === 'system_architecture')).toBe(true);
+    expect(entries.some(entry => entry.category === 'memory_system_deep')).toBe(true);
+    expect(promptContext).toContain('Connaissances pertinentes TITANE∞');
+  });
+
   it('keeps a substantial bundled default knowledge base via fallback entries when IPC is unavailable', async () => {
     mockedInvokeWithRetry.mockRejectedValueOnce(new Error('ipc unavailable'));
 
