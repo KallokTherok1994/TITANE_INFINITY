@@ -145,4 +145,53 @@ describe('MemoryDashboard', () => {
       'false'
     );
   });
+
+  it('surfaces consolidated additional entries and propagates the selection callback', () => {
+    const onEntrySelect = vi.fn();
+
+    mockUsePersistentMemory.mockReturnValue({
+      entries: [],
+      stats: {
+        countByLevel: { session: 0, intermediate: 0, long_term: 0 },
+        sizeByLevel: { session: 0, intermediate: 0, long_term: 0 },
+      },
+      isLoading: false,
+      error: null,
+      refresh: vi.fn(),
+      sessionCount: 0,
+      intermediateCount: 0,
+      longTermCount: 0,
+    });
+
+    const additionalEntry = {
+      id: 'kb-1',
+      level: 'long_term' as const,
+      topic: 'knowledge' as const,
+      importance: 4,
+      content: 'Connaissance consolidée importée depuis le chat',
+      tags: ['import', 'knowledge'],
+      metadata: {
+        createdAt: Date.now(),
+        accessCount: 7,
+      },
+    };
+
+    render(
+      <MemoryDashboard
+        modeId="admin"
+        compact={true}
+        additionalEntries={[additionalEntry]}
+        onEntrySelect={onEntrySelect}
+      />
+    );
+
+    const card = screen.getByTestId('memory-entry-card-kb-1');
+    expect(card).toBeInTheDocument();
+    expect(screen.getByText(/1 entrées/i)).toBeInTheDocument();
+
+    fireEvent.click(card);
+
+    expect(onEntrySelect).toHaveBeenCalledWith(expect.objectContaining({ id: 'kb-1' }));
+    expect(card).toHaveAttribute('data-selected', 'true');
+  });
 });

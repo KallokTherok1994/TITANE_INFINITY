@@ -69,6 +69,7 @@ describe('ChatFileImport', () => {
         expect.objectContaining({
           filename: 'memoire.pdf',
           content: 'Contenu PDF important pour la mémoire TITANE',
+          type: 'document',
         })
       );
     });

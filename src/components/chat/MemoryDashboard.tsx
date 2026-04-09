@@ -66,8 +66,16 @@ const LevelBadge: React.FC<{ level: MemoryLevel }> = ({ level }) => {
 };
 
 /** Badge de sujet */
-const TopicBadge: React.FC<{ topic: MemoryTopic }> = ({ topic }) => {
-  const config = MEMORY_TOPIC_LABELS[topic];
+const TopicBadge: React.FC<{ topic: MemoryTopic | string }> = ({ topic }) => {
+  const fallbackLabel = String(topic || 'autre')
+    .replace(/[_-]+/g, ' ')
+    .trim();
+
+  const config = MEMORY_TOPIC_LABELS[topic as MemoryTopic] ?? {
+    icon: '🏷️',
+    label: fallbackLabel.charAt(0).toUpperCase() + fallbackLabel.slice(1),
+  };
+
   return (
     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-gray-700/50 text-gray-300">
       {config.icon} {config.label}
@@ -606,7 +614,7 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
               className={viewMode === 'timeline' ? 'relative pl-4' : ''}
             >
               {viewMode === 'timeline' && (
-                <div className="absolute -left-[calc(0.5rem+1px)] top-4 w-2 h-2 rounded-full bg-blue-500" />
+                <div className="absolute -left-2.25 top-4 h-2 w-2 rounded-full bg-blue-500" />
               )}
               <MemoryEntryCard
                 entry={entry}

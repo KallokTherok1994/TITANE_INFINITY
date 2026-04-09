@@ -86,9 +86,10 @@ export const ChatFileImport: React.FC<ChatFileImportProps> = ({
     // Détecte le type de fichier
     let type = 'text';
     if (filename.endsWith('.md')) type = 'markdown';
-    else if (filename.match(/\.(js|ts|tsx|jsx)$/)) type = 'code';
-    else if (filename.match(/\.(json|yaml|yml)$/)) type = 'data';
-    else if (filename.match(/\.(txt|log)$/)) type = 'text';
+    else if (filename.match(/\.(js|ts|tsx|jsx)$/i)) type = 'code';
+    else if (filename.match(/\.(json|yaml|yml|xml|csv)$/i)) type = 'data';
+    else if (filename.match(/\.(pdf|doc|docx)$/i)) type = 'document';
+    else if (filename.match(/\.(txt|log)$/i)) type = 'text';
 
     return {
       filename,

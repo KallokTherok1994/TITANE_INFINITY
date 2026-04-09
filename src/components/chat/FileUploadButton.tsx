@@ -174,6 +174,12 @@ const analyzeFileContent = (content: string, filename: string): FileAnalysisResu
     const h2Matches = content.match(/^##\s+.+$/gm);
     metadata.sections = (h1Matches?.length || 0) + (h2Matches?.length || 0);
     metadata.codeBlocks = (content.match(/```/g)?.length || 0) / 2;
+  } else if (['.pdf', '.doc', '.docx', '.txt', '.log'].includes(ext)) {
+    contentType = 'Document';
+    metadata.extension = ext.slice(1);
+  } else if (['.yaml', '.yml', '.xml', '.csv'].includes(ext)) {
+    contentType = 'Structured Data';
+    metadata.extension = ext.slice(1);
   }
 
   // Génération du résumé
