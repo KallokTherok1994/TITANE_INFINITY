@@ -175,10 +175,36 @@ async function findFirstKnowledgeCardButton() {
   );
 }
 
+async function hasDisplayedElement(selector) {
+  return browser.execute(sel => {
+    const isVisible = element => {
+      if (!element) return false;
+      const style = window.getComputedStyle(element);
+      const rect = element.getBoundingClientRect();
+      return (
+        style.display !== 'none' &&
+        style.visibility !== 'hidden' &&
+        style.opacity !== '0' &&
+        rect.width > 0 &&
+        rect.height > 0
+      );
+    };
+
+    return Array.from(document.querySelectorAll(sel)).some(isVisible);
+  }, selector);
+}
+
 async function activateTitaneMemoryTab(tabTestId, expectedSelector) {
   await browser.url('tauri://localhost/titane?tab=memory-map').catch(() => {});
   const tab = await $(`[data-testid="${tabTestId}"]`);
   await tab.waitForDisplayed({ timeout: 10000 });
+
+  await browser
+    .execute(
+      el => el?.scrollIntoView?.({ block: 'center', inline: 'center', behavior: 'instant' }),
+      tab
+    )
+    .catch(() => {});
 
   await tab.click().catch(async () => {
     await browser.execute(el => el?.click(), tab);
@@ -186,23 +212,22 @@ async function activateTitaneMemoryTab(tabTestId, expectedSelector) {
 
   await browser.waitUntil(
     async () => {
-      const selected = await tab.getAttribute('aria-selected');
-      return selected === 'true';
+      const liveTab = await $(`[data-testid="${tabTestId}"]`);
+      if (!(await liveTab.isExisting())) return false;
+
+      const selected = await liveTab.getAttribute('aria-selected');
+      if (selected !== 'true') return false;
+
+      if (!expectedSelector) return true;
+
+      return hasDisplayedElement(expectedSelector);
     },
     {
-      timeout: 8000,
+      timeout: 15000,
       interval: 200,
-      timeoutMsg: `${tabTestId} did not become active`,
+      timeoutMsg: `${tabTestId} did not expose a visible active panel`,
     }
   );
-
-  if (expectedSelector) {
-    await browser.waitUntil(async () => await $(expectedSelector).isExisting(), {
-      timeout: 15000,
-      interval: 250,
-      timeoutMsg: `${expectedSelector} not visible after activating ${tabTestId}`,
-    });
-  }
 }
 
 describe('Memory page desktop E2E complete coverage', () => {
@@ -378,16 +403,49 @@ describe('Memory page desktop E2E complete coverage', () => {
       '[data-testid="memory-evolution-section-root"]'
     );
 
-    const evolutionRoot = await $('[data-testid="memory-evolution-section-root"]');
-    const evolutionMode = await evolutionRoot.getAttribute('data-memory-evolution-mode');
+    const evolutionSnapshot = await browser.execute(() => {
+      const isVisible = element => {
+        if (!element) return false;
+        const style = window.getComputedStyle(element);
+        const rect = element.getBoundingClientRect();
+        return (
+          style.display !== 'none' &&
+          style.visibility !== 'hidden' &&
+          style.opacity !== '0' &&
+          rect.width > 0 &&
+          rect.height > 0
+        );
+      };
+
+      const roots = Array.from(
+        document.querySelectorAll('[data-testid="memory-evolution-section-root"]')
+      );
+      const visibleRoot = roots.find(isVisible) || roots[0] || null;
+      const truthBanner = visibleRoot?.querySelector(
+        '[data-testid="memory-evolution-truth-banner"]'
+      );
+
+      return {
+        rootVisible: Boolean(visibleRoot && isVisible(visibleRoot)),
+        evolutionMode: visibleRoot?.getAttribute('data-memory-evolution-mode') || null,
+        truthState: truthBanner?.getAttribute('data-state') || null,
+      };
+    });
+
+    assert.equal(
+      evolutionSnapshot.rootVisible,
+      true,
+      'Memory evolution root should be visible after tab activation'
+    );
+
+    const evolutionMode = evolutionSnapshot.evolutionMode;
     assert.ok(
       evolutionMode === 'tauri' || evolutionMode === 'browser',
       `Unexpected evolution mode: ${evolutionMode}`
     );
 
-    const truthBanner = await $('[data-testid="memory-evolution-truth-banner"]');
-    await truthBanner.waitForDisplayed({ timeout: 15000 });
-    const truthState = await truthBanner.getAttribute('data-state');
+    const truthState = evolutionSnapshot.truthState;
+    assert.ok(truthState, 'Memory evolution truth banner state missing');
 
     assert.equal(
       await $('[data-testid="tab-memory-evolution"]').getAttribute('aria-selected'),

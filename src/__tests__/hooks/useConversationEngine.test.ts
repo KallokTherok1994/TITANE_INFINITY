@@ -7,6 +7,8 @@ const saveMessageMock = vi.fn(() => {
     saveResolvers.push(resolve);
   });
 });
+const clearModeMock = vi.fn();
+const replaceMessagesMock = vi.fn();
 
 const processMessageMock = vi.fn(async (content: string) => ({
   assistant_message: `ok:${content}`,
@@ -52,6 +54,8 @@ vi.mock('@/services/conversationEngine', () => ({
 vi.mock('@/hooks/useChatMemory', () => ({
   useChatMemory: vi.fn(() => ({
     saveMessage: saveMessageMock,
+    clearMode: clearModeMock,
+    replaceMessages: replaceMessagesMock,
   })),
 }));
 
@@ -73,6 +77,8 @@ describe('useConversationEngine fallback meta truth', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     saveResolvers.splice(0, saveResolvers.length);
+    clearModeMock.mockReset();
+    replaceMessagesMock.mockReset();
   });
 
   afterEach(() => {
@@ -214,5 +220,45 @@ describe('useConversationEngine fallback meta truth', () => {
     await waitFor(() => {
       expect(chatMemoryCompactor.flushPendingSaves).toHaveBeenCalled();
     });
+  });
+
+  it('clears persisted mode history when the chat is reset', async () => {
+    const { useConversationEngine } = await import('@/hooks/useConversationEngine');
+    const { result } = renderHook(() =>
+      useConversationEngine({ autoHealthCheck: false })
+    );
+
+    act(() => {
+      result.current.clearMessages();
+    });
+
+    expect(clearModeMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('persists message deletions so removed entries do not reappear after reload', async () => {
+    const { useConversationEngine } = await import('@/hooks/useConversationEngine');
+    const { result } = renderHook(() =>
+      useConversationEngine({ autoHealthCheck: false })
+    );
+
+    await act(async () => {
+      await result.current.appendLocalExchange('Mémoire à enlever', 'Réponse à enlever');
+    });
+
+    const firstMessageId = result.current.messages[0]?.id;
+    expect(firstMessageId).toBeTruthy();
+
+    act(() => {
+      result.current.deleteMessage(firstMessageId!);
+    });
+
+    expect(replaceMessagesMock).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        expect.objectContaining({
+          role: 'assistant',
+          content: 'Réponse à enlever',
+        }),
+      ])
+    );
   });
 });

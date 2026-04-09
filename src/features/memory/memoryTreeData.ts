@@ -23,6 +23,7 @@ const LEVEL_TO_NODE_TYPE: Record<MemoryLevel, ViewerNodeType> = {
 };
 
 const LEVEL_ORDER: MemoryLevel[] = ['session', 'intermediate', 'long_term'];
+const TOPIC_VISIBLE_CHILDREN_LIMIT = 3;
 
 function toNodeType(level: MemoryLevel): ViewerNodeType {
   return LEVEL_TO_NODE_TYPE[level];
@@ -49,31 +50,39 @@ function groupEntriesByTopic(entries: MemoryEntry[]): Array<[string, MemoryEntry
   return Array.from(grouped.entries()).sort((a, b) => b[1].length - a[1].length);
 }
 
+function buildEntryLeaf(level: MemoryLevel, entry: MemoryEntry): MemoryTreeNodeData {
+  return {
+    name:
+      entry.content.length > 48
+        ? `${entry.content.slice(0, 48).trim()}...`
+        : entry.content || ('title' in entry && entry.title ? entry.title : entry.id),
+    attributes: {
+      entryId: entry.id,
+      type: toNodeType(level),
+      level,
+      topic: entry.topic,
+      importance: entry.importance,
+      accesses: entry.metadata.accessCount,
+      createdAt: entry.metadata.createdAt,
+    },
+  };
+}
+
 function buildTopicNode(
   level: MemoryLevel,
   topic: string,
   entries: MemoryEntry[]
 ): MemoryTreeNodeData {
   const label = MEMORY_TOPIC_LABELS[topic as keyof typeof MEMORY_TOPIC_LABELS];
-  const recent = entries
+  const sortedEntries = entries
     .slice()
-    .sort((a, b) => b.metadata.createdAt - a.metadata.createdAt)
-    .slice(0, 3)
-    .map(entry => ({
-      name:
-        entry.content.length > 48
-          ? `${entry.content.slice(0, 48).trim()}...`
-          : entry.content || ('title' in entry && entry.title ? entry.title : entry.id),
-      attributes: {
-        entryId: entry.id,
-        type: toNodeType(level),
-        level,
-        topic: entry.topic,
-        importance: entry.importance,
-        accesses: entry.metadata.accessCount,
-        createdAt: entry.metadata.createdAt,
-      },
-    }));
+    .sort((a, b) => b.metadata.createdAt - a.metadata.createdAt);
+  const visibleEntries = sortedEntries
+    .slice(0, TOPIC_VISIBLE_CHILDREN_LIMIT)
+    .map(entry => buildEntryLeaf(level, entry));
+  const overflowEntries = sortedEntries
+    .slice(TOPIC_VISIBLE_CHILDREN_LIMIT)
+    .map(entry => buildEntryLeaf(level, entry));
 
   return {
     name: `${label?.icon ?? '📝'} ${label?.label ?? topic}`,
@@ -83,7 +92,22 @@ function buildTopicNode(
       entries: entries.length,
       importance_moyenne: averageImportance(entries),
     },
-    children: recent,
+    children:
+      overflowEntries.length > 0
+        ? [
+            ...visibleEntries,
+            {
+              name: `+${overflowEntries.length} autre${overflowEntries.length > 1 ? 's' : ''} entrée${overflowEntries.length > 1 ? 's' : ''}`,
+              attributes: {
+                type: toNodeType(level),
+                topic,
+                entries: overflowEntries.length,
+                overflow: true,
+              },
+              children: overflowEntries,
+            },
+          ]
+        : visibleEntries,
   };
 }
 

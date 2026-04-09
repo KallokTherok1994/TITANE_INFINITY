@@ -167,4 +167,55 @@ describe('memoryTreeData', () => {
     expect(node?.attributes?.entryId).toBe('l1');
     expect(node?.attributes?.topic).toBe('preferences');
   });
+
+  it('keeps older topic entries reachable when a branch has more than three memories', () => {
+    const tree = buildPersistentMemoryTree(
+      [
+        ...entries,
+        {
+          ...entries[2],
+          id: 'l2',
+          title: 'Preference secondaire',
+          content: 'Preference secondaire plus recente',
+          metadata: {
+            ...entries[2].metadata,
+            createdAt: 400,
+          },
+        },
+        {
+          ...entries[2],
+          id: 'l3',
+          title: 'Preference tertiaire',
+          content: 'Preference tertiaire plus recente',
+          metadata: {
+            ...entries[2].metadata,
+            createdAt: 500,
+          },
+        },
+        {
+          ...entries[2],
+          id: 'l4',
+          title: 'Preference quaternaire',
+          content: 'Preference quaternaire plus recente',
+          metadata: {
+            ...entries[2].metadata,
+            createdAt: 600,
+          },
+        },
+      ],
+      {
+        ...stats,
+        countByLevel: {
+          ...stats.countByLevel,
+          long_term: 4,
+        },
+        countByTopic: {
+          ...stats.countByTopic,
+          preferences: 4,
+        },
+      }
+    );
+
+    expect(findMemoryTreeNodeByEntryId(tree, 'l1')).not.toBeNull();
+  });
 });

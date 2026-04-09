@@ -32,6 +32,7 @@ export interface UseChatMemoryReturn {
   };
   loadHistory: () => AIMessage[];
   saveMessage: (message: AIMessage) => void;
+  replaceMessages: (messages: AIMessage[]) => void;
   clearMode: () => void;
   compactIfNeeded: () => { cleaned: boolean; sizeMB: number };
   awardXP: (
@@ -57,20 +58,26 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
     compressed: false,
   });
 
+  const syncVisibleState = useCallback(
+    (history: AIMessage[]) => {
+      setMessagesForMode(history);
+
+      const stats = chatMemoryCompactor.getStats(options.mode);
+      setMemoryStats({
+        count: history.length,
+        sizeMB: stats.sizeMB,
+        compressed: stats.compressed,
+      });
+    },
+    [options.mode]
+  );
+
   /**
    * Load history on mode change
    */
   useEffect(() => {
     const history = chatMemoryCompactor.loadForMode(options.mode);
-    setMessagesForMode(history);
-
-    // Update stats
-    const stats = chatMemoryCompactor.getStats(options.mode);
-    setMemoryStats({
-      count: history.length,
-      sizeMB: stats.sizeMB,
-      compressed: stats.compressed,
-    });
+    syncVisibleState(history);
 
     console.log(
       `🧠 USE CHAT MEMORY: Loaded ${history.length} messages for mode ${options.mode}`
@@ -83,16 +90,16 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
         console.log(`✅ SELFHEAL++: Memory cleaned (was ${cleanup.sizeMB.toFixed(2)}MB)`);
       }
     }
-  }, [options.mode, options.autoCleanup]);
+  }, [options.mode, options.autoCleanup, syncVisibleState]);
 
   /**
    * Load history manuel
    */
   const loadHistory = useCallback(() => {
     const history = chatMemoryCompactor.loadForMode(options.mode);
-    setMessagesForMode(history);
+    syncVisibleState(history);
     return history;
-  }, [options.mode]);
+  }, [options.mode, syncVisibleState]);
 
   /**
    * Save message
@@ -109,24 +116,33 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
       );
       chatMemoryCompactor.flushPendingSaves();
 
-      // ✅ FIX v15.1: MAINTENANT on met à jour messagesForMode
-      // Cela synchronise immédiatement l'UI avec le backend
-      // L'historique sera aussi rechargé au changement de mode (doublon sécurisé)
-      setMessagesForMode(updatedMessages);
-
-      // Update stats seulement
-      const stats = chatMemoryCompactor.getStats(options.mode);
-      setMemoryStats({
-        count: updatedMessages.length,
-        sizeMB: stats.sizeMB,
-        compressed: stats.compressed,
-      });
+      // ✅ FIX v15.1: synchronisation immédiate UI + stats
+      syncVisibleState(updatedMessages);
 
       console.log(
         `💾 USE CHAT MEMORY: Message saved (mode: ${options.mode}, total: ${updatedMessages.length})`
       );
     },
-    [options.mode]
+    [options.mode, syncVisibleState]
+  );
+
+  /**
+   * Replace persisted history for the current mode
+   */
+  const replaceMessages = useCallback(
+    (messages: AIMessage[]) => {
+      const updatedMessages = chatMemoryCompactor.replaceMessagesForMode(
+        options.mode,
+        messages
+      );
+
+      console.log(
+        `🔒 [useChatMemory] Forcing immediate flush after replace (mode: ${options.mode})`
+      );
+      chatMemoryCompactor.flushPendingSaves();
+      syncVisibleState(updatedMessages);
+    },
+    [options.mode, syncVisibleState]
   );
 
   /**
@@ -170,6 +186,7 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
     memoryStats,
     loadHistory,
     saveMessage,
+    replaceMessages,
     clearMode,
     compactIfNeeded,
     awardXP,

@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const loadForModeMock = vi.fn();
 const getStatsMock = vi.fn();
 const addMessageToModeMock = vi.fn();
+const replaceMessagesForModeMock = vi.fn();
 const flushPendingSavesMock = vi.fn();
 const clearModeMock = vi.fn();
 const autoCleanupIfNeededMock = vi.fn();
@@ -14,6 +15,7 @@ vi.mock('@/services/chatMemoryCompactor', () => ({
     loadForMode: (...args: unknown[]) => loadForModeMock(...args),
     getStats: (...args: unknown[]) => getStatsMock(...args),
     addMessageToMode: (...args: unknown[]) => addMessageToModeMock(...args),
+    replaceMessagesForMode: (...args: unknown[]) => replaceMessagesForModeMock(...args),
     flushPendingSaves: (...args: unknown[]) => flushPendingSavesMock(...args),
     clearMode: (...args: unknown[]) => clearModeMock(...args),
     autoCleanupIfNeeded: (...args: unknown[]) => autoCleanupIfNeededMock(...args),
@@ -36,6 +38,7 @@ describe('useChatMemory', () => {
     loadForModeMock.mockReturnValue([]);
     getStatsMock.mockReturnValue({ count: 0, sizeMB: 0, compressed: false });
     addMessageToModeMock.mockImplementation((_mode, message) => [message]);
+    replaceMessagesForModeMock.mockImplementation((_mode, messages) => messages);
     autoCleanupIfNeededMock.mockReturnValue({ cleaned: false, sizeMB: 0 });
   });
 
@@ -91,6 +94,35 @@ describe('useChatMemory', () => {
     expect(addMessageToModeMock).toHaveBeenCalledWith('default', savedMessage);
     expect(flushPendingSavesMock).toHaveBeenCalled();
     expect(result.current.messagesForMode.at(-1)?.content).toContain('ORION-482-LICHEN');
+    expect(result.current.memoryStats.count).toBe(1);
+  });
+
+  it('replaces persisted mode history and refreshes the visible stats immediately', async () => {
+    const replacementMessages = [
+      {
+        id: 'msg-2',
+        role: 'assistant' as const,
+        content: 'Historique nettoyé',
+        timestamp: 200,
+      },
+    ];
+
+    replaceMessagesForModeMock.mockReturnValue(replacementMessages);
+    getStatsMock.mockReturnValue({ count: 1, sizeMB: 0.0008, compressed: false });
+
+    const { useChatMemory } = await import('@/hooks/useChatMemory');
+    const { result } = renderHook(() => useChatMemory({ mode: 'default' }));
+
+    act(() => {
+      result.current.replaceMessages(replacementMessages);
+    });
+
+    expect(replaceMessagesForModeMock).toHaveBeenCalledWith(
+      'default',
+      replacementMessages
+    );
+    expect(flushPendingSavesMock).toHaveBeenCalled();
+    expect(result.current.messagesForMode).toEqual(replacementMessages);
     expect(result.current.memoryStats.count).toBe(1);
   });
 

@@ -80,6 +80,32 @@ function persistAssistantMessageInBackground(
   })();
 }
 
+function toPersistentAIMessage(message: ConversationMessage): AIMessage {
+  return {
+    role: message.role,
+    content: message.content,
+    timestamp: message.timestamp,
+    metadata: message.metadata || {},
+  };
+}
+
+function persistConversationHistoryInBackground(
+  replaceMessages: (messages: AIMessage[]) => unknown,
+  conversationMessages: ConversationMessage[],
+  failureLabel: string
+): void {
+  void (async () => {
+    try {
+      await Promise.resolve(
+        replaceMessages(conversationMessages.map(message => toPersistentAIMessage(message)))
+      );
+      chatMemoryCompactor.flushPendingSaves();
+    } catch (persistError) {
+      console.warn(failureLabel, persistError);
+    }
+  })();
+}
+
 function mapRequestedProviderClass(
   providerPreference: ConversationProviderPreference | undefined
 ): ProviderClass {
@@ -233,7 +259,11 @@ export function useConversationEngine(
   );
 
   // ✅ IMPORT MEMORY SYSTEM
-  const { saveMessage } = useChatMemory({ mode: currentMode });
+  const {
+    saveMessage,
+    clearMode: clearPersistedMode = () => undefined,
+    replaceMessages = () => undefined,
+  } = useChatMemory({ mode: currentMode });
 
   // ═══ LOAD MESSAGES FROM LOCALSTORAGE ON MOUNT ═══
   useEffect(() => {
@@ -721,16 +751,27 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
 
   // ═══ CLEAR MESSAGES ═══
   const clearMessages = useCallback(() => {
+    clearPersistedMode();
     setMessages([]);
     setConversationId(null);
     setLastResponse(null);
     setError(null);
-  }, []);
+  }, [clearPersistedMode]);
 
-  // ═══ DELETE MESSAGE (local only) ═══
-  const deleteMessage = useCallback((messageId: string) => {
-    setMessages(prev => prev.filter(m => m.id !== messageId));
-  }, []);
+  // ═══ DELETE MESSAGE (local + persisted history) ═══
+  const deleteMessage = useCallback(
+    (messageId: string) => {
+      const updatedMessages = messages.filter(m => m.id !== messageId);
+
+      setMessages(updatedMessages);
+      persistConversationHistoryInBackground(
+        replaceMessages,
+        updatedMessages,
+        '[useConversationEngine] ⚠️ Failed to persist message deletion'
+      );
+    },
+    [messages, replaceMessages]
+  );
 
   // ═══ SET MODE ═══
   const setModeCallback = useCallback((mode: ConversationMode) => {

@@ -193,10 +193,18 @@ class ChatMemoryCompactor {
    * Ajoute un message à un mode
    */
   addMessageToMode(mode: ChatMode, message: AIMessage): AIMessage[] {
-    const messages = this.loadForMode(mode);
-    messages.push(message);
+    const messages = [...this.loadForMode(mode), message];
     this.saveForMode(mode, messages);
     return messages;
+  }
+
+  /**
+   * Remplace l'historique d'un mode par une version filtrée/synchronisée
+   */
+  replaceMessagesForMode(mode: ChatMode, messages: AIMessage[]): AIMessage[] {
+    const normalizedMessages = [...messages];
+    this.saveForMode(mode, normalizedMessages);
+    return normalizedMessages;
   }
 
   /**
@@ -204,6 +212,11 @@ class ChatMemoryCompactor {
    */
   clearMode(mode: ChatMode): void {
     try {
+      this.pendingSaves.delete(mode);
+      if (this.pendingSaves.size === 0) {
+        this.saveScheduled = false;
+      }
+
       const key = `${STORAGE_KEY_PREFIX}${mode}`;
       localStorage.removeItem(key);
       logger.info(`Cleared ${mode}`, { component: 'MemoryCompactor', mode });
