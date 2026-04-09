@@ -82,6 +82,7 @@ export type KnowledgeCategory =
 
 export type KnowledgeFormat =
   | 'pdf'
+  | 'doc'
   | 'docx'
   | 'markdown'
   | 'plaintext'

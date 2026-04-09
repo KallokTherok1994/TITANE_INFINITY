@@ -32,6 +32,7 @@ export type KnowledgeCategory =
 
 export type KnowledgeFormat =
   | 'pdf'
+  | 'doc'
   | 'docx'
   | 'markdown'
   | 'plaintext'
@@ -117,6 +118,8 @@ const EXTENSION_CATEGORIES: Record<string, KnowledgeCategory> = {
   '.yml': 'config',
   '.toml': 'config',
   '.md': 'document',
+  '.doc': 'document',
+  '.docx': 'document',
   '.txt': 'notes',
   '.csv': 'data',
   '.xml': 'data',
@@ -124,6 +127,7 @@ const EXTENSION_CATEGORIES: Record<string, KnowledgeCategory> = {
 
 const EXTENSION_FORMATS: Record<string, KnowledgeFormat> = {
   '.pdf': 'pdf',
+  '.doc': 'doc',
   '.docx': 'docx',
   '.md': 'markdown',
   '.txt': 'plaintext',

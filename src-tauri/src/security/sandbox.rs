@@ -22,6 +22,7 @@ lazy_static::lazy_static! {
         set.insert("txt");
         set.insert("md");
         set.insert("pdf");
+        set.insert("doc");
         set.insert("docx");
         set.insert("odt");
         set.insert("rtf");

@@ -14,6 +14,7 @@ use tokio::time::{timeout, Duration};
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum FileFormat {
     PDF,
+    DOC,
     DOCX,
     Markdown,
     PlainText,
@@ -63,6 +64,7 @@ impl UniversalParser {
         Self {
             supported_formats: vec![
                 FileFormat::PDF,
+                FileFormat::DOC,
                 FileFormat::DOCX,
                 FileFormat::Markdown,
                 FileFormat::PlainText,
@@ -81,6 +83,7 @@ impl UniversalParser {
 
         match extension.as_deref() {
             Some("pdf") => FileFormat::PDF,
+            Some("doc") => FileFormat::DOC,
             Some("docx") => FileFormat::DOCX,
             Some("md") | Some("markdown") => FileFormat::Markdown,
             Some("txt") => FileFormat::PlainText,
@@ -104,6 +107,7 @@ impl UniversalParser {
             }
             FileFormat::JSON => self.parse_json(file_path).await,
             FileFormat::PDF => self.parse_pdf(file_path).await,
+            FileFormat::DOC => self.parse_doc(file_path).await,
             FileFormat::DOCX => self.parse_docx(file_path).await,
             _ => Err(format!("Unsupported format: {:?}", format)),
         }
@@ -194,6 +198,34 @@ impl UniversalParser {
             file_path,
             content,
             FileFormat::PDF,
+            metadata,
+            categories,
+            confidence,
+        ))
+    }
+
+    async fn parse_doc(&self, file_path: &str) -> Result<KnowledgeDocument, String> {
+        let metadata = self.extract_metadata(file_path).await?;
+        let extracted = self.extract_doc_text(file_path).await?;
+        let (content, confidence) = if extracted.is_empty() {
+            (
+                self.build_unavailable_content(
+                    file_path,
+                    "DOC",
+                    metadata.size_bytes,
+                    "Le format Word binaire legacy n’a pas pu être converti complètement dans ce runtime. Le document reste néanmoins indexé avec ses métadonnées pour la mémoire TITANE.",
+                ),
+                0.35,
+            )
+        } else {
+            (extracted, 0.78)
+        };
+        let categories = self.classify_content(&content);
+
+        Ok(self.build_document(
+            file_path,
+            content,
+            FileFormat::DOC,
             metadata,
             categories,
             confidence,
@@ -348,6 +380,21 @@ impl UniversalParser {
         Ok(Self::normalize_extracted_content(&raw))
     }
 
+    async fn extract_doc_text(&self, file_path: &str) -> Result<String, String> {
+        for (program, args) in [
+            ("antiword", vec![file_path]),
+            ("catdoc", vec![file_path]),
+        ] {
+            let raw = self.run_external_parser(program, &args).await?;
+            let normalized = Self::normalize_extracted_content(&raw);
+            if !normalized.is_empty() {
+                return Ok(normalized);
+            }
+        }
+
+        Ok(String::new())
+    }
+
     async fn extract_docx_text(&self, file_path: &str) -> Result<String, String> {
         let raw_xml = self
             .run_external_parser("unzip", &["-p", file_path, "word/document.xml"])
@@ -473,6 +520,7 @@ mod tests {
         let parser = UniversalParser::new();
 
         assert_eq!(parser.detect_format("/tmp/REPORT.PDF"), FileFormat::PDF);
+        assert_eq!(parser.detect_format("/tmp/legacy.DOC"), FileFormat::DOC);
         assert_eq!(parser.detect_format("/tmp/notes.DOCX"), FileFormat::DOCX);
     }
 
@@ -498,6 +546,23 @@ mod tests {
             !document.content.trim().is_empty(),
             "pdf fallback should produce visible content"
         );
+    }
+
+    #[tokio::test]
+    async fn parse_doc_returns_a_fallback_document_instead_of_unsupported() {
+        let parser = UniversalParser::new();
+        let dir = tempdir().expect("tempdir");
+        let doc_path = dir.path().join("legacy.DOC");
+
+        std::fs::write(&doc_path, b"legacy-doc-binary-placeholder").expect("write doc");
+
+        let document = parser
+            .parse_file(doc_path.to_string_lossy().as_ref())
+            .await
+            .expect("doc fallback should succeed");
+
+        assert_eq!(document.format, FileFormat::DOC);
+        assert!(document.content.contains("Document importé: legacy.DOC"));
     }
 
     #[tokio::test]

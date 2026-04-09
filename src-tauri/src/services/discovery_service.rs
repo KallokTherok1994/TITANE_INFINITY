@@ -289,6 +289,7 @@ fn is_non_html_extension(url: &str) -> bool {
             | "xml"
             | "csv"
             | "xlsx"
+            | "doc"
             | "docx"
             | "pptx"
             | "exe"
