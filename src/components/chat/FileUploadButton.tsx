@@ -14,6 +14,8 @@
 
 import React, { useRef, useState, useCallback, memo } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
+import { knowledgeVault } from '@/cognitive/knowledge/knowledgeVault';
+import { resolveImportedFileContent } from './fileImportSupport';
 import { awardExperience } from '../../services/experienceService';
 import { XPSource, XP_REWARDS } from '../../types/experience';
 import './FileUploadButton.css';
@@ -40,6 +42,7 @@ export interface AnalyzedFile {
   size: number;
   type: string;
   category: FileCategory;
+  sourcePath?: string | null;
   content: string | null;
   preview: string;
   analysis?: FileAnalysisResult;
@@ -210,6 +213,7 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = memo(
       async (file: File): Promise<AnalyzedFile> => {
         const category = classifyFile(file.name, file.type);
         const id = generateFileId();
+        const sourcePath = (file as File & { path?: string }).path ?? null;
 
         const analyzedFile: AnalyzedFile = {
           id,
@@ -217,6 +221,7 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = memo(
           size: file.size,
           type: file.type,
           category,
+          sourcePath,
           content: null,
           preview: '',
           status: 'pending',
@@ -248,10 +253,12 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = memo(
           };
         }
 
-        // Lecture du contenu texte
+        // Lecture du contenu texte avec tentative d'analyse backend réelle si le chemin Tauri est disponible
         try {
           analyzedFile.status = 'analyzing';
-          const content = await file.text();
+
+          const content = await resolveImportedFileContent(file);
+
           analyzedFile.content = content;
           analyzedFile.preview = generatePreview(content);
           analyzedFile.analysis = analyzeFileContent(content, file.name);
@@ -293,9 +300,27 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = memo(
           // Enregistrer le fichier dans la mémoire IA permanente (backend Tauri)
           if (result.status === 'done' && result.content) {
             try {
+              const now = Date.now();
+
+              try {
+                await knowledgeVault.ingest(
+                  result.sourcePath || result.name,
+                  result.content,
+                  {
+                    createdAt: now,
+                    modifiedAt: now,
+                  }
+                );
+              } catch (vaultError) {
+                console.warn(
+                  '[FileUpload] Knowledge vault ingestion warning (non-blocking):',
+                  vaultError
+                );
+              }
+
               // Ingestion dans la mémoire IA permanente
               const memoryResult = await tauriClient.memoryIngestFile({
-                path: result.name,
+                path: result.sourcePath || result.name,
                 content: result.content,
                 category: result.category,
                 metadata: {
@@ -303,7 +328,7 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = memo(
                   size: result.size,
                   type: result.type,
                   analysis: result.analysis,
-                  timestamp: Date.now(),
+                  timestamp: now,
                 },
               });
 

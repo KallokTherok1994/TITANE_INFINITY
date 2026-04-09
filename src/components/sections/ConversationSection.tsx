@@ -29,6 +29,7 @@ import {
   type ConversationProviderReadiness,
 } from './conversationProviderReadiness';
 import type { AnalyzedFile } from '@/components/chat/FileUploadButton';
+import { buildImportedFilesPrompt } from '@/components/chat/fileImportPrompt';
 import { ThinkingPanel, useThinkingSteps } from '@/features/chat/ThinkingPanel';
 import {
   downloadConversation,
@@ -1768,24 +1769,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
 
   const handleFilesAnalyzed = useCallback(
     (files: AnalyzedFile[]) => {
-      const filesSummary = files
-        .map(file => {
-          const lines = [
-            `📄 **${file.name}**`,
-            `- Taille: ${(file.size / 1024).toFixed(1)} KB`,
-          ];
-
-          if (file.analysis?.summary) {
-            lines.push(`- Résumé: ${file.analysis.summary}`);
-          }
-
-          return lines.join('\n');
-        })
-        .join('\n\n');
-
-      sendMessage(
-        `📎 Fichiers importés pour analyse:\n\n${filesSummary}\n\nAnalyse ces fichiers.`
-      );
+      sendMessage(buildImportedFilesPrompt(files));
     },
     [sendMessage]
   );

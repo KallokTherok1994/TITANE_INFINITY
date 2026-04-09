@@ -14,6 +14,13 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { logger } from '@/lib/logger';
 import { invokeTauri, TAURI_COMMANDS } from '@/core/commands/TAURI_COMMANDS';
+import { knowledgeVault } from '@/cognitive/knowledge/knowledgeVault';
+import {
+  CHAT_FILE_IMPORT_ACCEPT,
+  CHAT_FILE_IMPORT_HINT,
+  isSupportedChatImportFile,
+  resolveImportedFileContent,
+} from './fileImportSupport';
 import './ChatFileImport.css';
 
 interface ChatFileImportProps {
@@ -43,54 +50,17 @@ export const ChatFileImport: React.FC<ChatFileImportProps> = ({
    * Valide le type MIME du fichier
    */
   const validateFileMimeType = (file: File): boolean => {
-    const allowedMimeTypes = [
-      'text/plain',
-      'text/markdown',
-      'text/x-markdown',
-      'application/json',
-      'application/x-yaml',
-      'text/yaml',
-      'text/javascript',
-      'application/javascript',
-      'text/typescript',
-      'application/typescript',
-      'text/x-typescript',
-      'text/jsx',
-      'text/tsx',
-    ];
+    const isSupported = isSupportedChatImportFile(file);
 
-    // Vérification MIME
-    if (file.type && allowedMimeTypes.includes(file.type)) {
-      return true;
-    }
-
-    // Fallback: vérification extension si MIME vide
-    const allowedExtensions = [
-      '.txt',
-      '.md',
-      '.json',
-      '.yaml',
-      '.yml',
-      '.js',
-      '.ts',
-      '.tsx',
-      '.jsx',
-      '.log',
-    ];
-    const hasValidExtension = allowedExtensions.some(ext =>
-      file.name.toLowerCase().endsWith(ext)
-    );
-
-    if (!file.type && hasValidExtension) {
+    if (!file.type && isSupported) {
       logger.warn('MIME type empty, validated by extension', {
         component: 'ChatFileImport',
         action: 'validateFileMimeType',
         filename: file.name,
       });
-      return true;
     }
 
-    return false;
+    return isSupported;
   };
 
   /**
@@ -141,7 +111,7 @@ export const ChatFileImport: React.FC<ChatFileImportProps> = ({
       // Validation MIME type
       if (!validateFileMimeType(file)) {
         alert(
-          `Type de fichier non supporté: ${file.type || 'inconnu'}\nExtensions autorisées: .txt, .md, .json, .yaml, .yml, .js, .ts, .tsx, .jsx, .log`
+          `Type de fichier non supporté: ${file.type || 'inconnu'}\nFormats autorisés: ${CHAT_FILE_IMPORT_HINT}`
         );
         return;
       }
@@ -156,8 +126,10 @@ export const ChatFileImport: React.FC<ChatFileImportProps> = ({
       setIsProcessing(true);
 
       try {
-        // Lecture du fichier
-        const content = await file.text();
+        const sourcePath = (file as File & { path?: string }).path ?? null;
+
+        // Lecture du fichier avec parsing Tauri si disponible + fallback sûr côté UI
+        const content = await resolveImportedFileContent(file);
 
         logger.debug('File imported', {
           component: 'ChatFileImport',
@@ -179,10 +151,26 @@ export const ChatFileImport: React.FC<ChatFileImportProps> = ({
           sizeKB: (analysis.size / 1024).toFixed(2),
         });
 
-        // Appel backend pour ingestion (si disponible)
+        // Appel backend pour ingestion (si disponible) + sauvegarde knowledge vault visible dans la Mémoire
         try {
+          const now = Date.now();
+
+          try {
+            await knowledgeVault.ingest(sourcePath || file.name, content, {
+              createdAt: now,
+              modifiedAt: now,
+            });
+          } catch (vaultError) {
+            logger.warn('Knowledge vault ingestion warning (non-blocking)', {
+              component: 'ChatFileImport',
+              action: 'handleFileImport',
+              filename: file.name,
+              error: vaultError instanceof Error ? vaultError.message : String(vaultError),
+            });
+          }
+
           await invokeTauri(TAURI_COMMANDS.MEMORY_INGEST_FILE, {
-            path: file.name,
+            path: sourcePath || file.name,
             content: content,
             metadata: {
               type: analysis.type,
@@ -297,7 +285,7 @@ export const ChatFileImport: React.FC<ChatFileImportProps> = ({
       <input
         ref={fileInputRef}
         type="file"
-        accept=".txt,.md,.json,.yaml,.yml,.js,.ts,.tsx,.jsx,.log"
+        accept={CHAT_FILE_IMPORT_ACCEPT}
         onChange={handleFileSelect}
         style={{ display: 'none' }}
         disabled={disabled || isProcessing}
@@ -324,9 +312,7 @@ export const ChatFileImport: React.FC<ChatFileImportProps> = ({
             <span className="label">
               {isDragging ? 'Déposer le fichier' : 'Glisser un fichier ou cliquer'}
             </span>
-            <span className="hint">
-              .txt, .md, .json, .yaml/.yml, .js/.ts/.tsx/.jsx, .log
-            </span>
+            <span className="hint">{CHAT_FILE_IMPORT_HINT}</span>
           </>
         )}
       </div>

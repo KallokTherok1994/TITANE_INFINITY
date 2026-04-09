@@ -18,6 +18,7 @@ import { MessageBubble } from './chat/MessageBubble';
 import { StatusIndicator } from './StatusIndicator';
 import { VitalsPanel } from './VitalsPanel';
 import { ChatFileImport } from './chat/ChatFileImport';
+import { buildImportedFilesPrompt } from './chat/fileImportPrompt';
 import { useAIActions } from '../core/state/SingularityState.selectors';
 import type { Message as _Message } from '../core/ARCHITECTURE_TYPES_v∞';
 import { listPromptPresets } from '@/core/prompts';
@@ -326,16 +327,17 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
                 });
                 // Injecte résumé fichier dans input
                 setInput(
-                  `Analyse ce fichier:
-
-**${analysis.filename}** (${analysis.lines} lignes, ${analysis.wordCount} mots)
-
-Contenu:
-\`\`\`
-${analysis.summary}
-\`\`\`
-
-Que peux-tu en dire?`
+                  buildImportedFilesPrompt([
+                    {
+                      name: analysis.filename,
+                      size: analysis.size,
+                      content: analysis.content,
+                      preview: analysis.summary,
+                      analysis: {
+                        summary: `${analysis.type} • ${analysis.lines} lignes • ${analysis.wordCount} mots`,
+                      },
+                    },
+                  ])
                 );
                 setShowFileImport(false);
                 // Award +20 XP Memory (si backend disponible)
