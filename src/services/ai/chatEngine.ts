@@ -1423,9 +1423,9 @@ Que souhaites-tu explorer ?`;
         conversationId: this.getConversationId(finalConfig.mode),
         userMessage: validatedMessage,
         systemPrompt,
-        // Persisted Admin Config HUB defaults are resolved by chatEngine.commands.
-        temperature: finalConfig.aiConfig?.temperature,
-        maxOutputTokens: finalConfig.aiConfig?.maxTokens,
+        // Canonical policy profile values take priority; user aiConfig overrides as explicit opt-in.
+        temperature: modeTemperature ?? finalConfig.aiConfig?.temperature,
+        maxOutputTokens: modeMaxTokens ?? finalConfig.aiConfig?.maxTokens,
         provider: backendProvider,
         enableStreaming: false,
         profile: toBackendPerformanceProfile(responseProfileId),
@@ -1629,8 +1629,9 @@ Que souhaites-tu explorer ?`;
       conversationId: conversationId ?? undefined,
       userMessage: validatedMessage,
       systemPrompt,
-      temperature: finalConfig.aiConfig?.temperature,
-      maxOutputTokens: finalConfig.aiConfig?.maxTokens,
+      // Canonical policy profile values take priority; user aiConfig overrides as explicit opt-in.
+      temperature: modeTemperature ?? finalConfig.aiConfig?.temperature,
+      maxOutputTokens: modeMaxTokens ?? finalConfig.aiConfig?.maxTokens,
       provider: backendProvider,
       enableStreaming: true,
       profile: toBackendPerformanceProfile(responseProfileId),
