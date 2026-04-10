@@ -169,8 +169,7 @@ pub async fn query_ollama(params: OllamaParams) -> Result<OllamaResult, String> 
                 .unwrap_or_else(|| DEFAULT_OLLAMA_MODEL.to_string())
         });
 
-    let system_prompt = params.system_prompt.clone();
-    let system_ref = system_prompt.as_deref();
+    let system_ref = params.system_prompt.as_deref();
     let effective_ctx = params.num_ctx.unwrap_or_else(|| model_context_window(&preferred_model));
 
     let response = send_generate(
