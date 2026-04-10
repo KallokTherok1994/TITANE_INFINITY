@@ -151,6 +151,15 @@ describe('CanonicalDiscernmentKernel', () => {
       expect(['low', 'medium', 'high', 'max']).toContain(decision.provider.reasoningEffort);
     });
 
+    it('should escalate reasoningEffort to max for CERTIFY-mode messages', () => {
+      // "certify" + "proof" → CERTIFY_SIGNAL_STRONG → effortLevel=max escalates via EFFORT_RANK
+      const decision = kernel.discern({
+        ...defaultInput,
+        message: 'certify proof that the gate passes',
+      });
+      expect(decision.provider.reasoningEffort).toBe('max');
+    });
+
     it('should prefer user provider preference', () => {
       const decision = kernel.discern({
         ...defaultInput,
