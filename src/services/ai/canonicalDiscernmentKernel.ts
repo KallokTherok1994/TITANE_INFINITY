@@ -530,8 +530,12 @@ export class CanonicalDiscernmentKernel {
   ): string | null {
     if (!availableSkills || availableSkills.length === 0) return null;
 
-    // Only action_request and diagnostic intents can activate skills
-    if (intent.intent !== 'action_request' && intent.intent !== 'diagnostic') {
+    // Only action_request, diagnostic, and research_analysis intents can activate skills
+    if (
+      intent.intent !== 'action_request' &&
+      intent.intent !== 'diagnostic' &&
+      intent.intent !== 'research_analysis'
+    ) {
       return null;
     }
 

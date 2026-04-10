@@ -300,6 +300,19 @@ const DEEP_REASONING_SIGNALS = [
   'interactions',
   'complexe',
   'implications',
+  // research / web analysis signals
+  'recherche sur',
+  'cherche sur',
+  'analyse internet',
+  'analyse web',
+  'synthèse',
+  'résumé complet',
+  'long résumé',
+  'croise les sources',
+  'deep analysis',
+  'in-depth',
+  'research on',
+  'find online',
 ];
 
 /** ARCHITECT: system design, structure, long-term coherence */
