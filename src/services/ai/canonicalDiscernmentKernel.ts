@@ -45,6 +45,9 @@ import { aiOrchestrator } from './orchestrator';
 
 const logger = createLogger('CanonicalDiscernmentKernel');
 
+/** Singularity coherence must exceed this value to trigger a confidence boost signal. */
+const COHERENCE_BOOST_THRESHOLD = 0.7;
+
 // ─────────────────────────────────────────────────────────────────
 // TYPES — Canonical Decision Output
 // ─────────────────────────────────────────────────────────────────
@@ -322,7 +325,7 @@ export class CanonicalDiscernmentKernel {
     // When SingularityBridge reports high coherence, the system is in an aligned state.
     // Boost the mode classification confidence slightly to favour the auto-selected mode.
     const singularityCoherence = input.runtimeState?.singularityCoherence ?? 0.5;
-    if (singularityCoherence > 0.7) {
+    if (singularityCoherence > COHERENCE_BOOST_THRESHOLD) {
       signals.push({
         source: 'singularity',
         type: 'coherence_boost',

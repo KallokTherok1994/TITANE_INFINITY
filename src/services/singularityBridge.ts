@@ -354,7 +354,7 @@ export class SingularityBridge {
    * Used by the AI pipeline (synchronous discern() calls) to avoid adding async overhead.
    */
   static getCachedCoherence(): number {
-    return (this.state?.cognitive as { coherence?: number } | undefined)?.coherence ?? 0.5;
+    return this.state?.cognitive?.coherence ?? 0.5;
   }
 
   static async isCritical(): Promise<boolean> {
