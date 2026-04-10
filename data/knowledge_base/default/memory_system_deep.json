@@ -130,8 +130,8 @@
       "false_positive_rate": "0.1%",
       "benefit": "Évite les I/O disque pour les clés inexistantes (~95% des requêtes)"
     },
-    "persistent_memory_v19": {
-      "description": "PersistentMemoryState v19.2Ω — mémoire persistante haute disponibilité",
+    "persistent_memory_v30": {
+      "description": "PersistentMemoryState v30.0.0Ω — mémoire persistante haute disponibilité",
       "ipc_commands": [
         "persistent_memory_read",
         "persistent_memory_get_stats",

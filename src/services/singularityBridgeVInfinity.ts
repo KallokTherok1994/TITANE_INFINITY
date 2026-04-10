@@ -87,7 +87,7 @@ export interface WebSearchState {
   last_query_latency_ms: number;
 }
 
-export interface EvolutionStateV20 {
+export interface EvolutionStateV30 {
   total_xp: number;
   level: number;
   skills: Record<string, number>;
@@ -177,7 +177,7 @@ export interface SingularityStateVInfinity {
   analysis: AnalysisState;
   documents: DocumentEngineState;
   search: WebSearchState;
-  evolution: EvolutionStateV20;
+  evolution: EvolutionStateV30;
   ui: UIEngineState;
   audio: AudioState;
   system: SystemVitalsState;

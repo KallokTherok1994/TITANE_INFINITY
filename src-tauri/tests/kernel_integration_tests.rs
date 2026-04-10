@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20Ω — KERNEL INTEGRATION TESTS
+//   TITANE∞ v30Ω — KERNEL INTEGRATION TESTS
 //   Super Prompt #11 Phase 9C — Integration Testing Suite
 // ═══════════════════════════════════════════════════════════════
 

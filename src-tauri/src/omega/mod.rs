@@ -20,7 +20,7 @@ pub mod context_v2;
 pub mod events;
 pub mod memory_bridge;
 
-// Tests — Phase 1 Stabilisation v20.0
+// Tests — Phase 1 Stabilisation v30.0.0
 #[cfg(test)]
 mod tests_pipeline;
 

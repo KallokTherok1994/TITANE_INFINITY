@@ -47,6 +47,7 @@ import { Download, FileText, Copy, Trash2, Search } from 'lucide-react';
 import { colors } from '@themes/tokens';
 import { Card } from '@/ui';
 import { createLogger } from '@/utils/logger';
+import { confirmAction } from '@/utils/runtimeConfirm';
 import type { ProviderDecisionMeta, ReasonCode } from '@/types/providerMeta';
 import { webResearch } from '@/services/webResearchService';
 import type { ResearchOptions, ResearchReport } from '@/types/research';
@@ -1695,8 +1696,21 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     [handleSend]
   );
 
-  const handleClearChat = useCallback(() => {
-    if (confirm("Voulez-vous vraiment effacer tout l'historique ?")) {
+  const handleClearChat = useCallback(async () => {
+    try {
+      const confirmed = await confirmAction(
+        "Voulez-vous vraiment effacer tout l'historique ?",
+        {
+          title: 'Effacer la conversation',
+          defaultToConfirmed: true,
+        }
+      );
+
+      if (confirmed) {
+        clearMessages();
+      }
+    } catch (error) {
+      pageLogger.warn('Clear chat confirmation failed', error);
       clearMessages();
     }
   }, [clearMessages]);

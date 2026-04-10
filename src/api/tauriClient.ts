@@ -188,5 +188,17 @@ export async function tauriBatch<T = unknown>(
  * @returns true if Tauri API is available
  */
 export function isTauriAvailable(): boolean {
-  return typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  const candidate = window as Window & {
+    __TAURI__?: unknown;
+    __TAURI_INTERNALS__?: unknown;
+    isTauri?: boolean;
+  };
+
+  return Boolean(
+    candidate.__TAURI__ || candidate.__TAURI_INTERNALS__ || candidate.isTauri
+  );
 }

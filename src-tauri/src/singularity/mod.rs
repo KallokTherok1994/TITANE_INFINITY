@@ -16,7 +16,7 @@ pub mod singularity_state;
 pub mod totality;
 
 // ═══════════════════════════════════════════════════════════════
-//   MODULES v∞ (v20)
+//   MODULES v∞ (v30)
 // ═══════════════════════════════════════════════════════════════
 pub mod singularity_commands;
 pub mod singularity_selftest;
