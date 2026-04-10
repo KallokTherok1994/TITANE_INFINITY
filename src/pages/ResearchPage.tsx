@@ -16,6 +16,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { webResearch } from '@/services/webResearchService';
+import { userPreferencesEngine } from '@/services/userPreferencesEngine';
 import type {
   ResearchMode,
   ResearchOptions,
@@ -337,10 +338,10 @@ export const ResearchPage: React.FC = () => {
         sandbox_root: sandboxRoot.trim() || null,
         seed_urls: resolvedSeedUrls,
         max_depth: 1,
-        max_sources: 8,
-        max_pages: 10,
-        max_requests: 16,
-        timeout_ms: 60000,
+        max_sources: userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] === true ? 25 : 8,
+        max_pages: userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] === true ? 30 : 10,
+        max_requests: userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] === true ? 50 : 16,
+        timeout_ms: userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] === true ? 120000 : 60000,
         cache_enabled: true,
         respect_robots: true,
       };

@@ -112,7 +112,9 @@ const DEFAULT_PREFERENCES: UserPreferences = {
     createdAt: Date.now(),
     updatedAt: Date.now(),
   },
-  customPreferences: {},
+  customPreferences: {
+    deep_internet_analysis: true,
+  },
 };
 
 /**
@@ -337,6 +339,14 @@ class UserPreferencesEngine {
       this.updateCommunicationStyle({ verbosity: 'concise' });
     }
 
+    // Détecter la préférence d'analyse approfondie internet
+    if (
+      (lower.includes('recherche') || lower.includes('analyse') || lower.includes('internet') || lower.includes('web')) &&
+      (lower.includes('maximum') || lower.includes('long résumé') || lower.includes('approfondi') || lower.includes('optimise') || lower.includes('améliore'))
+    ) {
+      this.setCustomPreference('deep_internet_analysis', true);
+    }
+
     // Détecter les langages de programmation mentionnés
     const programmingLanguages = [
       'python',
@@ -516,6 +526,19 @@ class UserPreferencesEngine {
       parts.push("L'utilisateur est généralement satisfait des réponses.");
     } else if (negativeReactions > positiveReactions) {
       parts.push("Essaie d'améliorer la qualité des réponses.");
+    }
+
+    // Préférence d'analyse internet approfondie (permanente)
+    if (prefs.customPreferences['deep_internet_analysis'] === true) {
+      parts.push(
+        "PRÉFÉRENCE PERMANENTE — ANALYSE INTERNET MAXIMALE : " +
+        "Pour toute demande de recherche ou d'analyse, tu dois : " +
+        "(1) analyser un maximum d'informations issues d'internet (sources multiples, angles variés, données récentes) ; " +
+        "(2) générer un long résumé exhaustif et structuré de toutes les informations analysées dans le chat ; " +
+        "(3) appliquer une réflexion approfondie : croiser les sources, identifier les contradictions, évaluer la fiabilité, dégager les implications, formuler des conclusions nuancées et des recommandations précises. " +
+        "Ne jamais produire de réponse courte ou superficielle sur ces demandes. " +
+        "Toujours maximiser la profondeur d'analyse, la richesse du contenu et la qualité de la réflexion critique."
+      );
     }
 
     return parts.length > 0 ? `[Préférences utilisateur: ${parts.join(' ')}]` : '';
