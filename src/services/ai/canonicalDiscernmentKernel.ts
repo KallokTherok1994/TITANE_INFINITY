@@ -118,6 +118,8 @@ export interface DiscernmentInput {
     providerHealth?: Record<string, number>; // provider → health score 0-1
     latencyMs?: Record<string, number>;
     errorRates?: Record<string, number>;
+    /** Singularity-Omega coherence score (0–1). Used to boost confidence when coherence is high. */
+    singularityCoherence?: number;
   };
   availableSkills?: Array<{ id: string; healthy: boolean; intentMatch: string[] }>;
 }
@@ -315,6 +317,19 @@ export class CanonicalDiscernmentKernel {
       value: truthStatus,
       confidence: 0.9,
     });
+
+    // ── STEP 9: Singularity-Omega coherence signal ──
+    // When SingularityBridge reports high coherence, the system is in an aligned state.
+    // Boost the mode classification confidence slightly to favour the auto-selected mode.
+    const singularityCoherence = input.runtimeState?.singularityCoherence ?? 0.5;
+    if (singularityCoherence > 0.7) {
+      signals.push({
+        source: 'singularity',
+        type: 'coherence_boost',
+        value: singularityCoherence,
+        confidence: singularityCoherence,
+      });
+    }
 
     // ── Build reasoning ──
     const reasoning = this.buildReasoning(

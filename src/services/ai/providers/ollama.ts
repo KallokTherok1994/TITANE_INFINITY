@@ -48,8 +48,9 @@ const OLLAMA_CONFIG = {
   maxRetries: 3,
   maxErrors: 5,
   temperature: 0.7,
-  // OLLAMA CHAMPION: 8192 tokens — supports full DEVELOPED responses + system prompt
-  numCtx: 8192,
+  // OLLAMA CHAMPION: numCtx=undefined → Rust model_context_window() picks the correct value
+  // per-model: llama3.2/3.3/mistral/qwen/deepseek → 32 768; llama3.1/phi4 → 16 384; others → 8 192
+  numCtx: undefined as number | undefined,
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -347,6 +348,8 @@ export const ollamaProvider: AIProvider = {
           max_tokens:
             typeof finalConfig.maxTokens === 'number' ? finalConfig.maxTokens : undefined,
           timeout_secs: Math.ceil(OLLAMA_CONFIG.timeout / 1000),
+          // num_ctx=undefined → Rust model_context_window() picks the correct value per model
+          num_ctx: OLLAMA_CONFIG.numCtx,
         });
 
         if (!result.ok) {

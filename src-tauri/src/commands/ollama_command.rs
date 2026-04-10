@@ -18,6 +18,9 @@ pub struct OllamaRequest {
     /// Maximum tokens to generate. Forwarded to Ollama `num_predict`.
     #[serde(default)]
     pub max_tokens: Option<u32>,
+    /// Context window size override. `None` → model-aware default via `model_context_window()`.
+    #[serde(default)]
+    pub num_ctx: Option<u32>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -57,7 +60,7 @@ pub async fn ollama_generate(req: OllamaRequest) -> Result<OllamaResponse, Strin
         temperature: req.temperature,
         max_tokens: req.max_tokens,
         timeout_secs: Some(req.timeout_secs),
-        num_ctx: None, // model_context_window() will pick the right default
+        num_ctx: req.num_ctx, // None → model_context_window() picks the right default
     };
 
     match query_ollama(params).await {

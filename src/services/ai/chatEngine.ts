@@ -61,6 +61,7 @@ import {
 import { MEMORY_TIMEOUTS, REQUEST_BUDGETS } from '@/config/aiTimeouts.config'; // v22Ω: Centralized timeouts
 import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
 import { createLogger } from '@/utils/logger';
+import { SingularityBridge } from '@/services/singularityBridge';
 
 // 🆕 P1: Multi-conversations integration
 import { conversationLifecycle } from '@/engines/conversation/conversationLifecycleEngine';
@@ -649,6 +650,10 @@ class ChatEngineOmega {
       // Collect available skills for the kernel
       const availableSkills = finalConfig.mode !== 'default' ? [] : undefined;
 
+      // Singularity-Omega unification: read cached coherence from SingularityBridge
+      // (synchronous — uses in-memory state; falls back to 0.5 neutral if not yet loaded)
+      const singularityCoherence = SingularityBridge.getCachedCoherence();
+
       const canonicalDecision = canonicalDiscernmentKernel.discern({
         message: validatedMessage,
         mode: finalConfig.mode,
@@ -656,9 +661,10 @@ class ChatEngineOmega {
         preferences: memoryIntegration.loadPreferences(),
         userDepthPreference: userDepthPref,
         providerPreference: this.providerPreference,
-        runtimeState: providerHealthForKernel
-          ? { providerHealth: providerHealthForKernel }
-          : undefined,
+        runtimeState: {
+          ...(providerHealthForKernel ? { providerHealth: providerHealthForKernel } : {}),
+          singularityCoherence,
+        },
         availableSkills,
       });
 
