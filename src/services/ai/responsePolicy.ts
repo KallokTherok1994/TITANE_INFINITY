@@ -91,7 +91,7 @@ export interface ResponseProfile {
   /** Température de génération */
   temperature: number;
   /** Effort de raisonnement (pour providers compatibles : openai o1/o3) */
-  reasoningEffort: 'low' | 'medium' | 'high';
+  reasoningEffort: 'low' | 'medium' | 'high' | 'max';
 
   // Politique de réponse
   /** Niveau de structure (0=prose, 1=léger, 2=structuré, 3=haute structure) */
@@ -296,7 +296,7 @@ export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
       'Puissance maximale. Mémoire totale, génération longue, raisonnement approfondi. Aucune limitation artificielle.',
     maxTokens: 16000,
     temperature: 0.72,
-    reasoningEffort: 'high',
+    reasoningEffort: 'max',
     structureLevel: 3,
     clarificationThreshold: 0.2,
     inferenceAggression: 0.9,
@@ -338,7 +338,7 @@ const MODE_PROFILE_MAP: Record<string, ResponseProfileId> = {
   planning: 'ARCHITECT',
   hybrid: 'OMEGA',
   journal: 'DEVELOPED',
-  debug_cognitive: 'DEEP',
+  debug_cognitive: 'ARCHITECT',
   coach: 'DEVELOPED',
   dev: 'DEEP',
   admin: 'OMEGA',
@@ -650,9 +650,11 @@ export function mapReasoningEffort(
   provider: string,
   effort: ResponseProfile['reasoningEffort']
 ): Record<string, unknown> {
-  // Seul openai (o-series) supporte reasoning_effort nativement
+  // Seul openai (o-series) supporte reasoning_effort nativement.
+  // L'API OpenAI accepte low/medium/high seulement — 'max' est plafonné à 'high'.
   if (provider === 'openai') {
-    return { reasoning_effort: effort };
+    const mappedEffort = effort === 'max' ? 'high' : effort;
+    return { reasoning_effort: mappedEffort };
   }
   // Ignorer pour les autres providers
   return {};
