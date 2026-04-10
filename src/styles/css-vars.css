@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v29.0.0 — CSS CUSTOM PROPERTIES (DESIGN TOKENS)
+ * TITANE∞ v30.0.0 — CSS CUSTOM PROPERTIES (DESIGN TOKENS)
  *
  * Design System centralisé pour TITANE_INFINITY
  * Palette: Titane Métallique + Violet Énergie + Cyan Tech + Émeraude Arc Reactor
  * Mobile-first, responsive, accessible
  *
- * v29.0.0 Premium Glass Tech System
+ * v30.0.0 Premium Glass Tech System
  */
 
 :root {
@@ -252,7 +252,7 @@
   --max-content-width: 1280px;
 
   /* ═══════════════════════════════════════════════════════════════ */
-  /* SEMANTIC ALIASES v29.0.0 — For Component Compatibility          */
+  /* SEMANTIC ALIASES v30.0.0 — For Component Compatibility          */
   /* Maps Button.css, Card.css, etc. variables to design tokens      */
   /* ═══════════════════════════════════════════════════════════════ */
 
@@ -306,7 +306,7 @@
   --font-weight-bold: var(--font-bold);
 
   /* ═══════════════════════════════════════════════════════════════ */
-  /* ACCENT & INTERACTION v29.0.0 — Global Accent Variables          */
+  /* ACCENT & INTERACTION v30.0.0 — Global Accent Variables          */
   /* ═══════════════════════════════════════════════════════════════ */
 
   /* Main accent (émeraude TITANE∞) */
@@ -322,7 +322,7 @@
   --accent-secondary-dark: var(--color-violet-700);
 
   /* ═══════════════════════════════════════════════════════════════ */
-  /* BACKGROUND LAYERS v29.0.0 — Panel/Card/Glass Backgrounds        */
+  /* BACKGROUND LAYERS v30.0.0 — Panel/Card/Glass Backgrounds        */
   /* ═══════════════════════════════════════════════════════════════ */
 
   /* Base backgrounds */
@@ -349,7 +349,7 @@
   --chat-bubble-ai: rgba(16, 185, 129, 0.1);
 
   /* ═══════════════════════════════════════════════════════════════ */
-  /* ADMIN PANEL v29.0.0 — Admin-specific Variables                  */
+  /* ADMIN PANEL v30.0.0 — Admin-specific Variables                  */
   /* ═══════════════════════════════════════════════════════════════ */
 
   --admin-bg-start: #0f172a;
@@ -372,7 +372,7 @@
   --cloud-border: var(--color-border-subtle);
 
   /* ═══════════════════════════════════════════════════════════════ */
-  /* AURA EFFECTS v29.0.0 — Quantum/Visual Effect Variables          */
+  /* AURA EFFECTS v30.0.0 — Quantum/Visual Effect Variables          */
   /* ═══════════════════════════════════════════════════════════════ */
 
   /* Aura color palette */
@@ -419,7 +419,7 @@
   --aura-intensity-max: 1;
 
   /* ═══════════════════════════════════════════════════════════════ */
-  /* TITANE∞ EMERALD THEME v29.0.0 — Arc Reactor Identity            */
+  /* TITANE∞ EMERALD THEME v30.0.0 — Arc Reactor Identity            */
   /* ═══════════════════════════════════════════════════════════════ */
 
   /* Emerald core colors (Arc Reactor) */
@@ -453,7 +453,7 @@
   --shadow-emerald-glow: 0 0 60px rgba(52, 211, 153, 0.7);
 
   /* ═══════════════════════════════════════════════════════════════ */
-  /* METALLIC EFFECTS v29.0.0 — Premium Tech UI Effects              */
+  /* METALLIC EFFECTS v30.0.0 — Premium Tech UI Effects              */
   /* ═══════════════════════════════════════════════════════════════ */
 
   /* Metallic silver/titanium gradients */
@@ -525,7 +525,7 @@
   --text-shadow-emboss: 0 1px 0 rgba(255, 255, 255, 0.1), 0 -1px 0 rgba(0, 0, 0, 0.3);
 
   /* ═══════════════════════════════════════════════════════════════ */
-  /* CYAN TECH v29.0.0 — Official Cyan Variables                    */
+  /* CYAN TECH v30.0.0 — Official Cyan Variables                    */
   /* ═══════════════════════════════════════════════════════════════ */
 
   /* Cyan officiel TITANE (cohérent avec aura-cyan) */
@@ -541,7 +541,7 @@
   --shadow-cyan-glow: 0 0 40px rgba(103, 232, 249, 0.6);
 
   /* ═══════════════════════════════════════════════════════════════ */
-  /* VIOLET ENERGY v29.0.0 — Consolidated Violet Variables          */
+  /* VIOLET ENERGY v30.0.0 — Consolidated Violet Variables          */
   /* ═══════════════════════════════════════════════════════════════ */
 
   /* Violet officiel (139, 92, 246) */

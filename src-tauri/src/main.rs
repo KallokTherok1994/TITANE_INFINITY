@@ -328,7 +328,7 @@ mod commands {
         include!("commands/ollama_command.rs");
     }
 
-    // ✨ TOTAL_DEV v29.0.0 — GOD DEV secure space (unlock, git, console, file)
+    // ✨ TOTAL_DEV v30.0.0 — GOD DEV secure space (unlock, git, console, file)
     pub mod total_dev_commands {
         include!("commands/total_dev_commands.rs");
     }
@@ -2830,7 +2830,7 @@ fn main() {
             legacy_ai_bridge::vector_store_insert,
             legacy_ai_bridge::vector_store_update,
 
-            // ✨ TOTAL_DEV v29.0.0 — 6 handlers GOD DEV
+            // ✨ TOTAL_DEV v30.0.0 — 6 handlers GOD DEV
             commands::total_dev_commands::total_dev_unlock,
             commands::total_dev_commands::total_dev_session_status,
             commands::total_dev_commands::total_dev_revoke,

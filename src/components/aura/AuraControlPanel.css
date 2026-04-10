@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v29.0.0 — AURA CONTROL PANEL STYLES
+ *   TITANE∞ v30.0.0 — AURA CONTROL PANEL STYLES
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -38,7 +38,7 @@
 }
 
 /* Position variants */
-/* ✨ v29.0.0 - Ajusté pour éviter le conflit avec le panneau chat flottant (bottom: 2rem + 80px + 24px) */
+/* ✨ v30.0.0 - Ajusté pour éviter le conflit avec le panneau chat flottant (bottom: 2rem + 80px + 24px) */
 .aura-control-toggle--bottom-right {
   bottom: 130px;
   right: 24px;
@@ -155,7 +155,7 @@
 }
 
 /* Position variants */
-/* ✨ v29.0.0 - Ajusté pour éviter conflit avec le panneau chat flottant */
+/* ✨ v30.0.0 - Ajusté pour éviter conflit avec le panneau chat flottant */
 .aura-control-panel--bottom-right {
   bottom: 200px;
   right: 24px;

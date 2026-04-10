@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v29.0.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v29.0.0 — RESPONSIVE UTILITIES
+ *   TITANE∞ v30.0.0 — RESPONSIVE UTILITIES
  *   Ready-to-use CSS classes for responsive layouts
  *   Mobile-first, progressively enhanced
  * ═══════════════════════════════════════════════════════════════════
@@ -76,7 +76,7 @@
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   RESPONSIVE GRID v29.0.0
+   RESPONSIVE GRID v30.0.0
    Auto-adapting grid columns with auto-fit/auto-fill
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
@@ -94,7 +94,7 @@
   grid-template-columns: 1fr; /* Mobile: 1 column */
 }
 
-/* v29.0.0: Auto-fit grids - intelligent column distribution */
+/* v30.0.0: Auto-fit grids - intelligent column distribution */
 .grid-auto-fit {
   display: grid;
   gap: var(--gap-md, 16px);
@@ -113,7 +113,7 @@
   grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
 }
 
-/* v29.0.0: Auto-fill grids - always fill available space */
+/* v30.0.0: Auto-fill grids - always fill available space */
 .grid-auto-fill {
   display: grid;
   gap: var(--gap-md, 16px);
@@ -130,7 +130,7 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  /* v29.0.0: Allow 3 columns on tablet if space permits */
+  /* v30.0.0: Allow 3 columns on tablet if space permits */
   .grid-responsive-3 {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   }
@@ -151,7 +151,7 @@
   }
 }
 
-/* v29.0.0: Large desktop - allow 5-6 columns */
+/* v30.0.0: Large desktop - allow 5-6 columns */
 @media (min-width: 1536px) {
   .grid-responsive-4 {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
