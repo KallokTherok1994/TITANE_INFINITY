@@ -34,6 +34,7 @@ import type { ChatMode } from './chatTypes';
 import {
   classifyMode,
   resolveMode,
+  type BackendConversationMode,
   type CanonicalMode,
   type ClassifierInput,
   type ModeClassification,
@@ -159,13 +160,12 @@ export class CanonicalDiscernmentKernel {
     // Phase 3: Kernel decides mode from message signals
     const modeClassification = classifyMode({
       message: input.message,
-      userExplicitMode:
-        input.mode as unknown as import('./omegaModeClassifier').BackendConversationMode,
+      userExplicitMode: input.mode as BackendConversationMode,
     });
     const resolvedMode = resolveMode(
       modeClassification,
-      input.mode as unknown as import('./omegaModeClassifier').BackendConversationMode
-    ) as unknown as ChatMode;
+      input.mode as BackendConversationMode
+    ) as ChatMode;
 
     signals.push({
       source: 'mode_classifier',
