@@ -12,7 +12,7 @@
  */
 
 import { metricsEngine } from './metricsEngine';
-import { autoHealEngine } from './autoHealEngine';
+import { autoHealEngine, type AutoHealStats } from './autoHealEngine';
 import { aiOrchestrator } from './orchestrator';
 import { createLogger } from '@/utils/logger';
 
@@ -104,14 +104,7 @@ class AIHealthMonitor {
 
       // Analyser et générer alertes si nécessaire
       this.analyzeMetrics(metricsHealth);
-      this.analyzeAutoHeal(
-        autoHealStats as unknown as {
-          totalErrors: number;
-          totalFixes: number;
-          successRate: number;
-          [key: string]: string | number | boolean;
-        }
-      );
+      this.analyzeAutoHeal(autoHealStats);
       this.analyzeOrchestrator(orchestratorHealth);
 
       // Nettoyage vieilles alertes
@@ -180,12 +173,7 @@ class AIHealthMonitor {
   /**
    * Analyser auto-heal et générer alertes
    */
-  private analyzeAutoHeal(stats: {
-    totalErrors: number;
-    totalFixes: number;
-    successRate: number;
-    [key: string]: string | number | boolean;
-  }): void {
+  private analyzeAutoHeal(stats: AutoHealStats): void {
     // Trop d'erreurs
     if (stats.totalErrors > 50) {
       this.addAlert({
