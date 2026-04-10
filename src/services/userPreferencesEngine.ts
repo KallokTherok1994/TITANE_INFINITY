@@ -339,12 +339,17 @@ class UserPreferencesEngine {
       this.updateCommunicationStyle({ verbosity: 'concise' });
     }
 
-    // Détecter la préférence d'analyse approfondie internet
+    // Détecter la préférence d'analyse approfondie internet (bidirectionnel)
     if (
       (lower.includes('recherche') || lower.includes('analyse') || lower.includes('internet') || lower.includes('web')) &&
       (lower.includes('maximum') || lower.includes('long résumé') || lower.includes('approfondi') || lower.includes('optimise') || lower.includes('améliore'))
     ) {
       this.setCustomPreference('deep_internet_analysis', true);
+    } else if (
+      lower.includes('désactive') &&
+      (lower.includes('analyse approfondie') || lower.includes('deep_internet_analysis') || lower.includes('analyse internet'))
+    ) {
+      this.setCustomPreference('deep_internet_analysis', false);
     }
 
     // Détecter les langages de programmation mentionnés

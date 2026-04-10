@@ -332,16 +332,19 @@ export const ResearchPage: React.FC = () => {
       const resolvedSeedUrls =
         mode === 'WEB_LIVE' ? resolveWebLiveSeeds(question, seedUrls) : seedUrls;
 
+      const useDeepAnalysis =
+        userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] === true;
+
       const options: ResearchOptions = {
         mode,
         target_url: resolvedTargetUrl,
         sandbox_root: sandboxRoot.trim() || null,
         seed_urls: resolvedSeedUrls,
         max_depth: 1,
-        max_sources: userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] === true ? 25 : 8,
-        max_pages: userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] === true ? 30 : 10,
-        max_requests: userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] === true ? 50 : 16,
-        timeout_ms: userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] === true ? 120000 : 60000,
+        max_sources: useDeepAnalysis ? 25 : 8,
+        max_pages: useDeepAnalysis ? 30 : 10,
+        max_requests: useDeepAnalysis ? 50 : 16,
+        timeout_ms: useDeepAnalysis ? 120000 : 60000,
         cache_enabled: true,
         respect_robots: true,
       };
