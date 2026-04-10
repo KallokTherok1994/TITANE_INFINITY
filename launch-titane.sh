@@ -45,18 +45,28 @@ check_artifact_guard() {
 }
 
 declare -a candidates=(
-	"$ROOT_DIR/deployment/latest/Titan-Stable_29.0.0_amd64.AppImage"
-	"$ROOT_DIR/runtime/stable/Titan-Stable_29.0.0_amd64.AppImage"
-	"$ROOT_DIR/deployment/latest/TITANE-Infinity_29.0.0_amd64.AppImage"
-	"$ROOT_DIR/runtime/stable/TITANE-Infinity_29.0.0_amd64.AppImage"
+	"/usr/bin/titane-infinity"
 	"$ROOT_DIR/deployment/latest/titane-infinity"
 	"$HOME/.local/share/titane-infinity/titane-infinity.AppImage"
 	"$HOME/.local/bin/titane-infinity"
 )
 
-while IFS= read -r app; do
-	candidates+=("$app")
-done < <(find "$ROOT_DIR/runtime/stable" -maxdepth 1 -type f -name '*.AppImage' 2>/dev/null | sort -r)
+shopt -s nullglob
+latest_deploy_appimages=("$ROOT_DIR"/deployment/latest/*.AppImage)
+latest_runtime_appimages=("$ROOT_DIR"/runtime/stable/*.AppImage)
+shopt -u nullglob
+
+if (( ${#latest_deploy_appimages[@]} > 0 )); then
+	while IFS= read -r app; do
+		candidates+=("$app")
+	done < <(ls -1t "${latest_deploy_appimages[@]}" 2>/dev/null)
+fi
+
+if (( ${#latest_runtime_appimages[@]} > 0 )); then
+	while IFS= read -r app; do
+		candidates+=("$app")
+	done < <(ls -1t "${latest_runtime_appimages[@]}" 2>/dev/null)
+fi
 
 declare -A seen=()
 

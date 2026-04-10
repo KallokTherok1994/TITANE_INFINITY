@@ -39,7 +39,7 @@ mkdir -p "$DESKTOP_INSTALL_DIR"
 
 echo -e "${YELLOW}[1/4]${NC} Mise à jour du fichier .desktop avec chemins actuels..."
 
-# Détecter l'exécutable à utiliser (priorité: AppImage la plus récente déployée/stable → binaire installé → cargo release → cargo debug)
+# Détecter l'exécutable à utiliser (priorité: binaire installé → AppImage la plus récente déployée/stable → cargo release → cargo debug)
 BINARY_PATH=""
 
 shopt -s nullglob
@@ -49,12 +49,12 @@ BUNDLE_APPIMAGES=("$PROJECT_DIR"/src-tauri/target/release/bundle/appimage/*.AppI
 ALL_APPIMAGES=("${DEPLOY_APPIMAGES[@]}" "${STABLE_APPIMAGES[@]}" "${BUNDLE_APPIMAGES[@]}")
 shopt -u nullglob
 
-if [ ${#ALL_APPIMAGES[@]} -gt 0 ]; then
-    BINARY_PATH="$(ls -1t "${ALL_APPIMAGES[@]}" 2>/dev/null | head -n 1)"
-    echo -e "      ✓ AppImage la plus récente trouvée"
-elif [ -x "/usr/bin/titane-infinity" ]; then
+if [ -x "/usr/bin/titane-infinity" ]; then
     BINARY_PATH="/usr/bin/titane-infinity"
     echo -e "      ✓ Binaire installé trouvé (/usr/bin)"
+elif [ ${#ALL_APPIMAGES[@]} -gt 0 ]; then
+    BINARY_PATH="$(ls -1t "${ALL_APPIMAGES[@]}" 2>/dev/null | head -n 1)"
+    echo -e "      ✓ AppImage la plus récente trouvée"
 elif [ -x "$PROJECT_DIR/src-tauri/target/release/titane-infinity" ]; then
     BINARY_PATH="$PROJECT_DIR/src-tauri/target/release/titane-infinity"
     echo -e "      ✓ Binaire Release trouvé"
@@ -120,6 +120,8 @@ if [ -n "$CANONICAL_VERSION" ] && [ -n "$APP_VERSION" ] && [ "$APP_VERSION" != "
 fi
 
 APP_NAME="TITANE∞ v$APP_VERSION"
+MAIN_EXEC="$EXEC_BASE"
+DEV_EXEC="env TITANE_DEVTOOLS=1 $EXEC_BASE"
 
 # Créer le fichier .desktop mis à jour
 cat > "$DESKTOP_FILE" << EOF
@@ -128,7 +130,7 @@ Version=1.0
 Type=Application
 Name=$APP_NAME
 Comment=🏛️ Cognitive OS - Multi-Provider AI - Production Perfect
-Exec=$LAUNCHER_SCRIPT
+Exec=$MAIN_EXEC
 Icon=$ICON_PATH
 Terminal=false
 Categories=Development;Utility;AI;
@@ -139,7 +141,7 @@ Actions=DevMode;Logs;Config;
 
 [Desktop Action DevMode]
 Name=🔧 Developer Mode
-Exec=$LAUNCHER_SCRIPT --dev
+Exec=$DEV_EXEC
 
 [Desktop Action Logs]
 Name=📋 View Logs

@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { act, render, screen, fireEvent, waitFor } from '@testing-library/react';
 
 const TestVoiceApp: React.FC = () => {
   const [view, setView] = useState<'chat' | 'voice' | 'settings'>('chat');
@@ -89,6 +89,12 @@ const TestVoiceApp: React.FC = () => {
   );
 };
 
+const clickAndFlush = async (button: HTMLElement) => {
+  await act(async () => {
+    fireEvent.click(button);
+  });
+};
+
 describe('E2E: Voice Workflow', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -112,7 +118,7 @@ describe('E2E: Voice Workflow', () => {
 
       // Start recording
       const recordButton = screen.getByRole('button', { name: /record|start/i });
-      fireEvent.click(recordButton);
+      await clickAndFlush(recordButton);
 
       await waitFor(() => {
         expect(screen.getByText(/recording|listening/i)).toBeInTheDocument();
@@ -120,7 +126,7 @@ describe('E2E: Voice Workflow', () => {
 
       // Stop recording
       const stopButton = screen.getByRole('button', { name: /stop/i });
-      fireEvent.click(stopButton);
+      await clickAndFlush(stopButton);
 
       expect(screen.getByText(/processing|transcribing/i)).toBeInTheDocument();
     });
@@ -133,14 +139,14 @@ describe('E2E: Voice Workflow', () => {
 
       // Mock audio recording
       const recordButton = screen.getByRole('button', { name: /record/i });
-      fireEvent.click(recordButton);
+      await clickAndFlush(recordButton);
 
       await waitFor(() => {
         expect(screen.getByText(/recording/i)).toBeInTheDocument();
       });
 
       // Stop and transcribe
-      fireEvent.click(screen.getByRole('button', { name: /stop/i }));
+      await clickAndFlush(screen.getByRole('button', { name: /stop/i }));
 
       await waitFor(
         () => {
@@ -157,13 +163,13 @@ describe('E2E: Voice Workflow', () => {
 
       // Record voice
       fireEvent.click(screen.getByRole('button', { name: /voice/i }));
-      fireEvent.click(screen.getByRole('button', { name: /record/i }));
+      await clickAndFlush(screen.getByRole('button', { name: /record/i }));
 
       await waitFor(() => {
         expect(screen.getByText(/recording/i)).toBeInTheDocument();
       });
 
-      fireEvent.click(screen.getByRole('button', { name: /stop/i }));
+      await clickAndFlush(screen.getByRole('button', { name: /stop/i }));
 
       // Wait for transcription
       await waitFor(
@@ -215,7 +221,7 @@ describe('E2E: Voice Workflow', () => {
       render(<TestVoiceApp />);
 
       fireEvent.click(screen.getByRole('button', { name: /voice/i }));
-      fireEvent.click(screen.getByRole('button', { name: /record/i }));
+      await clickAndFlush(screen.getByRole('button', { name: /record/i }));
 
       await waitFor(() => {
         expect(
@@ -231,13 +237,13 @@ describe('E2E: Voice Workflow', () => {
       vi.spyOn(global, 'fetch').mockRejectedValueOnce(new Error('Transcription failed'));
 
       fireEvent.click(screen.getByRole('button', { name: /voice/i }));
-      fireEvent.click(screen.getByRole('button', { name: /record/i }));
+      await clickAndFlush(screen.getByRole('button', { name: /record/i }));
 
       await waitFor(() => {
         expect(screen.getByText(/recording/i)).toBeInTheDocument();
       });
 
-      fireEvent.click(screen.getByRole('button', { name: /stop/i }));
+      await clickAndFlush(screen.getByRole('button', { name: /stop/i }));
 
       await waitFor(
         () => {

@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { renderHook, act } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@testing-library/react';
 import { useVoice } from '@/hooks/useVoice';
 import { resetWarnOnceRegistryForTests } from '@/utils/deprecationWarnings';
 
@@ -27,24 +27,39 @@ describe('useVoice Hook', () => {
     (window as any).webkitSpeechRecognition = undefined;
   });
 
+  const renderUseVoice = async () => {
+    const hook = renderHook(() => useVoice());
+
+    await waitFor(() => {
+      expect(hook.result.current.state.ttsProvider).toBe('tauri');
+    });
+
+    return hook;
+  };
+
   describe('Initialization', () => {
-    it('should initialize in idle state', () => {
-      const { result } = renderHook(() => useVoice());
+    it('should initialize in idle state', async () => {
+      const { result } = await renderUseVoice();
       expect(result.current.state.isListening).toBe(false);
       expect(result.current.state.isSpeaking).toBe(false);
     });
 
-    it('should expose listening actions', () => {
-      const { result } = renderHook(() => useVoice());
+    it('should expose listening actions', async () => {
+      const { result } = await renderUseVoice();
       expect(typeof result.current.startListening).toBe('function');
       expect(typeof result.current.stopListening).toBe('function');
     });
 
-    it('should emit the deprecation warning only once across multiple mounts', () => {
+    it('should emit the deprecation warning only once across multiple mounts', async () => {
       const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
       const first = renderHook(() => useVoice());
       const second = renderHook(() => useVoice());
+
+      await waitFor(() => {
+        expect(first.result.current.state.ttsProvider).toBe('tauri');
+        expect(second.result.current.state.ttsProvider).toBe('tauri');
+      });
 
       const deprecationCalls = warnSpy.mock.calls.filter(([message]) =>
         String(message).includes('useVoice hook is deprecated')
@@ -59,7 +74,7 @@ describe('useVoice Hook', () => {
 
   describe('Listening/TTS', () => {
     it('should set error when SpeechRecognition is unavailable', async () => {
-      const { result } = renderHook(() => useVoice());
+      const { result } = await renderUseVoice();
 
       await act(async () => {
         await result.current.startListening();
@@ -69,7 +84,7 @@ describe('useVoice Hook', () => {
     });
 
     it('should stop listening without crashing', async () => {
-      const { result } = renderHook(() => useVoice());
+      const { result } = await renderUseVoice();
 
       await act(async () => {
         await result.current.stopListening();
@@ -79,7 +94,7 @@ describe('useVoice Hook', () => {
     });
 
     it('should speak text without setting error', async () => {
-      const { result } = renderHook(() => useVoice());
+      const { result } = await renderUseVoice();
 
       await act(async () => {
         await result.current.speak('Bonjour TITANE');
@@ -91,7 +106,7 @@ describe('useVoice Hook', () => {
 
   describe('Error Handling', () => {
     it('should clear error and transcript state', async () => {
-      const { result } = renderHook(() => useVoice());
+      const { result } = await renderUseVoice();
 
       await act(async () => {
         await result.current.startListening();
