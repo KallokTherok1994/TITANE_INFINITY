@@ -162,4 +162,39 @@ describe('audioService runtime TTS policy', () => {
     expect(audioService.getTTSSettings().voiceProfileId).toBeUndefined();
     expect(audioService.getTTSSettings().rate).toBe(0.92);
   });
+
+  it('maps browser microphone permission failures to a user-friendly error message', async () => {
+    mockDetectEnvironment.mockReturnValue({
+      isTauri: false,
+      isBrowser: true,
+      protocol: 'https',
+      origin: 'https://localhost',
+      tauriVersion: undefined,
+      isDev: true,
+    });
+
+    const originalMediaDevices = navigator.mediaDevices;
+    const mockGetUserMedia = vi.fn().mockRejectedValue(new Error('NotAllowedError'));
+    Object.defineProperty(global.navigator, 'mediaDevices', {
+      configurable: true,
+      value: {
+        getUserMedia: mockGetUserMedia,
+      },
+    });
+
+    try {
+      const audioService = await loadAudioService();
+      await expect(audioService.testMicrophone(10)).resolves.toMatchObject({
+        success: false,
+        errorMessage:
+          'Permission microphone refusée. Vérifiez les paramètres du navigateur.',
+      });
+      expect(mockGetUserMedia).toHaveBeenCalledTimes(1);
+    } finally {
+      Object.defineProperty(global.navigator, 'mediaDevices', {
+        configurable: true,
+        value: originalMediaDevices,
+      });
+    }
+  });
 });

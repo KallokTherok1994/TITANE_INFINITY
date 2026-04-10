@@ -4,8 +4,17 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ChatToolbar } from '@/components/chat/ChatToolbar';
+
+const mocks = vi.hoisted(() => ({
+  startTurn: vi.fn(),
+  cancelTurn: vi.fn().mockResolvedValue(undefined),
+  startDictation: vi.fn(),
+  stopDictation: vi.fn().mockResolvedValue(''),
+  toastError: vi.fn(),
+  hasMicrophone: vi.fn().mockResolvedValue(true),
+}));
 
 vi.mock('@/hooks/useAudioChat', () => ({
   useAudioChat: () => ({
@@ -20,9 +29,31 @@ vi.mock('@/hooks/useAudioChat', () => ({
 
 vi.mock('@/hooks/useVoiceEngine', () => ({
   useVoiceEngine: () => ({
-    startDictation: vi.fn(),
-    stopDictation: vi.fn().mockResolvedValue(''),
+    startDictation: mocks.startDictation,
+    stopDictation: mocks.stopDictation,
+    startTurn: mocks.startTurn,
+    cancelTurn: mocks.cancelTurn,
   }),
+}));
+
+vi.mock('@/hooks/useToast', () => ({
+  useToast: () => ({
+    success: vi.fn(),
+    error: mocks.toastError,
+    info: vi.fn(),
+    warning: vi.fn(),
+  }),
+}));
+
+vi.mock('@/utils/APISupport', () => ({
+  APISupport: {
+    hasMicrophone: mocks.hasMicrophone,
+    supportsScreenCapture: vi.fn().mockResolvedValue(true),
+    getErrorMessage: vi.fn((capability: string) => capability),
+    supportsGetUserMedia: vi.fn().mockResolvedValue(true),
+    hasCamera: vi.fn().mockResolvedValue(true),
+    supportsMediaRecorder: vi.fn().mockReturnValue(true),
+  },
 }));
 
 vi.mock('@/stores/useVisionStore.selectors', () => ({
@@ -77,6 +108,23 @@ describe('ChatToolbar Component', () => {
     it("should disable screen capture when callback isn't provided", () => {
       render(<ChatToolbar />);
       expect(screen.getByRole('button', { name: /Capture d'écran/i })).toBeDisabled();
+    });
+
+    it('should keep audio conversation disabled when startTurn fails', async () => {
+      mocks.startTurn.mockRejectedValueOnce(new Error('Mic failure'));
+
+      render(<ChatToolbar onScreenCapture={mockOnScreenCapture} />);
+      const conversationButton = screen.getByRole('button', {
+        name: /Mode conversation audio/i,
+      });
+
+      fireEvent.click(conversationButton);
+
+      await waitFor(() => {
+        expect(mocks.startTurn).toHaveBeenCalledTimes(1);
+        expect(conversationButton).toHaveAttribute('aria-pressed', 'false');
+        expect(mocks.toastError).toHaveBeenCalledWith('Erreur: Mic failure');
+      });
     });
   });
 

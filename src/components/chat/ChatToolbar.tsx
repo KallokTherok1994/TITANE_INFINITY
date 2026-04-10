@@ -529,22 +529,23 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
             isDev && console.warn('[ChatToolbar] No microphone for audio conversation');
             return;
           }
-        }
 
-        setIsAudioConversationActive(newState);
-        setAudioConversationPreferred(newState); // ✅ NOUVEAU - Sauvegarder la préférence
-
-        if (newState) {
-          voiceEngine.startTurn();
+          await voiceEngine.startTurn();
+          setIsAudioConversationActive(true);
+          setAudioConversationPreferred(true); // ✅ NOUVEAU - Sauvegarder la préférence
+          onToggleAudioConversation?.(true);
         } else {
-          voiceEngine.cancelTurn();
+          await voiceEngine.cancelTurn();
+          setIsAudioConversationActive(false);
+          setAudioConversationPreferred(false);
+          onToggleAudioConversation?.(false);
         }
 
-        onToggleAudioConversation?.(newState);
         isDev &&
           console.log('[ChatToolbar] Audio conversation:', newState ? 'ON' : 'OFF');
       } catch (err) {
         setIsAudioConversationActive(false);
+        setAudioConversationPreferred(false);
         console.error('[ChatToolbar] Audio conversation toggle error:', err);
         error(`Erreur: ${(err as Error).message || 'Erreur inconnue'}`);
       }
@@ -553,6 +554,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
       voiceEngine,
       setAudioConversationPreferred,
       onToggleAudioConversation,
+      error,
     ]);
 
     // ✅ NOUVEAU - Auto-stop audio conversation après 10 minutes

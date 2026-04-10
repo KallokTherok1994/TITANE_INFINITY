@@ -806,7 +806,7 @@ class AudioService {
         peakLevel: 0,
         noiseFloor: 0,
         signalToNoise: 0,
-        errorMessage: error instanceof Error ? error.message : 'Microphone test failed',
+        errorMessage,
       };
     }
   }
