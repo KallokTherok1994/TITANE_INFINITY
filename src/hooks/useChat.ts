@@ -1224,6 +1224,11 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       setRequestInFlight(true);
 
       // ⭐ OMEGA FIX: Activer failsafe timeout APRÈS setIsLoading(true)
+      const safeFailsafeMs =
+        Number.isFinite(UI_TIMEOUTS.failsafe) && UI_TIMEOUTS.failsafe > 0
+          ? UI_TIMEOUTS.failsafe
+          : 55_000;
+
       failsafeTimeout = setTimeout(() => {
         if (isLoadingRef.current) {
           chatLogger.warn(
@@ -1236,7 +1241,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           setRequestInFlight(false);
           operationLockRef.current = false;
         }
-      }, UI_TIMEOUTS.failsafe);
+      }, safeFailsafeMs);
 
       setError(null);
 
@@ -1257,12 +1262,32 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       // ✅ v∞.FIX P0-3: Timeout adaptatif selon provider et longueur message
       // ✨ v24.2.1: Use ref for stable dependency
       // v22Ω: Using centralized timeout config from aiTimeouts.config.ts
+      const sanitizeTimeoutMs = (value: number, fallback: number): number => {
+        const safeFallback =
+          Number.isFinite(fallback) && fallback > 0 ? Math.floor(fallback) : 30_000;
+
+        if (!Number.isFinite(value) || value <= 0) {
+          return safeFallback;
+        }
+
+        return Math.max(1, Math.floor(value));
+      };
+
       const getAdaptiveTimeout = (): number => {
         const messageLength = cleanMessage.length;
         const configTimeout = omnisTimeoutRef.current;
+        const safeMaxRequest = sanitizeTimeoutMs(
+          UI_TIMEOUTS.maxRequest,
+          REQUEST_BUDGETS.globalRequestMs
+        );
+        const fallbackTimeout = Math.min(
+          safeMaxRequest,
+          sanitizeTimeoutMs(REQUEST_BUDGETS.providerAttemptMs, safeMaxRequest)
+        );
 
         // Si timeout manuel configuré, l'utiliser comme minimum
-        const minTimeout = configTimeout || 0;
+        const minTimeout =
+          Number.isFinite(configTimeout) && configTimeout > 0 ? configTimeout : 0;
 
         // v22Ω: Use centralized config for adaptive timeout
         const providerType: 'local' | 'ollama' | 'cloud' =
@@ -1272,10 +1297,13 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
               ? 'ollama'
               : 'cloud';
 
-        const calculatedTimeout = getAdaptiveUITimeout(providerType, messageLength);
+        const calculatedTimeout = sanitizeTimeoutMs(
+          getAdaptiveUITimeout(providerType, messageLength),
+          fallbackTimeout
+        );
 
         // v22Ω: Apply global cap while respecting minimum
-        return Math.min(UI_TIMEOUTS.maxRequest, Math.max(minTimeout, calculatedTimeout));
+        return Math.min(safeMaxRequest, Math.max(minTimeout, calculatedTimeout));
       };
       const timeoutMs = getAdaptiveTimeout();
       chatLogger.debug('⏱️ Adaptive timeout configured', {
