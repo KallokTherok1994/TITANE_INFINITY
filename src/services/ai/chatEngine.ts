@@ -108,7 +108,7 @@ const DEBUG_CHAT_ENGINE_TRACES = Boolean(
 );
 
 /** Depth preference values that the deep-analysis override is allowed to replace. */
-const OVERRIDABLE_DEPTH_PREFS = new Set(['standard', 'developed', null, undefined]);
+const OVERRIDABLE_DEPTH_PREFS = new Set<string | null>(['standard', 'developed', null]);
 
 /**
  * Returns 'deep' when the deep_internet_analysis preference is active and
@@ -117,7 +117,7 @@ const OVERRIDABLE_DEPTH_PREFS = new Set(['standard', 'developed', null, undefine
 function resolveDepthPref(base: string | null): string | null {
   const deepActive =
     userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] === true;
-  if (deepActive && OVERRIDABLE_DEPTH_PREFS.has(base as string | null | undefined)) {
+  if (deepActive && OVERRIDABLE_DEPTH_PREFS.has(base)) {
     return 'deep';
   }
   return base;

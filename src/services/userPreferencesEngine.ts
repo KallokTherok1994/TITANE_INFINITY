@@ -366,13 +366,15 @@ class UserPreferencesEngine {
     // Détecter la préférence d'analyse approfondie internet (bidirectionnel)
     const deepAnalysisEnableTopics = ['recherche', 'analyse', 'internet', 'web'];
     const deepAnalysisEnableQualifiers = ['maximum', 'long résumé', 'approfondi', 'optimise', 'améliore'];
+    const deepAnalysisExplicitEnable = ['active deep_internet_analysis', 'active analyse approfondie', 'active analyse internet', 'enable deep analysis'];
     const deepAnalysisDisableMarkers = ['analyse approfondie', 'deep_internet_analysis', 'analyse internet'];
 
     const hasTopic = deepAnalysisEnableTopics.some(kw => lower.includes(kw));
     const hasQualifier = deepAnalysisEnableQualifiers.some(kw => lower.includes(kw));
+    const hasExplicitEnable = deepAnalysisExplicitEnable.some(kw => lower.includes(kw));
     const hasDisable = lower.includes('désactive') && deepAnalysisDisableMarkers.some(kw => lower.includes(kw));
 
-    if (hasTopic && hasQualifier) {
+    if (hasExplicitEnable || (hasTopic && hasQualifier)) {
       this.setCustomPreference('deep_internet_analysis', true);
     } else if (hasDisable) {
       this.setCustomPreference('deep_internet_analysis', false);
