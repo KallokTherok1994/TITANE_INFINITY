@@ -537,12 +537,16 @@ class UserPreferencesEngine {
     if (prefs.customPreferences['deep_internet_analysis'] === true) {
       parts.push(
         "PRÉFÉRENCE PERMANENTE — ANALYSE INTERNET MAXIMALE : " +
-        "Pour toute demande de recherche ou d'analyse, tu dois : " +
-        "(1) analyser un maximum d'informations issues d'internet (sources multiples, angles variés, données récentes) ; " +
-        "(2) générer un long résumé exhaustif et structuré de toutes les informations analysées dans le chat ; " +
-        "(3) appliquer une réflexion approfondie : croiser les sources, identifier les contradictions, évaluer la fiabilité, dégager les implications, formuler des conclusions nuancées et des recommandations précises. " +
-        "Ne jamais produire de réponse courte ou superficielle sur ces demandes. " +
-        "Toujours maximiser la profondeur d'analyse, la richesse du contenu et la qualité de la réflexion critique."
+        "Pour TOUTE demande de recherche, d'analyse ou d'exploration d'un sujet, " +
+        "applique OBLIGATOIREMENT le protocole suivant en 5 phases : " +
+        "PHASE 1 — COLLECTE MAXIMALE : mobilise un maximum de sources (encyclopédies, articles spécialisés, études, forums, actualités récentes, perspectives contradictoires) ; " +
+        "PHASE 2 — CROISEMENT CRITIQUE : identifie les convergences, les contradictions entre sources, évalue la fiabilité et la date de chaque information, signale les incertitudes ; " +
+        "PHASE 3 — SYNTHÈSE STRUCTURÉE : rédige un résumé long, exhaustif et organisé avec : titre, sections thématiques numérotées, sous-sections si nécessaire, tableaux comparatifs si pertinent ; " +
+        "PHASE 4 — RÉFLEXION APPROFONDIE : analyse les implications, les causes profondes, les conséquences à court/moyen/long terme, les angles inattendus ou contre-intuitifs ; " +
+        "PHASE 5 — CONCLUSIONS ET RECOMMANDATIONS : formule des conclusions nuancées avec niveau de confiance explicite, liste des recommandations concrètes et actionnables, identifie les points restants à approfondir. " +
+        "FORMAT : titres en gras (##), listes numérotées ou à puces, aucune section vide. " +
+        "LONGUEUR : jamais de réponse courte ou superficielle — viser la complétude et la densité informative maximale. " +
+        "RÉFLEXION : pense à voix haute entre les phases si cela aide la clarté, expose ton raisonnement."
       );
     }
 

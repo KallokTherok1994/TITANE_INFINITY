@@ -99,6 +99,8 @@ function safeParseStreamMetadata(raw: string): BackendStreamMetadata {
 // 🚀 v24.3.1 - Performance Optimizations
 import { responseCache } from '@/services/cache/responseCache';
 import { predictivePreloader } from '@/services/cache/predictivePreloader';
+// Deep analysis preference bridge
+import { userPreferencesEngine } from '@/services/userPreferencesEngine';
 
 const logger = createLogger('ChatEngine');
 const DEBUG_CHAT_ENGINE_TRACES = Boolean(
@@ -466,7 +468,14 @@ class ChatEngineOmega {
 
       // v26.0.0: Intent classification and depth computation are now inside the kernel
       // No independent calls — kernel.discern() handles both
-      const userDepthPref = memoryIntegration.getDepthPreference();
+      const _userDepthPrefBase = memoryIntegration.getDepthPreference();
+      // deep_internet_analysis preference: force DEEP profile when active and no stronger stored preference
+      const _deepAnalysisActive =
+        userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] === true;
+      const userDepthPref =
+        _deepAnalysisActive && (!_userDepthPrefBase || _userDepthPrefBase === 'standard' || _userDepthPrefBase === 'developed')
+          ? 'deep'
+          : _userDepthPrefBase;
 
       // ═══ PHASE 1.1.5: CONSTITUTIONAL CHECKS (TITANE∞ v1.0) ═══
       pipelineSteps.push('constitutional-checks');
@@ -2414,7 +2423,13 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
 
       // v26.0.0: Run kernel for streaming too — single source of truth
       pipelineSteps.push('canonical-discernment');
-      const userDepthPref = memoryIntegration.getDepthPreference();
+      const _streamDepthPrefBase = memoryIntegration.getDepthPreference();
+      const _streamDeepAnalysisActive =
+        userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] === true;
+      const userDepthPref =
+        _streamDeepAnalysisActive && (!_streamDepthPrefBase || _streamDepthPrefBase === 'standard' || _streamDepthPrefBase === 'developed')
+          ? 'deep'
+          : _streamDepthPrefBase;
       const streamCanonicalDecision = canonicalDiscernmentKernel.discern({
         message: validatedMessage,
         mode: finalConfig.mode,

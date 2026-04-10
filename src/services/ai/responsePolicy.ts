@@ -676,7 +676,8 @@ export type IntentType =
   | 'preference_signal' // User expressing how they like things structured
   | 'creative' // User wants generation, brainstorming, writing
   | 'diagnostic' // User asking about system state, errors, health
-  | 'conversational'; // Greeting, acknowledgment, social
+  | 'conversational' // Greeting, acknowledgment, social
+  | 'research_analysis'; // Deep research / web analysis / synthesis request
 
 export interface IntentClassification {
   intent: IntentType;
@@ -763,6 +764,19 @@ const INTENT_SIGNALS: Record<
       /\b(comment ça va|how are you|quoi de neuf|what's up)\b/i,
     ],
     freshness: 'stable',
+    memoryRelevance: 'low',
+  },
+  research_analysis: {
+    patterns: [
+      /\b(recherche|rechercher|cherche sur|trouve sur|analyse|analyser|étudie|étudier)\b/i,
+      /\b(internet|web|en ligne|online|sources|multiples sources)\b/i,
+      /\b(résumé|synthèse|rapport|bilan|compte-rendu|tour d'horizon)\b/i,
+      /\b(approfond|en profondeur|détaillé|exhaustif|complet|maximum)\b/i,
+      /\b(research|search the web|find online|analyze|study|investigate)\b/i,
+      /\b(deep dive|deep analysis|comprehensive|thorough|in-depth)\b/i,
+      /\b(croise les sources|recoup|compare les sources|vérifie)\b/i,
+    ],
+    freshness: 'current',
     memoryRelevance: 'low',
   },
 };
@@ -866,6 +880,7 @@ export function getDepthForIntent(intent: IntentType): ResponseProfileId {
     preference_signal: 'DEVELOPED',
     creative: 'DEEP',
     diagnostic: 'DEEP',
+    research_analysis: 'DEEP',
   };
 
   return intentDepthMap[intent] ?? 'DEVELOPED';
