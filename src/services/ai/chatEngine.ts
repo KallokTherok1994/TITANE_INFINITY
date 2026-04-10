@@ -898,13 +898,15 @@ Format: [Audit complet] + [Réponse utilisateur]
       // Timeout adaptatif: selon le mode ET l'effort de raisonnement du kernel
       const baseTimeout = finalConfig.omegaConfig?.timeoutMs || 30000;
       const effortTimeoutMultiplier =
-        canonicalDecision.provider.reasoningEffort === 'high'
-          ? 3.0 // DEEP_REASONING / ARCHITECT → 90s for a 30s base
-          : finalConfig.mode === 'brainstorming'
-            ? 1.5
-            : finalConfig.mode === 'synthesis'
-              ? 1.3
-              : 1.0;
+        canonicalDecision.provider.reasoningEffort === 'max'
+          ? 4.0 // CERTIFY → 120s for a 30s base
+          : canonicalDecision.provider.reasoningEffort === 'high'
+            ? 3.0 // DEEP_REASONING / ARCHITECT → 90s for a 30s base
+            : finalConfig.mode === 'brainstorming'
+              ? 1.5
+              : finalConfig.mode === 'synthesis'
+                ? 1.3
+                : 1.0;
       const timeoutMs = baseTimeout * effortTimeoutMultiplier;
       // v26.0.0: Use kernel's provider preference
       const kernelProvider =
@@ -1407,7 +1409,7 @@ Que souhaites-tu explorer ?`;
     /** v24.4.0: Effective temperature from canonical response policy */
     modeTemperature?: number;
     /** Reasoning effort level from CanonicalDecision — drives Ollama timeout scaling. */
-    reasoningEffort?: 'low' | 'medium' | 'high';
+    reasoningEffort?: 'low' | 'medium' | 'high' | 'max';
     backendProvider?: ProviderPreference;
     responseProfileId: string;
   }): Promise<ChatEngineResponse | null> {

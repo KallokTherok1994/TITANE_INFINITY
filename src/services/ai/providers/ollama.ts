@@ -326,12 +326,14 @@ export const ollamaProvider: AIProvider = {
     // Build messages with memory context
     const messages = buildOllamaMessages(message, history, memoryContext);
 
-    // Scale timeout based on reasoning effort so DEEP_REASONING/ARCHITECT chains never cut off
+    // Scale timeout based on reasoning effort so DEEP_REASONING/ARCHITECT/CERTIFY chains never cut off
     const reasoningEffort = (finalConfig as { reasoningEffort?: string }).reasoningEffort;
     const effortTimeoutSecs =
-      reasoningEffort === 'high' || reasoningEffort === 'max'
-        ? Math.max(90, Math.ceil(OLLAMA_CONFIG.timeout / 1000))
-        : Math.ceil(OLLAMA_CONFIG.timeout / 1000);
+      reasoningEffort === 'max'
+        ? Math.max(120, Math.ceil(OLLAMA_CONFIG.timeout / 1000))
+        : reasoningEffort === 'high'
+          ? Math.max(90, Math.ceil(OLLAMA_CONFIG.timeout / 1000))
+          : Math.ceil(OLLAMA_CONFIG.timeout / 1000);
 
     // Retry loop
     for (let attempt = 1; attempt <= OLLAMA_CONFIG.maxRetries; attempt++) {

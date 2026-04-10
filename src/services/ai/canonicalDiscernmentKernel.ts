@@ -37,6 +37,7 @@ import {
   type CanonicalMode,
   type ClassifierInput,
   type ModeClassification,
+  type EffortLevel,
 } from './omegaModeClassifier';
 import { getChampion } from './championChallenger';
 // Phase 2-3: Runtime truth, skill selection, orchestrator health
@@ -89,7 +90,7 @@ export interface CanonicalDecision {
     fallback: string[];
     temperature: number;
     maxTokens: number;
-    reasoningEffort: 'low' | 'medium' | 'high';
+    reasoningEffort: EffortLevel;
   };
 
   // 6. Tool/Skill
@@ -279,7 +280,8 @@ export class CanonicalDiscernmentKernel {
       effectiveProfile,
       input.providerPreference ?? 'auto',
       input.runtimeState,
-      modeClassification.canonicalMode
+      modeClassification.canonicalMode,
+      modeClassification.effortLevel
     );
 
     signals.push({
@@ -498,7 +500,8 @@ export class CanonicalDiscernmentKernel {
     },
     userPreference: string,
     runtimeState?: DiscernmentInput['runtimeState'],
-    canonicalMode?: CanonicalMode
+    canonicalMode?: CanonicalMode,
+    classifierEffortLevel?: EffortLevel
   ): CanonicalDecision['provider'] {
     let candidates = [...profile.preferredProviders];
 
@@ -529,13 +532,21 @@ export class CanonicalDiscernmentKernel {
     const selected = scored[0] ?? { name: candidates[0] ?? 'ollama', health: 0.5 };
     const fallback = scored.slice(1).map(s => s.name);
 
+    // Use the stronger of profile effort vs classifier effort (e.g. CERTIFY → 'max')
+    const EFFORT_RANK: Record<EffortLevel, number> = { low: 0, medium: 1, high: 2, max: 3 };
+    const resolvedEffort: EffortLevel =
+      classifierEffortLevel &&
+      EFFORT_RANK[classifierEffortLevel] > EFFORT_RANK[profile.reasoningEffort]
+        ? classifierEffortLevel
+        : profile.reasoningEffort;
+
     return {
       name: selected.name,
       model: 'auto', // orchestrator resolves model
       fallback,
       temperature: profile.temperature,
       maxTokens: profile.maxTokens,
-      reasoningEffort: profile.reasoningEffort,
+      reasoningEffort: resolvedEffort,
     };
   }
 
