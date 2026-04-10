@@ -15,11 +15,57 @@ fn ollama_base_url() -> String {
         .unwrap_or_else(|_| OLLAMA_BASE_URL_FALLBACK.to_string())
 }
 
+/// Returns the recommended context window size for a given model name.
+/// Larger context models (llama3.2, mistral, qwen2.5…) benefit greatly from
+/// more context; small models (gemma2:2b, phi3.5) are capped at 8K.
+fn model_context_window(model: &str) -> u32 {
+    let lower = model.to_lowercase();
+    if lower.starts_with("llama3.2") || lower.starts_with("llama3.3") {
+        32_768 // llama3.2 supports up to 128K; 32K is the pragmatic default
+    } else if lower.starts_with("llama3.1") {
+        16_384
+    } else if lower.starts_with("mistral") || lower.starts_with("mixtral") {
+        32_768
+    } else if lower.starts_with("qwen2.5") || lower.starts_with("qwen3") {
+        32_768
+    } else if lower.starts_with("deepseek") {
+        32_768
+    } else if lower.starts_with("phi4") {
+        16_384
+    } else {
+        // gemma2, phi3.5, small models — conservative but correct default
+        8_192
+    }
+}
+
+/// Full set of parameters for an Ollama query.
+/// All fields are optional except `prompt`.
+#[derive(Debug, Clone, Default)]
+pub struct OllamaParams {
+    /// User/conversation prompt (required).
+    pub prompt: String,
+    /// System prompt injected before the conversation.
+    pub system_prompt: Option<String>,
+    /// Model to use. `None` → `TITANE_OLLAMA_MODEL` env var or `gemma2:2b`.
+    pub model: Option<String>,
+    /// Sampling temperature (0.0–2.0). `None` → Ollama default (~0.8).
+    pub temperature: Option<f32>,
+    /// Maximum tokens to generate. `None` → unlimited (Ollama default: -1).
+    pub max_tokens: Option<u32>,
+    /// Request timeout in seconds. `None` → 60 s.
+    pub timeout_secs: Option<u64>,
+    /// Context window size. `None` → model-aware default via `model_context_window()`.
+    pub num_ctx: Option<u32>,
+}
+
 #[derive(Serialize)]
 struct OllamaRequest<'a> {
     model: &'a str,
     prompt: &'a str,
     stream: bool,
+    /// System prompt — top-level field in Ollama /api/generate.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    system: Option<&'a str>,
     #[serde(skip_serializing_if = "Option::is_none")]
     options: Option<OllamaOptions>,
 }
@@ -30,6 +76,15 @@ struct OllamaOptions {
     num_ctx: Option<u32>,
     #[serde(skip_serializing_if = "Option::is_none")]
     temperature: Option<f32>,
+    /// Maximum tokens to generate (-1 = unlimited).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    num_predict: Option<i32>,
+    /// Nucleus sampling probability (0.0–1.0).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    top_p: Option<f32>,
+    /// Penalise token repetition (>1.0 reduces repetition).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    repeat_penalty: Option<f32>,
 }
 
 /// Result returned by query_ollama — includes the model that actually responded
@@ -91,29 +146,48 @@ struct OllamaError {
     message: Option<String>,
 }
 
-pub async fn query_ollama(prompt: String) -> Result<OllamaResult, String> {
-    let trimmed_prompt = prompt.trim();
+pub async fn query_ollama(params: OllamaParams) -> Result<OllamaResult, String> {
+    let trimmed_prompt = params.prompt.trim().to_string();
     if trimmed_prompt.is_empty() {
         return Err("Le prompt fourni est vide".to_string());
     }
 
+    let timeout_secs = params.timeout_secs.unwrap_or(60);
     let client = Client::builder()
-        .timeout(Duration::from_secs(60))
+        .timeout(Duration::from_secs(timeout_secs))
         .build()
         .map_err(|e| format!("Erreur création client Ollama: {e}"))?;
 
-    let preferred_model = env::var(OLLAMA_MODEL_ENV)
-        .ok()
-        .map(|v| v.trim().to_string())
-        .filter(|v| !v.is_empty())
-        .unwrap_or_else(|| DEFAULT_OLLAMA_MODEL.to_string());
+    let preferred_model = params
+        .model
+        .filter(|m| !m.is_empty())
+        .unwrap_or_else(|| {
+            env::var(OLLAMA_MODEL_ENV)
+                .ok()
+                .map(|v| v.trim().to_string())
+                .filter(|v| !v.is_empty())
+                .unwrap_or_else(|| DEFAULT_OLLAMA_MODEL.to_string())
+        });
 
-    let response = send_generate(&client, &preferred_model, trimmed_prompt).await;
+    let system_prompt = params.system_prompt.clone();
+    let system_ref = system_prompt.as_deref();
+    let effective_ctx = params.num_ctx.unwrap_or_else(|| model_context_window(&preferred_model));
+
+    let response = send_generate(
+        &client,
+        &preferred_model,
+        &trimmed_prompt,
+        system_ref,
+        params.temperature,
+        Some(effective_ctx),
+        params.max_tokens,
+    )
+    .await;
     if let Ok((text, used_model, td, ld, pec, ped, ec, ed, dr)) = response {
         return Ok(OllamaResult {
             response: text,
             model: used_model,
-            context_window_used: Some(8192),
+            context_window_used: Some(effective_ctx),
             total_duration: td,
             load_duration: ld,
             prompt_eval_count: pec,
@@ -136,13 +210,24 @@ pub async fn query_ollama(prompt: String) -> Result<OllamaResult, String> {
     {
         if let Ok(fallback_model) = pick_fallback_model(&client).await {
             if fallback_model != preferred_model {
-                if let Ok((text, used_model, td, ld, pec, ped, ec, ed, dr)) =
-                    send_generate(&client, &fallback_model, trimmed_prompt).await
+                let fallback_ctx = params
+                    .num_ctx
+                    .unwrap_or_else(|| model_context_window(&fallback_model));
+                if let Ok((text, used_model, td, ld, pec, ped, ec, ed, dr)) = send_generate(
+                    &client,
+                    &fallback_model,
+                    &trimmed_prompt,
+                    system_ref,
+                    params.temperature,
+                    Some(fallback_ctx),
+                    params.max_tokens,
+                )
+                .await
                 {
                     return Ok(OllamaResult {
                         response: text,
                         model: used_model,
-                        context_window_used: Some(8192),
+                        context_window_used: Some(fallback_ctx),
                         total_duration: td,
                         load_duration: ld,
                         prompt_eval_count: pec,
@@ -164,6 +249,10 @@ async fn send_generate(
     client: &Client,
     model: &str,
     prompt: &str,
+    system: Option<&str>,
+    temperature: Option<f32>,
+    num_ctx: Option<u32>,
+    max_tokens: Option<u32>,
 ) -> Result<
     (
         String,
@@ -179,14 +268,18 @@ async fn send_generate(
     (StatusCode, String),
 > {
     let options = OllamaOptions {
-        num_ctx: Some(8192), // Effective context window for gemma2:2b
-        temperature: None,
+        num_ctx,
+        temperature,
+        num_predict: max_tokens.map(|t| t as i32),
+        top_p: None,
+        repeat_penalty: None,
     };
 
     let request_body = OllamaRequest {
         model,
         prompt,
         stream: false,
+        system,
         options: Some(options),
     };
 
@@ -358,20 +451,78 @@ mod tests {
     }
 
     // ─────────────────────────────────────────────────────────────
+    // model_context_window Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_model_context_window_llama32() {
+        assert_eq!(model_context_window("llama3.2:latest"), 32_768);
+        assert_eq!(model_context_window("llama3.2:3b"), 32_768);
+        assert_eq!(model_context_window("llama3.3:latest"), 32_768);
+    }
+
+    #[test]
+    fn test_model_context_window_llama31() {
+        assert_eq!(model_context_window("llama3.1:latest"), 16_384);
+        assert_eq!(model_context_window("llama3.1:8b"), 16_384);
+    }
+
+    #[test]
+    fn test_model_context_window_mistral() {
+        assert_eq!(model_context_window("mistral:latest"), 32_768);
+        assert_eq!(model_context_window("mixtral:8x7b"), 32_768);
+    }
+
+    #[test]
+    fn test_model_context_window_qwen() {
+        assert_eq!(model_context_window("qwen2.5:latest"), 32_768);
+        assert_eq!(model_context_window("qwen3:latest"), 32_768);
+    }
+
+    #[test]
+    fn test_model_context_window_default() {
+        assert_eq!(model_context_window("gemma2:2b"), 8_192);
+        assert_eq!(model_context_window("phi3.5:latest"), 8_192);
+        assert_eq!(model_context_window("unknown-model"), 8_192);
+    }
+
+    // ─────────────────────────────────────────────────────────────
     // query_ollama Tests (unit tests without actual network)
     // ─────────────────────────────────────────────────────────────
 
     #[tokio::test]
     async fn test_query_ollama_empty_prompt() {
-        let result = query_ollama("".to_string()).await;
+        let result = query_ollama(OllamaParams {
+            prompt: "".to_string(),
+            ..Default::default()
+        })
+        .await;
         assert!(result.is_err());
         assert!(result.unwrap_err().contains("vide"));
     }
 
     #[tokio::test]
     async fn test_query_ollama_whitespace_prompt() {
-        let result = query_ollama("   \n\t  ".to_string()).await;
+        let result = query_ollama(OllamaParams {
+            prompt: "   \n\t  ".to_string(),
+            ..Default::default()
+        })
+        .await;
         assert!(result.is_err());
         assert!(result.unwrap_err().contains("vide"));
+    }
+
+    #[test]
+    fn test_ollama_params_defaults() {
+        let p = OllamaParams {
+            prompt: "test".to_string(),
+            ..Default::default()
+        };
+        assert!(p.model.is_none());
+        assert!(p.system_prompt.is_none());
+        assert!(p.temperature.is_none());
+        assert!(p.max_tokens.is_none());
+        assert!(p.timeout_secs.is_none());
+        assert!(p.num_ctx.is_none());
     }
 }
