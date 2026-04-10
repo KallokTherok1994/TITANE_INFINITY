@@ -7,6 +7,7 @@
  */
 
 import type { PromptContext } from '@/core/prompts';
+import type { EffortLevel } from '@/services/ai/omegaModeClassifier';
 
 /**
  * ═══════════════════════════════════════════════════════════════════
@@ -172,7 +173,7 @@ export interface AIConfig {
   promptContext?: PromptContext;
   preferredProvider?: ProviderChoice; // ✨ v21 - Force specific provider
   /** Reasoning effort level forwarded from CanonicalDecision.provider.reasoningEffort. */
-  reasoningEffort?: 'low' | 'medium' | 'high' | 'max';
+  reasoningEffort?: EffortLevel;
 }
 
 export const DEFAULT_AI_CONFIG: AIConfig = {
