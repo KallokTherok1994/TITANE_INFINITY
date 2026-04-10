@@ -1,8 +1,8 @@
 # TITANE∞ — User Documentation (EN)
 
-**Version:** 28.0.0  
-**Status:** PARTIAL  
-**Date:** 2026-03-17
+**Version:** 30.0.0  
+**Status:** PRODUCTION READY  
+**Date:** 2026-04-10
 
 > Canonical guide for TITANE∞ end users.
 
@@ -35,15 +35,16 @@ TITANE∞ is a **desktop application** built with Tauri (Rust + React) that lets
 **What TITANE∞ is NOT:**
 - It is NOT a fully local or offline-first application — network connectivity is required for cloud providers (OpenAI, Claude, Gemini)
 - It is NOT "100% local" — this description in older documents is obsolete (LEGACY)
-- v28.0.0 does not yet have a published public binary — the current binary release is v27.0.5 (HISTORICAL)
+- It is NOT a browser-only web app — the production runtime is Tauri desktop and the current public Linux binary stream is `v30.0.0`
 
 ---
 
 ## Current version status
 
-- **Repo version:** 28.0.0 (authority: `package.json`)
-- **Last published binary release:** v27.0.5 (Linux: AppImage/DEB/RPM)
-- **Supported OS:** Ubuntu 20.04+ | Debian 11+ | Linux Mint 20+ | Pop!_OS 20.04+ (PROVEN for v27.0.5)
+- **Repo version:** 30.0.0 (authority: `package.json` + `CHANGELOG.md`)
+- **Current published binary release:** v30.0.0 (Linux: AppImage/DEB via `deployment/latest/`)
+- **Supported OS:** Ubuntu 20.04+ | Debian 11+ | Linux Mint 20+ | Pop!_OS 20.04+ (PROVEN on the V30 release stream)
+- **Archive policy:** older/historical materials remain preserved under `docs/99_ARCHIVE/` and `_archive/` and are no longer authoritative for current usage.
 
 ---
 

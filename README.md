@@ -5,14 +5,16 @@
 ![Release v30.0.0](https://img.shields.io/badge/release-v30.0.0-brightgreen?logo=github)
 
 **Version:** v30.0.0 (repository authority)
-**Status:** ✅ Production Ready (v30.0.0 — MAJOR RELEASE STREAM)
+**Status:** ✅ Production Ready (V30 maintained release stream)
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
-**Latest Release:** [v30.0.0-release-20260406](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260406) (April 6, 2026)
-**Latest Release:** [v30.0.0-release-20260405](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260405) (April 5, 2026)
+**Latest certified deployment:** `2026-04-10` via `deployment/latest/MANIFEST.json`
+**Primary release tag:** [v30.0.0-release-20260406](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260406) (current release stream)
+**Prior certification tag:** [v30.0.0-release-20260405](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260405) (historical)
 
 **Canal de release canonique:** v30.0.0
 
-**Qualité (v30.0.0) :** zero-regression eval harness, refreshed DEB/AppImage surfaces, stable deployment metadata alignment.
+**Qualité (2026-04-10) :** `build:production` PASS, `verify:final100` PASS (`23/23`), surfaces runtime/docs V30 réalignées.
+**Archive & legacy policy:** les surfaces obsolètes sont conservées sous `docs/99_ARCHIVE/` et `_archive/`; les surfaces actives V30 restent `src/`, `src-tauri/`, `README.md`, `CHANGELOG.md` et `docs/user/{fr,en}/`.
 
 **Documentation canonique :** [docs/README.md](docs/README.md) (source principale de navigation documentaire)
 
@@ -29,30 +31,31 @@
 
 ### ✅ Release canonique courante: v30.0.0 (Major Release)
 
-**Status**: � PRODUCTION READY — CERTIFIED & DEPLOYED  
-**Certification ID**: `TITANE_INFINITY_RELEASE_20260405_121527_CERTIFIED`  
-**Release Date**: April 6, 2026  
-**Certification Scope**: Eval harness 35/35, stable packaging refresh, deployment metadata alignment
+**Status**: ✅ PRODUCTION READY — CERTIFIED & DEPLOYED  
+**Certification ID**: `TITANE_INFINITY_RELEASE_20260410_135829_CERTIFIED`  
+**Last Certification Refresh**: April 10, 2026  
+**Certification Scope**: production rebuild PASS, governance gates PASS, runtime/docs V30 alignment verified
 
 Artefacts vérifiés (Linux amd64):
 
-- **AppImage**: `Titan-Stable_30.0.0_amd64.AppImage` (87M) — deployed in `deployment/latest/`
-- **DEB Package**: `Titan-Stable_30.0.0_amd64.deb` (17M) — deployed in `deployment/latest/`
+- **AppImage**: `Titan-Stable_30.0.0_amd64.AppImage` (deployed in `deployment/latest/`)
+- **DEB Package**: `Titan-Stable_30.0.0_amd64.deb` (deployed in `deployment/latest/`)
 
-Checksums:
+Checksums courants (`deployment/latest/MANIFEST.json`):
 
 ```
-AppImage:  12ed61d6581f7d16d626a8da73dbba8c37b8f56b9f562deca878898170a60a84
-DEB:       2bcfc64e57f5f234a6fa43dd810e8240ba1a37c61faee934f8e136b83f04f880
+AppImage:  046f1e268a3d9028dcd61aa56f7ed52440e50915559a275385a108985ddb9f90
+DEB:       847ab918eac554df59291d75e844ed6df348db137e89f33838c92463c09c3115
 ```
 
 **Release Notes & Installation**:
 
 - Full release notes: [CHANGELOG.md](CHANGELOG.md)
-- GitHub Release: https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260406
-- GitHub Release: https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260405
-- Deployment manifest: [deployment/latest/MANIFEST.json](deployment/latest/MANIFEST.json)
-- Checksums: [RELEASE_ARTIFACTS_CHECKSUMS_30.0.0.txt](RELEASE_ARTIFACTS_CHECKSUMS_30.0.0.txt)
+- GitHub Release (primary): https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260406
+- GitHub Release (historical certification): https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260405
+- Current deployment manifest: [deployment/latest/MANIFEST.json](deployment/latest/MANIFEST.json)
+- Current checksum bundle: [deployment/latest/CHECKSUMS.sha256](deployment/latest/CHECKSUMS.sha256)
+- Historical checksum snapshot: [RELEASE_ARTIFACTS_CHECKSUMS_30.0.0.txt](RELEASE_ARTIFACTS_CHECKSUMS_30.0.0.txt)
 
 **Security**: MAXIMUM_HARDENED  
 **Authorization**: Token-gated (`GO_FOR_PROD_BUILD__TITANE_INFINITY` + `GO_FOR_PROD_DEPLOY__TITANE_INFINITY`)
