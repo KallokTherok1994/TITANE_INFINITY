@@ -763,6 +763,7 @@ Format: [Audit complet] + [Réponse utilisateur]
         initialAutoHealed: autoHealed,
         modeMaxTokens: effectiveResponseProfile.maxTokens,
         modeTemperature: effectiveResponseProfile.temperature,
+        reasoningEffort: canonicalDecision.provider.reasoningEffort,
         backendProvider:
           canonicalDecision.provider.name !== 'auto'
             ? (canonicalDecision.provider.name as ProviderPreference)
@@ -894,14 +895,17 @@ Format: [Audit complet] + [Réponse utilisateur]
         aiConfig: finalConfig.aiConfig,
       });
 
-      // Timeout adaptatif selon le mode (plus long pour modes complexes)
+      // Timeout adaptatif: selon le mode ET l'effort de raisonnement du kernel
       const baseTimeout = finalConfig.omegaConfig?.timeoutMs || 30000;
-      const timeoutMs =
-        finalConfig.mode === 'brainstorming'
-          ? baseTimeout * 1.5
-          : finalConfig.mode === 'synthesis'
-            ? baseTimeout * 1.3
-            : baseTimeout;
+      const effortTimeoutMultiplier =
+        canonicalDecision.provider.reasoningEffort === 'high'
+          ? 3.0 // DEEP_REASONING / ARCHITECT → 90s for a 30s base
+          : finalConfig.mode === 'brainstorming'
+            ? 1.5
+            : finalConfig.mode === 'synthesis'
+              ? 1.3
+              : 1.0;
+      const timeoutMs = baseTimeout * effortTimeoutMultiplier;
       // v26.0.0: Use kernel's provider preference
       const kernelProvider =
         canonicalDecision.provider.name !== 'auto'
@@ -918,6 +922,8 @@ Format: [Audit complet] + [Réponse utilisateur]
         ...(finalConfig.aiConfig || {}),
         promptProfileId: modeConfig.profileId,
         promptContext,
+        // Forward reasoning effort so Ollama provider can scale its internal timeout
+        reasoningEffort: canonicalDecision.provider.reasoningEffort,
       };
 
       // Use kernel's provider preference if not 'auto'
@@ -1400,6 +1406,8 @@ Que souhaites-tu explorer ?`;
     modeMaxTokens?: number;
     /** v24.4.0: Effective temperature from canonical response policy */
     modeTemperature?: number;
+    /** Reasoning effort level from CanonicalDecision — drives Ollama timeout scaling. */
+    reasoningEffort?: 'low' | 'medium' | 'high';
     backendProvider?: ProviderPreference;
     responseProfileId: string;
   }): Promise<ChatEngineResponse | null> {
@@ -1414,6 +1422,7 @@ Que souhaites-tu explorer ?`;
       initialAutoHealed,
       modeMaxTokens,
       modeTemperature,
+      reasoningEffort,
       backendProvider,
       responseProfileId,
     } = params;

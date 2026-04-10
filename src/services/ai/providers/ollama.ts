@@ -326,6 +326,13 @@ export const ollamaProvider: AIProvider = {
     // Build messages with memory context
     const messages = buildOllamaMessages(message, history, memoryContext);
 
+    // Scale timeout based on reasoning effort so DEEP_REASONING/ARCHITECT chains never cut off
+    const reasoningEffort = (finalConfig as { reasoningEffort?: string }).reasoningEffort;
+    const effortTimeoutSecs =
+      reasoningEffort === 'high' || reasoningEffort === 'max'
+        ? Math.max(90, Math.ceil(OLLAMA_CONFIG.timeout / 1000))
+        : Math.ceil(OLLAMA_CONFIG.timeout / 1000);
+
     // Retry loop
     for (let attempt = 1; attempt <= OLLAMA_CONFIG.maxRetries; attempt++) {
       try {
@@ -347,7 +354,7 @@ export const ollamaProvider: AIProvider = {
           temperature: finalConfig.temperature ?? OLLAMA_CONFIG.temperature,
           max_tokens:
             typeof finalConfig.maxTokens === 'number' ? finalConfig.maxTokens : undefined,
-          timeout_secs: Math.ceil(OLLAMA_CONFIG.timeout / 1000),
+          timeout_secs: effortTimeoutSecs,
           // num_ctx=undefined → Rust model_context_window() picks the correct value per model
           num_ctx: OLLAMA_CONFIG.numCtx,
         });

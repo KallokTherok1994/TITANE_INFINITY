@@ -171,6 +171,8 @@ export interface AIConfig {
   promptProfileId?: string;
   promptContext?: PromptContext;
   preferredProvider?: ProviderChoice; // ✨ v21 - Force specific provider
+  /** Reasoning effort level forwarded from CanonicalDecision.provider.reasoningEffort. */
+  reasoningEffort?: 'low' | 'medium' | 'high' | 'max';
 }
 
 export const DEFAULT_AI_CONFIG: AIConfig = {
