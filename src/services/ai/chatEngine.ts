@@ -107,6 +107,22 @@ const DEBUG_CHAT_ENGINE_TRACES = Boolean(
   (import.meta as ImportMeta & { env?: { DEV?: boolean } }).env?.DEV
 );
 
+/** Depth preference values that the deep-analysis override is allowed to replace. */
+const OVERRIDABLE_DEPTH_PREFS = new Set(['standard', 'developed', null, undefined]);
+
+/**
+ * Returns 'deep' when the deep_internet_analysis preference is active and
+ * no stronger depth preference has already been stored by the user.
+ */
+function resolveDepthPref(base: string | null): string | null {
+  const deepActive =
+    userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] === true;
+  if (deepActive && OVERRIDABLE_DEPTH_PREFS.has(base as string | null | undefined)) {
+    return 'deep';
+  }
+  return base;
+}
+
 type BackendStreamMetadata = {
   raw?: string;
   provider?: string;
@@ -468,14 +484,7 @@ class ChatEngineOmega {
 
       // v26.0.0: Intent classification and depth computation are now inside the kernel
       // No independent calls — kernel.discern() handles both
-      const _userDepthPrefBase = memoryIntegration.getDepthPreference();
-      // deep_internet_analysis preference: force DEEP profile when active and no stronger stored preference
-      const _deepAnalysisActive =
-        userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] === true;
-      const userDepthPref =
-        _deepAnalysisActive && (!_userDepthPrefBase || _userDepthPrefBase === 'standard' || _userDepthPrefBase === 'developed')
-          ? 'deep'
-          : _userDepthPrefBase;
+      const userDepthPref = resolveDepthPref(memoryIntegration.getDepthPreference());
 
       // ═══ PHASE 1.1.5: CONSTITUTIONAL CHECKS (TITANE∞ v1.0) ═══
       pipelineSteps.push('constitutional-checks');
@@ -2423,13 +2432,7 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
 
       // v26.0.0: Run kernel for streaming too — single source of truth
       pipelineSteps.push('canonical-discernment');
-      const _streamDepthPrefBase = memoryIntegration.getDepthPreference();
-      const _streamDeepAnalysisActive =
-        userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] === true;
-      const userDepthPref =
-        _streamDeepAnalysisActive && (!_streamDepthPrefBase || _streamDepthPrefBase === 'standard' || _streamDepthPrefBase === 'developed')
-          ? 'deep'
-          : _streamDepthPrefBase;
+      const userDepthPref = resolveDepthPref(memoryIntegration.getDepthPreference());
       const streamCanonicalDecision = canonicalDiscernmentKernel.discern({
         message: validatedMessage,
         mode: finalConfig.mode,
