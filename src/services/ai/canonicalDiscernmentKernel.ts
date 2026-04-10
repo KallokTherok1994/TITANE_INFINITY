@@ -496,7 +496,7 @@ export class CanonicalDiscernmentKernel {
       preferredProviders: string[];
       temperature: number;
       maxTokens: number;
-      reasoningEffort: 'low' | 'medium' | 'high';
+      reasoningEffort: EffortLevel;
     },
     userPreference: string,
     runtimeState?: DiscernmentInput['runtimeState'],
