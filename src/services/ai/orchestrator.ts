@@ -1500,7 +1500,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     history: AIMessage[],
     timeout: number,
     requestId: string,
-    providerConfig?: Partial<AIConfig>
+    providerConfig?: AIConfig
   ): Promise<AIResponse> {
     this.currentRequests++;
 
@@ -1517,7 +1517,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
       }
 
       // Generation with full timeout — pass config so temperature/maxTokens reach the provider
-      const generationPromise = provider.generate(message, history, providerConfig as AIConfig | undefined);
+      const generationPromise = provider.generate(message, history, providerConfig);
       const generationTimeout = new Promise<never>((_, reject) =>
         setTimeout(
           () => reject(new Error(`Provider timeout (${timeout}ms) [${requestId}]`)),
