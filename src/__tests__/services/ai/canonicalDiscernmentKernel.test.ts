@@ -211,6 +211,30 @@ describe('CanonicalDiscernmentKernel', () => {
 
       expect(decision.skillId).toBeNull();
     });
+
+    it('should select skill for research_analysis when available', () => {
+      const decision = kernel.discern({
+        ...defaultInput,
+        message: 'Recherche sur internet les dernières avancées en IA',
+        availableSkills: [
+          { id: 'web-researcher', healthy: true, intentMatch: ['research_analysis'] },
+        ],
+      });
+
+      expect(decision.skillId).toBe('web-researcher');
+    });
+
+    it('should not select skill for research_analysis when unhealthy', () => {
+      const decision = kernel.discern({
+        ...defaultInput,
+        message: 'Recherche sur internet les dernières avancées en IA',
+        availableSkills: [
+          { id: 'web-researcher', healthy: false, intentMatch: ['research_analysis'] },
+        ],
+      });
+
+      expect(decision.skillId).toBeNull();
+    });
   });
 
   describe('Decision 7: Fallback Chain', () => {
