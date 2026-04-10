@@ -8,6 +8,7 @@
   "scripts": {
     "preinstall": "node scripts/install/enforce-package-manager.cjs",
     "dev": "tauri dev",
+    "tauri": "tauri",
     "gen:tauri-config": "node scripts/generate-tauri-config.mjs",
     "gen:tauri-config:force": "node scripts/generate-tauri-config.mjs --force",
     "gen:tauri-config:prod": "TITANE_ENV=production node scripts/generate-tauri-config.mjs --force",
