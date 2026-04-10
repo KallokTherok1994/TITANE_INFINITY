@@ -42,7 +42,7 @@
         "transparent": false,
         "center": true,
         "visible": true,
-        "devtools": false
+        "devtools": true
       },
       {
         "label": "avatar-floating",
@@ -59,7 +59,7 @@
         "visible": false,
         "skipTaskbar": true,
         "alwaysOnTop": false,
-        "devtools": false
+        "devtools": true
       }
     ],
     "security": {

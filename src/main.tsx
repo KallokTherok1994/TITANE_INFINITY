@@ -844,22 +844,32 @@ const scheduleBootWatchdog = (): void => {
 
 scheduleBootWatchdog();
 
-// 🔧 DevTools keyboard shortcuts (F12 + Ctrl+Shift+I)
+const isDevtoolsShortcut = (ev: KeyboardEvent): boolean => {
+  const key = ev.key.toLowerCase();
+
+  return (
+    ev.key === 'F12' ||
+    (ev.ctrlKey && ev.shiftKey && key === 'i') ||
+    (ev.metaKey && ev.altKey && key === 'i')
+  );
+};
+
+// 🔧 DevTools keyboard shortcuts (F12 + Ctrl+Shift+I / Cmd+Alt+I)
 if (typeof window !== 'undefined') {
-  if (isTauriRuntime()) {
-    window.addEventListener('keydown', (ev: KeyboardEvent) => {
-      if (ev.key === 'F12' || (ev.ctrlKey && ev.shiftKey && ev.key === 'I')) {
-        ev.preventDefault();
-        void openDevtoolsSafe().catch((err: unknown) => {
-          logger.error(
-            'Failed to open DevTools',
-            { component: 'DevTools' },
-            err instanceof Error ? err : new Error(String(err))
-          );
-        });
-      }
+  window.addEventListener('keydown', (ev: KeyboardEvent) => {
+    if (!isDevtoolsShortcut(ev) || !isTauriRuntime()) {
+      return;
+    }
+
+    ev.preventDefault();
+    void openDevtoolsSafe().catch((err: unknown) => {
+      logger.error(
+        'Failed to open DevTools',
+        { component: 'DevTools' },
+        err instanceof Error ? err : new Error(String(err))
+      );
     });
-  }
+  });
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
