@@ -58,6 +58,7 @@ import {
   canonicalDiscernmentKernel,
   type CanonicalDecision,
 } from './canonicalDiscernmentKernel';
+import type { EffortLevel } from './omegaModeClassifier';
 import { MEMORY_TIMEOUTS, REQUEST_BUDGETS } from '@/config/aiTimeouts.config'; // v22Ω: Centralized timeouts
 import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
 import { createLogger } from '@/utils/logger';
@@ -1409,7 +1410,7 @@ Que souhaites-tu explorer ?`;
     /** v24.4.0: Effective temperature from canonical response policy */
     modeTemperature?: number;
     /** Reasoning effort level from CanonicalDecision — drives Ollama timeout scaling. */
-    reasoningEffort?: 'low' | 'medium' | 'high' | 'max';
+    reasoningEffort?: EffortLevel;
     backendProvider?: ProviderPreference;
     responseProfileId: string;
   }): Promise<ChatEngineResponse | null> {

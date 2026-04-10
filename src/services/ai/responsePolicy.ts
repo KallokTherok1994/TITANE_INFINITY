@@ -23,6 +23,8 @@
  * I15 : "Plus long" ne signifie pas répétitif, flou ou moins utile.
  */
 
+import type { EffortLevel } from './omegaModeClassifier';
+
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES FONDAMENTAUX
 // ─────────────────────────────────────────────────────────────────────────────
@@ -91,7 +93,7 @@ export interface ResponseProfile {
   /** Température de génération */
   temperature: number;
   /** Effort de raisonnement (pour providers compatibles : openai o1/o3) */
-  reasoningEffort: 'low' | 'medium' | 'high' | 'max';
+  reasoningEffort: EffortLevel;
 
   // Politique de réponse
   /** Niveau de structure (0=prose, 1=léger, 2=structuré, 3=haute structure) */
