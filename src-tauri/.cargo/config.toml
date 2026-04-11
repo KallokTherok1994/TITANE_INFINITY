@@ -14,9 +14,8 @@
 # ═══════════════════════════════════════════════════════════════
 # ANDROID TARGET GUARDS (STOPLINE #5)
 # audio-capture (cpal) est incompatible Android sans NDK Oboe setup.
-# Les builds Android doivent utiliser --features custom-protocol,mock
-# sans audio-capture. Voir scripts android:build / android:build:debug.
+# Les builds Android mock doivent utiliser --features custom-protocol,mock
+# sans audio-capture. Voir scripts android:build:mock / android:build:mock:debug.
 # ═══════════════════════════════════════════════════════════════
 [target.aarch64-linux-android]
 # No additional flags needed — feature exclusion handled at build script level
-
