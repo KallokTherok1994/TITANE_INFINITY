@@ -116,6 +116,7 @@ export class BehavioralRouter {
       preference_signal: 'DEVELOPED',
       creative: 'DEEP',
       diagnostic: 'DEEP',
+      research_analysis: 'DEEP',
     };
     const intentDepth = intentDepthMap[intentResult.intent] ?? 'DEVELOPED';
     signals.push({

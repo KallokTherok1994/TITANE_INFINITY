@@ -148,7 +148,16 @@ describe('CanonicalDiscernmentKernel', () => {
       expect(decision.provider.name).toBeDefined();
       expect(decision.provider.temperature).toBeGreaterThan(0);
       expect(decision.provider.maxTokens).toBeGreaterThan(0);
-      expect(['low', 'medium', 'high']).toContain(decision.provider.reasoningEffort);
+      expect(['low', 'medium', 'high', 'max']).toContain(decision.provider.reasoningEffort);
+    });
+
+    it('should escalate reasoningEffort to max for CERTIFY-mode messages', () => {
+      // "certify" + "proof" → CERTIFY_SIGNAL_STRONG → effortLevel=max escalates via EFFORT_RANK
+      const decision = kernel.discern({
+        ...defaultInput,
+        message: 'certify proof that the gate passes',
+      });
+      expect(decision.provider.reasoningEffort).toBe('max');
     });
 
     it('should prefer user provider preference', () => {
@@ -206,6 +215,30 @@ describe('CanonicalDiscernmentKernel', () => {
         message: 'Crée un fichier test.ts',
         availableSkills: [
           { id: 'file-creator', healthy: false, intentMatch: ['action_request'] },
+        ],
+      });
+
+      expect(decision.skillId).toBeNull();
+    });
+
+    it('should select skill for research_analysis when available', () => {
+      const decision = kernel.discern({
+        ...defaultInput,
+        message: 'Recherche sur internet les dernières avancées en IA',
+        availableSkills: [
+          { id: 'web-researcher', healthy: true, intentMatch: ['research_analysis'] },
+        ],
+      });
+
+      expect(decision.skillId).toBe('web-researcher');
+    });
+
+    it('should not select skill for research_analysis when unhealthy', () => {
+      const decision = kernel.discern({
+        ...defaultInput,
+        message: 'Recherche sur internet les dernières avancées en IA',
+        availableSkills: [
+          { id: 'web-researcher', healthy: false, intentMatch: ['research_analysis'] },
         ],
       });
 

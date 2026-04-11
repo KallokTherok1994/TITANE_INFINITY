@@ -58,9 +58,11 @@ import {
   canonicalDiscernmentKernel,
   type CanonicalDecision,
 } from './canonicalDiscernmentKernel';
+import type { EffortLevel } from './omegaModeClassifier';
 import { MEMORY_TIMEOUTS, REQUEST_BUDGETS } from '@/config/aiTimeouts.config'; // v22Ω: Centralized timeouts
 import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
 import { createLogger } from '@/utils/logger';
+import { SingularityBridge } from '@/services/singularityBridge';
 
 // 🆕 P1: Multi-conversations integration
 import { conversationLifecycle } from '@/engines/conversation/conversationLifecycleEngine';
@@ -99,11 +101,29 @@ function safeParseStreamMetadata(raw: string): BackendStreamMetadata {
 // 🚀 v24.3.1 - Performance Optimizations
 import { responseCache } from '@/services/cache/responseCache';
 import { predictivePreloader } from '@/services/cache/predictivePreloader';
+// Deep analysis preference bridge
+import { userPreferencesEngine } from '@/services/userPreferencesEngine';
 
 const logger = createLogger('ChatEngine');
 const DEBUG_CHAT_ENGINE_TRACES = Boolean(
   (import.meta as ImportMeta & { env?: { DEV?: boolean } }).env?.DEV
 );
+
+/** Depth preference values that the deep-analysis override is allowed to replace. */
+const OVERRIDABLE_DEPTH_PREFS = new Set<string | null>(['standard', 'developed', null]);
+
+/**
+ * Returns 'deep' when the deep_internet_analysis preference is active and
+ * no stronger depth preference has already been stored by the user.
+ */
+function resolveDepthPref(base: string | null): string | null {
+  const deepActive =
+    userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] === true;
+  if (deepActive && OVERRIDABLE_DEPTH_PREFS.has(base)) {
+    return 'deep';
+  }
+  return base;
+}
 
 type BackendStreamMetadata = {
   raw?: string;
@@ -466,7 +486,7 @@ class ChatEngineOmega {
 
       // v26.0.0: Intent classification and depth computation are now inside the kernel
       // No independent calls — kernel.discern() handles both
-      const userDepthPref = memoryIntegration.getDepthPreference();
+      const userDepthPref = resolveDepthPref(memoryIntegration.getDepthPreference());
 
       // ═══ PHASE 1.1.5: CONSTITUTIONAL CHECKS (TITANE∞ v1.0) ═══
       pipelineSteps.push('constitutional-checks');
@@ -631,6 +651,10 @@ class ChatEngineOmega {
       // Collect available skills for the kernel
       const availableSkills = finalConfig.mode !== 'default' ? [] : undefined;
 
+      // Singularity-Omega unification: read cached coherence from SingularityBridge
+      // (synchronous — uses in-memory state; falls back to 0.5 neutral if not yet loaded)
+      const singularityCoherence = SingularityBridge.getCachedCoherence();
+
       const canonicalDecision = canonicalDiscernmentKernel.discern({
         message: validatedMessage,
         mode: finalConfig.mode,
@@ -638,9 +662,10 @@ class ChatEngineOmega {
         preferences: memoryIntegration.loadPreferences(),
         userDepthPreference: userDepthPref,
         providerPreference: this.providerPreference,
-        runtimeState: providerHealthForKernel
-          ? { providerHealth: providerHealthForKernel }
-          : undefined,
+        runtimeState: {
+          ...(providerHealthForKernel ? { providerHealth: providerHealthForKernel } : {}),
+          singularityCoherence,
+        },
         availableSkills,
       });
 
@@ -739,6 +764,7 @@ Format: [Audit complet] + [Réponse utilisateur]
         initialAutoHealed: autoHealed,
         modeMaxTokens: effectiveResponseProfile.maxTokens,
         modeTemperature: effectiveResponseProfile.temperature,
+        reasoningEffort: canonicalDecision.provider.reasoningEffort,
         backendProvider:
           canonicalDecision.provider.name !== 'auto'
             ? (canonicalDecision.provider.name as ProviderPreference)
@@ -870,14 +896,19 @@ Format: [Audit complet] + [Réponse utilisateur]
         aiConfig: finalConfig.aiConfig,
       });
 
-      // Timeout adaptatif selon le mode (plus long pour modes complexes)
+      // Timeout adaptatif: selon le mode ET l'effort de raisonnement du kernel
       const baseTimeout = finalConfig.omegaConfig?.timeoutMs || 30000;
-      const timeoutMs =
-        finalConfig.mode === 'brainstorming'
-          ? baseTimeout * 1.5
-          : finalConfig.mode === 'synthesis'
-            ? baseTimeout * 1.3
-            : baseTimeout;
+      const effortTimeoutMultiplier =
+        canonicalDecision.provider.reasoningEffort === 'max'
+          ? 4.0 // CERTIFY → 120s for a 30s base
+          : canonicalDecision.provider.reasoningEffort === 'high'
+            ? 3.0 // DEEP_REASONING / ARCHITECT → 90s for a 30s base
+            : finalConfig.mode === 'brainstorming'
+              ? 1.5
+              : finalConfig.mode === 'synthesis'
+                ? 1.3
+                : 1.0;
+      const timeoutMs = baseTimeout * effortTimeoutMultiplier;
       // v26.0.0: Use kernel's provider preference
       const kernelProvider =
         canonicalDecision.provider.name !== 'auto'
@@ -894,6 +925,8 @@ Format: [Audit complet] + [Réponse utilisateur]
         ...(finalConfig.aiConfig || {}),
         promptProfileId: modeConfig.profileId,
         promptContext,
+        // Forward reasoning effort so Ollama provider can scale its internal timeout
+        reasoningEffort: canonicalDecision.provider.reasoningEffort,
       };
 
       // Use kernel's provider preference if not 'auto'
@@ -1376,6 +1409,8 @@ Que souhaites-tu explorer ?`;
     modeMaxTokens?: number;
     /** v24.4.0: Effective temperature from canonical response policy */
     modeTemperature?: number;
+    /** Reasoning effort level from CanonicalDecision — drives Ollama timeout scaling. */
+    reasoningEffort?: EffortLevel;
     backendProvider?: ProviderPreference;
     responseProfileId: string;
   }): Promise<ChatEngineResponse | null> {
@@ -1390,6 +1425,7 @@ Que souhaites-tu explorer ?`;
       initialAutoHealed,
       modeMaxTokens,
       modeTemperature,
+      reasoningEffort,
       backendProvider,
       responseProfileId,
     } = params;
@@ -1405,7 +1441,9 @@ Que souhaites-tu explorer ?`;
         conversationId: this.getConversationId(finalConfig.mode),
         userMessage: validatedMessage,
         systemPrompt,
-        // Persisted Admin Config HUB defaults are resolved by chatEngine.commands.
+        // Canonical policy profile values take priority; user aiConfig overrides as explicit opt-in.
+        // NOTE: temperature/maxOutputTokens are intentionally omitted when not user-explicit —
+        // the backend derives them from `profile`. Sending them would override backend profile defaults.
         temperature: finalConfig.aiConfig?.temperature,
         maxOutputTokens: finalConfig.aiConfig?.maxTokens,
         provider: backendProvider,
@@ -1611,6 +1649,8 @@ Que souhaites-tu explorer ?`;
       conversationId: conversationId ?? undefined,
       userMessage: validatedMessage,
       systemPrompt,
+      // Canonical policy profile values take priority; user aiConfig overrides as explicit opt-in.
+      // NOTE: temperature/maxOutputTokens omitted when not user-explicit — backend derives from profile.
       temperature: finalConfig.aiConfig?.temperature,
       maxOutputTokens: finalConfig.aiConfig?.maxTokens,
       provider: backendProvider,
@@ -2414,7 +2454,7 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
 
       // v26.0.0: Run kernel for streaming too — single source of truth
       pipelineSteps.push('canonical-discernment');
-      const userDepthPref = memoryIntegration.getDepthPreference();
+      const userDepthPref = resolveDepthPref(memoryIntegration.getDepthPreference());
       const streamCanonicalDecision = canonicalDiscernmentKernel.discern({
         message: validatedMessage,
         mode: finalConfig.mode,

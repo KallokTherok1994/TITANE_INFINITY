@@ -14,6 +14,7 @@
 
 import type { AIProvider, AIMessage, AIResponse, AIConfig } from '../types';
 import { DEFAULT_AI_CONFIG } from '../types';
+import type { EffortLevel } from '../omegaModeClassifier';
 import { createLogger } from '@/utils/logger';
 import { memoryIntegration } from '../memoryIntegration';
 import type { MemoryContext } from '../memoryIntegration';
@@ -48,8 +49,9 @@ const OLLAMA_CONFIG = {
   maxRetries: 3,
   maxErrors: 5,
   temperature: 0.7,
-  // OLLAMA CHAMPION: 8192 tokens — supports full DEVELOPED responses + system prompt
-  numCtx: 8192,
+  // OLLAMA CHAMPION: numCtx=undefined → Rust model_context_window() picks the correct value
+  // per-model: llama3.2/3.3/mistral/qwen/deepseek → 32 768; llama3.1/phi4 → 16 384; others → 8 192
+  numCtx: undefined as number | undefined,
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -88,12 +90,41 @@ export async function initializeOllama(): Promise<boolean> {
 // SYSTEM PROMPT
 // ═══════════════════════════════════════════════════════════════
 
-const SYSTEM_PROMPT = `Tu es TITANE∞, une IA cognitive avancée développée par Humain Total.
+/**
+ * Base system identity — always injected when no upstream system history is present.
+ */
+const SYSTEM_PROMPT_BASE = `Tu es TITANE∞, une IA cognitive avancée développée par Humain Total.
 Tu réponds TOUJOURS en français de manière professionnelle, précise et utile.
 Tu es un assistant technique expert en architecture logicielle, React, Rust, TypeScript.
 Tu peux aider avec le système TITANE∞, son architecture, ses modules, et le développement.
 Si tu ne sais pas quelque chose, dis-le honnêtement.
-Reste concis mais complet dans tes réponses.`;
+Fournis des réponses complètes, structurées et riches en détails.`;
+
+/**
+ * Chain-of-thought addendum injected when Ollama is the sole reasoning engine
+ * (no upstream system history injected by chatEngine).
+ * Activates systematic deliberation to maximise response quality.
+ */
+const CHAIN_OF_THOUGHT_ADDENDUM = `
+
+PROTOCOLE DE RAISONNEMENT COGNITIF:
+1. ANALYSE — Décompose la demande en composants essentiels avant de répondre.
+2. HYPOTHÈSE — Formule l'hypothèse de travail la plus précise possible.
+3. RAISONNEMENT — Déduis les étapes intermédiaires de façon logique et explicite.
+4. VÉRIFICATION — Contrôle la cohérence interne avant de finaliser.
+5. SYNTHÈSE — Produis une réponse structurée, complète et actionnable.
+
+Ne saute aucune étape. Préfère la précision à la concision.`;
+
+/**
+ * Returns the Ollama fallback system prompt with optional chain-of-thought enrichment.
+ * Used ONLY when chatEngine has not injected a system message via history.
+ */
+function buildOllamaSystemPrompt(enableChainOfThought: boolean = true): string {
+  return enableChainOfThought
+    ? SYSTEM_PROMPT_BASE + CHAIN_OF_THOUGHT_ADDENDUM
+    : SYSTEM_PROMPT_BASE;
+}
 
 // ═══════════════════════════════════════════════════════════════
 // HELPER FUNCTIONS
@@ -117,7 +148,7 @@ function buildOllamaMessages(
   let systemContent =
     injectedSystemMessages.length > 0
       ? injectedSystemMessages.join('\n\n')
-      : SYSTEM_PROMPT;
+      : buildOllamaSystemPrompt(true);
 
   if (injectedSystemMessages.length === 0 && memoryContext) {
     const memoryParts: string[] = [];
@@ -296,6 +327,15 @@ export const ollamaProvider: AIProvider = {
     // Build messages with memory context
     const messages = buildOllamaMessages(message, history, memoryContext);
 
+    // Scale timeout based on reasoning effort so DEEP_REASONING/ARCHITECT/CERTIFY chains never cut off
+    const reasoningEffort = (finalConfig as { reasoningEffort?: EffortLevel }).reasoningEffort;
+    const effortTimeoutSecs =
+      reasoningEffort === 'max'
+        ? Math.max(120, Math.ceil(OLLAMA_CONFIG.timeout / 1000))
+        : reasoningEffort === 'high'
+          ? Math.max(90, Math.ceil(OLLAMA_CONFIG.timeout / 1000))
+          : Math.ceil(OLLAMA_CONFIG.timeout / 1000);
+
     // Retry loop
     for (let attempt = 1; attempt <= OLLAMA_CONFIG.maxRetries; attempt++) {
       try {
@@ -317,7 +357,9 @@ export const ollamaProvider: AIProvider = {
           temperature: finalConfig.temperature ?? OLLAMA_CONFIG.temperature,
           max_tokens:
             typeof finalConfig.maxTokens === 'number' ? finalConfig.maxTokens : undefined,
-          timeout_secs: Math.ceil(OLLAMA_CONFIG.timeout / 1000),
+          timeout_secs: effortTimeoutSecs,
+          // num_ctx=undefined → Rust model_context_window() picks the correct value per model
+          num_ctx: OLLAMA_CONFIG.numCtx,
         });
 
         if (!result.ok) {

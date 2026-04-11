@@ -17,6 +17,30 @@ const STORAGE_KEY = 'titane_user_preferences';
 const MAX_TOPICS_HISTORY = 50;
 const MAX_INTERACTIONS = 100;
 
+/**
+ * Protocol injected into the AI system prompt when deep_internet_analysis is active.
+ * Instructs the model to apply a 5-phase research & synthesis methodology.
+ */
+const DEEP_INTERNET_ANALYSIS_INSTRUCTION = [
+  'PRÉFÉRENCE PERMANENTE — ANALYSE INTERNET MAXIMALE :',
+  'Pour TOUTE demande de recherche, d\'analyse ou d\'exploration d\'un sujet,',
+  'applique OBLIGATOIREMENT le protocole suivant en 5 phases :',
+  'PHASE 1 — COLLECTE MAXIMALE : mobilise un maximum de sources',
+  '(encyclopédies, articles spécialisés, études, forums, actualités récentes, perspectives contradictoires) ;',
+  'PHASE 2 — CROISEMENT CRITIQUE : identifie les convergences et contradictions entre sources,',
+  'évalue la fiabilité et la date de chaque information, signale les incertitudes ;',
+  'PHASE 3 — SYNTHÈSE STRUCTURÉE : rédige un résumé long, exhaustif et organisé avec',
+  'titre, sections thématiques numérotées, sous-sections si nécessaire, tableaux comparatifs si pertinent ;',
+  'PHASE 4 — RÉFLEXION APPROFONDIE : analyse les implications, les causes profondes,',
+  'les conséquences à court/moyen/long terme, les angles inattendus ou contre-intuitifs ;',
+  'PHASE 5 — CONCLUSIONS ET RECOMMANDATIONS : formule des conclusions nuancées',
+  'avec niveau de confiance explicite, liste des recommandations concrètes et actionnables,',
+  'identifie les points restants à approfondir.',
+  'FORMAT : titres en gras (##), listes numérotées ou à puces, aucune section vide.',
+  'LONGUEUR : jamais de réponse courte ou superficielle — viser la complétude et la densité informative maximale.',
+  'RÉFLEXION : pense à voix haute entre les phases si cela aide la clarté, expose ton raisonnement.',
+].join(' ');
+
 // Types de préférences
 export interface UserPreferences {
   // Informations de base
@@ -112,7 +136,9 @@ const DEFAULT_PREFERENCES: UserPreferences = {
     createdAt: Date.now(),
     updatedAt: Date.now(),
   },
-  customPreferences: {},
+  customPreferences: {
+    deep_internet_analysis: true,
+  },
 };
 
 /**
@@ -337,6 +363,23 @@ class UserPreferencesEngine {
       this.updateCommunicationStyle({ verbosity: 'concise' });
     }
 
+    // Détecter la préférence d'analyse approfondie internet (bidirectionnel)
+    const deepAnalysisEnableTopics = ['recherche', 'analyse', 'internet', 'web'];
+    const deepAnalysisEnableQualifiers = ['maximum', 'long résumé', 'approfondi', 'optimise', 'améliore'];
+    const deepAnalysisExplicitEnable = ['active deep_internet_analysis', 'active analyse approfondie', 'active analyse internet', 'enable deep analysis'];
+    const deepAnalysisDisableMarkers = ['analyse approfondie', 'deep_internet_analysis', 'analyse internet'];
+
+    const hasTopic = deepAnalysisEnableTopics.some(kw => lower.includes(kw));
+    const hasQualifier = deepAnalysisEnableQualifiers.some(kw => lower.includes(kw));
+    const hasExplicitEnable = deepAnalysisExplicitEnable.some(kw => lower.includes(kw));
+    const hasDisable = lower.includes('désactive') && deepAnalysisDisableMarkers.some(kw => lower.includes(kw));
+
+    if (hasExplicitEnable || (hasTopic && hasQualifier)) {
+      this.setCustomPreference('deep_internet_analysis', true);
+    } else if (hasDisable) {
+      this.setCustomPreference('deep_internet_analysis', false);
+    }
+
     // Détecter les langages de programmation mentionnés
     const programmingLanguages = [
       'python',
@@ -516,6 +559,11 @@ class UserPreferencesEngine {
       parts.push("L'utilisateur est généralement satisfait des réponses.");
     } else if (negativeReactions > positiveReactions) {
       parts.push("Essaie d'améliorer la qualité des réponses.");
+    }
+
+    // Préférence d'analyse internet approfondie (permanente)
+    if (prefs.customPreferences['deep_internet_analysis'] === true) {
+      parts.push(DEEP_INTERNET_ANALYSIS_INSTRUCTION);
     }
 
     return parts.length > 0 ? `[Préférences utilisateur: ${parts.join(' ')}]` : '';

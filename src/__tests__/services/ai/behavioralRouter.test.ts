@@ -131,6 +131,29 @@ describe('BehavioralRouter', () => {
     });
   });
 
+  describe('EVAL D — Research analysis depth', () => {
+    it('should select DEEP profile for research_analysis intent', () => {
+      const intentResearch: IntentClassification = {
+        intent: 'research_analysis',
+        confidence: 0.85,
+        signals: ['recherche', 'internet'],
+        freshnessRequired: 'current',
+        memoryRelevance: 'low',
+      };
+
+      const decision = router.route(
+        'Recherche sur internet les dernières avancées en IA',
+        emptyMemory,
+        noPreferences,
+        intentResearch,
+        'default'
+      );
+
+      expect(decision.profileId).toBe('DEEP');
+      expect(decision.confidence).toBeGreaterThan(0.5);
+    });
+  });
+
   describe('EVAL E — Ambiguity threshold', () => {
     it('should select DIRECT for short messages', () => {
       const intentConversational: IntentClassification = {

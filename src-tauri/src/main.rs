@@ -999,7 +999,11 @@ impl CognitiveSystemState {
 
 #[tauri::command]
 async fn ollama_query(prompt: String) -> Result<serde_json::Value, String> {
-    let result = ollama::query_ollama(prompt).await?;
+    let result = ollama::query_ollama(ollama::OllamaParams {
+        prompt,
+        ..Default::default()
+    })
+    .await?;
     Ok(serde_json::json!({
         "response": result.response,
         "model": result.model

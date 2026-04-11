@@ -34,9 +34,11 @@ import type { ChatMode } from './chatTypes';
 import {
   classifyMode,
   resolveMode,
+  type BackendConversationMode,
   type CanonicalMode,
   type ClassifierInput,
   type ModeClassification,
+  type EffortLevel,
 } from './omegaModeClassifier';
 import { getChampion } from './championChallenger';
 // Phase 2-3: Runtime truth, skill selection, orchestrator health
@@ -44,6 +46,9 @@ import { cognitiveKernel } from './cognitiveKernel';
 import { aiOrchestrator } from './orchestrator';
 
 const logger = createLogger('CanonicalDiscernmentKernel');
+
+/** Singularity coherence must exceed this value to trigger a confidence boost signal. */
+const COHERENCE_BOOST_THRESHOLD = 0.7;
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES — Canonical Decision Output
@@ -86,7 +91,7 @@ export interface CanonicalDecision {
     fallback: string[];
     temperature: number;
     maxTokens: number;
-    reasoningEffort: 'low' | 'medium' | 'high';
+    reasoningEffort: EffortLevel;
   };
 
   // 6. Tool/Skill
@@ -118,6 +123,8 @@ export interface DiscernmentInput {
     providerHealth?: Record<string, number>; // provider → health score 0-1
     latencyMs?: Record<string, number>;
     errorRates?: Record<string, number>;
+    /** Singularity-Omega coherence score (0–1). Used to boost confidence when coherence is high. */
+    singularityCoherence?: number;
   };
   availableSkills?: Array<{ id: string; healthy: boolean; intentMatch: string[] }>;
 }
@@ -153,13 +160,12 @@ export class CanonicalDiscernmentKernel {
     // Phase 3: Kernel decides mode from message signals
     const modeClassification = classifyMode({
       message: input.message,
-      userExplicitMode:
-        input.mode as unknown as import('./omegaModeClassifier').BackendConversationMode,
+      userExplicitMode: input.mode as BackendConversationMode,
     });
     const resolvedMode = resolveMode(
       modeClassification,
-      input.mode as unknown as import('./omegaModeClassifier').BackendConversationMode
-    ) as unknown as ChatMode;
+      input.mode as BackendConversationMode
+    ) as ChatMode;
 
     signals.push({
       source: 'mode_classifier',
@@ -213,11 +219,24 @@ export class CanonicalDiscernmentKernel {
       logger.warn('BehavioralRouter failed, using intent-based depth');
     }
 
-    // Final profile: behavioral router wins if confident, else intent-based
-    const profileId =
+    // Behavioral router best candidate
+    const behavioralProfileId =
       behavioralDecision && behavioralDecision.confidence >= 0.5
         ? behavioralDecision.profileId
         : effectiveDepth;
+
+    // Profile rank for cap-down logic
+    const PROFILE_RANK: Record<ResponseProfileId, number> = {
+      DIRECT: 0, BALANCED: 1, DEVELOPED: 2, DEEP: 3, ARCHITECT: 4, OMEGA: 5,
+    };
+
+    // userDepthPreference caps the profile DOWN (e.g. 'short'→DIRECT overrides DEEP).
+    // When the preference would elevate the profile, behavioral routing still decides.
+    const profileId =
+      input.userDepthPreference &&
+      PROFILE_RANK[effectiveDepth] < PROFILE_RANK[behavioralProfileId]
+        ? effectiveDepth
+        : behavioralProfileId;
 
     // Get full profile with params
     const { profile: effectiveProfile } = getEffectiveProfile(
@@ -274,7 +293,8 @@ export class CanonicalDiscernmentKernel {
       effectiveProfile,
       input.providerPreference ?? 'auto',
       input.runtimeState,
-      modeClassification.canonicalMode
+      modeClassification.canonicalMode,
+      modeClassification.effortLevel
     );
 
     signals.push({
@@ -315,6 +335,19 @@ export class CanonicalDiscernmentKernel {
       value: truthStatus,
       confidence: 0.9,
     });
+
+    // ── STEP 9: Singularity-Omega coherence signal ──
+    // When SingularityBridge reports high coherence, the system is in an aligned state.
+    // Boost the mode classification confidence slightly to favour the auto-selected mode.
+    const singularityCoherence = input.runtimeState?.singularityCoherence ?? 0.5;
+    if (singularityCoherence > COHERENCE_BOOST_THRESHOLD) {
+      signals.push({
+        source: 'singularity',
+        type: 'coherence_boost',
+        value: singularityCoherence,
+        confidence: singularityCoherence,
+      });
+    }
 
     // ── Build reasoning ──
     const reasoning = this.buildReasoning(
@@ -476,11 +509,12 @@ export class CanonicalDiscernmentKernel {
       preferredProviders: string[];
       temperature: number;
       maxTokens: number;
-      reasoningEffort: 'low' | 'medium' | 'high';
+      reasoningEffort: EffortLevel;
     },
     userPreference: string,
     runtimeState?: DiscernmentInput['runtimeState'],
-    canonicalMode?: CanonicalMode
+    canonicalMode?: CanonicalMode,
+    classifierEffortLevel?: EffortLevel
   ): CanonicalDecision['provider'] {
     let candidates = [...profile.preferredProviders];
 
@@ -511,13 +545,21 @@ export class CanonicalDiscernmentKernel {
     const selected = scored[0] ?? { name: candidates[0] ?? 'ollama', health: 0.5 };
     const fallback = scored.slice(1).map(s => s.name);
 
+    // Use the stronger of profile effort vs classifier effort (e.g. CERTIFY → 'max')
+    const EFFORT_RANK: Record<EffortLevel, number> = { low: 0, medium: 1, high: 2, max: 3 };
+    const resolvedEffort: EffortLevel =
+      classifierEffortLevel &&
+      EFFORT_RANK[classifierEffortLevel] > EFFORT_RANK[profile.reasoningEffort]
+        ? classifierEffortLevel
+        : profile.reasoningEffort;
+
     return {
       name: selected.name,
       model: 'auto', // orchestrator resolves model
       fallback,
       temperature: profile.temperature,
       maxTokens: profile.maxTokens,
-      reasoningEffort: profile.reasoningEffort,
+      reasoningEffort: resolvedEffort,
     };
   }
 
@@ -530,8 +572,12 @@ export class CanonicalDiscernmentKernel {
   ): string | null {
     if (!availableSkills || availableSkills.length === 0) return null;
 
-    // Only action_request and diagnostic intents can activate skills
-    if (intent.intent !== 'action_request' && intent.intent !== 'diagnostic') {
+    // Only action_request, diagnostic, and research_analysis intents can activate skills
+    if (
+      intent.intent !== 'action_request' &&
+      intent.intent !== 'diagnostic' &&
+      intent.intent !== 'research_analysis'
+    ) {
       return null;
     }
 

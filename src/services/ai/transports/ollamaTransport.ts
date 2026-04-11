@@ -48,6 +48,8 @@ export interface OllamaGenerateRequest {
   temperature?: number;
   max_tokens?: number;
   timeout_secs?: number;
+  /** Context window override. `undefined` → model-aware default (model_context_window in Rust). */
+  num_ctx?: number;
 }
 
 export interface OllamaTagsResponse {
@@ -196,6 +198,7 @@ async function ipcGenerate(
         temperature: req.temperature,
         max_tokens: req.max_tokens,
         timeout_secs: req.timeout_secs ?? defaultTimeoutSecs,
+        num_ctx: req.num_ctx,
       },
     });
 

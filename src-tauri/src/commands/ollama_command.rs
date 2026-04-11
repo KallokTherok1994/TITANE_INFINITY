@@ -1,4 +1,4 @@
-use crate::ollama::query_ollama;
+use crate::ollama::{query_ollama, OllamaParams};
 /**
  * TITANE∞ — Unified Ollama Provider Command
  * Centralized Tauri command for all Ollama interactions
@@ -15,6 +15,12 @@ pub struct OllamaRequest {
     pub temperature: Option<f32>,
     #[serde(default)]
     pub system_prompt: Option<String>,
+    /// Maximum tokens to generate. Forwarded to Ollama `num_predict`.
+    #[serde(default)]
+    pub max_tokens: Option<u32>,
+    /// Context window size override. `None` → model-aware default via `model_context_window()`.
+    #[serde(default)]
+    pub num_ctx: Option<u32>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -47,7 +53,17 @@ pub async fn ollama_generate(req: OllamaRequest) -> Result<OllamaResponse, Strin
         req.timeout_secs
     );
 
-    match query_ollama(req.prompt).await {
+    let params = OllamaParams {
+        prompt: req.prompt,
+        model: Some(req.model),
+        system_prompt: req.system_prompt,
+        temperature: req.temperature,
+        max_tokens: req.max_tokens,
+        timeout_secs: Some(req.timeout_secs),
+        num_ctx: req.num_ctx, // None → model_context_window() picks the right default
+    };
+
+    match query_ollama(params).await {
         Ok(result) => {
             let latency_ms = start.elapsed().as_millis() as u64;
 

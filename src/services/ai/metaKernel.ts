@@ -21,6 +21,7 @@ import { createLogger } from '@/utils/logger';
 import metricsEngine from './metricsEngine';
 import autoHealEngine from './autoHealEngine';
 import { cognitiveKernel } from './cognitiveKernel';
+import { SingularityBridge } from '@/services/singularityBridge';
 
 const logger = createLogger('[META-KERNEL]');
 
@@ -759,6 +760,13 @@ class MetaKernel {
 
     // Détecter zones de fragilité
     this.detectFragilityZones(observation);
+
+    // Singularity-Omega unification: sync orchestrationQuality from SingularityBridge
+    // getCachedCoherence() returns 0–1; scale to 0–100 for metaKernel conventions
+    const singularityCoherence = SingularityBridge.getCachedCoherence();
+    this.subKernels.metaSingularity.orchestrationQuality = Math.round(
+      singularityCoherence * 100
+    );
 
     logger.debug('System observation complete', {
       stability: observation.stability.toFixed(1),

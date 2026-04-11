@@ -16,6 +16,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { webResearch } from '@/services/webResearchService';
+import { userPreferencesEngine } from '@/services/userPreferencesEngine';
 import type {
   ResearchMode,
   ResearchOptions,
@@ -36,6 +37,25 @@ type ResearchHandoffState = {
 // ─────────────────────────────────────────────────────────────────
 
 type ResearchState = 'idle' | 'running' | 'done' | 'error';
+
+// ─────────────────────────────────────────────────────────────────
+// DEEP ANALYSIS OPTIONS
+// Boost factors applied when deep_internet_analysis preference is active.
+// ─────────────────────────────────────────────────────────────────
+
+const DEEP_ANALYSIS_OPTIONS = {
+  max_sources: 25,  // vs 8 standard — broad multi-source collection
+  max_pages: 30,    // vs 10 standard — extended crawl depth
+  max_requests: 50, // vs 16 standard — allows full source retrieval
+  timeout_ms: 120000, // vs 60000 standard — 2 min for exhaustive fetch
+} as const;
+
+const STANDARD_OPTIONS = {
+  max_sources: 8,
+  max_pages: 10,
+  max_requests: 16,
+  timeout_ms: 60000,
+} as const;
 
 // ─────────────────────────────────────────────────────────────────
 // HELPERS
@@ -331,16 +351,20 @@ export const ResearchPage: React.FC = () => {
       const resolvedSeedUrls =
         mode === 'WEB_LIVE' ? resolveWebLiveSeeds(question, seedUrls) : seedUrls;
 
+      const useDeepAnalysis =
+        userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] === true;
+      const depthOptions = useDeepAnalysis ? DEEP_ANALYSIS_OPTIONS : STANDARD_OPTIONS;
+
       const options: ResearchOptions = {
         mode,
         target_url: resolvedTargetUrl,
         sandbox_root: sandboxRoot.trim() || null,
         seed_urls: resolvedSeedUrls,
         max_depth: 1,
-        max_sources: 8,
-        max_pages: 10,
-        max_requests: 16,
-        timeout_ms: 60000,
+        max_sources: depthOptions.max_sources,
+        max_pages: depthOptions.max_pages,
+        max_requests: depthOptions.max_requests,
+        timeout_ms: depthOptions.timeout_ms,
         cache_enabled: true,
         respect_robots: true,
       };

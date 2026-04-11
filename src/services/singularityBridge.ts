@@ -348,6 +348,15 @@ export class SingularityBridge {
     return getResultOrDefault(result, 0.5);
   }
 
+  /**
+   * Synchronous cache read — returns the cognitive coherence from the last known state.
+   * Returns 0.5 (neutral) if no state has been loaded yet.
+   * Used by the AI pipeline (synchronous discern() calls) to avoid adding async overhead.
+   */
+  static getCachedCoherence(): number {
+    return this.state?.cognitive?.coherence ?? 0.5;
+  }
+
   static async isCritical(): Promise<boolean> {
     return (await safeInvoke<boolean>('singularity_is_critical')) || false;
   }

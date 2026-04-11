@@ -944,7 +944,7 @@ class AIOrchestrator {
       const cognitiveDecision = await cognitiveKernel.executeCognitiveProcess({
         message: sanitized,
         providers: this.providers.map(p => p.name),
-        metrics: { ...realtimeMetrics } as unknown as MetricsData,
+        metrics: { ...realtimeMetrics } as MetricsData,
       });
 
       // Sélection neurale standard (avec préférence optionnelle)
@@ -1122,7 +1122,8 @@ class AIOrchestrator {
             sanitized,
             historyForProvider,
             executionTimeout,
-            requestId
+            requestId,
+            config
           );
 
           // 🚨 DEBUG CRITICAL: Log succès provider (désactivé en production)
@@ -1498,7 +1499,8 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     message: string,
     history: AIMessage[],
     timeout: number,
-    requestId: string
+    requestId: string,
+    providerConfig?: AIConfig
   ): Promise<AIResponse> {
     this.currentRequests++;
 
@@ -1514,8 +1516,8 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
         throw new Error(`Provider ${provider.name} is not available`);
       }
 
-      // Generation with full timeout
-      const generationPromise = provider.generate(message, history);
+      // Generation with full timeout — pass config so temperature/maxTokens reach the provider
+      const generationPromise = provider.generate(message, history, providerConfig);
       const generationTimeout = new Promise<never>((_, reject) =>
         setTimeout(
           () => reject(new Error(`Provider timeout (${timeout}ms) [${requestId}]`)),
