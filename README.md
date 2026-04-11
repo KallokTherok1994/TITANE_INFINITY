@@ -8,7 +8,7 @@
 **Status:** ✅ Production Ready (V30 maintained release stream)
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
 **Latest certified deployment:** `2026-04-11` via `deployment/latest/MANIFEST.json`
-**Primary release tag:** [v30.0.0-release-20260406](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260406) (current release stream)
+**Primary release tag:** [v30.0.0-release-20260406](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260406) (last certified v30.0.0 build — historical)
 **Prior certification tag:** [v30.0.0-release-20260405](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260405) (historical)
 
 **Canal de release canonique:** v30.1.0
@@ -38,8 +38,8 @@
 
 Artefacts vérifiés (Linux amd64):
 
-- **AppImage**: `Titan-Stable_30.1.0_amd64.AppImage` (deployed in `deployment/latest/`)
-- **DEB Package**: `Titan-Stable_30.1.0_amd64.deb` (deployed in `deployment/latest/`)
+- **AppImage**: `Titan-Stable_30.1.0_amd64.AppImage` (expected artifact for v30.1.0 release build)
+- **DEB Package**: `Titan-Stable_30.1.0_amd64.deb` (expected artifact for v30.1.0 release build)
 
 Checksums courants (`deployment/latest/MANIFEST.json`):
 
