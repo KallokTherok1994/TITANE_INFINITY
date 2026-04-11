@@ -14,5 +14,6 @@ export {
   useJournalUpdates,
   useReasoningTraceUpdates,
   useCognitiveStateUpdates,
+  useKernelMetricsUpdates,
   useAllDevToolsEvents,
 } from './useDevToolsEvents';

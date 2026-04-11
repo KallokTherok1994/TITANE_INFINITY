@@ -103,6 +103,8 @@ import { responseCache } from '@/services/cache/responseCache';
 import { predictivePreloader } from '@/services/cache/predictivePreloader';
 // Deep analysis preference bridge
 import { userPreferencesEngine } from '@/services/userPreferencesEngine';
+// v30: OMEGA DevTools Bridge — wires real pipeline data → DevTools Journal
+import { omegaDevToolsBridge } from './omegaDevToolsBridge';
 
 const logger = createLogger('ChatEngine');
 const DEBUG_CHAT_ENGINE_TRACES = Boolean(
@@ -697,6 +699,19 @@ class ChatEngineOmega {
         confidence: canonicalDecision.confidence.toFixed(2),
         timeMs: canonicalDecision.processingTimeMs,
       });
+
+      // v30: Notify DevTools Journal that TITANE is now thinking (fire-and-forget)
+      omegaDevToolsBridge
+        .updateCognitiveState({
+          status: 'thinking',
+          currentMode: canonicalDecision.mode,
+          currentProvider: canonicalDecision.provider.name,
+          effortLevel: canonicalDecision.provider.reasoningEffort,
+          singularityCoherence: Math.round(singularityCoherence * 100),
+          processingLoad: 55,
+          lastRequestAt: pipelineStartTime,
+        })
+        .catch(e => logger.debug('[OmegaBridge] state thinking failed', { e }));
 
       // ═══ PHASE 1.3: CONSTRUCTION PROMPT SELON MODE ═══
       // v26.0.0: Kernel is the single source of truth — behavioralRouter runs inside kernel
@@ -1318,6 +1333,32 @@ Format: [Audit complet] + [Réponse utilisateur]
         processingTime: `${processingTime}ms`,
         steps: pipelineSteps,
       });
+
+      // v30: Feed OMEGA DevTools Journal with real pipeline data (fire-and-forget, Tauri-guarded)
+      const singCoherence = SingularityBridge.getCachedCoherence();
+
+      const reflNote = `Réponse ${
+        validation.score >= 0.8 ? 'excellente' : validation.score >= 0.6 ? 'bonne' : 'basique'
+      } (score: ${(validation.score * 100).toFixed(0)}%). Mode: ${canonicalDecision.mode}. Effort: ${canonicalDecision.provider.reasoningEffort}.`;
+
+      omegaDevToolsBridge
+        .reportJournalEntry({
+          requestId: correlationId,
+          startedAt: pipelineStartTime,
+          request: message,
+          response: processedResponse.content,
+          decision: canonicalDecision,
+          pipelineSteps,
+          totalDurationMs: processingTime,
+          success: true,
+          singularityCoherence: singCoherence ?? undefined,
+          reflectionNotes: reflNote,
+        })
+        .catch(e => logger.debug('[OmegaBridge] journal emit failed', { e }));
+
+      omegaDevToolsBridge
+        .updateCognitiveState({ status: 'idle', processingLoad: 0 })
+        .catch(e => logger.debug('[OmegaBridge] state idle failed', { e }));
 
       return finalResponse;
     } catch (error) {

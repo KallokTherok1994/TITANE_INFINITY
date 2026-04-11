@@ -7,7 +7,7 @@
  */
 
 import { emit } from '@tauri-apps/api/event';
-import type { EngineStatus, LogLevel, JournalEntry, ReasoningTrace, CognitiveState } from '../store/devtools.store';
+import type { EngineStatus, LogLevel, JournalEntry, ReasoningTrace, CognitiveState, KernelMetrics } from '../store/devtools.store';
 
 /**
  * Envoie une mise à jour de statut d'engine
@@ -317,6 +317,15 @@ export async function sendJournalEntry(entry: JournalEntry) {
   }
 }
 
+/** Envoie les métriques du kernel OMEGA */
+export async function sendKernelMetrics(metrics: KernelMetrics) {
+  try {
+    await emit('omega-kernel-metrics', metrics);
+  } catch (error) {
+    console.error('[MockEvents] Failed to send kernel metrics:', error);
+  }
+}
+
 /** Simule une exécution OMEGA complète avec état cognitif et trace de raisonnement */
 export async function simulateOmegaExecution() {
   const mode = MOCK_MODES[Math.floor(Math.random() * MOCK_MODES.length)] ?? 'OMEGA';
@@ -414,4 +423,18 @@ export async function simulateOmegaExecution() {
 
   // 7. Back to idle
   await sendCognitiveStateUpdate({ status: 'idle', processingLoad: 0 });
+
+  // 8. Emit kernel metrics update (cumulative simulation)
+  const profileKeys = ['OMEGA', 'ARCHITECT', 'DEEP', 'DEVELOPED', 'BALANCED', 'DIRECT'];
+  const dist: Record<string, number> = {};
+  profileKeys.forEach(k => { dist[k] = Math.floor(Math.random() * 10); });
+  const topKey = mode === 'OMEGA' ? 'OMEGA' : 'ARCHITECT';
+  dist[topKey] = (dist[topKey] ?? 0) + 3;
+  await sendKernelMetrics({
+    totalDecisions: 12 + Math.floor(Math.random() * 40),
+    avgConfidence: 0.72 + Math.random() * 0.22,
+    avgProcessingTimeMs: 18 + Math.random() * 30,
+    profileDistribution: dist,
+    fallbackRate: Math.random() * 0.12,
+  });
 }

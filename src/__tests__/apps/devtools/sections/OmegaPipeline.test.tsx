@@ -34,6 +34,7 @@ vi.mock('@/apps/devtools/store/devtools.store', () => ({
     reasoningTrace: null,
     journalEntries: [],
     clearJournal: vi.fn(),
+    kernelMetrics: null,
   }),
 }));
 

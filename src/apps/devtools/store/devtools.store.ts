@@ -129,6 +129,15 @@ export interface CognitiveState {
   status: CognitiveStatus;
 }
 
+/** v30.0.0 — Kernel metrics from CanonicalDiscernmentKernel */
+export interface KernelMetrics {
+  totalDecisions: number;
+  avgConfidence: number; // 0-1
+  avgProcessingTimeMs: number;
+  profileDistribution: Record<string, number>;
+  fallbackRate: number;
+}
+
 // ─────────────────────────────────────────────────────────────────
 // STORE STATE
 // ─────────────────────────────────────────────────────────────────
@@ -164,6 +173,7 @@ interface DevToolsState {
   maxJournalEntries: number;
   reasoningTrace: ReasoningTrace | null;
   cognitiveState: CognitiveState;
+  kernelMetrics: KernelMetrics | null;
 
   // UI State
   autoScrollLogs: boolean;
@@ -187,6 +197,7 @@ interface DevToolsState {
   updateReasoningTrace: (trace: ReasoningTrace) => void;
   updateCognitiveState: (updates: Partial<CognitiveState>) => void;
   clearJournal: () => void;
+  updateKernelMetrics: (metrics: KernelMetrics) => void;
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -366,6 +377,7 @@ export const useDevToolsStore = create<DevToolsState>(set => ({
     activeEnginesCount: 0,
     status: 'idle',
   },
+  kernelMetrics: null,
 
   autoScrollLogs: true,
   selectedEngine: null,
@@ -453,4 +465,6 @@ export const useDevToolsStore = create<DevToolsState>(set => ({
     })),
 
   clearJournal: () => set({ journalEntries: [], reasoningTrace: null }),
+
+  updateKernelMetrics: metrics => set({ kernelMetrics: metrics }),
 }));

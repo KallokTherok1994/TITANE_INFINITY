@@ -598,6 +598,7 @@ export function OmegaPipeline() {
     reasoningTrace,
     journalEntries,
     clearJournal,
+    kernelMetrics,
   } = useDevToolsStore();
 
   const [activeTab, setActiveTab] = useState<JournalTab>('execution');
@@ -778,6 +779,55 @@ export function OmegaPipeline() {
             </div>
           ) : (
             <ReasoningTracePanel trace={reasoningTrace} />
+          )}
+
+          {/* Kernel Metrics Panel */}
+          {kernelMetrics && (
+            <div
+              className="rounded-lg border p-4"
+              style={{ background: 'var(--bg-panel, #101216)', borderColor: 'var(--border, rgba(196,196,196,0.12))' }}
+            >
+              <h4 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: 'var(--text-primary, #e0e0e0)' }}>
+                <span>⚙️</span>
+                <span>Métriques Kernel — CanonicalDiscernmentKernel</span>
+              </h4>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="rounded-md p-3 text-center" style={{ background: 'rgba(66,153,225,0.08)', border: '1px solid rgba(66,153,225,0.25)' }}>
+                  <div className="text-2xl font-bold" style={{ color: '#7ab8f0' }}>{kernelMetrics.totalDecisions}</div>
+                  <div className="text-xs mt-1" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>Décisions totales</div>
+                </div>
+                <div className="rounded-md p-3 text-center" style={{ background: 'rgba(99,179,93,0.08)', border: '1px solid rgba(99,179,93,0.25)' }}>
+                  <div className="text-2xl font-bold" style={{ color: '#7abf84' }}>{(kernelMetrics.avgConfidence * 100).toFixed(0)}%</div>
+                  <div className="text-xs mt-1" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>Confiance moyenne</div>
+                </div>
+                <div className="rounded-md p-3 text-center" style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.25)' }}>
+                  <div className="text-2xl font-bold" style={{ color: '#f59e0b' }}>{kernelMetrics.avgProcessingTimeMs.toFixed(0)}ms</div>
+                  <div className="text-xs mt-1" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>Temps kernel moyen</div>
+                </div>
+                <div className="rounded-md p-3 text-center" style={{ background: 'rgba(139,95,95,0.08)', border: '1px solid rgba(139,95,95,0.25)' }}>
+                  <div className="text-2xl font-bold" style={{ color: '#c97070' }}>{(kernelMetrics.fallbackRate * 100).toFixed(0)}%</div>
+                  <div className="text-xs mt-1" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>Taux fallback</div>
+                </div>
+              </div>
+              {Object.keys(kernelMetrics.profileDistribution).length > 0 && (
+                <div className="mt-3">
+                  <div className="text-xs mb-2" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>Distribution des profils</div>
+                  <div className="flex flex-wrap gap-2">
+                    {Object.entries(kernelMetrics.profileDistribution)
+                      .sort(([, a], [, b]) => b - a)
+                      .map(([profile, count]) => (
+                        <span
+                          key={profile}
+                          className="text-xs px-2 py-1 rounded-full font-mono"
+                          style={{ background: 'rgba(130,80,200,0.15)', color: '#c084fc', border: '1px solid rgba(130,80,200,0.3)' }}
+                        >
+                          {profile}: {count}
+                        </span>
+                      ))}
+                  </div>
+                </div>
+              )}
+            </div>
           )}
         </div>
       )}

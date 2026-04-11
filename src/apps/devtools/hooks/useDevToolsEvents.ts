@@ -16,6 +16,7 @@ import type {
   JournalEntry,
   ReasoningTrace,
   CognitiveState,
+  KernelMetrics,
 } from '../store/devtools.store';
 
 /**
@@ -314,6 +315,30 @@ export function useCognitiveStateUpdates() {
 }
 
 /**
+ * useKernelMetricsUpdates - Écoute les métriques du CanonicalDiscernmentKernel
+ */
+export function useKernelMetricsUpdates() {
+  const updateKernelMetrics = useDevToolsStore(state => state.updateKernelMetrics);
+
+  useEffect(() => {
+    let unlisten: UnlistenFn | undefined;
+
+    const setupListener = async () => {
+      try {
+        unlisten = await listen<KernelMetrics>('omega-kernel-metrics', event => {
+          if (event.payload) updateKernelMetrics(event.payload);
+        });
+      } catch (e) {
+        console.error('[DevTools] omega-kernel-metrics listener failed:', e);
+      }
+    };
+
+    setupListener();
+    return () => { if (unlisten) unlisten(); };
+  }, [updateKernelMetrics]);
+}
+
+/**
  * useAllDevToolsEvents - Hook principal activant tous les listeners
  *
  * Utiliser dans DevToolsApp pour activer tous les events en une fois
@@ -336,4 +361,5 @@ export function useAllDevToolsEvents() {
   useJournalUpdates();
   useReasoningTraceUpdates();
   useCognitiveStateUpdates();
+  useKernelMetricsUpdates();
 }
