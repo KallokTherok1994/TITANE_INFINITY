@@ -45,6 +45,7 @@ import { PageLoadingFallback } from './ui/components/PageLoadingFallback'; // �
 // ✨ OPT-10: initializeMicroInteractions lazy-loaded below (removed static import)
 import { ToastContainer } from './ui/components/Toast'; // ✨ v19.5.2 - Toast notifications
 import { useToasts, useToastActions } from './stores/uiStore.selectors'; // ✨ v29.1.0 - Optimized selectors
+import pkgJson from '../package.json'; // ✨ Rule 13 - Version displayed in footer
 // Sidebar state removed in UI vΩ - Navigation moved to TopNav
 // import { useSingularitySidebarCollapsed, useContextActions } from './core/state/SingularityState.selectors';
 import { useAppInitialization } from './hooks/useAppInitialization';
@@ -316,6 +317,11 @@ const AppRouter: React.FC = () => {
           onNavigate={handleNavigate}
           maxVisibleItems={5}
         />
+      }
+      footer={
+        <span className="select-none opacity-60 text-xs tracking-widest">
+          TITANE∞ v{pkgJson.version}
+        </span>
       }
     >
       {/* ✨ UI vΩ Phase F: Backend down indicator (mode dégradé local-first) */}
