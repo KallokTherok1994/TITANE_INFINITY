@@ -1,5 +1,5 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "engines_catalog",
   "description": "Catalogue exhaustif de tous les moteurs cognitifs TITANE∞",
   "engines": [
@@ -41,7 +41,7 @@
         "singularity_selftest_full"
       ],
       "status": "active",
-      "version": "v30.0.0"
+      "version": "v30.1.0"
     },
     {
       "id": "cognitive",
@@ -65,7 +65,7 @@
         "cognitive_evolution_tick"
       ],
       "status": "active",
-      "version": "v30.0.0"
+      "version": "v30.1.0"
     },
     {
       "id": "omega",
@@ -85,7 +85,7 @@
       ],
       "ipc_commands": ["omega_pipeline_process", "omega_get_state", "omega_diagnostics"],
       "status": "active",
-      "version": "v30.0.0"
+      "version": "v30.1.0"
     },
     {
       "id": "unified_memory_v2",
@@ -117,7 +117,7 @@
         "memory_export_conversation"
       ],
       "status": "active",
-      "version": "v30.0.0"
+      "version": "v30.1.0"
     },
     {
       "id": "ai_router",
@@ -150,7 +150,7 @@
         "ai_status"
       ],
       "status": "active",
-      "version": "v30.0.0"
+      "version": "v30.1.0"
     },
     {
       "id": "conversation_engine",
@@ -175,7 +175,7 @@
         "validate_chat_message"
       ],
       "status": "active",
-      "version": "v30.0.0"
+      "version": "v30.1.0"
     },
     {
       "id": "evolution",
@@ -197,13 +197,13 @@
         "quick_health_check"
       ],
       "status": "active",
-      "version": "v30.0.0"
+      "version": "v30.1.0"
     },
     {
       "id": "kernel_os",
       "name": "KernelOS",
       "path": "src-tauri/src/kernel/",
-      "role": "Noyau OS cognitif v30.0.0. Boucle principale, runtime, ordonnanceur, gestion ressources, priorités, événements, signaux, watchdog, gouvernance.",
+      "role": "Noyau OS cognitif v30.1.0. Boucle principale, runtime, ordonnanceur, gestion ressources, priorités, événements, signaux, watchdog, gouvernance.",
       "capabilities": [
         "core_loop",
         "runtime",
@@ -217,7 +217,7 @@
       ],
       "ipc_commands": ["kernel_get_state", "kernel_tick", "kernel_diagnostics"],
       "status": "active",
-      "version": "v30.0.0"
+      "version": "v30.1.0"
     },
     {
       "id": "meta_orchestrator",
@@ -232,7 +232,7 @@
       ],
       "ipc_commands": ["meta_orchestrator_get_state", "meta_orchestrator_tick"],
       "status": "active",
-      "version": "v30.0.0"
+      "version": "v30.1.0"
     },
     {
       "id": "hyper_intelligence",
@@ -247,7 +247,7 @@
       ],
       "ipc_commands": ["hyper_intelligence_get_state", "hyper_intelligence_reason"],
       "status": "active",
-      "version": "v30.0.0"
+      "version": "v30.1.0"
     },
     {
       "id": "self_heal",
@@ -269,7 +269,7 @@
         "selfheal_force_evaluation"
       ],
       "status": "active",
-      "version": "v30.0.0"
+      "version": "v30.1.0"
     },
     {
       "id": "identity",
@@ -286,7 +286,7 @@
       ],
       "ipc_commands": ["identity_get_state", "identity_set_mode", "identity_get_profile"],
       "status": "active",
-      "version": "v30.0.0"
+      "version": "v30.1.0"
     },
     {
       "id": "agi_core",
@@ -305,7 +305,7 @@
         "multimodal_perception"
       ],
       "status": "active",
-      "version": "v30.0.0"
+      "version": "v30.1.0"
     },
     {
       "id": "audio",
@@ -333,7 +333,7 @@
         "get_recording_status"
       ],
       "status": "active",
-      "version": "v30.0.0"
+      "version": "v30.1.0"
     },
     {
       "id": "security",
@@ -348,7 +348,7 @@
         "secure_storage"
       ],
       "status": "active",
-      "version": "v30.0.0"
+      "version": "v30.1.0"
     },
     {
       "id": "knowledge",
@@ -369,7 +369,7 @@
         "knowledge_save_state"
       ],
       "status": "active",
-      "version": "v30.0.0"
+      "version": "v30.1.0"
     },
     {
       "id": "numeric_twin",
@@ -383,7 +383,7 @@
         "kevin_titane_sync"
       ],
       "status": "active",
-      "version": "v30.0.0"
+      "version": "v30.1.0"
     },
     {
       "id": "agenda",
@@ -400,7 +400,7 @@
         "agenda_update_event"
       ],
       "status": "active",
-      "version": "v30.0.0"
+      "version": "v30.1.0"
     },
     {
       "id": "watchdog",
@@ -410,7 +410,7 @@
       "capabilities": ["system_surveillance", "log_capture", "event_monitoring"],
       "ipc_commands": ["watchdog_get_logs", "watchdog_get_data"],
       "status": "active",
-      "version": "v30.0.0"
+      "version": "v30.1.0"
     },
     {
       "id": "agent_system",
@@ -427,7 +427,7 @@
         "sandbox"
       ],
       "status": "active",
-      "version": "v30.0.0"
+      "version": "v30.1.0"
     }
   ]
 }

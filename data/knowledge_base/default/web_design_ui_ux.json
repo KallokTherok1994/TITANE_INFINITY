@@ -1,5 +1,5 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "web_design_ui_ux",
   "description": "Web design, UI/UX avancé — Figma avancé (composants, auto-layout, variables, design systems, dev mode), Webflow (design no-code CMS avancé), CSS avancé (Flexbox, Grid, animations, custom properties, container queries), design systems (tokens, documentation, implémentation), prototypage (Figma, Framer, ProtoPie), accessibilité WCAG 2.2, responsive design, motion design (Lottie, Framer Motion, GSAP), UX research (tests utilisateurs, wireframing, information architecture), design thinking",
   "web_design_ui_ux": {

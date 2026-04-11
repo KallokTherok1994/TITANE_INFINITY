@@ -1,9 +1,9 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "omega_pipeline_detail",
   "description": "OMEGA Pipeline TITANE∞ — orchestration complète, 10 étapes, routeur d'intent, exécuteur, garde-fous, diagnostics",
   "omega_pipeline": {
-    "nom": "OMEGA Pipeline v30.0.0",
+    "nom": "OMEGA Pipeline v30.1.0",
     "chemin": "src-tauri/src/omega/",
     "super_prompt": "#15 — Complete pipeline orchestration",
     "tagline": "Router → Executor → Merger → Guardrails → Output",

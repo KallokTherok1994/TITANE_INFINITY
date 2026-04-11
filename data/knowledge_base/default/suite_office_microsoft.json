@@ -1,5 +1,5 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "suite_office_microsoft",
   "description": "Suite Microsoft Office avancée — Word (styles, macros, références, collaboration), Excel avancé (formules complexes XLOOKUP/LAMBDA/LET, tableaux croisés dynamiques, Power Query, Power Pivot, VBA, graphiques avancés), PowerPoint (design professionnel, animations, présenter), Outlook (productivité email, règles, calendrier), Teams (collaboration, channels, intégrations), SharePoint (sites, bibliothèques, workflows), OneNote, Microsoft 365 cloud",
   "suite_office_microsoft": {

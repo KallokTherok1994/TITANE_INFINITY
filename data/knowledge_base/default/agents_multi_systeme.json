@@ -1,5 +1,5 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "agents_multi_systeme",
   "description": "Système multi-agents TITANE∞ — 8 types d'agents, rôles, permissions, collaboration, supervision, sandbox",
   "agent_system": {

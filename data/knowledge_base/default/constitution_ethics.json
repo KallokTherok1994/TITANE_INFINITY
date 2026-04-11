@@ -1,9 +1,9 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "constitution_ethics",
   "description": "Constitution TITANE∞ — principes fondamentaux, valeurs, droits, gouvernance et éthique cognitive",
   "constitution": {
-    "title": "Constitution TITANE∞ v30.0.0",
+    "title": "Constitution TITANE∞ v30.1.0",
     "super_prompt": "#13 — Système de gouvernance constitutionnelle",
     "modules": [
       "principles",

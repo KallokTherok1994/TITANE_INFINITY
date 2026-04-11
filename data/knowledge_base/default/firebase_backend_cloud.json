@@ -1,5 +1,5 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "firebase_backend_cloud",
   "description": "Firebase, plateformes cloud et APIs — Firebase complet (Firestore, Realtime DB, Authentication, Hosting, Cloud Functions, Storage, Analytics, Remote Config), Google AI Studio (Gemini API, prompt engineering), Reddit (API, communauté, growth), Unity game development (C#, composants, physique, UI, Store), plateformes cloud (AWS, GCP, Azure, Vercel, Netlify, Supabase)",
   "firebase_backend_cloud": {

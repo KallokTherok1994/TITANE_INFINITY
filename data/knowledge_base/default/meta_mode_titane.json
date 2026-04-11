@@ -1,9 +1,9 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "meta_mode_titane",
   "description": "Meta-Mode Engine TITANE∞ — 30+ modes d'accompagnement, détection automatique du mode optimal, transitions fluides, KevinState",
   "meta_mode_engine": {
-    "nom": "Meta-Mode Engine v30.0.0",
+    "nom": "Meta-Mode Engine v30.1.0",
     "chemin": "src-tauri/src/meta_mode_engine/",
     "description": "Système d'accompagnement multidisciplinaire intelligent. Intègre TOUS les modes TITANE∞ dans un ensemble cohérent. Détecte automatiquement le mode optimal et effectue des transitions fluides sans friction.",
     "capacités_majeures": [

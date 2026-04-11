@@ -1,5 +1,5 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "synchronisation_orchestration",
   "description": "Architecture de synchronisation, orchestration de l'IA, gestion des providers et pipeline de décision TITANE∞",
   "orchestration": {

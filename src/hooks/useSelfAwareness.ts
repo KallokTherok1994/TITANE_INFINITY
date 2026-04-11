@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — useSelfAwareness Hook
+ * TITANE∞ v30.1.0 — useSelfAwareness Hook
  *
  * Hook for accessing TITANE's self-awareness knowledge base.
  * Provides access to architecture map, capabilities, metrics,

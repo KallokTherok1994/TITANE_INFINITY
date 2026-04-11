@@ -1,9 +1,9 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "ai_providers_guide",
   "description": "Guide complet des providers IA TITANE∞: routing, fallback, configuration, modèles recommandés",
   "ai_routing": {
-    "description": "AIRouter Multi-Provider v30.0.0. Routage intelligent avec fallback automatique.",
+    "description": "AIRouter Multi-Provider v30.1.0. Routage intelligent avec fallback automatique.",
     "path": "src-tauri/src/ai/",
     "decision_logic": [
       "1. Vérifier disponibilité provider prioritaire (online first)",

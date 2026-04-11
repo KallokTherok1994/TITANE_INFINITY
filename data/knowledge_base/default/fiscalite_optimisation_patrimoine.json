@@ -1,5 +1,5 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "fiscalite_optimisation_patrimoine",
   "description": "Optimisation fiscale avancée et structuration patrimoniale — structures juridiques (micro-entreprise, SASU, EURL, SCI, holding, intégration fiscale), optimisation légale (frais réels, amortissement, charges déductibles, TVA), véhicules d'investissement (PEA, assurance-vie, PER, compte-titres), immobilier fiscal (LMNP, LMP, déficit foncier, dispositifs Pinel/Denormandie/Malraux), montages patrimoniaux (donation-partage, démembrement, Dutreil, clause bénéficiaire), fiscalité internationale (résidence fiscale, conventions, IP Box, expatriation), planification et erreurs fatales",
   "fiscalite_optimisation_patrimoine": {

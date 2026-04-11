@@ -1,5 +1,5 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "formats_fichiers_avance",
   "description": "Formats de fichiers avancés — PDF (création, édition, compression, signature électronique, formulaires, OCR), .docx/.xlsx (structure interne XML, Open XML SDK), Markdown (.md) avancé, JSON/XML/CSV/YAML (parsing, validation, transformation), formats audio (MP3, FLAC, WAV, AAC, OGG), formats vidéo (MP4, MOV, MKV, AVI, WebM), formats image (JPEG, PNG, SVG, WebP, HEIC, TIFF, RAW), compression et archivage (ZIP, 7z, TAR), conversion et compatibilité",
   "formats_fichiers_avance": {
