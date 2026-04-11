@@ -4,6 +4,10 @@
 
 import { secureInvoke } from '@/lib/security';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('FullBodyEngine');
+
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES
 // ═══════════════════════════════════════════════════════════════════════════
@@ -102,9 +106,9 @@ export class FullBodyAvatarBridge {
         build: profile?.build,
         postureDefault: profile?.postureDefault,
       });
-      console.log('[FullBodyAvatarBridge] Initialized:', result);
+      logger.info('[FullBodyAvatarBridge] Initialized:', result);
     } catch (error) {
-      console.error('[FullBodyAvatarBridge] Initialization failed:', error);
+      logger.error('[FullBodyAvatarBridge] Initialization failed:', error);
       throw error;
     }
   }
@@ -118,7 +122,7 @@ export class FullBodyAvatarBridge {
    */
   startAnimationLoop(onUpdate?: (snapshot: SkeletonSnapshot) => void): void {
     if (this.isRunning) {
-      console.warn('[FullBodyAvatarBridge] Animation loop already running');
+      logger.warn('[FullBodyAvatarBridge] Animation loop already running');
       return;
     }
 
@@ -141,12 +145,12 @@ export class FullBodyAvatarBridge {
         // 3. Planifier prochaine frame
         this.animationFrameId = requestAnimationFrame(animate);
       } catch (error) {
-        console.error('[FullBodyAvatarBridge] Animation loop error:', error);
+        logger.error('[FullBodyAvatarBridge] Animation loop error:', error);
       }
     };
 
     this.animationFrameId = requestAnimationFrame(animate);
-    console.log('[FullBodyAvatarBridge] Animation loop started (60 FPS)');
+    logger.info('[FullBodyAvatarBridge] Animation loop started (60 FPS)');
   }
 
   /**
@@ -158,7 +162,7 @@ export class FullBodyAvatarBridge {
       cancelAnimationFrame(this.animationFrameId);
       this.animationFrameId = null;
     }
-    console.log('[FullBodyAvatarBridge] Animation loop stopped');
+    logger.info('[FullBodyAvatarBridge] Animation loop stopped');
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -174,7 +178,7 @@ export class FullBodyAvatarBridge {
         gestureName: gesture,
       });
     } catch (error) {
-      console.error('[FullBodyAvatarBridge] Gesture activation failed:', error);
+      logger.error('[FullBodyAvatarBridge] Gesture activation failed:', error);
       throw error;
     }
   }
@@ -196,7 +200,7 @@ export class FullBodyAvatarBridge {
         intensity,
       });
     } catch (error) {
-      console.error('[FullBodyAvatarBridge] Expression update failed:', error);
+      logger.error('[FullBodyAvatarBridge] Expression update failed:', error);
       throw error;
     }
   }
@@ -214,7 +218,7 @@ export class FullBodyAvatarBridge {
         cheeks: morphWeights.cheeks,
       });
     } catch (error) {
-      console.error('[FullBodyAvatarBridge] Lip-sync update failed:', error);
+      logger.error('[FullBodyAvatarBridge] Lip-sync update failed:', error);
       throw error;
     }
   }
@@ -237,7 +241,7 @@ export class FullBodyAvatarBridge {
         xpProgression: state.xp_progression,
       });
     } catch (error) {
-      console.error('[FullBodyAvatarBridge] State update failed:', error);
+      logger.error('[FullBodyAvatarBridge] State update failed:', error);
       throw error;
     }
   }
@@ -254,7 +258,7 @@ export class FullBodyAvatarBridge {
         conversationPhase: context.conversation_phase,
       });
     } catch (error) {
-      console.error('[FullBodyAvatarBridge] Context update failed:', error);
+      logger.error('[FullBodyAvatarBridge] Context update failed:', error);
       throw error;
     }
   }
@@ -270,7 +274,7 @@ export class FullBodyAvatarBridge {
     try {
       await secureInvoke<string>('fullbody_on_wake_word');
     } catch (error) {
-      console.error('[FullBodyAvatarBridge] Wake-word reaction failed:', error);
+      logger.error('[FullBodyAvatarBridge] Wake-word reaction failed:', error);
       throw error;
     }
   }
@@ -287,7 +291,7 @@ export class FullBodyAvatarBridge {
       const json = await secureInvoke<string>('fullbody_export_skeleton');
       return JSON.parse(json) as SkeletonSnapshot;
     } catch (error) {
-      console.error('[FullBodyAvatarBridge] Skeleton export failed:', error);
+      logger.error('[FullBodyAvatarBridge] Skeleton export failed:', error);
       throw error;
     }
   }
@@ -300,7 +304,7 @@ export class FullBodyAvatarBridge {
       const json = await secureInvoke<string>('fullbody_get_stats');
       return JSON.parse(json) as FullBodyStats;
     } catch (error) {
-      console.error('[FullBodyAvatarBridge] Stats retrieval failed:', error);
+      logger.error('[FullBodyAvatarBridge] Stats retrieval failed:', error);
       throw error;
     }
   }
@@ -315,7 +319,7 @@ export class FullBodyAvatarBridge {
   destroy(): void {
     this.stopAnimationLoop();
     this.onSkeletonUpdate = undefined;
-    console.log('[FullBodyAvatarBridge] Bridge destroyed');
+    logger.info('[FullBodyAvatarBridge] Bridge destroyed');
   }
 }
 

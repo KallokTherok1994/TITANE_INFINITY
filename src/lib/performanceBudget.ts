@@ -5,6 +5,10 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('PerfBudget');
+
 // ────────────────────────────────────────────────────────────────
 // Types
 // ────────────────────────────────────────────────────────────────
@@ -115,7 +119,7 @@ export class PerformanceMonitor {
 
       observer.observe({ entryTypes: ['largest-contentful-paint'] });
     } catch (e) {
-      console.error('LCP observer failed:', e);
+      logger.error('LCP observer failed:', e);
     }
   }
 
@@ -135,7 +139,7 @@ export class PerformanceMonitor {
 
       observer.observe({ entryTypes: ['first-input'] });
     } catch (e) {
-      console.error('FID observer failed:', e);
+      logger.error('FID observer failed:', e);
     }
   }
 
@@ -161,7 +165,7 @@ export class PerformanceMonitor {
 
       observer.observe({ entryTypes: ['layout-shift'] });
     } catch (e) {
-      console.error('CLS observer failed:', e);
+      logger.error('CLS observer failed:', e);
     }
   }
 
@@ -183,7 +187,7 @@ export class PerformanceMonitor {
 
       observer.observe({ entryTypes: ['paint'] });
     } catch (e) {
-      console.error('FCP observer failed:', e);
+      logger.error('FCP observer failed:', e);
     }
   }
 
@@ -199,7 +203,7 @@ export class PerformanceMonitor {
 
       this.vitals.TTFB = ttfb;
     } catch (e) {
-      console.error('TTFB observer failed:', e);
+      logger.error('TTFB observer failed:', e);
     }
   }
 
@@ -352,14 +356,14 @@ export class PerformanceMonitor {
       `color: white; background-color: ${this.getGradeColor(report.grade)}; font-weight: bold; padding: 4px 8px; border-radius: 4px;`
     );
 
-    console.log('Core Web Vitals:');
+    logger.info('Core Web Vitals:');
     console.table(report.vitals);
 
     if (report.violations.length > 0) {
-      console.warn(`${report.violations.length} Budget Violations:`);
+      logger.warn(`${report.violations.length} Budget Violations:`);
       console.table(report.violations);
     } else {
-      console.log('✅ All budgets met!');
+      logger.info('✅ All budgets met!');
     }
 
     console.groupEnd();

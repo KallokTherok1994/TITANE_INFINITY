@@ -21,7 +21,7 @@ const logger = {
   configure: (_config: unknown) => {},
   trace: (..._args: unknown[]) => {},
   debug: (..._args: unknown[]) => {},
-  info: (...args: unknown[]) => console.info('[Monitoring]', ...args),
+  info: (...args: unknown[]) => console.log('[Monitoring]', ...args),
   warn: (...args: unknown[]) => console.warn('[Monitoring]', ...args),
   error: (...args: unknown[]) => console.error('[Monitoring]', ...args),
   fatal: (...args: unknown[]) => console.error('[Monitoring][FATAL]', ...args),
@@ -444,7 +444,7 @@ export default monitoring;
  * ## View metrics
  * ```typescript
  * const metrics = monitoring.getMetrics();
- * console.log('Performance Metrics:', metrics);
+ * logger.info('Performance Metrics:', metrics);
  *
  * // Or export to file
  * const json = monitoring.exportMetrics();

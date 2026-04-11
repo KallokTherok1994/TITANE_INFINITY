@@ -594,6 +594,10 @@ export class SingularityConnections {
 
 import { useEffect } from 'react';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('SingularityConn');
+
 /**
  * Hook to enable SingularityConnections in a component
  * Usage: useSingularityConnections({ interval: 5000, autoStart: true })

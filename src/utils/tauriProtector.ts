@@ -17,6 +17,9 @@ import type {
 } from '@/types/singularityState';
 import type { TauriCore, TauriCommandArgs, TauriCacheEntry } from '@/types/tauri';
 import { classifyError } from '@/lib/errorClassification';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('TauriProtector');
 
 type TauriCoreBridge = {
   core?: TauriCore;
@@ -248,7 +251,7 @@ export class TauriInvokeProtector {
     // ✅ v20.2: Initialize Tauri availability check immediately
     // This ensures isTauriAvailable is set as soon as the protector is created
     this.syncCheckTauriAvailability();
-    console.log(
+    logger.info(
       '[TauriProtector] 🛡️ Initialized - isTauriAvailable:',
       this.isTauriAvailable
     );
@@ -316,7 +319,7 @@ export class TauriInvokeProtector {
 
       if (isAvailable) {
         this.isTauriAvailable = true;
-        console.log(
+        logger.info(
           '[TauriProtector] ✅ Tauri confirmed available (strategies:',
           {
             hasTauriGlobal,
@@ -332,7 +335,7 @@ export class TauriInvokeProtector {
       this.isTauriAvailable = false;
       return false;
     } catch (error) {
-      console.warn('[TauriProtector] Error checking Tauri availability:', error);
+      logger.warn('[TauriProtector] Error checking Tauri availability:', error);
       this.isTauriAvailable = false;
       return false;
     }
@@ -354,7 +357,7 @@ export class TauriInvokeProtector {
     if (command === 'start_recording' || command === 'stop_recording') {
       const pending = this.pendingInvokes.get(command);
       if (pending) {
-        console.warn(
+        logger.warn(
           `[TauriProtector] ${command} already in progress, returning existing promise`
         );
         return pending as Promise<T>;
@@ -390,7 +393,7 @@ export class TauriInvokeProtector {
 
       const normalizedError = this.normalizeInvokeError(command, error);
 
-      console.warn(`[TauriProtector] Command ${command} failed:`, normalizedError);
+      logger.warn(`[TauriProtector] Command ${command} failed:`, normalizedError);
 
       if (this.isTestEnv) {
         // En mode test, propager l'erreur pour permettre les assertions
@@ -412,7 +415,7 @@ export class TauriInvokeProtector {
     // If isTauriAvailable is FALSE (confirmed unavailable), skip invoke
     // If isTauriAvailable is NULL or TRUE (not yet checked, or confirmed available), proceed
     if (this.isTauriAvailable === false && !this.isTestEnv) {
-      console.log(
+      logger.info(
         '[TauriProtector] Skipping invoke for',
         command,
         '- Tauri marked as unavailable'
@@ -429,11 +432,11 @@ export class TauriInvokeProtector {
     let tauriModule = this.tauriModuleCache;
 
     if (!tauriModule) {
-      console.log('[TauriProtector] 🔄 Module cache miss - importing...');
+      logger.info('[TauriProtector] 🔄 Module cache miss - importing...');
       // Only import if not cached
       tauriModule = await this.safeTauriImport();
       if (!tauriModule || !tauriModule.invoke) {
-        console.warn('[TauriProtector] ❌ Module import/invoke failed for', command);
+        logger.warn('[TauriProtector] ❌ Module import/invoke failed for', command);
         this.isTauriAvailable = false;
         if (this.isTestEnv) {
           throw new Error('Tauri invoke not available');
@@ -446,13 +449,13 @@ export class TauriInvokeProtector {
       }
       // Cache the module for future calls
       this.tauriModuleCache = tauriModule;
-      console.log('[TauriProtector] ✅ Module cached successfully');
+      logger.info('[TauriProtector] ✅ Module cached successfully');
     }
 
     this.isTauriAvailable = true;
 
     try {
-      console.log(`[TauriProtector] 🚀 Invoking: ${command} with args:`, args);
+      logger.info(`[TauriProtector] 🚀 Invoking: ${command} with args:`, args);
 
       // Appel direct - handle undefined args
       const invokeCall =
@@ -462,7 +465,7 @@ export class TauriInvokeProtector {
 
       const result = await invokeCall;
 
-      console.log(`[TauriProtector] ✅ Invoke succeeded: ${command}`);
+      logger.info(`[TauriProtector] ✅ Invoke succeeded: ${command}`);
 
       // Cache du résultat positif (skip for recording commands)
       if (this.shouldUseResultCache(command)) {
@@ -474,7 +477,7 @@ export class TauriInvokeProtector {
 
       return result;
     } catch (invokeError) {
-      console.warn(
+      logger.warn(
         `[TauriProtector] ❌ Invoke failed: ${command}`,
         invokeError instanceof Error ? invokeError.message : String(invokeError)
       );
@@ -493,7 +496,7 @@ export class TauriInvokeProtector {
     try {
       // ✅ If we've already imported and cached, return immediately
       if (this.tauriModuleCache) {
-        console.log('[TauriProtector] ✅ Using cached Tauri module');
+        logger.info('[TauriProtector] ✅ Using cached Tauri module');
         return this.tauriModuleCache;
       }
 
@@ -513,12 +516,12 @@ export class TauriInvokeProtector {
           ) {
             this.isTauriAvailable = true;
             this.tauriModuleCache = { invoke };
-            console.log(
+            logger.info(
               '[TauriProtector] ✅ Successfully imported Tauri core module (verified)'
             );
             return { invoke };
           } else {
-            console.warn(
+            logger.warn(
               '[TauriProtector] Tauri invoke imported but signature suspicious:',
               invoke.name
             );
@@ -529,17 +532,17 @@ export class TauriInvokeProtector {
           }
         } catch (e) {
           // If we can even check the invoke function, that's a problem
-          console.warn('[TauriProtector] Error verifying invoke function:', e);
+          logger.warn('[TauriProtector] Error verifying invoke function:', e);
           this.isTauriAvailable = false;
           return null;
         }
       }
 
-      console.warn('[TauriProtector] Tauri module imported but invoke not found');
+      logger.warn('[TauriProtector] Tauri module imported but invoke not found');
       this.isTauriAvailable = false;
       return null;
     } catch (error) {
-      console.warn('[TauriProtector] Failed to import Tauri core:', error);
+      logger.warn('[TauriProtector] Failed to import Tauri core:', error);
       this.isTauriAvailable = false;
       return null;
     }
@@ -555,9 +558,9 @@ export class TauriInvokeProtector {
   ): T {
     const safeCommand = command || 'unknown_command';
     if (safeCommand.includes('conversation_generate')) {
-      console.log('[TauriProtector] Fallback engaged for conversation_generate');
+      logger.info('[TauriProtector] Fallback engaged for conversation_generate');
     } else {
-      console.log(`[TauriProtector] Using fallback for ${safeCommand}`);
+      logger.info(`[TauriProtector] Using fallback for ${safeCommand}`);
     }
 
     const errorMessage = error instanceof Error ? error.message : String(error);
@@ -666,7 +669,7 @@ export class TauriInvokeProtector {
       }
 
       if (ipcCode) {
-        console.warn('[TauriProtector] conversation_generate IPC error', {
+        logger.warn('[TauriProtector] conversation_generate IPC error', {
           traceId,
           code: ipcCode,
           error: errorMessage,
@@ -720,7 +723,7 @@ export class TauriInvokeProtector {
                 ? 'Erreur réseau. Vérifie la connexion.'
                 : classification.message;
 
-      console.warn('[TauriProtector] conversation_generate fallback', {
+      logger.warn('[TauriProtector] conversation_generate fallback', {
         traceId,
         classification: classification.type,
         error: errorMessage,
@@ -834,7 +837,7 @@ export class TauriInvokeProtector {
   reset(): void {
     this.isTauriAvailable = null;
     this.checkCache = {};
-    console.log('[TauriProtector] Cache reset');
+    logger.info('[TauriProtector] Cache reset');
   }
 
   private shouldUseResultCache(command: string): boolean {

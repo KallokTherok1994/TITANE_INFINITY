@@ -22,6 +22,10 @@ import { writeFile, appendFile, mkdir } from '../../utils/tauriFsAdapter';
 import { existsSync } from '../../utils/tauriFsAdapter';
 import { join } from '../../utils/tauriFsAdapter';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('AutoSaveConv');
+
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
@@ -121,7 +125,7 @@ class AutoSaveConversationEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async initialize(): Promise<void> {
-    console.log(
+    logger.info(
       '[AutoSaveConversation] Initializing Auto-Save Conversation Engine v∞...'
     );
 
@@ -131,7 +135,7 @@ class AutoSaveConversationEngine {
     // Start snapshot timer
     this.startSnapshotTimer();
 
-    console.log('[AutoSaveConversation] Initialized');
+    logger.info('[AutoSaveConversation] Initialized');
   }
 
   private async ensureDirectories(): Promise<void> {
@@ -140,7 +144,7 @@ class AutoSaveConversationEngine {
     for (const dir of dirs) {
       if (!(await existsSync(dir))) {
         await mkdir(dir, { recursive: true });
-        console.log(`[AutoSaveConversation] Created directory: ${dir}`);
+        logger.info(`[AutoSaveConversation] Created directory: ${dir}`);
       }
     }
 
@@ -211,7 +215,7 @@ class AutoSaveConversationEngine {
 
     await writeFile(sessionFile, JSON.stringify(session, null, 2), 'utf-8');
 
-    console.log(`[AutoSaveConversation] Session saved: ${sessionFile}`);
+    logger.info(`[AutoSaveConversation] Session saved: ${sessionFile}`);
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -279,7 +283,7 @@ class AutoSaveConversationEngine {
     return entries.filter(entry => {
       const key = `${entry.input}-${entry.output}`;
       if (seen.has(key)) {
-        console.log('[AutoSaveConversation] Duplicate removed:', entry.id);
+        logger.info('[AutoSaveConversation] Duplicate removed:', entry.id);
         return false;
       }
       seen.add(key);
@@ -317,17 +321,17 @@ class AutoSaveConversationEngine {
   private async createSnapshot(): Promise<void> {
     if (this.pendingWrites.length === 0) return;
 
-    console.log('[AutoSaveConversation] Creating snapshot...');
+    logger.info('[AutoSaveConversation] Creating snapshot...');
     await this.flushWrites();
-    console.log(
+    logger.info(
       `[AutoSaveConversation] Snapshot created (${this.state.totalSaved} total saved)`
     );
   }
 
   async flush(): Promise<void> {
-    console.log('[AutoSaveConversation] Flushing all pending writes...');
+    logger.info('[AutoSaveConversation] Flushing all pending writes...');
     await this.flushWrites();
-    console.log('[AutoSaveConversation] Flush complete');
+    logger.info('[AutoSaveConversation] Flush complete');
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -353,7 +357,7 @@ class AutoSaveConversationEngine {
 
   configure(config: Partial<AutoSaveConfig>): void {
     this.config = { ...this.config, ...config };
-    console.log('[AutoSaveConversation] Configuration updated:', config);
+    logger.info('[AutoSaveConversation] Configuration updated:', config);
   }
 
   getState(): AutoSaveState {
@@ -369,7 +373,7 @@ class AutoSaveConversationEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async shutdown(): Promise<void> {
-    console.log('[AutoSaveConversation] Shutting down...');
+    logger.info('[AutoSaveConversation] Shutting down...');
 
     if (this.snapshotTimer) {
       clearInterval(this.snapshotTimer);
@@ -377,7 +381,7 @@ class AutoSaveConversationEngine {
 
     await this.flush();
 
-    console.log('[AutoSaveConversation] Shutdown complete');
+    logger.info('[AutoSaveConversation] Shutdown complete');
   }
 }
 

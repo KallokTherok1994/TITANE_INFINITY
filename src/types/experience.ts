@@ -114,6 +114,9 @@ export interface ExperienceGain {
  */
 export enum XPSource {
   ChatMessage = 'chat_message',
+  ChatQualityBonus = 'chat_quality_bonus',
+  ChatTitaneResponse = 'chat_titane_response',
+  ChatConversationStreak = 'chat_conversation_streak',
   FileImport = 'file_import',
   SystemEvent = 'system_event',
   MemoryIngestion = 'memory_ingestion',

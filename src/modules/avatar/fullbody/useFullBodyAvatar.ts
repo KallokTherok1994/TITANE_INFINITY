@@ -16,6 +16,10 @@ import {
   LipSyncMorphWeights,
 } from './fullbody_engine';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('FullBodyAvatar');
+
 // ═══════════════════════════════════════════════════════════════════════════
 // HOOK OPTIONS
 // ═══════════════════════════════════════════════════════════════════════════
@@ -77,7 +81,7 @@ export function useFullBodyAvatar(
 
   const initialize = useCallback(async () => {
     if (isInitialized) {
-      if (enableLogging) console.log('[useFullBodyAvatar] Already initialized');
+      if (enableLogging) logger.info('[useFullBodyAvatar] Already initialized');
       return;
     }
 
@@ -88,9 +92,9 @@ export function useFullBodyAvatar(
       await bridge.initialize(bodyProfile);
       setIsInitialized(true);
 
-      if (enableLogging) console.log('[useFullBodyAvatar] Initialized successfully');
+      if (enableLogging) logger.info('[useFullBodyAvatar] Initialized successfully');
     } catch (error) {
-      console.error('[useFullBodyAvatar] Initialization failed:', error);
+      logger.error('[useFullBodyAvatar] Initialization failed:', error);
       throw error;
     }
   }, [isInitialized, bodyProfile, enableLogging]);
@@ -101,12 +105,12 @@ export function useFullBodyAvatar(
 
   const startAnimation = useCallback(() => {
     if (!bridgeRef.current) {
-      console.error('[useFullBodyAvatar] Bridge not initialized');
+      logger.error('[useFullBodyAvatar] Bridge not initialized');
       return;
     }
 
     if (isRunning) {
-      if (enableLogging) console.log('[useFullBodyAvatar] Animation already running');
+      if (enableLogging) logger.info('[useFullBodyAvatar] Animation already running');
       return;
     }
 
@@ -120,7 +124,7 @@ export function useFullBodyAvatar(
     bridgeRef.current.startAnimationLoop(handleSkeletonUpdate);
     setIsRunning(true);
 
-    if (enableLogging) console.log('[useFullBodyAvatar] Animation started');
+    if (enableLogging) logger.info('[useFullBodyAvatar] Animation started');
   }, [isRunning, onSkeletonUpdate, enableLogging]);
 
   const stopAnimation = useCallback(() => {
@@ -129,7 +133,7 @@ export function useFullBodyAvatar(
     bridgeRef.current.stopAnimationLoop();
     setIsRunning(false);
 
-    if (enableLogging) console.log('[useFullBodyAvatar] Animation stopped');
+    if (enableLogging) logger.info('[useFullBodyAvatar] Animation stopped');
   }, [enableLogging]);
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -139,15 +143,15 @@ export function useFullBodyAvatar(
   const activateGesture = useCallback(
     async (gesture: GestureType) => {
       if (!bridgeRef.current) {
-        console.error('[useFullBodyAvatar] Bridge not initialized');
+        logger.error('[useFullBodyAvatar] Bridge not initialized');
         return;
       }
 
       try {
         await bridgeRef.current.activateGesture(gesture);
-        if (enableLogging) console.log('[useFullBodyAvatar] Gesture activated:', gesture);
+        if (enableLogging) logger.info('[useFullBodyAvatar] Gesture activated:', gesture);
       } catch (error) {
-        console.error('[useFullBodyAvatar] Gesture activation failed:', error);
+        logger.error('[useFullBodyAvatar] Gesture activation failed:', error);
         throw error;
       }
     },
@@ -157,16 +161,16 @@ export function useFullBodyAvatar(
   const updateExpression = useCallback(
     async (expression: ExpressionType, intensity: number = 0.7) => {
       if (!bridgeRef.current) {
-        console.error('[useFullBodyAvatar] Bridge not initialized');
+        logger.error('[useFullBodyAvatar] Bridge not initialized');
         return;
       }
 
       try {
         await bridgeRef.current.updateExpression(expression, intensity);
         if (enableLogging)
-          console.log('[useFullBodyAvatar] Expression updated:', expression);
+          logger.info('[useFullBodyAvatar] Expression updated:', expression);
       } catch (error) {
-        console.error('[useFullBodyAvatar] Expression update failed:', error);
+        logger.error('[useFullBodyAvatar] Expression update failed:', error);
         throw error;
       }
     },
@@ -180,7 +184,7 @@ export function useFullBodyAvatar(
       try {
         await bridgeRef.current.updateLipSync(phoneme, morphWeights);
       } catch (error) {
-        console.error('[useFullBodyAvatar] Lip-sync update failed:', error);
+        logger.error('[useFullBodyAvatar] Lip-sync update failed:', error);
       }
     },
     []
@@ -196,9 +200,9 @@ export function useFullBodyAvatar(
 
       try {
         await bridgeRef.current.updateState(state);
-        if (enableLogging) console.log('[useFullBodyAvatar] State updated:', state);
+        if (enableLogging) logger.info('[useFullBodyAvatar] State updated:', state);
       } catch (error) {
-        console.error('[useFullBodyAvatar] State update failed:', error);
+        logger.error('[useFullBodyAvatar] State update failed:', error);
       }
     },
     [enableLogging]
@@ -210,9 +214,9 @@ export function useFullBodyAvatar(
 
       try {
         await bridgeRef.current.updateContext(context);
-        if (enableLogging) console.log('[useFullBodyAvatar] Context updated:', context);
+        if (enableLogging) logger.info('[useFullBodyAvatar] Context updated:', context);
       } catch (error) {
-        console.error('[useFullBodyAvatar] Context update failed:', error);
+        logger.error('[useFullBodyAvatar] Context update failed:', error);
       }
     },
     [enableLogging]
@@ -223,9 +227,9 @@ export function useFullBodyAvatar(
 
     try {
       await bridgeRef.current.onWakeWord();
-      if (enableLogging) console.log('[useFullBodyAvatar] Wake-word reaction triggered');
+      if (enableLogging) logger.info('[useFullBodyAvatar] Wake-word reaction triggered');
     } catch (error) {
-      console.error('[useFullBodyAvatar] Wake-word reaction failed:', error);
+      logger.error('[useFullBodyAvatar] Wake-word reaction failed:', error);
     }
   }, [enableLogging]);
 
@@ -240,7 +244,7 @@ export function useFullBodyAvatar(
       const newStats = await bridgeRef.current.getStats();
       setStats(newStats);
     } catch (error) {
-      console.error('[useFullBodyAvatar] Stats refresh failed:', error);
+      logger.error('[useFullBodyAvatar] Stats refresh failed:', error);
     }
   }, []);
 

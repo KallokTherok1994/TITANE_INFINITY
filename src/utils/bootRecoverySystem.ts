@@ -7,6 +7,9 @@
  */
 
 import { bootSafetyLock } from './bootSafetyLock';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('BootRecovery');
 
 interface BootAttempt {
   id: string;
@@ -108,10 +111,10 @@ class TitaneBootRecovery {
    * Démarre le processus de boot avec récupération intelligente
    */
   public async startIntelligentBoot(): Promise<boolean> {
-    console.log('🚀 [BOOT-RECOVERY] Starting intelligent boot process...');
+    logger.info('🚀 [BOOT-RECOVERY] Starting intelligent boot process...');
 
     if (typeof window !== 'undefined' && (window as any).__TITANE_REACT_ROOT) {
-      console.log(
+      logger.info(
         '✅ [BOOT-RECOVERY] Existing React root detected, skipping recovery boot'
       );
       return true;
@@ -121,7 +124,7 @@ class TitaneBootRecovery {
     const recentFailures = this.getRecentBootFailures();
     const recommendedStrategy = this.analyzeBootHistory(recentFailures);
 
-    console.log(
+    logger.info(
       `📊 [BOOT-RECOVERY] Boot history analysis: ${recentFailures.length} recent failures, recommended strategy: ${recommendedStrategy}`
     );
 
@@ -130,21 +133,21 @@ class TitaneBootRecovery {
 
     for (const strategyName of strategiesToTry) {
       if (this.isRecovering) {
-        console.log(`🔄 [BOOT-RECOVERY] Trying strategy: ${strategyName}`);
+        logger.info(`🔄 [BOOT-RECOVERY] Trying strategy: ${strategyName}`);
       }
 
       const success = await this.attemptBootWithStrategy(strategyName);
       if (success) {
-        console.log(`✅ [BOOT-RECOVERY] Boot successful with strategy: ${strategyName}`);
+        logger.info(`✅ [BOOT-RECOVERY] Boot successful with strategy: ${strategyName}`);
         this.onBootSuccess(strategyName);
         return true;
       }
 
-      console.warn(`❌ [BOOT-RECOVERY] Strategy ${strategyName} failed, trying next...`);
+      logger.warn(`❌ [BOOT-RECOVERY] Strategy ${strategyName} failed, trying next...`);
     }
 
     // Tous les tentatives ont échoué
-    console.error(
+    logger.error(
       '🚨 [BOOT-RECOVERY] All boot strategies failed, entering emergency mode'
     );
     this.enterEmergencyMode();
@@ -157,7 +160,7 @@ class TitaneBootRecovery {
   private async attemptBootWithStrategy(strategyName: string): Promise<boolean> {
     const strategy = this.bootStrategies.get(strategyName);
     if (!strategy) {
-      console.error(`❌ [BOOT-RECOVERY] Unknown strategy: ${strategyName}`);
+      logger.error(`❌ [BOOT-RECOVERY] Unknown strategy: ${strategyName}`);
       return false;
     }
 
@@ -208,7 +211,7 @@ class TitaneBootRecovery {
       this.bootAttempts.unshift(attempt);
       this.saveBootHistory();
 
-      console.error(`❌ [BOOT-RECOVERY] Strategy ${strategyName} failed:`, error);
+      logger.error(`❌ [BOOT-RECOVERY] Strategy ${strategyName} failed:`, error);
       return false;
     }
   }
@@ -219,12 +222,12 @@ class TitaneBootRecovery {
   private async executeNormalBoot(): Promise<boolean> {
     // 🔒 PHASE 2: Vérification verrou boot
     if (bootSafetyLock.isFatalState()) {
-      console.error('❌ [BOOT-RECOVERY] Normal boot denied: fatal state');
+      logger.error('❌ [BOOT-RECOVERY] Normal boot denied: fatal state');
       return false;
     }
 
     if (!bootSafetyLock.canRenderReact()) {
-      console.error('❌ [BOOT-RECOVERY] Normal boot denied: render loop detected');
+      logger.error('❌ [BOOT-RECOVERY] Normal boot denied: render loop detected');
       bootSafetyLock.markFatalError();
       return false;
     }
@@ -253,7 +256,7 @@ class TitaneBootRecovery {
 
       // 🔒 PHASE 2: Protection DOM mutation
       if (!bootSafetyLock.beginDOMMutation()) {
-        console.error('❌ [BOOT-RECOVERY] DOM mutation denied');
+        logger.error('❌ [BOOT-RECOVERY] DOM mutation denied');
         return false;
       }
 
@@ -289,7 +292,7 @@ class TitaneBootRecovery {
         bootSafetyLock.endDOMMutation();
       }
     } catch (error) {
-      console.error('🚨 [BOOT-RECOVERY] Normal boot failed:', error);
+      logger.error('🚨 [BOOT-RECOVERY] Normal boot failed:', error);
       bootSafetyLock.markBootFailed();
       return false;
     }
@@ -345,7 +348,7 @@ class TitaneBootRecovery {
 
       return true;
     } catch (error) {
-      console.error('🚨 [BOOT-RECOVERY] Safe boot failed:', error);
+      logger.error('🚨 [BOOT-RECOVERY] Safe boot failed:', error);
       return false;
     }
   }
@@ -353,13 +356,13 @@ class TitaneBootRecovery {
   private async executeMinimalBoot(): Promise<boolean> {
     // 🔒 PHASE 2: Vérification état fatal
     if (bootSafetyLock.isFatalState()) {
-      console.error('❌ [BOOT-RECOVERY] Minimal boot denied: fatal state');
+      logger.error('❌ [BOOT-RECOVERY] Minimal boot denied: fatal state');
       return false;
     }
 
     // 🔒 PHASE 2: Protection DOM mutation
     if (!bootSafetyLock.beginDOMMutation()) {
-      console.error('❌ [BOOT-RECOVERY] Minimal boot DOM mutation denied');
+      logger.error('❌ [BOOT-RECOVERY] Minimal boot DOM mutation denied');
       return false;
     }
 
@@ -372,7 +375,7 @@ class TitaneBootRecovery {
 
       // Vérifier que le parent existe et que le container est dans le DOM
       if (!container.parentNode) {
-        console.error('❌ [BOOT-RECOVERY] Container has no parent');
+        logger.error('❌ [BOOT-RECOVERY] Container has no parent');
         bootSafetyLock.endDOMMutation();
         return false;
       }
@@ -426,7 +429,7 @@ class TitaneBootRecovery {
 
       return true;
     } catch (error) {
-      console.error('🚨 [BOOT-RECOVERY] Minimal boot failed:', error);
+      logger.error('🚨 [BOOT-RECOVERY] Minimal boot failed:', error);
       bootSafetyLock.markBootFailed();
       return false;
     } finally {
@@ -518,7 +521,7 @@ class TitaneBootRecovery {
 
       return true;
     } catch (error) {
-      console.error('🚨 [BOOT-RECOVERY] Fallback boot failed:', error);
+      logger.error('🚨 [BOOT-RECOVERY] Fallback boot failed:', error);
       return false;
     }
   }
@@ -560,7 +563,7 @@ class TitaneBootRecovery {
 
       return true;
     } catch (error) {
-      console.error('🚨 [BOOT-RECOVERY] Emergency boot failed:', error);
+      logger.error('🚨 [BOOT-RECOVERY] Emergency boot failed:', error);
       // Fallback absolu
       document.body.innerHTML =
         '<h1 style="color: red; text-align: center; margin-top: 50px;">CRITICAL ERROR - PLEASE RELOAD</h1>';
@@ -641,7 +644,7 @@ class TitaneBootRecovery {
     // Afficher un message de récupération réussie si ce n'était pas un boot normal
     if (strategy !== 'normal') {
       setTimeout(() => {
-        console.log(
+        logger.info(
           `🎉 [BOOT-RECOVERY] Successfully recovered using ${strategy} strategy`
         );
 
@@ -681,7 +684,7 @@ class TitaneBootRecovery {
         event.error?.message?.includes('Loading chunk') ||
         event.error?.message?.includes('dynamically imported module')
       ) {
-        console.error(
+        logger.error(
           '🚨 [BOOT-RECOVERY] Critical import error detected, triggering recovery'
         );
         this.isRecovering = true;
@@ -695,7 +698,7 @@ class TitaneBootRecovery {
         event.reason?.message?.includes('Loading chunk') ||
         event.reason?.message?.includes('import')
       ) {
-        console.error(
+        logger.error(
           '🚨 [BOOT-RECOVERY] Critical promise rejection detected, triggering recovery'
         );
         this.isRecovering = true;
@@ -712,7 +715,7 @@ class TitaneBootRecovery {
         this.bootAttempts = history.slice(0, 50); // Limiter à 50 entrées
       }
     } catch (error) {
-      console.warn('🔧 [BOOT-RECOVERY] Failed to load boot history:', error);
+      logger.warn('🔧 [BOOT-RECOVERY] Failed to load boot history:', error);
     }
   }
 
@@ -721,7 +724,7 @@ class TitaneBootRecovery {
       const historyToSave = this.bootAttempts.slice(0, 50);
       localStorage.setItem('titane_boot_history', JSON.stringify(historyToSave));
     } catch (error) {
-      console.warn('🔧 [BOOT-RECOVERY] Failed to save boot history:', error);
+      logger.warn('🔧 [BOOT-RECOVERY] Failed to save boot history:', error);
     }
   }
 
@@ -750,7 +753,7 @@ class TitaneBootRecovery {
   }
 
   public forceRecovery(strategy?: string): void {
-    console.log(
+    logger.info(
       `🔧 [BOOT-RECOVERY] Forcing recovery${strategy ? ` with strategy: ${strategy}` : ''}`
     );
     this.isRecovering = true;
@@ -782,7 +785,7 @@ if (typeof window !== 'undefined' && enableBootRecoveryAutostart) {
     setTimeout(() => titaneBootRecovery.startIntelligentBoot(), 100);
   }
 } else {
-  console.log(
+  logger.info(
     'ℹ️ [BOOT-RECOVERY] Autostart disabled (VITE_ENABLE_BOOT_RECOVERY_AUTOSTART != "1")'
   );
 }

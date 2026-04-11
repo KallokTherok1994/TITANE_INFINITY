@@ -23,6 +23,10 @@
 
 import type { VisualState } from './StateManager';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('EffectsOrch');
+
 // ─────────────────────────────────────────────────────────────────
 // TYPES
 // ─────────────────────────────────────────────────────────────────
@@ -191,20 +195,20 @@ export class EffectsOrchestrator {
   public requestEffect(request: EffectRequest): boolean {
     if (!this.enabled) {
       if (this.debug)
-        console.log('[EffectsOrchestrator] Disabled, ignoring request:', request.type);
+        logger.info('[EffectsOrchestrator] Disabled, ignoring request:', request.type);
       return false;
     }
 
     const config = EFFECTS_REGISTRY[request.type];
     if (!config) {
-      console.warn('[EffectsOrchestrator] Unknown effect type:', request.type);
+      logger.warn('[EffectsOrchestrator] Unknown effect type:', request.type);
       return false;
     }
 
     // Check cooldown
     if (this.isOnCooldown(request.type)) {
       if (this.debug)
-        console.log('[EffectsOrchestrator] Effect on cooldown:', request.type);
+        logger.info('[EffectsOrchestrator] Effect on cooldown:', request.type);
       this.metrics.totalBlocked++;
       return false;
     }
@@ -212,7 +216,7 @@ export class EffectsOrchestrator {
     // Check conflicts
     if (this.hasConflicts(config)) {
       if (this.debug)
-        console.log('[EffectsOrchestrator] Effect conflicts with active:', request.type);
+        logger.info('[EffectsOrchestrator] Effect conflicts with active:', request.type);
       this.metrics.totalBlocked++;
       return false;
     }
@@ -221,14 +225,14 @@ export class EffectsOrchestrator {
     const activeCount = this.getActiveCountByType(request.type);
     if (activeCount >= (config.maxConcurrent || 1)) {
       if (this.debug)
-        console.log('[EffectsOrchestrator] Max concurrent reached:', request.type);
+        logger.info('[EffectsOrchestrator] Max concurrent reached:', request.type);
       this.metrics.totalBlocked++;
       return false;
     }
 
     // Check GPU budget
     if (config.gpuIntensive && this.metrics.gpuLoad >= this.maxGPULoad) {
-      if (this.debug) console.log('[EffectsOrchestrator] GPU budget exceeded');
+      if (this.debug) logger.info('[EffectsOrchestrator] GPU budget exceeded');
       // Queue for later if high priority
       if ((request.priority || config.priority) === 'critical') {
         this.queue.push(request);
@@ -241,7 +245,7 @@ export class EffectsOrchestrator {
 
     // Check max active effects
     if (this.activeEffects.size >= this.maxActiveEffects) {
-      if (this.debug) console.log('[EffectsOrchestrator] Max active effects reached');
+      if (this.debug) logger.info('[EffectsOrchestrator] Max active effects reached');
       // Try to preempt lower priority effect
       if (this.tryPreempt(request.priority || config.priority)) {
         return this.activateEffect(request, config);
@@ -264,7 +268,7 @@ export class EffectsOrchestrator {
     this.activeEffects.delete(effectId);
     this.metrics.activeCount = this.activeEffects.size;
 
-    if (this.debug) console.log('[EffectsOrchestrator] Stopped effect:', effectId);
+    if (this.debug) logger.info('[EffectsOrchestrator] Stopped effect:', effectId);
 
     // Try to process queue
     this.processQueue();
@@ -286,7 +290,7 @@ export class EffectsOrchestrator {
 
     this.metrics.activeCount = this.activeEffects.size;
     if (this.debug && count > 0) {
-      console.log('[EffectsOrchestrator] Stopped', count, 'effects of type:', type);
+      logger.info('[EffectsOrchestrator] Stopped', count, 'effects of type:', type);
     }
 
     this.processQueue();
@@ -302,7 +306,7 @@ export class EffectsOrchestrator {
     this.metrics.activeCount = 0;
 
     if (this.debug && count > 0) {
-      console.log('[EffectsOrchestrator] Stopped all', count, 'effects');
+      logger.info('[EffectsOrchestrator] Stopped all', count, 'effects');
     }
   }
 
@@ -393,7 +397,7 @@ export class EffectsOrchestrator {
     }
 
     if (this.debug) {
-      console.log('[EffectsOrchestrator] Activated effect:', id, request.type);
+      logger.info('[EffectsOrchestrator] Activated effect:', id, request.type);
     }
 
     return true;
@@ -450,7 +454,7 @@ export class EffectsOrchestrator {
 
     if (lowestEffect) {
       if (this.debug) {
-        console.log('[EffectsOrchestrator] Preempting effect:', lowestEffect.id);
+        logger.info('[EffectsOrchestrator] Preempting effect:', lowestEffect.id);
       }
       this.stopEffect(lowestEffect.id);
       return true;
@@ -506,7 +510,7 @@ export class EffectsOrchestrator {
       if (firstEffect) {
         const [id] = firstEffect;
         if (this.debug) {
-          console.log('[EffectsOrchestrator] Throttling: stopping effect', id);
+          logger.info('[EffectsOrchestrator] Throttling: stopping effect', id);
         }
         this.stopEffect(id);
       }
@@ -539,7 +543,7 @@ export class EffectsOrchestrator {
         if (effect.endTime && now >= effect.endTime) {
           this.activeEffects.delete(id);
           if (this.debug) {
-            console.log('[EffectsOrchestrator] Effect expired:', id);
+            logger.info('[EffectsOrchestrator] Effect expired:', id);
           }
         }
       }

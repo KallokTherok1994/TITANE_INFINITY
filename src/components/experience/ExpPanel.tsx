@@ -11,7 +11,7 @@
 
 import { tauriClient } from '@/lib/tauriClient';
 import React, { useState, useEffect } from 'react';
-import { logger as _logger } from '@/lib/logger';
+import { logger } from '@/lib/logger';
 import '../../styles/exp-fusion.css';
 import { TalentTree } from './TalentTree';
 import { TimelineChart } from './TimelineChart';
@@ -83,7 +83,7 @@ export const ExpPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       setProjects(projs);
       setTalents(tals);
     } catch (error) {
-      console.error('Erreur fetch EXP data:', error);
+      logger.error('Erreur fetch EXP data:', { module: 'ExpPanel' }, error instanceof Error ? error : undefined);
     }
   };
 

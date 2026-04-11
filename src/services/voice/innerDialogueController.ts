@@ -25,6 +25,10 @@ import {
 } from './attentionEngine';
 import { haloEngine as _haloEngine, type HaloState } from './haloEngine';
 import type { ThinkingState } from '@/types/voice';
+
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('InnerDialogue');
 // MentalColor is declared locally below
 
 // ═══════════════════════════════════════════════════════════════════
@@ -243,7 +247,7 @@ class InnerDialogueController {
 
       return finalResponse;
     } catch (error) {
-      console.error('[IDC] Error in inner process:', error);
+      logger.error('[IDC] Error in inner process:', error);
       this.state.isThinking = false;
       this.transition('silent');
       this.notifyCallbacks();
@@ -333,7 +337,7 @@ class InnerDialogueController {
     });
 
     if (this.config.debugMode) {
-      console.log(`[IDC Step 1] Perception:`, thought.content);
+      logger.info(`[IDC Step 1] Perception:`, thought.content);
     }
 
     return thought;
@@ -356,7 +360,7 @@ class InnerDialogueController {
     });
 
     if (this.config.debugMode) {
-      console.log(`[IDC Step 2] Context:`, thought.content);
+      logger.info(`[IDC Step 2] Context:`, thought.content);
     }
 
     // Connect to voice memory for user preferences
@@ -379,7 +383,7 @@ class InnerDialogueController {
     });
 
     if (this.config.debugMode) {
-      console.log(`[IDC Step 3] Intent:`, thought.content);
+      logger.info(`[IDC Step 3] Intent:`, thought.content);
     }
 
     // Recognize intent type (question, command, emotion)
@@ -402,7 +406,7 @@ class InnerDialogueController {
     });
 
     if (this.config.debugMode) {
-      console.log(`[IDC Step 4] Plan:`, thought.content);
+      logger.info(`[IDC Step 4] Plan:`, thought.content);
     }
 
     return thought;
@@ -425,7 +429,7 @@ class InnerDialogueController {
     });
 
     if (this.config.debugMode) {
-      console.log(`[IDC Step 5] Coherence:`, thought.content);
+      logger.info(`[IDC Step 5] Coherence:`, thought.content);
     }
 
     // Verify alignment with TITANE identity and narrative
@@ -450,7 +454,7 @@ class InnerDialogueController {
     });
 
     if (this.config.debugMode) {
-      console.log(`[IDC Step 6] Emotion:`, thought.content);
+      logger.info(`[IDC Step 6] Emotion:`, thought.content);
     }
 
     // Select emotional tone from current state
@@ -475,7 +479,7 @@ class InnerDialogueController {
     });
 
     if (this.config.debugMode) {
-      console.log(`[IDC Step 7] Validation:`, thought.content);
+      logger.info(`[IDC Step 7] Validation:`, thought.content);
     }
 
     return thought;
@@ -496,7 +500,7 @@ class InnerDialogueController {
     });
 
     if (this.config.debugMode) {
-      console.log(`[IDC Step 8] Expression:`, thought.content);
+      logger.info(`[IDC Step 8] Expression:`, thought.content);
     }
 
     // Format with TITANE signature (structured, clear, empathetic)
@@ -517,13 +521,13 @@ class InnerDialogueController {
     // 1. Check for contradictions (basic implementation)
     const contradictions = this.detectContradictions(response);
     if (contradictions.length > 0 && this.config.debugMode) {
-      console.warn('[IDC] Potential contradictions detected:', contradictions);
+      logger.warn('[IDC] Potential contradictions detected:', contradictions);
     }
 
     // 2. Verify narrative alignment (TITANE identity)
     const isAligned = this.checkNarrativeAlignment(response);
     if (!isAligned && this.config.debugMode) {
-      console.warn('[IDC] Response not aligned with TITANE identity');
+      logger.warn('[IDC] Response not aligned with TITANE identity');
     }
 
     // 3. Ensure tone consistency (calm, supportive, clear)
@@ -578,12 +582,12 @@ class InnerDialogueController {
       // Load user voice preferences from localStorage or memory
       const voiceProfile = localStorage.getItem('user_voice_profile');
       if (voiceProfile && this.config.debugMode) {
-        console.log('[IDC] Voice profile loaded:', JSON.parse(voiceProfile));
+        logger.info('[IDC] Voice profile loaded:', JSON.parse(voiceProfile));
       }
     } catch (error) {
       // Silent fail - voice profile is optional
       if (this.config.debugMode) {
-        console.warn('[IDC] Could not load voice context:', error);
+        logger.warn('[IDC] Could not load voice context:', error);
       }
     }
   }
@@ -708,7 +712,7 @@ class InnerDialogueController {
     } catch (error) {
       // Halo engine might not be initialized yet
       if (this.config.debugMode) {
-        console.warn('[IDC] HaloEngine not ready:', error);
+        logger.warn('[IDC] HaloEngine not ready:', error);
       }
     }
   }
@@ -760,7 +764,7 @@ class InnerDialogueController {
       try {
         cb(this.getState());
       } catch (error) {
-        console.error('[IDC] Callback error:', error);
+        logger.error('[IDC] Callback error:', error);
       }
     });
   }

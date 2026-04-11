@@ -6,6 +6,10 @@
  * Surveillance continue, métriques de performance et alertes intelligentes
  */
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('BootMonitor');
+
 interface BootHealthMetrics {
   bootAttempts: number;
   successfulBoots: number;
@@ -67,7 +71,7 @@ class AdvancedBootHealthMonitor {
     // Démarrer les health checks périodiques
     this.startHealthChecks();
 
-    console.log('🔍 [BOOT-MONITOR] Advanced monitoring initialized');
+    logger.info('🔍 [BOOT-MONITOR] Advanced monitoring initialized');
   }
 
   /**
@@ -78,7 +82,7 @@ class AdvancedBootHealthMonitor {
     this.metrics.bootAttempts++;
     this.isMonitoring = true;
 
-    console.log(`🚀 [BOOT-MONITOR] Boot attempt #${this.metrics.bootAttempts} started`);
+    logger.info(`🚀 [BOOT-MONITOR] Boot attempt #${this.metrics.bootAttempts} started`);
   }
 
   /**
@@ -93,10 +97,10 @@ class AdvancedBootHealthMonitor {
     if (success) {
       this.metrics.successfulBoots++;
       this.updateAverageBootTime(bootTime);
-      console.log(`✅ [BOOT-MONITOR] Successful boot in ${bootTime.toFixed(2)}ms`);
+      logger.info(`✅ [BOOT-MONITOR] Successful boot in ${bootTime.toFixed(2)}ms`);
     } else {
       this.createAlert('high', 'Boot failure detected', 'Boot process failed');
-      console.error(`❌ [BOOT-MONITOR] Boot failed after ${bootTime.toFixed(2)}ms`);
+      logger.error(`❌ [BOOT-MONITOR] Boot failed after ${bootTime.toFixed(2)}ms`);
     }
 
     this.isMonitoring = false;
@@ -119,7 +123,7 @@ class AdvancedBootHealthMonitor {
       error.stack
     );
 
-    console.error(`🔥 [BOOT-MONITOR] Module failure recorded: ${moduleName}`, {
+    logger.error(`🔥 [BOOT-MONITOR] Module failure recorded: ${moduleName}`, {
       error: error.message,
       stack: error.stack,
       totalFailedModules: this.metrics.failedModules.length,
@@ -134,7 +138,7 @@ class AdvancedBootHealthMonitor {
     const index = this.metrics.failedModules.indexOf(moduleName);
     if (index > -1) {
       this.metrics.failedModules.splice(index, 1);
-      console.log(`🎯 [BOOT-MONITOR] Module ${moduleName} recovered from failure list`);
+      logger.info(`🎯 [BOOT-MONITOR] Module ${moduleName} recovered from failure list`);
     }
 
     // Analyser les performances de chargement
@@ -164,7 +168,7 @@ class AdvancedBootHealthMonitor {
         for (const entry of list.getEntries()) {
           if (entry.entryType === 'navigation') {
             const navEntry = entry as PerformanceNavigationTiming;
-            console.log('🎯 [BOOT-MONITOR] Navigation metrics:', {
+            logger.info('🎯 [BOOT-MONITOR] Navigation metrics:', {
               domContentLoaded:
                 navEntry.domContentLoadedEventEnd - (navEntry as any).navigationStart,
               loadComplete: navEntry.loadEventEnd - (navEntry as any).navigationStart,
@@ -192,7 +196,7 @@ class AdvancedBootHealthMonitor {
       });
       resourceObserver.observe({ entryTypes: ['resource'] });
     } catch (error) {
-      console.warn('🔍 [BOOT-MONITOR] Performance monitoring setup failed:', error);
+      logger.warn('🔍 [BOOT-MONITOR] Performance monitoring setup failed:', error);
     }
   }
 
@@ -208,7 +212,7 @@ class AdvancedBootHealthMonitor {
         'Unhandled Promise Rejection',
         event.reason?.toString() || 'Unknown error'
       );
-      console.error('🚨 [BOOT-MONITOR] Unhandled rejection:', event.reason);
+      logger.error('🚨 [BOOT-MONITOR] Unhandled rejection:', event.reason);
     });
 
     window.addEventListener('error', event => {
@@ -252,7 +256,7 @@ class AdvancedBootHealthMonitor {
           );
         }
 
-        console.log(`💾 [BOOT-MONITOR] Memory usage: ${memoryUsageMB.toFixed(1)}MB`);
+        logger.info(`💾 [BOOT-MONITOR] Memory usage: ${memoryUsageMB.toFixed(1)}MB`);
       }
     };
 
@@ -283,7 +287,7 @@ class AdvancedBootHealthMonitor {
       alertsCount: this.alerts.length,
     };
 
-    console.log('🏥 [BOOT-MONITOR] Health check:', health);
+    logger.info('🏥 [BOOT-MONITOR] Health check:', health);
 
     // Alertes automatiques basées sur les métriques
     if (health.bootSuccessRate < 0.8) {
@@ -330,14 +334,13 @@ class AdvancedBootHealthMonitor {
     }
 
     // Log selon la sévérité
-    const logFn =
-      severity === 'critical'
-        ? console.error
-        : severity === 'high'
-          ? console.warn
-          : console.log;
-
-    logFn(`🚨 [BOOT-MONITOR] ${severity.toUpperCase()} Alert:`, alert);
+    if (severity === 'critical') {
+      logger.error(`🚨 BOOT-MONITOR ${severity.toUpperCase()} Alert:`, alert);
+    } else if (severity === 'high') {
+      logger.warn(`🚨 BOOT-MONITOR ${severity.toUpperCase()} Alert:`, alert);
+    } else {
+      logger.info(`🚨 BOOT-MONITOR ${severity.toUpperCase()} Alert:`, alert);
+    }
   }
 
   /**
@@ -384,7 +387,7 @@ class AdvancedBootHealthMonitor {
       };
       localStorage.setItem('titane_boot_metrics', JSON.stringify(data));
     } catch (error) {
-      console.warn('🔍 [BOOT-MONITOR] Failed to save metrics:', error);
+      logger.warn('🔍 [BOOT-MONITOR] Failed to save metrics:', error);
     }
   }
 

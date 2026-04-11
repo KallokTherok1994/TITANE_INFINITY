@@ -10,6 +10,9 @@
 import { titaneAI, PredictionResult } from './aiPredictiveEngine';
 import { bootHealthMonitor } from './advancedBootMonitor';
 import { performanceOptimizer } from './performanceOptimizer';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('SelfHeal');
 
 interface HealingAction {
   id: string;
@@ -77,7 +80,7 @@ class TitaneSelfHealingSystem {
    * Initialise le système d'auto-guérison
    */
   private async initializeSelfHealingSystem(): Promise<void> {
-    console.log('🔧 [SELF-HEALING] Initializing autonomous healing system...');
+    logger.info('🔧 [SELF-HEALING] Initializing autonomous healing system...');
 
     // Enregistrer les actions de guérison
     this.registerHealingActions();
@@ -91,7 +94,7 @@ class TitaneSelfHealingSystem {
     // Charger l'historique de guérison
     await this.loadHealingHistory();
 
-    console.log(
+    logger.info(
       '🤖 [SELF-HEALING] Autonomous healing system online with',
       this.healingActions.size,
       'actions'
@@ -312,7 +315,7 @@ class TitaneSelfHealingSystem {
           await this.processHealingQueue();
         }
       } catch (error) {
-        console.error('🔧 [SELF-HEALING] Monitoring cycle failed:', error);
+        logger.error('🔧 [SELF-HEALING] Monitoring cycle failed:', error);
       }
     };
 
@@ -357,7 +360,7 @@ class TitaneSelfHealingSystem {
 
         // Évaluer la condition
         if (strategy.condition(predictions)) {
-          console.log(`🚨 [SELF-HEALING] Strategy triggered: ${strategy.trigger}`);
+          logger.info(`🚨 [SELF-HEALING] Strategy triggered: ${strategy.trigger}`);
 
           // Ajouter les actions à la queue
           strategy.actions.forEach(actionId => {
@@ -371,7 +374,7 @@ class TitaneSelfHealingSystem {
           break; // Une seule stratégie à la fois pour éviter les conflits
         }
       } catch (error) {
-        console.error(
+        logger.error(
           `🔧 [SELF-HEALING] Strategy evaluation failed for ${strategy.trigger}:`,
           error
         );
@@ -386,7 +389,7 @@ class TitaneSelfHealingSystem {
     if (this.isHealing || this.healingQueue.length === 0) return;
 
     this.isHealing = true;
-    console.log(
+    logger.info(
       `🔧 [SELF-HEALING] Processing healing queue: ${this.healingQueue.length} actions`
     );
 
@@ -408,34 +411,34 @@ class TitaneSelfHealingSystem {
         const action = this.healingActions.get(actionId);
 
         if (!action) {
-          console.warn(`🔧 [SELF-HEALING] Unknown action: ${actionId}`);
+          logger.warn(`🔧 [SELF-HEALING] Unknown action: ${actionId}`);
           continue;
         }
 
         // Vérifier les prérequis
         if (!this.checkPrerequisites(action)) {
-          console.warn(`🔧 [SELF-HEALING] Prerequisites not met for: ${action.name}`);
+          logger.warn(`🔧 [SELF-HEALING] Prerequisites not met for: ${action.name}`);
           continue;
         }
 
         // Exécuter l'action de guérison
-        console.log(`🔧 [SELF-HEALING] Executing: ${action.name}`);
+        logger.info(`🔧 [SELF-HEALING] Executing: ${action.name}`);
         const result = await this.executeHealingAction(action);
 
         if (!result.success) {
           healingSession.success = false;
-          console.error(
+          logger.error(
             `🔧 [SELF-HEALING] Action failed: ${action.name} - ${result.message}`
           );
 
           // Si l'action critique échoue, passer en mode d'urgence
           if (action.severity === 'critical') {
             this.emergencyMode = true;
-            console.error('🚨 [SELF-HEALING] EMERGENCY MODE ACTIVATED');
+            logger.error('🚨 [SELF-HEALING] EMERGENCY MODE ACTIVATED');
             break;
           }
         } else {
-          console.log(
+          logger.info(
             `✅ [SELF-HEALING] Action completed: ${action.name} - ${result.message}`
           );
         }
@@ -455,11 +458,11 @@ class TitaneSelfHealingSystem {
       this.systemState.healingHistory.unshift(healingSession);
       this.systemState.lastHealing = Date.now();
 
-      console.log(
+      logger.info(
         `🎯 [SELF-HEALING] Session completed. Health improvement: ${(healingSession.improvementScore * 100).toFixed(1)}%`
       );
     } catch (error) {
-      console.error('🔧 [SELF-HEALING] Healing session failed:', error);
+      logger.error('🔧 [SELF-HEALING] Healing session failed:', error);
       healingSession.success = false;
     } finally {
       this.isHealing = false;
@@ -542,10 +545,10 @@ class TitaneSelfHealingSystem {
       for (const moduleName of failedModules) {
         try {
           // Tenter de recharger le module
-          console.log(`🔄 [SELF-HEALING] Restarting module: ${moduleName}`);
+          logger.info(`🔄 [SELF-HEALING] Restarting module: ${moduleName}`);
           restarted++;
         } catch (error) {
-          console.warn(
+          logger.warn(
             `🔄 [SELF-HEALING] Failed to restart module: ${moduleName}`,
             error
           );
@@ -596,7 +599,7 @@ class TitaneSelfHealingSystem {
     const start = Date.now();
 
     try {
-      console.log('🚨 [SELF-HEALING] Initiating force system reset...');
+      logger.info('🚨 [SELF-HEALING] Initiating force system reset...');
 
       // Sauvegarder l'état critique
       await this.saveSystemState();
@@ -725,7 +728,7 @@ class TitaneSelfHealingSystem {
           JSON.stringify(this.systemState)
         );
       } catch (error) {
-        console.warn('🔧 [SELF-HEALING] Failed to save system state:', error);
+        logger.warn('🔧 [SELF-HEALING] Failed to save system state:', error);
       }
     }
   }
@@ -739,7 +742,7 @@ class TitaneSelfHealingSystem {
           this.systemState.healingHistory = history.slice(0, 20); // Limiter à 20 entrées
         }
       } catch (error) {
-        console.warn('🔧 [SELF-HEALING] Failed to load healing history:', error);
+        logger.warn('🔧 [SELF-HEALING] Failed to load healing history:', error);
       }
     }
   }
@@ -802,7 +805,7 @@ class TitaneSelfHealingSystem {
   }
 
   private async rollbackSystemReset(): Promise<void> {
-    console.log('🔄 [SELF-HEALING] Rollback system reset not implemented');
+    logger.info('🔄 [SELF-HEALING] Rollback system reset not implemented');
   }
 
   /**

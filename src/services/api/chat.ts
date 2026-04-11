@@ -14,6 +14,10 @@ import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 import { chatEngine } from '@/services/ai/chatEngine';
 import { getSystemPrompt } from '@/config/chatModes.config';
 import type { AIMessage } from '@/services/ai/types';
+import { createLogger } from '@/utils/logger';
+
+
+const logger = createLogger('ChatAPI');
 
 type MonitoringBridge = {
   trackRequest: () => void;
@@ -299,26 +303,26 @@ class ChatService {
   async startNewConversation(): Promise<ConversationId> {
     if (isE2EChatMockEnabled()) {
       const conversationId = createE2EConversationId();
-      console.info('[ChatService-OMEGA] 🧪 E2E mock conversation créée:', {
+      logger.info('[ChatService-OMEGA] 🧪 E2E mock conversation créée:', {
         conversationId,
       });
       return conversationId;
     }
 
-    console.log('[ChatService-OMEGA] 🚀 Démarrage d’une nouvelle conversation...');
+    logger.info('[ChatService-OMEGA] 🚀 Démarrage d’une nouvelle conversation...');
     try {
       const response = await invokeWithRetry<StartConversationResponse>(
         'create_new_conversation',
         {},
         { ...LONG_COMMAND_OPTIONS, context: 'StartConversation' }
       );
-      console.log(
+      logger.info(
         '[ChatService-OMEGA] ✅ Conversation créée avec ID:',
         response.conversation_id
       );
       return response.conversation_id;
     } catch (error) {
-      console.error(
+      logger.error(
         '[ChatService-OMEGA] ❌ Erreur lors de la création de la conversation:',
         error
       );
@@ -334,13 +338,13 @@ class ChatService {
    */
   async loadConversationHistory(conversationId: string): Promise<AIMessage[]> {
     if (!conversationId || conversationId.trim() === '') {
-      console.warn(
+      logger.warn(
         '[ChatService] loadConversationHistory: empty conversationId — returning []'
       );
       return [];
     }
     if (isE2EChatMockEnabled()) {
-      console.info('[ChatService] loadConversationHistory: E2E mock mode — returning []');
+      logger.info('[ChatService] loadConversationHistory: E2E mock mode — returning []');
       return [];
     }
     try {
@@ -352,7 +356,7 @@ class ChatService {
         { ...LONG_COMMAND_OPTIONS, context: 'LoadConversationHistory' }
       );
       if (!Array.isArray(rows) || rows.length === 0) {
-        console.info(
+        logger.info(
           '[ChatService] loadConversationHistory: no backend history for conversation_id=',
           conversationId
         );
@@ -366,13 +370,13 @@ class ChatService {
           timestamp: r.timestamp,
           metadata: { source: 'backend-restore', conversationId },
         }));
-      console.info(
+      logger.info(
         `[ChatService] loadConversationHistory: restored ${messages.length} messages for conversation_id=`,
         conversationId
       );
       return messages;
     } catch (error) {
-      console.warn(
+      logger.warn(
         '[ChatService] loadConversationHistory failed (non-fatal, returning []):',
         error
       );
@@ -398,7 +402,7 @@ class ChatService {
       });
       return rows ?? [];
     } catch (err) {
-      console.warn('[ChatService.listRestorableConversations] failed (non-fatal):', err);
+      logger.warn('[ChatService.listRestorableConversations] failed (non-fatal):', err);
       return [];
     }
   }
@@ -425,7 +429,7 @@ class ChatService {
     // 🛡️ BROWSER MODE PROTECTION - Backend web (chatEngine) si Tauri indisponible
     if (!isTauriRuntimeAvailable()) {
       const startedAt = Date.now();
-      console.warn(
+      logger.warn(
         '[ChatService-OMEGA] Tauri unavailable - using chatEngine (web backend)'
       );
 
@@ -458,7 +462,7 @@ class ChatService {
               : undefined,
         };
       } catch (error) {
-        console.error(
+        logger.error(
           '[ChatService-OMEGA] Browser chatEngine failure - fallback response',
           error
         );
@@ -490,7 +494,7 @@ class ChatService {
       messageLength: message.length,
     });
 
-    console.log('[ChatService-OMEGA] 📤 Envoi message via OMEGA:', {
+    logger.info('[ChatService-OMEGA] 📤 Envoi message via OMEGA:', {
       conversationId,
       message: message.substring(0, 50) + '...',
     });
@@ -523,14 +527,14 @@ class ChatService {
       // ✅ FIX AUDIT: Validation format AVANT détection
       if (!backendResponse || typeof backendResponse !== 'object') {
         monitoring.trackPipelineError();
-        console.error(
+        logger.error(
           '[ChatService-OMEGA] ❌ Réponse null ou invalide:',
           backendResponse
         );
         throw new Error('Backend response is null or not an object');
       }
 
-      console.log('[ChatService-OMEGA] 📥 Réponse brute reçue:', {
+      logger.info('[ChatService-OMEGA] 📥 Réponse brute reçue:', {
         hasContent: !!backendResponse.content,
         hasSuccess: !!backendResponse.success,
         hasMessage: !!backendResponse.message,
@@ -541,7 +545,7 @@ class ChatService {
       // ✅ FIX AUDIT: Gérer cas error explicite AVANT détection format
       if (backendResponse.error && !backendResponse.content && !backendResponse.success) {
         monitoring.trackPipelineError();
-        console.error(
+        logger.error(
           '[ChatService-OMEGA] ❌ Backend retourné erreur:',
           backendResponse.error
         );
@@ -553,7 +557,7 @@ class ChatService {
         // ✅ FIX AUDIT: Valider content non-null ET non-vide
         if (!backendResponse.content || backendResponse.content.trim() === '') {
           monitoring.trackPipelineError();
-          console.error('[ChatService-OMEGA] ❌ Backend retourné content vide');
+          logger.error('[ChatService-OMEGA] ❌ Backend retourné content vide');
           throw new Error('Backend returned empty content');
         }
 
@@ -561,7 +565,7 @@ class ChatService {
         const latencyMs = backendResponse.latencyMs || Date.now() - startedAt;
         monitoring.trackPipelineLatency(latencyMs);
 
-        console.log('[ChatService-OMEGA] ✅ Format OMEGA direct détecté:', {
+        logger.info('[ChatService-OMEGA] ✅ Format OMEGA direct détecté:', {
           contentLength: backendResponse.content?.length ?? 0,
           conversationId: backendResponse.conversationId,
           messageId: backendResponse.messageId,
@@ -607,7 +611,7 @@ class ChatService {
 
         monitoring.trackPipelineLatency(effectiveLatency);
 
-        console.log('[ChatService-OMEGA] ℹ️ Format Legacy détecté:', {
+        logger.info('[ChatService-OMEGA] ℹ️ Format Legacy détecté:', {
           success: backendResponse.success,
           provider: this.resolveProvider(
             backendResponse.message?.provider,
@@ -621,7 +625,7 @@ class ChatService {
       } else {
         // Format invalide
         monitoring.trackPipelineError();
-        console.error(
+        logger.error(
           '[ChatService-OMEGA] ❌ Format de réponse invalide:',
           backendResponse
         );
@@ -631,7 +635,7 @@ class ChatService {
         );
       }
     } catch (error) {
-      console.error('[ChatService-OMEGA] ❌ Erreur sendMessage:', error);
+      logger.error('[ChatService-OMEGA] ❌ Erreur sendMessage:', error);
 
       monitoring.trackError(error, {
         endpoint: 'OMEGA',
@@ -642,7 +646,7 @@ class ChatService {
       monitoring.trackPipelineError();
 
       if (isIPCError(error)) {
-        console.error(
+        logger.error(
           '[ChatService-OMEGA] ❌ IPC payload mismatch (expected {args:{...}})'
         );
         throw new Error('IPC payload mismatch (expected {args:{...}})');
@@ -682,7 +686,7 @@ class ChatService {
         const convResponse = await this.startNewConversation();
         conversationId = convResponse;
       } catch (err) {
-        console.warn(
+        logger.warn(
           '[ChatService] Failed to create conversation, using fallback ID:',
           err
         );
@@ -706,7 +710,7 @@ class ChatService {
   ): Promise<void> {
     // 🛡️ BROWSER MODE PROTECTION - Fallback immédiat si Tauri indisponible
     if (!isTauriRuntimeAvailable()) {
-      console.warn('[ChatService-Stream] Tauri unavailable - using browser fallback');
+      logger.warn('[ChatService-Stream] Tauri unavailable - using browser fallback');
       const fallbackResponse: ChatResponse = {
         content:
           "Mode navigateur: backend Tauri indisponible. Lance l'application native TITANE∞ pour accéder au moteur IA complet.",
@@ -901,7 +905,7 @@ class ChatService {
         try {
           onChunk(chunkText);
         } catch (callbackError) {
-          console.warn('[ChatService] onChunk callback error:', callbackError);
+          logger.warn('[ChatService] onChunk callback error:', callbackError);
         }
       }
     };
@@ -932,7 +936,7 @@ class ChatService {
           try {
             onError(err);
           } catch (callbackError) {
-            console.warn('[ChatService] onError callback error:', callbackError);
+            logger.warn('[ChatService] onError callback error:', callbackError);
           }
           return;
         }
@@ -956,7 +960,7 @@ class ChatService {
           try {
             onError(err);
           } catch (callbackError) {
-            console.warn('[ChatService] onError callback error:', callbackError);
+            logger.warn('[ChatService] onError callback error:', callbackError);
           }
           return;
         }
@@ -975,7 +979,7 @@ class ChatService {
         try {
           onComplete(response);
         } catch (callbackError) {
-          console.warn('[ChatService] onComplete callback error:', callbackError);
+          logger.warn('[ChatService] onComplete callback error:', callbackError);
         }
 
         cleanup();
@@ -1098,7 +1102,7 @@ class ChatService {
         try {
           onComplete(response);
         } catch (callbackError) {
-          console.warn(
+          logger.warn(
             '[ChatService] onComplete callback error (fallback):',
             callbackError
           );
@@ -1113,7 +1117,7 @@ class ChatService {
       try {
         onError(err);
       } catch (callbackError) {
-        console.warn('[ChatService] onError callback error (outer):', callbackError);
+        logger.warn('[ChatService] onError callback error (outer):', callbackError);
       }
     } finally {
       cleanupRef();
@@ -1135,7 +1139,7 @@ class ChatService {
         { ...LONG_COMMAND_OPTIONS, context: 'Chat' }
       );
     } catch (error) {
-      console.error('[ChatService] Erreur suggestions:', error);
+      logger.error('[ChatService] Erreur suggestions:', error);
       return [];
     }
   }
@@ -1156,7 +1160,7 @@ class ChatService {
         { ...LONG_COMMAND_OPTIONS, context: 'Chat' }
       );
     } catch (error) {
-      console.error('[ChatService] Erreur analyse émotion:', error);
+      logger.error('[ChatService] Erreur analyse émotion:', error);
       return {
         valence: 0,
         intensity: 0.5,
@@ -1177,7 +1181,7 @@ class ChatService {
         { ...LONG_COMMAND_OPTIONS, context: 'Chat' }
       );
     } catch (error) {
-      console.error('[ChatService] Erreur historique:', error);
+      logger.error('[ChatService] Erreur historique:', error);
       return [];
     }
   }
@@ -1193,7 +1197,7 @@ class ChatService {
         { ...LONG_COMMAND_OPTIONS, context: 'Chat' }
       );
     } catch (error) {
-      console.error('[ChatService] Erreur effacement:', error);
+      logger.error('[ChatService] Erreur effacement:', error);
       throw new Error(
         `Effacement échoué: ${error instanceof Error ? error.message : String(error)}`
       );
@@ -1211,7 +1215,7 @@ class ChatService {
         { ...LONG_COMMAND_OPTIONS, context: 'Chat' }
       );
     } catch (error) {
-      console.error('[ChatService] Erreur recherche:', error);
+      logger.error('[ChatService] Erreur recherche:', error);
       return [];
     }
   }
@@ -1227,7 +1231,7 @@ class ChatService {
         { ...LONG_COMMAND_OPTIONS, context: 'Chat' }
       );
     } catch (error) {
-      console.error('[ChatService] Erreur export:', error);
+      logger.error('[ChatService] Erreur export:', error);
       throw new Error(
         `Export échoué: ${error instanceof Error ? error.message : String(error)}`
       );
@@ -1471,7 +1475,7 @@ class ChatService {
           const parsed = JSON.parse(sanitized);
           return this.normalizeCompleteEvent(parsed);
         } catch (secondError) {
-          console.warn('[ChatService] Unable to parse completion payload:', secondError);
+          logger.warn('[ChatService] Unable to parse completion payload:', secondError);
           return {
             content: raw,
           };

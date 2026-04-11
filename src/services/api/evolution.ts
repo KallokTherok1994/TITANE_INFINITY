@@ -14,6 +14,10 @@ import {
   CRITICAL_COMMAND_OPTIONS,
 } from '../../lib/serviceInvoker';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('EvolutionAPI');
+
 /**
  * État évolution système
  */
@@ -85,7 +89,7 @@ class EvolutionService {
         { ...FAST_COMMAND_OPTIONS, context: 'Evolution' }
       );
     } catch (error) {
-      console.error('[EvolutionService] Erreur getState:', error);
+      logger.error('[EvolutionService] Erreur getState:', error);
       throw new Error(`Récupération état échoué: ${error}`);
     }
   }
@@ -101,7 +105,7 @@ class EvolutionService {
         { ...STANDARD_COMMAND_OPTIONS, context: 'Evolution' }
       );
     } catch (error) {
-      console.error('[EvolutionService] Erreur getData:', error);
+      logger.error('[EvolutionService] Erreur getData:', error);
       throw new Error(`Récupération données échouée: ${error}`);
     }
   }
@@ -117,7 +121,7 @@ class EvolutionService {
         { ...FAST_COMMAND_OPTIONS, context: 'Evolution' }
       );
     } catch (error) {
-      console.error('[EvolutionService] Erreur getConfig:', error);
+      logger.error('[EvolutionService] Erreur getConfig:', error);
       throw new Error(`Récupération config échouée: ${error}`);
     }
   }
@@ -133,7 +137,7 @@ class EvolutionService {
         { ...STANDARD_COMMAND_OPTIONS, context: 'Evolution' }
       );
     } catch (error) {
-      console.error('[EvolutionService] Erreur updateConfig:', error);
+      logger.error('[EvolutionService] Erreur updateConfig:', error);
       throw new Error(`Modification config échouée: ${error}`);
     }
   }
@@ -149,7 +153,7 @@ class EvolutionService {
         { ...LONG_COMMAND_OPTIONS, context: 'Evolution' }
       );
     } catch (error) {
-      console.error('[EvolutionService] Erreur runCycle:', error);
+      logger.error('[EvolutionService] Erreur runCycle:', error);
       throw new Error(`Cycle évolution échoué: ${error}`);
     }
   }
@@ -165,7 +169,7 @@ class EvolutionService {
         { ...STANDARD_COMMAND_OPTIONS, context: 'Evolution' }
       );
     } catch (error) {
-      console.error('[EvolutionService] Erreur getSuggestions:', error);
+      logger.error('[EvolutionService] Erreur getSuggestions:', error);
       return [];
     }
   }
@@ -181,7 +185,7 @@ class EvolutionService {
         { ...LONG_COMMAND_OPTIONS, context: 'Evolution' }
       );
     } catch (error) {
-      console.error('[EvolutionService] Erreur applySuggestion:', error);
+      logger.error('[EvolutionService] Erreur applySuggestion:', error);
       throw new Error(`Application suggestion échouée: ${error}`);
     }
   }
@@ -197,7 +201,7 @@ class EvolutionService {
         { ...STANDARD_COMMAND_OPTIONS, context: 'Evolution' }
       );
     } catch (error) {
-      console.error('[EvolutionService] Erreur rejectSuggestion:', error);
+      logger.error('[EvolutionService] Erreur rejectSuggestion:', error);
     }
   }
 
@@ -216,7 +220,7 @@ class EvolutionService {
         { ...STANDARD_COMMAND_OPTIONS, context: 'Evolution' }
       );
     } catch (error) {
-      console.error('[EvolutionService] Erreur recordFeedback:', error);
+      logger.error('[EvolutionService] Erreur recordFeedback:', error);
     }
   }
 
@@ -239,7 +243,7 @@ class EvolutionService {
         { ...STANDARD_COMMAND_OPTIONS, context: 'Evolution' }
       );
     } catch (error) {
-      console.error('[EvolutionService] Erreur analyzePatterns:', error);
+      logger.error('[EvolutionService] Erreur analyzePatterns:', error);
       return [];
     }
   }
@@ -255,7 +259,7 @@ class EvolutionService {
         { ...STANDARD_COMMAND_OPTIONS, context: 'Evolution' }
       );
     } catch (error) {
-      console.error('[EvolutionService] Erreur exportHistory:', error);
+      logger.error('[EvolutionService] Erreur exportHistory:', error);
       throw new Error(`Export historique échoué: ${error}`);
     }
   }
@@ -271,7 +275,7 @@ class EvolutionService {
         { ...CRITICAL_COMMAND_OPTIONS, context: 'Evolution' }
       );
     } catch (error) {
-      console.error('[EvolutionService] Erreur reset:', error);
+      logger.error('[EvolutionService] Erreur reset:', error);
       throw new Error(`Reset évolution échoué: ${error}`);
     }
   }
@@ -287,7 +291,7 @@ class EvolutionService {
         { ...STANDARD_COMMAND_OPTIONS, context: 'Evolution' }
       );
     } catch (error) {
-      console.error('[EvolutionService] Erreur snapshot:', error);
+      logger.error('[EvolutionService] Erreur snapshot:', error);
       throw new Error(`Snapshot échoué: ${error}`);
     }
   }
@@ -303,7 +307,7 @@ class EvolutionService {
         { ...LONG_COMMAND_OPTIONS, context: 'Evolution' }
       );
     } catch (error) {
-      console.error('[EvolutionService] Erreur restore:', error);
+      logger.error('[EvolutionService] Erreur restore:', error);
       throw new Error(`Restauration échouée: ${error}`);
     }
   }

@@ -10,6 +10,10 @@ import { PBRMaterialSystem } from '../rendering/PBRMaterialSystem';
 import { StudioLightingRig, type AppearanceStyle } from '../rendering/StudioLightingRig';
 import { PostProcessingPipeline } from '../rendering/PostProcessingPipeline';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('ThreeJSAvatar');
+
 // Debug flag (disable in production)
 const DEBUG = import.meta.env.DEV;
 
@@ -81,7 +85,7 @@ export class ThreeJSAvatarRenderer {
     this.lightingRig = null as any; // Will be set in initialize()
 
     if (DEBUG)
-      console.log(
+      logger.info(
         '[ThreeJSAvatarRenderer] Constructor complete (Three.js not loaded yet)'
       );
   }
@@ -92,12 +96,12 @@ export class ThreeJSAvatarRenderer {
    */
   public async initialize(): Promise<void> {
     if (this.isInitialized) {
-      if (DEBUG) console.warn('[ThreeJSAvatarRenderer] Already initialized');
+      if (DEBUG) logger.warn('[ThreeJSAvatarRenderer] Already initialized');
       return;
     }
 
     // Lazy-load Three.js
-    if (DEBUG) console.log('[ThreeJSAvatarRenderer] Loading Three.js...');
+    if (DEBUG) logger.info('[ThreeJSAvatarRenderer] Loading Three.js...');
     this.THREE = await loadThreeJS();
     const THREE = this.THREE;
 
@@ -151,7 +155,7 @@ export class ThreeJSAvatarRenderer {
     }
 
     this.isInitialized = true;
-    if (DEBUG) console.log('[ThreeJSAvatarRenderer] Initialization complete ✅');
+    if (DEBUG) logger.info('[ThreeJSAvatarRenderer] Initialization complete ✅');
   }
 
   // ═════════════════════════════════════════════════════════════════════════
@@ -229,12 +233,12 @@ export class ThreeJSAvatarRenderer {
     }
 
     if (this.avatarMeshes) {
-      console.warn('[ThreeJSAvatarRenderer] Avatar already initialized');
+      logger.warn('[ThreeJSAvatarRenderer] Avatar already initialized');
       return;
     }
 
     this.avatarMeshes = this.createPlaceholderAvatar();
-    if (DEBUG) console.log('[ThreeJSAvatarRenderer] Placeholder avatar created');
+    if (DEBUG) logger.info('[ThreeJSAvatarRenderer] Placeholder avatar created');
   }
 
   // ═════════════════════════════════════════════════════════════════════════
@@ -247,7 +251,7 @@ export class ThreeJSAvatarRenderer {
    */
   public updateSkeleton(snapshot: SkeletonSnapshot): void {
     if (!this.avatarMeshes) {
-      if (DEBUG) console.warn('[ThreeJSAvatarRenderer] Avatar not initialized');
+      if (DEBUG) logger.warn('[ThreeJSAvatarRenderer] Avatar not initialized');
       return;
     }
 
@@ -293,7 +297,7 @@ export class ThreeJSAvatarRenderer {
    */
   public startRenderLoop(): void {
     if (this.animationFrameId !== null) {
-      console.warn('[ThreeJSAvatarRenderer] Render loop already running');
+      logger.warn('[ThreeJSAvatarRenderer] Render loop already running');
       return;
     }
 
@@ -305,7 +309,7 @@ export class ThreeJSAvatarRenderer {
     };
 
     this.animationFrameId = requestAnimationFrame(animate);
-    if (DEBUG) console.log('[ThreeJSAvatarRenderer] Render loop started');
+    if (DEBUG) logger.info('[ThreeJSAvatarRenderer] Render loop started');
   }
 
   /**
@@ -315,7 +319,7 @@ export class ThreeJSAvatarRenderer {
     if (this.animationFrameId !== null) {
       cancelAnimationFrame(this.animationFrameId);
       this.animationFrameId = null;
-      if (DEBUG) console.log('[ThreeJSAvatarRenderer] Render loop stopped');
+      if (DEBUG) logger.info('[ThreeJSAvatarRenderer] Render loop stopped');
     }
   }
 
@@ -442,7 +446,7 @@ export class ThreeJSAvatarRenderer {
     }
 
     this.isDisposed = true;
-    if (DEBUG) console.log('[ThreeJSAvatarRenderer] Disposed');
+    if (DEBUG) logger.info('[ThreeJSAvatarRenderer] Disposed');
   }
 
   // ═════════════════════════════════════════════════════════════════════════

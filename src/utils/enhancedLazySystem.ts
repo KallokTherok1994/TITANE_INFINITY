@@ -10,6 +10,10 @@ import React from 'react';
 import { integrateWithLazyDiagnostic } from './advancedBootMonitor';
 import { performanceOptimizer, optimizedImport } from './performanceOptimizer';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('LazySystem');
+
 // Intégration avec le système de monitoring avancé
 const monitoringIntegration = integrateWithLazyDiagnostic();
 
@@ -70,7 +74,7 @@ export const createEnhancedLazyComponent = <T extends React.ComponentType<any>>(
 
   // Composant lazy avec tous les systèmes intégrés
   const lazyComponent = React.lazy(async () => {
-    console.log(`[ENHANCED-LAZY] 🚀 Loading: ${moduleName} (priority: ${priority})`);
+    logger.info(`[ENHANCED-LAZY] 🚀 Loading: ${moduleName} (priority: ${priority})`);
 
     if (enableMetrics) {
       monitoringIntegration.recordStart();
@@ -83,7 +87,7 @@ export const createEnhancedLazyComponent = <T extends React.ComponentType<any>>(
     // Vérifier le cache optimisé d'abord
     const cached = performanceOptimizer.getCachedResource(finalCacheKey);
     if (cached) {
-      console.log(`[ENHANCED-LAZY] 💾 Cache hit: ${moduleName}`);
+      logger.info(`[ENHANCED-LAZY] 💾 Cache hit: ${moduleName}`);
 
       if (enableMetrics) {
         monitoringIntegration.recordSuccess(moduleName, 0);
@@ -142,7 +146,7 @@ export const createEnhancedLazyComponent = <T extends React.ComponentType<any>>(
         // Mise en cache avec priorité appropriée
         performanceOptimizer.cacheResource(finalCacheKey, moduleResult, priority);
 
-        console.log(
+        logger.info(
           `[ENHANCED-LAZY] ✅ Success: ${moduleName} in ${loadTime.toFixed(2)}ms (attempt: ${retryCount + 1})`
         );
         return moduleResult;
@@ -150,7 +154,7 @@ export const createEnhancedLazyComponent = <T extends React.ComponentType<any>>(
         retryCount++;
         lastError = error as Error;
 
-        console.error(
+        logger.error(
           `[ENHANCED-LAZY] ❌ Attempt ${retryCount} failed for ${moduleName}:`,
           lastError.message
         );
@@ -175,7 +179,7 @@ export const createEnhancedLazyComponent = <T extends React.ComponentType<any>>(
             monitoringIntegration.recordEnd(false);
           }
 
-          console.error(
+          logger.error(
             `[ENHANCED-LAZY] 💥 Final failure for ${moduleName} after ${retryCount - 1} retries`
           );
 
@@ -191,7 +195,7 @@ export const createEnhancedLazyComponent = <T extends React.ComponentType<any>>(
         const backoffTime = calculateAdaptiveBackoff(retryCount, priority);
         await new Promise(resolve => setTimeout(resolve, backoffTime));
 
-        console.log(
+        logger.info(
           `[ENHANCED-LAZY] 🔄 Retrying ${moduleName} in ${backoffTime}ms (attempt ${retryCount + 1})`
         );
       }
@@ -204,18 +208,18 @@ export const createEnhancedLazyComponent = <T extends React.ComponentType<any>>(
   // Fonction de préchargement
   const preloader = async (): Promise<void> => {
     try {
-      console.log(`[ENHANCED-LAZY] 🎯 Preloading: ${moduleName}`);
+      logger.info(`[ENHANCED-LAZY] 🎯 Preloading: ${moduleName}`);
       const startTime = performance.now();
 
       const moduleResult = await optimizedImport(factory, finalCacheKey);
       const loadTime = performance.now() - startTime;
 
       performanceOptimizer.cacheResource(finalCacheKey, moduleResult, priority);
-      console.log(
+      logger.info(
         `[ENHANCED-LAZY] ✅ Preloaded: ${moduleName} in ${loadTime.toFixed(2)}ms`
       );
     } catch (error) {
-      console.warn(`[ENHANCED-LAZY] ⚠️ Preload failed for ${moduleName}:`, error);
+      logger.warn(`[ENHANCED-LAZY] ⚠️ Preload failed for ${moduleName}:`, error);
     }
   };
 
@@ -237,7 +241,7 @@ export const createEnhancedLazyComponent = <T extends React.ComponentType<any>>(
     // Précharger au prochain tick pour éviter de bloquer le thread principal
     setTimeout(() => {
       preloader().catch(err =>
-        console.warn(`Auto-preload failed for ${moduleName}:`, err)
+        logger.warn(`Auto-preload failed for ${moduleName}:`, err)
       );
     }, 100);
   }
@@ -267,7 +271,7 @@ async function attemptCriticalFallback<T>(
   moduleName: string,
   originalError: Error
 ): Promise<{ default: T }> {
-  console.log(`[ENHANCED-LAZY] 🆘 Attempting critical fallback for ${moduleName}`);
+  logger.info(`[ENHANCED-LAZY] 🆘 Attempting critical fallback for ${moduleName}`);
 
   try {
     // Stratégie 1: Forcer la recréation du composant
@@ -325,7 +329,7 @@ async function attemptCriticalFallback<T>(
 
     return { default: ErrorComponent as T };
   } catch (fallbackError) {
-    console.error(
+    logger.error(
       `[ENHANCED-LAZY] 💥 Critical fallback also failed for ${moduleName}:`,
       fallbackError
     );
@@ -391,7 +395,7 @@ function getMemoryUsage(): number {
  * Enregistre des diagnostics détaillés
  */
 function recordDetailedDiagnostic(info: DetailedDiagnosticInfo): void {
-  console.log(`[ENHANCED-LAZY-METRICS] 📊`, {
+  logger.info(`[ENHANCED-LAZY-METRICS] 📊`, {
     module: info.moduleName,
     success: info.success,
     loadTime: `${info.loadTime.toFixed(2)}ms`,
@@ -408,7 +412,7 @@ function recordDetailedDiagnostic(info: DetailedDiagnosticInfo): void {
     try {
       (window as any).TITANE_ANALYTICS.track('lazy_load_diagnostic', info);
     } catch (error) {
-      console.warn('Failed to send analytics:', error);
+      logger.warn('Failed to send analytics:', error);
     }
   }
 }
@@ -423,7 +427,7 @@ export const preloadModules = async (
     priority?: EnhancedLazyOptions['priority'];
   }>
 ): Promise<void> => {
-  console.log(`[ENHANCED-LAZY] 🎯 Batch preloading ${modules.length} modules`);
+  logger.info(`[ENHANCED-LAZY] 🎯 Batch preloading ${modules.length} modules`);
 
   const preloadPromises = modules.map(async ({ factory, name, priority = 'medium' }) => {
     try {
@@ -433,12 +437,12 @@ export const preloadModules = async (
       });
       await preloader();
     } catch (error) {
-      console.warn(`[ENHANCED-LAZY] Preload failed for ${name}:`, error);
+      logger.warn(`[ENHANCED-LAZY] Preload failed for ${name}:`, error);
     }
   });
 
   await Promise.allSettled(preloadPromises);
-  console.log(`[ENHANCED-LAZY] ✅ Batch preload completed`);
+  logger.info(`[ENHANCED-LAZY] ✅ Batch preload completed`);
 };
 
 // Export pour compatibilité avec le système existant

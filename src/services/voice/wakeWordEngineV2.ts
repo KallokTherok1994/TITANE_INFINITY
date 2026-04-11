@@ -23,6 +23,10 @@ import {
 import { antiEchoShield, type EchoAnalysis } from './antiEchoShield';
 import { contextualAttentionV2 } from './contextualAttentionV2';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('WakeWordV2');
+
 export type WakeWordMode = 'wake_only' | 'one_shot';
 
 export interface WakeWordEvent {
@@ -87,7 +91,7 @@ export class WakeWordEngineV2 {
       useContextualAdaptation: config.useContextualAdaptation ?? true,
     };
 
-    console.log('[WakeWordV2] 🧠 Initialized (Cognitive Mode)');
+    logger.info('[WakeWordV2] 🧠 Initialized (Cognitive Mode)');
   }
 
   /**
@@ -98,7 +102,7 @@ export class WakeWordEngineV2 {
       ...this.config,
       ...config,
     };
-    console.log('[WakeWordV2] ⚙️ Config updated');
+    logger.info('[WakeWordV2] ⚙️ Config updated');
   }
 
   // ═══ DETECTION WITH AUDIO ═══
@@ -111,14 +115,14 @@ export class WakeWordEngineV2 {
     audioBuffer?: Float32Array,
     sampleRate: number = 16000
   ): Promise<WakeWordEvent> {
-    console.log('[WakeWordV2] 🔍 Detecting with audio analysis...');
+    logger.info('[WakeWordV2] 🔍 Detecting with audio analysis...');
 
     // 1. Anti-Echo Check
     if (this.config.useAntiEcho && audioBuffer) {
       const echoAnalysis = antiEchoShield.analyzeAudio(audioBuffer);
 
       if (echoAnalysis.isEcho) {
-        console.log('[WakeWordV2] 🛑 Echo detected, blocking');
+        logger.info('[WakeWordV2] 🛑 Echo detected, blocking');
         return {
           detected: false,
           mode: 'wake_only',
@@ -141,7 +145,7 @@ export class WakeWordEngineV2 {
       ? contextualAttentionV2.getWakeThreshold()
       : this.config.confidenceThreshold;
 
-    console.log(`[WakeWordV2] 🎚️ Using threshold: ${threshold.toFixed(2)}`);
+    logger.info(`[WakeWordV2] 🎚️ Using threshold: ${threshold.toFixed(2)}`);
 
     // 4. Phonetic detection (base)
     const phoneticResult = this.detectPhonetic(text);
@@ -168,16 +172,16 @@ export class WakeWordEngineV2 {
         phoneticResult.confidence *= 0.7 + voiceSimilarity * 0.3;
         spectralMatch = voiceSimilarity > 0.75;
 
-        console.log(`[WakeWordV2] 🎯 Voice similarity: ${voiceSimilarity.toFixed(2)}`);
+        logger.info(`[WakeWordV2] 🎯 Voice similarity: ${voiceSimilarity.toFixed(2)}`);
       } else {
-        console.log('[WakeWordV2] ⚠️ Voice fingerprint not ready, collecting samples...');
+        logger.info('[WakeWordV2] ⚠️ Voice fingerprint not ready, collecting samples...');
       }
     }
 
     // 6. Final decision with adaptive threshold
     const finalDetected = phoneticResult.confidence >= threshold;
 
-    console.log(
+    logger.info(
       `[WakeWordV2] ${finalDetected ? '✅ DETECTED' : '❌ REJECTED'} ` +
         `(conf: ${phoneticResult.confidence.toFixed(2)}, threshold: ${threshold.toFixed(2)})`
     );
@@ -390,13 +394,13 @@ export class WakeWordEngineV2 {
     confidence: number = 1.0
   ): Promise<void> {
     if (!this.config.useVoiceFingerprint) {
-      console.warn('[WakeWordV2] Voice fingerprint disabled');
+      logger.warn('[WakeWordV2] Voice fingerprint disabled');
       return;
     }
 
     voiceFingerprintEngine.addWakeWordSample(audioBuffer, sampleRate, confidence);
 
-    console.log('[WakeWordV2] 📚 Voice model trained');
+    logger.info('[WakeWordV2] 📚 Voice model trained');
   }
 
   /**
@@ -405,7 +409,7 @@ export class WakeWordEngineV2 {
   reportFalsePositive(): void {
     if (this.config.useContextualAdaptation) {
       contextualAttentionV2.recordActivation(false, true);
-      console.log('[WakeWordV2] ⚠️ False positive reported');
+      logger.info('[WakeWordV2] ⚠️ False positive reported');
     }
   }
 
@@ -415,7 +419,7 @@ export class WakeWordEngineV2 {
   reportSuccess(): void {
     if (this.config.useContextualAdaptation) {
       contextualAttentionV2.recordActivation(true, false);
-      console.log('[WakeWordV2] ✅ Success reported');
+      logger.info('[WakeWordV2] ✅ Success reported');
     }
   }
 
@@ -444,7 +448,7 @@ export class WakeWordEngineV2 {
     voiceFingerprintEngine.reset();
     antiEchoShield.reset();
     contextualAttentionV2.reset();
-    console.log('[WakeWordV2] 🔄 Cognitive systems reset');
+    logger.info('[WakeWordV2] 🔄 Cognitive systems reset');
   }
 }
 

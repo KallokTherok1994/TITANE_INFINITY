@@ -60,7 +60,7 @@ function persistMessageInBackground(
       await Promise.resolve(saveMessage(message));
       chatMemoryCompactor.flushPendingSaves();
     } catch (persistError) {
-      console.warn(failureLabel, persistError);
+      logger.warn(failureLabel);
     }
   })();
 }
@@ -75,7 +75,7 @@ function persistAssistantMessageInBackground(
       await saveMessage(assistantAIMessage);
       chatMemoryCompactor.flushPendingSaves();
     } catch (persistError) {
-      console.warn(failureLabel, persistError);
+      logger.warn(failureLabel);
     }
   })();
 }
@@ -103,7 +103,7 @@ function persistConversationHistoryInBackground(
       );
       chatMemoryCompactor.flushPendingSaves();
     } catch (persistError) {
-      console.warn(failureLabel, persistError);
+      logger.warn(failureLabel);
     }
   })();
 }
@@ -308,7 +308,7 @@ export function useConversationEngine(
           }
         }
       } catch (err) {
-        console.warn('[useConversationEngine] ⚠️ Failed to load stored messages:', err);
+        logger.warn('[useConversationEngine] ⚠️ Failed to load stored messages:');
       }
     };
 
@@ -345,14 +345,14 @@ export function useConversationEngine(
           }
 
           if (report.status === 'Critical') {
-            console.warn(
+            logger.warn(
               '[ConversationEngine] État critique détecté, auto-réparation en cours...'
             );
           }
 
           return report;
         } catch (err) {
-          console.error('[ConversationEngine] Health check failed:', err);
+          logger.error('[ConversationEngine] Health check failed:', undefined, err instanceof Error ? err : undefined);
           return null;
         } finally {
           if (healthCheckPromiseRef.current === request) {
@@ -560,7 +560,7 @@ Actions immédiates:
         } else if (mode === 'REMOTE') {
           // NO_LYING_VIOLATION_FRONTEND guard: REMOTE requires network_used=true
           if (response.meta?.network_used === false) {
-            console.error(
+            logger.error(
               '[NO_LYING_VIOLATION_FRONTEND] mode=REMOTE but network_used=false — displaying as LOCAL/RESTRICTED'
             );
             logger.warn(
@@ -597,7 +597,7 @@ Actions immédiates:
         // Callback
         options.onResponse?.(response);
 
-        console.log('[ConversationEngine] Message traité:', {
+        logger.info('[ConversationEngine] Message traité:', {
           intention: response.detected_intention,
           emotion: response.detected_emotion,
           tags: response.cognitive_tags,
@@ -612,7 +612,7 @@ Actions immédiates:
         // Retry logic avec backoff exponentiel
         if (retryCount < MAX_RETRIES && errorMessage.includes('network')) {
           const delay = RETRY_DELAY_BASE_MS * Math.pow(2, retryCount);
-          console.warn(
+          logger.warn(
             `[ConversationEngine] Tentative ${retryCount + 1}/${MAX_RETRIES} échouée, retry dans ${delay}ms`
           );
 
@@ -663,7 +663,7 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
           '[useConversationEngine] ⚠️ Failed to persist fallback message'
         );
 
-        console.error('[ConversationEngine] Erreur finale:', err);
+        logger.error('[ConversationEngine] Erreur finale:', undefined, err instanceof Error ? err : undefined);
         return null;
       } finally {
         setIsLoading(false);
@@ -778,7 +778,7 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
   // ═══ SET MODE ═══
   const setModeCallback = useCallback((mode: ConversationMode) => {
     setCurrentMode(mode);
-    console.log('[ConversationEngine] Mode changé:', mode);
+    logger.info('[ConversationEngine] Mode changé', { module: 'useConversationEngine', mode: String(mode) });
   }, []);
 
   // ═══ MEMOIZED VALUES ═══

@@ -33,6 +33,10 @@ import type {
   DevOpsReport,
 } from '../../types/devops';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('VisualDevOps');
+
 // ============================================================================
 // VISUAL DEVOPS ENGINE
 // ============================================================================
@@ -50,7 +54,7 @@ class VisualDevOpsEngine {
   private readonly _MAX_SESSION_DURATION_MS = 8 * 60 * 60 * 1000; // 8 heures
 
   private constructor() {
-    console.log('[VisualDevOpsEngine] Initialized v30.0.0');
+    logger.info('[VisualDevOpsEngine] Initialized v30.0.0');
   }
 
   public static getInstance(): VisualDevOpsEngine {
@@ -68,26 +72,26 @@ class VisualDevOpsEngine {
     this.resetStateForTests();
 
     if (this.enabled) {
-      console.log('[VisualDevOpsEngine] Already enabled');
+      logger.info('[VisualDevOpsEngine] Already enabled');
       if (!this.currentSession || this.currentSession.interactions.length > 0) {
         this.currentSession = this.createSession();
       }
       return;
     }
 
-    console.log('[VisualDevOpsEngine] Enabling...');
+    logger.info('[VisualDevOpsEngine] Enabling...');
     this.enabled = true;
 
     // Démarrer session collaboration
     this.currentSession = this.createSession();
 
-    console.log('[VisualDevOpsEngine] Enabled successfully');
+    logger.info('[VisualDevOpsEngine] Enabled successfully');
   }
 
   public async disable(): Promise<void> {
     if (!this.enabled) return;
 
-    console.log('[VisualDevOpsEngine] Disabling...');
+    logger.info('[VisualDevOpsEngine] Disabling...');
     this.enabled = false;
 
     // Sauvegarder session si nécessaire
@@ -96,7 +100,7 @@ class VisualDevOpsEngine {
       this.currentSession = null;
     }
 
-    console.log('[VisualDevOpsEngine] Disabled');
+    logger.info('[VisualDevOpsEngine] Disabled');
   }
 
   public isEnabled(): boolean {
@@ -118,7 +122,7 @@ class VisualDevOpsEngine {
     imageBase64?: string,
     context?: string
   ): Promise<ScreenAnalysis> {
-    console.log('[VisualDevOpsEngine] Analyzing screen...');
+    logger.info('[VisualDevOpsEngine] Analyzing screen...');
 
     const analysis: ScreenAnalysis = {
       id: this.generateId(),
@@ -162,7 +166,7 @@ class VisualDevOpsEngine {
         analysis.context_type = backendAnalysis.context_type as any;
         analysis.confidence = backendAnalysis.confidence;
       } catch (error) {
-        console.warn('[VisualDevOpsEngine] Backend analysis failed, using fallback');
+        logger.warn('[VisualDevOpsEngine] Backend analysis failed, using fallback');
         analysis.confidence = 0.3;
       }
     }
@@ -190,7 +194,7 @@ class VisualDevOpsEngine {
       });
     }
 
-    console.log('[VisualDevOpsEngine] Screen analysis complete:', {
+    logger.info('[VisualDevOpsEngine] Screen analysis complete:', {
       context_type: analysis.context_type,
       elements_found: analysis.detected_elements.length,
       errors_found: analysis.technical_content.errors_detected.length,
@@ -334,7 +338,7 @@ class VisualDevOpsEngine {
     analysis: ScreenAnalysis,
     actionType: ActionType
   ): Promise<DevOpsAction> {
-    console.log('[VisualDevOpsEngine] Proposing action:', actionType);
+    logger.info('[VisualDevOpsEngine] Proposing action:', actionType);
 
     const action: DevOpsAction = {
       id: this.generateId(),
@@ -394,7 +398,7 @@ class VisualDevOpsEngine {
       });
     }
 
-    console.log('[VisualDevOpsEngine] Action proposed:', {
+    logger.info('[VisualDevOpsEngine] Action proposed:', {
       type: actionType,
       validation_required: action.validation_required,
       security_checks: action.security_checks.length,
@@ -418,7 +422,7 @@ class VisualDevOpsEngine {
 
     if (approved) {
       action.status = 'validated';
-      console.log('[VisualDevOpsEngine] Action validated:', actionId);
+      logger.info('[VisualDevOpsEngine] Action validated:', actionId);
 
       // Enregistrer validation
       if (this.currentSession) {
@@ -431,7 +435,7 @@ class VisualDevOpsEngine {
       }
     } else {
       action.status = 'rejected';
-      console.log('[VisualDevOpsEngine] Action rejected:', actionId);
+      logger.info('[VisualDevOpsEngine] Action rejected:', actionId);
     }
   }
 
@@ -459,7 +463,7 @@ class VisualDevOpsEngine {
       duration_ms: duration,
     };
 
-    console.log('[VisualDevOpsEngine] Action executed:', {
+    logger.info('[VisualDevOpsEngine] Action executed:', {
       id: actionId,
       success,
       duration_ms: action.result.duration_ms,
@@ -498,7 +502,7 @@ class VisualDevOpsEngine {
 
       return patch;
     } catch (error) {
-      console.warn('[VisualDevOpsEngine] Fix generation failed');
+      logger.warn('[VisualDevOpsEngine] Fix generation failed');
 
       // Fallback: patch minimal
       return {
@@ -810,7 +814,7 @@ echo "✅ Operation complete"
   }
 
   private async saveSession(session: CollaborationSession): Promise<void> {
-    console.log('[VisualDevOpsEngine] Saving session:', session.session_id);
+    logger.info('[VisualDevOpsEngine] Saving session:', session.session_id);
     // IMPLEMENTATION: Persist session to disk or backend
     // 1. Serialize: JSON.stringify(session) with pretty formatting
     // 2. Tauri filesystem: Use invoke('fs:write_file', { path, content }) to save

@@ -44,6 +44,10 @@ import {
   normalizePersistentMemoryStats,
 } from '../services/memory/persistentMemory.normalize';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('PersistMemory');
+
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES DU HOOK
 // ─────────────────────────────────────────────────────────────────────────────
@@ -413,7 +417,7 @@ export function usePersistentMemory(
           lastUpdate: Date.now(),
         });
       } catch (err) {
-        console.error('[usePersistentMemory] Erreur de chargement:', err);
+        logger.error('[usePersistentMemory] Erreur de chargement:', err);
         setState(prev => ({
           ...prev,
           isLoading: false,
@@ -473,7 +477,7 @@ export function usePersistentMemory(
           .slice(0, limit)
           .map(r => r.entry);
       } catch (err) {
-        console.error('[usePersistentMemory] Erreur de recherche:', err);
+        logger.error('[usePersistentMemory] Erreur de recherche:', err);
 
         // Fallback: recherche locale dans le cache
         if (enableCache && persistentMemoryCache.scopeKey === scopeKey) {
@@ -587,7 +591,7 @@ export function usePersistentMemory(
 
         return entryId;
       } catch (err) {
-        console.error('[usePersistentMemory] Erreur de sauvegarde:', err);
+        logger.error('[usePersistentMemory] Erreur de sauvegarde:', err);
         throw err;
       }
     },
@@ -601,7 +605,7 @@ export function usePersistentMemory(
         await refreshAfterMutation();
         return true;
       } catch (err) {
-        console.error('[usePersistentMemory] Erreur de promotion:', err);
+        logger.error('[usePersistentMemory] Erreur de promotion:', err);
         return false;
       }
     },
@@ -615,7 +619,7 @@ export function usePersistentMemory(
         await refreshAfterMutation();
         return true;
       } catch (err) {
-        console.error("[usePersistentMemory] Erreur d'archivage:", err);
+        logger.error("[usePersistentMemory] Erreur d'archivage:", err);
         return false;
       }
     },
@@ -629,7 +633,7 @@ export function usePersistentMemory(
         await refreshAfterMutation();
         return true;
       } catch (err) {
-        console.error('[usePersistentMemory] Erreur de suppression:', err);
+        logger.error('[usePersistentMemory] Erreur de suppression:', err);
         return false;
       }
     },
@@ -648,7 +652,7 @@ export function usePersistentMemory(
         await refreshAfterMutation();
         return summaryId;
       } catch (err) {
-        console.error('[usePersistentMemory] Erreur de création résumé:', err);
+        logger.error('[usePersistentMemory] Erreur de création résumé:', err);
         throw err;
       }
     },
@@ -671,7 +675,7 @@ export function usePersistentMemory(
         await refreshAfterMutation();
         return bundleId;
       } catch (err) {
-        console.error('[usePersistentMemory] Erreur de création bundle:', err);
+        logger.error('[usePersistentMemory] Erreur de création bundle:', err);
         throw err;
       }
     },
@@ -685,7 +689,7 @@ export function usePersistentMemory(
         await refreshAfterMutation();
         return true;
       } catch (err) {
-        console.error("[usePersistentMemory] Erreur d'ajout au bundle:", err);
+        logger.error("[usePersistentMemory] Erreur d'ajout au bundle:", err);
         return false;
       }
     },
@@ -712,7 +716,7 @@ export function usePersistentMemory(
     try {
       return (await tauriClient.persistentMemoryExport()) as string;
     } catch (err) {
-      console.error("[usePersistentMemory] Erreur d'export:", err);
+      logger.error("[usePersistentMemory] Erreur d'export:", err);
       throw err;
     }
   }, []);
@@ -828,7 +832,7 @@ export function usePersistentMemoryContext(
         setContext(response.context);
         setUsedEntries(response.usedEntries);
       } catch (err) {
-        console.error('[usePersistentMemoryContext] Erreur:', err);
+        logger.error('[usePersistentMemoryContext] Erreur:', err);
         setContext('');
         setUsedEntries([]);
       } finally {
