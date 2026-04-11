@@ -238,16 +238,16 @@ export const EvolutionMonitor: React.FC = memo(() => {
                   <div>
                     <p className="text-xs text-gray-500">Cycles</p>
                     <p className="text-white font-mono">
-                      {typeof (state as Record<string, unknown>).cycles_completed === 'number'
-                        ? String((state as Record<string, unknown>).cycles_completed)
+                      {typeof state.total_evolutions === 'number'
+                        ? String(state.total_evolutions)
                         : '—'}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Amélioration totale</p>
+                    <p className="text-xs text-gray-500">Santé moteur</p>
                     <p className="text-white font-mono">
-                      {typeof (state as Record<string, unknown>).total_improvement === 'number'
-                        ? `${((state as Record<string, unknown>).total_improvement as number).toFixed(1)}%`
+                      {typeof state.last_evolution?.health_score === 'number'
+                        ? `${state.last_evolution.health_score.toFixed(1)}`
                         : '—'}
                     </p>
                   </div>
@@ -258,11 +258,19 @@ export const EvolutionMonitor: React.FC = memo(() => {
                   <p className="text-xs text-gray-500">Dernier rapport</p>
                   <Badge
                     variant={
-                      (lastReport as Record<string, unknown>).success ? 'success' : 'error'
+                      lastReport.health_score >= 80
+                        ? 'success'
+                        : lastReport.health_score >= 50
+                          ? 'warning'
+                          : 'error'
                     }
                     size="sm"
                   >
-                    {(lastReport as Record<string, unknown>).success ? 'Succès' : 'Échec'}
+                    {lastReport.health_score >= 80
+                      ? 'Succès'
+                      : lastReport.health_score >= 50
+                        ? 'Dégradé'
+                        : 'Échec'}
                   </Badge>
                 </div>
               )}

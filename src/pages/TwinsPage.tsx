@@ -11,7 +11,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import React, { memo, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
@@ -38,7 +38,7 @@ import {
 // COMPONENT
 // ─────────────────────────────────────────────────────────────────
 
-export const TwinsPage: React.FC = memo(() => {
+export const TwinsPage: React.FC = () => {
   const {
     identity,
     isLoading: identityLoading,
@@ -124,7 +124,11 @@ export const TwinsPage: React.FC = memo(() => {
             </div>
             <p className="text-3xl font-bold text-cyan-400">
               {evolutionFusion != null
-                ? `${(typeof evolutionFusion === 'number' ? evolutionFusion : evolutionFusion.score ?? 0).toFixed(0)}%`
+                ? `${(
+                    (typeof evolutionFusion === 'number'
+                      ? evolutionFusion
+                      : evolutionFusion.globalScore ?? 0) * 100
+                  ).toFixed(0)}%`
                 : fusionIndex > 0
                   ? `${(fusionIndex * 100).toFixed(0)}%`
                   : '—'}
@@ -174,16 +178,20 @@ export const TwinsPage: React.FC = memo(() => {
                       <p className="text-white font-medium">{identity.name}</p>
                     </div>
                   )}
-                  {identity.essence && (
+                  {identity.signature && (
                     <div>
-                      <p className="text-xs text-gray-500">Essence</p>
-                      <p className="text-gray-300 italic text-sm">{identity.essence}</p>
+                      <p className="text-xs text-gray-500">Signature</p>
+                      <p className="text-gray-300 italic text-sm">{identity.signature}</p>
                     </div>
                   )}
-                  {humanStyle && humanStyle.communication_style && (
+                  {humanStyle && (
                     <div>
-                      <p className="text-xs text-gray-500">Style communication</p>
-                      <p className="text-gray-300 text-sm">{humanStyle.communication_style}</p>
+                      <p className="text-xs text-gray-500">Style humain</p>
+                      <p className="text-gray-300 text-sm">
+                        Précision {Math.round(humanStyle.calmPrecision * 100)}% · Fluidité{' '}
+                        {Math.round(humanStyle.organicFluidity * 100)}% · Sincérité{' '}
+                        {Math.round(humanStyle.sincerity * 100)}%
+                      </p>
                     </div>
                   )}
                   {coreValues.length > 0 && (
@@ -214,7 +222,7 @@ export const TwinsPage: React.FC = memo(() => {
                 <div className="space-y-3">
                   {growthTrends && (
                     <div className="grid grid-cols-2 gap-2">
-                      {Object.entries(growthTrends as Record<string, number>)
+                      {Object.entries(growthTrends)
                         .slice(0, 4)
                         .map(([key, val]) => (
                           <div key={key}>
@@ -342,7 +350,7 @@ export const TwinsPage: React.FC = memo(() => {
       </div>
     </div>
   );
-});
+};
 TwinsPage.displayName = 'TwinsPage';
 
 export default TwinsPage;

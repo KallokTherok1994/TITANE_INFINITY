@@ -90,10 +90,12 @@ export const SingularityMonitor: React.FC = memo(() => {
     return () => clearInterval(id);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const convergenceLevel = convergence
-    ? (Object.values(convergence as Record<string, number>).reduce((a, b) => a + b, 0) /
-        Object.keys(convergence as Record<string, unknown>).length)
-    : 0;
+  const convergenceValues = convergence ? Object.values(convergence) : [];
+  const convergenceLevel =
+    convergenceValues.length > 0
+      ? convergenceValues.reduce((sum, value) => sum + Number(value ?? 0), 0) /
+        convergenceValues.length
+      : 0;
 
   return (
     <div className="bg-gray-900 text-white min-h-screen p-6">
@@ -250,7 +252,7 @@ export const SingularityMonitor: React.FC = memo(() => {
                   Overmind
                 </h3>
                 <div className="grid grid-cols-2 gap-3">
-                  {Object.entries(overmind as Record<string, number | string | boolean>)
+                  {Object.entries(overmind)
                     .slice(0, 6)
                     .map(([key, value]) => (
                       <div key={key}>

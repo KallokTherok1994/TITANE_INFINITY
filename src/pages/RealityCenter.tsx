@@ -75,7 +75,8 @@ function statusToHealth(
 // ─────────────────────────────────────────────────────────────────
 
 export const RealityCenter: React.FC = memo(() => {
-  const { health, refresh, isLoading } = useSystemHealth();
+  const { health, refreshHealth, isMonitoring } = useSystemHealth();
+  const isLoading = isMonitoring && !health;
 
   const [modules, setModules] = useState<ModuleStatus[]>([
     {
@@ -147,7 +148,7 @@ export const RealityCenter: React.FC = memo(() => {
   const [lastRefresh, setLastRefresh] = useState(new Date());
 
   const handleRefresh = useCallback(async () => {
-    await refresh();
+    await refreshHealth();
     setLastRefresh(new Date());
     // Simulate slight drift update
     setModules(prev =>
@@ -156,7 +157,7 @@ export const RealityCenter: React.FC = memo(() => {
         conformance: Math.max(50, Math.min(100, m.conformance + (Math.random() - 0.5) * 4)),
       }))
     );
-  }, [refresh]);
+  }, [refreshHealth]);
 
   // Auto-refresh toutes les 30s
   useEffect(() => {
