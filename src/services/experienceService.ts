@@ -146,9 +146,7 @@ export const awardExperience = async (
     logger.info(`🎉 ${domain.label} level up! ${oldLevel} → ${newLevel}`);
   }
 
-  logger.info(
-    `+${amount} XP → ${domain.label} (${newXp} XP, Niveau ${newLevel})`
-  );
+  logger.info(`+${amount} XP → ${domain.label} (${newXp} XP, Niveau ${newLevel})`);
 
   return updatedDomain;
 };

@@ -46,12 +46,7 @@ import { normalizePersistentMemoryStats } from '@/services/memory/persistentMemo
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
 
-type TabId =
-  | 'overview'
-  | 'twins'
-  | 'memory-map'
-  | 'progression'
-  | 'transformation';
+type TabId = 'overview' | 'twins' | 'memory-map' | 'progression' | 'transformation';
 
 interface EvoStats {
   totalXP: number;

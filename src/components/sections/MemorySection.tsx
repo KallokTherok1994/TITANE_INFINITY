@@ -32,9 +32,7 @@ import {
   type MemoryTreeNodeData,
 } from '@/features/memory/memoryTreeData';
 import { dedupeMemoryEntries } from '@/features/memory/dedupeMemoryEntries';
-import {
-  MEMORY_TOPIC_LABELS,
-} from '@/services/memory/persistentMemory.config';
+import { MEMORY_TOPIC_LABELS } from '@/services/memory/persistentMemory.config';
 import type {
   MemoryBundle,
   MemoryEntry,
@@ -51,7 +49,7 @@ const noopAsync = async () => undefined;
 type MemorySectionTab = 'overview' | 'dashboard' | 'tree' | 'search';
 
 const SECTION_TABS: { id: MemorySectionTab; label: string; icon: string }[] = [
-  { id: 'overview', label: 'Vue d\'ensemble', icon: '📊' },
+  { id: 'overview', label: "Vue d'ensemble", icon: '📊' },
   { id: 'dashboard', label: 'Dashboard', icon: '📚' },
   { id: 'tree', label: 'Arbre', icon: '🌳' },
   { id: 'search', label: 'Recherche', icon: '🔍' },
@@ -376,7 +374,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
     const [isSurfaceSyncing, setIsSurfaceSyncing] = useState(false);
     const [activeTab, setActiveTab] = useState<MemorySectionTab>('overview');
     const [knowledgeSearch, setKnowledgeSearch] = useState('');
-    const [knowledgeTopicFilter, setKnowledgeTopicFilter] = useState<MemoryTopic | 'all'>('all');
+    const [knowledgeTopicFilter, setKnowledgeTopicFilter] = useState<MemoryTopic | 'all'>(
+      'all'
+    );
     const isMountedRef = useRef(true);
     const hasObservedPersistentUpdateRef = useRef(false);
     const vaultReadyRef = useRef(false);
@@ -762,7 +762,10 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
     }, [knowledgeEntries, knowledgeTopicFilter, knowledgeSearch]);
 
     const visibleKnowledgeEntries = useMemo(
-      () => (showAllKnowledge ? filteredKnowledgeEntries : filteredKnowledgeEntries.slice(0, INITIAL_VISIBLE_KNOWLEDGE_COUNT)),
+      () =>
+        showAllKnowledge
+          ? filteredKnowledgeEntries
+          : filteredKnowledgeEntries.slice(0, INITIAL_VISIBLE_KNOWLEDGE_COUNT),
       [filteredKnowledgeEntries, showAllKnowledge]
     );
 
@@ -920,16 +923,18 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                   setActiveTab(SECTION_TABS[(index + 1) % SECTION_TABS.length]!.id);
                 } else if (e.key === 'ArrowLeft') {
                   e.preventDefault();
-                  setActiveTab(SECTION_TABS[(index - 1 + SECTION_TABS.length) % SECTION_TABS.length]!.id);
+                  setActiveTab(
+                    SECTION_TABS[(index - 1 + SECTION_TABS.length) % SECTION_TABS.length]!
+                      .id
+                  );
                 }
               }}
               style={{
                 padding: `${spacing[2]} ${spacing[4]}`,
                 borderRadius: '8px',
                 border: 'none',
-                background: activeTab === tab.id
-                  ? 'rgba(59, 130, 246, 0.2)'
-                  : 'transparent',
+                background:
+                  activeTab === tab.id ? 'rgba(59, 130, 246, 0.2)' : 'transparent',
                 color: activeTab === tab.id ? '#60a5fa' : colors.neutral[400],
                 cursor: 'pointer',
                 fontSize: fontSizes.sm,
@@ -1023,24 +1028,26 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
           </Card>
         </Grid>
 
-        {(activeTab === 'overview') && (isBootstrappingPersistentMemory || isBootstrappingKnowledgeSurface) && (
-          <Card
-            style={{
-              marginTop: spacing[6],
-              border: `1px solid ${colors.neutral[500]}`,
-            }}
-          >
-            <h3 style={{ marginBottom: spacing[2] }}>
-              Chargement de la mémoire persistante
-            </h3>
-            <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
-              TITANE synchronise actuellement les entrées locales et persistantes avant
-              d&apos;afficher le dashboard, l&apos;arbre et la recherche.
-            </p>
-          </Card>
-        )}
+        {activeTab === 'overview' &&
+          (isBootstrappingPersistentMemory || isBootstrappingKnowledgeSurface) && (
+            <Card
+              style={{
+                marginTop: spacing[6],
+                border: `1px solid ${colors.neutral[500]}`,
+              }}
+            >
+              <h3 style={{ marginBottom: spacing[2] }}>
+                Chargement de la mémoire persistante
+              </h3>
+              <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
+                TITANE synchronise actuellement les entrées locales et persistantes avant
+                d&apos;afficher le dashboard, l&apos;arbre et la recherche.
+              </p>
+            </Card>
+          )}
 
-        {(activeTab === 'overview') && !isBootstrappingPersistentMemory &&
+        {activeTab === 'overview' &&
+          !isBootstrappingPersistentMemory &&
           !isBootstrappingKnowledgeSurface &&
           !hasPersistentMemory && (
             <Card
@@ -1071,7 +1078,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
             </Card>
           )}
 
-        {(activeTab === 'overview') && knowledgeLoadWarning && (
+        {activeTab === 'overview' && knowledgeLoadWarning && (
           <Card
             style={{
               marginTop: spacing[6],
@@ -1090,7 +1097,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
           </Card>
         )}
 
-        {(activeTab === 'overview') && recentChatMemoryEntries.length > 0 && (
+        {activeTab === 'overview' && recentChatMemoryEntries.length > 0 && (
           <div style={{ marginTop: spacing[6] }}>
             <Card>
               <h3 style={{ marginBottom: spacing[2] }}>
@@ -1147,7 +1154,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
           </div>
         )}
 
-        {(activeTab === 'overview') && consolidatedMemoryEntries.length > 0 && (
+        {activeTab === 'overview' && consolidatedMemoryEntries.length > 0 && (
           <div style={{ marginTop: spacing[6] }}>
             <Card>
               <h3 style={{ marginBottom: spacing[2] }}>
@@ -1227,7 +1234,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
           </div>
         )}
 
-        {(activeTab === 'overview') && knowledgeEntries.length > 0 && (
+        {activeTab === 'overview' && knowledgeEntries.length > 0 && (
           <div style={{ marginTop: spacing[6] }}>
             <Card>
               <h3 style={{ marginBottom: spacing[2] }}>
@@ -1288,7 +1295,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                 />
                 <select
                   value={knowledgeTopicFilter}
-                  onChange={e => setKnowledgeTopicFilter(e.target.value as MemoryTopic | 'all')}
+                  onChange={e =>
+                    setKnowledgeTopicFilter(e.target.value as MemoryTopic | 'all')
+                  }
                   data-testid="knowledge-topic-filter"
                   style={{
                     padding: `${spacing[2]} ${spacing[3]}`,
@@ -1319,7 +1328,8 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                       color: colors.neutral[400],
                     }}
                   >
-                    {filteredKnowledgeEntries.length} / {knowledgeEntries.length} affiché{filteredKnowledgeEntries.length > 1 ? 's' : ''}
+                    {filteredKnowledgeEntries.length} / {knowledgeEntries.length} affiché
+                    {filteredKnowledgeEntries.length > 1 ? 's' : ''}
                   </span>
                 )}
               </div>
@@ -1351,11 +1361,25 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                       }}
                     >
                       {/* Title */}
-                      <strong style={{ color: colors.neutral[300], display: 'block', marginBottom: spacing[1] }}>
+                      <strong
+                        style={{
+                          color: colors.neutral[300],
+                          display: 'block',
+                          marginBottom: spacing[1],
+                        }}
+                      >
                         {'title' in entry ? entry.title : entry.id}
                       </strong>
                       {/* Topic badge + Importance */}
-                      <div style={{ display: 'flex', gap: spacing[1], alignItems: 'center', marginBottom: spacing[2], flexWrap: 'wrap' }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          gap: spacing[1],
+                          alignItems: 'center',
+                          marginBottom: spacing[2],
+                          flexWrap: 'wrap',
+                        }}
+                      >
                         {topicConfig && (
                           <span
                             style={{
@@ -1375,17 +1399,31 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                             color: colors.neutral[500],
                           }}
                         >
-                          {'★'.repeat(entry.importance)}{'☆'.repeat(Math.max(0, MAX_IMPORTANCE - entry.importance))}
+                          {'★'.repeat(entry.importance)}
+                          {'☆'.repeat(Math.max(0, MAX_IMPORTANCE - entry.importance))}
                         </span>
                       </div>
                       {/* Content preview */}
-                      <span style={{ color: colors.neutral[500], fontSize: fontSizes.sm, display: 'block' }}>
+                      <span
+                        style={{
+                          color: colors.neutral[500],
+                          fontSize: fontSizes.sm,
+                          display: 'block',
+                        }}
+                      >
                         {entry.content.slice(0, KNOWLEDGE_PREVIEW_LENGTH)}
                         {entry.content.length > KNOWLEDGE_PREVIEW_LENGTH ? '…' : ''}
                       </span>
                       {/* Tags */}
                       {entry.tags.length > 0 && (
-                        <div style={{ display: 'flex', gap: spacing[1], flexWrap: 'wrap', marginTop: spacing[2] }}>
+                        <div
+                          style={{
+                            display: 'flex',
+                            gap: spacing[1],
+                            flexWrap: 'wrap',
+                            marginTop: spacing[2],
+                          }}
+                        >
                           {entry.tags.slice(0, MAX_VISIBLE_TAGS).map(tag => (
                             <span
                               key={tag}
@@ -1401,7 +1439,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                             </span>
                           ))}
                           {entry.tags.length > MAX_VISIBLE_TAGS && (
-                            <span style={{ fontSize: '10px', color: colors.neutral[600] }}>
+                            <span
+                              style={{ fontSize: '10px', color: colors.neutral[600] }}
+                            >
                               +{entry.tags.length - MAX_VISIBLE_TAGS}
                             </span>
                           )}
@@ -1414,8 +1454,16 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
 
               {/* No results from filter */}
               {filteredKnowledgeEntries.length === 0 && knowledgeEntries.length > 0 && (
-                <p style={{ fontSize: fontSizes.sm, color: colors.neutral[500], marginTop: spacing[4], textAlign: 'center' }}>
-                  Aucune connaissance ne correspond aux filtres actifs. Essayez d&apos;ajuster la recherche ou le sujet.
+                <p
+                  style={{
+                    fontSize: fontSizes.sm,
+                    color: colors.neutral[500],
+                    marginTop: spacing[4],
+                    textAlign: 'center',
+                  }}
+                >
+                  Aucune connaissance ne correspond aux filtres actifs. Essayez
+                  d&apos;ajuster la recherche ou le sujet.
                 </p>
               )}
 
@@ -1443,108 +1491,108 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
         )}
 
         {(activeTab === 'overview' || activeTab === 'dashboard') && (
-        <div style={{ marginTop: spacing[6] }}>
-          <Card>
-            <h3 style={{ marginBottom: spacing[4] }}>📚 Dashboard Mémoire</h3>
-            <React.Suspense
-              fallback={
-                <SectionLoadingFallback
-                  label="Dashboard mémoire"
-                  note="Chargement des signaux mémoire…"
-                  testId="loading-memory-dashboard"
+          <div style={{ marginTop: spacing[6] }}>
+            <Card>
+              <h3 style={{ marginBottom: spacing[4] }}>📚 Dashboard Mémoire</h3>
+              <React.Suspense
+                fallback={
+                  <SectionLoadingFallback
+                    label="Dashboard mémoire"
+                    note="Chargement des signaux mémoire…"
+                    testId="loading-memory-dashboard"
+                  />
+                }
+              >
+                <LazyMemoryDashboard
+                  modeId={MEMORY_SECTION_MODE}
+                  compact={true}
+                  onEntrySelect={selectPersistentEntry}
+                  selectedEntryId={selectedEntryId}
+                  additionalEntries={[...consolidatedMemoryEntries, ...knowledgeEntries]}
                 />
-              }
-            >
-              <LazyMemoryDashboard
-                modeId={MEMORY_SECTION_MODE}
-                compact={true}
-                onEntrySelect={selectPersistentEntry}
-                selectedEntryId={selectedEntryId}
-                additionalEntries={[...consolidatedMemoryEntries, ...knowledgeEntries]}
-              />
-            </React.Suspense>
-          </Card>
-        </div>
+              </React.Suspense>
+            </Card>
+          </div>
         )}
 
         {/* Memory Tree Visualization */}
         {(activeTab === 'overview' || activeTab === 'tree') && (
-        <div style={{ marginTop: spacing[6] }}>
-          <h3 style={{ marginBottom: spacing[4] }}>🌳 Arbre de la Mémoire</h3>
-          <React.Suspense
-            fallback={
-              <SectionLoadingFallback
-                label="Arbre mémoire"
-                note="Construction de la hiérarchie mémoire…"
-                testId="loading-memory-tree"
-              />
-            }
-          >
-            <LazyMemoryTreeViewer
-              data={memoryTreeData ?? undefined}
-              onNodeClick={handleNodeClick}
-              showAttributes={true}
-              selectedEntryId={selectedEntryId}
-              isLoading={
-                isBootstrappingPersistentMemory || isBootstrappingKnowledgeSurface
+          <div style={{ marginTop: spacing[6] }}>
+            <h3 style={{ marginBottom: spacing[4] }}>🌳 Arbre de la Mémoire</h3>
+            <React.Suspense
+              fallback={
+                <SectionLoadingFallback
+                  label="Arbre mémoire"
+                  note="Construction de la hiérarchie mémoire…"
+                  testId="loading-memory-tree"
+                />
               }
-            />
-          </React.Suspense>
-          {selectedNode && (
-            <Card style={{ marginTop: spacing[4] }}>
-              <h4 style={{ marginBottom: spacing[2] }}>
-                {selectedEntry ? 'Entrée mémoire sélectionnée' : 'Nœud sélectionné'}
-              </h4>
-              {selectedEntry ? (
-                <>
-                  <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
-                    {selectedEntry.content}
-                  </p>
-                  <p
-                    style={{
-                      fontSize: fontSizes.xs,
-                      color: colors.neutral[500],
-                      marginTop: spacing[2],
-                    }}
-                  >
-                    Niveau: {selectedEntry.level} | Sujet: {selectedEntry.topic} |
-                    Importance: {selectedEntry.importance} | Accès:{' '}
-                    {selectedEntry.metadata.accessCount}
-                  </p>
-                </>
-              ) : (
-                <pre style={{ fontSize: fontSizes.xs, color: colors.neutral[400] }}>
-                  {JSON.stringify(selectedNode, null, 2)}
-                </pre>
-              )}
-            </Card>
-          )}
-        </div>
+            >
+              <LazyMemoryTreeViewer
+                data={memoryTreeData ?? undefined}
+                onNodeClick={handleNodeClick}
+                showAttributes={true}
+                selectedEntryId={selectedEntryId}
+                isLoading={
+                  isBootstrappingPersistentMemory || isBootstrappingKnowledgeSurface
+                }
+              />
+            </React.Suspense>
+            {selectedNode && (
+              <Card style={{ marginTop: spacing[4] }}>
+                <h4 style={{ marginBottom: spacing[2] }}>
+                  {selectedEntry ? 'Entrée mémoire sélectionnée' : 'Nœud sélectionné'}
+                </h4>
+                {selectedEntry ? (
+                  <>
+                    <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
+                      {selectedEntry.content}
+                    </p>
+                    <p
+                      style={{
+                        fontSize: fontSizes.xs,
+                        color: colors.neutral[500],
+                        marginTop: spacing[2],
+                      }}
+                    >
+                      Niveau: {selectedEntry.level} | Sujet: {selectedEntry.topic} |
+                      Importance: {selectedEntry.importance} | Accès:{' '}
+                      {selectedEntry.metadata.accessCount}
+                    </p>
+                  </>
+                ) : (
+                  <pre style={{ fontSize: fontSizes.xs, color: colors.neutral[400] }}>
+                    {JSON.stringify(selectedNode, null, 2)}
+                  </pre>
+                )}
+              </Card>
+            )}
+          </div>
         )}
 
         {/* Memory Search */}
         {(activeTab === 'overview' || activeTab === 'search') && (
-        <div style={{ marginTop: spacing[6] }}>
-          <h3 style={{ marginBottom: spacing[4] }}>🔍 Recherche Sémantique</h3>
-          <React.Suspense
-            fallback={
-              <SectionLoadingFallback
-                label="Recherche sémantique"
-                note="Initialisation de la recherche mémoire…"
-                testId="loading-memory-search"
-              />
-            }
-          >
-            <LazyMemorySearchPanel
-              entries={searchEntries}
-              onEntryClick={handleEntryClick}
-              selectedEntryId={selectedEntryId}
-              isLoading={
-                isBootstrappingPersistentMemory || isBootstrappingKnowledgeSurface
+          <div style={{ marginTop: spacing[6] }}>
+            <h3 style={{ marginBottom: spacing[4] }}>🔍 Recherche Sémantique</h3>
+            <React.Suspense
+              fallback={
+                <SectionLoadingFallback
+                  label="Recherche sémantique"
+                  note="Initialisation de la recherche mémoire…"
+                  testId="loading-memory-search"
+                />
               }
-            />
-          </React.Suspense>
-        </div>
+            >
+              <LazyMemorySearchPanel
+                entries={searchEntries}
+                onEntryClick={handleEntryClick}
+                selectedEntryId={selectedEntryId}
+                isLoading={
+                  isBootstrappingPersistentMemory || isBootstrappingKnowledgeSurface
+                }
+              />
+            </React.Suspense>
+          </div>
         )}
       </div>
     );

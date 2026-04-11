@@ -94,56 +94,161 @@ const TIER_THRESHOLDS: { min: number; tier: QualityTier }[] = [
 
 /** Mots-clés techniques/spécifiques qui indiquent pertinence */
 const RELEVANCE_KEYWORDS_FR = [
-  'analyse', 'optimise', 'améliore', 'configure', 'explique', 'détaille',
-  'compare', 'évalue', 'recherche', 'développe', 'implémente', 'corrige',
-  'résume', 'planifie', 'organise', 'structure', 'diagnostique', 'résous',
-  'documente', 'teste', 'vérifie', 'surveille', 'automatise', 'intègre',
-  'architecture', 'stratégie', 'performance', 'sécurité', 'qualité',
-  'comment', 'pourquoi', 'quand', 'combien', 'quel', 'quelle',
+  'analyse',
+  'optimise',
+  'améliore',
+  'configure',
+  'explique',
+  'détaille',
+  'compare',
+  'évalue',
+  'recherche',
+  'développe',
+  'implémente',
+  'corrige',
+  'résume',
+  'planifie',
+  'organise',
+  'structure',
+  'diagnostique',
+  'résous',
+  'documente',
+  'teste',
+  'vérifie',
+  'surveille',
+  'automatise',
+  'intègre',
+  'architecture',
+  'stratégie',
+  'performance',
+  'sécurité',
+  'qualité',
+  'comment',
+  'pourquoi',
+  'quand',
+  'combien',
+  'quel',
+  'quelle',
 ];
 
 const RELEVANCE_KEYWORDS_EN = [
-  'analyze', 'optimize', 'improve', 'configure', 'explain', 'detail',
-  'compare', 'evaluate', 'research', 'develop', 'implement', 'fix',
-  'summarize', 'plan', 'organize', 'structure', 'diagnose', 'solve',
-  'document', 'test', 'verify', 'monitor', 'automate', 'integrate',
-  'architecture', 'strategy', 'performance', 'security', 'quality',
-  'how', 'why', 'when', 'what', 'which', 'where',
+  'analyze',
+  'optimize',
+  'improve',
+  'configure',
+  'explain',
+  'detail',
+  'compare',
+  'evaluate',
+  'research',
+  'develop',
+  'implement',
+  'fix',
+  'summarize',
+  'plan',
+  'organize',
+  'structure',
+  'diagnose',
+  'solve',
+  'document',
+  'test',
+  'verify',
+  'monitor',
+  'automate',
+  'integrate',
+  'architecture',
+  'strategy',
+  'performance',
+  'security',
+  'quality',
+  'how',
+  'why',
+  'when',
+  'what',
+  'which',
+  'where',
 ];
 
 /** Indicateurs de complexité */
 const COMPLEXITY_INDICATORS = [
   // Technique
-  'api', 'base de données', 'database', 'algorithme', 'algorithm',
-  'framework', 'typescript', 'javascript', 'python', 'rust',
-  'backend', 'frontend', 'fullstack', 'devops', 'ci/cd',
-  'docker', 'kubernetes', 'microservice', 'serverless',
+  'api',
+  'base de données',
+  'database',
+  'algorithme',
+  'algorithm',
+  'framework',
+  'typescript',
+  'javascript',
+  'python',
+  'rust',
+  'backend',
+  'frontend',
+  'fullstack',
+  'devops',
+  'ci/cd',
+  'docker',
+  'kubernetes',
+  'microservice',
+  'serverless',
   // Analytique
-  'tendance', 'trend', 'corrélation', 'correlation', 'régression',
-  'projection', 'prédiction', 'prediction', 'modèle', 'model',
-  'statistique', 'statistic', 'métrique', 'metric',
+  'tendance',
+  'trend',
+  'corrélation',
+  'correlation',
+  'régression',
+  'projection',
+  'prédiction',
+  'prediction',
+  'modèle',
+  'model',
+  'statistique',
+  'statistic',
+  'métrique',
+  'metric',
   // Créatif
-  'design', 'conception', 'innovation', 'créatif', 'creative',
-  'prototype', 'itération', 'iteration', 'brainstorm',
+  'design',
+  'conception',
+  'innovation',
+  'créatif',
+  'creative',
+  'prototype',
+  'itération',
+  'iteration',
+  'brainstorm',
   // Business
-  'roi', 'kpi', 'objectif', 'objective', 'budget', 'timeline',
-  'roadmap', 'milestone', 'sprint', 'agile', 'scrum',
+  'roi',
+  'kpi',
+  'objectif',
+  'objective',
+  'budget',
+  'timeline',
+  'roadmap',
+  'milestone',
+  'sprint',
+  'agile',
+  'scrum',
 ];
 
 /** Indicateurs de continuité conversationnelle */
-const CONNECTOR_PATTERN = /\b(donc|ainsi|car|parce que|cependant|néanmoins|toutefois|en effet|par conséquent|because|however|therefore|moreover|furthermore|additionally|consequently)\b/i;
+const CONNECTOR_PATTERN =
+  /\b(donc|ainsi|car|parce que|cependant|néanmoins|toutefois|en effet|par conséquent|because|however|therefore|moreover|furthermore|additionally|consequently)\b/i;
 
 /** Patterns d'action explicite */
-const ACTION_PATTERN = /\b(peux-tu|pourrais-tu|je veux|j'aimerais|aide-moi|can you|could you|please|help me|i want|i need|i'd like)\b/i;
+const ACTION_PATTERN =
+  /\b(peux-tu|pourrais-tu|je veux|j'aimerais|aide-moi|can you|could you|please|help me|i want|i need|i'd like)\b/i;
 
 /** Patterns de contexte spécifique */
-const CONTEXT_PATTERN = /\b(le fichier|le projet|le code|la page|le module|l'application|the file|the project|the code|the page|the module|the app)\b/i;
+const CONTEXT_PATTERN =
+  /\b(le fichier|le projet|le code|la page|le module|l'application|the file|the project|the code|the page|the module|the app)\b/i;
 
 /** Patterns de multi-aspects */
-const MULTI_ASPECT_PATTERN = /\b(et aussi|également|de plus|aussi|en plus|and also|additionally|also|moreover|as well)\b/i;
+const MULTI_ASPECT_PATTERN =
+  /\b(et aussi|également|de plus|aussi|en plus|and also|additionally|also|moreover|as well)\b/i;
 
 /** Patterns de référence conversationnelle */
-const REFERENCE_PATTERN = /\b(oui|non|exactement|c'est ça|d'accord|merci|continue|précise|yes|no|exactly|right|thanks|continue|clarify|go on|parfait|super)\b/i;
+const REFERENCE_PATTERN =
+  /\b(oui|non|exactement|c'est ça|d'accord|merci|continue|précise|yes|no|exactly|right|thanks|continue|clarify|go on|parfait|super)\b/i;
 
 // ─────────────────────────────────────────────────────────────────
 // SCORING FUNCTIONS
@@ -276,10 +381,7 @@ function scoreComplexity(message: string): number {
  * Évalue la continuité conversationnelle (0-10)
  * Un message qui fait suite logiquement à la conversation = plus de points
  */
-function scoreContinuity(
-  message: string,
-  context: ConversationContext
-): number {
+function scoreContinuity(message: string, context: ConversationContext): number {
   let score = 0;
 
   // Conversation en cours (+3 si au moins 2 messages dans la conversation)
@@ -300,7 +402,10 @@ function scoreContinuity(
         .split(/\s+/)
         .filter(w => w.length > 4)
     );
-    const currentWords = message.toLowerCase().split(/\s+/).filter(w => w.length > 4);
+    const currentWords = message
+      .toLowerCase()
+      .split(/\s+/)
+      .filter(w => w.length > 4);
     const overlap = currentWords.filter(w => prevWords.has(w)).length;
     if (overlap >= 2) {
       score += 2;
@@ -347,7 +452,8 @@ export function evaluateMessageQuality(
   const complexityScore = scoreComplexity(message);
   const continuityScore = scoreContinuity(message, context);
 
-  const total = lengthScore + coherenceScore + relevanceScore + complexityScore + continuityScore;
+  const total =
+    lengthScore + coherenceScore + relevanceScore + complexityScore + continuityScore;
   const tier = determineTier(total);
 
   return {

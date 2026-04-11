@@ -286,10 +286,7 @@ class AudioService {
       };
       this.saveConfig();
     } catch (error) {
-      logger.warn(
-        '[AudioService] Failed to hydrate TITANE active voice profile:',
-        error
-      );
+      logger.warn('[AudioService] Failed to hydrate TITANE active voice profile:', error);
     }
   }
 
@@ -757,7 +754,9 @@ class AudioService {
         setTimeout(() => {
           clearInterval(interval);
           stream.getTracks().forEach(t => t.stop());
-          audioContext.close().catch(err => logger.warn('AudioContext close error:', err));
+          audioContext
+            .close()
+            .catch(err => logger.warn('AudioContext close error:', err));
 
           // Calculate noise floor (average of lowest 20% of samples)
           samples.sort((a, b) => a - b);

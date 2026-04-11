@@ -548,10 +548,7 @@ class TitaneSelfHealingSystem {
           logger.info(`🔄 [SELF-HEALING] Restarting module: ${moduleName}`);
           restarted++;
         } catch (error) {
-          logger.warn(
-            `🔄 [SELF-HEALING] Failed to restart module: ${moduleName}`,
-            error
-          );
+          logger.warn(`🔄 [SELF-HEALING] Failed to restart module: ${moduleName}`, error);
         }
       }
 

@@ -2108,10 +2108,15 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
 
             // XP Bonus qualité (séparé pour tracking précis)
             if (qualityReward.qualityBonusXP > 0) {
-              await awardExperience('chat', qualityReward.qualityBonusXP, XPSource.ChatQualityBonus, {
-                qualityTier: qualityReward.tier,
-                qualityScore: qualityReward.score.total,
-              });
+              await awardExperience(
+                'chat',
+                qualityReward.qualityBonusXP,
+                XPSource.ChatQualityBonus,
+                {
+                  qualityTier: qualityReward.tier,
+                  qualityScore: qualityReward.score.total,
+                }
+              );
             }
 
             // XP TITANE réponse: TITANE gagne des XP à chaque réponse
@@ -2131,7 +2136,10 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
 
             // Mettre à jour les métadonnées du message utilisateur pour afficher le badge XP
             const updatedMessages = messagesRef.current.map(m => {
-              if (m === userMessage || (m.role === 'user' && m.timestamp === userMessage.timestamp)) {
+              if (
+                m === userMessage ||
+                (m.role === 'user' && m.timestamp === userMessage.timestamp)
+              ) {
                 return {
                   ...m,
                   metadata: {

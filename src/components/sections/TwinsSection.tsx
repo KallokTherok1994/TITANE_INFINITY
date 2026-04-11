@@ -19,10 +19,7 @@ import { TSectionHeader } from '@/design-system';
 import { SectionLoadingFallback } from './SectionLoadingFallback';
 import { colors, spacing, fontSizes } from '@themes/tokens';
 import { detectEnvironment } from '@/core/tauri/environment';
-import {
-  useChatModeStore,
-  useCurrentChatModeId,
-} from '@/stores/useChatModeStore';
+import { useChatModeStore, useCurrentChatModeId } from '@/stores/useChatModeStore';
 import { TwinEvolutionPanel } from '@/components/twin/TwinEvolutionPanel';
 import { useTwinEvolution } from '@/hooks/useTwinEvolution';
 import { createLogger } from '@/utils/logger';
@@ -65,9 +62,7 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
 
   const handleModeSelect = useCallback(
     (mode: { id: string }) => {
-      changeMode(mode.id).catch(err =>
-        sectionLogger.warn('changeMode failed', err)
-      );
+      changeMode(mode.id).catch(err => sectionLogger.warn('changeMode failed', err));
     },
     [changeMode]
   );
@@ -78,13 +73,31 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
 
   const chatStatusMeta =
     chatContextStatus === 'active'
-      ? { label: '🟢 Contexte TWINS actif — injecté dans le Chat IA', color: '#b7eb8f', bg: 'rgba(82,196,26,0.12)', border: 'rgba(82,196,26,0.5)' }
+      ? {
+          label: '🟢 Contexte TWINS actif — injecté dans le Chat IA',
+          color: '#b7eb8f',
+          bg: 'rgba(82,196,26,0.12)',
+          border: 'rgba(82,196,26,0.5)',
+        }
       : chatContextStatus === 'stale'
-      ? { label: '🟠 Contexte TWINS à resynchroniser', color: '#ffd591', bg: 'rgba(250,173,20,0.12)', border: 'rgba(250,173,20,0.5)' }
-      : { label: '⚪ Contexte TWINS en attente d\'initialisation', color: '#d9d9d9', bg: 'rgba(140,140,140,0.12)', border: 'rgba(140,140,140,0.5)' };
+        ? {
+            label: '🟠 Contexte TWINS à resynchroniser',
+            color: '#ffd591',
+            bg: 'rgba(250,173,20,0.12)',
+            border: 'rgba(250,173,20,0.5)',
+          }
+        : {
+            label: "⚪ Contexte TWINS en attente d'initialisation",
+            color: '#d9d9d9',
+            bg: 'rgba(140,140,140,0.12)',
+            border: 'rgba(140,140,140,0.5)',
+          };
 
   const lastSyncDisplay = lastSyncAt
-    ? new Date(lastSyncAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+    ? new Date(lastSyncAt).toLocaleTimeString('fr-FR', {
+        hour: '2-digit',
+        minute: '2-digit',
+      })
     : null;
 
   return (
@@ -96,18 +109,28 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
 
       {/* ═══ CHAT IA CONNECTION STATUS ═══ */}
       <Card style={{ marginBottom: spacing[4], padding: spacing[3] }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: spacing[2] }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: spacing[2],
+          }}
+        >
           <div style={{ display: 'flex', alignItems: 'center', gap: spacing[2] }}>
-            <span style={{
-              display: 'inline-block',
-              padding: `${spacing[1]} ${spacing[3]}`,
-              borderRadius: '20px',
-              fontSize: fontSizes.xs,
-              fontWeight: 600,
-              color: chatStatusMeta.color,
-              background: chatStatusMeta.bg,
-              border: `1px solid ${chatStatusMeta.border}`,
-            }}>
+            <span
+              style={{
+                display: 'inline-block',
+                padding: `${spacing[1]} ${spacing[3]}`,
+                borderRadius: '20px',
+                fontSize: fontSizes.xs,
+                fontWeight: 600,
+                color: chatStatusMeta.color,
+                background: chatStatusMeta.bg,
+                border: `1px solid ${chatStatusMeta.border}`,
+              }}
+            >
               {chatStatusMeta.label}
             </span>
             {lastSyncDisplay && (
@@ -141,7 +164,13 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
         <h3 style={{ marginBottom: spacing[4] }}>
           🧬 TWINS — Jumeau Numérique de Kevin Thibault
         </h3>
-        <p style={{ color: colors.neutral[400], fontSize: fontSizes.sm, marginBottom: spacing[3] }}>
+        <p
+          style={{
+            color: colors.neutral[400],
+            fontSize: fontSizes.sm,
+            marginBottom: spacing[3],
+          }}
+        >
           TITANE est le jumeau numérique de Kevin Thibault. Personnalité, valeurs, ton et
           traits cognitifs sont synchronisés en permanence via le mode Twins.
           Orchestration IA automatique — mode optimal sélectionné selon la demande.
@@ -152,10 +181,18 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
       {/* ═══ MODE MATRIX + PERSONA ═══ */}
       <Grid columns={2} gap={4}>
         <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>🎯 Orchestration IA — Matrice de Modes</h3>
-          <p style={{ color: colors.neutral[400], fontSize: fontSizes.xs, marginBottom: spacing[2] }}>
-            Sélection automatique du mode le plus adapté à chaque demande.
-            Toujours vivant, motivant, stratégique, visionnaire.
+          <h3 style={{ marginBottom: spacing[4] }}>
+            🎯 Orchestration IA — Matrice de Modes
+          </h3>
+          <p
+            style={{
+              color: colors.neutral[400],
+              fontSize: fontSizes.xs,
+              marginBottom: spacing[2],
+            }}
+          >
+            Sélection automatique du mode le plus adapté à chaque demande. Toujours
+            vivant, motivant, stratégique, visionnaire.
           </p>
           <React.Suspense
             fallback={
@@ -175,9 +212,15 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
 
         <Card>
           <h3 style={{ marginBottom: spacing[4] }}>👤 Personnalité TITANE × Kevin</h3>
-          <p style={{ color: colors.neutral[400], fontSize: fontSizes.xs, marginBottom: spacing[2] }}>
-            Traits de personnalité synchronisés avec le mode Twins.
-            Réponses étendues, motivantes, inspirantes, sans limite.
+          <p
+            style={{
+              color: colors.neutral[400],
+              fontSize: fontSizes.xs,
+              marginBottom: spacing[2],
+            }}
+          >
+            Traits de personnalité synchronisés avec le mode Twins. Réponses étendues,
+            motivantes, inspirantes, sans limite.
           </p>
           <React.Suspense
             fallback={

@@ -83,7 +83,11 @@ export const ExpPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       setProjects(projs);
       setTalents(tals);
     } catch (error) {
-      logger.error('Erreur fetch EXP data:', { module: 'ExpPanel' }, error instanceof Error ? error : undefined);
+      logger.error(
+        'Erreur fetch EXP data:',
+        { module: 'ExpPanel' },
+        error instanceof Error ? error : undefined
+      );
     }
   };
 

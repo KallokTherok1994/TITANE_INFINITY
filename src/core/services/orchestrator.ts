@@ -951,8 +951,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     this.currentRequests++;
 
     try {
-      isDev &&
-        logger.debug('[OMEGA] Provider execution start', requestId, provider.name);
+      isDev && logger.debug('[OMEGA] Provider execution start', requestId, provider.name);
       // Availability check with short timeout
       const availabilityPromise = provider.isAvailable();
       const availabilityTimeout = new Promise<boolean>((_, reject) =>

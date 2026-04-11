@@ -38,7 +38,6 @@ import { createLogger } from '@/utils/logger';
 // CSS VARIABLE APPLICATION
 // ═══════════════════════════════════════════════════════════════════
 
-
 const logger = createLogger('UIReading');
 
 function applyCSSVariables(settings: UIReadingSettings): void {

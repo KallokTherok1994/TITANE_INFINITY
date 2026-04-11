@@ -124,7 +124,9 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
   useEffect(() => {
     if (config) {
       configRef.current = { ...DEFAULT_CONFIG, ...config };
-      audioService.configureVAD(configRef.current).catch(err => logger.error('Error:', err));
+      audioService
+        .configureVAD(configRef.current)
+        .catch(err => logger.error('Error:', err));
     }
   }, [config]);
 

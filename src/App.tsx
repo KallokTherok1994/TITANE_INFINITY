@@ -599,7 +599,10 @@ const AppRouter: React.FC = () => {
           />
           <Route path="/quantum" element={<Navigate to="/quantum-center" replace />} />
           {/* ✨ TWINS — Fully unified (Identity + Twins + Persona) */}
-          <Route path="/identity-center" element={<Navigate to="/titane?tab=twins" replace />} />
+          <Route
+            path="/identity-center"
+            element={<Navigate to="/titane?tab=twins" replace />}
+          />
           <Route path="/identity" element={<Navigate to="/titane?tab=twins" replace />} />
           <Route path="/persona" element={<Navigate to="/titane?tab=twins" replace />} />
           <Route path="/twins" element={<Navigate to="/titane?tab=twins" replace />} />

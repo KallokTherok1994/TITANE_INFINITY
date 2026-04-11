@@ -95,7 +95,12 @@ describe('messageQualityScorer', () => {
     it('le score total ne dépasse pas 100', () => {
       const result = evaluateMessageQuality(
         "Peux-tu analyser en profondeur l'architecture backend, évaluer les performances du framework TypeScript, comparer avec Rust et Python, proposer une stratégie d'optimisation, documenter les résultats, tester les améliorations, et automatiser le déploiement? En effet, j'aimerais également configurer le CI/CD et surveiller les métriques de qualité.",
-        { messageCount: 15, recentTopics: ['architecture'], previousAssistantResponse: 'Le framework TypeScript offre de bonnes performances pour le backend.' }
+        {
+          messageCount: 15,
+          recentTopics: ['architecture'],
+          previousAssistantResponse:
+            'Le framework TypeScript offre de bonnes performances pour le backend.',
+        }
       );
       expect(result.total).toBeLessThanOrEqual(100);
     });
@@ -110,8 +115,9 @@ describe('messageQualityScorer', () => {
       const context: ConversationContext = {
         messageCount: 5,
         recentTopics: ['performance'],
-        previousAssistantResponse: 'Les performances actuelles montrent une latence de 200ms.',
-        previousUserMessage: "Comment améliorer les performances?",
+        previousAssistantResponse:
+          'Les performances actuelles montrent une latence de 200ms.',
+        previousUserMessage: 'Comment améliorer les performances?',
       };
       const result = evaluateMessageQuality(
         'Oui exactement, continue avec les performances et propose des solutions.',
@@ -157,7 +163,13 @@ describe('messageQualityScorer', () => {
 
     it('tier est inclus dans le résultat', () => {
       const result = calculateQualityXPReward('Bonjour');
-      const validTiers: QualityTier[] = ['minimal', 'basic', 'good', 'excellent', 'exceptional'];
+      const validTiers: QualityTier[] = [
+        'minimal',
+        'basic',
+        'good',
+        'excellent',
+        'exceptional',
+      ];
       expect(validTiers).toContain(result.tier);
     });
 
@@ -165,7 +177,12 @@ describe('messageQualityScorer', () => {
       // Un message très complet, technique, structuré
       const result = calculateQualityXPReward(
         "Peux-tu analyser en profondeur l'architecture du backend TypeScript, évaluer les performances avec des métriques détaillées, comparer avec Rust et Python? En effet, j'aimerais aussi configurer le CI/CD, automatiser les tests, et documenter les résultats. Propose une roadmap avec des milestones, timeline, et budget estimé.",
-        { messageCount: 10, recentTopics: ['backend'], previousAssistantResponse: 'L\'architecture TypeScript du backend offre de bonnes performances.' }
+        {
+          messageCount: 10,
+          recentTopics: ['backend'],
+          previousAssistantResponse:
+            "L'architecture TypeScript du backend offre de bonnes performances.",
+        }
       );
       if (result.tier === 'exceptional') {
         // 5 base + 5 * (6-1) = 5 + 25 = 30
@@ -218,7 +235,7 @@ describe('messageQualityScorer', () => {
 
     it('utilisateur qui pose une question pertinente = XP bonus', () => {
       const reward = calculateQualityXPReward(
-        "Comment puis-je optimiser les performances de mon application?"
+        'Comment puis-je optimiser les performances de mon application?'
       );
       expect(reward.totalXP).toBeGreaterThan(5);
     });

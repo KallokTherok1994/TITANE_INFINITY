@@ -40,7 +40,6 @@ import {
 import { haloEngine } from '@/services/voice/haloEngine'; // ✅ v∞.7 Halo sync
 import { createLogger } from '@/utils/logger';
 
-
 const logger = createLogger('VoiceEngine');
 
 type MicrophoneProbeState = {

@@ -352,7 +352,11 @@ export function useConversationEngine(
 
           return report;
         } catch (err) {
-          logger.error('[ConversationEngine] Health check failed:', undefined, err instanceof Error ? err : undefined);
+          logger.error(
+            '[ConversationEngine] Health check failed:',
+            undefined,
+            err instanceof Error ? err : undefined
+          );
           return null;
         } finally {
           if (healthCheckPromiseRef.current === request) {
@@ -663,7 +667,11 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
           '[useConversationEngine] ⚠️ Failed to persist fallback message'
         );
 
-        logger.error('[ConversationEngine] Erreur finale:', undefined, err instanceof Error ? err : undefined);
+        logger.error(
+          '[ConversationEngine] Erreur finale:',
+          undefined,
+          err instanceof Error ? err : undefined
+        );
         return null;
       } finally {
         setIsLoading(false);
@@ -778,7 +786,10 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
   // ═══ SET MODE ═══
   const setModeCallback = useCallback((mode: ConversationMode) => {
     setCurrentMode(mode);
-    logger.info('[ConversationEngine] Mode changé', { module: 'useConversationEngine', mode: String(mode) });
+    logger.info('[ConversationEngine] Mode changé', {
+      module: 'useConversationEngine',
+      mode: String(mode),
+    });
   }, []);
 
   // ═══ MEMOIZED VALUES ═══

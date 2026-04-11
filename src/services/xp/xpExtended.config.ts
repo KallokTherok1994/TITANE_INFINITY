@@ -422,7 +422,8 @@ export const ACHIEVEMENT_REGISTRY: Record<string, AchievementDefinition> = {
   quality_speaker: {
     id: 'quality_speaker',
     name: 'Interlocuteur de Qualité',
-    description: 'Atteindre le niveau 3 en catégorie Chat IA grâce à des messages de qualité.',
+    description:
+      'Atteindre le niveau 3 en catégorie Chat IA grâce à des messages de qualité.',
     icon: '🎯',
     type: 'mastery',
     rarity: 'uncommon',

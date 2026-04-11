@@ -15,7 +15,6 @@ import { DEFAULT_SETTINGS } from './UIReadingContext';
 import { validateSettings } from './UIReadingValidator';
 import { createLogger } from '@/utils/logger';
 
-
 const logger = createLogger('UIReading');
 
 const STORAGE_KEY = 'titane_ui_reading_settings';

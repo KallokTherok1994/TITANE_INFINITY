@@ -16,7 +16,6 @@ import { getSystemPrompt } from '@/config/chatModes.config';
 import type { AIMessage } from '@/services/ai/types';
 import { createLogger } from '@/utils/logger';
 
-
 const logger = createLogger('ChatAPI');
 
 type MonitoringBridge = {
@@ -527,10 +526,7 @@ class ChatService {
       // ✅ FIX AUDIT: Validation format AVANT détection
       if (!backendResponse || typeof backendResponse !== 'object') {
         monitoring.trackPipelineError();
-        logger.error(
-          '[ChatService-OMEGA] ❌ Réponse null ou invalide:',
-          backendResponse
-        );
+        logger.error('[ChatService-OMEGA] ❌ Réponse null ou invalide:', backendResponse);
         throw new Error('Backend response is null or not an object');
       }
 

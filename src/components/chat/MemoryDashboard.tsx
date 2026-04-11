@@ -523,7 +523,10 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
   }, [mergedEntries, selectedLevel, selectedTopic, minImportance, searchQuery, sortBy]);
   const hasPersistentEntries = mergedEntries.length > 0;
   const hasActiveFilters =
-    searchQuery.trim().length > 0 || selectedLevel !== 'all' || selectedTopic !== 'all' || minImportance > 0;
+    searchQuery.trim().length > 0 ||
+    selectedLevel !== 'all' ||
+    selectedTopic !== 'all' ||
+    minImportance > 0;
   const isEmptyPersistentMemory = !isLoading && !hasPersistentEntries;
   const resolvedSelectedEntryId =
     controlledSelectedEntryId !== undefined
