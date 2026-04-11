@@ -62,7 +62,7 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
 
     const transformationPhase =
       stats.evolutionScore >= 80
-        ? 'Symbiose avancée'
+        ? 'Fusion TWINS avancée'
         : stats.evolutionScore >= 50
           ? 'Consolidation active'
           : stats.evolutionScore >= 20

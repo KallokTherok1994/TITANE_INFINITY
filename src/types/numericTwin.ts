@@ -245,7 +245,7 @@ export function getPhaseLabel(phase: EvolutionPhase): string {
     Assimilation: '📥 Assimilation',
     Integration: '🔗 Intégration',
     CoEvolution: '🔄 Co-Évolution',
-    Symbiosis: '♾️ Symbiose',
+    Symbiosis: '♾️ Fusion TWINS',
   };
   return labels[phase] || phase;
 }

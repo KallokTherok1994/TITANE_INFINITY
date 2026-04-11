@@ -16,6 +16,7 @@ import React, {
   useDeferredValue,
   memo,
 } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/useToast';
 import { useConversationEngine } from '@hooks/useConversationEngine';
 import type {
@@ -52,6 +53,7 @@ import type { ProviderDecisionMeta, ReasonCode } from '@/types/providerMeta';
 import { webResearch } from '@/services/webResearchService';
 import type { ResearchOptions, ResearchReport } from '@/types/research';
 import { useLTMContext } from '@/hooks/useLTMContext';
+import { useTwinEvolution } from '@/hooks/useTwinEvolution';
 import {
   buildArtifactActionContract,
   buildProfessionalDocumentManifest,
@@ -1011,6 +1013,7 @@ const getInitialSelectedProvider = (): ConversationProviderPreference => {
 export const ConversationSection: React.FC<ConversationSectionProps> = memo(() => {
   // ═══ HOOKS ═══
   const { success: toastSuccess, error: errorToast } = useToast();
+  const navigate = useNavigate();
   const [selectedProvider, setSelectedProvider] =
     useState<ConversationProviderPreference>(getInitialSelectedProvider);
   const [providerReadiness, setProviderReadiness] =
@@ -1043,6 +1046,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
 
   // PATCH-014: LTM wired to ConversationSection — refreshes after each message
   const { historyCount: ltmCount, refresh: refreshLTM } = useLTMContext(conversationId);
+  const { chatContextStatus, lastSyncAt, currentPhase, syncScore } = useTwinEvolution();
 
   // ═══ STATE ═══
   const [inputValue, setInputValue] = useState('');
@@ -1879,6 +1883,39 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     setShowModeBuilder(false);
   }, []);
 
+  const openTwins = useCallback(() => {
+    navigate('/titane?tab=twins');
+  }, [navigate]);
+
+  const twinsStatusMeta =
+    chatContextStatus === 'active'
+      ? {
+          label: '🟢 TWINS connecté au Chat IA',
+          color: '#389e0d',
+          bg: 'rgba(82,196,26,0.12)',
+          border: 'rgba(82,196,26,0.45)',
+        }
+      : chatContextStatus === 'stale'
+        ? {
+            label: '🟠 TWINS à resynchroniser',
+            color: '#d48806',
+            bg: 'rgba(250,173,20,0.12)',
+            border: 'rgba(250,173,20,0.45)',
+          }
+        : {
+            label: '⚪ TWINS en attente pour cette session',
+            color: '#8c8c8c',
+            bg: 'rgba(140,140,140,0.12)',
+            border: 'rgba(140,140,140,0.4)',
+          };
+
+  const twinsLastSyncLabel = lastSyncAt
+    ? `Dernière synchronisation : ${new Date(lastSyncAt).toLocaleTimeString('fr-FR', {
+        hour: '2-digit',
+        minute: '2-digit',
+      })}`
+    : 'Le contexte TWINS sera injecté automatiquement dès la prochaine synchronisation.';
+
   // ═══ RENDER ═══
   return (
     <div
@@ -1889,6 +1926,61 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
         title="💬 Communication & Intelligence"
         subtitle={`Interface conversationnelle multi-provider avec modes spécialisés${ltmCount > 0 ? ` · 🗂 ${ltmCount} msg en mémoire LTM` : ''}`}
       />
+
+      <Card style={{ marginBottom: 16, padding: 16 }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 12,
+            flexWrap: 'wrap',
+          }}
+        >
+          <div>
+            <span
+              data-testid="chat-twins-status"
+              style={{
+                display: 'inline-block',
+                padding: '4px 12px',
+                borderRadius: 999,
+                fontSize: 12,
+                fontWeight: 700,
+                color: twinsStatusMeta.color,
+                background: twinsStatusMeta.bg,
+                border: `1px solid ${twinsStatusMeta.border}`,
+              }}
+            >
+              {twinsStatusMeta.label}
+            </span>
+            <div
+              style={{ fontSize: 12, color: colors.neutral[500], marginTop: 8 }}
+              data-testid="chat-twins-meta"
+            >
+              {twinsLastSyncLabel}
+              {currentPhase ? ` · Phase : ${currentPhase}` : ''}
+              {chatContextStatus === 'active' ? ` · Sync : ${Math.round(syncScore * 100)}%` : ''}
+            </div>
+          </div>
+
+          <button
+            type="button"
+            data-testid="chat-open-twins"
+            onClick={openTwins}
+            style={{
+              padding: '8px 14px',
+              borderRadius: 8,
+              border: 'none',
+              cursor: 'pointer',
+              fontWeight: 700,
+              color: '#fff',
+              background: 'linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)',
+            }}
+          >
+            🧬 Ouvrir TWINS
+          </button>
+        </div>
+      </Card>
 
       <div className="conversation-container">
         {/* ═══ TOOLBAR ═══ */}

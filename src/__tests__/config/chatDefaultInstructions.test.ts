@@ -24,7 +24,11 @@ describe('CHAT_DEFAULT_INSTRUCTIONS_SEAL — canonical default policy', () => {
     it('A3: declares patch minimal > refactor', () => {
       expect(def).toContain('Patch minimal > refactor');
     });
-    it('A4: SYSTEM_PROMPTS.default is non-empty and substantial (>200 chars)', () => {
+    it('A4: exposes the TWINS profile banner without legacy Symbiose wording', () => {
+      expect(def).toContain('PROFIL TWINS');
+      expect(def).not.toContain('SYMBIOSE TWINS');
+    });
+    it('A5: SYSTEM_PROMPTS.default is non-empty and substantial (>200 chars)', () => {
       expect(def.length).toBeGreaterThan(200);
     });
   });

@@ -8,12 +8,10 @@ export const uiPages = {
       '[data-testid="tab-conversation"]',
       '[data-testid="tab-overview"]',
       '[data-testid="tab-vision"]',
-      '[data-testid="tab-identity"]',
+      '[data-testid="tab-twins"]',
       '[data-testid="tab-memory"]',
-      '[data-testid="tab-memory-evolution"]',
       '[data-testid="tab-progression"]',
       '[data-testid="tab-transformation"]',
-      '[data-testid="tab-symbiose"]',
     ],
   },
   time: {

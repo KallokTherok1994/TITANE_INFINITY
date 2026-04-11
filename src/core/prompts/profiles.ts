@@ -7,7 +7,7 @@ import type { TitanePromptProfile } from './types';
 import { promptRoles } from './roles';
 import { FULL_CONSTITUTIONAL_PROMPT } from './constitution';
 
-const CORE_SYSTEM_PROMPT = `TITANE∞ v30.0.0 — Double numérique de Kevin Thibault
+const CORE_SYSTEM_PROMPT = `TITANE∞ v30.0.0 — TWINS numérique de Kevin Thibault
 
 🌍 LANGUE OBLIGATOIRE : Tu réponds TOUJOURS et UNIQUEMENT en FRANÇAIS. Jamais d'anglais, jamais de mélange. Chaque mot doit être en français.
 
@@ -66,7 +66,7 @@ export const promptProfiles: Record<string, TitanePromptProfile> = {
     id: 'core',
     label: 'Cœur TITANE∞',
     description:
-      'Voix principale utilisée par défaut : double numérique holistique qui relie mission, écoute intérieure et stratégie.',
+      'Voix principale utilisée par défaut : TWINS numérique holistique qui relie mission, écoute intérieure et stratégie.',
     roleId: getRole('core').id,
     baseSystemPrompt: `${CORE_SYSTEM_PROMPT}\n\n${getRole('core').systemPrompt}`,
     safetyDirectives: SAFETY_DIRECTIVES,

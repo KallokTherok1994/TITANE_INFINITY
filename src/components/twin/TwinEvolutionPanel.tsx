@@ -95,7 +95,7 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
       <div className="twin-panel twin-panel--loading">
         <div className="twin-panel__loader">
           <div className="twin-panel__loader-spinner" />
-          <span>Chargement du Twin...</span>
+          <span>Chargement du profil TWINS...</span>
         </div>
       </div>
     );

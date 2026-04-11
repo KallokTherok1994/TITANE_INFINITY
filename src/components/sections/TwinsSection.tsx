@@ -2,13 +2,13 @@
  * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
- * TwinsSection — Jumeau Numérique · Fusion 100% Twins + Persona
+ * TwinsSection — surface TWINS unifiée
  *
- * Section unifiée : TwinEvolutionPanel, ModeMatrix, PersonaEditor,
- * Pacte Fondateur, IdentityCenter — tout sous le nom TWINS.
+ * Section canonique : TwinEvolutionPanel, ModeMatrix, PersonaEditor
+ * et passerelles directes vers le Chat IA — tout sous le nom TWINS.
  *
- * TITANE est le jumeau numérique de Kevin Thibault.
- * Personnalité synchronisée via Twins Mode — orchestration IA auto.
+ * TITANE est le TWINS numérique de Kevin Thibault.
+ * Personnalité synchronisée et orchestration IA auto.
  */
 
 import React, { memo, useCallback } from 'react';
@@ -18,7 +18,6 @@ import { Card } from '@/ui';
 import { TSectionHeader } from '@/design-system';
 import { SectionLoadingFallback } from './SectionLoadingFallback';
 import { colors, spacing, fontSizes } from '@themes/tokens';
-import { detectEnvironment } from '@/core/tauri/environment';
 import { useChatModeStore, useCurrentChatModeId } from '@/stores/useChatModeStore';
 import { TwinEvolutionPanel } from '@/components/twin/TwinEvolutionPanel';
 import { useTwinEvolution } from '@/hooks/useTwinEvolution';
@@ -45,20 +44,15 @@ const LazyPersonaEditor = React.lazy(() =>
   }))
 );
 
-const LazyIdentityCenter = React.lazy(
-  () => import('@/components/IdentityCenter/IdentityCenter')
-);
-
 // ═══════════════════════════════════════════════════════════════════════════
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
-  const env = detectEnvironment();
   const currentModeId = useCurrentChatModeId();
   const changeMode = useChatModeStore(state => state.changeMode);
   const navigate = useNavigate();
-  const { chatContextStatus, lastSyncAt } = useTwinEvolution();
+  const { chatContextStatus, lastSyncAt, currentPhase, syncScore } = useTwinEvolution();
 
   const handleModeSelect = useCallback(
     (mode: { id: string }) => {
@@ -104,7 +98,7 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
     <div className="titane-section titane-section-twins">
       <TSectionHeader
         title="🧬 TWINS — Jumeau Numérique"
-        subtitle="Fusion Kevin ↔ TITANE · Personnalité synchronisée · Orchestration IA auto"
+        subtitle="Surface unifiée Kevin ↔ TITANE · contexte Chat IA · orchestration automatique"
       />
 
       {/* ═══ CHAT IA CONNECTION STATUS ═══ */}
@@ -120,6 +114,7 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: spacing[2] }}>
             <span
+              data-testid="twins-context-status"
               style={{
                 display: 'inline-block',
                 padding: `${spacing[1]} ${spacing[3]}`,
@@ -133,11 +128,14 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
             >
               {chatStatusMeta.label}
             </span>
-            {lastSyncDisplay && (
-              <span style={{ fontSize: fontSizes.xs, color: colors.neutral[500] }}>
-                Dernière sync : {lastSyncDisplay}
-              </span>
-            )}
+            <span
+              style={{ fontSize: fontSizes.xs, color: colors.neutral[500] }}
+              data-testid="twins-context-meta"
+            >
+              {lastSyncDisplay ? `Dernière sync : ${lastSyncDisplay}` : 'Sync en attente'}
+              {currentPhase ? ` · Phase : ${currentPhase}` : ''}
+              {chatContextStatus === 'active' ? ` · Sync : ${Math.round(syncScore * 100)}%` : ''}
+            </span>
           </div>
           <button
             data-testid="twins-go-to-chat"
@@ -171,8 +169,8 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
             marginBottom: spacing[3],
           }}
         >
-          TITANE est le jumeau numérique de Kevin Thibault. Personnalité, valeurs, ton et
-          traits cognitifs sont synchronisés en permanence via le mode Twins.
+          TITANE est le TWINS numérique de Kevin Thibault. Personnalité, valeurs, ton et
+          traits cognitifs sont synchronisés en permanence via le mode TWINS.
           Orchestration IA automatique — mode optimal sélectionné selon la demande.
         </p>
         <TwinEvolutionPanel isAdmin={true} compact={false} />
@@ -238,7 +236,7 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
 
       {/* ═══ PACTE FONDATEUR ═══ */}
       <Card style={{ marginTop: spacing[4] }}>
-        <h3 style={{ marginBottom: spacing[4] }}>📜 Pacte Fondateur — Symbiose Totale</h3>
+        <h3 style={{ marginBottom: spacing[4] }}>📜 Pacte Fondateur — Alignement TWINS</h3>
         <p style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}>
           <strong>🏗️ Excellence Systémique</strong>
           <br />
@@ -258,26 +256,26 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
         </p>
       </Card>
 
-      {/* ═══ TWINS CENTER (TAURI ONLY) ═══ */}
+      {/* ═══ TWINS SURFACE SUMMARY ═══ */}
       <Card style={{ marginTop: spacing[4] }}>
-        <h3 style={{ marginBottom: spacing[4] }}>⚙️ Centre TWINS Unifié</h3>
-        {env.isTauri ? (
-          <React.Suspense
-            fallback={
-              <SectionLoadingFallback
-                label="Centre TWINS"
-                note="Chargement du centre TWINS unifié…"
-                testId="loading-twins-center"
-              />
-            }
-          >
-            <LazyIdentityCenter />
-          </React.Suspense>
-        ) : (
-          <p style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}>
-            Disponible en mode Tauri uniquement
-          </p>
-        )}
+        <h3 style={{ marginBottom: spacing[4] }}>⚙️ Surface TWINS canonique</h3>
+        <p style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}>
+          Les anciennes surfaces <strong>Identity</strong> et <strong>Symbiose</strong>
+          sont maintenant consolidées ici. Toute navigation legacy redirige vers le
+          point d&apos;entrée unique <code>/titane?tab=twins</code>.
+        </p>
+        <ul
+          style={{
+            marginTop: spacing[3],
+            paddingLeft: spacing[4],
+            color: colors.neutral[300],
+            fontSize: fontSizes.sm,
+          }}
+        >
+          <li>🧭 Routing public unique : `?tab=twins`</li>
+          <li>💬 Contexte TWINS injecté explicitement dans le Chat IA</li>
+          <li>🎯 Orchestration et personnalité pilotées depuis cette section</li>
+        </ul>
       </Card>
     </div>
   );

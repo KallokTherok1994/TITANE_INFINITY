@@ -400,8 +400,8 @@ describe('Memory page desktop E2E complete coverage', () => {
     this.timeout(30000);
 
     await activateTitaneMemoryTab(
-      'tab-memory-evolution',
-      '[data-testid="memory-evolution-section-root"]'
+      'tab-transformation',
+      '[data-testid="transformation-section-root"]'
     );
 
     const evolutionSnapshot = await browser.execute(() => {
@@ -419,12 +419,12 @@ describe('Memory page desktop E2E complete coverage', () => {
       };
 
       const roots = Array.from(
-        document.querySelectorAll('[data-testid="memory-evolution-section-root"]')
+        document.querySelectorAll('[data-testid="transformation-section-root"]')
       );
       const visibleRoot = roots.find(isVisible) || roots[0] || null;
-      const truthBanner = visibleRoot?.querySelector(
-        '[data-testid="memory-evolution-truth-banner"]'
-      );
+      const truthBanner =
+        visibleRoot?.querySelector('[data-testid="memory-evolution-truth-banner"]') ||
+        document.querySelector('[data-testid="memory-evolution-truth-banner"]');
 
       return {
         rootVisible: Boolean(visibleRoot && isVisible(visibleRoot)),
@@ -436,7 +436,7 @@ describe('Memory page desktop E2E complete coverage', () => {
     assert.equal(
       evolutionSnapshot.rootVisible,
       true,
-      'Memory evolution root should be visible after tab activation'
+      'Transformation root should be visible after tab activation'
     );
 
     const evolutionMode = evolutionSnapshot.evolutionMode;
@@ -449,9 +449,9 @@ describe('Memory page desktop E2E complete coverage', () => {
     assert.ok(truthState, 'Memory evolution truth banner state missing');
 
     assert.equal(
-      await $('[data-testid="tab-memory-evolution"]').getAttribute('aria-selected'),
+      await $('[data-testid="tab-transformation"]').getAttribute('aria-selected'),
       'true',
-      'Memory evolution tab should be active'
+      'Transformation tab should be active'
     );
 
     await activateTitaneMemoryTab('tab-memory', '[data-testid="memory-section-root"]');
