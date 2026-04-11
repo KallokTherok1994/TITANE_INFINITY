@@ -1,0 +1,227 @@
+{
+  "version": "v30.0.0",
+  "category": "mindset_financier_wealth",
+  "description": "Mindset financier avancé et psychologie du wealth building — psychologie de l'argent (croyances héritées, money scripts, money thermostat), intelligence financière (cashflow quadrant, actifs vs passifs, ratios FI), abondance vs rareté, habitudes des ultra-riches, wealth building framework (7 niveaux), relation couple et argent, erreurs psychologiques (biais cognitifs), money plan stratégique, transmission de la wealth literacy",
+  "mindset_financier_wealth": {
+    "introduction": "La dimension psychologique de l'argent est le facteur le plus déterminant — et le plus ignoré — du parcours vers l'indépendance financière. Ce module VISIONNAIRE_2.0 explore en profondeur les mécanismes cognitifs, émotionnels et comportementaux qui façonnent notre rapport à l'argent. Il s'appuie sur les recherches de la psychologie financière (behavioral finance), les frameworks des penseurs patrimoniaux (Kiyosaki, Ramit Sethi, Morgan Housel, Dr. Brad Klontz), et les pratiques observées chez les individus ayant construit une richesse durable et transmissible.",
+    "psychologie_de_largent": {
+      "rapport_a_largent": {
+        "croyances_heritees": "Nos croyances financières se forment majoritairement entre 5 et 14 ans, transmises inconsciemment par l'environnement familial. Phrases toxiques fréquentes: 'L'argent ne pousse pas sur les arbres', 'Les riches sont malhonnêtes', 'On n'est pas des gens riches', 'L'argent ne fait pas le bonheur'. Ces scripts deviennent des vérités absolues qui programment nos comportements financiers à l'âge adulte.",
+        "exercice_archeologie_financiere": "Identifier ses 3 souvenirs d'argent les plus marquants avant 12 ans. Pour chacun: quelle émotion? Quelle croyance s'est formée? Cette croyance est-elle encore active aujourd'hui? Exemple: enfant témoin d'une dispute parentale sur les factures → croyance: 'l'argent crée des conflits' → comportement adulte: évitement des discussions financières.",
+        "reprogrammation": "Technique du reparenting financier: identifier la croyance limitante, formuler son contraire en affirmation ressource ('L'argent est un outil neutre qui amplifie mes valeurs'), puis ancrer la nouvelle croyance par des micro-actions quotidiennes alignées (consulter ses comptes avec sérénité, parler d'argent sans honte)."
+      },
+      "money_scripts": {
+        "source": "Concept développé par le Dr. Brad Klontz (Financial Psychology Institute). Quatre catégories de scripts monétaires identifiées par la recherche clinique, chacune avec ses comportements typiques et ses conséquences financières.",
+        "evitement": {
+          "croyances": "'L'argent est la racine de tous les maux', 'Les riches sont cupides', 'Je ne mérite pas d'être riche', 'L'argent corrompt les gens'.",
+          "comportements": "Ignorer ses relevés bancaires, sous-facturer ses services, donner excessivement au détriment de sa propre sécurité, saboter inconsciemment ses opportunités de revenus, culpabiliser lors d'une augmentation ou d'un succès financier.",
+          "risques": "Revenus chroniquement inférieurs au potentiel, absence d'épargne, dépendance financière vis-à-vis des autres.",
+          "antidote": "Séparer la valeur morale de l'outil financier. Pratiquer la réception consciente: accepter un compliment, une augmentation, un paiement avec gratitude plutôt que culpabilité."
+        },
+        "adoration": {
+          "croyances": "'L'argent résout tous les problèmes', 'Plus d'argent = plus de bonheur', 'Mon statut social dépend de ma richesse'.",
+          "comportements": "Workaholisme pour maximiser les revenus au détriment de la santé et des relations, achats compulsifs comme régulateur émotionnel, prise de risques financiers excessifs, endettement pour maintenir un train de vie.",
+          "risques": "Burnout, destruction relationnelle, surendettement, vide existentiel malgré les revenus élevés.",
+          "antidote": "Définir le 'enough' (concept de Paul Jarvis/Morgan Housel): quel montant suffit pour vivre selon ses valeurs? Pratiquer la déconnexion identité-patrimoine: 'Je ne suis pas mon solde bancaire'."
+        },
+        "vigilance": {
+          "croyances": "'Il faut surveiller chaque centime', 'La frugalité est la seule vertu', 'Toute dépense est potentiellement dangereuse', 'Il faut toujours avoir un filet de sécurité maximal'.",
+          "comportements": "Hyper-contrôle budgétaire anxieux, difficulté à dépenser même pour des besoins légitimes, thésaurisation excessive, incapacité à déléguer les finances, critiques du mode de consommation des autres.",
+          "risques": "Anxiété financière chronique malgré une situation saine, privation de qualité de vie, conflits relationnels autour de l'argent, paralysie décisionnelle pour les investissements.",
+          "antidote": "Distinguer frugalité stratégique (alignée sur les valeurs) et privation anxieuse (dictée par la peur). Instaurer un budget 'permission de dépenser' pour les plaisirs sans culpabilité."
+        },
+        "statut": {
+          "croyances": "'Ma valeur se mesure à mes possessions', 'Les gens me respecteront si je montre ma réussite', 'Il faut avoir le meilleur de tout'.",
+          "comportements": "Dépenses ostentatoires, comparaison sociale permanente, besoin de validation externe par les signes de richesse, dette cachée pour maintenir les apparences.",
+          "risques": "Patrimoine net très inférieur au patrimoine apparent, stress financier dissimulé, relations superficielles basées sur l'image.",
+          "antidote": "Concept du 'stealth wealth' (richesse invisible): construire un patrimoine net solide plutôt qu'un patrimoine apparent. Citation Morgan Housel: 'La richesse, c'est ce que vous ne voyez pas — c'est l'argent non dépensé'."
+        }
+      },
+      "money_thermostat": {
+        "concept": "Tout individu possède un 'thermostat financier' inconscient: un niveau de revenus/patrimoine où il se sent 'normal'. En dessous: motivation à gagner plus. Au-dessus: auto-sabotage inconscient pour revenir à la zone de confort (dépenses impulsives, mauvais investissements, refus d'opportunités).",
+        "exemples": "70% des gagnants de loterie font faillite dans les 5 ans — leur thermostat n'a pas suivi. Inversement, les entrepreneurs qui repartent de zéro retrouvent souvent leur niveau antérieur en 2-3 ans — leur thermostat est calibré haut.",
+        "recalibration": "Processus progressif: (1) Prendre conscience de son seuil actuel (quel patrimoine/revenu vous semble 'normal'?). (2) Augmenter la fréquentation de personnes au niveau supérieur (mastermind, mentoring). (3) Visualisation détaillée du prochain palier (pas ×10 mais ×1,5). (4) Micro-actions d'élévation (upgrader un aspect de vie mineur, normaliser un prix plus élevé).",
+        "ancrage_neurologique": "Le thermostat est ancré dans le système réticulé activateur du cerveau, qui filtre la réalité selon nos croyances. Recalibrer le thermostat, c'est littéralement reprogrammer ce filtre pour détecter les opportunités invisibles au palier précédent."
+      }
+    },
+    "intelligence_financiere": {
+      "cashflow_quadrant": {
+        "esbi_model": "Modèle de Robert Kiyosaki: E (Employee/Employé) → échange temps contre salaire, sécurité mais plafond. S (Self-employed/Indépendant) → liberté mais dépendance à sa propre présence, risque de créer un emploi plutôt qu'un business. B (Business owner/Entrepreneur) → système qui fonctionne sans vous, scalabilité, effet de levier humain. I (Investor/Investisseur) → l'argent travaille pour vous, revenus passifs, liberté temporelle totale.",
+        "transition_strategique": "E → S: développer une compétence monétisable en parallèle. S → B: systématiser, déléguer, documenter les processus (le test: votre business peut-il fonctionner 6 mois sans vous?). B/S → I: réinvestir les flux de trésorerie dans des actifs générateurs de revenus passifs.",
+        "erreur_frequente": "Beaucoup d'indépendants (S) pensent être des entrepreneurs (B) alors qu'ils ont simplement créé un emploi qu'ils ne peuvent pas quitter. Le vrai passage au quadrant B nécessite la construction de systèmes, d'équipes et de processus automatisés."
+      },
+      "actifs_vs_passifs": {
+        "definition_kiyosaki": "Actif: tout ce qui met de l'argent dans votre poche (immobilier locatif, actions à dividendes, business automatisé, propriété intellectuelle, royalties). Passif: tout ce qui sort de l'argent de votre poche (résidence principale avec crédit, voiture personnelle, abonnements non utilisés, dettes de consommation).",
+        "nuance_avancee": "La résidence principale est un actif comptable mais un passif cash-flow (charges, taxes, entretien > 0€/mois de revenu). Elle devient un actif net uniquement si la plus-value à la revente compense les flux sortants cumulés, ce qui n'est pas garanti.",
+        "ratio_cle": "Ratio actifs productifs / patrimoine brut: objectif minimum 60% à 40 ans, 80% à 55 ans. Un patrimoine de 500 000€ composé à 90% de résidence principale + voiture n'est pas un patrimoine productif."
+      },
+      "ratios_financiers_personnels": {
+        "savings_rate": "Taux d'épargne = (Revenus - Dépenses) / Revenus. Standard: 10-15%. Bon: 25-35%. Excellent (trajectoire FIRE): 50%+. Le savings rate est le prédicteur #1 de l'indépendance financière — bien plus que le niveau de revenu.",
+        "fi_number": "Montant nécessaire pour l'indépendance financière = Dépenses annuelles × 25 (basé sur la 4% rule). Si dépenses = 36 000€/an → FI number = 900 000€.",
+        "years_to_fi": "Formule simplifiée basée sur le savings rate: à 10% → ~51 ans. À 25% → ~32 ans. À 50% → ~17 ans. À 75% → ~7 ans. Le savings rate détermine exponentiellement le temps vers l'indépendance financière.",
+        "four_percent_rule": "Étude Trinity (1998): un portefeuille 60% actions / 40% obligations peut supporter un retrait annuel de 4% du capital initial (ajusté de l'inflation) avec une probabilité de survie de 95% sur 30 ans. Critiques: basée sur données US historiques, ne tient pas compte des frais de gestion élevés, des impôts spécifiques, ni des séquences de rendements défavorables en début de retraite (sequence-of-returns risk). Taux plus prudent pour la France: 3-3,5%.",
+        "coast_fi": "Concept intermédiaire: montant d'épargne atteint tel que, sans ajout supplémentaire, la croissance composée mènera au FI number à l'âge de retraite souhaitée. Permet de réduire la pression d'épargne et de se concentrer sur les dépenses courantes uniquement."
+      }
+    },
+    "abondance_vs_rarete": {
+      "mindset_rarete": {
+        "manifestations": "Vision zéro-sum: 'si quelqu'un gagne, quelqu'un d'autre perd'. Réactions émotionnelles négatives au succès des autres (jalousie, ressentiment). Difficulté à investir en soi (formations, coaching, santé) perçu comme une dépense plutôt qu'un investissement. Peur permanente de manquer.",
+        "origines": "Souvent issu d'un environnement familial de précarité ou d'anxiété financière. Renforcé par les médias et le discours catastrophiste. S'autoalimente: la peur du manque crée des comportements de thésaurisation qui limitent la croissance."
+      },
+      "mindset_abondance": {
+        "principes": "Vision positive-sum: la valeur se crée, elle n'est pas simplement redistribuée. Croyance que les ressources sont extensibles et que les opportunités sont illimitées. Disposition à investir pour créer plus de valeur.",
+        "gratitude_financiere": "Pratique quotidienne: noter 3 éléments de gratitude financière (un revenu reçu, une dépense de qualité de vie, un actif possédé). Effet: recâblage du focus mental de 'ce qui manque' vers 'ce qui est présent'. La recherche en psychologie positive (Dr. Robert Emmons) démontre un impact mesurable sur les comportements financiers.",
+        "circulation_argent": "L'argent est un flux, pas un stock statique. Retenir l'argent par peur crée une énergie de stagnation. Dépenser avec intention et générosité crée un flux dynamique. Attention: cela ne justifie pas la dépense irresponsable — c'est la conscience et l'intention derrière chaque flux qui comptent.",
+        "generosity_loop": "Concept: la générosité stratégique crée un cercle vertueux. Donner du temps, de l'expertise, du capital à des projets alignés → renforce le réseau et la réputation → crée des opportunités inattendues → génère des retours disproportionnés. Ce n'est pas magique: c'est la loi de réciprocité sociale (Robert Cialdini) amplifiée par la cohérence des valeurs."
+      }
+    },
+    "habitudes_ultra_riches": {
+      "lecture_quotidienne": {
+        "statistique": "88% des personnes à patrimoine net élevé lisent ≥30 minutes par jour de contenu éducatif (étude Thomas Corley, Rich Habits). Les lecteurs réguliers d'ouvrages financiers et de biographies d'entrepreneurs ont une probabilité 2,5× supérieure d'atteindre l'indépendance financière à 50 ans.",
+        "bibliotheque_essentielle": "Psychologie: 'The Psychology of Money' (Morgan Housel), 'Mind Over Money' (Brad Klontz). Stratégie: 'Rich Dad Poor Dad' (Kiyosaki), 'I Will Teach You to Be Rich' (Ramit Sethi). Investissement: 'The Little Book of Common Sense Investing' (Bogle), 'L'Investisseur Intelligent' (Graham). Mindset: 'Think and Grow Rich' (Napoleon Hill), 'Atomic Habits' (James Clear)."
+      },
+      "five_am_club": {
+        "principe": "Se lever à 5h pour consacrer 1h à la formule 20/20/20 de Robin Sharma: 20 min d'exercice physique (cortisol/endorphines), 20 min de réflexion/méditation/journaling (clarté mentale), 20 min d'apprentissage (lecture/podcast éducatif). Le cerveau en mode 'alpha waves' du matin absorbe et connecte les idées avec une efficacité supérieure.",
+        "adaptation": "L'heure exacte importe moins que le principe: un rituel matinal structuré avant les sollicitations externes (emails, réseaux sociaux, urgences des autres). C'est l'investissement en soi qui précède le travail pour les autres."
+      },
+      "multiple_income_streams": {
+        "statistique": "65% des millionnaires self-made ont 3 sources de revenus ou plus avant d'atteindre le premier million (étude IRS/Thomas Stanley). Diversification des revenus = résilience financière + accélération de l'accumulation.",
+        "sept_categories": "1. Earned income (salaire/honoraires). 2. Profit income (business). 3. Interest income (obligations, livrets). 4. Dividend income (actions). 5. Rental income (immobilier). 6. Capital gains (plus-values). 7. Royalty income (propriété intellectuelle, licences).",
+        "strategie_progressive": "Phase 1 (0-2 ans): maximiser l'earned income (compétences, négociation salariale, freelance parallèle). Phase 2 (2-5 ans): lancer un profit income scalable (business en ligne, consulting productisé). Phase 3 (5+ ans): construire les revenus passifs (dividendes, loyers, royalties) avec les flux des phases 1 et 2."
+      },
+      "delayed_gratification": {
+        "experience_marshmallow": "Étude Stanford de Walter Mischel (1972): les enfants capables de résister à la gratification immédiate (attendre 15 minutes pour obtenir 2 marshmallows au lieu d'1) avaient, 40 ans plus tard, des revenus supérieurs, une meilleure santé, et des relations plus stables. La capacité à différer la récompense est le méta-skill du wealth building.",
+        "application_financiere": "Différer l'achat de la voiture neuve de 3 ans et investir la différence. Reporter le lifestyle upgrade d'un an après chaque augmentation salariale. Réinvestir 100% des revenus d'un side business pendant les 24 premiers mois au lieu de les consommer.",
+        "technique_pratique": "Règle des 72 heures: avant tout achat non-essentiel > 200€, attendre 72 heures. 80% des envies disparaissent. Pour les 20% restants: acheter sans culpabilité car c'est un choix conscient."
+      },
+      "mastermind_et_mentors": {
+        "concept_napoleon_hill": "Le Mastermind (Napoleon Hill, Think and Grow Rich): un groupe de 3-6 personnes engagées dans des objectifs complémentaires qui se réunissent régulièrement pour partager défis, stratégies et redevabilité mutuelle. L'intelligence collective du groupe dépasse la somme des intelligences individuelles.",
+        "mentor_vs_coach": "Mentor: praticien expérimenté qui a déjà atteint ce que vous visez, partage son expérience spécifique gratuitement ou contre du temps. Coach: professionnel formé en accompagnement, agnostique du domaine, aide à clarifier les objectifs et lever les blocages. Les deux sont complémentaires: le mentor pour le 'quoi' et le 'comment', le coach pour le 'pourquoi' et le 'qui'.",
+        "regle_des_cinq": "Vous êtes la moyenne des 5 personnes que vous fréquentez le plus (Jim Rohn). Application: auditer consciemment votre cercle d'influence financier. Si personne autour de vous n'investit, ne crée, ou ne parle d'argent de manière saine, élargir activement votre réseau vers des communautés alignées."
+      }
+    },
+    "wealth_building_framework": {
+      "sept_niveaux": {
+        "niveau_1_survie": {
+          "description": "Revenus insuffisants pour couvrir les besoins de base. Endettement croissant, absence d'épargne, stress financier permanent.",
+          "objectif": "Stabiliser: éliminer les dettes toxiques (taux > 10%), constituer un micro-fonds d'urgence (500€), augmenter les revenus immédiats.",
+          "indicateur": "Solde net en fin de mois systématiquement négatif."
+        },
+        "niveau_2_securite": {
+          "description": "Revenus couvrent les besoins mais aucune marge. Un imprévu (panne, maladie, perte d'emploi) = crise.",
+          "objectif": "Constituer un fonds d'urgence de 3 mois de dépenses essentielles. Assurer les risques majeurs (santé, habitation, responsabilité civile).",
+          "indicateur": "Zéro dette de consommation, fonds d'urgence > 3 mois."
+        },
+        "niveau_3_stabilite": {
+          "description": "Marge d'épargne régulière. Début d'investissement. Capacité à absorber un imprévu sans crise.",
+          "objectif": "Fonds d'urgence 6 mois, début d'investissement régulier (DCA), taux d'épargne > 15%.",
+          "indicateur": "Patrimoine net positif et croissant sur 12 mois consécutifs."
+        },
+        "niveau_4_accumulation": {
+          "description": "Phase de croissance active du patrimoine. Revenus d'investissement commencent à être significatifs. Plusieurs classes d'actifs en portefeuille.",
+          "objectif": "Patrimoine net > 5× revenus annuels. Revenus passifs couvrent > 20% des dépenses. Diversification: actions, immobilier, business.",
+          "indicateur": "Revenus passifs mensuels > 1 000€."
+        },
+        "niveau_5_independance": {
+          "description": "Les revenus passifs couvrent les dépenses de base. Le travail devient optionnel pour la survie financière.",
+          "objectif": "Revenus passifs ≥ dépenses essentielles. Patrimoine ≥ 25× dépenses annuelles (4% rule). Couverture santé et retraite sécurisée.",
+          "indicateur": "Capacité à ne pas travailler pendant 12 mois sans impact sur le niveau de vie essentiel."
+        },
+        "niveau_6_liberte": {
+          "description": "Les revenus passifs couvrent largement le style de vie souhaité. Liberté totale du temps et des choix de vie.",
+          "objectif": "Revenus passifs ≥ 2× dépenses souhaitées. Marge de sécurité confortable. Patrimoine auto-régénérant même en période de crise.",
+          "indicateur": "Travailler uniquement sur des projets choisis par passion ou impact, sans contrainte financière."
+        },
+        "niveau_7_abondance": {
+          "description": "Patrimoine tel que la question n'est plus 'comment gagner plus' mais 'comment utiliser au mieux'. Impact philanthropique, transmission multi-générationnelle, legacy.",
+          "objectif": "Créer un impact positif durable. Structurer la transmission (family office, fondation, trusts). Éduquer la génération suivante.",
+          "indicateur": "La croissance du patrimoine dépasse systématiquement les dépenses + dons + transmissions."
+        }
+      },
+      "wealth_formula": {
+        "equation": "Richesse = (Revenus - Dépenses) × Rendement × Temps. Chaque variable est un levier indépendant, mais le Temps est le plus puissant grâce à la composition exponentielle.",
+        "trois_leviers": {
+          "augmenter_revenus": "Négociation salariale (data-driven, pas émotionnelle), développement de compétences à haute valeur ajoutée (T-shaped skills), création de side income, transition vers le quadrant B/I.",
+          "reduire_depenses": "Audit des dépenses récurrentes (abonnements fantômes, assurances non optimisées), optimisation des 3 postes majeurs (logement 30%, transport 15%, alimentation 15%), différenciation entre dépenses-investissement et dépenses-consommation.",
+          "optimiser_rendements": "Allocation d'actifs selon l'horizon temporel, minimisation des frais (ETF indiciels vs fonds actifs: différence de 1-2%/an composée sur 30 ans = 30-50% de patrimoine en plus), optimisation fiscale des enveloppes (PEA > assurance-vie > compte-titres), réinvestissement systématique des dividendes."
+        }
+      }
+    },
+    "relation_couple_et_argent": {
+      "discussions_financieres": {
+        "frequence": "Money dates mensuels (revue budget/épargne/objectifs, 45 min max, dans un cadre agréable). Revue trimestrielle approfondie (patrimoine net, avancement objectifs, ajustements). Revue annuelle stratégique (bilan de l'année, objectifs N+1, recalibrage vision long terme).",
+        "regles_communication": "Pas de reproches sur les dépenses passées. Focus sur les objectifs communs futurs. Chacun exprime ses valeurs et priorités sans jugement. Utiliser des chiffres, pas des émotions, pour les décisions. Distinguer les dépenses 'nous' des dépenses 'moi'."
+      },
+      "modeles_organisation": {
+        "tout_commun": "Un seul compte joint pour tous les revenus et dépenses. Transparence totale. Adapté aux couples avec revenus similaires et valeurs parfaitement alignées.",
+        "proportionnel": "Chacun contribue au prorata de ses revenus (ex: si 60/40 de revenus, contributions 60/40 aux charges communes). Équitable si écart de revenus significatif.",
+        "trois_comptes": "Méthode populaire: un compte joint (charges communes + épargne commune) + un compte personnel chacun (liberté de dépense sans justification). Montant personnel identique ou proportionnel selon les préférences.",
+        "enveloppes_separees": "Chaque poste budgétaire a son propriétaire désigné. Plus structuré mais nécessite une coordination régulière."
+      },
+      "pre_nup_et_protection": {
+        "contrat_mariage": "Régime légal par défaut en France: communauté réduite aux acquêts. Alternatives: séparation de biens (protection patrimoniale maximale), participation aux acquêts (compromis), communauté universelle (tout en commun). Choix stratégique crucial avant mariage, modifiable pendant le mariage (après 2 ans, procédure notariale).",
+        "pacs_vs_mariage": "PACS: séparation de biens par défaut (modifiable en indivision). Mariage: communauté réduite aux acquêts par défaut. Implications fiscales: imposition commune dans les deux cas. Implications successorales: le partenaire pacsé n'est PAS héritier légal (testament obligatoire), le conjoint marié est héritier légal et exonéré de droits de succession."
+      }
+    },
+    "erreurs_psychologiques": {
+      "lifestyle_inflation": {
+        "mecanisme": "Augmentation automatique et proportionnelle des dépenses avec les revenus. Augmentation de 20%: upgrade voiture, restaurant plus fréquent, abonnements premium. Résultat: savings rate constant ou décroissant malgré des revenus croissants.",
+        "antidote": "Règle du 50%: à chaque augmentation de revenu, 50% va automatiquement en épargne/investissement, 50% seulement en amélioration du lifestyle. Ainsi revenus +20% → épargne +10%, lifestyle +10%. Le savings rate augmente mécaniquement."
+      },
+      "keeping_up_with_the_joneses": {
+        "mecanisme": "Comparaison sociale permanente guidant les décisions financières. Voisin achète un SUV → pression pour un SUV. Collègue part aux Maldives → besoin de vacances équivalentes. Réseaux sociaux amplifient le phénomène (biais de survie: on voit les dépenses des autres, jamais leurs dettes).",
+        "realite_statistique": "78% des ménages français avec un revenu > 5 000€/mois ont un patrimoine net < 200 000€ (INSEE). Beaucoup de 'réussite visible' repose sur du crédit, pas du patrimoine."
+      },
+      "biais_cognitifs_investissement": {
+        "sunk_cost_fallacy": "Continuer à investir dans un actif perdant parce qu'on y a déjà mis beaucoup d'argent. 'J'ai payé 50€ cette action, je ne peux pas vendre à 30€.' Le prix d'achat passé est irrélevant pour la décision future. Question correcte: 'Si je n'avais pas cet actif, l'achèterais-je au prix actuel?'",
+        "anchoring": "Ancrage mental sur un prix de référence arbitraire. 'Cette action valait 100€ il y a 6 mois, à 60€ c'est une affaire.' Le prix passé ne préjuge en rien de la valeur intrinsèque actuelle. Toujours analyser les fondamentaux, pas les prix historiques.",
+        "confirmation_bias": "Rechercher sélectivement les informations qui confirment notre position existante. Long sur Tesla → ne lire que les analyses bullish. Solution: pratiquer l'inversion mentale de Charlie Munger: 'Quels scénarios feraient échouer ma thèse d'investissement?'",
+        "fomo": "Fear Of Missing Out: acheter un actif en pleine euphorie parce que 'tout le monde gagne de l'argent'. Typiquement: acheter au plus haut, vendre au plus bas. Antidote: plan d'investissement automatisé (DCA) qui élimine l'émotion du timing.",
+        "herd_mentality": "Suivre la foule sans analyse indépendante. 'Si tout le monde achète, c'est que c'est bien.' Rappel de Warren Buffett: 'Soyez craintif quand les autres sont avides, et avide quand les autres sont craintifs.' La foule a systématiquement tort aux extrêmes."
+      },
+      "loss_aversion": "Découverte de Kahneman et Tversky: la douleur d'une perte est ~2,5× plus intense que le plaisir d'un gain équivalent. Conséquence: vendre trop tôt les gagnants (pour 'sécuriser' les gains) et garder trop longtemps les perdants (pour éviter de 'réaliser' la perte). Solution: stop-loss systématiques et take-profit prédéfinis avant d'entrer en position."
+    },
+    "money_plan_strategique": {
+      "vision_financiere": {
+        "horizons": "Vision 1 an: objectifs tactiques (épargne de précaution, remboursement dette spécifique, premier investissement). Vision 5 ans: objectifs structurants (achat immobilier, side business rentable, patrimoine net cible). Vision 10 ans: objectifs transformationnels (indépendance financière, liberté géographique). Vision 25 ans: legacy (transmission, impact, fondation).",
+        "methode_backcasting": "Partir du résultat souhaité à 25 ans et remonter: quel patrimoine à 10 ans pour y arriver? Quel savings rate à 5 ans pour atteindre ce patrimoine? Quelle action ce mois-ci pour installer ce savings rate? Transformer la vision en action immédiate."
+      },
+      "net_worth_tracking": {
+        "frequence": "Mensuel: mise à jour du bilan patrimonial. Format: total actifs (immobilier valeur marché, placements financiers, épargne, crypto, business) - total passifs (crédits restants, dettes) = patrimoine net.",
+        "outils": "Tableur personnel (contrôle total, pas de partage de données), Finary (agrégation automatique comptes français), ou Bankin/Linxo pour le suivi des flux.",
+        "indicateurs_cles": "Patrimoine net (évolution MoM et YoY), taux d'épargne mensuel, revenus passifs vs dépenses, allocation par classe d'actifs, ratio dette/patrimoine."
+      },
+      "automatisation": {
+        "pay_yourself_first": "Virement automatique le jour du salaire vers l'épargne/investissement AVANT toute dépense. Montant non-négociable. Le reste = budget disponible. Psychologiquement: on ne peut pas dépenser ce qu'on ne voit jamais sur le compte courant.",
+        "buckets_system": "Système de sous-comptes thématiques: Bucket 1 (fonds d'urgence: 6 mois, livret A), Bucket 2 (projets moyen terme 1-5 ans: assurance-vie fonds euros), Bucket 3 (retraite/FI: PEA + PER, investissement long terme), Bucket 4 (fun/plaisir: 5-10% des revenus, permission sans culpabilité).",
+        "quarterly_money_dates": "Révision trimestrielle structurée: (1) Analyse des flux du trimestre vs budget. (2) Suivi patrimoine net. (3) Revue allocation et rééquilibrage si nécessaire. (4) Ajustement des objectifs si événement de vie. (5) Célébration des progrès (renforcement positif).",
+        "annual_review": "Bilan annuel complet: performance des investissements, évolution du patrimoine net sur 12 mois, optimisation fiscale réalisée, ajustement de l'allocation cible, fixation des objectifs N+1, mise à jour de la vision long terme."
+      }
+    },
+    "transmission_wealth_literacy": {
+      "education_financiere_enfants": {
+        "par_age": {
+          "trois_six_ans": "Concepts de base: l'argent s'échange contre des biens/services, distinction besoins vs envies, tirelire transparente (visualiser la croissance). Jeu du magasin avec de la monnaie réelle.",
+          "sept_douze_ans": "Argent de poche hebdomadaire avec budget libre (apprentissage par l'erreur). Système 3 bocaux: Dépenser/Épargner/Donner. Introduction au concept d'intérêts composés avec un exemple visuel (1 centime doublé chaque jour pendant 30 jours = 5,3 millions).",
+          "treize_dix_sept_ans": "Compte bancaire personnel avec carte. Budget mensuel à gérer en autonomie. Premier investissement symbolique (action d'une entreprise qu'ils connaissent). Discussion ouverte sur les revenus familiaux et les choix financiers. Initiation à la fiscalité de base.",
+          "dix_huit_plus": "Ouverture PEA (lancer le compteur des 5 ans), premier investissement en ETF, gestion autonome du budget. Transmission du patrimoine de connaissances avant le patrimoine financier."
+        },
+        "erreur_parentale": "Deux extrêmes à éviter: (1) Ne jamais parler d'argent ('tabou familial') → enfants financièrement illettrés à 25 ans. (2) Gâter sans limite ('il ne manquera de rien') → aucune compréhension de la valeur, incapacité à gérer la frustration financière."
+      },
+      "family_financial_meetings": {
+        "principe": "Réunions familiales financières trimestrielles adaptées à l'âge des enfants. Transparence graduelle sur les finances familiales. Inclusion progressive dans les décisions (choix de vacances avec budget, comparaison de prix, discussion d'un projet d'investissement familial).",
+        "objectif": "Normaliser les conversations sur l'argent, transmettre les valeurs financières familiales, préparer la prochaine génération à recevoir et gérer un patrimoine."
+      },
+      "legacy_planning": {
+        "family_mission_statement": "Rédiger en famille une déclaration de mission financière: quelles valeurs guide notre rapport à l'argent? Quel impact voulons-nous avoir? Comment définissons-nous la 'richesse' au-delà du financier? Ce document guide les décisions de transmission et d'allocation philanthropique.",
+        "structures": "Family office (gestion centralisée du patrimoine familial, à partir de ~5M€), SCI familiale (détention et transmission immobilière), holding familiale (gestion des participations), fondation familiale (philanthropie structurée avec avantages fiscaux: réduction IR 66% dans la limite de 20% du revenu imposable, réduction IFI 75% plafonnée à 50 000€).",
+        "impact_investing": "Investir dans des entreprises et projets qui génèrent un impact social/environnemental mesurable en plus du rendement financier. Labels: ISR, Greenfin, Finansol. Allocation recommandée: 10-30% du portefeuille en impact investing pour aligner patrimoine et valeurs."
+      },
+      "philanthropie_strategique": {
+        "don_optimise": "Réduction d'IR de 66% du don (dans la limite de 20% du revenu imposable) pour les associations d'intérêt général. 75% pour les organismes d'aide aux personnes en difficulté (dans la limite de 1 000€). Report possible sur 5 ans si dépassement du plafond.",
+        "fondation_abritee": "Alternative à la fondation indépendante: créer une fondation abritée sous l'égide d'une fondation reconnue d'utilité publique (Fondation de France, Institut de France). Moins contraignant juridiquement, permet une philanthropie structurée et pérenne avec un apport initial modeste (~50 000€).",
+        "giving_pledge_personnel": "S'engager personnellement sur un pourcentage de ses revenus/patrimoine dédié au don. Commencer à 1% et augmenter progressivement. Le giving pledge de Bill Gates et Warren Buffett (engagement à donner 50%+ du patrimoine) est l'horizon ultime de l'abondance financière."
+      }
+    }
+  }
+}

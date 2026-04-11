@@ -1,0 +1,51 @@
+{
+  "version": "v30.0.0",
+  "category": "firebase_backend_cloud",
+  "description": "Firebase, plateformes cloud et APIs — Firebase complet (Firestore, Realtime DB, Authentication, Hosting, Cloud Functions, Storage, Analytics, Remote Config), Google AI Studio (Gemini API, prompt engineering), Reddit (API, communauté, growth), Unity game development (C#, composants, physique, UI, Store), plateformes cloud (AWS, GCP, Azure, Vercel, Netlify, Supabase)",
+  "firebase_backend_cloud": {
+    "introduction": "Firebase est la plateforme Backend-as-a-Service de Google qui permet de construire des applications web/mobile sans gérer l'infrastructure. TITANE guide à travers son utilisation avancée, de l'authentification à la serverless computing, en intégrant les autres grandes plateformes cloud.",
+    "firebase": {
+      "firestore": {
+        "structure": "Base de données NoSQL orientée documents. Collections → Documents → Sous-collections. Données JSON. Pas de schéma fixe. Chaque document = 1 Mo max.",
+        "requetes": "Requêtes temps réel (`onSnapshot`). Filtres (`where`), ordres (`orderBy`), pagination (`limit`, `startAfter`). Index composites requis pour les requêtes complexes. Array queries (`array-contains`, `in`).",
+        "securite": "Firestore Security Rules (`firestore.rules`). `allow read, write: if request.auth != null;`. Validation des données dans les règles. `request.resource.data` vs `resource.data`.",
+        "optimisation": "Batched writes (500 ops max). Transactions (atomic reads/writes). Offline support (cache local). Sharding pour les compteurs haute fréquence. Structure de données dénormalisée pour la performance."
+      },
+      "authentication": {
+        "methodes": "Email/Password, Google, Facebook, Apple, GitHub, Twitter, Phone (SMS), Anonymous. Custom tokens (JWT).",
+        "sdk": "`createUserWithEmailAndPassword`, `signInWithEmailAndPassword`, `signInWithPopup(provider)`, `signOut`. `onAuthStateChanged` pour observer l'état.",
+        "securite": "Email verification. Password reset. MFA (Multi-Factor Auth). Account linking (plusieurs providers sur un compte). Session persistence (LOCAL/SESSION/NONE)."
+      },
+      "cloud_functions": {
+        "types": "HTTP functions (endpoints REST). Callable functions (appel depuis le client avec auth automatique). Background triggers (Firestore, Auth, Storage, Pub/Sub, Scheduling).",
+        "patterns": "Validation backend. Envoi d'emails (SendGrid, Resend). Webhooks Stripe. Image processing (Sharp). Synchronisation entre services. Cleanup automatique.",
+        "deploiement": "`firebase deploy --only functions`. `firebase emulators:start` pour test local. Environment variables via `.env` ou `firebase functions:config:set`."
+      },
+      "hosting": "CDN global. HTTPS automatique. Deploy avec `firebase deploy`. Rollback instantané. Preview channels (PR previews). Rewrites/redirects dans `firebase.json`. Headers personnalisés.",
+      "storage": "Cloud Storage for Firebase. Upload/download fichiers. Security Rules identiques à Firestore. `uploadBytes`, `getDownloadURL`. Métadonnées fichiers. Résumable uploads.",
+      "analytics_remote_config": "Firebase Analytics (funnel analysis, user properties, events personnalisés). Remote Config (feature flags, valeurs dynamiques sans redéployer)."
+    },
+    "google_ai_studio": {
+      "description": "Interface web pour tester et déployer les modèles Gemini de Google. Gratuit avec quotas généreux. Accès API pour intégration dans les applications.",
+      "modeles_gemini": {
+        "gemini_1_5_pro": "1M tokens de contexte. Multimodal (texte, images, audio, vidéo, code). Le plus capable. Idéal pour les tâches complexes.",
+        "gemini_1_5_flash": "Rapide et économique. 1M tokens. Meilleur rapport qualité/prix. Idéal pour les applications haute fréquence.",
+        "gemini_2_flash": "Modèle 2e génération. Encore plus rapide. Thinking mode (raisonnement chaîne-de-pensée)."
+      },
+      "api_integration": "`@google/generative-ai` (JavaScript). `google-generativeai` (Python). Chat multi-tours (`startChat`). Streaming (`generateContentStream`). System instructions. Safety settings.",
+      "prompt_engineering_avance": "Few-shot prompting (exemples dans le prompt). Chain-of-thought (raisonnement étape par étape). Role playing (system prompt). Format de sortie structuré (JSON mode). Grounding avec Google Search."
+    },
+    "reddit": {
+      "api": "Reddit API (OAuth2). `r/subreddit` endpoints. Créer des bots avec PRAW (Python Reddit API Wrapper). Rate limits : 60 requêtes/minute (OAuth). Push notifications (webhooks non disponibles → polling).",
+      "strategie_communaute": "Reddit est une communauté qui rejette le marketing direct. Apporter de la vraie valeur. Construire du karma. Poster dans les bons subreddits. Modération proactive. AMAs (Ask Me Anything).",
+      "growth": "Identifier les subreddits de niche pertinents. Posts de qualité (long-form, insights). Timing optimal (mardi-jeudi, 9h-12h EST). Commentaires top-level de valeur. Analyse via Reddit Insights."
+    },
+    "autres_plateformes_cloud": {
+      "vercel": "Déploiement de frontend et serverless functions. Intégration GitHub automatique. Edge network. Preview deployments. Analytics. Idéal pour Next.js, Nuxt, SvelteKit.",
+      "netlify": "JAMstack. Netlify Functions. Forms. Identity. Deploy previews. Split testing. Plugin ecosystem. Idéal pour les sites statiques.",
+      "supabase": "Alternative Firebase open-source. PostgreSQL + Auth + Storage + Realtime + Edge Functions. SQL + REST + Realtime API. Idéal pour migrer de Firebase vers SQL.",
+      "aws_essentiels": "S3 (stockage fichiers), EC2 (VMs), Lambda (serverless), RDS (SQL), DynamoDB (NoSQL), CloudFront (CDN), Route53 (DNS), Amplify (Firebase-like). IAM (gestion droits).",
+      "gcp_essentiels": "Cloud Run (containers serverless), BigQuery (analytics SQL), Cloud Storage, Vertex AI, Cloud SQL, App Engine."
+    }
+  }
+}

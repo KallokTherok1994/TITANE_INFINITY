@@ -1,0 +1,76 @@
+{
+  "version": "v30.0.0",
+  "category": "biologie_sciences_vivant",
+  "description": "Biologie et sciences du vivant — biologie cellulaire (cellule, ADN, ARN, protéines), génétique (hérédité, mutations, épigénétique, CRISPR), évolution (Darwin, sélection naturelle, spéciation, phylogénèse), microbiologie (bactéries, virus, champignons, immunité), anatomie et physiologie humaine, écologie et biodiversité, biotechnologies",
+  "biologie_sciences_vivant": {
+    "introduction": "La biologie est la science du vivant dans toute sa diversité — de la molécule à la biosphère. TITANE intègre les dernières connaissances biologiques, de la génétique moléculaire à l'écologie des systèmes, avec rigueur et pédagogie.",
+    "biologie_cellulaire": {
+      "types_cellules": {
+        "procaryote": "Sans noyau membranaire. Bactéries, archées. ADN circulaire dans le cytoplasme. Ribosome 70S. Paroi cellulaire (peptidoglycane pour bactéries). 1-10 μm.",
+        "eucaryote": "Noyau membranaire avec chromosomes linéaires. Animaux, végétaux, champignons, protistes. Organites membranaires : mitochondries, réticulum, appareil de Golgi. 10-100 μm."
+      },
+      "organites": {
+        "noyau": "Contient l'ADN (génome). Nucléole (synthèse ARN ribosomique). Enveloppe nucléaire avec pores.",
+        "mitochondrie": "Centrale énergétique. Respiration cellulaire : glucose + O2 → 36-38 ATP + CO2 + H2O. Propre ADN circulaire (endosymbiose).",
+        "ribosome": "Synthèse des protéines (traduction). 80S chez eucaryotes (60S + 40S). Libre ou attaché au réticulum endoplasmique rugueux.",
+        "chloroplaste": "Chez végétaux et algues. Photosynthèse : 6CO2 + 6H2O + énergie lumineuse → C6H12O6 + 6O2. Phases : réactions lumineuses (thylacoides) + cycle de Calvin (stroma)."
+      },
+      "division_cellulaire": {
+        "mitose": "Division équationnelle. 4 phases : prophase, métaphase, anaphase, télophase. Résultat : 2 cellules filles génétiquement identiques (clones).",
+        "meiose": "Division réductionnelle. 2 divisions. Résultat : 4 gamètes haploïdes (n chromosomes). Crossing-over = brassage génétique."
+      }
+    },
+    "genetique": {
+      "ADN_et_structure": {
+        "structure": "Double hélice (Watson et Crick, 1953). Nucléotides : base azotée (A-T, G-C) + désoxyribose + phosphate. Liaisons hydrogène entre brins complémentaires.",
+        "genetique_code": "64 codons (triplets de 3 bases) encodant 20 acides aminés + codons stop. Dégénéré (plusieurs codons pour un même AA). Universel (quasi toutes les espèces).",
+        "expression_genique": "Transcription ADN → ARN messager (noyau). Traduction ARNm → protéine (ribosome). Régulation (promoteurs, facteurs de transcription, épigénétique)."
+      },
+      "heredite": {
+        "Mendel": "Lois de ségrégation et de la dominance (1866). Allèles dominants (A) vs récessifs (a). Génotype (AA, Aa, aa) vs phénotype. Croisements : carré de Punnett.",
+        "beyond_Mendel": "Codominance (groupe sanguin AB), dominance incomplète (rouge × blanc = rose), polygénie (couleur peau), pléiotropie (un gène → plusieurs effets), épistasie."
+      },
+      "mutations_et_epigenetique": {
+        "mutations": "Substitution (ponctuelle), insertion/délétion (frameshift). Source : erreurs de réplication, mutagènes (UV, agents chimiques). Mutagène ≠ toujours cancérogène.",
+        "epigenetique": "Modifications de l'expression génique sans changement de séquence ADN. Méthylation de l'ADN, histones (acétylation/méthylation). Héritables. Impact environnemental sur expression."
+      },
+      "CRISPR_Cas9": "Ciseau moléculaire guidé par ARN vers une séquence précise d'ADN. Jennifer Doudna et Emmanuelle Charpentier (Nobel 2020). Applications : correction mutations, thérapies géniques, OGM de précision, diagnostics."
+    },
+    "evolution": {
+      "theorie_darwinienne": {
+        "Darwin": "L'Origine des Espèces (1859). Sélection naturelle : variation → héritabilité → survie différentielle → adaptation. Sélection sexuelle.",
+        "neo_darwinisme": "Synthèse moderne : Darwin + génétique mendélienne + génétique des populations. Allèle fréquence change sous sélection (Hardy-Weinberg si pas de sélection).",
+        "speciation": "Isolement reproducteur → divergence génétique → nouvelle espèce. Allopatrique (géographique), sympatrique, parapatrique.",
+        "convergence": "Structures similaires chez espèces non apparentées (ailes de chauves-souris et oiseaux). Analogue vs homologue."
+      },
+      "phylogenie": "Arbre du vivant. Domaines : Bacteria, Archaea, Eukarya. Clades. Horloge moléculaire. LUCA (Last Universal Common Ancestor).",
+      "biodiversite": "Diversité génétique, des espèces, des écosystèmes. Extinction de masse (5 épisodes passés, 6e en cours — Anthropocène). Conservation : in situ (parcs naturels) vs ex situ (zoos, banques de graines)."
+    },
+    "microbiologie": {
+      "bacteries": {
+        "structure": "Paroi (gram+ : épaisse; gram- : bicouche), membrane plasmique, cytoplasme, ADN circulaire (chromosome + plasmides), ribosomes 70S, flagelles.",
+        "pathogenicite": "Facteurs de virulence : toxines (exo/endo), adhésines, capsule, enzymes. Résistance aux antibiotiques (plasmide R, biofilms, pompes à efflux, mutation cible).",
+        "microbiome": "100 trillions de microorganismes chez l'humain. Rôle : digestion, immunité, synthèse vitamines (B12, K). Dysbiose → maladies inflammatoires, obésité, dépression."
+      },
+      "virologie": {
+        "structure": "Capsule protéique (capside) + matériel génétique (ADN ou ARN, simple ou double brin). ± enveloppe lipidique (virus enveloppés : SARS-CoV-2, influenza).",
+        "cycle_viral": "Attachement → pénétration → décapsidation → réplication → assemblage → libération. Virus à ARN : rétrovirus (HIV, intégration dans l'ADN hôte via transcriptase inverse).",
+        "immunite": "Immunité innée (barrières, phagocytose, interférons) vs adaptative (lymphocytes B/anticorps, lymphocytes T cytotoxiques). Vaccination : mémoire immunitaire sans maladie. ARNm (Pfizer, Moderna)."
+      }
+    },
+    "anatomie_physiologie": {
+      "systemes_principaux": {
+        "nerveux": "SNC (cerveau + moelle épinière) + SNP. Neurones (100 milliards), synapses, neurotransmetteurs (dopamine, sérotonine, GABA, glutamate). Plasticité neuronale.",
+        "cardiovasculaire": "Cœur : 4 cavités (2 oreillettes, 2 ventricules). Grande circulation (corps) + petite circulation (poumons). Pression artérielle normale : 120/80 mmHg. FC repos : 60-100 bpm.",
+        "respiratoire": "Voies aériennes → alvéoles (300m² de surface d'échange). VO2max : capacité aérobie maximale. Hémoglobine transporte O2 (4 molécules/Hb).",
+        "endocrinien": "Glandes hormonales : hypophyse (GH, TSH, FSH, LH), thyroïde (T3/T4), surrénales (cortisol, adrénaline), pancréas (insuline/glucagon), gonades.",
+        "immunitaire": "Organes : moelle osseuse (production), thymus (maturation T), rate et ganglions (filtration). Complément, cytokines, anticorps."
+      }
+    },
+    "biotechnologies": {
+      "OGM": "Organism génétiquement modifié. Techniques : Agrobacterium (plantes), biolistique. Applications : résistance aux insectes (Bt), tolérance aux herbicides, enrichissement nutritif (riz doré).",
+      "therapies_geniques": "Correction de mutations génétiques. Vecteurs : virus (AAV, lentivirus), nanoparticules lipidiques. Maladies : mucoviscidose, drépanocytose, certains cancers.",
+      "biologie_synthetique": "Concevoir des organismes artificiels avec des fonctions nouvelles. Bactéries usines pour insuline, biocarburants, bioplastiques. iGEM (competition universitaire)."
+    }
+  }
+}

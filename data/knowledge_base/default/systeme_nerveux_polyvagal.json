@@ -1,0 +1,91 @@
+{
+  "version": "v30.0.0",
+  "category": "systeme_nerveux_polyvagal",
+  "description": "Système nerveux et théorie polyvagale avancée — anatomie du SNA (sympathique/parasympathique/entérique), théorie polyvagale de Porges (hiérarchie vagale : sécurité/mobilisation/immobilisation), fenêtre de tolérance, régulation somatique (titration, pendulation, ancrage), trauma et dérégulation, pratiques de régulation du SN (respiration, mouvement, son), psychologie somatique",
+  "systeme_nerveux_polyvagal": {
+    "introduction": "Le système nerveux autonome (SNA) régit notre survie et notre capacité à nous connecter aux autres. La théorie polyvagale de Stephen Porges (1994) révolutionne notre compréhension du trauma, du stress et des relations. TITANE intègre ces connaissances de neurosciences appliquées pour guider la régulation du système nerveux.",
+    "anatomie_SNA": {
+      "systeme_sympathique": {
+        "fonction": "Mode de mobilisation : fuite ou combat (fight-or-flight). Activation face à la menace perçue. Libération d'adrénaline et de noradrénaline.",
+        "physiologie": "Accélération cardiaque, vasodilatation musculaire, dilatation pupillaire, inhibition digestion, hypervigilance sensorielle.",
+        "origine_evolution": "Survie face aux prédateurs. Efficace pour les menaces physiques immédiates. Inadapté aux stress chroniques modernes."
+      },
+      "systeme_parasympathique": {
+        "fonction": "Mode de repos et digestion (rest-and-digest). Récupération après la menace. Régulation via le nerf vague.",
+        "nerf_vague": "Nerf crânien X. Le plus long nerf du corps (cerveau → intestin). Deux branches : ventrale (sécurité, connexion) et dorsale (immobilisation, effondrement).",
+        "physiologie": "Ralentissement cardiaque, activation digestive, réduction de la pression artérielle, relaxation musculaire."
+      },
+      "systeme_enterique": "Le 'deuxième cerveau'. 500 millions de neurones dans le tractus gastro-intestinal. Produit 95% de la sérotonine corporelle. Communication bidirectionnelle cerveau-intestin (axe cérébro-intestinal)."
+    },
+    "theorie_polyvagale": {
+      "Stephen_Porges": "Neuroscientifique américain. Théorie Polyvagale (1994, 2011). Révolutionne la compréhension du trauma et de la connexion sociale.",
+      "hierarchie_des_reponses": {
+        "niveau_1_ventral": {
+          "etat": "Sécurité et connexion sociale",
+          "systeme": "Nerf vague ventral (branche récente, mammifères)",
+          "comportements": "Engagement social, sourire, prosodie vocale, écoute, empathie, créativité, jeu",
+          "physiologie": "Fréquence cardiaque variable (HRV élevé), muscles faciaux engagés, voix mélodieuse",
+          "trigger": "Signaux de sécurité dans l'environnement"
+        },
+        "niveau_2_sympathique": {
+          "etat": "Mobilisation : combat ou fuite",
+          "systeme": "Chaîne sympathique (ancienne, vertébrés)",
+          "comportements": "Agression, fuite, hyperactivité, anxiété, irritabilité, réactivité",
+          "physiologie": "Tachycardie, cortisol, adrénaline, muscles tendus, hyperventilation",
+          "trigger": "Menace perçue active"
+        },
+        "niveau_3_dorsal": {
+          "etat": "Immobilisation : effondrement, dissociation",
+          "systeme": "Nerf vague dorsal (primitif, reptiliens)",
+          "comportements": "Freeze, dissociation, dépression, engourdissement, collapse, honte",
+          "physiologie": "Bradycardie, apnée, tonus musculaire réduit, dissociation sensorielle",
+          "trigger": "Menace insurmontable, impuissance totale"
+        }
+      },
+      "neuroception": "Détection inconsciente de la sécurité ou du danger, avant la conscience. Le SN évalue en permanence : suis-je en sécurité ? Peut se dérégler (hypervigilance chronique, trauma).",
+      "coregulation": "Besoin biologique de réguler son SN par le contact avec d'autres SN régulés. La co-régulation précède l'autorégulation (enfant-parent). Base neurologique de l'attachement et des relations."
+    },
+    "fenetre_de_tolerance": {
+      "concept": "Dan Siegel. Zone optimale d'activation du SN où le traitement et l'apprentissage sont possibles.",
+      "zones": {
+        "fenetre": "Zone de tolérance : activation gérable, présence, flexibilité, apprentissage, relation",
+        "hyperactivation": "Au-dessus : anxiété, panique, rage, hypervigilance, agitation, traumatisation",
+        "hypoactivation": "En-dessous : dépression, engourdissement, dissociation, effondrement, figement"
+      },
+      "elargissement": "Pratiques somatiques élargissent progressivement la fenêtre. Titration (petits pas), pendulation (osciller entre activation et ressource), containment (s'ancrer)."
+    },
+    "trauma_et_deregulation": {
+      "definition_trauma": "Pas l'événement en lui-même mais la réponse du SN face à un événement perçu comme insurmontable. Le trauma vit dans le corps (Bessel van der Kolk : 'Le Corps n'Oublie Rien').",
+      "types": {
+        "trauma_T": "Grand T : chocs, accidents, agressions, catastrophes. Réponse traumatique visible.",
+        "trauma_t": "Petit t : humiliations répétées, rejet, abandon, négligence. Accumulation silencieuse. Souvent plus insidieux.",
+        "trauma_complexe": "PTSD complexe (cPTSD) : trauma développemental, relationnel, répété dans l'enfance. Herman (Trauma and Recovery).",
+        "trauma_intergenerationnel": "Transmission épigénétique et comportementale des traumas non résolus. Étude SHOAH, épigenomique du stress."
+      },
+      "processus_guerison": "Phase 1 : Stabilisation (sécurité, ressources, régulation). Phase 2 : Traitement du trauma (EMDR, Somatic Experiencing, IFS). Phase 3 : Intégration et post-traumatic growth."
+    },
+    "pratiques_regulation": {
+      "respiration": {
+        "coherence_cardiaque": "5-5 ou 4-6 (inspiration-expiration) = 5-6 cycles/min. Synchronise HRV. Stimule le nerf vague ventral. Pratique 3x5 min par jour. Cohérence.com.",
+        "expiration_longue": "Expiration prolongée (2x la durée de l'inspiration) active le parasympathique. Box breathing : 4-4-4-4. Physiological sigh : double inspiration + longue expiration.",
+        "respiration_diaphragmatique": "Respiration abdominale complète. Massage interne des organes. Activation vagale. Contrepoint à la respiration thoracique du stress."
+      },
+      "mouvement_somatique": {
+        "tremblements": "TRE (Trauma Release Exercises — Peter Levine). Les tremblements musculaires sont un mécanisme naturel de décharge du stress. Inhibés culturellement. Activation et libération.",
+        "danse_et_expression": "Danse libre, danse consciente (5Rhythmes), biodanza. Mouvement comme langage corporel, expression émotionnelle, intégration.",
+        "yoga_somatique": "Yoga orienté vers la sensation plutôt que la performance. Yoga nidra pour le système dorsal. Yin yoga pour le relâchement profond. Hatha yoga pour l'activation."
+      },
+      "son_et_vibration": {
+        "humming": "Fredonner stimule le nerf vague (vibration laryngée). Réduction de l'inflammation (NO nasale). 20-30 min de humming quotidien.",
+        "chant": "Kirtan, chant choral, bols tibétains. Le chant en groupe synchronise les SN (co-régulation auditive). Oxytocine.",
+        "sons_binauraux": "Battements binauraux (différence de fréquence entre les deux oreilles). Theta (4-8 Hz) pour méditation profonde, Alpha (8-12 Hz) pour relaxation, Beta (15-40 Hz) pour focus."
+      },
+      "ancrage": {
+        "technique_5_4_3_2_1": "5 choses vues, 4 entendues, 3 touchées, 2 odeurs, 1 goût. Ramène au présent sensoriel.",
+        "contact_sol": "Pieds nus sur la terre (earthing/grounding). Réduction du cortisol mesurée. Contact physiologique avec la réalité.",
+        "temperature": "Eau froide (douche froide, immersion) active le nerf vague dorsal en douceur. Sauna (chaleur) suivi de froid = entraînement du SN."
+      }
+    },
+    "HRV_et_biofeedback": "HRV (Heart Rate Variability) = variabilité de la fréquence cardiaque. Indicateur clé de la santé du SNA et de la résilience. HRV élevée = nerf vague tonique, bonne régulation. Mesure : Oura Ring, Garmin, HeartMath, Polar H10."
+  }
+}

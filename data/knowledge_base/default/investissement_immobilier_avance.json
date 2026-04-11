@@ -1,0 +1,105 @@
+{
+  "version": "v30.0.0",
+  "category": "investissement_immobilier_avance",
+  "description": "Investissement immobilier avancé VISIONNAIRE_2.0 — stratégies locatives (colocation/LCD/Airbnb/immeubles de rapport/division), montages juridiques (SCI IS/IR, LMNP/LMP, holding, démembrement), optimisation fiscale (amortissement, déficit foncier, Pinel/Denormandie), financement avancé (levier, refinancement, multi-banques), rénovation ROI, analyse de rentabilité (brut/net/net-net/cash-flow), gestion locative, marché immobilier",
+  "investissement_immobilier_avance": {
+    "introduction": "L'immobilier est le véhicule de création de richesse le plus éprouvé de l'histoire. Avec l'effet de levier bancaire, c'est le seul investissement où l'on peut investir l'argent des autres (la banque), le rembourser avec l'argent de quelqu'un d'autre (le locataire), et conserver la plus-value pour soi. TITANE maîtrise les stratégies avancées au niveau VISIONNAIRE_2.0.",
+    "strategies_locatives": {
+      "location_nue": {
+        "principe": "Bail de 3 ans (6 ans pour personne morale). Revenus fonciers. Moins rentable mais plus stable et moins de gestion.",
+        "regime_micro_foncier": "Revenus < 15 000€/an : abattement forfaitaire 30%. Simple mais rarement optimal.",
+        "regime_reel": "Déduction de toutes les charges réelles : intérêts emprunt, travaux, assurances, gestion, taxe foncière. Souvent plus avantageux."
+      },
+      "location_meublee": {
+        "avantages": "Loyers 15-30% plus élevés. Régime LMNP avec amortissement comptable. Bail 1 an (9 mois étudiants). Plus flexible.",
+        "equipements_obligatoires": "Liste de 11 éléments minimum : literie, volets/rideaux, plaques de cuisson, four/micro-ondes, réfrigérateur, vaisselle, ustensiles, table/chaises, luminaires, étagères, matériel d'entretien.",
+        "LMNP": {
+          "conditions": "Recettes < 23 000€/an OU < 50% des revenus du foyer. Sinon passage en LMP.",
+          "micro_BIC": "Recettes < 77 700€ : abattement 50% (meublé classique) ou 71% (tourisme classé). Simple.",
+          "regime_reel_simplifie": "Déduction charges + amortissements. L'amortissement du bien (hors terrain ~15-20%) sur 25-30 ans + meubles sur 5-7 ans crée un résultat fiscal souvent proche de zéro. Aucun impôt sur les loyers pendant 10-15 ans."
+        },
+        "LMP": {
+          "conditions": "Recettes > 23 000€ ET > 50% revenus du foyer.",
+          "avantages": "Déficit imputable sur revenu global (pas que BIC). Exonération plus-value après 5 ans d'activité. Exonération IFI sous conditions.",
+          "inconvenients": "Cotisations sociales SSI (~35-40% du bénéfice). Complexité comptable."
+        }
+      },
+      "colocation": {
+        "principe": "Louer un bien à plusieurs colocataires. Rendement 20-40% supérieur à la location classique.",
+        "bail": "Bail individuel (préférable : pas de solidarité, chaque chambre indépendante) ou bail collectif avec clause de solidarité.",
+        "cible": "Étudiants, jeunes actifs, digital nomads. Villes universitaires et métropoles.",
+        "optimisation": "Espaces communs de qualité, WiFi haut débit, meublé complet, chambres avec serrure, gestion structurée."
+      },
+      "location_courte_duree_LCD": {
+        "principe": "Airbnb, Booking.com. Rendement 2-3x la location classique. Très exigeant en gestion.",
+        "reglementation": "120 jours max/an en résidence principale. Déclaration mairie obligatoire en zone tendue. Numéro d'enregistrement.",
+        "optimisation": "Photos professionnelles, titre accrocheur, pricing dynamique (PriceLabs/Beyond Pricing), super-hôte, check-in automatisé (serrure connectée), conciergerie.",
+        "fiscalite": "Micro-BIC (abattement 50%) ou réel LMNP. Au-delà de certains seuils, TVA applicable."
+      },
+      "immeuble_de_rapport": {
+        "definition": "Acheter un immeuble entier (3+ lots). Prix au m² inférieur. Mutualisation des risques. Cash-flow souvent positif.",
+        "avantages": "Un seul acte notarié, pas de copropriété, maîtrise totale des travaux et des charges, rentabilité brute 8-15% en province.",
+        "risques": "Ticket d'entrée élevé, travaux lourds, vacance multiple possible, gestion complexe."
+      },
+      "division_de_lots": {
+        "principe": "Acheter un grand bien, diviser en plusieurs petits lots (studio/T2). Augmente la valeur totale et la rentabilité.",
+        "reglementation": "Permis ou déclaration préalable selon cas. Respect normes décence, surface min 9m², hauteur 2.20m. Mise en copropriété si vente à la découpe."
+      }
+    },
+    "montages_juridiques": {
+      "SCI_IS": {
+        "avantages": "IS à 15% (jusqu'à 42 500€ puis 25%). Amortissement du bien. Distribution dividendes au choix. Trésorerie accumulable dans la société.",
+        "inconvenients": "Plus-value des particuliers perdue (plus-value professionnelle = prix vente - valeur nette comptable). Comptabilité obligatoire. Coût de création ~500-1500€."
+      },
+      "SCI_IR": {
+        "avantages": "Transparence fiscale, plus-value des particuliers (abattement pour durée de détention), transmission facilitée de parts.",
+        "usage": "Patrimoine familial, préparation succession, démembrement de parts."
+      },
+      "holding_immobiliere": {
+        "structure": "Holding (SASU/SAS) détient des SCI filles. Cash remonte via dividendes avec régime mère-fille (exonération 95%).",
+        "avantages": "Cash pooling entre sociétés. Réinvestissement sans fiscalité. Management fees. Levier fiscal.",
+        "seuil_pertinence": "Généralement pertinent à partir de 3-5 biens / 500k€+ de patrimoine immobilier."
+      },
+      "demembrement": {
+        "usufruit_temporaire": "Donner l'usufruit temporaire à une société à l'IS. Elle perçoit les loyers et amortit l'usufruit. Pas d'IFI pour le nu-propriétaire.",
+        "nue_propriete": "Acheter la nue-propriété avec décote (40-50% sur 15-20 ans). Récupérer la pleine propriété sans impôt à terme."
+      }
+    },
+    "financement_avance": {
+      "levier_bancaire": {
+        "principe": "Emprunter pour investir. ROE (Return On Equity) amplifié par l'effet de levier. Si rendement net > coût de la dette = création de valeur.",
+        "taux_endettement": "Règle HCSF : 35% max des revenus (assurance incluse). Calcul différentiel vs classique selon les banques.",
+        "apport": "10-20% typiquement. Certains montages permettent le 110% (financement frais de notaire inclus) avec bon dossier.",
+        "duree": "20-25 ans optimal pour cash-flow. Plus long = mensualités basses = cash-flow positif plus facile."
+      },
+      "multi_banques": "Répartir les emprunts entre plusieurs banques pour maximiser la capacité d'emprunt totale. Chaque banque a ses propres critères.",
+      "refinancement": "Après plus-value latente, renégocier ou refinancer pour extraire du cash (equity release) et réinvestir. Technique américaine BRRRR adaptée.",
+      "pret_in_fine": "Ne rembourser que les intérêts, capital remboursé à la fin. Intérêts plus élevés mais déductibles. Couplé à une assurance-vie nantie."
+    },
+    "analyse_rentabilite": {
+      "rendement_brut": "Loyers annuels / Prix d'achat × 100. Premier filtre rapide. Objectif : > 7% en province, > 4% en grande ville.",
+      "rendement_net": "(Loyers - Charges - Taxe foncière - Assurances - Gestion) / (Prix + Frais notaire + Travaux) × 100. Plus réaliste.",
+      "rendement_net_net": "Après impôts et prélèvements sociaux. Le seul qui compte vraiment.",
+      "cash_flow": "Loyers encaissés - Toutes les charges - Mensualité emprunt. Positif = autofinancement. Négatif = effort d'épargne. Objectif : minimum 0, idéal > 100€/lot/mois.",
+      "methode_70_pourcent": "Le prix d'achat + travaux ne doit pas dépasser 70% de la valeur après rénovation (ARV). Marge pour revente ou sécurité.",
+      "TRI": "Taux de rendement interne : intègre le cash-flow, la plus-value et le remboursement de capital. Le calcul le plus complet."
+    },
+    "renovation_et_valorisation": {
+      "estimation_travaux": "Budget moyen au m² : rafraîchissement 200-400€, rénovation moyenne 500-800€, rénovation lourde 800-1500€. Toujours prévoir 10-15% d'imprévus.",
+      "roi_renovation": "Cuisine et salle de bain = meilleur ROI. Isolation = économies énergie + DPE amélioré + valeur. Peinture = rapport coût/impact visuel maximal.",
+      "home_staging": "Désencombrer, neutraliser, mettre en valeur pour 1-3% du prix de vente. ROI typique : 5-15x l'investissement en home staging.",
+      "DPE": "Le Diagnostic de Performance Énergétique est devenu crucial. F/G interdits à la location progressive. Viser C minimum pour valorisation et location pérenne."
+    },
+    "gestion_locative": {
+      "gestion_directe": "Économie de 6-8% HT sur les loyers. Chronophage mais rentable si < 5 biens. Outils : Rentila, Ublo.",
+      "gestion_deleguee": "6-10% HT des loyers. Justifié pour LCD, grand portefeuille ou distance géographique.",
+      "assurance_GLI": "Garantie Loyers Impayés : 2-3.5% du loyer. Couvre impayés + dégradations + frais juridiques. Alternative : Visale (caution État gratuite pour jeunes/précaires).",
+      "prevention_impayes": "Sélection rigoureuse (revenus 3x le loyer, CDI/fonctionnaire, garants), état des lieux détaillé, relation bienveillante mais professionnelle."
+    },
+    "segments_specialises": {
+      "parkings_garages": "Ticket d'entrée bas (5-30k€). Rendement brut 6-12%. Pas de trêve hivernale, bail simple, très peu de gestion.",
+      "locaux_commerciaux": "Bail 3-6-9. Locataire paie charges et travaux. Rendement 7-12%. Risque de vacance plus long.",
+      "crowdfunding_immobilier": "Plateformes (Homunity, Anaxago, ClubFunding). Rendement 8-12%/an sur 12-24 mois. Risque : défaut du promoteur. Diversifier sur 10+ projets."
+    }
+  }
+}

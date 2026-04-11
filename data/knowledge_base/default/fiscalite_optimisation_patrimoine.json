@@ -1,0 +1,191 @@
+{
+  "version": "v30.0.0",
+  "category": "fiscalite_optimisation_patrimoine",
+  "description": "Optimisation fiscale avancée et structuration patrimoniale — structures juridiques (micro-entreprise, SASU, EURL, SCI, holding, intégration fiscale), optimisation légale (frais réels, amortissement, charges déductibles, TVA), véhicules d'investissement (PEA, assurance-vie, PER, compte-titres), immobilier fiscal (LMNP, LMP, déficit foncier, dispositifs Pinel/Denormandie/Malraux), montages patrimoniaux (donation-partage, démembrement, Dutreil, clause bénéficiaire), fiscalité internationale (résidence fiscale, conventions, IP Box, expatriation), planification et erreurs fatales",
+  "fiscalite_optimisation_patrimoine": {
+    "introduction": "La fiscalité patrimoniale française est l'une des plus complexes d'Europe. Ce module VISIONNAIRE_2.0 couvre les stratégies avancées d'optimisation fiscale légale, de structuration juridique et de transmission patrimoniale. Chaque levier est détaillé avec ses seuils chiffrés, ses avantages réels, ses limites, et ses risques de requalification. L'objectif est de fournir à l'utilisateur une maîtrise experte lui permettant de dialoguer d'égal à égal avec un fiscaliste ou un notaire spécialisé.",
+    "structures_juridiques": {
+      "micro_entreprise": {
+        "seuils_2024": "CA maximal: 188 700€ pour vente de marchandises, 77 700€ pour prestations de services et professions libérales. Franchise en base de TVA: 101 000€ (ventes) et 39 100€ (services).",
+        "avantages": "Comptabilité ultra-simplifiée (livre des recettes), déclaration sur le CA brut, versement libératoire de l'IR possible (1% ventes, 1,7% BIC services, 2,2% BNC) sous condition de revenu fiscal N-2 < 27 478€ par part.",
+        "charges_sociales": "Cotisations URSSAF sur CA: 12,3% (ventes), 21,2% (services BIC), 21,1% (BNC hors CIPAV), 23,2% (professions libérales CIPAV). Abattement forfaitaire: 71% (ventes), 50% (BIC services), 34% (BNC).",
+        "limites_strategiques": "Impossible de déduire les charges réelles. Non récupération de TVA sous franchise. Pas d'amortissement. Peu adapté si charges réelles > abattement forfaitaire. Plafond de CA limitant la croissance. Pas de séparation patrimoine personnel/professionnel.",
+        "transition_vers_societe": "Indicateur de bascule: quand charges réelles > 34-50% du CA, quand CA approche 80% du plafond, quand besoin de protection patrimoniale, ou quand optimisation de la rémunération vs dividendes devient pertinente."
+      },
+      "sasu": {
+        "regime_fiscal": "IS par défaut. Taux réduit 15% sur les 42 500 premiers euros de bénéfice (sous conditions: CA < 10M€, capital entièrement libéré, détenu à 75%+ par des personnes physiques). Au-delà: 25%.",
+        "remuneration_president": "Assimilé salarié: cotisations sociales ~65-82% du net (charges patronales + salariales). Protection sociale complète (retraite, prévoyance, mais pas chômage sauf ARE maintenue). Déductible du résultat imposable.",
+        "dividendes": "Flat tax 30% (PFU): 12,8% IR + 17,2% prélèvements sociaux. Option barème progressif possible si TMI < 12,8%. Pas de cotisations sociales sur dividendes en SASU (contrairement à EURL/SARL). Avantage majeur pour rémunération mixte.",
+        "strategie_optimale": "Rémunération minimale en salaire (valider 4 trimestres retraite ≈ ~7 000€/an) + complément en dividendes flat tax 30%. Économie vs tout-salaire peut atteindre 20-30% de charges. Attention: abus manifeste si salaire = 0€ avec dividendes élevés.",
+        "holding_sasu": "La SASU est le véhicule idéal pour créer une holding. Remontée de dividendes via régime mère-fille: exonération à 95% (quote-part de frais et charges de 5%). Permet la capitalisation et le réinvestissement sans fiscalité immédiate."
+      },
+      "eurl": {
+        "regime_tns": "Gérant associé unique = Travailleur Non Salarié. Cotisations sociales ~45% du bénéfice (vs ~82% charges totales en SASU). Protection sociale moindre mais coût significativement réduit.",
+        "dividendes_eurl": "Dividendes > 10% du capital social + primes d'émission + apports en compte courant: soumis aux cotisations sociales TNS (~45%). Contrairement à la SASU, les dividendes ne sont pas un levier d'optimisation majeur en EURL.",
+        "option_is": "L'EURL peut opter pour l'IS (irrévocable). Devient similaire à une SASU fiscalement mais avec statut TNS. Intéressant pour capitaliser les bénéfices dans la société."
+      },
+      "sci_a_lis": {
+        "principe": "SCI soumise à l'IS: les loyers sont des produits imposables mais déduction des amortissements du bien immobilier (composants: structure 50 ans, toiture 25 ans, installations techniques 15 ans, agencements 10 ans). Réduction drastique du résultat imposable les premières années.",
+        "avantage_amortissement": "Exemple: bien de 300 000€ (hors terrain 20%). Amortissement annuel moyen ~8 000-12 000€ déductible. Avec intérêts d'emprunt + charges: résultat fiscal souvent proche de 0€ pendant 10-15 ans.",
+        "piege_plus_value": "À la revente, la plus-value est calculée sur la valeur nette comptable (prix d'achat - amortissements pratiqués). Si amortissement de 150 000€ sur 15 ans, la plus-value imposable est artificiellement gonflée. Taux: IS 25% + impôt sur distribution. Alternative: vendre les parts de SCI plutôt que le bien (pas de purge des amortissements mais droits d'enregistrement 5%).",
+        "demembrement_parts": "Donation de la nue-propriété des parts aux enfants: décote de 30-40% sur la valeur. Usufruit conservé par les parents = perception des loyers. Au décès: reconstitution de pleine propriété sans droits de succession."
+      },
+      "sarl_de_famille": {
+        "definition": "SARL constituée exclusivement entre parents en ligne directe (ascendants, descendants) ou entre frères et sœurs, ainsi que les conjoints et partenaires PACS. Option IR possible sans limitation de durée.",
+        "avantage_lmnp": "En LMNP via SARL de famille à l'IR: amortissements déductibles + régime des plus-values des particuliers à la revente (exonération progressive après 22 ans IR, 30 ans PS). Cumul des avantages IR et amortissement: le meilleur des deux mondes.",
+        "risque": "Si un associé non-familial entre au capital, perte automatique et irrévocable du régime SARL de famille. Irréversibilité de la perte."
+      },
+      "holding_et_integration_fiscale": {
+        "cascade_societes": "Holding détenant des filiales opérationnelles. Flux financiers optimisés: dividendes remontés en quasi-exonération, management fees facturés (attention prix de transfert), convention de trésorerie intra-groupe.",
+        "regime_mere_fille": "Conditions: holding détient ≥5% du capital de la filiale depuis ≥2 ans. Dividendes reçus exonérés à 95% (quote-part de 5% réintégrée au résultat). Économie massive vs flat tax 30% directe.",
+        "integration_fiscale": "Conditions: détention ≥95% du capital. Résultat fiscal consolidé du groupe. Déficits d'une filiale compensent bénéfices d'une autre. Optimisation puissante mais complexité administrative significative.",
+        "societe_de_management": "Société holding facturant des prestations de management aux filiales. Permet d'optimiser la répartition du résultat et de centraliser les fonctions support. Risque: requalification en acte anormal de gestion si prestations fictives ou prix non justifiés."
+      }
+    },
+    "optimisation_fiscale_legale": {
+      "frais_reels_vs_forfaitaire": {
+        "forfait_salarie": "Abattement forfaitaire de 10% sur les salaires (plafonné à 14 171€ en 2024). Adapté si frais professionnels réels < 10% des revenus.",
+        "frais_reels_pertinents": "Frais kilométriques (barème fiscal selon puissance et distance), frais de repas (différentiel entre coût réel et valeur forfaitaire du repas à domicile 5,20€), double résidence, formation professionnelle, équipement informatique (prorata professionnel), cotisations syndicales.",
+        "seuil_bascule": "Calcul systématique des deux options chaque année. Les frais réels deviennent avantageux typiquement au-delà de 30-40 km domicile-travail ou en cas de double résidence."
+      },
+      "amortissement": {
+        "lineaire": "Répartition uniforme sur la durée d'utilisation. Exemple: ordinateur 1 200€ sur 3 ans = 400€/an déductible.",
+        "degressif": "Coefficient multiplicateur (1,25 pour 3-4 ans, 1,75 pour 5-6 ans, 2,25 pour >6 ans) appliqué au taux linéaire, puis basculement en linéaire quand l'annuité dégressive devient inférieure. Permet de déduire plus les premières années. Réservé aux biens neufs d'une durée ≥3 ans.",
+        "composants_immobilier": "Décomposition obligatoire: structure (50-80 ans), toiture (25 ans), façade (30 ans), installations générales (15-20 ans), agencements (10-15 ans). Accélère l'amortissement global du bien."
+      },
+      "charges_deductibles_maximisees": {
+        "liste_exhaustive": "Loyer du local professionnel, fournitures, téléphonie et internet (prorata pro), assurances professionnelles, honoraires (comptable, avocat), frais bancaires pro, cotisations professionnelles, formation continue, déplacements, réceptions clients (justificatifs obligatoires), cadeaux clients (< 73€ TTC pour récupération TVA).",
+        "bureau_a_domicile": "Déduction prorata surface dédiée × (loyer ou valeur locative + charges + assurance + taxe foncière + énergie). Exemple: bureau 15m² dans appartement 75m² = 20% des charges du logement déductibles."
+      },
+      "tva_recuperable": {
+        "principe": "TVA payée sur achats professionnels récupérable si assujetti. Intérêt majeur pour investissements lourds (matériel, véhicules utilitaires, travaux). TVA sur véhicules de tourisme non récupérable (sauf pour activités de transport/location).",
+        "regime_reel_simplifie": "Acomptes semestriels + régularisation annuelle. Adapté si TVA annuelle < 15 000€.",
+        "regime_reel_normal": "Déclarations mensuelles. Obligatoire au-delà de 15 000€ de TVA annuelle ou sur option."
+      }
+    },
+    "vehicules_investissement": {
+      "pea": {
+        "plafond": "150 000€ de versements (225 000€ pour PEA-PME cumulé). Pas de plafond sur les gains.",
+        "fiscalite_avant_5_ans": "Retrait avant 5 ans: clôture du PEA + imposition des gains au PFU 30% (ou barème progressif + 17,2% PS).",
+        "fiscalite_apres_5_ans": "Retraits partiels possibles sans clôture. Gains exonérés d'IR, seuls les prélèvements sociaux de 17,2% s'appliquent. Enveloppe la plus avantageuse fiscalement pour actions européennes.",
+        "strategie_avancee": "Ouvrir le PEA le plus tôt possible pour lancer le compteur des 5 ans (même avec un versement minimal). Privilégier les ETF capitalisant pour reporter l'imposition. PEA-PME pour les small/mid caps éligibles avec avantages supplémentaires.",
+        "univers_eligible": "Actions de sociétés ayant leur siège dans l'EEE (UE + Islande, Norvège, Liechtenstein). ETF éligibles PEA via réplication synthétique: accès possible au S&P 500, MSCI World via cette méthode."
+      },
+      "assurance_vie": {
+        "fiscalite_avant_8_ans": "Rachat partiel: PFU 30% ou barème progressif sur les gains contenus dans le rachat. Calcul au prorata: part de gains = (total gains / total encours) × montant racheté.",
+        "fiscalite_apres_8_ans": "Abattement annuel: 4 600€ pour une personne seule, 9 200€ pour un couple. Au-delà: 24,7% (7,5% IR + 17,2% PS) pour les versements < 150 000€ ou PFU 30% au-delà.",
+        "strategie_rachat_optimise": "Effectuer des rachats partiels annuels calibrés pour rester sous l'abattement. Sur un contrat de 200 000€ avec 50 000€ de gains (25%), un rachat de 18 400€ contient ~4 600€ de gains = exonération totale pour une personne seule.",
+        "clause_beneficiaire": "Rédaction cruciale. Démembrement de la clause: usufruit au conjoint, nue-propriété aux enfants. Permet au conjoint de percevoir les fonds tout en organisant la transmission aux enfants sans droits supplémentaires au second décès.",
+        "abattement_succession": "152 500€ par bénéficiaire pour les primes versées avant 70 ans (article 990I CGI). 30 500€ global (tous bénéficiaires) pour les primes après 70 ans mais les intérêts sont exonérés (article 757B).",
+        "multi_contrats": "Aucune limite légale au nombre de contrats. Stratégie recommandée: un contrat sécurisé fonds euros, un contrat UC dynamique, un contrat dédié transmission. Diversification des assureurs (garantie 70 000€ par assureur via FGAP)."
+      },
+      "per": {
+        "deduction_entree": "Versements déductibles du revenu imposable dans la limite de 10% des revenus professionnels N-1 (plafond 35 194€ en 2024) ou 10% du PASS si plus favorable (4 399€). Report possible sur 3 ans des plafonds non utilisés. Mutualisation possible au sein du couple.",
+        "effet_tmi": "Économie proportionnelle au TMI: versement de 10 000€ avec TMI 30% = économie de 3 000€. TMI 41% = 4 100€. TMI 45% = 4 500€. L'effet de levier est maximal aux TMI élevés.",
+        "sortie_capital": "Sortie en capital à la retraite: imposition au barème progressif (sans abattement de 10%) + PS 17,2% sur les gains. Sortie en rente: imposition au barème après abattement selon l'âge (30% si 50-59 ans, 40% si 60-69 ans, 50% si >70 ans).",
+        "strategie_optimale": "Verser pendant les années à TMI élevée (activité), sortir pendant les années à TMI basse (retraite). Écart de TMI = gain net. Si TMI identique entrée/sortie: avantage nul (simple report). Ne pas déduire à l'entrée si TMI < 30%.",
+        "deblocage_anticipe": "Achat de résidence principale, invalidité, décès du conjoint, surendettement, fin de droits chômage, cessation activité non salariée. Déblocage pour RP: soumis à imposition (barème + PS)."
+      },
+      "compte_titres": {
+        "flat_tax": "PFU 30% (12,8% IR + 17,2% PS) sur les plus-values et dividendes. Option globale pour le barème progressif (s'applique à tous les revenus du capital de l'année).",
+        "avantage": "Aucune restriction géographique ou de plafond. Accès à toutes les classes d'actifs: actions mondiales, obligations, ETF, produits dérivés, crypto (via ETP).",
+        "moins_values": "Imputation sur les plus-values de même nature pendant 10 ans. Stratégie de tax-loss harvesting: cristalliser les moins-values en fin d'année pour compenser les plus-values réalisées."
+      }
+    },
+    "immobilier_fiscal": {
+      "lmnp": {
+        "statut": "Loueur Meublé Non Professionnel. Conditions: recettes locatives < 23 000€/an ET < revenus d'activité du foyer fiscal.",
+        "regime_reel": "Déduction des charges réelles + amortissement comptable du bien (hors terrain ~15-20%) et du mobilier. L'amortissement ne crée pas de déficit imputable mais est reportable sans limite. Résultat fiscal souvent nul pendant 10-20 ans.",
+        "exemple_chiffre": "Bien meublé 200 000€, loyers 10 000€/an. Charges déductibles: intérêts 3 000€, assurance 500€, taxe foncière 800€, comptable 600€. Amortissement: ~5 500€/an. Résultat fiscal: 10 000 - 3 000 - 500 - 800 - 600 - 5 500 = -400€ → ramené à 0€ (pas de déficit LMNP imputable). Report de l'amortissement excédentaire.",
+        "plus_value": "Régime des plus-values des particuliers: abattement progressif pour durée de détention. Exonération totale d'IR après 22 ans, de PS après 30 ans. Les amortissements déduits ne majorent PAS la plus-value (contrairement à la SCI IS)."
+      },
+      "lmp": {
+        "criteres": "Recettes locatives > 23 000€/an ET > revenus d'activité du foyer fiscal. Inscription au RCS supprimée depuis 2020.",
+        "avantages": "Déficits imputables sur le revenu global sans limitation. Exonération de plus-value après 5 ans d'activité si recettes < 90 000€. Exonération d'IFI sur les biens en location meublée professionnelle.",
+        "inconvenients": "Cotisations sociales SSI ~35-40% du bénéfice. Plus-value professionnelle (court terme/long terme) si les critères d'exonération ne sont pas remplis."
+      },
+      "deficit_foncier": {
+        "mecanisme": "Location nue: les charges (travaux d'entretien, réparation, amélioration + intérêts d'emprunt + charges de copropriété + assurance + taxe foncière) déductibles des revenus fonciers. Si charges > revenus fonciers: déficit foncier imputable sur le revenu global jusqu'à 10 700€/an (21 400€ pour travaux de rénovation énergétique).",
+        "report": "Excédent de déficit reportable sur les revenus fonciers des 10 années suivantes.",
+        "condition": "Obligation de maintenir la location pendant 3 ans après l'imputation du déficit sur le revenu global. Travaux de construction/agrandissement exclus.",
+        "strategie": "Concentrer les travaux déductibles sur une année à TMI élevée. Effet double: réduction du revenu imposable + réduction de la base taxable foncière les années suivantes."
+      },
+      "dispositifs_specifiques": {
+        "pinel": "Réduction d'IR: 9% sur 6 ans, 12% sur 9 ans, 14% sur 12 ans (taux 2024 post-Pinel+). Plafond d'investissement: 300 000€ et 5 500€/m². Zones tendues uniquement (A bis, A, B1). Plafonds de loyers et de ressources des locataires.",
+        "denormandie": "Même mécanique que Pinel mais dans l'ancien avec travaux représentant ≥25% du coût total. Applicable dans les communes éligibles Action Cœur de Ville et ORT.",
+        "malraux": "Réduction d'IR de 22% (ZPPAUP) ou 30% (secteur sauvegardé) des travaux de restauration. Plafond de 400 000€ de travaux sur 4 ans. Non soumis au plafonnement des niches fiscales. Réservé aux immeubles situés dans des zones protégées.",
+        "monuments_historiques": "Déduction intégrale des travaux et charges du revenu global sans plafond. Hors plafonnement des niches fiscales. Condition: immeuble classé ou inscrit. Engagement de conservation 15 ans minimum. Le dispositif le plus puissant fiscalement mais contraignant.",
+        "plus_value_immobiliere": "Abattement pour durée de détention: 6%/an de la 6e à la 21e année + 4% la 22e année = exonération IR après 22 ans. PS: 1,65%/an de la 6e à la 21e + 1,60% la 22e + 9%/an de la 23e à la 30e = exonération PS après 30 ans. Surtaxe si PV > 50 000€. Exonération totale résidence principale."
+      }
+    },
+    "montages_patrimoniaux": {
+      "donation_partage": {
+        "abattements": "100 000€ par parent et par enfant, renouvelable tous les 15 ans. Don familial de sommes d'argent: 31 865€ supplémentaires si donateur < 80 ans et donataire majeur. Couple avec 2 enfants: 4 × 100 000€ + 4 × 31 865€ = 527 460€ exonérés tous les 15 ans.",
+        "avantage_vs_succession": "Figer la valeur des biens au jour de la donation (pas de rapport fiscal à la succession sur la valeur actualisée). Répartition équitable entre héritiers. Réduction des droits de donation si le donateur a moins de 70 ans."
+      },
+      "demembrement": {
+        "usufruit_temporaire": "Donation de l'usufruit temporaire d'un bien locatif: le nu-propriétaire sort le bien de son assiette IFI, l'usufruitier perçoit les revenus. Valorisation de l'usufruit: 23% de la valeur en pleine propriété par tranche de 10 ans.",
+        "usufruit_viager": "Valorisation selon le barème fiscal (article 669 CGI): 90% à 21-30 ans, 80% à 31-40 ans, ..., 10% à 91+ ans. Donation de la nue-propriété aux enfants: droits calculés sur la valeur de la nue-propriété (décotée). Reconstitution gratuite au décès de l'usufruitier.",
+        "cles_de_voute": "Réserve d'usufruit: le donateur conserve les revenus. Quasi-usufruit sur sommes d'argent: l'usufruitier peut consommer le capital, créance de restitution déductible de la succession."
+      },
+      "pacte_dutreil": {
+        "principe": "Exonération de 75% de la valeur des parts/actions d'une entreprise pour donation ou succession. Applicable aux sociétés opérationnelles (activité industrielle, commerciale, artisanale, agricole ou libérale). Holdings animatrices éligibles.",
+        "conditions": "Engagement collectif de conservation ≥2 ans (par ≥2 associés détenant ≥34% en société non cotée ou ≥20% en société cotée) + engagement individuel de conservation ≥4 ans + fonction de direction pendant 3 ans post-transmission.",
+        "impact_chiffre": "Entreprise valorisée 2M€: sans Dutreil, droits en ligne directe ~400 000€. Avec Dutreil: base taxable 500 000€ (75% exonérés), droits ~50 000€ après abattement 100 000€. Économie: ~350 000€.",
+        "cumul": "Cumulable avec l'abattement de 100 000€ par enfant et la réduction de 50% des droits si donation avant 70 ans. Outil majeur de transmission d'entreprise familiale."
+      },
+      "assurance_vie_transmission": {
+        "clause_beneficiaire_demembree": "Formulation type: 'Mon conjoint pour l'usufruit, mes enfants nés ou à naître pour la nue-propriété, à parts égales entre eux.' Le conjoint reçoit un quasi-usufruit sur le capital, les enfants récupèrent au second décès via créance de restitution (déductible de la succession du conjoint).",
+        "strategie_multi_beneficiaire": "Éclater les capitaux sur plusieurs contrats avec bénéficiaires distincts pour maximiser l'abattement de 152 500€ par bénéficiaire. Inclure les petits-enfants pour multiplier les abattements."
+      },
+      "testament_et_legs": {
+        "testament_olographe": "Écrit entièrement de la main du testateur, daté et signé. Gratuit mais risque de contestation. Dépôt chez un notaire recommandé (inscription au FCDDV).",
+        "legs_universel_particulier": "Legs universel: totalité du patrimoine au légataire. Legs à titre universel: quote-part. Legs particulier: bien déterminé. Le testament ne peut pas déshériter les héritiers réservataires (enfants, conjoint) au-delà de la quotité disponible."
+      }
+    },
+    "fiscalite_internationale": {
+      "residence_fiscale": {
+        "criteres_france": "Article 4B CGI: foyer ou lieu de séjour principal en France, activité professionnelle principale en France, ou centre des intérêts économiques en France. Un seul critère suffit. Règle des 183 jours souvent citée mais non exclusive.",
+        "conventions_bilaterales": "En cas de double résidence: la convention fiscale applicable détermine la résidence selon des critères hiérarchisés (foyer permanent → centre des intérêts vitaux → séjour habituel → nationalité → accord amiable). Plus de 120 conventions signées par la France."
+      },
+      "ip_box": {
+        "france": "Taux réduit d'IS de 10% (au lieu de 25%) sur les revenus tirés de la cession ou concession de brevets, logiciels protégés par droit d'auteur, certificats d'obtention végétale. Condition du nexus: proportionnalité entre R&D réalisée et avantage fiscal.",
+        "international": "IP Box disponible dans de nombreuses juridictions (Irlande 6,25%, Pays-Bas 9%, Luxembourg 5,2%). Attention aux règles anti-abus BEPS et au substance requirement."
+      },
+      "juridictions_specifiques": {
+        "portugal_nhr": "Statut de Résident Non Habituel (en cours de réforme/suppression). Exonération des revenus de source étrangère pendant 10 ans dans certaines catégories. Flat tax 20% sur les revenus portugais de professions à haute valeur ajoutée.",
+        "dubai": "Absence d'impôt sur le revenu des personnes physiques. IS introduit à 9% pour les entreprises (>375 000 AED de bénéfice). Free zones avec régime spécifique. Attention: nécessité de prouver la résidence effective et la rupture avec la résidence fiscale française (exit tax).",
+        "estonie_e_residency": "La e-residency ne confère PAS la résidence fiscale estonienne. Permet de créer une société estonienne (OÜ) avec IS à 0% sur les bénéfices réinvestis, 20% uniquement sur les bénéfices distribués. Intéressant pour capitalisation mais le dirigeant reste imposé dans son pays de résidence fiscale.",
+        "quebec": "Impôt provincial + fédéral. Taux marginal combiné max ~53%. Mais: REER (équivalent PER) très généreux, CELI (compte épargne libre d'impôt = gains exonérés), crédits d'impôt spécifiques. Convention France-Canada pour éviter la double imposition."
+      },
+      "exit_tax": {
+        "mecanisme": "Imposition latente des plus-values sur participations ≥800 000€ ou ≥50% d'une société lors du transfert de résidence fiscale hors de France. Sursis automatique au sein de l'UE/EEE. Dégrèvement après 5 ans de détention post-transfert (2 ans pour les patrimoines < 2,57M€)."
+      }
+    },
+    "planification_fiscale": {
+      "tmi_et_optimisation": {
+        "tranches_2024": "0% jusqu'à 11 294€, 11% de 11 295€ à 28 797€, 30% de 28 798€ à 82 341€, 41% de 82 342€ à 177 106€, 45% au-delà de 177 106€. Par part de quotient familial.",
+        "strategie": "Lisser les revenus pour éviter les effets de seuil. Utiliser les dispositifs de défiscalisation pour réduire le revenu imposable dans les tranches hautes. Arbitrer entre PFU et barème progressif chaque année."
+      },
+      "plafonnement_niches": {
+        "regle_generale": "Plafond global de 10 000€/an de réductions et crédits d'impôt. Exceptions: Malraux, Monuments Historiques, Sofica (18 000€), investissements outre-mer (18 000€), dons aux œuvres.",
+        "optimisation": "Maximiser d'abord les dispositifs hors plafonnement (Malraux, MH, déficit foncier qui est une déduction et non une réduction) avant d'utiliser le plafond de 10 000€ avec Pinel, emploi à domicile, garde d'enfants."
+      },
+      "calendrier_fiscal": "Janvier: solde IR N-1, ISF/IFI si applicable. Avril-juin: déclaration de revenus. Septembre-décembre: acomptes IR, optimisation de fin d'année (versements PER, travaux déficit foncier, donation, crystallisation moins-values)."
+    },
+    "erreurs_fatales": {
+      "abus_de_droit": {
+        "definition": "Article L64 LPF: acte qui a un caractère fictif ou qui n'a pu être inspiré par aucun motif autre que celui d'éluder l'impôt. Majorations: 40% (mini-abus) à 80% du montant éludé.",
+        "exemples_classiques": "Vente à soi-même via SCI pour créer un déficit foncier artificiel, donation temporaire d'usufruit sans réalité économique, management fees sans contrepartie réelle, montage de cash-out via holding sans substance."
+      },
+      "urssaf_redressement": {
+        "risques": "Requalification du statut (indépendant → salarié en cas de lien de subordination), requalification des dividendes en rémunération (si abus manifeste en SASU), non-respect des minimaux de cotisation.",
+        "prescription": "3 ans (droit commun) à 5 ans (travail dissimulé)."
+      },
+      "controle_fiscal": {
+        "droits_du_contribuable": "Charte du contribuable vérifié obligatoirement remise. Droit à un interlocuteur départemental, droit de se faire assister par un conseil (avocat, expert-comptable), délai de réponse de 30 jours (prorogeable à 60). Prescription: 3 ans (droit commun), 6 ans (activités occultes), 10 ans (comptes étrangers non déclarés).",
+        "procedure": "Vérification de comptabilité (entreprise) ou ESFP (particulier: examen de situation fiscale personnelle). Proposition de rectification → réponse du contribuable → commission départementale → contentieux tribunal administratif."
+      }
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "version": "v30.0.0",
+  "category": "ikigai_valeurs_sens",
+  "description": "Ikigai, valeurs et sens de la vie — ikigai japonais (4 cercles, découverte de la raison d'être), valeurs personnelles (identification, hiérarchie, alignement vie-valeurs), sens de la vie (Viktor Frankl/logothérapie, flux de Csikszentmihalyi, théorie de l'autodétermination), mission de vie, vision à 10 ans, légacy, Ennéagramme, archétypes de personnalité",
+  "ikigai_valeurs_sens": {
+    "introduction": "Le sens de la vie n'est pas trouvé, il est créé. L'ikigai japonais, la logothérapie de Frankl et la psychologie positive convergent vers la même vérité : une vie épanouie naît à l'intersection de la passion, de la compétence, de l'utilité et de la rémunération. TITANE guide cette exploration profonde.",
+    "ikigai": {
+      "etymologie": "Du japonais 'iki' (vie) + 'gai' (valeur, raison). Concept d'Okinawa (île aux centenaires). Pas seulement une raison de travailler mais une raison de se lever le matin.",
+      "4_cercles": {
+        "passion": "Ce que vous aimez (love). Activités qui vous mettent en état de flow. Qui vous font perdre la notion du temps. Qui vous ressourcent même si elles sont épuisantes.",
+        "vocation": "Ce pour quoi vous êtes fait (good at). Compétences naturelles et développées. Dons que vous reconnaissez rarement car ils vous semblent 'faciles'. Feedback positif récurrent des autres.",
+        "mission": "Ce dont le monde a besoin (world needs). Problèmes que vous souhaitez résoudre. Impact que vous voulez avoir. Service aux autres.",
+        "profession": "Ce pour quoi vous pouvez être payé (can be paid). Marché qui valorise votre compétence. Modèle économique viable."
+      },
+      "intersections": {
+        "passion_vocation": "Ce que vous aimez ET êtes bons à faire → Satisfaction mais possible sentiment d'inutilité sans impact.",
+        "vocation_profession": "Ce pour quoi vous êtes bons ET payés → Confort financier mais possible sentiment de vide.",
+        "profession_mission": "Ce pour quoi vous êtes payés ET ce dont le monde a besoin → Utilité mais possible sentiment d'incompétence/non-alignment.",
+        "mission_passion": "Ce dont le monde a besoin ET ce que vous aimez → Enthousiasme mais possible instabilité financière.",
+        "ikigai_centre": "L'intersection des 4 cercles = la raison d'être profonde. Rare, précieuse et toujours en évolution."
+      },
+      "exercice_pratique": "1. Lister 5-10 activités que vous aimez. 2. Lister 5-10 choses dans lesquelles vous excellez. 3. Lister 5-10 problèmes du monde qui vous touchent. 4. Lister 5-10 façons de créer de la valeur monétisable. 5. Chercher les intersections. 6. Tester et affiner par l'expérience."
+    },
+    "valeurs_personnelles": {
+      "definition": "Principes fondamentaux qui guident nos décisions, notre comportement et nos priorités. Distinctes des valeurs imposées (famille, société, religion). Authenticités vs adoptées.",
+      "identification": {
+        "methode_1": "Pics de vie : moments où vous vous êtes senti le plus vivant, le plus fier, le plus en accord avec vous-même. Quelles valeurs étaient honorées ? Fuites : moments d'intense frustration ou colère. Quelles valeurs étaient violées ?",
+        "methode_2": "Liste de 100 valeurs potentielles (liberté, sécurité, aventure, famille, croissance, impact, beauté, vérité, justice...). Réduire à 10, puis 5, puis 3 valeurs core.",
+        "methode_3": "Définir ce que chaque valeur signifie précisément pour vous (liberté = quoi exactement ? quand est-elle présente ? quand est-elle absente ?)"
+      },
+      "hierarchie": "Les valeurs sont en conflit apparent (famille vs carrière, sécurité vs aventure). Identifier la hiérarchie évite les tensions. La valeur supérieure détermine le choix quand elles s'opposent.",
+      "alignement": "Dissonance cognitive : vivre contre ses valeurs crée un stress chronique, une démotivation, une perte de sens. Audit : dans chaque domaine de vie, mes actions reflètent-elles mes valeurs ? Score 1-10."
+    },
+    "sens_de_la_vie": {
+      "Frankl_logotherapie": {
+        "contexte": "Viktor Frankl, psychiatre survivant d'Auschwitz. 'L'Homme à la Recherche de Sens' (1946). Fondateur de la logothérapie (logos = sens).",
+        "concept_central": "La recherche du sens est la motivation primordiale humaine (vs plaisir de Freud, pouvoir d'Adler). Même dans la souffrance extrême, l'homme peut choisir son attitude.",
+        "3_voies_vers_le_sens": "1. Créer une œuvre (contribution). 2. Vivre une expérience (amour, beauté, vérité). 3. Souffrir avec dignité (la dernière liberté = choisir sa réponse).",
+        "espace_de_liberté": "'L'espace entre le stimulus et la réponse'. Élargir cet espace = grandir en humanité."
+      },
+      "flow_Csikszentmihalyi": {
+        "definition": "État d'absorption totale dans une activité. Temps suspendu, ego dissous, performance optimale. 'Le bonheur n'est pas quelque chose qui arrive. C'est quelque chose que l'on pratique.'",
+        "conditions": "1. But clair. 2. Feedback immédiat. 3. Défi légèrement supérieur aux compétences. Zone de flow entre anxiété (trop difficile) et ennui (trop facile).",
+        "applications": "Identifier ses activités de flow. Éliminer les interruptions. Structurer les tâches complexes. Gamification du travail."
+      },
+      "SDT_autodetermination": {
+        "Deci_Ryan": "Théorie de l'Autodétermination. Trois besoins psychologiques fondamentaux pour le bien-être intrinsèque.",
+        "autonomie": "Sentiment de choisir ses actions. Agir par choix, non par contrainte ou peur.",
+        "competence": "Sentiment de maîtrise et d'efficacité. Progrès visible, défis à la hauteur.",
+        "appartenance": "Connexion authentique avec les autres. Être vu, entendu, accepté."
+      }
+    },
+    "vision_et_mission_de_vie": {
+      "vision_10_ans": "Écrire une description vivante et détaillée de sa vie idéale dans 10 ans (relation, santé, carrière, finances, spiritualité, contribution). Utiliser le présent. Inclure les émotions et les sensations. Relire quotidiennement.",
+      "north_star_goal": "L'objectif polaire qui oriente toutes les décisions. Suffisamment grand pour être inspirant, suffisamment concret pour guider. Exemple : 'Aider 1 million de personnes à trouver leur ikigai d'ici 2034'.",
+      "legacy": "Ce que vous voulez qu'on dise de vous après votre mort. Exercice : écrire votre propre éloge funèbre idéale. Réaligner les décisions présentes avec cette vision."
+    },
+    "enneagramme": {
+      "definition": "Système de 9 types de personnalité basé sur les stratégies de survie développées dans l'enfance. Outil de conscience de soi profonde, pas d'étiquetage.",
+      "9_types": {
+        "1_perfectionniste": "Peur de l'imperfection. Vertu : intégrité. Vice : colère réprimée. Mission : la sérénité.",
+        "2_altruiste": "Peur de ne pas être aimé. Vertu : humilité. Vice : orgueil. Mission : l'amour inconditionnel.",
+        "3_performeur": "Peur d'être sans valeur. Vertu : authenticité. Vice : tromperie de soi. Mission : la vérité.",
+        "4_romantique": "Peur d'être ordinaire. Vertu : équanimité. Vice : envie. Mission : l'origine intérieure.",
+        "5_observateur": "Peur de la dépendance. Vertu : détachement sain. Vice : avarice d'énergie. Mission : l'omniscience.",
+        "6_loyaliste": "Peur de l'abandon. Vertu : courage. Vice : peur. Mission : la foi en soi.",
+        "7_épicurien": "Peur de la douleur. Vertu : sobriété. Vice : gourmandise. Mission : la totalité.",
+        "8_chef": "Peur de la vulnérabilité. Vertu : magnanimité. Vice : luxure de pouvoir. Mission : l'innocence.",
+        "9_médiateur": "Peur du conflit. Vertu : action. Vice : paresse spirituelle. Mission : l'amour actif."
+      }
+    }
+  }
+}

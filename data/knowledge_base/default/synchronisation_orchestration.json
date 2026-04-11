@@ -1,0 +1,128 @@
+{
+  "version": "v30.0.0",
+  "category": "synchronisation_orchestration",
+  "description": "Architecture de synchronisation, orchestration de l'IA, gestion des providers et pipeline de décision TITANE∞",
+  "orchestration": {
+    "pipeline_omega": {
+      "description": "Le pipeline OMEGA est le cœur de traitement de chaque requête TITANE∞. 10 étapes séquentielles obligatoires.",
+      "stages": [
+        "1. Validation d'entrée — vérification syntaxique, détection intention, filtrage sécurité",
+        "2. Résolution de contexte — chargement STM/MTM/LTM, résolution de l'état émotionnel",
+        "3. Analyse de l'intention et de l'émotion — classification de la demande (cognitive, créative, technique, coaching...)",
+        "4. Construction du prompt — assemblage system prompt + KB index + persona + mémoire",
+        "5. Sélection du provider/génération — Champion-Challenger + scoring contextuel + fallback hiérarchique",
+        "6. Post-traitement — filtrage, validation qualité, injection mémoire",
+        "7. Validation de la sortie — cohérence, sécurité, qualité linguistique",
+        "8. Sauvegarde mémoire — STM update, MTM consolidation conditionnelle",
+        "9. Synchronisation — sync état interne, métriques, events Tauri",
+        "10. Auto-heal check — détection de récurrence, mise à jour autoheal_rules.jsonl si nécessaire"
+      ]
+    },
+    "provider_selection": {
+      "algorithm": "Champion-Challenger avec scoring contextuel multi-critères",
+      "scoring_criteria": [
+        "Disponibilité du provider (check health)",
+        "Mode de conversation actuel (OMEGA, DIRECT, EXPERT...)",
+        "Complexité estimée de la requête",
+        "Latence cible selon l'urgence",
+        "Score historique (succès/échecs récents)",
+        "Préférence utilisateur configurée",
+        "Politique réseau (local-first ou online-first)"
+      ],
+      "provider_hierarchy": [
+        "1. Ollama (local) — préféré pour offline, rapide, confidentiel",
+        "2. OpenAI (GPT-4o, o3) — haute qualité, raisonnement complexe",
+        "3. Anthropic (Claude 3.5 Sonnet) — excellent pour analyse et code",
+        "4. Google (Gemini 1.5 Pro/Flash) — multimodal, contexte long",
+        "5. GitHub Copilot — spécialisé code et pair programming",
+        "6. Groq — ultra-rapide pour réponses courtes",
+        "7. TitaneLocal — modèle fine-tuné dédié TITANE∞"
+      ],
+      "fallback_policy": "En cas d'échec du provider principal, essayer dans l'ordre de la hiérarchie. Jamais de silence.",
+      "ollama_champion_bonus": "+120 points de score quand Ollama est le champion canonique configuré"
+    },
+    "kb_sync": {
+      "description": "La base de connaissances est synchronisée entre le backend Rust (OnceLock, compile-time via include_str!) et le frontend TypeScript (cache en mémoire avec invalidation manuelle).",
+      "rust_side": "Les 150 fichiers JSON sont compilés dans le binaire Tauri via include_str!(). Chargés une seule fois via OnceLock<Vec<KbEntry>>. Accès via IPC: knowledge_base_get_all, knowledge_base_get_category, knowledge_base_list_categories.",
+      "typescript_side": "Cache en mémoire (_allEntriesCache, _categoriesCache, _compactIndexCache). Invalidation via invalidateCache(). Chargement paresseux avec guard contre les requêtes concurrentes.",
+      "compact_index": "Un index compact (catégorie + description) est injecté dans chaque system prompt pour que TITANE∞ sache ce qu'il connaît. Mis à jour au démarrage de chaque session ChatEngine.",
+      "relevant_context": "getRelevantPromptContext(query) extrait les catégories pertinentes à une requête via scoring TF-IDF simplifié. Injecté dynamiquement dans le prompt selon le contexte.",
+      "invalidation_strategy": "invalidateCache() est appelé manuellement quand les données KB changent (rare en production, car les JSON sont compilés). Utile en développement."
+    },
+    "memory_system": {
+      "stm": {
+        "name": "Short-Term Memory (STM)",
+        "capacity": "Derniers 20-50 échanges de la conversation courante",
+        "persistence": "Session uniquement, effacé à la fermeture",
+        "usage": "Contexte immédiat, continuité de la conversation"
+      },
+      "mtm": {
+        "name": "Medium-Term Memory (MTM)",
+        "capacity": "Dernières sessions (patterns, projets, préférences)",
+        "persistence": "Base de données locale SQLite chiffrée",
+        "usage": "Personnalisation, continuité inter-sessions"
+      },
+      "ltm": {
+        "name": "Long-Term Memory (LTM)",
+        "capacity": "Profil complet Kevin, historique long terme, connaissances acquises",
+        "persistence": "LTM store local chiffré AES-256-GCM",
+        "usage": "Identité de Kevin, préférences durables, projets actifs"
+      }
+    },
+    "session_management": {
+      "init_sequence": [
+        "1. Charger la configuration Tauri (capabilities, clés API)",
+        "2. Initialiser le ChatEngine avec le mode par défaut (omega ou configuré)",
+        "3. Charger le KB index compact (async, mis en cache)",
+        "4. Charger la mémoire STM de la session courante",
+        "5. Consulter MTM pour les patterns récents",
+        "6. Vérifier la disponibilité des providers (health check)",
+        "7. Sélectionner le champion provider initial",
+        "8. Activer le DevTools Bridge si en mode dev",
+        "9. Émettre l'événement titane:session_ready"
+      ],
+      "session_end": [
+        "1. Consolider la STM vers MTM si seuil atteint",
+        "2. Mettre à jour le profil LTM",
+        "3. Sauvegarder les métriques de session",
+        "4. Nettoyer les caches temporaires",
+        "5. Émettre l'événement titane:session_closed"
+      ]
+    },
+    "health_monitoring": {
+      "metrics_tracked": [
+        "Latence moyenne par provider",
+        "Taux de succès/échec par provider",
+        "Nombre de tokens consommés",
+        "Erreurs critiques (criticalErrorHistory)",
+        "Score de qualité des réponses",
+        "Disponibilité des providers (cache 30s)"
+      ],
+      "auto_heal_triggers": [
+        "Provider indisponible → switch automatique",
+        "Latence excessive → downgrade au provider plus rapide",
+        "Erreur répétée → entrée autoheal_rules.jsonl",
+        "Drift de version → alerte maintenance"
+      ]
+    },
+    "ipc_architecture": {
+      "protocol": "Tauri IPC — seule interface autorisée entre UI et backend",
+      "canonical_payload": "{ ok: bool, content: unknown, error?: string }",
+      "zero_silent_failure": true,
+      "commands_kb": [
+        "knowledge_base_get_all",
+        "knowledge_base_get_category",
+        "knowledge_base_list_categories"
+      ],
+      "commands_chat": [
+        "chat_send_message",
+        "chat_generate_openai",
+        "chat_generate_anthropic",
+        "chat_generate_google",
+        "chat_generate_copilot",
+        "chat_generate_groq"
+      ],
+      "one_door_policy": "Tout appel réseau passe par le Gateway Rust — jamais d'appel HTTP direct depuis l'UI"
+    }
+  }
+}

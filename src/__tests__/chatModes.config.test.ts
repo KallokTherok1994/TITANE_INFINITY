@@ -254,6 +254,37 @@ describe('🟣 Chat Modes Configuration', () => {
   // MODE SPECIFICS
   // ═══════════════════════════════════════════════════════════════════════════
 
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PHASE 17 — FRENCH LANGUAGE ENFORCEMENT
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  describe('French Language Enforcement (Phase 17)', () => {
+    it('every mode with a systemPrompt contains "Réponds TOUJOURS en français"', () => {
+      Object.values(CHAT_MODES_CONFIG).forEach(mode => {
+        if (mode.systemPrompt && mode.systemPrompt.length > 0) {
+          expect(mode.systemPrompt).toContain('Réponds TOUJOURS en français');
+        }
+      });
+    });
+
+    it('no mode systemPrompt is missing the French rule when a systemPrompt is defined', () => {
+      const modesWithoutFrench = Object.entries(CHAT_MODES_CONFIG)
+        .filter(([, mode]) => mode.systemPrompt && !mode.systemPrompt.includes('français'))
+        .map(([id]) => id);
+
+      expect(modesWithoutFrench).toHaveLength(0);
+    });
+
+    it('the French enforcement rule appears in all ACTIVE_MODE_IDS modes', () => {
+      ACTIVE_MODE_IDS.forEach(modeId => {
+        const mode = CHAT_MODES_CONFIG[modeId];
+        if (mode.systemPrompt) {
+          expect(mode.systemPrompt).toContain('français');
+        }
+      });
+    });
+  });
+
   describe('Mode Specifics', () => {
     it('should have appropriate temperature for each mode type', () => {
       // Creative modes should have higher temperature

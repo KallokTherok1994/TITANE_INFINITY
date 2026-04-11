@@ -1,0 +1,56 @@
+{
+  "version": "v30.0.0",
+  "category": "politique_geopolitique",
+  "description": "Politique et géopolitique avancée — systèmes politiques (démocratie, autocratie, monarchies, fédéralisme), idéologies politiques (libéralisme, socialisme, nationalisme, écologie politique), institutions (ONU, UE, OTAN, OMC, FMI), relations internationales (théories réalisme/idéalisme/constructivisme), conflits géopolitiques contemporains, diplomatie et soft power, démocratie directe vs représentative",
+  "politique_geopolitique": {
+    "introduction": "La politique et la géopolitique façonnent chaque aspect de nos sociétés — des guerres aux droits fondamentaux, des économies aux migrations. TITANE analyse les systèmes politiques, les grandes puissances et les enjeux contemporains avec rigueur et nuance.",
+    "systemes_politiques": {
+      "democratie": {
+        "representative": "Élus représentent les citoyens. Parlement, élections, séparation des pouvoirs (législatif/exécutif/judiciaire). Modèles : présidentiel (USA), parlementaire (Royaume-Uni, Allemagne), semi-présidentiel (France).",
+        "directe": "Référendum, initiative populaire, révocation des élus (recall). Suisse : modèle avancé (votations fréquentes). Limites : démagogie, complexité des sujets.",
+        "liberale": "Démocratie + protection des droits individuels, minorités, État de droit. Constitution, Cour constitutionnelle. Freedom House : mesure liberté dans le monde.",
+        "illiberale": "Elections formelles sans garanties libérales. Presse muselée, justice dépendante, répression opposition. Hongrie, Turquie."
+      },
+      "autocraties": {
+        "totalitarisme": "Contrôle total : politique, économie, société, culture, vie privée. XXe siècle : nazisme, stalinisme, maoïsme. Hannah Arendt (Les Origines du totalitarisme).",
+        "autoritarisme": "Contrôle politique sans idéologie totale. Chine (PCC), Russie (poutinisme), Arabie Saoudite. Façade démocratique souvent maintenue.",
+        "monarchie_absolue": "Arabie Saoudite, Émirats. Pouvoir divin ou traditionnel. Monarchie constitutionnelle : pouvoir du monarque limité (Royaumes-Uni, Espagne, Japon)."
+      },
+      "ideologies": {
+        "liberalisme": "Liberté individuelle, droits naturels, État limité, libre marché. John Locke, Adam Smith. Libéralisme classique → néolibéralisme (Friedman, Hayek).",
+        "socialisme": "Propriété collective, solidarité, égalité. Spectre : social-démocratie (Suède : marché + État-providence) → communisme (Marx, Engels : lutte des classes, dictature du prolétariat).",
+        "conservatisme": "Tradition, ordre, religion, famille, nation. Burke (critique Révolution française). Neoconservatisme américain. Nouvelle droite européenne.",
+        "nationalisme": "Nation comme cadre naturel de l'organisation politique. Civique (loi du sol) vs ethnique (culture/sang). Populisme nationaliste contemporain.",
+        "ecologie_politique": "Décroissance, justice environnementale, post-capitalisme vert. Verts allemands (Grünen). Transition écologique vs éco-anxiété. Mouvement Extinction Rebellion, Youth for Climate."
+      }
+    },
+    "institutions_internationales": {
+      "ONU": "193 membres. Conseil de Sécurité (5 membres permanents avec droit de veto : USA, Russie, Chine, France, Royaume-Uni). Assemblée Générale. Agences : UNICEF, OMS, PNUD, UNESCO, HCR. Limites : veto paralysant.",
+      "UE": "27 membres post-Brexit. Commission Européenne (exécutif), Parlement Européen (élu au suffrage universel), Conseil de l'UE (États membres), Cour de Justice. Euro (zone euro : 20 pays). Schengen (27 pays).",
+      "OTAN": "Alliance militaire occidentale. Article 5 (attaque contre un = attaque contre tous). 31 membres (Finlande 2023, Suède 2024). Budget défense 2% du PIB (objectif). Russie/Chine comme adversaires stratégiques.",
+      "institutions_financieres": "FMI (stabilité financière mondiale, prêts conditionnels), Banque Mondiale (développement), OMC (commerce international, arbitrage des différends), G7/G20 (coordination économique)."
+    },
+    "relations_internationales": {
+      "theories": {
+        "realisme": "Les États sont acteurs rationnels dans un système anarchique. Maximisation du pouvoir et de la sécurité. Morgenthau, Waltz (néoréalisme). Dilemme de sécurité.",
+        "liberalisme": "Interdépendance, institutions, démocraties (ne se font pas la guerre entre elles). Kant (paix perpétuelle), Keohane, Nye. Soft power.",
+        "constructivisme": "Les intérêts et identités des États sont socialement construits. Wendt (l'anarchie est ce que les États en font).",
+        "marxisme_dependance": "Système-monde. Centre (pays riches) exploite périphérie (pays pauvres). Wallerstein."
+      },
+      "soft_power": "Joseph Nye. Attraction culturelle, valeurs, politiques légitimes. USA : Hollywood, médias, universités. Chine : Instituts Confucius, Belt and Road Initiative. France : francophonie, diplomatie culturelle.",
+      "multilateralisme_vs_unilateralisme": "Coopération multilatérale (accords climat Paris, OMS COVID) vs unilatéralisme (Trump : retrait Accord de Paris, TPP). Montée du bilatéralisme."
+    },
+    "geopolitique_contemporaine": {
+      "rivalite_USA_Chine": "La grande compétition du XXIe siècle. Technologie (5G, semi-conducteurs, IA), économie (découplage, supply chains), militaire (mer de Chine méridionale, Taïwan), idéologique (démocratie vs modèle autoritaire).",
+      "Russie_Ukraine": "Invasion 24 février 2022. OTAN élargi (Finlande, Suède). Guerre de haute intensité. Drone warfare, missiles longue portée. Impact énergie en Europe (gaz naturel). Sanctions économiques.",
+      "Moyen_Orient": "Conflit israélo-palestinien (Gaza 2023-). Influence Iran (Hezbollah, Hamas, Houthis). Normalisation Abraham Accords (Israël-EAU-Bahreïn). Rôle Arabie Saoudite. Pétrole et gaz.",
+      "Afrique": "Continent jeune et stratégique. Ressources (cobalt, lithium, or, uranium). Présence chinoise (infrastractures). Coups d'État Sahel (Mali, Niger, Burkina Faso). Retrait français. Wagner Group. Population 2.5 milliards en 2050.",
+      "Inde": "Démocratie la plus peuplée (1.4 milliard). Modi et BJP (nationalisme hindou). Puissance montante. Relations équilibrées USA-Russie-Chine. BRICS, SCO, G20. Rivalité Chine. Diaspora."
+    },
+    "democratie_et_enjeux": {
+      "desinformation": "Fake news, deepfakes, réseaux sociaux comme chambres d'écho. Algorithmes de polarisation. Fact-checking, media literacy.",
+      "lobbying_et_financement": "Financement des partis politiques. Revolving doors. Transparence vs corruption. Lobbying légal (UE : registre) vs illégal.",
+      "participation_citoyenne": "Taux de participation électorale en baisse. Nouvelles formes : assemblées citoyennes (Irlande, France Convention Citoyenne pour le Climat), budgets participatifs, pétitions en ligne."
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "version": "v30.0.0",
+  "category": "web_design_ui_ux",
+  "description": "Web design, UI/UX avancé — Figma avancé (composants, auto-layout, variables, design systems, dev mode), Webflow (design no-code CMS avancé), CSS avancé (Flexbox, Grid, animations, custom properties, container queries), design systems (tokens, documentation, implémentation), prototypage (Figma, Framer, ProtoPie), accessibilité WCAG 2.2, responsive design, motion design (Lottie, Framer Motion, GSAP), UX research (tests utilisateurs, wireframing, information architecture), design thinking",
+  "web_design_ui_ux": {
+    "introduction": "Le design d'interface est la discipline qui crée des expériences numériques belles, utilisables et accessibles. TITANE guide à travers les outils, les principes et les méthodologies avancées du web design moderne, de Figma à l'implémentation CSS.",
+    "principes_UX": {
+      "design_thinking": "Empathiser (comprendre les utilisateurs). Définir (problem statement). Idéer (brainstorming). Prototyper (solution rapide). Tester (feedback utilisateurs). Itérer.",
+      "lois_UX": {
+        "Fitts": "Le temps pour atteindre une cible dépend de sa distance et de sa taille. Grands boutons proches = plus rapide.",
+        "Hick": "Plus il y a de choix, plus la décision prend de temps. Limiter les options (7±2). Progressivité.",
+        "Miller": "Mémoire à court terme : 7 ± 2 éléments. Chunking des informations.",
+        "Jakob": "Les utilisateurs passent la majorité de leur temps sur d'autres sites. Respecter les conventions.",
+        "Von_Restorff": "Un élément distinctif est mieux mémorisé. Mettre en valeur les éléments clés."
+      },
+      "user_research": "Interviews utilisateurs. Tests d'utilisabilité (pensée à voix haute). Heatmaps (Hotjar, Microsoft Clarity). Analytics UX. Card sorting. Tree testing. A/B testing. Surveys (NPS, CSAT)."
+    },
+    "figma_avance": {
+      "composants": {
+        "base": "Components maîtres + instances (Ctrl+Alt+K). Modifier l'instance (overrides). Detach (Ctrl+Alt+B). Nesting (composants dans composants).",
+        "variants": "Grouper les états d'un composant (Default/Hover/Pressed/Disabled). Interactive components (prototype interactif avec changement d'état). Property pour les variants.",
+        "auto_layout": "Flexbox dans Figma. Direction (H/V). Gap (espacement). Padding. Hug/Fill/Fixed. Wrap. Responsive sans effort. Idéal pour les listes, cards, boutons."
+      },
+      "variables_tokens": "Variables Figma (primitives : couleurs HEX, nombres). Tokens sémantiques (surface/primary/destructive). Modes (clair/sombre). Export vers code (CSS variables, JSON, Style Dictionary).",
+      "design_systems": "Library partagée (Styles + Components + Variables). Documentation inline (descriptions des composants). Playground. Versioning. Storybook integration.",
+      "dev_mode": "Inspect panel pour les développeurs. Specs CSS automatiques. Handoff. Code snippets. Compare les changements. Assets export."
+    },
+    "css_avance": {
+      "flexbox": "`display: flex`. `flex-direction`, `justify-content`, `align-items`, `flex-wrap`, `gap`. `flex: 1 1 auto` (grow/shrink/basis). `order`. `align-self`. Le layout 1D.",
+      "grid": "`display: grid`. `grid-template-columns: repeat(3, 1fr)`, `minmax()`, `auto-fill/auto-fit`. `grid-area`. `place-items`. `subgrid`. Le layout 2D. Très puissant pour les mises en page complexes.",
+      "custom_properties": "`--color-primary: #6366f1;`. Héritées. Modifiables en JS (`el.style.setProperty('--color-primary', '#fff')`). Theming facile. Media queries pour les variables.",
+      "animations": {
+        "transitions": "`transition: all 0.3s ease`. `transition-property`, `transition-duration`, `transition-timing-function`. Cubic-bezier custom. `will-change` pour optimiser.",
+        "keyframes": "`@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }`. `animation-name`, `animation-duration`, `animation-iteration-count: infinite`, `animation-fill-mode: forwards`.",
+        "scroll_animations": "`scroll-driven animations` (CSS natif 2024). `animation-timeline: scroll()`. `@keyframes` déclenchées au scroll sans JavaScript."
+      },
+      "moderne_2024": "Container Queries (`@container`). Cascade Layers (`@layer`). Nesting CSS natif (comme SCSS). `:has()` selector. `color-mix()`. `oklch` color space. View Transitions API.",
+      "responsive": "Mobile-first. `min-width` breakpoints. `clamp()` pour les tailles fluides. `em` vs `rem` vs `vw`. `min()`, `max()`, `clamp()` pour le layout fluide. Intrinsic design."
+    },
+    "webflow": {
+      "description": "Outil de design + CMS + hosting no-code pour les professionnels. Génère du code propre (HTML/CSS/JS). Pas de templates — design from scratch.",
+      "fonctionnalites": "Visual CSS editor (exactement comme code mais visuel). Interactions (animations scroll, hover, click). CMS (contenu dynamique). Ecommerce. Membership (Webflow Logic). Hosting (CDN, HTTPS).",
+      "workflow": "Figma → Figma to Webflow plugin (semi-automatique) → ajustements. Build custom et animations. Publier. CMS pour les clients non-téchniques."
+    },
+    "motion_design_web": {
+      "Framer_Motion": "Bibliothèque React. `motion.div`, `animate={{ x: 100 }}`, `whileHover={{ scale: 1.05 }}`. Layout animations. Shared element transitions. `AnimatePresence` (exit animations).",
+      "GSAP": "GreenSock Animation Platform. Très puissant pour les animations complexes. `gsap.to('.el', { x: 100, duration: 1, ease: 'elastic.out' })`. ScrollTrigger plugin. MorphSVG.",
+      "Lottie": "Animations After Effects exportées en JSON. Légères. Évolutives. `@lottiefiles/react-lottie-player`. Utilisé pour les loading animations, onboarding, micro-interactions.",
+      "CSS_animations_avancees": "Parallax au scroll. Texte qui apparaît au scroll. Sticky elements. Scroll-linked animations (View Transitions API). Micro-interactions (hover, focus, active states)."
+    },
+    "accessibilite_WCAG": {
+      "niveaux": "WCAG 2.2. Niveau A (minimal), AA (standard légal), AAA (optimal). RGAA en France.",
+      "principes_POUR": "Perceptible (alternatives textuelles, sous-titres, contrastes). Opérable (clavier, pas de clignotement). Compréhensible (lisible, prévisible). Robuste (compatible assistive tech).",
+      "regles_pratiques": "Contraste 4.5:1 (texte normal), 3:1 (large text). `alt` text sur les images. Navigation au clavier (focus visible, tabindex). ARIA roles (`role='button'`). Skip links. `lang='fr'` sur html.",
+      "outils": "axe DevTools (extension navigateur). Lighthouse accessibility audit. NVDA/VoiceOver (lecteurs d'écran). Color Oracle (simulation daltonisme). WebAIM Contrast Checker."
+    },
+    "design_system_implementation": {
+      "tokens": "Primitives (couleurs, espacements, rayons, polices, ombres). Sémantiques (surface, border, text, interactive — en référencant les primitives). Responsive (valeurs différentes selon breakpoints).",
+      "outils": "Style Dictionary (Token transformation). Token Studio (plugin Figma → code). Storybook (documentation composants). Chromatic (visual regression testing).",
+      "documentation": "Patterns d'usage (Do/Don't). Props et variantes. Accessibilité. Copy guidelines. Changelog. Contribution guide."
+    }
+  }
+}

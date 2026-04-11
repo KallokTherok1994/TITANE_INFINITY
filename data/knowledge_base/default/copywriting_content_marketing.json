@@ -1,0 +1,143 @@
+{
+  "version": "v30.0.0",
+  "category": "copywriting_content_marketing",
+  "description": "Copywriting et content marketing — formules persuasives (AIDA/PAS/BAB/4P/storytelling), titres et accroches, CTA, email marketing, landing pages, stratégie de contenu, calendrier éditorial, SEO writing, conversion et A/B testing, voix de marque",
+  "copywriting_content_marketing": {
+    "introduction": "Le copywriting est l'art de persuader par l'écrit pour provoquer une action précise. Le content marketing est la stratégie de création et distribution de contenu à forte valeur pour attirer, engager et convertir une audience ciblée. TITANE maîtrise les deux disciplines pour transformer les mots en leviers de croissance mesurables.",
+    "formules_copywriting": {
+      "aida": {
+        "definition": "Attention → Intérêt → Désir → Action. La formule classique universelle.",
+        "attention": "Accrocher en 3 secondes avec un titre percutant, une statistique choc, une question provocante ou une promesse audacieuse.",
+        "interet": "Développer le problème ou l'opportunité. Montrer que vous comprenez la situation du lecteur. Créer de l'identification.",
+        "desir": "Présenter la solution et ses bénéfices concrets. Utiliser la preuve sociale, les témoignages, les résultats chiffrés. Faire visualiser la transformation.",
+        "action": "CTA clair et unique. Réduire la friction. Urgence ou rareté si pertinent. Un seul objectif par page."
+      },
+      "pas": {
+        "definition": "Problème → Agitation → Solution. Idéale pour les pages de vente et emails.",
+        "probleme": "Nommer le problème spécifique du lecteur avec ses propres mots. Montrer que vous le comprenez intimement.",
+        "agitation": "Amplifier la douleur. Quelles sont les conséquences de l'inaction? Le coût caché du statu quo? Les frustrations quotidiennes? Ne pas manipuler, mais éclairer la réalité.",
+        "solution": "Présenter votre offre comme la réponse naturelle et logique au problème agité. Prouver avec des résultats, des cas concrets et des garanties."
+      },
+      "bab": {
+        "definition": "Before → After → Bridge. Puissante pour le storytelling de transformation.",
+        "before": "Décrire la situation actuelle douloureuse ou insatisfaisante du lecteur. Utiliser des détails sensoriels et émotionnels.",
+        "after": "Peindre le tableau de la situation idéale une fois le problème résolu. Faire ressentir le soulagement, la fierté, la liberté.",
+        "bridge": "Révéler le pont entre les deux états: votre produit, service ou méthode. La transition doit sembler évidente et inévitable."
+      },
+      "quatre_p": {
+        "definition": "Promesse → Picture → Preuve → Push. Adaptée aux formats longs.",
+        "promesse": "Titre qui promet un bénéfice clair et désirable. Spécifique plutôt que vague.",
+        "picture": "Aider le lecteur à visualiser sa vie avec le bénéfice. Utiliser le langage sensoriel.",
+        "preuve": "Démontrer que la promesse est réalisable: données, études de cas, témoignages, certifications, démonstrations.",
+        "push": "Inciter à l'action immédiate avec un CTA précis et une raison d'agir maintenant."
+      },
+      "storytelling": {
+        "structure_hero": "Situation ordinaire → Élément perturbateur → Quête → Épreuves → Mentor (votre marque) → Transformation → Nouvelle situation.",
+        "conseil": "Le client est toujours le héros, jamais votre marque. Votre marque est le guide qui fournit les outils. Schéma StoryBrand de Donald Miller.",
+        "elements_cles": "Conflit (moteur de toute histoire), détails spécifiques (crédibilité), émotion (connexion), résolution (satisfaction). Les gens oublient les faits, retiennent les histoires."
+      }
+    },
+    "titres_et_accroches": {
+      "importance": "80% des gens lisent le titre, 20% lisent la suite. Le titre est la publicité de votre contenu. Investir 50% du temps de rédaction sur le titre.",
+      "formules_efficaces": {
+        "nombre_liste": "7 erreurs fatales en [domaine] (et comment les éviter). Les chiffres impairs convertissent mieux.",
+        "comment": "Comment [résultat désirable] en [temps court] sans [obstacle redouté].",
+        "question": "Faites-vous cette erreur de [domaine] qui vous coûte [conséquence]?",
+        "negatif": "Les titres négatifs surpassent les positifs de 30%. 'Arrêtez de...' ou 'N'achetez jamais... avant de...'",
+        "curiosite": "Créer un knowledge gap. Le cerveau ne supporte pas l'information incomplète."
+      },
+      "hooks_reseaux_sociaux": "Première ligne = votre titre. Formats: statistique choc, affirmation controversée, question rhétorique, micro-histoire en une phrase, promesse de valeur directe. Objectif: stopper le scroll en 1.5 secondes."
+    },
+    "cta_appels_action": {
+      "regles": "Un seul CTA principal par page ou email. Verbe d'action + bénéfice. 'Télécharger le guide gratuit' > 'Soumettre'. 'Commencer mon essai gratuit' > 'S'inscrire'.",
+      "psychologie": "Réduire le risque perçu: 'Essai gratuit', 'Sans engagement', 'Garantie 30 jours'. Augmenter l'urgence: 'Offre valable jusqu'au [date]', 'Plus que 3 places'.",
+      "design": "Couleur contrastante, taille suffisante, espace blanc autour, position au-dessus de la ligne de flottaison ET en fin de page. Répéter le CTA tous les 2-3 écrans sur les pages longues.",
+      "micro_copy": "Le texte autour du bouton rassure: 'Rejoignez 12 000 professionnels' sous le bouton. '2 minutes pour s'inscrire' réduit la friction perçue."
+    },
+    "email_marketing": {
+      "sequences_essentielles": {
+        "bienvenue": "5-7 emails sur 2 semaines. Email 1: livrer le lead magnet + histoire fondatrice. Email 2: valeur pure (conseil actionnable). Email 3: preuve sociale. Email 4: contenu éducatif. Email 5-7: offre progressive.",
+        "nurturing": "Séquence éducative qui transforme un prospect froid en prospect chaud. Alterner valeur (80%) et offre (20%). Durée: 2-6 semaines selon le cycle de vente.",
+        "abandon_panier": "3 emails: 1h après (rappel simple), 24h (preuve sociale + FAQ), 72h (incitation finale + urgence). Taux de récupération moyen: 5-15%.",
+        "reengagement": "Cibler les inactifs 60-90 jours. Objet: 'Vous nous manquez' ou 'Votre compte va être désactivé'. Offrir une raison de revenir. Nettoyer les non-répondeurs après 2 tentatives."
+      },
+      "metriques": "Taux d'ouverture: 20-30% (bon), > 35% (excellent). Taux de clic: 2-5% (bon). Taux de désinscription: < 0.5%/envoi. Délivrabilité: > 95%. Segmenter pour améliorer chaque métrique.",
+      "objets_email": "35-50 caractères maximum. Personnalisation (prénom) +20% ouverture. Curiosité, urgence douce, bénéfice direct. A/B tester systématiquement deux objets.",
+      "outils": "Brevo (ex-Sendinblue, bon rapport qualité/prix), Mailchimp (débutant), ConvertKit (créateurs), ActiveCampaign (automation avancée), Loops (SaaS moderne)."
+    },
+    "landing_pages_et_pages_vente": {
+      "landing_page": {
+        "structure": "Titre accrocheur + sous-titre explicatif + visuel hero + bénéfices (3-5 bullet points) + preuve sociale + CTA unique + éléments de réassurance.",
+        "regles": "Pas de menu de navigation (zéro distraction). Un seul objectif. Message cohérent avec la source de trafic (ad → landing page: même promesse). Temps de chargement < 3s.",
+        "taux_conversion": "Moyenne: 2-5%. Bon: 5-10%. Excellent: > 10%. Optimiser en continu via A/B testing."
+      },
+      "page_vente_longue": {
+        "structure": "Accroche → Problème → Agitation → Solution (votre offre) → Bénéfices détaillés → Preuve sociale → Offre détaillée (contenu exact) → Bonus → Garantie → Prix et CTA → FAQ → Dernier CTA.",
+        "longueur": "Plus le prix est élevé, plus la page doit être longue. Produit à 47€: 1500-2500 mots. Formation à 497€: 4000-8000 mots. Programme premium: 8000-15000 mots.",
+        "conseil": "Chaque section doit pouvoir être lue indépendamment. Utiliser des sous-titres qui racontent l'histoire même si le lecteur scanne la page."
+      }
+    },
+    "strategie_contenu": {
+      "piliers_contenu": {
+        "definition": "3-5 thèmes principaux autour desquels gravite tout le contenu. Liés à l'expertise et aux besoins de l'audience.",
+        "exemple": "SaaS de comptabilité: 1) Gestion financière PME 2) Fiscalité et obligations légales 3) Outils et productivité 4) Croissance et scaling.",
+        "methode": "Chaque pilier génère des dizaines de sous-sujets. Un pilier = une catégorie de blog, une playlist YouTube, un fil de newsletter."
+      },
+      "calendrier_editorial": {
+        "composantes": "Date de publication, plateforme, pilier de contenu, format, titre provisoire, statut (idée/brouillon/relecture/publié), responsable.",
+        "frequence": "Blog: 1-2 articles/semaine minimum pour le SEO. Réseaux sociaux: 3-5 posts/semaine. Newsletter: 1/semaine (régularité > fréquence). Podcast/vidéo: 1/semaine.",
+        "outils": "Notion (flexible), Trello (visuel), Airtable (bases de données), CoSchedule (intégré marketing)."
+      },
+      "repurposing": {
+        "principe": "Créer un contenu pilier long (article de fond, vidéo longue, podcast) puis le décliner en 10-15 micro-contenus pour chaque plateforme.",
+        "cascade": "Vidéo YouTube 30min → 5 extraits TikTok/Reels → 3 posts LinkedIn → 1 thread Twitter/X → 1 article de blog → 5 visuels carrousel Instagram → 1 newsletter → 1 infographie.",
+        "regle": "Adapter le format et le ton à chaque plateforme. Un post LinkedIn n'est pas un tweet. Un Reel n'est pas un article."
+      },
+      "ugc": {
+        "definition": "User-Generated Content — contenu créé par les utilisateurs ou clients de la marque.",
+        "avantages": "Authenticité supérieure à la publicité classique, coût de production nul, preuve sociale puissante. Les UGC convertissent 4x mieux que le contenu de marque.",
+        "stimuler": "Hashtags de marque, concours, incentives (réductions, mise en avant), programme ambassadeur, faciliter le partage dans le produit."
+      }
+    },
+    "seo_writing": {
+      "fondamentaux": "Un mot-clé principal par article. Intention de recherche: informationnelle, transactionnelle, navigationnelle. Répondre à l'intention plutôt que de bourrer les mots-clés.",
+      "structure_optimale": "Titre H1 (mot-clé) → Introduction (problème + promesse en 100 mots) → Table des matières → H2/H3 logiques → Paragraphes courts (3-4 phrases max) → Conclusion avec CTA.",
+      "bonnes_pratiques": "Meta title < 60 caractères, meta description < 155 caractères (incitative au clic). Liens internes (3-5 par article). Images optimisées avec alt text. URL courte et descriptive. Temps de lecture estimé.",
+      "contenu_evergreen": "Contenu qui reste pertinent dans le temps. Investir en priorité: guides complets, tutoriels, glossaires, comparatifs. Mettre à jour annuellement pour maintenir le classement."
+    },
+    "conversion_et_ab_testing": {
+      "elements_testables": "Titres, CTA (texte + couleur + position), images hero, longueur du formulaire, preuve sociale, prix affiché, structure de la page.",
+      "methodologie": "Un seul élément testé à la fois. Signification statistique > 95% avant de conclure. Durée minimum: 2 semaines ou 1000 visiteurs par variante.",
+      "outils": "Google Optimize (gratuit, en fin de vie), VWO, AB Tasty, Optimizely. Pour les emails: A/B natif dans Brevo/Mailchimp.",
+      "quick_wins": "Changer le texte du CTA (+20-30% possible), ajouter des témoignages au-dessus du CTA (+15%), réduire les champs de formulaire (+25%), ajouter une garantie visible (+10%)."
+    },
+    "voix_de_marque": {
+      "definition": "La personnalité cohérente de la marque exprimée à travers tous les contenus écrits et oraux.",
+      "creation_guide": {
+        "etape_1": "Définir 3-5 adjectifs de personnalité. Ex: 'Expert mais accessible, direct sans arrogance, chaleureux mais professionnel.'",
+        "etape_2": "Créer un spectre 'Nous sommes / Nous ne sommes pas'. Ex: 'Nous sommes francs, nous ne sommes pas brutaux.'",
+        "etape_3": "Rédiger des exemples concrets pour chaque contexte: email support, post réseaux sociaux, page produit, communication de crise.",
+        "etape_4": "Documenter les mots à utiliser et les mots à éviter. Le vocabulaire forme l'identité verbale."
+      },
+      "tonalite_par_contexte": "La voix reste constante, la tonalité s'adapte. Réseaux sociaux: décontractée. Email client: chaleureuse et professionnelle. Documentation: claire et pédagogique. Communication de crise: sobre et empathique.",
+      "conseil_cle": "Écrire comme on parle à un ami intelligent. Éviter le jargon sauf si l'audience est experte. Lire à voix haute pour vérifier la fluidité. Chaque phrase doit mériter sa place."
+    },
+    "scripts_video_et_podcast": {
+      "video": {
+        "hook": "Les 3 premières secondes déterminent tout. Commencer par une promesse, une question ou une déclaration choc. Jamais par une intro de marque.",
+        "structure": "Hook (3s) → Contexte rapide (15s) → Contenu principal (valeur pure) → CTA (10s). Pour YouTube: chapitres avec timestamps.",
+        "retention": "Pattern interrupts toutes les 30-60s: changement de plan, texte à l'écran, B-roll, question rhétorique. Maintenir l'énergie vocale."
+      },
+      "podcast": {
+        "format_solo": "Intro accrocheuse (30s) → Sujet et contexte (2min) → 3-5 points clés développés → Résumé actionnable → CTA.",
+        "format_interview": "Présentation de l'invité orientée bénéfice pour l'auditeur. Questions ouvertes préparées mais conversation naturelle. Relancer sur les réponses intéressantes.",
+        "conseil_production": "Enregistrer en qualité studio (micro USB minimum: Blue Yeti ou Rode NT-USB). Éditer les silences et hésitations. Show notes détaillées pour le SEO."
+      },
+      "newsletter": {
+        "structure": "Objet accrocheur → Phrase d'ouverture personnelle → 1-3 sections de valeur → CTA unique → PS (souvent le texte le plus lu).",
+        "frequence": "Hebdomadaire idéalement. La régularité construit la confiance. Mieux vaut 1 newsletter excellente par semaine que 3 médiocres.",
+        "croissance": "Lead magnet de qualité (checklist, template, mini-cours) → Landing page optimisée → Promotion sur tous les canaux → Referral program intégré."
+      }
+    }
+  }
+}
