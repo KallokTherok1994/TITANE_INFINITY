@@ -234,6 +234,9 @@ describe('xpExtended.config.ts', () => {
       const sources: XPSource[] = [
         'chat_message',
         'chat_response',
+        'chat_quality_bonus',
+        'chat_titane_response',
+        'chat_conversation_streak',
         'mode_usage',
         'automation_run',
         'automation_success',

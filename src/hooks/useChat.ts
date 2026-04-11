@@ -36,6 +36,11 @@ import {
   StreamConfig,
 } from '@/services/api/chat';
 import { XPSource, XP_REWARDS } from '../types/experience';
+import {
+  calculateQualityXPReward,
+  calculateTitaneResponseXP,
+  type ConversationContext,
+} from '@/services/xp/messageQualityScorer';
 
 import { useVisionStore } from '@/stores/useVisionStore';
 import { useRequestInFlightStore } from '@/stores/useRequestInFlightStore';
@@ -2064,33 +2069,56 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
           }
 
           // ═══ AWARD XP FOR SUCCESSFUL MESSAGE ═══
-          // Système XP global + domaines spécifiques
+          // Système XP qualité: points proportionnels à la qualité de l'interaction
           try {
             const { gainXP, awardExperience } = await loadExperienceTools();
 
-            // XP Global Engine (+5 XP pour le moteur global)
+            // Construire le contexte conversationnel pour l'évaluation
+            const conversationCtx: ConversationContext = {
+              messageCount: messagesRef.current.length,
+              recentTopics: [],
+              previousUserMessage: messagesRef.current
+                .filter(m => m.role === 'user')
+                .slice(-2, -1)[0]?.content,
+              previousAssistantResponse: messagesRef.current
+                .filter(m => m.role === 'assistant')
+                .slice(-2, -1)[0]?.content,
+            };
+
+            // Évaluer la qualité du message et calculer les XP
+            const qualityReward = calculateQualityXPReward(cleanMessage, conversationCtx);
+
+            // XP Global Engine (base + bonus qualité)
             gainXP(
-              XP_REWARDS.CHAT_MESSAGE,
+              qualityReward.totalXP,
               'chat_message',
-              `Message envoyé: ${cleanMessage.substring(0, 50)}...`
+              `Message [${qualityReward.tier}]: ${cleanMessage.substring(0, 50)}...`
             );
 
-            // XP Domaine Chat (+5 XP pour le domaine chat)
-            await awardExperience('chat', XP_REWARDS.CHAT_MESSAGE, XPSource.ChatMessage, {
+            // XP Domaine Chat (base + bonus qualité)
+            await awardExperience('chat', qualityReward.totalXP, XPSource.ChatMessage, {
               messageLength: cleanMessage.length,
               provider,
               mode: currentModeState,
+              qualityTier: qualityReward.tier,
+              qualityScore: qualityReward.score.total,
+              qualityBonusXP: qualityReward.qualityBonusXP,
             });
 
-            // XP Domaine Cognitive (+2 XP pour analyse cognitive si réponse longue)
-            if (finalContent && finalContent.length > 200) {
-              await awardExperience('cognitive', 2, XPSource.CognitiveAnalysis, {
-                responseLength: finalContent.length,
-                provider,
-              });
-            }
+            // XP TITANE réponse: TITANE gagne des XP à chaque réponse
+            const titaneXP = calculateTitaneResponseXP(
+              finalContent ? finalContent.length : 0,
+              true
+            );
+            await awardExperience('cognitive', titaneXP, XPSource.CognitiveAnalysis, {
+              responseLength: finalContent ? finalContent.length : 0,
+              provider,
+              titaneResponseXP: true,
+            });
 
-            chatLogger.success('✨ XP awarded: +5 chat, +2 cognitive (si applicable)');
+            chatLogger.success(
+              `✨ XP awarded: +${qualityReward.totalXP} chat [${qualityReward.tier}], +${titaneXP} cognitive (TITANE response)`
+            );
           } catch (xpError) {
             chatLogger.warn('XP award warning', { error: xpError });
           }
