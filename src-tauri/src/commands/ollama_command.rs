@@ -111,6 +111,8 @@ mod tests {
             timeout_secs: 30,
             temperature: Some(0.7),
             system_prompt: Some("Test system".to_string()),
+            max_tokens: None,
+            num_ctx: None,
         };
 
         assert_eq!(req.model, "gemma2:2b");

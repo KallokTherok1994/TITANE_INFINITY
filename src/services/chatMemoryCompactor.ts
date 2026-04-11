@@ -82,11 +82,11 @@ class ChatMemoryCompactor {
         return [];
       }
 
-      const memory: ModeMemory = JSON.parse(stored);
-      logger.info(`Loaded ${memory.messages?.length || 0} messages for ${mode}`, {
+      const memory = this.normalizeMemory(mode, JSON.parse(stored));
+      logger.info(`Loaded ${memory.messages.length} messages for ${mode}`, {
         component: 'MemoryCompactor',
       });
-      return memory.messages || [];
+      return memory.messages;
     } catch (error) {
       logger.error(
         `Failed to load ${mode}`,
@@ -315,10 +315,45 @@ class ChatMemoryCompactor {
         return this.createEmptyMemory(mode);
       }
 
-      return JSON.parse(stored);
+      return this.normalizeMemory(mode, JSON.parse(stored));
     } catch {
       return this.createEmptyMemory(mode);
     }
+  }
+
+  private normalizeMemory(mode: ChatMode, rawMemory: unknown): ModeMemory {
+    if (Array.isArray(rawMemory)) {
+      return {
+        ...this.createEmptyMemory(mode),
+        messages: rawMemory.filter(Boolean) as AIMessage[],
+      };
+    }
+
+    if (!rawMemory || typeof rawMemory !== 'object') {
+      return this.createEmptyMemory(mode);
+    }
+
+    const candidate = rawMemory as Partial<ModeMemory>;
+
+    return {
+      mode: candidate.mode ?? mode,
+      messages: Array.isArray(candidate.messages)
+        ? (candidate.messages.filter(Boolean) as AIMessage[])
+        : [],
+      compressed: Array.isArray(candidate.compressed)
+        ? candidate.compressed.filter(
+            entry =>
+              !!entry &&
+              typeof entry.timestamp === 'number' &&
+              typeof entry.summary === 'string' &&
+              typeof entry.messageCount === 'number'
+          )
+        : [],
+      lastCompacted:
+        typeof candidate.lastCompacted === 'number'
+          ? candidate.lastCompacted
+          : Date.now(),
+    };
   }
 
   private createEmptyMemory(mode: ChatMode): ModeMemory {

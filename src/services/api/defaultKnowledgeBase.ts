@@ -53,6 +53,21 @@ const BUNDLED_DEFAULT_KB_MODULES = import.meta.glob(
   }
 ) as Record<string, { default?: Record<string, unknown> } | Record<string, unknown>>;
 
+const RUST_CANONICAL_EXCLUDED_BUNDLED_KB_IDS = new Set([
+  'bourse_trading',
+  'crypto_blockchain',
+  'cuisine_gastronomie',
+  'droit_contrats_pratique',
+  'energie_renouvelable',
+  'jeux_video_culture',
+  'kevin_book_registry_v30',
+  'kevin_owner_profile_v30',
+  'kevin_public_corpus_v30',
+  'kevin_workflow_v30',
+  'musique_theorie_pratique',
+  'voyage_exploration',
+]);
+
 const DEFAULT_KB_FALLBACK_ENTRIES: KnowledgeBaseEntry[] = [
   {
     id: 'system_architecture',
@@ -121,6 +136,150 @@ const KB_STOP_WORDS = new Set([
   'titane',
 ]);
 
+const KB_CREATOR_HINTS = [
+  'kevin',
+  'createur',
+  'creator',
+  'fondateur',
+  'utilisateur principal',
+  'primary user',
+  'owner',
+];
+
+const KB_TWINS_HINTS = [
+  'twin',
+  'twins',
+  'symbiose',
+  'symbiosis',
+  'jumeau',
+  'numeric twin',
+  'fusion',
+];
+
+const KB_BOOK_HINTS = [
+  'livre',
+  'book',
+  'manuscrit',
+  'manuscript',
+  'eclaircit',
+  'eclairc',
+  'chapitre',
+  'roman',
+  'portfolio',
+  'livres audio',
+  'audiobook',
+  'diplome',
+  'diplômes',
+  'facebook',
+  'humain total',
+  'humain à tout faire',
+  'kallok',
+  'discerner',
+  'rain',
+  'deuxième vitesse',
+  'deuxieme vitesse',
+  'œuvre vivance',
+  'oeuvre vivance',
+];
+
+const KB_CORPUS_HINTS = [
+  'codex vivant',
+  'sanctuaire interieur',
+  'retour au vivant',
+  'rituel de presence',
+  'presence',
+  'authenticite',
+  'mode survie',
+  'burn out',
+  'burn-out',
+  'questionnement profond',
+  'module 0',
+  'module 1',
+  'module 2',
+  'module 3',
+  'module 4',
+  'module 5',
+  'module 6',
+  'cercle du feu humain',
+  'maitre de son feu',
+  'priere d ancrage',
+];
+
+function expandQueryContext(query: string): {
+  tokens: string[];
+  pinnedCategories: Set<string>;
+} {
+  const normalized = normalizeText(query);
+  const tokens = new Set(tokenizeQuery(query));
+  const pinnedCategories = new Set<string>();
+
+  const addTokens = (...values: string[]) => {
+    for (const value of values) {
+      tokens.add(normalizeText(value));
+    }
+  };
+
+  const pin = (...categories: string[]) => {
+    for (const category of categories) {
+      pinnedCategories.add(category);
+    }
+  };
+
+  if (KB_CREATOR_HINTS.some(hint => normalized.includes(hint))) {
+    addTokens('kevin', 'creator', 'owner', 'style', 'mission', 'workflow');
+    pin(
+      'identity_profile',
+      'style_expression_kevin',
+      'kevin_owner_profile_v30',
+      'kevin_workflow_v30'
+    );
+  }
+
+  if (KB_TWINS_HINTS.some(hint => normalized.includes(hint))) {
+    addTokens('twin', 'symbiose', 'fusion', 'sync', 'kevin');
+    pin(
+      'digital_twin_symbiosis',
+      'numeric_twin_detail',
+      'kevin_workflow_v30',
+      'identity_profile'
+    );
+  }
+
+  if (KB_BOOK_HINTS.some(hint => normalized.includes(hint))) {
+    addTokens('book', 'livre', 'manuscrit', 'chapter', 'auteur', 'kevin');
+    pin(
+      'kevin_book_registry_v30',
+      'style_expression_kevin',
+      'kevin_owner_profile_v30'
+    );
+  }
+
+  if (KB_CORPUS_HINTS.some(hint => normalized.includes(hint))) {
+    addTokens(
+      'codex',
+      'vivant',
+      'presence',
+      'authenticite',
+      'rituel',
+      'module',
+      'humain',
+      'total',
+      'kevin'
+    );
+    pin(
+      'kevin_public_corpus_v30',
+      'kevin_book_registry_v30',
+      'style_expression_kevin',
+      'kevin_owner_profile_v30'
+    );
+  }
+
+  return {
+    tokens: Array.from(tokens),
+    pinnedCategories,
+  };
+}
+
 function normalizeText(value: string): string {
   return value
     .toLowerCase()
@@ -175,6 +334,15 @@ function dedupeKnowledgeBaseEntries(entries: KnowledgeBaseEntry[]): KnowledgeBas
   );
 }
 
+function extractBundledFallbackId(path: string): string {
+  return (
+    path
+      .split('/')
+      .pop()
+      ?.replace(/\.json$/i, '') || 'unknown'
+  );
+}
+
 function buildKnowledgeEntryFromBundledJson(
   path: string,
   rawModule: { default?: Record<string, unknown> } | Record<string, unknown>
@@ -189,11 +357,7 @@ function buildKnowledgeEntryFromBundledJson(
   }
 
   const normalizedValue = rawValue as Record<string, unknown>;
-  const fallbackId =
-    path
-      .split('/')
-      .pop()
-      ?.replace(/\.json$/i, '') || 'unknown';
+  const fallbackId = extractBundledFallbackId(path);
 
   return {
     id:
@@ -220,6 +384,7 @@ function buildKnowledgeEntryFromBundledJson(
 
 function getFallbackEntries(): KnowledgeBaseEntry[] {
   const bundledEntries = Object.entries(BUNDLED_DEFAULT_KB_MODULES)
+    .filter(([path]) => !RUST_CANONICAL_EXCLUDED_BUNDLED_KB_IDS.has(extractBundledFallbackId(path)))
     .map(([path, rawModule]) => buildKnowledgeEntryFromBundledJson(path, rawModule))
     .filter((entry): entry is KnowledgeBaseEntry => entry !== null);
 
@@ -232,6 +397,8 @@ function getFallbackEntries(): KnowledgeBaseEntry[] {
     content: JSON.parse(JSON.stringify(entry.content)),
   }));
 }
+
+export const DEFAULT_KB_CANONICAL_ENTRY_COUNT = getFallbackEntries().length;
 
 // ─────────────────────────────────────────────────────────────────
 // Public API
@@ -272,6 +439,8 @@ export async function getAllEntries(): Promise<KnowledgeBaseEntry[]> {
   // Guard: if a load is already in flight, wait for it instead of issuing a second IPC call
   if (_allEntriesLoadingPromise) return _allEntriesLoadingPromise;
   _allEntriesLoadingPromise = (async () => {
+    let shouldUseFallbackEntries = false;
+
     try {
       const raw = await invokeWithRetry<string>(
         'knowledge_base_get_all',
@@ -285,9 +454,10 @@ export async function getAllEntries(): Promise<KnowledgeBaseEntry[]> {
       _allEntriesCache = dedupeKnowledgeBaseEntries(Object.values(parsed));
     } catch {
       _allEntriesCache = null;
+      shouldUseFallbackEntries = true;
     }
 
-    if (!_allEntriesCache || _allEntriesCache.length === 0) {
+    if (shouldUseFallbackEntries || !_allEntriesCache) {
       _allEntriesCache = getFallbackEntries();
     }
 
@@ -377,7 +547,7 @@ export async function getRelevantPromptContext(
   query: string,
   limit: number = 3
 ): Promise<string> {
-  const tokens = tokenizeQuery(query);
+  const { tokens, pinnedCategories } = expandQueryContext(query);
   if (tokens.length === 0) {
     return '';
   }
@@ -393,6 +563,7 @@ export async function getRelevantPromptContext(
         const categoryText = normalizeText(entry.category);
         const descriptionText = normalizeText(entry.description);
         const contentText = normalizeText(flattenContent(entry.content));
+        const isPinned = pinnedCategories.has(entry.category) || pinnedCategories.has(entry.id);
 
         const score = tokens.reduce((total, token) => {
           let nextScore = total;
@@ -400,7 +571,7 @@ export async function getRelevantPromptContext(
           if (descriptionText.includes(token)) nextScore += 3;
           if (contentText.includes(token)) nextScore += 1;
           return nextScore;
-        }, 0);
+        }, isPinned ? 9 : 0);
 
         return {
           entry,

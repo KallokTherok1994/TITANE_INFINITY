@@ -3,10 +3,13 @@
 //   Commandes Tauri pour le Numeric Twin Engine
 // ═══════════════════════════════════════════════════════════════════════════
 
+use crate::core::state::SingularityState;
+use crate::digital_twin_v14_1::memory_bridge::MemoryBridge as TwinMemoryBridge;
 use log::{info, warn};
 use serde::{Deserialize, Serialize};
+use std::sync::Arc;
 use tauri::State;
-use tokio::sync::Mutex;
+use tokio::sync::{Mutex, RwLock};
 
 use super::{
     EvolutionType, NumericTwinEngine, ObservationType, TwinConfig, TwinEvolutionRequest,
@@ -29,6 +32,56 @@ impl NumericTwinState {
 impl Default for NumericTwinState {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+const OWNER_TWIN_THEMES: &[&str] = &[
+    "presence",
+    "authenticite",
+    "retour-au-vivant",
+    "deuxieme-vitesse",
+    "clarte",
+    "oeuvre-vivante",
+];
+
+#[derive(Debug, Clone)]
+struct TwinMemorySnapshot {
+    fusion_score: f32,
+    trend: String,
+    phase: String,
+    sync_score: f32,
+}
+
+fn capture_twin_memory_snapshot(engine: &NumericTwinEngine) -> TwinMemorySnapshot {
+    TwinMemorySnapshot {
+        fusion_score: engine.fusion_index.global_score,
+        trend: format!("{:?}", engine.fusion_index.trend),
+        phase: format!("{:?}", engine.evolution_profile.current_phase),
+        sync_score: engine.evolution_profile.sync_score,
+    }
+}
+
+async fn persist_twin_memory(
+    singularity: &State<'_, Arc<RwLock<SingularityState>>>,
+    scope: &str,
+    snapshot: TwinMemorySnapshot,
+    details: serde_json::Value,
+) {
+    let bridge = TwinMemoryBridge::default();
+
+    let mut singularity_state = singularity.write().await;
+    match bridge.store_numeric_twin_state(
+        &mut singularity_state.memory,
+        scope,
+        snapshot.fusion_score,
+        &snapshot.trend,
+        &snapshot.phase,
+        snapshot.sync_score,
+        OWNER_TWIN_THEMES,
+        details,
+    ) {
+        Ok(memory_id) => info!("[NumericTwin] Memory bridge snapshot stored: {}", memory_id),
+        Err(error) => warn!("[NumericTwin] Memory bridge snapshot skipped: {}", error),
     }
 }
 
@@ -252,12 +305,18 @@ pub async fn twin_get_fusion_index(
 #[tauri::command]
 pub async fn twin_submit_observation(
     state: State<'_, NumericTwinState>,
+    singularity: State<'_, Arc<RwLock<SingularityState>>>,
     observation: TwinObservationRequest,
 ) -> Result<String, String> {
     info!(
         "[NumericTwin] twin_submit_observation called: {:?}",
         observation.observation_type
     );
+
+    let observation_type_name = observation.observation_type.clone();
+    let observation_content = observation.content.clone();
+    let observation_context = observation.context.clone();
+    let observation_confidence = observation.confidence;
 
     let mut engine = state.0.lock().await;
 
@@ -283,7 +342,23 @@ pub async fn twin_submit_observation(
 
     match engine.submit_observation(twin_observation) {
         Ok(packet) => {
-            info!("[NumericTwin] Observation submitted: {}", packet.id);
+            let packet_id = packet.id.clone();
+            let snapshot = capture_twin_memory_snapshot(&engine);
+            info!("[NumericTwin] Observation submitted: {}", packet_id);
+            drop(engine);
+            persist_twin_memory(
+                &singularity,
+                "observation",
+                snapshot,
+                serde_json::json!({
+                    "packetId": packet_id,
+                    "observationType": observation_type_name,
+                    "content": observation_content,
+                    "context": observation_context,
+                    "confidence": observation_confidence,
+                }),
+            )
+            .await;
             Ok(packet.id)
         }
         Err(e) => {
@@ -297,12 +372,19 @@ pub async fn twin_submit_observation(
 #[tauri::command]
 pub async fn twin_apply_evolution(
     state: State<'_, NumericTwinState>,
+    singularity: State<'_, Arc<RwLock<SingularityState>>>,
     evolution: TwinEvolutionRequestPayload,
 ) -> Result<TwinEvolutionResult, String> {
     info!(
         "[NumericTwin] twin_apply_evolution called: {:?}",
         evolution.evolution_type
     );
+
+    let evolution_type_name = evolution.evolution_type.clone();
+    let evolution_target = evolution.target.clone();
+    let evolution_delta = evolution.delta;
+    let evolution_is_deep_change = evolution.is_deep_change;
+    let evolution_validated_by_kevin = evolution.validated_by_kevin;
 
     let mut engine = state.0.lock().await;
 
@@ -329,7 +411,25 @@ pub async fn twin_apply_evolution(
 
     match engine.apply_evolution(request) {
         Ok(result) => {
-            info!("[NumericTwin] Evolution applied: {}", result.evolution_id);
+            let evolution_id = result.evolution_id.clone();
+            let snapshot = capture_twin_memory_snapshot(&engine);
+            info!("[NumericTwin] Evolution applied: {}", evolution_id);
+            drop(engine);
+            persist_twin_memory(
+                &singularity,
+                "evolution",
+                snapshot,
+                serde_json::json!({
+                    "evolutionId": evolution_id,
+                    "evolutionType": evolution_type_name,
+                    "target": evolution_target,
+                    "delta": evolution_delta,
+                    "isDeepChange": evolution_is_deep_change,
+                    "validatedByKevin": evolution_validated_by_kevin,
+                    "resultingPhase": format!("{:?}", result.new_phase),
+                }),
+            )
+            .await;
             Ok(result)
         }
         Err(e) => {
@@ -343,6 +443,7 @@ pub async fn twin_apply_evolution(
 #[tauri::command]
 pub async fn twin_validate_sync(
     state: State<'_, NumericTwinState>,
+    singularity: State<'_, Arc<RwLock<SingularityState>>>,
     validation: TwinSyncValidationRequest,
 ) -> Result<bool, String> {
     info!(
@@ -354,7 +455,19 @@ pub async fn twin_validate_sync(
 
     match engine.validate_sync(&validation.sync_id, validation.validated) {
         Ok(()) => {
+            let snapshot = capture_twin_memory_snapshot(&engine);
             info!("[NumericTwin] Sync validated: {}", validation.sync_id);
+            drop(engine);
+            persist_twin_memory(
+                &singularity,
+                "sync_validation",
+                snapshot,
+                serde_json::json!({
+                    "syncId": validation.sync_id,
+                    "validated": validation.validated,
+                }),
+            )
+            .await;
             Ok(true)
         }
         Err(e) => {
@@ -434,13 +547,30 @@ pub async fn twin_get_identity(
 
 /// Force le recalcul du FusionIndex
 #[tauri::command]
-pub async fn twin_recalculate_fusion(state: State<'_, NumericTwinState>) -> Result<f32, String> {
+pub async fn twin_recalculate_fusion(
+    state: State<'_, NumericTwinState>,
+    singularity: State<'_, Arc<RwLock<SingularityState>>>,
+) -> Result<f32, String> {
     info!("[NumericTwin] twin_recalculate_fusion called");
 
     let mut engine = state.0.lock().await;
     engine.calculate_fusion_index();
 
-    Ok(engine.fusion_index.global_score)
+    let fusion_score = engine.fusion_index.global_score;
+    let snapshot = capture_twin_memory_snapshot(&engine);
+    drop(engine);
+    persist_twin_memory(
+        &singularity,
+        "fusion_recalculation",
+        snapshot,
+        serde_json::json!({
+            "reason": "manual_recalculate",
+            "fusionScore": fusion_score,
+        }),
+    )
+    .await;
+
+    Ok(fusion_score)
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
