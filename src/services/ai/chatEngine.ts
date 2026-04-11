@@ -1442,8 +1442,10 @@ Que souhaites-tu explorer ?`;
         userMessage: validatedMessage,
         systemPrompt,
         // Canonical policy profile values take priority; user aiConfig overrides as explicit opt-in.
-        temperature: modeTemperature ?? finalConfig.aiConfig?.temperature,
-        maxOutputTokens: modeMaxTokens ?? finalConfig.aiConfig?.maxTokens,
+        // NOTE: temperature/maxOutputTokens are intentionally omitted when not user-explicit —
+        // the backend derives them from `profile`. Sending them would override backend profile defaults.
+        temperature: finalConfig.aiConfig?.temperature,
+        maxOutputTokens: finalConfig.aiConfig?.maxTokens,
         provider: backendProvider,
         enableStreaming: false,
         profile: toBackendPerformanceProfile(responseProfileId),
@@ -1648,8 +1650,9 @@ Que souhaites-tu explorer ?`;
       userMessage: validatedMessage,
       systemPrompt,
       // Canonical policy profile values take priority; user aiConfig overrides as explicit opt-in.
-      temperature: modeTemperature ?? finalConfig.aiConfig?.temperature,
-      maxOutputTokens: modeMaxTokens ?? finalConfig.aiConfig?.maxTokens,
+      // NOTE: temperature/maxOutputTokens omitted when not user-explicit — backend derives from profile.
+      temperature: finalConfig.aiConfig?.temperature,
+      maxOutputTokens: finalConfig.aiConfig?.maxTokens,
       provider: backendProvider,
       enableStreaming: true,
       profile: toBackendPerformanceProfile(responseProfileId),

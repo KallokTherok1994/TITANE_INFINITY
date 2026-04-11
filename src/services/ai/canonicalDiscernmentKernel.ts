@@ -219,11 +219,24 @@ export class CanonicalDiscernmentKernel {
       logger.warn('BehavioralRouter failed, using intent-based depth');
     }
 
-    // Final profile: behavioral router wins if confident, else intent-based
-    const profileId =
+    // Behavioral router best candidate
+    const behavioralProfileId =
       behavioralDecision && behavioralDecision.confidence >= 0.5
         ? behavioralDecision.profileId
         : effectiveDepth;
+
+    // Profile rank for cap-down logic
+    const PROFILE_RANK: Record<ResponseProfileId, number> = {
+      DIRECT: 0, BALANCED: 1, DEVELOPED: 2, DEEP: 3, ARCHITECT: 4, OMEGA: 5,
+    };
+
+    // userDepthPreference caps the profile DOWN (e.g. 'short'→DIRECT overrides DEEP).
+    // When the preference would elevate the profile, behavioral routing still decides.
+    const profileId =
+      input.userDepthPreference &&
+      PROFILE_RANK[effectiveDepth] < PROFILE_RANK[behavioralProfileId]
+        ? effectiveDepth
+        : behavioralProfileId;
 
     // Get full profile with params
     const { profile: effectiveProfile } = getEffectiveProfile(
