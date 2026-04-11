@@ -1713,6 +1713,79 @@ fn main() {
                                         log::warn!("[BOOT_PROBE] eval injection failed: {}", err);
                                 }
                         }
+
+                                        if window.label() == "main" {
+                                                if let Some(probe_flag_path) = window
+                                                        .app_handle()
+                                                        .path()
+                                                        .app_data_dir()
+                                                        .ok()
+                                                        .map(|dir| dir.join("probe_ollama_generate.flag"))
+                                                        .filter(|path| path.exists())
+                                                {
+                                                        if let Err(err) = std::fs::remove_file(&probe_flag_path) {
+                                                                log::warn!(
+                                                                        "[OLLAMA_PROBE] failed to clear probe flag {}: {}",
+                                                                        probe_flag_path.display(),
+                                                                        err
+                                                                );
+                                                        }
+
+                                                        let script = r#"
+                                                            if (!window.__TITANE_OLLAMA_PROBE_SCHEDULED__) {
+                                                                window.__TITANE_OLLAMA_PROBE_SCHEDULED__ = true;
+
+                                                                const probeInvoke = async (marker) => {
+                                                                    try {
+                                                                        if (window.__TAURI_INTERNALS__?.invoke) {
+                                                                            await window.__TAURI_INTERNALS__.invoke('boot_marker_log', { marker });
+                                                                        }
+                                                                    } catch (_) {
+                                                                        // ignore probe invoke failures
+                                                                    }
+                                                                };
+
+                                                                const sanitize = (value) =>
+                                                                    String(value ?? '')
+                                                                        .replace(/[|\n\r]/g, '_')
+                                                                        .slice(0, 160);
+
+                                                                setTimeout(async () => {
+                                                                    try {
+                                                                        await probeInvoke('OLLAMA_PROBE_START');
+
+                                                                        if (!window.__TAURI_INTERNALS__?.invoke) {
+                                                                            throw new Error('tauri-invoke-unavailable');
+                                                                        }
+
+                                                                        const result = await window.__TAURI_INTERNALS__.invoke('ollama_generate', {
+                                                                            req: {
+                                                                                model: 'gemma2:2b',
+                                                                                prompt: 'Reply with OK only.',
+                                                                                timeout_secs: 20,
+                                                                                temperature: 0,
+                                                                                max_tokens: 8,
+                                                                            },
+                                                                        });
+
+                                                                        await probeInvoke(
+                                                                            `OLLAMA_PROBE_OK|model=${sanitize(result?.model)}|len=${sanitize(result?.content?.length ?? 0)}|latency_ms=${sanitize(result?.latency_ms ?? 0)}|done_reason=${sanitize(result?.done_reason ?? 'none')}`
+                                                                        );
+                                                                        console.info('[OLLAMA_PROBE_OK]', JSON.stringify(result));
+                                                                    } catch (error) {
+                                                                        const message = sanitize(error?.message ?? error);
+                                                                        await probeInvoke(`OLLAMA_PROBE_ERR|message=${message}`);
+                                                                        console.error('[OLLAMA_PROBE_ERR]', String(error));
+                                                                    }
+                                                                }, 8000);
+                                                            }
+                                                        "#;
+
+                                                        if let Err(err) = window.eval(script) {
+                                                                log::warn!("[OLLAMA_PROBE] eval injection failed: {}", err);
+                                                        }
+                                                }
+                                        }
         })
         .invoke_handler(tauri::generate_handler![
             // Frontend OS bridge compatibility

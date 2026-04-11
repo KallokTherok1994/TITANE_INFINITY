@@ -398,7 +398,105 @@ pub mod error_handling;
 /// On Android, this function IS the app. Full command set migration: LOT-B1.
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder::default()
+    let builder = tauri::Builder::default().on_page_load(|window, _payload| {
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        {
+            let app_identifier = window.app_handle().config().identifier.clone();
+
+            let probe_flag_path = window
+                .app_handle()
+                .path()
+                .app_data_dir()
+                .ok()
+                .map(|dir| dir.join("probe_ollama_generate.flag"))
+                .into_iter()
+                .chain([
+                    std::path::PathBuf::from(format!(
+                        "/data/user/0/{}/files/probe_ollama_generate.flag",
+                        app_identifier
+                    )),
+                    std::path::PathBuf::from(format!(
+                        "/data/data/{}/files/probe_ollama_generate.flag",
+                        app_identifier
+                    )),
+                ])
+                .find(|path| path.exists());
+
+            if let Some(probe_flag_path) = probe_flag_path
+            {
+                if let Err(err) = std::fs::remove_file(&probe_flag_path) {
+                    log::warn!(
+                        "[OLLAMA_PROBE] failed to clear mobile probe flag {}: {}",
+                        probe_flag_path.display(),
+                        err
+                    );
+                }
+
+                let script = r#"
+                    if (!window.__TITANE_OLLAMA_PROBE_SCHEDULED__) {
+                        window.__TITANE_OLLAMA_PROBE_SCHEDULED__ = true;
+
+                        const probeInvoke = async (marker) => {
+                            try {
+                                if (window.__TAURI_INTERNALS__?.invoke) {
+                                    await window.__TAURI_INTERNALS__.invoke('boot_marker_log', { marker });
+                                }
+                            } catch (_) {
+                                // ignore probe invoke failures
+                            }
+                        };
+
+                        const sanitize = (value) =>
+                            String(value ?? '')
+                                .replace(/[|\n\r]/g, '_')
+                                .slice(0, 160);
+
+                        setTimeout(async () => {
+                            try {
+                                await probeInvoke('OLLAMA_PROBE_START');
+
+                                if (!window.__TAURI_INTERNALS__?.invoke) {
+                                    throw new Error('tauri-invoke-unavailable');
+                                }
+
+                                const result = await window.__TAURI_INTERNALS__.invoke('ollama_generate', {
+                                    req: {
+                                        model: 'gemma2:2b',
+                                        prompt: 'Reply with OK only.',
+                                        timeout_secs: 20,
+                                        temperature: 0,
+                                        max_tokens: 8,
+                                    },
+                                });
+
+                                await probeInvoke(
+                                    `OLLAMA_PROBE_OK|model=${sanitize(result?.model)}|len=${sanitize(result?.content?.length ?? 0)}|latency_ms=${sanitize(result?.latency_ms ?? 0)}|done_reason=${sanitize(result?.done_reason ?? 'none')}`
+                                );
+                                console.info('[OLLAMA_PROBE_OK]', JSON.stringify(result));
+                            } catch (error) {
+                                const message = sanitize(error?.message ?? error);
+                                await probeInvoke(`OLLAMA_PROBE_ERR|message=${message}`);
+                                console.error('[OLLAMA_PROBE_ERR]', String(error));
+                            }
+                        }, 8000);
+                    }
+                "#;
+
+                if let Err(err) = window.eval(script) {
+                    log::warn!("[OLLAMA_PROBE] mobile eval injection failed: {}", err);
+                }
+            }
+        }
+    });
+
+    #[cfg(all(not(feature = "mock"), feature = "full"))]
+    let builder = builder.invoke_handler(tauri::generate_handler![
+        commands::ollama_command::ollama_generate,
+        commands::orchestration_center::ping_ollama,
+        runtime_config::boot_marker_log,
+    ]);
+
+    builder
         .run(tauri::generate_context!())
         .unwrap_or_else(|e| {
             // I10: explicit error — no .expect() in production
