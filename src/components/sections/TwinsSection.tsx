@@ -12,6 +12,7 @@
  */
 
 import React, { memo, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Grid } from '@components/layout';
 import { Card } from '@/ui';
 import { TSectionHeader } from '@/design-system';
@@ -23,12 +24,16 @@ import {
   useCurrentChatModeId,
 } from '@/stores/useChatModeStore';
 import { TwinEvolutionPanel } from '@/components/twin/TwinEvolutionPanel';
+import { useTwinEvolution } from '@/hooks/useTwinEvolution';
+import { createLogger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
 
 type TwinsSectionProps = Record<string, never>;
+
+const sectionLogger = createLogger('TwinsSection');
 
 // Lazy-load heavy components
 const LazyModeMatrix = React.lazy(() =>
@@ -55,15 +60,32 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
   const env = detectEnvironment();
   const currentModeId = useCurrentChatModeId();
   const changeMode = useChatModeStore(state => state.changeMode);
+  const navigate = useNavigate();
+  const { chatContextStatus, lastSyncAt } = useTwinEvolution();
 
   const handleModeSelect = useCallback(
     (mode: { id: string }) => {
       changeMode(mode.id).catch(err =>
-        console.warn('[TwinsSection] changeMode failed:', err)
+        sectionLogger.warn('changeMode failed', err)
       );
     },
     [changeMode]
   );
+
+  const goToChat = useCallback(() => {
+    navigate('/titane?tab=conversation');
+  }, [navigate]);
+
+  const chatStatusMeta =
+    chatContextStatus === 'active'
+      ? { label: '🟢 Contexte TWINS actif — injecté dans le Chat IA', color: '#b7eb8f', bg: 'rgba(82,196,26,0.12)', border: 'rgba(82,196,26,0.5)' }
+      : chatContextStatus === 'stale'
+      ? { label: '🟠 Contexte TWINS à resynchroniser', color: '#ffd591', bg: 'rgba(250,173,20,0.12)', border: 'rgba(250,173,20,0.5)' }
+      : { label: '⚪ Contexte TWINS en attente d\'initialisation', color: '#d9d9d9', bg: 'rgba(140,140,140,0.12)', border: 'rgba(140,140,140,0.5)' };
+
+  const lastSyncDisplay = lastSyncAt
+    ? new Date(lastSyncAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+    : null;
 
   return (
     <div className="titane-section titane-section-twins">
@@ -72,7 +94,49 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
         subtitle="Fusion Kevin ↔ TITANE · Personnalité synchronisée · Orchestration IA auto"
       />
 
-      {/* ═══ TWINS EVOLUTION PANEL — Symbiose Kevin ↔ TITANE ═══ */}
+      {/* ═══ CHAT IA CONNECTION STATUS ═══ */}
+      <Card style={{ marginBottom: spacing[4], padding: spacing[3] }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: spacing[2] }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: spacing[2] }}>
+            <span style={{
+              display: 'inline-block',
+              padding: `${spacing[1]} ${spacing[3]}`,
+              borderRadius: '20px',
+              fontSize: fontSizes.xs,
+              fontWeight: 600,
+              color: chatStatusMeta.color,
+              background: chatStatusMeta.bg,
+              border: `1px solid ${chatStatusMeta.border}`,
+            }}>
+              {chatStatusMeta.label}
+            </span>
+            {lastSyncDisplay && (
+              <span style={{ fontSize: fontSizes.xs, color: colors.neutral[500] }}>
+                Dernière sync : {lastSyncDisplay}
+              </span>
+            )}
+          </div>
+          <button
+            data-testid="twins-go-to-chat"
+            onClick={goToChat}
+            style={{
+              padding: `${spacing[2]} ${spacing[4]}`,
+              background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
+              border: 'none',
+              borderRadius: '8px',
+              color: 'white',
+              fontSize: fontSizes.sm,
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'opacity 0.2s',
+            }}
+          >
+            💬 Ouvrir le Chat IA
+          </button>
+        </div>
+      </Card>
+
+      {/* ═══ TWINS EVOLUTION PANEL — Kevin ↔ TITANE ═══ */}
       <Card style={{ marginBottom: spacing[4] }}>
         <h3 style={{ marginBottom: spacing[4] }}>
           🧬 TWINS — Jumeau Numérique de Kevin Thibault

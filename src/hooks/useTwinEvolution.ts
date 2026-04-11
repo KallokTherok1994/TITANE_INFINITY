@@ -6,6 +6,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { numericTwinService } from '../services/api/numericTwin';
+import { createLogger } from '@/utils/logger';
 import type {
   TwinEvolutionProfile,
   FusionIndex,
@@ -31,6 +32,8 @@ const OWNER_TWIN_RESONANCE = {
     'https://static.wixstatic.com/media/0c58f2_0e50a8a83cac4080848fe97b54f92b8a~mv2.jpg/v1/fill/w_285,h_287,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/465277026_1246722113243921_9112138683944422327_n.jpg',
   portraitFallbackUrl: '/kevin-owner-portrait.svg',
 } as const;
+
+const twinLogger = createLogger('useTwinEvolution');
 
 interface UseTwinEvolutionReturn {
   // État
@@ -103,7 +106,7 @@ export function useTwinEvolution(): UseTwinEvolutionReturn {
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur lors du chargement');
-      console.error('[useTwinEvolution] Error:', err);
+      twinLogger.error('Error loading twin evolution data', err);
     } finally {
       setIsLoading(false);
     }
@@ -119,7 +122,7 @@ export function useTwinEvolution(): UseTwinEvolutionReturn {
       await fetchData(); // Refresh après recalcul
       return score;
     } catch (err) {
-      console.error('[useTwinEvolution] recalculateFusion error:', err);
+      twinLogger.error('recalculateFusion error', err);
       throw err;
     }
   }, [fetchData]);
@@ -131,7 +134,7 @@ export function useTwinEvolution(): UseTwinEvolutionReturn {
         await fetchData();
         return result;
       } catch (err) {
-        console.error('[useTwinEvolution] transitionPhase error:', err);
+        twinLogger.error('transitionPhase error', err);
         setError(err instanceof Error ? err.message : 'Erreur lors de la transition');
         return null;
       }
@@ -146,7 +149,7 @@ export function useTwinEvolution(): UseTwinEvolutionReturn {
         await fetchData();
         return result;
       } catch (err) {
-        console.error('[useTwinEvolution] reinforceValue error:', err);
+        twinLogger.error('reinforceValue error', err);
         setError(err instanceof Error ? err.message : 'Erreur lors du renforcement');
         return null;
       }
@@ -161,7 +164,7 @@ export function useTwinEvolution(): UseTwinEvolutionReturn {
         await fetchData();
         return result;
       } catch (err) {
-        console.error('[useTwinEvolution] adjustTrait error:', err);
+        twinLogger.error('adjustTrait error', err);
         setError(err instanceof Error ? err.message : "Erreur lors de l'ajustement");
         return null;
       }
