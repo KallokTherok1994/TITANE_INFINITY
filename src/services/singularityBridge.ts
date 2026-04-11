@@ -268,7 +268,9 @@ export class SingularityBridge {
         if (this.state) {
           // Merge delta into current state (only changed fields)
           this.state = { ...this.state, ...event.payload };
-          logger.info('v30.0.0: Delta update applied', { keys: Object.keys(event.payload) });
+          logger.info('v30.0.0: Delta update applied', {
+            keys: Object.keys(event.payload),
+          });
           this.notifySubscribers();
         }
       }

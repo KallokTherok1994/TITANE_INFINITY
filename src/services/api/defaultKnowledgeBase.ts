@@ -247,11 +247,7 @@ function expandQueryContext(query: string): {
 
   if (KB_BOOK_HINTS.some(hint => normalized.includes(hint))) {
     addTokens('book', 'livre', 'manuscrit', 'chapter', 'auteur', 'kevin');
-    pin(
-      'kevin_book_registry_v30',
-      'style_expression_kevin',
-      'kevin_owner_profile_v30'
-    );
+    pin('kevin_book_registry_v30', 'style_expression_kevin', 'kevin_owner_profile_v30');
   }
 
   if (KB_CORPUS_HINTS.some(hint => normalized.includes(hint))) {
@@ -384,7 +380,10 @@ function buildKnowledgeEntryFromBundledJson(
 
 function getFallbackEntries(): KnowledgeBaseEntry[] {
   const bundledEntries = Object.entries(BUNDLED_DEFAULT_KB_MODULES)
-    .filter(([path]) => !RUST_CANONICAL_EXCLUDED_BUNDLED_KB_IDS.has(extractBundledFallbackId(path)))
+    .filter(
+      ([path]) =>
+        !RUST_CANONICAL_EXCLUDED_BUNDLED_KB_IDS.has(extractBundledFallbackId(path))
+    )
     .map(([path, rawModule]) => buildKnowledgeEntryFromBundledJson(path, rawModule))
     .filter((entry): entry is KnowledgeBaseEntry => entry !== null);
 
@@ -563,15 +562,19 @@ export async function getRelevantPromptContext(
         const categoryText = normalizeText(entry.category);
         const descriptionText = normalizeText(entry.description);
         const contentText = normalizeText(flattenContent(entry.content));
-        const isPinned = pinnedCategories.has(entry.category) || pinnedCategories.has(entry.id);
+        const isPinned =
+          pinnedCategories.has(entry.category) || pinnedCategories.has(entry.id);
 
-        const score = tokens.reduce((total, token) => {
-          let nextScore = total;
-          if (categoryText.includes(token)) nextScore += 5;
-          if (descriptionText.includes(token)) nextScore += 3;
-          if (contentText.includes(token)) nextScore += 1;
-          return nextScore;
-        }, isPinned ? 9 : 0);
+        const score = tokens.reduce(
+          (total, token) => {
+            let nextScore = total;
+            if (categoryText.includes(token)) nextScore += 5;
+            if (descriptionText.includes(token)) nextScore += 3;
+            if (contentText.includes(token)) nextScore += 1;
+            return nextScore;
+          },
+          isPinned ? 9 : 0
+        );
 
         return {
           entry,

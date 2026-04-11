@@ -142,7 +142,7 @@ const DEFAULT_PREFERENCES: UserPreferences = {
     creator_identity_priority: true,
     kevin_owner_mode: 'v30',
     primary_project_ecosystem:
-      'Humain Total, TITANE_INFINITY, Humain à tout faire, Kallok\'s Arts',
+      "Humain Total, TITANE_INFINITY, Humain à tout faire, Kallok's Arts",
     learning_style_profile:
       'apprenant systémique, visuel-spatial, structuré, validation terrain, synthèses audio',
     creator_public_positioning:

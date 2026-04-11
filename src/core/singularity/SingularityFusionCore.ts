@@ -176,12 +176,12 @@ export class SingularityFusionCore extends EventEmitter {
   private initializeAutoSystems(): void {
     // Synchronisation backend ↔ frontend (adaptative 1-4 Hz)
     this.syncInterval = setInterval(() => {
-      this.adaptiveSync().catch((e) => logger.error('Adaptive sync error', e));
+      this.adaptiveSync().catch(e => logger.error('Adaptive sync error', e));
     }, 250); // Base rate 4 Hz, throttled internally
 
     // Auto-réparation continue (0.5 Hz, augmentée pour stabilité)
     this.autoHealInterval = setInterval(() => {
-      this.autoHeal().catch((e) => logger.error('Auto-heal error', e));
+      this.autoHeal().catch(e => logger.error('Auto-heal error', e));
     }, 2000);
 
     logger.info('Auto-systems initialized (adaptive sync + enhanced heal)');
@@ -400,7 +400,9 @@ export class SingularityFusionCore extends EventEmitter {
 
       // Niveau 3: Cohérence très basse - réinitialisation partielle
       if (coherence < 0.3) {
-        logger.error('Critical coherence — hard reset', { coherence: coherence.toFixed(3) });
+        logger.error('Critical coherence — hard reset', {
+          coherence: coherence.toFixed(3),
+        });
 
         // Reset des sous-systèmes critiques
         this.state.cognitive = {
@@ -425,7 +427,11 @@ export class SingularityFusionCore extends EventEmitter {
       this.state.meta.timestamp = Date.now();
 
       if (healActions.length > 0) {
-        logger.info('Healed', { actions: healActions.join(', '), from: coherence.toFixed(3), to: newCoherence.toFixed(3) });
+        logger.info('Healed', {
+          actions: healActions.join(', '),
+          from: coherence.toFixed(3),
+          to: newCoherence.toFixed(3),
+        });
         this.emit('state:healed', { state: this.state, actions: healActions });
       }
     } catch (error) {

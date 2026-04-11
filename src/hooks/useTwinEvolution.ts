@@ -26,8 +26,7 @@ const OWNER_TWIN_RESONANCE = {
     'œuvre vivante',
   ],
   sourceCount: 42,
-  reflectionAxis:
-    'clarté intérieure, structure concrète et transformation humaine douce',
+  reflectionAxis: 'clarté intérieure, structure concrète et transformation humaine douce',
   portraitUrl:
     'https://static.wixstatic.com/media/0c58f2_0e50a8a83cac4080848fe97b54f92b8a~mv2.jpg/v1/fill/w_285,h_287,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/465277026_1246722113243921_9112138683944422327_n.jpg',
   portraitFallbackUrl: '/kevin-owner-portrait.svg',
@@ -188,7 +187,8 @@ export function useTwinEvolution(): UseTwinEvolutionReturn {
         updatedAt: typeof parsed.updatedAt === 'number' ? parsed.updatedAt : null,
         ownerThemes: Array.isArray(parsed.ownerThemes)
           ? parsed.ownerThemes.filter(
-              (value): value is string => typeof value === 'string' && value.trim().length > 0
+              (value): value is string =>
+                typeof value === 'string' && value.trim().length > 0
             )
           : [],
         sourceCount: typeof parsed.sourceCount === 'number' ? parsed.sourceCount : 0,
@@ -225,10 +225,9 @@ export function useTwinEvolution(): UseTwinEvolutionReturn {
     chatContextStatus,
     growthTrends: evolutionProfile?.growthTrends ?? null,
     suggestions: evolutionProfile?.adjustmentSuggestions ?? [],
-    ownerThemes:
-      storedTwinsSnapshot?.ownerThemes.length
-        ? storedTwinsSnapshot.ownerThemes
-        : [...OWNER_TWIN_RESONANCE.ownerThemes],
+    ownerThemes: storedTwinsSnapshot?.ownerThemes.length
+      ? storedTwinsSnapshot.ownerThemes
+      : [...OWNER_TWIN_RESONANCE.ownerThemes],
     sourceCount: storedTwinsSnapshot?.sourceCount || OWNER_TWIN_RESONANCE.sourceCount,
     reflectionAxis:
       storedTwinsSnapshot?.reflectionAxis ?? OWNER_TWIN_RESONANCE.reflectionAxis,

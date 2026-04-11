@@ -89,11 +89,17 @@ const STEP_LABELS: Record<string, { name: string; engines?: string[] }> = {
   'context-build': { name: 'Construction Contexte', engines: ['MemoryCore', 'Helios'] },
   'context-loaded': { name: 'Contexte Chargé', engines: ['MemoryCore'] },
   'prompt-build': { name: 'Construction Prompt', engines: ['Harmonia'] },
-  'orchestrator-call': { name: 'Appel Orchestrateur', engines: ['Orchestrator', 'Nexus'] },
-  'consistency-check': { name: 'Vérification Cohérence', engines: ['Coherence', 'Engine∞'] },
+  'orchestrator-call': {
+    name: 'Appel Orchestrateur',
+    engines: ['Orchestrator', 'Nexus'],
+  },
+  'consistency-check': {
+    name: 'Vérification Cohérence',
+    engines: ['Coherence', 'Engine∞'],
+  },
   'auto-correction': { name: 'Auto-Correction', engines: ['Coherence'] },
   'memory-save': { name: 'Sauvegarde Mémoire', engines: ['MemoryCore'] },
-  'validation': { name: 'Validation Réponse', engines: ['Sentinel'] },
+  validation: { name: 'Validation Réponse', engines: ['Sentinel'] },
   'response-building': { name: 'Construction Réponse', engines: ['Harmonia'] },
 };
 
@@ -379,7 +385,11 @@ class OmegaDevToolsBridge {
       reflectionNotes,
     };
 
-    const pipeline = buildPipelineStepsFromEngine(pipelineSteps, totalDurationMs, !success);
+    const pipeline = buildPipelineStepsFromEngine(
+      pipelineSteps,
+      totalDurationMs,
+      !success
+    );
 
     const entry: DevToolsJournalEntry = {
       id: requestId,

@@ -83,7 +83,16 @@
       "W_will": "Volonté — Que vas-tu faire concrètement? Première action dans les 48h. Engagement sur une échelle de 1 à 10. Si moins de 8, réduire l'action jusqu'à atteindre 8+."
     },
     "roue_de_la_vie": {
-      "domaines": ["Carrière/Mission", "Finances", "Santé/Énergie", "Relations amoureuses", "Famille/Amis", "Croissance personnelle", "Loisirs/Fun", "Environnement physique"],
+      "domaines": [
+        "Carrière/Mission",
+        "Finances",
+        "Santé/Énergie",
+        "Relations amoureuses",
+        "Famille/Amis",
+        "Croissance personnelle",
+        "Loisirs/Fun",
+        "Environnement physique"
+      ],
       "utilisation": "Noter chaque domaine de 1 à 10. Visualiser la roue. Identifier les 2-3 domaines les plus bas. Un domaine négligé tire les autres vers le bas. Commencer par le domaine qui aurait le plus d'impact positif sur les autres."
     },
     "croyances_limitantes": {

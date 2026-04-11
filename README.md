@@ -7,13 +7,13 @@
 **Version:** v30.0.0 (repository authority)
 **Status:** ✅ Production Ready (V30 maintained release stream)
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
-**Latest certified deployment:** `2026-04-10` via `deployment/latest/MANIFEST.json`
+**Latest certified deployment:** `2026-04-11` via `deployment/latest/MANIFEST.json`
 **Primary release tag:** [v30.0.0-release-20260406](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260406) (current release stream)
 **Prior certification tag:** [v30.0.0-release-20260405](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260405) (historical)
 
 **Canal de release canonique:** v30.0.0
 
-**Qualité (2026-04-10) :** `build:production` PASS, `verify:final100` PASS (`23/23`), surfaces runtime/docs V30 réalignées.
+**Qualité (2026-04-11) :** `verify:final100` PASS, `twins_memory_bridge_test` PASS, build stable Linux PASS, réinstallation desktop V30 et smoke-run `BOOT:READY` validés.
 **Archive & legacy policy:** les surfaces obsolètes sont conservées sous `docs/99_ARCHIVE/` et `_archive/`; les surfaces actives V30 restent `src/`, `src-tauri/`, `README.md`, `CHANGELOG.md` et `docs/user/{fr,en}/`.
 
 **Documentation canonique :** [docs/README.md](docs/README.md) (source principale de navigation documentaire)
@@ -32,9 +32,9 @@
 ### ✅ Release canonique courante: v30.0.0 (Major Release)
 
 **Status**: ✅ PRODUCTION READY — CERTIFIED & DEPLOYED  
-**Certification ID**: `TITANE_INFINITY_RELEASE_20260410_135829_CERTIFIED`  
-**Last Certification Refresh**: April 10, 2026  
-**Certification Scope**: production rebuild PASS, governance gates PASS, runtime/docs V30 alignment verified
+**Certification ID**: `TITANE_INFINITY_RELEASE_20260411_080731_CERTIFIED`  
+**Last Certification Refresh**: April 11, 2026  
+**Certification Scope**: verify:final100 PASS, Rust TWINS bridge PASS, rebuild/redeploy Linux V30 PASS, installed runtime smoke `BOOT:READY`
 
 Artefacts vérifiés (Linux amd64):
 
@@ -44,8 +44,8 @@ Artefacts vérifiés (Linux amd64):
 Checksums courants (`deployment/latest/MANIFEST.json`):
 
 ```
-AppImage:  046f1e268a3d9028dcd61aa56f7ed52440e50915559a275385a108985ddb9f90
-DEB:       847ab918eac554df59291d75e844ed6df348db137e89f33838c92463c09c3115
+AppImage:  8bf170537c3f78e2179e47623f7a89ce6bb44c43304b52bd713054296364fcba
+DEB:       2608165ea3b900d4f7f1f41e6ae12bf3c25201d9b94e58dc0d754204b81c3e30
 ```
 
 **Release Notes & Installation**:

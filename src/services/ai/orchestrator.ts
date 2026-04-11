@@ -292,9 +292,18 @@ class AIOrchestrator {
       );
 
       // 4. Expire stale caches (metrics, status, health)
-      this.metricsCache = this.expireCache(this.metricsCache, this.METRICS_CACHE_TTL_MS * 2);
-      this.providersStatusCache = this.expireCache(this.providersStatusCache, this.STATUS_CACHE_TTL_MS * 2);
-      this.healthCheckCache = this.expireCache(this.healthCheckCache, this.HEALTH_CHECK_CACHE_TTL_MS * 2);
+      this.metricsCache = this.expireCache(
+        this.metricsCache,
+        this.METRICS_CACHE_TTL_MS * 2
+      );
+      this.providersStatusCache = this.expireCache(
+        this.providersStatusCache,
+        this.STATUS_CACHE_TTL_MS * 2
+      );
+      this.healthCheckCache = this.expireCache(
+        this.healthCheckCache,
+        this.HEALTH_CHECK_CACHE_TTL_MS * 2
+      );
     }, 30000);
   }
 
@@ -998,7 +1007,8 @@ class AIOrchestrator {
       // Sélection neurale standard (avec préférence optionnelle)
       const preferredProvider = config?.preferredProvider;
       // v30: Extract canonicalMode from config for OLLAMA CHAMPION scoring
-      const canonicalModeFromConfig = (config as Record<string, unknown>)?.canonicalMode as string | undefined;
+      const canonicalModeFromConfig = (config as Record<string, unknown>)
+        ?.canonicalMode as string | undefined;
       const routerStartTime = Date.now();
       const selection = await this.selectOptimalProvider(
         sanitized,

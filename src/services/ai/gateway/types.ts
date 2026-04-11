@@ -386,7 +386,9 @@ export async function exampleUsage() {
     },
   });
 
-  logger.info(`Response from ${response.provider} (${response.metadata.latencyMs}ms) — Cached: ${response.cached}, Coherence: ${response.cognitive.coherenceScore}`);
+  logger.info(
+    `Response from ${response.provider} (${response.metadata.latencyMs}ms) — Cached: ${response.cached}, Coherence: ${response.cognitive.coherenceScore}`
+  );
 
   if (response.fallback) {
     logger.warn(

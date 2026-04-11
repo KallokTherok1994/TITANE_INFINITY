@@ -269,7 +269,9 @@ describe('🟣 Chat Modes Configuration', () => {
 
     it('no mode systemPrompt is missing the French rule when a systemPrompt is defined', () => {
       const modesWithoutFrench = Object.entries(CHAT_MODES_CONFIG)
-        .filter(([, mode]) => mode.systemPrompt && !mode.systemPrompt.includes('français'))
+        .filter(
+          ([, mode]) => mode.systemPrompt && !mode.systemPrompt.includes('français')
+        )
         .map(([id]) => id);
 
       expect(modesWithoutFrench).toHaveLength(0);
