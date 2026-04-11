@@ -322,7 +322,9 @@ describe('ChatEngine ↔ CanonicalDiscernmentKernel Integration', () => {
     expect(decision?.provider.temperature).toBeGreaterThan(0);
     expect(decision?.provider.maxTokens).toBeGreaterThan(0);
     expect(decision?.provider.reasoningEffort).toBeDefined();
-    expect(['low', 'medium', 'high', 'max']).toContain(decision?.provider.reasoningEffort);
+    expect(['low', 'medium', 'high', 'max']).toContain(
+      decision?.provider.reasoningEffort
+    );
   });
 
   // ── LOCK 3: Kernel inferenceState gates LLM call ──

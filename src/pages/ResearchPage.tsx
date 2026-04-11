@@ -44,8 +44,8 @@ type ResearchState = 'idle' | 'running' | 'done' | 'error';
 // ─────────────────────────────────────────────────────────────────
 
 const DEEP_ANALYSIS_OPTIONS = {
-  max_sources: 25,  // vs 8 standard — broad multi-source collection
-  max_pages: 30,    // vs 10 standard — extended crawl depth
+  max_sources: 25, // vs 8 standard — broad multi-source collection
+  max_pages: 30, // vs 10 standard — extended crawl depth
   max_requests: 50, // vs 16 standard — allows full source retrieval
   timeout_ms: 120000, // vs 60000 standard — 2 min for exhaustive fetch
 } as const;
@@ -352,7 +352,9 @@ export const ResearchPage: React.FC = () => {
         mode === 'WEB_LIVE' ? resolveWebLiveSeeds(question, seedUrls) : seedUrls;
 
       const useDeepAnalysis =
-        userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] === true;
+        userPreferencesEngine.getPreferences().customPreferences[
+          'deep_internet_analysis'
+        ] === true;
       const depthOptions = useDeepAnalysis ? DEEP_ANALYSIS_OPTIONS : STANDARD_OPTIONS;
 
       const options: ResearchOptions = {
