@@ -54,18 +54,11 @@ const BUNDLED_DEFAULT_KB_MODULES = import.meta.glob(
 ) as Record<string, { default?: Record<string, unknown> } | Record<string, unknown>>;
 
 const RUST_CANONICAL_EXCLUDED_BUNDLED_KB_IDS = new Set([
-  'bourse_trading',
-  'crypto_blockchain',
-  'cuisine_gastronomie',
-  'droit_contrats_pratique',
-  'energie_renouvelable',
-  'jeux_video_culture',
+  // Kevin-specific personal files — not embedded in the Rust binary
   'kevin_book_registry_v30',
   'kevin_owner_profile_v30',
   'kevin_public_corpus_v30',
   'kevin_workflow_v30',
-  'musique_theorie_pratique',
-  'voyage_exploration',
 ]);
 
 const DEFAULT_KB_FALLBACK_ENTRIES: KnowledgeBaseEntry[] = [
@@ -404,7 +397,7 @@ export const DEFAULT_KB_CANONICAL_ENTRY_COUNT = getFallbackEntries().length;
 // ─────────────────────────────────────────────────────────────────
 
 /**
- * List all 150 category keys.
+ * List all category keys.
  * Derives from the entries cache when already loaded to avoid a second IPC call.
  */
 export async function listCategories(): Promise<string[]> {

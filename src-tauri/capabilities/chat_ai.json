@@ -24,7 +24,11 @@
       "ollama_query",
       "chat_get_memory_stats",
       "chat_memory_backup",
-      "chat_memory_restore"
+      "chat_memory_restore",
+      "chat_generate_copilot",
+      "chat_set_copilot_key",
+      "get_copilot_key_status",
+      "test_copilot_connection"
     ],
     "deny": []
   }
