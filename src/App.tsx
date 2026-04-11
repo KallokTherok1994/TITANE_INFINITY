@@ -180,12 +180,7 @@ const QuantumCenter = lazy(() =>
   }))
 );
 
-// ✨ IDENTITY CENTER - System Identity Engine v∞ (OPUS #15)
-const IdentityCenter = lazy(() =>
-  import('./components/IdentityCenter/IdentityCenter').then(m => ({
-    default: m.default,
-  }))
-);
+// ✨ IDENTITY × TWINS — Unified into Symbiose tab (v30 fusion - IdentityCenter lazy import removed)
 
 // ✨ MEMORY EVOLUTION - Memory Evolution Engine++ v∞ (OPUS #14)
 const MemoryEvolutionCenter = lazy(() =>
@@ -608,20 +603,12 @@ const AppRouter: React.FC = () => {
             }
           />
           <Route path="/quantum" element={<Navigate to="/quantum-center" replace />} />
-          {/* ✨ IDENTITY CENTER - System Identity Engine v∞ (OPUS #15) */}
-          <Route
-            path="/identity-center"
-            element={
-              <ErrorBoundary context="IdentityCenter">
-                <IdentityCenter />
-              </ErrorBoundary>
-            }
-          />
-          <Route path="/identity" element={<Navigate to="/identity-center" replace />} />
-          <Route path="/persona" element={<Navigate to="/identity-center" replace />} />
-          {/* ✨ TWINS — redirected to TITANE > Symbiose section (menu fusion v29.2) */}
-          <Route path="/twins" element={<Navigate to="/titane" replace />} />
-          <Route path="/twin" element={<Navigate to="/titane" replace />} />
+          {/* ✨ IDENTITY × TWINS — Unified into Symbiose tab (v30 fusion) */}
+          <Route path="/identity-center" element={<Navigate to="/titane?tab=symbiose" replace />} />
+          <Route path="/identity" element={<Navigate to="/titane?tab=symbiose" replace />} />
+          <Route path="/persona" element={<Navigate to="/titane?tab=symbiose" replace />} />
+          <Route path="/twins" element={<Navigate to="/titane?tab=symbiose" replace />} />
+          <Route path="/twin" element={<Navigate to="/titane?tab=symbiose" replace />} />
           {/* ✨ MEMORY EVOLUTION - Memory Evolution Engine++ v∞ (OPUS #14) */}
           <Route
             path="/memory-evolution"

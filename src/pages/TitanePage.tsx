@@ -16,7 +16,7 @@
  * 💬 CONVERSATION - Interface Chat IA multi-provider
  * 📷 VISION & PERCEPTION - Analyse visuelle et affective
  * 📊 VUE D'ENSEMBLE - Dashboard système et stats
- * 🧬 IDENTITÉ & ADN - Matrice identité, modes, pacte
+ * 🔀 SYMBIOSE × IDENTITÉ - Fusion Twins + Identité, orchestration IA auto
  * 💾 MÉMOIRE TRIPLE - Architecture court/moyen/long terme
  * 🔄 ÉVOLUTION MÉMOIRE - Dynamiques internes et journal
  * ⚡ PROGRESSION & XP - Système XP, milestones, talents
@@ -41,23 +41,22 @@ import { tauriClient } from '@/lib/tauriClient';
 import type { MemoryStats } from '@/services/memory/persistentMemory.config';
 import { normalizePersistentMemoryStats } from '@/services/memory/persistentMemory.normalize';
 
-// Section Components (Phase 3C Extracted)
+// Section Components (Phase 3C Extracted — Identity+Twins unified into Symbiose)
 import {
   ConversationSection,
   VisionSection,
   OverviewSection,
-  IdentitySection,
   MemorySection,
   MemoryEvolutionSection,
   ProgressionSection,
   TransformationSection,
 } from '@/components/sections';
 import type { TitaneStats } from '@/components/sections';
+import { SymbioseIdentitySection } from '@/components/sections/SymbioseIdentitySection';
 
 // UI Components
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { TitaneLogo } from '@/components/branding/TitaneLogo';
-import { TwinEvolutionPanel } from '@/components/twin/TwinEvolutionPanel';
 
 import './TitanePage.css';
 import './TitanePage-local.css';
@@ -72,7 +71,6 @@ type TabId =
   | 'conversation'
   | 'vision'
   | 'overview'
-  | 'identity'
   | 'memory-map'
   | 'memory-evolution'
   | 'progression'
@@ -83,7 +81,6 @@ const VALID_TABS: TabId[] = [
   'conversation',
   'vision',
   'overview',
-  'identity',
   'memory-map',
   'memory-evolution',
   'progression',
@@ -99,7 +96,6 @@ const TAB_PANEL_IDS: Record<TabId, string> = {
   conversation: 'titane-panel-conversation',
   vision: 'titane-panel-vision',
   overview: 'titane-panel-overview',
-  identity: 'titane-panel-identity',
   'memory-map': 'titane-panel-memory',
   'memory-evolution': 'titane-panel-evolution',
   progression: 'titane-panel-progression',
@@ -111,7 +107,6 @@ const TAB_LABEL_IDS: Record<TabId, string> = {
   conversation: 'titane-tab-conversation',
   vision: 'titane-tab-vision',
   overview: 'titane-tab-overview',
-  identity: 'titane-tab-identity',
   'memory-map': 'titane-tab-memory',
   'memory-evolution': 'titane-tab-evolution',
   progression: 'titane-tab-progression',
@@ -224,10 +219,15 @@ export const TitanePage: React.FC = () => {
 
   useEffect(() => {
     const requestedTab = searchParams.get('tab');
+    // Backward compat: ?tab=identity → symbiose (Identity merged into Symbiose)
+    if (requestedTab === 'identity') {
+      updateActiveTab('symbiose');
+      return;
+    }
     if (isTabId(requestedTab) && requestedTab !== activeTab) {
       setActiveTab(requestedTab);
     }
-  }, [activeTab, searchParams]);
+  }, [activeTab, searchParams, updateActiveTab]);
 
   // ═══ TAB HANDLERS ═══
   const tabHandlers = useMemo(
@@ -235,7 +235,6 @@ export const TitanePage: React.FC = () => {
       conversation: () => updateActiveTab('conversation'),
       vision: () => updateActiveTab('vision'),
       overview: () => updateActiveTab('overview'),
-      identity: () => updateActiveTab('identity'),
       memoryMap: () => updateActiveTab('memory-map'),
       memoryEvolution: () => updateActiveTab('memory-evolution'),
       progression: () => updateActiveTab('progression'),
@@ -254,8 +253,6 @@ export const TitanePage: React.FC = () => {
         return <VisionSection />;
       case 'overview':
         return <OverviewSection stats={stats} />;
-      case 'identity':
-        return <IdentitySection />;
       case 'memory-map':
         return <MemorySection stats={stats} conversationId={conversationId} />;
       case 'memory-evolution':
@@ -265,7 +262,7 @@ export const TitanePage: React.FC = () => {
       case 'transformation':
         return <TransformationSection stats={stats} />;
       case 'symbiose':
-        return <TwinEvolutionPanel isAdmin={true} compact={false} />;
+        return <SymbioseIdentitySection />;
       default:
         return <ConversationSection />;
     }
@@ -341,21 +338,6 @@ export const TitanePage: React.FC = () => {
               </button>
               <button
                 className={`px-4 py-2 text-sm font-medium rounded transition-all ${
-                  activeTab === 'identity'
-                    ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
-                    : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
-                }`}
-                data-testid="tab-identity"
-                onClick={tabHandlers.identity}
-                role="tab"
-                aria-selected={activeTab === 'identity'}
-                aria-controls={TAB_PANEL_IDS.identity}
-                id={TAB_LABEL_IDS.identity}
-              >
-                🧬 Identité
-              </button>
-              <button
-                className={`px-4 py-2 text-sm font-medium rounded transition-all ${
                   activeTab === 'memory-map'
                     ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
                     : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
@@ -427,7 +409,7 @@ export const TitanePage: React.FC = () => {
                 aria-controls={TAB_PANEL_IDS.symbiose}
                 id={TAB_LABEL_IDS.symbiose}
               >
-                🔀 Symbiose
+                🔀 Symbiose × Identité
               </button>
             </div>
           </div>
