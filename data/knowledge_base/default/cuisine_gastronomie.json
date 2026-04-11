@@ -1,0 +1,57 @@
+{
+  "version": "v30.0.0",
+  "category": "cuisine_gastronomie",
+  "description": "Cuisine et gastronomie — techniques fondamentales, chimie culinaire, cuisines du monde, nutrition culinaire, organisation cuisine professionnelle, accords mets-vins, pâtisserie scientifique, fermentation",
+  "cuisine_gastronomie": {
+    "introduction": "La cuisine est à la fois science et art. Comprendre la chimie des transformations alimentaires (réaction de Maillard, caramélisation, émulsification) permet de cuisiner avec intention plutôt que par recette aveugle. TITANE aborde la cuisine comme un système : technique + goût + nutrition + culture.",
+    "techniques_fondamentales": {
+      "chaleur": {
+        "sauter": "Haute chaleur, peu de matière grasse, mouvement constant. Légumes croquants, viandes dorées.",
+        "braiser": "Saisir puis cuire long en liquide couvert. Collagène → gélatine. Viandes dures deviennent fondantes.",
+        "pocher": "Cuire dans liquide frémissant (<100°C). Protéines délicates (œufs, poisson, poulet). Doux.",
+        "rotir": "Four sec. Maillard + caramélisation surfaces. Viandes + légumes.",
+        "vapeur": "Préserve nutriments, couleurs, texture. Cuisson douce sans Maillard.",
+        "frire": "Immersion huile 160-190°C. Croûte instantanée par évaporation eau. Texture unique."
+      },
+      "coupes": "Brunoise (2mm), mirepoix (1cm), julienne (bâtonnets fins), chiffonnade (herbes fines). Uniformité = cuisson homogène.",
+      "assaisonnement": "Sel en début (osmose, attendrit), acide en fin (luminosité). Umami (MSG, parmesan, champignons) amplifie tout.",
+      "reduction": "Évaporation eau concentre saveurs. Fond brun, glacis, sauces. Attention au sel qui se concentre aussi."
+    },
+    "chimie_culinaire": {
+      "maillard": "Réaction acides aminés + sucres > 140°C. Crée 100+ composés aromatiques. Différente de la caramélisation.",
+      "caramelisation": "Sucres seuls > 160°C. Brun, amer-doux. Caramel, crème brûlée.",
+      "emulsification": "Mélange deux liquides non miscibles (huile+eau) via émulsifiant (lécithine jaune d'œuf). Mayonnaise, vinaigrette, hollandaise.",
+      "gelatine_agar": "Gélatine (animale) gèle à 15°C, fond à 35°C. Agar-agar (végétal) plus ferme, reste gélifié plus chaud.",
+      "fermentation": {
+        "lactique": "Bactéries lactiques consomment sucres → acide lactique. Yaourt, fromage, choucroute, kimchi.",
+        "alcoolique": "Levures consomment sucres → alcool + CO2. Pain, bière, vin.",
+        "acetique": "Bactéries acétiques oxydent alcool → vinaigre.",
+        "umami_fermente": "Miso, sauce soja, garum — fermentation longue crée glutamates concentrés"
+      }
+    },
+    "cuisines_du_monde": {
+      "francaise": "Sauces mères (béchamel, velouté, espagnole, hollandaise, tomate), brigade cuisine, terroir, fromages (1200 variétés)",
+      "japonaise": "Umami central (dashi), saisonnalité (shun), présentation zen, fermentation (miso/sake/mirin), découpe précise (katsuramuki)",
+      "mexicaine": "Mole complexe (>30 ingrédients), épices fondamentales (cumin/chile/curcuma), masa nixtamalisée, fermentation (tepache)",
+      "indienne": "Épices = médicaments (ayurvéda), cuisson en plusieurs étapes (bhuna), pain (naan/roti/paratha), curries régionaux très distincts",
+      "italienne": "Qualité ingrédients > technique (pasta fraîche, huile olive, parmesan 24 mois), terroir, régionalisme fort"
+    },
+    "patisserie_scientifique": {
+      "bases": "Mesures précises au gramme (contrairement cuisine). Œuf : liant + aérant + émulsifiant + colorant.",
+      "gluten": "Protéines farine (gluténine+gliadine) forment réseau élastique avec eau. Travail = plus gluten. Repos = relâche.",
+      "corps_gras": "Beurre froid = feuilletage. Beurre pommade = créme, moelleux. Beurre fondu = dense.",
+      "sucres": "Saccharose (standard), glucose (anti-cristallisation), fructose (pouvoir sucrant 1.5x, hygroscopique)",
+      "levures_vs_chimique": "Levure biologique = lente, arômes complexes. Levure chimique (bicarbonate) = rapide, réaction chaleur."
+    },
+    "organisation_cuisine": {
+      "mise_en_place": "Préparer TOUT avant de commencer : ingrédients mesurés, équipements prêts. Clé de la cohérence.",
+      "brigade": "Chef → Sous-chef → Chef de partie → Commis. Spécialisation : saucier, garde-manger, patissier, poissonnier.",
+      "haccp": "Hygiène alimentaire : températures danger (4-60°C), contaminations croisées, chaîne du froid"
+    },
+    "accords_mets_vins": {
+      "principes": "Poids similaire (léger avec léger), région avec région, complémentarité ou contraste (foie gras + Sauternes sucré)",
+      "regles": "Blanc avant rouge, sec avant doux, léger avant corsé, fromage = vin rouge souvent meilleur avec blanc",
+      "umami_vin": "Tanins rouges + umami = métallique désagréable. Umami fort → vin avec acidité, peu de tanins"
+    }
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "version": "v30.0.0",
+  "category": "jeux_video_culture",
+  "description": "Jeux vidéo et culture gaming — histoire du jeu vidéo, game design, genres, industrie, eSports, psychologie du jeu, développement indie, impact cognitif et social, gaming professionnel",
+  "jeux_video_culture": {
+    "introduction": "Le jeu vidéo est l'industrie culturelle la plus grande au monde (200B$/an — dépasse cinéma + musique combinés). C'est aussi un médium unique : interactif, immergeant, formateur. TITANE analyse le gaming sous tous ses angles — design, psychologie, industrie et culture.",
+    "histoire": {
+      "1970s": "Pong (Atari, 1972), premiers arcades. Space Invaders (1978) = premier hit mondial. Jeu vidéo comme phénomène culturel.",
+      "1980s": "Crash 1983 (sursaturation marché US), sauvé par Nintendo (NES, 1985). Mario Bros, Zelda, Tetris. Consoles domestiques.",
+      "1990s": "SNES vs Sega (guerre des consoles). PlayStation révolutionne avec 3D (1994). PC gaming boom (Doom, Quake, RTS).",
+      "2000s": "PS2 (best-seller all time), Xbox, online gaming (WoW, Counter-Strike), casual (Guitar Hero).",
+      "2010s": "Mobile gaming explose (iOS App Store 2008). League of Legends/Fortnite/Minecraft = mega-hits. eSports légitimisés.",
+      "2020s": "Game Pass/cloud gaming, COVID boost, VR mature, jeux live service, IA dans game design"
+    },
+    "game_design": {
+      "principes_core": {
+        "gameplay_loop": "Action → Feedback → Récompense → Nouvelle action. Core loop doit être satisfaisant en 30 secondes.",
+        "flow_state": "Csikszentmihalyi : équilibre challenge/compétence. Trop facile = ennui. Trop dur = frustration.",
+        "progression": "Courbe de difficulté graduelle. Sens de la maîtrise. Unlocks, niveaux, compétences.",
+        "feedback": "Visuel + sonore + tactile (vibration). Chaque action doit avoir réponse immédiate et satisfaisante."
+      },
+      "mecaniques": {
+        "economies": "Ressources rares créent des choix signifiants. Inflation gameplay = problème.",
+        "roguelike": "Mort permanente + runs aléatoires + meta-progression. Hades, Dead Cells, Binding of Isaac.",
+        "emergence": "Règles simples → complexité émergente. Chess, Minecraft, Dwarf Fortress.",
+        "narrative": "Agency du joueur dans la narration (RPG), ludonarrative consonance (histoire = gameplay)"
+      },
+      "monetisation": {
+        "ethique": "Payer pour cosmétiques = OK. Pay-to-win = destroy gameplay. Loot boxes = gambling (réglementation montante).",
+        "gacha": "Probabilités aléatoires de personnages/équipements. Optimisé pour dépenses compulsives. Régulé Belgique/NL.",
+        "battle_pass": "Contenu saisonnier via progression. Moins prédateur que loot boxes."
+      }
+    },
+    "genres_majeurs": {
+      "fps": "First Person Shooter — Counter-Strike, Valorant, Call of Duty. Réflexes, précision, communication équipe.",
+      "moba": "Multiplayer Online Battle Arena — League of Legends, Dota 2. Stratégie, méta, équipe 5v5.",
+      "rpg": "Role-Playing Game — stat building, narratif profond. Souls-like (Dark Souls), JRPG (Final Fantasy), Western (Witcher).",
+      "battle_royale": "100 joueurs → 1 survivant. Fortnite, PUBG, Warzone. Tension, map shrinking, looting.",
+      "strategy": "RTS (StarCraft), 4X (Civilization), tower defense, auto-battler. Planification, gestion ressources.",
+      "simulation": "Minecraft (création libre), The Sims (vie simulée), simulateurs pro (Flight Simulator, Farming)"
+    },
+    "esports": {
+      "marche": "$1.8B (2023). Prize pools : TI Dota2 >$40M. League Worlds > $2M.",
+      "organisation": "Teams professionnelles, coaches, analysts, scrimming (matchs entraînement), bootcamps.",
+      "carriere": "Joueur pro (pic 18-24 ans), coach, analyst, caster, content creator, management",
+      "pathologie": "Gaming disorder (OMS 2019) — 3% gamers. Critères : perte contrôle, priorité > autres activités, continuation malgré conséquences."
+    },
+    "psychologie_gaming": {
+      "benefices": "Résolution problèmes, coordination œil-main, travail en équipe, gestion de l'échec, orientation spatiale, vitesse décision",
+      "apprentissage": "Serious games, simulations médicales, entraînement militaire. Games-based learning efficace si feedback immédiat.",
+      "flow": "Gaming = état de flow optimal fréquent. Expérience immersive sans frottement social.",
+      "violence": "Meta-analyse : corrélation faible entre jeux violents et comportement agressif. Pas causalité établie. Contexte social prime."
+    },
+    "developpement_indie": {
+      "outils": {
+        "unity": "C#, cross-platform, mobile fort. Free tier (revenue <100K$). Massive asset store.",
+        "unreal": "C++/Blueprints visual. Graphismes AAA, nanite/lumen. Gratuit, 5% royalties >$1M.",
+        "godot": "Open source, GDScript/C#. Léger, idéal 2D, communauté croissante.",
+        "pygame": "Python, prototypage rapide, apprentissage"
+      },
+      "succes_indie": "Hollow Knight, Stardew Valley, Celeste — 1-4 développeurs, millions vendus. Niche passion + polissage + marketing.",
+      "distribution": "Steam (30% cut mais exposition maximale), itch.io (0% cut), Epic Games Store (12% cut)."
+    }
+  }
+}

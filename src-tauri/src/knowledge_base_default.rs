@@ -530,8 +530,8 @@ mod tests {
             result.errors
         );
         assert_eq!(
-            result.entries_loaded, 92,
-            "Must have exactly 92 default knowledge categories"
+            result.entries_loaded, 103,
+            "Must have exactly 103 default knowledge categories"
         );
     }
 

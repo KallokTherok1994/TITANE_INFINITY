@@ -1,21 +1,26 @@
 /**
- * TITANE∞ — OMEGA MODE CLASSIFIER
+ * TITANE∞ v30.0.0 — Proprietary License
+ * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+ */
+
+/**
  * ═══════════════════════════════════════════════════════════════════
- * Auto-selects the correct conversation mode, response profile,
- * effort level, and model class for each user turn.
+ *   TITANE∞ v30.0.0 — OMEGA MODE CLASSIFIER
+ *   Auto-selects the correct conversation mode, response profile,
+ *   effort level, and model class for each user turn.
  *
- * DESIGN RULES:
- * - Pure function (no async, no LLM call, <1ms)
- * - Deterministic signal detection
- * - Reuses RESPONSE_PROFILES from responsePolicy.ts (read-only)
- * - Maps to existing backend ConversationMode enum values
- * - If confidence < 0.7, caller preserves user's manual mode
- * - SHADOW_LEARNING is never auto-classified from user input
+ *   DESIGN RULES:
+ *   - Pure function (no async, no LLM call, <1ms)
+ *   - Deterministic signal detection
+ *   - Reuses RESPONSE_PROFILES from responsePolicy.ts (read-only)
+ *   - Maps to existing backend ConversationMode enum values
+ *   - If confidence < 0.7, caller preserves user's manual mode
+ *   - SHADOW_LEARNING is never auto-classified from user input
  *
- * Constitution: I1 (no fake learning), I3 (no hidden routing),
- *               I4 (no mode inflation), I6 (minimal patch)
+ *   Constitution: I1 (no fake learning), I3 (no hidden routing),
+ *                 I4 (no mode inflation), I6 (minimal patch)
  *
- * Lock: #1 — OMEGA_AUTO_ORCHESTRATION_CHAIN
+ *   Lock: #1 — OMEGA_AUTO_ORCHESTRATION_CHAIN
  * ═══════════════════════════════════════════════════════════════════
  */
 

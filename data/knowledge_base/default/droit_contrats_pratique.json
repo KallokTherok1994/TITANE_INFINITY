@@ -1,0 +1,67 @@
+{
+  "version": "v30.0.0",
+  "category": "droit_contrats_pratique",
+  "description": "Droit des contrats — fondamentaux contractuels, contrats commerciaux, clauses essentielles, RGPD, propriété intellectuelle, droit du travail, protection consommateur, résolution de litiges",
+  "droit_contrats_pratique": {
+    "introduction": "Le droit des contrats est le socle de toute relation économique. TITANE ne remplace pas un avocat mais donne les outils pour comprendre ses engagements, négocier des clauses, identifier les pièges et savoir quand consulter un professionnel.",
+    "formation_contrat": {
+      "conditions_validite": [
+        "Consentement libre et éclairé (sans vice : erreur, dol, violence)",
+        "Capacité juridique des parties (18 ans, non sous tutelle)",
+        "Objet licite et possible",
+        "Cause licite (motivation non contraire à l'ordre public)"
+      ],
+      "vices_consentement": {
+        "erreur": "Erreur sur substance essentielle du contrat. Erreur sur valeur seule = non retenue.",
+        "dol": "Manœuvres frauduleuses pour tromper. Réticence dolosive = ne pas informer d'un vice caché.",
+        "violence": "Contrainte physique ou morale. Abus de dépendance économique inclus (jurisprudence récente)."
+      },
+      "forme": "Principe liberté de forme (oral valide). Exceptions : immobilier (acte notarié), CDI rupture (écrit), donation (notaire)."
+    },
+    "clauses_cles": {
+      "essentielles": {
+        "objet": "Ce qui est dû : prestations, produits, services. Description précise évite litiges.",
+        "prix": "Montant, modalités paiement, TVA, pénalités retard (taux légal ou contractuel).",
+        "delais": "Dates de livraison, durée contrat, renouvellement tacite (attention clause résiliation!).",
+        "responsabilite": "Limitation de responsabilité (plafond), exclusions, force majeure."
+      },
+      "a_negocier": {
+        "clause_resiliation": "Préavis, motifs, pénalités. Resiliation ad nutum (sans motif) = risque si pas encadrée.",
+        "clause_confidentialite": "NDA — périmètre, durée, sanctions. Standard 2-5 ans. Illimitée = souvent non applicable.",
+        "propriete_intellectuelle": "Cession ou licence ? Exclusivité ? Qui est propriétaire des créations ?",
+        "non_concurrence": "Géographiquement et temporellement limitée (sinon nulle). Contrepartie financière recommandée."
+      },
+      "pieges_frequents": [
+        "Renouvellement automatique sans clause de résiliation claire",
+        "Clause attributive de compétence défavorable (tribunal lointain)",
+        "Indexation prix sur indices (attention inflation)",
+        "Clause d'exclusivité non réciproque",
+        "Garanties implicites exclues par petites lignes"
+      ]
+    },
+    "contrats_commerciaux": {
+      "cgv": "Conditions Générales de Vente — opposables si acceptées avant. Mention 'lu et approuvé' seule insuffisante.",
+      "lettre_intention": "LOI/MOU — non contraignante en principe. Attention : clauses de confidentialité et exclusivité dans LOI peuvent être contraignantes.",
+      "spa": "Share Purchase Agreement — cession de parts. Due diligence, reps & warranties, conditions suspensives, earn-out.",
+      "prestation_services": "Obligation de moyens (avocat, médecin) vs obligation de résultat (entrepreneur). Distinction majeure pour responsabilité."
+    },
+    "propriete_intellectuelle": {
+      "droit_auteur": "Automatique à la création. France : protection 70 ans post-mortem. Cession écrite obligatoire. Droits moraux incessibles.",
+      "marque": "Protection par dépôt INPI (France) ou EUIPO (UE). Classe de produits/services. 10 ans renouvelable.",
+      "brevet": "20 ans. Invention nouvelle, inventive, industriellement applicable. Coûteux (~10-50K€ complet). Logiciels exclus en Europe.",
+      "secret_affaires": "Loi 2018 — protection information confidentielle. Mesures de protection prouvables requises."
+    },
+    "rgpd": {
+      "principes": "Licéité, loyauté, transparence. Limitation finalités. Minimisation données. Exactitude. Limitation conservation. Intégrité/confidentialité.",
+      "bases_legales": "Consentement, contrat, obligation légale, intérêts légitimes, mission d'intérêt public, intérêts vitaux.",
+      "droits_personnes": "Accès, rectification, effacement (droit à l'oubli), portabilité, opposition, décision automatisée.",
+      "sanctions": "CNIL peut aller jusqu'à 4% CA mondial ou 20M€. Amendes Amazon 746M€ (2021), Meta 1.2Md€ (2023)."
+    },
+    "resolution_litiges": {
+      "amiable": "Médiation, conciliation, transaction. 80%+ litiges résolus avant procès. Plus rapide et moins coûteux.",
+      "arbitrage": "Clause compromissoire — arbitre(s) privé(s) au lieu de tribunal. Confidentiel, spécialisé, exécutable internationalement.",
+      "procedure_judiciaire": "Référé (urgence, provisoire), fond (définitif). Tribunal Commerce (litiges commerciaux), TJ (civil, >10K€).",
+      "quand_avocat": "Contrat >50K€, clause complexe, litige en cours, propriété intellectuelle, acquisition entreprise, pénal"
+    }
+  }
+}
