@@ -105,10 +105,13 @@ const ROUTE_ALIASES: Record<string, string> = {
   '/hyper': '/hyper-center',
   '/intelligence': '/hyper-center',
   '/quantum': '/quantum-center',
-  '/identity': '/identity-center',
-  '/persona': '/identity-center',
-  '/memory-evo': '/titane',
-  '/memory-evolution': '/titane',
+  '/identity-center': '/titane?tab=twins',
+  '/identity': '/titane?tab=twins',
+  '/persona': '/titane?tab=twins',
+  '/twins': '/titane?tab=twins',
+  '/twin': '/titane?tab=twins',
+  '/memory-evo': '/titane?tab=transformation',
+  '/memory-evolution': '/titane?tab=transformation',
   '/cloud-sync': '/cloud',
   '/vault': '/cloud',
 };
@@ -433,6 +436,24 @@ function writeJson(key: string, value: unknown): void {
   }
 }
 
+function mergePageState(
+  aliasPageState?: string,
+  incomingPageState?: string
+): string | undefined {
+  if (!aliasPageState) return incomingPageState;
+  if (!incomingPageState) return aliasPageState;
+
+  const merged = new URLSearchParams(aliasPageState);
+  const incoming = new URLSearchParams(incomingPageState);
+
+  incoming.forEach((value, key) => {
+    merged.set(key, value);
+  });
+
+  const nextState = merged.toString();
+  return nextState.length > 0 ? nextState : undefined;
+}
+
 function normalizeRoute(pathWithState: string): {
   route: string;
   aliasResolvedFrom?: string;
@@ -441,22 +462,28 @@ function normalizeRoute(pathWithState: string): {
 } {
   const [rawPath, ...queryParts] = pathWithState.split('?');
   const route = rawPath || '/';
-  const pageState = queryParts.length > 0 ? queryParts.join('?') : undefined;
-  const canonical = ROUTE_ALIASES[route];
+  const incomingPageState = queryParts.length > 0 ? queryParts.join('?') : undefined;
+  const canonicalTarget = ROUTE_ALIASES[route];
 
-  if (!canonical) {
+  if (!canonicalTarget) {
     return {
       route,
-      pageState,
-      fullRoute: pageState ? `${route}?${pageState}` : route,
+      pageState: incomingPageState,
+      fullRoute: incomingPageState ? `${route}?${incomingPageState}` : route,
     };
   }
 
+  const [canonicalRouteRaw, ...canonicalQueryParts] = canonicalTarget.split('?');
+  const canonicalRoute = canonicalRouteRaw || '/';
+  const aliasPageState =
+    canonicalQueryParts.length > 0 ? canonicalQueryParts.join('?') : undefined;
+  const pageState = mergePageState(aliasPageState, incomingPageState);
+
   return {
-    route: canonical,
+    route: canonicalRoute,
     aliasResolvedFrom: route,
     pageState,
-    fullRoute: pageState ? `${canonical}?${pageState}` : canonical,
+    fullRoute: pageState ? `${canonicalRoute}?${pageState}` : canonicalRoute,
   };
 }
 

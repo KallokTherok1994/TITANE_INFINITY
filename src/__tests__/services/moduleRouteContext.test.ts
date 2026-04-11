@@ -56,6 +56,20 @@ describe('moduleRouteContext memory route', () => {
     expect(cognitiveContext.moduleId).toBe('dev_center');
   });
 
+  it('normalizes legacy identity and twins aliases to the unified TITANE twins tab', () => {
+    const identityContext = publishActiveModuleContext('/identity');
+    const twinsContext = publishActiveModuleContext('/twins');
+
+    expect(identityContext.route).toBe('/titane');
+    expect(identityContext.pageState).toBe('tab=twins');
+    expect(identityContext.fullRoute).toBe('/titane?tab=twins');
+
+    expect(twinsContext.route).toBe('/titane');
+    expect(twinsContext.pageState).toBe('tab=twins');
+    expect(twinsContext.fullRoute).toBe('/titane?tab=twins');
+    expect(twinsContext.continuity.changeType).toBe('same-module');
+  });
+
   it('preserves tab state for query-driven pages while keeping the canonical route', () => {
     const audioContext = publishActiveModuleContext('/admin?tab=audio');
     const governanceContext = publishActiveModuleContext('/admin?tab=governance');

@@ -26,13 +26,7 @@ const TOP_NAV_SECTIONS = [
     label: 'FUSION',
     route: '/fusion',
     description: 'Backend/Frontend Fusion',
-    matchRoutes: [
-      '/reality-center',
-      '/hyper-center',
-      '/quantum-center',
-      '/identity-center',
-      '/cloud',
-    ],
+    matchRoutes: ['/reality-center', '/hyper-center', '/quantum-center', '/cloud'],
   },
   {
     id: 'optimization',
