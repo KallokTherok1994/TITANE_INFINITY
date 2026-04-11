@@ -19,7 +19,7 @@
  * @created 2025-01-07
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { safeInvokeCanonical } from '@/utils/invoke';
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import {
   type HealingEvent,
@@ -757,14 +757,13 @@ export async function observedInvoke<T>(
   command: string,
   payload?: Record<string, unknown>
 ): Promise<T> {
-  // invoke is now imported statically at the top
-
-  try {
-    return await invoke<T>(command, payload);
-  } catch (error) {
-    selfHealingObserver.captureTauriInvokeError(command, error, payload);
-    throw error;
+  const result = await safeInvokeCanonical<T>(command, payload ?? {});
+  if (!result.ok) {
+    const err = new Error(result.error?.message ?? `IPC command ${command} failed`);
+    selfHealingObserver.captureTauriInvokeError(command, err, payload);
+    throw err;
   }
+  return result.content as T;
 }
 
 export default selfHealingObserver;
