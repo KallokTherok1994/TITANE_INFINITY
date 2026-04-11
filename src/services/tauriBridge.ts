@@ -105,6 +105,8 @@ function wrapError(error: unknown): CoreError {
  * - Error handling unifié
  * - Timeout configurable
  * - Retry logic optionnel
+ * @deprecated Use `invokeTauriCommandCanonical` instead.
+ * Returns legacy `{ success, data, error }` (CoreResponse). Will be removed in a future release.
  */
 export async function invokeTauriCommand<T = unknown>(
   command: string,

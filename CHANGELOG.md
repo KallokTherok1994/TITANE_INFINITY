@@ -4,6 +4,25 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+## [30.1.0] - 2026-04-11 (Minor Release — V30.1 Canonical IPC + Version Drift Fix)
+
+### Added
+
+- TauriAPI canonical migration: all ~20 `TauriAPI.*` methods now use `invokeTauriCommandCanonical` (returns `{ ok, content, error }`) instead of `invokeTauriCommand` (legacy `{ success, data, error }`)
+- `@deprecated` JSDoc annotations on `invokeTauriCommand` in `tauriCommands.ts` and `tauriBridge.ts`
+- AutoHeal entry `AH-2026-04-11-VERSION-DRIFT-FIX-V30.1.1` documenting version drift fix and canonical IPC migration
+
+### Changed
+
+- Version drift 30.0.0 → 30.1.0 across all canonical surfaces: `package.json`, `src-tauri/Cargo.toml`, `src-tauri/tauri.conf.json`, `tauri.base.json`, `src-tauri/tauri.base.json`, `runtime/stable/manifest.json`, `runtime/stable/tauri.conf.json`, `runtime/dev/tauri.conf.json`, `runtime/dev/tauri.network.conf.json`, `public/manifest.json`, `deployment/latest/MANIFEST.json`, `package.ui.json`, `src-tauri/capabilities/total_dev.json`
+- CI/CD pipeline names updated to v30.1.0 in `ci-unified.yml` and `release-unified.yml`
+- README authority surfaces updated to v30.1.0
+
+### Fixed
+
+- Version drift eliminated across all version-bearing surfaces (30.0.0 → 30.1.0 zero-drift guarantee)
+- IPC One Door enforced: TauriAPI methods now return canonical `{ ok, content, error }` contract
+
 ### Changed
 
 - Refreshed the active V30 documentation surfaces (`README.md`, `docs/user/en/README.md`, `docs/user/fr/README.md`) to match the current `deployment/latest` certification state.
