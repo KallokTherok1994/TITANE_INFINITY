@@ -198,6 +198,36 @@ const BIEN_ETRE_MENTAL_STRESS: &str =
     include_str!("../../data/knowledge_base/default/bien_etre_mental_stress.json");
 const SANTE_CORPS_NATURELLE: &str =
     include_str!("../../data/knowledge_base/default/sante_corps_naturelle.json");
+// ── v30.0.0 expansion — phase 12 (finance avancée, revenus, applications, copywriting, sites web, poésie, droit, vie pro/perso, coaching, médecine naturelle, revenus en ligne, peak performance, santé mentale, growth marketing) ─
+const STRATEGIES_REVENUS_MONETISATION: &str =
+    include_str!("../../data/knowledge_base/default/strategies_revenus_monetisation.json");
+const INVESTISSEMENT_PATRIMOINE: &str =
+    include_str!("../../data/knowledge_base/default/investissement_patrimoine.json");
+const CREATION_APPLICATIONS_SAAS: &str =
+    include_str!("../../data/knowledge_base/default/creation_applications_saas.json");
+const COPYWRITING_CONTENT_MARKETING: &str =
+    include_str!("../../data/knowledge_base/default/copywriting_content_marketing.json");
+const CREATION_SITES_WEB_PRATIQUE: &str =
+    include_str!("../../data/knowledge_base/default/creation_sites_web_pratique.json");
+const POESIE_ECRITURE_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/poesie_ecriture_avancee.json");
+const DROIT_PRATIQUE_QUOTIDIEN: &str =
+    include_str!("../../data/knowledge_base/default/droit_pratique_quotidien.json");
+const EQUILIBRE_VIE_PRO_PERSO: &str =
+    include_str!("../../data/knowledge_base/default/equilibre_vie_pro_perso.json");
+const COACHING_TRANSFORMATION_PERSONNELLE: &str =
+    include_str!("../../data/knowledge_base/default/coaching_transformation_personnelle.json");
+const MEDECINE_NATURELLE_PRATIQUE: &str =
+    include_str!("../../data/knowledge_base/default/medecine_naturelle_pratique.json");
+const REVENUS_EN_LIGNE_AFFILIATION: &str =
+    include_str!("../../data/knowledge_base/default/revenus_en_ligne_affiliation.json");
+const PLEIN_POTENTIEL_PEAK_PERFORMANCE: &str =
+    include_str!("../../data/knowledge_base/default/plein_potentiel_peak_performance.json");
+const SANTE_MENTALE_THERAPIES: &str =
+    include_str!("../../data/knowledge_base/default/sante_mentale_therapies.json");
+const MARKETING_AFFILIATION_GROWTH: &str =
+    include_str!("../../data/knowledge_base/default/marketing_affiliation_growth.json");
+
 // ── v30.0.0 expansion — phase 4 (communication & psychologie FR) ────────────
 const COMMUNICATION_INTERPERSONNELLE: &str =
     include_str!("../../data/knowledge_base/default/communication_interpersonnelle.json");
@@ -363,6 +393,21 @@ impl DefaultKnowledgeBase {
         ("spiritualite_sens_existence", SPIRITUALITE_SENS_EXISTENCE),
         ("immunite_prevention_naturelle", IMMUNITE_PREVENTION_NATURELLE),
         ("ecriture_expression_creatrice", ECRITURE_EXPRESSION_CREATRICE),
+        // v30.0.0 expansion — phase 12 (finance avancée, revenus, applications, copywriting, sites web, poésie, droit, vie pro/perso, coaching, médecine naturelle, revenus en ligne, peak performance, santé mentale, growth marketing)
+        ("strategies_revenus_monetisation", STRATEGIES_REVENUS_MONETISATION),
+        ("investissement_patrimoine", INVESTISSEMENT_PATRIMOINE),
+        ("creation_applications_saas", CREATION_APPLICATIONS_SAAS),
+        ("copywriting_content_marketing", COPYWRITING_CONTENT_MARKETING),
+        ("creation_sites_web_pratique", CREATION_SITES_WEB_PRATIQUE),
+        ("poesie_ecriture_avancee", POESIE_ECRITURE_AVANCEE),
+        ("droit_pratique_quotidien", DROIT_PRATIQUE_QUOTIDIEN),
+        ("equilibre_vie_pro_perso", EQUILIBRE_VIE_PRO_PERSO),
+        ("coaching_transformation_personnelle", COACHING_TRANSFORMATION_PERSONNELLE),
+        ("medecine_naturelle_pratique", MEDECINE_NATURELLE_PRATIQUE),
+        ("revenus_en_ligne_affiliation", REVENUS_EN_LIGNE_AFFILIATION),
+        ("plein_potentiel_peak_performance", PLEIN_POTENTIEL_PEAK_PERFORMANCE),
+        ("sante_mentale_therapies", SANTE_MENTALE_THERAPIES),
+        ("marketing_affiliation_growth", MARKETING_AFFILIATION_GROWTH),
     ];
 
     /// Load all default knowledge entries from embedded JSON.
@@ -530,8 +575,8 @@ mod tests {
             result.errors
         );
         assert_eq!(
-            result.entries_loaded, 92,
-            "Must have exactly 92 default knowledge categories"
+            result.entries_loaded, 106,
+            "Must have exactly 106 default knowledge categories"
         );
     }
 
@@ -561,6 +606,7 @@ mod tests {
             "chronobiologie_rythmes",
             "cloud_multimodal",
             "coaching_leadership",
+            "coaching_transformation_personnelle",
             "coherence_identitaire",
             "communication_avancee",
             "communication_crise",
@@ -569,17 +615,22 @@ mod tests {
             "communication_persuasion",
             "constitution_ethics",
             "conversation_engine_detail",
+            "copywriting_content_marketing",
+            "creation_applications_saas",
+            "creation_sites_web_pratique",
             "developpement_personnel",
             "developpement_web",
             "digital_twin_symbiosis",
             "digital_twin_v14_detail",
             "droit_immobilier_notarial",
             "droit_notarial_fondamentaux",
+            "droit_pratique_quotidien",
             "ecommerce_fondamentaux",
             "ecriture_expression_creatrice",
             "energetique_soins_corps",
             "engines_catalog",
             "entrepreneuriat_mindset",
+            "equilibre_vie_pro_perso",
             "finance_entreprise",
             "finances_personnelles",
             "frontend_modules",
@@ -590,12 +641,15 @@ mod tests {
             "immunite_prevention_naturelle",
             "intelligence_emotionnelle",
             "ipc_commands_catalog",
+            "investissement_patrimoine",
             "learning_prompts",
             "longevite_anti_aging",
             "management_administration",
             "management_qualite",
             "marketing_digital",
+            "marketing_affiliation_growth",
             "medecine_hollistique",
+            "medecine_naturelle_pratique",
             "meditation_pratique",
             "memory_os_detail",
             "memory_system_deep",
@@ -614,6 +668,8 @@ mod tests {
             "performance_cognitive",
             "philosophie_cognitive",
             "plantes_medicinales_aromatherapie",
+            "plein_potentiel_peak_performance",
+            "poesie_ecriture_avancee",
             "psychologie_cognitive",
             "psychologie_comportementale",
             "psychologie_emotionnelle",
@@ -625,8 +681,10 @@ mod tests {
             "redaction_professionnelle",
             "relations_humaines_profondes",
             "response_guidelines",
+            "revenus_en_ligne_affiliation",
             "sante_corps_naturelle",
             "sante_feminine_naturelle",
+            "sante_mentale_therapies",
             "security_privacy",
             "seo_referencement",
             "services_backend",
@@ -636,6 +694,7 @@ mod tests {
             "spiritualite_sens_existence",
             "strategie_concurrentielle",
             "strategie_entreprise",
+            "strategies_revenus_monetisation",
             "style_expression_kevin",
             "system_architecture",
             "troubleshooting_faq",
