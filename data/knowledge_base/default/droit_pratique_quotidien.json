@@ -1,0 +1,187 @@
+{
+  "version": "v30.0.0",
+  "category": "droit_pratique_quotidien",
+  "description": "Droit pratique quotidien — droit du travail, consommation, famille, entreprises, numérique, recours juridiques (France/Québec)",
+  "droit_pratique_quotidien": {
+    "introduction": "Le droit n'est pas réservé aux juristes. Chaque individu interagit quotidiennement avec des règles juridiques — contrat de travail, achat en ligne, séparation, création d'entreprise. TITANE aide Kevin à comprendre ses droits et obligations dans un langage accessible, sans se substituer à un avocat. Les références couvrent le droit français et québécois selon le contexte.",
+    "droit_du_travail": {
+      "contrat_de_travail": {
+        "types_france": {
+          "CDI": "Contrat à durée indéterminée — forme normale et générale de la relation de travail. Pas de date de fin.",
+          "CDD": "Contrat à durée déterminée — motif obligatoire (remplacement, surcroît, saisonnier). Durée max 18 mois renouvellements inclus.",
+          "interim": "Contrat de mission via agence — même motifs que CDD, relation tripartite",
+          "alternance": "Apprentissage (16-29 ans) ou professionnalisation — formation + travail"
+        },
+        "elements_essentiels": "Poste, rémunération, lieu, durée du travail, convention collective applicable, période d'essai",
+        "periode_essai": "CDI: 2 mois (ouvriers) à 4 mois (cadres), renouvelable une fois si convention le prévoit"
+      },
+      "quebec_normes": {
+        "loi_applicable": "Loi sur les normes du travail (LNT) — plancher minimum pour tous les salariés québécois",
+        "salaire_minimum": "Vérifié annuellement — consulter le site de la CNESST pour le taux en vigueur",
+        "contrat_verbal": "Au Québec, le contrat de travail peut être verbal — la LNT s'applique quand même"
+      },
+      "licenciement": {
+        "france": {
+          "motif_personnel": "Insuffisance professionnelle, faute (simple, grave, lourde) — procédure obligatoire: convocation, entretien préalable, notification",
+          "motif_economique": "Difficultés économiques, mutations technologiques, cessation — obligation de reclassement, plan de sauvegarde de l'emploi (PSE) si 10+ licenciements",
+          "indemnite_legale": "1/4 de mois par année d'ancienneté (10 premières) puis 1/3 au-delà. Minimum 8 mois d'ancienneté.",
+          "prud_hommes": "Conseil de prud'hommes — juridiction compétente pour tout litige individuel du travail. Gratuit, pas d'avocat obligatoire."
+        },
+        "quebec": {
+          "preavis": "1 semaine (3 mois à 1 an), 2 semaines (1-5 ans), 4 semaines (5-10 ans), 8 semaines (10+ ans)",
+          "congediement_injuste": "2+ ans d'ancienneté: droit de contester un congédiement sans cause juste et suffisante auprès de la CNESST",
+          "plainte_CNESST": "Commission des normes, de l'équité, de la santé et de la sécurité du travail — gratuite, délai 45 jours"
+        }
+      },
+      "demission": {
+        "preavis": "France: pas de préavis légal sauf convention collective. Québec: raisonnable selon l'ancienneté et le poste.",
+        "conseil": "Toujours envoyer une lettre recommandée avec date de départ. Garder une copie."
+      },
+      "harcelement": {
+        "moral": "Agissements répétés dégradant les conditions de travail, portant atteinte à la dignité ou à la santé",
+        "sexuel": "Propos ou comportements à connotation sexuelle imposés, répétés ou non (un seul acte grave suffit)",
+        "recours": "Signalement employeur, inspection du travail (France) ou CNESST (Québec), plainte pénale si nécessaire",
+        "protection": "Le salarié qui dénonce est protégé contre les représailles — licenciement nul si lié à la dénonciation"
+      }
+    },
+    "droit_consommation": {
+      "garanties": {
+        "garantie_legale_conformite": "France: 2 ans à compter de la livraison. Le vendeur doit réparer, remplacer ou rembourser. Présomption d'antériorité du défaut pendant 2 ans.",
+        "garantie_vices_caches": "Défaut rendant le bien impropre à l'usage. Action possible 2 ans après découverte du vice. Annulation ou réduction du prix.",
+        "garantie_commerciale": "Offerte volontairement par le vendeur/fabricant — s'ajoute aux garanties légales, ne les remplace jamais",
+        "quebec_garantie_legale": "Garantie légale de qualité (art. 37-38 LPC): le bien doit servir à un usage normal pendant une durée raisonnable. Pas de durée fixe — dépend du prix et de la nature du bien."
+      },
+      "remboursement": {
+        "droit_retractation": "Achat en ligne (France): 14 jours pour se rétracter sans motif. Le vendeur a 14 jours pour rembourser.",
+        "exceptions": "Biens personnalisés, périssables, contenus numériques commencés, voyages — pas de rétractation",
+        "en_magasin": "Aucun droit légal de rétractation en magasin (France). C'est une politique commerciale, pas une obligation."
+      },
+      "vices_caches": {
+        "conditions": "Défaut antérieur à la vente, non apparent, rendant le bien impropre à son usage ou diminuant fortement son utilité",
+        "immobilier": "Très fréquent: infiltrations, termites, fondations, amiante. Expertise souvent nécessaire.",
+        "action": "Mise en demeure du vendeur, expertise amiable ou judiciaire, action en garantie devant le tribunal"
+      },
+      "protection_consommateur": {
+        "pratiques_interdites": "Publicité mensongère, vente forcée, abus de faiblesse, clauses abusives",
+        "organismes": "DGCCRF (France), Office de la protection du consommateur (Québec)",
+        "conseil_pratique": "Toujours conserver factures, contrats, échanges écrits. Privilégier l'écrit pour toute réclamation."
+      }
+    },
+    "droit_famille": {
+      "mariage_union": {
+        "mariage_france": "Mairie, publication des bans, régime matrimonial (communauté réduite aux acquêts par défaut)",
+        "mariage_quebec": "Célébrant autorisé, patrimoine familial obligatoire (résidences, véhicules, REER, régimes de retraite)",
+        "pacs": "France: contrat d'union civile, droits fiscaux et patrimoniaux, dissolution simple",
+        "union_fait": "Concubinage (France) ou union de fait (Québec) — peu de protections automatiques, contrat de vie commune recommandé"
+      },
+      "divorce_separation": {
+        "types_divorce_france": {
+          "consentement_mutuel": "Le plus rapide — convention signée par les avocats, enregistrée par notaire. Pas de juge.",
+          "accepte": "Accord sur le principe, désaccord sur les conséquences",
+          "alteration_lien": "Séparation de fait depuis 1 an minimum",
+          "faute": "Violation grave des devoirs du mariage — le plus conflictuel"
+        },
+        "quebec": "Demande au tribunal supérieur. Motif: échec du mariage (séparation 1 an, ou adultère/cruauté).",
+        "prestation_compensatoire": "Compensation pour celui qui a contribué à l'enrichissement de l'autre pendant le mariage"
+      },
+      "garde_enfants": {
+        "principe": "Intérêt supérieur de l'enfant — critère fondamental dans toute décision",
+        "modes": {
+          "garde_exclusive": "Un parent a la résidence principale, l'autre un droit de visite et d'hébergement",
+          "garde_partagee": "Résidence alternée — 50/50 ou autre répartition. Favorisée quand c'est viable."
+        },
+        "pension_alimentaire": "Contribution à l'entretien et l'éducation. Calculée selon revenus des parents, besoins de l'enfant, temps de garde. Barème indicatif (France) ou table fédérale (Québec)."
+      },
+      "succession_testament": {
+        "sans_testament": "Dévolution légale — ordre: descendants, conjoint, ascendants, collatéraux",
+        "testament_france": "Olographe (manuscrit, daté, signé), authentique (notaire), mystique (fermé). Quotité disponible limitée par la réserve héréditaire.",
+        "testament_quebec": "Notarié (pas de vérification nécessaire), olographe ou devant témoins (vérification requise)",
+        "reserve_hereditaire": "France: part incompressible pour les enfants (1/2 pour 1 enfant, 2/3 pour 2, 3/4 pour 3+). Inexistante au Québec.",
+        "conseil": "Rédiger un testament dès qu'on a des biens ou des enfants. Mettre à jour après chaque événement majeur."
+      }
+    },
+    "droit_entreprises": {
+      "formes_juridiques_france": {
+        "auto_entrepreneur": "Micro-entreprise — simple, plafonds CA (77 700 services, 188 700 vente), charges sociales sur CA, pas de TVA sous seuil",
+        "SARL": "Société à responsabilité limitée — 2+ associés, responsabilité limitée aux apports, gérant majoritaire TNS",
+        "SAS": "Société par actions simplifiée — souplesse statutaire maximale, président assimilé salarié, préférée pour lever des fonds",
+        "EURL_SASU": "Versions unipersonnelles de la SARL et SAS — un seul associé"
+      },
+      "formes_juridiques_quebec": {
+        "travailleur_autonome": "Pas d'immatriculation obligatoire si nom personnel. Revenus déclarés en personne physique.",
+        "entreprise_individuelle": "Immatriculation au REQ si nom autre que le sien. Responsabilité illimitée.",
+        "societe_par_actions": "Incorporation fédérale ou provinciale. Responsabilité limitée. Taux d'imposition avantageux pour PME."
+      },
+      "contrats_commerciaux": {
+        "elements_cles": "Parties, objet, prix, durée, résiliation, clause de non-concurrence, juridiction compétente, loi applicable",
+        "conseil": "Ne jamais signer sans lire. Faire relire par un juriste pour tout contrat majeur. Conserver les originaux."
+      },
+      "propriete_intellectuelle": {
+        "marque": "Signe distinctif (nom, logo, slogan). Enregistrement INPI (France) ou OPIC (Canada). Durée 10 ans renouvelable.",
+        "brevet": "Invention technique nouvelle, inventive, susceptible d'application industrielle. Durée 20 ans, non renouvelable.",
+        "droit_auteur": "Protection automatique dès la création (pas de formalité). Droits moraux et patrimoniaux. Durée: vie + 70 ans (France), vie + 50 ans (Canada).",
+        "conseil_pratique": "Dater ses créations (enveloppe Soleau, dépôt en ligne, blockchain). Prévoir des clauses de cession dans les contrats."
+      }
+    },
+    "droit_numerique": {
+      "rgpd_france": {
+        "principes": "Licéité, loyauté, transparence, limitation des finalités, minimisation, exactitude, conservation limitée, intégrité, responsabilité",
+        "droits_personnes": "Accès, rectification, effacement (droit à l'oubli), portabilité, opposition, limitation du traitement",
+        "consentement": "Libre, spécifique, éclairé, univoque. Retirable à tout moment.",
+        "sanctions": "Jusqu'à 20 millions d'euros ou 4% du CA mondial. CNIL: autorité de contrôle."
+      },
+      "loi_25_quebec": {
+        "objet": "Modernisation de la protection des renseignements personnels au Québec (entrée en vigueur progressive 2022-2024)",
+        "obligations": "Responsable de la protection, évaluation des facteurs relatifs à la vie privée, consentement renforcé, droit de désindexation",
+        "sanctions": "Amendes administratives jusqu'à 10 millions $ ou 2% du CA mondial"
+      },
+      "droit_image": {
+        "principe": "Toute personne a un droit exclusif sur son image. Consentement nécessaire pour captation et diffusion.",
+        "exceptions": "Droit à l'information, personnalités publiques dans l'exercice de leurs fonctions, foules",
+        "reseaux_sociaux": "Publier la photo de quelqu'un sans consentement est illicite, même si prise dans un lieu public"
+      },
+      "donnees_personnelles": {
+        "definition": "Toute information se rapportant à une personne physique identifiée ou identifiable",
+        "bonnes_pratiques": "Minimiser la collecte, chiffrer les données sensibles, documenter les traitements, former les équipes"
+      }
+    },
+    "recours_juridiques": {
+      "mise_en_demeure": {
+        "definition": "Courrier formel demandant l'exécution d'une obligation dans un délai déterminé",
+        "forme": "Lettre recommandée avec accusé de réception (France) ou mise en demeure par huissier/notaire",
+        "contenu": "Rappel des faits, fondement juridique, demande précise, délai raisonnable (8-15 jours), mention des suites judiciaires",
+        "effet": "Fait courir les intérêts, constitue une preuve de diligence, souvent suffit à résoudre le litige"
+      },
+      "mediation": {
+        "principe": "Processus amiable, volontaire, confidentiel, avec un tiers neutre (médiateur)",
+        "avantages": "Rapide, moins coûteux, préserve la relation, solutions créatives possibles",
+        "quand": "Litiges commerciaux, voisinage, consommation, travail, famille — avant ou pendant une procédure",
+        "obligatoire": "France: tentative de médiation obligatoire avant saisine du tribunal pour litiges < 5000 euros"
+      },
+      "tribunal": {
+        "france": {
+          "tribunal_judiciaire": "Litiges civils généraux (ex-TGI et ex-TI fusionnés)",
+          "tribunal_commerce": "Litiges entre commerçants ou relatifs aux actes de commerce",
+          "conseil_prudhommes": "Litiges individuels du travail",
+          "tribunal_administratif": "Litiges avec l'administration publique"
+        },
+        "quebec": {
+          "petites_creances": "Litiges jusqu'à 15 000 $. Pas d'avocat autorisé. Rapide et accessible.",
+          "cour_superieure": "Litiges > 85 000 $ et actions collectives",
+          "tribunal_administratif": "TAQ — litiges avec organismes gouvernementaux"
+        }
+      },
+      "aide_juridique": {
+        "france": "Aide juridictionnelle — prise en charge totale ou partielle des frais selon revenus. Demande au tribunal.",
+        "quebec": "Aide juridique — gratuite ou avec contribution selon revenus et situation familiale. Bureau d'aide juridique."
+      },
+      "conseils_generaux": [
+        "Toujours privilégier l'écrit et conserver les preuves",
+        "Respecter les délais de prescription (2 ans civil, 5 ans contractuel en France)",
+        "Consulter un avocat pour les situations complexes — première consultation souvent abordable",
+        "Les associations de consommateurs et syndicats peuvent accompagner gratuitement",
+        "La conciliation et la médiation sont souvent plus efficaces qu'un procès"
+      ]
+    }
+  }
+}
