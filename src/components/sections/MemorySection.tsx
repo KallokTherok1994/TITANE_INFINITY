@@ -57,6 +57,15 @@ const SECTION_TABS: { id: MemorySectionTab; label: string; icon: string }[] = [
   { id: 'search', label: 'Recherche', icon: '🔍' },
 ];
 
+/** Maximum number of knowledge entries visible before "show all" */
+const INITIAL_VISIBLE_KNOWLEDGE_COUNT = 24;
+/** Maximum content preview length for knowledge cards */
+const KNOWLEDGE_PREVIEW_LENGTH = 160;
+/** Maximum number of tags shown per knowledge card */
+const MAX_VISIBLE_TAGS = 3;
+/** Maximum importance level (star scale) */
+const MAX_IMPORTANCE = 5;
+
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
@@ -753,7 +762,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
     }, [knowledgeEntries, knowledgeTopicFilter, knowledgeSearch]);
 
     const visibleKnowledgeEntries = useMemo(
-      () => (showAllKnowledge ? filteredKnowledgeEntries : filteredKnowledgeEntries.slice(0, 24)),
+      () => (showAllKnowledge ? filteredKnowledgeEntries : filteredKnowledgeEntries.slice(0, INITIAL_VISIBLE_KNOWLEDGE_COUNT)),
       [filteredKnowledgeEntries, showAllKnowledge]
     );
 
@@ -1352,18 +1361,18 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                             color: colors.neutral[500],
                           }}
                         >
-                          {'★'.repeat(entry.importance)}{'☆'.repeat(Math.max(0, 5 - entry.importance))}
+                          {'★'.repeat(entry.importance)}{'☆'.repeat(Math.max(0, MAX_IMPORTANCE - entry.importance))}
                         </span>
                       </div>
                       {/* Content preview */}
                       <span style={{ color: colors.neutral[500], fontSize: fontSizes.sm, display: 'block' }}>
-                        {entry.content.slice(0, 160)}
-                        {entry.content.length > 160 ? '…' : ''}
+                        {entry.content.slice(0, KNOWLEDGE_PREVIEW_LENGTH)}
+                        {entry.content.length > KNOWLEDGE_PREVIEW_LENGTH ? '…' : ''}
                       </span>
                       {/* Tags */}
                       {entry.tags.length > 0 && (
                         <div style={{ display: 'flex', gap: spacing[1], flexWrap: 'wrap', marginTop: spacing[2] }}>
-                          {entry.tags.slice(0, 3).map(tag => (
+                          {entry.tags.slice(0, MAX_VISIBLE_TAGS).map(tag => (
                             <span
                               key={tag}
                               style={{
@@ -1377,9 +1386,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                               #{tag}
                             </span>
                           ))}
-                          {entry.tags.length > 3 && (
+                          {entry.tags.length > MAX_VISIBLE_TAGS && (
                             <span style={{ fontSize: '10px', color: colors.neutral[600] }}>
-                              +{entry.tags.length - 3}
+                              +{entry.tags.length - MAX_VISIBLE_TAGS}
                             </span>
                           )}
                         </div>
@@ -1396,7 +1405,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                 </p>
               )}
 
-              {filteredKnowledgeEntries.length > 24 && (
+              {filteredKnowledgeEntries.length > INITIAL_VISIBLE_KNOWLEDGE_COUNT && (
                 <button
                   type="button"
                   onClick={() => setShowAllKnowledge(value => !value)}
