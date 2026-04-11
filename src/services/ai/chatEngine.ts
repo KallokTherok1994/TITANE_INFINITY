@@ -226,10 +226,28 @@ const CACHE_DISABLED_MODES = new Set([
   'hybrid',
 ]);
 
+/** Module-level stop words set (FR + EN) — avoids re-creation per call in extractKeyConcepts() */
+const STOP_WORDS = new Set([
+  // French
+  'le', 'la', 'les', 'un', 'une', 'des', 'et', 'ou', 'de', 'du', 'au', 'aux',
+  'ce', 'ces', 'son', 'sa', 'ses', 'mon', 'ma', 'mes', 'ton', 'ta', 'tes',
+  'notre', 'nos', 'votre', 'vos', 'leur', 'leurs',
+  'je', 'tu', 'il', 'elle', 'nous', 'vous', 'ils', 'elles',
+  'que', 'qui', 'quoi', 'dont', 'où', 'comment', 'pourquoi', 'quand',
+  'est', 'sont', 'être', 'avoir', 'faire', 'aller', 'venir', 'voir',
+  'dire', 'prendre', 'mettre', 'donner', 'trouver', 'passer',
+  'pouvoir', 'vouloir', 'devoir', 'savoir', 'falloir',
+  // English
+  'the', 'is', 'are', 'was', 'were', 'be', 'been', 'have', 'has', 'had',
+  'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might',
+  'can', 'shall', 'this', 'that', 'these', 'those', 'with', 'from', 'for', 'into',
+]);
+
 class ChatEngineOmega {
   private config: ChatEngineConfig = { mode: 'default' };
   private lastMode: ChatMode = 'default';
-  private conversationContext: Map<string, any> = new Map();
+  private conversationContext: Map<string, unknown> = new Map();
+  private static readonly MAX_CONTEXT_SIZE = 100;
   private pipelineFailures: number = 0;
   private lastHealing: number = 0;
   // 🆕 P1: DEPRECATED - Use conversationLifecycle.getActiveConversation() instead
@@ -1992,110 +2010,14 @@ Que souhaites-tu explorer ?`;
 
   /**
    * v6.0.0: Extract key concepts from a message for semantic matching
+   * v30.0.0: Stop words hoisted to module-level STOP_WORDS constant
    */
   private extractKeyConcepts(message: string): string[] {
     const concepts: string[] = [];
 
-    // Remove common stop words
-    const stopWords = new Set([
-      'le',
-      'la',
-      'les',
-      'un',
-      'une',
-      'des',
-      'et',
-      'ou',
-      'de',
-      'du',
-      'au',
-      'aux',
-      'ce',
-      'ces',
-      'son',
-      'sa',
-      'ses',
-      'mon',
-      'ma',
-      'mes',
-      'ton',
-      'ta',
-      'tes',
-      'notre',
-      'nos',
-      'votre',
-      'vos',
-      'leur',
-      'leurs',
-      'je',
-      'tu',
-      'il',
-      'elle',
-      'nous',
-      'vous',
-      'ils',
-      'elles',
-      'que',
-      'qui',
-      'quoi',
-      'dont',
-      'où',
-      'comment',
-      'pourquoi',
-      'quand',
-      'est',
-      'sont',
-      'être',
-      'avoir',
-      'faire',
-      'aller',
-      'venir',
-      'voir',
-      'dire',
-      'prendre',
-      'mettre',
-      'donner',
-      'trouver',
-      'passer',
-      'pouvoir',
-      'vouloir',
-      'devoir',
-      'savoir',
-      'falloir',
-      'the',
-      'is',
-      'are',
-      'was',
-      'were',
-      'be',
-      'been',
-      'have',
-      'has',
-      'had',
-      'do',
-      'does',
-      'did',
-      'will',
-      'would',
-      'could',
-      'should',
-      'may',
-      'might',
-      'can',
-      'shall',
-      'this',
-      'that',
-      'these',
-      'those',
-      'with',
-      'from',
-      'for',
-      'into',
-    ]);
-
     const words = message.split(/\s+/).filter(w => w.length > 2);
     for (const word of words) {
-      if (!stopWords.has(word)) {
+      if (!STOP_WORDS.has(word)) {
         concepts.push(word);
       }
     }
@@ -3052,7 +2974,7 @@ Profil: OMEGA — Puissance maximale, aucun compromis.
       return;
     }
 
-    console.log(message, payload);
+    logger.debug(message, payload);
   }
 
   private async saveMemoryArtifacts(params: {

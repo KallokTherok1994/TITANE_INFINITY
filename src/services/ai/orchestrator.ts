@@ -261,16 +261,43 @@ class AIOrchestrator {
 
   /**
    * EVOLUTION v21Ω: Periodic cleanup of expired quick-fail cache entries
+   * v30.0.0: Extended to also evict stale availability cache + critical error history
    * Prevents memory leaks from stale entries when no requests are made
    */
   private startQuickFailCleanup(): void {
     // Cleanup every 30 seconds
     this.quickFailCleanupInterval = setInterval(() => {
       const now = Date.now();
+
+      // 1. Quick-fail cache: remove expired entries
       for (const [provider, failedAt] of this.quickFailCache.entries()) {
         if (now - failedAt >= this.QUICK_FAIL_COOLDOWN_MS) {
           this.quickFailCache.delete(provider);
         }
+      }
+
+      // 2. Availability cache: remove entries older than 2× TTL
+      const availabilityMaxAge = CACHE_TTL.availability * 2;
+      for (const [key, entry] of this.availabilityCache.entries()) {
+        if (now - entry.timestamp > availabilityMaxAge) {
+          this.availabilityCache.delete(key);
+        }
+      }
+
+      // 3. Critical error history: prune timestamps outside the window
+      this.criticalErrorHistory = this.criticalErrorHistory.filter(
+        ts => now - ts < this.CRITICAL_ERROR_WINDOW_MS
+      );
+
+      // 4. Expire stale caches (metrics, status, health)
+      if (this.metricsCache.data && now - this.metricsCache.timestamp > this.METRICS_CACHE_TTL_MS * 2) {
+        this.metricsCache = { data: null, timestamp: 0 };
+      }
+      if (this.providersStatusCache.data && now - this.providersStatusCache.timestamp > this.STATUS_CACHE_TTL_MS * 2) {
+        this.providersStatusCache = { data: null, timestamp: 0 };
+      }
+      if (this.healthCheckCache.data && now - this.healthCheckCache.timestamp > this.HEALTH_CHECK_CACHE_TTL_MS * 2) {
+        this.healthCheckCache = { data: null, timestamp: 0 };
       }
     }, 30000);
   }
