@@ -1,7 +1,7 @@
 # ARCHITECTURE.md — TITANE_INFINITY
 
-**Version:** 30.0.0  
-**Date:** 2026-04-11T20:58:48Z  
+**Version:** 30.1.0  
+**Date:** 2026-04-11T21:48:00Z  
 **Classification:** CANON
 
 ---
@@ -148,4 +148,4 @@ pnpm run check
 
 ---
 
-*TITANE_INFINITY v30.0.0 — Cognitive OS*
+*TITANE_INFINITY v30.1.0 — Cognitive OS*
