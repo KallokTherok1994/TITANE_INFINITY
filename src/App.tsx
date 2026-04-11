@@ -187,12 +187,7 @@ const IdentityCenter = lazy(() =>
   }))
 );
 
-// ✨ MEMORY EVOLUTION - Memory Evolution Engine++ v∞ (OPUS #14)
-const MemoryEvolutionCenter = lazy(() =>
-  import('./components/MemoryEvolution/MemoryEvolutionCenter').then(m => ({
-    default: m.default,
-  }))
-);
+// ✨ MEMORY EVOLUTION - fusionné dans Transform (v30 fusion, lazy import conservé dans TransformationSection)
 
 // ✨ CLOUD CENTER - Cloud Sync & Vault Engine v∞
 const CloudCenter = lazy(() =>
@@ -622,18 +617,14 @@ const AppRouter: React.FC = () => {
           {/* ✨ TWINS — redirected to TITANE > Symbiose section (menu fusion v29.2) */}
           <Route path="/twins" element={<Navigate to="/titane" replace />} />
           <Route path="/twin" element={<Navigate to="/titane" replace />} />
-          {/* ✨ MEMORY EVOLUTION - Memory Evolution Engine++ v∞ (OPUS #14) */}
+          {/* ✨ MEMORY EVOLUTION - fusionné dans Transform (v30 fusion) */}
           <Route
             path="/memory-evolution"
-            element={
-              <ErrorBoundary context="MemoryEvolution">
-                <MemoryEvolutionCenter />
-              </ErrorBoundary>
-            }
+            element={<Navigate to="/titane?tab=transformation" replace />}
           />
           <Route
             path="/memory-evo"
-            element={<Navigate to="/memory-evolution" replace />}
+            element={<Navigate to="/titane?tab=transformation" replace />}
           />
           {/* ✨ CLOUD CENTER - Cloud Sync & Vault Engine v∞ */}
           <Route

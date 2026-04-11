@@ -31,7 +31,6 @@ const TOP_NAV_SECTIONS = [
       '/hyper-center',
       '/quantum-center',
       '/identity-center',
-      '/memory-evolution',
       '/cloud',
     ],
   },

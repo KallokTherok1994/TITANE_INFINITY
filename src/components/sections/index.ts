@@ -17,6 +17,5 @@ export type { TitaneStats } from './OverviewSection';
 
 export { IdentitySection } from './IdentitySection';
 export { MemorySection } from './MemorySection';
-export { MemoryEvolutionSection } from './MemoryEvolutionSection';
 export { ProgressionSection } from './ProgressionSection';
 export { TransformationSection } from './TransformationSection';
