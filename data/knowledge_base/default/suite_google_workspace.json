@@ -1,0 +1,65 @@
+{
+  "version": "v30.0.0",
+  "category": "suite_google_workspace",
+  "description": "Suite Google Workspace avancée — Google Docs (styles, collaboration, add-ons), Google Sheets (formules avancées QUERY/IMPORTRANGE/ARRAYFORMULA, Apps Script, automatisation), Google Slides (design, animations, présenter), Google Drive (organisation, partage, recherche), Google Forms (enquêtes, quiz, automatisation), Google Meet (visioconférence pro), Looker Studio (tableaux de bord), Google Sites, Google Calendar, Gmail avancé, Apps Script (automatisation cross-workspace)",
+  "suite_google_workspace": {
+    "introduction": "Google Workspace est l'alternative cloud-native à Microsoft Office, particulièrement puissante pour la collaboration en temps réel. TITANE guide à travers l'utilisation avancée de chaque outil, notamment les formules avancées de Sheets et l'automatisation avec Apps Script.",
+    "google_docs": {
+      "fonctionnalites_avancees": {
+        "styles": "Styles de titre (Titre, Sous-titre, Titre 1-6, Corps du texte). Table des matières automatique. Personnaliser les styles globalement.",
+        "collaboration": "Commentaires (@mention pour notifier). Suggestions (mode révision). Historique des révisions (Ctrl+Alt+Shift+H). Partage par lien (lecture, commentaire, modification). Mode hors-ligne.",
+        "add_ons": "Doc Variables, Grammarly, Lucidchart, EasyBib (bibliographies), Translate+. Google Workspace Marketplace."
+      },
+      "productivite": "Raccourcis Markdown-like : `#` pour Titre 1, `##` Titre 2, `- ` pour liste, `[] ` pour checkbox. Smart chips (@ pour insérer personnes, réunions, fichiers, lieux). Blocs de construction."
+    },
+    "google_sheets": {
+      "formules_avancees": {
+        "QUERY": "`=QUERY(data, 'SELECT A, B WHERE C > 100 ORDER BY B DESC LIMIT 10')` — SQL dans Sheets ! Très puissant pour filtrer, agréger, transformer.",
+        "IMPORTRANGE": "`=IMPORTRANGE('spreadsheet_url', 'Sheet1!A:D')` — importer des données d'un autre Sheets en temps réel.",
+        "ARRAYFORMULA": "`=ARRAYFORMULA(A:A * B:B)` — appliquer une formule à toute une colonne sans copier-coller.",
+        "FILTER_SORT": "`=FILTER(A:C, B:B > 100)`. `=SORT(range, col, ascending)`. `=UNIQUE(range)`. `=FLATTEN()`. Formules de tableau dynamiques.",
+        "IMPORTDATA_WEB": "`=IMPORTHTML(url, 'table', 1)` — scraper des tableaux HTML. `=IMPORTJSON(url)` (custom function). `=GOOGLEFINANCE('GOOG', 'price')` — cours boursiers en temps réel."
+      },
+      "apps_script_sheets": "Custom functions : `function MAFONCTION(value) { return value * 2; }`. Macros enregistrées. Triggers (onOpen, onEdit, onChange, time-driven). SpreadsheetApp.getActiveSheet().getRange('A1').setValue('hello').",
+      "data_studio_integration": "Connecter Sheets à Looker Studio. Source de données vivante pour les tableaux de bord.",
+      "validation_conditionnelle": "Validation des données (listes déroulantes, plages, formules personnalisées). Mise en forme conditionnelle avec formules (`=$B1>100`). Cases à cocher. Listes dépendantes."
+    },
+    "google_slides": {
+      "design": "Thème maître (Diapositive > Modifier le thème). Palette cohérente. Polices Google Fonts. Grilles et guides. Rôle des espaces blancs.",
+      "fonctionnalites": "Animations et transitions (apparition, fondu, zoom). Intégration YouTube/Google Drive (lecture dans la présentation). Lien vers d'autres slides. Q&A en temps réel (Présenter avec Q&A). Sous-titres automatiques.",
+      "collaboration": "Partage et co-édition. Mode présentation à distance. Présenter dans Google Meet. Exportation PowerPoint/PDF."
+    },
+    "google_drive": {
+      "organisation": "Drive (Mon Drive + Drive partagés). Dossiers partagés. Stars (favoris). Prioritaire (IA qui met en avant les fichiers importants). Espaces de travail (groupes de fichiers).",
+      "recherche_avancee": "Recherche par type, propriétaire, date, partage. `type:spreadsheet` `owner:me` `is:starred`. Opérateurs booléens.",
+      "partage": "Partager avec des personnes spécifiques, par lien (restreint, domaine, public). Demander l'accès. Drive partagés (propriété de l'organisation, pas individu)."
+    },
+    "google_forms": {
+      "creation": "Types de questions : choix multiple, cases à cocher, liste déroulante, échelle linéaire, grille, texte court/long, date, heure, importation de fichiers.",
+      "logique": "Aller à une section selon la réponse (branchement conditionnel). Mélanger les questions/réponses. Réponses à choix unique obligatoire.",
+      "automatisation": "Réponses envoyées vers Sheets automatiquement. Notifications email pour nouvelles réponses. Apps Script pour traitement automatisé des réponses. Google Workspace add-ons (Form Publisher).",
+      "quiz": "Mode quiz. Correction automatique. Barème de notation. Feedback par réponse. Voir les notes. Certificats via Apps Script."
+    },
+    "apps_script": {
+      "introduction": "JavaScript cloud-based pour automatiser Google Workspace. Pas d'installation requise. Accès à Gmail, Sheets, Docs, Drive, Calendar, Forms.",
+      "exemples_pratiques": {
+        "email_auto": "Lire les réponses d'un Form et envoyer des emails personnalisés. `GmailApp.sendEmail(to, subject, body)`.",
+        "sheets_auto": "Lire les données d'un Sheets. Ajouter des lignes. Formatage conditionnel programmatique. `SpreadsheetApp.openById(id).getSheetByName('Sheet1')`.",
+        "calendar_sync": "Créer des événements Calendar depuis un Sheets. `CalendarApp.getDefaultCalendar().createEvent(title, start, end)`.",
+        "triggers": "`ScriptApp.newTrigger('maFonction').timeBased().everyDays(1).atHour(8).create()`. `onEdit` — déclencher à la modification.",
+        "drive_auto": "Renommer des fichiers en masse. Déplacer dans des dossiers selon des critères. Générer des PDFs depuis des templates Docs."
+      }
+    },
+    "looker_studio": {
+      "description": "Anciennement Google Data Studio. Outil de BI/visualisation de données. Gratuit. Connecteurs natifs Google (Analytics, Sheets, BigQuery, Ads, Search Console).",
+      "fonctionnalites": "Tableaux de bord interactifs. Filtres. Contrôles de plage de dates. Scorecards, graphiques, tableaux. Formules de champs calculés. Partage et intégration (iframe).",
+      "connecteurs": "100+ connecteurs natifs. Connecteurs partenaires. Blended data (fusionner plusieurs sources)."
+    },
+    "gmail_avance": {
+      "filtres": "Créer des filtres (étiqueter, archiver, supprimer, transférer automatiquement). Filtres par expéditeur, destinataire, sujet, contenu.",
+      "etiquettes": "Système d'étiquettes vs dossiers. Couleurs. Imbrication. Retrouver rapidement. All Mail (archive universelle).",
+      "raccourcis": "`c` (composer), `r` (répondre), `a` (répondre à tous), `f` (transférer), `e` (archiver), `#` (supprimer), `l` (étiqueter), `?` (liste des raccourcis).",
+      "productivite": "Répondre à des templates (Templates/Canned Responses). Snooze les emails. Programmer l'envoi. Annuler l'envoi (délai 5-30 secondes). Confidential mode. Multiple signatures."
+    }
+  }
+}

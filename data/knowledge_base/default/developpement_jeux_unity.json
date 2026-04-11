@@ -1,0 +1,56 @@
+{
+  "version": "v30.0.0",
+  "category": "developpement_jeux_unity",
+  "description": "Développement de jeux Unity et game design — Unity 3D/2D complet (composants, physique, scripts C#, animations, UI Canvas, Cinemachine, shaders, Asset Store, Unity Cloud), Unreal Engine (Blueprints, C++, Nanite, Lumen), Godot (GDScript, open-source), design de jeu (game design document, niveaux, mécanique, économie de jeu), publishing (Google Play, App Store, Steam, itch.io), optimisation de performance jeu",
+  "developpement_jeux_unity": {
+    "introduction": "Unity est le moteur de jeu le plus utilisé au monde (50%+ des jeux mobiles). Il permet de créer des jeux 2D, 3D, mobile, PC, console et AR/VR. TITANE guide à travers l'architecture Unity, la programmation C#, le design de niveaux et la publication.",
+    "architecture_unity": {
+      "scene_objets": "Scenes (niveaux). GameObjects (conteneurs d'objets). Components (comportements attachés aux GameObjects). Hierarchy (arbre parent/enfant). Inspector (propriétés des composants). Project (assets).",
+      "components_essentiels": {
+        "transform": "Position, Rotation, Scale. Toujours présent. `transform.position`, `transform.rotation`, `transform.localScale`.",
+        "rigidbody": "Physique newtonienne. `AddForce()`, `velocity`. `isKinematic` pour contrôle manuel. `useGravity`. Mass, drag, angular drag.",
+        "colliders": "Box, Sphere, Capsule, Mesh, Polygon2D, Composite2D. Trigger vs Collision. `OnCollisionEnter`, `OnTriggerEnter`.",
+        "renderer": "Mesh Renderer, Sprite Renderer, Skinned Mesh Renderer (animations), Canvas Renderer. Materials et Shaders.",
+        "audio": "AudioSource (joue le son). AudioListener (sur la caméra). AudioMixer (effets, volumes). AudioClip (fichier audio)."
+      }
+    },
+    "csharp_unity": {
+      "monobehaviour": "Classe de base pour les scripts Unity. `Start()` (initialisation), `Update()` (chaque frame), `FixedUpdate()` (physique, 50x/sec), `LateUpdate()` (après tous les Update), `OnEnable/Disable/Destroy`.",
+      "acceder_composants": "`GetComponent<Rigidbody>()`. `[SerializeField] private Rigidbody rb;` (exposer dans l'Inspector). `GameObject.Find('Player')` (éviter pour la performance). `FindObjectsByType<T>()`.",
+      "coroutines": "`IEnumerator MyCoroutine() { yield return new WaitForSeconds(2f); DoSomething(); }`. `StartCoroutine(MyCoroutine())`. Non-bloquant. `WaitUntil`, `WaitForEndOfFrame`.",
+      "events_delegates": "`UnityEvent` (Inspector). `Action`, `Func`, `EventHandler`. Observer pattern. `static event Action OnPlayerDied;`. Découpler les systèmes.",
+      "scriptable_objects": "Assets de données réutilisables. Indépendants des scènes. Configurer des données dans l'Inspector sans code. Game design data (stats d'ennemis, items, dialogues).",
+      "design_patterns": "Singleton (game manager). Object Pooling (optimisation spawn). State Machine (IA ennemis). Observer (events). MVC pour UI. Entity Component System (ECS) pour les jeux complexes."
+    },
+    "animations": {
+      "animator": "Animator Controller. States (Idle, Walk, Run, Jump). Transitions (conditions, paramètres). Blend Trees (locomotion lisse selon vitesse). `animator.SetFloat('Speed', velocity)`. Layers (upper/lower body).",
+      "timeline": "Cinématiques. Animation d'objets, lumières, audio, activation. Non-linéaire. Signal tracks. Playable API.",
+      "spritesheet_2D": "Sprite Atlas. Sprite Editor (decouper). Sprite Shape. 2D Physics. Tilemap. Pixel Perfect Camera."
+    },
+    "ui_system": {
+      "canvas": "Screen Space Overlay/Camera/World Space. Canvas Scaler (référence résolution). GraphicRaycaster.",
+      "elements": "Button, Text (TextMeshPro recommandé), Image, RawImage, Slider, Toggle, InputField, ScrollView, DropDown.",
+      "TextMeshPro": "Rendu de texte haute qualité. Distance Field Shader. Rich Text tags. Styles. Très supérieur à l'ancien Text.",
+      "unity_UI_Toolkit": "Nouveau système UI. UXML (XML-like) + USS (CSS-like). Runtime + Editor. Data binding. Pour les jeux modernes."
+    },
+    "optimisation": {
+      "performance": "Profiler (Ctrl+7). CPU Profiler. Memory Profiler. GPU Profiler. Identifier les bottlenecks. Reduce Draw Calls (batching, GPU instancing). LOD (Level of Detail). Occlusion Culling.",
+      "code": "Éviter `Find()` dans Update(). Cacher les références dans Start(). Object Pooling (réutiliser les objets). `[System.Serializable]` + `readonly`. Coroutines vs async/await.",
+      "assets": "Texture compression (ASTC mobile, DXT PC). Mipmaps. Audio compression (Vorbis pour mobile). Lightmapping (bake les lumières statiques). Addressables (chargement dynamique)."
+    },
+    "publishing": {
+      "mobile": "Build Settings > Android/iOS. Keystore (signer l'APK). Player Settings (icône, splashscreen, permissions). Google Play Console. App Store Connect. Firebase Analytics + Crashlytics.",
+      "pc": "Steam (Steamworks SDK, steamworks.github.io). itch.io (simple, indie-friendly). Gog.com. Epic Games Store.",
+      "web": "WebGL Build. Compression (Brotli). Taille réduite (Strip Engine Code). itch.io hosting. Progressive Loading."
+    },
+    "autres_moteurs": {
+      "Unreal_Engine": "AAA quality. Blueprints (visual scripting). C++ pour la performance. Nanite (virtualisation géométrie), Lumen (GI dynamique), MetaHuman (personnages réalistes). Meilleur pour les jeux réalistes haut de gamme.",
+      "Godot": "Open-source et gratuit à 100%. GDScript (Python-like) ou C#. Léger (< 100 MB). Idéal pour les indépendants. 2D nativement excellent. Godot 4 (Vulkan, rendu amélioré)."
+    },
+    "game_design": {
+      "GDD": "Game Design Document. Vision, mécaniques core, systèmes, niveau, personnages, économie de jeu, monétisation, cible. Document vivant.",
+      "game_feel": "Juice. Feedback sonore et visuel à chaque action. Screen shake. Particules. Hit pause. Coyote time et jump buffering (plateformes). Animations anticipées.",
+      "economie_de_jeu": "Game loops (core loop, meta loop). Sinks et sources de ressources. Équilibre (game balance). Progression (power creep évité). Monétisation éthique (cosmétiques vs pay-to-win)."
+    }
+  }
+}

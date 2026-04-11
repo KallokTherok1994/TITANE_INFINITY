@@ -2,13 +2,13 @@
 
 exports[`DevTools OmegaPipeline Section > Snapshot > should match snapshot 1`] = `
 <div
-  class="space-y-6"
+  class="space-y-4"
 >
   <div
     data-testid="section-header"
   >
     <span>
-      Omega Pipeline
+      Journal d'Exécution OMEGA
     </span>
     <div
       data-testid="header-actions"
@@ -19,32 +19,156 @@ exports[`DevTools OmegaPipeline Section > Snapshot > should match snapshot 1`] =
         <span
           class="text-xs"
         >
-          Total: 
-          <span
-            class="font-medium"
-          >
-            170
-            ms
-          </span>
-        </span>
-        <span
-          class="text-xs"
-        >
-          History: 
-          <span
-            class="font-medium"
-          >
-            2
-          </span>
+          170
+          ms · 
+          1
+           exec
         </span>
       </div>
     </div>
   </div>
-  <div>
-    <h3
-      class="text-base font-semibold mb-3"
+  <div
+    class="p-4 rounded-lg border mb-4"
+  >
+    <div
+      class="flex flex-wrap items-center gap-3 mb-3"
     >
-      Current Execution
+      <div
+        class="flex items-center gap-2"
+      >
+        <span
+          class="text-lg "
+        >
+          ⏸
+        </span>
+        <span
+          class="text-sm font-semibold"
+        >
+          En attente
+        </span>
+      </div>
+      <span
+        class="text-xs font-bold px-2 py-1 rounded-full"
+        style="background: rgba(130, 80, 200, 0.18); color: #b48ef0; border: 1px solid #8250c8;"
+      >
+        ⚡ 
+        OMEGA
+      </span>
+      <span
+        class="text-xs font-medium px-2 py-1 rounded-full"
+      >
+        🔌 
+        ollama
+      </span>
+      <span
+        class="text-xs font-medium px-2 py-1 rounded-full"
+        style="color: #7ab8f0;"
+      >
+        🧠 Effort: 
+        high
+      </span>
+    </div>
+    <div
+      class="grid grid-cols-2 gap-4"
+    >
+      <div>
+        <div
+          class="flex justify-between mb-1"
+        >
+          <span
+            class="text-xs"
+          >
+            Cohérence Singularité
+          </span>
+          <span
+            class="text-xs font-bold"
+            style="color: #b48ef0;"
+          >
+            89
+            %
+          </span>
+        </div>
+        <div
+          class="h-1.5 rounded-full overflow-hidden"
+        >
+          <div
+            class="h-full rounded-full transition-all duration-500"
+            style="width: 89%; background: #b48ef0;"
+          />
+        </div>
+      </div>
+      <div>
+        <div
+          class="flex justify-between mb-1"
+        >
+          <span
+            class="text-xs"
+          >
+            Charge cognitive
+          </span>
+          <span
+            class="text-xs font-bold"
+            style="color: #93b399;"
+          >
+            0
+            %
+          </span>
+        </div>
+        <div
+          class="h-1.5 rounded-full overflow-hidden"
+        >
+          <div
+            class="h-full rounded-full transition-all duration-500"
+            style="width: 0%; background: #93b399;"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="flex gap-1 p-1 rounded-lg"
+  >
+    <button
+      class="flex-1 flex items-center justify-center gap-2 text-sm py-2 px-3 rounded-md transition-all duration-200"
+      style="border: none none; cursor: pointer; font-weight: 600;"
+    >
+      <span>
+        ⚡
+      </span>
+      <span>
+        Exécution
+      </span>
+    </button>
+    <button
+      class="flex-1 flex items-center justify-center gap-2 text-sm py-2 px-3 rounded-md transition-all duration-200"
+      style="background: transparent; border: none none; cursor: pointer; font-weight: 400;"
+    >
+      <span>
+        🤔
+      </span>
+      <span>
+        Raisonnement
+      </span>
+    </button>
+    <button
+      class="flex-1 flex items-center justify-center gap-2 text-sm py-2 px-3 rounded-md transition-all duration-200"
+      style="background: transparent; border: none none; cursor: pointer; font-weight: 400;"
+    >
+      <span>
+        📖
+      </span>
+      <span>
+        Journal
+      </span>
+    </button>
+  </div>
+  <div
+    class="space-y-4"
+  >
+    <h3
+      class="text-base font-semibold"
+    >
+      Exécution en Cours
     </h3>
     <div
       class="space-y-3"
@@ -53,7 +177,8 @@ exports[`DevTools OmegaPipeline Section > Snapshot > should match snapshot 1`] =
         class="relative"
       >
         <div
-          class="absolute left-6 top-12 w-0.5 h-8 -mt-2"
+          class="absolute left-6 top-14 w-0.5 h-6 -mt-2"
+          style="background: #93b399;"
         />
         <div
           class="p-4 rounded-lg border transition-all duration-300 "
@@ -76,7 +201,9 @@ exports[`DevTools OmegaPipeline Section > Snapshot > should match snapshot 1`] =
               >
                 <h4
                   class="text-base font-semibold"
-                />
+                >
+                  Perception
+                </h4>
                 <span
                   class="text-xs font-medium px-2 py-1 rounded-full"
                   style="background: rgba(147, 179, 153, 0.15); border: 1px solid; border-width: var(--border-success,#93b399); border-style: var(--border-success,#93b399); border-color: var(--border-success,#93b399);"
@@ -90,7 +217,7 @@ exports[`DevTools OmegaPipeline Section > Snapshot > should match snapshot 1`] =
                 <span
                   class="text-xs"
                 >
-                  Duration:
+                  Durée:
                 </span>
                 <span
                   class="text-xs font-medium"
@@ -115,7 +242,7 @@ exports[`DevTools OmegaPipeline Section > Snapshot > should match snapshot 1`] =
         class="relative"
       >
         <div
-          class="absolute left-6 top-12 w-0.5 h-8 -mt-2"
+          class="absolute left-6 top-14 w-0.5 h-6 -mt-2"
         />
         <div
           class="p-4 rounded-lg border transition-all duration-300 ring-2"
@@ -138,7 +265,9 @@ exports[`DevTools OmegaPipeline Section > Snapshot > should match snapshot 1`] =
               >
                 <h4
                   class="text-base font-semibold"
-                />
+                >
+                  Analyse
+                </h4>
                 <span
                   class="text-xs font-medium px-2 py-1 rounded-full"
                   style="background: rgba(114, 123, 129, 0.15); border: 1px solid; border-width: var(--border-info,#727b81); border-style: var(--border-info,#727b81); border-color: var(--border-info,#727b81);"
@@ -152,7 +281,7 @@ exports[`DevTools OmegaPipeline Section > Snapshot > should match snapshot 1`] =
                 <span
                   class="text-xs"
                 >
-                  Duration:
+                  Durée:
                 </span>
                 <span
                   class="text-xs font-medium"
@@ -195,7 +324,9 @@ exports[`DevTools OmegaPipeline Section > Snapshot > should match snapshot 1`] =
               >
                 <h4
                   class="text-base font-semibold"
-                />
+                >
+                  Synthèse
+                </h4>
                 <span
                   class="text-xs font-medium px-2 py-1 rounded-full"
                 >
@@ -208,7 +339,7 @@ exports[`DevTools OmegaPipeline Section > Snapshot > should match snapshot 1`] =
                 <span
                   class="text-xs"
                 >
-                  Duration:
+                  Durée:
                 </span>
                 <span
                   class="text-xs font-medium"
@@ -222,79 +353,47 @@ exports[`DevTools OmegaPipeline Section > Snapshot > should match snapshot 1`] =
         </div>
       </div>
     </div>
-  </div>
-  <div>
-    <h3
-      class="text-base font-semibold mb-3"
-    >
-      Recent Executions
-    </h3>
-    <div
-      class="rounded-lg border overflow-hidden"
-    >
-      <div
-        class="flex items-center gap-4 px-4 py-3 border-b last:border-b-0 hover:bg-white hover:bg-opacity-5 transition-colors"
+    <div>
+      <h3
+        class="text-base font-semibold mb-2"
       >
-        <span
-          class="text-xs font-mono"
-        >
-          #
-          2
-        </span>
-        <div
-          class="flex-1 flex items-center gap-2"
-        >
-          <div
-            class="w-8 h-2 rounded-full"
-            title="undefined: complete"
-          />
-          <div
-            class="w-8 h-2 rounded-full"
-            title="undefined: complete"
-          />
-          <div
-            class="w-8 h-2 rounded-full"
-            title="undefined: complete"
-          />
-        </div>
-        <span
-          class="text-xs font-medium"
-        >
-          210
-          ms
-        </span>
-      </div>
+        Exécutions Récentes
+      </h3>
       <div
-        class="flex items-center gap-4 px-4 py-3 border-b last:border-b-0 hover:bg-white hover:bg-opacity-5 transition-colors"
+        class="rounded-lg border overflow-hidden"
       >
-        <span
-          class="text-xs font-mono"
-        >
-          #
-          1
-        </span>
         <div
-          class="flex-1 flex items-center gap-2"
+          class="flex items-center gap-4 px-4 py-3 border-b last:border-b-0"
         >
+          <span
+            class="text-xs font-mono"
+          >
+            #
+            1
+          </span>
           <div
-            class="w-8 h-2 rounded-full"
-            title="undefined: complete"
-          />
-          <div
-            class="w-8 h-2 rounded-full"
-            title="undefined: complete"
-          />
-          <div
-            class="w-8 h-2 rounded-full"
-            title="undefined: complete"
-          />
+            class="flex-1 flex items-center gap-2"
+          >
+            <div
+              class="w-8 h-2 rounded-full"
+              title="Perception: complete"
+            />
+            <div
+              class="w-8 h-2 rounded-full"
+              title="Analyse: complete"
+            />
+            <div
+              class="w-8 h-2 rounded-full"
+              title="Synthèse: complete"
+            />
+          </div>
+          <span
+            class="text-xs font-medium"
+          >
+            210
+            ms
+          </span>
         </div>
-        <span
-          class="text-xs font-medium"
-        >
-          195
-          ms
-        </span>
       </div>
     </div>
   </div>

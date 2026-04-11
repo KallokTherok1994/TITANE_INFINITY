@@ -1,0 +1,211 @@
+{
+  "version": "v30.0.0",
+  "category": "equilibre_vie_pro_perso",
+  "description": "Équilibre vie professionnelle et personnelle — gestion de carrière, prévention du burnout, relations, design de vie, télétravail, indépendance financière, sens au travail",
+  "equilibre_vie_pro_perso": {
+    "introduction": "L'équilibre vie professionnelle et personnelle n'est pas un état figé — c'est un ajustement dynamique et continu entre ce qu'on donne au travail et ce qu'on préserve pour soi, ses proches et ses passions. TITANE accompagne Kevin dans cette recherche d'harmonie, en reconnaissant que les saisons de vie exigent des équilibres différents.",
+    "gestion_carriere": {
+      "plan_de_carriere": {
+        "definition": "Feuille de route personnelle qui aligne compétences, aspirations, valeurs et opportunités du marché",
+        "methode_ikigai": "Intersection de 4 cercles: ce que tu aimes, ce pour quoi tu es doué, ce dont le monde a besoin, ce pour quoi on te paie",
+        "etapes": [
+          "Bilan de compétences et de valeurs (identifier ses forces via CliftonStrengths, VIA Character, etc.)",
+          "Définir une vision à 3-5 ans — pas un poste, mais un mode de vie professionnel",
+          "Identifier les compétences manquantes et les acquérir (formation, projets, mentorat)",
+          "Construire un réseau stratégique (pas du réseautage superficiel — des relations authentiques)",
+          "Itérer — le plan évolue avec toi, ce n'est pas un document figé"
+        ],
+        "conseil": "Revoir son plan de carrière chaque trimestre. Poser la question: est-ce que mes actions quotidiennes me rapprochent de ma vision?"
+      },
+      "negociation_salariale": {
+        "preparation": "Connaître sa valeur marché (Glassdoor, LinkedIn Salary, enquêtes sectorielles), documenter ses résultats concrets et chiffrés",
+        "principes": [
+          "Ne jamais donner son chiffre en premier si possible — laisser l'employeur ancrer",
+          "Négocier le package global: salaire, bonus, télétravail, formation, vacances, équipement",
+          "Utiliser le silence après avoir annoncé son chiffre — ne pas combler le vide",
+          "Avoir un BATNA solide (Best Alternative To a Negotiated Agreement) — ton pouvoir vient de ta capacité à dire non"
+        ],
+        "formule_ancrage": "Demander 10-15% au-dessus de ton objectif réel pour créer une marge de négociation",
+        "timing": "Après un succès visible, lors de l'entretien annuel, ou quand on reçoit une offre externe. Jamais en période de crise."
+      },
+      "reconversion_professionnelle": {
+        "signes": "Perte de sens, ennui chronique, dimanche soir douloureux, fantasmes de tout quitter, désalignement avec ses valeurs",
+        "approche_progressive": [
+          "Explorer avant de quitter — informational interviews, side projects, bénévolat dans le domaine visé",
+          "Bilan de compétences (finançable CPF en France, possible via organismes au Québec)",
+          "Formation ciblée — pas forcément un diplôme complet, parfois une certification suffit",
+          "Transition en douceur — réduire le temps partiel, freelance en parallèle, épargne de sécurité (6-12 mois)"
+        ],
+        "mythe": "La reconversion n'est pas un saut dans le vide. Les meilleurs changements sont préparés, testés, puis exécutés."
+      },
+      "portfolio_competences": {
+        "definition": "Inventaire vivant de toutes tes compétences (techniques, transversales, relationnelles), réalisations et preuves",
+        "categories": {
+          "hard_skills": "Compétences techniques mesurables — langages, outils, certifications, savoir-faire métier",
+          "soft_skills": "Communication, leadership, gestion du stress, adaptabilité, esprit critique, empathie",
+          "meta_skills": "Apprendre à apprendre, résolution de problèmes complexes, créativité, pensée systémique"
+        },
+        "mise_a_jour": "Après chaque projet significatif, formation ou feedback. Documenter les résultats avec des chiffres."
+      }
+    },
+    "prevention_burnout": {
+      "signaux_alerte": [
+        "Fatigue qui ne part pas après le repos",
+        "Cynisme croissant envers le travail et les collègues",
+        "Baisse de performance malgré les efforts",
+        "Irritabilité disproportionnée, isolement social",
+        "Troubles du sommeil, maux physiques chroniques (dos, tête, estomac)",
+        "Sentiment d'être piégé — ni la force de partir, ni l'énergie de rester"
+      ],
+      "strategies_prevention": {
+        "limites_non_negociables": "Définir ses heures, couper les notifications, apprendre à dire non sans culpabilité",
+        "rituels_decompression": "Transition travail-vie: marche, douche, changement de vêtements, musique — signal clair au cerveau",
+        "micro_recuperations": "Pauses toutes les 90 minutes (cycle ultradien), respiration 4-7-8, 5 minutes en nature",
+        "diversification_identite": "Ne pas être uniquement son travail — cultiver des identités multiples (parent, sportif, artiste, ami)"
+      },
+      "recuperation_burnout": {
+        "phase_1_arret": "Accepter qu'on est en burnout. Arrêt souvent nécessaire. Pas de honte — c'est physiologique.",
+        "phase_2_repos": "Sommeil, alimentation, mouvement doux. Zéro productivité. Durée variable (semaines à mois).",
+        "phase_3_reconstruction": "Identifier les causes profondes. Thérapie, coaching. Redéfinir ses limites et ses priorités.",
+        "phase_4_retour": "Retour progressif, conditions négociées, plan de prévention de rechute",
+        "duree_typique": "6 à 18 mois pour une récupération complète. Non-linéaire — des rechutes sont normales."
+      }
+    },
+    "relations_personnelles": {
+      "communication_couple": {
+        "principes_gottman": {
+          "auteur": "John Gottman — 40 ans de recherche sur les couples",
+          "ratio_magique": "5 interactions positives pour 1 négative — le ratio qui prédit la stabilité du couple",
+          "quatre_cavaliers": {
+            "critique": "Attaquer le caractère, pas le comportement. Antidote: exprimer un besoin avec 'je'",
+            "mepris": "Sarcasme, moquerie, roulement des yeux. Prédicteur #1 de divorce. Antidote: culture de l'admiration",
+            "attitude_defensive": "Se victimiser, contre-attaquer. Antidote: accepter sa part de responsabilité",
+            "stonewalling": "Mur de silence, retrait émotionnel. Antidote: pause physiologique (20 min) puis revenir"
+          },
+          "bid_for_connection": "Tentatives de connexion — les reconnaître et y répondre est plus important que les grands gestes"
+        },
+        "conseil": "Les couples heureux ne sont pas sans conflits — ils savent réparer après le conflit."
+      },
+      "parentalite": {
+        "equilibre": "Être parent et professionnel n'est pas un problème à résoudre mais une tension à gérer",
+        "qualite_vs_quantite": "Le temps de qualité (présence réelle, attention pleine) est plus prédictif du bien-être de l'enfant que la quantité",
+        "charge_mentale": "Identifier et partager la charge mentale (planification, anticipation, organisation) — pas seulement les tâches visibles",
+        "culpabilite": "La culpabilité parentale est universelle et rarement proportionnelle. Baisser la barre du parent parfait."
+      },
+      "amities_adultes": {
+        "difficulte": "Après 30 ans, les amitiés demandent un effort intentionnel — elles ne se forment plus naturellement",
+        "strategies": [
+          "Programmer des rendez-vous réguliers comme des réunions — sans ça, le temps file",
+          "Rejoindre des communautés d'intérêt (sport, associations, bénévolat, coworking)",
+          "Accepter des amitiés de contexte (voisins, parents d'élèves) — elles ont leur valeur",
+          "Cultiver la vulnérabilité — les amitiés profondes naissent du partage authentique"
+        ],
+        "nombre_dunbar": "On peut maintenir 5 amitiés proches, 15 bonnes amitiés, 50 amis réguliers, 150 contacts significatifs"
+      }
+    },
+    "design_de_vie": {
+      "lifestyle_design": {
+        "auteur_reference": "Tim Ferriss — The 4-Hour Workweek (concepts adaptés, pas pris au pied de la lettre)",
+        "principe": "Designer sa vie intentionnellement plutôt que la subir par défaut",
+        "exercice_ideal_week": "Dessiner sa semaine idéale heure par heure. Comparer avec la semaine actuelle. Identifier les écarts et les actions pour les réduire.",
+        "mini_retraites": "Plutôt qu'attendre 65 ans, intégrer des périodes de récupération et d'exploration tout au long de la vie"
+      },
+      "teletravail": {
+        "bonnes_pratiques": [
+          "Espace de travail dédié — même petit, séparé physiquement de l'espace de vie",
+          "Horaires définis et communiqués — résister à la tentation de travailler tout le temps",
+          "Rituels de début et fin de journée — simuler le trajet (marche, café, podcast)",
+          "Sur-communiquer avec l'équipe — la visibilité remplace la présence physique",
+          "Pauses sociales intentionnelles — café virtuel, coworking occasionnel"
+        ],
+        "pieges": {
+          "surcharge": "Sans séparation physique, le travail envahit tout. Couper les notifications après l'heure.",
+          "isolement": "Prévoir 2-3 interactions sociales par semaine minimum, en dehors du travail",
+          "sedentarite": "Alarme toutes les heures pour bouger. Bureau debout, marche pendant les appels."
+        }
+      },
+      "digital_detox": {
+        "pourquoi": "Économie de l'attention: les apps sont conçues pour capter ton temps. Le coût est ta présence, ta créativité, ton calme.",
+        "strategies": [
+          "Pas d'écran la première et dernière heure de la journée",
+          "Notifications désactivées sauf appels et messages directs",
+          "Un jour par semaine sans réseaux sociaux (sabbat numérique)",
+          "Téléphone en mode avion pendant le travail profond",
+          "Applications de suivi du temps d'écran pour prendre conscience"
+        ],
+        "benefices": "Meilleur sommeil, attention restaurée, conversations plus profondes, réduction de l'anxiété"
+      },
+      "self_care": {
+        "definition": "Le self-care n'est pas du luxe — c'est l'entretien de base pour fonctionner durablement",
+        "piliers": {
+          "physique": "Sommeil 7-9h, mouvement quotidien, alimentation consciente, hydratation",
+          "emotionnel": "Journal, thérapie, conversations authentiques, pleurs quand c'est nécessaire",
+          "mental": "Lecture, apprentissage, créativité, temps sans stimulation (ennui volontaire)",
+          "social": "Temps avec les proches, solitude choisie, frontières avec les relations toxiques",
+          "spirituel": "Méditation, nature, gratitude, connexion à quelque chose de plus grand que soi"
+        },
+        "conseil": "Programmer le self-care comme un rendez-vous non négociable. Si tu ne le programmes pas, ça n'arrive pas."
+      }
+    },
+    "independance_financiere": {
+      "pourquoi": "L'indépendance financière n'est pas la richesse — c'est la liberté de choisir son travail sans y être contraint",
+      "regle_4_pourcent": "Règle Trinity: un portefeuille diversifié peut soutenir un retrait annuel de 4% indéfiniment. Capital nécessaire = dépenses annuelles × 25.",
+      "etapes": [
+        "Calculer son taux d'épargne — le levier le plus puissant (objectif: 20-50% des revenus)",
+        "Fonds d'urgence: 3-6 mois de dépenses en compte accessible",
+        "Éliminer les dettes à taux élevé (cartes de crédit, prêts consommation)",
+        "Investir régulièrement en fonds indiciels diversifiés (DCA — Dollar Cost Averaging)",
+        "Augmenter les revenus (compétences, négociation, revenus complémentaires) plutôt que couper dans le latte"
+      ],
+      "fire_mouvement": {
+        "definition": "Financial Independence, Retire Early — communauté visant l'indépendance financière accélérée",
+        "variantes": {
+          "lean_fire": "Budget minimal, frugalité maximale",
+          "fat_fire": "Indépendance avec un niveau de vie confortable",
+          "barista_fire": "Semi-retraite — travail à temps partiel par choix, pas par nécessité",
+          "coast_fire": "Assez investi pour que les intérêts composés financent la retraite — pas besoin d'épargner davantage"
+        }
+      }
+    },
+    "sens_et_travail": {
+      "meaningful_work": {
+        "composantes": "Autonomie, maîtrise, connexion (Deci & Ryan, Self-Determination Theory) + sens (Viktor Frankl)",
+        "question_cle": "Le sens ne se trouve pas — il se construit. Même un travail ordinaire peut être significatif si tu y apportes ta touche.",
+        "job_crafting": "Transformer activement son poste: modifier les tâches, les relations, ou la perception de son rôle pour y trouver plus de sens"
+      },
+      "carriere_purpose_driven": {
+        "approche": "Aligner progressivement son travail avec ses valeurs profondes — pas un pivot brutal, mais des ajustements constants",
+        "exercice_eulogy": "Écrire son propre éloge funèbre — qu'aimerais-tu qu'on dise de ta carrière? Utiliser ça comme boussole.",
+        "impact": "Chercher l'impact, pas le titre. Le sens vient de la contribution, pas du statut."
+      },
+      "sabbatique": {
+        "planification": "12-18 mois de préparation minimum. Épargne dédiée, négociation avec l'employeur, plan de retour.",
+        "droit_france": "Congé sabbatique: 6-11 mois, ancienneté 36 mois dans l'entreprise et 6 ans d'activité professionnelle",
+        "quebec": "Pas de droit légal, mais négociable — congé sans solde ou programme de congé à traitement différé",
+        "utilisation": "Voyage, projet personnel, formation longue, écriture, repos profond, exploration d'une reconversion"
+      },
+      "retraite": {
+        "planification_progressive": "Commencer à planifier 10-15 ans avant. Estimer ses besoins, maximiser les cotisations, diversifier les sources.",
+        "france": {
+          "regimes": "Régime de base (trimestres), complémentaire (Agirc-Arrco), épargne personnelle (PER)",
+          "age_legal": "64 ans (réforme 2023), taux plein selon durée de cotisation"
+        },
+        "quebec": {
+          "sources": "RRQ (Régime de rentes du Québec), Pension de la Sécurité de la Vieillesse (PSV), épargne personnelle (REER, CELI, REEE)",
+          "age": "RRQ dès 60 ans (réduit) ou 65 ans (plein), report possible jusqu'à 72 ans (bonification)"
+        },
+        "conseil": "La retraite n'est pas la fin du travail — c'est le début du travail choisi. Planifier aussi le sens, pas seulement l'argent."
+      },
+      "personal_branding": {
+        "definition": "Ton image professionnelle intentionnelle — ce que les gens disent de toi quand tu n'es pas dans la pièce",
+        "piliers": [
+          "Expertise visible — partager ses connaissances (articles, conférences, mentoring)",
+          "Cohérence — même message sur LinkedIn, CV, entretiens, projets",
+          "Authenticité — pas un personnage, mais la meilleure version professionnelle de soi",
+          "Réseau — être recommandable par ceux qui te connaissent"
+        ],
+        "conseil": "Le personal branding n'est pas de la vanité — c'est de la visibilité stratégique. Sans visibilité, tes compétences restent invisibles."
+      }
+    }
+  }
+}

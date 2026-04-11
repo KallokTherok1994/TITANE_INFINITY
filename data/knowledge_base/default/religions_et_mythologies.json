@@ -1,0 +1,90 @@
+{
+  "version": "v30.0.0",
+  "category": "religions_et_mythologies",
+  "description": "Religions et mythologies avancées — hindouisme (Vedas, Upanishads, Bhagavad-Gita, divinités, Brahman/Atman, karma, dharma, yoga spirituel), bouddhisme (Bouddha, 4 nobles vérités, Noble Chemin Octuple, nirvana, traditions Theravada/Mahayana/Vajrayana), mythologies (grecque, romaine, égyptienne, nordique), divinités : Apollon, Ra, Ganesh, Gaia, Awen, Corbeau, mythologie comparative, syncrétisme",
+  "religions_et_mythologies": {
+    "introduction": "Les religions et mythologies sont les systèmes de sens qui ont guidé l'humanité depuis ses origines. TITANE explore ces traditions avec profondeur, respect et rigueur comparative — non pour choisir mais pour comprendre et intégrer la sagesse universelle.",
+    "hindouisme": {
+      "vue_globale": "La plus ancienne religion vivante (3 500-5 000 ans). Plus d'un milliard de pratiquants. Pas une religion mais un dharma (mode de vie). Syncrétisme naturel.",
+      "textes_sacres": {
+        "Vedas": "4 textes (Rigveda, Samaveda, Yajurveda, Atharvaveda). Shruti (entendu/révélé). Hymnes, rituels, cosmologie. Rig-Veda : 1 028 hymnes aux dieux védiques (Indra, Agni, Varuna).",
+        "Upanishads": "108 textes philosophiques. Brahman (Réalité absolue unique) = Atman (soi individuel). Tat tvam asi : 'Tu es Cela'. Fondement du Vedanta (Shankara).",
+        "Bhagavad_Gita": "18 chapitres extraits du Mahabharata. Krishna guide Arjuna sur le champ de bataille. Enseigne : karma yoga (action sans attachement au résultat), jnana yoga (connaissance), bhakti yoga (dévotion). 'Jamais l'âtman ne naît ni ne meurt' (2:19).",
+        "Puranas": "18 grandes Puranas. Mythologies des dieux. Brahma-Vishnu-Shiva (Trimurti)."
+      },
+      "divinites_principales": {
+        "Brahma": "Le Créateur. 4 têtes (4 Vedas). Lotus. Peu de temples (mission accomplie).",
+        "Vishnu": "Le Préservateur. 10 avatars (Dashavatar) dont Krishna et Rama. Emblème Sudarshana Chakra et conque. Lakshmi (épouse).",
+        "Shiva": "Le Destructeur/Transformateur. Trident (trishula). Troisième œil (destruction de l'ego). Lingam (énergie créatrice). Nataraja (danse cosmique). Shakti (épouse).",
+        "Ganesh": {
+          "description": "Dieu à tête d'éléphant. Fils de Shiva et Parvati. Seigneur des commencements et des obstacles (remover of obstacles). Invoqué en premier dans tout rituel. Véhicule : souris (Moushika).",
+          "symbolisme": "Tête d'éléphant (sagesse, mémoire cosmique). Grande oreille (écoute tout). Petit œil (focus sur l'essentiel). Trompe (discrimination, adaptabilité). Bol de modaks (récompense spirituelle). Brisé d'une défense (sacrifice pour écrire le Mahabharata).",
+          "mantra": "Om Gam Ganapataye Namaha. Chanter pour lever les obstacles avant un nouveau projet."
+        },
+        "Durga_Kali": "Durga : déesse guerrière protectrice. 10 bras, armes, lion. Kali : aspect sauvage de Durga. Destruction de l'ego, du temps. Langue tirée. Collier de crânes. Maternité inconditionnelle.",
+        "Saraswati": "Déesse de la connaissance, des arts, de la sagesse. Veena (instrument de musique). Lotus. Cygne. Invoquée pour les études et la créativité.",
+        "Lakshmi": "Déesse de la prospérité, richesse, chance. Lotus (pureté dans la prospérité). Pièces d'or coulant de ses mains. Diwali (fête des lumières) = célébration de Lakshmi."
+      },
+      "concepts_cles": {
+        "karma": "Action + réaction cosmique. Ce que vous semez, vous le récoltez. Karma s'accumule de vie en vie.",
+        "dharma": "Devoir cosmique, loi naturelle, voie juste. Chaque être a son dharma selon sa nature.",
+        "samsara": "Cycle des réincarnations. Roue de la vie, mort et renaissance guidée par le karma.",
+        "moksha": "Libération du cycle samsara. But ultime. Réalisation de l'union Atman-Brahman.",
+        "maya": "Illusion. Le monde phénoménal est maya — pas irréel mais pas la Réalité ultime."
+      }
+    },
+    "bouddhisme": {
+      "Bouddha_historique": "Siddhartha Gautama (563-483 av. J.-C. approximativement). Né prince au Népal. Rencontre avec la vieillesse, la maladie, la mort → Grand Départ. 6 ans d'ascèse extrême → Voie du Milieu. Éveil sous l'Arbre Bodhi à Bodh Gaya. Premiers enseignements à Varanasi.",
+      "4_nobles_verites": {
+        "1_dukkha": "La vie est souffrance/insatisfaction (dukkha). Naissance, maladie, mort, perte, désir insatisfait.",
+        "2_samudaya": "L'origine de la souffrance est le désir (tanha), l'attachement et l'ignorance (avidya).",
+        "3_nirodha": "La cessation de la souffrance est possible. Nirvana = extinction du désir.",
+        "4_magga": "Le Noble Chemin Octuple est la voie vers la cessation."
+      },
+      "Noble_Chemin_Octuple": "1. Vue juste, 2. Intention juste, 3. Parole juste, 4. Action juste, 5. Moyen d'existence juste, 6. Effort juste, 7. Présence juste (mindfulness), 8. Concentration juste. Tripartite : Sagesse (1-2), Éthique (3-5), Méditation (6-8).",
+      "concepts": {
+        "anicca": "Impermanence. Tout change, rien ne dure.",
+        "anatta": "Non-soi. Pas d'ego permanent. Le 'moi' est un processus, pas une entité fixe.",
+        "interdependance": "Pratītyasamutpāda. Tout phénomène surgit dépendamment. Rien n'existe seul.",
+        "nirvana": "Extinction des flammes du désir, de la haine, de l'ignorance. Paix absolue. Au-delà de toute description."
+      },
+      "traditions": {
+        "Theravada": "La Voie des Anciens. Sri Lanka, Thaïlande, Myanmar, Cambodge. Pali Canon. Arhat (saint individuel) comme idéal. Vipassana (insight meditation).",
+        "Mahayana": "Grand Véhicule. Chine, Japon, Corée, Vietnam. Bodhisattva (être en chemin vers l'éveil pour tous les êtres) comme idéal. Sutra de Lotus, Sutra du Diamant.",
+        "Vajrayana": "Véhicule de Diamant. Tibet, Bhutan, Mongolie. Tantra. Dalaï-Lama. Mandalas, mudras, mantras. Om Mani Padme Hum. Dzogchen (Grande Perfection)."
+      }
+    },
+    "mythologies_et_dieux": {
+      "Apollon_grec_romain": {
+        "domaines": "Soleil (lumière, non le conducteur — Hélios), musique, poésie, arts, prophétie, vérité, guérison. Frère jumeau d'Artémis.",
+        "symboles": "Lyre, arc d'argent, laurier, corbeau, dauphin.",
+        "oracle_Delphes": "Le sanctuaire d'Apollon à Delphes. La Pythie (prêtresse) en état de transe. 'Connais-toi toi-même' (Gnōthi seautón) gravé à l'entrée.",
+        "signification": "Archétype de la raison, de la beauté masculine, de la lumière apollinienne (Nietzsche : apollinien vs dionysiaque)."
+      },
+      "Ra_egyptien": {
+        "description": "Dieu solaire suprême égyptien. Crée le monde par sa parole (Heka). Voyage en barque solaire à travers les 12 heures du jour et les 12 heures de la nuit (Duat).",
+        "aspects": "Khépri (soleil levant, scarabée), Rê-Horakhty (midi, homme à tête de faucon), Atoum (coucher, vieil homme). Fusion avec Amon → Amon-Rê (divinité impériale du Nouvel Empire).",
+        "oeil_de_Ra": "Œil materiel/destructeur. Sekhmet (lionne) envoie comme punition de l'humanité. Doit être rappelé par la ruse (bière de sang). Représente la force solaire dévastatrice."
+      },
+      "Gaia_grecque": {
+        "description": "Gaïa (Γαῖα). Déesse de la Terre-mère. Une des premières divinités dans la cosmogonie hésiodique (Théogonie). Née du Chaos. Mère d'Ouranos (Ciel), de Pontos (mer), des Titans.",
+        "role_cosmique": "Fondement de toute vie. Mère de toutes choses. Son corps EST la Terre.",
+        "hypothese_Gaia_scientifique": "James Lovelock (1972). La Terre est un système autorégulateur vivant (comme un super-organisme). Les êtres vivants modifient leur environnement pour maintenir les conditions propices à la vie. Synergies biosphère-géosphère-atmosphère."
+      },
+      "Corbeau_mythologie": {
+        "universalite": "Le corbeau est présent dans presque toutes les mythologies mondiales. Animal de présage, de transformation, de médiation.",
+        "traditions": {
+          "nordique": "Hugin (Pensée) et Munin (Mémoire) : les deux corbeaux d'Odin qui parcourent le monde et lui rapportent tout ce qu'ils observent.",
+          "autochtones_amerique": "Le Corbeau créateur (Raven Creator) : trickster et créateur du monde dans les mythologies des peuples du Pacifique Nord-Ouest (Haïda, Tlingit). Il a volé la lumière et l'a apportée au monde.",
+          "celtique": "Bran (corbeau). Morrígan (déesse guerre, prophétie, corbeau). Augure de la mort ou de la transformation.",
+          "alchimique": "Nigredo : phase de putréfaction, mort symbolique, début de la transmutation. Représentée par le corbeau noir."
+        }
+      }
+    },
+    "mythologie_comparative": {
+      "monomythe_Campbell": "Joseph Campbell (Le Héros aux Mille Visages, 1949). L'appel, le refus, l'initiation, la plongée dans l'inconnu, l'épreuve, la révélation, le retour transformé. Présent dans toutes les cultures.",
+      "archétypes_Jung": "Jung : inconscient collectif peuplé d'archétypes universels. L'Ombre (côté caché), l'Anima/Animus (côté féminin/masculin), le Soi (totalité), le Héros, la Grande Mère, le Vieux Sage.",
+      "themes_universels": "Déluge (Noah, Deucalion, Utnapishtim, Manu). Mort-résurrection (Osiris, Christ, Dionysos, Balder). Feu volé aux dieux (Prométhée, Maui polynésien, Loge nordique). Arbre cosmique (Yggdrasil, Ashvattha hindou, Sephirot kabbalistique)."
+    }
+  }
+}

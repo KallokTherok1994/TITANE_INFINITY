@@ -10,7 +10,7 @@
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ v30.0.0 — DEFAULT KNOWLEDGE BASE SERVICE (FRONTEND)
  *   Wraps the 4 IPC commands exposed by knowledge_base_default.rs
- *   so TITANE chat AI can access its 92 built-in knowledge categories.
+ *   so TITANE chat AI can access its 150 built-in knowledge categories.
  *
  *   Commands bridged:
  *     knowledge_base_get_all       → getAllEntries()
@@ -238,7 +238,7 @@ function getFallbackEntries(): KnowledgeBaseEntry[] {
 // ─────────────────────────────────────────────────────────────────
 
 /**
- * List all 92 category keys.
+ * List all 150 category keys.
  * Derives from the entries cache when already loaded to avoid a second IPC call.
  */
 export async function listCategories(): Promise<string[]> {
@@ -359,10 +359,10 @@ export async function getCompactIndex(): Promise<string> {
       .sort((a, b) => a.category.localeCompare(b.category))
       .map(
         e =>
-          `• ${e.category}: ${e.description.substring(0, 80)}${e.description.length > 80 ? '…' : ''}`
+          `• ${e.category}: ${e.description.substring(0, 120)}${e.description.length > 120 ? '…' : ''}`
       )
       .join('\n');
-    _compactIndexCache = lines;
+    _compactIndexCache = `[LANGUE: Réponds TOUJOURS en français]\n${lines}`;
   } catch {
     _compactIndexCache = '';
   }

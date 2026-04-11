@@ -1,0 +1,78 @@
+{
+  "version": "v30.0.0",
+  "category": "reseaux_sociaux_avance",
+  "description": "Réseaux sociaux avancés — stratégie Instagram (Reels, algorithme, engagement, niche), TikTok (algorithme FYP, hooks, formats viraux), Facebook (groupes, publicité, pages), LinkedIn (personal branding B2B, articles, SSI score), Twitter/X (threads, croissance, engagement), Wix (création de site web no-code), stratégie de contenu unifiée, analytics et KPIs, monétisation des audiences",
+  "reseaux_sociaux_avance": {
+    "introduction": "Les réseaux sociaux sont des amplificateurs de présence, de business et d'impact. TITANE guide la stratégie avancée plateforme par plateforme, avec une vision unifiée de la création de contenu, de l'algorithme et de la monétisation.",
+    "strategie_contenu_unifiee": {
+      "piliers_de_contenu": "3-5 thèmes récurrents qui définissent votre identité de marque. Exemple : [Bien-être] [Entrepreneuriat] [Voyage] [Mindset] [Cuisine santé]. Permet la cohérence, la prévisibilité et l'expertise perçue.",
+      "pyramid_contenu": {
+        "hero_content": "10% — Contenu viral ou flagship. Effort maximal. Long format documentaire, série, événement live.",
+        "hub_content": "30% — Contenu régulier engageant. Vidéos thématiques, articles approfondis, webinaires.",
+        "hygiene_content": "60% — Contenu quotidien simple. Stories, posts courts, réponses, partages."
+      },
+      "reuse_strategie": "Créer 1 contenu long → extraire 10-20 micro-contenus. Exemple : Podcast 1h → clips 30s TikTok + carrousels Instagram + thread X + article LinkedIn + extraits email.",
+      "batch_creation": "Regrouper la création (1 jour/semaine ou 1 demi-journée) puis programmer via Buffer, Publer, Later, Meta Business Suite."
+    },
+    "instagram": {
+      "algorithme_2024": "5 signaux clés : 1. Interactions passées (likes, commentaires, partages, sauvegardes). 2. Intérêt potentiel du contenu. 3. Popularité du contenu. 4. Récence du post. 5. Relations (amis, famille).",
+      "formats": {
+        "reels": "Format prioritaire en 2024. 60-90 secondes idéal. Hook dans les 3 premières secondes. Sous-titres obligatoires (80% regardent sans son). Musique tendance vs audio original.",
+        "carrousels": "Format à fort taux de sauvegarde. 7-10 slides. Slide 1 = accrocher, slides 2-9 = valeur dense, slide 10 = CTA. Taux d'engagement 2-3x supérieur aux posts simples.",
+        "stories": "Engagement 24h. Stickers interactifs (sondage, questions, compteur). 70% des utilisateurs regardent les stories quotidiennement.",
+        "broadcast_channel": "Canal de diffusion unilatéral. Idéal pour les annonces exclusives et le contenu premium."
+      },
+      "croissance": {
+        "engagement_reel": "Priorité à l'engagement qualitatif (commentaires > likes). Répondre à chaque commentaire dans la première heure. Poser une question en fin de caption.",
+        "hashtags": "2024 : hashtags moins importants. 5-10 pertinents > 30 génériques. Hashtags de niche (50k-500k) > viral (10M+).",
+        "collaboration": "Collab posts, stories partagées, live commun. Partager l'audience d'un compte complémentaire.",
+        "SEO_instagram": "Description du profil avec mots-clés (Instagram est un moteur de recherche). Alt text des images optimisé."
+      }
+    },
+    "tiktok": {
+      "algorithme_FYP": "For You Page. Différent d'Instagram : AUCUN abonné nécessaire pour viralité. Chaque vidéo est testée sur des petits groupes. Signaux : achèvement vidéo (watch time %), partages, commentaires, re-watch.",
+      "formats_viraux": {
+        "hook_3_secondes": "Les 3 premières secondes déterminent 90% du succès. Formules : 'Je ne savais pas que...', 'Cette astuce m'a sauvé...', 'Ce que personne ne dit sur...', montrer le résultat avant le processus.",
+        "duree_optimale": "15-60 secondes (top performance). Séries : jusqu'à 3 minutes pour engagement profond.",
+        "tendances": "Sons tendance (outil : TikTok Creative Center). Défis hashtags. Transitions. Duets et Stitches."
+      },
+      "creation_contenu": "Niche claire (plus précis = mieux). Consistance (1-3 vidéos/jour pour croissance rapide). Qualité sonore > qualité visuelle. Authentique > professionnel."
+    },
+    "facebook": {
+      "groupes": "Les groupes ont une portée organique supérieure aux pages en 2024. Groupe engagé > large page passive. Règles claires, modération active, contenu exclusif pour membres.",
+      "publicite_meta": {
+        "objectifs": "Notoriété, trafic, engagement, prospects, conversions, catalogue. Choisir l'objectif = l'IA optimise pour cet objectif.",
+        "audiences": "Audiences personnalisées (liste email, visiteurs site), audiences sosies (lookalike 1-10%), audiences par centres d'intérêt.",
+        "creative": "Image > vidéo pour le CPM. Vidéo 15-30s pour les utilisateurs mobiles. Test A/B systématique (3-5 variantes). AIDA : Attention, Intérêt, Désir, Action.",
+        "budget": "CBO (Campaign Budget Optimization) vs ABO (Ad Set Budget Optimization). Commencer petit (10-20€/jour), scaler les gagnants."
+      }
+    },
+    "linkedin": {
+      "personal_branding_B2B": "LinkedIn est le réseau B2B le plus puissant. SSI Score (Social Selling Index) : 0-100. Objectif : >70.",
+      "contenu_performant": {
+        "formats": "Texte long (1200-1900 caractères) avec sauts de ligne. Carrousels (documents PDF). Vidéos natives. Articles (pour SEO LinkedIn long terme).",
+        "hooks_linkedin": "Commencer par une ligne d'accroche audacieuse. 3 points de suspension '...' pour forcer le 'voir plus'. Storytelling personnel (vulnérabilité + leçon).",
+        "engagement_reseau": "Commenter intelligemment les posts de votre niche (10-15 commentaires profonds/jour). Connexions ciblées (ICP : Ideal Customer Profile). Messagerie personnalisée (pas de copier-coller)."
+      },
+      "croissance": "Posting 3-5x/semaine. 30 min/jour d'engagement actif. Optimiser le profil (photo pro, bannière, résumé avec mots-clés, recommandations). Profil = landing page permanente."
+    },
+    "twitter_X": {
+      "growth_strategies": {
+        "threads": "Format le plus engageant. Thread = série de tweets liés. Structure : Tweet 1 (hook), Tweets 2-8 (contenu dense), Tweet final (CTA + résumé). Numéroter les tweets.",
+        "posting_cadence": "3-7 tweets/jour pour croissance. Engager les gros comptes de sa niche (commentaires de valeur). Répondre en premier aux tweets tendance de sa niche.",
+        "topics": "Partager des opinions tranchées (polarisant mais mémorable). Niche vs généraliste."
+      },
+      "monetisation_X": "X Premium (abonnement), Super Follows (contenu payant), Spaces (live audio), revenus publicitaires partagés (10k views minimum)."
+    },
+    "wix_creation_site": {
+      "fonctionnalites": "Éditeur drag-and-drop. 800+ templates. Wix ADI (IA qui crée le site automatiquement). Domaine, hébergement inclus. SEO intégré. E-commerce. Blog. Booking (réservations).",
+      "creation_etapes": "1. Choisir un template selon la niche. 2. Personnaliser (couleurs, polices, images). 3. Ajouter les pages essentielles (Accueil, À propos, Services, Contact, Blog). 4. Optimiser pour mobile. 5. Configurer le SEO (titres, meta descriptions, sitemap). 6. Connecter un domaine personnalisé. 7. Publier.",
+      "wix_vs_concurrents": "Wix (simplicité, tout inclus), Squarespace (esthétique premium), WordPress (flexibilité maximale, technique), Webflow (design avancé, code propre), Framer (animations, interactif)."
+    },
+    "analytics_et_KPIs": {
+      "metriques_prioritaires": "Portée organique (reach), engagement rate (engagements/impressions), taux de clics (CTR), conversions (leads/ventes), coût par acquisition (CPA). Éviter les vanity metrics (likes seuls).",
+      "outils": "Meta Business Suite (Facebook+Instagram), TikTok Analytics, LinkedIn Analytics, Google Analytics 4, Buffer, Hootsuite, Sprout Social.",
+      "A_B_testing": "Tester un seul élément à la fois : visuel, titre, CTA, audience. Durée minimale : 7 jours. Budget suffisant pour la significativité statistique (500+ impressions minimum par variante)."
+    }
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "version": "v30.0.0",
+  "category": "musique_theorie_pratique",
+  "description": "Musique — théorie musicale, solfège, harmonie, rythme, genres musicaux, production musicale (DAW, mixing, mastering), apprentissage d'instruments, psychologie de la musique, business musical",
+  "musique_theorie_pratique": {
+    "introduction": "La musique est le seul art qui active simultanément toutes les zones du cerveau. Comprendre sa structure (théorie) permet de créer avec intention plutôt que par imitation. TITANE aborde la musique depuis ses fondements physiques jusqu'à la production professionnelle moderne.",
+    "theorie_fondamentale": {
+      "notes_gammes": {
+        "chromatique": "12 demi-tons : Do-Do#-Ré-Ré#-Mi-Fa-Fa#-Sol-Sol#-La-La#-Si. Octave = doubler fréquence.",
+        "majeure": "Intervalles : 1-1-½-1-1-1-½ (tons et demi-tons). Do Majeur = C-D-E-F-G-A-B",
+        "mineure_naturelle": "1-½-1-1-½-1-1. La mineur relatif de Do Majeur.",
+        "pentatonique": "5 notes. Pas de demi-tons. Universelle (blues, rock, folk, musiques du monde). Sonne 'juste' facilement."
+      },
+      "accords": {
+        "triade": "3 notes — fondamentale + tierce + quinte. Majeur (joyeux), mineur (mélancolique), augmenté, diminué.",
+        "septieme": "7e dominante (V7) = tension naturelle vers I. Base blues et jazz.",
+        "progressions": {
+          "I_IV_V": "Base blues/rock/pop. Do: C-F-G",
+          "I_V_vi_IV": "Progression pop universelle. C-G-Am-F. Des milliers de chansons.",
+          "ii_V_I": "Cadence jazz. Dm7-G7-CMaj7. Sophistiqué.",
+          "12_bar_blues": "Structure blues fondamentale. 3 accords, 12 mesures."
+        }
+      },
+      "rythme": {
+        "pulsation": "Battement régulier. Tempo en BPM (battements/minute). 60-80 détendu, 120-140 danse.",
+        "mesure": "4/4 standard (4 noires par mesure). 3/4 valse. 6/8 triolet. 7/8 complexe (Balkans, prog rock).",
+        "syncopation": "Accent sur les temps faibles. Groove, funk, jazz, reggae.",
+        "polyrhythme": "Rythmes différents simultanément. Musique africaine fondamentale. 3 contre 2, 4 contre 3."
+      }
+    },
+    "harmonie_avancee": {
+      "modes": "7 modes de la gamme majeure. Dorien (Ré) = mineur avec 6e majeure (jazz, rock). Lydien (Fa) = majeur #4 (rêveur). Mixolydien (Sol) = majeur b7 (blues, rock).",
+      "modulation": "Changer de tonalité. Directe (brusque, dramatique), pivot (accord commun aux deux tonalités, fluide).",
+      "tension_resolution": "Dissonance → consonance. Dynamique émotionnelle fondamentale. V → I = résolution universelle.",
+      "substitutions": "Triton sub (jazz) : remplacer V7 par accord à distance de triton. Résolution identique, couleur différente."
+    },
+    "production_musicale": {
+      "daw": {
+        "ableton_live": "Standard DJs et loop-based. Excellent pour électronique, performance live.",
+        "logic_pro": "Mac seulement. Rich en instruments/plugins natifs. Pop, film, polyvalent.",
+        "fl_studio": "Favori trap/hip-hop. Step sequencer intuitif. Portable entre OS.",
+        "reaper": "Open source quasi-gratuit. Léger, flexible. Appris par pros budgétaires."
+      },
+      "mixage": {
+        "eq": "Sculpter les fréquences. High-pass filtre boue grave. Cuts précis > boosts larges. 'Si ça coupe bien, ça mixe bien'.",
+        "compression": "Contrôle dynamiques. Attack/Release/Ratio/Threshold. Parallel compression pour punch.",
+        "reverb_delay": "Espace et profondeur. Reverb = taille de la salle. Delay = répétition rythmique. Automation clé.",
+        "stereo": "Mono pour basses/kick (compatibilité mono). Mid-Side processing pour largeur contrôlée."
+      },
+      "mastering": "Uniformisation loudness (LUFS: -14 streaming, -9 club), dernier EQ global, limiting, dithering pour export."
+    },
+    "apprentissage_instrument": {
+      "methode": "20 minutes/jour > 2h par semaine. Pratique délibérée (inconfort ciblé) > répétition confortable.",
+      "piano": "Idéal pour comprendre harmonie visuellement. Clavier = carte de la théorie. Débutant : 88 touches recommandées.",
+      "guitare": "Accords ouverts → barré → pentatonique. 3 mois pour jouer chansons simples. Callosités nécessaires.",
+      "chant": "La voix est un muscle. Échauffement (lip trills), soutien diaphragmatique, placement resonance. Coaching = accélérateur."
+    },
+    "psychologie_musique": {
+      "emotion": "Frissons musicaux (chills) = libération dopamine. Tension + surprise = plaisir émotionnel.",
+      "cognition": "Mozart effect = mythe. MAIS apprentissage musical améliore mémoire, mathématiques, langage à long terme.",
+      "therapeutique": "Musicothérapie validée : douleur chronique, anxiété, Alzheimer (mémoire musicale préservée en dernier).",
+      "productivite": "Musique sans paroles favorise concentration. BPM 60-70 = onde alpha. Musique préférée = motivation."
+    },
+    "business_musical": {
+      "droits": "SACEM (France) — droits d'auteur composition (50%) + interprétation (50%). Déclaration obligatoire.",
+      "streaming": "$0.003-0.005/écoute. 500K streams = ~1500$. Spotify nécessite DistroKid/TuneCore pour distribution.",
+      "sync": "Placement musique TV/film/pub = revenus > streaming souvent. Librairies : Musicbed, Artlist, Artgrid.",
+      "live": "Concerts = revenue principal artistes post-streaming. Bookings, management, merch."
+    }
+  }
+}

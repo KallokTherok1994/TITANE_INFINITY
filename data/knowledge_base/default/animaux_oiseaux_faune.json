@@ -1,0 +1,70 @@
+{
+  "version": "v30.0.0",
+  "category": "animaux_oiseaux_faune",
+  "description": "Animaux, oiseaux et faune avancée — éthologie (comportement animal, cognition, communication), ornithologie (identification, chant, migration, observation), mammifères (identification, ecologie, cycles), insectes et arthropodes, reptiles et amphibiens, animaux domestiques (bien-être, comportement, santé), faune aquatique, conservation et menaces",
+  "animaux_oiseaux_faune": {
+    "introduction": "La faune est l'ensemble des espèces animales d'un territoire. TITANE identifie les espèces, comprend leurs comportements, leurs interactions écologiques et guide dans l'observation naturaliste respectueuse.",
+    "ethologie": {
+      "definition": "Science du comportement animal dans son milieu naturel. Konrad Lorenz et Niko Tinbergen (Nobel 1973). Instinct vs apprentissage.",
+      "comportements_cles": {
+        "territoire": "Défense d'un espace ressources (nourriture, partenaire, abri). Marquage olfactif (mammifères), chant (oiseaux), parades. Taille du territoire proportionnelle aux ressources disponibles.",
+        "communication": "Visuelle (postures, couleurs, mimiques), sonore (chants, cris, ultrason des chauves-souris), chimique (phéromones : fourmi, papillon), tactile (toilettage social des primates).",
+        "cooperation": "Eusocialité (abeilles, fourmis, termites). Altruisme apparent (sélection de parentèle : Hamilton). Chasse coopérative (loups, orques, lions).",
+        "cognition_animale": "Utilisation d'outils (chimpanzé, corbeau, dauphin, pieuvre). Reconnaissance de soi dans le miroir (test miroir : grands singes, dauphins, éléphants, pies). Théorie de l'esprit chez les singes. Culture chez les cétacés."
+      },
+      "intelligence_animale": {
+        "primates": "Chimpanzés : résolution de problèmes, utilisation et fabrication d'outils, langage des signes (Washoe). Bonobo : plus pacifique que le chimpanzé. Orangoutan : 88% de gènes communs avec l'humain.",
+        "cetaces": "Dauphins : écho-localisation, nomméage individuel (sifflement signature). Baleines : 'chants' complexes évoluant chaque saison. Orques : cultures locales (dialectes, techniques de chasse propres à chaque pod).",
+        "corvides": "Corbeaux et corneilles : fab-rication d'outils, planification future, reconnaissance de visages humains. Piafs qui cachent de la nourriture et savent si on les observe."
+      }
+    },
+    "ornithologie": {
+      "identification": {
+        "criteres": "1. Taille (comparer avec espèce connue : moineau, merle, corneille, canard). 2. Silhouette (forme du bec, longueur de la queue, ailes pointues vs arrondies). 3. Plumage (couleurs, motifs). 4. Comportement (nage, grimpe, plane). 5. Chant.",
+        "bec": "Gros conique (granivore : moineau, pinson), fin allongé (insectivore : fauvette, rossignol), crochu (rapace : faucon, épervier), plat large (filtration : canard), long et droit (pêcheur : martin-pêcheur, héron).",
+        "applications": "Merlin Bird ID (Cornell Lab, reconnaissance chant), eBird (observations), iNaturalist (observations nature), PlantNet peut être utilisé pour végétaux mais aussi habitats."
+      },
+      "especes_france": {
+        "communs": "Moineau domestique (Passer domesticus), Merle noir (Turdus merula, chant mélodieux), Rougegorge (Erithacus rubecula, bave rouge-orange), Mésange charbonnière (Parus major), Pinson des arbres (Fringilla coelebs), Bergeronnette grise (queue oscillante).",
+        "rapaces": "Buse variable (planant en spirale), Épervier d'Europe (forêts, voltige), Faucon crécerelle (vol stationnaire), Milan royal (queue en forme de V), Busard Saint-Martin (blanc argenté), Chouette effraie (masque facial).",
+        "migrateurs": "Hirondelle rustique (April-Octobre, 10 000 km vers Afrique sub-saharienne), Martinet noir (5000 km, ne se pose qu'au nid), Cigogne blanche (vol thermique). Phénologie : suivi des dates d'arrivée/départ."
+      },
+      "observation": {
+        "equipement": "Jumelles (8x42 : polyvalent, 10x42 : distance, 7x50 : faible lumière). Spotting scope (20-60x) pour eau. Carnet de terrain, guide de terrain (Peterson, Sibley).",
+        "affut": "Se poster en avance, rester immobile, vêtements neutres, éviter les parfums. Observation à l'aube (chant maximal). Comprendre les habitats préférés de l'espèce.",
+        "bioacoustique": "Enregistrement des chants (Zoom H5, applications Merlin). Spectrogram (sonogramme) pour analyser visuellement. Playback (controversé éthiquement)."
+      }
+    },
+    "mammiferes_sauvages": {
+      "identification_traces": {
+        "empreintes": "Renard (4 doigts, unguéaux, alignés), Lièvre (4 doigts asymétriques, grandes pattes arrière), Chevreuil (bi-ongulé, sabots allongés), Sanglier (larges avec ergots), Blaireau (5 griffes), Loutre (palmures).",
+        "autres_indices": "Crottes, poils accrochés, terriers (renard, blaireau), écorces rongeées (castor), branches coupées à 45° (castor), plumes (repas de rapace), pelotes de rejection (os et poils non digérés par rapaces nocturnes)."
+      },
+      "carnivores_europeens": "Loup (Canis lupus, retour en France 1992), Lynx boréal (Lynx lynx, Jura, Vosges), Ours brun (Pyrénnées, ~50 individus), Renard roux, Belette, Fouine, Martre des pins, Vison d'Europe (en danger critique).",
+      "grands_herbivores": "Cerf élaphe (brame en septembre-octobre, mâle = 10 cors à 10 ans), Chevreuil (brame juillet), Chamois (montagne), Isard (Pyrénées), Bouquetin des Alpes (réintroduit)."
+    },
+    "insectes_et_arthropodes": {
+      "importance_ecologique": "Pollinisation (1/3 de la nourriture mondiale dépend des pollinisateurs). Décomposition de la matière organique. Base des chaînes alimentaires. Déclin : -75% de la biomasse des insectes volants en 27 ans (Allemagne, 2017).",
+      "abeilles": "Apis mellifera (abeille domestique), Bombus (bourdons : ~25 espèces en France), abeilles solitaires (osmies, andrènes : 1000 espèces en France). Communication : danse des abeilles (Karl von Frisch, Nobel 1973).",
+      "papillons": "Lépidoptères. Cycle : œuf → chenille → chrysalide → papillon. Identification par les ailes (motifs, couleur). Plantes hôtes spécifiques. Espèces emblématiques : Paon du Jour, Vulcain, Machaon, Belle Dame.",
+      "araignees": "Arachnides (8 pattes). Toile (soie 5 types). Venin (immobiliser proies). Aucune araignée dangereuse en Europe métropolitaine. Rôle régulateur d'insectes."
+    },
+    "animaux_domestiques": {
+      "chien": {
+        "bien_etre": "Chien social, a besoin de contact humain, stimulation mentale, exercice physique (min 2x/jour selon race), socialisation précoce (8-16 semaines = fenêtre critique).",
+        "communication": "Queue (position et mouvement : pas seulement joie), oreilles, posture du corps, regard, grognements (15 types distincts). Queue basse + corps tendu ≠ soumission passive.",
+        "education": "Renforcement positif (récompense immédiate). Cohérence et patience. Clicker training."
+      },
+      "chat": {
+        "communication": "Miaou (seulement vers les humains, non entre chats adultes). Ronronnement (bien-être mais aussi stress ou douleur). Queue droite (salutation amicale). Ventre exposé (confiance, pas invitation à caresser).",
+        "comportement": "Prédateur crépusculaire/nocturne. Besoin de jeu (instinct de chasse actif). Griffoir obligatoire. Territoire vertical (étagères, arbre à chat). Litière propre (chat très propre)."
+      },
+      "bien_etre_general": "5 libertés animales : absence de faim/soif, absence d'inconfort, absence de douleur/maladie/blessure, liberté d'exprimer comportements normaux, absence de peur/détresse. Base du bien-être animal reconnu en droit français (Code rural L214-1)."
+    },
+    "conservation": {
+      "menaces": "Destruction des habitats (#1), espèces invasives, surexploitation (braconnage, pêche), pollution (plastiques, pesticides, lumière artificielle), changement climatique (décalages phénologiques).",
+      "especes_en_danger": "UICN (Union Internationale pour la Conservation de la Nature) : Liste Rouge. Catégories CR/EN/VU. Tigre de Sibérie (~500), Vaquita (< 10), Rhinocéros de Java (~70), Gorille des plaines orientales.",
+      "actions": "Corridors écologiques, réintroduction d'espèces (Lynx, Élan, Bison), zones protégées (Parc Naturel Régional, Réserve de Biosphère, Zone Ramsar), CDB (Convention sur la Biodiversité Biologique), CITES (commerce espèces menacées)."
+    }
+  }
+}

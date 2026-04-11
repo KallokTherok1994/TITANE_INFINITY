@@ -37,7 +37,7 @@ const tabs = [
   { id: 'logs', label: 'Logs', icon: '📝' },
   { id: 'engines', label: 'Engines', icon: '⚙️' },
   { id: 'memory', label: 'Memory', icon: '🧠' },
-  { id: 'pipeline', label: 'Pipeline', icon: '🔄' },
+  { id: 'pipeline', label: 'Journal Ω', icon: '📋' },
   { id: 'errors', label: 'Errors', icon: '⚠️' },
 ];
 

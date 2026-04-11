@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v37.0.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v37.0.0 — AI ORCHESTRATOR OMEGA (NEURAL ORDER)
+ *   TITANE∞ v30.0.0 — AI ORCHESTRATOR OMEGA (NEURAL ORDER)
  *   Orchestrator neural • Isolation absolue • Auto-heal intégré
  *   Architecture: Cloud-first → Sandbox providers → Fallback garanti → Never throw
  *   Lazy cloud providers, Circuit breaker, Rate limiting, Availability cache
@@ -43,6 +43,8 @@ import {
   AVAILABILITY_CACHE,
   REQUEST_BUDGETS,
 } from '@/config/aiTimeouts.config'; // ← v22Ω: Centralized timeouts
+import { getChampion } from './championChallenger'; // ← OMEGA Champion/Challenger
+import type { CanonicalMode } from './omegaModeClassifier'; // ← for champion scoring cast
 
 const logger = createLogger('Orchestrator');
 
@@ -261,17 +263,38 @@ class AIOrchestrator {
 
   /**
    * EVOLUTION v21Ω: Periodic cleanup of expired quick-fail cache entries
+   * v30.0.0: Extended to also evict stale availability cache + critical error history
    * Prevents memory leaks from stale entries when no requests are made
    */
   private startQuickFailCleanup(): void {
     // Cleanup every 30 seconds
     this.quickFailCleanupInterval = setInterval(() => {
       const now = Date.now();
+
+      // 1. Quick-fail cache: remove expired entries
       for (const [provider, failedAt] of this.quickFailCache.entries()) {
         if (now - failedAt >= this.QUICK_FAIL_COOLDOWN_MS) {
           this.quickFailCache.delete(provider);
         }
       }
+
+      // 2. Availability cache: remove entries older than 2× TTL
+      const availabilityMaxAge = CACHE_TTL.providerAvailability * 2;
+      for (const [key, entry] of this.availabilityCache.entries()) {
+        if (now - entry.timestamp > availabilityMaxAge) {
+          this.availabilityCache.delete(key);
+        }
+      }
+
+      // 3. Critical error history: prune timestamps outside the window
+      this.criticalErrorHistory = this.criticalErrorHistory.filter(
+        ts => now - ts < this.CRITICAL_ERROR_WINDOW_MS
+      );
+
+      // 4. Expire stale caches (metrics, status, health)
+      this.metricsCache = this.expireCache(this.metricsCache, this.METRICS_CACHE_TTL_MS * 2);
+      this.providersStatusCache = this.expireCache(this.providersStatusCache, this.STATUS_CACHE_TTL_MS * 2);
+      this.healthCheckCache = this.expireCache(this.healthCheckCache, this.HEALTH_CHECK_CACHE_TTL_MS * 2);
     }, 30000);
   }
 
@@ -283,6 +306,19 @@ class AIOrchestrator {
       clearInterval(this.quickFailCleanupInterval);
       this.quickFailCleanupInterval = null;
     }
+  }
+
+  /**
+   * v30.0.0: Expire a simple {data, timestamp} cache if older than maxAge.
+   */
+  private expireCache<T>(
+    cache: { data: T | null; timestamp: number },
+    maxAgeMs: number
+  ): { data: T | null; timestamp: number } {
+    if (cache.data && Date.now() - cache.timestamp > maxAgeMs) {
+      return { data: null, timestamp: 0 };
+    }
+    return cache;
   }
 
   /**
@@ -590,7 +626,8 @@ class AIOrchestrator {
   private async selectOptimalProvider(
     message: string,
     history: AIMessage[],
-    preferredProvider?: ProviderChoice
+    preferredProvider?: ProviderChoice,
+    canonicalMode?: string
   ): Promise<NeuralSelection> {
     // ✨ v21: Force specific provider from trusted config (UI/tests), not from user message content.
     // Mapping: 'local' means "local LLM" (Ollama), while 'titane-local' remains the ultimate fallback.
@@ -731,20 +768,31 @@ class AIOrchestrator {
           score -= contextLength > 10000 ? 10 : 0;
           break;
 
-        case 'ollama':
-          // #5: Ollama = CLOUD FIRST (local fallback only)
-          // Mode auto: Score bas (~30) pour fallback après clouds
-          // Mode local: Boost +200 pour forcer Ollama exclusivement
+        case 'ollama': {
+          // #5: Ollama — CHAMPION MODE AWARE
+          // Mode local forcé: Score très haut pour Ollama exclusif
+          // Mode champion (per registry): Score élevé pour priorité champion
+          // Mode auto sans champion: Score modéré comme fallback local
           if (preferredProvider === 'local') {
             score += 200; // Mode local forcé
             logger.debug('   🏠 LOCAL MODE FORCÉ: Ollama exclusif');
+          } else if (canonicalMode) {
+            const champion = getChampion(canonicalMode as CanonicalMode);
+            if (champion?.provider === 'ollama') {
+              score += 120; // 🏆 OLLAMA CHAMPION: priorité maximale pour ce mode
+              logger.debug(`   🏆 OLLAMA CHAMPION: mode=${canonicalMode} boost=+120`);
+            } else {
+              score += 30; // Score modéré si non-champion pour ce mode
+              logger.debug('   🏠 AUTO MODE: Ollama non-champion (fallback local)');
+            }
           } else {
-            score += 30; // Score bas en mode auto = fallback après clouds
-            logger.debug('   🏠 AUTO MODE: Ollama fallback local (après clouds)');
+            score += 30; // Score de base sans info de mode
+            logger.debug('   🏠 AUTO MODE: Ollama fallback local (pas de canonicalMode)');
           }
           score += messageLength < 500 ? 10 : 0; // Bonus messages courts
           score += !requiresRealtime ? 5 : 0; // Légèrement bon si async OK
           break;
+        }
 
         case 'titane-local':
           // #6: Fallback ultime (noyau infaillible)
@@ -949,11 +997,14 @@ class AIOrchestrator {
 
       // Sélection neurale standard (avec préférence optionnelle)
       const preferredProvider = config?.preferredProvider;
+      // v30: Extract canonicalMode from config for OLLAMA CHAMPION scoring
+      const canonicalModeFromConfig = (config as Record<string, unknown>)?.canonicalMode as string | undefined;
       const routerStartTime = Date.now();
       const selection = await this.selectOptimalProvider(
         sanitized,
         history,
-        preferredProvider
+        preferredProvider,
+        canonicalModeFromConfig
       );
 
       // ═══ PROVIDER TRUTH CHAIN: Single Canonical Authority ═══
@@ -1667,7 +1718,8 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     const selection = await this.selectOptimalProvider(
       sanitized,
       history,
-      preferredProvider
+      preferredProvider,
+      undefined // canonicalMode not available in stream() public API — kernel chose provider via preferredProvider
     );
     const providersToTry = [selection.selectedProvider, 'titane-local']; // Minimal pour streaming
 

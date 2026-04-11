@@ -1,0 +1,165 @@
+{
+  "version": "v30.0.0",
+  "category": "investissement_patrimoine",
+  "description": "Investissement et construction patrimoniale — marchés financiers (actions/ETF/obligations), immobilier (SCPI/LMNP/locatif), cryptomonnaies, enveloppes fiscales (PEA/assurance-vie), allocation d'actifs, intérêts composés, stratégies (DCA/value/growth), gestion des risques et indépendance financière (FIRE)",
+  "investissement_patrimoine": {
+    "introduction": "Construire un patrimoine solide repose sur des principes éprouvés: commencer tôt, diversifier, maîtriser les frais, et laisser les intérêts composés travailler. TITANE structure ce domaine pour permettre des décisions éclairées et une progression méthodique vers l'indépendance financière.",
+    "fondamentaux": {
+      "interets_composes": {
+        "definition": "Les intérêts génèrent eux-mêmes des intérêts. Einstein les aurait qualifiés de 'huitième merveille du monde'.",
+        "formule": "Capital final = Capital initial × (1 + taux)^nombre_années. Ex: 10 000€ à 7%/an pendant 30 ans = 76 123€.",
+        "regle_de_72": "72 / taux de rendement = nombre d'années pour doubler le capital. À 8%, le capital double en 9 ans.",
+        "implication": "Commencer 10 ans plus tôt compte plus qu'investir deux fois plus. Le temps est le meilleur allié de l'investisseur."
+      },
+      "allocation_actifs": {
+        "definition": "Répartition du portefeuille entre classes d'actifs (actions, obligations, immobilier, liquidités) selon le profil de risque.",
+        "regle_classique": "Pourcentage en actions = 100 - âge. À 30 ans: 70% actions, 30% obligations. Règle simpliste mais point de départ utile.",
+        "profils": {
+          "prudent": "70% obligations/fonds euros + 20% actions + 10% liquidités. Rendement attendu: 2-4%/an.",
+          "equilibre": "50% actions + 30% obligations + 15% immobilier + 5% alternatifs. Rendement attendu: 5-7%/an.",
+          "dynamique": "80% actions + 10% immobilier + 10% alternatifs (crypto, private equity). Rendement attendu: 7-10%/an."
+        },
+        "rebalancement": "Rééquilibrer le portefeuille 1-2 fois par an pour maintenir l'allocation cible. Vendre ce qui a surperformé, acheter ce qui a sous-performé."
+      },
+      "diversification": {
+        "principe": "Ne pas mettre tous ses œufs dans le même panier. Diversifier par: classe d'actifs, géographie, secteur, devise.",
+        "correlation": "Combiner des actifs faiblement corrélés réduit la volatilité globale sans sacrifier le rendement.",
+        "erreur_commune": "Posséder 10 actions technologiques françaises n'est pas diversifier. Vrai diversification: actions monde + obligations + immobilier + matières premières."
+      }
+    },
+    "marches_financiers": {
+      "actions": {
+        "definition": "Part de propriété d'une entreprise cotée en bourse. Rendement historique: 7-10%/an sur longue période (CAC40, S&P500).",
+        "types": "Actions de croissance (growth): forte hausse attendue, peu/pas de dividendes. Actions de valeur (value): sous-évaluées, dividendes stables.",
+        "risques": "Volatilité court terme, risque sectoriel, risque entreprise individuelle. Atténués par la diversification et l'horizon long.",
+        "indicateurs_cles": "PER (Price/Earnings Ratio), rendement du dividende, ROE (Return on Equity), dette/EBITDA, croissance du BPA."
+      },
+      "etf_trackers": {
+        "definition": "Fonds indiciels cotés qui répliquent un indice (CAC40, S&P500, MSCI World) à frais très réduits.",
+        "avantages": "Diversification instantanée, frais faibles (0.1-0.5%/an vs 1.5-2% pour fonds actifs), performance supérieure à 90% des gérants actifs sur 15 ans.",
+        "etf_recommandes": "MSCI World (1600 entreprises, 23 pays développés), S&P500 (500 grandes entreprises US), MSCI Emerging Markets.",
+        "strategie": "DCA (Dollar Cost Averaging) mensuel sur un ETF World: la stratégie la plus simple et la plus efficace pour 90% des investisseurs.",
+        "frais": "TER (Total Expense Ratio) < 0.3% idéalement. Comparer aussi les spreads et les frais de courtage."
+      },
+      "obligations": {
+        "definition": "Titres de dette émis par des États ou des entreprises. L'investisseur prête de l'argent contre des intérêts réguliers (coupons).",
+        "types": "OAT (État français), obligations d'entreprise (investment grade vs high yield), obligations indexées inflation.",
+        "relation_taux_prix": "Quand les taux montent, le prix des obligations existantes baisse (et inversement). Duration = sensibilité aux taux.",
+        "role_portefeuille": "Réduire la volatilité globale, fournir des revenus réguliers, protection en période de récession."
+      }
+    },
+    "enveloppes_fiscales": {
+      "pea": {
+        "definition": "Plan d'Épargne en Actions — enveloppe fiscale française pour investir en actions européennes.",
+        "plafond": "150 000€ de versements (PEA classique) + 225 000€ (PEA-PME).",
+        "fiscalite": "Après 5 ans: exonération d'impôt sur les plus-values (17.2% de prélèvements sociaux restent). Avant 5 ans: clôture et imposition au PFU (30%).",
+        "strategie": "Ouvrir un PEA le plus tôt possible pour faire courir le délai de 5 ans, même avec un versement minimum.",
+        "supports": "ETF éligibles PEA: Amundi MSCI World (CW8), Lyxor S&P500 (PSP5), BNP Paribas Stoxx 600."
+      },
+      "assurance_vie": {
+        "definition": "Enveloppe d'épargne polyvalente avec avantages fiscaux et successoraux.",
+        "supports": "Fonds euros (capital garanti, rendement 1-3%) + Unités de compte (actions, immobilier, obligations — non garanti).",
+        "fiscalite": "Après 8 ans: abattement de 4 600€/an sur les gains (9 200€ pour un couple). Au-delà: 7.5% + prélèvements sociaux.",
+        "succession": "Avant 70 ans: abattement de 152 500€ par bénéficiaire (hors succession). Outil patrimonial puissant.",
+        "conseil": "Privilégier les contrats en ligne (Linxea, Boursorama) avec des frais de gestion < 0.6% sur UC et 0% de frais d'entrée."
+      },
+      "per": {
+        "definition": "Plan d'Épargne Retraite — déduction des versements du revenu imposable.",
+        "interet": "Particulièrement avantageux pour les TMI élevées (30%, 41%, 45%). Déduction fiscale immédiate, imposition à la sortie.",
+        "attention": "Fonds bloqués jusqu'à la retraite (sauf cas de déblocage anticipé: achat résidence principale, invalidité, décès du conjoint)."
+      }
+    },
+    "immobilier": {
+      "immobilier_locatif": {
+        "avantages": "Effet de levier du crédit (investir avec l'argent de la banque), revenus réguliers, protection inflation, actif tangible.",
+        "rendement_brut": "Formule: (loyer annuel / prix d'achat tout compris) × 100. Bon rendement: > 7% brut.",
+        "rendement_net_net": "Brut - charges - taxe foncière - assurance - vacance - entretien - fiscalité = rendement net-net. Souvent 3-5%.",
+        "cashflow": "Loyer - mensualité crédit - charges = cashflow. Objectif: cashflow positif dès le départ.",
+        "criteres_achat": "Emplacement (transport, commerces, emploi), tension locative, prix au m² vs loyer au m², état du bien, potentiel de valorisation."
+      },
+      "lmnp": {
+        "definition": "Loueur Meublé Non Professionnel — statut fiscal avantageux pour la location meublée.",
+        "regime_reel": "Amortissement du bien et du mobilier qui réduit ou annule l'imposition sur les loyers pendant 20-30 ans.",
+        "conditions": "Revenus locatifs < 23 000€/an ET < 50% des revenus du foyer. Au-delà: passage en LMP.",
+        "avantage_cle": "Possibilité de ne payer aucun impôt sur les loyers pendant des années grâce à l'amortissement comptable."
+      },
+      "scpi": {
+        "definition": "Société Civile de Placement Immobilier — pierre-papier. Investir dans l'immobilier sans gestion directe.",
+        "rendement": "4-6% de rendement annuel distribué (TDVM). Accessible dès quelques centaines d'euros.",
+        "avantages": "Diversification (bureaux, commerces, santé, Europe), mutualisation du risque, aucune gestion, liquidité relative.",
+        "inconvenients": "Frais d'entrée élevés (8-12%), délai de jouissance (3-6 mois), fiscalité des revenus fonciers.",
+        "strategie": "Acheter des SCPI à crédit pour bénéficier de l'effet de levier. Ou via assurance-vie pour optimiser la fiscalité."
+      }
+    },
+    "cryptomonnaies": {
+      "definition": "Actifs numériques décentralisés basés sur la blockchain. Bitcoin (réserve de valeur), Ethereum (smart contracts).",
+      "position_portefeuille": "Classe d'actifs spéculative. Allocation recommandée: 1-5% maximum du patrimoine total.",
+      "principes": {
+        "bitcoin": "Offre limitée à 21 millions d'unités. Halvings tous les 4 ans réduisent l'émission. Souvent comparé à l'or numérique.",
+        "ethereum": "Plateforme de contrats intelligents. Transition vers Proof of Stake. Staking possible (3-5%/an).",
+        "stablecoins": "Adossés au dollar (USDC, USDT). Utiles pour le rendement DeFi, pas pour la plus-value."
+      },
+      "risques": "Volatilité extrême (chutes de 50-80% possibles), risques réglementaires, risques de piratage, perte de clés privées.",
+      "securite": "Utiliser un hardware wallet (Ledger, Trezor) pour les montants significatifs. Ne jamais laisser ses cryptos sur un exchange.",
+      "fiscalite_france": "Flat tax de 30% sur les plus-values réalisées lors de la conversion en monnaie fiat. Déclaration des comptes étrangers obligatoire."
+    },
+    "strategies_investissement": {
+      "dca": {
+        "definition": "Dollar Cost Averaging — investir un montant fixe à intervalles réguliers, indépendamment du prix.",
+        "avantage": "Élimine le risque de market timing. Lisse le prix d'achat moyen. Discipline automatique.",
+        "exemple": "200€/mois sur un ETF MSCI World pendant 25 ans à 7%/an = environ 162 000€ (pour 60 000€ investis)."
+      },
+      "value_investing": {
+        "definition": "Acheter des entreprises sous-évaluées par le marché (prix < valeur intrinsèque). Philosophie de Benjamin Graham et Warren Buffett.",
+        "criteres": "PER bas, PBR < 1, rendement dividende élevé, dette maîtrisée, avantage concurrentiel durable (moat).",
+        "patience": "Le marché finit toujours par reconnaître la valeur. Horizon minimum: 3-5 ans par position."
+      },
+      "growth_investing": {
+        "definition": "Investir dans des entreprises à forte croissance, même si la valorisation semble élevée.",
+        "criteres": "Croissance du chiffre d'affaires > 20%/an, marché adressable large (TAM), avantage technologique, effets de réseau.",
+        "risque": "Valorisations tendues, vulnérabilité aux hausses de taux, forte volatilité."
+      },
+      "buy_and_hold": {
+        "definition": "Acheter et conserver sur le très long terme sans essayer de timer le marché.",
+        "justification": "Les 10 meilleurs jours de bourse sur 20 ans représentent l'essentiel de la performance. Les manquer divise le rendement par 2 ou plus."
+      }
+    },
+    "gestion_des_risques": {
+      "risque_marche": "Volatilité des cours. Atténué par la diversification et l'horizon long terme.",
+      "risque_inflation": "Érosion du pouvoir d'achat. Contré par les actifs réels (immobilier, actions, matières premières).",
+      "risque_liquidite": "Impossibilité de vendre rapidement sans perte. Concerne l'immobilier physique, le private equity, certaines SCPI.",
+      "risque_concentration": "Trop de poids sur un seul actif/secteur/pays. Règle: aucune position individuelle > 5-10% du portefeuille.",
+      "fonds_urgence": "Conserver 3-6 mois de dépenses en liquidités avant d'investir. Épargne de précaution sur livret A ou LDDS.",
+      "stop_loss_mental": "Définir à l'avance le seuil de perte acceptable par position. Ne pas laisser les émotions dicter les décisions."
+    },
+    "independance_financiere_fire": {
+      "definition": "Financial Independence, Retire Early — accumuler suffisamment de patrimoine pour vivre de ses revenus passifs.",
+      "regle_des_4_pourcent": "Retirer 4% de son portefeuille par an a historiquement permis de ne jamais épuiser le capital sur 30 ans (étude Trinity).",
+      "calcul": "Dépenses annuelles × 25 = capital nécessaire. Ex: 30 000€/an × 25 = 750 000€ de patrimoine investi.",
+      "variantes": {
+        "lean_fire": "Frugalité maximale, objectif patrimoine réduit (< 600 000€). Mode de vie minimaliste.",
+        "fat_fire": "Maintien d'un niveau de vie confortable. Objectif: > 1,5 million d'euros.",
+        "barista_fire": "Semi-retraite: patrimoine couvre les besoins de base, activité à temps partiel pour le surplus et la couverture santé.",
+        "coast_fire": "Capital investi suffisant pour croître seul jusqu'à la retraite standard. Plus besoin d'épargner, seulement de couvrir les dépenses courantes."
+      },
+      "etapes": "1) Calculer son taux d'épargne. 2) Réduire les dépenses superflues. 3) Augmenter les revenus. 4) Investir la différence. 5) Automatiser. 6) Patienter.",
+      "taux_epargne": "Le taux d'épargne est le facteur le plus déterminant. À 50% d'épargne: indépendance en 17 ans. À 70%: en 8,5 ans."
+    },
+    "fiscalite_investissements": {
+      "pfu": "Prélèvement Forfaitaire Unique (flat tax) de 30% (12.8% IR + 17.2% PS) sur les revenus du capital.",
+      "option_bareme": "Possibilité d'opter pour le barème progressif de l'IR si TMI < 30%. Calcul à faire chaque année.",
+      "plus_values_immobilieres": "Exonération totale après 22 ans de détention (IR) et 30 ans (prélèvements sociaux). Résidence principale toujours exonérée.",
+      "optimisation": "Utiliser les enveloppes fiscales dans l'ordre: PEA → Assurance-vie → CTO. Maximiser les niches fiscales avant le CTO.",
+      "conseil": "La fiscalité ne doit jamais dicter la stratégie d'investissement. Un bon investissement fortement taxé reste meilleur qu'un mauvais investissement défiscalisé."
+    },
+    "plan_financier_personnel": {
+      "etape_1": "Bilan patrimonial: lister tous les actifs et passifs. Patrimoine net = actifs - dettes.",
+      "etape_2": "Budget mensuel: revenus - dépenses = capacité d'épargne. Objectif minimum: 20% des revenus (règle 50/30/20).",
+      "etape_3": "Constitution du fonds d'urgence (3-6 mois de dépenses sur livret sécurisé).",
+      "etape_4": "Remboursement des dettes à taux élevé (> 4-5%) avant d'investir.",
+      "etape_5": "Ouverture des enveloppes fiscales (PEA, assurance-vie) pour faire courir les délais.",
+      "etape_6": "Mise en place d'un DCA automatique mensuel selon l'allocation d'actifs choisie.",
+      "etape_7": "Revue annuelle: rééquilibrage, ajustement de l'allocation selon l'évolution de la situation et des objectifs."
+    }
+  }
+}

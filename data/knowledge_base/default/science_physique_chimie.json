@@ -1,0 +1,75 @@
+{
+  "version": "v30.0.0",
+  "category": "science_physique_chimie",
+  "description": "Sciences avancées — physique (mécanique, thermodynamique, électromagnétisme, optique, relativité restreinte/générale, mécanique quantique), chimie (liaisons, réactions, stœchiométrie, chimie organique, biochimie), méthode scientifique, grandes découvertes, constantes fondamentales et formules clés",
+  "science_physique_chimie": {
+    "introduction": "La physique et la chimie sont les fondements de notre compréhension de l'univers. TITANE maîtrise les concepts depuis les bases jusqu'à la relativité générale et la mécanique quantique, en mode pédagogique et rigoureux.",
+    "mecanique_classique": {
+      "lois_de_newton": {
+        "premiere_loi": "Principe d'inertie : un corps au repos ou en mouvement uniforme reste dans cet état si la somme des forces est nulle. Σ⃗F = 0.",
+        "deuxieme_loi": "Principe fondamental de la dynamique : Σ⃗F = m × ⃗a. Relation entre force, masse et accélération.",
+        "troisieme_loi": "Principe d'action-réaction : à toute action correspond une réaction égale et opposée."
+      },
+      "energie": {
+        "cinetique": "Ec = ½mv². Energie liée au mouvement.",
+        "potentielle": "Ep = mgh (gravitationnelle). Conservation de l'énergie mécanique en l'absence de frottements.",
+        "travail": "W = F × d × cos(θ). Puissance : P = W/t = F × v."
+      },
+      "oscillations": "Pendule simple : T = 2π√(L/g). Ressort : T = 2π√(m/k). Résonance : fréquence propre du système.",
+      "fluides": "Poussée d'Archimède : Fa = ρ_fluide × V_immergé × g. Bernoulli : P + ½ρv² + ρgh = constante (conservation énergie fluide). Viscosité, turbulence (Reynolds)."
+    },
+    "thermodynamique": {
+      "lois": {
+        "0eme": "Équilibre thermique : si A est en équilibre avec B, et B avec C, alors A est en équilibre avec C. Définit la température.",
+        "1ere": "Conservation de l'énergie : ΔU = Q + W. L'énergie interne varie par échanges de chaleur Q et de travail W.",
+        "2eme": "L'entropie d'un système isolé ne peut que croître (ΔS ≥ 0). Irréversibilité naturelle. Machine de Carnot : rendement max = 1 - Tc/Th.",
+        "3eme": "L'entropie tend vers zéro quand T → 0 K. Impossibilité d'atteindre le zéro absolu (-273.15°C)."
+      },
+      "transferts_thermiques": "Conduction (Fourier : Q = -λA ΔT/Δx), convection (naturelle/forcée, coefficient h), rayonnement (Stefan-Boltzmann : P = εσT⁴). R (résistance thermique) = e/λ pour isolation."
+    },
+    "electromagnetisme": {
+      "electricite": {
+        "loi_ohm": "V = R × I. Puissance : P = V × I = R × I². Résistances en série (R_total = ΣR), en parallèle (1/R = Σ1/R).",
+        "condensateur": "C = Q/V. Énergie : E = ½CV². Charge/décharge exponentielle.",
+        "Maxwell": "Les 4 équations de Maxwell unifient l'électricité, le magnétisme et la lumière. La lumière est une onde électromagnétique (c = 3×10⁸ m/s)."
+      },
+      "ondes_EM": "Spectre : radio → micro-ondes → infrarouge → lumière visible (380-780nm) → UV → rayons X → gamma. E = hf = hc/λ. Dualité onde-corpuscule."
+    },
+    "relativite": {
+      "restreinte": {
+        "postulats": "1. Les lois de la physique sont identiques dans tous les référentiels inertiels. 2. La vitesse de la lumière c est constante (~3×10⁸ m/s).",
+        "consequences": "Dilatation du temps : Δt' = γΔt où γ = 1/√(1-v²/c²). Contraction des longueurs. Équivalence masse-énergie : E = mc²."
+      },
+      "generale": "La gravité n'est pas une force mais la courbure de l'espace-temps par la masse. Équations d'Einstein Gμν = 8πG/c⁴ × Tμν. Prédictions : trous noirs, ondes gravitationnelles (LIGO 2015), dilatation temporelle gravitationnelle."
+    },
+    "mecanique_quantique": {
+      "principes": {
+        "dualite": "Toute particule a aussi un comportement ondulatoire. λ = h/p (De Broglie).",
+        "heisenberg": "Principe d'incertitude : Δx × Δp ≥ ħ/2. On ne peut pas connaître simultanément la position et l'impulsion avec précision infinie.",
+        "superposition": "Une particule existe dans plusieurs états simultanément jusqu'à la mesure. Chat de Schrödinger.",
+        "entanglement": "Intrication quantique : deux particules restent corrélées quelle que soit la distance. Fondement des qubits quantiques.",
+        "equation_schrodinger": "iħ ∂Ψ/∂t = ĤΨ. La fonction d'onde Ψ décrit l'état quantique d'un système."
+      },
+      "applications": "Laser, LED, transistors (semiconducteurs), IRM, cryptographie quantique, ordinateur quantique (qubit, portes quantiques, algorithme de Shor)."
+    },
+    "chimie": {
+      "tableau_periodique": "118 éléments. Périodes (lignes) et groupes (colonnes). Métaux (gauche) vs non-métaux (droite), métalloïdes. Propriétés périodiques : électronégativité (↑ → droite/haut), rayon atomique (↑ → gauche/bas).",
+      "liaisons_chimiques": {
+        "ionique": "Transfer d'électron entre métal et non-métal. Solides cristallins, points de fusion élevés. NaCl, MgO.",
+        "covalente": "Partage d'électrons. Polaire (ΔEN > 0.4) vs apolaire. Simple, double, triple. H2, O2, H2O, CO2.",
+        "metallique": "Mer d'électrons délocalisés. Conductivité électrique/thermique, malléabilité, brillance."
+      },
+      "reactions_chimiques": {
+        "types": "Synthèse (A+B→C), décomposition (C→A+B), substitution simple/double, redox (transfert d'électrons : oxydation = perd e⁻, réduction = gagne e⁻).",
+        "stoichiometrie": "Équilibrage des équations. Mole (6.022×10²³ entités). n = m/M. Conservation de la masse (Lavoisier).",
+        "thermochimie": "ΔH (enthalpie). Exothermique (ΔH < 0, libère chaleur) vs endothermique. Énergie d'activation, catalyseur (abaisse Ea)."
+      },
+      "chimie_organique": {
+        "hydrocarbures": "Alcanes (C-C, saturés), alcènes (C=C), alcynes (C≡C), aromatiques (benzène, Hückel). Nomenclature IUPAC.",
+        "groupes_fonctionnels": "Alcool (-OH), aldéhyde (-CHO), cétone (-CO-), acide carboxylique (-COOH), amine (-NH2), ester. Chaque groupe définit les propriétés réactives de la molécule.",
+        "polymeres": "Polyéthylène (PE), polypropylène (PP), PVC, nylon, Kevlar, caoutchouc naturel/synthétique. Réaction de polymérisation (addition ou condensation)."
+      }
+    },
+    "methode_scientifique": "Observation → Question → Hypothèse → Expérimentation → Analyse → Conclusion → Peer review. Réfutabilité (Popper). Reproductibilité. Biais cognitifs et contrôle expérimental (double aveugle). Différence corrélation et causalité."
+  }
+}

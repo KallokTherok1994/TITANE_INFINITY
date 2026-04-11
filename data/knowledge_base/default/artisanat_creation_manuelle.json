@@ -1,0 +1,71 @@
+{
+  "version": "v30.0.0",
+  "category": "artisanat_creation_manuelle",
+  "description": "Artisanat et création manuelle avancée — couture (patron, tissu, technique), tricot et crochet (points, laine, aiguilles), broderie (fils, trame, motifs), poterie et céramique (tournage, émaillage, cuisson), bijouterie artisanale, woodworking (menuiserie, assemblages, finitions), maroquinerie, macramé, origami avancé, résine époxy, travail du cuir, outils essentiels par discipline",
+  "artisanat_creation_manuelle": {
+    "introduction": "L'artisanat est la rencontre de la main, de la matière et de l'intention créatrice. Au-delà du loisir, c'est une pratique thérapeutique, économique (vente Etsy, marchés) et culturelle. TITANE guide du niveau débutant à l'artisan confirmé.",
+    "couture_et_mode": {
+      "bases": {
+        "outils": "Machine à coudre (point droit, zigzag), ciseaux de couture (ne jamais couper le papier), découd-vite, épingles, dés à coudre, mètre ruban, craie tailleur.",
+        "tissus": "Tissés (coton, lin, denim — coupe stable), mailles (jersey, tricot — s'étirent, nécessitent aiguille jersey), tissus spéciaux (mousseline, velours, cuir).",
+        "patron": "Patron commercial (Burda, Vogue) ou drafting (tracer soi-même). Comprendre les marges de couture (1-1.5 cm standard), le droit fil, les encoches."
+      },
+      "techniques": {
+        "coutures": "Point d'assemblage, couture française (propre, sans surjet), couture anglaise, double piqûre, biais.",
+        "finitions": "Surjet (surjeteuse/overlock), ourlet (invisible, double), boutonnières, fermetures éclair (classique, invisible), boutons.",
+        "patrons_avances": "Placement optimal sur tissu (économie de matière), coutures courbes (encoches, pinces), manches, cols.",
+        "upcycling": "Transformer vieux vêtements : teindre (Dylon, RIT), redimensionner, patcher, broderie décorative."
+      }
+    },
+    "tricot_et_crochet": {
+      "tricot": {
+        "aiguilles": "Droites (pulls), circulaires (en rond, grands projets), double pointe (chaussettes, manches).",
+        "laines": "Superwash (lavable machine), mérinos (doux), coton (été), alpaga (luxueux), synthétiques. Titre = épaisseur (laceweight → super bulky).",
+        "points_base": "Endroit (knit), envers (purl), jersey (base), côtes (1/1, 2/2), point mousse, torsades (cable), jacquard (colorwork Fair Isle).",
+        "patron": "Jauge (gauge) — toujours faire un échantillon. Lire les diagrammes. Augmentations, diminutions, montage (cast on), rabat (bind off)."
+      },
+      "crochet": {
+        "crochets": "En aluminium (0.5-10mm), bambou, ergonomiques. Chaque marque a ses tailles.",
+        "points": "Maille en l'air (chaînette), maille coulée, maille serrée, demi-bride, bride, double bride, magic ring.",
+        "projets": "Amigurumi (animaux en crochet), granny squares (patchwork crochet), sacs, vêtements, déco maison."
+      }
+    },
+    "broderie": {
+      "matériel": "Métier à broder (cercle), fils mouliné DMC (6 fils divisibles), fils de soie, fil d'or. Aiguilles à broderie (pointe fine).",
+      "types": {
+        "classique": "Point de croix (grid de tissu Aida), broderie anglaise (jours), broderie de Lunéville (tambour, applications),  broderie au ruban.",
+        "contemporaine": "Punch needle (canevas texturé), broderie libre (transfert motif), broderie au fil de laine (effet touffeté).",
+        "machine": "Broderie par ordinateur (Wilcom, PE-Design), dessins numériques, transferts."
+      }
+    },
+    "poterie_ceramique": {
+      "techniques_de_fa_onnage": {
+        "main_libre": "Colombin (rouleaux d'argile superposés), plaques, modelage direct. Accessible sans matériel lourd.",
+        "tournage": "Tour de potier (électrique ou à pied). Centrage = étape critique. Ouverture, montée des parois, finition intérieure. Apprentissage : 20-50h minimum pour les bases.",
+        "moulage": "Moule en plâtre (coulage de barbotine). Production en série."
+      },
+      "argiles": "Terre cuite (400-900°C, poreuse, rouge/orange), grès (1200-1300°C, imperméable, beige/gris), porcelaine (1280-1400°C, blanche, translucide). Chamottée (résistante, texture).",
+      "cuisson_et_emaillage": "Dégourdi (800°C, premier passage). Émail (glaçure) appliqué au pinceau/trempage/aérographe. Couverture (1240°C+). Four à céramique électrique ou à gaz. Effets : céladon, shino, raku (sortie à chaud).",
+      "finitions": "Engobe (argile liquide colorée), sgraffite (incision dans l'engobe), décor sous ou sur émail, lustres métalliques."
+    },
+    "bijouterie_artisanale": {
+      "metaux": "Argent 925, cuivre (pratique, moins cher), laiton, gold-filled. Techniques : soudure à l'étain, soudure à l'argent (difficile mais durable).",
+      "techniques": "Martelage (texture), estampage, découpe (cisailles, scies à métaux), perçage, filetage, finitions (polissage, oxydation au foie de soufre).",
+      "wire_wrapping": "Enrouler le fil métallique autour de pierres sans soudure. Accessible débutant. Fils 0.3-1.2mm selon usage.",
+      "pierres": "Cabochons (plats), cristaux, perles. Semi-précieuses : améthyste, labradorite, citrine, turquoise. Pierres précieuses : diamant, émeraude, rubis, saphir."
+    },
+    "woodworking": {
+      "outils_essentiels": "Scie à onglet (coupes précises), défonceuse (rainures, profils), ponceuse (80→180→220 grains), perceuse-visseuse, serre-joints.",
+      "bois": "Massif (chêne, hêtre, pin, noyer) vs contreplaqué (économique, stable). Bois exotiques (teck, acacia). Comprendre le fil du bois, le séchage (humidité 8-12%).",
+      "assemblages": "Dominos (lamello), tourillons, tenon-mortaise, queue d'aronde (dovetail), vis, colle à bois (PVA, polyuréthane).",
+      "finitions": "Ponçage progressif, pore filler (bois ouverts), huile (lin, teck), cire, vernis (acrylique, polyuréthane), lazure (teinture + protection).",
+      "projets_debutant": "Étagère flottante, planche à découper, jardinière, coffre simple. Projets intermédiaires : table basse, meuble TV, lit enfant."
+    },
+    "autres_techniques": {
+      "macrame": "Nœuds plats, demi-clé, spirale. Cordes naturelles (coton, jute, chanvre) ou synthétiques. Suspensions, décos murales, hamacs, porte-plantes.",
+      "résine_epoxy": "Résine + durcisseur (ratio précis). Inclusions : fleurs séchées, pigments, paillettes, feuilles d'or. Tables de bois live edge (river tables), bijoux, coasters. Sécurité : ventilation + masque + gants.",
+      "maroquinerie": "Cuir végétal (tannage naturel, patine au fil du temps) vs synthétique. Outils : emporte-pièces, alène, fil de lin ciré, pince à coudre. Projets : portefeuille, sac, ceinture.",
+      "origami": "Art japonais du pliage de papier sans coupures. Papier Washi ou Kami. Bases (grue, grenouille) → avancé (modèles tesselation, modulaires). Robert Lang (artiste contemporain)."
+    }
+  }
+}

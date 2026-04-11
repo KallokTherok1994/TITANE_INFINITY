@@ -1,0 +1,165 @@
+{
+  "version": "v30.0.0",
+  "category": "marketing_affiliation_growth",
+  "description": "Growth hacking et marketing avancé — AARRR, funnel TOFU/MOFU/BOFU, publicité payante, SEO, viral loops, referral, PLG, automation, CRM, analytics, CRO, pricing psychology, stratégies de lancement",
+  "marketing_affiliation_growth": {
+    "introduction": "Le growth marketing combine créativité, données et expérimentation rapide pour acquérir, activer et retenir des utilisateurs de manière scalable. Contrairement au marketing traditionnel, il couvre l'intégralité du cycle de vie client et optimise chaque étape avec des métriques précises. TITANE fournit ici un cadre opérationnel complet pour concevoir et exécuter des stratégies de croissance mesurables.",
+    "growth_hacking_methodology": {
+      "definition": "Approche systématique de croissance rapide par expérimentation continue, popularisée par Sean Ellis. Chaque hypothèse est testée, mesurée et itérée en cycles courts (sprints d'1-2 semaines).",
+      "framework_AARRR": {
+        "nom": "Pirate Metrics (Dave McClure)",
+        "acquisition": {
+          "objectif": "Attirer des visiteurs qualifiés vers le produit ou le site.",
+          "canaux": "SEO, SEA (Google/Bing Ads), réseaux sociaux organiques, paid social, content marketing, partenariats, relations presse, podcast guesting, communautés",
+          "métrique_clé": "Coût par acquisition (CPA) et volume de trafic qualifié",
+          "conseil": "Tester 3-5 canaux en parallèle pendant 4 semaines avec un budget contrôlé. Tuer rapidement les canaux sous-performants (règle du 80/20)."
+        },
+        "activation": {
+          "objectif": "Transformer le visiteur en utilisateur actif — lui faire vivre le 'Aha moment' le plus vite possible.",
+          "métrique_clé": "Taux d'activation (% d'utilisateurs qui atteignent la valeur clé du produit)",
+          "conseil": "Identifier le Aha moment en analysant les cohortes : quelle action les utilisateurs retenus font-ils tous dans les 24-48 premières heures ? Optimiser l'onboarding pour y conduire directement."
+        },
+        "retention": {
+          "objectif": "Faire revenir les utilisateurs régulièrement. La rétention est le levier le plus puissant — un produit qui ne retient pas perd chaque euro investi en acquisition.",
+          "métrique_clé": "Rétention J1, J7, J30 (courbes de rétention par cohorte)",
+          "formule_churn": "Taux de churn = Clients perdus / Clients début de période × 100",
+          "conseil": "Viser une courbe de rétention qui se stabilise (plateau). Si la courbe descend vers zéro, résoudre le problème de rétention AVANT d'investir en acquisition."
+        },
+        "revenue": {
+          "objectif": "Monétiser — convertir les utilisateurs actifs en clients payants.",
+          "métriques": "ARPU (revenu moyen par utilisateur), LTV (valeur vie client), MRR/ARR (revenu récurrent mensuel/annuel)",
+          "formule_LTV": "LTV = ARPU × Durée de vie moyenne du client (en mois)",
+          "règle_fondamentale": "LTV doit être au minimum 3× le CAC (coût d'acquisition client). Ratio LTV:CAC < 3 = croissance non rentable."
+        },
+        "referral": {
+          "objectif": "Transformer les clients satisfaits en ambassadeurs qui recrutent de nouveaux utilisateurs.",
+          "métrique_clé": "Coefficient viral (K-factor) = Invitations envoyées × Taux de conversion des invitations. K > 1 = croissance virale organique.",
+          "conseil": "Intégrer le mécanisme de parrainage dans le flux naturel du produit, pas dans un onglet caché. Récompenser les deux parties (parrain et filleul)."
+        }
+      }
+    },
+    "funnel_marketing": {
+      "TOFU_haut_de_funnel": {
+        "objectif": "Sensibilisation et découverte — faire connaître la marque et attirer un large public.",
+        "contenus": "Articles de blog éducatifs, vidéos courtes (Reels/TikTok/Shorts), infographies, podcasts, lead magnets gratuits (ebooks, checklists, templates)",
+        "métriques": "Impressions, portée, trafic organique, taux de clic (CTR), coût pour mille (CPM)"
+      },
+      "MOFU_milieu_de_funnel": {
+        "objectif": "Considération — nourrir l'intérêt et établir la confiance. Le prospect évalue les options.",
+        "contenus": "Webinaires, études de cas, comparatifs, démonstrations produit, séquences email nurturing, retargeting",
+        "métriques": "Taux d'inscription, taux d'ouverture email, engagement, demandes de démo, score de lead"
+      },
+      "BOFU_bas_de_funnel": {
+        "objectif": "Décision et conversion — transformer le prospect qualifié en client.",
+        "contenus": "Essai gratuit, consultation personnalisée, offre limitée, témoignages clients, garantie satisfait ou remboursé",
+        "métriques": "Taux de conversion, panier moyen, coût par conversion, délai de décision"
+      }
+    },
+    "publicite_payante": {
+      "google_ads": {
+        "structure": "Compte → Campagnes → Groupes d'annonces → Annonces + Mots-clés",
+        "types_campagnes": "Search (intention forte), Display (notoriété), Shopping (e-commerce), YouTube (vidéo), Performance Max (IA multi-canal)",
+        "optimisation": {
+          "mots_clés": "Utiliser les correspondances de mots-clés (exacte > expression > large). Exclure les négatifs agressivement. Cibler l'intention d'achat (mots-clés transactionnels).",
+          "quality_score": "Score de qualité (1-10) = pertinence annonce + expérience page de destination + CTR attendu. Un QS élevé réduit le CPC de 30-50%.",
+          "conseil": "Commencer par Search exact match sur 10-20 mots-clés à forte intention. Tester les annonces en A/B. Optimiser après 100 clics minimum par variante."
+        }
+      },
+      "meta_ads": {
+        "structure": "Campagne (objectif) → Ensemble de publicités (audience, budget, placement) → Publicité (créatif + texte)",
+        "audiences": {
+          "core": "Ciblage par démographie, intérêts, comportements",
+          "custom": "Audiences personnalisées (visiteurs site, liste email, engagement page/vidéo)",
+          "lookalike": "Audiences similaires basées sur vos meilleurs clients (1-10%, commencer par 1%)"
+        },
+        "retargeting": "Recibler les visiteurs du site (pixel Meta) avec des annonces spécifiques selon l'étape du funnel. Exclure les clients existants pour éviter le gaspillage.",
+        "conseil": "Le créatif est responsable de 60-70% de la performance. Tester 3-5 visuels par ensemble de publicités. Prioriser la vidéo courte (<15s) avec hook dans les 3 premières secondes."
+      },
+      "tiktok_ads": {
+        "principe": "Contenu natif obligatoire — les publicités qui ressemblent à des pubs échouent. Créer du contenu qui se fond dans le feed (UGC style, storytelling, trends).",
+        "formats": "In-Feed Ads, Spark Ads (booster du contenu organique existant), TopView",
+        "conseil": "Tester les Spark Ads en premier (coût inférieur, authenticité supérieure). Renouveler les créatifs toutes les 1-2 semaines (fatigue créative rapide sur TikTok)."
+      },
+      "metrique_universelle_ROAS": {
+        "formule": "ROAS = Revenu généré par la pub / Dépense publicitaire",
+        "seuils": "ROAS 1× = seuil de rentabilité. ROAS 3× = bon. ROAS 5× = excellent. Adapter selon les marges (marge brute élevée tolère un ROAS plus bas)."
+      }
+    },
+    "croissance_organique": {
+      "viral_loops": {
+        "definition": "Mécanisme intégré au produit où chaque utilisateur génère naturellement de nouveaux utilisateurs par son utilisation même.",
+        "exemples": "Signature email ('Envoyé via X'), partage de contenu créé dans l'app, invitations collaboratives, résultats partageables sur les réseaux sociaux",
+        "formule_viralité": "Temps de cycle viral = Temps moyen entre l'inscription d'un utilisateur et l'inscription de l'utilisateur qu'il invite. Plus court = croissance plus explosive."
+      },
+      "referral_programs": {
+        "principe": "Structurer et inciter le bouche-à-oreille naturel avec des récompenses bidirectionnelles.",
+        "design_efficace": "1) Récompense immédiate et tangible. 2) Mécanisme de partage en 1 clic (lien unique, code, QR). 3) Visibilité du programme dans le parcours produit. 4) Suivi transparent (le parrain voit ses filleuls et récompenses).",
+        "exemple_classique": "Dropbox : 500 Mo gratuits pour le parrain ET le filleul → croissance de 3900% en 15 mois."
+      },
+      "product_led_growth": {
+        "definition": "Le produit lui-même est le principal moteur d'acquisition, de conversion et d'expansion. Modèle freemium ou essai gratuit comme porte d'entrée.",
+        "principes": "1) Time-to-value minimal (valeur immédiate). 2) Self-service (pas besoin d'un commercial pour démarrer). 3) Expansion naturelle (l'usage pousse vers le plan supérieur). 4) Viralité intégrée.",
+        "exemples": "Slack, Notion, Figma, Calendly, Zoom"
+      },
+      "community_building": {
+        "valeur": "Une communauté engagée réduit le CAC, augmente la rétention, génère du contenu (UGC) et crée des défenseurs de la marque.",
+        "plateformes": "Discord, Slack, Circle, groupes Facebook/LinkedIn, forums propriétaires",
+        "conseil": "Apporter 10× plus de valeur que ce que vous demandez. Faciliter les connexions entre membres (pas seulement marque → communauté)."
+      }
+    },
+    "influence_et_relations": {
+      "influencer_marketing": {
+        "tiers": "Nano (1K-10K, engagement fort 5-8%), Micro (10K-100K, niche), Macro (100K-1M, portée), Méga (>1M, notoriété)",
+        "conseil": "Privilégier les nano/micro-influenceurs pour le ROI. Mesurer par codes promo uniques ou liens trackés, pas par les likes."
+      },
+      "podcast_guesting": "Être invité sur des podcasts de niche = crédibilité + audience qualifiée + contenu evergreen. Préparer 3 histoires mémorables et un call-to-action clair.",
+      "pr_digitale": "Relations presse digitales : pitcher des angles originaux (données exclusives, tendances contre-intuitives, stories humaines) aux journalistes tech/business. Utiliser HARO, Muck Rack."
+    },
+    "automation_marketing": {
+      "outils_clés": {
+        "zapier_make": "Connecter les apps entre elles sans code. Automatiser les tâches répétitives (nouveau lead → ajout CRM → email de bienvenue → notification Slack).",
+        "activecampaign": "Email marketing + CRM + automation avancée. Séquences conditionnelles basées sur le comportement utilisateur.",
+        "conseil": "Commencer par automatiser les 3 flux les plus chronophages : onboarding, relance panier abandonné, réactivation des inactifs."
+      },
+      "crm_strategy": {
+        "principe": "Centraliser toutes les interactions clients pour personnaliser la communication et maximiser la LTV.",
+        "segmentation": "Par comportement (actifs/inactifs), par valeur (VIP/standard), par étape du funnel, par source d'acquisition"
+      },
+      "customer_journey_mapping": "Cartographier chaque point de contact : découverte → évaluation → achat → onboarding → usage → support → renouvellement → recommandation. Identifier les points de friction et les moments de vérité."
+    },
+    "analytics_et_optimisation": {
+      "outils": {
+        "ga4": "Google Analytics 4 — tracking événementiel (pas basé sur les pages vues), rapports d'exploration, entonnoirs personnalisés, audiences prédictives",
+        "hotjar": "Heatmaps (cartes de chaleur), enregistrements de sessions, sondages on-site. Comprendre le QUOI (données quantitatives GA4) et le POURQUOI (données qualitatives Hotjar).",
+        "mixpanel": "Analytics produit événementiels — rétention par cohorte, parcours utilisateur, impact des fonctionnalités sur la rétention"
+      },
+      "conversion_rate_optimization": {
+        "definition": "Optimisation systématique du taux de conversion par expérimentation et analyse du comportement utilisateur.",
+        "processus": "1) Analyser (données + heatmaps + feedback). 2) Hypothèse (Si je change X, alors Y augmentera parce que Z). 3) Prioriser (framework ICE : Impact × Confiance × Facilité). 4) Tester (A/B test). 5) Implémenter ou itérer.",
+        "règles_AB_test": "Minimum 100 conversions par variante pour significativité statistique. Tester un seul changement à la fois. Durée minimale : 2 semaines complètes (couvrir les cycles hebdomadaires)."
+      },
+      "split_testing": {
+        "éléments_à_tester": "Titres (impact le plus fort), CTA (texte + couleur + position), images/vidéos, longueur de page, formulaires (nombre de champs), prix et offres, preuve sociale",
+        "conseil": "Commencer par les éléments à fort impact et faible effort. Un bon titre peut améliorer les conversions de 20-50%."
+      }
+    },
+    "psychologie_pricing": {
+      "prix_psychologiques": "9,97€ au lieu de 10€ (effet du chiffre gauche). Prix en 7 ou 9 perçus comme des offres. Prix ronds (100€) pour les achats émotionnels/premium.",
+      "ancrage": "Présenter d'abord l'option la plus chère pour ancrer la perception de valeur. L'option intermédiaire paraît alors raisonnable (effet leurre).",
+      "scarcite_urgence": {
+        "scarcité": "Quantité limitée (il ne reste que 3 places). Déclenche la peur de manquer (FOMO). Doit être authentique — la fausse rareté détruit la confiance.",
+        "urgence": "Temporalité limitée (offre valable 48h). Compteur à rebours visible. Combiner avec une raison crédible (fin de saison, lancement, anniversaire)."
+      },
+      "preuve_sociale": {
+        "types": "Témoignages clients (avec photo et nom), nombre d'utilisateurs, logos de clients, notes et avis, certifications, mentions presse, études de cas chiffrées",
+        "conseil": "La preuve sociale la plus puissante est spécifique et chiffrée : 'Augmentation de 47% du CA en 3 mois' > 'Super produit, je recommande'."
+      }
+    },
+    "strategies_de_lancement": {
+      "pre_lancement": "1) Constituer une liste d'attente (landing page + lead magnet). 2) Créer du contenu de pré-vente (behind the scenes, teasers). 3) Activer les early adopters et beta testeurs. 4) Préparer les assets (emails, pages de vente, créatifs publicitaires).",
+      "lancement": "1) Séquence email de lancement (J-3, J-1, Jour J, J+1, J+3, dernière chance). 2) Offre de lancement limitée dans le temps avec bonus exclusifs. 3) Live event (webinaire, live social). 4) Activation des affiliés et partenaires.",
+      "post_lancement": "1) Analyser les métriques (ventes, taux de conversion, feedback). 2) Témoignages des premiers clients. 3) Itérer sur le produit et le positionnement. 4) Planifier la relance evergreen.",
+      "conseil_fondamental": "Un lancement réussi se prépare 6-8 semaines à l'avance. 80% du travail est dans la pré-vente et la constitution d'audience."
+    }
+  }
+}
