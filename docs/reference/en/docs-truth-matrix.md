@@ -1,7 +1,7 @@
 # TITANE∞ — Docs Truth Matrix
 
-**Status:** PARTIAL (docs system being established)  
-**Date:** 2026-03-17  
+**Status:** QUALIFIED  
+**Date:** 2026-04-11  
 **Mode:** AUDIT
 
 > Every major claim in TITANE∞ documentation is listed below with its source, proof, status, and any contradiction.
@@ -27,7 +27,7 @@
 | Claim | Source doc | Proof source | Status | Contradiction | Action |
 |---|---|---|---|---|---|
 | TITANE∞ is a Tauri desktop application | `README.md`, `docs/ARCHITECTURE.md` | `src-tauri/`, `tauri.base.json` | PROVEN | NO | — |
-| Version is 28.0.0 | `README.md`, `package.json` | `package.json`, `src-tauri/Cargo.toml`, `CHANGELOG.md` | PROVEN | NO | — |
+| Version is 30.0.0 | `README.md`, `package.json` | `package.json`, `src-tauri/Cargo.toml`, `CHANGELOG.md` | PROVEN | NO | — |
 | Frontend: React 18 + TypeScript 5.5 | `docs/README.md` | `package.json` deps | PROVEN | NO | — |
 | Backend: Rust 2021 edition | `docs/ARCHITECTURE.md` | `src-tauri/Cargo.toml` | PROVEN | NO | — |
 | Build tool: Vite 6+ | `docs/README.md` | `package.json` devDeps | PROVEN | NO | — |

@@ -1,6 +1,6 @@
 # TRUTH_MATRIX.md — Matrice de Vérité TITANE_INFINITY
 
-**Version:** 28.0.0 | **SHA:** c59e9b5b3 | **Date:** 2026-03-15T13:32:00Z
+**Version:** 30.0.0 | **SHA:** 1165def2d | **Date:** 2026-04-11T15:45:00Z
 **Classification:** CANON
 
 ---
