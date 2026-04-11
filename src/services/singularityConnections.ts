@@ -102,7 +102,7 @@ export class SingularityConnections {
 
       // Gracefully disable command if not found
       if (msg.includes('command') && msg.includes('not found')) {
-        console.warn(
+        logger.warn(
           `[SingularityConnections] Command "${cmd}" not found. Disabling this sync.`
         );
         this.disabledCommands.add(cmd);
@@ -110,7 +110,7 @@ export class SingularityConnections {
       }
 
       // Log other errors but don't crash
-      console.error(`[SingularityConnections] Error invoking ${cmd}:`, err);
+      logger.error(`[SingularityConnections] Error invoking ${cmd}:`, err);
       return null;
     }
   }
@@ -120,11 +120,11 @@ export class SingularityConnections {
    */
   static async start(intervalMs: number = 0): Promise<void> {
     if (this.isRunning) {
-      console.warn('⚠️ SingularityConnections already running');
+      logger.warn('⚠️ SingularityConnections already running');
       return;
     }
 
-    console.log('🔗 Starting SingularityConnections v30.0.0 (event-driven mode)');
+    logger.info('🔗 Starting SingularityConnections v30.0.0 (event-driven mode)');
     this.isRunning = true;
 
     // Initial sync
@@ -132,18 +132,18 @@ export class SingularityConnections {
 
     // v30.0.0: Fallback polling only if intervalMs > 0 (default: pure event-driven)
     if (intervalMs > 0) {
-      console.log(
+      logger.info(
         `⚠️ SingularityConnections: Fallback polling enabled (${intervalMs}ms)`
       );
       this.updateInterval = window.setInterval(async () => {
         try {
           await this.syncAll();
         } catch (err) {
-          console.error('❌ SingularityConnections sync error:', err);
+          logger.error('❌ SingularityConnections sync error:', err);
         }
       }, intervalMs);
     } else {
-      console.log('✅ SingularityConnections: Pure event-driven mode (no polling)');
+      logger.info('✅ SingularityConnections: Pure event-driven mode (no polling)');
     }
   }
 
@@ -156,7 +156,7 @@ export class SingularityConnections {
       this.updateInterval = null;
     }
     this.isRunning = false;
-    console.log('⏹️  SingularityConnections stopped');
+    logger.info('⏹️  SingularityConnections stopped');
   }
 
   /**
@@ -218,7 +218,7 @@ export class SingularityConnections {
 
       await SingularityBridge.updatePhysical(updated);
     } catch (err) {
-      console.error('[SingularityConnections] Failed to update Helios state:', err);
+      logger.error('[SingularityConnections] Failed to update Helios state:', err);
     }
   }
 
@@ -280,7 +280,7 @@ export class SingularityConnections {
 
       await SingularityBridge.updateCognitive(updated);
     } catch (err) {
-      console.error('[SingularityConnections] Failed to update Memory state:', err);
+      logger.error('[SingularityConnections] Failed to update Memory state:', err);
     }
   }
 
@@ -344,7 +344,7 @@ export class SingularityConnections {
 
       await SingularityBridge.updateSymbolic(updated);
     } catch (err) {
-      console.error('[SingularityConnections] Failed to update Persona state:', err);
+      logger.error('[SingularityConnections] Failed to update Persona state:', err);
     }
   }
 
@@ -397,7 +397,7 @@ export class SingularityConnections {
 
       await SingularityBridge.updateAdaptive(updated);
     } catch (err) {
-      console.error('[SingularityConnections] Failed to update AutoHeal state:', err);
+      logger.error('[SingularityConnections] Failed to update AutoHeal state:', err);
     }
   }
 
@@ -451,7 +451,7 @@ export class SingularityConnections {
 
       await SingularityBridge.updateMeta(updated);
     } catch (err) {
-      console.error('[SingularityConnections] Failed to update UI state:', err);
+      logger.error('[SingularityConnections] Failed to update UI state:', err);
     }
   }
 
@@ -590,6 +590,10 @@ export class SingularityConnections {
 // ═══════════════════════════════════════════════════════════════
 
 import { useEffect } from 'react';
+
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('SingularityConn');
 
 /**
  * Hook to enable SingularityConnections in a component
