@@ -235,7 +235,7 @@ function PipelineStepCard({
 
       <div
         className={`p-4 rounded-lg border transition-all duration-300 ${isActive ? 'ring-2' : ''}`}
-        style={{ background: colors.bg, borderColor: colors.border, '--tw-ring-color': isActive ? colors.border : undefined } as React.CSSProperties}
+        style={{ background: colors.bg, borderColor: colors.border, ...(isActive && { '--tw-ring-color': colors.border }) } as React.CSSProperties}
       >
         <div className="flex items-start gap-4">
           {/* Icon */}
@@ -301,7 +301,7 @@ function PipelineStepCard({
             {step.outputSummary && step.status === 'complete' && (
               <div>
                 <button
-                  onClick={() => setExpanded(e => !e)}
+                  onClick={() => setExpanded(prev => !prev)}
                   className="text-xs flex items-center gap-1 mb-1"
                   style={{ color: '#7ab8f0', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
                 >
@@ -349,7 +349,7 @@ function ReasoningTracePanel({ trace }: { trace: ReasoningTrace }) {
       <button
         className="w-full flex items-center justify-between px-4 py-3"
         style={{ background: 'rgba(130,80,200,0.10)', border: 'none', cursor: 'pointer' }}
-        onClick={() => setCollapsed(c => !c)}
+        onClick={() => setCollapsed(prev => !prev)}
       >
         <div className="flex items-center gap-2">
           <span className={isComplete ? '' : 'animate-pulse'}>🤔</span>
@@ -495,7 +495,7 @@ function JournalEntryCard({ entry }: { entry: JournalEntry }) {
       <button
         className="w-full flex items-center gap-3 px-4 py-3 text-left"
         style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-        onClick={() => setExpanded(e => !e)}
+        onClick={() => setExpanded(prev => !prev)}
       >
         <span className="text-xs font-mono" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))', flexShrink: 0 }}>
           {ts}
