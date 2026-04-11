@@ -651,3 +651,53 @@ Modules kernel : `kernel/`, `core/`, `security/`, `constitution/`
 | 8 | `conversation_engine/french_mastery.rs` | 1 434 |
 | 9 | `mock_commands.rs` | 1 390 |
 | 10 | `memory/pool.rs` | 1 334 |
+
+---
+
+## I. Base de Connaissance Self-Awareness (Mémoire Cognitive)
+
+Cette cartographie est injectée dans la **mémoire cognitive de TITANE** pour qu'il soit conscient de sa propre architecture.
+
+### Fichiers de connaissance (`src/knowledge/self-awareness/`)
+
+| Fichier | Description |
+|---------|-------------|
+| `architecture-map.json` | Carte structurée complète : rings, IPC, stores, hooks, routes, métriques |
+| `capabilities-manifest.json` | Inventaire complet des capacités (chat, voice, cognitive, memory, etc.) |
+| `index.ts` | Module TypeScript d'accès à la self-awareness knowledge base |
+
+### Hook React (`src/hooks/useSelfAwareness.ts`)
+
+```typescript
+import { useSelfAwareness } from '@/hooks/useSelfAwareness';
+
+function MyComponent() {
+  const {
+    metrics,           // { total_ts_files, total_rust_files, total_ipc_commands, ... }
+    allCapabilities,   // ['ai_chat', 'voice', 'cognitive', 'memory', ...]
+    commandCount,      // 916
+    stores,            // ['effectsStore', 'evolutionStore', ...]
+    hooks,             // ['useAIChatStreaming', 'useChat', ...]
+    routes,            // ['/', '/titane', '/memory', ...]
+    hasCapability,     // (name: string) => boolean
+    getCommandsByDomain, // (domain: string) => string[]
+  } = useSelfAwareness();
+}
+```
+
+### Capacités Connues
+
+| Capacité | Description | Fonctionnalités |
+|----------|-------------|-----------------|
+| `ai_chat` | Chat IA multi-providers | streaming, suggestions, context-memory |
+| `voice` | Voix TTS/STT/VAD/wake-word | tts, stt, vad, wake-word, duplex, lip-sync |
+| `cognitive` | Moteur cognitif + évolution | knowledge-vault, evolution-cycles, progression-xp |
+| `visual` | Avatar 3D + effets | avatar-3d, lip-sync, expressions, gestures |
+| `memory` | Mémoire persistante | snapshots, timeline, knowledge-base, vector-search |
+| `singularity` | État unifié 4 couches | 4-layer-state, self-healing, integrity-check, diff |
+| `security` | Sécurité end-to-end | aes-gcm, ed25519, argon2, permission-audit |
+| `creation` | Studio de création | text, code, image, audio, templates |
+| `monitoring` | QA + watchdog + self-heal | test-suites, alerts, performance-reports, auto-fix |
+| `evolution` | Auto-amélioration continue | evolution-cycles, xp-accumulation, adaptive-learning |
+| `time` | Intelligence temporelle | agenda, calendar, temporal-search |
+| `identity` | Identité + twin cognitif | twin-identity, twin-evolution, cognitive-profile |
