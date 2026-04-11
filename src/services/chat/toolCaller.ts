@@ -6,6 +6,71 @@
  */
 
 // ═══════════════════════════════════════════════════════════════════
+// SAFE MATH EVALUATOR
+// ═══════════════════════════════════════════════════════════════════
+
+/**
+ * Recursive descent parser for safe arithmetic evaluation.
+ * Supports: +, -, *, /, parentheses, decimals.
+ * No eval() or Function() — immune to code injection.
+ */
+function safeMathEval(expression: string): number {
+  const input = expression.replace(/\s+/g, '');
+  let pos = 0;
+
+  const peek = (): string => input[pos] ?? '';
+
+  const consume = (): string => input[pos++] ?? '';
+
+  const parseNumber = (): number => {
+    let num = '';
+    if (peek() === '-') num += consume();
+    while (/[0-9.]/.test(peek())) num += consume();
+    if (num === '' || num === '-') throw new Error(`Invalid number at position ${pos}`);
+    const value = parseFloat(num);
+    if (isNaN(value)) throw new Error(`Invalid number: ${num}`);
+    return value;
+  };
+
+  const parseExpr = (): number => {
+    let left = parseTerm();
+    while (peek() === '+' || peek() === '-') {
+      const op = consume();
+      const right = parseTerm();
+      left = op === '+' ? left + right : left - right;
+    }
+    return left;
+  };
+
+  const parseTerm = (): number => {
+    let left = parseFactor();
+    while (peek() === '*' || peek() === '/') {
+      const op = consume();
+      const right = parseFactor();
+      if (op === '/' && right === 0) throw new Error('Division by zero');
+      left = op === '*' ? left * right : left / right;
+    }
+    return left;
+  };
+
+  const parseFactor = (): number => {
+    if (peek() === '(') {
+      consume(); // '('
+      const value = parseExpr();
+      if (peek() !== ')') throw new Error(`Expected ')' at position ${pos}`);
+      consume(); // ')'
+      return value;
+    }
+    return parseNumber();
+  };
+
+  const result = parseExpr();
+  if (pos !== input.length)
+    throw new Error(`Unexpected token at position ${pos}: '${peek()}'`);
+  return result;
+}
+
+// ═══════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════
 
@@ -79,24 +144,13 @@ const DEFAULT_TOOLS: Record<string, ToolDefinition> = {
     execute: async args => {
       const { expression = '' } = args as { expression: string };
       try {
-        // Security: Only allow safe math operations
-        // In production, use a proper expression parser
+        // Security: Only allow safe math operations via recursive descent parser
         const allowedPattern = /^[0-9+\-*/(). ]+$/;
         if (!allowedPattern.test(expression)) {
           throw new Error('Invalid expression: only numbers and basic operators allowed');
         }
 
-        // ✅ #2: Add timeout protection (1s) to prevent infinite loops
-        const timeoutPromise = new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('Expression evaluation timeout (1s)')), 1000)
-        );
-
-        const evalPromise = Promise.resolve(
-          // eslint-disable-next-line no-eval
-          Function(`"use strict"; return (${expression})`)()
-        );
-
-        const result = await Promise.race([evalPromise, timeoutPromise]);
+        const result = safeMathEval(expression);
         console.log('[ToolCaller] calculate:', { expression, result });
         return { result, expression };
       } catch (error) {
