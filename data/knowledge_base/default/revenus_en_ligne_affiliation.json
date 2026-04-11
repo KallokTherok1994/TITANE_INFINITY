@@ -1,0 +1,192 @@
+{
+  "version": "v30.0.0",
+  "category": "revenus_en_ligne_affiliation",
+  "description": "Revenus en ligne et affiliation — modèles business digitaux, marketing d'affiliation, freelance, création de formations, monétisation de contenu, tunnels de vente et plateformes e-commerce",
+  "revenus_en_ligne_affiliation": {
+    "introduction": "La génération de revenus en ligne repose sur la maîtrise de plusieurs piliers : un modèle économique viable, une audience qualifiée, un système de conversion optimisé et une capacité de rétention. L'affiliation constitue l'un des leviers les plus accessibles pour démarrer, mais la diversification vers des produits propres et des revenus récurrents est la clé de la pérennité financière en ligne.",
+    "modeles_business_en_ligne": {
+      "e_commerce_classique": {
+        "définition": "Vente de produits physiques via une boutique en ligne avec gestion de stock ou logistique externalisée",
+        "plateformes": {
+          "Shopify": "Leader mondial — simplicité, écosystème d'apps, thèmes optimisés conversion. Plan de base ~29€/mois. Idéal pour débuter.",
+          "WooCommerce": "Plugin WordPress open-source — flexibilité maximale, contrôle total, nécessite hébergement et maintenance technique.",
+          "Etsy": "Marketplace spécialisée artisanat et créateurs — trafic intégré mais commissions (6.5% + frais). Idéal pour valider un produit."
+        },
+        "métriques_clés": "CAC (Coût d'Acquisition Client), LTV (Lifetime Value), AOV (Average Order Value), taux de conversion (2-4% = bon), marge nette",
+        "conseil": "Viser un ratio LTV/CAC supérieur à 3:1 pour assurer la rentabilité à long terme"
+      },
+      "dropshipping": {
+        "principe": "Vente sans stock — le fournisseur expédie directement au client final",
+        "avantages": "Investissement initial minimal, pas de logistique, test rapide de produits",
+        "limites": "Marges faibles (15-30%), dépendance fournisseur, délais livraison, SAV complexe",
+        "fournisseurs": "AliExpress (Chine, lent), CJ Dropshipping (meilleur contrôle qualité), fournisseurs EU (Bigbuy, Brandsdistribution) pour livraison rapide",
+        "stratégie_gagnante": "Niche spécifique + branding fort + fournisseur européen + contenu organique = différenciation durable"
+      },
+      "print_on_demand": {
+        "principe": "Produits imprimés à la demande (t-shirts, mugs, posters) — aucun stock, production à la commande",
+        "plateformes": "Printful, Printify, Redbubble, Merch by Amazon",
+        "clé_succès": "Design différenciant + niche passionnée (communautés, humour spécialisé, métiers). Le design vend, pas le produit.",
+        "marge_typique": "30-50% selon produit et plateforme"
+      },
+      "infoproduits": {
+        "types": "Ebooks, formations vidéo, templates, checklists, guides PDF, audio programs",
+        "avantage_majeur": "Création une fois, vente infinie — marge proche de 95%. Scalabilité maximale.",
+        "pricing": {
+          "ebook_guide": "7€ à 47€ — produit d'appel, génère de la confiance",
+          "formation_signature": "197€ à 997€ — transformation complète sur un sujet",
+          "programme_premium": "997€ à 5000€+ — accompagnement, coaching de groupe, communauté",
+          "mastermind": "5000€ à 25000€+ — cercle restreint, accès direct au formateur"
+        },
+        "règle_valeur": "Le prix reflète la transformation promise, pas le nombre d'heures de contenu. Vendre le résultat, pas le processus."
+      },
+      "coaching_en_ligne": {
+        "modèles": {
+          "one_on_one": "Sessions individuelles (100-500€/h selon expertise et positionnement)",
+          "coaching_groupe": "6-20 personnes, interactivité, prix intermédiaire (500-2000€/programme)",
+          "hybride": "Formation en ligne + sessions live + communauté = meilleur rapport valeur/temps"
+        },
+        "outils": "Zoom/Google Meet, Calendly (planification), Notion (suivi), Stripe (paiement)",
+        "positionnement": "Spécialisation étroite > généraliste. Coach en productivité pour développeurs > coach de vie généraliste."
+      },
+      "SaaS_micro_saas": {
+        "définition": "Software as a Service — logiciel vendu en abonnement récurrent",
+        "avantage": "Revenus récurrents mensuels (MRR) — la forme de revenu en ligne la plus valorisée",
+        "micro_saas": "SaaS à petite échelle géré par 1-3 personnes — résout un problème hyper-spécifique d'une niche",
+        "métriques": "MRR, Churn Rate (< 5%/mois = bon), ARPU, CAC Payback Period",
+        "exemples_niches": "Outils pour créateurs de contenu, automatisation pour agents immobiliers, dashboards pour e-commerçants"
+      }
+    },
+    "marketing_affiliation": {
+      "principe": "Promouvoir les produits d'autrui en échange d'une commission sur chaque vente générée via un lien tracké unique",
+      "programmes_majeurs": {
+        "Amazon_Associates": {
+          "commission": "1% à 10% selon catégorie (tech ~3%, mode ~7%)",
+          "avantage": "Confiance marque Amazon, catalogue immense, cookie 24h mais commission sur tout le panier",
+          "limite": "Commissions faibles, conditions strictes, cookie court"
+        },
+        "ClickBank": {
+          "spécialité": "Produits numériques (formations, ebooks, logiciels)",
+          "commission": "50% à 75% — les plus hautes commissions du marché",
+          "conseil": "Vérifier la gravity score (popularité) et la qualité de la page de vente avant de promouvoir"
+        },
+        "systeme_io": {
+          "spécialité": "Plateforme tout-en-un francophone (tunnels, email, formations, affiliation)",
+          "avantage": "Écosystème francophone, commissions récurrentes 40%, plan gratuit disponible",
+          "idéal_pour": "Marché francophone, débutants, créateurs de formations"
+        },
+        "programmes_privés": {
+          "définition": "Programmes d'affiliation gérés directement par les entreprises (SaaS, marques premium)",
+          "avantage": "Commissions plus élevées, relation directe, négociation possible",
+          "exemples": "ConvertKit (30% récurrent), Notion, Canva, SEMrush (40% récurrent)"
+        }
+      },
+      "commissions_récurrentes": {
+        "principe": "Commission versée chaque mois tant que le client reste abonné — revenu passif cumulatif",
+        "calcul": "100 clients actifs × 50€/mois × 30% commission = 1500€/mois récurrents",
+        "stratégie": "Prioriser les programmes récurrents pour construire un revenu de base stable"
+      },
+      "méthodes_promotion": {
+        "contenu_SEO": "Articles de blog optimisés (comparatifs, reviews, guides) — trafic organique long terme",
+        "YouTube": "Reviews vidéo avec liens en description — fort taux de conversion grâce à la confiance visuelle",
+        "email_marketing": "Séquences automatisées recommandant des produits pertinents — meilleur ROI par canal",
+        "réseaux_sociaux": "Instagram, TikTok, Pinterest selon la niche — contenu natif, pas publicitaire"
+      },
+      "éthique": "Toujours divulguer les liens affiliés (obligation légale et morale). Ne recommander que ce qu'on utilise ou qu'on a testé. La confiance est le capital n°1."
+    },
+    "freelance_en_ligne": {
+      "plateformes": {
+        "Upwork": "Leader mondial — gros clients, projets variés, système de réputation. Commission 10%. Compétition internationale.",
+        "Fiverr": "Marketplace de services packagés (gigs) — idéal pour services standardisables. Approche inversée: le freelance crée l'offre.",
+        "Malt": "Plateforme premium francophone — freelances qualifiés, tarifs plus élevés, projets francophones. Idéal pour le marché français.",
+        "Toptal": "Top 3% des freelances — sélection rigoureuse, tarifs premium (80-200€/h+), clients Fortune 500"
+      },
+      "positionnement": {
+        "règle_or": "Expert dans un domaine précis > généraliste qui fait tout",
+        "formule_bio": "[Résultat spécifique] pour [audience précise] via [méthode/outil]",
+        "exemple": "J'augmente le taux de conversion des SaaS B2B de 30% via l'optimisation UX des pages de pricing"
+      },
+      "pricing": {
+        "au_temps": "Facturer à l'heure — simple mais plafonné par le temps disponible",
+        "au_projet": "Forfait par livrable — meilleure marge si on est rapide et efficace",
+        "à_la_valeur": "Facturer selon le ROI apporté au client — le modèle le plus rentable. Exemple: 10% des revenus supplémentaires générés",
+        "évolution": "Commencer au temps → passer au projet → évoluer vers la valeur à mesure que l'expertise et la réputation croissent"
+      },
+      "portfolio": "3-5 études de cas détaillées valent plus que 50 projets listés. Montrer: Problème → Solution → Résultat mesurable."
+    },
+    "creation_formation_en_ligne": {
+      "plateformes": {
+        "Teachable": "Interface intuitive, gestion complète, plan gratuit limité. Commission 5% (plan gratuit) à 0% (plans payants).",
+        "Podia": "Tout-en-un: formations, téléchargements, coaching, communauté. Interface épurée. À partir de 39$/mois.",
+        "systeme_io_formation": "Plateforme francophone intégrée (tunnel + email + formation + affiliation). Plan gratuit généreux."
+      },
+      "structure_formation": {
+        "méthode": "Transformation Promise → Étapes séquentielles → Quick Wins rapides → Exercices pratiques → Résultat final",
+        "module_idéal": "5-15 minutes par vidéo. Chaque module = un micro-résultat concret. Progression claire.",
+        "formats": "Vidéo (principal) + PDF récapitulatif + exercice pratique + quiz/checkpoint"
+      },
+      "lancement": {
+        "pré_lancement": "Construire l'audience → Identifier le problème brûlant → Créer l'anticipation (14-21 jours)",
+        "webinaire_de_vente": "Éduquer pendant 45-60 min → Présenter l'offre pendant 15-20 min. Taux conversion live: 5-15%.",
+        "séquence_email": "Jour 1: replay + rappel offre. Jour 3: témoignages + objections. Jour 5: urgence + clôture.",
+        "evergreen": "Automatiser le processus de lancement pour qu'il tourne en continu (webinaire enregistré + séquence automatisée)"
+      }
+    },
+    "monetisation_contenu": {
+      "YouTube": {
+        "conditions_monétisation": "1000 abonnés + 4000 heures de visionnage (12 derniers mois) pour le Programme Partenaire",
+        "revenus_moyens": "1-5€ pour 1000 vues (CPM variable selon niche — finance et tech = CPM élevé)",
+        "diversification": "AdSense seul est insuffisant. Combiner: sponsoring (50-70% des revenus créateurs), affiliation, produits propres, membership."
+      },
+      "podcast": {
+        "monétisation": "Sponsoring (CPM 15-50€/1000 écoutes), affiliation, produits propres, donations (Patreon)",
+        "seuil_rentabilité": "1000-5000 écoutes/épisode pour attirer des sponsors. Niche > volume pour les revenus.",
+        "host_reads": "Publicités lues par l'hôte convertissent 2-3× mieux que les spots pré-enregistrés"
+      },
+      "newsletter_payante": {
+        "plateformes": "Substack, Beehiiv, Ghost, ConvertKit",
+        "modèle": "Contenu gratuit (acquisition) + contenu premium (monétisation). Typiquement 5-15€/mois.",
+        "taux_conversion": "5-10% des abonnés gratuits convertissent en payant. 10000 abonnés gratuits = 500-1000 payants.",
+        "clé": "Expertise unique + consistance + valeur actionnable immédiate"
+      },
+      "communauté_payante": {
+        "plateformes": "Discord, Circle, Skool, Slack privé",
+        "modèle": "Accès communauté + contenu exclusif + événements live. 10-50€/mois.",
+        "rétention": "La communauté retient mieux qu'un cours statique — les membres restent pour les connexions humaines."
+      }
+    },
+    "tunnels_de_vente": {
+      "définition": "Parcours automatisé guidant un prospect de la découverte à l'achat via des étapes séquentielles optimisées",
+      "structure_classique": {
+        "étape_1_lead_magnet": "Offrir une ressource gratuite à haute valeur perçue en échange de l'email (ebook, checklist, mini-formation, template)",
+        "étape_2_nurture": "Séquence email de 5-7 messages: valeur → crédibilité → preuve sociale → offre",
+        "étape_3_offre_entry": "Produit d'entrée à petit prix (7-47€) — transforme le prospect en client. La première transaction est la plus difficile.",
+        "étape_4_offre_core": "Produit principal (197-997€) — la transformation complète promise",
+        "étape_5_upsell": "Offre complémentaire ou premium proposée immédiatement après l'achat"
+      },
+      "email_list_building": {
+        "importance": "L'email est le seul canal que vous possédez. Algorithmes des réseaux sociaux changent — votre liste email reste.",
+        "lead_magnets_efficaces": "Checklists (taux conversion 20-30%), templates, mini-cours email (5 jours), quiz interactif, calculateur",
+        "outils": "ConvertKit, Mailchimp, systeme.io, ActiveCampaign, Brevo",
+        "règle": "Traiter chaque abonné comme un humain, pas un numéro. Segmenter par intérêt et comportement."
+      },
+      "webinaires_de_vente": {
+        "structure": "Hook (5 min) → Contenu éducatif avec 3 secrets/piliers (40 min) → Transition (5 min) → Offre avec stack de valeur (15 min) → Q&A (15 min)",
+        "taux_conversion": "Live: 5-15%. Replay: 2-5%. Evergreen automatisé: 1-3%.",
+        "conseil": "Le webinaire doit apporter une vraie valeur même sans achat. La générosité construit la confiance qui convertit."
+      },
+      "métriques_tunnel": {
+        "opt_in_rate": "25-50% = bon (page de capture vers inscription)",
+        "email_open_rate": "20-35% = bon (taux d'ouverture emails)",
+        "click_rate": "2-5% = bon (taux de clic dans les emails)",
+        "conversion_vente": "1-5% selon le prix et la chaleur du trafic"
+      }
+    },
+    "principes_transversaux": {
+      "audience_first": "Construire l'audience avant le produit. Valider la demande avant de créer. Pré-vendre avant de produire.",
+      "diversification": "Ne jamais dépendre d'une seule source de revenus ou d'une seule plateforme. Règle: minimum 3 sources.",
+      "automatisation": "Automatiser les processus répétitifs (email, tunnels, livraison) pour libérer du temps et scaler sans épuisement.",
+      "consistance": "La régularité bat l'intensité. Publier 1 article par semaine pendant 2 ans > publier 50 articles en 1 mois puis arrêter.",
+      "patience": "Les revenus en ligne suivent une courbe exponentielle — lent au début, puis accélération. La plupart abandonnent trop tôt."
+    }
+  }
+}
