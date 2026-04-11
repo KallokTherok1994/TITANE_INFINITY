@@ -44,6 +44,7 @@ import {
   REQUEST_BUDGETS,
 } from '@/config/aiTimeouts.config'; // ← v22Ω: Centralized timeouts
 import { getChampion } from './championChallenger'; // ← OMEGA Champion/Challenger
+import type { CanonicalMode } from './omegaModeClassifier'; // ← for champion scoring cast
 
 const logger = createLogger('Orchestrator');
 
@@ -776,7 +777,7 @@ class AIOrchestrator {
             score += 200; // Mode local forcé
             logger.debug('   🏠 LOCAL MODE FORCÉ: Ollama exclusif');
           } else if (canonicalMode) {
-            const champion = getChampion(canonicalMode as Parameters<typeof getChampion>[0]);
+            const champion = getChampion(canonicalMode as CanonicalMode);
             if (champion?.provider === 'ollama') {
               score += 120; // 🏆 OLLAMA CHAMPION: priorité maximale pour ce mode
               logger.debug(`   🏆 OLLAMA CHAMPION: mode=${canonicalMode} boost=+120`);
