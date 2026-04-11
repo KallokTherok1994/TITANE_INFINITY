@@ -2870,8 +2870,11 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
       }
 
       // ═══ DEFAULT KNOWLEDGE BASE: inject compact index ═══
+      // The first line is the language header "[LANGUE: ...]"; subtract it from the category count.
+      const kbLines = this._defaultKbIndex.split('\n');
+      const kbCategoryCount = kbLines.filter(l => l.startsWith('•')).length || Math.max(0, kbLines.length - 1);
       const kbBlock = this._defaultKbIndex
-        ? `\n\n📚 Base de connaissances intégrée TITANE∞ (${this._defaultKbIndex.split('\n').length} catégories) :\n${this._defaultKbIndex}`
+        ? `\n\n📚 Base de connaissances intégrée TITANE∞ (${kbCategoryCount} catégories) :\n${this._defaultKbIndex}`
         : '';
 
       const stablePrefix = skillInjection
