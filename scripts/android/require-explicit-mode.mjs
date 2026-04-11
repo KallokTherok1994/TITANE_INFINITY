@@ -19,7 +19,9 @@ const commandSets = {
 
 const suggestions = commandSets[mode] ?? [];
 
-console.error(`ANDROID MODE LOCK: \`${mode}\` is intentionally disabled because it is ambiguous.`);
+console.error(
+  `ANDROID MODE LOCK: \`${mode}\` is intentionally disabled because it is ambiguous.`
+);
 console.error('Choose an explicit Android mode instead:');
 for (const suggestion of suggestions) {
   console.error(`  - ${suggestion}`);

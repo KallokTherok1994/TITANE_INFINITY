@@ -41,10 +41,18 @@ console.log(`init_ready=${initReady ? 'yes' : 'no'}`);
 console.log(`apk_count=${apkArtifacts.length}`);
 console.log(`aab_count=${bundleArtifacts.length}`);
 console.log(`explicit_signing_config=${hasSigningConfig ? 'yes' : 'no'}`);
-console.log(`strongest_honest_target=${hasSigningConfig ? 'unsigned-or-signed-release-depends-on-local-config' : 'debug-apk-or-unsigned-release-apk'}`);
-console.log('expected_debug_hint=src-tauri/gen/android/app/build/outputs/apk/**/debug/*.apk');
-console.log('expected_release_hint=src-tauri/gen/android/app/build/outputs/apk/**/release/*.apk');
-console.log('expected_bundle_hint=src-tauri/gen/android/app/build/outputs/bundle/**/**/*.aab');
+console.log(
+  `strongest_honest_target=${hasSigningConfig ? 'unsigned-or-signed-release-depends-on-local-config' : 'debug-apk-or-unsigned-release-apk'}`
+);
+console.log(
+  'expected_debug_hint=src-tauri/gen/android/app/build/outputs/apk/**/debug/*.apk'
+);
+console.log(
+  'expected_release_hint=src-tauri/gen/android/app/build/outputs/apk/**/release/*.apk'
+);
+console.log(
+  'expected_bundle_hint=src-tauri/gen/android/app/build/outputs/bundle/**/**/*.aab'
+);
 
 if (apkArtifacts.length > 0) {
   console.log('apk_artifacts:');
@@ -61,5 +69,7 @@ if (bundleArtifacts.length > 0) {
 }
 
 if (!hasSigningConfig) {
-  console.log('signing_note=no Android keystore/signingConfig is declared in src-tauri/gen/android/app/build.gradle.kts');
+  console.log(
+    'signing_note=no Android keystore/signingConfig is declared in src-tauri/gen/android/app/build.gradle.kts'
+  );
 }
