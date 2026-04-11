@@ -1,8 +1,8 @@
 # TITANE∞ — Documentation Développeur (FR)
 
-**Version :** 28.0.0  
+**Version :** 30.0.0  
 **Statut :** PARTIAL  
-**Date :** 2026-03-17
+**Date :** 2026-04-11
 
 > Documentation canonique pour les développeurs contribuant à TITANE∞.
 
