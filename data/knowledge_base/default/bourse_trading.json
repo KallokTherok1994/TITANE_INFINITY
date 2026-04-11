@@ -1,0 +1,78 @@
+{
+  "version": "v30.0.0",
+  "category": "bourse_trading",
+  "description": "Bourse et trading — fondamentaux marchés, analyse technique, analyse fondamentale, gestion du risque, psychologie du trader, stratégies d'investissement long terme et court terme, ETFs, options, fiscalité",
+  "bourse_trading": {
+    "introduction": "Les marchés financiers sont un jeu de probabilités, pas de certitudes. TITANE enseigne les mécanismes réels, démasque les mythes, et guide vers une approche disciplinée. 90% des traders actifs perdent à long terme — la discipline et la gestion du risque sont les vrais edges.",
+    "marches_fondamentaux": {
+      "actions": "Parts de propriété d'une entreprise. Valorisation = actualisation des flux futurs (DCF) + sentiment marché",
+      "obligations": "Dettes d'États/entreprises. Prix inversement corrélé aux taux d'intérêt.",
+      "etf": "Panier diversifié coté en bourse. Frais ultra-faibles (0.03-0.5%). Recommandé pour 90%+ des investisseurs.",
+      "options": "Droit (non obligation) d'acheter/vendre à un prix fixé. Levier + protection. Complexité élevée.",
+      "forex": "Marché devises, 6.6T$/jour. Très levier, très risqué. Accès 24h/5j.",
+      "crypto": "Voir module dédié crypto_blockchain",
+      "indices_cles": "S&P500 (500 grandes US), CAC40 (40 FR), NASDAQ100 (tech US), MSCI World (global)"
+    },
+    "analyse_technique": {
+      "definition": "Étude des prix et volumes passés pour anticiper le futur. Auto-réalisatrice en partie (patterns suivis par millions).",
+      "supports_resistances": "Niveaux où prix rebondit fréquemment. Breakout = changement de régime.",
+      "moyennes_mobiles": {
+        "sma": "Simple Moving Average — lissage prix. Croisements MA20/MA50 = signaux",
+        "ema": "Exponential — plus réactive au récent. EMA9/EMA21 populaires",
+        "golden_death_cross": "MA50 croise MA200 — signal long terme (golden=haussier, death=baissier)"
+      },
+      "indicateurs": {
+        "rsi": "Relative Strength Index — survente <30, surachat >70. Divergences puissantes.",
+        "macd": "Momentum + trend. Histogramme + croisement signal line.",
+        "bollinger": "Volatilité. Prix en dehors bandes = mouvement extrême probable retour.",
+        "volume": "Confirmation obligatoire. Breakout sans volume = faux signal souvent."
+      },
+      "limites": "L'AT ne prédit pas — elle identifie des probabilités. Fonctionne moins en news/earnings."
+    },
+    "analyse_fondamentale": {
+      "valorisation": {
+        "per": "Price/Earnings Ratio — combien paie-t-on pour 1€ de profit. PER < 15 = value, > 30 = growth",
+        "pb": "Price/Book — valeur marché vs valeur comptable. < 1 = potentiellement sous-évalué",
+        "ev_ebitda": "Enterprise Value / EBITDA — compare entreprises indépendamment de la structure financière",
+        "dcf": "Discounted Cash Flow — actualise flux futurs. Sensible aux hypothèses de croissance et taux."
+      },
+      "analyse_qualitative": "Avantage concurrentiel (moat), management quality, barrières à l'entrée, TAM (marché total adressable)",
+      "sources": "Rapports annuels (10-K), earning calls, SEC filings, Bloomberg, Morningstar, Simply Wall St"
+    },
+    "gestion_risque": {
+      "regles_fondamentales": [
+        "Ne jamais risquer plus de 1-2% du capital sur une seule position",
+        "Ratio reward/risk minimum 2:1 avant d'entrer",
+        "Diversification: max 5-10% par position",
+        "Stop-loss systématique, jamais déplacé contre soi"
+      ],
+      "position_sizing": "Kelly Criterion ou fraction fixe. Position = (Capital × %risque) / (Prix entrée - Stop loss)",
+      "drawdown": "Perte maximale depuis un pic. Drawdown 20% nécessite 25% de gain pour revenir. 50% → 100%.",
+      "correlation": "Diversification réelle = actifs non corrélés. Actions + obligations + or + immobilier réduisent volatilité globale."
+    },
+    "strategies": {
+      "buy_hold": "Investissement passif long terme. SPY/MSCI World. Surperforme 80%+ des gérants actifs sur 10 ans.",
+      "dca": "Dollar-Cost Averaging — investissement régulier fixe. Élimine timing. Psychologiquement sain.",
+      "value_investing": "Graham/Buffett — entreprises solides décotées. Patience 3-5 ans minimum.",
+      "growth": "Entreprises à forte croissance revenue (>20%/an). PER élevé toléré si croissance justifiée.",
+      "swing_trading": "Positions 2-14 jours sur mouvements techniques. Temps partiel possible. Risque modéré.",
+      "scalping": "Dizaines trades/jour sur micro-mouvements. Stressant, exige discipline de fer, spreads coûteux."
+    },
+    "psychologie_trader": {
+      "biais": {
+        "confirmation": "Chercher uniquement les infos qui confirment la thèse",
+        "ancrage": "Rester attaché au prix d'achat ('j'attends de revenir en positif')",
+        "peur_rater": "FOMO — entrer trop tard sur un mouvement déjà fait",
+        "overconfidence": "Après série de gains, augmenter les risques inconsidérément"
+      },
+      "discipline": "Journal de trading obligatoire. Review hebdomadaire. Process > résultats court terme.",
+      "routine": "Plan avant ouverture, risque défini avant entrée, pas de vengeance trade après perte"
+    },
+    "fiscalite_france": {
+      "pea": "Plan Épargne Actions — actions EU/EEA. Exonération d'impôt après 5 ans (hors PS 17.2%). Plafond 150K€.",
+      "cto": "Compte Titres Ordinaire — tous actifs. PFU 30% (flat tax) sur gains + dividendes.",
+      "per_assurance_vie": "Enveloppes fiscalement avantageuses pour long terme. Règles de rachat différentes.",
+      "crypto_fiscalite": "BIC ou revenus non commerciaux. Plus-value imposée à 30% en France."
+    }
+  }
+}

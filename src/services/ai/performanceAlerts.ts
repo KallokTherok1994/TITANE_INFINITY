@@ -435,11 +435,9 @@ performanceAlerts.onAlert(alert => {
         ? '⚠️'
         : 'ℹ️';
 
-  console.log(`${icon} Performance Alert [${alert.severity.toUpperCase()}]`);
-  console.log(`  Metric: ${alert.metricName}`);
-  console.log(`  Message: ${alert.message}`);
-  console.log(
-    `  Value: ${alert.value.toFixed(2)}, Threshold: ${alert.threshold.toFixed(2)}`
+  const level = alert.severity === AlertSeverity.CRITICAL ? 'error' : alert.severity === AlertSeverity.WARNING ? 'warn' : 'info';
+  logger[level](
+    `${icon} Performance Alert [${alert.severity.toUpperCase()}] — ${alert.metricName}: ${alert.message} | value=${alert.value.toFixed(2)} threshold=${alert.threshold.toFixed(2)}`
   );
 });
 

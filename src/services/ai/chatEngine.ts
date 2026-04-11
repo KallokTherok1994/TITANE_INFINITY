@@ -103,6 +103,8 @@ import { responseCache } from '@/services/cache/responseCache';
 import { predictivePreloader } from '@/services/cache/predictivePreloader';
 // Deep analysis preference bridge
 import { userPreferencesEngine } from '@/services/userPreferencesEngine';
+// v30: OMEGA DevTools Bridge — wires real pipeline data → DevTools Journal
+import { omegaDevToolsBridge } from './omegaDevToolsBridge';
 
 const logger = createLogger('ChatEngine');
 const DEBUG_CHAT_ENGINE_TRACES = Boolean(
@@ -226,10 +228,27 @@ const CACHE_DISABLED_MODES = new Set([
   'hybrid',
 ]);
 
+/** Module-level stop words set (FR + EN) — avoids re-creation per call in extractKeyConcepts() */
+const STOP_WORDS = new Set([
+  // French
+  'le', 'la', 'les', 'un', 'une', 'des', 'et', 'ou', 'de', 'du', 'au', 'aux',
+  'ce', 'ces', 'son', 'sa', 'ses', 'mon', 'ma', 'mes', 'ton', 'ta', 'tes',
+  'notre', 'nos', 'votre', 'vos', 'leur', 'leurs',
+  'je', 'tu', 'il', 'elle', 'nous', 'vous', 'ils', 'elles',
+  'que', 'qui', 'quoi', 'dont', 'où', 'comment', 'pourquoi', 'quand',
+  'est', 'sont', 'être', 'avoir', 'faire', 'aller', 'venir', 'voir',
+  'dire', 'prendre', 'mettre', 'donner', 'trouver', 'passer',
+  'pouvoir', 'vouloir', 'devoir', 'savoir', 'falloir',
+  // English
+  'the', 'is', 'are', 'was', 'were', 'be', 'been', 'have', 'has', 'had',
+  'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might',
+  'can', 'shall', 'this', 'that', 'these', 'those', 'with', 'from', 'for', 'into',
+]);
+
 class ChatEngineOmega {
   private config: ChatEngineConfig = { mode: 'default' };
   private lastMode: ChatMode = 'default';
-  private conversationContext: Map<string, any> = new Map();
+  private conversationContext: Map<string, unknown> = new Map();
   private pipelineFailures: number = 0;
   private lastHealing: number = 0;
   // 🆕 P1: DEPRECATED - Use conversationLifecycle.getActiveConversation() instead
@@ -681,6 +700,19 @@ class ChatEngineOmega {
         timeMs: canonicalDecision.processingTimeMs,
       });
 
+      // v30: Notify DevTools Journal that TITANE is now thinking (fire-and-forget)
+      omegaDevToolsBridge
+        .updateCognitiveState({
+          status: 'thinking',
+          currentMode: canonicalDecision.mode,
+          currentProvider: canonicalDecision.provider.name,
+          effortLevel: canonicalDecision.provider.reasoningEffort,
+          singularityCoherence: Math.round(singularityCoherence * 100),
+          processingLoad: 55,
+          lastRequestAt: pipelineStartTime,
+        })
+        .catch(e => logger.debug('DevTools bridge: state thinking emit failed', { e }));
+
       // ═══ PHASE 1.3: CONSTRUCTION PROMPT SELON MODE ═══
       // v26.0.0: Kernel is the single source of truth — behavioralRouter runs inside kernel
       pipelineSteps.push('prompt-building');
@@ -943,6 +975,8 @@ Format: [Audit complet] + [Réponse utilisateur]
       // Use kernel's temperature and maxTokens
       orchestratorConfig.temperature = canonicalDecision.provider.temperature;
       orchestratorConfig.maxTokens = canonicalDecision.provider.maxTokens;
+      // v30: Pass canonicalMode so orchestrator can honor champion scoring (OLLAMA CHAMPION)
+      orchestratorConfig.canonicalMode = canonicalDecision.mode;
 
       const response = await this.withTimeout(
         aiOrchestrator.generate(validatedMessage, enrichedHistory, orchestratorConfig),
@@ -1301,6 +1335,32 @@ Format: [Audit complet] + [Réponse utilisateur]
         processingTime: `${processingTime}ms`,
         steps: pipelineSteps,
       });
+
+      // v30: Feed OMEGA DevTools Journal with real pipeline data (fire-and-forget, Tauri-guarded)
+      const singCoherence = SingularityBridge.getCachedCoherence();
+
+      const reflNote = `Réponse ${
+        validation.score >= 0.8 ? 'excellente' : validation.score >= 0.6 ? 'bonne' : 'basique'
+      } (score: ${(validation.score * 100).toFixed(0)}%). Mode: ${canonicalDecision.mode}. Effort: ${canonicalDecision.provider.reasoningEffort}.`;
+
+      omegaDevToolsBridge
+        .reportJournalEntry({
+          requestId: correlationId,
+          startedAt: pipelineStartTime,
+          request: message,
+          response: processedResponse.content,
+          decision: canonicalDecision,
+          pipelineSteps,
+          totalDurationMs: processingTime,
+          success: true,
+          singularityCoherence: singCoherence ?? undefined,
+          reflectionNotes: reflNote,
+        })
+        .catch(e => logger.debug('DevTools bridge: journal emit failed', { e }));
+
+      omegaDevToolsBridge
+        .updateCognitiveState({ status: 'idle', processingLoad: 0 })
+        .catch(e => logger.debug('DevTools bridge: state idle emit failed', { e }));
 
       return finalResponse;
     } catch (error) {
@@ -1992,110 +2052,14 @@ Que souhaites-tu explorer ?`;
 
   /**
    * v6.0.0: Extract key concepts from a message for semantic matching
+   * v30.0.0: Stop words hoisted to module-level STOP_WORDS constant
    */
   private extractKeyConcepts(message: string): string[] {
     const concepts: string[] = [];
 
-    // Remove common stop words
-    const stopWords = new Set([
-      'le',
-      'la',
-      'les',
-      'un',
-      'une',
-      'des',
-      'et',
-      'ou',
-      'de',
-      'du',
-      'au',
-      'aux',
-      'ce',
-      'ces',
-      'son',
-      'sa',
-      'ses',
-      'mon',
-      'ma',
-      'mes',
-      'ton',
-      'ta',
-      'tes',
-      'notre',
-      'nos',
-      'votre',
-      'vos',
-      'leur',
-      'leurs',
-      'je',
-      'tu',
-      'il',
-      'elle',
-      'nous',
-      'vous',
-      'ils',
-      'elles',
-      'que',
-      'qui',
-      'quoi',
-      'dont',
-      'où',
-      'comment',
-      'pourquoi',
-      'quand',
-      'est',
-      'sont',
-      'être',
-      'avoir',
-      'faire',
-      'aller',
-      'venir',
-      'voir',
-      'dire',
-      'prendre',
-      'mettre',
-      'donner',
-      'trouver',
-      'passer',
-      'pouvoir',
-      'vouloir',
-      'devoir',
-      'savoir',
-      'falloir',
-      'the',
-      'is',
-      'are',
-      'was',
-      'were',
-      'be',
-      'been',
-      'have',
-      'has',
-      'had',
-      'do',
-      'does',
-      'did',
-      'will',
-      'would',
-      'could',
-      'should',
-      'may',
-      'might',
-      'can',
-      'shall',
-      'this',
-      'that',
-      'these',
-      'those',
-      'with',
-      'from',
-      'for',
-      'into',
-    ]);
-
     const words = message.split(/\s+/).filter(w => w.length > 2);
     for (const word of words) {
-      if (!stopWords.has(word)) {
+      if (!STOP_WORDS.has(word)) {
         concepts.push(word);
       }
     }
@@ -3055,7 +3019,7 @@ Profil: OMEGA — Puissance maximale, aucun compromis.
       return;
     }
 
-    console.log(message, payload);
+    logger.debug(message, payload);
   }
 
   private async saveMemoryArtifacts(params: {

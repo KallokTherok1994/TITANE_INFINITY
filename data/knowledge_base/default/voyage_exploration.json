@@ -1,0 +1,66 @@
+{
+  "version": "v30.0.0",
+  "category": "voyage_exploration",
+  "description": "Voyage et exploration — planification optimale, budget voyage, destinations emblématiques, voyage solo/couple/famille, hacking voyageur, sécurité internationale, slow travel, road trips, nomadisme digital",
+  "voyage_exploration": {
+    "introduction": "Voyager transforme davantage que déplacer le corps — c'est un outil de croissance personnelle, d'ouverture culturelle et de remise en question des certitudes. TITANE aide à planifier intelligemment, à voyager en sécurité et à maximiser les expériences tout en maîtrisant les coûts.",
+    "planification": {
+      "quand_reserver": {
+        "vols": "Long-courrier : 2-6 mois avant. Court-courrier Europe : 1-3 mois. Last minute : gamble mais parfois -50%.",
+        "hotels": "Destinations populaires : 2-3 mois avant. Flexibilité = économies. Booking.com + Airbnb comparaison.",
+        "saisons": "Haute saison = foule + prix x2. Épaule (avant/après) = meilleur ratio. Basse = économies mais météo risque."
+      },
+      "outils": "Google Flights (suivi prix), Skyscanner (comparatif), Kayak Explore (où aller selon budget), Seat61 (trains Europe), Rome2Rio (multimodal)",
+      "budget": {
+        "backpacker": "$30-50/jour (Asie SE, Amérique Latine), $60-80 (Europe Est)",
+        "confort": "$80-150/jour monde. $150-250 Europe Ouest, USA.",
+        "luxe": "$300+/jour. Business class seule peut coûter prix d'un voyage complet en eco.",
+        "hacks": "Miles/points CB (Amex, Revolut, Capital One), cartes lounge (Priority Pass), visa/remboursements"
+      }
+    },
+    "destinations": {
+      "asie_se": {
+        "incontournables": "Thaïlande (temples/plages/food), Vietnam (Hanoi→Hoi An→HCMC), Cambodge (Angkor Wat), Bali (culture+surf)",
+        "budget": "Ultra-low cost possible. Street food $1-3, dorms $5-10, motos $5-10/jour.",
+        "saison": "Novembre-Mars pour la plupart (hors pluie). Variable selon latitude."
+      },
+      "europe": {
+        "classiques": "Portugal (Lisbonne+Porto, rapport qualité/prix excellent), Géorgie (prix bas, hospitalité, nature), Balkans (Croatie/Slovénie/Albanie montants)",
+        "interrail": "Pass train European pour jeunes/pas chers. 30+ pays, flexibilité maximale.",
+        "slow_travel": "1-2 semaines par ville vs city-break. Appartement > hôtel pour longue durée."
+      },
+      "amerique_latine": {
+        "incontournables": "Colombie (Medellín+Cartagène), Pérou (Machu Picchu+Amazonie), Argentine (Buenos Aires+Patagonie), Mexique (Oaxaca+Yucatán)",
+        "securite": "Renseignements actuels (Conseils aux voyageurs France). Éviter affichage téléphone/bijoux luxueux."
+      },
+      "afrique": {
+        "safari": "Kenya/Tanzanie (Grande Migration), Botswana (Okavango), Namibie (Désert Namib). Budget $200-1000/jour.",
+        "accessible": "Maroc (Fès, Sahara), Cape Town, Afrique du Sud côte jardin"
+      }
+    },
+    "types_voyage": {
+      "solo": {
+        "avantages": "Liberté totale, rencontres plus faciles, introspection, flexibilité",
+        "defis": "Sécurité accrue (femmes voyageuses surtout), coût logement (chambres simples chères), solitude",
+        "conseils": "Auberges jeunesse (communauté), apps rencontres voyageurs (Couchsurfing/Meetup), itinéraire partagé avec proche"
+      },
+      "couple": "Synchroniser envies avant (cultures/aventure/détente ratio). Budget commun planifié. Chambres doubles = optimisation.",
+      "famille": "Flexibilité planning (enfants imprévisibles). Appartements > hôtels. Activités adaptées âge. Snacks/sieste respectés.",
+      "nomadisme_digital": {
+        "hubs": "Chiang Mai (Thaïlande), Bali (Canggu), Lisbonne, Medellín, Tbilissi — communautés établies",
+        "exigences": "Wifi fiable (speedtest avant réservation), timezone client, visas travail (attention légalité)",
+        "outils": "Notion (organisation), Revolut/Wise (frais bancaires 0), eSIM (Airalo), VPN"
+      }
+    },
+    "securite_voyage": {
+      "avant_depart": "Photocopies papiers + cloud, assurance voyage (MAIF Laissez-vous guider ou AXA), vaccins selon destination, ambassade enregistrement",
+      "sur_place": "Pas d'affichage richesse, assurance objet de valeur, vigilance transports nuit, numéros urgence locaux",
+      "sante": "Trousse médicale basique, médicaments génériques, eau locale (boîte filtrante LifeStraw ou pastilles)"
+    },
+    "impact_responsable": {
+      "empreinte": "Vol long-courrier = 1-3 tCO2. Compenser via Gold Standard. Slow travel réduit fréquence vols.",
+      "tourisme_local": "Hébergements indépendants, restaurants locaux, guides certifiés communauté, marchés producteurs",
+      "over_tourisme": "Éviter Venise/Dubrovnik/Santorini en haute saison. Explorer destinations secondaires."
+    }
+  }
+}

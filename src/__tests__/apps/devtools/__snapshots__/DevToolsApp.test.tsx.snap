@@ -82,9 +82,9 @@ exports[`DevToolsApp > Snapshot > should match snapshot 1`] = `
           <button
             data-testid="tab-pipeline"
           >
-            🔄
+            📋
              
-            Pipeline
+            Journal Ω
           </button>
           <button
             data-testid="tab-errors"
