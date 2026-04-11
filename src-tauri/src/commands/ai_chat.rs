@@ -325,7 +325,7 @@ pub async fn ai_query_streaming(
 }
 
 /// v24.20: TTS avec streaming + background task (non-blocking)
-#[tauri::command]
+/// Legacy helper wrapper: canonical IPC command lives in `crate::audio::commands`.
 pub async fn speak(
     state: State<'_, AIChatState>,
     text: String,
@@ -413,7 +413,6 @@ pub async fn speak(
 }
 
 /// v24.20: Arrêt synthèse TTS en cours (async-safe)
-#[tauri::command]
 pub async fn stop_speaking(state: State<'_, AIChatState>) -> Result<(), String> {
     let mut is_speaking = state.is_speaking.write().await;
     if !*is_speaking {
@@ -425,25 +424,21 @@ pub async fn stop_speaking(state: State<'_, AIChatState>) -> Result<(), String> 
 }
 
 /// v24.20: Vérification état TTS (async-safe)
-#[tauri::command]
 pub async fn is_speaking(state: State<'_, AIChatState>) -> Result<bool, String> {
     let is_speaking = state.is_speaking.read().await;
     Ok(*is_speaking)
 }
 
-#[tauri::command]
 pub async fn start_recording(state: State<'_, AIChatState>) -> Result<(), String> {
     let recorder = state.audio_recorder.read().await;
     recorder.start().map_err(|e| e.to_string())
 }
 
-#[tauri::command]
 pub async fn stop_recording(state: State<'_, AIChatState>) -> Result<(), String> {
     let recorder = state.audio_recorder.read().await;
     recorder.stop().map_err(|e| e.to_string())
 }
 
-#[tauri::command]
 pub async fn transcribe_audio(
     state: State<'_, AIChatState>,
     audio_data: Vec<u8>,
@@ -525,7 +520,6 @@ pub async fn check_connection() -> Result<bool, String> {
     Ok(matches!(connectivity, Ok(Ok(_))))
 }
 
-#[tauri::command]
 pub async fn health_check(state: State<'_, AIChatState>) -> Result<String, String> {
     let health = if let Some(router_ref) = state.ai_router.get("default") {
         router_ref.health_check().await

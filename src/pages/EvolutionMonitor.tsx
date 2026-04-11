@@ -133,8 +133,15 @@ function MetricDelta({ value, label }: { value: number; label: string }) {
           value > 0 ? 'text-green-400' : value < 0 ? 'text-red-400' : 'text-gray-400'
         }`}
       >
-        {value > 0 ? <ArrowUp className="w-3 h-3" /> : value < 0 ? <ArrowDown className="w-3 h-3" /> : <Minus className="w-3 h-3" />}
-        {value > 0 ? '+' : ''}{value}%
+        {value > 0 ? (
+          <ArrowUp className="w-3 h-3" />
+        ) : value < 0 ? (
+          <ArrowDown className="w-3 h-3" />
+        ) : (
+          <Minus className="w-3 h-3" />
+        )}
+        {value > 0 ? '+' : ''}
+        {value}%
       </div>
       <p className="text-xs text-gray-500 mt-0.5">{label}</p>
     </div>
@@ -150,10 +157,7 @@ export const EvolutionMonitor: React.FC = memo(() => {
     0
   );
   const totalStabilityDelta = TIMELINE.reduce((acc, e) => acc + e.metrics.stability, 0);
-  const totalCapabilityDelta = TIMELINE.reduce(
-    (acc, e) => acc + e.metrics.capability,
-    0
-  );
+  const totalCapabilityDelta = TIMELINE.reduce((acc, e) => acc + e.metrics.capability, 0);
 
   const handleRefresh = useCallback(async () => {
     await fetchState();
@@ -166,7 +170,7 @@ export const EvolutionMonitor: React.FC = memo(() => {
 
   return (
     <div className="bg-gray-900 text-white min-h-screen p-6">
-      <div className="max-w-screen-xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-6">
         {/* ── Header ── */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -179,11 +183,21 @@ export const EvolutionMonitor: React.FC = memo(() => {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="secondary" size="sm" onClick={handleRefresh} disabled={loading}>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={handleRefresh}
+              disabled={loading}
+            >
               <RefreshCw className={`w-4 h-4 mr-1 ${loading ? 'animate-spin' : ''}`} />
               Actualiser
             </Button>
-            <Button variant="primary" size="sm" onClick={() => void runEvolution()} disabled={loading}>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => void runEvolution()}
+              disabled={loading}
+            >
               <Zap className="w-4 h-4 mr-1" />
               Lancer évolution
             </Button>
@@ -297,9 +311,7 @@ export const EvolutionMonitor: React.FC = memo(() => {
                   {/* Timeline dot */}
                   <div
                     className={`relative z-10 w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                      index === 0
-                        ? 'bg-violet-600'
-                        : 'bg-gray-700 border border-gray-600'
+                      index === 0 ? 'bg-violet-600' : 'bg-gray-700 border border-gray-600'
                     }`}
                   >
                     <GitCommit className="w-4 h-4 text-white" />
@@ -317,7 +329,9 @@ export const EvolutionMonitor: React.FC = memo(() => {
                             {entry.version}
                           </span>
                           {index === 0 && (
-                            <Badge variant="primary" size="sm">latest</Badge>
+                            <Badge variant="primary" size="sm">
+                              latest
+                            </Badge>
                           )}
                         </div>
                         <p className="text-sm font-medium text-white">{entry.title}</p>
@@ -334,7 +348,9 @@ export const EvolutionMonitor: React.FC = memo(() => {
                       <MetricDelta value={entry.metrics.stability} label="Stabilité" />
                       <MetricDelta value={entry.metrics.capability} label="Capacité" />
                       <div className="ml-auto">
-                        <span className={`text-xs font-medium ${IMPACT_COLORS[entry.impact]}`}>
+                        <span
+                          className={`text-xs font-medium ${IMPACT_COLORS[entry.impact]}`}
+                        >
                           Impact {entry.impact}
                         </span>
                       </div>
@@ -359,7 +375,9 @@ export const EvolutionMonitor: React.FC = memo(() => {
             </div>
             <div>
               <p className="text-xs text-gray-500">Statut</p>
-              <Badge variant="success" size="sm">Stable</Badge>
+              <Badge variant="success" size="sm">
+                Stable
+              </Badge>
             </div>
             <div>
               <p className="text-xs text-gray-500">Versions trackées</p>
@@ -367,7 +385,9 @@ export const EvolutionMonitor: React.FC = memo(() => {
             </div>
             <div>
               <p className="text-xs text-gray-500">Alertes actives</p>
-              <Badge variant="success" size="sm" dot>0</Badge>
+              <Badge variant="success" size="sm" dot>
+                0
+              </Badge>
             </div>
           </div>
         </Card>

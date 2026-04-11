@@ -3,7 +3,7 @@
 // ║ Unified command handlers for frontend-backend communication                 ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
-// pub mod ai_chat; // disabled: duplicate command names with other command surfaces
+pub mod ai_chat; // required for full-backend state/types; keep non-re-exported to avoid handler drift
 pub mod ai_prompt_generator; // ✅ v25.4.2: AI Prompt Generator for Mode Builder
 pub mod automations; // ✅ v19.2Ω: Automation System
 pub mod chat_generate_commands; // ✅ v21 Phase 1: Provider-specific AI generation (Gemini/OpenAI/Claude)

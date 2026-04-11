@@ -6,14 +6,14 @@
 use crate::security::secrets_engine::{
     SecretsError, SecureSecretsEngine, KEY_CLAUDE, KEY_GEMINI, KEY_OPENAI,
 };
+use crate::profiling::ipc_profiler::IPCProfiler;
 use log::{error, info};
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 use std::sync::Arc;
 use tauri::State;
 #[allow(dead_code)]
-use titane_infinity::ia::{IAEngine, UnifiedIAEngine, UnifiedIARequest, UnifiedMessage};
-use titane_infinity::profiling::ipc_profiler::IPCProfiler;
+use crate::ia::{IAEngine, UnifiedIAEngine, UnifiedIARequest, UnifiedMessage};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetAPIKeyRequest {

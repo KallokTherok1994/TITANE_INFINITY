@@ -134,7 +134,9 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
             >
               {lastSyncDisplay ? `Dernière sync : ${lastSyncDisplay}` : 'Sync en attente'}
               {currentPhase ? ` · Phase : ${currentPhase}` : ''}
-              {chatContextStatus === 'active' ? ` · Sync : ${Math.round(syncScore * 100)}%` : ''}
+              {chatContextStatus === 'active'
+                ? ` · Sync : ${Math.round(syncScore * 100)}%`
+                : ''}
             </span>
           </div>
           <button
@@ -236,7 +238,9 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
 
       {/* ═══ PACTE FONDATEUR ═══ */}
       <Card style={{ marginTop: spacing[4] }}>
-        <h3 style={{ marginBottom: spacing[4] }}>📜 Pacte Fondateur — Alignement TWINS</h3>
+        <h3 style={{ marginBottom: spacing[4] }}>
+          📜 Pacte Fondateur — Alignement TWINS
+        </h3>
         <p style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}>
           <strong>🏗️ Excellence Systémique</strong>
           <br />
@@ -261,8 +265,8 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
         <h3 style={{ marginBottom: spacing[4] }}>⚙️ Surface TWINS canonique</h3>
         <p style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}>
           Les anciennes surfaces <strong>Identity</strong> et <strong>Symbiose</strong>
-          sont maintenant consolidées ici. Toute navigation legacy redirige vers le
-          point d&apos;entrée unique <code>/titane?tab=twins</code>.
+          sont maintenant consolidées ici. Toute navigation legacy redirige vers le point
+          d&apos;entrée unique <code>/titane?tab=twins</code>.
         </p>
         <ul
           style={{

@@ -36,16 +36,14 @@ export const useVisualTransitionDuration = () =>
   useVisualStore((s: VisualStore) => s.transitionDuration);
 
 /** Moteur visuel en cours d'exécution */
-export const useVisualIsRunning = () =>
-  useVisualStore((s: VisualStore) => s.isRunning);
+export const useVisualIsRunning = () => useVisualStore((s: VisualStore) => s.isRunning);
 
 /** Moteur visuel initialisé */
 export const useVisualIsInitialized = () =>
   useVisualStore((s: VisualStore) => s.isInitialized);
 
 /** Moteur visuel en pause */
-export const useVisualIsPaused = () =>
-  useVisualStore((s: VisualStore) => s.isPaused);
+export const useVisualIsPaused = () => useVisualStore((s: VisualStore) => s.isPaused);
 
 /** Métriques de performance complètes */
 export const useVisualMetricsSelector = () =>

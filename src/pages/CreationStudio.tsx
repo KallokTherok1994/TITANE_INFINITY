@@ -75,7 +75,7 @@ const TOOLS: CreationTool[] = [
     id: 'image',
     label: 'Image Builder',
     icon: <Image className="w-5 h-5" />,
-    description: 'Génération et manipulation d\'images',
+    description: "Génération et manipulation d'images",
     status: 'beta',
   },
   {
@@ -102,10 +102,34 @@ const TOOLS: CreationTool[] = [
 ];
 
 const RECENT_PROJECTS: RecentProject[] = [
-  { id: '1', name: 'Rapport d\'audit V30', type: 'text', updatedAt: '2026-04-11', status: 'active' },
-  { id: '2', name: 'Module TITANE API', type: 'code', updatedAt: '2026-04-10', status: 'draft' },
-  { id: '3', name: 'Présentation système', type: 'image', updatedAt: '2026-04-09', status: 'published' },
-  { id: '4', name: 'Voice greeting V∞', type: 'audio', updatedAt: '2026-04-08', status: 'active' },
+  {
+    id: '1',
+    name: "Rapport d'audit V30",
+    type: 'text',
+    updatedAt: '2026-04-11',
+    status: 'active',
+  },
+  {
+    id: '2',
+    name: 'Module TITANE API',
+    type: 'code',
+    updatedAt: '2026-04-10',
+    status: 'draft',
+  },
+  {
+    id: '3',
+    name: 'Présentation système',
+    type: 'image',
+    updatedAt: '2026-04-09',
+    status: 'published',
+  },
+  {
+    id: '4',
+    name: 'Voice greeting V∞',
+    type: 'audio',
+    updatedAt: '2026-04-08',
+    status: 'active',
+  },
 ];
 
 const STATUS_COLORS = {
@@ -141,7 +165,7 @@ export const CreationStudio: React.FC = memo(() => {
     <div className="min-h-screen bg-gray-900 text-white">
       {/* ── Header ── */}
       <div className="bg-gray-800 border-b border-gray-700 px-6 py-4">
-        <div className="flex items-center justify-between max-w-screen-xl mx-auto">
+        <div className="flex items-center justify-between max-w-7xl mx-auto">
           <div className="flex items-center gap-3">
             <Layers className="w-7 h-7 text-violet-400" />
             <div>
@@ -152,7 +176,9 @@ export const CreationStudio: React.FC = memo(() => {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Badge variant="info" size="sm">v30.1.0</Badge>
+            <Badge variant="info" size="sm">
+              v30.1.0
+            </Badge>
             <Button variant="primary" size="sm">
               <Plus className="w-4 h-4 mr-1" />
               Nouveau projet
@@ -162,7 +188,7 @@ export const CreationStudio: React.FC = memo(() => {
       </div>
 
       {/* ── Main Layout ── */}
-      <div className="flex max-w-screen-xl mx-auto h-[calc(100vh-73px)]">
+      <div className="flex max-w-7xl mx-auto h-[calc(100vh-73px)]">
         {/* Sidebar d'outils */}
         <aside className="w-64 bg-gray-800 border-r border-gray-700 p-4 flex flex-col gap-2 overflow-y-auto">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
@@ -191,7 +217,9 @@ export const CreationStudio: React.FC = memo(() => {
                     </Badge>
                   )}
                 </div>
-                <p className="text-xs text-gray-400 mt-0.5 truncate">{tool.description}</p>
+                <p className="text-xs text-gray-400 mt-0.5 truncate">
+                  {tool.description}
+                </p>
               </div>
             </button>
           ))}
@@ -211,15 +239,15 @@ export const CreationStudio: React.FC = memo(() => {
             <div className="flex-1 p-6 flex flex-col gap-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-violet-400">
-                    {TOOL_ICONS[activeTool]}
-                  </span>
+                  <span className="text-violet-400">{TOOL_ICONS[activeTool]}</span>
                   <h2 className="text-lg font-semibold">
                     {TOOLS.find(t => t.id === activeTool)?.label}
                   </h2>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="secondary" size="sm">Sauvegarder</Button>
+                  <Button variant="secondary" size="sm">
+                    Sauvegarder
+                  </Button>
                   <Button variant="primary" size="sm">
                     <Wand2 className="w-4 h-4 mr-1" />
                     Générer avec IA

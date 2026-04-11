@@ -63,10 +63,14 @@ function statusToHealth(
   status: ModuleStatus['status']
 ): 'success' | 'warning' | 'error' | 'neutral' {
   switch (status) {
-    case 'nominal': return 'success';
-    case 'degraded': return 'warning';
-    case 'critical': return 'error';
-    default: return 'neutral';
+    case 'nominal':
+      return 'success';
+    case 'degraded':
+      return 'warning';
+    case 'critical':
+      return 'error';
+    default:
+      return 'neutral';
   }
 }
 
@@ -154,7 +158,10 @@ export const RealityCenter: React.FC = memo(() => {
     setModules(prev =>
       prev.map(m => ({
         ...m,
-        conformance: Math.max(50, Math.min(100, m.conformance + (Math.random() - 0.5) * 4)),
+        conformance: Math.max(
+          50,
+          Math.min(100, m.conformance + (Math.random() - 0.5) * 4)
+        ),
       }))
     );
   }, [refreshHealth]);
@@ -172,15 +179,11 @@ export const RealityCenter: React.FC = memo(() => {
   const nominalCount = modules.filter(m => m.status === 'nominal').length;
 
   const overallStatus =
-    criticalCount > 0
-      ? 'critical'
-      : degradedCount > 0
-        ? 'degraded'
-        : 'nominal';
+    criticalCount > 0 ? 'critical' : degradedCount > 0 ? 'degraded' : 'nominal';
 
   return (
     <div className="bg-gray-900 text-white min-h-screen p-6">
-      <div className="max-w-screen-xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-6">
         {/* ── Header ── */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -194,10 +197,14 @@ export const RealityCenter: React.FC = memo(() => {
           </div>
           <div className="flex items-center gap-3">
             <span className="text-xs text-gray-500">
-              Dernière mise à jour :{' '}
-              {lastRefresh.toLocaleTimeString()}
+              Dernière mise à jour : {lastRefresh.toLocaleTimeString()}
             </span>
-            <Button variant="secondary" size="sm" onClick={handleRefresh} disabled={isLoading}>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={handleRefresh}
+              disabled={isLoading}
+            >
               <RefreshCw className={`w-4 h-4 mr-1 ${isLoading ? 'animate-spin' : ''}`} />
               Actualiser
             </Button>
@@ -214,7 +221,11 @@ export const RealityCenter: React.FC = memo(() => {
             <p className="text-3xl font-bold text-white">
               {globalConformance.toFixed(0)}%
             </p>
-            <Badge variant={conformanceBadgeVariant(globalConformance)} size="sm" className="mt-1">
+            <Badge
+              variant={conformanceBadgeVariant(globalConformance)}
+              size="sm"
+              className="mt-1"
+            >
               {overallStatus}
             </Badge>
           </Card>
@@ -265,7 +276,9 @@ export const RealityCenter: React.FC = memo(() => {
               <div>
                 <p className="text-xs text-gray-500">Conversation</p>
                 <Badge
-                  variant={health.conversation?.status === 'healthy' ? 'success' : 'warning'}
+                  variant={
+                    health.conversation?.status === 'healthy' ? 'success' : 'warning'
+                  }
                   size="sm"
                 >
                   {health.conversation?.status ?? 'unknown'}
@@ -283,7 +296,9 @@ export const RealityCenter: React.FC = memo(() => {
               <div>
                 <p className="text-xs text-gray-500">Singularité</p>
                 <Badge
-                  variant={health.singularity?.status === 'healthy' ? 'success' : 'warning'}
+                  variant={
+                    health.singularity?.status === 'healthy' ? 'success' : 'warning'
+                  }
                   size="sm"
                 >
                   {health.singularity?.status ?? 'unknown'}
@@ -331,11 +346,15 @@ export const RealityCenter: React.FC = memo(() => {
                     }`}
                   >
                     <td className="p-3 font-medium text-white">{mod.name}</td>
-                    <td className="p-3 text-gray-300 font-mono text-xs">{mod.expected}</td>
+                    <td className="p-3 text-gray-300 font-mono text-xs">
+                      {mod.expected}
+                    </td>
                     <td className="p-3 font-mono text-xs">
                       <span
                         className={
-                          mod.actual === mod.expected ? 'text-green-400' : 'text-yellow-400'
+                          mod.actual === mod.expected
+                            ? 'text-green-400'
+                            : 'text-yellow-400'
                         }
                       >
                         {mod.actual}
@@ -402,15 +421,21 @@ export const RealityCenter: React.FC = memo(() => {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">IPC One Door</span>
-                <Badge variant="success" size="sm">OK</Badge>
+                <Badge variant="success" size="sm">
+                  OK
+                </Badge>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">Backend Rust</span>
-                <Badge variant="success" size="sm">OK</Badge>
+                <Badge variant="success" size="sm">
+                  OK
+                </Badge>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">AI Gateway</span>
-                <Badge variant="success" size="sm">OK</Badge>
+                <Badge variant="success" size="sm">
+                  OK
+                </Badge>
               </div>
             </div>
           </Card>
@@ -439,7 +464,9 @@ export const RealityCenter: React.FC = memo(() => {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">Refresh auto</span>
-                <Badge variant="info" size="sm">30s</Badge>
+                <Badge variant="info" size="sm">
+                  30s
+                </Badge>
               </div>
             </div>
           </Card>

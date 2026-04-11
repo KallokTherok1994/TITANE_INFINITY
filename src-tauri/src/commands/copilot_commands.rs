@@ -7,12 +7,12 @@
 
 use crate::security::permission_guard::PERMISSION_GUARD;
 use crate::security::permissions::Role;
+use crate::api_hub::copilot::{CopilotClient, CopilotRequest, Message, TestResult};
 use crate::security::secrets_engine::{SecureSecretsEngine, KEY_COPILOT};
 use log::{debug, error, info};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tauri::State;
-use titane_infinity::api_hub::copilot::{CopilotClient, CopilotRequest, Message, TestResult};
 use tokio::sync::RwLock;
 
 // ─────────────────────────────────────────────────────────────────────────────

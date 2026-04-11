@@ -53,6 +53,10 @@ pub mod registry {
         pub fn get_core(&self, _name: &str) -> Option<CoreModule> {
             Some(CoreModule)
         }
+
+        pub fn get_dependencies(&self, _name: &str) -> Vec<String> {
+            Vec::new()
+        }
     }
 
     pub struct CoreModule;

@@ -26,7 +26,7 @@ import {
   Brain,
   Layers,
   GitMerge,
-  Infinity,
+  Infinity as InfinityIcon,
   CheckCircle,
   AlertCircle,
 } from 'lucide-react';
@@ -49,15 +49,78 @@ interface EngineNode {
 // ─────────────────────────────────────────────────────────────────
 
 const INITIAL_ENGINES: EngineNode[] = [
-  { id: 'cognitive', name: 'Cognitive Engine', domain: 'cognitive', syncScore: 0.97, latencyMs: 12, active: true },
-  { id: 'memory', name: 'Memory Engine', domain: 'memory', syncScore: 0.95, latencyMs: 18, active: true },
-  { id: 'emotion', name: 'Emotion Engine', domain: 'emotional', syncScore: 0.93, latencyMs: 8, active: true },
-  { id: 'voice', name: 'Voice Engine', domain: 'voice', syncScore: 0.88, latencyMs: 22, active: true },
-  { id: 'identity', name: 'Identity Engine', domain: 'identity', syncScore: 1.0, latencyMs: 5, active: true },
-  { id: 'narrative', name: 'Narrative Engine', domain: 'cognitive', syncScore: 0.91, latencyMs: 15, active: true },
-  { id: 'temporal', name: 'Temporal Engine', domain: 'memory', syncScore: 0.89, latencyMs: 20, active: true },
-  { id: 'singularity', name: 'Singularity Core', domain: 'singularity', syncScore: 0.99, latencyMs: 3, active: true },
-  { id: 'consciousness', name: 'Consciousness Engine', domain: 'singularity', syncScore: 0.96, latencyMs: 10, active: true },
+  {
+    id: 'cognitive',
+    name: 'Cognitive Engine',
+    domain: 'cognitive',
+    syncScore: 0.97,
+    latencyMs: 12,
+    active: true,
+  },
+  {
+    id: 'memory',
+    name: 'Memory Engine',
+    domain: 'memory',
+    syncScore: 0.95,
+    latencyMs: 18,
+    active: true,
+  },
+  {
+    id: 'emotion',
+    name: 'Emotion Engine',
+    domain: 'emotional',
+    syncScore: 0.93,
+    latencyMs: 8,
+    active: true,
+  },
+  {
+    id: 'voice',
+    name: 'Voice Engine',
+    domain: 'voice',
+    syncScore: 0.88,
+    latencyMs: 22,
+    active: true,
+  },
+  {
+    id: 'identity',
+    name: 'Identity Engine',
+    domain: 'identity',
+    syncScore: 1.0,
+    latencyMs: 5,
+    active: true,
+  },
+  {
+    id: 'narrative',
+    name: 'Narrative Engine',
+    domain: 'cognitive',
+    syncScore: 0.91,
+    latencyMs: 15,
+    active: true,
+  },
+  {
+    id: 'temporal',
+    name: 'Temporal Engine',
+    domain: 'memory',
+    syncScore: 0.89,
+    latencyMs: 20,
+    active: true,
+  },
+  {
+    id: 'singularity',
+    name: 'Singularity Core',
+    domain: 'singularity',
+    syncScore: 0.99,
+    latencyMs: 3,
+    active: true,
+  },
+  {
+    id: 'consciousness',
+    name: 'Consciousness Engine',
+    domain: 'singularity',
+    syncScore: 0.96,
+    latencyMs: 10,
+    active: true,
+  },
 ];
 
 const DOMAIN_COLORS: Record<EngineNode['domain'], string> = {
@@ -114,7 +177,7 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
 
   return (
     <div className="bg-gray-900 text-white min-h-screen p-6">
-      <div className="max-w-screen-xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-6">
         {/* ── Header ── */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -137,7 +200,9 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
               onClick={handleRefresh}
               disabled={isRefreshing}
             >
-              <RefreshCw className={`w-4 h-4 mr-1 ${isRefreshing ? 'animate-spin' : ''}`} />
+              <RefreshCw
+                className={`w-4 h-4 mr-1 ${isRefreshing ? 'animate-spin' : ''}`}
+              />
               Sync
             </Button>
           </div>
@@ -147,7 +212,7 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card variant="glass" elevation="md" padding={4}>
             <div className="flex items-center gap-2 mb-2">
-              <Infinity className="w-4 h-4 text-violet-400" />
+              <InfinityIcon className="w-4 h-4 text-violet-400" />
               <span className="text-xs text-gray-400">Cohérence auto</span>
             </div>
             <p className="text-3xl font-bold text-white">
@@ -210,7 +275,11 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
             <p className="text-2xl font-bold text-white">
               {activeCount}/{engines.length}
             </p>
-            <Badge variant={activeCount === engines.length ? 'success' : 'warning'} size="sm" className="mt-1">
+            <Badge
+              variant={activeCount === engines.length ? 'success' : 'warning'}
+              size="sm"
+              className="mt-1"
+            >
               {activeCount === engines.length ? 'Tous actifs' : 'Dégradé'}
             </Badge>
           </Card>
@@ -248,7 +317,11 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
                 <div className="mb-3">
                   <div className="flex justify-between text-xs text-gray-400 mb-1">
                     <span>Synchronisation</span>
-                    <span className={engine.syncScore >= 0.95 ? 'text-green-400' : 'text-yellow-400'}>
+                    <span
+                      className={
+                        engine.syncScore >= 0.95 ? 'text-green-400' : 'text-yellow-400'
+                      }
+                    >
                       {(engine.syncScore * 100).toFixed(0)}%
                     </span>
                   </div>

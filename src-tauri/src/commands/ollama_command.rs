@@ -1,4 +1,4 @@
-use crate::ollama::{query_ollama, OllamaParams};
+use crate::ai::ollama::{query_ollama, OllamaParams};
 /**
  * TITANE∞ — Unified Ollama Provider Command
  * Centralized Tauri command for all Ollama interactions

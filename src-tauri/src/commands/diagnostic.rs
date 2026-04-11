@@ -79,9 +79,8 @@ pub async fn backend_self_check(
     log::info!("[Diagnostic v14] Starting backend self-check");
 
     let (initialized, running, health, modules, metrics) = {
-        let engine = state
-            .core_collection
-            .engine()
+        let engine_handle = state.core_collection.engine();
+        let engine = engine_handle
             .lock()
             .map_err(|e| format!("Failed to lock SingularityEngine: {}", e))?;
 

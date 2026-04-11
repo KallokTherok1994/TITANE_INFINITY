@@ -1959,7 +1959,9 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             >
               {twinsLastSyncLabel}
               {currentPhase ? ` · Phase : ${currentPhase}` : ''}
-              {chatContextStatus === 'active' ? ` · Sync : ${Math.round(syncScore * 100)}%` : ''}
+              {chatContextStatus === 'active'
+                ? ` · Sync : ${Math.round(syncScore * 100)}%`
+                : ''}
             </div>
           </div>
 

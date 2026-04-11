@@ -19,7 +19,7 @@ pub struct IdentityMatrix {
 }
 
 /// Obtenir la matrice d'identité actuelle
-#[tauri::command]
+/// Legacy local helper: canonical IPC command lives in `crate::identity::commands`.
 pub async fn identity_get_matrix() -> Result<IdentityMatrix, String> {
     PERMISSION_GUARD
         .require("system_read", Role::User, "identity_get_matrix")
@@ -48,7 +48,6 @@ pub async fn identity_get_matrix() -> Result<IdentityMatrix, String> {
 }
 
 /// Sauvegarder la matrice d'identité
-#[tauri::command]
 pub async fn identity_save_matrix(matrix: IdentityMatrix) -> Result<(), String> {
     PERMISSION_GUARD
         .require("system_write", Role::User, "identity_save_matrix")
@@ -71,7 +70,6 @@ pub async fn identity_save_matrix(matrix: IdentityMatrix) -> Result<(), String> 
 }
 
 /// Mettre à jour une préférence spécifique
-#[tauri::command]
 pub async fn identity_update_preference(
     key: String,
     value: serde_json::Value,

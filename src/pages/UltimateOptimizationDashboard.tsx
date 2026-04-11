@@ -64,7 +64,13 @@ interface Recommendation {
 const BENCHMARKS: BenchmarkEntry[] = [
   { name: 'IPC Latence', before: 85, after: 12, unit: 'ms', higher_is_better: false },
   { name: 'FPS moyen', before: 42, after: 60, unit: 'fps', higher_is_better: true },
-  { name: 'Mémoire JS heap', before: 384, after: 210, unit: 'MB', higher_is_better: false },
+  {
+    name: 'Mémoire JS heap',
+    before: 384,
+    after: 210,
+    unit: 'MB',
+    higher_is_better: false,
+  },
   { name: 'Temps boot', before: 3200, after: 1400, unit: 'ms', higher_is_better: false },
   { name: 'Req IPC/s', before: 120, after: 380, unit: 'req/s', higher_is_better: true },
   { name: 'CPU idle', before: 35, after: 12, unit: '%', higher_is_better: false },
@@ -75,7 +81,8 @@ const INITIAL_RECOMMENDATIONS: Recommendation[] = [
     id: 'r1',
     priority: 'high',
     title: 'Migrer les stores visuels vers unifiedVisualStore',
-    description: 'Consolider visualStore + visualStateStore + visualStateStoreV21 réduit la duplication et les re-renders.',
+    description:
+      'Consolider visualStore + visualStateStore + visualStateStoreV21 réduit la duplication et les re-renders.',
     estimatedGain: '+8% perf React',
     effort: 'medium',
     applied: true,
@@ -84,7 +91,8 @@ const INITIAL_RECOMMENDATIONS: Recommendation[] = [
     id: 'r2',
     priority: 'high',
     title: 'Consolider les bridges Singularity',
-    description: 'unifiedSingularityBridge remplace les 2 bridges dupliqués (~30 KB → ~18 KB).',
+    description:
+      'unifiedSingularityBridge remplace les 2 bridges dupliqués (~30 KB → ~18 KB).',
     estimatedGain: '-40% bundle',
     effort: 'medium',
     applied: true,
@@ -93,7 +101,8 @@ const INITIAL_RECOMMENDATIONS: Recommendation[] = [
     id: 'r3',
     priority: 'medium',
     title: 'Décomposer useChat.ts (82 KB)',
-    description: 'Diviser le hook géant en sous-hooks spécialisés pour améliorer la lisibilité et le tree-shaking.',
+    description:
+      'Diviser le hook géant en sous-hooks spécialisés pour améliorer la lisibilité et le tree-shaking.',
     estimatedGain: '+5% bundle size',
     effort: 'hard',
     applied: false,
@@ -102,7 +111,8 @@ const INITIAL_RECOMMENDATIONS: Recommendation[] = [
     id: 'r4',
     priority: 'medium',
     title: 'Refactoriser main.rs (142 KB)',
-    description: 'Décomposer le fichier monolithique en modules Rust pour faciliter la compilation incrémentale.',
+    description:
+      'Décomposer le fichier monolithique en modules Rust pour faciliter la compilation incrémentale.',
     estimatedGain: '-30% rebuild time',
     effort: 'hard',
     applied: false,
@@ -136,10 +146,9 @@ const EFFORT_LABEL = {
 // ─────────────────────────────────────────────────────────────────
 
 function BenchmarkRow({ entry }: { entry: BenchmarkEntry }) {
-  const improvement =
-    entry.higher_is_better
-      ? ((entry.after - entry.before) / entry.before) * 100
-      : ((entry.before - entry.after) / entry.before) * 100;
+  const improvement = entry.higher_is_better
+    ? ((entry.after - entry.before) / entry.before) * 100
+    : ((entry.before - entry.after) / entry.before) * 100;
 
   return (
     <tr className="border-b border-gray-800 hover:bg-gray-800/40">
@@ -163,7 +172,8 @@ function BenchmarkRow({ entry }: { entry: BenchmarkEntry }) {
           ) : (
             <TrendingDown className="w-3 h-3" />
           )}
-          {improvement > 0 ? '+' : ''}{improvement.toFixed(0)}%
+          {improvement > 0 ? '+' : ''}
+          {improvement.toFixed(0)}%
         </span>
       </td>
     </tr>
@@ -199,7 +209,7 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
 
   return (
     <div className="bg-gray-900 text-white min-h-screen p-6">
-      <div className="max-w-screen-xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-6">
         {/* ── Header ── */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -226,7 +236,9 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
               onClick={() => void handleRefresh()}
               disabled={isRefreshing}
             >
-              <RefreshCw className={`w-4 h-4 mr-1 ${isRefreshing ? 'animate-spin' : ''}`} />
+              <RefreshCw
+                className={`w-4 h-4 mr-1 ${isRefreshing ? 'animate-spin' : ''}`}
+              />
               Refresh
             </Button>
           </div>
@@ -241,17 +253,27 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
             </div>
             <p
               className={`text-3xl font-bold ${
-                metrics.fps >= 55 ? 'text-green-400' : metrics.fps >= 40 ? 'text-yellow-400' : 'text-red-400'
+                metrics.fps >= 55
+                  ? 'text-green-400'
+                  : metrics.fps >= 40
+                    ? 'text-yellow-400'
+                    : 'text-red-400'
               }`}
             >
               {Math.round(metrics.fps)}
             </p>
             <Badge
-              variant={metrics.fps >= 55 ? 'success' : metrics.fps >= 40 ? 'warning' : 'error'}
+              variant={
+                metrics.fps >= 55 ? 'success' : metrics.fps >= 40 ? 'warning' : 'error'
+              }
               size="sm"
               className="mt-1"
             >
-              {metrics.fps >= 55 ? 'Optimal' : metrics.fps >= 40 ? 'Acceptable' : 'Dégradé'}
+              {metrics.fps >= 55
+                ? 'Optimal'
+                : metrics.fps >= 40
+                  ? 'Acceptable'
+                  : 'Dégradé'}
             </Badge>
           </Card>
 
@@ -262,7 +284,11 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
             </div>
             <p
               className={`text-3xl font-bold ${
-                metrics.cpuLoad < 50 ? 'text-green-400' : metrics.cpuLoad < 80 ? 'text-yellow-400' : 'text-red-400'
+                metrics.cpuLoad < 50
+                  ? 'text-green-400'
+                  : metrics.cpuLoad < 80
+                    ? 'text-yellow-400'
+                    : 'text-red-400'
               }`}
             >
               {metrics.cpuLoad.toFixed(0)}%
@@ -278,7 +304,9 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
               {animationConfig.duration}ms
             </p>
             {animationConfig.skipAnimation && (
-              <Badge variant="warning" size="sm" className="mt-1">Skip</Badge>
+              <Badge variant="warning" size="sm" className="mt-1">
+                Skip
+              </Badge>
             )}
           </Card>
 
@@ -331,9 +359,13 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
               </h2>
             </div>
             <div className="flex gap-2">
-              <Badge variant="success" size="sm">{appliedCount} appliquées</Badge>
+              <Badge variant="success" size="sm">
+                {appliedCount} appliquées
+              </Badge>
               {pendingCount > 0 && (
-                <Badge variant="warning" size="sm">{pendingCount} en attente</Badge>
+                <Badge variant="warning" size="sm">
+                  {pendingCount} en attente
+                </Badge>
               )}
             </div>
           </div>
@@ -367,7 +399,9 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
                         </Badge>
                         <p className="text-sm font-medium text-white">{rec.title}</p>
                         {rec.applied && (
-                          <Badge variant="success" size="sm">✓ Appliquée</Badge>
+                          <Badge variant="success" size="sm">
+                            ✓ Appliquée
+                          </Badge>
                         )}
                       </div>
                       <p className="text-xs text-gray-400 mb-2">{rec.description}</p>
@@ -432,7 +466,10 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
                   <span className="text-green-400">Optimal</span>
                 </div>
                 <div className="w-full bg-gray-700 rounded-full h-1.5">
-                  <div className="bg-green-500 h-1.5 rounded-full" style={{ width: '92%' }} />
+                  <div
+                    className="bg-green-500 h-1.5 rounded-full"
+                    style={{ width: '92%' }}
+                  />
                 </div>
               </div>
               <div>
@@ -441,7 +478,10 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
                   <span className="text-green-400">Optimal</span>
                 </div>
                 <div className="w-full bg-gray-700 rounded-full h-1.5">
-                  <div className="bg-green-500 h-1.5 rounded-full" style={{ width: '88%' }} />
+                  <div
+                    className="bg-green-500 h-1.5 rounded-full"
+                    style={{ width: '88%' }}
+                  />
                 </div>
               </div>
               <div>
@@ -450,7 +490,10 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
                   <span className="text-yellow-400">Moyen</span>
                 </div>
                 <div className="w-full bg-gray-700 rounded-full h-1.5">
-                  <div className="bg-yellow-500 h-1.5 rounded-full" style={{ width: '65%' }} />
+                  <div
+                    className="bg-yellow-500 h-1.5 rounded-full"
+                    style={{ width: '65%' }}
+                  />
                 </div>
               </div>
               <div>
@@ -459,7 +502,10 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
                   <span className="text-green-400">Bon</span>
                 </div>
                 <div className="w-full bg-gray-700 rounded-full h-1.5">
-                  <div className="bg-green-500 h-1.5 rounded-full" style={{ width: '78%' }} />
+                  <div
+                    className="bg-green-500 h-1.5 rounded-full"
+                    style={{ width: '78%' }}
+                  />
                 </div>
               </div>
             </div>

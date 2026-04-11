@@ -19,7 +19,7 @@ import { Spinner } from '../ui/Spinner';
 import { useSingularity } from '../hooks/useSingularity';
 import {
   Atom,
-  Infinity,
+  Infinity as InfinityIcon,
   RefreshCw,
   Activity,
   Zap,
@@ -99,7 +99,7 @@ export const SingularityMonitor: React.FC = memo(() => {
 
   return (
     <div className="bg-gray-900 text-white min-h-screen p-6">
-      <div className="max-w-screen-xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-6">
         {/* ── Header ── */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -122,7 +122,9 @@ export const SingularityMonitor: React.FC = memo(() => {
               onClick={() => void handleRefresh()}
               disabled={isRefreshing}
             >
-              <RefreshCw className={`w-4 h-4 mr-1 ${isRefreshing ? 'animate-spin' : ''}`} />
+              <RefreshCw
+                className={`w-4 h-4 mr-1 ${isRefreshing ? 'animate-spin' : ''}`}
+              />
               Refresh
             </Button>
           </div>
@@ -152,7 +154,7 @@ export const SingularityMonitor: React.FC = memo(() => {
 
           <Card variant="glass" elevation="md" padding={4}>
             <div className="flex items-center gap-2 mb-2">
-              <Infinity className="w-4 h-4 text-violet-400" />
+              <InfinityIcon className="w-4 h-4 text-violet-400" />
               <span className="text-xs text-gray-400">Cohérence auto</span>
             </div>
             <p className="text-3xl font-bold text-violet-400">
@@ -259,7 +261,9 @@ export const SingularityMonitor: React.FC = memo(() => {
                         <p className="text-xs text-gray-500">{key}</p>
                         <p className="text-sm text-white font-mono">
                           {typeof value === 'boolean'
-                            ? value ? 'true' : 'false'
+                            ? value
+                              ? 'true'
+                              : 'false'
                             : typeof value === 'number'
                               ? value.toFixed(3)
                               : String(value)}

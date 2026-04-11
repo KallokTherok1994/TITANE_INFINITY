@@ -100,6 +100,7 @@ pub mod cache; // ✅ Intelligent Cache LRU + Persistent v19.5.2 P2-2 (NEW) // �
 
 pub mod ai; // ✅ AI Router (v15 migration in progress)
 pub mod ai_chat; // ✅ AI Chat & Training Mode v∞ (OPUS #12)
+pub mod ollama; // ✅ Canonical Ollama runtime bridge for Tauri/library builds
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 pub mod chat_engine; // ✅ High-performance Chat Engine v∞
 pub mod conversation_engine; // ✅ Conversation Engine v∞ (Unified Pipeline, Memory Map, Self-Healing)

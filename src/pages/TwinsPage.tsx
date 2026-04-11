@@ -73,7 +73,7 @@ export const TwinsPage: React.FC = () => {
 
   return (
     <div className="bg-gray-900 text-white min-h-screen p-6">
-      <div className="max-w-screen-xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-6">
         {/* ── Header ── */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -87,7 +87,13 @@ export const TwinsPage: React.FC = () => {
           </div>
           <div className="flex items-center gap-3">
             <Badge
-              variant={chatContextStatus === 'active' ? 'success' : chatContextStatus === 'stale' ? 'warning' : 'neutral'}
+              variant={
+                chatContextStatus === 'active'
+                  ? 'success'
+                  : chatContextStatus === 'stale'
+                    ? 'warning'
+                    : 'neutral'
+              }
               size="sm"
               dot
             >
@@ -127,7 +133,7 @@ export const TwinsPage: React.FC = () => {
                 ? `${(
                     (typeof evolutionFusion === 'number'
                       ? evolutionFusion
-                      : evolutionFusion.globalScore ?? 0) * 100
+                      : (evolutionFusion.globalScore ?? 0)) * 100
                   ).toFixed(0)}%`
                 : fusionIndex > 0
                   ? `${(fusionIndex * 100).toFixed(0)}%`
@@ -216,7 +222,9 @@ export const TwinsPage: React.FC = () => {
             <Card variant="solid" padding={4}>
               <div className="flex items-center gap-2 mb-3">
                 <TrendingUp className="w-4 h-4 text-green-400" />
-                <h2 className="text-sm font-semibold text-gray-300">Profil d'évolution</h2>
+                <h2 className="text-sm font-semibold text-gray-300">
+                  Profil d'évolution
+                </h2>
               </div>
               {evolutionProfile ? (
                 <div className="space-y-3">
@@ -239,7 +247,9 @@ export const TwinsPage: React.FC = () => {
                       <p className="text-xs text-gray-500 mb-1">Thèmes propriétaire</p>
                       <div className="flex flex-wrap gap-1">
                         {ownerThemes.slice(0, 4).map((theme, i) => (
-                          <Badge key={i} variant="info" size="sm">{theme}</Badge>
+                          <Badge key={i} variant="info" size="sm">
+                            {theme}
+                          </Badge>
                         ))}
                       </div>
                     </div>
@@ -288,15 +298,16 @@ export const TwinsPage: React.FC = () => {
                   <span>87%</span>
                 </div>
                 <div className="w-full bg-gray-700 rounded-full h-1.5">
-                  <div className="bg-blue-500 h-1.5 rounded-full" style={{ width: '87%' }} />
+                  <div
+                    className="bg-blue-500 h-1.5 rounded-full"
+                    style={{ width: '87%' }}
+                  />
                 </div>
               </div>
               <div>
                 <div className="flex justify-between text-xs text-gray-400 mb-1">
                   <span>Cohérence valeurs</span>
-                  <span>
-                    {syncScore > 0 ? `${(syncScore * 100).toFixed(0)}%` : '—'}
-                  </span>
+                  <span>{syncScore > 0 ? `${(syncScore * 100).toFixed(0)}%` : '—'}</span>
                 </div>
                 <div className="w-full bg-gray-700 rounded-full h-1.5">
                   <div
@@ -317,7 +328,13 @@ export const TwinsPage: React.FC = () => {
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">Contexte chat</span>
                 <Badge
-                  variant={chatContextStatus === 'active' ? 'success' : chatContextStatus === 'stale' ? 'warning' : 'neutral'}
+                  variant={
+                    chatContextStatus === 'active'
+                      ? 'success'
+                      : chatContextStatus === 'stale'
+                        ? 'warning'
+                        : 'neutral'
+                  }
                   size="sm"
                 >
                   {chatContextStatus}
@@ -325,7 +342,9 @@ export const TwinsPage: React.FC = () => {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">Twin actif</span>
-                <Badge variant="success" size="sm" dot>Oui</Badge>
+                <Badge variant="success" size="sm" dot>
+                  Oui
+                </Badge>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">Sources</span>
