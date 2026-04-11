@@ -16,6 +16,10 @@ import { titaneTelemetry } from '../utils/telemetryEngine';
 import { titaneBootRecovery } from '../utils/bootRecoverySystem';
 import ConsciousnessDashboard from './ConsciousnessDashboard';
 import type { QuantumThought } from '../utils/quantumIntelligence';
+
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('SysIntegration');
 // import type { SystemState } from '../utils/selfHealingSystem';
 // import type { TelemetryReport } from '../utils/telemetryEngine';
 // import type { BootAttempt } from '../utils/bootRecoverySystem';
@@ -92,7 +96,7 @@ const SystemIntegrationHub: React.FC<SystemIntegrationHubProps> = ({
   const integrationLoop = useCallback(() => {
     // 🔒 PHASE 3: Vérifier état fatal
     if (bootSafetyLock.isFatalState()) {
-      console.error('❌ [SYSTEM-HUB] Integration loop blocked: fatal state');
+      logger.error('❌ [SYSTEM-HUB] Integration loop blocked: fatal state');
       return;
     }
 
@@ -154,7 +158,7 @@ const SystemIntegrationHub: React.FC<SystemIntegrationHubProps> = ({
         // 🔒 PHASE 3: Incrémenter compteur de render
         renderCountRef.current++;
         if (renderCountRef.current > 100) {
-          console.error('💥 [SYSTEM-HUB] Render loop detected - STOP');
+          logger.error('💥 [SYSTEM-HUB] Render loop detected - STOP');
           bootSafetyLock.markFatalError();
           return currentState;
         }
@@ -218,16 +222,16 @@ const SystemIntegrationHub: React.FC<SystemIntegrationHubProps> = ({
 
           // Log console pour les événements critiques
           if (event.severity === 'critical' || event.severity === 'error') {
-            console.error(`🚨 [SYSTEM-HUB] ${event.type}:`, event.data);
+            logger.error(`🚨 [SYSTEM-HUB] ${event.type}:`, event.data);
           } else if (event.severity === 'warning') {
-            console.warn(`⚠️ [SYSTEM-HUB] ${event.type}:`, event.data);
+            logger.warn(`⚠️ [SYSTEM-HUB] ${event.type}:`, event.data);
           } else {
-            console.log(`ℹ️ [SYSTEM-HUB] ${event.type}:`, event.data);
+            logger.info(`ℹ️ [SYSTEM-HUB] ${event.type}:`, event.data);
           }
         });
       }
     } catch (error) {
-      console.error('🔧 [SYSTEM-HUB] Integration loop error:', error);
+      logger.error('🔧 [SYSTEM-HUB] Integration loop error:', error);
     } finally {
       inFlight.current = false;
     }
@@ -245,7 +249,7 @@ const SystemIntegrationHub: React.FC<SystemIntegrationHubProps> = ({
   // Actions manuelles (définies AVANT useEffect qui les utilise)
   const triggerManualHealing = useCallback(async () => {
     try {
-      console.log('🔧 [SYSTEM-HUB] Triggering manual healing...');
+      logger.info('🔧 [SYSTEM-HUB] Triggering manual healing...');
       const results = await titaneSelfHealing.triggerManualHealing([
         'clear_cache',
         'optimize_memory',
@@ -253,14 +257,14 @@ const SystemIntegrationHub: React.FC<SystemIntegrationHubProps> = ({
       ]);
 
       const successCount = results.filter(r => r.success).length;
-      console.log(
+      logger.info(
         `✅ [SYSTEM-HUB] Manual healing completed: ${successCount}/${results.length} actions successful`
       );
 
       // Notification visuelle
       showNotification('🔧 Healing completed', 'success');
     } catch (error) {
-      console.error('❌ [SYSTEM-HUB] Manual healing failed:', error);
+      logger.error('❌ [SYSTEM-HUB] Manual healing failed:', error);
       showNotification('❌ Healing failed', 'error');
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -269,10 +273,10 @@ const SystemIntegrationHub: React.FC<SystemIntegrationHubProps> = ({
     try {
       const demonstration =
         await titaneQuantumIntelligence.demonstrateQuantumIntelligence();
-      console.log(demonstration);
+      logger.info(demonstration);
       showNotification('🧠 Quantum Intelligence Demonstrated', 'info');
     } catch (error) {
-      console.error('❌ [SYSTEM-HUB] Quantum intelligence demo failed:', error);
+      logger.error('❌ [SYSTEM-HUB] Quantum intelligence demo failed:', error);
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -473,7 +477,7 @@ const SystemIntegrationHub: React.FC<SystemIntegrationHubProps> = ({
         >
           <ConsciousnessDashboard
             onThoughtClick={(thought: QuantumThought) => {
-              console.log('💭 [QUANTUM-THOUGHT]', thought.meta_cognition);
+              logger.info('💭 [QUANTUM-THOUGHT]', thought.meta_cognition);
               showNotification(
                 `💭 "${thought.meta_cognition.substring(0, 50)}..."`,
                 'info'

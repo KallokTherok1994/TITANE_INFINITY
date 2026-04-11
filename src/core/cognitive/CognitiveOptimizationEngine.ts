@@ -31,6 +31,10 @@
 
 import { secureInvoke } from '@/lib/security';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('CogOptim');
+
 // ═══════════════════════════════════════════════════════════════════
 // TYPES COGNITIFS
 // ═══════════════════════════════════════════════════════════════════
@@ -152,7 +156,7 @@ export class CognitiveOptimizationEngine {
 
       return result;
     } catch (error) {
-      console.error('[CognitiveOptimizationEngine] Intention analysis error:', error);
+      logger.error('[CognitiveOptimizationEngine] Intention analysis error:', error);
       return {
         primary_intention: 'unknown',
         secondary_intentions: [],
@@ -191,7 +195,7 @@ export class CognitiveOptimizationEngine {
 
       return result;
     } catch (error) {
-      console.error('[CognitiveOptimizationEngine] Coherence check error:', error);
+      logger.error('[CognitiveOptimizationEngine] Coherence check error:', error);
       return {
         is_coherent: true, // Fallback optimiste
         coherence_score: 1.0,
@@ -226,7 +230,7 @@ export class CognitiveOptimizationEngine {
 
       return result;
     } catch (error) {
-      console.error('[CognitiveOptimizationEngine] Context optimization error:', error);
+      logger.error('[CognitiveOptimizationEngine] Context optimization error:', error);
       return {
         original_tokens: 0,
         optimized_tokens: 0,
@@ -259,7 +263,7 @@ export class CognitiveOptimizationEngine {
 
       return result;
     } catch (error) {
-      console.error('[CognitiveOptimizationEngine] Memory gating error:', error);
+      logger.error('[CognitiveOptimizationEngine] Memory gating error:', error);
       return {
         retrieved_memories: [],
         relevance_scores: [],
@@ -291,7 +295,7 @@ export class CognitiveOptimizationEngine {
 
       return clusters;
     } catch (error) {
-      console.error('[CognitiveOptimizationEngine] Semantic clustering error:', error);
+      logger.error('[CognitiveOptimizationEngine] Semantic clustering error:', error);
       return [];
     }
   }
@@ -314,7 +318,7 @@ export class CognitiveOptimizationEngine {
 
       return corrected;
     } catch (error) {
-      console.error('[CognitiveOptimizationEngine] Auto-correction error:', error);
+      logger.error('[CognitiveOptimizationEngine] Auto-correction error:', error);
       return response; // Fallback sur réponse originale
     }
   }
@@ -337,7 +341,7 @@ export class CognitiveOptimizationEngine {
 
       return cleaned;
     } catch (error) {
-      console.error('[CognitiveOptimizationEngine] Noise removal error:', error);
+      logger.error('[CognitiveOptimizationEngine] Noise removal error:', error);
       return messages;
     }
   }
@@ -363,7 +367,7 @@ export class CognitiveOptimizationEngine {
 
       return injected;
     } catch (error) {
-      console.error('[CognitiveOptimizationEngine] Selective injection error:', error);
+      logger.error('[CognitiveOptimizationEngine] Selective injection error:', error);
       return baseContext;
     }
   }
@@ -381,7 +385,7 @@ export class CognitiveOptimizationEngine {
 
       return steps;
     } catch (error) {
-      console.error('[CognitiveOptimizationEngine] Step prioritization error:', error);
+      logger.error('[CognitiveOptimizationEngine] Step prioritization error:', error);
       return ['analyze', 'generate', 'validate'];
     }
   }
@@ -405,7 +409,7 @@ export class CognitiveOptimizationEngine {
 
       return result;
     } catch (error) {
-      console.error('[CognitiveOptimizationEngine] Mini reasoning error:', error);
+      logger.error('[CognitiveOptimizationEngine] Mini reasoning error:', error);
       return { valid: true, reasoning: 'No reasoning available' };
     }
   }
@@ -426,7 +430,7 @@ export class CognitiveOptimizationEngine {
       this.context.narrative_continuity = continuityScore;
       return continuityScore;
     } catch (error) {
-      console.error('[CognitiveOptimizationEngine] Narrative continuity error:', error);
+      logger.error('[CognitiveOptimizationEngine] Narrative continuity error:', error);
       return 1.0;
     }
   }
@@ -532,7 +536,7 @@ export class CognitiveOptimizationEngine {
         retrievedMemories,
       };
     } catch (error) {
-      console.error('[CognitiveOptimizationEngine] Full pipeline error:', error);
+      logger.error('[CognitiveOptimizationEngine] Full pipeline error:', error);
       return {
         optimizedContext: conversationHistory,
         intention: {

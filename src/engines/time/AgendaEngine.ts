@@ -20,6 +20,10 @@ import type {
   PriorityLevel,
   AgendaView,
 } from './types';
+
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('Agenda');
 // ARCHITECTURE RINGS COMPLIANT: Engines (Ring 2) don't import from Services (Ring 3)
 // I/O operations injected via storage callbacks at initialization
 // See docs/ARCHITECTURE_RINGS.md for details
@@ -169,13 +173,13 @@ export class AgendaEngine {
    * Initialise l'AgendaEngine et charge les événements depuis Tauri
    */
   async init(): Promise<void> {
-    console.log('[AgendaEngine] 📅 Initialisation...');
+    logger.info('[AgendaEngine] 📅 Initialisation...');
 
     if (this.storage) {
       await this.loadEvents();
     }
 
-    console.log('[AgendaEngine] ✅ Initialisé:', {
+    logger.info('[AgendaEngine] ✅ Initialisé:', {
       eventsCount: this.events.size,
       defaultView: this.meta.defaultView,
     });
@@ -196,9 +200,9 @@ export class AgendaEngine {
       this.events.clear();
       events.forEach((event: AgendaEvent) => this.events.set(event.id, event));
       this.notifyListeners();
-      console.log('[AgendaEngine] 📥 Événements chargés:', events.length);
+      logger.info('[AgendaEngine] 📥 Événements chargés:', events.length);
     } catch (error) {
-      console.error('[AgendaEngine] Erreur chargement:', error);
+      logger.error('[AgendaEngine] Erreur chargement:', error);
       // Fallback: garder les événements en mémoire
     }
   }
@@ -212,9 +216,9 @@ export class AgendaEngine {
     try {
       const eventsArray = Array.from(this.events.values());
       await this.storage.saveEvents(eventsArray);
-      console.log('[AgendaEngine] 💾 Événements sauvegardés:', eventsArray.length);
+      logger.info('[AgendaEngine] 💾 Événements sauvegardés:', eventsArray.length);
     } catch (error) {
-      console.error('[AgendaEngine] Erreur sauvegarde:', error);
+      logger.error('[AgendaEngine] Erreur sauvegarde:', error);
     }
   }
 
@@ -236,7 +240,7 @@ export class AgendaEngine {
     await this.saveEvents();
     this.notifyListeners();
 
-    console.log('[AgendaEngine] ➕ Événement créé:', event.title);
+    logger.info('[AgendaEngine] ➕ Événement créé:', event.title);
     return event;
   }
 
@@ -274,7 +278,7 @@ export class AgendaEngine {
   ): Promise<AgendaEvent | null> {
     const event = this.events.get(eventId);
     if (!event) {
-      console.warn('[AgendaEngine] Événement non trouvé:', eventId);
+      logger.warn('[AgendaEngine] Événement non trouvé:', eventId);
       return null;
     }
 
@@ -289,7 +293,7 @@ export class AgendaEngine {
     await this.saveEvents();
     this.notifyListeners();
 
-    console.log('[AgendaEngine] ✏️ Événement modifié:', updatedEvent.title);
+    logger.info('[AgendaEngine] ✏️ Événement modifié:', updatedEvent.title);
     return updatedEvent;
   }
 
@@ -331,7 +335,7 @@ export class AgendaEngine {
     await this.saveEvents();
     this.notifyListeners();
 
-    console.log('[AgendaEngine] 🗑️ Événement supprimé:', event.title);
+    logger.info('[AgendaEngine] 🗑️ Événement supprimé:', event.title);
     return true;
   }
 
@@ -606,7 +610,7 @@ export class AgendaEngine {
       try {
         listener(events);
       } catch (error) {
-        console.error('[AgendaEngine] Erreur listener:', error);
+        logger.error('[AgendaEngine] Erreur listener:', error);
       }
     });
   }

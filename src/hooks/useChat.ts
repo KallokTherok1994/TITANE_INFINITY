@@ -167,6 +167,10 @@ import {
   REQUEST_BUDGETS,
 } from '@/config/aiTimeouts.config'; // v22Ω: Centralized timeouts
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('ChatHook');
+
 let _cloudProvidersPromise: Promise<{
   openaiProvider: { isAvailable: () => Promise<boolean> };
   geminiProvider: { isAvailable: () => Promise<boolean> };
@@ -878,7 +882,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       const hasMessages = normalized.length > 0;
 
       // 🚨 DEBUG: Log avant harmonisation
-      console.log('[useChat] 🔄 applyMessagesSafely appelée', {
+      logger.info('[useChat] 🔄 applyMessagesSafely appelée', {
         context,
         messagesCount: normalized.length,
         lastMessage: normalized[normalized.length - 1],
@@ -920,7 +924,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       const emitted = applied.map(message => ({ ...message }));
 
       // 🚨 DEBUG: Log avant setMessages
-      console.log('[useChat] ✅ setMessages() appelée', {
+      logger.info('[useChat] ✅ setMessages() appelée', {
         context,
         messagesCount: emitted.length,
         lastMessage: emitted[emitted.length - 1],
@@ -1156,7 +1160,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
             await saveMessage(userMessage);
             await saveMessage(devSudoResponse);
           } catch (persistError) {
-            console.warn('[useChat] ⚠️ dev-sudo persistence failed', persistError);
+            logger.warn('[useChat] ⚠️ dev-sudo persistence failed', persistError);
           }
 
           return devSudoResponse;
@@ -1206,7 +1210,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
             await saveMessage(userMessage);
             await saveMessage(cameraResponse);
           } catch (persistError) {
-            console.warn('[useChat] ⚠️ camera persistence failed', persistError);
+            logger.warn('[useChat] ⚠️ camera persistence failed', persistError);
           }
 
           return cameraResponse;
@@ -1867,7 +1871,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
               finalResponse = await executeStreaming();
             } catch (error) {
               streamingError = error instanceof Error ? error : new Error(String(error));
-              console.warn('[Chat] Streaming fallback triggered:', streamingError);
+              logger.warn('[Chat] Streaming fallback triggered:', streamingError);
             }
           }
         }
@@ -2019,7 +2023,7 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
           metadataPatch
         );
 
-        console.log(
+        logger.info(
           '[useChat OMNIS DEBUG] ✅ updateAssistant terminé, messages actuels:',
           messagesRef.current.length
         );
@@ -2145,7 +2149,7 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
             chatLogger.warn('XP award warning', { error: xpError });
           }
         } catch (memoryError) {
-          console.warn('[Chat] Memory integration warning:', memoryError);
+          logger.warn('[Chat] Memory integration warning:', memoryError);
         }
 
         // ✨ v24.2.1: Use ref for stable dependency
@@ -2160,7 +2164,7 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
               assistantMessage.content
             );
           } catch (voiceError) {
-            console.warn('[Chat] Voice warning:', voiceError);
+            logger.warn('[Chat] Voice warning:', voiceError);
           }
         }
 
@@ -2171,7 +2175,7 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
 
         return assistantMessage;
       } catch (error) {
-        console.error('[Chat] Engine pipeline error:', error);
+        logger.error('[Chat] Engine pipeline error:', error);
 
         // 🧠 NOUVEAU v22Ω: Harmoniser l'erreur avec Cognitive Kernel
         const harmonizedError = cognitiveKernelRef.current.harmonizeError(error);
@@ -2252,7 +2256,7 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
     try {
       clearMode();
     } catch (error) {
-      console.warn('[OMNIS] Clear mode warning:', error);
+      logger.warn('[OMNIS] Clear mode warning:', error);
     }
   }, [applyMessagesSafely, clearMode]);
 
@@ -2262,7 +2266,7 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
       try {
         setCoreMode(mode);
       } catch (error) {
-        console.warn('[OMNIS] Set mode warning:', error);
+        logger.warn('[OMNIS] Set mode warning:', error);
       }
     },
     [setCoreMode]
