@@ -16,6 +16,7 @@ import { memoryIntegration } from '@/services/ai/memoryIntegration';
 import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
 import { chatEngineCommands } from '@/services/tauri/chatEngine.commands';
 import * as defaultKnowledgeBase from '@/services/api/defaultKnowledgeBase';
+import userPreferencesEngine from '@/services/userPreferencesEngine';
 
 const EMPTY_MEMORY_CONTEXT = {
   activeProjects: [],

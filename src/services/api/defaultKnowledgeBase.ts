@@ -53,6 +53,21 @@ const BUNDLED_DEFAULT_KB_MODULES = import.meta.glob(
   }
 ) as Record<string, { default?: Record<string, unknown> } | Record<string, unknown>>;
 
+const RUST_CANONICAL_EXCLUDED_BUNDLED_KB_IDS = new Set([
+  'bourse_trading',
+  'crypto_blockchain',
+  'cuisine_gastronomie',
+  'droit_contrats_pratique',
+  'energie_renouvelable',
+  'jeux_video_culture',
+  'kevin_book_registry_v30',
+  'kevin_owner_profile_v30',
+  'kevin_public_corpus_v30',
+  'kevin_workflow_v30',
+  'musique_theorie_pratique',
+  'voyage_exploration',
+]);
+
 const DEFAULT_KB_FALLBACK_ENTRIES: KnowledgeBaseEntry[] = [
   {
     id: 'system_architecture',
@@ -319,6 +334,15 @@ function dedupeKnowledgeBaseEntries(entries: KnowledgeBaseEntry[]): KnowledgeBas
   );
 }
 
+function extractBundledFallbackId(path: string): string {
+  return (
+    path
+      .split('/')
+      .pop()
+      ?.replace(/\.json$/i, '') || 'unknown'
+  );
+}
+
 function buildKnowledgeEntryFromBundledJson(
   path: string,
   rawModule: { default?: Record<string, unknown> } | Record<string, unknown>
@@ -333,11 +357,7 @@ function buildKnowledgeEntryFromBundledJson(
   }
 
   const normalizedValue = rawValue as Record<string, unknown>;
-  const fallbackId =
-    path
-      .split('/')
-      .pop()
-      ?.replace(/\.json$/i, '') || 'unknown';
+  const fallbackId = extractBundledFallbackId(path);
 
   return {
     id:
@@ -364,6 +384,7 @@ function buildKnowledgeEntryFromBundledJson(
 
 function getFallbackEntries(): KnowledgeBaseEntry[] {
   const bundledEntries = Object.entries(BUNDLED_DEFAULT_KB_MODULES)
+    .filter(([path]) => !RUST_CANONICAL_EXCLUDED_BUNDLED_KB_IDS.has(extractBundledFallbackId(path)))
     .map(([path, rawModule]) => buildKnowledgeEntryFromBundledJson(path, rawModule))
     .filter((entry): entry is KnowledgeBaseEntry => entry !== null);
 
@@ -376,6 +397,8 @@ function getFallbackEntries(): KnowledgeBaseEntry[] {
     content: JSON.parse(JSON.stringify(entry.content)),
   }));
 }
+
+export const DEFAULT_KB_CANONICAL_ENTRY_COUNT = getFallbackEntries().length;
 
 // ─────────────────────────────────────────────────────────────────
 // Public API
@@ -416,6 +439,8 @@ export async function getAllEntries(): Promise<KnowledgeBaseEntry[]> {
   // Guard: if a load is already in flight, wait for it instead of issuing a second IPC call
   if (_allEntriesLoadingPromise) return _allEntriesLoadingPromise;
   _allEntriesLoadingPromise = (async () => {
+    let shouldUseFallbackEntries = false;
+
     try {
       const raw = await invokeWithRetry<string>(
         'knowledge_base_get_all',
@@ -429,9 +454,10 @@ export async function getAllEntries(): Promise<KnowledgeBaseEntry[]> {
       _allEntriesCache = dedupeKnowledgeBaseEntries(Object.values(parsed));
     } catch {
       _allEntriesCache = null;
+      shouldUseFallbackEntries = true;
     }
 
-    if (!_allEntriesCache || _allEntriesCache.length === 0) {
+    if (shouldUseFallbackEntries || !_allEntriesCache) {
       _allEntriesCache = getFallbackEntries();
     }
 
