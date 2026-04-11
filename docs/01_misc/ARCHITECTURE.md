@@ -1,12 +1,12 @@
 # 🏗️ ARCHITECTURE FRONTEND TITANE∞
 
-**Version:** 26.4.0  
-**Date:** Janvier 2026  
+**Version:** 30.0.0  
+**Date:** 2026-04-11  
 **Auteurs:** Équipe TITANE∞
 
 ---
 
-## 🎯 Évolutions Majeures v25
+## 🎯 Évolutions Majeures v25→v30
 
 ### ✨ Fusion EVO (v25.0)
 
@@ -18,7 +18,7 @@
 - Evolution Center (/evolution-center) → `/evo` Section 5-6
 - Progression (/progression) → `/evo` Section 5
 
-### � Fusion TIME (v25.1)
+### 🕐 Fusion TIME (v25.1)
 
 **3 modules → 1 module unifié**
 
@@ -27,7 +27,7 @@
 - Time Navigator (/time-navigator) → `/time` Section 3
 - 6 sections internes: NOW, Agenda, Timeline, Snapshots, Intelligence, Flow
 
-### �📊 Fusion Stats (v25.2)
+### 📊 Fusion Stats (v25.2)
 
 **4 modules → 1 page unifiée**
 
@@ -81,77 +81,80 @@
 - Source unique : MENU_SECTIONS
 - Synchronisation Menu.tsx ↔ Sidebar App.tsx
 
+### 🌱 Fusion Évolution → Transform (v30.0)
+
+**Tab `/memory-evolution` supprimé — contenu fusionné dans `transformation`**
+
+- Memory Evolution Center → `/titane?tab=transformation` (TransformationSection)
+- EvolutionTimeline → `/titane?tab=transformation` (TransformationSection)
+- Routes `/memory-evolution` et `/memory-evo` redirigées → `/titane?tab=transformation`
+- EvoPage : 6 → 5 onglets (tab Évolution supprimé)
+- TitanePage : onglet `🌱 Transform & Évo` fusionne transformation + évolution mémoire
+
 ---
 
-## 🗺️ Routes Principales v25.4.0
+## 🗺️ Routes Principales v30.0.0
 
 ### Routes Actives
 
 ```
-/chat                Chat IA (Multi-Provider)
-/titane              TITANE — Le Cœur du Système (fusion Chat + Vision + EVO) ⚡ v25.3.0
+/titane              TITANE — Le Cœur du Système (8 onglets) ⚡ v30.0.0
 /time                TIME — Centre Temporel (fusion 3 modules) 🕐 v25.1
-/stats               STATS — Statistiques Moteurs (fusion 4 modules) 📊 v25.2
 /admin               ADMIN — Centre Administration (fusion 7 modules) 👑 v25.2.2
 /dev                 DEV — Centre Développement (fusion 4 modules) 🔧 v25.4.0
+/experience          XP — Centre Expérience & Progression 🏆 v∞.D5
+/memory              Mémoire — Dashboard mémoire 💾
+/cloud               Cloud — Sync & Vault Engine ☁️
 ```
 
-### Routes Obsolètes (Redirigées v25.4.0)
+### Onglets TitanePage (/titane?tab=X)
 
 ```
-❌ /                     → /evo (redirect) → /titane (redirect v25.3.0)
-❌ /dashboard            → /evo (redirect) → /titane (redirect v25.3.0)
-❌ /helios               → /stats (redirect)
-❌ /nexus                → /stats (redirect)
-❌ /harmonia             → /stats (redirect)
-❌ /identity-center      → /evo (redirect) → /titane (redirect v25.3.0)
-❌ /memory-evolution     → /evo (redirect) → /titane (redirect v25.3.0)
-❌ /evolution-center     → /evo (redirect) → /titane (redirect v25.3.0)
-❌ /cognitive-evolution  → /evo (redirect) → /titane (redirect v25.3.0)
-❌ /progression          → /evo (redirect) → /titane (redirect v25.3.0)
-❌ /xp                   → /evo (redirect) → /titane (redirect v25.3.0)
+tab=conversation     💬 Chat IA multi-provider
+tab=overview         📊 Vue d'Ensemble
+tab=vision           📷 Vision & Caméra
+tab=identity         🧬 Identité & ADN cognitif
+tab=memory-map       💾 Mémoire Triple (STM/MTM/LTM)
+tab=progression      ⚡ XP & Progression
+tab=transformation   🌱 Transform & Évo — Transformation + Évolution mémoire (fusionnées v30)
+tab=symbiose         🔀 Symbiose
+```
 
-🆕 Module TIME - Redirections v25.1:
-❌ /temporal-center      → /time (redirect)
-❌ /agenda               → /time (redirect)
-❌ /time-navigator       → /time (redirect)
+### Routes Obsolètes (Redirigées)
 
-🆕 Module ADMIN - Redirections v25.2.2:
-❌ /system-center        → /admin (redirect)
-❌ /configuration        → /admin (redirect)
-❌ /audio-center         → /admin (redirect)
-❌ /design-center        → /admin (redirect)
-❌ /governance-center    → /admin (redirect)
-❌ /diagnostics          → /admin (redirect)
-❌ /devtools             → /admin (redirect)
-❌ /cluster              → /admin (redirect)
-❌ /introspection        → /admin (redirect)
-❌ /hypervision          → /admin (redirect)
-❌ /design-system        → /admin (redirect)
-❌ /settings             → /admin (redirect)
-❌ /governance           → /admin (redirect)
-❌ /secure               → /admin (redirect)
-❌ /audio                → /admin (redirect)
-❌ /voice                → /admin (redirect)
-❌ /tts                  → /admin (redirect)
-
-🆕 Module DEV - Redirections v25.4.0:
-❌ /one-core             → /dev (redirect)
-❌ /command-center       → /dev (redirect)
-❌ /unified              → /dev (redirect)
-❌ /singularity          → /dev (redirect)
-❌ /qa-monitoring        → /dev (redirect)
-❌ /qa                   → /dev (redirect)
-❌ /monitoring           → /dev (redirect)
-❌ /tests                → /dev (redirect)
-❌ /developer-mode       → /dev (redirect)
-❌ /dev-mode             → /dev (redirect)
-❌ /devmode              → /dev (redirect)
-❌ /ia-dev               → /dev (redirect)
-❌ /orchestration-intelligence → /dev (redirect)
-❌ /orchestration-center → /dev (redirect)
-❌ /orchestration        → /dev (redirect)
-❌ /meta-center          → /dev (redirect)
+```
+❌ /                     → /titane
+❌ /chat                 → /titane
+❌ /dashboard            → /titane
+❌ /evo                  → /titane
+❌ /helios               → /dev?tab=diagnostics
+❌ /nexus                → /dev?tab=diagnostics
+❌ /harmonia             → /dev?tab=diagnostics
+❌ /stats                → /dev?tab=diagnostics
+❌ /identity-center      → /titane
+❌ /memory-evolution     → /titane?tab=transformation (redirect v30 — fusionné dans Transform)
+❌ /memory-evo           → /titane?tab=transformation (redirect v30 — fusionné dans Transform)
+❌ /evolution-center     → /titane
+❌ /cognitive-evolution  → /titane
+❌ /progression          → /titane
+❌ /xp                   → /experience
+❌ /temporal-center      → /time
+❌ /agenda               → /time
+❌ /time-navigator       → /time
+❌ /system-center        → /admin?tab=system
+❌ /configuration        → /admin?tab=config
+❌ /audio-center         → /admin?tab=audio
+❌ /design-center        → /admin?tab=design
+❌ /governance-center    → /admin?tab=governance
+❌ /diagnostics          → /admin?tab=system
+❌ /devtools             → /admin?tab=system
+❌ /settings             → /admin?tab=config
+❌ /governance           → /admin?tab=governance
+❌ /one-core             → /dev
+❌ /qa-monitoring        → /dev
+❌ /developer-mode       → /dev
+❌ /orchestration-intelligence → /dev
+❌ /orchestration        → /dev
 ```
 
 ---
