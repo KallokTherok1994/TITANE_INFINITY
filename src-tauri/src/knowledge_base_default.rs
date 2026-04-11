@@ -248,6 +248,28 @@ const FISCALITE_OPTIMISATION_PATRIMOINE: &str =
 const MINDSET_FINANCIER_WEALTH: &str =
     include_str!("../../data/knowledge_base/default/mindset_financier_wealth.json");
 
+// ── v30.0.0 expansion — phase 15 (charisme/séduction, ikigai/valeurs, SN polyvagal, neurosciences/conscience, réseaux sociaux, histoire/civilisations, peuples anciens, religions/mythologies, cycles lune, géologie) ─
+const CHARISME_SEDUCTION_PRESENCE: &str =
+    include_str!("../../data/knowledge_base/default/charisme_seduction_presence.json");
+const IKIGAI_VALEURS_SENS: &str =
+    include_str!("../../data/knowledge_base/default/ikigai_valeurs_sens.json");
+const SYSTEME_NERVEUX_POLYVAGAL: &str =
+    include_str!("../../data/knowledge_base/default/systeme_nerveux_polyvagal.json");
+const NEUROSCIENCES_CONSCIENCE: &str =
+    include_str!("../../data/knowledge_base/default/neurosciences_conscience.json");
+const RESEAUX_SOCIAUX_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/reseaux_sociaux_avance.json");
+const HISTOIRE_CIVILISATIONS: &str =
+    include_str!("../../data/knowledge_base/default/histoire_civilisations.json");
+const PEUPLES_ANCIENS_MYSTIQUES: &str =
+    include_str!("../../data/knowledge_base/default/peuples_anciens_mystiques.json");
+const RELIGIONS_ET_MYTHOLOGIES: &str =
+    include_str!("../../data/knowledge_base/default/religions_et_mythologies.json");
+const CYCLES_NATURELS_ENERGIE_LUNE: &str =
+    include_str!("../../data/knowledge_base/default/cycles_naturels_energie_lune.json");
+const GEOLOGIE_MINERAUX_TERRE: &str =
+    include_str!("../../data/knowledge_base/default/geologie_mineraux_terre.json");
+
 // ── v30.0.0 expansion — phase 12 (finance avancée, revenus, applications, copywriting, sites web, poésie, droit, vie pro/perso, coaching, médecine naturelle, revenus en ligne, peak performance, santé mentale, growth marketing) ─
 const STRATEGIES_REVENUS_MONETISATION: &str =
     include_str!("../../data/knowledge_base/default/strategies_revenus_monetisation.json");
@@ -483,6 +505,17 @@ impl DefaultKnowledgeBase {
         ("animaux_oiseaux_faune", ANIMAUX_OISEAUX_FAUNE),
         ("chakras_energie_spirituelle", CHAKRAS_ENERGIE_SPIRITUELLE),
         ("astrologie_numerologie", ASTROLOGIE_NUMEROLOGIE),
+        // phase 15
+        ("charisme_seduction_presence", CHARISME_SEDUCTION_PRESENCE),
+        ("ikigai_valeurs_sens", IKIGAI_VALEURS_SENS),
+        ("systeme_nerveux_polyvagal", SYSTEME_NERVEUX_POLYVAGAL),
+        ("neurosciences_conscience", NEUROSCIENCES_CONSCIENCE),
+        ("reseaux_sociaux_avance", RESEAUX_SOCIAUX_AVANCE),
+        ("histoire_civilisations", HISTOIRE_CIVILISATIONS),
+        ("peuples_anciens_mystiques", PEUPLES_ANCIENS_MYSTIQUES),
+        ("religions_et_mythologies", RELIGIONS_ET_MYTHOLOGIES),
+        ("cycles_naturels_energie_lune", CYCLES_NATURELS_ENERGIE_LUNE),
+        ("geologie_mineraux_terre", GEOLOGIE_MINERAUX_TERRE),
     ];
 
     /// Load all default knowledge entries from embedded JSON.
@@ -650,8 +683,8 @@ mod tests {
             result.errors
         );
         assert_eq!(
-            result.entries_loaded, 129,
-            "Must have exactly 129 default knowledge categories"
+            result.entries_loaded, 139,
+            "Must have exactly 139 default knowledge categories"
         );
     }
 
@@ -687,6 +720,7 @@ mod tests {
             "calisthenie",
             "capabilities_matrix",
             "chakras_energie_spirituelle",
+            "charisme_seduction_presence",
             "chronobiologie_rythmes",
             "cloud_multimodal",
             "coaching_leadership",
@@ -703,6 +737,7 @@ mod tests {
             "creation_applications_saas",
             "creation_sites_web_pratique",
             "crypto_blockchain_avance",
+            "cycles_naturels_energie_lune",
             "decoration_interieure_design",
             "developpement_personnel",
             "developpement_web",
@@ -726,12 +761,15 @@ mod tests {
             "frontend_modules",
             "gestion_projet_avancee",
             "gestion_temps_productivite",
+            "geologie_mineraux_terre",
+            "histoire_civilisations",
             "hyper_intelligence",
             "identity_profile",
             "immunite_prevention_naturelle",
             "infoproduits_formations_en_ligne",
             "intelligence_emotionnelle",
             "ipc_commands_catalog",
+            "ikigai_valeurs_sens",
             "investissement_patrimoine",
             "investissement_immobilier_avance",
             "learning_prompts",
@@ -752,6 +790,7 @@ mod tests {
             "musculation_force",
             "naturopathie_fondamentaux",
             "negociation_avancee",
+            "neurosciences_conscience",
             "numeric_twin_detail",
             "nutrition_avancee",
             "nutrition_sante_naturelle",
@@ -759,6 +798,7 @@ mod tests {
             "operational_knowledge",
             "organisation_personnelle",
             "performance_cognitive",
+            "peuples_anciens_mystiques",
             "philosophie_cognitive",
             "photographie_analyse_image",
             "plantes_medicinales_aromatherapie",
@@ -772,10 +812,12 @@ mod tests {
             "psychologie_performance",
             "psychologie_relations",
             "realisme_conversationnel",
+            "religions_et_mythologies",
             "redaction_actes_juridiques",
             "redaction_professionnelle",
             "relations_humaines_profondes",
             "renovation_bricolage_habitat",
+            "reseaux_sociaux_avance",
             "response_guidelines",
             "revenus_en_ligne_affiliation",
             "sante_corps_naturelle",
@@ -792,6 +834,7 @@ mod tests {
             "strategie_concurrentielle",
             "strategie_entreprise",
             "strategies_revenus_monetisation",
+            "systeme_nerveux_polyvagal",
             "style_expression_kevin",
             "system_architecture",
             "technologie_innovation_avancee",

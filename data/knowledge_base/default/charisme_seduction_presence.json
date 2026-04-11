@@ -1,0 +1,64 @@
+{
+  "version": "v30.0.0",
+  "category": "charisme_seduction_presence",
+  "description": "Charisme, séduction et présence magnétique — fondements du charisme (confiance, authenticité, présence), communication non-verbale avancée (posture, regard, voix, espace), séduction éthique (ancrage, désir, mystère, polarité), influence sociale (réciprocité, rareté, preuve sociale, autorité), art de la conversation, magnétisme personnel, leadership charismatique",
+  "charisme_seduction_presence": {
+    "introduction": "Le charisme est la capacité à attirer, captiver et influencer les autres par sa présence et son énergie. La séduction éthique est l'art de créer une connexion profonde basée sur l'authenticité. TITANE guide vers le développement d'une présence magnétique naturelle et puissante.",
+    "fondements_du_charisme": {
+      "definition": "Du grec 'kharisma' (don divin). Combinaison de présence (être pleinement là), de puissance (projeter de la force tranquille) et de chaleur (faire sentir l'autre important).",
+      "trois_piliers": {
+        "presence": "Être pleinement dans l'instant présent. Pas de téléphone, pas de distraction mentale. Contact visuel durable (3-5 secondes). Écoute totale (écouter pour comprendre, pas pour répondre). La présence est le don le plus rare.",
+        "puissance": "Force intérieure tranquille. Posture expansive (power pose, Amy Cuddy). Silence confortable (ne pas remplir l'espace vide). Parler moins mais mieux. Désaccord calme.",
+        "chaleur": "Faire sentir l'autre unique et valué. Mémoriser les détails (prénom, passions). Compliments sincères et spécifiques. Curiosité authentique. Empathie visible."
+      },
+      "confiance_en_soi": {
+        "types": "Confiance en soi réelle (basée sur la compétence, l'expérience) vs confiance en soi sociale (basée sur la posture et l'état intérieur). Les deux se renforcent mutuellement.",
+        "ancrage_interieur": "État intérieur précède le comportement extérieur. Pratique : respiration profonde avant une interaction importante. Visualisation du meilleur soi. Ancres positives (physiologie + état mental associé).",
+        "imposteur": "Syndrome de l'imposteur : universel (70% des gens). Solution : documenter ses succès. Reconnaître l'expertise sans la minimiser. Faux jusqu'à être vrai (embodiment)."
+      }
+    },
+    "communication_non_verbale": {
+      "importance": "7% des mots, 38% de la voix, 55% du non-verbal (règle de Mehrabian — contexte émotionnel). Le non-verbal révèle les états authentiques.",
+      "posture_et_corps": {
+        "posture_haute": "Colonne vertébrale droite, épaules naturellement en arrière, tête haute et légèrement inclinée. Occupe l'espace (ne pas se replier). Signale compétence et sécurité.",
+        "mirroring": "Miroir subtil et décalé de la posture de l'autre. Crée un rapport inconscient. 30% d'amélioration du sentiment de connexion (études).",
+        "toucher": "Zone sécurisée : main, avant-bras, épaule. Un toucher bref et approprié augmente la sympathie et la persuasion. Contexte culturel crucial.",
+        "espace": "Zone intime (0-45 cm), personnelle (45-120 cm), sociale (1.2-3.6 m), publique (>3.6 m). Invasion de l'espace intime = intérêt ou agression selon le contexte."
+      },
+      "regard": {
+        "contact_visuel": "60-70% pendant la conversation. Trop peu = désintérêt. Trop = intimidation. Technique du triangle (yeux-bouche-yeux). Pupilles dilatées = intérêt.",
+        "sourire_duchenne": "Sourire authentique implique les orbiculaires des yeux (patte d'oie). Sourire social = bouche seulement. L'authenticité se voit."
+      },
+      "voix": {
+        "prosodique": "Tempo (lenteur = autorité), volume (modulation = intérêt), timbre (voix grave = confiance), intonation (descendre en fin de phrase = affirmation, monter = question).",
+        "pauses": "Les silences sont des outils de puissance. Silence avant une réponse importante = réflexion et autorité. Silences confortables = sécurité.",
+        "resonance_vocale": "Exercices : humming, sirène vocale, lecture à voix haute. Respiration abdominale pour projeter la voix sans effort."
+      }
+    },
+    "seduction_ethique": {
+      "principes": "La séduction éthique repose sur la connexion authentique, la réciprocité et le respect des limites. Elle est l'art de rendre l'autre heureux en sa présence, pas de le manipuler.",
+      "polarite": {
+        "definition": "Attraction entre les opposés énergétiques. Énergie masculine (direction, structure, présence) et énergie féminine (fluidité, receptivité, expression). Chaque personne porte les deux.",
+        "dynamique": "La polarité crée l'attraction. La similitude crée l'amitié. Garder son énergie distinctive plutôt que de fusionner avec l'autre."
+      },
+      "mystere_et_intrigue": "Ne pas tout dévoiler d'un coup. Questions ouvertes plutôt qu'affirmations. Lifestyle intéressant (activités, passions, projets). Absence calculée (ne pas être toujours disponible). L'imagination est le moteur du désir.",
+      "ancrage_et_desir": "Créer des expériences positives et des émotions intenses ensemble. Nouveauté (dopamine), humour (oxytocine), proximité physique appropriée. Concept de 'peak-end rule' (expérience mémorable par son pic et sa fin).",
+      "cadre": "Maintenir son cadre (valeurs, comportements) plutôt que de s'adapter à celui de l'autre. L'attraction naît quand l'autre entre dans votre monde, pas l'inverse."
+    },
+    "influence_sociale": {
+      "Cialdini_6_principes": {
+        "reciprocite": "Donner en premier. Cadeaux inattendus et personnalisés. Le don crée une dette psychologique. Offrir de la valeur sans attente crée de la loyauté.",
+        "engagement_coherence": "Petits engagements escaladent vers des grands. Pieds dans la porte. Les gens agissent en accord avec leur identité déclarée.",
+        "preuve_sociale": "Témoignages, popularité, appartenance au groupe. 'Tout le monde le fait'. Particulièrement puissant dans l'incertitude.",
+        "autorite": "Expertise signalée (titre, expérience, apparence). Porter des marqueurs d'autorité. Citer des sources. Parler avec assurance.",
+        "sympathie": "Gens pareils à nous, physiquement attractifs, qui nous complimentent, qui connaissent nos amis. La proximité crée la sympathie.",
+        "rarete": "Disponibilité limitée = valeur augmentée. Urgence (FOMO). Exclusive. Édition limitée."
+      }
+    },
+    "art_de_la_conversation": {
+      "structure": "Ouverture (accrocher, contexte commun), développement (curiosité, profondeur, humour), clôture (mémorable, invitation à continuer). FORD : Famille, Occupation, Récréation, Désirs.",
+      "ecoute_active": "Reformuler, résumer, poser des questions de suivi. Valider les émotions avant de donner une solution. Écoute avec 3 niveaux : mots, émotions, besoins profonds.",
+      "humour": "Décalage de perspective inattendu. Auto-dérision (signale sécurité émotionnelle). Timing > contenu. Ne pas expliquer ses blagues. Rire avec l'autre, pas de l'autre."
+    }
+  }
+}

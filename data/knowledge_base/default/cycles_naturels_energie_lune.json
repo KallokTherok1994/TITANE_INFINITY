@@ -1,0 +1,97 @@
+{
+  "version": "v30.0.0",
+  "category": "cycles_naturels_energie_lune",
+  "description": "Cycles naturels, énergie et lune — cycle lunaire complet (8 phases, influences énergétiques et rituels), solstices et équinoxes (signification, célébrations), rythmes circadiens et biologiques, énergie cosmique (soleil, planètes, champs magnétiques terrestres), rituel et intention selon les saisons, écologie sacrée, connexion à la nature (shinrin-yoku, earthing), calendrier naturel",
+  "cycles_naturels_energie_lune": {
+    "introduction": "Les cycles naturels sont les langages de l'univers. Depuis des millénaires, les traditions reconnaissent que notre énergie, nos humeurs, notre créativité et notre santé sont modulées par les rythmes de la Lune, du Soleil et des saisons. TITANE intègre ces sagesses avec la chronobiologie moderne.",
+    "cycle_lunaire": {
+      "vue_generale": "Cycle lunaire : 29,5 jours (cycle synodique — retour à la même position relative au Soleil). Chaque phase a une qualité énergétique distincte et correspond à un moment propice pour différentes intentions.",
+      "8_phases": {
+        "nouvelle_lune": {
+          "moment": "Jour 0. Lune non visible.",
+          "energie": "Nouveau départ, graine, intention, introspection, silence, repos, renouveau.",
+          "pratiques": "Écrire ses intentions pour le cycle à venir. Méditation profonde. Nouveau projet. Jeûne léger. Purification. Cleansing énergétique.",
+          "corps": "Niveau d'énergie bas, besoin de repos, menstruation (cycle féminin aligné)."
+        },
+        "croissant_lunaire": {
+          "moment": "Jour 1-7. Lune croissante (premier quartier).",
+          "energie": "Élan, initiation, action, motivation, croissance, plantage de graines (littéral et métaphorique).",
+          "pratiques": "Démarrer de nouveaux projets, pratiquer, s'exercer, commencer des thérapies."
+        },
+        "premier_quartier": {
+          "moment": "Jour 7-8. Demi-lune à droite.",
+          "energie": "Action, défi, décision, obstacles et ajustements, réorientation si nécessaire.",
+          "pratiques": "Ajuster son plan d'action. Prendre des décisions difficiles. Confronter les obstacles."
+        },
+        "gibbeuse_croissante": {
+          "moment": "Jour 8-14.",
+          "energie": "Raffinement, édition, perfectionnement, préparation, analyser les détails.",
+          "pratiques": "Peaufiner les projets. Améliorer la qualité. Préparer la présentation."
+        },
+        "pleine_lune": {
+          "moment": "Jour 14-15. Lune complète.",
+          "energie": "Culmination, accomplissement, gratitude, clarté, célébration mais aussi tension, émotions intenses, révélations.",
+          "pratiques": "Célébrer ses succès. Gratitude profonde. Libérer ce qui ne sert plus. Rituels de guérison. Recharger les cristaux au clair de lune. Nuit de pleine lune = potentiel maximum.",
+          "effets_biologiques": "Les urgences hospitalières augmentent. Sommeil réduit (-20 min en moyenne). Cycles menstruels s'alignent souvent avec la pleine lune. Marées maximales."
+        },
+        "gibbeuse_decroissante": {
+          "moment": "Jour 15-22.",
+          "energie": "Partage, expression, générosité, enseigner ce qu'on a appris, rayonner vers l'extérieur.",
+          "pratiques": "Partager ses dons. Enseigner. Exprimer ses créations. Étendre son impact."
+        },
+        "dernier_quartier": {
+          "moment": "Jour 22-23. Demi-lune à gauche.",
+          "energie": "Lâcher prise, pardon, bilan, libération de ce qui est terminé.",
+          "pratiques": "Faire le bilan du cycle. Pardonner. Clore des chapitres. Libérer des attachements."
+        },
+        "croissant_decroissant": {
+          "moment": "Jour 23-29.",
+          "energie": "Repos, intégration, réflexion, retrait, nettoyage, régénération.",
+          "pratiques": "Se reposer. Nettoyage physique et énergétique (espaces de vie, corps). Méditation profonde. Préparer le prochain cycle."
+        }
+      },
+      "lune_et_zodiac": "La lune transite par les 12 signes du zodiaque en 29,5 jours (~2,5 jours par signe). Nouvelle lune en Bélier = énergie d'initiation. Pleine lune en Scorpion = intensité émotionnelle profonde. La lune natale (signe lunaire) révèle les besoins émotionnels."
+    },
+    "solstices_et_equinoxes": {
+      "solstice_ete": {
+        "date": "21-22 juin (Hémisphère Nord). Jour le plus long de l'année.",
+        "signification": "Apogée solaire. Énergie de croissance maximale. Lumière triomphante. Feu, abondance, manifestation.",
+        "celebrations": "Litha (Wicca), Ivan Kupala (Slave), Midsommar (Scandinave), fête de la Saint-Jean (tradition chrétienne / préchristienne). Feux de joie."
+      },
+      "solstice_hiver": {
+        "date": "21-22 décembre (Hémisphère Nord). Nuit la plus longue.",
+        "signification": "Retour de la lumière. Renaissance solaire. Introspection maximale. Renouveau.",
+        "celebrations": "Yule (nordique), Saturnalia (romain), Christmas (solstice christianisé), Dongzhi (chinois), Shab-e Yalda (iranien). Le pin de Yule (arbre toujours vert = vie persistante)."
+      },
+      "equinoxe_printemps": {
+        "date": "20-21 mars. Jour = nuit.",
+        "signification": "Résurrection, renaissance, équilibre, fertilité, renouveau.",
+        "celebrations": "Ostara (Wicca), Pâques (solstice christianisé), Nawruz (Persan), Holi (indien). Œufs et lapins = fertilité ancienne."
+      },
+      "equinoxe_automne": {
+        "date": "22-23 septembre. Jour = nuit.",
+        "signification": "Récoltes, gratitude, bilan, préparation à l'hiver, libération.",
+        "celebrations": "Mabon (Wicca), Action de grâce (Nord-Amérique), Sukkot (juif), Mid-Autumn Festival (chinois/mooncake)."
+      }
+    },
+    "rythmes_biologiques": {
+      "circadien": "Cycle de ~24 heures. Régulé par la lumière via le noyau suprachiasmatique (SCN). Cortisol (pic à 8h), mélatonine (pic à 22h-2h). La lumière bleue le soir décale le rythme. Chrono-biologie = science des rythmes biologiques.",
+      "ultradien": "Cycles de 90-120 minutes pendant la journée. Ultradian Basic Rest-Activity Cycle (BRAC). Périodes d'alerte alternant avec des périodes de fatigue. Travailler avec, non contre (Pomodoro adapté).",
+      "infradian": "Cycles plus longs que 24h. Cycle menstruel (28 jours), cycle lunaire. Les phases du cycle féminin (menstruel/folliculaire/ovulatoire/lutéal) correspondent à des fluctuations hormonales profondes affectant l'énergie, la cognition, la libido et les émotions."
+    },
+    "energie_cosmique": {
+      "soleil": {
+        "cycles_solaires": "Cycle de 11 ans (activité solaire : taches, éruptions, vents solaires). Les éruptions solaires perturbent le champ géomagnétique terrestre. Corrélé avec les cycles économiques, épidémiques et politiques (Alexander Chizhevsky).",
+        "phototherapie": "Lumière solaire directe le matin : synchronisation circadienne, vitamine D (cholécalciférol — immunité, os, humeur), sérotonine."
+      },
+      "champ_magnetique_terrestre": "Protège des vents solaires (magnétosphère). Les variations du champ géomagnétique affectent la biologie humaine (navigation des oiseaux, les abeilles, les humains aussi — étude de Caltech 2019). Le cœur humain génère le champ électromagnétique le plus fort du corps.",
+      "HeartMath": "Institut HeartMath : cohérence cardiaque = synchronisation rythme cardiaque avec cerveau et autres organes. Le champ électromagnétique du cœur (2-3 mètres). Co-régulation entre personnes en contact."
+    },
+    "pratiques_connexion_nature": {
+      "shinrin_yoku": "Bain de forêt (Japon, 1982). 2h dans la forêt : réduction cortisol (-12%), pression artérielle (-6%), NK cells +50% (immunité anti-tumeur). Phytoncides (composés aromatiques des arbres) stimulent l'immunité. Prescription médicale au Japon.",
+      "earthing_grounding": "Contact nu de la peau avec la Terre (sol, eau, herbe). Transfère des électrons libres depuis la Terre vers le corps. Réduction de l'inflammation, amélioration du sommeil, réduction du cortisol. Étude Chevalier et al. (2012).",
+      "observation_naturelle": "Contemplation d'un coucher de soleil, d'un feu, d'un plan d'eau. Réduction de l'activité du DMN (Default Mode Network = réseau de la rumination). Induction d'états d'émerveillement (awe) : humilité, perspective, bien-être.",
+      "jardinage": "Connexion à la terre littérale. Mycobacterium vaccae (bactérie du sol) stimule la sérotonine. Réduction du stress chronique. Sentiment d'accomplissement et de contribution. 'Qui jardine ne vieillit pas' (dicton japonais)."
+    }
+  }
+}

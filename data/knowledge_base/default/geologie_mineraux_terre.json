@@ -1,0 +1,89 @@
+{
+  "version": "v30.0.0",
+  "category": "geologie_mineraux_terre",
+  "description": "Géologie, minéraux et Terre — structure interne de la Terre (noyau, manteau, croûte), tectonique des plaques, types de roches (ignées, sédimentaires, métamorphiques), minéraux (identification, propriétés, formation), cristallographie, ressources naturelles (pétrole, gaz, charbon, métaux), risques géologiques (volcans, séismes, tsunamis), géomorphologie (paysages), géologie pratique et lithothérapie",
+  "geologie_mineraux_terre": {
+    "introduction": "La géologie est la science de la Terre solide — sa composition, sa structure, ses processus et son histoire. Elle permet de comprendre les ressources naturelles, les risques et la beauté des paysages. TITANE explore la géologie depuis la cristallographie jusqu'à la tectonique, en intégrant la dimension pratique des minéraux et cristaux.",
+    "structure_interne_terre": {
+      "croute": {
+        "continentale": "Épaisseur 25-70 km. Composition : granodiorite et granite (silicique, densité 2.7 g/cm³). Ancienne jusqu'à 4 Ga.",
+        "oceanique": "Épaisseur 7-10 km. Composition : basalte (mafique, densité 3.0 g/cm³). Jeune (<200 Ma — créée aux dorsales, détruite aux zones de subduction)."
+      },
+      "manteau": {
+        "manteau_superieur": "30-660 km de profondeur. Péridotite (roche ultramafique — olivine, pyroxène). La lithosphère (croûte + manteau sup) est rigide. L'asthénosphère (~100-200 km) est ductile — glisse sous la lithosphère.",
+        "manteau_inferieur": "660-2 900 km. Plus dense, sous haute pression. Minéraux haute pression (bridgmanite).",
+        "transition": "Zone de transition à 410 et 660 km : changements de phase minéralogique sous pression."
+      },
+      "noyau": {
+        "externe": "2 900-5 100 km. Fer-nickel liquide. Convection du noyau externe → champ magnétique terrestre (dynamo géomagnétique).",
+        "interne": "5 100-6 371 km. Fer-nickel solide (sous pression de ~3.5 millions d'atmosphères). Tourne légèrement plus vite que le reste de la Terre."
+      },
+      "discontinuites": "Mohorovičić (Moho) : limite croûte-manteau. Gutenberg : limite manteau-noyau externe. Lehmann : limite noyau externe-interne."
+    },
+    "tectonique_des_plaques": {
+      "theorie": "Développée dans les années 1960 (Hess, Vine, Matthews). Unifie la géologie, vulcanologie et sismologie. La lithosphère est divisée en 7 grandes plaques + plusieurs plaques mineures.",
+      "mouvements": {
+        "divergente": "Plaques qui s'écartent. Rift continental (Rift africain → futur océan). Dorsale océanique (dorsale médio-atlantique : Islande émerge). Production de nouveau fond océanique (basalte).",
+        "convergente": {
+          "ocean_continent": "Subduction : plancher océanique plonge sous la plaque continentale (plus légère). Tranchée océanique (Fosse des Mariannes : 11 km). Volcanisme andésitique (Andes, Cascades). Séismes profonds.",
+          "ocean_ocean": "Subduction de la plaque la plus ancienne. Archipels volcaniques (Japon, Philippines, Antilles).",
+          "continent_continent": "Collision. Pas de subduction. Chaînes de montagnes (Himalaya : Inde + Eurasie, 45 Ma, encore 5 cm/an)."
+        },
+        "transformante": "Plaques qui glissent horizontalement. Faille San Andreas (Californie). Faille de North Anatolian (Turquie). Séismes superficiels et violents."
+      }
+    },
+    "roches": {
+      "ignees": {
+        "definition": "Formées par refroidissement du magma.",
+        "plutoniques": "Refroidissement lent en profondeur → grands cristaux visibles. Granite (quartz + feldspath + mica), gabbro, diorite.",
+        "volcaniques": "Refroidissement rapide en surface → petits cristaux ou amorphe. Basalte (coulées), obsidienne (verre volcanique), ponce (lave avec bulles de gaz)."
+      },
+      "sedimentaires": {
+        "definition": "Formées par dépôt et compaction de sédiments.",
+        "clasticas": "Fragments d'autres roches : grès (sable), conglomérat (galets), argile (limon). Strates = archives géologiques.",
+        "chimiques": "Précipitation chimique : calcaire (CaCO3), sel gemme, gypse, flint.",
+        "biochimiques": "Organismes biologiques : charbon (tourbe → lignite → houille → anthracite), calcaire récifal (coraux), calcaire coquillier."
+      },
+      "metamorphiques": {
+        "definition": "Roches transformées par pression et/ou température sans fusion.",
+        "exemples": "Marbre (calcaire métamorphisé → calcite recristallisée), schiste (argile → mica), gneiss (granite → foliation), quartzite (grès → quartz), ardoise (argile → métamorphisme faible).",
+        "grade": "Faible (ardoise, phyllite), moyen (schiste), élevé (gneiss), très élevé (granulite, migmatite)."
+      },
+      "cycle_des_roches": "Toute roche peut se transformer en une autre type sur des échelles géologiques. Ignée → érosion → sédimentaire → enfouissement → métamorphique → fusion → magma → ignée."
+    },
+    "mineraux_et_cristaux": {
+      "definition": "Minéral : solide inorganique naturel, composition chimique définie, structure cristalline ordonnée. ~5 500 espèces minérales connues.",
+      "proprietes_identification": {
+        "dureté": "Échelle de Mohs (1-10). Talc (1) → Gypse (2) → Calcite (3) → Fluorite (4) → Apatite (5) → Feldspath (6) → Quartz (7) → Topaze (8) → Corindon (saphir/rubis, 9) → Diamant (10).",
+        "éclat": "Métallique (pyrite, galène), vitreux (quartz), adamantin (diamant), nacré (muscovite), soyeux (sélénite), gras (olivine).",
+        "couleur_et_trait": "Trait : couleur de la poudre du minéral (plus fiable que la couleur de surface). Hématite : brun-rouge malgré surface noire.",
+        "clivage_cassure": "Clivage : fracture selon des plans cristallographiques (mica = clivage parfait). Cassure : concoïdale (obsidienne), irrégulière, fibreuse.",
+        "systemes_cristallins": "Cubique (cube, octaèdre — halite, galène, diamant), tétragonal (zircon, rutile), orthorhombique (olivine, topaze), hexagonal (quartz, calcite, béryl), monoclinique (gypse, augite), triclinique (feldspath plagioclase)."
+      },
+      "mineraux_importants": {
+        "quartz_famille": "SiO₂. Le plus abondant des minéraux de la croûte. Fumé (brun), rose (manganèse), citrine (jaune, chaleur), améthyste (violet, fer + irradiation), cristal de roche (incolore).",
+        "feldspaths": "50% de la croûte terrestre. Orthoclase (potassique, granite), Plagioclase (sodique/calcique). Labradorite (iridescence = labradorescence).",
+        "micas": "Biotite (noir), Muscovite (incolore). Clivage parfait en feuillets. Utilisé en électronique (isolant).",
+        "olivine": "Mg₂SiO₄. Vert-jaune. Manteau supérieur. Péridot = olivine gemme.",
+        "carbonates": "Calcite (CaCO₃), aragonite, dolomite. Effervescence à l'acide HCl = test diagnostic."
+      },
+      "pierres_precieuses": {
+        "definition": "Minéraux ou roches taillés et polis pour la joaillerie. Critères : beauté (couleur, transparence), dureté (résistance), rareté.",
+        "principales": "Diamant (C pur, Mohs 10, brillant max), Rubis (corindon rouge, Cr), Émeraude (béryl vert, Cr+V), Saphir (corindon bleu, Fe+Ti), Alexandrite (chrysobérylle, changement couleur), Spinelle rouge (souvent confondu avec rubis), Tanzanite (zoisite violette, Tanzanie uniquement).",
+        "synthétiques": "Créées en laboratoire, chimiquement identiques. Moissanite (SiC), rubis Verneuil, diamant CVD/HPHT."
+      }
+    },
+    "risques_geologiques": {
+      "seismes": {
+        "ondes": "P (longitudinales, premières, traversent tout) et S (transversales, secondaires, solides seulement). Ondes de surface (Love et Rayleigh) : les plus destructrices.",
+        "magnitude": "Moment Mw (remplace Richter). Log scale : M7 = 32× plus d'énergie que M6. M9 = 1000× plus qu'un M7. M8.9 (Sumatra 2004 → tsunami).",
+        "prediction": "Impossible actuellement. Probabilité + précurseurs (gaz radon, déformations, micro-séismes). Early Warning Systems (Japon : 5-60 secondes d'alerte)."
+      },
+      "volcans": {
+        "types": "Bouclier (Hawaii, basalte fluide, peu explosif), Stratovolcan (Vésuve, Fuji, andésite, très explosif — VEI 4-8), Maar (phréato-magmatique), Caldeira (effondrée après éruption énorme).",
+        "VEI": "Volcanic Explosivity Index (0-8). Tambora 1815 = VEI 7 (plus grande éruption historique, 'Année sans été'). Toba ~74 000 ans = VEI 8 (supereruption, population humaine réduite à ~10 000)."
+      }
+    },
+    "geomorphologie_paysages": "Processus créant les paysages. Érosion fluviale (rivières, deltas, canyons — Grand Canyon). Glaciaire (fjords, U-shaped valleys, moraines). Éolienne (dunes, mesas, yardangs). Karstique (grottes, stalactites, dolines — dans les calcaires). Littoral (falaises, arches, îles barrière)."
+  }
+}
