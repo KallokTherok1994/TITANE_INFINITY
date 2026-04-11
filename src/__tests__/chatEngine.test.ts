@@ -462,4 +462,33 @@ describe('ChatEngine — default knowledge base integration', () => {
     expect(systemPrompt).not.toContain('catégories');
     expect(systemPrompt).not.toContain('Base de connaissances intégrée');
   });
+
+  test('injects Kevin owner-context preferences into the backend system prompt', async () => {
+    vi.spyOn(memoryIntegration, 'loadContext').mockResolvedValue(EMPTY_MEMORY_CONTEXT);
+    vi.spyOn(memoryIntegration, 'loadPreferences').mockReturnValue([]);
+    vi.spyOn(memoryIntegration, 'saveInteraction').mockResolvedValue(undefined);
+    vi.spyOn(defaultKnowledgeBase, 'getCompactIndex').mockResolvedValue('');
+    vi.spyOn(defaultKnowledgeBase, 'getRelevantPromptContext').mockResolvedValue('');
+    vi.spyOn(userPreferencesEngine, 'generateContextForAI').mockReturnValue(
+      "[Préférences utilisateur: Contexte propriétaire: Kevin Thibault est le créateur et l'utilisateur principal de TITANE∞.]"
+    );
+
+    const backendSpy = vi.spyOn(chatEngineCommands, 'generateResponse').mockResolvedValue({
+      content: 'Réponse préférences',
+      provider: 'ollama',
+      conversationId: 'conv-owner',
+      messageId: 'msg-owner',
+      timestamp: Date.now(),
+      tokenCount: 36,
+      latencyMs: 10,
+    });
+
+    await chatEngine.generate('Aide-moi à structurer mon axe', []);
+
+    expect(backendSpy).toHaveBeenCalledTimes(1);
+    expect(backendSpy.mock.calls[0]?.[0]?.systemPrompt).toContain('Kevin Thibault');
+    expect(backendSpy.mock.calls[0]?.[0]?.systemPrompt).toContain(
+      "créateur et l'utilisateur principal"
+    );
+  });
 });

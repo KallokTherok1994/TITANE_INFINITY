@@ -40,8 +40,16 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
     evolutionProfile,
     isLoading: evolutionLoading,
     currentPhase,
+    syncScore,
+    lastSyncAt,
+    chatContextStatus,
     growthTrends,
     suggestions,
+    ownerThemes,
+    sourceCount,
+    reflectionAxis,
+    portraitUrl,
+    portraitFallbackUrl,
     recalculateFusion,
     transitionPhase,
     reinforceValue,
@@ -54,6 +62,33 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
 
   const isLoading = identityLoading || evolutionLoading;
   const hookError = identityError ?? evolutionError ?? null;
+  const contextStatusMeta =
+    chatContextStatus === 'active'
+      ? {
+          label: '🟢 Contexte chat TWINS actif',
+          style: {
+            border: '1px solid rgba(82, 196, 26, 0.5)',
+            background: 'rgba(82, 196, 26, 0.12)',
+            color: '#b7eb8f',
+          },
+        }
+      : chatContextStatus === 'stale'
+        ? {
+            label: '🟠 Contexte TWINS à resynchroniser',
+            style: {
+              border: '1px solid rgba(250, 173, 20, 0.5)',
+              background: 'rgba(250, 173, 20, 0.12)',
+              color: '#ffd591',
+            },
+          }
+        : {
+            label: '⚪ Contexte chat TWINS en attente',
+            style: {
+              border: '1px solid rgba(140, 140, 140, 0.5)',
+              background: 'rgba(140, 140, 140, 0.12)',
+              color: '#d9d9d9',
+            },
+          };
 
   if (isLoading) {
     return (
@@ -115,6 +150,55 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
         <div className="twin-panel__version">v{identity?.version ?? 'N/A'}</div>
       </div>
 
+      <div
+        data-testid="twin-context-status"
+        style={{
+          margin: '0 0 12px',
+          padding: '8px 12px',
+          borderRadius: 8,
+          ...contextStatusMeta.style,
+        }}
+      >
+        <strong>{contextStatusMeta.label}</strong>
+        <span style={{ display: 'block', marginTop: 4, fontSize: '0.9rem', opacity: 0.92 }}>
+          SyncScore: {(syncScore * 100).toFixed(0)}%
+          {lastSyncAt
+            ? ` • Dernière synchro: ${new Date(lastSyncAt).toLocaleTimeString('fr-FR', {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}`
+            : ' • Aucune synchro persistée'}
+        </span>
+      </div>
+
+      <div className="twin-panel__owner-card" data-testid="twin-owner-resonance">
+        <img
+          className="twin-panel__owner-portrait"
+          src={portraitUrl ?? portraitFallbackUrl}
+          alt="Portrait de Kevin Thibault"
+          onError={event => {
+            event.currentTarget.src = portraitFallbackUrl;
+          }}
+        />
+        <div className="twin-panel__owner-copy">
+          <div className="twin-panel__owner-heading">
+            <h3>Résonance Kevin ↔ TITANE</h3>
+            <span>{sourceCount} sources</span>
+          </div>
+          <p>
+            {reflectionAxis ??
+              'Clarté intérieure, structure et transformation humaine incarnée.'}
+          </p>
+          <div className="twin-panel__owner-tags">
+            {ownerThemes.map(theme => (
+              <span key={theme} className="twin-panel__owner-tag">
+                {theme}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Tabs */}
       <div className="twin-panel__tabs" role="tablist" aria-label="Navigation Twin">
         <button
@@ -174,6 +258,8 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
             currentPhase={currentPhase}
             growthTrends={growthTrends}
             suggestions={suggestions}
+            ownerThemes={ownerThemes}
+            reflectionAxis={reflectionAxis}
             milestonesCount={evolutionProfile?.milestonesCount ?? 0}
           />
         )}
@@ -374,13 +460,39 @@ interface EvolutionTabProps {
   currentPhase: ReturnType<typeof useTwinEvolution>['currentPhase'];
   growthTrends: ReturnType<typeof useTwinEvolution>['growthTrends'];
   suggestions: ReturnType<typeof useTwinEvolution>['suggestions'];
+  ownerThemes: ReturnType<typeof useTwinEvolution>['ownerThemes'];
+  reflectionAxis: ReturnType<typeof useTwinEvolution>['reflectionAxis'];
   milestonesCount: number;
+}
+
+function getThemeIntegrationHint(theme: string): string {
+  const normalized = theme.toLowerCase();
+
+  if (normalized.includes('présence')) {
+    return 'Refaire 3 cycles de respiration 4-1-6 avant toute décision importante.';
+  }
+  if (normalized.includes('authentic')) {
+    return 'Nommer clairement ce qui est vrai maintenant, sans performance ni masque.';
+  }
+  if (normalized.includes('retour au vivant')) {
+    return 'Revenir au corps, au rythme et à un geste simple qui remet en mouvement.';
+  }
+  if (normalized.includes('deuxième vitesse')) {
+    return 'Choisir une action plus alignée plutôt qu’une action seulement plus rapide.';
+  }
+  if (normalized.includes('clart')) {
+    return 'Formuler une priorité nette et retirer ce qui brouille l’axe du jour.';
+  }
+
+  return 'Transformer ce thème en geste concret, simple et soutenable aujourd’hui.';
 }
 
 const EvolutionTab: React.FC<EvolutionTabProps> = ({
   currentPhase,
   growthTrends,
   suggestions,
+  ownerThemes,
+  reflectionAxis,
   milestonesCount,
 }) => {
   const phases = [
@@ -444,6 +556,21 @@ const EvolutionTab: React.FC<EvolutionTabProps> = ({
           </div>
         </div>
       )}
+
+      <div className="twin-evolution__reflection" data-testid="twin-document-reflection">
+        <h3>Réflexion approfondie issue du corpus</h3>
+        <p className="twin-evolution__reflection-axis">
+          {reflectionAxis ?? 'Revenir au vivant, clarifier l’axe et agir avec douceur ferme.'}
+        </p>
+        <div className="twin-evolution__reflection-grid">
+          {ownerThemes.slice(0, 4).map(theme => (
+            <div key={theme} className="twin-evolution__reflection-card">
+              <strong>{theme}</strong>
+              <p>{getThemeIntegrationHint(theme)}</p>
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* Suggestions */}
       {suggestions.length > 0 && (

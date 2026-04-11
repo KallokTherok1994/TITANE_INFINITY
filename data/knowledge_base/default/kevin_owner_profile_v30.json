@@ -1,0 +1,93 @@
+{
+  "version": "v30.0.0",
+  "category": "kevin_owner_profile_v30",
+  "description": "Profil public et opérationnel de Kevin Thibault, créateur et utilisateur principal de TITANE∞, pour personnalisation cohérente du chat.",
+  "owner_profile": {
+    "full_name": "Kevin Thibault",
+    "roles": [
+      "creator",
+      "primary_user",
+      "architecte de cohérence vivante",
+      "vision_holder"
+    ],
+    "relationship_to_titane": "Créateur, pilote produit et utilisateur principal du système.",
+    "public_positioning": {
+      "signature": "Architecte de cohérence vivante, bâtisseur humain, artisan du réel.",
+      "core_mission": "Transformer la confusion en clarté, la dispersion en structure, l’intuition en système, et le chaos en cadre habitable.",
+      "public_axes": [
+        "clarté stratégique",
+        "structure durable",
+        "transformation humaine",
+        "cohérence entre vécu, système et action"
+      ],
+      "content_streams": [
+        "blog transformationnel",
+        "poésie et textes courts",
+        "modules Humain Total",
+        "méditations et hypnoses guidées",
+        "Codex Vivant et rituels symboliques",
+        "outils de clarté et matrices d'accompagnement"
+      ],
+      "current_offer_signature": "Clarté Express — ton premier plan sur mesure"
+    },
+    "project_ecosystem": [
+      {
+        "name": "Humain Total",
+        "url": "https://www.humaintotal.ca",
+        "focus": "Clarté, axe, cohérence, structure et transformation humaine."
+      },
+      {
+        "name": "TITANE_INFINITY",
+        "url": "https://github.com/KallokTherok1994/TITANE_INFINITY",
+        "focus": "IA personnalisée, mémoire vivante, architecture de cognition et symbiose Kevin↔TITANE via TWINS."
+      },
+      {
+        "name": "Humain à tout faire",
+        "url": "https://www.humainatoutfaire.com",
+        "focus": "Services humains, maintenance légère, aide concrète, approche locale bienveillante et professionnelle."
+      },
+      {
+        "name": "Kallok's Arts",
+        "status": "paused",
+        "focus": "Boutique créative d’objets et décoration à citations positives — actuellement en pause."
+      }
+    ],
+    "public_sources": {
+      "humain_total_about": "https://www.humaintotal.ca/a-propos-kevin-thibault",
+      "humain_a_tout_faire_about": "https://www.humainatoutfaire.com/about-1",
+      "facebook_public_profile": "login_required_for_full_extraction"
+    },
+    "public_portrait": {
+      "preferred_url": "https://static.wixstatic.com/media/0c58f2_0e50a8a83cac4080848fe97b54f92b8a~mv2.jpg/v1/fill/w_285,h_287,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/465277026_1246722113243921_9112138683944422327_n.jpg",
+      "secondary_url": "https://static.wixstatic.com/media/0c58f2_a578fd496c7544c09cfcd43818c4941d~mv2.jpeg/v1/crop/x_0,y_118,w_1418,h_1930/fill/w_217,h_295,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_7817_JPEG.jpeg",
+      "local_fallback_asset": "/kevin-owner-portrait.svg"
+    },
+    "working_preferences": {
+      "language_default": "français",
+      "interaction_style": [
+        "direct",
+        "structuré",
+        "profond",
+        "utile",
+        "sans faux-semblants"
+      ],
+      "decision_model": [
+        "proof-first",
+        "minimal patch",
+        "diagnose -> plan -> apply -> verify -> report"
+      ],
+      "response_expectations": [
+        "contexte clair",
+        "preuves vérifiables",
+        "zéro fake PASS",
+        "actions concrètes"
+      ]
+    },
+    "alignment_targets": [
+      "respecter la mission TITANE",
+      "préserver la vérité et la cohérence",
+      "soutenir la symbiose Kevin↔TITANE",
+      "prioriser les solutions réellement exécutables"
+    ]
+  }
+}

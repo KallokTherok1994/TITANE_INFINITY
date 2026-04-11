@@ -2817,6 +2817,11 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
         // localStorage unavailable — silently ignore
       }
 
+      const userPreferencesContext = userPreferencesEngine.generateContextForAI();
+      const preferencesInjection = userPreferencesContext
+        ? `\n\n🧠 Préférences & contexte propriétaire :\n${userPreferencesContext}`
+        : '';
+
       // ═══ SKILL OS: Inject active skill system prompt ═══
       let skillInjection = '';
       const activeSkillId = getActiveSkillId();
@@ -2842,11 +2847,10 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
         ? `\n\n📚 Base de connaissances intégrée TITANE∞ (${kbCategoryCount} catégories) :\n${this._defaultKbIndex}`
         : '';
 
+      const contextualBasePrompt = `${basePrompt}${personaInjection}${preferencesInjection}${kbBlock}`;
       const stablePrefix = skillInjection
-        ? `${skillInjection}\n\n${personaInjection ? `${basePrompt}${personaInjection}` : basePrompt}${kbBlock}`
-        : personaInjection
-          ? `${basePrompt}${personaInjection}${kbBlock}`
-          : `${basePrompt}${kbBlock}`;
+        ? `${skillInjection}\n\n${contextualBasePrompt}`
+        : contextualBasePrompt;
 
       // ═══ VOLATILE SUFFIX (per-request, changes every turn) ═══
       let volatileSuffix = '';

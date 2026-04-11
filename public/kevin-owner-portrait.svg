@@ -1,0 +1,20 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="64" y1="48" x2="448" y2="464" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1F3B57"/>
+      <stop offset="0.5" stop-color="#355C7D"/>
+      <stop offset="1" stop-color="#6C8B5E"/>
+    </linearGradient>
+    <linearGradient id="ring" x1="128" y1="128" x2="384" y2="384" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F3E9D2"/>
+      <stop offset="1" stop-color="#D9C7A1"/>
+    </linearGradient>
+  </defs>
+  <rect x="16" y="16" width="480" height="480" rx="32" fill="url(#bg)"/>
+  <rect x="28" y="28" width="456" height="456" rx="24" stroke="rgba(255,255,255,0.18)" stroke-width="2"/>
+  <circle cx="256" cy="190" r="88" fill="rgba(255,255,255,0.12)" stroke="url(#ring)" stroke-width="6"/>
+  <path d="M196 216C196 182.863 222.863 156 256 156C289.137 156 316 182.863 316 216V220C316 253.137 289.137 280 256 280C222.863 280 196 253.137 196 220V216Z" fill="#F2E8D4" fill-opacity="0.9"/>
+  <path d="M148 384C159.354 326.123 202.708 294 256 294C309.292 294 352.646 326.123 364 384" stroke="#F2E8D4" stroke-opacity="0.9" stroke-width="28" stroke-linecap="round"/>
+  <text x="256" y="430" text-anchor="middle" fill="#F8F4EA" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="700">Kevin Thibault</text>
+  <text x="256" y="458" text-anchor="middle" fill="#D7E2EC" font-family="Inter, Arial, sans-serif" font-size="15">TWINS • Portrait de référence</text>
+</svg>
