@@ -1,8 +1,8 @@
 # TITANE∞ — Commands (EN)
 
-**Version:** 28.0.0  
+**Version:** 30.0.0  
 **Status:** PROVEN  
-**Date:** 2026-03-17
+**Date:** 2026-04-11
 
 > Full commands reference: [docs/reference/en/commands-reference.md](../../reference/en/commands-reference.md)
 

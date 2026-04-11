@@ -1,8 +1,8 @@
 # TITANE∞ — Tests, Proofs and Gates (EN)
 
-**Version:** 28.0.0  
+**Version:** 30.0.0  
 **Status:** QUALIFIED  
-**Date:** 2026-03-17
+**Date:** 2026-04-11
 
 > See also: `docs/TESTING_STRATEGY.md`, `docs/MAP_TESTS_GATES.md`, `docs/MAP_GATES.md`
 
