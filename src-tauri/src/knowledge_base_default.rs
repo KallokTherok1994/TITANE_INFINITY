@@ -198,6 +198,28 @@ const BIEN_ETRE_MENTAL_STRESS: &str =
     include_str!("../../data/knowledge_base/default/bien_etre_mental_stress.json");
 const SANTE_CORPS_NATURELLE: &str =
     include_str!("../../data/knowledge_base/default/sante_corps_naturelle.json");
+// ── v30.0.0 expansion — phase 13 VISIONNAIRE_2.0 (bourse/crypto/immobilier/ecommerce/dropship/freelance/infoproduits/automation/fiscalité/mindset argent) ─
+const BOURSE_TRADING_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/bourse_trading_avance.json");
+const CRYPTO_BLOCKCHAIN_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/crypto_blockchain_avance.json");
+const INVESTISSEMENT_IMMOBILIER_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/investissement_immobilier_avance.json");
+const ECOMMERCE_SCALING_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/ecommerce_scaling_avance.json");
+const DROPSHIPPING_PRINT_ON_DEMAND: &str =
+    include_str!("../../data/knowledge_base/default/dropshipping_print_on_demand.json");
+const FREELANCE_CONSULTING_PREMIUM: &str =
+    include_str!("../../data/knowledge_base/default/freelance_consulting_premium.json");
+const INFOPRODUITS_FORMATIONS_EN_LIGNE: &str =
+    include_str!("../../data/knowledge_base/default/infoproduits_formations_en_ligne.json");
+const AUTOMATISATION_REVENUS_PASSIFS: &str =
+    include_str!("../../data/knowledge_base/default/automatisation_revenus_passifs.json");
+const FISCALITE_OPTIMISATION_PATRIMOINE: &str =
+    include_str!("../../data/knowledge_base/default/fiscalite_optimisation_patrimoine.json");
+const MINDSET_FINANCIER_WEALTH: &str =
+    include_str!("../../data/knowledge_base/default/mindset_financier_wealth.json");
+
 // ── v30.0.0 expansion — phase 12 (finance avancée, revenus, applications, copywriting, sites web, poésie, droit, vie pro/perso, coaching, médecine naturelle, revenus en ligne, peak performance, santé mentale, growth marketing) ─
 const STRATEGIES_REVENUS_MONETISATION: &str =
     include_str!("../../data/knowledge_base/default/strategies_revenus_monetisation.json");
@@ -408,6 +430,17 @@ impl DefaultKnowledgeBase {
         ("plein_potentiel_peak_performance", PLEIN_POTENTIEL_PEAK_PERFORMANCE),
         ("sante_mentale_therapies", SANTE_MENTALE_THERAPIES),
         ("marketing_affiliation_growth", MARKETING_AFFILIATION_GROWTH),
+        // v30.0.0 expansion — phase 13 VISIONNAIRE_2.0 (bourse/crypto/immobilier/ecommerce/dropship/freelance/infoproduits/automation/fiscalité/mindset argent)
+        ("bourse_trading_avance", BOURSE_TRADING_AVANCE),
+        ("crypto_blockchain_avance", CRYPTO_BLOCKCHAIN_AVANCE),
+        ("investissement_immobilier_avance", INVESTISSEMENT_IMMOBILIER_AVANCE),
+        ("ecommerce_scaling_avance", ECOMMERCE_SCALING_AVANCE),
+        ("dropshipping_print_on_demand", DROPSHIPPING_PRINT_ON_DEMAND),
+        ("freelance_consulting_premium", FREELANCE_CONSULTING_PREMIUM),
+        ("infoproduits_formations_en_ligne", INFOPRODUITS_FORMATIONS_EN_LIGNE),
+        ("automatisation_revenus_passifs", AUTOMATISATION_REVENUS_PASSIFS),
+        ("fiscalite_optimisation_patrimoine", FISCALITE_OPTIMISATION_PATRIMOINE),
+        ("mindset_financier_wealth", MINDSET_FINANCIER_WEALTH),
     ];
 
     /// Load all default knowledge entries from embedded JSON.
@@ -575,8 +608,8 @@ mod tests {
             result.errors
         );
         assert_eq!(
-            result.entries_loaded, 106,
-            "Must have exactly 106 default knowledge categories"
+            result.entries_loaded, 116,
+            "Must have exactly 116 default knowledge categories"
         );
     }
 
@@ -599,7 +632,9 @@ mod tests {
             "ai_providers_guide",
             "analyse_professionnelle",
             "apprentissage_evolution",
+            "automatisation_revenus_passifs",
             "bien_etre_mental_stress",
+            "bourse_trading_avance",
             "branding_identite",
             "calisthenie",
             "capabilities_matrix",
@@ -618,6 +653,7 @@ mod tests {
             "copywriting_content_marketing",
             "creation_applications_saas",
             "creation_sites_web_pratique",
+            "crypto_blockchain_avance",
             "developpement_personnel",
             "developpement_web",
             "digital_twin_symbiosis",
@@ -625,7 +661,9 @@ mod tests {
             "droit_immobilier_notarial",
             "droit_notarial_fondamentaux",
             "droit_pratique_quotidien",
+            "dropshipping_print_on_demand",
             "ecommerce_fondamentaux",
+            "ecommerce_scaling_avance",
             "ecriture_expression_creatrice",
             "energetique_soins_corps",
             "engines_catalog",
@@ -633,15 +671,19 @@ mod tests {
             "equilibre_vie_pro_perso",
             "finance_entreprise",
             "finances_personnelles",
+            "fiscalite_optimisation_patrimoine",
+            "freelance_consulting_premium",
             "frontend_modules",
             "gestion_projet_avancee",
             "gestion_temps_productivite",
             "hyper_intelligence",
             "identity_profile",
             "immunite_prevention_naturelle",
+            "infoproduits_formations_en_ligne",
             "intelligence_emotionnelle",
             "ipc_commands_catalog",
             "investissement_patrimoine",
+            "investissement_immobilier_avance",
             "learning_prompts",
             "longevite_anti_aging",
             "management_administration",
@@ -656,6 +698,7 @@ mod tests {
             "meta_mode_titane",
             "meta_orchestrateur",
             "metier_qualite",
+            "mindset_financier_wealth",
             "musculation_force",
             "naturopathie_fondamentaux",
             "negociation_avancee",

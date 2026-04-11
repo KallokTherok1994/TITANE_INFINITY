@@ -1,0 +1,206 @@
+{
+  "version": "v30.0.0",
+  "category": "bourse_trading_avance",
+  "description": "Trading avancé et analyse des marchés financiers — analyse technique avancée (chandeliers japonais, figures chartistes, indicateurs), price action, smart money concepts, options (Greeks, stratégies), gestion de portefeuille tactique, risk management, psychologie du trader, screeners et backtesting",
+  "bourse_trading_avance": {
+    "introduction": "Ce module dépasse les fondamentaux de l'investissement pour couvrir le trading actif à un niveau professionnel. Il s'adresse à ceux qui veulent comprendre la microstructure des marchés, maîtriser l'analyse technique avancée, et développer une discipline de trader rentable sur le long terme. TITANE aborde ce domaine avec la rigueur quantitative et la lucidité psychologique nécessaires.",
+    "analyse_technique_avancee": {
+      "chandeliers_japonais": {
+        "philosophie": "Les chandeliers japonais (inventés par Munehisa Homma au XVIIIe siècle) encodent la psychologie du marché dans chaque bougie: ouverture, plus haut, plus bas, clôture. Leur lecture en contexte (tendance, support/résistance, volume) est essentielle.",
+        "patterns_de_retournement": {
+          "doji": {
+            "description": "Ouverture ≈ clôture, mèches variables. Signal d'indécision.",
+            "variantes": "Doji classique, doji libellule (longue mèche basse = rejet baissier), doji pierre tombale (longue mèche haute = rejet haussier), doji en croix",
+            "confirmation": "Un doji seul ne suffit jamais. Attendre la bougie suivante pour confirmer le retournement. Volume élevé renforce le signal."
+          },
+          "engulfing": {
+            "bullish_engulfing": "Bougie haussière dont le corps englobe entièrement le corps de la bougie baissière précédente. Signal de retournement haussier en bas de tendance.",
+            "bearish_engulfing": "Bougie baissière englobant le corps haussier précédent. Signal de retournement baissier en haut de tendance.",
+            "fiabilite": "Parmi les patterns les plus fiables, surtout sur unités de temps H4/Daily et avec volume croissant."
+          },
+          "morning_star_evening_star": {
+            "morning_star": "Pattern en 3 bougies: (1) grande baissière, (2) petit corps (gap down idéal), (3) grande haussière clôturant au-dessus du milieu de la bougie 1. Retournement haussier.",
+            "evening_star": "Inverse: (1) grande haussière, (2) petit corps (gap up), (3) grande baissière. Retournement baissier.",
+            "astuce": "Le gap entre bougies 1-2 renforce considérablement le signal. Rare en forex (marché 24h), plus fréquent en actions."
+          },
+          "three_white_soldiers_black_crows": {
+            "three_white_soldiers": "3 bougies haussières consécutives avec des clôtures progressivement plus hautes et des ouvertures dans le corps précédent. Forte impulsion haussière.",
+            "three_black_crows": "3 bougies baissières consécutives. Forte pression vendeuse.",
+            "piege": "Attention à l'épuisement: si les corps deviennent plus petits (pattern stalled), le mouvement s'essouffle."
+          },
+          "harami": {
+            "description": "Petit corps contenu entièrement dans le corps de la bougie précédente (inverse de l'engulfing).",
+            "bullish_harami": "Petite bougie haussière dans une grande baissière = possible retournement haussier.",
+            "bearish_harami": "Petite bougie baissière dans une grande haussière = possible retournement baissier.",
+            "fiabilite": "Signal modéré — nécessite impérativement confirmation par la bougie suivante et par le volume."
+          },
+          "hammer_shooting_star": {
+            "hammer": "Petit corps en haut, longue mèche basse (≥2x le corps). En bas de tendance = rejet des prix bas, signal haussier.",
+            "shooting_star": "Petit corps en bas, longue mèche haute. En haut de tendance = rejet des prix hauts, signal baissier.",
+            "inverted_hammer": "Petit corps en bas, longue mèche haute, EN BAS de tendance = signal haussier (contre-intuitif mais validé statistiquement)."
+          }
+        }
+      },
+      "figures_chartistes": {
+        "double_top_bottom": {
+          "double_top": "Deux sommets au même niveau avec un creux entre (ligne de cou). Cassure de la ligne de cou = signal de vente. Objectif = hauteur de la figure projetée vers le bas.",
+          "double_bottom": "Deux creux au même niveau. Cassure de la ligne de cou vers le haut = signal d'achat. Objectif = hauteur projetée vers le haut.",
+          "regle_objectif": "Objectif de cours = prix de cassure ± hauteur entre sommet/creux et ligne de cou"
+        },
+        "tete_epaules": {
+          "description": "Figure de retournement majeure: épaule gauche, tête (sommet plus haut), épaule droite (sommet plus bas que la tête, ≈ niveau épaule gauche). La ligne de cou relie les creux.",
+          "signal": "Cassure de la ligne de cou avec volume = vente. Objectif = hauteur tête-ligne de cou projetée sous la cassure.",
+          "variante_inverse": "Tête-épaules inversée = figure de retournement haussier en bas de tendance.",
+          "fiabilite": "Considérée comme la figure chartiste la plus fiable. Taux de réussite ~75% sur daily."
+        },
+        "triangles": {
+          "triangle_ascendant": "Résistance horizontale + supports ascendants. Biais haussier. Cassure par le haut dans ~75% des cas.",
+          "triangle_descendant": "Support horizontal + résistances descendantes. Biais baissier.",
+          "triangle_symétrique": "Supports ascendants + résistances descendantes convergeant. Neutre — cassure dans le sens de la tendance préexistante dans ~65% des cas.",
+          "mesure_objectif": "Objectif = base du triangle (hauteur maximale) projetée depuis le point de cassure."
+        },
+        "wedges_flags_pennants": {
+          "rising_wedge": "Biseau ascendant — les deux droites convergent vers le haut. Signal baissier (même en tendance haussière).",
+          "falling_wedge": "Biseau descendant — convergence vers le bas. Signal haussier.",
+          "flag": "Drapeau: consolidation en canal court contre-tendance après un mouvement impulsif. Continuation dans >80% des cas.",
+          "pennant": "Fanion: petite consolidation en triangle symétrique après impulsion. Très similaire au flag."
+        },
+        "cup_and_handle": {
+          "description": "Tasse (U arrondi) suivie d'une anse (petite consolidation baissière). Cassure de la résistance de l'anse = signal d'achat puissant.",
+          "objectif": "Profondeur de la tasse projetée au-dessus du point de cassure.",
+          "duree_ideale": "Formation sur 7 semaines à 6 mois pour une fiabilité maximale."
+        }
+      },
+      "indicateurs_avances": {
+        "RSI_divergences": {
+          "RSI_rappel": "RSI = 100 - (100 / (1 + RS)) où RS = moyenne des hausses / moyenne des baisses sur N périodes (défaut 14).",
+          "divergence_haussiere": "Prix fait un nouveau plus bas MAIS le RSI fait un plus bas plus haut. Le momentum baissier s'affaiblit = potentiel retournement haussier.",
+          "divergence_baissiere": "Prix fait un nouveau plus haut MAIS le RSI fait un plus haut plus bas. Momentum haussier déclinant.",
+          "divergence_cachee": "Divergence cachée haussière: prix fait un plus bas plus haut, RSI fait un plus bas plus bas = continuation haussière. Signal de tendance.",
+          "regle_pratique": "Les divergences sur RSI en weekly/daily sont bien plus fiables qu'en M15/M5. Combiner avec support/résistance."
+        },
+        "MACD_avance": {
+          "formule": "MACD = EMA(12) - EMA(26). Signal = EMA(9) du MACD. Histogramme = MACD - Signal.",
+          "lecture_histogramme": "L'histogramme mesure la distance entre MACD et signal. Histogramme croissant = momentum accélère. Décroissant = momentum décélère AVANT le croisement MACD.",
+          "divergence_histogramme": "Divergence entre histogramme et prix = signal précoce de retournement, plus rapide que les divergences MACD classiques."
+        },
+        "bollinger_squeeze": {
+          "rappel": "Bandes = SMA(20) ± 2 écarts-types. Mesurent la volatilité, pas la direction.",
+          "squeeze": "Quand les bandes se resserrent fortement (faible volatilité), un mouvement explosif se prépare. Le Bandwidth (largeur des bandes) atteint un minimum local.",
+          "strategie": "Attendre la cassure après le squeeze. Direction = déterminée par la cassure. Combiner avec volume et momentum pour filtrer les faux breakouts."
+        },
+        "ichimoku_complet": {
+          "composantes": {
+            "tenkan_sen": "(Plus haut 9 + Plus bas 9) / 2 — ligne de conversion, signal rapide",
+            "kijun_sen": "(Plus haut 26 + Plus bas 26) / 2 — ligne de base, signal lent, support/résistance dynamique",
+            "senkou_span_A": "(Tenkan + Kijun) / 2, projeté 26 périodes en avant — bord rapide du nuage",
+            "senkou_span_B": "(Plus haut 52 + Plus bas 52) / 2, projeté 26 périodes en avant — bord lent du nuage",
+            "chikou_span": "Clôture actuelle projetée 26 périodes en arrière — confirmation de tendance"
+          },
+          "lecture": "Prix au-dessus du nuage = haussier. En dessous = baissier. Dans le nuage = zone neutre. Nuage vert (Span A > Span B) = haussier. Nuage rouge = baissier. Croisement Tenkan/Kijun = signal d'entrée. Chikou libre = confirmation.",
+          "signal_ideal": "Les 5 conditions alignées (prix > nuage, nuage vert, Tenkan > Kijun, Chikou libre au-dessus des prix passés) = signal haussier fort."
+        },
+        "volume_profile_VWAP": {
+          "volume_profile": "Distribution du volume par niveau de prix sur une période donnée. Identifie le Point of Control (POC = prix avec le plus de volume échangé) et les zones de Value Area (70% du volume).",
+          "VWAP": "Volume-Weighted Average Price = Σ(Prix × Volume) / Σ(Volume). Prix moyen pondéré par le volume de la journée. Benchmark institutionnel.",
+          "usage": "Prix > VWAP = biais haussier intraday. Prix < VWAP = biais baissier. Les institutions cherchent à exécuter proche du VWAP."
+        },
+        "ADX": {
+          "formule": "Average Directional Index. Mesure la FORCE de la tendance, pas sa direction. ADX > 25 = tendance forte. ADX < 20 = range/consolidation.",
+          "composantes": "+DI et -DI mesurent la direction. +DI > -DI = pression acheteuse. ADX montant avec +DI > -DI = tendance haussière forte."
+        }
+      }
+    },
+    "price_action_et_smart_money": {
+      "price_action_trading": {
+        "definition": "Trader uniquement sur la base du prix brut et des chandeliers, sans indicateurs retardés. Le prix est l'indicateur ultime car il reflète en temps réel les décisions de tous les participants.",
+        "concepts_cles": "Structure de marché (higher highs/higher lows en tendance haussière), niveaux clés (support/résistance/pivots), zones d'offre et demande, pin bars, inside bars, fakeouts."
+      },
+      "supply_demand_zones": {
+        "definition": "Zones où un déséquilibre majeur entre acheteurs et vendeurs a créé un mouvement impulsif. Ces zones sont susceptibles de réagir quand le prix y revient.",
+        "identification": "Chercher un mouvement fort (bougie engulfing ou série impulsive) qui quitte une zone de consolidation. La base de ce mouvement = zone de supply (si baissier) ou demand (si haussier).",
+        "fraicheur": "Une zone non testée (fresh) est plus fiable qu'une zone déjà testée. Chaque test affaiblit la zone."
+      },
+      "market_structure": {
+        "BOS": "Break of Structure — cassure d'un swing high/low dans le sens de la tendance. Confirme la continuation.",
+        "CHoCH": "Change of Character — cassure d'un swing high/low CONTRE la tendance. Premier signal de retournement potentiel.",
+        "application": "En tendance haussière: Higher Highs + Higher Lows. BOS = cassure du dernier HH. CHoCH = cassure du dernier HL vers le bas = possible retournement baissier."
+      },
+      "smart_money_concepts": {
+        "definition": "Cadre d'analyse basé sur le comportement supposé des institutions (smart money) qui manipulent les prix pour accumuler/distribuer des positions.",
+        "liquidity_grabs": "Les institutions poussent le prix au-delà de niveaux évidents (stop-loss clusters) pour déclencher les stops et accumuler à meilleur prix. Les mèches longues au-delà des supports/résistances sont souvent des prises de liquidité.",
+        "order_blocks": "Dernière bougie contre-tendance avant un mouvement impulsif. Zone institutionnelle d'accumulation/distribution.",
+        "fair_value_gaps": "Gaps entre la mèche haute de la bougie 1 et la mèche basse de la bougie 3, causés par un mouvement trop rapide. Le prix tend à revenir combler ces gaps (imbalances)."
+      }
+    },
+    "options_trading": {
+      "fondamentaux": {
+        "call": "Droit (pas obligation) d'ACHETER un actif à un prix fixé (strike) avant une date (expiration). Acheteur paye une prime.",
+        "put": "Droit de VENDRE à un prix fixé. Protection contre la baisse ou spéculation baissière.",
+        "valeur_intrinseque": "Pour un call: max(0, prix du sous-jacent - strike). Pour un put: max(0, strike - prix du sous-jacent).",
+        "valeur_temps": "Prime - valeur intrinsèque. Décroît avec le temps (time decay). Maximum pour les options ATM."
+      },
+      "greeks": {
+        "delta": "Sensibilité du prix de l'option à un mouvement de 1$ du sous-jacent. Call: 0 à +1. Put: 0 à -1. ATM ≈ 0.50.",
+        "gamma": "Taux de changement du delta. Maximum pour les options ATM proches de l'expiration. Risque de gamma squeeze.",
+        "theta": "Décroissance temporelle quotidienne. Toujours négatif pour l'acheteur. Accélère exponentiellement dans les 30 derniers jours.",
+        "vega": "Sensibilité à la volatilité implicite. +1% de VI = +vega en valeur d'option. Élevé pour les options longue échéance."
+      },
+      "strategies": {
+        "covered_call": "Détenir l'action + vendre un call OTM. Revenu de prime + protection partielle. Plafonne le gain. Idéal en marché latéral/légèrement haussier.",
+        "protective_put": "Détenir l'action + acheter un put. Assurance contre la baisse. Coût = prime du put.",
+        "bull_call_spread": "Acheter call strike bas + vendre call strike haut. Risque limité, gain limité. Coût réduit vs call seul.",
+        "iron_condor": "Vendre un put spread + vendre un call spread simultanément. Profit si le prix reste dans la fourchette. Gain max = primes encaissées. Perte max = écart des strikes - primes.",
+        "straddle": "Acheter call + put même strike, même expiration. Profit si mouvement fort dans n'importe quelle direction. Coûteux (double prime)."
+      }
+    },
+    "risk_management": {
+      "position_sizing": {
+        "regle_1_2_pourcent": "Ne jamais risquer plus de 1-2% du capital total par trade. Si capital = 50 000€ et risque = 1%, risque max par trade = 500€.",
+        "formule_taille": "Taille position = Risque en € / (Prix d'entrée - Stop-loss). Exemple: risque 500€, entrée 100€, stop 95€ → taille = 500/5 = 100 actions.",
+        "kelly_criterion": "f* = (p × b - q) / b, où p = probabilité de gain, q = probabilité de perte (1-p), b = ratio gain/perte moyen. Donne la fraction optimale du capital à risquer. En pratique, utiliser ½ Kelly ou ¼ Kelly pour réduire la volatilité."
+      },
+      "stop_loss_types": {
+        "fixe": "Niveau de prix prédéfini. Simple mais ne s'adapte pas.",
+        "trailing_stop": "Se déplace avec le prix en tendance favorable. Protège les gains tout en laissant courir les profits.",
+        "ATR_stop": "Stop basé sur l'Average True Range. Stop = prix - N × ATR(14). S'adapte à la volatilité. N typique = 1.5 à 3.",
+        "structure_stop": "Placé sous le dernier swing low (achat) ou au-dessus du dernier swing high (vente). Respecte la structure du marché."
+      },
+      "risk_reward_ratio": {
+        "minimum": "Ratio R:R minimum de 1:2 recommandé. Pour chaque euro risqué, viser au moins 2€ de gain potentiel.",
+        "calcul": "R:R = (Objectif - Entrée) / (Entrée - Stop). Exemple: entrée 100€, stop 95€, objectif 112€ → R:R = 12/5 = 2.4",
+        "impact": "Avec un R:R de 1:2, un taux de réussite de 40% suffit pour être rentable: (0.40 × 2) - (0.60 × 1) = +0.20 par euro risqué."
+      }
+    },
+    "psychologie_du_trader": {
+      "biais_destructeurs": {
+        "FOMO": "Fear Of Missing Out — entrer dans un trade par peur de rater le mouvement, souvent au pire moment (après le mouvement). Antidote: si tu as raté l'entrée, il y aura toujours un autre setup.",
+        "revenge_trading": "Augmenter la taille ou prendre des trades impulsifs après une perte pour se refaire. Conduit souvent à des pertes en cascade. Antidote: règle stricte — après 2 pertes consécutives, arrêter pour la journée.",
+        "overtrading": "Trader trop fréquemment par ennui ou addiction. La qualité des setups prime sur la quantité. Les meilleurs traders attendent patiemment.",
+        "biais_de_confirmation": "Ne chercher que les informations qui confirment son biais directionnel. Chercher activement les arguments contre sa position."
+      },
+      "discipline": {
+        "plan_de_trading": "Définir AVANT chaque trade: entrée, stop-loss, objectif, taille, raison du trade. Ne jamais dévier du plan en cours de trade.",
+        "journal_de_trading": "Enregistrer chaque trade avec: date, instrument, setup, entrée, sortie, P&L, capture d'écran, émotions ressenties, respect du plan (oui/non). Réviser hebdomadairement.",
+        "routine": "Pré-marché: analyse des niveaux clés, news, plan du jour. Post-marché: revue des trades, journaling. Weekend: revue hebdomadaire, statistiques."
+      }
+    },
+    "outils_et_backtesting": {
+      "screeners": {
+        "TradingView": "Plateforme de charting la plus populaire. Screener intégré, Pine Script pour indicateurs custom, alertes, communauté. Versions gratuite et payante.",
+        "ProRealTime": "Plateforme européenne avancée, backtesting intégré, ProBuilder (langage de programmation), exécution directe via courtiers (IG, Interactive Brokers)."
+      },
+      "backtesting": {
+        "definition": "Tester une stratégie sur des données historiques pour évaluer sa performance passée. Indispensable avant tout trading en réel.",
+        "metriques_cles": "Win rate, ratio R:R moyen, profit factor (gains bruts / pertes brutes, viser >1.5), drawdown maximum (perte maximale depuis le pic), ratio de Sharpe (rendement ajusté au risque).",
+        "pieges": "Overfitting (optimisation excessive sur données passées), survivorship bias, look-ahead bias, commissions/slippage ignorés. Toujours valider sur données hors-échantillon."
+      }
+    },
+    "gestion_portefeuille_avancee": {
+      "allocation_tactique": "Ajuster dynamiquement l'allocation sectorielle/géographique en fonction du cycle économique. Surpondérer les secteurs cycliques en expansion, les défensifs en récession.",
+      "sector_rotation": "Modèle de rotation sectorielle selon le cycle: Reprise (technologie, consommation discrétionnaire) → Expansion (industrie, matériaux) → Pic (énergie, matières premières) → Contraction (santé, utilities, consommation de base).",
+      "rebalancing": "Rééquilibrer le portefeuille périodiquement (trimestriel ou quand un actif dévie de ±5% de son allocation cible). Vendre ce qui a surperformé, acheter ce qui a sous-performé = acheter bas, vendre haut mécaniquement.",
+      "hedging": "Couverture: acheter des puts sur indices pour protéger un portefeuille actions, utiliser des ETF inverses, ou des positions short sur futures. Coût de la couverture vs risque couvert."
+    }
+  }
+}

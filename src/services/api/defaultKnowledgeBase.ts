@@ -10,7 +10,7 @@
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ v30.0.0 — DEFAULT KNOWLEDGE BASE SERVICE (FRONTEND)
  *   Wraps the 4 IPC commands exposed by knowledge_base_default.rs
- *   so TITANE chat AI can access its 106 built-in knowledge categories.
+ *   so TITANE chat AI can access its 116 built-in knowledge categories.
  *
  *   Commands bridged:
  *     knowledge_base_get_all       → getAllEntries()
@@ -238,7 +238,7 @@ function getFallbackEntries(): KnowledgeBaseEntry[] {
 // ─────────────────────────────────────────────────────────────────
 
 /**
- * List all 106 category keys.
+ * List all 116 category keys.
  * Derives from the entries cache when already loaded to avoid a second IPC call.
  */
 export async function listCategories(): Promise<string[]> {

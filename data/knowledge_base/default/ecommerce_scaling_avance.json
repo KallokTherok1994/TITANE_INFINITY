@@ -1,0 +1,97 @@
+{
+  "version": "v30.0.0",
+  "category": "ecommerce_scaling_avance",
+  "description": "E-commerce scaling avancé VISIONNAIRE_2.0 — Amazon FBA (private label, PPC, Brand Registry, A+ Content), marques privées (sourcing Alibaba/1688, branding, packaging, certifications), logistique avancée (3PL, multi-channel, Incoterms), rétention/LTV (email, fidélité, subscriptions, RFM), scaling publicitaire (Meta Ads CBO/Advantage+, Google Shopping, TikTok Shop), analytics (attribution, CAC/LTV, ROAS, unit economics), internationalisation, exit/valorisation",
+  "ecommerce_scaling_avance": {
+    "introduction": "Le e-commerce avancé ne consiste plus à 'ouvrir une boutique en ligne'. C'est construire une machine à cash-flow reproductible, scalable et valorisable. TITANE opère au niveau VISIONNAIRE_2.0 : chaque levier est maîtrisé pour transformer un business e-commerce en actif patrimonial.",
+    "amazon_FBA": {
+      "modele_private_label": {
+        "principe": "Créer sa propre marque, fabriquer en Chine/Asie, expédier en entrepôts Amazon. Amazon gère stockage, expédition, service client. Commission 15% + frais FBA.",
+        "product_research": {
+          "outils": "Helium 10 (Black Box, Cerebro, Magnet), Jungle Scout (Product Database, Keyword Scout), Keepa (historique prix/BSR)",
+          "criteres_winning_product": "BSR (Best Sellers Rank) < 5000 dans la catégorie, revenus estimés > 10 000€/mois, < 200 avis pour le top 3, pas de marque dominante, possibilité de différenciation, marge > 30% après tous les frais.",
+          "validation": "Analyser les 10 premiers résultats de la page 1. Revenus, nombre d'avis, qualité des listings. Si plusieurs listings avec peu d'avis performent bien → opportunité."
+        }
+      },
+      "listing_optimization": {
+        "titre": "Mot-clé principal + marque + caractéristique + bénéfice. 200 caractères max. Front-loaded keywords.",
+        "bullet_points": "5 points. Format: BÉNÉFICE EN MAJUSCULE — explication détaillée. Keywords intégrés naturellement.",
+        "A_plus_content": "Disponible avec Brand Registry. Images lifestyle + comparaison + histoire de marque. Augmente conversion 5-15%.",
+        "images": "7-9 images. Photo principale fond blanc (obligatoire). Infographies, lifestyle, dimensions, packaging. Image 1 = CTR, le reste = conversion.",
+        "backend_keywords": "250 bytes de mots-clés cachés. Pas de répétition, pas de marques concurrentes, inclure fautes courantes et synonymes."
+      },
+      "PPC_amazon": {
+        "types_campagnes": "Sponsored Products (70% du budget), Sponsored Brands (logo + titre + 3 produits), Sponsored Display (retargeting + audiences).",
+        "structure": "Campagne auto (découverte) → extraire les termes performants → campagnes manuelles exact/phrase. ACOS cible < marge brute.",
+        "metriques": "ACOS (Advertising Cost of Sales), TACOS (Total ACOS incluant ventes organiques), impression share, conversion rate."
+      },
+      "brand_registry": "Protection marque, accès A+ Content, Vine (avis gratuits), Brand Analytics (données recherche clients), Virtual Bundles."
+    },
+    "marque_privee_sourcing": {
+      "sourcing_chine": {
+        "plateformes": "Alibaba (B2B international, MOQ souvent 500+), 1688.com (marché domestique chinois, prix plus bas, agent nécessaire), Global Sources, foires Canton (126e session).",
+        "processus": "1. Rechercher 5-10 fournisseurs → 2. Demander devis + échantillons (50-200€) → 3. Comparer qualité/prix/communication → 4. Négocier MOQ/prix/conditions → 5. Commande test (1-2 cartons) → 6. Inspection QC (QIMA/Asia Inspection) → 7. Production masse.",
+        "agent_sourcing": "Alternative aux plateformes : agent local en Chine qui négocie, inspecte, consolide les commandes. Coût 5-10% de la commande. Recommandé pour débutants."
+      },
+      "branding": {
+        "elements": "Logo professionnel, packaging personnalisé (boîte couleur, insert carte de remerciement, sceau de qualité), étiquetage conforme (CE/normes pays), unboxing experience.",
+        "differenciation": "Bundle (accessoire offert), meilleure qualité matériaux, design unique, instruction/guide inclus, garantie étendue, SAV français."
+      },
+      "certifications": "CE (Europe obligatoire), REACH (chimiques), RoHS (électronique), FDA (USA alimentaire/cosmétique), CPSIA (enfants USA). Tester en labo accrédité AVANT importation."
+    },
+    "logistique_avancee": {
+      "3PL": {
+        "definition": "Third-Party Logistics : externalisation stockage + préparation commandes + expédition. Ex : ShipBob, Delivengo, BigBlue (France), Amazon MCF.",
+        "quand": "Quand le volume dépasse la gestion personnelle (~50+ commandes/jour) ou pour multi-canal (site propre + marketplaces).",
+        "criteres_choix": "Localisation entrepôts, coût par commande, intégrations (Shopify/WooCommerce), délais de traitement, capacité retours."
+      },
+      "incoterms": {
+        "FOB": "Free On Board : vendeur livre au port d'embarquement. Acheteur gère le transport maritime + dédouanement. Le plus courant en import Chine.",
+        "DDP": "Delivered Duty Paid : vendeur livre jusqu'à destination, tous frais et droits de douane inclus. Plus cher mais plus simple.",
+        "EXW": "Ex Works : prix départ usine. Tout le transport à la charge de l'acheteur. Moins cher mais plus complexe."
+      },
+      "multi_channel": "Vendre sur Amazon + Shopify + Etsy + eBay. Synchroniser stocks (outil : Sellbrite, ChannelAdvisor, Linnworks). Fulfillment centralisé ou par canal."
+    },
+    "retention_LTV": {
+      "email_post_achat": {
+        "sequence": "J+0 : confirmation commande → J+3 : suivi expédition → J+7 : tips d'utilisation → J+14 : demande avis → J+30 : offre fidélité/cross-sell → J+60 : réapprovisionnement (si consommable).",
+        "outils": "Klaviyo (e-commerce leader), Omnisend, Drip. Segmentation RFM automatique."
+      },
+      "RFM_segmentation": {
+        "definition": "Recency (dernier achat), Frequency (nombre d'achats), Monetary (montant total). Permet de segmenter les clients en groupes actionnables.",
+        "segments": "Champions (R↑F↑M↑ : VIP, offres exclusives), Loyaux (F↑ : programme fidélité), À risque (R↓ : réactivation urgente), Perdus (R↓↓ : win-back ou abandon)."
+      },
+      "programme_fidelite": "Points par achat, tiers (Bronze/Argent/Or), avantages exclusifs, early access. Outils : Smile.io, LoyaltyLion. Augmente rétention 20-30%.",
+      "subscriptions": "Abonnements récurrents (consommables, boxes). MRR (Monthly Recurring Revenue) prévisible. Outils : ReCharge, Bold Subscriptions. Churn rate cible < 5%/mois.",
+      "upsell_cross_sell": "Upsell : version premium (+30-50% prix). Cross-sell : produits complémentaires. Post-purchase upsell (page de remerciement) : taux conversion 10-15%. Outils : Zipify OneClickUpsell, ReConvert."
+    },
+    "scaling_publicitaire": {
+      "meta_ads": {
+        "structure": "CBO (Campaign Budget Optimization) : budget au niveau campagne, Meta distribue. ABO pour test, CBO pour scale.",
+        "advantage_plus": "Advantage+ Shopping : IA Meta gère ciblage, enchères, placements. Très performant pour scaling rapide. Budget min 50€/jour.",
+        "creative_testing": "3-5 créatives/semaine. Format gagnant : UGC (User Generated Content) + hook 3 secondes + before/after + social proof. Tester hooks, pas juste les visuels.",
+        "audiences": "Broad (prospection massive), Lookalike 1-3% (clients existants), Retargeting (visiteurs 7/14/30 jours, ajout panier, initié checkout). Scaling = broad + creative rotation."
+      },
+      "google_shopping": {
+        "performance_max": "Campagne IA Google. Feed produits optimisé + assets créatifs. Capture intention d'achat haute. ROAS souvent 3-8x.",
+        "feed_optimization": "Titres avec mots-clés (produit + marque + attribut clé), descriptions riches, images de qualité, prix compétitifs, GTINs/EAN corrects."
+      },
+      "tiktok_shop": "Shopping intégré dans TikTok. Affiliate marketplace (créateurs vendent vos produits). Vidéos virales organiques + ads. Nouveau canal en forte croissance 2024-2025."
+    },
+    "analytics_unit_economics": {
+      "metriques_essentielles": {
+        "CAC": "Customer Acquisition Cost = Dépenses marketing / Nouveaux clients. Doit être < 1/3 de la LTV.",
+        "LTV": "Lifetime Value = AOV × Fréquence d'achat × Durée relation client. Objectif LTV/CAC > 3.",
+        "AOV": "Average Order Value. Augmenter via bundles, seuils livraison gratuite, upsells. Chaque +10% AOV = impact direct sur marge.",
+        "ROAS": "Return On Ad Spend = Revenus publicitaires / Dépenses publicitaires. ROAS cible dépend de la marge (marge 60% → ROAS min 1.67).",
+        "MER": "Marketing Efficiency Ratio = Revenu total / Dépenses marketing totales. Vue holistique incluant l'organique. Cible > 3.",
+        "contribution_margin": "Revenu - COGS - Shipping - Payment processing - Ads. Le vrai profit par commande. Viser > 20%."
+      }
+    },
+    "exit_valorisation": {
+      "multiples": "Valorisation typique : 2.5-4x SDE (Seller's Discretionary Earnings) ou 3-6x EBITDA pour les plus gros. Business > 3 ans, diversifié, marque forte = multiple supérieur.",
+      "acquereurs": "FBA Aggregators (Thrasio, Perch, Berlin Brands), courtiers (Empire Flippers, Flippa, FE International, Quiet Light). Préparer 12+ mois de P&L clean.",
+      "valorisation_maximale": "Diversifier les canaux de vente, construire une marque (pas juste un produit), documenter les process (SOPs), réduire la dépendance au fondateur."
+    }
+  }
+}

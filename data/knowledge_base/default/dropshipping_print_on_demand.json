@@ -1,0 +1,91 @@
+{
+  "version": "v30.0.0",
+  "category": "dropshipping_print_on_demand",
+  "description": "Dropshipping et print-on-demand avancé VISIONNAIRE_2.0 — sélection de niche, supplier qualification (AliExpress/CJ/Spocket/Zendrop), winning products (critères/research/TikTok viral/Ad Spy), testing methodology, scaling ads (horizontal/vertical/CBO), Shopify optimisation (conversion/checkout/abandoned cart), POD avancé (Printful/Printify/Gelato/Etsy/Amazon Merch), transition marque privée, métriques (CTR/CPC/ROAS), aspects juridiques",
+  "dropshipping_print_on_demand": {
+    "introduction": "Le dropshipping et le print-on-demand sont des modèles d'entrée dans le e-commerce sans stock. Au niveau VISIONNAIRE_2.0, on dépasse le 'test et espère' pour construire des systèmes de testing méthodiques, des machines publicitaires scalables et des transitions vers des marques pérennes.",
+    "dropshipping_avance": {
+      "selection_niche": {
+        "criteres": "Passion + problème résolu + audience identifiable + possibilité de repeat purchase. Éviter : trop saisonnier, trop réglementé (santé/sécurité), trop concurrentiel (phone cases).",
+        "niches_rentables_2025": "Animaux de compagnie, bien-être/self-care, home improvement, fitness niche (yoga/posture), bébé/enfant, outdoor/camping, bureau/productivité, cuisine spécialisée.",
+        "validation": "Vérifier la taille du marché (Google Trends, Facebook Audience Insights), la concurrence (combien de shops actifs), la marge possible (prix vente 3-5x coût produit)."
+      },
+      "winning_products": {
+        "criteres": {
+          "wow_factor": "Le produit doit susciter une réaction immédiate : 'c'est quoi ce truc ?' ou 'j'en ai besoin !'",
+          "problem_solver": "Résout un problème quotidien de manière élégante ou inattendue.",
+          "pas_en_magasin": "Pas facilement trouvable en grande surface. Le client ne peut pas comparer instantanément le prix.",
+          "marge": "Prix d'achat < 10€, prix de vente 25-50€. Marge brute > 60%. Shipping compris.",
+          "potentiel_pub": "Le produit se démontre bien en vidéo. Before/after possible. Résultat visible."
+        },
+        "research_methods": {
+          "tiktok_viral": "Scroller #TikTokMadeMeBuyIt, #AmazonFinds. Produits avec millions de vues = demande validée. Agir vite (7-14 jours de window).",
+          "ad_spy_tools": "Minea (multiplateforme), Dropispy (Facebook spécifique), AdSpy, BigSpy. Filtrer par engagement, date récente, pays cible.",
+          "aliexpress_trending": "Top produits par commandes, nouveautés, AliExpress Dropshipping Center (données de marché).",
+          "amazon_movers": "Amazon Movers & Shakers (produits en forte progression de ventes). Indique une tendance montante."
+        }
+      },
+      "fournisseurs": {
+        "AliExpress": "Le classique. Temps de livraison 10-25 jours (ePacket/AliExpress Standard). Qualité variable. Toujours commander un échantillon.",
+        "CJ_Dropshipping": "Entrepôts mondiaux (USA, EU, Chine). Sourcing personnalisé, packaging custom, livraison 7-15 jours. Agent dédié gratuit.",
+        "Spocket": "Fournisseurs US/EU. Livraison rapide 3-7 jours. Prix plus élevés mais qualité et délais supérieurs. Intégration Shopify native.",
+        "Zendrop": "Automatisation complète. Branding custom. US fulfillment 5-8 jours. Bundle avec service client.",
+        "agent_prive": "Pour scaler : agent sourcing en Chine. Négocie les prix, gère QC, expédie depuis entrepôt privé. ROI sur le volume."
+      },
+      "testing_methodology": {
+        "methode_1_produit_3_adsets": "Budget : 30-50€/jour. 1 campagne → 3 adsets (3 audiences différentes) → 1-2 créatives par adset. Tester 3-5 jours. Kill si CPA > cible.",
+        "criteres_kill": "Après 50€ dépensés sans vente → kill. CPC > 2€ → kill ou changer créative. CTR < 1% → créative faible. Taux conversion < 1% → landing page problème.",
+        "criteres_scale": "ROAS > 2 sur 3 jours → augmenter budget 20-30%/jour. Ne jamais doubler le budget d'un coup (reset learning phase)."
+      },
+      "scaling": {
+        "horizontal": "Dupliquer les adsets gagnants avec de nouvelles audiences. Lookalike 1%, 2%, 3%. Intérêts liés. Broad targeting.",
+        "vertical": "Augmenter le budget des adsets gagnants de 20-30% tous les 2-3 jours. Surveiller le CPA.",
+        "CBO_scaling": "Regrouper les audiences gagnantes dans une campagne CBO. Laisser Meta optimiser la distribution. Budget 100-500€+/jour."
+      }
+    },
+    "shopify_optimisation": {
+      "theme_conversion": "Dawn (gratuit, rapide), Prestige, Impulse, Debutify. Vitesse de chargement < 3 secondes. Mobile-first (70%+ du trafic).",
+      "page_produit": {
+        "elements": "Titre accrocheur (bénéfice principal), images haute qualité (5-8, dont lifestyle + infographie), vidéo produit, prix barré + prix promo, badges de confiance, timer urgence (modéré), avis clients, description bénéfice-orientée, FAQ intégrée.",
+        "copywriting": "Structure : Hook → Problème → Agitation → Solution (votre produit) → Bénéfices (bullet points) → Social proof → CTA clair.",
+        "trust_elements": "Garantie satisfait ou remboursé, livraison gratuite seuil, paiement sécurisé (badges), avis vérifiés, nombre de commandes."
+      },
+      "checkout": "Shopify Checkout Extensibility. Shop Pay (conversion +18%). Upsell post-purchase. Afficher shipping estimé. Retirer distractions. Express checkout (Apple Pay, Google Pay).",
+      "abandoned_cart": "Séquence : 1h après → rappel simple. 24h après → + avis clients. 48h après → 10% discount code. Taux récupération moyen : 5-10%. Outils : Klaviyo, Shopify Flow."
+    },
+    "print_on_demand": {
+      "principe": "Designs imprimés à la demande sur t-shirts, hoodies, mugs, posters, phone cases. Zéro stock, zéro risque. Marge 20-40%.",
+      "plateformes": {
+        "Printful": "Qualité premium, intégration Shopify/Etsy/Amazon, mockups HD, branding (étiquettes, inserts). Prix moyen-haut.",
+        "Printify": "Réseau de fournisseurs (choisir par qualité/prix/localisation). Prix plus compétitifs. Premium plan réduit les coûts.",
+        "Gelato": "Production locale (30+ pays). Livraison rapide, empreinte carbone réduite. Bon pour international.",
+        "marketplaces_POD": "Redbubble, TeePublic, Society6, Spreadshirt : upload designs → ils gèrent tout (trafic, production, shipping). Royalties 10-20%. Revenus passifs."
+      },
+      "designs_gagnants": {
+        "types": "Typography/citations (best-sellers), niches passion (métiers, hobbies, races de chiens), humour, saisonnier (Noël, Halloween, fête des mères), tendances culturelles.",
+        "outils": "Canva Pro (templates, éléments), Adobe Illustrator (vectoriel pro), Kittl (typographie), Placeit (mockups). AI : Midjourney/DALL-E pour inspiration (attention copyright).",
+        "copyright": "Ne JAMAIS utiliser : logos de marques, personnages protégés, phrases trademark. Vérifier sur TESS (US) / EUIPO (EU) avant de publier."
+      },
+      "niches_POD_rentables": "Professions spécifiques (infirmière, pompier, enseignant), passions (pêche, yoga, gaming), relations (meilleur papa/maman, couple), animaux spécifiques, dates personnalisées."
+    },
+    "transition_marque": {
+      "quand": "Quand un produit fait 100+ ventes/mois de manière constante sur 3+ mois. Le marché est validé.",
+      "etapes": "1. Sourcer le produit en direct (Alibaba/agent) → 2. Créer packaging et branding personnalisé → 3. Passer en stock (3PL ou auto) → 4. Construire la marque (site dédié, storytelling, valeurs) → 5. Diversifier la gamme → 6. Programme fidélité.",
+      "avantages": "Marges +20-30% vs dropship. Contrôle qualité. Délais de livraison réduits. Marque valorisable (exit possible)."
+    },
+    "metriques_cles": {
+      "CTR": "Click-Through Rate pub : > 2% bon, > 3% excellent. Si < 1% → changer la créative.",
+      "CPC": "Coût par clic : varie par niche. E-commerce moyen 0.50-1.50€ (Facebook). Objectif < 1€.",
+      "ROAS": "Return On Ad Spend : revenus / dépenses pub. Break-even = 1/marge (si marge 50% → ROAS min 2.0). Objectif > 2.5.",
+      "taux_conversion": "Visiteurs → acheteurs. Moyen e-commerce 1.5-3%. Bon > 3%. Excellent > 5%. Si < 1% → problème page produit.",
+      "AOV": "Average Order Value. Augmenter via upsells, bundles, seuil livraison gratuite. Chaque +10€ d'AOV change la rentabilité.",
+      "profit_par_commande": "Prix vente - coût produit - shipping - frais plateforme - ads (au prorata). Le seul chiffre qui compte. Objectif > 10€/commande."
+    },
+    "aspects_juridiques": {
+      "CGV": "Conditions Générales de Vente obligatoires. Inclure : délais de livraison réalistes, politique retour (14 jours rétractation EU/FR), garantie légale.",
+      "mentions_legales": "Identité du vendeur, siège social, numéro SIRET/RCS, contact email, hébergeur du site. Obligatoire en France.",
+      "RGPD": "Bannière cookies, politique de confidentialité, droit accès/suppression données. Outils : Axeptio, CookieYes.",
+      "droit_retractation": "14 jours calendaires après réception (EU). Remboursement sous 14 jours. Frais retour à la charge du client (sauf mention contraire)."
+    }
+  }
+}
