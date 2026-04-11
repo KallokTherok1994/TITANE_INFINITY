@@ -16,6 +16,10 @@ import type {
   TwinSyncValidationRequest,
 } from '../../types/numericTwin';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('NumericTwin');
+
 /**
  * Service centralisé pour le Numeric Twin
  * Gère la communication avec le backend Rust
@@ -27,12 +31,12 @@ class NumericTwinService {
    * Obtient l'état complet du Twin
    */
   async getState(): Promise<TwinState> {
-    console.log(`${this.LOG_PREFIX} getState`);
+    logger.info(`${this.LOG_PREFIX} getState`);
     try {
       const state = await secureInvoke<TwinState>('twin_get_state');
       return state;
     } catch (error) {
-      console.error(`${this.LOG_PREFIX} getState error:`, error);
+      logger.error(`${this.LOG_PREFIX} getState error:`, error);
       throw error;
     }
   }
@@ -41,12 +45,12 @@ class NumericTwinService {
    * Obtient uniquement le FusionIndex
    */
   async getFusionIndex(): Promise<FusionIndex> {
-    console.log(`${this.LOG_PREFIX} getFusionIndex`);
+    logger.info(`${this.LOG_PREFIX} getFusionIndex`);
     try {
       const index = await secureInvoke<FusionIndex>('twin_get_fusion_index');
       return index;
     } catch (error) {
-      console.error(`${this.LOG_PREFIX} getFusionIndex error:`, error);
+      logger.error(`${this.LOG_PREFIX} getFusionIndex error:`, error);
       throw error;
     }
   }
@@ -55,14 +59,14 @@ class NumericTwinService {
    * Soumet une observation au Twin
    */
   async submitObservation(observation: TwinObservationRequest): Promise<string> {
-    console.log(`${this.LOG_PREFIX} submitObservation:`, observation.observationType);
+    logger.info(`${this.LOG_PREFIX} submitObservation:`, observation.observationType);
     try {
       const syncId = await secureInvoke<string>('twin_submit_observation', {
         observation,
       });
       return syncId;
     } catch (error) {
-      console.error(`${this.LOG_PREFIX} submitObservation error:`, error);
+      logger.error(`${this.LOG_PREFIX} submitObservation error:`, error);
       throw error;
     }
   }
@@ -71,14 +75,14 @@ class NumericTwinService {
    * Applique une évolution au Twin
    */
   async applyEvolution(evolution: TwinEvolutionRequest): Promise<TwinEvolutionResult> {
-    console.log(`${this.LOG_PREFIX} applyEvolution:`, evolution.evolutionType);
+    logger.info(`${this.LOG_PREFIX} applyEvolution:`, evolution.evolutionType);
     try {
       const result = await secureInvoke<TwinEvolutionResult>('twin_apply_evolution', {
         evolution,
       });
       return result;
     } catch (error) {
-      console.error(`${this.LOG_PREFIX} applyEvolution error:`, error);
+      logger.error(`${this.LOG_PREFIX} applyEvolution error:`, error);
       throw error;
     }
   }
@@ -87,12 +91,12 @@ class NumericTwinService {
    * Valide une synchronisation
    */
   async validateSync(validation: TwinSyncValidationRequest): Promise<boolean> {
-    console.log(`${this.LOG_PREFIX} validateSync:`, validation.syncId);
+    logger.info(`${this.LOG_PREFIX} validateSync:`, validation.syncId);
     try {
       const result = await secureInvoke<boolean>('twin_validate_sync', { validation });
       return result;
     } catch (error) {
-      console.error(`${this.LOG_PREFIX} validateSync error:`, error);
+      logger.error(`${this.LOG_PREFIX} validateSync error:`, error);
       throw error;
     }
   }
@@ -101,14 +105,14 @@ class NumericTwinService {
    * Obtient le profil d'évolution
    */
   async getEvolutionProfile(): Promise<TwinEvolutionProfile> {
-    console.log(`${this.LOG_PREFIX} getEvolutionProfile`);
+    logger.info(`${this.LOG_PREFIX} getEvolutionProfile`);
     try {
       const profile = await secureInvoke<TwinEvolutionProfile>(
         'twin_get_evolution_profile'
       );
       return profile;
     } catch (error) {
-      console.error(`${this.LOG_PREFIX} getEvolutionProfile error:`, error);
+      logger.error(`${this.LOG_PREFIX} getEvolutionProfile error:`, error);
       throw error;
     }
   }
@@ -117,12 +121,12 @@ class NumericTwinService {
    * Obtient l'identité du Twin
    */
   async getIdentity(): Promise<TwinIdentityCore> {
-    console.log(`${this.LOG_PREFIX} getIdentity`);
+    logger.info(`${this.LOG_PREFIX} getIdentity`);
     try {
       const identity = await secureInvoke<TwinIdentityCore>('twin_get_identity');
       return identity;
     } catch (error) {
-      console.error(`${this.LOG_PREFIX} getIdentity error:`, error);
+      logger.error(`${this.LOG_PREFIX} getIdentity error:`, error);
       throw error;
     }
   }
@@ -131,12 +135,12 @@ class NumericTwinService {
    * Force le recalcul du FusionIndex
    */
   async recalculateFusion(): Promise<number> {
-    console.log(`${this.LOG_PREFIX} recalculateFusion`);
+    logger.info(`${this.LOG_PREFIX} recalculateFusion`);
     try {
       const score = await secureInvoke<number>('twin_recalculate_fusion');
       return score;
     } catch (error) {
-      console.error(`${this.LOG_PREFIX} recalculateFusion error:`, error);
+      logger.error(`${this.LOG_PREFIX} recalculateFusion error:`, error);
       throw error;
     }
   }

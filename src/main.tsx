@@ -7,7 +7,7 @@
  */
 
 // ⭐ PHASE 2: BOOT DIAGNOSTIC MARKER
-console.log('[BOOT] main.tsx start');
+logger.info('[BOOT] main.tsx start');
 (window as any).__TITANE_BOOT__ = (window as any).__TITANE_BOOT__ || {};
 (window as any).__TITANE_BOOT__.main_tsx = true;
 (window as any).__TITANE_BOOT__.main_tsx_timestamp = Date.now();
@@ -180,7 +180,7 @@ const emitBootMarker = (marker: string): void => {
 
   seenBootMarkers.add(marker);
   setBootStage(marker);
-  console.info(`[${new Date().toISOString()}] ${marker}`);
+  logger.info(`[${new Date().toISOString()}] ${marker}`);
 
   void import('@tauri-apps/api/event')
     .then(({ emit }) =>
@@ -527,7 +527,7 @@ import { logInfo } from './lib/UILogger';
 // ✨ v∞.D: Initialize XP Engine
 import { XP } from './core/experience/XP_ENGINE';
 XP.load();
-console.log(`[XP] Système chargé:`, { level: XP.state.level, xp: XP.state.total });
+logger.info(`[XP] Système chargé:`, { level: XP.state.level, xp: XP.state.total });
 
 // Set default theme
 document.documentElement.setAttribute('data-theme', 'dark');
@@ -578,7 +578,7 @@ async function initializeRuntimeConfig(): Promise<void> {
   const isTauri = Boolean(tauriCandidate.__TAURI__ || tauriCandidate.__TAURI_INTERNALS__);
   if (!isTauri) {
     // Mode navigateur - utiliser la config par défaut (normal, pas une erreur)
-    console.log(
+    logger.info(
       '[RuntimeConfig] Mode navigateur détecté - utilisation config par défaut'
     );
     return;
@@ -595,18 +595,18 @@ async function initializeRuntimeConfig(): Promise<void> {
       'ollamaUrl' in runtimeConfig
     ) {
       setRuntimeConfig(runtimeConfig as RuntimeConfigPayload);
-      console.log('[RuntimeConfig] Loaded (sanitized)', {
+      logger.info('[RuntimeConfig] Loaded (sanitized)', {
         secretsMode: runtimeConfig.secretsMode,
         geminiConfigured: runtimeConfig.geminiConfigured,
         ollamaEndpoint: runtimeConfig.ollamaUrl,
       });
     } else {
-      console.warn(
+      logger.warn(
         '[RuntimeConfig] Backend returned unexpected payload; keeping defaults'
       );
     }
   } catch (error) {
-    console.warn('[RuntimeConfig] Failed to load from backend; using defaults', error);
+    logger.warn('[RuntimeConfig] Failed to load from backend; using defaults');
   }
 }
 
@@ -933,17 +933,17 @@ if (typeof window !== 'undefined') {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🚀 BOOT SEQUENCE START
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-console.log('\n╔════════════════════════════════════════════════════════════════╗');
-console.log('║  🌌 TITANE∞ v30.0.0 - BOOT SEQUENCE                             ║');
-console.log('║  Timestamp: ' + new Date().toISOString() + '                  ║');
-console.log('╚════════════════════════════════════════════════════════════════╝\n');
+logger.info('\n╔════════════════════════════════════════════════════════════════╗');
+logger.info('║  🌌 TITANE∞ v30.0.0 - BOOT SEQUENCE                             ║');
+logger.info('║  Timestamp: ' + new Date().toISOString() + '                  ║');
+logger.info('╚════════════════════════════════════════════════════════════════╝\n');
 
 // ✨ v30.0.0 Phase 5 - Monitoring Infrastructure (Priority 1)
-console.log('[1/7] 🔍 Monitoring: Initializing (Web Vitals, Errors, Performance)...');
+logger.info('[1/7] 🔍 Monitoring: Initializing (Web Vitals, Errors, Performance)...');
 if (import.meta.env.PROD) {
   // Load monitoring in background after First Contentful Paint
   setTimeout(() => {
-    console.log('      ⚡ Loading monitoring infrastructure...');
+    logger.info('      ⚡ Loading monitoring infrastructure...');
     import('./monitoring')
       .then(({ initMonitoring, monitoring }) => {
         initMonitoring();
@@ -951,12 +951,12 @@ if (import.meta.env.PROD) {
         if (typeof window !== 'undefined') {
           window.__TITANE_MONITORING__ = monitoring;
         }
-        console.log(
+        logger.info(
           '      ✅ Monitoring: Ready (access via window.__TITANE_MONITORING__)'
         );
       })
       .catch(err => {
-        console.warn('      ⚠️ Monitoring initialization failed:', err);
+        logger.warn('      ⚠️ Monitoring initialization failed:');
       });
   }, 2000);
 } else {
@@ -968,11 +968,11 @@ if (import.meta.env.PROD) {
       if (typeof window !== 'undefined') {
         window.__TITANE_MONITORING__ = monitoring;
       }
-      console.log('      ✅ Monitoring: Ready (dev mode - immediate)');
-      console.log('      💡 Access metrics: window.__TITANE_MONITORING__.getMetrics()');
+      logger.info('      ✅ Monitoring: Ready (dev mode - immediate)');
+      logger.info('      💡 Access metrics: window.__TITANE_MONITORING__.getMetrics()');
     })
     .catch(err => {
-      console.warn('      ⚠️ Monitoring initialization failed (dev):', err);
+      logger.warn('      ⚠️ Monitoring initialization failed (dev):', err);
     });
 }
 
@@ -984,19 +984,19 @@ logInfo('🔒 UILogger initialized', {
   maxStoredLogs: 1000,
 });
 
-console.log('[2/7] 🔒 UILogger: Activated (console override in production)');
-console.log('[3/7] 🦀 Backend: 40+ Rust modules | 33 Tauri Commands');
-console.log('[4/7] ✨ Frontend: 20 Unified Engines | SingularityState Active');
-console.log('[5/7] 🔒 Tauri v2.0 100% | Rust + React + TypeScript');
-console.log('[6/7] 📦 Loading React 18 + TypeScript 5...');
-console.log('[7/7] 🎯 Mounting root component...');
+logger.info('[2/7] 🔒 UILogger: Activated (console override in production)');
+logger.info('[3/7] 🦀 Backend: 40+ Rust modules | 33 Tauri Commands');
+logger.info('[4/7] ✨ Frontend: 20 Unified Engines | SingularityState Active');
+logger.info('[5/7] 🔒 Tauri v2.0 100% | Rust + React + TypeScript');
+logger.info('[6/7] 📦 Loading React 18 + TypeScript 5...');
+logger.info('[7/7] 🎯 Mounting root component...');
 
 // Initialize Singularity Engine - DÉSACTIVÉ pour debug écran blanc
 /*
 singularityEngine.initialize().then(() => {
-  console.log('✅ SingularityEngine initialized');
-  console.log('🌌 Consciousness Level:', singularityEngine.getState().consciousness);
-  console.log('🔮 Auto-Coherence:', (singularityEngine.getState().autoCoherence * 100).toFixed(1) + '%');
+  logger.info('✅ SingularityEngine initialized');
+  logger.info('🌌 Consciousness Level:', singularityEngine.getState().consciousness);
+  logger.info('🔮 Auto-Coherence:', (singularityEngine.getState().autoCoherence * 100).toFixed(1) + '%');
 }).catch((err) => {
   logger.error('SingularityEngine initialization failed', { component: 'SingularityEngine' }, err as Error);
 });
@@ -1046,17 +1046,17 @@ const getSingularityPollingIntervalMs = (): number => {
 
 SingularityBridge.initialize()
   .then(() => {
-    console.log('✅ SingularityBridge initialized (Rust ↔ React sync active)');
+    logger.info('✅ SingularityBridge initialized (Rust ↔ React sync active)');
 
     void SingularityBridge.getGlobalCoherence().then(coherence => {
-      console.log('🔗 Backend Coherence:', (coherence * 100).toFixed(1) + '%');
+      logger.info(`🔗 Backend Coherence: ${(coherence * 100).toFixed(1)}%`);
     });
 
     void SingularityBridge.isCritical().then(critical => {
       if (critical) {
-        console.warn('⚠️  System in CRITICAL state!');
+        logger.warn('⚠️  System in CRITICAL state!');
       } else {
-        console.log('✅ System health: Normal');
+        logger.info('✅ System health: Normal');
       }
     });
 
@@ -1064,17 +1064,17 @@ SingularityBridge.initialize()
     SingularityConnections.start(singularityIntervalMs)
       .then(() => {
         if (singularityIntervalMs > 0) {
-          console.log(
+          logger.info(
             `🔗 SingularityConnections started (${singularityIntervalMs}ms polling)`
           );
         } else {
-          console.log('🔗 SingularityConnections started (event-driven; no polling)');
+          logger.info('🔗 SingularityConnections started (event-driven; no polling)');
         }
-        console.log('   → Helios → PhysicalLayer');
-        console.log('   → Memory → CognitiveLayer');
-        console.log('   → Persona → SymbolicLayer');
-        console.log('   → AutoHeal → AdaptiveLayer');
-        console.log('   → UI Router → MetaLayer');
+        logger.info('   → Helios → PhysicalLayer');
+        logger.info('   → Memory → CognitiveLayer');
+        logger.info('   → Persona → SymbolicLayer');
+        logger.info('   → AutoHeal → AdaptiveLayer');
+        logger.info('   → UI Router → MetaLayer');
       })
       .catch(err => {
         logger.error(
@@ -1105,16 +1105,16 @@ PerformanceMonitor.initialize({
 // Generate performance report after 5s
 setTimeout(() => {
   const report = PerformanceMonitor.generateReport();
-  console.log(`⚡ Performance Grade: ${report.grade}, Score: ${report.score.toFixed(1)}`);
+  logger.info(`⚡ Performance Grade: ${report.grade}, Score: ${report.score.toFixed(1)}`);
   if (report.violations.length > 0) {
-    console.warn('⚠️ Performance violations:', report.violations);
+    logger.warn('⚠️ Performance violations:', report.violations);
   }
 }, 5000);
 */
 
 // Phase 8: Inject accessibility styles
 injectSROnlyStyles();
-console.log('♿ Accessibility styles injected (WCAG 2.1 AA)');
+logger.info('♿ Accessibility styles injected (WCAG 2.1 AA)');
 
 // 🔧 Global error handlers (catch unhandled errors)
 window.addEventListener('error', event => {
@@ -1129,8 +1129,8 @@ window.addEventListener('unhandledrejection', event => {
   );
 });
 
-console.log('✅ TITANE∞ frontend loaded successfully');
-console.log('>>> MOUNTING REACT ROOT NOW...\n');
+logger.info('✅ TITANE∞ frontend loaded successfully');
+logger.info('>>> MOUNTING REACT ROOT NOW...\n');
 
 // ⚡ FIX: NON-MAIN WINDOW GUARD
 // Root cause: avatar-floating pre-created in tauri.conf.json (no dedicated URL)
@@ -1168,7 +1168,7 @@ if (_titaneCurrentWindowLabel !== 'main') {
   if (typeof document !== 'undefined') {
     document.documentElement.dataset.titaneBootReady = '1';
   }
-  console.log(
+  logger.info(
     `[TITANE] Non-main window "${_titaneCurrentWindowLabel}" — minimal mode active (boot dedup)`
   );
 } else {
@@ -1204,11 +1204,11 @@ if (_titaneCurrentWindowLabel !== 'main') {
     throw new Error(errorMsg);
   }
 
-  console.log('✅ Root element found:', rootElement);
-  console.log('🎨 Starting React 18 render...');
+  logger.info('✅ Root element found');
+  logger.info('🎨 Starting React 18 render...');
 
   try {
-    console.log('🚀 [v16.2.3] Rendering App complet (après validation AppMinimal)');
+    logger.info('🚀 [v16.2.3] Rendering App complet (après validation AppMinimal)');
 
     // 🔬 DIAGNOSTIC: Test minimal pour isoler problème écran noir
     // Décommenter la ligne ci-dessous pour tester React minimal
@@ -1243,9 +1243,9 @@ if (_titaneCurrentWindowLabel !== 'main') {
       </React.StrictMode>
     );
 
-    console.log('\n╔════════════════════════════════════════════════════════════════╗');
-    console.log('║  ✅ TITANE∞ REACT ROOT MOUNTED (App Complet Actif)           ║');
-    console.log('╚════════════════════════════════════════════════════════════════╝\n');
+    logger.info('\n╔════════════════════════════════════════════════════════════════╗');
+    logger.info('║  ✅ TITANE∞ REACT ROOT MOUNTED (App Complet Actif)           ║');
+    logger.info('╚════════════════════════════════════════════════════════════════╝\n');
 
     // ✨ P2-B: Register Service Worker for offline caching (-400ms repeat visit)
     // In Tauri, service workers can create persistent caching issues across builds.
@@ -1253,7 +1253,7 @@ if (_titaneCurrentWindowLabel !== 'main') {
       navigator.serviceWorker
         .register('/sw.js', { scope: '/' })
         .then(registration => {
-          console.log('✅ Service Worker registered:', registration.scope);
+          logger.info(`✅ Service Worker registered: ${registration.scope}`);
 
           // Update on page reload
           registration.addEventListener('updatefound', () => {
@@ -1264,7 +1264,7 @@ if (_titaneCurrentWindowLabel !== 'main') {
                   newWorker.state === 'installed' &&
                   navigator.serviceWorker.controller
                 ) {
-                  console.log('🔄 New Service Worker available. Refresh to update.');
+                  logger.info('🔄 New Service Worker available. Refresh to update.');
                   // Optional: Show update notification to user
                 }
               });
@@ -1272,7 +1272,7 @@ if (_titaneCurrentWindowLabel !== 'main') {
           });
         })
         .catch(error => {
-          console.warn('⚠️ Service Worker registration failed:', error);
+          logger.warn('⚠️ Service Worker registration failed:');
         });
     }
   } catch (error) {

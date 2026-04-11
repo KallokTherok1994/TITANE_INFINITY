@@ -31,6 +31,9 @@
  */
 
 import { v4 as uuidv4 } from 'uuid';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('UnifiedMemory');
 import {
   MemoryTier,
   type MemoryEntry as _MCPMemoryEntry,
@@ -381,15 +384,15 @@ export class UnifiedMemory {
     if (this.isInitialized) return;
 
     try {
-      console.log('[UnifiedMemory] Initializing...');
+      logger.info('[UnifiedMemory] Initializing...');
 
       // Initialize vector store
       await this.vectorStore.initialize();
-      console.log('[UnifiedMemory] Vector store initialized');
+      logger.info('[UnifiedMemory] Vector store initialized');
 
       // Initialize embedding generator
       await this.embeddingGenerator.initialize();
-      console.log('[UnifiedMemory] Embedding generator initialized');
+      logger.info('[UnifiedMemory] Embedding generator initialized');
 
       // Start schedulers
       if (this.config.cleanup.enabled) {
@@ -403,9 +406,9 @@ export class UnifiedMemory {
       }
 
       this.isInitialized = true;
-      console.log('[UnifiedMemory] Initialization complete');
+      logger.info('[UnifiedMemory] Initialization complete');
     } catch (error) {
-      console.error('[UnifiedMemory] Initialization failed:', error);
+      logger.error('[UnifiedMemory] Initialization failed:', error);
       throw error;
     }
   }
@@ -417,7 +420,7 @@ export class UnifiedMemory {
     if (!this.isInitialized) return;
 
     try {
-      console.log('[UnifiedMemory] Shutting down...');
+      logger.info('[UnifiedMemory] Shutting down...');
 
       // Stop schedulers
       if (this.cleanupScheduler) clearInterval(this.cleanupScheduler);
@@ -428,9 +431,9 @@ export class UnifiedMemory {
       await this.vectorStore.close();
 
       this.isInitialized = false;
-      console.log('[UnifiedMemory] Shutdown complete');
+      logger.info('[UnifiedMemory] Shutdown complete');
     } catch (error) {
-      console.error('[UnifiedMemory] Shutdown failed:', error);
+      logger.error('[UnifiedMemory] Shutdown failed:', error);
       throw error;
     }
   }
@@ -524,12 +527,12 @@ export class UnifiedMemory {
       // Store in vector store
       await this.vectorStore.add(entry);
 
-      console.log(
+      logger.info(
         `[UnifiedMemory] Memory created: ${entry.id} (${entry.type}, tier: ${entry.tier})`
       );
       return entry;
     } catch (error) {
-      console.error('[UnifiedMemory] Failed to create memory:', error);
+      logger.error('[UnifiedMemory] Failed to create memory:', error);
       throw error;
     }
   }
@@ -618,12 +621,12 @@ export class UnifiedMemory {
         this.perfStats.retrievalTimeMs.shift();
       }
 
-      console.log(
+      logger.info(
         `[UnifiedMemory] Retrieved ${results.length} memories (${retrievalTime.toFixed(2)}ms)`
       );
       return results;
     } catch (error) {
-      console.error('[UnifiedMemory] Failed to retrieve memories:', error);
+      logger.error('[UnifiedMemory] Failed to retrieve memories:', error);
       return [];
     }
   }
@@ -634,9 +637,9 @@ export class UnifiedMemory {
   async updateMemory(id: string, updates: Partial<UnifiedMemoryEntry>): Promise<void> {
     try {
       await this.vectorStore.update(id, updates);
-      console.log(`[UnifiedMemory] Memory updated: ${id}`);
+      logger.info(`[UnifiedMemory] Memory updated: ${id}`);
     } catch (error) {
-      console.error('[UnifiedMemory] Failed to update memory:', error);
+      logger.error('[UnifiedMemory] Failed to update memory:', error);
       throw error;
     }
   }
@@ -647,9 +650,9 @@ export class UnifiedMemory {
   async deleteMemory(id: string): Promise<void> {
     try {
       await this.vectorStore.delete(id);
-      console.log(`[UnifiedMemory] Memory deleted: ${id}`);
+      logger.info(`[UnifiedMemory] Memory deleted: ${id}`);
     } catch (error) {
-      console.error('[UnifiedMemory] Failed to delete memory:', error);
+      logger.error('[UnifiedMemory] Failed to delete memory:', error);
       throw error;
     }
   }
@@ -679,10 +682,10 @@ export class UnifiedMemory {
         strength: 0.1, // Almost forgotten
       });
 
-      console.log(`[UnifiedMemory] Memory superseded: ${oldId} → ${newEntry.id}`);
+      logger.info(`[UnifiedMemory] Memory superseded: ${oldId} → ${newEntry.id}`);
       return newEntry;
     } catch (error) {
-      console.error('[UnifiedMemory] Failed to supersede memory:', error);
+      logger.error('[UnifiedMemory] Failed to supersede memory:', error);
       throw error;
     }
   }
@@ -772,12 +775,12 @@ export class UnifiedMemory {
 
       if (newTier) {
         await this.vectorStore.update(id, { tier: newTier });
-        console.log(
+        logger.info(
           `[UnifiedMemory] Memory promoted: ${id} (${entry.tier} → ${newTier})`
         );
       }
     } catch (error) {
-      console.error('[UnifiedMemory] Failed to promote memory:', error);
+      logger.error('[UnifiedMemory] Failed to promote memory:', error);
     }
   }
 
@@ -803,10 +806,10 @@ export class UnifiedMemory {
       });
 
       this.perfStats.lastCleanup = now;
-      console.log(`[UnifiedMemory] Cleanup: ${deleted} memories deleted`);
+      logger.info(`[UnifiedMemory] Cleanup: ${deleted} memories deleted`);
       return deleted;
     } catch (error) {
-      console.error('[UnifiedMemory] Cleanup failed:', error);
+      logger.error('[UnifiedMemory] Cleanup failed:', error);
       return 0;
     }
   }
@@ -885,7 +888,7 @@ export class UnifiedMemory {
               toDelete.push(discard.id);
               mergedCount++;
 
-              console.log(
+              logger.info(
                 `[UnifiedMemory] Consolidated: ${discard.id} → ${keep.id} (similarity: ${similarity.toFixed(3)})`
               );
             }
@@ -899,12 +902,12 @@ export class UnifiedMemory {
       }
 
       this.perfStats.lastConsolidation = Date.now();
-      console.log(
+      logger.info(
         `[UnifiedMemory] Consolidation complete: ${mergedCount} memories merged`
       );
       return mergedCount;
     } catch (error) {
-      console.error('[UnifiedMemory] Consolidation failed:', error);
+      logger.error('[UnifiedMemory] Consolidation failed:', error);
       return 0;
     }
   }
@@ -984,7 +987,7 @@ export class UnifiedMemory {
         if (newStrength < 0.1) {
           toDelete.push(entry.id);
           decayedCount++;
-          console.log(
+          logger.info(
             `[UnifiedMemory] Decay: ${entry.id} marked for deletion (strength: ${newStrength.toFixed(3)})`
           );
         } else if (newStrength !== entry.strength) {
@@ -1006,12 +1009,12 @@ export class UnifiedMemory {
       }
 
       this.perfStats.lastDecay = now;
-      console.log(
+      logger.info(
         `[UnifiedMemory] Decay complete: ${toUpdate.length} updated, ${decayedCount} deleted`
       );
       return decayedCount;
     } catch (error) {
-      console.error('[UnifiedMemory] Decay failed:', error);
+      logger.error('[UnifiedMemory] Decay failed:', error);
       return 0;
     }
   }
@@ -1024,7 +1027,7 @@ export class UnifiedMemory {
       () => this.cleanup(),
       this.config.cleanup.intervalMs
     );
-    console.log(
+    logger.info(
       `[UnifiedMemory] Cleanup scheduler started (${this.config.cleanup.intervalMs}ms)`
     );
   }
@@ -1037,7 +1040,7 @@ export class UnifiedMemory {
       () => this.consolidate(),
       this.config.consolidation.intervalMs
     );
-    console.log(
+    logger.info(
       `[UnifiedMemory] Consolidation scheduler started (${this.config.consolidation.intervalMs}ms)`
     );
   }
@@ -1047,7 +1050,7 @@ export class UnifiedMemory {
    */
   private startDecayScheduler(): void {
     this.decayScheduler = setInterval(() => this.decay(), this.config.decay.intervalMs);
-    console.log(
+    logger.info(
       `[UnifiedMemory] Decay scheduler started (${this.config.decay.intervalMs}ms)`
     );
   }
@@ -1063,7 +1066,7 @@ export class UnifiedMemory {
     try {
       return await this.vectorStore.getStats();
     } catch (error) {
-      console.error('[UnifiedMemory] Failed to get stats:', error);
+      logger.error('[UnifiedMemory] Failed to get stats:', error);
       throw error;
     }
   }

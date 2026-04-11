@@ -1,8 +1,8 @@
 # ARCHITECTURE_TRUTH.md — Architecture 4-Ring TITANE_INFINITY
 
-**Version:** 28.0.0
-**SHA:** c59e9b5b3
-**Date:** 2026-03-15T13:32:00Z
+**Version:** 30.0.0
+**SHA:** 1165def2d
+**Date:** 2026-04-11T13:17:00Z
 **Classification:** CANON
 
 ---
@@ -26,7 +26,8 @@ UI → IPC (Tauri invoke) → Backend Rust → Réseau externe
 ┌─────────────────────────────────────────────────────┐
 │  RING 4 — UI / Entry Point                          │
 │  src/App.tsx, src/main.tsx                          │
-│  src-tauri/src/main.rs (invoke_handler, 401 cmds@SHA/408 actuel)  │
+│  src/pages/ (TitanePage: 8 tabs, EvoPage: 5 tabs)  │
+│  src-tauri/src/main.rs (invoke_handler)             │
 ├─────────────────────────────────────────────────────┤
 │  RING 3 — Orchestration                             │
 │  src/core/                                          │
@@ -143,5 +144,20 @@ Au démarrage (`main.rs`), les états suivants sont enregistrés :
 
 ---
 
+## 8. Fusion v30 — Évolution → Transform
+
+La fusion v30 a supprimé le tab standalone `memory-evolution` de TitanePage et EvoPage.
+Contenu absorbé dans `src/components/sections/TransformationSection.tsx`.
+
+| Avant (v28) | Après (v30) |
+|---|---|
+| Tab séparé `/memory-evolution` | Fusionné dans `tab=transformation` |
+| EvoPage : 6 onglets | EvoPage : 5 onglets |
+| TitanePage : onglets sans MemoryEvolution explicite | TitanePage `🌱 Transform & Évo` = transformation + évolution mémoire |
+
+Routes `/memory-evolution` et `/memory-evo` → `Navigate to="/titane?tab=transformation"`.
+
+---
+
 *Autorité : Kevin Thibault — TITANE Team*
-*Généré : 2026-03-15T13:32:00Z*
+*Mis à jour : 2026-04-11T13:17:00Z — v30.0.0*

@@ -35,6 +35,9 @@
 import type { SingularityState as _SingularityState } from '@/types/singularityState';
 import { secureInvoke } from '@/lib/security';
 import { detectEnvironment } from '@/core/tauri/environment';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('SingularityAuto');
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES D'AUTONOMIE
@@ -205,13 +208,13 @@ export class SingularityAutonomyEngine {
     args?: Record<string, unknown>
   ): Promise<T | null> {
     if (!this.isTauriEnv) {
-      console.log(`[AutonomyEngine] Mock command: ${cmd}`);
+      logger.info(`[AutonomyEngine] Mock command: ${cmd}`);
       return null;
     }
     try {
       return await secureInvoke<T>(cmd, args);
     } catch (error) {
-      console.warn(`[AutonomyEngine] Command failed: ${cmd}`, error);
+      logger.warn(`[AutonomyEngine] Command failed: ${cmd}`, error);
       return null;
     }
   }
@@ -228,12 +231,12 @@ export class SingularityAutonomyEngine {
    */
   start(): void {
     if (this.isRunning) {
-      console.warn('[AutonomyEngine] Already running');
+      logger.warn('[AutonomyEngine] Already running');
       return;
     }
 
     this.isRunning = true;
-    console.log('[AutonomyEngine] ✨ Started v24.30');
+    logger.info('[AutonomyEngine] ✨ Started v24.30');
 
     // Cycle autonome toutes les 30 secondes
     this.scanIntervalId = setInterval(() => {
@@ -256,7 +259,7 @@ export class SingularityAutonomyEngine {
     }
 
     this.isRunning = false;
-    console.log('[AutonomyEngine] Stopped');
+    logger.info('[AutonomyEngine] Stopped');
   }
 
   /**
@@ -323,7 +326,7 @@ export class SingularityAutonomyEngine {
         });
       }
     } catch (error) {
-      console.error('[AutonomyEngine] Cycle error:', error);
+      logger.error('[AutonomyEngine] Cycle error:', error);
     }
   }
 
@@ -377,7 +380,7 @@ export class SingularityAutonomyEngine {
 
       return result;
     } catch (error) {
-      console.error('[AutonomyEngine] auto_scan error:', error);
+      logger.error('[AutonomyEngine] auto_scan error:', error);
       return {
         timestamp: Date.now(),
         backend_errors: [`Scan failed: ${error}`],
@@ -438,7 +441,7 @@ export class SingularityAutonomyEngine {
 
       return result;
     } catch (error) {
-      console.error('[AutonomyEngine] auto_detect error:', error);
+      logger.error('[AutonomyEngine] auto_detect error:', error);
       return {
         error_patterns: [],
         abnormal_behaviors: [],
@@ -484,7 +487,7 @@ export class SingularityAutonomyEngine {
         );
         result.fixed_states = fixResponse?.fixed || [];
       } catch (error) {
-        console.warn('[AutonomyEngine] Backend fix failed:', error);
+        logger.warn('[AutonomyEngine] Backend fix failed:', error);
       }
 
       // Nettoyer caches frontend
@@ -502,7 +505,7 @@ export class SingularityAutonomyEngine {
       result.success = true;
       return result;
     } catch (error) {
-      console.error('[AutonomyEngine] auto_fix error:', error);
+      logger.error('[AutonomyEngine] auto_fix error:', error);
       return {
         fixed_states: [],
         reloaded_modules: [],
@@ -545,7 +548,7 @@ export class SingularityAutonomyEngine {
         );
         result.rebuilt_modules = healResponse?.repaired || [];
       } catch (error) {
-        console.warn('[AutonomyEngine] Backend heal failed:', error);
+        logger.warn('[AutonomyEngine] Backend heal failed:', error);
       }
 
       // Re-synchroniser SingularityState
@@ -561,7 +564,7 @@ export class SingularityAutonomyEngine {
       result.success = true;
       return result;
     } catch (error) {
-      console.error('[AutonomyEngine] auto_heal error:', error);
+      logger.error('[AutonomyEngine] auto_heal error:', error);
       return {
         rebuilt_modules: [],
         resynchronized_states: [],
@@ -601,7 +604,7 @@ export class SingularityAutonomyEngine {
         );
         result.performance_gain_percentage = optimizeResponse?.gains || 0;
       } catch (error) {
-        console.warn('[AutonomyEngine] Backend optimize failed:', error);
+        logger.warn('[AutonomyEngine] Backend optimize failed:', error);
       }
 
       // Compresser caches
@@ -614,7 +617,7 @@ export class SingularityAutonomyEngine {
 
       return result;
     } catch (error) {
-      console.error('[AutonomyEngine] auto_optimize error:', error);
+      logger.error('[AutonomyEngine] auto_optimize error:', error);
       return {
         cpu_optimization: 'failed',
         gpu_optimization: 'failed',
@@ -656,12 +659,12 @@ export class SingularityAutonomyEngine {
         result.heuristics_updated = evolveResponse?.improvements || [];
         result.ia_coherence_improved = true;
       } catch (error) {
-        console.warn('[AutonomyEngine] Backend evolve failed:', error);
+        logger.warn('[AutonomyEngine] Backend evolve failed:', error);
       }
 
       return result;
     } catch (error) {
-      console.error('[AutonomyEngine] auto_evolve error:', error);
+      logger.error('[AutonomyEngine] auto_evolve error:', error);
       return {
         ia_coherence_improved: false,
         chat_speed_improved: false,
@@ -703,7 +706,7 @@ export class SingularityAutonomyEngine {
         );
         result.ia_coherence = iaTest?.coherent || false;
       } catch (error) {
-        console.warn('[AutonomyEngine] IA test failed:', error);
+        logger.warn('[AutonomyEngine] IA test failed:', error);
       }
 
       // Tester latence
@@ -721,7 +724,7 @@ export class SingularityAutonomyEngine {
 
       return result;
     } catch (error) {
-      console.error('[AutonomyEngine] auto_test error:', error);
+      logger.error('[AutonomyEngine] auto_test error:', error);
       this.autonomyState.health_score = 0;
       return {
         ia_coherence: false,
@@ -763,7 +766,7 @@ export class SingularityAutonomyEngine {
         );
         result.singularity_state_protected = shieldResponse?.protected || false;
       } catch (error) {
-        console.warn('[AutonomyEngine] Backend shield failed:', error);
+        logger.warn('[AutonomyEngine] Backend shield failed:', error);
       }
 
       // Prévenir doublons mémoire
@@ -772,7 +775,7 @@ export class SingularityAutonomyEngine {
 
       return result;
     } catch (error) {
-      console.error('[AutonomyEngine] auto_shield error:', error);
+      logger.error('[AutonomyEngine] auto_shield error:', error);
       return {
         singularity_state_protected: false,
         memory_duplicates_prevented: false,
@@ -810,7 +813,7 @@ export class SingularityAutonomyEngine {
         );
         result.logs_analyzed = analyseResponse?.analyzed_count || 0;
       } catch (error) {
-        console.warn('[AutonomyEngine] Backend analyse failed:', error);
+        logger.warn('[AutonomyEngine] Backend analyse failed:', error);
       }
 
       // Détecter anomalies récurrentes
@@ -820,7 +823,7 @@ export class SingularityAutonomyEngine {
 
       return result;
     } catch (error) {
-      console.error('[AutonomyEngine] auto_analyse error:', error);
+      logger.error('[AutonomyEngine] auto_analyse error:', error);
       return {
         logs_analyzed: 0,
         long_context_analyzed: false,
@@ -844,14 +847,14 @@ export class SingularityAutonomyEngine {
 
       // Log local léger
       if (report.diagnostics.length > 0 || report.errors_fixed.length > 0) {
-        console.log(`[AutonomyEngine] Report:`, {
+        logger.info(`[AutonomyEngine] Report:`, {
           diagnostics: report.diagnostics.length,
           fixes: report.errors_fixed.length,
           optimizations: report.optimizations_performed.length,
         });
       }
     } catch (error) {
-      console.error('[AutonomyEngine] auto_report error:', error);
+      logger.error('[AutonomyEngine] auto_report error:', error);
     }
   }
 
@@ -941,7 +944,7 @@ export class SingularityAutonomyEngine {
         (window as any).queryClient.clear();
       }
     } catch (error) {
-      console.warn('[AutonomyEngine] Cache clear failed:', error);
+      logger.warn('[AutonomyEngine] Cache clear failed:', error);
     }
   }
 
@@ -949,7 +952,7 @@ export class SingularityAutonomyEngine {
     try {
       await this.safeInvoke('autonomy_fix_tts_sync');
     } catch (error) {
-      console.warn('[AutonomyEngine] TTS sync fix failed:', error);
+      logger.warn('[AutonomyEngine] TTS sync fix failed:', error);
     }
   }
 
@@ -957,7 +960,7 @@ export class SingularityAutonomyEngine {
     try {
       await this.safeInvoke('autonomy_resync_singularity_state');
     } catch (error) {
-      console.warn('[AutonomyEngine] SingularityState resync failed:', error);
+      logger.warn('[AutonomyEngine] SingularityState resync failed:', error);
     }
   }
 
@@ -965,7 +968,7 @@ export class SingularityAutonomyEngine {
     try {
       await this.safeInvoke('autonomy_clean_memory');
     } catch (error) {
-      console.warn('[AutonomyEngine] Memory clean failed:', error);
+      logger.warn('[AutonomyEngine] Memory clean failed:', error);
     }
   }
 
@@ -983,7 +986,7 @@ export class SingularityAutonomyEngine {
         }
       });
     } catch (error) {
-      console.warn('[AutonomyEngine] Cache compression failed:', error);
+      logger.warn('[AutonomyEngine] Cache compression failed:', error);
     }
   }
 
@@ -1015,7 +1018,7 @@ export class SingularityAutonomyEngine {
         }
       });
     } catch (error) {
-      console.warn('[AutonomyEngine] Duplicate prevention failed:', error);
+      logger.warn('[AutonomyEngine] Duplicate prevention failed:', error);
     }
   }
 }

@@ -3,6 +3,10 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('AntiEcho');
+
 /**
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ v30.0.0 — ANTI-ECHO SHIELD (AES)
@@ -96,10 +100,10 @@ class AntiEchoShieldEngine {
     // Auto-mute si activé
     if (this.config.autoMute) {
       this.isMuted = true;
-      console.log('[AntiEcho] 🔇 Auto-muted during TTS');
+      logger.info('[AntiEcho] 🔇 Auto-muted during TTS');
     }
 
-    console.log(
+    logger.info(
       `[AntiEcho] 🔊 TTS started: "${text.substring(0, 50)}..." (${estimatedDuration}ms)`
     );
 
@@ -111,7 +115,7 @@ class AntiEchoShieldEngine {
    */
   forceUnmute(): void {
     this.isMuted = false;
-    console.log('[AntiEchoShield] 🔊 Force unmute activated');
+    logger.info('[AntiEchoShield] 🔊 Force unmute activated');
   }
 
   /**
@@ -130,7 +134,7 @@ class AntiEchoShieldEngine {
    */
   endTTS(id: string): void {
     if (!this.activeTTS || this.activeTTS.id !== id) {
-      console.warn('[AntiEcho] ⚠️ TTS end mismatch');
+      logger.warn('[AntiEcho] ⚠️ TTS end mismatch');
       return;
     }
 
@@ -148,11 +152,11 @@ class AntiEchoShieldEngine {
     if (this.config.autoMute) {
       setTimeout(() => {
         this.isMuted = false;
-        console.log('[AntiEcho] 🔊 Auto-unmuted after TTS');
+        logger.info('[AntiEcho] 🔊 Auto-unmuted after TTS');
       }, this.config.postTTSMargin);
     }
 
-    console.log('[AntiEcho] ✅ TTS ended');
+    logger.info('[AntiEcho] ✅ TTS ended');
   }
 
   /**
@@ -165,7 +169,7 @@ class AntiEchoShieldEngine {
     }
 
     this.isMuted = false;
-    console.log('[AntiEcho] 🛑 Force stopped all TTS');
+    logger.info('[AntiEcho] 🛑 Force stopped all TTS');
   }
 
   // ═══ ECHO DETECTION ═══
@@ -332,7 +336,7 @@ class AntiEchoShieldEngine {
    */
   setEnabled(enabled: boolean): void {
     this.config.enabled = enabled;
-    console.log(`[AntiEcho] ${enabled ? '✅ Enabled' : '❌ Disabled'}`);
+    logger.info(`[AntiEcho] ${enabled ? '✅ Enabled' : '❌ Disabled'}`);
   }
 
   /**
@@ -340,7 +344,7 @@ class AntiEchoShieldEngine {
    */
   setThreshold(threshold: number): void {
     this.config.echoThreshold = Math.max(0, Math.min(1, threshold));
-    console.log(`[AntiEcho] 🎚️ Threshold: ${this.config.echoThreshold.toFixed(2)}`);
+    logger.info(`[AntiEcho] 🎚️ Threshold: ${this.config.echoThreshold.toFixed(2)}`);
   }
 
   /**
@@ -348,7 +352,7 @@ class AntiEchoShieldEngine {
    */
   setPostTTSMargin(margin: number): void {
     this.config.postTTSMargin = Math.max(0, margin);
-    console.log(`[AntiEcho] ⏱️ Post-TTS margin: ${this.config.postTTSMargin}ms`);
+    logger.info(`[AntiEcho] ⏱️ Post-TTS margin: ${this.config.postTTSMargin}ms`);
   }
 
   /**
@@ -375,7 +379,7 @@ class AntiEchoShieldEngine {
     this.activeTTS = null;
     this.recentTTS = [];
     this.isMuted = false;
-    console.log('[AntiEcho] 🔄 Reset complete');
+    logger.info('[AntiEcho] 🔄 Reset complete');
   }
 
   /**

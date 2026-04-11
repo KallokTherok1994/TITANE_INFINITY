@@ -20,6 +20,10 @@
 
 import { tauriClient } from '@/lib/tauriClient';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('CrashGuard');
+
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
@@ -142,7 +146,7 @@ export class CrashGuardEngine {
    */
   public configure(config: Partial<CrashGuardConfig>): void {
     this.config = { ...this.config, ...config };
-    console.log('[CrashGuard] 🔧 Configuration updated');
+    logger.info('[CrashGuard] 🔧 Configuration updated');
   }
 
   /**
@@ -158,7 +162,7 @@ export class CrashGuardEngine {
       this.updateStats();
     }, this.config.detection_interval);
 
-    console.log('[CrashGuard] 🛡️ Protection started');
+    logger.info('[CrashGuard] 🛡️ Protection started');
   }
 
   /**
@@ -168,7 +172,7 @@ export class CrashGuardEngine {
     if (this.detectionInterval) {
       clearInterval(this.detectionInterval);
       this.detectionInterval = null;
-      console.log('[CrashGuard] 🛑 Protection stopped');
+      logger.info('[CrashGuard] 🛑 Protection stopped');
     }
   }
 
@@ -238,7 +242,7 @@ export class CrashGuardEngine {
           localStorage.setItem('singularity-emergency-backup', state);
         }
       } catch (error) {
-        console.error('[CrashGuard] Failed to create emergency backup');
+        logger.error('[CrashGuard] Failed to create emergency backup');
       }
     }
   }
@@ -254,7 +258,7 @@ export class CrashGuardEngine {
         this.registerThreat(threat);
       }
     } catch (error) {
-      console.warn('[CrashGuard] Threat detection failed:', error);
+      logger.warn('[CrashGuard] Threat detection failed:', error);
     }
   }
 
@@ -266,7 +270,7 @@ export class CrashGuardEngine {
     this.stats.threats_detected++;
     this.stats.last_threat = threat.detected_at;
 
-    console.warn(`[CrashGuard] ⚠️ Threat detected: ${threat.type} (${threat.severity})`);
+    logger.warn(`[CrashGuard] ⚠️ Threat detected: ${threat.type} (${threat.severity})`);
 
     // Auto-recovery si activé
     if (this.config.auto_recovery && threat.preventable) {
@@ -283,7 +287,7 @@ export class CrashGuardEngine {
    * Effectue une récupération
    */
   private async performRecovery(threat: CrashThreat): Promise<void> {
-    console.log(`[CrashGuard] 🔧 Performing recovery for: ${threat.type}`);
+    logger.info(`[CrashGuard] 🔧 Performing recovery for: ${threat.type}`);
 
     const startTime = Date.now();
     let recoveryType: RecoveryType = 'restart_module';
@@ -327,7 +331,7 @@ export class CrashGuardEngine {
         this.activeThreats.delete(threat.id);
       }
     } catch (error) {
-      console.error('[CrashGuard] Recovery failed:', error);
+      logger.error('[CrashGuard] Recovery failed:', error);
     }
 
     const recovery: RecoveryAction = {
@@ -352,7 +356,7 @@ export class CrashGuardEngine {
    * Action d'urgence
    */
   private async performEmergencyAction(): Promise<void> {
-    console.error('[CrashGuard] 🚨 EMERGENCY ACTION - Too many threats!');
+    logger.error('[CrashGuard] 🚨 EMERGENCY ACTION - Too many threats!');
 
     if (this.config.emergency_rollback) {
       try {
@@ -362,9 +366,9 @@ export class CrashGuardEngine {
         // Clear toutes les menaces
         this.activeThreats.clear();
 
-        console.log('[CrashGuard] ✅ Emergency rollback successful');
+        logger.info('[CrashGuard] ✅ Emergency rollback successful');
       } catch (error) {
-        console.error('[CrashGuard] Emergency rollback failed:', error);
+        logger.error('[CrashGuard] Emergency rollback failed:', error);
       }
     }
   }
@@ -406,7 +410,7 @@ export class CrashGuardEngine {
     this.recoveryHistory = [];
     this.stats = this.createInitialStats();
     this.startTime = Date.now();
-    console.log('[CrashGuard] ♻️ Reset complete');
+    logger.info('[CrashGuard] ♻️ Reset complete');
   }
 }
 

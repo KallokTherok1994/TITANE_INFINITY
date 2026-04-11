@@ -39,6 +39,10 @@ import {
   ConversationContext,
 } from '@/design-system/visual-states';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('VisualStore');
+
 interface VisualStateStoreV21 {
   // Engine instance
   engine: TitaneVisualEngineV21 | null;
@@ -154,7 +158,7 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>((set, get) => 
       currentConfig: newEngine.getCurrentConfig(),
     });
 
-    console.log('[VisualStateStoreV21] Engine initialized', {
+    logger.info('[VisualStateStoreV21] Engine initialized', {
       state: initialState,
       config,
     });
@@ -184,7 +188,7 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>((set, get) => 
     if (engine) {
       engine.start();
     } else {
-      console.warn(
+      logger.warn(
         '[VisualStateStoreV21] Engine not initialized. Call initEngine() first.'
       );
     }
@@ -212,7 +216,7 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>((set, get) => 
     if (engine) {
       engine.setState(state, duration);
     } else {
-      console.warn('[VisualStateStoreV21] Engine not initialized');
+      logger.warn('[VisualStateStoreV21] Engine not initialized');
     }
   },
 
@@ -224,7 +228,7 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>((set, get) => 
     if (engine) {
       engine.setStateImmediate(state);
     } else {
-      console.warn('[VisualStateStoreV21] Engine not initialized');
+      logger.warn('[VisualStateStoreV21] Engine not initialized');
     }
   },
 
@@ -236,7 +240,7 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>((set, get) => 
     if (engine) {
       engine.setCognitiveState(cognitive, duration);
     } else {
-      console.warn('[VisualStateStoreV21] Engine not initialized');
+      logger.warn('[VisualStateStoreV21] Engine not initialized');
     }
   },
 
@@ -248,7 +252,7 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>((set, get) => 
     if (engine) {
       engine.setEmotionalTone(emotional, duration);
     } else {
-      console.warn('[VisualStateStoreV21] Engine not initialized');
+      logger.warn('[VisualStateStoreV21] Engine not initialized');
     }
   },
 
@@ -260,7 +264,7 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>((set, get) => 
     if (engine) {
       engine.setSystemLoad(load, duration);
     } else {
-      console.warn('[VisualStateStoreV21] Engine not initialized');
+      logger.warn('[VisualStateStoreV21] Engine not initialized');
     }
   },
 
@@ -272,7 +276,7 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>((set, get) => 
     if (engine) {
       engine.setConversationContext(context, duration);
     } else {
-      console.warn('[VisualStateStoreV21] Engine not initialized');
+      logger.warn('[VisualStateStoreV21] Engine not initialized');
     }
   },
 
@@ -284,7 +288,7 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>((set, get) => 
     if (engine) {
       engine.setCustomConfig(override, duration);
     } else {
-      console.warn('[VisualStateStoreV21] Engine not initialized');
+      logger.warn('[VisualStateStoreV21] Engine not initialized');
     }
   },
 
@@ -296,7 +300,7 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>((set, get) => 
     if (engine) {
       engine.clearCustomConfig(duration);
     } else {
-      console.warn('[VisualStateStoreV21] Engine not initialized');
+      logger.warn('[VisualStateStoreV21] Engine not initialized');
     }
   },
 
@@ -312,7 +316,7 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>((set, get) => 
     if (engine) {
       engine.updateConfig(config);
     } else {
-      console.warn('[VisualStateStoreV21] Engine not initialized');
+      logger.warn('[VisualStateStoreV21] Engine not initialized');
     }
   },
 
@@ -324,7 +328,7 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>((set, get) => 
     if (engine) {
       engine.setPerformanceMode(mode);
     } else {
-      console.warn('[VisualStateStoreV21] Engine not initialized');
+      logger.warn('[VisualStateStoreV21] Engine not initialized');
     }
   },
 }));

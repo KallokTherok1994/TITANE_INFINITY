@@ -943,3 +943,51 @@
   opacity: 0.8;
   margin-left: 2px;
 }
+
+/* ── XP Quality Badge ── */
+
+.message-xp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 8px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  vertical-align: middle;
+  user-select: none;
+  white-space: nowrap;
+  transition: opacity 200ms ease;
+}
+
+.message-xp-badge-minimal {
+  background: rgba(114, 123, 129, 0.1);
+  color: rgba(114, 123, 129, 0.7);
+  border: 1px solid rgba(114, 123, 129, 0.15);
+}
+
+.message-xp-badge-basic {
+  background: rgba(147, 179, 153, 0.1);
+  color: rgba(147, 179, 153, 0.85);
+  border: 1px solid rgba(147, 179, 153, 0.2);
+}
+
+.message-xp-badge-good {
+  background: rgba(59, 130, 246, 0.12);
+  color: rgba(147, 197, 253, 0.9);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+.message-xp-badge-excellent {
+  background: rgba(168, 85, 247, 0.12);
+  color: rgba(196, 148, 255, 0.9);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+}
+
+.message-xp-badge-exceptional {
+  background: rgba(245, 158, 11, 0.15);
+  color: rgba(252, 211, 77, 0.95);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}

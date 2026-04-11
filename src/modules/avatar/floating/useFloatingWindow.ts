@@ -18,6 +18,10 @@ import {
   useAvatarDisplayActions,
 } from '@/core/state/SingularityState.selectors';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('FloatingWindow');
+
 export interface UseFloatingWindowResult {
   displayState: AvatarDisplayState;
   screens: ScreenInfo[];
@@ -123,7 +127,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
       setError(null);
     } catch (err) {
       setError(`Failed to fetch display state: ${err}`);
-      console.error('Failed to fetch display state:', err);
+      logger.error('Failed to fetch display state:', err);
     }
   }, [syncToSingularity]);
 
@@ -134,7 +138,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
       setError(null);
     } catch (err) {
       setError(`Failed to fetch screens: ${err}`);
-      console.error('Failed to fetch screens:', err);
+      logger.error('Failed to fetch screens:', err);
     }
   }, []);
 
@@ -168,7 +172,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
       setError(null);
     } catch (err) {
       setError(`Failed to set floating mode: ${err}`);
-      console.error('Failed to set floating mode:', err);
+      logger.error('Failed to set floating mode:', err);
     }
   }, [syncToSingularity]);
 
@@ -180,7 +184,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
       setError(null);
     } catch (err) {
       setError(`Failed to set embed mode: ${err}`);
-      console.error('Failed to set embed mode:', err);
+      logger.error('Failed to set embed mode:', err);
     }
   }, [syncToSingularity]);
 
@@ -192,7 +196,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
       setError(null);
     } catch (err) {
       setError(`Failed to set hidden mode: ${err}`);
-      console.error('Failed to set hidden mode:', err);
+      logger.error('Failed to set hidden mode:', err);
     }
   }, [syncToSingularity]);
 
@@ -209,7 +213,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
         setError(null);
       } catch (err) {
         setError(`Failed to set position: ${err}`);
-        console.error('Failed to set position:', err);
+        logger.error('Failed to set position:', err);
       }
     },
     [syncToSingularity]
@@ -224,7 +228,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
         setError(null);
       } catch (err) {
         setError(`Failed to set size: ${err}`);
-        console.error('Failed to set size:', err);
+        logger.error('Failed to set size:', err);
       }
     },
     [syncToSingularity]
@@ -239,7 +243,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
         setError(null);
       } catch (err) {
         setError(`Failed to set scale: ${err}`);
-        console.error('Failed to set scale:', err);
+        logger.error('Failed to set scale:', err);
       }
     },
     [syncToSingularity]
@@ -254,7 +258,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
         setError(null);
       } catch (err) {
         setError(`Failed to set opacity: ${err}`);
-        console.error('Failed to set opacity:', err);
+        logger.error('Failed to set opacity:', err);
       }
     },
     [syncToSingularity]
@@ -272,7 +276,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
       setError(null);
     } catch (err) {
       setError(`Failed to toggle always on top: ${err}`);
-      console.error('Failed to toggle always on top:', err);
+      logger.error('Failed to toggle always on top:', err);
     }
   }, [displayState.always_on_top, syncToSingularity]);
 
@@ -284,7 +288,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
       setError(null);
     } catch (err) {
       setError(`Failed to toggle locked: ${err}`);
-      console.error('Failed to toggle locked:', err);
+      logger.error('Failed to toggle locked:', err);
     }
   }, [displayState.locked, syncToSingularity]);
 
@@ -296,7 +300,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
       setError(null);
     } catch (err) {
       setError(`Failed to toggle mirror mode: ${err}`);
-      console.error('Failed to toggle mirror mode:', err);
+      logger.error('Failed to toggle mirror mode:', err);
     }
   }, [displayState.mirror_mode, syncToSingularity]);
 
@@ -308,7 +312,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
       setError(null);
     } catch (err) {
       setError(`Failed to toggle click through: ${err}`);
-      console.error('Failed to toggle click through:', err);
+      logger.error('Failed to toggle click through:', err);
     }
   }, [displayState.click_through, syncToSingularity]);
 
@@ -325,7 +329,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
         setError(null);
       } catch (err) {
         setError(`Failed to set anchor: ${err}`);
-        console.error('Failed to set anchor:', err);
+        logger.error('Failed to set anchor:', err);
       }
     },
     [syncToSingularity]
@@ -340,7 +344,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
         setError(null);
       } catch (err) {
         setError(`Failed to set anchor by name: ${err}`);
-        console.error('Failed to set anchor by name:', err);
+        logger.error('Failed to set anchor by name:', err);
       }
     },
     [syncToSingularity]
@@ -355,7 +359,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
         setError(null);
       } catch (err) {
         setError(`Failed to move to screen: ${err}`);
-        console.error('Failed to move to screen:', err);
+        logger.error('Failed to move to screen:', err);
       }
     },
     [syncToSingularity]
@@ -374,7 +378,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
         setError(null);
       } catch (err) {
         setError(`Failed to update display state: ${err}`);
-        console.error('Failed to update display state:', err);
+        logger.error('Failed to update display state:', err);
       }
     },
     [syncToSingularity]
@@ -388,7 +392,7 @@ export function useFloatingWindow(): UseFloatingWindowResult {
       setError(null);
     } catch (err) {
       setError(`Failed to reset display state: ${err}`);
-      console.error('Failed to reset display state:', err);
+      logger.error('Failed to reset display state:', err);
     }
   }, [syncToSingularity]);
 

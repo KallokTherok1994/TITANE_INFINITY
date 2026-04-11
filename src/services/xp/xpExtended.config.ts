@@ -26,6 +26,9 @@ export type XPCategory =
 export type XPSource =
   | 'chat_message'
   | 'chat_response'
+  | 'chat_quality_bonus'
+  | 'chat_titane_response'
+  | 'chat_conversation_streak'
   | 'mode_usage'
   | 'automation_run'
   | 'automation_success'
@@ -155,6 +158,9 @@ export const BASE_XP_BY_SOURCE: Record<
 > = {
   chat_message: { amount: 10, category: 'chat_ia' },
   chat_response: { amount: 15, category: 'chat_ia' },
+  chat_quality_bonus: { amount: 5, category: 'chat_ia' },
+  chat_titane_response: { amount: 3, category: 'chat_ia' },
+  chat_conversation_streak: { amount: 8, category: 'chat_ia' },
   mode_usage: { amount: 20, category: 'evolution' },
   automation_run: { amount: 30, category: 'automation' },
   automation_success: { amount: 50, category: 'automation' },
@@ -411,6 +417,53 @@ export const ACHIEVEMENT_REGISTRY: Record<string, AchievementDefinition> = {
     condition: profile => profile.bestStreak >= 90,
     secret: false,
   },
+
+  // Quality-based achievements
+  quality_speaker: {
+    id: 'quality_speaker',
+    name: 'Interlocuteur de Qualité',
+    description: 'Atteindre le niveau 3 en catégorie Chat IA grâce à des messages de qualité.',
+    icon: '🎯',
+    type: 'mastery',
+    rarity: 'uncommon',
+    xpReward: 200,
+    condition: profile => profile.categoryXP.chat_ia.level >= 3,
+    secret: false,
+  },
+  coherent_thinker: {
+    id: 'coherent_thinker',
+    name: 'Penseur Cohérent',
+    description: 'Atteindre 1000 XP en catégorie Chat IA.',
+    icon: '💡',
+    type: 'mastery',
+    rarity: 'rare',
+    xpReward: 350,
+    condition: profile => profile.categoryXP.chat_ia.totalXP >= 1000,
+    secret: false,
+  },
+  conversation_master: {
+    id: 'conversation_master',
+    name: 'Maître de la Conversation',
+    description: 'Atteindre le niveau 10 en Chat IA grâce à des interactions de qualité.',
+    icon: '🗣️',
+    type: 'mastery',
+    rarity: 'epic',
+    xpReward: 600,
+    condition: profile => profile.categoryXP.chat_ia.level >= 10,
+    secret: false,
+  },
+  exceptional_mind: {
+    id: 'exceptional_mind',
+    name: 'Esprit Exceptionnel',
+    description: 'Accumuler 5000 XP total grâce à des interactions de haute qualité.',
+    icon: '🧠',
+    type: 'challenge',
+    rarity: 'epic',
+    xpReward: 800,
+    condition: profile => profile.totalXP >= 5000,
+    secret: false,
+  },
+
   omniscient: {
     id: 'omniscient',
     name: 'Omniscient',

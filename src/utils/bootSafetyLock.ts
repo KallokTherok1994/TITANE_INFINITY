@@ -6,6 +6,10 @@
  * Empêche les boucles infinies et les crash conditions WebKit
  */
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('BootSafety');
+
 /**
  * État global du boot - Module scope (singleton strict)
  */
@@ -28,11 +32,11 @@ export const bootSafetyLock = {
    */
   markBootFailed(): void {
     if (bootAlreadyFailed) {
-      console.warn('⚠️ [BOOT-LOCK] Boot already marked as failed');
+      logger.warn('⚠️ [BOOT-LOCK] Boot already marked as failed');
       return;
     }
     bootAlreadyFailed = true;
-    console.error('🚨 [BOOT-LOCK] Boot marked as FAILED');
+    logger.error('🚨 [BOOT-LOCK] Boot marked as FAILED');
   },
 
   /**
@@ -47,7 +51,7 @@ export const bootSafetyLock = {
    */
   markRecoveryAttempted(): void {
     bootRecoveryAttempted = true;
-    console.warn('🛡️ [BOOT-LOCK] Recovery attempt registered');
+    logger.warn('🛡️ [BOOT-LOCK] Recovery attempt registered');
   },
 
   /**
@@ -55,11 +59,11 @@ export const bootSafetyLock = {
    */
   canAttemptRecovery(): boolean {
     if (bootRecoveryAttempted) {
-      console.error('❌ [BOOT-LOCK] Recovery already attempted - DENIED');
+      logger.error('❌ [BOOT-LOCK] Recovery already attempted - DENIED');
       return false;
     }
     if (fatalErrorCaptured) {
-      console.error('❌ [BOOT-LOCK] Fatal error captured - Recovery DENIED');
+      logger.error('❌ [BOOT-LOCK] Fatal error captured - Recovery DENIED');
       return false;
     }
     return true;
@@ -71,7 +75,7 @@ export const bootSafetyLock = {
   markFatalError(): void {
     fatalErrorCaptured = true;
     bootAlreadyFailed = true;
-    console.error('💀 [BOOT-LOCK] FATAL ERROR CAPTURED - ALL RECOVERY DISABLED');
+    logger.error('💀 [BOOT-LOCK] FATAL ERROR CAPTURED - ALL RECOVERY DISABLED');
   },
 
   /**
@@ -86,11 +90,11 @@ export const bootSafetyLock = {
    */
   canMutateDOM(): boolean {
     if (domMutationInProgress) {
-      console.error('❌ [BOOT-LOCK] DOM mutation already in progress - DENIED');
+      logger.error('❌ [BOOT-LOCK] DOM mutation already in progress - DENIED');
       return false;
     }
     if (fatalErrorCaptured) {
-      console.error('❌ [BOOT-LOCK] Fatal state - DOM mutation DENIED');
+      logger.error('❌ [BOOT-LOCK] Fatal state - DOM mutation DENIED');
       return false;
     }
     return true;
@@ -130,7 +134,7 @@ export const bootSafetyLock = {
     reactRenderCount++;
 
     if (reactRenderCount > MAX_RENDERS_PER_SECOND) {
-      console.error(
+      logger.error(
         `💥 [BOOT-LOCK] React render loop detected: ${reactRenderCount} renders/sec`
       );
       this.markFatalError();
@@ -151,7 +155,7 @@ export const bootSafetyLock = {
     domMutationInProgress = false;
     reactRenderCount = 0;
     lastRenderTime = 0;
-    console.warn('⚠️ [BOOT-LOCK] UNSAFE RESET performed');
+    logger.warn('⚠️ [BOOT-LOCK] UNSAFE RESET performed');
   },
 
   /**

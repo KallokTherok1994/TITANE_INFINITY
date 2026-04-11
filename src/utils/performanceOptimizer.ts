@@ -1,4 +1,7 @@
 // @ts-nocheck
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('PerfOptimizer');
 /**
  * TITANE∞ v30.0.0 — Performance Optimizer & Cache Manager
  * © 2025 TITANE Team. All rights reserved.
@@ -59,7 +62,7 @@ class AdvancedPerformanceOptimizer {
       import.meta.env?.VITE_ENABLE_PERF_OPTIMIZER === '1';
 
     if ((!isTauriRuntime && !enableInWebMode) || isPlaywright) {
-      console.log('🛑 [PERF-OPTIMIZER] Skipped in browser/test mode (Tauri unavailable)');
+      logger.info('🛑 [PERF-OPTIMIZER] Skipped in browser/test mode (Tauri unavailable)');
       this.isOptimizationActive = false;
       this.initialized = false;
       return;
@@ -78,7 +81,7 @@ class AdvancedPerformanceOptimizer {
     this.optimizeCriticalResources();
 
     this.initialized = true;
-    console.log('🚀 [PERF-OPTIMIZER] Advanced performance optimization initialized');
+    logger.info('🚀 [PERF-OPTIMIZER] Advanced performance optimization initialized');
   }
 
   /**
@@ -111,7 +114,7 @@ class AdvancedPerformanceOptimizer {
     const optimizations: any[] = [];
 
     try {
-      console.log('🚀 [PERF-OPTIMIZER] Starting intelligent optimization...', config);
+      logger.info('🚀 [PERF-OPTIMIZER] Starting intelligent optimization...', config);
 
       // Optimisation mémoire
       if (
@@ -163,7 +166,7 @@ class AdvancedPerformanceOptimizer {
         0
       );
 
-      console.log('✅ [PERF-OPTIMIZER] Intelligent optimization completed:', {
+      logger.info('✅ [PERF-OPTIMIZER] Intelligent optimization completed:', {
         optimizations: optimizations.length,
         totalImprovement,
         duration: performance.now() - startTime,
@@ -176,7 +179,7 @@ class AdvancedPerformanceOptimizer {
         duration: performance.now() - startTime,
       };
     } catch (error) {
-      console.error('🚀 [PERF-OPTIMIZER] Intelligent optimization failed:', error);
+      logger.error('🚀 [PERF-OPTIMIZER] Intelligent optimization failed:', error);
       return {
         success: false,
         applied_optimizations: [],
@@ -190,7 +193,7 @@ class AdvancedPerformanceOptimizer {
     const before = (window.performance as any).memory?.usedJSHeapSize || 0;
 
     try {
-      console.log(
+      logger.info(
         `🧠 [PERF-OPTIMIZER] Optimizing memory usage (aggressiveness: ${aggressiveness})`
       );
 
@@ -239,7 +242,7 @@ class AdvancedPerformanceOptimizer {
 
   private async optimizeCPUUsage(aggressiveness: number): Promise<any> {
     try {
-      console.log(
+      logger.info(
         `⚡ [PERF-OPTIMIZER] Optimizing CPU usage (aggressiveness: ${aggressiveness})`
       );
       let improvements = 0;
@@ -278,7 +281,7 @@ class AdvancedPerformanceOptimizer {
 
   private async optimizeCache(aggressiveness: number): Promise<any> {
     try {
-      console.log(
+      logger.info(
         `💾 [PERF-OPTIMIZER] Optimizing cache (aggressiveness: ${aggressiveness})`
       );
       const beforeSize = this.cache.size;
@@ -315,7 +318,7 @@ class AdvancedPerformanceOptimizer {
 
   private async optimizePreloading(aggressiveness: number): Promise<any> {
     try {
-      console.log(
+      logger.info(
         `🔄 [PERF-OPTIMIZER] Optimizing preloading (aggressiveness: ${aggressiveness})`
       );
       const strategies = Math.floor(
@@ -351,7 +354,7 @@ class AdvancedPerformanceOptimizer {
 
   private async optimizeQuantumProcessing(aggressiveness: number): Promise<any> {
     try {
-      console.log(
+      logger.info(
         `🧠 [PERF-OPTIMIZER] Optimizing quantum processing (aggressiveness: ${aggressiveness})`
       );
 
@@ -388,7 +391,7 @@ class AdvancedPerformanceOptimizer {
 
   private reduceBackgroundTasks(aggressiveness: number): void {
     // Réduire la fréquence des intervalles non critiques (simulation)
-    console.log(
+    logger.info(
       `🔧 [PERF-OPTIMIZER] Reducing background tasks (level: ${aggressiveness})`
     );
   }
@@ -412,17 +415,17 @@ class AdvancedPerformanceOptimizer {
       document.head.appendChild(style);
       document.body.classList.add('titane-optimized');
 
-      console.log(
+      logger.info(
         `🎨 [PERF-OPTIMIZER] Animation optimization applied (speed factor: ${1 + aggressiveness})`
       );
     } catch (error) {
-      console.warn('🎨 [PERF-OPTIMIZER] Animation optimization failed:', error);
+      logger.warn('🎨 [PERF-OPTIMIZER] Animation optimization failed:', error);
     }
   }
 
   private deferHeavyTasks(): void {
     // Reporter les tâches lourdes à plus tard (simulation)
-    console.log('⏳ [PERF-OPTIMIZER] Deferring heavy computational tasks');
+    logger.info('⏳ [PERF-OPTIMIZER] Deferring heavy computational tasks');
   }
 
   private optimizeCacheStrategies(aggressiveness: number): void {
@@ -438,7 +441,7 @@ class AdvancedPerformanceOptimizer {
       }
     }
 
-    console.log(
+    logger.info(
       `🗑️ [PERF-OPTIMIZER] Cache cleanup completed, removed ${removed} entries`
     );
   }
@@ -448,7 +451,7 @@ class AdvancedPerformanceOptimizer {
     const criticalModules = this.identifyCriticalModules();
     const modulesToPreload = criticalModules.slice(0, Math.floor(aggressiveness * 3));
 
-    console.log(
+    logger.info(
       `🔄 [PERF-OPTIMIZER] Adaptive preloading ${modulesToPreload.length} modules`
     );
 
@@ -500,7 +503,7 @@ class AdvancedPerformanceOptimizer {
 
     this.cache.set(key, entry);
 
-    console.log(
+    logger.info(
       `💾 [PERF-OPTIMIZER] Cached resource: ${key} (${entry.size} bytes, priority: ${priority})`
     );
   }
@@ -532,7 +535,7 @@ class AdvancedPerformanceOptimizer {
     entry.hitCount++;
     entry.lastAccess = Date.now();
 
-    console.log(`✅ [PERF-OPTIMIZER] Cache hit: ${key} (hits: ${entry.hitCount})`);
+    logger.info(`✅ [PERF-OPTIMIZER] Cache hit: ${key} (hits: ${entry.hitCount})`);
     return entry.data;
   }
 
@@ -547,7 +550,7 @@ class AdvancedPerformanceOptimizer {
       'src/utils/api',
     ];
 
-    console.log('🎯 [PERF-OPTIMIZER] Starting critical module preload');
+    logger.info('🎯 [PERF-OPTIMIZER] Starting critical module preload');
 
     const preloadPromises = criticalModules.map(async modulePath => {
       const startTime = performance.now();
@@ -555,7 +558,7 @@ class AdvancedPerformanceOptimizer {
       try {
         // Vérifier si déjà en cache
         if (this.getCachedResource(`preload:${modulePath}`)) {
-          console.log(`📋 [PERF-OPTIMIZER] Module ${modulePath} already preloaded`);
+          logger.info(`📋 [PERF-OPTIMIZER] Module ${modulePath} already preloaded`);
           return;
         }
 
@@ -572,11 +575,11 @@ class AdvancedPerformanceOptimizer {
         const loadTime = performance.now() - startTime;
         this.recordBenchmark('module_preload', loadTime, { module: modulePath });
 
-        console.log(
+        logger.info(
           `⚡ [PERF-OPTIMIZER] Preloaded ${modulePath} in ${loadTime.toFixed(2)}ms`
         );
       } catch (error) {
-        console.warn(`⚠️ [PERF-OPTIMIZER] Failed to preload ${modulePath}:`, error);
+        logger.warn(`⚠️ [PERF-OPTIMIZER] Failed to preload ${modulePath}:`, error);
       }
     });
 
@@ -656,13 +659,13 @@ class AdvancedPerformanceOptimizer {
           connection.effectiveType === '2g' || connection.effectiveType === 'slow-2g';
 
         if (isSlowConnection) {
-          console.log('📡 [PERF-OPTIMIZER] Slow connection detected, reducing preload');
+          logger.info('📡 [PERF-OPTIMIZER] Slow connection detected, reducing preload');
           this.isOptimizationActive = false;
         } else {
           this.isOptimizationActive = true;
         }
 
-        console.log(
+        logger.info(
           `📡 [PERF-OPTIMIZER] Network: ${connection.effectiveType}, Optimization: ${this.isOptimizationActive ? 'Active' : 'Reduced'}`
         );
       };
@@ -698,7 +701,7 @@ class AdvancedPerformanceOptimizer {
       import.meta.env?.VITE_ENABLE_FONT_PRELOAD === '1';
 
     if (!enableFontPreload) {
-      console.log(
+      logger.info(
         '🎨 [PERF-OPTIMIZER] Font preload disabled (VITE_ENABLE_FONT_PRELOAD != "1")'
       );
       return;
@@ -720,7 +723,7 @@ class AdvancedPerformanceOptimizer {
       document.head.appendChild(link);
     });
 
-    console.log(`🎨 [PERF-OPTIMIZER] Preloaded ${criticalFonts.length} critical fonts`);
+    logger.info(`🎨 [PERF-OPTIMIZER] Preloaded ${criticalFonts.length} critical fonts`);
   }
 
   /**
@@ -757,7 +760,7 @@ class AdvancedPerformanceOptimizer {
    */
   private async warmupCriticalAPIs(): Promise<void> {
     if (!this.isOptimizationActive) return;
-    console.log(
+    logger.info(
       '⏭️ [PERF-OPTIMIZER] API warmup skipped (tauri-only / no frontend network)'
     );
   }
@@ -784,7 +787,7 @@ class AdvancedPerformanceOptimizer {
       this.benchmarks = this.benchmarks.slice(-200);
     }
 
-    console.log(
+    logger.info(
       `📊 [PERF-OPTIMIZER] Benchmark: ${operation} took ${duration.toFixed(2)}ms`,
       metadata
     );
@@ -815,7 +818,7 @@ class AdvancedPerformanceOptimizer {
     }
 
     if (cleanedCount > 0) {
-      console.log(
+      logger.info(
         `🧹 [PERF-OPTIMIZER] Cleaned ${cleanedCount} cache entries, ${this.cache.size} remaining`
       );
     }
@@ -845,7 +848,7 @@ class AdvancedPerformanceOptimizer {
 
     if (leastUseful) {
       this.cache.delete(leastUseful.key);
-      console.log(
+      logger.info(
         `🗑️ [PERF-OPTIMIZER] Evicted least useful cache entry: ${leastUseful.key}`
       );
     }
@@ -880,12 +883,12 @@ class AdvancedPerformanceOptimizer {
           }
         });
 
-        console.log(
+        logger.info(
           `📂 [PERF-OPTIMIZER] Restored ${this.cache.size} cache entries from storage`
         );
       }
     } catch (error) {
-      console.warn('⚠️ [PERF-OPTIMIZER] Failed to restore cache from storage:', error);
+      logger.warn('⚠️ [PERF-OPTIMIZER] Failed to restore cache from storage:', error);
     }
   }
 
@@ -983,7 +986,7 @@ class AdvancedPerformanceOptimizer {
 
       localStorage.setItem('titane_performance_cache', JSON.stringify(criticalEntries));
     } catch (error) {
-      console.warn('⚠️ [PERF-OPTIMIZER] Failed to save critical cache:', error);
+      logger.warn('⚠️ [PERF-OPTIMIZER] Failed to save critical cache:', error);
     }
   }
 }

@@ -32,10 +32,14 @@ import {
   ValidZoomLevels,
 } from './UIReadingValidator';
 import { loadSettings, saveSettingsDebounced } from './UIReadingPersistence';
+import { createLogger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════
 // CSS VARIABLE APPLICATION
 // ═══════════════════════════════════════════════════════════════════
+
+
+const logger = createLogger('UIReading');
 
 function applyCSSVariables(settings: UIReadingSettings): void {
   const root = document.documentElement;
@@ -194,7 +198,7 @@ export function UIReadingProvider({ children }: UIReadingProviderProps): JSX.Ele
         }
       }
     } catch (error) {
-      console.warn('[UIReading] Fullscreen toggle failed:', error);
+      logger.warn('[UIReading] Fullscreen toggle failed:', error);
     }
   }, []);
 
@@ -209,7 +213,7 @@ export function UIReadingProvider({ children }: UIReadingProviderProps): JSX.Ele
     }
 
     if (!isValidPreset(preset)) {
-      console.warn('[UIReading] Invalid preset:', preset);
+      logger.warn('[UIReading] Invalid preset:', preset);
       return;
     }
 

@@ -32,8 +32,12 @@ import { TitaneLogo } from '../components/branding/TitaneLogo';
 import { safeInvoke } from '@/utils/invoke';
 import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 import './styles/Menu.css';
+import { createLogger } from '@/utils/logger';
 
 // ✨ v30.0.0 - Icon mapping for Lucide icons (professional, themeable)
+
+const logger = createLogger('Menu');
+
 const MENU_ICONS: Record<string, React.ReactNode> = {
   titane: <Atom size={20} className="menu-lucide-icon" />,
   time: <Timer size={20} className="menu-lucide-icon" />,
@@ -151,8 +155,8 @@ export const Menu: React.FC<MenuProps> = ({
       localStorage.removeItem('sidebar_config');
       localStorage.setItem('titane_menu_version', MENU_VERSION);
 
-      console.log('🔧 Menu v30.0.0 - Migration one-time completed');
-      console.log(
+      logger.info('🔧 Menu v30.0.0 - Migration one-time completed');
+      logger.info(
         '📋 Sections actives:',
         MENU_SECTIONS.length,
         '→',
@@ -262,12 +266,12 @@ export const Menu: React.FC<MenuProps> = ({
     // v30.0.0: DÉSACTIVER la sauvegarde localStorage pour éviter persistance anciennes sections
     // L'utilisateur peut réorganiser visuellement mais pas sauvegarder définitivement
     setMenuSections(newSections);
-    console.log(
+    logger.info(
       'ℹ️ Menu réorganisé temporairement:',
       newSections.length,
       'sections (non sauvegardé)'
     );
-    console.warn(
+    logger.warn(
       '⚠️ Les modifications du menu ne sont plus persistées pour éviter les anciennes configurations'
     );
   };

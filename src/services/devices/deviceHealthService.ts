@@ -26,6 +26,10 @@ import {
   type SelfHealResult as AudioSelfHealResult,
 } from '@/services/audio/audioHealthCheck';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('DeviceHealth');
+
 // ═══════════════════════════════════════════════════════════════════════════
 // Types
 // ═══════════════════════════════════════════════════════════════════════════
@@ -95,7 +99,7 @@ class DeviceHealthService {
    * Scanne tous les périphériques et génère un rapport de santé complet
    */
   async scanAll(): Promise<SystemHealthReport> {
-    console.log('[DeviceHealth] 🔍 Scanning all devices...');
+    logger.info('[DeviceHealth] 🔍 Scanning all devices...');
 
     const env = detectEnvironment();
     const devices: DeviceInfo[] = [];
@@ -199,7 +203,7 @@ class DeviceHealthService {
     this.lastReport = report;
     this.notifyListeners(report);
 
-    console.log(
+    logger.info(
       `[DeviceHealth] 📊 Scan complete: ${overallStatus} (${devices.length} devices)`
     );
     return report;
@@ -322,7 +326,7 @@ class DeviceHealthService {
    * Exécute l'auto-réparation complète du système
    */
   async selfHeal(): Promise<SelfHealingReport> {
-    console.log('[DeviceHealth] 🩺 Self-healing started...');
+    logger.info('[DeviceHealth] 🩺 Self-healing started...');
 
     // Phase 1: Scan initial
     const initialReport = await this.scanAll();
@@ -374,7 +378,7 @@ class DeviceHealthService {
     // Ajouter à l'historique
     this.repairHistory.push(...repairs);
 
-    console.log(
+    logger.info(
       `[DeviceHealth] 🩺 Self-healing complete: ${successCount}/${repairs.length} repairs succeeded`
     );
     return report;
@@ -415,7 +419,7 @@ class DeviceHealthService {
       result.message = `Repair error: ${err instanceof Error ? err.message : 'unknown'}`;
     }
 
-    console.log(
+    logger.info(
       `[DeviceHealth] ${result.success ? '✅' : '❌'} Storage repair: ${result.message}`
     );
     return result;
@@ -425,7 +429,7 @@ class DeviceHealthService {
    * Répare un périphérique spécifique
    */
   async repairDevice(deviceId: string): Promise<RepairResult> {
-    console.log(`[DeviceHealth] 🔧 Repairing device: ${deviceId}`);
+    logger.info(`[DeviceHealth] 🔧 Repairing device: ${deviceId}`);
 
     switch (deviceId) {
       case 'microphone': {
@@ -507,12 +511,12 @@ class DeviceHealthService {
 
       // Auto-heal si critique
       if (report.overallStatus === 'critical') {
-        console.log('[DeviceHealth] ⚠️ Critical status detected, auto-healing...');
+        logger.info('[DeviceHealth] ⚠️ Critical status detected, auto-healing...');
         await this.selfHeal();
       }
     }, intervalMs);
 
-    console.log(`[DeviceHealth] 🔄 Monitoring started (${intervalMs}ms interval)`);
+    logger.info(`[DeviceHealth] 🔄 Monitoring started (${intervalMs}ms interval)`);
   }
 
   /**
@@ -522,7 +526,7 @@ class DeviceHealthService {
     if (this.monitoringInterval) {
       clearInterval(this.monitoringInterval);
       this.monitoringInterval = null;
-      console.log('[DeviceHealth] ⏹️ Monitoring stopped');
+      logger.info('[DeviceHealth] ⏹️ Monitoring stopped');
     }
   }
 
@@ -546,7 +550,7 @@ class DeviceHealthService {
       try {
         cb(report);
       } catch (err) {
-        console.error('[DeviceHealth] Listener error:', err);
+        logger.error('[DeviceHealth] Listener error:', err);
       }
     });
   }
@@ -574,7 +578,7 @@ class DeviceHealthService {
    */
   clearRepairHistory(): void {
     this.repairHistory = [];
-    console.log('[DeviceHealth] 🧹 Repair history cleared');
+    logger.info('[DeviceHealth] 🧹 Repair history cleared');
   }
 }
 

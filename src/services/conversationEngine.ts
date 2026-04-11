@@ -45,6 +45,10 @@ import { xpEngine } from '@/cognitive/progression/xpEngine';
 import { useEvolutionStore } from '@/stores/evolutionStore';
 import { aiOrchestrator } from '@/services/ai/orchestrator';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('ConversationEngine');
+
 const E2E_CHAT_MOCK_FLAG = '__TITANE_E2E_CHAT_MOCK__';
 const E2E_CHAT_CONV_SEQ = '__TITANE_E2E_CHAT_CONV_SEQ__';
 const STATIC_PROMPT_CONTEXT_TTL_MS = 2000;
@@ -505,12 +509,12 @@ export async function processMessage(
     try {
       conversationId = (await tauriClient.createNewConversation()) as string;
     } catch (error) {
-      console.warn('[conversationEngine] ⚠️ Failed to create conversation:', error);
+      logger.warn('[conversationEngine] ⚠️ Failed to create conversation:', error);
       conversationId = `fallback-${Date.now()}`;
     }
   }
 
-  console.log('[conversationEngine] 📤 Sending to backend:', {
+  logger.info('[conversationEngine] 📤 Sending to backend:', {
     message_length: userMessage.length,
     mode: options?.mode || 'default',
     conversationId,
@@ -519,7 +523,7 @@ export async function processMessage(
 
   // ✨ v20.5: Ne pas bloquer ici - laisser TauriProtector gérer le fallback Ollama
   // Le protector tentera Tauri en premier, puis Ollama en fallback si besoin
-  console.log('[conversationEngine] 🚀 Envoi du message via secureInvoke');
+  logger.info('[conversationEngine] 🚀 Envoi du message via secureInvoke');
 
   const provider = options?.providerPreference ?? 'auto';
 
@@ -562,7 +566,7 @@ export async function processMessage(
     } catch (error) {
       // No silent fallback: keep processing but surface explicit status.
       persistentMemoryStatus = 'unavailable';
-      console.warn('[conversationEngine] persistentMemoryGetContext unavailable', error);
+      logger.warn('[conversationEngine] persistentMemoryGetContext unavailable', error);
     }
   }
 
@@ -626,7 +630,7 @@ export async function processMessage(
   );
 
   if (!budgetValidation.ok) {
-    console.warn(
+    logger.warn(
       '[PROMPT_BUDGET] ⚠️ Budget violations detected, applying truncation:',
       budgetValidation.violations
     );
@@ -662,7 +666,7 @@ export async function processMessage(
     ...(options?.contextEnvelope ? { contextEnvelope: options.contextEnvelope } : {}),
   };
 
-  console.log('[CONV_SEND] Provider request', {
+  logger.info('[CONV_SEND] Provider request', {
     mode: options?.mode || 'default',
     provider_requested: provider,
     conversation_id: conversationId,
@@ -700,7 +704,7 @@ export async function processMessage(
     // Ollama est disponible en local mais le backend Tauri ne l'est pas → utiliser l'orchestrator frontend
     const errorMsg =
       tauriError instanceof Error ? tauriError.message : String(tauriError);
-    console.warn(
+    logger.warn(
       '[conversationEngine] ⚠️ Tauri IPC failed, falling back to aiOrchestrator:',
       errorMsg
     );
@@ -751,7 +755,7 @@ export async function processMessage(
         },
       };
 
-      console.log('[conversationEngine] ✅ Orchestrator fallback succeeded:', {
+      logger.info('[conversationEngine] ✅ Orchestrator fallback succeeded:', {
         provider: orchestratorProvider,
         latencyMs,
         contentLength: orchestratorResponse.content?.length,
@@ -761,7 +765,7 @@ export async function processMessage(
         orchestratorError instanceof Error
           ? orchestratorError.message
           : String(orchestratorError);
-      console.error(
+      logger.error(
         '[conversationEngine] ❌ Orchestrator fallback also failed:',
         orchErrorMsg
       );
@@ -787,7 +791,7 @@ export async function processMessage(
 
   if (isTauriProtectorFallback) {
     const fallbackReason = rawMetaCheck?.reason_code || 'UNKNOWN';
-    console.warn(
+    logger.warn(
       `[conversationEngine] ⚠️ TauriProtector returned silent fallback (${fallbackReason}), attempting orchestrator fallback...`
     );
 
@@ -837,7 +841,7 @@ export async function processMessage(
         },
       };
 
-      console.log(
+      logger.info(
         '[conversationEngine] ✅ Orchestrator fallback succeeded after tauriProtector silent fallback:',
         {
           provider: orchestratorProvider,
@@ -850,7 +854,7 @@ export async function processMessage(
         orchestratorError instanceof Error
           ? orchestratorError.message
           : String(orchestratorError);
-      console.error(
+      logger.error(
         '[conversationEngine] ❌ Orchestrator fallback also failed after tauriProtector silent fallback:',
         orchErrorMsg
       );
@@ -873,8 +877,8 @@ export async function processMessage(
 
   const content = typeof raw?.content === 'string' ? raw.content : '';
   if (content.trim().length === 0) {
-    console.error('[conversationEngine] ❌ AI returned empty content');
-    console.info('[conversationEngine] Raw response:', raw);
+    logger.error('[conversationEngine] ❌ AI returned empty content');
+    logger.info('[conversationEngine] Raw response:', raw);
     throw new Error('AI backend returned empty response');
   }
 
@@ -890,7 +894,7 @@ export async function processMessage(
   if (providerMeta) {
     const metaValidation = validateProviderDecisionMeta(providerMeta);
     if (!metaValidation.ok) {
-      console.error(
+      logger.error(
         '[conversationEngine] ❌ IPC TRUTH CONTRACT VIOLATION — ProviderDecisionMeta invalid:',
         metaValidation.errors
       );
@@ -1003,7 +1007,7 @@ export async function processMessage(
     },
   };
 
-  console.log('[conversationEngine] 📥 Backend response:', {
+  logger.info('[conversationEngine] 📥 Backend response:', {
     message_id: response.message_id,
     assistant_message_length: response.assistant_message?.length || 0,
     assistant_message_preview: response.assistant_message?.substring(0, 100),
@@ -1012,7 +1016,7 @@ export async function processMessage(
 
   // ✨ OBSERVABILITY: Log provider decision meta
   if (providerMeta) {
-    console.log('[CONV_RECV] Provider decision', {
+    logger.info('[CONV_RECV] Provider decision', {
       mode: providerMeta.mode,
       reason_code: providerMeta.reason_code,
       provider_used: providerMeta.provider_used,
@@ -1021,7 +1025,7 @@ export async function processMessage(
       latency_ms: providerMeta.latency_ms_total,
     });
   } else {
-    console.warn('[CONV_RECV] ⚠️ Provider meta missing in response');
+    logger.warn('[CONV_RECV] ⚠️ Provider meta missing in response');
   }
 
   return response;

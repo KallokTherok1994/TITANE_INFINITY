@@ -31,6 +31,10 @@ import {
 import { type PlanExecutionResult } from './selfHealingExecutor';
 import { type ExecutionPlan as _ExecutionPlan } from './selfHealingPlaybookEngine';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('SelfHealSync');
+
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
@@ -163,7 +167,7 @@ export class SelfHealingSyncLayer {
   // ═══════════════════════════════════════════════════════════════════════════
 
   public async initialize(): Promise<void> {
-    console.log('[SelfHealingSyncLayer] 🔄 Initializing...');
+    logger.info('[SelfHealingSyncLayer] 🔄 Initializing...');
 
     // Charger le profil depuis le backend
     await this.loadProfile();
@@ -179,11 +183,11 @@ export class SelfHealingSyncLayer {
       this.startAutoSync();
     }
 
-    console.log('[SelfHealingSyncLayer] ✅ Initialized');
+    logger.info('[SelfHealingSyncLayer] ✅ Initialized');
   }
 
   public async shutdown(): Promise<void> {
-    console.log('[SelfHealingSyncLayer] 🛑 Shutting down...');
+    logger.info('[SelfHealingSyncLayer] 🛑 Shutting down...');
 
     // Arrêter la synchronisation
     this.stopAutoSync();
@@ -197,7 +201,7 @@ export class SelfHealingSyncLayer {
     // Sauvegarder le profil
     await this.saveProfile();
 
-    console.log('[SelfHealingSyncLayer] Shutdown complete');
+    logger.info('[SelfHealingSyncLayer] Shutdown complete');
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -308,7 +312,7 @@ export class SelfHealingSyncLayer {
 
     // Persister le profil
     if (this.config.persistHistory) {
-      this.saveProfile().catch(console.error);
+      this.saveProfile().catch(err => logger.error('saveProfile error:', err));
     }
   }
 
@@ -342,7 +346,7 @@ export class SelfHealingSyncLayer {
 
     if (this.profile.evolutionLevel > oldLevel) {
       this.profile.lastEvolutionTime = Date.now();
-      console.log(
+      logger.info(
         `[SelfHealingSyncLayer] 🎉 Level up! ${oldLevel} → ${this.profile.evolutionLevel}`
       );
 
@@ -397,7 +401,7 @@ export class SelfHealingSyncLayer {
         this.vitals.timestamp = Date.now();
       }
     } catch (error) {
-      console.warn('[SelfHealingSyncLayer] Could not fetch vitals:', error);
+      logger.warn('[SelfHealingSyncLayer] Could not fetch vitals:', error);
       this.vitals.timestamp = Date.now();
     }
 
@@ -426,7 +430,7 @@ export class SelfHealingSyncLayer {
         this.profile = { ...DEFAULT_PROFILE };
       }
     } catch (error) {
-      console.warn('[SelfHealingSyncLayer] Could not load profile:', error);
+      logger.warn('[SelfHealingSyncLayer] Could not load profile:', error);
       this.profile = { ...DEFAULT_PROFILE };
     }
   }
@@ -438,7 +442,7 @@ export class SelfHealingSyncLayer {
         await secureInvoke('selfheal_save_profile', { profile: this.profile });
       }
     } catch (error) {
-      console.warn('[SelfHealingSyncLayer] Could not save profile:', error);
+      logger.warn('[SelfHealingSyncLayer] Could not save profile:', error);
     }
   }
 
@@ -453,7 +457,7 @@ export class SelfHealingSyncLayer {
       await this.performSync();
     }, this.config.syncIntervalMs);
 
-    console.log(
+    logger.info(
       `[SelfHealingSyncLayer] Auto-sync started (${this.config.syncIntervalMs}ms)`
     );
   }
@@ -462,7 +466,7 @@ export class SelfHealingSyncLayer {
     if (this.syncInterval) {
       clearInterval(this.syncInterval);
       this.syncInterval = null;
-      console.log('[SelfHealingSyncLayer] Auto-sync stopped');
+      logger.info('[SelfHealingSyncLayer] Auto-sync stopped');
     }
   }
 
@@ -478,7 +482,7 @@ export class SelfHealingSyncLayer {
 
       this.lastSyncTime = Date.now();
     } catch (error) {
-      console.warn('[SelfHealingSyncLayer] Sync failed:', error);
+      logger.warn('[SelfHealingSyncLayer] Sync failed:', error);
     }
   }
 
@@ -507,7 +511,7 @@ export class SelfHealingSyncLayer {
       });
       this.unlisteners.push(unlisten2);
     } catch (error) {
-      console.warn('[SelfHealingSyncLayer] Could not setup listeners:', error);
+      logger.warn('[SelfHealingSyncLayer] Could not setup listeners:', error);
     }
   }
 
@@ -524,7 +528,7 @@ export class SelfHealingSyncLayer {
         data,
       });
     } catch (error) {
-      console.warn('[SelfHealingSyncLayer] Could not emit to Singularity:', error);
+      logger.warn('[SelfHealingSyncLayer] Could not emit to Singularity:', error);
     }
   }
 
@@ -541,7 +545,7 @@ export class SelfHealingSyncLayer {
         });
       }
     } catch (error) {
-      console.warn('[SelfHealingSyncLayer] Singularity sync failed:', error);
+      logger.warn('[SelfHealingSyncLayer] Singularity sync failed:', error);
     }
   }
 

@@ -15,6 +15,9 @@ import { titaneTelemetry } from './telemetryEngine';
 import { titaneBootRecovery } from './bootRecoverySystem';
 import { titanePerformanceOptimizer } from './performanceOptimizer';
 import { bootSafetyLock } from './bootSafetyLock';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('QuantumOrch');
 
 interface OrchestrationEvent {
   type:
@@ -143,7 +146,7 @@ class TitaneQuantumOrchestrator {
 
           // Capability check for executeHealingPlan
           if (typeof titaneSelfHealing.executeHealingPlan !== 'function') {
-            console.warn(
+            logger.warn(
               '⚠️ [ORCHESTRATOR] executeHealingPlan not available, using triggerManualHealing'
             );
             const results = await titaneSelfHealing.triggerManualHealing(healingPlan);
@@ -377,7 +380,7 @@ class TitaneQuantumOrchestrator {
       this.lastMetrics = metrics;
       return metrics;
     } catch (error) {
-      console.error('🎼 [ORCHESTRATOR] Error gathering metrics:', error);
+      logger.error('🎼 [ORCHESTRATOR] Error gathering metrics:', error);
 
       // Métriques par défaut en cas d'erreur
       return {
@@ -564,7 +567,7 @@ class TitaneQuantumOrchestrator {
         consciousness_delta: consciousnessDelta,
       };
     } catch (error) {
-      console.error('🎼 [ORCHESTRATOR] Learning session error:', error);
+      logger.error('🎼 [ORCHESTRATOR] Learning session error:', error);
       return {
         session_id: sessionId,
         duration: Date.now() - startTime,
@@ -583,7 +586,7 @@ class TitaneQuantumOrchestrator {
 
     // 🔒 PHASE 4: Vérifier état fatal global
     if (bootSafetyLock.isFatalState()) {
-      console.error(`❌ [ORCHESTRATOR] Strategy ${strategy.name} blocked: fatal state`);
+      logger.error(`❌ [ORCHESTRATOR] Strategy ${strategy.name} blocked: fatal state`);
       return;
     }
 
@@ -593,18 +596,18 @@ class TitaneQuantumOrchestrator {
     }
 
     try {
-      console.log(`🎼 [ORCHESTRATOR] Executing strategy: ${strategy.name}`);
+      logger.info(`🎼 [ORCHESTRATOR] Executing strategy: ${strategy.name}`);
 
       // 🔒 PHASE 4: Vérifier que strategy.actions existe et est un array
       if (!Array.isArray(strategy.actions) || strategy.actions.length === 0) {
-        console.warn(`⚠️ [ORCHESTRATOR] Strategy ${strategy.name} has no actions`);
+        logger.warn(`⚠️ [ORCHESTRATOR] Strategy ${strategy.name} has no actions`);
         return;
       }
 
       // 🔒 PHASE 4: Vérifier que chaque action est une fonction
       const validActions = strategy.actions.filter(action => {
         if (typeof action !== 'function') {
-          console.error(
+          logger.error(
             `❌ [ORCHESTRATOR] Invalid action in strategy ${strategy.name}: not a function`
           );
           return false;
@@ -613,7 +616,7 @@ class TitaneQuantumOrchestrator {
       });
 
       if (validActions.length === 0) {
-        console.error(`❌ [ORCHESTRATOR] Strategy ${strategy.name} has no valid actions`);
+        logger.error(`❌ [ORCHESTRATOR] Strategy ${strategy.name} has no valid actions`);
         return;
       }
 
@@ -623,7 +626,7 @@ class TitaneQuantumOrchestrator {
           try {
             return action(metrics);
           } catch (err) {
-            console.error(
+            logger.error(
               `💥 [ORCHESTRATOR] Action execution error in ${strategy.name}:`,
               err
             );
@@ -641,20 +644,20 @@ class TitaneQuantumOrchestrator {
           // 🔒 PHASE 4: Vérifier que le résultat a bien une structure attendue
           if (result.value && typeof result.value === 'object') {
             this.events.unshift(result.value);
-            console.log(
+            logger.info(
               `✅ [ORCHESTRATOR] Strategy action completed:`,
               result.value.actionTaken || 'unknown'
             );
           }
         } else {
           errorCount++;
-          console.error(`❌ [ORCHESTRATOR] Strategy action failed:`, result.reason);
+          logger.error(`❌ [ORCHESTRATOR] Strategy action failed:`, result.reason);
         }
       }
 
       // 🔒 PHASE 4: Si trop d'erreurs, désactiver la stratégie
       if (errorCount >= validActions.length) {
-        console.error(
+        logger.error(
           `💀 [ORCHESTRATOR] Strategy ${strategy.name} failed completely - DISABLED`
         );
         strategy.last_executed = now + strategy.cooldown * 10; // Désactiver longtemps
@@ -663,7 +666,7 @@ class TitaneQuantumOrchestrator {
 
       strategy.last_executed = now;
     } catch (error) {
-      console.error(
+      logger.error(
         `🎼 [ORCHESTRATOR] Strategy execution failed for ${strategy.name}:`,
         error
       );
@@ -687,7 +690,7 @@ class TitaneQuantumOrchestrator {
         .sort((a, b) => b.priority - a.priority); // Trier par priorité décroissante
 
       if (applicableStrategies.length > 0) {
-        console.log(
+        logger.info(
           `🎼 [ORCHESTRATOR] Found ${applicableStrategies.length} applicable strategies`
         );
 
@@ -703,10 +706,10 @@ class TitaneQuantumOrchestrator {
       // Désactiver le mode d'urgence si les conditions sont revenues à la normale
       if (this.emergencyMode && metrics.self_healing.system_health > 0.6) {
         this.emergencyMode = false;
-        console.log('🎼 [ORCHESTRATOR] Emergency mode deactivated');
+        logger.info('🎼 [ORCHESTRATOR] Emergency mode deactivated');
       }
     } catch (error) {
-      console.error('🎼 [ORCHESTRATOR] Orchestration cycle error:', error);
+      logger.error('🎼 [ORCHESTRATOR] Orchestration cycle error:', error);
     }
   }
 
@@ -714,18 +717,18 @@ class TitaneQuantumOrchestrator {
     if (this.isRunning) return;
 
     this.isRunning = true;
-    console.log('🎼 [ORCHESTRATOR] Starting quantum orchestration...');
+    logger.info('🎼 [ORCHESTRATOR] Starting quantum orchestration...');
 
     // Cycle d'orchestration toutes les 5 secondes
     this.orchestrationInterval = setInterval(() => {
       this.orchestrationCycle().catch(error => {
-        console.error('🎼 [ORCHESTRATOR] Cycle error:', error);
+        logger.error('🎼 [ORCHESTRATOR] Cycle error:', error);
       });
     }, 5000);
 
     // Première exécution immédiate
     this.orchestrationCycle().catch(error => {
-      console.error('🎼 [ORCHESTRATOR] Initial cycle error:', error);
+      logger.error('🎼 [ORCHESTRATOR] Initial cycle error:', error);
     });
   }
 
@@ -738,7 +741,7 @@ class TitaneQuantumOrchestrator {
       this.orchestrationInterval = null;
     }
 
-    console.log('🎼 [ORCHESTRATOR] Quantum orchestration stopped');
+    logger.info('🎼 [ORCHESTRATOR] Quantum orchestration stopped');
   }
 
   public getOrchestrationStatus(): {
@@ -761,12 +764,12 @@ class TitaneQuantumOrchestrator {
 
   public setAutonomousMode(enabled: boolean): void {
     this.autonomousMode = enabled;
-    console.log(`🎼 [ORCHESTRATOR] Autonomous mode ${enabled ? 'enabled' : 'disabled'}`);
+    logger.info(`🎼 [ORCHESTRATOR] Autonomous mode ${enabled ? 'enabled' : 'disabled'}`);
   }
 
   public triggerEmergencyMode(): void {
     this.emergencyMode = true;
-    console.log('🚨 [ORCHESTRATOR] Emergency mode activated manually');
+    logger.info('🚨 [ORCHESTRATOR] Emergency mode activated manually');
 
     // Déclencher immédiatement la stratégie d'urgence
     const emergencyStrategy = this.strategies.find(

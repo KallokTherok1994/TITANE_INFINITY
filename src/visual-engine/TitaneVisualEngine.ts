@@ -31,6 +31,10 @@ import { effectsOrchestrator } from './EffectsOrchestrator';
 import { osIntegrationBridge } from './OSIntegrationBridge';
 import type { EffectsMetrics as _EffectsMetrics } from './EffectsOrchestrator';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('VisualEngine');
+
 export interface VisualEngineConfig {
   enableParticles: boolean;
   enableEffects: boolean;
@@ -166,7 +170,7 @@ export class TitaneVisualEngine extends EventEmitter {
     }
 
     if (this.config.debug) {
-      console.log('[TitaneVisualEngine] v21 initialized with config:', this.config);
+      logger.info('[TitaneVisualEngine] v21 initialized with config:', this.config);
     }
   }
 
@@ -175,7 +179,7 @@ export class TitaneVisualEngine extends EventEmitter {
    */
   start(): void {
     if (this.isRunning) {
-      console.warn('Visual engine is already running');
+      logger.warn('Visual engine is already running');
       return;
     }
 
@@ -336,7 +340,7 @@ export class TitaneVisualEngine extends EventEmitter {
     this.performanceMetrics.throttleActive = true;
 
     if (this.config.debug) {
-      console.log(
+      logger.info(
         `[TitaneVisualEngine] Throttling increased to level ${this.throttleLevel}`
       );
     }
@@ -375,7 +379,7 @@ export class TitaneVisualEngine extends EventEmitter {
     this.throttleLevel--;
 
     if (this.config.debug) {
-      console.log(
+      logger.info(
         `[TitaneVisualEngine] Throttling decreased to level ${this.throttleLevel}`
       );
     }
@@ -475,7 +479,7 @@ export class TitaneVisualEngine extends EventEmitter {
       this.realtimeSocket = new realtimeSocketCtor(url);
 
       this.realtimeSocket.onopen = () => {
-        console.log('[VisualEngine] Realtime socket connected');
+        logger.info('[VisualEngine] Realtime socket connected');
         this.websocketReconnectAttempts = 0;
         this.emit('websocketConnected');
       };
@@ -485,17 +489,17 @@ export class TitaneVisualEngine extends EventEmitter {
           const data = JSON.parse(event.data);
           this.handleRealtimeSocketMessage(data);
         } catch (error) {
-          console.error('[VisualEngine] Realtime socket message parse error:', error);
+          logger.error('[VisualEngine] Realtime socket message parse error:', error);
         }
       };
 
       this.realtimeSocket.onerror = (error: any) => {
-        console.error('[VisualEngine] Realtime socket error:', error);
+        logger.error('[VisualEngine] Realtime socket error:', error);
         this.emit('websocketError', error);
       };
 
       this.realtimeSocket.onclose = () => {
-        console.log('[VisualEngine] Realtime socket disconnected');
+        logger.info('[VisualEngine] Realtime socket disconnected');
         this.emit('websocketDisconnected');
         this.realtimeSocket = null;
 
@@ -530,7 +534,7 @@ export class TitaneVisualEngine extends EventEmitter {
         }, delayMs);
       };
     } catch (error) {
-      console.error('[VisualEngine] Realtime socket connection error:', error);
+      logger.error('[VisualEngine] Realtime socket connection error:', error);
       this.emit('websocketError', error);
     }
   }
@@ -565,7 +569,7 @@ export class TitaneVisualEngine extends EventEmitter {
           break;
 
         default:
-          console.warn(
+          logger.warn(
             '[VisualEngine] Unknown realtime socket message type:',
             message.type
           );

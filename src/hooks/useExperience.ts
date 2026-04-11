@@ -14,6 +14,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { createLogger } from '../utils/logger';
 import type { ExperienceState, ExperienceDomain, XPSource } from '../types/experience';
 import {
   initExperienceService,
@@ -55,6 +56,7 @@ export interface UseExperienceReturn {
  * Auto-initialise au premier mount, s'abonne aux updates
  */
 export const useExperience = (): UseExperienceReturn => {
+  const hookLogger = createLogger('useExperience');
   const [state, setState] = useState<ExperienceState>(getExperienceState());
   const [isLoading, setIsLoading] = useState(true);
 
@@ -70,7 +72,7 @@ export const useExperience = (): UseExperienceReturn => {
           setIsLoading(false);
         }
       } catch (err) {
-        console.error('[useExperience] Erreur initialisation:', err);
+        hookLogger.error('Erreur initialisation:', err);
         if (mounted) {
           setIsLoading(false);
         }

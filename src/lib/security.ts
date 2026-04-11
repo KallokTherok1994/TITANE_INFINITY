@@ -11,6 +11,10 @@
 import { invoke } from '@tauri-apps/api/core';
 import { safeInvokeTauri } from '@/utils/tauriProtector';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('Security');
+
 type MonitoringBridge = {
   trackRequest: () => void;
   addBreadcrumb: (message: string, category?: string, data?: unknown) => void;
@@ -1426,7 +1430,7 @@ export function enableLocalNetworkMode(
   config?: Partial<LocalNetworkSecurityConfig>
 ): void {
   localNetworkMode = { ...localNetworkMode, enabled: true, ...(config || {}) };
-  console.log('[Security] 🏠 Mode réseau local activé');
+  logger.info('[Security] 🏠 Mode réseau local activé');
 }
 
 /**
@@ -1434,7 +1438,7 @@ export function enableLocalNetworkMode(
  */
 export function disableLocalNetworkMode(): void {
   localNetworkMode.enabled = false;
-  console.log('[Security] 🔒 Mode réseau local désactivé');
+  logger.info('[Security] 🔒 Mode réseau local désactivé');
 }
 
 /**
@@ -1664,7 +1668,7 @@ function _startCallTrackingCleanup() {
   if (callTrackingIntervalId !== null) return; // Already running
 
   callTrackingIntervalId = setInterval(cleanupCallTracking, 5000);
-  console.log('[Security] Call tracking cleanup activé (5s)');
+  logger.info('[Security] Call tracking cleanup activé (5s)');
 }
 
 /**
@@ -1674,7 +1678,7 @@ export function stopCallTrackingCleanup() {
   if (callTrackingIntervalId !== null) {
     clearInterval(callTrackingIntervalId);
     callTrackingIntervalId = null;
-    console.log('[Security] Call tracking cleanup désactivé');
+    logger.info('[Security] Call tracking cleanup désactivé');
   }
 }
 
@@ -1887,7 +1891,7 @@ export async function secureInvoke<T>(
 
   const startedAt = Date.now();
   const invokeId = `${startedAt}-${Math.random().toString(36).slice(2, 10)}`;
-  console.info(`IPC:START ${command} ${invokeId}`);
+  logger.info(`IPC:START ${command} ${invokeId}`);
   try {
     monitoring.trackRequest();
     monitoring.addBreadcrumb('secureInvoke start', 'tauri', {
@@ -1904,7 +1908,7 @@ export async function secureInvoke<T>(
     const cmdValidation = validateCommand(command);
     if (!cmdValidation.valid) {
       const errorMsg = `Security: ${cmdValidation.errors.join('; ')}`;
-      console.error(`[Security] ✗ ${errorMsg}`);
+      logger.error(`[Security] ✗ ${errorMsg}`);
 
       try {
         monitoring.trackError(new Error(errorMsg), {
@@ -1924,7 +1928,7 @@ export async function secureInvoke<T>(
     const injectionCheck = detectInjection(payload);
     if (!injectionCheck.valid) {
       const errorMsg = `Security: ${injectionCheck.errors.join('; ')}`;
-      console.error(`[Security] ✗ ${errorMsg}`);
+      logger.error(`[Security] ✗ ${errorMsg}`);
 
       try {
         monitoring.trackError(new Error(errorMsg), {
@@ -1943,7 +1947,7 @@ export async function secureInvoke<T>(
   const sizeCheck = validatePayloadSize(payload);
   if (!sizeCheck.valid) {
     const errorMsg = `Security: ${sizeCheck.errors.join('; ')}`;
-    console.error(`[Security] ✗ ${errorMsg}`);
+    logger.error(`[Security] ✗ ${errorMsg}`);
 
     try {
       monitoring.trackError(new Error(errorMsg), {
@@ -1962,7 +1966,7 @@ export async function secureInvoke<T>(
     const loopCheck = detectInfiniteLoop(command);
     if (!loopCheck.valid) {
       const errorMsg = `Security: ${loopCheck.errors.join('; ')}`;
-      console.error(`[Security] ✗ ${errorMsg}`);
+      logger.error(`[Security] ✗ ${errorMsg}`);
 
       try {
         monitoring.trackError(new Error(errorMsg), {
@@ -2009,7 +2013,7 @@ export async function secureInvoke<T>(
     const responseValidation = validateResponse<T>(response, validator);
     if (!responseValidation.valid) {
       const errorMsg = `Response validation failed: ${responseValidation.errors.join('; ')}`;
-      console.error(`[Security] ✗ ${errorMsg}`);
+      logger.error(`[Security] ✗ ${errorMsg}`);
       throw new Error(errorMsg);
     }
 
@@ -2047,15 +2051,15 @@ export async function secureInvoke<T>(
       // ignore monitoring errors
     }
 
-    console.info(`IPC:END ${command} ${invokeId} ok`);
+    logger.info(`IPC:END ${command} ${invokeId} ok`);
     return sanitized as T;
   } catch (error) {
     const normalized = normalizeInvokeError(command, error);
     if (normalized.name === 'IPC_TIMEOUT') {
-      console.info(`IPC:TIMEOUT ${command} ${invokeId}`);
+      logger.info(`IPC:TIMEOUT ${command} ${invokeId}`);
     }
-    console.info(`IPC:END ${command} ${invokeId} error`);
-    console.error(`[Security] ✗ secureInvoke("${command}") failed:`, normalized.message);
+    logger.info(`IPC:END ${command} ${invokeId} error`);
+    logger.error(`[Security] ✗ secureInvoke("${command}") failed:`, normalized.message);
 
     try {
       monitoring.trackError(normalized, {
@@ -2087,8 +2091,8 @@ export async function runSecuritySelfTest(): Promise<HardeningReport> {
     isHardeningReport
   );
 
-  console.log(`[Security Self-Test] Pass rate: ${(report.pass_rate * 100).toFixed(1)}%`);
-  console.table(
+  logger.info(`[Security Self-Test] Pass rate: ${(report.pass_rate * 100).toFixed(1)}%`);
+  logger.table(
     report.tests.map(t => ({
       Test: t.name,
       Status: t.passed ? '✅ PASS' : '❌ FAIL',
