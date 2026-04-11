@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-vi.mock('@tauri-apps/api/core', () => ({
-  invoke: vi.fn(),
+vi.mock('@/utils/invoke', () => ({
+  safeInvokeCanonical: vi.fn(),
 }));
 
 import {
@@ -12,12 +12,12 @@ import {
   getDesktopControlStatus,
 } from '../../../services/operator/desktopPerception';
 
-import { invoke } from '@tauri-apps/api/core';
-const mockInvoke = invoke as ReturnType<typeof vi.fn>;
+import { safeInvokeCanonical } from '@/utils/invoke';
+const mockSafeInvokeCanonical = safeInvokeCanonical as ReturnType<typeof vi.fn>;
 
 describe('Desktop Perception — Control Surfaces', () => {
   beforeEach(() => {
-    mockInvoke.mockClear();
+    mockSafeInvokeCanonical.mockClear();
   });
 
   it('should pause a desktop session', async () => {
@@ -26,14 +26,15 @@ describe('Desktop Perception — Control Surfaces', () => {
       status: 'paused',
       paused_at: '2026-04-02T22:00:00Z',
     };
-    mockInvoke.mockResolvedValueOnce(mockSession);
+    mockSafeInvokeCanonical.mockResolvedValueOnce({ ok: true, content: mockSession, error: null });
 
     const result = await pauseDesktopSession('dsk_123456_abc');
 
-    expect(mockInvoke).toHaveBeenCalledWith('desktop_pause_session', {
+    expect(mockSafeInvokeCanonical).toHaveBeenCalledWith('desktop_pause_session', {
       session_id: 'dsk_123456_abc',
     });
-    expect(result.status).toBe('paused');
+    expect(result.ok).toBe(true);
+    expect(result.content?.status).toBe('paused');
   });
 
   it('should resume a paused session', async () => {
@@ -41,14 +42,15 @@ describe('Desktop Perception — Control Surfaces', () => {
       session_id: 'dsk_123456_abc',
       status: 'perceiving',
     };
-    mockInvoke.mockResolvedValueOnce(mockSession);
+    mockSafeInvokeCanonical.mockResolvedValueOnce({ ok: true, content: mockSession, error: null });
 
     const result = await resumeDesktopSession('dsk_123456_abc');
 
-    expect(mockInvoke).toHaveBeenCalledWith('desktop_resume_session', {
+    expect(mockSafeInvokeCanonical).toHaveBeenCalledWith('desktop_resume_session', {
       session_id: 'dsk_123456_abc',
     });
-    expect(result.status).toBe('perceiving');
+    expect(result.ok).toBe(true);
+    expect(result.content?.status).toBe('perceiving');
   });
 
   it('should trigger handoff for a session', async () => {
@@ -56,27 +58,29 @@ describe('Desktop Perception — Control Surfaces', () => {
       session_id: 'dsk_123456_abc',
       handoff_pending: true,
     };
-    mockInvoke.mockResolvedValueOnce(mockSession);
+    mockSafeInvokeCanonical.mockResolvedValueOnce({ ok: true, content: mockSession, error: null });
 
     const result = await handoffDesktopSession('dsk_123456_abc', 'sensitive_content');
 
-    expect(mockInvoke).toHaveBeenCalledWith('desktop_handoff_session', {
+    expect(mockSafeInvokeCanonical).toHaveBeenCalledWith('desktop_handoff_session', {
       session_id: 'dsk_123456_abc',
       reason: 'sensitive_content',
     });
-    expect(result.handoff_pending).toBe(true);
+    expect(result.ok).toBe(true);
+    expect(result.content?.handoff_pending).toBe(true);
   });
 
   it('should activate kill switch', async () => {
-    mockInvoke.mockResolvedValueOnce(true);
+    mockSafeInvokeCanonical.mockResolvedValueOnce({ ok: true, content: true, error: null });
 
     const result = await killDesktopSession('dsk_123456_abc', 'user_requested');
 
-    expect(mockInvoke).toHaveBeenCalledWith('desktop_kill_switch', {
+    expect(mockSafeInvokeCanonical).toHaveBeenCalledWith('desktop_kill_switch', {
       session_id: 'dsk_123456_abc',
       reason: 'user_requested',
     });
-    expect(result).toBe(true);
+    expect(result.ok).toBe(true);
+    expect(result.content).toBe(true);
   });
 
   it('should get control status', async () => {
@@ -87,13 +91,28 @@ describe('Desktop Perception — Control Surfaces', () => {
       can_kill: true,
       current_status: 'perceiving',
     };
-    mockInvoke.mockResolvedValueOnce(mockStatus);
+    mockSafeInvokeCanonical.mockResolvedValueOnce({ ok: true, content: mockStatus, error: null });
 
     const result = await getDesktopControlStatus('dsk_123456_abc');
 
-    expect(mockInvoke).toHaveBeenCalledWith('desktop_get_control_status', {
+    expect(mockSafeInvokeCanonical).toHaveBeenCalledWith('desktop_get_control_status', {
       session_id: 'dsk_123456_abc',
     });
-    expect(result.can_pause).toBe(true);
+    expect(result.ok).toBe(true);
+    expect(result.content?.can_pause).toBe(true);
+  });
+
+  it('should return canonical error result on IPC failure', async () => {
+    mockSafeInvokeCanonical.mockResolvedValueOnce({
+      ok: false,
+      content: null,
+      error: { code: 'IPC_ERROR', message: 'backend unavailable' },
+    });
+
+    const result = await pauseDesktopSession('dsk_123456_abc');
+
+    expect(result.ok).toBe(false);
+    expect(result.content).toBeNull();
+    expect(result.error?.code).toBe('IPC_ERROR');
   });
 });

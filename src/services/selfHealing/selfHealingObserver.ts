@@ -19,7 +19,7 @@
  * @created 2025-01-07
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import {
   type HealingEvent,
@@ -757,10 +757,8 @@ export async function observedInvoke<T>(
   command: string,
   payload?: Record<string, unknown>
 ): Promise<T> {
-  // invoke is now imported statically at the top
-
   try {
-    return await invoke<T>(command, payload);
+    return await secureInvoke<T>(command, payload ?? {});
   } catch (error) {
     selfHealingObserver.captureTauriInvokeError(command, error, payload);
     throw error;

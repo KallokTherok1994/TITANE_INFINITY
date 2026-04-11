@@ -8,7 +8,7 @@
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { safeInvokeCanonical } from '@/utils/invoke';
 import { tauriClient } from '@/lib/tauriClient';
 
 export interface IdentityValue {
@@ -283,31 +283,27 @@ export async function loadIdentityMatrix(): Promise<{
   isLoaded: boolean;
   isFallback: boolean;
 }> {
-  try {
-    const loaded = await invoke<IdentityMatrix>('identity_get_matrix');
+  const result = await safeInvokeCanonical<IdentityMatrix>('identity_get_matrix');
 
-    if (validateIdentityMatrix(loaded)) {
-      return {
-        matrix: loaded,
-        isLoaded: true,
-        isFallback: false,
-      };
-    } else {
-      console.warn('[TITANE∞] Identity matrix invalid structure, using default');
-      return {
-        matrix: DEFAULT_IDENTITY_MATRIX,
-        isLoaded: false,
-        isFallback: true,
-      };
-    }
-  } catch (error) {
-    console.error('[TITANE∞] Failed to load identity matrix:', error);
+  if (result.ok && result.content && validateIdentityMatrix(result.content)) {
     return {
-      matrix: DEFAULT_IDENTITY_MATRIX,
-      isLoaded: false,
-      isFallback: true,
+      matrix: result.content,
+      isLoaded: true,
+      isFallback: false,
     };
   }
+
+  if (!result.ok) {
+    console.error('[TITANE∞] Failed to load identity matrix:', result.error);
+  } else {
+    console.warn('[TITANE∞] Identity matrix invalid structure, using default');
+  }
+
+  return {
+    matrix: DEFAULT_IDENTITY_MATRIX,
+    isLoaded: false,
+    isFallback: true,
+  };
 }
 
 /**
