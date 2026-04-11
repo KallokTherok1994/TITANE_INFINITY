@@ -276,6 +276,10 @@ export const TAURI_COMMANDS: Record<string, TauriCommand> = {
 // TYPED INVOKE WRAPPERS
 // ═══════════════════════════════════════════════════════════════
 
+/**
+ * @deprecated Use `invokeTauriCommandCanonical` instead for all new and migrated call sites.
+ * Returns `CoreResponse<T>` (`{ success, data, error }`).
+ */
 export async function invokeTauriCommand<T = unknown>(
   command: string,
   params?: Record<string, unknown>
@@ -348,29 +352,29 @@ export async function invokeTauriCommandCanonical<T = unknown>(
 export const TauriAPI = {
   // Singularity
   getSingularityState: () =>
-    invokeTauriCommand<SingularityState>('singularity_get_state'),
+    invokeTauriCommandCanonical<SingularityState>('singularity_get_state'),
 
   syncSingularityState: (state: Partial<SingularityState>) =>
-    invokeTauriCommand('singularity_sync_state', { state }),
+    invokeTauriCommandCanonical('singularity_sync_state', { state }),
 
   // Helios
-  getHeliosModules: () => invokeTauriCommand<HeliosModule[]>('helios_get_modules'),
+  getHeliosModules: () => invokeTauriCommandCanonical<HeliosModule[]>('helios_get_modules'),
 
-  getHeliosHealth: () => invokeTauriCommand<HeliosHealth>('helios_get_health'),
+  getHeliosHealth: () => invokeTauriCommandCanonical<HeliosHealth>('helios_get_health'),
 
   // Memory
   getActiveProjects: (limit = 10) =>
-    invokeTauriCommand<ActiveProject[]>('memory_get_active_projects', { limit }),
+    invokeTauriCommandCanonical<ActiveProject[]>('memory_get_active_projects', { limit }),
 
   getRecentMemories: (limit = 20) =>
-    invokeTauriCommand<RecentMemory[]>('memory_get_recent_memories', { limit }),
+    invokeTauriCommandCanonical<RecentMemory[]>('memory_get_recent_memories', { limit }),
 
   // Nexus
-  getNexusStatus: () => invokeTauriCommand<NexusStatus>('nexus_get_status'),
+  getNexusStatus: () => invokeTauriCommandCanonical<NexusStatus>('nexus_get_status'),
 
   // Persona
   getPersonaMultipliers: () =>
-    invokeTauriCommand<PersonaMultipliers>('persona_get_multipliers'),
+    invokeTauriCommandCanonical<PersonaMultipliers>('persona_get_multipliers'),
 
   // Chat (legacy disabled)
   sendChatMessage: () => {
@@ -380,37 +384,37 @@ export const TauriAPI = {
   },
 
   // Voice
-  startVoiceRecording: () => invokeTauriCommand<string>('start_recording'),
+  startVoiceRecording: () => invokeTauriCommandCanonical<string>('start_recording'),
 
-  stopVoiceRecording: () => invokeTauriCommand<VoiceRecordingResult>('stop_recording'),
+  stopVoiceRecording: () => invokeTauriCommandCanonical<VoiceRecordingResult>('stop_recording'),
 
   speak: (text: string, voice = 'default') =>
-    invokeTauriCommand('speak', { text, voice }),
+    invokeTauriCommandCanonical('speak', { text, voice }),
 
   // Engine
-  initEngine: () => invokeTauriCommand('engine_init'),
+  initEngine: () => invokeTauriCommandCanonical('engine_init'),
 
-  tickEngine: () => invokeTauriCommand<void>('engine_tick'),
+  tickEngine: () => invokeTauriCommandCanonical<void>('engine_tick'),
 
-  stopEngine: () => invokeTauriCommand('engine_stop'),
+  stopEngine: () => invokeTauriCommandCanonical('engine_stop'),
 
-  getEngineState: () => invokeTauriCommand<Record<string, unknown>>('engine_get_state'),
+  getEngineState: () => invokeTauriCommandCanonical<Record<string, unknown>>('engine_get_state'),
 
-  getEngineHealth: () => invokeTauriCommand<string>('engine_get_health'),
+  getEngineHealth: () => invokeTauriCommandCanonical<string>('engine_get_health'),
 
   // DevTools
-  getDevToolsLogs: () => invokeTauriCommand<unknown[]>('devtools_get_logs'),
+  getDevToolsLogs: () => invokeTauriCommandCanonical<unknown[]>('devtools_get_logs'),
 
   getDevToolsMetrics: () =>
-    invokeTauriCommand<Record<string, unknown>>('devtools_get_metrics'),
+    invokeTauriCommandCanonical<Record<string, unknown>>('devtools_get_metrics'),
 
   inspectSingularity: () =>
-    invokeTauriCommand<Record<string, unknown>>('devtools_inspect_singularity'),
+    invokeTauriCommandCanonical<Record<string, unknown>>('devtools_inspect_singularity'),
 
   // System
-  getSystemStatus: () => invokeTauriCommand<Record<string, unknown>>('system_get_status'),
+  getSystemStatus: () => invokeTauriCommandCanonical<Record<string, unknown>>('system_get_status'),
 
-  getSystemInfo: () => invokeTauriCommand<Record<string, unknown>>('system_get_info'),
+  getSystemInfo: () => invokeTauriCommandCanonical<Record<string, unknown>>('system_get_info'),
 };
 
 // ═══════════════════════════════════════════════════════════════
