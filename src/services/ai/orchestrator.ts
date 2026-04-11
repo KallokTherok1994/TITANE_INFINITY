@@ -290,15 +290,9 @@ class AIOrchestrator {
       );
 
       // 4. Expire stale caches (metrics, status, health)
-      if (this.metricsCache.data && now - this.metricsCache.timestamp > this.METRICS_CACHE_TTL_MS * 2) {
-        this.metricsCache = { data: null, timestamp: 0 };
-      }
-      if (this.providersStatusCache.data && now - this.providersStatusCache.timestamp > this.STATUS_CACHE_TTL_MS * 2) {
-        this.providersStatusCache = { data: null, timestamp: 0 };
-      }
-      if (this.healthCheckCache.data && now - this.healthCheckCache.timestamp > this.HEALTH_CHECK_CACHE_TTL_MS * 2) {
-        this.healthCheckCache = { data: null, timestamp: 0 };
-      }
+      this.metricsCache = this.expireCache(this.metricsCache, this.METRICS_CACHE_TTL_MS * 2);
+      this.providersStatusCache = this.expireCache(this.providersStatusCache, this.STATUS_CACHE_TTL_MS * 2);
+      this.healthCheckCache = this.expireCache(this.healthCheckCache, this.HEALTH_CHECK_CACHE_TTL_MS * 2);
     }, 30000);
   }
 
@@ -310,6 +304,19 @@ class AIOrchestrator {
       clearInterval(this.quickFailCleanupInterval);
       this.quickFailCleanupInterval = null;
     }
+  }
+
+  /**
+   * v30.0.0: Expire a simple {data, timestamp} cache if older than maxAge.
+   */
+  private expireCache<T>(
+    cache: { data: T | null; timestamp: number },
+    maxAgeMs: number
+  ): { data: T | null; timestamp: number } {
+    if (cache.data && Date.now() - cache.timestamp > maxAgeMs) {
+      return { data: null, timestamp: 0 };
+    }
+    return cache;
   }
 
   /**

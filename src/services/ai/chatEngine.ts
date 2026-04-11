@@ -247,7 +247,6 @@ class ChatEngineOmega {
   private config: ChatEngineConfig = { mode: 'default' };
   private lastMode: ChatMode = 'default';
   private conversationContext: Map<string, unknown> = new Map();
-  private static readonly MAX_CONTEXT_SIZE = 100;
   private pipelineFailures: number = 0;
   private lastHealing: number = 0;
   // 🆕 P1: DEPRECATED - Use conversationLifecycle.getActiveConversation() instead
