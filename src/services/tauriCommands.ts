@@ -6,6 +6,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { safeInvokeCanonical, type CanonicalIpcResult } from '@/utils/invoke';
 import { logger } from '@/lib/logger';
 import type { CoreResponse } from '../core/ARCHITECTURE_TYPES_v∞';
 import type {
@@ -332,6 +333,17 @@ export async function invokeTauriCommand<T = unknown>(
 // ═══════════════════════════════════════════════════════════════
 // SPECIFIC COMMAND HELPERS
 // ═══════════════════════════════════════════════════════════════
+
+/**
+ * Canonical IPC wrapper — returns `CanonicalIpcResult<T>` (`{ ok, content, error }`).
+ * Preferred over `invokeTauriCommand` for all new call sites.
+ */
+export async function invokeTauriCommandCanonical<T = unknown>(
+  command: string,
+  params?: Record<string, unknown>
+): Promise<CanonicalIpcResult<T>> {
+  return safeInvokeCanonical<T>(command, params ?? {});
+}
 
 export const TauriAPI = {
   // Singularity

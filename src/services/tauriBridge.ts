@@ -6,6 +6,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { safeInvokeCanonical, type CanonicalIpcResult } from '@/utils/invoke';
 import { validateIpcPayload } from '@/lib/ipcContract';
 import { detectEnvironment } from '@/core/tauri/environment';
 import { createLogger } from '@/utils/logger';
@@ -173,6 +174,19 @@ export async function invokeTauriCommand<T = unknown>(
     error: lastError?.message || 'Unknown error',
     timestamp: Date.now(),
   };
+}
+
+/**
+ * Canonical IPC wrapper — returns `CanonicalIpcResult<T>` (`{ ok, content, error }`).
+ * Preferred over `invokeTauriCommand` for all new call sites.
+ */
+export async function invokeTauriCommandCanonical<T = unknown>(
+  command: string,
+  params?: Record<string, unknown>,
+  options: { timeout?: number } = {}
+): Promise<CanonicalIpcResult<T>> {
+  const { timeout = 30000 } = options;
+  return safeInvokeCanonical<T>(command, params ?? {}, timeout);
 }
 
 // ═══════════════════════════════════════════════════════════════
