@@ -11,7 +11,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { safeInvokeCanonical, type CanonicalIpcResult } from '@/utils/invoke';
 
 export const TAURI_COMMANDS = {
   // ═══════════════════════════════════════════════════════════════
@@ -232,61 +232,21 @@ export function isValidTauriCommand(cmd: string): cmd is TauriCommand {
 
 /**
  * Helper pour invoke() avec validation et protection robuste
+ * Retourne un payload canonique { ok, content, error } — Rule 6
  */
 export async function invokeTauri<T>(
   command: TauriCommand,
   args?: Record<string, unknown>
-): Promise<T> {
+): Promise<CanonicalIpcResult<T>> {
   if (!isValidTauriCommand(command)) {
-    throw new Error(`Invalid Tauri command: ${command}`);
-  }
-
-  try {
-    // Protection contre undefined - invoke est importé au niveau global
-    if (typeof invoke !== 'function') {
-      throw new Error('Tauri invoke function not available');
-    }
-
-    return await invoke<T>(command, args);
-  } catch (error) {
-    // Fallback en cas d'erreur Tauri (mode web ou erreur backend)
-    console.warn(`[TAURI] Command ${command} failed:`, error);
-
-    // Retourner une réponse de fallback selon le type de commande
-    return createFallbackResponse<T>(command, error);
-  }
-}
-
-/**
- * Créer une réponse de fallback selon le type de commande
- */
-function createFallbackResponse<T>(command: string, error: unknown): T {
-  console.log(`[TAURI] Using fallback for ${command}`);
-
-  // Fallbacks spécifiques par type de commande
-  if (command.includes('chat') || command.includes('providers')) {
     return {
-      success: false,
-      error: 'Backend not available - using local fallback',
-      fallback: true,
-      provider: 'titane-local',
-    } as T;
+      ok: false,
+      content: null,
+      error: { code: 'INVALID_COMMAND', message: `Invalid Tauri command: ${command}` },
+    };
   }
 
-  if (command.includes('status') || command.includes('health')) {
-    return {
-      status: 'offline',
-      available: false,
-      fallback: true,
-    } as T;
-  }
-
-  // Fallback générique
-  return {
-    success: false,
-    error: String(error),
-    fallback: true,
-  } as T;
+  return safeInvokeCanonical<T>(command, args ?? {});
 }
 
 // ═══════════════════════════════════════════════════════════════
