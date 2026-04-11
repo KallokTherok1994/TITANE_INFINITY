@@ -19,6 +19,9 @@ import {
 import type { AIMessage } from '../services/ai/types';
 import { chatValidator } from '../services/chatValidator';
 import { getProviderTimeout, REQUEST_BUDGETS } from '@/config/aiTimeouts.config';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('ChatCore');
 
 export interface UseChatCoreOptions {
   mode?: ChatMode;
@@ -85,12 +88,12 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
    */
   const generate = useCallback(
     async (message: string, history: AIMessage[]): Promise<ChatEngineResponse> => {
-      console.log('\n╔════════════════════════════════════════════════════════════╗');
-      console.log('║  USE CHAT CORE v15: Generation (provider-aware)            ║');
-      console.log('╚════════════════════════════════════════════════════════════╝');
-      console.log(`🎯 Mode: ${currentMode}`);
-      console.log(`🔌 Provider: ${currentProvider}`);
-      console.log(`📝 Prompt: "${message.substring(0, 60)}..."`);
+      logger.info('\n╔════════════════════════════════════════════════════════════╗');
+      logger.info('║  USE CHAT CORE v15: Generation (provider-aware)            ║');
+      logger.info('╚════════════════════════════════════════════════════════════╝');
+      logger.info(`🎯 Mode: ${currentMode}`);
+      logger.info(`🔌 Provider: ${currentProvider}`);
+      logger.info(`📝 Prompt: "${message.substring(0, 60)}..."`);
 
       try {
         // Configure mode (reset cognitif automatique dans chatEngine)
@@ -115,7 +118,7 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
           REQUEST_BUDGETS.globalRequestMs
         );
 
-        console.log(`⏱️  Timeout: ${timeout}ms (${currentProvider})`);
+        logger.info(`⏱️  Timeout: ${timeout}ms (${currentProvider})`);
 
         const generatePromise = chatEngine.generate(message, history);
         const timeoutPromise = new Promise<never>((_, reject) =>
@@ -132,23 +135,23 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
 
         setLastResponseProvider(response.provider);
 
-        console.log(`✅ Response received (${response.content.length} chars)`);
-        console.log(`🏷️  Provider used: ${response.provider}`);
+        logger.info(`✅ Response received (${response.content.length} chars)`);
+        logger.info(`🏷️  Provider used: ${response.provider}`);
 
         // SENTINEL validation
         const validation = chatValidator.validate(response.content, currentMode, message);
         if (!validation.isValid) {
-          console.warn(
+          logger.warn(
             `⚠️ SENTINEL: Quality issue (score: ${(validation.score * 100).toFixed(0)}%)`
           );
           setAnomalyCount(prev => prev + 1);
 
           if (validation.cleaned) {
-            console.log('🧹 Using cleaned response');
+            logger.info('🧹 Using cleaned response');
             response.content = validation.cleaned;
           }
         } else {
-          console.log(
+          logger.info(
             `✅ NEXUS: Validated (score: ${(validation.score * 100).toFixed(0)}%)`
           );
         }
@@ -156,11 +159,11 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
         // Callback success (✨ v24.2.1: use ref)
         onResponseRef.current?.(response);
 
-        console.log('╚════════════════════════════════════════════════════════════╝\n');
+        logger.info('╚════════════════════════════════════════════════════════════╝\n');
         return response;
       } catch (err) {
         const error = err instanceof Error ? err : new Error('Unknown AI error');
-        console.error('❌ USE CHAT CORE: Error', error);
+        logger.error('❌ USE CHAT CORE: Error', error);
 
         // Callback error (✨ v24.2.1: use ref)
         onErrorRef.current?.(error);
@@ -180,12 +183,12 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
       message: string,
       history: AIMessage[]
     ): AsyncGenerator<string, ChatEngineResponse> => {
-      console.log('\n╔════════════════════════════════════════════════════════════╗');
-      console.log('║  USE CHAT CORE v15: Streaming (provider-aware)            ║');
-      console.log('╚════════════════════════════════════════════════════════════╝');
-      console.log(`🎯 Mode: ${currentMode}`);
-      console.log(`🔌 Provider: ${currentProvider}`);
-      console.log(`📝 Prompt: "${message.substring(0, 60)}..."`);
+      logger.info('\n╔════════════════════════════════════════════════════════════╗');
+      logger.info('║  USE CHAT CORE v15: Streaming (provider-aware)            ║');
+      logger.info('╚════════════════════════════════════════════════════════════╝');
+      logger.info(`🎯 Mode: ${currentMode}`);
+      logger.info(`🔌 Provider: ${currentProvider}`);
+      logger.info(`📝 Prompt: "${message.substring(0, 60)}..."`);
 
       try {
         chatEngine.setProvider(currentProvider);
@@ -241,7 +244,7 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
           } catch (err) {
             const error =
               err instanceof Error ? err : new Error('Unknown AI stream error');
-            console.error('❌ USE CHAT CORE: Stream error', error);
+            logger.error('❌ USE CHAT CORE: Stream error', error);
             // ✨ v24.2.1: Use ref
             onErrorRef.current?.(error);
             throw error;
@@ -250,14 +253,14 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
               try {
                 await baseStream.return(undefined as unknown as ChatEngineResponse);
               } catch (cleanupError) {
-                console.warn('⚠️ USE CHAT CORE: Stream cleanup failed', cleanupError);
+                logger.warn('⚠️ USE CHAT CORE: Stream cleanup failed', cleanupError);
               }
             }
           }
         })();
       } catch (err) {
         const error = err instanceof Error ? err : new Error('Unknown AI stream error');
-        console.error('❌ USE CHAT CORE: Failed to start stream', error);
+        logger.error('❌ USE CHAT CORE: Failed to start stream', error);
         // ✨ v24.2.1: Use ref
         onErrorRef.current?.(error);
         throw error;
@@ -270,7 +273,7 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
    * Change provider
    */
   const setProvider = useCallback((provider: 'auto' | 'gemini' | 'ollama' | 'local') => {
-    console.log(`🔌 USE CHAT CORE: Provider change → ${provider}`);
+    logger.info(`🔌 USE CHAT CORE: Provider change → ${provider}`);
     setCurrentProvider(provider);
     chatEngine.setProvider(provider);
   }, []);
@@ -289,7 +292,7 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
    * Change mode (avec reset cognitif automatique dans chatEngine)
    */
   const setMode = useCallback((mode: ChatMode) => {
-    console.log(`🔄 USE CHAT CORE: Mode change → ${mode}`);
+    logger.info(`🔄 USE CHAT CORE: Mode change → ${mode}`);
     setCurrentMode(mode);
   }, []);
 

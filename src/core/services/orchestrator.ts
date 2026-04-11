@@ -33,6 +33,9 @@ import { metricsEngine } from './metrics'; // ← NOUVEAU: Metrics Engine v20Ω
 import type { AggregatedMetrics } from '../../services/ai/metricsEngine';
 import { cognitiveKernel } from './cognitiveKernel'; // ← NOUVEAU v22Ω: Cognitive Kernel
 import { z } from 'zod';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('CoreOrchestrator');
 
 const isDev = process.env.NODE_ENV === 'development';
 const NULL_BYTE = String.fromCharCode(0);
@@ -184,7 +187,7 @@ class AIOrchestrator {
 
     try {
       isDev &&
-        console.log('[OMEGA ORCHESTRATOR] Starting provider warmup (optimized)...');
+        logger.info('[OMEGA ORCHESTRATOR] Starting provider warmup (optimized)...');
 
       // Warmup en parallèle avec timeout court pour performance
       const warmupPromises = this.providers.map(async provider => {
@@ -213,12 +216,12 @@ class AIOrchestrator {
 
       const warmupResults = await Promise.allSettled(warmupPromises);
       isDev &&
-        console.log(
+        logger.info(
           '[OMEGA ORCHESTRATOR] Warmup complete:',
           warmupResults.map(r => (r.status === 'fulfilled' ? r.value : { error: true }))
         );
     } catch (error) {
-      isDev && console.error('[OMEGA ORCHESTRATOR] Warmup failed:', error);
+      isDev && logger.error('[OMEGA ORCHESTRATOR] Warmup failed:', error);
     } finally {
       this.isWarmup = false;
     }
@@ -380,7 +383,7 @@ class AIOrchestrator {
         const recoveryBoost = Math.min(15, (timeSinceLastUsed - 60000) / 10000); // +1 per 10s idle, max +15
         score += recoveryBoost;
         isDev &&
-          console.log(
+          logger.info(
             `   🔄 Recovery boost for ${provider.name}: +${recoveryBoost.toFixed(1)}`
           );
       }
@@ -524,13 +527,13 @@ class AIOrchestrator {
       }
 
       if (isDev) {
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        console.log(`🟣 OMEGA ORCHESTRATOR: Neural Generation [${requestId}]`);
-        console.log(
+        logger.info('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        logger.info(`🟣 OMEGA ORCHESTRATOR: Neural Generation [${requestId}]`);
+        logger.info(
           `📝 Message: "${sanitized.substring(0, 60)}${sanitized.length > 60 ? '...' : ''}"`
         );
-        console.log(`📚 History: ${history.length} messages`);
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        logger.info(`📚 History: ${history.length} messages`);
+        logger.info('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
       }
 
       // ═══ PHASE 3.4.2: NEURAL PROVIDER SELECTION + COGNITIVE KERNEL v22Ω ═══
@@ -573,18 +576,18 @@ class AIOrchestrator {
           : selection.selectedProvider;
 
       if (isDev) {
-        console.log(
+        logger.info(
           `🧠 Cognitive Decision: ${cognitiveDecision.provider} (confidence: ${cognitiveDecision.confidence}%, coherence: ${cognitiveDecision.coherenceScore}%)`
         );
-        console.log(`   Reason: ${cognitiveDecision.reason}`);
-        console.log(
+        logger.info(`   Reason: ${cognitiveDecision.reason}`);
+        logger.info(
           `   Adaptations: ${cognitiveDecision.adaptations.join(', ') || 'None'}`
         );
-        console.log(
+        logger.info(
           `🧠 Neural Selection: ${selection.selectedProvider} (${selection.reason}, ${selection.confidence}% confidence)`
         );
-        console.log(`🎯 Final Provider: ${finalProvider}`);
-        console.log(`🔄 Alternates: ${selection.alternates.join(', ')}`);
+        logger.info(`🎯 Final Provider: ${finalProvider}`);
+        logger.info(`🔄 Alternates: ${selection.alternates.join(', ')}`);
       }
 
       // ═══ PHASE 3.4.3: ISOLATED PROVIDER EXECUTION ═══
@@ -611,7 +614,7 @@ class AIOrchestrator {
           const timeSinceFailure = Date.now() - quickFailTime;
           if (timeSinceFailure < this.QUICK_FAIL_COOLDOWN_MS) {
             isDev &&
-              console.log(
+              logger.info(
                 `⏭️ Skipping ${providerName} (failed ${timeSinceFailure}ms ago, cooldown: ${this.QUICK_FAIL_COOLDOWN_MS}ms)`
               );
             continue;
@@ -626,7 +629,7 @@ class AIOrchestrator {
 
         try {
           if (isDev) {
-            console.log(
+            logger.info(
               `\n🔍 [${attempts}/${providersToTry.length}] Trying ${providerName}...`
             );
           }
@@ -691,14 +694,14 @@ class AIOrchestrator {
             totalTime / this.orchestratorMetrics.totalSuccesses;
 
           if (isDev) {
-            console.log(
+            logger.info(
               `   ✅ SUCCESS in ${providerLatency}ms (total: ${totalResponseTime}ms)`
             );
-            console.log(`   📦 Response: ${response.content.length} chars`);
-            console.log(`   🏷️ Provider: ${response.provider || providerName}`);
-            console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-            console.log(`🟣 OMEGA ORCHESTRATOR: Generation complete! [${requestId}]`);
-            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+            logger.info(`   📦 Response: ${response.content.length} chars`);
+            logger.info(`   🏷️ Provider: ${response.provider || providerName}`);
+            logger.info('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+            logger.info(`🟣 OMEGA ORCHESTRATOR: Generation complete! [${requestId}]`);
+            logger.info('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
           }
 
           return {
@@ -758,14 +761,14 @@ class AIOrchestrator {
           }
 
           if (isDev) {
-            console.error(
+            logger.error(
               `   ❌ FAILED: ${lastError.message} (${providerFailureLatency}ms)`
             );
           }
 
           // Si c'est titane-local qui échoue, c'est critique
           if (providerName === 'titane-local') {
-            isDev && console.error('🚨 CRITICAL: titane-local provider failed!');
+            isDev && logger.error('🚨 CRITICAL: titane-local provider failed!');
             break;
           }
 
@@ -782,9 +785,9 @@ class AIOrchestrator {
       const responseTime = Date.now() - requestStartTime;
 
       if (isDev) {
-        console.error('\n🚨 OMEGA ORCHESTRATOR: All providers exhausted!');
-        console.error(`Last error: ${lastError?.message || 'Unknown'}`);
-        console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        logger.error('\n🚨 OMEGA ORCHESTRATOR: All providers exhausted!');
+        logger.error(`Last error: ${lastError?.message || 'Unknown'}`);
+        logger.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
       }
 
       // Ultimate emergency response
@@ -833,7 +836,7 @@ Le système s'auto-répare en continu. Que puis-je t'aider à explorer ?`,
       );
 
       if (isDev) {
-        console.error(
+        logger.error(
           `🆘 OMEGA ORCHESTRATOR: Critical error [${requestId}]:`,
           criticalError
         );
@@ -933,7 +936,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
       return cloned;
     } catch (error) {
       isDev &&
-        console.warn('[OMEGA] Prompt rebuild skipped for provider', providerName, error);
+        logger.warn('[OMEGA] Prompt rebuild skipped for provider', providerName, error);
       return history;
     }
   }
@@ -949,7 +952,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
 
     try {
       isDev &&
-        console.debug('[OMEGA] Provider execution start', requestId, provider.name);
+        logger.debug('[OMEGA] Provider execution start', requestId, provider.name);
       // Availability check with short timeout
       const availabilityPromise = provider.isAvailable();
       const availabilityTimeout = new Promise<boolean>((_, reject) =>
@@ -1161,7 +1164,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
           return; // Simulation successful
         }
       } catch (error) {
-        isDev && console.warn(`[OMEGA STREAM] ${providerName} failed:`, error);
+        isDev && logger.warn(`[OMEGA STREAM] ${providerName} failed:`, error);
 
         // Auto-heal pour streaming failures
         autoHealEngine.heal(
@@ -1274,7 +1277,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
    * EVOLUTION v21Ω: Now clears ALL state including quick-fail cache
    */
   async resetAllProviders(): Promise<void> {
-    isDev && console.log('[OMEGA ORCHESTRATOR] Force reset all providers...');
+    isDev && logger.info('[OMEGA ORCHESTRATOR] Force reset all providers...');
 
     this.initializeProviderStats();
     this.orchestratorMetrics = {
