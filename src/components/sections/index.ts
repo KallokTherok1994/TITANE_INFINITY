@@ -4,7 +4,7 @@
  *
  * Section Components Index
  * Centralized exports for all extracted TitanePage sections
- * Identity + Twins unified into SymbioseIdentitySection (v30 fusion)
+ * Identity + Twins fully unified into TwinsSection (v30 fusion 100%)
  */
 
 export { ConversationSection } from './ConversationSection';
@@ -16,11 +16,8 @@ export { VisionSection } from './VisionSection';
 export { OverviewSection } from './OverviewSection';
 export type { TitaneStats } from './OverviewSection';
 
-// ═══ IDENTITY → Unified into SymbioseIdentitySection ═══
-// IdentitySection is kept for backward compatibility but the standalone tab is removed.
-// Use SymbioseIdentitySection for the unified Twins × Identity experience.
-export { IdentitySection } from './IdentitySection';
-export { SymbioseIdentitySection } from './SymbioseIdentitySection';
+// ═══ TWINS — Fusion 100% Twins + Persona (Identity page supprimée) ═══
+export { TwinsSection } from './TwinsSection';
 
 export { MemorySection } from './MemorySection';
 export { MemoryEvolutionSection } from './MemoryEvolutionSection';

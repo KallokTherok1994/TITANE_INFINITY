@@ -10,13 +10,13 @@
  * Fusion ultime de 5 modules en un seul centre hyper-puissant:
  * - Tableau de bord (métriques système, stats)
  * - Évolution Cognitive (XP, progression, talents)
- * - Identité Système (matrice, modes, pacte)
+ * - TWINS (jumeau numérique, matrice, modes, pacte)
  * - Mémoire Évolutive (opérations auto, journal)
  * - Mémoire (court/moyen/long terme)
  *
  * 6 SECTIONS UNIFIÉES:
  * 📊 Vue d&apos;Ensemble - Dashboard + Stats système
- * 🧬 Identité & ADN - Qui je suis, mes modes, mon pacte
+ * 🧬 TWINS — Jumeau numérique, mes modes, mon pacte
  * 💾 Mémoire Triple - Architecture court/moyen/long terme
  * 🔄 Évolution Mémoire - Dynamiques internes + Journal
  * ⚡ Progression & XP - Système XP + Milestones + Talents
@@ -49,7 +49,7 @@ import { normalizePersistentMemoryStats } from '@/services/memory/persistentMemo
 
 type TabId =
   | 'overview'
-  | 'identity'
+  | 'twins'
   | 'memory-map'
   | 'memory-evolution'
   | 'progression'
@@ -161,7 +161,7 @@ export const EvoPage: React.FC = () => {
                     color: colors.neutral[400],
                   }}
                 >
-                  Fusion ultime: Dashboard + Identité + Mémoire + Évolution + Progression
+                  Fusion ultime: Dashboard + TWINS + Mémoire + Évolution + Progression
                 </p>
               </div>
             </div>
@@ -214,7 +214,7 @@ export const EvoPage: React.FC = () => {
           >
             {[
               { id: 'overview', label: '📊 Vue d&apos;Ensemble', icon: TrendingUp },
-              { id: 'identity', label: '🧬 Identité & ADN', icon: Brain },
+              { id: 'twins', label: '🧬 TWINS', icon: Brain },
               { id: 'memory-map', label: '💾 Mémoire Triple', icon: Database },
               { id: 'memory-evolution', label: '🔄 Évolution Mémoire', icon: Zap },
               { id: 'progression', label: '⚡ Progression & XP', icon: TrendingUp },
@@ -256,7 +256,7 @@ export const EvoPage: React.FC = () => {
             {activeTab === 'overview' && (
               <OverviewSection stats={stats} progression={progression} />
             )}
-            {activeTab === 'identity' && <IdentitySection />}
+            {activeTab === 'twins' && <EvoTwinsSection />}
             {activeTab === 'memory-map' && <MemoryMapSection stats={stats} />}
             {activeTab === 'memory-evolution' && <MemoryEvolutionSection />}
             {activeTab === 'progression' && (
@@ -454,15 +454,15 @@ const OverviewSection: React.FC<OverviewSectionProps> = ({ stats, progression })
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
-// SECTION 2: IDENTITÉ & ADN
+// SECTION 2: TWINS — Jumeau Numérique
 // ═══════════════════════════════════════════════════════════════════════════
 
-const IdentitySection: React.FC = () => {
+const EvoTwinsSection: React.FC = () => {
   return (
     <div className="space-y-6">
       <TSectionHeader
-        title="Identité Système & ADN"
-        subtitle="Matrice identitaire, valeurs, rôles, modes de fonctionnement"
+        title="TWINS — Jumeau Numérique & ADN"
+        subtitle="Matrice identitaire, valeurs, rôles, modes de fonctionnement — Synchronisé avec Kevin"
       />
 
       {/* Matrice Identitaire */}

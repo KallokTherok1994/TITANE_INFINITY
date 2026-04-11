@@ -10,13 +10,13 @@
  * FUSION ULTIME de 3 modules majeurs:
  * - Chat IA (/chat) → Communication & Intelligence Conversationnelle
  * - Vision (/camera) → Perception Visuelle & Affect Estimation
- * - EVO (/evo) → Évolution Totale (Dashboard, Identity, Memory, Progression)
+ * - EVO (/evo) → Évolution Totale (Dashboard, TWINS, Memory, Progression)
  *
  * 8 SECTIONS UNIFIÉES (EXTRACTED AS INDEPENDENT COMPONENTS):
  * 💬 CONVERSATION - Interface Chat IA multi-provider
  * 📷 VISION & PERCEPTION - Analyse visuelle et affective
  * 📊 VUE D'ENSEMBLE - Dashboard système et stats
- * 🔀 SYMBIOSE × IDENTITÉ - Fusion Twins + Identité, orchestration IA auto
+ * 🧬 TWINS - Jumeau Numérique, Persona, orchestration IA auto
  * 💾 MÉMOIRE TRIPLE - Architecture court/moyen/long terme
  * 🔄 ÉVOLUTION MÉMOIRE - Dynamiques internes et journal
  * ⚡ PROGRESSION & XP - Système XP, milestones, talents
@@ -41,7 +41,7 @@ import { tauriClient } from '@/lib/tauriClient';
 import type { MemoryStats } from '@/services/memory/persistentMemory.config';
 import { normalizePersistentMemoryStats } from '@/services/memory/persistentMemory.normalize';
 
-// Section Components (Phase 3C Extracted — Identity+Twins unified into Symbiose)
+// Section Components (Phase 3C Extracted — Identity+Twins fully unified into TWINS)
 import {
   ConversationSection,
   VisionSection,
@@ -52,7 +52,7 @@ import {
   TransformationSection,
 } from '@/components/sections';
 import type { TitaneStats } from '@/components/sections';
-import { SymbioseIdentitySection } from '@/components/sections/SymbioseIdentitySection';
+import { TwinsSection } from '@/components/sections/TwinsSection';
 
 // UI Components
 import { ErrorBoundary } from '@/components/ErrorBoundary';
@@ -75,7 +75,7 @@ type TabId =
   | 'memory-evolution'
   | 'progression'
   | 'transformation'
-  | 'symbiose';
+  | 'twins';
 
 const VALID_TABS: TabId[] = [
   'conversation',
@@ -85,7 +85,7 @@ const VALID_TABS: TabId[] = [
   'memory-evolution',
   'progression',
   'transformation',
-  'symbiose',
+  'twins',
 ];
 
 const isTabId = (value: string | null): value is TabId => {
@@ -100,7 +100,7 @@ const TAB_PANEL_IDS: Record<TabId, string> = {
   'memory-evolution': 'titane-panel-evolution',
   progression: 'titane-panel-progression',
   transformation: 'titane-panel-transformation',
-  symbiose: 'titane-panel-symbiose',
+  twins: 'titane-panel-twins',
 };
 
 const TAB_LABEL_IDS: Record<TabId, string> = {
@@ -111,7 +111,7 @@ const TAB_LABEL_IDS: Record<TabId, string> = {
   'memory-evolution': 'titane-tab-evolution',
   progression: 'titane-tab-progression',
   transformation: 'titane-tab-transformation',
-  symbiose: 'titane-tab-symbiose',
+  twins: 'titane-tab-twins',
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -219,9 +219,9 @@ export const TitanePage: React.FC = () => {
 
   useEffect(() => {
     const requestedTab = searchParams.get('tab');
-    // Backward compat: ?tab=identity → symbiose (Identity merged into Symbiose)
-    if (requestedTab === 'identity') {
-      updateActiveTab('symbiose');
+    // Backward compat: ?tab=identity or ?tab=symbiose → twins (fully unified)
+    if (requestedTab === 'identity' || requestedTab === 'symbiose') {
+      updateActiveTab('twins');
       return;
     }
     if (isTabId(requestedTab) && requestedTab !== activeTab) {
@@ -239,7 +239,7 @@ export const TitanePage: React.FC = () => {
       memoryEvolution: () => updateActiveTab('memory-evolution'),
       progression: () => updateActiveTab('progression'),
       transformation: () => updateActiveTab('transformation'),
-      symbiose: () => updateActiveTab('symbiose'),
+      twins: () => updateActiveTab('twins'),
     }),
     [updateActiveTab]
   );
@@ -261,8 +261,8 @@ export const TitanePage: React.FC = () => {
         return <ProgressionSection progression={progression} stats={stats} />;
       case 'transformation':
         return <TransformationSection stats={stats} />;
-      case 'symbiose':
-        return <SymbioseIdentitySection />;
+      case 'twins':
+        return <TwinsSection />;
       default:
         return <ConversationSection />;
     }
@@ -398,18 +398,18 @@ export const TitanePage: React.FC = () => {
               </button>
               <button
                 className={`px-4 py-2 text-sm font-medium rounded transition-all ${
-                  activeTab === 'symbiose'
+                  activeTab === 'twins'
                     ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
                     : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
                 }`}
-                data-testid="tab-symbiose"
-                onClick={tabHandlers.symbiose}
+                data-testid="tab-twins"
+                onClick={tabHandlers.twins}
                 role="tab"
-                aria-selected={activeTab === 'symbiose'}
-                aria-controls={TAB_PANEL_IDS.symbiose}
-                id={TAB_LABEL_IDS.symbiose}
+                aria-selected={activeTab === 'twins'}
+                aria-controls={TAB_PANEL_IDS.twins}
+                id={TAB_LABEL_IDS.twins}
               >
-                🔀 Symbiose × Identité
+                🧬 TWINS
               </button>
             </div>
           </div>

@@ -2,9 +2,13 @@
  * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
- * IdentitySection Component
- * Extracted from TitanePage.tsx for better maintainability
- * Handles: Mode matrix, persona editor, founding pact, identity center
+ * TwinsSection — Jumeau Numérique · Fusion 100% Twins + Persona
+ *
+ * Section unifiée : TwinEvolutionPanel, ModeMatrix, PersonaEditor,
+ * Pacte Fondateur, IdentityCenter — tout sous le nom TWINS.
+ *
+ * TITANE est le jumeau numérique de Kevin Thibault.
+ * Personnalité synchronisée via Twins Mode — orchestration IA auto.
  */
 
 import React, { memo, useCallback } from 'react';
@@ -17,14 +21,14 @@ import { detectEnvironment } from '@/core/tauri/environment';
 import {
   useChatModeStore,
   useCurrentChatModeId,
-  useAvailableChatModes,
 } from '@/stores/useChatModeStore';
+import { TwinEvolutionPanel } from '@/components/twin/TwinEvolutionPanel';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
 
-type IdentitySectionProps = Record<string, never>;
+type TwinsSectionProps = Record<string, never>;
 
 // Lazy-load heavy components
 const LazyModeMatrix = React.lazy(() =>
@@ -47,7 +51,7 @@ const LazyIdentityCenter = React.lazy(
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const IdentitySection: React.FC<IdentitySectionProps> = memo(() => {
+export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
   const env = detectEnvironment();
   const currentModeId = useCurrentChatModeId();
   const changeMode = useChatModeStore(state => state.changeMode);
@@ -55,28 +59,46 @@ export const IdentitySection: React.FC<IdentitySectionProps> = memo(() => {
   const handleModeSelect = useCallback(
     (mode: { id: string }) => {
       changeMode(mode.id).catch(err =>
-        console.warn('[IdentitySection] changeMode failed:', err)
+        console.warn('[TwinsSection] changeMode failed:', err)
       );
     },
     [changeMode]
   );
 
   return (
-    <div className="titane-section titane-section-identity">
+    <div className="titane-section titane-section-twins">
       <TSectionHeader
-        title="🧬 Identité & ADN"
-        subtitle="Matrice identité, modes, pacte fondateur"
+        title="🧬 TWINS — Jumeau Numérique"
+        subtitle="Fusion Kevin ↔ TITANE · Personnalité synchronisée · Orchestration IA auto"
       />
 
+      {/* ═══ TWINS EVOLUTION PANEL — Symbiose Kevin ↔ TITANE ═══ */}
+      <Card style={{ marginBottom: spacing[4] }}>
+        <h3 style={{ marginBottom: spacing[4] }}>
+          🧬 TWINS — Jumeau Numérique de Kevin Thibault
+        </h3>
+        <p style={{ color: colors.neutral[400], fontSize: fontSizes.sm, marginBottom: spacing[3] }}>
+          TITANE est le jumeau numérique de Kevin Thibault. Personnalité, valeurs, ton et
+          traits cognitifs sont synchronisés en permanence via le mode Twins.
+          Orchestration IA automatique — mode optimal sélectionné selon la demande.
+        </p>
+        <TwinEvolutionPanel isAdmin={true} compact={false} />
+      </Card>
+
+      {/* ═══ MODE MATRIX + PERSONA ═══ */}
       <Grid columns={2} gap={4}>
         <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Matrice de Modes</h3>
+          <h3 style={{ marginBottom: spacing[4] }}>🎯 Orchestration IA — Matrice de Modes</h3>
+          <p style={{ color: colors.neutral[400], fontSize: fontSizes.xs, marginBottom: spacing[2] }}>
+            Sélection automatique du mode le plus adapté à chaque demande.
+            Toujours vivant, motivant, stratégique, visionnaire.
+          </p>
           <React.Suspense
             fallback={
               <SectionLoadingFallback
                 label="Matrice de modes"
-                note="Chargement des modes d’identité…"
-                testId="loading-identity-modes"
+                note="Chargement de l'orchestration IA…"
+                testId="loading-twins-modes"
               />
             }
           >
@@ -88,12 +110,16 @@ export const IdentitySection: React.FC<IdentitySectionProps> = memo(() => {
         </Card>
 
         <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Personnalité TITANE</h3>
+          <h3 style={{ marginBottom: spacing[4] }}>👤 Personnalité TITANE × Kevin</h3>
+          <p style={{ color: colors.neutral[400], fontSize: fontSizes.xs, marginBottom: spacing[2] }}>
+            Traits de personnalité synchronisés avec le mode Twins.
+            Réponses étendues, motivantes, inspirantes, sans limite.
+          </p>
           <React.Suspense
             fallback={
               <SectionLoadingFallback
                 label="Personnalité TITANE"
-                note="Chargement de l’éditeur de persona…"
+                note="Chargement du profil de personnalité…"
                 testId="loading-persona-editor"
               />
             }
@@ -103,34 +129,38 @@ export const IdentitySection: React.FC<IdentitySectionProps> = memo(() => {
         </Card>
       </Grid>
 
+      {/* ═══ PACTE FONDATEUR ═══ */}
       <Card style={{ marginTop: spacing[4] }}>
-        <h3 style={{ marginBottom: spacing[4] }}>Pacte Fondateur</h3>
+        <h3 style={{ marginBottom: spacing[4] }}>📜 Pacte Fondateur — Symbiose Totale</h3>
         <p style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}>
-          <strong>Excellence Systémique</strong>
+          <strong>🏗️ Excellence Systémique</strong>
           <br />
-          Architecture cohérente et maintenable
-          <br />
-          <br />
-          <strong>Innovation Continue</strong>
-          <br />
-          Évolution permanente du système
+          Architecture cohérente et maintenable — Orchestration IA automatique optimale
           <br />
           <br />
-          <strong>Cohérence Totale</strong>
+          <strong>🚀 Innovation Continue & Vision Stratégique</strong>
           <br />
-          Zéro duplication, source unique de vérité
+          Évolution permanente — Toujours motivant, inspirant, avancé, intelligent
+          <br />
+          <br />
+          <strong>🔗 Cohérence Totale — TWINS Kevin ↔ TITANE</strong>
+          <br />
+          Zéro duplication, source unique de vérité — Jumeaux numériques synchronisés
+          <br />
+          Mode optimal sans limite — God Mode actif
         </p>
       </Card>
 
+      {/* ═══ TWINS CENTER (TAURI ONLY) ═══ */}
       <Card style={{ marginTop: spacing[4] }}>
-        <h3 style={{ marginBottom: spacing[4] }}>Identity Center</h3>
+        <h3 style={{ marginBottom: spacing[4] }}>⚙️ Centre TWINS Unifié</h3>
         {env.isTauri ? (
           <React.Suspense
             fallback={
               <SectionLoadingFallback
-                label="Identity Center"
-                note="Chargement du centre d’identité…"
-                testId="loading-identity-center"
+                label="Centre TWINS"
+                note="Chargement du centre TWINS unifié…"
+                testId="loading-twins-center"
               />
             }
           >
@@ -146,4 +176,4 @@ export const IdentitySection: React.FC<IdentitySectionProps> = memo(() => {
   );
 });
 
-IdentitySection.displayName = 'IdentitySection';
+TwinsSection.displayName = 'TwinsSection';

@@ -74,7 +74,7 @@ const MENU_SECTIONS: MenuSection[] = [
     icon: '⚛️',
     label: 'TITANE',
     description:
-      'Le Cœur du Système - Conversation, Vision, Overview, Identité, Mémoire, Évolution, Progression, Transformation',
+      'Le Cœur du Système - Conversation, Vision, Overview, TWINS, Mémoire, Évolution, Progression, Transformation',
     route: '/titane',
   },
   // ✨ v30.0.0 TIME - FUSION TEMPORELLE ULTIME (Temporal Flow + Agenda + Time Navigator)

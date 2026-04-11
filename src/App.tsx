@@ -180,7 +180,7 @@ const QuantumCenter = lazy(() =>
   }))
 );
 
-// ✨ IDENTITY × TWINS — Unified into Symbiose tab (v30 fusion - IdentityCenter lazy import removed)
+// ✨ TWINS — Fully unified (Identity + Twins + Persona → /titane?tab=twins)
 
 // ✨ MEMORY EVOLUTION - Memory Evolution Engine++ v∞ (OPUS #14)
 const MemoryEvolutionCenter = lazy(() =>
@@ -603,12 +603,12 @@ const AppRouter: React.FC = () => {
             }
           />
           <Route path="/quantum" element={<Navigate to="/quantum-center" replace />} />
-          {/* ✨ IDENTITY × TWINS — Unified into Symbiose tab (v30 fusion) */}
-          <Route path="/identity-center" element={<Navigate to="/titane?tab=symbiose" replace />} />
-          <Route path="/identity" element={<Navigate to="/titane?tab=symbiose" replace />} />
-          <Route path="/persona" element={<Navigate to="/titane?tab=symbiose" replace />} />
-          <Route path="/twins" element={<Navigate to="/titane?tab=symbiose" replace />} />
-          <Route path="/twin" element={<Navigate to="/titane?tab=symbiose" replace />} />
+          {/* ✨ TWINS — Fully unified (Identity + Twins + Persona) */}
+          <Route path="/identity-center" element={<Navigate to="/titane?tab=twins" replace />} />
+          <Route path="/identity" element={<Navigate to="/titane?tab=twins" replace />} />
+          <Route path="/persona" element={<Navigate to="/titane?tab=twins" replace />} />
+          <Route path="/twins" element={<Navigate to="/titane?tab=twins" replace />} />
+          <Route path="/twin" element={<Navigate to="/titane?tab=twins" replace />} />
           {/* ✨ MEMORY EVOLUTION - Memory Evolution Engine++ v∞ (OPUS #14) */}
           <Route
             path="/memory-evolution"

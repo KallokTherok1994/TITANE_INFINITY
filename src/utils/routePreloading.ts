@@ -29,7 +29,7 @@ import { useLocation } from 'react-router';
 const ROUTE_CHUNKS: Record<string, string[]> = {
   '/': ['@/pages/Chat', '@/pages/centers/MemoryCenter'],
   '/chat': ['@/pages/Agenda', '@/pages/Camera'],
-  '/memory': ['@/pages/centers/RealityCenter', '@/pages/centers/IdentityCenter'],
+  '/memory': ['@/pages/centers/RealityCenter'],
   '/agenda': ['@/pages/Camera', '@/pages/Chat'],
   '/camera': ['@/pages/Chat', '@/pages/centers/MemoryCenter'],
   '/developer-tools': ['@/pages/Chat', '@/pages/centers/MemoryCenter'],
