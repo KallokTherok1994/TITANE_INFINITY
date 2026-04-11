@@ -14,9 +14,7 @@
  */
 
 import { safeInvoke } from '../utils/invoke';
-import { createLogger } from '@/utils/logger';
-
-const logger = createLogger('ExperienceService');
+import { createLogger } from '../utils/logger';
 import type {
   ExperienceState,
   ExperienceDomain,
@@ -28,6 +26,8 @@ import {
   calculateLevel,
   xpForNextLevel,
 } from '../types/experience';
+
+const logger = createLogger('Experience');
 
 // ─────────────────────────────────────────────────────────────────
 // STATE MANAGEMENT
@@ -58,10 +58,10 @@ export const initExperienceService = async (): Promise<void> => {
 
     if (savedState && typeof savedState === 'object' && savedState.domains) {
       experienceState = savedState;
-      logger.info('[Experience] État chargé depuis Tauri:', experienceState);
+      logger.info('État chargé depuis Tauri:', experienceState);
     } else {
       // État invalide ou vide : créer état par défaut
-      logger.info('[Experience] État backend invalide, création état par défaut');
+      logger.info('État backend invalide, création état par défaut');
       experienceState = createDefaultExperienceState();
       await saveState();
     }
@@ -70,7 +70,7 @@ export const initExperienceService = async (): Promise<void> => {
     notifyListeners();
   } catch (err) {
     // Si commande Tauri pas disponible (mode browser), utiliser localStorage
-    logger.warn('[Experience] Tauri non disponible, fallback localStorage:', err);
+    logger.warn('Tauri non disponible, fallback localStorage:', err);
     loadFromLocalStorage();
     isInitialized = true;
   }
@@ -95,7 +95,7 @@ export const awardExperience = async (
   const domain = experienceState.domains[domainId];
 
   if (!domain) {
-    logger.error(`[Experience] Domaine introuvable: ${domainId}`);
+    logger.error(`Domaine introuvable: ${domainId}`);
     return null;
   }
 
@@ -143,11 +143,11 @@ export const awardExperience = async (
 
   // Log level-up si applicable
   if (newLevel > oldLevel) {
-    logger.info(`🎉 [Experience] ${domain.label} level up! ${oldLevel} → ${newLevel}`);
+    logger.info(`🎉 ${domain.label} level up! ${oldLevel} → ${newLevel}`);
   }
 
   logger.info(
-    `[Experience] +${amount} XP → ${domain.label} (${newXp} XP, Niveau ${newLevel})`
+    `+${amount} XP → ${domain.label} (${newXp} XP, Niveau ${newLevel})`
   );
 
   return updatedDomain;
@@ -206,7 +206,7 @@ const saveState = async (): Promise<void> => {
     await safeInvoke('experience_update_state', { state: experienceState });
   } catch (err) {
     // Fallback localStorage si Tauri non disponible
-    logger.warn('[Experience] Tauri save failed, using localStorage:', err);
+    logger.warn('Tauri save failed, using localStorage:', err);
     localStorage.setItem('titane_experience', JSON.stringify(experienceState));
   }
 };
@@ -219,14 +219,14 @@ const loadFromLocalStorage = (): void => {
     const saved = localStorage.getItem('titane_experience');
     if (saved) {
       experienceState = JSON.parse(saved);
-      logger.info('[Experience] État chargé depuis localStorage');
+      logger.info('État chargé depuis localStorage');
     } else {
       experienceState = createDefaultExperienceState();
       localStorage.setItem('titane_experience', JSON.stringify(experienceState));
-      logger.info('[Experience] État initial créé (localStorage)');
+      logger.info('État initial créé (localStorage)');
     }
   } catch (err) {
-    logger.error('[Experience] Erreur chargement localStorage:', err);
+    logger.error('Erreur chargement localStorage:', err);
     experienceState = createDefaultExperienceState();
   }
 };
@@ -239,7 +239,7 @@ const notifyListeners = (): void => {
     try {
       listener({ ...experienceState });
     } catch (err) {
-      logger.error('[Experience] Erreur listener:', err);
+      logger.error('Erreur listener:', err);
     }
   });
 };
@@ -255,7 +255,7 @@ export const resetExperienceState = async (): Promise<void> => {
   experienceState = createDefaultExperienceState();
   await saveState();
   notifyListeners();
-  logger.info('[Experience] État réinitialisé');
+  logger.info('État réinitialisé');
 };
 
 /**

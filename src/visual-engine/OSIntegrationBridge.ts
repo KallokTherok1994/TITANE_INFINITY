@@ -26,6 +26,10 @@ import type { TitaneVisualEngine } from './TitaneVisualEngine';
 import type { EffectsOrchestrator } from './EffectsOrchestrator';
 import type { VisualState } from './StateManager';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('OSBridge');
+
 // ─────────────────────────────────────────────────────────────────
 // TYPES - OS STATE
 // ─────────────────────────────────────────────────────────────────
@@ -175,7 +179,7 @@ export class OSIntegrationBridge {
     this.effectsOrchestrator = effectsOrchestrator;
 
     if (this.config.debug) {
-      console.log('[OSIntegrationBridge] Initialized with engines');
+      logger.info('[OSIntegrationBridge] Initialized with engines');
     }
 
     // Start connection attempt
@@ -205,7 +209,7 @@ export class OSIntegrationBridge {
 
     if (!this.config.realtimeSocketUrl) {
       if (this.config.debug) {
-        console.log('[OSIntegrationBridge] No OS endpoint configured; skipping connect');
+        logger.info('[OSIntegrationBridge] No OS endpoint configured; skipping connect');
       }
       return;
     }
@@ -216,7 +220,7 @@ export class OSIntegrationBridge {
       // Silent-by-default in production/Tauri: never start background polling unless explicitly enabled.
       if (!this.isPollingEnabled()) {
         if (this.config.debug) {
-          console.log(
+          logger.info(
             '[OSIntegrationBridge] Polling disabled (silent-by-default); skipping connect'
           );
         }
@@ -267,7 +271,7 @@ export class OSIntegrationBridge {
     this.metrics.connected = false;
 
     if (this.config.debug) {
-      console.log('[OSIntegrationBridge] Disconnected');
+      logger.info('[OSIntegrationBridge] Disconnected');
     }
   }
 
@@ -445,7 +449,7 @@ export class OSIntegrationBridge {
         this.metrics.reconnectAttempts = 0;
 
         if (this.config.debug) {
-          console.log('[OSIntegrationBridge] Realtime socket connected');
+          logger.info('[OSIntegrationBridge] Realtime socket connected');
         }
 
         this.emit('connected', null);
@@ -456,12 +460,12 @@ export class OSIntegrationBridge {
           const message = JSON.parse(event.data);
           this.handleMessage(message);
         } catch (error) {
-          console.error('[OSIntegrationBridge] Failed to parse message:', error);
+          logger.error('[OSIntegrationBridge] Failed to parse message:', error);
         }
       };
 
       this.realtimeSocket.onerror = (error: any) => {
-        console.error('[OSIntegrationBridge] Realtime socket error:', error);
+        logger.error('[OSIntegrationBridge] Realtime socket error:', error);
         this.emit('error', error);
       };
 
@@ -470,7 +474,7 @@ export class OSIntegrationBridge {
         this.realtimeSocket = null;
 
         if (this.config.debug) {
-          console.log('[OSIntegrationBridge] Realtime socket closed');
+          logger.info('[OSIntegrationBridge] Realtime socket closed');
         }
 
         this.emit('disconnected', null);
@@ -487,13 +491,13 @@ export class OSIntegrationBridge {
           this.reconnectTimer = null;
           this.metrics.reconnectAttempts = attempt;
           if (this.config.debug) {
-            console.log('[OSIntegrationBridge] Reconnect attempt', attempt, { delayMs });
+            logger.info('[OSIntegrationBridge] Reconnect attempt', attempt, { delayMs });
           }
           this.connectRealtimeSocket();
         }, delayMs);
       };
     } catch (error) {
-      console.error('[OSIntegrationBridge] Failed to create realtime socket:', error);
+      logger.error('[OSIntegrationBridge] Failed to create realtime socket:', error);
       this.emit('error', error);
     }
   }
@@ -515,7 +519,7 @@ export class OSIntegrationBridge {
       // 5. Timeout: 5s request timeout to avoid blocking
       // 6. Authentication: Optional API key in headers for secure environments
       if (this.config.debug) {
-        console.log('[OSIntegrationBridge] Polling for OS state...');
+        logger.info('[OSIntegrationBridge] Polling for OS state...');
       }
     }, this.config.pollInterval);
   }
@@ -539,7 +543,7 @@ export class OSIntegrationBridge {
         break;
       default:
         if (this.config.debug) {
-          console.warn('[OSIntegrationBridge] Unknown message type:', message.type);
+          logger.warn('[OSIntegrationBridge] Unknown message type:', message.type);
         }
     }
   }
@@ -625,7 +629,7 @@ export class OSIntegrationBridge {
         try {
           callback(data);
         } catch (error) {
-          console.error('[OSIntegrationBridge] Listener error:', error);
+          logger.error('[OSIntegrationBridge] Listener error:', error);
         }
       }
     }

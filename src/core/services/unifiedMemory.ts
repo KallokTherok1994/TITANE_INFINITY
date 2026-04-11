@@ -3,6 +3,10 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('UnifiedMem');
+
 /**
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ v30.0.0 — UNIFIED MEMORY SYSTEM (LEGACY LOCAL HELPER)
@@ -141,7 +145,7 @@ class UnifiedMemorySystem {
 
   constructor() {
     // Lazy auto-cleanup start
-    shouldLog && console.log('[UnifiedMemory] Initialized (STM/MTM/LTM)');
+    shouldLog && logger.info('[UnifiedMemory] Initialized (STM/MTM/LTM)');
   }
 
   private ensureAutoCleanupStarted(): void {
@@ -150,7 +154,7 @@ class UnifiedMemorySystem {
     try {
       this.startAutoCleanup();
     } catch (error) {
-      console.warn('[UnifiedMemory] Failed to start auto-cleanup:', error);
+      logger.warn('[UnifiedMemory] Failed to start auto-cleanup:', error);
     }
   }
 
@@ -181,7 +185,7 @@ class UnifiedMemorySystem {
    *   'conv-123',
    *   ['decision', 'project']
    * );
-   * console.log(entry.tier); // 'LTM'
+   * logger.info(entry.tier); // 'LTM'
    * ```
    */
   store(entry: ChatEngineMemoryEntryInput): string;
@@ -229,7 +233,7 @@ class UnifiedMemorySystem {
       this.updateStats();
       isDev &&
         shouldLog &&
-        console.log(`[UnifiedMemory] Stored (ChatEngine) in ${entry.tier}:`, entry.id);
+        logger.info(`[UnifiedMemory] Stored (ChatEngine) in ${entry.tier}:`, entry.id);
       return entry.id;
     }
 
@@ -260,7 +264,7 @@ class UnifiedMemorySystem {
     }
 
     this.updateStats();
-    isDev && console.log(`[UnifiedMemory] Stored in ${entry.tier}:`, entry.id);
+    isDev && logger.info(`[UnifiedMemory] Stored in ${entry.tier}:`, entry.id);
     return entry;
   }
 
@@ -413,7 +417,7 @@ class UnifiedMemorySystem {
    * // Forcer promotion vers LTM
    * const promoted = unifiedMemory.promote(entry.id);
    * if (promoted) {
-   *   console.log('Entry now in LTM (permanent)');
+   *   logger.info('Entry now in LTM (permanent)');
    * }
    * ```
    */
@@ -454,7 +458,7 @@ class UnifiedMemorySystem {
       this.mtm.delete(id);
       this.stats.promotions++;
       this.updateStats(); // BUGFIX: Update stats after promotion
-      isDev && console.log('[UnifiedMemory] Promoted to LTM:', id);
+      isDev && logger.info('[UnifiedMemory] Promoted to LTM:', id);
       return true;
     }
     return false;
@@ -480,7 +484,7 @@ class UnifiedMemorySystem {
    *
    * // Vérifier effet
    * const stats = unifiedMemory.getStats();
-   * console.log('Entries after cleanup:', stats.total);
+   * logger.info('Entries after cleanup:', stats.total);
    * ```
    */
   cleanup(): void {
@@ -519,7 +523,7 @@ class UnifiedMemorySystem {
       const stmCleaned = stmBefore - this.stm.length;
       const mtmCleaned = mtmBefore - this.mtm.size;
       shouldLog &&
-        console.log(`[UnifiedMemory] Cleanup: STM -${stmCleaned}, MTM -${mtmCleaned}`);
+        logger.info(`[UnifiedMemory] Cleanup: STM -${stmCleaned}, MTM -${mtmCleaned}`);
     }
   }
 
@@ -540,7 +544,7 @@ class UnifiedMemorySystem {
     //   * Ratio target: 70-80% space reduction while maintaining semantic value
     // - Trigger: Run weekly or when LTM > 10k entries
     // - Reversibility: Keep original uncompressed data for 30 days before permanent deletion
-    isDev && console.log('[UnifiedMemory] Compress: Not implemented yet (v1.1)');
+    isDev && logger.info('[UnifiedMemory] Compress: Not implemented yet (v1.1)');
   }
 
   /**
@@ -560,10 +564,10 @@ class UnifiedMemorySystem {
    * @example
    * ```typescript
    * const stats = unifiedMemory.getStats();
-   * console.log(`Total entries: ${stats.total}`);
-   * console.log(`STM: ${stats.stm.totalEntries}/${stats.stm.maxEntries}`);
-   * console.log(`MTM: ${stats.mtm.totalEntries} (TTL: ${stats.mtm.ttl})`);
-   * console.log(`LTM: ${stats.ltm.totalEntries} (${stats.promotions} promotions)`);
+   * logger.info(`Total entries: ${stats.total}`);
+   * logger.info(`STM: ${stats.stm.totalEntries}/${stats.stm.maxEntries}`);
+   * logger.info(`MTM: ${stats.mtm.totalEntries} (TTL: ${stats.mtm.ttl})`);
+   * logger.info(`LTM: ${stats.ltm.totalEntries} (${stats.promotions} promotions)`);
    * ```
    */
   getStats(): MemoryStats;
@@ -600,7 +604,7 @@ class UnifiedMemorySystem {
       this.stm = [];
       this.mtm.clear();
       this.ltm.clear();
-      isDev && console.log('[UnifiedMemory] Cleared all tiers');
+      isDev && logger.info('[UnifiedMemory] Cleared all tiers');
     } else {
       switch (tier) {
         case 'STM':
@@ -613,7 +617,7 @@ class UnifiedMemorySystem {
           this.ltm.clear();
           break;
       }
-      isDev && console.log(`[UnifiedMemory] Cleared ${tier}`);
+      isDev && logger.info(`[UnifiedMemory] Cleared ${tier}`);
     }
     this.updateStats();
   }
@@ -628,7 +632,7 @@ class UnifiedMemorySystem {
       clearInterval(this.cleanupTimer);
       this.cleanupTimer = null;
     }
-    isDev && console.log('[UnifiedMemory] Shutdown');
+    isDev && logger.info('[UnifiedMemory] Shutdown');
   }
 
   // ─────────────────────────────────────────────────────────────────

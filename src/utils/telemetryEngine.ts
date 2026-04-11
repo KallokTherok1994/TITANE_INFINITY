@@ -12,6 +12,10 @@ import { titaneSelfHealing } from './selfHealingSystem';
 import { bootHealthMonitor } from './advancedBootMonitor';
 import { performanceOptimizer } from './performanceOptimizer';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('Telemetry');
+
 interface TelemetryMetric {
   id: string;
   name: string;
@@ -94,7 +98,7 @@ class TitaneTelemetryEngine {
    * Initialise le moteur de télémétrie
    */
   private async initializeTelemetryEngine(): Promise<void> {
-    console.log('📊 [TELEMETRY] Initializing advanced telemetry & analytics engine...');
+    logger.info('📊 [TELEMETRY] Initializing advanced telemetry & analytics engine...');
 
     // Enregistrer les collecteurs de métriques
     this.registerMetricCollectors();
@@ -111,7 +115,7 @@ class TitaneTelemetryEngine {
     // Charger les données historiques
     await this.loadHistoricalData();
 
-    console.log(
+    logger.info(
       '📈 [TELEMETRY] Advanced telemetry engine online with',
       this.collectors.size,
       'collectors'
@@ -367,7 +371,7 @@ class TitaneTelemetryEngine {
             const metrics = collector();
             allMetrics.push(...metrics);
           } catch (error) {
-            console.warn(`📊 [TELEMETRY] Collector ${collectorName} failed:`, error);
+            logger.warn(`📊 [TELEMETRY] Collector ${collectorName} failed:`, error);
           }
         }
 
@@ -385,7 +389,7 @@ class TitaneTelemetryEngine {
         // Nettoyer les anciennes données
         this.cleanupOldData();
       } catch (error) {
-        console.error('📊 [TELEMETRY] Collection cycle failed:', error);
+        logger.error('📊 [TELEMETRY] Collection cycle failed:', error);
       }
     };
 
@@ -404,7 +408,7 @@ class TitaneTelemetryEngine {
       this.isAnalyzing = true;
 
       try {
-        console.log(
+        logger.info(
           `📈 [TELEMETRY] Analyzing ${this.analyticsQueue.length} metrics for patterns...`
         );
 
@@ -427,11 +431,11 @@ class TitaneTelemetryEngine {
         this.analyticsQueue = [];
         this.lastAnalysis = Date.now();
 
-        console.log(
+        logger.info(
           `🎯 [TELEMETRY] Pattern analysis completed. Found ${this.patterns.size} patterns.`
         );
       } catch (error) {
-        console.error('📈 [TELEMETRY] Pattern analysis failed:', error);
+        logger.error('📈 [TELEMETRY] Pattern analysis failed:', error);
       } finally {
         this.isAnalyzing = false;
       }
@@ -533,7 +537,7 @@ class TitaneTelemetryEngine {
       this.alerts.splice(100);
     }
 
-    console.warn(`🚨 [TELEMETRY] ${level.toUpperCase()} Alert: ${alert.message}`);
+    logger.warn(`🚨 [TELEMETRY] ${level.toUpperCase()} Alert: ${alert.message}`);
 
     // Auto-résolution pour les alertes de niveau info
     if (level === 'info') {
@@ -892,10 +896,10 @@ class TitaneTelemetryEngine {
           this.alerts = data.alerts.slice(0, 50);
         }
 
-        console.log('📊 [TELEMETRY] Historical data loaded successfully');
+        logger.info('📊 [TELEMETRY] Historical data loaded successfully');
       }
     } catch (error) {
-      console.warn('📊 [TELEMETRY] Failed to load historical data:', error);
+      logger.warn('📊 [TELEMETRY] Failed to load historical data:', error);
     }
   }
 
@@ -914,7 +918,7 @@ class TitaneTelemetryEngine {
 
       localStorage.setItem('titane_telemetry_data', JSON.stringify(data));
     } catch (error) {
-      console.warn('📊 [TELEMETRY] Failed to save data:', error);
+      logger.warn('📊 [TELEMETRY] Failed to save data:', error);
     }
   }
 

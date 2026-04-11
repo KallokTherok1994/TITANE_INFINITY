@@ -46,6 +46,10 @@ import { CognitiveOptimizer } from '../cognitive/CognitiveOptimizationEngine';
 import { AutonomyEngine } from '../autonomy/SingularityAutonomyEngine';
 import type { SingularityState } from '@/types/singularityState';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('SingularityFusion');
+
 // ═══════════════════════════════════════════════════════════════════
 // TYPES FUSION
 // ═══════════════════════════════════════════════════════════════════
@@ -186,7 +190,7 @@ export class SingularityFusionEngine {
    */
   async initialize(initialState: SingularityState): Promise<void> {
     if (this.isInitialized) {
-      console.warn('[FusionEngine] Already initialized');
+      logger.warn('[FusionEngine] Already initialized');
       return;
     }
 
@@ -196,7 +200,7 @@ export class SingularityFusionEngine {
     // Démarrer AutonomyEngine
     AutonomyEngine.start();
 
-    console.log('[FusionEngine] ✨ Initialized v∞');
+    logger.info('[FusionEngine] ✨ Initialized v∞');
   }
 
   /**
@@ -317,7 +321,7 @@ export class SingularityFusionEngine {
         pipeline_stats: stats,
       };
     } catch (error) {
-      console.error('[FusionEngine] Cycle error:', error);
+      logger.error('[FusionEngine] Cycle error:', error);
       throw error;
     }
   }
@@ -354,7 +358,7 @@ export class SingularityFusionEngine {
 
       return fullIntention;
     } catch (error) {
-      console.error('[FusionEngine] Step 1 error:', error);
+      logger.error('[FusionEngine] Step 1 error:', error);
       return {
         primary_intention: 'conversation',
         secondary_intentions: [],
@@ -406,13 +410,13 @@ export class SingularityFusionEngine {
         appearance: newState.crash_protection ?? intention.requires_animation,
       };
 
-      console.log('[FusionEngine] Step 2: Modules activated via backend', {
+      logger.info('[FusionEngine] Step 2: Modules activated via backend', {
         response,
         activation,
       });
       return activation;
     } catch (error) {
-      console.warn('[FusionEngine] Step 2: Backend call failed, using fallback', error);
+      logger.warn('[FusionEngine] Step 2: Backend call failed, using fallback', error);
       // Fallback to local logic
       return {
         cognitive: true,
@@ -468,13 +472,13 @@ export class SingularityFusionEngine {
         animation_style: 'natural',
       };
 
-      console.log('[FusionEngine] Step 3: Styles adjusted via backend', {
+      logger.info('[FusionEngine] Step 3: Styles adjusted via backend', {
         response,
         styleConfig,
       });
       return styleConfig;
     } catch (error) {
-      console.warn('[FusionEngine] Step 3: Backend call failed, using fallback', error);
+      logger.warn('[FusionEngine] Step 3: Backend call failed, using fallback', error);
       // Fallback to local logic
       return {
         narrative_tone: preferences.narrative_style,
@@ -527,7 +531,7 @@ export class SingularityFusionEngine {
       });
 
       const response = iaResponse.response || 'Réponse générée avec succès.';
-      console.log('[FusionEngine] Step 4: IA response generated via backend', {
+      logger.info('[FusionEngine] Step 4: IA response generated via backend', {
         tokens: iaResponse.tokens_used,
         confidence: iaResponse.confidence,
         time: iaResponse.processing_time_ms,
@@ -535,7 +539,7 @@ export class SingularityFusionEngine {
 
       return response;
     } catch (error) {
-      console.error('[FusionEngine] Step 4 error:', error);
+      logger.error('[FusionEngine] Step 4 error:', error);
       return 'Je rencontre une difficulté technique. Pouvez-vous reformuler votre question ?';
     }
   }
@@ -570,7 +574,7 @@ export class SingularityFusionEngine {
 
       return new ArrayBuffer(response.buffer_size);
     } catch (error) {
-      console.error('[FusionEngine] Step 5 error:', error);
+      logger.error('[FusionEngine] Step 5 error:', error);
       return new ArrayBuffer(0);
     }
   }
@@ -609,7 +613,7 @@ export class SingularityFusionEngine {
 
       return response.data;
     } catch (error) {
-      console.error('[FusionEngine] Step 6 error:', error);
+      logger.error('[FusionEngine] Step 6 error:', error);
       return {
         phonemes: [],
         durations: [],
@@ -647,7 +651,7 @@ export class SingularityFusionEngine {
 
       return response.animation;
     } catch (error) {
-      console.error('[FusionEngine] Step 7 error:', error);
+      logger.error('[FusionEngine] Step 7 error:', error);
       return {
         keyframes: [],
         duration: 0,
@@ -691,7 +695,7 @@ export class SingularityFusionEngine {
       this.currentState = response.updated_state;
       return response.updated_state;
     } catch (error) {
-      console.error('[FusionEngine] Step 8 error:', error);
+      logger.error('[FusionEngine] Step 8 error:', error);
       this.currentState = currentState;
       return currentState;
     }
@@ -733,7 +737,7 @@ export class SingularityFusionEngine {
 
       // Optimisation proactive si performance dégradée
       if (bottlenecks.length > 0 || stats.total_ms > totalThreshold) {
-        console.warn('[FusionEngine v∞.Ω] ⚠️ Performance issues:', bottlenecks);
+        logger.warn('[FusionEngine v∞.Ω] ⚠️ Performance issues:', bottlenecks);
 
         try {
           const response = await secureInvoke<{
@@ -759,14 +763,14 @@ export class SingularityFusionEngine {
           });
 
           if (response?.success) {
-            console.warn('[FusionEngine v∞.Ω] Auto-optimization suggestions:', {
+            logger.warn('[FusionEngine v∞.Ω] Auto-optimization suggestions:', {
               level: response.optimization_level,
               bottlenecks: response.bottlenecks,
               recommendations: response.recommendations,
             });
           }
         } catch (error) {
-          console.warn('[FusionEngine v∞.Ω] Auto-optimization fallback:', error);
+          logger.warn('[FusionEngine v∞.Ω] Auto-optimization fallback:', error);
         }
       }
 
@@ -776,7 +780,7 @@ export class SingularityFusionEngine {
           ? ((stats.step4_generation_ms / stats.total_ms) * 100).toFixed(1)
           : '0';
 
-      console.log('[FusionEngine v∞.Ω] Pipeline stats:', {
+      logger.info('[FusionEngine v∞.Ω] Pipeline stats:', {
         total: `${stats.total_ms.toFixed(0)}ms`,
         ia: `${stats.step4_generation_ms.toFixed(0)}ms (${efficiency}%)`,
         tts: `${stats.step5_tts_ms.toFixed(0)}ms`,
@@ -785,7 +789,7 @@ export class SingularityFusionEngine {
         health: stats.total_ms < 3000 ? '✅' : stats.total_ms < 5000 ? '⚠️' : '❌',
       });
     } catch (error) {
-      console.error('[FusionEngine v∞.Ω] Step 9 error:', error);
+      logger.error('[FusionEngine v∞.Ω] Step 9 error:', error);
     }
   }
 
@@ -814,7 +818,7 @@ export class SingularityFusionEngine {
     this.isInitialized = false;
     this.currentState = null;
 
-    console.log('[FusionEngine] Shutdown complete');
+    logger.info('[FusionEngine] Shutdown complete');
   }
 }
 

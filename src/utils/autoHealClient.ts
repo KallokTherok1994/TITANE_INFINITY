@@ -3,6 +3,10 @@
 
 import { secureInvoke } from '@/lib/security';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('AutoHealClient');
+
 // ============================================================================
 // TYPES
 // ============================================================================
@@ -40,10 +44,10 @@ export interface HealReport {
 export async function scanSystem(): Promise<HealReport> {
   try {
     const report = await secureInvoke<HealReport>('auto_heal_scan');
-    console.log('[AutoHeal] Scan terminé:', report);
+    logger.info('[AutoHeal] Scan terminé:', report);
     return report;
   } catch (error) {
-    console.error('[AutoHeal] Erreur scan:', error);
+    logger.error('[AutoHeal] Erreur scan:', error);
     throw error;
   }
 }
@@ -55,10 +59,10 @@ export async function scanSystem(): Promise<HealReport> {
 export async function repairSystem(module?: string): Promise<string[]> {
   try {
     const results = await secureInvoke<string[]>('auto_heal_repair', { module });
-    console.log('[AutoHeal] Réparation terminée:', results);
+    logger.info('[AutoHeal] Réparation terminée:', results);
     return results;
   } catch (error) {
-    console.error('[AutoHeal] Erreur réparation:', error);
+    logger.error('[AutoHeal] Erreur réparation:', error);
     throw error;
   }
 }
@@ -71,7 +75,7 @@ export async function getLogs(): Promise<HealReport> {
     const logs = await secureInvoke<HealReport>('auto_heal_get_logs');
     return logs;
   } catch (error) {
-    console.error('[AutoHeal] Erreur récupération logs:', error);
+    logger.error('[AutoHeal] Erreur récupération logs:', error);
     throw error;
   }
 }
@@ -107,10 +111,10 @@ export class AutoHealErrorHandler {
    * Gère une erreur React et tente de la réparer
    */
   async handleError(error: Error, errorInfo: React.ErrorInfo): Promise<void> {
-    console.error('[AutoHeal] Erreur React détectée:', error, errorInfo);
+    logger.error('[AutoHeal] Erreur React détectée:', error, errorInfo);
 
     if (this.healingInProgress) {
-      console.warn('[AutoHeal] Réparation déjà en cours, ignoré');
+      logger.warn('[AutoHeal] Réparation déjà en cours, ignoré');
       return;
     }
 
@@ -122,7 +126,7 @@ export class AutoHealErrorHandler {
 
       // Scanner le système
       const report = await scanSystem();
-      console.log('[AutoHeal] Rapport scan:', report);
+      logger.info('[AutoHeal] Rapport scan:', report);
 
       // Réparer le module identifié
       if (module) {
@@ -137,7 +141,7 @@ export class AutoHealErrorHandler {
       // Recharger l'application
       window.location.reload();
     } catch (error) {
-      console.error('[AutoHeal] Échec auto-réparation:', error);
+      logger.error('[AutoHeal] Échec auto-réparation:', error);
     } finally {
       this.healingInProgress = false;
     }
@@ -170,11 +174,11 @@ export class AutoHealMonitor {
 
   start(): void {
     if (this.intervalId) {
-      console.warn('[AutoHeal] Monitor déjà démarré');
+      logger.warn('[AutoHeal] Monitor déjà démarré');
       return;
     }
 
-    console.log('[AutoHeal] Démarrage monitoring...');
+    logger.info('[AutoHeal] Démarrage monitoring...');
 
     this.intervalId = window.setInterval(async () => {
       try {
@@ -186,12 +190,12 @@ export class AutoHealMonitor {
         );
 
         if (criticalErrors.length > 0) {
-          console.warn('[AutoHeal] Erreurs critiques détectées:', criticalErrors);
+          logger.warn('[AutoHeal] Erreurs critiques détectées:', criticalErrors);
           // Auto-réparation
           await repairSystem();
         }
       } catch (error) {
-        console.error('[AutoHeal] Erreur monitoring:', error);
+        logger.error('[AutoHeal] Erreur monitoring:', error);
       }
     }, this.checkInterval);
   }
@@ -200,7 +204,7 @@ export class AutoHealMonitor {
     if (this.intervalId) {
       clearInterval(this.intervalId);
       this.intervalId = null;
-      console.log('[AutoHeal] Monitoring arrêté');
+      logger.info('[AutoHeal] Monitoring arrêté');
     }
   }
 

@@ -7,6 +7,10 @@
  * Machine Learning pour anticiper les défaillances et optimiser les performances
  */
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('AIPredictive');
+
 interface PredictionModel {
   id: string;
   name: string;
@@ -70,7 +74,7 @@ class TitaneAIPredictiveEngine {
       import.meta.env?.VITE_ENABLE_PREDICTIVE_AI === '1';
 
     if ((!isTauriRuntime && !enableInWebMode) || isPlaywright) {
-      console.log('🛑 [AI-ENGINE] Predictive engine disabled in browser/test mode');
+      logger.info('🛑 [AI-ENGINE] Predictive engine disabled in browser/test mode');
       return;
     }
 
@@ -81,7 +85,7 @@ class TitaneAIPredictiveEngine {
    * Initialise le moteur IA avec modèles pré-entraînés
    */
   private async initializeAIEngine(): Promise<void> {
-    console.log('🤖 [AI-ENGINE] Initializing predictive AI system...');
+    logger.info('🤖 [AI-ENGINE] Initializing predictive AI system...');
     this.enabled = true;
 
     // Charger les modèles existants depuis le stockage local
@@ -96,7 +100,7 @@ class TitaneAIPredictiveEngine {
     // Analyser les patterns historiques
     await this.analyzeHistoricalPatterns();
 
-    console.log(
+    logger.info(
       '🧠 [AI-ENGINE] Predictive AI system initialized with',
       this.models.size,
       'models'
@@ -184,7 +188,7 @@ class TitaneAIPredictiveEngine {
           this.performOnlineLearning();
         }
       } catch (error) {
-        console.warn('🤖 [AI-ENGINE] Metrics collection failed:', error);
+        logger.warn('🤖 [AI-ENGINE] Metrics collection failed:', error);
       }
     };
 
@@ -220,7 +224,7 @@ class TitaneAIPredictiveEngine {
     const predictions = new Map<string, PredictionResult>();
     const currentMetrics = await this.gatherSystemMetrics();
 
-    console.log('🔮 [AI-ENGINE] Running predictive analysis...');
+    logger.info('🔮 [AI-ENGINE] Running predictive analysis...');
 
     for (const [modelId, model] of this.models) {
       try {
@@ -229,12 +233,12 @@ class TitaneAIPredictiveEngine {
 
         // Log prédictions significatives
         if (prediction.probability > 0.7) {
-          console.warn(
+          logger.warn(
             `🚨 [AI-PREDICTION] ${model.name}: ${(prediction.probability * 100).toFixed(1)}% risk - ${prediction.recommendation}`
           );
         }
       } catch (error) {
-        console.error(`🤖 [AI-ENGINE] Prediction failed for model ${modelId}:`, error);
+        logger.error(`🤖 [AI-ENGINE] Prediction failed for model ${modelId}:`, error);
       }
     }
 
@@ -404,7 +408,7 @@ class TitaneAIPredictiveEngine {
     if (this.isLearning) return;
 
     this.isLearning = true;
-    console.log('📚 [AI-ENGINE] Starting online learning session...');
+    logger.info('📚 [AI-ENGINE] Starting online learning session...');
 
     try {
       // Analyser les patterns récents
@@ -416,9 +420,9 @@ class TitaneAIPredictiveEngine {
       // Sauvegarder les modèles améliorés
       await this.saveModelsToStorage();
 
-      console.log('🎓 [AI-ENGINE] Online learning completed, models updated');
+      logger.info('🎓 [AI-ENGINE] Online learning completed, models updated');
     } catch (error) {
-      console.error('📚 [AI-ENGINE] Online learning failed:', error);
+      logger.error('📚 [AI-ENGINE] Online learning failed:', error);
     } finally {
       this.isLearning = false;
     }
@@ -494,7 +498,7 @@ class TitaneAIPredictiveEngine {
       recommendations: this.generateSystemRecommendations(predictions),
     };
 
-    console.log('🤖 [AI-ENGINE] Generated comprehensive AI analysis report');
+    logger.info('🤖 [AI-ENGINE] Generated comprehensive AI analysis report');
     return report;
   }
 
@@ -683,7 +687,7 @@ class TitaneAIPredictiveEngine {
         });
       }
     } catch (error) {
-      console.warn('🤖 [AI-ENGINE] Failed to load stored models:', error);
+      logger.warn('🤖 [AI-ENGINE] Failed to load stored models:', error);
     }
   }
 
@@ -701,13 +705,13 @@ class TitaneAIPredictiveEngine {
 
       localStorage.setItem('titane_ai_models', JSON.stringify(modelsData));
     } catch (error) {
-      console.warn('🤖 [AI-ENGINE] Failed to save models:', error);
+      logger.warn('🤖 [AI-ENGINE] Failed to save models:', error);
     }
   }
 
   private async analyzeHistoricalPatterns(): Promise<void> {
     // Analyser les patterns historiques si disponibles
-    console.log('📊 [AI-ENGINE] Analyzing historical patterns...');
+    logger.info('📊 [AI-ENGINE] Analyzing historical patterns...');
   }
 }
 

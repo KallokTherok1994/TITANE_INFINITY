@@ -18,6 +18,10 @@ import { ConfigSection, ConfigFieldEditable } from '../components/config';
 import { useCognitiveLayout, type UIMode } from '@/hooks/useCognitiveLayout';
 import './ModulePages.css';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('ConfigHub');
+
 interface RuntimeConfig {
   ollama_url: string;
   ollama_model: string;
@@ -416,7 +420,7 @@ export const ConfigurationHub: React.FC = () => {
     setError(null);
 
     try {
-      console.log('🎯 [ConfigHub] Loading configuration snapshot...');
+      logger.info('🎯 [ConfigHub] Loading configuration snapshot...');
       const snapshot = normalizeSnapshotResponse(await tauriClient.getAllConfigs());
       const engineEnvelope = normalizeEnvelope(
         await tauriClient.getChatEngineConfig(),
@@ -440,7 +444,7 @@ export const ConfigurationHub: React.FC = () => {
         );
       }
 
-      console.log('✅ [ConfigHub] Configuration loaded:', snapshot);
+      logger.info('✅ [ConfigHub] Configuration loaded:', snapshot);
       setConfig({
         ...snapshot,
         chat_engine: {
@@ -459,7 +463,7 @@ export const ConfigurationHub: React.FC = () => {
       setEditedRequestDefaults({});
       setValidationErrors({});
     } catch (err) {
-      console.error('❌ [ConfigHub] Failed to load configuration:', err);
+      logger.error('❌ [ConfigHub] Failed to load configuration:', err);
       setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
@@ -482,7 +486,7 @@ export const ConfigurationHub: React.FC = () => {
         });
       }
     } catch (audioErr) {
-      console.warn('[ConfigHub] Audio config load failed (non-fatal):', audioErr);
+      logger.warn('[ConfigHub] Audio config load failed (non-fatal):', audioErr);
     }
   };
 
@@ -555,23 +559,23 @@ export const ConfigurationHub: React.FC = () => {
     setValidationErrors({});
 
     try {
-      console.log('💾 [ConfigHub] Saving configuration...');
+      logger.info('💾 [ConfigHub] Saving configuration...');
 
       // Save runtime config if changed
       if (Object.keys(editedRuntime).length > 0) {
-        console.log('📤 [ConfigHub] Updating runtime config:', editedRuntime);
+        logger.info('📤 [ConfigHub] Updating runtime config:', editedRuntime);
         await tauriClient.updateRuntimeConfig({
           update: {
             ollama_url: editedRuntime.ollama_url,
             ollama_model: editedRuntime.ollama_model,
           },
         });
-        console.log('✅ [ConfigHub] Runtime config updated');
+        logger.info('✅ [ConfigHub] Runtime config updated');
       }
 
       // Save chat engine config if changed
       if (Object.keys(editedChatEngine).length > 0) {
-        console.log('📤 [ConfigHub] Updating chat engine config:', editedChatEngine);
+        logger.info('📤 [ConfigHub] Updating chat engine config:', editedChatEngine);
         const payload: ChatEngineConfigPayload = {
           responseTimeoutMs:
             editedChatEngine.response_timeout_ms ?? engineConfig.response_timeout_ms,
@@ -602,7 +606,7 @@ export const ConfigurationHub: React.FC = () => {
             envelope.error?.message || 'Échec mise à jour Chat Engine Configuration'
           );
         }
-        console.log('✅ [ConfigHub] Chat engine config updated');
+        logger.info('✅ [ConfigHub] Chat engine config updated');
       }
 
       if (Object.keys(editedRequestDefaults).length > 0) {
@@ -632,9 +636,9 @@ export const ConfigurationHub: React.FC = () => {
       // Reload config after successful save
       await loadConfig();
       setEditMode(false);
-      console.log('✅ [ConfigHub] Configuration saved successfully');
+      logger.info('✅ [ConfigHub] Configuration saved successfully');
     } catch (err) {
-      console.error('❌ [ConfigHub] Failed to save configuration:', err);
+      logger.error('❌ [ConfigHub] Failed to save configuration:', err);
       const errorMsg = err instanceof Error ? err.message : String(err);
 
       // Try to parse validation errors from backend
@@ -672,14 +676,14 @@ export const ConfigurationHub: React.FC = () => {
   const handleExport = async () => {
     try {
       const filename = `config-${new Date().toISOString().replace(/[:.]/g, '-')}`;
-      console.log('📤 [ConfigHub] Exporting configuration to:', filename);
+      logger.info('📤 [ConfigHub] Exporting configuration to:', filename);
 
       const filePath = (await tauriClient.exportConfig({ filename })) as string;
-      console.log('✅ [ConfigHub] Configuration exported to:', filePath);
+      logger.info('✅ [ConfigHub] Configuration exported to:', filePath);
 
       success(`Configuration exportée vers:\n${filePath}`);
     } catch (err) {
-      console.error('❌ [ConfigHub] Failed to export configuration:', err);
+      logger.error('❌ [ConfigHub] Failed to export configuration:', err);
       errorToast(`Échec de l'export: ${err}`);
     }
   };
@@ -694,19 +698,19 @@ export const ConfigurationHub: React.FC = () => {
     }
 
     try {
-      console.log('📥 [ConfigHub] Importing configuration from:', filePath);
+      logger.info('📥 [ConfigHub] Importing configuration from:', filePath);
 
       const importedConfig = (await tauriClient.importConfig({
         filePath,
       })) as ConfigSnapshot;
-      console.log('✅ [ConfigHub] Configuration imported:', importedConfig);
+      logger.info('✅ [ConfigHub] Configuration imported:', importedConfig);
 
       // Reload config to show imported values
       await loadConfig();
 
       success('Configuration importée avec succès.');
     } catch (err) {
-      console.error('❌ [ConfigHub] Failed to import configuration:', err);
+      logger.error('❌ [ConfigHub] Failed to import configuration:', err);
       errorToast(`Échec de l'import: ${err}`);
     }
   };
@@ -724,7 +728,7 @@ export const ConfigurationHub: React.FC = () => {
       }>;
       setPresets(presetsList);
     } catch (err) {
-      console.error('❌ [ConfigHub] Failed to load presets:', err);
+      logger.error('❌ [ConfigHub] Failed to load presets:', err);
     }
   };
 
@@ -739,7 +743,7 @@ export const ConfigurationHub: React.FC = () => {
       success(`Preset "${name}" sauvegardé.`);
       await loadPresets();
     } catch (err) {
-      console.error('❌ [ConfigHub] Failed to save preset:', err);
+      logger.error('❌ [ConfigHub] Failed to save preset:', err);
       errorToast(`Échec de sauvegarde: ${err}`);
     }
   };
@@ -756,7 +760,7 @@ export const ConfigurationHub: React.FC = () => {
       await loadConfig();
       success(`Preset "${name}" chargé.`);
     } catch (err) {
-      console.error('❌ [ConfigHub] Failed to load preset:', err);
+      logger.error('❌ [ConfigHub] Failed to load preset:', err);
       errorToast(`Échec de chargement: ${err}`);
     }
   };
@@ -771,7 +775,7 @@ export const ConfigurationHub: React.FC = () => {
       success(`Preset "${name}" supprimé.`);
       await loadPresets();
     } catch (err) {
-      console.error('❌ [ConfigHub] Failed to delete preset:', err);
+      logger.error('❌ [ConfigHub] Failed to delete preset:', err);
       errorToast(`Échec de suppression: ${err}`);
     }
   };

@@ -13,6 +13,10 @@
 import type { UIReadingSettings } from './UIReadingContext';
 import { DEFAULT_SETTINGS } from './UIReadingContext';
 import { validateSettings } from './UIReadingValidator';
+import { createLogger } from '@/utils/logger';
+
+
+const logger = createLogger('UIReading');
 
 const STORAGE_KEY = 'titane_ui_reading_settings';
 
@@ -39,7 +43,7 @@ export function loadSettings(): UIReadingSettings {
       ...sanitized,
     };
   } catch (error) {
-    console.warn('[UIReading] Failed to load settings, using defaults:', error);
+    logger.warn('[UIReading] Failed to load settings, using defaults:', error);
     // Self-healing: clear corrupted data
     try {
       localStorage.removeItem(STORAGE_KEY);
@@ -56,7 +60,7 @@ export function saveSettings(settings: UIReadingSettings): boolean {
     const { valid, sanitized } = validateSettings(settings);
 
     if (!valid) {
-      console.warn('[UIReading] Saving sanitized settings due to validation errors');
+      logger.warn('[UIReading] Saving sanitized settings due to validation errors');
     }
 
     const toSave = { ...DEFAULT_SETTINGS, ...sanitized };
@@ -64,7 +68,7 @@ export function saveSettings(settings: UIReadingSettings): boolean {
 
     return true;
   } catch (error) {
-    console.error('[UIReading] Failed to save settings:', error);
+    logger.error('[UIReading] Failed to save settings:', error);
     return false;
   }
 }
@@ -73,7 +77,7 @@ export function clearSettings(): void {
   try {
     localStorage.removeItem(STORAGE_KEY);
   } catch (error) {
-    console.error('[UIReading] Failed to clear settings:', error);
+    logger.error('[UIReading] Failed to clear settings:', error);
   }
 }
 

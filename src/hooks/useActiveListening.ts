@@ -23,6 +23,10 @@ import { interruptionController } from '@/services/voice/interruptionController'
 import { adaptiveThresholdEngine } from '@/services/voice/adaptiveThresholdEngine';
 import type { StreamingResult } from '@/services/audio/audioStreaming';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('ActiveListening');
+
 /**
  * Configuration de l'écoute active
  */
@@ -138,7 +142,7 @@ export function useActiveListening(
     },
 
     onStateChange: streamState => {
-      console.log('[ActiveListening] 🎙️ Stream state:', streamState);
+      logger.info('[ActiveListening] 🎙️ Stream state:', streamState);
 
       if (mountedRef.current) {
         setState(prev => ({
@@ -149,7 +153,7 @@ export function useActiveListening(
     },
 
     onStreamingComplete: (result: StreamingResult) => {
-      console.log('[ActiveListening] ✅ Streaming complete');
+      logger.info('[ActiveListening] ✅ Streaming complete');
       handleStreamingComplete(result);
     },
   });
@@ -176,7 +180,7 @@ export function useActiveListening(
 
       const currentStreaming = streamingRef.current;
 
-      console.log('[ActiveListening] 🧠 Attention:', event.state);
+      logger.info('[ActiveListening] 🧠 Attention:', event.state);
 
       setState(
         prev =>
@@ -195,7 +199,7 @@ export function useActiveListening(
 
         // Si pas déjà en streaming, démarrer
         if (!currentStreaming.isStreaming) {
-          console.log('[ActiveListening] 🎤 Auto-starting streaming for command');
+          logger.info('[ActiveListening] 🎤 Auto-starting streaming for command');
           currentStreaming.startStreaming();
         }
       }
@@ -244,9 +248,9 @@ export function useActiveListening(
           : wakeWordEngine.detectStreaming(text);
 
         if (wakeEvent?.detected) {
-          console.log('[ActiveListening] 🎯 Wake word detected!');
-          console.log(`  Mode: ${wakeEvent.mode}`);
-          console.log(`  Confidence: ${wakeEvent.confidence.toFixed(2)}`);
+          logger.info('[ActiveListening] 🎯 Wake word detected!');
+          logger.info(`  Mode: ${wakeEvent.mode}`);
+          logger.info(`  Confidence: ${wakeEvent.confidence.toFixed(2)}`);
 
           // Notifier
           onWakeDetected?.(wakeEvent);
@@ -261,7 +265,7 @@ export function useActiveListening(
           // Traiter selon le mode
           if (wakeEvent.mode === 'one_shot') {
             // Commande immédiate
-            console.log('[ActiveListening] ⚡ One-shot command:', wakeEvent.cleanedText);
+            logger.info('[ActiveListening] ⚡ One-shot command:', wakeEvent.cleanedText);
 
             if (wakeEvent.cleanedText.trim()) {
               setState(prev => ({ ...prev, isProcessingCommand: true }));
@@ -271,7 +275,7 @@ export function useActiveListening(
             attentionEngine.handleWakeWord(wakeEvent);
           } else {
             // Wake only
-            console.log('[ActiveListening] 👂 Wake only, awaiting command...');
+            logger.info('[ActiveListening] 👂 Wake only, awaiting command...');
             attentionEngine.handleWakeWord(wakeEvent);
             // Le reste sera géré par le state change listener
           }
@@ -280,7 +284,7 @@ export function useActiveListening(
 
       // Mode 2: En awaiting_command, traiter comme commande
       else if (attentionState === 'awaiting_command' && isFinal && text.trim()) {
-        console.log('[ActiveListening] 📝 Command received:', text);
+        logger.info('[ActiveListening] 📝 Command received:', text);
 
         awaitingCommandRef.current = false;
         setState(prev => ({ ...prev, isProcessingCommand: true }));
@@ -294,7 +298,7 @@ export function useActiveListening(
         const wakeEvent = wakeWordEngine.detectStreaming(text);
 
         if (wakeEvent?.detected) {
-          console.log('[ActiveListening] 🛑 Interruption detected!');
+          logger.info('[ActiveListening] 🛑 Interruption detected!');
           interruptionController.processPartialTranscript(text);
         }
       }
@@ -318,7 +322,7 @@ export function useActiveListening(
       const transcript = pendingTranscriptRef.current;
 
       if (transcript) {
-        console.log('[ActiveListening] 📝 Final transcript:', transcript);
+        logger.info('[ActiveListening] 📝 Final transcript:', transcript);
 
         onFinalTranscript?.(transcript);
         analyzeForWakeWord(transcript, true);
@@ -331,7 +335,7 @@ export function useActiveListening(
         awaitingCommandRef.current &&
         attentionEngine.getState() === 'awaiting_command'
       ) {
-        console.log('[ActiveListening] 🔄 Restarting streaming for command');
+        logger.info('[ActiveListening] 🔄 Restarting streaming for command');
         // ✨ v24.2.1: Track timeout for cleanup
         if (restartTimeoutRef.current) {
           clearTimeout(restartTimeoutRef.current);
@@ -353,7 +357,7 @@ export function useActiveListening(
    * Armer l'écoute active
    */
   const arm = useCallback(() => {
-    console.log('[ActiveListening] 🔊 Arming wake word detection');
+    logger.info('[ActiveListening] 🔊 Arming wake word detection');
 
     attentionEngine.activate();
 
@@ -373,7 +377,7 @@ export function useActiveListening(
    * Désarmer l'écoute active
    */
   const disarm = useCallback(() => {
-    console.log('[ActiveListening] 🔇 Disarming wake word detection');
+    logger.info('[ActiveListening] 🔇 Disarming wake word detection');
 
     attentionEngine.deactivate();
     awaitingCommandRef.current = false;
@@ -395,7 +399,7 @@ export function useActiveListening(
    * Reset complet
    */
   const reset = useCallback(() => {
-    console.log('[ActiveListening] 🔄 Resetting');
+    logger.info('[ActiveListening] 🔄 Resetting');
 
     attentionEngine.reset();
     awaitingCommandRef.current = false;
@@ -416,7 +420,7 @@ export function useActiveListening(
    * Démarrer l'écoute manuellement
    */
   const startListening = useCallback(async () => {
-    console.log('[ActiveListening] 🎤 Starting listening');
+    logger.info('[ActiveListening] 🎤 Starting listening');
     await streaming.startStreaming();
   }, [streaming]);
 
@@ -424,7 +428,7 @@ export function useActiveListening(
    * Arrêter l'écoute manuellement
    */
   const stopListening = useCallback(async () => {
-    console.log('[ActiveListening] 🛑 Stopping listening');
+    logger.info('[ActiveListening] 🛑 Stopping listening');
     await streaming.stopStreaming();
   }, [streaming]);
 
