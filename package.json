@@ -13,6 +13,7 @@
     "gen:tauri-config:force": "node scripts/generate-tauri-config.mjs --force",
     "gen:tauri-config:prod": "TITANE_ENV=production node scripts/generate-tauri-config.mjs --force",
     "sync:versions": "node scripts/sync-versions.mjs",
+    "bump:version": "node scripts/bump-version.mjs",
     "dev:tauri": "node scripts/launch/dev_tauri_monitor.mjs",
     "dev:tauri:clean": "bash scripts/dev/cleanup-dev-env.sh && pnpm run dev:tauri",
     "dev:tauri:raw": "bash scripts/launch/deploy_full_local_dev.sh",

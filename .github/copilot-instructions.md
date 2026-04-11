@@ -90,6 +90,14 @@ Mandatory: gate report, rollback plan, and final unique verdict.
 
 If contradiction remains unresolved after minimal patch: classify `BLOCKED_DOCTRINE`.
 
+## Rule 13 - Version bump at each advanced BUILD
+
+At each advanced BUILD (tauri build, production build, or any build that produces a distributable artifact), the patch version MUST be incremented by 0.0.1 in `package.json` before building.
+Run `node scripts/bump-version.mjs` (or `pnpm run bump:version`) before every advanced build to auto-increment the patch.
+After bumping, run `node scripts/sync-versions.mjs` (or `pnpm run sync:versions`) to propagate the new version to Cargo.toml, tauri.conf.json, and runtime config.
+This ensures every build artifact carries a unique, traceable version number.
+The current version MUST always be visible in the bottom footer of the TITANE interface.
+
 ## Operational authority
 
 Only one active execution authority and one active E2E authority at a time.

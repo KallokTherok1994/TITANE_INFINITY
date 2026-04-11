@@ -10,7 +10,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import { fileURLToPath } from 'node:url';
-import { readdir, writeFile } from 'node:fs/promises';
+import { readdir, writeFile, readFile } from 'node:fs/promises';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import viteCompression from 'vite-plugin-compression';
 import { injectManifest } from 'workbox-build';
@@ -18,6 +18,9 @@ import { visualizer } from 'rollup-plugin-visualizer';
 import type { Plugin, PluginOption, ResolvedConfig } from 'vite';
 
 const ROOT_DIR = fileURLToPath(new URL('.', import.meta.url));
+// ✨ Rule 13 - Inject version at build time (avoids bundling full package.json)
+const _pkgRaw = await readFile(resolve(ROOT_DIR, 'package.json'), 'utf8');
+const _appVersion: string = (JSON.parse(_pkgRaw) as { version: string }).version;
 
 // P2-B: Workbox Service Worker plugin
 function workboxPlugin(): Plugin {
@@ -115,6 +118,11 @@ export default defineConfig(({ command }) => ({
   // - Dev: '/' for absolute paths
   // - Build: './' for relative paths (required for AppImage/DEB bundling)
   base: command === 'build' ? './' : '/',
+
+  // ✨ Rule 13 - Expose version as build-time constant (no runtime JSON bundle)
+  define: {
+    __APP_VERSION__: JSON.stringify(_appVersion),
+  },
 
   // ✅ v27: Exclure les fichiers shell et scripts du traitement Vite
   assetsInclude: ['**/*.sh', '**/*.bash', '**/*.zsh'],
