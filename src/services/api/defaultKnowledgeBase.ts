@@ -238,7 +238,7 @@ function getFallbackEntries(): KnowledgeBaseEntry[] {
 // ─────────────────────────────────────────────────────────────────
 
 /**
- * List all 150 category keys.
+ * List all category keys.
  * Derives from the entries cache when already loaded to avoid a second IPC call.
  */
 export async function listCategories(): Promise<string[]> {

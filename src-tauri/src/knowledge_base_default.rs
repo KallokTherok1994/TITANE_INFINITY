@@ -294,6 +294,24 @@ const WEB_DESIGN_UI_UX: &str =
 const SYNCHRONISATION_ORCHESTRATION: &str =
     include_str!("../../data/knowledge_base/default/synchronisation_orchestration.json");
 
+// ── v30.0.0 expansion — phase 17 (bourse, crypto, cuisine, droit, énergie, jeux vidéo, musique, voyage) ─
+const BOURSE_TRADING: &str =
+    include_str!("../../data/knowledge_base/default/bourse_trading.json");
+const CRYPTO_BLOCKCHAIN: &str =
+    include_str!("../../data/knowledge_base/default/crypto_blockchain.json");
+const CUISINE_GASTRONOMIE: &str =
+    include_str!("../../data/knowledge_base/default/cuisine_gastronomie.json");
+const DROIT_CONTRATS_PRATIQUE: &str =
+    include_str!("../../data/knowledge_base/default/droit_contrats_pratique.json");
+const ENERGIE_RENOUVELABLE: &str =
+    include_str!("../../data/knowledge_base/default/energie_renouvelable.json");
+const JEUX_VIDEO_CULTURE: &str =
+    include_str!("../../data/knowledge_base/default/jeux_video_culture.json");
+const MUSIQUE_THEORIE_PRATIQUE: &str =
+    include_str!("../../data/knowledge_base/default/musique_theorie_pratique.json");
+const VOYAGE_EXPLORATION: &str =
+    include_str!("../../data/knowledge_base/default/voyage_exploration.json");
+
 // ── v30.0.0 expansion — phase 12 (finance avancée, revenus, applications, copywriting, sites web, poésie, droit, vie pro/perso, coaching, médecine naturelle, revenus en ligne, peak performance, santé mentale, growth marketing) ─
 const STRATEGIES_REVENUS_MONETISATION: &str =
     include_str!("../../data/knowledge_base/default/strategies_revenus_monetisation.json");
@@ -552,6 +570,15 @@ impl DefaultKnowledgeBase {
         ("developpement_jeux_unity", DEVELOPPEMENT_JEUX_UNITY),
         ("web_design_ui_ux", WEB_DESIGN_UI_UX),
         ("synchronisation_orchestration", SYNCHRONISATION_ORCHESTRATION),
+        // v30.0.0 expansion — phase 17 (bourse, crypto, cuisine, droit, énergie, jeux vidéo, musique, voyage)
+        ("bourse_trading", BOURSE_TRADING),
+        ("crypto_blockchain", CRYPTO_BLOCKCHAIN),
+        ("cuisine_gastronomie", CUISINE_GASTRONOMIE),
+        ("droit_contrats_pratique", DROIT_CONTRATS_PRATIQUE),
+        ("energie_renouvelable", ENERGIE_RENOUVELABLE),
+        ("jeux_video_culture", JEUX_VIDEO_CULTURE),
+        ("musique_theorie_pratique", MUSIQUE_THEORIE_PRATIQUE),
+        ("voyage_exploration", VOYAGE_EXPLORATION),
     ];
 
     /// Load all default knowledge entries from embedded JSON.
@@ -719,8 +746,8 @@ mod tests {
             result.errors
         );
         assert_eq!(
-            result.entries_loaded, 150,
-            "Must have exactly 150 default knowledge categories"
+            result.entries_loaded, 158,
+            "Must have exactly 158 default knowledge categories"
         );
     }
 

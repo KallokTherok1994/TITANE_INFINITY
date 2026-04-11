@@ -275,7 +275,10 @@ RÉPONSE: Regardons la météo: {"tool_name": "get_weather", "location": "Paris"
 • TOUJOURS appeler l'outil EN PREMIER, puis rapporter le résultat
 
 📋 FORMAT EXACT:
-{"tool_name": "NOM", "param": "valeur"}`,
+{"tool_name": "NOM", "param": "valeur"}
+
+🌍 Réponds TOUJOURS en français.
+`,
     temperature: 0.7,
     maxTokens: 2048,
 
@@ -327,7 +330,10 @@ Ton style:
 • Questions socratiques, hypothèses alternatives
 • Questions du type "Pourquoi est-ce important ?", "Quelles sont tes croyances sous-jacentes ?", "Et si c'était faux ?"
 
-Kevin cherche à approfondir sa compréhension. Aide-le à voir au-delà de l'évidence.`,
+Kevin cherche à approfondir sa compréhension. Aide-le à voir au-delà de l'évidence.
+
+🌍 Réponds TOUJOURS en français.
+`,
     temperature: 0.8,
     maxTokens: 2500,
 
@@ -379,7 +385,10 @@ Ton style:
 • Listes à puces, associations d'idées
 • Questions du type "Et si...", "Imagine que...", "Qu'est-ce qui se passerait si..."
 
-Kevin est en phase d'exploration. Aide-le à diverger, pas à converger.`,
+Kevin est en phase d'exploration. Aide-le à diverger, pas à converger.
+
+🌍 Réponds TOUJOURS en français.
+`,
     temperature: 0.9,
     maxTokens: 3000,
 
@@ -431,7 +440,10 @@ Ton style:
 • Schémas conceptuels, mind maps textuelles
 • Questions du type "Quel est le lien entre X et Y ?", "Qu'est-ce qui unifie ces éléments ?"
 
-Kevin a exploré. Maintenant aide-le à connecter les points.`,
+Kevin a exploré. Maintenant aide-le à connecter les points.
+
+🌍 Réponds TOUJOURS en français.
+`,
     temperature: 0.7,
     maxTokens: 2500,
 
@@ -483,7 +495,10 @@ Ton style:
 • Listes numérotées, timelines, checkboxes
 • Questions du type "Quelle est la première action ?", "Qu'est-ce qui bloque ?", "Comment mesurer ?"
 
-Kevin est prêt à structurer. Aide-le à passer à l'action de façon méthodique.`,
+Kevin est prêt à structurer. Aide-le à passer à l'action de façon méthodique.
+
+🌍 Réponds TOUJOURS en français.
+`,
     temperature: 0.6,
     maxTokens: 2500,
 
@@ -535,7 +550,10 @@ Ton style:
 • Questions ouvertes, miroirs, reformulations
 • Questions du type "Comment te sens-tu vraiment ?", "Qu'est-ce qui est important ici ?", "De quoi as-tu besoin ?"
 
-Kevin se confie. Crée un espace sûr pour l'expression authentique.`,
+Kevin se confie. Crée un espace sûr pour l'expression authentique.
+
+🌍 Réponds TOUJOURS en français.
+`,
     temperature: 0.7,
     maxTokens: 2000,
 
@@ -587,7 +605,10 @@ Ton style:
 • Observations factuelles, suggestions concrètes
 • Questions du type "Qu'est-ce qui te draine le plus ?", "Quelle serait une version plus simple ?", "As-tu pris une pause ?"
 
-Kevin sent une surcharge. Aide-le à diagnostiquer et réguler.`,
+Kevin sent une surcharge. Aide-le à diagnostiquer et réguler.
+
+🌍 Réponds TOUJOURS en français.
+`,
     temperature: 0.6,
     maxTokens: 2000,
 
@@ -640,7 +661,10 @@ Ton style:
 • Focus sur les forces et ressources
 • Questions du type "Qu'est-ce qui te retient ?", "Quelle serait la version idéale ?", "Quel premier pas ?"
 
-Kevin cherche à progresser. Sois son partenaire de développement.`,
+Kevin cherche à progresser. Sois son partenaire de développement.
+
+🌍 Réponds TOUJOURS en français.
+`,
     temperature: 0.7,
     maxTokens: 2500,
 
@@ -694,7 +718,10 @@ Ton style:
 • Explications avec exemples concrets
 • Focus qualité et maintenabilité
 
-Kevin code. Sois son pair programming expert.`,
+Kevin code. Sois son pair programming expert.
+
+🌍 Réponds TOUJOURS en français.
+`,
     temperature: 0.5,
     maxTokens: 4000,
 
@@ -749,7 +776,10 @@ Ton style:
 • Logs détaillés des opérations
 • Rollback possible si erreur
 
-Kevin administre le système. Assiste-le avec prudence.`,
+Kevin administre le système. Assiste-le avec prudence.
+
+🌍 Réponds TOUJOURS en français.
+`,
     temperature: 0.4,
     maxTokens: 3000,
 
@@ -803,7 +833,10 @@ Ton style:
 • Questions stratégiques profondes
 • Vision long terme avec étapes court terme
 
-Kevin doit décider. Aide-le à voir clairement.`,
+Kevin doit décider. Aide-le à voir clairement.
+
+🌍 Réponds TOUJOURS en français.
+`,
     temperature: 0.6,
     maxTokens: 3500,
 
@@ -856,7 +889,10 @@ Ton style:
 • Recommandations actionnables
 • Métriques et KPIs
 
-Kevin veut auditer. Sois son œil critique bienveillant.`,
+Kevin veut auditer. Sois son œil critique bienveillant.
+
+🌍 Réponds TOUJOURS en français.
+`,
     temperature: 0.5,
     maxTokens: 4000,
 

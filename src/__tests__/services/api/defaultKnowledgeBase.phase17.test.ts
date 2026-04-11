@@ -172,14 +172,22 @@ describe('defaultKnowledgeBase — Phase 17 French enforcement & bullet-line for
   });
 
   // ─────────────────────────────────────────────────────────────────────────
-  // 6. Empty entries → empty string (no orphan header)
+  // 6. IPC returns empty → bundled fallback kicks in, no orphan [LANGUE] header
+  // The KB always has bundled fallback entries (import.meta.glob), so the
+  // compact index is never empty. We verify the header is always paired with
+  // at least one bullet line (no orphan header without content).
   // ─────────────────────────────────────────────────────────────────────────
 
-  it('returns an empty string when there are no entries (no orphan [LANGUE] header)', async () => {
+  it('compact index always has content when IPC returns empty (bundled fallback, no orphan header)', async () => {
     mockedInvokeWithRetry.mockResolvedValueOnce(JSON.stringify({}));
 
     const index = await getCompactIndex();
 
-    expect(index).toBe('');
+    // Bundled fallback always provides entries; the index must not be bare or empty
+    expect(index).not.toBe('');
+    expect(index.startsWith('[LANGUE:')).toBe(true);
+    // At least one bullet line must follow the header
+    const bulletLines = index.split('\n').filter(l => l.startsWith('•'));
+    expect(bulletLines.length).toBeGreaterThan(0);
   });
 });
