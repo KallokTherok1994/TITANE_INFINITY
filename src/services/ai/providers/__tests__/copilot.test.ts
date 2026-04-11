@@ -31,10 +31,7 @@ vi.mock('../../apiCache', () => ({
 // Mock statusCache — pass-through to test core logic
 vi.mock('../../statusCache', () => {
   class MockStatusCache {
-    async get(
-      fetcher: () => Promise<unknown>,
-      _fallback: () => unknown
-    ) {
+    async get(fetcher: () => Promise<unknown>, _fallback: () => unknown) {
       return await fetcher();
     }
   }

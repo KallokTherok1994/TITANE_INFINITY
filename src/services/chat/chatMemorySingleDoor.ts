@@ -142,9 +142,7 @@ function readFreshTwinsFusion(): ChatContextEnvelope['twinsContext'] | null {
   }>('titane_twin_fusion_v1');
   if (!raw) return null;
   if (typeof raw.updatedAt !== 'number') {
-    logger.warn(
-      'titane_twin_fusion_v1: missing updatedAt — treating as stale'
-    );
+    logger.warn('titane_twin_fusion_v1: missing updatedAt — treating as stale');
     return null;
   }
   const ageMs = Date.now() - raw.updatedAt;
