@@ -1,0 +1,56 @@
+{
+  "version": "v30.0.0",
+  "category": "suite_office_microsoft",
+  "description": "Suite Microsoft Office avancée — Word (styles, macros, références, collaboration), Excel avancé (formules complexes XLOOKUP/LAMBDA/LET, tableaux croisés dynamiques, Power Query, Power Pivot, VBA, graphiques avancés), PowerPoint (design professionnel, animations, présenter), Outlook (productivité email, règles, calendrier), Teams (collaboration, channels, intégrations), SharePoint (sites, bibliothèques, workflows), OneNote, Microsoft 365 cloud",
+  "suite_office_microsoft": {
+    "introduction": "Microsoft Office est l'environnement professionnel dominant dans les entreprises. La maîtrise avancée des outils Office transforme la productivité et la qualité du travail. TITANE couvre les fonctionnalités avancées de chaque outil, du format de tableau croisé dynamique aux macros VBA.",
+    "word_avance": {
+      "styles_et_mise_en_forme": "Styles (Titre 1/2/3, Normal, Liste). Table des matières automatique depuis les styles. Navigation par niveaux. Modifier le style maître pour changer tout le document. Styles liés.",
+      "references": "Références croisées (figures, tableaux, sections). Notes de bas de page et de fin. Bibliographie (APA, MLA, Chicago) via Gestion des sources. Index automatique. Table des figures.",
+      "fonctionnalites_avancees": {
+        "fusion_publipostage": "Publipostage : lettre type + source de données (Excel, liste de contacts). Champs de fusion. Conditions (IF). Envoi en masse personnalisé. Étiquettes et enveloppes.",
+        "macros_VBA": "Enregistrer une macro (Alt+F8). Éditer dans VBA Editor (Alt+F11). `Selection.Font.Bold = True`. `ActiveDocument.Paragraphs`. Automatiser les tâches répétitives.",
+        "collaboration": "Suivi des modifications (Track Changes). Commentaires. Comparer des documents. Co-authoring en temps réel (SharePoint/OneDrive). Versions historique.",
+        "protection": "Protéger le document (mot de passe, restriction de mise en forme, protection des sections). Marquer comme final. Signature numérique."
+      }
+    },
+    "excel_avance": {
+      "formules_avancees": {
+        "lookup": "VLOOKUP (obsolète mais omniprésent). XLOOKUP (remplaçant moderne : `=XLOOKUP(cherche, plage_cherche, plage_retour, si_non_trouvé, mode_correspondance)`). INDEX/MATCH (flexible, bidirectionnel). XMATCH.",
+        "dynamiques": "FILTER (`=FILTER(A:A, B:B > 100)`). SORT. SORTBY. UNIQUE. SEQUENCE (`=SEQUENCE(10,1,1,2)` — série de nombres). RANDARRAY.",
+        "lambda_let": "LET (nommer des valeurs intermédiaires) : `=LET(x, A1*2, y, B1+1, x+y)`. LAMBDA (créer ses propres fonctions) : `=LAMBDA(x, y, x^2+y^2)` puis nommer dans Name Manager.",
+        "agregation": "SUMIFS, COUNTIFS, AVERAGEIFS (conditions multiples). SUMPRODUCT (sommer des produits, très puissant). Fonctions de base de données (DSUM, DCOUNT). AGGREGATE.",
+        "texte": "TEXTJOIN (concaténer avec séparateur). TEXTSPLIT (diviser texte). LEFT/RIGHT/MID. FIND/SEARCH. SUBSTITUTE. VALUE (texte → nombre). TRIM/CLEAN."
+      },
+      "tableaux_croises_dynamiques": {
+        "creation": "Insérer > Tableau Croisé Dynamique. Glisser les champs (Lignes, Colonnes, Valeurs, Filtres). Regrouper les dates (mois, trimestres, années).",
+        "fonctionnalites": "Champs calculés (`= Ventes / Quantité`). Disposition (compact, plan, tabulaire). Segments (slicers) pour filtrer visuellement. Chronologie (filtre dates).",
+        "pivot_charts": "Graphique lié au TCD. Mise à jour automatique. Combinaisons (barres + courbes)."
+      },
+      "power_query": "Importer des données de sources diverses (Excel, CSV, web, base de données, API). Transformer sans formules (interface graphique). Fusionner des tables (merge/join). Dépivotage (unpivot). Actualisation automatique. M language pour les étapes avancées.",
+      "power_pivot": "Modèle de données interne. Relations entre tables. DAX (Data Analysis Expressions) pour les mesures calculées : CALCULATE, SUMX, RELATED, USERELATIONSHIP. Millions de lignes.",
+      "VBA_excel": {
+        "objets": "`Workbook`, `Worksheet`, `Range`, `Cell`. `ThisWorkbook.Sheets('Sheet1').Range('A1').Value = 'Hello'`.",
+        "boucles_conditions": "`For Each cell In Range('A1:A100')`, `If cell.Value > 0 Then`, `Do While`, `With` block pour éviter la répétition.",
+        "evenements": "`Worksheet_Change`, `Workbook_Open`, `Worksheet_SelectionChange`. Déclencher du code automatiquement.",
+        "userforms": "Formulaires personnalisés. TextBox, ComboBox, ListBox, CheckBox, CommandButton. `Private Sub CommandButton1_Click()`."
+      },
+      "graphiques_avances": "Graphiques combinés. Axe secondaire. Graphique cascade (Waterfall). Graphique boîte à moustaches (Box & Whisker). Graphique en entonnoir (Funnel). Sparklines. Mise en forme conditionnelle avancée (barres de données, nuances de couleur, icônes)."
+    },
+    "powerpoint_avance": {
+      "design_professionnel": "Thèmes et modèles maîtres (Masque des diapositives). Palette de couleurs cohérente. Polices appariées (titre + corps). Grilles et guides. Alignement parfait (Organiser > Aligner). Raccourci F4 (répéter dernière action).",
+      "animations_et_transitions": "Transitions discrètes (Morph pour les animations fluides entre diapositives). Animations d'entrée/sortie/emphase/trajectoire. Volet Animation pour gérer l'ordre. Déclencheurs (cliquer sur un objet).",
+      "multimedia": "Vidéos (incrustation, lecture auto, boucle). Audio (narration, musique de fond). Liens hypertexte (entre diapositives, URL, email).",
+      "collaboration": "Commentaires. Co-authoring. Partage de présentation (Teams, OneDrive). Présenter en direct (PowerPoint Live dans Teams). Sous-titres en temps réel."
+    },
+    "outlook_productivite": {
+      "email": "Règles (trier automatiquement, rediriger). Actions rapides. Réponse rapide avec modèles. Délai d'envoi (annuler un email envoyé). Ignorer les conversations. BCC sur tous les envois de calendrier.",
+      "calendrier": "Planificateur de réunion (Trouver un créneau). Réunions récurrentes. Partager son calendrier. Heures de travail. Fuseau horaire secondaire.",
+      "gestion_emails": "Méthode Inbox Zero. Règles d'archivage. Catégories (couleurs). Indicateurs de suivi. Recherche avancée. Nettoyage de boîte (supprimer les redondances)."
+    },
+    "teams_et_sharepoint": {
+      "teams": "Channels thématiques (public/privé). Messages @ (mentions), réactions. Onglets (fichiers SharePoint, apps, sites web). Réunions (salle d'attente, sous-salles, enregistrement, transcription). Teams + Planner pour la gestion de projet.",
+      "sharepoint": "Bibliothèques de documents (versioning, co-authoring, métadonnées). Listes (base de données légère). Sites d'équipe vs sites de communication. Flux Power Automate. Intranet d'entreprise."
+    }
+  }
+}

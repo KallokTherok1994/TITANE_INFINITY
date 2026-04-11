@@ -1,0 +1,71 @@
+{
+  "version": "v30.0.0",
+  "category": "design_graphique_adobe",
+  "description": "Design graphique et suite Adobe — Photoshop avancé (calques, masques, retouche, compositing, actions), Illustrator (vecteurs, typographie, logo design, Pen tool), InDesign (mise en page, print, PDF export), Premiere Pro (montage vidéo, transitions, étalonnage), After Effects (motion design, effets visuels, expressions), Adobe XD et Figma (UI/UX design, prototypage, design systems), Canva (templates, social media), Lightroom (retouche photo), principes de design graphique",
+  "design_graphique_adobe": {
+    "introduction": "La maîtrise des outils de design est essentielle pour la communication visuelle, le branding et la création numérique. TITANE guide à travers les logiciels professionnels de la suite Adobe et leurs alternatives, des fondements aux techniques avancées.",
+    "principes_design": {
+      "elements": "Point, ligne, forme, texture, espace, couleur, valeur. Les 7 éléments fondamentaux du design visuel.",
+      "principes": {
+        "CRAP": "Contrast (Contraste), Repetition (Répétition), Alignment (Alignement), Proximity (Proximité). Principes de Robin Williams.",
+        "gestalt": "Similarité, proximité, continuation, fermeture, figure/fond. Le cerveau perçoit les formes globales avant les détails.",
+        "typographie": "Hiérarchie typographique. Grille de base. Paires de polices. Lisibilité vs readability. Espacement (tracking, kerning, leading). Règles des 66 caractères par ligne.",
+        "couleur": "Roue chromatique. Complémentaires, analogues, triadiques. Codes couleurs (HEX, RGB, CMJN, Pantone). Mode RVB (écran) vs CMJN (impression). Psychologie des couleurs."
+      }
+    },
+    "photoshop": {
+      "workflow": "Camera RAW (Lightroom pour la RAW processing). Mode 16 bits pour la retouche. Calques non-destructifs. Smart Objects (transformations non-destructives). Masques de calques (noir/blanc = caché/visible).",
+      "retouche_avancee": {
+        "selection": "Sélection rapide, baguette magique, lasso magnétique. `Sélectionner > Sujet` (IA). Affiner le contour (cheveux, fourrure). Quick Mask Mode (Q). Channels pour sélections complexes.",
+        "recadrage_remplacement": "Contenu pris en compte (Content-Aware Fill, Scale, Move). Liquéfier (Liquify) — face-aware. Patch Tool. Healing Brush vs Clone Stamp.",
+        "ajustements": "Courbes (Curves) — contrôle précis. Niveaux (Levels). TSL/TSV. Mixeur de couches. Filtre Camera RAW. Dodge/Burn non-destructif.",
+        "compositing": "Modes de fusion (Multiply, Screen, Overlay, Luminosity). Masques de fusion. Luminosity masks. Color Grading (Gradient Map). Double exposure."
+      },
+      "automatisation": "Actions (Ctrl+F8). Batch processing. Droplets. Scripts JavaScript dans Photoshop. Variables (data-driven graphics).",
+      "neuraux_filtres": "Neural Filters : Colorisation, Flou de profondeur, JPEG Artefacts removal, Amélioration de la photo, Harmonisation des couleurs, Stylisation. Powered by Firefly."
+    },
+    "illustrator": {
+      "pen_tool": "Outil le plus important. Points d'ancrage (angle vs lisse). Handles de Bézier. Alt pour casser les handles. Shift pour contraindre. Modifier les courbes a posteriori (Ctrl+clic sur point).",
+      "workflows": {
+        "logo_design": "Commencer en bitmap (esquisse). Vectoriser (Image Trace > haute fidélité). Ou créer directement en vecteur. Formes de base + Pathfinder (Unite, Minus Front, Intersect, Exclude). Guides et grilles.",
+        "typographie": "Glyphs (caractères spéciaux). OpenType features (ligatures, fractions, etc.). Texte sur un tracé. Texte dans une forme. Contour de texte (Create Outlines) pour exportation.",
+        "patterns": "Swatches patron. Pattern Options (Brick, Grid, Hex). Recolor artwork. Global colors.",
+        "clipping_masks": "Ctrl+7. Forme de dessus = masque. Utilisation : images dans des formes. Compound Paths pour masques complexes."
+      },
+      "export": "SVG (interactif, web). PDF (impression). EPS (vectoriel universel). PNG/JPG pour web. Artboards multiples. Export Assets (écrans, App Store)."
+    },
+    "indesign": {
+      "mise_en_page": "Pages maîtresses (gabarits). Grilles de colonnes et gouttières. Blocs texte liés (flux). Styles de paragraphe et de caractère. Bibliothèque (objets réutilisables).",
+      "print_pdf": "Vérification en amont (Preflight). Fond perdu (bleed 3mm). Repères de coupe. Profil couleur CMJN. PDF/X-4 pour l'impression. Interactif PDF (boutons, formulaires, vidéos).",
+      "livre_magazine": "Table des matières automatique. Indexation. Notes de bas de page. Book (plusieurs documents). Folios (numéros de page automatiques)."
+    },
+    "premiere_pro": {
+      "montage": "Timeline non-linéaire. Multicam editing. Rognage (trim) avancé (ripple, roll, slip, slide). J-cut, L-cut. Vitesse (time remapping, courbe de vitesse). Proxies pour les fichiers lourds.",
+      "etalonnage": "Lumetri Color. Scopes (Waveform, Vectorscope). Correction de base (exposition, balance des blancs). Look créatif (grade cinematique). Match color IA. LUTs (Look-Up Tables).",
+      "audio": "Essentiel Sound (dialogue, musique, effets, ambiance). Loudness automatique. DeNoise IA. Adobe Audition pour le mastering avancé.",
+      "integration_AE": "Dynamic Link : pas d'export intermédiaire. After Effects compositions dans Premiere. Motion Graphics Templates (.mogrt) depuis AE ou Essential Graphics."
+    },
+    "after_effects": {
+      "motion_design": "Keyframes. Ease-in/Ease-out (F9). Graph editor (courbes de vitesse). Motion path. Null objects. Parenting (lier des calques). Pre-compositions.",
+      "effets_visuels": "Tracking (caméra 3D, point, plat). Rotoscoping (Roto Brush 2). Chroma key (Keylight). Compositing 3D (Cineware, Element 3D). Expressions (JavaScript pour dynamisme).",
+      "expressions": "`wiggle(freq, amp)` — mouvement aléatoire. `time * 90` — rotation continue. `loopOut('cycle')` — boucle. `thisComp.layer('Null').position[0]` — lier à un autre layer.",
+      "plugins": "Motion Bro, Video Copilot (Element 3D, Optical Flares), MOCHA AE (tracking avancé), Lottie (export JSON pour web/mobile animations), bodymovin."
+    },
+    "figma": {
+      "interface_composants": "Components maîtres + instances. Variants (états interactifs). Auto Layout (Flexbox-like). Styles (couleurs, typographies, effets, grilles). Variables (design tokens).",
+      "prototypage": "Connexions entre frames. Animations (Smart Animate, Move in/out, dissolve). Prototypes interactifs. Partager le lien avec le client. Mode présentation.",
+      "design_systems": "Component library partagée. Styles globaux. Variables (primitive + semantic tokens). Documentation inline. Versioning.",
+      "collaboration": "Multiplayer en temps réel. Commentaires. Dev Mode (inspection CSS, iOS, Android specs). FigJam pour le brainstorming."
+    },
+    "canva": {
+      "usage": "Outil no-code pour non-designers. Templates professionnels (réseaux sociaux, présentations, flyers, vidéos). Brand Kit (couleurs, polices, logo). Magic Resize.",
+      "fonctionnalites_avancees": "Background Remover (IA). Magic Write (IA générative). Canva Pro : exports transparents PNG, animations, Brand Kit. Canva for Teams. Canva Docs.",
+      "integration": "Publication directe (Facebook, Instagram, LinkedIn, Pinterest). Imports Google Drive, Dropbox. Présentations présentées directement dans Canva."
+    },
+    "lightroom": {
+      "workflow": "Import (DNG, RAW). Catalogue (organisation). Module Develop (retouche). Synchroniser les paramètres sur plusieurs photos. Export avec presets.",
+      "retouche": "Courbes de tonalité. TSL par couleur. Masques de sujet/ciel/luminosité. Retouche locale (pinceau, filtre radial/gradué). Suppression des taches. Profils d'objectif.",
+      "presets": "Créer ses presets (look signature). Importation presets Lightroom. Partage de presets (influenceurs, photographes)."
+    }
+  }
+}

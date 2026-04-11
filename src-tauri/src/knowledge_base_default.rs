@@ -270,6 +270,28 @@ const CYCLES_NATURELS_ENERGIE_LUNE: &str =
 const GEOLOGIE_MINERAUX_TERRE: &str =
     include_str!("../../data/knowledge_base/default/geologie_mineraux_terre.json");
 
+// ── v30.0.0 expansion — phase 16 (langages prog, outils dev, Firebase/cloud, Adobe design, Office, Google Workspace, formats fichiers, IA pratique, Unity/game dev, web design UI/UX) ─
+const LANGAGES_PROGRAMMATION_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/langages_programmation_avance.json");
+const ENVIRONNEMENTS_DEV_OUTILS: &str =
+    include_str!("../../data/knowledge_base/default/environnements_dev_outils.json");
+const FIREBASE_BACKEND_CLOUD: &str =
+    include_str!("../../data/knowledge_base/default/firebase_backend_cloud.json");
+const DESIGN_GRAPHIQUE_ADOBE: &str =
+    include_str!("../../data/knowledge_base/default/design_graphique_adobe.json");
+const SUITE_OFFICE_MICROSOFT: &str =
+    include_str!("../../data/knowledge_base/default/suite_office_microsoft.json");
+const SUITE_GOOGLE_WORKSPACE: &str =
+    include_str!("../../data/knowledge_base/default/suite_google_workspace.json");
+const FORMATS_FICHIERS_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/formats_fichiers_avance.json");
+const INTELLIGENCE_ARTIFICIELLE_PRATIQUE: &str =
+    include_str!("../../data/knowledge_base/default/intelligence_artificielle_pratique.json");
+const DEVELOPPEMENT_JEUX_UNITY: &str =
+    include_str!("../../data/knowledge_base/default/developpement_jeux_unity.json");
+const WEB_DESIGN_UI_UX: &str =
+    include_str!("../../data/knowledge_base/default/web_design_ui_ux.json");
+
 // ── v30.0.0 expansion — phase 12 (finance avancée, revenus, applications, copywriting, sites web, poésie, droit, vie pro/perso, coaching, médecine naturelle, revenus en ligne, peak performance, santé mentale, growth marketing) ─
 const STRATEGIES_REVENUS_MONETISATION: &str =
     include_str!("../../data/knowledge_base/default/strategies_revenus_monetisation.json");
@@ -516,6 +538,17 @@ impl DefaultKnowledgeBase {
         ("religions_et_mythologies", RELIGIONS_ET_MYTHOLOGIES),
         ("cycles_naturels_energie_lune", CYCLES_NATURELS_ENERGIE_LUNE),
         ("geologie_mineraux_terre", GEOLOGIE_MINERAUX_TERRE),
+        // phase 16
+        ("langages_programmation_avance", LANGAGES_PROGRAMMATION_AVANCE),
+        ("environnements_dev_outils", ENVIRONNEMENTS_DEV_OUTILS),
+        ("firebase_backend_cloud", FIREBASE_BACKEND_CLOUD),
+        ("design_graphique_adobe", DESIGN_GRAPHIQUE_ADOBE),
+        ("suite_office_microsoft", SUITE_OFFICE_MICROSOFT),
+        ("suite_google_workspace", SUITE_GOOGLE_WORKSPACE),
+        ("formats_fichiers_avance", FORMATS_FICHIERS_AVANCE),
+        ("intelligence_artificielle_pratique", INTELLIGENCE_ARTIFICIELLE_PRATIQUE),
+        ("developpement_jeux_unity", DEVELOPPEMENT_JEUX_UNITY),
+        ("web_design_ui_ux", WEB_DESIGN_UI_UX),
     ];
 
     /// Load all default knowledge entries from embedded JSON.
@@ -683,8 +716,8 @@ mod tests {
             result.errors
         );
         assert_eq!(
-            result.entries_loaded, 139,
-            "Must have exactly 139 default knowledge categories"
+            result.entries_loaded, 149,
+            "Must have exactly 149 default knowledge categories"
         );
     }
 
@@ -741,6 +774,8 @@ mod tests {
             "decoration_interieure_design",
             "developpement_personnel",
             "developpement_web",
+            "design_graphique_adobe",
+            "developpement_jeux_unity",
             "digital_twin_symbiosis",
             "digital_twin_v14_detail",
             "droit_immobilier_notarial",
@@ -752,11 +787,14 @@ mod tests {
             "ecriture_expression_creatrice",
             "energetique_soins_corps",
             "engines_catalog",
+            "environnements_dev_outils",
             "entrepreneuriat_mindset",
             "equilibre_vie_pro_perso",
             "finance_entreprise",
             "finances_personnelles",
             "fiscalite_optimisation_patrimoine",
+            "firebase_backend_cloud",
+            "formats_fichiers_avance",
             "freelance_consulting_premium",
             "frontend_modules",
             "gestion_projet_avancee",
@@ -768,10 +806,12 @@ mod tests {
             "immunite_prevention_naturelle",
             "infoproduits_formations_en_ligne",
             "intelligence_emotionnelle",
+            "intelligence_artificielle_pratique",
             "ipc_commands_catalog",
             "ikigai_valeurs_sens",
             "investissement_patrimoine",
             "investissement_immobilier_avance",
+            "langages_programmation_avance",
             "learning_prompts",
             "longevite_anti_aging",
             "management_administration",
@@ -835,10 +875,13 @@ mod tests {
             "strategie_entreprise",
             "strategies_revenus_monetisation",
             "systeme_nerveux_polyvagal",
+            "suite_google_workspace",
+            "suite_office_microsoft",
             "style_expression_kevin",
             "system_architecture",
             "technologie_innovation_avancee",
             "troubleshooting_faq",
+            "web_design_ui_ux",
             "yoga_pratique",
         ];
         for cat in &expected {
