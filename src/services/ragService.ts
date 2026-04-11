@@ -15,7 +15,7 @@
  * - Support for multiple document types (code, markdown, text)
  */
 
-import { invokeTauriCommand } from './tauriBridge';
+import { safeInvokeCanonical } from '@/utils/invoke';
 import { logger } from '@/lib/logger';
 
 /**
@@ -72,12 +72,12 @@ class RAGService {
 
     // Load existing chunks from backend
     try {
-      const response = await invokeTauriCommand<DocumentChunk[]>(
+      const response = await safeInvokeCanonical<DocumentChunk[]>(
         'rag_get_all_chunks',
         {}
       );
-      if (response.success && response.data) {
-        response.data?.forEach(chunk => {
+      if (response.ok && response.content) {
+        response.content.forEach(chunk => {
           this.chunks.set(chunk.id, chunk);
         });
       }
@@ -121,7 +121,7 @@ class RAGService {
     });
 
     // Persist to backend
-    await invokeTauriCommand('rag_store_chunks', { chunks: chunksWithEmbeddings });
+    await safeInvokeCanonical('rag_store_chunks', { chunks: chunksWithEmbeddings });
 
     return chunksWithEmbeddings;
   }
@@ -184,14 +184,14 @@ class RAGService {
     const prompt = `Context:\n${context}\n\nQuestion: ${question}\n\nAnswer based on the context above:`;
 
     // Call AI chat service (assumes aiChatClient is available)
-    const response = await invokeTauriCommand<string>('ai_chat', {
+    const response = await safeInvokeCanonical<string>('ai_chat', {
       message: prompt,
       system_prompt:
         'You are a helpful assistant that answers questions based on provided context.',
     });
 
     return {
-      answer: response.data || 'No answer generated',
+      answer: response.content ?? 'No answer generated',
       sources,
     };
   }
@@ -206,7 +206,7 @@ class RAGService {
 
     toDelete.forEach(id => this.chunks.delete(id));
 
-    await invokeTauriCommand('rag_delete_chunks', { ids: toDelete });
+    await safeInvokeCanonical('rag_delete_chunks', { ids: toDelete });
   }
 
   /**
@@ -252,16 +252,16 @@ class RAGService {
    */
   private async generateEmbeddings(chunks: DocumentChunk[]): Promise<DocumentChunk[]> {
     try {
-      const response = await invokeTauriCommand<{ embeddings: number[][] }>(
+      const response = await safeInvokeCanonical<{ embeddings: number[][] }>(
         'rag_generate_embeddings',
         {
           texts: chunks.map(c => c.content),
         }
       );
 
-      if (response.success && response.data) {
+      if (response.ok && response.content) {
         return chunks.map((chunk, index) => {
-          const embedding = response.data?.embeddings[index];
+          const embedding = response.content?.embeddings[index];
           return {
             ...chunk,
             embedding: embedding || [],
@@ -289,15 +289,15 @@ class RAGService {
    */
   private async generateQueryEmbedding(query: string): Promise<number[]> {
     try {
-      const response = await invokeTauriCommand<{ embedding: number[] }>(
+      const response = await safeInvokeCanonical<{ embedding: number[] }>(
         'rag_generate_embedding',
         {
           text: query,
         }
       );
 
-      if (response.success && response.data) {
-        return response.data?.embedding;
+      if (response.ok && response.content) {
+        return response.content.embedding;
       }
     } catch (error) {
       console.error('[RAG] Query embedding failed:', error);

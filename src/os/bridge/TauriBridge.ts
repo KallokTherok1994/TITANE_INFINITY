@@ -4,6 +4,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { safeInvokeCanonical, type CanonicalIpcResult } from '@/utils/invoke';
 import { listen, emit as tauriEmit, type UnlistenFn } from '@tauri-apps/api/event';
 import type { BridgeState, TauriCommand } from '../types';
 
@@ -51,6 +52,26 @@ export class TauriBridge {
     } catch (error) {
       console.error(`[TauriBridge] Command ${command} failed:`, error);
       throw error;
+    } finally {
+      this.state.pendingCommands--;
+    }
+  }
+
+  /**
+   * Invoque une commande Tauri et retourne le contrat canonique `{ ok, content, error }`.
+   * Méthode préférée pour tous les nouveaux call sites.
+   */
+  async invokeCanonical<R = unknown>(
+    command: string,
+    args?: Record<string, unknown>
+  ): Promise<CanonicalIpcResult<R>> {
+    this.state.pendingCommands++;
+    try {
+      const result = await safeInvokeCanonical<R>(command, args ?? {});
+      if (result.ok) {
+        this.state.lastSync = Date.now();
+      }
+      return result;
     } finally {
       this.state.pendingCommands--;
     }
