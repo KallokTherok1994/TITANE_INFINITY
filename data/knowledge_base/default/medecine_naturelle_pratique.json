@@ -1,0 +1,163 @@
+{
+  "version": "v30.0.0",
+  "category": "medecine_naturelle_pratique",
+  "description": "Médecine naturelle pratique — remèdes naturels courants, protocoles naturopathiques (détox, jeûne), phytothérapie, aromathérapie, compléments alimentaires, hydrothérapie, réflexologie, acupression, pharmacie naturelle maison",
+  "medecine_naturelle_pratique": {
+    "introduction": "La médecine naturelle repose sur la capacité innée du corps à se guérir lorsqu'on lui fournit les bonnes conditions. Elle ne remplace pas la médecine conventionnelle pour les urgences et pathologies graves, mais offre des outils puissants de prévention, de soutien et de traitement pour de nombreux maux courants. TITANE fournit ces informations à titre éducatif — consulter un professionnel de santé pour tout problème persistant.",
+    "remedes_naturels_courants": {
+      "rhume_grippe": {
+        "prevention": "Vitamine C (500-1000mg/j), zinc (15-30mg/j dès les premiers symptômes), échinacée en cure de 10 jours, propolis, sureau noir.",
+        "traitement_actif": "Tisane thym-miel-citron (3-4 tasses/jour), inhalation eucalyptus (3 gouttes dans un bol d'eau chaude, 10 min sous une serviette), gargarisme eau salée tiède, bouillon d'os, repos absolu.",
+        "fievre": "La fièvre modérée (<39°C) est un mécanisme de défense — ne pas la supprimer systématiquement. Hydratation abondante, compresses fraîches sur le front, tisane de tilleul (sudorifique naturel)."
+      },
+      "digestion": {
+        "ballonnements": "Tisane fenouil-anis-cumin après les repas. Charbon végétal activé (2 gélules loin des médicaments). Mâcher lentement, éviter de boire pendant les repas.",
+        "acidite_reflux": "Gel d'aloe vera (30ml avant les repas). Bicarbonate de soude (1/2 cuillère à café dans un verre d'eau — usage ponctuel). Réglisse DGL (déglycyrrhizinée). Surélever la tête du lit.",
+        "constipation": "Graines de lin moulues (2 cuillères à soupe dans de l'eau le matin). Pruneaux trempés la veille. Psyllium blond (5g dans un grand verre d'eau). Magnésium citrate (300-400mg le soir). Mouvement et hydratation.",
+        "diarrhee": "Eau de riz, banane, pomme râpée, caroube. Probiotiques Saccharomyces boulardii. Tisane de myrtille séchée (astringente). Réhydratation orale (eau + sel + sucre + citron)."
+      },
+      "douleurs": {
+        "maux_de_tete": "Huile essentielle de menthe poivrée en application sur les tempes (diluée). Magnésium (carence fréquente). Grande camomille (Tanacetum parthenium) en prévention des migraines. Hydratation. Massage des points de tension cervicaux.",
+        "douleurs_articulaires": "Curcuma + poivre noir (curcumine biodisponible, 500-1000mg/j). Harpagophytum (griffe du diable). Oméga-3 (anti-inflammatoire). Cataplasme d'argile verte. Massage à l'arnica.",
+        "douleurs_musculaires": "Bain au sel d'Epsom (magnésium transdermique, 300g dans un bain chaud, 20 min). Huile de massage arnica + gaulthérie. Étirements doux. Magnésium bisglycinate."
+      },
+      "insomnie": {
+        "hygiene_du_sommeil": "Coucher et lever à heures fixes. Obscurité totale. Température 18°C. Arrêt des écrans 1h avant (ou filtre lumière bleue). Pas de caféine après 14h.",
+        "plantes_sedatives": "Valériane (300-600mg 1h avant le coucher — efficacité cumulative sur 2-4 semaines). Passiflore (tisane ou extrait). Mélisse. Houblon. Escholtzia (pavot de Californie).",
+        "complements": "Magnésium bisglycinate (300mg le soir). Mélatonine (0.5-1mg uniquement pour le recalage du rythme circadien, pas en usage chronique). L-théanine (200mg). Glycine (3g).",
+        "rituel_du_soir": "Tisane relaxante → cohérence cardiaque 5 min → lecture papier ou étirements → gratitude (3 choses) → obscurité."
+      },
+      "stress_anxiete": {
+        "adaptogenes": "Ashwagandha (300-600mg d'extrait KSM-66, réduit le cortisol de 28%). Rhodiola rosea (200-400mg le matin). Ginseng sibérien (éleuthérocoque). Basilic sacré (tulsi).",
+        "techniques_rapides": "Respiration 4-7-8 (inspire 4s, retient 7s, expire 8s — 3 cycles). EFT (tapping). Grounding (5 choses vues, 4 touchées, 3 entendues, 2 senties, 1 goûtée).",
+        "plantes_anxiolytiques": "Passiflore, valériane, mélisse, camomille matricaire, lavande (capsules Silexan 80mg = efficacité comparable au lorazépam dans certaines études)."
+      }
+    },
+    "protocoles_naturopathiques": {
+      "cure_detox": {
+        "principe": "Soutenir les 5 émonctoires (foie, reins, intestins, peau, poumons) pour optimiser l'élimination des toxines et revitaliser l'organisme.",
+        "duree": "7 à 21 jours selon l'état de vitalité. Ne pas dépasser sans supervision.",
+        "protocole_foie": "Jus de citron tiède le matin à jeun. Artichaut ou chardon-marie (silymarine 200-400mg/j). Radis noir en ampoules. Bouillotte chaude sur le foie 20 min le soir.",
+        "protocole_reins": "Hydratation 2L/jour minimum. Tisane orthosiphon, piloselle ou queue de cerise. Réduire sel et protéines animales temporairement.",
+        "protocole_intestins": "Psyllium blond pour le transit. Probiotiques multi-souches (Lactobacillus + Bifidobacterium). Bouillon de poule ou os pour la paroi intestinale (L-glutamine). Réduire sucres raffinés et aliments ultra-transformés.",
+        "precautions": "Contre-indiqué chez la femme enceinte/allaitante, enfants, personnes très affaiblies ou sous traitement lourd. Commencer doucement pour éviter les crises de détox (maux de tête, fatigue = Herxheimer)."
+      },
+      "jeune_intermittent": {
+        "methodes": {
+          "16_8": "Fenêtre alimentaire de 8h, jeûne de 16h. Ex: dernier repas à 20h, premier repas à 12h. Le plus accessible et durable.",
+          "5_2": "5 jours d'alimentation normale, 2 jours non consécutifs à 500-600 kcal.",
+          "eat_stop_eat": "1-2 jeûnes complets de 24h par semaine."
+        },
+        "benefices": "Autophagie cellulaire (nettoyage des cellules endommagées), sensibilité à l'insuline améliorée, réduction de l'inflammation, clarté mentale, longévité potentielle.",
+        "conseils": "Rester bien hydraté (eau, tisanes, café noir sans sucre). Rompre le jeûne en douceur (fruits, soupe, pas de repas lourd). Écouter son corps — le jeûne n'est pas pour tout le monde."
+      },
+      "cure_de_jus": {
+        "jus_vert_detox": "Concombre + céleri + épinards + pomme verte + gingembre + citron. Riche en chlorophylle, minéraux et enzymes vivantes.",
+        "jus_anti_inflammatoire": "Carotte + betterave + curcuma frais + gingembre + orange. Puissant antioxydant et anti-inflammatoire.",
+        "jus_immunitaire": "Orange + pamplemousse + citron + gingembre + curcuma + poivre noir. Vitamine C concentrée.",
+        "règle": "Toujours à l'extracteur (pas centrifugeuse) pour préserver enzymes et nutriments. Boire dans les 20 minutes. Ne pas remplacer tous les repas sans supervision."
+      }
+    },
+    "phytotherapie_pratique": {
+      "formes_galeniques": {
+        "tisane_infusion": "Feuilles et fleurs — eau frémissante (pas bouillante), couvrir, infuser 5-10 min. 2-3 tasses/jour.",
+        "decoction": "Racines, écorces, graines — porter à ébullition 10-15 min puis filtrer.",
+        "teinture_mere": "Macération de plante fraîche dans alcool. Concentration élevée. 20-50 gouttes 2-3x/jour dans un peu d'eau.",
+        "gemmo_therapie": "Macérats de bourgeons — contiennent le potentiel total de la plante (méristème). 5-15 gouttes/jour. Ex: bourgeon de cassis (anti-inflammatoire puissant, adaptogène), bourgeon de figuier (stress, sommeil, digestion).",
+        "gelules": "Poudre ou extrait sec standardisé. Pratique mais vérifier la qualité (titrage en principes actifs, sans additifs douteux)."
+      },
+      "plantes_essentielles": {
+        "thym": "Antiseptique respiratoire majeur. Tisane pour bronchites, maux de gorge, rhume. Thymus vulgaris CT thymol.",
+        "romarin": "Hépato-protecteur, tonique mental, antioxydant. Tisane ou gemmothérapie. Rosmarinus officinalis.",
+        "ortie": "Reminéralisante exceptionnelle (fer, silice, magnésium). Anti-inflammatoire prostatique. Tisane ou poudre.",
+        "camomille_matricaire": "Anti-spasmodique digestive, calmante, anti-inflammatoire cutanée. Tisane ou HE.",
+        "millepertuis": "Antidépresseur naturel (ISRS-like). 300mg d'extrait 3x/jour. ATTENTION: interactions médicamenteuses majeures (pilule, anticoagulants, antidépresseurs). Photosensibilisant."
+      }
+    },
+    "aromatherapie_pratique": {
+      "regles_de_securite": {
+        "dilution_cutanee": "Toujours diluer dans une huile végétale (amande douce, jojoba, coco). Adulte: 3-5% (3-5 gouttes HE pour 5ml huile végétale). Enfant >6 ans: 1-2%. Jamais pure sur la peau sauf lavande vraie et tea tree (en ponctuel).",
+        "voie_orale": "Uniquement sur avis d'un aromathérapeute qualifié. Certaines HE sont hépatotoxiques ou néphrotoxiques.",
+        "contre_indications": "Femmes enceintes/allaitantes (1er trimestre = aucune HE), enfants <6 ans (très restreint), épileptiques (pas de cétones), asthmatiques (prudence en diffusion).",
+        "test_allergie": "1 goutte diluée au pli du coude, attendre 24h avant usage étendu."
+      },
+      "huiles_essentielles_incontournables": {
+        "lavande_vraie": "Calmante, cicatrisante, anti-douleur. Brûlures légères, stress, insomnie, piqûres d'insectes. L'HE la plus polyvalente et sûre.",
+        "tea_tree": "Anti-infectieux majeur (antibactérien, antiviral, antifongique). Boutons, mycoses, aphtes, infections cutanées. Melaleuca alternifolia.",
+        "menthe_poivree": "Antalgique (maux de tête), digestive (nausées), tonique mental. Application tempes (diluée). Mentha piperita. Interdite <6 ans.",
+        "eucalyptus_radie": "Décongestionnant respiratoire, antiviral. Rhume, sinusite, bronchite. Diffusion ou inhalation. Eucalyptus radiata (plus doux que globulus).",
+        "ravintsara": "Antiviral puissant, immunostimulant. Grippe, infections hivernales, fatigue. 2 gouttes sur les poignets matin et soir en prévention. Cinnamomum camphora CT cinéole.",
+        "helichryse_italienne": "Anti-hématome exceptionnel, cicatrisante. Bleus, coups, cicatrices. Chère mais remarquablement efficace. Application locale pure possible.",
+        "gaultherie": "Anti-inflammatoire et antalgique musculaire (riche en salicylate de méthyle). Tendinites, crampes, courbatures. Toujours diluée 10-20% dans huile végétale. Contre-indiquée si allergie aspirine."
+      },
+      "modes_utilisation": {
+        "diffusion": "Diffuseur ultrasonique ou nébulisation. 15-30 min maximum par heure. Pas en continu. Pas en présence d'animaux (chats très sensibles).",
+        "inhalation_seche": "1-2 gouttes sur un mouchoir ou un stick inhalateur. Rapide et efficace pour stress, nausées, congestion.",
+        "bain_aromatique": "5-8 gouttes mélangées dans du sel d'Epsom ou du lait entier AVANT de mettre dans le bain (les HE ne se mélangent pas à l'eau seules).",
+        "massage": "Huile de massage: 5-10 gouttes HE dans 10ml huile végétale. Chauffer entre les paumes avant application."
+      }
+    },
+    "complements_alimentaires": {
+      "magnesium": {
+        "formes": "Bisglycinate (meilleure biodisponibilité, pas d'effet laxatif), citrate (bon rapport qualité/prix, léger effet laxatif), malate (énergie, douleurs musculaires). Éviter oxyde (très mal absorbé).",
+        "dosage": "300-400mg de magnésium élémentaire par jour. Fractionner en 2 prises (matin et soir). Synergie avec vitamine B6 et taurine.",
+        "signes_carence": "Crampes, fatigue, irritabilité, paupière qui tremble, troubles du sommeil, anxiété, envies de chocolat."
+      },
+      "vitamine_d": {
+        "dosage": "1000-4000 UI/jour selon le taux sanguin (objectif: 40-60 ng/mL). Toujours avec vitamine K2 (MK-7) pour diriger le calcium vers les os et non les artères.",
+        "sources": "Soleil (15-20 min bras et jambes exposés, sans crème, en été entre 11h et 15h). Supplémentation quasi obligatoire en hiver sous nos latitudes."
+      },
+      "omega_3": {
+        "ratio_ideal": "EPA/DHA. EPA pour l'anti-inflammatoire, DHA pour le cerveau. Viser 1000-2000mg d'EPA+DHA combinés par jour.",
+        "qualite": "Indice TOTOX bas (<26), certifié IFOS ou Friend of the Sea. Conserver au réfrigérateur. Forme triglyceride > forme ethyl ester."
+      },
+      "probiotiques": {
+        "souches_cles": "Lactobacillus rhamnosus GG, L. acidophilus, Bifidobacterium longum, B. lactis, Saccharomyces boulardii (levure, diarrhée voyageur).",
+        "dosage": "10-50 milliards UFC/jour. Prendre à jeun ou en dehors des repas avec un verre d'eau (pas de boisson chaude). Cure de 1-3 mois.",
+        "prebiotiques": "Nourrir les bonnes bactéries: inuline, FOS, GOS. Sources alimentaires: ail, oignon, poireau, asperge, banane verte, topinambour."
+      },
+      "zinc": {
+        "dosage": "15-30mg/jour (bisglycinate ou picolinate). Renforce l'immunité, la peau, la fertilité. Ne pas dépasser 40mg/jour. Prendre loin du fer et du calcium.",
+        "sources_alimentaires": "Huîtres (champion absolu), viande rouge, graines de courge, noix de cajou."
+      }
+    },
+    "hydrotherapie": {
+      "douche_ecossaise": "Alterner eau chaude (2-3 min) et eau froide (30-60s), terminer par le froid. 3-5 cycles. Stimule la circulation, le système immunitaire, la vitalité. Progresser lentement (commencer pieds/jambes).",
+      "bain_hyperthermique": "Bain à 38-40°C pendant 20 minutes. Ajout de sel d'Epsom (300-500g), bicarbonate (100g), huiles essentielles. Favorise la détoxification, la relaxation musculaire et le sommeil.",
+      "enveloppement_froid": "Drap mouillé à l'eau froide essoré, envelopper le corps, se couvrir de couvertures chaudes. Le corps réchauffe le drap — sudation douce, stimulation immunitaire."
+    },
+    "reflexologie_acupression": {
+      "reflexologie_plantaire": {
+        "principe": "Les pieds contiennent des zones réflexes correspondant à tous les organes. Stimuler ces zones par pression rétablit l'équilibre énergétique.",
+        "zones_cles": {
+          "plexus_solaire": "Centre de la voûte plantaire. Calme le stress et l'anxiété. Presser et maintenir 30 secondes.",
+          "foie": "Sous le pied droit, zone médiane. Stimuler pour soutenir la détoxification.",
+          "intestins": "Centre du pied, zone large. Mouvements de chenille pour soutenir le transit."
+        }
+      },
+      "points_acupression": {
+        "LI4_hegu": "Entre pouce et index, dans le creux musculaire. Maux de tête, douleurs faciales, constipation, stress. Presser fermement 1-2 min. Contre-indiqué chez la femme enceinte.",
+        "PC6_neiguan": "3 travers de doigt au-dessus du pli du poignet, entre les tendons. Anti-nausée (mal des transports, grossesse), anxiété, palpitations.",
+        "ST36_zusanli": "4 travers de doigt sous la rotule, 1 doigt à l'extérieur du tibia. Tonique général, digestion, immunité, fatigue. Le point de longévité.",
+        "GV20_baihui": "Sommet du crâne, intersection des lignes oreille-oreille et nez-nuque. Clarté mentale, maux de tête, vertiges, insomnie."
+      }
+    },
+    "pharmacie_naturelle_maison": {
+      "indispensables": {
+        "huiles_essentielles": "Lavande vraie, tea tree, menthe poivrée, ravintsara, eucalyptus radié, hélichryse italienne.",
+        "plantes_sechees": "Thym, camomille, tilleul, menthe, ortie, gingembre séché.",
+        "complements_base": "Magnésium bisglycinate, vitamine D3+K2, vitamine C, zinc, probiotiques multi-souches.",
+        "divers": "Argile verte (cataplasmes), charbon végétal activé, gel d'aloe vera pur, miel de Manuka (>UMF 10+), propolis, teinture-mère d'échinacée, sel d'Epsom."
+      },
+      "trousse_urgence_naturelle": {
+        "brulure_legere": "Lavande vraie pure + aloe vera gel.",
+        "coupure": "Tea tree 1 goutte pure, puis miel de Manuka en pansement.",
+        "piqure_insecte": "Lavande aspic pure sur la piqûre. Vinaigre de cidre dilué.",
+        "coup_bleu": "Hélichryse italienne pure + arnica gel.",
+        "mal_de_gorge": "Gargarisme eau salée + propolis spray + tisane thym-miel.",
+        "nausee": "Menthe poivrée en inhalation sèche + point PC6. Gingembre frais à mâcher.",
+        "mal_de_tete": "Menthe poivrée diluée sur les tempes + magnésium + hydratation + point LI4."
+      }
+    }
+  }
+}
