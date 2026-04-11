@@ -95,10 +95,7 @@ describe('TWINS B — Context transfer: localStorage → envelope', () => {
     });
     const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     buildChatContextEnvelope(makeInput());
-    expect(spy).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.stringContaining('stale')
-    );
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.stringContaining('stale'));
     spy.mockRestore();
   });
 

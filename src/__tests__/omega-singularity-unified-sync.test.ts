@@ -903,10 +903,9 @@ describe('J — Knowledge Base Count Synchronization', () => {
   });
 
   it('J2: getAllEntries() count cohérent avec Rust (valeur exacte 158)', async () => {
-    const {
-      DEFAULT_KB_CANONICAL_ENTRY_COUNT,
-      getAllEntries,
-    } = await import('../services/api/defaultKnowledgeBase');    const entries = await getAllEntries();
+    const { DEFAULT_KB_CANONICAL_ENTRY_COUNT, getAllEntries } =
+      await import('../services/api/defaultKnowledgeBase');
+    const entries = await getAllEntries();
     expect(DEFAULT_KB_CANONICAL_ENTRY_COUNT).toBe(158);
     expect(entries.length).toBe(DEFAULT_KB_CANONICAL_ENTRY_COUNT);
   });
