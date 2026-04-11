@@ -180,12 +180,7 @@ const QuantumCenter = lazy(() =>
   }))
 );
 
-// ✨ IDENTITY CENTER - System Identity Engine v∞ (OPUS #15)
-const IdentityCenter = lazy(() =>
-  import('./components/IdentityCenter/IdentityCenter').then(m => ({
-    default: m.default,
-  }))
-);
+// ✨ TWINS — Fully unified (Identity + Twins + Persona → /titane?tab=twins)
 
 // ✨ MEMORY EVOLUTION - fusionné dans Transform (v30 fusion, lazy import conservé dans TransformationSection)
 
@@ -603,21 +598,13 @@ const AppRouter: React.FC = () => {
             }
           />
           <Route path="/quantum" element={<Navigate to="/quantum-center" replace />} />
-          {/* ✨ IDENTITY CENTER - System Identity Engine v∞ (OPUS #15) */}
-          <Route
-            path="/identity-center"
-            element={
-              <ErrorBoundary context="IdentityCenter">
-                <IdentityCenter />
-              </ErrorBoundary>
-            }
-          />
-          <Route path="/identity" element={<Navigate to="/identity-center" replace />} />
-          <Route path="/persona" element={<Navigate to="/identity-center" replace />} />
-          {/* ✨ TWINS — redirected to TITANE > Symbiose section (menu fusion v29.2) */}
-          <Route path="/twins" element={<Navigate to="/titane" replace />} />
-          <Route path="/twin" element={<Navigate to="/titane" replace />} />
-          {/* ✨ MEMORY EVOLUTION - fusionné dans Transform (v30 fusion) */}
+          {/* ✨ TWINS — Fully unified (Identity + Twins + Persona) */}
+          <Route path="/identity-center" element={<Navigate to="/titane?tab=twins" replace />} />
+          <Route path="/identity" element={<Navigate to="/titane?tab=twins" replace />} />
+          <Route path="/persona" element={<Navigate to="/titane?tab=twins" replace />} />
+          <Route path="/twins" element={<Navigate to="/titane?tab=twins" replace />} />
+          <Route path="/twin" element={<Navigate to="/titane?tab=twins" replace />} />
+          {/* ✨ MEMORY EVOLUTION - Memory Evolution Engine++ v∞ (OPUS #14) */}
           <Route
             path="/memory-evolution"
             element={<Navigate to="/titane?tab=transformation" replace />}

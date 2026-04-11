@@ -917,10 +917,10 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               onKeyDown={e => {
                 if (e.key === 'ArrowRight') {
                   e.preventDefault();
-                  setActiveTab(SECTION_TABS[(index + 1) % SECTION_TABS.length].id);
+                  setActiveTab(SECTION_TABS[(index + 1) % SECTION_TABS.length]!.id);
                 } else if (e.key === 'ArrowLeft') {
                   e.preventDefault();
-                  setActiveTab(SECTION_TABS[(index - 1 + SECTION_TABS.length) % SECTION_TABS.length].id);
+                  setActiveTab(SECTION_TABS[(index - 1 + SECTION_TABS.length) % SECTION_TABS.length]!.id);
                 }
               }}
               style={{

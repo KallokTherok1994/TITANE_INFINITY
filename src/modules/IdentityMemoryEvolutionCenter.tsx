@@ -1,9 +1,9 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v30.0.0 — IDENTITY & MEMORY EVOLUTION CENTER
+ * TITANE∞ v30.0.0 — TWINS & MEMORY EVOLUTION CENTER
  *
  * Centre unifié fusionnant 4 modules:
- * - Identité Système (matrice identitaire, valeurs, rôles)
+ * - TWINS (jumeau numérique, matrice identitaire, valeurs, rôles)
  * - Mémoire (court/moyen/long terme, architecture)
  * - Mémoire Évolutive (réorganisation, apprentissage)
  * - Évolution Cognitive (transformation long terme)
@@ -17,17 +17,17 @@ import React, { useState } from 'react';
 import { TBadge, TMetric, TSectionHeader } from '../design-system';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 
-type Tab = 'identity' | 'memory-map' | 'memory-evolution' | 'cognitive-evolution';
+type Tab = 'twins' | 'memory-map' | 'memory-evolution' | 'cognitive-evolution';
 
 const IdentityMemoryEvolutionCenter: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<Tab>('identity');
+  const [activeTab, setActiveTab] = useState<Tab>('twins');
 
   return (
     <div className="identity-memory-evolution-center p-6 space-y-6">
       {/* Header */}
       <div className="header mb-8">
         <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-cyan-600 bg-clip-text text-transparent">
-          🧠 Identity & Memory Evolution Center
+          🧠 TWINS & Memory Evolution Center
         </h1>
         <p className="text-gray-400">
           Le noyau intérieur du double numérique — Qui je suis, ce que je garde, comment
@@ -39,9 +39,9 @@ const IdentityMemoryEvolutionCenter: React.FC = () => {
       <div className="tabs flex gap-2 border-b border-gray-700 pb-4 overflow-x-auto">
         {[
           {
-            id: 'identity',
-            label: '🎯 Identité Système',
-            desc: 'Fondation - Qui je suis',
+            id: 'twins',
+            label: '🧬 TWINS',
+            desc: 'Fondation - Jumeau numérique',
           },
           { id: 'memory-map', label: '🗺️ Carte Mémoire', desc: 'Architecture actuelle' },
           {
@@ -74,7 +74,7 @@ const IdentityMemoryEvolutionCenter: React.FC = () => {
 
       {/* Content */}
       <div className="content">
-        {activeTab === 'identity' && <IdentitySection />}
+        {activeTab === 'twins' && <ModuleTwinsSection />}
         {activeTab === 'memory-map' && <MemoryMapSection />}
         {activeTab === 'memory-evolution' && <MemoryEvolutionSection />}
         {activeTab === 'cognitive-evolution' && <CognitiveEvolutionSection />}
@@ -84,15 +84,15 @@ const IdentityMemoryEvolutionCenter: React.FC = () => {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
-// SECTION 1: Identité Système (fondation)
+// SECTION 1: TWINS — Jumeau Numérique (fondation)
 // ═══════════════════════════════════════════════════════════════════════════
 
-const IdentitySection: React.FC = () => {
+const ModuleTwinsSection: React.FC = () => {
   return (
     <div className="space-y-6">
       <TSectionHeader
-        title="Identité Système"
-        subtitle="Matrice identitaire, valeurs, rôles, modes de fonctionnement"
+        title="TWINS — Jumeau Numérique"
+        subtitle="Matrice identitaire, valeurs, rôles, modes de fonctionnement — Synchronisé avec Kevin"
       />
 
       {/* Matrice Identitaire */}

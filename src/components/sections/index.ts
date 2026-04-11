@@ -4,6 +4,7 @@
  *
  * Section Components Index
  * Centralized exports for all extracted TitanePage sections
+ * Identity + Twins fully unified into TwinsSection (v30 fusion 100%)
  */
 
 export { ConversationSection } from './ConversationSection';
@@ -15,7 +16,9 @@ export { VisionSection } from './VisionSection';
 export { OverviewSection } from './OverviewSection';
 export type { TitaneStats } from './OverviewSection';
 
-export { IdentitySection } from './IdentitySection';
+// ═══ TWINS — Fusion 100% Twins + Persona (Identity page supprimée) ═══
+export { TwinsSection } from './TwinsSection';
+
 export { MemorySection } from './MemorySection';
 export { ProgressionSection } from './ProgressionSection';
 export { TransformationSection } from './TransformationSection';
