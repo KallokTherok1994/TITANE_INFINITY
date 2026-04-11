@@ -224,3 +224,41 @@ export {
   useEnableVision,
   useDisableVision,
 } from './useVisionStore.selectors';
+
+// ═══════════════════════════════════════════════════════════════
+// v30.1.0 UNIFIED STORES
+// ═══════════════════════════════════════════════════════════════
+
+// Unified Visual Store (consolide visualStore + visualStateStore + visualStateStoreV21)
+export {
+  useVisualStore as useUnifiedVisual,
+  useVisualStateStore as useUnifiedVisualStateLegacy,
+  useVisualStateStoreV21 as useUnifiedVisualStateV21,
+} from './unifiedVisualStore';
+
+// Unified Visual Store Selectors
+export {
+  useVisualCurrentState,
+  useVisualIsTransitioning,
+  useVisualTransitionDuration,
+  useVisualIsRunning,
+  useVisualIsInitialized,
+  useVisualIsPaused,
+  useVisualMetricsSelector,
+  useVisualFPSSelector,
+  useVisualGPULoadSelector,
+  useVisualThrottleActive,
+  useVisualPreviousState,
+  useVisualStateHistory,
+  useVisualConfig,
+  useVisualActionsSelector,
+  useVisualEngineV21,
+  useVisualTitaneState,
+  useVisualCognitiveState,
+  useVisualEmotionalTone,
+  useVisualSystemLoad,
+  useVisualCurrentConfig,
+  useVisualIsTransitioningV21,
+  useVisualPerformanceMetrics,
+  useVisualFPSV21,
+} from './unifiedVisualStore.selectors';
