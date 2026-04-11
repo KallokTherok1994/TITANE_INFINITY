@@ -271,7 +271,7 @@ export async function getAllEntries(): Promise<KnowledgeBaseEntry[]> {
   if (_allEntriesCache) return _allEntriesCache;
   // Guard: if a load is already in flight, wait for it instead of issuing a second IPC call
   if (_allEntriesLoadingPromise) return _allEntriesLoadingPromise;
-  _allEntriesLoadingPromise = (async () => {
+  _allEntriesLoadingPromise = (async (): Promise<KnowledgeBaseEntry[]> => {
     let ipcSucceeded = false;
     try {
       const raw = await invokeWithRetry<string>(
@@ -292,6 +292,11 @@ export async function getAllEntries(): Promise<KnowledgeBaseEntry[]> {
     // Only use local fallback when IPC failed (not when backend explicitly returned empty)
     if (!ipcSucceeded && (!_allEntriesCache || _allEntriesCache.length === 0)) {
       _allEntriesCache = getFallbackEntries();
+    }
+
+    // Ensure we always return a non-null array
+    if (!_allEntriesCache) {
+      _allEntriesCache = [];
     }
 
     if (!_categoriesCache) {
