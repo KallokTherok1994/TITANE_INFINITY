@@ -13,6 +13,9 @@
 
 import championChallengerRegistry from '../../../config/championChallenger.json';
 import type { CanonicalMode } from './omegaModeClassifier';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('ChampionChallenger');
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES
@@ -132,12 +135,12 @@ export function recordComparison(result: ComparisonResult): void {
   if (!registry.comparison.log_divergence) return;
 
   if (result.divergence) {
-    console.warn(
-      `[ChampionChallenger] DIVERGENCE mode=${result.mode} ` +
-        `champion=${result.champion.provider}/${result.champion.model} ` +
-        `challenger=${result.challenger.provider}/${result.challenger.model} ` +
-        `detail=${result.divergence_detail ?? 'none'}`
-    );
+    logger.warn('DIVERGENCE detected', {
+      mode: result.mode,
+      champion: `${result.champion.provider}/${result.champion.model}`,
+      challenger: `${result.challenger.provider}/${result.challenger.model}`,
+      detail: result.divergence_detail ?? 'none',
+    });
   }
 }
 

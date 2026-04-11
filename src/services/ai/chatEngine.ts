@@ -975,6 +975,8 @@ Format: [Audit complet] + [Réponse utilisateur]
       // Use kernel's temperature and maxTokens
       orchestratorConfig.temperature = canonicalDecision.provider.temperature;
       orchestratorConfig.maxTokens = canonicalDecision.provider.maxTokens;
+      // v30: Pass canonicalMode so orchestrator can honor champion scoring (OLLAMA CHAMPION)
+      orchestratorConfig.canonicalMode = canonicalDecision.mode;
 
       const response = await this.withTimeout(
         aiOrchestrator.generate(validatedMessage, enrichedHistory, orchestratorConfig),

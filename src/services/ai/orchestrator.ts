@@ -43,6 +43,7 @@ import {
   AVAILABILITY_CACHE,
   REQUEST_BUDGETS,
 } from '@/config/aiTimeouts.config'; // ← v22Ω: Centralized timeouts
+import { getChampion } from './championChallenger'; // ← OMEGA Champion/Challenger
 
 const logger = createLogger('Orchestrator');
 
@@ -624,7 +625,8 @@ class AIOrchestrator {
   private async selectOptimalProvider(
     message: string,
     history: AIMessage[],
-    preferredProvider?: ProviderChoice
+    preferredProvider?: ProviderChoice,
+    canonicalMode?: string
   ): Promise<NeuralSelection> {
     // ✨ v21: Force specific provider from trusted config (UI/tests), not from user message content.
     // Mapping: 'local' means "local LLM" (Ollama), while 'titane-local' remains the ultimate fallback.
@@ -765,20 +767,31 @@ class AIOrchestrator {
           score -= contextLength > 10000 ? 10 : 0;
           break;
 
-        case 'ollama':
-          // #5: Ollama = CLOUD FIRST (local fallback only)
-          // Mode auto: Score bas (~30) pour fallback après clouds
-          // Mode local: Boost +200 pour forcer Ollama exclusivement
+        case 'ollama': {
+          // #5: Ollama — CHAMPION MODE AWARE
+          // Mode local forcé: Score très haut pour Ollama exclusif
+          // Mode champion (per registry): Score élevé pour priorité champion
+          // Mode auto sans champion: Score modéré comme fallback local
           if (preferredProvider === 'local') {
             score += 200; // Mode local forcé
             logger.debug('   🏠 LOCAL MODE FORCÉ: Ollama exclusif');
+          } else if (canonicalMode) {
+            const champion = getChampion(canonicalMode as Parameters<typeof getChampion>[0]);
+            if (champion?.provider === 'ollama') {
+              score += 120; // 🏆 OLLAMA CHAMPION: priorité maximale pour ce mode
+              logger.debug(`   🏆 OLLAMA CHAMPION: mode=${canonicalMode} boost=+120`);
+            } else {
+              score += 30; // Score modéré si non-champion pour ce mode
+              logger.debug('   🏠 AUTO MODE: Ollama non-champion (fallback local)');
+            }
           } else {
-            score += 30; // Score bas en mode auto = fallback après clouds
-            logger.debug('   🏠 AUTO MODE: Ollama fallback local (après clouds)');
+            score += 30; // Score de base sans info de mode
+            logger.debug('   🏠 AUTO MODE: Ollama fallback local (pas de canonicalMode)');
           }
           score += messageLength < 500 ? 10 : 0; // Bonus messages courts
           score += !requiresRealtime ? 5 : 0; // Légèrement bon si async OK
           break;
+        }
 
         case 'titane-local':
           // #6: Fallback ultime (noyau infaillible)
@@ -983,11 +996,14 @@ class AIOrchestrator {
 
       // Sélection neurale standard (avec préférence optionnelle)
       const preferredProvider = config?.preferredProvider;
+      // v30: Extract canonicalMode from config for OLLAMA CHAMPION scoring
+      const canonicalModeFromConfig = (config as Record<string, unknown>)?.canonicalMode as string | undefined;
       const routerStartTime = Date.now();
       const selection = await this.selectOptimalProvider(
         sanitized,
         history,
-        preferredProvider
+        preferredProvider,
+        canonicalModeFromConfig
       );
 
       // ═══ PROVIDER TRUTH CHAIN: Single Canonical Authority ═══
@@ -1701,7 +1717,8 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     const selection = await this.selectOptimalProvider(
       sanitized,
       history,
-      preferredProvider
+      preferredProvider,
+      undefined // canonicalMode not available in stream() public API — kernel chose provider via preferredProvider
     );
     const providersToTry = [selection.selectedProvider, 'titane-local']; // Minimal pour streaming
 

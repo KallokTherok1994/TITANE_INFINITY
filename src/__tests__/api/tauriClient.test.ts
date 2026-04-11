@@ -116,6 +116,12 @@ describe('tauriClient', () => {
   it('isTauriAvailable() devrait détecter la présence de __TAURI_INTERNALS__', async () => {
     const { isTauriAvailable } = await import('../../api/tauriClient');
 
+    // Temporarily remove global __TAURI__ set by test setup to test __TAURI_INTERNALS__ detection
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- test setup cleanup
+    const savedTauri = (window as any).__TAURI__;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- test setup cleanup
+    delete (window as any).__TAURI__;
+
     expect(isTauriAvailable()).toBe(false);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- test de feature detection
@@ -125,5 +131,8 @@ describe('tauriClient', () => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- cleanup
     delete (window as any).__TAURI_INTERNALS__;
+    // Restore original test setup state
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- restore
+    (window as any).__TAURI__ = savedTauri;
   });
 });
