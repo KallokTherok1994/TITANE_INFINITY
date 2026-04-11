@@ -13,6 +13,10 @@ Index de navigation unique Search/Tracking/Vision.
 5. `docs/MAP_MERMAID_OVERVIEW.md`
 6. `reports/MAP_PROOFS.log`
 
+## Cartographie consolidée (executive)
+
+- `docs/CARTOGRAPHY_TITANE_INFINITY.md` — cartographie ultra-complète MAIN (4-Ring + IPC One Door + contrat canonique + commandes Rust + services/moteurs + gates)
+
 ## Convention de mapping
 
 Chaque entrée contient :
