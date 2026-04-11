@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — Self-Awareness Knowledge Module
+ * TITANE∞ v30.1.0 — Self-Awareness Knowledge Module
  *
  * This module allows TITANE to be aware of its own architecture,
  * capabilities, and internal structure. It loads the architecture

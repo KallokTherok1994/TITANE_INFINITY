@@ -1,5 +1,5 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "developpement_jeux_unity",
   "description": "Développement de jeux Unity et game design — Unity 3D/2D complet (composants, physique, scripts C#, animations, UI Canvas, Cinemachine, shaders, Asset Store, Unity Cloud), Unreal Engine (Blueprints, C++, Nanite, Lumen), Godot (GDScript, open-source), design de jeu (game design document, niveaux, mécanique, économie de jeu), publishing (Google Play, App Store, Steam, itch.io), optimisation de performance jeu",
   "developpement_jeux_unity": {

@@ -1,5 +1,5 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "learning_prompts",
   "description": "Prompts d'apprentissage, templates de réponse, exemples few-shot et patterns conversationnels TITANE∞",
   "identity_grounding": {

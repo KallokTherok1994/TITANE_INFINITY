@@ -1,5 +1,5 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "seo_referencement",
   "description": "SEO et référencement naturel — fondamentaux (comment fonctionnent les moteurs de recherche/crawl/indexation/ranking), SEO on-page (balises/contenu/structure/mots-clés/NLP), SEO off-page (netlinking/backlinks/autorité de domaine/E-E-A-T), SEO technique (Core Web Vitals/vitesse/mobile-first/structured data/XML sitemap/robots.txt/canonicalisation), recherche de mots-clés (outils/intention de recherche), SEO local (Google Business Profile), mesure et outils (GSC/Semrush/Ahrefs/Screaming Frog)",
   "seo_referencement": {

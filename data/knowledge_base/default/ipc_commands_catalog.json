@@ -1,5 +1,5 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "ipc_commands_catalog",
   "description": "Catalogue des commandes IPC Tauri disponibles (1231+ commandes). Contract: { ok, content, error }",
   "contract": "{ ok: bool, content: T, error: Option<String> }",

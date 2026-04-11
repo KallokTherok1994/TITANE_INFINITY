@@ -1,5 +1,5 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "finance_entreprise",
   "description": "Finance d'entreprise — comptabilité générale (bilan actif/passif, compte de résultat, soldes intermédiaires de gestion), analyse financière (ratios liquidité/solvabilité/rentabilité/rotation), gestion de trésorerie (plan de trésorerie, BFR, cash conversion cycle), financement (capital, dette, business angels, VC, crowdfunding, BPI, prêt bancaire), évaluation d'entreprise (méthodes DCF/multiples/actif net), fiscalité des entreprises (IS, TVA, cotisations sociales, régimes)",
   "finance_entreprise": {

@@ -1,5 +1,5 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "developpement_web",
   "description": "Développement web — fondamentaux (HTML5/CSS3/JavaScript ES2024), frameworks front-end (React/Vue/Svelte/Next.js/Nuxt), CSS avancé (Flexbox/Grid/Tailwind/animations), développement back-end (Node.js/Python FastAPI/PHP Laravel/bases de données SQL/NoSQL), APIs REST et GraphQL, hébergement et déploiement (Vercel/Netlify/VPS/Docker/CI-CD), performance web, accessibilité (WCAG), sécurité web (OWASP Top 10), développement mobile (React Native/Flutter/PWA)",
   "developpement_web": {

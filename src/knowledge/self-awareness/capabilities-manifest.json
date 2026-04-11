@@ -1,7 +1,7 @@
 {
   "meta": {
-    "id": "titane-capabilities-v30.0.0",
-    "version": "30.0.0",
+    "id": "titane-capabilities-v30.1.0",
+    "version": "30.1.0",
     "generated_at": "2026-04-11T20:58:48Z",
     "purpose": "Capability inventory — TITANE knows what it can do"
   },

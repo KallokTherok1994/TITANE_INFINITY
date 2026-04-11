@@ -1,7 +1,7 @@
 {
   "deployment": {
     "timestamp": "2026-04-11 16:26:52 UTC",
-    "version": "30.0.0",
+    "version": "30.1.0",
     "commit": "93b180224a852d7985baa57a39d411d637973938",
     "branch": "MAIN",
     "certification": "TITANE_INFINITY_RELEASE_20260411_122652_CERTIFIED",

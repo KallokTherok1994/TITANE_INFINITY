@@ -1,5 +1,5 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "ecommerce_fondamentaux",
   "description": "E-commerce fondamentaux — modèles de business (B2C/B2B/C2C/D2C/dropshipping/abonnement), plateformes (Shopify/WooCommerce/PrestaShop/Magento/Amazon/Etsy), UX et optimisation de la conversion (tunnel d'achat, checkout, CRO), logistique et fulfillment (stock propre vs 3PL vs dropshipping), marketing e-commerce (acquisition, rétention, email/SMS marketing, retargeting), marketplace strategy, métriques clés (AOV/LTV/CAC/taux de conversion/panier abandonné)",
   "ecommerce_fondamentaux": {

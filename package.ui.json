@@ -1,7 +1,7 @@
 {
   "name": "@titane-infinity/ui",
-  "version": "30.0.0",
-  "description": "TITANE∞ v30.0.0 - Interface UI/UX Premium",
+  "version": "30.1.0",
+  "description": "TITANE∞ v30.1.0 - Interface UI/UX Premium",
   "private": true,
   "type": "module",
   "scripts": {

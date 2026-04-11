@@ -1,9 +1,9 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "memory_system_deep",
   "description": "Système mémoire TITANE∞ en profondeur: Memory OS, STM/MTM/LTM, embeddings HNSW, semantic search, vector store",
   "memory_os": {
-    "description": "Système d'exploitation mémoriel unifié v30.0.0. Orchestrateur de toutes les couches mémoire.",
+    "description": "Système d'exploitation mémoriel unifié v30.1.0. Orchestrateur de toutes les couches mémoire.",
     "path": "src-tauri/src/memory_os/",
     "modules": [
       "stm",
@@ -131,7 +131,7 @@
       "benefit": "Évite les I/O disque pour les clés inexistantes (~95% des requêtes)"
     },
     "persistent_memory_v30": {
-      "description": "PersistentMemoryState v30.0.0Ω — mémoire persistante haute disponibilité",
+      "description": "PersistentMemoryState v30.1.0Ω — mémoire persistante haute disponibilité",
       "ipc_commands": [
         "persistent_memory_read",
         "persistent_memory_get_stats",
