@@ -32,6 +32,9 @@ import {
   type MemoryTreeNodeData,
 } from '@/features/memory/memoryTreeData';
 import { dedupeMemoryEntries } from '@/features/memory/dedupeMemoryEntries';
+import {
+  MEMORY_TOPIC_LABELS,
+} from '@/services/memory/persistentMemory.config';
 import type {
   MemoryBundle,
   MemoryEntry,
@@ -44,6 +47,15 @@ import type { KnowledgeEntry as RuntimeKnowledgeEntry } from '@/services/memory/
 const pageLogger = createLogger('MemorySection');
 const MEMORY_SECTION_MODE = 'admin' as const;
 const noopAsync = async () => undefined;
+
+type MemorySectionTab = 'overview' | 'dashboard' | 'tree' | 'search';
+
+const SECTION_TABS: { id: MemorySectionTab; label: string; icon: string }[] = [
+  { id: 'overview', label: 'Vue d\'ensemble', icon: '📊' },
+  { id: 'dashboard', label: 'Dashboard', icon: '📚' },
+  { id: 'tree', label: 'Arbre', icon: '🌳' },
+  { id: 'search', label: 'Recherche', icon: '🔍' },
+];
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -353,6 +365,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
     const [showAllKnowledge, setShowAllKnowledge] = useState(false);
     const [surfaceSyncTimestamp, setSurfaceSyncTimestamp] = useState<number | null>(null);
     const [isSurfaceSyncing, setIsSurfaceSyncing] = useState(false);
+    const [activeTab, setActiveTab] = useState<MemorySectionTab>('overview');
+    const [knowledgeSearch, setKnowledgeSearch] = useState('');
+    const [knowledgeTopicFilter, setKnowledgeTopicFilter] = useState<MemoryTopic | 'all'>('all');
     const isMountedRef = useRef(true);
     const hasObservedPersistentUpdateRef = useRef(false);
     const vaultReadyRef = useRef(false);
@@ -717,10 +732,38 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
         e.metadata.accessCount > 0 ? Math.min(e.metadata.accessCount / 10, 1) : undefined,
     }));
 
+    const filteredKnowledgeEntries = useMemo(() => {
+      let result = knowledgeEntries;
+
+      if (knowledgeTopicFilter !== 'all') {
+        result = result.filter(e => e.topic === knowledgeTopicFilter);
+      }
+
+      if (knowledgeSearch.trim()) {
+        const query = knowledgeSearch.toLowerCase();
+        result = result.filter(
+          e =>
+            e.content.toLowerCase().includes(query) ||
+            e.tags.some(t => t.toLowerCase().includes(query)) ||
+            ('title' in e && e.title?.toLowerCase().includes(query))
+        );
+      }
+
+      return result;
+    }, [knowledgeEntries, knowledgeTopicFilter, knowledgeSearch]);
+
     const visibleKnowledgeEntries = useMemo(
-      () => (showAllKnowledge ? knowledgeEntries : knowledgeEntries.slice(0, 18)),
-      [knowledgeEntries, showAllKnowledge]
+      () => (showAllKnowledge ? filteredKnowledgeEntries : filteredKnowledgeEntries.slice(0, 24)),
+      [filteredKnowledgeEntries, showAllKnowledge]
     );
+
+    const knowledgeTopicCounts = useMemo(() => {
+      const counts: Record<string, number> = {};
+      for (const entry of knowledgeEntries) {
+        counts[entry.topic] = (counts[entry.topic] ?? 0) + 1;
+      }
+      return counts;
+    }, [knowledgeEntries]);
 
     const lastSurfaceSyncLabel = useMemo(() => {
       const timestamp = surfaceSyncTimestamp ?? persistentMemoryLastUpdate;
@@ -836,7 +879,47 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
           subtitle="Architecture court/moyen/long terme avec visualisation hiérarchique"
         />
 
-        {/* Stats Cards */}
+        {/* Section Navigation Tabs */}
+        <div
+          style={{
+            display: 'flex',
+            gap: spacing[2],
+            marginBottom: spacing[6],
+            padding: `${spacing[1]} ${spacing[2]}`,
+            borderRadius: '12px',
+            background: 'rgba(30, 30, 40, 0.4)',
+            flexWrap: 'wrap',
+          }}
+          role="tablist"
+          aria-label="Navigation mémoire"
+        >
+          {SECTION_TABS.map(tab => (
+            <button
+              key={tab.id}
+              type="button"
+              role="tab"
+              aria-selected={activeTab === tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              style={{
+                padding: `${spacing[2]} ${spacing[4]}`,
+                borderRadius: '8px',
+                border: 'none',
+                background: activeTab === tab.id
+                  ? 'rgba(59, 130, 246, 0.2)'
+                  : 'transparent',
+                color: activeTab === tab.id ? '#60a5fa' : colors.neutral[400],
+                cursor: 'pointer',
+                fontSize: fontSizes.sm,
+                fontWeight: activeTab === tab.id ? 600 : 400,
+                transition: 'all 0.2s ease',
+              }}
+            >
+              {tab.icon} {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Stats Cards — always visible */}
         <Grid columns={3} gap={4}>
           <Card>
             <h3 style={{ marginBottom: spacing[4] }}>Court Terme</h3>
@@ -917,7 +1000,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
           </Card>
         </Grid>
 
-        {(isBootstrappingPersistentMemory || isBootstrappingKnowledgeSurface) && (
+        {(activeTab === 'overview') && (isBootstrappingPersistentMemory || isBootstrappingKnowledgeSurface) && (
           <Card
             style={{
               marginTop: spacing[6],
@@ -934,7 +1017,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
           </Card>
         )}
 
-        {!isBootstrappingPersistentMemory &&
+        {(activeTab === 'overview') && !isBootstrappingPersistentMemory &&
           !isBootstrappingKnowledgeSurface &&
           !hasPersistentMemory && (
             <Card
@@ -965,7 +1048,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
             </Card>
           )}
 
-        {knowledgeLoadWarning && (
+        {(activeTab === 'overview') && knowledgeLoadWarning && (
           <Card
             style={{
               marginTop: spacing[6],
@@ -984,7 +1067,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
           </Card>
         )}
 
-        {recentChatMemoryEntries.length > 0 && (
+        {(activeTab === 'overview') && recentChatMemoryEntries.length > 0 && (
           <div style={{ marginTop: spacing[6] }}>
             <Card>
               <h3 style={{ marginBottom: spacing[2] }}>
@@ -1041,7 +1124,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
           </div>
         )}
 
-        {consolidatedMemoryEntries.length > 0 && (
+        {(activeTab === 'overview') && consolidatedMemoryEntries.length > 0 && (
           <div style={{ marginTop: spacing[6] }}>
             <Card>
               <h3 style={{ marginBottom: spacing[2] }}>
@@ -1121,7 +1204,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
           </div>
         )}
 
-        {knowledgeEntries.length > 0 && (
+        {(activeTab === 'overview') && knowledgeEntries.length > 0 && (
           <div style={{ marginTop: spacing[6] }}>
             <Card>
               <h3 style={{ marginBottom: spacing[2] }}>
@@ -1153,39 +1236,167 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                   mémoire cohérente et réelle.
                 </p>
               )}
+
+              {/* Knowledge search + topic filter */}
+              <div
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: spacing[2],
+                  marginTop: spacing[4],
+                  alignItems: 'center',
+                }}
+              >
+                <input
+                  type="text"
+                  value={knowledgeSearch}
+                  onChange={e => setKnowledgeSearch(e.target.value)}
+                  placeholder="🔍 Rechercher une connaissance…"
+                  data-testid="knowledge-search-input"
+                  style={{
+                    flex: '1 1 200px',
+                    padding: `${spacing[2]} ${spacing[3]}`,
+                    borderRadius: '8px',
+                    border: `1px solid ${colors.neutral[500]}`,
+                    background: 'rgba(0,0,0,0.2)',
+                    color: colors.neutral[300],
+                    fontSize: fontSizes.sm,
+                  }}
+                />
+                <select
+                  value={knowledgeTopicFilter}
+                  onChange={e => setKnowledgeTopicFilter(e.target.value as MemoryTopic | 'all')}
+                  data-testid="knowledge-topic-filter"
+                  style={{
+                    padding: `${spacing[2]} ${spacing[3]}`,
+                    borderRadius: '8px',
+                    border: `1px solid ${colors.neutral[500]}`,
+                    background: 'rgba(0,0,0,0.2)',
+                    color: colors.neutral[300],
+                    fontSize: fontSizes.sm,
+                  }}
+                >
+                  <option value="all">Tous les sujets ({knowledgeEntries.length})</option>
+                  {Object.entries(knowledgeTopicCounts).map(([topic, count]) => {
+                    const topicConfig = MEMORY_TOPIC_LABELS[topic as MemoryTopic];
+                    const label = topicConfig
+                      ? `${topicConfig.icon} ${topicConfig.label}`
+                      : topic;
+                    return (
+                      <option key={topic} value={topic}>
+                        {label} ({count})
+                      </option>
+                    );
+                  })}
+                </select>
+                {filteredKnowledgeEntries.length !== knowledgeEntries.length && (
+                  <span
+                    style={{
+                      fontSize: fontSizes.sm,
+                      color: colors.neutral[400],
+                    }}
+                  >
+                    {filteredKnowledgeEntries.length} / {knowledgeEntries.length} affiché{filteredKnowledgeEntries.length > 1 ? 's' : ''}
+                  </span>
+                )}
+              </div>
+
+              {/* Knowledge entry cards */}
               <div
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
                   gap: spacing[3],
                   marginTop: spacing[4],
                 }}
               >
-                {visibleKnowledgeEntries.map(entry => (
-                  <button
-                    key={entry.id}
-                    type="button"
-                    onClick={() => selectPersistentEntry(entry)}
-                    style={{
-                      textAlign: 'left',
-                      padding: spacing[3],
-                      borderRadius: '10px',
-                      border: `1px solid ${colors.neutral[500]}`,
-                      background: 'transparent',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    <strong style={{ color: colors.neutral[400], display: 'block' }}>
-                      {'title' in entry ? entry.title : entry.id}
-                    </strong>
-                    <span style={{ color: colors.neutral[500], fontSize: fontSizes.sm }}>
-                      {entry.content.slice(0, 140)}
-                      {entry.content.length > 140 ? '…' : ''}
-                    </span>
-                  </button>
-                ))}
+                {visibleKnowledgeEntries.map(entry => {
+                  const topicConfig = MEMORY_TOPIC_LABELS[entry.topic];
+                  return (
+                    <button
+                      key={entry.id}
+                      type="button"
+                      onClick={() => selectPersistentEntry(entry)}
+                      style={{
+                        textAlign: 'left',
+                        padding: spacing[3],
+                        borderRadius: '10px',
+                        border: `1px solid ${colors.neutral[500]}`,
+                        background: 'transparent',
+                        cursor: 'pointer',
+                        transition: 'border-color 0.2s ease, background 0.2s ease',
+                      }}
+                    >
+                      {/* Title */}
+                      <strong style={{ color: colors.neutral[300], display: 'block', marginBottom: spacing[1] }}>
+                        {'title' in entry ? entry.title : entry.id}
+                      </strong>
+                      {/* Topic badge + Importance */}
+                      <div style={{ display: 'flex', gap: spacing[1], alignItems: 'center', marginBottom: spacing[2], flexWrap: 'wrap' }}>
+                        {topicConfig && (
+                          <span
+                            style={{
+                              fontSize: fontSizes.xs,
+                              padding: `1px ${spacing[2]}`,
+                              borderRadius: '9999px',
+                              background: 'rgba(100, 100, 120, 0.3)',
+                              color: colors.neutral[400],
+                            }}
+                          >
+                            {topicConfig.icon} {topicConfig.label}
+                          </span>
+                        )}
+                        <span
+                          style={{
+                            fontSize: fontSizes.xs,
+                            color: colors.neutral[500],
+                          }}
+                        >
+                          {'★'.repeat(entry.importance)}{'☆'.repeat(Math.max(0, 5 - entry.importance))}
+                        </span>
+                      </div>
+                      {/* Content preview */}
+                      <span style={{ color: colors.neutral[500], fontSize: fontSizes.sm, display: 'block' }}>
+                        {entry.content.slice(0, 160)}
+                        {entry.content.length > 160 ? '…' : ''}
+                      </span>
+                      {/* Tags */}
+                      {entry.tags.length > 0 && (
+                        <div style={{ display: 'flex', gap: spacing[1], flexWrap: 'wrap', marginTop: spacing[2] }}>
+                          {entry.tags.slice(0, 3).map(tag => (
+                            <span
+                              key={tag}
+                              style={{
+                                fontSize: '10px',
+                                padding: `0 ${spacing[1]}`,
+                                borderRadius: '4px',
+                                background: 'rgba(60, 60, 80, 0.4)',
+                                color: colors.neutral[500],
+                              }}
+                            >
+                              #{tag}
+                            </span>
+                          ))}
+                          {entry.tags.length > 3 && (
+                            <span style={{ fontSize: '10px', color: colors.neutral[600] }}>
+                              +{entry.tags.length - 3}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
-              {knowledgeEntries.length > 18 && (
+
+              {/* No results from filter */}
+              {filteredKnowledgeEntries.length === 0 && knowledgeEntries.length > 0 && (
+                <p style={{ fontSize: fontSizes.sm, color: colors.neutral[500], marginTop: spacing[4], textAlign: 'center' }}>
+                  Aucune connaissance ne correspond aux filtres actifs. Essayez d&apos;ajuster la recherche ou le sujet.
+                </p>
+              )}
+
+              {filteredKnowledgeEntries.length > 24 && (
                 <button
                   type="button"
                   onClick={() => setShowAllKnowledge(value => !value)}
@@ -1201,13 +1412,14 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                 >
                   {showAllKnowledge
                     ? 'Réduire la liste des connaissances visibles'
-                    : `Afficher toutes les connaissances (${knowledgeEntries.length})`}
+                    : `Afficher toutes les connaissances (${filteredKnowledgeEntries.length})`}
                 </button>
               )}
             </Card>
           </div>
         )}
 
+        {(activeTab === 'overview' || activeTab === 'dashboard') && (
         <div style={{ marginTop: spacing[6] }}>
           <Card>
             <h3 style={{ marginBottom: spacing[4] }}>📚 Dashboard Mémoire</h3>
@@ -1230,8 +1442,10 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
             </React.Suspense>
           </Card>
         </div>
+        )}
 
         {/* Memory Tree Visualization */}
+        {(activeTab === 'overview' || activeTab === 'tree') && (
         <div style={{ marginTop: spacing[6] }}>
           <h3 style={{ marginBottom: spacing[4] }}>🌳 Arbre de la Mémoire</h3>
           <React.Suspense
@@ -1283,8 +1497,10 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
             </Card>
           )}
         </div>
+        )}
 
         {/* Memory Search */}
+        {(activeTab === 'overview' || activeTab === 'search') && (
         <div style={{ marginTop: spacing[6] }}>
           <h3 style={{ marginBottom: spacing[4] }}>🔍 Recherche Sémantique</h3>
           <React.Suspense
@@ -1306,6 +1522,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
             />
           </React.Suspense>
         </div>
+        )}
       </div>
     );
   }

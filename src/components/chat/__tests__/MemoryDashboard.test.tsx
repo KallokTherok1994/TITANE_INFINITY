@@ -46,6 +46,7 @@ describe('MemoryDashboard', () => {
     expect(filters[0]).toBeDisabled();
     expect(filters[1]).toBeDisabled();
     expect(filters[2]).toBeDisabled();
+    expect(filters[3]).toBeDisabled();
   });
 
   it('distinguishes filtered-empty results from truly empty persistent memory', () => {
