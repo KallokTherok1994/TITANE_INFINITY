@@ -2,16 +2,16 @@
 
 ![CI/CD Status](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci.yml/badge.svg?branch=MAIN)
 ![Mermaid Canon](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/mermaid-verify.yml/badge.svg?branch=MAIN)
-![Release v30.0.0](https://img.shields.io/badge/release-v30.0.0-brightgreen?logo=github)
+![Release v30.1.0](https://img.shields.io/badge/release-v30.1.0-brightgreen?logo=github)
 
-**Version:** v30.0.0 (repository authority)
+**Version:** v30.1.0 (repository authority)
 **Status:** ✅ Production Ready (V30 maintained release stream)
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
 **Latest certified deployment:** `2026-04-11` via `deployment/latest/MANIFEST.json`
 **Primary release tag:** [v30.0.0-release-20260406](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260406) (current release stream)
 **Prior certification tag:** [v30.0.0-release-20260405](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260405) (historical)
 
-**Canal de release canonique:** v30.0.0
+**Canal de release canonique:** v30.1.0
 
 **Qualité (2026-04-11) :** `verify:final100` PASS, `twins_memory_bridge_test` PASS, build stable Linux PASS, réinstallation desktop V30 et smoke-run `BOOT:READY` validés.
 **Archive & legacy policy:** les surfaces obsolètes sont conservées sous `docs/99_ARCHIVE/` et `_archive/`; les surfaces actives V30 restent `src/`, `src-tauri/`, `README.md`, `CHANGELOG.md` et `docs/user/{fr,en}/`.
@@ -20,16 +20,16 @@
 
 **Statut d'autorité documentaire (LOCAL, 2026-04-05) :**
 
-- Source de version canonique du repo: `package.json` + `CHANGELOG.md` -> `30.0.0` (`PROVEN_BY_REPO`)
-- Release canonique vérifiée: `v30.0.0` (`PROVEN_BY_REPO` + `PROVEN_BY_CHANGELOG`)
+- Source de version canonique du repo: `package.json` + `CHANGELOG.md` -> `30.1.0` (`PROVEN_BY_REPO`)
+- Release canonique vérifiée: `v30.1.0` (`PROVEN_BY_REPO` + `PROVEN_BY_CHANGELOG`)
 - Lignes binaires historiques documentées: `v28.90.0`, `v28.88.0`, `v27.2.0` (`PROVEN_BY_CANON_DOC`)
-- Politique de cohérence: version canonique et release courante `30.0.0`; les surfaces historiques restent archivées et identifiées par version
+- Politique de cohérence: version canonique et release courante `30.1.0`; les surfaces historiques restent archivées et identifiées par version
 
 ---
 
 ## 📦 Téléchargement
 
-### ✅ Release canonique courante: v30.0.0 (Major Release)
+### ✅ Release canonique courante: v30.1.0 (Unified Release)
 
 **Status**: ✅ PRODUCTION READY — CERTIFIED & DEPLOYED  
 **Certification ID**: `TITANE_INFINITY_RELEASE_20260411_080731_CERTIFIED`  
@@ -38,8 +38,8 @@
 
 Artefacts vérifiés (Linux amd64):
 
-- **AppImage**: `Titan-Stable_30.0.0_amd64.AppImage` (deployed in `deployment/latest/`)
-- **DEB Package**: `Titan-Stable_30.0.0_amd64.deb` (deployed in `deployment/latest/`)
+- **AppImage**: `Titan-Stable_30.1.0_amd64.AppImage` (deployed in `deployment/latest/`)
+- **DEB Package**: `Titan-Stable_30.1.0_amd64.deb` (deployed in `deployment/latest/`)
 
 Checksums courants (`deployment/latest/MANIFEST.json`):
 
@@ -105,10 +105,10 @@ TITANE∞ est un **OS cognitif online-first** : votre double numérique évoluti
 
 ### Historique de production (v29.x + v28.x + v27.x)
 
-- **v30.0.0** (Current Release Stream — 🚀)
-  - Status: ✅ CERTIFIED & DEPLOYED (2026-04-05)
-  - Tag: `v30.0.0-release-20260406`
-  - Tag: `v30.0.0-release-20260405`
+- **v30.1.0** (Current Release Stream — 🚀)
+  - Status: ✅ CERTIFIED & DEPLOYED (2026-04-11)
+  - Tag: `v30.0.0-release-20260406` (prior stream)
+  - Tag: `v30.0.0-release-20260405` (historical)
   - Gates: eval harness PASS, certified deployment PASS, deployment metadata aligned
   - Proof: `CHANGELOG.md` + `deployment/latest/MANIFEST.json` + `RELEASE_ARTIFACTS_CHECKSUMS_30.0.0.txt`
 
@@ -286,8 +286,8 @@ Progressive rollout model (Strict & Perfection lanes only):
 2. **Wave 2 (25%)** — Early adopters, expanded monitoring (48h soak)
 3. **Wave 3 (100%)** — General availability (GA)
 
-**Repository Authority**: v30.0.0 (documentation canonique)  
-**Latest Canonical Release Stream**: v30.0.0 (`CHANGELOG.md` + `deployment/latest/MANIFEST.json`)
+**Repository Authority**: v30.1.0 (documentation canonique)  
+**Latest Canonical Release Stream**: v30.1.0 (`CHANGELOG.md` + `deployment/latest/MANIFEST.json`)
 
 ---
 
@@ -322,12 +322,12 @@ GO_FOR_PROD_BUILD__TITANE_INFINITY=GO_FOR_PROD_BUILD__TITANE_INFINITY corepack p
 
 ---
 
-## 📐 Architecture v30.0.0
+## 📐 Architecture v30.1.0
 
 ### 🗺️ Navigation (13 Centres Unifiés)
 
 ```
-TITANE∞ v30.0.0
+TITANE∞ v30.1.0
 
 📂 PRINCIPAL
 ├─ 💬 Chat IA → /chat
@@ -707,7 +707,7 @@ git push origin feature/my-awesome-feature
 
 ## 📊 Roadmap Legacy v24-v25 (Archive)
 
-> # **🎯 Phase actuelle : v30.0.0 — Major release canonique gouvernée (cf. [CHANGELOG](CHANGELOG.md))**
+> # **🎯 Phase actuelle : v30.1.0 — Unified release canonique gouvernée (cf. [CHANGELOG](CHANGELOG.md))**
 >
 > > > > > > > **Statut :** Couverture documentation 200% ✅ — zéro dette technique
 
@@ -850,14 +850,14 @@ git push origin feature/my-awesome-feature
 **Before Reporting:**
 
 1. ✅ Search [existing issues](https://github.com/KallokTherok1994/TITANE_INFINITY/issues)
-2. ✅ Verify repository authority version (`30.0.0`)
+2. ✅ Verify repository authority version (`30.1.0`)
 3. ✅ Provide reproduction steps + environment details
 
 ### 💡 Feature Requests
 
 **Roadmap & Planning:**
 
-- # Current Phase: **v30.0.0 — major release canonique (docs + versions + artefacts alignés)**
+- # Current Phase: **v30.1.0 — unified release canonique (docs + versions + artefacts alignés)**
 - Next Phases: i18n → Interactive docs → Auto-sync → Advanced features
 
 **How to Propose:**
@@ -935,4 +935,4 @@ Voir `LICENSE.md` pour détails.
 
 ---
 
-**TITANE∞ v30.0.0** — _Votre système d'exploitation cognitif_
+**TITANE∞ v30.1.0** — _Votre système d'exploitation cognitif_
