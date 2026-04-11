@@ -12,6 +12,7 @@
 
 import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vitest';
 import { renderHook, waitFor, act } from '@testing-library/react';
+import { getAdaptiveUITimeout } from '@/config/aiTimeouts.config';
 
 let useChat: typeof import('../useChat').useChat;
 
@@ -64,6 +65,16 @@ vi.mock('@/config/aiTimeouts.config', () => ({
     STREAM_DEBOUNCE: 50,
     LOADING_INDICATOR_DELAY: 200,
     MESSAGE_ANIMATION: 150,
+    failsafe: 10000,
+    maxRequest: 52000,
+    localProvider: { short: 6000, long: 10000 },
+    ollamaProvider: { short: 20000, long: 45000 },
+    cloudProvider: { short: 15000, medium: 30000, long: 52000 },
+  },
+  REQUEST_BUDGETS: {
+    globalRequestMs: 52000,
+    providerAttemptMs: 50000,
+    maxAttempts: 2,
   },
   getAdaptiveUITimeout: vi.fn(() => 5000),
 }));
@@ -247,6 +258,21 @@ describe('useChat - KERNEL OMNIS Tests', () => {
       });
 
       expect(response.metadata?.status).toBe('input-error');
+    });
+
+    it('should sanitize invalid adaptive timeout values', async () => {
+      vi.mocked(getAdaptiveUITimeout).mockReturnValueOnce(Number.NaN);
+      const setTimeoutSpy = vi.spyOn(globalThis, 'setTimeout');
+      const { result } = renderHook(() => useChat());
+
+      await act(async () => {
+        await result.current.sendMessage('Hello TITANE');
+      });
+
+      expect(setTimeoutSpy).toHaveBeenCalled();
+      expect(
+        setTimeoutSpy.mock.calls.some(([, delay]) => Number.isNaN(Number(delay)))
+      ).toBe(false);
     });
 
     it('should add user and assistant messages', async () => {

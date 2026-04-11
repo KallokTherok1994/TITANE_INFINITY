@@ -50,6 +50,7 @@ import { ResponsiveChatLayout } from '../../layouts/ResponsiveChatLayout';
 // ✨ v30.0.0: OMEGA Reflection Panel v2 - Compact mode
 import { ThinkingPanel } from '../../features/chat/ThinkingPanel';
 import { useExperience } from '../../hooks/useExperience';
+import { confirmAction } from '../../utils/runtimeConfirm';
 import './styles/Chat.css';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -1117,11 +1118,16 @@ const ChatComponent: React.FC = () => {
   }, [handleRenderError, restoreFromVault, uiIntegrity?.hasSnapshot]);
 
   // ═══ PHASE 5.3: MEMOIZED HANDLERS (éviter render loops) ═══
-  const handleClearChat = useCallback(() => {
+  const handleClearChat = useCallback(async () => {
     try {
       if (messages.length === 0) return;
 
-      if (window.confirm("Effacer tout l'historique du chat ?")) {
+      const confirmed = await confirmAction("Effacer tout l'historique du chat ?", {
+        title: 'Effacer le chat',
+        defaultToConfirmed: true,
+      });
+
+      if (confirmed) {
         clearChat();
       }
     } catch (clearError) {

@@ -349,7 +349,7 @@ impl OmegaPipeline {
                     .iter()
                     .map(|s| s.task_id.clone())
                     .collect(),
-                model: "titane-omega-v20".to_string(),
+                model: "titane-omega-v30".to_string(),
                 tokens: (merge_result.response.len() / 4) as u32,
             },
             timings,

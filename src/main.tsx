@@ -43,6 +43,8 @@ import './config/logLevelConfig';
 // TITANE∞ v30.0.0 - Main Entry Point - Certification P10.4→P11 PASS
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { isTauriAvailable } from '@/api/tauriClient';
+import { createDevtoolsShortcutHandler } from '@/utils/devtoolsShortcuts';
 import { logger } from './lib/logger';
 import { setErrorToastDispatcher } from './lib/errorHandler';
 import { useUIStore } from './stores/uiStore';
@@ -610,7 +612,14 @@ async function initializeRuntimeConfig(): Promise<void> {
 
 void initializeRuntimeConfig();
 
-const getTauriWindowAPI = () => {
+const getTauriWindowAPI = ():
+  | {
+      getCurrent?: () => {
+        openDevtools?: () => Promise<void>;
+        toggleDevtools?: () => Promise<void>;
+      };
+    }
+  | undefined => {
   if (typeof window === 'undefined') {
     return undefined;
   }
@@ -620,7 +629,8 @@ const getTauriWindowAPI = () => {
       __TAURI__?: {
         window?: {
           getCurrent: () => {
-            openDevtools: () => Promise<void>;
+            openDevtools?: () => Promise<void>;
+            toggleDevtools?: () => Promise<void>;
           };
         };
       };
@@ -636,28 +646,81 @@ const isTauriRuntime = (): boolean => {
   const candidate = window as Window & {
     __TAURI__?: unknown;
     __TAURI_INTERNALS__?: unknown;
+    isTauri?: boolean;
   };
 
-  return Boolean(candidate.__TAURI__ || candidate.__TAURI_INTERNALS__);
+  return Boolean(
+    isTauriAvailable() ||
+    candidate.__TAURI__ ||
+    candidate.__TAURI_INTERNALS__ ||
+    candidate.isTauri
+  );
 };
 
 const openDevtoolsSafe = async (): Promise<void> => {
-  // Preferred path for Tauri v2
+  let lastError: unknown = null;
+
   try {
     const { getCurrentWebviewWindow } = await import('@tauri-apps/api/webviewWindow');
-    const win = getCurrentWebviewWindow();
-    // @ts-expect-error: openDevtools exists in Tauri v2 but not typed yet
-    await win.openDevtools();
-    return;
-  } catch {
-    // Fallback to legacy/global bridge if available
+    const win = getCurrentWebviewWindow() as {
+      openDevtools?: () => Promise<void>;
+      toggleDevtools?: () => Promise<void>;
+    };
+
+    if (typeof win.openDevtools === 'function') {
+      await win.openDevtools();
+      return;
+    }
+
+    if (typeof win.toggleDevtools === 'function') {
+      await win.toggleDevtools();
+      return;
+    }
+  } catch (error) {
+    lastError = error;
+  }
+
+  try {
+    const { getCurrentWindow } = await import('@tauri-apps/api/window');
+    const appWindow = getCurrentWindow() as {
+      openDevtools?: () => Promise<void>;
+      toggleDevtools?: () => Promise<void>;
+    };
+
+    if (typeof appWindow.openDevtools === 'function') {
+      await appWindow.openDevtools();
+      return;
+    }
+
+    if (typeof appWindow.toggleDevtools === 'function') {
+      await appWindow.toggleDevtools();
+      return;
+    }
+  } catch (error) {
+    lastError = error;
   }
 
   const legacyWindowAPI = getTauriWindowAPI();
-  if (!legacyWindowAPI) {
-    throw new Error('Tauri window API unavailable');
+  const legacyCurrent = legacyWindowAPI?.getCurrent?.() as
+    | {
+        openDevtools?: () => Promise<void>;
+        toggleDevtools?: () => Promise<void>;
+      }
+    | undefined;
+
+  if (legacyCurrent && typeof legacyCurrent.openDevtools === 'function') {
+    await legacyCurrent.openDevtools();
+    return;
   }
-  await legacyWindowAPI.getCurrent().openDevtools();
+
+  if (legacyCurrent && typeof legacyCurrent.toggleDevtools === 'function') {
+    await legacyCurrent.toggleDevtools();
+    return;
+  }
+
+  throw lastError instanceof Error
+    ? lastError
+    : new Error('Tauri window API unavailable');
 };
 
 const cleanupServiceWorkersForTauri = (): void => {
@@ -844,32 +907,27 @@ const scheduleBootWatchdog = (): void => {
 
 scheduleBootWatchdog();
 
-const isDevtoolsShortcut = (ev: KeyboardEvent): boolean => {
-  const key = ev.key.toLowerCase();
-
-  return (
-    ev.key === 'F12' ||
-    (ev.ctrlKey && ev.shiftKey && key === 'i') ||
-    (ev.metaKey && ev.altKey && key === 'i')
-  );
-};
+const handleDevtoolsShortcut = createDevtoolsShortcutHandler({
+  isTauriRuntime,
+  openDevtools: openDevtoolsSafe,
+  onError: (err: unknown) => {
+    logger.error(
+      'Failed to open DevTools',
+      { component: 'DevTools' },
+      err instanceof Error ? err : new Error(String(err))
+    );
+  },
+});
 
 // 🔧 DevTools keyboard shortcuts (F12 + Ctrl+Shift+I / Cmd+Alt+I)
 if (typeof window !== 'undefined') {
-  window.addEventListener('keydown', (ev: KeyboardEvent) => {
-    if (!isDevtoolsShortcut(ev) || !isTauriRuntime()) {
-      return;
-    }
-
-    ev.preventDefault();
-    void openDevtoolsSafe().catch((err: unknown) => {
-      logger.error(
-        'Failed to open DevTools',
-        { component: 'DevTools' },
-        err instanceof Error ? err : new Error(String(err))
-      );
-    });
-  });
+  window.addEventListener(
+    'keydown',
+    ev => {
+      void handleDevtoolsShortcut(ev);
+    },
+    { capture: true }
+  );
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

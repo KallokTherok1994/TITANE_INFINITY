@@ -1,5 +1,6 @@
-> ⚠️ **LEGACY** — Ce document est obsolète (version 19.4.3). La description "100% local" est inexacte pour la version courante.
-> **Documents canoniques actuels :** [docs/user/fr/README.md](./fr/README.md) (FR) | [docs/user/en/README.md](./en/README.md) (EN)
+> ⚠️ **LEGACY / ARCHIVED** — Ce document est conservé uniquement pour référence historique. Il ne fait plus autorité pour la version courante.
+> **Surface canonique V30 actuelle :** [docs/user/fr/README.md](./fr/README.md) (FR) | [docs/user/en/README.md](./en/README.md) (EN)
+> **Note de cohérence :** la description "100% local" ci-dessous est obsolète; TITANE∞ v30.0.0 est un runtime Tauri desktop gouverné avec politique online-first et fallback local encadré.
 
 # 🌟 TITANE∞ — Intelligence Artificielle Locale
 

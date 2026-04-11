@@ -94,7 +94,7 @@ pub struct WebSearchState {
 
 /// 10. XP / EVOLUTION ENGINE STATE
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct EvolutionStateV20 {
+pub struct EvolutionStateV30 {
     pub total_xp: u64,
     pub level: u32,
     pub skills: HashMap<String, u32>,
@@ -251,7 +251,7 @@ pub struct SingularityStateVInfinity {
     pub search: WebSearchState,
 
     // 10. XP / EVOLUTION ENGINE
-    pub evolution: EvolutionStateV20,
+    pub evolution: EvolutionStateV30,
 
     // 11. UI ENGINE
     pub ui: UIEngineState,
@@ -321,7 +321,7 @@ pub struct AllEnginesState {
     pub analysis: AnalysisState,
     pub documents: DocumentEngineState,
     pub search: WebSearchState,
-    pub evolution: EvolutionStateV20,
+    pub evolution: EvolutionStateV30,
     pub ui: UIEngineState,
     pub audio: AudioState,
     pub system: SystemVitalsState,
@@ -388,7 +388,7 @@ impl SingularityStateVInfinity {
             analysis: AnalysisState::default(),
             documents: DocumentEngineState::default(),
             search: WebSearchState::default(),
-            evolution: EvolutionStateV20::default(),
+            evolution: EvolutionStateV30::default(),
             ui: UIEngineState::default(),
             audio: AudioState::default(),
             system: SystemVitalsState::default(),
@@ -647,7 +647,7 @@ impl SingularityStateVInfinity {
             analysis: &'a AnalysisState,
             documents: &'a DocumentEngineState,
             search: &'a WebSearchState,
-            evolution: &'a EvolutionStateV20,
+            evolution: &'a EvolutionStateV30,
             ui: &'a UIEngineState,
             audio: &'a AudioState,
             system: &'a SystemVitalsState,
@@ -830,7 +830,7 @@ pub fn collect_all_engines_state() -> AllEnginesState {
         analysis: AnalysisState::default(),
         documents: DocumentEngineState::default(),
         search: WebSearchState::default(),
-        evolution: EvolutionStateV20::default(),
+        evolution: EvolutionStateV30::default(),
         ui: UIEngineState::default(),
         audio: AudioState::default(),
         system: SystemVitalsState::default(),

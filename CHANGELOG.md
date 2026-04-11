@@ -2,6 +2,18 @@
 
 All notable changes to this project are documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- Refreshed the active V30 documentation surfaces (`README.md`, `docs/user/en/README.md`, `docs/user/fr/README.md`) to match the current `deployment/latest` certification state.
+- Clarified repo hygiene and archive routing so obsolete materials remain preserved under `docs/99_ARCHIVE/` and `_archive/` while the V30 active surface stays clearly identified.
+
+### Fixed
+
+- Removed lingering V30 metadata drift across runtime/UI surfaces and eliminated the `useChat` `TimeoutNaNWarning` regression with a dedicated test guard.
+- Corrected stale user-facing release guidance that still referenced `v28.0.0` / `v27.0.5` as the current public binary.
+
 ## [30.0.0] - 2026-04-06 (Major Release — V30 Full Upgrade Cycle)
 
 ### Added

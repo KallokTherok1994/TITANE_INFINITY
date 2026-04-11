@@ -1,10 +1,10 @@
 /**
- * TITANE∞ v29.0.0 — TitanePage Styles
+ * TITANE∞ v30.0.0 — TitanePage Styles
  * Module TITANE — Le Cœur du Système
  * © 2025 TITANE Team. All rights reserved.
  */
 
-/* Import Tech Fonts & Aura Effects (v29.0.0 active stack) */
+/* Import Tech Fonts & Aura Effects (v30.0.0 active stack) */
 @import '../styles/tech-fonts.css';
 @import '../styles/tech-effects.css';
 @import '../styles/aura-effects.css';
@@ -24,7 +24,7 @@
     var(--titane-secondary) 50%,
     var(--titane-accent) 100%
   );
-  /* v29.0.0 - Metallic gradient for tech look */
+  /* v30.0.0 - Metallic gradient for tech look */
   --titane-gradient-metallic: linear-gradient(
     135deg,
     rgba(59, 130, 246, 0.95) 0%,
@@ -41,7 +41,7 @@
   --titane-radius: 12px;
   --titane-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* GLASSMORPHISM ADVANCED v29.0.0 */
+  /* GLASSMORPHISM ADVANCED v30.0.0 */
   --glass-bg: rgba(20, 25, 40, 0.85);
   --glass-bg-light: rgba(30, 35, 50, 0.75);
   --glass-border: rgba(255, 255, 255, 0.12);
@@ -56,7 +56,7 @@
    PAGE CONTAINER
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* v29.0.0: padding réduit pour maximiser l'espace conversation */
+/* v30.0.0: padding réduit pour maximiser l'espace conversation */
 .titane-page {
   min-height: 100vh;
   padding: 1rem 1.5rem;
@@ -357,10 +357,10 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   RESPONSIVE v29.0.0 - OPTIMIZED FOR ALL DEVICES
+   RESPONSIVE v30.0.0 - OPTIMIZED FOR ALL DEVICES
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* Large Desktop (≥ 1440px) — v29.0.0: maximise espace conversation */
+/* Large Desktop (≥ 1440px) — v30.0.0: maximise espace conversation */
 @media (min-width: 1440px) {
   .titane-page {
     padding: 1rem 2rem;
@@ -399,14 +399,14 @@
 @media (max-width: 767px) {
   .titane-page {
     padding: 0.75rem;
-    /* v29.0.0: Safe area support */
+    /* v30.0.0: Safe area support */
     padding-top: calc(0.75rem + env(safe-area-inset-top, 0px));
     padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
   }
 
   .titane-header {
     padding: 1rem;
-    /* v29.0.0: Reduce blur for mobile performance */
+    /* v30.0.0: Reduce blur for mobile performance */
     backdrop-filter: blur(10px) saturate(150%);
     -webkit-backdrop-filter: blur(10px) saturate(150%);
   }
@@ -430,7 +430,7 @@
     font-size: max(0.75rem, 12px);
   }
 
-  /* v29.0.0: Horizontal scroll tabs with snap */
+  /* v30.0.0: Horizontal scroll tabs with snap */
   .titane-tabs {
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -452,7 +452,7 @@
       black 97%,
       transparent 100%
     );
-    /* v29.0.0: Reduce blur for performance */
+    /* v30.0.0: Reduce blur for performance */
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
   }
@@ -465,8 +465,8 @@
     scroll-snap-align: start;
     flex-shrink: 0;
     padding: 0.625rem 1rem;
-    font-size: max(0.75rem, 12px); /* v29.0.0: Minimum 12px */
-    /* v29.0.0: Touch target 44px minimum */
+    font-size: max(0.75rem, 12px); /* v30.0.0: Minimum 12px */
+    /* v30.0.0: Touch target 44px minimum */
     min-height: 44px;
     display: flex;
     align-items: center;
@@ -489,7 +489,7 @@
 
   .titane-tab {
     padding: 0.5rem 0.875rem;
-    min-height: 44px; /* v29.0.0: Keep touch target */
+    min-height: 44px; /* v30.0.0: Keep touch target */
   }
 }
 
@@ -589,7 +589,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* v29.0.0: padding vertical réduit pour gagner de la hauteur conversation */
+  /* v30.0.0: padding vertical réduit pour gagner de la hauteur conversation */
   padding: 0.625rem 1rem;
   background: rgba(0, 0, 0, 0.3);
   border-bottom: 1px solid var(--glass-border);
@@ -603,7 +603,7 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  /* v29.0.0: padding vertical réduit */
+  /* v30.0.0: padding vertical réduit */
   padding: 0.5rem 1rem;
   border-bottom: 1px solid var(--glass-border);
   background: rgba(0, 0, 0, 0.22);
@@ -768,7 +768,7 @@
   gap: 1rem;
 }
 
-/* Premium scrollbar - v29.0.0 harmonisé */
+/* Premium scrollbar - v30.0.0 harmonisé */
 .conversation-messages::-webkit-scrollbar {
   width: 8px;
 }
@@ -1278,7 +1278,7 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   MODERN UI TECH UPGRADES - AURA + GLASSMORPHISM v29.0.0
+   MODERN UI TECH UPGRADES - AURA + GLASSMORPHISM v30.0.0
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* Enhanced message animations */
@@ -1461,7 +1461,7 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   AURA ADVANCED APPLICATION v29.0.0
+   AURA ADVANCED APPLICATION v30.0.0
    Effets Aura étendus à toutes les sections TITANE
    ═══════════════════════════════════════════════════════════════════════════ */
 
@@ -1866,5 +1866,5 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   END AURA ADVANCED APPLICATION v29.0.0
+   END AURA ADVANCED APPLICATION v30.0.0
    ═══════════════════════════════════════════════════════════════════════════ */

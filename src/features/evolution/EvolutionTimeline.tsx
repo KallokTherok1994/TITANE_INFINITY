@@ -206,7 +206,7 @@ function generateMockEvents(): TimelineEvent[] {
       cardTitle: 'v29.0 — Pipelines Chat Wiring',
       cardSubtitle: 'Connexion multi-modules → conversationEngine',
       cardDetailedText:
-        'Wiring complet 6 sources dans systemPrompt : mémoire 3 niveaux, persona, XP/Evolution, CognitiveEngine. Fix loop infini usePersistentMemory (DEFAULT_LEVELS constant). Fix NaN guards XPProgressBar. IPC Rust : 12 commandes persistent_memory_v19 câblées dans main.rs.',
+        'Wiring complet 6 sources dans systemPrompt : mémoire 3 niveaux, persona, XP/Evolution, CognitiveEngine. Fix loop infini usePersistentMemory (DEFAULT_LEVELS constant). Fix NaN guards XPProgressBar. IPC Rust : 12 commandes persistent_memory_v30 câblées dans main.rs.',
       date: '10 Mars 2026',
       type: 'milestone',
       importance: 'critical',

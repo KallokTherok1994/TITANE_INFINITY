@@ -1201,7 +1201,7 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
     const providerAttr = domAttrs.providerUsed || '';
     assert.notEqual(
       providerAttr,
-      'titane-omega-v20 (OMEGA+Singularity)',
+      'titane-omega-v30 (OMEGA+Singularity)',
       `[G_NO_MOCK_PROVIDER/DOM] provider_used="${providerAttr}" = OMEGA mock; AIRouter wiring failed`
     );
 

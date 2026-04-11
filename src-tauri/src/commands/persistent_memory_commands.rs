@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════
 // PERSISTENT MEMORY COMMANDS - TITANE∞ v30.0.0
-// ✅ AUTOFIX(memory-chat): stub commands removed — superseded by persistent_memory_v19
-//    (promote/archive/delete/add_to_bundle now served by persistent_memory.rs v19.2Ω)
+// ✅ AUTOFIX(memory-chat): stub commands removed — superseded by persistent_memory_v30
+//    (promote/archive/delete/add_to_bundle now served by persistent_memory.rs v30.0.0Ω)
 // ═══════════════════════════════════════════════════════════════════

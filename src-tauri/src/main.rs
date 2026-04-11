@@ -74,9 +74,9 @@ mod commands_v21 {
     }
 }
 
-// ✅ AUTOFIX(memory-chat): Persistent Memory v19.2Ω — full 3-level pipeline
+// ✅ AUTOFIX(memory-chat): Persistent Memory v30.0.0Ω — full 3-level pipeline
 // Previously orphaned; provides persistent_memory_read/get_stats/get_context/write_entry/etc.
-mod persistent_memory_v19 {
+mod persistent_memory_v30 {
     include!("commands/persistent_memory.rs");
 }
 
@@ -328,7 +328,7 @@ mod commands {
         include!("commands/ollama_command.rs");
     }
 
-    // ✨ TOTAL_DEV v29.0.0 — GOD DEV secure space (unlock, git, console, file)
+    // ✨ TOTAL_DEV v30.0.0 — GOD DEV secure space (unlock, git, console, file)
     pub mod total_dev_commands {
         include!("commands/total_dev_commands.rs");
     }
@@ -1333,10 +1333,10 @@ fn main() {
                 }
             });
 
-            // ✅ AUTOFIX(memory-chat): PersistentMemoryState v19.2Ω — required by
+            // ✅ AUTOFIX(memory-chat): PersistentMemoryState v30.0.0Ω — required by
             //    persistent_memory_read/get_stats/get_context/write_entry IPC commands
-            app.manage(persistent_memory_v19::PersistentMemoryState::new(app.handle()));
-            log::info!("✅ PersistentMemoryState v19.2Ω initialized");
+            app.manage(persistent_memory_v30::PersistentMemoryState::new(app.handle()));
+            log::info!("✅ PersistentMemoryState v30.0.0Ω initialized");
 
             // ✅ DEFAULT KNOWLEDGE BASE v30.0.0 — Pre-seeded knowledge at installation time
             // Loads embedded JSON knowledge (engines, IPC commands, architecture, identity,
@@ -2140,20 +2140,20 @@ fn main() {
             commands_v21::whisper_commands::stop_whisper_streaming,
             commands_v21::whisper_commands::send_audio_chunk,
             // Audio Config Commands - NOTE: Already exist in audio::commands (set/get_audio_*_device)
-            // ✅ AUTOFIX(memory-chat): Persistent Memory v19.2Ω — full IPC suite
+            // ✅ AUTOFIX(memory-chat): Persistent Memory v30.0.0Ω — full IPC suite
             //    (stubs v21 remplacés; module orphelin désormais enregistré)
-            persistent_memory_v19::persistent_memory_read,
-            persistent_memory_v19::persistent_memory_get_stats,
-            persistent_memory_v19::persistent_memory_get_bundles,
-            persistent_memory_v19::persistent_memory_get_context,
-            persistent_memory_v19::persistent_memory_write_entry,
-            persistent_memory_v19::persistent_memory_create_summary,
-            persistent_memory_v19::persistent_memory_create_bundle,
-            persistent_memory_v19::persistent_memory_export,
-            persistent_memory_v19::persistent_memory_promote_entry,
-            persistent_memory_v19::persistent_memory_archive_entry,
-            persistent_memory_v19::persistent_memory_delete_entry,
-            persistent_memory_v19::persistent_memory_add_to_bundle,
+            persistent_memory_v30::persistent_memory_read,
+            persistent_memory_v30::persistent_memory_get_stats,
+            persistent_memory_v30::persistent_memory_get_bundles,
+            persistent_memory_v30::persistent_memory_get_context,
+            persistent_memory_v30::persistent_memory_write_entry,
+            persistent_memory_v30::persistent_memory_create_summary,
+            persistent_memory_v30::persistent_memory_create_bundle,
+            persistent_memory_v30::persistent_memory_export,
+            persistent_memory_v30::persistent_memory_promote_entry,
+            persistent_memory_v30::persistent_memory_archive_entry,
+            persistent_memory_v30::persistent_memory_delete_entry,
+            persistent_memory_v30::persistent_memory_add_to_bundle,
             // UI Theme Commands
             design_center::theme_manager::save_ui_theme,
             design_center::theme_manager::load_ui_theme,
@@ -2834,7 +2834,7 @@ fn main() {
             legacy_ai_bridge::vector_store_insert,
             legacy_ai_bridge::vector_store_update,
 
-            // ✨ TOTAL_DEV v29.0.0 — 6 handlers GOD DEV
+            // ✨ TOTAL_DEV v30.0.0 — 6 handlers GOD DEV
             commands::total_dev_commands::total_dev_unlock,
             commands::total_dev_commands::total_dev_session_status,
             commands::total_dev_commands::total_dev_revoke,

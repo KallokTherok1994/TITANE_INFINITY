@@ -155,7 +155,28 @@ describe('E2E: Chat Workflow', () => {
       const clearButton = screen.getByRole('button', { name: /effacer/i });
       fireEvent.click(clearButton);
 
-      expect(screen.queryByText('To be cleared')).not.toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.queryByText('To be cleared')).not.toBeInTheDocument();
+      });
+    });
+
+    it('should still clear chat when browser confirm is unavailable', async () => {
+      render(<TitanePage />);
+
+      const input = screen.getByPlaceholderText(/tapez votre message/i);
+      fireEvent.change(input, { target: { value: 'Fallback clear' } });
+      fireEvent.click(screen.getByRole('button', { name: /envoyer/i }));
+
+      await waitFor(() => {
+        expect(screen.getByText('Fallback clear')).toBeInTheDocument();
+      });
+
+      vi.stubGlobal('confirm', undefined);
+      fireEvent.click(screen.getByRole('button', { name: /effacer/i }));
+
+      await waitFor(() => {
+        expect(screen.queryByText('Fallback clear')).not.toBeInTheDocument();
+      });
     });
   });
 
