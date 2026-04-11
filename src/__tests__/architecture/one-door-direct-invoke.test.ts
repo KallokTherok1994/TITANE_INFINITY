@@ -33,7 +33,7 @@ describe('Architecture: One Door — no direct @tauri-apps/api/core imports', ()
       const relative = path.normalize(path.relative(process.cwd(), file));
 
       // Skip test files (they may mock the module)
-      if (relative.includes(path.normalize('src/__tests__'))) continue;
+      if (relative.includes('__tests__')) continue;
       if (relative.includes(path.normalize('src/test/'))) continue;
 
       if (ALLOWED_DIRECT_IMPORTERS.has(relative)) continue;
