@@ -4,29 +4,32 @@
  * Hook for accessing TITANE's self-awareness knowledge base.
  * Provides access to architecture map, capabilities, metrics,
  * and IPC command catalogue at runtime.
+ *
+ * Note: The underlying data is static JSON loaded at module init time.
+ * Values are pre-computed once at module level and returned directly.
  */
 
-import { useMemo } from 'react';
 import { SELF_AWARENESS } from '@/knowledge/self-awareness';
 
-export function useSelfAwareness() {
-  const metrics = useMemo(() => SELF_AWARENESS.getMetrics(), []);
-  const allCapabilities = useMemo(() => SELF_AWARENESS.getCapabilities(), []);
-  const stores = useMemo(() => SELF_AWARENESS.getStores(), []);
-  const hooks = useMemo(() => SELF_AWARENESS.getHooks(), []);
-  const routes = useMemo(() => SELF_AWARENESS.getRoutes(), []);
-  const commandDomains = useMemo(() => SELF_AWARENESS.getCommandDomains(), []);
+const _metrics = SELF_AWARENESS.getMetrics();
+const _allCapabilities = SELF_AWARENESS.getCapabilities();
+const _stores = SELF_AWARENESS.getStores();
+const _hooks = SELF_AWARENESS.getHooks();
+const _routes = SELF_AWARENESS.getRoutes();
+const _commandDomains = SELF_AWARENESS.getCommandDomains();
+const _commandCount = SELF_AWARENESS.getCommandCount();
 
+export function useSelfAwareness() {
   return {
     architecture: SELF_AWARENESS.architecture,
     capabilities: SELF_AWARENESS.capabilities,
-    metrics,
-    commandCount: SELF_AWARENESS.getCommandCount(),
-    allCapabilities,
-    stores,
-    hooks,
-    routes,
-    commandDomains,
+    metrics: _metrics,
+    commandCount: _commandCount,
+    allCapabilities: _allCapabilities,
+    stores: _stores,
+    hooks: _hooks,
+    routes: _routes,
+    commandDomains: _commandDomains,
     hasCapability: SELF_AWARENESS.hasCapability,
     getCommandsByDomain: SELF_AWARENESS.getCommandsByDomain,
     getRing: SELF_AWARENESS.getRing,

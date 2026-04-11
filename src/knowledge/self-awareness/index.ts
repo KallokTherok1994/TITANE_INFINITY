@@ -22,10 +22,12 @@ export const SELF_AWARENESS = {
   /** Check if a capability exists */
   hasCapability: (name: string) => name in capabilitiesManifest.capabilities,
 
-  /** Get architecture ring info */
+  /** Get architecture ring info (ring 0–4) */
   getRing: (ring: number) => {
+    if (ring < 0 || ring > 4) return undefined;
     const rings = architectureMap.architecture.rings;
-    const key = `ring${ring}_${['kernel', 'services', 'engines', 'stores', 'ui'][ring]}` as keyof typeof rings;
+    const suffix = ['kernel', 'services', 'engines', 'stores', 'ui'][ring];
+    const key = `ring${ring}_${suffix}` as keyof typeof rings;
     return rings[key];
   },
 
