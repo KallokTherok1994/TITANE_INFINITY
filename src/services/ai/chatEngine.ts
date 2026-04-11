@@ -231,18 +231,100 @@ const CACHE_DISABLED_MODES = new Set([
 /** Module-level stop words set (FR + EN) — avoids re-creation per call in extractKeyConcepts() */
 const STOP_WORDS = new Set([
   // French
-  'le', 'la', 'les', 'un', 'une', 'des', 'et', 'ou', 'de', 'du', 'au', 'aux',
-  'ce', 'ces', 'son', 'sa', 'ses', 'mon', 'ma', 'mes', 'ton', 'ta', 'tes',
-  'notre', 'nos', 'votre', 'vos', 'leur', 'leurs',
-  'je', 'tu', 'il', 'elle', 'nous', 'vous', 'ils', 'elles',
-  'que', 'qui', 'quoi', 'dont', 'où', 'comment', 'pourquoi', 'quand',
-  'est', 'sont', 'être', 'avoir', 'faire', 'aller', 'venir', 'voir',
-  'dire', 'prendre', 'mettre', 'donner', 'trouver', 'passer',
-  'pouvoir', 'vouloir', 'devoir', 'savoir', 'falloir',
+  'le',
+  'la',
+  'les',
+  'un',
+  'une',
+  'des',
+  'et',
+  'ou',
+  'de',
+  'du',
+  'au',
+  'aux',
+  'ce',
+  'ces',
+  'son',
+  'sa',
+  'ses',
+  'mon',
+  'ma',
+  'mes',
+  'ton',
+  'ta',
+  'tes',
+  'notre',
+  'nos',
+  'votre',
+  'vos',
+  'leur',
+  'leurs',
+  'je',
+  'tu',
+  'il',
+  'elle',
+  'nous',
+  'vous',
+  'ils',
+  'elles',
+  'que',
+  'qui',
+  'quoi',
+  'dont',
+  'où',
+  'comment',
+  'pourquoi',
+  'quand',
+  'est',
+  'sont',
+  'être',
+  'avoir',
+  'faire',
+  'aller',
+  'venir',
+  'voir',
+  'dire',
+  'prendre',
+  'mettre',
+  'donner',
+  'trouver',
+  'passer',
+  'pouvoir',
+  'vouloir',
+  'devoir',
+  'savoir',
+  'falloir',
   // English
-  'the', 'is', 'are', 'was', 'were', 'be', 'been', 'have', 'has', 'had',
-  'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might',
-  'can', 'shall', 'this', 'that', 'these', 'those', 'with', 'from', 'for', 'into',
+  'the',
+  'is',
+  'are',
+  'was',
+  'were',
+  'be',
+  'been',
+  'have',
+  'has',
+  'had',
+  'do',
+  'does',
+  'did',
+  'will',
+  'would',
+  'could',
+  'should',
+  'may',
+  'might',
+  'can',
+  'shall',
+  'this',
+  'that',
+  'these',
+  'those',
+  'with',
+  'from',
+  'for',
+  'into',
 ]);
 
 class ChatEngineOmega {
@@ -1340,7 +1422,11 @@ Format: [Audit complet] + [Réponse utilisateur]
       const singCoherence = SingularityBridge.getCachedCoherence();
 
       const reflNote = `Réponse ${
-        validation.score >= 0.8 ? 'excellente' : validation.score >= 0.6 ? 'bonne' : 'basique'
+        validation.score >= 0.8
+          ? 'excellente'
+          : validation.score >= 0.6
+            ? 'bonne'
+            : 'basique'
       } (score: ${(validation.score * 100).toFixed(0)}%). Mode: ${canonicalDecision.mode}. Effort: ${canonicalDecision.provider.reasoningEffort}.`;
 
       omegaDevToolsBridge
@@ -2842,7 +2928,8 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
       // ═══ DEFAULT KNOWLEDGE BASE: inject compact index ═══
       // The first line is the language header "[LANGUE: ...]"; subtract it from the category count.
       const kbLines = this._defaultKbIndex.split('\n');
-      const kbCategoryCount = kbLines.filter(l => l.startsWith('•')).length || Math.max(0, kbLines.length - 1);
+      const kbCategoryCount =
+        kbLines.filter(l => l.startsWith('•')).length || Math.max(0, kbLines.length - 1);
       const kbBlock = this._defaultKbIndex
         ? `\n\n📚 Base de connaissances intégrée TITANE∞ (${kbCategoryCount} catégories) :\n${this._defaultKbIndex}`
         : '';

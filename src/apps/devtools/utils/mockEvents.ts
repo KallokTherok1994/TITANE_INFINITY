@@ -7,7 +7,14 @@
  */
 
 import { emit } from '@tauri-apps/api/event';
-import type { EngineStatus, LogLevel, JournalEntry, ReasoningTrace, CognitiveState, KernelMetrics } from '../store/devtools.store';
+import type {
+  EngineStatus,
+  LogLevel,
+  JournalEntry,
+  ReasoningTrace,
+  CognitiveState,
+  KernelMetrics,
+} from '../store/devtools.store';
 
 /**
  * Envoie une mise à jour de statut d'engine
@@ -218,7 +225,14 @@ export function startMockActivity(intervalMs = 2000): () => void {
 // v30.0.0 — JOURNAL D'EXÉCUTION OMEGA MOCK HELPERS
 // ─────────────────────────────────────────────────────────────────
 
-const MOCK_MODES = ['OMEGA', 'ARCHITECT', 'DEEP_REASONING', 'CERTIFY', 'CREATIVE', 'default'];
+const MOCK_MODES = [
+  'OMEGA',
+  'ARCHITECT',
+  'DEEP_REASONING',
+  'CERTIFY',
+  'CREATIVE',
+  'default',
+];
 const MOCK_PROVIDERS = ['ollama', 'openai', 'copilot', 'anthropic'];
 const MOCK_EFFORT = ['max', 'high', 'medium', 'low'];
 const MOCK_REQUESTS = [
@@ -226,11 +240,11 @@ const MOCK_REQUESTS = [
   'Crée un plan complet pour un business SaaS B2B dans le domaine de la fintech',
   'Analyse les tendances actuelles du marché crypto et donne une stratégie',
   'Optimise ce code TypeScript pour les performances en production',
-  'Génère une stratégie marketing complète pour le lancement d\'un produit',
-  'Continue à développer l\'architecture OMEGA et améliore la cohérence',
+  "Génère une stratégie marketing complète pour le lancement d'un produit",
+  "Continue à développer l'architecture OMEGA et améliore la cohérence",
 ];
 const MOCK_RESPONSES = [
-  'La relativité restreinte d\'Einstein postule que les lois de la physique sont identiques dans tous les référentiels inertiels…',
+  "La relativité restreinte d'Einstein postule que les lois de la physique sont identiques dans tous les référentiels inertiels…",
   'Plan SaaS B2B Fintech: Phase 1 — MVP ciblé sur la gestion de trésorerie pour PME. KPIs: MRR, churn rate, CAC…',
   'Analyse crypto 2026: Bitcoin maintient sa dominance à 52%, ETH Layer-2 en forte croissance. Stratégie recommandée…',
   'Optimisation TypeScript: Remplacement des Map<string,any> par des types stricts, élimination des allocations hot-path…',
@@ -240,43 +254,51 @@ const MOCK_RESPONSES = [
 
 const MOCK_REASONING_THOUGHTS = [
   {
-    label: 'Analyse de l\'entrée',
-    thought: 'Je reçois une requête complexe. Je détecte des signaux linguistiques qui indiquent un besoin de raisonnement approfondi. La longueur et la structure de la phrase suggèrent une attente de réponse détaillée et structurée.',
+    label: "Analyse de l'entrée",
+    thought:
+      'Je reçois une requête complexe. Je détecte des signaux linguistiques qui indiquent un besoin de raisonnement approfondi. La longueur et la structure de la phrase suggèrent une attente de réponse détaillée et structurée.',
     decision: 'Traitement avancé requis',
   },
   {
-    label: 'Classification de l\'intention',
-    thought: 'L\'intention principale est informationnelle/analytique. Je détecte des concepts clés: architecture, optimisation, cohérence. Les signaux DEEP_REASONING sont présents (continue, développe, optimise). Score OMEGA élevé.',
+    label: "Classification de l'intention",
+    thought:
+      "L'intention principale est informationnelle/analytique. Je détecte des concepts clés: architecture, optimisation, cohérence. Les signaux DEEP_REASONING sont présents (continue, développe, optimise). Score OMEGA élevé.",
     decision: 'Mode DEEP_REASONING ou OMEGA',
   },
   {
     label: 'Sélection du mode cognitif',
-    thought: 'Évaluation des modes disponibles: OMEGA (score 87), ARCHITECT (score 72), DEEP_REASONING (score 68). La cohérence Singularité est à 89%, ce qui booste le mode OMEGA. Contexte conversationnel: continuation d\'un fil existant.',
+    thought:
+      "Évaluation des modes disponibles: OMEGA (score 87), ARCHITECT (score 72), DEEP_REASONING (score 68). La cohérence Singularité est à 89%, ce qui booste le mode OMEGA. Contexte conversationnel: continuation d'un fil existant.",
     decision: 'Mode OMEGA sélectionné',
   },
   {
     label: 'Sélection du provider',
-    thought: 'Provider Ollama disponible avec latence 23ms. OpenAI disponible mais quota limité. Copilot disponible. Pour un effort "max", Ollama local offre le meilleur ratio qualité/latence pour ce type de requête.',
+    thought:
+      'Provider Ollama disponible avec latence 23ms. OpenAI disponible mais quota limité. Copilot disponible. Pour un effort "max", Ollama local offre le meilleur ratio qualité/latence pour ce type de requête.',
     decision: 'Provider: Ollama (llama3.1)',
   },
   {
     label: 'Engagement des moteurs',
-    thought: 'Activation: MemoryCore (STM + LTM), Coherence Engine, Harmonia (style), Nexus (knowledge). La base de connaissances contient 116 catégories pertinentes. Extraction de contexte conversationnel: 47 tokens pertinents récupérés.',
+    thought:
+      'Activation: MemoryCore (STM + LTM), Coherence Engine, Harmonia (style), Nexus (knowledge). La base de connaissances contient 116 catégories pertinentes. Extraction de contexte conversationnel: 47 tokens pertinents récupérés.',
     decision: '5 moteurs engagés',
   },
   {
     label: 'Construction du prompt système',
-    thought: 'Assemblage du contexte: instructions système v30, profil utilisateur ARCHITECT_LEVEL, contexte conversationnel (3 derniers tours), base de connaissances pertinente (8 fragments). Effort max → chain-of-thought addendum inclus.',
+    thought:
+      'Assemblage du contexte: instructions système v30, profil utilisateur ARCHITECT_LEVEL, contexte conversationnel (3 derniers tours), base de connaissances pertinente (8 fragments). Effort max → chain-of-thought addendum inclus.',
     decision: 'Prompt système optimisé',
   },
   {
     label: 'Génération de la réponse',
-    thought: 'Streaming en cours vers Ollama. Température: 0.7 (profil OMEGA). Max tokens: 4096. La réponse se forme progressivement. Détection de cohérence interne: 92%. Pas de contradiction avec le contexte précédent.',
+    thought:
+      'Streaming en cours vers Ollama. Température: 0.7 (profil OMEGA). Max tokens: 4096. La réponse se forme progressivement. Détection de cohérence interne: 92%. Pas de contradiction avec le contexte précédent.',
     decision: 'Réponse générée avec succès',
   },
   {
     label: 'Réflexion qualitative',
-    thought: 'Évaluation post-réponse: cohérence 94%, profondeur analytique bonne, structure claire. La réponse couvre tous les aspects demandés. XP attribué: 42 points (tier excellent × multiplicateur 3.5). Mise à jour LTM recommandée.',
+    thought:
+      'Évaluation post-réponse: cohérence 94%, profondeur analytique bonne, structure claire. La réponse couvre tous les aspects demandés. XP attribué: 42 points (tier excellent × multiplicateur 3.5). Mise à jour LTM recommandée.',
     decision: 'Qualité: Excellent (42 XP)',
   },
 ];
@@ -329,7 +351,8 @@ export async function sendKernelMetrics(metrics: KernelMetrics) {
 /** Simule une exécution OMEGA complète avec état cognitif et trace de raisonnement */
 export async function simulateOmegaExecution() {
   const mode = MOCK_MODES[Math.floor(Math.random() * MOCK_MODES.length)] ?? 'OMEGA';
-  const provider = MOCK_PROVIDERS[Math.floor(Math.random() * MOCK_PROVIDERS.length)] ?? 'ollama';
+  const provider =
+    MOCK_PROVIDERS[Math.floor(Math.random() * MOCK_PROVIDERS.length)] ?? 'ollama';
   const effort = MOCK_EFFORT[Math.floor(Math.random() * MOCK_EFFORT.length)] ?? 'high';
   const reqIdx = Math.floor(Math.random() * MOCK_REQUESTS.length);
   const request = MOCK_REQUESTS[reqIdx] ?? MOCK_REQUESTS[0] ?? '';
@@ -374,7 +397,10 @@ export async function simulateOmegaExecution() {
   });
 
   // 3. Mark responding
-  await sendCognitiveStateUpdate({ status: 'responding', processingLoad: 70 + Math.floor(Math.random() * 20) });
+  await sendCognitiveStateUpdate({
+    status: 'responding',
+    processingLoad: 70 + Math.floor(Math.random() * 20),
+  });
 
   // 4. Mark reflecting + complete trace
   await new Promise(r => setTimeout(r, 200 + Math.random() * 300));
@@ -397,13 +423,60 @@ export async function simulateOmegaExecution() {
 
   // 5. Create pipeline steps
   const pipelineSteps = [
-    { id: 'input', name: 'Entrée', status: 'complete' as const, duration: 5, outputSummary: `Message reçu: "${request.slice(0, 50)}…"` },
-    { id: 'normalize', name: 'Normalisation', status: 'complete' as const, duration: 12, engines: ['Helios'], outputSummary: 'Tokenisation + extraction concepts réussie' },
-    { id: 'coherence', name: 'Cohérence', status: 'complete' as const, duration: 45, engines: ['Coherence', 'SingularityBridge'], outputSummary: `Score: ${coherence}%` },
-    { id: 'memory', name: 'Mémoire', status: 'complete' as const, duration: 38, engines: ['MemoryCore'], outputSummary: '47 tokens contexte récupérés, 3 souvenirs LTM activés' },
-    { id: 'engines', name: 'Moteurs', status: 'complete' as const, duration: 67, engines: ['Harmonia', 'Nexus', 'Engine∞'], outputSummary: `Mode ${mode} activé, effort ${effort}` },
-    { id: 'conversation', name: 'Génération', status: 'complete' as const, duration: totalMs - 167, engines: [provider], outputSummary: `Réponse générée: "${response.slice(0, 60)}…"` },
-    { id: 'output', name: 'Sortie', status: 'complete' as const, duration: 8, outputSummary: 'Stream envoyé au client' },
+    {
+      id: 'input',
+      name: 'Entrée',
+      status: 'complete' as const,
+      duration: 5,
+      outputSummary: `Message reçu: "${request.slice(0, 50)}…"`,
+    },
+    {
+      id: 'normalize',
+      name: 'Normalisation',
+      status: 'complete' as const,
+      duration: 12,
+      engines: ['Helios'],
+      outputSummary: 'Tokenisation + extraction concepts réussie',
+    },
+    {
+      id: 'coherence',
+      name: 'Cohérence',
+      status: 'complete' as const,
+      duration: 45,
+      engines: ['Coherence', 'SingularityBridge'],
+      outputSummary: `Score: ${coherence}%`,
+    },
+    {
+      id: 'memory',
+      name: 'Mémoire',
+      status: 'complete' as const,
+      duration: 38,
+      engines: ['MemoryCore'],
+      outputSummary: '47 tokens contexte récupérés, 3 souvenirs LTM activés',
+    },
+    {
+      id: 'engines',
+      name: 'Moteurs',
+      status: 'complete' as const,
+      duration: 67,
+      engines: ['Harmonia', 'Nexus', 'Engine∞'],
+      outputSummary: `Mode ${mode} activé, effort ${effort}`,
+    },
+    {
+      id: 'conversation',
+      name: 'Génération',
+      status: 'complete' as const,
+      duration: totalMs - 167,
+      engines: [provider],
+      outputSummary: `Réponse générée: "${response.slice(0, 60)}…"`,
+    },
+    {
+      id: 'output',
+      name: 'Sortie',
+      status: 'complete' as const,
+      duration: 8,
+      outputSummary: 'Stream envoyé au client',
+    },
   ];
 
   // 6. Send journal entry
@@ -427,7 +500,9 @@ export async function simulateOmegaExecution() {
   // 8. Emit kernel metrics update (cumulative simulation)
   const profileKeys = ['OMEGA', 'ARCHITECT', 'DEEP', 'DEVELOPED', 'BALANCED', 'DIRECT'];
   const dist: Record<string, number> = {};
-  profileKeys.forEach(k => { dist[k] = Math.floor(Math.random() * 10); });
+  profileKeys.forEach(k => {
+    dist[k] = Math.floor(Math.random() * 10);
+  });
   const topKey = mode === 'OMEGA' ? 'OMEGA' : 'ARCHITECT';
   dist[topKey] = (dist[topKey] ?? 0) + 3;
   await sendKernelMetrics({

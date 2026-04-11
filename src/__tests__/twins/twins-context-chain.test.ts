@@ -531,9 +531,13 @@ describe('TWINS H — Owner resonance metadata sync', () => {
     const envelope = buildChatContextEnvelope(makeInput());
     const promptContext = formatContextEnvelopeForSystemPrompt(envelope!);
 
-    expect(promptContext).toContain('twins_owner_themes=présence, clarté, deuxième vitesse');
+    expect(promptContext).toContain(
+      'twins_owner_themes=présence, clarté, deuxième vitesse'
+    );
     expect(promptContext).toContain('twins_source_count=42');
-    expect(promptContext).toContain('twins_reflection_axis=retour au vivant et structure incarnée');
+    expect(promptContext).toContain(
+      'twins_reflection_axis=retour au vivant et structure incarnée'
+    );
     expect(promptContext).toContain('twins_portrait=configured');
   });
 });

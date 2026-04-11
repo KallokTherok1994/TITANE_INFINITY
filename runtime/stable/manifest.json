@@ -3,8 +3,8 @@
   "version": "30.0.0",
   "build_target": "production",
   "certification_level": "P3_STABLE_BUILD",
-  "build_timestamp": null,
-  "build_hash": null,
+  "build_timestamp": "2026-04-11T12:07:31Z",
+  "build_hash": "f0ca56c59743363d81ea46c2676853761c6ebb22",
   "allowlist_source": "src-tauri/allowlist.whitelist.stable.json",
   "config_source": "runtime/stable/tauri.conf.json",
   "stage_directory": "runtime/stable/stage/",
@@ -45,18 +45,15 @@
   ],
   "success_criteria": {
     "exit_code": 0,
-    "artifacts_created": [
-      "*.AppImage",
-      "*.deb"
-    ],
+    "artifacts_created": ["*.AppImage", "*.deb"],
     "size_limit_mb": 100,
     "no_forbidden_content": true
   },
-  "last_validation": 1775884677.45101,
-  "certification_status": "FORBIDDEN_SCAN_PASSED",
+  "last_validation": 1775889691.814297,
+  "certification_status": "BUILD_COMPLETE",
   "p3_3_forbidden_scan": {
     "status": "PASS",
-    "last_run": 1775884677.451019,
+    "last_run": 1775889691.814306,
     "violations": 0
   }
 }

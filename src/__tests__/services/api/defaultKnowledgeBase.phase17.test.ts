@@ -114,8 +114,8 @@ describe('defaultKnowledgeBase — Phase 17 French enforcement & bullet-line for
     // This is the core regression guard for the AH-105 fix:
     // Before fix: split('\n').length would return entries.length + 1 (overcounting the header)
     expect(splitTotal).toBe(entries.length + 1); // header + N category lines
-    expect(bulletCount).toBe(entries.length);    // N category lines only
-    expect(bulletCount).toBe(splitTotal - 1);    // regression-proof assertion
+    expect(bulletCount).toBe(entries.length); // N category lines only
+    expect(bulletCount).toBe(splitTotal - 1); // regression-proof assertion
   });
 
   // ─────────────────────────────────────────────────────────────────────────

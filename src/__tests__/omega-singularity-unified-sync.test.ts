@@ -39,10 +39,7 @@ import {
   type ModeClassification,
 } from '../services/ai/omegaModeClassifier';
 
-import {
-  RESPONSE_PROFILES,
-  type ResponseProfileId,
-} from '../services/ai/responsePolicy';
+import { RESPONSE_PROFILES, type ResponseProfileId } from '../services/ai/responsePolicy';
 
 import {
   getChampion,
@@ -119,8 +116,16 @@ function makeKernelInput(
 
 describe('A — Mode Registry Completeness', () => {
   it('A1: tous les 8 canonical modes doivent être classifiables', () => {
-    for (const msg of ['test message', 'analyse complexe', 'bug erreur', 'architecture modules',
-      'certifie valide', 'explore idées', 'réponds vite', '']) {
+    for (const msg of [
+      'test message',
+      'analyse complexe',
+      'bug erreur',
+      'architecture modules',
+      'certifie valide',
+      'explore idées',
+      'réponds vite',
+      '',
+    ]) {
       const result = classifyMode({ message: msg, history: [] });
       expect(result).toBeDefined();
       expect(result.canonicalMode).toBeTruthy();
@@ -178,7 +183,10 @@ describe('A — Mode Registry Completeness', () => {
 
     for (const mode of ALL_CANONICAL_MODES.filter(m => m !== 'SHADOW_LEARNING')) {
       const result = classifyMode({ message: testMessages[mode], history: [] });
-      expect(ALL_PROFILE_IDS, `Mode ${result.canonicalMode}: profileId '${result.profileId}' invalide`).toContain(result.profileId);
+      expect(
+        ALL_PROFILE_IDS,
+        `Mode ${result.canonicalMode}: profileId '${result.profileId}' invalide`
+      ).toContain(result.profileId);
     }
   });
 
@@ -191,7 +199,14 @@ describe('A — Mode Registry Completeness', () => {
   });
 
   it('A5: effortLevel de chaque mode est dans ALL_EFFORT_LEVELS', () => {
-    for (const msg of ['vite', 'analyse profonde', 'architecture', 'bug', 'certifie', 'explore']) {
+    for (const msg of [
+      'vite',
+      'analyse profonde',
+      'architecture',
+      'bug',
+      'certifie',
+      'explore',
+    ]) {
       const result = classifyMode({ message: msg, history: [] });
       expect(ALL_EFFORT_LEVELS).toContain(result.effortLevel);
     }
@@ -208,12 +223,18 @@ describe('A — Mode Registry Completeness', () => {
     ];
     for (const msg of testMessages) {
       const result = classifyMode({ message: msg, history: [] });
-      expect(result.modelClass, `Message '${msg}': modelClass HAIKU non autorisé`).not.toBe('HAIKU');
+      expect(
+        result.modelClass,
+        `Message '${msg}': modelClass HAIKU non autorisé`
+      ).not.toBe('HAIKU');
     }
   });
 
   it('A7: CERTIFY a toujours effortLevel=max', () => {
-    const result = classifyMode({ message: 'vérifie valide certifie ce résultat runtime', history: [] });
+    const result = classifyMode({
+      message: 'vérifie valide certifie ce résultat runtime',
+      history: [],
+    });
     if (result.canonicalMode === 'CERTIFY') {
       expect(result.effortLevel).toBe('max');
     }
@@ -248,7 +269,12 @@ describe('A — Mode Registry Completeness', () => {
 
 describe('B — Type Alignment Cross-Module', () => {
   it('B1: EffortLevel range — 4 niveaux ordonnés (low < medium < high < max)', () => {
-    const EFFORT_RANK: Record<EffortLevel, number> = { low: 1, medium: 2, high: 3, max: 4 };
+    const EFFORT_RANK: Record<EffortLevel, number> = {
+      low: 1,
+      medium: 2,
+      high: 3,
+      max: 4,
+    };
     expect(EFFORT_RANK.low).toBeLessThan(EFFORT_RANK.medium);
     expect(EFFORT_RANK.medium).toBeLessThan(EFFORT_RANK.high);
     expect(EFFORT_RANK.high).toBeLessThan(EFFORT_RANK.max);
@@ -274,7 +300,10 @@ describe('B — Type Alignment Cross-Module', () => {
   });
 
   it('B4: ARCHITECT mode → backendMode=planning (cohérence CanonicalMode→Backend)', () => {
-    const result = classifyMode({ message: 'architecture modules système conception intégration', history: [] });
+    const result = classifyMode({
+      message: 'architecture modules système conception intégration',
+      history: [],
+    });
     if (result.canonicalMode === 'ARCHITECT') {
       expect(result.backendMode).toBe('planning');
       expect(result.modelClass).toBe('OPUS');
@@ -282,14 +311,20 @@ describe('B — Type Alignment Cross-Module', () => {
   });
 
   it('B5: REPAIR mode → backendMode=debug_cognitive (cohérence CanonicalMode→Backend)', () => {
-    const result = classifyMode({ message: 'TypeError: Cannot read properties bug erreur exception', history: [] });
+    const result = classifyMode({
+      message: 'TypeError: Cannot read properties bug erreur exception',
+      history: [],
+    });
     if (result.canonicalMode === 'REPAIR') {
       expect(result.backendMode).toBe('debug_cognitive');
     }
   });
 
   it('B6: DEEP_REASONING mode → backendMode=synthesis', () => {
-    const result = classifyMode({ message: 'synthèse profonde analyse raisonnement complexe chaînes longues', history: [] });
+    const result = classifyMode({
+      message: 'synthèse profonde analyse raisonnement complexe chaînes longues',
+      history: [],
+    });
     if (result.canonicalMode === 'DEEP_REASONING') {
       expect(result.backendMode).toBe('synthesis');
       expect(result.effortLevel).toBe('high');
@@ -297,7 +332,10 @@ describe('B — Type Alignment Cross-Module', () => {
   });
 
   it('B7: EXPLORATION mode → backendMode=brainstorming', () => {
-    const result = classifyMode({ message: 'brainstorming explore idées alternatives possibilités créer', history: [] });
+    const result = classifyMode({
+      message: 'brainstorming explore idées alternatives possibilités créer',
+      history: [],
+    });
     if (result.canonicalMode === 'EXPLORATION') {
       expect(result.backendMode).toBe('brainstorming');
     }
@@ -321,12 +359,18 @@ describe('C — Mode Specs ↔ Response Profiles Coherence', () => {
     for (const msg of testMessages) {
       const result = classifyMode({ message: msg, history: [] });
       const profile = RESPONSE_PROFILES[result.profileId];
-      expect(profile, `ProfileId '${result.profileId}' non trouvé dans RESPONSE_PROFILES pour message '${msg}'`).toBeDefined();
+      expect(
+        profile,
+        `ProfileId '${result.profileId}' non trouvé dans RESPONSE_PROFILES pour message '${msg}'`
+      ).toBeDefined();
     }
     // SHADOW_LEARNING aussi
     const shadowResult = shadowLearningMode();
     const shadowProfile = RESPONSE_PROFILES[shadowResult.profileId];
-    expect(shadowProfile, `ProfileId '${shadowResult.profileId}' de SHADOW_LEARNING non trouvé`).toBeDefined();
+    expect(
+      shadowProfile,
+      `ProfileId '${shadowResult.profileId}' de SHADOW_LEARNING non trouvé`
+    ).toBeDefined();
   });
 
   it('C2: tous les ResponseProfiles ont les champs requis (id, maxTokens, temperature, memory, reasoningEffort)', () => {
@@ -380,16 +424,23 @@ describe('D — Champion/Challenger Registry Unification', () => {
   });
 
   it('D2: Ollama est champion pour tous les canonical modes (sauf SHADOW_LEARNING non-applicable)', () => {
-    const applicableModes: CanonicalMode[] = ALL_CANONICAL_MODES.filter(m => m !== 'SHADOW_LEARNING');
+    const applicableModes: CanonicalMode[] = ALL_CANONICAL_MODES.filter(
+      m => m !== 'SHADOW_LEARNING'
+    );
     for (const mode of applicableModes) {
       const champion = getChampion(mode);
       expect(champion, `Champion manquant pour mode ${mode}`).not.toBeNull();
-      expect((champion as ChampionEntry).provider, `Mode ${mode}: champion doit être ollama`).toBe('ollama');
+      expect(
+        (champion as ChampionEntry).provider,
+        `Mode ${mode}: champion doit être ollama`
+      ).toBe('ollama');
     }
   });
 
   it('D3: chaque champion a un modèle Ollama valide (llama3.x)', () => {
-    const applicableModes: CanonicalMode[] = ALL_CANONICAL_MODES.filter(m => m !== 'SHADOW_LEARNING');
+    const applicableModes: CanonicalMode[] = ALL_CANONICAL_MODES.filter(
+      m => m !== 'SHADOW_LEARNING'
+    );
     for (const mode of applicableModes) {
       const champion = getChampion(mode);
       expect(champion).not.toBeNull();
@@ -399,7 +450,9 @@ describe('D — Champion/Challenger Registry Unification', () => {
   });
 
   it('D4: chaque champion a un confidence_threshold entre 0 et 1', () => {
-    const applicableModes: CanonicalMode[] = ALL_CANONICAL_MODES.filter(m => m !== 'SHADOW_LEARNING');
+    const applicableModes: CanonicalMode[] = ALL_CANONICAL_MODES.filter(
+      m => m !== 'SHADOW_LEARNING'
+    );
     for (const mode of applicableModes) {
       const champion = getChampion(mode);
       const threshold = (champion as ChampionEntry).confidence_threshold;
@@ -413,8 +466,9 @@ describe('D — Champion/Challenger Registry Unification', () => {
     const directChampion = getChampion('DIRECT');
     expect(certifyChampion).not.toBeNull();
     expect(directChampion).not.toBeNull();
-    expect((certifyChampion as ChampionEntry).confidence_threshold)
-      .toBeGreaterThanOrEqual((directChampion as ChampionEntry).confidence_threshold);
+    expect(
+      (certifyChampion as ChampionEntry).confidence_threshold
+    ).toBeGreaterThanOrEqual((directChampion as ChampionEntry).confidence_threshold);
   });
 
   it('D6: ARCHITECT a un confidence_threshold >= 0.8 (architectures critiques)', () => {
@@ -441,8 +495,10 @@ describe('E — CanonicalDiscernmentKernel ↔ OmegaModeClassifier Contract', ()
     kernel = new CanonicalDiscernmentKernel();
   });
 
-  const makeInput = (msg: string, overrides: Partial<DiscernmentInput> = {}): DiscernmentInput =>
-    makeKernelInput(msg, overrides);
+  const makeInput = (
+    msg: string,
+    overrides: Partial<DiscernmentInput> = {}
+  ): DiscernmentInput => makeKernelInput(msg, overrides);
 
   it('E1: discern() retourne une CanonicalDecision avec tous les champs requis', () => {
     const decision = kernel.discern(makeInput('Explique-moi TypeScript'));
@@ -475,25 +531,27 @@ describe('E — CanonicalDiscernmentKernel ↔ OmegaModeClassifier Contract', ()
   });
 
   it('E4: profil riche (ARCHITECT/DEEP/OMEGA) pour message de design système', () => {
-    const decision = kernel.discern(makeInput(
-      'Conçois une architecture microservices avec 5 modules, Redis, PostgreSQL et gestion de queues'
-    ));
+    const decision = kernel.discern(
+      makeInput(
+        'Conçois une architecture microservices avec 5 modules, Redis, PostgreSQL et gestion de queues'
+      )
+    );
     expect(['ARCHITECT', 'DEEP', 'OMEGA', 'DEVELOPED']).toContain(decision.profileId);
   });
 
   it('E5: provider.reasoningEffort ≥ high pour CERTIFY explicite', () => {
-    const decision = kernel.discern(makeInput(
-      'certifie valide vérifie que ce runtime est correct',
-      { mode: 'debug_cognitive' }
-    ));
+    const decision = kernel.discern(
+      makeInput('certifie valide vérifie que ce runtime est correct', {
+        mode: 'debug_cognitive',
+      })
+    );
     expect(['high', 'max']).toContain(decision.provider.reasoningEffort);
   });
 
   it('E6: providerPreference respectée par le kernel (provider.name)', () => {
-    const decision = kernel.discern(makeInput(
-      'Analyse ce code',
-      { providerPreference: 'openai' }
-    ));
+    const decision = kernel.discern(
+      makeInput('Analyse ce code', { providerPreference: 'openai' })
+    );
     expect(decision.provider.name).toBe('openai');
   });
 
@@ -503,18 +561,24 @@ describe('E — CanonicalDiscernmentKernel ↔ OmegaModeClassifier Contract', ()
   });
 
   it('E8: memoryInjection.use=true pour message de recall mémoire', () => {
-    const decision = kernel.discern(makeInput(
-      'rappelle-toi de ce que je t\'ai dit sur mon projet',
-      {
+    const decision = kernel.discern(
+      makeInput("rappelle-toi de ce que je t'ai dit sur mon projet", {
         memoryContext: {
           ...EMPTY_MEMORY,
-          activeProjects: [{
-            id: 'proj-1', name: 'TITANE', description: 'App React',
-            status: 'active', priority: 'high', lastActivity: new Date(), tags: [],
-          }],
+          activeProjects: [
+            {
+              id: 'proj-1',
+              name: 'TITANE',
+              description: 'App React',
+              status: 'active',
+              priority: 'high',
+              lastActivity: new Date(),
+              tags: [],
+            },
+          ],
         },
-      }
-    ));
+      })
+    );
     expect(decision.memoryInjection.use).toBe(true);
   });
 
@@ -528,9 +592,18 @@ describe('E — CanonicalDiscernmentKernel ↔ OmegaModeClassifier Contract', ()
   });
 
   it('E10: discern() profileId est toujours dans ALL_PROFILE_IDS', () => {
-    for (const msg of ['bonjour', 'architecture complexe', 'bug erreur TypeError', 'certifie valide', 'explore créer']) {
+    for (const msg of [
+      'bonjour',
+      'architecture complexe',
+      'bug erreur TypeError',
+      'certifie valide',
+      'explore créer',
+    ]) {
       const decision = kernel.discern(makeInput(msg));
-      expect(ALL_PROFILE_IDS, `ProfileId "${decision.profileId}" invalide pour "${msg}"`).toContain(decision.profileId);
+      expect(
+        ALL_PROFILE_IDS,
+        `ProfileId "${decision.profileId}" invalide pour "${msg}"`
+      ).toContain(decision.profileId);
     }
   });
 });
@@ -543,7 +616,7 @@ describe('F — Performance Benchmarks', () => {
   it('F1: classifyMode() < 1ms (spécification pure function)', () => {
     const start = performance.now();
     for (let i = 0; i < 100; i++) {
-      classifyMode({ message: 'Explique-moi l\'architecture de ce système', history: [] });
+      classifyMode({ message: "Explique-moi l'architecture de ce système", history: [] });
     }
     const elapsed = performance.now() - start;
     const avgMs = elapsed / 100;
@@ -561,7 +634,14 @@ describe('F — Performance Benchmarks', () => {
   it('F3: resolveMode() < 0.1ms (pure function triviale)', () => {
     const start = performance.now();
     for (let i = 0; i < 1000; i++) {
-      resolveMode({ canonicalMode: 'ARCHITECT', confidence: 0.9, profileId: 'ARCHITECT', backendMode: 'planning', effortLevel: 'high', modelClass: 'OPUS' });
+      resolveMode({
+        canonicalMode: 'ARCHITECT',
+        confidence: 0.9,
+        profileId: 'ARCHITECT',
+        backendMode: 'planning',
+        effortLevel: 'high',
+        modelClass: 'OPUS',
+      });
     }
     const elapsed = performance.now() - start;
     const avgMs = elapsed / 1000;
@@ -571,7 +651,7 @@ describe('F — Performance Benchmarks', () => {
   it('F4: discern() < 50ms (traitement complet kernel)', () => {
     const kernel = new CanonicalDiscernmentKernel();
     const start = performance.now();
-    kernel.discern(makeKernelInput('Explique-moi l\'architecture OMEGA'));
+    kernel.discern(makeKernelInput("Explique-moi l'architecture OMEGA"));
     const elapsed = performance.now() - start;
     expect(elapsed).toBeLessThan(50);
   });
@@ -589,7 +669,9 @@ describe('F — Performance Benchmarks', () => {
   });
 
   it('F6: getChampion() pour tous les modes < 1ms total', () => {
-    const modes: CanonicalMode[] = ALL_CANONICAL_MODES.filter(m => m !== 'SHADOW_LEARNING');
+    const modes: CanonicalMode[] = ALL_CANONICAL_MODES.filter(
+      m => m !== 'SHADOW_LEARNING'
+    );
     const start = performance.now();
     for (const mode of modes) {
       getChampion(mode);
@@ -599,12 +681,11 @@ describe('F — Performance Benchmarks', () => {
   });
 
   it('F7: classifyMode() stabilité — 3 appels identiques produisent le même résultat', () => {
-    const input = { message: 'architecture système modules dépendances', history: [] as never[] };
-    const results = [
-      classifyMode(input),
-      classifyMode(input),
-      classifyMode(input),
-    ];
+    const input = {
+      message: 'architecture système modules dépendances',
+      history: [] as never[],
+    };
+    const results = [classifyMode(input), classifyMode(input), classifyMode(input)];
     expect(results[0].canonicalMode).toBe(results[1].canonicalMode);
     expect(results[1].canonicalMode).toBe(results[2].canonicalMode);
     expect(results[0].effortLevel).toBe(results[1].effortLevel);
@@ -633,22 +714,28 @@ vi.mock('@/lib/security', async importOriginal => {
 
 describe('G — SingularityFusionCore State Coherence', () => {
   it('G1: SingularityFusionCore est un singleton', async () => {
-    const { singularityFusion: instance1 } = await import('../core/singularity/SingularityFusionCore');
-    const { singularityFusion: instance2 } = await import('../core/singularity/SingularityFusionCore');
+    const { singularityFusion: instance1 } =
+      await import('../core/singularity/SingularityFusionCore');
+    const { singularityFusion: instance2 } =
+      await import('../core/singularity/SingularityFusionCore');
     expect(instance1).toBe(instance2);
   });
 
   it('G2: getState() retourne un état valide (non-null)', async () => {
-    const { singularityFusion } = await import('../core/singularity/SingularityFusionCore');
+    const { singularityFusion } =
+      await import('../core/singularity/SingularityFusionCore');
     const state = singularityFusion.getState();
     expect(state).toBeDefined();
     expect(typeof state).toBe('object');
   });
 
-  it('G3: updateState() met à jour l\'état partiellement', async () => {
-    const { singularityFusion } = await import('../core/singularity/SingularityFusionCore');
+  it("G3: updateState() met à jour l'état partiellement", async () => {
+    const { singularityFusion } =
+      await import('../core/singularity/SingularityFusionCore');
     expect(() =>
-      singularityFusion.updateState({} as Parameters<typeof singularityFusion.updateState>[0])
+      singularityFusion.updateState(
+        {} as Parameters<typeof singularityFusion.updateState>[0]
+      )
     ).not.toThrow();
     const updatedState = singularityFusion.getState();
     expect(updatedState).toBeDefined();
@@ -656,7 +743,8 @@ describe('G — SingularityFusionCore State Coherence', () => {
   });
 
   it('G4: resetState() réinitialise sans erreur', async () => {
-    const { singularityFusion } = await import('../core/singularity/SingularityFusionCore');
+    const { singularityFusion } =
+      await import('../core/singularity/SingularityFusionCore');
     expect(() => singularityFusion.resetState()).not.toThrow();
     const state = singularityFusion.getState();
     expect(state).toBeDefined();
@@ -684,23 +772,36 @@ describe('H — Response Profiles Completeness', () => {
   it('H2: chaque profil a maxTokens entre 100 et 16000', () => {
     for (const profileId of ALL_PROFILE_IDS) {
       const profile = RESPONSE_PROFILES[profileId];
-      expect(profile.maxTokens, `${profileId}.maxTokens invalide`).toBeGreaterThanOrEqual(100);
-      expect(profile.maxTokens, `${profileId}.maxTokens trop élevé`).toBeLessThanOrEqual(16000);
+      expect(profile.maxTokens, `${profileId}.maxTokens invalide`).toBeGreaterThanOrEqual(
+        100
+      );
+      expect(profile.maxTokens, `${profileId}.maxTokens trop élevé`).toBeLessThanOrEqual(
+        16000
+      );
     }
   });
 
   it('H3: chaque profil a temperature entre 0 et 1', () => {
     for (const profileId of ALL_PROFILE_IDS) {
       const profile = RESPONSE_PROFILES[profileId];
-      expect(profile.temperature, `${profileId}.temperature invalide`).toBeGreaterThanOrEqual(0);
+      expect(
+        profile.temperature,
+        `${profileId}.temperature invalide`
+      ).toBeGreaterThanOrEqual(0);
       expect(profile.temperature, `${profileId}.temperature > 1`).toBeLessThanOrEqual(1);
     }
   });
 
   it('H4: profils croissants par complexité (DIRECT < DEVELOPED < DEEP < OMEGA en tokens)', () => {
-    expect(RESPONSE_PROFILES.DIRECT.maxTokens).toBeLessThan(RESPONSE_PROFILES.DEVELOPED.maxTokens);
-    expect(RESPONSE_PROFILES.DEVELOPED.maxTokens).toBeLessThanOrEqual(RESPONSE_PROFILES.DEEP.maxTokens);
-    expect(RESPONSE_PROFILES.DEEP.maxTokens).toBeLessThanOrEqual(RESPONSE_PROFILES.OMEGA.maxTokens);
+    expect(RESPONSE_PROFILES.DIRECT.maxTokens).toBeLessThan(
+      RESPONSE_PROFILES.DEVELOPED.maxTokens
+    );
+    expect(RESPONSE_PROFILES.DEVELOPED.maxTokens).toBeLessThanOrEqual(
+      RESPONSE_PROFILES.DEEP.maxTokens
+    );
+    expect(RESPONSE_PROFILES.DEEP.maxTokens).toBeLessThanOrEqual(
+      RESPONSE_PROFILES.OMEGA.maxTokens
+    );
   });
 
   it('H5: profil OMEGA a memory.injectSTM=true et memory.injectLTM=true (mémoire complète)', () => {
@@ -723,7 +824,10 @@ describe('H — Response Profiles Completeness', () => {
   it('H8: tous les profils ont un reasoningEffort défini', () => {
     for (const profileId of ALL_PROFILE_IDS) {
       const profile = RESPONSE_PROFILES[profileId];
-      expect(profile.reasoningEffort, `${profileId}: reasoningEffort manquant`).toBeDefined();
+      expect(
+        profile.reasoningEffort,
+        `${profileId}: reasoningEffort manquant`
+      ).toBeDefined();
       expect(ALL_EFFORT_LEVELS).toContain(profile.reasoningEffort);
     }
   });
@@ -802,14 +906,14 @@ describe('J — Knowledge Base Count Synchronization', () => {
     const {
       DEFAULT_KB_CANONICAL_ENTRY_COUNT,
       getAllEntries,
-    } = await import('../services/api/defaultKnowledgeBase');
-    const entries = await getAllEntries();
+    } = await import('../services/api/defaultKnowledgeBase');    const entries = await getAllEntries();
     expect(DEFAULT_KB_CANONICAL_ENTRY_COUNT).toBe(158);
     expect(entries.length).toBe(DEFAULT_KB_CANONICAL_ENTRY_COUNT);
   });
 
   it('J3: listCategories() retourne autant de catégories que getAllEntries()', async () => {
-    const { listCategories, getAllEntries } = await import('../services/api/defaultKnowledgeBase');
+    const { listCategories, getAllEntries } =
+      await import('../services/api/defaultKnowledgeBase');
     const categories = await listCategories();
     const entries = await getAllEntries();
     expect(categories.length).toBe(entries.length);
@@ -847,14 +951,52 @@ describe('J — Knowledge Base Count Synchronization', () => {
 describe('K — Anti-Lie Assertions (OMEGA Honesty Contracts)', () => {
   it('K1: assertClassificationHonest ne throw pas pour toutes les combinaisons valides', () => {
     const validCombinations: ModeClassification[] = [
-      { canonicalMode: 'DIRECT', profileId: 'DIRECT', backendMode: 'default', effortLevel: 'low', modelClass: 'SONNET', confidence: 0.8 },
-      { canonicalMode: 'ARCHITECT', profileId: 'ARCHITECT', backendMode: 'planning', effortLevel: 'high', modelClass: 'OPUS', confidence: 0.9 },
-      { canonicalMode: 'CERTIFY', profileId: 'ARCHITECT', backendMode: 'debug_cognitive', effortLevel: 'max', modelClass: 'OPUS', confidence: 0.95 },
-      { canonicalMode: 'EXPLORATION', profileId: 'BALANCED', backendMode: 'brainstorming', effortLevel: 'medium', modelClass: 'SONNET', confidence: 0.75 },
-      { canonicalMode: 'REPAIR', profileId: 'DEEP', backendMode: 'debug_cognitive', effortLevel: 'high', modelClass: 'SONNET', confidence: 0.85 },
+      {
+        canonicalMode: 'DIRECT',
+        profileId: 'DIRECT',
+        backendMode: 'default',
+        effortLevel: 'low',
+        modelClass: 'SONNET',
+        confidence: 0.8,
+      },
+      {
+        canonicalMode: 'ARCHITECT',
+        profileId: 'ARCHITECT',
+        backendMode: 'planning',
+        effortLevel: 'high',
+        modelClass: 'OPUS',
+        confidence: 0.9,
+      },
+      {
+        canonicalMode: 'CERTIFY',
+        profileId: 'ARCHITECT',
+        backendMode: 'debug_cognitive',
+        effortLevel: 'max',
+        modelClass: 'OPUS',
+        confidence: 0.95,
+      },
+      {
+        canonicalMode: 'EXPLORATION',
+        profileId: 'BALANCED',
+        backendMode: 'brainstorming',
+        effortLevel: 'medium',
+        modelClass: 'SONNET',
+        confidence: 0.75,
+      },
+      {
+        canonicalMode: 'REPAIR',
+        profileId: 'DEEP',
+        backendMode: 'debug_cognitive',
+        effortLevel: 'high',
+        modelClass: 'SONNET',
+        confidence: 0.85,
+      },
     ];
     for (const combo of validCombinations) {
-      expect(() => assertClassificationHonest(combo), `Combination ${JSON.stringify(combo)} ne doit pas throw`).not.toThrow();
+      expect(
+        () => assertClassificationHonest(combo),
+        `Combination ${JSON.stringify(combo)} ne doit pas throw`
+      ).not.toThrow();
     }
   });
 
@@ -878,7 +1020,10 @@ describe('K — Anti-Lie Assertions (OMEGA Honesty Contracts)', () => {
         modelClass: 'SONNET',
         confidence: 0.8,
       };
-      expect(() => assertEffortCoherent(classification), `Mode ${mode} avec effort ${effort} ne doit pas throw`).not.toThrow();
+      expect(
+        () => assertEffortCoherent(classification),
+        `Mode ${mode} avec effort ${effort} ne doit pas throw`
+      ).not.toThrow();
     }
   });
 

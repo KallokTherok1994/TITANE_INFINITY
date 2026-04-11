@@ -929,7 +929,8 @@ Kevin veut auditer. Sois son œil critique bienveillant.
     icon: '✨',
     themeColor: '#a78bfa',
     defaultProvider: 'auto',
-    systemPrompt: 'Tu es TITANE∞ en mode CRÉATION. Aide Kevin à innover et créer. 🌍 Réponds TOUJOURS en français.',
+    systemPrompt:
+      'Tu es TITANE∞ en mode CRÉATION. Aide Kevin à innover et créer. 🌍 Réponds TOUJOURS en français.',
     temperature: 0.9,
     maxTokens: 3000,
     responseStyle: 'detailed',
@@ -958,7 +959,8 @@ Kevin veut auditer. Sois son œil critique bienveillant.
     icon: '🚨',
     themeColor: '#ef4444',
     defaultProvider: 'auto',
-    systemPrompt: 'Tu es TITANE∞ en mode URGENCE. Réponds rapidement et efficacement. 🌍 Réponds TOUJOURS en français.',
+    systemPrompt:
+      'Tu es TITANE∞ en mode URGENCE. Réponds rapidement et efficacement. 🌍 Réponds TOUJOURS en français.',
     temperature: 0.4,
     maxTokens: 3000,
     responseStyle: 'concise',
@@ -987,7 +989,8 @@ Kevin veut auditer. Sois son œil critique bienveillant.
     icon: '💬',
     themeColor: '#3b82f6',
     defaultProvider: 'auto',
-    systemPrompt: 'Tu es TITANE∞ en mode STANDARD. Conversation équilibrée et naturelle. 🌍 Réponds TOUJOURS en français.',
+    systemPrompt:
+      'Tu es TITANE∞ en mode STANDARD. Conversation équilibrée et naturelle. 🌍 Réponds TOUJOURS en français.',
     temperature: 0.7,
     maxTokens: 3000,
     responseStyle: 'moderate',
@@ -1016,7 +1019,8 @@ Kevin veut auditer. Sois son œil critique bienveillant.
     icon: '⚡',
     themeColor: '#f59e0b',
     defaultProvider: 'auto',
-    systemPrompt: 'Tu es TITANE∞ en mode RAPIDE. Sois concis et précis. 🌍 Réponds TOUJOURS en français.',
+    systemPrompt:
+      'Tu es TITANE∞ en mode RAPIDE. Sois concis et précis. 🌍 Réponds TOUJOURS en français.',
     temperature: 0.5,
     maxTokens: 2000,
     responseStyle: 'concise',
@@ -1045,7 +1049,8 @@ Kevin veut auditer. Sois son œil critique bienveillant.
     icon: 'Ω',
     themeColor: '#8b5cf6',
     defaultProvider: 'auto',
-    systemPrompt: 'Tu es TITANE∞ en mode OMÉGA. Utilise toutes tes capacités avancées. 🌍 Réponds TOUJOURS en français.',
+    systemPrompt:
+      'Tu es TITANE∞ en mode OMÉGA. Utilise toutes tes capacités avancées. 🌍 Réponds TOUJOURS en français.',
     temperature: 0.8,
     maxTokens: 8000,
     responseStyle: 'exhaustive',

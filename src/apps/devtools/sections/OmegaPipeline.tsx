@@ -72,7 +72,11 @@ const modeColors: Record<string, { bg: string; text: string; border: string }> =
   default: { bg: 'rgba(100,100,100,0.18)', text: '#a0a0a0', border: '#646464' },
 };
 
-const DEFAULT_MODE_COLOR = modeColors.default as { bg: string; text: string; border: string };
+const DEFAULT_MODE_COLOR = modeColors.default as {
+  bg: string;
+  text: string;
+  border: string;
+};
 function getModeColor(mode: string) {
   return modeColors[mode] ?? DEFAULT_MODE_COLOR;
 }
@@ -106,7 +110,8 @@ const statusLabels: Record<CognitiveStatus, string> = {
 function CognitiveBanner({ state }: { state: CognitiveState }) {
   const mode = state.currentMode || 'default';
   const modeColor = getModeColor(mode);
-  const effortColor = effortColors[state.effortLevel] ?? 'var(--text-muted, rgba(255,255,255,0.60))';
+  const effortColor =
+    effortColors[state.effortLevel] ?? 'var(--text-muted, rgba(255,255,255,0.60))';
   const isActive = state.status !== 'idle';
 
   return (
@@ -120,14 +125,14 @@ function CognitiveBanner({ state }: { state: CognitiveState }) {
       <div className="flex flex-wrap items-center gap-3 mb-3">
         {/* Status */}
         <div className="flex items-center gap-2">
-          <span
-            className={`text-lg ${isActive ? 'animate-pulse' : ''}`}
-          >
+          <span className={`text-lg ${isActive ? 'animate-pulse' : ''}`}>
             {statusIcons[state.status]}
           </span>
           <span
             className="text-sm font-semibold"
-            style={{ color: isActive ? '#93b399' : 'var(--text-muted, rgba(255,255,255,0.60))' }}
+            style={{
+              color: isActive ? '#93b399' : 'var(--text-muted, rgba(255,255,255,0.60))',
+            }}
           >
             {statusLabels[state.status]}
           </span>
@@ -136,7 +141,11 @@ function CognitiveBanner({ state }: { state: CognitiveState }) {
         {/* Mode badge */}
         <span
           className="text-xs font-bold px-2 py-1 rounded-full"
-          style={{ background: modeColor.bg, color: modeColor.text, border: `1px solid ${modeColor.border}` }}
+          style={{
+            background: modeColor.bg,
+            color: modeColor.text,
+            border: `1px solid ${modeColor.border}`,
+          }}
         >
           ⚡ {mode}
         </span>
@@ -144,7 +153,11 @@ function CognitiveBanner({ state }: { state: CognitiveState }) {
         {/* Provider badge */}
         <span
           className="text-xs font-medium px-2 py-1 rounded-full"
-          style={{ background: 'var(--bg-surface, #181c21)', color: 'var(--text-primary, #e0e0e0)', border: 'var(--border, rgba(196,196,196,0.12))' }}
+          style={{
+            background: 'var(--bg-surface, #181c21)',
+            color: 'var(--text-primary, #e0e0e0)',
+            border: 'var(--border, rgba(196,196,196,0.12))',
+          }}
         >
           🔌 {state.currentProvider}
         </span>
@@ -163,19 +176,30 @@ function CognitiveBanner({ state }: { state: CognitiveState }) {
         {/* Singularity coherence */}
         <div>
           <div className="flex justify-between mb-1">
-            <span className="text-xs" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>
+            <span
+              className="text-xs"
+              style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+            >
               Cohérence Singularité
             </span>
             <span className="text-xs font-bold" style={{ color: '#b48ef0' }}>
               {state.singularityCoherence}%
             </span>
           </div>
-          <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--bg-surface, #181c21)' }}>
+          <div
+            className="h-1.5 rounded-full overflow-hidden"
+            style={{ background: 'var(--bg-surface, #181c21)' }}
+          >
             <div
               className="h-full rounded-full transition-all duration-500"
               style={{
                 width: `${state.singularityCoherence}%`,
-                background: state.singularityCoherence > 80 ? '#b48ef0' : state.singularityCoherence > 60 ? '#7ab8f0' : '#8b5f5f',
+                background:
+                  state.singularityCoherence > 80
+                    ? '#b48ef0'
+                    : state.singularityCoherence > 60
+                      ? '#7ab8f0'
+                      : '#8b5f5f',
               }}
             />
           </div>
@@ -184,19 +208,33 @@ function CognitiveBanner({ state }: { state: CognitiveState }) {
         {/* Processing load */}
         <div>
           <div className="flex justify-between mb-1">
-            <span className="text-xs" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>
+            <span
+              className="text-xs"
+              style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+            >
               Charge cognitive
             </span>
-            <span className="text-xs font-bold" style={{ color: state.processingLoad > 80 ? '#8b5f5f' : '#93b399' }}>
+            <span
+              className="text-xs font-bold"
+              style={{ color: state.processingLoad > 80 ? '#8b5f5f' : '#93b399' }}
+            >
               {state.processingLoad}%
             </span>
           </div>
-          <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--bg-surface, #181c21)' }}>
+          <div
+            className="h-1.5 rounded-full overflow-hidden"
+            style={{ background: 'var(--bg-surface, #181c21)' }}
+          >
             <div
               className="h-full rounded-full transition-all duration-500"
               style={{
                 width: `${state.processingLoad}%`,
-                background: state.processingLoad > 80 ? '#8b5f5f' : state.processingLoad > 60 ? '#f0b87a' : '#93b399',
+                background:
+                  state.processingLoad > 80
+                    ? '#8b5f5f'
+                    : state.processingLoad > 60
+                      ? '#f0b87a'
+                      : '#93b399',
               }}
             />
           </div>
@@ -229,31 +267,52 @@ function PipelineStepCard({
       {index < total - 1 && (
         <div
           className="absolute left-6 top-14 w-0.5 h-6 -mt-2"
-          style={{ background: step.status === 'complete' ? '#93b399' : 'var(--border, rgba(196,196,196,0.12))' }}
+          style={{
+            background:
+              step.status === 'complete'
+                ? '#93b399'
+                : 'var(--border, rgba(196,196,196,0.12))',
+          }}
         />
       )}
 
       <div
         className={`p-4 rounded-lg border transition-all duration-300 ${isActive ? 'ring-2' : ''}`}
-        style={{ background: colors.bg, borderColor: colors.border, ...(isActive && { '--tw-ring-color': colors.border }) } as React.CSSProperties}
+        style={
+          {
+            background: colors.bg,
+            borderColor: colors.border,
+            ...(isActive && { '--tw-ring-color': colors.border }),
+          } as React.CSSProperties
+        }
       >
         <div className="flex items-start gap-4">
           {/* Icon */}
           <div
             className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-2xl ${isActive ? 'animate-pulse' : ''}`}
-            style={{ background: 'var(--bg-surface, #181c21)', border: `2px solid ${colors.border}` }}
+            style={{
+              background: 'var(--bg-surface, #181c21)',
+              border: `2px solid ${colors.border}`,
+            }}
           >
             {icon}
           </div>
 
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between mb-2">
-              <h4 className="text-base font-semibold" style={{ color: 'var(--text-primary, #e0e0e0)' }}>
+              <h4
+                className="text-base font-semibold"
+                style={{ color: 'var(--text-primary, #e0e0e0)' }}
+              >
                 {step.name}
               </h4>
               <span
                 className="text-xs font-medium px-2 py-1 rounded-full"
-                style={{ background: colors.bg, color: colors.text, border: `1px solid ${colors.border}` }}
+                style={{
+                  background: colors.bg,
+                  color: colors.text,
+                  border: `1px solid ${colors.border}`,
+                }}
               >
                 {step.status.toUpperCase()}
               </span>
@@ -262,17 +321,29 @@ function PipelineStepCard({
             {/* Duration bar */}
             {step.duration !== undefined && (
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-xs" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>
+                <span
+                  className="text-xs"
+                  style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+                >
                   Durée:
                 </span>
-                <span className="text-xs font-medium" style={{ color: 'var(--text-primary, #e0e0e0)' }}>
+                <span
+                  className="text-xs font-medium"
+                  style={{ color: 'var(--text-primary, #e0e0e0)' }}
+                >
                   {step.duration}ms
                 </span>
                 {step.duration > 0 && totalDuration > 0 && (
-                  <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--bg-surface, #181c21)' }}>
+                  <div
+                    className="flex-1 h-1.5 rounded-full overflow-hidden"
+                    style={{ background: 'var(--bg-surface, #181c21)' }}
+                  >
                     <div
                       className="h-full transition-all duration-300"
-                      style={{ width: `${Math.min((step.duration / totalDuration) * 100, 100)}%`, background: colors.border }}
+                      style={{
+                        width: `${Math.min((step.duration / totalDuration) * 100, 100)}%`,
+                        background: colors.border,
+                      }}
                     />
                   </div>
                 )}
@@ -282,14 +353,20 @@ function PipelineStepCard({
             {/* Engines */}
             {step.engines && step.engines.length > 0 && (
               <div className="flex items-center gap-2 mb-2 flex-wrap">
-                <span className="text-xs" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>
+                <span
+                  className="text-xs"
+                  style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+                >
                   Moteurs:
                 </span>
                 {step.engines.map(engine => (
                   <span
                     key={engine}
                     className="text-xs px-2 py-0.5 rounded-full"
-                    style={{ background: 'var(--bg-surface, #181c21)', color: 'var(--text-primary, #e0e0e0)' }}
+                    style={{
+                      background: 'var(--bg-surface, #181c21)',
+                      color: 'var(--text-primary, #e0e0e0)',
+                    }}
                   >
                     {engine}
                   </span>
@@ -303,14 +380,24 @@ function PipelineStepCard({
                 <button
                   onClick={() => setExpanded(prev => !prev)}
                   className="text-xs flex items-center gap-1 mb-1"
-                  style={{ color: '#7ab8f0', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                  style={{
+                    color: '#7ab8f0',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: 0,
+                  }}
                 >
                   {expanded ? '▼' : '▶'} Détails
                 </button>
                 {expanded && (
                   <div
                     className="text-xs p-2 rounded-md font-mono"
-                    style={{ background: 'rgba(30,120,200,0.08)', color: 'var(--text-primary, #e0e0e0)', borderLeft: '2px solid #7ab8f0' }}
+                    style={{
+                      background: 'rgba(30,120,200,0.08)',
+                      color: 'var(--text-primary, #e0e0e0)',
+                      borderLeft: '2px solid #7ab8f0',
+                    }}
                   >
                     {step.outputSummary}
                   </div>
@@ -357,20 +444,27 @@ function ReasoningTracePanel({ trace }: { trace: ReasoningTrace }) {
             Pensées de TITANE∞
           </span>
           {!isComplete && (
-            <span className="text-xs px-2 py-0.5 rounded-full animate-pulse"
-              style={{ background: 'rgba(130,80,200,0.25)', color: '#b48ef0' }}>
+            <span
+              className="text-xs px-2 py-0.5 rounded-full animate-pulse"
+              style={{ background: 'rgba(130,80,200,0.25)', color: '#b48ef0' }}
+            >
               EN COURS
             </span>
           )}
           {isComplete && (
-            <span className="text-xs px-2 py-0.5 rounded-full"
-              style={{ background: 'rgba(147,179,153,0.20)', color: '#93b399' }}>
+            <span
+              className="text-xs px-2 py-0.5 rounded-full"
+              style={{ background: 'rgba(147,179,153,0.20)', color: '#93b399' }}
+            >
               ✓ TERMINÉ
             </span>
           )}
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-xs font-mono" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>
+          <span
+            className="text-xs font-mono"
+            style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+          >
             {trace.steps.length} étape{trace.steps.length > 1 ? 's' : ''}
             {isComplete && trace.completedAt
               ? ` · ${trace.completedAt - trace.startedAt}ms`
@@ -390,7 +484,10 @@ function ReasoningTracePanel({ trace }: { trace: ReasoningTrace }) {
               <div
                 key={step.id}
                 className="p-3 rounded-md"
-                style={{ background: 'var(--bg-surface, #181c21)', borderLeft: '3px solid #8250c8' }}
+                style={{
+                  background: 'var(--bg-surface, #181c21)',
+                  borderLeft: '3px solid #8250c8',
+                }}
               >
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-xs font-bold" style={{ color: '#b48ef0' }}>
@@ -398,7 +495,10 @@ function ReasoningTracePanel({ trace }: { trace: ReasoningTrace }) {
                   </span>
                   <div className="flex items-center gap-2">
                     {step.durationMs !== undefined && (
-                      <span className="text-xs font-mono" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>
+                      <span
+                        className="text-xs font-mono"
+                        style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+                      >
                         {step.durationMs}ms
                       </span>
                     )}
@@ -408,20 +508,30 @@ function ReasoningTracePanel({ trace }: { trace: ReasoningTrace }) {
                   </div>
                 </div>
                 {/* Thought text */}
-                <p className="text-xs mb-2" style={{ color: 'var(--text-primary, #e0e0e0)', lineHeight: 1.6 }}>
+                <p
+                  className="text-xs mb-2"
+                  style={{ color: 'var(--text-primary, #e0e0e0)', lineHeight: 1.6 }}
+                >
                   {step.thought}
                 </p>
                 {/* Decision badge */}
                 {step.decision && (
                   <span
                     className="inline-block text-xs px-2 py-0.5 rounded-full font-medium"
-                    style={{ background: 'rgba(130,80,200,0.20)', color: '#b48ef0', border: '1px solid #8250c8' }}
+                    style={{
+                      background: 'rgba(130,80,200,0.20)',
+                      color: '#b48ef0',
+                      border: '1px solid #8250c8',
+                    }}
                   >
                     ➤ {step.decision}
                   </span>
                 )}
                 {/* Confidence bar */}
-                <div className="mt-2 h-1 rounded-full overflow-hidden" style={{ background: 'var(--bg-panel, #101216)' }}>
+                <div
+                  className="mt-2 h-1 rounded-full overflow-hidden"
+                  style={{ background: 'var(--bg-panel, #101216)' }}
+                >
                   <div
                     className="h-full rounded-full transition-all duration-500"
                     style={{ width: `${conf}%`, background: confColor }}
@@ -435,41 +545,76 @@ function ReasoningTracePanel({ trace }: { trace: ReasoningTrace }) {
           {isComplete && (
             <div
               className="p-3 rounded-md"
-              style={{ background: 'rgba(130,80,200,0.08)', border: '1px solid rgba(130,80,200,0.30)' }}
+              style={{
+                background: 'rgba(130,80,200,0.08)',
+                border: '1px solid rgba(130,80,200,0.30)',
+              }}
             >
               <div className="flex flex-wrap gap-3 mb-2">
-                <span className="text-xs font-bold px-2 py-0.5 rounded-full"
-                  style={{ background: modeColor.bg, color: modeColor.text, border: `1px solid ${modeColor.border}` }}>
+                <span
+                  className="text-xs font-bold px-2 py-0.5 rounded-full"
+                  style={{
+                    background: modeColor.bg,
+                    color: modeColor.text,
+                    border: `1px solid ${modeColor.border}`,
+                  }}
+                >
                   Mode: {trace.finalMode}
                 </span>
-                <span className="text-xs font-medium px-2 py-0.5 rounded-full"
-                  style={{ background: 'var(--bg-surface, #181c21)', color: 'var(--text-primary, #e0e0e0)' }}>
+                <span
+                  className="text-xs font-medium px-2 py-0.5 rounded-full"
+                  style={{
+                    background: 'var(--bg-surface, #181c21)',
+                    color: 'var(--text-primary, #e0e0e0)',
+                  }}
+                >
                   Provider: {trace.selectedProvider}
                 </span>
-                <span className="text-xs font-medium px-2 py-0.5 rounded-full"
-                  style={{ color: effortColors[trace.effortLevel] ?? '#a0a0a0', background: 'var(--bg-surface, #181c21)' }}>
+                <span
+                  className="text-xs font-medium px-2 py-0.5 rounded-full"
+                  style={{
+                    color: effortColors[trace.effortLevel] ?? '#a0a0a0',
+                    background: 'var(--bg-surface, #181c21)',
+                  }}
+                >
                   Effort: {trace.effortLevel}
                 </span>
                 {trace.singularityCoherence !== undefined && (
-                  <span className="text-xs font-medium px-2 py-0.5 rounded-full"
-                    style={{ background: 'var(--bg-surface, #181c21)', color: '#b48ef0' }}>
+                  <span
+                    className="text-xs font-medium px-2 py-0.5 rounded-full"
+                    style={{ background: 'var(--bg-surface, #181c21)', color: '#b48ef0' }}
+                  >
                     Cohérence: {trace.singularityCoherence}%
                   </span>
                 )}
               </div>
               {trace.keyConceptsExtracted && trace.keyConceptsExtracted.length > 0 && (
                 <div className="flex flex-wrap gap-1 mb-2">
-                  <span className="text-xs mr-1" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>Concepts:</span>
+                  <span
+                    className="text-xs mr-1"
+                    style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+                  >
+                    Concepts:
+                  </span>
                   {trace.keyConceptsExtracted.map(c => (
-                    <span key={c} className="text-xs px-1.5 py-0.5 rounded"
-                      style={{ background: 'rgba(114,123,129,0.20)', color: 'var(--text-primary, #e0e0e0)' }}>
+                    <span
+                      key={c}
+                      className="text-xs px-1.5 py-0.5 rounded"
+                      style={{
+                        background: 'rgba(114,123,129,0.20)',
+                        color: 'var(--text-primary, #e0e0e0)',
+                      }}
+                    >
                       {c}
                     </span>
                   ))}
                 </div>
               )}
               {trace.reflectionNotes && (
-                <p className="text-xs italic" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>
+                <p
+                  className="text-xs italic"
+                  style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+                >
                   💭 {trace.reflectionNotes}
                 </p>
               )}
@@ -490,27 +635,48 @@ function JournalEntryCard({ entry }: { entry: JournalEntry }) {
   return (
     <div
       className="rounded-lg border overflow-hidden"
-      style={{ background: 'var(--bg-panel, #101216)', borderColor: entry.success ? 'var(--border, rgba(196,196,196,0.12))' : '#8b5f5f' }}
+      style={{
+        background: 'var(--bg-panel, #101216)',
+        borderColor: entry.success ? 'var(--border, rgba(196,196,196,0.12))' : '#8b5f5f',
+      }}
     >
       <button
         className="w-full flex items-center gap-3 px-4 py-3 text-left"
         style={{ background: 'none', border: 'none', cursor: 'pointer' }}
         onClick={() => setExpanded(prev => !prev)}
       >
-        <span className="text-xs font-mono" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))', flexShrink: 0 }}>
+        <span
+          className="text-xs font-mono"
+          style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))', flexShrink: 0 }}
+        >
           {ts}
         </span>
-        <span className="text-xs font-bold px-2 py-0.5 rounded-full flex-shrink-0"
-          style={{ background: modeColor.bg, color: modeColor.text, border: `1px solid ${modeColor.border}` }}>
+        <span
+          className="text-xs font-bold px-2 py-0.5 rounded-full flex-shrink-0"
+          style={{
+            background: modeColor.bg,
+            color: modeColor.text,
+            border: `1px solid ${modeColor.border}`,
+          }}
+        >
           {entry.mode}
         </span>
-        <span className="text-xs flex-shrink-0" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>
+        <span
+          className="text-xs flex-shrink-0"
+          style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+        >
           {entry.provider}
         </span>
-        <span className="text-xs flex-1 truncate" style={{ color: 'var(--text-primary, #e0e0e0)' }}>
+        <span
+          className="text-xs flex-1 truncate"
+          style={{ color: 'var(--text-primary, #e0e0e0)' }}
+        >
           {entry.requestPreview}
         </span>
-        <span className="text-xs font-mono flex-shrink-0" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>
+        <span
+          className="text-xs font-mono flex-shrink-0"
+          style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+        >
           {entry.totalDurationMs}ms
         </span>
         <span
@@ -522,28 +688,54 @@ function JournalEntryCard({ entry }: { entry: JournalEntry }) {
         >
           {entry.success ? 'OK' : 'ERR'}
         </span>
-        <span style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))', fontSize: '0.75rem' }}>
+        <span
+          style={{
+            color: 'var(--text-muted, rgba(255,255,255,0.60))',
+            fontSize: '0.75rem',
+          }}
+        >
           {expanded ? '▼' : '▶'}
         </span>
       </button>
 
       {expanded && (
-        <div className="px-4 pb-4 space-y-3 border-t" style={{ borderColor: 'var(--border, rgba(196,196,196,0.08))' }}>
+        <div
+          className="px-4 pb-4 space-y-3 border-t"
+          style={{ borderColor: 'var(--border, rgba(196,196,196,0.08))' }}
+        >
           {/* Request/Response preview */}
           <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
-              <div className="text-xs font-bold mb-1" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>
+              <div
+                className="text-xs font-bold mb-1"
+                style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+              >
                 Requête
               </div>
-              <div className="text-xs p-2 rounded-md font-mono" style={{ background: 'var(--bg-surface, #181c21)', color: 'var(--text-primary, #e0e0e0)' }}>
+              <div
+                className="text-xs p-2 rounded-md font-mono"
+                style={{
+                  background: 'var(--bg-surface, #181c21)',
+                  color: 'var(--text-primary, #e0e0e0)',
+                }}
+              >
                 {entry.requestPreview}
               </div>
             </div>
             <div>
-              <div className="text-xs font-bold mb-1" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>
+              <div
+                className="text-xs font-bold mb-1"
+                style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+              >
                 Réponse TITANE
               </div>
-              <div className="text-xs p-2 rounded-md font-mono" style={{ background: 'var(--bg-surface, #181c21)', color: 'var(--text-primary, #e0e0e0)' }}>
+              <div
+                className="text-xs p-2 rounded-md font-mono"
+                style={{
+                  background: 'var(--bg-surface, #181c21)',
+                  color: 'var(--text-primary, #e0e0e0)',
+                }}
+              >
                 {entry.responsePreview}
               </div>
             </div>
@@ -551,7 +743,10 @@ function JournalEntryCard({ entry }: { entry: JournalEntry }) {
 
           {/* Pipeline mini */}
           <div>
-            <div className="text-xs font-bold mb-2" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>
+            <div
+              className="text-xs font-bold mb-2"
+              style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+            >
               Pipeline
             </div>
             <div className="flex flex-wrap gap-2">
@@ -561,7 +756,11 @@ function JournalEntryCard({ entry }: { entry: JournalEntry }) {
                   <div
                     key={step.id}
                     className="flex items-center gap-1 text-xs px-2 py-1 rounded-full"
-                    style={{ background: c.bg, color: c.text, border: `1px solid ${c.border}` }}
+                    style={{
+                      background: c.bg,
+                      color: c.text,
+                      border: `1px solid ${c.border}`,
+                    }}
                     title={`${step.name}: ${step.duration ?? 0}ms`}
                   >
                     {stepIcons[step.id] ?? '⚡'} {step.name}
@@ -624,11 +823,19 @@ export function OmegaPipeline() {
           <div className="flex items-center gap-3">
             {isLive && (
               <div className="flex items-center gap-1.5">
-                <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#93b399' }} />
-                <span className="text-xs font-medium" style={{ color: '#93b399' }}>LIVE</span>
+                <div
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ background: '#93b399' }}
+                />
+                <span className="text-xs font-medium" style={{ color: '#93b399' }}>
+                  LIVE
+                </span>
               </div>
             )}
-            <span className="text-xs" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>
+            <span
+              className="text-xs"
+              style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+            >
               {totalDuration}ms · {pipelineHistory.length} exec
             </span>
           </div>
@@ -641,7 +848,10 @@ export function OmegaPipeline() {
       {/* Tab Navigation */}
       <div
         className="flex gap-1 p-1 rounded-lg"
-        style={{ background: 'var(--bg-panel, #101216)', border: '1px solid var(--border, rgba(196,196,196,0.12))' }}
+        style={{
+          background: 'var(--bg-panel, #101216)',
+          border: '1px solid var(--border, rgba(196,196,196,0.12))',
+        }}
       >
         {tabs.map(tab => (
           <button
@@ -649,8 +859,12 @@ export function OmegaPipeline() {
             onClick={() => setActiveTab(tab.id)}
             className="flex-1 flex items-center justify-center gap-2 text-sm py-2 px-3 rounded-md transition-all duration-200"
             style={{
-              background: activeTab === tab.id ? 'var(--bg-elevated, #0b0d0f)' : 'transparent',
-              color: activeTab === tab.id ? 'var(--text-primary, #e0e0e0)' : 'var(--text-muted, rgba(255,255,255,0.60))',
+              background:
+                activeTab === tab.id ? 'var(--bg-elevated, #0b0d0f)' : 'transparent',
+              color:
+                activeTab === tab.id
+                  ? 'var(--text-primary, #e0e0e0)'
+                  : 'var(--text-muted, rgba(255,255,255,0.60))',
               border: 'none',
               cursor: 'pointer',
               fontWeight: activeTab === tab.id ? 600 : 400,
@@ -665,18 +879,27 @@ export function OmegaPipeline() {
       {/* Tab: Exécution en Cours */}
       {activeTab === 'execution' && (
         <div className="space-y-4">
-          <h3 className="text-base font-semibold" style={{ color: 'var(--text-primary, #e0e0e0)' }}>
+          <h3
+            className="text-base font-semibold"
+            style={{ color: 'var(--text-primary, #e0e0e0)' }}
+          >
             Exécution en Cours
           </h3>
 
           {(currentPipeline?.length ?? 0) === 0 ? (
             <div
               className="flex items-center justify-center h-48 rounded-lg border"
-              style={{ background: 'var(--bg-panel, #101216)', borderColor: 'var(--border, rgba(196,196,196,0.12))' }}
+              style={{
+                background: 'var(--bg-panel, #101216)',
+                borderColor: 'var(--border, rgba(196,196,196,0.12))',
+              }}
             >
               <div className="text-center">
                 <div className="text-3xl mb-2">⏸</div>
-                <p className="text-sm" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>
+                <p
+                  className="text-sm"
+                  style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+                >
                   Aucune exécution en cours
                 </p>
               </div>
@@ -698,7 +921,10 @@ export function OmegaPipeline() {
           {/* Live reasoning trace if active */}
           {reasoningTrace && !reasoningTrace.completedAt && (
             <div>
-              <h3 className="text-base font-semibold mb-3" style={{ color: 'var(--text-primary, #e0e0e0)' }}>
+              <h3
+                className="text-base font-semibold mb-3"
+                style={{ color: 'var(--text-primary, #e0e0e0)' }}
+              >
                 Raisonnement Actif
               </h3>
               <ReasoningTracePanel trace={reasoningTrace} />
@@ -708,15 +934,23 @@ export function OmegaPipeline() {
           {/* Pipeline History mini */}
           {pipelineHistory.length > 0 && (
             <div>
-              <h3 className="text-base font-semibold mb-2" style={{ color: 'var(--text-primary, #e0e0e0)' }}>
+              <h3
+                className="text-base font-semibold mb-2"
+                style={{ color: 'var(--text-primary, #e0e0e0)' }}
+              >
                 Exécutions Récentes
               </h3>
               <div
                 className="rounded-lg border overflow-hidden"
-                style={{ background: 'var(--bg-panel, #101216)', borderColor: 'var(--border, rgba(196,196,196,0.12))' }}
+                style={{
+                  background: 'var(--bg-panel, #101216)',
+                  borderColor: 'var(--border, rgba(196,196,196,0.12))',
+                }}
               >
                 {pipelineHistory.slice(0, 5).map((pipeline, historyIndex) => {
-                  const dur = pipeline.filter(s => s.duration).reduce((sum, s) => sum + (s.duration ?? 0), 0);
+                  const dur = pipeline
+                    .filter(s => s.duration)
+                    .reduce((sum, s) => sum + (s.duration ?? 0), 0);
                   const hasErrors = pipeline.some(s => s.status === 'error');
                   return (
                     <div
@@ -724,7 +958,10 @@ export function OmegaPipeline() {
                       className="flex items-center gap-4 px-4 py-3 border-b last:border-b-0"
                       style={{ borderColor: 'var(--border, rgba(196,196,196,0.08))' }}
                     >
-                      <span className="text-xs font-mono" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>
+                      <span
+                        className="text-xs font-mono"
+                        style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+                      >
                         #{pipelineHistory.length - historyIndex}
                       </span>
                       <div className="flex-1 flex items-center gap-2">
@@ -737,12 +974,17 @@ export function OmegaPipeline() {
                           />
                         ))}
                       </div>
-                      <span className="text-xs font-medium" style={{ color: 'var(--text-primary, #e0e0e0)' }}>
+                      <span
+                        className="text-xs font-medium"
+                        style={{ color: 'var(--text-primary, #e0e0e0)' }}
+                      >
                         {dur}ms
                       </span>
                       {hasErrors && (
-                        <span className="text-xs font-medium px-2 py-0.5 rounded-full"
-                          style={{ background: 'rgba(139,95,95,0.15)', color: '#8b5f5f' }}>
+                        <span
+                          className="text-xs font-medium px-2 py-0.5 rounded-full"
+                          style={{ background: 'rgba(139,95,95,0.15)', color: '#8b5f5f' }}
+                        >
                           ERR
                         </span>
                       )}
@@ -758,21 +1000,33 @@ export function OmegaPipeline() {
       {/* Tab: Trace de Raisonnement */}
       {activeTab === 'reasoning' && (
         <div className="space-y-4">
-          <h3 className="text-base font-semibold" style={{ color: 'var(--text-primary, #e0e0e0)' }}>
+          <h3
+            className="text-base font-semibold"
+            style={{ color: 'var(--text-primary, #e0e0e0)' }}
+          >
             Trace de Raisonnement TITANE∞
           </h3>
 
           {!reasoningTrace ? (
             <div
               className="flex items-center justify-center h-48 rounded-lg border"
-              style={{ background: 'var(--bg-panel, #101216)', borderColor: 'var(--border, rgba(196,196,196,0.12))' }}
+              style={{
+                background: 'var(--bg-panel, #101216)',
+                borderColor: 'var(--border, rgba(196,196,196,0.12))',
+              }}
             >
               <div className="text-center">
                 <div className="text-3xl mb-2">🤔</div>
-                <p className="text-sm" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>
+                <p
+                  className="text-sm"
+                  style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+                >
                   Aucune trace de raisonnement disponible
                 </p>
-                <p className="text-xs mt-1" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>
+                <p
+                  className="text-xs mt-1"
+                  style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+                >
                   La trace apparaîtra lors de la prochaine exécution
                 </p>
               </div>
@@ -785,33 +1039,96 @@ export function OmegaPipeline() {
           {kernelMetrics && (
             <div
               className="rounded-lg border p-4"
-              style={{ background: 'var(--bg-panel, #101216)', borderColor: 'var(--border, rgba(196,196,196,0.12))' }}
+              style={{
+                background: 'var(--bg-panel, #101216)',
+                borderColor: 'var(--border, rgba(196,196,196,0.12))',
+              }}
             >
-              <h4 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: 'var(--text-primary, #e0e0e0)' }}>
+              <h4
+                className="text-sm font-semibold mb-3 flex items-center gap-2"
+                style={{ color: 'var(--text-primary, #e0e0e0)' }}
+              >
                 <span>⚙️</span>
                 <span>Métriques Kernel — CanonicalDiscernmentKernel</span>
               </h4>
               <div className="grid grid-cols-2 gap-3">
-                <div className="rounded-md p-3 text-center" style={{ background: 'rgba(66,153,225,0.08)', border: '1px solid rgba(66,153,225,0.25)' }}>
-                  <div className="text-2xl font-bold" style={{ color: '#7ab8f0' }}>{kernelMetrics.totalDecisions}</div>
-                  <div className="text-xs mt-1" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>Décisions totales</div>
+                <div
+                  className="rounded-md p-3 text-center"
+                  style={{
+                    background: 'rgba(66,153,225,0.08)',
+                    border: '1px solid rgba(66,153,225,0.25)',
+                  }}
+                >
+                  <div className="text-2xl font-bold" style={{ color: '#7ab8f0' }}>
+                    {kernelMetrics.totalDecisions}
+                  </div>
+                  <div
+                    className="text-xs mt-1"
+                    style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+                  >
+                    Décisions totales
+                  </div>
                 </div>
-                <div className="rounded-md p-3 text-center" style={{ background: 'rgba(99,179,93,0.08)', border: '1px solid rgba(99,179,93,0.25)' }}>
-                  <div className="text-2xl font-bold" style={{ color: '#7abf84' }}>{(kernelMetrics.avgConfidence * 100).toFixed(0)}%</div>
-                  <div className="text-xs mt-1" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>Confiance moyenne</div>
+                <div
+                  className="rounded-md p-3 text-center"
+                  style={{
+                    background: 'rgba(99,179,93,0.08)',
+                    border: '1px solid rgba(99,179,93,0.25)',
+                  }}
+                >
+                  <div className="text-2xl font-bold" style={{ color: '#7abf84' }}>
+                    {(kernelMetrics.avgConfidence * 100).toFixed(0)}%
+                  </div>
+                  <div
+                    className="text-xs mt-1"
+                    style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+                  >
+                    Confiance moyenne
+                  </div>
                 </div>
-                <div className="rounded-md p-3 text-center" style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.25)' }}>
-                  <div className="text-2xl font-bold" style={{ color: '#f59e0b' }}>{kernelMetrics.avgProcessingTimeMs.toFixed(0)}ms</div>
-                  <div className="text-xs mt-1" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>Temps kernel moyen</div>
+                <div
+                  className="rounded-md p-3 text-center"
+                  style={{
+                    background: 'rgba(245,158,11,0.08)',
+                    border: '1px solid rgba(245,158,11,0.25)',
+                  }}
+                >
+                  <div className="text-2xl font-bold" style={{ color: '#f59e0b' }}>
+                    {kernelMetrics.avgProcessingTimeMs.toFixed(0)}ms
+                  </div>
+                  <div
+                    className="text-xs mt-1"
+                    style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+                  >
+                    Temps kernel moyen
+                  </div>
                 </div>
-                <div className="rounded-md p-3 text-center" style={{ background: 'rgba(139,95,95,0.08)', border: '1px solid rgba(139,95,95,0.25)' }}>
-                  <div className="text-2xl font-bold" style={{ color: '#c97070' }}>{(kernelMetrics.fallbackRate * 100).toFixed(0)}%</div>
-                  <div className="text-xs mt-1" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>Taux fallback</div>
+                <div
+                  className="rounded-md p-3 text-center"
+                  style={{
+                    background: 'rgba(139,95,95,0.08)',
+                    border: '1px solid rgba(139,95,95,0.25)',
+                  }}
+                >
+                  <div className="text-2xl font-bold" style={{ color: '#c97070' }}>
+                    {(kernelMetrics.fallbackRate * 100).toFixed(0)}%
+                  </div>
+                  <div
+                    className="text-xs mt-1"
+                    style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+                  >
+                    Taux fallback
+                  </div>
                 </div>
               </div>
               {Object.keys(kernelMetrics.profileDistribution).length > 0 && (
                 <div className="mt-3">
-                  <div className="text-xs mb-2" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>Distribution des profils</div>
+                  <div
+                    className="text-xs mb-2"
+                    style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+                  >
+                    Distribution des profils
+                  </div>
                   <div className="flex flex-wrap gap-2">
                     {Object.entries(kernelMetrics.profileDistribution)
                       .sort(([, a], [, b]) => b - a)
@@ -819,7 +1136,11 @@ export function OmegaPipeline() {
                         <span
                           key={profile}
                           className="text-xs px-2 py-1 rounded-full font-mono"
-                          style={{ background: 'rgba(130,80,200,0.15)', color: '#c084fc', border: '1px solid rgba(130,80,200,0.3)' }}
+                          style={{
+                            background: 'rgba(130,80,200,0.15)',
+                            color: '#c084fc',
+                            border: '1px solid rgba(130,80,200,0.3)',
+                          }}
                         >
                           {profile}: {count}
                         </span>
@@ -836,8 +1157,12 @@ export function OmegaPipeline() {
       {activeTab === 'journal' && (
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-base font-semibold" style={{ color: 'var(--text-primary, #e0e0e0)' }}>
-              Journal d'Exécution ({journalEntries.length} entrée{journalEntries.length > 1 ? 's' : ''})
+            <h3
+              className="text-base font-semibold"
+              style={{ color: 'var(--text-primary, #e0e0e0)' }}
+            >
+              Journal d'Exécution ({journalEntries.length} entrée
+              {journalEntries.length > 1 ? 's' : ''})
             </h3>
             {journalEntries.length > 0 && (
               <button
@@ -858,14 +1183,23 @@ export function OmegaPipeline() {
           {journalEntries.length === 0 ? (
             <div
               className="flex items-center justify-center h-48 rounded-lg border"
-              style={{ background: 'var(--bg-panel, #101216)', borderColor: 'var(--border, rgba(196,196,196,0.12))' }}
+              style={{
+                background: 'var(--bg-panel, #101216)',
+                borderColor: 'var(--border, rgba(196,196,196,0.12))',
+              }}
             >
               <div className="text-center">
                 <div className="text-3xl mb-2">📖</div>
-                <p className="text-sm" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>
+                <p
+                  className="text-sm"
+                  style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+                >
                   Journal vide
                 </p>
-                <p className="text-xs mt-1" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>
+                <p
+                  className="text-xs mt-1"
+                  style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+                >
                   Les entrées apparaîtront après chaque exécution OMEGA
                 </p>
               </div>

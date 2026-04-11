@@ -237,7 +237,7 @@ describe('defaultKnowledgeBase', () => {
           version: 'v30.0.0',
           description: 'Livres audio et sources d’influence.',
           content: {
-            audiobook_influences: ['Pouvoir illimité', 'L\'effet cumulé'],
+            audiobook_influences: ['Pouvoir illimité', "L'effet cumulé"],
           },
         },
       })

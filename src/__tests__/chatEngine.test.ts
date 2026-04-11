@@ -474,15 +474,17 @@ describe('ChatEngine — default knowledge base integration', () => {
       "[Préférences utilisateur: Contexte propriétaire: Kevin Thibault est le créateur et l'utilisateur principal de TITANE∞.]"
     );
 
-    const backendSpy = vi.spyOn(chatEngineCommands, 'generateResponse').mockResolvedValue({
-      content: 'Réponse préférences',
-      provider: 'ollama',
-      conversationId: 'conv-owner',
-      messageId: 'msg-owner',
-      timestamp: Date.now(),
-      tokenCount: 36,
-      latencyMs: 10,
-    });
+    const backendSpy = vi
+      .spyOn(chatEngineCommands, 'generateResponse')
+      .mockResolvedValue({
+        content: 'Réponse préférences',
+        provider: 'ollama',
+        conversationId: 'conv-owner',
+        messageId: 'msg-owner',
+        timestamp: Date.now(),
+        tokenCount: 36,
+        latencyMs: 10,
+      });
 
     await chatEngine.generate('Aide-moi à structurer mon axe', []);
 

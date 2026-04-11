@@ -3,13 +3,7 @@
   "category": "kevin_workflow_v30",
   "description": "Workflow canonique de Kevin avec TITANE∞ pour le développement, la mémoire, l’apprentissage et la vérification.",
   "workflow": {
-    "default_sequence": [
-      "diagnose",
-      "plan",
-      "apply",
-      "verify",
-      "report"
-    ],
+    "default_sequence": ["diagnose", "plan", "apply", "verify", "report"],
     "engineering_rules": [
       "proof before verdict",
       "minimal safe patch only",

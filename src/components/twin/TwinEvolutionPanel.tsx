@@ -160,7 +160,9 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
         }}
       >
         <strong>{contextStatusMeta.label}</strong>
-        <span style={{ display: 'block', marginTop: 4, fontSize: '0.9rem', opacity: 0.92 }}>
+        <span
+          style={{ display: 'block', marginTop: 4, fontSize: '0.9rem', opacity: 0.92 }}
+        >
           SyncScore: {(syncScore * 100).toFixed(0)}%
           {lastSyncAt
             ? ` • Dernière synchro: ${new Date(lastSyncAt).toLocaleTimeString('fr-FR', {
@@ -560,7 +562,8 @@ const EvolutionTab: React.FC<EvolutionTabProps> = ({
       <div className="twin-evolution__reflection" data-testid="twin-document-reflection">
         <h3>Réflexion approfondie issue du corpus</h3>
         <p className="twin-evolution__reflection-axis">
-          {reflectionAxis ?? 'Revenir au vivant, clarifier l’axe et agir avec douceur ferme.'}
+          {reflectionAxis ??
+            'Revenir au vivant, clarifier l’axe et agir avec douceur ferme.'}
         </p>
         <div className="twin-evolution__reflection-grid">
           {ownerThemes.slice(0, 4).map(theme => (
