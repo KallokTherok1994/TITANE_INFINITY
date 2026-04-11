@@ -51,3 +51,12 @@ export { AgendaPage } from './AgendaPage';
 
 // Camera & Vision Engine v∞
 export { CameraPage } from './CameraPage';
+
+// ✨ v30.1.0 — Pages implémentées (anciennement stubs)
+export { CreationStudio } from './CreationStudio';
+export { RealityCenter } from './RealityCenter';
+export { PerfectFusionDashboard } from './PerfectFusionDashboard';
+export { EvolutionMonitor } from './EvolutionMonitor';
+export { SingularityMonitor } from './SingularityMonitor';
+export { UltimateOptimizationDashboard } from './UltimateOptimizationDashboard';
+export { TwinsPage } from './TwinsPage';
