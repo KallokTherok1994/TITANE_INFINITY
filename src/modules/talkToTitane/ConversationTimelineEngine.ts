@@ -25,6 +25,10 @@ import { existsSync } from '../../utils/tauriFsAdapter';
 import { join } from '../../utils/tauriFsAdapter';
 import type { ConversationEntry } from './AutoSaveConversationEngine';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('ConvTimeline');
+
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
@@ -116,14 +120,14 @@ class ConversationTimelineEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async initialize(): Promise<void> {
-    console.log('[Timeline] Initializing Conversation Timeline Engine v∞...');
+    logger.info('[Timeline] Initializing Conversation Timeline Engine v∞...');
 
     if (this.config.enabled) {
       await this.build();
       this.startRebuildTimer();
     }
 
-    console.log('[Timeline] Initialized');
+    logger.info('[Timeline] Initialized');
   }
 
   private startRebuildTimer(): void {
@@ -140,14 +144,14 @@ class ConversationTimelineEngine {
 
   async build(): Promise<TimelineEntry[]> {
     if (this.state.isBuilding) {
-      console.log('[Timeline] Build already in progress');
+      logger.info('[Timeline] Build already in progress');
       return this.state.currentTimeline;
     }
 
     this.state.isBuilding = true;
 
     try {
-      console.log('[Timeline] Building timeline...');
+      logger.info('[Timeline] Building timeline...');
 
       const allEntries: TimelineEntry[] = [];
 
@@ -181,7 +185,7 @@ class ConversationTimelineEngine {
       this.state.lastBuildTime = Date.now();
       this.state.totalBuilds++;
 
-      console.log(`[Timeline] Timeline built: ${enhanced.length} entries`);
+      logger.info(`[Timeline] Timeline built: ${enhanced.length} entries`);
 
       return enhanced;
     } finally {
@@ -520,21 +524,21 @@ class ConversationTimelineEngine {
 
     const recent = timeline.slice(-limit);
 
-    console.log('\n═══════════════════════════════════════════════════');
-    console.log('  TITANE∞ CONVERSATION TIMELINE (RECENT)');
-    console.log('═══════════════════════════════════════════════════\n');
+    logger.info('\n═══════════════════════════════════════════════════');
+    logger.info('  TITANE∞ CONVERSATION TIMELINE (RECENT)');
+    logger.info('═══════════════════════════════════════════════════\n');
 
     for (const entry of recent) {
       const timestamp = new Date(entry.timestamp).toLocaleString();
       const majorFlag = entry.isMajorEvent ? ' [MAJOR]' : '';
 
-      console.log(`[${timestamp}] ${entry.engineName} - ${entry.intentType}${majorFlag}`);
-      console.log(`  Input:  ${entry.input.substring(0, 80)}...`);
-      console.log(`  Output: ${entry.output.substring(0, 80)}...`);
-      console.log('');
+      logger.info(`[${timestamp}] ${entry.engineName} - ${entry.intentType}${majorFlag}`);
+      logger.info(`  Input:  ${entry.input.substring(0, 80)}...`);
+      logger.info(`  Output: ${entry.output.substring(0, 80)}...`);
+      logger.info('');
     }
 
-    console.log('═══════════════════════════════════════════════════\n');
+    logger.info('═══════════════════════════════════════════════════\n');
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -571,7 +575,7 @@ class ConversationTimelineEngine {
 
   configure(config: Partial<TimelineConfig>): void {
     this.config = { ...this.config, ...config };
-    console.log('[Timeline] Configuration updated:', config);
+    logger.info('[Timeline] Configuration updated:', config);
   }
 
   getState(): TimelineState {
@@ -591,13 +595,13 @@ class ConversationTimelineEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async shutdown(): Promise<void> {
-    console.log('[Timeline] Shutting down...');
+    logger.info('[Timeline] Shutting down...');
 
     if (this.rebuildTimer) {
       clearInterval(this.rebuildTimer);
     }
 
-    console.log('[Timeline] Shutdown complete');
+    logger.info('[Timeline] Shutdown complete');
   }
 }
 
