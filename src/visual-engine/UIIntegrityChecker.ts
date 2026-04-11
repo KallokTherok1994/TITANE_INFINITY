@@ -6,6 +6,10 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('UIIntegrity');
+
 /**
  * ═══════════════════════════════════════════════════════════════
  * TITANE∞ v30.0.0 - UI Integrity Checker (Self-Healing Light)
@@ -163,7 +167,7 @@ export class UIIntegrityChecker {
     }
 
     if (this.config.debug) {
-      console.log('[UIIntegrityChecker] Initialized with config:', this.config);
+      logger.info('[UIIntegrityChecker] Initialized with config:', this.config);
     }
   }
 
@@ -173,7 +177,7 @@ export class UIIntegrityChecker {
   public start(): void {
     if (this.running) {
       if (this.config.debug) {
-        console.log('[UIIntegrityChecker] Already running');
+        logger.info('[UIIntegrityChecker] Already running');
       }
       return;
     }
@@ -182,20 +186,20 @@ export class UIIntegrityChecker {
 
     // Run initial check
     this.runCheck().catch(error => {
-      console.error('[UIIntegrityChecker] Initial check failed:', error);
+      logger.error('[UIIntegrityChecker] Initial check failed:', error);
     });
 
     // Schedule periodic checks
     if (this.config.checkInterval > 0) {
       this.checkTimer = setInterval(() => {
         this.runCheck().catch(error => {
-          console.error('[UIIntegrityChecker] Periodic check failed:', error);
+          logger.error('[UIIntegrityChecker] Periodic check failed:', error);
         });
       }, this.config.checkInterval);
     }
 
     if (this.config.debug) {
-      console.log('[UIIntegrityChecker] Started');
+      logger.info('[UIIntegrityChecker] Started');
     }
   }
 
@@ -211,7 +215,7 @@ export class UIIntegrityChecker {
     }
 
     if (this.config.debug) {
-      console.log('[UIIntegrityChecker] Stopped');
+      logger.info('[UIIntegrityChecker] Stopped');
     }
   }
 
@@ -222,7 +226,7 @@ export class UIIntegrityChecker {
     const startTime = Date.now();
 
     if (this.config.debug) {
-      console.log('[UIIntegrityChecker] Running integrity check...');
+      logger.info('[UIIntegrityChecker] Running integrity check...');
     }
 
     // Clear resolved anomalies
@@ -263,9 +267,9 @@ export class UIIntegrityChecker {
 
     // Log if enabled
     if (this.config.logAnomalies && report.anomaliesFound > 0) {
-      console.warn('[UIIntegrityChecker] Found', report.anomaliesFound, 'anomalies');
+      logger.warn('[UIIntegrityChecker] Found', report.anomaliesFound, 'anomalies');
       for (const anomaly of report.anomalies) {
-        console.warn(`  [${anomaly.severity}] ${anomaly.type}: ${anomaly.message}`);
+        logger.warn(`  [${anomaly.severity}] ${anomaly.type}: ${anomaly.message}`);
       }
     }
 
@@ -277,8 +281,8 @@ export class UIIntegrityChecker {
     }
 
     if (this.config.debug) {
-      console.log('[UIIntegrityChecker] Check complete in', duration, 'ms');
-      console.log('[UIIntegrityChecker] Health score:', report.overallHealth.toFixed(2));
+      logger.info('[UIIntegrityChecker] Check complete in', duration, 'ms');
+      logger.info('[UIIntegrityChecker] Health score:', report.overallHealth.toFixed(2));
     }
 
     return report;
@@ -311,7 +315,7 @@ export class UIIntegrityChecker {
   public clearAnomalies(): void {
     this.anomalies.clear();
     if (this.config.debug) {
-      console.log('[UIIntegrityChecker] Cleared all anomalies');
+      logger.info('[UIIntegrityChecker] Cleared all anomalies');
     }
   }
 
@@ -325,7 +329,7 @@ export class UIIntegrityChecker {
     // In production, this would use Node.js fs or build tool APIs
 
     if (this.config.debug) {
-      console.log('[UIIntegrityChecker] Checking required files...');
+      logger.info('[UIIntegrityChecker] Checking required files...');
     }
 
     // Simulate file checks (in real implementation, would use fs.existsSync)
@@ -334,7 +338,7 @@ export class UIIntegrityChecker {
 
   private async checkImports(): Promise<void> {
     if (this.config.debug) {
-      console.log('[UIIntegrityChecker] Checking imports...');
+      logger.info('[UIIntegrityChecker] Checking imports...');
     }
 
     // Check if critical imports are available
@@ -407,7 +411,7 @@ export class UIIntegrityChecker {
 
   private async checkStyles(): Promise<void> {
     if (this.config.debug) {
-      console.log('[UIIntegrityChecker] Checking styles...');
+      logger.info('[UIIntegrityChecker] Checking styles...');
     }
 
     // Check if critical CSS variables are defined
@@ -451,7 +455,7 @@ export class UIIntegrityChecker {
 
   private async checkExports(): Promise<void> {
     if (this.config.debug) {
-      console.log('[UIIntegrityChecker] Checking exports...');
+      logger.info('[UIIntegrityChecker] Checking exports...');
     }
 
     // Check visual-engine exports
@@ -525,17 +529,17 @@ export class UIIntegrityChecker {
             this.metrics.totalAutoFixes++;
 
             if (this.config.debug) {
-              console.log('[UIIntegrityChecker] Auto-fixed:', anomaly.message);
+              logger.info('[UIIntegrityChecker] Auto-fixed:', anomaly.message);
             }
           }
         } catch (error) {
-          console.error('[UIIntegrityChecker] Auto-fix failed:', error);
+          logger.error('[UIIntegrityChecker] Auto-fix failed:', error);
         }
       }
     }
 
     if (fixCount > 0 && this.config.logAnomalies) {
-      console.log('[UIIntegrityChecker] Auto-fixed', fixCount, 'anomalies');
+      logger.info('[UIIntegrityChecker] Auto-fixed', fixCount, 'anomalies');
     }
   }
 

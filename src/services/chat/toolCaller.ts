@@ -5,6 +5,10 @@
  * v26.4.0 (Sprint 6)
  */
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('ToolCaller');
+
 // ═══════════════════════════════════════════════════════════════════
 // SAFE MATH EVALUATOR
 // ═══════════════════════════════════════════════════════════════════
@@ -118,7 +122,7 @@ const DEFAULT_TOOLS: Record<string, ToolDefinition> = {
         maxResults?: number;
       };
       // Implémentation stub - en production, appeler une API réelle
-      console.log('[ToolCaller] web_search:', { query, maxResults });
+      logger.info('[ToolCaller] web_search:', { query, maxResults });
       return {
         results: [
           {
@@ -151,10 +155,10 @@ const DEFAULT_TOOLS: Record<string, ToolDefinition> = {
         }
 
         const result = safeMathEval(expression);
-        console.log('[ToolCaller] calculate:', { expression, result });
+        logger.info('[ToolCaller] calculate:', { expression, result });
         return { result, expression };
       } catch (error) {
-        console.error('[ToolCaller] calculate error:', error);
+        logger.error('[ToolCaller] calculate error:', error);
         throw error;
       }
     },
@@ -172,7 +176,7 @@ const DEFAULT_TOOLS: Record<string, ToolDefinition> = {
         locale: now.toLocaleString('fr-FR'),
         timestamp: now.getTime(),
       };
-      console.log('[ToolCaller] get_time:', result);
+      logger.info('[ToolCaller] get_time:', result);
       return result;
     },
   },
@@ -188,7 +192,7 @@ const DEFAULT_TOOLS: Record<string, ToolDefinition> = {
     execute: async args => {
       const { location = '', unit = 'C' } = args as { location: string; unit?: string };
       // Implémentation stub - en production, appeler OpenWeather API ou similaire
-      console.log('[ToolCaller] get_weather:', { location, unit });
+      logger.info('[ToolCaller] get_weather:', { location, unit });
       return {
         location,
         temperature: 20,
@@ -210,7 +214,7 @@ const DEFAULT_TOOLS: Record<string, ToolDefinition> = {
     execute: async args => {
       const { ticker = '' } = args as { ticker: string };
       // Implémentation stub - en production, appeler un service de données financières
-      console.log('[ToolCaller] get_stock:', { ticker });
+      logger.info('[ToolCaller] get_stock:', { ticker });
       return {
         ticker,
         price: 150.25,
@@ -249,11 +253,11 @@ export class ToolCallerService {
       throw new Error(`Tool ${tool.name} must have an execute function`);
     }
     if (this.tools.has(tool.name)) {
-      console.warn(`[ToolCaller] Tool ${tool.name} already registered, overwriting`);
+      logger.warn(`[ToolCaller] Tool ${tool.name} already registered, overwriting`);
     }
 
     this.tools.set(tool.name, tool);
-    console.log(`[ToolCaller] ✅ Tool registered: ${tool.name}`);
+    logger.info(`[ToolCaller] ✅ Tool registered: ${tool.name}`);
   }
 
   /**
@@ -281,7 +285,7 @@ export class ToolCallerService {
     text: string
   ): Array<{ name: string; arguments: Record<string, unknown> }> {
     const calls: Array<{ name: string; arguments: Record<string, unknown> }> = [];
-    console.log('[ToolCaller] 🔍 PARSING TEXT:', text.substring(0, 200)); // DEBUG: afficher début du texte
+    logger.info('[ToolCaller] 🔍 PARSING TEXT:', text.substring(0, 200)); // DEBUG: afficher début du texte
 
     // Format 1 (PRIMARY): JSON objects - {"tool_name": "...", "arg": "value"}
     const jsonObjRegex = /\{\s*"tool_name"\s*:\s*"([^"]+)"([^}]*)\}/g;
@@ -294,7 +298,7 @@ export class ToolCallerService {
       const argsStr = match[2] ?? '';
       const args: Record<string, unknown> = {};
 
-      console.log(
+      logger.info(
         `[ToolCaller] ✅ JSON MATCH #${jsonFound}: tool_name=${toolName}, argsStr=${argsStr}`
       ); // DEBUG
 
@@ -310,19 +314,19 @@ export class ToolCallerService {
             const value =
               numValue && !isNaN(Number(numValue)) ? Number(numValue) : strValue;
             args[key] = value;
-            console.log(`[ToolCaller]   → arg: ${key}=${value}`); // DEBUG: afficher chaque arg
+            logger.info(`[ToolCaller]   → arg: ${key}=${value}`); // DEBUG: afficher chaque arg
           }
         }
       }
 
       if (toolName) {
         calls.push({ name: toolName, arguments: args });
-        console.log('[ToolCaller] ✨ TOOL CALL PARSED:', { toolName, arguments: args });
+        logger.info('[ToolCaller] ✨ TOOL CALL PARSED:', { toolName, arguments: args });
       }
     }
 
     if (jsonFound === 0) {
-      console.log('[ToolCaller] ⚠️  NO JSON MATCHES FOUND'); // DEBUG: aucun JSON trouvé
+      logger.info('[ToolCaller] ⚠️  NO JSON MATCHES FOUND'); // DEBUG: aucun JSON trouvé
     }
 
     // Format 2 (LEGACY XML): <tool name="..." args /> - backward compatibility
@@ -334,7 +338,7 @@ export class ToolCallerService {
       const argsStr = match[2] ?? '';
       const args: Record<string, unknown> = {};
 
-      console.log(`[ToolCaller] 📦 XML LEGACY MATCH #${xmlFound}: name=${name}`); // DEBUG
+      logger.info(`[ToolCaller] 📦 XML LEGACY MATCH #${xmlFound}: name=${name}`); // DEBUG
 
       // Parse attributes: key="value" key2="value2"
       if (argsStr) {
@@ -349,17 +353,17 @@ export class ToolCallerService {
 
       if (name) {
         calls.push({ name, arguments: args });
-        console.log('[ToolCaller] 📦 LEGACY XML TOOL PARSED:', { name, arguments: args });
+        logger.info('[ToolCaller] 📦 LEGACY XML TOOL PARSED:', { name, arguments: args });
       }
     }
 
     if (xmlFound === 0 && jsonFound === 0) {
-      console.log(
+      logger.info(
         '[ToolCaller] 🚨 ZERO TOOLS PARSED - model did not generate tool calls'
       ); // DEBUG
     }
 
-    console.log(
+    logger.info(
       `[ToolCaller] 📋 FINAL RESULT: ${calls.length} tools parsed (${jsonFound} JSON + ${xmlFound} XML)`
     );
     return calls;
@@ -376,12 +380,12 @@ export class ToolCallerService {
 
     if (!tool) {
       const error = `Tool "${toolName}" not found. Available tools: ${Array.from(this.tools.keys()).join(', ')}`;
-      console.error('[ToolCaller]', error);
+      logger.error('[ToolCaller]', error);
       return { result: null, error };
     }
 
     try {
-      console.log(`[ToolCaller] Executing ${toolName}:`, arguments_);
+      logger.info(`[ToolCaller] Executing ${toolName}:`, arguments_);
       const result = await tool.execute(arguments_);
 
       // Store in history with memory limit
@@ -396,7 +400,7 @@ export class ToolCallerService {
       // ✅ #1: Enforce MAX_HISTORY limit - remove oldest if needed
       if (this.callHistory.length > this.MAX_HISTORY) {
         this.callHistory.shift();
-        console.log(
+        logger.info(
           `[ToolCaller] ⚠️ History limit reached (${this.MAX_HISTORY}), removed oldest entry`
         );
       }
@@ -404,7 +408,7 @@ export class ToolCallerService {
       return { result };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      console.error(`[ToolCaller] Error executing ${toolName}:`, errorMessage);
+      logger.error(`[ToolCaller] Error executing ${toolName}:`, errorMessage);
 
       // Store error in history
       this.callHistory.push({
