@@ -1,0 +1,165 @@
+{
+  "version": "v30.0.0",
+  "category": "creation_sites_web_pratique",
+  "description": "Création de sites web pratique — WordPress, plateformes no-code, hébergement, domaine, SSL, UX/UI, responsive design, e-commerce, performance, RGPD, sécurité et maintenance",
+  "creation_sites_web_pratique": {
+    "introduction": "Créer un site web professionnel en 2024 ne requiert plus de savoir coder — mais exige de maîtriser les bons outils, les principes UX/UI, la performance, la sécurité et la conformité légale. Ce guide couvre l'ensemble du parcours : du choix de plateforme à la mise en production optimisée.",
+    "wordpress": {
+      "présentation": "WordPress propulse ~43% du web mondial. CMS open source, extensible via thèmes et plugins, adapté du blog personnel au site e-commerce complexe.",
+      "installation": {
+        "prérequis": "PHP 8.0+, MySQL 5.7+ ou MariaDB 10.4+, serveur Apache/Nginx, certificat SSL",
+        "méthode_rapide": "Installateur en 1 clic chez la plupart des hébergeurs (OVH, Hostinger, o2switch)",
+        "méthode_manuelle": "Télécharger depuis wordpress.org → uploader via FTP → créer la base de données → lancer wp-admin/install.php"
+      },
+      "thèmes_recommandés": {
+        "gratuits": "Astra (léger, rapide), GeneratePress (performance), Kadence (polyvalent, blocks natifs)",
+        "premium": "Divi (constructeur intégré), Avada (polyvalent), OceanWP (flexible, WooCommerce-ready)",
+        "conseil": "Privilégier un thème léger compatible Gutenberg/FSE. Éviter les thèmes multi-usage surchargés qui ralentissent le site."
+      },
+      "plugins_essentiels": {
+        "sécurité": "Wordfence (firewall + scan malware) ou Sucuri Security",
+        "seo": "Yoast SEO ou Rank Math (sitemap, meta tags, schema markup, analyse de contenu)",
+        "performance": "WP Rocket (cache page/navigateur, minification, lazy load) ou LiteSpeed Cache",
+        "sauvegarde": "UpdraftPlus (sauvegarde automatique vers cloud: Google Drive, S3, Dropbox)",
+        "formulaires": "WPForms ou Gravity Forms (formulaires de contact, inscription, devis)",
+        "anti_spam": "Akismet ou CleanTalk",
+        "rgpd": "Complianz ou CookieYes (bandeau cookies, politique de confidentialité)"
+      },
+      "woocommerce": {
+        "description": "Extension e-commerce gratuite pour WordPress. Gère produits, panier, paiement, livraison, taxes.",
+        "configuration_initiale": "Assistant de configuration → devise, pays, modes de paiement (Stripe, PayPal), zones de livraison, taux TVA",
+        "extensions_clés": "WooCommerce Subscriptions (abonnements), WooCommerce Bookings (réservations), Mailchimp for WooCommerce (email marketing)",
+        "optimisation": "Désactiver les scripts WooCommerce sur les pages non-boutique, utiliser un CDN pour les images produits, activer le cache objet Redis/Memcached"
+      },
+      "elementor": {
+        "description": "Page builder visuel drag-and-drop. Version gratuite suffisante pour débuter, Pro pour les fonctionnalités avancées.",
+        "bonnes_pratiques": "Limiter les widgets à ceux nécessaires, éviter les animations lourdes, utiliser les containers Flexbox plutôt que les sections/colonnes classiques",
+        "alternatives": "Bricks Builder (performance supérieure), Breakdance (moderne), Gutenberg natif (léger, avenir de WordPress)"
+      },
+      "sécurité_wordpress": {
+        "mesures_essentielles": [
+          "Modifier le préfixe de table par défaut (wp_ → autre)",
+          "Désactiver l'éditeur de fichiers dans wp-config.php (DISALLOW_FILE_EDIT)",
+          "Limiter les tentatives de connexion (Limit Login Attempts Reloaded)",
+          "Utiliser des mots de passe forts + authentification 2FA",
+          "Maintenir WordPress, thèmes et plugins à jour en permanence",
+          "Supprimer les thèmes et plugins inutilisés",
+          "Protéger wp-admin avec une authentification HTTP supplémentaire",
+          "Désactiver XML-RPC si non utilisé (xmlrpc.php)"
+        ],
+        "fichier_htaccess": "Bloquer l'accès direct aux fichiers sensibles (wp-config.php, .htaccess, readme.html)"
+      }
+    },
+    "plateformes_no_code": {
+      "webflow": {
+        "forces": "Design pixel-perfect, animations natives, CMS intégré, hébergement inclus, export de code propre",
+        "limites": "Courbe d'apprentissage, coût élevé pour sites multiples, e-commerce limité hors US/UK",
+        "idéal_pour": "Sites vitrines haut de gamme, portfolios design, landing pages complexes"
+      },
+      "wix": {
+        "forces": "Interface intuitive, templates variés, App Market riche, ADI (création assistée par IA)",
+        "limites": "Code non exportable, performance parfois lente, SEO historiquement limité (amélioré depuis)",
+        "idéal_pour": "Petites entreprises, sites personnels, restaurants, artisans"
+      },
+      "squarespace": {
+        "forces": "Templates élégants, e-commerce intégré, analytics natif, domaine inclus (première année)",
+        "limites": "Moins de flexibilité que Webflow, personnalisation CSS limitée, intégrations tierces réduites",
+        "idéal_pour": "Portfolios créatifs, photographes, musiciens, petits e-commerces"
+      },
+      "framer": {
+        "forces": "Design interactif avancé, composants React natifs, collaboration en temps réel, performance excellente",
+        "limites": "Jeune plateforme, écosystème plugins limité, CMS basique",
+        "idéal_pour": "Landing pages modernes, sites SaaS, prototypage interactif"
+      },
+      "comparaison_rapide": "WordPress = maximum de contrôle et extensibilité. Webflow = design premium sans code. Wix = simplicité maximale. Squarespace = élégance clé en main. Framer = modernité et interactivité."
+    },
+    "hébergement": {
+      "critères_de_choix": "Temps de réponse serveur (TTFB < 200ms), uptime garanti (99.9%+), support technique réactif, localisation des serveurs (France/Europe pour RGPD), certificat SSL inclus, sauvegardes automatiques",
+      "ovh": {
+        "offres": "Hébergement mutualisé (dès 3€/mois), VPS (dès 6€/mois), serveur dédié, cloud public",
+        "avantages": "Serveurs en France, données souveraines, excellent rapport qualité/prix",
+        "conseil": "Offre Performance pour WordPress avec LiteSpeed + cache intégré"
+      },
+      "hostinger": {
+        "offres": "Hébergement mutualisé (dès 2€/mois), VPS, cloud hosting",
+        "avantages": "Prix agressifs, interface hPanel intuitive, LiteSpeed natif, data centers EU",
+        "conseil": "Plan Business pour le staging et les sauvegardes quotidiennes"
+      },
+      "cloudflare": {
+        "rôle": "CDN mondial, protection DDoS, DNS performant, SSL gratuit, Workers (edge computing)",
+        "configuration_recommandée": "Activer le proxy orange (CDN), règles de cache pour assets statiques, minification automatique, HTTP/3, Early Hints"
+      }
+    },
+    "nom_de_domaine_et_ssl": {
+      "choix_domaine": "Court, mémorable, sans tirets si possible. Extensions: .fr (France), .com (international), .io/.dev (tech)",
+      "registrars": "OVH, Gandi, Namecheap, Google Domains (transféré vers Squarespace)",
+      "dns": "Configurer les enregistrements A, CNAME, MX (email), TXT (vérification SPF/DKIM/DMARC)",
+      "ssl_tls": {
+        "importance": "Chiffrement HTTPS obligatoire — Google pénalise les sites HTTP, navigateurs affichent des avertissements",
+        "solutions_gratuites": "Let's Encrypt (certbot, renouvellement automatique), Cloudflare SSL",
+        "vérification": "Tester avec SSL Labs (ssllabs.com) — viser une note A ou A+"
+      }
+    },
+    "ux_ui_design": {
+      "principes_fondamentaux": {
+        "hiérarchie_visuelle": "Guider l'œil avec taille, couleur, contraste et espacement. Le plus important = le plus visible.",
+        "règle_des_3_clics": "L'utilisateur doit atteindre n'importe quelle information en 3 clics maximum.",
+        "loi_de_hick": "Réduire le nombre de choix — trop d'options = paralysie décisionnelle.",
+        "whitespace": "L'espace vide n'est pas du gaspillage — il améliore la lisibilité et le focus.",
+        "cohérence": "Même style de boutons, couleurs, typographies et interactions sur tout le site."
+      },
+      "typographie": "Maximum 2 polices (titres + corps). Taille minimale corps: 16px. Line-height: 1.5-1.8. Contraste WCAG AA minimum (4.5:1).",
+      "couleurs": "Palette limitée: 1 couleur primaire, 1 secondaire, 1 d'accent, neutres. Utiliser coolors.co ou Adobe Color pour la cohérence.",
+      "responsive_design": {
+        "approche": "Mobile-first — concevoir d'abord pour mobile puis enrichir pour tablette et desktop",
+        "breakpoints_courants": "320px (mobile), 768px (tablette), 1024px (laptop), 1440px (desktop)",
+        "techniques": "Flexbox et CSS Grid, unités relatives (rem, em, vw, vh), images responsives (srcset), media queries"
+      }
+    },
+    "types_de_sites": {
+      "landing_page": {
+        "structure": "Hero (titre + CTA) → Problème → Solution → Bénéfices → Preuve sociale (témoignages) → CTA final",
+        "conseils": "Un seul objectif par page, CTA visible sans scroller, temps de chargement < 2s"
+      },
+      "portfolio": "Grille de projets avec filtres, page détail par projet (contexte, processus, résultats), page à propos + contact",
+      "e_commerce": "Fiches produits optimisées (photos HD, descriptions, avis), tunnel de conversion simplifié (3 étapes max), relance panier abandonné",
+      "blog": "Structure en catégories/tags, articles longs (1500+ mots pour SEO), table des matières, articles connexes, newsletter intégrée"
+    },
+    "performance": {
+      "objectifs": "LCP < 2.5s, FID < 100ms, CLS < 0.1 (Core Web Vitals Google)",
+      "caching": {
+        "navigateur": "Cache-Control avec max-age long pour assets statiques (CSS, JS, images)",
+        "serveur": "Cache page (WP Rocket, Varnish, Redis), cache objet pour requêtes BDD fréquentes",
+        "cdn": "Distribuer les fichiers statiques via Cloudflare, BunnyCDN ou KeyCDN"
+      },
+      "lazy_loading": "Charger les images/vidéos uniquement quand elles entrent dans le viewport. Attribut loading='lazy' natif HTML ou Intersection Observer API.",
+      "optimisation_images": "Format WebP/AVIF, compression (ShortPixel, Imagify, Squoosh), dimensions adaptées, pas d'images 4000px pour un affichage 800px",
+      "minification": "Minifier CSS/JS (Terser, CSSNano), combiner les fichiers, différer le JS non critique (defer/async)",
+      "outils_diagnostic": "Google PageSpeed Insights, GTmetrix, WebPageTest, Lighthouse (Chrome DevTools)"
+    },
+    "analytics": {
+      "google_analytics_4": "Créer un compte GA4 → insérer le tag gtag.js ou via Google Tag Manager → configurer les événements clés (scroll, clic CTA, formulaire, achat)",
+      "google_search_console": "Vérifier le domaine → soumettre le sitemap.xml → suivre les impressions, clics, position moyenne, erreurs d'indexation",
+      "alternatives_rgpd": "Matomo (self-hosted, RGPD-friendly), Plausible (léger, sans cookies), Fathom Analytics",
+      "kpis_essentiels": "Taux de rebond, durée de session, pages par session, taux de conversion, sources de trafic, vitesse de chargement"
+    },
+    "rgpd_conformité": {
+      "obligations": [
+        "Bandeau cookies avec consentement explicite (pas de cases pré-cochées)",
+        "Politique de confidentialité accessible et claire",
+        "Formulaires: case à cocher pour acceptation, lien vers la politique",
+        "Droit d'accès, rectification, suppression des données personnelles",
+        "Registre des traitements si > 250 employés ou données sensibles",
+        "DPO (Délégué à la Protection des Données) si traitement à grande échelle"
+      ],
+      "outils": "Complianz, CookieYes, Axeptio (bandeau cookies français), Iubenda",
+      "mentions_légales": "Obligatoires en France: éditeur du site, hébergeur, directeur de publication, contact, numéro SIRET si professionnel"
+    },
+    "maintenance": {
+      "hebdomadaire": "Vérifier les mises à jour (WordPress core, thèmes, plugins), scanner les malwares, tester les formulaires",
+      "mensuelle": "Analyser les performances (PageSpeed), vérifier les liens cassés (Broken Link Checker), revoir les analytics",
+      "trimestrielle": "Tester les sauvegardes (restauration complète), auditer la sécurité, renouveler SSL si non auto, nettoyer la base de données (WP-Optimize)",
+      "annuelle": "Revoir le design et le contenu, analyser le SEO global, évaluer le changement d'hébergeur si nécessaire"
+    }
+  }
+}

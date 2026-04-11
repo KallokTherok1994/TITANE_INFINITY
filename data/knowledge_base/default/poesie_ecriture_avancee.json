@@ -1,0 +1,217 @@
+{
+  "version": "v30.0.0",
+  "category": "poesie_ecriture_avancee",
+  "description": "Poésie et écriture créative avancée — formes poétiques, figures de style, versification française, écriture romanesque, nouvelle, rhétorique, slam, publication et développement du style",
+  "poesie_ecriture_avancee": {
+    "introduction": "L'écriture est un art qui se travaille autant qu'il s'inspire. De la rigueur du sonnet classique à la liberté du slam contemporain, de la construction d'un roman à la ciselure d'un haïku, ce guide couvre les techniques fondamentales et avancées pour maîtriser l'art des mots — en français, avec la richesse de sa prosodie et de sa tradition littéraire.",
+    "formes_poétiques": {
+      "sonnet": {
+        "structure": "14 vers organisés en 2 quatrains + 2 tercets (sonnet français/Marot) ou 3 quatrains + 1 distique (sonnet anglais/shakespearien)",
+        "rimes_françaises": "ABBA ABBA CCD EDE (schéma classique Pétrarque/Ronsard) ou ABBA ABBA CCD EED",
+        "règles": "Mètre: alexandrin (12 syllabes) traditionnellement. Volta (tournant thématique) au vers 9. Chute au dernier vers.",
+        "conseil": "Le sonnet est un exercice de compression — chaque mot doit porter du sens. S'entraîner au sonnet discipline l'écriture comme aucune autre forme.",
+        "maîtres": "Ronsard, Du Bellay, Baudelaire (Les Fleurs du Mal), Nerval (El Desdichado), Mallarmé"
+      },
+      "haiku": {
+        "structure": "3 vers: 5-7-5 syllabes (17 mores en japonais, adaptation française flexible)",
+        "principes": "Kigo (référence saisonnière), kireji (césure émotionnelle), perception directe de l'instant présent",
+        "technique": "Capturer un moment sensoriel unique. Pas d'abstraction ni de métaphore complexe. Juxtaposer deux images.",
+        "exemple": "Pluie de novembre — / sur la vitre embuée / le doigt d'un enfant",
+        "maîtres": "Bashō, Buson, Issa. En français: Paul-Louis Couchoud, Patrick Blanche"
+      },
+      "vers_libre": {
+        "définition": "Poésie sans contrainte métrique ni rimique fixe, mais qui conserve un rythme intentionnel",
+        "technique": "Le vers libre n'est pas de la prose découpée — il joue sur les retours à la ligne, le blanc, le souffle, la cadence interne",
+        "conseil": "Chaque retour à la ligne doit être un choix — il crée une pause, une tension, un effet visuel ou sonore",
+        "maîtres": "Rimbaud (Illuminations), Apollinaire (Alcools), Saint-John Perse, René Char, Yves Bonnefoy"
+      },
+      "alexandrin": {
+        "structure": "Vers de 12 syllabes avec césure à l'hémistiche (6+6)",
+        "règles_prosodie": "Le e muet compte sauf en fin de vers ou devant voyelle. Diérèse (li-on = 2 syllabes) vs synérèse (lion = 1). L'hiatus (voyelle+voyelle entre mots) est évité en poésie classique.",
+        "exemple_scanné": "Je / suis / le / Té / né / breux, // le / veuf, / l'in / con / so / lé (Nerval — 6+6 parfait)",
+        "variantes": "Alexandrin ternaire romantique (4+4+4): Et la ti/gresse hor/rible au Gan/ge avait bu (Hugo)"
+      },
+      "ode": {
+        "définition": "Poème lyrique célébrant un sujet élevé — nature, amour, héroïsme, idéal",
+        "structure": "Strophes régulières (souvent en dizains ou huitains), ton solennel et exalté",
+        "maîtres": "Ronsard (Odes), Victor Hugo, Paul Claudel. Modèle antique: Pindare, Horace"
+      },
+      "élégie": {
+        "définition": "Poème de lamentation — deuil, perte, mélancolie, amour perdu",
+        "tonalité": "Registre pathétique, rythme lent, vocabulaire de l'absence et du souvenir",
+        "maîtres": "Lamartine (Le Lac), Musset, Marceline Desbordes-Valmore"
+      },
+      "ballade": {
+        "structure": "3 strophes (huitains ou dizains) + 1 envoi (demi-strophe). Refrain au dernier vers de chaque strophe. Schéma de rimes fixe.",
+        "tradition": "Forme médiévale remise à l'honneur par Villon (Ballade des pendus, Ballade des dames du temps jadis)",
+        "envoi": "Commence traditionnellement par 'Prince' — adresse au dédicataire ou au lecteur"
+      },
+      "slam": {
+        "définition": "Poésie orale performée sans musique ni accessoire, jugée par le public. Art du texte dit.",
+        "techniques": "Rythme parlé, anaphores percussives, jeux de mots, registre direct et engagé, adresse au public",
+        "structure_libre": "Pas de contrainte formelle — le texte vit par la voix, le corps, l'émotion",
+        "conseil": "Écrire pour l'oreille, pas pour l'œil. Tester à voix haute. Le silence est aussi un outil.",
+        "artistes_francophones": "Grand Corps Malade, Abd al Malik, Lisette Lombé, Souleymane Diamanka"
+      }
+    },
+    "figures_de_style": {
+      "analogie": {
+        "métaphore": {
+          "définition": "Comparaison implicite sans outil de comparaison (comme, tel que)",
+          "exemple": "Cette faucille d'or dans le champ des étoiles (Hugo) — la lune = faucille",
+          "variantes": "Métaphore filée (développée sur plusieurs phrases), métaphore morte (courante, usée: pied de la table)"
+        },
+        "allégorie": {
+          "définition": "Représentation concrète d'une abstraction à travers un récit ou une image prolongée",
+          "exemple": "La Justice avec sa balance et son glaive. La caverne de Platon (allégorie de l'ignorance)."
+        },
+        "comparaison": {
+          "définition": "Rapprochement explicite entre deux éléments via un outil (comme, tel, pareil à, semblable à)",
+          "exemple": "La terre est bleue comme une orange (Éluard) — comparaison surréaliste"
+        }
+      },
+      "répétition_et_rythme": {
+        "anaphore": {
+          "définition": "Répétition d'un même mot ou groupe en début de vers/phrase successifs",
+          "exemple": "Moi président... Moi président... — effet d'accumulation et de martèlement",
+          "usage": "Puissant en slam et en discours. Crée un rythme obsédant."
+        },
+        "chiasme": {
+          "définition": "Structure croisée AB-BA inversant l'ordre des termes",
+          "exemple": "Il faut manger pour vivre et non pas vivre pour manger (Molière)",
+          "effet": "Crée une symétrie intellectuelle, un effet de miroir, une clôture."
+        },
+        "gradation": {
+          "définition": "Énumération de termes en progression croissante ou décroissante d'intensité",
+          "exemple": "Va, cours, vole et nous venge! (Corneille) — accélération dramatique"
+        }
+      },
+      "substitution": {
+        "synecdoque": {
+          "définition": "Désigner le tout par la partie ou inversement",
+          "exemple": "Les voiles (= les bateaux) au loin. Cent têtes (= cent personnes)."
+        },
+        "métonymie": {
+          "définition": "Désigner un concept par un élément qui lui est associé (contenant/contenu, cause/effet, lieu/institution)",
+          "exemple": "Boire un verre (le contenu). L'Élysée a déclaré (le président)."
+        },
+        "périphrase": {
+          "définition": "Remplacer un mot par une expression plus longue qui le décrit",
+          "exemple": "L'astre du jour (= le soleil). La Ville Lumière (= Paris)."
+        }
+      },
+      "opposition_et_intensité": {
+        "oxymore": {
+          "définition": "Alliance de deux termes contradictoires",
+          "exemple": "Cette obscure clarté (Corneille). Un silence assourdissant."
+        },
+        "hyperbole": {
+          "définition": "Exagération volontaire pour amplifier l'expression",
+          "exemple": "Je meurs de faim. Un bruit à réveiller les morts."
+        },
+        "litote": {
+          "définition": "Dire moins pour suggérer plus — atténuation qui renforce",
+          "exemple": "Va, je ne te hais point (Chimène à Rodrigue = je t'aime passionnément)"
+        },
+        "antithèse": {
+          "définition": "Opposition forte entre deux idées dans une même structure",
+          "exemple": "Je vis, je meurs; je me brûle et me noie (Louise Labé)"
+        }
+      }
+    },
+    "versification_française": {
+      "types_de_rimes": {
+        "par_qualité": "Rime pauvre (1 son commun: ami/parti), suffisante (2 sons: amer/mer), riche (3+ sons: lumière/poussière)",
+        "par_disposition": "Plates/suivies (AABB), croisées (ABAB), embrassées (ABBA)",
+        "par_genre": "Rime féminine (terminée par e muet: ombre/sombre) vs masculine (terminée par son prononcé: jour/amour). Alternance obligatoire en poésie classique."
+      },
+      "mètres_principaux": {
+        "alexandrin": "12 syllabes — vers noble par excellence (tragédie, épopée, sonnet)",
+        "décasyllabe": "10 syllabes (césure 4+6 ou 6+4) — vers épique médiéval (Chanson de Roland)",
+        "octosyllabe": "8 syllabes — vers léger et narratif (fables, chansons, poésie lyrique)",
+        "heptasyllabe": "7 syllabes — rythme impair, musicale (Verlaine: De la musique avant toute chose / Et pour cela préfère l'impair)"
+      },
+      "césure": "Pause rythmique à l'intérieur du vers. Dans l'alexandrin classique: à la 6e syllabe (hémistiche). Peut être mobile dans le vers romantique.",
+      "enjambement": {
+        "enjambement": "La phrase déborde sur le vers suivant sans pause — crée un effet de continuité ou de relance",
+        "rejet": "Un élément court est rejeté au début du vers suivant — met en relief le mot rejeté",
+        "contre_rejet": "Un élément court en fin de vers annonce le suivant — crée une attente"
+      },
+      "diérèse_synérèse": "Diérèse: prononcer 2 syllabes là où l'usage n'en met qu'une (vi-o-lon = 3). Synérèse: fusionner en 1 (vio-lon = 2). Choix du poète selon le mètre visé."
+    },
+    "écriture_romanesque": {
+      "structure_narrative": {
+        "schéma_classique": "Situation initiale → Élément perturbateur → Péripéties → Climax → Dénouement → Situation finale",
+        "structure_en_3_actes": "Acte I (setup, 25%) → Acte II (confrontation, 50%) → Acte III (résolution, 25%)",
+        "structure_en_7_points": "Hook → Plot Turn 1 → Pinch 1 → Midpoint → Pinch 2 → Plot Turn 2 → Resolution",
+        "conseil": "La structure est un guide, pas une prison. Les meilleures histoires savent quand transgresser les règles."
+      },
+      "arcs_de_personnages": {
+        "arc_positif": "Le personnage surmonte sa faille interne (mensonge → vérité). Ex: Rastignac, Jean Valjean.",
+        "arc_négatif": "Le personnage succombe à sa faille — corruption ou chute. Ex: Macbeth, Julien Sorel.",
+        "arc_plat": "Le personnage ne change pas mais change le monde autour de lui. Ex: Atticus Finch, Sherlock Holmes.",
+        "faille_et_besoin": "Chaque personnage a un DÉSIR (conscient, externe) et un BESOIN (inconscient, interne). Le conflit entre les deux crée la profondeur."
+      },
+      "worldbuilding": {
+        "principe": "Construire un monde cohérent dont seul 10% est montré — le reste est ressenti par le lecteur",
+        "éléments": "Géographie, histoire, système politique, économie, culture, langue, mythes, technologie, religions",
+        "iceberg_hemingway": "L'auteur doit tout savoir de son monde. Le lecteur ne voit que la pointe — mais sent la masse sous la surface.",
+        "conseil": "Montrer le monde par les détails sensoriels et les comportements des personnages, jamais par des expositions didactiques."
+      }
+    },
+    "autres_formes_d_écriture": {
+      "nouvelle": {
+        "définition": "Récit court centré sur un événement unique, un retournement, une chute",
+        "technique": "Économie de moyens: peu de personnages, une unité de lieu/temps/action, chaque phrase avance l'intrigue",
+        "maîtres": "Maupassant, Mérimée, Borges, Cortázar, Annie Saumont"
+      },
+      "creative_non_fiction": {
+        "définition": "Récit factuel utilisant les techniques littéraires — reportage narratif, essai personnel, portrait",
+        "technique": "Scènes reconstruites, dialogues réels, arc narratif appliqué au réel",
+        "exemples": "Truman Capote (De sang-froid), Emmanuel Carrère (L'Adversaire)"
+      },
+      "mémoire_autobiographie": {
+        "distinction": "Autobiographie = vie entière chronologique. Mémoire = période/thème spécifique avec perspective personnelle.",
+        "conseil": "Écrire avec honnêteté radicale. Le lecteur pardonne tout sauf le mensonge à soi-même.",
+        "technique": "Alterner entre le moi narrant (présent, réflexif) et le moi narré (passé, immergé dans l'action)"
+      },
+      "écriture_philosophique": {
+        "formes": "Essai, dialogue (Platon), aphorisme (Nietzsche, Cioran), fragment (Pascal, Barthes), méditation (Marc Aurèle)",
+        "conseil": "Clarté avant tout. La profondeur ne vient pas de l'obscurité mais de la précision."
+      }
+    },
+    "rhétorique": {
+      "trois_piliers_aristote": {
+        "ethos": "Crédibilité de l'orateur — autorité, compétence, bienveillance perçues",
+        "pathos": "Émotion du public — empathie, indignation, espoir, peur",
+        "logos": "Logique de l'argument — preuves, raisonnements, données, exemples"
+      },
+      "structure_discours": "Exorde (accroche) → Narration (contexte) → Argumentation (thèse + preuves) → Réfutation (objections anticipées) → Péroraison (conclusion émotionnelle + appel à l'action)",
+      "figures_rhétoriques": "Question rhétorique (affirmer en interrogeant), prétérition (dire en prétendant ne pas dire), prosopopée (faire parler un absent/objet)"
+    },
+    "processus_créatif": {
+      "journaling_créatif": {
+        "morning_pages": "3 pages manuscrites chaque matin, flux de conscience sans censure (méthode Julia Cameron, The Artist's Way)",
+        "prompts": "Écrire à partir de contraintes: un mot imposé, une première phrase, un objet, un souvenir sensoriel",
+        "bénéfices": "Débloquer la créativité, identifier les thèmes récurrents, entraîner la fluidité d'écriture"
+      },
+      "développement_du_style": {
+        "lire_massivement": "Lire dans et hors de son genre. Analyser ce qui fonctionne et pourquoi.",
+        "copier_puis_diverger": "Imiter consciemment un auteur admiré pour intégrer ses techniques, puis s'en éloigner pour trouver sa voix.",
+        "réécriture": "Le premier jet est toujours imparfait. Réécrire est le vrai travail — couper, resserrer, préciser, rythmer."
+      },
+      "editing": {
+        "premier_jet": "Écrire sans s'arrêter ni corriger. Le premier jet sert à exister, pas à être bon.",
+        "révision_structurelle": "Arcs narratifs, cohérence, rythme global, chapitres superflus",
+        "révision_ligne": "Phrases, mots, rythme, images, dialogues — chaque phrase doit mériter sa place",
+        "bêta_lecteurs": "Faire lire à 3-5 lecteurs de confiance avant soumission. Écouter les retours convergents."
+      },
+      "publication": {
+        "éditeurs_traditionnels": "Manuscrit → lettre d'accompagnement → envoi à des maisons d'édition (comité de lecture). Délai: 3-12 mois. Acceptation: ~2-5%.",
+        "autoédition": "Amazon KDP, BoD, Lulu. Contrôle total mais marketing à sa charge. Investir dans couverture pro et correction.",
+        "revues_littéraires": "Publier en revue pour se faire connaître: La NRF, Recours au Poème, Remue.net, revues universitaires",
+        "concours": "Prix du Jeune Écrivain, concours de nouvelles (Hemingway, Bouquinvore), slam (Coupe de France de Slam)"
+      }
+    }
+  }
+}
