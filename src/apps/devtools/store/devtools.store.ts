@@ -71,6 +71,62 @@ export interface OmegaStep {
   duration?: number; // ms
   engines?: string[];
   error?: string;
+  outputSummary?: string; // v30: brief output description
+}
+
+// ─────────────────────────────────────────────────────────────────
+// v30.0.0 — JOURNAL D'EXÉCUTION OMEGA TYPES
+// ─────────────────────────────────────────────────────────────────
+
+export interface ReasoningStep {
+  id: string;
+  label: string; // e.g. "Classifier l'intention", "Sélectionner le provider"
+  thought: string; // the actual reasoning text shown to user
+  decision?: string; // the decision made at this step
+  confidence?: number; // 0-100
+  durationMs?: number;
+  timestamp: number;
+}
+
+export interface ReasoningTrace {
+  requestId: string;
+  startedAt: number;
+  completedAt?: number;
+  steps: ReasoningStep[];
+  finalMode: string; // e.g. "OMEGA", "ARCHITECT", "DEEP_REASONING"
+  selectedProvider: string; // e.g. "ollama", "openai", "copilot"
+  effortLevel: string; // e.g. "max", "high", "medium", "low"
+  singularityCoherence?: number; // 0-100
+  keyConceptsExtracted?: string[];
+  reflectionNotes?: string; // post-response qualitative reflection
+}
+
+export interface JournalEntry {
+  id: string;
+  timestamp: number;
+  requestPreview: string; // first 80 chars of user message
+  responsePreview: string; // first 80 chars of TITANE response
+  mode: string;
+  provider: string;
+  effortLevel: string;
+  totalDurationMs: number;
+  pipeline: OmegaStep[];
+  reasoningTrace: ReasoningTrace;
+  success: boolean;
+  errorMessage?: string;
+}
+
+export type CognitiveStatus = 'idle' | 'thinking' | 'responding' | 'reflecting';
+
+export interface CognitiveState {
+  currentMode: string;
+  currentProvider: string;
+  effortLevel: string;
+  singularityCoherence: number; // 0-100
+  processingLoad: number; // 0-100
+  activeEnginesCount: number;
+  lastRequestAt?: number;
+  status: CognitiveStatus;
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -103,6 +159,12 @@ interface DevToolsState {
   currentPipeline: OmegaStep[];
   pipelineHistory: OmegaStep[][];
 
+  // v30.0.0 — Journal d'Exécution OMEGA
+  journalEntries: JournalEntry[];
+  maxJournalEntries: number;
+  reasoningTrace: ReasoningTrace | null;
+  cognitiveState: CognitiveState;
+
   // UI State
   autoScrollLogs: boolean;
   selectedEngine: string | null;
@@ -120,6 +182,11 @@ interface DevToolsState {
   setAutoScrollLogs: (enabled: boolean) => void;
   setSelectedEngine: (id: string | null) => void;
   setTimeRange: (range: '30s' | '2m' | '5m' | '10m' | '1h') => void;
+  // v30.0.0 — Journal actions
+  addJournalEntry: (entry: JournalEntry) => void;
+  updateReasoningTrace: (trace: ReasoningTrace) => void;
+  updateCognitiveState: (updates: Partial<CognitiveState>) => void;
+  clearJournal: () => void;
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -286,6 +353,20 @@ export const useDevToolsStore = create<DevToolsState>(set => ({
   currentPipeline: [],
   pipelineHistory: [],
 
+  // v30.0.0 — Journal d'Exécution OMEGA initial state
+  journalEntries: [],
+  maxJournalEntries: 50,
+  reasoningTrace: null,
+  cognitiveState: {
+    currentMode: 'default',
+    currentProvider: 'ollama',
+    effortLevel: 'medium',
+    singularityCoherence: 87,
+    processingLoad: 0,
+    activeEnginesCount: 0,
+    status: 'idle',
+  },
+
   autoScrollLogs: true,
   selectedEngine: null,
   timeRange: '2m',
@@ -357,4 +438,19 @@ export const useDevToolsStore = create<DevToolsState>(set => ({
   setSelectedEngine: id => set({ selectedEngine: id }),
 
   setTimeRange: range => set({ timeRange: range }),
+
+  // v30.0.0 — Journal actions
+  addJournalEntry: entry =>
+    set(state => ({
+      journalEntries: [entry, ...state.journalEntries].slice(0, state.maxJournalEntries),
+    })),
+
+  updateReasoningTrace: trace => set({ reasoningTrace: trace }),
+
+  updateCognitiveState: updates =>
+    set(state => ({
+      cognitiveState: { ...state.cognitiveState, ...updates },
+    })),
+
+  clearJournal: () => set({ journalEntries: [], reasoningTrace: null }),
 }));

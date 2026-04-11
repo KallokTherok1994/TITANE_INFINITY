@@ -1,6 +1,6 @@
 /**
- * Tests pour DevTools OmegaPipeline Section
- * Coverage: Pipeline OMEGA, Étapes, État
+ * Tests pour DevTools OmegaPipeline Section — Journal d'Exécution OMEGA v30
+ * Coverage: Pipeline OMEGA, Étapes, État cognitif, Journal
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -11,27 +11,34 @@ import { OmegaPipeline } from '@/apps/devtools/sections';
 vi.mock('@/apps/devtools/store/devtools.store', () => ({
   useDevToolsStore: () => ({
     currentPipeline: [
-      { id: 'perception', status: 'complete', duration: 50 },
-      { id: 'analysis', status: 'running', duration: 120 },
-      { id: 'synthesis', status: 'pending', duration: 0 },
+      { id: 'perception', name: 'Perception', status: 'complete', duration: 50 },
+      { id: 'analysis', name: 'Analyse', status: 'running', duration: 120 },
+      { id: 'synthesis', name: 'Synthèse', status: 'pending', duration: 0 },
     ],
     pipelineHistory: [
       [
-        { id: 'perception', status: 'complete', duration: 45 },
-        { id: 'analysis', status: 'complete', duration: 110 },
-        { id: 'synthesis', status: 'complete', duration: 55 },
-      ],
-      [
-        { id: 'perception', status: 'complete', duration: 50 },
-        { id: 'analysis', status: 'complete', duration: 95 },
-        { id: 'synthesis', status: 'complete', duration: 50 },
+        { id: 'perception', name: 'Perception', status: 'complete', duration: 45 },
+        { id: 'analysis', name: 'Analyse', status: 'complete', duration: 110 },
+        { id: 'synthesis', name: 'Synthèse', status: 'complete', duration: 55 },
       ],
     ],
+    cognitiveState: {
+      currentMode: 'OMEGA',
+      currentProvider: 'ollama',
+      effortLevel: 'high',
+      singularityCoherence: 89,
+      processingLoad: 0,
+      activeEnginesCount: 5,
+      status: 'idle',
+    },
+    reasoningTrace: null,
+    journalEntries: [],
+    clearJournal: vi.fn(),
   }),
 }));
 
 vi.mock('@/apps/devtools/components', () => ({
-  SectionHeader: ({ title, actions }: any) => (
+  SectionHeader: ({ title, actions }: { title: string; actions?: React.ReactNode }) => (
     <div data-testid="section-header">
       <span>{title}</span>
       {actions && <div data-testid="header-actions">{actions}</div>}
@@ -49,20 +56,20 @@ describe('DevTools OmegaPipeline Section', () => {
       render(<OmegaPipeline />);
 
       expect(screen.getByTestId('section-header')).toBeInTheDocument();
-      expect(screen.getByText('Omega Pipeline')).toBeInTheDocument();
+      expect(screen.getByText("Journal d'Exécution OMEGA")).toBeInTheDocument();
     });
 
     it('should display current execution section', () => {
       render(<OmegaPipeline />);
 
-      expect(screen.getByText('Current Execution')).toBeInTheDocument();
+      expect(screen.getByText('Exécution en Cours')).toBeInTheDocument();
     });
 
     it('should display total duration', () => {
       render(<OmegaPipeline />);
 
-      // Vérifier que le total existe (peut être 0ms si pas de pipeline)
-      expect(screen.getByText(/Total:/i)).toBeInTheDocument();
+      // duration + history count in actions bar
+      expect(screen.getByText(/ms · \d+ exec/)).toBeInTheDocument();
     });
   });
 

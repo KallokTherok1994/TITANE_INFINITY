@@ -13,6 +13,9 @@ import type {
   ErrorEntry,
   MemoryNode,
   OmegaStep,
+  JournalEntry,
+  ReasoningTrace,
+  CognitiveState,
 } from '../store/devtools.store';
 
 /**
@@ -239,6 +242,78 @@ export function usePipelineUpdates() {
 }
 
 /**
+ * useJournalUpdates - Écoute les nouvelles entrées du Journal d'Exécution OMEGA
+ */
+export function useJournalUpdates() {
+  const addJournalEntry = useDevToolsStore(state => state.addJournalEntry);
+
+  useEffect(() => {
+    let unlisten: UnlistenFn | undefined;
+
+    const setupListener = async () => {
+      try {
+        unlisten = await listen<JournalEntry>('omega-journal-entry', event => {
+          if (event.payload) addJournalEntry(event.payload);
+        });
+      } catch (e) {
+        console.error('[DevTools] omega-journal-entry listener failed:', e);
+      }
+    };
+
+    setupListener();
+    return () => { if (unlisten) unlisten(); };
+  }, [addJournalEntry]);
+}
+
+/**
+ * useReasoningTraceUpdates - Écoute la trace de raisonnement OMEGA en temps réel
+ */
+export function useReasoningTraceUpdates() {
+  const updateReasoningTrace = useDevToolsStore(state => state.updateReasoningTrace);
+
+  useEffect(() => {
+    let unlisten: UnlistenFn | undefined;
+
+    const setupListener = async () => {
+      try {
+        unlisten = await listen<ReasoningTrace>('omega-reasoning-trace', event => {
+          if (event.payload) updateReasoningTrace(event.payload);
+        });
+      } catch (e) {
+        console.error('[DevTools] omega-reasoning-trace listener failed:', e);
+      }
+    };
+
+    setupListener();
+    return () => { if (unlisten) unlisten(); };
+  }, [updateReasoningTrace]);
+}
+
+/**
+ * useCognitiveStateUpdates - Écoute l'état cognitif OMEGA
+ */
+export function useCognitiveStateUpdates() {
+  const updateCognitiveState = useDevToolsStore(state => state.updateCognitiveState);
+
+  useEffect(() => {
+    let unlisten: UnlistenFn | undefined;
+
+    const setupListener = async () => {
+      try {
+        unlisten = await listen<Partial<CognitiveState>>('cognitive-state-update', event => {
+          if (event.payload) updateCognitiveState(event.payload);
+        });
+      } catch (e) {
+        console.error('[DevTools] cognitive-state-update listener failed:', e);
+      }
+    };
+
+    setupListener();
+    return () => { if (unlisten) unlisten(); };
+  }, [updateCognitiveState]);
+}
+
+/**
  * useAllDevToolsEvents - Hook principal activant tous les listeners
  *
  * Utiliser dans DevToolsApp pour activer tous les events en une fois
@@ -258,4 +333,7 @@ export function useAllDevToolsEvents() {
   useErrorTracking();
   useMemoryUpdates();
   usePipelineUpdates();
+  useJournalUpdates();
+  useReasoningTraceUpdates();
+  useCognitiveStateUpdates();
 }
