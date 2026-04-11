@@ -6,6 +6,9 @@
 import type { ModuleRouteContext } from '@/services/chat/moduleRouteContext';
 import type { ConversationMode } from '@/services/conversationEngine';
 import type { ProviderDecisionMeta } from '@/types/providerMeta';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('[chatMemorySingleDoor]');
 
 const LAST_ENVELOPE_KEY = 'titane_chat_context_envelope_v1';
 
@@ -139,15 +142,15 @@ function readFreshTwinsFusion(): ChatContextEnvelope['twinsContext'] | null {
   }>('titane_twin_fusion_v1');
   if (!raw) return null;
   if (typeof raw.updatedAt !== 'number') {
-    console.warn(
-      '[chatMemorySingleDoor] titane_twin_fusion_v1: missing updatedAt — treating as stale'
+    logger.warn(
+      'titane_twin_fusion_v1: missing updatedAt — treating as stale'
     );
     return null;
   }
   const ageMs = Date.now() - raw.updatedAt;
   if (ageMs > TWINS_FUSION_MAX_AGE_MS) {
-    console.warn(
-      `[chatMemorySingleDoor] titane_twin_fusion_v1: stale (age=${Math.round(ageMs / 60_000)}min > 30min) — excluded from context`
+    logger.warn(
+      `titane_twin_fusion_v1: stale (age=${Math.round(ageMs / 60_000)}min > 30min) — excluded from context`
     );
     return null;
   }

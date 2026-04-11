@@ -5,6 +5,9 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('[useTwinEvolution]');
 import { numericTwinService } from '../services/api/numericTwin';
 import type {
   TwinEvolutionProfile,
@@ -104,7 +107,7 @@ export function useTwinEvolution(): UseTwinEvolutionReturn {
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur lors du chargement');
-      console.error('[useTwinEvolution] Error:', err);
+      logger.error('Error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -120,7 +123,7 @@ export function useTwinEvolution(): UseTwinEvolutionReturn {
       await fetchData(); // Refresh après recalcul
       return score;
     } catch (err) {
-      console.error('[useTwinEvolution] recalculateFusion error:', err);
+      logger.error('recalculateFusion error:', err);
       throw err;
     }
   }, [fetchData]);
@@ -132,7 +135,7 @@ export function useTwinEvolution(): UseTwinEvolutionReturn {
         await fetchData();
         return result;
       } catch (err) {
-        console.error('[useTwinEvolution] transitionPhase error:', err);
+        logger.error('transitionPhase error:', err);
         setError(err instanceof Error ? err.message : 'Erreur lors de la transition');
         return null;
       }
@@ -147,7 +150,7 @@ export function useTwinEvolution(): UseTwinEvolutionReturn {
         await fetchData();
         return result;
       } catch (err) {
-        console.error('[useTwinEvolution] reinforceValue error:', err);
+        logger.error('reinforceValue error:', err);
         setError(err instanceof Error ? err.message : 'Erreur lors du renforcement');
         return null;
       }
@@ -162,7 +165,7 @@ export function useTwinEvolution(): UseTwinEvolutionReturn {
         await fetchData();
         return result;
       } catch (err) {
-        console.error('[useTwinEvolution] adjustTrait error:', err);
+        logger.error('adjustTrait error:', err);
         setError(err instanceof Error ? err.message : "Erreur lors de l'ajustement");
         return null;
       }
