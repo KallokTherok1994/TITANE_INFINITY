@@ -16,6 +16,9 @@
 
 export type XPSource =
   | 'chat_message'
+  | 'chat_quality_bonus'
+  | 'chat_titane_response'
+  | 'chat_conversation_streak'
   | 'file_import'
   | 'automation_success'
   | 'diagnostic_pass'
@@ -53,6 +56,10 @@ export interface ProgressionState {
   xpInCurrentLevel: number;
   xpToNextLevel: number;
   chatMessageCount: number; // incremented on every 'chat_message' XP event
+  /** Dernier tier de qualité du message (pour feedback UI) */
+  lastQualityTier: string | null;
+  /** Compteur de messages par tier de qualité */
+  qualityTierCounts: Record<string, number>;
   milestones: ProgressionMilestone[];
   unlockedMilestones: string[];
   lastXPGain: XPEvent | null;
