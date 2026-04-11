@@ -1,0 +1,69 @@
+{
+  "version": "v30.0.0",
+  "category": "crypto_blockchain",
+  "description": "Cryptomonnaies et blockchain — fondamentaux techniques, Bitcoin, Ethereum, DeFi, NFTs, stablecoins, sécurité, réglementation, cycles de marché, cas d'usage réels et mythes à démythifier",
+  "crypto_blockchain": {
+    "introduction": "La blockchain est une technologie réelle avec des cas d'usage légitimes. Les cryptomonnaies sont une classe d'actifs spéculative à haut risque. TITANE distingue la technologie de la spéculation, les projets solides des scams, et donne les outils pour naviguer cet espace avec discernement.",
+    "blockchain_fondamentaux": {
+      "definition": "Registre distribué immuable. Transactions groupées en blocs chaînés par hachage cryptographique. Aucun acteur central ne contrôle.",
+      "consensus": {
+        "proof_of_work": "Bitcoin — mineurs résolvent puzzle computationnel. Sécurisé, énergivore (127 TWh/an ≈ Argentine)",
+        "proof_of_stake": "Ethereum post-merge, Solana, Cardano — validateurs stakent des tokens. 99.95% moins énergivore.",
+        "autres": "DPoS (Delegated PoS), PoA (Authority), PoH (Solana)"
+      },
+      "proprietes": "Immuabilité (modification nécessite >51% hashrate), transparence (tout public on-chain), permissionless, censorship-resistant",
+      "limites": "Scalabilité trilemme (décentralisation/sécurité/vitesse), UX complexe, financement infrastructure, réglementation"
+    },
+    "bitcoin": {
+      "creation": "Satoshi Nakamoto, 2008. Whitepaper 'A Peer-to-Peer Electronic Cash System'. Genèse block 3 janvier 2009.",
+      "proprietes": "Supply fixe (21M BTC), décentralisé max (10K+ nodes), ~4 ans halvings réduisent émission",
+      "store_of_value": "Or digital — réserve de valeur rare, portable, divisible (satoshi = 0.00000001 BTC). Arguments inflation hedge.",
+      "critiques": "Volatilité rend usage comme monnaie difficile, énergie, lenteur transactions (7 TPS), scalabilité",
+      "layer2": "Lightning Network — canaux de paiement off-chain. Quasi-instantané, frais micro. Adoption croissante."
+    },
+    "ethereum": {
+      "creation": "Vitalik Buterin, 2015. Smart contracts = programmes autonomes sur blockchain.",
+      "evm": "Ethereum Virtual Machine — langage Solidity/Vyper. Déterministe, isolé.",
+      "defi": {
+        "definition": "Finance décentralisée — services financiers sans intermédiaires (banques, courtiers)",
+        "protocoles": "Uniswap (DEX, échanges automatiques), Aave/Compound (prêts/emprunts), Maker (DAI stablecoin), Curve (stablecoins)",
+        "risques": "Smart contract bugs (hack DAO 2016, Ronin $625M), liquidations en cascade, rug pulls, impermanent loss"
+      },
+      "layer2": "Arbitrum, Optimism, Base, zkSync — transactions off-chain + preuves on-chain. Frais <$0.01 vs Ethereum $1-50."
+    },
+    "stablecoins": {
+      "categories": {
+        "fiat_backed": "USDC (Circle), USDT (Tether) — 1$ de réserve pour 1 token. Centralisé mais stable.",
+        "crypto_backed": "DAI (sur-collatéralisé en ETH/BTC). Décentralisé mais liquidation risk.",
+        "algorithmique": "Luna/UST — effondrement 2022, $60B disparus. Mécanisme intrinsèquement fragile sans backing réel."
+      },
+      "risques": "USDT audit partiel, risque contrepartie USDC (SVB bank crisis), réglementation incoming"
+    },
+    "nfts": {
+      "technique": "Non-Fungible Token — token unique représentant ownership. Metadata généralement off-chain (IPFS).",
+      "usages_reels": "Art numérique, ticketing anti-fraude, gaming (ownership items), identité digitale, certificats",
+      "bulle_2021": "$69M Beeple. 90%+ des NFTs 2021 valent aujourd'hui proche de 0. Spéculation + wash trading.",
+      "avenir": "Utilities tangibles (concerts, access passes) ont de la valeur. JPEG spéculatif = incertain."
+    },
+    "securite_crypto": {
+      "wallets": {
+        "hot": "MetaMask, Phantom — connecté internet, pratique, risque hack",
+        "cold": "Ledger/Trezor hardware wallet — clés privées hors ligne. Recommandé >$1000.",
+        "seed_phrase": "12-24 mots = accès TOTAL. Jamais en ligne, jamais photo. Métal gravé = meilleure pratique."
+      },
+      "escroqueries": "Fausses apps (toujours vérifier URL officielle), phishing Discord/Twitter, 'double your crypto', faux support",
+      "regle_or": "Jamais partager seed phrase. Personne légitime ne la demande JAMAIS."
+    },
+    "cycles_marche": {
+      "halving_bitcoin": "Tous les ~4 ans, récompense mineurs divisée par 2. Historiquement précède bull market 12-18 mois après.",
+      "indicateurs": "Fear & Greed Index, Pi Cycle Top, MVRV ratio, on-chain metrics (Glassnode)",
+      "psychologie": "FOMO sommet, désespoir creux. 'Soyez gourmands quand les autres ont peur' (Buffett — vaut aussi crypto).",
+      "avertissement": "Passé ≠ futur. Régulation, technologie, macro peuvent briser cycles historiques."
+    },
+    "regulation": {
+      "europe": "MiCA (2024) — premier cadre réglementaire complet crypto. Stablecoins sous supervision BCE.",
+      "usa": "Débat SEC/CFTC juridiction. ETF Bitcoin spot approuvé (jan 2024). Ethereum ETF en attente.",
+      "investissement": "Risque élevé. Position max recommandée : 5-10% portefeuille pour investisseur informé."
+    }
+  }
+}

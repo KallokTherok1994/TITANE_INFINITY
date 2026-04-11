@@ -1,0 +1,82 @@
+{
+  "version": "v30.0.0",
+  "category": "histoire_civilisations",
+  "description": "Histoire des civilisations — Mésopotamie, Égypte, Grèce, Rome, Islam médiéval, Renaissance, révolutions modernes, colonisation, guerres mondiales, ères contemporaines, leçons pour le présent",
+  "histoire_civilisations": {
+    "introduction": "L'histoire n'est pas un passé figé — c'est un miroir de la nature humaine. Comprendre comment les civilisations naissent, prospèrent et s'effondrent permet d'anticiper les dynamiques actuelles. TITANE aborde l'histoire comme un système complexe de causes, structures et individus.",
+    "antiquite": {
+      "mesopotamie": {
+        "periode": "3500–550 av. J-C",
+        "contributions": "Première écriture (cunéiforme), premières lois écrites (Code de Hammurabi), astronomie, mathématiques base 60 (nos minutes/secondes viennent d'ici)",
+        "chute": "Conflits Assyrie/Babylone, puis conquête perse d'Achéménides (539 av. J-C)"
+      },
+      "egypte_ancienne": {
+        "periode": "3100–30 av. J-C",
+        "contributions": "Architecture monumentale (pyramides, temples), médecine empirique, papyrus, mathématiques géométriques, agriculture Nil",
+        "lecon": "Stabilité exceptionnelle de 3000 ans grâce à géographie protectrice (déserts + mer) et structure sociale rigide"
+      },
+      "grece_classique": {
+        "periode": "800–31 av. J-C",
+        "contributions": "Démocratie (Athènes), philosophie (Socrate/Platon/Aristote), sciences (Archimède, Pythagore, Hipocrate), tragédie et comédie, olympiades",
+        "lecon": "Rivalité Athènes/Sparte (Guerre du Péloponnèse) illustre comment la méfiance détruit les alliances face à une menace commune (Perse)"
+      },
+      "rome": {
+        "periode": "753 av. J-C – 476 ap. J-C (Occident)",
+        "contributions": "Droit romain (base systèmes légaux occidentaux), ingénierie (aqueducs, routes, béton), concept républicain puis impérial, latin",
+        "chute": "Multi-causale — pression barbares, crises économiques, débasement monnaie, politique instable, taille ingérable"
+      }
+    },
+    "moyen_age": {
+      "empire_islamique": {
+        "periode": "622–1258",
+        "age_or": "800–1200 — mathématiques (algèbre = al-jabr), médecine (Avicenne), astronomie, philosophie, commerce de Séville à Samarcande",
+        "chute": "Invasions mongoles (1258, sac de Bagdad), croisades, fragmentation politique"
+      },
+      "europe_medievale": {
+        "structure": "Féodalisme — hiérarchie seigneur/vassal/serf. Église comme pouvoir central (politique + moral).",
+        "evolutions": "Universités (Bologne 1088, Paris 1150), villes marchandes, Magna Carta (1215 — limite pouvoir royal)",
+        "feodalisme_fin": "Peste noire (1347 — tue 30-50% Europe) restructure économie, libère serfs, amorce Renaissance"
+      }
+    },
+    "modernite_emergente": {
+      "renaissance": {
+        "periode": "14e–17e siècle",
+        "essence": "Redécouverte antiquité + humanisme. Homme au centre, raison valorisée.",
+        "figures": "Léonard da Vinci (art+science), Machiavel (politique réaliste), Copernic/Galilée (héliocentrisme)"
+      },
+      "revolutions_scientifiques": "Newton (gravitation, calcul), Lavoisier (chimie), Linné (taxonomie). Méthode scientifique systématisée.",
+      "exploration": "Christophe Colomb (1492), Magellan (1519-1522). Échanges commerciaux mondiaux. Début colonisation et traite des esclaves."
+    },
+    "ere_revolutions": {
+      "revolution_industrielle": {
+        "periode": "1760–1840 (Angleterre), puis Europe/US",
+        "moteurs": "Machine à vapeur (Watt), charbon, textile mécanisé, chemin de fer",
+        "impacts": "Urbanisation massive, classes ouvrières, pollution, nouvelles inégalités, productivité multipliée par 10"
+      },
+      "revolutions_politiques": {
+        "americaine_1776": "Indépendance des 13 colonies. Constitution écrite, droits individuels, séparation des pouvoirs.",
+        "francaise_1789": "Renversement monarchie absolue. Droits de l'homme, Terreur, puis Napoléon.",
+        "lecon": "Les révolutions commencent par la libération et finissent souvent par une nouvelle forme d'autorité."
+      }
+    },
+    "xxe_siecle": {
+      "guerres_mondiales": {
+        "ww1": "1914–1918. Alliances rigides + nationalisme + impérialisme. 20M morts. Effondrement 4 empires (Ottoman, Austro-hongrois, Russe, Allemand).",
+        "ww2": "1939–1945. Holocauste (6M juifs), 70-85M morts. ONU fondée. Ordre bipolaire USA/URSS.",
+        "lecon": "Traité de Versailles (1919) trop punitif → conditions économiques et humiliantes favorisant l'extrémisme (Hitler)"
+      },
+      "guerre_froide": {
+        "periode": "1947–1991",
+        "dynamique": "Bipolarité nucléaire, courses armements et espace, proxy wars (Corée, Vietnam, Afghanistan)",
+        "fin": "Effondrement URSS 1991 — inefficacité économique planifiée, pression militaire, Gorbatchev"
+      },
+      "decolonisation": "1945–1975. 80+ nations indépendantes. Héritage : frontières artificielles, instabilité post-coloniale, dette historique."
+    },
+    "lecons_transversales": {
+      "effondrement_civilisations": "Récurrent : surexploitation ressources, inégalités extrêmes, incapacité d'adaptation, chocs externes",
+      "innovation_disruptive": "Chaque révolution technologique majeure (écriture/imprimerie/vapeur/internet) restructure le pouvoir",
+      "cycles_historiques": "Turchin (cliodynamique) : cycles ~200 ans d'intégration et désintégration. Nous serions en phase de désintégration.",
+      "memoire_critique": "L'histoire est écrite par les vainqueurs. Chercher sources multiples, perspectives subalternes, archives primaires."
+    }
+  }
+}

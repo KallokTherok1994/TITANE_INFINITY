@@ -6,7 +6,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
-import { logger as _logger } from '@/lib/logger';
+import { logger } from '@/lib/logger';
 
 /**
  * DESIGN PRINCIPLES
@@ -386,13 +386,10 @@ export async function exampleUsage() {
     },
   });
 
-  console.log(`Response from ${response.provider} (${response.metadata.latencyMs}ms)`);
-  console.log(
-    `Cached: ${response.cached}, Coherence: ${response.cognitive.coherenceScore}`
-  );
+  logger.info(`Response from ${response.provider} (${response.metadata.latencyMs}ms) — Cached: ${response.cached}, Coherence: ${response.cognitive.coherenceScore}`);
 
   if (response.fallback) {
-    console.warn(
+    logger.warn(
       `Fallback used: ${response.fallback.originalProvider} → ${response.provider}`
     );
   }
