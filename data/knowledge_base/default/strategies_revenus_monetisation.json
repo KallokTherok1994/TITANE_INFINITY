@@ -1,0 +1,132 @@
+{
+  "version": "v30.0.0",
+  "category": "strategies_revenus_monetisation",
+  "description": "Stratégies de revenus et monétisation — modèles économiques (freelance/SaaS/infoproduits/services productisés), revenus passifs (dividendes/royalties/loyers/affiliation), pricing, diversification et scaling des sources de revenus",
+  "strategies_revenus_monetisation": {
+    "introduction": "Générer des revenus durables exige de comprendre les différents modèles économiques, de diversifier ses sources et de maîtriser les leviers de pricing et de scaling. TITANE structure ce savoir en catégories actionnables pour bâtir un écosystème de revenus résilient et évolutif.",
+    "revenus_actifs": {
+      "freelance": {
+        "definition": "Vente directe de compétences (développement, design, rédaction, conseil) à des clients en mode projet ou mission.",
+        "avantages": "Démarrage rapide, faible investissement initial, flexibilité géographique et temporelle.",
+        "inconvenients": "Revenu plafonné par le temps disponible, dépendance client, irrégularité des missions.",
+        "conseils": "Spécialiser sa niche pour justifier des tarifs premium. Viser le positionnement expert plutôt que généraliste. Construire un portfolio de cas concrets avec résultats chiffrés.",
+        "plateformes": "Malt, Upwork, Fiverr (entrée de gamme), LinkedIn (prospection directe), Crème de la Crème (haut de gamme).",
+        "formule_tarif": "Tarif journalier = (salaire annuel cible + charges + congés + formation) / jours facturables. Viser 220 jours max, facturer 150-180 réellement."
+      },
+      "consulting": {
+        "definition": "Accompagnement stratégique ou opérationnel d'entreprises sur des problématiques complexes.",
+        "positionnement": "Le consultant vend une transformation mesurable, pas du temps. Facturer à la valeur créée plutôt qu'au temps passé.",
+        "modeles_facturation": "Forfait projet, régie (TJM), success fee (% des résultats), retainer mensuel (abonnement conseil).",
+        "scaling": "Passer du solo au cabinet en recrutant des consultants juniors. Créer des méthodologies propriétaires réutilisables."
+      },
+      "coaching_et_formation": {
+        "coaching_individuel": "Accompagnement personnalisé à forte valeur perçue. Tarifs de 80€ à 500€/heure selon la niche et l'expertise.",
+        "coaching_groupe": "Levier de scaling naturel: 1 coach pour 5-15 personnes, prix unitaire réduit mais revenu total supérieur.",
+        "packages": "Structurer en programmes (3 mois, 6 mois) plutôt qu'en séances isolées. Inclure: sessions live, supports, accès communauté, suivi asynchrone.",
+        "certifications": "ICF, RNCP, ou certifications sectorielles augmentent la crédibilité et le tarif justifiable."
+      }
+    },
+    "revenus_semi_passifs": {
+      "infoproduits": {
+        "definition": "Produits numériques (ebooks, templates, guides, checklists) créés une fois et vendus de manière récurrente.",
+        "avantages": "Marge quasi-totale après création, pas de stock, distribution mondiale instantanée.",
+        "types": "Ebooks (15-50€), templates Notion/Excel (10-100€), guides PDF spécialisés (30-200€), kits complets (100-500€).",
+        "conseil_cle": "Résoudre un problème précis et douloureux pour une audience définie. La spécificité bat la généralité."
+      },
+      "cours_en_ligne": {
+        "definition": "Programmes de formation structurés en vidéo, texte et exercices, hébergés sur une plateforme.",
+        "plateformes": "Teachable, Podia, Thinkific (propre plateforme), Udemy/Skillshare (marketplace, moins de contrôle).",
+        "pricing": "Cours marketplace: 10-50€ (volume). Cours propre plateforme: 200-2000€ (valeur perçue, communauté, support).",
+        "structure": "Module 1: quick win rapide. Modules suivants: progression logique. Module final: plan d'action concret.",
+        "taux_completion": "Moyenne industrie: 5-15%. Améliorer avec: accountability, communauté, jalons, certificats."
+      },
+      "membership_et_abonnements": {
+        "definition": "Accès récurrent à du contenu, une communauté ou des ressources moyennant un abonnement mensuel ou annuel.",
+        "avantages": "Revenus récurrents prévisibles (MRR), relation long terme avec les membres.",
+        "modeles": "Communauté premium (10-50€/mois), bibliothèque de ressources (20-100€/mois), mastermind (100-500€/mois).",
+        "metriques_cles": "Churn rate (taux de désabonnement), LTV (valeur vie client), MRR (revenu mensuel récurrent). Objectif churn < 5%/mois.",
+        "retention": "Contenu frais régulier, engagement communautaire, événements live exclusifs, onboarding structuré."
+      },
+      "services_productises": {
+        "definition": "Service standardisé avec scope fixe, prix fixe et processus reproductible. Hybride entre service et produit.",
+        "exemples": "Audit SEO en 48h (500€), pack identité visuelle (1500€), setup CRM clé en main (2000€).",
+        "avantage": "Élimine la négociation, simplifie la vente, permet la délégation et le scaling.",
+        "conseil": "Documenter chaque étape du processus. Créer des SOP (Standard Operating Procedures) pour déléguer sans perte de qualité."
+      }
+    },
+    "revenus_passifs": {
+      "affiliation": {
+        "definition": "Commission sur les ventes générées via un lien de recommandation unique.",
+        "commissions_types": "Amazon (1-10%), SaaS (20-40% récurrent), formation en ligne (30-50%), hébergement web (50-200€/vente).",
+        "strategie": "Créer du contenu SEO evergreen autour de comparatifs, tutoriels et avis. Le trafic organique alimente les ventes en continu.",
+        "ethique": "Toujours divulguer les liens affiliés. Ne recommander que des produits testés et approuvés."
+      },
+      "dividendes": {
+        "definition": "Revenus distribués par les entreprises cotées à leurs actionnaires proportionnellement aux actions détenues.",
+        "rendement_moyen": "2-5% annuel pour les actions à dividendes stables (aristocrates du dividende).",
+        "strategie": "DRIP (Dividend Reinvestment Plan): réinvestir automatiquement les dividendes pour effet boule de neige.",
+        "formule": "Revenu mensuel cible / rendement annuel moyen × 12 = capital nécessaire. Ex: 1000€/mois à 4% = 300 000€ investis."
+      },
+      "royalties_et_licences": {
+        "definition": "Revenus perçus pour l'utilisation de propriété intellectuelle: brevets, marques, musique, logiciels, livres.",
+        "exemples": "Auteur: 8-15% du prix de vente. Musicien: droits SACEM/streaming. Inventeur: 3-8% des ventes sous licence.",
+        "conseil": "Protéger sa PI (INPI, dépôt de marque, copyright). Négocier des minimums garantis dans les contrats de licence."
+      },
+      "revenus_locatifs": {
+        "definition": "Revenus issus de la location de biens immobiliers ou mobiliers.",
+        "rendement_brut": "Formule: (loyer annuel / prix d'achat) × 100. Viser 7-10% brut en locatif classique.",
+        "strategies": "Location longue durée (stabilité), location courte durée/Airbnb (rendement supérieur, gestion accrue), colocation (optimisation du m²).",
+        "attention": "Rendement net = brut - charges - fiscalité - vacance locative - entretien. Souvent 40-50% du brut."
+      }
+    },
+    "modeles_ecommerce": {
+      "dropshipping": {
+        "definition": "Vente en ligne sans stock: le fournisseur expédie directement au client final.",
+        "avantages": "Investissement initial très faible, pas de gestion de stock.",
+        "inconvenients": "Marges faibles (15-30%), délais de livraison longs, contrôle qualité limité, forte concurrence.",
+        "conseil": "Privilégier des fournisseurs européens pour les délais. Se différencier par le branding et le service client, pas par le prix."
+      },
+      "print_on_demand": {
+        "definition": "Impression à la demande de designs personnalisés sur t-shirts, mugs, posters, etc.",
+        "plateformes": "Printful, Printify, Redbubble, Merch by Amazon.",
+        "marge_typique": "5-15€ par article. Volume nécessaire pour revenus significatifs.",
+        "conseil": "Cibler des micro-niches passionnées (métiers spécifiques, hobbies). Tester 50-100 designs et doubler sur les gagnants."
+      },
+      "saas_revenu_recurrent": {
+        "definition": "Software as a Service — logiciel vendu par abonnement mensuel ou annuel.",
+        "metriques": "MRR, ARR, churn, LTV, CAC. Ratio LTV/CAC > 3 pour viabilité.",
+        "pricing": "Freemium (conversion 2-5%), essai gratuit (conversion 10-25%), plans par paliers de fonctionnalités.",
+        "avantage": "Revenus récurrents et prévisibles, valorisation élevée (8-15x ARR pour les SaaS performants).",
+        "conseil": "Valider le problème avant de coder. MVP en 4-8 semaines. Itérer sur le feedback utilisateur."
+      }
+    },
+    "sponsoring_et_partenariats": {
+      "sponsoring_contenu": "Marques payent pour être mentionnées dans du contenu (articles, vidéos, podcasts). Tarif selon audience et engagement.",
+      "partenariats_strategiques": "Co-création de produits ou services avec des marques complémentaires. Partage des revenus.",
+      "ambassadeur_marque": "Contrat long terme avec une marque. Rémunération fixe + variable selon performance.",
+      "tarification": "CPM (coût pour mille impressions): 5-50€. Forfait par post/vidéo selon la niche et l'engagement."
+    },
+    "pricing_et_strategie_tarifaire": {
+      "methodes": {
+        "cost_plus": "Coût de revient + marge souhaitée. Simple mais ignore la valeur perçue.",
+        "value_based": "Prix basé sur la valeur perçue par le client. Méthode la plus rentable mais nécessite une compréhension profonde du client.",
+        "concurrentiel": "Alignement sur les prix du marché. Risque de course vers le bas.",
+        "penetration": "Prix bas pour gagner des parts de marché rapidement, puis augmentation progressive.",
+        "ecremage": "Prix élevé au lancement (early adopters), puis baisse progressive."
+      },
+      "psychologie_prix": "Effet d'ancrage (montrer le prix barré), prix charm (97€ vs 100€), packaging en 3 offres (bronze/argent/or, le milieu est le plus choisi).",
+      "regle_or": "Le prix doit refléter la transformation promise, pas le temps passé. Un conseil de 15 minutes qui fait économiser 50 000€ vaut plus qu'un rapport de 100 pages."
+    },
+    "diversification_et_scaling": {
+      "principe": "Ne jamais dépendre d'une seule source de revenus. Objectif: 3-5 sources complémentaires.",
+      "matrice_revenus": "Axe 1: actif vs passif. Axe 2: échange de temps vs échange de valeur. Migrer progressivement vers passif + valeur.",
+      "scaling": {
+        "levier_1_delegation": "Déléguer les tâches à faible valeur ajoutée pour libérer du temps sur les activités à fort impact.",
+        "levier_2_automatisation": "Automatiser les processus répétitifs (email sequences, onboarding, facturation).",
+        "levier_3_systemes": "Créer des systèmes reproductibles (SOPs, templates, workflows) qui fonctionnent sans intervention directe.",
+        "levier_4_produits": "Transformer son expertise en produits (cours, logiciels, licences) pour découpler revenu et temps."
+      },
+      "progression_recommandee": "Freelance → Services productisés → Infoproduits → SaaS/Membership → Investissements passifs. Chaque étape finance la suivante."
+    }
+  }
+}

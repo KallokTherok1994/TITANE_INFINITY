@@ -1,0 +1,177 @@
+{
+  "version": "v30.0.0",
+  "category": "sante_mentale_therapies",
+  "description": "Santé mentale et approches thérapeutiques — TCC, ACT, EMDR, thérapies brèves, humaniste, systémique, Gestalt, psychanalyse, sophrologie, art-thérapie, gestion anxiété/dépression/trauma/addictions/sommeil",
+  "sante_mentale_therapies": {
+    "introduction": "La santé mentale est un pilier fondamental du bien-être global. Comprendre les différentes approches thérapeutiques permet de choisir celle qui correspond le mieux à chaque situation. TITANE aborde ce domaine avec rigueur clinique, sans jamais se substituer à un professionnel de santé mentale. L'objectif est d'informer, d'outiller et d'accompagner la réflexion.",
+    "therapie_cognitive_comportementale": {
+      "nom_complet": "Thérapie Cognitive et Comportementale (TCC)",
+      "principe": "Identifier et modifier les pensées automatiques dysfonctionnelles et les comportements inadaptés. Basée sur le modèle cognitif de Beck : situation → pensée automatique → émotion → comportement.",
+      "piliers": {
+        "restructuration_cognitive": {
+          "description": "Repérer les distorsions cognitives (pensée tout-ou-rien, catastrophisation, surgénéralisation, lecture de pensée, filtre mental, disqualification du positif) et les remplacer par des pensées alternatives équilibrées.",
+          "technique_colonnes_de_Beck": "Situation | Pensée automatique | Émotion (0-100) | Distorsion identifiée | Pensée alternative | Nouvelle émotion (0-100)",
+          "conseil": "Tenir un journal de pensées quotidien pendant 3 semaines minimum pour installer le réflexe d'auto-observation cognitive."
+        },
+        "exposition_graduelle": {
+          "description": "Confrontation progressive et contrôlée aux stimuli anxiogènes, de la situation la moins redoutée à la plus redoutée.",
+          "étapes": "1) Construire une hiérarchie d'anxiété (SUDS 0-100). 2) Commencer par l'item coté 20-30. 3) Rester dans la situation jusqu'à diminution de 50% de l'anxiété. 4) Répéter jusqu'à habituation. 5) Passer au palier suivant.",
+          "règle_clé": "Ne jamais fuir pendant l'exposition — la fuite renforce l'évitement et consolide la peur."
+        },
+        "activation_comportementale": {
+          "description": "Réintroduire progressivement des activités plaisantes et valorisantes pour briser le cycle dépressif retrait-inactivité-rumination.",
+          "méthode": "Planifier 3 activités quotidiennes : 1 activité de maîtrise (accomplissement), 1 activité de plaisir, 1 activité sociale. Noter le niveau de plaisir et de maîtrise (0-10) après chaque activité."
+        }
+      },
+      "indications_principales": "Troubles anxieux, phobies, TOC, dépression, insomnie, TSPT, troubles alimentaires"
+    },
+    "therapie_acceptation_engagement": {
+      "nom_complet": "Thérapie d'Acceptation et d'Engagement (ACT)",
+      "principe": "Développer la flexibilité psychologique — capacité à être présent, ouvert à l'expérience, et engagé dans des actions alignées avec ses valeurs, même en présence de souffrance.",
+      "six_processus": {
+        "defusion_cognitive": {
+          "description": "Se distancier des pensées sans les combattre. Une pensée n'est qu'une pensée, pas un fait.",
+          "exercice": "Préfixer chaque pensée difficile par 'Je remarque que j'ai la pensée que...' pour créer un espace entre soi et la pensée."
+        },
+        "acceptation": "Accueillir les émotions et sensations désagréables sans lutter contre elles. L'évitement expérientiel amplifie la souffrance.",
+        "moment_present": "Revenir au contact avec l'ici et maintenant plutôt que ruminer le passé ou anticiper le futur.",
+        "soi_comme_contexte": "Se percevoir comme l'observateur de ses expériences plutôt que comme ses expériences elles-mêmes.",
+        "valeurs": {
+          "description": "Clarifier ce qui compte profondément — les directions de vie choisies (pas des objectifs à atteindre).",
+          "domaines_clés": "Relations, travail/vocation, croissance personnelle, santé, loisirs, spiritualité, communauté"
+        },
+        "action_engagee": "Poser des actions concrètes, même petites, alignées avec ses valeurs. L'engagement n'exige pas la perfection mais la direction."
+      }
+    },
+    "emdr": {
+      "nom_complet": "Désensibilisation et Retraitement par les Mouvements Oculaires (EMDR)",
+      "createur": "Francine Shapiro (1987)",
+      "principe": "Stimuler le système de traitement adaptatif de l'information (TAI) par des stimulations bilatérales alternées (mouvements oculaires, tapping, sons) pendant le rappel d'un souvenir traumatique.",
+      "huit_phases": "1) Histoire du patient. 2) Préparation et stabilisation. 3) Évaluation de la cible (image, cognition négative, cognition positive, VOC, SUDS, émotions, sensations corporelles). 4) Désensibilisation par stimulations bilatérales. 5) Installation de la cognition positive. 6) Scan corporel. 7) Clôture et stabilisation. 8) Réévaluation à la séance suivante.",
+      "indications": "TSPT, trauma simple et complexe, phobies, deuil compliqué, anxiété de performance",
+      "important": "Uniquement pratiqué par un thérapeute formé et certifié EMDR. Ne pas tenter en auto-traitement."
+    },
+    "therapies_breves": {
+      "solution_focused": {
+        "nom": "Thérapie brève orientée solutions (TBOS)",
+        "principe": "Se concentrer sur les solutions et les ressources plutôt que sur les problèmes. Le client est l'expert de sa vie.",
+        "outils_clés": {
+          "question_miracle": "Si un miracle se produisait cette nuit et que votre problème était résolu, qu'est-ce qui serait différent demain matin ? Que feriez-vous en premier ?",
+          "échelle_de_progrès": "Sur une échelle de 0 à 10, où 10 est l'objectif atteint, où vous situez-vous aujourd'hui ? Qu'est-ce qui vous a permis d'être à ce chiffre plutôt qu'à zéro ?",
+          "exceptions": "Quand le problème ne se manifeste-t-il pas ? Que faites-vous de différent dans ces moments ?"
+        }
+      },
+      "hypnose_ericksonienne": {
+        "principe": "Utiliser un état modifié de conscience (transe légère) pour accéder aux ressources inconscientes du patient. Approche permissive et indirecte, contrairement à l'hypnose directive.",
+        "techniques": "Métaphores thérapeutiques, recadrage, dissociation, suggestions indirectes, saupoudrage, confusion bienveillante",
+        "applications": "Douleur chronique, phobies, habitudes, confiance en soi, préparation mentale"
+      }
+    },
+    "psychotherapie_humaniste": {
+      "approche_rogers": {
+        "fondateur": "Carl Rogers (approche centrée sur la personne)",
+        "trois_conditions": {
+          "empathie": "Comprendre le monde intérieur du client comme s'il était le sien, sans jamais perdre le 'comme si'. Reformuler pour valider la compréhension.",
+          "congruence": "Le thérapeute est authentique et transparent — pas de façade professionnelle. L'authenticité inspire l'authenticité.",
+          "regard_positif_inconditionnel": "Accepter le client tel qu'il est, sans jugement ni condition. La valeur de la personne n'est pas conditionnée à ses comportements."
+        },
+        "ecoute_active": {
+          "composantes": "Reformulation, reflet émotionnel, silence respectueux, questions ouvertes, validation non-verbale (hochement, contact visuel)",
+          "conseil_pratique": "80% écoute, 20% parole. Résister à l'envie de conseiller — le client possède ses propres réponses."
+        }
+      }
+    },
+    "therapie_systemique": {
+      "principe": "Le symptôme n'appartient pas à l'individu mais au système (famille, couple, équipe). Modifier les interactions et les patterns relationnels plutôt que l'individu isolé.",
+      "concepts_clés": "Homéostasie du système, patient désigné, loyautés invisibles, triangulation, parentification, double contrainte (Bateson), génogramme",
+      "indications": "Conflits familiaux, troubles de l'enfant/adolescent, crises de couple, problèmes transgénérationnels"
+    },
+    "gestalt_therapie": {
+      "principe": "Prise de conscience (awareness) de l'expérience présente — sensations, émotions, besoins — dans l'ici et maintenant. Focus sur le 'comment' plutôt que le 'pourquoi'.",
+      "concepts": "Cycle du contact (pré-contact, mise en contact, contact plein, post-contact), mécanismes de résistance (confluence, introjection, projection, rétroflexion, déflexion), travail avec la chaise vide",
+      "apport_unique": "Intégration corps-esprit-émotions dans un même mouvement thérapeutique."
+    },
+    "psychanalyse_fondamentaux": {
+      "principe": "Explorer l'inconscient pour comprendre les conflits psychiques qui génèrent les symptômes. Le passé infantile structure le présent.",
+      "concepts_essentiels": "Inconscient, transfert et contre-transfert, résistances, associations libres, analyse des rêves, complexe d'Œdipe, mécanismes de défense (refoulement, projection, déni, sublimation, rationalisation)",
+      "cadre": "Fréquence élevée (2-4 séances/semaine), durée longue (plusieurs années), divan traditionnel",
+      "distinction": "Psychanalyse (cadre strict, divan) vs psychothérapie d'orientation analytique (face à face, 1 fois/semaine, plus focalisée)"
+    },
+    "approches_complementaires": {
+      "sophrologie": {
+        "fondateur": "Alfonso Caycedo (1960)",
+        "principe": "Méthode psychocorporelle combinant respiration contrôlée, détente musculaire progressive et visualisation positive pour harmoniser corps et esprit.",
+        "exercice_base": "Respiration abdominale 4 temps : inspirer 4s (gonfler le ventre) → retenir 4s → expirer 6s (rentrer le ventre) → pause 2s. Répéter 5 cycles."
+      },
+      "art_therapie": {
+        "principe": "Utiliser le processus créatif (dessin, peinture, sculpture, collage) comme médiation thérapeutique. L'expression non-verbale contourne les défenses intellectuelles.",
+        "indications": "Trauma, alexithymie, enfants, personnes âgées, handicap, troubles du spectre autistique"
+      },
+      "musicotherapie": {
+        "formes": "Réceptive (écoute guidée pour évoquer émotions et souvenirs) et active (production sonore, improvisation instrumentale ou vocale)",
+        "effets_documentés": "Réduction du cortisol, régulation du rythme cardiaque, stimulation de la dopamine, amélioration de la communication non-verbale"
+      }
+    },
+    "gestion_anxiete": {
+      "comprendre": "L'anxiété est une réponse normale de survie (système nerveux sympathique). Elle devient pathologique quand elle est disproportionnée, persistante et invalidante.",
+      "techniques_immediates": {
+        "respiration_4_7_8": {
+          "méthode": "Inspirer par le nez 4 secondes → Retenir 7 secondes → Expirer par la bouche 8 secondes. Répéter 4 cycles.",
+          "mécanisme": "Active le nerf vague et le système parasympathique. Effet mesurable en 60 secondes."
+        },
+        "grounding_5_4_3_2_1": {
+          "méthode": "Nommer : 5 choses que je vois, 4 choses que je touche, 3 choses que j'entends, 2 choses que je sens (odorat), 1 chose que je goûte.",
+          "mécanisme": "Ancre dans le présent sensoriel et interrompt la spirale cognitive anxieuse."
+        },
+        "exposition_progressive": "Construire une échelle d'évitement (0-100) et affronter progressivement chaque situation, en commençant par les moins anxiogènes."
+      }
+    },
+    "depression": {
+      "signes_principaux": "Tristesse persistante (>2 semaines), perte d'intérêt/plaisir (anhédonie), fatigue profonde, troubles du sommeil, modifications de l'appétit, difficultés de concentration, culpabilité excessive, idées noires",
+      "quand_consulter": "Dès que les symptômes durent plus de 2 semaines ou impactent le fonctionnement quotidien. En cas d'idées suicidaires : appeler le 3114 (numéro national de prévention du suicide).",
+      "habitudes_protectrices": {
+        "sommeil": "Régularité des horaires, pas d'écran 1h avant le coucher, chambre fraîche et sombre",
+        "mouvement": "30 minutes d'activité physique modérée 5 fois/semaine — aussi efficace que les antidépresseurs pour la dépression légère à modérée (étude Blumenthal et al.)",
+        "alimentation": "Régime méditerranéen riche en oméga-3, magnésium, tryptophane. Limiter sucre, alcool, ultra-transformés.",
+        "lien_social": "Maintenir au minimum un contact social significatif par jour, même bref.",
+        "sens_et_valeurs": "Identifier une micro-action quotidienne alignée avec une valeur personnelle."
+      }
+    },
+    "trauma": {
+      "trauma_simple_vs_complexe": {
+        "simple": "Événement unique et identifiable (accident, agression). Réponse de stress post-traumatique classique.",
+        "complexe": "Exposition répétée et prolongée à des traumatismes relationnels (maltraitance, négligence, violence conjugale). Altère la régulation émotionnelle, l'identité et les relations."
+      },
+      "guerison": {
+        "trois_phases_Herman": "1) Sécurité et stabilisation (créer un ancrage sûr). 2) Travail du trauma (narration, EMDR, exposition). 3) Reconnexion avec la vie (sens, relations, projets).",
+        "fenêtre_de_tolérance": "Zone où l'on peut traiter les émotions sans être submergé (hyperactivation) ni figé (hypoactivation). Le travail thérapeutique vise à élargir cette fenêtre."
+      },
+      "post_traumatic_growth": {
+        "definition": "Croissance psychologique positive survenant après la traversée d'un trauma — pas malgré la souffrance mais à travers elle.",
+        "cinq_domaines": "Relations approfondies, nouvelles possibilités, force personnelle accrue, appréciation de la vie, transformation spirituelle ou existentielle"
+      }
+    },
+    "addictions": {
+      "mecanismes": {
+        "cycle": "Déclencheur (stress, ennui, émotion) → Craving (envie irrésistible) → Consommation → Soulagement temporaire → Culpabilité/conséquences → Nouveau déclencheur",
+        "neurobiologie": "Détournement du circuit de la récompense (dopamine). Tolérance (besoin de doses croissantes) et sensibilisation (craving amplifié par les indices contextuels)."
+      },
+      "recuperation": {
+        "stades_du_changement": "Pré-contemplation (pas de conscience du problème) → Contemplation (ambivalence) → Préparation → Action → Maintien → Rechute possible (pas un échec, mais une étape d'apprentissage)",
+        "outils": "Entretien motivationnel, prévention de la rechute (Marlatt), groupes de soutien, TCC addictologique, gestion des déclencheurs"
+      }
+    },
+    "trouble_du_sommeil_therapeutique": {
+      "insomnie_chronique": {
+        "traitement_de_référence": "TCC de l'insomnie (TCC-I) — plus efficace que les somnifères à long terme (recommandation HAS/APA).",
+        "composantes_TCC_I": {
+          "restriction_de_sommeil": "Réduire le temps passé au lit au temps réellement dormi, puis augmenter progressivement de 15 min quand l'efficacité du sommeil dépasse 85%.",
+          "controle_du_stimulus": "Lit = sommeil uniquement. Se lever si éveillé >15 min. Heures de lever fixes. Pas de sieste compensatoire.",
+          "hygiene_du_sommeil": "Régularité, obscurité, fraîcheur (18-19°C), pas de caféine après 14h, pas d'alcool (fragmente le sommeil), routine de décompression 60 min avant le coucher.",
+          "restructuration_cognitive": "Identifier les croyances dysfonctionnelles sur le sommeil (je dois dormir 8h sinon je ne fonctionnerai pas) et les assouplir."
+        }
+      }
+    },
+    "conseil_general": "Ces informations sont éducatives et ne remplacent pas un diagnostic ou un suivi professionnel. En cas de souffrance psychique significative, consulter un psychologue, psychiatre ou psychothérapeute qualifié. En urgence : 3114 (prévention suicide), 15 (SAMU), 114 (SMS pour sourds et malentendants)."
+  }
+}

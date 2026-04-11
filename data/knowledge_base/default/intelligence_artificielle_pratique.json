@@ -1,77 +1,71 @@
 {
   "version": "v30.0.0",
   "category": "intelligence_artificielle_pratique",
-  "description": "Intelligence artificielle pratique — prompt engineering, fine-tuning, RAG, agents autonomes, sélection de modèles, évaluation, sécurité IA, déploiement, éthique et tendances 2025-2026",
+  "description": "Intelligence artificielle pratique avancée — Google AI Studio et Gemini (API, multimodal, grounding), ChatGPT et GPT-4o/o3 (API, GPTs personnalisés, plugins), Claude (Anthropic, multi-turn, tool use), Midjourney et image AI (génération d'images, prompt crafting), Stable Diffusion (local, ControlNet, LoRA), Runway et vidéo IA, prompt engineering avancé (chain-of-thought, few-shot, RAG), IA dans le workflow créatif et professionnel, LangChain et agents IA, fine-tuning",
   "intelligence_artificielle_pratique": {
-    "introduction": "L'IA générative transforme chaque domaine. TITANE aide à distinguer le hype de la valeur réelle, à choisir les bons modèles, à concevoir des prompts efficaces et à déployer des systèmes IA robustes et éthiques.",
-    "prompt_engineering": {
-      "principes": "Contexte clair, rôle explicite, format désiré, exemples (few-shot), contraintes, persona",
-      "techniques": {
-        "zero_shot": "Instruction directe sans exemple — fonctionne bien pour LLMs modernes",
-        "few_shot": "2-5 exemples input/output — réduit ambiguïté, guide le format",
-        "chain_of_thought": "'Réfléchis étape par étape' — améliore raisonnement complexe de 30-40%",
-        "tree_of_thought": "Explorer plusieurs branches de raisonnement — problèmes combinatoires",
-        "react": "Reason + Act — alternance raisonnement/action/observation pour agents",
-        "structured_output": "JSON mode, Pydantic schemas, function calling — output parsable garanti"
-      },
-      "anti_patterns": "Prompts trop vagues, sur-instruction, incohérences internes, ignorer la fenêtre de contexte"
+    "introduction": "L'IA générative révolutionne tous les domaines créatifs et techniques. TITANE guide à travers la maîtrise pratique des principaux outils d'IA — des interfaces aux APIs, des techniques de prompting aux workflows avancés.",
+    "prompt_engineering_avance": {
+      "zero_shot": "Donner directement la tâche sans exemple. 'Résume ce texte en 3 points.' Simple mais limité pour les tâches complexes.",
+      "few_shot": "Donner 2-5 exemples input/output dans le prompt. Montre le format et le style attendus. Très efficace pour les tâches structurées.",
+      "chain_of_thought": "Demander à l'IA de raisonner étape par étape. 'Pense étape par étape.' ou 'Réfléchis à voix haute avant de répondre.' Améliore drastiquement la logique et les maths.",
+      "role_system_prompts": "System prompt : définit la personnalité, le contexte, les contraintes. 'Tu es un expert en droit fiscal français. Tu réponds uniquement en français. Tu ne fais jamais de suppositions.'",
+      "structured_output": "Demander un format précis (JSON, Markdown, XML). 'Réponds au format JSON avec les clés: name, price, category.' Utiliser les modes JSON natifs (OpenAI, Google).",
+      "ReAct_pattern": "Reasoning + Acting. L'IA alterne entre réflexion et actions (appel d'outils). Base des agents IA.",
+      "metacognition": "Demander à l'IA d'évaluer sa propre réponse. 'Sur une échelle de 1-10, quelle est la confiance dans cette réponse?' 'Quelles sont les limites de cette analyse?'"
     },
-    "modeles_selection": {
-      "criteres": "Taille contexte, vitesse inference, coût/token, capabilities (vision/code/audio), privacy, latence",
-      "categories": {
-        "frontier": "GPT-4o, Claude 3.5 Sonnet, Gemini 1.5 Pro — qualité max, coût élevé",
-        "balanced": "GPT-4o-mini, Claude Haiku, Llama 3.1 70B — bon ratio qualité/coût",
-        "local": "Ollama (Llama 3.2, Mistral, Phi-3) — privacy, offline, coût zéro",
-        "specialises": "Code (CodeLlama, DeepSeek Coder), vision (LLaVA), embedding (text-embedding-3)"
+    "chatgpt_openai": {
+      "modeles": {
+        "gpt4o": "Multimodal (texte, images, audio, vidéo). Rapide. Meilleur pour l'usage quotidien. Contexte 128K tokens.",
+        "o1_o3": "Modèles de raisonnement. 'Pense' avant de répondre (chain-of-thought interne). Excellence en math, code, logique. Plus lent mais plus précis.",
+        "gpt4o_mini": "Économique, rapide. Bon pour les tâches simples et le volume."
       },
-      "benchmark_reels": "Ignorer leaderboards abstraits. Tester sur tes cas d'usage réels avec des métriques métier."
-    },
-    "rag": {
-      "definition": "Retrieval-Augmented Generation — enrichir le contexte LLM avec des données externes pertinentes",
-      "pipeline": "Ingestion → Chunking → Embedding → Vector Store → Retrieval → Reranking → Augmentation → Generation",
-      "chunking": "Fixed-size (512 tokens), semantic (phrases), recursive (markdown headers). Overlap 10-20%.",
-      "embeddings": "text-embedding-3-small (OpenAI), bge-m3 (multilingual), nomic-embed-text (local)",
-      "vector_stores": "Pinecone (cloud), Weaviate, Qdrant, Chroma (local), pgvector (PostgreSQL)",
-      "optimisations": "Hybrid search (dense + sparse BM25), reranking (cross-encoders), query expansion, HyDE"
-    },
-    "agents_autonomes": {
-      "definition": "LLM + outils + mémoire + boucle de raisonnement. Peut prendre des actions dans le monde réel.",
-      "frameworks": "LangChain, LlamaIndex, AutoGen, CrewAI, Smolagents, Pydantic AI",
-      "patterns": {
-        "react_loop": "Observe → Reason → Act — simple et robuste pour la plupart des tâches",
-        "plan_execute": "Planifier entièrement puis exécuter — tâches à longue portée",
-        "multi_agent": "Orchestrateur + agents spécialisés — parallélisme, séparation des responsabilités",
-        "reflection": "Auto-critique et révision — améliore qualité sortie"
+      "fonctionnalites": {
+        "GPTs_personnalises": "Créer des GPTs avec instructions spécifiques, knowledge base, actions (appel d'APIs). Partager publiquement ou en privé. GPT Store.",
+        "plugins_tools": "Web browsing, DALL-E 3 (images), Code Interpreter (Python sandbox pour data analysis, graphiques). Advanced Data Analysis.",
+        "memory": "ChatGPT mémorise des informations entre les sessions (opt-in). Personnalisation progressive."
       },
-      "securite": "Sandbox outils dangereux, confirmation humaine pour actions irréversibles, rate limiting"
+      "api_openai": "`openai.chat.completions.create(model='gpt-4o', messages=[...])`. Streaming. Function calling (tool use). Embeddings (text-embedding-3). Whisper (transcription). TTS (text-to-speech). Fine-tuning via API."
+    },
+    "claude_anthropic": {
+      "caracteristiques": "Claude 3.5 Sonnet/Haiku. Long context (200K tokens). Excellent pour l'analyse de documents, le code, l'écriture longue. 'Constitutional AI' (sécurité).",
+      "atouts": "Raisonnement nuancé. Refus moins fréquents pour les tâches légitimes. Très bon pour les instructions complexes. Artefacts (code, documents, SVG directement dans l'interface). Computer use (contrôle de l'ordinateur).",
+      "api": "`anthropic.messages.create(model='claude-3-5-sonnet-20241022', messages=[...])`. Tool use natif. Vision. Streaming. Cache de prompt (discount sur les longs prompts répétitifs)."
+    },
+    "google_gemini": {
+      "modeles": "Gemini 2.0 Flash (rapide, économique), Gemini 1.5 Pro (1M context, multimodal puissant), Gemini 2.0 Pro (recherche grounding).",
+      "specificites": "Contexte 1M tokens (analyser des longs livres/vidéos). Multimodal natif (image, audio, vidéo dans le même prompt). Grounding avec Google Search. Code Execution.",
+      "google_ai_studio": "Interface web pour tester les modèles. Playground (prompt libre). Chat (multi-tour). API key gratuite avec quotas. Export vers code (Python, JS). NotebookLM (analyse de sources multiples).",
+      "vertex_ai": "Version enterprise de Gemini. Fine-tuning, déploiement, monitoring. Intégration GCP. SLA et sécurité enterprise."
+    },
+    "image_ia": {
+      "midjourney": {
+        "prompts": "Décrire l'image souhaitée. Style artistique. Artiste de référence. Qualité (`--q 2`). Aspect ratio (`--ar 16:9`). Seed pour la reproductibilité (`--seed 12345`). Stylize (`--stylize 750`).",
+        "techniques": "Negative prompting (`--no blurry`). Image prompting (donner une image de référence). Remix mode (modifier une génération). Vary (variations). Upscale. Inpaint (Vary Region).",
+        "versions": "Midjourney v6 (ultra-réaliste). Niji v6 (anime/manga). `/imagine`, `/blend`, `/describe`."
+      },
+      "stable_diffusion": {
+        "local": "Automatic1111, ComfyUI (workflow-based). Gratuit, illimité. Nécessite GPU (NVIDIA recommandé). SDXL (base), SD 1.5 (compatible LoRA).",
+        "controlnet": "Contrôler la pose, la structure, les bords. OpenPose (corps humain), Depth, Canny (bords), LineArt, IP-Adapter (référence de style/personnage).",
+        "LoRA": "Fine-tuning léger. Entraîner sur 10-30 images pour un personnage/style/concept. Partage sur CivitAI.",
+        "inpainting_outpainting": "Modifier une zone spécifique. Étendre l'image au-delà de ses bords."
+      },
+      "DALL_E_Firefly": "DALL-E 3 (OpenAI, dans ChatGPT et API). Adobe Firefly (dans Photoshop, suite Adobe). Très bon pour les prompts textuels. Génération de texte dans les images."
+    },
+    "video_et_audio_ia": {
+      "runway": "Gen-3 Alpha. Text-to-Video, Image-to-Video. Motion Brush. Director Mode. Inpainting vidéo. Reference Images.",
+      "autres_video": "Sora (OpenAI, accès limité). Kling (Kuaishou). Luma Dream Machine. Pika Labs. HeyGen/D-ID (avatar vidéo, lèvres synchronisées). Synthesia (présentations video IA).",
+      "audio_ia": "ElevenLabs (clonage vocal, TTS ultra-réaliste). Suno.ai (génération musicale). Udio. MusicGen (Meta, open-source). Whisper (transcription, OpenAI). Adobe Podcast (enhance speech)."
+    },
+    "agents_et_workflows_ia": {
+      "LangChain": "Framework Python/JS pour construire des applications LLM. Chains, Agents, Tools, Memory. RAG (Retrieval-Augmented Generation). Vector stores (Chroma, Pinecone, Weaviate).",
+      "RAG": "Retrieval-Augmented Generation. Indexer des documents (chunking + embeddings). Retrouver les chunks pertinents au moment de la question. Injecter dans le prompt. Réponses fondées sur vos données.",
+      "agents": "LLM + outils (web search, code execution, APIs). ReAct loop. LangGraph (agents stateful). AutoGPT, CrewAI (multi-agents). OpenAI Assistants API.",
+      "n8n_make": "n8n (open-source), Make/Zapier (no-code automation). Connecter des LLMs à d'autres services (Gmail, Slack, Notion, Airtable, Webhooks). Workflows IA no-code."
     },
     "fine_tuning": {
-      "quand": "Behavior consistant spécifique, format propriétaire, réduction de prompt (coût), domain knowledge narrow",
-      "techniques": {
-        "full": "Tous les poids — coût élevé, GPU requis, résultats max",
-        "lora_qlora": "Low-Rank Adaptation — ~1% des poids, VRAM réduite 4-8x. Standard actuel.",
-        "dpo": "Direct Preference Optimization — aligner sur préférences humaines sans RL complexe",
-        "sft": "Supervised Fine-Tuning — dataset question/réponse curated"
-      },
-      "dataset": "Qualité >> quantité. 100 exemples parfaits > 10K médiocres. Diversité, couverture edge cases."
-    },
-    "evaluation": {
-      "metriques": "BLEU/ROUGE (génération), exact match (QA), human eval (référence gold), LLM-as-judge",
-      "frameworks": "Ragas (RAG eval), DeepEval, PromptFoo, LangSmith traces",
-      "pitfalls": "Benchmark overfitting, contamination données test, métriques auto proxy imparfait"
-    },
-    "ethique_securite": {
-      "biais": "Auditer sur groupes démographiques. Fairness metrics. Red teaming systématique.",
-      "hallucinations": "Grounding obligatoire (RAG/citations), confidence scores, fact-checking automatique",
-      "privacy": "PII removal avant ingestion, local models pour données sensibles, audit trails",
-      "alignement": "Constitutional AI, RLHF, guardrails (Guardrails AI, LLM-Guard)"
-    },
-    "tendances_2025_2026": {
-      "multimodal": "Vision + audio + vidéo intégrés nativement (Gemini 1.5, GPT-4o, Claude 3.5)",
-      "context_long": "1M+ tokens contexte — dépasse RAG pour certains use cases",
-      "reasoning_models": "o1/o3/DeepSeek-R1 — chain-of-thought interne, math/code avancé",
-      "edge_inference": "Modèles 1-3B sur device — phi-3-mini, Llama 3.2 1B, privacy maximale",
-      "agents_production": "Infrastructure mature (LangGraph, Temporal workflows) pour agents fiables"
+      "quand": "Dataset spécifique que le modèle de base ne gère pas bien. Format de sortie très spécifique. Personnalité particulière. Terminologie métier.",
+      "methodes": "OpenAI Fine-tuning API (GPT-3.5, GPT-4o mini). LoRA/QLoRA (Parameter-Efficient Fine-Tuning, fonctionne sur un GPU grand public). Full fine-tuning (requiert plusieurs GPUs).",
+      "donnees": "Minimum 50-100 exemples (idéalement 500-1000). Format `instruction/input/output` ou chat format. Qualité > quantité. Diversité des exemples."
     }
   }
 }

@@ -1,0 +1,99 @@
+{
+  "version": "v30.0.0",
+  "category": "freelance_consulting_premium",
+  "description": "Freelance et consulting premium VISIONNAIRE_2.0 — positionnement expert (niche/thought leadership/personal branding LinkedIn), pricing premium (value-based/retainers/anchor pricing), client acquisition (outbound/inbound/referrals/networking), sales process (discovery call/closing/objections), spécialisations lucratives, productisation de services, scaling (agency/subcontractors), outils, aspects juridiques (micro/SASU/portage salarial)",
+  "freelance_consulting_premium": {
+    "introduction": "Le freelance et le consulting premium ne sont pas du travail à l'heure — c'est de la vente d'expertise et de transformation. Au niveau VISIONNAIRE_2.0, on passe du 'je cherche des clients' à 'les clients viennent à moi', du 'TJM marché' à 'pricing par la valeur'. TITANE maîtrise cette transformation.",
+    "positionnement_expert": {
+      "niche_specialisation": {
+        "pourquoi": "Un spécialiste gagne 2-5x plus qu'un généraliste. Le marché paie pour la certitude du résultat, pas pour la polyvalence.",
+        "formule": "Votre niche = Compétence forte × Secteur spécifique × Problème précis. Ex : 'développeur React pour SaaS B2B' pas 'développeur web'.",
+        "validation": "Le marché existe si : 1. Les gens cherchent activement une solution. 2. Ils ont le budget. 3. Le problème est récurrent. 4. Vous pouvez démontrer des résultats."
+      },
+      "thought_leadership": {
+        "piliers": "Publier régulièrement (2-3x/semaine minimum), partager des résultats clients (anonymisés), donner des frameworks actionnables, prendre des positions claires.",
+        "canaux": "LinkedIn (B2B incontournable), newsletter (Substack/Beehiiv), podcast, YouTube (contenu evergreen), conférences/webinaires.",
+        "objectif": "Être la première personne à laquelle on pense quand le problème se pose. Top of mind = top of wallet."
+      },
+      "personal_branding": {
+        "linkedin": "Photo pro, headline orientée résultat ('J'aide les X à obtenir Y en Z'), bannière avec proposition de valeur, section À propos storytelling (hook → parcours → expertise → CTA), featured posts avec résultats.",
+        "portfolio": "Case studies détaillées : contexte → défi → solution → résultats chiffrés → témoignage client. 3-5 cas suffisent si bien présentés.",
+        "temoignages": "Demander systématiquement après chaque mission réussie. LinkedIn recommendations + vidéo témoignage + citation avec photo."
+      }
+    },
+    "pricing_premium": {
+      "value_based_pricing": {
+        "principe": "Prix basé sur la valeur créée pour le client, pas sur le temps passé. Si votre travail génère 100k€ de revenus supplémentaires, 10-20k€ d'honoraires est justifié.",
+        "decouverte_valeur": "En discovery call, poser : 'Combien vous coûte ce problème par mois/an ?' 'Combien gagnerez-vous en le résolvant ?' Le prix = fraction de cette valeur (10-20%)."
+      },
+      "modeles_pricing": {
+        "projet_forfait": "Prix fixe pour un livrable défini. Prévisible pour le client. Vous gagnez en efficacité. Toujours définir le scope avec précision (SOW).",
+        "retainer_mensuel": "Forfait mensuel pour un volume de travail ou une disponibilité. MRR prévisible. Idéal pour conseil continu, support, maintenance.",
+        "day_rate": "Tarif journalier. Simple mais limite le revenu (max ~220 jours/an). Utilisé en consulting et ESN.",
+        "packages_tiers": "Bronze/Argent/Or ou Starter/Pro/Premium. L'option du milieu est souvent choisie (effet d'ancrage). La haute gamme légitime les prix."
+      },
+      "augmenter_ses_prix": {
+        "methode": "Augmenter de 15-25% pour chaque nouveau client. Garder les anciens clients aux anciens prix (ou augmenter graduellement 5-10%/an).",
+        "signaux": "Si 100% de vos prospects acceptent → vous êtes trop bas. Taux de conversion idéal : 60-75%. Si 50% refusent → prix correct."
+      },
+      "TJM_marche_france_2025": {
+        "developpement": "Junior 300-450€, confirmé 500-700€, senior/expert 700-1200€, architect/lead 1000-1500€+.",
+        "design_UX": "Junior 350-500€, senior 600-1000€.",
+        "consulting_strategie": "500-2000€/jour selon expertise et secteur.",
+        "data_IA": "600-1500€/jour. Forte demande, peu d'offre."
+      }
+    },
+    "client_acquisition": {
+      "outbound": {
+        "cold_email": "Séquence 3-5 emails sur 2 semaines. Personnalisation : nom + entreprise + pain point spécifique + résultat pertinent. Taux réponse cible > 5%. Outils : Lemlist, Instantly, Apollo.io.",
+        "linkedin_outreach": "Connexion + message personnalisé (pas de pitch direct). Engager avec le contenu de la cible d'abord. Ratio : 100 connexions → 20 réponses → 5 calls → 1-2 clients.",
+        "warm_intros": "Le canal #1 en consulting. Demander à chaque client satisfait : 'Connaissez-vous 2-3 personnes qui auraient le même besoin ?'"
+      },
+      "inbound": {
+        "content_marketing": "Articles/posts qui démontrent l'expertise → attirent des prospects qualifiés → convertissent via CTA (audit gratuit, appel découverte, lead magnet).",
+        "SEO": "Blog personnel optimisé sur les mots-clés de votre niche. Résultats en 6-12 mois mais trafic gratuit et qualifié à long terme.",
+        "referrals": "Programme de recommandation : 5-15% de la première mission recommandée. Ou échange de recommandations entre freelances complémentaires."
+      },
+      "networking": "Événements métier, meetups, conférences. Objectif : 2-3 connexions de qualité, pas 50 cartes de visite. Follow-up dans les 48h."
+    },
+    "sales_process": {
+      "discovery_call": {
+        "structure": "30-45 min. 1. Rapport (5 min) → 2. Situation actuelle du client (10 min) → 3. Problème et douleur (10 min) → 4. Impact du problème (5 min) → 5. Solution high-level (5 min) → 6. Next steps (5 min).",
+        "questions_cles": "Qu'avez-vous déjà essayé ? Qu'est-ce qui n'a pas fonctionné ? Que se passe-t-il si rien ne change ? Quel est votre budget approximatif ? Qui d'autre est impliqué dans la décision ?"
+      },
+      "proposition": "Document professionnel : récapitulatif du besoin (montrer qu'on a écouté), approche proposée, livrables, timeline, prix (3 options idéalement), conditions, témoignages pertinents.",
+      "closing": {
+        "techniques": "Choix présumé ('Vous préférez le package Pro ou Premium ?'), deadline naturelle ('Je n'ai qu'une place disponible ce trimestre'), réduction de risque (garantie, phase test payante).",
+        "objections_courantes": {
+          "trop_cher": "Ramener au coût du problème non résolu. 'Combien vous coûte chaque mois sans solution ?' Comparer au ROI attendu.",
+          "je_reflechis": "Fixer une date de décision. 'Je comprends, quand pensez-vous avoir pris votre décision ? Je bloque le créneau jusqu'à vendredi.'",
+          "on_fait_en_interne": "'Excellent, en combien de temps pensez-vous y arriver ? Quel est le coût d'opportunité du retard ?' Proposer un audit/diagnostic d'abord."
+        }
+      }
+    },
+    "specialisations_lucratives": {
+      "dev_web_mobile": "React/Next.js, React Native, Flutter. TJM 500-1200€. Forte demande B2B et startup.",
+      "data_IA_ML": "Data engineering, ML ops, ChatGPT/LLM intégration. TJM 700-1500€. Marché en explosion.",
+      "UX_UI_design": "Product design, design systems, audit UX. TJM 500-1000€. Différenciation par la spécialisation sectorielle.",
+      "CFO_externalise": "Direction financière à temps partagé. 3-5 clients PME. 2-5k€/mois/client. Expertise comptable + stratégie.",
+      "CTO_as_a_service": "Direction technique pour startups pré-CTO. Architecture, recrutement, tech strategy. 3-8k€/mois/client.",
+      "copywriting_conversion": "Pages de vente, emails, ads. Par projet 500-5000€ ou retainer. Performance-based pricing possible."
+    },
+    "productisation": {
+      "principe": "Transformer le consulting 1:1 en offres reproductibles : templates, frameworks, cours en ligne, SaaS from consulting, audits standardisés.",
+      "exemples": "Audit SEO packagé à 997€ (process standard, rapport template, call de restitution), templates Notion/Airtable vendus en ligne, formation signature (votre méthode).",
+      "avantage": "Décorrèle le revenu du temps. Scalable. Crée un actif vendable."
+    },
+    "scaling": {
+      "subcontractors": "Recruter 1-3 freelances pour déléguer l'exécution. Garder la relation client, la stratégie, la QA. Marge 20-40% sur les sous-traitants.",
+      "agency": "Passer de freelance solo à agence : process documentés (SOPs), équipe, commercial dédié, brand d'agence. Valorisation 1-3x revenu annuel.",
+      "partenariats": "White-label pour d'autres agences. Co-création de services avec des freelances complémentaires."
+    },
+    "aspects_juridiques": {
+      "micro_entreprise": "Seuil 77 700€ (services). Charges sociales 21.2%. Abattement forfaitaire 34%. Simple mais limité (pas de TVA récupérable, pas de charges déductibles).",
+      "SASU_EURL": "SASU : flat tax 30% sur dividendes, président assimilé salarié. EURL : TNS charges ~45% mais base réduite. Pertinent dès 50-60k€ de CA.",
+      "portage_salarial": "Le portage prend 5-10% + charges salariales. Vous êtes salarié (protection sociale, chômage, retraite). Idéal pour démarrer ou tester.",
+      "ACRE": "Aide à la Création ou Reprise d'Entreprise : 50% de réduction de charges sociales pendant 1 an. Cumulable avec ARE (allocations chômage)."
+    }
+  }
+}

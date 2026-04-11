@@ -1,0 +1,85 @@
+{
+  "version": "v30.0.0",
+  "category": "formats_fichiers_avance",
+  "description": "Formats de fichiers avancés — PDF (création, édition, compression, signature électronique, formulaires, OCR), .docx/.xlsx (structure interne XML, Open XML SDK), Markdown (.md) avancé, JSON/XML/CSV/YAML (parsing, validation, transformation), formats audio (MP3, FLAC, WAV, AAC, OGG), formats vidéo (MP4, MOV, MKV, AVI, WebM), formats image (JPEG, PNG, SVG, WebP, HEIC, TIFF, RAW), compression et archivage (ZIP, 7z, TAR), conversion et compatibilité",
+  "formats_fichiers_avance": {
+    "introduction": "Comprendre les formats de fichiers est fondamental pour un travail numérique efficace. TITANE couvre les spécificités techniques, les outils de manipulation et les meilleures pratiques pour chaque format.",
+    "pdf": {
+      "structure": "Portable Document Format (Adobe, 1993). Format fixe, indépendant du système. PDF/A (archivage long terme), PDF/X (impression), PDF/E (ingénierie), PDF/UA (accessibilité), PDF 2.0 (ISO 32000-2).",
+      "creation": {
+        "depuis_office": "Imprimer > Microsoft Print to PDF. Enregistrer sous > PDF. Word/Excel/PowerPoint permettent d'exporter en PDF (options de qualité, inclure/exclure balises).",
+        "depuis_code": "Python : `reportlab` (génération), `PyMuPDF` (lecture/modification), `pdfplumber` (extraction texte/tableaux). JavaScript : `pdf-lib`, `jsPDF`, `Puppeteer` (HTML vers PDF). Rust : `printpdf`.",
+        "depuis_navigateur": "Ctrl+P > Enregistrer en PDF. Chrome headless (`--print-to-pdf`). Puppeteer/Playwright pour les PDF dynamiques."
+      },
+      "edition": "Adobe Acrobat Pro (édition complète). Preview (macOS). PDF-XChange Editor (Windows). `pdftk` (outil CLI). `ghostscript` (compression, fusion). `pdfcpu` (Go — manipulation avancée).",
+      "fonctionnalites_avancees": {
+        "formulaires": "Champs de formulaire interactifs. AcroForms vs XFA. Remplissage et signature. Extraction des données (FDF).",
+        "OCR": "Reconnaissance optique de caractères. Adobe Acrobat (Make Searchable PDF). Tesseract (open-source, 100+ langues). Google Cloud Vision API. Abbyy FineReader.",
+        "signature": "Signature électronique simple (image). Signature électronique qualifiée (DocuSign, Adobe Sign, HelloSign). Certificat numérique (X.509). Signature longue durée (LTV).",
+        "compression": "Ghostscript : `gs -sDEVICE=pdfwrite -dPDFSETTINGS=/ebook -o out.pdf in.pdf`. Niveaux : screen (72dpi), ebook (150dpi), printer (300dpi), prepress (300dpi + couleur)."
+      }
+    },
+    "formats_office": {
+      "OOXML": "Office Open XML — format ZIP contenant du XML. `.docx` = `.zip` renommé. Contient : `word/document.xml`, `word/styles.xml`, `[Content_Types].xml`, `_rels/`. Editable avec n'importe quel éditeur ZIP+XML.",
+      "xlsx_structure": "`xl/workbook.xml` (feuilles), `xl/worksheets/sheet1.xml` (données), `xl/styles.xml` (formatage), `xl/sharedStrings.xml` (textes partagés). Formula strings. Conditional formatting en XML.",
+      "manipulation_code": "Python `openpyxl` (lire/écrire xlsx). `python-docx` (Word). JavaScript `xlsx` (SheetJS — universel). `docx` npm (créer Word). C# `DocumentFormat.OpenXml` (Office SDK)."
+    },
+    "markdown": {
+      "syntaxe_avancee": {
+        "standard": "Titres (#, ##), gras (**), italique (*), code inline (`), code bloc (```), liens ([texte](url)), images (![alt](url)), listes (- ou 1.), blockquotes (>), règles horizontales (---).",
+        "extended": "Tables (| col1 | col2 |). Footnotes ([^1]). Task lists ([x]). Strikethrough (~~). Definition lists. Superscript/subscript. Emoji (:smile:). Math (LaTeX : $E=mc^2$).",
+        "frontmatter": "YAML frontmatter (---). Métadonnées pour les SSG (Static Site Generators). `title:`, `date:`, `tags:`, `draft:`."
+      },
+      "outils": "Parsers : marked.js, remark, Pandoc. Renderers : CommonMark, GitHub Flavored Markdown (GFM). Éditeurs : Typora, Obsidian, iA Writer, VS Code + extensions. Pandoc : conversion universelle (Markdown → PDF/DOCX/HTML).",
+      "use_cases": "Documentation technique (README.md, wikis GitHub). Blogs (Jekyll, Hugo, Astro, Gatsby). Prises de notes (Obsidian, Notion). Livres (GitBook, mdBook). Présentations (Marp, Reveal.js)."
+    },
+    "formats_donnees": {
+      "JSON": {
+        "specification": "JavaScript Object Notation. RFC 8259. Types : string, number, boolean, null, array, object. Pas de commentaires natifs (JSON5 les supporte). UTF-8.",
+        "avance": "`JSON.stringify(obj, null, 2)` — indentation. `JSON.parse()`. `JSON Schema` (validation). `jq` (CLI processing). `jsonpath` (requêtes). `ajv` (validation JS). `serde_json` (Rust).",
+        "alternatives": "YAML (lisible humain, commentaires). TOML (config files). MessagePack (binaire compact). CBOR (IETF binaire). Protocol Buffers (Google, schéma obligatoire, très compact)."
+      },
+      "XML": "Extensible Markup Language. Schémas : XSD (validation), XSLT (transformation), XPath (requêtes), XQuery. SVG, HTML5, RSS/Atom, SOAP, Maven POM. `lxml` (Python), `DOMParser` (JS).",
+      "CSV": "Comma-Separated Values. RFC 4180. Pièges : encoding (UTF-8 BOM pour Excel), guillemets, virgules dans les données, sauts de ligne. `csv` module Python. Excel > Text to Columns. pandas `read_csv`."
+    },
+    "audio": {
+      "formats": {
+        "mp3": "MPEG-1 Audio Layer 3. Perte de données (lossy). 128-320 kbps. Universel (1991). Pour usage web et écoute quotidienne.",
+        "FLAC": "Free Lossless Audio Codec. Sans perte (lossless). 2-5x la taille du MP3 pour qualité identique au WAV. Idéal pour la collection musicale de qualité.",
+        "WAV": "Waveform Audio. Non compressé. Qualité maximale. Fichiers très lourds. Standard pour la production audio (enregistrement, édition).",
+        "AAC": "Advanced Audio Coding. Successeur du MP3. Meilleure qualité à bitrate équivalent. Utilisé par Apple (iTunes, AirPods), YouTube.",
+        "OGG_Opus": "Ogg Vorbis (streaming), Opus (voix + musique, meilleur pour <128kbps). Open source. Utilisé par Spotify, Discord, WebRTC."
+      },
+      "metadata": "ID3 tags (MP3) : artiste, album, titre, genre, pochette. Vorbis Comments (FLAC/OGG). `mutagen` (Python), `music-metadata` (JS), `exiftool` (universel).",
+      "conversion": "FFmpeg (le couteau suisse de l'audio/vidéo). `ffmpeg -i input.wav -b:a 192k output.mp3`. Audacity (open-source). Adobe Audition."
+    },
+    "video": {
+      "formats": {
+        "mp4": "MPEG-4 Part 14 (H.264/H.265 video + AAC audio). Le format universel du web. Compatible partout. Balance qualité/taille.",
+        "MOV": "QuickTime Movie (Apple). Haute qualité, gros fichiers. Natif sur macOS/iOS. H.264, ProRes, HEVC.",
+        "MKV": "Matroska. Container flexible (multiple audio/subtitle tracks). Pas de DRM. Populaire pour les films en haute qualité.",
+        "WebM": "Format web open-source (Google). VP8/VP9/AV1 video + Opus audio. Streaming web, YouTube.",
+        "codec_H265": "HEVC. Compresse 40-50% mieux que H.264 à qualité équivalente. Standard pour 4K, smartphones modernes, streaming."
+      },
+      "FFmpeg": {
+        "commandes": "`ffmpeg -i input.mov -vcodec h264 -acodec aac output.mp4` (convertir). `-crf 23` (qualité 0-51, 18=visually lossless). `-ss 00:01:00 -t 30` (extraire 30 secondes depuis 1 min). `-vf 'scale=1280:720'` (redimensionner).",
+        "extraction": "`ffmpeg -i video.mp4 -vn -acodec copy audio.aac` (extraire audio). `ffmpeg -i video.mp4 frame_%04d.png` (extraire frames).",
+        "trim_concatenate": "`ffmpeg -i input.mp4 -ss 10 -to 30 -c copy output.mp4`. Concat filter ou concat demuxer pour fusionner."
+      }
+    },
+    "image": {
+      "formats_web": {
+        "JPEG": "Lossy. Meilleur pour les photos. 8-bit. Qualité 85-95 pour web. Pas de transparence. Format universel.",
+        "PNG": "Lossless. Transparence (alpha channel). Meilleur pour les logos, icônes, captures d'écran. PNG-8 (256 couleurs) vs PNG-24 (vraies couleurs).",
+        "WebP": "Google. 25-34% plus petit que JPEG pour qualité équivalente. Lossy et lossless. Transparence. Animations. Support universel navigateurs modernes.",
+        "SVG": "Scalable Vector Graphics. XML. Résolution indépendante (parfait pour les logos). Animable avec CSS/JS. Accessible. Editable textuellement.",
+        "AVIF_HEIC": "AVIF (AV1 Image Format) — encore plus compact que WebP. HEIC (Apple, iPhone) — efficace mais moins universel."
+      },
+      "formats_production": {
+        "TIFF": "Tagged Image File Format. Sans perte. Haute résolution pour l'impression. Layers (Adobe). 16 et 32 bits. Archives musée.",
+        "RAW": "Données brutes du capteur (non-démosaïcké). CR3 (Canon), ARW (Sony), NEF (Nikon), DNG (Adobe universel). Maximum de latitude d'édition. 2-10x plus lourd que JPEG.",
+        "PSD_AI": "PSD (Photoshop, calques, masques). AI (Illustrator, vecteurs). Formats natifs non portables mais essentiels pour la production."
+      }
+    }
+  }
+}

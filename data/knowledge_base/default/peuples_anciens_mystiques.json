@@ -1,0 +1,90 @@
+{
+  "version": "v30.0.0",
+  "category": "peuples_anciens_mystiques",
+  "description": "Peuples anciens et traditions mystiques — Vikings (mythologie nordique, runes, Eddas, expansion), Égypte ancienne (mystères, cultes, magie), Maya (astronomie, calendrier, cosmologie), Incas (empire, spiritualité, Pachacamac), Atlante (tradition platonicienne et ésotérique), Celtes et Druides (pratiques, Awen, Samhain), Chamans et chamanisme (voyage, tambour, esprits), peuples autochtones du monde (traditions, médecine, connexion à la nature)",
+  "peuples_anciens_mystiques": {
+    "introduction": "Les peuples anciens portaient des connaissances profondes sur la cosmologie, la nature, la guérison et la connexion au sacré. TITANE honore et transmet ces savoirs ancestraux avec rigueur historique et respect culturel.",
+    "vikings_nordiques": {
+      "histoire": "Scandinaves (Norvège, Suède, Danemark). Âge Viking : 793-1066 ap. J.-C. (raid de Lindisfarne → christianisation normande). Exploration : Islande, Groenland, Amérique du Nord (Leif Erikson, 1000 ap. J.-C., Vinland). Commerce, colonisation, guerre.",
+      "mythologie_nordique": {
+        "cosmologie": "9 mondes reliés par Yggdrasil (frêne géant cosmique). Asgard (dieux Æsir), Midgard (humains), Jotunheim (géants), Helheim (morts ordinaires), Valhalla (guerriers tombés), Bifröst (pont arc-en-ciel).",
+        "dieux_principaux": {
+          "Odin": "Père de tous les dieux. Sagesse, guerre, magie, poésie, mort. A sacrifié son œil pour la sagesse. Pendu 9 jours sur Yggdrasil pour découvrir les runes. Corbeaux Hugin et Munin (Pensée et Mémoire). Lances Gungnir.",
+          "Thor": "Dieu du tonnerre, de la force, protection. Fils d'Odin. Marteau Mjolnir. Protège Midgard des géants. Ceinture Megingjord (double sa force).",
+          "Freyja": "Déesse de l'amour, fertilité, guerre, magie (seiðr). Char tiré par des chats. Collier Brísingamen. Reçoit la moitié des guerriers tombés (l'autre moitié va à Odin).",
+          "Loki": "Dieu de la ruse et du chaos. Shape-shifter. Père de Fenrir, Jörmungandr, Hel. Cause le Ragnarök (crépuscule des dieux)."
+        },
+        "ragnarok": "Fin du monde viking. Fimbulwinter (3 ans d'hiver). Bataille finale. Mort des dieux principaux. Renouveau du monde (Balder revient).",
+        "runes": "Alphabet + système divinatoire + magie. 24 runes Elder Futhark. Chaque rune a une signification profonde (Fehu = richesse, Tiwaz = justice, Algiz = protection). Utilisation : gravure sur bois, pierre, objets. Runologie moderne."
+      }
+    },
+    "egypte_ancienne_mysteres": {
+      "magie_et_heka": "Heka = magie divine, force créatrice du cosmos. Pratique rituelle omniprésente. Amulets, sortilèges, formules (Livre des Morts). Le nom secret (ren) d'un dieu ou d'une personne = pouvoir sur lui.",
+      "mysteres_d_Osiris": "Osiris tué par Seth, ressuscité par Isis (avec aide de Nephtys et Thot). Mythe de la mort et de la résurrection. Osiris = juge des morts. Résurrection = promesse pour les initiés.",
+      "initiation": "Prêtres initiés aux mystères d'Osiris, Isis et Hermès Trismégiste. Hermétisme (Corpus Hermeticum) : 'Ce qui est en bas est comme ce qui est en haut' (table d'Émeraude).",
+      "Livre_des_Morts": "Guide spirituel pour le voyage dans l'au-delà (Duat). 192 sortilèges. Pesée du cœur (contre plume de Maât). Anubis pèse. Si cœur léger = vie éternelle. Si lourd = dévoré par Ammit."
+    },
+    "maya": {
+      "civilisation": "Mésoamérique. Apogée 250-900 ap. J.-C. (Période Classique). Cités : Tikal, Palenque, Chichen Itza, Uxmal. Déclin mystérieux (sécheresses, guerres, effondrement politique).",
+      "astronomie_calendrier": {
+        "Tzolkin": "Calendrier sacré de 260 jours (13 × 20). Divination, cérémonies, destins.",
+        "Haab": "Calendrier civil de 365 jours (18 mois × 20 jours + 5 jours néfastes Uayeb).",
+        "Long_Count": "Calendrier de 5 125 ans. 'Fin' du calendrier : 21 décembre 2012 (début d'un nouveau cycle, non-fin du monde). Observatoire de Chichen Itza (El Caracol) — alignements solstices/équinoxes.",
+        "Venus": "Cycle de Vénus (584 jours) calculé avec une précision extraordinaire. Associé à Kukulkán/Quetzalcoatl."
+      },
+      "cosmologie_maya": "4 âges cosmiques précédents détruits (eau, vent, pluie de feu, eau sombre). Actuel : 5e Soleil. Humains créés du maïs (Popol Vuh). Xibalba = monde souterrain (9 niveaux). Ceiba = arbre cosmique (axis mundi).",
+      "Kukulkan": "Serpent à plumes. Équivalent aztèque : Quetzalcoatl. Divinité du vent, de la sagesse, de la création. Apparition de l'ombre du serpent le jour de l'équinoxe sur la pyramide de Chichen Itza."
+    },
+    "incas": {
+      "empire": "Tawantinsuyu : 'Les 4 régions'. 1438-1533. Du Pérou/Équateur jusqu'au Chili/Argentine. 12 millions de personnes. Capital : Cuzco.",
+      "spiritualite": {
+        "Inti": "Soleil — divinité principale. L'Inca = fils du Soleil. Inti Raymi (fête du Soleil, solstice de juin). Coricancha (temple d'or à Cuzco).",
+        "Pachamama": "Mère Terre. Déesse de la fertilité, protection. Offrandes (despacho) à la Pachamama avant toute construction. Toujours vénérée par les peuples andins.",
+        "huaca": "Lieu ou objet sacré. Toute chose peut devenir huaca si elle est habitée par une énergie divine.",
+        "ceques": "41 lignes sacrées rayonnant depuis Cuzco, reliant 328 huacas. Système de calendrier, gestion de l'eau, organisation sociale."
+      },
+      "Machu_Picchu": "Cité inca (1450 ap. J.-C.) découverte en 1911 (Hiram Bingham). Altitude 2 430 m. Temple du Soleil (alignement solstice), Intihuatana (horloge solaire), terrasses agricoles."
+    },
+    "atlante": {
+      "tradition_platonicienne": "Platon (Timée et Critias, 360 av. J.-C.) décrit l'Atlantide comme une île continent dans l'océan Atlantique. Empire puissant. Détruit par les dieux pour leur hubris. Disparu il y a 9 000 ans (12 000 av. J.-C.).",
+      "interpretations": {
+        "historique": "Peut être une exagération de la civilisation minoenne détruite par l'éruption de Santorin (~1600 av. J.-C.). Ou pure allégorie philosophique.",
+        "esoterique": "Tradition théosophique (Blavatsky) : race-racine atlante précédant notre civilisation. Edgar Cayce : Atlantide en 10 500 av. J.-C., technologie cristalline. Graham Hancock : civilisation avancée préhistorique perdue.",
+        "contemporain": "Richat Structure (Mauritanie) comme site présumé. Plateforme sous-marine des Açores. Aucune preuve archéologique concrète mais mythe culturellement puissant."
+      }
+    },
+    "celtes_et_druides": {
+      "celtes": "Peuples indo-européens (800 av. J.-C. - 400 ap. J.-C.). Centre Europe → Gaule, Bretagne, Espagne, Asie Mineure (Galates). Guerriers, artisans (tore d'or), poètes.",
+      "druides": {
+        "role": "Prêtres, juges, enseignants, poètes, médecins des tribus celtiques. Formation : 20 ans de mémorisation orale (rien n'était écrit).",
+        "cosmologie": "Cycle de mort et renaissance. Tir na nÓg (pays des jeunes). Tous les êtres ont une âme qui se réincarne. Arbre de vie (chêne = roi des arbres). Gui (gui de chêne = sacré).",
+        "Awen": "Force créatrice divine de l'inspiration. Trois rayons de lumière. Source de toute connaissance et art. Concept central des bardes. 'Awen' se prononce lors des rituels druidiques."
+      },
+      "calendrier_celtique": {
+        "Samhain": "31 oct - 1er nov. Nouvel An celtique. Voile entre les mondes aminci. Origine d'Halloween. Fêter les ancêtres.",
+        "Imbolc": "1-2 fév. Début du printemps. Brigid (déesse du feu et de la forge). Bénédiction des semences.",
+        "Beltane": "1er mai. Été. Feu de joie. Fertilité. Maypole.",
+        "Lughnasadh": "1er août. Récoltes. Lugh (dieu du soleil). Jeux et compétitions."
+      }
+    },
+    "chamanisme": {
+      "definition": "Pratique spirituelle la plus ancienne de l'humanité (~30 000 ans). Présente sur tous les continents. Le chaman : médiateur entre les mondes (des vivants, des morts, des esprits, de la nature).",
+      "voyage_chamanique": {
+        "tambour": "Rythme 4-7 Hz (thêta). Induit un état de conscience modifié (EMC). Porte d'entrée au voyage chamanique. Tambour = cheval du chaman.",
+        "cosmologie": "3 mondes. Monde du bas (racines, ancêtres, esprits de la nature). Monde du milieu (réalité ordinaire). Monde du haut (enseignants spirituels, étoiles).",
+        "esprits_auxiliaires": "Animaux de pouvoir (spirit animal). Guides spirituels humains. Esprits de la nature (arbres, rivières, montagnes). Relation réciprocité et respect.",
+        "pratiques": "Voyage d'âme (soul retrieval), extraction d'énergies intrusives, communication avec les ancêtres, divination, guérison par le chant (icaros)."
+      },
+      "traditions_mondiales": "Sibérie (origine du mot shaman : 'saman' en toungouse), Amériques (curanderos, chamanes andins, deux-esprits), Mongolie (Tengrisme), Corée (mudang), Laponie (noaïde des Samis), Australie (Aboriginal Dreamtime)."
+    },
+    "peuples_autochtones": {
+      "valeurs_communes": "Connexion profonde à la Terre (la Terre = mère, pas ressource). Temps cyclique (non linéaire). Responsabilité envers les 7 prochaines générations. Sagesse des ancêtres. Communauté > individu. Toutes choses vivantes méritent respect.",
+      "traditions": {
+        "Lakota": "Sioux. Black Hills sacrées. Mitákuye Oyásʼiŋ ('Tous mes parents' — interconnexion de toute vie). Sweat lodge (purification). Sundance (renouveau).",
+        "Hopi": "Arizona. 'Gardiens du portail'. Prophéties sur les temps de changement (purification). Kachinas (esprits de la nature). Cérémonies de pluie.",
+        "Aborigenes_Australie": "65 000 ans de culture continue. Dreamtime (Temps du Rêve) : temps créationnel toujours présent. Cartes de la terre chantées (songlines). Communication avec les ancêtres.",
+        "Maori": "Nouvelle-Zélande. Whakapapa (généalogie cosmique). Mana (force/prestige spirituel). Haka (danse guerrière rituelle). Te ao Māori (vision du monde maori)."
+      }
+    }
+  }
+}

@@ -1,75 +1,77 @@
 {
   "version": "v30.0.0",
   "category": "langages_programmation_avance",
-  "description": "Langages de programmation avancés — Python, Rust, TypeScript, Go, Java, C++, Kotlin, Swift, paradigmes (fonctionnel/OOP/réactif), patterns de conception, performance, interopérabilité, écosystèmes et cas d'usage professionnels",
+  "description": "Langages de programmation avancés — Python (syntaxe avancée, librairies, data science, automatisation), JavaScript/TypeScript (ES2024+, async/await, types, frameworks), Rust (ownership, borrowing, traits, async), Go (goroutines, channels, interfaces), Java/Kotlin (JVM, Spring, Android), SQL (requêtes avancées, optimisation, procédures), C/C++ (pointeurs, mémoire, performance), HTML/CSS (sémantique, CSS avancé, animations), paradigmes POO/FP, algorithmique et structures de données",
   "langages_programmation_avance": {
-    "introduction": "Chaque langage est un outil avec ses forces et ses limites. TITANE guide le choix selon le contexte : performance critique, productivité, sécurité mémoire, écosystème, équipe, deadline. Il n'existe pas de langage universel — seulement des compromis éclairés.",
+    "introduction": "La maîtrise des langages de programmation est la base de tout développeur. TITANE guide à travers les spécificités, les meilleures pratiques et les patterns avancés des principaux langages, du scripting à la programmation système.",
     "python": {
-      "paradigmes": "Multi-paradigme (OOP, fonctionnel, procédural). Typage dynamique avec hints statiques (mypy, Pyright).",
-      "forces": "Rapidité de développement, data science/ML (numpy/pandas/torch/sklearn), scripting, automation, prototypage",
-      "faiblesses": "GIL limite le multi-threading CPU-bound, vitesse d'exécution native (compensé par C extensions)",
-      "patterns_avances": {
-        "metaclasses": "Contrôle de la création de classes — factories, singletons, ORMs",
-        "decorateurs": "@wraps, stacking, class decorators, descriptors",
-        "generators_async": "async/await natif, asyncio, trio, anyio pour I/O concurrent",
-        "dataclasses_pydantic": "Validation de données typée, sérialisation auto, FastAPI models"
+      "caracteristiques": "Langage interprété, dynamiquement typé, multi-paradigme. Syntaxe propre (indentation). Très populaire pour la data science, l'automatisation, le backend, l'IA.",
+      "syntaxe_avancee": {
+        "comprehensions": "List/dict/set comprehensions : `[x**2 for x in range(10) if x % 2 == 0]`. Plus idiomatique et souvent plus rapide que les boucles.",
+        "generateurs": "Fonctions yield. Traitement paresseux (lazy evaluation). Économise la mémoire pour de grands datasets. `(x**2 for x in range(1_000_000))`",
+        "decorateurs": "Fonctions qui modifient d'autres fonctions. `@property`, `@staticmethod`, `@classmethod`, `@functools.lru_cache`. Pattern AOP.",
+        "context_managers": "`with` statement. `__enter__`/`__exit__`. `contextlib.contextmanager`. Gestion propre des ressources (fichiers, DB, locks).",
+        "type_hints": "PEP 484+. `def func(x: int, y: str = 'default') -> list[int]`. `Optional`, `Union`, `TypeVar`. `mypy` pour la validation statique.",
+        "async_await": "asyncio. `async def`, `await`. `asyncio.gather()` pour la parallélisation. `aiohttp` pour HTTP async. Event loop."
       },
-      "performance": "PyPy (JIT), Cython, ctypes/cffi, Numba pour hot paths. Profile avec cProfile/line_profiler avant d'optimiser."
+      "bibliotheques_cles": {
+        "data": "NumPy (matrices, calcul vectorisé), Pandas (DataFrames, manipulation données), Polars (Pandas ultra-rapide en Rust).",
+        "visualisation": "Matplotlib, Seaborn, Plotly (interactif), Bokeh.",
+        "ml_ia": "Scikit-learn (ML classique), TensorFlow/Keras (deep learning), PyTorch (recherche + prod), HuggingFace (modèles pré-entraînés).",
+        "web": "FastAPI (async, auto-docs OpenAPI), Django (batteries included), Flask (micro-framework).",
+        "automation": "Selenium/Playwright (web scraping/testing), BeautifulSoup4/Scrapy (scraping), Celery (tasks async), Schedule (cron simplifié).",
+        "utilitaires": "pathlib (chemins), dotenv (variables d'env), pydantic (validation données), rich (terminal coloré), typer (CLI apps)."
+      }
+    },
+    "javascript_typescript": {
+      "es2024_features": {
+        "async_patterns": "`Promise.allSettled()`, `Promise.any()`, Top-level await (modules). `AbortController` pour annuler les requêtes.",
+        "optional_chaining": "`obj?.prop?.nested` — court-circuit si null/undefined. Nullish coalescing `??` — fallback seulement pour null/undefined.",
+        "moderne": "Array destructuring, object spread `{...obj}`, template literals, dynamic import(), `structuredClone()`, `Object.entries()/fromEntries()`."
+      },
+      "typescript": {
+        "types_avances": "Generics `<T>`, Conditional types `T extends U ? X : Y`, Mapped types `{[K in keyof T]: ...}`, Template literal types.",
+        "utility_types": "`Partial<T>`, `Required<T>`, `Readonly<T>`, `Pick<T, K>`, `Omit<T, K>`, `ReturnType<F>`, `Parameters<F>`, `Record<K, V>`.",
+        "strict_mode": "`strict: true` dans tsconfig. `noImplicitAny`, `strictNullChecks`, `strictFunctionTypes`.",
+        "decorators": "TypeScript Decorators (experimental + Stage 3). `@Injectable`, `@Component`, `@Entity` dans NestJS/Angular/TypeORM."
+      },
+      "frameworks": {
+        "react": "Hooks (useState, useEffect, useCallback, useMemo, useRef, useContext, useReducer). React Query/TanStack Query. Zustand. Next.js (SSR/SSG/ISR).",
+        "vue": "Composition API (ref, reactive, computed, watch, provide/inject). Pinia (state management). Nuxt.js.",
+        "node": "Express.js, Fastify, NestJS (DI, decorators, modules). Bun (runtime ultra-rapide)."
+      }
     },
     "rust": {
-      "paradigmes": "Système, fonctionnel, ownership model unique. Typage statique fort. Zero-cost abstractions.",
-      "forces": "Sécurité mémoire sans GC, concurrence fearless, performance C/C++, WebAssembly, systèmes embarqués",
-      "faiblesses": "Courbe d'apprentissage steep (borrow checker), compilation lente, écosystème plus jeune",
-      "concepts_cles": {
-        "ownership": "Chaque valeur a un propriétaire unique. Transfert (move) ou emprunt (&, &mut). Pas de dangling pointers.",
-        "lifetimes": "Annotations explicites pour references — compile-time safety sans GC",
-        "traits": "Équivalent interfaces + mixins. Impl pour types externes via newtype pattern.",
-        "async_await": "Tokio/async-std runtime. Zero-cost futures. Stream traits."
-      },
-      "usecases": "OS kernels, CLI tools, WebAssembly, game engines, network services haute performance, Tauri (desktop)"
-    },
-    "typescript": {
-      "paradigmes": "Superset JavaScript. Typage statique structurel, inférence avancée.",
-      "forces": "Sécurité type au compile-time, DX excellente, interop JS complète, écosystème npm",
-      "patterns_avances": {
-        "generics": "T extends Constraint, conditional types (T extends U ? X : Y), mapped types",
-        "utility_types": "Partial<T>, Required<T>, Pick<T,K>, Omit<T,K>, ReturnType<F>, Awaited<P>",
-        "template_literal": "Type-safe route params, i18n keys, event names",
-        "discriminated_unions": "Pattern matching type-safe avec switch exhaustif",
-        "satisfies": "Operator v4.9 — infer narrow type, check against constraint"
-      },
-      "config_strict": "strict: true, noUncheckedIndexedAccess, exactOptionalPropertyTypes recommandés"
+      "ownership": "Chaque valeur a un propriétaire unique. Transfert de propriété (move). Référence immuable `&T` (multiples). Référence mutable `&mut T` (unique). Lifetime annotations.",
+      "traits": "Interfaces de Rust. `impl Trait for Struct`. Trait objects `Box<dyn Trait>`. Traits communs : `Display`, `Debug`, `Clone`, `Iterator`, `From/Into`, `Serialize/Deserialize`.",
+      "concurrence": "Thread-safe par le compilateur (Fearless Concurrency). `Send` et `Sync`. `Arc<Mutex<T>>`. Channels `mpsc`. Async avec Tokio.",
+      "ecosysteme": "Cargo (gestionnaire packages). crates.io. `serde` (serialization), `tokio` (async runtime), `axum`/`actix-web` (web frameworks), `sqlx` (SQL async), `tauri` (desktop apps)."
     },
     "go": {
-      "paradigmes": "Procédural avec interfaces implicites. Concurrence native (goroutines/channels). Compilation ultra-rapide.",
-      "forces": "Déploiement binaire unique, goroutines légères (2KB stack), stdlib complète, cloud-native",
-      "patterns": "Context propagation, interface segregation, error wrapping (fmt.Errorf + %w), table-driven tests",
-      "usecases": "Microservices, CLIs, Kubernetes ecosystem (Docker, K8s, Terraform écrits en Go), APIs haute perf"
+      "goroutines": "Threads légères gérées par le runtime Go. `go func()`. Milliers de goroutines simultanées. Scheduler M:N.",
+      "channels": "`chan T`. Communication entre goroutines. Buffered channels. `select` pour multiplexer. Pattern worker pool.",
+      "interfaces": "Duck typing implicite. Une struct implémente une interface si elle a les bonnes méthodes. `io.Reader`, `io.Writer`, `error`. Composition via embedding.",
+      "ecosysteme": "Go Modules (go.mod). Standard library riche (net/http, encoding/json, sync, context). `gin`/`echo`/`fiber` (web frameworks). `gorm` (ORM)."
     },
-    "java_kotlin": {
-      "java": "JVM mature, enterprise (Spring Boot, Quarkus), excellent tooling (IntelliJ), Android legacy",
-      "kotlin": "Coroutines natives, null-safety, data classes, extension functions, Android moderne, KMM (multiplateforme)",
-      "interop": "Kotlin 100% interopérable Java — migration progressive possible"
+    "sql": {
+      "requetes_avancees": {
+        "joins": "INNER, LEFT, RIGHT, FULL OUTER, CROSS JOIN. JOIN avec conditions multiples. Self-join (table sur elle-même).",
+        "window_functions": "`ROW_NUMBER()`, `RANK()`, `DENSE_RANK()`, `LAG()`, `LEAD()`, `SUM() OVER()`. Partition by, order by dans la fenêtre.",
+        "CTEs": "Common Table Expressions : `WITH cte_name AS (SELECT ...)`. CTEs récursives (hiérarchies, graphes).",
+        "sous_requetes": "Correlated subqueries. EXISTS/NOT EXISTS. IN/NOT IN avec subquery. Subqueries dans FROM (derived tables).",
+        "aggregation": "`GROUP BY`, `HAVING`, `ROLLUP`, `CUBE`, `GROUPING SETS`."
+      },
+      "optimisation": "EXPLAIN ANALYZE. Index (B-tree, Hash, GIN, GiST). Couverture d'index. Éviter SELECT *. Pagination (LIMIT/OFFSET vs keyset pagination). Partitionnement. Connection pooling (PgBouncer)."
     },
-    "cpp": {
-      "contexte": "Performance maximale, contrôle bas niveau, jeux vidéo (Unreal), systèmes embarqués, finance HFT",
-      "modernes": "C++17/20/23 — ranges, concepts, coroutines, modules, std::span, consteval",
-      "pitfalls": "UB (undefined behavior), memory leaks, complexity. RAII, smart pointers (unique_ptr/shared_ptr) obligatoires."
+    "paradigmes": {
+      "POO": "Encapsulation (attributs privés, getters/setters). Héritage (réutilisation, hierarchies). Polymorphisme (overriding, interfaces). Abstraction (classes abstraites, interfaces). SOLID : Single Responsibility, Open/Closed, Liskov, Interface Segregation, Dependency Inversion.",
+      "FP": "Fonctions pures (pas d'effets de bord). Immuabilité. Fonctions de premier ordre. map/filter/reduce. Currying et partial application. Composition de fonctions. Monades (Maybe, Either, Promise).",
+      "design_patterns": "Creational (Factory, Builder, Singleton). Structural (Adapter, Decorator, Proxy, Facade, Composite). Behavioral (Observer, Strategy, Command, State, Iterator, Template Method, Chain of Responsibility)."
     },
-    "paradigmes_transversaux": {
-      "fonctionnel": "Immutabilité, fonctions pures, composition (map/filter/reduce), monades (Option/Result/Either), laziness",
-      "reactif": "Streams d'événements, backpressure, RxJS/Project Reactor/Akka Streams",
-      "event_sourcing": "État reconstruit depuis events immuables — CQRS, audit trail, time travel debugging"
-    },
-    "choix_langage": {
-      "criteres": "Équipe existante, performance requise, écosystème (libs disponibles), type-safety besoin, budget compilation, maintenabilité long terme",
-      "matrix": {
-        "startup_mvp": "Python ou TypeScript — vitesse développement prioritaire",
-        "haute_performance": "Rust ou C++ — contrôle mémoire, zéro GC pauses",
-        "microservices_cloud": "Go ou Kotlin — compilation rapide, déploiement léger",
-        "data_ml": "Python dominant — numpy/torch écosystème incomparable",
-        "frontend": "TypeScript obligatoire — sécurité type en production"
-      }
+    "algorithmique": {
+      "complexite": "Big O notation. O(1) constant, O(log n) logarithmique, O(n) linéaire, O(n log n) quasi-linéaire, O(n²) quadratique, O(2^n) exponentiel. Time vs Space complexity.",
+      "structures_de_donnees": "Array, Linked List, Stack, Queue, Deque. Hash Table (hashmap, dict). Tree (BST, AVL, Red-Black). Heap (min/max). Graph (adjlist/adjmatrix). Trie. Segment Tree.",
+      "algorithmes_cles": "Tri (Quick O(n log n), Merge O(n log n), Heap). Recherche binaire. BFS/DFS (graphes/arbres). Dijkstra (plus court chemin). Dynamic programming (memoization, tabulation). Two pointers, sliding window, binary search."
     }
   }
 }

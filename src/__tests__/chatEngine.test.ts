@@ -362,4 +362,104 @@ describe('ChatEngine — default knowledge base integration', () => {
       'One Door network governance'
     );
   });
+
+  test('kbCategoryCount uses bullet-line filter — header [LANGUE] does NOT inflate the count', async () => {
+    // Phase 17 regression guard (AH-105):
+    // _defaultKbIndex now starts with "[LANGUE: Réponds TOUJOURS en français]"
+    // followed by N lines starting with "•". The count displayed in the system
+    // prompt must equal N (the number of •-lines), NOT N+1 (which split('\n').length gives).
+    vi.spyOn(memoryIntegration, 'loadContext').mockResolvedValue(EMPTY_MEMORY_CONTEXT);
+    vi.spyOn(memoryIntegration, 'loadPreferences').mockReturnValue([]);
+    vi.spyOn(memoryIntegration, 'saveInteraction').mockResolvedValue(undefined);
+
+    // Simulate the Phase 17 compact index format: header + 3 category lines
+    const mockCompactIndex =
+      '[LANGUE: Réponds TOUJOURS en français]\n' +
+      '• system_architecture: Architecture cœur TITANE∞\n' +
+      '• synchronisation_orchestration: Pipeline OMEGA, sélection provider\n' +
+      '• memory_system_deep: Architecture mémoire STM/MTM/LTM';
+
+    vi.spyOn(defaultKnowledgeBase, 'getCompactIndex').mockResolvedValue(mockCompactIndex);
+    vi.spyOn(defaultKnowledgeBase, 'getRelevantPromptContext').mockResolvedValue('');
+
+    const backendSpy = vi
+      .spyOn(chatEngineCommands, 'generateResponse')
+      .mockResolvedValue({
+        content: 'Réponse KB count test',
+        provider: 'ollama',
+        conversationId: 'conv-kbcount',
+        messageId: 'msg-kbcount',
+        timestamp: Date.now(),
+        tokenCount: 10,
+        latencyMs: 5,
+      });
+
+    await chatEngine.generate('Parle-moi de la synchronisation OMEGA', []);
+
+    expect(backendSpy).toHaveBeenCalledTimes(1);
+    const systemPrompt = backendSpy.mock.calls[0]?.[0]?.systemPrompt ?? '';
+
+    // The system prompt must show "3 catégories", NOT "4 catégories"
+    // (4 would be the off-by-one error: 3 bullet lines + 1 header line)
+    expect(systemPrompt).toContain('3 catégories');
+    expect(systemPrompt).not.toContain('4 catégories');
+  });
+
+  test('kbCategoryCount shows correct count when compact index has no header (legacy format)', async () => {
+    vi.spyOn(memoryIntegration, 'loadContext').mockResolvedValue(EMPTY_MEMORY_CONTEXT);
+    vi.spyOn(memoryIntegration, 'loadPreferences').mockReturnValue([]);
+    vi.spyOn(memoryIntegration, 'saveInteraction').mockResolvedValue(undefined);
+
+    // Legacy format: no [LANGUE] header, just bullet lines
+    const legacyIndex =
+      '• system_architecture: Architecture cœur TITANE∞\n' +
+      '• memory_system_deep: Architecture mémoire STM/MTM/LTM';
+
+    vi.spyOn(defaultKnowledgeBase, 'getCompactIndex').mockResolvedValue(legacyIndex);
+    vi.spyOn(defaultKnowledgeBase, 'getRelevantPromptContext').mockResolvedValue('');
+
+    const backendSpy = vi
+      .spyOn(chatEngineCommands, 'generateResponse')
+      .mockResolvedValue({
+        content: 'Réponse legacy test',
+        provider: 'ollama',
+        conversationId: 'conv-legacy',
+        messageId: 'msg-legacy',
+        timestamp: Date.now(),
+        tokenCount: 10,
+        latencyMs: 5,
+      });
+
+    await chatEngine.generate('Architecture TITANE', []);
+
+    const systemPrompt = backendSpy.mock.calls[0]?.[0]?.systemPrompt ?? '';
+    // 2 bullet lines → "2 catégories"
+    expect(systemPrompt).toContain('2 catégories');
+  });
+
+  test('kbBlock is not injected when compact index is empty', async () => {
+    vi.spyOn(memoryIntegration, 'loadContext').mockResolvedValue(EMPTY_MEMORY_CONTEXT);
+    vi.spyOn(memoryIntegration, 'loadPreferences').mockReturnValue([]);
+    vi.spyOn(memoryIntegration, 'saveInteraction').mockResolvedValue(undefined);
+    vi.spyOn(defaultKnowledgeBase, 'getCompactIndex').mockResolvedValue('');
+    vi.spyOn(defaultKnowledgeBase, 'getRelevantPromptContext').mockResolvedValue('');
+
+    const backendSpy = vi
+      .spyOn(chatEngineCommands, 'generateResponse')
+      .mockResolvedValue({
+        content: 'Réponse vide-kb test',
+        provider: 'ollama',
+        conversationId: 'conv-emptykb',
+        messageId: 'msg-emptykb',
+        timestamp: Date.now(),
+        tokenCount: 10,
+        latencyMs: 5,
+      });
+
+    await chatEngine.generate('Test sans KB', []);
+
+    const systemPrompt = backendSpy.mock.calls[0]?.[0]?.systemPrompt ?? '';
+    expect(systemPrompt).not.toContain('catégories');
+    expect(systemPrompt).not.toContain('Base de connaissances intégrée');
+  });
 });

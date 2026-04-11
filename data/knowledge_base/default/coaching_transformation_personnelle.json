@@ -1,0 +1,169 @@
+{
+  "version": "v30.0.0",
+  "category": "coaching_transformation_personnelle",
+  "description": "Coaching de transformation personnelle — PNL avancée (ancrage, recadrage, sous-modalités, méta-modèle, Milton model), coaching ontologique, systémique, orienté solutions, modèle GROW, roue de la vie, croyances limitantes, EFT, respiration transformationnelle, accountability coaching",
+  "coaching_transformation_personnelle": {
+    "introduction": "La transformation personnelle profonde exige bien plus qu'une simple motivation temporaire. Elle nécessite des outils structurés, des protocoles éprouvés et un accompagnement qui touche à la fois le cognitif, l'émotionnel et le somatique. TITANE intègre les cadres les plus puissants du coaching transformationnel pour accompagner un changement durable et aligné.",
+    "pnl_avancee": {
+      "definition": "La Programmation Neuro-Linguistique modélise l'excellence humaine en étudiant la structure subjective de l'expérience — comment nous encodons, organisons et transformons nos représentations internes.",
+      "ancrage": {
+        "principe": "Associer un état émotionnel intense à un stimulus sensoriel (toucher, mot, image) pour pouvoir le réactiver à volonté.",
+        "protocole": "1) Choisir l'état désiré (confiance, calme, détermination). 2) Revivre intensément un souvenir où cet état était maximal. 3) Au pic de l'intensité, appliquer le stimulus (presser le pouce et l'index). 4) Relâcher et tester. 5) Empiler 3-5 souvenirs sur le même ancrage pour le renforcer.",
+        "applications": "Gestion du trac, préparation aux négociations, récupération rapide après un échec, rituel de performance."
+      },
+      "recadrage": {
+        "recadrage_de_sens": "Changer la signification attribuée à un événement. Ex: 'Mon échec' → 'Mon apprentissage le plus précieux'. La situation reste identique, sa lecture change tout.",
+        "recadrage_de_contexte": "Identifier un contexte où le comportement problématique devient une ressource. Ex: 'Je suis trop perfectionniste' → 'Dans quel contexte cette précision extrême est-elle un atout?'",
+        "recadrage_en_6_etapes": "1) Identifier le comportement indésirable. 2) Établir une communication avec la partie responsable. 3) Découvrir l'intention positive. 4) Générer 3+ alternatives. 5) Vérifier l'écologie. 6) Futuriser et ancrer."
+      },
+      "sous_modalites": {
+        "principe": "Nos représentations internes (images, sons, sensations) ont des caractéristiques fines — taille, distance, luminosité, volume, température — qui déterminent leur impact émotionnel.",
+        "technique_de_mapping": "Comparer les sous-modalités d'une croyance limitante vs une croyance ressource. Transférer les paramètres visuels/auditifs/kinesthésiques de la ressource vers la limitation.",
+        "sous_modalites_cles": {
+          "visuelles": "Taille, distance, luminosité, couleur/N&B, associé/dissocié, mouvement, cadré/panoramique",
+          "auditives": "Volume, tonalité, tempo, localisation, mono/stéréo, continu/intermittent",
+          "kinesthesiques": "Localisation dans le corps, température, pression, texture, mouvement, intensité"
+        }
+      },
+      "meta_modele": {
+        "objectif": "Reconnecter le langage de surface à l'expérience profonde en questionnant les distorsions, généralisations et omissions.",
+        "distorsions": {
+          "lecture_de_pensee": "'Il ne m'aime pas' → 'Comment sais-tu exactement ce qu'il ressent?'",
+          "cause_effet": "'Il me rend furieux' → 'Comment exactement son comportement crée-t-il ta fureur?'",
+          "equivalence_complexe": "'Il ne m'appelle pas = il s'en fiche' → 'En quoi ne pas appeler signifie-t-il ne pas se soucier?'"
+        },
+        "generalisations": {
+          "quantifieurs_universels": "'Toujours/jamais/tout le monde' → 'Vraiment toujours? Y a-t-il eu une exception?'",
+          "operateurs_modaux": "'Je ne peux pas/je dois' → 'Que se passerait-il si tu le faisais? Qu'est-ce qui t'en empêche concrètement?'"
+        }
+      },
+      "milton_model": {
+        "objectif": "Utiliser un langage volontairement vague et hypnotique pour contourner les résistances conscientes et accéder aux ressources inconscientes.",
+        "patterns_cles": {
+          "presuppositions": "'Quand tu auras fait ce changement, tu seras surpris de la facilité...'",
+          "ambiguite": "'Tu peux te sentir plus léger en laissant aller ce qui est prêt à partir...'",
+          "truismes": "'Tout le monde sait qu'il faut parfois lâcher prise pour avancer...'",
+          "double_lien": "'Tu préfères commencer par la respiration ou par la visualisation?'"
+        }
+      },
+      "modelisation": "Observer et reproduire systématiquement les stratégies cognitives, émotionnelles et comportementales d'une personne excellente dans un domaine. Décomposer: croyances, états internes, séquences de pensée, physiologie, patterns linguistiques."
+    },
+    "coaching_ontologique": {
+      "principe": "Le coaching ontologique travaille sur l'être (l'observateur que tu es) plutôt que sur le faire. Changer qui tu es change automatiquement ce que tu fais et ce que tu obtiens.",
+      "trois_domaines": {
+        "langage": "Les conversations que tu as avec toi-même et les autres créent ta réalité. Transformer les déclarations, demandes, promesses et jugements.",
+        "emotions": "Les émotions sont des prédispositions à l'action. La peur ferme des possibilités, la confiance les ouvre. Apprendre à choisir son état émotionnel.",
+        "corps": "La posture, la respiration et le mouvement influencent directement la pensée et l'émotion. Cohérence corps-langage-émotion."
+      },
+      "questions_ontologiques": [
+        "Quel observateur es-tu en train d'être dans cette situation?",
+        "Quelle conversation te manque-t-il d'avoir?",
+        "Quelle émotion t'habite et que rend-elle possible ou impossible?",
+        "Quel engagement n'as-tu pas encore pris?"
+      ]
+    },
+    "coaching_systemique": {
+      "principe": "L'individu n'existe pas isolément. Il est un nœud dans un réseau de systèmes (famille, travail, culture, croyances héritées). Changer un élément modifie tout le système.",
+      "outils": {
+        "constellations": "Positionner les éléments du système dans l'espace pour révéler les dynamiques cachées, les loyautés invisibles et les intrications transgénérationnelles.",
+        "cartographie_systemique": "Dessiner les relations, alliances, conflits, triangulations et flux d'énergie dans le système.",
+        "questions_circulaires": "Comment ta mère décrirait-elle ta relation avec ton père? Si ton équipe pouvait parler, que dirait-elle de ta posture de leader?"
+      }
+    },
+    "approche_orientee_solutions": {
+      "principe": "Se concentrer sur les solutions plutôt que sur les problèmes. Le passé informe mais ne détermine pas. Le futur désiré guide l'intervention.",
+      "question_miracle": "'Si un miracle se produisait cette nuit et que ton problème disparaissait, à quoi remarquerais-tu le changement demain matin?' — Cette question contourne les résistances et active l'imagination constructive.",
+      "echelle_de_progres": "Sur une échelle de 0 à 10, où es-tu maintenant? Qu'est-ce qui fait que tu n'es pas à 0? Que faudrait-il pour monter d'un point?",
+      "exceptions": "Quand le problème ne se manifeste-t-il PAS? Que fais-tu différemment dans ces moments? Comment reproduire davantage ces exceptions?"
+    },
+    "modele_grow": {
+      "G_goal": "Objectif — Que veux-tu atteindre? Formulé positivement, spécifique, mesurable, temporellement défini. 'Je veux être confiant en présentations d'ici 3 mois.'",
+      "R_reality": "Réalité — Où en es-tu maintenant? Évaluation honnête sans jugement. Quelles ressources as-tu? Quels obstacles existent?",
+      "O_options": "Options — Quelles sont toutes les possibilités? Brainstorming sans censure. Au moins 5 options. Avantages/inconvénients de chacune.",
+      "W_will": "Volonté — Que vas-tu faire concrètement? Première action dans les 48h. Engagement sur une échelle de 1 à 10. Si moins de 8, réduire l'action jusqu'à atteindre 8+."
+    },
+    "roue_de_la_vie": {
+      "domaines": ["Carrière/Mission", "Finances", "Santé/Énergie", "Relations amoureuses", "Famille/Amis", "Croissance personnelle", "Loisirs/Fun", "Environnement physique"],
+      "utilisation": "Noter chaque domaine de 1 à 10. Visualiser la roue. Identifier les 2-3 domaines les plus bas. Un domaine négligé tire les autres vers le bas. Commencer par le domaine qui aurait le plus d'impact positif sur les autres."
+    },
+    "croyances_limitantes": {
+      "detection": "Écouter les 'je ne peux pas', 'je ne suis pas assez', 'c'est impossible', 'les gens comme moi ne...' — Ce sont des croyances, pas des faits.",
+      "protocole_transformation": {
+        "etape_1": "Identifier la croyance exacte et son origine probable (famille, école, expérience traumatique, culture).",
+        "etape_2": "Quantifier son coût: que t'a-t-elle empêché de vivre/créer/obtenir?",
+        "etape_3": "Trouver 3 contre-exemples réels qui prouvent que la croyance est fausse.",
+        "etape_4": "Formuler la croyance ressource opposée. La rendre vivante avec des preuves.",
+        "etape_5": "Ancrer la nouvelle croyance par répétition, visualisation et action alignée."
+      },
+      "niveaux_logiques_dilts": {
+        "environnement": "Où et quand?",
+        "comportement": "Que fais-tu?",
+        "capacites": "Comment le fais-tu?",
+        "croyances_valeurs": "Pourquoi le fais-tu?",
+        "identite": "Qui es-tu?",
+        "spirituel_mission": "Pour qui/pour quoi de plus grand?"
+      }
+    },
+    "intelligence_emotionnelle_appliquee": {
+      "conscience_de_soi": "Identifier et nommer précisément ses émotions (vocabulaire émotionnel riche). Distinguer émotion primaire et émotion de couverture (colère qui masque la peur).",
+      "regulation": "Techniques: respiration 4-7-8, ancrage PNL, recentrage somatique, recadrage cognitif, mouvement physique, écriture expressive.",
+      "empathie": "Écoute active niveau 3 (écouter ce qui n'est pas dit). Reformulation émotionnelle. Validation sans approbation.",
+      "competence_sociale": "Communication non-violente (Observation-Sentiment-Besoin-Demande), feedback constructif, gestion des conflits par la curiosité."
+    },
+    "processus_de_changement_prochaska": {
+      "pre_contemplation": "La personne ne voit pas le problème. Intervention: sensibiliser sans confronter.",
+      "contemplation": "Ambivalence — 'Je devrais mais...' Intervention: balance décisionnelle, exploration des deux côtés.",
+      "preparation": "Décision prise, planification. Intervention: plan d'action concret, anticipation des obstacles.",
+      "action": "Mise en œuvre. Intervention: soutien, accountability, célébration des petites victoires.",
+      "maintien": "Stabilisation du changement. Intervention: prévention des rechutes, intégration identitaire.",
+      "rechute": "Normale et attendue. Intervention: normaliser, apprendre de la rechute, réengager sans culpabilité."
+    },
+    "liberation_emotionnelle_eft": {
+      "principe": "L'EFT (Emotional Freedom Techniques) combine stimulation de points d'acupression et verbalisation de l'émotion pour désactiver la charge émotionnelle associée à un souvenir ou une croyance.",
+      "protocole_de_base": "1) Évaluer l'intensité (0-10). 2) Phrase de préparation: 'Même si j'ai cette [émotion/problème], je m'accepte profondément et complètement.' 3) Tapoter les 8 points en répétant le rappel. 4) Réévaluer l'intensité. Répéter jusqu'à 0-2.",
+      "points_de_tapotement": "Sommet du crâne, début du sourcil, coin de l'œil, sous l'œil, sous le nez, menton, clavicule, sous le bras."
+    },
+    "respiration_transformationnelle": {
+      "coherence_cardiaque": {
+        "protocole": "5 secondes d'inspiration, 5 secondes d'expiration, pendant 5 minutes, 3 fois par jour (méthode 365). Active le système nerveux parasympathique, réduit le cortisol, améliore la variabilité cardiaque.",
+        "benefices": "Réduction du stress en 3 minutes, meilleure régulation émotionnelle, clarté mentale accrue, amélioration du sommeil."
+      },
+      "wim_hof": {
+        "protocole": "30-40 respirations profondes rapides → expiration complète → rétention poumons vides (1-3 min) → inspiration profonde → rétention poumons pleins (15s). 3 cycles.",
+        "benefices": "Boost immunitaire, résistance au froid, énergie accrue, clarté mentale, maîtrise du système nerveux autonome.",
+        "precautions": "Ne jamais pratiquer dans l'eau ou en conduisant. Commencer progressivement. Contre-indiqué en cas d'épilepsie ou de problèmes cardiaques graves."
+      }
+    },
+    "shadow_work_et_inner_child": {
+      "shadow_work": {
+        "definition": "Explorer et intégrer les parties de soi refoulées, niées ou projetées sur les autres (concept jungien de l'Ombre).",
+        "methode": "Observer ses réactions émotionnelles disproportionnées — elles pointent vers l'ombre. Ce qui t'irrite intensément chez les autres est souvent un miroir de ta propre ombre non intégrée.",
+        "integration": "Accueillir sans juger. Dialoguer avec la partie ombre. Reconnaître sa fonction protectrice. L'intégrer comme ressource plutôt que de la combattre."
+      },
+      "inner_child_healing": {
+        "principe": "Les blessures d'enfance (abandon, rejet, humiliation, trahison, injustice) créent des patterns de protection qui deviennent des limitations à l'âge adulte.",
+        "protocole": "Visualisation guidée: rencontrer l'enfant intérieur à l'âge de la blessure. L'écouter. Lui dire ce qu'il avait besoin d'entendre. Le rassurer. L'emmener en sécurité."
+      }
+    },
+    "cercle_influence_covey": {
+      "cercle_preoccupation": "Ce qui nous affecte mais sur quoi nous n'avons aucun contrôle direct (météo, économie mondiale, actions des autres). Y consacrer de l'énergie = frustration.",
+      "cercle_influence": "Ce sur quoi nous pouvons agir directement (nos habitudes, nos réponses, nos compétences, nos relations). Y concentrer 80% de son énergie.",
+      "pratique": "Chaque matin, lister les préoccupations du jour. Classer: influence ou préoccupation? Agir uniquement sur la zone d'influence. Observer le cercle d'influence s'élargir avec le temps."
+    },
+    "accountability_coaching": {
+      "principe": "L'engagement verbal augmente le passage à l'action de 10% à 65%. L'engagement avec un partenaire de responsabilité monte à 95%.",
+      "structure": "Objectif clair → Actions spécifiques → Délai non-négociable → Rapport au partenaire → Conséquence positive ou corrective → Célébration.",
+      "outils": "Check-ins hebdomadaires, journal de progression, tableau de suivi visuel, système de récompenses progressives."
+    },
+    "resilience": {
+      "definition": "Capacité à rebondir après l'adversité et à en sortir transformé positivement (croissance post-traumatique).",
+      "piliers": {
+        "lien_social": "Maintenir des connexions authentiques — le facteur de protection le plus puissant.",
+        "sens": "Trouver une signification dans l'épreuve — 'Pour quoi cela me prépare-t-il?'",
+        "agentivite": "Maintenir un sentiment de contrôle même minimal — agir sur ce qui est possible.",
+        "flexibilite_cognitive": "Capacité à revoir ses schémas de pensée et à adopter de nouvelles perspectives.",
+        "auto_compassion": "Se traiter avec la même bienveillance que l'on offrirait à un ami proche dans la même situation."
+      }
+    }
+  }
+}

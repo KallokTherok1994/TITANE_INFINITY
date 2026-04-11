@@ -1,0 +1,109 @@
+{
+  "version": "v30.0.0",
+  "category": "infoproduits_formations_en_ligne",
+  "description": "Infoproduits et formations en ligne VISIONNAIRE_2.0 — création de formation (validation marché/architecture pédagogique/tournage/plateformes Teachable/Kajabi/systeme.io), modèles de monétisation (membership/cohort/high-ticket/certification), tunnels de vente (lead magnet/webinaire automatisé/VSL/challenge 5 jours/séquences email), lancements (PLF Jeff Walker/seed/JV/evergreen), coaching/mentorat (mastermind/1:1/communauté Skool), e-books/KDP, métriques et scaling",
+  "infoproduits_formations_en_ligne": {
+    "introduction": "Les infoproduits sont l'un des business models les plus rentables au monde : coût marginal proche de zéro, marges 80-95%, livraison instantanée, pas de stock, pas de logistique physique. Au niveau VISIONNAIRE_2.0, TITANE maîtrise la création, le lancement et le scaling de formations en ligne et produits numériques comme un expert du domaine.",
+    "creation_formation": {
+      "identification_expertise": {
+        "questions_cles": "Qu'est-ce que les gens vous demandent régulièrement ? Quel résultat avez-vous obtenu que d'autres veulent aussi ? Quelle compétence maîtrisez-vous mieux que 90% des gens ?",
+        "validation_marche": {
+          "methode_rapide": "1. Sondage audience existante (Instagram stories, email, LinkedIn poll). 2. Pré-vente : proposer la formation avant de la créer — si 10+ personnes paient, le marché est validé. 3. Mini-cours gratuit (3 vidéos) pour tester l'engagement.",
+          "recherche_concurrence": "Identifier 3-5 formations existantes dans la niche. Analyser : prix, contenu, avis, ce qui manque. Votre angle : plus pratique, plus à jour, méthode unique, meilleur support."
+        }
+      },
+      "architecture_pedagogique": {
+        "structure": "5-8 modules, 3-6 leçons par module, 10-20 min par leçon. Progression logique : fondamentaux → intermédiaire → avancé → mise en pratique.",
+        "formats": "Vidéo (screen recording + face cam), workbooks PDF (exercices pratiques), quiz de validation, templates téléchargeables, communauté de support.",
+        "engagement": "Chaque module doit avoir un quick win (résultat rapide) pour maintenir la motivation. Certificat de completion. Gamification (progression, badges)."
+      },
+      "tournage": {
+        "materiel_minimal": "Webcam Logitech C920+ ou smartphone récent, micro USB (Blue Yeti/Rode NT-USB), ring light ou éclairage naturel, fond neutre ou virtuel.",
+        "materiel_pro": "Caméra Sony ZV-1/Canon M50, micro cravate Rode Wireless, éclairage 3 points (key/fill/back), prompteur, fond studio.",
+        "montage": "DaVinci Resolve (gratuit, pro), CapCut (rapide), Camtasia (screen recording), Descript (editing par texte, suppression uhm/ah automatique).",
+        "conseil_cle": "La qualité audio > qualité vidéo. Un mauvais son fait partir les gens immédiatement. Un bon son avec une image moyenne est acceptable."
+      },
+      "plateformes": {
+        "Teachable": "Leader. Facile d'utilisation. Checkout intégré. Plan gratuit limité, payant dès 39$/mois. Bon pour débutants-intermédiaires.",
+        "Kajabi": "All-in-one (cours + site + email + funnel). 149$/mois. Puissant mais cher. Pour créateurs sérieux avec CA > 5k€/mois.",
+        "Thinkific": "Alternative à Teachable. Plus de personnalisation. Communauté intégrée. Plan gratuit généreux.",
+        "Podia": "Simple et élégant. Cours + downloads + webinaires + communauté. 39$/mois. Bon pour les créateurs solo.",
+        "systeme_io": "Français, tout-en-un (cours + tunnel + email + affiliation + blog). Plan gratuit très complet. Excellent rapport qualité/prix. Populaire en francophone."
+      }
+    },
+    "modeles_monetisation": {
+      "cours_unique": {
+        "pricing": "Mini-cours 27-97€, cours standard 197-497€, cours premium 497-997€. Le prix reflète la transformation promise, pas la durée.",
+        "evergreen": "Disponible en permanence. Tunnel automatisé. Revenus passifs une fois le système en place."
+      },
+      "membership_abonnement": {
+        "modele": "Contenu mensuel + communauté + appels de groupe. 27-97€/mois. MRR (Monthly Recurring Revenue) prévisible.",
+        "retention": "Contenu frais chaque mois, communauté active, événements live, early access. Churn cible < 5%/mois.",
+        "plateformes": "Skool (communauté + cours, 99$/mois), Circle, Patreon, Discord + Gumroad."
+      },
+      "cohort_based_course": {
+        "modele": "Promotion avec dates fixes. 4-8 semaines. Live sessions + cohorte d'étudiants. Interactivité et accountability élevées.",
+        "pricing": "500-5000€. Justifié par l'accompagnement live et la cohorte.",
+        "exemples": "Altmba (Seth Godin), On Deck, Write of Passage."
+      },
+      "high_ticket": {
+        "modele": "Programme premium 2000-25000€. Accompagnement intensif. Résultats garantis ou quasi. Petit nombre de participants (5-20).",
+        "contenu": "Cours vidéo + appels 1:1 ou groupe hebdomadaires + feedback personnalisé + communauté VIP + accès à vie.",
+        "vente": "Application form + call de qualification + call de closing. Pas de vente directe sur le site. Le call est obligatoire."
+      },
+      "certification": "Former des formateurs/coachs avec votre méthode. Licence annuelle 500-5000€. Ils enseignent votre méthode, vous recevez royalties + crédibilité."
+    },
+    "tunnels_de_vente": {
+      "lead_magnet": {
+        "types": "Checklist, guide PDF, mini-cours gratuit (3 vidéos), template, quiz, webinaire gratuit, challenge gratuit.",
+        "criteres": "Résout un problème spécifique et immédiat. Montre votre expertise. Crée le désir pour votre offre payante. Optimum : consommable en < 15 min."
+      },
+      "webinaire_automatise": {
+        "structure_perfect_webinar": "60-90 min. 1. Hook (5 min) → 2. Introduction + crédibilité (5 min) → 3. Contenu de valeur : 3 secrets/clés (30-40 min) → 4. Transition vers l'offre (5 min) → 5. Présentation offre + prix + bonus (15 min) → 6. Urgence + CTA (5 min) → 7. FAQ + objections (10 min).",
+        "conversion": "Taux conversion moyen : 5-15% des participants. Avec bon ciblage et offre alignée : 15-25%.",
+        "outils": "EverWebinar, WebinarKit, systeme.io (webinaire intégré), Demio."
+      },
+      "challenge_5_jours": {
+        "structure": "Jour 1 : Mindset/Fondation. Jour 2 : Premier pas. Jour 3 : Technique clé. Jour 4 : Mise en pratique. Jour 5 : Résultats + offre.",
+        "avantage": "Engagement élevé (participation active 5 jours), micro-résultats qui prouvent votre méthode, communauté créée, confiance établie avant la vente.",
+        "conversion": "10-20% des participants du challenge. Supérieur au webinaire car plus d'engagement."
+      },
+      "VSL": {
+        "definition": "Video Sales Letter : vidéo de vente longue (15-45 min) qui remplace une page de vente classique.",
+        "structure": "Hook → Problème amplifié → Crédibilité → Solution → Mécanisme unique → Résultats/Preuves → Offre → Garantie → Urgence → CTA.",
+        "quand": "Offres 200-2000€. Produit qui nécessite de l'éducation avant l'achat. Audiences froides à tièdes."
+      },
+      "sequences_email": {
+        "bienvenue": "5-7 emails sur 7-10 jours. Jour 1 : Livraison lead magnet + histoire personnelle. Jour 2-3 : Valeur gratuite (tips). Jour 4-5 : Études de cas. Jour 6-7 : Introduction offre payante.",
+        "lancement": "Séquence 7-14 jours : anticipation (teaser, waitlist) → portes ouvertes (3-5 emails de vente) → rappels urgence → dernière chance → portes fermées.",
+        "nurturing": "Newsletter hebdomadaire : 80% valeur, 20% promotion. Construire la relation sur la durée. Référence : Newsletter de James Clear (Atomic Habits)."
+      }
+    },
+    "lancements": {
+      "PLF_jeff_walker": {
+        "phases": "Pre-Pre-Launch (sondage, teaser) → Pre-Launch (3 vidéos de contenu gratuit sur 7-10 jours) → Launch (ouverture du panier, 4-7 jours, urgence croissante) → Post-Launch (témoignages, debrief, prochaine date).",
+        "puissance": "Crée anticipation, réciprocité (contenu gratuit), preuve sociale (commentaires), urgence (fermeture du panier). Méthode qui a généré des milliards de $ dans le monde."
+      },
+      "evergreen": {
+        "principe": "Le tunnel tourne en permanence. Chaque nouveau lead entre dans la séquence. Pas de dates fixes. Revenus prévisibles.",
+        "fausse_urgence": "Deadline Funnel crée un timer personnalisé par lead (expire 72h après l'inscription). Éthiquement discutable mais très efficace."
+      },
+      "JV_launch": "Joint-Venture : partenaires affiliés qui promeuvent votre lancement à leur audience. Commission 30-50%. Le canal le plus puissant pour scaler rapidement."
+    },
+    "ebooks_produits_numeriques": {
+      "amazon_KDP": {
+        "processus": "Écrire (ou faire écrire) → Formater (Kindle + paperback) → Cover design (Canva/99designs) → Publier sur KDP → Optimiser titre/description/mots-clés.",
+        "revenus": "Royalties 35% (prix < 2.99$) ou 70% (2.99-9.99$). Low content books (carnets, planners) = volume. High content = autorité + leads.",
+        "niches_rentables": "Développement personnel, finance, cuisine, enfants, romance, guides pratiques."
+      },
+      "gumroad_lemon_squeezy": "Vente directe de produits numériques : templates, presets, designs, code, guides. Commission 5-10%. Checkout simple. Parfait pour créateurs solo.",
+      "notion_templates": "Marché en explosion. Templates de productivité, gestion de projet, finances, habitudes. Prix 5-50€. Distribution : Gumroad + marketplace Notion."
+    },
+    "metriques_cles": {
+      "taux_completion": "% d'étudiants qui finissent la formation. Moyen : 10-15%. Bon : 30%+. Améliorer : modules courts, quick wins, certificat, communauté.",
+      "NPS": "Net Promoter Score : 'Recommanderiez-vous cette formation ?' Score -100 à 100. > 50 = excellent. Demander à la fin du programme.",
+      "taux_refund": "Cible < 5%. Si > 10% = problème d'alignement entre la promesse et le contenu. Offrir garantie 30 jours montre la confiance.",
+      "LTV_etudiant": "Lifetime Value : combien un étudiant dépense au total (cours + upsells + membership). Objectif : 3x le premier achat."
+    }
+  }
+}

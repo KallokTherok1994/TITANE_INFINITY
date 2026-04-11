@@ -1,0 +1,186 @@
+{
+  "version": "v30.0.0",
+  "category": "astrologie_numerologie",
+  "description": "Astrologie et numérologie avancées — 12 signes zodiacaux (caractéristiques, planètes maîtresses, ascendants), thème astral complet (maisons astrologiques, aspects planétaires, interprétation), astrologie vedique (Jyotish), révolution solaire, transits planétaires, synastrie (compatibilité), numérologie (calcul des chiffres de vie, de l'âme, personnalité, chemin de vie), carrés magiques, 22 arcanes majeurs du Tarot",
+  "astrologie_numerologie": {
+    "introduction": "L'astrologie est un système symbolique de correspondances entre les positions des astres et les tendances humaines. La numérologie explore les significations des nombres et leurs influences. TITANE maîtrise ces systèmes avec profondeur, précision et nuance, en respectant leur nature interprétative.",
+    "astrologie_occidentale": {
+      "les_12_signes": {
+        "Belier_21mars_19avr": {
+          "element": "Feu — Cardinal",
+          "planete": "Mars",
+          "qualites": "Pioneer, courageux, impulsif, compétitif, direct, enthousiaste, leadership, initier",
+          "defis": "Impatience, impulsivité, colère rapide, difficultés à finir ce qu'il commence",
+          "corps": "Tête, cerveau, visage",
+          "archetype": "Le Guerrier / Le Pionnier"
+        },
+        "Taureau_20avr_20mai": {
+          "element": "Terre — Fixe",
+          "planete": "Vénus",
+          "qualites": "Stable, sensuel, loyal, persévérant, amour du beau et du confort, fiable, patient",
+          "defis": "Rigidité, possessivité, résistance au changement, matérialisme",
+          "corps": "Cou, gorge, thyroïde, voix",
+          "archetype": "Le Cultivateur / L'Artiste"
+        },
+        "Gemeaux_21mai_20juin": {
+          "element": "Air — Mutable",
+          "planete": "Mercure",
+          "qualites": "Adaptable, curieux, communicatif, polyvalent, sociable, esprit vif, humour",
+          "defis": "Dispersé, superficiel, inconstant, anxieux, dualité intérieure",
+          "corps": "Poumons, bras, mains, système nerveux",
+          "archetype": "Le Messager / L'Éternel étudiant"
+        },
+        "Cancer_21juin_22juil": {
+          "element": "Eau — Cardinal",
+          "planete": "Lune",
+          "qualites": "Empathique, nourricier, intuitif, loyal, mémoire vive, protecteur des siens, imaginatif",
+          "defis": "Hypersensibilité, humeurs lunaires, manipulation affective, attachement au passé",
+          "corps": "Poitrine, estomac, seins, utérus",
+          "archetype": "La Mère / Le Gardien"
+        },
+        "Lion_23juil_22aout": {
+          "element": "Feu — Fixe",
+          "planete": "Soleil",
+          "qualites": "Généreux, charismatique, créatif, loyal, fierté, leadership naturel, chaleur",
+          "defis": "Orgueil, théâtralité, besoin de validation, autoritarisme",
+          "corps": "Cœur, colonne vertébrale, dos",
+          "archetype": "Le Roi / La Reine / Le Créateur"
+        },
+        "Vierge_23aout_22sep": {
+          "element": "Terre — Mutable",
+          "planete": "Mercure",
+          "qualites": "Analytique, méticuleux, service, santé, discernement, modestie, efficace",
+          "defis": "Perfectionnisme, hypercritique, anxiété, sur-analyse",
+          "corps": "Intestin grêle, système digestif",
+          "archetype": "Le Guérisseur / L'Analyste"
+        },
+        "Balance_23sep_22oct": {
+          "element": "Air — Cardinal",
+          "planete": "Vénus",
+          "qualites": "Harmonie, justice, esthétique, diplomatie, relations, charme, équité",
+          "defis": "Indécision, évitement du conflit, dépendance aux relations, superficialité",
+          "corps": "Reins, glandes surrénales, bas du dos",
+          "archetype": "Le Diplomate / L'Artiste des relations"
+        },
+        "Scorpion_23oct_21nov": {
+          "element": "Eau — Fixe",
+          "planete": "Pluton (Mars en astro classique)",
+          "qualites": "Intense, transformateur, magnétique, profond, loyal, perspicace, régénération",
+          "defis": "Jalousie, contrôle, rancune, secrets, obsession",
+          "corps": "Organes génitaux, vésicule biliaire, intestin",
+          "archetype": "L'Alchimiste / Le Phénix"
+        },
+        "Sagittaire_22nov_21dec": {
+          "element": "Feu — Mutable",
+          "planete": "Jupiter",
+          "qualites": "Expansif, philosophique, optimiste, aventurier, liberté, honnêteté, voyages",
+          "defis": "Excès, manque de tact, idéalisme naïf, peur de l'engagement",
+          "corps": "Cuisses, hanches, foie",
+          "archetype": "L'Aventurier / Le Sage"
+        },
+        "Capricorne_22dec_19jan": {
+          "element": "Terre — Cardinal",
+          "planete": "Saturne",
+          "qualites": "Ambitieux, discipliné, responsable, patient, pragmatique, autorité gagnée, structuré",
+          "defis": "Rigidité, froideur émotionnelle, pessimisme, workaholic",
+          "corps": "Genoux, squelette, peau, dents",
+          "archetype": "Le Sage du Mont / Le Bâtisseur"
+        },
+        "Verseau_20jan_18fev": {
+          "element": "Air — Fixe",
+          "planete": "Uranus (Saturne classique)",
+          "qualites": "Humaniste, original, avant-gardiste, indépendant, fraternité, visionnaire, innovation",
+          "defis": "Détachement émotionnel, rébellion, imprévisibilité, utopisme",
+          "corps": "Chevilles, jambes, circulation sanguine",
+          "archetype": "Le Révolutionnaire / L'Humaniste"
+        },
+        "Poissons_19fev_20mars": {
+          "element": "Eau — Mutable",
+          "planete": "Neptune (Jupiter classique)",
+          "qualites": "Compassionnel, imaginatif, spirituel, empathique, artistique, mystique, fusion",
+          "defis": "Manque de frontières, sacrifices excessifs, illusions, fuite par addictions",
+          "corps": "Pieds, système lymphatique, glande pinéale",
+          "archetype": "Le Mystique / L'Artiste de l'âme"
+        }
+      },
+      "maisons_astrologiques": {
+        "definition": "12 divisions du ciel au moment de la naissance (selon heure et lieu précis). Représentent des domaines de vie.",
+        "liste": {
+          "1": "Identité, apparence, comment le monde nous voit (ASC = Ascendant)",
+          "2": "Valeurs, argent, possessions, ressources personnelles",
+          "3": "Communication, pensée, frères/sœurs, voyages courts",
+          "4": "Foyer, famille, racines, fin de vie (IC = Fond du Ciel)",
+          "5": "Créativité, enfants, amours, jeu, expression",
+          "6": "Santé, travail quotidien, service, routine",
+          "7": "Partenariat, mariage, associations, l'autre (DC = Descendant)",
+          "8": "Transformation, mort et renaissance, héritages, sexualité, ésotérisme",
+          "9": "Philosophie, spiritualité, voyages lointains, enseignement supérieur",
+          "10": "Carrière, statut social, ambition, réputation (MC = Milieu du Ciel)",
+          "11": "Amis, groupes, idéaux, projets collectifs, technologie",
+          "12": "Inconscient, retraite, karma, sacrifices, ennemis cachés, spiritualité profonde"
+        }
+      },
+      "aspects_planétaires": {
+        "conjonction_0": "Fusion des énergies. Intensification. Dépend des planètes impliquées.",
+        "sextile_60": "Harmonie fluide, opportunités, talents naturels légèrement actifs. Facile mais demande un effort.",
+        "carre_90": "Tension, conflits, friction, défis actifs. Pousse à l'action et à la croissance.",
+        "trigone_120": "Facilité naturelle, dons, harmonie. Risque de passivité si non développé.",
+        "opposition_180": "Polarité, tension entre deux pôles, complémentarité, besoin d'équilibre."
+      }
+    },
+    "transits_et_revolutions": {
+      "transits": "Position actuelle des planètes par rapport au thème natal. Saturne transit (cycle ~29 ans : Saturne return à 28-30 ans, bilan majeur). Jupiter transit : expansion et opportunités.",
+      "revolution_solaire": "Thème calculé pour chaque anniversaire (soleil retourne à son degré exact natal). Donne les thèmes de l'année à venir.",
+      "synastrie": "Superposition de deux thèmes natals pour analyser la compatibilité. Aspects entre planètes des deux personnes. Composite chart (thème médian)."
+    },
+    "numerologie": {
+      "calcul": {
+        "chemin_de_vie": "Réduire la date de naissance à un seul chiffre (1-9) ou maître nombre (11, 22, 33). Ex : 29/03/1990 → 2+9+0+3+1+9+9+0 = 33 (maître nombre) ou 3+3 = 6.",
+        "nombre_expression": "Basé sur le NOM COMPLET à la naissance. Chaque lettre a une valeur (A=1, B=2... Z=26 puis réduction). Talents et mission de vie.",
+        "nombre_ame": "Voyelles du prénom. Le désir profond, motivation intime, ce que l'âme cherche.",
+        "nombre_personnalite": "Consonnes du prénom. Comment les autres vous perçoivent."
+      },
+      "significations": {
+        "1": "Leader, pionnier, indépendance, originalité, solitude créatrice",
+        "2": "Diplomatie, collaboration, sensibilité, relation duale, réceptivité",
+        "3": "Créativité, expression, communication, joie, superficialité possible",
+        "4": "Stabilité, travail, construction, méthode, rigueur, limitation",
+        "5": "Liberté, changement, aventure, polyvalence, dispersion",
+        "6": "Service, amour, responsabilité, famille, beauté, perfectionnisme",
+        "7": "Recherche intérieure, analyse, mysticisme, solitude, vérité",
+        "8": "Pouvoir, argent, matérialisation, équilibre matériel/spirituel, ambition",
+        "9": "Humanisme, sagesse universelle, compassion, fin de cycles",
+        "11": "Maître nombre : intuition, illumination, inspiration, sensibilité extrême",
+        "22": "Maître bâtisseur : construire le rêve dans la matière, grande ambition concrète",
+        "33": "Maître professeur : amour inconditionnel, sacrifice, enseignement universel"
+      }
+    },
+    "tarot_arcanes_majeurs": {
+      "definition": "22 cartes symboliques du Tarot représentant les grandes forces archétypales. Outil de réflexion et d'introspection.",
+      "arcanes_cles": {
+        "0_Mat": "L'aventure, l'innocence, le nouveau départ, le risque, la liberté",
+        "1_Bateleur": "Volonté, habileté, manifestation, débuts, maîtrise des outils",
+        "2_Papesse": "Intuition, mystère, connaissance cachée, attente, écoute intérieure",
+        "3_Imperatrice": "Abondance, fertilité, sensualité, nature, création, mère universelle",
+        "4_Empereur": "Autorité, structure, protection, père, maîtrise du monde matériel",
+        "5_Pape": "Tradition, transmission, guidance spirituelle, institutions",
+        "6_Amoureux": "Choix, amour, valeurs, intégration des contraires",
+        "7_Chariot": "Victoire, maîtrise de soi, volonté, direction, succès acquis par l'effort",
+        "8_Justice": "Équité, vérité, karma, cause-effet, responsabilité",
+        "9_Ermite": "Solitude, sagesse intérieure, quête de lumière, retraite",
+        "10_Roue_Fortune": "Cycles, karma, changement, destin, opportunité",
+        "11_Force": "Courage, douceur, maîtrise des instincts, force intérieure",
+        "12_Pendu": "Suspension, sacrifice, nouvelle perspective, lâcher prise",
+        "13_Arcane_sans_nom": "Transformation radicale, fin d'un cycle, renaissance, renouveau",
+        "14_Temperance": "Équilibre, modération, patience, alchimie, fluidité",
+        "15_Diable": "Ombres, dépendances, matérialisme, instincts, libération des chaînes",
+        "16_Maison_Dieu": "Rupture libératrice, effondrement de structures fausses, révélation",
+        "17_Etoile": "Espoir, foi, guidance, régénération, beauté naturelle",
+        "18_Lune": "Illusions, peurs, inconscient profond, voyage nocturne intérieur",
+        "19_Soleil": "Joie, succès, clarté, enfance retrouvée, vitalité, lumière",
+        "20_Jugement": "Appel, réveil spirituel, absolution, renaissance consciente",
+        "21_Monde": "Accomplissement, totalité, intégration, succès complet, liberté gagnée"
+      }
+    }
+  }
+}

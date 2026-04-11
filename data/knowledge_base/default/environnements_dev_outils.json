@@ -1,0 +1,75 @@
+{
+  "version": "v30.0.0",
+  "category": "environnements_dev_outils",
+  "description": "Environnements de développement et outils avancés — VS Code (extensions essentielles, raccourcis, debugging, snippets, workspace), Git avancé (rebase, cherry-pick, bisect, hooks, workflows), GitHub avancé (Actions CI/CD, Pages, Codespaces, Projects, CLI), terminal/bash avancé (zsh, oh-my-zsh, scripts), Docker (images, containers, compose, réseaux), package managers (npm/pnpm/yarn/cargo), linting/formatting (ESLint, Prettier, Biome)",
+  "environnements_dev_outils": {
+    "introduction": "Les outils du développeur multiplient la productivité. TITANE guide à travers la maîtrise avancée de VS Code, Git, GitHub, le terminal et Docker — l'armurerie complète du développeur moderne.",
+    "vscode": {
+      "raccourcis_essentiels": {
+        "navigation": "Ctrl+P (fichier rapide), Ctrl+Shift+P (palette commandes), Ctrl+G (aller à ligne), Ctrl+T (symbole global), Ctrl+Shift+E (explorateur), Ctrl+` (terminal), Ctrl+B (sidebar).",
+        "edition": "Alt+↑↓ (déplacer ligne), Shift+Alt+↑↓ (dupliquer ligne), Ctrl+Shift+K (supprimer ligne), Ctrl+/ (commenter), Ctrl+Shift+I (formater), F2 (renommer symbole), F12 (aller à définition), Alt+F12 (aperçu définition).",
+        "multi_curseur": "Alt+Clic (curseur multiple), Ctrl+Alt+↑↓ (curseurs verticaux), Ctrl+D (sélectionner prochain occurrence), Ctrl+Shift+L (sélectionner toutes occurrences).",
+        "debug": "F5 (démarrer debug), F10 (step over), F11 (step into), Shift+F11 (step out), F9 (toggle breakpoint), Ctrl+Shift+F5 (restart)."
+      },
+      "extensions_essentielles": {
+        "langages": "Prettier (formatage), ESLint, Rust Analyzer, Python (Pylance), GitLens (git avancé), IntelliCode (IA complétion).",
+        "productivite": "GitHub Copilot, TabNine, Thunder Client (REST client), REST Client, Todo Tree, Error Lens (erreurs inline).",
+        "apparence": "One Dark Pro / Catppuccin (thèmes), Material Icon Theme, Bracket Pair Colorizer 2, Indent Rainbow.",
+        "dev_ops": "Docker, Remote - SSH, Remote - Containers, Live Share (collaboration), Live Server (serveur web local)."
+      },
+      "workspace_settings": "`.vscode/settings.json` — settings du projet. `.vscode/launch.json` — configurations debug. `.vscode/tasks.json` — tâches automatisées. `.vscode/extensions.json` — extensions recommandées. Multi-root workspaces.",
+      "snippets": "User snippets (Ctrl+Shift+P > snippets). Prefix + Tab. `$1`, `$2` placeholders. `${1:default_value}`. Partager via gist ou extensions."
+    },
+    "git_avance": {
+      "commandes_cles": {
+        "rebase": "`git rebase -i HEAD~N` — rebase interactif (squash, edit, reword, drop). `git rebase main` — rejouer commits sur main. Résoudre conflits + `git rebase --continue`.",
+        "cherry_pick": "`git cherry-pick <hash>` — appliquer un commit spécifique. `--no-commit` pour inspecter avant commit.",
+        "stash": "`git stash push -m 'WIP: feature'`. `git stash list`. `git stash pop` / `apply`. `git stash drop`.",
+        "bisect": "`git bisect start`, `git bisect bad` (commit actuel), `git bisect good <hash>`. Git teste automatiquement les commits pour trouver le bug.",
+        "reflog": "`git reflog` — historique de tous les mouvements HEAD. Récupérer des commits 'perdus'. `git checkout HEAD@{N}`.",
+        "worktree": "`git worktree add ../branch-name branch` — plusieurs working directories simultanément (pour travailler sur plusieurs branches en parallèle)."
+      },
+      "workflows": {
+        "gitflow": "main (stable), develop (intégration), feature/* (nouvelles fonctionnalités), release/* (préparation release), hotfix/* (correctifs urgents).",
+        "trunk_based": "Commits directs sur main. Feature flags pour code non-prêt. Short-lived branches (< 1-2 jours). CI/CD rapide.",
+        "conventional_commits": "`type(scope): description`. Types : feat, fix, docs, style, refactor, test, chore. Génération automatique de CHANGELOG. Semantic versioning."
+      },
+      "hooks": "`.git/hooks/` — scripts exécutés à des événements. `pre-commit` (lint, tests), `commit-msg` (validation format), `pre-push` (tests complets). Husky + lint-staged pour la gestion npm."
+    },
+    "github_avance": {
+      "actions_CI_CD": {
+        "structure": "`.github/workflows/*.yml`. Triggers (push, pull_request, schedule, workflow_dispatch). Jobs et steps. Runners (ubuntu-latest, windows-latest, macos-latest, self-hosted).",
+        "patterns": "Build + test + deploy. Matrix strategy (tester sur plusieurs versions/OS). Secrets et variables d'environnement. Artefacts (upload/download). Cache (actions/cache). Réutilisation de workflows (workflow_call).",
+        "actions_populaires": "actions/checkout, actions/setup-node, actions/setup-python, docker/build-push-action, peaceiris/actions-gh-pages, softprops/action-gh-release."
+      },
+      "github_pages": "Hébergement gratuit. Source : `/docs` folder ou `gh-pages` branch. GitHub Actions pour déploiement automatique. Domaine personnalisé. HTTPS gratuit via Let's Encrypt.",
+      "github_CLI": "`gh auth login`. `gh repo create/clone/fork`. `gh issue create/list/view`. `gh pr create/merge/review`. `gh workflow run`. `gh codespace create`. Scriptable pour CI/CD.",
+      "codespaces": "IDE cloud dans le navigateur. Basé sur VS Code. Fichier `devcontainer.json` pour la configuration. Partage de ports. Prébuilds pour startup ultra-rapide.",
+      "projects": "GitHub Projects (Kanban/Table). Automation (workflows auto-assignation, fermeture issues). Roadmap view. Filtres et groupements."
+    },
+    "terminal_bash": {
+      "bash_avance": {
+        "scripting": "Shebang `#!/bin/bash`. Variables, arrays, fonctions. Boucles for/while. Conditions if/elif/else. `$?` exit code. `set -e` (stop on error), `set -x` (debug mode).",
+        "manipulation_texte": "`grep -E` (regex), `sed 's/old/new/g'`, `awk '{print $1}'`, `cut -d: -f1`, `tr`, `sort | uniq -c | sort -rn`, `head/tail -n 20`, `wc -l`.",
+        "redirection": "`>` (overwrite), `>>` (append), `2>&1` (stderr to stdout), `|` pipe, `tee` (stdout + fichier), `xargs`, process substitution `<()`.",
+        "jobs": "`&` (background), `jobs`, `fg/bg`, `nohup`, `disown`. `tmux` / `screen` pour sessions persistantes."
+      },
+      "zsh_oh_my_zsh": "Zsh > Bash pour usage interactif. Oh-My-Zsh (framework plugins/thèmes). Plugins essentiels : git, zsh-autosuggestions, zsh-syntax-highlighting, fzf, z (autojump). Thème Powerlevel10k.",
+      "outils_modernes": "`ripgrep` (rg — grep ultra-rapide), `fd` (find alternatif), `bat` (cat avec highlight), `exa/eza` (ls moderne), `delta` (git diff amélioré), `jq` (JSON processor), `httpie`/`curl` (HTTP clients), `tmux` (multiplexeur terminal)."
+    },
+    "docker": {
+      "concepts": {
+        "image": "Template immutable. Layers (cache). Dockerfile : FROM, RUN, COPY, WORKDIR, EXPOSE, CMD, ENTRYPOINT. Multi-stage builds pour réduire la taille.",
+        "container": "Instance d'une image. Éphémère (stateless). Volumes pour la persistance. Réseau entre containers.",
+        "registries": "Docker Hub, GitHub Container Registry (ghcr.io), Google Artifact Registry, AWS ECR. Tagging (semver, latest, commit hash)."
+      },
+      "docker_compose": "`docker-compose.yml`. Services, volumes, networks, environment. `docker compose up -d`, `down`, `logs -f`, `exec <service> bash`. Dépendances entre services (`depends_on`).",
+      "bonnes_pratiques": "Images officielles slim/alpine. Un processus par container. Non-root user. .dockerignore. Health checks. Dockerfile scan (trivy, snyk). Secrets via variables d'env ou secrets manager."
+    },
+    "package_managers": {
+      "npm_pnpm": "npm : `package.json`, `node_modules`, `package-lock.json`. pnpm : store central, symlinks, 2-3x plus rapide, économie disque. `pnpm install`, `add`, `remove`, `run`. Workspaces (monorepos).",
+      "scripts": "`npm run build/test/lint/dev`. Cross-env (variables env cross-platform). Concurrently (run multiple). pre/post hooks.",
+      "versionning": "Semantic Versioning (major.minor.patch). `^` (minor + patch updates), `~` (patch only), exact version. `npm outdated`, `npm update`."
+    }
+  }
+}

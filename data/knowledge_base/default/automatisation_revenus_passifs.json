@@ -1,0 +1,102 @@
+{
+  "version": "v30.0.0",
+  "category": "automatisation_revenus_passifs",
+  "description": "Automatisation et revenus passifs VISIONNAIRE_2.0 — classification des revenus passifs (actifs numériques/financiers/immobiliers/PI), automatisation business (no-code Zapier/Make/n8n, email automation, chatbots, AI tools, social scheduling), royalties (KDP/musique/photos stock/templates), licensing/PI, cashflow machines physiques, revenus financiers passifs (dividendes/REITs/SCPI/robo-advisors), business en ligne automatisés (niche sites/YouTube/affiliate SEO), micro-SaaS solo founder",
+  "automatisation_revenus_passifs": {
+    "introduction": "Les revenus passifs ne sont jamais vraiment 'passifs' — ils demandent un investissement initial (temps, argent ou les deux) avant de générer des flux récurrents avec un effort minimal. Au niveau VISIONNAIRE_2.0, TITANE structure les stratégies pour construire un portefeuille de revenus diversifié qui travaille pour vous 24/7.",
+    "classification_revenus_passifs": {
+      "actifs_numeriques": "Sites web monétisés, chaînes YouTube, cours en ligne, templates/presets, applications, SaaS. Investissement initial : temps + compétences. Scalabilité : infinie.",
+      "actifs_financiers": "Dividendes, intérêts, gains en capital. Investissement initial : capital. Effort : quasi nul après configuration.",
+      "actifs_immobiliers": "Loyers, SCPI, crowdfunding immobilier. Investissement initial : capital + effet de levier bancaire.",
+      "propriete_intellectuelle": "Livres, musique, brevets, licences, marques. Investissement initial : création. Durée : très long terme (droit d'auteur = vie + 70 ans).",
+      "regle_or": "Objectif : 7 sources de revenus différentes. Aucune source ne doit représenter > 40% du total. Diversification = sécurité."
+    },
+    "automatisation_business": {
+      "no_code_automation": {
+        "Zapier": "Connecte 6000+ apps. Trigger → Action. Ex : nouveau lead (formulaire) → ajout CRM → email bienvenue → notification Slack. Plan gratuit 100 tâches/mois.",
+        "Make": "Alternative plus puissante et moins chère que Zapier. Scénarios visuels complexes. Branching, itérations, error handling. 1000 opérations gratuites/mois.",
+        "n8n": "Open-source, auto-hébergé. Aucune limite. Pour les tech-savvy qui veulent contrôle total et coût zéro."
+      },
+      "email_automation": {
+        "sequences_evergreen": "Pré-écrites, déclenchées par l'inscription. Le nouveau lead reçoit 30-60 jours de contenu automatisé. Convertit en client sans intervention.",
+        "segmentation_auto": "Tags automatiques basés sur le comportement : clics, achats, pages visitées. Chaque segment reçoit le contenu le plus pertinent.",
+        "outils": "Klaviyo (e-commerce), ConvertKit (créateurs), ActiveCampaign (B2B/avancé), systeme.io (tout-en-un FR), Mailchimp (débutant)."
+      },
+      "chatbots": {
+        "ManyChat": "Automation Messenger + Instagram DM + WhatsApp. Réponse automatique aux commentaires, qualification de leads, vente directe en DM.",
+        "Tidio": "Chat en direct + chatbot IA pour site web. Répond aux questions fréquentes, capture les leads, redirige vers un humain si nécessaire.",
+        "ChatGPT_custom": "GPT personnalisé formé sur votre FAQ, vos produits, vos processus. Support client 24/7. Réduction 60-80% du temps support."
+      },
+      "AI_tools_automation": {
+        "contenu": "ChatGPT/Claude pour rédaction (articles, emails, scripts). Midjourney/DALL-E pour visuels. ElevenLabs pour voix-off. Descript pour montage vidéo.",
+        "workflow": "AI + no-code = puissance. Ex : RSS feed → résumé IA → post LinkedIn automatique → publié via Buffer. Zéro effort après setup.",
+        "social_scheduling": "Buffer, Later, Hootsuite, Publer. Programmer 30 jours de contenu en 2-3h. Recyclage automatique des meilleurs posts."
+      }
+    },
+    "royalties_et_PI": {
+      "livres_KDP": {
+        "low_content": "Carnets, journaux, planners, livres de coloriage, cahiers d'exercices. Design Canva/BookBolt. Volume : publier 50-100 livres sur 6-12 mois. Revenus : 500-5000€/mois à maturité.",
+        "high_content": "Livres de non-fiction dans des niches profitables. Établit l'autorité + génère des leads + royalties. Écrire un livre = le meilleur business card au monde."
+      },
+      "musique": {
+        "distribution": "DistroKid (20$/an illimité), TuneCore, CD Baby. Publier sur Spotify, Apple Music, YouTube Music, Amazon Music.",
+        "revenus": "Streams : 0.003-0.005$/stream Spotify. Musique de fond : royalties YouTube Content ID, sync licensing (TV/pub/films), bibliothèques musicales (Epidemic Sound, Artlist en tant que contributeur).",
+        "AI_music": "Suno, Udio : générer de la musique avec IA. Zone grise juridique. Potentiel pour musique d'ambiance, lo-fi, méditation."
+      },
+      "photos_videos_stock": "Shutterstock, Adobe Stock, Getty Images, iStock (contributeur). Chaque photo/vidéo acceptée génère des micro-royalties à vie. Volume : 1000+ assets pour revenus significatifs.",
+      "templates_digitaux": {
+        "plateformes": "Creative Market, Envato (ThemeForest/CodeCanyon/GraphicRiver), Gumroad, Etsy (templates numériques).",
+        "types": "Thèmes WordPress, templates Figma/Canva, presets Lightroom, LUTs vidéo, mockups, plugins. Marges 70-95%.",
+        "strategie": "Créer dans une niche spécifique. Mettre à jour régulièrement. Récolter les avis. Construire un catalogue de 20-50 produits."
+      }
+    },
+    "cashflow_machines_physiques": {
+      "distributeurs_automatiques": "Investissement : 3-8k€/machine. Revenus : 200-800€/mois/machine. Emplacements clés : bureaux, hôpitaux, universités, gares. ROI en 6-18 mois.",
+      "laundromats": "Laveries automatiques. Investissement : 50-200k€. Revenus : 2-8k€/mois net. Cash business. Peu de gestion avec monitoring IoT. Demande constante.",
+      "car_wash": "Stations de lavage automatique. Investissement lourd mais revenus récurrents. Emplacement = tout.",
+      "storage_units": "Self-stockage. Investissement immobilier avec rendement supérieur au locatif résidentiel. Gestion simple. Faible maintenance.",
+      "parking_garages": "Zones urbaines tendues. Rendement 6-12% brut. Ticket d'entrée bas (5-30k€). Zéro entretien, zéro impayé complexe."
+    },
+    "revenus_financiers_passifs": {
+      "dividendes": {
+        "aristocrates": "Entreprises qui augmentent leur dividende depuis 25+ ans (USA: Dividend Aristocrats, EU: Dividend Champions). Rendement 2-5%/an + croissance.",
+        "strategie": "PEA pour optimisation fiscale. Réinvestir les dividendes (DRIP) pour effet boule de neige. Objectif : dividendes mensuels = dépenses mensuelles.",
+        "ETF_dividendes": "iShares STOXX Europe Select Dividend 30, SPDR S&P Dividend ETF, Vanguard High Dividend Yield. Diversification automatique."
+      },
+      "SCPI": "Société Civile de Placement Immobilier. Investir dans l'immobilier sans gestion. Rendement 4-6%/an. Ticket : dès 1000€. Corum, Primovie, Épargne Pierre.",
+      "robo_advisors": "Gestion automatisée d'un portefeuille diversifié ETF. Yomoni, Nalo, WeSave (France). Frais 0.5-1.6%/an. Idéal pour investisseur passif.",
+      "crowdfunding_lending": "Prêt participatif : Mintos, October, PeerBerry. Rendement 6-12%/an. Risque de défaut. Diversifier sur 50+ prêts."
+    },
+    "business_en_ligne_automatises": {
+      "niche_websites": {
+        "modele": "Site web de contenu optimisé SEO dans une niche spécifique. Monétisation : AdSense/Mediavine/Raptive (pubs display) + affiliation.",
+        "revenus": "Mediavine : 15-40€ pour 1000 pages vues. Site à 100k visites/mois = 1500-4000€/mois. Affiliation en plus.",
+        "timeline": "6-12 mois pour le trafic SEO. 50-100 articles de 1500-3000 mots. Puis revenus quasi-passifs (mise à jour trimestrielle).",
+        "exit": "Valorisation 24-48x bénéfice mensuel. Site faisant 2000€/mois net = vente 48k-96k€ (Flippa, Empire Flippers, Motion Invest)."
+      },
+      "youtube_faceless": {
+        "concept": "Chaînes YouTube sans montrer son visage : compilation, narration + B-roll, top 10, éducation animée, méditation/ambiance.",
+        "outils_IA": "ChatGPT (scripts), ElevenLabs (voix-off), Pexels/Storyblocks (vidéos stock), CapCut (montage), Canva (thumbnails).",
+        "monetisation": "AdSense (1-8€/1000 vues selon niche), sponsoring, affiliation dans la description, produits propres.",
+        "scaling": "Embaucher des éditeurs vidéo freelances (Philippines: 5-15$/vidéo). Publier 3-5 vidéos/semaine. Système documenté."
+      },
+      "affiliate_sites_SEO": {
+        "modele": "Comparatifs, tests produits, guides d'achat. Liens affiliés Amazon Associates (3-10%), programmes privés (10-50%).",
+        "strategie": "Cibler des mots-clés 'meilleur X pour Y', 'avis X', 'comparatif X vs Y'. Contenu exhaustif. Mise à jour annuelle.",
+        "revenus": "Top sites affiliés FR : 1000-20000€/mois. Dépend de la niche et du volume de trafic."
+      }
+    },
+    "micro_SaaS": {
+      "definition": "Petit logiciel en ligne résolvant un problème précis, géré par 1-2 personnes. MRR 1-50k€. Pas de levée de fonds, pas d'équipe.",
+      "exemples": "Outil de scheduling spécialisé, widget pour e-commerce, intégration entre 2 outils, chrome extension payante, API spécialisée.",
+      "stack_technique": "Next.js/React + Supabase/Firebase + Stripe + Vercel. Ou no-code : Bubble + Stripe. MVP en 2-8 semaines.",
+      "distribution": "Product Hunt launch, communautés niche (Reddit, forums), SEO long terme, intégrations marketplace (Shopify App Store, WordPress plugins).",
+      "metriques": "MRR (Monthly Recurring Revenue), churn rate (< 5%), LTV/CAC > 3, logo churn vs revenue churn."
+    },
+    "indicateurs_passivite": {
+      "heures_par_euro": "Mesurer le ratio temps investi / revenu généré. Objectif : < 0.5h/€ de revenu mensuel (2000€/mois pour < 1000h de travail sur la durée de vie).",
+      "scalabilite": "Le revenu peut-il 10x sans 10x le temps ? Si oui = vrai actif passif. Si non = emploi déguisé.",
+      "diversification": "Tableau de bord mensuel : source de revenu × montant × heures investies × tendance (↑↗→↘↓). Objectif : 7 lignes, aucune > 40%."
+    }
+  }
+}

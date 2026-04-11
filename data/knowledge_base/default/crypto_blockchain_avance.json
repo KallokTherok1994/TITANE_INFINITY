@@ -1,0 +1,201 @@
+{
+  "version": "v30.0.0",
+  "category": "crypto_blockchain_avance",
+  "description": "Crypto et blockchain avancé — DeFi complète (DEX, AMM, yield farming, lending), tokenomics, NFT écosystème, Layer 2, smart contracts et sécurité, analyse on-chain, Bitcoin/Ethereum avancé, trading crypto, airdrops, DAOs, régulation et fiscalité crypto France/Québec",
+  "crypto_blockchain_avance": {
+    "introduction": "Ce module couvre l'écosystème crypto et blockchain à un niveau avancé, bien au-delà des bases d'achat/vente. Il explore la DeFi, la tokenomics, les mécanismes de consensus, la sécurité des smart contracts, l'analyse on-chain et les cadres réglementaires. TITANE aborde ce domaine avec rigueur technique et conscience des risques réels.",
+    "defi_complete": {
+      "DEX_et_AMM": {
+        "principe_DEX": "Les Decentralized Exchanges permettent l'échange de tokens sans intermédiaire centralisé. Pas de KYC, pas de custody — l'utilisateur garde le contrôle de ses clés. Contrepartie: risques de smart contracts, slippage, front-running.",
+        "AMM_fonctionnement": "Les Automated Market Makers remplacent les carnets d'ordres par des pools de liquidité et une formule mathématique. Formule de base (Uniswap v2): x × y = k, où x et y sont les réserves des deux tokens et k est une constante. Le prix est déterminé par le ratio des réserves.",
+        "principaux_DEX": {
+          "Uniswap": "Pioneer des AMM sur Ethereum. V2 = formule x*y=k simple. V3 = liquidité concentrée (LPs choisissent une fourchette de prix = efficacité du capital multipliée par 100-4000x). V4 = hooks personnalisables.",
+          "Curve": "Spécialisé dans les échanges de stablecoins et actifs corrélés (stETH/ETH). Formule StableSwap = hybride entre x*y=k et x+y=k, minimisant le slippage pour les paires corrélées. veCRV = vote-escrowed governance.",
+          "SushiSwap": "Fork communautaire d'Uniswap avec tokenomics différente (SUSHI rewards). Écosystème multi-chaîne."
+        },
+        "slippage_et_MEV": {
+          "slippage": "Différence entre le prix attendu et le prix exécuté. Augmente avec la taille du trade par rapport à la liquidité du pool. Tolérance typique: 0.5-1% pour les majeurs, 2-5% pour les small caps.",
+          "MEV": "Maximal Extractable Value — bots qui réordonnent les transactions dans les blocs pour extraire du profit. Sandwich attacks: le bot place un achat avant et une vente après votre transaction. Protection: utiliser des RPC privés (Flashbots Protect), limiter le slippage."
+        }
+      },
+      "liquidity_providing": {
+        "principe": "Déposer une paire de tokens dans un pool AMM pour faciliter les échanges. En retour, le LP reçoit des frais de trading (typiquement 0.3% par swap, distribués proportionnellement).",
+        "impermanent_loss": {
+          "definition": "Perte temporaire subie par un LP quand le ratio de prix des deux tokens change par rapport au moment du dépôt. Plus la divergence de prix est grande, plus l'IL est important.",
+          "formule_approximative": "IL ≈ 2 × √(ratio_prix) / (1 + ratio_prix) - 1. Exemple: si un token double (+100%), IL ≈ 5.7%. Si un token fait ×5, IL ≈ 25.5%.",
+          "mitigation": "Fournir de la liquidité sur des paires corrélées (stablecoins), utiliser la liquidité concentrée (Uniswap V3) sur des fourchettes étroites, ou choisir des pools avec des récompenses en tokens suffisantes pour compenser l'IL."
+        }
+      },
+      "yield_farming": {
+        "definition": "Optimiser le rendement en déplaçant ses capitaux entre différents protocoles DeFi. Combiner staking, lending, LP et récompenses en tokens de gouvernance.",
+        "strategies": {
+          "simple_LP": "Déposer dans un pool AMM et farmer les frais + récompenses. Rendement typique: 5-50% APY selon le risque.",
+          "leveraged_farming": "Emprunter pour augmenter sa position de farming. Multiplier le rendement mais aussi le risque de liquidation. Protocoles: Alpaca Finance, Gearbox.",
+          "recursive_lending": "Déposer du collatéral → emprunter → re-déposer → re-emprunter (loop). Amplifie le rendement de lending. Risque: liquidation en cascade si le collatéral baisse.",
+          "stablecoin_farming": "LP de stablecoins (USDC/USDT/DAI) pour minimiser l'impermanent loss. Rendement plus faible (3-15% APY) mais risque réduit."
+        },
+        "risques": "Smart contract risk (hacks), rug pulls, IL, effondrement du token de récompense, risque de liquidation, dépeg de stablecoins (cas UST/LUNA), risque réglementaire."
+      },
+      "lending_borrowing": {
+        "protocoles_majeurs": {
+          "Aave": "Leader du lending DeFi. Multi-chaîne (Ethereum, Polygon, Arbitrum, Optimism). Flash loans (emprunt sans collatéral remboursé dans le même bloc). Taux variables et stables. Governance token: AAVE.",
+          "Compound": "Pionnier du lending DeFi. Modèle de cTokens (tokens représentant le dépôt + intérêts accumulés). Taux algorithmiques basés sur l'utilisation du pool."
+        },
+        "mecanisme": "Dépôt de collatéral (overcollateralized, typiquement 150-200%). Emprunt d'un autre actif. Si la valeur du collatéral tombe sous le seuil de liquidation, le collatéral est vendu automatiquement.",
+        "health_factor": "Santé de la position = valeur du collatéral × seuil de liquidation / dette. HF < 1 = liquidation. Maintenir HF > 1.5 pour la sécurité.",
+        "flash_loans": "Emprunt instantané sans collatéral, à condition que le remboursement (+ frais 0.09%) se fasse dans la même transaction atomique. Usages: arbitrage, refinancement de dette, liquidations."
+      },
+      "staking_avance": {
+        "PoS_classique": "Proof of Stake: verrouiller des tokens pour valider des transactions et sécuriser le réseau. Rendement typique: 3-15% APY. Risque de slashing (pénalité pour comportement malveillant ou inactivité).",
+        "liquid_staking": "Staker ses tokens et recevoir un dérivé liquide (stETH pour Lido, rETH pour Rocket Pool) utilisable dans la DeFi. Résout le problème de l'illiquidité du staking. stETH peut servir de collatéral sur Aave.",
+        "restaking_EigenLayer": "Réutiliser les ETH stakés (ou liquid staking tokens) pour sécuriser d'autres protocoles (AVS — Actively Validated Services). Superposition de rendements mais aussi de risques. Concept de shared security."
+      }
+    },
+    "tokenomics_avancee": {
+      "supply_dynamics": {
+        "inflation_deflation": "Tokens inflationnistes: nouvelle émission continue (récompenses de staking/mining). Tokens déflationnistes: mécanismes de burn réduisant l'offre. Certains sont neutres ou adaptifs.",
+        "token_burns": "Destruction permanente de tokens pour réduire l'offre. Automatique (EIP-1559 brûle une partie des gas fees ETH) ou programmé (Binance brûle du BNB trimestriellement basé sur les profits).",
+        "vesting_schedules": "Calendrier de déblocage progressif des tokens alloués à l'équipe, investisseurs early-stage, advisors. Cliff = période initiale sans déblocage. Vesting linéaire typique: 1 an de cliff + 3 ans de vesting mensuel. Les gros déverrouillages (token unlocks) créent de la pression vendeuse."
+      },
+      "types_de_tokens": {
+        "governance": "Donnent des droits de vote sur le protocole (UNI, AAVE, COMP). Valeur = pouvoir de gouvernance + revenus potentiels du protocole.",
+        "utility": "Utilisés pour payer des services dans l'écosystème (ETH pour le gas, LINK pour les oracles). La demande dépend de l'usage réel.",
+        "security_tokens": "Représentent un droit sur un actif réel (actions, immobilier). Soumis aux réglementations sur les valeurs mobilières. Test de Howey (USA): investissement d'argent dans une entreprise commune avec attente de profits provenant des efforts d'autrui.",
+        "stablecoins": "Indexés sur une monnaie fiat. Collatéralisés (USDC, USDT = réserves en dollars), crypto-collatéralisés (DAI = sur-collatéralisation en ETH), ou algorithmiques (risqués — cf. effondrement UST)."
+      },
+      "evaluation": "Métriques clés: FDV (Fully Diluted Valuation = prix × supply max), MC/FDV ratio (< 0.5 = beaucoup de tokens encore verrouillés = pression vendeuse future), revenus du protocole vs émissions de tokens (P/E ratio crypto), TVL (Total Value Locked) comme proxy d'adoption."
+    },
+    "NFT_ecosysteme": {
+      "standards_techniques": {
+        "ERC_721": "Standard de base pour les NFTs sur Ethereum. Chaque token est unique avec un tokenId distinct. Fonctions: ownerOf(), transferFrom(), approve().",
+        "ERC_1155": "Standard multi-token: permet de gérer des tokens fongibles ET non-fongibles dans le même contrat. Plus efficace en gas pour les collections avec des items semi-fongibles (éditions multiples).",
+        "metadata": "tokenURI pointe vers un JSON (souvent sur IPFS) contenant: name, description, image, attributes (traits). IPFS > serveur centralisé pour la pérennité des métadonnées."
+      },
+      "marketplaces_et_royalties": {
+        "OpenSea": "Marketplace dominant. Modèle: frais de plateforme 2.5% (réduits en 2023). Seaport protocol = moteur d'échange décentralisé sous-jacent.",
+        "Blur": "Marketplace pro-traders. Agrégateur, bid pools, pas de royalties forcées. A capturé une part majeure du volume en 2023 grâce aux airdrops.",
+        "royalties": "Pourcentage (typiquement 2.5-10%) versé au créateur à chaque revente. Historiquement optionnel sur la blockchain, certains marketplaces les ont rendues optionnelles. EIP-2981 = standard de royalties on-chain mais non contraignant.",
+        "utility_NFTs": "NFTs donnant accès à des avantages réels: accès communauté, événements, revenus, governance. Valeur utilitaire > valeur spéculative pure."
+      }
+    },
+    "layer_2_solutions": {
+      "problematique": "Ethereum L1: ~15-30 TPS, gas fees élevés en période de congestion (parfois >100$ par transaction). Les L2 exécutent les transactions hors chaîne et publient des preuves sur L1, héritant de sa sécurité.",
+      "optimistic_rollups": {
+        "principe": "Les transactions sont présumées valides (optimistic). Période de contestation de 7 jours pendant laquelle quiconque peut prouver une fraude (fraud proof). Si personne ne conteste, les transactions sont finalisées.",
+        "Arbitrum": "L2 leader en TVL. Nitro = pile logicielle optimisée. Stylus = support de langages autres que Solidity (Rust, C++). ARB = token de gouvernance.",
+        "Optimism": "Architecture modulaire (OP Stack). Base de la Superchain (vision de multiples L2 interconnectés). OP = token de gouvernance. Utilisé par Base (Coinbase)."
+      },
+      "zk_rollups": {
+        "principe": "Chaque lot de transactions est accompagné d'une preuve cryptographique (validity proof/zero-knowledge proof) prouvant leur validité. Finalité plus rapide (pas de période de contestation). Plus complexe à développer.",
+        "zkSync": "Utilise des preuves SNARK. EVM-compatible (zkEVM). Abstraction de compte native.",
+        "Polygon_zkEVM": "zkEVM de type 2 (équivalent EVM). Fait partie de l'écosystème Polygon plus large (PoS, Supernets, zkEVM).",
+        "Base": "L2 incubé par Coinbase, basé sur OP Stack (optimistic rollup). Adoption rapide grâce à l'intégration Coinbase. Pas de token natif."
+      }
+    },
+    "smart_contracts_securite": {
+      "solidity_essentiels": {
+        "concepts_cles": "Contrats = programmes immuables déployés sur la blockchain. Fonctions: public/private/external/internal. Storage (onchain, coûteux) vs Memory (temporaire). Modifiers pour le contrôle d'accès. Events pour les logs.",
+        "patterns_importants": "Ownable (contrôle d'accès), ReentrancyGuard (protection), Proxy (upgradability), ERC standards (interfaces standard), SafeMath (obsolète depuis Solidity 0.8 avec overflow checks natifs)."
+      },
+      "exploits_communs": {
+        "reentrancy": "L'attaquant rappelle le contrat victime avant que le premier appel ne soit terminé, retirant des fonds en boucle. Hack DAO 2016 (60M$). Protection: pattern Checks-Effects-Interactions, ReentrancyGuard (mutex), utiliser transfer() au lieu de call().",
+        "flash_loan_attacks": "Emprunter massivement via flash loan pour manipuler les prix dans un AMM, exploiter un protocole, et rembourser dans la même transaction. Exemples: Cream Finance, bZx. Protection: oracles TWAP (time-weighted average price) au lieu de prix spot.",
+        "oracle_manipulation": "Manipuler l'oracle de prix dont dépend un protocole. Si le prix est lu d'un seul pool AMM, il suffit de le manipuler temporairement. Protection: Chainlink (oracles décentralisés), TWAP, sources multiples.",
+        "access_control": "Fonctions admin non protégées, clés privées compromises, initializers non protégés sur les proxies. Protection: OpenZeppelin AccessControl, multisig, timelocks."
+      },
+      "audit_et_securite": "Audits par des firmes spécialisées (Trail of Bits, OpenZeppelin, Certik, Spearbit). Bug bounties (Immunefi — jusqu'à 10M$ de récompense). Vérification formelle pour les protocoles critiques. Un audit ne garantit pas l'absence de bugs."
+    },
+    "wallets_et_securite": {
+      "types": {
+        "hot_wallets": "Connectés à internet (MetaMask, Rabby, Phantom). Pratiques pour la DeFi. Risque: compromission si le navigateur/PC est infecté.",
+        "hardware_wallets": "Clés privées stockées dans une puce sécurisée hors ligne (Ledger, Trezor). Transaction signée sur le device, jamais exposée. Standard de sécurité pour les montants significatifs.",
+        "multisig": "Portefeuille nécessitant M signatures sur N signataires (ex: 3/5). Utilisé par les DAOs et les trésoreries de protocoles. Safe (ex-Gnosis Safe) = standard."
+      },
+      "seed_phrase_security": {
+        "regle_absolue": "JAMAIS stocker sa seed phrase numériquement (photo, cloud, email, fichier texte). Graver sur métal résistant au feu/eau. Stocker dans un lieu sûr, idéalement réparti (Shamir's Secret Sharing ou multiples localisations).",
+        "social_engineering": "Les attaques les plus fréquentes ne sont pas techniques mais sociales: faux support, faux airdrops, phishing de signatures (approve/permit malicieux). Vérifier CHAQUE transaction avant de signer."
+      },
+      "OpSec_avancee": "Utiliser un wallet dédié pour les interactions DeFi risquées (ne pas mettre tous ses fonds dans un hot wallet). Révoquer régulièrement les approbations de tokens (revoke.cash). Utiliser un hardware wallet pour tout montant > 1000$. VPN pour la vie privée."
+    },
+    "analyse_on_chain": {
+      "outils": {
+        "Nansen": "Analytics blockchain avec labellisation des wallets (smart money, fonds, exchanges). Suivi des mouvements de smart money, alertes, dashboards sectoriels. Payant.",
+        "Dune_Analytics": "Plateforme de requêtes SQL sur les données blockchain. Dashboards communautaires gratuits. Permet d'analyser n'importe quelle métrique on-chain. Courbe d'apprentissage technique.",
+        "Glassnode": "Métriques on-chain Bitcoin avancées: MVRV, SOPR, HODL waves, exchange flows. Référence pour l'analyse cyclique Bitcoin.",
+        "DefiLlama": "Agrégateur gratuit de TVL par protocole et par chaîne. Comparaison de yields, volumes DEX, stablecoins, bridges."
+      },
+      "metriques_cles": {
+        "whale_tracking": "Suivre les gros wallets (>1000 BTC ou >10000 ETH). Les mouvements vers les exchanges = potentielle pression vendeuse. Les retraits = accumulation.",
+        "TVL": "Total Value Locked — mesure l'adoption d'un protocole DeFi. TVL croissant = confiance. Attention: TVL peut être gonflé par le leveraging récursif.",
+        "gas_fees": "Indicateur d'activité réseau. Gas élevé = forte demande de blockspace. Gas bas = activité réduite. Base fee brûlée (EIP-1559) = ETH potentiellement déflationniste quand l'activité est forte.",
+        "exchange_flows": "Flux entrants/sortants des exchanges centralisés. Sortants nets = accumulation (bullish). Entrants nets = distribution (bearish)."
+      }
+    },
+    "bitcoin_avance": {
+      "halving_cycles": {
+        "mecanisme": "La récompense de bloc Bitcoin est divisée par 2 tous les 210 000 blocs (~4 ans). 2009: 50 BTC → 2012: 25 → 2016: 12.5 → 2020: 6.25 → 2024: 3.125. Supply max = 21 millions BTC.",
+        "impact_cyclique": "Historiquement, chaque halving a été suivi d'un cycle haussier majeur 12-18 mois après. Réduction de l'offre nouvelle + demande constante ou croissante = pression haussière.",
+        "stock_to_flow": "Modèle de PlanB: valeur = f(stock/flux). Stock = BTC existants. Flow = nouveaux BTC minés par an. Post-halving, le S2F double. Le modèle a été critiqué pour son excès de simplicité mais reste un cadre de réflexion populaire."
+      },
+      "Lightning_Network": "Solution de scalabilité L2 Bitcoin. Canaux de paiement bidirectionnels permettant des milliers de transactions instantanées à coût quasi-nul, réglées sur la chaîne principale à la fermeture du canal. Adoption croissante pour les micropaiements."
+    },
+    "ethereum_avance": {
+      "the_merge": "Transition du Proof of Work au Proof of Stake (septembre 2022). Réduction de la consommation énergétique de ~99.95%. Les validateurs stakent 32 ETH minimum. Issuance réduite de ~90%.",
+      "EIP_1559": "Réforme du gas fee (août 2021). Base fee brûlée (détruite) + priority fee (pourboire au validateur). Rend l'offre d'ETH potentiellement déflationniste quand le burn > issuance. Ultra Sound Money narrative.",
+      "roadmap": {
+        "danksharding": "Objectif final: diviser la blockchain en fragments (shards) traitant des données en parallèle. Proto-danksharding (EIP-4844, mars 2024) = blobs de données temporaires réduisant les coûts L2 de 10-100x.",
+        "account_abstraction": "ERC-4337: transformer les wallets en smart contracts. Permet: récupération sociale, paiement de gas en tokens ERC-20, transactions sponsorisées, batching. UX proche des apps traditionnelles."
+      }
+    },
+    "altcoins_analyse": {
+      "market_cap_tiers": {
+        "large_cap": ">10B$ — BTC, ETH, SOL, BNB. Liquidité élevée, volatilité modérée (pour la crypto), risque relatif plus faible.",
+        "mid_cap": "1-10B$ — Projets établis avec adoption réelle. Potentiel de croissance supérieur mais risque accru.",
+        "small_cap": "100M-1B$ — Projets émergents. Potentiel de multiples élevés (10-100x) mais risque très élevé de perte totale.",
+        "micro_cap": "<100M$ — Hautement spéculatif. La majorité ne survivra pas. Due diligence approfondie requise."
+      },
+      "narratives_actuelles": {
+        "AI_crypto": "Convergence IA et blockchain: réseaux de calcul décentralisés (Render, Akash), agents IA on-chain, données d'entraînement décentralisées.",
+        "RWA": "Real World Assets: tokenisation d'actifs réels (obligations, immobilier, commodités) sur la blockchain. Marché potentiel de trillions de dollars. Ondo Finance, Centrifuge.",
+        "DePIN": "Decentralized Physical Infrastructure Networks: réseaux physiques construits par la communauté et récompensés en tokens. Helium (IoT/5G), Hivemapper (cartographie), io.net (GPU).",
+        "GameFi": "Jeux blockchain avec économies de tokens. Modèle play-to-earn en évolution vers play-and-earn. Challenges: durabilité économique, gameplay vs rendement."
+      }
+    },
+    "trading_crypto": {
+      "spot_vs_derives": {
+        "spot": "Achat et détention réelle du token. Pas de risque de liquidation. Idéal pour l'investissement moyen-long terme.",
+        "futures_perpetuels": "Contrats à terme sans date d'expiration. Levier jusqu'à 125x (extrêmement risqué). Funding rate: paiement périodique entre longs et shorts pour ancrer le prix au spot. Funding positif = longs payent shorts (marché haussier). Négatif = inverse.",
+        "liquidation": "Si la position perd assez pour que la marge soit insuffisante, la position est fermée automatiquement. À 10x de levier, un mouvement de ~10% contre vous = liquidation totale. Formule: prix de liquidation ≈ prix d'entrée × (1 ± 1/levier).",
+        "margin": "Cross margin: tout le compte sert de collatéral. Isolated margin: seule la marge allouée est à risque. Préférer isolated pour limiter les pertes."
+      }
+    },
+    "airdrops_et_farming": {
+      "strategies": "Interagir avec des protocoles avant le lancement de leur token (testnet + mainnet). Critères typiques: volume de transactions, ancienneté du wallet, nombre de transactions, interaction avec les contrats clés, bridges entre chaînes.",
+      "sybil_detection": "Les protocoles utilisent des algorithmes pour détecter les wallets multiples d'une même personne (clustering d'adresses, patterns de gas, timing de transactions, financements depuis la même source). Pénalité: exclusion de l'airdrop.",
+      "precautions": "Ne jamais interagir avec des liens de claim non vérifiés. Vérifier l'URL officielle du protocole. Utiliser un wallet dédié. Les faux airdrops sont le vecteur de phishing le plus courant en crypto."
+    },
+    "DAOs": {
+      "definition": "Decentralized Autonomous Organizations — organisations gouvernées par des smart contracts et des votes de détenteurs de tokens. Pas de hiérarchie centralisée.",
+      "mecanismes": "Proposition → Discussion (forum) → Vote on-chain (Snapshot pour votes gasless, Governor pour votes on-chain) → Exécution (automatique via smart contract ou multisig). Quorum minimum requis.",
+      "challenges": "Faible participation aux votes (<10% typiquement), concentration du pouvoir (whales), gouvernance lente, attaques de gouvernance (acheter des tokens pour forcer un vote)."
+    },
+    "regulation_fiscalite": {
+      "MiCA": {
+        "description": "Markets in Crypto-Assets — réglementation européenne entrée en vigueur en 2024. Cadre unifié pour les 27 pays de l'UE. Licence obligatoire pour les prestataires de services crypto (CASP).",
+        "stablecoins": "Les émetteurs de stablecoins significatifs doivent avoir des réserves 1:1, audits réguliers, et une licence spécifique. Impact: USDT potentiellement non-conforme en UE."
+      },
+      "PSAN_France": "Prestataire de Services sur Actifs Numériques — enregistrement obligatoire auprès de l'AMF pour exercer en France. Obligations de KYC/AML renforcées.",
+      "fiscalite_France": {
+        "regime_applicable": "Flat tax de 30% (12.8% IR + 17.2% prélèvements sociaux) sur les plus-values de cession de crypto vers fiat ou vers biens/services. Option: barème progressif de l'IR si plus avantageux.",
+        "calcul_PV": "Plus-value = Prix de cession × (Prix total d'acquisition du portefeuille / Valeur totale du portefeuille au moment de la cession) - Prix total d'acquisition. Méthode du portefeuille global, pas FIFO/LIFO.",
+        "exoneration": "Les échanges crypto-crypto ne sont PAS imposés tant qu'il n'y a pas de conversion en fiat. Les stablecoins indexés sur le dollar ne sont PAS considérés comme du fiat.",
+        "declaration": "Déclaration obligatoire des comptes sur plateformes étrangères (formulaire 3916-bis). Formulaire 2086 pour les plus-values."
+      },
+      "fiscalite_Quebec": {
+        "regime": "Les cryptomonnaies sont considérées comme des commodités (biens). Gains en capital: 50% du gain est imposable au taux marginal. Si activité fréquente de trading, Revenu Québec peut requalifier en revenu d'entreprise (100% imposable).",
+        "criteres_revenu_entreprise": "Fréquence des transactions, durée de détention courte, intention spéculative, connaissance avancée des marchés, levier utilisé. Si plusieurs critères sont remplis = risque de requalification.",
+        "declaration": "Déclarer chaque disposition (vente, échange, utilisation comme paiement). Tenir un registre détaillé de chaque transaction (date, montant, coût de base, produit de disposition)."
+      }
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "version": "v30.0.0",
+  "category": "arbres_plantes_fleurs",
+  "description": "Arbres, plantes et fleurs avancé — botanique (anatomie végétale, physiologie, photosynthèse, reproduction), arbres remarquables et identification (feuillus, conifères, tropicaux), plantes d'intérieur (soins, lumière, arrosage, rempotage, multiplication), fleurs et jardinage (annuelles, vivaces, bulbes, calendrier de plantation), permaculture et jardinage naturel, herboristerie, fleurs séchées et florographie",
+  "arbres_plantes_fleurs": {
+    "introduction": "Le règne végétal est le fondement de la vie sur Terre. Des séquoias millénaires aux orchidées délicates, TITANE guide l'identification, la culture et la compréhension profonde des végétaux, de la biologie cellulaire au jardin de permaculture.",
+    "botanique_fondamentaux": {
+      "anatomie_vegetale": {
+        "racines": "Fixation, absorption eau et minéraux. Poils absorbants (cellules épidermiques allongées). Types : pivotante (carotte, chêne), fasciculée (graminées), adventives, aériennes (lierre), pneumatophores (mangrove).",
+        "tiges": "Transport sève brute (xylème, montante) et sève élaborée (phloème, descendante). Turgescence. Types : ligneuses (arbres), herbacées, grimpantes, rampantes, tubéreuses.",
+        "feuilles": "Photosynthèse, respiration, transpiration. Anatomie : épiderme (cuticule), mésophylle (cellules à chloroplastes), nervures. Formes : simple/composée, entière/dentée/lobée/pennée.",
+        "fleurs": "Organes reproducteurs. Pétales (attirer pollinisateurs), sépales (protéger bouton), étamines (pollen, mâle), pistil (ovaire, femelle). Pollinisation : entomophile (insectes), anémophile (vent), ornithophile (oiseaux).",
+        "fruits_graines": "Fruit = ovaire mûri. Sec (akène, gousse, capsule) vs charnu (baie, drupe, pomme). Dispersion : zoochorie (animaux), anémochorie (vent), hydrochorie (eau), autochorie (explosion)."
+      },
+      "physiologie": {
+        "photosynthese": "6CO₂ + 6H₂O + lumière → C₆H₁₂O₆ + 6O₂. Phase lumineuse (thylacoïdes) : capture énergie, production ATP/NADPH. Phase sombre - Cycle de Calvin (stroma) : fixation CO₂. Chlorophylle a (rouge 680nm) et b (rouge 700nm).",
+        "transpiration": "Évapotranspiration. Ouverture/fermeture stomates (osmorégulation des cellules de garde). Pompe aspiro-refoulante pour monter la sève brute.",
+        "dormance": "Stratégie d'adaptation : hiver (froid), été (sécheresse). Accumulation d'ABA (acide abscissique). Levée de dormance : vernalisation (froid), photopériodisme, stratification des graines."
+      }
+    },
+    "arbres": {
+      "identification": {
+        "feuilles": "Simple vs composée. Pennée vs palmée (pour composée). Lobes (chêne). Bord : entier (hêtre), denté (orme, châtaignier), lobé (érable).",
+        "ecorce": "Lisse et gris (hêtre), crevassée longitudinalement (chêne), plaques (platane), papyracée blanche (bouleau), rouge orangée (arbousier).",
+        "silhouette": "Port général : fastigié (peuplier Lombardie), étalé (chêne), pleureur (saule), conique (épicéa), globeux (tilleul).",
+        "fleurs_fruits": "Chatons (bouleau, noisetier, chêne). Samares (érable, frêne). Noix, glands, faines, châtaignes — identifier l'arbre par son fruit."
+      },
+      "especes_remarquables": {
+        "chene": "Symbole de force et longévité (1000 ans). Chêne pédonculé (Quercus robur) vs sessile (Q. petraea). Glands. Tanins (vin, maroquinerie).",
+        "sequoia": "Géant de la planète. Séquoia géant (Sequoiadendron giganteum, USA, 2500 ans) vs Séquoia côtier (Sequoia sempervirens, le plus grand en hauteur : 115m). Résilient au feu.",
+        "baobab": "Arbre de vie africain (Adansonia). Tronc stocke des milliers de litres d'eau. Jusqu'à 2000 ans. Fruit (pain de singe) comestible.",
+        "olivier": "Olea europaea. 2000-3000 ans. Symbiose avec les civilisations méditerranéennes. Feuilles lancéolées argentées. Huile (80% acide oléique).",
+        "bambou": "Graminée géante (Phyllostachys, Moso). Croissance record : 91cm/jour. Résistance tension acier. Rhizomes = propagation aggressive."
+      },
+      "arbres_fruitiers": {
+        "plantation": "Hiver (repos végétatif), pied dans le vent dominant. Porte-greffe adapté au sol et à la vigueur désirée. Pollinisation croisée souvent nécessaire (pommiers).",
+        "taille": "Formation (arbre jeune) : gobelet, fuseau, palmette. Fructification (adulte) : supprimer bois mort, gourmands, rameaux entrelacés. Taille d'été (pincement) pour concentrer les sucres.",
+        "maladies_courantes": "Moniliose (momification des fruits), tavelure (taches noires pommier/poirier), cloque (pêcher), mildiou (vigne). Traitements : bouillie bordelaise, soufre mouillable, insecticides naturels (pyrèthre)."
+      }
+    },
+    "plantes_interieur": {
+      "soins_generaux": {
+        "lumiere": "Plein soleil (Cactus, Euphorbes), lumière vive indirecte (Monstera, Ficus, Pothos), mi-ombre (Syngonium, Calathea, Fougères), ombre (Aspidistra, Sansevieria, Pothos à haute tolérance).",
+        "arrosage": "Règle générale : laisser sécher le premier tiers du terreau entre deux arrosages (test du doigt). Excès d'eau = cause #1 de mort. Rosettes : arroser le terreau, pas le cœur.",
+        "rempotage": "Printemps. Pot 2-3cm plus grand que le précédent. Terreau adapté : universel, spécial orchidées, spécial cactées. Drainage obligatoire.",
+        "humidite": "Plantes tropicales (Calathea, Fittonia) : humidité > 50%. Brumisateur, plateau de galets avec eau, humidificateur. Monsteras : moins exigeants."
+      },
+      "plantes_populaires": {
+        "Monstera_deliciosa": "Fenestrations (trous dans les feuilles) avec la maturité. Lumière vive indirecte. Arrosage modéré. Soutien (mousse végétale pour les racines aériennes). Purifiante.",
+        "Pothos": "Le plus résistant. Supporte ombre, oublis d'arrosage. Idéal débutant. Multiplier facilement par boutures dans l'eau.",
+        "Ficus_lyrata": "Figuier lyre. Très en vogue. Plein soleil indirect. Déteste les déménagements (perte feuilles). Arrosage régulier.",
+        "Orchidees": "Phalaenopsis (le plus facile). Lumière indirecte vive. Arroser 1x/semaine (immerger pot 15 min). Rempotage : écorce de pin spécifique. Refloraison : exposition à 15°C quelques semaines.",
+        "Cactus_succulentes": "Terre drainante (50% sable ou perlite). Arrosage très rare (1x/mois en hiver). Plein soleil. Résistent à la négligence."
+      },
+      "multiplication": {
+        "boutures": "Tige (Pothos, Philodendron : nœud dans l'eau ou terreau), feuille (Begonia, Kalanchoe : poser sur terreau), feuille-tige (Sansevieria), division des racines (Broméliacées, Fougères).",
+        "marcottage": "Faire des racines sur la plante mère avant de couper. Aérien (Monstera, Ficus).",
+        "semis": "Graines sur terreau humide, couvrir (chambre chaude), transplanter après 2-3 vraies feuilles."
+      }
+    },
+    "jardinage_et_floriculture": {
+      "annuelles_vivaces_bulbes": {
+        "annuelles": "Un seul cycle. Semis de mars à mai. Tournesol, Capucine, Cosmos, Pétunia, Gazania. Fleurissent de l'été à l'automne.",
+        "vivaces": "Reviennent chaque année. Hosta, Lavande, Sauge, Rudbeckia, Échinacée. Plantez au printemps ou automne.",
+        "bulbes_de_printemps": "Planter en automne (oct-nov) : Tulipes, Jonquilles, Jacinthes, Crocus. Froid nécessaire pour la vernalisation.",
+        "bulbes_ete": "Planter au printemps (mars-mai) : Dahlias, Glaïeuls, Lys, Cannas. Arracher avant gelées dans les zones froides."
+      },
+      "calendrier_jardinage": "Jan-Fév : planification, taille arbres. Mars : semis intérieurs, taille rosiers. Avr : semis extérieur, plantation bulbes été. Mai-Juin : plantation légumes, massifs fleuris. Juil-Août : entretien, arrosage, taille en vert. Sept : plantation bulbes printemps, vivaces. Oct-Nov : récupération graines, compost, protection. Déc : commandes graines, repos."
+    },
+    "permaculture": "Jardinage en accord avec la nature. Principes : observer et interagir, capturer et stocker l'énergie, obtenir un rendement, utiliser les ressources renouvelables. Guildes (association de plantes bénéfiques), zones (intensité décroissante depuis la maison), compostage, mulching, récupération eau de pluie.",
+    "fleurs_sechees_florographie": {
+      "sechage": "Méthodes : air libre (suspendre tête en bas, 2-4 semaines), dessiccant (gel de silice, 3-7 jours, meilleure conservation des couleurs), micro-ondes (rapide), presse (herbier, 2 semaines).",
+      "langage_des_fleurs": "Rose rouge (amour), rose jaune (amitié), tournesol (loyauté), lavande (dévotion), dahlia (élégance), pivoine (prospérité), iris (sagesse), lotus (pureté spirituelle)."
+    }
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "version": "v30.0.0",
+  "category": "creation_applications_saas",
+  "description": "Création d'applications et SaaS — développement mobile (React Native/Flutter/Swift/Kotlin), web apps (React/Vue/Next.js), méthodologie MVP, product-market fit, app store optimization, acquisition utilisateur, monétisation, architecture API, déploiement cloud et scaling",
+  "creation_applications_saas": {
+    "introduction": "Créer une application performante et rentable exige une maîtrise transversale: de l'idéation au scaling, en passant par le choix technologique, le développement, le lancement et la monétisation. TITANE structure ce parcours complet pour guider chaque étape avec rigueur et pragmatisme, que l'objectif soit une app mobile, une web app ou un produit SaaS.",
+    "methodologie_produit": {
+      "ideation_et_validation": {
+        "probleme_avant_solution": "Toujours partir d'un problème réel et douloureux. Interviewer 20-30 utilisateurs potentiels avant d'écrire une seule ligne de code. Méthode Mom Test: poser des questions sur le comportement passé, jamais sur les intentions futures.",
+        "lean_canvas": "Outil de validation rapide en 1 page: Problème, Segments clients, Proposition de valeur unique, Solution, Canaux, Flux de revenus, Structure de coûts, Métriques clés, Avantage injuste.",
+        "taille_marche": "TAM (marché total adressable) > SAM (marché serviceable) > SOM (marché capturable). Un SOM réaliste de 1-5% du SAM sur 3 ans est un bon point de départ."
+      },
+      "mvp": {
+        "definition": "Minimum Viable Product — la version la plus simple qui permet de tester l'hypothèse de valeur principale auprès de vrais utilisateurs.",
+        "types_mvp": "Landing page + liste d'attente (test de demande), Wizard of Oz (processus manuel derrière une interface automatisée), Concierge (service manuel personnalisé), Prototype cliquable (Figma/InVision), MVP fonctionnel (features essentielles uniquement).",
+        "regle_80_20": "80% de la valeur vient de 20% des fonctionnalités. Identifier les 3-5 features core et livrer uniquement celles-ci. Chaque feature supplémentaire retarde le lancement et dilue le feedback.",
+        "timeline": "MVP idéal: 4-8 semaines de développement. Au-delà de 12 semaines, remettre en question le scope."
+      },
+      "product_market_fit": {
+        "definition": "Le moment où le produit satisfait une demande forte du marché. Sean Ellis Test: si plus de 40% des utilisateurs seraient 'très déçus' sans le produit, le PMF est atteint.",
+        "indicateurs": "Rétention J30 > 25%, croissance organique (bouche-à-oreille), NPS > 50, coût d'acquisition en baisse, demandes de features cohérentes.",
+        "piege": "Ne pas confondre traction payante (ads) avec PMF. Le vrai PMF génère de la croissance organique mesurable.",
+        "iteration": "Boucle Build-Measure-Learn. Sprint de 2 semaines, mesure des métriques clés, décision pivot ou persévère."
+      }
+    },
+    "developpement_mobile": {
+      "react_native": {
+        "cas_usage": "Apps cross-platform avec UI riche, startups cherchant à couvrir iOS et Android avec une seule base de code JavaScript/TypeScript.",
+        "avantages": "Code partagé à 80-95%, écosystème npm, hot reload, communauté massive, soutien Meta.",
+        "limites": "Performance inférieure au natif pour les animations complexes, bridge JavaScript, dépendance aux modules natifs tiers.",
+        "stack_recommande": "React Native + Expo (simplification build) + TypeScript + React Navigation + Zustand/Redux Toolkit + React Query."
+      },
+      "flutter": {
+        "cas_usage": "Apps cross-platform avec animations fluides, design custom poussé, performances proches du natif.",
+        "avantages": "Moteur de rendu Skia propre (pas de bridge), Dart compilé en natif, widget system cohérent, Material et Cupertino intégrés, hot reload rapide.",
+        "limites": "Écosystème de packages moins mature que npm, taille du binaire plus élevée, courbe d'apprentissage Dart.",
+        "stack_recommande": "Flutter + Dart + Riverpod/Bloc + GoRouter + Dio (HTTP) + Hive/Isar (stockage local)."
+      },
+      "natif": {
+        "swift_ios": "Langage moderne, sûr et performant pour iOS. SwiftUI pour les interfaces déclaratives. Obligatoire pour les apps nécessitant un accès profond aux API Apple (HealthKit, ARKit, Core ML).",
+        "kotlin_android": "Langage officiel Android, interopérable Java, null safety, coroutines pour l'asynchrone. Jetpack Compose pour les UI déclaratives modernes.",
+        "quand_choisir_natif": "Performance critique (jeux, AR/VR), intégration hardware profonde, budget suffisant pour 2 équipes, expérience utilisateur premium non négociable."
+      }
+    },
+    "developpement_web": {
+      "react": {
+        "forces": "Écosystème le plus vaste, JSX intuitif, composants réutilisables, hooks puissants, communauté immense.",
+        "stack_moderne": "React 18+ + TypeScript + Vite + TanStack Query + Zustand + Tailwind CSS + React Hook Form + Zod (validation)."
+      },
+      "vue": {
+        "forces": "Courbe d'apprentissage douce, Composition API élégante, écosystème cohérent (Vuex/Pinia, Vue Router officiels), documentation exemplaire.",
+        "stack_moderne": "Vue 3 + TypeScript + Vite + Pinia + Vue Router + VueUse + Tailwind CSS."
+      },
+      "nextjs": {
+        "forces": "Framework React full-stack: SSR, SSG, ISR, API routes, middleware, App Router, Server Components. Idéal pour le SEO et les performances.",
+        "cas_usage": "SaaS, sites marketing, e-commerce, dashboards. Déploiement natif sur Vercel avec optimisations automatiques.",
+        "stack_moderne": "Next.js 14+ + TypeScript + Tailwind CSS + Prisma (ORM) + NextAuth.js + tRPC ou API Routes."
+      }
+    },
+    "architecture_saas": {
+      "api_design": {
+        "rest": "Convention standard: GET (lecture), POST (création), PUT/PATCH (modification), DELETE (suppression). Versionner: /api/v1/. Pagination obligatoire. Codes HTTP sémantiques.",
+        "graphql": "Requêtes flexibles côté client, un seul endpoint. Idéal quand les clients ont des besoins de données très variés. Attention au problème N+1 et à la complexité des requêtes.",
+        "bonnes_pratiques": "Rate limiting, authentification JWT/OAuth2, validation des entrées (Zod/Joi), documentation OpenAPI/Swagger auto-générée, idempotence des mutations."
+      },
+      "multi_tenancy": {
+        "strategies": "Base de données partagée avec colonne tenant_id (économique, scaling horizontal), schéma par tenant (isolation moyenne), base par tenant (isolation maximale, coût élevé).",
+        "conseil": "Commencer par tenant_id partagé. Migrer vers l'isolation quand un client l'exige contractuellement (entreprise, santé, finance)."
+      },
+      "authentification": {
+        "standards": "OAuth 2.0 + OpenID Connect pour le SSO. JWT pour les API stateless. Refresh tokens avec rotation obligatoire.",
+        "services": "Auth0, Clerk, Supabase Auth, Firebase Auth, NextAuth.js. Ne pas réinventer l'auth sauf cas très spécifique."
+      }
+    },
+    "deploiement_et_infrastructure": {
+      "cloud_providers": {
+        "vercel": "Déploiement optimal pour Next.js/React. Preview deployments par PR, edge functions, analytics intégrés. Idéal pour les frontends et les API légères.",
+        "aws": "Infrastructure complète: EC2, Lambda, S3, RDS, CloudFront, SQS, ECS/EKS. Courbe d'apprentissage élevée, flexibilité maximale. Pricing complexe à maîtriser.",
+        "gcp": "Forces en data/ML (BigQuery, Vertex AI), Kubernetes natif (GKE), Firebase pour le prototypage rapide. Cloud Run pour les conteneurs serverless."
+      },
+      "ci_cd": {
+        "pipeline": "Commit → Lint + Type-check → Tests unitaires → Tests intégration → Build → Deploy staging → Tests E2E → Deploy production.",
+        "outils": "GitHub Actions (intégré, gratuit pour l'open source), GitLab CI, CircleCI. Infrastructure as Code: Terraform ou Pulumi.",
+        "bonnes_pratiques": "Déploiement blue/green ou canary, feature flags (LaunchDarkly/Unleash), rollback automatique en cas de dégradation des métriques."
+      },
+      "testing": {
+        "pyramide": "Base large: tests unitaires (70%, rapides, isolés). Milieu: tests d'intégration (20%, interactions entre modules). Sommet: tests E2E (10%, parcours utilisateur complet).",
+        "outils": "Vitest/Jest (unitaires), Playwright/Cypress (E2E), Testing Library (composants React/Vue), MSW (mock API)."
+      }
+    },
+    "monetisation": {
+      "freemium": "Version gratuite limitée + version payante complète. Objectif: 2-5% de conversion gratuit → payant. La version gratuite doit créer assez de valeur pour engager, assez de friction pour motiver l'upgrade.",
+      "abonnement_saas": {
+        "tiers": "3 plans maximum: Starter (individuel), Pro (équipe), Enterprise (sur mesure). Le plan du milieu doit être le plus attractif (effet d'ancrage).",
+        "metriques": "MRR (revenu mensuel récurrent), ARR (annuel), ARPU (revenu moyen par utilisateur), Churn (taux de désabonnement < 5%/mois), LTV (valeur vie client), CAC (coût d'acquisition). Ratio LTV/CAC > 3 pour la viabilité.",
+        "annual_vs_monthly": "Offrir 15-20% de réduction sur l'annuel. L'annuel améliore le cash-flow et réduit le churn mécanique."
+      },
+      "in_app_purchases": "Consommables (crédits, vies), non-consommables (déblocage permanent), abonnements auto-renouvelables. Commission Apple/Google: 15-30%.",
+      "publicite": "CPM (coût pour mille impressions), CPC (coût par clic), CPA (coût par action). Formats: bannières, interstitiels, rewarded video (le mieux accepté par les utilisateurs)."
+    },
+    "acquisition_et_croissance": {
+      "app_store_optimization": {
+        "facteurs_cles": "Titre (mot-clé principal), sous-titre, mots-clés (iOS), description courte (Android), icône (CTR), screenshots (conversion), vidéo preview, notes et avis (> 4.5 étoiles).",
+        "conseils": "Tester les visuels avec A/B testing (Google Play Experiments), répondre à tous les avis, mettre à jour régulièrement pour signaler un produit vivant."
+      },
+      "canaux_acquisition": {
+        "organique": "SEO/ASO, contenu (blog/YouTube/podcast), communauté, Product Hunt launch, referral/parrainage.",
+        "payant": "Meta Ads, Google Ads, TikTok Ads, Apple Search Ads. Mesurer le ROAS (Return On Ad Spend) par cohorte.",
+        "viral": "Boucles virales intégrées au produit: invitations, partage de résultats, collaboration. Coefficient viral K > 1 = croissance exponentielle."
+      },
+      "retention": {
+        "metriques": "Rétention J1, J7, J30. Bonne rétention J30: > 25% (mobile), > 40% (SaaS). Cohort analysis obligatoire.",
+        "leviers": "Onboarding guidé avec quick win en < 5 min, notifications push pertinentes (pas de spam), emails de réengagement, gamification (streaks, badges), personnalisation."
+      },
+      "analytics": {
+        "outils": "Mixpanel/Amplitude (product analytics), PostHog (open source), Google Analytics 4, Firebase Analytics (mobile). Sentry pour le monitoring d'erreurs.",
+        "north_star_metric": "Une seule métrique qui capture la valeur délivrée aux utilisateurs. Slack: messages envoyés. Airbnb: nuits réservées. Identifier et optimiser la vôtre."
+      }
+    },
+    "selection_stack_technique": {
+      "criteres": "Maturité de l'écosystème, taille du talent pool, performance requise, time-to-market, coût d'hébergement, scaling prévisible.",
+      "conseil_startup": "Choisir des technologies mainstream (React/Next.js, Node.js/Python, PostgreSQL). L'innovation doit être dans le produit, pas dans le stack. La dette technique coûte plus cher que le choix ennuyeux.",
+      "stack_saas_recommande": "Frontend: Next.js + TypeScript + Tailwind. Backend: Node.js (Express/Fastify) ou Python (FastAPI). BDD: PostgreSQL + Redis (cache). Infra: Vercel (front) + Railway/Render (back) ou AWS. Auth: Clerk/Auth0. Paiement: Stripe."
+    }
+  }
+}

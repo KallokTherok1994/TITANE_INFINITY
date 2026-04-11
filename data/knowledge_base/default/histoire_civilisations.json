@@ -1,82 +1,58 @@
 {
   "version": "v30.0.0",
   "category": "histoire_civilisations",
-  "description": "Histoire des civilisations — Mésopotamie, Égypte, Grèce, Rome, Islam médiéval, Renaissance, révolutions modernes, colonisation, guerres mondiales, ères contemporaines, leçons pour le présent",
+  "description": "Histoire et civilisations — chronologie de l'humanité (paléolithique à nos jours), grandes civilisations (Mésopotamie, Égypte, Grèce, Rome, Chine, Inde, Islam), Moyen Âge (féodalisme, croisades, épidémies), Révolutions (scientifique, industrielle, française, américaine), guerres mondiales, décolonisation, Guerre Froide, monde contemporain. Géologie de la Terre (tectonique des plaques, ères géologiques, catastrophes)",
   "histoire_civilisations": {
-    "introduction": "L'histoire n'est pas un passé figé — c'est un miroir de la nature humaine. Comprendre comment les civilisations naissent, prospèrent et s'effondrent permet d'anticiper les dynamiques actuelles. TITANE aborde l'histoire comme un système complexe de causes, structures et individus.",
-    "antiquite": {
-      "mesopotamie": {
-        "periode": "3500–550 av. J-C",
-        "contributions": "Première écriture (cunéiforme), premières lois écrites (Code de Hammurabi), astronomie, mathématiques base 60 (nos minutes/secondes viennent d'ici)",
-        "chute": "Conflits Assyrie/Babylone, puis conquête perse d'Achéménides (539 av. J-C)"
-      },
-      "egypte_ancienne": {
-        "periode": "3100–30 av. J-C",
-        "contributions": "Architecture monumentale (pyramides, temples), médecine empirique, papyrus, mathématiques géométriques, agriculture Nil",
-        "lecon": "Stabilité exceptionnelle de 3000 ans grâce à géographie protectrice (déserts + mer) et structure sociale rigide"
-      },
-      "grece_classique": {
-        "periode": "800–31 av. J-C",
-        "contributions": "Démocratie (Athènes), philosophie (Socrate/Platon/Aristote), sciences (Archimède, Pythagore, Hipocrate), tragédie et comédie, olympiades",
-        "lecon": "Rivalité Athènes/Sparte (Guerre du Péloponnèse) illustre comment la méfiance détruit les alliances face à une menace commune (Perse)"
-      },
-      "rome": {
-        "periode": "753 av. J-C – 476 ap. J-C (Occident)",
-        "contributions": "Droit romain (base systèmes légaux occidentaux), ingénierie (aqueducs, routes, béton), concept républicain puis impérial, latin",
-        "chute": "Multi-causale — pression barbares, crises économiques, débasement monnaie, politique instable, taille ingérable"
+    "introduction": "L'histoire est la mémoire collective de l'humanité — un outil indispensable pour comprendre le présent et anticiper l'avenir. TITANE explore les grandes civilisations, les tournants décisifs et les forces profondes qui façonnent notre monde, en intégrant géologie, archéologie et historiographie critique.",
+    "prehistoire": {
+      "chronologie": {
+        "Paleolithique": "3 millions - 10 000 av. J.-C. Taille de pierre. Homo habilis → Homo erectus → Néandertal → Homo sapiens (200 000 av. J.-C., Afrique). Art rupestre (Lascaux ~17 000, Chauvet ~36 000). Chasse-cueillette nomade.",
+        "Mesolithique": "10 000 - 7 000 av. J.-C. Transition. Microlites. Début de la sédentarisation.",
+        "Neolithique": "7 000 - 3 000 av. J.-C. Révolution agricole (Croissant Fertile, Yangtzé, Mexique, Andes). Premiers villages permanents. Élevage. Poterie. Mégalithes (Stonehenge, Carnac).",
+        "Age_Bronze": "3 000 - 1 200 av. J.-C. Métallurgie. Premières villes. Écriture. Grandes civilisations.",
+        "Age_Fer": "1 200 - 500 av. J.-C. Fer remplace le bronze. Cités-états. Expansion commerciale."
       }
+    },
+    "grandes_civilisations_antiques": {
+      "Mesopotamie": "Sumer (3 500 av. J.-C.) : premières cités (Ur, Uruk), écriture cunéiforme, roue, ziggurats. Akkad, Babylone (Code d'Hammurabi, ~1750 av. J.-C. — premier code de lois écrit). Assyrie (empire militaire). Perse (Achéménides : Cyrus, Darius, Xerxès).",
+      "Egypte_ancienne": {
+        "periodisation": "Ancien Empire (2700-2200, pyramides de Gizeh). Moyen Empire (2050-1650, expansion, littérature). Nouvel Empire (1550-1070, Toutânkhamon, Ramsès II, Hatchepsout). Basse Époque → conquête d'Alexandre (332 av. J.-C.).",
+        "apports": "Hiéroglyphes, papyrus, astronomie, médecine (Edwin Smith Papyrus), architecture colossale, monothéisme d'Akhénaton (1353-1336 av. J.-C. — premier)."
+      },
+      "Grece_antique": "Mycènes (1600-1100 av. J.-C.), Période sombre, Archaïque (poleis, colonisation), Classique (Périclès, Socrate, Platon, Aristote, démocratie athénienne), Hellénistique (Alexandre le Grand étend la culture grecque de l'Égypte à l'Inde). Jeux Olympiques (776 av. J.-C.).",
+      "Rome": "Fondation légendaire 753 av. J.-C. République (Sénat, consuls, légions) → Empire (Auguste 27 av. J.-C.). Pax Romana (200 ans de paix relative). Droit romain (fondement des droits occidentaux). Christianisme officiel (Constantin 312 ap. J.-C.). Chute de l'Empire Romain d'Occident 476 ap. J.-C.",
+      "Chine": "Dynasties : Shang (écriture oracle), Zhou, Qin (Grande Muraille, Shi Huangdi — premier Empereur, armée de terre cuite), Han (Route de la Soie, papier), Tang (âge d'or, poésie, peinture), Song (imprimerie, poudre à canon, boussole), Ming (Cité Interdite), Qing → République 1912 → Mao 1949.",
+      "Inde": "Civilisation de l'Indus (2600-1900 av. J.-C., Mohenjo-daro, Harappa). Vedas et Upanishads. Bouddha (~500 av. J.-C.). Empire Maurya (Ashoka). Gupta (âge d'or : mathématiques, zéro, chiffres 'arabes'). Sultanats, Moghols (Taj Mahal). Colonisation britannique → Indépendance 1947 (Gandhi)."
     },
     "moyen_age": {
-      "empire_islamique": {
-        "periode": "622–1258",
-        "age_or": "800–1200 — mathématiques (algèbre = al-jabr), médecine (Avicenne), astronomie, philosophie, commerce de Séville à Samarcande",
-        "chute": "Invasions mongoles (1258, sac de Bagdad), croisades, fragmentation politique"
+      "Europe_medievale": {
+        "feodal": "System seigneur-vassal-serf. Château fort. Manoir. Serfs agriculteurs.",
+        "eglise": "Pouvoir de l'Église catholique. Croisades (1095-1291, récupération Terre Sainte). Inquisition. Universités médiévales (Bologne 1088, Paris ~1150, Oxford ~1167).",
+        "Peste_Noire": "1347-1351. 30-60% de la population européenne (25-50 millions). Yersinia pestis (puce du rat). Transformation sociale, économique et religieuse profonde."
       },
-      "europe_medievale": {
-        "structure": "Féodalisme — hiérarchie seigneur/vassal/serf. Église comme pouvoir central (politique + moral).",
-        "evolutions": "Universités (Bologne 1088, Paris 1150), villes marchandes, Magna Carta (1215 — limite pouvoir royal)",
-        "feodalisme_fin": "Peste noire (1347 — tue 30-50% Europe) restructure économie, libère serfs, amorce Renaissance"
-      }
+      "Islam": "Mahomet (622 ap. J.-C., Hégire). Califat Rashidun → Omeyyades → Abassides. Âge d'or islamique (800-1200) : mathématiques (algèbre, Al-Khwarizmi), astronomie, médecine (Avicenne), philosophie. Reconquista espagnole. Empire Ottoman (1453, chute de Constantinople)."
     },
-    "modernite_emergente": {
-      "renaissance": {
-        "periode": "14e–17e siècle",
-        "essence": "Redécouverte antiquité + humanisme. Homme au centre, raison valorisée.",
-        "figures": "Léonard da Vinci (art+science), Machiavel (politique réaliste), Copernic/Galilée (héliocentrisme)"
-      },
-      "revolutions_scientifiques": "Newton (gravitation, calcul), Lavoisier (chimie), Linné (taxonomie). Méthode scientifique systématisée.",
-      "exploration": "Christophe Colomb (1492), Magellan (1519-1522). Échanges commerciaux mondiaux. Début colonisation et traite des esclaves."
-    },
-    "ere_revolutions": {
-      "revolution_industrielle": {
-        "periode": "1760–1840 (Angleterre), puis Europe/US",
-        "moteurs": "Machine à vapeur (Watt), charbon, textile mécanisé, chemin de fer",
-        "impacts": "Urbanisation massive, classes ouvrières, pollution, nouvelles inégalités, productivité multipliée par 10"
-      },
-      "revolutions_politiques": {
-        "americaine_1776": "Indépendance des 13 colonies. Constitution écrite, droits individuels, séparation des pouvoirs.",
-        "francaise_1789": "Renversement monarchie absolue. Droits de l'homme, Terreur, puis Napoléon.",
-        "lecon": "Les révolutions commencent par la libération et finissent souvent par une nouvelle forme d'autorité."
-      }
-    },
-    "xxe_siecle": {
+    "revolutions_et_monde_moderne": {
+      "revolution_scientifique": "XVIe-XVIIe s. Copernic (héliocentrisme), Galilée (lunette, mécanique), Kepler (lois orbitales), Newton (gravitation, calcul). Rupture avec l'aristotélisme et l'autorité religieuse.",
+      "revolution_industrielle": "1760-1840. Angleterre. Vapeur (Watt). Charbon. Textile mécanisé. Chemin de fer. Urbanisation massive. Classe ouvrière. Capital et socialisme naissant (Marx, Engels).",
+      "revolutions_politiques": "Révolution américaine (1776, indépendance, Constitution). Révolution française (1789, Liberté-Égalité-Fraternité, Terreur, Napoléon). Printemps des peuples (1848). Révolution russe (1917, Lénine, URSS).",
       "guerres_mondiales": {
-        "ww1": "1914–1918. Alliances rigides + nationalisme + impérialisme. 20M morts. Effondrement 4 empires (Ottoman, Austro-hongrois, Russe, Allemand).",
-        "ww2": "1939–1945. Holocauste (6M juifs), 70-85M morts. ONU fondée. Ordre bipolaire USA/URSS.",
-        "lecon": "Traité de Versailles (1919) trop punitif → conditions économiques et humiliantes favorisant l'extrémisme (Hitler)"
+        "WWI": "1914-1918. Assassinat François-Ferdinand → guerre totale. Tranchées. 20 millions de morts. Traité de Versailles (1919) → instabilité.",
+        "WWII": "1939-1945. Hitler, Staline, Churchill, Roosevelt. Holocaust (6 millions de Juifs). Hiroshima/Nagasaki (bombes atomiques, 1945). 70-85 millions de morts. ONU fondée. Début Guerre Froide."
       },
-      "guerre_froide": {
-        "periode": "1947–1991",
-        "dynamique": "Bipolarité nucléaire, courses armements et espace, proxy wars (Corée, Vietnam, Afghanistan)",
-        "fin": "Effondrement URSS 1991 — inefficacité économique planifiée, pression militaire, Gorbatchev"
-      },
-      "decolonisation": "1945–1975. 80+ nations indépendantes. Héritage : frontières artificielles, instabilité post-coloniale, dette historique."
+      "decolonisation_guerre_froide": "1945-1990. Décolonisation (Inde 1947, Algérie 1962, Afrique). Guerre Froide USA-URSS (course aux armements, espace, proxy wars). Mur de Berlin (1961-1989). Chute URSS (1991)."
     },
-    "lecons_transversales": {
-      "effondrement_civilisations": "Récurrent : surexploitation ressources, inégalités extrêmes, incapacité d'adaptation, chocs externes",
-      "innovation_disruptive": "Chaque révolution technologique majeure (écriture/imprimerie/vapeur/internet) restructure le pouvoir",
-      "cycles_historiques": "Turchin (cliodynamique) : cycles ~200 ans d'intégration et désintégration. Nous serions en phase de désintégration.",
-      "memoire_critique": "L'histoire est écrite par les vainqueurs. Chercher sources multiples, perspectives subalternes, archives primaires."
+    "geologie_terre": {
+      "age_et_formation": "Terre formée il y a 4.54 milliards d'années (accrétion de la nébuleuse solaire). Lune : impact géant (Théia). Premières traces de vie : 3.7 milliards d'années (stromatolites).",
+      "eres_geologiques": {
+        "Hadeen": "4.5-4 Ga. Formation de la croûte, océans, atmosphère (CO2/N2/vapeur d'eau).",
+        "Archeeen_Proterozoique": "4-0.54 Ga. Premiers organismes (procaryotes → eucaryotes → multicellulaires). Grande Oxydation (~2.4 Ga).",
+        "Paleozoique": "541-252 Ma. Explosion cambrienne, poissons, plantes terrestres, insectes, reptiles. Extinction Permien-Trias (96% des espèces marines).",
+        "Mesozoique": "252-66 Ma. Dinosaures. Pangée se divise. Extinction K-Pg (météorite Chicxulub).",
+        "Cenozoique": "66 Ma-présent. Mammifères. Prairies. Hominidés. Glaciations. Homo sapiens (0.3 Ma)."
+      },
+      "tectonique": "7-8 grandes plaques lithosphériques (Pacifique, Nord-Américaine, Eurasiatique, Africaine, Indo-Australienne, Antarctique, Sud-Américaine) + microplaques. Convergence (chaînes montagneuses, subduction), divergence (rifts, dorsales), coulissement (failles transformantes). Vitesse : 2-10 cm/an.",
+      "volcans_seismes": "Zones de subduction (feu du Pacifique), points chauds (Hawaii), rifts (Islande). Séismes : mesure Moment (Mw, remplace Richter). Tsunamis (perturbation fond marin). Volcans de superposition (Yellowstone) — supereruptions."
     }
   }
 }

@@ -1,0 +1,101 @@
+{
+  "version": "v30.0.0",
+  "category": "neurosciences_conscience",
+  "description": "Neurosciences et états de conscience — glande pinéale (localisation, mélatonine, DMT), troisième œil (traditions et neurobiologie), EEG et ondes cérébrales (delta, thêta, alpha, bêta, gamma), casque Muse 2 (utilisation, protocoles), états altérés de conscience (méditation profonde, hypnose, psychédéliques), conscience et philosophie de l'esprit, neuroplasticité et reprogrammation",
+  "neurosciences_conscience": {
+    "introduction": "La conscience est le mystère ultime des neurosciences. Des traditions millénaires aux recherches contemporaines, TITANE guide à travers la neurobiologie de la glande pinéale, les ondes cérébrales, les états altérés et les outils modernes comme le Muse 2 pour naviguer les états de conscience avec précision.",
+    "glande_pineale": {
+      "anatomie": "Glande endocrine. Située au centre géométrique du cerveau (diencéphale, épithalamus). Taille d'un grain de riz (8mm). Photosensible malgré sa localisation profonde (via rétine → SCN → pinéale).",
+      "fonctions_connues": {
+        "melatonine": "Hormone du sommeil et de l'obscurité. Synthétisée à partir de la sérotonine (elle-même dérivée du tryptophane). Sécrétion déclenchée par l'obscurité, inhibée par la lumière bleue. Rôle : synchronisation circadienne, immunité, anti-oxydant, anti-inflammatoire.",
+        "regulation_circadienne": "Chef d'orchestre de l'horloge biologique. Coordonne tous les rythmes ultradian et circadien de l'organisme.",
+        "calcification": "40% des adultes : dépôts calciques (fluorure, perturbateurs endocriniens, vieillissement). Corrélée avec une réduction de la production de mélatonine."
+      },
+      "DMT_et_pineal": {
+        "N_N_DMT": "Diméthyltryptamine. Molécule psychédélique endogène produite naturellement par l'organisme. Retrouvée dans la glande pinéale humaine (Barker 2013), les poumons, le cerveau.",
+        "hypothese_Strassman": "Rick Strassman (DMT : La Molécule de l'Esprit, 2001). Hypothèse que la glande pinéale libère du DMT lors de la naissance, de la mort et des rêves profonds. Non prouvé mais influent.",
+        "status_recherche": "Recherche active mais controversée. DMT confirmé dans le cerveau de rats (Dean 2019). Récepteurs sigma-1 (DPR = DMT Production Regulation) dans la glande pinéale humaine."
+      },
+      "troisieme_oeil": {
+        "traditions": "Hindouisme : Ajna chakra (6e chakra, entre les sourcils). Glande pinéale comme siège de l'âme (Descartes, 1649). Ojo de Horus égyptien. Troisième œil dans le bouddhisme tibétain.",
+        "neurobiologie": "La pinéale contient des cellules similaires aux cellules photoréceptrices (cônes) de la rétine — vestige évolutif de l'œil pariétal des reptiles. Crocodiles et lézards tuatara ont encore un vrai 'troisième œil' avec cristallin.",
+        "activation_pratiques": "Méditation du point unique entre les sourcils. Visualisation indigo/violet. Chant du mantra AUM (vibration de la cavité crânienne). Décalcification : réduction du fluorure, curcuma, spiruline, chlorelle, eau filtrée, exposition solaire matinale."
+      }
+    },
+    "ondes_cerebrales_EEG": {
+      "electroencephalographie": "L'EEG mesure l'activité électrique synchronisée des neurones via des électrodes placées sur le scalp. Unité : μV. Fréquence : Hz. Chaque état de conscience correspond à un profil d'ondes.",
+      "types_ondes": {
+        "delta_0_4Hz": {
+          "etat": "Sommeil profond (stade N3), états inconscients profonds",
+          "amplitude": "Haute (100-200 μV)",
+          "fonctions": "Régénération cellulaire, consolidation mémoire implicite, nettoyage glymphatique du cerveau",
+          "pratique": "Sommeil réparateur. Méditation profonde de maitres. Yoga Nidra long."
+        },
+        "theta_4_8Hz": {
+          "etat": "Somnolence profonde, méditation profonde, hypnagogie (entre veille et sommeil), créativité",
+          "amplitude": "Moyenne (50-100 μV)",
+          "fonctions": "Mémoire épisodique, créativité intuitive, apprentissage profond, hypnose, accès inconscient",
+          "pratique": "Méditation body scan profonde. Avant de s'endormir. Programmes de reprogrammation theta (theta healing)."
+        },
+        "alpha_8_12Hz": {
+          "etat": "Relaxation éveillée, flow, après-méditation, visualisation",
+          "amplitude": "Faible-moyenne (30-50 μV)",
+          "fonctions": "Cohérence corticale, anti-anxiété, augmentée par la fermeture des yeux et la relaxation",
+          "pratique": "Respiration profonde. Méditation légère. État idéal pour la lecture, le travail créatif et la réception."
+        },
+        "beta_12_30Hz": {
+          "etat": "Éveil normal, pensée active, concentration, stress",
+          "amplitude": "Faible (10-30 μV)",
+          "fonctions": "Cognition normale, traitement de l'information, prise de décision. Beta haute → anxiété, rumination.",
+          "pratique": "Activité intellectuelle normale. Café. Sport intense. Stimulation sensorielle."
+        },
+        "gamma_30_100Hz": {
+          "etat": "Haute concentration, insight, états mystiques, compassion (moinées tibétains)",
+          "amplitude": "Très faible (2-10 μV)",
+          "fonctions": "Liaison neuronale inter-régions, conscience unificatrice, 'flash' de compréhension, perception unifiée",
+          "pratique": "Méditation avancée de compassion (Metta). Visualisation intense. États de flow profonds."
+        }
+      }
+    },
+    "muse_2_casque_EEG": {
+      "description": "Casque EEG grand public d'InteraXon (Canada). 7 capteurs EEG (TP9, AF7, AF8, TP10 + 3 capteurs supplémentaires). + accéléromètre, PPG (fréquence cardiaque), capteur de souffle.",
+      "fonctionnalites": {
+        "meditation_app": "Application Muse (iOS/Android). Feedback sonore en temps réel : sons de tempête (mind wandering), oiseaux (mind calm). Séances guidées. Historique de sessions.",
+        "mind_monitor": "App tierce (iOS/Android). Visualisation complète des ondes. Export CSV. Algorithme OSC pour intégration externe.",
+        "muse_direct": "Développeurs : accès aux données brutes EEG via OSC. Intégration Max/MSP, Pure Data, Python, Unity."
+      },
+      "protocoles": {
+        "baseline": "Session de 10 min à jeun, assis, les yeux fermés. Enregistrer le profil de base. Comparer avec les sessions futures.",
+        "alpha_training": "Objectif : augmenter les ondes alpha. Feedback visuel (écran vert = alpha présent). Relaxation progressive.",
+        "focus_training": "Objectif : augmenter bêta en zone frontale. Tâche cognitive légère (calcul mental, lecture). Biofeedback neurofeedback."
+      }
+    },
+    "etats_alteres_conscience": {
+      "meditation_profonde": {
+        "niveaux": "Concentration (dharana) → Méditation (dhyana) → Absorption (samadhi). Chaque niveau correspond à un profil d'ondes plus lent et plus ample.",
+        "neurosciences": "Épaississement cortex préfrontal (Holzel 2011). Réduction amygdale (réponse au stress). Augmentation cohérence inter-hémisphérique. Augmentation dopamine et sérotonine."
+      },
+      "hypnose": {
+        "etat_hypnotique": "État de conscience modifié caractérisé par une focalisation intense, une suggestibilité accrue et une dissociation partielle. Profil EEG : augmentation theta et alpha, réduction beta frontale.",
+        "applications": "Gestion de la douleur (chirurgie sans anesthésie), phobies, habitudes, performance, trauma, créativité.",
+        "autohypnose": "Induction MILD ou par fixation d'un point. Suggestions pendant l'état hypnotique (theta). Réveil naturel."
+      },
+      "psychedeliques": {
+        "psilocybine": "Champignons Psilocybe. Agoniste des récepteurs 5-HT2A. Désactivation du Default Mode Network (DMN). Hyper-connectivité inter-régionale. Études Hopkins, NYU : traitement dépression, addictions. Phase 3 clinique.",
+        "ayahuasca": "Brew amazonien (Banisteriopsis caapi + Psychotria viridis). DMT + IMAO. Cérémonie chamanique. Traitement de l'ÉTAT de conscience complet.",
+        "MDMA": "Non classique. Libération massive de sérotonine/dopamine/ocytocine. Protocole MAPS pour PTSD (Phase 3 terminée, FDA breakthrough therapy).",
+        "legal_status": "Dépends des pays. Décriminalisation progressive (Oregon, Colorado). Recherche clinique encadrée."
+      }
+    },
+    "neuroplasticite_reprogrammation": {
+      "definition": "Capacité du cerveau à se modifier structurellement et fonctionnellement en réponse à l'expérience. Hebb : 'Les neurones qui s'activent ensemble se lient ensemble'.",
+      "principes": {
+        "repetition": "La répétition myélinise les voies neuronales (augmente la vitesse de transmission).",
+        "emotion": "L'émotion amplifie l'encodage (LTP — Long-Term Potentiation). Apprentissage émotionnel = plus profond.",
+        "attention": "Ce sur quoi on porte son attention se renforce. Attention → Activation → Modification structurelle.",
+        "sommeil": "Consolidation mémorielle pendant le sommeil. Cleaning (glymphatique). Potentialisation des apprentissages du jour."
+      },
+      "pratiques": "Visualisation mentale (activation des mêmes zones qu'une pratique réelle). Méditation (renforce l'insula et le CPF). Apprentissage de nouvelles compétences (croissance dendritique). Exercice physique (BDNF — engrais du cerveau)."
+    }
+  }
+}
