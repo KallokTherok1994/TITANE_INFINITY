@@ -3,7 +3,7 @@
 //   LOCK 5: Desktop operator control surfaces (pause/resume/handoff/kill-switch)
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import type { DesktopSession, DesktopControlStatus } from './desktopTypes';
 
 /**
@@ -12,7 +12,7 @@ import type { DesktopSession, DesktopControlStatus } from './desktopTypes';
  * @returns Updated session with status PAUSED
  */
 export async function pauseDesktopSession(sessionId: string): Promise<DesktopSession> {
-  return invoke<DesktopSession>('desktop_pause_session', {
+  return secureInvoke<DesktopSession>('desktop_pause_session', {
     session_id: sessionId,
   });
 }
@@ -23,7 +23,7 @@ export async function pauseDesktopSession(sessionId: string): Promise<DesktopSes
  * @returns Updated session with status PERCEIVING
  */
 export async function resumeDesktopSession(sessionId: string): Promise<DesktopSession> {
-  return invoke<DesktopSession>('desktop_resume_session', {
+  return secureInvoke<DesktopSession>('desktop_resume_session', {
     session_id: sessionId,
   });
 }
@@ -38,7 +38,7 @@ export async function handoffDesktopSession(
   sessionId: string,
   reason: string
 ): Promise<DesktopSession> {
-  return invoke<DesktopSession>('desktop_handoff_session', {
+  return secureInvoke<DesktopSession>('desktop_handoff_session', {
     session_id: sessionId,
     reason,
   });
@@ -54,7 +54,7 @@ export async function killDesktopSession(
   sessionId: string,
   reason: string
 ): Promise<boolean> {
-  return invoke<boolean>('desktop_kill_switch', {
+  return secureInvoke<boolean>('desktop_kill_switch', {
     session_id: sessionId,
     reason,
   });
@@ -68,7 +68,7 @@ export async function killDesktopSession(
 export async function getDesktopControlStatus(
   sessionId: string
 ): Promise<Record<string, unknown>> {
-  return invoke<Record<string, unknown>>('desktop_get_control_status', {
+  return secureInvoke<Record<string, unknown>>('desktop_get_control_status', {
     session_id: sessionId,
   });
 }

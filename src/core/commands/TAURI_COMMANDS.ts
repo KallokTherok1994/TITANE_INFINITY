@@ -11,7 +11,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 export const TAURI_COMMANDS = {
   // ═══════════════════════════════════════════════════════════════
@@ -242,12 +242,7 @@ export async function invokeTauri<T>(
   }
 
   try {
-    // Protection contre undefined - invoke est importé au niveau global
-    if (typeof invoke !== 'function') {
-      throw new Error('Tauri invoke function not available');
-    }
-
-    return await invoke<T>(command, args);
+    return await secureInvoke<T>(command, args ?? {});
   } catch (error) {
     // Fallback en cas d'erreur Tauri (mode web ou erreur backend)
     console.warn(`[TAURI] Command ${command} failed:`, error);

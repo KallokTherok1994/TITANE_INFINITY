@@ -8,7 +8,7 @@
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { tauriClient } from '@/lib/tauriClient';
 
 export interface IdentityValue {
@@ -284,7 +284,7 @@ export async function loadIdentityMatrix(): Promise<{
   isFallback: boolean;
 }> {
   try {
-    const loaded = await invoke<IdentityMatrix>('identity_get_matrix');
+    const loaded = await secureInvoke<IdentityMatrix>('identity_get_matrix');
 
     if (validateIdentityMatrix(loaded)) {
       return {
