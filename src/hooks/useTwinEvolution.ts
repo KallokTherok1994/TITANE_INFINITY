@@ -5,8 +5,8 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { numericTwinService } from '../services/api/numericTwin';
 import { createLogger } from '@/utils/logger';
+import { numericTwinService } from '../services/api/numericTwin';
 import type {
   TwinEvolutionProfile,
   FusionIndex,

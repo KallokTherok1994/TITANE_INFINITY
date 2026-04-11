@@ -20,6 +20,10 @@ import { voiceFingerprintEngine } from './voiceFingerprint';
 import { antiEchoShield } from './antiEchoShield';
 import { contextualAttentionV2 } from './contextualAttentionV2';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('WakeWord');
+
 /**
  * Mode de détection du wake word
  */
@@ -105,7 +109,7 @@ export class WakeWordEngine {
       wakeWordCooldown: config.wakeWordCooldown ?? 5000, // ✅ v∞.7
     };
 
-    console.log('[WakeWordEngine] 🎙️ Initialized with config:', this.config);
+    logger.info('[WakeWordEngine] 🎙️ Initialized with config:', this.config);
 
     // [v19.5.0] Configure cognitive features if enabled
     if (this.config.useCognitiveMode) {
@@ -117,14 +121,14 @@ export class WakeWordEngine {
    * [v19.5.0] Enable cognitive features (voice fingerprint, anti-echo, adaptive)
    */
   private enableCognitiveMode(): void {
-    console.log('[WakeWordEngine] 🧠 Enabling cognitive mode...');
+    logger.info('[WakeWordEngine] 🧠 Enabling cognitive mode...');
 
     // Configure cognitive features (v2 engine auto-enabled)
-    console.log(
+    logger.info(
       '[WakeWordEngine] Cognitive features: voice fingerprint, anti-echo, contextual adaptation'
     );
 
-    console.log('[WakeWordEngine] ✅ Cognitive mode enabled');
+    logger.info('[WakeWordEngine] ✅ Cognitive mode enabled');
   }
 
   /**
@@ -136,7 +140,7 @@ export class WakeWordEngine {
     if (enabled) {
       this.enableCognitiveMode();
     } else {
-      console.log('[WakeWordEngine] 🔇 Disabling cognitive mode');
+      logger.info('[WakeWordEngine] 🔇 Disabling cognitive mode');
       // Cognitive features remain available but not used in v1 mode
     }
   }
@@ -153,11 +157,11 @@ export class WakeWordEngine {
    * [v19.5.0] Uses cognitive mode if enabled
    */
   detect(text: string): WakeWordEvent {
-    console.log(`[WakeWordEngine] 🔍 Analyzing: "${text}"`);
+    logger.info(`[WakeWordEngine] 🔍 Analyzing: "${text}"`);
 
     // [v19.5.0] If cognitive mode enabled, use v2.0 (text-only fallback)
     if (this.config.useCognitiveMode) {
-      console.log('[WakeWordEngine] 🧠 Using cognitive mode (v2.0)');
+      logger.info('[WakeWordEngine] 🧠 Using cognitive mode (v2.0)');
       // Note: text-only detection, no audio features available
       // For full cognitive features, use detectWithAudio()
       return this.detectV1(text); // Fallback to v1 for text-only
@@ -180,7 +184,7 @@ export class WakeWordEngine {
       return this.detect(text);
     }
 
-    console.log('[WakeWordEngine] 🧠 Cognitive detection with audio...');
+    logger.info('[WakeWordEngine] 🧠 Cognitive detection with audio...');
     return await wakeWordEngineV2.detectWithAudio(text, audioBuffer, sampleRate);
   }
 
@@ -188,21 +192,21 @@ export class WakeWordEngine {
    * [v19.5.0] v1 detection logic (legacy, fast, no audio required)
    */
   private detectV1(text: string): WakeWordEvent {
-    console.log(`[WakeWordEngine] 📝 v1 Detection: "${text}"`);
+    logger.info(`[WakeWordEngine] 📝 v1 Detection: "${text}"`);
 
     // Normalisation
     const normalized = this.normalizeText(text);
 
     // Anti-faux-positifs : texte trop long
     if (normalized.length > this.config.maxTextLength) {
-      console.log('[WakeWordEngine] ❌ Text too long, ignoring');
+      logger.info('[WakeWordEngine] ❌ Text too long, ignoring');
       return this.createNegativeEvent(text);
     }
 
     // Détection exacte
     const exactMatch = this.detectExact(normalized);
     if (exactMatch) {
-      console.log(`[WakeWordEngine] ✅ Exact match: ${exactMatch.variant}`);
+      logger.info(`[WakeWordEngine] ✅ Exact match: ${exactMatch.variant}`);
       return this.createEvent(text, normalized, exactMatch);
     }
 
@@ -210,14 +214,14 @@ export class WakeWordEngine {
     if (this.config.usePhoneticMatching) {
       const phoneticMatch = this.detectPhonetic(normalized);
       if (phoneticMatch) {
-        console.log(
+        logger.info(
           `[WakeWordEngine] ✅ Phonetic match: ${phoneticMatch.variant} (distance: ${phoneticMatch.distance})`
         );
         return this.createEvent(text, normalized, phoneticMatch);
       }
     }
 
-    console.log('[WakeWordEngine] ❌ No match found');
+    logger.info('[WakeWordEngine] ❌ No match found');
     return this.createNegativeEvent(text);
   }
 
@@ -504,7 +508,7 @@ export class WakeWordEngine {
       ...this.config,
       ...updates,
     };
-    console.log('[WakeWordEngine] 🔧 Config updated:', this.config);
+    logger.info('[WakeWordEngine] 🔧 Config updated:', this.config);
 
     // [v19.5.0] Re-apply cognitive mode if changed
     if (updates.useCognitiveMode !== undefined) {

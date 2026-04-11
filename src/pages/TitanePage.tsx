@@ -12,15 +12,14 @@
  * - Vision (/camera) → Perception Visuelle & Affect Estimation
  * - EVO (/evo) → Évolution Totale (Dashboard, TWINS, Memory, Progression)
  *
- * 8 SECTIONS UNIFIÉES (EXTRACTED AS INDEPENDENT COMPONENTS):
+ * 7 SECTIONS UNIFIÉES (EXTRACTED AS INDEPENDENT COMPONENTS):
  * 💬 CONVERSATION - Interface Chat IA multi-provider
  * 📷 VISION & PERCEPTION - Analyse visuelle et affective
  * 📊 VUE D'ENSEMBLE - Dashboard système et stats
  * 🧬 TWINS - Jumeau Numérique, Persona, orchestration IA auto
  * 💾 MÉMOIRE TRIPLE - Architecture court/moyen/long terme
- * 🔄 ÉVOLUTION MÉMOIRE - Dynamiques internes et journal
  * ⚡ PROGRESSION & XP - Système XP, milestones, talents
- * 🌱 TRANSFORMATION - Lignes d'évolution et paliers
+ * 🌱 TRANSFORM & ÉVOLUTION - Transformation + Évolution mémoire fusionnées
  *
  * Phase 3C Refactoring:
  * - Extracted 8 internal section components to src/components/sections/
@@ -47,7 +46,6 @@ import {
   VisionSection,
   OverviewSection,
   MemorySection,
-  MemoryEvolutionSection,
   ProgressionSection,
   TransformationSection,
 } from '@/components/sections';
@@ -72,7 +70,6 @@ type TabId =
   | 'vision'
   | 'overview'
   | 'memory-map'
-  | 'memory-evolution'
   | 'progression'
   | 'transformation'
   | 'twins';
@@ -82,7 +79,6 @@ const VALID_TABS: TabId[] = [
   'vision',
   'overview',
   'memory-map',
-  'memory-evolution',
   'progression',
   'transformation',
   'twins',
@@ -97,7 +93,6 @@ const TAB_PANEL_IDS: Record<TabId, string> = {
   vision: 'titane-panel-vision',
   overview: 'titane-panel-overview',
   'memory-map': 'titane-panel-memory',
-  'memory-evolution': 'titane-panel-evolution',
   progression: 'titane-panel-progression',
   transformation: 'titane-panel-transformation',
   twins: 'titane-panel-twins',
@@ -108,7 +103,6 @@ const TAB_LABEL_IDS: Record<TabId, string> = {
   vision: 'titane-tab-vision',
   overview: 'titane-tab-overview',
   'memory-map': 'titane-tab-memory',
-  'memory-evolution': 'titane-tab-evolution',
   progression: 'titane-tab-progression',
   transformation: 'titane-tab-transformation',
   twins: 'titane-tab-twins',
@@ -236,7 +230,6 @@ export const TitanePage: React.FC = () => {
       vision: () => updateActiveTab('vision'),
       overview: () => updateActiveTab('overview'),
       memoryMap: () => updateActiveTab('memory-map'),
-      memoryEvolution: () => updateActiveTab('memory-evolution'),
       progression: () => updateActiveTab('progression'),
       transformation: () => updateActiveTab('transformation'),
       twins: () => updateActiveTab('twins'),
@@ -255,8 +248,6 @@ export const TitanePage: React.FC = () => {
         return <OverviewSection stats={stats} />;
       case 'memory-map':
         return <MemorySection stats={stats} conversationId={conversationId} />;
-      case 'memory-evolution':
-        return <MemoryEvolutionSection />;
       case 'progression':
         return <ProgressionSection progression={progression} stats={stats} />;
       case 'transformation':
@@ -353,21 +344,6 @@ export const TitanePage: React.FC = () => {
               </button>
               <button
                 className={`px-4 py-2 text-sm font-medium rounded transition-all ${
-                  activeTab === 'memory-evolution'
-                    ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
-                    : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
-                }`}
-                data-testid="tab-memory-evolution"
-                onClick={tabHandlers.memoryEvolution}
-                role="tab"
-                aria-selected={activeTab === 'memory-evolution'}
-                aria-controls={TAB_PANEL_IDS['memory-evolution']}
-                id={TAB_LABEL_IDS['memory-evolution']}
-              >
-                🔄 Évolution
-              </button>
-              <button
-                className={`px-4 py-2 text-sm font-medium rounded transition-all ${
                   activeTab === 'progression'
                     ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
                     : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
@@ -394,7 +370,7 @@ export const TitanePage: React.FC = () => {
                 aria-controls={TAB_PANEL_IDS.transformation}
                 id={TAB_LABEL_IDS.transformation}
               >
-                🌱 Transform
+                🌱 Transform & Évo
               </button>
               <button
                 className={`px-4 py-2 text-sm font-medium rounded transition-all ${

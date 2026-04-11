@@ -54,18 +54,11 @@ const BUNDLED_DEFAULT_KB_MODULES = import.meta.glob(
 ) as Record<string, { default?: Record<string, unknown> } | Record<string, unknown>>;
 
 const RUST_CANONICAL_EXCLUDED_BUNDLED_KB_IDS = new Set([
-  'bourse_trading',
-  'crypto_blockchain',
-  'cuisine_gastronomie',
-  'droit_contrats_pratique',
-  'energie_renouvelable',
-  'jeux_video_culture',
+  // Kevin-specific personal files — not embedded in the Rust binary
   'kevin_book_registry_v30',
   'kevin_owner_profile_v30',
   'kevin_public_corpus_v30',
   'kevin_workflow_v30',
-  'musique_theorie_pratique',
-  'voyage_exploration',
 ]);
 
 const DEFAULT_KB_FALLBACK_ENTRIES: KnowledgeBaseEntry[] = [
@@ -404,7 +397,7 @@ export const DEFAULT_KB_CANONICAL_ENTRY_COUNT = getFallbackEntries().length;
 // ─────────────────────────────────────────────────────────────────
 
 /**
- * List all 150 category keys.
+ * List all category keys.
  * Derives from the entries cache when already loaded to avoid a second IPC call.
  */
 export async function listCategories(): Promise<string[]> {
@@ -437,9 +430,8 @@ export async function getAllEntries(): Promise<KnowledgeBaseEntry[]> {
   if (_allEntriesCache) return _allEntriesCache;
   // Guard: if a load is already in flight, wait for it instead of issuing a second IPC call
   if (_allEntriesLoadingPromise) return _allEntriesLoadingPromise;
-  _allEntriesLoadingPromise = (async () => {
-    let shouldUseFallbackEntries = false;
-
+  _allEntriesLoadingPromise = (async (): Promise<KnowledgeBaseEntry[]> => {
+    let ipcSucceeded = false;
     try {
       const raw = await invokeWithRetry<string>(
         'knowledge_base_get_all',
@@ -451,13 +443,19 @@ export async function getAllEntries(): Promise<KnowledgeBaseEntry[]> {
           ? JSON.parse(raw)
           : (raw as Record<string, KnowledgeBaseEntry>);
       _allEntriesCache = dedupeKnowledgeBaseEntries(Object.values(parsed));
+      ipcSucceeded = true;
     } catch {
       _allEntriesCache = null;
-      shouldUseFallbackEntries = true;
     }
 
-    if (shouldUseFallbackEntries || !_allEntriesCache) {
+    // Only use local fallback when IPC failed (not when backend explicitly returned empty)
+    if (!ipcSucceeded && (!_allEntriesCache || _allEntriesCache.length === 0)) {
       _allEntriesCache = getFallbackEntries();
+    }
+
+    // Ensure we always return a non-null array
+    if (!_allEntriesCache) {
+      _allEntriesCache = [];
     }
 
     if (!_categoriesCache) {

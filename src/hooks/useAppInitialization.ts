@@ -102,7 +102,7 @@ export const useAppInitialization = (): void => {
   // ─── Console monitor (dev only) ────────────────────────────────────────────
   useEffect(() => {
     if (import.meta.env.DEV) {
-      console.log(
+      logger.info(
         '🔍 [CONSOLE-MONITOR] Starting console monitoring & auto-heal integration...'
       );
       try {
@@ -165,10 +165,10 @@ export const useAppInitialization = (): void => {
     import('../services/backup/AutoBackupService')
       .then(({ autoBackupService }) => {
         autoBackupService.initialize();
-        console.log('💾 [BACKUP] Auto-backup service initialized (6h intervals)');
+        logger.info('💾 [BACKUP] Auto-backup service initialized (6h intervals)');
       })
       .catch(err => {
-        console.warn('⚠️ [BACKUP] Failed to initialize auto-backup:', err);
+        logger.warn('⚠️ [BACKUP] Failed to initialize auto-backup:', err);
       });
   }, []);
 
@@ -188,13 +188,13 @@ export const useAppInitialization = (): void => {
 
   // ─── Cognitive cache → SingularityKernel ──────────────────────────────────
   useEffect(() => {
-    console.log('🧠 [COGNITIVE-CACHE] Connecting to SingularityKernel...');
+    logger.info('🧠 [COGNITIVE-CACHE] Connecting to SingularityKernel...');
 
     Promise.all([import('../services/ai/singularityKernel'), import('../services/ai')])
       .then(([{ singularityKernel }, { connectCacheToSingularity }]) => {
         try {
           connectCacheToSingularity(singularityKernel);
-          console.log('✅ [COGNITIVE-CACHE] Connected successfully');
+          logger.info('✅ [COGNITIVE-CACHE] Connected successfully');
         } catch (error) {
           logger.error(
             'Connection failed',
@@ -229,13 +229,13 @@ export const useAppInitialization = (): void => {
       return;
     }
 
-    console.log('🔍 [AUTO-AUDIT] Loading automatic audits...');
+    logger.info('🔍 [AUTO-AUDIT] Loading automatic audits...');
     import('../services/autoAuditEngine')
       .then(({ autoAuditEngine }) => {
         if (!started) {
           autoAuditEngine.start();
           started = true;
-          console.log('✅ [AUTO-AUDIT] Started');
+          logger.info('✅ [AUTO-AUDIT] Started');
         }
 
         return () => {
@@ -243,14 +243,14 @@ export const useAppInitialization = (): void => {
         };
       })
       .catch(err => {
-        console.warn('⚠️ [AUTO-AUDIT] Failed to load:', err);
+        logger.warn('⚠️ [AUTO-AUDIT] Failed to load:', err);
       });
   }, []);
 
   // ─── Telemetry + self-healing singletons ───────────────────────────────────
   useEffect(() => {
     import('../utils/telemetryEngine').catch(err => {
-      console.warn('⚠️ [TELEMETRY] Failed to load:', err);
+      logger.warn('⚠️ [TELEMETRY] Failed to load:', err);
     });
   }, []);
 
@@ -272,13 +272,13 @@ export const useAppInitialization = (): void => {
       return;
     }
 
-    console.log('🧠 [COGNITIVE] Loading Cognitive Layout Engine...');
+    logger.info('🧠 [COGNITIVE] Loading Cognitive Layout Engine...');
     import('../engines/cognitive/cognitiveLayoutEngine')
       .then(({ cognitiveLayoutEngine }) => {
         if (!started) {
           cognitiveLayoutEngine.start();
           started = true;
-          console.log('✅ [COGNITIVE] Cognitive Layout Engine started');
+          logger.info('✅ [COGNITIVE] Cognitive Layout Engine started');
         }
 
         return () => {
@@ -324,18 +324,18 @@ export const useAppInitialization = (): void => {
 
   // ─── Presence OS ──────────────────────────────────────────────────────────
   useEffect(() => {
-    console.log('🌐 [PRESENCE] Starting Presence OS...');
-    console.log('═══════════════════════════════════════════════════');
+    logger.info('🌐 [PRESENCE] Starting Presence OS...');
+    logger.info('═══════════════════════════════════════════════════');
 
     presenceOS.start();
-    console.log('  ✅ Presence OS active (30Hz, 8 signature modes)');
-    console.log(
+    logger.info('  ✅ Presence OS active (30Hz, 8 signature modes)');
+    logger.info(
       '  ✅ 7 layers: Cognitive, Affective, Expression, Aura, Spatial, Autonomic, Evolution'
     );
-    console.log('  ✅ Unified identity orchestration across 6 engines');
+    logger.info('  ✅ Unified identity orchestration across 6 engines');
 
     return () => {
-      console.log('🛑 [PRESENCE] Stopping Presence OS...');
+      logger.info('🛑 [PRESENCE] Stopping Presence OS...');
       presenceOS.stop();
     };
   }, []);

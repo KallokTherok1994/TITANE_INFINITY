@@ -11,6 +11,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { createLogger } from '@/utils/logger';
 import {
   calculateLevel as canonicalCalculateLevel,
   xpInCurrentLevel as canonicalXpInCurrentLevel,
@@ -20,11 +21,20 @@ import {
 } from '@/services/xp/xpCanonical';
 
 // ─────────────────────────────────────────────────────────────────────────────
+// LOGGER
+// ─────────────────────────────────────────────────────────────────────────────
+
+const logger = createLogger('XPEngine');
+
+// ─────────────────────────────────────────────────────────────────────────────
 // TYPES (Inline pour éviter les problèmes d'import circulaire)
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type XPSource =
   | 'chat_message'
+  | 'chat_quality_bonus'
+  | 'chat_titane_response'
+  | 'chat_conversation_streak'
   | 'file_import'
   | 'automation_success'
   | 'diagnostic_pass'
@@ -62,6 +72,10 @@ export interface ProgressionState {
   xpInCurrentLevel: number;
   xpToNextLevel: number;
   chatMessageCount: number; // incremented on every 'chat_message' XP event
+  /** Dernier tier de qualité du message (pour feedback UI) */
+  lastQualityTier: string | null;
+  /** Compteur de messages par tier de qualité */
+  qualityTierCounts: Record<string, number>;
   milestones: ProgressionMilestone[];
   unlockedMilestones: string[];
   lastXPGain: XPEvent | null;
@@ -183,6 +197,9 @@ const DEFAULT_MILESTONES: ProgressionMilestone[] = [
 
 const XP_AMOUNTS: Record<XPSource, number> = {
   chat_message: 5,
+  chat_quality_bonus: 0, // Variable selon qualité (géré par le caller)
+  chat_titane_response: 3,
+  chat_conversation_streak: 8,
   file_import: 20,
   automation_success: 15,
   diagnostic_pass: 10,
@@ -205,6 +222,8 @@ const createDefaultState = (): ProgressionState => ({
   xpInCurrentLevel: 0,
   xpToNextLevel: XP_PER_LEVEL,
   chatMessageCount: 0,
+  lastQualityTier: null,
+  qualityTierCounts: {},
   milestones: DEFAULT_MILESTONES,
   unlockedMilestones: [],
   lastXPGain: null,
@@ -242,8 +261,8 @@ class XPEngine {
       const backendState = await secureInvoke<ProgressionState>('exp_get_global_state');
       if (backendState) {
         this.state = { ...createDefaultState(), ...backendState };
-        console.log(
-          '[XPEngine] État chargé depuis backend:',
+        logger.info(
+          'État chargé depuis backend:',
           this.state.level,
           'XP:',
           this.state.totalXP
@@ -256,10 +275,10 @@ class XPEngine {
         if (stored) {
           const parsed = JSON.parse(stored);
           this.state = { ...createDefaultState(), ...parsed };
-          console.log('[XPEngine] État chargé depuis localStorage');
+          logger.info('État chargé depuis localStorage');
         }
       } catch (e) {
-        console.warn('[XPEngine] Erreur chargement localStorage:', e);
+        logger.warn('Erreur chargement localStorage:', e);
       }
     }
 
@@ -308,6 +327,16 @@ class XPEngine {
       this.state.chatMessageCount = (this.state.chatMessageCount ?? 0) + 1;
     }
 
+    // Track quality tier when quality bonus is awarded
+    if (source === 'chat_quality_bonus' && metadata?.qualityTier) {
+      const tier = String(metadata.qualityTier);
+      this.state.lastQualityTier = tier;
+      if (!this.state.qualityTierCounts) {
+        this.state.qualityTierCounts = {};
+      }
+      this.state.qualityTierCounts[tier] = (this.state.qualityTierCounts[tier] ?? 0) + 1;
+    }
+
     // Calculer le nouveau niveau
     this.updateLevel();
 
@@ -326,8 +355,8 @@ class XPEngine {
     // Notifier les listeners
     this.notifyListeners();
 
-    console.log(
-      `[XPEngine] +${actualAmount} XP (${source}) → Level ${this.state.level}, Total: ${this.state.totalXP}`
+    logger.info(
+      `+${actualAmount} XP (${source}) → Level ${this.state.level}, Total: ${this.state.totalXP}`
     );
 
     return event;
@@ -349,7 +378,7 @@ class XPEngine {
     const newLevel = canonicalCalculateLevel(this.state.totalXP);
 
     if (newLevel !== this.state.level) {
-      console.log(`[XPEngine] 🎉 Level Up! ${this.state.level} → ${newLevel}`);
+      logger.info(`🎉 Level Up! ${this.state.level} → ${newLevel}`);
       this.state.level = newLevel;
     }
 
@@ -396,7 +425,7 @@ class XPEngine {
     milestone.unlockedAt = Date.now();
     this.state.unlockedMilestones.push(milestone.id);
 
-    console.log(`[XPEngine] 🏆 Milestone débloqué: ${milestone.name}`);
+    logger.info(`🏆 Milestone débloqué: ${milestone.name}`);
 
     // Bonus XP pour certains milestones
     const bonusXP = this.getMilestoneBonus(milestone.id);
@@ -440,7 +469,7 @@ class XPEngine {
     if (lastDate === yesterday) {
       // Streak continue
       this.state.streakDays++;
-      console.log(`[XPEngine] 🔥 Streak: ${this.state.streakDays} jours`);
+      logger.info(`🔥 Streak: ${this.state.streakDays} jours`);
     } else {
       // Streak reset
       this.state.streakDays = 1;
@@ -461,7 +490,7 @@ class XPEngine {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
     } catch (e) {
-      console.warn('[XPEngine] Erreur sauvegarde localStorage:', e);
+      logger.warn('Erreur sauvegarde localStorage:', e);
     }
 
     // Sauvegarder dans Tauri backend
@@ -530,7 +559,7 @@ class XPEngine {
     this.history = [];
     await this.persist();
     this.notifyListeners();
-    console.log('[XPEngine] État réinitialisé');
+    logger.info('État réinitialisé');
   }
 }
 
@@ -542,7 +571,7 @@ export const xpEngine = new XPEngine();
 
 // Auto-initialize
 if (typeof window !== 'undefined') {
-  xpEngine.initialize().catch(console.error);
+  xpEngine.initialize().catch(err => logger.error('Erreur initialisation:', err));
 }
 
 export default xpEngine;

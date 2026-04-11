@@ -107,7 +107,8 @@ const ROUTE_ALIASES: Record<string, string> = {
   '/quantum': '/quantum-center',
   '/identity': '/identity-center',
   '/persona': '/identity-center',
-  '/memory-evo': '/memory-evolution',
+  '/memory-evo': '/titane',
+  '/memory-evolution': '/titane',
   '/cloud-sync': '/cloud',
   '/vault': '/cloud',
 };
@@ -251,9 +252,9 @@ const MODULE_REGISTRY: Record<string, ModuleRouteDefinition> = {
   },
   '/memory-evolution': {
     moduleId: 'memory_evolution',
-    moduleName: 'Memory Evolution',
+    moduleName: 'Transform & Évolution (fusionné)',
     moduleType: 'memory',
-    pageTitle: 'Memory Evolution',
+    pageTitle: 'Transform & Évolution',
     capabilities: [
       'hierarchy-health',
       'cluster-observability',
@@ -265,6 +266,7 @@ const MODULE_REGISTRY: Record<string, ModuleRouteDefinition> = {
       'legacy-memory-evolution-isolated-from-persistent-ltm',
       'write-actions-blocked-until-persistent-bridge-exists',
       'operation-latency-variable',
+      'redirected-to-titane-transformation-tab',
     ],
     memoryKeys: ['memory_evolution_pipeline_state'],
   },

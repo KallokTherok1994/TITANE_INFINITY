@@ -25,6 +25,10 @@ import { persist, devtools } from 'zustand/middleware';
 import type { VisualState } from '@/visual-engine/StateManager';
 import type { PerformanceMetrics } from '@/visual-engine/TitaneVisualEngine';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('VisualStore');
+
 /**
  * Interface pour l'état du Visual Engine
  */
@@ -218,7 +222,7 @@ export const useVisualStore = create<VisualStore>()(
           }, duration);
 
           if (get().debug) {
-            console.log(
+            logger.info(
               `[visualStore] État changé: ${currentState} → ${state} (${duration}ms)`
             );
           }
@@ -247,7 +251,7 @@ export const useVisualStore = create<VisualStore>()(
           });
 
           if (get().debug) {
-            console.log('[visualStore] Visual Engine démarré');
+            logger.info('[visualStore] Visual Engine démarré');
           }
         },
 
@@ -266,7 +270,7 @@ export const useVisualStore = create<VisualStore>()(
           });
 
           if (get().debug) {
-            console.log('[visualStore] Visual Engine arrêté');
+            logger.info('[visualStore] Visual Engine arrêté');
           }
         },
 
@@ -276,7 +280,7 @@ export const useVisualStore = create<VisualStore>()(
           });
 
           if (get().debug) {
-            console.log('[visualStore] Visual Engine en pause');
+            logger.info('[visualStore] Visual Engine en pause');
           }
         },
 
@@ -286,7 +290,7 @@ export const useVisualStore = create<VisualStore>()(
           });
 
           if (get().debug) {
-            console.log('[visualStore] Visual Engine repris');
+            logger.info('[visualStore] Visual Engine repris');
           }
         },
 
@@ -294,7 +298,7 @@ export const useVisualStore = create<VisualStore>()(
           set(getInitialState());
 
           if (get().debug) {
-            console.log('[visualStore] Visual Engine réinitialisé');
+            logger.info('[visualStore] Visual Engine réinitialisé');
           }
         },
 
@@ -319,7 +323,7 @@ export const useVisualStore = create<VisualStore>()(
           set({ enableOrchestration: enabled });
 
           if (get().debug) {
-            console.log(
+            logger.info(
               `[visualStore] Orchestration ${enabled ? 'activée' : 'désactivée'}`
             );
           }
@@ -334,7 +338,7 @@ export const useVisualStore = create<VisualStore>()(
           set({ enableOSIntegration: enabled });
 
           if (get().debug) {
-            console.log(
+            logger.info(
               `[visualStore] OS Integration ${enabled ? 'activée' : 'désactivée'}`
             );
           }
@@ -349,7 +353,7 @@ export const useVisualStore = create<VisualStore>()(
           set({ adaptiveFPS: enabled });
 
           if (get().debug) {
-            console.log(`[visualStore] Adaptive FPS ${enabled ? 'activé' : 'désactivé'}`);
+            logger.info(`[visualStore] Adaptive FPS ${enabled ? 'activé' : 'désactivé'}`);
           }
         },
 
@@ -360,7 +364,7 @@ export const useVisualStore = create<VisualStore>()(
 
         setDebug: (enabled: boolean) => {
           set({ debug: enabled });
-          console.log(`[visualStore] Debug mode ${enabled ? 'activé' : 'désactivé'}`);
+          logger.info(`[visualStore] Debug mode ${enabled ? 'activé' : 'désactivé'}`);
         },
 
         toggleDebug: () => {
@@ -376,7 +380,7 @@ export const useVisualStore = create<VisualStore>()(
           set({ stateHistory: [] });
 
           if (get().debug) {
-            console.log('[visualStore] Historique effacé');
+            logger.info('[visualStore] Historique effacé');
           }
         },
 

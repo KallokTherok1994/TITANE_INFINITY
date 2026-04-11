@@ -17,6 +17,9 @@
 
 import { secureInvoke } from '@/lib/security';
 import type { ConversationHealthReport, OmegaHealthReport } from '@/types/omega.types';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('OmegaClient');
 
 // ─────────────────────────────────────────────────────────────────────
 // OMEGA IPC Commands (registered in main.rs + ALLOWED_COMMANDS)
@@ -51,7 +54,7 @@ export class OmegaClient {
         requestsProcessed: 0,
       };
     } catch (err) {
-      console.warn('[OmegaClient] health() unavailable:', err);
+      logger.warn('[OmegaClient] health() unavailable:', err);
       return null;
     }
   }
@@ -74,7 +77,7 @@ export class OmegaClient {
       });
       return result?.response ?? null;
     } catch (err) {
-      console.warn('[OmegaClient] processMessage() error:', err);
+      logger.warn('[OmegaClient] processMessage() error:', err);
       return null;
     }
   }

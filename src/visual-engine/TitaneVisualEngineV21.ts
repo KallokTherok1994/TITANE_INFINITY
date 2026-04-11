@@ -28,6 +28,10 @@ import { IdentityPulse, type PulseWaveform } from './signature/IdentityPulse';
 import { OrbitalSignature, type OrbitalSnapshot } from './signature/OrbitalSignature';
 import { ParticleSignature } from './signature/ParticleSignature';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('VisualV21');
+
 export interface VisualEngineV21Config {
   enableParticles: boolean;
   enableEffects: boolean;
@@ -127,7 +131,7 @@ export class TitaneVisualEngineV21 extends EventEmitter {
    */
   start(): void {
     if (this.isRunning) {
-      console.warn('[VisualEngineV21] Engine is already running');
+      logger.warn('[VisualEngineV21] Engine is already running');
       return;
     }
 
@@ -143,7 +147,7 @@ export class TitaneVisualEngineV21 extends EventEmitter {
     this.startRenderLoop();
 
     this.emit('engineStart');
-    console.log('[VisualEngineV21] Engine started', {
+    logger.info('[VisualEngineV21] Engine started', {
       state: this.currentState,
       config: this.currentConfig,
     });
@@ -178,7 +182,7 @@ export class TitaneVisualEngineV21 extends EventEmitter {
     }
 
     this.emit('engineStop');
-    console.log('[VisualEngineV21] Engine stopped');
+    logger.info('[VisualEngineV21] Engine stopped');
   }
 
   /**
@@ -607,7 +611,7 @@ export class TitaneVisualEngineV21 extends EventEmitter {
       this.realtimeSocket = new realtimeSocketCtor(url);
 
       this.realtimeSocket.onopen = () => {
-        console.log('[VisualEngineV21] Realtime socket connected');
+        logger.info('[VisualEngineV21] Realtime socket connected');
         this.websocketReconnectAttempts = 0;
         this.emit('websocketConnected');
       };
@@ -617,17 +621,17 @@ export class TitaneVisualEngineV21 extends EventEmitter {
           const data = JSON.parse(event.data);
           this.handleRealtimeSocketMessage(data);
         } catch (error) {
-          console.error('[VisualEngineV21] Realtime socket message parse error:', error);
+          logger.error('[VisualEngineV21] Realtime socket message parse error:', error);
         }
       };
 
       this.realtimeSocket.onerror = (error: any) => {
-        console.error('[VisualEngineV21] Realtime socket error:', error);
+        logger.error('[VisualEngineV21] Realtime socket error:', error);
         this.emit('websocketError', error);
       };
 
       this.realtimeSocket.onclose = () => {
-        console.log('[VisualEngineV21] Realtime socket disconnected');
+        logger.info('[VisualEngineV21] Realtime socket disconnected');
         this.emit('websocketDisconnected');
         this.realtimeSocket = null;
 
@@ -662,7 +666,7 @@ export class TitaneVisualEngineV21 extends EventEmitter {
         }, delayMs);
       };
     } catch (error) {
-      console.error('[VisualEngineV21] Realtime socket connection error:', error);
+      logger.error('[VisualEngineV21] Realtime socket connection error:', error);
       this.emit('websocketError', error);
     }
   }
@@ -712,7 +716,7 @@ export class TitaneVisualEngineV21 extends EventEmitter {
           break;
 
         default:
-          console.warn(
+          logger.warn(
             '[VisualEngineV21] Unknown realtime socket message type:',
             message.type
           );
@@ -757,7 +761,7 @@ export class TitaneVisualEngineV21 extends EventEmitter {
     this.stateChangeCallbacks.clear();
     this.configChangeCallbacks.clear();
     this.removeAllListeners();
-    console.log('[VisualEngineV21] Engine destroyed');
+    logger.info('[VisualEngineV21] Engine destroyed');
   }
 }
 

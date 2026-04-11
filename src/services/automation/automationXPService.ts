@@ -40,6 +40,10 @@ import {
 
 import { secureInvoke } from '@/lib/security';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('AutomationXP');
+
 // ═══════════════════════════════════════════════════════════════════════════
 // STORAGE KEYS
 // ═══════════════════════════════════════════════════════════════════════════
@@ -114,9 +118,9 @@ class AutomationXPService {
       this.checkDailyReset();
 
       this.initialized = true;
-      console.log('[AutomationXPService] ✅ Initialized');
+      logger.info('[AutomationXPService] ✅ Initialized');
     } catch (error) {
-      console.error('[AutomationXPService] ❌ Init failed:', error);
+      logger.error('[AutomationXPService] ❌ Init failed:', error);
     }
   }
 
@@ -151,7 +155,7 @@ class AutomationXPService {
         this.actionLog = newLog;
       }
     } catch (error) {
-      console.warn('[AutomationXPService] Failed to load state:', error);
+      logger.warn('[AutomationXPService] Failed to load state:', error);
     }
   }
 
@@ -170,7 +174,7 @@ class AutomationXPService {
         JSON.stringify(Object.fromEntries(this.actionLog))
       );
     } catch (error) {
-      console.warn('[AutomationXPService] Failed to save state:', error);
+      logger.warn('[AutomationXPService] Failed to save state:', error);
     }
   }
 
@@ -180,7 +184,7 @@ class AutomationXPService {
       // Backend exp_fusion commands are read-only (exp_get_global_state, exp_get_talents, etc.)
       // No write/sync command exists → This sync is a NOOP
       // Keeping for future implementation when write endpoint is added
-      console.warn(
+      logger.warn(
         '[AutomationXPService] xp_sync_state not implemented in backend - skipping sync'
       );
       return;
@@ -204,7 +208,7 @@ class AutomationXPService {
   public addXP(actionId: XPActionId, _metadata?: Record<string, unknown>): number {
     const action = XP_ACTIONS[actionId];
     if (!action) {
-      console.warn(`[AutomationXPService] Unknown action: ${actionId}`);
+      logger.warn(`[AutomationXPService] Unknown action: ${actionId}`);
       return 0;
     }
 
@@ -291,7 +295,7 @@ class AutomationXPService {
   }
 
   private handleLevelUp(previousLevel: UserLevel, newLevel: UserLevel): void {
-    console.log(`[AutomationXPService] 🎉 Level up: ${previousLevel} → ${newLevel}`);
+    logger.info(`[AutomationXPService] 🎉 Level up: ${previousLevel} → ${newLevel}`);
 
     this.notifyXPEvent({
       type: 'level_up',
@@ -306,7 +310,7 @@ class AutomationXPService {
     if (levelConfig) {
       // Notifier pour les unlocks
       levelConfig.unlocks.forEach(unlock => {
-        console.log(`[AutomationXPService] 🔓 Unlocked: ${unlock}`);
+        logger.info(`[AutomationXPService] 🔓 Unlocked: ${unlock}`);
       });
     }
   }
@@ -420,7 +424,7 @@ class AutomationXPService {
       xp_earned: achievement.xp_reward,
     });
 
-    console.log(`[AutomationXPService] 🏆 Achievement unlocked: ${achievement.name}`);
+    logger.info(`[AutomationXPService] 🏆 Achievement unlocked: ${achievement.name}`);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -729,7 +733,7 @@ class AutomationXPService {
       try {
         cb(event);
       } catch (e) {
-        console.error(e);
+        logger.error(e);
       }
     });
   }
@@ -739,7 +743,7 @@ class AutomationXPService {
       try {
         cb(event);
       } catch (e) {
-        console.error(e);
+        logger.error(e);
       }
     });
   }
@@ -749,7 +753,7 @@ class AutomationXPService {
       try {
         cb(event);
       } catch (e) {
-        console.error(e);
+        logger.error(e);
       }
     });
   }

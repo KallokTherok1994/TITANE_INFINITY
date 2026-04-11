@@ -42,6 +42,9 @@ import type {
   DevOpsAction,
   ActionType,
 } from '../../types/devops';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('LocalAgent');
 
 // ============================================================================
 // LOCAL AGENT ENGINE
@@ -60,7 +63,7 @@ class LocalAgentEngine {
   private readonly CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
   private constructor() {
-    console.log('[LocalAgentEngine] Initialized v30.0.0');
+    logger.info('[LocalAgentEngine] Initialized v30.0.0');
   }
 
   public static getInstance(): LocalAgentEngine {
@@ -78,32 +81,32 @@ class LocalAgentEngine {
     this.resetStateForTests();
 
     if (this.enabled) {
-      console.log('[LocalAgentEngine] Already enabled');
+      logger.info('[LocalAgentEngine] Already enabled');
       return;
     }
 
-    console.log('[LocalAgentEngine] Enabling...');
+    logger.info('[LocalAgentEngine] Enabling...');
     this.enabled = true;
 
     // Analyser projet actuel
     try {
       const projectRoot = process.cwd();
       this.currentProject = await this.analyzeProject(projectRoot);
-      console.log(
+      logger.info(
         '[LocalAgentEngine] Current project analyzed:',
         this.currentProject.project_type
       );
     } catch (error) {
-      console.warn('[LocalAgentEngine] Could not analyze current project:', error);
+      logger.warn('[LocalAgentEngine] Could not analyze current project:', error);
     }
 
-    console.log('[LocalAgentEngine] Enabled successfully');
+    logger.info('[LocalAgentEngine] Enabled successfully');
   }
 
   public async disable(): Promise<void> {
     if (!this.enabled) return;
 
-    console.log('[LocalAgentEngine] Disabling...');
+    logger.info('[LocalAgentEngine] Disabling...');
     this.enabled = false;
 
     // Pause tous les workflows
@@ -113,7 +116,7 @@ class LocalAgentEngine {
       }
     }
 
-    console.log('[LocalAgentEngine] Disabled');
+    logger.info('[LocalAgentEngine] Disabled');
   }
 
   public isEnabled(): boolean {
@@ -131,12 +134,12 @@ class LocalAgentEngine {
    * @returns Analyse complète du projet
    */
   public async analyzeProject(projectRoot: string): Promise<ProjectAnalysis> {
-    console.log('[LocalAgentEngine] Analyzing project:', projectRoot);
+    logger.info('[LocalAgentEngine] Analyzing project:', projectRoot);
 
     // Check cache
     const cached = this.projectCache.get(projectRoot);
     if (cached) {
-      console.log('[LocalAgentEngine] Using cached analysis');
+      logger.info('[LocalAgentEngine] Using cached analysis');
       return cached;
     }
 
@@ -161,11 +164,11 @@ class LocalAgentEngine {
 
     // Détecter type de projet
     analysis.project_type = await this.detectProjectType(projectRoot);
-    console.log('[LocalAgentEngine] Project type:', analysis.project_type);
+    logger.info('[LocalAgentEngine] Project type:', analysis.project_type);
 
     // Détecter technologies
     analysis.detected_technologies = await this.detectTechnologies(projectRoot);
-    console.log(
+    logger.info(
       '[LocalAgentEngine] Technologies:',
       analysis.detected_technologies.map(t => t.name)
     );
@@ -201,7 +204,7 @@ class LocalAgentEngine {
     this.projectCache.set(projectRoot, analysis);
     setTimeout(() => this.projectCache.delete(projectRoot), this.CACHE_TTL_MS);
 
-    console.log('[LocalAgentEngine] Project analysis complete:', {
+    logger.info('[LocalAgentEngine] Project analysis complete:', {
       type: analysis.project_type,
       technologies: analysis.detected_technologies.length,
       issues: analysis.issues.length,
@@ -232,7 +235,7 @@ class LocalAgentEngine {
 
       return 'unknown';
     } catch (error) {
-      console.warn('[LocalAgentEngine] Project type detection failed:', error);
+      logger.warn('[LocalAgentEngine] Project type detection failed:', error);
       return 'unknown';
     }
   }
@@ -278,7 +281,7 @@ class LocalAgentEngine {
         });
       }
     } catch (error) {
-      console.warn('[LocalAgentEngine] Technology detection failed:', error);
+      logger.warn('[LocalAgentEngine] Technology detection failed:', error);
     }
 
     return technologies;
@@ -312,7 +315,7 @@ class LocalAgentEngine {
         // 3. Run cargo-audit --json (check for RustSec advisories)
       }
     } catch (error) {
-      console.warn('[LocalAgentEngine] Dependency analysis failed:', error);
+      logger.warn('[LocalAgentEngine] Dependency analysis failed:', error);
     }
 
     return info;
@@ -348,7 +351,7 @@ class LocalAgentEngine {
         }
       }
     } catch (error) {
-      console.warn('[LocalAgentEngine] Build config detection failed:', error);
+      logger.warn('[LocalAgentEngine] Build config detection failed:', error);
     }
 
     return config;
@@ -390,7 +393,7 @@ class LocalAgentEngine {
         };
       }
     } catch (error) {
-      console.warn('[LocalAgentEngine] Test config detection failed:', error);
+      logger.warn('[LocalAgentEngine] Test config detection failed:', error);
     }
 
     return undefined;
@@ -409,7 +412,7 @@ class LocalAgentEngine {
         };
       }
     } catch (error) {
-      console.warn('[LocalAgentEngine] Deployment config detection failed:', error);
+      logger.warn('[LocalAgentEngine] Deployment config detection failed:', error);
     }
 
     return undefined;
@@ -810,7 +813,7 @@ class LocalAgentEngine {
       estimated_duration: '5-15 minutes',
     };
 
-    console.log('[LocalAgentEngine] Pipeline generated:', {
+    logger.info('[LocalAgentEngine] Pipeline generated:', {
       name: pipeline.name,
       stages: pipeline.stages.length,
       estimated_duration: pipeline.estimated_duration,
@@ -882,7 +885,7 @@ class LocalAgentEngine {
 
     this.workflows.set(workflow.id, workflow);
 
-    console.log('[LocalAgentEngine] Workflow created:', {
+    logger.info('[LocalAgentEngine] Workflow created:', {
       id: workflow.id,
       name: workflow.name,
       steps: workflow.steps.length,
@@ -942,7 +945,7 @@ class LocalAgentEngine {
 
     this.lastHealthCheck = healthCheck;
 
-    console.log('[LocalAgentEngine] Health check complete:', {
+    logger.info('[LocalAgentEngine] Health check complete:', {
       overall_health: healthCheck.overall_health,
       issues: healthCheck.issues.length,
     });
@@ -974,7 +977,7 @@ class LocalAgentEngine {
       // 3. Hybrid: Environment detection + appropriate API selection
       return {}; // Placeholder - awaiting fs abstraction layer
     } catch (error) {
-      console.warn('[LocalAgentEngine] Failed to read JSON file:', path);
+      logger.warn('[LocalAgentEngine] Failed to read JSON file:', path);
       return {};
     }
   }

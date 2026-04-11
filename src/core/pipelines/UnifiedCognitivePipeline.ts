@@ -29,6 +29,10 @@
 import { secureInvoke } from '@/lib/security';
 import type { SingularityState } from '@/types/singularityState';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('CognitivePipe');
+
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
@@ -216,7 +220,7 @@ export class UnifiedCognitivePipeline {
    */
   public configure(config: Partial<PipelineConfig>): void {
     this.config = { ...this.config, ...config };
-    console.log('[UnifiedPipeline] 🔧 Configuration updated');
+    logger.info('[UnifiedPipeline] 🔧 Configuration updated');
   }
 
   /**
@@ -246,7 +250,7 @@ export class UnifiedCognitivePipeline {
    * Traite un message utilisateur - POINT D'ENTRÉE PRINCIPAL
    */
   public async processMessage(message: UserMessage): Promise<PipelineResult> {
-    console.log('[UnifiedPipeline] 🚀 Processing message:', message.id);
+    logger.info('[UnifiedPipeline] 🚀 Processing message:', message.id);
 
     const startTime = Date.now();
     const stageTimes: Record<string, number> = {};
@@ -256,13 +260,13 @@ export class UnifiedCognitivePipeline {
       const intentStart = Date.now();
       const intention = await this.analyzeIntention(message);
       stageTimes['intention'] = Date.now() - intentStart;
-      console.log('[UnifiedPipeline] ✅ Intention detected:', intention.primary_intent);
+      logger.info('[UnifiedPipeline] ✅ Intention detected:', intention.primary_intent);
 
       // 2. GÉNÉRATION COGNITIVE
       const cognitiveStart = Date.now();
       const cognitiveResponse = await this.generateCognitiveResponse(message, intention);
       stageTimes['cognitive'] = Date.now() - cognitiveStart;
-      console.log('[UnifiedPipeline] ✅ Cognitive response generated');
+      logger.info('[UnifiedPipeline] ✅ Cognitive response generated');
 
       // 3. PRÉPARATION TTS (si activé)
       let ttsAudio: TTSAudio | null = null;
@@ -270,7 +274,7 @@ export class UnifiedCognitivePipeline {
         const ttsStart = Date.now();
         ttsAudio = await this.prepareTTS(cognitiveResponse.text);
         stageTimes['tts'] = Date.now() - ttsStart;
-        console.log('[UnifiedPipeline] ✅ TTS audio prepared');
+        logger.info('[UnifiedPipeline] ✅ TTS audio prepared');
       }
 
       // 4. PRÉPARATION LIP-SYNC (si activé et TTS disponible)
@@ -279,14 +283,14 @@ export class UnifiedCognitivePipeline {
         const lipsyncStart = Date.now();
         avatarAnimation = await this.prepareAvatarAnimation(ttsAudio);
         stageTimes['lipsync'] = Date.now() - lipsyncStart;
-        console.log('[UnifiedPipeline] ✅ Avatar animation prepared');
+        logger.info('[UnifiedPipeline] ✅ Avatar animation prepared');
       }
 
       // 5. MISE À JOUR ÉTAT GLOBAL
       const stateStart = Date.now();
       const stateUpdates = await this.prepareStateUpdates(intention, cognitiveResponse);
       stageTimes['state'] = Date.now() - stateStart;
-      console.log('[UnifiedPipeline] ✅ State updates prepared');
+      logger.info('[UnifiedPipeline] ✅ State updates prepared');
 
       // 6. RÉSULTAT FINAL
       const processingTime = Date.now() - startTime;
@@ -307,11 +311,11 @@ export class UnifiedCognitivePipeline {
       // Mettre à jour métriques
       this.updateMetrics(result);
 
-      console.log(`[UnifiedPipeline] ✨ Processing complete in ${processingTime}ms`);
+      logger.info(`[UnifiedPipeline] ✨ Processing complete in ${processingTime}ms`);
 
       return result;
     } catch (error) {
-      console.error('[UnifiedPipeline] ❌ Processing failed:', error);
+      logger.error('[UnifiedPipeline] ❌ Processing failed:', error);
 
       this.metrics.total_errors++;
 
@@ -350,7 +354,7 @@ export class UnifiedCognitivePipeline {
 
       return result;
     } catch (error) {
-      console.warn('[UnifiedPipeline] Intention analysis failed, using fallback');
+      logger.warn('[UnifiedPipeline] Intention analysis failed, using fallback');
 
       // Analyse simple basée sur mots-clés
       const content = message.content.toLowerCase();
@@ -409,7 +413,7 @@ export class UnifiedCognitivePipeline {
 
       return result;
     } catch (error) {
-      console.warn('[UnifiedPipeline] Cognitive generation failed, using fallback');
+      logger.warn('[UnifiedPipeline] Cognitive generation failed, using fallback');
 
       return {
         text: `Je comprends votre message : "${message.content}". Comment puis-je vous aider ?`,
@@ -453,7 +457,7 @@ export class UnifiedCognitivePipeline {
       // When result is null/undefined (IPC success with void return), use empty TTSAudio.
       return result ?? this.createEmptyTTS();
     } catch (error) {
-      console.warn('[UnifiedPipeline] TTS generation failed');
+      logger.warn('[UnifiedPipeline] TTS generation failed');
       return this.createEmptyTTS();
     }
   }
@@ -475,7 +479,7 @@ export class UnifiedCognitivePipeline {
 
       return result;
     } catch (error) {
-      console.warn('[UnifiedPipeline] Avatar animation preparation failed');
+      logger.warn('[UnifiedPipeline] Avatar animation preparation failed');
       return this.createEmptyAnimation();
     }
   }

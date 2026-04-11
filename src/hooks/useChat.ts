@@ -36,6 +36,11 @@ import {
   StreamConfig,
 } from '@/services/api/chat';
 import { XPSource, XP_REWARDS } from '../types/experience';
+import {
+  calculateQualityXPReward,
+  calculateTitaneResponseXP,
+  type ConversationContext,
+} from '@/services/xp/messageQualityScorer';
 
 import { useVisionStore } from '@/stores/useVisionStore';
 import { useRequestInFlightStore } from '@/stores/useRequestInFlightStore';
@@ -161,6 +166,10 @@ import {
   getAdaptiveUITimeout,
   REQUEST_BUDGETS,
 } from '@/config/aiTimeouts.config'; // v22Ω: Centralized timeouts
+
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('ChatHook');
 
 let _cloudProvidersPromise: Promise<{
   openaiProvider: { isAvailable: () => Promise<boolean> };
@@ -873,7 +882,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       const hasMessages = normalized.length > 0;
 
       // 🚨 DEBUG: Log avant harmonisation
-      console.log('[useChat] 🔄 applyMessagesSafely appelée', {
+      logger.info('[useChat] 🔄 applyMessagesSafely appelée', {
         context,
         messagesCount: normalized.length,
         lastMessage: normalized[normalized.length - 1],
@@ -915,7 +924,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       const emitted = applied.map(message => ({ ...message }));
 
       // 🚨 DEBUG: Log avant setMessages
-      console.log('[useChat] ✅ setMessages() appelée', {
+      logger.info('[useChat] ✅ setMessages() appelée', {
         context,
         messagesCount: emitted.length,
         lastMessage: emitted[emitted.length - 1],
@@ -1151,7 +1160,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
             await saveMessage(userMessage);
             await saveMessage(devSudoResponse);
           } catch (persistError) {
-            console.warn('[useChat] ⚠️ dev-sudo persistence failed', persistError);
+            logger.warn('[useChat] ⚠️ dev-sudo persistence failed', persistError);
           }
 
           return devSudoResponse;
@@ -1201,7 +1210,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
             await saveMessage(userMessage);
             await saveMessage(cameraResponse);
           } catch (persistError) {
-            console.warn('[useChat] ⚠️ camera persistence failed', persistError);
+            logger.warn('[useChat] ⚠️ camera persistence failed', persistError);
           }
 
           return cameraResponse;
@@ -1862,7 +1871,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
               finalResponse = await executeStreaming();
             } catch (error) {
               streamingError = error instanceof Error ? error : new Error(String(error));
-              console.warn('[Chat] Streaming fallback triggered:', streamingError);
+              logger.warn('[Chat] Streaming fallback triggered:', streamingError);
             }
           }
         }
@@ -2014,7 +2023,7 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
           metadataPatch
         );
 
-        console.log(
+        logger.info(
           '[useChat OMNIS DEBUG] ✅ updateAssistant terminé, messages actuels:',
           messagesRef.current.length
         );
@@ -2064,38 +2073,83 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
           }
 
           // ═══ AWARD XP FOR SUCCESSFUL MESSAGE ═══
-          // Système XP global + domaines spécifiques
+          // Système XP qualité: points proportionnels à la qualité de l'interaction
           try {
             const { gainXP, awardExperience } = await loadExperienceTools();
 
-            // XP Global Engine (+5 XP pour le moteur global)
+            // Construire le contexte conversationnel pour l'évaluation
+            const conversationCtx: ConversationContext = {
+              messageCount: messagesRef.current.length,
+              recentTopics: [],
+              previousUserMessage: messagesRef.current
+                .filter(m => m.role === 'user')
+                .slice(-2, -1)[0]?.content,
+              previousAssistantResponse: messagesRef.current
+                .filter(m => m.role === 'assistant')
+                .slice(-2, -1)[0]?.content,
+            };
+
+            // Évaluer la qualité du message et calculer les XP
+            const qualityReward = calculateQualityXPReward(cleanMessage, conversationCtx);
+
+            // XP Global Engine (base + bonus qualité)
             gainXP(
-              XP_REWARDS.CHAT_MESSAGE,
+              qualityReward.totalXP,
               'chat_message',
-              `Message envoyé: ${cleanMessage.substring(0, 50)}...`
+              `Message [${qualityReward.tier}]: ${cleanMessage.substring(0, 50)}...`
             );
 
-            // XP Domaine Chat (+5 XP pour le domaine chat)
-            await awardExperience('chat', XP_REWARDS.CHAT_MESSAGE, XPSource.ChatMessage, {
+            // XP Domaine Chat: base XP + bonus qualité séparé
+            await awardExperience('chat', qualityReward.baseXP, XPSource.ChatMessage, {
               messageLength: cleanMessage.length,
               provider,
               mode: currentModeState,
             });
 
-            // XP Domaine Cognitive (+2 XP pour analyse cognitive si réponse longue)
-            if (finalContent && finalContent.length > 200) {
-              await awardExperience('cognitive', 2, XPSource.CognitiveAnalysis, {
-                responseLength: finalContent.length,
-                provider,
+            // XP Bonus qualité (séparé pour tracking précis)
+            if (qualityReward.qualityBonusXP > 0) {
+              await awardExperience('chat', qualityReward.qualityBonusXP, XPSource.ChatQualityBonus, {
+                qualityTier: qualityReward.tier,
+                qualityScore: qualityReward.score.total,
               });
             }
 
-            chatLogger.success('✨ XP awarded: +5 chat, +2 cognitive (si applicable)');
+            // XP TITANE réponse: TITANE gagne des XP à chaque réponse
+            const titaneXP = calculateTitaneResponseXP(
+              finalContent ? finalContent.length : 0,
+              true
+            );
+            await awardExperience('cognitive', titaneXP, XPSource.ChatTitaneResponse, {
+              responseLength: finalContent ? finalContent.length : 0,
+              provider,
+              titaneResponseXP: true,
+            });
+
+            chatLogger.success(
+              `✨ XP awarded: +${qualityReward.totalXP} chat [${qualityReward.tier}], +${titaneXP} cognitive (TITANE response)`
+            );
+
+            // Mettre à jour les métadonnées du message utilisateur pour afficher le badge XP
+            const updatedMessages = messagesRef.current.map(m => {
+              if (m === userMessage || (m.role === 'user' && m.timestamp === userMessage.timestamp)) {
+                return {
+                  ...m,
+                  metadata: {
+                    ...m.metadata,
+                    qualityTier: qualityReward.tier,
+                    xpAwarded: qualityReward.totalXP,
+                    qualityScore: qualityReward.score.total,
+                  },
+                };
+              }
+              return m;
+            });
+            applyMessagesSafely(updatedMessages, 'xp-quality-metadata');
           } catch (xpError) {
             chatLogger.warn('XP award warning', { error: xpError });
           }
         } catch (memoryError) {
-          console.warn('[Chat] Memory integration warning:', memoryError);
+          logger.warn('[Chat] Memory integration warning:', memoryError);
         }
 
         // ✨ v24.2.1: Use ref for stable dependency
@@ -2110,7 +2164,7 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
               assistantMessage.content
             );
           } catch (voiceError) {
-            console.warn('[Chat] Voice warning:', voiceError);
+            logger.warn('[Chat] Voice warning:', voiceError);
           }
         }
 
@@ -2121,7 +2175,7 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
 
         return assistantMessage;
       } catch (error) {
-        console.error('[Chat] Engine pipeline error:', error);
+        logger.error('[Chat] Engine pipeline error:', error);
 
         // 🧠 NOUVEAU v22Ω: Harmoniser l'erreur avec Cognitive Kernel
         const harmonizedError = cognitiveKernelRef.current.harmonizeError(error);
@@ -2202,7 +2256,7 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
     try {
       clearMode();
     } catch (error) {
-      console.warn('[OMNIS] Clear mode warning:', error);
+      logger.warn('[OMNIS] Clear mode warning:', error);
     }
   }, [applyMessagesSafely, clearMode]);
 
@@ -2212,7 +2266,7 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
       try {
         setCoreMode(mode);
       } catch (error) {
-        console.warn('[OMNIS] Set mode warning:', error);
+        logger.warn('[OMNIS] Set mode warning:', error);
       }
     },
     [setCoreMode]

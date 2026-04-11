@@ -235,11 +235,13 @@ const StatsPanel: React.FC<{ stats: MemoryStats | null; isLoading: boolean }> = 
 const FilterBar: React.FC<{
   selectedLevel: MemoryLevel | 'all';
   selectedTopic: MemoryTopic | 'all';
+  minImportance: number;
   sortBy: SortBy;
   viewMode: ViewMode;
   disabled?: boolean;
   onLevelChange: (level: MemoryLevel | 'all') => void;
   onTopicChange: (topic: MemoryTopic | 'all') => void;
+  onImportanceChange: (min: number) => void;
   onSortChange: (sort: SortBy) => void;
   onViewChange: (view: ViewMode) => void;
   searchQuery: string;
@@ -247,11 +249,13 @@ const FilterBar: React.FC<{
 }> = ({
   selectedLevel,
   selectedTopic,
+  minImportance,
   sortBy,
   viewMode,
   disabled = false,
   onLevelChange,
   onTopicChange,
+  onImportanceChange,
   onSortChange,
   onViewChange,
   searchQuery,
@@ -317,6 +321,22 @@ const FilterBar: React.FC<{
           ))}
         </select>
 
+        {/* Importance minimum */}
+        <select
+          value={minImportance}
+          onChange={e => onImportanceChange(Number(e.target.value))}
+          disabled={disabled}
+          aria-disabled={disabled}
+          className="px-2 py-1 bg-gray-900/50 border border-gray-700 rounded text-sm text-gray-300 focus:outline-none focus:border-blue-500"
+        >
+          <option value={0}>Toute importance</option>
+          <option value={1}>★ Trivial+</option>
+          <option value={2}>★★ Faible+</option>
+          <option value={3}>★★★ Normal+</option>
+          <option value={4}>★★★★ Important+</option>
+          <option value={5}>★★★★★ Critique</option>
+        </select>
+
         {/* Tri */}
         <select
           value={sortBy}
@@ -374,6 +394,7 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
   // État local
   const [selectedLevel, setSelectedLevel] = useState<MemoryLevel | 'all'>('all');
   const [selectedTopic, setSelectedTopic] = useState<MemoryTopic | 'all'>('all');
+  const [minImportance, setMinImportance] = useState<number>(0);
   const [sortBy, setSortBy] = useState<SortBy>('date');
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [searchQuery, setSearchQuery] = useState('');
@@ -467,6 +488,11 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
       result = result.filter(e => e.topic === selectedTopic);
     }
 
+    // Filtre par importance minimum
+    if (minImportance > 0) {
+      result = result.filter(e => e.importance >= minImportance);
+    }
+
     // Filtre par recherche
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
@@ -494,10 +520,10 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
     });
 
     return result;
-  }, [mergedEntries, selectedLevel, selectedTopic, searchQuery, sortBy]);
+  }, [mergedEntries, selectedLevel, selectedTopic, minImportance, searchQuery, sortBy]);
   const hasPersistentEntries = mergedEntries.length > 0;
   const hasActiveFilters =
-    searchQuery.trim().length > 0 || selectedLevel !== 'all' || selectedTopic !== 'all';
+    searchQuery.trim().length > 0 || selectedLevel !== 'all' || selectedTopic !== 'all' || minImportance > 0;
   const isEmptyPersistentMemory = !isLoading && !hasPersistentEntries;
   const resolvedSelectedEntryId =
     controlledSelectedEntryId !== undefined
@@ -558,11 +584,13 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
       <FilterBar
         selectedLevel={selectedLevel}
         selectedTopic={selectedTopic}
+        minImportance={minImportance}
         sortBy={sortBy}
         viewMode={viewMode}
         disabled={isEmptyPersistentMemory}
         onLevelChange={setSelectedLevel}
         onTopicChange={setSelectedTopic}
+        onImportanceChange={setMinImportance}
         onSortChange={setSortBy}
         onViewChange={setViewMode}
         searchQuery={searchQuery}

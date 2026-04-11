@@ -7,6 +7,10 @@
  * "Moteur parfait Chat IA - Mathematically impossible to break"
  */
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('OmnisFinalVal');
+
 // ═══════════════════════════════════════════════════════════════════
 // 🎯 OMNIS VALIDATION FINALE - 12 CRITÈRES DE PERFECTION
 // ═══════════════════════════════════════════════════════════════════
@@ -317,7 +321,7 @@ class OMNISFinalValidator {
    * Exécution complète de la validation OMNIS
    */
   async executeFullValidation(): Promise<OMNISFinalReport> {
-    console.log('🚀 DÉMARRAGE VALIDATION FINALE OMNIS...\n');
+    logger.info('🚀 DÉMARRAGE VALIDATION FINALE OMNIS...\n');
 
     // Exécution de tous les critères
     const validations = [
@@ -393,20 +397,20 @@ class OMNISFinalValidator {
    * Affichage du rapport final
    */
   displayReport(report: OMNISFinalReport): void {
-    console.log(
+    logger.info(
       '\n🟢 ═══════════════════════════════════════════════════════════════════'
     );
-    console.log('🏆 OMNIS FINAL VALIDATION COMPLETE - RAPPORT DÉPLOIEMENT');
-    console.log('═══════════════════════════════════════════════════════════════════\n');
+    logger.info('🏆 OMNIS FINAL VALIDATION COMPLETE - RAPPORT DÉPLOIEMENT');
+    logger.info('═══════════════════════════════════════════════════════════════════\n');
 
-    console.log(`📅 Timestamp: ${report.timestamp}`);
-    console.log(`🚀 Version: ${report.version}`);
-    console.log(`🏗️ Architecture: ${report.architecture}`);
-    console.log(`📊 Score Global: ${report.scoreGlobal}%`);
-    console.log(`🎯 Statut: ${report.deploymentStatus}`);
-    console.log(`🏆 Certification: ${report.certification}\n`);
+    logger.info(`📅 Timestamp: ${report.timestamp}`);
+    logger.info(`🚀 Version: ${report.version}`);
+    logger.info(`🏗️ Architecture: ${report.architecture}`);
+    logger.info(`📊 Score Global: ${report.scoreGlobal}%`);
+    logger.info(`🎯 Statut: ${report.deploymentStatus}`);
+    logger.info(`🏆 Certification: ${report.certification}\n`);
 
-    console.log('📋 CRITÈRES DE VALIDATION:\n');
+    logger.info('📋 CRITÈRES DE VALIDATION:\n');
     report.criteria.forEach((criterion, index) => {
       const icon =
         criterion.status === 'OPTIMAL'
@@ -414,50 +418,50 @@ class OMNISFinalValidator {
           : criterion.status === 'PASSED'
             ? '🟡'
             : '🔴';
-      console.log(`${icon} ${index + 1}. ${criterion.criterion}: ${criterion.score}%`);
-      console.log(`   ${criterion.details}`);
-      console.log(`   Evidence: ${criterion.evidence.length} éléments validés\n`);
+      logger.info(`${icon} ${index + 1}. ${criterion.criterion}: ${criterion.score}%`);
+      logger.info(`   ${criterion.details}`);
+      logger.info(`   Evidence: ${criterion.evidence.length} éléments validés\n`);
     });
 
-    console.log('⚡ MÉTRIQUES PERFORMANCE:');
-    console.log(`   Build Time: ${report.buildMetrics.buildTime}ms`);
-    console.log(
+    logger.info('⚡ MÉTRIQUES PERFORMANCE:');
+    logger.info(`   Build Time: ${report.buildMetrics.buildTime}ms`);
+    logger.info(
       `   Bundle Size: ${(report.buildMetrics.bundleSize / 1024 / 1024).toFixed(2)}MB`
     );
-    console.log(`   Modules: ${report.buildMetrics.moduleCount}`);
-    console.log(`   Gzip: ${(report.buildMetrics.gzipSize / 1024).toFixed(0)}KB\n`);
+    logger.info(`   Modules: ${report.buildMetrics.moduleCount}`);
+    logger.info(`   Gzip: ${(report.buildMetrics.gzipSize / 1024).toFixed(0)}KB\n`);
 
-    console.log('🛡️ SÉCURITÉ:');
-    console.log(
+    logger.info('🛡️ SÉCURITÉ:');
+    logger.info(
       `   Whitelist: ${report.securityValidation.whitelistActive ? '✅' : '❌'}`
     );
-    console.log(
+    logger.info(
       `   Command Security: ${report.securityValidation.commandSecurity ? '✅' : '❌'}`
     );
-    console.log(`   Encryption: ${report.securityValidation.encryptionLevel}\n`);
+    logger.info(`   Encryption: ${report.securityValidation.encryptionLevel}\n`);
 
-    console.log('🎯 RECOMMANDATION:');
-    console.log(`   ${report.recommendation}\n`);
+    logger.info('🎯 RECOMMANDATION:');
+    logger.info(`   ${report.recommendation}\n`);
 
     if (report.deploymentStatus === 'AUTHORIZED') {
-      console.log(
+      logger.info(
         '🟢 ═══════════════════════════════════════════════════════════════════'
       );
-      console.log('✅ DÉPLOIEMENT AUTORISÉ - OMNIS ARCHITECTURE CERTIFIÉE');
-      console.log('🚀 TITANE∞ v30.0.0 PRÊT POUR PRODUCTION');
-      console.log(
+      logger.info('✅ DÉPLOIEMENT AUTORISÉ - OMNIS ARCHITECTURE CERTIFIÉE');
+      logger.info('🚀 TITANE∞ v30.0.0 PRÊT POUR PRODUCTION');
+      logger.info(
         '🎯 "Moteur parfait Chat IA - Mathematically impossible to break" RÉALISÉ'
       );
-      console.log(
+      logger.info(
         '═══════════════════════════════════════════════════════════════════\n'
       );
     } else {
-      console.log(
+      logger.info(
         '🔴 ═══════════════════════════════════════════════════════════════════'
       );
-      console.log('❌ DÉPLOIEMENT REFUSÉ - SCORE INSUFFISANT');
-      console.log('🔧 CORRECTIONS REQUISES AVANT DÉPLOIEMENT');
-      console.log(
+      logger.info('❌ DÉPLOIEMENT REFUSÉ - SCORE INSUFFISANT');
+      logger.info('🔧 CORRECTIONS REQUISES AVANT DÉPLOIEMENT');
+      logger.info(
         '═══════════════════════════════════════════════════════════════════\n'
       );
     }
@@ -467,7 +471,7 @@ class OMNISFinalValidator {
    * Sauvegarde du rapport (simplifiée pour éviter les imports inutiles)
    */
   async saveReport(report: OMNISFinalReport): Promise<void> {
-    console.log(`📄 Rapport JSON généré (${JSON.stringify(report).length} caractères)\n`);
+    logger.info(`📄 Rapport JSON généré (${JSON.stringify(report).length} caractères)\n`);
   }
 }
 
@@ -485,4 +489,4 @@ export async function runOMNISFinalValidation(): Promise<OMNISFinalReport> {
 }
 
 // Auto-exécution
-runOMNISFinalValidation().catch(console.error);
+runOMNISFinalValidation().catch(err => logger.error('Error:', err));

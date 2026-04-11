@@ -221,6 +221,23 @@ export const MessageBubble = memo(function MessageBubble({
         <div className="message-bubble-header">
           <span className="message-bubble-author">{AUTHOR_NAMES[role]}</span>
           <span className="message-bubble-time">{formattedTime}</span>
+          {/* XP Quality tier badge for user messages */}
+          {role === 'user' && typeof metadata?.qualityTier === 'string' && (
+            <span
+              className={`message-xp-badge message-xp-badge-${metadata.qualityTier as string}`}
+              data-testid={`message-xp-badge-${timestamp}`}
+              title={`Qualité: ${metadata.qualityTier as string} (+${String(metadata.xpAwarded ?? '?')} XP)`}
+              aria-label={`Points XP: qualité ${metadata.qualityTier as string}`}
+            >
+              {metadata.qualityTier === 'exceptional' && '🌟'}
+              {metadata.qualityTier === 'excellent' && '⭐'}
+              {metadata.qualityTier === 'good' && '✨'}
+              {metadata.qualityTier === 'basic' && '💬'}
+              {metadata.qualityTier === 'minimal' && '·'}
+              {' +'}
+              {String(metadata.xpAwarded ?? '5')} XP
+            </span>
+          )}
           {/* LOCK1 — PROVIDER_DISPLAY_TRUTH: actual provider from backend, not localStorage */}
           {role === 'assistant' && typeof metadata?.providerUsed === 'string' && (
             <span

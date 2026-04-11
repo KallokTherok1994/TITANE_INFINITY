@@ -106,6 +106,9 @@ import {
   DEFAULT_AUDIO_CONFIG,
   AVAILABLE_VOICES,
 } from '../types';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('AudioService');
 
 const STORAGE_KEY = 'titane_audio_config';
 const DEVICE_CACHE_TTL = 30000; // 30 secondes
@@ -174,7 +177,7 @@ class AudioService {
       };
       this.saveConfig();
     }
-    console.log('[AudioService] Initialized. Tauri mode:', this.isTauri);
+    logger.info('[AudioService] Initialized. Tauri mode:', this.isTauri);
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -200,7 +203,7 @@ class AudioService {
         return JSON.parse(stored);
       }
     } catch (error) {
-      console.warn('Failed to load audio config:', error);
+      logger.warn('Failed to load audio config:', error);
     }
     return DEFAULT_AUDIO_CONFIG;
   }
@@ -210,7 +213,7 @@ class AudioService {
       this.config.lastUpdated = Date.now();
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.config));
     } catch (error) {
-      console.error('Failed to save audio config:', error);
+      logger.error('Failed to save audio config:', error);
     }
   }
 
@@ -283,7 +286,7 @@ class AudioService {
       };
       this.saveConfig();
     } catch (error) {
-      console.warn(
+      logger.warn(
         '[AudioService] Failed to hydrate TITANE active voice profile:',
         error
       );
@@ -342,7 +345,7 @@ class AudioService {
     try {
       await simpleTauriClient.identitySetActiveVoiceProfile({ voiceProfileId });
     } catch (error) {
-      console.warn('[AudioService] Failed to sync TITANE voice profile:', error);
+      logger.warn('[AudioService] Failed to sync TITANE voice profile:', error);
     }
   }
 
@@ -410,7 +413,7 @@ class AudioService {
       try {
         devices = (await simpleTauriClient.getAudioOutputDevices()) as AudioDevice[];
       } catch (error) {
-        console.warn('Failed to get output devices from Tauri:', error);
+        logger.warn('Failed to get output devices from Tauri:', error);
       }
     }
 
@@ -434,13 +437,13 @@ class AudioService {
           }));
         devices = webDevices;
       } catch (error) {
-        console.warn('Failed to enumerate devices:', error);
+        logger.warn('Failed to enumerate devices:', error);
       }
     }
 
     // No fake fallback: return empty array so UI can show real "no devices" state
     if (devices.length === 0) {
-      console.warn('[AudioService] No output audio devices found');
+      logger.warn('[AudioService] No output audio devices found');
     }
 
     // Update cache
@@ -471,7 +474,7 @@ class AudioService {
       try {
         devices = (await simpleTauriClient.getAudioInputDevices()) as AudioDevice[];
       } catch (error) {
-        console.warn('Failed to get input devices from Tauri:', error);
+        logger.warn('Failed to get input devices from Tauri:', error);
       }
     }
 
@@ -496,13 +499,13 @@ class AudioService {
             driver: 'webaudio',
           }));
       } catch (error) {
-        console.warn('Failed to enumerate input devices:', error);
+        logger.warn('Failed to enumerate input devices:', error);
       }
     }
 
     // No fake fallback: return empty array so UI can show real "no devices" state
     if (devices.length === 0) {
-      console.warn('[AudioService] No input audio devices found');
+      logger.warn('[AudioService] No input audio devices found');
     }
 
     // Update cache
@@ -531,7 +534,7 @@ class AudioService {
         // Tauri 2.0 attend camelCase pour les paramètres
         await simpleTauriClient.setAudioOutputDevice({ deviceId });
       } catch (error) {
-        console.warn('Failed to set output device:', error);
+        logger.warn('Failed to set output device:', error);
       }
 
       // Persist to canonical audio device config
@@ -547,7 +550,7 @@ class AudioService {
           outputDeviceLabel: deviceLabel,
         });
       } catch (e) {
-        console.warn('[AudioService] canonical audio config save failed:', e);
+        logger.warn('[AudioService] canonical audio config save failed:', e);
       }
     }
   }
@@ -561,7 +564,7 @@ class AudioService {
         // Tauri 2.0 attend camelCase pour les paramètres
         await simpleTauriClient.setAudioInputDevice({ deviceId });
       } catch (error) {
-        console.warn('Failed to set input device:', error);
+        logger.warn('Failed to set input device:', error);
       }
 
       // Persist to canonical audio device config
@@ -577,7 +580,7 @@ class AudioService {
           inputDeviceLabel: deviceLabel,
         });
       } catch (e) {
-        console.warn('[AudioService] canonical audio config save failed:', e);
+        logger.warn('[AudioService] canonical audio config save failed:', e);
       }
     }
   }
@@ -663,7 +666,7 @@ class AudioService {
   }
 
   async testMicrophone(durationMs: number = 3000): Promise<MicrophoneTestResult> {
-    console.log(
+    logger.info(
       '[AudioService] testMicrophone called, duration:',
       durationMs,
       'isTauri:',
@@ -672,7 +675,7 @@ class AudioService {
 
     try {
       if (this.isTauri) {
-        console.log('[AudioService] Calling Tauri test_microphone...');
+        logger.info('[AudioService] Calling Tauri test_microphone...');
         // Timeout = durée enregistrement + 5s de marge pour traitement
         const timeoutMs = durationMs + 5000;
         // Tauri 2.0 attend camelCase pour les paramètres de commande
@@ -680,16 +683,16 @@ class AudioService {
           { durationMs, deviceId: this.config.input.deviceId || undefined },
           { timeout: timeoutMs }
         )) as MicrophoneTestResult;
-        console.log('[AudioService] test_microphone result:', result);
+        logger.info('[AudioService] test_microphone result:', result);
         return result;
       }
 
       // Web Audio fallback - seulement en mode Web pur (pas Tauri)
-      console.log('[AudioService] Using Web Audio API fallback...');
+      logger.info('[AudioService] Using Web Audio API fallback...');
 
       // IMPORTANT: En mode Tauri, éviter getUserMedia car WebKitGTK peut causer des problèmes
       if (this.isTauri) {
-        console.warn('[AudioService] Tauri fallback attempted - avoiding Web APIs');
+        logger.warn('[AudioService] Tauri fallback attempted - avoiding Web APIs');
         return {
           success: false,
           peakLevel: 0,
@@ -754,7 +757,7 @@ class AudioService {
         setTimeout(() => {
           clearInterval(interval);
           stream.getTracks().forEach(t => t.stop());
-          audioContext.close().catch(console.warn);
+          audioContext.close().catch(err => logger.warn('AudioContext close error:', err));
 
           // Calculate noise floor (average of lowest 20% of samples)
           samples.sort((a, b) => a - b);
@@ -776,7 +779,7 @@ class AudioService {
         }, durationMs);
       });
     } catch (error) {
-      console.error('[AudioService] testMicrophone error:', error);
+      logger.error('[AudioService] testMicrophone error:', error);
 
       // Amélioration des messages d'erreur
       let errorMessage = 'Unknown error';
@@ -817,13 +820,13 @@ class AudioService {
 
   async speak(text: string, lifecycle?: AudioSpeakLifecycle): Promise<void> {
     if (!text || text.trim().length === 0) {
-      console.warn('[AudioService] speak() called with empty text');
+      logger.warn('[AudioService] speak() called with empty text');
       return;
     }
 
     // Prevent overlapping speech
     if (this.isSpeaking) {
-      console.log('[AudioService] Already speaking, stopping previous speech');
+      logger.info('[AudioService] Already speaking, stopping previous speech');
       await this.stop();
       await new Promise(resolve => setTimeout(resolve, 100));
     }
@@ -831,7 +834,7 @@ class AudioService {
     this.isSpeaking = true;
     this.isPaused = false;
     this.activeProvider = null;
-    console.log(
+    logger.info(
       '[AudioService] speak() called. Tauri mode:',
       this.isTauri,
       'Text:',
@@ -846,22 +849,22 @@ class AudioService {
           this.activeProvider = 'tauri';
           lifecycle?.onStart?.('tauri');
           await waitForUiFrame();
-          console.log('[AudioService] Invoking tts_speak via Tauri...');
+          logger.info('[AudioService] Invoking tts_speak via Tauri...');
           await simpleTauriClient.ttsSpeak({
             text,
             settings: this.buildRuntimeTTSSettings(),
           });
-          console.log('[AudioService] tts_speak completed successfully');
+          logger.info('[AudioService] tts_speak completed successfully');
           lifecycle?.onComplete?.('tauri');
         } catch (error) {
-          console.error('[AudioService] tts_speak error:', error);
+          logger.error('[AudioService] tts_speak error:', error);
           // Only fallback to Web Speech if it's available
           if (this.config.tts.autoFallback && this.isWebSpeechAvailable()) {
-            console.log('[AudioService] Falling back to Web Speech API...');
+            logger.info('[AudioService] Falling back to Web Speech API...');
             lifecycle?.onFallback?.('webspeech');
             await this.speakWithWebSpeech(text, lifecycle);
           } else {
-            console.warn(
+            logger.warn(
               '[AudioService] No TTS available (Tauri failed, Web Speech not supported)'
             );
             throw error;
@@ -903,7 +906,7 @@ class AudioService {
       return Promise.reject(new Error('Web Speech API not available'));
     }
 
-    console.log('[AudioService] Using Web Speech API');
+    logger.info('[AudioService] Using Web Speech API');
     const utterance = new SpeechSynthesisUtterance(text);
     this.currentUtterance = utterance;
     utterance.lang = this.config.tts.language;
@@ -918,12 +921,12 @@ class AudioService {
         lifecycle?.onStart?.('webspeech');
       };
       utterance.onend = () => {
-        console.log('[AudioService] Web Speech finished');
+        logger.info('[AudioService] Web Speech finished');
         lifecycle?.onComplete?.('webspeech');
         resolve();
       };
       utterance.onerror = e => {
-        console.error('[AudioService] Web Speech error:', e);
+        logger.error('[AudioService] Web Speech error:', e);
         reject(e);
       };
       window.speechSynthesis.speak(utterance);
@@ -931,7 +934,7 @@ class AudioService {
   }
 
   async stop(): Promise<void> {
-    console.log('[AudioService] stop() called');
+    logger.info('[AudioService] stop() called');
     this.isSpeaking = false;
     this.isPaused = false;
     this.currentUtterance = null;
@@ -947,9 +950,9 @@ class AudioService {
       try {
         await simpleTauriClient.stopSpeaking();
       } catch (err) {
-        console.error('[AudioService] stop_speaking error:', err);
+        logger.error('[AudioService] stop_speaking error:', err);
         await simpleTauriClient.ttsStop().catch(fallbackErr => {
-          console.error('[AudioService] tts_stop error:', fallbackErr);
+          logger.error('[AudioService] tts_stop error:', fallbackErr);
         });
       }
     }
@@ -1010,7 +1013,7 @@ class AudioService {
           supportsPause: true,
         };
       } catch (error) {
-        console.warn('[AudioService] Failed to query Tauri speaking state:', error);
+        logger.warn('[AudioService] Failed to query Tauri speaking state:', error);
       }
     }
 
@@ -1051,7 +1054,7 @@ class AudioService {
       };
       return result;
     } catch (error) {
-      console.error('[AudioService] VAD get state error:', error);
+      logger.error('[AudioService] VAD get state error:', error);
       return { state: 'silence', isSpeaking: false };
     }
   }
@@ -1073,7 +1076,7 @@ class AudioService {
       })) as { state: string; isSpeaking: boolean };
       return result;
     } catch (error) {
-      console.error('[AudioService] VAD process frame error:', error);
+      logger.error('[AudioService] VAD process frame error:', error);
       return { state: 'silence', isSpeaking: false };
     }
   }
@@ -1097,10 +1100,10 @@ class AudioService {
           minSilenceFrames: config.minSilenceFrames ?? 20,
         },
       })) as string;
-      console.log('[AudioService] VAD configured:', result);
+      logger.info('[AudioService] VAD configured:', result);
       return result;
     } catch (error) {
-      console.error('[AudioService] VAD configure error:', error);
+      logger.error('[AudioService] VAD configure error:', error);
       throw error;
     }
   }
@@ -1114,10 +1117,10 @@ class AudioService {
     }
     try {
       const result = (await simpleTauriClient.vadReset()) as string;
-      console.log('[AudioService] VAD reset:', result);
+      logger.info('[AudioService] VAD reset:', result);
       return result;
     } catch (error) {
-      console.error('[AudioService] VAD reset error:', error);
+      logger.error('[AudioService] VAD reset error:', error);
       throw error;
     }
   }
@@ -1169,7 +1172,7 @@ class AudioService {
         message: string;
       };
 
-      console.log('[AudioService] VAD test result:', result);
+      logger.info('[AudioService] VAD test result:', result);
 
       return {
         success: result.success,
@@ -1182,7 +1185,7 @@ class AudioService {
         message: result.message,
       };
     } catch (error) {
-      console.error('[AudioService] VAD test error:', error);
+      logger.error('[AudioService] VAD test error:', error);
       return {
         success: false,
         tests: {

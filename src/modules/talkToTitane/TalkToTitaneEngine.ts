@@ -17,6 +17,10 @@
 
 import { autoSaveConversationEngine } from './AutoSaveConversationEngine';
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('TalkToTitane');
+
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
@@ -127,7 +131,7 @@ class TalkToTitaneEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async activate(mode: TalkToTitaneMode = 'continuous'): Promise<void> {
-    console.log('[TalkToTitane] Activating Talk-To-TITANE Engine v∞...');
+    logger.info('[TalkToTitane] Activating Talk-To-TITANE Engine v∞...');
 
     this.state.isActive = true;
     this.state.currentMode = mode;
@@ -139,12 +143,12 @@ class TalkToTitaneEngine {
     // Start listening for wake phrases
     await this.startWakePhraseDetection();
 
-    console.log(`[TalkToTitane] Activated in ${mode} mode`);
+    logger.info(`[TalkToTitane] Activated in ${mode} mode`);
     this.notifyListeners();
   }
 
   async deactivate(): Promise<void> {
-    console.log('[TalkToTitane] Deactivating Talk-To-TITANE Engine...');
+    logger.info('[TalkToTitane] Deactivating Talk-To-TITANE Engine...');
 
     this.stopListening();
 
@@ -164,7 +168,7 @@ class TalkToTitaneEngine {
     this.state.isListening = false;
     this.state.currentIntent = null;
 
-    console.log('[TalkToTitane] Deactivated');
+    logger.info('[TalkToTitane] Deactivated');
     this.notifyListeners();
   }
 
@@ -173,7 +177,7 @@ class TalkToTitaneEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   private async startWakePhraseDetection(): Promise<void> {
-    console.log('[TalkToTitane] Wake phrase detection active...');
+    logger.info('[TalkToTitane] Wake phrase detection active...');
 
     // Dynamic import pour éviter bundling
     const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
@@ -205,7 +209,7 @@ class TalkToTitaneEngine {
         };
 
         this.state.lastWakePhrase = wakePhrase;
-        console.log(`[TalkToTitane] Wake phrase detected: "${phrase}"`);
+        logger.info(`[TalkToTitane] Wake phrase detected: "${phrase}"`);
 
         // Start listening
         if (!this.state.isListening) {
@@ -232,14 +236,14 @@ class TalkToTitaneEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   private startListening(): void {
-    console.log('[TalkToTitane] Listening activated...');
+    logger.info('[TalkToTitane] Listening activated...');
     this.state.isListening = true;
     this.lastProcessedLength = 0;
     this.notifyListeners();
   }
 
   stopListening(): void {
-    console.log('[TalkToTitane] Listening stopped');
+    logger.info('[TalkToTitane] Listening stopped');
     this.state.isListening = false;
     this.notifyListeners();
   }
@@ -498,7 +502,7 @@ class TalkToTitaneEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async processUserInput(text: string): Promise<TalkResponse> {
-    console.log('[TalkToTitane] Processing input:', text);
+    logger.info('[TalkToTitane] Processing input:', text);
 
     // Detect intent
     const intent = await this.detectIntent(text);
@@ -707,7 +711,7 @@ class TalkToTitaneEngine {
     // Features:
     //   - Emotion mapping: joy -> higher pitch, sadness -> slower speed
     //   - Interruption: tts_stop() for dynamic conversations
-    console.log(`[TalkToTitane] TTS: "${text}" (volume: ${this.config.ttsVolume})`);
+    logger.info(`[TalkToTitane] TTS: "${text}" (volume: ${this.config.ttsVolume})`);
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -738,13 +742,13 @@ class TalkToTitaneEngine {
 
   configure(config: Partial<TalkToTitaneConfig>): void {
     this.config = { ...this.config, ...config };
-    console.log('[TalkToTitane] Configuration updated:', config);
+    logger.info('[TalkToTitane] Configuration updated:', config);
     this.notifyListeners();
   }
 
   setMode(mode: TalkToTitaneMode): void {
     this.state.currentMode = mode;
-    console.log(`[TalkToTitane] Mode changed to: ${mode}`);
+    logger.info(`[TalkToTitane] Mode changed to: ${mode}`);
     this.notifyListeners();
   }
 
@@ -752,7 +756,7 @@ class TalkToTitaneEngine {
     tone: 'analytical' | 'calm' | 'energizing' | 'motivating' | 'neutral'
   ): void {
     this.state.emotionalCalibration = tone;
-    console.log(`[TalkToTitane] Emotional calibration: ${tone}`);
+    logger.info(`[TalkToTitane] Emotional calibration: ${tone}`);
     this.notifyListeners();
   }
 
