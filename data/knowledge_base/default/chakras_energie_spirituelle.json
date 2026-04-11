@@ -1,0 +1,122 @@
+{
+  "version": "v30.0.0",
+  "category": "chakras_energie_spirituelle",
+  "description": "Chakras et énergie spirituelle avancée — système des 7 chakras principaux (localisation, correspondances, déséquilibres et rééquilibrage), kundalini yoga, aura et corps subtils, lithothérapie (pierres et cristaux), Reiki et guérison énergétique, médecine traditionnelle chinoise (méridiens, QI), nadis et prana, mantras et sons sacrés, Ayurveda (doshas), pratiques énergétiques quotidiennes",
+  "chakras_energie_spirituelle": {
+    "introduction": "Le système des chakras est un modèle de compréhension de l'énergie vitale humaine, originaire de la tradition hindoue védique (1500-500 av. J.-C.). Au niveau VISIONNAIRE_2.0, TITANE maîtrise ces systèmes comme un praticien expérimenté, intégrant l'approche traditionnelle et la vision holistique contemporaine.",
+    "les_7_chakras": {
+      "1_muladhara": {
+        "nom_sanskrit": "Mūlādhāra — 'Racine, Support fondamental'",
+        "localisation": "Périnée, base de la colonne vertébrale, os du coccyx",
+        "couleur": "Rouge",
+        "element": "Terre",
+        "glande": "Surrénales",
+        "themes": "Survie, sécurité, ancrage, famille d'origine, argent, nourriture, maison, tribu",
+        "equilibre": "Sentiment de sécurité, ancré dans le présent, capacité à se nourrir et à pourvoir à ses besoins fondamentaux",
+        "desequilibre_exces": "Matérialisme, avarice, peur, attachement excessif, obésité, léthargie",
+        "desequilibre_deficience": "Anxiété chronique, insécurité, désorganisation, troubles alimentaires, déracinement",
+        "activation": "Marche pieds nus sur la terre, jardinage, méditation d'ancrage (visualiser des racines), posture Tadasana, aliments rouges et racines, cristaux (obsidienne, jaspe rouge, grenat)"
+      },
+      "2_svadhisthana": {
+        "nom_sanskrit": "Svādhiṣṭhāna — 'Sa propre demeure'",
+        "localisation": "2 doigts sous le nombril, zone sacrée",
+        "couleur": "Orange",
+        "element": "Eau",
+        "glande": "Gonades (ovaires/testicules)",
+        "themes": "Créativité, sexualité, émotions, plaisir, relations, abondance, fluidité",
+        "equilibre": "Créativité fluide, plaisir sain, émotions équilibrées, intimité satisfaisante",
+        "desequilibre": "Dépendance affective ou aux substances, culpabilité sexuelle, sécheresse créative, frigidité/hypersexualité",
+        "activation": "Danse, baignade, création artistique, orange alimentaire (mangue, carotte), kundalini yoga (mouvements circulaires des hanches), cristaux (cornaline, calcite orange)"
+      },
+      "3_manipura": {
+        "nom_sanskrit": "Maṇipūra — 'Joyau étincelant'",
+        "localisation": "Plexus solaire (entre nombril et sternum)",
+        "couleur": "Jaune",
+        "element": "Feu",
+        "glande": "Pancréas",
+        "themes": "Pouvoir personnel, volonté, confiance en soi, discipline, transformation, identité, estime de soi",
+        "equilibre": "Assertivité saine, motivation, action décisive, digestion optimale, confiance en soi",
+        "desequilibre_exces": "Domination, contrôle, rage, arrogance, workaholism",
+        "desequilibre_deficience": "Passivité, manque de confiance, victimisation, mauvaise digestion, fatigue chronique",
+        "activation": "Pranayama Kapalabhati (Souffle du feu), postures de torsion, visualisation boule de feu jaune, aliments jaunes (gingembre, curcuma, banane), cristaux (citrine, tigre œil, ambre)"
+      },
+      "4_anahata": {
+        "nom_sanskrit": "Anāhata — 'Son non frappé, pur'",
+        "localisation": "Centre de la poitrine, derrière le sternum",
+        "couleur": "Vert (ou rose)",
+        "element": "Air",
+        "glande": "Thymus",
+        "themes": "Amour inconditionnel, compassion, connexion, pardon, joie, grâce, relations saines",
+        "equilibre": "Capacité d'aimer et d'être aimé, pardon de soi et des autres, compassion sans sacrifice de soi",
+        "desequilibre": "Jalousie, codépendance, fermeture émotionnelle, deuil non résolu, sentiment de séparation",
+        "activation": "Pranayama du cœur, postures d'ouverture du cœur (Camel, Bridge, Ustrasana), gratitude quotidienne, méditation Metta (compassion bouddhiste), cristaux (quartz rose, malachite, aventurine verte)"
+      },
+      "5_vishuddha": {
+        "nom_sanskrit": "Viśuddha — 'Purification'",
+        "localisation": "Gorge, thyroïde",
+        "couleur": "Bleu ciel / Turquoise",
+        "element": "Éther/Espace",
+        "glande": "Thyroïde et parathyroïdes",
+        "themes": "Expression, communication, authenticité, vérité, écoute, créativité par la voix",
+        "equilibre": "Expression authentique, communication claire, écoute profonde, intégrité entre pensées/paroles/actes",
+        "desequilibre_exces": "Bavardage compulsif, interruptions, manipulation verbale, voix trop forte",
+        "desequilibre_deficience": "Timidité extrême, difficulté à s'exprimer, gorge serrée, peur du jugement, mensonge",
+        "activation": "Chant (kirtan, mantra), humming (fredonner en méditant), Jalandhara Bandha (Mula pose de la gorge), cristaux (lapis-lazuli, aigue-marine, turquoise, angélite)"
+      },
+      "6_ajna": {
+        "nom_sanskrit": "Ājñā — 'Commandement, Percevoir'",
+        "localisation": "Entre les sourcils (troisième œil)",
+        "couleur": "Indigo",
+        "element": "Lumière/Conscience",
+        "glande": "Glande pinéale",
+        "themes": "Intuition, clairvoyance, discernement, sagesse, imagination, visualisation, connexion au Supérieur",
+        "equilibre": "Intuition développée, clarté mentale, visions, accès aux rêves symboliques, discernement juste",
+        "desequilibre": "Illusions, pensée magique (déséquilibre excès), rationalisme rigide (déficience), cauchemars, maux de tête",
+        "activation": "Méditation de visualisation, tratak (fixation d'une flamme de bougie), yoga nidra, cristaux (améthydte, sodalite, lapis-lazuli, labradorite)"
+      },
+      "7_sahasrara": {
+        "nom_sanskrit": "Sahasrāra — 'Lotus aux 1000 pétales'",
+        "localisation": "Sommet du crâne (fontanelle)",
+        "couleur": "Violet / Blanc / Or",
+        "element": "Conscience / Espace",
+        "glande": "Glande pinéale / Hypophyse",
+        "themes": "Connexion au divin, éveil spirituel, sagesse universelle, unité, transcendance, paix profonde",
+        "equilibre": "Sentiment d'unité, paix intérieure profonde, connexion au sens de l'existence, sagesse intégrée",
+        "desequilibre": "Nihilisme, désespoir, déni du spirituel (déficience), addiction au spirituel, détachement de la réalité (excès)",
+        "activation": "Méditation silencieuse, Savasana prolongé, prière contemplative, jeûne, cristaux (quartz clair, améthyste couronne, séléinite, diamant Herkimer)"
+      }
+    },
+    "kundalini": {
+      "definition": "Énergie primordiale (serpent enroulé à la base de la colonne) qui remonte à travers les chakras vers le Sahasrara lors de l'éveil spirituel. Kundalini Yoga (Yogi Bhajan) : kriyas, pranayama, mantras, postures.",
+      "eveil": "Expérience intense : chaleur remontant le long de la colonne, vibrations, extase, visions. Peut être destabilisant sans accompagnement. Prérequis : bases solides de méditation, corps purifié, vie saine."
+    },
+    "corps_subtils_et_aura": {
+      "corps_subtils": "Couches d'énergie entourant le corps physique (7 corps). Corps éthérique (prâna), corps astral (émotions), corps mental (pensées), corps causal (karma).",
+      "aura": "Champ d'énergie lumineux autour du corps physique. Visible par certains clairvoyants ou photographié (Kirlian). Couleurs reflètent l'état de santé physique, émotionnel et spirituel. Aura reading (lecture d'aura).",
+      "nettoyage_energetique": "Sauge blanche (smudging), son de bols tibétains, encens (palo santo, frankincense), bain de sel (sel de mer ou Himalaya dans l'eau), visualisation lumière blanche."
+    },
+    "lithotherapie": {
+      "bases": "Pierre + intention + conscience = outil de transformation. La lithothérapie ne remplace pas la médecine conventionnelle. Le minéral a une fréquence vibratoire propre (piézoélectricité du quartz mesurable scientifiquement).",
+      "pierres_principales": {
+        "quartz_rose": "Amour, douceur, guérison émotionnelle. Cœur.",
+        "amethyste": "Protection, intuition, anti-stress, spiritualité. Troisième œil, couronne.",
+        "obsidienne": "Protection, ancrage, révélation des ombres. Racine.",
+        "labradorite": "Protection énergétique, magie, transformation, synchronicités. Troisième œil.",
+        "citrine": "Abondance, joie, lumière, motivation. Plexus solaire.",
+        "selenite": "Purification, connexion haute, nettoyage des autres pierres. Couronne.",
+        "malachite": "Transformation, protection, guérison du cœur. Cœur."
+      },
+      "utilisation": "Porter sur soi, placer dans l'espace (maison, bureau), méditer avec dans les mains, placer sur les chakras allongé, grille de cristaux, elixirs (certaines pierres toxiques)."
+    },
+    "pratiques_energetiques": {
+      "reiki": "Technique de soins énergétiques japonaise (Mikao Usui, 1922). Canalisation du Reiki (énergie universelle) par imposition des mains. Niveaux : Reiki 1 (auto-traitement), Reiki 2 (soins à distance), Maître-Enseignant.",
+      "QI_et_meridiens": "Médecine traditionnelle chinoise (MTC) : Qi (énergie vitale) circule dans des méridiens (12 principaux + extra). Acupuncture (aiguilles), acupression, Qi Gong, Tai Chi pour équilibrer.",
+      "pranayama_energetique": {
+        "nadi_shodhana": "Respiration alternée des narines (Anulom Vilom). Équilibre Ida (lunaire, gauche) et Pingala (solaire, droite) nadis.",
+        "kapalabhati": "Expirations rapides et actives. Nettoie les nadis, active le feu digestif, énergise.",
+        "bhramari": "Respiration du bourdon (humming). Apaise le système nerveux, active le troisième œil.",
+        "bhastrika": "Soufflet de forge : inspirations et expirations rapides et profondes. Charge d'énergie rapide."
+      }
+    }
+  }
+}

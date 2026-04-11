@@ -1,0 +1,75 @@
+{
+  "version": "v30.0.0",
+  "category": "renovation_bricolage_habitat",
+  "description": "Rénovation et bricolage habitat avancé — plomberie (tuyauterie, robinetterie, évacuations, chauffe-eau), électricité (normes NF C 15-100, tableau, prises, éclairage), peinture et enduits (préparation, application, finitions), carrelage et revêtements de sol, isolation thermique et acoustique, menuiserie intérieure (portes, fenêtres, plinthes), maçonnerie légère, rénovation salle de bain et cuisine, estimation et gestion d'un chantier",
+  "renovation_bricolage_habitat": {
+    "introduction": "La rénovation immobilière est une compétence qui valorise votre patrimoine et réduit les coûts. De la petite réparation au chantier complet, TITANE vous accompagne avec des connaissances techniques précises, conformes aux normes françaises en vigueur.",
+    "plomberie": {
+      "notions_base": {
+        "circuit_eau": "Eau froide (CF) et eau chaude sanitaire (ECS). Pression réseau 2-4 bars. Compteur eau → vanne d'arrêt principale → distribution.",
+        "materiaux_tuyauterie": "Cuivre (soudure à l'étain ou raccords à sertir), PER (polyéthylène réticulé, gaine de couleur bleu/rouge/violet, raccords à compression ou sertir), multicouche, PVC-C (eau froide), inox.",
+        "raccords": "Raccords à sertir (outil spécial), compression, à visser (filetage NPT/BSP), manchon, coude 90°, té."
+      },
+      "interventions_courantes": {
+        "robinetterie": "Changer un joint de robinet (caoutchouc ou céramique), remplacement robinet mitigeur, démonter siphon (bouchon, joint plat), déboucher (ventouse, furet, produit enzymatique).",
+        "chauffe_eau": "Chauffe-eau électrique : changer la résistance (vidange obligatoire), anode magnésium (protège contre la corrosion, à changer tous les 2-5 ans). Chauffe-eau thermodynamique : COP 2.5-3.5. Règlementation eau chaude : 60°C mini au ballon.",
+        "fuite": "Localiser (compteur arrêté, test de présence de fuite), réparer (mastic, téflon pour filetages, soudure étanchéité)."
+      },
+      "normes": "NF DTU 60.1 (plomberie sanitaire). Pente obligatoire pour évacuations : 1-3 cm/m minimum. Siphon obligatoire sur chaque appareil."
+    },
+    "electricite": {
+      "normes_NFC15100": {
+        "tableau": "Disjoncteur différentiel de tête (500 mA type S), disjoncteurs 16A (prises), 20A (cuisine), 32A (plaque induction), différentiels 30 mA (pièces sèches et humides).",
+        "prises_eclairage": "Prise 2P+T (phase, neutre, terre). Dans salle de bain : règle des volumes (0, 1, 2). TBTS uniquement en volume 0. IP44 minimum en volume 1.",
+        "sections_cables": "Éclairage : 1.5 mm². Prises 16A : 2.5 mm². Plaques induction : 6 mm². Four : 4 mm²."
+      },
+      "interventions": {
+        "ajouter_prise": "Vérifier la charge du circuit (max 8 prises sur un circuit 16A). Câble 2.5mm² H07V-U ou NYM. Coupure de courant obligatoire. Tester avec le multimètre.",
+        "interrupteur_variateur": "Remplacer un interrupteur : repérer les fils (phase, neutre, va-et-vient). Variateur : compatible ampoules LED (vérifier DIM sur l'ampoule).",
+        "eclairage_LED": "Ampoule LED : flux en lumens (≠ watts). Température couleur : 2700K (chaud, salon), 4000K (neutre, bureau), 6500K (froid, atelier). IRC > 80 pour rendu fidèle des couleurs.",
+        "secu": "JAMAIS toucher à un circuit sous tension. Tester avec un testeur de tension (voltmètre, stylo testeur). Couper le disjoncteur + étiquetter."
+      }
+    },
+    "peinture_et_enduits": {
+      "preparation": {
+        "imperviable": "La préparation = 70% du résultat final. Reboucher fissures (enduit lissage). Égrenage du papier peint. Décapage ancienne peinture écaillée. Dégraissage.",
+        "primaires": "Primaire d'accrochage (surfaces lisses, carrelage). Primaire isolant (taches, bois). Primaire anti-humidité."
+      },
+      "application": {
+        "rouleaux": "Poil court (4-6mm) pour surfaces lisses. Poil long (10-12mm) pour textures et radiatifs. Armé pour plafonds.",
+        "techniques": "Croisé (rouleau horizontal puis vertical pour homogénéité). Éviter les coups de pinceau visibles : lisser dans le même sens en fin d'application.",
+        "peintures": "Acrylique (séchage rapide, inodore, lavable). Glycéro (brillant plus durable, séchage lent, white spirit). Finitions : mat (cache défauts), satin (facile à nettoyer), brillant (radiatifs, huisseries). A+ = éco-certifié."
+      },
+      "effets_decoratifs": "Badigeon (effet vieilli), béton ciré (murs et sols), effet lin, tadelakt (enduit marocain hydrofuge), chaux teintée, stuc vénitien."
+    },
+    "carrelage_sols": {
+      "types_carreaux": "Grès cérame (résistant, salle de bain), faïence (murs uniquement, < 3.5 Mohs), pierre naturelle (marbre, ardoise — entretien spécifique), parquet stratifié (AC3-AC5 résistance), vinyle/LVT (imperméable, confort acoustique).",
+      "pose": {
+        "preparation_support": "Primaire d'accrochage, ragréage (planéité ≤ 5mm sous règle de 2m), désolidarisation si plancher chauffant.",
+        "colle_et_joints": "Colle flexible (C2 + S1 pour plancher chauffant). Joint de fractionnement tous les 25 m². Joints entre carreaux 2-5mm (spatule dentelée adaptée à la taille du carreau).",
+        "pose_motifs": "Pose droite, pose décalée (1/2 carreau, 1/3), pose diagonale, opus incertum (irrégulier). Calcul des chutes et quantités (+10%)."
+      }
+    },
+    "isolation": {
+      "thermique": {
+        "materiaux": "Laine de verre/roche (ITE, ITI, plafonds), ouate de cellulose (soufflage, écologique), polyuréthane (PU, forte résistance par cm), polystyrène expansé/extrudé (sols, dallages).",
+        "normes_RT2020": "RE2020 (Réglementation Environnementale 2020). Bbio, Cep, Ic énergie, Ic carbone. Ponts thermiques (zones de froid) à traiter.",
+        "priorites": "1. Combles (30% des déperditions). 2. Murs (25%). 3. Planchers bas (7%). 4. Fenêtres (13%)."
+      },
+      "acoustique": "Masse (double cloison), ressort (laine minérale), désolidarisation. Indice Rw (affaiblissement acoustique). Bruits aériens (voix) vs bruits d'impact (pas)."
+    },
+    "salle_de_bain_et_cuisine": {
+      "renovation_sdb": {
+        "ordre": "1. Démolition → 2. Plomberie rough-in → 3. Électricité → 4. Carrelage → 5. Menuiserie → 6. Sanitaires → 7. Finitions.",
+        "douche_italienne": "Receveur extra-plat ou tablette intégrée. Pente vers bonde (min 1%). Étanchéité KERDI ou SIKA obligatoire avant carrelage.",
+        "VMC": "Ventilation mécanique contrôlée obligatoire en zones humides. Débit minimum 15 m³/h pour salle de bain."
+      },
+      "renovation_cuisine": "Plan de travail (stratifié, quartz, marbre, bois huilé, inox). Crédence (carrelage, verre laqué, inox). Hauteur standard plan de travail : 90cm."
+    },
+    "gestion_chantier": {
+      "estimation": "Obtenir 3 devis comparatifs. Décomposer : main d'œuvre (60-70% souvent), matériaux (30-40%). Corps d'état : GO (gros œuvre), PL (plâtrerie), EL (électricité), PL (plomberie), menuiserie.",
+      "artisans": "Vérifier : SIRET, assurance décennale (10 ans, obligatoire), garanties biennale (2 ans). Qualibat, RGE (travaux énergétiques pour aides financières).",
+      "aides_france": "MaPrimeRénov' (isolation, chauffage), CEE (Certificats d'Économies d'Énergie), éco-PTZ (prêt à taux zéro travaux éco), TVA 5.5% pour travaux de rénovation énergétique."
+    }
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "version": "v30.0.0",
+  "category": "photographie_analyse_image",
+  "description": "Photographie et analyse d'image avancée — fondamentaux (triangle d'exposition, optique), composition (règle des tiers, lignes directrices, cadre dans le cadre, espace négatif), lumière naturelle et artificielle (direction, qualité, modifier), genres photographiques (portrait, paysage, street, macro, architecture, nature), post-traitement (Lightroom, Photoshop, Capture One), analyse critique d'images, photographie smartphone avancée",
+  "photographie_analyse_image": {
+    "introduction": "La photographie est l'art de maîtriser la lumière, le temps et l'espace pour créer une image qui communique une émotion, une idée ou une réalité. TITANE guide du mécanisme de l'objectif à l'analyse sémiologique de l'image.",
+    "fondamentaux_techniques": {
+      "triangle_exposition": {
+        "ouverture": {
+          "definition": "Taille de l'ouverture du diaphragme. Exprimée en f/nombre (f/1.4, f/2.8, f/16). Plus le chiffre est bas, plus l'ouverture est grande.",
+          "effets": "Grande ouverture (f/1.4-f/2.8) : faible profondeur de champ (arrière-plan flou = bokeh). Portrait, macro. Petite ouverture (f/8-f/16) : grande profondeur de champ. Paysage, architecture.",
+          "loi": "Chaque stop double/divise la quantité de lumière."
+        },
+        "vitesse": {
+          "definition": "Durée d'exposition du capteur. De 1/8000s (gel du mouvement) à 30s+ (poses longues).",
+          "effets": "Rapide (>1/500) : gel du mouvement (sport, oiseaux). Lente (<1/60) : flou de mouvement (filé de voiture, eau soyeuse). Règle : vitesse mini = 1/focale (ex: 50mm → 1/50s minimum)."
+        },
+        "ISO": {
+          "definition": "Sensibilité du capteur. ISO 100-200 (lumière abondante, qualité max), 800-3200 (intérieur), 6400+ (obscurité, bruit numérique).",
+          "bruit": "Artefacts visuels à haut ISO. Réducteur de bruit en post (Lightroom AI, Topaz DeNoise)."
+        }
+      },
+      "optique": {
+        "focales": "Grand angle (<35mm) : large champ, distorsion perspective, environnement. Standard (35-85mm) : vue proche de l'œil humain. Télé (>135mm) : compression perspective, isoler le sujet.",
+        "qualite_objectif": "Ouverture maximale, traitement antireflet, nombre de lamelles diaphragme (bokeh), aberrations chromatiques, distorsion, MTF (acuité). Primes vs zooms.",
+        "autofocus": "AF continu (suivi sport/animaux), AF ponctuel (portrait), détection visage/œil (Sony, Canon EOS R, Nikon Z).",
+        "stabilisation": "OIS (optique, dans l'objectif) vs IBIS (capteur, dans le boîtier) vs les deux (meilleur : Panasonic S5, Sony A7 IV)."
+      }
+    },
+    "composition": {
+      "regle_des_tiers": "Diviser le cadre en 9 parties (2 lignes H + 2 lignes V). Placer les sujets importants sur les lignes ou aux intersections (points forts). Naturel pour l'œil.",
+      "lignes_directrices": "Routes, clôtures, rivières, escaliers conduisent le regard vers le sujet principal. Créer de la profondeur et de la dynamique.",
+      "cadre_dans_cadre": "Utiliser des éléments naturels (arches, portes, branches, tunnels) pour encadrer le sujet. Isole le sujet et crée de la profondeur.",
+      "espace_negatif": "Vide autour du sujet. Donne de l'air, met en valeur le sujet. Minimalisme photographique.",
+      "symetrie_et_motifs": "Symétrie parfaite (bâtiments, miroirs d'eau). Briser la symétrie intentionnellement pour créer tension.",
+      "point_de_vue": "Élever (plongée, vue d'en haut), abaisser (contre-plongée, niveau du sol), inclinaison (dutch angle), rapprocher, reculer. La même scène, 10 perspectives différentes.",
+      "regle_des_odds": "Les objets en nombre impair (3, 5, 7) semblent plus naturels et esthétiques qu'en nombre pair."
+    },
+    "lumiere": {
+      "naturelle": {
+        "golden_hour": "1h après lever / 1h avant coucher du soleil. Lumière chaude (2000-3000K), rasante, ombres longues, dorée. Idéal portrait, paysage.",
+        "blue_hour": "30 min avant lever / 30 min après coucher. Lumière bleue diffuse. Architecture, cityscape.",
+        "lumiere_diffuse": "Ciel nuageux = softbox géante. Portraits flatteurs, couleurs saturées, pas d'ombres dures. Meilleur moment pour la macro et les portraits.",
+        "lumiere_dure": "Soleil direct à midi. Ombres franches et contrastées. À éviter portrait, excellent pour texture (architecture, désert)."
+      },
+      "artificielle": {
+        "studio": "Boîte à lumière (softbox : lumière diffuse et directionnelle), parapluies (large mais moins contrôlé), beauty dish (portrait mode), spot (accent).",
+        "schema_3_points": "Lumière principale (key light, sujet 45°), lumière de remplissage (fill light, côté opposé, moins intense pour réduire les ombres), lumière de séparation (hair light, fond, séparation fond).",
+        "flash_speedlite": "Flash externe TTL vs manuel. Bounce (rebondir sur plafond/mur). HSS (High Speed Sync) : figer à grande vitesse. Gelification couleur (filtres sur flash)."
+      }
+    },
+    "genres_photographiques": {
+      "portrait": {
+        "conseils": "85mm-135mm (compression flatteuse). Focus sur l'œil le plus proche. Grande ouverture (f/1.4-f/2.8) pour bokeh. Lumière diffuse ou golden hour. Mise en confiance du modèle.",
+        "poses": "Corps en 3/4 (amincit), menton légèrement avancé et incliné (évite double menton), yeux plissés légèrement (regard naturel), mains actives."
+      },
+      "paysage": "Trépied obligatoire pour longues poses et précision. Grand angle 16-24mm. Filtre CPL (réduction reflets eau/ciel, saturation), filtre ND (poses longues). Règle des tiers avec ligne d'horizon.",
+      "street_photography": "35mm ou 50mm. Être discret, réactif, proche. f/8, 1/250, ISO auto. Chercher la lumière naturelle forte, les contrastes, les histoires humaines. Henri Cartier-Bresson : 'l'instant décisif'.",
+      "macro": "Ratio 1:1 (sujet à taille réelle sur capteur). Objectif macro ou tubes allonges. Faible profondeur de champ extrême. Focus stacking pour tout net. Lumière critique.",
+      "nature_faune": "Téléobjectif 300-600mm. Patience. S'approcher sans déranger (longue focale, se poster en avance). Focus tracking avancé. Connaître le comportement de l'animal."
+    },
+    "post_traitement": {
+      "workflow_lightroom": {
+        "ordre": "Import RAW → Exposition globale → Blancs/noirs (histogramme aux extrêmes sans écrêtage) → Contrastes (courbe de tons, clarté) → Couleurs (TSL, saturation, vibrance) → Détails (netteté, bruit) → Objectif → Export.",
+        "masques_IA": "Masque Sujet, Ciel, Arrière-plan avec 1 clic (AI Lightroom 2023+). Ajustement local précis.",
+        "presets": "Développer son propre style avec des presets cohérents. Éviter les presets VSCO excessivement filtrés pour un usage professionnel."
+      },
+      "photoshop": "Retouche avancée : healing (tampon, correcteur de peau), Clone Stamp, liquéfier (retouche corps — usage éthique), masques de calques, Generative Fill (IA, incroyable pour extension de scène).",
+      "RAW_vs_JPEG": "RAW = données brutes du capteur, 14-16 bits, non compressé, récupération jusqu'à 4-5 stops, taille 20-40 Mo. JPEG = traitement in-camera, 8 bits, compression, 4-8 Mo. Toujours RAW pour photographie sérieuse."
+    },
+    "analyse_critique_image": {
+      "semiologie": "Barthes : studium (contexte culturel) vs punctum (détail qui touche personnellement). Niveau dénotatif (ce qu'on voit) vs conotatif (ce que ça évoque).",
+      "composition_avancee": "Diagonales hollandaises, tension, équilibre dynamique vs statique, rythme visuel, hiérarchie visuelle (que voit-on en premier, deuxième, troisième ?).",
+      "lecture_image_AI": "Modèles de vision (GPT-4V, Claude Vision, Gemini) : description, OCR, analyse composition, détection émotions, style artistique, authenticité (détection AI/fake)."
+    },
+    "smartphone_avance": "Capteur principal + ultra grand angle + téléobjectif. Mode portrait : distance 1.5-2m. Night mode (longue pause automatique). RAW 12 bits (ProRAW iPhone, Expert Raw Samsung). Adobe Lightroom Mobile, VSCO, Snapseed."
+  }
+}

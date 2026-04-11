@@ -1,0 +1,73 @@
+{
+  "version": "v30.0.0",
+  "category": "decoration_interieure_design",
+  "description": "Décoration intérieure et design avancé — styles décoratifs (scandinave, industriel, bohème, minimaliste, japandi, côtier, mid-century modern), théorie des couleurs (cercle chromatique, palettes harmonieuses, psychologie des couleurs), organisation de l'espace (circulation, échelle, proportion), mobilier et revêtements, feng shui et biophilie, home staging, tendances 2024-2025",
+  "decoration_interieure_design": {
+    "introduction": "La décoration intérieure est l'art de transformer un espace de vie en un environnement qui reflète une personnalité, répond à des besoins fonctionnels et crée une atmosphère. TITANE guide du concept jusqu'à la réalisation avec expertise.",
+    "styles_decoratifs": {
+      "scandinave": {
+        "principes": "Hygge (confort et convivialité danois). Fonctionnalité + esthétique simple. Matériaux naturels (bois clair, lin, laine). Palette : blanc cassé, gris, beige, accents noir ou vert.",
+        "elements_cles": "Meubles aux lignes épurées, abondance de lumière naturelle, plantes, bougies, coussins et plaids, céramiques artisanales.",
+        "marques": "IKEA (accessible), Muuto, Hay, Menu (premium danois), Finnish Design Shop."
+      },
+      "industriel": {
+        "principes": "Inspiré des usines et entrepôts. Matériaux bruts et honnêtes : métal exposé, brique apparente, béton, bois vieilli.",
+        "elements_cles": "Tuyauterie apparente, luminaires en cage, fenêtres à petits carreaux, mobilier en metal et bois massif, palette sombre (charbon, rouille, brun).",
+        "modern_industrial": "Adoucir avec textiles doux, plantes, œuvres d'art pour éviter la froideur excessive."
+      },
+      "japandi": {
+        "definition": "Fusion japonaise (wabi-sabi : beauté de l'imparfait et de l'éphémère) + scandinave. Minimalisme, nature, qualité.",
+        "principes": "Vide intentionnel, chaque objet a une raison d'être, palette naturelle (beige, taupe, noir, terracotta), bois sombre (noyer, chêne fumé).",
+        "wabi_sabi": "Accepter l'imperfection : kintsugi (réparer avec de l'or), céramiques irrégulières, matières imparfaites."
+      },
+      "boheme": "Couches de textiles (kilim, velours, soie), couleurs riches (ocre, bordeaux, sarcelle, doré), objets de voyage et artisanat du monde, plantes en abondance, luminaires en rotin/osier.",
+      "minimaliste": "Moins mais mieux. Chaque objet est choisi avec intention. Rangements cachés, surfaces dégagées, palette neutre, qualité > quantité.",
+      "mid_century_modern": "Années 1940-1960. Design emblématique (Eames, Saarinen, Nelson). Bois en fuseau, couleurs des années 60 (moutarde, orange, turquoise), formes organiques.",
+      "cotier": "Inspiré des bords de mer. Lin lavé, bois flotté, blanc et bleu, sisal, objets marins, luminosité maximale. Mediterranean coastal vs New England coastal.",
+      "art_deco": "Géométrie, luxe, symétrie. Laiton et miroirs, lignes droites et angles, velours et marbre, noir et or."
+    },
+    "theorie_des_couleurs": {
+      "cercle_chromatique": {
+        "couleurs_primaires": "Rouge, jaune, bleu (RJB en peinture) ; Rouge, Vert, Bleu (RVB en numérique).",
+        "harmonies": {
+          "monochromatique": "Teintes, tons et nuances d'une seule couleur. Harmonie assurée, risque de monotonie. Variation de texture pour dynamisme.",
+          "complementaire": "Couleurs opposées sur le cercle (bleu/orange, rouge/vert, jaune/violet). Fort contraste, dynamique. Doser : 80/20.",
+          "triadique": "3 couleurs équidistantes (rouge/jaune/bleu). Vivant mais difficile à équilibrer. Choisir une dominante.",
+          "analogue": "3-4 couleurs voisines (bleu + bleu-vert + vert). Harmonie douce et naturelle.",
+          "tetradique": "4 couleurs formant un rectangle sur le cercle. Riche mais complexe à maîtriser."
+        }
+      },
+      "psychologie_couleurs": {
+        "bleu": "Calme, confiance, sérénité. Chambre, bureau. Teintes : marine (autorité), turquoise (fraîcheur), ciel (légèreté).",
+        "vert": "Nature, croissance, équilibre. Forêt (reposant), sauge (tendance 2024), menthe (frais). Idéal partout.",
+        "jaune": "Optimisme, énergie, créativité. En accent (trop agressif en grande quantité). Ocre/moutarde : chaleur.",
+        "rouge": "Passion, énergie, appétit. Salle à manger ou accents. Bordeaux : sophistication.",
+        "noir": "Élégance, sophistication, force. À utiliser avec parcimonie ou comme cadre.",
+        "blanc": "Pureté, espace, lumière. Blanc cassé (crème, lin) plus chaleureux que blanc pur."
+      },
+      "temperature_couleur": "Couleurs chaudes (rouge, orange, jaune) = énergie, intimité. Couleurs froides (bleu, vert, violet) = calme, espace. Neutrals chauds (beige, crème, rouille) vs froids (gris, blanc froid)."
+    },
+    "organisation_de_lespace": {
+      "circulation": "Minimum 60 cm de passage (aisé) ; 90 cm pour confort (cuisine). 120 cm pour deux personnes. Éviter les angles morts et les couloirs sans destination.",
+      "proportion_et_echelle": {
+        "regles": "Mobilier proportionnel à la pièce. Petit espace ≠ petits meubles (un grand canapé peut agrandir visuellement). Table basse : H = hauteur siège - 5-10cm.",
+        "zones": "Définir des zones fonctionnelles dans les espaces ouverts (séjour, repas, bureau). Tapis, éclairage, mobilier comme délimiteurs."
+      },
+      "agrandir_visuellement": "Miroirs (illusion de profondeur), couleurs claires, lignes verticales (hautes étagères), fenêtres dégagées, meubles en hauteur, éclairage indirect."
+    },
+    "eclairage_design": {
+      "niveaux": "1. Éclairage général (ambiance, plafonnier). 2. Éclairage fonctionnel (tâche : lampe bureau, îlot cuisine). 3. Éclairage d'accent (œuvre d'art, niche). 4. Éclairage décoratif (guirlandes, bougies).",
+      "temperature": "2700-3000K : chaud, cosy (chambre, salon). 3500-4000K : neutre (bureau, salle de bain). Éviter lumière froide (>5000K) dans les espaces de vie.",
+      "luminaires_tendance": "Plafonniers suspension (rattan, papier, métal), appliques murales (lire, ambiance), lampadaires torchères, luminaires architecturaux LED encastrés, neon LED custom."
+    },
+    "feng_shui_et_biophilie": {
+      "feng_shui": {
+        "principes": "Circulation du chi (énergie). Bagua (carte énergétique 9 zones). Éviter le bord du lit dans l'axe de la porte. Miroir face au lit déconseillé. Plantes dans la zone prospérité (SE).",
+        "5_elements": "Bois (croissance : plantes, bois), Feu (passion : rouge, éclairage), Terre (stabilité : céramique, ocre), Métal (clarté : blanc, métal), Eau (fluidité : bleu, miroir, fontaine)."
+      },
+      "biophilie": "Connexion innée aux êtres vivants (Wilson). Plantes d'intérieur, murs végétaux, lumière naturelle, matériaux naturels, vues sur la nature. Réduit stress, améliore créativité et bien-être."
+    },
+    "home_staging": "Préparer un bien immobilier pour la vente/location. Désencombrer radical (50% des objets), neutraliser (couleurs neutres), valoriser les atouts, masquer les défauts. ROI : 500-1500€ investis → prix vente +5-15%.",
+    "tendances_2024_2025": "Maximalisme joyeux (bibelots, imprimés, couleurs audacieuses — retour du 'quiet luxury' abandonne le minimalisme strict), terracotta et tons chauds, béton ciré et parquet sombre, arches et formes organiques, plafonds tendances (couleur, moulures, bois), cuisine intemporelle (vert forêt, bleu marine + laiton), chambre cocon (rideaux jusqu'au plafond, tête de lit architecturale)."
+  }
+}

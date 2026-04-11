@@ -1,0 +1,73 @@
+{
+  "version": "v30.0.0",
+  "category": "art_histoire_pratique",
+  "description": "Art et histoire de l'art — grands mouvements artistiques (Renaissance, Baroque, Impressionnisme, Modernisme, Art Contemporain), techniques de peinture (huile, aquarelle, acrylique, gouache, pastel), dessin académique et expressif, sculpture (argile, pierre, bronze, installation), arts graphiques, lecture et analyse d'une œuvre, musées et institutions culturelles",
+  "art_histoire_pratique": {
+    "introduction": "L'art est le langage universel de l'humanité. Comprendre l'art — de l'histoire des mouvements à la pratique technique — développe la sensibilité, la créativité et la capacité d'analyse visuelle. TITANE maîtrise l'art comme domaine de connaissance complet.",
+    "histoire_de_lart": {
+      "prehistoire_et_antiquite": {
+        "art_prehistorique": "Grottes de Lascaux (~17 000 ans), Chauvet (~36 000 ans). Pigments naturels : charbon, ocre. Fonction rituelle/chamanique.",
+        "egypte_ancienne": "Art au service du divin et de la mort. Canon de représentation strict (frontalité, profil). Hiéroglyphes comme art pictural. Pyramides comme architecture symbolique.",
+        "grece_rome": "Idéalisme grec (kalokagathie : beau et bon). Ordre architectural : dorique, ionique, corinthien. Sculpture : Phidias (Parthénon), Praxitèle (Aphrodite de Cnide). Rome : art narratif (Colonne Trajane)."
+      },
+      "moyen_age_et_renaissance": {
+        "art_medieval": "Au service de l'Église. Icônes byzantines (fond or, dématérialisation). Enluminures, vitraux (Sainte-Chapelle), romans et gothiques.",
+        "renaissance_italienne": "Retour à l'Antiquité. Perspective linéaire (Brunelleschi, Alberti). Trompe-l'œil. Maîtres : Léonard de Vinci (Joconde, La Cène), Michel-Ange (Sixtine, David), Raphaël (Madones). Quattrocento → Cinquecento.",
+        "maniérisme": "Réaction contre l'équilibre Renaissance. Allongement des formes, couleurs acides, compositions instables. Le Pontormo, Le Greco."
+      },
+      "17eme_18eme": {
+        "baroque": "Mouvement, dramatisme, clair-obscur (chiaroscuro). Le Caravage (ténébrisme), Rubens (dynamisme), Rembrandt (lumière psychologique), Vélasquez (Las Meninas).",
+        "classicisme": "Raison, ordre, clarté. Poussin, Le Brun. Architecture versaillaise.",
+        "rococo": "Légèreté, ornement, plaisir. Boucher, Fragonard, Watteau."
+      },
+      "19eme_siecle": {
+        "neoclassicisme": "Retour à l'antique après Révolution. David (Serment des Horaces), Ingres (Grand Odalisque).",
+        "romantisme": "Émotion, nature sauvage, sublime. Delacroix (Liberté guidant le peuple), Géricault (Radeau de la Méduse), Turner (lumière atmosphérique).",
+        "realisme": "Le monde ouvrier et paysan. Courbet (L'Atelier), Millet (Les Glaneuses), Daumier.",
+        "impressionnisme": "Capter la lumière instantanée. Touche divisée, plein air. Monet (Nymphéas, Impression Soleil Levant), Renoir, Degas, Pissarro. Révolution de la perception.",
+        "post_impressionnisme": "Au-delà de l'impression. Cézanne (géométrisation, père du cubisme), Van Gogh (expressivité de la couleur, touche tourbillonnante), Gauguin (primitivisme, Tahiti), Seurat (pointillisme/divisionnisme)."
+      },
+      "20eme_siecle": {
+        "fauvisme": "Couleur pure libérée de la réalité. Matisse (La Danse), Derain, Vlaminck. 1905.",
+        "expressionnisme": "Déformer la réalité pour exprimer l'émotion intérieure. Munch (Le Cri), Kirchner, Schiele.",
+        "cubisme": "Déconstruction de l'espace. Picasso et Braque. Cubisme analytique → synthétique. Les Demoiselles d'Avignon (1907).",
+        "dadaisme_surrealisme": "Dada : anti-art, provocation, absurde (Duchamp, Tzara). Surréalisme : inconscient, rêve, automatisme. Dalí (Montres molles), Magritte (La Trahison des images), Ernst.",
+        "abstraction": "Kandinsky (peinture comme musique), Mondrian (De Stijl, lignes et primaires), Malevitch (Carré Noir), action painting (Pollock, De Kooning).",
+        "pop_art": "Culture populaire et consommation. Warhol (Marilyn, Campbell), Lichtenstein, Hockney.",
+        "art_contemporain": "Conceptuel (l'idée prime), installation, vidéo art, street art (Banksy), art numérique/NFT, performance. Biennale de Venise, Art Basel, FIAC."
+      }
+    },
+    "techniques_de_peinture": {
+      "peinture_a_huile": {
+        "support": "Toile (lin/coton) ou bois préparé (gesso). Châssis à clés pour tension.",
+        "mediums": "Térébenthine (diluer), huile de lin (ralentir séchage), liquin (accélérer), vernis final après 6+ mois.",
+        "techniques": "Alla prima (frais sur frais). Grisaille (ébauche monochrome) puis glacis colorés. Impasto (pâte épaisse, texture). Frottis (ton délicat sur fond sec).",
+        "ordre": "Gras sur maigre : plus de médium en couches supérieures. Sombre → clair (ou inverse selon tradition)."
+      },
+      "aquarelle": {
+        "papier": "Grain satiné (lisse), fin (polyvalent), torchon (texture). Grammage 300g/m² minimum. Arches, Fabriano, Canson Expert.",
+        "techniques": "Mouillé sur mouillé (wet-on-wet) : effets doux, flous. Mouillé sur sec : précision. Réserves à la gomme. Sel pour textures. Granulation des pigments.",
+        "principe": "Du clair au foncé. Travailler la lumière en réserve. L'eau contrôle la valeur."
+      },
+      "acrylique": "Versatilité totale. Dilutable à l'eau. Séchage rapide (avantage et inconvénient). Peut imiter l'huile (médiums retardateurs) ou l'aquarelle. Support polyvalent. Médiums : gel, modeling paste, texture.",
+      "dessin": {
+        "outils": "Graphite (HB-8B dureté), fusain, sanguine, craie, stylo, encre.",
+        "notions": "Valeurs (lumières/ombres), perspective (1, 2, 3 points de fuite), proportion (canon humain : 7-8 têtes), geste (dessin rapide pour saisir le mouvement), observation fine.",
+        "exercices": "Copies de maîtres, nature morte, portrait, dessin de mémoire, carnet de croquis quotidien."
+      }
+    },
+    "analyse_oeuvre": {
+      "methode": "1. Description (que voit-on ?) → 2. Analyse formelle (composition, couleur, ligne, espace, lumière, matière) → 3. Interprétation (sens, symbolisme, contexte) → 4. Jugement (impact, originalité, qualité).",
+      "elements_formels": {
+        "composition": "Règle des tiers, triangle, diagonale, lignes directrices, points d'entrée et de sortie du regard.",
+        "couleur": "Primaires/secondaires/tertiaires. Couleurs chaudes vs froides. Complémentaires (rouge/vert, bleu/orange). Valeur (clair/foncé). Saturation.",
+        "lumiere_ombre": "Source lumineuse, ombre portée, ombre propre, lumière réfléchie, pénombre. Clair-obscur = volume."
+      }
+    },
+    "institutions_et_marche": {
+      "musees_majeurs": "Louvre (Paris), MoMA (New York), Tate Modern (Londres), Hermitage (Saint-Pétersbourg), Uffizi (Florence), Prado (Madrid), Rijksmuseum (Amsterdam).",
+      "foires_et_ventes": "Art Basel (Bâle, Miami, Hong Kong), Frieze, FIAC, Sotheby's, Christie's. Cotes et investissement en art.",
+      "street_art_urbain": "Banksy, Invader, JR, Vhils. Muralisme, pochoir, paste-up. Légalité vs vandalisme. Galeries à ciel ouvert : Wynwood Miami, Shoreditch Londres, Belleville Paris."
+    }
+  }
+}

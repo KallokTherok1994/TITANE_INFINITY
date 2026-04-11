@@ -198,6 +198,34 @@ const BIEN_ETRE_MENTAL_STRESS: &str =
     include_str!("../../data/knowledge_base/default/bien_etre_mental_stress.json");
 const SANTE_CORPS_NATURELLE: &str =
     include_str!("../../data/knowledge_base/default/sante_corps_naturelle.json");
+// ── v30.0.0 expansion — phase 14 (art, artisanat, rénovation, sciences, biologie, technologie, politique, décoration, photographie, botanique, faune, chakras, astrologie) ─
+const ART_HISTOIRE_PRATIQUE: &str =
+    include_str!("../../data/knowledge_base/default/art_histoire_pratique.json");
+const ARTISANAT_CREATION_MANUELLE: &str =
+    include_str!("../../data/knowledge_base/default/artisanat_creation_manuelle.json");
+const RENOVATION_BRICOLAGE_HABITAT: &str =
+    include_str!("../../data/knowledge_base/default/renovation_bricolage_habitat.json");
+const SCIENCE_PHYSIQUE_CHIMIE: &str =
+    include_str!("../../data/knowledge_base/default/science_physique_chimie.json");
+const BIOLOGIE_SCIENCES_VIVANT: &str =
+    include_str!("../../data/knowledge_base/default/biologie_sciences_vivant.json");
+const TECHNOLOGIE_INNOVATION_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/technologie_innovation_avancee.json");
+const POLITIQUE_GEOPOLITIQUE: &str =
+    include_str!("../../data/knowledge_base/default/politique_geopolitique.json");
+const DECORATION_INTERIEURE_DESIGN: &str =
+    include_str!("../../data/knowledge_base/default/decoration_interieure_design.json");
+const PHOTOGRAPHIE_ANALYSE_IMAGE: &str =
+    include_str!("../../data/knowledge_base/default/photographie_analyse_image.json");
+const ARBRES_PLANTES_FLEURS: &str =
+    include_str!("../../data/knowledge_base/default/arbres_plantes_fleurs.json");
+const ANIMAUX_OISEAUX_FAUNE: &str =
+    include_str!("../../data/knowledge_base/default/animaux_oiseaux_faune.json");
+const CHAKRAS_ENERGIE_SPIRITUELLE: &str =
+    include_str!("../../data/knowledge_base/default/chakras_energie_spirituelle.json");
+const ASTROLOGIE_NUMEROLOGIE: &str =
+    include_str!("../../data/knowledge_base/default/astrologie_numerologie.json");
+
 // ── v30.0.0 expansion — phase 13 VISIONNAIRE_2.0 (bourse/crypto/immobilier/ecommerce/dropship/freelance/infoproduits/automation/fiscalité/mindset argent) ─
 const BOURSE_TRADING_AVANCE: &str =
     include_str!("../../data/knowledge_base/default/bourse_trading_avance.json");
@@ -441,6 +469,20 @@ impl DefaultKnowledgeBase {
         ("automatisation_revenus_passifs", AUTOMATISATION_REVENUS_PASSIFS),
         ("fiscalite_optimisation_patrimoine", FISCALITE_OPTIMISATION_PATRIMOINE),
         ("mindset_financier_wealth", MINDSET_FINANCIER_WEALTH),
+        // v30.0.0 expansion — phase 14 (art, artisanat, rénovation, sciences, biologie, technologie, politique, décoration, photographie, botanique, faune, chakras, astrologie)
+        ("art_histoire_pratique", ART_HISTOIRE_PRATIQUE),
+        ("artisanat_creation_manuelle", ARTISANAT_CREATION_MANUELLE),
+        ("renovation_bricolage_habitat", RENOVATION_BRICOLAGE_HABITAT),
+        ("science_physique_chimie", SCIENCE_PHYSIQUE_CHIMIE),
+        ("biologie_sciences_vivant", BIOLOGIE_SCIENCES_VIVANT),
+        ("technologie_innovation_avancee", TECHNOLOGIE_INNOVATION_AVANCEE),
+        ("politique_geopolitique", POLITIQUE_GEOPOLITIQUE),
+        ("decoration_interieure_design", DECORATION_INTERIEURE_DESIGN),
+        ("photographie_analyse_image", PHOTOGRAPHIE_ANALYSE_IMAGE),
+        ("arbres_plantes_fleurs", ARBRES_PLANTES_FLEURS),
+        ("animaux_oiseaux_faune", ANIMAUX_OISEAUX_FAUNE),
+        ("chakras_energie_spirituelle", CHAKRAS_ENERGIE_SPIRITUELLE),
+        ("astrologie_numerologie", ASTROLOGIE_NUMEROLOGIE),
     ];
 
     /// Load all default knowledge entries from embedded JSON.
@@ -608,8 +650,8 @@ mod tests {
             result.errors
         );
         assert_eq!(
-            result.entries_loaded, 116,
-            "Must have exactly 116 default knowledge categories"
+            result.entries_loaded, 129,
+            "Must have exactly 129 default knowledge categories"
         );
     }
 
@@ -631,13 +673,20 @@ mod tests {
             "agents_multi_systeme",
             "ai_providers_guide",
             "analyse_professionnelle",
+            "animaux_oiseaux_faune",
             "apprentissage_evolution",
+            "arbres_plantes_fleurs",
+            "art_histoire_pratique",
+            "artisanat_creation_manuelle",
+            "astrologie_numerologie",
             "automatisation_revenus_passifs",
             "bien_etre_mental_stress",
+            "biologie_sciences_vivant",
             "bourse_trading_avance",
             "branding_identite",
             "calisthenie",
             "capabilities_matrix",
+            "chakras_energie_spirituelle",
             "chronobiologie_rythmes",
             "cloud_multimodal",
             "coaching_leadership",
@@ -654,6 +703,7 @@ mod tests {
             "creation_applications_saas",
             "creation_sites_web_pratique",
             "crypto_blockchain_avance",
+            "decoration_interieure_design",
             "developpement_personnel",
             "developpement_web",
             "digital_twin_symbiosis",
@@ -710,9 +760,11 @@ mod tests {
             "organisation_personnelle",
             "performance_cognitive",
             "philosophie_cognitive",
+            "photographie_analyse_image",
             "plantes_medicinales_aromatherapie",
             "plein_potentiel_peak_performance",
             "poesie_ecriture_avancee",
+            "politique_geopolitique",
             "psychologie_cognitive",
             "psychologie_comportementale",
             "psychologie_emotionnelle",
@@ -723,11 +775,13 @@ mod tests {
             "redaction_actes_juridiques",
             "redaction_professionnelle",
             "relations_humaines_profondes",
+            "renovation_bricolage_habitat",
             "response_guidelines",
             "revenus_en_ligne_affiliation",
             "sante_corps_naturelle",
             "sante_feminine_naturelle",
             "sante_mentale_therapies",
+            "science_physique_chimie",
             "security_privacy",
             "seo_referencement",
             "services_backend",
@@ -740,6 +794,7 @@ mod tests {
             "strategies_revenus_monetisation",
             "style_expression_kevin",
             "system_architecture",
+            "technologie_innovation_avancee",
             "troubleshooting_faq",
             "yoga_pratique",
         ];
