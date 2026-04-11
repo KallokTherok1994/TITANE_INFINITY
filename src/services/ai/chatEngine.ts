@@ -118,7 +118,8 @@ const OVERRIDABLE_DEPTH_PREFS = new Set<string | null>(['standard', 'developed',
  */
 function resolveDepthPref(base: string | null): string | null {
   const deepActive =
-    userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] === true;
+    userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] ===
+    true;
   if (deepActive && OVERRIDABLE_DEPTH_PREFS.has(base)) {
     return 'deep';
   }

@@ -148,7 +148,9 @@ describe('CanonicalDiscernmentKernel', () => {
       expect(decision.provider.name).toBeDefined();
       expect(decision.provider.temperature).toBeGreaterThan(0);
       expect(decision.provider.maxTokens).toBeGreaterThan(0);
-      expect(['low', 'medium', 'high', 'max']).toContain(decision.provider.reasoningEffort);
+      expect(['low', 'medium', 'high', 'max']).toContain(
+        decision.provider.reasoningEffort
+      );
     });
 
     it('should escalate reasoningEffort to max for CERTIFY-mode messages', () => {
