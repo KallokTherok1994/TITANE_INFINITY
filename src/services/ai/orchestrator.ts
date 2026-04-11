@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v37.0.0 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v37.0.0 — AI ORCHESTRATOR OMEGA (NEURAL ORDER)
+ *   TITANE∞ v30.0.0 — AI ORCHESTRATOR OMEGA (NEURAL ORDER)
  *   Orchestrator neural • Isolation absolue • Auto-heal intégré
  *   Architecture: Cloud-first → Sandbox providers → Fallback garanti → Never throw
  *   Lazy cloud providers, Circuit breaker, Rate limiting, Availability cache

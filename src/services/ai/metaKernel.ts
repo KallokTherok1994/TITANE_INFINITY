@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v∞Ω — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v∞Ω — META-KERNEL (SUPER-CONSCIENCE SYSTÈME)
+ *   TITANE∞ v30.0.0 — META-KERNEL (SUPER-CONSCIENCE SYSTÈME)
  *   Super-structure d'orchestration globale
  *   - Vision holistique du système complet
  *   - Orchestration des kernels (Stability · Autofix · Evolution · Cognitive)

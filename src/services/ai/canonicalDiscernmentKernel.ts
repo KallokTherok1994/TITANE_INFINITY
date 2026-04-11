@@ -1,9 +1,10 @@
 /**
- * TITANE∞ — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ═══════════════════════════════════════════════════════════════════
- *   CANONICAL DISCERNMENT KERNEL — Premier organe vivant de TITANE
+ *   TITANE∞ v30.0.0 — CANONICAL DISCERNMENT KERNEL
+ *   Premier organe vivant de TITANE
  *
  *   Point de fusion unique pour toutes les décisions de chat.
  *   Un tour de chat = UNE CanonicalDecision.
