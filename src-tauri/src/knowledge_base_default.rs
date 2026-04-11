@@ -291,6 +291,8 @@ const DEVELOPPEMENT_JEUX_UNITY: &str =
     include_str!("../../data/knowledge_base/default/developpement_jeux_unity.json");
 const WEB_DESIGN_UI_UX: &str =
     include_str!("../../data/knowledge_base/default/web_design_ui_ux.json");
+const SYNCHRONISATION_ORCHESTRATION: &str =
+    include_str!("../../data/knowledge_base/default/synchronisation_orchestration.json");
 
 // ── v30.0.0 expansion — phase 12 (finance avancée, revenus, applications, copywriting, sites web, poésie, droit, vie pro/perso, coaching, médecine naturelle, revenus en ligne, peak performance, santé mentale, growth marketing) ─
 const STRATEGIES_REVENUS_MONETISATION: &str =
@@ -549,6 +551,7 @@ impl DefaultKnowledgeBase {
         ("intelligence_artificielle_pratique", INTELLIGENCE_ARTIFICIELLE_PRATIQUE),
         ("developpement_jeux_unity", DEVELOPPEMENT_JEUX_UNITY),
         ("web_design_ui_ux", WEB_DESIGN_UI_UX),
+        ("synchronisation_orchestration", SYNCHRONISATION_ORCHESTRATION),
     ];
 
     /// Load all default knowledge entries from embedded JSON.
@@ -716,8 +719,8 @@ mod tests {
             result.errors
         );
         assert_eq!(
-            result.entries_loaded, 149,
-            "Must have exactly 149 default knowledge categories"
+            result.entries_loaded, 150,
+            "Must have exactly 150 default knowledge categories"
         );
     }
 
@@ -878,6 +881,7 @@ mod tests {
             "suite_google_workspace",
             "suite_office_microsoft",
             "style_expression_kevin",
+            "synchronisation_orchestration",
             "system_architecture",
             "technologie_innovation_avancee",
             "troubleshooting_faq",
