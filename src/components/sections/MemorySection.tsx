@@ -774,6 +774,11 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
       return counts;
     }, [knowledgeEntries]);
 
+    // Reset pagination when search query or topic filter changes
+    useEffect(() => {
+      setShowAllKnowledge(false);
+    }, [knowledgeSearch, knowledgeTopicFilter]);
+
     const lastSurfaceSyncLabel = useMemo(() => {
       const timestamp = surfaceSyncTimestamp ?? persistentMemoryLastUpdate;
       if (!timestamp) {
@@ -902,13 +907,22 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
           role="tablist"
           aria-label="Navigation mémoire"
         >
-          {SECTION_TABS.map(tab => (
+          {SECTION_TABS.map((tab, index) => (
             <button
               key={tab.id}
               type="button"
               role="tab"
               aria-selected={activeTab === tab.id}
               onClick={() => setActiveTab(tab.id)}
+              onKeyDown={e => {
+                if (e.key === 'ArrowRight') {
+                  e.preventDefault();
+                  setActiveTab(SECTION_TABS[(index + 1) % SECTION_TABS.length].id);
+                } else if (e.key === 'ArrowLeft') {
+                  e.preventDefault();
+                  setActiveTab(SECTION_TABS[(index - 1 + SECTION_TABS.length) % SECTION_TABS.length].id);
+                }
+              }}
               style={{
                 padding: `${spacing[2]} ${spacing[4]}`,
                 borderRadius: '8px',

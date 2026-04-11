@@ -4,7 +4,6 @@
  */
 
 import React, { useState, useCallback } from 'react';
-import { logger } from '@/lib/logger';
 import { createLogger } from '@/utils/logger';
 
 const viewerLogger = createLogger('MemoryViewer');
@@ -419,7 +418,7 @@ export const MemoryViewer: React.FC<MemoryViewerProps> = ({
         viewerLogger.info('✨ +15 XP awarded for memory promotion');
       } catch (xpError) {
         const err = xpError as Error;
-        logger.warn('XP award failed for memory promotion', {
+        viewerLogger.warn('XP award failed for memory promotion', {
           component: 'MemoryViewer',
           action: 'handlePromote',
           entryId: entry.id,
@@ -451,7 +450,7 @@ export const MemoryViewer: React.FC<MemoryViewerProps> = ({
         viewerLogger.info('✨ +20 XP awarded for memory archival');
       } catch (xpError) {
         const err = xpError as Error;
-        logger.warn('XP award failed for memory archival', {
+        viewerLogger.warn('XP award failed for memory archival', {
           component: 'MemoryViewer',
           action: 'handleArchive',
           entryId: entry.id,
