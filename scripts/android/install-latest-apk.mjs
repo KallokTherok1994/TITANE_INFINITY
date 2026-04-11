@@ -43,7 +43,9 @@ function collectApks(root) {
 }
 
 function pickPreferredApk(apks) {
-  return apks.find((apk) => apk.isDebug) ?? apks.find((apk) => apk.isRelease) ?? apks[0] ?? null;
+  return (
+    apks.find(apk => apk.isDebug) ?? apks.find(apk => apk.isRelease) ?? apks[0] ?? null
+  );
 }
 
 function waitMs(ms) {
@@ -90,8 +92,11 @@ function inspectDeviceReadiness(deviceId) {
   const bootCompleted = sysBootCompleted === '1' || devBootComplete === '1';
   const provisioningReady = deviceProvisioned === '1' && userSetupComplete === '1';
   const packageServiceReady =
-    !packageService.error && packageService.status === 0 && /\bpackage\b/i.test(packageService.stdout);
-  const pmPathReady = !pmPath.error && pmPath.status === 0 && pmPath.stdout.includes('package:');
+    !packageService.error &&
+    packageService.status === 0 &&
+    /\bpackage\b/i.test(packageService.stdout);
+  const pmPathReady =
+    !pmPath.error && pmPath.status === 0 && pmPath.stdout.includes('package:');
 
   return {
     deviceId,
@@ -169,7 +174,9 @@ const adbDevices = runAdb(['devices']);
 if (adbDevices.error) {
   console.error('status=BLOCKED');
   console.error('error=adb not found in PATH');
-  console.error('next_step=install Android platform-tools or export adb into PATH, then retry');
+  console.error(
+    'next_step=install Android platform-tools or export adb into PATH, then retry'
+  );
   process.exit(1);
 }
 
@@ -181,9 +188,9 @@ if (adbDevices.status !== 0) {
 
 const connectedDevices = adbDevices.stdout
   .split(/\r?\n/)
-  .map((line) => line.trim())
-  .filter((line) => /\tdevice$/.test(line))
-  .map((line) => line.split('\t')[0]);
+  .map(line => line.trim())
+  .filter(line => /\tdevice$/.test(line))
+  .map(line => line.split('\t')[0]);
 
 if (connectedDevices.length === 0) {
   console.error('status=BLOCKED');
@@ -214,7 +221,9 @@ if (!readiness.ready) {
 let installResult = null;
 for (let attempt = 1; attempt <= 3; attempt += 1) {
   console.log(`install_attempt=${attempt}`);
-  installResult = runAdb(['-s', targetDevice, 'install', '-r', preferred.absolute], { timeout: 300_000 });
+  installResult = runAdb(['-s', targetDevice, 'install', '-r', preferred.absolute], {
+    timeout: 300_000,
+  });
   printOutput(installResult);
 
   if (!installResult.error && installResult.status === 0) {

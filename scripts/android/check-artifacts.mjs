@@ -32,9 +32,11 @@ function collectArtifacts(root, extension) {
 
 function pickPreferredInstallApk(apkArtifacts) {
   return (
-    apkArtifacts.find((artifact) => artifact.includes('/debug/')) ??
-    apkArtifacts.find((artifact) => artifact.includes('/release/') && !artifact.endsWith('-unsigned.apk')) ??
-    apkArtifacts.find((artifact) => artifact.includes('/release/')) ??
+    apkArtifacts.find(artifact => artifact.includes('/debug/')) ??
+    apkArtifacts.find(
+      artifact => artifact.includes('/release/') && !artifact.endsWith('-unsigned.apk')
+    ) ??
+    apkArtifacts.find(artifact => artifact.includes('/release/')) ??
     null
   );
 }
@@ -65,11 +67,13 @@ console.log(
 );
 console.log(`preferred_install_apk=${preferredInstallApk ?? 'none'}`);
 console.log(
-  `install_helper_hint=${preferredInstallApk
-    ? preferredInstallApk.endsWith('-unsigned.apk')
-      ? 'build a debug APK or sign the release before using android:install:latest'
-      : 'corepack pnpm run android:install:latest'
-    : 'run an explicit android:build:* command first'}`
+  `install_helper_hint=${
+    preferredInstallApk
+      ? preferredInstallApk.endsWith('-unsigned.apk')
+        ? 'build a debug APK or sign the release before using android:install:latest'
+        : 'corepack pnpm run android:install:latest'
+      : 'run an explicit android:build:* command first'
+  }`
 );
 
 if (apkArtifacts.length > 0) {
