@@ -227,7 +227,12 @@ export class CanonicalDiscernmentKernel {
 
     // Profile rank for cap-down logic
     const PROFILE_RANK: Record<ResponseProfileId, number> = {
-      DIRECT: 0, BALANCED: 1, DEVELOPED: 2, DEEP: 3, ARCHITECT: 4, OMEGA: 5,
+      DIRECT: 0,
+      BALANCED: 1,
+      DEVELOPED: 2,
+      DEEP: 3,
+      ARCHITECT: 4,
+      OMEGA: 5,
     };
 
     // userDepthPreference caps the profile DOWN (e.g. 'short'→DIRECT overrides DEEP).
@@ -546,7 +551,12 @@ export class CanonicalDiscernmentKernel {
     const fallback = scored.slice(1).map(s => s.name);
 
     // Use the stronger of profile effort vs classifier effort (e.g. CERTIFY → 'max')
-    const EFFORT_RANK: Record<EffortLevel, number> = { low: 0, medium: 1, high: 2, max: 3 };
+    const EFFORT_RANK: Record<EffortLevel, number> = {
+      low: 0,
+      medium: 1,
+      high: 2,
+      max: 3,
+    };
     const resolvedEffort: EffortLevel =
       classifierEffortLevel &&
       EFFORT_RANK[classifierEffortLevel] > EFFORT_RANK[profile.reasoningEffort]

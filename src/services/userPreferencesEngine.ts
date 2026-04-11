@@ -23,7 +23,7 @@ const MAX_INTERACTIONS = 100;
  */
 const DEEP_INTERNET_ANALYSIS_INSTRUCTION = [
   'PRÉFÉRENCE PERMANENTE — ANALYSE INTERNET MAXIMALE :',
-  'Pour TOUTE demande de recherche, d\'analyse ou d\'exploration d\'un sujet,',
+  "Pour TOUTE demande de recherche, d'analyse ou d'exploration d'un sujet,",
   'applique OBLIGATOIREMENT le protocole suivant en 5 phases :',
   'PHASE 1 — COLLECTE MAXIMALE : mobilise un maximum de sources',
   '(encyclopédies, articles spécialisés, études, forums, actualités récentes, perspectives contradictoires) ;',
@@ -365,14 +365,31 @@ class UserPreferencesEngine {
 
     // Détecter la préférence d'analyse approfondie internet (bidirectionnel)
     const deepAnalysisEnableTopics = ['recherche', 'analyse', 'internet', 'web'];
-    const deepAnalysisEnableQualifiers = ['maximum', 'long résumé', 'approfondi', 'optimise', 'améliore'];
-    const deepAnalysisExplicitEnable = ['active deep_internet_analysis', 'active analyse approfondie', 'active analyse internet', 'enable deep analysis'];
-    const deepAnalysisDisableMarkers = ['analyse approfondie', 'deep_internet_analysis', 'analyse internet'];
+    const deepAnalysisEnableQualifiers = [
+      'maximum',
+      'long résumé',
+      'approfondi',
+      'optimise',
+      'améliore',
+    ];
+    const deepAnalysisExplicitEnable = [
+      'active deep_internet_analysis',
+      'active analyse approfondie',
+      'active analyse internet',
+      'enable deep analysis',
+    ];
+    const deepAnalysisDisableMarkers = [
+      'analyse approfondie',
+      'deep_internet_analysis',
+      'analyse internet',
+    ];
 
     const hasTopic = deepAnalysisEnableTopics.some(kw => lower.includes(kw));
     const hasQualifier = deepAnalysisEnableQualifiers.some(kw => lower.includes(kw));
     const hasExplicitEnable = deepAnalysisExplicitEnable.some(kw => lower.includes(kw));
-    const hasDisable = lower.includes('désactive') && deepAnalysisDisableMarkers.some(kw => lower.includes(kw));
+    const hasDisable =
+      lower.includes('désactive') &&
+      deepAnalysisDisableMarkers.some(kw => lower.includes(kw));
 
     if (hasExplicitEnable || (hasTopic && hasQualifier)) {
       this.setCustomPreference('deep_internet_analysis', true);

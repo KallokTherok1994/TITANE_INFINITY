@@ -328,7 +328,8 @@ export const ollamaProvider: AIProvider = {
     const messages = buildOllamaMessages(message, history, memoryContext);
 
     // Scale timeout based on reasoning effort so DEEP_REASONING/ARCHITECT/CERTIFY chains never cut off
-    const reasoningEffort = (finalConfig as { reasoningEffort?: EffortLevel }).reasoningEffort;
+    const reasoningEffort = (finalConfig as { reasoningEffort?: EffortLevel })
+      .reasoningEffort;
     const effortTimeoutSecs =
       reasoningEffort === 'max'
         ? Math.max(120, Math.ceil(OLLAMA_CONFIG.timeout / 1000))
