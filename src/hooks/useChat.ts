@@ -2124,6 +2124,23 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
             chatLogger.success(
               `✨ XP awarded: +${qualityReward.totalXP} chat [${qualityReward.tier}], +${titaneXP} cognitive (TITANE response)`
             );
+
+            // Mettre à jour les métadonnées du message utilisateur pour afficher le badge XP
+            const updatedMessages = messagesRef.current.map(m => {
+              if (m === userMessage || (m.role === 'user' && m.timestamp === userMessage.timestamp)) {
+                return {
+                  ...m,
+                  metadata: {
+                    ...m.metadata,
+                    qualityTier: qualityReward.tier,
+                    xpAwarded: qualityReward.totalXP,
+                    qualityScore: qualityReward.score.total,
+                  },
+                };
+              }
+              return m;
+            });
+            applyMessagesSafely(updatedMessages, 'xp-quality-metadata');
           } catch (xpError) {
             chatLogger.warn('XP award warning', { error: xpError });
           }

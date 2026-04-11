@@ -25,6 +25,9 @@ import {
 
 export type XPSource =
   | 'chat_message'
+  | 'chat_quality_bonus'
+  | 'chat_titane_response'
+  | 'chat_conversation_streak'
   | 'file_import'
   | 'automation_success'
   | 'diagnostic_pass'
@@ -62,6 +65,10 @@ export interface ProgressionState {
   xpInCurrentLevel: number;
   xpToNextLevel: number;
   chatMessageCount: number; // incremented on every 'chat_message' XP event
+  /** Dernier tier de qualité du message (pour feedback UI) */
+  lastQualityTier: string | null;
+  /** Compteur de messages par tier de qualité */
+  qualityTierCounts: Record<string, number>;
   milestones: ProgressionMilestone[];
   unlockedMilestones: string[];
   lastXPGain: XPEvent | null;
@@ -183,6 +190,9 @@ const DEFAULT_MILESTONES: ProgressionMilestone[] = [
 
 const XP_AMOUNTS: Record<XPSource, number> = {
   chat_message: 5,
+  chat_quality_bonus: 0, // Variable selon qualité (géré par le caller)
+  chat_titane_response: 3,
+  chat_conversation_streak: 8,
   file_import: 20,
   automation_success: 15,
   diagnostic_pass: 10,
@@ -205,6 +215,8 @@ const createDefaultState = (): ProgressionState => ({
   xpInCurrentLevel: 0,
   xpToNextLevel: XP_PER_LEVEL,
   chatMessageCount: 0,
+  lastQualityTier: null,
+  qualityTierCounts: {},
   milestones: DEFAULT_MILESTONES,
   unlockedMilestones: [],
   lastXPGain: null,
@@ -306,6 +318,16 @@ class XPEngine {
     // Track canonical message count for achievement computation
     if (source === 'chat_message') {
       this.state.chatMessageCount = (this.state.chatMessageCount ?? 0) + 1;
+    }
+
+    // Track quality tier when quality bonus is awarded
+    if (source === 'chat_quality_bonus' && metadata?.qualityTier) {
+      const tier = String(metadata.qualityTier);
+      this.state.lastQualityTier = tier;
+      if (!this.state.qualityTierCounts) {
+        this.state.qualityTierCounts = {};
+      }
+      this.state.qualityTierCounts[tier] = (this.state.qualityTierCounts[tier] ?? 0) + 1;
     }
 
     // Calculer le nouveau niveau
