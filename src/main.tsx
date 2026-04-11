@@ -910,6 +910,19 @@ scheduleBootWatchdog();
 const handleDevtoolsShortcut = createDevtoolsShortcutHandler({
   isTauriRuntime,
   openDevtools: openDevtoolsSafe,
+  fallbackAction: () => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    logger.warn('Native DevTools unavailable - routing to internal DevTools page', {
+      component: 'DevTools',
+      route: '/devtools?source=f12',
+    });
+
+    window.history.pushState({}, '', '/devtools?source=f12');
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  },
   onError: (err: unknown) => {
     logger.error(
       'Failed to open DevTools',

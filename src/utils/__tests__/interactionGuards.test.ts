@@ -73,6 +73,22 @@ describe('devtools interaction guards', () => {
 
     expect(openDevtools).not.toHaveBeenCalled();
   });
+
+  it('runs a fallback action when native DevTools APIs are unavailable', async () => {
+    const openDevtools = vi.fn().mockRejectedValue(new Error('native API unavailable'));
+    const fallbackAction = vi.fn();
+
+    const handler = createDevtoolsShortcutHandler({
+      isTauriRuntime: () => true,
+      openDevtools,
+      fallbackAction,
+    });
+
+    await handler(new KeyboardEvent('keydown', { key: 'F12' }));
+
+    expect(openDevtools).toHaveBeenCalledTimes(1);
+    expect(fallbackAction).toHaveBeenCalledTimes(1);
+  });
 });
 
 describe('confirmAction', () => {

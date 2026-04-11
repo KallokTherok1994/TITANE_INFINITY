@@ -65,8 +65,7 @@ const AuraControlPanel = lazy(() =>
   }))
 );
 import { useAura } from './hooks/useAuraOrchestrator';
-import { useWindowControls } from './hooks/useWindowControls'; // ✨ v30.0.0 - Window zoom & fullscreen controls
-import { useZoomControl } from './hooks/useZoomControl'; // ✨ Sprint 6 Phase 3 - Zoom control
+import { useWindowControls } from './hooks/useWindowControls'; // ✨ v30.0.0 - Canonical window zoom & fullscreen controls
 import { ToastProvider } from './components/providers/ToastProvider'; // ✨ M1 - Toast notifications via Sonner
 import { publishActiveModuleContext } from '@/services/chat/moduleRouteContext';
 import { SingularityConnections } from './services/singularityConnections';
@@ -272,11 +271,8 @@ const AppRouter: React.FC = () => {
   const toasts = useToasts();
   const { removeToast } = useToastActions();
 
-  // ✨ v30.0.0 - Window zoom & fullscreen controls (CTRL+scroll, F11)
+  // ✨ v30.0.0 - Canonical desktop controls (CTRL+scroll, Ctrl+Plus/Minus/0, F11)
   useWindowControls({ enableZoom: true, enableFullscreen: true });
-
-  // ✨ Sprint 6 Phase 3 - Keyboard zoom controls (Ctrl+Plus/Minus/0)
-  useZoomControl();
 
   useAppInitialization();
 
@@ -406,7 +402,10 @@ const AppRouter: React.FC = () => {
             path="/diagnostics"
             element={<Navigate to="/admin?tab=production-health" replace />}
           />
-          <Route path="/devtools" element={<Navigate to="/admin?tab=system" replace />} />
+          <Route
+            path="/devtools"
+            element={<Navigate to="/admin?tab=system&systemTab=devtools" replace />}
+          />
           <Route
             path="/cluster"
             element={<Navigate to="/admin?tab=production-health" replace />}

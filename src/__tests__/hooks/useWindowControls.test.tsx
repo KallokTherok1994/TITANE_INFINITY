@@ -47,6 +47,23 @@ describe('useWindowControls Hook', () => {
       expect(document.documentElement.style.zoom).toBe('0.825');
     });
 
+    it('supports Ctrl+NumpadAdd as a zoom-in shortcut', async () => {
+      renderHook(() => useWindowControls());
+
+      await act(async () => {
+        window.dispatchEvent(
+          new KeyboardEvent('keydown', {
+            key: 'NumpadAdd',
+            code: 'NumpadAdd',
+            ctrlKey: true,
+            bubbles: true,
+          })
+        );
+      });
+
+      expect(document.documentElement.style.zoom).toBe('0.825');
+    });
+
     it('should zoom out', async () => {
       const { result } = renderHook(() => useWindowControls());
 

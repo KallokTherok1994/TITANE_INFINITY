@@ -729,15 +729,23 @@ const LogsPanel: React.FC = () => {
 export const DevToolsTab: React.FC = () => {
   const [activeSubTab, setActiveSubTab] = useState<DevToolsSubTab>('debugger');
   const [status, setStatus] = useState<DevToolsStatus | null>(null);
+  const [lastError, setLastError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchStatus = async () => {
       try {
         const res =
           (await tauriClient.devtoolsStatus()) as DevToolsResponse<DevToolsStatus>;
-        if (res.success && res.data) setStatus(res.data);
-      } catch {
-        // DevTools may not be available
+        if (res.success && res.data) {
+          setStatus(res.data);
+          setLastError(null);
+        }
+      } catch (error) {
+        setLastError(
+          error instanceof Error
+            ? error.message
+            : 'DevTools natifs indisponibles dans ce contexte.'
+        );
       }
     };
     fetchStatus();
@@ -752,9 +760,16 @@ export const DevToolsTab: React.FC = () => {
       }
       const res =
         (await tauriClient.devtoolsStatus()) as DevToolsResponse<DevToolsStatus>;
-      if (res.success && res.data) setStatus(res.data);
-    } catch {
-      // Silently fail
+      if (res.success && res.data) {
+        setStatus(res.data);
+        setLastError(null);
+      }
+    } catch (error) {
+      setLastError(
+        error instanceof Error
+          ? error.message
+          : 'Impossible de basculer les DevTools pour cette fenêtre.'
+      );
     }
   };
 
@@ -796,6 +811,8 @@ export const DevToolsTab: React.FC = () => {
           )}
         </div>
       </div>
+
+      {lastError && <div className="dt-warning">⚠️ {lastError}</div>}
 
       {/* Sub-Tab Navigation */}
       <nav className="dt-subtabs">

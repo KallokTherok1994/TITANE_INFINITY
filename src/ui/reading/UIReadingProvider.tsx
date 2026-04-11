@@ -325,33 +325,8 @@ export function UIReadingProvider({ children }: UIReadingProviderProps): JSX.Ele
       const isCtrl = e.ctrlKey || e.metaKey;
       const isShift = e.shiftKey;
 
-      // Ctrl + Plus: Zoom In
-      if (isCtrl && (e.key === '+' || e.key === '=')) {
-        e.preventDefault();
-        zoomIn();
-        return;
-      }
-
-      // Ctrl + Minus: Zoom Out
-      if (isCtrl && e.key === '-') {
-        e.preventDefault();
-        zoomOut();
-        return;
-      }
-
-      // Ctrl + 0: Reset Zoom
-      if (isCtrl && e.key === '0') {
-        e.preventDefault();
-        resetZoom();
-        return;
-      }
-
-      // F11: Toggle Fullscreen
-      if (e.key === 'F11') {
-        e.preventDefault();
-        toggleFullscreen();
-        return;
-      }
+      // Global zoom/fullscreen shortcuts are handled centrally by useWindowControls
+      // to avoid duplicate triggers and inconsistent scale jumps in the desktop shell.
 
       // Ctrl + Shift + R: Toggle Panel
       if (isCtrl && isShift && e.key === 'R') {

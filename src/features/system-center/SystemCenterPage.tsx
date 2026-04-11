@@ -12,8 +12,9 @@
  * © 2025 TITANE Team. All rights reserved.
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useSearchParams } from 'react-router-dom';
 import { type SystemCenterTab, SYSTEM_CENTER_TABS } from './types/systemCenter.types';
 import { DiagnosticsTab } from './tabs/DiagnosticsTab';
 import { DevToolsTab } from './tabs/DevToolsTab';
@@ -51,12 +52,40 @@ const TabContent: React.FC<TabContentProps> = ({ tab }) => {
 // MAIN PAGE COMPONENT
 // ══════════════════════════════════════════════════════════════════
 
-export const SystemCenterPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<SystemCenterTab>('diagnostics');
+const normalizeSystemCenterTab = (value: string | null): SystemCenterTab => {
+  switch (value) {
+    case 'diagnostics':
+    case 'devtools':
+    case 'cluster':
+    case 'introspection':
+    case 'hypervision':
+      return value;
+    default:
+      return 'diagnostics';
+  }
+};
 
-  const handleTabChange = useCallback((tab: SystemCenterTab) => {
-    setActiveTab(tab);
-  }, []);
+export const SystemCenterPage: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState<SystemCenterTab>(() =>
+    normalizeSystemCenterTab(searchParams.get('systemTab'))
+  );
+
+  useEffect(() => {
+    const nextTab = normalizeSystemCenterTab(searchParams.get('systemTab'));
+    setActiveTab(currentTab => (currentTab === nextTab ? currentTab : nextTab));
+  }, [searchParams]);
+
+  const handleTabChange = useCallback(
+    (tab: SystemCenterTab) => {
+      setActiveTab(tab);
+
+      const nextParams = new URLSearchParams(searchParams);
+      nextParams.set('systemTab', tab);
+      setSearchParams(nextParams, { replace: true });
+    },
+    [searchParams, setSearchParams]
+  );
 
   return (
     <div className="system-center-page" data-testid="page-system-center">

@@ -23,6 +23,32 @@ const DEFAULT_OPTIONS: WindowControlsOptions = {
   maxZoom: 5.0,
 };
 
+const isEditableTarget = (target: EventTarget | null): boolean => {
+  if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) {
+    return true;
+  }
+
+  return target instanceof HTMLElement && target.isContentEditable;
+};
+
+const isZoomInShortcut = (event: KeyboardEvent): boolean =>
+  (event.ctrlKey || event.metaKey) &&
+  (event.key === '+' ||
+    event.key === '=' ||
+    event.key === 'Add' ||
+    event.code === 'NumpadAdd');
+
+const isZoomOutShortcut = (event: KeyboardEvent): boolean =>
+  (event.ctrlKey || event.metaKey) &&
+  (event.key === '-' ||
+    event.key === '_' ||
+    event.key === 'Subtract' ||
+    event.code === 'NumpadSubtract');
+
+const isZoomResetShortcut = (event: KeyboardEvent): boolean =>
+  (event.ctrlKey || event.metaKey) &&
+  (event.key === '0' || event.code === 'Digit0' || event.code === 'Numpad0');
+
 /**
  * Apply CSS zoom relative to the UI baseline.
  */
@@ -115,12 +141,7 @@ export function useWindowControls(options: WindowControlsOptions = {}) {
 
     // Keyboard shortcuts
     const handleKeyDown = (e: KeyboardEvent) => {
-      // F12: Toggle DevTools (in development mode)
-      if (e.key === 'F12') {
-        e.preventDefault();
-        // DevTools handled by Tauri automatically in dev mode
-        // In production, requires explicit permission in tauri.conf.json
-        console.log('[WindowControls] F12 pressed - DevTools should toggle');
+      if (isEditableTarget(e.target)) {
         return;
       }
 
@@ -131,29 +152,24 @@ export function useWindowControls(options: WindowControlsOptions = {}) {
         return;
       }
 
-      // CTRL + 0: Reset zoom
-      if (opts.enableZoom && (e.ctrlKey || e.metaKey) && e.key === '0') {
+      // CTRL/Cmd + 0: Reset zoom
+      if (opts.enableZoom && isZoomResetShortcut(e)) {
         e.preventDefault();
         handleZoomReset();
         return;
       }
 
-      // CTRL + Plus: Zoom in
-      if (
-        opts.enableZoom &&
-        (e.ctrlKey || e.metaKey) &&
-        (e.key === '+' || e.key === '=')
-      ) {
+      // CTRL/Cmd + Plus / NumpadAdd: Zoom in
+      if (opts.enableZoom && isZoomInShortcut(e)) {
         e.preventDefault();
         handleZoomIn();
         return;
       }
 
-      // CTRL + Minus: Zoom out
-      if (opts.enableZoom && (e.ctrlKey || e.metaKey) && e.key === '-') {
+      // CTRL/Cmd + Minus / NumpadSubtract: Zoom out
+      if (opts.enableZoom && isZoomOutShortcut(e)) {
         e.preventDefault();
         handleZoomOut();
-        return;
       }
     };
 

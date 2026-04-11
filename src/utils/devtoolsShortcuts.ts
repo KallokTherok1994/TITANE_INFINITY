@@ -13,6 +13,7 @@ type DevtoolsShortcutHandlerOptions = {
   isTauriRuntime: () => boolean;
   openDevtools: () => Promise<void>;
   toggleDevtools?: () => Promise<void>;
+  fallbackAction?: () => void | Promise<void>;
   onError?: (error: unknown) => void;
 };
 
@@ -32,6 +33,7 @@ export const createDevtoolsShortcutHandler = ({
   isTauriRuntime,
   openDevtools,
   toggleDevtools,
+  fallbackAction,
   onError,
 }: DevtoolsShortcutHandlerOptions) => {
   return async (ev: KeyboardShortcutEvent): Promise<void> => {
@@ -42,20 +44,34 @@ export const createDevtoolsShortcutHandler = ({
     ev.preventDefault();
     ev.stopPropagation();
 
+    let lastError: unknown = null;
+
     try {
       await openDevtools();
       return;
     } catch (primaryError) {
-      if (!toggleDevtools) {
-        onError?.(primaryError);
-        return;
-      }
+      lastError = primaryError;
+    }
 
+    if (toggleDevtools) {
       try {
         await toggleDevtools();
+        return;
       } catch (toggleError) {
-        onError?.(toggleError instanceof Error ? toggleError : primaryError);
+        lastError = toggleError instanceof Error ? toggleError : lastError;
       }
     }
+
+    if (fallbackAction) {
+      try {
+        await fallbackAction();
+        return;
+      } catch (fallbackError) {
+        onError?.(fallbackError instanceof Error ? fallbackError : lastError);
+        return;
+      }
+    }
+
+    onError?.(lastError);
   };
 };
