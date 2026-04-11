@@ -1,6 +1,6 @@
-# TITANE∞ v30.0.0
+# TITANE∞ v30.1.0
 
-![Version](https://img.shields.io/badge/version-30.0.0-blue)
+![Version](https://img.shields.io/badge/version-30.1.0-blue)
 ![Rust](https://img.shields.io/badge/rust-2021-orange)
 ![React](https://img.shields.io/badge/react-18-61dafb)
 ![TypeScript](https://img.shields.io/badge/typescript-5.5-3178c6)
@@ -14,7 +14,7 @@ TITANE∞ (Transformative Intelligence Through Adaptive Neural Engines - Infinit
 
 ## Statut canonique de version (mode B2)
 
-- Verite version repo: `30.0.0` via `package.json` et `CHANGELOG.md` (`PROVEN_BY_REPO`)
+- Verite version repo: `30.1.0` via `package.json` et `CHANGELOG.md` (`PROVEN_BY_REPO`)
 - `README.md` et ce fichier sont les surfaces canoniques de navigation (`PROVEN_BY_CANON_DOC`)
 - Les lignes binaires `v28.90.0`, `v28.88.0` et `v27.0.5` sont conservees comme historique documente
 - `CHANGELOG.md` + `deployment/latest/MANIFEST.json` portent la reference de release canonique courante
@@ -25,7 +25,7 @@ TITANE∞ (Transformative Intelligence Through Adaptive Neural Engines - Infinit
 - Index documentaire global: [`INDEX.md`](INDEX.md)
 - Diagrammes Mermaid: [`diagrams/README.md`](diagrams/README.md)
 
-## 🌟 Caracteristiques v30.0.0
+## 🌟 Caracteristiques v30.1.0
 
 - **60+ Modules Intelligents** : Architecture modulaire complète avec stacks hiérarchiques
 - **Auto-Régulation** : Governor et Autonomic Evolution pour homéostasie cognitive
@@ -39,7 +39,7 @@ TITANE∞ (Transformative Intelligence Through Adaptive Neural Engines - Infinit
 - **Interface Moderne** : React 18 + TypeScript strict
 - **DevTools Intégrés** : Monitoring et dashboard en temps réel
 
-## 🏗️ Architecture v30.0.0
+## 🏗️ Architecture v30.1.0
 
 ```
 TITANE∞ - 10+ Stacks Hiérarchiques
