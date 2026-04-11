@@ -30,9 +30,19 @@ function collectArtifacts(root, extension) {
   return found.sort();
 }
 
+function pickPreferredInstallApk(apkArtifacts) {
+  return (
+    apkArtifacts.find((artifact) => artifact.includes('/debug/')) ??
+    apkArtifacts.find((artifact) => artifact.includes('/release/') && !artifact.endsWith('-unsigned.apk')) ??
+    apkArtifacts.find((artifact) => artifact.includes('/release/')) ??
+    null
+  );
+}
+
 const initReady = exists(path.join(androidRoot, 'settings.gradle')) && exists(gradleFile);
 const apkArtifacts = collectArtifacts(apkRoot, '.apk');
 const bundleArtifacts = collectArtifacts(bundleRoot, '.aab');
+const preferredInstallApk = pickPreferredInstallApk(apkArtifacts);
 const gradleContent = exists(gradleFile) ? fs.readFileSync(gradleFile, 'utf8') : '';
 const hasSigningConfig = /signingConfig\s*=/.test(gradleContent);
 
@@ -52,6 +62,14 @@ console.log(
 );
 console.log(
   'expected_bundle_hint=src-tauri/gen/android/app/build/outputs/bundle/**/**/*.aab'
+);
+console.log(`preferred_install_apk=${preferredInstallApk ?? 'none'}`);
+console.log(
+  `install_helper_hint=${preferredInstallApk
+    ? preferredInstallApk.endsWith('-unsigned.apk')
+      ? 'build a debug APK or sign the release before using android:install:latest'
+      : 'corepack pnpm run android:install:latest'
+    : 'run an explicit android:build:* command first'}`
 );
 
 if (apkArtifacts.length > 0) {
