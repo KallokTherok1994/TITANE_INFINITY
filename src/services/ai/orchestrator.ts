@@ -277,7 +277,7 @@ class AIOrchestrator {
       }
 
       // 2. Availability cache: remove entries older than 2× TTL
-      const availabilityMaxAge = CACHE_TTL.availability * 2;
+      const availabilityMaxAge = CACHE_TTL.providerAvailability * 2;
       for (const [key, entry] of this.availabilityCache.entries()) {
         if (now - entry.timestamp > availabilityMaxAge) {
           this.availabilityCache.delete(key);
