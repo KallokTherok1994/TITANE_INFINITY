@@ -272,6 +272,7 @@ export async function getAllEntries(): Promise<KnowledgeBaseEntry[]> {
   // Guard: if a load is already in flight, wait for it instead of issuing a second IPC call
   if (_allEntriesLoadingPromise) return _allEntriesLoadingPromise;
   _allEntriesLoadingPromise = (async () => {
+    let ipcSucceeded = false;
     try {
       const raw = await invokeWithRetry<string>(
         'knowledge_base_get_all',
@@ -283,11 +284,13 @@ export async function getAllEntries(): Promise<KnowledgeBaseEntry[]> {
           ? JSON.parse(raw)
           : (raw as Record<string, KnowledgeBaseEntry>);
       _allEntriesCache = dedupeKnowledgeBaseEntries(Object.values(parsed));
+      ipcSucceeded = true;
     } catch {
       _allEntriesCache = null;
     }
 
-    if (!_allEntriesCache || _allEntriesCache.length === 0) {
+    // Only use local fallback when IPC failed (not when backend explicitly returned empty)
+    if (!ipcSucceeded && (!_allEntriesCache || _allEntriesCache.length === 0)) {
       _allEntriesCache = getFallbackEntries();
     }
 

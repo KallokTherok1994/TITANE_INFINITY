@@ -798,10 +798,10 @@ describe('J — Knowledge Base Count Synchronization', () => {
     expect(entries.length).toBeGreaterThanOrEqual(100);
   });
 
-  it('J2: getAllEntries() count cohérent avec Rust (valeur exacte 103)', async () => {
+  it('J2: getAllEntries() count cohérent avec les modules bundlés (valeur exacte 158)', async () => {
     const { getAllEntries } = await import('../services/api/defaultKnowledgeBase');
     const entries = await getAllEntries();
-    expect(entries.length).toBe(103);
+    expect(entries.length).toBe(158);
   });
 
   it('J3: listCategories() retourne autant de catégories que getAllEntries()', async () => {
