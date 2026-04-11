@@ -1,11 +1,11 @@
 /**
- * TITANE∞ vΩ∞ — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ vΩ∞ — SINGULARITY KERNEL (OS COGNITIF TOTAL)
+ *   TITANE∞ v30.0.0 — SINGULARITY KERNEL (OS COGNITIF TOTAL)
  *   - Unification des champs cognitifs
  *   - OS cognitif (Perception → Interprétation → Intention → Expression)
  *   - Gouvernance absolue des kernels

@@ -1,0 +1,75 @@
+{
+  "version": "v30.0.0",
+  "category": "langages_programmation_avance",
+  "description": "Langages de programmation avancés — Python, Rust, TypeScript, Go, Java, C++, Kotlin, Swift, paradigmes (fonctionnel/OOP/réactif), patterns de conception, performance, interopérabilité, écosystèmes et cas d'usage professionnels",
+  "langages_programmation_avance": {
+    "introduction": "Chaque langage est un outil avec ses forces et ses limites. TITANE guide le choix selon le contexte : performance critique, productivité, sécurité mémoire, écosystème, équipe, deadline. Il n'existe pas de langage universel — seulement des compromis éclairés.",
+    "python": {
+      "paradigmes": "Multi-paradigme (OOP, fonctionnel, procédural). Typage dynamique avec hints statiques (mypy, Pyright).",
+      "forces": "Rapidité de développement, data science/ML (numpy/pandas/torch/sklearn), scripting, automation, prototypage",
+      "faiblesses": "GIL limite le multi-threading CPU-bound, vitesse d'exécution native (compensé par C extensions)",
+      "patterns_avances": {
+        "metaclasses": "Contrôle de la création de classes — factories, singletons, ORMs",
+        "decorateurs": "@wraps, stacking, class decorators, descriptors",
+        "generators_async": "async/await natif, asyncio, trio, anyio pour I/O concurrent",
+        "dataclasses_pydantic": "Validation de données typée, sérialisation auto, FastAPI models"
+      },
+      "performance": "PyPy (JIT), Cython, ctypes/cffi, Numba pour hot paths. Profile avec cProfile/line_profiler avant d'optimiser."
+    },
+    "rust": {
+      "paradigmes": "Système, fonctionnel, ownership model unique. Typage statique fort. Zero-cost abstractions.",
+      "forces": "Sécurité mémoire sans GC, concurrence fearless, performance C/C++, WebAssembly, systèmes embarqués",
+      "faiblesses": "Courbe d'apprentissage steep (borrow checker), compilation lente, écosystème plus jeune",
+      "concepts_cles": {
+        "ownership": "Chaque valeur a un propriétaire unique. Transfert (move) ou emprunt (&, &mut). Pas de dangling pointers.",
+        "lifetimes": "Annotations explicites pour references — compile-time safety sans GC",
+        "traits": "Équivalent interfaces + mixins. Impl pour types externes via newtype pattern.",
+        "async_await": "Tokio/async-std runtime. Zero-cost futures. Stream traits."
+      },
+      "usecases": "OS kernels, CLI tools, WebAssembly, game engines, network services haute performance, Tauri (desktop)"
+    },
+    "typescript": {
+      "paradigmes": "Superset JavaScript. Typage statique structurel, inférence avancée.",
+      "forces": "Sécurité type au compile-time, DX excellente, interop JS complète, écosystème npm",
+      "patterns_avances": {
+        "generics": "T extends Constraint, conditional types (T extends U ? X : Y), mapped types",
+        "utility_types": "Partial<T>, Required<T>, Pick<T,K>, Omit<T,K>, ReturnType<F>, Awaited<P>",
+        "template_literal": "Type-safe route params, i18n keys, event names",
+        "discriminated_unions": "Pattern matching type-safe avec switch exhaustif",
+        "satisfies": "Operator v4.9 — infer narrow type, check against constraint"
+      },
+      "config_strict": "strict: true, noUncheckedIndexedAccess, exactOptionalPropertyTypes recommandés"
+    },
+    "go": {
+      "paradigmes": "Procédural avec interfaces implicites. Concurrence native (goroutines/channels). Compilation ultra-rapide.",
+      "forces": "Déploiement binaire unique, goroutines légères (2KB stack), stdlib complète, cloud-native",
+      "patterns": "Context propagation, interface segregation, error wrapping (fmt.Errorf + %w), table-driven tests",
+      "usecases": "Microservices, CLIs, Kubernetes ecosystem (Docker, K8s, Terraform écrits en Go), APIs haute perf"
+    },
+    "java_kotlin": {
+      "java": "JVM mature, enterprise (Spring Boot, Quarkus), excellent tooling (IntelliJ), Android legacy",
+      "kotlin": "Coroutines natives, null-safety, data classes, extension functions, Android moderne, KMM (multiplateforme)",
+      "interop": "Kotlin 100% interopérable Java — migration progressive possible"
+    },
+    "cpp": {
+      "contexte": "Performance maximale, contrôle bas niveau, jeux vidéo (Unreal), systèmes embarqués, finance HFT",
+      "modernes": "C++17/20/23 — ranges, concepts, coroutines, modules, std::span, consteval",
+      "pitfalls": "UB (undefined behavior), memory leaks, complexity. RAII, smart pointers (unique_ptr/shared_ptr) obligatoires."
+    },
+    "paradigmes_transversaux": {
+      "fonctionnel": "Immutabilité, fonctions pures, composition (map/filter/reduce), monades (Option/Result/Either), laziness",
+      "reactif": "Streams d'événements, backpressure, RxJS/Project Reactor/Akka Streams",
+      "event_sourcing": "État reconstruit depuis events immuables — CQRS, audit trail, time travel debugging"
+    },
+    "choix_langage": {
+      "criteres": "Équipe existante, performance requise, écosystème (libs disponibles), type-safety besoin, budget compilation, maintenabilité long terme",
+      "matrix": {
+        "startup_mvp": "Python ou TypeScript — vitesse développement prioritaire",
+        "haute_performance": "Rust ou C++ — contrôle mémoire, zéro GC pauses",
+        "microservices_cloud": "Go ou Kotlin — compilation rapide, déploiement léger",
+        "data_ml": "Python dominant — numpy/torch écosystème incomparable",
+        "frontend": "TypeScript obligatoire — sécurité type en production"
+      }
+    }
+  }
+}

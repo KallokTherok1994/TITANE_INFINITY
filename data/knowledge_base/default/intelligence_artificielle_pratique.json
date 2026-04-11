@@ -1,0 +1,77 @@
+{
+  "version": "v30.0.0",
+  "category": "intelligence_artificielle_pratique",
+  "description": "Intelligence artificielle pratique — prompt engineering, fine-tuning, RAG, agents autonomes, sélection de modèles, évaluation, sécurité IA, déploiement, éthique et tendances 2025-2026",
+  "intelligence_artificielle_pratique": {
+    "introduction": "L'IA générative transforme chaque domaine. TITANE aide à distinguer le hype de la valeur réelle, à choisir les bons modèles, à concevoir des prompts efficaces et à déployer des systèmes IA robustes et éthiques.",
+    "prompt_engineering": {
+      "principes": "Contexte clair, rôle explicite, format désiré, exemples (few-shot), contraintes, persona",
+      "techniques": {
+        "zero_shot": "Instruction directe sans exemple — fonctionne bien pour LLMs modernes",
+        "few_shot": "2-5 exemples input/output — réduit ambiguïté, guide le format",
+        "chain_of_thought": "'Réfléchis étape par étape' — améliore raisonnement complexe de 30-40%",
+        "tree_of_thought": "Explorer plusieurs branches de raisonnement — problèmes combinatoires",
+        "react": "Reason + Act — alternance raisonnement/action/observation pour agents",
+        "structured_output": "JSON mode, Pydantic schemas, function calling — output parsable garanti"
+      },
+      "anti_patterns": "Prompts trop vagues, sur-instruction, incohérences internes, ignorer la fenêtre de contexte"
+    },
+    "modeles_selection": {
+      "criteres": "Taille contexte, vitesse inference, coût/token, capabilities (vision/code/audio), privacy, latence",
+      "categories": {
+        "frontier": "GPT-4o, Claude 3.5 Sonnet, Gemini 1.5 Pro — qualité max, coût élevé",
+        "balanced": "GPT-4o-mini, Claude Haiku, Llama 3.1 70B — bon ratio qualité/coût",
+        "local": "Ollama (Llama 3.2, Mistral, Phi-3) — privacy, offline, coût zéro",
+        "specialises": "Code (CodeLlama, DeepSeek Coder), vision (LLaVA), embedding (text-embedding-3)"
+      },
+      "benchmark_reels": "Ignorer leaderboards abstraits. Tester sur tes cas d'usage réels avec des métriques métier."
+    },
+    "rag": {
+      "definition": "Retrieval-Augmented Generation — enrichir le contexte LLM avec des données externes pertinentes",
+      "pipeline": "Ingestion → Chunking → Embedding → Vector Store → Retrieval → Reranking → Augmentation → Generation",
+      "chunking": "Fixed-size (512 tokens), semantic (phrases), recursive (markdown headers). Overlap 10-20%.",
+      "embeddings": "text-embedding-3-small (OpenAI), bge-m3 (multilingual), nomic-embed-text (local)",
+      "vector_stores": "Pinecone (cloud), Weaviate, Qdrant, Chroma (local), pgvector (PostgreSQL)",
+      "optimisations": "Hybrid search (dense + sparse BM25), reranking (cross-encoders), query expansion, HyDE"
+    },
+    "agents_autonomes": {
+      "definition": "LLM + outils + mémoire + boucle de raisonnement. Peut prendre des actions dans le monde réel.",
+      "frameworks": "LangChain, LlamaIndex, AutoGen, CrewAI, Smolagents, Pydantic AI",
+      "patterns": {
+        "react_loop": "Observe → Reason → Act — simple et robuste pour la plupart des tâches",
+        "plan_execute": "Planifier entièrement puis exécuter — tâches à longue portée",
+        "multi_agent": "Orchestrateur + agents spécialisés — parallélisme, séparation des responsabilités",
+        "reflection": "Auto-critique et révision — améliore qualité sortie"
+      },
+      "securite": "Sandbox outils dangereux, confirmation humaine pour actions irréversibles, rate limiting"
+    },
+    "fine_tuning": {
+      "quand": "Behavior consistant spécifique, format propriétaire, réduction de prompt (coût), domain knowledge narrow",
+      "techniques": {
+        "full": "Tous les poids — coût élevé, GPU requis, résultats max",
+        "lora_qlora": "Low-Rank Adaptation — ~1% des poids, VRAM réduite 4-8x. Standard actuel.",
+        "dpo": "Direct Preference Optimization — aligner sur préférences humaines sans RL complexe",
+        "sft": "Supervised Fine-Tuning — dataset question/réponse curated"
+      },
+      "dataset": "Qualité >> quantité. 100 exemples parfaits > 10K médiocres. Diversité, couverture edge cases."
+    },
+    "evaluation": {
+      "metriques": "BLEU/ROUGE (génération), exact match (QA), human eval (référence gold), LLM-as-judge",
+      "frameworks": "Ragas (RAG eval), DeepEval, PromptFoo, LangSmith traces",
+      "pitfalls": "Benchmark overfitting, contamination données test, métriques auto proxy imparfait"
+    },
+    "ethique_securite": {
+      "biais": "Auditer sur groupes démographiques. Fairness metrics. Red teaming systématique.",
+      "hallucinations": "Grounding obligatoire (RAG/citations), confidence scores, fact-checking automatique",
+      "privacy": "PII removal avant ingestion, local models pour données sensibles, audit trails",
+      "alignement": "Constitutional AI, RLHF, guardrails (Guardrails AI, LLM-Guard)"
+    },
+    "tendances_2025_2026": {
+      "multimodal": "Vision + audio + vidéo intégrés nativement (Gemini 1.5, GPT-4o, Claude 3.5)",
+      "context_long": "1M+ tokens contexte — dépasse RAG pour certains use cases",
+      "reasoning_models": "o1/o3/DeepSeek-R1 — chain-of-thought interne, math/code avancé",
+      "edge_inference": "Modèles 1-3B sur device — phi-3-mini, Llama 3.2 1B, privacy maximale",
+      "agents_production": "Infrastructure mature (LangGraph, Temporal workflows) pour agents fiables"
+    }
+  }
+}

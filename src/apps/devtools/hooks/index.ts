@@ -11,5 +11,9 @@ export {
   useErrorTracking,
   useMemoryUpdates,
   usePipelineUpdates,
+  useJournalUpdates,
+  useReasoningTraceUpdates,
+  useCognitiveStateUpdates,
+  useKernelMetricsUpdates,
   useAllDevToolsEvents,
 } from './useDevToolsEvents';

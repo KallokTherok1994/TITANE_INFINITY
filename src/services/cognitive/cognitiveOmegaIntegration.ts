@@ -1,18 +1,18 @@
 /**
- * TITANE∞ v∞.42 — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v∞.42 — COGNITIVE OMEGA INTEGRATION
+ *   TITANE∞ v30.0.0 — COGNITIVE OMEGA INTEGRATION
  *   Integration of 4 cognitive engines into OMEGA pipeline
  *
  *   Architecture:
- *   - Semantic Memory Engine v∞.42: Long-term memory with vector search
- *   - Goal & Consistency Engine v∞.42: Multi-turn coherence & goal tracking
- *   - Conversation Evaluation Engine v∞.42: Quality metrics & testing
- *   - Cognitive Observability Engine v∞.42: Introspection & tracing
+ *   - Semantic Memory Engine: Long-term memory with vector search
+ *   - Goal & Consistency Engine: Multi-turn coherence & goal tracking
+ *   - Conversation Evaluation Engine: Quality metrics & testing
+ *   - Cognitive Observability Engine: Introspection & tracing
  *
  *   OMEGA Pipeline Integration Points:
  *   - Phase 1.3.2: Inject semantic memories + goals + facts into context

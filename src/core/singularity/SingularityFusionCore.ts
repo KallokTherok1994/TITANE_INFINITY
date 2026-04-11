@@ -1,9 +1,10 @@
 /**
- * TITANE∞ vΩ — Proprietary License
+ * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ═══════════════════════════════════════════════════════════════════
- *   SINGULARITY FUSION CORE vΩ — Unified System Orchestration
+ *   TITANE∞ v30.0.0 — SINGULARITY FUSION CORE
+ *   Unified System Orchestration
  * ═══════════════════════════════════════════════════════════════════
  *
  * Module central unificateur de TITANE∞ :
@@ -16,9 +17,12 @@
 
 import { EventEmitter } from 'events';
 import { secureInvoke } from '@/lib/security';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('SingularityFusionCore');
 
 // ═══════════════════════════════════════════════════════════════════
-// TYPES — État Unifié Singularité vΩ
+// TYPES — État Unifié Singularité v30.0.0
 // ═══════════════════════════════════════════════════════════════════
 
 export interface UnifiedSingularityState {
@@ -167,22 +171,20 @@ export class SingularityFusionCore extends EventEmitter {
 
   /**
    * Initialiser systèmes automatiques (sync, heal, optimize)
-   * v∞.Ω: Sync adaptative + heal intelligent
+   * v30.0.0: Sync adaptative + heal intelligent
    */
   private initializeAutoSystems(): void {
     // Synchronisation backend ↔ frontend (adaptative 1-4 Hz)
     this.syncInterval = setInterval(() => {
-      this.adaptiveSync().catch(console.error);
+      this.adaptiveSync().catch((e) => logger.error('Adaptive sync error', e));
     }, 250); // Base rate 4 Hz, throttled internally
 
     // Auto-réparation continue (0.5 Hz, augmentée pour stabilité)
     this.autoHealInterval = setInterval(() => {
-      this.autoHeal().catch(console.error);
+      this.autoHeal().catch((e) => logger.error('Auto-heal error', e));
     }, 2000);
 
-    console.log(
-      '[SingularityFusion vΩ] ✨ Auto-systems initialized (adaptive sync + enhanced heal)'
-    );
+    logger.info('Auto-systems initialized (adaptive sync + enhanced heal)');
   }
 
   /**
@@ -213,11 +215,7 @@ export class SingularityFusionCore extends EventEmitter {
       this.syncFailCount++;
       if (this.syncFailCount > 3) {
         this.adaptiveSyncRate = Math.min(2000, this.adaptiveSyncRate + 100);
-        console.warn(
-          '[SingularityFusion vΩ] Sync rate reduced to',
-          this.adaptiveSyncRate,
-          'ms'
-        );
+        logger.warn('Sync rate reduced', { rate: this.adaptiveSyncRate });
       }
     }
   }
@@ -290,7 +288,7 @@ export class SingularityFusionCore extends EventEmitter {
       },
       meta: {
         timestamp: Date.now(),
-        version: 'vΩ',
+        version: 'v30.0.0',
         coherence_score: 0.85,
         health_status: 'optimal',
       },
@@ -324,13 +322,13 @@ export class SingularityFusionCore extends EventEmitter {
       // Émettre événement de mise à jour
       this.emit('state:updated', this.state);
     } catch (error) {
-      console.error('[SingularityFusion] Sync failed:', error);
+      logger.error('Sync failed', error);
       // Fallback : garder état actuel
     }
   }
 
   /**
-   * Auto-réparation de l'état (v∞.Ω Enhanced)
+   * Auto-réparation de l'état (v30.0.0 Enhanced)
    * Corrections multi-niveaux avec diagnostics
    */
   private async autoHeal(): Promise<void> {
@@ -373,11 +371,7 @@ export class SingularityFusionCore extends EventEmitter {
 
       // Niveau 2: Cohérence critique - réparation aggressive
       if (coherence < 0.5) {
-        console.warn(
-          '[SingularityFusion vΩ] ⚠️ Low coherence:',
-          coherence.toFixed(3),
-          '- Auto-healing...'
-        );
+        logger.warn('Low coherence — auto-healing', { coherence: coherence.toFixed(3) });
 
         // Restaurer valeurs par défaut pour éléments dégradés
         if (this.state.narrative.coherence < 0.3) {
@@ -406,11 +400,7 @@ export class SingularityFusionCore extends EventEmitter {
 
       // Niveau 3: Cohérence très basse - réinitialisation partielle
       if (coherence < 0.3) {
-        console.error(
-          '[SingularityFusion vΩ] ❌ Critical coherence:',
-          coherence.toFixed(3),
-          '- Hard reset...'
-        );
+        logger.error('Critical coherence — hard reset', { coherence: coherence.toFixed(3) });
 
         // Reset des sous-systèmes critiques
         this.state.cognitive = {
@@ -435,22 +425,16 @@ export class SingularityFusionCore extends EventEmitter {
       this.state.meta.timestamp = Date.now();
 
       if (healActions.length > 0) {
-        console.log('[SingularityFusion vΩ] ✅ Healed:', healActions.join(', '));
-        console.log(
-          '[SingularityFusion vΩ] Coherence:',
-          coherence.toFixed(3),
-          '→',
-          newCoherence.toFixed(3)
-        );
+        logger.info('Healed', { actions: healActions.join(', '), from: coherence.toFixed(3), to: newCoherence.toFixed(3) });
         this.emit('state:healed', { state: this.state, actions: healActions });
       }
     } catch (error) {
-      console.error('[SingularityFusion vΩ] Auto-heal failed:', error);
+      logger.error('Auto-heal failed', error);
     }
   }
 
   /**
-   * Calculer score de cohérence global (v∞.Ω Optimisé)
+   * Calculer score de cohérence global (v30.0.0 Optimisé)
    * Facteurs multiples avec pondérations adaptatives
    */
   private calculateCoherence(): number {
@@ -595,7 +579,7 @@ export class SingularityFusionCore extends EventEmitter {
     if (this.autoHealInterval) clearInterval(this.autoHealInterval);
     this.removeAllListeners();
     SingularityFusionCore.instance = null;
-    console.log('[SingularityFusion vΩ] Moteur arrêté');
+    logger.info('Moteur arrêté');
   }
 }
 

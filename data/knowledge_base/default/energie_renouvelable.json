@@ -1,0 +1,66 @@
+{
+  "version": "v30.0.0",
+  "category": "energie_renouvelable",
+  "description": "Énergie renouvelable et environnement — solaire, éolien, hydrogène, stockage, transition énergétique, empreinte carbone, économie circulaire, enjeux géopolitiques de l'énergie verte",
+  "energie_renouvelable": {
+    "introduction": "La transition énergétique est la transformation économique et technique la plus vaste du 21e siècle. TITANE fournit les données réelles derrière les discours politiques : coûts, capacités, limites physiques, fenêtre temporelle disponible.",
+    "contexte_crise": {
+      "chiffres_cles": "Énergie fossile = 83% consommation mondiale (2023). 1.5°C Paris Agreement nécessite neutralité carbone ~2050.",
+      "urgence": "Budget carbone restant à 1.5°C ≈ 250 GtCO2 (rythme actuel = épuisé en ~6 ans)",
+      "opportunite": "Coût solaire -99% en 40 ans. Éolien -80%. Transition = opportunité économique de 5T$/an."
+    },
+    "solaire": {
+      "technologie": {
+        "pv_silicium": "Standard. Rendement commercial 20-23%. Durée vie 25-30 ans. Prix $0.20/W (2024)",
+        "perovskite": "Promesse > 30% rendement, coût très faible. Stabilité long terme encore problématique.",
+        "solaire_concentre": "Miroirs concentrent chaleur → vapeur → électricité. Stockage thermique intégrable. Utile zones très ensoleillées."
+      },
+      "capacite_mondiale": "1.7 TW installé (2024). Chine 40%, Europe 20%, USA 10%.",
+      "limites": "Intermittent (nuit, météo), espace nécessaire (mais toitures/surfaces existantes), recyclage panneaux"
+    },
+    "eolien": {
+      "terrestre": "Coût $30-50/MWh (2024). Plus compétitif que charbon/gaz dans la plupart des pays.",
+      "offshore": "Plus coûteux ($80-120/MWh) mais vents plus forts, moins variable, moins d'opposition locale",
+      "limites": "Bruit proche des habitations, impact oiseaux/chauves-souris, dépendance du vent, recyclage pales",
+      "capacite": "2.1 TW installé mondial (2024)"
+    },
+    "hydrogene": {
+      "couleurs": {
+        "gris": "95% de l'H2 actuel — steam reforming méthane. Très CO2.",
+        "bleu": "Gris + captage carbone (CCS). Transitoire.",
+        "vert": "Électrolyse eau avec électricité renouvelable. Propre. Coût encore élevé ($3-6/kg, objectif <$1).",
+        "rose": "Nucléaire + électrolyse. Faible carbone."
+      },
+      "usages": "Acier (hauts fourneaux), chimie (ammoniac/engrais), aviation long courrier, shipping, stockage saisonnier",
+      "defis": "Densité énergétique volumique faible, H2 fragile (embrittlement métaux), infrastructure distribution"
+    },
+    "stockage_energie": {
+      "batteries": {
+        "lithium_ion": "Standard actuel. ~$100/kWh (2024, en baisse). Tesla Megapack, CATL. Durée vie 15-20 ans.",
+        "lfp": "Lithium Fer Phosphate — plus sûr, plus durable, moins dense. Préféré pour stockage stationnaire.",
+        "sodium_ion": "Prochain : matériaux abondants, pas de lithium/cobalt. CATL commercialise 2024.",
+        "flow_batteries": "Vanadium redox — durée quasi illimitée, scalable. Coûteux. Idéal long terme (heures)."
+      },
+      "gravite_pompage": "STEP (Station de Transfert d'Énergie par Pompage) — 90% du stockage mondial. Très fiable, géographie-dépendant.",
+      "air_comprime": "CAES — stockage en cavernes. Grand volume, rendement moyen."
+    },
+    "transition_energetique": {
+      "scenarios": {
+        "net_zero_2050": "AIE : 90% électricité renouvelable, 2/3 voitures électriques, pas nouveau forage après 2021",
+        "realiste_3deg": "Trajectoire actuelle : +2.5-3°C à 2100 si politiques actuelles maintenues",
+        "rupture": "Courbes exponentielle solaire/batteries accélèrent — certains modèles prévoient dépassement plus rapide"
+      },
+      "geopolitique": "OPEP perd influence long terme. Nouveau pouvoir : lithium (Chili/Arg/Bol), cobalt (RDC), terres rares (Chine 60%).",
+      "emplois": "10M emplois fossiles perdus. 30M créés en ENR. Transition juste nécessaire : formation, relocalisation."
+    },
+    "empreinte_carbone": {
+      "gestes_impact": {
+        "fort": "Alimentation (vegan -50% vs omnivore), transport aérien, voiture thermique, maison mal isolée",
+        "moyen": "Électroménager, chauffage, streaming vidéo (impact overestimé mais réel)",
+        "faible": "Vélo/marche, légumes locaux, achat occasion"
+      },
+      "calcul": "Bilan Carbone personnel France ≈ 9 tCO2e/an. Objectif compatible 1.5°C : 2 tCO2e/an.",
+      "reducteur_efficace": "1€ dépensé en isolation > 10€ en compensation carbone (plantations d'arbres souvent inefficaces)"
+    }
+  }
+}
