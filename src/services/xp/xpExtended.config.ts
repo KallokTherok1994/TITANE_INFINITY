@@ -422,12 +422,12 @@ export const ACHIEVEMENT_REGISTRY: Record<string, AchievementDefinition> = {
   quality_speaker: {
     id: 'quality_speaker',
     name: 'Interlocuteur de Qualité',
-    description: 'Envoyer 10 messages de qualité "excellent" ou supérieure.',
+    description: 'Atteindre le niveau 3 en catégorie Chat IA grâce à des messages de qualité.',
     icon: '🎯',
     type: 'mastery',
     rarity: 'uncommon',
     xpReward: 200,
-    condition: profile => profile.stats.totalEventsCount >= 10,
+    condition: profile => profile.categoryXP.chat_ia.level >= 3,
     secret: false,
   },
   coherent_thinker: {

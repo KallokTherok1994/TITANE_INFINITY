@@ -2095,22 +2095,27 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
               `Message [${qualityReward.tier}]: ${cleanMessage.substring(0, 50)}...`
             );
 
-            // XP Domaine Chat (base + bonus qualité)
-            await awardExperience('chat', qualityReward.totalXP, XPSource.ChatMessage, {
+            // XP Domaine Chat: base XP + bonus qualité séparé
+            await awardExperience('chat', qualityReward.baseXP, XPSource.ChatMessage, {
               messageLength: cleanMessage.length,
               provider,
               mode: currentModeState,
-              qualityTier: qualityReward.tier,
-              qualityScore: qualityReward.score.total,
-              qualityBonusXP: qualityReward.qualityBonusXP,
             });
+
+            // XP Bonus qualité (séparé pour tracking précis)
+            if (qualityReward.qualityBonusXP > 0) {
+              await awardExperience('chat', qualityReward.qualityBonusXP, XPSource.ChatQualityBonus, {
+                qualityTier: qualityReward.tier,
+                qualityScore: qualityReward.score.total,
+              });
+            }
 
             // XP TITANE réponse: TITANE gagne des XP à chaque réponse
             const titaneXP = calculateTitaneResponseXP(
               finalContent ? finalContent.length : 0,
               true
             );
-            await awardExperience('cognitive', titaneXP, XPSource.CognitiveAnalysis, {
+            await awardExperience('cognitive', titaneXP, XPSource.ChatTitaneResponse, {
               responseLength: finalContent ? finalContent.length : 0,
               provider,
               titaneResponseXP: true,

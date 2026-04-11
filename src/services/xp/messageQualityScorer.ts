@@ -130,6 +130,21 @@ const COMPLEXITY_INDICATORS = [
   'roadmap', 'milestone', 'sprint', 'agile', 'scrum',
 ];
 
+/** Indicateurs de continuité conversationnelle */
+const CONNECTOR_PATTERN = /\b(donc|ainsi|car|parce que|cependant|néanmoins|toutefois|en effet|par conséquent|because|however|therefore|moreover|furthermore|additionally|consequently)\b/i;
+
+/** Patterns d'action explicite */
+const ACTION_PATTERN = /\b(peux-tu|pourrais-tu|je veux|j'aimerais|aide-moi|can you|could you|please|help me|i want|i need|i'd like)\b/i;
+
+/** Patterns de contexte spécifique */
+const CONTEXT_PATTERN = /\b(le fichier|le projet|le code|la page|le module|l'application|the file|the project|the code|the page|the module|the app)\b/i;
+
+/** Patterns de multi-aspects */
+const MULTI_ASPECT_PATTERN = /\b(et aussi|également|de plus|aussi|en plus|and also|additionally|also|moreover|as well)\b/i;
+
+/** Patterns de référence conversationnelle */
+const REFERENCE_PATTERN = /\b(oui|non|exactement|c'est ça|d'accord|merci|continue|précise|yes|no|exactly|right|thanks|continue|clarify|go on|parfait|super)\b/i;
+
 // ─────────────────────────────────────────────────────────────────
 // SCORING FUNCTIONS
 // ─────────────────────────────────────────────────────────────────
@@ -180,8 +195,7 @@ function scoreCoherence(message: string): number {
   }
 
   // Contient des mots connecteurs (donc, ainsi, car, parce que, cependant) (+5)
-  const connectors = /\b(donc|ainsi|car|parce que|cependant|néanmoins|toutefois|en effet|par conséquent|because|however|therefore|moreover|furthermore|additionally|consequently)\b/i;
-  if (connectors.test(trimmed)) {
+  if (CONNECTOR_PATTERN.test(trimmed)) {
     score += 5;
   }
 
@@ -216,14 +230,12 @@ function scoreRelevance(message: string): number {
   }
 
   // Demande explicite d'action (+5)
-  const actionPatterns = /\b(peux-tu|pourrais-tu|je veux|j'aimerais|aide-moi|can you|could you|please|help me|i want|i need|i'd like)\b/i;
-  if (actionPatterns.test(message)) {
+  if (ACTION_PATTERN.test(message)) {
     score += 5;
   }
 
   // Référence à un contexte spécifique (+3)
-  const contextPatterns = /\b(le fichier|le projet|le code|la page|le module|l'application|the file|the project|the code|the page|the module|the app)\b/i;
-  if (contextPatterns.test(message)) {
+  if (CONTEXT_PATTERN.test(message)) {
     score += 3;
   }
 
@@ -243,8 +255,7 @@ function scoreComplexity(message: string): number {
   score += Math.min(10, complexityHits.length * 2);
 
   // Message multi-aspects (contient "et", "aussi", "également") (+5)
-  const multiAspect = /\b(et aussi|également|de plus|aussi|en plus|and also|additionally|also|moreover|as well)\b/i;
-  if (multiAspect.test(message)) {
+  if (MULTI_ASPECT_PATTERN.test(message)) {
     score += 3;
   }
 
@@ -278,8 +289,7 @@ function scoreContinuity(
 
   // Référence au message précédent (continuité) (+4)
   if (context.previousAssistantResponse) {
-    const referencePatterns = /\b(oui|non|exactement|c'est ça|d'accord|merci|continue|précise|yes|no|exactly|right|thanks|continue|clarify|go on|parfait|super)\b/i;
-    if (referencePatterns.test(message)) {
+    if (REFERENCE_PATTERN.test(message)) {
       score += 2;
     }
 
