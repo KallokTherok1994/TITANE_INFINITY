@@ -11,6 +11,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { createLogger } from '@/utils/logger';
 import {
   calculateLevel as canonicalCalculateLevel,
   xpInCurrentLevel as canonicalXpInCurrentLevel,
@@ -18,6 +19,12 @@ import {
   calculateProgress as canonicalCalculateProgress,
   MAX_LEVEL as CANONICAL_MAX_LEVEL,
 } from '@/services/xp/xpCanonical';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LOGGER
+// ─────────────────────────────────────────────────────────────────────────────
+
+const logger = createLogger('XPEngine');
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES (Inline pour éviter les problèmes d'import circulaire)
@@ -254,8 +261,8 @@ class XPEngine {
       const backendState = await secureInvoke<ProgressionState>('exp_get_global_state');
       if (backendState) {
         this.state = { ...createDefaultState(), ...backendState };
-        console.log(
-          '[XPEngine] État chargé depuis backend:',
+        logger.info(
+          'État chargé depuis backend:',
           this.state.level,
           'XP:',
           this.state.totalXP
@@ -268,10 +275,10 @@ class XPEngine {
         if (stored) {
           const parsed = JSON.parse(stored);
           this.state = { ...createDefaultState(), ...parsed };
-          console.log('[XPEngine] État chargé depuis localStorage');
+          logger.info('État chargé depuis localStorage');
         }
       } catch (e) {
-        console.warn('[XPEngine] Erreur chargement localStorage:', e);
+        logger.warn('Erreur chargement localStorage:', e);
       }
     }
 
@@ -348,8 +355,8 @@ class XPEngine {
     // Notifier les listeners
     this.notifyListeners();
 
-    console.log(
-      `[XPEngine] +${actualAmount} XP (${source}) → Level ${this.state.level}, Total: ${this.state.totalXP}`
+    logger.info(
+      `+${actualAmount} XP (${source}) → Level ${this.state.level}, Total: ${this.state.totalXP}`
     );
 
     return event;
@@ -371,7 +378,7 @@ class XPEngine {
     const newLevel = canonicalCalculateLevel(this.state.totalXP);
 
     if (newLevel !== this.state.level) {
-      console.log(`[XPEngine] 🎉 Level Up! ${this.state.level} → ${newLevel}`);
+      logger.info(`🎉 Level Up! ${this.state.level} → ${newLevel}`);
       this.state.level = newLevel;
     }
 
@@ -418,7 +425,7 @@ class XPEngine {
     milestone.unlockedAt = Date.now();
     this.state.unlockedMilestones.push(milestone.id);
 
-    console.log(`[XPEngine] 🏆 Milestone débloqué: ${milestone.name}`);
+    logger.info(`🏆 Milestone débloqué: ${milestone.name}`);
 
     // Bonus XP pour certains milestones
     const bonusXP = this.getMilestoneBonus(milestone.id);
@@ -462,7 +469,7 @@ class XPEngine {
     if (lastDate === yesterday) {
       // Streak continue
       this.state.streakDays++;
-      console.log(`[XPEngine] 🔥 Streak: ${this.state.streakDays} jours`);
+      logger.info(`🔥 Streak: ${this.state.streakDays} jours`);
     } else {
       // Streak reset
       this.state.streakDays = 1;
@@ -483,7 +490,7 @@ class XPEngine {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
     } catch (e) {
-      console.warn('[XPEngine] Erreur sauvegarde localStorage:', e);
+      logger.warn('Erreur sauvegarde localStorage:', e);
     }
 
     // Sauvegarder dans Tauri backend
@@ -552,7 +559,7 @@ class XPEngine {
     this.history = [];
     await this.persist();
     this.notifyListeners();
-    console.log('[XPEngine] État réinitialisé');
+    logger.info('État réinitialisé');
   }
 }
 
@@ -564,7 +571,7 @@ export const xpEngine = new XPEngine();
 
 // Auto-initialize
 if (typeof window !== 'undefined') {
-  xpEngine.initialize().catch(console.error);
+  xpEngine.initialize().catch(err => logger.error('Erreur initialisation:', err));
 }
 
 export default xpEngine;
