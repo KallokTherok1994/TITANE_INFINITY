@@ -11,6 +11,18 @@ use std::time::Duration;
 pub const AI_REQUEST_TIMEOUT: Duration = Duration::from_secs(30);
 pub const AI_RESPONSE_MAX_SIZE: usize = 1024 * 1024; // 1 MB
 
+/// Sanitize error messages to prevent API key leakage.
+/// Strips any `key=<value>` query parameter from error strings that may include
+/// full URLs (e.g., from reqwest error formatting).
+pub fn sanitize_api_error(raw: &str) -> String {
+    if raw.contains("key=") {
+        let before_key = raw.split("key=").next().unwrap_or("API error");
+        format!("{}key=***", before_key)
+    } else {
+        raw.to_string()
+    }
+}
+
 /// Liste blanche des endpoints autorisés
 const ALLOWED_ENDPOINTS: &[&str] = &[
     "https://generativelanguage.googleapis.com",

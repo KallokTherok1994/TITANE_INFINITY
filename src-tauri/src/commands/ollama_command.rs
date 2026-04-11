@@ -4,6 +4,8 @@ use crate::ollama::{query_ollama, OllamaParams};
  * Centralized Tauri command for all Ollama interactions
  * Replaces scattered direct HTTP calls throughout codebase
  */
+use crate::security::permission_guard::PERMISSION_GUARD;
+use crate::security::permissions::Role;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -44,6 +46,12 @@ pub struct OllamaResponse {
 /// Returns actual model used (handles fallback transparently).
 #[tauri::command]
 pub async fn ollama_generate(req: OllamaRequest) -> Result<OllamaResponse, String> {
+    // Permission check (aligned with chat_generate_gemini/openai/anthropic)
+    PERMISSION_GUARD
+        .require("ai_generate", Role::User, "ollama_generate")
+        .await
+        .map_err(|e| format!("Permission denied: {}", e))?;
+
     let start = std::time::Instant::now();
 
     log::info!(
