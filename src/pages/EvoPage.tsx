@@ -14,13 +14,12 @@
  * - Mémoire Évolutive (opérations auto, journal)
  * - Mémoire (court/moyen/long terme)
  *
- * 6 SECTIONS UNIFIÉES:
+ * 5 SECTIONS UNIFIÉES:
  * 📊 Vue d&apos;Ensemble - Dashboard + Stats système
  * 🧬 Identité & ADN - Qui je suis, mes modes, mon pacte
  * 💾 Mémoire Triple - Architecture court/moyen/long terme
- * 🔄 Évolution Mémoire - Dynamiques internes + Journal
  * ⚡ Progression & XP - Système XP + Milestones + Talents
- * 🌱 Transformation - Lignes d&apos;évolution + Paliers franchis
+ * 🌱 Transform & Évolution - Transformation + Évolution mémoire fusionnées
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -37,7 +36,7 @@ import { TitaneLogo } from '@components/branding/TitaneLogo';
 import { TBadge, TMetric, TSectionHeader } from '../design-system';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { xpEngine } from '@/cognitive/progression/xpEngine';
-import { Settings, TrendingUp, Brain, Database, Zap, Sprout } from 'lucide-react';
+import { Settings, TrendingUp, Brain, Database, Sprout } from 'lucide-react';
 import type { ProgressionState } from '@/cognitive/types';
 import { tauriClient } from '@/lib/tauriClient';
 import type { MemoryStats } from '@/services/memory/persistentMemory.config';
@@ -51,7 +50,6 @@ type TabId =
   | 'overview'
   | 'identity'
   | 'memory-map'
-  | 'memory-evolution'
   | 'progression'
   | 'transformation';
 
@@ -216,9 +214,8 @@ export const EvoPage: React.FC = () => {
               { id: 'overview', label: '📊 Vue d&apos;Ensemble', icon: TrendingUp },
               { id: 'identity', label: '🧬 Identité & ADN', icon: Brain },
               { id: 'memory-map', label: '💾 Mémoire Triple', icon: Database },
-              { id: 'memory-evolution', label: '🔄 Évolution Mémoire', icon: Zap },
               { id: 'progression', label: '⚡ Progression & XP', icon: TrendingUp },
-              { id: 'transformation', label: '🌱 Transformation', icon: Sprout },
+              { id: 'transformation', label: '🌱 Transform & Évo', icon: Sprout },
             ].map(tab => {
               const Icon = tab.icon;
               return (
@@ -258,7 +255,6 @@ export const EvoPage: React.FC = () => {
             )}
             {activeTab === 'identity' && <IdentitySection />}
             {activeTab === 'memory-map' && <MemoryMapSection stats={stats} />}
-            {activeTab === 'memory-evolution' && <MemoryEvolutionSection />}
             {activeTab === 'progression' && (
               <ProgressionSection progression={progression} />
             )}
@@ -733,164 +729,7 @@ const MemoryMapSection: React.FC<MemoryMapSectionProps> = ({ stats }) => {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
-// SECTION 4: ÉVOLUTION MÉMOIRE (Dynamiques internes)
-// ═══════════════════════════════════════════════════════════════════════════
-
-const MemoryEvolutionSection: React.FC = () => {
-  return (
-    <div className="space-y-6">
-      <TSectionHeader
-        title="Évolution de la Mémoire"
-        subtitle="Opérations automatiques, réorganisation, apprentissage continu"
-      />
-
-      {/* Opérations Automatiques */}
-      <div className="bg-gray-800 rounded-lg p-6">
-        <h3 className="text-xl font-bold mb-4">🔄 Opérations Automatiques Actives</h3>
-        <div className="space-y-4">
-          {[
-            {
-              operation: 'Fusion de doublons',
-              status: 'Actif',
-              frequency: 'Toutes les 6h',
-              lastRun: '2h ago',
-            },
-            {
-              operation: 'Compression anciens items',
-              status: 'Actif',
-              frequency: 'Quotidien',
-              lastRun: '14h ago',
-            },
-            {
-              operation: 'Promotion vers Long Terme',
-              status: 'Actif',
-              frequency: 'Hebdomadaire',
-              lastRun: '2d ago',
-            },
-            {
-              operation: 'Reclassification thématique',
-              status: 'Pause',
-              frequency: 'Sur demande',
-              lastRun: '5d ago',
-            },
-          ].map(op => (
-            <div key={op.operation} className="bg-gray-900 p-4 rounded">
-              <div className="flex items-center justify-between mb-2">
-                <h4 className="font-bold">{op.operation}</h4>
-                <TBadge variant={op.status === 'Actif' ? 'success' : 'warning'}>
-                  {op.status}
-                </TBadge>
-              </div>
-              <div className="text-sm text-gray-400 space-y-1">
-                <div>Fréquence: {op.frequency}</div>
-                <div>Dernier: {op.lastRun}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Journal d'Évolution */}
-      <div className="bg-gray-800 rounded-lg p-6">
-        <h3 className="text-xl font-bold mb-4">📜 Journal d&apos;Évolution Mémoire</h3>
-        <div className="space-y-3">
-          {[
-            {
-              event: 'Reclassification automatique',
-              desc: 'TITANE a reclassé 47 notes sous le thème "Fusion EVO v25"',
-              time: '2h ago',
-              impact: 'Medium',
-            },
-            {
-              event: 'Compression réussie',
-              desc: '10 anciens éléments ont été compressés en 3 synthèses-clés',
-              time: '1d ago',
-              impact: 'High',
-            },
-            {
-              event: 'Promotion vers Long Terme',
-              desc: 'Le concept "Module EVO Unifié" promu en pilier fondamental',
-              time: '3d ago',
-              impact: 'High',
-            },
-            {
-              event: 'Fusion de doublons',
-              desc: '8 entrées dupliquées fusionnées avec succès',
-              time: '5d ago',
-              impact: 'Low',
-            },
-          ].map((event, i) => (
-            <div key={i} className="bg-gray-900 p-4 rounded">
-              <div className="flex items-start justify-between mb-2">
-                <div>
-                  <h4 className="font-bold">{event.event}</h4>
-                  <p className="text-sm text-gray-400 mt-1">{event.desc}</p>
-                </div>
-                <TBadge
-                  variant={
-                    event.impact === 'High'
-                      ? 'success'
-                      : event.impact === 'Medium'
-                        ? 'warning'
-                        : 'default'
-                  }
-                >
-                  {event.impact}
-                </TBadge>
-              </div>
-              <div className="text-xs text-gray-500 mt-2">{event.time}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Paramètres Memory Core */}
-      <div className="bg-gray-800 rounded-lg p-6">
-        <h3 className="text-xl font-bold mb-4">⚙️ Paramètres Memory Core</h3>
-        <div className="space-y-4">
-          {[
-            {
-              param: 'Sensibilité au bruit',
-              value: 0.15,
-              desc: 'Filtrage des infos non pertinentes',
-            },
-            {
-              param: 'Agressivité compression',
-              value: 0.68,
-              desc: 'Intensité de la compression automatique',
-            },
-            {
-              param: 'Granularité résumés',
-              value: 0.72,
-              desc: 'Niveau de détail des synthèses',
-            },
-          ].map(param => (
-            <div key={param.param}>
-              <div className="flex justify-between mb-2">
-                <div>
-                  <div className="font-semibold">{param.param}</div>
-                  <div className="text-sm text-gray-400">{param.desc}</div>
-                </div>
-                <div className="text-cyan-400 font-bold">
-                  {(param.value * 100).toFixed(0)}%
-                </div>
-              </div>
-              <div className="w-full bg-gray-700 rounded-full h-2">
-                <div
-                  className="h-2 rounded-full bg-cyan-500"
-                  style={{ width: `${param.value * 100}%` }}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// ═══════════════════════════════════════════════════════════════════════════
-// SECTION 5: PROGRESSION & XP
+// SECTION 4: PROGRESSION & XP (renumerotée après fusion Évolution → Transform)
 // ═══════════════════════════════════════════════════════════════════════════
 
 interface ProgressionSectionProps {
@@ -1096,15 +935,15 @@ const ProgressionSection: React.FC<ProgressionSectionProps> = ({ progression }) 
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
-// SECTION 6: TRANSFORMATION (Évolution cognitive incarnée)
+// SECTION 5: TRANSFORM & ÉVOLUTION (fusion Transformation + Évolution mémoire)
 // ═══════════════════════════════════════════════════════════════════════════
 
 const TransformationSection: React.FC = () => {
   return (
     <div className="space-y-6">
       <TSectionHeader
-        title="Transformation Cognitive"
-        subtitle="Évolution incarnée — Comment l'identité + mémoires modifient la façon d'être"
+        title="Transform & Évolution"
+        subtitle="Transformation cognitive + Évolution mémoire — fusionnées"
       />
 
       {/* Lignes d'Évolution */}
@@ -1242,6 +1081,150 @@ const TransformationSection: React.FC = () => {
               </div>
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* ═══ ÉVOLUTION MÉMOIRE (fusionnée depuis Section 4) ═══ */}
+
+      {/* Opérations Automatiques */}
+      <div className="bg-gray-800 rounded-lg p-6">
+        <h3 className="text-xl font-bold mb-4">🔄 Opérations Automatiques Actives</h3>
+        <div className="space-y-4">
+          {[
+            {
+              operation: 'Fusion de doublons',
+              status: 'Actif',
+              frequency: 'Toutes les 6h',
+              lastRun: '2h ago',
+            },
+            {
+              operation: 'Compression anciens items',
+              status: 'Actif',
+              frequency: 'Quotidien',
+              lastRun: '14h ago',
+            },
+            {
+              operation: 'Promotion vers Long Terme',
+              status: 'Actif',
+              frequency: 'Hebdomadaire',
+              lastRun: '2d ago',
+            },
+            {
+              operation: 'Reclassification thématique',
+              status: 'Pause',
+              frequency: 'Sur demande',
+              lastRun: '5d ago',
+            },
+          ].map(op => (
+            <div key={op.operation} className="bg-gray-900 p-4 rounded">
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="font-bold">{op.operation}</h4>
+                <TBadge variant={op.status === 'Actif' ? 'success' : 'warning'}>
+                  {op.status}
+                </TBadge>
+              </div>
+              <div className="text-sm text-gray-400 space-y-1">
+                <div>Fréquence: {op.frequency}</div>
+                <div>Dernier: {op.lastRun}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Journal d'Évolution */}
+      <div className="bg-gray-800 rounded-lg p-6">
+        <h3 className="text-xl font-bold mb-4">📜 Journal d&apos;Évolution Mémoire</h3>
+        <div className="space-y-3">
+          {[
+            {
+              event: 'Reclassification automatique',
+              desc: 'TITANE a reclassé 47 notes sous le thème "Fusion EVO v25"',
+              time: '2h ago',
+              impact: 'Medium',
+            },
+            {
+              event: 'Compression réussie',
+              desc: '10 anciens éléments ont été compressés en 3 synthèses-clés',
+              time: '1d ago',
+              impact: 'High',
+            },
+            {
+              event: 'Promotion vers Long Terme',
+              desc: 'Le concept "Module EVO Unifié" promu en pilier fondamental',
+              time: '3d ago',
+              impact: 'High',
+            },
+            {
+              event: 'Fusion de doublons',
+              desc: '8 entrées dupliquées fusionnées avec succès',
+              time: '5d ago',
+              impact: 'Low',
+            },
+          ].map((event, i) => (
+            <div key={i} className="bg-gray-900 p-4 rounded">
+              <div className="flex items-start justify-between mb-2">
+                <div>
+                  <h4 className="font-bold">{event.event}</h4>
+                  <p className="text-sm text-gray-400 mt-1">{event.desc}</p>
+                </div>
+                <TBadge
+                  variant={
+                    event.impact === 'High'
+                      ? 'success'
+                      : event.impact === 'Medium'
+                        ? 'warning'
+                        : 'default'
+                  }
+                >
+                  {event.impact}
+                </TBadge>
+              </div>
+              <div className="text-xs text-gray-500 mt-2">{event.time}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Paramètres Memory Core */}
+      <div className="bg-gray-800 rounded-lg p-6">
+        <h3 className="text-xl font-bold mb-4">⚙️ Paramètres Memory Core</h3>
+        <div className="space-y-4">
+          {[
+            {
+              param: 'Sensibilité au bruit',
+              value: 0.15,
+              desc: 'Filtrage des infos non pertinentes',
+            },
+            {
+              param: 'Agressivité compression',
+              value: 0.68,
+              desc: 'Intensité de la compression automatique',
+            },
+            {
+              param: 'Granularité résumés',
+              value: 0.72,
+              desc: 'Niveau de détail des synthèses',
+            },
+          ].map(param => (
+            <div key={param.param}>
+              <div className="flex justify-between mb-2">
+                <div>
+                  <div className="font-semibold">{param.param}</div>
+                  <div className="text-sm text-gray-400">{param.desc}</div>
+                </div>
+                <div className="text-cyan-400 font-bold">
+                  {(param.value * 100).toFixed(0)}%
+                </div>
+              </div>
+              <div className="w-full bg-gray-700 rounded-full h-2">
+                <div
+                  className="h-2 rounded-full bg-cyan-500"
+                  style={{ width: `${param.value * 100}%` }}
+                />
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

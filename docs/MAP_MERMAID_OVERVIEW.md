@@ -40,3 +40,27 @@ flowchart LR
   G --> RP[reports/proof pack]
   RP --> VD[verdict unique]
 ```
+
+## 5) Structure TitanePage — Onglets v30.0.0
+
+```mermaid
+flowchart TD
+  TP["/titane — TitanePage"] --> T1["💬 Chat\ntab=conversation"]
+  TP --> T2["📊 Vue\ntab=overview"]
+  TP --> T3["📷 Vision\ntab=vision"]
+  TP --> T4["🧬 Identité\ntab=identity"]
+  TP --> T5["💾 Mémoire\ntab=memory-map"]
+  TP --> T6["⚡ XP\ntab=progression"]
+  TP --> T7["🌱 Transform & Évo\ntab=transformation"]
+  TP --> T8["🔀 Symbiose\ntab=symbiose"]
+  T7 --> MEV["MemoryEvolutionCenter\nEvolutionTimeline\n(fusionnés v30)"]
+```
+
+## 6) Fusion v30 — Évolution → Transform
+
+```mermaid
+flowchart LR
+  OLD1["/memory-evolution"] -- "Navigate v30" --> TRANS["/titane?tab=transformation"]
+  OLD2["/memory-evo"] -- "Navigate v30" --> TRANS
+  SEC["MemoryEvolutionSection\n(standalone tab supprimé)"] -- "fusionné dans" --> TRANS
+```

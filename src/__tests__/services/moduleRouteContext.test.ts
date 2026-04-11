@@ -38,27 +38,12 @@ describe('moduleRouteContext memory route', () => {
     expect(history.at(-1)?.moduleId).toBe('memory_page');
   });
 
-  it('publishes /memory-evolution as an isolated legacy bridge, not as active repair', () => {
+  it('redirects /memory-evolution to /titane (fusionné dans Transform)', () => {
     const context = publishActiveModuleContext('/memory-evolution');
 
-    expect(context.moduleId).toBe('memory_evolution');
-    expect(context.capabilities).toEqual([
-      'hierarchy-health',
-      'cluster-observability',
-      'persistent-bridge-visibility',
-    ]);
-    expect(context.actions).toEqual([
-      'memory_get_clusters',
-      'memory_get_status',
-      'persistent_memory_get_stats',
-    ]);
-    expect(context.actions).not.toContain('memory_check_repair');
-    expect(context.limits).toContain(
-      'legacy-memory-evolution-isolated-from-persistent-ltm'
-    );
-    expect(context.limits).toContain(
-      'write-actions-blocked-until-persistent-bridge-exists'
-    );
+    // /memory-evolution is now aliased to /titane via fusion
+    expect(context.moduleId).toBe('titane_core');
+    expect(context.route).toBe('/titane');
   });
 
   it('normalizes redirected routes to their real active destinations', () => {

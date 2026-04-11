@@ -5,6 +5,9 @@
  * TransformationSection Component
  * Extracted from TitanePage.tsx for better maintainability
  * Handles: Evolution roadmap, evolution lines, milestones
+ *
+ * FUSION v30: Évolution Mémoire (ex-MemoryEvolutionSection) fusionnée ici à 100%.
+ * Ce composant unifie Transformation + Évolution Mémoire en un seul onglet.
  */
 
 import React, { memo } from 'react';
@@ -13,6 +16,7 @@ import { Card } from '@/ui';
 import { TMetric, TBadge, TSectionHeader } from '@/design-system';
 import { SectionLoadingFallback } from './SectionLoadingFallback';
 import { colors, spacing, fontSizes } from '@themes/tokens';
+import { detectEnvironment } from '@/core/tauri/environment';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -37,12 +41,25 @@ const LazyTransformationRoadmap = React.lazy(() =>
   }))
 );
 
+const LazyMemoryEvolutionCenter = React.lazy(
+  () => import('@/components/MemoryEvolution/MemoryEvolutionCenter')
+);
+
+const LazyEvolutionTimeline = React.lazy(() =>
+  import('@/features/evolution/EvolutionTimeline').then(m => ({
+    default: m.EvolutionTimeline,
+  }))
+);
+
 // ═══════════════════════════════════════════════════════════════════════════
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const TransformationSection: React.FC<TransformationSectionProps> = memo(
   ({ stats }) => {
+    const env = detectEnvironment();
+    const mode = env.isTauri ? 'tauri' : 'browser';
+
     const transformationPhase =
       stats.evolutionScore >= 80
         ? 'Symbiose avancée'
@@ -56,12 +73,17 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
       stats.memoryShortTerm + stats.memoryMidTerm + stats.memoryLongTerm;
 
     return (
-      <div className="titane-section titane-section-transformation">
+      <div
+        className="titane-section titane-section-transformation"
+        data-testid="transformation-section-root"
+        data-memory-evolution-mode={mode}
+      >
         <TSectionHeader
-          title="🌱 Transformation"
-          subtitle="Lignes d'évolution et paliers franchis"
+          title="🌱 Transform & Évolution"
+          subtitle="Transformation cognitive + Évolution mémoire — fusionnées"
         />
 
+        {/* ═══ TRANSFORMATION: Roadmap ═══ */}
         <Card>
           <h3 style={{ marginBottom: spacing[4] }}>Roadmap Évolutif</h3>
           <React.Suspense
@@ -77,6 +99,45 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
           </React.Suspense>
         </Card>
 
+        {/* ═══ ÉVOLUTION MÉMOIRE (fusionnée depuis MemoryEvolutionSection) ═══ */}
+        <Card>
+          <h3 style={{ marginBottom: spacing[4] }}>Centre d&apos;Évolution Mémoire</h3>
+          {env.isTauri ? (
+            <React.Suspense
+              fallback={
+                <SectionLoadingFallback
+                  label="Évolution mémoire"
+                  note="Chargement du centre d'évolution…"
+                  testId="loading-memory-evolution-center"
+                />
+              }
+            >
+              <LazyMemoryEvolutionCenter />
+            </React.Suspense>
+          ) : (
+            <div>
+              <p style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}>
+                Disponible en mode Tauri uniquement
+              </p>
+              <div style={{ marginTop: spacing[4] }}>
+                <h4 style={{ marginBottom: spacing[3] }}>Timeline d&apos;Évolution</h4>
+                <React.Suspense
+                  fallback={
+                    <SectionLoadingFallback
+                      label="Timeline d'évolution"
+                      note="Chargement de la timeline…"
+                      testId="loading-evolution-timeline"
+                    />
+                  }
+                >
+                  <LazyEvolutionTimeline />
+                </React.Suspense>
+              </div>
+            </div>
+          )}
+        </Card>
+
+        {/* ═══ TRANSFORMATION: Lignes d'Évolution + Indicateurs ═══ */}
         <Grid columns={2} gap={4} style={{ marginTop: spacing[4] }}>
           <Card>
             <h3 style={{ marginBottom: spacing[4] }}>Lignes d&apos;Évolution</h3>
