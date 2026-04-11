@@ -1,3 +1,43 @@
+# Architecture TITANE∞ v30.1.0
+
+> **Cartographie complète mise à jour le 2026-04-11**
+>
+> Voir les documents de cartographie complète :
+> - 📊 [Cartographie Complète Avancée](./CARTOGRAPHY_COMPLETE.md)
+> - 🔗 [Catalogue IPC Exhaustif](./IPC_CATALOG.md)
+> - 📦 [Carte des Dépendances](./DEPENDENCY_MAP.md)
+
+## 📊 Métriques du Projet v30.1.0
+
+| Métrique | Valeur |
+|---------|--------|
+| Fichiers TypeScript/TSX | 1 668 |
+| Fichiers Rust (.rs) | 880 |
+| Commandes IPC Tauri | 1 135 |
+| Stores Zustand | 18 |
+| Hooks custom | 96 |
+| Pages React | 45+ |
+| Lignes TS/TSX total | 530 579 |
+| Lignes Rust total | 294 556 |
+
+## 🏛️ Architecture 4-Ring
+
+```mermaid
+graph TD
+    R4["Ring 4 — UI React/TypeScript<br/>Pages · Components · UI Primitives"]
+    R3["Ring 3 — Store Layer<br/>18 Zustand Stores + Selectors"]
+    R2["Ring 2 — Engine Layer<br/>20+ Moteurs Rust — Cognitive · Memory · Singularity"]
+    R1["Ring 1 — Core Services<br/>IPC Bridge · 1135 Commandes Tauri"]
+    R0["Ring 0 — Kernel Rust<br/>main.rs · Security · Constitution"]
+
+    R4 --> R3
+    R3 --> R2
+    R2 --> R1
+    R1 --> R0
+```
+
+---
+
 # Architecture TITANE∞ v8.0
 
 ## 📐 Vue d'Ensemble
