@@ -1,20 +1,20 @@
 {
   "deployment": {
-    "timestamp": "2026-04-10 13:58:29 UTC",
+    "timestamp": "2026-04-11 12:07:31 UTC",
     "version": "30.0.0",
-    "commit": "00fd79a2cf43cad6e665ede3b3cdabaa1354bcc3",
+    "commit": "f0ca56c59743363d81ea46c2676853761c6ebb22",
     "branch": "MAIN",
-    "certification": "TITANE_INFINITY_RELEASE_20260410_135829_CERTIFIED",
+    "certification": "TITANE_INFINITY_RELEASE_20260411_080731_CERTIFIED",
     "deployment_type": "post_certification"
   },
   "artifacts": {
     "appimage": {
       "available": true,
-      "sha256": "046f1e268a3d9028dcd61aa56f7ed52440e50915559a275385a108985ddb9f90"
+      "sha256": "8bf170537c3f78e2179e47623f7a89ce6bb44c43304b52bd713054296364fcba"
     },
     "deb": {
       "available": true,
-      "sha256": "847ab918eac554df59291d75e844ed6df348db137e89f33838c92463c09c3115"
+      "sha256": "2608165ea3b900d4f7f1f41e6ae12bf3c25201d9b94e58dc0d754204b81c3e30"
     }
   },
   "certification": {

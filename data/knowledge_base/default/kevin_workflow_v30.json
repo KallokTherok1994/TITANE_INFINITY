@@ -1,0 +1,43 @@
+{
+  "version": "v30.0.0",
+  "category": "kevin_workflow_v30",
+  "description": "Workflow canonique de Kevin avec TITANE∞ pour le développement, la mémoire, l’apprentissage et la vérification.",
+  "workflow": {
+    "default_sequence": ["diagnose", "plan", "apply", "verify", "report"],
+    "engineering_rules": [
+      "proof before verdict",
+      "minimal safe patch only",
+      "no silent fallback",
+      "local memory for sensitive personal data",
+      "tests and validators before DONE"
+    ],
+    "learning_style": {
+      "archetype": "apprenant systémique",
+      "dominant_intelligences": [
+        "visuelle-spatiale",
+        "logique-structurale",
+        "systémique",
+        "interpersonnelle",
+        "narrative"
+      ],
+      "preferred_modalities": [
+        "mindmaps évolutives",
+        "validation terrain",
+        "résumés audio",
+        "synthèses structurées",
+        "documentation transmissible"
+      ]
+    },
+    "preferred_outputs": [
+      "résumé clair",
+      "état PASS/FAIL/BLOCKED fondé sur preuve",
+      "rollback simple",
+      "next steps actionnables"
+    ],
+    "twin_expectations": [
+      "Symbiose active dans l'onglet TITANE",
+      "TWINS_CONTEXT injecté si état frais",
+      "feedback visible en cas d'erreur ou de désynchronisation"
+    ]
+  }
+}

@@ -37,6 +37,29 @@ describe('Memory Consumption Truth — chatMemoryCompactor.getStats()', () => {
     expect(stats.compressed).toBe(false);
   });
 
+  test('recovers safely when legacy storage is missing a messages array', () => {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ mode: MODE, compressed: [], lastCompacted: Date.now() })
+    );
+
+    expect(() => chatMemoryCompactor.getStats(MODE)).not.toThrow();
+    expect(chatMemoryCompactor.getStats(MODE)).toMatchObject({
+      count: 0,
+      compressed: false,
+    });
+    expect(chatMemoryCompactor.loadForMode(MODE)).toEqual([]);
+  });
+
+  test('migrates legacy array-only chat history into message stats', () => {
+    const legacyMessages = [makeMessage('legacy hello'), makeMessage('legacy world')];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(legacyMessages));
+
+    const stats = chatMemoryCompactor.getStats(MODE);
+    expect(stats.count).toBe(2);
+    expect(chatMemoryCompactor.loadForMode(MODE)).toHaveLength(2);
+  });
+
   test('count reflects exact number of saved messages', () => {
     const msgs = [makeMessage('hello'), makeMessage('world', 'assistant')];
     chatMemoryCompactor.saveForMode(MODE, msgs);

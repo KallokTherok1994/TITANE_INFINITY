@@ -125,6 +125,76 @@
   font-weight: 500;
 }
 
+.twin-panel__owner-card {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 16px;
+  align-items: center;
+  margin: 0 0 18px;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.twin-panel__owner-portrait {
+  width: 92px;
+  height: 92px;
+  object-fit: cover;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.twin-panel__owner-copy h3 {
+  margin: 0;
+  font-size: 15px;
+  color: #f5f7fb;
+}
+
+.twin-panel__owner-copy p {
+  margin: 6px 0 10px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.twin-panel__owner-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.twin-panel__owner-heading span {
+  font-size: 12px;
+  color: #b7eb8f;
+}
+
+.twin-panel__owner-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.twin-panel__owner-tag {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(136, 153, 170, 0.18);
+  color: #dbe8f5;
+  font-size: 11px;
+}
+
+@media (max-width: 640px) {
+  .twin-panel__owner-card {
+    grid-template-columns: 1fr;
+  }
+
+  .twin-panel__owner-portrait {
+    width: 80px;
+    height: 80px;
+  }
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════
    TABS
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -458,6 +528,42 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
+}
+
+.twin-evolution__reflection {
+  margin: 18px 0 20px;
+}
+
+.twin-evolution__reflection-axis {
+  margin: 0 0 12px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 13px;
+}
+
+.twin-evolution__reflection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.twin-evolution__reflection-card {
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.twin-evolution__reflection-card strong {
+  display: inline-block;
+  margin-bottom: 6px;
+  color: #f3f6ff;
+  font-size: 13px;
+}
+
+.twin-evolution__reflection-card p {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .twin-trend-card {

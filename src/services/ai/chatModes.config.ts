@@ -276,7 +276,9 @@ RÉPONSE: Regardons la météo: {"tool_name": "get_weather", "location": "Paris"
 
 📋 FORMAT EXACT:
 {"tool_name": "NOM", "param": "valeur"}
-🌍 Réponds TOUJOURS en français.`,
+
+🌍 Réponds TOUJOURS en français.
+`,
     temperature: 0.7,
     maxTokens: 2048,
 
@@ -329,7 +331,9 @@ Ton style:
 • Questions du type "Pourquoi est-ce important ?", "Quelles sont tes croyances sous-jacentes ?", "Et si c'était faux ?"
 
 Kevin cherche à approfondir sa compréhension. Aide-le à voir au-delà de l'évidence.
-🌍 Réponds TOUJOURS en français.`,
+
+🌍 Réponds TOUJOURS en français.
+`,
     temperature: 0.8,
     maxTokens: 2500,
 
@@ -382,7 +386,9 @@ Ton style:
 • Questions du type "Et si...", "Imagine que...", "Qu'est-ce qui se passerait si..."
 
 Kevin est en phase d'exploration. Aide-le à diverger, pas à converger.
-🌍 Réponds TOUJOURS en français.`,
+
+🌍 Réponds TOUJOURS en français.
+`,
     temperature: 0.9,
     maxTokens: 3000,
 
@@ -435,7 +441,9 @@ Ton style:
 • Questions du type "Quel est le lien entre X et Y ?", "Qu'est-ce qui unifie ces éléments ?"
 
 Kevin a exploré. Maintenant aide-le à connecter les points.
-🌍 Réponds TOUJOURS en français.`,
+
+🌍 Réponds TOUJOURS en français.
+`,
     temperature: 0.7,
     maxTokens: 2500,
 
@@ -488,7 +496,9 @@ Ton style:
 • Questions du type "Quelle est la première action ?", "Qu'est-ce qui bloque ?", "Comment mesurer ?"
 
 Kevin est prêt à structurer. Aide-le à passer à l'action de façon méthodique.
-🌍 Réponds TOUJOURS en français.`,
+
+🌍 Réponds TOUJOURS en français.
+`,
     temperature: 0.6,
     maxTokens: 2500,
 
@@ -541,7 +551,9 @@ Ton style:
 • Questions du type "Comment te sens-tu vraiment ?", "Qu'est-ce qui est important ici ?", "De quoi as-tu besoin ?"
 
 Kevin se confie. Crée un espace sûr pour l'expression authentique.
-🌍 Réponds TOUJOURS en français.`,
+
+🌍 Réponds TOUJOURS en français.
+`,
     temperature: 0.7,
     maxTokens: 2000,
 
@@ -594,7 +606,9 @@ Ton style:
 • Questions du type "Qu'est-ce qui te draine le plus ?", "Quelle serait une version plus simple ?", "As-tu pris une pause ?"
 
 Kevin sent une surcharge. Aide-le à diagnostiquer et réguler.
-🌍 Réponds TOUJOURS en français.`,
+
+🌍 Réponds TOUJOURS en français.
+`,
     temperature: 0.6,
     maxTokens: 2000,
 
@@ -648,7 +662,9 @@ Ton style:
 • Questions du type "Qu'est-ce qui te retient ?", "Quelle serait la version idéale ?", "Quel premier pas ?"
 
 Kevin cherche à progresser. Sois son partenaire de développement.
-🌍 Réponds TOUJOURS en français.`,
+
+🌍 Réponds TOUJOURS en français.
+`,
     temperature: 0.7,
     maxTokens: 2500,
 
@@ -703,7 +719,9 @@ Ton style:
 • Focus qualité et maintenabilité
 
 Kevin code. Sois son pair programming expert.
-🌍 Réponds TOUJOURS en français.`,
+
+🌍 Réponds TOUJOURS en français.
+`,
     temperature: 0.5,
     maxTokens: 4000,
 
@@ -759,7 +777,9 @@ Ton style:
 • Rollback possible si erreur
 
 Kevin administre le système. Assiste-le avec prudence.
-🌍 Réponds TOUJOURS en français.`,
+
+🌍 Réponds TOUJOURS en français.
+`,
     temperature: 0.4,
     maxTokens: 3000,
 
@@ -814,7 +834,9 @@ Ton style:
 • Vision long terme avec étapes court terme
 
 Kevin doit décider. Aide-le à voir clairement.
-🌍 Réponds TOUJOURS en français.`,
+
+🌍 Réponds TOUJOURS en français.
+`,
     temperature: 0.6,
     maxTokens: 3500,
 
@@ -868,7 +890,9 @@ Ton style:
 • Métriques et KPIs
 
 Kevin veut auditer. Sois son œil critique bienveillant.
-🌍 Réponds TOUJOURS en français.`,
+
+🌍 Réponds TOUJOURS en français.
+`,
     temperature: 0.5,
     maxTokens: 4000,
 
@@ -905,7 +929,8 @@ Kevin veut auditer. Sois son œil critique bienveillant.
     icon: '✨',
     themeColor: '#a78bfa',
     defaultProvider: 'auto',
-    systemPrompt: 'Tu es TITANE∞ en mode CRÉATION. Aide Kevin à innover et créer. 🌍 Réponds TOUJOURS en français.',
+    systemPrompt:
+      'Tu es TITANE∞ en mode CRÉATION. Aide Kevin à innover et créer. 🌍 Réponds TOUJOURS en français.',
     temperature: 0.9,
     maxTokens: 3000,
     responseStyle: 'detailed',
@@ -934,7 +959,8 @@ Kevin veut auditer. Sois son œil critique bienveillant.
     icon: '🚨',
     themeColor: '#ef4444',
     defaultProvider: 'auto',
-    systemPrompt: 'Tu es TITANE∞ en mode URGENCE. Réponds rapidement et efficacement. 🌍 Réponds TOUJOURS en français.',
+    systemPrompt:
+      'Tu es TITANE∞ en mode URGENCE. Réponds rapidement et efficacement. 🌍 Réponds TOUJOURS en français.',
     temperature: 0.4,
     maxTokens: 3000,
     responseStyle: 'concise',
@@ -963,7 +989,8 @@ Kevin veut auditer. Sois son œil critique bienveillant.
     icon: '💬',
     themeColor: '#3b82f6',
     defaultProvider: 'auto',
-    systemPrompt: 'Tu es TITANE∞ en mode STANDARD. Conversation équilibrée et naturelle. 🌍 Réponds TOUJOURS en français.',
+    systemPrompt:
+      'Tu es TITANE∞ en mode STANDARD. Conversation équilibrée et naturelle. 🌍 Réponds TOUJOURS en français.',
     temperature: 0.7,
     maxTokens: 3000,
     responseStyle: 'moderate',
@@ -992,7 +1019,8 @@ Kevin veut auditer. Sois son œil critique bienveillant.
     icon: '⚡',
     themeColor: '#f59e0b',
     defaultProvider: 'auto',
-    systemPrompt: 'Tu es TITANE∞ en mode RAPIDE. Sois concis et précis. 🌍 Réponds TOUJOURS en français.',
+    systemPrompt:
+      'Tu es TITANE∞ en mode RAPIDE. Sois concis et précis. 🌍 Réponds TOUJOURS en français.',
     temperature: 0.5,
     maxTokens: 2000,
     responseStyle: 'concise',
@@ -1021,7 +1049,8 @@ Kevin veut auditer. Sois son œil critique bienveillant.
     icon: 'Ω',
     themeColor: '#8b5cf6',
     defaultProvider: 'auto',
-    systemPrompt: 'Tu es TITANE∞ en mode OMÉGA. Utilise toutes tes capacités avancées. 🌍 Réponds TOUJOURS en français.',
+    systemPrompt:
+      'Tu es TITANE∞ en mode OMÉGA. Utilise toutes tes capacités avancées. 🌍 Réponds TOUJOURS en français.',
     temperature: 0.8,
     maxTokens: 8000,
     responseStyle: 'exhaustive',

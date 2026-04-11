@@ -16,6 +16,9 @@
 // @ts-nocheck - Complex dynamic types from v∞ architecture
 import { secureInvoke } from '@/lib/security';
 import { SingularityBridge } from './singularityBridge';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('SingularityConnections');
 import type {
   PhysicalLayer,
   CognitiveLayer,

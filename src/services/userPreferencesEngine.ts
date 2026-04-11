@@ -13,6 +13,10 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('UserPreferencesEngine');
+
 const STORAGE_KEY = 'titane_user_preferences';
 const MAX_TOPICS_HISTORY = 50;
 const MAX_INTERACTIONS = 100;
@@ -138,6 +142,19 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   },
   customPreferences: {
     deep_internet_analysis: true,
+    primary_user_name: 'Kevin Thibault',
+    creator_identity_priority: true,
+    kevin_owner_mode: 'v30',
+    primary_project_ecosystem:
+      "Humain Total, TITANE_INFINITY, Humain à tout faire, Kallok's Arts",
+    learning_style_profile:
+      'apprenant systémique, visuel-spatial, structuré, validation terrain, synthèses audio',
+    creator_public_positioning:
+      'artiste du vivant, multididacte, bâtisseur d’humains, guide de clarté et de cohérence',
+    creator_core_themes:
+      'présence, authenticité, retour au vivant, deuxième vitesse, clarté, structure, œuvre vivante',
+    creator_content_channels:
+      'blog, poésie, modules Humain Total, Codex Vivant, méditations, hypnoses',
   },
 };
 
@@ -150,7 +167,7 @@ class UserPreferencesEngine {
 
   constructor() {
     this.preferences = this.loadPreferences();
-    console.log(
+    logger.info(
       '[UserPreferencesEngine] Initialized with',
       this.preferences.metrics.totalInteractions,
       'interactions'
@@ -168,7 +185,7 @@ class UserPreferencesEngine {
         return { ...DEFAULT_PREFERENCES, ...JSON.parse(stored) };
       }
     } catch (error) {
-      console.warn('[UserPreferencesEngine] Failed to load preferences:', error);
+      logger.warn('[UserPreferencesEngine] Failed to load preferences:', error);
     }
     return { ...DEFAULT_PREFERENCES };
   }
@@ -178,7 +195,7 @@ class UserPreferencesEngine {
       this.preferences.metrics.updatedAt = Date.now();
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.preferences));
     } catch (error) {
-      console.error('[UserPreferencesEngine] Failed to save preferences:', error);
+      logger.error('[UserPreferencesEngine] Failed to save preferences:', error);
     }
   }
 
@@ -225,7 +242,7 @@ class UserPreferencesEngine {
   setName(name: string): void {
     this.preferences.name = name;
     this.savePreferences();
-    console.log('[UserPreferencesEngine] Name set to:', name);
+    logger.info('[UserPreferencesEngine] Name set to:', name);
   }
 
   updateCommunicationStyle(style: Partial<UserPreferences['communicationStyle']>): void {
@@ -524,6 +541,59 @@ class UserPreferencesEngine {
       parts.push(`L'utilisateur s'appelle ${prefs.name}.`);
     }
 
+    const primaryUserName =
+      typeof prefs.customPreferences['primary_user_name'] === 'string'
+        ? prefs.customPreferences['primary_user_name']
+        : null;
+    const creatorIdentityPriority =
+      prefs.customPreferences['creator_identity_priority'] === true;
+
+    if (creatorIdentityPriority && primaryUserName) {
+      parts.push(
+        `Contexte propriétaire: ${primaryUserName} est le créateur et l'utilisateur principal de TITANE∞. Quand c'est pertinent, aligne tes réponses sur sa mission, sa vision et son workflow, sans inventer d'informations sensibles.`
+      );
+    }
+
+    const projectEcosystem =
+      typeof prefs.customPreferences['primary_project_ecosystem'] === 'string'
+        ? prefs.customPreferences['primary_project_ecosystem']
+        : null;
+    if (projectEcosystem) {
+      parts.push(`Écosystème de projets principal: ${projectEcosystem}.`);
+    }
+
+    const learningStyleProfile =
+      typeof prefs.customPreferences['learning_style_profile'] === 'string'
+        ? prefs.customPreferences['learning_style_profile']
+        : null;
+    if (learningStyleProfile) {
+      parts.push(`Style d'apprentissage et de travail: ${learningStyleProfile}.`);
+    }
+
+    const creatorPublicPositioning =
+      typeof prefs.customPreferences['creator_public_positioning'] === 'string'
+        ? prefs.customPreferences['creator_public_positioning']
+        : null;
+    if (creatorPublicPositioning) {
+      parts.push(`Positionnement public du créateur: ${creatorPublicPositioning}.`);
+    }
+
+    const creatorCoreThemes =
+      typeof prefs.customPreferences['creator_core_themes'] === 'string'
+        ? prefs.customPreferences['creator_core_themes']
+        : null;
+    if (creatorCoreThemes) {
+      parts.push(`Thèmes dominants du corpus Kevin: ${creatorCoreThemes}.`);
+    }
+
+    const creatorContentChannels =
+      typeof prefs.customPreferences['creator_content_channels'] === 'string'
+        ? prefs.customPreferences['creator_content_channels']
+        : null;
+    if (creatorContentChannels) {
+      parts.push(`Canaux de contenu à connaître: ${creatorContentChannels}.`);
+    }
+
     // Style de communication
     const style = prefs.communicationStyle;
     if (style.formality === 'informal') {
@@ -594,7 +664,7 @@ class UserPreferencesEngine {
     this.preferences = { ...DEFAULT_PREFERENCES };
     this.interactionBuffer = [];
     this.savePreferences();
-    console.log('[UserPreferencesEngine] Preferences reset');
+    logger.info('[UserPreferencesEngine] Preferences reset');
   }
 
   getDebugInfo(): object {

@@ -10,11 +10,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import {
-  CHAT_MODES,
-  SYSTEM_PROMPTS,
-  getSystemPrompt,
-} from '@/config/chatModes.config';
+import { CHAT_MODES, SYSTEM_PROMPTS, getSystemPrompt } from '@/config/chatModes.config';
 
 describe('src/config/chatModes.config — Phase 17 French Enforcement', () => {
   // ─────────────────────────────────────────────────────────────────────────
@@ -89,7 +85,9 @@ describe('src/config/chatModes.config — Phase 17 French Enforcement', () => {
       const knownModeIds = Object.keys(CHAT_MODES);
       knownModeIds.forEach(modeId => {
         const prompt = getSystemPrompt(modeId);
-        expect(prompt, `getSystemPrompt('${modeId}') missing "français"`).toContain('français');
+        expect(prompt, `getSystemPrompt('${modeId}') missing "français"`).toContain(
+          'français'
+        );
       });
     });
 

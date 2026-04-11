@@ -114,8 +114,8 @@ describe('defaultKnowledgeBase — Phase 17 French enforcement & bullet-line for
     // This is the core regression guard for the AH-105 fix:
     // Before fix: split('\n').length would return entries.length + 1 (overcounting the header)
     expect(splitTotal).toBe(entries.length + 1); // header + N category lines
-    expect(bulletCount).toBe(entries.length);    // N category lines only
-    expect(bulletCount).toBe(splitTotal - 1);    // regression-proof assertion
+    expect(bulletCount).toBe(entries.length); // N category lines only
+    expect(bulletCount).toBe(splitTotal - 1); // regression-proof assertion
   });
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -172,14 +172,16 @@ describe('defaultKnowledgeBase — Phase 17 French enforcement & bullet-line for
   });
 
   // ─────────────────────────────────────────────────────────────────────────
-  // 6. Empty entries → empty string (no orphan header)
+  // 6. IPC returns empty object → entries empty → compact index is empty string
+  // (no orphan [LANGUE] header without bullet content)
   // ─────────────────────────────────────────────────────────────────────────
 
-  it('returns an empty string when there are no entries (no orphan [LANGUE] header)', async () => {
+  it('returns an empty string when IPC returns empty entries (no orphan [LANGUE] header)', async () => {
     mockedInvokeWithRetry.mockResolvedValueOnce(JSON.stringify({}));
 
     const index = await getCompactIndex();
 
+    // IPC succeeded but with empty result: entries = [] → compact index = ''
     expect(index).toBe('');
   });
 });

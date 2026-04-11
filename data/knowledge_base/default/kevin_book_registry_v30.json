@@ -1,0 +1,71 @@
+{
+  "version": "v30.0.0",
+  "category": "kevin_book_registry_v30",
+  "description": "Registre public-safe des livres/manuscrits et influences audio de Kevin pour assimilation locale, mémoire longue durée et récupération ciblée par le chat.",
+  "book_registry": {
+    "owner": "Kevin Thibault",
+    "ingestion_policy": {
+      "full_text_storage": "local_encrypted_memory_only",
+      "prompt_retrieval": "chapter_summaries_quotes_themes",
+      "privacy_boundary": "sensitive biographical details stay local and are not committed to the repository"
+    },
+    "primary_sources": [
+      {
+        "id": "la_ou_tout_seclaircit_2026",
+        "title": "Là où tout s'éclaircit",
+        "format": "docx",
+        "role": "source_livre_personnel",
+        "status": "partially_ingested_from_local_analysis",
+        "summary_status": "chapter_framework_indexed",
+        "notes": [
+          "local analysis already identified the 12-chapter Humain Total framework and core transformation themes",
+          "keep full verbatim manuscript storage in local encrypted memory only while exposing chapter summaries, protocols and worldview markers for retrieval"
+        ]
+      },
+      {
+        "id": "portfolio_kevin_thibault_v3",
+        "title": "Portfolio Kevin Thibault V3 — Visuelle Premium Optimisé",
+        "format": "docx",
+        "role": "source_portfolio_public",
+        "status": "ready_for_local_ingestion",
+        "summary_status": "awaiting_full_text_import"
+      }
+    ],
+    "profile_sources": [
+      "PROFIL PROFESSIONEL KEVIN.txt",
+      "PROFIL-ALL.md",
+      "Portfolio_Kevin_Thibault_V3_Visuelle_Premium_Optimise.docx"
+    ],
+    "framework_highlights": {
+      "humain_total_12_chapters": [
+        "La deuxième vitesse",
+        "Retrouver l'écoute intérieure",
+        "S'ancrer dans le corps et le quotidien",
+        "Clarifier ses vraies priorités",
+        "Créer un espace de vie aligné",
+        "Installer des rituels de recentrage",
+        "Revenir à sa mission profonde",
+        "Honorer son rythme et bâtir à partir de soi",
+        "S'entourer consciemment",
+        "Transmuter ses blessures en sagesse",
+        "Incarner sa vérité dans l'action",
+        "Nourrir une œuvre utile et vivance"
+      ],
+      "core_protocols": ["D.I.S.C.E.R.N.E.R.", "RAIN"],
+      "retrieval_use": "prioritize these themes when Kevin asks about his book, Humain Total method, transformation chapters, mission, rituals, alignment, or inner listening"
+    },
+    "audiobook_influences": [
+      "Élevez votre vibration",
+      "Les quatre accords toltèques",
+      "L'effet cumulé",
+      "Pouvoir illimité",
+      "Les 21 lois irréfutables du leadership",
+      "Les 5 niveaux du leadership",
+      "Le pouvoir de la confiance en soi",
+      "Psychologie Noire et Manipulation Mentale",
+      "Maître de votre temps, maître de votre vie",
+      "Découvrez votre point d'équilibre",
+      "Devenir super-conscient"
+    ]
+  }
+}

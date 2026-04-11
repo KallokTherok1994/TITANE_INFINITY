@@ -6,6 +6,9 @@
 import type { ModuleRouteContext } from '@/services/chat/moduleRouteContext';
 import type { ConversationMode } from '@/services/conversationEngine';
 import type { ProviderDecisionMeta } from '@/types/providerMeta';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('[chatMemorySingleDoor]');
 
 const LAST_ENVELOPE_KEY = 'titane_chat_context_envelope_v1';
 
@@ -82,6 +85,10 @@ export interface ChatContextEnvelope {
     trend: string;
     currentPhase?: string | null;
     syncScore?: number;
+    ownerThemes?: string[];
+    sourceCount?: number;
+    portraitUrl?: string;
+    reflectionAxis?: string;
     updatedAt: number;
   };
   generatedAt: number;
@@ -127,27 +134,41 @@ function readFreshTwinsFusion(): ChatContextEnvelope['twinsContext'] | null {
     trend: string;
     currentPhase?: string | null;
     syncScore?: number;
+    ownerThemes?: unknown[];
+    sourceCount?: number;
+    portraitUrl?: string;
+    reflectionAxis?: string;
     updatedAt?: number;
   }>('titane_twin_fusion_v1');
   if (!raw) return null;
   if (typeof raw.updatedAt !== 'number') {
-    console.warn(
-      '[chatMemorySingleDoor] titane_twin_fusion_v1: missing updatedAt — treating as stale'
-    );
+    logger.warn('titane_twin_fusion_v1: missing updatedAt — treating as stale');
     return null;
   }
   const ageMs = Date.now() - raw.updatedAt;
   if (ageMs > TWINS_FUSION_MAX_AGE_MS) {
-    console.warn(
-      `[chatMemorySingleDoor] titane_twin_fusion_v1: stale (age=${Math.round(ageMs / 60_000)}min > 30min) — excluded from context`
+    logger.warn(
+      `titane_twin_fusion_v1: stale (age=${Math.round(ageMs / 60_000)}min > 30min) — excluded from context`
     );
     return null;
   }
+
+  const ownerThemes = Array.isArray(raw.ownerThemes)
+    ? raw.ownerThemes.filter(
+        (value): value is string => typeof value === 'string' && value.trim().length > 0
+      )
+    : [];
+
   return {
     globalScore: raw.globalScore,
     trend: raw.trend,
     currentPhase: raw.currentPhase ?? null,
     syncScore: raw.syncScore ?? 0,
+    ownerThemes,
+    sourceCount: typeof raw.sourceCount === 'number' ? raw.sourceCount : 0,
+    portraitUrl: typeof raw.portraitUrl === 'string' ? raw.portraitUrl : undefined,
+    reflectionAxis:
+      typeof raw.reflectionAxis === 'string' ? raw.reflectionAxis : undefined,
     updatedAt: raw.updatedAt,
   };
 }
@@ -271,6 +292,25 @@ export function formatContextEnvelopeForSystemPrompt(
     `mode=${envelope.memorySingleDoor.mode}`,
     `provider_requested=${envelope.memorySingleDoor.providerRequested}`,
     `tags=${envelope.memorySingleDoor.tags.join(', ')}`,
+    ...(envelope.cognitiveContext
+      ? [
+          `cognitive_flow_active=${envelope.cognitiveContext.flowActive}`,
+          `cognitive_energy=${envelope.cognitiveContext.energy}`,
+          `cognitive_mode=${envelope.cognitiveContext.mode}`,
+        ]
+      : []),
+    ...(envelope.twinsContext
+      ? [
+          `twins_fusion_score=${envelope.twinsContext.globalScore.toFixed(2)}`,
+          `twins_trend=${envelope.twinsContext.trend}`,
+          `twins_phase=${envelope.twinsContext.currentPhase ?? 'unknown'}`,
+          `twins_sync_score=${(envelope.twinsContext.syncScore ?? 0).toFixed(2)}`,
+          `twins_owner_themes=${(envelope.twinsContext.ownerThemes ?? []).join(', ') || 'none'}`,
+          `twins_source_count=${envelope.twinsContext.sourceCount ?? 0}`,
+          `twins_reflection_axis=${envelope.twinsContext.reflectionAxis ?? 'none'}`,
+          `twins_portrait=${envelope.twinsContext.portraitUrl ? 'configured' : 'fallback'}`,
+        ]
+      : []),
     'recent_memory:',
     ...recentLines,
   ].join('\n');

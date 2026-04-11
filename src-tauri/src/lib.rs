@@ -181,6 +181,12 @@ pub mod system_center; // ✅ Centre Système Unifié (Diagnostics, DevTools, Cl
 pub mod design_center; // ✅ Centre Design & Apparence Unifié (Design System Monochrome v16, Tokens Dynamiques)
 
 // ═══════════════════════════════════════════════════════════════
+// DIGITAL / NUMERIC TWIN MODULES
+// ═══════════════════════════════════════════════════════════════
+
+pub mod digital_twin_v14_1; // ✅ TWINS memory bridge + legacy digital twin utilities
+
+// ═══════════════════════════════════════════════════════════════
 // PHASES V-Ω MODULES (Active)
 // ═══════════════════════════════════════════════════════════════
 

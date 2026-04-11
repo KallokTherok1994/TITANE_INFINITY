@@ -158,19 +158,18 @@ pub async fn query_ollama(params: OllamaParams) -> Result<OllamaResult, String> 
         .build()
         .map_err(|e| format!("Erreur création client Ollama: {e}"))?;
 
-    let preferred_model = params
-        .model
-        .filter(|m| !m.is_empty())
-        .unwrap_or_else(|| {
-            env::var(OLLAMA_MODEL_ENV)
-                .ok()
-                .map(|v| v.trim().to_string())
-                .filter(|v| !v.is_empty())
-                .unwrap_or_else(|| DEFAULT_OLLAMA_MODEL.to_string())
-        });
+    let preferred_model = params.model.filter(|m| !m.is_empty()).unwrap_or_else(|| {
+        env::var(OLLAMA_MODEL_ENV)
+            .ok()
+            .map(|v| v.trim().to_string())
+            .filter(|v| !v.is_empty())
+            .unwrap_or_else(|| DEFAULT_OLLAMA_MODEL.to_string())
+    });
 
     let system_ref = params.system_prompt.as_deref();
-    let effective_ctx = params.num_ctx.unwrap_or_else(|| model_context_window(&preferred_model));
+    let effective_ctx = params
+        .num_ctx
+        .unwrap_or_else(|| model_context_window(&preferred_model));
 
     let response = send_generate(
         &client,

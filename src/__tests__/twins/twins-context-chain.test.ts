@@ -11,6 +11,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import {
   buildChatContextEnvelope,
+  formatContextEnvelopeForSystemPrompt,
   type BuildSingleDoorInput,
 } from '@/services/chat/chatMemorySingleDoor';
 import type { ModuleRouteContext } from '@/services/chat/moduleRouteContext';
@@ -94,7 +95,7 @@ describe('TWINS B — Context transfer: localStorage → envelope', () => {
     });
     const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     buildChatContextEnvelope(makeInput());
-    expect(spy).toHaveBeenCalledWith(expect.stringContaining('stale'));
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.stringContaining('stale'));
     spy.mockRestore();
   });
 
@@ -469,5 +470,71 @@ describe('TWINS G — Deterministic prompt-trace: TWINS_CONTEXT string changes (
     // Whether the LLM response changes is non-deterministic (model behavior).
     // This is RESPONSE_EFFECT_UNPROVEN — correctly classified, not faked.
     expect(true).toBe(true);
+  });
+});
+
+// ─── H. Owner resonance metadata sync (documents/photo → TWINS → chat) ─────
+
+describe('TWINS H — Owner resonance metadata sync', () => {
+  beforeEach(() => clearTwinsFusion());
+  afterEach(() => clearTwinsFusion());
+
+  it('H1. fresh owner resonance metadata is preserved in twinsContext for chat injection', () => {
+    window.localStorage.setItem(
+      'titane_twin_fusion_v1',
+      JSON.stringify({
+        globalScore: 0.93,
+        trend: 'Improving',
+        currentPhase: 'Symbiosis',
+        syncScore: 0.87,
+        updatedAt: Date.now(),
+        ownerThemes: ['présence', 'authenticité', 'retour au vivant'],
+        sourceCount: 42,
+        portraitUrl: 'https://example.com/kevin.jpg',
+        reflectionAxis: 'clarté, structure et transformation humaine',
+      })
+    );
+
+    const envelope = buildChatContextEnvelope(makeInput());
+
+    expect(envelope?.twinsContext?.ownerThemes).toEqual([
+      'présence',
+      'authenticité',
+      'retour au vivant',
+    ]);
+    expect(envelope?.twinsContext?.sourceCount).toBe(42);
+    expect(envelope?.twinsContext?.portraitUrl).toBe('https://example.com/kevin.jpg');
+    expect(envelope?.twinsContext?.reflectionAxis).toBe(
+      'clarté, structure et transformation humaine'
+    );
+  });
+
+  it('H2. formatted prompt context includes owner themes and reflection metadata', () => {
+    window.localStorage.setItem(
+      'titane_twin_fusion_v1',
+      JSON.stringify({
+        globalScore: 0.91,
+        trend: 'Stable',
+        currentPhase: 'Integration',
+        syncScore: 0.84,
+        updatedAt: Date.now(),
+        ownerThemes: ['présence', 'clarté', 'deuxième vitesse'],
+        sourceCount: 42,
+        portraitUrl: 'https://example.com/kevin.jpg',
+        reflectionAxis: 'retour au vivant et structure incarnée',
+      })
+    );
+
+    const envelope = buildChatContextEnvelope(makeInput());
+    const promptContext = formatContextEnvelopeForSystemPrompt(envelope!);
+
+    expect(promptContext).toContain(
+      'twins_owner_themes=présence, clarté, deuxième vitesse'
+    );
+    expect(promptContext).toContain('twins_source_count=42');
+    expect(promptContext).toContain(
+      'twins_reflection_axis=retour au vivant et structure incarnée'
+    );
+    expect(promptContext).toContain('twins_portrait=configured');
   });
 });

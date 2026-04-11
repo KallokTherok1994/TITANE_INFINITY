@@ -262,7 +262,9 @@ export function useJournalUpdates() {
     };
 
     setupListener();
-    return () => { if (unlisten) unlisten(); };
+    return () => {
+      if (unlisten) unlisten();
+    };
   }, [addJournalEntry]);
 }
 
@@ -286,7 +288,9 @@ export function useReasoningTraceUpdates() {
     };
 
     setupListener();
-    return () => { if (unlisten) unlisten(); };
+    return () => {
+      if (unlisten) unlisten();
+    };
   }, [updateReasoningTrace]);
 }
 
@@ -301,16 +305,21 @@ export function useCognitiveStateUpdates() {
 
     const setupListener = async () => {
       try {
-        unlisten = await listen<Partial<CognitiveState>>('cognitive-state-update', event => {
-          if (event.payload) updateCognitiveState(event.payload);
-        });
+        unlisten = await listen<Partial<CognitiveState>>(
+          'cognitive-state-update',
+          event => {
+            if (event.payload) updateCognitiveState(event.payload);
+          }
+        );
       } catch (e) {
         console.error('[DevTools] cognitive-state-update listener failed:', e);
       }
     };
 
     setupListener();
-    return () => { if (unlisten) unlisten(); };
+    return () => {
+      if (unlisten) unlisten();
+    };
   }, [updateCognitiveState]);
 }
 
@@ -334,7 +343,9 @@ export function useKernelMetricsUpdates() {
     };
 
     setupListener();
-    return () => { if (unlisten) unlisten(); };
+    return () => {
+      if (unlisten) unlisten();
+    };
   }, [updateKernelMetrics]);
 }
 

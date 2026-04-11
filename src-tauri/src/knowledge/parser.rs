@@ -353,9 +353,7 @@ impl UniversalParser {
         .await
         {
             Ok(Ok(output)) => output,
-            Ok(Err(err)) if err.kind() == std::io::ErrorKind::NotFound => {
-                return Ok(String::new())
-            }
+            Ok(Err(err)) if err.kind() == std::io::ErrorKind::NotFound => return Ok(String::new()),
             Ok(Err(err)) => return Err(format!("{} failed: {}", program, err)),
             Err(_) => {
                 return Err(format!(
@@ -381,10 +379,7 @@ impl UniversalParser {
     }
 
     async fn extract_doc_text(&self, file_path: &str) -> Result<String, String> {
-        for (program, args) in [
-            ("antiword", vec![file_path]),
-            ("catdoc", vec![file_path]),
-        ] {
+        for (program, args) in [("antiword", vec![file_path]), ("catdoc", vec![file_path])] {
             let raw = self.run_external_parser(program, &args).await?;
             let normalized = Self::normalize_extracted_content(&raw);
             if !normalized.is_empty() {

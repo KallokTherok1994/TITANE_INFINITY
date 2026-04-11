@@ -107,9 +107,9 @@ echo ""
 echo "🦀 Building Tauri app (production)..."
 if node -e "const p=require('./package.json'); process.exit(p.scripts && p.scripts.tauri ? 0 : 1)"; then
     if command -v corepack >/dev/null 2>&1; then
-        corepack pnpm run tauri -- build --config runtime/stable/tauri.conf.json
+        corepack pnpm run tauri build --config runtime/stable/tauri.conf.json
     elif command -v pnpm >/dev/null 2>&1; then
-        pnpm run tauri -- build --config runtime/stable/tauri.conf.json
+        pnpm run tauri build --config runtime/stable/tauri.conf.json
     else
         echo "❌ pnpm requis mais introuvable (corepack/pnpm)."
         exit 1

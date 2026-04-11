@@ -276,7 +276,9 @@ impl OmegaConversationBridge {
             })
             .unwrap_or("auto");
 
-        let (real_response_text, real_provider_name, real_call_error) = if let Some(router_lock) = &self.ai_router {
+        let (real_response_text, real_provider_name, real_call_error) = if let Some(router_lock) =
+            &self.ai_router
+        {
             // Build prompt: system_prompt already contains LTM history injected by frontend.
             // If no custom_system_prompt, inject backend request.history directly (canonical fallback).
             // Token budget: truncate history entries to max 200 chars each to prevent overflow.
@@ -356,11 +358,7 @@ impl OmegaConversationBridge {
                         ai_resp.provider,
                         ai_resp.tokens
                     );
-                    (
-                        ai_resp.content,
-                        format!("{:?}", ai_resp.provider),
-                        None,
-                    )
+                    (ai_resp.content, format!("{:?}", ai_resp.provider), None)
                 }
                 Err(e) => {
                     let error_message = e.to_string();

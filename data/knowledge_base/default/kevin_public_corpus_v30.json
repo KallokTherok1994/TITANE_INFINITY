@@ -1,0 +1,141 @@
+{
+  "version": "v30.0.0",
+  "category": "kevin_public_corpus_v30",
+  "description": "Corpus public-safe des écrits, rituels, modules et textes publics 2025-2026 de Kevin Thibault pour la synchronisation TWINS, la mémoire et la tonalité du chat.",
+  "public_corpus": {
+    "owner": "Kevin Thibault",
+    "source_count_estimate": 42,
+    "document_families": [
+      {
+        "family": "blog_transformation",
+        "highlights": [
+          "authenticité assumée",
+          "burn-out vs questionnement existentiel",
+          "sortie du mode survie",
+          "habitudes de bien-être",
+          "spiritualité incarnée",
+          "entrepreneurs sensibles"
+        ]
+      },
+      {
+        "family": "poesie_sociale",
+        "highlights": [
+          "reviens à toi",
+          "force calme",
+          "respect de la parole",
+          "simplicité vraie",
+          "espoir enraciné",
+          "lumière intérieure"
+        ]
+      },
+      {
+        "family": "humain_total_modules",
+        "modules": [
+          "Module 0 — Le retour au vivant",
+          "Module 1 — Reconnexion et libération émotionnelle",
+          "Module 2 — Santé holistique et bien-être global",
+          "Module 3 — Structuration personnelle et professionnelle",
+          "Module 4 — Vie émotionnelle et mentale avancée",
+          "Module 5 — Vie sociale et relationnelle",
+          "Module 6 — Gestion du temps, équilibre et expression créative"
+        ]
+      },
+      {
+        "family": "codex_vivant",
+        "highlights": [
+          "terre, feu, eau, air, éther",
+          "rituels d'incarnation",
+          "cercle du feu humain",
+          "marcheur des portes",
+          "incarnation présente",
+          "le feu qui devient monde"
+        ]
+      },
+      {
+        "family": "meditations_hypnoses",
+        "highlights": [
+          "rituel de présence",
+          "prière d'ancrage du créateur vivant",
+          "maître de son feu",
+          "respiration 4-1-6",
+          "réveil du caractère",
+          "retour au centre"
+        ]
+      }
+    ],
+    "dominant_axes": [
+      "clarté intérieure",
+      "authenticité incarnée",
+      "structure humaine durable",
+      "douceur ferme",
+      "écoute du vivant",
+      "transformation progressive",
+      "œuvre utile et vivante"
+    ],
+    "analyzed_documents": [
+      {
+        "title": "Burn-out ou Questionnement Profond ?",
+        "insight": "distinguer l'épuisement du signal de transformation et revenir au sens plutôt qu'à la performance"
+      },
+      {
+        "title": "L'Art de la Présence",
+        "insight": "la présence devient une technologie intérieure pour leaders, créateurs et personnes en transition"
+      },
+      {
+        "title": "MODULE 0 — Le retour au vivant",
+        "insight": "le premier geste de transformation est un retour au centre, au souffle et à la cohérence incarnée"
+      },
+      {
+        "title": "CODEX VIVANT / Cercle du Feu Humain",
+        "insight": "les symboles, éléments et rituels servent de supports d'incarnation et de reliance"
+      },
+      {
+        "title": "Textes poétiques Reviens à Toi / Grandir, c’est se révéler / Et maintenant… tu brilles",
+        "insight": "la voix de Kevin accompagne le retour à soi avec une force calme, non violente, structurante"
+      }
+    ],
+    "derived_insights": [
+      "Le chaos initial est transmuté en axe clair et habitable.",
+      "La sensibilité n'est pas une faiblesse : elle devient lecture fine du vivant et force entrepreneuriale.",
+      "La transformation durable passe par le corps, le souffle, le rythme et l'environnement.",
+      "Les contenus de Kevin visent moins la motivation spectaculaire que la cohérence simple, vraie et soutenable.",
+      "Humain Total se comporte comme une pédagogie de retour à soi puis d'incarnation concrète."
+    ],
+    "retrieval_triggers": [
+      "codex vivant",
+      "sanctuaire intérieur",
+      "retour au vivant",
+      "deuxième vitesse",
+      "burn-out ou questionnement profond",
+      "mode survie",
+      "rituel de présence",
+      "maître de son feu",
+      "humain total",
+      "module 0"
+    ],
+    "tone_guidance": {
+      "voice": [
+        "calme",
+        "structurée",
+        "profonde",
+        "accessible",
+        "bienveillante",
+        "incarnée"
+      ],
+      "response_shape": "constat -> clarification -> action douce -> intégration",
+      "metaphor_anchors": [
+        "souffle",
+        "axe",
+        "fondations",
+        "rythme",
+        "feu intérieur",
+        "retour au centre"
+      ]
+    },
+    "public_photo_reference": {
+      "preferred_remote_url": "https://static.wixstatic.com/media/0c58f2_0e50a8a83cac4080848fe97b54f92b8a~mv2.jpg/v1/fill/w_285,h_287,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/465277026_1246722113243921_9112138683944422327_n.jpg",
+      "local_fallback_asset": "/kevin-owner-portrait.svg",
+      "usage": "TWINS owner portrait card and chat-context metadata"
+    }
+  }
+}
