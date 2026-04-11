@@ -286,7 +286,7 @@ class OmegaDevToolsBridge {
       const { emit } = await import('@tauri-apps/api/event');
       await emit(event, payload);
     } catch (error) {
-      logger.debug(`[OmegaDevToolsBridge] emit failed for "${event}"`, { error });
+      logger.debug(`emit failed for "${event}"`, { error });
     }
   }
 

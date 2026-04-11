@@ -106,7 +106,7 @@ const statusLabels: Record<CognitiveStatus, string> = {
 function CognitiveBanner({ state }: { state: CognitiveState }) {
   const mode = state.currentMode || 'default';
   const modeColor = getModeColor(mode);
-  const effortColor = effortColors[state.effortLevel] ?? effortColors.medium;
+  const effortColor = effortColors[state.effortLevel] ?? 'var(--text-muted, rgba(255,255,255,0.60))';
   const isActive = state.status !== 'idle';
 
   return (

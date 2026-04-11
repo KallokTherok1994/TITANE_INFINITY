@@ -711,7 +711,7 @@ class ChatEngineOmega {
           processingLoad: 55,
           lastRequestAt: pipelineStartTime,
         })
-        .catch(e => logger.debug('[OmegaBridge] state thinking failed', { e }));
+        .catch(e => logger.debug('DevTools bridge: state thinking emit failed', { e }));
 
       // ═══ PHASE 1.3: CONSTRUCTION PROMPT SELON MODE ═══
       // v26.0.0: Kernel is the single source of truth — behavioralRouter runs inside kernel
@@ -1354,11 +1354,11 @@ Format: [Audit complet] + [Réponse utilisateur]
           singularityCoherence: singCoherence ?? undefined,
           reflectionNotes: reflNote,
         })
-        .catch(e => logger.debug('[OmegaBridge] journal emit failed', { e }));
+        .catch(e => logger.debug('DevTools bridge: journal emit failed', { e }));
 
       omegaDevToolsBridge
         .updateCognitiveState({ status: 'idle', processingLoad: 0 })
-        .catch(e => logger.debug('[OmegaBridge] state idle failed', { e }));
+        .catch(e => logger.debug('DevTools bridge: state idle emit failed', { e }));
 
       return finalResponse;
     } catch (error) {
