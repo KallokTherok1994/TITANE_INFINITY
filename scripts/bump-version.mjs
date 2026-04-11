@@ -26,7 +26,7 @@ const pkgRaw = fs.readFileSync(pkgPath, 'utf8');
 const pkg = JSON.parse(pkgRaw);
 const current = pkg.version;
 
-if (!current || !/^\d+\.\d+\.\d+/.test(current)) {
+if (!current || !/^\d+\.\d+\.\d+$/.test(current)) {
   console.error(`❌ Invalid version in package.json: ${current}`);
   process.exit(1);
 }
@@ -53,7 +53,13 @@ if (!dryRun) {
   // ── 3. Sync all downstream version files ────────────────────────────────────
   const syncScript = path.join(__dirname, 'sync-versions.mjs');
   if (fs.existsSync(syncScript)) {
-    execFileSync(process.execPath, [syncScript], { stdio: 'inherit', cwd: root });
+    try {
+      execFileSync(process.execPath, [syncScript], { stdio: 'inherit', cwd: root });
+    } catch (err) {
+      console.error(`❌ sync-versions.mjs failed. Run it manually: node scripts/sync-versions.mjs`);
+      console.error(err instanceof Error ? err.message : String(err));
+      process.exit(1);
+    }
   } else {
     console.warn('  ⚠️  sync-versions.mjs not found, skipping downstream sync');
   }
