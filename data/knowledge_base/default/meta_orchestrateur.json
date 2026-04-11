@@ -1,5 +1,5 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "meta_orchestrateur",
   "description": "Meta-Orchestrateur TITANE∞ — superviseur global, conscience système, allocation ressources, niveaux d'awareness, priorités dynamiques",
   "meta_orchestrateur": {

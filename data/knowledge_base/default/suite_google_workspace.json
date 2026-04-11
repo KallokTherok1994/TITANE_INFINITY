@@ -1,5 +1,5 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "suite_google_workspace",
   "description": "Suite Google Workspace avancée — Google Docs (styles, collaboration, add-ons), Google Sheets (formules avancées QUERY/IMPORTRANGE/ARRAYFORMULA, Apps Script, automatisation), Google Slides (design, animations, présenter), Google Drive (organisation, partage, recherche), Google Forms (enquêtes, quiz, automatisation), Google Meet (visioconférence pro), Looker Studio (tableaux de bord), Google Sites, Google Calendar, Gmail avancé, Apps Script (automatisation cross-workspace)",
   "suite_google_workspace": {

@@ -1,5 +1,5 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "redaction_actes_juridiques",
   "description": "Rédaction d'actes juridiques — structure d'un acte authentique (comparution/exposé/convention/clauses/signatures), clauses types, rédaction des conditions suspensives, style juridique français (formules solennelles/présent indicatif/définitions inter partes/références légales), relecture critique, erreurs fréquentes et responsabilité du rédacteur",
   "redaction_actes_juridiques": {

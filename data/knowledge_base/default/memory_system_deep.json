@@ -1,5 +1,5 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "memory_system_deep",
   "description": "Système mémoire TITANE∞ en profondeur: Memory OS, STM/MTM/LTM, embeddings HNSW, semantic search, vector store",
   "memory_os": {

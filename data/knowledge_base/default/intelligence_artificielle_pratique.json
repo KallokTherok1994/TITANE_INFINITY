@@ -1,5 +1,5 @@
 {
-  "version": "v30.0.0",
+  "version": "v30.1.0",
   "category": "intelligence_artificielle_pratique",
   "description": "Intelligence artificielle pratique avancée — Google AI Studio et Gemini (API, multimodal, grounding), ChatGPT et GPT-4o/o3 (API, GPTs personnalisés, plugins), Claude (Anthropic, multi-turn, tool use), Midjourney et image AI (génération d'images, prompt crafting), Stable Diffusion (local, ControlNet, LoRA), Runway et vidéo IA, prompt engineering avancé (chain-of-thought, few-shot, RAG), IA dans le workflow créatif et professionnel, LangChain et agents IA, fine-tuning",
   "intelligence_artificielle_pratique": {
