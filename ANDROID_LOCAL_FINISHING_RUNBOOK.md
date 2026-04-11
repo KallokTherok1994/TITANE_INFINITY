@@ -43,7 +43,9 @@ corepack pnpm run android:build:mock:debug
 corepack pnpm run android:build:full:debug
 corepack pnpm run android:build:mock
 corepack pnpm run android:build:full
+corepack pnpm run android:env:check
 corepack pnpm run android:artifact:check
+corepack pnpm run android:install:latest
 corepack pnpm run android:smoke:prep
 ```
 
@@ -77,10 +79,14 @@ src-tauri/gen/android/app/build/outputs/apk/universal/release/*-unsigned.apk
 ## Install on device
 
 ```bash
+corepack pnpm run android:env:check
 adb devices
-adb install -r src-tauri/gen/android/app/build/outputs/apk/universal/debug/<your-debug-apk>.apk
+corepack pnpm run android:install:latest
 adb shell am start -n com.titane.infinity/.MainActivity
 ```
+
+- `android:env:check` fails fast on missing JDK / SDK / NDK / Rust target / connected-device prerequisites.
+- `android:install:latest` prefers a debug APK when present and otherwise falls back to the latest release APK.
 
 ## Smoke checklist
 
