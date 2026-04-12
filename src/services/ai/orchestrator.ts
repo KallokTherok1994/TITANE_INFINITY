@@ -84,6 +84,9 @@ const IS_VITEST =
 // TYPES OMEGA ORCHESTRATOR
 // ─────────────────────────────────────────────────────────────────
 
+// v30.3.0: Error type classification for intelligent failover
+type ErrorSignature = 'timeout' | 'rate_limit' | 'auth_failed' | 'network' | 'model_error' | 'unknown';
+
 interface ProviderStats {
   name: string;
   totalRequests: number;
@@ -94,6 +97,9 @@ interface ProviderStats {
   lastFailure: number;
   reliability: number; // 0-100
   status: 'healthy' | 'degraded' | 'critical' | 'offline';
+  // v30.3.0: Error-type tracking for intelligent failover
+  lastErrorType?: ErrorSignature;
+  recentErrors: { type: ErrorSignature; timestamp: number }[];
 }
 
 interface OrchestratorMetrics {
@@ -436,6 +442,7 @@ class AIOrchestrator {
         lastFailure: 0,
         reliability: 100, // Start optimistic
         status: 'healthy',
+        recentErrors: [],
       });
     });
 
@@ -451,6 +458,7 @@ class AIOrchestrator {
         lastFailure: 0,
         reliability: 100,
         status: 'offline', // Mark as offline until loaded
+        recentErrors: [],
       });
     });
 
@@ -624,6 +632,63 @@ class AIOrchestrator {
 
     // Partial governance: everything in between
     return 'partial';
+  }
+
+  /**
+   * v30.3.0: Classify error type for intelligent failover routing
+   * Different error types warrant different retry strategies
+   */
+  private classifyError(error: unknown): ErrorSignature {
+    const msg = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
+
+    if (msg.includes('timeout') || msg.includes('timed out') || msg.includes('econnaborted')) {
+      return 'timeout';
+    }
+    if (msg.includes('rate limit') || msg.includes('429') || msg.includes('too many requests')) {
+      return 'rate_limit';
+    }
+    if (msg.includes('401') || msg.includes('403') || msg.includes('unauthorized') || msg.includes('forbidden') || msg.includes('api key')) {
+      return 'auth_failed';
+    }
+    if (msg.includes('econnrefused') || msg.includes('enotfound') || msg.includes('network') || msg.includes('fetch failed') || msg.includes('econnreset')) {
+      return 'network';
+    }
+    if (msg.includes('model') || msg.includes('invalid') || msg.includes('context length') || msg.includes('content filter')) {
+      return 'model_error';
+    }
+    return 'unknown';
+  }
+
+  /**
+   * v30.3.0: Compute error-type-aware penalty for provider scoring
+   * - rate_limit: heavy penalty (wait required), strongly boost others
+   * - timeout: moderate penalty (may recover soon)
+   * - auth_failed: severe penalty (won't recover without config change)
+   * - network: moderate penalty with faster recovery
+   * - model_error: light penalty (request-specific, not provider-wide)
+   */
+  private computeErrorPenalty(stats: ProviderStats): number {
+    const now = Date.now();
+    // Clean old errors (>60s)
+    stats.recentErrors = stats.recentErrors.filter(e => now - e.timestamp < 60000);
+
+    if (stats.recentErrors.length === 0) return 0;
+
+    let penalty = 0;
+    const errorCounts = new Map<ErrorSignature, number>();
+    for (const err of stats.recentErrors) {
+      errorCounts.set(err.type, (errorCounts.get(err.type) || 0) + 1);
+    }
+
+    // Type-specific penalties
+    penalty += (errorCounts.get('rate_limit') || 0) * 40;    // Heavy: must wait
+    penalty += (errorCounts.get('auth_failed') || 0) * 60;   // Severe: config broken
+    penalty += (errorCounts.get('timeout') || 0) * 20;       // Moderate: may recover
+    penalty += (errorCounts.get('network') || 0) * 25;       // Moderate: transient
+    penalty += (errorCounts.get('model_error') || 0) * 10;   // Light: request-specific
+    penalty += (errorCounts.get('unknown') || 0) * 15;
+
+    return Math.min(80, penalty); // Cap penalty
   }
 
   /**
@@ -810,10 +875,12 @@ class AIOrchestrator {
           break;
       }
 
-      // Malus échecs récents
-      if (stats.lastFailure && Date.now() - stats.lastFailure < 30000) {
-        // 30s
-        score -= 25;
+      // v30.3.0: Error-type-aware penalty replaces flat -25pts
+      // Different error types get different penalties (rate_limit=heavy, timeout=moderate, etc.)
+      const errorPenalty = this.computeErrorPenalty(stats);
+      if (errorPenalty > 0) {
+        score -= errorPenalty;
+        logger.debug(`   ⚠️ Error penalty for ${provider.name}: -${errorPenalty} (${stats.recentErrors.map(e => e.type).join(',')})`);
       }
 
       // Encourage provider diversity by penalizing recently used engines (except titane-local emergency fallback)
@@ -1279,7 +1346,7 @@ class AIOrchestrator {
           // });
 
           // ═══ FAILURE PATH + AUTO-HEAL + COGNITIVE KERNEL ═══
-          this.updateProviderStats(providerName, false, providerFailureLatency);
+          this.updateProviderStats(providerName, false, providerFailureLatency, lastError);
 
           // 🧠 NOUVEAU v22Ω: Enregistrer échec dans Cognitive Kernel
           cognitiveKernel.recordInMemory('error', {
@@ -1620,7 +1687,8 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
   private updateProviderStats(
     providerName: string,
     success: boolean,
-    responseTime: number
+    responseTime: number,
+    error?: unknown
   ): void {
     const stats = this.providerStats.get(providerName);
     if (!stats) return;
@@ -1653,6 +1721,12 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     } else {
       stats.failureCount++;
       stats.lastFailure = Date.now();
+      // v30.3.0: Track error type for intelligent failover
+      const errorType = this.classifyError(error);
+      stats.lastErrorType = errorType;
+      stats.recentErrors.push({ type: errorType, timestamp: Date.now() });
+      // Keep only last 10 errors
+      if (stats.recentErrors.length > 10) stats.recentErrors = stats.recentErrors.slice(-10);
       if (providerName !== 'titane-local') {
         this.consecutiveLocalResponses = 0;
       }

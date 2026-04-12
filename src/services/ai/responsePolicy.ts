@@ -1169,12 +1169,14 @@ export function getDepthForIntent(intent: IntentType): ResponseProfileId {
  * Compute effective depth considering:
  * 1. User's stored depth preference (highest priority)
  * 2. Intent-based depth
- * 3. Mode default (fallback)
+ * 3. v30.3.0: Complexity-adjusted escalation — complex queries auto-escalate depth
+ * 4. Mode default (fallback)
  */
 export function computeEffectiveDepth(
   intent: IntentType,
   mode: string,
-  userDepthPreference?: string | null
+  userDepthPreference?: string | null,
+  messageComplexity?: number
 ): ResponseProfileId {
   // User preference overrides everything
   if (userDepthPreference) {
@@ -1188,7 +1190,26 @@ export function computeEffectiveDepth(
   }
 
   // Intent-based selection
-  return getDepthForIntent(intent);
+  let depth = getDepthForIntent(intent);
+
+  // v30.3.0: Complexity-adjusted escalation
+  // If message complexity is high, escalate depth by one level
+  if (typeof messageComplexity === 'number' && messageComplexity > 0) {
+    const PROFILE_RANK: Record<ResponseProfileId, number> = {
+      DIRECT: 0, BALANCED: 1, DEVELOPED: 2, DEEP: 3, ARCHITECT: 4, OMEGA: 5,
+    };
+    const RANK_TO_PROFILE: ResponseProfileId[] = ['DIRECT', 'BALANCED', 'DEVELOPED', 'DEEP', 'ARCHITECT', 'OMEGA'];
+    const currentRank = PROFILE_RANK[depth] ?? 2;
+
+    // Graduated escalation based on complexity score
+    if (messageComplexity > 0.85 && currentRank < 4) {
+      depth = RANK_TO_PROFILE[currentRank + 2] ?? depth; // Jump +2 levels for very high complexity
+    } else if (messageComplexity > 0.60 && currentRank < 4) {
+      depth = RANK_TO_PROFILE[currentRank + 1] ?? depth; // Escalate +1 level for moderate-high complexity
+    }
+  }
+
+  return depth;
 }
 
 export const RESPONSE_POLICY_VERSION = '2.2.0';

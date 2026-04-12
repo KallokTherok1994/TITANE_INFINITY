@@ -394,10 +394,19 @@ export class SemanticMemoryEngine {
         const ageMs = now - new Date(entry.last_used_at || entry.created_at).getTime();
         const recencyScore = Math.exp((-Math.LN2 * ageMs) / halfLifeMs);
 
+        // v30.3.0: Apply importance decay for long-unused memories
+        // If a memory hasn't been accessed in >60 days, gradually reduce effective importance
+        // This prevents old high-importance memories from permanently crowding out newer ones
+        const daysSinceAccess = ageMs / (24 * 60 * 60 * 1000);
+        const importanceDecayFactor = daysSinceAccess > 60
+          ? Math.max(0.3, 1 - (daysSinceAccess - 60) * 0.002) // -0.2% per day after 60 days, floor at 30%
+          : 1.0;
+        const effectiveImportance = entry.importance * importanceDecayFactor;
+
         // Score hybride
         const hybridScore =
           weights.similarity * similarity +
-          weights.importance * entry.importance +
+          weights.importance * effectiveImportance +
           weights.recency * recencyScore;
 
         return {
@@ -491,7 +500,11 @@ export class SemanticMemoryEngine {
 
   /**
    * Mettre à jour les métriques d'accès
-   * v30.3.0: Importance reinforcement — frequently accessed memories gradually increase in importance
+   * v30.3.0: Diminishing importance reinforcement + access-aware decay
+   * - First 10 accesses: +0.03 per access (fast learning)
+   * - After 10 accesses: +0.01 per access (diminishing returns)
+   * - After 30 accesses: +0.005 per access (saturation)
+   * Prevents over-inflated importance from drowning newer relevant memories
    */
   private async updateAccessMetrics(ids: string[]): Promise<void> {
     const now = new Date().toISOString();
@@ -499,12 +512,21 @@ export class SemanticMemoryEngine {
     for (const id of ids) {
       const entry = await this.vectorStore.get(id);
       if (entry) {
-        // v30.3.0: Reinforce importance on each access (+0.03, capped at 1.0)
-        // Memories that keep getting retrieved are genuinely important
-        const reinforcedImportance = Math.min(1.0, entry.importance + 0.03);
+        // v30.3.0: Diminishing returns on importance reinforcement
+        const accessCount = entry.access_count + 1;
+        let increment: number;
+        if (accessCount <= 10) {
+          increment = 0.03; // Fast learning phase
+        } else if (accessCount <= 30) {
+          increment = 0.01; // Diminishing returns
+        } else {
+          increment = 0.005; // Saturation — further accesses barely help
+        }
+
+        const reinforcedImportance = Math.min(1.0, entry.importance + increment);
         await this.vectorStore.update(id, {
           last_used_at: now,
-          access_count: entry.access_count + 1,
+          access_count: accessCount,
           importance: reinforcedImportance,
         });
       }

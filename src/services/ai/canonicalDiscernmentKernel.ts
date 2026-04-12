@@ -206,10 +206,12 @@ export class CanonicalDiscernmentKernel {
     });
 
     // ── STEP 2: Depth/Profile Resolution ──
+    // v30.3.0: Pass complexity score for context-aware depth escalation
     const effectiveDepth = computeEffectiveDepth(
       intentResult.intent,
       input.mode,
-      input.userDepthPreference ?? undefined
+      input.userDepthPreference ?? undefined,
+      messageComplexity
     );
 
     // Behavioral router gives us a richer signal set
