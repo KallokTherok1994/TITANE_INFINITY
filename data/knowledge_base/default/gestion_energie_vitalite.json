@@ -1,0 +1,143 @@
+{
+  "version": "v30.1.0",
+  "category": "gestion_energie_vitalite",
+  "description": "Gestion de l'énergie et vitalité — bioénergétique humaine, chronobiologie appliquée, cohérence cardiaque, techniques d'amélioration du bien-être, routines optimales, gestion des cycles d'énergie, respiration, grounding/earthing, hydrologie, ultradian rhythms, energy management vs time management",
+  "gestion_energie_vitalite": {
+    "introduction": "La vraie ressource limitée n'est pas le temps mais l'ÉNERGIE. Le temps est fixe (24h/jour) mais l'énergie est modulable. Gérer son énergie (physique, émotionnelle, mentale, spirituelle) plutôt que son temps est le paradigme qui distingue les performants durables des personnes en burnout. TITANE fournit un système complet de gestion et d'optimisation de l'énergie vitale.",
+    "modèle_4_energies": {
+      "auteurs": "Jim Loehr & Tony Schwartz — 'The Power of Full Engagement' (2003).",
+      "énergie_physique": {
+        "description": "La fondation — quantité d'énergie disponible. Déterminée par le sommeil, la nutrition, l'exercice et la récupération.",
+        "optimisation": {
+          "sommeil": "7-9h pour un adulte. Se coucher et se lever à heures fixes (même le weekend). Chambre fraîche (18°C), obscure, silencieuse. Pas d'écran 1h avant. Le sommeil est le multiplicateur de toutes les autres énergies.",
+          "nutrition_énergétique": "Protéines + graisses saines le matin (stabilité glycémique). Glucides complexes en soirée (sérotonine → sommeil). Hydratation 2-3L/jour. Éviter les pics glycémiques (crash d'énergie).",
+          "exercice": "L'exercice ne coûte pas d'énergie — il en CRÉE. 150 min/semaine de cardio modéré + 2 séances de renforcement. Le matin de préférence (cortisol, dopamine).",
+          "respiration": "La respiration est le levier le plus rapide et le plus accessible pour moduler l'énergie. Profonde = calme. Rapide = énergie. Cohérente = équilibre.",
+          "micro_pauses": "Le corps fonctionne par cycles ultradiens de 90-120 min. Après 90 min de concentration → pause de 15-20 min (mouvement, eau, regard au loin). Ignorer ces cycles → fatigue cumulative."
+        }
+      },
+      "énergie_émotionnelle": {
+        "description": "La qualité de l'énergie. Déterminée par les émotions dominantes : positives (joie, gratitude, enthousiasme) = énergie haute qualité ; négatives (frustration, colère, anxiété) = énergie basse qualité qui épuise.",
+        "optimisation": {
+          "intelligence_émotionnelle": "Reconnaître, nommer et réguler ses émotions. Le simple fait de nommer une émotion ('affect labeling') réduit l'activation de l'amygdale (Lieberman et al. 2007).",
+          "gratitude": "3 choses pour lesquelles être reconnaissant chaque soir. Augmente le tonus vagal, améliore le sommeil, réduit le cortisol.",
+          "relations": "Les relations positives sont le plus grand réservoir d'énergie émotionnelle. Les relations toxiques sont le plus grand drain. Audit relationnel : qui me donne de l'énergie ? qui m'en prend ?",
+          "nature": "2h/semaine en nature → amélioration significative du bien-être émotionnel (White et al. 2019). L'effet commence dès 20 min.",
+          "rire": "Le rire réduit le cortisol de 39%, augmente les endorphines, active le parasympathique. Chercher intentionnellement l'humour et le jeu."
+        }
+      },
+      "énergie_mentale": {
+        "description": "La concentration — capacité à diriger et maintenir l'attention. Ressource finie qui se recharge par le repos cognitif.",
+        "optimisation": {
+          "deep_work": "Cal Newport : blocs de 90 min de travail profond sans interruption. Pas de notifications, pas de multitâche. Le multitâche réduit le QI effectif de 10 points (University of London).",
+          "single_tasking": "Faire UNE chose à la fois. Le cerveau ne multitâche pas — il switche rapidement entre tâches (task-switching) avec un coût cognitif à chaque switch (20-40% de perte de productivité).",
+          "décisions": "Chaque décision épuise l'énergie mentale (ego depletion — Baumeister). Réduire les décisions non essentielles : routines, automatisation, 'uniforme' vestimentaire (Steve Jobs, Zuckerberg).",
+          "input_control": "Le cerveau n'a pas de filtre d'entrée — chaque information (news, notification, email) consomme de l'énergie mentale même si non traitée consciemment. Diète informationnelle : limiter les inputs non essentiels.",
+          "méditation": "10 min de méditation de pleine conscience = récupération cognitive mesurable. La méditation est un 'gymnase' pour l'attention."
+        }
+      },
+      "énergie_spirituelle": {
+        "description": "Le sens — la raison pour laquelle on investit son énergie. Le carburant le plus puissant. Les personnes qui ont un sens profond ont plus de résilience et d'endurance.",
+        "optimisation": {
+          "ikigai": "Identifier sa raison d'être. L'intersection de la passion, de la compétence, du besoin du monde et de la rémunération.",
+          "valeurs_alignement": "Vivre en accord avec ses valeurs core. Dissonance valeurs-actions = fuite d'énergie massive.",
+          "contribution": "Servir quelque chose de plus grand que soi. Le service augmente le bien-être du donneur plus que du receveur (helper's high — Luks 1988).",
+          "vision": "Avoir une vision claire de son futur idéal. Relire quotidiennement. La vision crée un vecteur d'énergie directionnelle."
+        }
+      }
+    },
+    "cohérence_cardiaque": {
+      "définition": "État physiologique d'équilibre optimal entre le système nerveux sympathique et parasympathique, mesuré par la variabilité de la fréquence cardiaque (HRV — Heart Rate Variability).",
+      "méthode_365": {
+        "auteur": "Dr David O'Hare — 'Cohérence cardiaque 365' (2012)",
+        "3": "3 fois par jour",
+        "6": "6 respirations par minute (5 secondes inspiration, 5 secondes expiration)",
+        "5": "Pendant 5 minutes",
+        "effets": "Réduction immédiate du cortisol. Augmentation des IgA (immunité). Amélioration de la concentration. Réduction de l'anxiété. Effets cumulatifs sur 4-6 semaines."
+      },
+      "HRV": {
+        "définition": "La variabilité de l'intervalle entre deux battements cardiaques. Un cœur sain ne bat PAS régulièrement — il varie en permanence en réponse aux inputs du SNA.",
+        "HRV_élevé": "= système nerveux flexible, bonne récupération, bonne gestion du stress, longévité. Les athlètes de haut niveau, les méditants expérimentés ont un HRV élevé.",
+        "HRV_bas": "= système nerveux rigide, stress chronique, inflammation, fatigue, risque cardiovasculaire augmenté.",
+        "mesure": "Applications smartphone (EliteHRV, HRV4Training), ceintures thoraciques (Polar H10), bagues (Oura Ring), montres (Apple Watch, Garmin).",
+        "améliorer_HRV": "Cohérence cardiaque, exercice régulier, sommeil optimal, respiration lente, méditation, oméga-3, réduction alcool."
+      }
+    },
+    "chronobiologie_appliquée": {
+      "rythme_circadien": {
+        "horloge_maîtresse": "Noyau suprachiasmatique (NSC) de l'hypothalamus. Synchronisé par la lumière via les cellules ganglionnaires à mélanopsine de la rétine.",
+        "zeitgebers": "Synchroniseurs du rythme : lumière (le plus puissant), repas, exercice, température, interactions sociales.",
+        "chronotype": {
+          "matin_alouette": "15-20% de la population. Pic d'énergie 8-12h. Se couchent tôt, se lèvent tôt.",
+          "soir_hibou": "15-20%. Pic d'énergie 18-24h. Se couchent tard, se lèvent tard. Pénalisés par les horaires conventionnels.",
+          "intermédiaire": "60-70%. S'adaptent.",
+          "importance": "Travailler AVEC son chronotype, pas contre. Programmer les tâches cognitives exigeantes dans le pic d'énergie. Tâches routinières dans les creux."
+        }
+      },
+      "cycles_ultradiens": {
+        "définition": "Cycles de 90-120 min d'énergie haute suivis de 15-20 min de baisse d'énergie (BRAC — Basic Rest-Activity Cycle). Nathaniel Kleitman (1960s).",
+        "application": "Travailler en blocs de 90 min (deep work) → pause de 15-20 min (mouvement, eau, air frais, pas d'écran). 4-5 blocs par jour = productivité optimale sans épuisement.",
+        "signaux_fin_cycle": "Difficulté à se concentrer, bâillements, envie de grignoter, regard qui vagabonde, soupirs. Ce ne sont PAS des signes de paresse — ce sont des signaux biologiques."
+      },
+      "rythme_optimal_journée": {
+        "matin_6_9h": "Cortisol pic → énergie, vigilance. Lumière naturelle, mouvement, petit-déjeuner protéiné. PAS de café immédiat (attendre 90 min — le cortisol naturel fait le travail).",
+        "milieu_matinée_9_12h": "Pic cognitif pour les chronotypes intermédiaires et alouettes. Deep work, créativité, décisions importantes.",
+        "après_midi_13_15h": "Creux post-prandial. Tâches routinières, emails, administratif. Sieste de 20 min (NASA nap) si possible.",
+        "fin_après_midi_15_17h": "Second pic d'énergie pour beaucoup. Réunions, collaboration, exercice physique (performance musculaire optimale à 17h).",
+        "soirée_18_21h": "Descente progressive. Repas léger. Activités calmes. Réduction de la lumière bleue.",
+        "nuit_21_6h": "Obscurité, température basse, pas de stimulation. Sommeil réparateur."
+      }
+    },
+    "techniques_énergie": {
+      "respiration": {
+        "respiration_énergisante": "Kapalabhati (souffle de feu) — 30 expirations rapides par le nez + 1 rétention. OU respiration Wim Hof : 30 respirations profondes rapides → rétention maximale → inspiration profonde + rétention 15 sec. Énergie immédiate.",
+        "respiration_calmante": "Cohérence cardiaque 5-5. OU respiration 4-7-8 (Andrew Weil) : inspirer 4 temps, retenir 7, expirer 8. Active puissamment le parasympathique. 2-3 cycles suffisent.",
+        "respiration_box": "Navy SEAL : 4-4-4-4. Inspirer 4, retenir 4, expirer 4, retenir vide 4. Calme et concentration sous pression."
+      },
+      "grounding_earthing": {
+        "définition": "Contact direct de la peau (pieds nus) avec la surface de la terre (herbe, sable, terre, eau naturelle). La terre a une charge électrique négative qui neutralise les radicaux libres du corps.",
+        "études": "Chevalier et al. (2012) : 30 min de grounding → réduction de la viscosité sanguine (moins de risque de caillot), amélioration du sommeil, réduction de la douleur. Oschman et al. (2015) : réduction des marqueurs inflammatoires.",
+        "pratique": "20-30 min pieds nus sur l'herbe, le sable ou la terre humide. L'asphalte, le bois et le plastique ne conduisent PAS. Le béton conduit si humide."
+      },
+      "exposition_froid": {
+        "douche_froide": "30 sec à 3 min d'eau froide (10-15°C). Dopamine +250-300% pendant 2-3h. Noradrénaline augmentée. Système immunitaire activé. Méthode Wim Hof : respiration → froid → méditation.",
+        "bain_froid": "Immersion dans l'eau à 10-15°C pendant 2-5 min. Plus intense. Récupération musculaire, anti-inflammatoire, boost d'énergie.",
+        "progressivité": "Commencer par 30 sec de froid en fin de douche. Augmenter progressivement. Le stress du froid est un eustress — il renforce l'organisme (hormèse)."
+      },
+      "exposition_chaleur": {
+        "sauna": "Sauna finlandais (80-100°C, 15-20 min). Laukkanen et al. (2015, étude finlandaise 20 ans, 2300 hommes) : 4-7 saunas/semaine → réduction de 40% de la mortalité toute cause, 50% des maladies cardiovasculaires.",
+        "heat_shock_proteins": "La chaleur active les HSP (Heat Shock Proteins) → réparation cellulaire, protection contre le stress oxydatif, amélioration de la longévité.",
+        "contraste": "Alternance chaud (sauna) → froid (douche froide ou bain froid) → chaud. 3-4 cycles. Pompage vasculaire, stimulation immunitaire, énergie maximale."
+      },
+      "lumière": {
+        "lumière_matinale": "10-30 min de lumière naturelle dans les yeux (sans lunettes de soleil) dans les 30 min suivant le réveil. Synchronise le rythme circadien, augmente le cortisol matinal (énergie), la dopamine et la sérotonine. Andrew Huberman : 'La chose la plus importante que vous pouvez faire pour votre santé.'",
+        "lumière_rouge": "Photobiomodulation (630-850nm). Pénètre les mitochondries → augmente la production d'ATP (énergie cellulaire). Améliore la récupération musculaire, la peau, le sommeil. Thérapie par lumière rouge (lampes ou panneaux).",
+        "réduction_lumière_bleue": "Après le coucher du soleil : filtres sur les écrans (f.lux, Night Shift), lunettes anti-lumière bleue, éclairage ambré/rouge. La lumière bleue le soir supprime la mélatonine de 50% (Harvard, 2014)."
+      },
+      "hydratation": {
+        "au_réveil": "500ml d'eau tiède au réveil (le corps est déshydraté après 7-8h sans eau). Avec citron et sel de mer (minéraux, digestion, pH).",
+        "quotidien": "30-35ml/kg de poids corporel. Plus si exercice ou chaleur. Urines claires = bien hydraté.",
+        "eau_structurée": "Concept controversé de Gerald Pollack (4e phase de l'eau — eau EZ). L'eau en contact avec les surfaces hydrophiles forme une couche d'exclusion plus ordonnée. Base scientifique intéressante mais applications thérapeutiques non prouvées."
+      },
+      "musique_et_fréquences": {
+        "binaural_beats": "Deux fréquences légèrement différentes dans chaque oreille → le cerveau perçoit la différence comme une fréquence de battement. Delta (0.5-4 Hz, sommeil), Theta (4-8 Hz, méditation), Alpha (8-12 Hz, relaxation), Beta (12-30 Hz, concentration), Gamma (30-100 Hz, cognition supérieure).",
+        "fréquence_432Hz": "Fréquence naturelle controversée (vs 440 Hz standard). Partisans : plus harmonieuse, relaxante. Études limitées mais certaines montrent une réduction de la fréquence cardiaque et de la pression artérielle.",
+        "Mozart_effect": "L'écoute de Mozart améliore temporairement le raisonnement spatial (Rauscher et al. 1993). Effet modeste et temporaire. Étendu par Jenkins (2001) : toute musique appréciée améliore temporairement la cognition."
+      }
+    },
+    "rituels_quotidiens": {
+      "miracle_morning": {
+        "auteur": "Hal Elrod (2012) — SAVERS",
+        "S": "Silence (méditation, prière, gratitude). 5-10 min.",
+        "A": "Affirmations. Affirmations positives alignées avec ses objectifs. 5 min.",
+        "V": "Visualization. Visualisation détaillée de sa journée et de ses objectifs. 5 min.",
+        "E": "Exercise. Mouvement physique (yoga, HIIT, marche). 20 min.",
+        "R": "Reading. Lecture de développement personnel. 10 min.",
+        "S2": "Scribing. Écriture (journal, gratitude, réflexion). 5 min."
+      },
+      "rituel_soir": {
+        "heure_dorée": "1h avant le coucher sans écran. Préparer le lendemain (vêtements, agenda). Journal de gratitude (3 choses). Étirements doux ou yoga nidra. Tisane relaxante. Obscurité progressive."
+      }
+    }
+  }
+}

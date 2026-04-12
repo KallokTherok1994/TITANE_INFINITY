@@ -359,6 +359,35 @@ const PSYCHOLOGIE_RELATIONS: &str =
     include_str!("../../data/knowledge_base/default/psychologie_relations.json");
 const PSYCHOLOGIE_PERFORMANCE: &str =
     include_str!("../../data/knowledge_base/default/psychologie_performance.json");
+// ── v30.1.0 expansion — connaissances avancées bien-être, neurosciences, thérapies ──
+const NEUROCHIMIE_BONHEUR: &str =
+    include_str!("../../data/knowledge_base/default/neurochimie_bonheur.json");
+const LANGAGE_CORPOREL_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/langage_corporel_avance.json");
+const COMMUNICATION_PROFESSIONNELLE_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/communication_professionnelle_avancee.json");
+const CHIROPRATIQUE_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/chiropratique_avancee.json");
+const ACUPUNCTURE_ACUPRESSION_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/acupuncture_acupression_avancee.json");
+const PHYSIOTHERAPIE_OSTEOPATHIE_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/physiotherapie_osteopathie_avancee.json");
+const MASSAGE_THERAPEUTIQUE_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/massage_therapeutique_avance.json");
+const YOGA_KUNDALINI_MAITRE: &str =
+    include_str!("../../data/knowledge_base/default/yoga_kundalini_maitre.json");
+const THERAPIES_ALTERNATIVES_CREATIVES: &str =
+    include_str!("../../data/knowledge_base/default/therapies_alternatives_creatives.json");
+const PHYTOTHERAPIE_REMEDES_ELIXIRS: &str =
+    include_str!("../../data/knowledge_base/default/phytotherapie_remedes_elixirs.json");
+const CERVEAU_HUMAIN_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/cerveau_humain_avance.json");
+const DEPRESSION_BURNOUT_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/depression_burnout_avance.json");
+const GESTION_ENERGIE_VITALITE: &str =
+    include_str!("../../data/knowledge_base/default/gestion_energie_vitalite.json");
+const CULTURE_JAPONAISE_SAGESSE: &str =
+    include_str!("../../data/knowledge_base/default/culture_japonaise_sagesse.json");
 
 // ─────────────────────────────────────────────────────────────────
 // LAZY STATIC CACHE — parsed once, reused on every call
@@ -579,6 +608,21 @@ impl DefaultKnowledgeBase {
         ("jeux_video_culture", JEUX_VIDEO_CULTURE),
         ("musique_theorie_pratique", MUSIQUE_THEORIE_PRATIQUE),
         ("voyage_exploration", VOYAGE_EXPLORATION),
+        // v30.1.0 expansion — connaissances avancées bien-être, neurosciences, thérapies
+        ("neurochimie_bonheur", NEUROCHIMIE_BONHEUR),
+        ("langage_corporel_avance", LANGAGE_CORPOREL_AVANCE),
+        ("communication_professionnelle_avancee", COMMUNICATION_PROFESSIONNELLE_AVANCEE),
+        ("chiropratique_avancee", CHIROPRATIQUE_AVANCEE),
+        ("acupuncture_acupression_avancee", ACUPUNCTURE_ACUPRESSION_AVANCEE),
+        ("physiotherapie_osteopathie_avancee", PHYSIOTHERAPIE_OSTEOPATHIE_AVANCEE),
+        ("massage_therapeutique_avance", MASSAGE_THERAPEUTIQUE_AVANCE),
+        ("yoga_kundalini_maitre", YOGA_KUNDALINI_MAITRE),
+        ("therapies_alternatives_creatives", THERAPIES_ALTERNATIVES_CREATIVES),
+        ("phytotherapie_remedes_elixirs", PHYTOTHERAPIE_REMEDES_ELIXIRS),
+        ("cerveau_humain_avance", CERVEAU_HUMAIN_AVANCE),
+        ("depression_burnout_avance", DEPRESSION_BURNOUT_AVANCE),
+        ("gestion_energie_vitalite", GESTION_ENERGIE_VITALITE),
+        ("culture_japonaise_sagesse", CULTURE_JAPONAISE_SAGESSE),
     ];
 
     /// Load all default knowledge entries from embedded JSON.
@@ -746,8 +790,8 @@ mod tests {
             result.errors
         );
         assert_eq!(
-            result.entries_loaded, 158,
-            "Must have exactly 158 default knowledge categories"
+            result.entries_loaded, 172,
+            "Must have exactly 172 default knowledge categories"
         );
     }
 

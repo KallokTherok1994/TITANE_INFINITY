@@ -1,0 +1,176 @@
+{
+  "version": "v30.1.0",
+  "category": "therapies_alternatives_creatives",
+  "description": "Thérapies alternatives créatives — zoothérapie (thérapie assistée par l'animal), colorothérapie (chromothérapie), art-thérapie (peinture, musique, danse, écriture), thérapie positive (psychologie positive appliquée), musicothérapie, danse-thérapie, thérapie par le jeu, thérapie par la nature (sylvothérapie)",
+  "therapies_alternatives_creatives": {
+    "introduction": "Les thérapies alternatives créatives utilisent des vecteurs non-verbaux et sensoriels (animaux, couleurs, art, mouvement, nature) pour accéder à des couches de l'expérience humaine que la parole seule ne peut atteindre. Elles sont particulièrement efficaces pour les enfants, les personnes traumatisées, les personnes en situation de handicap et tous ceux qui résistent aux thérapies verbales classiques. TITANE présente ces approches avec leurs bases théoriques, leurs applications et leur niveau de preuve.",
+    "zootherapie": {
+      "définition": "Intervention thérapeutique planifiée qui utilise la relation humain-animal comme vecteur de soin. Distincte de la simple possession d'un animal de compagnie.",
+      "types": {
+        "thérapie_assistée_par_animal": {
+          "description": "Séances structurées avec un thérapeute qualifié et un animal spécialement sélectionné et entraîné. Objectifs thérapeutiques définis et mesurés.",
+          "animaux_courants": "Chiens (les plus utilisés — fiables, prévisibles), chevaux (équithérapie/hippothérapie), chats, lapins, dauphins (controversé), oiseaux.",
+          "formation_animal": "L'animal doit être socialisé, calme, tolérant au toucher, non réactif aux mouvements brusques, en bonne santé. Évaluation comportementale obligatoire."
+        },
+        "activité_assistée_par_animal": "Interactions moins structurées avec objectif récréatif/motivationnel. Visites d'animaux en EHPAD, hôpitaux, écoles.",
+        "animal_de_soutien_émotionnel": "Animal de compagnie dont la présence soutient émotionnellement son propriétaire. Pas de formation spécifique mais reconnaissance légale dans certains pays."
+      },
+      "mécanismes": {
+        "ocytocine": "Caresser un animal → libération d'ocytocine mutuelle (humain ET animal). Nagasawa et al. (2015) : le regard entre chien et propriétaire active la même boucle d'ocytocine que le regard mère-enfant.",
+        "cortisol": "Interaction avec un animal → réduction du cortisol de 10-15%. Effet mesurable en 10-20 min de contact.",
+        "pression_artérielle": "La présence d'un animal réduit la pression artérielle et la fréquence cardiaque en situation de stress (Allen et al. 2002).",
+        "attachement_sécure": "L'animal offre un attachement non-jugeant, constant et prévisible. Particulièrement thérapeutique pour les personnes ayant un attachement insécure.",
+        "effet_miroir": "L'animal reflète les émotions et l'énergie de la personne sans filtre social. Un cheval sentira l'anxiété avant que le thérapeute ne la voie."
+      },
+      "applications": {
+        "équithérapie": {
+          "description": "Thérapie assistée par le cheval. Le cheval est un animal proie — hyper-sensible aux émotions et au langage corporel. Le travail avec le cheval est un miroir puissant.",
+          "hippothérapie": "Utilisation du mouvement du cheval pour la rééducation physique (paralysie cérébrale, sclérose en plaques, séquelles AVC). Le mouvement tridimensionnel du bassin en selle reproduit le pattern de la marche.",
+          "équicoaching": "Travail avec le cheval pour le développement du leadership, la confiance, la gestion émotionnelle, la communication non-verbale. Très utilisé en entreprise.",
+          "preuves": "Preuves solides pour la rééducation motrice (hippothérapie). Preuves modérées pour l'anxiété, la dépression, le TSPT, l'autisme."
+        },
+        "cynothérapie": {
+          "description": "Thérapie assistée par le chien. Le chien est le meilleur 'brise-glace' thérapeutique — facilite le contact et la verbalisation.",
+          "autisme": "L'enfant autiste se connecte souvent plus facilement à un animal qu'à un humain. Le chien réduit les comportements stéréotypés et augmente les interactions sociales.",
+          "TSPT": "Les chiens d'assistance TSPT sont entraînés à détecter les crises d'anxiété, à réveiller lors des cauchemars, à créer un périmètre de sécurité dans les foules.",
+          "personnes_agées": "Réduction de l'agitation en EHPAD, amélioration de la communication chez les patients Alzheimer, lutte contre l'isolement social."
+        },
+        "ronronthérapie": {
+          "description": "Le ronronnement du chat émet des vibrations à basse fréquence (25-50 Hz). Ces fréquences correspondent à celles utilisées en médecine physique pour stimuler la cicatrisation osseuse et la réparation tissulaire.",
+          "effets": "Réduction du stress, amélioration du sommeil, effet apaisant démontré. Les études restent limitées mais les mécanismes vibratoires sont plausibles."
+        }
+      }
+    },
+    "colorotherapie": {
+      "définition": "Utilisation thérapeutique des couleurs et de la lumière colorée pour influencer l'humeur, les émotions et les processus physiologiques. Aussi appelée chromothérapie.",
+      "bases": {
+        "physique": "Chaque couleur correspond à une longueur d'onde spécifique du spectre électromagnétique. Rouge (620-750nm, basse fréquence) → Violet (380-450nm, haute fréquence).",
+        "neurologique": "Les cônes rétiniens transmettent les signaux de couleur au cortex visuel via le chiasma optique. La couleur influence directement le système limbique (émotions) et l'hypothalamus (hormones).",
+        "psychologique": "Les associations couleur-émotion sont en partie culturelles, en partie universelles. Le rouge augmente l'excitation physiologique mesurable quel que soit le contexte culturel."
+      },
+      "propriétés_couleurs": {
+        "rouge": {
+          "longueur_onde": "620-750 nm",
+          "effets_physiologiques": "Augmente la fréquence cardiaque, la pression artérielle, la température cutanée, la vigilance. Stimule le système sympathique.",
+          "effets_psychologiques": "Énergie, passion, urgence, colère, danger, courage. Augmente la force physique mesurée (Hill & Barton 2005).",
+          "applications": "Fatigue, anémie, hypotension, manque de motivation. Éviter en cas d'hypertension, d'insomnie, de colère.",
+          "chakra": "Muladhara (racine)"
+        },
+        "orange": {
+          "effets": "Joie, optimisme, créativité, sociabilité. Stimule l'appétit et la digestion. Moins intense que le rouge.",
+          "applications": "Dépression légère, perte d'appétit, créativité bloquée.",
+          "chakra": "Svadhisthana (sacré)"
+        },
+        "jaune": {
+          "effets": "Clarté mentale, concentration, confiance, optimisme. Stimule le système nerveux et la mémoire.",
+          "applications": "Difficultés de concentration, examen, apprentissage, stimulation intellectuelle.",
+          "chakra": "Manipura (solaire)"
+        },
+        "vert": {
+          "effets": "Équilibre, harmonie, calme, régénération. Couleur la plus reposante pour l'œil (milieu du spectre). La nature est verte — effet biophilique.",
+          "applications": "Stress, hypertension, insomnie, salles d'attente, environnements de travail.",
+          "chakra": "Anahata (cœur)"
+        },
+        "bleu": {
+          "effets": "Calme, sérénité, communication, refroidissement. Réduit la fréquence cardiaque et la pression artérielle. Supprime l'appétit.",
+          "applications": "Insomnie (lumière bleue du soir paradoxale — la lumière bleue des écrans empêche la mélatonine mais l'exposition à un bleu profond calme), fièvre, inflammation, anxiété.",
+          "chakra": "Vishuddha (gorge)"
+        },
+        "indigo": {
+          "effets": "Intuition, perception, introspection. Stimule la glande pinéale.",
+          "applications": "Méditation, développement de l'intuition, migraines.",
+          "chakra": "Ajna (troisième œil)"
+        },
+        "violet": {
+          "effets": "Spiritualité, transformation, créativité supérieure. Le violet combine le rouge (matière) et le bleu (esprit).",
+          "applications": "Méditation profonde, troubles nerveux, insomnie, douleur chronique.",
+          "chakra": "Sahasrara (couronne)"
+        }
+      },
+      "applications_pratiques": {
+        "lumière_colorée": "Lampes de chromothérapie, LEDs colorées, filtres. Exposition de 15-30 min ciblée sur la zone du corps concernée ou en ambiance.",
+        "environnement": "Choix des couleurs de l'habitat, du bureau, des vêtements selon l'intention (productivité → jaune/orange, calme → bleu/vert, créativité → violet/orange).",
+        "alimentation": "Manger un arc-en-ciel de couleurs → diversité nutritionnelle naturelle. Les pigments végétaux (anthocyanes violets, lycopène rouge, bêta-carotène orange, chlorophylle verte) sont des antioxydants puissants.",
+        "visualisation": "Méditation avec visualisation de couleurs : inspirer une couleur et la diriger vers une zone du corps. Technique chakra classique."
+      },
+      "niveau_preuve": "Preuves faibles à modérées en tant que thérapie autonome. Les effets de la couleur sur la physiologie et la psychologie sont bien documentés, mais les applications thérapeutiques spécifiques manquent d'études rigoureuses."
+    },
+    "art_therapie": {
+      "définition": "Utilisation du processus créatif (arts visuels, musique, danse, écriture, théâtre) comme moyen d'expression, d'exploration et de transformation thérapeutique. Le produit artistique n'est pas jugé — c'est le PROCESSUS qui est thérapeutique.",
+      "principes": {
+        "expression_non_verbale": "L'art permet d'exprimer ce que les mots ne peuvent pas saisir — traumatismes préverbaux, émotions complexes, conflits intérieurs.",
+        "externalisation": "Mettre à l'extérieur (sur la toile, dans la danse) ce qui est à l'intérieur → distance thérapeutique, objectivation, maîtrise.",
+        "symbolisme": "Les images, les couleurs, les formes, les mouvements sont un langage symbolique de l'inconscient (Jung). Le thérapeute aide à décoder ce langage.",
+        "flow_créatif": "Le processus créatif induit un état de flow (Csikszentmihalyi) → réduction de l'anxiété, augmentation du sentiment de compétence, présence."
+      },
+      "modalités": {
+        "arts_plastiques": {
+          "peinture_dessin": "Aquarelle, gouache, pastels, fusain. La matière choisie a un sens : le contrôle (crayon fin) vs le lâcher-prise (aquarelle fluide).",
+          "sculpture_modelage": "Argile, plasticine. Le toucher et le pétrissage activent le système sensorimoteur et le parasympathique. Ancrage corporel.",
+          "collage": "Assemblage d'images découpées. Utile quand le patient dit 'je ne sais pas dessiner'. Pas de jugement technique."
+        },
+        "musicothérapie": {
+          "active": "Le patient crée de la musique (instruments, voix, rythme). Improvisation libre ou structurée. Expression émotionnelle directe.",
+          "réceptive": "Écoute guidée de musique sélectionnée par le thérapeute. Évoque des émotions, des souvenirs, des images. Méthode GIM (Guided Imagery and Music — Bonny).",
+          "preuves": "Preuves solides pour la réduction de l'anxiété, la douleur, la dépression, l'autisme, la maladie d'Alzheimer (Cochrane Reviews)."
+        },
+        "danse_thérapie": {
+          "définition": "Utilisation du mouvement corporel comme processus créatif et expressif. Le corps est la voie d'accès aux émotions bloquées.",
+          "principes": "Marian Chace (1940s). Le mouvement reflète l'état émotionnel. Changer le mouvement change l'émotion (embodied cognition).",
+          "applications": "Traumatisme corporel, troubles alimentaires, dépression, isolement social, troubles du schéma corporel."
+        },
+        "écriture_thérapeutique": {
+          "journal_expressif": "Écrire ses émotions et expériences difficiles pendant 15-20 min, 4 jours consécutifs (protocole Pennebaker). Amélioration immunitaire et réduction de l'anxiété mesurées.",
+          "poésie_thérapie": "Utilisation de la lecture et de l'écriture de poèmes comme vecteur d'expression et de résonance émotionnelle.",
+          "écriture_narrative": "Réécrire son histoire de vie en intégrant les événements difficiles dans un récit cohérent et porteur de sens."
+        },
+        "dramathérapie": {
+          "définition": "Utilisation du jeu théâtral, du jeu de rôle et de la mise en scène comme outil thérapeutique.",
+          "psychodrame": "Jacob Moreno (1920s). Le patient rejoue des scènes de sa vie avec d'autres participants. Permet de revivre, de comprendre et de transformer les situations."
+        }
+      },
+      "indications": {
+        "trauma": "L'art-thérapie est particulièrement efficace pour le trauma — les souvenirs traumatiques sont stockés dans l'hémisphère droit (non-verbal, sensoriel) et l'art y accède directement.",
+        "enfants": "Les enfants communiquent naturellement par le jeu et le dessin. L'art-thérapie est souvent le premier choix thérapeutique chez l'enfant.",
+        "personnes_agées": "Maintien de la créativité, stimulation cognitive, expression des émotions face à la perte et au déclin. Particulièrement efficace dans la démence.",
+        "addictions": "Expression des émotions difficiles sans la substance, développement d'alternatives créatives, reconstruction identitaire."
+      }
+    },
+    "therapie_positive": {
+      "définition": "Application clinique de la psychologie positive (Seligman, 2000). Ne remplace pas le traitement des troubles mentaux mais complète en développant les forces, les émotions positives et le sens.",
+      "fondement_PERMA": {
+        "auteur": "Martin Seligman (2011) — 'Flourish'",
+        "Positive_emotions": "Cultiver intentionnellement les émotions positives : gratitude, joie, émerveillement, sérénité, espoir, fierté, inspiration, amusement, amour.",
+        "Engagement": "Flow — absorption totale dans une activité alignée avec ses forces de caractère.",
+        "Relationships": "Relations positives — connexion authentique, intimité, appartenance.",
+        "Meaning": "Sens — servir quelque chose de plus grand que soi (Frankl).",
+        "Accomplishment": "Réalisation — maîtrise, progrès, objectifs atteints."
+      },
+      "interventions": {
+        "journal_gratitude": "Écrire 3 bonnes choses de la journée et pourquoi elles se sont produites. 1 semaine → amélioration du bien-être pendant 6 mois (Seligman et al. 2005).",
+        "lettre_gratitude": "Écrire et livrer en personne une lettre de gratitude à quelqu'un qui a eu un impact positif dans sa vie. L'intervention la plus puissante testée par Seligman.",
+        "forces_signature": "Identifier ses 5 forces de caractère principales (VIA Survey — gratuit en ligne). Les utiliser de manière nouvelle chaque jour pendant une semaine.",
+        "best_possible_self": "Écrire pendant 20 min une version détaillée de son meilleur soi futur possible. Augmente l'optimisme et la motivation.",
+        "actes_de_bonté": "Réaliser 5 actes de bonté en une seule journée (plus efficace que répartis sur la semaine). Augmente le bonheur du donneur plus que du receveur.",
+        "savoring": "Savourer intentionnellement les moments positifs — ralentir, remarquer les détails sensoriels, partager avec quelqu'un, prendre une photo mentale."
+      },
+      "preuves": "Solides pour le traitement de la dépression légère-modérée (comparable aux antidépresseurs dans certaines études). Efficace en prévention des rechutes. Complémentaire aux traitements classiques."
+    },
+    "sylvotherapie": {
+      "définition": "Thérapie par la forêt. Bain de forêt (Shinrin-yoku en japonais — 森林浴). Immersion sensorielle dans l'environnement forestier.",
+      "origines": "Concept japonais officialisé en 1982 par le Ministère de l'Agriculture du Japon. Aujourd'hui prescrit par les médecins au Japon et en Corée du Sud.",
+      "mécanismes": {
+        "phytoncides": "Les arbres émettent des composés organiques volatils (phytoncides : α-pinène, limonène, etc.) qui activent les cellules NK (natural killer) du système immunitaire. Li et al. (2009) : 2h de forêt → augmentation des NK de 50% pendant 7 jours.",
+        "cortisol": "2h de Shinrin-yoku → réduction du cortisol de 12-16%, réduction de la pression artérielle, réduction du rythme cardiaque.",
+        "parasympathique": "L'environnement forestier active le système nerveux parasympathique (repos et digestion). Le vert des feuilles est la couleur la plus reposante pour le système visuel.",
+        "microbiome": "Exposition à la biodiversité microbienne du sol forestier → enrichissement du microbiome cutané et respiratoire → amélioration immunitaire (hypothèse de la biodiversité)."
+      },
+      "pratique": {
+        "durée": "Minimum 2h d'immersion pour des effets mesurables. Idéal : demi-journée à journée complète.",
+        "rythme": "Marche très lente ou stations immobiles. Ce n'est PAS de la randonnée — c'est une immersion sensorielle.",
+        "cinq_sens": "Vue (canopée, lumière filtrée), ouïe (oiseaux, vent, eau), odorat (phytoncides, humus, fleurs), toucher (écorce, mousse, terre), goût (eau de source, herbes comestibles).",
+        "exercices": "Méditation adossé à un arbre, respiration consciente dans les senteurs forestières, marche pieds nus (earthing/grounding), écoute du silence."
+      }
+    }
+  }
+}

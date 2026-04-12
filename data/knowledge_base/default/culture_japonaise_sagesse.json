@@ -1,0 +1,156 @@
+{
+  "version": "v30.1.0",
+  "category": "culture_japonaise_sagesse",
+  "description": "Culture japonaise et sagesse — IKIGAI approfondi, Wabi-sabi, Kintsugi, Kaizen, Bushido, philosophie zen, shintoïsme, esthétique japonaise (Ma, Mono no aware, Yūgen), concepts de vie (Gaman, Shoganai, Oubaitori), cérémonie du thé, bain japonais (Onsen), arts martiaux mentaux, Shinrin-yoku, cuisine kaiseki, minimalisme japonais",
+  "culture_japonaise_sagesse": {
+    "introduction": "La culture japonaise offre un ensemble de concepts philosophiques et pratiques d'une profondeur remarquable pour la vie quotidienne, le bien-être et la sagesse existentielle. Du wabi-sabi (beauté de l'imperfection) au kaizen (amélioration continue), ces concepts ne sont pas des théories abstraites mais des MODES DE VIE intégrés depuis des siècles. TITANE explore ces sagesses avec authenticité et application concrète.",
+    "ikigai_approfondi": {
+      "au_dela_des_4_cercles": "Le modèle des 4 cercles (passion, vocation, mission, profession) est une occidentalisation récente du concept. L'ikigai japonais authentique est plus simple et plus profond.",
+      "ikigai_authentique": {
+        "Okinawa": "Les centenaires d'Okinawa (l'île avec la plus forte concentration de centenaires au monde) utilisent le mot ikigai pour désigner ce qui les fait se lever le matin. Ce n'est souvent pas un grand projet mais une chose simple : leur jardin, le thé du matin avec un ami, enseigner aux enfants.",
+        "quotidien": "L'ikigai n'est pas un objectif à atteindre — c'est un état à VIVRE chaque jour. Il peut être grand (mission de vie) ou petit (le plaisir du premier café). Souvent les deux coexistent.",
+        "évolution": "L'ikigai évolue au fil de la vie. L'ikigai d'un jeune adulte (carrière, réalisation) ≠ l'ikigai d'un retraité (transmission, simplicité). Le lâcher-prise sur un ikigai fixe est lui-même un acte de sagesse.",
+        "composantes_japonaises": {
+          "kodawari": "La poursuite de la perfection dans les détails. L'artisan qui passe 40 ans à maîtriser la fabrication de couteaux a trouvé son ikigai dans le kodawari.",
+          "communauté": "Au Japon, l'ikigai est profondément social — il inclut le rôle qu'on joue pour sa communauté. L'isolement est l'ennemi de l'ikigai.",
+          "flow_quotidien": "L'ikigai se manifeste dans les moments de flow — absorption totale dans une activité, perte de la notion du temps, plaisir intrinsèque."
+        }
+      },
+      "exercice_ikigai_japonais": "Au lieu de chercher l'intersection parfaite des 4 cercles, demandez-vous : 'À quel moment de ma journée est-ce que j'oublie le temps ?' 'Qu'est-ce que je ferais même sans être payé ?' 'Qu'est-ce qui me manquerait le plus si je ne pouvais plus le faire ?' Ces réponses pointent vers votre ikigai."
+    },
+    "wabi_sabi": {
+      "définition": "L'esthétique et la philosophie de la beauté de l'imperfection, de l'impermanence et de l'incomplétude. Enraciné dans le bouddhisme zen et le taoïsme.",
+      "wabi": "La beauté dans la simplicité rustique, l'humilité, la solitude contemplative. La cabane de thé plutôt que le palais.",
+      "sabi": "La beauté du vieillissement, de la patine, de l'usure du temps. La mousse sur la pierre, les fissures dans la poterie.",
+      "trois_réalités": {
+        "rien_nest_permanent": "Mujo (無常) — impermanence. Tout change, tout passe. Accepter cette réalité libère de l'attachement.",
+        "rien_nest_achevé": "Fukanzen (不完全) — incomplétude. La perfection est un leurre. La vraie beauté est dans l'inachevé, l'asymétrique, l'irrégulier.",
+        "rien_nest_parfait": "Fukanzen (不完全) — imperfection. Les fissures, les cicatrices, les asymétries sont ce qui rend les choses uniques et vivantes."
+      },
+      "application_vie": {
+        "accepter_ses_imperfections": "Vos défauts, vos cicatrices, vos erreurs passées ne vous diminuent pas — ils vous rendent unique et authentique.",
+        "simplicité": "Chercher la beauté dans le simple et l'ordinaire. Un bol de riz parfaitement cuit peut être un moment de wabi-sabi.",
+        "vieillissement": "Accueillir les rides, les cheveux gris, les limitations comme des signes d'une vie vécue, pas comme des défauts à corriger."
+      }
+    },
+    "kintsugi": {
+      "définition": "L'art de réparer la poterie cassée avec de la laque saupoudrée d'or, d'argent ou de platine. La réparation est visible et magnifiée — les fissures deviennent l'ornement le plus précieux.",
+      "philosophie": "La casse n'est pas la fin mais une transformation. L'objet réparé est plus beau et plus précieux qu'avant la cassure.",
+      "origines": "XVe siècle. Un shogun aurait envoyé un bol de thé cassé en Chine pour réparation. Il serait revenu avec des agrafes métalliques laides. Les artisans japonais ont alors développé le kintsugi comme art de la réparation magnifiée.",
+      "métaphore_personnelle": {
+        "résilience": "Nos blessures, nos traumas, nos échecs ne nous brisent pas définitivement — ils peuvent être intégrés et transformés en source de beauté et de sagesse.",
+        "vulnérabilité": "Montrer ses cicatrices (dorées) plutôt que de les cacher. La vulnérabilité est une force, pas une faiblesse (Brené Brown rejoint ici le kintsugi).",
+        "post_traumatic_growth": "Le concept psychologique de croissance post-traumatique (Tedeschi & Calhoun) est l'équivalent occidental du kintsugi. Certaines personnes émergent d'un trauma plus fortes, plus sages, plus compassionnelles."
+      }
+    },
+    "kaizen": {
+      "définition": "Kai (改) = changement + Zen (善) = bien/meilleur. L'amélioration continue par de très petits pas. Philosophie managériale ET philosophie de vie.",
+      "origines": "Post-guerre. W. Edwards Deming (statisticien américain) a enseigné le management de la qualité au Japon. Toyota a développé le Toyota Production System (TPS) basé sur le kaizen.",
+      "principes": {
+        "1_pour_cent": "S'améliorer de 1% chaque jour. 1% par jour = ×37 en un an (1.01^365 = 37.78). La magie des intérêts composés appliquée à la vie.",
+        "processus_vs_résultat": "Le kaizen se concentre sur le PROCESSUS, pas sur le résultat. Si le processus est bon, les résultats suivent.",
+        "questions_kaizen": "Des questions si petites que le cerveau n'a pas peur : 'Quel est le plus petit pas possible vers mon objectif ?' 'Quelle chose ridiculeusement facile puis-je faire maintenant ?' Robert Maurer : 'One Small Step Can Change Your Life'.",
+        "gemba": "Aller sur le terrain (gemba = le lieu réel) pour observer. Ne pas décider depuis un bureau. Observer, comprendre, puis améliorer."
+      },
+      "application_personnelle": {
+        "habitudes": "Ne pas viser 1h de méditation d'emblée → commencer par 1 MINUTE. Ne pas viser 5 séances de sport → commencer par mettre ses chaussures de sport.",
+        "cycle_PDCA": "Plan (planifier) → Do (exécuter) → Check (vérifier) → Act (ajuster). Cycle continu d'amélioration. Deming cycle.",
+        "5S": "Seiri (trier), Seiton (ranger), Seiso (nettoyer), Seiketsu (standardiser), Shitsuke (maintenir). Applicable à l'espace de travail, au bureau, à la maison, aux fichiers numériques."
+      }
+    },
+    "bushido": {
+      "définition": "La Voie du Guerrier (武士道). Code d'honneur et d'éthique des samouraïs. Nitobe Inazō l'a codifié dans 'Bushido: The Soul of Japan' (1900).",
+      "sept_vertus": {
+        "gi_rectitude": "Justice, intégrité morale, faire ce qui est juste même quand personne ne regarde.",
+        "yu_courage": "Le courage héroïque — non pas l'absence de peur mais l'action malgré la peur.",
+        "jin_bienveillance": "Compassion, empathie, aide aux faibles. Le guerrier puissant qui est aussi bienveillant.",
+        "rei_respect": "Politesse, courtoisie, respect de l'autre. La forme extérieure de la vertu intérieure.",
+        "makoto_sincérité": "Honnêteté absolue. La parole du samouraï vaut contrat écrit.",
+        "meiyo_honneur": "L'honneur personnel — la valeur de sa réputation et de son intégrité.",
+        "chugi_loyauté": "Fidélité absolue envers ceux qu'on sert. Loyauté est la vertu suprême du bushido."
+      },
+      "application_moderne": "Le bushido n'est pas obsolète — ses vertus sont le fondement du leadership éthique, de la discipline personnelle et de l'intégrité professionnelle. Des PDG japonais modernes citent encore le bushido comme guide de leur management."
+    },
+    "concepts_esthetiques": {
+      "ma_間": {
+        "définition": "L'espace négatif, la pause, le vide entre les choses. En architecture, en musique, en conversation.",
+        "sens": "Le ma n'est pas du vide — c'est un espace PLEIN de potentiel. Le silence entre les notes est ce qui fait la musique. L'espace entre les murs est ce qui fait la pièce habitable.",
+        "application": "Accepter les pauses dans la conversation (ne pas remplir chaque silence). Laisser de l'espace blanc dans son agenda. L'espace mental (méditation) permet aux idées d'émerger."
+      },
+      "mono_no_aware_物の哀れ": {
+        "définition": "La douce mélancolie des choses éphémères. L'émotion ressentie devant la beauté transitoire.",
+        "exemple": "Les cerisiers en fleur (sakura) — leur beauté est intensifiée par le fait qu'ils ne fleurissent que quelques jours. Hanami (contemplation des cerisiers) est une célébration de l'impermanence.",
+        "application": "Savourer les moments de bonheur PARCE qu'ils sont éphémères. La conscience de l'impermanence ne rend pas triste — elle rend PRÉSENT."
+      },
+      "yugen_幽玄": {
+        "définition": "La beauté mystérieuse et profonde qui ne peut pas être exprimée en mots. Le sentiment de l'univers qui est trop profond et trop vaste pour être saisi par l'intellect.",
+        "exemples": "La lune derrière les nuages. La brume sur une montagne. Le son d'une cloche de temple dans la forêt."
+      },
+      "shibui_渋い": {
+        "définition": "L'élégance discrète, la beauté qui se révèle lentement. L'opposé du clinquant. La simplicité raffinée.",
+        "application": "Choisir la qualité silencieuse plutôt que l'ostentation. Un vêtement simple mais parfaitement coupé. Un plat avec 3 ingrédients mais d'une qualité exceptionnelle."
+      }
+    },
+    "concepts_de_vie": {
+      "gaman_我慢": {
+        "définition": "Endurance patiente face à l'adversité. Supporter le difficulté avec dignité et sans se plaindre.",
+        "philosophie": "Le gaman n'est pas de la résignation passive — c'est une force intérieure. L'idée que la difficulté est temporaire et que la patience est une vertu active.",
+        "attention": "Le gaman excessif peut mener à la suppression des émotions et au burnout. L'équilibre est entre endurance et expression authentique des besoins."
+      },
+      "shoganai_しょうがない": {
+        "définition": "'Il n'y a rien à y faire' / 'C'est comme ça'. Acceptation de ce qui ne peut pas être changé.",
+        "sagesse": "Le shoganai est l'équivalent japonais de la prière de sérénité ('Accorder-moi la sérénité d'accepter les choses que je ne puis changer...'). Il libère l'énergie gaspillée à résister à l'inévitable.",
+        "lien_stoïcisme": "Proche de la dichotomie du contrôle d'Épictète : distinguer ce qui dépend de nous (nos actions, nos réactions) de ce qui ne dépend pas de nous (les événements, les autres)."
+      },
+      "oubaitori_桜梅桃李": {
+        "définition": "Cerisier, prunier, pêcher, poirier — chacun fleurit à son propre rythme. Ne pas se comparer aux autres.",
+        "application": "Chaque personne a son propre timing de développement. Se comparer aux autres est aussi absurde que de demander au prunier pourquoi il ne fleurit pas comme le cerisier."
+      },
+      "ikigai_communautaire_moai": {
+        "définition": "Groupe social de soutien mutuel à Okinawa. 5-10 personnes qui se rencontrent régulièrement depuis l'enfance et se soutiennent toute la vie.",
+        "lien_longévité": "Les moai sont un des facteurs clés de la longévité okinawaïenne (Blue Zones, Dan Buettner). L'appartenance sociale est un besoin biologique."
+      }
+    },
+    "pratiques_japonaises": {
+      "chado_cérémonie_thé": {
+        "définition": "La Voie du Thé (茶道). Bien plus qu'une boisson — c'est une méditation en action, une pratique de présence, de respect et de beauté.",
+        "quatre_principes_Sen_no_Rikyu": {
+          "wa_harmonie": "Harmonie entre les participants, avec la nature, avec les ustensiles.",
+          "kei_respect": "Respect sincère de l'autre, quel que soit son rang.",
+          "sei_pureté": "Pureté du cœur et de l'espace. Le nettoyage du jardin de thé est un acte spirituel.",
+          "jaku_tranquillité": "La sérénité profonde qui émerge de la pratique des trois premiers principes."
+        },
+        "ichigo_ichie": "'Une rencontre, une chance' (一期一会). Chaque cérémonie du thé est unique et ne se reproduira jamais. Être totalement présent à cet instant."
+      },
+      "onsen_bain_japonais": {
+        "tradition": "Le bain japonais (入浴) est un rituel de purification, de relaxation et de connexion sociale. Les onsens (sources chaudes naturelles) sont au cœur de la culture japonaise.",
+        "bienfaits": "Chaleur → vasodilatation, relaxation musculaire, réduction cortisol. Minéraux des sources (soufre, magnésium, silice). Ritual social (hadaka no tsukiai — 'la communication nue' — supprimer les barrières sociales)."
+      },
+      "shinrin_yoku": {
+        "définition": "Bain de forêt (森林浴). Immersion sensorielle dans la forêt sans objectif de randonnée ou d'exercice.",
+        "recherche": "Le Dr Qing Li (Nippon Medical School) a mené 30+ études démontrant les effets du Shinrin-yoku : réduction du cortisol, augmentation des cellules NK, amélioration de l'humeur, réduction de la pression artérielle.",
+        "pratique": "Marcher lentement. S'arrêter. Respirer. Toucher les arbres. Écouter les oiseaux et le vent. Sentir la terre et les feuilles. 2h minimum pour des effets mesurables."
+      },
+      "cuisine_kaiseki": {
+        "définition": "La haute cuisine japonaise traditionnelle. Multi-plats (7-14 services), saisonnier, esthétique extrême, portions délicates.",
+        "philosophie": "Shun (旬) — manger au moment où l'aliment est à son apogée saisonnier. Moritsuke (盛り付け) — présentation comme un art. Umami comme 5e goût fondamental (Kikunae Ikeda, 1908)."
+      }
+    },
+    "zen_et_pratique": {
+      "zazen": "Méditation assise. Shikantaza : 'juste s'asseoir'. Pas de visualisation, pas de mantra, pas d'objet — juste la conscience pure de l'instant. 'Quand vous mangez, mangez. Quand vous marchez, marchez. Quand vous êtes assis, soyez assis.'",
+      "koans": "Paradoxes utilisés pour court-circuiter le mental rationnel. 'Quel est le son d'une seule main qui applaudit ?' Le koan n'a pas de réponse logique — il pointe vers une compréhension au-delà de la pensée.",
+      "mushin_無心": "L'esprit de non-esprit. L'état dans lequel l'action est spontanée, fluide, sans hésitation ni pensée discursive. L'état du maître d'arts martiaux, du musicien de jazz, du sportif 'dans la zone'. Équivalent du flow de Csikszentmihalyi.",
+      "shoshin_初心": "L'esprit du débutant. 'Dans l'esprit du débutant, les possibilités sont nombreuses. Dans l'esprit de l'expert, elles sont rares.' (Shunryu Suzuki). Aborder chaque situation avec curiosité et ouverture, sans les filtres de l'expérience.",
+      "fudoshin_不動心": "L'esprit immobile. Le calme intérieur qui persiste au milieu du chaos. Le guerrier qui reste serein au cœur de la bataille. La capacité à ne pas réagir émotionnellement sous pression."
+    },
+    "minimalisme_japonais": {
+      "danshari": {
+        "dan": "Refuser ce qui n'est pas nécessaire (ne pas accumuler).",
+        "sha": "Se séparer de ce qui est inutile (désencombrer).",
+        "ri": "Se libérer de l'attachement aux possessions (lâcher-prise)."
+      },
+      "Marie_Kondo": "Méthode KonMari. Garder uniquement ce qui 'spark joy' (tokimeku — fait vibrer le cœur). Trier par catégorie (pas par pièce) : vêtements, livres, papiers, komono (divers), objets sentimentaux.",
+      "philosophie": "Le minimalisme japonais n'est pas de la privation — c'est la liberté. Moins de choses = plus d'espace mental, plus de temps, plus de présence. 'La perfection est atteinte non pas quand il n'y a plus rien à ajouter, mais quand il n'y a plus rien à retirer.' (Saint-Exupéry, mais profondément japonais dans l'esprit)."
+    }
+  }
+}
