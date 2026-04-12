@@ -10,6 +10,12 @@ const DEFAULT_OLLAMA_MODEL: &str = "gemma2:2b";
 const OLLAMA_MODEL_ENV: &str = "TITANE_OLLAMA_MODEL";
 
 fn ollama_base_url() -> String {
+    // Disk config on Android (highest priority)
+    if let Some(disk_url) = crate::runtime_config::get_persisted_ollama_url() {
+        return disk_url;
+    }
+    
+    // Environment variables (fallback)
     std::env::var("OLLAMA_BASE_URL")
         .or_else(|_| std::env::var("OLLAMA_URL"))
         .unwrap_or_else(|_| OLLAMA_BASE_URL_FALLBACK.to_string())

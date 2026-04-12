@@ -18,7 +18,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 use crate::security::secrets_engine::{SecretsMode, SecureSecretsEngine};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::time::{SystemTime, UNIX_EPOCH};
 use tauri::{State, Window};
 
@@ -62,16 +62,64 @@ fn sanitize_model(model: &str) -> String {
     }
 }
 
-fn collect_runtime_config(secrets: &SecureSecretsEngine) -> RuntimeConfig {
-    // Prefer canonical names (OLLAMA_BASE_URL / OLLAMA_DEFAULT_MODEL), but keep
-    // backward compatibility with legacy (OLLAMA_URL / OLLAMA_MODEL).
-    let ollama_url = std::env::var("OLLAMA_BASE_URL")
-        .or_else(|_| std::env::var("OLLAMA_URL"))
-        .unwrap_or_else(|_| "http://127.0.0.1:11434".to_string());
+/// Minimal in-lib disk config schema (mirrors config::update::RuntimeConfigDisk).
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct DiskRuntimeConfig {
+    pub ollama_url: Option<String>,
+    pub ollama_model: Option<String>,
+}
 
-    let ollama_model = std::env::var("OLLAMA_DEFAULT_MODEL")
-        .or_else(|_| std::env::var("OLLAMA_MODEL"))
-        .unwrap_or_else(|_| "gemma2:2b".to_string());
+fn persisted_config_path() -> std::path::PathBuf {
+    #[cfg(target_os = "android")]
+    {
+        std::path::PathBuf::from("/data/user/0/com.titane.infinity/files")
+            .join("titane-infinity")
+            .join("config")
+            .join("runtime_settings_v1.json")
+    }
+    #[cfg(not(target_os = "android"))]
+    {
+        let base = dirs::data_local_dir().unwrap_or_else(std::env::temp_dir);
+        base.join("titane-infinity")
+            .join("config")
+            .join("runtime_settings_v1.json")
+    }
+}
+
+fn read_persisted_url_and_model() -> (Option<String>, Option<String>) {
+    let path = persisted_config_path();
+    let Ok(raw) = std::fs::read_to_string(&path) else {
+        return (None, None);
+    };
+    match serde_json::from_str::<DiskRuntimeConfig>(&raw) {
+        Ok(cfg) => (cfg.ollama_url, cfg.ollama_model),
+        Err(_) => (None, None),
+    }
+}
+
+pub fn get_persisted_ollama_url() -> Option<String> {
+    read_persisted_url_and_model().0
+}
+
+pub fn get_persisted_ollama_model() -> Option<String> {
+    read_persisted_url_and_model().1
+}
+
+fn collect_runtime_config(secrets: &SecureSecretsEngine) -> RuntimeConfig {
+    // Priority: persisted disk config (UI or adb-pushed) > env vars > hardcoded default.
+    // Android physical devices read from /data/user/0/<pkg>/files/titane-infinity/config/.
+    let (disk_url, disk_model) = read_persisted_url_and_model();
+
+    let ollama_url = disk_url
+        .or_else(|| std::env::var("OLLAMA_BASE_URL").ok())
+        .or_else(|| std::env::var("OLLAMA_URL").ok())
+        .unwrap_or_else(|| "http://127.0.0.1:11434".to_string());
+
+    let ollama_model = disk_model
+        .or_else(|| std::env::var("OLLAMA_DEFAULT_MODEL").ok())
+        .or_else(|| std::env::var("OLLAMA_MODEL").ok())
+        .unwrap_or_else(|| "gemma2:2b".to_string());
 
     let secrets_mode = match secrets.mode() {
         SecretsMode::Encrypted { .. } => "encrypted".to_string(),

@@ -401,30 +401,17 @@ pub fn run() {
     let builder = tauri::Builder::default().on_page_load(|window, _payload| {
         #[cfg(all(not(feature = "mock"), feature = "full"))]
         {
-            let app_identifier = window.app_handle().config().identifier.clone();
+            let candidate_probe_paths: Vec<std::path::PathBuf> = vec![
+                std::path::PathBuf::from("/data/user/0/com.titane.infinity/files/probe_ollama_generate.flag"),
+                std::path::PathBuf::from("/data/data/com.titane.infinity/files/probe_ollama_generate.flag"),
+            ];
 
-            let probe_flag_path = window
-                .app_handle()
-                .path()
-                .app_data_dir()
-                .ok()
-                .map(|dir| dir.join("probe_ollama_generate.flag"))
+            let probe_flag_path: Option<std::path::PathBuf> = candidate_probe_paths
                 .into_iter()
-                .chain([
-                    std::path::PathBuf::from(format!(
-                        "/data/user/0/{}/files/probe_ollama_generate.flag",
-                        app_identifier
-                    )),
-                    std::path::PathBuf::from(format!(
-                        "/data/data/{}/files/probe_ollama_generate.flag",
-                        app_identifier
-                    )),
-                ])
-                .find(|path| path.exists());
+                .find_map(|path: std::path::PathBuf| if path.exists() { Some(path) } else { None });
 
-            if let Some(probe_flag_path) = probe_flag_path
-            {
-                if let Err(err) = std::fs::remove_file(&probe_flag_path) {
+            if let Some(probe_flag_path) = probe_flag_path {
+                if let Err(err) = std::fs::remove_file(probe_flag_path.as_path()) {
                     log::warn!(
                         "[OLLAMA_PROBE] failed to clear mobile probe flag {}: {}",
                         probe_flag_path.display(),
@@ -461,7 +448,7 @@ pub fn run() {
 
                                 const result = await window.__TAURI_INTERNALS__.invoke('ollama_generate', {
                                     req: {
-                                        model: 'gemma2:2b',
+                                        model: 'llama3.1:latest',
                                         prompt: 'Reply with OK only.',
                                         timeout_secs: 20,
                                         temperature: 0,
@@ -478,7 +465,7 @@ pub fn run() {
                                 await probeInvoke(`OLLAMA_PROBE_ERR|message=${message}`);
                                 console.error('[OLLAMA_PROBE_ERR]', String(error));
                             }
-                        }, 8000);
+                        }, 500);
                     }
                 "#;
 
