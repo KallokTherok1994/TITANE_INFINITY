@@ -1,71 +1,276 @@
 {
   "version": "v30.1.0",
   "category": "musique_theorie_pratique",
-  "description": "Musique — théorie musicale, solfège, harmonie, rythme, genres musicaux, production musicale (DAW, mixing, mastering), apprentissage d'instruments, psychologie de la musique, business musical",
+  "description": "Musique — théorie musicale, solfège, harmonie, rythme, genres musicaux, acoustique, composition, histoire, technologie, ear training, arrangement, musique de film, production musicale (DAW, mixing, mastering), apprentissage d'instruments, psychologie de la musique, business musical",
   "musique_theorie_pratique": {
-    "introduction": "La musique est le seul art qui active simultanément toutes les zones du cerveau. Comprendre sa structure (théorie) permet de créer avec intention plutôt que par imitation. TITANE aborde la musique depuis ses fondements physiques jusqu'à la production professionnelle moderne.",
+    "introduction": "La musique est le seul art qui active simultanément toutes les zones du cerveau. Comprendre sa structure (théorie) permet de créer avec intention plutôt que par imitation. TITANE aborde la musique depuis ses fondements physiques — vibrations, harmoniques, acoustique — jusqu'à la production professionnelle moderne, en passant par l'histoire des genres, la composition, l'arrangement orchestral, le sound design et les métiers de la musique à l'image. Cette base de connaissances couvre la pratique instrumentale, l'ear training, la psychologie de l'écoute et les réalités économiques de l'industrie musicale contemporaine.",
     "theorie_fondamentale": {
       "notes_gammes": {
-        "chromatique": "12 demi-tons : Do-Do#-Ré-Ré#-Mi-Fa-Fa#-Sol-Sol#-La-La#-Si. Octave = doubler fréquence.",
-        "majeure": "Intervalles : 1-1-½-1-1-1-½ (tons et demi-tons). Do Majeur = C-D-E-F-G-A-B",
-        "mineure_naturelle": "1-½-1-1-½-1-1. La mineur relatif de Do Majeur.",
-        "pentatonique": "5 notes. Pas de demi-tons. Universelle (blues, rock, folk, musiques du monde). Sonne 'juste' facilement."
+        "chromatique": "12 demi-tons : Do-Do#-Ré-Ré#-Mi-Fa-Fa#-Sol-Sol#-La-La#-Si. Octave = doubler la fréquence (La4 = 440 Hz, La5 = 880 Hz). Système tempéré égal : chaque demi-ton = rapport de 2^(1/12) ≈ 1.0595.",
+        "majeure": "Intervalles : 1-1-½-1-1-1-½ (tons et demi-tons). Do Majeur = C-D-E-F-G-A-B. Chaque gamme majeure possède un relatif mineur situé une tierce mineure en dessous.",
+        "mineure_naturelle": "1-½-1-1-½-1-1. La mineur relatif de Do Majeur. Trois variantes : naturelle, harmonique (7e haussée pour créer sensible), mélodique (6e et 7e haussées en montant, naturelle en descendant).",
+        "pentatonique": "5 notes. Pas de demi-tons. Universelle (blues, rock, folk, musiques du monde). Sonne 'juste' facilement. Pentatonique majeure : 1-2-3-5-6. Pentatonique mineure : 1-b3-4-5-b7. Ajout de la blue note (b5) = gamme blues.",
+        "gamme_blues": "Pentatonique mineure + quinte diminuée (blue note). 6 notes chargées d'émotion. Fondement de l'improvisation blues, rock et jazz fusion.",
+        "gammes_symetriques": "Ton entier (Debussy, impressionnisme) : 6 notes espacées d'un ton. Diminuée (demi-ton/ton) : 8 notes, symétrie parfaite, jazz et tension cinématique. Chromatique : les 12 notes, utilisée pour le mouvement chromatique et l'ornementation.",
+        "gammes_exotiques": "Gamme arabe (double harmonique) : 1-b2-3-4-5-b6-7. Gamme japonaise (in-sen) : 1-b2-4-5-b7. Gamme hongroise : 1-2-b3-#4-5-b6-7. Chaque culture développe ses propres systèmes mélodiques."
+      },
+      "intervalles": {
+        "definition": "Distance entre deux notes. Nommé par le nombre de degrés (seconde, tierce, quarte...) et la qualité (majeur, mineur, juste, augmenté, diminué).",
+        "consonance_dissonance": "Consonants : unisson, octave, quinte juste, tierce majeure. Dissonants : seconde mineure, septième majeure, triton. La dissonance crée tension, la consonance résout.",
+        "renversements": "Tout intervalle renversé = complémentaire à l'octave. Tierce majeure renversée = sixte mineure. Quinte juste renversée = quarte juste."
       },
       "accords": {
-        "triade": "3 notes — fondamentale + tierce + quinte. Majeur (joyeux), mineur (mélancolique), augmenté, diminué.",
-        "septieme": "7e dominante (V7) = tension naturelle vers I. Base blues et jazz.",
+        "triade": "3 notes — fondamentale + tierce + quinte. Majeur (tierce majeure + quinte juste = joyeux), mineur (tierce mineure + quinte juste = mélancolique), augmenté (tierce majeure + quinte augmentée = tendu), diminué (tierce mineure + quinte diminuée = instable).",
+        "septieme": "7e dominante (V7) = tension naturelle vers I. Base blues et jazz. Maj7 = doux, rêveur. Min7 = chaleureux. m7b5 (demi-diminué) = substitut ii dans mineur. Dim7 = 4 tierces mineures empilées, symétrique.",
+        "extensions": "9e, 11e, 13e : couleurs jazz et neo-soul. Add9 = triade + 9e sans 7e (pop). Sus2/Sus4 = tierce remplacée, suspension ambiguë. Accords slash = renversement ou basse pédales.",
         "progressions": {
-          "I_IV_V": "Base blues/rock/pop. Do: C-F-G",
-          "I_V_vi_IV": "Progression pop universelle. C-G-Am-F. Des milliers de chansons.",
-          "ii_V_I": "Cadence jazz. Dm7-G7-CMaj7. Sophistiqué.",
-          "12_bar_blues": "Structure blues fondamentale. 3 accords, 12 mesures."
+          "I_IV_V": "Base blues/rock/pop. Do: C-F-G. Fondement harmonique occidental depuis des siècles.",
+          "I_V_vi_IV": "Progression pop universelle. C-G-Am-F. Des milliers de chansons : Let It Be, No Woman No Cry, Someone Like You.",
+          "ii_V_I": "Cadence jazz par excellence. Dm7-G7-CMaj7. Base de l'improvisation jazz. Peut être mineur : ii°7-V7b9-im.",
+          "12_bar_blues": "Structure blues fondamentale. I-I-I-I / IV-IV-I-I / V-IV-I-V. 3 accords, 12 mesures. Socle du rock'n'roll.",
+          "vi_IV_I_V": "Variante émotionnelle. Am-F-C-G. Très utilisée en pop moderne et power ballads.",
+          "cadences": "Parfaite (V→I) : résolution forte. Plagale (IV→I) : 'amen'. Demi-cadence (→V) : suspens. Rompue (V→vi) : surprise émotionnelle."
         }
       },
       "rythme": {
-        "pulsation": "Battement régulier. Tempo en BPM (battements/minute). 60-80 détendu, 120-140 danse.",
-        "mesure": "4/4 standard (4 noires par mesure). 3/4 valse. 6/8 triolet. 7/8 complexe (Balkans, prog rock).",
-        "syncopation": "Accent sur les temps faibles. Groove, funk, jazz, reggae.",
-        "polyrhythme": "Rythmes différents simultanément. Musique africaine fondamentale. 3 contre 2, 4 contre 3."
+        "pulsation": "Battement régulier. Tempo en BPM (battements/minute). 60-80 détendu, 90-110 mid-tempo, 120-140 danse, 140-180 énergie haute. Le tempo influence directement la perception émotionnelle.",
+        "mesure": "4/4 standard (4 noires par mesure). 3/4 valse. 6/8 triolet (berceuses, marches). 5/4 (Take Five de Brubeck). 7/8 complexe (Balkans, prog rock). 12/8 blues shuffle.",
+        "syncopation": "Accent sur les temps faibles ou entre les temps. Crée le groove, essentiel au funk, jazz, reggae et bossa nova. Déplacer l'accent = transformer le caractère d'un morceau.",
+        "polyrhythme": "Rythmes différents simultanément. Musique africaine fondamentale. 3 contre 2, 4 contre 3. Hemiola = alterner 3/4 et 6/8. Base des percussions latines (clave).",
+        "subdivisions": "Croches, doubles-croches, triolets, sextolets. Swing = triolets avec silence médian (jazz). Straight = subdivisions égales (rock, pop). Shuffle = croches inégales (blues).",
+        "groove_feel": "Le groove naît des micro-décalages de timing (ahead/behind the beat). Drummers légendaires : chacun a un feel unique. Quantisation 100% = rigide, artificiel."
+      },
+      "notation_solfege": {
+        "portee": "5 lignes, clé de sol (aigus) et clé de fa (graves). Grand portée pour piano. Clé d'ut pour alto et violoncelle aigu.",
+        "figures_notes": "Ronde (4 temps), blanche (2), noire (1), croche (1/2), double-croche (1/4). Point = +50% durée. Liaison = addition de durées.",
+        "dechiffrage": "Compétence essentielle pour musicien classique. Lire en temps réel : intervalles visuels, patterns rythmiques, anticipation des phrases."
       }
     },
     "harmonie_avancee": {
-      "modes": "7 modes de la gamme majeure. Dorien (Ré) = mineur avec 6e majeure (jazz, rock). Lydien (Fa) = majeur #4 (rêveur). Mixolydien (Sol) = majeur b7 (blues, rock).",
-      "modulation": "Changer de tonalité. Directe (brusque, dramatique), pivot (accord commun aux deux tonalités, fluide).",
-      "tension_resolution": "Dissonance → consonance. Dynamique émotionnelle fondamentale. V → I = résolution universelle.",
-      "substitutions": "Triton sub (jazz) : remplacer V7 par accord à distance de triton. Résolution identique, couleur différente."
+      "modes": {
+        "description": "7 modes de la gamme majeure. Chacun possède une couleur émotionnelle distincte déterminée par la position des demi-tons.",
+        "ionien": "Mode I (Do). Identique à la gamme majeure. Lumineux, résolu, stable.",
+        "dorien": "Mode II (Ré). Mineur avec 6e majeure. Jazz, rock, funk. So What de Miles Davis.",
+        "phrygien": "Mode III (Mi). Mineur avec 2e mineure. Sonorité espagnole, flamenco, metal.",
+        "lydien": "Mode IV (Fa). Majeur avec #4. Rêveur, flottant, science-fiction. Utilisé par Joe Satriani, film scores.",
+        "mixolydien": "Mode V (Sol). Majeur avec b7. Blues, rock classique, musique celtique. Norwegian Wood des Beatles.",
+        "eolien": "Mode VI (La). Identique au mineur naturel. Mélancolique, introspectif.",
+        "locrien": "Mode VII (Si). Diminué, instable. Rarement utilisé comme tonalité, plutôt comme passage tendu en jazz et metal."
+      },
+      "modulation": "Changer de tonalité. Directe (brusque, dramatique — utilisée en pop pour monter d'un demi-ton au dernier refrain). Pivot (accord commun aux deux tonalités, transition fluide — préférée en classique et jazz). Par séquence (mouvement progressif par intervalles réguliers).",
+      "tension_resolution": "Dissonance → consonance. Dynamique émotionnelle fondamentale. V → I = résolution universelle. Retarder la résolution augmente l'impact émotionnel. Appogiature, retard, échappée = ornements de tension.",
+      "substitutions": "Triton sub (jazz) : remplacer V7 par accord à distance de triton. Résolution identique, couleur chromatique. Substitution modale : emprunter accords d'un autre mode. Accords d'emprunt : prendre un accord du mode parallèle (ex: bVI de mineur dans contexte majeur).",
+      "harmonie_modale": "Éviter les cadences fonctionnelles (pas de V-I). Utiliser bourdons, ostinatos et mouvement parallèle. Miles Davis, Debussy, musiques de film modernes. Les accords sont des couleurs, pas des fonctions.",
+      "reharmonisation": "Remplacer les accords d'une mélodie par des alternatives harmoniques. Techniques : substitution diatonique, chromatique, tritonique, contrepoint de basses. Essentiel en arrangement jazz.",
+      "voix_conduite": "Mouvement minimal entre accords (voice leading). Chaque voix se déplace par degrés conjoints ou reste en place. Règles classiques : éviter quintes/octaves parallèles. En jazz et pop, la fluidité prime."
+    },
+    "genres_musicaux": {
+      "classique": {
+        "periodes": "Baroque (1600-1750, Bach, Vivaldi), Classique (1750-1820, Mozart, Haydn), Romantique (1820-1900, Chopin, Brahms), Moderne (1900-1950, Stravinsky, Bartók), Contemporain (1950+, Ligeti, Messiaen).",
+        "caracteristiques": "Notation écrite précise, orchestres et ensembles de chambre, formes structurées (sonate, symphonie, concerto, fugue). Dynamiques et timbres riches.",
+        "artistes_cles": "Bach (contrepoint), Mozart (équilibre), Beethoven (transition classique-romantique), Debussy (impressionnisme), Stravinsky (rythme moderne)."
+      },
+      "jazz": {
+        "histoire": "Né à La Nouvelle-Orléans (~1900) du croisement blues, ragtime, musique d'église afro-américaine et traditions africaines. Évolution : Swing (1930s), Bebop (1940s), Cool Jazz (1950s), Free Jazz (1960s), Fusion (1970s), Neo-soul jazz (2000s+).",
+        "caracteristiques": "Improvisation sur grilles d'accords, swing feel, blue notes, extensions harmoniques (9e, 11e, 13e), interaction entre musiciens en temps réel, standards comme répertoire commun.",
+        "artistes_cles": "Louis Armstrong, Duke Ellington, Charlie Parker, Miles Davis, John Coltrane, Thelonious Monk, Bill Evans, Herbie Hancock, Wayne Shorter."
+      },
+      "blues": {
+        "histoire": "Racines dans les chants de travail et spirituals afro-américains du Delta du Mississippi (fin XIXe). Blues rural → blues urbain (Chicago) → blues-rock. A engendré le rock, le R&B et le soul.",
+        "caracteristiques": "Structure 12 mesures, blue notes (b3, b5, b7), call-and-response, paroles autobiographiques et émotionnelles, guitare slide, shuffle groove.",
+        "artistes_cles": "Robert Johnson, Muddy Waters, B.B. King, Howlin' Wolf, John Lee Hooker, Buddy Guy, Stevie Ray Vaughan."
+      },
+      "rock": {
+        "histoire": "Né dans les années 1950 du blues, country et R&B. Elvis Presley popularise. British Invasion (Beatles, Rolling Stones) dans les 1960s. Diversification : punk (1970s), new wave (1980s), grunge (1990s), indie (2000s+).",
+        "caracteristiques": "Guitare électrique centrale, batterie énergique, structure couplet-refrain, riffs mémorables, attitude rebelle. Power chords (fondamentale + quinte, pas de tierce).",
+        "artistes_cles": "Chuck Berry, Beatles, Led Zeppelin, Pink Floyd, Queen, Nirvana, Radiohead, Arctic Monkeys."
+      },
+      "hip_hop": {
+        "histoire": "Né dans le Bronx (New York) dans les années 1970. DJ Kool Herc, breakbeats, MCing, graffiti et breakdance. Old school → Golden Age (1980s-90s) → Gangsta Rap → crunk → trap → drill. Culture globale majeure.",
+        "caracteristiques": "Rap (flow, rimes, storytelling), sampling et beats programmés, 808 bass, hi-hats rapides (trap), scratch, production numérique. Le texte prime.",
+        "artistes_cles": "Grandmaster Flash, Run-DMC, Public Enemy, Nas, Tupac, Notorious B.I.G., Jay-Z, Kanye West, Kendrick Lamar, MF DOOM."
+      },
+      "electronique": {
+        "histoire": "Pionniers : Kraftwerk, Jean-Michel Jarre (1970s). House (Chicago, 1980s), Techno (Detroit), Rave culture (UK 1990s), EDM mainstream (2010s). Sous-genres infinis : ambient, drum & bass, dubstep, trance, IDM.",
+        "caracteristiques": "Synthétiseurs et boîtes à rythmes, production entièrement numérique possible, BPM comme identité de genre (house ~125, techno ~130, drum & bass ~170), drops et builds, sound design central.",
+        "artistes_cles": "Kraftwerk, Aphex Twin, Daft Punk, Boards of Canada, Skrillex, Burial, Amon Tobin, Flume, Bicep."
+      },
+      "reggae": {
+        "histoire": "Né en Jamaïque dans les années 1960, issu du ska et du rocksteady. Bob Marley internationalise le genre. Lié au mouvement Rastafari. A influencé le dub, le dancehall et le reggaeton.",
+        "caracteristiques": "Off-beat skank (guitare sur temps faibles), basse proéminente et mélodique, tempo détendu, one drop (grosse caisse sur le 3), paroles sociales et spirituelles.",
+        "artistes_cles": "Bob Marley, Peter Tosh, Jimmy Cliff, Burning Spear, Lee Scratch Perry (producteur dub), Toots & the Maytals."
+      },
+      "soul_funk": {
+        "histoire": "Soul : fusion gospel et R&B (1950s-60s), Motown et Stax. Funk : James Brown pousse le rythme au premier plan (1960s-70s). Influence directe sur disco, hip-hop, neo-soul contemporain.",
+        "caracteristiques": "Soul : voix puissante et émotionnelle, arrangements cuivres et cordes. Funk : groove syncopé, basse slap, guitare rythmique coupée, accent sur le 'one' (premier temps).",
+        "artistes_cles": "Ray Charles, Aretha Franklin, Otis Redding, Marvin Gaye, James Brown, Parliament-Funkadelic, Sly Stone, Prince, D'Angelo, Erykah Badu."
+      },
+      "metal": {
+        "histoire": "Né du hard rock (Black Sabbath, 1970). NWOBHM (Iron Maiden, 1980s), thrash (Metallica), death metal, black metal, progressive metal. Sous-genres extrêmes et techniques.",
+        "caracteristiques": "Guitares saturées, riffs lourds, tempos rapides, virtuosité technique, double pédale de grosse caisse, drop tunings (Drop D, Drop C), modes mineurs et phrygiens, blast beats.",
+        "artistes_cles": "Black Sabbath, Iron Maiden, Metallica, Megadeth, Opeth, Tool, Meshuggah, Gojira, Dream Theater."
+      },
+      "world_music": {
+        "traditions": "Chaque culture possède son système musical. Maqam arabe (quarts de ton), raga indien (mélodie + rythme codifiés = raga + tala), gamelan indonésien (percussions métalliques, échelles non tempérées), griot d'Afrique de l'Ouest (tradition orale, kora, balafon).",
+        "fusions": "Croisements modernes : afrobeat (Fela Kuti = jazz + funk + rythmes yoruba), bossa nova (samba + jazz), flamenco nuevo, bhangra électronique, celtic fusion.",
+        "artistes_cles": "Ravi Shankar, Fela Kuti, Ali Farka Touré, Nusrat Fateh Ali Khan, Youssou N'Dour, Tinariwen, Buena Vista Social Club."
+      }
+    },
+    "acoustique_physique_son": {
+      "frequences": "Le son est une vibration de l'air. Fréquence en Hertz (Hz) = hauteur perçue. Audition humaine : 20 Hz (grave profond) à 20 000 Hz (aigu). La4 = 440 Hz (diapason standard). Chaque octave double la fréquence. Sub-basses (20-60 Hz), basses (60-250 Hz), médiums (250 Hz-4 kHz), aigus (4-20 kHz).",
+      "harmoniques": "Un son musical contient une fondamentale + des harmoniques (multiples entiers de la fondamentale). La3 = 220 Hz → harmoniques à 440, 660, 880, 1100 Hz... La proportion relative des harmoniques détermine le timbre. Série harmonique naturelle = base de l'harmonie tonale.",
+      "timbre": "Ce qui distingue un piano d'une guitare jouant la même note. Déterminé par le spectre harmonique, l'enveloppe ADSR (Attack, Decay, Sustain, Release), les transitoires d'attaque et les formants. Le timbre est la 'couleur' du son.",
+      "resonance": "Un objet vibre plus fort à sa fréquence naturelle. Corps de guitare, table d'harmonie du piano, cavité buccale du chanteur. Résonance sympathique : une corde vibre quand une autre joue sa fondamentale ou harmonique. Effet Larsen = boucle de résonance micro-enceinte.",
+      "acoustique_salles": "Réverbération = réflexions multiples. RT60 = temps pour que le son chute de 60 dB. Studio d'enregistrement : RT60 ~0.3s (mat). Salle de concert : ~1.5-2s. Cathédrale : ~4-6s. Modes de salle = fréquences stationnaires problématiques dans les petits espaces. Traitement : absorption (mousses, rideaux), diffusion (surfaces irrégulières), bass traps (coins).",
+      "isolation_phonique": "Différent du traitement acoustique. Isolation = bloquer le son entre espaces. Masse (murs épais), découplage (mur dans mur), étanchéité (joints). Loi de masse : doubler la masse = +6 dB d'isolation. Plancher flottant et plafond suspendu pour studios professionnels. Transmission par structure (vibrations solides) plus difficile à bloquer que transmission aérienne."
+    },
+    "composition_songwriting": {
+      "structures": {
+        "couplet_refrain": "Structure la plus commune en pop/rock : Intro - Couplet 1 - Refrain - Couplet 2 - Refrain - Pont - Refrain - Outro. Le couplet raconte, le refrain résume le message émotionnel (hook).",
+        "AABA": "Forme classique de standard jazz et chanson française. A = thème, B = pont (bridge) contrastant. 32 mesures typiques.",
+        "verse_chorus_bridge": "Le pont (bridge) apporte contraste harmonique et mélodique. Souvent dans une tonalité voisine ou sur l'accord IV/vi. Empêche la monotonie après deux cycles couplet-refrain.",
+        "formes_libres": "Through-composed : pas de répétition structurelle (chanson art, progressif). Suite : plusieurs sections enchaînées (Bohemian Rhapsody). Rondo : A-B-A-C-A."
+      },
+      "hooks": "Élément mélodique ou rythmique mémorable qui 'accroche' l'auditeur. Peut être un riff de guitare (Smoke on the Water), un motif vocal (Bad Guy), une ligne de basse (Under Pressure) ou même un son de production. Un bon hook est simple, répétable et immédiatement reconnaissable.",
+      "melodie": "La mélodie efficace utilise majoritairement des mouvements conjoints (degrés voisins) avec des sauts occasionnels pour créer des points culminants. Contour mélodique : arc (montée puis descente), terrasse (paliers), vague (oscillation). Répétition avec variation = mémorabilité. Tessiture limitée (une octave) pour chantabilité.",
+      "paroles": "Écrire des paroles : show don't tell (images concrètes > abstractions). Schéma de rimes : ABAB (alterné), AABB (couplé), ABCB (ballad). Prosodie = mariage naturel entre accents du texte et accents musicaux. Technique : écrire le refrain d'abord, puis les couplets qui y mènent.",
+      "co_ecriture": "Pratique dominante en pop moderne. Camps d'écriture (writing camps) : producteurs et auteurs réunis pendant plusieurs jours. Rôles : topliner (mélodie/paroles), beatmaker (production), songwriter (structure/harmonie). Splits de droits à négocier avant la session.",
+      "writer_block": "Panne créative. Solutions : contraintes arbitraires (écrire en 20 min, tonalité imposée), changer d'instrument, improviser sans jugement, réécrire une chanson existante dans un autre style, marcher/voyager, collaborer, revenir plus tard. La régularité (écrire chaque jour) réduit les pannes."
+    },
+    "histoire_musique": {
+      "musique_classique_periodes": {
+        "medievale_renaissance": "Chant grégorien (monophonique, VIe siècle). Polyphonie progressive : organum, motet. Renaissance (1400-1600) : Palestrina, Josquin, madrigaux, naissance de l'harmonie verticale.",
+        "baroque": "1600-1750. Basse continue, ornementation, contrepoint. Opéra naît à Florence. Bach (fugues, cantates), Vivaldi (concertos), Haendel (oratorios). Clavecin et orgue dominent.",
+        "classique": "1750-1820. Clarté, équilibre, structure sonate. Mozart (opéras, symphonies), Haydn (père du quatuor à cordes et de la symphonie), Beethoven (transition vers romantisme). Piano remplace clavecin.",
+        "romantique": "1820-1900. Expression émotionnelle intense, orchestres élargis, virtuosité. Chopin (piano), Wagner (opéra, leitmotiv), Tchaikovsky (ballets), Brahms, Liszt. Poème symphonique, musique à programme.",
+        "moderne_contemporain": "1900+. Éclatement du système tonal. Debussy (impressionnisme), Schoenberg (dodécaphonisme, sérialisme), Stravinsky (Sacre du Printemps = révolution rythmique), Cage (aléatoire), musique concrète (Schaeffer), minimalisme (Reich, Glass)."
+      },
+      "naissance_jazz": "Convergence à La Nouvelle-Orléans : blues du Delta, ragtime, fanfares, musique d'église. Buddy Bolden, premier cornettiste jazz (~1900). Enregistrements : Original Dixieland Jass Band (1917). Louis Armstrong révolutionne l'improvisation soliste (1920s). Duke Ellington élève le jazz à la composition orchestrale. Charlie Parker et Dizzy Gillespie inventent le bebop (1940s) : tempos rapides, harmonies complexes.",
+      "rock_revolution": "Années 1950 : Chuck Berry, Little Richard, Elvis Presley fusionnent blues noir et country blanc. British Invasion (1964) : Beatles et Rolling Stones. Psychédélisme (Hendrix, Pink Floyd). Punk (1977 : Ramones, Sex Pistols) : retour à la simplicité brute. New Wave, post-punk. Grunge (1991 : Nirvana) détruit le hair metal. Indie rock et décentralisation numérique (2000s+).",
+      "hip_hop_culture": "1973 : DJ Kool Herc isole les breakbeats au Bronx. MC (Master of Ceremonies) anime la foule. Quatre piliers : DJing, MCing, breaking, graffiti. Sugar Hill Gang : premier hit rap (1979). Run-DMC fusionne rap et rock. Golden Age (Public Enemy, Wu-Tang Clan, Nas). Gangsta Rap (N.W.A., Tupac). Kanye West réinvente la production. Trap (Atlanta, 2010s). Le hip-hop devient le genre le plus écouté au monde.",
+      "electronic_music_evolution": "Musique concrète (Pierre Schaeffer, 1948) : manipulation de sons enregistrés. Synthétiseurs analogiques (Moog, 1960s). Kraftwerk (1970s) : électronique populaire. House (Chicago, Frankie Knuckles, 1980s). Techno (Detroit, Juan Atkins). Rave culture UK (1990s). Trance, drum & bass, dubstep. EDM mainstream (2010s : Skrillex, Deadmau5, Avicii). Modular synth revival, lo-fi et ambient contemporains."
+    },
+    "technologie_musicale": {
+      "midi": "Musical Instrument Digital Interface (1983). Transmet des données de notes (hauteur, vélocité, durée), pas du son. Universel : connecte synthés, DAW, contrôleurs. MIDI 2.0 (2020) : résolution 32 bits, communication bidirectionnelle, MPE (Multidimensional Polyphonic Expression) pour contrôleurs expressifs comme le Roli Seaboard.",
+      "synthetiseurs": {
+        "soustractif": "Oscillateur génère onde riche (saw, square) → filtre retire des harmoniques → enveloppe ADSR modèle l'amplitude. Moog, Prophet-5, Juno-106. Le plus intuitif.",
+        "additif": "Addition de sinusoïdes individuelles pour construire un timbre. Complexe mais précis. Hammond B3 (tirettes harmoniques) en est un exemple simplifié.",
+        "fm": "Modulation de fréquence (Yamaha DX7, 1983). Un oscillateur module la fréquence d'un autre. Sons métalliques, cloches, basses électriques caractéristiques. Complexe à programmer mais sons distinctifs.",
+        "wavetable": "Lecture de tables d'ondes avec morphing. Serum (Xfer Records) = standard actuel. Visuel, flexible, excellent pour sound design moderne et bass music.",
+        "granulaire": "Découpe un échantillon en micro-grains (1-50ms) et les réarrange. Textures atmosphériques, pads évolutifs, transformation radicale de sons. Granulator de Robert Henke."
+      },
+      "samplers": "Enregistrer un son réel et le jouer chromatiquement. Akai MPC = révolution hip-hop (sampling de vinyles). Kontakt (Native Instruments) = standard pour instruments échantillonnés (orchestres, pianos, batteries). Techniques : chopping, timestretching, pitchshifting, layering.",
+      "plugins_vst": "Virtual Studio Technology (Steinberg, 1996). Instruments et effets logiciels dans le DAW. Catégories : synthés (Serum, Massive, Vital), effets (FabFilter, Valhalla, Soundtoys), instruments échantillonnés (Kontakt, EastWest). Formats : VST3, AU (Mac), AAX (Pro Tools). Le plugin gratuit Vital rivalise avec les payants pour la synthèse wavetable.",
+      "automation": "Enregistrer les variations de paramètres dans le temps. Volume, panoramique, filtres, effets. Crée du mouvement et de l'intérêt. Automation de filtre passe-bas = build classique en électronique. Automation de reverb = créer distance puis proximité.",
+      "sidechain": "Un signal contrôle le traitement d'un autre. Sidechain compression : la grosse caisse compresse la basse → effet de pompage (signature house/EDM). Sidechain sur les pads avec le kick = clarté et énergie. Utilisé aussi en ducking (voix off réduit musique de fond).",
+      "sound_design": "Création de sons originaux. Synthèse (partir de zéro), traitement (transformer des enregistrements), layering (empiler des couches), resampling (traiter puis ré-échantillonner). Foley (bruitages réalistes), design de créatures, atmosphères. Compétence essentielle pour musique électronique, jeux vidéo et cinéma."
+    },
+    "ear_training": {
+      "intervalles": "Entraîner l'oreille à reconnaître les distances entre notes. Associations mnémoniques : seconde majeure = début de Frère Jacques, tierce majeure = début d'Oh When the Saints, quarte juste = début de La Marseillaise, quinte juste = Star Wars (thème principal), octave = Somewhere Over the Rainbow.",
+      "dictee_melodique": "Transcrire une mélodie entendue. Commencer par 4-5 notes, gamme majeure. Identifier d'abord le contour (monte/descend), puis les intervalles exacts. Progression : mélodies diatoniques → chromatiques → modulations. Pratiquer quotidiennement avec des apps (Functional Ear Trainer, EarMaster).",
+      "dictee_rythmique": "Transcrire un rythme entendu. Taper la pulsation (pieds) et le rythme (mains) simultanément. Identifier la mesure, puis les subdivisions. Commencer par noires et croches, puis doubles-croches, triolets, syncopes.",
+      "reconnaissance_accords": "Distinguer majeur (joyeux), mineur (triste), diminué (tendu), augmenté (flottant). Puis septièmes : Maj7 (doux), Dom7 (blues), Min7 (chaud), m7b5 (jazz mineur). Progresser vers extensions et renversements. Écouter la couleur globale avant d'analyser les notes individuelles.",
+      "oreille_relative_vs_absolue": "Oreille absolue (perfect pitch) : identifier une note sans référence. Rare, partiellement innée, peut se développer jeune. Oreille relative : identifier les intervalles par rapport à une référence. Plus utile en pratique, s'entraîne à tout âge. La majorité des grands musiciens utilisent l'oreille relative.",
+      "exercices_quotidiens": "15-20 min/jour suffisent. Chanter les intervalles avant de les jouer. Transcrire des mélodies simples à l'oreille. Identifier les accords dans les chansons écoutées. Chanter la fondamentale d'un accord entendu. L'ear training est un marathon, pas un sprint : résultats visibles après 3-6 mois de pratique régulière."
+    },
+    "arrangement_orchestration": {
+      "instruments_orchestre": {
+        "cordes": "Violons (I et II), altos, violoncelles, contrebasses. Colonne vertébrale de l'orchestre. Techniques : arco (archet), pizzicato (pincé), tremolo, col legno, harmoniques. Tessiture totale : ~4 octaves par instrument.",
+        "bois": "Flûte (brillante, agile), hautbois (nasillard, expressif), clarinette (versatile, large tessiture), basson (grave, comique ou solennel). Chacun a un timbre distinct grâce à son mécanisme de production sonore (anche simple, double, embouchure).",
+        "cuivres": "Trompette (éclat, fanfares), cor (chaleur, lien bois-cuivres), trombone (puissance, glissando), tuba (fondation grave). Sourdines modifient le timbre : cup, harmon (wah-wah jazz), straight.",
+        "percussions": "Hauteur définie : timbales, xylophone, marimba, vibraphone, cloches. Hauteur indéfinie : caisse claire, grosse caisse, cymbales, triangle, tam-tam. Rôle structurel (ponctuation, climax) et coloriste."
+      },
+      "voicings": "Répartition des notes d'un accord entre les instruments. Voicing serré (close) : notes proches, compact. Voicing ouvert (open/drop) : notes espacées, large. Drop 2, Drop 3 : techniques jazz guitare/piano. Doubler la fondamentale et la quinte pour la puissance, éviter de doubler la tierce pour la clarté.",
+      "contrepoint": "Art de combiner des lignes mélodiques indépendantes. Règles de Bach : mouvement contraire préféré, éviter parallèles de quintes/octaves, chaque voix a une identité mélodique propre. Espèces de contrepoint (Fux) : note contre note, 2 contre 1, 4 contre 1, syncopes, fleuri. Fugue = forme contrapuntique suprême.",
+      "dynamiques": "Contrôle de l'intensité sonore. pp (pianissimo) → p → mp → mf → f → ff (fortissimo). Crescendo, diminuendo. Sforzando (accent soudain). La dynamique est l'un des outils les plus puissants et les plus sous-utilisés en arrangement pop/rock.",
+      "instrumentation_pratique": "Écrire pour les tessitures réelles des instruments. Éviter l'extrême aigu prolongé (fatigue). Respecter les limites de souffle (vents). Laisser de l'espace entre les couches (éviter masquage fréquentiel). Doubler les mélodies à l'octave pour la puissance. Contrastes de texture : tutti vs solo, legato vs staccato."
+    },
+    "musique_film_media": {
+      "composition_film": "La musique de film soutient le récit émotionnel sans le dominer. Techniques : leitmotiv (thème associé à un personnage/concept — Wagner, Williams), mickeymousing (synchroniser musique et action — dessins animés), scoring contre l'image (jouer contre l'émotion apparente pour créer malaise). Spotting session : le compositeur et le réalisateur décident où placer la musique.",
+      "sound_design_cinema": "Création de l'univers sonore du film. Ambiances (backgrounds), effets spéciaux (créatures, vaisseaux), design UI (sons d'interface dans sci-fi). Ben Burtt (Star Wars : sabre laser = TV + fil tendu, R2-D2 = voix synthétique). Le son représente 50% de l'expérience cinématographique.",
+      "foley": "Art de recréer les bruits quotidiens en studio de post-production. Pas sur différentes surfaces, manipulation d'objets, vêtements, impacts. Enregistré en synchronisation avec l'image. Le nom vient de Jack Foley (Universal Studios). Essentiel car les sons directs du tournage sont souvent inutilisables ou inexistants.",
+      "compositeurs_majeurs": {
+        "john_williams": "Star Wars, Indiana Jones, Harry Potter, Jurassic Park, Schindler's List. Style néo-romantique orchestral, thèmes mémorables, leitmotivs puissants. Le compositeur de film le plus reconnu au monde.",
+        "hans_zimmer": "Inception, Interstellar, The Dark Knight, Gladiator, Dune. Fusion orchestre et électronique, textures massives, sons signature (BRAAAM d'Inception). A révolutionné la production musicale de film avec Remote Control Productions.",
+        "ennio_morricone": "Le Bon, la Brute et le Truand, Il était une fois dans l'Ouest, Cinema Paradiso, Mission. Mélodies inoubliables, utilisation non conventionnelle d'instruments (sifflement, guimbarde, chœurs). Plus de 500 films.",
+        "autres_incontournables": "Bernard Herrmann (Hitchcock : Psycho), Nino Rota (Le Parrain), Howard Shore (Le Seigneur des Anneaux), Joe Hisaishi (Miyazaki), Alexandre Desplat (The Grand Budapest Hotel), Hildur Guðnadóttir (Joker, Tchernobyl)."
+      },
+      "library_music": "Musique pré-composée sous licence pour TV, publicités, podcasts, vidéos corporate. Catalogues : Epidemic Sound, Artlist, AudioJungle, PremiumBeat. Revenus passifs pour compositeurs. Organisée par mood, genre, instrumentation. Alternative économique à la commande sur mesure.",
+      "jingles_identite_sonore": "Signature musicale courte associée à une marque. Intel (5 notes), Netflix (ta-dum), McDonald's (I'm lovin' it). Identité sonore (audio branding) = cohérence sur tous les points de contact. Créer un jingle mémorable : simplicité, caractère distinctif, adaptabilité multi-format."
     },
     "production_musicale": {
       "daw": {
-        "ableton_live": "Standard DJs et loop-based. Excellent pour électronique, performance live.",
-        "logic_pro": "Mac seulement. Rich en instruments/plugins natifs. Pop, film, polyvalent.",
-        "fl_studio": "Favori trap/hip-hop. Step sequencer intuitif. Portable entre OS.",
-        "reaper": "Open source quasi-gratuit. Léger, flexible. Appris par pros budgétaires."
+        "ableton_live": "Standard DJs et loop-based. Deux vues : Session (jams, performance live) et Arrangement (composition linéaire). Excellent pour électronique, performance live. Max for Live étend ses capacités infiniment.",
+        "logic_pro": "Mac seulement. Riche en instruments/plugins natifs (Alchemy, Drummer, Space Designer). Pop, film, polyvalent. Rapport qualité/prix imbattable pour l'écosystème Apple.",
+        "fl_studio": "Favori trap/hip-hop. Step sequencer intuitif. Pattern-based workflow unique. Portable entre OS. Mises à jour gratuites à vie. Piano roll considéré comme le meilleur de l'industrie.",
+        "pro_tools": "Standard industrie pour l'enregistrement et le mixage pro. Studios professionnels, post-production cinéma. Workflow non-destructif avancé, HDX (hardware dédié) pour zéro latence.",
+        "reaper": "Quasi-gratuit (licence $60). Léger, extrêmement flexible et scriptable. Communauté active. Personnalisable à l'infini. Choix de pros budgétaires et de power users.",
+        "studio_one": "PreSonus. Interface intuitive, drag-and-drop avancé. Page de mastering intégrée. Montée en popularité rapide."
       },
       "mixage": {
-        "eq": "Sculpter les fréquences. High-pass filtre boue grave. Cuts précis > boosts larges. 'Si ça coupe bien, ça mixe bien'.",
-        "compression": "Contrôle dynamiques. Attack/Release/Ratio/Threshold. Parallel compression pour punch.",
-        "reverb_delay": "Espace et profondeur. Reverb = taille de la salle. Delay = répétition rythmique. Automation clé.",
-        "stereo": "Mono pour basses/kick (compatibilité mono). Mid-Side processing pour largeur contrôlée."
+        "eq": "Sculpter les fréquences. High-pass filtre la boue grave (cut sous 80-100 Hz sur tout sauf basse/kick). Cuts précis (Q étroit) > boosts larges (Q large). Soustractif d'abord : enlever ce qui gêne avant d'ajouter ce qui manque. EQ dynamique = compression fréquentielle.",
+        "compression": "Contrôle des dynamiques. Attack rapide = contrôle transitoires. Attack lente = laisse passer le punch. Parallel compression (New York compression) : mélanger signal sec + signal très compressé pour punch sans écraser. Sidechain EQ pour compresser sélectivement certaines fréquences.",
+        "reverb_delay": "Espace et profondeur. Reverb = simulation d'espace (room, hall, plate, spring). Delay = répétition rythmique (slap, ping-pong, dotted eighth pour U2). Pre-delay sépare le son direct de la réverb. Automation pour créer mouvement et contraste.",
+        "stereo": "Mono pour basses/kick (compatibilité mono, énergie centrée). Mid-Side processing : traiter centre et côtés séparément. Panning LCR (Left-Center-Right) pour clarté. Haas effect = micro-delay pour élargir. Vérifier systématiquement en mono.",
+        "gain_staging": "Maintenir des niveaux optimaux à chaque étape du signal. Viser -18 dBFS sur chaque piste (headroom analogique). Éviter le clipping numérique. Bonne structure de gain = mixage plus facile et plus propre.",
+        "bus_routing": "Grouper les pistes par catégorie (drums bus, vocals bus, guitars bus). Traitement collectif : compression de bus (glue compressor), EQ global du groupe. Facilite le mixage et le contrôle des balances."
       },
-      "mastering": "Uniformisation loudness (LUFS: -14 streaming, -9 club), dernier EQ global, limiting, dithering pour export."
+      "mastering": {
+        "objectif": "Uniformiser le son final, assurer la compatibilité sur tous les systèmes d'écoute (casque, voiture, téléphone, club). Dernier contrôle qualité avant distribution.",
+        "loudness": "LUFS (Loudness Units Full Scale) : -14 LUFS pour streaming (Spotify, Apple Music), -9 LUFS pour club/DJ. Loudness war = course au volume au détriment de la dynamique. Normalization automatique sur les plateformes rend le mastering excessif contre-productif.",
+        "chaine": "EQ correctif → compression douce (2-3 dB max) → saturation subtile (harmoniques, chaleur) → stereo enhancement → limiting (plafond à -1 dBTP pour le true peak) → dithering (16 bits pour CD/streaming, 24 bits pour archives).",
+        "stem_mastering": "Mastering à partir de groupes (stems) plutôt que du mix stéréo final. Plus de contrôle : ajuster batterie, voix, instruments séparément. Plus coûteux mais résultats supérieurs."
+      },
+      "enregistrement": {
+        "microphones": "Dynamique (SM57/SM58 : robuste, polyvalent). Condensateur (large diaphragme : voix, overhead ; petit diaphragme : instruments acoustiques, précision). Ruban : chaleur vintage, fragile. Diagrammes polaires : cardioïde (avant), omnidirectionnel (tout), figure-8 (avant-arrière).",
+        "techniques_stereo": "XY (coïncident : bon mono, image étroite), AB (espacé : large, problèmes de phase possibles), ORTF (compromis réaliste), Mid-Side (mono compatible, largeur variable en post), Blumlein (deux rubans en figure-8, réalisme spatial).",
+        "traitement_acoustique_studio": "Panneaux absorbants aux points de première réflexion. Bass traps dans les coins. Diffuseurs sur le mur arrière. Position d'écoute = triangle équilatéral avec les moniteurs. Éviter la symétrie parfaite (modes de salle)."
+      }
     },
     "apprentissage_instrument": {
-      "methode": "20 minutes/jour > 2h par semaine. Pratique délibérée (inconfort ciblé) > répétition confortable.",
-      "piano": "Idéal pour comprendre harmonie visuellement. Clavier = carte de la théorie. Débutant : 88 touches recommandées.",
-      "guitare": "Accords ouverts → barré → pentatonique. 3 mois pour jouer chansons simples. Callosités nécessaires.",
-      "chant": "La voix est un muscle. Échauffement (lip trills), soutien diaphragmatique, placement resonance. Coaching = accélérateur."
+      "methode": {
+        "pratique_deliberee": "20 minutes/jour > 2h par semaine. Pratique délibérée (inconfort ciblé) > répétition confortable. Travailler lentement ce qui est difficile, puis accélérer progressivement. Métronome obligatoire pour le rythme.",
+        "plateau_apprentissage": "Progrès rapide initial → plateau → nouveau progrès. Le plateau est normal, pas un échec. Solutions : varier le répertoire, prendre un cours, jouer avec d'autres, enregistrer et réécouter.",
+        "memorisation": "Mémoire musculaire (répétition), mémoire auditive (chanter avant de jouer), mémoire visuelle (carte mentale du clavier/manche), mémoire analytique (structure harmonique). Utiliser les quatre pour solidifier."
+      },
+      "piano": "Idéal pour comprendre l'harmonie visuellement. Clavier = carte linéaire de la théorie. 88 touches recommandées pour débutant sérieux. Toucher lesté (weighted keys) essentiel pour développer la technique. Commencer par : position des mains, gammes majeures, accords de base, morceaux simples. Méthodes : Hanon (technique), Czerny (études), Bartók Mikrokosmos (progressif et musical).",
+      "guitare": "Accords ouverts → barrés → pentatonique → modes. 3 mois pour jouer des chansons simples. Callosités nécessaires (2-4 semaines). Tablatures pour débuter, puis notation standard. Techniques essentielles : alternate picking, hammer-on/pull-off, bend, vibrato, slide. Guitare classique (nylon, doigts) vs acoustique (acier, médiator) vs électrique (ampli, effets).",
+      "chant": "La voix est un instrument musculaire. Échauffement quotidien : lip trills, sirènes, gammes douces. Soutien diaphragmatique = fondation. Placement de la résonance : poitrine (grave, puissant), mixte (médium, équilibré), tête (aigu, léger). Coaching vocal = accélérateur indispensable. Hydratation, repos vocal, éviter forçage. Technique de belting pour pop/rock.",
+      "batterie": "Coordonner quatre membres indépendamment. Rudiments fondamentaux : frisé (RLRL), roulé (RRLL), paradiddle (RLRR LRLL). Commencer avec grooves simples (rock beat) puis ajouter ghost notes, fills, syncopes. Le clic (métronome) est le meilleur ami du batteur. Écouter activement les grands batteurs : Bonham, Porcaro, Gadd, Questlove.",
+      "basse": "Fondation rythmique et harmonique. Rôle : connecter la batterie (rythme) et l'harmonie (accords). Techniques : doigts (fingerstyle), médiator (pick), slap (funk). Connaître les notes du manche, les gammes et les arpèges. Jouer avec la batterie est essentiel. Groove > virtuosité."
     },
     "psychologie_musique": {
-      "emotion": "Frissons musicaux (chills) = libération dopamine. Tension + surprise = plaisir émotionnel.",
-      "cognition": "Mozart effect = mythe. MAIS apprentissage musical améliore mémoire, mathématiques, langage à long terme.",
-      "therapeutique": "Musicothérapie validée : douleur chronique, anxiété, Alzheimer (mémoire musicale préservée en dernier).",
-      "productivite": "Musique sans paroles favorise concentration. BPM 60-70 = onde alpha. Musique préférée = motivation."
+      "emotion": {
+        "frissons": "Frissons musicaux (chills) = libération dopamine dans le noyau accumbens. Provoqués par tension + surprise : résolution inattendue, entrée d'un instrument, crescendo culminant, modulation soudaine.",
+        "valence_energie": "Deux axes émotionnels : valence (positif/négatif) et énergie (excitation/calme). Majeur + tempo rapide = joie. Mineur + tempo lent = tristesse. Mineur + tempo rapide = urgence, tension. Majeur + tempo lent = nostalgie, sérénité.",
+        "memoire_emotionnelle": "La musique est un puissant déclencheur de souvenirs autobiographiques. Une chanson peut instantanément reconnecter à un moment précis du passé. Utilisé en thérapie Alzheimer : la mémoire musicale est parmi les dernières à disparaître."
+      },
+      "cognition": {
+        "mozart_effect": "Mozart effect = mythe médiatique. L'étude originale (Rauscher, 1993) montrait un effet temporaire et limité sur le raisonnement spatial, non une augmentation du QI. MAIS l'apprentissage musical actif améliore mémoire, attention, mathématiques et langage à long terme (études longitudinales).",
+        "plasticite_cerebrale": "Le cerveau des musiciens montre des différences structurelles : corps calleux plus épais, cortex auditif élargi, représentation motrice accrue des doigts. La pratique musicale est l'une des activités les plus complètes pour le cerveau.",
+        "langage_musique": "Traitement syntaxique partagé entre musique et langage (aire de Broca). Enfants musiciens : meilleure discrimination phonétique, lecture précoce, apprentissage facilité des langues étrangères."
+      },
+      "therapeutique": "Musicothérapie validée scientifiquement : réduction de la douleur chronique (détournement attentionnel), anxiété pré-opératoire (réduite de 20-30%), rééducation post-AVC (thérapie par intonation mélodique permet de retrouver la parole), autisme (amélioration communication sociale), dépression (réduction significative des symptômes).",
+      "productivite": "Musique sans paroles favorise la concentration pour le travail cognitif. BPM 60-70 = onde alpha (relaxation focalisée). Musique familière = moins de distraction que la nouvelle musique. Bruit ambiant modéré (~70 dB, style café) stimule la créativité. Le silence reste optimal pour les tâches de haute complexité."
     },
     "business_musical": {
-      "droits": "SACEM (France) — droits d'auteur composition (50%) + interprétation (50%). Déclaration obligatoire.",
-      "streaming": "$0.003-0.005/écoute. 500K streams = ~1500$. Spotify nécessite DistroKid/TuneCore pour distribution.",
-      "sync": "Placement musique TV/film/pub = revenus > streaming souvent. Librairies : Musicbed, Artlist, Artgrid.",
-      "live": "Concerts = revenue principal artistes post-streaming. Bookings, management, merch."
+      "droits": {
+        "droit_auteur": "SACEM (France), GEMA (Allemagne), ASCAP/BMI (USA). Droits d'auteur = composition (mélodie + paroles). Droits voisins = interprétation + production phonographique. Durée : 70 ans après la mort de l'auteur en Europe.",
+        "splits": "Répartition des droits entre co-auteurs. À négocier AVANT la création. Standard pop : parts égales entre tous les contributeurs (mélodie, paroles, production). Tout mettre par écrit. Split sheets obligatoires.",
+        "publishing": "Édition musicale : gestion et exploitation des droits d'auteur. L'éditeur prend 20-50% en échange de la promotion et du placement. Auto-édition possible via TuneCore Publishing, Songtrust."
+      },
+      "streaming": {
+        "revenus": "Paiement moyen par stream : Spotify ~$0.003-0.005, Apple Music ~$0.007-0.01, Tidal ~$0.01-0.013, YouTube Music ~$0.002. 500K streams Spotify ≈ $1500-2500. Le streaming favorise le catalogue (revenus récurrents sur le long terme).",
+        "distribution": "Distributeurs numériques : DistroKid ($22.99/an, illimité), TuneCore (par album), CD Baby (one-time fee), LANDR, Amuse. Placent la musique sur 150+ plateformes. Conservent 0-15% selon le service.",
+        "algorithmes": "Playlists éditoriales (Spotify : New Music Friday) vs algorithmiques (Discover Weekly, Release Radar). Optimisation : sortir le vendredi, artwork accrocheur, pre-save campaigns, premier mois critique pour l'algorithme."
+      },
+      "sync": "Placement de musique dans TV, film, publicité, jeux vidéo = revenus souvent supérieurs au streaming. Frais de synchronisation ($500-$500K+ selon l'utilisation) + royalties de diffusion. Librairies : Musicbed, Artlist, Artgrid, Marmoset. Superviseurs musicaux = gatekeepers. Musique instrumentale et sans paroles = plus facile à placer.",
+      "live": {
+        "concerts": "Revenus principaux des artistes post-streaming. Billetterie, merchandising (30-50% de marge), VIP experiences. Bookings via agent (10-15% commission). Rider technique = exigences scéniques.",
+        "tournee": "Logistique : transport, hébergement, techniciens, backline. Break-even souvent difficile pour artistes émergents. Festivals = visibilité + cachet garanti. Tournées de rodage dans les petites salles avant les grandes.",
+        "merchandising": "T-shirts, vinyles, posters = revenus directs sans intermédiaire. Vente en ligne (Bandcamp, Shopify) + stands aux concerts. Le merch crée aussi du marketing gratuit (fans portent le logo)."
+      },
+      "carriere_independante": "DIY (Do It Yourself) : artiste gère tout (création, distribution, marketing, booking). Réseaux sociaux essentiels : TikTok (découverte virale), Instagram (communauté), YouTube (contenu long). Newsletter et fanbase directe (Patreon, Bandcamp) = indépendance face aux plateformes. Budget marketing minimal peut suffire avec une stratégie organique cohérente."
     }
   }
 }
