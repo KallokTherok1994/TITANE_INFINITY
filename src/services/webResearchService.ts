@@ -6,20 +6,57 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ — WEB RESEARCH SERVICE (Ring 3 — UI bridge)
- *   P1.0 EXPERIMENTAL — Tauri-only, zéro réseau UI
+ *   One Door: UI → IPC → Rust → SearXNG → return
  * ═══════════════════════════════════════════════════════════════════
  *
  * INVARIANT: aucun fetch/HTTP ici. Tout passe par invoke Tauri.
  */
 
+import { safeInvokeCanonical } from '@/utils/invoke';
+import type { IpcErrorPayload } from '@/utils/invoke';
 import { tauri } from '@/api/tauriClient';
 import type { ResearchOptions, ResearchQuery, ResearchReport } from '@/types/research';
 
+export interface WebSearchResult {
+  title: string;
+  url: string;
+  snippet: string;
+}
+
+export interface WebSearchResponse {
+  ok: boolean;
+  content: WebSearchResult[] | null;
+  error: IpcErrorPayload | null;
+}
+
 /**
- * Invoke the `web_research` Tauri command (P1 stub).
+ * Perform a web search via the Tauri `web_search` command.
+ *
+ * One Door governance: search goes through IPC → Rust → SearXNG.
+ * No direct network access from the UI.
+ *
+ * The search API endpoint is configurable via `TITANE_SEARCH_API_URL`
+ * environment variable in the Rust backend (default: SearXNG at http://127.0.0.1:8888/search).
+ */
+export async function webSearch(
+  query: string,
+  maxResults?: number
+): Promise<WebSearchResponse> {
+  const response = await safeInvokeCanonical<WebSearchResult[]>('web_search', {
+    query,
+    max_results: maxResults,
+  });
+  return {
+    ok: response.ok,
+    content: response.content ?? null,
+    error: response.error,
+  };
+}
+
+/**
+ * Invoke the `web_research` Tauri command (full research pipeline).
  *
  * Returns a `ResearchReport` with full trace and markers.
- * WEB_LIVE mode returns BLOCKED (network not activated in P1).
  */
 export async function webResearch(
   query: ResearchQuery,
@@ -27,3 +64,4 @@ export async function webResearch(
 ): Promise<ResearchReport> {
   return tauri<ResearchReport>('web_research', { query, options });
 }
+
