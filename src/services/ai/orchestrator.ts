@@ -803,7 +803,7 @@ class AIOrchestrator {
         stats.reliability < 80
       ) {
         // Logarithmic recovery: fast initial boost, plateau at ~20
-        // ln(1 + idleSeconds/10) * 5 → at 30s: ~8, 60s: ~12, 120s: ~16, 300s: ~20
+        // ln(1 + idleSeconds/10) * 5 → at 20s: ~5.5, 50s: ~9, 110s: ~12, 290s: ~17
         const idleSeconds = (timeSinceLastUsed - 10000) / 1000;
         const recoveryBoost = Math.min(20, Math.log(1 + idleSeconds / 10) * 5);
         // Reliability-scaled: lower reliability → stronger recovery push
