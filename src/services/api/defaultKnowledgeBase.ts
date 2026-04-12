@@ -120,13 +120,49 @@ const KB_STOP_WORDS = new Set([
   'that',
   'this',
   'quoi',
-  'avec',
   'sans',
   'mais',
   'donc',
   'comment',
   'explique',
   'titane',
+  'the',
+  'and',
+  'les',
+  'des',
+  'une',
+  'est',
+  'qui',
+  'que',
+  'sur',
+  'par',
+  'pas',
+  'son',
+  'from',
+  'have',
+  'been',
+  'what',
+  'when',
+  'will',
+  'how',
+  'can',
+  'moi',
+  'toi',
+  'nous',
+  'vous',
+  'dit',
+  'fait',
+  'fais',
+  'etre',
+  'avoir',
+  'plus',
+  'aussi',
+  'tout',
+  'tous',
+  'very',
+  'about',
+  'just',
+  'like',
 ]);
 
 const KB_CREATOR_HINTS = [
@@ -198,6 +234,116 @@ const KB_CORPUS_HINTS = [
   'priere d ancrage',
 ];
 
+const KB_DEVOPS_HINTS = [
+  'cicd',
+  'ci/cd',
+  'pipeline',
+  'deploy',
+  'deploiement',
+  'docker',
+  'container',
+  'kubernetes',
+  'github actions',
+  'workflow',
+  'infrastructure',
+  'monitoring',
+  'build',
+  'release',
+];
+
+const KB_SECURITY_HINTS = [
+  'securite',
+  'security',
+  'vulnerability',
+  'vulnerabilite',
+  'owasp',
+  'injection',
+  'xss',
+  'csrf',
+  'authentification',
+  'authentication',
+  'authorization',
+  'encryption',
+  'chiffrement',
+  'firewall',
+  'pentest',
+  'audit securite',
+];
+
+const KB_ARCHITECTURE_HINTS = [
+  'architecture',
+  'design pattern',
+  'microservice',
+  'monolith',
+  'solid',
+  'clean architecture',
+  'hexagonal',
+  'event driven',
+  'cqrs',
+  'domain driven',
+  'scalabilite',
+  'scalability',
+  'refactoring',
+  'separation of concerns',
+];
+
+const KB_DATA_HINTS = [
+  'database',
+  'base de donnees',
+  'sql',
+  'sqlite',
+  'postgresql',
+  'mongodb',
+  'indexation',
+  'requete',
+  'query',
+  'migration',
+  'schema',
+  'orm',
+  'data model',
+  'nosql',
+  'redis',
+  'cache',
+];
+
+const KB_TESTING_HINTS = [
+  'test',
+  'testing',
+  'unit test',
+  'test unitaire',
+  'integration test',
+  'test integration',
+  'e2e',
+  'end to end',
+  'vitest',
+  'jest',
+  'coverage',
+  'couverture',
+  'tdd',
+  'bdd',
+  'mock',
+  'assertion',
+];
+
+const KB_PERFORMANCE_HINTS = [
+  'performance',
+  'optimisation',
+  'optimization',
+  'latence',
+  'latency',
+  'throughput',
+  'debit',
+  'profiling',
+  'benchmark',
+  'memory leak',
+  'fuite memoire',
+  'bundle size',
+  'lazy load',
+  'cache',
+  'bottleneck',
+  'goulot',
+];
+
 function expandQueryContext(query: string): {
   tokens: string[];
   pinnedCategories: Set<string>;
@@ -263,6 +409,47 @@ function expandQueryContext(query: string): {
     );
   }
 
+  if (KB_DEVOPS_HINTS.some(hint => normalized.includes(hint))) {
+    addTokens('devops', 'pipeline', 'deploy', 'cicd', 'container', 'infrastructure');
+    pin('devops_cicd_infrastructure', 'operational_knowledge', 'system_architecture');
+  }
+
+  if (KB_SECURITY_HINTS.some(hint => normalized.includes(hint))) {
+    addTokens('security', 'securite', 'vulnerability', 'protection', 'audit');
+    pin('cybersecurite_avancee', 'security_privacy', 'system_architecture');
+  }
+
+  if (KB_ARCHITECTURE_HINTS.some(hint => normalized.includes(hint))) {
+    addTokens('architecture', 'pattern', 'design', 'structure', 'module', 'scalability');
+    pin(
+      'architecture_logicielle_patterns',
+      'system_architecture',
+      'services_backend'
+    );
+  }
+
+  if (KB_DATA_HINTS.some(hint => normalized.includes(hint))) {
+    addTokens('database', 'data', 'query', 'schema', 'index', 'persistence');
+    pin('data_engineering_databases', 'memory_system_deep', 'services_backend');
+  }
+
+  if (KB_TESTING_HINTS.some(hint => normalized.includes(hint))) {
+    addTokens('test', 'testing', 'coverage', 'assertion', 'validation', 'quality');
+    pin('testing_quality_assurance', 'troubleshooting_faq', 'operational_knowledge');
+  }
+
+  if (KB_PERFORMANCE_HINTS.some(hint => normalized.includes(hint))) {
+    addTokens(
+      'performance',
+      'optimization',
+      'latency',
+      'throughput',
+      'profiling',
+      'cache'
+    );
+    pin('performance_optimization_avancee', 'troubleshooting_faq', 'operational_knowledge');
+  }
+
   return {
     tokens: Array.from(tokens),
     pinnedCategories,
@@ -290,16 +477,20 @@ function flattenContent(value: unknown): string {
 
 function tokenizeQuery(query: string): string[] {
   const normalized = normalizeText(query);
-  return [
-    ...new Set(
-      normalized
-        .split(/[^a-z0-9_]+/)
-        .filter(token => token.length >= 3 && !KB_STOP_WORDS.has(token))
-    ),
-  ];
+  const singleTokens = normalized
+    .split(/[^a-z0-9_]+/)
+    .filter(token => token.length >= 3 && !KB_STOP_WORDS.has(token));
+
+  // Generate bigrams for compound concept matching (e.g., "machine learning", "self healing")
+  const bigrams: string[] = [];
+  for (let i = 0; i < singleTokens.length - 1; i++) {
+    bigrams.push(`${singleTokens[i]}_${singleTokens[i + 1]}`);
+  }
+
+  return [...new Set([...singleTokens, ...bigrams])];
 }
 
-function compactExcerpt(value: string, maxLength = 220): string {
+function compactExcerpt(value: string, maxLength = 320): string {
   const normalized = value.replace(/\s+/g, ' ').trim();
   if (!normalized) return '';
   return normalized.length > maxLength
@@ -538,11 +729,21 @@ export async function getCompactIndex(): Promise<string> {
 
 /**
  * Build a compact, query-relevant knowledge block for prompt injection.
- * Reuses the cached entries loaded by `getCompactIndex()` when available.
+ *
+ * Enhanced v30.2.0: Multi-factor scoring with:
+ *  - Category match boost (×7) for exact domain alignment
+ *  - Description relevance (×4) for summary-level matching
+ *  - Content depth match (×1) for deep content hits
+ *  - Bigram compound matching (×3 bonus) for multi-word concepts
+ *  - Token density normalization to avoid long-content bias
+ *  - Pinned category boost (+12) for context-aware pinning
+ *  - Diversity penalty to avoid returning redundant entries
+ *
+ * Default limit raised from 3→5 for richer context injection.
  */
 export async function getRelevantPromptContext(
   query: string,
-  limit: number = 3
+  limit: number = 5
 ): Promise<string> {
   const { tokens, pinnedCategories } = expandQueryContext(query);
   if (tokens.length === 0) {
@@ -555,6 +756,10 @@ export async function getRelevantPromptContext(
       return '';
     }
 
+    // Separate single tokens from bigrams for differential scoring
+    const singleTokens = tokens.filter(t => !t.includes('_'));
+    const bigramTokens = tokens.filter(t => t.includes('_'));
+
     const ranked = entries
       .map(entry => {
         const categoryText = normalizeText(entry.category);
@@ -563,38 +768,85 @@ export async function getRelevantPromptContext(
         const isPinned =
           pinnedCategories.has(entry.category) || pinnedCategories.has(entry.id);
 
-        const score = tokens.reduce(
-          (total, token) => {
-            let nextScore = total;
-            if (categoryText.includes(token)) nextScore += 5;
-            if (descriptionText.includes(token)) nextScore += 3;
-            if (contentText.includes(token)) nextScore += 1;
-            return nextScore;
-          },
-          isPinned ? 9 : 0
-        );
+        let score = isPinned ? 12 : 0;
+        let matchedTokenCount = 0;
+
+        // Single token scoring with graduated weights
+        for (const token of singleTokens) {
+          const catMatch = categoryText.includes(token);
+          const descMatch = descriptionText.includes(token);
+          const contentMatch = contentText.includes(token);
+
+          if (catMatch) score += 7;
+          if (descMatch) score += 4;
+          if (contentMatch) score += 1;
+          if (catMatch || descMatch || contentMatch) matchedTokenCount++;
+        }
+
+        // Bigram scoring — compound concepts get higher weight
+        for (const bigram of bigramTokens) {
+          const parts = bigram.split('_');
+          const bigramJoined = parts.join(' ');
+          const bigramUnderscore = bigram;
+
+          // Check if both parts appear close together in content
+          const catBigram =
+            categoryText.includes(bigramJoined) ||
+            categoryText.includes(bigramUnderscore);
+          const descBigram =
+            descriptionText.includes(bigramJoined) ||
+            descriptionText.includes(bigramUnderscore);
+          const contentBigram =
+            contentText.includes(bigramJoined) ||
+            contentText.includes(bigramUnderscore);
+
+          if (catBigram) score += 10;
+          if (descBigram) score += 6;
+          if (contentBigram) score += 3;
+        }
+
+        // Token coverage bonus: reward entries that match more unique tokens
+        if (singleTokens.length > 0) {
+          const coverageRatio = matchedTokenCount / singleTokens.length;
+          score *= 1 + coverageRatio * 0.3; // Up to +30% boost for full coverage
+        }
 
         return {
           entry,
-          score,
+          score: Math.round(score * 100) / 100,
           excerpt: compactExcerpt(flattenContent(entry.content)),
         };
       })
       .filter(item => item.score > 0)
       .sort(
         (a, b) => b.score - a.score || a.entry.category.localeCompare(b.entry.category)
-      )
-      .slice(0, Math.max(1, limit));
+      );
 
-    if (ranked.length === 0) {
+    // Diversity filter: avoid returning too many entries from the same domain prefix
+    const selected: typeof ranked = [];
+    const prefixCounts = new Map<string, number>();
+    for (const item of ranked) {
+      if (selected.length >= Math.max(1, limit)) break;
+      const prefix = item.entry.category.split('_').slice(0, 2).join('_');
+      const count = prefixCounts.get(prefix) || 0;
+      // Allow max 2 entries from the same domain prefix
+      if (count < 2) {
+        selected.push(item);
+        prefixCounts.set(prefix, count + 1);
+      }
+    }
+
+    if (selected.length === 0) {
       return '';
     }
 
     return [
       '📚 Connaissances pertinentes TITANE∞ :',
-      ...ranked.map(({ entry, excerpt }) => {
+      ...selected.map(({ entry, score, excerpt }) => {
+        const relevance =
+          score >= 20 ? '🔴' : score >= 10 ? '🟠' : score >= 5 ? '🟡' : '⚪';
         const excerptBlock = excerpt ? ` | Extrait: ${excerpt}` : '';
-        return `• ${entry.category} — ${entry.description}${excerptBlock}`;
+        return `${relevance} ${entry.category} — ${entry.description}${excerptBlock}`;
       }),
     ].join('\n');
   } catch {

@@ -1,0 +1,166 @@
+{
+  "version": "v30.2.0",
+  "category": "performance_optimization_avancee",
+  "description": "Optimisation des performances: profiling, mémoire, réseau, rendering, algorithmes, Rust et TypeScript",
+  "profiling_et_diagnostic": {
+    "principes": {
+      "mesurer_avant_optimiser": "Ne jamais optimiser sans données de profiling — les intuitions sont souvent fausses",
+      "loi_amdahl": "L'accélération globale est limitée par la partie non-optimisée du code",
+      "regle_90_10": "90% du temps d'exécution est passé dans 10% du code",
+      "premature_optimization": "L'optimisation prématurée est la racine de tous les maux (Knuth) — optimiser après profiling"
+    },
+    "outils_profiling": {
+      "chrome_devtools": {
+        "performance_tab": "Enregistrer et analyser les flame charts pour identifier les fonctions lentes",
+        "memory_tab": "Heap snapshots pour détecter les fuites mémoire, allocation timeline",
+        "network_tab": "Waterfall des requêtes, compression, caching headers",
+        "lighthouse": "Audit automatisé: performance, accessibilité, SEO, best practices"
+      },
+      "rust_profiling": {
+        "cargo_flamegraph": "Générer des flame graphs pour identifier les hot paths Rust",
+        "perf_linux": "perf record + perf report pour profiling bas-niveau (Linux)",
+        "valgrind": "Détection de fuites mémoire et accès mémoire invalides (cachegrind, massif)",
+        "criterion": "Benchmarking statistique avec détection de régressions"
+      },
+      "typescript_profiling": {
+        "node_inspect": "node --inspect pour debugger/profiler avec Chrome DevTools",
+        "clinic_js": "Diagnostic automatisé: doctor (CPU), bubbleprof (async), flame (profiling)"
+      }
+    }
+  },
+  "optimisation_frontend": {
+    "rendering": {
+      "virtual_dom_optimisation": {
+        "react_memo": "Éviter les re-renders inutiles avec React.memo() pour composants purs",
+        "useMemo_useCallback": "Mémoriser les valeurs calculées et les callbacks pour stabiliser les props",
+        "key_strategy": "Utiliser des clés stables et uniques (jamais index dans les listes dynamiques)",
+        "state_colocation": "Placer le state au plus près du composant qui l'utilise"
+      },
+      "layout_paint": {
+        "avoid_layout_thrashing": "Ne pas lire et écrire le DOM en alternance (batch reads, then batch writes)",
+        "will_change": "Informer le navigateur des animations à venir: will-change: transform",
+        "composite_layers": "Préférer transform/opacity pour les animations (GPU-accélérées)",
+        "content_visibility": "content-visibility: auto pour le contenu hors-viewport (lazy rendering)"
+      },
+      "fps_target": "60fps = 16.67ms par frame. Budget: 10ms pour JavaScript, 6ms pour layout/paint"
+    },
+    "bundle_optimization": {
+      "code_splitting": {
+        "route_based": "Un chunk par route (React.lazy + Suspense)",
+        "component_based": "Lazy-load des composants lourds (éditeurs, graphiques, modals)",
+        "dynamic_import": "import() pour charger du code à la demande"
+      },
+      "tree_shaking": {
+        "description": "Éliminer le code mort non-utilisé (unused exports)",
+        "prerequis": "Utiliser ES modules (import/export), pas CommonJS (require/module.exports)",
+        "verification": "Analyser le bundle avec webpack-bundle-analyzer ou vite-bundle-visualizer"
+      },
+      "asset_optimization": {
+        "images": "WebP/AVIF pour photos, SVG pour icônes, lazy-loading avec loading='lazy'",
+        "fonts": "Font-display: swap, subset fonts (latin uniquement si pas de CJK), woff2",
+        "compression": "Brotli (br) en priorité, gzip en fallback"
+      },
+      "cibles": {
+        "initial_bundle": "<200KB gzipped pour le premier chargement",
+        "largest_chunk": "<50KB gzipped par chunk individuel",
+        "lcp": "Largest Contentful Paint < 2.5s",
+        "fid": "First Input Delay < 100ms",
+        "cls": "Cumulative Layout Shift < 0.1"
+      }
+    },
+    "network": {
+      "http2_multiplexing": "Plusieurs requêtes sur une seule connexion TCP",
+      "preload_prefetch": "rel=preload pour ressources critiques, rel=prefetch pour navigation anticipée",
+      "service_worker": "Cache offline, background sync, push notifications",
+      "api_optimization": {
+        "batching": "Combiner plusieurs requêtes API en une seule (GraphQL, batch endpoints)",
+        "pagination": "Cursor-based pagination pour les grandes listes",
+        "compression": "Compresser les payloads JSON avec gzip/brotli",
+        "conditional_requests": "ETag/If-Modified-Since pour éviter les transferts inutiles"
+      }
+    }
+  },
+  "optimisation_backend_rust": {
+    "memoire": {
+      "ownership_patterns": {
+        "borrowing": "Préférer &T et &mut T aux clones — zéro-copie quand possible",
+        "cow": "Clone-on-Write (Cow<'_, str>) pour éviter les clones dans les cas read-only",
+        "arc_mutex": "Arc<Mutex<T>> pour partage entre threads — préférer RwLock si plus de lectures",
+        "string_interning": "Réutiliser les chaînes fréquentes au lieu de les dupliquer"
+      },
+      "allocation": {
+        "stack_vs_heap": "Préférer la stack (types sized) au heap (Box, Vec) pour les petites données",
+        "pre_allocation": "Vec::with_capacity(n) pour éviter les réallocations",
+        "arena_allocator": "Bumpalo pour allocations groupées libérées en une fois",
+        "small_string": "SmallString/SmallVec pour les petites données (évite le heap)"
+      }
+    },
+    "concurrence": {
+      "tokio_runtime": {
+        "description": "Runtime async utilisé par Tauri pour les opérations non-bloquantes",
+        "bonnes_pratiques": [
+          "Ne jamais bloquer un thread async (pas de std::thread::sleep dans async)",
+          "Utiliser tokio::spawn pour les tâches concurrentes",
+          "Utiliser tokio::task::spawn_blocking pour les opérations CPU-intensive",
+          "Limiter la taille du thread pool pour éviter la contention"
+        ]
+      },
+      "rayon": {
+        "description": "Parallélisme data-parallel pour les opérations CPU-bound",
+        "usage": "iter.par_iter().map().collect() pour paralléliser les itérations lourdes"
+      },
+      "channels": {
+        "mpsc": "Multiple Producer Single Consumer — communication unidirectionnelle",
+        "crossbeam": "Channels haute-performance avec sélection et timeouts"
+      }
+    },
+    "compilation": {
+      "lto": "Link-Time Optimization (lto = true dans Cargo.toml) — binaires plus petits et plus rapides",
+      "codegen_units": "codegen-units = 1 pour meilleur LTO (compilation plus lente mais binaire optimal)",
+      "strip": "strip = 'symbols' pour réduire la taille du binaire",
+      "target_cpu": "RUSTFLAGS='-C target-cpu=native' pour optimisations spécifiques au CPU",
+      "profile_guided": "PGO (Profile-Guided Optimization) pour les hot paths identifiés par profiling"
+    }
+  },
+  "optimisation_algorithmique": {
+    "complexite": {
+      "O_1": "Temps constant — lookup dans HashMap, accès array par index",
+      "O_log_n": "Logarithmique — recherche binaire, opérations BST",
+      "O_n": "Linéaire — scan de tableau, filtre, map",
+      "O_n_log_n": "Log-linéaire — tri par comparaison (mergesort, quicksort)",
+      "O_n2": "Quadratique — boucles imbriquées, tri par insertion sur grands jeux",
+      "O_2n": "Exponentiel — force brute combinatoire, backtracking naïf"
+    },
+    "optimisations_courantes": {
+      "hashmap_vs_array": "Utiliser HashMap/HashSet pour les lookups fréquents (O(1) vs O(n))",
+      "lazy_evaluation": "Ne calculer que ce qui est nécessaire (iterators Rust, generators JS)",
+      "memoization": "Cacher les résultats de fonctions pures déjà calculées",
+      "binary_search": "Utiliser sur les données triées au lieu de scan linéaire",
+      "batch_processing": "Grouper les opérations I/O (requêtes DB, writes fichier) au lieu de one-by-one",
+      "early_return": "Sortir tôt des fonctions dès que le résultat est connu"
+    },
+    "structures_avancees": {
+      "bloom_filter": "Test d'appartenance probabiliste — rapide, compact, faux positifs possibles",
+      "trie": "Arbre de préfixes — optimal pour autocomplétion et recherche de mots",
+      "lru_cache": "Cache avec éviction du moins récemment utilisé — bounded memory",
+      "skip_list": "Liste chaînée multi-niveaux — recherche O(log n) sans rééquilibrage",
+      "hnsw": "Hierarchical Navigable Small World — recherche de plus proches voisins dans les espaces vectoriels"
+    }
+  },
+  "metriques_performance": {
+    "web_vitals": {
+      "lcp": "Largest Contentful Paint — temps de rendu du plus grand élément visible (<2.5s)",
+      "fid": "First Input Delay — délai entre la première interaction et la réponse (<100ms)",
+      "cls": "Cumulative Layout Shift — instabilité visuelle (<0.1)",
+      "inp": "Interaction to Next Paint — réactivité aux interactions (<200ms)",
+      "ttfb": "Time To First Byte — temps de réponse serveur (<800ms)"
+    },
+    "titane_metriques": {
+      "ipc_latency": "Latence des commandes IPC Tauri — cible <10ms pour les commandes rapides",
+      "ai_response_time": "Temps de génération IA — DIRECT <5s, BALANCED <15s, DEEP <45s",
+      "memory_usage": "Utilisation RAM — cible <500MB en idle, <1GB sous charge",
+      "fps": "Frames per second de l'UI — cible 60fps constant",
+      "boot_time": "Temps de démarrage de l'application — cible <3s sur SSD"
+    }
+  }
+}
