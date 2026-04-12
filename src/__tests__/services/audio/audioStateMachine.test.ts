@@ -7,7 +7,7 @@ describe('services/audio/audioStateMachine', () => {
   });
 
   it('AudioStateMachine: transitions valides + listener + history', async () => {
-    const consoleLog = vi.spyOn(console, 'log').mockImplementation(() => undefined);
+    const consoleInfo = vi.spyOn(console, 'info').mockImplementation(() => undefined);
 
     const { AudioStateMachine } =
       await import('../../../services/audio/audioStateMachine');
@@ -39,8 +39,8 @@ describe('services/audio/audioStateMachine', () => {
     expect(history.length).toBeGreaterThanOrEqual(4);
     expect(history[0]).toHaveProperty('timestamp');
 
-    expect(consoleLog).toHaveBeenCalled();
-    consoleLog.mockRestore();
+    expect(consoleInfo).toHaveBeenCalled();
+    consoleInfo.mockRestore();
   });
 
   it('AudioStateMachine: transition invalide retourne false (sans auto-recovery)', async () => {
