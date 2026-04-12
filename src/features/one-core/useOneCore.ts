@@ -329,7 +329,9 @@ export function useOneCore(): UseOneCoreReturn {
     const interval = setInterval(() => {
       (tauriClient.oneCoreGetMetrics() as Promise<OneCoreMetrics>)
         .then(setMetrics)
-        .catch(() => {});
+        .catch((err: unknown) => {
+          console.warn('[OneCore] metrics refresh failed:', err);
+        });
     }, 5000);
 
     return () => clearInterval(interval);

@@ -43,7 +43,9 @@ void import('@/monitoring')
       monitoringBridge = candidate;
     }
   })
-  .catch(() => {});
+  .catch((err: unknown) => {
+    console.warn('[chat] monitoring module preload failed:', err);
+  });
 
 const monitoring: MonitoringBridge = {
   trackRequest: () => monitoringBridge.trackRequest(),

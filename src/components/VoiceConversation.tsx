@@ -230,7 +230,9 @@ export const VoiceConversation = ({
       animationFrameRef.current = null;
     }
     if (audioContextRef.current) {
-      audioContextRef.current.close().catch(() => {});
+      audioContextRef.current.close().catch((err: unknown) => {
+        console.warn('[VoiceConversation] AudioContext close failed:', err);
+      });
       audioContextRef.current = null;
     }
     if (streamRef.current) {

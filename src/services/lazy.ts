@@ -105,11 +105,17 @@ export function preloadLazyServices() {
   if (typeof requestIdleCallback !== 'undefined') {
     requestIdleCallback(
       () => {
-        // Fire all preloads in parallel, ignore errors
+        // Fire all preloads in parallel, log errors
         Promise.all([
-          getChatEngineServices().catch(() => {}),
-          getAIOrchestrator().catch(() => {}),
-        ]).catch(() => {});
+          getChatEngineServices().catch((err: unknown) => {
+            console.warn('[lazy] preload ChatEngineServices failed:', err);
+          }),
+          getAIOrchestrator().catch((err: unknown) => {
+            console.warn('[lazy] preload AIOrchestrator failed:', err);
+          }),
+        ]).catch((err: unknown) => {
+          console.warn('[lazy] preloadLazyServices failed:', err);
+        });
       },
       { timeout: 5000 }
     );

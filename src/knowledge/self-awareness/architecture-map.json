@@ -28,25 +28,94 @@
           "memory_persistence.rs"
         ],
         "modules": [
-          "adaptive", "agenda", "agent_system", "agents", "agi_core",
-          "ai", "ai_chat", "api", "api_hub", "app", "audio", "auth",
-          "avatar", "batch", "behavior_engine", "cache", "chat_engine",
-          "cloud", "cluster", "cognitive", "cognitive_learning", "commands",
-          "compat", "config", "constitution", "control_panel_commands",
-          "conversation_engine", "conversation_os", "core", "cycle_engine",
-          "design_center", "devtools", "digital_twin_v14_1", "doc_engine",
-          "duplex", "emotion", "engine", "engines", "errors", "evolution",
-          "harmonic_os", "hyper_intelligence", "hypervision", "ia",
-          "identity", "ipc", "ipc_batcher", "introspection", "kernel",
-          "knowledge", "memory", "memory_evolution", "memory_os",
-          "meta", "meta_mode_engine", "meta_orchestrator", "modules",
-          "monitoring", "multi_agents", "multimodal", "neural_memory",
-          "numeric_twin", "omega", "overdrive", "performance",
-          "persistence", "profiling", "qa", "resilience", "security",
-          "self_repair", "selfheal", "semantic", "services", "shared",
-          "singularity", "singularity_fusion", "system", "system_center",
-          "temporal_engine", "time", "tts", "types", "unified_memory_v2",
-          "updates", "utils", "wakeword", "watchdog"
+          "adaptive",
+          "agenda",
+          "agent_system",
+          "agents",
+          "agi_core",
+          "ai",
+          "ai_chat",
+          "api",
+          "api_hub",
+          "app",
+          "audio",
+          "auth",
+          "avatar",
+          "batch",
+          "behavior_engine",
+          "cache",
+          "chat_engine",
+          "cloud",
+          "cluster",
+          "cognitive",
+          "cognitive_learning",
+          "commands",
+          "compat",
+          "config",
+          "constitution",
+          "control_panel_commands",
+          "conversation_engine",
+          "conversation_os",
+          "core",
+          "cycle_engine",
+          "design_center",
+          "devtools",
+          "digital_twin_v14_1",
+          "doc_engine",
+          "duplex",
+          "emotion",
+          "engine",
+          "engines",
+          "errors",
+          "evolution",
+          "harmonic_os",
+          "hyper_intelligence",
+          "hypervision",
+          "ia",
+          "identity",
+          "ipc",
+          "ipc_batcher",
+          "introspection",
+          "kernel",
+          "knowledge",
+          "memory",
+          "memory_evolution",
+          "memory_os",
+          "meta",
+          "meta_mode_engine",
+          "meta_orchestrator",
+          "modules",
+          "monitoring",
+          "multi_agents",
+          "multimodal",
+          "neural_memory",
+          "numeric_twin",
+          "omega",
+          "overdrive",
+          "performance",
+          "persistence",
+          "profiling",
+          "qa",
+          "resilience",
+          "security",
+          "self_repair",
+          "selfheal",
+          "semantic",
+          "services",
+          "shared",
+          "singularity",
+          "singularity_fusion",
+          "system",
+          "system_center",
+          "temporal_engine",
+          "time",
+          "tts",
+          "types",
+          "unified_memory_v2",
+          "updates",
+          "utils",
+          "wakeword",
+          "watchdog"
         ]
       },
       "ring1_services": {
@@ -105,24 +174,96 @@
         "description": "Zustand state management",
         "path": "src/stores/",
         "stores": [
-          { "name": "effectsStore", "file": "effectsStore.ts", "purpose": "Visual effects state" },
-          { "name": "evolutionStore", "file": "evolutionStore.ts", "purpose": "Cognitive evolution and XP state" },
-          { "name": "memoryStore", "file": "memoryStore.ts", "purpose": "Memory system state" },
-          { "name": "panelsStore", "file": "panelsStore.ts", "purpose": "UI panels layout state" },
-          { "name": "systemStore", "file": "systemStore.ts", "purpose": "System health and status state" },
-          { "name": "uiStore", "file": "uiStore.ts", "purpose": "Global UI state (theme, lang, modals)" },
-          { "name": "unifiedVisualStore", "file": "unifiedVisualStore.ts", "purpose": "Unified visual engine state" },
-          { "name": "useAutomationXPStore", "file": "useAutomationXPStore.ts", "purpose": "Automation XP tracking" },
-          { "name": "useChatModeStore", "file": "useChatModeStore.ts", "purpose": "Chat mode configuration" },
-          { "name": "useMemoryEngineStore", "file": "useMemoryEngineStore.ts", "purpose": "Memory engine runtime state" },
-          { "name": "usePerformanceStore", "file": "usePerformanceStore.ts", "purpose": "Performance metrics store" },
-          { "name": "useRequestInFlightStore", "file": "useRequestInFlightStore.ts", "purpose": "In-flight IPC request tracking" },
-          { "name": "useSelfHealingStore", "file": "useSelfHealingStore.ts", "purpose": "Self-healing engine state" },
-          { "name": "useTTSEngineStore", "file": "useTTSEngineStore.ts", "purpose": "TTS engine state" },
-          { "name": "useVisionStore", "file": "useVisionStore.ts", "purpose": "Vision/camera engine state" },
-          { "name": "visualStateStore", "file": "visualStateStore.ts", "purpose": "Visual state for avatar/3D" },
-          { "name": "visualStateStoreV21", "file": "visualStateStoreV21.ts", "purpose": "Visual state v21 (updated)" },
-          { "name": "visualStore", "file": "visualStore.ts", "purpose": "Visual rendering store" }
+          {
+            "name": "effectsStore",
+            "file": "effectsStore.ts",
+            "purpose": "Visual effects state"
+          },
+          {
+            "name": "evolutionStore",
+            "file": "evolutionStore.ts",
+            "purpose": "Cognitive evolution and XP state"
+          },
+          {
+            "name": "memoryStore",
+            "file": "memoryStore.ts",
+            "purpose": "Memory system state"
+          },
+          {
+            "name": "panelsStore",
+            "file": "panelsStore.ts",
+            "purpose": "UI panels layout state"
+          },
+          {
+            "name": "systemStore",
+            "file": "systemStore.ts",
+            "purpose": "System health and status state"
+          },
+          {
+            "name": "uiStore",
+            "file": "uiStore.ts",
+            "purpose": "Global UI state (theme, lang, modals)"
+          },
+          {
+            "name": "unifiedVisualStore",
+            "file": "unifiedVisualStore.ts",
+            "purpose": "Unified visual engine state"
+          },
+          {
+            "name": "useAutomationXPStore",
+            "file": "useAutomationXPStore.ts",
+            "purpose": "Automation XP tracking"
+          },
+          {
+            "name": "useChatModeStore",
+            "file": "useChatModeStore.ts",
+            "purpose": "Chat mode configuration"
+          },
+          {
+            "name": "useMemoryEngineStore",
+            "file": "useMemoryEngineStore.ts",
+            "purpose": "Memory engine runtime state"
+          },
+          {
+            "name": "usePerformanceStore",
+            "file": "usePerformanceStore.ts",
+            "purpose": "Performance metrics store"
+          },
+          {
+            "name": "useRequestInFlightStore",
+            "file": "useRequestInFlightStore.ts",
+            "purpose": "In-flight IPC request tracking"
+          },
+          {
+            "name": "useSelfHealingStore",
+            "file": "useSelfHealingStore.ts",
+            "purpose": "Self-healing engine state"
+          },
+          {
+            "name": "useTTSEngineStore",
+            "file": "useTTSEngineStore.ts",
+            "purpose": "TTS engine state"
+          },
+          {
+            "name": "useVisionStore",
+            "file": "useVisionStore.ts",
+            "purpose": "Vision/camera engine state"
+          },
+          {
+            "name": "visualStateStore",
+            "file": "visualStateStore.ts",
+            "purpose": "Visual state for avatar/3D"
+          },
+          {
+            "name": "visualStateStoreV21",
+            "file": "visualStateStoreV21.ts",
+            "purpose": "Visual state v21 (updated)"
+          },
+          {
+            "name": "visualStore",
+            "file": "visualStore.ts",
+            "purpose": "Visual rendering store"
+          }
         ]
       },
       "ring4_ui": {
@@ -448,11 +589,7 @@
           "memory_health_check",
           "memory_ping"
         ],
-        "qa": [
-          "watchdog_run_selftest",
-          "watchdog_scan",
-          "watchdog_fix"
-        ],
+        "qa": ["watchdog_run_selftest", "watchdog_scan", "watchdog_fix"],
         "security": [
           "secure_store_secret",
           "has_secret",
@@ -595,51 +732,205 @@
       }
     },
     "stores": [
-      { "name": "effectsStore", "file": "src/stores/effectsStore.ts", "purpose": "Visual effects state" },
-      { "name": "evolutionStore", "file": "src/stores/evolutionStore.ts", "purpose": "Cognitive evolution and XP state" },
-      { "name": "memoryStore", "file": "src/stores/memoryStore.ts", "purpose": "Memory system state" },
-      { "name": "panelsStore", "file": "src/stores/panelsStore.ts", "purpose": "UI panels layout state" },
-      { "name": "systemStore", "file": "src/stores/systemStore.ts", "purpose": "System health and status state" },
-      { "name": "uiStore", "file": "src/stores/uiStore.ts", "purpose": "Global UI state (theme, lang, modals)" },
-      { "name": "unifiedVisualStore", "file": "src/stores/unifiedVisualStore.ts", "purpose": "Unified visual engine state" },
-      { "name": "useAutomationXPStore", "file": "src/stores/useAutomationXPStore.ts", "purpose": "Automation XP tracking" },
-      { "name": "useChatModeStore", "file": "src/stores/useChatModeStore.ts", "purpose": "Chat mode configuration" },
-      { "name": "useMemoryEngineStore", "file": "src/stores/useMemoryEngineStore.ts", "purpose": "Memory engine runtime state" },
-      { "name": "usePerformanceStore", "file": "src/stores/usePerformanceStore.ts", "purpose": "Performance metrics store" },
-      { "name": "useRequestInFlightStore", "file": "src/stores/useRequestInFlightStore.ts", "purpose": "In-flight IPC request tracking" },
-      { "name": "useSelfHealingStore", "file": "src/stores/useSelfHealingStore.ts", "purpose": "Self-healing engine state" },
-      { "name": "useTTSEngineStore", "file": "src/stores/useTTSEngineStore.ts", "purpose": "TTS engine state" },
-      { "name": "useVisionStore", "file": "src/stores/useVisionStore.ts", "purpose": "Vision/camera engine state" },
-      { "name": "visualStateStore", "file": "src/stores/visualStateStore.ts", "purpose": "Visual state for avatar/3D" },
-      { "name": "visualStateStoreV21", "file": "src/stores/visualStateStoreV21.ts", "purpose": "Visual state v21 (updated)" },
-      { "name": "visualStore", "file": "src/stores/visualStore.ts", "purpose": "Visual rendering store" }
+      {
+        "name": "effectsStore",
+        "file": "src/stores/effectsStore.ts",
+        "purpose": "Visual effects state"
+      },
+      {
+        "name": "evolutionStore",
+        "file": "src/stores/evolutionStore.ts",
+        "purpose": "Cognitive evolution and XP state"
+      },
+      {
+        "name": "memoryStore",
+        "file": "src/stores/memoryStore.ts",
+        "purpose": "Memory system state"
+      },
+      {
+        "name": "panelsStore",
+        "file": "src/stores/panelsStore.ts",
+        "purpose": "UI panels layout state"
+      },
+      {
+        "name": "systemStore",
+        "file": "src/stores/systemStore.ts",
+        "purpose": "System health and status state"
+      },
+      {
+        "name": "uiStore",
+        "file": "src/stores/uiStore.ts",
+        "purpose": "Global UI state (theme, lang, modals)"
+      },
+      {
+        "name": "unifiedVisualStore",
+        "file": "src/stores/unifiedVisualStore.ts",
+        "purpose": "Unified visual engine state"
+      },
+      {
+        "name": "useAutomationXPStore",
+        "file": "src/stores/useAutomationXPStore.ts",
+        "purpose": "Automation XP tracking"
+      },
+      {
+        "name": "useChatModeStore",
+        "file": "src/stores/useChatModeStore.ts",
+        "purpose": "Chat mode configuration"
+      },
+      {
+        "name": "useMemoryEngineStore",
+        "file": "src/stores/useMemoryEngineStore.ts",
+        "purpose": "Memory engine runtime state"
+      },
+      {
+        "name": "usePerformanceStore",
+        "file": "src/stores/usePerformanceStore.ts",
+        "purpose": "Performance metrics store"
+      },
+      {
+        "name": "useRequestInFlightStore",
+        "file": "src/stores/useRequestInFlightStore.ts",
+        "purpose": "In-flight IPC request tracking"
+      },
+      {
+        "name": "useSelfHealingStore",
+        "file": "src/stores/useSelfHealingStore.ts",
+        "purpose": "Self-healing engine state"
+      },
+      {
+        "name": "useTTSEngineStore",
+        "file": "src/stores/useTTSEngineStore.ts",
+        "purpose": "TTS engine state"
+      },
+      {
+        "name": "useVisionStore",
+        "file": "src/stores/useVisionStore.ts",
+        "purpose": "Vision/camera engine state"
+      },
+      {
+        "name": "visualStateStore",
+        "file": "src/stores/visualStateStore.ts",
+        "purpose": "Visual state for avatar/3D"
+      },
+      {
+        "name": "visualStateStoreV21",
+        "file": "src/stores/visualStateStoreV21.ts",
+        "purpose": "Visual state v21 (updated)"
+      },
+      {
+        "name": "visualStore",
+        "file": "src/stores/visualStore.ts",
+        "purpose": "Visual rendering store"
+      }
     ],
     "hooks": [
-      "useAIChatStreaming", "useActiveListening", "useAdaptiveFPS", "useAdvancedPerformance",
-      "useAppInitialization", "useAudioChat", "useAudioSettings", "useAudioStreaming",
-      "useAuraOrchestrator", "useAuraPerformanceMonitor", "useAutoTimeout", "useBackendHealth",
-      "useChat", "useChatCore", "useChatMemory", "useChatMemoryCache", "useChatModes",
-      "useChatStreaming", "useChatUI", "useCognitive", "useCognitiveLayout", "useConnection",
-      "useControlPanelSection", "useConversationEngine", "useConversations", "useDebounce",
-      "useDeepPsyche", "useDeviceHealth", "useDevicePermissions", "useEffects",
-      "useEngineState", "useEngineSubscription", "useEngineVitals", "useExperience",
-      "useExpression", "useExpressionOrchestration", "useFileOperations", "useFocusTrap",
-      "useFusionEngine", "useGlobalAIChat", "useHoloPresence", "useHybridEngine",
-      "useIdentity", "useIdentityMatrix", "useKeyboardShortcuts", "useLTMContext",
-      "useLazyAvatar", "useLiveDebugger", "useLivingEngines", "useLocalStorage",
-      "useMCPOrchestrator", "useMediaQuery", "useMemory", "useMemoryCore", "useMemoryEngine",
-      "useMultimodalPresence", "useOmegaPipeline", "usePanelState", "useParticles",
-      "usePerformanceMonitor", "usePerformanceProfiler", "usePersistentMemory", "usePhaseSpace",
-      "usePreferences", "usePresenceOS", "useProviderStatus", "useRAG", "useResponsive",
-      "useSessions", "useSingularity", "useSingularityState", "useSingularityStateSafe",
-      "useSingularityStore", "useSingularitySync", "useStoreSync", "useSystemCenterAutoFix",
-      "useSystemHealth", "useSystemMonitor", "useTTS", "useTTSWithMicControl", "useThrottle",
-      "useTimeAgenda", "useTitaneCore", "useTitaneDb", "useTitaneSphere", "useToast",
-      "useToolCaller", "useTopNavigation", "useTwinBehavior", "useTwinEvolution",
-      "useTwinIdentity", "useUnifiedMemory", "useUnifiedPresence", "useUserPreferences",
-      "useVAD", "useVisualEngine", "useVisualEngines", "useVisualState", "useVitals",
-      "useVocalDevConsole", "useVoice", "useVoiceEngine", "useVoiceInput", "useVoiceMode",
-      "useWhisperStream", "useWindowControls", "useZoomControl"
+      "useAIChatStreaming",
+      "useActiveListening",
+      "useAdaptiveFPS",
+      "useAdvancedPerformance",
+      "useAppInitialization",
+      "useAudioChat",
+      "useAudioSettings",
+      "useAudioStreaming",
+      "useAuraOrchestrator",
+      "useAuraPerformanceMonitor",
+      "useAutoTimeout",
+      "useBackendHealth",
+      "useChat",
+      "useChatCore",
+      "useChatMemory",
+      "useChatMemoryCache",
+      "useChatModes",
+      "useChatStreaming",
+      "useChatUI",
+      "useCognitive",
+      "useCognitiveLayout",
+      "useConnection",
+      "useControlPanelSection",
+      "useConversationEngine",
+      "useConversations",
+      "useDebounce",
+      "useDeepPsyche",
+      "useDeviceHealth",
+      "useDevicePermissions",
+      "useEffects",
+      "useEngineState",
+      "useEngineSubscription",
+      "useEngineVitals",
+      "useExperience",
+      "useExpression",
+      "useExpressionOrchestration",
+      "useFileOperations",
+      "useFocusTrap",
+      "useFusionEngine",
+      "useGlobalAIChat",
+      "useHoloPresence",
+      "useHybridEngine",
+      "useIdentity",
+      "useIdentityMatrix",
+      "useKeyboardShortcuts",
+      "useLTMContext",
+      "useLazyAvatar",
+      "useLiveDebugger",
+      "useLivingEngines",
+      "useLocalStorage",
+      "useMCPOrchestrator",
+      "useMediaQuery",
+      "useMemory",
+      "useMemoryCore",
+      "useMemoryEngine",
+      "useMultimodalPresence",
+      "useOmegaPipeline",
+      "usePanelState",
+      "useParticles",
+      "usePerformanceMonitor",
+      "usePerformanceProfiler",
+      "usePersistentMemory",
+      "usePhaseSpace",
+      "usePreferences",
+      "usePresenceOS",
+      "useProviderStatus",
+      "useRAG",
+      "useResponsive",
+      "useSessions",
+      "useSingularity",
+      "useSingularityState",
+      "useSingularityStateSafe",
+      "useSingularityStore",
+      "useSingularitySync",
+      "useStoreSync",
+      "useSystemCenterAutoFix",
+      "useSystemHealth",
+      "useSystemMonitor",
+      "useTTS",
+      "useTTSWithMicControl",
+      "useThrottle",
+      "useTimeAgenda",
+      "useTitaneCore",
+      "useTitaneDb",
+      "useTitaneSphere",
+      "useToast",
+      "useToolCaller",
+      "useTopNavigation",
+      "useTwinBehavior",
+      "useTwinEvolution",
+      "useTwinIdentity",
+      "useUnifiedMemory",
+      "useUnifiedPresence",
+      "useUserPreferences",
+      "useVAD",
+      "useVisualEngine",
+      "useVisualEngines",
+      "useVisualState",
+      "useVitals",
+      "useVocalDevConsole",
+      "useVoice",
+      "useVoiceEngine",
+      "useVoiceInput",
+      "useVoiceMode",
+      "useWhisperStream",
+      "useWindowControls",
+      "useZoomControl"
     ],
     "routes": [
       "/",

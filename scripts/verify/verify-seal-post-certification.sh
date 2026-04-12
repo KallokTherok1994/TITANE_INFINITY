@@ -3,6 +3,7 @@ set -euo pipefail
 
 ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 cd "$ROOT"
+source "$(dirname "${BASH_SOURCE[0]}")/_rg_compat.sh"
 
 echo "🔐 VERIFY: seal proof packs require post-certification sections"
 

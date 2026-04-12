@@ -56,7 +56,9 @@ if (!dryRun) {
     try {
       execFileSync(process.execPath, [syncScript], { stdio: 'inherit', cwd: root });
     } catch (err) {
-      console.error(`❌ sync-versions.mjs failed. Run it manually: node scripts/sync-versions.mjs`);
+      console.error(
+        `❌ sync-versions.mjs failed. Run it manually: node scripts/sync-versions.mjs`
+      );
       console.error(err instanceof Error ? err.message : String(err));
       process.exit(1);
     }

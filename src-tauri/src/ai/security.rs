@@ -11,6 +11,22 @@ use std::time::Duration;
 pub const AI_REQUEST_TIMEOUT: Duration = Duration::from_secs(30);
 pub const AI_RESPONSE_MAX_SIZE: usize = 1024 * 1024; // 1 MB
 
+/// Sanitize error messages to prevent API key leakage.
+/// Strips any key/token query parameters from error strings that may include
+/// full URLs (e.g., from reqwest error formatting).
+/// Uses case-insensitive matching on the lowercase form, then slices the
+/// original string at the matched position.
+pub fn sanitize_api_error(raw: &str) -> String {
+    let lower = raw.to_lowercase();
+    // Check for common API key parameter patterns (case-insensitive)
+    for pattern in &["key=", "apikey=", "api_key=", "token="] {
+        if let Some(pos) = lower.find(pattern) {
+            return format!("{}{}***", &raw[..pos], pattern);
+        }
+    }
+    raw.to_string()
+}
+
 /// Liste blanche des endpoints autorisés
 const ALLOWED_ENDPOINTS: &[&str] = &[
     "https://generativelanguage.googleapis.com",
