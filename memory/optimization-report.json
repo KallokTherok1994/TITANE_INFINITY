@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-12T19:08:00Z",
+  "timestamp": "2026-04-12T22:30:00Z",
   "version": "v30.2.0",
   "stats": {
     "filesProcessed": 6,
@@ -40,6 +40,14 @@
       "description": "Capabilities manifest declared vector-search, embedding, and semantic-search as active when they are not operationally implemented.",
       "status": "fixed",
       "fixed_at": "2026-04-12T19:08:00Z"
+    },
+    {
+      "id": "ISSUE-NO-CI-KB-GOVERNANCE",
+      "severity": "medium",
+      "file": ".github/workflows/",
+      "description": "KB health-check and autoheal governance scripts existed but were not integrated into CI, allowing regressions to go undetected.",
+      "status": "fixed",
+      "fixed_at": "2026-04-12T22:30:00Z"
     }
   ],
   "recommendations": [
@@ -48,6 +56,7 @@
     "Implémenter un pipeline d'embeddings vectoriels pour activer vector-search et semantic-search réelle",
     "Remplacer le stub webResearchService.ts par un vrai moteur de recherche web (Brave API ou SearXNG)",
     "Ajouter un pipeline de chunking intelligent pour les fichiers KB (paragraphe/section plutôt que fichier entier)",
-    "Mettre en place un versioning automatique des fichiers KB avec changelog sémantique"
+    "Mettre en place un versioning automatique des fichiers KB avec changelog sémantique",
+    "Add Ollama embedding model pull to Android build pipeline (ollama pull nomic-embed-text)"
   ]
 }

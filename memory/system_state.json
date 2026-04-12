@@ -1,7 +1,7 @@
 {
   "system_state": {
     "version": "v20.0Ω",
-    "last_update": "2026-04-12T19:08:00Z",
+    "last_update": "2026-04-12T22:30:00Z",
     "harmonia_mode": "active",
     "memory_compaction_enabled": true,
     "auto_verify_enabled": true,
@@ -39,6 +39,12 @@
       "deduplication": true,
       "compression": "gzip",
       "snapshot_interval": 300
+    },
+    "rag_embeddings": {
+      "status": "active",
+      "backend": "ollama",
+      "model": "nomic-embed-text",
+      "dimension": 768
     }
   },
   "metrics": {

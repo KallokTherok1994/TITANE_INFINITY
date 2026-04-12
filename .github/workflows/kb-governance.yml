@@ -1,0 +1,163 @@
+name: 📚 Knowledge Base & AutoHeal Governance
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kb-governance-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  kb-health-check:
+    name: KB Health Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
+      - name: Check kb-health.sh exists
+        run: |
+          if [[ ! -f "scripts/kb-health.sh" ]]; then
+            echo "ERROR: scripts/kb-health.sh not found — cannot run KB health check"
+            exit 1
+          fi
+          chmod +x scripts/kb-health.sh
+
+      - name: Run KB health check
+        run: bash scripts/kb-health.sh
+
+  autoheal-governance:
+    name: AutoHeal Governance
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Make scripts executable
+        run: |
+          chmod +x scripts/autoheal/detect_recurrence.sh
+          chmod +x scripts/verify_instructions.sh
+
+      - name: Run detect_recurrence.sh (no duplicate IDs)
+        run: bash scripts/autoheal/detect_recurrence.sh
+
+      - name: Run verify_instructions.sh
+        run: bash scripts/verify_instructions.sh
+
+  kb-checksums-drift:
+    name: KB Checksums Drift Detection
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
+      - name: Make kb-health.sh executable
+        run: chmod +x scripts/kb-health.sh
+
+      - name: Regenerate KB checksums
+        run: bash scripts/kb-health.sh
+
+      - name: Check for checksum drift
+        run: |
+          CHECKSUMS_FILE="data/knowledge_base/KB_CHECKSUMS.sha256"
+          if git diff --name-only HEAD | grep -q "$(basename $CHECKSUMS_FILE)"; then
+            echo "::warning file=$CHECKSUMS_FILE::KB checksums have drifted vs committed version. Consider committing the updated checksums."
+          else
+            echo "KB checksums are up to date — no drift detected."
+          fi
+
+  backend-contract-validation:
+    name: Backend Contract Validation (IPC static check)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Make validate-new-backends.sh executable
+        run: |
+          if [[ -f "scripts/e2e/validate-new-backends.sh" ]]; then
+            chmod +x scripts/e2e/validate-new-backends.sh
+          fi
+
+      - name: Run IPC contract static checks
+        run: |
+          FAIL=0
+
+          # Check rag_commands.rs exists and follows canonical IPC pattern
+          RAG_CMD="src-tauri/src/commands/rag_commands.rs"
+          if [[ ! -f "$RAG_CMD" ]]; then
+            echo "IPC_CONTRACT_FAIL: $RAG_CMD not found"
+            FAIL=1
+          elif grep -qE '"ok".*bool|pub ok: bool' "$RAG_CMD" && \
+               grep -qE '"content"|pub content' "$RAG_CMD" && \
+               grep -qE '"error"|pub error' "$RAG_CMD"; then
+            echo "IPC_CONTRACT_OK: $RAG_CMD follows { ok, content, error } pattern"
+          else
+            echo "IPC_CONTRACT_FAIL: $RAG_CMD does not follow canonical IPC contract { ok, content, error }"
+            FAIL=1
+          fi
+
+          # Check web_search_commands.rs exists and follows canonical IPC pattern
+          WEB_CMD="src-tauri/src/commands/web_search_commands.rs"
+          if [[ ! -f "$WEB_CMD" ]]; then
+            echo "IPC_CONTRACT_FAIL: $WEB_CMD not found"
+            FAIL=1
+          elif grep -qE '"ok".*bool|pub ok: bool' "$WEB_CMD" && \
+               grep -qE '"content"|pub content' "$WEB_CMD" && \
+               grep -qE '"error"|pub error' "$WEB_CMD"; then
+            echo "IPC_CONTRACT_OK: $WEB_CMD follows { ok, content, error } pattern"
+          else
+            echo "IPC_CONTRACT_FAIL: $WEB_CMD does not follow canonical IPC contract { ok, content, error }"
+            FAIL=1
+          fi
+
+          # Check chunkingService.ts exists and exports chunkMarkdown and chunkCode
+          CHUNK_SVC="src/services/chunkingService.ts"
+          if [[ ! -f "$CHUNK_SVC" ]]; then
+            echo "CHUNKING_SERVICE_FAIL: $CHUNK_SVC not found"
+            FAIL=1
+          elif grep -q "export.*chunkMarkdown\|export function chunkMarkdown" "$CHUNK_SVC" && \
+               grep -q "export.*chunkCode\|export function chunkCode" "$CHUNK_SVC"; then
+            echo "CHUNKING_SERVICE_OK: $CHUNK_SVC exports chunkMarkdown and chunkCode"
+          else
+            echo "CHUNKING_SERVICE_FAIL: $CHUNK_SVC missing required exports (chunkMarkdown, chunkCode)"
+            FAIL=1
+          fi
+
+          if [[ $FAIL -eq 0 ]]; then
+            echo ""
+            echo "All backend contract checks PASSED"
+            exit 0
+          else
+            echo ""
+            echo "One or more backend contract checks FAILED"
+            exit 1
+          fi
