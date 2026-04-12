@@ -388,6 +388,37 @@ const GESTION_ENERGIE_VITALITE: &str =
     include_str!("../../data/knowledge_base/default/gestion_energie_vitalite.json");
 const CULTURE_JAPONAISE_SAGESSE: &str =
     include_str!("../../data/knowledge_base/default/culture_japonaise_sagesse.json");
+// v30.1.0 expansion — phase 19 (MTC avancée, Ayurveda, microbiome, hormones, respiration, Qi Gong, hypnose/PNL, trauma/résilience, détox/jeûne, réflexologie, sophrologie, santé masculine, médecine fonctionnelle, aromathérapie, psychologie positive)
+const MEDECINE_TRADITIONNELLE_CHINOISE_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/medecine_traditionnelle_chinoise_avancee.json");
+const AYURVEDA_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/ayurveda_avance.json");
+const MICROBIOME_AXE_INTESTIN_CERVEAU: &str =
+    include_str!("../../data/knowledge_base/default/microbiome_axe_intestin_cerveau.json");
+const SYSTEME_HORMONAL_ENDOCRINIEN: &str =
+    include_str!("../../data/knowledge_base/default/systeme_hormonal_endocrinien.json");
+const RESPIRATION_PRANAYAMA_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/respiration_pranayama_avance.json");
+const QI_GONG_TAI_CHI_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/qi_gong_tai_chi_avance.json");
+const HYPNOTHERAPIE_PNL_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/hypnotherapie_pnl_avancee.json");
+const TRAUMATISME_RESILIENCE_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/traumatisme_resilience_avance.json");
+const DETOX_JEUNE_PURIFICATION: &str =
+    include_str!("../../data/knowledge_base/default/detox_jeune_purification.json");
+const REFLEXOLOGIE_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/reflexologie_avancee.json");
+const SOPHROLOGIE_RELAXATION_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/sophrologie_relaxation_avancee.json");
+const SANTE_MASCULINE_NATURELLE: &str =
+    include_str!("../../data/knowledge_base/default/sante_masculine_naturelle.json");
+const MEDECINE_FONCTIONNELLE_INTEGRATIVE: &str =
+    include_str!("../../data/knowledge_base/default/medecine_fonctionnelle_integrative.json");
+const AROMATHERAPIE_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/aromatherapie_avancee.json");
+const PSYCHOLOGIE_POSITIVE_SCIENCE_BONHEUR: &str =
+    include_str!("../../data/knowledge_base/default/psychologie_positive_science_bonheur.json");
 
 // ─────────────────────────────────────────────────────────────────
 // LAZY STATIC CACHE — parsed once, reused on every call
@@ -623,6 +654,22 @@ impl DefaultKnowledgeBase {
         ("depression_burnout_avance", DEPRESSION_BURNOUT_AVANCE),
         ("gestion_energie_vitalite", GESTION_ENERGIE_VITALITE),
         ("culture_japonaise_sagesse", CULTURE_JAPONAISE_SAGESSE),
+        // v30.1.0 expansion — phase 19 (santé avancée, MTC, Ayurveda, microbiome, hormones, respiration, Qi Gong, hypnose/PNL, trauma, détox, réflexologie, sophrologie, santé masculine, médecine fonctionnelle, aromathérapie, psychologie positive)
+        ("medecine_traditionnelle_chinoise_avancee", MEDECINE_TRADITIONNELLE_CHINOISE_AVANCEE),
+        ("ayurveda_avance", AYURVEDA_AVANCE),
+        ("microbiome_axe_intestin_cerveau", MICROBIOME_AXE_INTESTIN_CERVEAU),
+        ("systeme_hormonal_endocrinien", SYSTEME_HORMONAL_ENDOCRINIEN),
+        ("respiration_pranayama_avance", RESPIRATION_PRANAYAMA_AVANCE),
+        ("qi_gong_tai_chi_avance", QI_GONG_TAI_CHI_AVANCE),
+        ("hypnotherapie_pnl_avancee", HYPNOTHERAPIE_PNL_AVANCEE),
+        ("traumatisme_resilience_avance", TRAUMATISME_RESILIENCE_AVANCE),
+        ("detox_jeune_purification", DETOX_JEUNE_PURIFICATION),
+        ("reflexologie_avancee", REFLEXOLOGIE_AVANCEE),
+        ("sophrologie_relaxation_avancee", SOPHROLOGIE_RELAXATION_AVANCEE),
+        ("sante_masculine_naturelle", SANTE_MASCULINE_NATURELLE),
+        ("medecine_fonctionnelle_integrative", MEDECINE_FONCTIONNELLE_INTEGRATIVE),
+        ("aromatherapie_avancee", AROMATHERAPIE_AVANCEE),
+        ("psychologie_positive_science_bonheur", PSYCHOLOGIE_POSITIVE_SCIENCE_BONHEUR),
     ];
 
     /// Load all default knowledge entries from embedded JSON.
@@ -790,8 +837,8 @@ mod tests {
             result.errors
         );
         assert_eq!(
-            result.entries_loaded, 172,
-            "Must have exactly 172 default knowledge categories"
+            result.entries_loaded, 187,
+            "Must have exactly 187 default knowledge categories"
         );
     }
 

@@ -1,0 +1,96 @@
+{
+  "version": "v30.1.0",
+  "category": "hypnotherapie_pnl_avancee",
+  "description": "Hypnothérapie et PNL avancées — hypnose Ericksonienne, ancrages, recadrage, timeline therapy, EMDR, techniques dissociatives, thérapie brève, submodalités, méta-programmes, états modifiés de conscience, suggestion indirecte, métaphores thérapeutiques",
+  "hypnotherapie_pnl_avancee": {
+    "introduction": "L'hypnothérapie et la Programmation Neuro-Linguistique (PNL) forment un duo thérapeutique puissant. L'hypnose ericksonienne utilise les ressources inconscientes du patient via des suggestions indirectes et des métaphores. La PNL modélise les stratégies d'excellence et propose des outils précis de changement rapide. Ensemble, elles permettent une thérapie brève efficace (3-10 séances).",
+    "hypnose_ericksonienne": {
+      "fondateur": "Milton H. Erickson (1901-1980), psychiatre américain. Révolutionna l'hypnose en remplaçant les suggestions directes autoritaires par une approche permissive et indirecte.",
+      "principes": {
+        "utilisation": "Tout ce que le patient apporte (symptômes, résistances, comportements) peut être utilisé comme levier thérapeutique.",
+        "ressources_inconscientes": "L'inconscient est un réservoir de ressources, de solutions et de sagesse. Le thérapeute facilite l'accès à ces ressources.",
+        "suggestions_indirectes": "Métaphores, analogies, histoires, truismes, présuppositions, doubles liens — contournent les résistances conscientes.",
+        "catalepsie_ratification": "Utilisation de phénomènes hypnotiques (lévitation du bras, catalepsie, amnésie) pour ratifier l'état de transe."
+      },
+      "techniques_avancees": {
+        "metaphore_therapeutique": "Histoire racontée au patient dont la structure symbolique correspond à sa problématique. L'inconscient décode et applique la solution.",
+        "recadrage_ericksonien": "Changer la signification d'un événement ou d'un comportement. 'Ce que tu appelles ta peur, comment pourrait-on aussi l'appeler un système d'alerte intelligent?'",
+        "confusion": "Surcharger le conscient par des phrases complexes ou paradoxales pour ouvrir une fenêtre vers l'inconscient.",
+        "regression_age": "Guider le patient vers un souvenir passé pour le revisiter avec les ressources adultes, guérir l'enfant intérieur.",
+        "progression_future": "Projeter le patient dans un futur où le problème est résolu. L'inconscient intègre la solution comme réelle.",
+        "dissociation_therapeutique": "Séparer le patient de l'expérience douloureuse (observer de l'extérieur). Permet le retraitement sans reviviscence traumatique."
+      },
+      "etats_de_transe": {
+        "legere": "Relaxation, focalisation de l'attention, début de dissociation.",
+        "moyenne": "Catalepsie, analgésie, distorsion temporelle, réponses idéomotrices.",
+        "profonde": "Amnésie, hallucinations positives/négatives, anesthésie, somnambulisme."
+      }
+    },
+    "pnl_programmation_neuro_linguistique": {
+      "fondateurs": "Richard Bandler (mathématicien/informaticien) et John Grinder (linguiste), années 1970. Modélisation de Fritz Perls (Gestalt), Virginia Satir (thérapie familiale) et Milton Erickson.",
+      "presupposes_fondamentaux": [
+        "La carte n'est pas le territoire (notre perception n'est pas la réalité)",
+        "Chaque comportement a une intention positive",
+        "L'échec n'existe pas, il n'y a que du feedback",
+        "Nous avons toutes les ressources dont nous avons besoin",
+        "Le sens de la communication est la réponse qu'elle provoque",
+        "Si ce que vous faites ne marche pas, faites autre chose",
+        "Qui a le plus de flexibilité contrôle le système"
+      ],
+      "techniques_avancees": {
+        "ancrages": {
+          "definition": "Association stimulus-réponse. Un geste, mot, image ou son déclenche un état émotionnel spécifique.",
+          "creation": "1) Évoquer l'état désiré intensément. 2) Au pic de l'état, appliquer l'ancre (toucher le poignet, serrer le poing). 3) Relâcher. 4) Tester.",
+          "types": ["Ancrage kinesthésique (toucher)", "Ancrage visuel (image)", "Ancrage auditif (mot/son)", "Ancrage spatial (lieu)"],
+          "applications": "Confiance en soi, gestion du trac, état de flow, motivation instantanée.",
+          "empilement": "Empiler plusieurs expériences positives sur le même ancrage pour le renforcer.",
+          "effondrement": "Fusionner un ancrage positif puissant avec un ancrage négatif pour neutraliser l'état négatif."
+        },
+        "recadrage": {
+          "recadrage_contexte": "Trouver un contexte où le comportement 'problème' est en fait utile. 'Ton perfectionnisme est un problème au travail, mais il t'a permis d'exceller dans tes études.'",
+          "recadrage_sens": "Changer la signification attribuée à l'événement. 'Ce n'est pas un échec, c'est un prototype de ce qui ne fonctionne pas.'",
+          "recadrage_six_pas": "Protocole en 6 étapes pour communiquer avec la partie inconsciente responsable du comportement indésirable et lui proposer de nouvelles options."
+        },
+        "submodalites": {
+          "definition": "Caractéristiques fines de nos représentations internes (taille, luminosité, couleur, distance d'une image mentale; volume, tonalité, localisation d'un son interne).",
+          "utilisation": "Modifier les submodalités d'un souvenir négatif (le rendre petit, lointain, flou, muet) pour réduire son impact émotionnel. Amplifier les submodalités d'un souvenir positif pour le renforcer."
+        },
+        "swish_pattern": {
+          "definition": "Technique de remplacement rapide d'une image déclencheur (comportement indésirable) par une image ressource (comportement désiré).",
+          "protocole": "1) Identifier l'image déclencheur. 2) Créer l'image ressource. 3) Placer l'image ressource petite et sombre au centre du déclencheur. 4) Swish! L'image ressource grandit et illumine. 5) Répéter 5-7 fois rapidement."
+        },
+        "meta_programmes": {
+          "definition": "Filtres inconscients qui déterminent comment nous traitons l'information et prenons des décisions.",
+          "exemples": ["Proactif vs Réactif", "Orienté vers (ce qu'on veut) vs Éloignement de (ce qu'on évite)", "Global vs Détail", "Interne (propre jugement) vs Externe (avis des autres)", "Options vs Procédures", "Similitudes vs Différences"]
+        }
+      }
+    },
+    "timeline_therapy": {
+      "createur": "Tad James (années 1980), basée sur les travaux de Richard Bandler et les concepts temporels d'Erickson.",
+      "principe": "Chaque personne stocke ses souvenirs le long d'une ligne temporelle interne. En modifiant la relation à cette timeline, on peut libérer les émotions négatives ancrées dans le passé.",
+      "processus": {
+        "etape_1": "Identifier la ligne du temps personnelle (passé-présent-futur).",
+        "etape_2": "Flotter au-dessus de la timeline, se dissocier.",
+        "etape_3": "Remonter au-delà de l'événement racine (ISE - Initial Sensitizing Event).",
+        "etape_4": "Préserver les apprentissages, libérer l'émotion négative.",
+        "etape_5": "Revenir au présent avec les nouvelles ressources.",
+        "etape_6": "Créer un futur désiré et l'ancrer sur la timeline."
+      },
+      "applications": "Colère, tristesse, peur, culpabilité, honte chroniques. Limitations croyances. Traumas émotionnels non résolus."
+    },
+    "emdr": {
+      "nom_complet": "Eye Movement Desensitization and Reprocessing",
+      "creatrice": "Francine Shapiro (1987)",
+      "principe": "Stimulations bilatérales (mouvements oculaires, sons alternés, tapotements) pendant l'évocation d'un souvenir traumatique. Permet au cerveau de retraiter et intégrer le souvenir.",
+      "mecanisme_presume": "Simule les mouvements oculaires du sommeil REM. Facilite le retraitement adaptatif de l'information (passage de la mémoire épisodique traumatique à la mémoire narrative intégrée).",
+      "protocole_8_phases": ["Historique et plan de traitement", "Préparation et stabilisation", "Évaluation du souvenir cible", "Désensibilisation (stimulations bilatérales)", "Installation de la cognition positive", "Scanner corporel", "Clôture de la séance", "Réévaluation à la séance suivante"],
+      "efficacite": "Recommandé par l'OMS et la HAS pour le TSPT (trouble de stress post-traumatique). Résultats en 3-12 séances."
+    },
+    "therapie_breve": {
+      "principes": ["Orientée solution (pas analyse du passé)", "Durée limitée (3-10 séances)", "Objectifs clairs et mesurables", "Utilisation des exceptions (quand le problème n'est PAS présent)", "Question miracle: si demain le problème a disparu, qu'est-ce qui est différent?"],
+      "approches_combinees": ["Hypnose ericksonienne + PNL", "Thérapie brève de Palo Alto (systémique)", "Thérapie orientée solutions (Steve de Shazer)", "EFT (Emotional Freedom Techniques)"],
+      "applications": "Phobies, addictions, dépression légère-modérée, anxiété, deuil, transition de vie, confiance en soi, performance."
+    },
+    "avertissement_sante": "L'hypnothérapie et la PNL ne remplacent pas un suivi psychiatrique pour les troubles mentaux sévères. Choisissez un praticien certifié par une organisation reconnue."
+  }
+}

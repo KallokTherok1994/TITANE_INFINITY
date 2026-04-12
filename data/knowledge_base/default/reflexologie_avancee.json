@@ -1,0 +1,93 @@
+{
+  "version": "v30.1.0",
+  "category": "reflexologie_avancee",
+  "description": "Réflexologie avancée — réflexologie plantaire, palmaire, auriculaire, faciale (Dien Chan), correspondances organes-zones réflexes, techniques de pression, cartographie des pieds/mains/oreilles/visage, protocoles par pathologie, neuroscience de la réflexologie",
+  "reflexologie_avancee": {
+    "introduction": "La réflexologie repose sur le principe que chaque organe, glande et structure du corps est représenté sur des zones réflexes des pieds, mains, oreilles et visage. La stimulation de ces zones par pression spécifique influence les organes correspondants via le système nerveux, favorisant l'auto-guérison et l'homéostasie.",
+    "reflexologie_plantaire": {
+      "principe": "Les pieds contiennent plus de 7200 terminaisons nerveuses. La cartographie plantaire projette tout le corps sur la surface des pieds.",
+      "cartographie": {
+        "zones_tete_cou": "Orteils — cerveau, sinus, yeux, oreilles, dents, gorge, thyroïde",
+        "zone_thorax": "Métatarses — poumons, cœur, plexus solaire, diaphragme, œsophage",
+        "zone_abdomen": "Voûte plantaire — estomac, foie, rate, pancréas, intestin grêle, reins, surrénales",
+        "zone_pelvis": "Talon — intestin/côlon, vessie, organes reproducteurs, nerf sciatique",
+        "colonne_vertebrale": "Bord interne du pied — de la base du gros orteil (cervicales) au talon (coccyx)"
+      },
+      "techniques_pression": {
+        "chenille": "Progression pouce par pouce, comme une chenille. Technique la plus courante.",
+        "rotation": "Pression rotative sur un point spécifique pour stimuler en profondeur.",
+        "pincement": "Entre pouce et index, sur les orteils et les zones étroites.",
+        "crochetage": "Pression profonde avec le pouce recourbé sur les zones denses.",
+        "lissage": "Mouvements de glissement pour disperser l'énergie et clôturer."
+      },
+      "sensations": {
+        "cristaux": "Petits granules sous la peau indiquant une congestion de l'organe correspondant.",
+        "douleur": "Zone douloureuse = organe en déséquilibre. L'intensité diminue avec les séances.",
+        "chaleur_froid": "Variations thermiques locales reflétant l'état énergétique de l'organe."
+      }
+    },
+    "reflexologie_palmaire": {
+      "principe": "Les mains reflètent les mêmes zones que les pieds, mais en plus compact. Idéal pour l'auto-traitement.",
+      "avantages": "Accessible partout, auto-massage facile, complément à la réflexologie plantaire.",
+      "cartographie_simplifiee": {
+        "pouces": "Tête, cerveau, hypophyse, thyroïde",
+        "doigts": "Sinus, yeux, oreilles",
+        "paume": "Organes thoraciques et abdominaux",
+        "poignet": "Organes pelviens, système reproducteur"
+      }
+    },
+    "reflexologie_auriculaire": {
+      "principe": "L'oreille est un microsystème complet du corps humain, en forme de fœtus inversé. Développée par Paul Nogier (1957, Lyon) et intégrée à la MTC.",
+      "cartographie_fetus_inverse": {
+        "lobe": "Tête, visage, dents, yeux (le fœtus a la tête en bas)",
+        "antihelix": "Colonne vertébrale, thorax",
+        "conque": "Organes internes (foie, reins, intestins, cœur, poumons)",
+        "tragus_antitragus": "Système endocrinien, hormones, faim/satiété",
+        "helix": "Membres, articulations"
+      },
+      "techniques": {
+        "graines_vaccaria": "Petites graines collées sur les points auriculaires avec sparadrap. Le patient les stimule en pressant plusieurs fois par jour.",
+        "aiguilles_semi_permanentes": "Micro-aiguilles (ASP) laissées en place 1-2 semaines.",
+        "frequences_nogier": "7 fréquences thérapeutiques de Nogier appliquées par laser ou électrostimulation."
+      },
+      "indications_specifiques": ["Addictions (tabac, alcool — point Shen Men)", "Douleur chronique", "Anxiété et insomnie (point zéro, Shen Men)", "Gestion du poids (point faim, estomac)", "Troubles hormonaux"]
+    },
+    "dien_chan_reflexologie_faciale": {
+      "createur": "Professeur Bùi Quốc Châu (Vietnam, 1980)",
+      "principe": "Le visage contient 600+ points réflexes reliés à tout le corps. La stimulation se fait par outils spécifiques (rouleau, détecteur, marteau) ou par les doigts.",
+      "cartographie_faciale": {
+        "front": "Organes digestifs (estomac, intestins), cerveau",
+        "nez": "Colonne vertébrale (arête = dos), cœur (bout du nez)",
+        "joues": "Poumons, foie, rate",
+        "menton": "Organes pelviens, reproducteurs, vessie",
+        "oreilles": "Reins",
+        "yeux": "Foie (MTC: les yeux sont la fenêtre du Foie)",
+        "levres": "Rate/Estomac (MTC: la bouche est l'ouverture de la Rate)"
+      },
+      "outils": ["Rouleau multi-pointes (stimulation large)", "Détecteur (pointe fine pour les points précis)", "Marteau à 7 pointes (martelage doux)", "Moxa (chaleur sur les points)"],
+      "avantages": "Auto-pratique facile, résultats rapides (5-10 min), non invasif, combine MTC et réflexologie moderne."
+    },
+    "mecanismes_scientifiques": {
+      "reflexe_neurologique": "La stimulation des zones réflexes envoie des signaux via les nerfs afférents au cerveau et à la moelle épinière, qui modulent les fonctions des organes correspondants via le système nerveux autonome.",
+      "liberation_endorphines": "La pression sur les zones réflexes stimule la libération d'endorphines et d'enképhalines (analgésie naturelle).",
+      "amelioration_circulation": "La réflexologie améliore la circulation sanguine et lymphatique locale et dans les organes correspondants.",
+      "reduction_cortisol": "Études montrant une réduction significative du cortisol après une séance de réflexologie.",
+      "etudes_cliniques": "Efficacité démontrée pour: douleur, anxiété, insomnie, nausées post-chimiothérapie, syndrome prémenstruel, constipation."
+    },
+    "protocoles_par_pathologie": {
+      "stress_anxiete": "Plexus solaire (centre du pied), surrénales, diaphragme, hypophyse. Séance de relaxation profonde.",
+      "troubles_digestifs": "Estomac, intestin grêle, gros intestin, foie, rate/pancréas. Suivre le trajet digestif.",
+      "cephalees_migraines": "Gros orteil (tête/cerveau), zone cervicales, foie, yeux. Insister sur les zones tendues.",
+      "insomnie": "Plexus solaire, glande pinéale (centre du gros orteil), surrénales. Séance en soirée.",
+      "douleurs_lombaires": "Zone colonne lombaire (bord interne du pied), reins, surrénales, sciatique.",
+      "renforcement_immunitaire": "Rate, thymus, ganglions lymphatiques, intestin, surrénales."
+    },
+    "auto_reflexologie": {
+      "pieds": "10-15 min/jour. Utiliser le pouce, une balle de tennis ou un rouleau. Commencer par le plexus solaire, puis parcourir systématiquement tout le pied.",
+      "mains": "5-10 min. Pression du pouce sur chaque zone. Idéal en pause au travail.",
+      "visage": "5 min de Dien Chan le matin. Rouleau multi-pointes sur l'ensemble du visage.",
+      "oreilles": "Masser l'ensemble de l'oreille entre pouce et index, 2-3 min matin et soir."
+    },
+    "avertissement_sante": "La réflexologie est complémentaire et ne remplace pas un diagnostic médical. Contre-indiquée en cas de phlébite, thrombose, fracture récente, grossesse (1er trimestre — certaines zones). Consultez un réflexologue certifié."
+  }
+}

@@ -10,7 +10,7 @@
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ v30.0.0 — DEFAULT KNOWLEDGE BASE SERVICE (FRONTEND)
  *   Wraps the 4 IPC commands exposed by knowledge_base_default.rs
- *   so TITANE chat AI can access its 172 built-in knowledge categories.
+ *   so TITANE chat AI can access its 187 built-in knowledge categories.
  *
  *   Commands bridged:
  *     knowledge_base_get_all       → getAllEntries()

@@ -1,0 +1,94 @@
+{
+  "version": "v30.1.0",
+  "category": "sophrologie_relaxation_avancee",
+  "description": "Sophrologie et relaxation avancées — méthode Caycedo (12 degrés), training autogène de Schultz, relaxation progressive de Jacobson, sophro-analyse, sophro-substitution sensorielle, yoga nidra, relaxation psychosomatique, visualisation créatrice, body scan, cohérence somato-psychique",
+  "sophrologie_relaxation_avancee": {
+    "introduction": "La sophrologie (science de la conscience harmonieuse) est une méthode psychocorporelle créée en 1960 par le neuropsychiatre Alfonso Caycedo. Elle combine respiration contrôlée, relâchement musculaire et visualisation positive pour développer la conscience de soi, gérer le stress et renforcer les ressources internes. Les techniques de relaxation associées (Schultz, Jacobson) offrent des outils complémentaires validés scientifiquement.",
+    "sophrologie_caycedo": {
+      "fondateur": "Alfonso Caycedo (1932-2017), neuropsychiatre colombien, formé en psychiatrie phénoménologique, hypnose et traditions orientales (yoga, Zen, méditation tibétaine).",
+      "niveaux_conscience": {
+        "veille_ordinaire": "Conscience quotidienne, souvent en pilote automatique.",
+        "niveau_sophroliminal": "Entre veille et sommeil. Zone de travail sophrologique. Conscience élargie, réceptivité maximale.",
+        "sommeil": "Conscience réduite, récupération."
+      },
+      "quatre_degres_fondamentaux": {
+        "degre_1": {
+          "nom": "Concentration — Schéma corporel",
+          "inspiration": "Yoga (Hatha)",
+          "objectif": "Découvrir et ressentir le corps. Relaxation dynamique. Conscience des sensations corporelles.",
+          "exercices": "Sophronisation de base, rotations axiales (tête, épaules, tronc), relaxation dynamique 1er degré."
+        },
+        "degre_2": {
+          "nom": "Contemplation — Schéma mental",
+          "inspiration": "Bouddhisme tibétain",
+          "objectif": "Explorer l'esprit, les émotions, les images mentales. Développer la contemplation intérieure.",
+          "exercices": "Visualisation sensorielle, futurisation positive, sophro-acceptation progressive."
+        },
+        "degre_3": {
+          "nom": "Méditation — Intégration corps-esprit",
+          "inspiration": "Zen japonais",
+          "objectif": "Unifier le corps et l'esprit. Méditer sur les valeurs et le sens de la vie.",
+          "exercices": "Marche sophrologique, méditation sur les valeurs existentielles, sophro-correction sérielle."
+        },
+        "degre_4": {
+          "nom": "Transcendance — Valeurs existentielles",
+          "inspiration": "Traditions contemplatives universelles",
+          "objectif": "S'ouvrir aux valeurs universelles (liberté, harmonie, fraternité). Conscience élargie.",
+          "exercices": "Méditation sur la liberté, la tridimensionnalité de l'être (passé-présent-futur)."
+        }
+      },
+      "techniques_cles": {
+        "sophronisation_base": "Relaxation guidée progressive du corps, segment par segment, avec respiration contrôlée. Entrée dans le niveau sophroliminal.",
+        "relaxation_dynamique": "Mouvements doux et conscients associés à la respiration. Chaque degré a sa propre RD (Relaxation Dynamique).",
+        "sophro_acceptation_progressive": "Visualisation positive d'un événement futur (examen, compétition, entretien). Le vivre mentalement avec succès, ancrer les sensations positives.",
+        "sophro_correction_serielle": "Désensibilisation progressive d'une situation anxiogène par exposition imaginaire graduelle en état sophroliminal.",
+        "sophro_substitution_sensorielle": "Remplacer une sensation négative (douleur, tension) par une sensation positive (chaleur, légèreté) via la visualisation.",
+        "sophro_mnesia": "Revivre mentalement un souvenir positif avec toutes les sensations (VAKOG: visuel, auditif, kinesthésique, olfactif, gustatif). Ancrer l'état positif."
+      },
+      "applications": ["Gestion du stress et de l'anxiété", "Préparation mentale (sport, examens, accouchement)", "Gestion de la douleur", "Troubles du sommeil", "Confiance en soi et développement personnel", "Accompagnement en oncologie", "Phobie et addictions", "Burn-out et prévention"]
+    },
+    "training_autogene_schultz": {
+      "createur": "Johannes Heinrich Schultz (1884-1970), psychiatre allemand. Publié en 1932.",
+      "principe": "Auto-suggestion concentrée et répétitive pour induire une réponse de relaxation physiologique profonde.",
+      "six_exercices_standard": [
+        {"exercice": "Pesanteur", "formule": "Mon bras droit est lourd... très lourd...", "effet": "Relâchement musculaire profond"},
+        {"exercice": "Chaleur", "formule": "Mon bras droit est chaud... agréablement chaud...", "effet": "Vasodilatation, amélioration circulation"},
+        {"exercice": "Cœur", "formule": "Mon cœur bat calmement et régulièrement...", "effet": "Régulation cardiaque"},
+        {"exercice": "Respiration", "formule": "Ma respiration est calme et régulière... ça respire en moi...", "effet": "Régulation respiratoire autonome"},
+        {"exercice": "Plexus solaire", "formule": "Mon plexus solaire est chaud... rayonnant de chaleur...", "effet": "Relaxation abdominale profonde, digestion"},
+        {"exercice": "Front", "formule": "Mon front est agréablement frais...", "effet": "Clarté mentale, prévention des céphalées"}
+      ],
+      "progression": "Maîtriser chaque exercice en 1-2 semaines avant de passer au suivant. Programme complet en 6-12 semaines.",
+      "cycle_superieur": "Exercices avancés: visualisation de couleurs, d'objets, de concepts abstraits, de personnes, de sentiments. Exploration de l'inconscient."
+    },
+    "relaxation_jacobson": {
+      "createur": "Edmund Jacobson (1888-1983), médecin américain. Relaxation Progressive Musculaire (RPM), 1929.",
+      "principe": "Contracter puis relâcher systématiquement chaque groupe musculaire pour enseigner au corps la différence entre tension et détente.",
+      "protocole": {
+        "duree": "15-30 minutes",
+        "position": "Allongé ou assis confortablement",
+        "sequence": ["Mains et avant-bras", "Biceps", "Front (lever les sourcils)", "Yeux (fermer fort)", "Mâchoire (serrer les dents)", "Cou", "Épaules (lever vers les oreilles)", "Dos", "Abdomen", "Cuisses", "Mollets", "Pieds"],
+        "methode": "Contracter 5-7 secondes, observer la tension, puis relâcher complètement 15-30 secondes en observant la détente."
+      },
+      "benefices_prouves": "Réduction de l'anxiété, gestion de l'insomnie, réduction des céphalées de tension, gestion de la douleur chronique, amélioration de la concentration."
+    },
+    "yoga_nidra": {
+      "definition": "Sommeil yogique conscient. Relaxation profonde systématique guidée, entre veille et sommeil.",
+      "origine": "Tradition tantrique, formalisé par Swami Satyananda Saraswati (Bihar School of Yoga).",
+      "etapes": ["Sankalpa (intention positive)", "Rotation de conscience dans le corps (Nyasa)", "Conscience de la respiration", "Évocation de sensations opposées (chaud/froid, lourd/léger)", "Visualisation symbolique", "Retour au Sankalpa", "Externalisation progressive"],
+      "effets": "1h de Yoga Nidra = 4h de sommeil en termes de récupération (tradition). Réduction du stress, traitement de l'insomnie, exploration de l'inconscient, implantation d'intentions (Sankalpa).",
+      "applications_therapeutiques": "TSPT (vétérans — protocole iRest de Richard Miller), douleur chronique, addictions, anxiété."
+    },
+    "visualisation_creatrice": {
+      "principe": "Le cerveau ne distingue pas parfaitement une expérience vécue d'une expérience intensément imaginée (même circuits neuronaux activés). La visualisation programme l'inconscient pour atteindre un objectif.",
+      "methode_vakog": "Visualiser avec les 5 sens: Voir l'image clairement, Entendre les sons, Ressentir les sensations corporelles, Sentir les odeurs, Goûter si applicable.",
+      "applications": ["Préparation sportive (études de neuroimagerie)", "Guérison et gestion de la douleur (psycho-neuro-immunologie)", "Atteinte d'objectifs personnels et professionnels", "Renforcement de la confiance", "Gestion des phobies"]
+    },
+    "body_scan": {
+      "definition": "Technique de pleine conscience (mindfulness) consistant à balayer systématiquement le corps avec l'attention, sans jugement.",
+      "methode": "Allongé, 20-45 min. Attention portée des orteils au sommet du crâne, en observant chaque sensation sans la modifier.",
+      "effets": "Développe l'intéroception, réduit le stress, améliore la conscience corporelle, réduit la douleur chronique (protocole MBSR de Jon Kabat-Zinn)."
+    },
+    "avertissement_sante": "Ces techniques sont complémentaires et ne remplacent pas un traitement médical. En cas de trouble psychiatrique, consultez un professionnel. La sophrologie est pratiquée par des sophrologues certifiés."
+  }
+}
