@@ -1,3 +1,4 @@
+use crate::ai::security::sanitize_api_error;
 use crate::core::http_types::Client;
 /// Gemini Provider Refactoring for v27.0 Epic 1
 /// Target: Convert ~200 expect() calls to Result-based error handling
@@ -176,12 +177,14 @@ impl Provider for GeminiProvider {
             .send()
             .await
             .map_err(|e| {
+                // Sanitize error to prevent API key leakage
+                let msg = sanitize_api_error(&e.to_string());
                 if e.is_timeout() {
-                    ProviderError::RequestTimeout(format!("Gemini request timeout: {}", e))
+                    ProviderError::RequestTimeout(format!("Gemini request timeout: {}", msg))
                 } else if e.is_connect() {
-                    ProviderError::ConnectionFailed(format!("Gemini connection failed: {}", e))
+                    ProviderError::ConnectionFailed(format!("Gemini connection failed: {}", msg))
                 } else {
-                    ProviderError::ApiError(format!("Gemini API error: {}", e))
+                    ProviderError::ApiError(format!("Gemini API error: {}", msg))
                 }
             })?;
 
@@ -226,7 +229,9 @@ impl Provider for GeminiProvider {
             .send()
             .await
             .map_err(|e| {
-                ProviderError::ConnectionFailed(format!("Gemini health check failed: {}", e))
+                // Sanitize error to prevent API key leakage
+                let msg = sanitize_api_error(&e.to_string());
+                ProviderError::ConnectionFailed(format!("Gemini health check failed: {}", msg))
             })?;
 
         if response.status().as_u16() == 200 {

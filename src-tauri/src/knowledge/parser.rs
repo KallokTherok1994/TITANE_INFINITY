@@ -489,16 +489,38 @@ impl Default for UniversalParser {
 // TAURI COMMANDS
 // ══════════════════════════════════════════════════════════════════
 
+/// Validates that a file path is safe (no traversal attacks).
+/// Rejects paths containing `..` components, NUL bytes, or protocol schemes.
+fn validate_file_path(file_path: &str) -> Result<std::path::PathBuf, String> {
+    if file_path.contains('\0') {
+        return Err("Invalid file path: contains NUL byte".to_string());
+    }
+    let path = std::path::PathBuf::from(file_path);
+    // Reject any path with .. components (traversal)
+    for component in path.components() {
+        if matches!(component, std::path::Component::ParentDir) {
+            return Err("Invalid file path: path traversal detected".to_string());
+        }
+    }
+    // Reject protocol schemes (e.g. file://, http://)
+    if file_path.contains("://") {
+        return Err("Invalid file path: protocol schemes not allowed".to_string());
+    }
+    Ok(path)
+}
+
 #[tauri::command]
 pub async fn parse_document(file_path: String) -> Result<KnowledgeDocument, String> {
+    let validated = validate_file_path(&file_path)?;
     let parser = UniversalParser::new();
-    parser.parse_file(&file_path).await
+    parser.parse_file(&validated.to_string_lossy()).await
 }
 
 #[tauri::command]
 pub async fn detect_file_format(file_path: String) -> Result<String, String> {
+    let validated = validate_file_path(&file_path)?;
     let parser = UniversalParser::new();
-    let format = parser.detect_format(&file_path);
+    let format = parser.detect_format(&validated.to_string_lossy());
     Ok(format!("{:?}", format))
 }
 
@@ -590,5 +612,30 @@ mod tests {
         assert_eq!(document.format, FileFormat::DOCX);
         assert!(document.content.contains("Bonjour TITANE"));
         assert!(document.content.contains("Mémoire persistante"));
+    }
+
+    #[test]
+    fn validate_file_path_rejects_traversal() {
+        assert!(validate_file_path("../../../etc/passwd").is_err());
+        assert!(validate_file_path("/home/user/../../../etc/shadow").is_err());
+        assert!(validate_file_path("foo/../../bar").is_err());
+    }
+
+    #[test]
+    fn validate_file_path_rejects_nul_bytes() {
+        assert!(validate_file_path("/tmp/safe\0malicious").is_err());
+    }
+
+    #[test]
+    fn validate_file_path_rejects_protocol_schemes() {
+        assert!(validate_file_path("file:///etc/passwd").is_err());
+        assert!(validate_file_path("http://evil.com/payload").is_err());
+    }
+
+    #[test]
+    fn validate_file_path_accepts_safe_paths() {
+        assert!(validate_file_path("/home/user/docs/report.pdf").is_ok());
+        assert!(validate_file_path("report.pdf").is_ok());
+        assert!(validate_file_path("/tmp/REPORT.PDF").is_ok());
     }
 }

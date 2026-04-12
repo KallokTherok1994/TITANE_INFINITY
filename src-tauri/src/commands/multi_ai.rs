@@ -5,6 +5,7 @@
 
 // Re-export all Multi-IA API commands
 pub use crate::ai::api::{
-    multi_ai_best_provider, multi_ai_configure_keys, multi_ai_evaluate, multi_ai_generate,
-    multi_ai_generate_dual, multi_ai_generate_fused, multi_ai_providers, multi_ai_set_fallback,
+    multi_ai_best_provider, multi_ai_cache_stats, multi_ai_clear_cache, multi_ai_configure_keys,
+    multi_ai_evaluate, multi_ai_generate, multi_ai_generate_dual, multi_ai_generate_fused,
+    multi_ai_providers, multi_ai_set_fallback,
 };

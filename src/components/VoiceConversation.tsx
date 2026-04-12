@@ -233,7 +233,7 @@ export const VoiceConversation = ({
     }
     if (audioContextRef.current) {
       audioContextRef.current.close().catch((err: unknown) => {
-        logger.warn('Failed to close AudioContext during cleanup', {
+        logger.debug('AudioContext close during cleanup', {
           component: 'VoiceConversation',
           action: 'stopAudioVisualization',
           error: err instanceof Error ? err.message : String(err),

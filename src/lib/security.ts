@@ -40,7 +40,9 @@ void import('@/monitoring')
       monitoringBridge = candidate;
     }
   })
-  .catch(() => {});
+  .catch((err: unknown) => {
+    logger.debug('Optional monitoring module unavailable', { error: String(err) });
+  });
 
 const monitoring: MonitoringBridge = {
   trackRequest: () => monitoringBridge.trackRequest(),
@@ -66,6 +68,7 @@ export const VOID_COMMANDS = new Set<string>([
   'tts_stop',
   'stop_speaking',
   'pause_speaking',
+  'calibrate_titane_voice',
   'resume_speaking',
   'set_audio_output_device',
   'set_audio_input_device',
@@ -117,6 +120,10 @@ export const VOID_COMMANDS = new Set<string>([
   // Config commands that return ()
   'save_ui_theme',
   'delete_config_preset',
+  // Multi-IA commands that return ()
+  'multi_ai_set_fallback',
+  'multi_ai_configure_keys',
+  'multi_ai_clear_cache',
   // Evolution commands that return ()
   'sync_evolution_state',
   // Devtools commands that return ()
@@ -174,6 +181,14 @@ export const VOID_COMMANDS = new Set<string>([
   'pipeline_pause',
   'pipeline_resume',
   'pipeline_reset',
+  // Window commands that return () (v30.1.0 audit)
+  'window_set_fullscreen',
+  'window_set_zoom',
+  'window_zoom_reset',
+  // Recording commands that return () (v30.1.0 audit)
+  'start_recording',
+  // Chat error reporting (v30.1.0 audit)
+  'report_chat_error',
 ]);
 
 /**
@@ -353,6 +368,18 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'chat_mode_change', // ✅ v30.0.0 — Chat mode switching
   'chat_mode_sync', // ✅ v30.0.0 — Chat mode sync
   'chat_generate_suggestions', // ✅ v∞ Suggestions IA
+  // Multi-IA Orchestrator Commands (v28.0)
+  'multi_ai_generate',
+  'multi_ai_generate_dual',
+  'multi_ai_generate_fused',
+  'multi_ai_providers',
+  'multi_ai_best_provider',
+  'multi_ai_evaluate',
+  'multi_ai_set_fallback',
+  'multi_ai_configure_keys',
+  'multi_ai_cache_stats',
+  'multi_ai_clear_cache',
+  'report_chat_error', // ✅ v30.1.0 — Error reporting (void command)
   'generate_response',
   'stream_response',
   'speak_text',
@@ -840,6 +867,12 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'get_system_health',
   'memory_repair',
   'system_optimize',
+  // Admin Engine state aggregator commands (v30.1.0 — previously required skipWhitelistCheck)
+  'get_admin_vitals',
+  'get_module_statuses',
+  'get_performance_anomalies',
+  'get_healing_anomalies',
+  'get_system_mode',
   // Legacy commands kept for auto-heal compatibility
   'memory_save_entry',
   'memory_get_entry',
