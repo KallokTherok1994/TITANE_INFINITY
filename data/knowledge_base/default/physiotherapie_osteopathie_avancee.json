@@ -1,0 +1,135 @@
+{
+  "version": "v30.1.0",
+  "category": "physiotherapie_osteopathie_avancee",
+  "description": "Physiothérapie et ostéopathie avancées — rééducation fonctionnelle, biomécanique, techniques manuelles, fascia et chaînes myofasciales, ostéopathie crânienne, viscérale, structurelle, thérapie manuelle orthopédique, exercice thérapeutique, électrothérapie, hydrothérapie, proprioception",
+  "physiotherapie_osteopathie_avancee": {
+    "introduction": "La physiothérapie (kinésithérapie) et l'ostéopathie sont deux approches complémentaires de la santé musculo-squelettique et de la rééducation fonctionnelle. La physiothérapie se concentre sur la restauration du mouvement et de la fonction par l'exercice thérapeutique et les modalités physiques. L'ostéopathie considère le corps comme une unité fonctionnelle et utilise des techniques manuelles pour restaurer la mobilité globale. TITANE fournit une compréhension avancée de ces deux disciplines.",
+    "physiotherapie": {
+      "fondements": {
+        "définition": "Profession de santé de première ligne spécialisée dans l'évaluation, le traitement et la prévention des troubles du mouvement et de la fonction physique. Réglementée dans la plupart des pays développés.",
+        "principes": {
+          "movement_is_medicine": "Le mouvement est le médicament le plus puissant et le moins cher. L'immobilisation prolongée est délétère dans la majorité des cas.",
+          "patient_actif": "Le patient est acteur de sa guérison. Le physiothérapeute guide et éduque — il ne 'répare' pas passivement.",
+          "evidence_based": "Pratique basée sur les preuves (EBP) : intégration des meilleures preuves scientifiques, de l'expertise clinique et des préférences du patient.",
+          "biopsychosocial": "Modèle biopsychosocial : la douleur et le handicap sont influencés par des facteurs biologiques (tissu, inflammation), psychologiques (croyances, peur du mouvement, catastrophisation) ET sociaux (travail, relations, environnement)."
+        }
+      },
+      "évaluation": {
+        "anamnèse": "Histoire détaillée de la plainte, mécanisme de blessure, facteurs aggravants/soulageants, drapeaux rouges (red flags), impact fonctionnel.",
+        "examen_physique": {
+          "inspection": "Posture, symétrie, déformation, oedème, atrophie musculaire, cicatrices.",
+          "palpation": "Température, texture tissulaire, points de douleur (tender points vs trigger points), spasme musculaire, crépitation.",
+          "amplitude_articulaire": "Goniométrie — mesure de l'amplitude de mouvement active et passive de chaque articulation.",
+          "force_musculaire": "Testing musculaire manuel (échelle 0-5) ou dynamométrie. Identification des faiblesses spécifiques.",
+          "tests_spéciaux": "Tests orthopédiques spécifiques à chaque articulation (Lachman pour LCA du genou, Neer pour conflit d'épaule, SLR pour nerf sciatique, etc.).",
+          "évaluation_fonctionnelle": "Tests fonctionnels : marche, montée d'escaliers, squat, équilibre, activités spécifiques au sport ou au travail du patient."
+        }
+      },
+      "techniques_de_traitement": {
+        "exercice_therapeutique": {
+          "renforcement": "Isométrique (sans mouvement) → Concentrique (raccourcissement) → Excentrique (allongement — le plus efficace pour les tendinopathies). Progressif en charge.",
+          "étirements": "Statique (30-60 sec), dynamique (pré-activité), PNF (contracter-relâcher — le plus efficace pour gagner en amplitude).",
+          "stabilisation": "Exercices de stabilisation segmentaire (transverse abdominal, multifides pour le rachis). Planche, bird-dog, dead bug.",
+          "proprioception": "Rééducation de l'équilibre et du contrôle neuromusculaire. Planche instable, yeux fermés, surfaces instables. Essentiel après entorse ou reconstruction ligamentaire.",
+          "cardio_reconditionnement": "Réentraînement à l'effort après déconditionnement (maladie chronique, chirurgie, alitement). Protocole progressif monitoré."
+        },
+        "thérapie_manuelle": {
+          "mobilisation": "Mouvements passifs oscillatoires appliqués dans l'amplitude physiologique. Grades I-IV de Maitland (I-II = petite amplitude pour la douleur, III-IV = grande amplitude pour la raideur).",
+          "manipulation": "HVLA (High Velocity Low Amplitude) — impulsion rapide au-delà de la barrière physiologique (similaire à l'ajustement chiropratique). Le 'crack' articulaire.",
+          "mobilisation_avec_mouvement": "Technique de Mulligan — mobilisation articulaire passive combinée avec un mouvement actif du patient. Souvent un effet immédiat spectaculaire.",
+          "massage_tissus_mous": "Friction transversale profonde (Cyriax), pétrissage, effleurage, libération myofasciale."
+        },
+        "modalités_physiques": {
+          "cryothérapie": "Application de froid. Réduit l'inflammation aiguë, la douleur, le spasme. 15-20 min max. Protocole RICE (Rest, Ice, Compression, Elevation) remplacé par POLICE (Protection, Optimal Loading, Ice, Compression, Elevation).",
+          "thermothérapie": "Application de chaleur. Relaxation musculaire, augmentation de la circulation, réduction raideur. Compresses chaudes, bains chauds, paraffine.",
+          "ultrasons": "Ondes sonores à haute fréquence. Effet thermique profond et mécanique (micro-massage cellulaire). Tendinopathies, cicatrices, contractures.",
+          "TENS": "Transcutaneous Electrical Nerve Stimulation. Électrodes cutanées délivrant un courant de faible intensité. Analgésie par gate control et libération d'endorphines.",
+          "laser_thérapeutique": "Low-Level Laser Therapy (LLLT). Photobiomodulation — stimule la cicatrisation cellulaire, réduit l'inflammation. Tendinopathies, arthrose.",
+          "ondes_de_choc": "Shockwave therapy. Ondes acoustiques de haute énergie. Très efficace pour les tendinopathies chroniques (fasciite plantaire, tendinopathie d'Achille, épicondylite). Douloureux mais résultats rapides."
+        },
+        "dry_needling": {
+          "définition": "Insertion d'aiguilles sèches (sans médicament) dans les trigger points myofasciaux pour libérer les contractures.",
+          "différence_acupuncture": "Le dry needling cible les trigger points (nœuds musculaires). L'acupuncture cible les points des méridiens. Overlap partiel des points.",
+          "mécanisme": "L'aiguille provoque une réponse de secousse locale (LTR — local twitch response) → relâchement du point de contracture → amélioration de la circulation locale."
+        }
+      },
+      "spécialités": {
+        "orthopédique": "Troubles musculo-squelettiques : entorses, fractures (post-immobilisation), arthrose, tendinopathies, douleurs vertébrales.",
+        "neurologique": "AVC, Parkinson, sclérose en plaques, lésions médullaires, paralysies. Rééducation de la marche, de l'équilibre, de la motricité fine.",
+        "cardio_respiratoire": "Réhabilitation cardiaque post-infarctus, BPCO, fibrose kystique. Drainage bronchique, réentraînement à l'effort.",
+        "pelvienne": "Rééducation du plancher pelvien (post-partum, incontinence, prolapsus, douleurs pelviennes). Domaine en forte croissance.",
+        "sportive": "Prévention des blessures, retour au sport, préparation physique, gestion de la charge d'entraînement."
+      }
+    },
+    "osteopathie": {
+      "fondements": {
+        "auteur": "Dr Andrew Taylor Still (1874, Kirksville, Missouri). Médecin désenchanté par la médecine de son époque.",
+        "quatre_principes": {
+          "unité_du_corps": "Le corps est une unité fonctionnelle — structure et fonction sont interdépendantes. Un problème à un endroit peut avoir des répercussions à distance.",
+          "autorégulation": "Le corps possède des mécanismes d'autorégulation et d'auto-guérison (homéostasie). Le rôle de l'ostéopathe est de lever les obstacles à ces mécanismes.",
+          "structure_et_fonction": "La structure gouverne la fonction et réciproquement. Une altération structurelle (restriction de mobilité, compression) altère la fonction (vasculaire, nerveuse, viscérale).",
+          "loi_de_artere": "La circulation libre de tous les fluides (sang, lymphe, LCR) est essentielle à la santé. Toute obstruction → pathologie."
+        }
+      },
+      "approches_osteopathiques": {
+        "structurelle": {
+          "cibles": "Articulations, muscles, ligaments, tendons.",
+          "techniques": {
+            "HVLA": "High Velocity Low Amplitude — trust articulaire. Technique signature de l'ostéopathie. Objectif : restaurer la mobilité d'une articulation en restriction.",
+            "techniques_musculaires": "Muscle Energy Technique (MET) — le patient contracte activement contre la résistance de l'ostéopathe → allongement post-isométrique. Strain-Counterstrain — positionner le patient dans la position de confort maximal pendant 90 sec → reset du fuseau neuromusculaire.",
+            "myofasciale": "Libération myofasciale directe et indirecte. Pression lente et soutenue sur les restrictions du fascia jusqu'à la libération tissulaire."
+          }
+        },
+        "crânienne": {
+          "auteur": "William Garner Sutherland (1930s). Élève de Still.",
+          "concept": "Le crâne n'est pas une boîte rigide — les sutures crâniennes permettent un micro-mouvement rythmique (MRP — Mécanisme Respiratoire Primaire). Ce rythme (8-14 cycles/min) reflète la fluctuation du liquide céphalo-rachidien (LCR).",
+          "technique": "Palpation ultra-fine des os du crâne et du sacrum (axe cranio-sacré). Corrections par pressions légères (5-10 grammes — le poids d'une pièce de monnaie).",
+          "indications": "Migraines, céphalées, acouphènes, troubles de la mâchoire (ATM), sinusites chroniques, stress, troubles du sommeil, coliques du nourrisson.",
+          "débat_scientifique": "Le MRP est controversé dans la communauté scientifique. Les preuves anatomiques du mouvement des sutures sont limitées chez l'adulte. Cependant, les résultats cliniques sont rapportés par de nombreux patients et praticiens.",
+          "nourrisson": "L'ostéopathie crânienne est particulièrement utilisée chez le nourrisson (plagiocéphalie, torticolis, coliques, reflux, troubles de succion). Les sutures sont encore ouvertes = plus de mobilité."
+        },
+        "viscérale": {
+          "auteur": "Jean-Pierre Barral (1980s). Ostéopathe français.",
+          "concept": "Les organes (viscères) ont une mobilité propre — ils glissent les uns sur les autres et par rapport aux structures environnantes à chaque respiration et mouvement. Une adhérence, une cicatrice, une inflammation peut restreindre cette mobilité → dysfonction viscérale.",
+          "techniques": "Écoute tissulaire (la main est posée légèrement et 'écoute' le mouvement viscéral), mobilisation douce de l'organe, libération des ligaments suspenseurs.",
+          "indications": "Troubles digestifs fonctionnels (ballonnements, constipation, reflux), douleurs pelviennes, adhérences post-chirurgicales, douleurs référées viscérales.",
+          "controverses": "Preuves scientifiques limitées mais croissantes. Concept de 'mobilité viscérale' difficile à mesurer objectivement."
+        },
+        "fonctionnelle": {
+          "description": "Approche douce qui suit le mouvement tissulaire dans le sens de la facilité (indirect) plutôt que contre la restriction (direct).",
+          "adapté_pour": "Patients aigus, douloureux, enfants, personnes âgées, post-opératoire."
+        }
+      },
+      "fascia": {
+        "définition": "Tissu conjonctif fibreux qui enveloppe et connecte TOUT dans le corps : muscles, os, organes, nerfs, vaisseaux. Du superficiel (sous la peau) au profond (autour des organes et du cerveau).",
+        "propriétés": {
+          "tensegrité": "Le fascia fonctionne comme un système de tensegrité — les tensions sont distribuées dans l'ensemble du réseau. Une restriction locale a des effets à distance (comme tirer sur un fil d'un pull).",
+          "mécanoréception": "Le fascia contient plus de récepteurs sensoriels que les muscles (Schleip 2003). C'est un organe sensoriel majeur — proprioception, intéroception, nociception.",
+          "thixotropie": "Le fascia change de viscosité sous l'effet de la chaleur, du mouvement et de la pression (comme le ketchup). C'est pourquoi l'échauffement et le massage libèrent les tensions.",
+          "mémoire_tissulaire": "Le fascia peut stocker les contraintes mécaniques et émotionnelles. Base des thérapies somatiques et du bodywork."
+        },
+        "chaînes_myofasciales_Thomas_Myers": {
+          "auteur": "Thomas Myers (2001) — 'Anatomy Trains'",
+          "principe": "Les muscles ne fonctionnent pas isolément — ils sont connectés en chaînes continues via le fascia. Une restriction dans une chaîne affecte l'ensemble.",
+          "ligne_postérieure_superficielle": "Fascia plantaire → mollets → ischio-jambiers → fascia thoraco-lombaire → muscles paravertébraux → galea (crâne). De la plante du pied au sommet du crâne.",
+          "ligne_antérieure_superficielle": "Orteils → tibial antérieur → quadriceps → droits de l'abdomen → sterno-cléido-mastoïdien → galea. Front du corps.",
+          "ligne_latérale": "Malléole externe → péroniers → IT band → obliques → intercostaux → SCM. Stabilisation latérale.",
+          "ligne_spirale": "Enroulement hélicoïdal autour du corps. Relie le crâne au pied opposé. Rôle dans la rotation et la marche.",
+          "implication_clinique": "Une douleur au pied peut être causée par une restriction dans la chaîne postérieure au niveau du bassin ou du crâne. Traiter le site de la douleur sans traiter la chaîne entière → résultat incomplet."
+        }
+      }
+    },
+    "rééducation_avancée": {
+      "contrôle_moteur": {
+        "définition": "Capacité à coordonner les muscles profonds (stabilisateurs) et superficiels (mobilisateurs) dans un pattern de mouvement optimal.",
+        "dysfonction": "Dans la lombalgie chronique, le transverse de l'abdomen et le multifide se désactivent ou se contractent en retard → instabilité segmentaire → douleur.",
+        "rééducation": "Réapprentissage du recrutement des muscles profonds avant les muscles superficiels. Progression : allongé → assis → debout → mouvement → charge → sport."
+      },
+      "neurosciences_de_la_douleur": {
+        "douleur_chronique": "La douleur chronique (> 3 mois) n'est pas proportionnelle aux lésions tissulaires. Le système nerveux se sensibilise (sensibilisation centrale) — le 'volume de la douleur' est augmenté.",
+        "éducation_à_la_douleur": "Pain Neuroscience Education (PNE) : expliquer au patient que la douleur est un signal d'alarme, pas un dommage tissulaire continu. Réduit la peur du mouvement et améliore les résultats.",
+        "kinésiophobie": "Peur du mouvement liée à la croyance que bouger = se blesser. Facteur prédictif majeur de chronicité. Traitement : exposition graduelle au mouvement + éducation."
+      }
+    }
+  }
+}

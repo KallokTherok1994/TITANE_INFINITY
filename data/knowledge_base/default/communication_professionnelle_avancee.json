@@ -1,0 +1,133 @@
+{
+  "version": "v30.1.0",
+  "category": "communication_professionnelle_avancee",
+  "description": "Communication professionnelle avancée — entretien d'embauche, réunion efficace, feedback constructif, assertivité, gestion de conflit, communication non-violente (CNV Rosenberg), influence éthique, leadership communicationnel, gestion de crise, communication écrite professionnelle",
+  "communication_professionnelle_avancee": {
+    "introduction": "La communication professionnelle avancée va au-delà de 'bien s'exprimer' — elle intègre l'intelligence émotionnelle, la stratégie relationnelle, la gestion de pouvoir et la capacité à naviguer les situations complexes (conflits, crises, négociations) avec impact et intégrité. TITANE fournit des frameworks actionnables pour chaque contexte professionnel.",
+    "communication_non_violente": {
+      "auteur": "Marshall Rosenberg (1960s). CNV = Communication Non Violente (ou Communication Consciente).",
+      "philosophie": "Toute violence est l'expression tragique d'un besoin non satisfait. La CNV vise à rétablir la connexion empathique entre les personnes.",
+      "quatre_étapes_OSBD": {
+        "observation": "Décrire les FAITS observables sans interprétation ni jugement. 'Quand tu es arrivé à 10h15...' (pas 'Tu es toujours en retard').",
+        "sentiment": "Exprimer l'ÉMOTION ressentie (pas une pensée déguisée). 'Je me suis senti frustré' (pas 'Je me suis senti manipulé' — c'est un jugement).",
+        "besoin": "Identifier le BESOIN universel sous-jacent. 'J'ai besoin de pouvoir compter sur les horaires convenus' (besoin de fiabilité/respect).",
+        "demande": "Formuler une DEMANDE concrète, positive, réalisable et négociable. 'Serais-tu d'accord pour me prévenir 30 min avant si tu as un retard ?' (pas un ordre déguisé)."
+      },
+      "écoute_empathique": "Reformuler ce que l'autre vit : 'Est-ce que tu te sens X parce que tu as besoin de Y ?' — sans conseil, sans minimiser, sans comparer avec sa propre expérience.",
+      "pièges_courants": {
+        "faux_sentiments": "'Je me sens ignoré/manipulé/trahi' = jugements déguisés en sentiments. Vrais sentiments : triste, en colère, frustré, effrayé, découragé.",
+        "exigences_déguisées": "Si la demande n'est pas refusable, c'est une exigence. La CNV suppose la liberté de dire non.",
+        "cnv_de_surface": "Utiliser la formule OSBD mécaniquement sans vraie empathie → perçu comme manipulatoire."
+      }
+    },
+    "assertivité": {
+      "définition": "Capacité à exprimer ses opinions, ses besoins et ses limites de manière claire, directe et respectueuse — sans agressivité ni passivité.",
+      "quatre_styles": {
+        "passif": "Ne pas exprimer ses besoins. Dire oui quand on pense non. Accumulation de frustration → explosion ou résignation. Phrases typiques : 'C'est pas grave', 'Comme tu veux'.",
+        "agressif": "Imposer ses besoins au détriment des autres. Critique, intimidation, sarcasme. Phrases typiques : 'Tu dois...', 'C'est ta faute'.",
+        "passif_agressif": "Exprimer l'hostilité indirectement. Procrastination, sabotage subtil, sarcasme, silence punitif. Le plus toxique car non confrontable directement.",
+        "assertif": "Exprimer clairement ses besoins tout en respectant ceux des autres. Position adulte-adulte (analyse transactionnelle). Phrases typiques : 'Je préfère...', 'J'ai besoin que...', 'Non, et voici pourquoi'."
+      },
+      "techniques": {
+        "disque_rayé": "Répéter calmement sa position sans se justifier ni se défendre. 'Je comprends, mais ma réponse est non.' Efficace face à la pression.",
+        "brouillard": "Accepter partiellement la critique sans la prendre personnellement. 'C'est possible que tu aies raison sur ce point.' Désamorce l'escalade.",
+        "DESC": "Décrire → Exprimer → Spécifier → Conséquences. Structure complète pour une confrontation assertive.",
+        "sandwich_feedback": "Positif → Correctif → Positif. Controversé (peut sembler manipulateur) mais utile pour les feedbacks légers."
+      }
+    },
+    "feedback_constructif": {
+      "modèle_SBI": {
+        "auteur": "Center for Creative Leadership",
+        "situation": "Décrire le contexte précis (quand, où). 'Lors de la réunion de lundi dernier...'",
+        "behaviour": "Décrire le comportement observé (fait, pas jugement). 'Tu as coupé la parole à Marie trois fois...'",
+        "impact": "Expliquer l'impact concret. 'Ce qui a fait que ses idées n'ont pas été entendues et que l'équipe est repartie sans consensus.'"
+      },
+      "feedforward": {
+        "concept": "Marshall Goldsmith. Au lieu de donner du feedback sur le passé (non modifiable), donner des suggestions pour le futur.",
+        "exemple": "'À l'avenir, pourrais-tu laisser chaque personne terminer son point avant d'intervenir ?' vs 'Tu as interrompu tout le monde.'"
+      },
+      "recevoir_feedback": {
+        "règle_24h": "Ne pas réagir immédiatement. Écouter, remercier, réfléchir 24h, puis décider quoi intégrer.",
+        "filtrage": "Tout feedback n'est pas valide. Évaluer : qui le donne (crédibilité) ? avec quelle intention ? basé sur quels faits ? récurrent ou isolé ?"
+      }
+    },
+    "réunion_efficace": {
+      "préparation": {
+        "règle_PAO": "Purpose (objectif clair), Agenda (ordre du jour), Outcome (résultat attendu). Si vous ne pouvez pas remplir PAO → annulez la réunion.",
+        "durée": "Jeff Bezos : pas de réunion > 1h. Elon Musk : quitter une réunion dès qu'on n'apporte plus de valeur. Préférer 25 min ou 50 min (au lieu de 30 ou 60)."
+      },
+      "facilitation": {
+        "règle_2_pizzas": "Bezos : si vous ne pouvez pas nourrir le groupe avec 2 pizzas, il y a trop de monde. 5-7 personnes max pour décider.",
+        "gardien_du_temps": "Désigner un timekeeper. Interrompre poliment les tangentes.",
+        "parking_lot": "Liste visible des sujets hors-sujet importants mais non urgents. 'Excellente question — on la capture dans le parking lot pour la traiter séparément.'"
+      },
+      "compte_rendu": "Qui fait quoi avant quand (format QQCD). Distribué dans les 24h. Actions avec responsable ET deadline."
+    },
+    "gestion_de_conflit": {
+      "modèle_Thomas_Kilmann": {
+        "compétition": "Assertif + non-coopératif. Win-lose. Utile en urgence ou quand les enjeux sont non-négociables.",
+        "collaboration": "Assertif + coopératif. Win-win. Le meilleur quand le temps le permet et la relation compte.",
+        "compromis": "Moitié-moitié. Quand la collaboration n'est pas possible et le temps est limité.",
+        "évitement": "Non-assertif + non-coopératif. Quand l'enjeu est faible ou la situation explosive.",
+        "accommodation": "Non-assertif + coopératif. Quand la relation prime sur l'enjeu. Risque : devenir un paillasson."
+      },
+      "désescalade": {
+        "technique_LARA": "Listen (écouter sans interrompre) → Affirm (valider l'émotion) → Respond (répondre factuellement) → Add (proposer une solution/alternative)",
+        "règle_3_secondes": "Prendre 3 secondes de respiration avant de répondre dans une situation tendue → évite la réaction limbique.",
+        "repositionnement": "Passer de 'toi contre moi' à 'nous contre le problème'. Langage inclusif : 'Comment peut-on résoudre ça ensemble ?'"
+      }
+    },
+    "entretien_embauche": {
+      "méthode_STAR": {
+        "situation": "Contexte précis de l'exemple",
+        "tâche": "Ce qui était attendu de vous",
+        "action": "Ce que VOUS avez fait concrètement (pas l'équipe)",
+        "résultat": "Impact mesurable (chiffres, pourcentages, feedback reçu)"
+      },
+      "questions_pièges": {
+        "forces_faiblesses": "Force : illustrée par un exemple STAR. Faiblesse : réelle mais gérée activement ('J'ai tendance à X, et voici comment je le gère : Y').",
+        "pourquoi_vous": "Alignement valeurs-compétences-mission : 'Ce que vous faites me parle parce que X, et j'apporte Y qui répond à votre besoin Z.'",
+        "où_dans_5_ans": "Montrer ambition + alignement avec l'entreprise. Pas 'à votre place' mais 'en ayant contribué à X et développé Y'."
+      },
+      "salaire": {
+        "ancrage": "Donner un chiffre élevé mais justifiable (étude de marché). L'ancrage influence le résultat final (Kahneman).",
+        "BATNA": "Best Alternative To a Negotiated Agreement — avoir une alternative renforce la position de négociation."
+      }
+    },
+    "communication_écrite_pro": {
+      "email_efficace": {
+        "règle_5_lignes": "Un email professionnel devrait tenir en 5 lignes ou moins pour le corps principal. Au-delà → réunion ou appel.",
+        "objet_actionnable": "MAUVAIS : 'Réunion'. BON : '[Action requise] Validation budget Q2 avant vendredi 16h'.",
+        "structure_BLUF": "Bottom Line Up Front (militaire américain) : conclusion/demande en PREMIER, puis le contexte si nécessaire."
+      },
+      "rédaction_persuasive": {
+        "AIDA": "Attention → Intérêt → Désir → Action. Structure classique du copywriting applicable aux propositions commerciales.",
+        "pyramide_inversée": "Information la plus importante en premier, détails ensuite, contexte en fin. Le lecteur peut arrêter à tout moment et avoir l'essentiel."
+      }
+    },
+    "influence_ethique": {
+      "Cialdini_6_principes": {
+        "auteur": "Robert Cialdini (1984) — 'Influence: The Psychology of Persuasion'",
+        "réciprocité": "Donner avant de demander. Un service non sollicité crée un sentiment d'obligation.",
+        "engagement_cohérence": "Les gens veulent être cohérents avec leurs engagements antérieurs (surtout publics et écrits).",
+        "preuve_sociale": "Les gens font ce que d'autres personnes similaires font. Témoignages, chiffres, 'X personnes ont déjà...'",
+        "sympathie": "On dit oui plus facilement à quelqu'un qu'on apprécie. Similarité, compliments sincères, coopération.",
+        "autorité": "Expertise perçue augmente la persuasion. Titres, publications, expérience démontrée.",
+        "rareté": "Ce qui est rare ou en voie de disparition est perçu comme plus désirable. 'Dernière chance', 'Places limitées'."
+      },
+      "usage_éthique": "Ces principes sont des OUTILS. Utilisés avec intégrité → influence positive. Utilisés pour manipuler → perte de confiance durable si découvert."
+    },
+    "communication_interculturelle": {
+      "modèle_Meyer": {
+        "auteur": "Erin Meyer (2014) — 'The Culture Map'",
+        "dimensions": {
+          "communication": "Low context (direct : Allemagne, Pays-Bas, USA) vs High context (implicite : Japon, Chine, France)",
+          "feedback_négatif": "Direct (Russie, Pays-Bas) vs Indirect (Japon, Thaïlande). La France est directe en feedback mais high-context en communication.",
+          "persuasion": "Principes d'abord (France, Italie) vs Applications d'abord (USA, UK). En France on explique pourquoi avant quoi.",
+          "leadership": "Égalitaire (Scandinavie) vs Hiérarchique (Japon, Corée, Inde)",
+          "décision": "Consensus (Japon, Suède) vs Top-down (USA, Chine, Inde)"
+        }
+      }
+    }
+  }
+}

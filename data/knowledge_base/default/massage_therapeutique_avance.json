@@ -1,0 +1,109 @@
+{
+  "version": "v30.1.0",
+  "category": "massage_therapeutique_avance",
+  "description": "Massage thérapeutique avancé — techniques profondes (deep tissue, trigger points, Rolfing), fasciathérapie, massage sportif, drainage lymphatique avancé, massage thaï, shiatsu avancé, massage californien, pierre chaude, réflexologie avancée, auto-massage, effets neurophysiologiques",
+  "massage_therapeutique_avance": {
+    "introduction": "Le massage thérapeutique est l'une des plus anciennes formes de médecine — des traces de massage datent de 3000 av. J.-C. en Chine, en Inde et en Égypte. Au-delà de la relaxation, le massage thérapeutique avancé traite les dysfonctions musculo-squelettiques, améliore la circulation, module le système nerveux et a des effets mesurables sur la biochimie du stress. TITANE détaille les techniques avancées, les mécanismes et les protocoles.",
+    "effets_neurophysiologiques": {
+      "neurochimie": {
+        "cortisol": "Réduction de 31% en moyenne (Field et al. 2005). Le massage active le parasympathique et inhibe l'axe HPA.",
+        "sérotonine": "Augmentation de 28% (urinaire). Contribue à l'amélioration de l'humeur et du sommeil post-massage.",
+        "dopamine": "Augmentation de 31%. Contribue au sentiment de bien-être et de motivation.",
+        "ocytocine": "Le toucher thérapeutique libère de l'ocytocine chez le masseur ET le massé — renforcement du lien de confiance.",
+        "endorphines": "Libération d'endorphines proportionnelle à l'intensité du massage. Effet analgésique.",
+        "substance_P": "Réduction de la Substance P (neuropeptide de la douleur) dans les tissus massés."
+      },
+      "système_nerveux_autonome": {
+        "activation_parasympathique": "Réduction de la fréquence cardiaque, de la pression artérielle, du rythme respiratoire. Augmentation du tonus vagal (HRV).",
+        "réduction_sympathique": "Diminution de l'activité fight-or-flight. Réduction de la tension musculaire réflexe.",
+        "effets_cumulatifs": "Les effets sont dose-dépendants — un massage régulier (1x/semaine pendant 5 semaines) a des effets cumulatifs supérieurs à une séance isolée."
+      },
+      "fascia_et_mecanotransduction": "La pression du massage stimule les mécanorécepteurs du fascia (corpuscules de Ruffini, de Pacini, de Golgi). Les cellules du fascia (fibroblastes) répondent à la stimulation mécanique par un remodelage de la matrice extracellulaire (Langevin 2006)."
+    },
+    "techniques_avancées": {
+      "deep_tissue": {
+        "définition": "Travail sur les couches profondes du tissu musculaire, du fascia et des tendons. Pression ferme et lente, souvent le long des fibres musculaires.",
+        "objectifs": "Libération des adhérences et des cicatrices, relâchement des contractures chroniques, amélioration de l'alignement musculaire.",
+        "stripping": "Pression lente et profonde le long de la fibre musculaire, du tendon vers l'insertion. Sépare les fibres adhérentes.",
+        "friction_transversale": "Pression perpendiculaire aux fibres musculaires. Technique de Cyriax. Casse les adhérences cicatricielles, stimule le remodelage du collagène.",
+        "précautions": "Douleur post-massage normale (24-48h, type courbature). Hydratation abondante après la séance. Contre-indiqué sur les zones inflammatoires aiguës, les varices, les thromboses."
+      },
+      "trigger_points": {
+        "définition": "Points de contraction musculaire hypertonique (nœuds) qui causent une douleur locale et référée (projetée) à distance.",
+        "auteurs": "Janet Travell et David Simons — 'Myofascial Pain and Dysfunction' (1983). Cartographie complète des trigger points et de leurs patterns de douleur référée.",
+        "caractéristiques": {
+          "point_actif": "Douloureux spontanément et à la pression. Cause la douleur du patient. Bande tendue palpable. Réponse de secousse locale (LTR) possible.",
+          "point_latent": "Non douloureux spontanément mais douloureux à la pression. Peut devenir actif sous stress, fatigue ou surcharge.",
+          "douleur_référée": "La douleur est projetée dans un pattern prévisible. Exemple : trigger point dans le trapèze supérieur → douleur référée dans la tempe et derrière l'œil (souvent diagnostiqué à tort comme migraine)."
+        },
+        "traitement": {
+          "compression_ischémique": "Pression soutenue sur le trigger point (10-90 secondes) → ischémie locale → relâchement → reperfusion. La douleur diminue progressivement sous la pression (signe de relâchement).",
+          "spray_and_stretch": "Vaporisation de froid (fluorométhane ou éthyle chloride) sur le pattern de douleur référée + étirement passif du muscle.",
+          "dry_needling": "Insertion d'une aiguille sèche dans le trigger point → réponse de secousse locale → relâchement. Très efficace."
+        },
+        "patterns_courants": {
+          "trapèze_supérieur": "TrP → douleur référée tempe + derrière l'œil. Pseudo-migraine.",
+          "sterno_cléido_mastoidien": "TrP → douleur référée front + sinus + oreille. Pseudo-sinusite, vertiges.",
+          "piriforme": "TrP → douleur référée fesse + jambe postérieure. Pseudo-sciatique.",
+          "sous_occipitaux": "TrP → douleur référée bandeau autour de la tête. Pseudo-céphalée de tension.",
+          "psoas": "TrP → douleur référée bas du dos + aine. Souvent ignoré — cause majeure de lombalgie."
+        }
+      },
+      "rolfing": {
+        "auteur": "Ida Rolf (1950s) — 'Structural Integration'",
+        "philosophie": "Le corps s'organise dans la gravité. Les restrictions fasciales créent des compensations posturales. L'intégration structurelle réorganise le corps dans un alignement optimal avec la gravité.",
+        "protocole": "10 séances progressives, chacune ciblant une région ou un plan du corps. Séance 1 : thorax superficiel. Séance 7 : tête et cou. Séance 10 : intégration finale.",
+        "intensité": "Peut être intense voire douloureux. Travail profond sur le fascia. Les 'releases' émotionnels sont fréquents (pleurs, souvenirs corporels)."
+      },
+      "massage_thai": {
+        "nom": "Nuad Thai (นวดไทย) — inscrit au patrimoine culturel immatériel de l'UNESCO (2019)",
+        "philosophie": "Basé sur le système des 'sen' (lignes d'énergie similaires aux méridiens). Le praticien est un 'yogi paresseux' — il utilise son propre poids et ses leviers pour étirer passivement le receveur.",
+        "techniques": "Pressions des pouces/paumes/coudes/genoux/pieds le long des sen. Étirements passifs type yoga. Travail au sol sur un futon.",
+        "séquence": "Commence par les pieds et remonte. Décubitus dorsal → latéral → ventral → assis. Séance typique : 90-120 min.",
+        "bénéfices": "Augmentation de la flexibilité, réduction de la douleur, amélioration de la circulation, profonde relaxation. Études modérées mais positives."
+      },
+      "shiatsu_avance": {
+        "fondements": "Pression digitale (shi = doigt, atsu = pression) sur les points d'acupuncture et les méridiens. Développé au Japon à partir de la MTC.",
+        "diagnostic_hara": "Palpation de l'abdomen (hara) pour identifier les méridiens en excès (jitsu) et en vide (kyo). Le traitement tonifie le kyo et disperse le jitsu.",
+        "technique": "Pression perpendiculaire, avec le poids du corps (pas la force musculaire). Pression statique maintenue 3-7 secondes. Transition fluide entre les points.",
+        "meridien_approach": "Travail sur le méridien entier (pas seulement les points) — le praticien suit le trajet du méridien avec une attention continue.",
+        "zen_shiatsu": "Développé par Shizuto Masunaga (1970s). Intègre la psychologie et les extensions des méridiens. Chaque méridien a un aspect émotionnel et psychologique."
+      },
+      "massage_californien": {
+        "description": "Développé à Esalen Institute (Big Sur, California, 1960s). Mouvements longs, fluides et enveloppants sur l'ensemble du corps.",
+        "caractéristiques": "Effleurage continu, transitions sans rupture, contact constant. Plus lent que le suédois. Huile abondante.",
+        "objectif": "Reconnexion corps-esprit. Conscience corporelle. Profonde relaxation. Souvent utilisé en psychothérapie corporelle."
+      },
+      "pierres_chaudes": {
+        "outils": "Pierres de basalte chauffées (50-55°C). Pierres de marbre froides (alternance possible).",
+        "technique": "Les pierres sont placées sur les points d'énergie (chakras, long de la colonne) et utilisées pour masser en glissant.",
+        "effets": "La chaleur profonde détend les muscles en profondeur, améliore la circulation, prépare le tissu pour un travail plus profond.",
+        "thermothérapie": "Alternance chaud/froid (contraste) → vasodilatation/vasoconstriction alternée → pompage vasculaire → réduction oedème et inflammation."
+      }
+    },
+    "auto_massage": {
+      "outils": {
+        "foam_roller": "Rouleau en mousse. Auto-libération myofasciale. Rouler lentement sur les zones tendues (IT band, quadriceps, mollets, thoracique). 30-60 sec par zone.",
+        "balle_tennis_lacrosse": "Pour cibler les trigger points spécifiques. Piriforme (assis sur la balle), trapèze (contre un mur), sous les pieds (fasciite plantaire).",
+        "theracane": "Bâton en S pour atteindre les trigger points du dos et des épaules soi-même.",
+        "pistolet_massage": "Appareil à percussion. Efficace pour la récupération musculaire post-entraînement. 30-60 sec par groupe musculaire. Ne pas utiliser sur les os, les articulations ou les zones inflammatoires."
+      },
+      "protocole_quotidien": {
+        "matin": "Rouleau sur le thoracique (extension), balle sous les pieds (activation fasciale), auto-massage du visage et du cuir chevelu.",
+        "post_entrainement": "Pistolet ou rouleau sur les muscles travaillés. 60-90 sec par groupe. Réduit les DOMS (Delayed Onset Muscle Soreness).",
+        "soir": "Auto-massage des pieds (réflexologie simplifiée), auto-pression sur HT7 et PC6 (relaxation), auto-massage du cuir chevelu (5 min → libération d'endorphines et d'ocytocine)."
+      }
+    },
+    "massage_et_conditions": {
+      "lombalgie": "Deep tissue paravertébral + trigger points (quadratus lumborum, psoas, piriforme, glutéaux). Étirements passifs. 60-90 min. Hebdomadaire pendant 4-6 semaines.",
+      "cervicalgie": "Trigger points trapèze, SCM, sous-occipitaux, scalènes. Mobilisation cervicale douce. Attention : pas de pression forte sur le triangle antérieur du cou (artères carotides).",
+      "fibromyalgie": "Massage léger à modéré. Commencer très doucement — les patients sont hypersensibles. Augmenter progressivement. Effet positif sur la douleur et le sommeil.",
+      "anxiété_dépression": "Le massage réduit l'anxiété de 50% et la dépression de 30% (méta-analyse Moyer et al. 2004). Effet comparable à la psychothérapie pour l'anxiété légère.",
+      "sport": {
+        "pré_compétition": "Massage stimulant, rapide, superficiel. Active la circulation et la musculature. 15-20 min.",
+        "post_compétition": "Massage lent, drainant, modéré. Réduction des DOMS, élimination des métabolites. 30-45 min.",
+        "inter_compétition": "Maintenance : deep tissue ciblé sur les zones de surcharge. Trigger points. 45-60 min. 1-2x/semaine."
+      }
+    }
+  }
+}
