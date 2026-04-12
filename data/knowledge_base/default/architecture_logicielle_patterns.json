@@ -1,0 +1,162 @@
+{
+  "version": "v30.2.0",
+  "category": "architecture_logicielle_patterns",
+  "description": "Architecture logicielle: design patterns, SOLID, clean architecture, DDD, microservices, event-driven",
+  "principes_solid": {
+    "S_single_responsibility": {
+      "definition": "Une classe/module ne devrait avoir qu'une seule raison de changer",
+      "exemple": "Séparer UserValidator (validation) de UserRepository (persistance) de UserNotifier (notifications)",
+      "application_titane": "Chaque moteur cognitif a une responsabilité unique: Helios (monitoring), Nexus (mémoire), Harmonia (équilibre)"
+    },
+    "O_open_closed": {
+      "definition": "Ouvert à l'extension, fermé à la modification",
+      "exemple": "Ajouter un nouveau provider IA sans modifier l'orchestrateur existant (plugin pattern)",
+      "application_titane": "AIProviderLazyLoader permet d'ajouter des providers sans toucher au code existant"
+    },
+    "L_liskov_substitution": {
+      "definition": "Les sous-types doivent être substituables à leurs types de base",
+      "exemple": "Tout AIProvider (Ollama, OpenAI, Claude) implémente la même interface et peut remplacer un autre",
+      "violation": "Un provider qui lance une exception non-prévue au lieu de retourner { ok: false }"
+    },
+    "I_interface_segregation": {
+      "definition": "Les clients ne devraient pas dépendre d'interfaces qu'ils n'utilisent pas",
+      "exemple": "Séparer ReadableMemory et WritableMemory au lieu d'une seule interface Memory géante",
+      "application_titane": "Les commandes IPC sont séparées par domaine (memory_*, cognitive_*, singularity_*)"
+    },
+    "D_dependency_inversion": {
+      "definition": "Dépendre d'abstractions, pas de concrétions",
+      "exemple": "L'orchestrateur dépend de l'interface Provider, pas d'OllamaProvider directement",
+      "application_titane": "Le chatEngine utilise des interfaces abstraites pour les providers, pas d'imports directs"
+    }
+  },
+  "design_patterns": {
+    "creational": {
+      "singleton": {
+        "usage": "Instance unique partagée (config, cache, connection pool)",
+        "implementation": "Module-level const en TypeScript, lazy_static!/once_cell en Rust",
+        "attention": "Rend les tests difficiles — préférer l'injection de dépendances quand possible"
+      },
+      "factory": {
+        "usage": "Créer des objets sans exposer la logique de création",
+        "exemple": "createProvider('ollama') retourne OllamaProvider, createProvider('openai') retourne OpenAIProvider"
+      },
+      "builder": {
+        "usage": "Construire des objets complexes étape par étape",
+        "exemple": "MessageBuilder.new().role('user').content('hello').metadata({...}).build()"
+      }
+    },
+    "structural": {
+      "adapter": {
+        "usage": "Convertir l'interface d'une classe en une interface attendue",
+        "exemple": "Adapter différentes APIs de providers IA vers une interface unifiée ProviderResponse"
+      },
+      "facade": {
+        "usage": "Interface simplifiée pour un sous-système complexe",
+        "exemple": "chatEngine.send(message) cache la complexité: routing → provider selection → context → generation → memory"
+      },
+      "proxy": {
+        "usage": "Contrôler l'accès à un objet (cache, logging, permissions)",
+        "exemple": "PERMISSION_GUARD en proxy devant chaque commande IPC Tauri"
+      }
+    },
+    "behavioral": {
+      "observer": {
+        "usage": "Notifier plusieurs objets d'un changement d'état",
+        "exemple": "EventEmitter de TITANE notifie les listeners sur quality:low, goal:drift, patterns:synthesized"
+      },
+      "strategy": {
+        "usage": "Famille d'algorithmes interchangeables",
+        "exemple": "Stratégies de troncation de contexte: RECENT, SUMMARIZE, IMPORTANCE, SLIDING"
+      },
+      "chain_of_responsibility": {
+        "usage": "Passer une requête le long d'une chaîne de handlers",
+        "exemple": "Pipeline de validation: input → sanitize → rate_limit → auth → route → execute"
+      },
+      "command": {
+        "usage": "Encapsuler une action comme objet (undo/redo, queue, logging)",
+        "exemple": "Chaque commande IPC TITANE est un objet avec metadata, payload et handler"
+      },
+      "state": {
+        "usage": "Changer le comportement d'un objet selon son état interne",
+        "exemple": "Provider status: healthy → degraded → critical → offline, chaque état change le comportement de scoring"
+      }
+    }
+  },
+  "architecture_patterns": {
+    "clean_architecture": {
+      "description": "Séparation en couches concentriques avec dépendances pointant vers l'intérieur",
+      "couches": {
+        "entities": "Règles métier fondamentales, indépendantes de tout framework",
+        "use_cases": "Logique d'application, orchestration des entités",
+        "interface_adapters": "Conversion entre format des use cases et format externe (controllers, presenters)",
+        "frameworks": "Détails d'implémentation (DB, UI, API, frameworks)"
+      },
+      "regle_dependance": "Les couches internes ne connaissent pas les couches externes"
+    },
+    "hexagonal_ports_adapters": {
+      "description": "L'application expose des ports (interfaces) et utilise des adaptateurs pour les implémenter",
+      "ports": {
+        "driving": "Interfaces utilisées pour interagir avec l'application (API, CLI, IPC)",
+        "driven": "Interfaces que l'application utilise pour ses dépendances (DB, API externe, filesystem)"
+      },
+      "avantages": ["Testabilité maximale (mock les adaptateurs)", "Indépendance technologique", "Remplacement facile des dépendances"]
+    },
+    "event_driven_architecture": {
+      "description": "Communication par événements asynchrones entre composants découplés",
+      "patterns": {
+        "event_sourcing": "Stocker les événements plutôt que l'état courant — reconstruire l'état par replay",
+        "cqrs": "Command Query Responsibility Segregation — séparer les opérations de lecture et d'écriture",
+        "saga": "Coordonner des transactions distribuées par séquences d'événements compensables"
+      },
+      "application_titane": "TITANE utilise un EventEmitter interne pour la communication entre moteurs cognitifs"
+    },
+    "microservices": {
+      "description": "Application décomposée en services indépendants, chacun avec sa propre base de données",
+      "principes": {
+        "single_responsibility": "Chaque service gère un domaine métier unique",
+        "independent_deployability": "Chaque service peut être déployé indépendamment",
+        "resilience": "La défaillance d'un service n'affecte pas les autres (circuit breaker, bulkhead)"
+      },
+      "anti_patterns": [
+        "Distributed monolith: services trop couplés, déployés ensemble",
+        "Shared database: violation de l'indépendance des données",
+        "Chatty services: trop d'appels inter-services synchrones"
+      ]
+    },
+    "domain_driven_design": {
+      "concepts": {
+        "ubiquitous_language": "Vocabulaire partagé entre développeurs et experts métier",
+        "bounded_context": "Limites claires entre sous-domaines avec modèles indépendants",
+        "aggregate": "Groupe d'entités traitées comme une unité de consistance",
+        "value_object": "Objet défini par ses attributs, pas par une identité (ex: Money, Email)",
+        "domain_event": "Événement significatif dans le domaine (OrderPlaced, PaymentReceived)",
+        "repository": "Abstraction pour l'accès aux agrégats (séparation domaine/persistance)"
+      },
+      "strategic_patterns": {
+        "context_mapping": "Carte des relations entre bounded contexts (partnership, customer-supplier, conformist)",
+        "anti_corruption_layer": "Couche de traduction entre contextes incompatibles"
+      }
+    }
+  },
+  "architecture_titane": {
+    "4_ring_model": {
+      "ring0_kernel": "Core Tauri process, primitives OS, gestion mémoire bas niveau",
+      "ring1_services": "150+ modules Rust: moteurs cognitifs, routeur IA, mémoire unifiée, SQLite, Tantivy, HNSW",
+      "ring2_applications": "Frontend React: composants UI, état Zustand, TailwindCSS, animations Framer Motion",
+      "ring3_extensions": "Plugins, modules custom, intégrations tierces"
+    },
+    "one_door_network": "UI → IPC (canonical contract) → Services → NetworkGateway → External — jamais de fetch direct depuis l'UI",
+    "canonical_ipc_contract": "{ ok: boolean, content: T | null, error: string | null } — zéro silence, zéro faux succès"
+  },
+  "scalabilite": {
+    "horizontal": "Ajouter plus d'instances (load balancer + stateless services)",
+    "vertical": "Augmenter les ressources d'une instance (CPU, RAM)",
+    "patterns": {
+      "connection_pooling": "Réutiliser les connexions DB/HTTP au lieu d'en créer à chaque requête",
+      "caching_layers": "L1 (in-process) → L2 (distributed/Redis) → L3 (CDN) pour réduire la charge",
+      "async_processing": "Déplacer les opérations lourdes vers des queues (messages, workers, batch)",
+      "read_replicas": "Séparer les lectures des écritures pour scaler indépendamment",
+      "sharding": "Partitionner les données horizontalement par clé (user_id, region)"
+    }
+  }
+}

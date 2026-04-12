@@ -1,0 +1,132 @@
+{
+  "version": "v30.2.0",
+  "category": "cybersecurite_avancee",
+  "description": "Cybersécurité avancée: OWASP, hardening, pen-testing, threat modeling, zero trust, cryptographie",
+  "owasp_top_10_2025": {
+    "A01_broken_access_control": {
+      "description": "Contrôle d'accès défaillant — première cause de vulnérabilités",
+      "risques": ["Escalade de privilèges", "IDOR (Insecure Direct Object Reference)", "Bypass CORS", "Manipulation de JWT/tokens"],
+      "prevention": {
+        "principle_of_least_privilege": "Donner le minimum de permissions nécessaires",
+        "deny_by_default": "Bloquer tout accès par défaut, n'autoriser que l'explicitement permis",
+        "server_side_validation": "Toujours valider côté serveur, jamais seulement côté client",
+        "rate_limiting": "Limiter les tentatives d'accès par IP/utilisateur/session",
+        "audit_logging": "Logger toutes les tentatives d'accès, succès et échecs"
+      },
+      "implementation_tauri": "Utiliser le système PERMISSION_GUARD de TITANE avec roles (System, Ia, User) pour chaque commande IPC"
+    },
+    "A02_cryptographic_failures": {
+      "description": "Échecs cryptographiques — données sensibles exposées",
+      "risques": ["Données en clair dans les logs", "Algorithmes obsolètes (MD5, SHA1)", "Clés hardcodées", "TLS mal configuré"],
+      "prevention": {
+        "aes256_gcm": "Chiffrement AES-256-GCM pour données au repos",
+        "tls_1_3": "TLS 1.3 minimum pour données en transit",
+        "key_rotation": "Rotation des clés tous les 90 jours",
+        "argon2_bcrypt": "Argon2id ou bcrypt pour hachage de mots de passe",
+        "secrets_management": "SecureSecretsEngine pour clés API, jamais en .env en production"
+      }
+    },
+    "A03_injection": {
+      "description": "Injections SQL, NoSQL, OS command, LDAP, XPath",
+      "prevention": {
+        "parameterized_queries": "Utiliser des requêtes paramétrées systématiquement",
+        "input_validation": "Validation stricte avec Zod schemas côté entrée",
+        "output_encoding": "Échapper les sorties HTML/JS/SQL",
+        "orm_usage": "Préférer un ORM (SQLx pour Rust) aux requêtes brutes",
+        "command_sanitization": "Jamais de shell exec avec entrée utilisateur directe"
+      }
+    },
+    "A07_identification_auth_failures": {
+      "description": "Défaillances d'identification et d'authentification",
+      "prevention": {
+        "mfa": "Authentification multi-facteurs (TOTP, WebAuthn, hardware keys)",
+        "session_management": "Tokens à durée limitée, rotation de session, invalidation à la déconnexion",
+        "password_policy": "Minimum 12 caractères, vérification contre listes de mots de passe compromis (HaveIBeenPwned API)",
+        "brute_force_protection": "Verrouillage progressif (1s, 2s, 4s, 8s...) après tentatives échouées"
+      }
+    },
+    "A09_security_logging_monitoring": {
+      "description": "Défaillances de journalisation et de surveillance",
+      "prevention": {
+        "structured_logging": "Logs structurés JSON avec timestamp, level, module, trace_id",
+        "alerting": "Alertes automatiques sur patterns anormaux (>5 échecs/minute, IP inconnue)",
+        "immutable_logs": "Logs append-only, jamais modifiables, rétention 90+ jours",
+        "siem_integration": "Intégration avec SIEM pour corrélation d'événements"
+      }
+    }
+  },
+  "threat_modeling": {
+    "stride": {
+      "description": "Méthodologie STRIDE de Microsoft pour analyse des menaces",
+      "categories": {
+        "spoofing": "Usurpation d'identité — mitigation: authentification forte, vérification de certificats",
+        "tampering": "Altération de données — mitigation: signatures numériques, checksums, intégrité",
+        "repudiation": "Répudiation d'actions — mitigation: audit trail immutable, horodatage signé",
+        "information_disclosure": "Divulgation d'information — mitigation: chiffrement, contrôle d'accès, data masking",
+        "denial_of_service": "Déni de service — mitigation: rate limiting, circuit breakers, scaling auto",
+        "elevation_of_privilege": "Élévation de privilèges — mitigation: principe du moindre privilège, sandboxing"
+      }
+    },
+    "attack_surface": {
+      "titane_surface": {
+        "ipc_bridge": "32+ commandes exposées — validées par PERMISSION_GUARD",
+        "network_gateway": "One Door policy — aucun accès réseau direct depuis UI",
+        "local_storage": "Données chiffrées AES-256-GCM via SecureSecretsEngine",
+        "ollama_port": "Port 11434 — accès local uniquement, pas d'exposition réseau"
+      }
+    }
+  },
+  "zero_trust_architecture": {
+    "principes": {
+      "never_trust_always_verify": "Vérifier chaque requête, même interne",
+      "least_privilege_access": "Accès minimum requis, durée limitée",
+      "assume_breach": "Concevoir comme si l'attaquant est déjà à l'intérieur",
+      "micro_segmentation": "Isoler les composants, pas de réseau plat"
+    },
+    "implementation_titane": {
+      "ring_isolation": "Architecture 4-Ring avec séparation stricte des responsabilités",
+      "ipc_validation": "Chaque commande IPC validée avec rôle + permission + audit",
+      "provider_isolation": "Providers IA isolés avec circuit breakers individuels",
+      "memory_encryption": "Données sensibles chiffrées en mémoire et au repos"
+    }
+  },
+  "cryptographie_moderne": {
+    "algorithmes_recommandes": {
+      "chiffrement_symetrique": "AES-256-GCM (authentifié) ou ChaCha20-Poly1305",
+      "chiffrement_asymetrique": "RSA-4096 ou Ed25519/X25519 (courbes elliptiques)",
+      "hachage": "SHA-256/SHA-3 pour intégrité, Argon2id pour mots de passe",
+      "signature": "Ed25519 pour signatures rapides, RSA-PSS pour compatibilité",
+      "kdf": "PBKDF2 (100k+ itérations) ou Argon2id (mémoire-dur)"
+    },
+    "post_quantum": {
+      "menace": "Ordinateurs quantiques peuvent briser RSA/ECC en temps polynomial",
+      "solutions": ["CRYSTALS-Kyber (échange de clés)", "CRYSTALS-Dilithium (signatures)", "SPHINCS+ (signatures hash-based)"],
+      "timeline": "Migration recommandée d'ici 2030, planification dès maintenant"
+    }
+  },
+  "securite_applicative": {
+    "secure_coding": {
+      "rust_safety": "Ownership system de Rust élimine les buffer overflows, use-after-free, data races",
+      "typescript_safety": "Strict mode, Zod validation, no-any eslint rule, Content-Security-Policy",
+      "dependency_audit": "npm audit / cargo audit régulier, Dependabot/Renovate pour mises à jour",
+      "sast_dast": "Analyse statique (CodeQL, Clippy) + analyse dynamique (fuzzing, pen-test)"
+    },
+    "supply_chain_security": {
+      "sbom": "Software Bill of Materials obligatoire (CycloneDX, SPDX)",
+      "lockfile_integrity": "Vérifier checksums pnpm-lock.yaml / Cargo.lock",
+      "reproducible_builds": "Builds déterministes pour auditabilité",
+      "code_signing": "Signer tous les artefacts de release avec clé GPG"
+    }
+  },
+  "incident_response": {
+    "phases": {
+      "preparation": "Playbooks documentés, contacts définis, sauvegardes testées",
+      "detection": "Monitoring continu, alertes automatiques, logs centralisés",
+      "containment": "Isoler le système affecté, préserver les preuves",
+      "eradication": "Supprimer la cause racine, patcher la vulnérabilité",
+      "recovery": "Restaurer depuis sauvegarde vérifiée, validation graduelle",
+      "lessons_learned": "Post-mortem, mise à jour des playbooks, formation"
+    },
+    "titane_autoheal": "Le Self-Healing Engine de TITANE automatise detection→containment→eradication pour les anomalies connues"
+  }
+}

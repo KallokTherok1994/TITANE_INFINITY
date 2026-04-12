@@ -1,0 +1,170 @@
+{
+  "version": "v30.2.0",
+  "category": "testing_quality_assurance",
+  "description": "Testing patterns, TDD/BDD, tests unitaires/intégration/E2E, couverture, qualité logicielle",
+  "pyramide_des_tests": {
+    "description": "Stratégie de test en pyramide: beaucoup de tests unitaires, moins d'intégration, peu d'E2E",
+    "niveaux": {
+      "unitaire": {
+        "proportion": "70% des tests",
+        "scope": "Fonction/classe isolée, dépendances mockées",
+        "vitesse": "< 10ms par test",
+        "outils_titane": ["Vitest (frontend TS)", "cargo test (backend Rust)"],
+        "bonnes_pratiques": [
+          "Un test = une assertion principale",
+          "Nommer clairement: should_return_error_when_input_is_empty",
+          "Arrange-Act-Assert (AAA) pattern",
+          "Pas de dépendance réseau/disque/DB dans les tests unitaires",
+          "Couvrir les cas limites: null, vide, overflow, unicode"
+        ]
+      },
+      "integration": {
+        "proportion": "20% des tests",
+        "scope": "Interaction entre 2+ modules/services",
+        "vitesse": "< 500ms par test",
+        "outils_titane": ["Vitest avec TestBed", "cargo test avec #[cfg(test)]"],
+        "bonnes_pratiques": [
+          "Tester les contrats IPC (frontend ↔ Rust)",
+          "Vérifier la sérialisation/désérialisation JSON",
+          "Tester les chaînes de fallback (provider1 → provider2 → kernel)",
+          "Utiliser des fixtures réalistes, pas des données minimales"
+        ]
+      },
+      "e2e": {
+        "proportion": "10% des tests",
+        "scope": "Workflow complet utilisateur de bout en bout",
+        "vitesse": "< 30s par test",
+        "outils_titane": ["WebdriverIO (wdio.desktop.conf.cjs)", "Playwright"],
+        "bonnes_pratiques": [
+          "Utiliser data-testid pour les sélecteurs (stable vs class/id)",
+          "Tests déterministes: pas de Math.random(), dates fixées",
+          "Retries bornés et loggés (max 3 tentatives)",
+          "Captures d'écran sur échec pour diagnostic",
+          "Wrapper tauri-driver obligatoire pour tests desktop"
+        ]
+      }
+    }
+  },
+  "tdd_test_driven_development": {
+    "cycle": {
+      "red": "Écrire un test qui échoue (définir le comportement attendu)",
+      "green": "Écrire le code minimum pour faire passer le test",
+      "refactor": "Améliorer le code sans changer le comportement (tests toujours verts)"
+    },
+    "avantages": [
+      "Design émergent guidé par les besoins",
+      "Couverture de test naturellement élevée",
+      "Refactoring en confiance",
+      "Documentation vivante via les tests",
+      "Détection précoce des bugs"
+    ],
+    "quand_utiliser": "Logique métier complexe, algorithmes, parsers, validateurs, transformations de données",
+    "quand_eviter": "Prototypage exploratoire, UI layout, configuration statique"
+  },
+  "bdd_behavior_driven_development": {
+    "format_gherkin": {
+      "given": "Contexte initial (état du système avant l'action)",
+      "when": "Action effectuée par l'utilisateur ou le système",
+      "then": "Résultat attendu (état final, effets de bord)"
+    },
+    "exemple": {
+      "scenario": "L'utilisateur envoie un message au chat",
+      "given": "Un utilisateur connecté avec une conversation active",
+      "when": "L'utilisateur envoie 'Bonjour TITANE'",
+      "then": "TITANE répond en français avec un message pertinent dans le chat"
+    },
+    "avantages": ["Langage ubiquitaire partagé avec non-développeurs", "Specs exécutables", "Réduction des malentendus"]
+  },
+  "strategies_de_test": {
+    "test_doubles": {
+      "mock": "Simule un objet avec des comportements prédéfinis et des assertions sur les appels",
+      "stub": "Retourne des valeurs prédéfinies sans vérifier les appels",
+      "spy": "Enregistre les appels pour vérification ultérieure sans modifier le comportement",
+      "fake": "Implémentation simplifiée mais fonctionnelle (ex: InMemoryDatabase)"
+    },
+    "property_based_testing": {
+      "description": "Générer des milliers d'entrées aléatoires pour trouver des cas limites",
+      "outils": ["fast-check (TypeScript)", "proptest (Rust)"],
+      "proprietes_communes": [
+        "Idempotence: f(f(x)) == f(x)",
+        "Commutatif: f(a, b) == f(b, a)",
+        "Invariant: longueur de sortie = longueur d'entrée",
+        "Round-trip: decode(encode(x)) == x"
+      ]
+    },
+    "mutation_testing": {
+      "description": "Modifier le code source et vérifier que les tests détectent la mutation",
+      "score": "Mutation Score = mutations tuées / mutations totales × 100%",
+      "outils": ["Stryker (JavaScript/TypeScript)", "cargo-mutants (Rust)"],
+      "cible": ">80% de score de mutation pour le code critique"
+    },
+    "snapshot_testing": {
+      "description": "Capturer la sortie d'un composant et la comparer aux futures exécutions",
+      "usage": "UI components, sérialisation JSON, HTML rendu",
+      "attention": "Mettre à jour les snapshots volontairement, pas aveuglément"
+    },
+    "contract_testing": {
+      "description": "Vérifier que les producteurs et consommateurs d'API respectent un contrat partagé",
+      "outils": ["Pact (consumer-driven)", "OpenAPI spec validation"],
+      "usage_titane": "Valider les contrats IPC { ok, content, error } entre frontend et Rust"
+    }
+  },
+  "couverture_de_code": {
+    "metriques": {
+      "line_coverage": "Pourcentage de lignes exécutées par les tests",
+      "branch_coverage": "Pourcentage de branches if/else/match couvertes",
+      "function_coverage": "Pourcentage de fonctions appelées par les tests",
+      "condition_coverage": "Pourcentage de conditions booléennes évaluées à true ET false"
+    },
+    "cibles_recommandees": {
+      "minimum": "70% de couverture globale",
+      "bon": "80%+ de couverture avec branches",
+      "excellent": "90%+ pour le code critique (sécurité, finance, santé)",
+      "attention": "100% de couverture ≠ 0 bugs — couvrir les cas significatifs, pas les getter/setter"
+    },
+    "outils": {
+      "vitest_coverage": "vitest --coverage (Istanbul ou C8 provider)",
+      "cargo_tarpaulin": "cargo tarpaulin pour Rust (coverage avec support LLVM)",
+      "codecov": "Service de tracking de couverture avec badges et rapports PR"
+    }
+  },
+  "qualite_logicielle": {
+    "code_review": {
+      "checklist": [
+        "Le code fait ce qu'il prétend faire",
+        "Les cas d'erreur sont gérés (pas de silent failure)",
+        "Les performances sont acceptables (pas de N+1, pas de boucle O(n²) inutile)",
+        "La sécurité est préservée (pas d'injection, pas de données exposées)",
+        "Les tests couvrent les nouveaux chemins",
+        "La documentation est mise à jour si nécessaire"
+      ],
+      "taille_pr": "Idéal: <400 lignes changées. >1000 lignes = diviser en PR plus petites"
+    },
+    "linting_formatting": {
+      "typescript": "ESLint (analyse statique) + Prettier (formatage automatique)",
+      "rust": "Clippy (analyse statique, -D warnings) + rustfmt (formatage)",
+      "pre_commit": "Husky + lint-staged pour vérification automatique avant chaque commit"
+    },
+    "dette_technique": {
+      "detection": ["TODO/FIXME/HACK comments", "Complexité cyclomatique élevée (>10)", "Duplication de code (>30 lignes identiques)", "Dépendances obsolètes"],
+      "gestion": "Allouer 20% du temps de sprint à la réduction de dette technique",
+      "metriques": ["Ratio de code dupliqué", "Nombre de dépendances avec vulnérabilités connues", "Temps moyen de build", "Flakiness rate des tests"]
+    }
+  },
+  "tests_performance": {
+    "load_testing": {
+      "description": "Vérifier le comportement sous charge normale attendue",
+      "outils": ["k6 (JavaScript)", "Artillery", "Locust (Python)"],
+      "metriques": ["Throughput (req/s)", "Latence P50/P95/P99", "Error rate", "Saturation points"]
+    },
+    "stress_testing": {
+      "description": "Pousser le système au-delà de ses limites pour trouver le point de rupture",
+      "objectif": "Identifier les goulots d'étranglement et les modes de défaillance"
+    },
+    "chaos_engineering": {
+      "description": "Injecter des défaillances contrôlées en production pour valider la résilience",
+      "principes": ["Définir l'état stable", "Hypothèse: le système résiste à X", "Injecter la perturbation", "Observer et comparer"],
+      "outils": ["Chaos Monkey (Netflix)", "Litmus (Kubernetes)", "Gremlin (SaaS)"]
+    }
+  }
+}

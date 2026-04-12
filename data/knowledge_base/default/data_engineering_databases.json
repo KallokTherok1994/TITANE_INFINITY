@@ -1,0 +1,170 @@
+{
+  "version": "v30.2.0",
+  "category": "data_engineering_databases",
+  "description": "Data engineering: bases de données, SQL/NoSQL, indexation, migrations, ETL, pipelines de données",
+  "bases_de_donnees_relationnelles": {
+    "concepts_fondamentaux": {
+      "acid": {
+        "atomicity": "Une transaction est entièrement exécutée ou pas du tout",
+        "consistency": "La base passe d'un état valide à un autre état valide",
+        "isolation": "Les transactions concurrentes n'interfèrent pas entre elles",
+        "durability": "Une transaction commitée survit à un crash système"
+      },
+      "normalisation": {
+        "1NF": "Valeurs atomiques, pas de colonnes répétées",
+        "2NF": "1NF + pas de dépendance partielle à la clé primaire",
+        "3NF": "2NF + pas de dépendance transitive (non-clé → non-clé)",
+        "denormalisation": "Introduire volontairement de la redondance pour améliorer les performances de lecture"
+      }
+    },
+    "sqlite": {
+      "description": "Base de données embarquée utilisée par TITANE∞ pour la persistance locale",
+      "avantages": ["Zero configuration", "Fichier unique portable", "ACID complet", "Performant pour <100 connexions concurrentes"],
+      "bonnes_pratiques": {
+        "wal_mode": "PRAGMA journal_mode=WAL pour lectures/écritures concurrentes optimales",
+        "foreign_keys": "PRAGMA foreign_keys=ON pour intégrité référentielle",
+        "busy_timeout": "PRAGMA busy_timeout=5000 pour éviter les SQLITE_BUSY",
+        "index_strategy": "Créer des index sur les colonnes WHERE/JOIN/ORDER BY fréquentes",
+        "vacuum": "VACUUM périodique pour récupérer l'espace disque"
+      },
+      "usage_titane": {
+        "memory_persistence": "Stockage STM/MTM/LTM avec schéma versionné",
+        "semantic_vectors": "TauriVectorStore avec index HNSW pour recherche sémantique",
+        "conversation_storage": "Persistance des conversations avec chiffrement optionnel"
+      }
+    },
+    "postgresql": {
+      "description": "Base relationnelle avancée pour applications de production",
+      "fonctionnalites_avancees": ["JSONB (document store hybride)", "Full-text search natif", "Partitionnement de tables", "Extensions (PostGIS, pgvector, TimescaleDB)", "Réplication logique"],
+      "pgvector": {
+        "description": "Extension pour stocker et rechercher des vecteurs d'embedding",
+        "usage": "CREATE EXTENSION vector; CREATE TABLE items (id bigserial, embedding vector(384));",
+        "index": "CREATE INDEX ON items USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);"
+      }
+    }
+  },
+  "bases_nosql": {
+    "types": {
+      "document": {
+        "outils": ["MongoDB", "CouchDB", "Firestore"],
+        "usage": "Données semi-structurées, schéma flexible, documents JSON",
+        "quand": "Prototypage rapide, données hétérogènes, faible besoin de jointures"
+      },
+      "key_value": {
+        "outils": ["Redis", "DynamoDB", "etcd"],
+        "usage": "Cache, sessions, compteurs, files d'attente",
+        "redis_patterns": {
+          "cache_aside": "Check cache → miss → read DB → write cache → return",
+          "pub_sub": "Communication asynchrone entre services",
+          "rate_limiting": "INCR + EXPIRE pour limiter les requêtes par fenêtre de temps",
+          "distributed_lock": "SET key value NX EX seconds pour verrouillage distribué"
+        }
+      },
+      "graph": {
+        "outils": ["Neo4j", "ArangoDB", "Amazon Neptune"],
+        "usage": "Relations complexes, réseaux sociaux, recommandations, knowledge graphs",
+        "quand": "Les relations entre données sont aussi importantes que les données elles-mêmes"
+      },
+      "time_series": {
+        "outils": ["InfluxDB", "TimescaleDB", "Prometheus"],
+        "usage": "Métriques, IoT, monitoring, données temporelles à haute fréquence"
+      },
+      "vector": {
+        "outils": ["Pinecone", "Weaviate", "Milvus", "Qdrant", "pgvector"],
+        "usage": "Recherche sémantique, RAG, similarité d'embeddings",
+        "algorithmes": {
+          "hnsw": "Hierarchical Navigable Small World — optimal pour recall/speed (utilisé par TITANE)",
+          "ivfflat": "Inverted File Index — bon compromis espace/vitesse",
+          "pq": "Product Quantization — compression des vecteurs pour large-scale"
+        }
+      }
+    }
+  },
+  "indexation_et_recherche": {
+    "types_index": {
+      "btree": "Index par défaut — optimal pour range queries et comparaisons ordonnées",
+      "hash": "Optimal pour recherche exacte (=), pas de range",
+      "gin": "Generalized Inverted Index — optimal pour full-text search et JSONB",
+      "gist": "Generalized Search Tree — optimal pour géospatial et range types",
+      "brin": "Block Range Index — très compact, bon pour données naturellement ordonnées (timestamps)"
+    },
+    "full_text_search": {
+      "tantivy": {
+        "description": "Moteur de recherche full-text en Rust (équivalent de Lucene) utilisé par TITANE",
+        "fonctionnalites": ["Tokenization multilingue", "Stemming", "BM25 scoring", "Faceted search", "Fuzzy matching"]
+      },
+      "elasticsearch": {
+        "description": "Moteur de recherche distribué basé sur Lucene",
+        "cas_usage": ["Recherche full-text à grande échelle", "Analyse de logs (ELK stack)", "Auto-complétion"]
+      }
+    },
+    "optimisation_requetes": {
+      "explain_analyze": "Utiliser EXPLAIN ANALYZE pour comprendre le plan d'exécution",
+      "n_plus_1": "Détecter et corriger les requêtes N+1 avec eager loading/batch loading",
+      "covering_index": "Index qui contient toutes les colonnes nécessaires (évite le table scan)",
+      "query_pagination": "Préférer cursor-based pagination (WHERE id > last_id) à offset-based (LIMIT/OFFSET)",
+      "connection_pooling": "Réutiliser les connexions DB (r2d2 en Rust, pg-pool en Node)"
+    }
+  },
+  "migrations_et_schema": {
+    "principes": {
+      "forward_only": "Les migrations vont toujours vers l'avant, pas de rollback destructif en production",
+      "backward_compatible": "Chaque migration doit être compatible avec le code actuel ET le nouveau code",
+      "atomic": "Chaque migration est une transaction — réussit entièrement ou échoue entièrement",
+      "versioned": "Chaque migration a un numéro de version unique et ordonnée"
+    },
+    "outils": {
+      "rust": "sqlx migrate pour migrations SQL typées à la compilation",
+      "node": "Prisma Migrate, Knex.js, TypeORM migrations",
+      "standalone": "Flyway, Liquibase pour projets multi-langage"
+    },
+    "strategies": {
+      "expand_contract": {
+        "description": "Ajouter d'abord (expand), migrer les données, puis supprimer l'ancien (contract)",
+        "etapes": ["1. Ajouter la nouvelle colonne/table", "2. Réécrire le code pour utiliser la nouvelle structure", "3. Migrer les données existantes", "4. Supprimer l'ancienne colonne/table après vérification"]
+      }
+    }
+  },
+  "etl_pipelines": {
+    "description": "Extract-Transform-Load: processus de mouvement et transformation de données",
+    "phases": {
+      "extract": "Extraire les données de sources variées (API, DB, fichiers, streams)",
+      "transform": "Nettoyer, valider, enrichir, agréger, normaliser les données",
+      "load": "Charger les données transformées dans le système cible (data warehouse, lake)"
+    },
+    "patterns": {
+      "batch": "Traitement par lots périodiques (quotidien, horaire) — simples, fiables",
+      "stream": "Traitement en temps réel (Kafka, Pulsar) — faible latence, complexe",
+      "micro_batch": "Compromis entre batch et stream (Spark Structured Streaming)",
+      "change_data_capture": "Capturer les changements en temps réel depuis la source (Debezium, WAL)"
+    },
+    "qualite_donnees": {
+      "validation": "Vérifier les types, ranges, formats, unicité, référentielle à chaque étape",
+      "observabilite": "Métriques de pipeline: lignes traitées, erreurs, latence, fraîcheur des données",
+      "data_contracts": "Schémas partagés entre producteurs et consommateurs (Avro, Protobuf, JSON Schema)"
+    }
+  },
+  "caching_strategies": {
+    "niveaux": {
+      "l1_process": "Cache en mémoire du processus (Map, LRU cache) — <1μs latence",
+      "l2_distributed": "Cache partagé entre processus/services (Redis, Memcached) — <1ms latence",
+      "l3_cdn": "Cache géographiquement distribué pour assets statiques — variable"
+    },
+    "politiques_eviction": {
+      "lru": "Least Recently Used — évicte l'entrée la moins récemment utilisée",
+      "lfu": "Least Frequently Used — évicte l'entrée la moins fréquemment utilisée",
+      "ttl": "Time To Live — évicte après un temps fixe, indépendamment de l'usage",
+      "fifo": "First In First Out — évicte la plus ancienne entrée"
+    },
+    "patterns_cache": {
+      "cache_aside": "Application gère le cache explicitement: check → miss → read source → write cache",
+      "write_through": "Écriture simultanée dans le cache et la source — cohérence garantie, latence d'écriture",
+      "write_behind": "Écriture asynchrone dans la source après le cache — rapide, risque de perte",
+      "read_through": "Le cache lit automatiquement la source sur miss — simplifie le code client"
+    },
+    "invalidation": {
+      "probleme": "L'invalidation de cache est l'un des deux problèmes les plus difficiles en informatique",
+      "strategies": ["TTL-based (simple mais imprecis)", "Event-based (précis mais complexe)", "Version-based (ETag/If-Modified-Since)", "Tag-based (invalider par groupe)"]
+    }
+  }
+}

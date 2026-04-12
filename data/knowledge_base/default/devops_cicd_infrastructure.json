@@ -1,0 +1,158 @@
+{
+  "version": "v30.2.0",
+  "category": "devops_cicd_infrastructure",
+  "description": "DevOps, CI/CD, infrastructure as code, conteneurisation, monitoring, déploiement continu",
+  "cicd_pipelines": {
+    "github_actions": {
+      "description": "Plateforme CI/CD native GitHub utilisée par TITANE∞",
+      "concepts_cles": {
+        "workflow": "Fichier YAML dans .github/workflows/ définissant le pipeline automatisé",
+        "job": "Unité d'exécution dans un workflow, tourne sur un runner",
+        "step": "Action atomique dans un job (checkout, build, test, deploy)",
+        "runner": "Machine virtuelle ou self-hosted exécutant les jobs",
+        "artifact": "Fichier produit par un workflow (binaire, rapport, logs)"
+      },
+      "best_practices": {
+        "cache_dependencies": "Utiliser actions/cache pour pnpm/cargo, accélère les builds de 60-80%",
+        "matrix_strategy": "Tester sur plusieurs OS/versions en parallèle (ubuntu, macos, windows)",
+        "concurrency_control": "Annuler les runs précédents sur la même branche pour économiser les ressources",
+        "secrets_management": "Stocker les clés API dans GitHub Secrets, jamais dans le code",
+        "reusable_workflows": "Factoriser les patterns communs dans des workflows réutilisables",
+        "status_checks": "Rendre les checks obligatoires avant merge (tests, lint, build)"
+      },
+      "pipeline_titane": {
+        "stages": ["lint (ESLint + Clippy)", "test (Vitest + cargo test)", "build (Vite + Tauri)", "security (CodeQL + npm audit)", "release (Tauri action)"],
+        "triggers": ["push to main", "pull_request", "release tag"],
+        "artifacts": ["TITANE.msi (Windows)", "TITANE.dmg (macOS)", "TITANE.AppImage (Linux)", "TITANE.apk (Android)"]
+      }
+    },
+    "pipeline_patterns": {
+      "trunk_based_development": {
+        "description": "Branches de courte durée mergées fréquemment dans main",
+        "avantages": ["Conflits minimaux", "Feedback rapide", "Déploiement continu facilité"],
+        "pratiques": ["Feature flags pour code incomplet", "Short-lived branches (<24h)", "Pre-commit hooks pour lint/format"]
+      },
+      "blue_green_deployment": {
+        "description": "Deux environnements identiques (blue=actif, green=staging)",
+        "workflow": "Déployer sur green → tester → switch DNS → green devient blue",
+        "rollback": "Revenir au blue précédent en <30 secondes"
+      },
+      "canary_deployment": {
+        "description": "Déployer à un petit pourcentage d'utilisateurs d'abord",
+        "strategy": "1% → 5% → 25% → 50% → 100% avec monitoring à chaque étape",
+        "rollback_criteria": "Error rate >0.1%, latence P99 >2x baseline, crash rate >0.01%"
+      }
+    }
+  },
+  "conteneurisation": {
+    "docker": {
+      "description": "Plateforme de conteneurisation pour isoler et déployer des applications",
+      "best_practices": {
+        "multi_stage_builds": "Utiliser des builds multi-étapes pour réduire la taille de l'image (stage build + stage runtime)",
+        "minimal_base_image": "Préférer alpine ou distroless à ubuntu pour réduire la surface d'attaque",
+        "non_root_user": "Toujours exécuter en tant qu'utilisateur non-root dans le conteneur",
+        "layer_caching": "Ordonner les instructions Dockerfile du moins au plus changeant",
+        "health_checks": "Ajouter HEALTHCHECK pour la détection automatique des pannes",
+        "resource_limits": "Définir --memory et --cpus pour éviter les fuites de ressources"
+      },
+      "dockerfile_pattern": {
+        "exemple": "FROM rust:1.82-slim AS builder → COPY → RUN cargo build --release → FROM debian:bookworm-slim → COPY --from=builder",
+        "optimisation": "Utiliser cargo-chef pour cacher les dépendances Rust séparément du code source"
+      }
+    },
+    "kubernetes": {
+      "description": "Orchestrateur de conteneurs pour déploiement à grande échelle",
+      "concepts": {
+        "pod": "Plus petite unité déployable, contient un ou plusieurs conteneurs",
+        "deployment": "Gère le cycle de vie des pods (scaling, rolling updates)",
+        "service": "Expose les pods avec un endpoint réseau stable",
+        "ingress": "Routage HTTP/HTTPS externe vers les services internes",
+        "configmap_secret": "Configuration externalisée (non-sensible vs sensible)",
+        "hpa": "Horizontal Pod Autoscaler — scale automatique basé sur CPU/mémoire/métriques custom"
+      },
+      "bonnes_pratiques": {
+        "resource_requests_limits": "Toujours définir requests et limits pour CPU/mémoire",
+        "readiness_liveness_probes": "Probes de santé pour redémarrage automatique des pods défaillants",
+        "pod_disruption_budgets": "Garantir un minimum de réplicas disponibles pendant les mises à jour",
+        "namespace_isolation": "Séparer les environnements par namespace (dev, staging, prod)"
+      }
+    }
+  },
+  "infrastructure_as_code": {
+    "principes": {
+      "immutable_infrastructure": "Ne pas modifier les serveurs en place — recréer avec le nouveau code",
+      "version_controlled": "Toute l'infrastructure dans Git, revue par PR, auditée",
+      "idempotent": "Appliquer la même configuration N fois produit le même résultat",
+      "declarative": "Décrire l'état désiré, pas les étapes pour y arriver"
+    },
+    "outils": {
+      "terraform": "Infrastructure multi-cloud déclarative (AWS, GCP, Azure)",
+      "pulumi": "Infrastructure as code en TypeScript/Python/Go (alternative typée à Terraform)",
+      "ansible": "Configuration management et orchestration (procédural)",
+      "cloudformation": "IaC native AWS (déclaratif, intégré à l'écosystème AWS)"
+    }
+  },
+  "monitoring_observabilite": {
+    "three_pillars": {
+      "metrics": {
+        "description": "Données numériques agrégées sur le comportement du système",
+        "outils": ["Prometheus (collecte)", "Grafana (visualisation)", "Datadog (SaaS)"],
+        "metriques_essentielles": {
+          "red_method": "Rate (requêtes/s), Errors (%), Duration (latence P50/P95/P99)",
+          "use_method": "Utilization (%), Saturation (queue length), Errors (count)"
+        }
+      },
+      "logs": {
+        "description": "Événements textuels horodatés avec contexte",
+        "outils": ["ELK Stack (Elasticsearch, Logstash, Kibana)", "Loki + Grafana", "CloudWatch Logs"],
+        "bonnes_pratiques": ["Structured logging (JSON)", "Correlation IDs", "Log levels (DEBUG/INFO/WARN/ERROR)", "Rétention par tier (hot 7j, warm 30j, cold 90j)"]
+      },
+      "traces": {
+        "description": "Suivi distribué des requêtes à travers les services",
+        "outils": ["Jaeger", "Zipkin", "OpenTelemetry (standard unifié)"],
+        "concepts": ["Span (unité de travail)", "Trace (ensemble de spans)", "Context propagation (headers W3C)"]
+      }
+    },
+    "alerting": {
+      "principes": {
+        "signal_vs_noise": "Alerter sur les symptômes (error rate), pas les causes (CPU usage)",
+        "actionable": "Chaque alerte doit avoir un runbook ou une action claire",
+        "severity_levels": "P1 (critique, réponse <15min), P2 (majeur, <1h), P3 (mineur, <24h), P4 (info, best-effort)",
+        "on_call_rotation": "Rotation d'astreinte équitable avec escalade automatique"
+      }
+    },
+    "sla_slo_sli": {
+      "sli": "Service Level Indicator — métrique mesurée (ex: latence P99 < 200ms)",
+      "slo": "Service Level Objective — cible interne (ex: 99.9% de disponibilité)",
+      "sla": "Service Level Agreement — engagement contractuel avec pénalités",
+      "error_budget": "Budget d'erreur = 100% - SLO (ex: 0.1% = 43.8 minutes/mois)"
+    }
+  },
+  "gitops": {
+    "description": "Utiliser Git comme source de vérité unique pour l'infrastructure et les déploiements",
+    "principes": {
+      "declarative": "État désiré décrit dans Git",
+      "versioned": "Historique complet des changements d'infrastructure",
+      "automated": "Agents (ArgoCD, FluxCD) synchronisent automatiquement",
+      "auditable": "Chaque changement est une PR revue et approuvée"
+    },
+    "outils": {
+      "argocd": "Déploiement continu GitOps pour Kubernetes",
+      "fluxcd": "Alternative légère, toolkit GitOps natif Kubernetes",
+      "kustomize": "Personnalisation de manifestes Kubernetes sans templates"
+    }
+  },
+  "disaster_recovery": {
+    "strategies": {
+      "backup_3_2_1": "3 copies, 2 supports différents, 1 hors site",
+      "rpo_rto": "RPO (perte de données acceptable) et RTO (temps de restauration cible)",
+      "failover_automatique": "Basculement automatique vers le site de secours en <5 minutes",
+      "dr_testing": "Tester le plan de reprise au moins 2 fois par an"
+    },
+    "titane_resilience": {
+      "memory_persistence": "3 niveaux (STM/MTM/LTM) avec sauvegarde locale et auto-reconstruction",
+      "provider_fallback": "Chaîne de fallback: Ollama local → cloud providers → kernel minimal",
+      "state_snapshots": "Snapshots d'état périodiques avec rollback instantané"
+    }
+  }
+}

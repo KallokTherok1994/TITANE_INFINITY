@@ -97,5 +97,113 @@
     "format": "{ id, date, scope, symptom, root_cause, fix, prevention_test, commands, files_changed, rollback }",
     "validation": "bash scripts/autoheal/detect_recurrence.sh → doit finir PASS: G_AH_RECURRENCE_GUARD_PASS",
     "verify": "bash scripts/verify_instructions.sh → doit finir SUMMARY: PASS=23 FAIL=0"
+  },
+  "advanced_debugging": {
+    "provider_cascade_failure": {
+      "symptom": "Aucun provider IA ne répond, toutes les requêtes échouent",
+      "diagnostic": [
+        "Vérifier la chaîne de fallback: titaneLocal → tauriChat → ollama → cloud",
+        "Pour chaque provider: ai_get_provider_status → vérifier status (healthy/degraded/critical/offline)",
+        "Vérifier les circuit breakers: compteur d'échecs consécutifs",
+        "Vérifier la connectivité réseau: curl http://localhost:11434/api/tags"
+      ],
+      "solutions": [
+        "Redémarrer Ollama: ollama serve",
+        "Reset circuit breakers: redémarrer TITANE pour réinitialiser les compteurs",
+        "Vérifier les API keys: secrets_store → clés expirées ou invalides",
+        "Mode dégradé: titaneLocal kernel fournit des réponses minimales sans réseau"
+      ]
+    },
+    "memory_corruption": {
+      "symptom": "Données incohérentes dans la mémoire, faits contradictoires, index corrompu",
+      "diagnostic": [
+        "memory_debug_scan → rapport d'intégrité fichiers",
+        "Vérifier les checksums SHA-256 des entrées",
+        "Chercher les entrées avec importance NaN ou null",
+        "Vérifier la cohérence STM ↔ MTM ↔ LTM (pas d'orphelins)"
+      ],
+      "solutions": [
+        "memory_compact → recompacter l'index LTM",
+        "memorySelfHealEngine → auto-réparation des entrées corrompues",
+        "Si persistant: memory_clear_stm + restart pour reconstruction fraîche",
+        "Dernier recours: restaurer depuis le dernier snapshot valide"
+      ]
+    },
+    "knowledge_base_empty": {
+      "symptom": "La base de connaissances retourne 0 entrée, réponses IA sans contexte KB",
+      "diagnostic": [
+        "knowledge_base_validate → intégrité de la KB",
+        "knowledge_base_list_categories → vérifier le nombre de catégories",
+        "Vérifier si le IPC bridge fonctionne (fallback vers bundled ?)"
+      ],
+      "solutions": [
+        "L'application a 3 niveaux de fallback: IPC Rust → Vite bundled → 5 entrées hardcoded",
+        "Si IPC échoue: vérifier que les fichiers JSON sont bien dans data/knowledge_base/default/",
+        "Rebuild: cargo build recompile les include_str!()",
+        "Reset cache frontend: appeler resetCache() dans defaultKnowledgeBase.ts"
+      ]
+    },
+    "ui_blank_screen": {
+      "symptom": "Écran blanc au chargement, aucun composant React rendu",
+      "diagnostic": [
+        "Console DevTools → erreurs JavaScript",
+        "Network tab → vérifier que les chunks JS sont chargés",
+        "Vérifier index.html → le div#root existe",
+        "Vérifier Tauri → window.__TAURI__ défini"
+      ],
+      "solutions": [
+        "ErrorBoundary manquant: ajouter un error boundary racine",
+        "Import cassé: vérifier les chemins relatifs dans les imports",
+        "Tauri bridge non disponible: TauriProtector gère le fallback",
+        "pnpm build → vérifier que le build est propre"
+      ]
+    },
+    "conversation_lost": {
+      "symptom": "Conversations disparues après redémarrage ou mise à jour",
+      "diagnostic": [
+        "Vérifier ConversationStorage → fichiers dans app_data_dir",
+        "Vérifier le chiffrement: password correct pour décryptage",
+        "Vérifier la migration de schéma: version compatibilité"
+      ],
+      "solutions": [
+        "Auto-reconstruction: ConversationStorage reconstruit depuis les fichiers locaux",
+        "Si chiffrement échoue: vérifier que le password n'a pas changé",
+        "Backup: les conversations sont sauvegardées en JSON local",
+        "Migration: le système auto-migre les anciens formats"
+      ]
+    },
+    "singularity_desync": {
+      "symptom": "Les moteurs cognitifs ne sont pas synchronisés, incohérences entre couches",
+      "diagnostic": [
+        "singularity_get_full_state → vérifier chaque couche (physical, cognitive, symbolic, adaptive, meta)",
+        "Vérifier les timestamps de dernière mise à jour par couche",
+        "Chercher des erreurs dans les logs Sentinel"
+      ],
+      "solutions": [
+        "sync_singularity → re-synchroniser toutes les couches",
+        "Si physique désynchronisé: singularity_update_physical avec données actuelles",
+        "Si cognitif désynchronisé: relancer l'analyse cognitive",
+        "Dernier recours: singularity_save_state + singularity_load_state (reset propre)"
+      ]
+    }
+  },
+  "resolution_patterns": {
+    "escalation_pyramid": {
+      "level_1_auto": "Self-healing automatique: restart_module, clear_cache, fallback_provider",
+      "level_2_guided": "Diagnostic guidé: commandes IPC de diagnostic + solutions documentées",
+      "level_3_manual": "Intervention manuelle: git restore, reconfiguration, redémarrage complet",
+      "level_4_rebuild": "Reconstruction: fresh install, restauration depuis backup"
+    },
+    "five_whys": {
+      "description": "Technique de diagnostic en 5 questions 'Pourquoi ?' pour trouver la cause racine",
+      "exemple": {
+        "1": "Pourquoi la réponse IA est lente ? → Le provider met >10s à répondre",
+        "2": "Pourquoi le provider est lent ? → Il utilise un modèle trop lourd (70B)",
+        "3": "Pourquoi utilise-t-il un modèle lourd ? → Le profil DEEP a été sélectionné",
+        "4": "Pourquoi DEEP est sélectionné ? → La complexité estimée est >0.72",
+        "5": "Pourquoi la complexité est élevée ? → Le message contient des termes techniques multiples"
+      },
+      "fix": "Ajuster le seuil d'escalation ou utiliser un modèle plus performant pour DEEP"
+    }
   }
 }
