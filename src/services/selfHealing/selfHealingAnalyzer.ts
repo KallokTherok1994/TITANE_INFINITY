@@ -658,6 +658,7 @@ export class SelfHealingAnalyzer {
       // Sort by confidence descending
       matchedRules.sort((a, b) => b.confidence - a.confidence);
       const primary = matchedRules[0];
+      if (!primary) return diagnosis;
 
       // Primary rule provides the base diagnosis
       diagnosis = {
@@ -671,6 +672,7 @@ export class SelfHealingAnalyzer {
       // and contributes unique impact/pattern information
       for (let i = 1; i < matchedRules.length; i++) {
         const secondary = matchedRules[i];
+        if (!secondary) continue;
         // Confidence boost: +0.03 per additional rule, diminishing after 3
         const boostIncrement = i <= 3 ? 0.03 : 0.01;
         diagnosis.confidence = Math.min(0.98, diagnosis.confidence + boostIncrement);

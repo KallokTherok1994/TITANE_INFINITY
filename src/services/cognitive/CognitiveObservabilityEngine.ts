@@ -653,11 +653,11 @@ export class CognitiveObservabilityEngine extends EventEmitter {
     for (const trace of relevantTraces) {
       for (const decision of trace.decisions) {
         const chosen = decision.chosen_option || '';
-        if (decision.decision_point?.includes('provider') || decision.type === 'provider') {
+        if (decision.decision_point?.includes('provider') || (decision.type as string) === 'provider') {
           providerChoices.push(chosen);
           providerDistribution[chosen] = (providerDistribution[chosen] || 0) + 1;
         }
-        if (decision.decision_point?.includes('profile') || decision.type === 'profile') {
+        if (decision.decision_point?.includes('profile') || (decision.type as string) === 'profile') {
           profileChoices.push(chosen);
         }
       }

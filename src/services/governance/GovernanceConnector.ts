@@ -403,8 +403,9 @@ export class GovernanceConnector {
     scored.sort((a, b) => b.fitness - a.fitness);
 
     // Return best fitness provider, or default, or local
-    if (scored.length > 0 && scored[0].fitness > 0.2) {
-      return scored[0].id;
+    const best = scored[0];
+    if (best && best.fitness > 0.2) {
+      return best.id;
     }
 
     // Absolute fallback

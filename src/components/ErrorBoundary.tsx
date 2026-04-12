@@ -185,7 +185,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             Une erreur inattendue s&apos;est produite. Le composant a été isolé pour
             protéger l&apos;application.
           </p>
-          {error && (
+          {error != null && (
             <details style={{ marginBottom: '1rem' }}>
               <summary
                 style={{

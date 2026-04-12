@@ -1,0 +1,22 @@
+# TITANE_INFINITY v30.1.4 - Release Artifacts Checksums
+# Generated: 2026-04-12
+# Build: Production stable
+
+## Desktop (Linux)
+131af88c6975b9e6dea521841b14137ba8e80a383251ece020ec197ea2ddc162  Titan-Stable_30.1.4_amd64.AppImage (89M)
+76b1e31a1961b60664cb1c146187c8267045953e0eab3c9236ef0cf9a8b72db5  Titan-Stable_30.1.4_amd64.deb (20M)
+d023481925e5b06638a8b969de50ccbbce14f2cd663d64882f78d67405f5fab7  titane-infinity (binary, 44M)
+
+## Android
+7ab60661e2c0bcf03f5b873a0aee3826bec490fb7d82babbf434118cc8eeaf96  app-universal-release-unsigned.apk (67M)
+4694b9f76d9f0a8ca503eee2b6b804fcac054165db49c1274b798e69c48e7f71  app-universal-release.aab (41M)
+
+## Windows
+SKIPPED - No cross-compile toolchain available on Linux build host.
+Requires Windows CI runner.
+
+## Notes
+- AppImage: self-contained, no install required
+- DEB: installed as titan-stable 30.1.4 (dpkg Status: install ok installed)
+- APK: unsigned release, requires signing for Play Store distribution
+- AAB: unsigned release bundle, requires signing for Play Store distribution

@@ -765,6 +765,7 @@ export interface IntentClassification {
   signals: string[]; // What triggered this classification
   freshnessRequired: 'stable' | 'current' | 'realtime'; // How fresh the info needs to be
   memoryRelevance: 'low' | 'medium' | 'high'; // How relevant memory is to this intent
+  secondaryIntent?: { intent: IntentType; confidence: number }; // optional secondary signal (v30.3.0)
 }
 
 const INTENT_SIGNALS: Record<
