@@ -4,7 +4,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 use crate::ai::providers::{AiProvider, ProviderResult};
-use crate::ai::{AIError, AiMetadata, AiMode, AiRequest, AiResponse};
+use crate::ai::{AIError, AiMetadata, AiRequest, AiResponse};
 use crate::core::http_types::Client;
 use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
