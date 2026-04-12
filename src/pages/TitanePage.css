@@ -518,10 +518,21 @@
     min-height: 44px;
     padding: 0.55rem 0.85rem !important;
     font-size: 0.8rem !important;
+    line-height: 1.1;
   }
 
   .titane-content {
     min-height: 64dvh;
+  }
+
+  .titane-page-header {
+    position: sticky;
+    top: 0;
+    z-index: 4;
+    padding-top: 0.2rem;
+    background: linear-gradient(180deg, rgba(9, 12, 22, 0.92), rgba(9, 12, 22, 0.72));
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
 }
 
@@ -1309,31 +1320,136 @@
     min-height: 420px;
   }
 
+  .conversation-runtime-panel {
+    margin: 0 0.75rem 0.5rem;
+    padding: 0.625rem 0.75rem;
+  }
+
   .conversation-toolbar {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.625rem;
+    padding: 0.5rem 0.75rem;
   }
 
   .conversation-toolbar-left,
   .conversation-toolbar-right {
     justify-content: space-between;
+    gap: 0.5rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .conversation-toolbar-left::-webkit-scrollbar,
+  .conversation-toolbar-right::-webkit-scrollbar {
+    display: none;
   }
 
   .conversation-message-content {
-    max-width: 85%;
+    max-width: 92%;
+  }
+
+  .conversation-messages {
+    padding: 0.875rem 0.75rem 0.75rem;
+    scroll-padding-bottom: 6.5rem;
+  }
+
+  .conversation-message {
+    gap: 0.625rem;
+  }
+
+  .conversation-message-avatar {
+    width: 34px;
+    height: 34px;
+    font-size: 1rem;
+  }
+
+  .conversation-empty {
+    gap: 1rem;
+    padding: 1.25rem 0.75rem;
+  }
+
+  .conversation-empty h3 {
+    font-size: 1.125rem;
+  }
+
+  .conversation-empty p {
+    font-size: 0.875rem;
+  }
+
+  .conversation-empty-suggestions {
+    width: 100%;
+  }
+
+  .conversation-empty-suggestions button {
+    width: calc(50% - 0.375rem);
+    min-height: 42px;
+    padding: 0.625rem 0.75rem;
   }
 
   .conversation-input-container {
     flex-direction: column;
+    gap: 0.625rem;
+    padding: 0.75rem;
     padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
   }
 
   .conversation-send-btn {
     width: 100%;
+    min-height: 44px;
   }
 
   .conversation-input {
-    min-height: 108px;
+    min-height: 96px;
+    font-size: 16px;
+  }
+
+  .conversation-message-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .conversation-runtime-badges {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 0.15rem;
+    scrollbar-width: none;
+  }
+
+  .conversation-runtime-badges::-webkit-scrollbar {
+    display: none;
+  }
+
+  .titane-tab.active {
+    animation: none;
+  }
+
+  .conversation-send-btn::before {
+    display: none;
+  }
+
+  .conversation-message.assistant .conversation-message-avatar::before,
+  .conversation-message.user .conversation-message-avatar::before {
+    animation: none;
+    opacity: 0.35;
+  }
+}
+
+@media (max-width: 420px) {
+  .titane-inline-tabs > button {
+    font-size: 0.75rem !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  .conversation-container {
+    min-height: 380px;
+  }
+
+  .conversation-empty-suggestions button {
+    width: 100%;
   }
 }
 
