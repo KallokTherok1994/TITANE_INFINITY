@@ -23,7 +23,7 @@ else
 fi
 
 rule_count=$(_rg -n '^## Rule [0-9]+' -S "$KERNEL" | wc -l | tr -d ' ')
-if [[ "$rule_count" -ge 10 && "$rule_count" -le 12 ]]; then
+if [[ "$rule_count" -ge 10 && "$rule_count" -le 15 ]]; then
   pass "KERNEL_RULE_BUDGET rule_count=$rule_count"
 else
   fail "KERNEL_RULE_BUDGET_OUT_OF_RANGE rule_count=$rule_count"

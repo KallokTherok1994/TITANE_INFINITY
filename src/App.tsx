@@ -317,6 +317,11 @@ const AppRouter: React.FC = () => {
           maxVisibleItems={5}
         />
       }
+      footer={
+        <span className="select-none opacity-60 text-xs tracking-widest">
+          TITANE∞ v{__APP_VERSION__}
+        </span>
+      }
     >
       {/* ✨ UI vΩ Phase F: Backend down indicator (mode dégradé local-first) */}
       <BackendDownIndicator position="top" dismissible />

@@ -3,6 +3,7 @@
 // Clean architecture v15: documented, production-ready
 
 use super::{AIError, AIProvider, AIRequest, AIResponse, AIResult};
+use crate::ai::security::sanitize_api_error;
 use crate::core::http_types::Client;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
@@ -113,7 +114,10 @@ impl GeminiClient {
             .json(&gemini_request)
             .send()
             .await
-            .map_err(|e| AIError::NetworkError(e.to_string()))?;
+            .map_err(|e| {
+                // Sanitize error to prevent API key leakage in URL-based error messages
+                AIError::NetworkError(sanitize_api_error(&e.to_string()))
+            })?;
 
         if !response.status().is_success() {
             let status = response.status();

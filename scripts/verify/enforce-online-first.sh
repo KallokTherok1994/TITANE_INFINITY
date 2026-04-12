@@ -17,6 +17,7 @@ set -euo pipefail
 
 FAIL=0
 WARN=0
+source "$(dirname "${BASH_SOURCE[0]}")/_rg_compat.sh"
 
 echo "🌐 ONLINE-FIRST GOVERNANCE CHECK"
 echo "================================"
