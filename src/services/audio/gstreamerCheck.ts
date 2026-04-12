@@ -5,6 +5,9 @@
 
 import { detectEnvironment } from '@/core/tauri/environment';
 import { secureInvoke } from '@/lib/security';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('GStreamerCheck');
 
 let gstreamerStatus: 'available' | 'unavailable' | 'unknown' = 'unknown';
 let checkPromise: Promise<boolean> | null = null;
@@ -43,7 +46,7 @@ async function checkGStreamerAvailability(): Promise<boolean> {
       gstreamerStatus = 'unavailable';
       return false;
     } catch (error) {
-      console.warn('[GStreamerCheck] Failed to detect GStreamer:', error);
+      logger.warn('Failed to detect GStreamer:', error);
       gstreamerStatus = 'unavailable';
       return false;
     }
@@ -64,7 +67,7 @@ function getGStreamerStatus(): 'available' | 'unavailable' | 'unknown' {
  */
 function markGStreamerUnavailable(): void {
   gstreamerStatus = 'unavailable';
-  console.warn('[GStreamerCheck] GStreamer marked unavailable due to runtime errors');
+  logger.warn('GStreamer marked unavailable due to runtime errors');
 }
 
 export const gstreamerCheck = {

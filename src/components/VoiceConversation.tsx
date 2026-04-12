@@ -12,11 +12,13 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { logger } from '@/lib/logger';
+import { createLogger } from '@/utils/logger';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import { useAudioStreaming } from '@/hooks/useAudioStreaming'; // ✅ v∞.8: Real audio streaming
 import { chatEngineCommands } from '@/services/tauri/chatEngine.commands';
 import { detectEnvironment } from '@/core/tauri/environment';
+
+const logger = createLogger('VoiceConversation');
 
 interface VoiceConversationProps {
   onTranscript?: (text: string) => void;
@@ -170,7 +172,7 @@ export const VoiceConversation = ({
 
       // En mode Tauri: utiliser CPAL audio streaming (real backend audio)
       if (env.isTauri) {
-        console.log('[VoiceConversation] ✅ Starting REAL audio streaming (CPAL)');
+        logger.info('✅ Starting REAL audio streaming (CPAL)');
         await startStreaming(); // ✅ Connecte au vrai flux audio CPAL
         return;
       }
@@ -231,7 +233,11 @@ export const VoiceConversation = ({
     }
     if (audioContextRef.current) {
       audioContextRef.current.close().catch((err: unknown) => {
-        logger.debug('AudioContext close during cleanup', { error: String(err) });
+        logger.debug('AudioContext close during cleanup', {
+          component: 'VoiceConversation',
+          action: 'stopAudioVisualization',
+          error: err instanceof Error ? err.message : String(err),
+        });
       });
       audioContextRef.current = null;
     }
@@ -381,12 +387,19 @@ export const VoiceConversation = ({
         style={getButtonStyle()}
         title={status.state === 'idle' ? 'Activer la conversation vocale' : 'Arrêter'}
         disabled={!status.isMicAvailable && status.state === 'idle'}
+        data-testid="voice-conversation-toggle"
+        aria-label={
+          status.state === 'idle'
+            ? 'Activer la conversation vocale'
+            : 'Arrêter la conversation vocale'
+        }
       >
         <span>{getIcon()}</span>
       </button>
 
       {status.isRecording && (
         <div
+          data-testid="voice-audio-level"
           style={{
             width: '100px',
             height: '4px',
@@ -407,6 +420,7 @@ export const VoiceConversation = ({
       )}
 
       <span
+        data-testid="voice-conversation-status"
         style={{
           fontSize: '0.75rem',
           color: 'rgba(255,255,255,0.6)',
@@ -418,9 +432,16 @@ export const VoiceConversation = ({
       </span>
 
       {/* Indicateur TTS/Mic */}
-      <div style={{ display: 'flex', gap: '8px', fontSize: '10px', opacity: 0.5 }}>
-        <span title="Microphone">{status.isMicAvailable ? '🎤✓' : '🎤✗'}</span>
-        <span title="TTS">{status.isTTSAvailable ? '🔊✓' : '🔊✗'}</span>
+      <div
+        data-testid="voice-indicators"
+        style={{ display: 'flex', gap: '8px', fontSize: '10px', opacity: 0.5 }}
+      >
+        <span data-testid="voice-mic-indicator" title="Microphone">
+          {status.isMicAvailable ? '🎤✓' : '🎤✗'}
+        </span>
+        <span data-testid="voice-tts-indicator" title="TTS">
+          {status.isTTSAvailable ? '🔊✓' : '🔊✗'}
+        </span>
       </div>
     </div>
   );

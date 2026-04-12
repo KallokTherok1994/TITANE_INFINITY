@@ -29,6 +29,9 @@ import {
   type ArchetypeType,
 } from '../psyche/archetypeResonanceEngine';
 import type { EmotionalState } from '@/types/voice';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('VoiceBlend');
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES
@@ -517,8 +520,8 @@ class NeuralVoiceBlendingEngine {
     // Update identity coherence (slow increase)
     this.state.identityCoherence = Math.min(1, this.state.identityCoherence + 0.001);
 
-    console.log(
-      `🎤 [VOICE-BLEND] Learning session ${this.state.learningSessionCount} — ${key} → ${Math.round(newPref * 100)}%`
+    logger.info(
+      `🎤 Learning session ${this.state.learningSessionCount} — ${key} → ${Math.round(newPref * 100)}%`
     );
   }
 
@@ -527,7 +530,7 @@ class NeuralVoiceBlendingEngine {
    */
   stabilizeSignature(): void {
     if (this.state.identityCoherence < this.config.minStability) {
-      console.log('⚠️ [VOICE-BLEND] Signature instable, stabilisation...');
+      logger.info('⚠️ Signature instable, stabilisation...');
 
       // Force convergence vers profil dominant
       const dominant = archetypeResonanceEngine.getDominantProfile();
@@ -539,8 +542,8 @@ class NeuralVoiceBlendingEngine {
     const version = `v${Math.floor(this.state.learningSessionCount / 10)}.${this.state.learningSessionCount % 10}`;
     this.state.voiceSignature = `TITANE∞-Voice-${version}`;
 
-    console.log(
-      `🎙️ [VOICE-BLEND] Voice signature stabilized: ${this.state.voiceSignature}`
+    logger.info(
+      `🎙️ Voice signature stabilized: ${this.state.voiceSignature}`
     );
   }
 
@@ -561,8 +564,8 @@ class NeuralVoiceBlendingEngine {
     const tone = this.determineCognitiveTone(context);
     const microExpressions = this.injectMicroExpressions(text, context);
 
-    console.log(
-      `🎤 [VOICE-BLEND] Voice generated: ${tone} ${context.archetype} (blend: ${Math.round(this.state.blendRatio.inspired * 100)}% inspired)`
+    logger.info(
+      `🎤 Voice generated: ${tone} ${context.archetype} (blend: ${Math.round(this.state.blendRatio.inspired * 100)}% inspired)`
     );
 
     this.notifyCallbacks();
@@ -598,7 +601,7 @@ class NeuralVoiceBlendingEngine {
       try {
         cb(this.state);
       } catch (error) {
-        console.error('[VOICE-BLEND] Callback error:', error);
+        logger.error('Callback error:', { error: String(error) });
       }
     });
   }

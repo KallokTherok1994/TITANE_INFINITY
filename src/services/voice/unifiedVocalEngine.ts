@@ -145,6 +145,7 @@ class UnifiedVocalEngine {
   private state: UnifiedVocalState;
   private config: UnifiedVocalConfig;
   private loopInterval: number | null = null;
+  private audioStateInterval: number | null = null;
   private listeners: Set<(state: UnifiedVocalState) => void> = new Set();
   private vadCheckCount = 0;
   private lastVADTimestamp = 0;
@@ -250,7 +251,7 @@ class UnifiedVocalEngine {
         this.updateCognitiveState();
       }
     };
-    setInterval(checkAudioState, 200); // Check every 200ms
+    this.audioStateInterval = window.setInterval(checkAudioState, 200);
 
     // Sync avec attentionEngine
     attentionEngine.onStateChange(attentionState => {
@@ -700,6 +701,11 @@ class UnifiedVocalEngine {
     if (this.loopInterval) {
       clearInterval(this.loopInterval);
       this.loopInterval = null;
+    }
+
+    if (this.audioStateInterval) {
+      clearInterval(this.audioStateInterval);
+      this.audioStateInterval = null;
     }
 
     // Sauvegarder mémoire finale

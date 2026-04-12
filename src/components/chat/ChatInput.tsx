@@ -631,6 +631,8 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
                         setUploadedFiles(prev => prev.filter((_, i) => i !== idx))
                       }
                       title="Retirer ce fichier"
+                      aria-label={`Retirer le fichier ${file.name}`}
+                      data-testid={`chat-file-chip-remove-${idx}`}
                     >
                       ✕
                     </button>
@@ -654,6 +656,7 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
                 aria-label="Importer des fichiers"
                 aria-expanded={showFileUpload}
                 aria-controls="chat-file-upload-zone"
+                data-testid="chat-input-file-upload-btn"
               >
                 <span className="chat-file-icon" aria-hidden="true">
                   📎
@@ -687,6 +690,7 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
               aria-label="Message à envoyer"
               aria-describedby={`char-count chat-input-hint${inputState.inputError ? ' input-error-message' : ''}`}
               aria-invalid={!!inputState.inputError}
+              data-testid="chat-input-textarea"
             />
 
             {/* Character counter with live region */}
@@ -725,6 +729,7 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
                 voiceModeActive ? 'Désactiver le mode vocal' : 'Activer le mode vocal'
               }
               aria-pressed={voiceModeActive}
+              data-testid="chat-input-voice-btn"
             >
               <span className="chat-voice-icon" aria-hidden="true">
                 🎤
@@ -751,6 +756,7 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
               }
               aria-busy={messageSent.current}
               title="Envoyer le message (Enter ou Ctrl+Enter)"
+              data-testid="chat-input-send-btn"
             >
               <span className="chat-send-icon" aria-hidden="true">
                 {voiceModeActive ? '🎤' : '➤'}
@@ -801,7 +807,13 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
         <div className="chat-input-container chat-input-critical">
           <div className="chat-input-critical-error">
             <span>🆘 Input OMEGA Error</span>
-            <button onClick={() => window.location.reload()}>Recharger</button>
+            <button
+              onClick={() => window.location.reload()}
+              aria-label="Recharger la page"
+              data-testid="chat-input-reload-btn"
+            >
+              Recharger
+            </button>
           </div>
         </div>
       );

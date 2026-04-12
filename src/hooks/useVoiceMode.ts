@@ -27,9 +27,12 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { secureInvoke } from '@/lib/security';
 import { warnOncePerSession } from '@/utils/deprecationWarnings';
+import { createLogger } from '@/utils/logger';
 import { voiceService } from '../services/api';
 import { getAIConfig } from '../config/offline-first';
 import { confirmCloudAPIUsage } from '../utils/cloudAPIConfirmation';
+
+const logger = createLogger('VoiceMode');
 
 export interface VoiceState {
   isRecording: boolean;
@@ -84,7 +87,7 @@ export function useVoiceMode(): UseVoiceModeReturn {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       setError(errorMessage);
-      console.error('Start recording error:', err);
+      logger.error('Start recording error:', { error: String(err) });
     }
   }, []);
 
@@ -101,7 +104,7 @@ export function useVoiceMode(): UseVoiceModeReturn {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       setError(errorMessage);
-      console.error('Stop recording error:', err);
+      logger.error('Stop recording error:', { error: String(err) });
     }
   }, []);
 
@@ -129,7 +132,7 @@ export function useVoiceMode(): UseVoiceModeReturn {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       setError(errorMessage);
-      console.error('Transcription error:', err);
+      logger.error('Transcription error:', { error: String(err) });
 
       setState(prev => ({
         ...prev,
@@ -153,7 +156,7 @@ export function useVoiceMode(): UseVoiceModeReturn {
 
       // Mode OFFLINE FIRST : toujours essayer local d'abord
       if (config.localFirst || !useOnline) {
-        console.log('🔊 TTS Local...');
+        logger.info('🔊 TTS Local...');
         await voiceService.speak(text, undefined, false); // ✅ FIX: Passer useOnline
       } else {
         // Mode cloud uniquement si confirmation
@@ -163,10 +166,10 @@ export function useVoiceMode(): UseVoiceModeReturn {
         );
 
         if (confirmed) {
-          console.log('🌐 TTS Cloud (Google)...');
+          logger.info('🌐 TTS Cloud (Google)...');
           await voiceService.speak(text, undefined, true); // ✅ FIX: Passer useOnline=true
         } else {
-          console.log('🔊 TTS Local (fallback)...');
+          logger.info('🔊 TTS Local (fallback)...');
           await voiceService.speak(text, undefined, false);
         }
       }
@@ -178,7 +181,7 @@ export function useVoiceMode(): UseVoiceModeReturn {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       setError(errorMessage);
-      console.error('TTS error:', err);
+      logger.error('TTS error:', { error: String(err) });
 
       setState(prev => ({
         ...prev,
@@ -199,7 +202,7 @@ export function useVoiceMode(): UseVoiceModeReturn {
 
       return vadActive;
     } catch (err) {
-      console.error('VAD state error:', err);
+      logger.error('VAD state error:', { error: String(err) });
       return false;
     }
   }, []);

@@ -7,6 +7,9 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('AudioTranscription');
 
 export interface TranscriptionResult {
   text: string;
@@ -74,8 +77,8 @@ export const audioTranscriptionService = {
 
       // Fallback en cas d'erreur backend
       if (errorMsg.includes('indisponible') || errorMsg.includes('Tauri')) {
-        console.warn(
-          '[audioTranscriptionService] Backend Tauri unavailable, trying Web Speech API'
+        logger.warn(
+          'Backend Tauri unavailable, trying Web Speech API'
         );
 
         // Pour Web Speech, on ne peut pas transcrire un fichier
@@ -117,7 +120,7 @@ export const audioTranscriptionService = {
         const recognition = new SpeechRecognition();
         const transcript: string[] = [];
         let isListening = false;
-        let timeoutHandle: NodeJS.Timeout | null = null;
+        let timeoutHandle: ReturnType<typeof setTimeout> | null = null;
 
         // Configuration
         recognition.language = 'fr-FR'; // Français par défaut
@@ -126,14 +129,12 @@ export const audioTranscriptionService = {
 
         recognition.onstart = () => {
           isListening = true;
-          console.log('[audioTranscriptionService] Microphone recording started');
+          logger.info('Microphone recording started');
 
           // Auto-stop après maxDuration
           timeoutHandle = setTimeout(() => {
             if (isListening) {
-              console.warn(
-                `[audioTranscriptionService] Auto-stop after ${maxDuration}ms`
-              );
+              logger.warn(`Auto-stop after ${maxDuration}ms`);
               recognition.stop();
             }
           }, maxDuration);
@@ -167,7 +168,7 @@ export const audioTranscriptionService = {
 
         recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
           const errorMsg = `Erreur reconnaissance vocale: ${event.error}`;
-          console.error('[audioTranscriptionService]', errorMsg);
+          logger.error('Speech recognition error', { error: errorMsg });
 
           return resolve({
             text: '',
@@ -180,11 +181,7 @@ export const audioTranscriptionService = {
           if (timeoutHandle) clearTimeout(timeoutHandle);
 
           const finalText = transcript.join('');
-          console.log(
-            '[audioTranscriptionService] Recognition ended:',
-            finalText.length,
-            'chars'
-          );
+          logger.info('Recognition ended', { chars: finalText.length });
 
           return resolve({
             text: finalText,
@@ -195,7 +192,7 @@ export const audioTranscriptionService = {
         recognition.start();
       } catch (err) {
         const errorMsg = (err as Error).message || 'Erreur inconnue';
-        console.error('[audioTranscriptionService] Error:', errorMsg);
+        logger.error('Transcription error', { error: errorMsg });
 
         return resolve({
           text: '',

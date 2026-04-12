@@ -1757,6 +1757,8 @@ const ChatComponent: React.FC = () => {
               voiceModeActive={voiceModeActive}
               onToggleVoiceMode={toggleVoiceMode}
               placeholder={chatInputPlaceholder}
+              enableDictation
+              enableFileUpload
             />
           </div>
 

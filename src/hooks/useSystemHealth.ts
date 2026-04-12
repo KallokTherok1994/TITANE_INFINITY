@@ -14,6 +14,9 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
 import { normalizePersistentMemoryStats } from '@/services/memory/persistentMemory.normalize';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('SystemHealth');
 
 // ═══════════════════════════════════════════════════════════════════
 // CONSTANTS
@@ -295,18 +298,30 @@ export function useSystemHealth(): UseSystemHealthReturn {
     try {
       // Fetch all health metrics in parallel
       const [convHealthRaw, memStats, singState, sysHealth] = await Promise.all([
-        tauriClient.conversationHealthCheck().catch(() => null) as Promise<{
+        tauriClient.conversationHealthCheck().catch((err: unknown) => {
+          logger.debug('conversationHealthCheck failed', { error: String(err) });
+          return null;
+        }) as Promise<{
           status: string;
           active_conversations: number;
           total_messages: number;
           avg_response_time_ms: number;
           error_rate: number;
         } | null>,
-        tauriClient.persistentMemoryGetStats().catch(() => null) as Promise<unknown>,
-        tauriClient.engineGetSingularityState().catch(() => null) as Promise<{
+        tauriClient.persistentMemoryGetStats().catch((err: unknown) => {
+          logger.debug('persistentMemoryGetStats failed', { error: String(err) });
+          return null;
+        }) as Promise<unknown>,
+        tauriClient.engineGetSingularityState().catch((err: unknown) => {
+          logger.debug('engineGetSingularityState failed', { error: String(err) });
+          return null;
+        }) as Promise<{
           engines: Array<{ name: string; status: string }>;
         } | null>,
-        tauriClient.getSystemHealth().catch(() => null) as Promise<{
+        tauriClient.getSystemHealth().catch((err: unknown) => {
+          logger.debug('getSystemHealth failed', { error: String(err) });
+          return null;
+        }) as Promise<{
           uptime_ms: number;
           cpu_usage: number;
           memory_usage_mb: number;
