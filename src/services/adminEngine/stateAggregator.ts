@@ -200,10 +200,7 @@ export class StateAggregator {
     // Collecter depuis Rust (Tauri)
     let rustVitals: RustVitalsResponse | null = null;
     try {
-      rustVitals = await secureInvoke<RustVitalsResponse>(
-        'get_admin_vitals',
-        {}
-      );
+      rustVitals = await secureInvoke<RustVitalsResponse>('get_admin_vitals', {});
     } catch (error) {
       console.warn('[StateAggregator] Impossible de collecter vitals Rust:', error);
     }
@@ -417,10 +414,7 @@ export class StateAggregator {
    */
   private async getSystemMode(): Promise<SystemMode> {
     try {
-      const mode = await secureInvoke<string>(
-        'get_system_mode',
-        {}
-      );
+      const mode = await secureInvoke<string>('get_system_mode', {});
       return (mode ?? 'NORMAL') as SystemMode;
     } catch {
       return 'NORMAL';

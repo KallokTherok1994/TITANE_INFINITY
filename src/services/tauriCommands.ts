@@ -358,7 +358,8 @@ export const TauriAPI = {
     invokeTauriCommandCanonical('singularity_sync_state', { state }),
 
   // Helios
-  getHeliosModules: () => invokeTauriCommandCanonical<HeliosModule[]>('helios_get_modules'),
+  getHeliosModules: () =>
+    invokeTauriCommandCanonical<HeliosModule[]>('helios_get_modules'),
 
   getHeliosHealth: () => invokeTauriCommandCanonical<HeliosHealth>('helios_get_health'),
 
@@ -386,7 +387,8 @@ export const TauriAPI = {
   // Voice
   startVoiceRecording: () => invokeTauriCommandCanonical<string>('start_recording'),
 
-  stopVoiceRecording: () => invokeTauriCommandCanonical<VoiceRecordingResult>('stop_recording'),
+  stopVoiceRecording: () =>
+    invokeTauriCommandCanonical<VoiceRecordingResult>('stop_recording'),
 
   speak: (text: string, voice = 'default') =>
     invokeTauriCommandCanonical('speak', { text, voice }),
@@ -398,7 +400,8 @@ export const TauriAPI = {
 
   stopEngine: () => invokeTauriCommandCanonical('engine_stop'),
 
-  getEngineState: () => invokeTauriCommandCanonical<Record<string, unknown>>('engine_get_state'),
+  getEngineState: () =>
+    invokeTauriCommandCanonical<Record<string, unknown>>('engine_get_state'),
 
   getEngineHealth: () => invokeTauriCommandCanonical<string>('engine_get_health'),
 
@@ -412,9 +415,11 @@ export const TauriAPI = {
     invokeTauriCommandCanonical<Record<string, unknown>>('devtools_inspect_singularity'),
 
   // System
-  getSystemStatus: () => invokeTauriCommandCanonical<Record<string, unknown>>('system_get_status'),
+  getSystemStatus: () =>
+    invokeTauriCommandCanonical<Record<string, unknown>>('system_get_status'),
 
-  getSystemInfo: () => invokeTauriCommandCanonical<Record<string, unknown>>('system_get_info'),
+  getSystemInfo: () =>
+    invokeTauriCommandCanonical<Record<string, unknown>>('system_get_info'),
 };
 
 // ═══════════════════════════════════════════════════════════════

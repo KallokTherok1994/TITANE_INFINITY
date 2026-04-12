@@ -32,7 +32,7 @@ export const SELF_AWARENESS = {
   },
 
   /** Get all store names */
-  getStores: () => architectureMap.architecture.stores.map((s) => s.name),
+  getStores: () => architectureMap.architecture.stores.map(s => s.name),
 
   /** Get all hook names */
   getHooks: () => architectureMap.architecture.hooks,
@@ -45,7 +45,10 @@ export const SELF_AWARENESS = {
 
   /** Get IPC commands for a specific domain */
   getCommandsByDomain: (domain: string) => {
-    const domains = architectureMap.architecture.ipc_commands.domains as Record<string, string[]>;
+    const domains = architectureMap.architecture.ipc_commands.domains as Record<
+      string,
+      string[]
+    >;
     return domains[domain] ?? [];
   },
 
