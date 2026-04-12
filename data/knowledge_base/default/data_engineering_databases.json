@@ -19,7 +19,12 @@
     },
     "sqlite": {
       "description": "Base de données embarquée utilisée par TITANE∞ pour la persistance locale",
-      "avantages": ["Zero configuration", "Fichier unique portable", "ACID complet", "Performant pour <100 connexions concurrentes"],
+      "avantages": [
+        "Zero configuration",
+        "Fichier unique portable",
+        "ACID complet",
+        "Performant pour <100 connexions concurrentes"
+      ],
       "bonnes_pratiques": {
         "wal_mode": "PRAGMA journal_mode=WAL pour lectures/écritures concurrentes optimales",
         "foreign_keys": "PRAGMA foreign_keys=ON pour intégrité référentielle",
@@ -35,7 +40,13 @@
     },
     "postgresql": {
       "description": "Base relationnelle avancée pour applications de production",
-      "fonctionnalites_avancees": ["JSONB (document store hybride)", "Full-text search natif", "Partitionnement de tables", "Extensions (PostGIS, pgvector, TimescaleDB)", "Réplication logique"],
+      "fonctionnalites_avancees": [
+        "JSONB (document store hybride)",
+        "Full-text search natif",
+        "Partitionnement de tables",
+        "Extensions (PostGIS, pgvector, TimescaleDB)",
+        "Réplication logique"
+      ],
       "pgvector": {
         "description": "Extension pour stocker et rechercher des vecteurs d'embedding",
         "usage": "CREATE EXTENSION vector; CREATE TABLE items (id bigserial, embedding vector(384));",
@@ -91,11 +102,21 @@
     "full_text_search": {
       "tantivy": {
         "description": "Moteur de recherche full-text en Rust (équivalent de Lucene) utilisé par TITANE",
-        "fonctionnalites": ["Tokenization multilingue", "Stemming", "BM25 scoring", "Faceted search", "Fuzzy matching"]
+        "fonctionnalites": [
+          "Tokenization multilingue",
+          "Stemming",
+          "BM25 scoring",
+          "Faceted search",
+          "Fuzzy matching"
+        ]
       },
       "elasticsearch": {
         "description": "Moteur de recherche distribué basé sur Lucene",
-        "cas_usage": ["Recherche full-text à grande échelle", "Analyse de logs (ELK stack)", "Auto-complétion"]
+        "cas_usage": [
+          "Recherche full-text à grande échelle",
+          "Analyse de logs (ELK stack)",
+          "Auto-complétion"
+        ]
       }
     },
     "optimisation_requetes": {
@@ -121,7 +142,12 @@
     "strategies": {
       "expand_contract": {
         "description": "Ajouter d'abord (expand), migrer les données, puis supprimer l'ancien (contract)",
-        "etapes": ["1. Ajouter la nouvelle colonne/table", "2. Réécrire le code pour utiliser la nouvelle structure", "3. Migrer les données existantes", "4. Supprimer l'ancienne colonne/table après vérification"]
+        "etapes": [
+          "1. Ajouter la nouvelle colonne/table",
+          "2. Réécrire le code pour utiliser la nouvelle structure",
+          "3. Migrer les données existantes",
+          "4. Supprimer l'ancienne colonne/table après vérification"
+        ]
       }
     }
   },
@@ -164,7 +190,12 @@
     },
     "invalidation": {
       "probleme": "L'invalidation de cache est l'un des deux problèmes les plus difficiles en informatique",
-      "strategies": ["TTL-based (simple mais imprecis)", "Event-based (précis mais complexe)", "Version-based (ETag/If-Modified-Since)", "Tag-based (invalider par groupe)"]
+      "strategies": [
+        "TTL-based (simple mais imprecis)",
+        "Event-based (précis mais complexe)",
+        "Version-based (ETag/If-Modified-Since)",
+        "Tag-based (invalider par groupe)"
+      ]
     }
   }
 }

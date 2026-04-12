@@ -73,7 +73,11 @@
       "when": "L'utilisateur envoie 'Bonjour TITANE'",
       "then": "TITANE répond en français avec un message pertinent dans le chat"
     },
-    "avantages": ["Langage ubiquitaire partagé avec non-développeurs", "Specs exécutables", "Réduction des malentendus"]
+    "avantages": [
+      "Langage ubiquitaire partagé avec non-développeurs",
+      "Specs exécutables",
+      "Réduction des malentendus"
+    ]
   },
   "strategies_de_test": {
     "test_doubles": {
@@ -146,16 +150,31 @@
       "pre_commit": "Husky + lint-staged pour vérification automatique avant chaque commit"
     },
     "dette_technique": {
-      "detection": ["TODO/FIXME/HACK comments", "Complexité cyclomatique élevée (>10)", "Duplication de code (>30 lignes identiques)", "Dépendances obsolètes"],
+      "detection": [
+        "TODO/FIXME/HACK comments",
+        "Complexité cyclomatique élevée (>10)",
+        "Duplication de code (>30 lignes identiques)",
+        "Dépendances obsolètes"
+      ],
       "gestion": "Allouer 20% du temps de sprint à la réduction de dette technique",
-      "metriques": ["Ratio de code dupliqué", "Nombre de dépendances avec vulnérabilités connues", "Temps moyen de build", "Flakiness rate des tests"]
+      "metriques": [
+        "Ratio de code dupliqué",
+        "Nombre de dépendances avec vulnérabilités connues",
+        "Temps moyen de build",
+        "Flakiness rate des tests"
+      ]
     }
   },
   "tests_performance": {
     "load_testing": {
       "description": "Vérifier le comportement sous charge normale attendue",
       "outils": ["k6 (JavaScript)", "Artillery", "Locust (Python)"],
-      "metriques": ["Throughput (req/s)", "Latence P50/P95/P99", "Error rate", "Saturation points"]
+      "metriques": [
+        "Throughput (req/s)",
+        "Latence P50/P95/P99",
+        "Error rate",
+        "Saturation points"
+      ]
     },
     "stress_testing": {
       "description": "Pousser le système au-delà de ses limites pour trouver le point de rupture",
@@ -163,7 +182,12 @@
     },
     "chaos_engineering": {
       "description": "Injecter des défaillances contrôlées en production pour valider la résilience",
-      "principes": ["Définir l'état stable", "Hypothèse: le système résiste à X", "Injecter la perturbation", "Observer et comparer"],
+      "principes": [
+        "Définir l'état stable",
+        "Hypothèse: le système résiste à X",
+        "Injecter la perturbation",
+        "Observer et comparer"
+      ],
       "outils": ["Chaos Monkey (Netflix)", "Litmus (Kubernetes)", "Gremlin (SaaS)"]
     }
   }

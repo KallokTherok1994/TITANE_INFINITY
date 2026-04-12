@@ -425,11 +425,7 @@ function expandQueryContext(query: string): {
 
   if (KB_ARCHITECTURE_HINTS.some(hint => normalized.includes(hint))) {
     addTokens('architecture', 'pattern', 'design', 'structure', 'module', 'scalability');
-    pin(
-      'architecture_logicielle_patterns',
-      'system_architecture',
-      'services_backend'
-    );
+    pin('architecture_logicielle_patterns', 'system_architecture', 'services_backend');
   }
 
   if (KB_DATA_HINTS.some(hint => normalized.includes(hint))) {
@@ -451,7 +447,11 @@ function expandQueryContext(query: string): {
       'profiling',
       'cache'
     );
-    pin('performance_optimization_avancee', 'troubleshooting_faq', 'operational_knowledge');
+    pin(
+      'performance_optimization_avancee',
+      'troubleshooting_faq',
+      'operational_knowledge'
+    );
   }
 
   return {
@@ -804,8 +804,7 @@ export async function getRelevantPromptContext(
             descriptionText.includes(bigramJoined) ||
             descriptionText.includes(bigramUnderscore);
           const contentBigram =
-            contentText.includes(bigramJoined) ||
-            contentText.includes(bigramUnderscore);
+            contentText.includes(bigramJoined) || contentText.includes(bigramUnderscore);
 
           if (catBigram) score += 10;
           if (descBigram) score += 6;

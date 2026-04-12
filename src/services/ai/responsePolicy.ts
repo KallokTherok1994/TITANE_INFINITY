@@ -631,7 +631,7 @@ export function estimateComplexity(message: string): number {
   // v30.2.0: Structural complexity signals
   const enumerationCount = (
     message.match(
-      /\b(\d+[\.\)]\s|premièrement|deuxièmement|d'abord|ensuite|enfin|firstly|secondly|finally|also|de plus|par ailleurs)\b/gi
+      /\b(\d+[.)]\s|premièrement|deuxièmement|d'abord|ensuite|enfin|firstly|secondly|finally|also|de plus|par ailleurs)\b/gi
     ) || []
   ).length;
   const conditionalCount = (
@@ -709,7 +709,6 @@ export function getEffectiveProfile(
   // Si le mode a des paramètres spécifiques plus élevés, les respecter
   const effectiveMaxTokens =
     modeMaxTokens && modeMaxTokens > base.maxTokens ? modeMaxTokens : base.maxTokens;
-
   const effectiveTemperature =
     modeTemperature !== undefined ? modeTemperature : base.temperature;
 
