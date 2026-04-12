@@ -287,7 +287,13 @@ class AudioSelfHeal {
 
     try {
       // Cancel recording
-      await voiceService.cancelRecording().catch(() => {});
+      await voiceService.cancelRecording().catch((err: unknown) => {
+        logger.warn('AudioSelfHeal cancelRecording failed during force reset', {
+          component: 'AudioSelfHeal',
+          action: 'forceReset',
+          error: err instanceof Error ? err.message : String(err),
+        });
+      });
 
       // Reset state machine
       audioStateMachine.forceReset();

@@ -230,7 +230,13 @@ export const VoiceConversation = ({
       animationFrameRef.current = null;
     }
     if (audioContextRef.current) {
-      audioContextRef.current.close().catch(() => {});
+      audioContextRef.current.close().catch((err: unknown) => {
+        logger.warn('Failed to close AudioContext during cleanup', {
+          component: 'VoiceConversation',
+          action: 'stopAudioVisualization',
+          error: err instanceof Error ? err.message : String(err),
+        });
+      });
       audioContextRef.current = null;
     }
     if (streamRef.current) {
@@ -379,12 +385,19 @@ export const VoiceConversation = ({
         style={getButtonStyle()}
         title={status.state === 'idle' ? 'Activer la conversation vocale' : 'Arrêter'}
         disabled={!status.isMicAvailable && status.state === 'idle'}
+        data-testid="voice-conversation-toggle"
+        aria-label={
+          status.state === 'idle'
+            ? 'Activer la conversation vocale'
+            : 'Arrêter la conversation vocale'
+        }
       >
         <span>{getIcon()}</span>
       </button>
 
       {status.isRecording && (
         <div
+          data-testid="voice-audio-level"
           style={{
             width: '100px',
             height: '4px',
@@ -405,6 +418,7 @@ export const VoiceConversation = ({
       )}
 
       <span
+        data-testid="voice-conversation-status"
         style={{
           fontSize: '0.75rem',
           color: 'rgba(255,255,255,0.6)',
@@ -416,9 +430,16 @@ export const VoiceConversation = ({
       </span>
 
       {/* Indicateur TTS/Mic */}
-      <div style={{ display: 'flex', gap: '8px', fontSize: '10px', opacity: 0.5 }}>
-        <span title="Microphone">{status.isMicAvailable ? '🎤✓' : '🎤✗'}</span>
-        <span title="TTS">{status.isTTSAvailable ? '🔊✓' : '🔊✗'}</span>
+      <div
+        data-testid="voice-indicators"
+        style={{ display: 'flex', gap: '8px', fontSize: '10px', opacity: 0.5 }}
+      >
+        <span data-testid="voice-mic-indicator" title="Microphone">
+          {status.isMicAvailable ? '🎤✓' : '🎤✗'}
+        </span>
+        <span data-testid="voice-tts-indicator" title="TTS">
+          {status.isTTSAvailable ? '🔊✓' : '🔊✗'}
+        </span>
       </div>
     </div>
   );
