@@ -32,12 +32,10 @@ pub struct MemoryStorage {
 
 impl MemoryStorage {
     pub fn new(storage_dir: PathBuf, password: String) -> MemoryResult<Self> {
-        // Create storage directory if it doesn't exist
-        if !storage_dir.exists() {
-            fs::create_dir_all(&storage_dir)
-                .map_err(|e| MemoryError::StorageError(e.to_string()))?;
-        }
-
+        // Note: Directory creation deferred to lazy initialization (save_conversation).
+        // This keeps boot time fast and non-blocking (HOTFIX v30.1.2: BOOT_HANG issue).
+        // The directory will be created with create_dir_all() when first write occurs.
+        
         Ok(Self {
             storage_dir,
             encryption: MemoryEncryption::new(password),
@@ -65,6 +63,13 @@ impl MemoryStorage {
     }
 
     pub fn save_conversation(&self, conversation: &Conversation) -> MemoryResult<()> {
+        // Lazy: Create storage directory on first write (not at initialization)
+        // This prevents boot hang if filesystem is slow/unreachable (v30.1.2 hotfix)
+        if !self.storage_dir.exists() {
+            fs::create_dir_all(&self.storage_dir)
+                .map_err(|e| MemoryError::StorageError(format!("Failed to create storage dir: {}", e)))?;
+        }
+        
         // Serialize conversation
         let json = serde_json::to_string(conversation)
             .map_err(|e| MemoryError::StorageError(e.to_string()))?;
