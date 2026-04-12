@@ -231,7 +231,7 @@ export const VoiceConversation = ({
     }
     if (audioContextRef.current) {
       audioContextRef.current.close().catch((err: unknown) => {
-        console.warn('[VoiceConversation] AudioContext close failed:', err);
+        logger.debug('AudioContext close during cleanup', { error: String(err) });
       });
       audioContextRef.current = null;
     }

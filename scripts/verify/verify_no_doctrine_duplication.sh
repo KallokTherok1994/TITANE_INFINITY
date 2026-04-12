@@ -15,7 +15,7 @@ check_rule() {
   local canonical="$3"
 
   local hits
-  hits=$(rg -n "$pattern" -S .github/copilot-instructions.md .github/instructions .github/agents .github/prompts 2>/dev/null || true)
+  hits=$(_rg -n "$pattern" -S .github/copilot-instructions.md .github/instructions .github/agents .github/prompts 2>/dev/null || true)
   if [[ -z "$hits" ]]; then
     fail "$id missing from instruction layers"
     return

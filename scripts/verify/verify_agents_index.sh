@@ -26,7 +26,7 @@ for f in "${required[@]}"; do
   fi
 done
 
-if rg -n "^name:" -S .github/agents/*.agent.md >/dev/null 2>&1; then
+if _rg -n "^name:" -S .github/agents/*.agent.md >/dev/null 2>&1; then
   pass "AGENT_FRONTMATTER_NAMES_PRESENT"
 else
   fail "AGENT_FRONTMATTER_NAMES_MISSING"

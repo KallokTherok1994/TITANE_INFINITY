@@ -41,7 +41,7 @@ void import('@/monitoring')
     }
   })
   .catch((err: unknown) => {
-    console.warn('[security] monitoring module preload failed:', err);
+    logger.debug('Optional monitoring module unavailable', { error: String(err) });
   });
 
 const monitoring: MonitoringBridge = {

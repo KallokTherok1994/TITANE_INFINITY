@@ -22,7 +22,7 @@ else
   fail "KERNEL_LINE_BUDGET_EXCEEDED line_count=$line_count"
 fi
 
-rule_count=$(rg -n '^## Rule [0-9]+' -S "$KERNEL" | wc -l | tr -d ' ')
+rule_count=$(_rg -n '^## Rule [0-9]+' -S "$KERNEL" | wc -l | tr -d ' ')
 if [[ "$rule_count" -ge 10 && "$rule_count" -le 15 ]]; then
   pass "KERNEL_RULE_BUDGET rule_count=$rule_count"
 else
@@ -30,7 +30,7 @@ else
 fi
 
 for token in "GO_FOR_PROD_BUILD__TITANE_INFINITY" "GO_FOR_PROD_DEPLOY__TITANE_INFINITY" "Tauri-only" "4-Ring" "Stop-the-line"; do
-  if rg -n "$token" -S "$KERNEL" >/dev/null 2>&1; then
+  if _rg -n "$token" -S "$KERNEL" >/dev/null 2>&1; then
     pass "KERNEL_TOKEN_PRESENT $token"
   else
     fail "KERNEL_TOKEN_MISSING $token"

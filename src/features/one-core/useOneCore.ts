@@ -11,6 +11,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
+import { createLogger } from '@/utils/logger';
 import type {
   OneCoreState,
   EngineStatus,
@@ -19,6 +20,8 @@ import type {
   OneCoreDiagnostic,
   OneCoreMetrics,
 } from './types';
+
+const logger = createLogger('OneCore');
 
 interface UseOneCoreReturn {
   // État
@@ -330,7 +333,7 @@ export function useOneCore(): UseOneCoreReturn {
       (tauriClient.oneCoreGetMetrics() as Promise<OneCoreMetrics>)
         .then(setMetrics)
         .catch((err: unknown) => {
-          console.warn('[OneCore] metrics refresh failed:', err);
+          logger.debug('OneCore metrics refresh skipped', { error: String(err) });
         });
     }, 5000);
 

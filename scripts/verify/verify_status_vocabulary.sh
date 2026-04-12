@@ -16,14 +16,14 @@ else
 fi
 
 for s in PASS FAIL BLOCKED BLOCKED_APPROVAL DONE SEALED; do
-  if rg -n "^\s*-\s*$s\s*$" -S governance/statuses.yaml >/dev/null 2>&1; then
+  if _rg -n "^\s*-\s*$s\s*$" -S governance/statuses.yaml >/dev/null 2>&1; then
     pass "STATUS_DECLARED $s"
   else
     fail "STATUS_MISSING $s"
   fi
 done
 
-if rg -n "PASS / FAIL / BLOCKED" -S .github/copilot-instructions.md >/dev/null 2>&1; then
+if _rg -n "PASS / FAIL / BLOCKED" -S .github/copilot-instructions.md >/dev/null 2>&1; then
   pass "KERNEL_STATUS_VOCAB_PRESENT"
 else
   fail "KERNEL_STATUS_VOCAB_MISSING"

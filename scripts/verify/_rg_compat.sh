@@ -1,55 +1,56 @@
 #!/usr/bin/env bash
-# ─────────────────────────────────────────────────────────────────
-# _rg_compat.sh — ripgrep fallback shim for verify scripts
-# Sources this file to get an `rg` function that falls back to
-# `grep -rn -E` when ripgrep is not installed.
-# rg uses Rust regex where \( = literal paren. grep -E matches
-# this behavior (in ERE, \( also = literal paren).
-# Usage: source "$(dirname "${BASH_SOURCE[0]}")/_rg_compat.sh"
-# ─────────────────────────────────────────────────────────────────
+# Portable rg (ripgrep) compatibility shim for CI environments.
+# Source this file in verify scripts that use rg.
+# If rg is not installed, falls back to grep -rn.
+#
+# Usage:
+#   source "$(dirname "${BASH_SOURCE[0]}")/_rg_compat.sh"
+#   _rg "pattern" file_or_dir ...
 
 if command -v rg >/dev/null 2>&1; then
-  # rg is available natively — nothing to do
-  :
+  _rg() { rg "$@"; }
 else
-  # Provide an rg-compatible shim using grep -E (extended regex)
-  rg() {
+  _rg() {
+    # rg uses Rust/PCRE-style regex; grep -P (Perl) is the closest match.
+    # Fallback to -E (ERE) if -P is unavailable.
+    local grep_flags=("-r" "-n")
+    if grep -P "" /dev/null 2>/dev/null; then
+      grep_flags+=("-P")
+    else
+      grep_flags+=("-E")
+    fi
     local pattern=""
-    local paths=()
-    local grep_flags=("-r" "-n" "-E")
+    local targets=()
     local skip_next=false
 
     for arg in "$@"; do
-      if $skip_next; then
-        skip_next=false
-        continue
-      fi
+      if $skip_next; then skip_next=false; continue; fi
       case "$arg" in
-        -n) ;; # already in grep_flags
-        # -S in rg = smart-case (case-insensitive only when pattern is all-lowercase).
-        # Our shim maps it to grep -i (always case-insensitive) which is slightly broader.
-        # This is acceptable: verify scripts only use -S with lowercase patterns.
-        -S|-i) grep_flags+=("-i") ;;
+        -n) ;; # grep -n already included
+        -S) ;; # rg smart-case; grep does not support, skip
+        -i) grep_flags+=("-i") ;;
         -l) grep_flags+=("-l") ;;
-        --) ;;
-        -*)
-          # Ignore unknown rg flags
-          ;;
+        -c) grep_flags+=("-c") ;;
+        --) ;; # separator, skip
+        -*) ;; # skip other rg-only flags
         *)
           if [[ -z "$pattern" ]]; then
             pattern="$arg"
           else
-            paths+=("$arg")
+            targets+=("$arg")
           fi
           ;;
       esac
     done
 
-    if [[ ${#paths[@]} -eq 0 ]]; then
-      paths=(".")
+    if [[ -z "$pattern" ]]; then
+      return 1
     fi
 
-    grep "${grep_flags[@]}" -- "$pattern" "${paths[@]}" 2>/dev/null
+    if [[ ${#targets[@]} -eq 0 ]]; then
+      targets=(".")
+    fi
+
+    grep "${grep_flags[@]}" -- "$pattern" "${targets[@]}" 2>/dev/null
   }
-  export -f rg
 fi

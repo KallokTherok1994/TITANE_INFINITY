@@ -34,21 +34,21 @@ for p in src/AGENTS.md src-tauri/AGENTS.md e2e/AGENTS.md docs/AGENTS.md scripts/
 done
 
 # Lower layers must not redefine exact PROD tokens
-if rg -n "GO_FOR_PROD_BUILD__TITANE_INFINITY|GO_FOR_PROD_DEPLOY__TITANE_INFINITY" -S .github/instructions .github/agents .github/prompts >/dev/null 2>&1; then
+if _rg -n "GO_FOR_PROD_BUILD__TITANE_INFINITY|GO_FOR_PROD_DEPLOY__TITANE_INFINITY" -S .github/instructions .github/agents .github/prompts >/dev/null 2>&1; then
   fail "LOWER_LAYER_REDEFINES_PROD_TOKEN"
 else
   pass "LOWER_LAYER_NO_PROD_TOKEN_REDEFINITION"
 fi
 
 # Lower layers must not redefine status vocabulary canonical phrase
-if rg -n "PASS / FAIL / BLOCKED" -S .github/instructions .github/agents .github/prompts >/dev/null 2>&1; then
+if _rg -n "PASS / FAIL / BLOCKED" -S .github/instructions .github/agents .github/prompts >/dev/null 2>&1; then
   fail "LOWER_LAYER_REDEFINES_STATUS_VOCAB"
 else
   pass "LOWER_LAYER_NO_STATUS_REDEFINITION"
 fi
 
 # Layer policy must declare unresolved conflict behavior
-if rg -n "unresolved_conflict_status:\s*BLOCKED_DOCTRINE" -S governance/layer_priority.yaml >/dev/null 2>&1; then
+if _rg -n "unresolved_conflict_status:\s*BLOCKED_DOCTRINE" -S governance/layer_priority.yaml >/dev/null 2>&1; then
   pass "LAYER_POLICY_BLOCKED_DOCTRINE"
 else
   fail "LAYER_POLICY_MISSING_BLOCKED_DOCTRINE"
