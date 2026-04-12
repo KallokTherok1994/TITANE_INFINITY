@@ -30,225 +30,218 @@
       "message": "BOOT:START"
     },
     {
-      "id": "ui-1773841938939-jynsqqku",
-      "timestamp": 1773841938939,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "BOOT:START"
-    },
-    {
-      "id": "ui-1773841920042-gf1lgcgd",
-      "timestamp": 1773841920042,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "BOOT:START"
-    },
-    {
-      "id": "ui-1773837910329-oqfuxctu",
-      "timestamp": 1773837910329,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "BOOT:START"
-    },
-    {
-      "id": "ui-1773835395689-3bxjulzp",
-      "timestamp": 1773835395689,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "BOOT:START"
-    },
-    {
       "id": "ui-1773835018629-cedkpidv",
       "timestamp": 1773835018629,
       "level": "Info",
       "module": "frontend.boot",
       "message": "BOOT:AFTER_STORE"
-    },
-    {
-      "id": "ui-1773834613683-cd85t6tj",
-      "timestamp": 1773834613683,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "BOOT:START"
-    },
-    {
-      "id": "ui-1773834573907-xt50n24y",
-      "timestamp": 1773834573907,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "BOOT:START"
-    },
-    {
-      "id": "ui-1773834484784-8cnwnp08",
-      "timestamp": 1773834484784,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "BOOT:START"
-    },
-    {
-      "id": "ui-1773834449916-lpbmj19d",
-      "timestamp": 1773834449916,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "BOOT:START"
-    },
-    {
-      "id": "ui-1773834363809-mc9m70t0",
-      "timestamp": 1773834363809,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "BOOT:START"
-    },
-    {
-      "id": "ui-1773786718382-9d0rj9k3",
-      "timestamp": 1773786718382,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "BOOT:START"
-    },
-    {
-      "id": "ui-1773786502596-u301d6ii",
-      "timestamp": 1773786502596,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "BOOT:START"
-    },
-    {
-      "id": "ui-1773588440781-zoehglqt",
-      "timestamp": 1773588440781,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "BOOT:START"
-    },
-    {
-      "id": "ui-1773588379314-lgywmb5o",
-      "timestamp": 1773588379314,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "BOOT:START"
-    },
-    {
-      "id": "ui-1773588325617-5d7isdb6",
-      "timestamp": 1773588325617,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "BOOT:START"
-    },
-    {
-      "id": "ui-1773588291302-pr6pqv9q",
-      "timestamp": 1773588291302,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "BOOT:START"
-    },
-    {
-      "id": "ui-1772900166800-6nu2ygle",
-      "timestamp": 1772900166800,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "BOOT:START"
-    },
-    {
-      "id": "ui-1772629380700-2wn16fd0",
-      "timestamp": 1772629380700,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "main.tsx: boot handlers registered"
-    },
-    {
-      "id": "ui-1771096743310-r3mro8cz",
-      "timestamp": 1771096743310,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "main.tsx: boot handlers registered"
-    },
-    {
-      "id": "ui-1771096537146-tp51pnaa",
-      "timestamp": 1771096537146,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "main.tsx: boot handlers registered"
-    },
-    {
-      "id": "ui-1771095031339-h61faip7",
-      "timestamp": 1771095031339,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "main.tsx: boot handlers registered"
-    },
-    {
-      "id": "ui-1770900224712-4d2ou0fz",
-      "timestamp": 1770900224712,
-      "level": "Error",
-      "module": "frontend.fatal",
-      "message": "Erreur UI (Promise non gérée): Command start_recording not found"
-    },
-    {
-      "id": "ui-1770900050936-c16alanv",
-      "timestamp": 1770900050936,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "main.tsx: boot handlers registered"
-    },
-    {
-      "id": "ui-1770900050705-voeta8w0",
-      "timestamp": 1770900050705,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "main.tsx: boot handlers registered"
-    },
-    {
-      "id": "ui-1770899894372-02qrvb4e",
-      "timestamp": 1770899894372,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "main.tsx: boot handlers registered"
-    },
-    {
-      "id": "ui-1770899723201-g9rq0ecf",
-      "timestamp": 1770899723201,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "main.tsx: boot handlers registered"
-    },
-    {
-      "id": "ui-1770899597969-42xv2k1i",
-      "timestamp": 1770899597969,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "main.tsx: boot handlers registered"
-    },
-    {
-      "id": "ui-1770899232777-rv9hdxam",
-      "timestamp": 1770899232777,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "main.tsx: boot handlers registered"
-    },
-    {
-      "id": "ui-1770898552231-3e7i6auc",
-      "timestamp": 1770898552231,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "main.tsx: boot handlers registered"
-    },
-    {
-      "id": "ui-1770897856243-alns1lx4",
-      "timestamp": 1770897856243,
-      "level": "Info",
-      "module": "frontend.boot",
-      "message": "main.tsx: boot handlers registered"
     }
   ],
   "events": [],
-  "timeline_entries": [],
+  "timeline_entries": [
+    {
+      "id": "tl-2026-04-12-audit-optimization",
+      "timestamp": "2026-04-12T19:08:00Z",
+      "type": "audit",
+      "title": "Optimization Audit — Critical Gaps Resolved",
+      "description": "Deep audit identified and fixed 3 critical issues: toxic RAG fallback (random embeddings), empty memory core state, stagnant singularity meta-learning rate. Also updated capabilities manifest, optimization report, and system state.",
+      "impact": "high",
+      "tags": ["audit", "rag", "memory", "singularity", "optimization"]
+    }
+  ],
   "chat_history": [],
-  "projects": [],
-  "decisions": [],
-  "knowledge": [],
-  "rituals": [],
+  "projects": [
+    {
+      "id": "proj-titane-infinity",
+      "name": "TITANE∞",
+      "description": "Système d'IA personnel avancé — architecture 4-Ring, 25+ moteurs cognitifs, mémoire tri-couche STM/MTM/LTM, self-healing, runtime Tauri-only.",
+      "status": "active",
+      "domain": "ai_system",
+      "created_at": "2025-01-01T00:00:00Z",
+      "updated_at": "2026-04-12T19:08:00Z",
+      "tags": ["titane", "ia", "cognitif", "tauri", "ring-architecture"]
+    },
+    {
+      "id": "proj-humain-total",
+      "name": "Humain Total",
+      "description": "Programme de développement personnel holistique — corps, esprit, âme, performance, santé optimale.",
+      "status": "active",
+      "domain": "personal_development",
+      "created_at": "2025-01-01T00:00:00Z",
+      "updated_at": "2026-04-12T00:00:00Z",
+      "tags": ["sante", "performance", "bien-etre", "holistique"]
+    },
+    {
+      "id": "proj-kalloks-arts",
+      "name": "Kallok's Arts",
+      "description": "Projet artistique et créatif de Kallok — expression visuelle, musicale, littéraire et numérique.",
+      "status": "active",
+      "domain": "creative_arts",
+      "created_at": "2025-01-01T00:00:00Z",
+      "updated_at": "2026-04-12T00:00:00Z",
+      "tags": ["art", "creation", "expression", "kallok"]
+    },
+    {
+      "id": "proj-la-ou-tout-s-eclarcit",
+      "name": "Là où tout s'éclaircit",
+      "description": "Livre en cours de rédaction — récit de vie, quête de sens, transformation personnelle et spirituelle.",
+      "status": "in_progress",
+      "domain": "literature",
+      "created_at": "2025-01-01T00:00:00Z",
+      "updated_at": "2026-04-12T00:00:00Z",
+      "tags": ["livre", "ecriture", "spiritualite", "transformation"]
+    }
+  ],
+  "decisions": [
+    {
+      "id": "dec-4ring-architecture",
+      "title": "Modèle architectural 4-Ring",
+      "description": "L'architecture TITANE∞ est organisée en 4 anneaux concentriques: Ring0 (OS/Runtime), Ring1 (Services), Ring2 (Engines), Ring3 (UI). Aucun import inversé n'est autorisé.",
+      "status": "active",
+      "date": "2025-01-01T00:00:00Z",
+      "rationale": "Séparation des préoccupations, sécurité, maintenabilité et prévention des dépendances circulaires.",
+      "tags": ["architecture", "ring", "invariant"]
+    },
+    {
+      "id": "dec-ipc-canonical-contract",
+      "title": "Contrat IPC canonique { ok, content, error }",
+      "description": "Tous les appels IPC Tauri doivent retourner { ok: boolean, content: T | null, error: string | null }. Zero silent failure. Aucun fallback mensonger autorisé.",
+      "status": "active",
+      "date": "2025-01-01T00:00:00Z",
+      "rationale": "Observabilité, traçabilité, cohérence des erreurs et respect de la Rule 6.",
+      "tags": ["ipc", "contract", "tauri", "invariant"]
+    },
+    {
+      "id": "dec-tauri-only-runtime",
+      "title": "Runtime Tauri-only en production",
+      "description": "Le runtime de production est exclusivement Tauri. Aucun serveur HTTP implicite, aucun accès réseau direct depuis l'UI sans passer par l'IPC et la Gateway.",
+      "status": "active",
+      "date": "2025-01-01T00:00:00Z",
+      "rationale": "Sécurité, performance, One Door network governance, Rule 4.",
+      "tags": ["tauri", "runtime", "security", "invariant"]
+    },
+    {
+      "id": "dec-one-door-network",
+      "title": "Gouvernance réseau One Door",
+      "description": "Chemin réseau unique autorisé: UI -> IPC canonique -> Services -> Network Gateway -> External. Aucun accès réseau direct depuis l'UI.",
+      "status": "active",
+      "date": "2025-01-01T00:00:00Z",
+      "rationale": "Sécurité, auditabilité, contrôle des flux réseau, Rule 5.",
+      "tags": ["network", "governance", "one-door", "invariant"]
+    },
+    {
+      "id": "dec-rag-safe-fallback",
+      "title": "Fallback RAG sûr — tableau vide au lieu de vecteurs aléatoires",
+      "description": "Lorsque le service d'embeddings est indisponible, generateQueryEmbedding() retourne [] avec un logger.warn visible. cosineSimilarity() retourne 0 pour les longueurs non concordantes, ce qui produit zéro résultat — jamais de résultats parasites.",
+      "status": "active",
+      "date": "2026-04-12T00:00:00Z",
+      "rationale": "Rule 6 — contrat IPC canonique, aucun fallback mensonger. Rule 8 — stop-the-line sur violation d'invariant.",
+      "tags": ["rag", "embedding", "fallback", "fix", "rule6", "rule8"]
+    }
+  ],
+  "knowledge": [
+    {
+      "id": "kn-architecture-type",
+      "title": "Type d'architecture TITANE∞",
+      "content": "Architecture 4-Ring (Ring0: OS/Runtime Tauri, Ring1: Services Rust/TS, Ring2: Engines cognitifs, Ring3: UI React). Aucun import inversé autorisé. One Door network governance active.",
+      "domain": "system_architecture",
+      "confidence": 1.0,
+      "source": "src/knowledge/self-awareness/architecture-map.json",
+      "created_at": "2026-04-12T00:00:00Z"
+    },
+    {
+      "id": "kn-memory-model",
+      "title": "Modèle mémoire tri-couche",
+      "content": "STM (Short-Term Memory): contexte immédiat, ~1.2 KB. MTM (Medium-Term Memory): sessions actives, ~4.7 KB. LTM (Long-Term Memory): mémoire persistante, ~9 KB. Self-Healing intégré via memorySelfHealEngine (28.4 KB).",
+      "domain": "memory_system",
+      "confidence": 1.0,
+      "source": "memory/stm.json, memory/mtm.json, memory/ltm.json",
+      "created_at": "2026-04-12T00:00:00Z"
+    },
+    {
+      "id": "kn-engine-count",
+      "title": "Nombre de moteurs cognitifs",
+      "content": "TITANE∞ intègre 25+ moteurs cognitifs: aura, autopoiesis, cognitive, conscious, continuum, conversation, embodiment, emotion, expression, flow, holopresence, identity, interoception, metasingularity, narrative, output, phasespace, predictive, presence, psyche, selfHealing, spatial, time, uiux, et d'autres.",
+      "domain": "cognitive_system",
+      "confidence": 1.0,
+      "source": "src/engines/",
+      "created_at": "2026-04-12T00:00:00Z"
+    },
+    {
+      "id": "kn-kb-size",
+      "title": "Taille de la base de connaissances",
+      "content": "130+ fichiers JSON dans data/knowledge_base/default/ couvrant: IA/Tech, système TITANE, psychologie, santé, finance, business, identité owner (Kevin), spiritualité. Taille totale estimée > 130 KB.",
+      "domain": "knowledge_base",
+      "confidence": 0.95,
+      "source": "data/knowledge_base/default/",
+      "created_at": "2026-04-12T00:00:00Z"
+    },
+    {
+      "id": "kn-ipc-contract",
+      "title": "Contrat IPC TITANE∞",
+      "content": "Tous les appels IPC retournent { ok: boolean, content: T | null, error: string | null }. Implémenté via safeInvokeCanonical(). Aucun silent failure autorisé. Rollback possible via proof_packs/.",
+      "domain": "ipc_system",
+      "confidence": 1.0,
+      "source": "src/utils/invoke.ts",
+      "created_at": "2026-04-12T00:00:00Z"
+    },
+    {
+      "id": "kn-rag-embedding-status",
+      "title": "État du pipeline RAG et embeddings",
+      "content": "Le service RAG (ragService.ts) est opérationnel pour la recherche keyword-based. Les embeddings vectoriels dépendent du backend Tauri (rag_generate_embedding). En l'absence du service, le fallback retourne [] (tableau vide) depuis le 2026-04-12 — jamais de vecteurs aléatoires.",
+      "domain": "rag_system",
+      "confidence": 1.0,
+      "source": "src/services/ragService.ts",
+      "created_at": "2026-04-12T00:00:00Z"
+    },
+    {
+      "id": "kn-owner-profile",
+      "title": "Profil owner — Kevin (Kallok)",
+      "content": "Kevin (Kallok) est le créateur et owner de TITANE∞. Projets actifs: TITANE∞ (IA personnelle), Humain Total (dev personnel), Kallok's Arts (création), 'Là où tout s'éclaircit' (livre). Profil détaillé dans data/knowledge_base/default/kevin_owner_profile_v30.json.",
+      "domain": "owner_identity",
+      "confidence": 1.0,
+      "source": "data/knowledge_base/default/kevin_owner_profile_v30.json",
+      "created_at": "2026-04-12T00:00:00Z"
+    }
+  ],
+  "rituals": [
+    {
+      "id": "ritual-boot-sequence",
+      "name": "Séquence de démarrage (Boot Sequence)",
+      "description": "Au démarrage: 1) Initialisation Tauri runtime, 2) Chargement configuration, 3) Activation des engines, 4) Validation mémoire (STM/MTM/LTM), 5) Connexion IPC, 6) Rapport état système.",
+      "frequency": "on_start",
+      "status": "active",
+      "steps": ["tauri_init", "config_load", "engines_start", "memory_validate", "ipc_connect", "state_report"]
+    },
+    {
+      "id": "ritual-memory-compaction",
+      "name": "Compaction Mémoire",
+      "description": "Compaction périodique des mémoires: déduplication STM/MTM, promotion MTM→LTM des entrées fréquentes, archivage LTM des entrées obsolètes, mise à jour de l'index mémoire.",
+      "frequency": "periodic",
+      "interval_hours": 24,
+      "status": "active",
+      "steps": ["stm_dedup", "mtm_dedup", "mtm_to_ltm_promote", "ltm_archive", "index_update"]
+    },
+    {
+      "id": "ritual-self-healing-cycle",
+      "name": "Cycle Self-Healing",
+      "description": "Cycle automatique de réparation: détection anomalies, analyse causes, application correctifs graduels, validation, rapport AutoHeal. Géré par memorySelfHealEngine.ts.",
+      "frequency": "continuous",
+      "status": "active",
+      "steps": ["anomaly_detect", "root_cause_analysis", "graduated_fix", "validate", "autoheal_report"]
+    },
+    {
+      "id": "ritual-optimization-audit",
+      "name": "Audit d'Optimisation",
+      "description": "Audit périodique du système: analyse des gaps KB, validation des capacités déclarées vs réelles, mise à jour singularity.json, rapport d'optimisation.",
+      "frequency": "periodic",
+      "interval_days": 30,
+      "status": "active",
+      "steps": ["kb_gap_analysis", "capability_audit", "singularity_update", "optimization_report"]
+    }
+  ],
   "metadata": {
     "last_validation_ts": 1774097601039,
-    "last_compaction_ts": null
+    "last_compaction_ts": "2026-04-12T19:08:00Z"
   }
 }

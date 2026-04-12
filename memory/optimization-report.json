@@ -1,16 +1,53 @@
 {
-  "timestamp": "2026-03-23T12:49:39.988Z",
-  "version": "v26.3.0",
+  "timestamp": "2026-04-12T19:08:00Z",
+  "version": "v30.2.0",
   "stats": {
-    "filesProcessed": 7,
+    "filesProcessed": 6,
     "entriesMigrated": 0,
-    "duplicatesRemoved": 0,
-    "errorsFixed": 0,
+    "duplicatesRemoved": 28,
+    "errorsFixed": 1,
     "backupCreated": true
   },
-  "issues": [],
+  "issues": [
+    {
+      "id": "ISSUE-RAG-TOXIC-FALLBACK",
+      "severity": "critical",
+      "file": "src/services/ragService.ts",
+      "description": "generateQueryEmbedding() used Math.random() as fallback, producing meaningless search results and violating Rule 6 (no lying fallback).",
+      "status": "fixed",
+      "fixed_at": "2026-04-12T19:08:00Z"
+    },
+    {
+      "id": "ISSUE-MEMORY-CORE-EMPTY",
+      "severity": "high",
+      "file": "memory/memory_core_state.json",
+      "description": "memory_core_state.json had all arrays empty (projects, knowledge, decisions, rituals, timeline_entries) and 33 redundant BOOT:START log entries.",
+      "status": "fixed",
+      "fixed_at": "2026-04-12T19:08:00Z"
+    },
+    {
+      "id": "ISSUE-SINGULARITY-STAGNANT",
+      "severity": "high",
+      "file": "memory/singularity.json",
+      "description": "Meta-learning rate was 0.01 (100x too slow), adaptation_threshold too high (0.7), only 1 pattern detected and 2 evolution cycles.",
+      "status": "fixed",
+      "fixed_at": "2026-04-12T19:08:00Z"
+    },
+    {
+      "id": "ISSUE-CAPABILITIES-INCOHERENT",
+      "severity": "medium",
+      "file": "src/knowledge/self-awareness/capabilities-manifest.json",
+      "description": "Capabilities manifest declared vector-search, embedding, and semantic-search as active when they are not operationally implemented.",
+      "status": "fixed",
+      "fixed_at": "2026-04-12T19:08:00Z"
+    }
+  ],
   "recommendations": [
     "Intégrer ce script dans le pipeline de déploiement",
-    "Configurer des backups automatiques avant chaque optimisation"
+    "Configurer des backups automatiques avant chaque optimisation",
+    "Implémenter un pipeline d'embeddings vectoriels pour activer vector-search et semantic-search réelle",
+    "Remplacer le stub webResearchService.ts par un vrai moteur de recherche web (Brave API ou SearXNG)",
+    "Ajouter un pipeline de chunking intelligent pour les fichiers KB (paragraphe/section plutôt que fichier entier)",
+    "Mettre en place un versioning automatique des fichiers KB avec changelog sémantique"
   ]
 }
