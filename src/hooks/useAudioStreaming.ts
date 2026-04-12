@@ -12,6 +12,9 @@ import {
   type StreamingResult,
   type StreamingStats,
 } from '../services/audio/audioStreaming';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('AudioStreaming');
 
 // ═══════════════════════════════════════════════════════════════════
 // CONSTANTS
@@ -129,7 +132,7 @@ export function useAudioStreaming(
               setStats(currentStats);
             }
           } catch (err) {
-            console.error('[useAudioStreaming] Stats error:', err);
+            logger.error('Stats error:', err);
           } finally {
             statsRequestRef.current = null;
           }
@@ -168,7 +171,7 @@ export function useAudioStreaming(
    */
   const startStreaming = useCallback(async () => {
     if (isStreaming) {
-      console.warn('[useAudioStreaming] Already streaming');
+      logger.warn('Already streaming');
       return;
     }
 
@@ -181,7 +184,7 @@ export function useAudioStreaming(
         setIsStreaming(true);
       }
     } catch (err) {
-      console.error('[useAudioStreaming] Start error:', err);
+      logger.error('Start error:', err);
       if (isMountedRef.current) {
         setError(err as Error);
       }
@@ -193,7 +196,7 @@ export function useAudioStreaming(
    */
   const stopStreaming = useCallback(async (): Promise<StreamingResult | null> => {
     if (!isStreaming) {
-      console.warn('[useAudioStreaming] Not streaming');
+      logger.warn('Not streaming');
       return null;
     }
 
@@ -214,7 +217,7 @@ export function useAudioStreaming(
 
       return result;
     } catch (err) {
-      console.error('[useAudioStreaming] Stop error:', err);
+      logger.error('Stop error:', err);
       if (isMountedRef.current) {
         setError(err as Error);
         setIsStreaming(false);
@@ -238,7 +241,7 @@ export function useAudioStreaming(
         setStats(null);
       }
     } catch (err) {
-      console.error('[useAudioStreaming] Force stop error:', err);
+      logger.error('Force stop error:', err);
       if (isMountedRef.current) {
         setError(err as Error);
       }

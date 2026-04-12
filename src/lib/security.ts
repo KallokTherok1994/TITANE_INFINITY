@@ -601,6 +601,14 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'voice_get_available_models',
   'calibrate_titane_voice', // ✅ v30.0.0 — TITANE voice calibration
   'check_is_titane_speaking', // ✅ v30.0.0 — TITANE voice fingerprinting check (anti-feedback)
+  'get_titane_voice_status', // ✅ v30.0.0 — TITANE voice status for fingerprint calibration
+  'audio_capture_start', // ✅ v30.0.0 — Audio capture pipeline
+  'audio_capture_stop',
+  'audio_capture_status',
+  'audio_capture_get_chunk',
+  'audio_capture_export_wav',
+  'audio_list_devices', // ✅ v30.0.0 — List audio input/output devices
+  'tts_generate_test_buffer', // ✅ v30.0.0 — TTS test buffer generation
 
   // ═══════════════════════════════════════════════════════════════
   // PERSISTENCE ENGINE v∞.MPE

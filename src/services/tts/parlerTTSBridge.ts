@@ -12,6 +12,10 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('ParlerTTS');
+
 export interface ParlerTTSConfig {
   /** URL API locale (défaut: localhost:8765) */
   apiUrl?: string;
@@ -149,7 +153,7 @@ class ParlerTTSBridge {
         cache_key: null, // Géré automatiquement côté serveur
       };
 
-      console.log('[ParlerTTS] 🎤 Synthèse:', {
+      logger.info('🎤 Synthèse:', {
         text: text.substring(0, 50) + (text.length > 50 ? '...' : ''),
         style: payload.style_description.substring(0, 40) + '...',
         format: payload.format,
@@ -157,7 +161,7 @@ class ParlerTTSBridge {
 
       throw this.networkDisabledError('synthesize');
     } catch (error) {
-      console.error('[ParlerTTS] ❌ Erreur synthèse:', error);
+      logger.error('❌ Erreur synthèse:', error);
       throw new Error(
         `Parler-TTS synthesis failed: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
@@ -180,7 +184,7 @@ class ParlerTTSBridge {
 
       throw this.networkDisabledError('update-style');
     } catch (error) {
-      console.error('[ParlerTTS] ❌ Erreur update style:', error);
+      logger.error('❌ Erreur update style:', error);
       throw error;
     }
   }
@@ -197,7 +201,7 @@ class ParlerTTSBridge {
    */
   setApiUrl(newUrl: string): void {
     this.apiUrl = newUrl;
-    console.log('[ParlerTTS] API URL updated:', newUrl);
+    logger.info('API URL updated:', newUrl);
   }
 }
 
@@ -222,13 +226,13 @@ export async function playAudioBlob(audioBlob: Blob, onEnd?: () => void): Promis
     };
 
     audio.onerror = error => {
-      console.error('[ParlerTTS] Audio playback error:', error);
+      logger.error('Audio playback error:', error);
       URL.revokeObjectURL(audioUrl);
     };
 
     await audio.play();
   } catch (error) {
-    console.error('[ParlerTTS] Failed to play audio:', error);
+    logger.error('Failed to play audio:', error);
     throw error;
   }
 }
