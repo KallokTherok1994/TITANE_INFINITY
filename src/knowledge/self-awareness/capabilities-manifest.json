@@ -1,13 +1,14 @@
 {
   "meta": {
-    "id": "titane-capabilities-v30.1.0",
-    "version": "30.1.0",
-    "generated_at": "2026-04-11T20:58:48Z",
+    "id": "titane-capabilities-v30.2.0",
+    "version": "30.2.0",
+    "generated_at": "2026-04-12T19:08:00Z",
     "purpose": "Capability inventory — TITANE knows what it can do"
   },
   "capabilities": {
     "ai_chat": {
       "description": "Multi-provider AI chat with conversation management",
+      "status": "active",
       "providers": ["ollama", "openai", "anthropic", "openrouter"],
       "features": [
         "streaming",
@@ -21,6 +22,7 @@
     },
     "voice": {
       "description": "Voice input/output with TTS, STT, VAD, wake-word",
+      "status": "active",
       "features": [
         "tts",
         "stt",
@@ -34,6 +36,7 @@
     },
     "cognitive": {
       "description": "Cognitive engine with learning, memory, evolution",
+      "status": "active",
       "features": [
         "knowledge-vault",
         "evolution-cycles",
@@ -46,6 +49,7 @@
     },
     "visual": {
       "description": "Visual engine with avatar, 3D, effects",
+      "status": "active",
       "features": [
         "avatar-3d",
         "lip-sync",
@@ -59,21 +63,26 @@
     },
     "memory": {
       "description": "Persistent memory with snapshots, timeline, knowledge",
+      "status": "active",
       "features": [
         "snapshots",
         "timeline",
         "knowledge-base",
         "file-ingestion",
-        "vector-search",
         "ltm",
         "episodic-memory",
         "working-memory",
-        "embedding",
         "consolidation"
-      ]
+      ],
+      "features_planned": [
+        "vector-search",
+        "embedding"
+      ],
+      "notes": "vector-search and embedding require backend embedding service (planned); keyword-based search is active"
     },
     "singularity": {
       "description": "Unified state engine — physical, cognitive, symbolic, adaptive layers",
+      "status": "active",
       "features": [
         "4-layer-state",
         "self-healing",
@@ -88,6 +97,7 @@
     },
     "security": {
       "description": "End-to-end security with encryption, permission enforcement",
+      "status": "active",
       "features": [
         "aes-gcm",
         "ed25519",
@@ -101,10 +111,12 @@
     },
     "creation": {
       "description": "Creation studio for content generation",
+      "status": "active",
       "features": ["text", "code", "image", "audio", "templates", "research"]
     },
     "monitoring": {
       "description": "QA monitoring, watchdog, self-heal, adaptive optimization",
+      "status": "active",
       "features": [
         "test-suites",
         "alerts",
@@ -117,6 +129,7 @@
     },
     "evolution": {
       "description": "Continuous self-improvement and XP progression",
+      "status": "active",
       "features": [
         "evolution-cycles",
         "xp-accumulation",
@@ -128,6 +141,7 @@
     },
     "time": {
       "description": "Temporal intelligence with agenda and timeline management",
+      "status": "active",
       "features": [
         "agenda",
         "calendar",
@@ -139,6 +153,7 @@
     },
     "identity": {
       "description": "Identity and persona management with twin evolution",
+      "status": "active",
       "features": [
         "twin-identity",
         "twin-evolution",
@@ -149,6 +164,7 @@
     },
     "engine_management": {
       "description": "Engine lifecycle management with dev-mode patching",
+      "status": "active",
       "features": [
         "engine-init",
         "engine-tick",
@@ -161,6 +177,7 @@
     },
     "ipc_governance": {
       "description": "Governed IPC with one-door pattern and canonical contract",
+      "status": "active",
       "contract": "{ ok: boolean, content: T | null, error: string | null }",
       "features": [
         "one-door",
@@ -173,6 +190,7 @@
     },
     "performance": {
       "description": "Adaptive performance monitoring and optimization",
+      "status": "active",
       "features": [
         "adaptive-fps",
         "resource-monitoring",
@@ -183,11 +201,17 @@
     },
     "research": {
       "description": "Web research and knowledge acquisition",
+      "status": "partial",
+      "notes": "rag-pipeline and file-ingestion are active; semantic-search is keyword-based only (not true vector semantic); web-search and knowledge-import are planned",
       "features": [
-        "web-search",
         "rag-pipeline",
-        "file-ingestion",
-        "semantic-search",
+        "file-ingestion"
+      ],
+      "features_partial": [
+        "semantic-search"
+      ],
+      "features_planned": [
+        "web-search",
         "knowledge-import"
       ]
     }

@@ -300,13 +300,22 @@ class RAGService {
         return response.content.embedding;
       }
     } catch (error) {
-      console.error('[RAG] Query embedding failed:', error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error(
+        'RAG query embedding failed',
+        { component: 'RAGService', action: 'generateQueryEmbedding' },
+        err
+      );
     }
 
-    // Fallback: random embedding (for testing)
-    return Array(384)
-      .fill(0)
-      .map(() => Math.random());
+    // Safe fallback: embedding service unavailable — return empty array to
+    // avoid polluting search results with random meaningless scores.
+    // callers that receive [] will produce cosineSimilarity = 0 (length mismatch guard).
+    logger.warn(
+      'Embedding service unavailable — returning empty embedding. Search results will be empty.',
+      { component: 'RAGService', action: 'generateQueryEmbedding' }
+    );
+    return [];
   }
 
   /**
