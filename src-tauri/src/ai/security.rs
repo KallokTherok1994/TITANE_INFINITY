@@ -14,21 +14,14 @@ pub const AI_RESPONSE_MAX_SIZE: usize = 1024 * 1024; // 1 MB
 /// Sanitize error messages to prevent API key leakage.
 /// Strips any key/token query parameters from error strings that may include
 /// full URLs (e.g., from reqwest error formatting).
+/// Uses case-insensitive matching on the lowercase form, then slices the
+/// original string at the matched position.
 pub fn sanitize_api_error(raw: &str) -> String {
     let lower = raw.to_lowercase();
     // Check for common API key parameter patterns (case-insensitive)
-    if lower.contains("key=") || lower.contains("apikey=") || lower.contains("token=") {
-        // Split on the first occurrence of any key pattern and mask the rest
-        for pattern in &["key=", "apiKey=", "api_key=", "apikey=", "token="] {
-            if let Some(pos) = raw.find(pattern) {
-                return format!("{}{}***", &raw[..pos], pattern);
-            }
-        }
-        // Case-insensitive fallback
-        for pattern in &["key=", "apikey=", "token="] {
-            if let Some(pos) = lower.find(pattern) {
-                return format!("{}***", &raw[..pos + pattern.len()]);
-            }
+    for pattern in &["key=", "apikey=", "api_key=", "token="] {
+        if let Some(pos) = lower.find(pattern) {
+            return format!("{}{}***", &raw[..pos], pattern);
         }
     }
     raw.to_string()

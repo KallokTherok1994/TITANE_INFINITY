@@ -26,6 +26,9 @@ else
       fi
       case "$arg" in
         -n) ;; # already in grep_flags
+        # -S in rg = smart-case (case-insensitive only when pattern is all-lowercase).
+        # Our shim maps it to grep -i (always case-insensitive) which is slightly broader.
+        # This is acceptable: verify scripts only use -S with lowercase patterns.
         -S|-i) grep_flags+=("-i") ;;
         -l) grep_flags+=("-l") ;;
         --) ;;
