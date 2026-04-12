@@ -14,7 +14,7 @@ describe('TAURI_COMMANDS', () => {
     expect(isValidTauriCommand('not-a-command')).toBe(false);
   });
 
-  it('invokeTauri() devrait appeler @tauri-apps/api/core.invoke', async () => {
+  it('invokeTauri() devrait appeler @tauri-apps/api/core.invoke et retourner payload canonique', async () => {
     const invoke = vi.fn().mockResolvedValueOnce({ ok: true });
 
     vi.doMock('@tauri-apps/api/core', () => ({ invoke }));
@@ -26,20 +26,33 @@ describe('TAURI_COMMANDS', () => {
       foo: 'bar',
     });
 
-    expect(result).toEqual({ ok: true });
+    expect(result).toEqual(
+      expect.objectContaining({
+        ok: true,
+        content: { ok: true },
+        error: null,
+      })
+    );
     expect(invoke).toHaveBeenCalledWith(TAURI_COMMANDS.HELIOS_GET_STATE, { foo: 'bar' });
   });
 
-  it('invokeTauri() devrait throw si commande invalide', async () => {
+  it('invokeTauri() devrait retourner un payload canonique en cas de commande invalide', async () => {
     const { invokeTauri } = await import('../../../core/commands/TAURI_COMMANDS');
 
     // Cast volontaire pour simuler une entrée non valide
-    await expect(invokeTauri('bad-command' as never)).rejects.toThrow(
-      'Invalid Tauri command'
-    );
+    const result = await invokeTauri('bad-command' as never);
+
+    expect(result).toEqual({
+      ok: false,
+      content: null,
+      error: {
+        code: 'INVALID_COMMAND',
+        message: 'Invalid Tauri command: bad-command',
+      },
+    });
   });
 
-  it('invokeTauri() devrait retourner un fallback chat si invoke échoue', async () => {
+  it('invokeTauri() devrait retourner un payload canonique si invoke échoue', async () => {
     const invoke = vi.fn().mockRejectedValueOnce(new Error('backend down'));
 
     vi.doMock('@tauri-apps/api/core', () => ({ invoke }));
@@ -53,14 +66,14 @@ describe('TAURI_COMMANDS', () => {
 
     expect(result).toEqual(
       expect.objectContaining({
-        success: false,
-        fallback: true,
-        provider: 'titane-local',
+        ok: false,
+        content: null,
       })
     );
+    expect(result.error?.message).toContain('backend down');
   });
 
-  it('invokeTauri() devrait retourner un fallback status/health si invoke indisponible', async () => {
+  it('invokeTauri() devrait retourner un payload canonique si invoke est indisponible', async () => {
     vi.doMock('@tauri-apps/api/core', () => ({ invoke: undefined }));
 
     const { TAURI_COMMANDS, invokeTauri } =
@@ -72,10 +85,10 @@ describe('TAURI_COMMANDS', () => {
 
     expect(result).toEqual(
       expect.objectContaining({
-        status: 'offline',
-        available: false,
-        fallback: true,
+        ok: false,
+        content: null,
       })
     );
+    expect(result.error?.message).toContain('is not a function');
   });
 });
