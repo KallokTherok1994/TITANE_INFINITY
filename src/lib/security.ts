@@ -40,7 +40,9 @@ void import('@/monitoring')
       monitoringBridge = candidate;
     }
   })
-  .catch(() => {});
+  .catch((err: unknown) => {
+    logger.debug('Optional monitoring module unavailable', { error: String(err) });
+  });
 
 const monitoring: MonitoringBridge = {
   trackRequest: () => monitoringBridge.trackRequest(),

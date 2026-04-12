@@ -15,6 +15,10 @@
  * - All others
  */
 
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('LazyServices');
+
 /**
  * @type Cache for loaded service modules (prevent re-imports)
  */
@@ -105,11 +109,17 @@ export function preloadLazyServices() {
   if (typeof requestIdleCallback !== 'undefined') {
     requestIdleCallback(
       () => {
-        // Fire all preloads in parallel, ignore errors
+        // Fire all preloads in parallel, log but tolerate errors
         Promise.all([
-          getChatEngineServices().catch(() => {}),
-          getAIOrchestrator().catch(() => {}),
-        ]).catch(() => {});
+          getChatEngineServices().catch((err: unknown) => {
+            logger.debug('Chat engine preload skipped', { error: String(err) });
+          }),
+          getAIOrchestrator().catch((err: unknown) => {
+            logger.debug('AI orchestrator preload skipped', { error: String(err) });
+          }),
+        ]).catch((err: unknown) => {
+          logger.debug('Lazy service preload batch failed', { error: String(err) });
+        });
       },
       { timeout: 5000 }
     );
