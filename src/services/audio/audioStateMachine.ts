@@ -167,9 +167,7 @@ class AudioStateMachine {
 
     if (!nextState) {
       if (this.enableLogging) {
-        logger.warn(
-          `⚠️ Invalid transition: ${this.state} + ${event}`
-        );
+        logger.warn(`⚠️ Invalid transition: ${this.state} + ${event}`);
       }
 
       // ✅ AUTO-RECOVERY: Reset to idle on invalid transitions for critical events
@@ -198,9 +196,7 @@ class AudioStateMachine {
 
     if (this.enableLogging) {
       const emoji = this.getStateEmoji(nextState);
-      logger.info(
-        `${emoji} ${previousState} → ${nextState} (${event})`
-      );
+      logger.info(`${emoji} ${previousState} → ${nextState} (${event})`);
     }
 
     // Notifier les listeners

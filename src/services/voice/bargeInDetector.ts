@@ -252,9 +252,7 @@ export class BargeInDetector {
       return;
     }
 
-    logger.info(
-      `🚨 ${event.type} detected (confidence: ${event.confidence.toFixed(2)})`
-    );
+    logger.info(`🚨 ${event.type} detected (confidence: ${event.confidence.toFixed(2)})`);
 
     this.listeners.forEach(listener => {
       try {

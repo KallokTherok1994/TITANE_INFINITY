@@ -260,12 +260,22 @@ class VoiceService {
           'is_speaking',
           {},
           { ...FAST_COMMAND_OPTIONS, context: 'Voice', retries: 1 }
-        ).catch(() => false),
+        ).catch((err: unknown) => {
+          logger.debug('is_speaking check failed, defaulting to false', {
+            error: String(err),
+          });
+          return false;
+        }),
         invokeWithRetry<boolean>(
           'is_recording',
           {},
           { ...FAST_COMMAND_OPTIONS, context: 'Voice', retries: 1 }
-        ).catch(() => false),
+        ).catch((err: unknown) => {
+          logger.debug('is_recording check failed, defaulting to false', {
+            error: String(err),
+          });
+          return false;
+        }),
       ]);
 
       return {
@@ -362,12 +372,18 @@ class VoiceService {
           'test_microphone',
           { durationMs: 1000 },
           { ...STANDARD_COMMAND_OPTIONS, context: 'Voice' }
-        ).catch(() => ({ success: false })),
+        ).catch((err: unknown) => {
+          logger.debug('test_microphone failed, defaulting', { error: String(err) });
+          return { success: false };
+        }),
         invokeWithRetry<string>(
           'voice_test_pipeline',
           {},
           { ...STANDARD_COMMAND_OPTIONS, context: 'Voice' }
-        ).catch(() => null),
+        ).catch((err: unknown) => {
+          logger.debug('voice_test_pipeline failed, defaulting', { error: String(err) });
+          return null;
+        }),
       ]);
 
       return {

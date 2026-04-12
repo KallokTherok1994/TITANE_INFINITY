@@ -201,7 +201,13 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
 
             for (const file of filesArray) {
               // Analyse simple des fichiers
-              const content = await file.text().catch(() => null);
+              const content = await file.text().catch((err: unknown) => {
+                logger.debug('File text read failed', {
+                  error: String(err),
+                  file: file.name,
+                });
+                return null;
+              });
 
               const analyzed: AnalyzedFile = {
                 id: `${Date.now()}-${Math.random()}`,
