@@ -6,12 +6,12 @@
 use crate::cognitive::{
     engine::CognitiveEngine,
     mental::CognitiveMode,
-    state::{CenterCoherence, CognitiveState, SystemRecommendation},
+    state::{CognitiveState, SystemRecommendation},
 };
-use crate::compat::plugin_system::{core_module::CoreHealth, registry::CoreRegistry};
+use crate::compat::plugin_system::registry::CoreRegistry;
 use crate::devtools::{
     logging::{LogCollector, LogEntry, LogFilters, LogLevel},
-    metrics::{MetricPoint, MetricSeries, MetricStats, MetricsCollector},
+    metrics::{MetricPoint, MetricStats, MetricsCollector},
 };
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;

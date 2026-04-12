@@ -191,7 +191,7 @@ class KnowledgeVaultEngine {
 
     try {
       // Essayer de charger depuis Tauri backend
-      const backendState = await secureInvoke<KnowledgeVaultState>('knowledge_get_state');
+      const backendState = await secureInvoke<KnowledgeVaultState>('cognitive_get_knowledge_vault');
       if (backendState) {
         this.state = { ...createDefaultState(), ...backendState };
         console.log(

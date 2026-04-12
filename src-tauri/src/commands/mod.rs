@@ -90,6 +90,7 @@ pub use self_healing_commands::*;
 pub use singularity_commands::*;
 // pub use ui_theme_commands::*; // disabled: duplicate __cmd__ exports
 
+#[cfg(any())]
 use crate::types::ModuleHealthInfo as ModuleHealth;
 
 // ═════════════════════════════════════════════════════════════════════════════

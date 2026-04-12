@@ -15,7 +15,6 @@ use super::memory_inspector::{
     MemoryBundle, MemoryEntry, MemoryHealthReport, MemoryInspector, MemorySearchResult,
     MemorySystemStats,
 };
-use super::metrics::MetricsCollector;
 
 // ═══════════════════════════════════════════════════════════════
 // GLOBAL DEVTOOLS INSTANCES

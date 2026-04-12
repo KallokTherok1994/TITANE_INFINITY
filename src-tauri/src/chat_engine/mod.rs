@@ -16,7 +16,6 @@ use speech::{SpeechOrchestrator, SpeechTask};
 use streaming::{chunk_text, new_stream_channel, StreamReceiver, StreamSender};
 
 use crate::ai::router::AIRouter;
-use crate::ia::unified_engine::UnifiedIAEngine;
 use crate::memory::model::Conversation;
 use crate::memory::MemoryEntry;
 use crate::security::secrets_engine::SecureSecretsEngine;

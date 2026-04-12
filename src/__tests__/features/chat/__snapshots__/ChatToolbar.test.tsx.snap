@@ -38,6 +38,7 @@ exports[`ChatToolbar Component > Snapshot > should match snapshot 1`] = `
           aria-label="Importer fichiers"
           aria-pressed="false"
           class="chat-toolbar-btn   default"
+          data-testid="chat-toolbar-file-import-btn"
           title="Importer des fichiers pour analyse (📎)"
           type="button"
         >
@@ -67,6 +68,7 @@ exports[`ChatToolbar Component > Snapshot > should match snapshot 1`] = `
           aria-label="Capture d'écran"
           aria-pressed="false"
           class="chat-toolbar-btn   default"
+          data-testid="chat-toolbar-screen-capture-btn"
           title="Prendre une capture d'écran (📸)"
           type="button"
         >
@@ -125,6 +127,7 @@ exports[`ChatToolbar Component > Snapshot > should match snapshot 1`] = `
           aria-label="Analyser image"
           aria-pressed="false"
           class="chat-toolbar-btn   default"
+          data-testid="chat-toolbar-image-analysis-btn"
           title="Importer une image pour analyse IA (👁️)"
           type="button"
         >
@@ -167,6 +170,7 @@ exports[`ChatToolbar Component > Snapshot > should match snapshot 1`] = `
           aria-label="Capture caméra"
           aria-pressed="false"
           class="chat-toolbar-btn   default"
+          data-testid="chat-toolbar-camera-capture-btn"
           title="Prendre une photo avec la caméra (📷)"
           type="button"
         >
@@ -201,6 +205,7 @@ exports[`ChatToolbar Component > Snapshot > should match snapshot 1`] = `
           aria-label="Caméra live"
           aria-pressed="false"
           class="chat-toolbar-btn   default"
+          data-testid="chat-toolbar-camera-live-btn"
           title="Activer caméra live"
           type="button"
         >
@@ -249,6 +254,7 @@ exports[`ChatToolbar Component > Snapshot > should match snapshot 1`] = `
           aria-label="Dictée vocale"
           aria-pressed="false"
           class="chat-toolbar-btn   default"
+          data-testid="chat-toolbar-dictation-btn"
           title="Démarrer la dictée vocale (🎙️)"
           type="button"
         >
@@ -288,6 +294,7 @@ exports[`ChatToolbar Component > Snapshot > should match snapshot 1`] = `
           aria-label="Enregistrer audio"
           aria-pressed="false"
           class="chat-toolbar-btn   default"
+          data-testid="chat-toolbar-audio-record-btn"
           title="Enregistrer un message audio (🔴)"
           type="button"
         >
@@ -324,6 +331,7 @@ exports[`ChatToolbar Component > Snapshot > should match snapshot 1`] = `
           aria-label="Transcrire audio"
           aria-pressed="false"
           class="chat-toolbar-btn   default"
+          data-testid="chat-toolbar-audio-transcribe-btn"
           title="Importer un fichier audio pour transcription (📝)"
           type="button"
         >
@@ -372,6 +380,7 @@ exports[`ChatToolbar Component > Snapshot > should match snapshot 1`] = `
           aria-label="Mode conversation audio"
           aria-pressed="false"
           class="chat-toolbar-btn   default"
+          data-testid="chat-toolbar-audio-conversation-btn"
           title="Activer mode conversation audio (🔊)"
           type="button"
         >
@@ -401,6 +410,7 @@ exports[`ChatToolbar Component > Snapshot > should match snapshot 1`] = `
           aria-label="Synthèse vocale"
           aria-pressed="true"
           class="chat-toolbar-btn active  default"
+          data-testid="chat-toolbar-tts-toggle-btn"
           title="Désactiver la synthèse vocale"
           type="button"
         >

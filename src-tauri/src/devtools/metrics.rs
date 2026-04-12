@@ -4,16 +4,6 @@ use std::sync::Arc;
 use std::time::SystemTime;
 use tokio::sync::RwLock;
 
-/// Macro for safe mutex locking with auto-recovery
-macro_rules! lock_or_recover {
-    ($mutex:expr) => {
-        $mutex.lock().unwrap_or_else(|poisoned| {
-            log::error!("[Metrics] CRITICAL: Mutex poisoned, recovering...");
-            poisoned.into_inner()
-        })
-    };
-}
-
 /// Type de métrique
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum MetricType {

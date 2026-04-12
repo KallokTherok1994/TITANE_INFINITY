@@ -4,7 +4,7 @@
 // V24 OPTIMIZATION: Response streaming support for memory efficiency
 
 use crate::ai::router::AIRouter;
-use crate::ai::{AIRequest, AIResponse};
+use crate::ai::AIRequest;
 use crate::audio::asr::ASREngine;
 use crate::audio::recorder::AudioRecorder;
 use crate::audio::vad::VoiceActivityDetector;
@@ -22,16 +22,6 @@ use std::sync::Arc;
 use tauri::{Emitter, State, Window};
 use tokio::sync::RwLock;
 use uuid::Uuid;
-
-/// Macro for safe mutex locking with auto-recovery
-macro_rules! lock_or_recover {
-    ($mutex:expr) => {
-        $mutex.lock().unwrap_or_else(|poisoned| {
-            log::error!("[AIChat] CRITICAL: Mutex poisoned, recovering...");
-            poisoned.into_inner()
-        })
-    };
-}
 
 // Global state for AI Chat system (v15)
 // v19.5.2 P2-1: Optimized with DashMap for concurrent access (Phase 2)

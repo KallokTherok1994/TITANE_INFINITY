@@ -11,9 +11,9 @@ use tauri::command;
 
 // Import engines
 use crate::engines::{
-    ChangeSeverity, DetectedAnomaly, DeveloperModeState, EngineHeartbeat, HealthStatus,
-    MonitoringState, PatchAction, PatchResult, PatchType, QAEngineState, QAReport, QASeverity,
-    QATestResult, QATestSuite, SecurityValidation, SystemInfo, SystemMetricsRealtime,
+    DetectedAnomaly, DeveloperModeState, EngineHeartbeat, HealthStatus, MonitoringState,
+    PatchAction, PatchResult, QAEngineState, QAReport, QATestSuite, SecurityValidation,
+    SystemInfo, SystemMetricsRealtime,
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════

@@ -9,7 +9,7 @@ pub mod online_tts;
 pub use elevenlabs_tts::{ElevenLabsTTS, TTSEmotion, TITANE_VOICE_ID};
 
 use serde::{Deserialize, Serialize};
-use smallvec::{smallvec, SmallVec};
+use smallvec::SmallVec;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TTSRequest {

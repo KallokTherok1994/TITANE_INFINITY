@@ -9,7 +9,9 @@ use tokio::time;
 
 use crate::memory::model::Conversation;
 use crate::memory::storage::{MemoryStorage, MemoryStoragePort};
-use crate::memory::{MemoryEntry, MemoryError, MemoryResult, MessageRole};
+use crate::memory::{MemoryEntry, MessageRole};
+#[cfg(test)]
+use crate::memory::{MemoryError, MemoryResult};
 
 use super::errors::ChatEngineError;
 
@@ -52,7 +54,7 @@ impl ChatMemoryManager {
             return Ok(id);
         }
 
-        let mut conversation = Conversation::new("Session".to_string());
+        let conversation = Conversation::new("Session".to_string());
         let id = conversation.id.clone();
         self.storage
             .save_conversation(&conversation)

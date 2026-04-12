@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0",
   "productName": "TITANE-Infinity",
-  "version": "30.1.0",
+  "version": "30.1.1",
   "identifier": "com.titane.infinity",
   "build": {
     "devUrl": "http://localhost:1420",
@@ -21,7 +21,9 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "resources": ["../dist"],
+    "resources": [
+      "../dist"
+    ],
     "copyright": "Copyright © 2025 TITANE",
     "category": "DeveloperTool",
     "shortDescription": "TITANE∞ v30.1.0 - Stable Release",
@@ -64,6 +66,7 @@
     ],
     "security": {
       "csp": "default-src 'self' tauri: asset:; script-src 'self' 'unsafe-inline' asset: tauri:; style-src 'self' 'unsafe-inline' asset: tauri:; img-src 'self' asset: data: blob:; font-src 'self' asset: data:; connect-src 'self' tauri: asset: ipc:; media-src 'self' asset: blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
+      "dangerousDisableAssetCspModification": true,
       "assetProtocol": {
         "enable": true,
         "scope": [
@@ -77,7 +80,9 @@
         {
           "identifier": "main-capability",
           "description": "Capability for the main window",
-          "windows": ["main"],
+          "windows": [
+            "main"
+          ],
           "permissions": [
             "core:default",
             "core:event:default",
@@ -3261,7 +3266,9 @@
         {
           "identifier": "avatar-floating-capability",
           "description": "Capability for the floating avatar window",
-          "windows": ["avatar-floating"],
+          "windows": [
+            "avatar-floating"
+          ],
           "permissions": [
             "core:default",
             "core:event:default",

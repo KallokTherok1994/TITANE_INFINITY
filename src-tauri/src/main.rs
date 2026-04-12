@@ -916,6 +916,12 @@ mod ollama;
 // Configuration Management System v19.5.2 (Phase 2 - Configuration Hub)
 pub mod config;
 
+// Bridge lib modules into the binary crate root so include!-based command
+// modules can keep canonical crate::... imports across targets.
+pub use titane_infinity::api_hub;
+pub use titane_infinity::ia;
+pub use titane_infinity::profiling;
+
 // ═══════════════════════════════════════════════════════════════
 // SUPPORT MODULES (v21.5 AUTO-FIX) - Types, Memory, Utils
 // ═══════════════════════════════════════════════════════════════

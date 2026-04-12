@@ -4,9 +4,8 @@
  *
  * Commandes Tauri pour compacter et valider la mémoire
  */
-use crate::memory_compactor::{CompactionResult, CompactorConfig, MemoryCompactor};
-use serde::{Deserialize, Serialize};
-use std::path::PathBuf;
+use crate::memory_compactor::MemoryCompactor;
+use serde::Serialize;
 
 #[derive(Debug, Serialize)]
 pub struct CompactionStats {
