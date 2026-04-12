@@ -202,8 +202,7 @@ export class StateAggregator {
     try {
       rustVitals = await secureInvoke<RustVitalsResponse>(
         'get_admin_vitals',
-        {},
-        { skipWhitelistCheck: true }
+        {}
       );
     } catch (error) {
       console.warn('[StateAggregator] Impossible de collecter vitals Rust:', error);
@@ -307,8 +306,7 @@ export class StateAggregator {
     try {
       const rustStatuses = await secureInvoke<RustModuleStatusResponse[]>(
         'get_module_statuses',
-        {},
-        { skipWhitelistCheck: true }
+        {}
       );
 
       for (const rs of Array.isArray(rustStatuses) ? rustStatuses : []) {
@@ -388,8 +386,7 @@ export class StateAggregator {
       // Récupérer depuis Performance Engine
       const perfAnomalies = await secureInvoke<AdminAnomaly[]>(
         'get_performance_anomalies',
-        {},
-        { skipWhitelistCheck: true }
+        {}
       );
       anomalies.push(...(Array.isArray(perfAnomalies) ? perfAnomalies : []));
     } catch {
@@ -400,8 +397,7 @@ export class StateAggregator {
       // Récupérer depuis Self-Healing Engine
       const healingAnomalies = await secureInvoke<AdminAnomaly[]>(
         'get_healing_anomalies',
-        {},
-        { skipWhitelistCheck: true }
+        {}
       );
       anomalies.push(...(Array.isArray(healingAnomalies) ? healingAnomalies : []));
     } catch {
@@ -423,8 +419,7 @@ export class StateAggregator {
     try {
       const mode = await secureInvoke<string>(
         'get_system_mode',
-        {},
-        { skipWhitelistCheck: true }
+        {}
       );
       return (mode ?? 'NORMAL') as SystemMode;
     } catch {

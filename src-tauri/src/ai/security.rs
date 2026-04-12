@@ -12,15 +12,26 @@ pub const AI_REQUEST_TIMEOUT: Duration = Duration::from_secs(30);
 pub const AI_RESPONSE_MAX_SIZE: usize = 1024 * 1024; // 1 MB
 
 /// Sanitize error messages to prevent API key leakage.
-/// Strips any `key=<value>` query parameter from error strings that may include
+/// Strips any key/token query parameters from error strings that may include
 /// full URLs (e.g., from reqwest error formatting).
 pub fn sanitize_api_error(raw: &str) -> String {
-    if raw.contains("key=") {
-        let before_key = raw.split("key=").next().unwrap_or("API error");
-        format!("{}key=***", before_key)
-    } else {
-        raw.to_string()
+    let lower = raw.to_lowercase();
+    // Check for common API key parameter patterns (case-insensitive)
+    if lower.contains("key=") || lower.contains("apikey=") || lower.contains("token=") {
+        // Split on the first occurrence of any key pattern and mask the rest
+        for pattern in &["key=", "apiKey=", "api_key=", "apikey=", "token="] {
+            if let Some(pos) = raw.find(pattern) {
+                return format!("{}{}***", &raw[..pos], pattern);
+            }
+        }
+        // Case-insensitive fallback
+        for pattern in &["key=", "apikey=", "token="] {
+            if let Some(pos) = lower.find(pattern) {
+                return format!("{}***", &raw[..pos + pattern.len()]);
+            }
+        }
     }
+    raw.to_string()
 }
 
 /// Liste blanche des endpoints autorisés
