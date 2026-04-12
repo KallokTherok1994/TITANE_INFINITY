@@ -3,6 +3,7 @@ set -euo pipefail
 
 ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
 cd "$ROOT_DIR"
+source "$(dirname "${BASH_SOURCE[0]}")/_rg_compat.sh"
 
 FAIL=0
 pass() { echo "PASS: $1"; }

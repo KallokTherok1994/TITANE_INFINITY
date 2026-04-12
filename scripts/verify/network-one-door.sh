@@ -3,6 +3,7 @@ set -euo pipefail
 
 ROOT="src-tauri/src"
 PATTERN="HttpClient::new\\(|use[[:space:]]+http_client|reqwest::Client|use[[:space:]]+reqwest|ureq::|hyper::"
+source "$(dirname "${BASH_SOURCE[0]}")/_rg_compat.sh"
 
 ALLOWLIST=(
   "src-tauri/src/services/network_gateway.rs"

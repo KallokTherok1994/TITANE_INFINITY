@@ -6,6 +6,7 @@
 #═══════════════════════════════════════════════════════════════════════════════
 
 set -euo pipefail
+source "$(dirname "${BASH_SOURCE[0]}")/_rg_compat.sh"
 
 # Colors
 RED='\033[0;31m'
