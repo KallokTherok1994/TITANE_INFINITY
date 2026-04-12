@@ -1,63 +1,261 @@
 {
   "version": "v30.1.0",
   "category": "entrepreneuriat_mindset",
-  "description": "Entrepreneuriat et mindset fondateur — lean startup (MVP/build-measure-learn), ikigai, side hustle→business, 1000 true fans, product-market fit, bootstrapping vs levée de fonds, mindset fondateur (stoïcisme + anti-fragilité Taleb), marketing organique",
+  "description": "Entrepreneuriat et mindset fondateur — lean startup (MVP/build-measure-learn/customer development), ikigai, side hustle→business, 1000 true fans, product-market fit, bootstrapping vs levée de fonds, mindset fondateur (stoïcisme + anti-fragilité Taleb), marketing organique, levée de fonds, modèles économiques, écosystème startup, gestion d'équipe fondateur, scaling, échec et résilience",
   "entrepreneuriat_mindset": {
-    "introduction": "L'entrepreneuriat n'est pas réservé aux startups de la Silicon Valley — c'est une façon de créer de la valeur et de l'autonomie. TITANE distingue le entrepreneuriat de style de vie (indépendance + revenus suffisants) du VC-backed (hypercroissance + sortie). Les deux sont valides mais nécessitent des stratégies très différentes.",
+    "introduction": "L'entrepreneuriat n'est pas réservé aux startups de la Silicon Valley — c'est une façon de créer de la valeur et de l'autonomie. TITANE distingue le entrepreneuriat de style de vie (indépendance + revenus suffisants) du VC-backed (hypercroissance + sortie). Les deux sont valides mais nécessitent des stratégies très différentes. Ce corpus couvre l'intégralité du cycle entrepreneurial : de l'idéation au scaling, en passant par la levée de fonds, la construction d'équipe, et la résilience face à l'échec.",
     "lean_startup": {
       "auteur": "Eric Ries — The Lean Startup (2011)",
       "boucle_BML": {
-        "Build": "Construire le MVP (Minimum Viable Product) — la version la plus simple validant une hypothèse clé",
-        "Measure": "Mesurer les réactions réelles des vrais utilisateurs (pas des enquêtes)",
-        "Learn": "Apprendre ce qui est validé ou infirmé → pivoter ou persévérer"
+        "Build": "Construire le MVP (Minimum Viable Product) — la version la plus simple validant une hypothèse clé. L'objectif est de minimiser le temps de cycle, pas de maximiser les fonctionnalités.",
+        "Measure": "Mesurer les réactions réelles des vrais utilisateurs (pas des enquêtes). Utiliser des métriques actionnables, pas des métriques de vanité.",
+        "Learn": "Apprendre ce qui est validé ou infirmé → pivoter ou persévérer. Documenter chaque cycle d'apprentissage."
       },
-      "MVP": "Le produit minimum qui permet d'apprendre, pas le produit minimum vendable. Ex: landing page, manuel en PDF, prototype papier.",
-      "validated_learning": "L'unité de progrès en startup = connaissance validée sur les hypothèses business — pas les features livrées",
-      "pivot_vs_persevere": "Pivoter = changer de stratégie en préservant les insights. Persévérer = continuer si les signaux sont positifs."
+      "MVP": "Le produit minimum qui permet d'apprendre, pas le produit minimum vendable. Ex: landing page, manuel en PDF, prototype papier, Wizard of Oz (simulation manuelle du produit), concierge MVP (service manuel avant automatisation).",
+      "validated_learning": "L'unité de progrès en startup = connaissance validée sur les hypothèses business — pas les features livrées. Chaque expérience doit avoir une hypothèse falsifiable.",
+      "pivot_vs_persevere": "Pivoter = changer de stratégie en préservant les insights. Persévérer = continuer si les signaux sont positifs. Types de pivot : zoom-in (une feature devient le produit), zoom-out (le produit devient une feature), segment client, canal, technologie, modèle de revenus.",
+      "customer_development": {
+        "auteur": "Steve Blank — The Four Steps to the Epiphany (2005)",
+        "étapes": ["Découverte client (problem-solution fit)", "Validation client (product-market fit)", "Création client (scaling demande)", "Construction entreprise (organisation)"],
+        "principe": "Sortir du bâtiment (Get Out of the Building). Les hypothèses ne se valident pas derrière un écran mais en parlant aux clients potentiels.",
+        "interviews": "Conduire 50-100 entretiens clients avant de coder. Questions ouvertes sur les problèmes, pas sur les solutions."
+      },
+      "metriques_vanite_vs_actionnables": {
+        "vanité": "Nombre de téléchargements, pages vues, utilisateurs inscrits — impressionnant mais non actionnable",
+        "actionnables": "Taux de rétention, revenu par utilisateur, coût d'acquisition client (CAC), lifetime value (LTV), taux de conversion, NPS",
+        "ratio_cle": "LTV/CAC > 3 = modèle sain. Payback period < 12 mois = trésorerie viable."
+      },
+      "product_market_fit_avance": {
+        "définition": "PMF: le produit répond à un besoin réel suffisamment intense pour qu'un marché se forme naturellement",
+        "signe_positif": "Croissance organique, rétention élevée, utilisateurs déçus si le produit disparaissait (>40% 'très déçus' = PMF selon Sean Ellis)",
+        "avant_PMF": "Ne pas scale — acquisition payante avant PMF = gaspillage. Focus sur la rétention, pas l'acquisition.",
+        "test_maman": "Rob Fitzpatrick — poser des questions sur le passé (comportements réels), pas l'avenir (intentions). Ne jamais demander 'achèteriez-vous ceci ?'",
+        "indicateurs_PMF": ["Taux de rétention J30 > 40%", "NPS > 50", "Croissance organique > 50% des nouveaux utilisateurs", "Temps d'usage croissant", "Demandes de fonctionnalités (signe d'engagement)"]
+      }
     },
-    "product_market_fit": {
-      "définition": "PMF: le produit répond à un besoin réel suffisamment intense pour qu'un marché se forme naturellement",
-      "signe_positif": "Croissance organique, rétention élevée, utilisateurs déçus si le produit disparaissait (>40% 'très déçus' = PMF)",
-      "avant_PMF": "Ne pas scale — acquisition payante avant PMF = gaspillage",
-      "test_maman": "Rob Fitzpatrick — poser des questions sur le passé (comportements réels), pas l'avenir (intentions)"
+    "levee_fonds": {
+      "introduction": "La levée de fonds est un outil, pas un objectif. Elle sert à accélérer une traction existante, pas à financer une recherche de PMF. Ne lever que si le capital accélère significativement la capture de valeur.",
+      "etapes_financement": {
+        "pre_seed": "50-500K€. Idée + équipe + premiers prototypes. Sources : épargne personnelle, love money (famille/amis), business angels.",
+        "seed": "500K-2M€. MVP fonctionnel + premières métriques de traction. Sources : business angels, fonds d'amorçage (Kima, Daphni), BPI France.",
+        "serie_A": "2-15M€. Product-market fit démontré + modèle économique clair + début de scaling. Sources : fonds VC (Partech, Elaia, Breega).",
+        "serie_B": "15-50M€. Scaling avéré + expansion marché. Internationalisation ou domination du segment.",
+        "serie_C_et_plus": "50M€+. Pré-IPO ou expansion massive. Sources : growth equity, fonds internationaux (Sequoia, a16z, Tiger Global)."
+      },
+      "business_angels": {
+        "définition": "Investisseurs individuels, souvent ex-entrepreneurs. Apportent capital (25-200K€) + réseau + expertise sectorielle.",
+        "réseaux_france": ["France Angels", "Femmes Business Angels", "Paris Business Angels", "réseau Entreprendre"],
+        "avantages_fiscaux": "Réduction IR 25% (dispositif Madelin) ou PEA-PME. Attention : conditions de détention 5 ans minimum."
+      },
+      "venture_capital": {
+        "fonctionnement": "Les VC lèvent des fonds auprès de LP (Limited Partners : fonds de pension, family offices). Cycle de vie : 10 ans. Objectif : rendement 3-10x sur le fonds.",
+        "critères_investissement": ["Taille de marché (TAM > 1Md€)", "Équipe exceptionnelle", "Traction / PMF démontré", "Avantage compétitif défendable (moat)", "Potentiel de sortie (IPO/M&A)"],
+        "power_law": "Les VC savent que 1-2 investissements sur 10 feront le rendement du fonds entier. Ils cherchent des 100x, pas des 3x."
+      },
+      "crowdfunding": {
+        "types": ["Don/récompense (Kickstarter, Ulule, KissKissBankBank)", "Equity crowdfunding (Tudigo, Sowefund, WiSEED)", "Prêt participatif (October, Credit.fr)"],
+        "avantages": "Validation marché + financement + communauté de premiers clients/ambassadeurs.",
+        "limites": "Effort marketing important, commissions plateformes 5-10%, obligations de livraison."
+      },
+      "pitch_deck": {
+        "structure_classique": ["Problème (douleur réelle et mesurable)", "Solution (votre proposition unique)", "Marché (TAM/SAM/SOM)", "Modèle économique", "Traction (métriques clés)", "Équipe (pourquoi vous ?)", "Concurrence (matrice positionnement)", "Roadmap", "Ask (montant + utilisation)"],
+        "conseils": "10-15 slides maximum. 3 minutes de pitch, 7 minutes de Q&A. Raconter une histoire, pas réciter des chiffres."
+      },
+      "term_sheet": {
+        "définition": "Document non-contraignant résumant les termes de l'investissement avant la documentation juridique complète.",
+        "clauses_clés": ["Valorisation pré/post-money", "Type d'actions (ordinaires vs préférentielles)", "Liquidation preference (1x non-participating standard)", "Anti-dilution (broad-based weighted average)", "Drag-along / Tag-along", "Board seats", "Vesting fondateurs", "ESOP (pool options salariés)"],
+        "dilution": "Exemple : si vous cédez 20% en seed, 20% en série A, 15% en série B → il vous reste ~54% avant ESOP. Anticiper la dilution totale sur 3-4 tours."
+      }
+    },
+    "modeles_economiques": {
+      "introduction": "Le modèle économique définit comment l'entreprise crée, délivre et capture de la valeur. Un bon produit avec un mauvais modèle économique échoue.",
+      "SaaS": {
+        "définition": "Software as a Service — abonnement mensuel/annuel à un logiciel hébergé.",
+        "métriques_clés": ["MRR/ARR (revenus récurrents)", "Churn rate (taux d'attrition)", "Net Revenue Retention (NRR > 120% = excellent)", "CAC payback period", "LTV/CAC ratio"],
+        "benchmark": "Rule of 40 : taux de croissance + marge = > 40%. Best-in-class SaaS : NRR > 130%, churn < 5%/an.",
+        "pricing": "Per-seat, usage-based, tiered, freemium-to-paid. Tendance 2024 : usage-based pricing (Snowflake, Twilio)."
+      },
+      "marketplace": {
+        "définition": "Plateforme connectant offreurs et demandeurs. Commission sur chaque transaction.",
+        "chicken_egg": "Problème de la poule et de l'œuf : commencer par un côté (souvent l'offre), créer de la valeur manuellement, puis attirer la demande.",
+        "exemples": "Airbnb (hébergement), Uber (transport), Leboncoin (petites annonces), Malt (freelances).",
+        "commission_type": "5-30% selon le secteur. Plus la valeur ajoutée est élevée, plus la commission est acceptable."
+      },
+      "freemium": {
+        "définition": "Version gratuite limitée + version payante premium. Conversion typique : 2-5% des utilisateurs gratuits.",
+        "clé_succès": "La version gratuite doit être suffisamment utile pour créer l'habitude, mais limitée pour créer le désir de payer.",
+        "exemples": "Spotify (publicité vs premium), Notion (limites équipe), Slack (historique messages), Dropbox (espace stockage)."
+      },
+      "abonnement": {
+        "définition": "Paiement récurrent pour un accès continu à un produit ou service.",
+        "avantages": "Revenus prévisibles, relation client durable, LTV élevée.",
+        "types": ["Box physique (Birchbox)", "Contenu (Netflix, Substack)", "Logiciel (SaaS)", "Service (Amazon Prime)"]
+      },
+      "licence": {
+        "définition": "Vente d'un droit d'utilisation d'un logiciel ou d'une propriété intellectuelle.",
+        "modèle_classique": "Licence perpétuelle + maintenance annuelle (15-20% du prix). En déclin face au SaaS.",
+        "quand_pertinent": "Données sensibles, contraintes réglementaires (défense, santé), environnements déconnectés."
+      },
+      "commission_et_publicite": {
+        "commission": "Affiliation (Amazon Associates : 1-10%), courtage, apport d'affaires. Modèle léger mais dépendant du partenaire.",
+        "publicité": "CPM, CPC, CPA. Nécessite une audience massive. Rentable à partir de 100K+ visiteurs/mois.",
+        "data": "Monétisation des données agrégées et anonymisées. Contraintes RGPD majeures. Modèle controversé (ex: régie publicitaire ciblée)."
+      }
+    },
+    "ecosysteme_startup": {
+      "incubateurs": {
+        "définition": "Structures d'accompagnement pour startups en phase d'idéation/création. Hébergement, mentorat, formation.",
+        "exemples_france": ["Station F (plus grand campus mondial, Paris)", "Agoranov (deeptech)", "Paris&Co", "ESSEC Ventures", "HEC Incubateur"],
+        "durée": "6-24 mois. Souvent gratuit ou faible coût. Rarement prise de participation."
+      },
+      "accelerateurs": {
+        "définition": "Programmes intensifs (3-6 mois) pour startups post-MVP. Mentorat intensif, démo day, souvent investissement.",
+        "exemples": ["Y Combinator (7% equity, 500K$ SAFE)", "Techstars (6% equity, 120K$)", "eFounders/Hexa (studio)", "The Family (France, fermé 2022)"],
+        "valeur": "Réseau alumni, crédibilité, accès investisseurs. Le réseau YC seul vaut plus que l'investissement."
+      },
+      "french_tech": {
+        "définition": "Label et écosystème porté par la Mission French Tech (gouvernement français).",
+        "dispositifs": ["French Tech Visa (talents internationaux)", "French Tech 120 (hypercroissance)", "Bourse French Tech (amorçage)", "French Tech communautés (30+ capitales dans le monde)"],
+        "BPI_France": "Banque publique d'investissement. Prêts d'honneur, avances remboursables, co-investissement, garanties bancaires. Partenaire incontournable."
+      },
+      "station_F": {
+        "localisation": "Paris 13e, Halle Freyssinet. Fondée par Xavier Niel (2017).",
+        "chiffres": "34 000 m², 1000+ startups résidentes, 30+ programmes partenaires (Microsoft, Facebook, LVMH).",
+        "programmes": "Founders Program (gratuit, 600 places), Fighters Program (entrepreneurs issus de milieux défavorisés)."
+      },
+      "ecosysteme_mondial": {
+        "silicon_valley": "Épicentre historique. Stanford + VC Sand Hill Road + culture du risque. Avantage : concentration de talents et de capital.",
+        "autres_hubs": ["Tel Aviv (cybersécurité, deeptech)", "Londres (fintech)", "Berlin (B2C, marketplaces)", "Bangalore (IT services, SaaS)", "Shenzhen (hardware)", "São Paulo (Amérique Latine)", "Lagos/Nairobi (Afrique)"],
+        "tendance": "Décentralisation post-COVID. Remote-first permet de construire depuis n'importe où. Le capital suit le talent, pas la géographie."
+      }
+    },
+    "gestion_equipe_fondateur": {
+      "cofondateur": {
+        "importance": "70% des startups financées par YC ont 2+ cofondateurs. Complémentarité technique/business est idéale.",
+        "erreurs_courantes": ["Choisir un ami plutôt qu'un complémentaire", "Ne pas discuter l'equity split dès le jour 1", "Pas de pacte d'associés", "Rôles mal définis"],
+        "pacte_associes": "Document juridique définissant : rôles, equity, vesting, clause de départ (good/bad leaver), décisions majeures, non-concurrence."
+      },
+      "equity_split": {
+        "principe": "Répartir l'equity en fonction de la contribution future attendue, pas du passé. Dynamic equity (Slicing Pie de Mike Moyer) comme alternative.",
+        "vesting": "Standard : 4 ans avec 1 an de cliff. Protège l'entreprise si un cofondateur part tôt. Sans vesting, un cofondateur partant après 3 mois garde ses parts.",
+        "ESOP": "Employee Stock Option Plan : réserver 10-15% du capital pour les premiers employés. BSPCE en France (régime fiscal avantageux)."
+      },
+      "recrutement_early_stage": {
+        "profil_ideal": "Généralistes autonomes, tolérants à l'ambiguïté, motivés par la mission. Les spécialistes viendront au scaling.",
+        "erreurs": ["Recruter trop tôt (avant PMF)", "Recruter des profils corporate pour une startup", "Sur-payer pour compenser le risque (préférer equity)"],
+        "culture": "La culture se définit par les 10 premiers recrutements. Après, elle se perpétue d'elle-même — en bien ou en mal."
+      },
+      "culture_entreprise": {
+        "définition": "Ensemble des valeurs, comportements et normes partagées. Netflix Culture Deck : 'Culture is what you do, not what you say.'",
+        "éléments_clés": ["Transparence radicale (Buffer, GitLab)", "Autonomie + accountability", "Feedback continu", "Tolérance à l'erreur, intolérance à l'incompétence"],
+        "remote": "Culture remote-first : documentation écrite, communication asynchrone, rituels d'équipe intentionnels."
+      },
+      "burn_rate": {
+        "définition": "Montant mensuel net dépensé par l'entreprise. Runway = trésorerie / burn rate mensuel.",
+        "règle": "Toujours avoir 12-18 mois de runway. Commencer à lever quand il reste 6 mois.",
+        "optimisation": "Réduire le burn ne signifie pas ne rien dépenser — signifie dépenser uniquement sur ce qui accélère le PMF ou la croissance."
+      }
     },
     "1000_true_fans": {
       "auteur": "Kevin Kelly — 1000 True Fans (2008)",
       "principe": "Un créateur n'a besoin que de 1000 vrais fans (qui achèteraient tout ce qu'il produit) pour vivre de sa création. 1000 fans × 100€/an = 100 000€.",
       "implication": "Pas besoin d'être viral — construire une communauté petite et dédiée est suffisant. La niche est une force.",
-      "plateformes": "Substack, Patreon, Gumroad, Podia — monétiser directement l'audience sans intermédiaire"
+      "plateformes": "Substack, Patreon, Gumroad, Podia — monétiser directement l'audience sans intermédiaire",
+      "stratégie_construction": "Créer du contenu gratuit de haute valeur → construire une liste email → proposer un produit payant → itérer sur le feedback."
     },
     "bootstrapping_vs_VC": {
       "bootstrapping": {
         "définition": "Se financer soi-même et par les revenus du produit",
         "avantages": "100% de contrôle, pas de dilution, décisions long terme, liberté totale",
-        "convient_à": "SaaS, services, info-produits, niches B2B spécifiques"
+        "convient_à": "SaaS, services, info-produits, niches B2B spécifiques",
+        "exemples": "Basecamp (37signals), Mailchimp (avant acquisition), Lemlist, Crisp"
       },
       "VC_backed": {
         "définition": "Financement par venture capital en échange de parts",
         "avantages": "Capital pour hypercroissance, réseau, crédibilité",
         "inconvénients": "Dilution, pression de croissance, objectif sortie (IPO/acquisition) imposé"
       },
-      "conseil_TITANE": "90% des entrepreneurs devraient boostraper. Les VC conviennent aux marchés de type 'winner takes all' nécessitant de battre des concurrents bien financés."
+      "conseil_TITANE": "90% des entrepreneurs devraient bootstraper. Les VC conviennent aux marchés de type 'winner takes all' nécessitant de battre des concurrents bien financés."
     },
     "side_hustle_to_business": {
       "étape_1": "Valider l'idée sans quitter son emploi — premières ventes avant d'investir du temps",
       "étape_2": "Atteindre 50% du revenu salarial en revenus parallèles avant de sauter",
       "étape_3": "Quitter avec 6-12 mois de trésorerie personnelle de sécurité",
-      "règle": "Ne jamais quitter son emploi pour 'se consacrer à l'idée' — quitter quand le marché a validé l'idée par de vrais euros"
+      "règle": "Ne jamais quitter son emploi pour 'se consacrer à l'idée' — quitter quand le marché a validé l'idée par de vrais euros",
+      "outils": "Stripe Atlas (création entreprise US), Auto-entrepreneur (France), Wise (multi-devises), Notion (organisation)."
     },
     "mindset_fondateur": {
       "stoicisme": "Ce qu'on ne contrôle pas (marché, concurrents, macroéconomie) ≠ ce qu'on contrôle (actions, réponses, effort). Memento Mori = urgence d'agir.",
-      "antifragilite_Taleb": "Concevoir son business pour gagner de l'expérience des chocs et incertitudes — pas juste être robuste.",
+      "antifragilite_Taleb": "Concevoir son business pour gagner de l'expérience des chocs et incertitudes — pas juste être robuste. Optionalité : se positionner pour capturer les upside asymétriques.",
       "amor_fati": "Aimer ce qui arrive, y compris les échecs — chaque tentative échouée est du capital informationnel",
       "identité_découplée": "Ne pas confondre l'échec d'une idée avec l'échec de sa personne — Jim Collins: la grandeur vient de la capacité à supporter l'incertitude sans perdre de vue le cap",
-      "biais_action": "Agir avec des informations imparfaites > attendre la certitude. La certitude n'arrive jamais."
+      "biais_action": "Agir avec des informations imparfaites > attendre la certitude. La certitude n'arrive jamais. Jeff Bezos : décider avec 70% de l'information souhaitée.",
+      "endurance": "L'entrepreneuriat est un marathon, pas un sprint. La majorité des succès 'overnight' ont pris 7-10 ans. Protéger sa santé mentale et physique est un impératif stratégique."
     },
     "marketing_organique": {
-      "contenu": "SEO, blog, LinkedIn, YouTube — construire une audience qui cherche ce qu'on fait",
+      "contenu": "SEO, blog, LinkedIn, YouTube — construire une audience qui cherche ce qu'on fait. Le contenu est un actif qui compose dans le temps.",
       "réseau": "Le meilleur marketing = les relations. Servir généreusement, le réseau suit.",
-      "positioning": "Devenir LA référence pour un problème spécifique dans une niche précise > être généraliste moyen",
-      "storytelling": "Les humains achètent des histoires, pas des features. 'Jobs to be done' framework: quelle transformation le client cherche-t-il?"
+      "positioning": "Devenir LA référence pour un problème spécifique dans une niche précise > être généraliste moyen. April Dunford — Obviously Awesome.",
+      "storytelling": "Les humains achètent des histoires, pas des features. 'Jobs to be done' framework: quelle transformation le client cherche-t-il ?",
+      "community_led_growth": "Construire une communauté autour du problème (pas du produit). Exemples : Figma, Notion, dbt. La communauté devient le moat."
+    },
+    "scaling": {
+      "introduction": "Le scaling commence après le PMF confirmé. Scaler trop tôt = amplifier un modèle qui ne fonctionne pas encore.",
+      "hypercroissance": {
+        "définition": "Croissance annuelle > 40% sur plusieurs années consécutives. Reid Hoffman — Blitzscaling.",
+        "risques": "Culture qui se dilue, dette technique, burn rate incontrôlable, recrutement précipité.",
+        "quand_blitzscale": "Uniquement quand le marché est 'winner takes most' et que la vitesse est le seul avantage défendable."
+      },
+      "OKRs": {
+        "définition": "Objectives and Key Results — cadre de définition d'objectifs popularisé par Intel et Google.",
+        "structure": "Objectif (qualitatif, inspirant) + 3-5 Key Results (quantitatifs, mesurables, ambitieux). Cycle trimestriel.",
+        "exemple": "Objectif : Devenir la référence SaaS en France. KR1 : Atteindre 1M€ ARR. KR2 : NPS > 60. KR3 : 50 clients entreprise."
+      },
+      "internationalisation": {
+        "stratégie": "Commencer par un marché similaire (France → Belgique/Suisse) avant les marchés culturellement différents.",
+        "erreurs": ["Traduire sans localiser", "Ignorer les différences réglementaires", "Envoyer des expatriés au lieu de recruter localement"],
+        "go_to_market": "Tester avec un country manager local + budget limité avant de s'engager pleinement."
+      },
+      "automatisation": {
+        "principe": "Automatiser ce qui est répétitif et validé. Ne pas automatiser ce qui n'est pas encore compris.",
+        "outils": "Zapier, Make (ex-Integromat), n8n, scripts internes. Automatiser le support (chatbot), l'onboarding, la facturation, le reporting."
+      },
+      "recrutement_massif": {
+        "défis": "Maintenir la culture en doublant l'effectif chaque année. Structurer les processus RH. Créer des niveaux de management.",
+        "conseils": ["Documenter la culture et les processus AVANT de scaler", "Recruter des managers expérimentés (pas uniquement promouvoir les premiers employés)", "Créer un onboarding structuré"]
+      },
+      "product_led_growth": {
+        "définition": "Le produit lui-même est le principal vecteur d'acquisition, de conversion et d'expansion. Le produit remplace le commercial.",
+        "exemples": "Slack, Notion, Figma, Calendly, Loom, Zoom. L'utilisateur découvre → adopte → invite ses collègues → l'entreprise paie.",
+        "mécanismes": ["Viralité native (invitations)", "Freemium généreux", "Time-to-value court", "Self-serve onboarding"]
+      }
+    },
+    "echec_resilience": {
+      "statistiques": {
+        "taux_echec": "90% des startups échouent. 70% échouent entre la 2e et 5e année. 10% échouent la première année.",
+        "causes_principales": ["Pas de besoin marché (42%)", "Plus de cash (29%)", "Mauvaise équipe (23%)", "Concurrence (19%)", "Pricing/coût (18%)"],
+        "source": "CB Insights — analyse de 101 post-mortems de startups."
+      },
+      "rebondir": {
+        "principe": "L'échec en startup est normalisé dans l'écosystème. Les investisseurs préfèrent souvent un entrepreneur qui a échoué à un primo-entrepreneur.",
+        "stratégie": ["Faire le deuil (3-6 mois)", "Analyser objectivement les causes (post-mortem)", "Documenter les leçons", "Reconstruire le réseau", "Relancer avec les insights acquis"],
+        "exemples": "Steve Jobs (viré d'Apple → Pixar → retour Apple), Reid Hoffman (SocialNet → LinkedIn), Slack (né de l'échec du jeu Glitch)."
+      },
+      "post_mortem": {
+        "définition": "Analyse structurée après l'arrêt d'un projet ou d'une startup. Exercice de lucidité, pas de culpabilité.",
+        "questions_clés": ["Quand avons-nous su que ça ne marchait pas ?", "Qu'aurions-nous fait différemment avec les mêmes informations ?", "Quels signaux avons-nous ignorés ?", "Quelles compétences nous manquaient ?"],
+        "partage": "Publier son post-mortem (blog, LinkedIn) = acte de générosité pour l'écosystème + crédibilité personnelle."
+      },
+      "pivot_strategique": {
+        "définition": "Changement fondamental de direction basé sur les apprentissages. Pas un échec, mais une évolution informée.",
+        "exemples_celebres": ["YouTube : site de rencontre vidéo → plateforme vidéo", "Instagram : Burbn (réseau social géolocalisé) → partage de photos", "Twitter : Odeo (podcasts) → microblogging", "Shopify : boutique de snowboard en ligne → plateforme e-commerce"],
+        "conditions": "Pivoter quand les métriques stagnent malgré les itérations. Garder ce qui fonctionne (équipe, technologie, audience), changer ce qui ne fonctionne pas (marché, produit, modèle)."
+      },
+      "lecons_transversales": {
+        "vitesse_execution": "La vitesse d'exécution compense beaucoup d'erreurs stratégiques. Un plan B médiocre exécuté vite > un plan A parfait exécuté lentement.",
+        "focus": "La ressource la plus rare en startup est l'attention. Dire non à 100 bonnes idées pour en exécuter une seule parfaitement.",
+        "cash_is_king": "La trésorerie est l'oxygène de la startup. Une startup ne meurt pas d'un mauvais produit, elle meurt quand elle n'a plus de cash."
+      }
     }
   }
 }

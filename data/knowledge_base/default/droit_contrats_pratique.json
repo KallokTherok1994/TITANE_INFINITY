@@ -1,9 +1,9 @@
 {
   "version": "v30.1.0",
   "category": "droit_contrats_pratique",
-  "description": "Droit des contrats — fondamentaux contractuels, contrats commerciaux, clauses essentielles, RGPD, propriété intellectuelle, droit du travail, protection consommateur, résolution de litiges",
+  "description": "Droit des contrats — fondamentaux contractuels, contrats commerciaux, clauses essentielles, RGPD, droit numérique, propriété intellectuelle, droit du travail, protection consommateur, résolution de litiges, contentieux, contrats types, responsabilité, droit des sociétés",
   "droit_contrats_pratique": {
-    "introduction": "Le droit des contrats est le socle de toute relation économique. TITANE ne remplace pas un avocat mais donne les outils pour comprendre ses engagements, négocier des clauses, identifier les pièges et savoir quand consulter un professionnel.",
+    "introduction": "Le droit des contrats est le socle de toute relation économique. TITANE ne remplace pas un avocat mais donne les outils pour comprendre ses engagements, négocier des clauses, identifier les pièges et savoir quand consulter un professionnel. Ce corpus couvre le droit contractuel, numérique, la propriété intellectuelle, le contentieux, le droit de la consommation, les contrats types, la responsabilité et le droit des sociétés.",
     "formation_contrat": {
       "conditions_validite": [
         "Consentement libre et éclairé (sans vice : erreur, dol, violence)",
@@ -12,56 +12,297 @@
         "Cause licite (motivation non contraire à l'ordre public)"
       ],
       "vices_consentement": {
-        "erreur": "Erreur sur substance essentielle du contrat. Erreur sur valeur seule = non retenue.",
-        "dol": "Manœuvres frauduleuses pour tromper. Réticence dolosive = ne pas informer d'un vice caché.",
-        "violence": "Contrainte physique ou morale. Abus de dépendance économique inclus (jurisprudence récente)."
+        "erreur": "Erreur sur substance essentielle du contrat. Erreur sur valeur seule = non retenue. Erreur sur la personne possible pour contrats intuitu personae.",
+        "dol": "Manœuvres frauduleuses pour tromper. Réticence dolosive = ne pas informer d'un vice caché. Le dol doit émaner du cocontractant (ou complice).",
+        "violence": "Contrainte physique ou morale. Abus de dépendance économique inclus (jurisprudence récente). Violence économique reconnue par la Cour de cassation."
       },
-      "forme": "Principe liberté de forme (oral valide). Exceptions : immobilier (acte notarié), CDI rupture (écrit), donation (notaire)."
+      "forme": "Principe liberté de forme (oral valide). Exceptions : immobilier (acte notarié), CDI rupture (écrit), donation (notaire). Le formalisme ad probationem (preuve) ≠ formalisme ad validitatem (validité).",
+      "nullite": {
+        "absolue": "Violation d'une règle d'ordre public ou d'intérêt général. Tout intéressé peut agir. Prescription 5 ans.",
+        "relative": "Protection d'un intérêt privé (vice du consentement, incapacité). Seule la partie protégée peut agir. Prescription 5 ans."
+      }
     },
     "clauses_cles": {
       "essentielles": {
-        "objet": "Ce qui est dû : prestations, produits, services. Description précise évite litiges.",
-        "prix": "Montant, modalités paiement, TVA, pénalités retard (taux légal ou contractuel).",
-        "delais": "Dates de livraison, durée contrat, renouvellement tacite (attention clause résiliation!).",
-        "responsabilite": "Limitation de responsabilité (plafond), exclusions, force majeure."
+        "objet": "Ce qui est dû : prestations, produits, services. Description précise évite litiges. Obligation de délivrance conforme.",
+        "prix": "Montant, modalités paiement, TVA, pénalités retard (taux légal ou contractuel). Loi LME : délais de paiement max 60 jours.",
+        "delais": "Dates de livraison, durée contrat, renouvellement tacite (attention clause résiliation!). Loi Chatel : obligation d'information avant renouvellement tacite.",
+        "responsabilite": "Limitation de responsabilité (plafond), exclusions, force majeure. Clause limitative nulle en cas de faute lourde ou dol."
       },
       "a_negocier": {
-        "clause_resiliation": "Préavis, motifs, pénalités. Resiliation ad nutum (sans motif) = risque si pas encadrée.",
-        "clause_confidentialite": "NDA — périmètre, durée, sanctions. Standard 2-5 ans. Illimitée = souvent non applicable.",
-        "propriete_intellectuelle": "Cession ou licence ? Exclusivité ? Qui est propriétaire des créations ?",
-        "non_concurrence": "Géographiquement et temporellement limitée (sinon nulle). Contrepartie financière recommandée."
+        "clause_resiliation": "Préavis, motifs, pénalités. Résiliation ad nutum (sans motif) = risque si pas encadrée. Clause résolutoire : résiliation automatique en cas de manquement spécifié.",
+        "clause_confidentialite": "NDA — périmètre, durée, sanctions. Standard 2-5 ans. Illimitée = souvent non applicable. Préciser les exceptions (obligation légale, ordre juridictionnel).",
+        "propriete_intellectuelle": "Cession ou licence ? Exclusivité ? Qui est propriétaire des créations ? Cession must spécifier : étendue, destination, lieu, durée (art. L131-3 CPI).",
+        "non_concurrence": "Géographiquement et temporellement limitée (sinon nulle). Contrepartie financière obligatoire en droit du travail. En droit commercial : validité appréciée au cas par cas."
       },
       "pieges_frequents": [
         "Renouvellement automatique sans clause de résiliation claire",
         "Clause attributive de compétence défavorable (tribunal lointain)",
         "Indexation prix sur indices (attention inflation)",
         "Clause d'exclusivité non réciproque",
-        "Garanties implicites exclues par petites lignes"
+        "Garanties implicites exclues par petites lignes",
+        "Clause pénale disproportionnée (réductible par le juge, art. 1231-5 CC)",
+        "Conditions générales contradictoires (bataille des formulaires)"
       ]
     },
     "contrats_commerciaux": {
-      "cgv": "Conditions Générales de Vente — opposables si acceptées avant. Mention 'lu et approuvé' seule insuffisante.",
-      "lettre_intention": "LOI/MOU — non contraignante en principe. Attention : clauses de confidentialité et exclusivité dans LOI peuvent être contraignantes.",
-      "spa": "Share Purchase Agreement — cession de parts. Due diligence, reps & warranties, conditions suspensives, earn-out.",
-      "prestation_services": "Obligation de moyens (avocat, médecin) vs obligation de résultat (entrepreneur). Distinction majeure pour responsabilité."
+      "cgv": "Conditions Générales de Vente — opposables si acceptées avant. Mention 'lu et approuvé' seule insuffisante. CGV doivent être communiquées sur support durable.",
+      "lettre_intention": "LOI/MOU — non contraignante en principe. Attention : clauses de confidentialité et exclusivité dans LOI peuvent être contraignantes. Rupture abusive des négociations = faute (art. 1112 CC).",
+      "spa": "Share Purchase Agreement — cession de parts. Due diligence, reps & warranties, conditions suspensives, earn-out. Garantie d'actif et de passif (GAP) standard.",
+      "prestation_services": "Obligation de moyens (avocat, médecin) vs obligation de résultat (entrepreneur). Distinction majeure pour responsabilité. Charge de la preuve inversée selon le type.",
+      "contrat_cadre": "Accord fixant les conditions générales des relations commerciales futures. Les contrats d'application définissent les modalités spécifiques (quantités, dates)."
+    },
+    "droit_numerique": {
+      "introduction": "Le droit numérique encadre les activités en ligne, la protection des données et les services numériques. Cadre en constante évolution (RGPD, DSA, DMA, AI Act).",
+      "RGPD": {
+        "principes": "Licéité, loyauté, transparence. Limitation finalités. Minimisation données. Exactitude. Limitation conservation. Intégrité/confidentialité. Responsabilité (accountability).",
+        "bases_legales": ["Consentement (libre, spécifique, éclairé, univoque)", "Exécution d'un contrat", "Obligation légale", "Intérêts légitimes (balance des intérêts)", "Mission d'intérêt public", "Intérêts vitaux"],
+        "droits_personnes": ["Droit d'accès (art. 15)", "Droit de rectification (art. 16)", "Droit à l'effacement / droit à l'oubli (art. 17)", "Droit à la portabilité (art. 20)", "Droit d'opposition (art. 21)", "Droit à la limitation du traitement (art. 18)", "Droit de ne pas faire l'objet d'une décision automatisée (art. 22)"],
+        "sanctions": "CNIL peut aller jusqu'à 4% CA mondial ou 20M€. Amendes Amazon 746M€ (2021), Meta 1.2Md€ (2023). Sanctions graduées : mise en demeure, avertissement, amende.",
+        "DPO": "Délégué à la Protection des Données — obligatoire pour : autorités publiques, traitement à grande échelle de données sensibles, suivi régulier et systématique de personnes.",
+        "registre_traitements": "Obligatoire pour entreprises > 250 salariés et pour tout traitement non occasionnel. Recense : finalité, catégories de données, destinataires, durée, mesures de sécurité."
+      },
+      "donnees_personnelles": {
+        "définition": "Toute information se rapportant à une personne physique identifiée ou identifiable. Adresse IP, cookie ID, email = données personnelles.",
+        "données_sensibles": "Origine raciale/ethnique, opinions politiques, convictions religieuses, santé, vie sexuelle, données génétiques/biométriques. Traitement interdit sauf exceptions limitées.",
+        "transferts_internationaux": "Hors UE : clauses contractuelles types (CCT), règles d'entreprise contraignantes (BCR), décision d'adéquation. Invalidation Privacy Shield (Schrems II, 2020). EU-US Data Privacy Framework (2023)."
+      },
+      "droit_oubli": {
+        "principe": "Demander à un moteur de recherche de déréférencer des résultats contenant des données personnelles. Pas de suppression de la source.",
+        "conditions": "Les données ne sont plus nécessaires, le consentement est retiré, les données ont été traitées illicitement, ou obligation légale d'effacement.",
+        "limites": "Liberté d'expression, intérêt public, recherche scientifique/historique, exercice de droits en justice. Personnalités publiques : droit restreint."
+      },
+      "cookies": {
+        "cadre_legal": "Directive ePrivacy + RGPD. Consentement préalable obligatoire pour cookies non essentiels (analytics, publicité, réseaux sociaux).",
+        "cookies_exemptés": "Cookies strictement nécessaires au fonctionnement du site (panier, authentification, choix de langue).",
+        "bandeau_cookie": "Information claire sur les finalités. Possibilité de refuser aussi simple qu'accepter. Pas de cookie walls (sauf exception press).",
+        "durée": "Consentement cookie : 13 mois maximum (recommandation CNIL). Cookies de mesure d'audience : exemption possible si anonymisés."
+      },
+      "CGU_CGV_ecommerce": {
+        "CGU": "Conditions Générales d'Utilisation — encadrent l'accès et l'utilisation d'un site/service. Mentions légales obligatoires (LCEN).",
+        "CGV_ecommerce": "Mentions obligatoires : identité vendeur, caractéristiques produit, prix TTC, frais livraison, droit de rétractation 14 jours, garanties, médiation.",
+        "mentions_legales": "Obligatoires sur tout site : raison sociale, siège social, capital, RCS, directeur publication, hébergeur. Sanction : 1 an + 75K€.",
+        "LCEN": "Loi pour la Confiance dans l'Économie Numérique (2004). Responsabilité limitée des hébergeurs. Obligation de retrait de contenus manifestement illicites."
+      }
     },
     "propriete_intellectuelle": {
-      "droit_auteur": "Automatique à la création. France : protection 70 ans post-mortem. Cession écrite obligatoire. Droits moraux incessibles.",
-      "marque": "Protection par dépôt INPI (France) ou EUIPO (UE). Classe de produits/services. 10 ans renouvelable.",
-      "brevet": "20 ans. Invention nouvelle, inventive, industriellement applicable. Coûteux (~10-50K€ complet). Logiciels exclus en Europe.",
-      "secret_affaires": "Loi 2018 — protection information confidentielle. Mesures de protection prouvables requises."
+      "droit_auteur": {
+        "principe": "Protection automatique à la création, sans formalité. France : protection 70 ans post-mortem. Cession écrite obligatoire.",
+        "droits_moraux": "Incessibles et perpétuels. Droit de paternité (être reconnu comme auteur), droit au respect de l'œuvre, droit de divulgation, droit de retrait.",
+        "droits_patrimoniaux": "Cessibles : droit de reproduction, droit de représentation, droit de suite (artistes plasticiens). Cession doit préciser étendue, destination, lieu, durée.",
+        "oeuvres_salariees": "En France, l'employeur n'est PAS automatiquement titulaire. Cession contractuelle nécessaire (sauf logiciels : art. L113-9 CPI).",
+        "preuve_anteriorite": "Enveloppe Soleau (INPI), dépôt chez huissier, blockchain timestamp, envoi recommandé à soi-même (faible valeur probante)."
+      },
+      "marques": {
+        "protection": "Par dépôt INPI (France, ~200€) ou EUIPO (UE, ~850€). Marque internationale via OMPI (système de Madrid).",
+        "conditions": "Distinctive, non descriptive, non trompeuse, non contraire à l'ordre public. Recherche d'antériorité recommandée avant dépôt.",
+        "classes": "Classification de Nice : 45 classes de produits/services. Protection limitée aux classes déposées. Multi-classes possible.",
+        "durée": "10 ans renouvelable indéfiniment. Obligation d'exploitation : déchéance possible après 5 ans de non-usage."
+      },
+      "brevets": {
+        "conditions": "Invention nouvelle, inventive (non évidente pour l'homme du métier), industriellement applicable.",
+        "durée": "20 ans à compter du dépôt. Annuités croissantes. Coût total : 10-50K€ (France), 50-200K€ (international).",
+        "logiciels": "Exclus en tant que tels en Europe (Convention de Munich). Protégeables si contribution technique. Brevetables aux USA.",
+        "procédure": "Dépôt INPI → examen (18-24 mois) → délivrance. Extension internationale via PCT (30 mois pour désigner les pays)."
+      },
+      "design": {
+        "protection": "Dessins et modèles : apparence visuelle d'un produit. Dépôt INPI (France) ou EUIPO (UE).",
+        "conditions": "Nouveauté et caractère individuel (impression visuelle d'ensemble différente pour l'observateur averti).",
+        "durée": "5 ans renouvelable par périodes de 5 ans, jusqu'à 25 ans maximum."
+      },
+      "contrefacon": {
+        "définition": "Atteinte aux droits de propriété intellectuelle. Action civile (dommages-intérêts) et/ou pénale (3 ans + 300K€).",
+        "procédures": ["Saisie-contrefaçon (preuve)", "Référé interdiction (urgence)", "Action au fond (indemnisation)", "Douanes (retenue de marchandises)"],
+        "dommages": "Préjudice commercial (manque à gagner), préjudice moral, bénéfices réalisés par le contrefacteur. Dommages punitifs non admis en France."
+      },
+      "licences_open_source": {
+        "permissives": "MIT, Apache 2.0, BSD — permettent l'utilisation commerciale, modification, redistribution. Obligation : conserver les notices de copyright.",
+        "copyleft": "GPL, LGPL, AGPL — obligation de redistribuer sous la même licence. AGPL : s'applique aussi aux services en ligne (SaaS).",
+        "risques": "Contamination copyleft : un composant GPL dans un logiciel propriétaire peut obliger à ouvrir tout le code source.",
+        "bonnes_pratiques": "Audit régulier des dépendances (SBOM), politique de licences documentée, formation des développeurs."
+      },
+      "secret_affaires": "Loi 2018 (transposition directive UE 2016/943) — protection information confidentielle à valeur commerciale. Mesures de protection raisonnables prouvables requises. Action en justice si acquisition, utilisation ou divulgation illicite."
     },
-    "rgpd": {
-      "principes": "Licéité, loyauté, transparence. Limitation finalités. Minimisation données. Exactitude. Limitation conservation. Intégrité/confidentialité.",
-      "bases_legales": "Consentement, contrat, obligation légale, intérêts légitimes, mission d'intérêt public, intérêts vitaux.",
-      "droits_personnes": "Accès, rectification, effacement (droit à l'oubli), portabilité, opposition, décision automatisée.",
-      "sanctions": "CNIL peut aller jusqu'à 4% CA mondial ou 20M€. Amendes Amazon 746M€ (2021), Meta 1.2Md€ (2023)."
+    "contentieux": {
+      "introduction": "Le contentieux est l'ultime recours. Privilégier systématiquement les modes amiables de résolution (MARD) avant toute action judiciaire.",
+      "mise_en_demeure": {
+        "définition": "Acte par lequel le créancier somme le débiteur d'exécuter son obligation. Condition préalable à la plupart des actions.",
+        "forme": "Lettre recommandée avec AR (LRAR). Contenu : rappel des faits, fondement juridique, demande précise, délai raisonnable (15-30 jours), mention des suites envisagées.",
+        "effet": "Fait courir les intérêts moratoires, constitue une preuve de la tentative amiable, conditionne certaines clauses contractuelles."
+      },
+      "mediation": {
+        "définition": "Processus structuré où un tiers neutre (médiateur) aide les parties à trouver un accord. Non contraignante.",
+        "obligation": "Tentative de médiation ou conciliation obligatoire avant saisine du tribunal pour certains litiges (< 5000€, voisinage).",
+        "avantages": "Confidentialité, rapidité (2-3 mois), coût modéré (500-5000€), préservation de la relation commerciale.",
+        "plateformes": "Médiation de la consommation obligatoire. CMAP (Centre de Médiation et d'Arbitrage de Paris)."
+      },
+      "arbitrage": {
+        "clause_compromissoire": "Clause du contrat prévoyant le recours à l'arbitrage en cas de litige. Valable entre commerçants. Interdite dans les contrats de consommation.",
+        "avantages": "Confidentialité, expertise des arbitres, rapidité relative, exécution internationale (Convention de New York).",
+        "inconvénients": "Coût élevé (10-100K€+), voies de recours très limitées (pas d'appel sur le fond).",
+        "institutions": "CCI (Chambre de Commerce Internationale), LCIA (London Court), CMAP, tribunaux arbitraux ad hoc."
+      },
+      "tribunaux": {
+        "tribunal_commerce": "Litiges entre commerçants, sociétés commerciales. Juges élus par les commerçants. Procédure rapide.",
+        "tribunal_judiciaire": "Litiges civils > 10K€. Juge professionnel. Procédure plus longue (12-24 mois en première instance).",
+        "conseil_prudhommes": "Litiges individuels du travail. Composition paritaire (employeurs/salariés). Phase de conciliation obligatoire.",
+        "tribunal_administratif": "Litiges avec l'administration publique. Contentieux fiscal, marchés publics, urbanisme."
+      },
+      "delais_prescription": {
+        "droit_commun": "5 ans (art. 2224 Code civil). Point de départ : jour où le titulaire a connu ou aurait dû connaître les faits.",
+        "responsabilite_corporelle": "10 ans à compter de la consolidation du dommage.",
+        "droit_consommation": "2 ans pour la garantie légale de conformité.",
+        "droit_commercial": "5 ans entre commerçants. 10 ans pour les obligations personnelles entre commerçants et non-commerçants.",
+        "interruption": "Assignation en justice, reconnaissance de dette, mesure conservatoire. L'interruption fait repartir le délai intégral."
+      },
+      "procedures_urgence": {
+        "refere": "Procédure rapide (quelques semaines) pour mesures provisoires ou conservatoires. Conditions : urgence + absence de contestation sérieuse.",
+        "requete": "Procédure non contradictoire (ex parte). Utilisée pour saisies conservatoires, mesures d'instruction (saisie-contrefaçon)."
+      }
+    },
+    "droit_consommation": {
+      "introduction": "Le droit de la consommation protège le consommateur (personne physique agissant à des fins personnelles) face au professionnel. Ordre public de protection.",
+      "garanties": {
+        "garantie_legale_conformite": "2 ans à compter de la livraison (art. L217-3 Code consommation). Présomption de non-conformité 24 mois (produits neufs). Réparation, remplacement, ou remboursement.",
+        "garantie_vices_caches": "2 ans à compter de la découverte du vice (art. 1641 Code civil). Vice rendant le bien impropre à son usage ou diminuant tellement l'usage que l'acheteur ne l'aurait pas acquis.",
+        "garantie_commerciale": "Optionnelle, offerte par le vendeur ou fabricant. Ne peut réduire les garanties légales. Conditions écrites obligatoires."
+      },
+      "retractation": {
+        "droit": "14 jours calendaires à compter de la réception du bien ou de la conclusion du contrat de service. Sans motif, sans pénalité.",
+        "application": "Vente à distance (internet, téléphone, catalogue). Ne s'applique pas en magasin physique.",
+        "exceptions": ["Biens personnalisés", "Denrées périssables", "Contenus numériques commencés avec accord", "Prestations de services achevées", "Presse, paris, événements sportifs/culturels"],
+        "remboursement": "14 jours maximum après notification. Frais de retour à la charge du consommateur sauf si le professionnel les prend en charge."
+      },
+      "pratiques_commerciales_deloyales": {
+        "trompeuses": "Fausses allégations, omissions substantielles, présentation créant confusion. Sanction : 2 ans + 300K€ (personne physique) ou 10% CA (personne morale).",
+        "agressives": "Harcèlement, contrainte, influence indue. Exploitation de la vulnérabilité (âge, maladie, infirmité).",
+        "exemples": ["Faux avis consommateurs", "Prix de référence fictif", "Dark patterns (interfaces trompeuses)", "Green washing (allégations environnementales infondées)"]
+      },
+      "recours_consommateur": {
+        "médiateur": "Médiation de la consommation gratuite et obligatoire (professionnel doit désigner un médiateur et l'indiquer sur ses CGV/site).",
+        "associations": "UFC-Que Choisir, CLCV, 60 Millions de Consommateurs — peuvent agir en justice en représentation des consommateurs.",
+        "action_groupe": "Action de groupe (class action à la française) depuis 2014. Domaines : consommation, concurrence, santé, environnement, données personnelles.",
+        "DGCCRF": "Direction Générale de la Concurrence, de la Consommation et de la Répression des Fraudes. Signalements : SignalConso."
+      }
+    },
+    "contrats_types": {
+      "introduction": "Panorama des contrats les plus courants en droit français, avec leurs spécificités essentielles.",
+      "CDD": {
+        "définition": "Contrat à Durée Déterminée. Cas de recours limitatifs : remplacement, accroissement temporaire d'activité, emploi saisonnier.",
+        "durée": "18 mois maximum (renouvellement inclus), sauf exceptions. Indemnité de précarité 10% en fin de contrat.",
+        "requalification": "CDD ne respectant pas les conditions légales = requalifié en CDI. Risque majeur pour l'employeur."
+      },
+      "CDI": {
+        "définition": "Contrat à Durée Indéterminée. Contrat de droit commun. Pas de durée maximale.",
+        "rupture": ["Démission (initiative salarié)", "Licenciement (initiative employeur — cause réelle et sérieuse requise)", "Rupture conventionnelle (accord mutuel, homologation DIRECCTE)", "Prise d'acte (salarié — faits graves reprochés à l'employeur)"],
+        "période_essai": "CDI : 2 mois (ouvriers/employés), 3 mois (agents de maîtrise), 4 mois (cadres). Renouvelable une fois si prévu."
+      },
+      "freelance": {
+        "contrat_prestation": "Contrat de prestation de services entre un indépendant et un client. Obligation de moyens ou de résultat selon la nature.",
+        "risque_requalification": "Si lien de subordination prouvé (horaires imposés, lieu de travail imposé, exclusivité, intégration dans l'organisation) = requalification en CDI + cotisations sociales rétroactives.",
+        "clauses_essentielles": ["Périmètre de la mission", "Livrables et délais", "Rémunération et modalités", "Propriété intellectuelle", "Confidentialité", "Absence de lien de subordination"]
+      },
+      "NDA": {
+        "définition": "Non-Disclosure Agreement / Accord de confidentialité. Protège les informations échangées lors de négociations ou collaborations.",
+        "éléments": "Définition précise des informations confidentielles, durée (2-5 ans standard), exceptions, sanctions, droit applicable.",
+        "mutuel_vs_unilateral": "NDA mutuel (bilatéral) quand les deux parties échangent des informations. Unilatéral quand une seule partie divulgue."
+      },
+      "bail_commercial": {
+        "statut": "Bail commercial (3-6-9) — forte protection du locataire commerçant. Droit au renouvellement ou indemnité d'éviction.",
+        "loyer": "Révision triennale indexée sur ILC (Indice des Loyers Commerciaux). Déplafonnement possible en cas de modification notable.",
+        "cession": "Le locataire peut céder son bail avec le fonds de commerce. Clause interdisant la cession du bail seul est valable.",
+        "bail_professionnel": "Alternative pour professions libérales. Durée minimum 6 ans. Moins protecteur que le bail commercial."
+      },
+      "mandat": {
+        "définition": "Contrat par lequel une personne (mandant) donne pouvoir à une autre (mandataire) d'agir en son nom.",
+        "types": ["Mandat de vente (immobilier)", "Mandat de gestion (patrimoine)", "Procuration (actes juridiques)", "Mandat ad litem (avocat)"],
+        "obligations": "Le mandataire doit agir dans l'intérêt du mandant, rendre compte, ne pas dépasser les pouvoirs conférés."
+      },
+      "franchise": {
+        "définition": "Contrat par lequel le franchiseur concède au franchisé le droit d'exploiter son concept, marque et savoir-faire.",
+        "DIP": "Document d'Information Précontractuelle — obligatoire 20 jours avant signature. Contenu : historique, comptes, réseau, contrat type.",
+        "obligations": "Franchiseur : transmettre savoir-faire, assistance, marque. Franchisé : respecter le concept, payer redevances, rendre compte.",
+        "redevances": "Droit d'entrée (20-100K€+), redevance d'exploitation (5-10% CA), contribution publicitaire (1-3% CA)."
+      }
+    },
+    "responsabilite": {
+      "introduction": "La responsabilité juridique est le mécanisme par lequel une personne est tenue de réparer un dommage causé à autrui.",
+      "civile": {
+        "contractuelle": "Inexécution d'une obligation contractuelle. Conditions : contrat valide, inexécution, préjudice, lien de causalité. Mise en demeure préalable requise.",
+        "delictuelle": "Fait dommageable hors contrat (art. 1240-1241 CC). Faute, dommage, lien de causalité. Pas de mise en demeure préalable.",
+        "sans_faute": "Responsabilité du fait des choses (gardien), du fait d'autrui (commettant/préposé), du fait des produits défectueux."
+      },
+      "penale": {
+        "principe": "Infraction à une loi pénale. Sanctions : amendes, emprisonnement, interdictions. Preuve au-delà du doute raisonnable.",
+        "infractions_entreprise": ["Abus de biens sociaux", "Travail dissimulé", "Fraude fiscale", "Harcèlement", "Mise en danger d'autrui", "Atteinte aux données personnelles"],
+        "personne_morale": "Responsabilité pénale des personnes morales (art. 121-2 CP). Amendes x5 par rapport aux personnes physiques."
+      },
+      "professionnelle": {
+        "définition": "Responsabilité engagée dans l'exercice d'une activité professionnelle. Obligations renforcées de conseil, d'information, de prudence.",
+        "professions_reglementees": "Avocats, médecins, architectes, experts-comptables : responsabilité accrue, assurance RC professionnelle obligatoire.",
+        "dirigeant": "Responsabilité personnelle du dirigeant en cas de faute de gestion, insuffisance d'actif, fraude, non-respect des obligations légales."
+      },
+      "assurances": {
+        "RC_professionnelle": "Obligatoire pour certaines professions. Couvre les dommages causés à des tiers dans l'exercice de l'activité.",
+        "RC_exploitation": "Dommages causés par les locaux, le matériel, les salariés dans le cadre de l'activité courante.",
+        "cyber_assurance": "Couverture des risques numériques : violation de données, ransomware, interruption d'activité. Marché en forte croissance.",
+        "D_and_O": "Directors & Officers — assurance responsabilité des dirigeants. Couvre les frais de défense et les condamnations (hors faute intentionnelle)."
+      },
+      "clauses_limitatives": {
+        "principe": "Les parties peuvent limiter contractuellement leur responsabilité (plafond d'indemnisation). Fréquent en B2B.",
+        "limites": ["Nulles en cas de dol ou faute lourde", "Interdites pour les dommages corporels", "Écartées en droit de la consommation (clauses abusives)", "Doivent être expressément acceptées"],
+        "clause_penale": "Fixe forfaitairement les dommages-intérêts. Le juge peut la réviser si manifestement excessive ou dérisoire (art. 1231-5 CC)."
+      }
+    },
+    "droit_societes": {
+      "introduction": "Le choix de la forme juridique est une décision structurante qui impacte la fiscalité, la responsabilité, la gouvernance et la capacité à lever des fonds.",
+      "auto_entrepreneur": {
+        "définition": "Micro-entreprise — régime simplifié pour les entrepreneurs individuels. Pas de capital social, pas de statuts.",
+        "plafonds": "77 700€/an (services) ou 188 700€/an (commerce/hébergement). Au-delà, passage obligatoire vers un autre régime.",
+        "charges": "Cotisations sociales sur CA : 21.1% (services) ou 12.3% (commerce). Pas de TVA sous 36 800€ (franchise en base).",
+        "avantages": "Simplicité, pas de comptabilité complexe, radiation facile. Idéal pour tester une activité.",
+        "limites": "Responsabilité illimitée sur le patrimoine personnel (atténuée par la loi 2022), pas de déduction de charges, difficulté à lever des fonds."
+      },
+      "SARL": {
+        "définition": "Société à Responsabilité Limitée. 2-100 associés (EURL si associé unique). Capital libre (1€ minimum).",
+        "responsabilite": "Limitée aux apports. Le patrimoine personnel des associés est protégé (sauf faute de gestion du gérant).",
+        "gerance": "Gérant (personne physique, associé ou non). Gérant majoritaire = TNS (Travailleur Non Salarié). Gérant minoritaire = assimilé salarié.",
+        "fiscalite": "IS par défaut. Option IR possible (5 premières années ou SARL de famille). Rémunération du gérant déductible.",
+        "cession_parts": "Agrément obligatoire des associés pour cession à un tiers. Libre entre associés et conjoints/descendants."
+      },
+      "SAS": {
+        "définition": "Société par Actions Simplifiée. 1+ associés (SASU si associé unique). Capital libre. Forme privilégiée des startups.",
+        "avantages": "Grande liberté statutaire, président assimilé salarié (protection sociale), facilité de lever des fonds (actions), pas de commissaire aux comptes (sous seuils).",
+        "gouvernance": "Président obligatoire. Organes librement définis dans les statuts (directeur général, comité, conseil). Pacte d'actionnaires fréquent.",
+        "fiscalite": "IS par défaut. Option IR possible (5 premières années sous conditions). Dividendes : flat tax 30% (PFU) ou barème IR sur option.",
+        "cession_actions": "Libre sauf clauses statutaires (agrément, préemption, inaliénabilité). Procédure plus simple que SARL."
+      },
+      "statuts": {
+        "contenu_obligatoire": ["Dénomination sociale", "Forme juridique", "Siège social", "Objet social", "Capital social et répartition", "Durée (99 ans max)", "Modalités de fonctionnement"],
+        "rédaction": "Possibilité de rédiger soi-même (modèles en ligne) ou par un professionnel (avocat, expert-comptable). Pour SAS avec investisseurs : avocat recommandé.",
+        "modification": "Toute modification des statuts nécessite une décision collective des associés/actionnaires (AG extraordinaire) et publication au BODACC."
+      },
+      "assemblees_generales": {
+        "AGO": "Assemblée Générale Ordinaire — décisions courantes : approbation des comptes, affectation du résultat, nomination/révocation des dirigeants. Majorité simple.",
+        "AGE": "Assemblée Générale Extraordinaire — modification des statuts : augmentation de capital, changement de siège, fusion, dissolution. Majorité qualifiée.",
+        "PV": "Procès-verbal — document obligatoire constatant les décisions de l'assemblée. Conservation obligatoire. Registre des PV coté et paraphé."
+      },
+      "cession_parts_actions": {
+        "procédure_SARL": "Notification au gérant → agrément des associés (majorité, délai 3 mois) → acte de cession → dépôt au greffe → enregistrement fiscal.",
+        "procédure_SAS": "Selon statuts (agrément, préemption) → acte de cession → mise à jour registre mouvements de titres → notification à la société.",
+        "fiscalité": "Droits d'enregistrement : 3% (SARL, abattement 23K€ proportionnel) ou 0.1% (SAS). Plus-value de cession : PFU 30% ou barème IR."
+      },
+      "dissolution_liquidation": {
+        "causes": ["Arrivée du terme", "Décision des associés (AGE)", "Réalisation ou extinction de l'objet social", "Jugement (liquidation judiciaire)", "Fonds propres < 50% du capital (obligation de reconstituer ou dissoudre)"],
+        "procédure": "Dissolution → nomination liquidateur → réalisation de l'actif → paiement du passif → partage du boni de liquidation → radiation au RCS.",
+        "liquidation_judiciaire": "Cessation des paiements (passif exigible > actif disponible). Tribunal de commerce. Redressement judiciaire possible si perspectives de continuation."
+      }
     },
     "resolution_litiges": {
-      "amiable": "Médiation, conciliation, transaction. 80%+ litiges résolus avant procès. Plus rapide et moins coûteux.",
-      "arbitrage": "Clause compromissoire — arbitre(s) privé(s) au lieu de tribunal. Confidentiel, spécialisé, exécutable internationalement.",
-      "procedure_judiciaire": "Référé (urgence, provisoire), fond (définitif). Tribunal Commerce (litiges commerciaux), TJ (civil, >10K€).",
-      "quand_avocat": "Contrat >50K€, clause complexe, litige en cours, propriété intellectuelle, acquisition entreprise, pénal"
+      "amiable": "Médiation, conciliation, transaction. 80%+ litiges résolus avant procès. Plus rapide et moins coûteux. Tentative de résolution amiable désormais obligatoire dans de nombreux cas.",
+      "arbitrage": "Clause compromissoire — arbitre(s) privé(s) au lieu de tribunal. Confidentiel, spécialisé, exécutable internationalement (Convention de New York 1958).",
+      "procedure_judiciaire": "Référé (urgence, provisoire), fond (définitif). Tribunal Commerce (litiges commerciaux), TJ (civil, >10K€). Appel possible dans 1 mois.",
+      "quand_avocat": "Contrat >50K€, clause complexe, litige en cours, propriété intellectuelle, acquisition entreprise, pénal. Représentation obligatoire devant TJ (sauf < 10K€)."
     }
   }
 }
