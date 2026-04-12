@@ -168,15 +168,42 @@ pub async fn multi_ai_set_fallback(
 pub async fn multi_ai_configure_keys(
     claude_key: Option<String>,
     openai_key: Option<String>,
+    gemini_key: Option<String>,
     state: State<'_, OrchestratorState>,
 ) -> Result<(), String> {
     use crate::ai::orchestrator_multi::MultiAIOrchestrator;
 
-    let new_orchestrator = MultiAIOrchestrator::with_api_keys(claude_key, openai_key);
+    let new_orchestrator = MultiAIOrchestrator::with_api_keys(claude_key, openai_key, gemini_key);
 
     let mut current = state.orchestrator.write().await;
     *current = new_orchestrator;
 
+    Ok(())
+}
+
+/// Statistiques du cache AI
+#[tauri::command]
+pub async fn multi_ai_cache_stats(
+    state: State<'_, OrchestratorState>,
+) -> Result<CacheStatsResponse, String> {
+    let orchestrator = state.orchestrator.read().await;
+    let stats = orchestrator.cache_stats().await;
+    Ok(CacheStatsResponse {
+        hits: stats.hits,
+        misses: stats.misses,
+        evictions: stats.evictions,
+        total_saved_ms: stats.total_saved_ms,
+        hit_rate: stats.hit_rate(),
+    })
+}
+
+/// Vide le cache AI
+#[tauri::command]
+pub async fn multi_ai_clear_cache(
+    state: State<'_, OrchestratorState>,
+) -> Result<(), String> {
+    let orchestrator = state.orchestrator.read().await;
+    orchestrator.clear_cache().await;
     Ok(())
 }
 
@@ -188,6 +215,15 @@ pub async fn multi_ai_configure_keys(
 pub struct DualResponse {
     pub primary: AiResponse,
     pub secondary: Option<AiResponse>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CacheStatsResponse {
+    pub hits: u64,
+    pub misses: u64,
+    pub evictions: u64,
+    pub total_saved_ms: u64,
+    pub hit_rate: f64,
 }
 
 // ═══════════════════════════════════════════════════════════════

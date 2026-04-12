@@ -1836,6 +1836,18 @@ fn main() {
             overdrive::chat_orchestrator::chat_memory_backup,    // LTM backup coverage
             overdrive::chat_orchestrator::chat_memory_restore,   // LTM restore coverage
 
+            // Multi-IA Orchestrator Commands (v28.0)
+            titane_infinity::ai::api::multi_ai_generate,
+            titane_infinity::ai::api::multi_ai_generate_dual,
+            titane_infinity::ai::api::multi_ai_generate_fused,
+            titane_infinity::ai::api::multi_ai_providers,
+            titane_infinity::ai::api::multi_ai_best_provider,
+            titane_infinity::ai::api::multi_ai_evaluate,
+            titane_infinity::ai::api::multi_ai_set_fallback,
+            titane_infinity::ai::api::multi_ai_configure_keys,
+            titane_infinity::ai::api::multi_ai_cache_stats,
+            titane_infinity::ai::api::multi_ai_clear_cache,
+
             // Diagnostic Commands v27 (Online capabilities check)
             diagnostic_commands::check_online_capabilities,
             // P1: WebResearch Engine (EXPERIMENTAL — stub, no network)

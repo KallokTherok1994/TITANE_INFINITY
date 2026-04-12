@@ -345,6 +345,17 @@ export const TAURI_COMMANDS = {
   ORCHESTRATION_GET_UNIFIED_STATE: 'orchestration_get_unified_state',
   ORCHESTRATION_GET_COGNITIVE_STATE: 'orchestration_get_cognitive_state',
   MULTI_AI_GET_STATE: 'multi_ai_get_state',
+  // Multi-IA Orchestrator Commands (v28.0)
+  MULTI_AI_GENERATE: 'multi_ai_generate',
+  MULTI_AI_GENERATE_DUAL: 'multi_ai_generate_dual',
+  MULTI_AI_GENERATE_FUSED: 'multi_ai_generate_fused',
+  MULTI_AI_PROVIDERS: 'multi_ai_providers',
+  MULTI_AI_BEST_PROVIDER: 'multi_ai_best_provider',
+  MULTI_AI_EVALUATE: 'multi_ai_evaluate',
+  MULTI_AI_SET_FALLBACK: 'multi_ai_set_fallback',
+  MULTI_AI_CONFIGURE_KEYS: 'multi_ai_configure_keys',
+  MULTI_AI_CACHE_STATS: 'multi_ai_cache_stats',
+  MULTI_AI_CLEAR_CACHE: 'multi_ai_clear_cache',
   // @fix FIX-007: 'nexus_get_state'/'harmonia_get_state' not registered in generate_handler[];
   // map to the registered engine_get_* aliases (legacy_ai_bridge, main.rs:2077-2078)
   NEXUS_GET_STATE: 'engine_get_nexus_state',

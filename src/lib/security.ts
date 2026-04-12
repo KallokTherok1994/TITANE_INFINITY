@@ -120,6 +120,10 @@ export const VOID_COMMANDS = new Set<string>([
   // Config commands that return ()
   'save_ui_theme',
   'delete_config_preset',
+  // Multi-IA commands that return ()
+  'multi_ai_set_fallback',
+  'multi_ai_configure_keys',
+  'multi_ai_clear_cache',
   // Evolution commands that return ()
   'sync_evolution_state',
   // Devtools commands that return ()
@@ -364,6 +368,17 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'chat_mode_change', // ✅ v30.0.0 — Chat mode switching
   'chat_mode_sync', // ✅ v30.0.0 — Chat mode sync
   'chat_generate_suggestions', // ✅ v∞ Suggestions IA
+  // Multi-IA Orchestrator Commands (v28.0)
+  'multi_ai_generate',
+  'multi_ai_generate_dual',
+  'multi_ai_generate_fused',
+  'multi_ai_providers',
+  'multi_ai_best_provider',
+  'multi_ai_evaluate',
+  'multi_ai_set_fallback',
+  'multi_ai_configure_keys',
+  'multi_ai_cache_stats',
+  'multi_ai_clear_cache',
   'report_chat_error', // ✅ v30.1.0 — Error reporting (void command)
   'generate_response',
   'stream_response',

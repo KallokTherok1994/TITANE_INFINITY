@@ -1791,6 +1791,102 @@ class TauriClient {
     );
   }
 
+  // ═══════════════════════════════════════════════════════════════════════════
+  // MULTI-AI ORCHESTRATOR COMMANDS (v28.0)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  async multiAiGenerate(params: {
+    prompt: string;
+    mode: string;
+    userId: string;
+    sessionId: string;
+    maxTokens?: number;
+    temperature?: number;
+  }): Promise<unknown> {
+    return await this.invoke(TAURI_COMMANDS.MULTI_AI_GENERATE, {
+      prompt: params.prompt,
+      mode: params.mode,
+      user_id: params.userId,
+      session_id: params.sessionId,
+      max_tokens: params.maxTokens,
+      temperature: params.temperature,
+    });
+  }
+
+  async multiAiGenerateDual(params: {
+    prompt: string;
+    mode: string;
+    userId: string;
+    sessionId: string;
+  }): Promise<unknown> {
+    return await this.invoke(TAURI_COMMANDS.MULTI_AI_GENERATE_DUAL, {
+      prompt: params.prompt,
+      mode: params.mode,
+      user_id: params.userId,
+      session_id: params.sessionId,
+    });
+  }
+
+  async multiAiGenerateFused(params: {
+    prompt: string;
+    mode: string;
+    userId: string;
+    sessionId: string;
+    fusionStrategy?: string;
+  }): Promise<unknown> {
+    return await this.invoke(TAURI_COMMANDS.MULTI_AI_GENERATE_FUSED, {
+      prompt: params.prompt,
+      mode: params.mode,
+      user_id: params.userId,
+      session_id: params.sessionId,
+      fusion_strategy: params.fusionStrategy,
+    });
+  }
+
+  async multiAiProviders(): Promise<unknown> {
+    return await this.invoke(TAURI_COMMANDS.MULTI_AI_PROVIDERS, {});
+  }
+
+  async multiAiBestProvider(mode: string): Promise<unknown> {
+    return await this.invoke(TAURI_COMMANDS.MULTI_AI_BEST_PROVIDER, { mode });
+  }
+
+  async multiAiEvaluate(params: {
+    prompt: string;
+    response: unknown;
+    mode: string;
+  }): Promise<unknown> {
+    return await this.invoke(TAURI_COMMANDS.MULTI_AI_EVALUATE, {
+      prompt: params.prompt,
+      response: params.response,
+      mode: params.mode,
+    });
+  }
+
+  async multiAiSetFallback(enabled: boolean): Promise<void> {
+    await this.invoke(TAURI_COMMANDS.MULTI_AI_SET_FALLBACK, { enabled });
+  }
+
+  async multiAiConfigureKeys(params: {
+    claudeKey?: string;
+    openaiKey?: string;
+    geminiKey?: string;
+  }): Promise<void> {
+    await this.invoke(TAURI_COMMANDS.MULTI_AI_CONFIGURE_KEYS, {
+      claude_key: params.claudeKey,
+      openai_key: params.openaiKey,
+      gemini_key: params.geminiKey,
+    });
+  }
+
+  async multiAiCacheStats(): Promise<unknown> {
+    return await this.invoke(TAURI_COMMANDS.MULTI_AI_CACHE_STATS, {});
+  }
+
+  async multiAiClearCache(): Promise<void> {
+    await this.invoke(TAURI_COMMANDS.MULTI_AI_CLEAR_CACHE, {});
+  }
+
   async nexusGetState(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.NEXUS_GET_STATE,

@@ -251,6 +251,17 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("orchestration_ping_providers");
     commands.insert("orchestration_force_provider");
     commands.insert("orchestration_set_auto_mode");
+    // Multi-IA Orchestrator Commands (v28.0)
+    commands.insert("multi_ai_generate");
+    commands.insert("multi_ai_generate_dual");
+    commands.insert("multi_ai_generate_fused");
+    commands.insert("multi_ai_providers");
+    commands.insert("multi_ai_best_provider");
+    commands.insert("multi_ai_evaluate");
+    commands.insert("multi_ai_set_fallback");
+    commands.insert("multi_ai_configure_keys");
+    commands.insert("multi_ai_cache_stats");
+    commands.insert("multi_ai_clear_cache");
     commands.insert("orchestration_get_nexus");
     commands.insert("orchestration_update_nexus_node");
     commands.insert("orchestration_get_harmonia");
