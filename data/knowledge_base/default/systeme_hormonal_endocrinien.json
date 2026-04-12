@@ -1,0 +1,86 @@
+{
+  "version": "v30.1.0",
+  "category": "systeme_hormonal_endocrinien",
+  "description": "Système endocrinien et hormonal avancé — cortisol, mélatonine, thyroïde (T3/T4/TSH), insuline, hormones sexuelles (œstrogènes, progestérone, testostérone), axe HPA, axe HPG, perturbateurs endocriniens, glandes pinéale/surrénales/hypophyse, optimisation hormonale naturelle",
+  "systeme_hormonal_endocrinien": {
+    "introduction": "Le système endocrinien est un réseau de glandes productrices d'hormones qui régulent la croissance, le métabolisme, la reproduction, le stress, le sommeil, l'humeur et l'homéostasie. Les hormones agissent comme des messagers chimiques, circulant dans le sang vers les cellules cibles.",
+    "glandes_principales": {
+      "hypothalamus": "Chef d'orchestre du système endocrinien. Reçoit les signaux du cerveau et du corps, libère des hormones de libération (CRH, GnRH, TRH, GHRH) qui commandent l'hypophyse.",
+      "hypophyse_pituitaire": "Glande maîtresse. Antéhypophyse: ACTH (surrénales), TSH (thyroïde), LH/FSH (gonades), GH (croissance), PRL (lactation). Posthypophyse: ADH (rétention eau), Ocytocine (lien social, accouchement).",
+      "thyroide": "Produit T4 (thyroxine) et T3 (triiodothyronine). Régule le métabolisme basal, la température, la fréquence cardiaque, l'énergie. Nécessite iode, sélénium, zinc.",
+      "parathyroides": "4 petites glandes sur la thyroïde. Régulent le calcium sanguin via la PTH (parathormone).",
+      "surrenales": "Cortex: cortisol (stress), aldostérone (sodium/pression), DHEA (précurseur hormones sexuelles). Médulla: adrénaline et noradrénaline (fight-or-flight).",
+      "pancreas": "Îlots de Langerhans: insuline (β) abaisse la glycémie, glucagon (α) l'élève. Équilibre glycémique vital.",
+      "epiphyse_pineale": "Produit la mélatonine à partir de la sérotonine. Régule le rythme circadien. Sensible à la lumière (supprimée par lumière bleue).",
+      "gonades": "Ovaires: œstrogènes, progestérone. Testicules: testostérone. Régulent la reproduction, la libido, les caractères sexuels, l'humeur, la densité osseuse.",
+      "thymus": "Maturation des lymphocytes T. Actif surtout dans l'enfance. Rôle dans l'immunité adaptative."
+    },
+    "hormones_cles_detaillees": {
+      "cortisol": {
+        "glande": "Corticosurrénale",
+        "rythme": "Circadien: pic au réveil (6-8h), nadir à minuit. Pulsatile.",
+        "fonctions_normales": "Mobilisation du glucose, anti-inflammatoire aigu, adaptation au stress, éveil, concentration.",
+        "stress_chronique": "Cortisol chroniquement élevé → résistance à l'insuline, fonte musculaire, prise de poids viscéral, immunosuppression, anxiété/dépression, insomnie, trouble thyroïdien (blocage T4→T3), altération de la mémoire (hippocampe).",
+        "cortisol_bas_burnout": "Épuisement surrénalien (HPA axis dysfunction): fatigue matinale intense, hypotension, hypoglycémie, intolérance au stress, brouillard mental."
+      },
+      "melatonine": {
+        "glande": "Épiphyse (glande pinéale)",
+        "synthese": "Tryptophane→Sérotonine→Mélatonine. Synthétisée dans l'obscurité, supprimée par la lumière (surtout bleue).",
+        "fonctions": "Régulateur circadien, antioxydant puissant, immunomodulateur, neuroprotecteur, anti-âge cellulaire.",
+        "perturbateurs": "Écrans nocturnes, lumière artificielle, travail de nuit, jet-lag, vieillissement (déclin naturel).",
+        "optimisation": "Obscurité totale pour dormir, lunettes anti-lumière bleue le soir, exposition solaire matinale, tryptophane alimentaire (banane, dinde, noix)."
+      },
+      "thyroide_t3_t4": {
+        "axe_hpt": "Hypothalamus (TRH) → Hypophyse (TSH) → Thyroïde (T4/T3). Rétrocontrôle négatif.",
+        "t4": "Forme inactive majoritaire (93%). Convertie en T3 par déiodinases (foie, reins). Nécessite sélénium.",
+        "t3": "Forme active (7%). Accélère le métabolisme cellulaire. Impact sur énergie, poids, chaleur, humeur.",
+        "hypothyroidie": "TSH élevée, T4/T3 basses. Fatigue, prise de poids, froid, constipation, dépression, peau sèche, cheveux fins.",
+        "hyperthyroidie": "TSH basse, T4/T3 élevées. Palpitations, perte de poids, anxiété, tremblements, chaleur, diarrhée.",
+        "nutriments_essentiels": "Iode (algues, poisson), Sélénium (noix du Brésil), Zinc (huîtres), Fer, Tyrosine, Vitamine D."
+      },
+      "insuline_glucagon": {
+        "insuline": "Hormone anabolique. Abaisse la glycémie en facilitant l'entrée du glucose dans les cellules. Favorise le stockage (glycogène, graisse).",
+        "resistance_insuline": "Les cellules deviennent insensibles. Hyperinsulinémie compensatrice→diabète type 2, syndrome métabolique, inflammation, prise de poids, SOPK.",
+        "sensibilite_insuline_optimiser": "Exercice physique (musculation+++), jeûne intermittent, alimentation à index glycémique bas, sommeil suffisant, chrome, berbérine, cannelle, magnésium."
+      },
+      "hormones_sexuelles": {
+        "oestrogenes": "3 formes (E1 estrone, E2 estradiol actif, E3 estriol). Développement sexuel féminin, cycle menstruel, densité osseuse, humeur, peau, cognition. Dominance oestrogénique=excès relatif par rapport à progestérone.",
+        "progesterone": "Hormone de la grossesse et du calme. Anti-anxiété naturelle (stimule GABA). Équilibre les œstrogènes. Décline avec l'âge.",
+        "testosterone": "Hormone de la vitalité chez les deux sexes. Libido, masse musculaire, densité osseuse, énergie, confiance, cognition. Décline progressivement après 30 ans chez l'homme.",
+        "dhea": "Précurseur surrénalien des hormones sexuelles. Pic à 25 ans, déclin progressif. Marqueur de vieillissement biologique."
+      }
+    },
+    "axes_hormonaux": {
+      "axe_hpa": {
+        "nom_complet": "Hypothalamo-Hypophyso-Surrénalien",
+        "fonction": "Axe du stress. CRH→ACTH→Cortisol. Rétrocontrôle négatif.",
+        "dysregulation": "Stress chronique→hyperactivation HPA→cortisol élevé chronique→burnout→dysfonction HPA→cortisol bas paradoxal."
+      },
+      "axe_hpt": {
+        "nom_complet": "Hypothalamo-Hypophyso-Thyroïdien",
+        "fonction": "Régulation du métabolisme. TRH→TSH→T4/T3.",
+        "interaction_stress": "Le cortisol élevé inhibe la conversion T4→T3 et supprime la TSH."
+      },
+      "axe_hpg": {
+        "nom_complet": "Hypothalamo-Hypophyso-Gonadique",
+        "fonction": "Régulation de la reproduction. GnRH→LH/FSH→Hormones sexuelles.",
+        "interaction_stress": "Le stress chronique supprime GnRH, réduisant LH/FSH et donc la fertilité."
+      }
+    },
+    "perturbateurs_endocriniens": {
+      "definition": "Substances chimiques exogènes qui interfèrent avec la synthèse, le transport, l'action ou l'élimination des hormones naturelles.",
+      "substances_courantes": ["BPA et bisphénols (plastiques, conserves)", "Phtalates (cosmétiques, emballages)", "Pesticides (organochlorés, glyphosate)", "Parabènes (cosmétiques)", "PFAS (revêtements anti-adhésifs)", "Retardateurs de flamme (meubles, textiles)", "Dioxines (pollution industrielle)"],
+      "effets": "Féminisation, troubles de la fertilité, puberté précoce, cancers hormonodépendants, troubles thyroïdiens, obésité, troubles neurocomportementaux.",
+      "reduction_exposition": ["Utiliser des contenants en verre/inox", "Alimentation biologique", "Cosmétiques naturels certifiés", "Filtrer l'eau de boisson", "Aérer son habitat", "Éviter le plastique chauffé"]
+    },
+    "optimisation_hormonale_naturelle": {
+      "sommeil": "7-9h, obscurité totale, régularité. Crucial pour cortisol, mélatonine, GH, testostérone, leptine/ghréline.",
+      "exercice": "Musculation et HIIT augmentent GH et testostérone. Exercice modéré réduit le cortisol. Éviter le surentraînement.",
+      "nutrition": "Graisses saines (avocat, noix, poisson gras) pour hormones stéroïdiennes. Protéines suffisantes. Micronutriments clés (Zn, Se, I, Mg, Vit D, B6).",
+      "gestion_stress": "Méditation, cohérence cardiaque, nature, relations sociales — régulent l'axe HPA.",
+      "lumiere_naturelle": "Exposition solaire matinale (20-30 min) synchronise le rythme circadien, stimule vitamine D et cortisol matinal.",
+      "plantes_adaptogenes": ["Ashwagandha (cortisol, thyroïde, testostérone)", "Rhodiola (fatigue, stress, cognition)", "Maca (libido, énergie, hormones sexuelles)", "Ginseng (énergie, immunité)", "Tribulus (testostérone, libido)"]
+    },
+    "avertissement_sante": "Ces informations sont éducatives. Tout trouble hormonal suspecté nécessite un bilan sanguin complet et un suivi médical."
+  }
+}

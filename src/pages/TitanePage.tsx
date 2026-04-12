@@ -223,6 +223,26 @@ export const TitanePage: React.FC = () => {
     }
   }, [activeTab, searchParams, updateActiveTab]);
 
+  useEffect(() => {
+    // Keep active tab visible on small horizontal tablists.
+    const activeTabButton = document.getElementById(TAB_LABEL_IDS[activeTab]);
+    activeTabButton?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+
+    // On chat tab, ensure we land near the input area (mobile ergonomics).
+    if (activeTab !== 'conversation') {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      const chatInput = document.querySelector('[data-testid="chat-input"]') as
+        | HTMLTextAreaElement
+        | null;
+      chatInput?.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
+    }, 120);
+
+    return () => window.clearTimeout(timer);
+  }, [activeTab]);
+
   // ═══ TAB HANDLERS ═══
   const tabHandlers = useMemo(
     () => ({

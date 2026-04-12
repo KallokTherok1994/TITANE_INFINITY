@@ -1,7 +1,7 @@
 {
   "name": "titane-infinity",
-  "version": "30.1.2",
-  "description": "TITANE∞ v30.1.2 - Major Release: Full Version Upgrade Cycle — V30 Authority Promotion",
+  "version": "30.1.3",
+  "description": "TITANE∞ v30.1.3 - Major Release: Full Version Upgrade Cycle — V30 Authority Promotion",
   "type": "module",
   "license": "SEE LICENSE.md",
   "packageManager": "pnpm@10.30.2+sha512.36cdc707e7b7940a988c9c1ecf88d084f8514b5c3f085f53a2e244c2921d3b2545bc20dd4ebe1fc245feec463bb298aecea7a63ed1f7680b877dc6379d8d0cb4",
@@ -36,6 +36,8 @@
     "android:init": "tauri android init",
     "android:dev": "node scripts/android/require-explicit-mode.mjs dev",
     "android:dev:mock": "tauri android dev --features custom-protocol,mock",
+    "android:dev:stable": "bash scripts/android/dev-stable.sh",
+    "android:dev:stable:stop": "bash scripts/android/dev-stable-stop.sh",
     "android:dev:full": "tauri android dev --features custom-protocol,full -- --no-default-features",
     "android:build": "node scripts/android/require-explicit-mode.mjs build",
     "android:build:debug": "node scripts/android/require-explicit-mode.mjs build:debug",
@@ -97,8 +99,8 @@
     "test:e2e": "playwright test e2e",
     "test:e2e:playwright": "playwright test e2e",
     "test:e2e:android:browser": "node scripts/e2e/run-android-ui-browser.cjs",
-    "test:e2e:android:device": "TITANE_E2E_USE_WEBSERVER=0 playwright test e2e/android/android-build-ui.device.spec.ts --project chromium --workers=1",
-    "test:e2e:vitest": "bash -c 'if [[ \"${TITANE_E2E_TAURI:-}\" != \"1\" ]]; then echo \"SKIP: Vitest E2E (src/tests/e2e) nécessite un contexte Tauri réel. Relance avec TITANE_E2E_TAURI=1\"; exit 0; fi; cross-env RUN_E2E_TESTS=1 NODE_OPTIONS=\"--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs\" vitest run src/tests/e2e/titane_e2e.test.ts'",
+    "test:e2e:android:device": "TITANE_E2E_ANDROID_DEVICE=1 TITANE_E2E_USE_WEBSERVER=0 playwright test e2e/android/android-build-ui.device.spec.ts --project chromium --workers=1",
+    "test:e2e:vitest": "bash -c 'if [[ \"${TITANE_E2E_TAURI:-}\" != \"1\" ]]; then echo \"SKIP: Vitest E2E (src/tests/e2e) nécessite un contexte Tauri réel. Relance avec TITANE_E2E_TAURI=1\"; exit 0; fi; cross-env RUN_E2E_TESTS=1 NODE_OPTIONS=\"--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs\" vitest run src/tests/e2e/titane_e2e.test.ts src/tests/e2e/chat-ar20-ipc.test.ts'",
     "test:browser": "vitest --config vitest.browser.config.ts --run",
     "test:browser:ui": "vitest --config vitest.browser.config.ts --ui",
     "test:browser:watch": "vitest --config vitest.browser.config.ts",
@@ -169,7 +171,8 @@
     "verify:registry": "pnpm -s verify:registry:sync && pnpm -s verify:registry:integrity && pnpm -s verify:registry:quality",
     "run:x3:tests": "bash scripts/lib/run_x3_profile.sh tests",
     "run:x3:build": "bash scripts/lib/run_x3_profile.sh build",
-    "run:x3:network": "bash scripts/lib/run_x3_profile.sh network"
+    "run:x3:network": "bash scripts/lib/run_x3_profile.sh network",
+    "run:x3:android:browser-mobile": "bash scripts/lib/run_x3_profile.sh android-browser-mobile"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.91.3",

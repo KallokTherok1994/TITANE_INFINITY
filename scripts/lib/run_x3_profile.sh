@@ -8,7 +8,7 @@ PROFILE="${1:-}"
 LOGFILE="${2:-}"
 
 if [[ -z "$PROFILE" ]]; then
-  echo "Usage: $0 <tests|build|network> [logfile]" >&2
+  echo "Usage: $0 <tests|build|network|android-browser-mobile> [logfile]" >&2
   exit 2
 fi
 
@@ -33,8 +33,14 @@ case "$PROFILE" in
     timeout_sec="${RUN_X3_TIMEOUT_NETWORK:-120}"
     CMD=(timeout "$timeout_sec" bash scripts/gates/rc-network-surface-gate.sh)
     ;;
+  android-browser-mobile)
+    logfile_default="reports/run_x3/android_browser_mobile_${timestamp}.log"
+    LOGFILE="${LOGFILE:-$logfile_default}"
+    timeout_sec="${RUN_X3_TIMEOUT_ANDROID_BROWSER_MOBILE:-360}"
+    CMD=(timeout "$timeout_sec" node scripts/e2e/run-android-ui-browser.cjs)
+    ;;
   *)
-    echo "Unknown profile: $PROFILE (expected: tests|build|network)" >&2
+    echo "Unknown profile: $PROFILE (expected: tests|build|network|android-browser-mobile)" >&2
     exit 2
     ;;
 esac

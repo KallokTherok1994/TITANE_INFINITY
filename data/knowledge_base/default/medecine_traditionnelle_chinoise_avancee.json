@@ -1,0 +1,105 @@
+{
+  "version": "v30.1.0",
+  "category": "medecine_traditionnelle_chinoise_avancee",
+  "description": "Médecine Traditionnelle Chinoise avancée — Wu Xing (5 éléments), Zang-Fu (organes/entrailles), Qi Gong médical, pharmacopée chinoise (materia medica), Tuina avancé, diététique chinoise énergétique, diagnostic MTC (pouls, langue, teint), San Jiao, Jing-Qi-Shen, 8 principes diagnostiques",
+  "medecine_traditionnelle_chinoise_avancee": {
+    "introduction": "La Médecine Traditionnelle Chinoise (MTC) est un système médical complet vieux de plus de 3000 ans. Elle repose sur une vision énergétique du corps humain, où la santé résulte de l'équilibre dynamique entre le Yin et le Yang, la libre circulation du Qi (énergie vitale) dans les méridiens, et l'harmonie des organes Zang-Fu selon les lois des Cinq Éléments (Wu Xing).",
+    "wu_xing_cinq_elements": {
+      "definition": "Le Wu Xing (Bois, Feu, Terre, Métal, Eau) est le modèle fondamental de la MTC décrivant les cycles de transformation de l'énergie dans l'univers et le corps humain.",
+      "correspondances": {
+        "bois": {"organe_zang": "Foie", "organe_fu": "Vésicule Biliaire", "emotion": "Colère", "saison": "Printemps", "saveur": "Acide", "sens": "Vue", "tissu": "Tendons/Ligaments", "couleur": "Vert"},
+        "feu": {"organe_zang": "Cœur", "organe_fu": "Intestin Grêle", "emotion": "Joie", "saison": "Été", "saveur": "Amer", "sens": "Parole", "tissu": "Vaisseaux sanguins", "couleur": "Rouge"},
+        "terre": {"organe_zang": "Rate", "organe_fu": "Estomac", "emotion": "Rumination/Souci", "saison": "Intersaison", "saveur": "Doux", "sens": "Goût", "tissu": "Chair/Muscles", "couleur": "Jaune"},
+        "metal": {"organe_zang": "Poumons", "organe_fu": "Gros Intestin", "emotion": "Tristesse", "saison": "Automne", "saveur": "Piquant", "sens": "Odorat", "tissu": "Peau/Poils", "couleur": "Blanc"},
+        "eau": {"organe_zang": "Reins", "organe_fu": "Vessie", "emotion": "Peur", "saison": "Hiver", "saveur": "Salé", "sens": "Ouïe", "tissu": "Os/Moelle", "couleur": "Noir"}
+      },
+      "cycles": {
+        "engendrement_sheng": "Bois→Feu→Terre→Métal→Eau→Bois (cycle mère-fils, nourricier)",
+        "controle_ke": "Bois→Terre→Eau→Feu→Métal→Bois (cycle de régulation, domination)",
+        "surdomination_cheng": "Quand le contrôle est excessif (pathologique)",
+        "insulte_wu": "Quand l'élément contrôlé se retourne contre celui qui le contrôle (rébellion)"
+      },
+      "application_clinique": "Les cycles permettent de comprendre les chaînes pathologiques (ex: colère du Foie→Bois attaque Rate→Terre = troubles digestifs liés au stress) et de choisir les stratégies thérapeutiques appropriées."
+    },
+    "zang_fu_organes": {
+      "definition": "Les Zang (organes pleins/Yin) stockent les substances vitales; les Fu (organes creux/Yang) transforment et transportent.",
+      "zang_organes_pleins": {
+        "coeur": "Gouverne le sang et les vaisseaux, abrite le Shen (esprit/conscience). Maître de la joie. Relié à la parole et au teint.",
+        "foie": "Assure le libre flux du Qi (fonction de drainage/régulation). Stocke le sang. Gouverne les tendons. Lié à la colère et à la planification.",
+        "rate": "Transforme et transporte les aliments en Qi et Sang. Gouverne les muscles et les chairs. Liée à la rumination/réflexion.",
+        "poumons": "Gouvernent le Qi et la respiration. Contrôlent la diffusion et la descente du Qi. Liés à la peau, la tristesse. Gèrent le Wei Qi (Qi défensif).",
+        "reins": "Stockent le Jing (essence vitale). Gouvernent l'eau, les os, la moelle, le cerveau. Racine du Yin et du Yang. Liés à la peur et à la volonté.",
+        "pericarde": "Protège le Cœur. Gouverne la circulation du sang. Relié au Triple Réchauffeur (San Jiao)."
+      },
+      "fu_organes_creux": {
+        "vesicule_biliaire": "Stocke et sécrète la bile. Liée à la prise de décision et au courage.",
+        "intestin_grele": "Sépare le pur de l'impur. Absorption des nutriments.",
+        "estomac": "Reçoit et décompose les aliments. Mouvement descendant du Qi.",
+        "gros_intestin": "Absorbe l'eau, forme et élimine les selles.",
+        "vessie": "Stocke et excrète l'urine. Transformation du Qi via les Reins.",
+        "san_jiao_triple_rechauffeur": "Voie de passage de l'eau et du Qi. Supérieur (brume/distribution), moyen (fermentation/transformation), inférieur (drainage/excrétion)."
+      }
+    },
+    "jing_qi_shen": {
+      "jing_essence": "Substance fondamentale héritée des parents (Jing inné/prénatal) et acquise via alimentation (Jing postnatal). Base de la croissance, reproduction, vieillissement.",
+      "qi_energie": "Force vitale animant toutes les fonctions. Types: Yuan Qi (originel), Gu Qi (alimentaire), Zong Qi (pectoral), Wei Qi (défensif), Ying Qi (nourricier).",
+      "shen_esprit": "Conscience, esprit, vitalité mentale. Réside dans le Cœur. Se manifeste dans les yeux, la parole, la clarté de pensée.",
+      "relation": "Jing est la base matérielle, Qi est la force dynamique, Shen est la manifestation spirituelle. Les Trois Trésors (San Bao) sont interdépendants."
+    },
+    "diagnostic_mtc": {
+      "huit_principes": ["Yin/Yang", "Intérieur/Extérieur", "Froid/Chaleur", "Vide/Plénitude"],
+      "quatre_examens": {
+        "observation": "Teint, langue (forme, couleur, enduit), yeux, posture, Shen visible.",
+        "auscultation_olfaction": "Voix, respiration, odeurs corporelles.",
+        "interrogatoire": "10 questions classiques (froid/chaud, transpiration, sommeil, alimentation, selles/urine, douleurs, émotions, menstruations, antécédents).",
+        "palpation": "Pouls (28 qualités de pouls aux 3 positions radiales), palpation des méridiens et points douloureux."
+      },
+      "diagnostic_langue": {
+        "corps": "Couleur (pâle=vide, rouge=chaleur, violacée=stase), forme (gonflée=humidité, fine=vide sang), empreintes dentaires=vide Rate.",
+        "enduit": "Fin blanc=normal, épais blanc=froid-humidité, jaune=chaleur, gras=humidité-glaires, absent=vide de Yin."
+      },
+      "diagnostic_pouls": "28 qualités classiques: superficiel, profond, lent, rapide, glissant, rugueux, tendu, mou, fin, large, etc. 3 positions (pouce=Poumons/Cœur, barrière=Foie/Rate, pied=Reins)."
+    },
+    "pharmacopee_chinoise": {
+      "principes": "Classification par nature (froide, fraîche, neutre, tiède, chaude), saveur (acide, amer, doux, piquant, salé), méridiens-tropisme, direction (montante, descendante, intérieure, extérieure).",
+      "categories_substances": ["Plantes (herbes, racines, écorces)", "Minéraux (cinabre, gypse, magnétite)", "Substances animales (usage restreint, éthique)"],
+      "formulation": {
+        "empereur_jun": "Substance principale ciblant la cause/symptôme majeur.",
+        "ministre_chen": "Renforce l'action de l'empereur.",
+        "assistant_zuo": "Traite les symptômes secondaires, modère les effets toxiques.",
+        "messager_shi": "Guide la formule vers le méridien/organe cible."
+      },
+      "formules_celebres": ["Si Jun Zi Tang (4 Gentilshommes - tonifie Rate/Qi)", "Liu Wei Di Huang Wan (6 saveurs Rehmannia - nourrit Yin Reins)", "Xiao Yao San (Poudre libre/errante - harmonise Foie et Rate)", "Bu Zhong Yi Qi Tang (soutient le Qi central)"]
+    },
+    "tuina_avance": {
+      "definition": "Massage thérapeutique chinois travaillant sur les méridiens, points d'acupuncture et tissus profonds pour rétablir le flux du Qi.",
+      "techniques_principales": ["An (pression)", "Mo (friction circulaire)", "Tui (poussée)", "Na (pincement/saisie)", "Gun (roulement)", "Rou (pétrissage)", "Dian (point pressure)", "Ban (traction/mobilisation)"],
+      "indications": "Douleurs musculo-squelettiques, troubles digestifs, céphalées, insomnie, stress, pédiatrie (Tuina pédiatrique), rééducation."
+    },
+    "dietetique_chinoise": {
+      "principe": "Chaque aliment a une nature thermique, une saveur et un tropisme méridien. L'alimentation est un outil thérapeutique à part entière.",
+      "natures_thermiques": {
+        "froid": "Pastèque, concombre, tofu, crabe — rafraîchit la chaleur interne",
+        "frais": "Pomme, poire, céleri, thé vert — légèrement rafraîchissant",
+        "neutre": "Riz, patate douce, carotte, bœuf — équilibrant",
+        "tiede": "Poulet, gingembre, oignon, cannelle — réchauffe",
+        "chaud": "Piment, poivre, alcool, agneau — réchauffe fortement"
+      },
+      "regles": ["Adapter l'alimentation à la saison", "Manger selon sa constitution (Yin/Yang)", "Cuisson adaptée (cru=froid, cuit=tiède)", "Pas de boisson glacée pendant les repas", "Privilégier le petit-déjeuner chaud"]
+    },
+    "qi_gong_medical": {
+      "definition": "Pratique de mouvements, respiration et méditation guidée par les principes MTC pour prévenir et traiter les maladies.",
+      "formes_classiques": ["Ba Duan Jin (8 pièces de brocart)", "Yi Jin Jing (classique de transformation des tendons)", "Wu Qin Xi (jeu des 5 animaux)", "Liu Zi Jue (6 sons thérapeutiques)"],
+      "six_sons_therapeutiques": {
+        "xu": {"organe": "Foie", "son": "Chuuuu"},
+        "he": {"organe": "Cœur", "son": "Hhhaaaa"},
+        "hu": {"organe": "Rate", "son": "Hooouu"},
+        "si": {"organe": "Poumons", "son": "Ssssii"},
+        "chui": {"organe": "Reins", "son": "Tchouiii"},
+        "xi": {"organe": "San Jiao", "son": "Hiiii"}
+      },
+      "applications": "Maladies chroniques (hypertension, diabète, cancer en complément), troubles émotionnels, renforcement immunitaire, récupération post-opératoire."
+    },
+    "avertissement_sante": "Ces informations sont éducatives et ne remplacent pas un diagnostic médical professionnel. Consultez un praticien qualifié en MTC pour tout problème de santé."
+  }
+}

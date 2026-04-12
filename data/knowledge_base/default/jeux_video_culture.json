@@ -1,65 +1,156 @@
 {
   "version": "v30.1.0",
   "category": "jeux_video_culture",
-  "description": "Jeux vidéo et culture gaming — histoire du jeu vidéo, game design, genres, industrie, eSports, psychologie du jeu, développement indie, impact cognitif et social, gaming professionnel",
+  "description": "Jeux vidéo et culture gaming — histoire, game design, genres, eSports, psychologie, indie, retrogaming, VR/AR, narration, musique, streaming, accessibilité, IA, communauté",
   "jeux_video_culture": {
-    "introduction": "Le jeu vidéo est l'industrie culturelle la plus grande au monde (200B$/an — dépasse cinéma + musique combinés). C'est aussi un médium unique : interactif, immergeant, formateur. TITANE analyse le gaming sous tous ses angles — design, psychologie, industrie et culture.",
+    "introduction": "Le jeu vidéo est l'industrie culturelle la plus grande au monde (200B$/an). Médium unique, interactif et immersif, fédérant 3,2 milliards de joueurs. TITANE analyse le gaming sous tous ses angles.",
     "histoire": {
-      "1970s": "Pong (Atari, 1972), premiers arcades. Space Invaders (1978) = premier hit mondial. Jeu vidéo comme phénomène culturel.",
-      "1980s": "Crash 1983 (sursaturation marché US), sauvé par Nintendo (NES, 1985). Mario Bros, Zelda, Tetris. Consoles domestiques.",
-      "1990s": "SNES vs Sega (guerre des consoles). PlayStation révolutionne avec 3D (1994). PC gaming boom (Doom, Quake, RTS).",
-      "2000s": "PS2 (best-seller all time), Xbox, online gaming (WoW, Counter-Strike), casual (Guitar Hero).",
-      "2010s": "Mobile gaming explose (iOS App Store 2008). League of Legends/Fortnite/Minecraft = mega-hits. eSports légitimisés.",
-      "2020s": "Game Pass/cloud gaming, COVID boost, VR mature, jeux live service, IA dans game design"
+      "origines": "Spacewar! (1962, MIT). Pong (Atari, 1972) lance l'arcade. Space Invaders (1978) génère $3,8B. Atari 2600 démocratise la console.",
+      "1980s": "Crash 1983. Nintendo sauve l'industrie (NES 1985). Mario, Zelda, Metroid, Tetris. Game Boy (1989). Dragon Quest/FF lancent le JRPG.",
+      "1990s": "SNES vs Mega Drive. PlayStation (1994) = CD-ROM + 3D. PC : Doom, StarCraft, Half-Life. Pokémon phénomène mondial.",
+      "2000s": "PS2 (155M vendues). Xbox/Halo. WoW (12M abonnés). Wii motion control. GTA III monde ouvert.",
+      "2010s": "Mobile explose. LoL/Fortnite/Minecraft méga-hits. eSports légitimisés. Switch (2017). Indies. Twitch.",
+      "2020s": "Game Pass/cloud. COVID +30%. VR Quest 2/3. IA générative. Microsoft-Activision $69B."
     },
     "game_design": {
-      "principes_core": {
-        "gameplay_loop": "Action → Feedback → Récompense → Nouvelle action. Core loop doit être satisfaisant en 30 secondes.",
-        "flow_state": "Csikszentmihalyi : équilibre challenge/compétence. Trop facile = ennui. Trop dur = frustration.",
-        "progression": "Courbe de difficulté graduelle. Sens de la maîtrise. Unlocks, niveaux, compétences.",
-        "feedback": "Visuel + sonore + tactile (vibration). Chaque action doit avoir réponse immédiate et satisfaisante."
+      "principes": {
+        "gameplay_loop": "Action→Feedback→Récompense→Action. Core loop satisfaisant en 30s (règle Miyamoto).",
+        "flow_state": "Csikszentmihalyi : équilibre challenge/compétence. Left 4 Dead Director AI ajuste dynamiquement.",
+        "progression": "Courbe difficulté graduelle. Horizontale (options) vs verticale (puissance). 80% abandon si mauvais onboarding.",
+        "feedback": "Visuel (particules, screen shake) + sonore + tactile (triggers adaptatifs PS5). Le juice rend mémorable.",
+        "level_design": "Guidage implicite par lumière/couleur/architecture. Weenie Disney. Playtesting itératif indispensable.",
+        "tutoriel": "Show don't tell. World 1-1 Mario = tutoriel parfait sans un mot."
       },
       "mecaniques": {
-        "economies": "Ressources rares créent des choix signifiants. Inflation gameplay = problème.",
-        "roguelike": "Mort permanente + runs aléatoires + meta-progression. Hades, Dead Cells, Binding of Isaac.",
-        "emergence": "Règles simples → complexité émergente. Chess, Minecraft, Dwarf Fortress.",
-        "narrative": "Agency du joueur dans la narration (RPG), ludonarrative consonance (histoire = gameplay)"
+        "economies": "Ressources rares = choix signifiants. Sinks vs faucets. Équilibrage crucial multijoueur.",
+        "roguelike": "Mort permanente + runs aléatoires. Hades, Dead Cells, Slay the Spire. Rejouabilité infinie.",
+        "emergence": "Règles simples → complexité émergente. Minecraft, BotW. Saint-Graal du game design.",
+        "narrative": "Ludonarrative consonance (Spec Ops) vs dissonance (Uncharted). Conséquences persistantes (Witcher 3).",
+        "social": "Coopération (It Takes Two), trahison (Among Us). Dark Souls = connexion sociale subtile."
       },
       "monetisation": {
-        "ethique": "Payer pour cosmétiques = OK. Pay-to-win = destroy gameplay. Loot boxes = gambling (réglementation montante).",
-        "gacha": "Probabilités aléatoires de personnages/équipements. Optimisé pour dépenses compulsives. Régulé Belgique/NL.",
-        "battle_pass": "Contenu saisonnier via progression. Moins prédateur que loot boxes."
+        "modeles": "Cosmétiques OK. Pay-to-win détruit la confiance. Loot boxes = gambling (réglementation UE). Gacha : Genshin $4B+. Battle pass : progression saisonnière (Fortnite). F2P : 2-5% joueurs = 95% revenus. Abonnement Game Pass = Netflix du jeu."
       }
     },
     "genres_majeurs": {
-      "fps": "First Person Shooter — Counter-Strike, Valorant, Call of Duty. Réflexes, précision, communication équipe.",
-      "moba": "Multiplayer Online Battle Arena — League of Legends, Dota 2. Stratégie, méta, équipe 5v5.",
-      "rpg": "Role-Playing Game — stat building, narratif profond. Souls-like (Dark Souls), JRPG (Final Fantasy), Western (Witcher).",
-      "battle_royale": "100 joueurs → 1 survivant. Fortnite, PUBG, Warzone. Tension, map shrinking, looting.",
-      "strategy": "RTS (StarCraft), 4X (Civilization), tower defense, auto-battler. Planification, gestion ressources.",
-      "simulation": "Minecraft (création libre), The Sims (vie simulée), simulateurs pro (Flight Simulator, Farming)"
+      "fps": "CS2 (tactique), Valorant (abilities), CoD (arcade). Sous-genres : extraction (Tarkov), boomer (ULTRAKILL).",
+      "moba": "LoL (140M/mois), Dota 2. Draft, 5v5, courbe d'apprentissage raide.",
+      "rpg": "JRPG (FF, Persona), Western (Witcher 3, BG3), Action (Elden Ring), CRPG (Divinity).",
+      "battle_royale": "100→1. Fortnite, PUBG, Apex (ping innovant). Tension via zone rétrécissante.",
+      "strategy": "RTS (StarCraft II), 4X (Civ VI), grand strategy (CK3). Gestion ressources.",
+      "simulation": "Minecraft (300M+, plus vendu), Flight Simulator 2020, Cities Skylines.",
+      "metroidvania": "Exploration non-linéaire + capacités progressives. Hollow Knight, Ori.",
+      "souls_like": "Demon's Souls → Elden Ring (25M+). Difficulté exigeante, narration environnementale cryptique.",
+      "horror": "Survival (RE, Silent Hill), psychologique (Amnesia), asymétrique (Dead by Daylight)."
     },
     "esports": {
-      "marche": "$1.8B (2023). Prize pools : TI Dota2 >$40M. League Worlds > $2M.",
-      "organisation": "Teams professionnelles, coaches, analysts, scrimming (matchs entraînement), bootcamps.",
-      "carriere": "Joueur pro (pic 18-24 ans), coach, analyst, caster, content creator, management",
-      "pathologie": "Gaming disorder (OMS 2019) — 3% gamers. Critères : perte contrôle, priorité > autres activités, continuation malgré conséquences."
+      "marche": "$1,8B (2023). TI Dota2 >$40M. 530M viewers. Sponsoring, droits, paris.",
+      "ecosysteme": {
+        "lol": "Plus grand eSport (Worlds 6,4M pic). Franchises LEC/LCK/LPL. Corée/Chine dominent.",
+        "cs2": "FPS eSport le plus ancien. Majors $1,25M. Écosystème ouvert.",
+        "valorant": "Croissance rapide. Champions Tour. FPS tactique + abilities.",
+        "fgc": "Grassroots. EVO, SF6, Tekken 8. Culture arcade."
+      },
+      "carriere": "Pro (pic 18-24), coach, analyst, caster, content creator. Retraite → coaching/streaming.",
+      "sante": "Canal carpien, burnout, fatigue oculaire. Kiné, psychologues intégrés. Gaming disorder (OMS 2019) ~3%."
     },
     "psychologie_gaming": {
-      "benefices": "Résolution problèmes, coordination œil-main, travail en équipe, gestion de l'échec, orientation spatiale, vitesse décision",
-      "apprentissage": "Serious games, simulations médicales, entraînement militaire. Games-based learning efficace si feedback immédiat.",
-      "flow": "Gaming = état de flow optimal fréquent. Expérience immersive sans frottement social.",
-      "violence": "Meta-analyse : corrélation faible entre jeux violents et comportement agressif. Pas causalité établie. Contexte social prime."
+      "benefices": "Résolution problèmes, coordination œil-main, travail équipe, gestion échec. Attention sélective améliorée (Bavelier 2012).",
+      "apprentissage": "Serious games médecine/défense. Gamification (Duolingo, Kahoot). Feedback immédiat = efficacité.",
+      "flow": "Flow optimal fréquent. Feedback immédiat + difficulté ajustée = immersion profonde.",
+      "violence": "Corrélation faible jeux violents/agression. Pas de causalité. Japon/Corée : forte conso, faible violence.",
+      "motivation": "Autodétermination (Deci & Ryan) : autonomie, compétence, relation sociale.",
+      "addiction": "Passion harmonieuse vs obsessive. Risques : isolement, anxiété préexistante."
     },
     "developpement_indie": {
       "outils": {
-        "unity": "C#, cross-platform, mobile fort. Free tier (revenue <100K$). Massive asset store.",
-        "unreal": "C++/Blueprints visual. Graphismes AAA, nanite/lumen. Gratuit, 5% royalties >$1M.",
-        "godot": "Open source, GDScript/C#. Léger, idéal 2D, communauté croissante.",
-        "pygame": "Python, prototypage rapide, apprentissage"
+        "unity": "C#, cross-platform. Free <200K$. Cuphead, Hollow Knight. Controverse pricing 2023.",
+        "unreal": "C++/Blueprints. Nanite/Lumen. 5% royalties >$1M. Dominant AAA/VR.",
+        "godot": "Open source MIT. GDScript/C#. Croissance post-Unity. V4 améliore 3D.",
+        "autres": "GameMaker (Undertale), RPG Maker (Omori), Pygame, MonoGame (Stardew Valley)."
       },
-      "succes_indie": "Hollow Knight, Stardew Valley, Celeste — 1-4 développeurs, millions vendus. Niche passion + polissage + marketing.",
-      "distribution": "Steam (30% cut mais exposition maximale), itch.io (0% cut), Epic Games Store (12% cut)."
+      "succes": "Stardew Valley (1 dev, 30M+), Hollow Knight (3 devs), Hades (Hugo Awards), Vampire Survivors (1 dev, 10M+).",
+      "distribution": "Steam (30%), itch.io (0%), Epic (12%), GOG (DRM-free). Next Fest critique visibilité.",
+      "financement": "Kickstarter, publishers (Devolver, Annapurna), grants. Budget typique $200K-$2M.",
+      "defis": "14K+ jeux/an Steam. Crunch indie. Marketing 30-50% du temps. Santé mentale."
+    },
+    "retrogaming": {
+      "definition": "Pratique et préservation des jeux anciens. Passion nostalgique et patrimoine vidéoludique.",
+      "emulation": "RetroArch (multi-système), Dolphin (GC/Wii), PCSX2, RPCS3. MAME (arcade). Émulateur légal (Sony vs Connectix), ROMs copyright. Préservation essentielle contre le rot numérique.",
+      "consoles_retro": "NES/SNES Classic Mini. FPGA (Analogue Pocket, MiSTer) = fidélité matérielle, open-source. Collection : cartouches prix record, grading controversé (WATA Games).",
+      "speedrunning": "Any%, 100%, glitchless. Games Done Quick ($50M+ charité). Speedrun.com. TAS (Tool-Assisted). Communauté : Summoning Salt (YouTube).",
+      "mods_romhacks": "Kaizo Mario, Pokémon custom, randomizers (ALttP, SM). Doom modding actif 30 ans après.",
+      "communautes": "RetroRGB, r/retrogaming. YouTube : Ahoy, Gaming Historian. Conventions rétro."
+    },
+    "realite_virtuelle_ar": {
+      "marche": "VR gaming ~$12B (2024). Meta Quest 2/3 (20M+ Q2). PSVR2. Apple Vision Pro spatial computing.",
+      "casques": {
+        "quest": "Quest 3 : standalone + PCVR, mixed reality, $500. Beat Saber. Quest 2 = porte d'entrée VR.",
+        "psvr2": "OLED, eye tracking, haptique, triggers adaptatifs. Horizon, GT7, RE Village VR.",
+        "pc_vr": "Valve Index (144Hz, finger tracking). Half-Life: Alyx = référence VR AAA."
+      },
+      "ar_gaming": "Pokémon GO ($6B+ revenus). AR mobile domine. Lunettes AR pas encore percées.",
+      "haptics": "Vestes (bHaptics), gants (SenseGlove), tapis omnidirectionnels. Recherche thermique/olfactive.",
+      "motion_sickness": "40-70% des utilisateurs. Décalage visuel/vestibulaire. Solutions : téléportation, vignettage, 90Hz min.",
+      "avenir": "Casques légers, foveated rendering, body tracking, social VR (VRChat 100M+), fitness VR, thérapeutique."
+    },
+    "game_narrative": {
+      "narration_interactive": "Seul médium où le spectateur est l'acteur. Responsabilité des décisions. Pionniers : Zork (1980), Wing Commander.",
+      "choix_moraux": "Moralité binaire (Mass Effect) vs gris (Witcher 3). Papers Please (sécurité vs humanité). BG3 : liberté sans précédent. Illusion du choix (Telltale) : convergence invisible.",
+      "world_building": "Elder Scrolls (lore pages), Dark Souls (architecture narrative), Disco Elysium (philosophie).",
+      "lore": "Souls-like = lore cryptique (descriptions objets). Elden Ring (Miyazaki × Martin). Wikis communautaires.",
+      "environmental_storytelling": "Gone Home, Edith Finch, BioShock. Environnement = récit passif reconstitué activement.",
+      "narration_emergente": "EVE Online (guerres corporations), Dwarf Fortress, RimWorld. Plus mémorable que le scripté.",
+      "auteurs": "Kojima (Metal Gear), Druckmann (TLOU), Yoko Taro (NieR), Vincke (BG3)."
+    },
+    "musique_jeux_video": {
+      "importance": "Pilier de l'expérience. Guide émotions, signale danger. Zelda/Mario reconnaissables mondialement.",
+      "ost_cultes": "Chrono Trigger (Mitsuda), Ocarina of Time (Kondo). NieR Automata (Okabe), Celeste (Raine), Doom 2016 (Gordon), Undertale (Fox), Hades (Korb).",
+      "compositeurs": {
+        "uematsu": "Final Fantasy I-X. One-Winged Angel, To Zanarkand. Autodidacte. Art orchestral. Distant Worlds.",
+        "kondo": "Nintendo — Mario/Zelda. Minimalisme mélodique parfait. 35 ans définissant le son Nintendo.",
+        "mick_gordon": "Doom 2016/Eternal. Métal industriel 11/8, guitare 9 cordes. BFG Division = hymne gaming.",
+        "autres": "Shimomura (Kingdom Hearts), Yamaoka (Silent Hill), Wintory (Journey, nominé Grammy)."
+      },
+      "musique_adaptive": "Temps réel selon actions. iMUSE LucasArts (1991, pionnier). Horizontal resequencing, vertical remixing. RDR2 = référence.",
+      "chiptune": "Puces sonores (NES 2A03, GB LR35902). 4-5 canaux = créativité contrainte. Genre vivant : Anamanaguchi, Chipzel."
+    },
+    "streaming_content_creation": {
+      "plateformes": {
+        "twitch": "Dominant. 140M+ visiteurs/mois. Subs/bits/pubs. Affiliation (50 followers, 3 viewers) et partenariat.",
+        "youtube": "VODs + SEO. Super Chats, memberships. Migrations contrats (Ludwig, Valkyrae).",
+        "kick": "Émergent (2023). Split 95/5. Modération souple controversée. Avenir incertain."
+      },
+      "setup": "PC/carte capture (Elgato), micro (SM7B), webcam, éclairage. OBS Studio standard.",
+      "monetisation": "Subs, dons, sponsors, pubs, merch. Top >$1M/an. Majorité < SMIC.",
+      "communaute": "Interaction chat, constance, authenticité, niche. Mods bénévoles. Discord hors-stream.",
+      "carriere": "Hobby → affiliation → partenariat → diversification. Burnout fréquent. <1% en vivent."
+    },
+    "accessibilite_gaming": {
+      "importance": "15% population = handicap. TLOU2 : 60+ options = standard. Xbox Adaptive Controller (2018).",
+      "daltonisme": "8% hommes. Filtres, symboles+formes, personnalisation interface.",
+      "handicap_moteur": "Remapping complet, one-handed, auto-aim. Adaptive Controller + contacteurs. Quadstick. Xbox Copilot (2 manettes → 1 personnage).",
+      "sous_titres": "Locuteur identifié, taille ajustable, fond opaque, sons ambiants. SDH. Forza 5, Spider-Man 2 = références.",
+      "difficulte_adaptive": "Celeste mode assist sans jugement. Hades God Mode progressif. Bon challenge pour chaque joueur.",
+      "inclusivite": "Représentation diverse, pronoms, audio-description, navigation audio (TLOU2 jouable en audio). CVAA USA.",
+      "ressources": "AbleGamers, SpecialEffect, gameaccessibilityguidelines.com, Can I Play That."
+    },
+    "intelligence_artificielle_jeux": {
+      "pathfinding": "A* sur navmesh. HPA* grands mondes. Flow fields (RTS). Detour/Recast standard industrie.",
+      "behaviour_trees": "Séquences, sélecteurs, décorateurs. Plus flexible que FSM. Halo 2 pionnier. Built-in Unreal.",
+      "procedural_generation": "Perlin noise, WFC, L-systems. Minecraft (infini), No Man's Sky (18 quintillions planètes). Mieux comme assistant design.",
+      "machine_learning": "AlphaGo, OpenAI Five (Dota 2), AlphaStar (SC2). Dev : playtesting IA, animation procédurale. IA générative : PNJ dynamiques (Inworld AI). Défis : cohérence, coût.",
+      "npcs_intelligents": "F.E.A.R. (IA tactique), TLOU2 (ennemis nommés), Alien Isolation (apprend habitudes). Graal : PNJ mémoire+émotions.",
+      "director_ai": "L4D (2008) : Director contrôle spawns/items/musique selon performance. Flow sans manipulation perceptible."
+    },
+    "culture_communaute": {
+      "conventions": "Gamescom (300K+), TGS, PAX. E3 en pause. Summer Game Fest/Nintendo Direct. France : PGW, Lyon e-Sport, Japan Expo.",
+      "cosplay": "Concours mondiaux (World Cosplay Summit). Mousse EVA, Worbla, impression 3D. Pro : sponsorships, commissions.",
+      "fan_art": "DeviantArt, ArtStation, Pixiv. Studios encouragent. Illustrations, remixes, fanfiction. Tremplin industrie.",
+      "modding": "CS = mod Half-Life. Dota = mod WC3. Steam Workshop, Nexus Mods (Skyrim 70K+). Creation Kit essentiel.",
+      "speedrun_culture": "GDQ lève des millions. TAS = limites théoriques. Summoning Salt documente les records.",
+      "tournois_lan": "DreamHack (1994). Retour post-COVID. LAN amateurs = premier pas eSport.",
+      "toxicite_inclusion": "Défi : harcèlement en ligne. IA modération (Riot), trust scores. Progrès : diversité, GaymerX, Women in Games."
     }
   }
 }

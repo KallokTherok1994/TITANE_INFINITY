@@ -1,0 +1,95 @@
+{
+  "version": "v30.1.0",
+  "category": "qi_gong_tai_chi_avance",
+  "description": "Qi Gong et Tai Chi avancés — Qi Gong médical, Ba Duan Jin (8 pièces de brocart), Yi Jin Jing, Wu Qin Xi (5 animaux), Tai Chi styles (Yang, Chen, Wu, Sun), formes martiales et santé, méridiens et Qi, Zhan Zhuang (posture de l'arbre), Dan Tian, circulation microcosmique",
+  "qi_gong_tai_chi_avance": {
+    "introduction": "Le Qi Gong (travail de l'énergie) et le Tai Chi Chuan (boxe du faîte suprême) sont des arts millénaires chinois intégrant mouvement, respiration et intention mentale. Le Qi Gong est principalement thérapeutique et méditatif. Le Tai Chi est un art martial interne devenu pratique de santé majeure, validée par la recherche scientifique moderne.",
+    "qi_gong_fondements": {
+      "san_tiao": {
+        "tiao_shen": "Réguler le corps — posture correcte, alignement, relâchement (Song)",
+        "tiao_xi": "Réguler la respiration — douce, profonde, naturelle, abdominale",
+        "tiao_xin": "Réguler l'esprit — intention (Yi), concentration, visualisation, calme mental"
+      },
+      "dan_tian": {
+        "inferieur": "Sous le nombril (3 doigts). Centre d'énergie principal. Stockage du Qi. Racine de la pratique.",
+        "moyen": "Plexus solaire/cœur. Centre émotionnel et respiratoire.",
+        "superieur": "Entre les sourcils (Yin Tang). Centre de la conscience et de l'intuition."
+      },
+      "circulation_microcosmique": {
+        "definition": "Orbite microcosmique (Xiao Zhou Tian): circulation du Qi le long des méridiens Du Mai (vaisseau gouverneur, dos) et Ren Mai (vaisseau conception, devant).",
+        "pratique": "Méditation assise, langue au palais (pont énergétique), respiration abdominale, visualisation de la circulation du Qi montant dans le dos et descendant par le devant.",
+        "effets": "Harmonise le Yin et le Yang, renforce le Jing, nourrit le Shen, prévient les maladies, prépare aux pratiques avancées."
+      }
+    },
+    "formes_classiques_qi_gong": {
+      "ba_duan_jin": {
+        "nom": "Huit pièces de brocart",
+        "origine": "Général Yue Fei (Song du Sud) ou traditions plus anciennes",
+        "exercices": [
+          {"num": 1, "nom": "Soutenir le ciel avec les deux mains", "meridien": "San Jiao (Triple Réchauffeur)", "effet": "Étire la colonne, régule les 3 foyers"},
+          {"num": 2, "nom": "Tirer à l'arc des deux côtés", "meridien": "Poumons/Cœur", "effet": "Ouvre la poitrine, renforce les bras"},
+          {"num": 3, "nom": "Lever un bras pour réguler Rate et Estomac", "meridien": "Rate/Estomac", "effet": "Étire les flancs, aide la digestion"},
+          {"num": 4, "nom": "Regarder en arrière pour prévenir les maladies", "meridien": "Du Mai/Reins", "effet": "Torsion douce de la colonne, renforce les reins"},
+          {"num": 5, "nom": "Balancer la tête et le tronc pour chasser le feu du cœur", "meridien": "Cœur", "effet": "Réduit le stress et l'excès de feu"},
+          {"num": 6, "nom": "Toucher les pieds pour renforcer les reins", "meridien": "Vessie/Reins", "effet": "Étire le dos, nourrit les reins et le Jing"},
+          {"num": 7, "nom": "Serrer les poings avec un regard courroucé", "meridien": "Foie", "effet": "Exprime/libère la colère du Foie, renforce le Qi du Foie"},
+          {"num": 8, "nom": "Soulever les talons 7 fois pour chasser les maladies", "meridien": "Tous", "effet": "Fait vibrer tout le corps, harmonise tous les méridiens"}
+        ]
+      },
+      "yi_jin_jing": {
+        "nom": "Classique de la transformation des tendons et muscles",
+        "origine": "Attribué à Bodhidharma (Da Mo), temple Shaolin",
+        "principe": "12 exercices qui étirent et renforcent les tendons, ligaments et fascias en profondeur. Transforme la force externe en force interne.",
+        "effets": "Augmente la flexibilité, renforce les tendons (plus que les muscles), améliore la circulation du Qi dans les méridiens, prévient le vieillissement des articulations."
+      },
+      "wu_qin_xi": {
+        "nom": "Jeu des 5 animaux",
+        "createur": "Hua Tuo (médecin légendaire, dynastie Han)",
+        "animaux": [
+          {"animal": "Tigre", "organe": "Foie", "qualite": "Force, courage, tendons"},
+          {"animal": "Cerf", "organe": "Reins", "qualite": "Souplesse, Jing, longévité"},
+          {"animal": "Ours", "organe": "Rate", "qualite": "Stabilité, enracinement, digestion"},
+          {"animal": "Singe", "organe": "Cœur", "qualite": "Agilité, vivacité, Shen"},
+          {"animal": "Grue", "organe": "Poumons", "qualite": "Légèreté, équilibre, respiration"}
+        ]
+      },
+      "liu_zi_jue": {
+        "nom": "Six sons thérapeutiques",
+        "principe": "Chaque son vibre à la fréquence de résonance d'un organe spécifique, libérant les tensions et équilibrant le Qi de l'organe.",
+        "sons": ["Xu (Foie/Bois)", "He (Cœur/Feu)", "Hu (Rate/Terre)", "Si (Poumons/Métal)", "Chui (Reins/Eau)", "Xi (San Jiao)"]
+      },
+      "zhan_zhuang": {
+        "nom": "Posture de l'arbre / Pilier debout",
+        "principe": "Position debout immobile, bras levés comme embrassant un arbre. Développe le Qi interne, l'enracinement, la structure interne.",
+        "duree": "5 min (débutant) à 1h+ (avancé)",
+        "effets": "Renforce le Dan Tian inférieur, développe la force interne (Nei Jin), calme l'esprit, renforce les jambes et la posture, améliore la proprioception."
+      }
+    },
+    "tai_chi_chuan": {
+      "principes_fondamentaux": ["Relâchement (Song) total", "Lenteur et continuité", "Intention guide le Qi, le Qi guide le corps", "Racine dans les pieds, puissance des jambes, contrôle à la taille, expression dans les mains", "Équilibre Yin/Yang dans chaque mouvement"],
+      "styles_principaux": {
+        "yang": "Le plus répandu. Mouvements amples, lents, fluides. Idéal pour la santé. Forme longue (108 mouvements) et forme courte (24 mouvements de Pékin).",
+        "chen": "Style originel. Combine lenteur et explosivité (fajin). Mouvements en spirale (chan si jin). Plus martial.",
+        "wu": "Mouvements compacts, postures inclinées. Emphase sur la sensibilité et les applications martiales subtiles.",
+        "sun": "Combine Tai Chi + Xingyi + Bagua. Pas agiles, mouvements rapides, ouverture/fermeture caractéristique."
+      },
+      "benefices_scientifiques": ["Réduction des chutes chez les personnes âgées (-50%)", "Amélioration de l'équilibre et de la proprioception", "Réduction de la pression artérielle", "Gestion de l'arthrose et de la douleur chronique", "Réduction du stress et de l'anxiété", "Amélioration de la densité osseuse", "Bénéfices cardiovasculaires comparables à l'exercice aérobie modéré", "Amélioration cognitive chez les seniors"]
+    },
+    "qi_gong_medical": {
+      "definition": "Application thérapeutique du Qi Gong pour prévenir et traiter des pathologies spécifiques.",
+      "categories": {
+        "auto_pratique": "Le patient pratique lui-même des exercices prescrits par un praticien MTC.",
+        "emission_externe": "Le praticien émet/dirige son Qi vers le patient (Wai Qi Liao Fa). Controversé mais pratiqué traditionnellement.",
+        "qi_gong_anti_cancer": "Programmes de Qi Gong utilisés en Chine en complément de la chimiothérapie (Guolin Qi Gong — marche des 5 éléments)."
+      },
+      "indications": "Hypertension, diabète type 2, douleurs chroniques, fibromyalgie, dépression, anxiété, insomnie, renforcement immunitaire, récupération post-opératoire."
+    },
+    "pratique_quotidienne": {
+      "matin": "10-20 min Qi Gong (Ba Duan Jin ou Zhan Zhuang) pour éveiller le Qi.",
+      "journee": "Pauses respiratoires de 3-5 min avec respiration abdominale.",
+      "soir": "Tai Chi ou Qi Gong doux pour harmoniser et préparer au sommeil.",
+      "progression": "Commencer par la posture de l'arbre (5 min) et Ba Duan Jin. Ajouter progressivement d'autres formes sur 6-12 mois."
+    },
+    "avertissement_sante": "Le Qi Gong et le Tai Chi sont sûrs pour la majorité. Les formes avancées (Bhastrika, circulation microcosmique) nécessitent un enseignant qualifié. Consultez un médecin si pathologie grave."
+  }
+}

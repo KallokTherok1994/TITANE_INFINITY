@@ -1,0 +1,86 @@
+{
+  "version": "v30.1.0",
+  "category": "sante_masculine_naturelle",
+  "description": "Santé masculine naturelle — prostate (HBP, prévention, PSA), testostérone (optimisation naturelle, déclin), fertilité masculine (spermatogenèse, qualité spermatique), andropause, énergie masculine, sexualité masculine naturelle, calvitie, performance physique, longévité masculine",
+  "sante_masculine_naturelle": {
+    "introduction": "La santé masculine requiert une attention spécifique aux systèmes hormonal, reproducteur et prostatique. La testostérone, hormone clé de la vitalité masculine, décline naturellement de 1-2% par an après 30 ans. Une approche naturelle et préventive permet de maintenir l'énergie, la fertilité et la santé prostatique tout au long de la vie.",
+    "testosterone": {
+      "role": "Hormone androgène principale. Développement sexuel masculin, masse musculaire, densité osseuse, production de spermatozoïdes, libido, énergie, confiance, cognition, humeur, pilosité.",
+      "production": "95% par les cellules de Leydig (testicules), 5% par les surrénales. Régulée par l'axe HPG: GnRH→LH→Testostérone. Pic le matin.",
+      "formes": {
+        "totale": "Mesure standard. Norme: 300-1000 ng/dL (10-35 nmol/L).",
+        "libre": "2-3% non liée. Forme biologiquement active. La plus importante cliniquement.",
+        "shbg": "Sex Hormone-Binding Globulin. Lie la testostérone, la rendant inactive. Augmente avec l'âge et l'excès d'œstrogènes."
+      },
+      "causes_declin": ["Vieillissement naturel (1-2%/an après 30 ans)", "Stress chronique (cortisol antagonise la testostérone)", "Manque de sommeil (même 1 semaine réduit de 10-15%)", "Sédentarité et obésité (tissu adipeux convertit testostérone en œstrogènes via aromatase)", "Perturbateurs endocriniens (BPA, phtalates)", "Alcool excessif", "Déficiences nutritionnelles (zinc, magnésium, vitamine D)"],
+      "optimisation_naturelle": {
+        "exercice": "Musculation composée (squats, soulevés de terre, développé) augmente la testostérone acutement et chroniquement. HIIT > cardio prolongé.",
+        "sommeil": "7-9h de sommeil de qualité. La testostérone est produite principalement pendant le sommeil profond. Pic matinal.",
+        "nutrition": {
+          "graisses_saines": "30-35% des calories en graisses saines (avocat, noix, huile d'olive, poisson gras). Le cholestérol est le précurseur de la testostérone.",
+          "zinc": "Huîtres (champion!), viande rouge, graines de courge. Cofacteur essentiel de la synthèse de testostérone.",
+          "magnesium": "Noix du Brésil, amandes, chocolat noir, épinards. Réduit la SHBG, augmente la testostérone libre.",
+          "vitamine_d": "Exposition solaire 15-20 min/jour ou supplémentation (2000-4000 UI/jour). Corrélation directe avec les niveaux de testostérone.",
+          "cruciferes": "Brocoli, chou-fleur, choux. Contiennent DIM (diindolylméthane) qui favorise l'élimination des œstrogènes excédentaires."
+        },
+        "gestion_stress": "Méditation, cohérence cardiaque, nature. Le cortisol chronique supprime la GnRH et donc la testostérone.",
+        "eviter": ["Alcool excessif (toxique pour les cellules de Leydig)", "Soja en excès (phytoœstrogènes)", "Plastiques chauffés (BPA)", "Surentraînement (cortisol)", "Cannabis chronique"]
+      },
+      "plantes_et_supplements": [
+        {"nom": "Ashwagandha (KSM-66)", "action": "Augmente testostérone de 10-22%, réduit cortisol de 30%. Adaptogène majeur."},
+        {"nom": "Tongkat Ali (Eurycoma longifolia)", "action": "Stimule la production de testostérone libre, réduit SHBG. Études cliniques positives."},
+        {"nom": "Tribulus Terrestris", "action": "Stimule LH, améliore la libido. Effets sur la testostérone discutés mais bénéfices sur la vitalité."},
+        {"nom": "Fenugrec (Testofen)", "action": "Inhibe l'aromatase (conversion testostérone→œstrogènes). Améliore la force et la libido."},
+        {"nom": "Maca (Lepidium meyenii)", "action": "Améliore la libido et l'énergie sans modifier les niveaux hormonaux sanguins. Adaptogène."},
+        {"nom": "Zinc + Magnésium (ZMA)", "action": "Corrige les déficiences minérales communes chez les sportifs. Soutient la production hormonale."}
+      ]
+    },
+    "prostate": {
+      "anatomie_fonction": "Glande de la taille d'une noix située sous la vessie. Produit une partie du liquide séminal. Entoure l'urètre prostatique.",
+      "hypertrophie_benigne_hbp": {
+        "definition": "Augmentation de volume de la prostate liée à l'âge. Touche 50% des hommes à 50 ans, 80% à 80 ans.",
+        "symptomes": "Mictions fréquentes (nycturie), jet urinaire faible, urgence mictionnelle, sensation de vidange incomplète.",
+        "facteurs_risque": "Âge, DHT (dihydrotestostérone) élevée, obésité, sédentarité, alimentation occidentale."
+      },
+      "prevention_naturelle": [
+        {"nom": "Saw Palmetto (palmier nain)", "action": "Inhibe la 5-alpha-réductase (réduit la conversion testostérone→DHT). Réduit les symptômes urinaires."},
+        {"nom": "Pygeum africanum (prunier d'Afrique)", "action": "Anti-inflammatoire prostatique, réduit l'œdème, améliore le flux urinaire."},
+        {"nom": "Graines de courge", "action": "Riches en zinc, phytostérols, acides gras essentiels. Soutiennent la prostate."},
+        {"nom": "Lycopène (tomates cuites)", "action": "Antioxydant puissant. Études épidémiologiques montrant réduction du risque de cancer prostatique."},
+        {"nom": "Ortie (racine)", "action": "Réduit la SHBG prostatique, améliore les symptômes urinaires."},
+        {"nom": "Zinc", "action": "La prostate concentre le zinc plus que tout autre tissu. Essentiel à sa santé."}
+      ],
+      "psa": "Antigène Prostatique Spécifique. Marqueur sanguin. Norme <4 ng/mL mais interprétation nuancée (PSA libre/total, vélocité, densité). Dépistage recommandé à partir de 50 ans (45 ans si antécédents familiaux).",
+      "exercices_prostate": "Exercices de Kegel (contraction du périnée), marche, natation, vélo modéré. Éviter les longs trajets assis."
+    },
+    "fertilite_masculine": {
+      "spermatogenese": "Cycle de 74 jours (du germe au spermatozoïde mature). Température optimale: 33-34°C (2-3°C sous la température corporelle).",
+      "spermogramme_normal": {
+        "volume": ">1.5 mL",
+        "concentration": ">15 millions/mL",
+        "motilite": ">40% mobiles (>32% progressifs)",
+        "morphologie": ">4% formes normales (critères stricts de Kruger)"
+      },
+      "facteurs_amelioration": [
+        "Éviter la chaleur testiculaire (bains chauds, laptops sur les genoux, sous-vêtements serrés)",
+        "Zinc (30-50 mg/jour) — essentiel à la spermatogenèse",
+        "Sélénium (200 µg/jour) — protège l'ADN spermatique",
+        "Coenzyme Q10 (200-300 mg/jour) — énergie mitochondriale des spermatozoïdes",
+        "L-Carnitine (2-3 g/jour) — motilité spermatique",
+        "Oméga-3 (DHA) — fluidité membranaire spermatique",
+        "Vitamine C et E — antioxydants, protègent contre le stress oxydatif spermatique",
+        "Folate (acide folique) — intégrité ADN",
+        "Exercice modéré (pas de surentraînement)",
+        "Arrêt du tabac et réduction de l'alcool"
+      ],
+      "facteurs_negatifs": ["Tabac (réduit concentration de 20% et motilité)", "Alcool >14 verres/semaine", "Cannabis (réduit concentration et morphologie)", "Stéroïdes anabolisants (suppriment la spermatogenèse — azoospermie possible)", "Stress oxydatif (pollution, pesticides)", "Obésité (augmente température scrotale, convertit testostérone en œstrogènes)"]
+    },
+    "andropause": {
+      "definition": "Déclin progressif de la testostérone avec l'âge (DALA - Déficit Androgénique Lié à l'Âge). Contrairement à la ménopause, le déclin est graduel et non universel.",
+      "symptomes": "Fatigue, perte de masse musculaire, prise de graisse abdominale, baisse de libido, troubles érectiles, humeur dépressive, troubles du sommeil, bouffées de chaleur, diminution de la pilosité.",
+      "approche_naturelle": "Optimisation lifestyle (exercice, sommeil, nutrition, stress) AVANT toute intervention hormonale. Les plantes adaptogènes (Ashwagandha, Tongkat Ali) peuvent suffire.",
+      "quand_consulter": "Testostérone totale <300 ng/dL avec symptômes cliniques. Bilan complet: testostérone totale et libre, SHBG, LH, FSH, prolactine, estradiol, PSA."
+    },
+    "avertissement_sante": "Ces informations sont éducatives. Consultez un urologue ou un endocrinologue pour tout trouble prostatique, hormonal ou de fertilité. Ne prenez pas de suppléments hormonaux sans supervision médicale."
+  }
+}

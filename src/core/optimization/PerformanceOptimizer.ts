@@ -97,12 +97,15 @@ export class PerformanceOptimizer {
   private config: OptimizationConfig;
   private metrics: PerformanceMetrics | null = null;
   private optimizationHistory: OptimizationResult[] = [];
+  private readonly isTauriRuntime: boolean;
 
   private metricsInterval: number | null = null;
   private _optimizationInterval: number | null = null;
+  private isMonitoringCycleRunning = false;
 
   private constructor() {
     this.config = this.getDefaultConfig();
+    this.isTauriRuntime = detectEnvironment().isTauri;
   }
 
   public static getInstance(): PerformanceOptimizer {
@@ -151,8 +154,17 @@ export class PerformanceOptimizer {
     }
 
     this.metricsInterval = window.setInterval(async () => {
-      await this.collectMetrics();
-      await this.optimizeIfNeeded();
+      if (!this.shouldRunMonitoringCycle() || this.isMonitoringCycleRunning) {
+        return;
+      }
+
+      this.isMonitoringCycleRunning = true;
+      try {
+        await this.collectMetrics();
+        await this.optimizeIfNeeded();
+      } finally {
+        this.isMonitoringCycleRunning = false;
+      }
     }, interval);
 
     console.log('[PerformanceOptimizer] 📊 Monitoring started');
@@ -165,8 +177,19 @@ export class PerformanceOptimizer {
     if (this.metricsInterval) {
       clearInterval(this.metricsInterval);
       this.metricsInterval = null;
+      this.isMonitoringCycleRunning = false;
       console.log('[PerformanceOptimizer] 🛑 Monitoring stopped');
     }
+  }
+
+  /**
+   * Évite du travail inutile quand l'onglet est en arrière-plan.
+   */
+  private shouldRunMonitoringCycle(): boolean {
+    if (typeof document === 'undefined') {
+      return true;
+    }
+    return document.visibilityState !== 'hidden';
   }
 
   /**
@@ -174,11 +197,9 @@ export class PerformanceOptimizer {
    */
   private async collectMetrics(): Promise<void> {
     try {
-      const env = detectEnvironment();
-
       // Métriques depuis le backend (uniquement en Tauri)
       let backendMetrics: PerformanceMetrics | null = null;
-      if (env.isTauri) {
+      if (this.isTauriRuntime) {
         backendMetrics = await secureInvoke<PerformanceMetrics>(
           'performance_get_metrics'
         );
@@ -262,8 +283,7 @@ export class PerformanceOptimizer {
     if (!this.config.cpu_throttle_enabled) return null;
 
     try {
-      const env = detectEnvironment();
-      if (env.isTauri) {
+      if (this.isTauriRuntime) {
         await secureInvoke('performance_throttle_cpu');
       }
 
@@ -286,8 +306,7 @@ export class PerformanceOptimizer {
     if (!this.config.gpu_acceleration) return null;
 
     try {
-      const env = detectEnvironment();
-      if (env.isTauri) {
+      if (this.isTauriRuntime) {
         await secureInvoke('performance_optimize_gpu');
       }
 
@@ -308,8 +327,7 @@ export class PerformanceOptimizer {
    */
   private async optimizeRendering(): Promise<OptimizationResult | null> {
     try {
-      const env = detectEnvironment();
-      if (env.isTauri) {
+      if (this.isTauriRuntime) {
         // Réduire qualité temporairement
         await secureInvoke('performance_reduce_render_quality');
       }
@@ -331,8 +349,7 @@ export class PerformanceOptimizer {
    */
   private async optimizeMemory(): Promise<OptimizationResult | null> {
     try {
-      const env = detectEnvironment();
-      if (this.config.memory_compression && env.isTauri) {
+      if (this.config.memory_compression && this.isTauriRuntime) {
         await secureInvoke('performance_compress_memory');
       }
 
@@ -396,8 +413,7 @@ export class PerformanceOptimizer {
    * Réinitialise les optimisations
    */
   public async reset(): Promise<void> {
-    const env = detectEnvironment();
-    if (env.isTauri) {
+    if (this.isTauriRuntime) {
       await secureInvoke('performance_reset_optimizations');
     }
     this.optimizationHistory = [];

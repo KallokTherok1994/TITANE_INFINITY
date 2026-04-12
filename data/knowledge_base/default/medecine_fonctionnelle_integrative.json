@@ -1,0 +1,106 @@
+{
+  "version": "v30.1.0",
+  "category": "medecine_fonctionnelle_integrative",
+  "description": "Médecine fonctionnelle et intégrative — biomarqueurs avancés, épigénétique, médecine personnalisée, génomique nutritionnelle, analyse fonctionnelle, matrice IFM, médecine des systèmes, médecine mitochondriale, inflammation chronique, stress oxydatif, détoxification avancée, anti-aging médical",
+  "medecine_fonctionnelle_integrative": {
+    "introduction": "La médecine fonctionnelle cherche les causes racines des maladies plutôt que de traiter les symptômes. Elle intègre la biochimie individuelle, la génétique, l'environnement et le mode de vie pour créer des protocoles thérapeutiques personnalisés. La médecine intégrative combine le meilleur de la médecine conventionnelle et des approches complémentaires validées.",
+    "principes_fondamentaux": {
+      "centree_patient": "Chaque patient est biochimiquement unique. Le traitement est personnalisé.",
+      "causes_racines": "Identifier et traiter les causes sous-jacentes, pas seulement les symptômes.",
+      "systemes_interconnectes": "Le corps est un réseau de systèmes interdépendants. Un déséquilibre dans un système affecte les autres.",
+      "prevention_proactive": "La santé optimale est un état actif, pas simplement l'absence de maladie.",
+      "evidence_based": "Intégration des meilleures preuves scientifiques avec l'expertise clinique et les préférences du patient."
+    },
+    "matrice_ifm": {
+      "definition": "L'Institute for Functional Medicine (IFM) organise les déséquilibres en 7 nœuds fondamentaux.",
+      "noeuds": {
+        "assimilation": "Digestion, absorption, microbiome, perméabilité intestinale. 'Toute maladie commence dans l'intestin' (Hippocrate).",
+        "defense_reparation": "Système immunitaire, inflammation, infection, microbiome. Inflammation chronique de bas grade = racine de la plupart des maladies chroniques.",
+        "energie": "Production d'énergie mitochondriale, métabolisme oxydatif, stress oxydatif. Dysfonction mitochondriale impliquée dans fatigue chronique, neurodégénérescence, vieillissement.",
+        "biotransformation_elimination": "Détoxification hépatique (phases I, II, III), reins, intestins, peau, poumons. Capacité à neutraliser et éliminer les toxines.",
+        "transport": "Système cardiovasculaire, lymphatique. Circulation des nutriments, hormones, oxygène, déchets.",
+        "communication": "Hormones, neurotransmetteurs, cytokines, neuropeptides. Messagers inter-systèmes.",
+        "integrite_structurelle": "Intégrité des membranes cellulaires, barrière intestinale, barrière hémato-encéphalique, fascia, os, muscles."
+      }
+    },
+    "biomarqueurs_avances": {
+      "inflammation": {
+        "hs_crp": "Protéine C-réactive ultra-sensible. Marqueur d'inflammation systémique. Optimal: <1 mg/L. >3 mg/L = risque cardiovasculaire élevé.",
+        "homocysteine": "Marqueur de méthylation et risque cardiovasculaire. Optimal: <7 µmol/L. Élevé = déficit B9/B12/B6.",
+        "fibrinogene": "Marqueur inflammatoire et de coagulation. Élevé dans l'inflammation chronique.",
+        "cytokines": "IL-6, TNF-α, IL-1β — mesurées dans les protocoles avancés d'inflammation chronique."
+      },
+      "metabolisme": {
+        "hba1c": "Hémoglobine glyquée. Reflet de la glycémie moyenne sur 3 mois. Optimal: <5.5%. Pré-diabète: 5.7-6.4%.",
+        "insuline_a_jeun": "Marqueur précoce de résistance à l'insuline. Optimal: <5 µUI/mL.",
+        "homa_ir": "Index de résistance à l'insuline (Insuline à jeun × Glucose à jeun / 405). Optimal: <1.5.",
+        "profil_lipidique_avance": "LDL particules (sdLDL = petites denses = athérogènes), Lp(a), ApoB, ratio TG/HDL."
+      },
+      "hormones": {
+        "cortisol_salivaire": "4 prélèvements sur 24h (matin, midi, soir, nuit). Évalue le rythme circadien et l'axe HPA.",
+        "dhea_s": "Marqueur de réserve surrénalienne et de vieillissement biologique.",
+        "panel_thyroide_complet": "TSH + T4L + T3L + T3 reverse + anti-TPO + anti-thyroglobuline. La TSH seule est insuffisante."
+      },
+      "micronutriments": {
+        "vitamine_d": "25-OH-D3. Optimal: 50-80 ng/mL (et non simplement >30). Impliquée dans 3000+ gènes.",
+        "magnesium_erythrocytaire": "Plus fiable que le magnésium sérique. Optimal: 2.0-2.5 mmol/L.",
+        "ferritine": "Stockage du fer. Optimal: 40-100 ng/mL (femmes), 50-150 ng/mL (hommes). Trop haut = inflammatoire.",
+        "zinc_serique": "Optimal: 80-120 µg/dL. Essentiel à l'immunité, la cicatrisation, les hormones.",
+        "omega_3_index": "Pourcentage d'EPA+DHA dans les membranes des globules rouges. Optimal: >8%. <4% = risque cardiovasculaire."
+      },
+      "stress_oxydatif": {
+        "glutathion": "Antioxydant maître intracellulaire. Mesuré dans les globules rouges.",
+        "8_ohdg": "Marqueur de dommage oxydatif à l'ADN.",
+        "mda": "Malondialdéhyde — marqueur de peroxydation lipidique.",
+        "coq10": "Coenzyme Q10 — essentiel à la chaîne respiratoire mitochondriale."
+      }
+    },
+    "epigenetique": {
+      "definition": "Modifications de l'expression des gènes sans changer la séquence ADN. Les gènes ne sont pas le destin — l'environnement et le mode de vie activent ou désactivent les gènes.",
+      "mecanismes": {
+        "methylation_adn": "Ajout de groupes méthyle sur les gènes. Influence leur activation. Dépend de B9, B12, B6, SAMe, choline.",
+        "modification_histones": "Acétylation/déacétylation des histones modifie la compaction de l'ADN et l'accessibilité des gènes.",
+        "micro_arn": "Petits ARN régulateurs qui modulent l'expression génique post-transcriptionnelle."
+      },
+      "facteurs_epigenetiques": [
+        "Alimentation (polyphénols, crucifères, jeûne activent des gènes protecteurs)",
+        "Exercice physique (active des gènes anti-inflammatoires et de réparation)",
+        "Stress (l'épigénétique du cortisol chronique se transmet sur 3 générations)",
+        "Sommeil (le manque altère l'expression de 700+ gènes)",
+        "Toxines environnementales (perturbateurs endocriniens modifient l'épigénome)",
+        "Méditation (modifie l'expression de gènes liés à l'inflammation et au vieillissement)"
+      ],
+      "tests_epigenetiques": "Horloges épigénétiques (Horvath, GrimAge) mesurent l'âge biologique vs chronologique via les patterns de méthylation ADN."
+    },
+    "genomique_nutritionnelle": {
+      "nutrigenomique": "Comment les nutriments influencent l'expression des gènes.",
+      "nutrigenetique": "Comment les variations génétiques individuelles affectent la réponse aux nutriments.",
+      "polymorphismes_cles": {
+        "mthfr": "Méthylène-tétrahydrofolate réductase. Variants C677T et A1298C. Affecte la méthylation, le métabolisme du folate, l'homocystéine. 40% de la population a au moins un variant.",
+        "apoe": "Apolipoprotéine E. APOε4 = risque Alzheimer et cholestérol élevé. Nécessite régime pauvre en graisses saturées.",
+        "cyp1a2": "Métabolisme de la caféine. Métaboliseur lent = risque cardiaque accru avec >2 cafés/jour.",
+        "fto": "Fat mass and obesity-associated gene. Influence la satiété et la propension à l'obésité.",
+        "vdr": "Récepteur de la vitamine D. Variants affectent les besoins en vitamine D."
+      }
+    },
+    "medecine_mitochondriale": {
+      "definition": "Les mitochondries sont les centrales énergétiques de chaque cellule. Leur dysfonctionnement est impliqué dans la fatigue chronique, les maladies neurodégénératives, le diabète, le cancer et le vieillissement.",
+      "soutien_mitochondrial": [
+        {"nutriment": "CoQ10 (Ubiquinol)", "role": "Transfert d'électrons dans la chaîne respiratoire. 100-300 mg/jour."},
+        {"nutriment": "PQQ (Pyrroloquinoline quinone)", "role": "Stimule la biogenèse mitochondriale (création de nouvelles mitochondries). 10-20 mg/jour."},
+        {"nutriment": "NAD+ / NMN / NR", "role": "Précurseurs du NAD+, coenzyme essentiel au métabolisme énergétique. Décline avec l'âge."},
+        {"nutriment": "D-Ribose", "role": "Sucre constitutif de l'ATP. 5-15 g/jour pour la fatigue chronique."},
+        {"nutriment": "L-Carnitine", "role": "Transport des acides gras dans les mitochondries pour la β-oxydation. 1-3 g/jour."},
+        {"nutriment": "Alpha-lipoïque (ALA)", "role": "Antioxydant mitochondrial, régénère le glutathion. 300-600 mg/jour."},
+        {"nutriment": "Magnésium", "role": "Cofacteur de 300+ enzymes dont l'ATP synthase. 400-600 mg/jour."}
+      ],
+      "stimulation_naturelle": ["Exercice physique (HIIT et endurance augmentent le nombre de mitochondries)", "Jeûne intermittent (active la biogenèse mitochondriale via AMPK/PGC-1α)", "Exposition au froid (thermogenèse, mitochondries du tissu adipeux brun)", "Lumière rouge/infrarouge (photobiomodulation — stimule le cytochrome c oxydase)"]
+    },
+    "approche_integrative": {
+      "definition": "Combinaison raisonnée de la médecine conventionnelle et des thérapies complémentaires fondées sur des preuves.",
+      "therapies_integrees": ["Nutrition fonctionnelle", "Médecine herboristique fondée sur les preuves", "Acupuncture", "Méditation et pleine conscience (MBSR, MBCT)", "Yoga thérapeutique", "Supplémentation ciblée basée sur les biomarqueurs"],
+      "centres_reference": ["Cleveland Clinic Center for Functional Medicine", "Institute for Functional Medicine (IFM)", "Andrew Weil Center for Integrative Medicine (Arizona)"]
+    },
+    "avertissement_sante": "La médecine fonctionnelle et intégrative ne remplace pas les soins médicaux d'urgence ni les traitements conventionnels éprouvés. Consultez un médecin formé en médecine fonctionnelle pour une approche personnalisée."
+  }
+}

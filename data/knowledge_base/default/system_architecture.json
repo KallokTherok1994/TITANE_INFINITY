@@ -1,87 +1,780 @@
 {
   "version": "v30.1.0",
   "category": "system_architecture",
-  "description": "Architecture 4-Ring, One Door Network, IPC Contract TITANE∞",
-  "architecture": {
-    "model": "4-Ring + One Door Network",
-    "rings": {
-      "ring1": {
-        "name": "Hardware / OS",
-        "description": "Couche matérielle et système d'exploitation. Accès direct au hardware.",
-        "no_imports_from": ["ring2", "ring3", "ring4"]
+  "description": "Documentation complète de l'architecture système TITANE∞ — modèle 4-Ring, One Door Network, IPC Contract, pile technologique, orchestration IA, pipeline audio/voix, sécurité, persistance et déploiement.",
+  "architecture_4_rings": {
+    "modele": "Architecture concentrique à 4 anneaux avec isolation stricte des responsabilités",
+    "principe": "Chaque anneau ne peut importer que depuis les anneaux intérieurs (numéro inférieur). Les imports inversés sont strictement interdits. Le flux de données suit toujours la direction Ring 0 → Ring 1 → Ring 2 → Ring 3.",
+    "ring0_core_kernel": {
+      "nom": "Noyau / Kernel",
+      "description": "Couche fondamentale du système. Gère le matériel, le système d'exploitation, les primitives de bas niveau et le cycle de vie du processus principal Tauri.",
+      "responsabilites": [
+        "Gestion du cycle de vie de l'application (démarrage, arrêt, signaux OS)",
+        "Accès aux ressources matérielles (système de fichiers, réseau bas niveau, GPU)",
+        "Primitives de sécurité (chiffrement AES-256-GCM, gestion des clés)",
+        "Gestion mémoire et allocation des ressources système",
+        "Initialisation du runtime Tauri et du processus Rust principal",
+        "Journalisation système et métriques de bas niveau"
+      ],
+      "imports_autorises": "Aucun import depuis les anneaux supérieurs",
+      "no_imports_from": ["ring1", "ring2", "ring3"],
+      "fichiers_cles": [
+        "src-tauri/src/main.rs",
+        "src-tauri/src/lib.rs",
+        "src-tauri/src/setup.rs"
+      ]
+    },
+    "ring1_services": {
+      "nom": "Services Backend",
+      "description": "Couche de services métier implémentée en Rust. Contient tous les moteurs cognitifs, le routeur IA, la mémoire unifiée, et la logique applicative. Plus de 150 modules Rust.",
+      "responsabilites": [
+        "Moteurs cognitifs (20 moteurs spécialisés : raisonnement, mémoire, perception, etc.)",
+        "Routeur IA multi-fournisseur (OpenAI, Claude, Gemini, Ollama local)",
+        "Mémoire unifiée et graphe de connaissances",
+        "Indexation full-text via Tantivy BM25",
+        "Store vectoriel HNSW via instant-distance pour embeddings sémantiques",
+        "Persistance SQLite via rusqlite",
+        "Network Gateway — seul point de sortie réseau autorisé",
+        "Network Policy — règles de filtrage et validation des requêtes sortantes",
+        "Pipeline de traitement audio (VAD, TTS, STT)",
+        "Gestion des tâches asynchrones via Tokio"
+      ],
+      "imports_autorises": "Uniquement depuis Ring 0",
+      "no_imports_from": ["ring2", "ring3"],
+      "fichiers_cles": [
+        "src-tauri/src/services/",
+        "src-tauri/src/engines/",
+        "src-tauri/src/services/network_gateway.rs",
+        "src-tauri/src/services/network_policy.rs"
+      ]
+    },
+    "ring2_ipc_bridge": {
+      "nom": "Pont IPC / Tauri Core",
+      "description": "Couche de communication inter-processus. Assure le pont entre le frontend (WebView) et le backend Rust via le protocole IPC canonique de Tauri. Point d'entrée réseau unique pour l'UI.",
+      "responsabilites": [
+        "Exposition des commandes Tauri (#[tauri::command]) au frontend",
+        "Validation et sérialisation/désérialisation des payloads IPC",
+        "Enforcement du contrat IPC { ok, content, error }",
+        "Gestion des capabilities et de l'allowlist Tauri",
+        "Système d'événements bidirectionnel (emit/listen entre Rust et JS)",
+        "Routage des requêtes réseau vers le Network Gateway (Ring 1)",
+        "Custom protocol (tauri://) pour le chargement sécurisé des assets"
+      ],
+      "imports_autorises": "Depuis Ring 0 et Ring 1 uniquement",
+      "no_imports_from": ["ring3"],
+      "fichiers_cles": [
+        "src-tauri/src/commands/",
+        "src-tauri/capabilities/",
+        "src-tauri/tauri.conf.json"
+      ]
+    },
+    "ring3_ui_frontend": {
+      "nom": "Interface Utilisateur / Modules Frontend",
+      "description": "Couche de présentation implémentée en React/TypeScript. Contient tous les composants visuels, les stores d'état, les hooks métier et les modules fonctionnels. Plus de 200 modules TypeScript.",
+      "responsabilites": [
+        "Rendu de l'interface utilisateur via React 19 et TailwindCSS",
+        "Gestion de l'état applicatif via Zustand stores",
+        "Appels IPC via secureInvoke (jamais de fetch/HTTP direct)",
+        "Routage et navigation entre les vues de l'application",
+        "Composants réutilisables et design system",
+        "Gestion des erreurs visibles (ErrorBoundary, notifications)",
+        "Sélecteurs stables data-testid pour les tests E2E"
+      ],
+      "imports_autorises": "Depuis Ring 0, Ring 1 et Ring 2 (via IPC uniquement pour Ring 1/Ring 2)",
+      "acces_reseau": "Exclusivement via IPC → Ring 2 → Ring 1 → Network Gateway",
+      "fichiers_cles": [
+        "src/",
+        "src/components/",
+        "src/features/",
+        "src/stores/",
+        "src/hooks/"
+      ]
+    },
+    "flux_de_donnees": {
+      "direction": "Toujours du noyau vers la périphérie pour les données, et de la périphérie vers le noyau pour les requêtes",
+      "requete_typique": "UI (Ring 3) → secureInvoke → IPC Bridge (Ring 2) → Service Rust (Ring 1) → [Network Gateway si externe] → Réponse { ok, content, error }",
+      "regles": [
+        "Un composant Ring 3 ne peut jamais appeler directement un service Ring 1",
+        "Tout transit de données entre rings passe par le pont IPC (Ring 2)",
+        "Les réponses IPC respectent toujours le contrat canonique { ok, content, error }",
+        "Aucun appel réseau direct depuis Ring 3 — tout passe par One Door"
+      ]
+    }
+  },
+  "one_door_network": {
+    "description": "Politique réseau à porte unique — tout appel réseau de l'application passe obligatoirement par un chemin contrôlé et auditable.",
+    "chemin_canonique": "UI → IPC canonique → Services → Network Gateway → Externe",
+    "regles": [
+      "Aucun accès réseau direct depuis l'UI (Ring 3) sans passer par IPC",
+      "Aucune URL hardcodée sans variable d'environnement de substitution",
+      "Le Network Gateway est le seul module autorisé à effectuer des requêtes HTTP sortantes",
+      "La Network Policy valide chaque requête sortante contre une liste blanche de domaines",
+      "Toute requête réseau est journalisée avec timestamp, destination et résultat"
+    ],
+    "gateway": "src-tauri/src/services/network_gateway.rs",
+    "policy": "src-tauri/src/services/network_policy.rs",
+    "violation_consequence": "Stop-the-line immédiat — FAIL obligatoire si un accès réseau direct est détecté"
+  },
+  "tauri_runtime": {
+    "nom": "Runtime Tauri v2",
+    "version": "v2.10.1",
+    "description": "TITANE∞ utilise exclusivement Tauri comme runtime de production. Electron et tout serveur web standalone sont strictement interdits. Tauri fournit un processus Rust natif couplé à une WebView système pour le rendu de l'interface.",
+    "composants": {
+      "processus_rust": {
+        "description": "Processus principal écrit en Rust. Gère le cycle de vie de l'application, les services backend, la persistance et toutes les opérations système.",
+        "point_entree": "src-tauri/src/main.rs",
+        "runtime_async": "Tokio multi-threaded (par défaut 4 workers)",
+        "gestion_etat": "tauri::State<T> pour le partage d'état thread-safe entre commandes"
       },
-      "ring2": {
-        "name": "Tauri Core / IPC Gateway",
-        "description": "Runtime Tauri (v2.10.1), pont IPC Rust↔Frontend. Seul point d'entrée réseau autorisé pour l'UI.",
-        "no_imports_from": ["ring3", "ring4"]
+      "webview": {
+        "description": "WebView système (WKWebView sur macOS, WebView2 sur Windows, WebKitGTK sur Linux). Affiche l'interface React. Communique avec Rust uniquement via IPC.",
+        "avantages": [
+          "Empreinte mémoire réduite comparée à Electron (pas de Chromium embarqué)",
+          "Binaire final compact (~15 Mo vs ~150 Mo pour Electron)",
+          "Intégration native avec le système d'exploitation"
+        ]
       },
-      "ring3": {
-        "name": "Services Backend (Rust)",
-        "description": "Moteurs cognitifs, services, AI Router, Unified Memory. Toute logique métier. 150+ modules.",
-        "no_imports_from": ["ring4"]
-      },
-      "ring4": {
-        "name": "UI / Modules Frontend",
-        "description": "React/TypeScript, features, engines frontend. Interface utilisateur. 200+ modules.",
-        "allowed_network": "via IPC uniquement → Ring2 → Ring3"
+      "custom_protocol": {
+        "description": "Protocole tauri:// pour le chargement sécurisé des assets statiques (HTML, CSS, JS, images) depuis le bundle de l'application.",
+        "securite": "Les assets sont servis depuis le binaire, empêchant toute injection externe"
       }
     },
-    "one_door_network": {
-      "description": "Tout appel réseau passe obligatoirement par: UI → IPC canonique → Services → Network Gateway → Externe",
-      "rule": "Aucun accès réseau direct depuis l'UI sans passer par IPC. Aucune URL hardcodée sans env override.",
-      "gateway": "src-tauri/src/services/network_gateway.rs",
-      "policy": "src-tauri/src/services/network_policy.rs"
+    "ipc_tauri": {
+      "description": "Système de communication inter-processus natif de Tauri. Les commandes Rust sont annotées avec #[tauri::command] et exposées au frontend via l'API invoke().",
+      "mecanisme": "Sérialisation JSON via serde entre le processus Rust et la WebView",
+      "direction": "Bidirectionnel — invoke() du JS vers Rust, emit()/listen() pour les événements Rust vers JS"
     },
-    "ipc_contract": {
-      "format": "{ ok: bool, content: T, error: Option<String> }",
-      "rule": "Zéro silence — toujours retourner ok=true ou ok=false avec error explicite",
-      "no_lying_fallback": true,
-      "no_silent_failure": true,
-      "array_safety": "Toujours vérifier Array.isArray avant d'itérer une réponse IPC — secureInvoke peut retourner un objet fallback"
+    "systeme_evenements": {
+      "description": "Système pub/sub pour la communication événementielle entre Rust et JavaScript.",
+      "rust_vers_js": "app_handle.emit('event-name', payload) → écoute côté JS via listen('event-name', callback)",
+      "js_vers_rust": "emit('event-name', payload) → écoute côté Rust via app.listen('event-name', handler)",
+      "cas_usage": [
+        "Notifications de progression (téléchargement, traitement IA)",
+        "Mises à jour d'état en temps réel (statut connexion, métriques)",
+        "Streaming de réponses IA token par token",
+        "Événements audio (VAD activé, fin de parole, etc.)"
+      ]
     },
-    "runtime": {
-      "name": "Tauri",
-      "version": "v2.10.1",
-      "production_only": true,
-      "no_electron": true,
-      "no_web_server": true,
-      "capabilities_dir": "src-tauri/capabilities/"
+    "capabilities": {
+      "repertoire": "src-tauri/capabilities/",
+      "nombre_fichiers": 8,
+      "description": "Les capabilities définissent les permissions granulaires accordées à chaque fenêtre WebView. Chaque nouvelle capability doit être justifiée par un test et une preuve.",
+      "politique": "Toute modification de l'allowlist nécessite une revue explicite, des tests E2E et un plan de rollback"
     },
-    "tech_stack": {
-      "frontend": "React 19.2.4 + TypeScript strict mode (0 erreurs)",
-      "backend": "Rust 1.70+ MSRV (Edition 2021)",
-      "database": [
-        "SQLite via rusqlite (persistence principale)",
-        "Tantivy BM25 (indexation full-text)",
-        "Vector Store HNSW via instant-distance (embeddings sémantiques)"
-      ],
-      "ai_providers": [
-        "OpenAI GPT-4/GPT-3.5-turbo",
-        "Anthropic Claude",
-        "Google Gemini",
-        "Ollama local (port 11434)",
-        "Modèles locaux"
-      ],
-      "encryption": "AES-256-GCM (toutes données sensibles, mémoire, cloud sync)",
-      "package_manager": "pnpm v10.30.2 (enforced — npm/yarn interdits)"
-    },
-    "modules": {
-      "backend_rust_count": 150,
-      "frontend_ts_count": 200,
-      "ipc_commands_count": 1231,
-      "capabilities_files": 8,
-      "cognitive_engines": 20
-    },
-    "key_invariants": [
-      "Tauri-only production runtime — jamais Electron ou serveur web standalone",
-      "4-Ring: pas d'import inversé entre rings (Ring4 → Ring3 interdit sans IPC)",
-      "One Door: tout réseau via IPC → Gateway uniquement",
-      "IPC contract: { ok, content, error } — zéro silence, zéro fallback menteur",
-      "Minimal patch: changement le plus petit et sûr possible",
-      "Proof first: pas de DONE/SEALED sans preuves exécutables",
-      "Online-first governed avec fallback local obligatoire et opérationnel",
-      "AutoHeal: une entrée obligatoire par fix dans autoheal_rules.jsonl",
-      "NO_SKIPS: aucun check obligatoire ne peut être sauté par narrative"
+    "contraintes": [
+      "Production uniquement via Tauri — aucun mode serveur web standalone",
+      "Jamais d'Electron ni de framework concurrent",
+      "Pas de serveur HTTP caché ou implicite dans le processus Tauri",
+      "Toute nouvelle commande Tauri nécessite une entrée dans l'allowlist"
     ]
-  }
+  },
+  "ipc_protocol": {
+    "nom": "Protocole IPC Canonique TITANE∞",
+    "description": "Contrat de communication obligatoire entre le frontend et le backend. Chaque réponse IPC respecte un format strict garantissant la transparence et l'absence de défaillance silencieuse.",
+    "format_canonique": {
+      "structure": "{ ok: bool, content: T, error: Option<String> }",
+      "champ_ok": "Booléen indiquant le succès (true) ou l'échec (false) de l'opération",
+      "champ_content": "Données typées retournées en cas de succès. Peut être null/None en cas d'erreur.",
+      "champ_error": "Message d'erreur explicite en cas d'échec. Obligatoire quand ok=false."
+    },
+    "regles_strictes": [
+      "Zéro silence — toute commande retourne explicitement ok=true ou ok=false avec error",
+      "Zéro fallback menteur — jamais de données factices présentées comme réelles",
+      "Toujours vérifier Array.isArray() avant d'itérer une réponse IPC",
+      "secureInvoke peut retourner un objet fallback en cas d'erreur réseau — ne jamais supposer le type",
+      "Chaque erreur IPC est journalisée côté Rust et côté frontend"
+    ],
+    "secure_invoke": {
+      "description": "Wrapper TypeScript autour de invoke() de Tauri. Ajoute validation de type, gestion d'erreur, timeout et journalisation.",
+      "fonctionnalites": [
+        "Validation du nom de commande contre ALLOWED_COMMANDS",
+        "Timeout configurable par commande (défaut : 30 secondes)",
+        "Retry automatique avec backoff exponentiel pour erreurs transitoires",
+        "Journalisation structurée de chaque appel (commande, durée, résultat)",
+        "Transformation automatique des erreurs en format { ok: false, content: null, error: message }"
+      ]
+    },
+    "allowed_commands": {
+      "description": "Liste blanche des commandes IPC autorisées. Toute commande non listée est rejetée par secureInvoke avant même d'atteindre le backend Rust.",
+      "nombre_commandes": 1231,
+      "localisation": "src/services/ipc/allowedCommands.ts",
+      "politique": "Ajout d'une commande = revue obligatoire + test IPC + mise à jour de l'allowlist"
+    },
+    "couches_securite": [
+      "Validation du nom de commande côté frontend (ALLOWED_COMMANDS)",
+      "Validation des capabilities Tauri côté runtime (allowlist)",
+      "Désérialisation typée côté Rust (serde + validation)",
+      "Sanitisation des entrées utilisateur avant passage IPC",
+      "Rate limiting par commande pour prévenir les abus"
+    ]
+  },
+  "frontend_stack": {
+    "nom": "Pile Frontend TITANE∞",
+    "description": "Interface utilisateur construite avec React 19, TypeScript en mode strict, et TailwindCSS pour le styling. L'architecture suit un pattern modulaire avec des features isolées.",
+    "react": {
+      "version": "19.2.4",
+      "mode": "Strict Mode activé",
+      "fonctionnalites_cles": [
+        "Concurrent rendering pour une UI fluide pendant les opérations lourdes",
+        "Suspense pour le chargement asynchrone des composants et données",
+        "ErrorBoundary systématique — l'utilisateur voit toujours un message clair en cas d'erreur",
+        "Server Components non utilisés (pas de serveur web — tout est local via Tauri)"
+      ]
+    },
+    "typescript": {
+      "version": "strict mode (zéro erreur tolérée)",
+      "configurations": [
+        "tsconfig.json — configuration principale",
+        "tsconfig.node.json — configuration pour les scripts Node",
+        "tsconfig.test.json — configuration pour les tests"
+      ],
+      "regles": [
+        "Strict mode obligatoire — noImplicitAny, strictNullChecks, etc.",
+        "Zéro erreur TypeScript autorisée dans le build",
+        "Types explicites pour toutes les interfaces IPC"
+      ]
+    },
+    "zustand_stores": {
+      "description": "Gestion d'état centralisée via Zustand. Chaque domaine fonctionnel possède son propre store avec des sélecteurs typés.",
+      "pattern": "Un store par domaine (chat, settings, audio, knowledge, etc.)",
+      "avantages": [
+        "API minimale comparée à Redux — moins de boilerplate",
+        "Sélecteurs fins pour éviter les re-rendus inutiles",
+        "Middleware pour la persistance locale et la journalisation",
+        "Compatible avec les DevTools React"
+      ],
+      "stores_principaux": [
+        "useChatStore — état des conversations et messages",
+        "useSettingsStore — préférences utilisateur et configuration",
+        "useAudioStore — état du pipeline audio (VAD, TTS, STT)",
+        "useKnowledgeStore — base de connaissances et résultats de recherche",
+        "useThemeStore — thème et apparence de l'interface"
+      ]
+    },
+    "tailwindcss": {
+      "description": "Framework CSS utilitaire pour le styling de tous les composants. Configuration personnalisée avec les tokens de design TITANE∞.",
+      "configuration": "tailwind.config.ts",
+      "postcss": "postcss.config.js",
+      "tokens_design": "figma-tokens.json",
+      "fonctionnalites": [
+        "Classes utilitaires pour un styling rapide et cohérent",
+        "Mode sombre natif via la classe dark:",
+        "Responsive design avec breakpoints personnalisés",
+        "Animations et transitions fluides"
+      ]
+    },
+    "composants": {
+      "organisation": "src/components/ pour les composants partagés, src/features/ pour les modules fonctionnels",
+      "conventions": [
+        "Chaque composant possède un data-testid stable pour les tests E2E",
+        "ErrorBoundary obligatoire autour des composants critiques",
+        "Props typées explicitement avec des interfaces TypeScript",
+        "Lazy loading via React.lazy() pour les composants lourds"
+      ]
+    },
+    "hooks": {
+      "description": "Hooks React personnalisés pour encapsuler la logique métier réutilisable.",
+      "repertoire": "src/hooks/",
+      "exemples": [
+        "useSecureInvoke — wrapper pour les appels IPC avec gestion d'erreur",
+        "useAudioPipeline — contrôle du pipeline audio (enregistrement, lecture)",
+        "useKnowledgeSearch — recherche dans la base de connaissances",
+        "useTheme — gestion du thème et des préférences visuelles"
+      ]
+    },
+    "routing": {
+      "description": "Navigation entre les vues principales de l'application. Routage côté client sans serveur.",
+      "vues_principales": [
+        "Chat — interface de conversation principale",
+        "Knowledge Base — exploration de la base de connaissances",
+        "Settings — configuration de l'application",
+        "Dashboard — tableau de bord et métriques"
+      ]
+    }
+  },
+  "backend_rust": {
+    "nom": "Backend Rust TITANE∞",
+    "description": "Cœur logique de l'application écrit en Rust. Gère tous les services métier, les moteurs cognitifs, la persistance, le réseau et le pipeline audio.",
+    "version_rust": "1.70+ MSRV (Minimum Supported Rust Version), Edition 2021",
+    "nombre_modules": 150,
+    "structure_modules": {
+      "commands": {
+        "description": "Commandes Tauri exposées au frontend. Chaque commande est annotée #[tauri::command] et enregistrée dans le builder Tauri.",
+        "nombre": 1231,
+        "pattern": "Chaque commande retourne Result<IpcResponse<T>, Error> avec le contrat { ok, content, error }",
+        "localisation": "src-tauri/src/commands/"
+      },
+      "services": {
+        "description": "Services métier — logique applicative principale. Chaque service est un module Rust indépendant.",
+        "localisation": "src-tauri/src/services/",
+        "exemples": [
+          "network_gateway.rs — point de sortie réseau unique",
+          "network_policy.rs — validation des requêtes sortantes",
+          "ai_router.rs — routage vers les fournisseurs IA",
+          "knowledge_service.rs — gestion de la base de connaissances",
+          "memory_service.rs — mémoire unifiée et persistance"
+        ]
+      },
+      "engines": {
+        "description": "Moteurs cognitifs spécialisés. Chaque moteur implémente un trait commun pour l'interopérabilité.",
+        "nombre": 20,
+        "localisation": "src-tauri/src/engines/",
+        "exemples": [
+          "Moteur de raisonnement (reasoning engine)",
+          "Moteur de mémoire (memory engine)",
+          "Moteur de perception (perception engine)",
+          "Moteur de planification (planning engine)",
+          "Moteur émotionnel (emotional engine)"
+        ]
+      }
+    },
+    "feature_flags": {
+      "description": "Compilation conditionnelle via les features Cargo pour activer/désactiver des modules.",
+      "localisation": "src-tauri/Cargo.toml",
+      "politique": "Chaque feature flag doit être documentée et testée dans les deux états (activé/désactivé)"
+    },
+    "state_management": {
+      "description": "Gestion d'état côté Rust via tauri::State<T>. Les états partagés sont thread-safe grâce à Arc<Mutex<T>> ou Arc<RwLock<T>>.",
+      "pattern": "Injection d'état via .manage() dans le builder Tauri, accès via State<T> dans les commandes"
+    },
+    "serde": {
+      "description": "Sérialisation/désérialisation JSON pour tous les échanges IPC et la persistance.",
+      "usage": [
+        "Dérivation automatique via #[derive(Serialize, Deserialize)]",
+        "Renommage de champs via #[serde(rename_all = \"camelCase\")]",
+        "Validation des types à la désérialisation — rejet des payloads malformés",
+        "Support des types optionnels via Option<T> et valeurs par défaut"
+      ]
+    },
+    "async_runtime": {
+      "description": "Runtime asynchrone Tokio pour toutes les opérations I/O non bloquantes.",
+      "configuration": "Multi-threaded avec pool de workers (défaut : 4 threads)",
+      "usage": [
+        "Requêtes réseau asynchrones via reqwest",
+        "Opérations fichier asynchrones via tokio::fs",
+        "Canaux de communication inter-tâches via tokio::sync::mpsc",
+        "Timeouts et annulation de tâches via tokio::time"
+      ]
+    }
+  },
+  "knowledge_system": {
+    "nom": "Système de Base de Connaissances TITANE∞",
+    "description": "Système de gestion des connaissances structurées en fichiers JSON. Permet le chargement, la recherche et l'accès runtime aux informations de référence pour l'IA et l'utilisateur.",
+    "structure": {
+      "repertoire_racine": "data/knowledge_base/",
+      "organisation": "Sous-répertoires par collection (default, custom, etc.)",
+      "format_fichier": "JSON avec schéma normalisé incluant version, category et contenu structuré"
+    },
+    "schema_json": {
+      "champs_obligatoires": [
+        "version — version sémantique du document (ex: v30.1.0)",
+        "category — identifiant de catégorie unique (ex: system_architecture, ai_config)",
+        "description — résumé court du contenu en français"
+      ],
+      "champs_optionnels": [
+        "Sections thématiques libres selon la catégorie",
+        "Listes, objets imbriqués, tableaux de données",
+        "Métadonnées de provenance et de mise à jour"
+      ]
+    },
+    "categories": [
+      "system_architecture — architecture technique du système",
+      "ai_configuration — paramètres des fournisseurs IA et du routeur",
+      "voice_audio — configuration du pipeline audio et vocal",
+      "security_policies — politiques de sécurité et règles de validation",
+      "user_preferences — préférences utilisateur et personnalisation",
+      "knowledge_domains — domaines de connaissances spécialisés"
+    ],
+    "chargement_runtime": {
+      "description": "Les fichiers de la base de connaissances sont chargés au démarrage de l'application et mis en cache en mémoire pour un accès rapide.",
+      "mecanisme": "Lecture des fichiers JSON → désérialisation serde → stockage dans un HashMap indexé par catégorie",
+      "rechargement": "Rechargement à chaud possible via commande IPC sans redémarrage de l'application"
+    },
+    "recherche": {
+      "description": "Recherche dans la base de connaissances via indexation full-text Tantivy et recherche vectorielle HNSW.",
+      "modes": [
+        "Recherche par catégorie — filtrage par identifiant de catégorie",
+        "Recherche full-text — indexation BM25 via Tantivy sur le contenu textuel",
+        "Recherche sémantique — embeddings vectoriels via HNSW pour la similarité de sens",
+        "Recherche combinée — fusion des scores BM25 et vectoriels pour la pertinence optimale"
+      ]
+    }
+  },
+  "ai_orchestration": {
+    "nom": "Orchestrateur IA Multi-Fournisseur",
+    "description": "Système de routage intelligent entre plusieurs fournisseurs d'IA. Gère la sélection du modèle optimal, le cache des réponses, le fallback automatique et le streaming token par token.",
+    "fournisseurs": {
+      "openai": {
+        "modeles": ["GPT-4", "GPT-4-turbo", "GPT-3.5-turbo"],
+        "fonctionnalites": ["Chat completion", "Embeddings", "Function calling", "Vision"],
+        "endpoint": "Configurable via variable d'environnement OPENAI_API_BASE"
+      },
+      "anthropic_claude": {
+        "modeles": ["Claude 3.5 Sonnet", "Claude 3 Opus", "Claude 3 Haiku"],
+        "fonctionnalites": ["Chat completion", "Analyse de documents", "Raisonnement avancé"],
+        "endpoint": "Configurable via variable d'environnement ANTHROPIC_API_BASE"
+      },
+      "google_gemini": {
+        "modeles": ["Gemini Pro", "Gemini Ultra"],
+        "fonctionnalites": ["Chat completion", "Multimodal", "Embeddings"],
+        "endpoint": "Configurable via variable d'environnement GEMINI_API_BASE"
+      },
+      "ollama_local": {
+        "description": "Fournisseur local via Ollama. Permet l'exécution de modèles IA sans connexion internet.",
+        "port": 11434,
+        "modeles": "Configurables dynamiquement (Llama, Mistral, CodeLlama, etc.)",
+        "avantages": [
+          "Fonctionne hors ligne — fallback local obligatoire",
+          "Données restent en local — aucune fuite vers des API externes",
+          "Latence réduite pour les modèles légers"
+        ]
+      }
+    },
+    "routage": {
+      "description": "Le routeur IA sélectionne le fournisseur optimal en fonction de la tâche, de la disponibilité et des préférences utilisateur.",
+      "criteres": [
+        "Type de tâche (chat, embeddings, analyse, code)",
+        "Disponibilité du fournisseur (healthcheck périodique)",
+        "Préférence utilisateur (fournisseur par défaut configurable)",
+        "Coût estimé et limites de quota",
+        "Latence mesurée et historique de fiabilité"
+      ],
+      "politique": "Online-first gouverné — le fournisseur cloud est préféré quand disponible, avec fallback local obligatoire et opérationnel"
+    },
+    "cache": {
+      "description": "Cache des réponses IA pour réduire la latence et les coûts API.",
+      "strategie": "Cache LRU en mémoire avec TTL configurable par type de requête",
+      "invalidation": "Invalidation automatique sur changement de contexte ou de paramètres"
+    },
+    "fallback": {
+      "description": "Chaîne de fallback automatique en cas d'échec d'un fournisseur.",
+      "ordre": "Fournisseur préféré → Fournisseur alternatif cloud → Ollama local → Réponse d'erreur explicite",
+      "regle": "Jamais de fallback silencieux — l'utilisateur est toujours informé du fournisseur utilisé et de tout basculement"
+    },
+    "streaming": {
+      "description": "Support du streaming token par token pour toutes les réponses IA.",
+      "mecanisme": "Server-Sent Events côté API → événements Tauri côté IPC → mise à jour progressive de l'UI",
+      "avantages": [
+        "Affichage immédiat des premiers tokens — perception de rapidité",
+        "Possibilité d'annulation en cours de génération",
+        "Réduction de la latence perçue pour les longues réponses"
+      ]
+    }
+  },
+  "voice_audio_pipeline": {
+    "nom": "Pipeline Audio et Vocal TITANE∞",
+    "description": "Système complet de traitement audio en temps réel. Gère la détection d'activité vocale, la synthèse vocale, la reconnaissance vocale et les interactions en duplex intégral.",
+    "vad": {
+      "nom": "Détection d'Activité Vocale (VAD)",
+      "description": "Module de détection en temps réel de la parole dans le flux audio du microphone.",
+      "fonctionnalites": [
+        "Détection début/fin de parole avec seuils configurables",
+        "Filtrage du bruit ambiant et des silences",
+        "Événements IPC émis : vad-speech-start, vad-speech-end",
+        "Latence cible : < 100ms entre début de parole et détection"
+      ]
+    },
+    "tts": {
+      "nom": "Synthèse Vocale (Text-to-Speech)",
+      "description": "Conversion du texte en parole avec support de voix multiples et d'expressions émotionnelles.",
+      "fonctionnalites": [
+        "Voix multiples configurables (genre, langue, timbre)",
+        "TTS émotionnel — adaptation du ton selon le contexte (neutre, empathique, enthousiaste)",
+        "Streaming audio pour lecture progressive pendant la génération",
+        "File d'attente de lecture avec priorités"
+      ],
+      "fournisseurs": [
+        "API cloud (OpenAI TTS, ElevenLabs)",
+        "Moteur TTS local pour le mode hors ligne"
+      ]
+    },
+    "stt": {
+      "nom": "Reconnaissance Vocale (Speech-to-Text)",
+      "description": "Transcription en temps réel de la parole de l'utilisateur en texte.",
+      "fonctionnalites": [
+        "Transcription en temps réel avec résultats intermédiaires",
+        "Support multilingue (français, anglais, etc.)",
+        "Adaptation au vocabulaire technique TITANE∞",
+        "Ponctuation automatique et mise en forme"
+      ]
+    },
+    "barge_in": {
+      "nom": "Interruption Vocale (Barge-in)",
+      "description": "Permet à l'utilisateur d'interrompre la synthèse vocale en cours en commençant à parler.",
+      "mecanisme": "VAD détecte la parole pendant la lecture TTS → arrêt immédiat de la lecture → passage en mode écoute",
+      "latence_cible": "< 200ms entre début de parole et arrêt de la lecture"
+    },
+    "full_duplex": {
+      "nom": "Communication Duplex Intégral",
+      "description": "Mode de communication où l'utilisateur et l'IA peuvent parler simultanément, simulant une conversation naturelle.",
+      "composants": [
+        "Séparation des flux audio entrant (microphone) et sortant (haut-parleur)",
+        "Annulation d'écho pour éviter que le TTS ne déclenche le STT",
+        "Gestion des tours de parole intelligente"
+      ]
+    },
+    "voice_router": {
+      "nom": "Routeur Vocal",
+      "description": "Module de routage qui dirige les flux audio vers les bons composants du pipeline selon l'état courant.",
+      "etats": [
+        "IDLE — en attente, VAD actif",
+        "LISTENING — enregistrement et transcription en cours",
+        "PROCESSING — traitement IA de la requête vocale",
+        "SPEAKING — lecture TTS de la réponse",
+        "INTERRUPTED — barge-in détecté, transition vers LISTENING"
+      ]
+    }
+  },
+  "security_model": {
+    "nom": "Modèle de Sécurité TITANE∞",
+    "description": "Architecture de sécurité en couches couvrant la politique de sécurité du contenu, la validation des chemins, la sécurité IPC, le sandboxing et le chiffrement.",
+    "csp": {
+      "nom": "Content Security Policy",
+      "description": "Politique de sécurité du contenu appliquée à la WebView pour prévenir les injections de scripts et le chargement de ressources non autorisées.",
+      "regles": [
+        "default-src 'self' — seules les ressources locales sont autorisées par défaut",
+        "script-src 'self' — pas de scripts inline ni de sources externes",
+        "connect-src uniquement vers les endpoints autorisés via IPC",
+        "img-src 'self' data: — images locales et data URIs uniquement",
+        "Pas de eval() ni de Function() dynamique"
+      ]
+    },
+    "allowlist": {
+      "description": "Liste blanche des commandes et capacités Tauri autorisées. Chaque commande IPC doit être explicitement listée.",
+      "gestion": "Fichiers de capabilities dans src-tauri/capabilities/",
+      "politique": "Principe du moindre privilège — n'autoriser que les capacités strictement nécessaires"
+    },
+    "validation_chemins": {
+      "description": "Validation de tous les chemins de fichiers pour prévenir les attaques de traversée de répertoire.",
+      "regles": [
+        "Normalisation des chemins avant tout accès fichier",
+        "Rejet des séquences ../ et des chemins absolus non autorisés",
+        "Confinement des accès fichier au répertoire de données de l'application",
+        "Validation côté Rust avant toute opération sur le système de fichiers"
+      ]
+    },
+    "ipc_securite": {
+      "description": "Sécurisation de la couche IPC entre le frontend et le backend.",
+      "mesures": [
+        "Validation du nom de commande contre ALLOWED_COMMANDS côté frontend",
+        "Validation des capabilities Tauri côté runtime",
+        "Désérialisation typée avec rejet des payloads invalides",
+        "Rate limiting par commande et par fenêtre de temps",
+        "Journalisation de tous les appels IPC pour audit"
+      ]
+    },
+    "cors": {
+      "description": "Politique CORS stricte pour les requêtes réseau sortantes via le Network Gateway.",
+      "politique": "Seuls les domaines explicitement listés dans la Network Policy sont autorisés"
+    },
+    "sandboxing": {
+      "description": "Isolation des processus pour limiter l'impact d'une compromission.",
+      "niveaux": [
+        "Isolation WebView — le processus de rendu est sandboxé par le système",
+        "Isolation des commandes — chaque commande Tauri s'exécute dans un contexte limité",
+        "Isolation réseau — seul le Network Gateway peut effectuer des requêtes sortantes"
+      ]
+    },
+    "chiffrement": {
+      "algorithme": "AES-256-GCM",
+      "usage": [
+        "Chiffrement de toutes les données sensibles au repos",
+        "Chiffrement des clés API et tokens d'authentification",
+        "Chiffrement de la mémoire unifiée et des données de synchronisation cloud",
+        "Dérivation de clés sécurisée pour chaque contexte"
+      ]
+    }
+  },
+  "data_persistence": {
+    "nom": "Persistance des Données TITANE∞",
+    "description": "Stratégie de persistance locale couvrant la base de données SQLite, la configuration runtime, les préférences utilisateur et les caches.",
+    "sqlite": {
+      "description": "Base de données principale pour la persistance structurée. Utilisée via rusqlite côté Rust.",
+      "usage": [
+        "Historique des conversations et messages",
+        "Base de connaissances indexée",
+        "Métadonnées des fichiers et documents",
+        "Journaux d'audit et métriques",
+        "État de la mémoire unifiée"
+      ],
+      "localisation": "Répertoire de données de l'application (app_data_dir via Tauri)",
+      "migrations": "Migrations schéma gérées au démarrage avec versionnement séquentiel"
+    },
+    "runtime_config": {
+      "description": "Configuration runtime chargée au démarrage et modifiable à chaud.",
+      "sources": [
+        "tauri.conf.json — configuration principale Tauri",
+        "Variables d'environnement — surcharge des valeurs de configuration",
+        "Fichiers de configuration utilisateur — préférences personnalisées"
+      ]
+    },
+    "settings": {
+      "description": "Préférences utilisateur persistées localement et synchronisables.",
+      "categories": [
+        "Apparence — thème, taille de police, langue de l'interface",
+        "Audio — volume, voix TTS préférée, sensibilité VAD",
+        "IA — fournisseur par défaut, température, longueur maximale",
+        "Sécurité — niveau de journalisation, auto-lock, chiffrement"
+      ]
+    },
+    "local_storage": {
+      "description": "Stockage clé-valeur côté frontend pour les données de session et les préférences temporaires.",
+      "implementation": "Zustand middleware persist → localStorage de la WebView",
+      "politique": "Aucune donnée sensible dans le localStorage — uniquement des préférences non critiques"
+    },
+    "cache_strategy": {
+      "description": "Stratégie de cache multi-niveaux pour optimiser les performances.",
+      "niveaux": [
+        "Cache mémoire L1 — HashMap Rust pour les données fréquemment accédées (TTL court)",
+        "Cache disque L2 — SQLite pour les résultats IA et les embeddings (TTL long)",
+        "Cache frontend L3 — Zustand stores pour l'état UI (durée de session)"
+      ],
+      "invalidation": "Invalidation par TTL, par événement de modification, ou manuelle via commande IPC"
+    }
+  },
+  "deployment_pipeline": {
+    "nom": "Pipeline de Déploiement TITANE∞",
+    "description": "Processus de build, test, versionnement et release de l'application. Intègre CI/CD, builds multi-plateformes et gestion des artefacts.",
+    "ci_cd": {
+      "description": "Intégration et déploiement continus via GitHub Actions.",
+      "workflows": [
+        "CI — lint, typecheck, tests unitaires, tests d'intégration à chaque push/PR",
+        "Build — compilation Tauri multi-plateformes (macOS, Windows, Linux)",
+        "E2E — tests end-to-end avec Playwright et WebDriverIO",
+        "Release — création automatique des artefacts de release signés"
+      ]
+    },
+    "builds": {
+      "description": "Processus de build de l'application Tauri.",
+      "etapes": [
+        "1. Bump de version automatique via scripts/bump-version.mjs",
+        "2. Synchronisation des versions via scripts/sync-versions.mjs (package.json → Cargo.toml → tauri.conf.json)",
+        "3. Build frontend (pnpm run build → Vite → bundle optimisé)",
+        "4. Build backend Rust (cargo build --release)",
+        "5. Packaging Tauri (tauri build → installeur natif par plateforme)",
+        "6. Génération des checksums SHA256 (RELEASE_ARTIFACTS_CHECKSUMS_*.txt)"
+      ],
+      "outils": {
+        "bundler_frontend": "Vite",
+        "compilateur_backend": "Cargo (Rust)",
+        "packager": "Tauri bundler",
+        "gestionnaire_paquets": "pnpm v10.30.2 (enforced — npm/yarn interdits)"
+      }
+    },
+    "testing": {
+      "description": "Stratégie de test à plusieurs niveaux.",
+      "niveaux": [
+        "Tests unitaires — Vitest pour le frontend, cargo test pour le backend Rust",
+        "Tests d'intégration — Vitest avec configuration dédiée (vitest.integration.config.ts)",
+        "Tests E2E — Playwright (playwright.config.ts) et WebDriverIO (wdio.desktop.conf.cjs)",
+        "Tests navigateur — Vitest browser mode (vitest.browser.config.ts)"
+      ],
+      "configurations": [
+        "vitest.config.ts — configuration principale Vitest",
+        "vitest.unit.config.ts — tests unitaires isolés",
+        "vitest.integration.config.ts — tests d'intégration",
+        "vitest.browser.config.ts — tests dans un navigateur réel",
+        "vitest.workspace.ts — workspace multi-projets",
+        "playwright.config.ts — tests E2E Playwright"
+      ]
+    },
+    "versionnement": {
+      "description": "Gestion sémantique des versions avec bump automatique.",
+      "format": "SemVer (MAJOR.MINOR.PATCH)",
+      "regle": "Chaque build avancé (production) incrémente obligatoirement le patch de +0.0.1",
+      "scripts": [
+        "scripts/bump-version.mjs — incrémentation automatique du patch",
+        "scripts/sync-versions.mjs — propagation vers Cargo.toml et tauri.conf.json"
+      ],
+      "affichage": "La version courante est toujours visible dans le footer de l'interface TITANE∞"
+    },
+    "release": {
+      "description": "Processus de release gouverné avec tokens de production.",
+      "etapes": [
+        "1. Validation de tous les gates (lint, typecheck, tests, E2E)",
+        "2. Bump de version et synchronisation",
+        "3. Build multi-plateformes",
+        "4. Génération des checksums SHA256",
+        "5. Création du proof pack avec VERDICT.md et ROLLBACK.md",
+        "6. Scellement de la release (RELEASE_v*.SEALED.txt)",
+        "7. Publication des artefacts"
+      ],
+      "tokens_prod": [
+        "GO_FOR_PROD_BUILD__TITANE_INFINITY — autorisation de build production",
+        "GO_FOR_PROD_DEPLOY__TITANE_INFINITY — autorisation de déploiement production"
+      ]
+    }
+  },
+  "performance": {
+    "nom": "Optimisations de Performance TITANE∞",
+    "description": "Stratégies d'optimisation couvrant le chargement paresseux, le découpage de code, le cache, le préchargement et le monitoring.",
+    "lazy_loading": {
+      "description": "Chargement différé des composants et modules non critiques pour réduire le temps de démarrage initial.",
+      "techniques": [
+        "React.lazy() pour les composants de route non visibles au démarrage",
+        "Import dynamique (import()) pour les modules fonctionnels lourds",
+        "Suspense avec fallback visuel pendant le chargement",
+        "Chargement différé des moteurs cognitifs non essentiels côté Rust"
+      ]
+    },
+    "code_splitting": {
+      "description": "Découpage automatique du bundle frontend en chunks optimisés par Vite.",
+      "strategie": [
+        "Chunks par route — chaque vue génère un chunk séparé",
+        "Chunks vendors — librairies tierces isolées pour un cache navigateur efficace",
+        "Chunks partagés — code commun extrait automatiquement",
+        "Tree shaking — élimination du code mort à la compilation"
+      ]
+    },
+    "caching": {
+      "description": "Cache multi-niveaux pour minimiser les recalculs et les requêtes réseau.",
+      "strategies": [
+        "Cache mémoire LRU pour les réponses IA fréquentes",
+        "Cache d'embeddings vectoriels pour éviter les recalculs coûteux",
+        "Cache de résultats de recherche avec invalidation par TTL",
+        "Memoization React (useMemo, useCallback) pour les calculs de rendu coûteux"
+      ]
+    },
+    "prefetch": {
+      "description": "Préchargement anticipé des ressources susceptibles d'être demandées.",
+      "techniques": [
+        "Préchargement des routes adjacentes lors de la navigation",
+        "Préchargement des données de la base de connaissances au démarrage",
+        "Préchargement des modèles IA locaux si Ollama est disponible",
+        "Warm-up des connexions réseau vers les API IA configurées"
+      ]
+    },
+    "monitoring": {
+      "description": "Surveillance des performances en temps réel pour identifier les goulots d'étranglement.",
+      "metriques": [
+        "Temps de démarrage de l'application (cold start / warm start)",
+        "Latence des appels IPC (p50, p95, p99)",
+        "Temps de réponse des fournisseurs IA",
+        "Utilisation mémoire du processus Rust et de la WebView",
+        "Taille des stores Zustand et fréquence des re-rendus",
+        "Durée des opérations SQLite et des recherches full-text"
+      ],
+      "outils": [
+        "Métriques internes journalisées via le système de logging Rust",
+        "React DevTools Profiler pour les performances de rendu",
+        "monitoring.sh — script de surveillance des processus"
+      ]
+    }
+  },
+  "key_invariants": [
+    "Tauri-only production runtime — jamais Electron ou serveur web standalone",
+    "4-Ring : pas d'import inversé entre rings (Ring 3 → Ring 1 interdit sans IPC)",
+    "One Door : tout réseau via IPC → Gateway uniquement",
+    "IPC contract : { ok, content, error } — zéro silence, zéro fallback menteur",
+    "Minimal patch : changement le plus petit et sûr possible",
+    "Proof first : pas de DONE/SEALED sans preuves exécutables",
+    "Online-first gouverné avec fallback local obligatoire et opérationnel",
+    "AutoHeal : une entrée obligatoire par fix dans autoheal_rules.jsonl",
+    "NO_SKIPS : aucun check obligatoire ne peut être sauté par narrative",
+    "Version bump obligatoire à chaque build production avancé",
+    "Tokens PROD obligatoires pour tout build ou déploiement de production",
+    "Append-only pour les preuves, rapports et packs de preuve — jamais de réécriture destructive",
+    "Chiffrement AES-256-GCM pour toutes les données sensibles au repos",
+    "Sélecteurs data-testid stables et obligatoires pour tous les composants E2E-testés"
+  ]
 }

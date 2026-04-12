@@ -1,0 +1,134 @@
+{
+  "version": "v30.1.0",
+  "category": "chiropratique_avancee",
+  "description": "Chiropratique avancée — philosophie, subluxation vertébrale, ajustement chiropratique, biomécanique vertébrale, techniques (Diversified, Gonstead, Activator, Thompson, Cox Flexion), anatomie colonne vertébrale, système nerveux et colonne, indications, contre-indications, intégration avec physiothérapie",
+  "chiropratique_avancee": {
+    "introduction": "La chiropratique est une profession de santé réglementée centrée sur le diagnostic, le traitement et la prévention des troubles neuro-musculo-squelettiques, principalement de la colonne vertébrale. Fondée par D.D. Palmer en 1895 à Davenport (Iowa), elle est aujourd'hui la 3e profession de santé primaire au monde. TITANE présente la chiropratique avec ses fondements, ses techniques, ses preuves scientifiques et ses limites.",
+    "fondements": {
+      "philosophie_chiropratique": {
+        "intelligence_innée": "Le corps possède une intelligence innée de guérison (vis medicatrix naturae). Le rôle du chiropraticien est de lever les obstacles à cette guérison naturelle.",
+        "système_nerveux_central": "Le système nerveux est le maître régulateur du corps. Toute interférence dans la transmission nerveuse (notamment au niveau vertébral) affecte la santé globale.",
+        "subluxation_vertébrale": {
+          "définition": "Dysfonctionnement articulaire vertébral caractérisé par une restriction de mobilité, une altération de l'alignement et/ou une irritation neurologique associée.",
+          "5_composantes_du_complexe": "1. Kinésiologie : perte de mouvement normal. 2. Myopathologie : tension musculaire associée. 3. Neuropathologie : irritation/compression nerveuse. 4. Histopathologie : inflammation tissulaire. 5. Pathophysiologie : dégénérescence progressive si non traitée.",
+          "débat_scientifique": "Le concept de subluxation est débattu dans la communauté scientifique. Les chiropraticiens 'evidence-based' parlent plutôt de 'dysfonction articulaire' ou 'complexe de restriction segmentaire'."
+        }
+      },
+      "triade_santé": "Structure (posture, alignement) + Chimie (nutrition, toxines) + Mental (stress, émotions). Les trois piliers sont interdépendants."
+    },
+    "anatomie_colonne_vertebrale": {
+      "structure": {
+        "cervicales": "C1 (Atlas) - C7. 7 vertèbres. Mobilité maximale (rotation tête). Atlas = vertèbre portant le crâne, sans corps vertébral. Axis (C2) = pivot de rotation via le processus odontoïde.",
+        "thoraciques": "T1-T12. 12 vertèbres. Articulées avec les côtes. Mobilité réduite par la cage thoracique. Zone de protection du cœur et des poumons.",
+        "lombaires": "L1-L5. 5 vertèbres. Les plus grosses et les plus fortes. Portent le poids du haut du corps. Zone la plus sujette aux hernies discales (L4-L5, L5-S1).",
+        "sacrum": "5 vertèbres fusionnées. Articulé avec le bassin (articulation sacro-iliaque). Base de la colonne.",
+        "coccyx": "3-5 vertèbres vestigiales fusionnées."
+      },
+      "disque_intervertébral": {
+        "structure": "Anneau fibreux (extérieur, résistant) + Noyau pulpeux (intérieur, gélatineux). Amortisseur entre les vertèbres.",
+        "hernie_discale": "Rupture de l'anneau fibreux → protrusion du noyau pulpeux → compression nerveuse (sciatique si L4-L5 ou L5-S1).",
+        "dégénérescence": "Avec l'âge, le disque perd en hydratation et en hauteur. Spondylose dégénérative. Prévention : mouvement, hydratation, posture, renforcement musculaire."
+      },
+      "foramen_intervertébral": "Ouverture entre deux vertèbres par laquelle passent les nerfs spinaux. Une réduction de ce foramen (sténose) peut comprimer le nerf → douleur, engourdissement, faiblesse.",
+      "courbes_physiologiques": {
+        "lordose_cervicale": "Courbure concave (vers l'arrière). Perte de lordose cervicale (rectification) fréquente avec l'usage du smartphone ('text neck').",
+        "cyphose_thoracique": "Courbure convexe (vers l'avant). Excès = dos voûté, bosse.",
+        "lordose_lombaire": "Courbure concave. Excès = hyperlordose (antéversion du bassin). Insuffisance = dos plat.",
+        "importance": "Ces courbes agissent comme des ressorts naturels. Leur altération augmente les contraintes et accélère la dégénérescence."
+      }
+    },
+    "techniques_chiropratiques": {
+      "diversified": {
+        "description": "La technique la plus courante (>95% des chiropraticiens). Ajustement manuel par impulsion rapide (HVLA — High Velocity Low Amplitude) sur l'articulation restreinte.",
+        "principe": "Mouvement rapide et précis qui va au-delà de la barrière physiologique de l'articulation sans dépasser la barrière anatomique. Libère la restriction.",
+        "craquement": "Le 'crack' = cavitation articulaire = libération de bulles de gaz (CO2, azote) dans le liquide synovial. Non dangereux. Pas obligatoire pour l'efficacité de l'ajustement."
+      },
+      "gonstead": {
+        "auteur": "Dr Clarence Gonstead (1923). Considéré comme le 'gold standard' de l'ajustement spécifique.",
+        "diagnostic": "5 critères : radiographie (analyse biomécanique), palpation statique et dynamique, instrumentation (nervoscope — détection des différences de température paravertébrales), inspection visuelle, symptomatologie.",
+        "principe": "Ajustement ultra-spécifique d'une seule vertèbre à la fois. Contact précis. Direction précise. Pas d'ajustement généraliste."
+      },
+      "activator_method": {
+        "instrument": "Activator Adjusting Instrument — petit appareil à ressort qui délivre une impulsion mécanique rapide et légère.",
+        "avantages": "Moins de force manuelle. Adapté aux personnes âgées, ostéoporotiques, enfants, personnes craignant le 'craquement'. Très reproductible.",
+        "études": "Efficacité comparable à l'ajustement manuel pour certaines conditions (Schneider et al. 2015)."
+      },
+      "thompson_drop": {
+        "table": "Table spéciale avec des sections qui 'tombent' de quelques millimètres lors de l'ajustement. Le poids du corps et la gravité assistent l'impulsion.",
+        "avantage": "Moins de force nécessaire. Confortable pour le patient."
+      },
+      "cox_flexion_distraction": {
+        "indication": "Hernies discales, sténose spinale, sciatique.",
+        "méthode": "Table spécialisée qui permet une flexion et distraction douce de la colonne lombaire. Ouvre le foramen, réduit la pression discale.",
+        "études": "Bonne base de preuves pour les hernies discales lombaires et la sténose."
+      },
+      "SOT_sacro_occipital": {
+        "auteur": "Dr De Jarnette (1925)",
+        "principe": "Le crâne (occiput) et le sacrum sont liés par les méninges. L'équilibre cranio-sacré influence l'ensemble du corps.",
+        "diagnostic": "Catégorisation du patient en 3 catégories selon la relation sacro-iliaque et méningée."
+      }
+    },
+    "indications_preuves": {
+      "niveau_preuve_fort": [
+        "Lombalgie aiguë et chronique (recommandation OMS, Lancet 2018)",
+        "Cervicalgie (douleur de cou)",
+        "Céphalées cervicogéniques et de tension",
+        "Douleur sacro-iliaque"
+      ],
+      "niveau_preuve_modéré": [
+        "Sciatique (hernies non chirurgicales)",
+        "Douleur thoracique musculo-squelettique",
+        "Migraine (réduction fréquence)",
+        "Douleur de l'épaule (capsulite, conflit)"
+      ],
+      "niveau_preuve_faible_ou_controversé": [
+        "Troubles viscéraux (coliques, reflux, asthme) — preuves insuffisantes",
+        "Otites — preuves anecdotiques",
+        "Dysfonctions organiques — pas de consensus scientifique"
+      ]
+    },
+    "contre_indications": {
+      "absolues": [
+        "Fracture vertébrale ou suspicion de fracture",
+        "Tumeur osseuse (métastases vertébrales)",
+        "Infection vertébrale (spondylodiscite)",
+        "Syndrome de la queue de cheval (urgence chirurgicale)",
+        "Dissection ou anévrisme de l'artère vertébrale",
+        "Instabilité ligamentaire majeure (luxation atloïdo-axoïdienne)"
+      ],
+      "relatives": [
+        "Ostéoporose avancée (adapter la technique)",
+        "Anticoagulothérapie",
+        "Arthrite rhumatoïde avancée",
+        "Hernie discale séquestrée",
+        "Grossesse (techniques adaptées possibles)"
+      ]
+    },
+    "sécurité": {
+      "risques": "Effets secondaires légers fréquents (30-50%) : raideur, douleur légère post-ajustement (24-48h). Effets graves très rares : AVC post-manipulation cervicale (estimé 1 sur 1-5 millions d'ajustements — débattu, possible biais de pré-sélection).",
+      "rapport_bénéfice_risque": "Favorable pour les indications validées, comparé aux AINS (risques gastro-intestinaux) et à la chirurgie (risques élevés).",
+      "recommandations": "Bilan initial complet (anamnèse, examen physique, radiographies si nécessaire). Red flags systématiques. Consentement éclairé."
+    },
+    "ergonomie_et_posture": {
+      "poste_travail": {
+        "écran": "Bord supérieur de l'écran à hauteur des yeux. Distance = longueur du bras. Inclinaison 10-20° vers l'arrière.",
+        "chaise": "Soutien lombaire, pieds à plat au sol, cuisses horizontales, coudes à 90°.",
+        "pauses": "Règle 20-20-20 (toutes les 20 min, regarder à 20 pieds/6m pendant 20 secondes). Se lever toutes les 30-45 min."
+      },
+      "text_neck": {
+        "problème": "La tête pèse 5 kg en position neutre. À 15° de flexion → 12 kg. À 30° → 18 kg. À 45° → 22 kg. À 60° → 27 kg de contrainte sur le rachis cervical.",
+        "prévention": "Élever le téléphone à hauteur des yeux. Renforcer les muscles extenseurs cervicaux. Étirements des fléchisseurs cervicaux."
+      },
+      "exercices_correctifs": {
+        "chin_tuck": "Rétraction cervicale — rentrer le menton vers l'arrière (double menton). 10 répétitions × 3 séries/jour. Corrige la protraction cervicale.",
+        "extension_thoracique": "Rouler une serviette sous la colonne thoracique en position allongée. 5 min/jour. Corrige la cyphose.",
+        "cat_cow": "Position quadrupédique. Alternance flexion/extension complète de la colonne. 10 cycles. Mobilise chaque segment vertébral."
+      }
+    },
+    "integration_multidisciplinaire": {
+      "chiro_physio": "La chiropratique traite la restriction articulaire (ajustement) ; la physiothérapie renforce la stabilisation musculaire. Les deux sont complémentaires pour des résultats durables.",
+      "chiro_osteo": "Les deux traitent les dysfonctions musculo-squelettiques. L'ostéopathie intègre davantage les viscères et le crânien. La chiropratique se concentre sur la colonne et les nerfs.",
+      "chiro_massage": "Le massage relâche les tensions musculaires. L'ajustement chiropratique corrige la restriction articulaire sous-jacente. Séquence optimale : massage → ajustement."
+    }
+  }
+}

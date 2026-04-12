@@ -1,0 +1,99 @@
+{
+  "version": "v30.1.0",
+  "category": "detox_jeune_purification",
+  "description": "Détoxification, jeûne thérapeutique et purification — jeûne intermittent, jeûne prolongé, méthode Buchinger, autophagie, organes émonctoires (foie, reins, intestins, peau, poumons), détox hépatique, purification ayurvédique, cures de jus, mono-diètes, drainage lymphatique, chélation naturelle",
+  "detox_jeune_purification": {
+    "introduction": "La détoxification est le processus par lequel l'organisme neutralise et élimine les toxines endogènes (métabolites) et exogènes (polluants, additifs, médicaments). Le jeûne thérapeutique, pratiqué par toutes les traditions médicales anciennes, active l'autophagie (nettoyage cellulaire), régénère le système immunitaire et permet une profonde remise à zéro physiologique.",
+    "organes_emonctoires": {
+      "foie": {
+        "role": "Organe majeur de détoxification. Filtre le sang, neutralise les toxines (phases I et II), produit la bile, métabolise les hormones et les médicaments.",
+        "phase_i": "Cytochrome P450 — oxydation, réduction, hydrolyse des toxines. Produit des radicaux libres intermédiaires (plus dangereux que la toxine initiale).",
+        "phase_ii": "Conjugaison (glutathion, glucuronidation, sulfation, méthylation, acétylation) — rend les toxines hydrosolubles pour élimination.",
+        "soutien_naturel": ["Chardon-Marie (silymarine) — protège et régénère les hépatocytes", "Artichaut (cynarine) — stimule la bile", "Desmodium — hépatoprotecteur", "Curcuma — anti-inflammatoire hépatique", "Radis noir — stimule la vésicule biliaire", "N-acétyl-cystéine (NAC) — précurseur du glutathion"]
+      },
+      "reins": {
+        "role": "Filtrent 180 litres de sang/jour. Éliminent déchets azotés (urée, créatinine), excès de minéraux, toxines hydrosolubles.",
+        "soutien_naturel": ["Hydratation suffisante (1.5-2L eau/jour)", "Bouleau (feuilles) — diurétique doux", "Piloselle — draine les reins", "Jus de citron tiède le matin", "Éviter l'excès de protéines et de sodium"]
+      },
+      "intestins": {
+        "role": "Élimination des déchets solides. Le microbiote joue un rôle actif dans la détoxification et l'immunité.",
+        "soutien_naturel": ["Fibres (psyllium, lin, légumes)", "Probiotiques et aliments fermentés", "Glutamine pour la muqueuse", "Chlorophylle (spiruline, chlorella)", "Hydrothérapie du côlon (sous supervision professionnelle)"]
+      },
+      "peau": {
+        "role": "Plus grand organe émonctoire. Élimine les toxines via la sueur (urée, métaux lourds, acides).",
+        "soutien_naturel": ["Sauna/hammam (2-3x/semaine)", "Brossage à sec (stimule la circulation lymphatique)", "Exercice physique (transpiration)", "Bains détox (sel d'Epsom, argile, bicarbonate)"]
+      },
+      "poumons": {
+        "role": "Éliminent le CO2 et certains composés volatils. La respiration profonde active le drainage lymphatique.",
+        "soutien_naturel": ["Respiration diaphragmatique profonde", "Pranayama (Kapalabhati pour les poumons)", "Air pur (forêt, montagne)", "Eucalyptus, thym, menthe (inhalation)"]
+      }
+    },
+    "jeune_therapeutique": {
+      "jeune_intermittent": {
+        "protocoles": {
+          "16_8": "16h de jeûne, 8h de prise alimentaire. Le plus courant et accessible.",
+          "18_6": "18h de jeûne, 6h de prise alimentaire. Plus intense, meilleure autophagie.",
+          "20_4_warrior": "20h de jeûne, 4h de prise alimentaire (Warrior Diet). Un seul gros repas.",
+          "5_2": "5 jours alimentation normale, 2 jours à 500-600 calories.",
+          "omad": "One Meal A Day. Un seul repas par jour. Pour les pratiquants avancés."
+        },
+        "benefices": ["Activation de l'autophagie (nettoyage cellulaire)", "Amélioration de la sensibilité à l'insuline", "Réduction de l'inflammation systémique", "Augmentation de l'hormone de croissance (HGH)", "Perte de graisse avec préservation musculaire", "Clarté mentale accrue (corps cétoniques)", "Régénération du microbiote"],
+        "adaptation": "Commencer par 12h, puis 14h, puis 16h. Augmenter progressivement sur 2-4 semaines."
+      },
+      "jeune_prolonge": {
+        "24_72h": {
+          "effets": "Autophagie significative à partir de 24h. Régénération des cellules souches immunitaires à 72h (étude Valter Longo, USC).",
+          "precautions": "Hydratation essentielle (eau, eau minérale, tisanes). Électrolytes (sodium, potassium, magnésium). Repos."
+        },
+        "methode_buchinger": {
+          "duree": "5-21 jours typiquement, en clinique spécialisée.",
+          "protocole": "Bouillons de légumes légers (250 kcal/jour max), jus de fruits dilués, tisanes, miel. Accompagnement médical.",
+          "indications": "Maladies chroniques (rhumatismes, hypertension, diabète type 2, obésité), purification profonde, crise existentielle.",
+          "cliniques_referentes": "Clinique Buchinger Wilhelmi (Lac de Constance, Marbella). Tradition depuis 1953."
+        },
+        "fasting_mimicking_diet": {
+          "createur": "Valter Longo (USC, chercheur en longévité)",
+          "principe": "5 jours de régime hypocalorique (800-1100 kcal) simulant les effets du jeûne tout en mangeant. Protège la masse musculaire.",
+          "benefices": "Autophagie, régénération cellulaire, réduction des facteurs de risque (IGF-1, glucose, triglycérides, inflammation)."
+        }
+      },
+      "autophagie": {
+        "definition": "Processus cellulaire de recyclage des composants endommagés ou obsolètes. Prix Nobel de médecine 2016 (Yoshinori Ohsumi).",
+        "activation": "Jeûne (16h+), exercice intense, restriction calorique, café noir, thé vert, curcumine, resvératrol.",
+        "effets": "Anti-vieillissement cellulaire, prévention cancer, neuroprotection, régénération mitochondriale."
+      }
+    },
+    "cures_specifiques": {
+      "cure_jus": {
+        "duree": "1-7 jours",
+        "principe": "Jus de légumes et fruits frais pressés à froid. Apport massif de micronutriments avec repos digestif.",
+        "jus_detox": ["Jus vert (concombre, céleri, épinard, citron, gingembre)", "Jus betterave-carotte-pomme (foie)", "Jus pastèque-menthe (reins)"]
+      },
+      "mono_diete": {
+        "principe": "Manger un seul aliment pendant 1-3 jours. Simplifie la digestion, permet au corps de se concentrer sur l'élimination.",
+        "aliments_classiques": ["Riz complet", "Pommes", "Raisin (cure uvale)", "Compote de pommes"]
+      },
+      "purification_ayurvedique": {
+        "kitchari_cleanse": "Mono-diète de Kitchari (riz basmati + mung dal + épices) pendant 3-7 jours. Douce et nourrissante. Rééquilibre les 3 Doshas.",
+        "triphala": "Combinaison de 3 fruits (Amalaki, Haritaki, Bibhitaki). Pris le soir pour un nettoyage intestinal doux et progressif."
+      },
+      "chelation_naturelle": {
+        "definition": "Liaison et élimination des métaux lourds (plomb, mercure, arsenic, cadmium) par des agents naturels.",
+        "agents": ["Chlorella (algue verte — chélate mercure et plomb)", "Coriandre (mobilise les métaux lourds du SNC)", "Ail (composés soufrés — sélénium)", "Acide alpha-lipoïque", "NAC (N-acétyl-cystéine)", "Zéolite (piège minéral)"],
+        "precaution": "La chélation peut remobiliser les métaux. Toujours assurer les voies d'élimination (foie, reins, intestins) sont fonctionnelles AVANT de chélater."
+      }
+    },
+    "drainage_lymphatique": {
+      "systeme_lymphatique": "Réseau parallèle au système sanguin. Transporte les déchets cellulaires, les toxines et les cellules immunitaires. Pas de pompe — dépend du mouvement.",
+      "stimulation": ["Exercice physique (rebounding/mini-trampoline)", "Brossage à sec de la peau", "Massage de drainage lymphatique (méthode Vodder)", "Respiration diaphragmatique profonde", "Postures inversées (yoga: Sarvangasana)", "Alternance chaud-froid (douche écossaise)"]
+    },
+    "programme_detox_complet": {
+      "preparation_3_jours": "Éliminer progressivement café, alcool, sucre, gluten, produits laitiers, viande. Augmenter légumes, fruits, eau.",
+      "cure_3_7_jours": "Jeûne intermittent 16/8 OU cure de jus OU mono-diète. Tisanes drainantes. Brossage à sec. Sauna. Marche en nature.",
+      "sortie_progressive": "Réintroduire les aliments un par un, en commençant par les plus digestibles (soupes, fruits cuits, riz). Observer les réactions.",
+      "entretien": "1 jour de jeûne intermittent par semaine. Cure saisonnière de 3-5 jours aux changements de saison."
+    },
+    "contre_indications_generales": ["Grossesse et allaitement", "Enfants et adolescents en croissance", "Troubles du comportement alimentaire (anorexie, boulimie)", "Diabète type 1 (sans supervision médicale)", "Insuffisance rénale ou hépatique sévère", "Cachexie ou dénutrition"],
+    "avertissement_sante": "Les jeûnes prolongés (>72h) doivent être supervisés médicalement. Le jeûne intermittent est sûr pour la plupart des adultes en bonne santé. En cas de doute, consultez votre médecin."
+  }
+}

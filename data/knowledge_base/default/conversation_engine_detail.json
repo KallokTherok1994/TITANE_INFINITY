@@ -1,7 +1,7 @@
 {
   "version": "v30.1.0",
   "category": "conversation_engine_detail",
-  "description": "Moteur conversationnel TITANE∞ — pipeline unifié, maîtrise française, réalisme, cohérence, subtilité émotionnelle, littéraire, anthologie",
+  "description": "Moteur conversationnel TITANE∞ — pipeline unifié, maîtrise française, réalisme, cohérence, subtilité émotionnelle, littéraire, gestion de contexte, détection d'intention, génération de réponse, gestion de tours, récupération d'erreurs, mémoire conversationnelle, conversation multi-modale",
   "conversation_engine": {
     "nom": "ConversationEngine v∞",
     "chemin": "src-tauri/src/conversation_engine/",
@@ -28,7 +28,11 @@
       "memory.rs": "ConversationMemoryEngine — mémoire conversationnelle locale",
       "multilayer_memory.rs": "MultiLayerMemoryManager — mémoire multi-couches (STM/MTM/LTM bridge)",
       "omega_integration.rs": "OmegaConversationBridge — intégration pipeline OMEGA (R05 P1)",
-      "self_healing.rs": "SelfHealingConversation — auto-réparation en cas de dérive"
+      "self_healing.rs": "SelfHealingConversation — auto-réparation en cas de dérive",
+      "context_manager.rs": "ContextManager — gestion fenêtre de contexte et injection mémoire",
+      "turn_controller.rs": "TurnController — gestion des tours de parole et interruptions",
+      "response_builder.rs": "ResponseBuilder — moteur de templates et formatage dynamique",
+      "multimodal_bridge.rs": "MultiModalBridge — pont conversationnel texte, voix, image, fichier"
     },
     "french_mastery": {
       "description": "Post-processeur linguistique garantissant des réponses d'excellence en français",
@@ -44,7 +48,11 @@
         "Intermediate (standard, défaut)",
         "Expert (maximal)"
       ],
-      "tons": ["Neutral (défaut)", "Warm (chaleureux)", "Professional (formel)"],
+      "tons": [
+        "Neutral (défaut)",
+        "Warm (chaleureux)",
+        "Professional (formel)"
+      ],
       "longueurs": [
         "Short (<150 mots)",
         "Medium (150-400 mots, défaut)",
@@ -63,6 +71,318 @@
         "7. Retour réponse finale via IPC"
       ],
       "note": "Chaque étape peut laisser passer sans modification si tout est conforme. Aucune étape n'invente du contenu — elles affinent uniquement."
+    },
+    "contexte_management": {
+      "description": "Gestionnaire de contexte conversationnel — cohérence sur de longues sessions via fenêtre glissante, résumés et injection mémoire",
+      "fenêtre_de_contexte": {
+        "taille_max_tokens": "Configurable par provider — 4096 (Ollama local) à 128000 (GPT-4, Claude)",
+        "reserve_systeme": "15% réservés au prompt système et instructions TITANE",
+        "reserve_reponse": "20% réservés à la génération de la réponse"
+      },
+      "fenêtre_glissante": {
+        "mode_fifo": "Messages anciens retirés en premier après résumé",
+        "mode_pertinence": "Messages pondérés par score de pertinence — les messages importants survivent plus longtemps",
+        "seuil_compression": "Compression déclenchée à 80% d'utilisation de la fenêtre maximale",
+        "granularite": "Compression par blocs de 5 à 10 messages pour préserver la cohérence thématique"
+      },
+      "résumé_automatique": {
+        "format": "Résumé structuré: points clés, décisions, entités, ton émotionnel dominant",
+        "injection": "Injecté au début de la fenêtre de contexte comme message système",
+        "fusion": "Résumés successifs fusionnés — un seul résumé cumulatif actif"
+      },
+      "injection_memoire": {
+        "source": "MultiLayerMemoryManager (STM/MTM/LTM) fournit les fragments candidats",
+        "selection": "Sélection par similarité sémantique avec la requête courante",
+        "budget_tokens": "Maximum 10% de la fenêtre alloué aux injections mémoire",
+        "priorite": "Mémoire épisodique récente > sémantique pertinente > long terme"
+      },
+      "scoring_priorite": {
+        "facteurs": [
+          "Récence temporelle (0.3)",
+          "Pertinence sémantique (0.3)",
+          "Importance conversationnelle (0.2)",
+          "Référence utilisateur (0.1)",
+          "Ancrage émotionnel (0.1)"
+        ],
+        "seuil_retention": "Éléments sous 0.2 candidats à la compression ou au retrait"
+      }
+    },
+    "intent_detection": {
+      "description": "Détection et classification d'intention — analyse sémantique multi-niveaux",
+      "classification_intention": {
+        "categories_primaires": [
+          "Question — demande d'information",
+          "Instruction — demande d'action spécifique",
+          "Conversation — échange social ou réflexion libre",
+          "Création — génération de contenu (code, texte)",
+          "Correction — modification ou amélioration",
+          "Navigation — commande d'interface TITANE",
+          "Configuration — modification de paramètres",
+          "Méta — question sur TITANE lui-même"
+        ],
+        "confiance": "Score entre 0.0 et 1.0 — seuil minimum de 0.4 pour accepter"
+      },
+      "patterns": {
+        "lexicaux": "Mots-clés déclencheurs (ex: 'explique-moi', 'génère', 'corrige')",
+        "syntaxiques": "Structure grammaticale (interrogative, impérative, déclarative)",
+        "pragmatiques": "Contexte conversationnel et actes de langage implicites",
+        "appris": "Patterns personnalisés appris depuis l'historique utilisateur"
+      },
+      "entités_et_slots": {
+        "types": [
+          "Fichier",
+          "Code (langages, fonctions)",
+          "Temporel",
+          "Numérique",
+          "Persona (modèles IA)",
+          "Concept"
+        ],
+        "slots": "Structures typées remplies progressivement au fil de la conversation",
+        "validation": "Vérification de complétude des slots requis avant exécution"
+      },
+      "multi_tour": {
+        "continuation": "Détection de continuation d'intention ('et aussi...', 'en plus...')",
+        "raffinement": "Suivi du raffinement progressif d'une intention vague vers une intention précise",
+        "chaînage": "Détection de chaînes d'intentions liées",
+        "historique": "Conservation des 20 dernières intentions classifiées"
+      },
+      "désambiguïsation": {
+        "seuil": "Activée sous 0.4 de confiance ou si deux intentions rivales sont proches",
+        "strategie_question": "Question de clarification courte et précise",
+        "strategie_proposition": "2 à 3 interprétations possibles avec demande de choix",
+        "limite": "Maximum 2 tentatives avant fallback sur l'intention la plus probable"
+      }
+    },
+    "response_generation": {
+      "description": "Moteur de génération de réponse — assemblage, formatage et personnalisation",
+      "template_engine": {
+        "templates": [
+          "Libre (conversationnel)",
+          "Structuré (titres, listes)",
+          "Code (blocs + explications)",
+          "Tableau",
+          "Étapes (pas-à-pas)",
+          "Comparaison",
+          "Résumé"
+        ],
+        "selection": "Automatique selon l'intention détectée, forçable par commande ('/liste', '/code')"
+      },
+      "formatage_dynamique": {
+        "markdown": "Formatage Markdown natif — titres, listes, gras, italique, liens",
+        "code_blocks": "Détection automatique du langage et coloration syntaxique",
+        "adaptif": "Minimal en conversation rapide, riche en réponse détaillée"
+      },
+      "injection_persona": {
+        "persona_defaut": "Assistant professionnel, compétent, chaleureux, francophone natif",
+        "traits": [
+          "Précision",
+          "Empathie",
+          "Proactivité",
+          "Humilité",
+          "Élégance"
+        ],
+        "coherence_session": "Persona stable sur toute la session — pas de variation brusque",
+        "persona_custom": "Support de personas personnalisées via configuration"
+      },
+      "contrôle_longueur": {
+        "concis": "<100 mots — questions factuelles simples",
+        "standard": "150-400 mots — mode par défaut",
+        "détaillé": ">400 mots — explications complexes",
+        "adaptatif": "Ajustement automatique selon la complexité détectée"
+      },
+      "formatage_code": {
+        "detection_langage": "Automatique à partir du contexte et du contenu",
+        "indentation": "Cohérente selon les conventions du langage",
+        "diff": "Support format diff pour les modifications",
+        "langages": [
+          "Rust",
+          "TypeScript",
+          "JavaScript",
+          "Python",
+          "HTML",
+          "CSS",
+          "SQL",
+          "Bash",
+          "JSON",
+          "TOML",
+          "YAML"
+        ]
+      }
+    },
+    "turn_management": {
+      "description": "Gestion des tours de parole — orchestration de l'échange conversationnel",
+      "tour_de_parole": {
+        "principe": "Alternance utilisateur → TITANE avec possibilité d'interruption",
+        "etats": [
+          "ATTENTE_UTILISATEUR",
+          "GENERATION_EN_COURS",
+          "TRAITEMENT_PIPELINE"
+        ],
+        "timeout_inactivite": "30 minutes → sauvegarde contexte et mise en pause"
+      },
+      "interruptions": {
+        "annulation": "Stop via bouton ou raccourci clavier à tout moment",
+        "nouveau_message": "Nouveau message pendant génération → annulation et traitement du nouveau",
+        "reponse_partielle": "Réponse partielle conservée et marquée incomplète",
+        "reprise": "Reprise possible avec 'continue'"
+      },
+      "continuation": {
+        "detection": "Détection automatique des messages de suite",
+        "marqueurs": "'aussi', 'et', 'de plus', 'en outre', 'pareil pour'",
+        "contexte_implicite": "Contexte de la question précédente automatiquement hérité"
+      },
+      "multi_message": {
+        "messages_longs": "Traitement intégral sans troncature",
+        "file_attente": "File ordonnée pour messages reçus pendant la génération",
+        "priorite": "Messages système et commandes traités en priorité"
+      },
+      "streaming": {
+        "mode": "Token-par-token via IPC depuis le provider vers l'interface",
+        "post_traitement": "Pipeline appliqué par blocs pendant le streaming",
+        "latence_cible": "<200ms entre requête et premier token",
+        "buffer": "50 tokens pour post-traitement temps réel sans saccades"
+      }
+    },
+    "error_recovery": {
+      "description": "Récupération d'erreurs — résilience et dégradation gracieuse",
+      "fallback_strategies": {
+        "niveaux": [
+          "1. Réessai avec le même provider (délai exponentiel)",
+          "2. Basculement vers provider alternatif",
+          "3. Basculement vers Ollama local si disponible",
+          "4. Réponse pré-enregistrée contextuelle",
+          "5. Message d'erreur explicite avec suggestion"
+        ],
+        "provider_chain": "Principal → secondaire → Ollama local → message d'erreur"
+      },
+      "clarification": {
+        "requete_vague": "Proposition de reformulations possibles",
+        "requete_contradictoire": "Détection de contradictions — demande de confirmation",
+        "requete_hors_scope": "Redirection vers les capacités disponibles"
+      },
+      "retry": {
+        "erreurs_transitoires": [
+          "Timeout réseau",
+          "Erreur 429 (rate limit)",
+          "Erreur 500/503",
+          "Déconnexion temporaire"
+        ],
+        "max_retries": "3 tentatives avant escalade",
+        "backoff": "Exponentiel: 1s → 3s → 9s"
+      },
+      "degradation_gracieuse": {
+        "niveaux": [
+          "Complet — tous post-processeurs actifs",
+          "Réduit — émotionnel et littéraire désactivés",
+          "Minimal — réponse brute sans post-traitement",
+          "Hors ligne — réponses pré-enregistrées et mémoire locale"
+        ],
+        "notification": "Utilisateur toujours informé du niveau actuel",
+        "restauration": "Automatique dès conditions rétablies"
+      },
+      "self_healing": {
+        "detection_derive": "Détection boucles, répétitions et incohérences",
+        "correction": "Réinitialisation partielle du contexte",
+        "seuils": "Similarité > 0.9 entre réponses consécutives → dérive probable",
+        "journalisation": "Toutes les interventions journalisées pour analyse"
+      }
+    },
+    "conversation_memory": {
+      "description": "Mémoire conversationnelle multi-niveaux — stockage, indexation et rappel",
+      "memoire_court_terme": {
+        "duree": "Session active uniquement",
+        "capacite": "100 derniers messages ou 50 000 tokens",
+        "stockage": "RAM uniquement — aucune persistance disque",
+        "acces": "<1ms"
+      },
+      "memoire_moyen_terme": {
+        "duree": "30 jours (configurable)",
+        "capacite": "Résumés des 100 dernières sessions",
+        "stockage": "SQLite chiffré — table conversation_summaries",
+        "contenu": "Thèmes, décisions, préférences, entités clés"
+      },
+      "memoire_long_terme": {
+        "duree": "Permanente jusqu'à suppression explicite",
+        "stockage": "SQLite chiffré — table user_long_term_memory",
+        "contenu": "Faits utilisateur, préférences stables, compétences, projets",
+        "validation": "3 mentions minimum avant promotion en LTM"
+      },
+      "memoire_episodique": {
+        "contenu": "Événements marquants: succès, erreurs, moments émotionnels, résolutions",
+        "indexation": "Par date, thème, émotion dominante et résultat",
+        "rappel": "Déclenché par similarité contextuelle avec la conversation en cours"
+      },
+      "memoire_semantique": {
+        "contenu": "Concepts techniques, définitions, relations entre entités",
+        "representation": "Vectorielle pour recherche par similarité sémantique",
+        "conflit": "Version récente prime avec conservation de l'historique"
+      },
+      "memoire_de_travail": {
+        "contenu": "Intention courante, entités extraites, état des slots, plan de réponse",
+        "duree": "Un seul tour — réinitialisée à chaque message",
+        "taille": "4096 tokens maximum"
+      },
+      "rappel": {
+        "declencheurs": [
+          "Mention explicite d'un sujet passé",
+          "Similarité sémantique vectorielle",
+          "Pattern récurrent détecté",
+          "Demande explicite ('tu te souviens...')"
+        ],
+        "format": "Injection naturelle dans la réponse — jamais artificielle",
+        "limite": "Maximum 3 rappels par réponse"
+      }
+    },
+    "multi_modal_conversation": {
+      "description": "Support multi-modal — texte, voix, image et fichier dans un flux unifié",
+      "texte": {
+        "encodage": "UTF-8 natif avec support Unicode complet et emojis",
+        "markdown": "Support Markdown complet en entrée et sortie",
+        "longueur_max": "32 000 caractères par message",
+        "langues": "Optimisé français, multilingue via le modèle IA"
+      },
+      "voix": {
+        "stt": "Speech-to-Text via tts-service/ local ou API externe",
+        "tts": "Text-to-Speech pour lecture des réponses",
+        "activation": "Bouton microphone ou raccourci clavier configurable",
+        "transcription": "Progressive pendant que l'utilisateur parle"
+      },
+      "image": {
+        "formats": [
+          "PNG",
+          "JPEG",
+          "WebP",
+          "SVG",
+          "GIF"
+        ],
+        "analyse": "Via modèles multimodaux (GPT-4 Vision, Claude Vision)",
+        "taille_max": "20 Mo par image",
+        "contexte": "Images partagées enrichissent le contexte — référençables ultérieurement"
+      },
+      "fichier": {
+        "types": [
+          "Texte brut",
+          "Code source",
+          "JSON",
+          "YAML",
+          "TOML",
+          "CSV",
+          "Markdown",
+          "PDF"
+        ],
+        "taille_max": "10 Mo par fichier, 50 Mo total par session",
+        "traitement": "Extraction textuelle, analyse, résumé et réponse contextualisée"
+      },
+      "commutation_mode": {
+        "transition": "Passage transparent entre modes sans perte de contexte",
+        "preference": "Mode préféré mémorisé et proposé par défaut",
+        "combinaison": "Modes combinables dans un même message (texte + image)"
+      },
+      "preservation_contexte": {
+        "continuite": "Contexte maintenu intégralement lors du changement de mode",
+        "references_croisees": "Éléments d'un mode référençables depuis un autre",
+        "historique_unifie": "Historique unique quelle que soit la modalité"
+      }
     }
   }
 }

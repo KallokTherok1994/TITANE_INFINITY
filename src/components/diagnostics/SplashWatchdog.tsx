@@ -157,6 +157,56 @@ const deriveBackendStatus = (health: unknown): 'ok' | 'error' | 'unknown' => {
   return 'unknown';
 };
 
+export const normalizeBootErrorForDisplay = (entry: unknown): string => {
+  if (typeof entry === 'string') {
+    return entry;
+  }
+
+  if (entry instanceof Error) {
+    return entry.message || String(entry);
+  }
+
+  if (entry && typeof entry === 'object') {
+    const record = entry as Record<string, unknown>;
+    const message =
+      typeof record.msg === 'string'
+        ? record.msg
+        : typeof record.message === 'string'
+          ? record.message
+          : undefined;
+
+    if (message) {
+      return message;
+    }
+
+    try {
+      return JSON.stringify(entry);
+    } catch {
+      return String(entry);
+    }
+  }
+
+  return String(entry);
+};
+
+const readBootErrors = (): string[] => {
+  try {
+    const errorLogs = window.localStorage.getItem('titane_boot_errors');
+    if (!errorLogs) {
+      return [];
+    }
+
+    const parsed = JSON.parse(errorLogs) as unknown;
+    if (!Array.isArray(parsed)) {
+      return [normalizeBootErrorForDisplay(parsed)];
+    }
+
+    return parsed.map(normalizeBootErrorForDisplay);
+  } catch {
+    return [];
+  }
+};
+
 /**
  * Hook qui surveille le boot et expose les diagnostics
  */
@@ -193,15 +243,7 @@ const useBootWatchdog = () => {
       const currentTimestamp = w.__TITANE_BOOT__?.timestamp ?? Date.now();
 
       // Collecter erreurs JS capturées
-      const errors: string[] = [];
-      try {
-        const errorLogs = window.localStorage.getItem('titane_boot_errors');
-        if (errorLogs) {
-          errors.push(...JSON.parse(errorLogs));
-        }
-      } catch {
-        // Ignore
-      }
+      const errors = readBootErrors();
 
       setDiagnostics(prev => ({
         ...prev,

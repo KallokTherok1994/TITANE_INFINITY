@@ -1,3 +1,4 @@
+import React from 'react';
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -71,6 +72,28 @@ describe('useLivingEngines', () => {
       }
       await Promise.resolve();
     });
+
+    unmount();
+  });
+
+  it('re-initializes correctly under React.StrictMode effect replay', async () => {
+    mockedBridge.getState.mockResolvedValue({
+      intensity: 0.4,
+      presenceLevel: 0.6,
+    } as any);
+
+    const wrapper = ({ children }: { children: React.ReactNode }) =>
+      React.createElement(React.StrictMode, null, children);
+
+    const { result, unmount } = renderHook(() => useLivingEngines(100), { wrapper });
+
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+
+    expect(result.current.state.initialized).toBe(true);
+    expect(mockedBridge.initialize).toHaveBeenCalled();
 
     unmount();
   });

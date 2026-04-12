@@ -1,0 +1,170 @@
+{
+  "version": "v30.1.0",
+  "category": "yoga_kundalini_maitre",
+  "description": "Yoga Maître et Kundalini Maître — siddhis (pouvoirs yogiques), bandhas (verrous énergétiques), kriyas (purification), mudras avancés, pranayama maître, éveil de la kundalini (montée, symptômes, intégration), chakras avancés, samadhi, yoga nidra profond, tantra sacré, mantra avancé",
+  "yoga_kundalini_maitre": {
+    "introduction": "Le yoga maître va au-delà de la pratique posturale (asana) pour explorer les dimensions énergétiques, spirituelles et transformatives du yoga. Le Kundalini Yoga, considéré comme le 'yoga de la conscience', travaille directement avec l'énergie subtile (prana, kundalini) et les centres énergétiques (chakras). TITANE présente ces enseignements avancés avec respect pour la tradition et honnêteté sur les risques et les limites.",
+    "yoga_avance_au_dela_asana": {
+      "pratyahara_retrait_sens": {
+        "pratique": "Fermer les yeux, tourner l'attention vers l'intérieur. Shanmukhi mudra (fermer les 7 portes : yeux, oreilles, narines, bouche avec les doigts). Yoga nidra comme pratyahara structuré.",
+        "objectif": "Développer la capacité à ne plus être esclave des stimuli externes. Précondition indispensable à la méditation profonde.",
+        "dans_vie_quotidienne": "Périodes de silence (mauna), jeûne médiatique, périodes sans stimulation (no phone, no music), marche en silence dans la nature."
+      },
+      "dharana_concentration": {
+        "trataka": "Fixation du regard sur la flamme d'une bougie sans cligner pendant 1-3 min → fermer les yeux → observer l'image rémanente → concentration sur le point lumineux intérieur. Développe une concentration laser.",
+        "concentration_sur_souffle": "Anapanasati — observation du souffle au niveau des narines. Le souffle comme ancre. Vipassana commence ici.",
+        "mantra_japa": "Répétition d'un mantra (OM, So Hum, Sat Nam) comme support de concentration. Mala (108 perles) pour compter. Le mantra devient automatique puis silencieux."
+      },
+      "dhyana_meditation": {
+        "niveaux": "Savitarka (avec pensée/objet) → Nirvitarka (sans pensée/concept) → Savichara (avec discernement subtil) → Nirvichara (au-delà du discernement).",
+        "signes_progression": "Stabilité de l'attention prolongée, réduction du dialogue interne, perception de la luminosité intérieure (nimitta), sensation d'expansion, perte de la perception du corps."
+      },
+      "samadhi": {
+        "définition": "État d'absorption complète — dissolution de la séparation entre le méditant, l'objet de méditation et l'acte de méditer.",
+        "savikalpa_samadhi": "Samadhi avec semence — extase temporaire, le méditant revient à l'état ordinaire. Expérience d'union mais retour au dualisme.",
+        "nirvikalpa_samadhi": "Samadhi sans semence — dissolution complète de l'ego. Conscience pure sans objet. Très rare. Décrit par Ramana Maharshi, Ramakrishna, Paramahansa Yogananda.",
+        "sahaja_samadhi": "Samadhi naturel et continu — l'état d'éveil est maintenu dans la vie quotidienne. Le saint vit dans le monde mais n'est pas du monde."
+      }
+    },
+    "kundalini": {
+      "nature": {
+        "définition": "Énergie cosmique primordiale dormante à la base de la colonne vertébrale (muladhara chakra). Représentée comme un serpent enroulé 3,5 fois autour du lingam de Shiva.",
+        "shakti_et_shiva": "Kundalini = Shakti (énergie féminine créatrice). Son éveil la fait monter par la sushumna nadi (canal central) vers Sahasrara (sommet du crâne) où elle s'unit à Shiva (conscience pure). Cette union = illumination.",
+        "nadis": {
+          "sushumna": "Canal central — de la base de la colonne au sommet du crâne. Quand la kundalini monte dans ce canal = éveil.",
+          "ida": "Canal lunaire, yin, gauche du corps, narine gauche. Refroidissant, réceptif, introspectif.",
+          "pingala": "Canal solaire, yang, droit du corps, narine droite. Réchauffant, actif, extraverti.",
+          "équilibre": "Quand ida et pingala sont en équilibre, la sushumna s'ouvre. C'est l'objectif du pranayama Nadi Shodhana (respiration alternée)."
+        }
+      },
+      "éveil_kundalini": {
+        "méthodes_traditionnelles": {
+          "pranayama_intense": "Bhastrika (soufflet), Kapalabhati prolongé, Nadi Shodhana avancé avec rétentions. Le pranayama est considéré comme la méthode la plus puissante.",
+          "bandhas": "Verrous énergétiques qui dirigent le prana vers la sushumna. Indispensables pour l'éveil sécurisé.",
+          "kriyas": "Séquences spécifiques de postures + respiration + mantra + mudra conçues pour activer l'énergie dans un chakra spécifique.",
+          "méditation": "Concentration intense et soutenue sur muladhara, sur la flamme intérieure, sur le mantra 'Lam'.",
+          "shaktipat": "Transmission directe d'énergie d'un maître éveillé au disciple par le toucher, le regard ou l'intention. Tradition tantrique."
+        },
+        "symptômes_éveil": {
+          "physiques": "Chaleur intense le long de la colonne, tremblements/secousses involontaires (kriyas spontanées), pressions au sommet du crâne, bourdonnements (nada), sensations électriques, orgasmes spontanés, changements de sommeil.",
+          "émotionnels": "Vagues de joie/extase intense, pleurs spontanés de libération, résurgence d'émotions enfouies, phases de peur ou d'anxiété, amour inconditionnel.",
+          "perceptuels": "Visions de lumière (phosphènes, lumière intérieure), perception de vibrations ou d'énergie dans le corps, synesthésie (mélange des sens), perception de la présence.",
+          "cognitifs": "Clarté mentale exceptionnelle ou confusion temporaire, réorganisation des priorités de vie, détachement des désirs matériels, sentiment d'interconnexion avec tout."
+        },
+        "dangers_et_précautions": {
+          "kundalini_syndrome": "Éveil prématuré ou non préparé → crise kundalini : anxiété extrême, dissociation, symptômes psychotiques, douleurs physiques intenses, insomnie sévère. Peut durer des semaines à des années.",
+          "préparation_essentielle": "Purification physique (shatkarmas), alimentation sattvique, maîtrise des asanas et pranayamas de base, stabilité émotionnelle, ancrage, guidance d'un enseignant expérimenté.",
+          "intégration": "L'éveil n'est pas l'objectif final — l'INTÉGRATION dans la vie quotidienne l'est. Un éveil non intégré peut déstabiliser la vie personnelle, professionnelle et relationnelle."
+        }
+      }
+    },
+    "bandhas_verrous_energetiques": {
+      "mula_bandha": {
+        "localisation": "Périnée (entre anus et organes génitaux). Zone du plancher pelvien.",
+        "technique": "Contraction et maintien du périnée (comme retenir l'urine ET les selles). Subtil — pas un serrage brutal.",
+        "effets": "Ancrage de l'énergie, prévention de la perte de prana par le bas, stimulation de muladhara chakra, renforcement du plancher pelvien.",
+        "conseil": "Commencer par des contractions-relâchements (comme des Kegel) → puis maintien continu pendant le pranayama."
+      },
+      "uddiyana_bandha": {
+        "localisation": "Abdomen — rétraction du diaphragme vers le haut et de la paroi abdominale vers l'intérieur.",
+        "technique": "À pratiquer à JEUN et sur une expiration complète. Expirer totalement → fermer la glotte → tenter d'inspirer (le diaphragme remonte, l'abdomen se creuse). Maintenir 10-30 sec.",
+        "effets": "Stimulation du plexus solaire (manipura), massage des organes internes, amélioration de la digestion, montée de l'énergie dans la sushumna.",
+        "contre_indications": "Grossesse, menstruation, hypertension, hernies, ulcères."
+      },
+      "jalandhara_bandha": {
+        "localisation": "Gorge — flexion du menton vers la poitrine (menton dans l'encoche du sternum).",
+        "technique": "Inspirer → menton vers la poitrine → fermer la glotte. Maintenir pendant la rétention du souffle.",
+        "effets": "Compression de la thyroïde et parathyroïdes (régulation métabolique), ferme le passage du prana vers la tête (prévient les maux de tête pendant le pranayama intense)."
+      },
+      "maha_bandha": {
+        "définition": "Le Grand Verrou — application simultanée des trois bandhas (mula + uddiyana + jalandhara).",
+        "effet": "La combinaison des trois verrous force le prana dans la sushumna nadi → activation directe de la kundalini. Technique puissante — réservée aux pratiquants avancés sous guidance."
+      }
+    },
+    "pranayama_maitre": {
+      "kumbhaka_retention": {
+        "antara": "Rétention poumons pleins. Ratio classique : 1:4:2 (inspiration:rétention:expiration). 4 temps in, 16 temps rétention, 8 temps out. La rétention est la clé de la transformation pranique.",
+        "bahya": "Rétention poumons vides (externe). Plus avancée et plus puissante. Associée à uddiyana bandha et mula bandha.",
+        "progression": "Commencer sans rétention → courte rétention → ratio 1:1:1 → ratio 1:2:2 → ratio 1:4:2 (classique). JAMAIS forcer."
+      },
+      "bhastrika": {
+        "technique": "Respiration en soufflet — inspirations et expirations forcées, rapides et profondes par le nez. 20-40 cycles → rétention profonde → expansion de conscience.",
+        "effets": "Purification des nadis, augmentation du prana, chaleur interne, activation de la kundalini.",
+        "précautions": "Vertiges, étourdissements possibles. Contre-indiqué : hypertension, épilepsie, grossesse, maladies cardiaques."
+      },
+      "surya_bhedana": {
+        "technique": "Inspiration par la narine droite (pingala/solaire) → rétention → expiration par la narine gauche (ida/lunaire).",
+        "effets": "Active le système sympathique, réchauffe, augmente l'énergie, améliore la digestion."
+      },
+      "sitali_sitkari": {
+        "technique": "Inspiration par la langue enroulée (sitali) ou entre les dents (sitkari) → refroidissement.",
+        "effets": "Rafraîchit le corps, calme le mental, réduit la fièvre, la soif et l'agitation."
+      }
+    },
+    "kriyas_kundalini_yoga": {
+      "définition": "En Kundalini Yoga (tradition Yogi Bhajan), un kriya est une séquence complète et spécifique de postures + respiration + mudra + mantra + timing. Chaque kriya a un objectif précis.",
+      "kriyas_fondamentaux": {
+        "kriya_colonne_vertébrale": "Flexion-extension de la colonne assise en tailleur, avec souffle de feu. Active la kundalini le long de la colonne.",
+        "sat_kriya": "Assis sur les talons, bras tendus au-dessus de la tête. Chant 'Sat Nam' avec contraction du nombril sur 'Sat', relâchement sur 'Nam'. 3-31 min. Considéré comme le kriya le plus complet.",
+        "kriya_système_nerveux": "Séquence de 6-8 exercices conçue pour renforcer et équilibrer le système nerveux. Inclut le souffle de feu, des postures statiques tenues et des mantras.",
+        "kriya_des_reins_et_surrénales": "Séquence ciblant les reins et les glandes surrénales. Combat la fatigue et le burnout."
+      },
+      "souffle_de_feu": {
+        "technique": "Respiration rapide, rythmique, par le nez. Expiration active (contraction du nombril), inspiration passive. 2-3 cycles/seconde.",
+        "effets": "Purification du sang, activation du système nerveux sympathique, augmentation du prana, oxygénation du cerveau, massage des organes abdominaux.",
+        "durée": "1 min (débutant) → 3 min (intermédiaire) → 11 min → 31 min (avancé)."
+      }
+    },
+    "chakras_avances": {
+      "au_dela_7": {
+        "chakra_8": "Aura — le champ électromagnétique du corps. En Kundalini Yoga, c'est le 8e chakra. Un aura fort = protection et rayonnement.",
+        "chakras_transpersonnels": "Certaines traditions décrivent des chakras au-dessus de la tête (soul star, stellar gateway) et en dessous des pieds (earth star). Correspondent aux états de conscience cosmique.",
+        "chakras_mineurs": "Paumes des mains (guérison, énergie), plantes des pieds (ancrage), genoux (humilité), coudes (action)."
+      },
+      "travail_avancé_par_chakra": {
+        "muladhara_racine": "Au-delà de la sécurité basique : enracinement dans le corps comme temple, acceptation de la matière, kundalini dormante comme potentiel infini.",
+        "svadhisthana_sacré": "Au-delà de la sexualité : créativité pure, fluidité émotionnelle, capacité à être dans le plaisir sans attachement.",
+        "manipura_solaire": "Au-delà de la volonté : feu transformateur (tapas), digestion des expériences de vie, courage d'être soi.",
+        "anahata_coeur": "Au-delà de l'amour romantique : amour inconditionnel (metta), compassion pour soi et les autres, pardon radical, siège de l'intelligence intuitive.",
+        "vishuddha_gorge": "Au-delà de la parole : expression de sa vérité profonde, écoute intérieure, communication avec le divin, silence comme expression.",
+        "ajna_troisième_oeil": "Au-delà de l'intuition : vision non-duelle, dissolution de la pensée dualiste, perception directe (prajna), maîtrise du mental.",
+        "sahasrara_couronne": "Au-delà de la spiritualité conceptuelle : dissolution de l'ego, union avec la conscience universelle, samadhi, expérience directe du Soi."
+      }
+    },
+    "mudras_avances": {
+      "gyan_mudra": "Pouce + index — connaissance et sagesse. Le plus utilisé en méditation. Active le lobe frontal.",
+      "shuni_mudra": "Pouce + majeur — patience et discipline. Développe le sens du devoir.",
+      "surya_mudra": "Pouce + annulaire — santé et énergie. Active l'élément feu.",
+      "buddhi_mudra": "Pouce + auriculaire — communication et intuition. Active l'élément eau.",
+      "khechari_mudra": "Rouler la langue vers l'arrière pour toucher le palais mou (ou au-delà dans la pratique avancée). Considéré comme le roi des mudras. Active la sécrétion d'amrita (nectar divin) de la glande pinéale. Pratique avancée sous guidance.",
+      "maha_mudra": "Combinaison de posture (janusirsasana) + bandhas + pranayama. Purifie les nadis, active la kundalini, équilibre les énergies."
+    },
+    "mantra_avance": {
+      "bij_mantras": {
+        "LAM": "Muladhara (terre). Ancrage, stabilité.",
+        "VAM": "Svadhisthana (eau). Fluidité, créativité.",
+        "RAM": "Manipura (feu). Volonté, transformation.",
+        "YAM": "Anahata (air). Amour, compassion.",
+        "HAM": "Vishuddha (éther). Vérité, expression.",
+        "OM": "Ajna. Conscience, perception.",
+        "silence": "Sahasrara. Au-delà du son."
+      },
+      "mantras_puissants": {
+        "Gayatri": "Om Bhur Bhuva Svah, Tat Savitur Varenyam, Bhargo Devasya Dhimahi, Dhiyo Yo Nah Prachodayat. Mantra védique suprême — illumination de l'intellect par la lumière divine.",
+        "Sat_Nam": "Vérité est mon identité. Mantra fondamental du Kundalini Yoga.",
+        "Wahe_Guru": "Extase de l'illumination. Mantra de l'émerveillement devant le divin.",
+        "Ra_Ma_Da_Sa": "Mantra de guérison. Ra (soleil), Ma (lune), Da (terre), Sa (infini), Sa (mouvement de l'infini), Say (la totalité de l'expérience), So Hung (je suis cela)."
+      }
+    },
+    "yoga_nidra_profond": {
+      "définition": "Le 'yoga du sommeil conscient'. État entre veille et sommeil (ondes thêta) maintenu consciemment. 1h de Yoga Nidra = 4h de sommeil en termes de récupération.",
+      "protocole_avancé": {
+        "sankalpa": "Intention/résolution posée au début et à la fin. Parle directement à l'inconscient car la conscience est en état hypnagogique.",
+        "rotation_conscience": "Balayage systématique du corps partie par partie. Crée une carte neuronale complète du corps (homunculus sensitif).",
+        "paires_opposées": "Chaud/froid, lourd/léger, joie/tristesse — alterner les sensations et émotions opposées développe l'équanimité.",
+        "visualisation": "Images symboliques rapides (forêt, temple, ciel étoilé) → chaque image stimule un complexe émotionnel et le libère.",
+        "retour_sankalpa": "La résolution est répétée — elle s'inscrit dans l'inconscient profond. Base de la reprogrammation mentale yogique."
+      }
+    }
+  }
+}

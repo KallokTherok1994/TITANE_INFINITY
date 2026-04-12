@@ -1,0 +1,135 @@
+{
+  "version": "v30.1.0",
+  "category": "langage_corporel_avance",
+  "description": "Langage corporel avancé — microexpressions (Ekman 7 émotions universelles), décodage posture, proxémique (Hall), calibration, congruence, synergologie, gestes d'autorité et de soumission, lecture des pieds/mains/yeux, détection du mensonge, power posing",
+  "langage_corporel_avance": {
+    "introduction": "Le langage corporel transmet 55 à 93% du message selon le contexte (Mehrabian, 1971). Les micro-expressions — flashs émotionnels involontaires de 1/25 à 1/5 de seconde — révèlent les émotions véritables même quand la personne tente de les masquer. TITANE fournit des outils avancés de lecture et de projection du langage non-verbal, utilisables en négociation, leadership, séduction et vie quotidienne.",
+    "microexpressions_Ekman": {
+      "auteur": "Paul Ekman (1969, 1972, 2003). Psychologue. A identifié 7 émotions universelles lisibles sur tous les visages humains indépendamment de la culture. Système FACS (Facial Action Coding System) : 46 unités d'action musculaire faciale.",
+      "sept_emotions_universelles": {
+        "joie": {
+          "muscles": "Sourire de Duchenne : zygomatique majeur (lèvres) + orbicularis oculi (yeux — pattes d'oie). Un sourire sans plissage des yeux est social/faux.",
+          "indices": "Joues relevées, dents visibles, rides aux coins des yeux, front lisse",
+          "durée_micro": "40-200 ms"
+        },
+        "tristesse": {
+          "muscles": "Coin interne des sourcils relevé (corrugateur + frontal médial), lèvre inférieure qui tremble, regard vers le bas",
+          "indices": "Sourcils en accent circonflexe inversé, paupières supérieures tombantes, coins de la bouche vers le bas",
+          "signal_subtil": "Le coin interne des sourcils qui se relève est le signal le plus fiable — très difficile à simuler volontairement"
+        },
+        "colère": {
+          "muscles": "Sourcils abaissés et rapprochés (corrugateur), yeux étrécis, narines dilatées, mâchoire serrée, lèvres comprimées",
+          "indices": "Regard fixe intense, rougeur du visage, tension visible de la mâchoire",
+          "signal_subtil": "Compression des lèvres en ligne fine — indicateur précoce d'irritation avant l'explosion"
+        },
+        "peur": {
+          "muscles": "Sourcils relevés et rapprochés, yeux écarquillés (blanc visible au-dessus de l'iris), bouche ouverte étirée horizontalement",
+          "indices": "Visage pâle, muscles du cou tendus, recul du corps",
+          "différence_surprise": "Dans la peur les sourcils sont rapprochés (tension) ; dans la surprise ils sont relevés mais détendus"
+        },
+        "surprise": {
+          "muscles": "Sourcils hauts et arrondis, yeux grands ouverts, bouche ouverte en O",
+          "indices": "Expression la plus brève (< 1 seconde). Si elle dure plus longtemps → surprise feinte.",
+          "transition": "La surprise est toujours suivie d'une autre émotion (joie, peur, colère...). Observer la transition révèle le vrai sentiment."
+        },
+        "dégoût": {
+          "muscles": "Lèvre supérieure relevée (levator labii superioris), nez plissé, sourcils abaissés",
+          "indices": "Narines contractées, langue légèrement sortie, tête détournée",
+          "variante_mépris": "Le mépris = micro-expression asymétrique — un seul coin de bouche relevé. Signe de supériorité perçue."
+        },
+        "mépris": {
+          "muscles": "Sourire asymétrique — un seul coin de bouche légèrement relevé (risorius unilatéral)",
+          "indices": "Expression la plus dangereuse en relation (Gottman : le mépris est le prédicteur #1 du divorce — 93% de précision)",
+          "signification": "Sentiment de supériorité morale sur l'autre. Absence d'empathie momentanée."
+        }
+      },
+      "entrainement": "L'entraînement à la détection des micro-expressions est possible (METT — Micro Expression Training Tool d'Ekman). Amélioration significative en 1h d'entraînement. Application : forces de l'ordre, négociation, psychothérapie, leadership."
+    },
+    "posture_et_presence": {
+      "postures_de_pouvoir": {
+        "expansive": "Corps ouvert, bras écartés ou mains sur les hanches, jambes écartées, torse droit. Communique confiance, autorité, dominance.",
+        "power_posing_Cuddy": "Amy Cuddy (2012) : 2 minutes en posture de pouvoir → cortisol ↓ 25%, testostérone ↑ 20%. Étude contestée mais l'effet subjectif (confiance ressentie) reste validé.",
+        "posture_victoire": "Bras en V au-dessus de la tête — expression universelle de victoire. Même les aveugles de naissance la font spontanément (Matsumoto & Willingham 2009)."
+      },
+      "postures_de_soumission": {
+        "contractive": "Corps fermé, bras croisés, épaules rentrées, tête baissée, jambes croisées. Communique insécurité, défensive, inconfort.",
+        "auto_toucher": "Se toucher le cou, le visage, frotter les mains → geste d'auto-apaisement (pacifying behaviors, Joe Navarro). Signal d'inconfort ou de stress.",
+        "protection_du_torse": "Croiser les bras, tenir un objet devant soi (sac, dossier, tasse) = barrière inconsciente."
+      },
+      "alignement_posture": {
+        "ancrage": "Pieds à largeur d'épaules, poids équitablement réparti, genoux légèrement fléchis → stabilité et présence",
+        "verticalité": "Imaginer un fil au sommet du crâne tirant vers le haut → allongement de la colonne, menton neutre (ni relevé arrogant, ni baissé soumis)",
+        "ouverture_thoracique": "Épaules relâchées et légèrement en arrière, sternum légèrement ouvert → communique confiance et réceptivité"
+      }
+    },
+    "proxemique_Edward_Hall": {
+      "auteur": "Edward T. Hall (1966) — 'The Hidden Dimension'. Étude de l'utilisation de l'espace dans la communication.",
+      "quatre_zones": {
+        "intime": "0-45 cm. Réservée au partenaire, enfants, famille très proche. L'intrusion dans cette zone par un inconnu déclenche stress et combat/fuite.",
+        "personnelle": "45 cm - 1,2 m. Amis proches, collègues de confiance. Zone de conversation privée.",
+        "sociale": "1,2 - 3,6 m. Interactions professionnelles, connaissances. Zone des réunions et échanges formels.",
+        "publique": "3,6 m+. Discours, conférences, situations formelles. Voix projetée, gestes amplifiés."
+      },
+      "variations_culturelles": {
+        "cultures_contact": "Méditerranée, Amérique Latine, Moyen-Orient — distances plus proches, toucher fréquent, regard direct prolongé.",
+        "cultures_non_contact": "Scandinavie, Japon, Angleterre — distances plus grandes, toucher rare, regard indirect.",
+        "adaptation": "En interculturel, calibrer sur l'autre : s'il recule, lui donner de l'espace ; s'il s'approche, ne pas reculer."
+      }
+    },
+    "lecture_avancee": {
+      "yeux": {
+        "direction_regard": "Haut-gauche (visuel construit/imaginé), Haut-droit (visuel remémoré), Horizontal-gauche (auditif construit), Horizontal-droit (auditif remémoré), Bas-gauche (dialogue interne), Bas-droit (kinesthésique). Basé sur la PNL — controversé mais utile comme indice, pas comme preuve.",
+        "dilatation_pupillaire": "Pupilles dilatées → intérêt, attraction, effort cognitif. Pupilles contractées → désintérêt, aversion, méfiance. Non contrôlable volontairement.",
+        "taux_clignement": "Normal : 15-20/min. Augmenté → stress, surcharge cognitive, mensonge potentiel. Diminué → concentration intense, fascination.",
+        "regard_fuyant_vs_fixe": "Regard fuyant ≠ mensonge (peut être timidité, culture, neurodivergence). Regard trop fixe → possiblement manipulateur ou agressif."
+      },
+      "mains": {
+        "paumes_ouvertes": "Paumes visibles = honnêteté, ouverture, absence de menace (origine évolutive : montrer qu'on n'a pas d'arme).",
+        "paumes_cachées": "Paumes vers le bas ou mains dans les poches → dissimulation, contrôle, dominance.",
+        "steepling": "Mains en clocher (doigts joints pointe en haut) → confiance extrême, certitude. Geste de pouvoir (Merkel, Jobs).",
+        "mains_derrière_dos": "Position parade militaire (prince Charles) → confiance, supériorité, territoire.",
+        "poignée_de_main": "Poignée ferme (2-3 pressions, regard dans les yeux, 2-3 secondes) → confiance. Molle → faiblesse perçue. Écrasante → dominance/insécurité compensée. Main dessus → dominance. Main dessous → soumission."
+      },
+      "pieds": {
+        "orientation": "Les pieds pointent vers ce qui intéresse vraiment la personne. Si quelqu'un vous parle mais ses pieds pointent vers la sortie → il veut partir. Si ses pieds pointent vers une autre personne → plus intéressé par elle.",
+        "mouvement": "Pieds qui tapent → impatience, nervosité. Pieds qui reculent → désir de fuite. Chevilles croisées → retenue, information non partagée.",
+        "note_Navarro": "Joe Navarro (ancien FBI) : 'Les pieds sont la partie la plus honnête du corps — les gens ne pensent pas à les contrôler.'"
+      },
+      "clusters": "RÈGLE FONDAMENTALE : ne jamais interpréter un geste isolé. Chercher les clusters (groupes de signaux cohérents). Un bras croisé SEUL peut être du confort ; un bras croisé + sourcils froncés + recul du torse = fermeture réelle."
+    },
+    "detection_mensonge": {
+      "avertissement": "La détection du mensonge par le langage corporel est bien MOINS fiable qu'on ne le croit. Taux de base de détection sans formation : 54% (à peine mieux que le hasard). Avec formation : 60-70%. Aucun signe unique n'est un 'détecteur de mensonge'.",
+      "indices_potentiels": {
+        "incongruence": "Discordance entre les mots et le non-verbal (dire oui en secouant la tête). Signal le plus fiable.",
+        "micro_expressions_fugitives": "Flash émotionnel contradictoire avec le discours (micro-peur quand on affirme sa confiance).",
+        "augmentation_auto_toucher": "Toucher le nez, frotter la nuque, gratter le lobe d'oreille → gestes d'auto-apaisement sous stress.",
+        "figer": "Bref moment de freeze avant de répondre à une question sensible (le cerveau cherche la réponse construite vs automatique).",
+        "changement_baseline": "Ce qui compte n'est pas le geste lui-même mais le CHANGEMENT par rapport au comportement normal de la personne (baseline). D'où l'importance de la calibration."
+      },
+      "calibration": "Observer le comportement normal de la personne dans des situations neutres (smalltalk, sujets non menaçants) pour établir sa baseline. Ensuite, les DÉVIATIONS de cette baseline sur les sujets sensibles sont les vrais indices."
+    },
+    "congruence_et_charisme": {
+      "congruence": "Alignement entre le message verbal, le ton de voix et le langage corporel. La congruence = authenticité perçue = confiance. L'incongruence crée un malaise intuitif chez l'interlocuteur ('quelque chose cloche').",
+      "charisme_non_verbal": {
+        "présence": "Attention totale à l'interlocuteur (corps orienté, regard engagé, pas de distraction). Le charisme n'est pas de briller mais de faire briller l'autre.",
+        "expressivité": "Amplitude des gestes, variations vocales, mobilité du visage. Les leaders charismatiques utilisent 2x plus de gestes que la moyenne.",
+        "calme_sous_pression": "Mouvements lents et délibérés sous stress. Ne pas se précipiter. Les pauses renforcent l'autorité.",
+        "espace": "Occuper l'espace physique avec aisance. Gestes larges, déplacement fluide, posture ouverte."
+      }
+    },
+    "synergologie": {
+      "définition": "Discipline fondée par Philippe Turchet (1996). Étude du langage corporel comme expression de la pensée inconsciente. Controversée mais offre des grilles de lecture intéressantes.",
+      "principes_clés": {
+        "hémisphère_gauche_droite": "Le côté gauche du corps est contrôlé par l'hémisphère droit (émotions, créativité). Les micro-gestes du côté gauche trahiraient les émotions véritables.",
+        "axe_de_partage": "L'axe vertical qui divise le corps en deux. Le côté dominant (souvent le droit) gère le social ; le côté non-dominant révèle l'intime.",
+        "mouvement_vers_soi_vs_autre": "Geste vers soi = centré sur soi, autoprotection. Geste vers l'autre = ouverture, engagement, désir de connexion."
+      }
+    },
+    "applications_professionnelles": {
+      "entretien_embauche": "Poignée de main ferme, contact visuel 60-70%, sourire de Duchenne, posture ouverte, mirroring subtil de l'intervieweur, pieds stables, mains visibles.",
+      "négociation": "Observer les clusters de stress (auto-toucher, retrait), la dilatation pupillaire sur les chiffres, les micro-expressions de surprise ou de dégoût. Utiliser les silences comme outil de pression.",
+      "leadership": "Posture d'autorité calme (pas agressive), gestes de inclusion (paumes ouvertes vers le groupe), contact visuel distribué, rythme posé, occupation de l'espace.",
+      "séduction": "Mirroring, toucher progressif (bras, épaule), proximité progressive, orientation du corps et des pieds, jeu de regard (triangulation yeux-bouche-yeux), sourire Duchenne."
+    }
+  }
+}

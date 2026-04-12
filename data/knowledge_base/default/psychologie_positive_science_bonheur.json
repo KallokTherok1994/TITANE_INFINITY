@@ -1,0 +1,104 @@
+{
+  "version": "v30.1.0",
+  "category": "psychologie_positive_science_bonheur",
+  "description": "Psychologie positive et science du bonheur — modèle PERMA (Seligman), flow (Csikszentmihalyi), gratitude, forces de caractère (VIA), résilience, savoring, neuroplasticité du bonheur, mindset de croissance (Dweck), auto-compassion (Neff), relations positives, sens et purpose, bien-être eudémonique vs hédonique",
+  "psychologie_positive_science_bonheur": {
+    "introduction": "La psychologie positive, fondée par Martin Seligman en 1998, est l'étude scientifique des conditions et processus qui contribuent à l'épanouissement des individus, des groupes et des institutions. Plutôt que de se concentrer sur la pathologie, elle explore ce qui rend la vie digne d'être vécue: les émotions positives, l'engagement, les relations, le sens et l'accomplissement.",
+    "modele_perma": {
+      "createur": "Martin Seligman (2011), 'Flourish'",
+      "definition": "Modèle des 5 piliers du bien-être durable.",
+      "piliers": {
+        "positive_emotions": {
+          "description": "Joie, gratitude, sérénité, intérêt, espoir, fierté, amusement, inspiration, admiration, amour.",
+          "theorie_broaden_and_build": "Barbara Fredrickson (2001): les émotions positives élargissent le répertoire pensée-action (créativité, ouverture) et construisent des ressources durables (résilience, relations, compétences).",
+          "ratio_positivite": "Ratio 3:1 (3 émotions positives pour 1 négative) associé à l'épanouissement. En dessous de 1:1 = dépression.",
+          "pratiques": ["Journal de gratitude (3 bonnes choses/jour)", "Savoring (savourer consciemment les moments positifs)", "Méditation bienveillante (Loving-kindness)", "Actes de bonté aléatoires"]
+        },
+        "engagement": {
+          "description": "Être totalement absorbé dans une activité. État de flow.",
+          "flow_csikszentmihalyi": {
+            "definition": "État optimal de conscience où la personne est complètement immergée dans une activité, perd la notion du temps, et la performance est à son maximum.",
+            "conditions": ["Objectif clair", "Feedback immédiat", "Équilibre défi/compétence (juste au-dessus de la zone de confort)", "Concentration profonde", "Sens de contrôle", "Fusion action-conscience", "Perte de conscience de soi", "Distorsion temporelle"],
+            "neurobiologie": "Le flow implique une hypoactivité du cortex préfrontal (transient hypofrontality), une augmentation de dopamine, noradrénaline, endorphines, anandamide et sérotonine.",
+            "cultiver_flow": "Identifier ses activités de flow, créer les conditions (concentration sans interruption, défi adapté), pratiquer le deep work."
+          }
+        },
+        "relationships": {
+          "description": "Relations positives et profondes. L'être humain est fondamentalement social.",
+          "reponse_active_constructive": "Quand quelqu'un partage une bonne nouvelle, répondre avec enthousiasme et intérêt (Shelly Gable). La façon dont on célèbre les succès de l'autre est plus prédictive que la façon dont on gère les conflits.",
+          "ratio_gottman": "John Gottman: ratio 5:1 (5 interactions positives pour 1 négative) dans les couples heureux. Les '4 cavaliers de l'apocalypse': critique, mépris, défensivité, stonewalling.",
+          "pratiques": ["Écoute active profonde", "Actes de bonté intentionnels", "Temps de qualité sans écrans", "Vulnérabilité partagée (Brené Brown)", "Gratitude exprimée envers les proches"]
+        },
+        "meaning": {
+          "description": "Appartenir et servir quelque chose de plus grand que soi.",
+          "sources_sens": ["Contribution (servir les autres, laisser un héritage)", "Appartenance (communauté, famille, cause)", "Cohérence narrative (donner du sens à son histoire de vie)", "Transcendance (spiritualité, art, nature, awe)"],
+          "logotherapie_frankl": "Viktor Frankl ('Man's Search for Meaning'): même dans les pires circonstances, trouver un sens permet de survivre et de s'épanouir. 3 sources de sens: création (œuvre), expérience (amour, beauté), attitude face à la souffrance inévitable.",
+          "ikigai_connexion": "Le concept japonais d'Ikigai (raison d'être) combine passion, mission, vocation et profession. Intersection de ce qu'on aime, ce en quoi on est bon, ce dont le monde a besoin, et ce pour quoi on peut être payé."
+        },
+        "accomplishment": {
+          "description": "Poursuite de la maîtrise et de l'accomplissement pour eux-mêmes, au-delà de la récompense externe.",
+          "grit_duckworth": "Angela Duckworth: la persévérance passionnée (grit) prédit mieux le succès que le talent ou le QI. Grit = passion + persévérance à long terme.",
+          "mindset_croissance_dweck": "Carol Dweck: les personnes ayant un mindset de croissance (les capacités sont développables par l'effort) réussissent mieux que celles ayant un mindset fixe (les capacités sont innées et fixes).",
+          "pratiques": ["Objectifs d'apprentissage (vs objectifs de performance)", "Célébrer le processus, pas seulement le résultat", "Gratification différée", "Pratique délibérée (Ericsson)"]
+        }
+      }
+    },
+    "forces_de_caractere": {
+      "classification_via": "Values in Action (VIA Institute, Peterson & Seligman, 2004). 24 forces de caractère universelles regroupées en 6 vertus.",
+      "vertus_et_forces": {
+        "sagesse": ["Créativité", "Curiosité", "Jugement/pensée critique", "Amour de l'apprentissage", "Perspective/sagesse"],
+        "courage": ["Bravoure", "Persévérance", "Honnêteté/authenticité", "Zeste/vitalité"],
+        "humanite": ["Amour", "Bonté", "Intelligence sociale"],
+        "justice": ["Travail d'équipe", "Équité", "Leadership"],
+        "temperance": ["Pardon/clémence", "Humilité", "Prudence", "Maîtrise de soi"],
+        "transcendance": ["Appréciation de la beauté", "Gratitude", "Espoir/optimisme", "Humour", "Spiritualité"]
+      },
+      "forces_signatures": "Chaque personne a 3-7 forces signatures (les plus naturelles et énergisantes). Les utiliser quotidiennement augmente le bien-être et réduit la dépression.",
+      "test_gratuit": "www.viacharacter.org — test validé scientifiquement, disponible en français."
+    },
+    "gratitude": {
+      "science": "L'une des interventions les plus étudiées et validées en psychologie positive.",
+      "effets_mesures": ["Augmentation du bien-être subjectif de 25%", "Amélioration du sommeil (qualité et durée)", "Renforcement du système immunitaire", "Réduction de la dépression et de l'anxiété", "Amélioration des relations sociales", "Augmentation de la résilience"],
+      "neurobiologie": "La gratitude active le cortex préfrontal médian et l'aire tegmentale ventrale (circuit de la récompense/dopamine). Elle régule l'axe HPA et réduit le cortisol.",
+      "pratiques": {
+        "journal_gratitude": "Écrire 3 choses pour lesquelles on est reconnaissant chaque soir. Spécifique > général. Pourquoi cette chose est arrivée.",
+        "lettre_gratitude": "Écrire une lettre de remerciement détaillée à quelqu'un d'important et la lire en personne (Martin Seligman). Effet sur le bonheur dure 1 mois.",
+        "meditation_gratitude": "5-10 min de méditation guidée sur tout ce qui soutient notre vie (nourriture, toit, personnes, corps).",
+        "gratitude_anticipatoire": "Être reconnaissant par avance pour ce qui va arriver. Renforce l'optimisme."
+      }
+    },
+    "auto_compassion": {
+      "creatrice": "Kristin Neff, Ph.D. (University of Texas)",
+      "trois_composantes": {
+        "bienveillance_soi": "Se traiter avec la même gentillesse qu'on traiterait un ami proche en difficulté, plutôt que s'auto-critiquer.",
+        "humanite_commune": "Reconnaître que la souffrance et l'imperfection font partie de l'expérience humaine partagée. On n'est pas seul.",
+        "pleine_conscience": "Observer ses émotions douloureuses sans les dramatiser ni les supprimer. Ni ignorer, ni ruminer."
+      },
+      "vs_estime_de_soi": "L'auto-compassion est plus stable et moins fragile que l'estime de soi. Elle ne dépend pas de la comparaison sociale ni de la performance.",
+      "benefices": "Réduction de l'anxiété, de la dépression, du perfectionnisme toxique. Augmentation de la motivation (paradoxalement), de la résilience, et du bien-être.",
+      "pratique_pause_auto_compassion": "1) 'C'est un moment de souffrance' (pleine conscience). 2) 'La souffrance fait partie de la vie' (humanité commune). 3) 'Puis-je être bienveillant(e) avec moi-même?' (bienveillance)."
+    },
+    "savoring_savourer": {
+      "definition": "Capacité à prolonger et intensifier consciemment les expériences positives.",
+      "strategies": {
+        "partager": "Communiquer son expérience positive à quelqu'un.",
+        "construction_memoire": "Prendre une photo mentale, écrire le souvenir.",
+        "auto_congratulation": "Se féliciter pour ses réussites sans fausse modestie.",
+        "aiguiser_perception": "Concentrer son attention sur les détails sensoriels du moment.",
+        "absorption": "Se laisser totalement porter par l'expérience."
+      }
+    },
+    "neuroplasticite_bonheur": {
+      "principe": "Le cerveau se reconfigure en fonction de ce sur quoi on porte attention de manière répétée. On peut littéralement entraîner le cerveau au bonheur.",
+      "rick_hanson": "Rick Hanson ('Hardwiring Happiness'): le cerveau a un biais de négativité (les expériences négatives collent comme du velcro, les positives glissent comme du téflon). Antidote: HEAL — Have a positive experience, Enrich it, Absorb it, Link it.",
+      "pratique_12_secondes": "Pour qu'une expérience positive s'inscrive dans la mémoire à long terme et reconfigure les circuits neuronaux, il faut la maintenir consciemment pendant au moins 12-20 secondes.",
+      "meditation_et_cerveau": "8 semaines de MBSR (Kabat-Zinn) augmentent la densité de matière grise dans l'hippocampe, le cortex préfrontal, et réduisent l'amygdale. Changements mesurables par IRM."
+    },
+    "bien_etre_hedonique_vs_eudemonique": {
+      "hedonique": "Recherche du plaisir et évitement de la douleur. Bonheur = émotions positives fréquentes. Fragile et dépendant des circonstances (hedonic treadmill).",
+      "eudemonique": "Réalisation de son potentiel, vie alignée avec ses valeurs, contribution. Bonheur = sens + engagement + croissance. Plus durable et profond.",
+      "integration": "Le bien-être optimal combine les deux: savourer les plaisirs (hédonique) tout en poursuivant ce qui a du sens (eudémonique)."
+    },
+    "avertissement_sante": "La psychologie positive ne nie pas la souffrance. Elle ne remplace pas une thérapie en cas de dépression clinique, de traumatisme ou de trouble psychiatrique. Elle complète les approches traditionnelles."
+  }
+}

@@ -1,0 +1,166 @@
+{
+  "version": "v30.1.0",
+  "category": "acupuncture_acupression_avancee",
+  "description": "Acupuncture et acupression avancées — théorie des méridiens (12 méridiens principaux + 8 extraordinaires), points clés (100+ points), digitopuncture, auriculothérapie, électroacupuncture, moxibustion, ventouses, protocoles par pathologie, mécanismes neurophysiologiques",
+  "acupuncture_acupression_avancee": {
+    "introduction": "L'acupuncture est un pilier de la Médecine Traditionnelle Chinoise (MTC) vieux de plus de 3000 ans, aujourd'hui reconnu par l'OMS pour plus de 100 conditions. L'acupression (digitopuncture) utilise les mêmes points mais avec la pression des doigts au lieu des aiguilles — accessible à tous pour l'auto-soin. TITANE fournit une compréhension avancée des méridiens, des points clés et de leurs applications thérapeutiques.",
+    "fondements_théoriques": {
+      "qi_et_sang": {
+        "qi": "Énergie vitale qui circule dans les méridiens. Le qi est à la fois mouvement et fonction — il réchauffe, protège, transforme, contient et transporte.",
+        "sang_xue": "Le sang en MTC est plus que le sang physiologique — il nourrit, humidifie et ancre l'esprit (Shen). Le qi meut le sang, le sang nourrit le qi.",
+        "relation": "Le qi est le commandant du sang (le qi le fait circuler). Le sang est la mère du qi (le sang le nourrit). Stagnation de qi → stagnation de sang → douleur."
+      },
+      "yin_yang_appliqué": {
+        "yin": "Intérieur, froid, repos, matière, nutritif, descendant, nuit. Organes yin (Zang) : Foie, Cœur, Rate, Poumons, Reins.",
+        "yang": "Extérieur, chaud, activité, fonction, protecteur, ascendant, jour. Organes yang (Fu) : Vésicule biliaire, Intestin grêle, Estomac, Gros intestin, Vessie.",
+        "diagnostic": "Chaque déséquilibre se classe en termes de yin/yang : vide de yin (chaleur), vide de yang (froid), excès de yang (inflammation), excès de yin (stagnation froide)."
+      }
+    },
+    "système_des_méridiens": {
+      "douze_méridiens_principaux": {
+        "poumon": {
+          "trajet": "Thorax → face interne du bras → pouce. 11 points (LU1 à LU11).",
+          "fonctions": "Respiration, qi défensif (Wei Qi), peau, deuil/tristesse.",
+          "points_clés": {
+            "LU7_Lieque": "Point de commande de la tête et de la nuque. Maître point du Ren Mai (Vaisseau Conception). Ouvre la respiration. Usage : rhume, toux, cervicalgie, maux de tête.",
+            "LU9_Taiyuan": "Point source du méridien du Poumon. Tonifie le qi du Poumon. Pouls artère radiale. Usage : toux chronique, asthme, faiblesse du qi."
+          }
+        },
+        "gros_intestin": {
+          "trajet": "Index → face externe du bras → visage. 20 points (LI1 à LI20).",
+          "fonctions": "Élimination, drainage, clarté mentale, lâcher-prise.",
+          "points_clés": {
+            "LI4_Hegu": "Point le plus polyvalent de tout le corps. Analgésique puissant, immunité, céphalées, sinusite, douleur dentaire, accouchement. CONTRE-INDIQUÉ pendant la grossesse (peut induire le travail).",
+            "LI11_Quchi": "Anti-inflammatoire, anti-allergique, régulation immunitaire, fièvre, eczéma, hypertension.",
+            "LI20_Yingxiang": "Aile du nez. Sinusite, congestion nasale, anosmie, rhinite allergique."
+          }
+        },
+        "estomac": {
+          "trajet": "Visage → thorax → face antérieure jambe → 2e orteil. 45 points (ST1 à ST45).",
+          "fonctions": "Digestion, transformation, descente du qi, faim/satiété, inquiétude.",
+          "points_clés": {
+            "ST36_Zusanli": "Le point le plus célèbre de l'acupuncture. Tonifie le qi global, immunité, digestion, énergie, longévité. Tradition : les marcheurs japonais le stimulaient pour marcher sans fatigue. Le premier point à apprendre en acupression.",
+            "ST25_Tianshu": "Régulation intestinale. Constipation ET diarrhée. Point Mu (alarme) du Gros Intestin."
+          }
+        },
+        "rate": {
+          "trajet": "Gros orteil → face interne jambe → thorax. 21 points (SP1 à SP21).",
+          "fonctions": "Transformation des aliments en qi et sang. Contention du sang. Pensée, concentration, muscles.",
+          "points_clés": {
+            "SP6_Sanyinjiao": "Croisement des 3 méridiens yin de la jambe (Rate, Foie, Rein). Gynécologie (règles, fertilité, accouchement), digestion, insomnie, anxiété. CONTRE-INDIQUÉ pendant la grossesse.",
+            "SP9_Yinlingquan": "Drainage de l'humidité. Œdèmes, rétention d'eau, lourdeur, infections urinaires."
+          }
+        },
+        "coeur": {
+          "trajet": "Aisselle → face interne bras → auriculaire. 9 points (HT1 à HT9).",
+          "fonctions": "Abrite le Shen (esprit/conscience). Joie, mémoire, sommeil, circulation sanguine.",
+          "points_clés": {
+            "HT7_Shenmen": "Porte de l'Esprit. Point majeur pour l'anxiété, l'insomnie, les palpitations, la dépression. Calme le Shen. Un des points les plus importants en acupression pour le stress."
+          }
+        },
+        "intestin_grele": {
+          "trajet": "Auriculaire → face postérieure bras → omoplate → visage → oreille. 19 points.",
+          "fonctions": "Tri du pur et de l'impur (physique et émotionnel). Discernement."
+        },
+        "vessie": {
+          "trajet": "Coin interne de l'œil → crâne → dos (2 lignes parallèles à la colonne) → jambe postérieure → petit orteil. 67 points — le méridien le plus long.",
+          "fonctions": "Élimination des eaux, protection de la surface (Wei Qi), dos, SN autonome.",
+          "points_clés": {
+            "BL40_Weizhong": "Creux poplité (derrière le genou). Point de commande du dos et de la colonne vertébrale. Lombalgie, sciatique.",
+            "points_Shu_du_dos": "BL13 (Poumon), BL15 (Cœur), BL18 (Foie), BL20 (Rate), BL23 (Rein) — Points dorsaux de chaque organe. Utilisés en diagnostic et traitement."
+          }
+        },
+        "rein": {
+          "trajet": "Plante du pied → face interne jambe → thorax. 27 points.",
+          "fonctions": "Énergie fondamentale (Jing), vitalité, reproduction, os, cerveau, peur/volonté, vieillissement.",
+          "points_clés": {
+            "KI1_Yongquan": "Source Jaillissante — seul point sur la plante du pied. Point le plus yin du corps. Urgences (perte de conscience), hypertension, insomnie, anxiété extrême. Ancrage.",
+            "KI3_Taixi": "Point source du Rein. Tonifie le yin ET le yang du Rein. Fatigue chronique, lombalgie, acouphènes, déclin cognitif."
+          }
+        },
+        "pericarde": {
+          "trajet": "Thorax → face interne bras → majeur. 9 points.",
+          "fonctions": "Protecteur du Cœur. Émotions, circulation, relations.",
+          "points_clés": {
+            "PC6_Neiguan": "Point anti-nausée (bracelet d'acupression Sea-Band). Anxiété, palpitations, insomnie, mal des transports, nausées de grossesse. Un des points d'acupression les plus étudiés scientifiquement."
+          }
+        },
+        "triple_rechauffeur": {
+          "trajet": "Annulaire → face postérieure bras → épaule → oreille. 23 points.",
+          "fonctions": "Thermorégulation, métabolisme de l'eau, voies respiratoires/digestives/urinaires. N'a pas d'équivalent anatomique occidental."
+        },
+        "vesicule_biliaire": {
+          "trajet": "Coin externe de l'œil → crâne (zigzag) → flanc → face latérale jambe → 4e orteil. 44 points.",
+          "fonctions": "Courage, décision, latéralité du corps, migraines, tensions temporales/occipitales.",
+          "points_clés": {
+            "GB20_Fengchi": "Base du crâne (Piscine du Vent). Céphalées, migraines, vertiges, tension cervicale, rhume, amélioration vision. Un des points les plus utilisés en pratique.",
+            "GB34_Yanglingquan": "Point de réunion des tendons. Tendinites, problèmes musculo-squelettiques, sciatique latérale."
+          }
+        },
+        "foie": {
+          "trajet": "Gros orteil → face interne jambe → organes génitaux → abdomen → thorax. 14 points.",
+          "fonctions": "Libre circulation du qi (fluidité émotionnelle), stockage du sang, tendons, yeux, colère/créativité.",
+          "points_clés": {
+            "LR3_Taichong": "Le 'Grand Carrefour'. Stagnation du qi du Foie (frustration, irritabilité, SPM, migraines), hypertension, insomnie de colère. Couplé avec LI4 → 'Les Quatre Portes' = libération globale du qi."
+          }
+        }
+      },
+      "huit_merveilleux_vaisseaux": {
+        "description": "Réservoirs d'énergie qui régulent les 12 méridiens principaux. Formés avant les méridiens (vie fœtale).",
+        "Ren_Mai": "Vaisseau Conception — face antérieure du corps, axe médian. Gouverne tous les méridiens yin. Point clé : CV4 (Guanyuan — Qi originel, fertilité), CV6 (Qihai — Mer de qi, énergie vitale).",
+        "Du_Mai": "Vaisseau Gouverneur — face postérieure, axe médian de la colonne. Gouverne tous les méridiens yang. Point clé : GV20 (Baihui — sommet du crâne, montée du yang, clarté mentale, dépression), GV4 (Mingmen — Porte de la Vie, feu des Reins).",
+        "Chong_Mai": "Mer du Sang. Lien avec le cycle menstruel et la vitalité sanguine.",
+        "Dai_Mai": "Vaisseau Ceinture — le seul méridien horizontal. Tour de taille. Lien avec les problèmes de hanche, leucorrhées, lourdeur pelvienne."
+      }
+    },
+    "acupression_digitopuncture": {
+      "principe": "Stimulation des points d'acupuncture par pression des doigts (pouce, index) au lieu d'aiguilles. Accessible en auto-soin.",
+      "technique": {
+        "pression": "Appuyer fermement avec le pouce ou l'index sur le point. Pression progressive (pas brutale). Maintenir 1-3 min par point. Respiration lente pendant la pression.",
+        "rotation": "Petits cercles sur le point dans le sens horaire (tonification) ou anti-horaire (dispersion/sédation).",
+        "intensité": "Sensation de pression profonde, parfois douloureuse ('douleur agréable' ou 'de qi'). Si trop douloureux, réduire la pression."
+      },
+      "protocoles_auto_soin": {
+        "stress_anxiété": "HT7 (poignet interne) + PC6 (avant-bras interne, 3 travers de doigt au-dessus du poignet) + Yintang (entre les sourcils). 2 min chaque point, respiration lente.",
+        "maux_de_tête": "LI4 (entre pouce et index) + GB20 (base du crâne) + Taiyang (tempes). Pression ferme 2-3 min.",
+        "insomnie": "HT7 + SP6 (4 travers de doigt au-dessus de la malléole interne) + Anmian (derrière l'oreille). 30 min avant le coucher.",
+        "énergie_fatigue": "ST36 (4 travers de doigt sous le genou, côté externe) + CV6 (2 travers de doigt sous le nombril) + KI3 (entre malléole interne et tendon d'Achille). Matin.",
+        "digestion": "ST36 + ST25 (2 travers de doigt de chaque côté du nombril) + PC6. Après les repas.",
+        "douleur_dos": "BL40 (creux poplité) + BL60 (derrière malléole externe) + GV4 (entre L2-L3). Points paravertébraux."
+      }
+    },
+    "mécanismes_neurophysiologiques": {
+      "endorphines": "L'acupuncture stimule la libération de bêta-endorphines, d'enképhalines et de dynorphines → analgésie endogène. Bloquée par la naloxone (antagoniste opioïde) — preuve du mécanisme opioïde.",
+      "gate_control": "Théorie du portillon (Melzack & Wall) : la stimulation des fibres A-beta par l'aiguille 'ferme la porte' de la douleur au niveau de la corne dorsale de la moelle épinière.",
+      "neuro_imagerie": "L'IRM fonctionnelle montre que l'acupuncture au point LI4 module l'activité du cortex cingulaire antérieur, de l'insula et de l'amygdale — centres de la douleur et des émotions.",
+      "inflammation": "L'acupuncture au nerf vague (point auriculaire) active le réflexe inflammatoire cholinergique → réduction de TNF-alpha et autres cytokines inflammatoires.",
+      "fascia": "Langevin (2006) : le tissu conjonctif (fascia) répond à la rotation de l'aiguille d'acupuncture par un 'accrochage' mécanique qui transmet un signal aux cellules → remodelage tissulaire."
+    },
+    "techniques_complémentaires": {
+      "moxibustion": {
+        "définition": "Combustion d'armoise (Artemisia vulgaris) séchée sur ou près des points d'acupuncture. Apporte chaleur et tonifie le yang.",
+        "indications": "Froid interne, douleurs aggravées par le froid, fatigue chronique, diarrhée chronique, retournement du bébé en siège (BL67 — bien documenté)."
+      },
+      "ventouses_cupping": {
+        "méthode": "Cloches de verre ou silicone appliquées sur la peau par succion. Crée une ecchymose (marque ronde) qui dure 3-7 jours.",
+        "effets": "Augmentation de la circulation locale, drainage lymphatique, relâchement myofascial, réduction de la douleur.",
+        "popularité": "Médiatisée par les athlètes olympiques (Michael Phelps, 2016). Preuves modérées pour la lombalgie et les douleurs cervicales."
+      },
+      "électroacupuncture": {
+        "méthode": "Courant électrique de faible intensité appliqué entre deux aiguilles d'acupuncture. Fréquences : 2 Hz (endorphines) ou 100 Hz (dynorphines).",
+        "indications": "Douleur chronique, paralysie, récupération neurologique, nausées postopératoires."
+      },
+      "auriculothérapie": {
+        "auteur": "Dr Paul Nogier (Lyon, 1957). A cartographié le pavillon de l'oreille comme un fœtus inversé.",
+        "principe": "L'oreille est un microsystème représentant l'ensemble du corps. Plus de 200 points auriculaires.",
+        "applications": "Addiction (protocole NADA 5 points — tabac, alcool, drogues), douleur, anxiété, perte de poids. Protocole reconnu par l'OMS.",
+        "auto_soin": "Masser le pavillon de l'oreille entier pendant 2-3 min → stimulation réflexe de tout le corps. Pincer le lobe (point du stress) → relaxation."
+      }
+    },
+    "preuves_scientifiques": {
+      "reconnues_OMS": "L'OMS reconnaît l'acupuncture pour 100+ conditions (2003). Douleur lombaire, cervicale, céphalées, nausées, arthrose du genou, dépression légère — preuves solides.",
+      "méta_analyses": "Vickers et al. (2018, 39 essais, 20 000+ patients) : l'acupuncture est supérieure au sham (placebo) pour la douleur chronique. L'effet est cliniquement significatif et durable.",
+      "limites": "Effet placebo important (30-50% de l'effet total). Difficulté à créer un vrai placebo d'acupuncture (sham acupuncture stimule aussi des mécanismes neurophysiologiques). Variabilité entre praticiens."
+    }
+  }
+}

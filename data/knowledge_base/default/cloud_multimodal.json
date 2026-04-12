@@ -1,7 +1,7 @@
 {
   "version": "v30.1.0",
   "category": "cloud_multimodal",
-  "description": "Cloud sync chiffré et capacités multimodales TITANE∞ — vision, audio 3D, wakeword, synchronisation",
+  "description": "Cloud sync chiffré et capacités multimodales TITANE∞ — vision, audio 3D, wakeword, synchronisation, traitement vidéo, intelligence documentaire, pipelines de données et edge computing",
   "cloud_sync": {
     "description": "CloudSyncEngine — synchronisation multi-device chiffrée de bout en bout",
     "path": "src-tauri/src/cloud/",
@@ -107,5 +107,534 @@
     "path": "src-tauri/src/commands/desktop_perception.rs",
     "capabilities": ["screen_capture", "window_analysis", "clipboard_access"],
     "privacy": "Uniquement avec permission explicite de Kevin"
+  },
+  "vision_analyse": {
+    "description": "Analyse visuelle avancée — reconnaissance d'images, OCR, détection d'objets, analyse faciale et parsing documentaire",
+    "path": "src-tauri/src/multimodal/vision/",
+    "reconnaissance_images": {
+      "description": "Classification et identification d'images par réseaux convolutifs et transformers visuels",
+      "modeles_supportes": ["CLIP ViT-L/14", "GPT-4 Vision", "Gemini 1.5 Pro Vision", "LLaVA local"],
+      "formats_entree": ["JPEG", "PNG", "WebP", "TIFF", "BMP", "HEIC", "RAW"],
+      "resolution_max": "4096x4096 pixels (redimensionnement automatique au-delà)",
+      "batch_processing": "Traitement par lots jusqu'à 50 images simultanément"
+    },
+    "ocr": {
+      "description": "Reconnaissance optique de caractères — extraction de texte depuis images et documents scannés",
+      "moteurs": ["Tesseract 5.x (local, hors-ligne)", "Google Cloud Vision OCR", "Azure Computer Vision OCR"],
+      "langues_supportees": ["français", "anglais", "espagnol", "allemand", "italien", "portugais", "arabe", "chinois", "japonais"],
+      "modes": {
+        "texte_simple": "Extraction de texte brut ligne par ligne",
+        "structure_preservee": "Conservation de la mise en page et formatage",
+        "tableau_detection": "Détection et extraction de tableaux depuis images"
+      },
+      "precision": "95-99% selon qualité de l'image source et langue"
+    },
+    "scene_description": {
+      "description": "Description automatique de scènes visuelles en langage naturel",
+      "niveaux_detail": {
+        "resume": "Description courte en une phrase (légende)",
+        "standard": "Description détaillée des éléments principaux, couleurs, composition",
+        "exhaustif": "Analyse complète incluant ambiance, éclairage, contexte culturel, émotions"
+      },
+      "contexte_temporel": "Estimation du moment de la journée, saison, époque si pertinent"
+    },
+    "object_detection": {
+      "description": "Détection et localisation d'objets dans une image avec boîtes englobantes",
+      "modeles": ["YOLOv8 (local, temps réel)", "DETR (transformer-based)", "Cloud Vision API"],
+      "categories": "80+ catégories COCO standard + catégories personnalisées entraînables",
+      "seuil_confiance": "Configurable de 0.1 à 0.99 — défaut 0.5",
+      "sortie": "Coordonnées boîtes englobantes + étiquettes + scores de confiance"
+    },
+    "face_analysis": {
+      "description": "Analyse faciale respectueuse de la vie privée — détection, attributs, émotions",
+      "capacites": [
+        "Détection de visages et comptage",
+        "Estimation d'âge approximatif",
+        "Analyse d'expression émotionnelle (joie, surprise, neutre, etc.)",
+        "Détection de port de lunettes, chapeau, masque"
+      ],
+      "vie_privee": "Aucune identification biométrique — pas de reconnaissance faciale individuelle. Conforme RGPD.",
+      "stockage": "Aucun visage stocké ou indexé — traitement éphémère uniquement"
+    },
+    "document_parsing": {
+      "description": "Parsing intelligent de documents visuels — extraction structurée depuis photos de documents",
+      "types_documents": ["cartes de visite", "reçus", "factures", "menus", "panneaux", "étiquettes"],
+      "extraction_structuree": "Champs clé-valeur extraits automatiquement selon le type de document",
+      "confiance": "Score de confiance par champ extrait pour validation humaine"
+    },
+    "ipc_commands": [
+      "vision_recognize_image",
+      "vision_ocr_extract",
+      "vision_describe_scene_detailed",
+      "vision_detect_objects",
+      "vision_analyze_faces",
+      "vision_parse_document"
+    ]
+  },
+  "audio_processing": {
+    "description": "Traitement audio complet — speech-to-text, text-to-speech, clonage vocal, analyse audio et reconnaissance musicale",
+    "path": "src-tauri/src/audio/",
+    "speech_to_text": {
+      "description": "Transcription vocale en texte — temps réel et différé",
+      "moteurs": {
+        "whisper_local": "OpenAI Whisper embarqué (tiny/base/small/medium/large) — 100% hors-ligne",
+        "whisper_api": "API Whisper cloud pour transcription haute précision",
+        "google_stt": "Google Speech-to-Text pour langues spécialisées"
+      },
+      "fonctionnalites": [
+        "Transcription en temps réel avec affichage progressif",
+        "Détection automatique de la langue parlée",
+        "Ponctuation et capitalisation automatiques",
+        "Horodatage par mot et par segment",
+        "Identification de locuteurs (diarisation)"
+      ],
+      "langues": "99+ langues avec Whisper large — optimisé français/anglais",
+      "precision": "95-98% en conditions normales, 85-92% en environnement bruité"
+    },
+    "text_to_speech": {
+      "description": "Synthèse vocale naturelle — génération de parole à partir de texte",
+      "moteurs": {
+        "systeme_natif": "TTS natif OS (macOS Say, Windows SAPI, Linux eSpeak/Festival)",
+        "neural_local": "Piper TTS (modèle neural local, voix naturelles)",
+        "cloud_premium": "ElevenLabs ou Azure Neural TTS pour voix premium"
+      },
+      "parametres_voix": {
+        "vitesse": "0.5x à 2.0x — défaut 1.0x",
+        "tonalite": "Ajustable par demi-tons",
+        "volume": "Normalisation automatique avec contrôle manuel",
+        "style": "Neutre, conversationnel, narratif, enthousiaste"
+      },
+      "ssml_support": "Support SSML pour contrôle fin de la prosodie, pauses et emphases"
+    },
+    "voice_cloning": {
+      "description": "Clonage vocal éthique — reproduction de timbre vocal à partir d'échantillons",
+      "methode": "Minimum 30 secondes d'audio source pour clonage basique, 5+ minutes pour haute fidélité",
+      "ethique": "Consentement explicite obligatoire du propriétaire de la voix. Watermark audio intégré.",
+      "usage": "Voix personnalisée pour Kevin — notifications, lectures, rappels",
+      "stockage": "Empreinte vocale chiffrée localement, jamais transmise au cloud"
+    },
+    "audio_analysis": {
+      "description": "Analyse audio avancée — classification, segmentation, extraction de caractéristiques",
+      "capacites": [
+        "Classification de sons environnementaux (alarme, porte, sonnerie, etc.)",
+        "Détection d'activité vocale (VAD) avec seuils configurables",
+        "Analyse spectrale et extraction de fréquences dominantes",
+        "Mesure du niveau sonore et détection de pics",
+        "Segmentation automatique parole/musique/bruit/silence"
+      ],
+      "formats_supportes": ["WAV", "MP3", "FLAC", "OGG", "AAC", "M4A", "OPUS"]
+    },
+    "music_recognition": {
+      "description": "Reconnaissance musicale — identification de morceaux et extraction de métadonnées",
+      "fonctionnalites": [
+        "Identification de morceaux par empreinte audio (fingerprinting)",
+        "Extraction tempo (BPM), tonalité, et structure",
+        "Détection de genre musical",
+        "Séparation de sources (voix, instruments) via modèle Demucs"
+      ],
+      "mode_local": "Empreintes audio calculées localement, comparaison possible hors-ligne avec base embarquée"
+    },
+    "ipc_commands": [
+      "audio_transcribe_realtime",
+      "audio_transcribe_file",
+      "audio_tts_speak",
+      "audio_tts_generate_file",
+      "audio_clone_voice",
+      "audio_analyze",
+      "audio_recognize_music"
+    ]
+  },
+  "video_capabilities": {
+    "description": "Traitement vidéo — analyse, extraction de frames, reconnaissance d'actions et résumé automatique",
+    "path": "src-tauri/src/multimodal/video/",
+    "video_analysis": {
+      "description": "Analyse sémantique de contenu vidéo — comprendre ce qui se passe dans une vidéo",
+      "modeles": ["Gemini 1.5 Pro (vidéo native)", "GPT-4 Vision (frame sampling)", "VideoMAE local"],
+      "capacites": [
+        "Description textuelle du contenu vidéo",
+        "Détection d'événements et changements de scène",
+        "Comptage et suivi d'objets à travers les frames",
+        "Analyse de sentiment et d'ambiance vidéo"
+      ],
+      "formats_entree": ["MP4", "MOV", "AVI", "WebM", "MKV"],
+      "duree_max": "60 minutes pour analyse cloud, 10 minutes pour traitement local"
+    },
+    "frame_extraction": {
+      "description": "Extraction intelligente de frames clés — pas d'extraction aveugle, sélection sémantique",
+      "strategies": {
+        "intervalle_fixe": "Extraction toutes les N secondes (configurable)",
+        "changement_scene": "Extraction automatique aux transitions de scène",
+        "moments_cles": "Extraction aux moments d'action ou de changement significatif",
+        "visages": "Extraction quand un visage est détecté ou change d'expression"
+      },
+      "sortie": "Images JPEG/PNG avec métadonnées temporelles et score de pertinence"
+    },
+    "action_recognition": {
+      "description": "Reconnaissance d'actions humaines et d'activités dans la vidéo",
+      "categories": [
+        "Actions quotidiennes (marcher, parler, écrire, cuisiner)",
+        "Gestes et interactions (pointer, saluer, applaudir)",
+        "Activités sportives et physiques",
+        "Interactions avec objets"
+      ],
+      "modele": "Temporal Shift Module (TSM) ou SlowFast local pour inférence temps réel"
+    },
+    "video_summarization": {
+      "description": "Résumé automatique de vidéo — condensé textuel et visuel",
+      "modes": {
+        "textuel": "Résumé narratif en paragraphes avec horodatages",
+        "chapitres": "Découpage en chapitres avec titres et descriptions",
+        "highlights": "Extraction des moments les plus importants en clip condensé",
+        "transcript_resume": "Résumé basé sur la transcription audio de la vidéo"
+      },
+      "ratio_compression": "Vidéo de 30 min résumée en 2-3 min de highlights ou 500 mots de texte"
+    },
+    "ipc_commands": [
+      "video_analyze",
+      "video_extract_frames",
+      "video_recognize_actions",
+      "video_summarize",
+      "video_detect_scenes"
+    ]
+  },
+  "document_intelligence": {
+    "description": "Intelligence documentaire — parsing PDF, extraction de tableaux, reconnaissance de formulaires et classification",
+    "path": "src-tauri/src/document/",
+    "pdf_parsing": {
+      "description": "Analyse complète de documents PDF — texte, images, structure, métadonnées",
+      "capacites": [
+        "Extraction de texte avec préservation de la mise en page",
+        "Extraction d'images embarquées avec résolution originale",
+        "Lecture des métadonnées (auteur, date, mots-clés, version)",
+        "Support PDF chiffrés (avec mot de passe fourni)",
+        "Détection de PDF scannés vs natifs avec bascule OCR automatique"
+      ],
+      "moteurs": ["pdf-rs (Rust natif, local)", "Apache Tika (extraction avancée)", "Azure Document Intelligence"],
+      "performance": "Traitement de 100 pages en moins de 5 secondes (texte natif)"
+    },
+    "table_extraction": {
+      "description": "Extraction et structuration de tableaux depuis documents PDF, images et scans",
+      "methodes": {
+        "regle_based": "Détection par lignes et bordures — rapide et fiable pour tableaux bien formatés",
+        "ml_based": "Modèle ML pour tableaux sans bordures ou complexes (Table Transformer)",
+        "hybride": "Combinaison règles + ML avec score de confiance"
+      },
+      "formats_sortie": ["CSV", "JSON", "Markdown", "DataFrame pandas-compatible"],
+      "precision": "90-98% selon complexité du tableau et qualité du document source"
+    },
+    "form_recognition": {
+      "description": "Reconnaissance de formulaires — extraction de champs clé-valeur depuis formulaires structurés",
+      "types_formulaires": [
+        "Formulaires administratifs standards",
+        "Formulaires fiscaux (déclarations, avis)",
+        "Bons de commande et factures",
+        "Questionnaires et sondages",
+        "Formulaires médicaux (avec confidentialité renforcée)"
+      ],
+      "extraction": "Paires clé-valeur avec localisation spatiale et score de confiance",
+      "apprentissage": "Modèles personnalisables — entraînement sur 5+ exemples d'un type de formulaire"
+    },
+    "document_classification": {
+      "description": "Classification automatique de documents — tri et catégorisation intelligente",
+      "categories_predefinies": [
+        "Facture", "Contrat", "Correspondance", "Rapport", "CV",
+        "Formulaire", "Article", "Présentation", "Manuel technique", "Autre"
+      ],
+      "classification_personnalisee": "Ajout de catégories custom avec minimum 10 exemples d'entraînement",
+      "confiance": "Score de confiance 0-1 avec seuil configurable pour validation humaine",
+      "multi_label": "Support classification multi-étiquettes (un document peut appartenir à plusieurs catégories)"
+    },
+    "ipc_commands": [
+      "document_parse_pdf",
+      "document_extract_tables",
+      "document_recognize_form",
+      "document_classify",
+      "document_extract_metadata",
+      "document_batch_process"
+    ]
+  },
+  "cloud_providers": {
+    "description": "Fournisseurs cloud utilisés par TITANE∞ — services, optimisation des coûts et basculement",
+    "strategie_globale": "Multi-cloud gouverné — chaque service a un fournisseur principal et un fallback. One Door policy respectée.",
+    "firebase": {
+      "description": "Google Firebase — services temps réel et authentification",
+      "services_utilises": [
+        "Firebase Auth (authentification multi-méthode)",
+        "Cloud Firestore (base NoSQL temps réel pour sync)",
+        "Firebase Cloud Messaging (notifications push)",
+        "Firebase Storage (stockage fichiers chiffrés)"
+      ],
+      "usage_titane": "Authentification, notifications push, sync temps réel des préférences",
+      "region": "europe-west1 (Belgique) — conformité RGPD"
+    },
+    "aws": {
+      "description": "Amazon Web Services — stockage, compute et services ML",
+      "services_utilises": [
+        "S3 (stockage objet pour backups chiffrés et vaults)",
+        "Lambda (fonctions serverless pour traitements ponctuels)",
+        "Bedrock (accès modèles IA — Claude, Titan)",
+        "CloudFront (CDN pour assets statiques)"
+      ],
+      "usage_titane": "Stockage S3 pour CloudVault, Lambda pour traitements batch, Bedrock pour fallback IA"
+    },
+    "gcp": {
+      "description": "Google Cloud Platform — IA, vision et traitement naturel du langage",
+      "services_utilises": [
+        "Vertex AI (modèles Gemini et PaLM)",
+        "Cloud Vision API (OCR et analyse d'images)",
+        "Cloud Speech-to-Text (transcription vocale)",
+        "Cloud Translation (traduction multilingue)"
+      ],
+      "usage_titane": "Modèles Gemini pour conversations, Vision API pour OCR avancé"
+    },
+    "azure": {
+      "description": "Microsoft Azure — services cognitifs et infrastructure entreprise",
+      "services_utilises": [
+        "Azure OpenAI Service (GPT-4, GPT-4 Vision)",
+        "Azure Document Intelligence (parsing documents)",
+        "Azure Speech Services (TTS neural premium)",
+        "Azure Cognitive Search (recherche sémantique cloud)"
+      ],
+      "usage_titane": "Accès GPT-4/Vision via Azure, TTS neural pour voix premium"
+    },
+    "cost_optimization": {
+      "description": "Stratégies d'optimisation des coûts cloud",
+      "strategies": [
+        "Traitement local prioritaire — cloud uniquement quand la qualité locale est insuffisante",
+        "Mise en cache agressive — résultats cloud cachés localement pour réutilisation",
+        "Batch groupé — regroupement des requêtes pour minimiser les appels API",
+        "Modèles tiered — modèle léger d'abord, modèle lourd seulement si nécessaire",
+        "Budget mensuel configurable avec alertes à 75%, 90% et 100%"
+      ],
+      "monitoring": "Dashboard coûts en temps réel accessible via /settings/cloud-costs"
+    },
+    "failover": {
+      "description": "Stratégie de basculement automatique entre fournisseurs",
+      "politique": "Si le fournisseur principal échoue 3 fois en 5 minutes, bascule vers le fallback",
+      "chaine_fallback": "Cloud principal → Cloud secondaire → Traitement local dégradé",
+      "health_checks": "Vérification santé toutes les 60 secondes sur chaque endpoint",
+      "retour_normal": "Retour automatique au fournisseur principal après 10 minutes de stabilité"
+    }
+  },
+  "api_integration": {
+    "description": "Intégration API — protocoles, limitation de débit, stratégies de retry et circuit breaker",
+    "path": "src-tauri/src/services/api/",
+    "protocoles": {
+      "rest": {
+        "description": "API REST — protocole principal pour la majorité des intégrations cloud",
+        "standards": "OpenAPI 3.1, JSON:API pour les réponses structurées",
+        "authentification": "Bearer token OAuth2, clés API chiffrées dans le vault local",
+        "timeout_defaut": "30 secondes pour requêtes standard, 120 secondes pour uploads/transcriptions"
+      },
+      "websocket": {
+        "description": "WebSocket — connexions persistantes pour données temps réel",
+        "usages": ["Sync temps réel des conversations", "Notifications push", "Streaming de réponses IA"],
+        "reconnexion": "Backoff exponentiel avec jitter — délai initial 1s, max 60s",
+        "heartbeat": "Ping toutes les 30 secondes pour maintenir la connexion"
+      },
+      "grpc": {
+        "description": "gRPC — communication haute performance pour services internes",
+        "usages": ["Communication inter-services backend", "Streaming bidirectionnel de données"],
+        "serialisation": "Protocol Buffers v3 pour sérialisation efficace",
+        "compression": "gzip activé par défaut pour réduire la bande passante"
+      }
+    },
+    "rate_limiting": {
+      "description": "Gestion intelligente des limites de débit API",
+      "strategie": "Token bucket avec fenêtre glissante — respecte les limites de chaque fournisseur",
+      "headers_respectes": ["X-RateLimit-Remaining", "X-RateLimit-Reset", "Retry-After"],
+      "file_attente": "Requêtes en excès mises en file d'attente prioritaire (FIFO avec priorité)",
+      "alertes": "Notification à Kevin quand 80% du quota est consommé"
+    },
+    "retry_strategies": {
+      "description": "Stratégies de réessai pour requêtes échouées",
+      "politique_defaut": {
+        "max_retries": 3,
+        "backoff": "Exponentiel avec jitter — 1s, 2s, 4s (±20% aléatoire)",
+        "erreurs_retryables": ["408", "429", "500", "502", "503", "504"],
+        "erreurs_non_retryables": ["400", "401", "403", "404", "422"]
+      },
+      "idempotence": "Clé d'idempotence automatique pour POST/PUT — évite les doublons"
+    },
+    "circuit_breaker": {
+      "description": "Disjoncteur automatique — protection contre les cascades de pannes",
+      "etats": {
+        "ferme": "Fonctionnement normal — requêtes passent normalement",
+        "ouvert": "Service détecté comme défaillant — requêtes court-circuitées vers fallback",
+        "semi_ouvert": "Phase de test — une requête test envoyée périodiquement pour vérifier le rétablissement"
+      },
+      "seuils": {
+        "ouverture": "5 échecs consécutifs ou taux d'erreur > 50% sur 60 secondes",
+        "semi_ouverture": "Après 30 secondes en état ouvert",
+        "fermeture": "3 succès consécutifs en état semi-ouvert"
+      },
+      "fallback_local": "Quand le circuit est ouvert, bascule vers traitement local si disponible"
+    },
+    "ipc_commands": [
+      "api_health_check",
+      "api_rate_limit_status",
+      "api_circuit_breaker_status",
+      "api_retry_queue_status"
+    ]
+  },
+  "edge_computing": {
+    "description": "Edge computing — traitement local, calcul privacy-first, ML on-device et architecture hybride cloud/edge",
+    "path": "src-tauri/src/edge/",
+    "philosophie": "Traiter localement tout ce qui peut l'être — le cloud est un accélérateur, pas une dépendance",
+    "local_processing": {
+      "description": "Traitement local prioritaire — maximiser le calcul sur l'appareil de Kevin",
+      "capacites": [
+        "Inférence de modèles IA légers (Ollama, llama.cpp)",
+        "Traitement d'images et OCR local (Tesseract, CLIP)",
+        "Transcription vocale hors-ligne (Whisper embarqué)",
+        "Recherche sémantique locale via embeddings vectoriels",
+        "Analyse de documents et extraction de texte"
+      ],
+      "detection_ressources": "Évaluation automatique CPU/GPU/RAM disponibles pour ajuster la charge locale",
+      "seuil_bascule": "Si le traitement local dépasse 10 secondes ou échoue, proposition de bascule cloud"
+    },
+    "privacy_first_compute": {
+      "description": "Calcul privacy-first — données sensibles traitées exclusivement localement",
+      "donnees_locales_strictes": [
+        "Conversations personnelles et mémoire contextuelle",
+        "Documents marqués confidentiel par Kevin",
+        "Données biométriques vocales (empreinte vocale)",
+        "Historique de navigation et préférences",
+        "Fichiers du vault personnel"
+      ],
+      "chiffrement_au_repos": "AES-256-GCM pour toutes les données persistées localement",
+      "zero_knowledge": "Le cloud ne voit jamais les données en clair — chiffrement côté client systématique"
+    },
+    "on_device_ml": {
+      "description": "Machine learning sur appareil — modèles optimisés pour inférence locale",
+      "frameworks": ["ONNX Runtime", "llama.cpp", "Whisper.cpp", "Candle (Rust ML)"],
+      "optimisations": {
+        "quantification": "Modèles quantifiés INT4/INT8 pour réduire empreinte mémoire de 75%",
+        "pruning": "Élagage des poids non significatifs pour accélérer l'inférence",
+        "distillation": "Modèles distillés — performance du grand modèle, taille du petit",
+        "compilation_native": "Compilation AOT des modèles pour architecture CPU/GPU spécifique"
+      },
+      "gpu_acceleration": {
+        "nvidia": "CUDA / cuDNN pour GPU NVIDIA — accélération 10-50x",
+        "apple": "Metal / Core ML pour Apple Silicon — optimisé M1/M2/M3",
+        "amd": "ROCm pour GPU AMD (support expérimental)",
+        "cpu_fallback": "AVX2/AVX-512 pour accélération CPU quand aucun GPU disponible"
+      }
+    },
+    "hybrid_cloud_edge": {
+      "description": "Architecture hybride cloud/edge — le meilleur des deux mondes",
+      "decision_engine": {
+        "description": "Moteur de décision automatique cloud vs local",
+        "criteres": [
+          "Complexité de la tâche (simple → local, complexe → cloud)",
+          "Sensibilité des données (sensible → local toujours)",
+          "Connectivité réseau (hors-ligne → local obligatoire)",
+          "Latence requise (temps réel → local, différé → cloud acceptable)",
+          "Coût (budget restant → cloud, budget épuisé → local)"
+        ]
+      },
+      "sync_resultats": "Résultats de traitement edge synchronisés vers le cloud pour backup (chiffré)",
+      "cache_intelligent": "Cache LRU local des réponses cloud fréquentes — hit rate cible > 60%"
+    },
+    "ipc_commands": [
+      "edge_capability_check",
+      "edge_resource_status",
+      "edge_process_local",
+      "edge_decision_override",
+      "edge_cache_stats"
+    ]
+  },
+  "data_pipeline": {
+    "description": "Pipeline de données — ingestion, transformation, indexation, cache, streaming et traitement par lots",
+    "path": "src-tauri/src/pipeline/",
+    "ingestion": {
+      "description": "Ingestion de données multi-sources — collecte et normalisation",
+      "sources_supportees": [
+        "Fichiers locaux (drag & drop, import, surveillance de dossiers)",
+        "APIs externes (REST, WebSocket — via One Door)",
+        "Clipboard (texte, images, fichiers copiés)",
+        "Capture d'écran et perception bureau",
+        "Flux audio microphone (transcription temps réel)",
+        "Import en masse (ZIP, archives, dossiers complets)"
+      ],
+      "normalisation": "Conversion automatique vers formats internes standardisés (UTF-8, JSON, embeddings)",
+      "deduplication": "Détection de doublons par hash SHA-256 et similarité sémantique (cosine > 0.95)"
+    },
+    "transformation": {
+      "description": "Transformation et enrichissement des données ingérées",
+      "etapes": [
+        "Nettoyage — suppression bruit, normalisation encodage, correction typos automatique",
+        "Chunking — découpage intelligent en segments sémantiques (512-2048 tokens)",
+        "Enrichissement — ajout métadonnées (date, source, langue, type, tags automatiques)",
+        "Embedding — génération de vecteurs sémantiques pour recherche et similarité",
+        "Classification — catégorisation automatique du contenu"
+      ],
+      "chunking_strategies": {
+        "fixe": "Découpage par nombre de tokens fixe avec chevauchement configurable",
+        "semantique": "Découpage aux frontières de paragraphes et sections",
+        "recursif": "Découpage récursif avec respect de la hiérarchie du document",
+        "adaptatif": "Taille de chunk ajustée selon le type de contenu"
+      }
+    },
+    "indexation": {
+      "description": "Indexation multi-modale pour recherche rapide et pertinente",
+      "index_types": {
+        "vectoriel": "Index HNSW pour recherche sémantique par similarité (via embeddings)",
+        "textuel": "Index inversé full-text pour recherche par mots-clés (BM25)",
+        "metadata": "Index structuré sur les métadonnées (date, type, source, tags)",
+        "hybride": "Fusion des scores vectoriel + textuel pour résultats optimaux"
+      },
+      "moteur": "SQLite FTS5 + index vectoriel HNSW intégré (aucune dépendance externe)",
+      "performance": "Recherche < 50ms sur 1M+ de documents indexés",
+      "mise_a_jour": "Indexation incrémentale — seuls les documents modifiés sont ré-indexés"
+    },
+    "caching": {
+      "description": "Stratégie de cache multi-niveaux pour performance optimale",
+      "niveaux": {
+        "L1_memoire": "Cache en mémoire — résultats chauds, TTL 5 minutes, max 100 Mo",
+        "L2_disque": "Cache disque — résultats tièdes, TTL 24 heures, max 1 Go",
+        "L3_persistant": "Cache persistant — résultats froids mais coûteux à recalculer, TTL 7 jours"
+      },
+      "invalidation": {
+        "ttl": "Expiration automatique par durée de vie",
+        "evenementielle": "Invalidation immédiate quand la donnée source change",
+        "manuelle": "Purge manuelle via commande IPC"
+      },
+      "politique_eviction": "LRU (Least Recently Used) avec protection des entrées fréquemment accédées"
+    },
+    "streaming": {
+      "description": "Traitement en flux continu — données traitées au fil de l'eau",
+      "usages": [
+        "Streaming de réponses IA (affichage progressif token par token)",
+        "Transcription audio en temps réel",
+        "Sync temps réel des modifications",
+        "Flux de notifications et événements système"
+      ],
+      "implementation": "Channels async Rust (tokio) avec backpressure automatique",
+      "backpressure": "Si le consommateur est lent, le producteur ralentit — pas de perte de données"
+    },
+    "batch_processing": {
+      "description": "Traitement par lots — opérations lourdes exécutées en arrière-plan",
+      "usages": [
+        "Ré-indexation complète de la base de connaissances",
+        "Génération d'embeddings pour un corpus complet",
+        "Export et backup chiffré de toutes les données",
+        "Analyse batch de documents (OCR, classification)",
+        "Nettoyage et optimisation des caches et index"
+      ],
+      "planification": "Exécution planifiable (immédiat, différé, cron) avec priorité configurable",
+      "progression": "Barre de progression et estimation du temps restant via IPC",
+      "resilience": "Reprise automatique après interruption — checkpoint tous les 100 éléments"
+    },
+    "ipc_commands": [
+      "pipeline_ingest",
+      "pipeline_transform",
+      "pipeline_index_search",
+      "pipeline_cache_stats",
+      "pipeline_cache_purge",
+      "pipeline_batch_start",
+      "pipeline_batch_status",
+      "pipeline_stream_subscribe"
+    ]
   }
 }

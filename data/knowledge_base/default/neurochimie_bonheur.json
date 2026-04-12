@@ -1,0 +1,176 @@
+{
+  "version": "v30.1.0",
+  "category": "neurochimie_bonheur",
+  "description": "Neurochimie du bonheur — les 4 molécules clés (dopamine, sérotonine, ocytocine, endorphines), circuits neuronaux, récepteurs, dérèglements, optimisation naturelle, interactions, rôle dans la motivation, l'humeur, l'attachement et la douleur",
+  "neurochimie_bonheur": {
+    "introduction": "Le bonheur n'est pas un état mystique — c'est en grande partie un phénomène neurochimique orchestré par quatre molécules principales : la dopamine (motivation/récompense), la sérotonine (humeur/stabilité), l'ocytocine (lien/confiance) et les endorphines (soulagement/euphorie). Comprendre leur fonctionnement permet de les activer naturellement et de comprendre les dérèglements qui mènent à la dépression, l'addiction ou l'anxiété. TITANE fournit ces connaissances avancées avec rigueur neuroscientifique.",
+    "dopamine": {
+      "nature": "Neurotransmetteur catécholaminergique. Synthétisée à partir de la tyrosine (acide aminé) → L-DOPA → Dopamine. Principalement produite dans l'aire tegmentale ventrale (VTA) et la substance noire (substantia nigra) du mésencéphale.",
+      "circuits_dopaminergiques": {
+        "mesolimbique": {
+          "trajet": "VTA → noyau accumbens (striatum ventral) → amygdale → hippocampe",
+          "fonction": "Circuit de la récompense et de la motivation. Centre du désir, de l'anticipation du plaisir, du renforcement comportemental.",
+          "pathologie_excès": "Addiction (cocaïne, amphétamines, jeux, réseaux sociaux, pornographie), schizophrénie (symptômes positifs — hallucinations, délires)",
+          "pathologie_déficit": "Anhédonie (incapacité à ressentir du plaisir), apathie, démotivation"
+        },
+        "mesocortical": {
+          "trajet": "VTA → cortex préfrontal",
+          "fonction": "Fonctions exécutives : planification, prise de décision, mémoire de travail, attention, motivation dirigée vers un but.",
+          "pathologie_déficit": "Déficit attentionnel (TDAH), symptômes négatifs de la schizophrénie (retrait social, aplatissement émotionnel)"
+        },
+        "nigrostriatal": {
+          "trajet": "Substance noire → striatum dorsal (noyau caudé, putamen)",
+          "fonction": "Contrôle moteur volontaire, coordination, initiation du mouvement.",
+          "pathologie": "Maladie de Parkinson (destruction progressive des neurones dopaminergiques de la substance noire → rigidité, tremblements, bradykinésie)"
+        },
+        "tuberoinfundibulaire": {
+          "trajet": "Hypothalamus → hypophyse antérieure",
+          "fonction": "Inhibition de la sécrétion de prolactine. Régulation hormonale."
+        }
+      },
+      "récepteurs": {
+        "D1_D5": "Famille excitatrice. Activation de l'adénylate cyclase. Rôle dans la motivation, la mémoire de travail, la plasticité synaptique.",
+        "D2_D3_D4": "Famille inhibitrice. D2 : cible des antipsychotiques. D4 : lié à la recherche de nouveauté (gène DRD4-7R — 'gène de l'aventure')."
+      },
+      "dopamine_et_motivation": {
+        "anticipation_vs_plaisir": "La dopamine n'est PAS la molécule du plaisir — c'est la molécule de l'ANTICIPATION du plaisir et de la MOTIVATION à l'obtenir. Le pic dopaminergique survient AVANT la récompense, pas pendant.",
+        "erreur_de_prédiction": "Schultz (1997) : les neurones dopaminergiques codent l'erreur de prédiction de la récompense. Récompense inattendue → pic de dopamine. Récompense attendue → pas de pic. Absence de récompense attendue → chute de dopamine (déception).",
+        "cycle_dopamine": "Désir → Action → Récompense → Nouvelle cible. Si le cycle est court-circuité (récompense sans effort : scrolling, sucre, pornographie), la sensibilité des récepteurs D2 baisse → tolérance → besoin de stimulation croissante.",
+        "dopamine_detox": "Concept popularisé : réduire les sources de dopamine facile (réseaux sociaux, sucre, jeux) pour resensibiliser les récepteurs. Base neuroscientifique partielle mais pratique utile."
+      },
+      "optimisation_naturelle_dopamine": {
+        "alimentation": "Tyrosine (précurseur) : amandes, avocats, bananes, viande, œufs, fromage, poisson. Fer, zinc, vitamine B6, folate nécessaires à la synthèse.",
+        "exercice": "Augmente la dopamine de 200-300% (comparable à la cocaïne mais physiologique et soutenue). Running, natation, HIIT particulièrement efficaces.",
+        "sommeil": "Le sommeil réinitialise la sensibilité des récepteurs D2. Privation de sommeil → hypersensibilité dopaminergique temporaire puis crash.",
+        "exposition_soleil": "Lumière du matin → augmentation de la dopamine via le système rétino-hypothalamique. 10-30 min de lumière naturelle matinale.",
+        "musique": "Salimpoor et al. (2011) : la musique provoque une libération de dopamine dans le striatum. Les frissons musicaux sont un marqueur dopaminergique.",
+        "accomplissement": "Fixer et atteindre des micro-objectifs quotidiens. La dopamine récompense la progression, pas seulement le résultat final.",
+        "nouveauté": "Exploration, voyages, nouvelles expériences stimulent le circuit dopaminergique. Routine excessive → déplétion dopamine.",
+        "douche_froide": "Exposition au froid (2-3 min) → augmentation dopamine de 250-300% pendant 2-3h (Šrámek et al. 2000).",
+        "meditation": "Méditation régulière augmente les récepteurs D2 dans le striatum ventral (Kjaer et al. 2002)."
+      },
+      "dérèglements": {
+        "addiction": "Toutes les addictions détournent le circuit dopaminergique. Substance/comportement → libération massive de dopamine → down-regulation des récepteurs D2 → tolérance → besoin croissant → perte de contrôle → anhédonie sans la substance.",
+        "TDAH": "Hypofonctionnement dopaminergique préfrontal. Le méthylphénidate (Ritalin) et l'amphétamine (Adderall) augmentent la dopamine disponible dans le cortex préfrontal.",
+        "Parkinson": "Destruction des neurones dopaminergiques nigrostriataux. L-DOPA (Lévodopa) = précurseur de la dopamine qui traverse la BHE.",
+        "schizophrénie": "Hypothèse dopaminergique : excès dopamine mésolimbique (symptômes positifs) + déficit dopamine mésocortical (symptômes négatifs)."
+      }
+    },
+    "serotonine": {
+      "nature": "Neurotransmetteur indolaminergique (5-hydroxytryptamine, 5-HT). Synthétisée à partir du tryptophane (acide aminé essentiel) → 5-HTP → Sérotonine. 95% de la sérotonine corporelle est produite dans le tractus gastro-intestinal (cellules entérochromaffines), 5% dans le cerveau (noyaux du raphé du tronc cérébral).",
+      "fonctions": {
+        "humeur": "Stabilisateur d'humeur principal. Déficit associé à la dépression, l'anxiété, l'irritabilité, l'impulsivité.",
+        "sommeil": "Précurseur de la mélatonine (sérotonine → N-acétylsérotonine → mélatonine dans la glande pinéale). Rythme circadien.",
+        "appetit": "Régulation de la satiété. Les ISRS réduisent l'appétit initialement. Le tryptophane alimentaire (glucides) → humeur apaisée (effet 'comfort food').",
+        "cognition": "Mémoire, apprentissage, flexibilité cognitive. Implication dans les TOC (boucles obsessionnelles liées à l'hypoactivité sérotoninergique).",
+        "douleur": "Modulation des signaux douloureux dans la moelle épinière (voies descendantes inhibitrices).",
+        "motilité_intestinale": "Régulation du péristaltisme. Excès de sérotonine intestinale → diarrhée/nausées (effet secondaire ISRS).",
+        "coagulation": "Les plaquettes stockent la sérotonine et la libèrent lors de la coagulation."
+      },
+      "récepteurs": {
+        "note": "Au moins 14 sous-types de récepteurs 5-HT (la plus grande famille de récepteurs d'un seul neurotransmetteur).",
+        "5HT1A": "Anxiolytique, antidépresseur. Cible de la buspirone. Auto-récepteur somatodendritique (feedback négatif).",
+        "5HT2A": "Perception, cognition, hallucinogènes. Cible du LSD et de la psilocybine. Médiation des effets psychédéliques.",
+        "5HT3": "Nausées, vomissements. Cible des anti-émétiques (ondansétron). Seul récepteur ionotrope de la sérotonine.",
+        "5HT4": "Motilité gastro-intestinale, mémoire, cognition."
+      },
+      "axe_intestin_cerveau": {
+        "microbiote": "Le microbiote intestinal produit environ 90% de la sérotonine corporelle via les cellules entérochromaffines. Les bactéries (Lactobacillus, Bifidobacterium) influencent directement la production de sérotonine.",
+        "nerf_vague": "Autoroute bidirectionnelle intestin-cerveau. 80% des fibres sont afférentes (intestin → cerveau). Le microbiote communique l'état intestinal au cerveau via le nerf vague.",
+        "implications": "Alimentation → microbiote → sérotonine → humeur. Dysbiose intestinale corrélée avec dépression, anxiété, fatigue chronique."
+      },
+      "optimisation_naturelle_serotonine": {
+        "tryptophane_alimentaire": "Dinde, poulet, œufs, bananes, noix, graines de citrouille, fromage, chocolat noir, spiruline, tofu. Le tryptophane a besoin de glucides pour traverser la BHE (compétition avec d'autres acides aminés).",
+        "lumière_solaire": "L'exposition à la lumière vive augmente la synthèse cérébrale de sérotonine. Déficit lumineux hivernal → baisse sérotonine → dépression saisonnière (SAD). Luminothérapie 10 000 lux, 30 min/matin.",
+        "exercice_physique": "L'exercice augmente le tryptophane cérébral en utilisant les BCAA en compétition → plus de tryptophane passe la BHE. 30 min d'exercice modéré = efficacité comparable aux ISRS pour la dépression légère-modérée.",
+        "meditation_gratitude": "La méditation de bienveillance (metta) et les pratiques de gratitude augmentent l'activité sérotoninergique mesurée par PET scan.",
+        "massage": "Le massage thérapeutique augmente la sérotonine urinaire de 28% (Field et al. 2005). Augmente aussi la dopamine.",
+        "microbiote": "Probiotiques ciblés (psychobiotiques) : Lactobacillus helveticus R0052 + Bifidobacterium longum R0175. Alimentation riche en fibres prébiotiques (inuline, FOS). Fermentés : kéfir, choucroute, kimchi, miso.",
+        "5HTP": "5-hydroxytryptophane (supplément). Précurseur direct de la sérotonine. 50-300mg/jour. NE PAS combiner avec des ISRS (risque de syndrome sérotoninergique — urgence médicale)."
+      },
+      "dérèglements": {
+        "dépression": "Hypothèse monoaminergique : déficit sérotoninergique central. Base des ISRS (fluoxétine, sertraline, escitalopram). Hypothèse remise en question mais les ISRS restent efficaces cliniquement.",
+        "anxiété": "Hypoactivité 5-HT1A → anxiété généralisée. Les ISRS sont le traitement de première ligne de l'anxiété généralisée, du trouble panique, du TSPT.",
+        "TOC": "Boucles obsessionnelles liées à un dysfonctionnement sérotoninergique fronto-striatal. Doses élevées d'ISRS nécessaires.",
+        "syndrome_serotoninergique": "Urgence médicale : excès de sérotonine (interactions médicamenteuses ISRS + IMAO, ISRS + 5-HTP, ISRS + triptans). Symptômes : agitation, tremblements, hyperthermie, diarrhée, tachycardie, rigidité musculaire. Potentiellement mortel."
+      }
+    },
+    "ocytocine": {
+      "nature": "Neuropeptide de 9 acides aminés. Synthétisée dans l'hypothalamus (noyaux paraventriculaire et supraoptique). Sécrétée par la neurohypophyse (hypophyse postérieure). Agit comme hormone ET comme neurotransmetteur.",
+      "surnoms": "L'hormone de l'amour, de la confiance, du lien, de l'attachement, de la monogamie.",
+      "fonctions": {
+        "attachement_maternel": "Libérée massivement lors de l'accouchement (contractions utérines), de l'allaitement (réflexe d'éjection du lait), du peau-à-peau mère-enfant. Crée le lien d'attachement primaire.",
+        "lien_amoureux": "Libérée lors des relations sexuelles (orgasme), des câlins, des baisers, du regard prolongé dans les yeux (4+ secondes). Renforce l'attachement dans le couple.",
+        "confiance_sociale": "Kosfeld et al. (2005) : l'ocytocine intranasale augmente la confiance dans les jeux économiques de 17%. Facilite la coopération et la générosité.",
+        "réduction_stress": "Diminue le cortisol, abaisse la pression artérielle, active le parasympathique. Le toucher affectueux libère de l'ocytocine → effet calmant.",
+        "comportement_pro_social": "Augmente l'empathie, la lecture des émotions faciales, la générosité intra-groupe.",
+        "cicatrisation": "Accélère la guérison des plaies (Gouin et al. 2010) via la réduction du stress et l'activation immunitaire."
+      },
+      "face_sombre": {
+        "biais_ingroup": "L'ocytocine renforce les liens INTRA-groupe mais peut augmenter la méfiance et l'agressivité INTER-groupes. 'Hormone de l'ethnocentrisme' (De Dreu et al. 2011).",
+        "dépendance_affective": "Excès d'ocytocine peut créer un attachement anxieux, une dépendance émotionnelle, une difficulté à se séparer.",
+        "mémoire_sociale_négative": "L'ocytocine intensifie les souvenirs sociaux — positifs ET négatifs. Peut amplifier l'anxiété sociale chez les personnes déjà anxieuses."
+      },
+      "optimisation_naturelle_ocytocine": {
+        "contact_physique": "Câlins (20 secondes minimum pour libération significative), massage, peau-à-peau, caresses, poignées de main chaleureuses, accolade.",
+        "regard_dans_les_yeux": "Contact visuel prolongé (4+ secondes) avec une personne de confiance → libération mutuelle d'ocytocine.",
+        "animaux_domestiques": "Caresser un chien augmente l'ocytocine de 300% chez le propriétaire ET chez le chien (Nagasawa et al. 2015). Les chiens qui regardent leur maître dans les yeux provoquent un pic d'ocytocine similaire au lien mère-enfant.",
+        "chant_en_groupe": "Le chant choral synchronisé libère de l'ocytocine et augmente le sentiment d'appartenance.",
+        "actes_de_générosité": "Donner, aider, faire du bénévolat libèrent de l'ocytocine ('helper's high').",
+        "relations_de_qualité": "Conversations intimes, partage de vulnérabilité, écoute empathique, rire partagé.",
+        "accouchement_allaitement": "Pics massifs d'ocytocine. Base biologique du lien maternel.",
+        "orgasme": "Libération d'ocytocine lors de l'orgasme — renforce le lien avec le partenaire."
+      }
+    },
+    "endorphines": {
+      "nature": "Peptides opioïdes endogènes. 'Endorphine' = 'morphine endogène'. Trois familles principales : bêta-endorphine, enképhalines, dynorphines. Produites par l'hypophyse et l'hypothalamus.",
+      "récepteurs_opioides": {
+        "mu": "Analgésie, euphorie, dépendance physique. Cible de la morphine, de l'héroïne. Les bêta-endorphines sont les ligands endogènes principaux.",
+        "delta": "Analgésie, effets antidépresseurs. Enképhalines sont les ligands principaux.",
+        "kappa": "Analgésie spinale, dysphorie à haute dose. Dynorphines sont les ligands principaux."
+      },
+      "fonctions": {
+        "analgésie": "Inhibition de la transmission de la douleur au niveau de la corne dorsale de la moelle épinière et du thalamus. Les endorphines sont 20 à 40 fois plus puissantes que la morphine molécule pour molécule.",
+        "euphorie": "Le 'runner's high' (euphorie du coureur) est médié par les endorphines ET les endocannabinoïdes (anandamide). Sensation de bien-être profond, réduction de l'anxiété, sentiment d'invincibilité temporaire.",
+        "réponse_au_stress": "Libérées lors du stress aigu pour permettre de continuer à fonctionner malgré la douleur (soldats blessés qui continuent à combattre).",
+        "système_immunitaire": "Modulation de la réponse immunitaire. Les endorphines stimulent les cellules NK (natural killer) et certains lymphocytes.",
+        "plaisir_social": "Le rire, le chant, la danse, les interactions sociales chaleureuses libèrent des endorphines. Base biologique du plaisir de la compagnie."
+      },
+      "optimisation_naturelle_endorphines": {
+        "exercice_intense": "Le 'runner's high' apparaît après 30-45 min d'exercice soutenu à 70-85% de la FCmax. Course, vélo, natation, HIIT.",
+        "rire": "Le rire authentique (pas le rire forcé initialement, mais le yoga du rire peut fonctionner par effet d'entraînement) libère des endorphines. 15 min de rire = augmentation significative du seuil de douleur.",
+        "musique": "L'écoute et surtout la PRATIQUE musicale libèrent des endorphines. Les frissons musicaux (chills) sont un marqueur de libération endorphinique.",
+        "douleur_contrôlée": "Acupuncture, massage profond, exposition au froid, nourriture épicée (capsaïcine → endorphines en réponse à la 'douleur' perçue).",
+        "chocolat_noir": "Contient de la phényléthylamine et stimule la libération d'endorphines. 70%+ cacao. 20-30g/jour.",
+        "sexualité": "L'excitation sexuelle et l'orgasme provoquent une libération massive d'endorphines. Effet analgésique post-orgasmique bien documenté.",
+        "aromathérapie": "Vanille, lavande, certaines huiles essentielles stimulent la production d'endorphines via le système olfactif-limbique.",
+        "méditation": "La méditation de compassion (tonglen, metta) augmente les niveaux d'endorphines. Le yoga nidra profond également.",
+        "danse": "La danse en groupe libère des endorphines de manière significative — effet social + exercice + musique."
+      }
+    },
+    "interactions_entre_molecules": {
+      "dopamine_serotonine": "Relation inverse partielle : la dopamine pousse à l'action et à la recherche de nouveauté ; la sérotonine stabilise et apaise. Les ISRS peuvent émousser la motivation dopaminergique (effet secondaire fréquent : apathie sous ISRS).",
+      "ocytocine_dopamine": "L'ocytocine module le circuit dopaminergique de la récompense. Le lien social active la dopamine → le partenaire/enfant devient une 'récompense' neurochimique.",
+      "endorphines_dopamine": "L'exercice libère les deux simultanément. Les endorphines soutiennent le plaisir, la dopamine soutient la motivation à recommencer.",
+      "serotonine_ocytocine": "La sérotonine facilite l'effet pro-social de l'ocytocine. Déficit sérotoninergique → agressivité impulsive même en présence d'ocytocine.",
+      "cocktail_bonheur": "Le bonheur durable est un équilibre des 4 molécules. Exercice + soleil + relations + accomplissement + alimentation optimale → activation synergique de toutes les voies.",
+      "tableau_synthese": {
+        "dopamine": "Motivation, désir, objectifs → Activée par : accomplissement, nouveauté, exercice, musique, froid",
+        "serotonine": "Stabilité, sérénité, satisfaction → Activée par : soleil, tryptophane, exercice, gratitude, microbiote",
+        "ocytocine": "Lien, confiance, amour → Activée par : toucher, regard, animaux, générosité, chant",
+        "endorphines": "Soulagement, euphorie, résilience → Activée par : exercice intense, rire, musique, épicé, acupuncture"
+      }
+    },
+    "neurochimie_des_pathologies": {
+      "dépression": "Déficit multi-monoaminergique (sérotonine + noradrénaline + dopamine). Inflammation chronique → dépletion tryptophane (vers kynurénine au lieu de sérotonine). Dysfonctionnement axe HPA (cortisol chronique).",
+      "anxiété": "Excès noradrénaline + déficit GABA + hypoactivité sérotoninergique (5-HT1A). L'amygdale hyperactive surréagit aux stimuli neutres.",
+      "addiction": "Détournement du circuit mésolimbique dopaminergique. Tolérance → down-regulation D2 → anhédonie sans la substance → rechute.",
+      "stress_chronique": "Cortisol élevé → destruction hippocampe → mémoire altérée. Déplétion sérotonine et dopamine. Suppression ocytocine → isolement social → aggravation."
+    },
+    "protocoles_pratiques": {
+      "routine_matinale_neurochimique": "1. Lumière solaire 10 min (sérotonine + dopamine). 2. Douche froide 2 min (dopamine + endorphines + noradrénaline). 3. Exercice 30 min (les 4 molécules). 4. Petit-déjeuner riche en tryptophane et tyrosine (œufs, banane, noix).",
+      "routine_sociale": "1. Câlin/contact physique avec un proche (ocytocine). 2. Conversation authentique (sérotonine + ocytocine). 3. Acte de générosité/gratitude (sérotonine + ocytocine).",
+      "routine_soirée": "1. Musique calme (endorphines + sérotonine). 2. Gratitude/journal (sérotonine). 3. Obscurité progressive (mélatonine via sérotonine). 4. Contact affectueux (ocytocine → sommeil)."
+    }
+  }
+}
