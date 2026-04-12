@@ -13,6 +13,9 @@ use std::time::Instant;
 const GEMINI_API_URL: &str =
     "https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent";
 
+/// Approximate characters per token for estimation when provider doesn't return token counts.
+const CHARS_PER_TOKEN_ESTIMATE: u32 = 4;
+
 pub struct GeminiProvider {
     api_key: String,
     client: Client,
@@ -124,8 +127,8 @@ impl AiProvider for GeminiProvider {
             .map(|p| p.text.clone())
             .ok_or_else(|| AIError::InvalidResponse("No content in Gemini response".to_string()))?;
 
-        let tokens_in = (req.prompt.len() / 4) as u32;
-        let tokens_out = (output.len() / 4) as u32;
+        let tokens_in = (req.prompt.len() as u32) / CHARS_PER_TOKEN_ESTIMATE;
+        let tokens_out = (output.len() as u32) / CHARS_PER_TOKEN_ESTIMATE;
 
         Ok(AiResponse {
             output,

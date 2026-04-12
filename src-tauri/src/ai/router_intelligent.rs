@@ -246,8 +246,9 @@ mod tests {
         };
 
         let decision = router.route(&req).await;
-        // Fast mode with short prompt selects claude_haiku
+        // Fast mode with short prompt selects claude_haiku with gemini_flash secondary
         assert_eq!(decision.primary, "claude_haiku");
+        assert_eq!(decision.fallback, "local_llama3");
     }
 
     #[tokio::test]
