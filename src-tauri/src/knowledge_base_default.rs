@@ -929,7 +929,7 @@ mod tests {
         let entry = DefaultKnowledgeBase::get_entry("engines_catalog");
         assert!(entry.is_some(), "engines_catalog must exist");
         let e = entry.unwrap();
-        assert_eq!(e.version, "v30.0.0");
+        assert_eq!(e.version, "v30.1.0");
         let engines = e
             .content
             .get("engines")
