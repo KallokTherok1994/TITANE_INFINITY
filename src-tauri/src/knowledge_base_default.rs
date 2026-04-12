@@ -1072,15 +1072,15 @@ mod tests {
         let e = entry.unwrap();
         let arch = e
             .content
-            .get("architecture")
-            .expect("Must have 'architecture'");
+            .get("architecture_4_rings")
+            .expect("Must have 'architecture_4_rings'");
         assert!(
-            arch.get("rings").is_some(),
-            "Architecture must define 4 rings"
+            arch.get("ring0_core_kernel").is_some(),
+            "Architecture must define ring0_core_kernel"
         );
         assert!(
-            arch.get("ipc_contract").is_some(),
-            "Architecture must define IPC contract"
+            e.content.get("ipc_protocol").is_some(),
+            "Architecture must define ipc_protocol"
         );
     }
 

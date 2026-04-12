@@ -48,15 +48,23 @@ mod tests {
 
     #[test]
     fn test_memory_storage_creates_directory() -> Result<(), Box<dyn Error>> {
-        // Phase 1 Stabilisation: Directory créé automatiquement
+        // v30.1.2 HOTFIX: Directory creation is now lazy (deferred to first save).
+        // new() does NOT create the dir; save_conversation() does on first write.
         let temp_dir = TempDir::new()?;
         let storage_path = temp_dir.path().join("new_storage");
 
         assert!(!storage_path.exists());
 
-        let _storage = MemoryStorage::new(storage_path.clone(), "password".to_string())?;
+        let storage = MemoryStorage::new(storage_path.clone(), "password".to_string())?;
 
-        assert!(storage_path.exists());
+        // After new(), directory must NOT exist yet (lazy init).
+        assert!(!storage_path.exists(), "Directory must not be created at new() (lazy-init)");
+
+        // Trigger first write — directory must be created lazily.
+        let conv = create_test_conversation();
+        storage.save_conversation(&conv)?;
+
+        assert!(storage_path.exists(), "Directory must be created after first save_conversation()");
 
         Ok(())
     }
