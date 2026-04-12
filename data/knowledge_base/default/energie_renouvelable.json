@@ -1,66 +1,317 @@
 {
   "version": "v30.1.0",
   "category": "energie_renouvelable",
-  "description": "Énergie renouvelable et environnement — solaire, éolien, hydrogène, stockage, transition énergétique, empreinte carbone, économie circulaire, enjeux géopolitiques de l'énergie verte",
+  "description": "Énergie renouvelable et environnement — solaire, éolien, hydrogène, stockage, transition énergétique, empreinte carbone, nucléaire, géothermie, biomasse, économie circulaire, mobilité verte, réseaux intelligents, habitat durable, politiques et incitations. Base de connaissances exhaustive pour TITANE.",
   "energie_renouvelable": {
-    "introduction": "La transition énergétique est la transformation économique et technique la plus vaste du 21e siècle. TITANE fournit les données réelles derrière les discours politiques : coûts, capacités, limites physiques, fenêtre temporelle disponible.",
+    "introduction": "La transition énergétique est la transformation économique et technique la plus vaste du 21e siècle. TITANE fournit les données réelles derrière les discours politiques : coûts, capacités, limites physiques, fenêtre temporelle disponible. Cette base couvre l'intégralité du spectre énergétique : production décarbonée, stockage, distribution intelligente, mobilité, habitat, recyclage et politiques publiques.",
     "contexte_crise": {
-      "chiffres_cles": "Énergie fossile = 83% consommation mondiale (2023). 1.5°C Paris Agreement nécessite neutralité carbone ~2050.",
-      "urgence": "Budget carbone restant à 1.5°C ≈ 250 GtCO2 (rythme actuel = épuisé en ~6 ans)",
-      "opportunite": "Coût solaire -99% en 40 ans. Éolien -80%. Transition = opportunité économique de 5T$/an."
+      "chiffres_cles": "Énergie fossile = 83 % de la consommation mondiale d'énergie primaire (2023). L'Accord de Paris (2015, COP21) vise la neutralité carbone vers 2050 pour limiter le réchauffement à 1,5 °C. En 2024, les ENR représentent ~30 % de l'électricité mondiale mais seulement ~15 % de l'énergie primaire totale.",
+      "urgence": "Budget carbone restant à 1,5 °C ≈ 250 GtCO₂ (rythme actuel ~42 GtCO₂/an → épuisé en ~6 ans). Chaque dixième de degré supplémentaire augmente significativement les événements climatiques extrêmes : canicules, inondations, sécheresses, montée des eaux.",
+      "opportunite": "Coût du solaire PV : −99 % en 40 ans. Éolien terrestre : −80 %. Batteries Li-ion : −97 % depuis 1991. La transition représente une opportunité économique estimée à 5 000 milliards USD/an d'ici 2030 selon BloombergNEF.",
+      "mix_mondial_2024": "Charbon 27 %, pétrole 31 %, gaz 24 %, nucléaire 4 %, hydraulique 7 %, solaire + éolien 5 %, biomasse et autres 2 %. Objectif AIE Net Zero : ENR à 80 % du mix électrique en 2030."
     },
     "solaire": {
       "technologie": {
-        "pv_silicium": "Standard. Rendement commercial 20-23%. Durée vie 25-30 ans. Prix $0.20/W (2024)",
-        "perovskite": "Promesse > 30% rendement, coût très faible. Stabilité long terme encore problématique.",
-        "solaire_concentre": "Miroirs concentrent chaleur → vapeur → électricité. Stockage thermique intégrable. Utile zones très ensoleillées."
+        "pv_silicium_monocristallin": "Standard haut de gamme. Rendement commercial 21–24 %. Durée de vie garantie 25–30 ans, dégradation ~0,4 %/an. Prix module ~0,18 $/W (2024). Domine 95 % du marché mondial.",
+        "pv_silicium_polycristallin": "Moins cher, rendement 17–20 %. En déclin face au monocristallin dont le surcoût est devenu marginal. Utilisé encore dans les installations à grand volume en Asie.",
+        "perovskite": "Rendement labo record 33,9 % en tandem avec silicium (2024). Coût de fabrication potentiellement très faible (impression roll-to-roll). Défi majeur : stabilité à long terme (dégradation humidité, UV). Commercialisation attendue 2026–2028.",
+        "couches_minces": "CdTe (First Solar) et CIGS : rendement 18–22 %, flexibilité mécanique, meilleur rendement en faible luminosité. Part de marché ~5 %. Idéal pour intégration au bâtiment (BIPV).",
+        "solaire_concentre_csp": "Miroirs paraboliques ou tours concentrent la chaleur (500–1000 °C) → sel fondu → vapeur → turbine. Stockage thermique intégré permettant la production nocturne. Centrales : Noor Ouarzazate (Maroc, 580 MW), Ivanpah (USA). Coût ~100–150 $/MWh.",
+        "solaire_thermique": "Chauffe-eau solaire individuel ou collectif. Rendement thermique 60–80 %. Très rentable en zone ensoleillée. 500 millions de m² installés mondialement, Chine leader (70 %).",
+        "agrivoltaisme": "Panneaux surélevés sur cultures agricoles. Double usage du sol. Réduction stress hydrique pour les plantes (-30 % évaporation). France : objectif 100 GW solaire en 2050 dont part significative en agrivoltaïsme."
       },
-      "capacite_mondiale": "1.7 TW installé (2024). Chine 40%, Europe 20%, USA 10%.",
-      "limites": "Intermittent (nuit, météo), espace nécessaire (mais toitures/surfaces existantes), recyclage panneaux"
+      "capacite_mondiale": "1,7 TW installé (2024). Ajouts annuels : ~420 GW en 2024 (record). Chine 40 %, Europe 20 %, USA 10 %, Inde 7 %. Prix LCOE solaire : 20–40 $/MWh selon la localisation.",
+      "limites": "Intermittence (nuit, nébulosité), emprise au sol (7–10 ha/MWc pour centrales au sol), recyclage des panneaux en fin de vie (directive DEEE en Europe), dépendance au silicium de qualité solaire (Chine produit 80 % du polysilicium).",
+      "facteur_charge": "Facteur de charge moyen : 12–15 % en Europe du Nord, 18–25 % en Méditerranée, 25–30 % dans les déserts. Tracker mono-axe : +20–25 % de production vs fixe."
     },
     "eolien": {
-      "terrestre": "Coût $30-50/MWh (2024). Plus compétitif que charbon/gaz dans la plupart des pays.",
-      "offshore": "Plus coûteux ($80-120/MWh) mais vents plus forts, moins variable, moins d'opposition locale",
-      "limites": "Bruit proche des habitations, impact oiseaux/chauves-souris, dépendance du vent, recyclage pales",
-      "capacite": "2.1 TW installé mondial (2024)"
+      "terrestre": {
+        "cout": "LCOE : 25–50 $/MWh (2024). Plus compétitif que le charbon et le gaz dans 2/3 des pays. Turbines modernes : 5–7 MW, hauteur 150–200 m, diamètre rotor 150–170 m.",
+        "facteur_charge": "Facteur de charge moyen 25–35 % selon le site. Meilleurs sites (Patagonie, Écosse) : 45–50 %.",
+        "leaders": "Chine (365 GW), USA (148 GW), Allemagne (66 GW), Inde (44 GW), Espagne (30 GW). France : 22 GW installés, objectif 40 GW en 2030."
+      },
+      "offshore": {
+        "cout": "LCOE : 60–100 $/MWh. En baisse rapide. Turbines géantes : 15–18 MW (Vestas V236, Siemens SG 14-236 DD). Fondations fixes jusqu'à 60 m de profondeur.",
+        "flottant": "Éolien flottant : technologie émergente pour profondeurs > 60 m. Prototypes : Hywind (Norvège), projets pilotes en Méditerranée française. Potentiel énorme : 80 % des ressources éoliennes offshore mondiales sont en eaux profondes.",
+        "capacite": "Offshore total : 75 GW installés (2024). Objectifs EU : 300 GW en 2050. UK leader européen (15 GW)."
+      },
+      "limites": "Impact paysager et bruit (<500 m des habitations), mortalité avifaune (0,2–0,5 oiseau/turbine/an, bien inférieure aux chats ou bâtiments vitrés), recyclage des pales en composite (nouvelles résines thermoplastiques recyclables en développement), effet stroboscopique des ombres.",
+      "capacite_mondiale": "Terrestre + offshore : 1 020 GW installés (2024). Objectif AIE Net Zero : 3 100 GW en 2030.",
+      "micro_eolien": "Petites turbines (<50 kW) pour autoconsommation. Rendement faible en milieu urbain (turbulences). Plus pertinent en site isolé ou agricole."
     },
     "hydrogene": {
       "couleurs": {
-        "gris": "95% de l'H2 actuel — steam reforming méthane. Très CO2.",
-        "bleu": "Gris + captage carbone (CCS). Transitoire.",
-        "vert": "Électrolyse eau avec électricité renouvelable. Propre. Coût encore élevé ($3-6/kg, objectif <$1).",
-        "rose": "Nucléaire + électrolyse. Faible carbone."
+        "gris": "95 % de l'H₂ actuel — reformage du méthane (SMR). Émet 9–12 kgCO₂/kgH₂. Coût : 1–2 $/kg. 70 Mt/an produites mondialement.",
+        "bleu": "Reformage + captage et stockage carbone (CCS). Réduit les émissions de 80–90 %. Coût : 1,5–3 $/kg. Dépend de la disponibilité de sites de stockage géologique.",
+        "vert": "Électrolyse de l'eau avec électricité renouvelable. Zéro émission. Coût : 3–6 $/kg (2024), objectif < 2 $/kg en 2030, < 1 $/kg en 2040. Électrolyseurs PEM ou alcalins.",
+        "rose": "Électrolyse alimentée par le nucléaire. Faible carbone, production continue 24h/24. France y voit un atout stratégique avec son parc nucléaire.",
+        "turquoise": "Pyrolyse du méthane → H₂ + carbone solide (pas de CO₂). Technologie émergente, intéressante si le carbone solide est valorisé.",
+        "blanc": "Hydrogène natif géologique, découvert naturellement dans certaines formations rocheuses. Gisements identifiés au Mali, en Australie. Potentiel disruptif si exploitable à grande échelle."
       },
-      "usages": "Acier (hauts fourneaux), chimie (ammoniac/engrais), aviation long courrier, shipping, stockage saisonnier",
-      "defis": "Densité énergétique volumique faible, H2 fragile (embrittlement métaux), infrastructure distribution"
+      "usages": {
+        "industrie": "Sidérurgie (remplacement du coke dans les hauts fourneaux → acier vert, projet HYBRIT en Suède), chimie (ammoniac pour engrais, 180 Mt/an), raffinage, verre, céramique.",
+        "transport_lourd": "Piles à combustible pour camions longue distance, bus, trains (Alstom iLint), navires, aviation (projets Airbus ZEROe). Avantage : recharge rapide, autonomie élevée.",
+        "stockage_saisonnier": "Conversion électricité → H₂ → stockage en cavernes salines → reconversion en électricité. Rendement global ~35 % mais seule solution viable pour le stockage intersaisonnier à grande échelle.",
+        "injection_reseau": "Mélange jusqu'à 20 % d'H₂ dans le réseau de gaz naturel existant (power-to-gas). Au-delà, adaptations des infrastructures nécessaires."
+      },
+      "defis": "Densité énergétique volumique très faible (compression à 700 bars ou liquéfaction à −253 °C nécessaire), fragilisation des métaux (hydrogen embrittlement), fuites (H₂ = plus petite molécule), infrastructure de distribution quasi inexistante, rendement de la chaîne complète (électricité → H₂ → électricité) = 25–35 %.",
+      "electrolyse_technologies": {
+        "alcalin": "Mature, fiable, moins cher. Rendement 60–70 %. Temps de réponse lent. Idéal pour production continue.",
+        "pem": "Proton Exchange Membrane. Plus compact, réponse rapide, rendement 65–80 %. Plus coûteux (platine, iridium). Idéal pour couplage ENR variable.",
+        "soec": "Électrolyse haute température (700–900 °C). Rendement > 80 %. Encore en R&D. Synergie possible avec la chaleur nucléaire ou industrielle."
+      }
     },
     "stockage_energie": {
       "batteries": {
-        "lithium_ion": "Standard actuel. ~$100/kWh (2024, en baisse). Tesla Megapack, CATL. Durée vie 15-20 ans.",
-        "lfp": "Lithium Fer Phosphate — plus sûr, plus durable, moins dense. Préféré pour stockage stationnaire.",
-        "sodium_ion": "Prochain : matériaux abondants, pas de lithium/cobalt. CATL commercialise 2024.",
-        "flow_batteries": "Vanadium redox — durée quasi illimitée, scalable. Coûteux. Idéal long terme (heures)."
+        "lithium_ion_nmc": "Nickel-Manganèse-Cobalt. Densité énergétique élevée (250–300 Wh/kg). Standard pour véhicules électriques. Durée de vie 1 500–3 000 cycles. Coût ~100 $/kWh (2024).",
+        "lfp": "Lithium Fer Phosphate. Plus sûr (pas d'emballement thermique), plus durable (3 000–6 000 cycles), moins dense (160–180 Wh/kg). Préféré pour stockage stationnaire et véhicules d'entrée de gamme. BYD Blade, Tesla standard.",
+        "sodium_ion": "Matériaux abondants (sodium, fer), pas de lithium ni cobalt. Densité 100–160 Wh/kg. CATL commercialise en 2024. Coût cible < 40 $/kWh. Idéal stockage stationnaire grande échelle.",
+        "solid_state": "Batteries à électrolyte solide : densité > 400 Wh/kg, recharge ultra-rapide, sécurité accrue. Toyota, Samsung SDI, QuantumScape. Commercialisation attendue 2027–2030.",
+        "flow_batteries": "Batteries à flux (vanadium redox, zinc-brome). Durée quasi illimitée (>20 000 cycles), capacité modulable indépendamment de la puissance. Coût élevé au kWh mais excellent pour stockage 4–12 heures. Rendement 70–80 %.",
+        "lithium_soufre": "Densité théorique > 500 Wh/kg. En développement, cyclabilité à améliorer. Applications potentielles : aviation électrique, spatial."
       },
-      "gravite_pompage": "STEP (Station de Transfert d'Énergie par Pompage) — 90% du stockage mondial. Très fiable, géographie-dépendant.",
-      "air_comprime": "CAES — stockage en cavernes. Grand volume, rendement moyen."
+      "gravite_pompage": "STEP (Station de Transfert d'Énergie par Pompage) : 160 GW installés mondialement, 90 % du stockage d'énergie mondial. Rendement 75–85 %. Durée de vie > 50 ans. Nécessite deux réservoirs à altitudes différentes. Grand Maison (France) : 1 800 MW.",
+      "air_comprime": "CAES (Compressed Air Energy Storage) : air comprimé en cavernes souterraines. Huntorf (Allemagne, 321 MW). Rendement 40–60 % (adiabatique : 70 %). Coût modéré, très grande capacité.",
+      "stockage_thermique": "Sels fondus (CSP), briques réfractaires chauffées à 1 500 °C (Antora Energy), béton, sable. Stockage longue durée possible. Coût très faible au kWh thermique.",
+      "gravite_solide": "Systèmes à blocs de béton empilés/descendus par grues ou rails (Energy Vault, Gravitricity). Rendement 80–85 %. Pas de dégradation chimique. En déploiement pilote.",
+      "supercondensateurs": "Réponse ultra-rapide (millisecondes), millions de cycles, mais densité énergétique faible. Utilisés pour lissage de puissance, freinage régénératif, stabilisation réseau."
     },
     "transition_energetique": {
       "scenarios": {
-        "net_zero_2050": "AIE : 90% électricité renouvelable, 2/3 voitures électriques, pas nouveau forage après 2021",
-        "realiste_3deg": "Trajectoire actuelle : +2.5-3°C à 2100 si politiques actuelles maintenues",
-        "rupture": "Courbes exponentielle solaire/batteries accélèrent — certains modèles prévoient dépassement plus rapide"
+        "net_zero_2050": "AIE (Agence Internationale de l'Énergie) : 90 % d'électricité renouvelable, 2/3 des voitures neuves électriques dès 2030, plus aucun nouveau projet pétrolier/gazier après 2021, quadruplement des capacités ENR d'ici 2030.",
+        "realiste_3deg": "Trajectoire actuelle des politiques en place : +2,5–3,0 °C à 2100. Insuffisant pour éviter les points de basculement climatiques (fonte permafrost, dépérissement Amazonie, instabilité calottes glaciaires).",
+        "rupture_technologique": "Les courbes exponentielles du solaire et des batteries accélèrent plus vite que les modèles. RethinkX et Tony Seba prévoient une disruption complète du système énergétique avant 2040.",
+        "negawatt_france": "Scénario négaWatt (France) : sobriété + efficacité + renouvelables = 100 % ENR en 2050. Réduction de 50 % de la consommation d'énergie finale par rapport à 2020.",
+        "rte_futurs_energetiques": "Étude RTE Futurs Énergétiques 2050 (France) : 6 scénarios de M0 (100 % renouvelable) à N03 (50 % nucléaire). Tous nécessitent une forte électrification et sobriété."
       },
-      "geopolitique": "OPEP perd influence long terme. Nouveau pouvoir : lithium (Chili/Arg/Bol), cobalt (RDC), terres rares (Chine 60%).",
-      "emplois": "10M emplois fossiles perdus. 30M créés en ENR. Transition juste nécessaire : formation, relocalisation."
+      "geopolitique": {
+        "anciennes_dependances": "OPEP perd de l'influence à long terme. Les pays pétroliers diversifient (Arabie Saoudite Vision 2030, NEOM). Risque de stranded assets : 1 000–4 000 milliards USD d'actifs fossiles dévalorisés.",
+        "nouvelles_dependances": "Lithium (triangle Chili-Argentine-Bolivie + Australie), cobalt (RDC 70 %), terres rares (Chine 60 % extraction, 90 % raffinage), cuivre (Chili, Pérou). La Chine domine 80 % de la chaîne de valeur des batteries et 95 % du raffinage du polysilicium.",
+        "souverainete_europeenne": "EU Critical Raw Materials Act (2023) : objectif 10 % extraction, 40 % transformation, 25 % recyclage locaux d'ici 2030. Gigafactories batteries en France (ACC Dunkerque, Verkor Grenoble), Allemagne, Suède (Northvolt)."
+      },
+      "emplois": "Fossiles : ~10 millions d'emplois menacés. ENR : ~30 millions d'emplois créés d'ici 2030 (IRENA). Transition juste : reconversion professionnelle, accompagnement des territoires, formation aux métiers verts. En France : 500 000 emplois ENR attendus en 2030.",
+      "electrification": "L'électrification est le levier principal : transport (VE), chauffage (pompes à chaleur), industrie (fours électriques). Part de l'électricité dans la consommation finale : 20 % (2024) → 50 % visé en 2050."
     },
     "empreinte_carbone": {
       "gestes_impact": {
-        "fort": "Alimentation (vegan -50% vs omnivore), transport aérien, voiture thermique, maison mal isolée",
-        "moyen": "Électroménager, chauffage, streaming vidéo (impact overestimé mais réel)",
-        "faible": "Vélo/marche, légumes locaux, achat occasion"
+        "fort": "Transport aérien long-courrier (1–3 tCO₂e/vol), voiture thermique (2–4 tCO₂e/an), alimentation carnée (omnivore 2,5 tCO₂e vs végétalien 1,0 tCO₂e), maison mal isolée passoire thermique (DPE F-G : 3–5 tCO₂e/an de chauffage).",
+        "moyen": "Achats de biens manufacturés neufs (textile, électronique : 1–2 tCO₂e/an), chauffage gaz (1,5 tCO₂e/an), streaming vidéo (impact surestimé dans les médias : ~36 kgCO₂e/an pour un usage intensif).",
+        "faible": "Vélo et marche, achat d'occasion et réparation, alimentation locale et de saison, réduction du gaspillage alimentaire (30 % de la production alimentaire mondiale est gaspillée)."
       },
-      "calcul": "Bilan Carbone personnel France ≈ 9 tCO2e/an. Objectif compatible 1.5°C : 2 tCO2e/an.",
-      "reducteur_efficace": "1€ dépensé en isolation > 10€ en compensation carbone (plantations d'arbres souvent inefficaces)"
+      "calcul": "Bilan carbone personnel moyen en France : ~9 tCO₂e/an (transport 30 %, alimentation 25 %, logement 20 %, biens 15 %, services publics 10 %). Objectif compatible 1,5 °C : 2 tCO₂e/an/personne. Monde : moyenne 6,5 tCO₂e. USA : 16 tCO₂e. Inde : 2,5 tCO₂e.",
+      "reducteur_efficace": "Hiérarchie d'efficacité : 1. Sobriété (éviter le besoin) > 2. Efficacité (mieux faire) > 3. Substitution (énergie propre) > 4. Compensation (en dernier recours). 1 € en isolation = 10× plus efficace que 1 € en compensation carbone volontaire.",
+      "outils_mesure": "Outils de calcul : Nos Gestes Climat (ADEME), MyCO2, Carbon Footprint Calculator. Bilan Carbone® (méthode ADEME pour entreprises et collectivités). BEGES obligatoire pour les entreprises > 500 salariés en France.",
+      "scope_entreprises": {
+        "scope_1": "Émissions directes : combustion sur site, flotte de véhicules possédés.",
+        "scope_2": "Émissions indirectes liées à l'énergie achetée : électricité, chaleur, vapeur.",
+        "scope_3": "Toute la chaîne de valeur : fournisseurs, transport, usage des produits vendus, fin de vie. Représente souvent 70–90 % du total. Le plus difficile à mesurer et réduire."
+      }
+    },
+    "nucleaire": {
+      "fission": {
+        "principe": "Réaction de fission de noyaux lourds (uranium-235, plutonium-239) libérant une énergie considérable. 1 kg d'uranium = énergie de 10 000 kg de pétrole. Électricité bas carbone : 6–12 gCO₂e/kWh (comparable à l'éolien).",
+        "parc_mondial": "440 réacteurs en opération dans 32 pays (2024). 60 en construction. Puissance installée : 390 GW. Part dans l'électricité mondiale : ~10 %. France : 56 réacteurs, 62 GW, ~65 % de l'électricité nationale.",
+        "technologies_actuelles": "Réacteurs à eau pressurisée (REP/PWR, 70 % du parc mondial), à eau bouillante (REB/BWR), CANDU (eau lourde, Canada), VVER (Russie). Réacteurs de génération III+ : EPR (Flamanville, Hinkley Point, Taishan), AP1000 (Westinghouse), VVER-1200.",
+        "cout_lcoe": "LCOE nucléaire : 40–110 $/MWh selon le pays et le projet. Nouveaux EPR : surcoûts et retards systématiques (Flamanville : 13,2 Md€ vs 3,3 Md€ prévus). Coût en exploitation des réacteurs existants amortis très compétitif : 30–50 $/MWh."
+      },
+      "fusion": {
+        "principe": "Fusion de noyaux légers (deutérium + tritium) reproduisant le processus du soleil. Énergie quasi illimitée, pas de déchets à longue durée de vie, pas de risque d'emballement.",
+        "iter": "ITER à Cadarache (France) : le plus grand tokamak au monde. 35 pays partenaires. Objectif : démontrer la faisabilité scientifique (Q ≥ 10, 500 MW de puissance de fusion). Premier plasma visé fin des années 2030. Coût : > 20 milliards €.",
+        "autres_projets": "DEMO (réacteur pilote post-ITER, 2050+), SPARC/ARC (MIT/Commonwealth Fusion, aimants HTS), JET (record 69 MJ en 2022), confinement inertiel (NIF : gain > 1 en 2022). Startups : TAE Technologies, Helion Energy, First Light Fusion.",
+        "horizon": "Électricité de fusion commerciale : probablement pas avant 2050–2060. Progrès rapides sur les aimants supraconducteurs à haute température (HTS) qui pourraient accélérer le calendrier."
+      },
+      "smr": {
+        "definition": "Small Modular Reactors : réacteurs de petite puissance (< 300 MWe) fabriqués en usine et transportés sur site. Modularité, série industrielle, délais réduits.",
+        "projets": "NuScale (USA, certifié NRC 2023, projet annulé pour raisons économiques), BWRX-300 (GE Hitachi, Canada), Nuward (EDF, 2 × 170 MWe, France, horizon 2030+), Rolls-Royce SMR (UK, 470 MWe), Xe-100 (X-energy, à gaz haute température).",
+        "avantages": "Investissement initial plus faible, déploiement flexible, refroidissement passif (sûreté intrinsèque), adaptés aux réseaux isolés, couplage chaleur industrielle + électricité.",
+        "defis": "Économies d'échelle non prouvées en série, coût au MWh potentiellement plus élevé que les grands réacteurs, acceptabilité locale, régulation et certification spécifiques par pays."
+      },
+      "dechets": {
+        "categories": "Haute activité vie longue (HAVL) : 3 % du volume mais 95 % de la radioactivité. Moyenne activité (MA-VL). Faible activité (FA-VL). Très faible activité (TFA). Durée de dangerosité HAVL : des centaines de milliers d'années.",
+        "solutions": "Stockage géologique profond : Cigéo (France, Meuse, 500 m de profondeur, horizon 2035–2040), Onkalo (Finlande, opérationnel 2025, premier au monde). Transmutation par réacteurs à neutrons rapides (Gen IV) pour réduire la durée de vie des déchets.",
+        "volumes": "France : 1,76 million de m³ de déchets radioactifs cumulés. Production annuelle HAVL : ~200 m³/an (volume d'un appartement). Retraitement à La Hague récupère 96 % de la matière fissile (MOX)."
+      },
+      "surete": "Trois accidents majeurs : Three Mile Island (1979, fusion partielle, pas de victime), Tchernobyl (1986, explosion, >30 morts directs, zone d'exclusion), Fukushima (2011, tsunami, 1 mort liée aux radiations, 150 000+ évacués). Les réacteurs Gen III+ intègrent des systèmes de sûreté passive : refroidissement gravitaire sans électricité ni intervention humaine pendant 72h+.",
+      "couts_comparatifs": "Nucléaire existant amorti : 30–50 $/MWh. Nouveau nucléaire (EPR) : 80–120 $/MWh. Solaire : 20–40 $/MWh. Éolien terrestre : 25–50 $/MWh. Le nucléaire reste pertinent comme source pilotable et bas carbone pour les pays qui en disposent déjà.",
+      "opinion_publique": "Très variable selon les pays. France : ~50 % favorable (en hausse post-crise énergétique 2022). Allemagne : sortie achevée en 2023. Japon : redémarrage progressif post-Fukushima. Perception influencée par la confusion entre nucléaire civil et militaire, gestion des déchets et accidents passés."
+    },
+    "geothermie": {
+      "principe": "Exploitation de la chaleur interne de la Terre. Gradient géothermique moyen : +3 °C tous les 100 m de profondeur. Énergie disponible 24h/24, 365 jours/an, indépendante de la météo.",
+      "haute_temperature": {
+        "description": "Réservoirs géothermiques à > 150 °C en profondeur (1–5 km). Production d'électricité via turbines à vapeur. Rendement 10–23 %. Capacité mondiale : 16 GW installés (2024).",
+        "pays_leaders": "Islande (30 % de l'électricité + 90 % du chauffage), Nouvelle-Zélande, Kenya (50 % de l'électricité), Philippines, Indonésie (2ᵉ producteur mondial), Italie (Larderello, pionnière depuis 1904), USA (The Geysers, Californie : 1,5 GW).",
+        "egs": "Enhanced Geothermal Systems (EGS) : fracturation hydraulique contrôlée en roche sèche profonde pour créer des réservoirs artificiels. Projet Soultz-sous-Forêts (Alsace, France). Potentiel considérable : pourrait décupler la capacité géothermique mondiale."
+      },
+      "basse_temperature": {
+        "description": "Réservoirs à 30–90 °C pour chauffage urbain direct, serres, aquaculture, procédés industriels. Réseaux de chaleur géothermique : Paris (Dogger, 74 °C, 250 000 logements chauffés en Île-de-France).",
+        "potentiel_france": "Bassin parisien (nappe du Dogger), Bassin aquitain, Fossé rhénan (Alsace). 40+ centrales géothermiques en fonctionnement en France. Objectif : tripler la production d'ici 2030."
+      },
+      "pompes_a_chaleur": {
+        "principe": "Captent la chaleur du sol (1–200 m) ou de la nappe phréatique pour chauffer/refroidir les bâtiments. COP (coefficient de performance) de 3 à 5 : pour 1 kWh électrique consommé, 3 à 5 kWh de chaleur produits.",
+        "types": "PAC géothermique verticale (sondes 80–200 m, stable toute l'année), horizontale (capteurs à 1,2 m, nécessite surface), sur nappe (aquathermie, excellent rendement).",
+        "marche": "190 millions de PAC installées dans le monde (2024). Objectif AIE : 600 millions en 2030. Taux de croissance : +10 %/an. France : objectif 1 million de PAC/an installées."
+      },
+      "avantages_limites": "Avantages : base-load 24/7, faible emprise au sol, très bas carbone (15–55 gCO₂e/kWh), longue durée de vie (30–50 ans). Limites : investissement initial élevé (forages), risque sismicité induite (EGS), disponibilité géographique variable."
+    },
+    "biomasse_bioenergie": {
+      "definition": "Énergie produite à partir de matière organique : bois, résidus agricoles, déchets verts, cultures dédiées. Première source d'énergie renouvelable mondiale (hors hydraulique) : ~55 EJ/an, soit 10 % de l'énergie primaire mondiale.",
+      "bois_energie": {
+        "usages": "Chauffage domestique (poêles, chaudières à granulés/bûches), chauffage collectif et réseaux de chaleur, cogénération électricité + chaleur. France : 1ʳᵉ source ENR (40 % de la production ENR), 7,4 millions de ménages se chauffent au bois.",
+        "durabilite": "Durable si forêts gérées (replantation > récolte). Émissions CO₂ théoriquement neutres (le CO₂ relâché = CO₂ absorbé lors de la croissance). Problème : combustion émet particules fines (PM2.5). Labels : Flamme Verte, PEFC, FSC.",
+        "granules": "Pellets de bois : marché en forte croissance. Production européenne : 24 Mt/an (2024). Densité énergétique : 4,8 kWh/kg. Chauffage granulés : rendement 90–95 %, très automatisé."
+      },
+      "biogaz_methanisation": {
+        "principe": "Décomposition anaérobie de matières organiques (lisier, biodéchets, boues d'épuration, résidus de culture) par des bactéries → biogaz (55–65 % CH₄ + 35–45 % CO₂).",
+        "biometane": "Biogaz épuré à > 97 % CH₄ → injection directe dans le réseau de gaz naturel. France : 700+ unités de méthanisation (2024), objectif 10 % du gaz consommé en biométhane en 2030.",
+        "cogeneration": "Biogaz brûlé dans un moteur pour produire électricité + chaleur simultanément. Rendement global 80–90 %. Allemagne : 10 000 unités de biogaz.",
+        "digestat": "Résidu de la méthanisation utilisé comme engrais organique. Remplace les engrais chimiques. Boucle vertueuse : déchet → énergie + fertilisant."
+      },
+      "biocarburants": {
+        "premiere_generation": "Éthanol (maïs, betterave, canne à sucre) et biodiesel (colza, palme, soja). Controverse : compétition alimentaire, déforestation (palme). Part dans les carburants : 3–5 % (mandats d'incorporation).",
+        "deuxieme_generation": "Lignocellulosique : résidus forestiers, paille, miscanthus. Pas de compétition alimentaire. Technologie plus complexe (prétraitement enzymatique). En voie de commercialisation.",
+        "troisieme_generation": "Algocarburants : microalgues cultivées en photobioréacteurs. Rendement par hectare 10–100× supérieur aux cultures terrestres. Encore en R&D, coût élevé.",
+        "saf": "Sustainable Aviation Fuel : biocarburants et e-fuels pour l'aviation. Objectif UE : 6 % en 2030, 70 % en 2050. Seule solution réaliste pour décarboner l'aviation long-courrier à moyen terme."
+      },
+      "dechets_verts": "Valorisation énergétique des déchets verts municipaux, résidus de taille, tontes. Compostage (non énergétique) ou méthanisation. Collecte séparée obligatoire en France depuis 2024 (loi AGEC). Potentiel sous-exploité."
+    },
+    "economie_circulaire": {
+      "definition": "Modèle économique visant à découpler la croissance de la consommation de ressources finies. Passer du linéaire (extraire → fabriquer → jeter) au circulaire (réduire → réutiliser → recycler → régénérer).",
+      "recyclage": {
+        "taux_actuels": "France : taux de recyclage des déchets municipaux ~42 % (objectif 65 % en 2025). Verre : 88 %, papier-carton : 68 %, plastique : 27 % (problème majeur). Métaux : 80 %+. Taux de recyclage global mondial : ~8,6 % (Circularity Gap Report).",
+        "defis": "Contamination des flux, plastiques multicouches non recyclables, coût du tri, export illégal de déchets, downcycling (perte de qualité à chaque cycle). Recyclage chimique du plastique : technologie prometteuse (pyrolyse, dépolymérisation).",
+        "metaux_critiques": "Recyclage stratégique : lithium (taux actuel < 5 %, objectif 80 % en 2030 en UE), cobalt, nickel, terres rares. Usines de recyclage batteries : Snam, Redwood Materials, Li-Cycle."
+      },
+      "reemploi_reparation": {
+        "indice_reparabilite": "Obligatoire en France depuis 2021 sur 5 catégories (smartphones, PC portables, TV, lave-linge, tondeuses). Note sur 10. Objectif : indice de durabilité en 2025 (intégrant la fiabilité et la robustesse).",
+        "reemploi": "Marché de l'occasion en forte croissance : Leboncoin (30 M d'utilisateurs), Back Market (reconditionné certifié). Économie : un smartphone reconditionné = 80 % d'émissions en moins vs neuf.",
+        "droit_reparation": "Directive européenne sur le droit à la réparation (2024) : obligation pour les fabricants de fournir pièces détachées pendant 5–10 ans, bonus réparation textile (France)."
+      },
+      "cradle_to_cradle": "Philosophie de conception (William McDonough) : chaque produit est conçu dès l'origine pour être entièrement recyclé en nutriments biologiques ou techniques. Certification C2C : Basic, Bronze, Silver, Gold, Platinum. Exemples : tissus compostables, métaux infiniment recyclables.",
+      "symbiose_industrielle": "Les déchets d'une entreprise deviennent les ressources d'une autre. Exemple emblématique : Kalundborg (Danemark) — la raffinerie, la centrale électrique, l'usine pharmaceutique et la ville échangent chaleur, vapeur, gypse, boues. France : programmes Picardie (Club d'écologie industrielle de l'Aube).",
+      "obsolescence_programmee": {
+        "formes": "Technique (composant dimensionné pour casser), logicielle (mises à jour ralentissant l'appareil), esthétique (modes, nouvelles versions), par incompatibilité (connecteurs, formats).",
+        "legislation": "France pionnière : délit d'obsolescence programmée depuis 2015 (code de la consommation). Amende jusqu'à 300 000 € et 2 ans de prison. Enquête DGCCRF contre Apple en 2018 (amende 25 M€ pour ralentissement volontaire d'iPhones).",
+        "alternatives": "Écoconception, modularité (Fairphone), économie de la fonctionnalité (vendre l'usage plutôt que le produit), labels durabilité."
+      },
+      "loi_agec": "Loi Anti-Gaspillage pour une Économie Circulaire (France, 2020) : fin du plastique à usage unique d'ici 2040, indice de réparabilité, interdiction de détruire les invendus non alimentaires, collecte biodéchets obligatoire, fonds réparation."
+    },
+    "mobilite_verte": {
+      "vehicules_electriques": {
+        "marche": "18 % des ventes mondiales de voitures neuves en 2024 (40 millions cumulés sur les routes). Chine : 60 % des ventes mondiales de VE. Europe : 25 % des ventes. Prix parité thermique attendue 2025–2027.",
+        "batteries_ve": "Capacité moyenne : 60–80 kWh. Autonomie réelle : 300–500 km. Charge rapide DC : 150–350 kW (10–80 % en 15–30 min). Durée de vie batterie : 200 000–500 000 km avant 80 % de capacité résiduelle.",
+        "bilan_carbone": "VE vs thermique : 50–70 % de CO₂ en moins sur le cycle de vie complet (fabrication + usage) en Europe. Avantage maximal avec électricité décarbonée (France, Norvège). Même avec mix charbon, avantage net après 60 000–80 000 km.",
+        "marques_cles": "Tesla (leader mondial), BYD (1ᵉʳ mondial en volume 2024), Volkswagen ID, Renault Megane E-Tech, Hyundai Ioniq, BMW iX, Stellantis (e-208, e-C4), et constructeurs chinois (NIO, XPeng, Li Auto)."
+      },
+      "bornes_recharge": {
+        "situation": "3,5 millions de bornes publiques mondiales (2024). France : 130 000+ points de charge publics (objectif 400 000 en 2030). Ratio recommandé UE : 1 borne pour 10 VE.",
+        "types": "AC lente (3,7–22 kW, domicile/travail, recharge nocturne), DC rapide (50–150 kW, stations-service), ultra-rapide (250–350 kW, autoroutes, Ionity, Tesla Supercharger). Norme CCS2 standard en Europe.",
+        "defis": "Maillage rural insuffisant, files d'attente vacances, coût raccordement réseau, interopérabilité des réseaux, prix au kWh variable (0,30–0,80 €/kWh en public vs 0,15–0,20 €/kWh à domicile)."
+      },
+      "hydrogene_transport": {
+        "piles_combustible": "FCEV : véhicules à pile à combustible. Toyota Mirai, Hyundai Nexo. Autonomie 500–700 km, recharge 5 min. Marché encore confidentiel : 80 000 FCEV dans le monde (2024).",
+        "transport_lourd": "Secteur le plus prometteur pour l'H₂ : camions (Hyzon, Nikola, Daimler GenH2), bus (100+ villes en Europe), trains (Alstom Coradia iLint, ligne Buxtehude en Allemagne), navires (Viking Energy en Norvège).",
+        "aviation": "Airbus ZEROe : avion à hydrogène pour vols court/moyen-courrier (< 2 000 km). Entrée en service visée 2035. Défis : stockage cryogénique embarqué, certification sécurité."
+      },
+      "transport_public": {
+        "electrification": "Bus électriques : 800 000+ dans le monde (95 % en Chine). Tramway, métro déjà électriques. Trains : électrification des lignes (50 % du réseau ferré européen électrifié) ou batteries/H₂ pour lignes non électrifiées.",
+        "modes_doux": "Report modal : chaque trajet en transport en commun = 1/10ᵉ de l'empreinte carbone de la voiture solo. Gratuité des transports : Dunkerque, Luxembourg, Montpellier (partielle). Effet positif sur la fréquentation (+20–70 %)."
+      },
+      "velo_infrastructure": {
+        "potentiel": "60 % des trajets domicile-travail en France font < 5 km (accessibles à vélo). Vélo à assistance électrique (VAE) : ventes en forte hausse (500 000/an en France). Bilan carbone du VAE : 5–10 gCO₂e/km vs 200 gCO₂e/km en voiture.",
+        "politiques": "Plan Vélo France : 2 milliards € (2023–2027). Pistes cyclables : Paris (+1 000 km depuis 2015), Pays-Bas modèle mondial (37 000 km). Forfait mobilités durables : jusqu'à 800 €/an défiscalisés.",
+        "services": "Vélib (Paris), Vélô Toulouse, systèmes de vélopartage dans 150+ villes françaises. Stationnement sécurisé, intermodalité train+vélo."
+      }
+    },
+    "smart_grid_reseau": {
+      "definition": "Réseau électrique intelligent utilisant les technologies numériques (capteurs, IoT, IA) pour optimiser en temps réel la production, la distribution et la consommation d'électricité. Indispensable pour intégrer massivement les ENR intermittentes.",
+      "demand_response": {
+        "principe": "Ajustement de la consommation électrique en fonction de la production disponible et du prix. Effacement de pointe : les consommateurs réduisent ou décalent leur demande contre rémunération.",
+        "exemples": "Chauffe-eau, recharge VE, climatisation modulés automatiquement. Enedis Linky : 36 millions de compteurs communicants déployés en France. Capacité d'effacement France : 5,5 GW (équivalent 4 réacteurs nucléaires).",
+        "tarification_dynamique": "Prix de l'électricité variable en temps réel (spot market). Contrats Tempo, Heures Pleines/Creuses. Futurs contrats : tarif négatif quand surproduction ENR (déjà courant en Allemagne, Danemark)."
+      },
+      "autoconsommation": {
+        "individuelle": "Panneaux solaires + batterie domestique. Taux d'autoconsommation : 30 % sans batterie, 60–80 % avec batterie. Rentabilité atteinte en 5–10 ans en France selon l'ensoleillement et le tarif de revente.",
+        "collective": "Plusieurs consommateurs partagent une installation ENR locale (immeuble, quartier). Cadre juridique français opérationnel depuis 2017. 200+ opérations en France (2024).",
+        "revente_surplus": "Obligation d'achat EDF OA : tarif garanti 20 ans. Autoconsommation avec revente surplus : modèle dominant en France pour installations < 36 kWc."
+      },
+      "communautes_energetiques": {
+        "definition": "Regroupement de citoyens, collectivités et entreprises locales pour produire, consommer, stocker et vendre de l'énergie collectivement. Cadre UE : directive RED II (2018), transposition française en cours.",
+        "exemples": "Énergie citoyenne : Enercoop (coopérative 100 % ENR), centrales villageoises solaires, parcs éoliens participatifs. 3 500+ communautés énergétiques en Europe.",
+        "benefices": "Réduction de la facture (15–30 %), autonomie locale, lien social, revenus pour la collectivité, acceptabilité des ENR."
+      },
+      "v2g_vehicle_to_grid": {
+        "principe": "Les batteries des véhicules électriques, garés 95 % du temps, servent de stockage distribué pour le réseau. Le VE restitue l'énergie au réseau pendant les pics de demande et se recharge pendant les creux (surproduction solaire de midi).",
+        "potentiel": "40 millions de VE en Europe en 2030 × 60 kWh moyen = 2 400 GWh de stockage distribué (énorme). Chaque VE peut fournir 7–10 kW au réseau.",
+        "defis": "Dégradation batterie (cycles supplémentaires), bornes bidirectionnelles nécessaires (CHAdeMO supporte, CCS2 en développement), modèle économique à stabiliser, acceptabilité des conducteurs.",
+        "v2h": "Vehicle-to-Home : le VE alimente la maison en cas de coupure ou pour optimiser l'autoconsommation solaire. Nissan Leaf V2H opérationnel au Japon depuis 2012."
+      },
+      "interconnexions": "Renforcement des interconnexions électriques transfrontalières pour mutualiser les ressources ENR. Projet North Sea Link (Norvège-UK, 1,4 GW), EuroAsia Interconnector (Grèce-Chypre-Israël). France : 17 GW d'interconnexion avec les pays voisins."
+    },
+    "habitat_durable": {
+      "enjeu": "Le bâtiment représente 44 % de la consommation d'énergie finale et 25 % des émissions de CO₂ en France. 5 millions de passoires thermiques (DPE F et G). La rénovation thermique est le levier n°1 de réduction des émissions dans le secteur résidentiel.",
+      "isolation": {
+        "principes": "Réduire les déperditions thermiques : toiture (25–30 %), murs (20–25 %), fenêtres (10–15 %), plancher bas (7–10 %), renouvellement d'air (20 %). Isolation par l'extérieur (ITE) ou par l'intérieur (ITI).",
+        "materiaux": "Laine de verre/roche (R = 2,5–3,5 m²K/W pour 10 cm), polyuréthane (R = 4,5), polystyrène expansé (R = 2,6), matériaux biosourcés : laine de bois (R = 2,5), chanvre, ouate de cellulose (R = 2,5), liège, paille (R = 6–7 pour 35 cm de botte).",
+        "performance": "Résistance thermique R (m²·K/W) : plus R est élevé, meilleure est l'isolation. Exigence RE2020 murs : R ≥ 4. Passivhaus : R murs ≥ 7–10. Pont thermique : zone de faiblesse (jonction mur-plancher, encadrement fenêtres) à traiter impérativement."
+      },
+      "bbc_batiment_basse_consommation": "Label BBC (Bâtiment Basse Consommation) : consommation < 50 kWhEP/m²/an (chauffage + ECS + éclairage + ventilation + auxiliaires), modulée selon la zone climatique. Standard pour le neuf depuis la RT2012 en France.",
+      "maison_passive": {
+        "definition": "Standard Passivhaus (Institut PHI, Darmstadt) : besoin de chauffage < 15 kWh/m²/an, énergie primaire totale < 120 kWh/m²/an, étanchéité à l'air n50 ≤ 0,6 vol/h. Confort thermique sans chauffage conventionnel.",
+        "principes": "Super-isolation (U murs < 0,15 W/m²K), triple vitrage (Uw < 0,8), étanchéité à l'air maximale, VMC double flux avec récupérateur de chaleur (rendement > 80 %), orientation et apports solaires passifs.",
+        "cout_surcout": "Surcoût construction : 10–20 % vs standard. Amorti en 10–15 ans par les économies d'énergie. Facture chauffage : 100–300 €/an vs 1 500–3 000 €/an pour une passoire thermique."
+      },
+      "re2020": {
+        "description": "Réglementation Environnementale 2020 (entrée en vigueur 2022 en France). Remplace la RT2012. Triple objectif : performance énergétique, réduction carbone (analyse cycle de vie ACV du bâtiment), confort d'été.",
+        "exigences": "Bbio (besoin bioclimatique) renforcé de 30 %. Cep (consommation énergie primaire) < 70 kWhEP/m²/an. Ic_construction (impact carbone construction) plafonné. Chauffage gaz interdit dans le neuf collectif à partir de 2025.",
+        "trajectoire_carbone": "Seuils carbone progressivement durcis : 2022, 2025, 2028, 2031. Objectif : bâtiments neufs à énergie positive et bas carbone (BEPOS)."
+      },
+      "materiaux_biosources": {
+        "definition": "Matériaux d'origine végétale ou animale : bois (CLT, lamellé-collé, ossature), paille, chanvre (béton de chanvre), lin, ouate de cellulose, liège, laine de mouton, terre crue. Stockent du carbone biogénique pendant leur durée de vie.",
+        "avantages": "Faible énergie grise (fabrication), stockage carbone (1 m³ de bois = 0,9 tCO₂ stockée), ressources renouvelables, régulation hygrothermique naturelle, confort acoustique.",
+        "marche": "France : objectif 50 % de bois dans la construction neuve publique (loi Climat et Résilience). Label Bâtiment Biosourcé (3 niveaux). CLT (bois massif lamellé-croisé) permet la construction bois jusqu'à 18+ étages."
+      },
+      "renovation_thermique": {
+        "enjeu": "Rénover 700 000 logements/an en France pour atteindre un parc BBC en 2050 (rythme actuel ~70 000 rénovations globales/an — largement insuffisant).",
+        "approche": "Rénovation globale performante (tout en une fois) vs par gestes (isolation toiture, puis murs, puis fenêtres). La rénovation globale est 2 à 3× plus efficace mais plus coûteuse. Accompagnateur Rénov obligatoire pour les aides (depuis 2024).",
+        "financement": "MaPrimeRénov (4 milliards €/an en 2024), CEE (Certificats d'Économie d'Énergie), éco-PTZ (prêt à taux zéro), TVA réduite 5,5 %, aides locales. Reste à charge moyen après aides : 5 000–15 000 € pour rénovation globale d'une maison."
+      }
+    },
+    "politiques_incitations": {
+      "contexte": "Les politiques publiques sont le principal accélérateur de la transition énergétique. Sans cadre réglementaire et incitatif, le marché seul ne décarbonera pas assez vite pour respecter l'objectif 1,5 °C.",
+      "subventions_directes": {
+        "france": "MaPrimeRénov (rénovation énergétique, 4 Md€/an), prime à la conversion automobile (jusqu'à 5 000 € pour un VE), bonus écologique VE (jusqu'à 7 000 €, sous condition de prix et de revenu), aide à l'installation de bornes (ADVENIR).",
+        "europe": "Green Deal européen : 1 000 milliards € d'investissements verts sur 10 ans. REPowerEU (2022) : 300 Md€ pour l'indépendance énergétique. Fonds de Transition Juste pour les régions charbonnières.",
+        "usa": "Inflation Reduction Act (IRA, 2022) : 369 milliards USD de crédits d'impôt et subventions pour les ENR, VE, batteries, hydrogène. Effet massif : relocalisation d'usines de batteries et panneaux solaires aux USA."
+      },
+      "credit_impot": {
+        "france_historique": "CITE (Crédit d'Impôt pour la Transition Énergétique) remplacé par MaPrimeRénov en 2021. Défiscalisation investissement forestier (DEFI Forêt). Réduction IR pour investissement dans les PME ENR (IR-PME, 25 %).",
+        "usa_itc_ptc": "Investment Tax Credit (ITC) : 30 % pour le solaire, le stockage, la géothermie. Production Tax Credit (PTC) : 27,5 $/MWh pour l'éolien et le solaire. Prolongés jusqu'en 2032+ par l'IRA."
+      },
+      "certificats_verts": {
+        "principe": "Garanties d'Origine (GO) en Europe : 1 GO = 1 MWh d'électricité renouvelable. Permet aux consommateurs de certifier l'origine verte de leur électricité. Marché des GO : ~2 €/MWh (2024).",
+        "rec": "Renewable Energy Certificates (USA) : équivalent américain. Marché volontaire + marché réglementaire (Renewable Portfolio Standards par État).",
+        "critiques": "Les GO ne garantissent pas de consommation physique d'ENR (achat sur marché séparé). Certifications plus exigeantes : EKOénergie, contrats PPA directs (Power Purchase Agreement)."
+      },
+      "maprimenov": {
+        "description": "Aide de l'État français pour la rénovation énergétique, gérée par l'ANAH. Ouverte à tous les propriétaires occupants, bailleurs et copropriétés. Montant selon revenus (4 profils : bleu, jaune, violet, rose) et type de travaux.",
+        "montants": "Isolation murs par l'extérieur : 40–75 €/m². Pompe à chaleur air-eau : 3 000–5 000 €. Chaudière granulés : 5 000–10 000 €. Rénovation globale : 30 000–63 000 € (parcours accompagné). CEE cumulables.",
+        "evolution": "2024 : recentrage sur les rénovations globales performantes (DPE gain ≥ 2 classes). Obligation d'un Accompagnateur Rénov (Mon Accompagnateur Rénov) pour les aides supérieures à 5 000 €."
+      },
+      "tarifs_achat": {
+        "principe": "Obligation d'achat : EDF OA achète l'électricité renouvelable à un tarif garanti pendant 15–20 ans. Sécurise les investissements des producteurs ENR. Historiquement le principal moteur du déploiement ENR en Europe.",
+        "solaire_france": "Tarif achat solaire (autoconsommation avec surplus, < 9 kWc) : 0,13 €/kWh (2024). Vente totale : 0,17 €/kWh. Appels d'offres CRE pour installations > 500 kWc.",
+        "evolution": "Transition vers les contrats de complément de rémunération (CfD, Contract for Difference) pour les grandes installations. Prix garanti vs prix de marché : l'État compense la différence (dans les deux sens). Modèle UK/France."
+      },
+      "marche_carbone": {
+        "eu_ets": "Système européen d'échange de quotas d'émission (EU-ETS) : plafond d'émissions décroissant + marché de droits à émettre. Prix du CO₂ : 50–100 €/tonne (2024). Couvre industrie, production d'électricité, aviation intra-UE.",
+        "cbam": "Mécanisme d'ajustement carbone aux frontières (CBAM, 2026) : taxe carbone sur les importations de produits fortement émetteurs (acier, ciment, aluminium, engrais, électricité, hydrogène). Évite la fuite de carbone.",
+        "marche_volontaire": "Entreprises achètent des crédits carbone volontaires pour compenser leurs émissions résiduelles. Qualité très variable. Labels : Gold Standard, Verified Carbon Standard (Verra). Prix : 5–50 €/tonne."
+      },
+      "reglementation": {
+        "interdictions": "Fin des ventes de voitures thermiques neuves : 2035 (UE), 2035 (France). Fin chaudières fioul neuves : 2022 (France). Fin chaudières gaz neuf collectif : 2025 (RE2020). Interdiction location DPE G : 2025, DPE F : 2028, DPE E : 2034.",
+        "taxonomie_verte": "Taxonomie européenne (2022) : classification des activités économiques durables pour orienter les investissements. Inclusion controversée du gaz et du nucléaire comme énergies de transition.",
+        "loi_climat_resilience": "Loi Climat et Résilience (France, 2021) : zéro artificialisation nette (ZAN) en 2050, zones à faibles émissions (ZFE) dans les agglomérations > 150 000 hab., encadrement de la publicité, menu végétarien hebdomadaire en restauration collective."
+      }
     }
   }
 }
