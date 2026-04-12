@@ -113,56 +113,60 @@ const DEFAULT_KB_FALLBACK_ENTRIES: KnowledgeBaseEntry[] = [
   },
 ];
 
+// Stop words for query tokenization — filtered out to improve relevance scoring
+// Organized by language: French first, then English
 const KB_STOP_WORDS = new Set([
+  // French stop words
   'avec',
+  'aussi',
+  'avoir',
   'dans',
-  'pour',
-  'that',
-  'this',
-  'quoi',
-  'sans',
-  'mais',
-  'donc',
-  'comment',
-  'explique',
-  'titane',
-  'the',
-  'and',
-  'les',
   'des',
-  'une',
+  'dit',
+  'donc',
   'est',
-  'qui',
-  'que',
-  'sur',
+  'etre',
+  'explique',
+  'fais',
+  'fait',
+  'les',
+  'mais',
+  'moi',
+  'nous',
   'par',
   'pas',
+  'plus',
+  'pour',
+  'que',
+  'qui',
+  'quoi',
+  'sans',
   'son',
+  'sur',
+  'titane',
+  'toi',
+  'tous',
+  'tout',
+  'une',
+  'vous',
+  'comment',
+  // English stop words
+  'about',
+  'and',
+  'been',
+  'can',
   'from',
   'have',
-  'been',
+  'how',
+  'just',
+  'like',
+  'that',
+  'the',
+  'this',
+  'very',
   'what',
   'when',
   'will',
-  'how',
-  'can',
-  'moi',
-  'toi',
-  'nous',
-  'vous',
-  'dit',
-  'fait',
-  'fais',
-  'etre',
-  'avoir',
-  'plus',
-  'aussi',
-  'tout',
-  'tous',
-  'very',
-  'about',
-  'just',
-  'like',
 ]);
 
 const KB_CREATOR_HINTS = [
@@ -482,14 +486,17 @@ function tokenizeQuery(query: string): string[] {
     .filter(token => token.length >= 3 && !KB_STOP_WORDS.has(token));
 
   // Generate bigrams for compound concept matching (e.g., "machine learning", "self healing")
+  // Limited to first 15 tokens to avoid excessive bigram generation on very long queries
+  const bigramSource = singleTokens.slice(0, 15);
   const bigrams: string[] = [];
-  for (let i = 0; i < singleTokens.length - 1; i++) {
-    bigrams.push(`${singleTokens[i]}_${singleTokens[i + 1]}`);
+  for (let i = 0; i < bigramSource.length - 1; i++) {
+    bigrams.push(`${bigramSource[i]}_${bigramSource[i + 1]}`);
   }
 
   return [...new Set([...singleTokens, ...bigrams])];
 }
 
+// 320-char excerpt provides richer context for LLM prompt injection while staying under ~80 tokens
 function compactExcerpt(value: string, maxLength = 320): string {
   const normalized = value.replace(/\s+/g, ' ').trim();
   if (!normalized) return '';
