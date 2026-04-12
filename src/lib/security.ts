@@ -600,6 +600,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'voice_test_pipeline',
   'voice_get_available_models',
   'calibrate_titane_voice', // ✅ v30.0.0 — TITANE voice calibration
+  'check_is_titane_speaking', // ✅ v30.0.0 — TITANE voice fingerprinting check (anti-feedback)
 
   // ═══════════════════════════════════════════════════════════════
   // PERSISTENCE ENGINE v∞.MPE

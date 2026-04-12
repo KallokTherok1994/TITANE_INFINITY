@@ -98,6 +98,8 @@ interface ToolbarButtonProps {
   disabled?: boolean;
   onClick: () => void;
   variant?: 'default' | 'danger' | 'success' | 'warning';
+  /** data-testid for E2E testing */
+  testId?: string;
 }
 
 // ═══ COMPOSANT BOUTON ═══
@@ -112,6 +114,7 @@ const ToolbarButton: React.FC<ToolbarButtonProps> = memo(
     disabled = false,
     onClick,
     variant = 'default',
+    testId,
   }) => (
     <button
       type="button"
@@ -121,6 +124,7 @@ const ToolbarButton: React.FC<ToolbarButtonProps> = memo(
       title={tooltip}
       aria-label={label}
       aria-pressed={active}
+      data-testid={testId}
     >
       <span className="toolbar-btn-icon">{active && activeIcon ? activeIcon : icon}</span>
       {recording && <span className="toolbar-btn-pulse" />}
@@ -655,6 +659,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
                 tooltip="Importer des fichiers pour analyse (📎)"
                 onClick={handleFileImportClick}
                 disabled={disabled}
+                testId="chat-toolbar-file-import-btn"
               />
 
               <ToolbarButton
@@ -663,6 +668,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
                 tooltip="Prendre une capture d'écran (📸)"
                 onClick={handleScreenCapture}
                 disabled={disabled || !onScreenCapture}
+                testId="chat-toolbar-screen-capture-btn"
               />
             </div>
           </div>
@@ -677,6 +683,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
                 tooltip="Importer une image pour analyse IA (👁️)"
                 onClick={handleImageUploadClick}
                 disabled={disabled || !onImageAnalysis}
+                testId="chat-toolbar-image-analysis-btn"
               />
 
               <ToolbarButton
@@ -685,6 +692,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
                 tooltip="Prendre une photo avec la caméra (📷)"
                 onClick={handleCameraCapture}
                 disabled={disabled || !onImageAnalysis}
+                testId="chat-toolbar-camera-capture-btn"
               />
 
               <ToolbarButton
@@ -697,6 +705,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
                 active={isCameraActive}
                 onClick={handleCameraLiveToggle}
                 disabled={disabled}
+                testId="chat-toolbar-camera-live-btn"
               />
             </div>
           </div>
@@ -717,6 +726,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
                 onClick={handleDictationToggle}
                 disabled={disabled}
                 variant={isDictating ? 'danger' : 'default'}
+                testId="chat-toolbar-dictation-btn"
               />
 
               <ToolbarButton
@@ -733,6 +743,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
                 onClick={handleAudioRecordToggle}
                 disabled={disabled}
                 variant={isRecordingAudio ? 'danger' : 'default'}
+                testId="chat-toolbar-audio-record-btn"
               />
 
               <ToolbarButton
@@ -741,6 +752,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
                 tooltip="Importer un fichier audio pour transcription (📝)"
                 onClick={handleAudioTranscriptionClick}
                 disabled={disabled}
+                testId="chat-toolbar-audio-transcribe-btn"
               />
             </div>
           </div>
@@ -762,6 +774,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
                 onClick={handleAudioConversationToggle}
                 disabled={disabled}
                 variant={isAudioConversationActive ? 'success' : 'default'}
+                testId="chat-toolbar-audio-conversation-btn"
               />
 
               <ToolbarButton
@@ -776,6 +789,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
                 active={isTTSEnabled}
                 onClick={handleTTSToggle}
                 disabled={disabled}
+                testId="chat-toolbar-tts-toggle-btn"
               />
             </div>
           </div>

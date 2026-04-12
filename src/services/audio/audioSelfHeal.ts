@@ -196,13 +196,19 @@ class AudioSelfHeal {
    * Perform automatic healing
    */
   private async performAutoHeal(): Promise<void> {
-    console.log('[AudioSelfHeal] 🔧 Performing auto-heal...');
+    logger.info('Performing auto-heal...', {
+      component: 'AudioSelfHeal',
+      action: 'performAutoHeal',
+    });
     this.healthStatus.healAttempts++;
 
     try {
       // 1. Cancel any stuck recording
       if (this.healthStatus.recordingStuck) {
-        console.log('[AudioSelfHeal] Cancelling stuck recording');
+        logger.info('Cancelling stuck recording', {
+          component: 'AudioSelfHeal',
+          action: 'performAutoHeal',
+        });
         try {
           await voiceService.cancelRecording();
         } catch (error) {
@@ -217,25 +223,37 @@ class AudioSelfHeal {
 
       // 2. Reset state machine if stuck
       if (this.healthStatus.stateMachineStuck) {
-        console.log('[AudioSelfHeal] Resetting stuck state machine');
+        logger.info('Resetting stuck state machine', {
+          component: 'AudioSelfHeal',
+          action: 'performAutoHeal',
+        });
         audioStateMachine.forceReset();
       }
 
       // 3. If backend unresponsive, try to reconnect/reset
       if (this.healthStatus.backendUnresponsive) {
-        console.log('[AudioSelfHeal] Backend unresponsive - attempting recovery');
+        logger.warn('Backend unresponsive - attempting recovery', {
+          component: 'AudioSelfHeal',
+          action: 'performAutoHeal',
+        });
         // Force kill any orphaned audio processes
         try {
           await secureInvoke('cancel_recording', {});
         } catch (error) {
-          // Ignore errors
+          const err = error instanceof Error ? error : new Error(String(error));
+          logger.warn('Force cancel_recording failed during backend recovery', {
+            component: 'AudioSelfHeal',
+            action: 'performAutoHeal',
+            error: err.message,
+          });
         }
       }
 
-      console.log(
-        '[AudioSelfHeal] ✅ Auto-heal completed, attempt',
-        this.healthStatus.healAttempts
-      );
+      logger.info('Auto-heal completed', {
+        component: 'AudioSelfHeal',
+        action: 'performAutoHeal',
+        attempt: this.healthStatus.healAttempts,
+      });
 
       // Reset heal attempts after successful recovery
       setTimeout(() => {
@@ -309,7 +327,10 @@ class AudioSelfHeal {
         backendUnresponsive: false,
       };
 
-      console.log('[AudioSelfHeal] ✅ Force reset completed');
+      logger.info('Force reset completed', {
+        component: 'AudioSelfHeal',
+        action: 'forceReset',
+      });
     } catch (error) {
       const err = error instanceof Error ? error : new Error(String(error));
       logger.error(
