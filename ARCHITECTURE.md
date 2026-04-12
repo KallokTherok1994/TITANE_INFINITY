@@ -10,18 +10,18 @@
 
 TITANE_INFINITY est un **OS cognitif Tauri-only** (React/TypeScript + Rust/Tauri v2).
 
-| Dimension | Valeur |
-|-----------|--------|
-| Runtime | Tauri v2 — desktop uniquement |
-| Frontend | React 18 + TypeScript 5.5 strict |
-| Backend | Rust 2021 — `src-tauri/` |
-| Fichiers TS/TSX | **1 668** |
-| Fichiers Rust | **880** |
-| Commandes IPC uniques | **916** |
-| Stores Zustand | **18** |
-| Hooks React custom | **110** |
-| Pages | **41** |
-| Composants | **226** |
+| Dimension             | Valeur                           |
+| --------------------- | -------------------------------- |
+| Runtime               | Tauri v2 — desktop uniquement    |
+| Frontend              | React 18 + TypeScript 5.5 strict |
+| Backend               | Rust 2021 — `src-tauri/`         |
+| Fichiers TS/TSX       | **1 668**                        |
+| Fichiers Rust         | **880**                          |
+| Commandes IPC uniques | **916**                          |
+| Stores Zustand        | **18**                           |
+| Hooks React custom    | **110**                          |
+| Pages                 | **41**                           |
+| Composants            | **226**                          |
 
 ---
 
@@ -93,13 +93,13 @@ UI Component
 
 ## Documentation
 
-| Document | Description |
-|----------|-------------|
-| [`docs/CARTOGRAPHY_COMPLETE.md`](./docs/CARTOGRAPHY_COMPLETE.md) | Cartographie complète avancée — 4-Ring, IPC, stores, hooks, routes, Rust |
-| [`docs/IPC_CATALOG.md`](./docs/IPC_CATALOG.md) | Catalogue exhaustif des 916+ commandes IPC par domaine |
-| [`docs/DEPENDENCY_MAP.md`](./docs/DEPENDENCY_MAP.md) | Carte des dépendances frontend (npm) et backend (Cargo) |
-| [`docs/CARTOGRAPHY_TITANE_INFINITY.md`](./docs/CARTOGRAPHY_TITANE_INFINITY.md) | Cartographie canonique MAIN — architecture, IPC One Door |
-| [`docs/ARCHITECTURE_RINGS.md`](./docs/ARCHITECTURE_RINGS.md) | Architecture en anneaux détaillée |
+| Document                                                                       | Description                                                              |
+| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| [`docs/CARTOGRAPHY_COMPLETE.md`](./docs/CARTOGRAPHY_COMPLETE.md)               | Cartographie complète avancée — 4-Ring, IPC, stores, hooks, routes, Rust |
+| [`docs/IPC_CATALOG.md`](./docs/IPC_CATALOG.md)                                 | Catalogue exhaustif des 916+ commandes IPC par domaine                   |
+| [`docs/DEPENDENCY_MAP.md`](./docs/DEPENDENCY_MAP.md)                           | Carte des dépendances frontend (npm) et backend (Cargo)                  |
+| [`docs/CARTOGRAPHY_TITANE_INFINITY.md`](./docs/CARTOGRAPHY_TITANE_INFINITY.md) | Cartographie canonique MAIN — architecture, IPC One Door                 |
+| [`docs/ARCHITECTURE_RINGS.md`](./docs/ARCHITECTURE_RINGS.md)                   | Architecture en anneaux détaillée                                        |
 
 ---
 
@@ -107,12 +107,12 @@ UI Component
 
 TITANE est conscient de sa propre architecture grâce à la base de connaissance interne :
 
-| Fichier | Description |
-|---------|-------------|
-| [`src/knowledge/self-awareness/architecture-map.json`](./src/knowledge/self-awareness/architecture-map.json) | Carte structurée complète de l'architecture |
-| [`src/knowledge/self-awareness/capabilities-manifest.json`](./src/knowledge/self-awareness/capabilities-manifest.json) | Inventaire complet des capacités |
-| [`src/knowledge/self-awareness/index.ts`](./src/knowledge/self-awareness/index.ts) | Module d'interface pour la self-awareness |
-| [`src/hooks/useSelfAwareness.ts`](./src/hooks/useSelfAwareness.ts) | Hook React pour l'introspection |
+| Fichier                                                                                                                | Description                                 |
+| ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| [`src/knowledge/self-awareness/architecture-map.json`](./src/knowledge/self-awareness/architecture-map.json)           | Carte structurée complète de l'architecture |
+| [`src/knowledge/self-awareness/capabilities-manifest.json`](./src/knowledge/self-awareness/capabilities-manifest.json) | Inventaire complet des capacités            |
+| [`src/knowledge/self-awareness/index.ts`](./src/knowledge/self-awareness/index.ts)                                     | Module d'interface pour la self-awareness   |
+| [`src/hooks/useSelfAwareness.ts`](./src/hooks/useSelfAwareness.ts)                                                     | Hook React pour l'introspection             |
 
 ```typescript
 // Usage
@@ -148,4 +148,4 @@ pnpm run check
 
 ---
 
-*TITANE_INFINITY v30.1.0 — Cognitive OS*
+_TITANE_INFINITY v30.1.0 — Cognitive OS_

@@ -4,6 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
 cd "$ROOT_DIR"
+source "$(dirname "${BASH_SOURCE[0]}")/_rg_compat.sh"
 
 if [ ! -d "dist" ]; then
   echo "FAIL: dist/ not found. Build before running this guard."

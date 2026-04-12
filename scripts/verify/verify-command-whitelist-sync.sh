@@ -4,6 +4,7 @@ set -euo pipefail
 
 ROOT_DIR="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 cd "$ROOT_DIR"
+source "$(dirname "${BASH_SOURCE[0]}")/_rg_compat.sh"
 
 OUT_DIR="${1:-reports/command_whitelist_sync}"
 EXCEPTIONS_FILE="${2:-scripts/verify/allowlist-exceptions.txt}"

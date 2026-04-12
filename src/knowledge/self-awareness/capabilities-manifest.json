@@ -9,31 +9,95 @@
     "ai_chat": {
       "description": "Multi-provider AI chat with conversation management",
       "providers": ["ollama", "openai", "anthropic", "openrouter"],
-      "features": ["streaming", "suggestions", "context-memory", "multi-conversation", "history", "search", "export"]
+      "features": [
+        "streaming",
+        "suggestions",
+        "context-memory",
+        "multi-conversation",
+        "history",
+        "search",
+        "export"
+      ]
     },
     "voice": {
       "description": "Voice input/output with TTS, STT, VAD, wake-word",
-      "features": ["tts", "stt", "vad", "wake-word", "duplex", "lip-sync", "streaming-audio", "voice-activity-detection"]
+      "features": [
+        "tts",
+        "stt",
+        "vad",
+        "wake-word",
+        "duplex",
+        "lip-sync",
+        "streaming-audio",
+        "voice-activity-detection"
+      ]
     },
     "cognitive": {
       "description": "Cognitive engine with learning, memory, evolution",
-      "features": ["knowledge-vault", "evolution-cycles", "memory-consolidation", "progression-xp", "self-eval", "pattern-analysis", "insight-generation"]
+      "features": [
+        "knowledge-vault",
+        "evolution-cycles",
+        "memory-consolidation",
+        "progression-xp",
+        "self-eval",
+        "pattern-analysis",
+        "insight-generation"
+      ]
     },
     "visual": {
       "description": "Visual engine with avatar, 3D, effects",
-      "features": ["avatar-3d", "lip-sync", "expressions", "gestures", "effects", "immersive-mode", "morph-targets", "animation"]
+      "features": [
+        "avatar-3d",
+        "lip-sync",
+        "expressions",
+        "gestures",
+        "effects",
+        "immersive-mode",
+        "morph-targets",
+        "animation"
+      ]
     },
     "memory": {
       "description": "Persistent memory with snapshots, timeline, knowledge",
-      "features": ["snapshots", "timeline", "knowledge-base", "file-ingestion", "vector-search", "ltm", "episodic-memory", "working-memory", "embedding", "consolidation"]
+      "features": [
+        "snapshots",
+        "timeline",
+        "knowledge-base",
+        "file-ingestion",
+        "vector-search",
+        "ltm",
+        "episodic-memory",
+        "working-memory",
+        "embedding",
+        "consolidation"
+      ]
     },
     "singularity": {
       "description": "Unified state engine — physical, cognitive, symbolic, adaptive layers",
-      "features": ["4-layer-state", "self-healing", "integrity-check", "diff", "sync", "checkpoint", "rollback", "layer-management", "drift-detection"]
+      "features": [
+        "4-layer-state",
+        "self-healing",
+        "integrity-check",
+        "diff",
+        "sync",
+        "checkpoint",
+        "rollback",
+        "layer-management",
+        "drift-detection"
+      ]
     },
     "security": {
       "description": "End-to-end security with encryption, permission enforcement",
-      "features": ["aes-gcm", "ed25519", "argon2", "permission-audit", "csp", "secret-management", "permission-matrix", "message-validation"]
+      "features": [
+        "aes-gcm",
+        "ed25519",
+        "argon2",
+        "permission-audit",
+        "csp",
+        "secret-management",
+        "permission-matrix",
+        "message-validation"
+      ]
     },
     "creation": {
       "description": "Creation studio for content generation",
@@ -41,36 +105,91 @@
     },
     "monitoring": {
       "description": "QA monitoring, watchdog, self-heal, adaptive optimization",
-      "features": ["test-suites", "alerts", "performance-reports", "auto-fix", "watchdog", "self-healing", "auto-heal"]
+      "features": [
+        "test-suites",
+        "alerts",
+        "performance-reports",
+        "auto-fix",
+        "watchdog",
+        "self-healing",
+        "auto-heal"
+      ]
     },
     "evolution": {
       "description": "Continuous self-improvement and XP progression",
-      "features": ["evolution-cycles", "xp-accumulation", "score-tracking", "data-points", "progression-reports", "adaptive-learning"]
+      "features": [
+        "evolution-cycles",
+        "xp-accumulation",
+        "score-tracking",
+        "data-points",
+        "progression-reports",
+        "adaptive-learning"
+      ]
     },
     "time": {
       "description": "Temporal intelligence with agenda and timeline management",
-      "features": ["agenda", "calendar", "events", "temporal-search", "time-context", "history"]
+      "features": [
+        "agenda",
+        "calendar",
+        "events",
+        "temporal-search",
+        "time-context",
+        "history"
+      ]
     },
     "identity": {
       "description": "Identity and persona management with twin evolution",
-      "features": ["twin-identity", "twin-evolution", "persona-config", "identity-matrix", "cognitive-profile"]
+      "features": [
+        "twin-identity",
+        "twin-evolution",
+        "persona-config",
+        "identity-matrix",
+        "cognitive-profile"
+      ]
     },
     "engine_management": {
       "description": "Engine lifecycle management with dev-mode patching",
-      "features": ["engine-init", "engine-tick", "devmode", "patch-validation", "backup-restore", "module-control", "nexus-state"]
+      "features": [
+        "engine-init",
+        "engine-tick",
+        "devmode",
+        "patch-validation",
+        "backup-restore",
+        "module-control",
+        "nexus-state"
+      ]
     },
     "ipc_governance": {
       "description": "Governed IPC with one-door pattern and canonical contract",
       "contract": "{ ok: boolean, content: T | null, error: string | null }",
-      "features": ["one-door", "allowlist", "canonical-result", "timeout", "error-capture", "audit-log"]
+      "features": [
+        "one-door",
+        "allowlist",
+        "canonical-result",
+        "timeout",
+        "error-capture",
+        "audit-log"
+      ]
     },
     "performance": {
       "description": "Adaptive performance monitoring and optimization",
-      "features": ["adaptive-fps", "resource-monitoring", "bottleneck-detection", "optimization-automation", "profiling"]
+      "features": [
+        "adaptive-fps",
+        "resource-monitoring",
+        "bottleneck-detection",
+        "optimization-automation",
+        "profiling"
+      ]
     },
     "research": {
       "description": "Web research and knowledge acquisition",
-      "features": ["web-search", "rag-pipeline", "file-ingestion", "semantic-search", "knowledge-import"]
+      "features": [
+        "web-search",
+        "rag-pipeline",
+        "file-ingestion",
+        "semantic-search",
+        "knowledge-import"
+      ]
     }
   }
 }
