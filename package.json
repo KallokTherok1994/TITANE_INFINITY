@@ -98,7 +98,7 @@
     "test:e2e:playwright": "playwright test e2e",
     "test:e2e:android:browser": "node scripts/e2e/run-android-ui-browser.cjs",
     "test:e2e:android:device": "TITANE_E2E_USE_WEBSERVER=0 playwright test e2e/android/android-build-ui.device.spec.ts --project chromium --workers=1",
-    "test:e2e:vitest": "bash -c 'if [[ \"${TITANE_E2E_TAURI:-}\" != \"1\" ]]; then echo \"SKIP: Vitest E2E (src/tests/e2e) nécessite un contexte Tauri réel. Relance avec TITANE_E2E_TAURI=1\"; exit 0; fi; cross-env RUN_E2E_TESTS=1 NODE_OPTIONS=\"--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs\" vitest run src/tests/e2e/titane_e2e.test.ts'",
+    "test:e2e:vitest": "bash -c 'if [[ \"${TITANE_E2E_TAURI:-}\" != \"1\" ]]; then echo \"SKIP: Vitest E2E (src/tests/e2e) nécessite un contexte Tauri réel. Relance avec TITANE_E2E_TAURI=1\"; exit 0; fi; cross-env RUN_E2E_TESTS=1 NODE_OPTIONS=\"--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs\" vitest run src/tests/e2e/titane_e2e.test.ts src/tests/e2e/chat-ar20-ipc.test.ts'",
     "test:browser": "vitest --config vitest.browser.config.ts --run",
     "test:browser:ui": "vitest --config vitest.browser.config.ts --ui",
     "test:browser:watch": "vitest --config vitest.browser.config.ts",

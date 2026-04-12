@@ -31,14 +31,18 @@ const CHAT_INPUT_SELECTORS = [
 ].join(', ');
 
 const SEND_BUTTON_SELECTORS = [
+  '[data-testid="chat-send"]',
   '[data-testid="send-button"]',
   '.send-button',
+  '.chat-send-btn',
+  '.chat-send-omega',
   '.chat-input-container button[type="submit"]',
   'button:has-text("Envoyer")',
   'button[aria-label*="Envoyer"]',
 ].join(', ');
 
 const ASSISTANT_MESSAGE_SELECTORS = [
+  '[data-testid="chat-message-assistant"]',
   '[data-testid="assistant-message"]',
   '.message-bubble-assistant .message-bubble-text',
   '.message-bubble-assistant',

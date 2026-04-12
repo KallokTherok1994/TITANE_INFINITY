@@ -23,10 +23,10 @@ const TAURI_E2E_ENABLED = process.env.TITANE_E2E_TAURI === '1';
 const CHAT_INPUT_SELECTOR =
   '#chat-input-textarea, textarea.chat-input, [data-testid="chat-input"]';
 const SEND_BUTTON_SELECTOR =
-  'button.chat-send-btn, button.chat-send-omega, [data-testid="send-button"]';
+  'button.chat-send-btn, button.chat-send-omega, [data-testid="send-button"], [data-testid="chat-send"], button[type="submit"]';
 const MESSAGE_CONTAINER_SELECTOR = '.chat-messages';
-const ASSISTANT_MESSAGE_SELECTOR = `${MESSAGE_CONTAINER_SELECTOR} .message-bubble.message-assistant .message-text, [data-testid="assistant-message"]`;
-const USER_MESSAGE_SELECTOR = `${MESSAGE_CONTAINER_SELECTOR} .message-bubble.message-user .message-text`;
+const ASSISTANT_MESSAGE_SELECTOR = `${MESSAGE_CONTAINER_SELECTOR} .message-bubble.message-assistant .message-text, [data-testid="assistant-message"], [data-testid="chat-message-assistant"]`;
+const USER_MESSAGE_SELECTOR = `${MESSAGE_CONTAINER_SELECTOR} .message-bubble.message-user .message-text, [data-testid="chat-message-user"]`;
 
 // Helper: wait for response in chat UI
 async function waitForResponse(page, _userMessage: string, timeoutMs = 15000) {
@@ -62,8 +62,13 @@ async function sendChatMessage(page, message: string) {
   const initialCount = await userMessages.count();
 
   const sendBtn = page.locator(SEND_BUTTON_SELECTOR).first();
-  await sendBtn.waitFor({ state: 'visible', timeout: 5000 });
-  await sendBtn.click();
+  const sendVisible = await sendBtn.isVisible().catch(() => false);
+
+  if (sendVisible) {
+    await sendBtn.click();
+  } else {
+    await input.press('Enter');
+  }
 
   await expect(userMessages).toHaveCount(initialCount + 1, { timeout: 10000 });
 }
