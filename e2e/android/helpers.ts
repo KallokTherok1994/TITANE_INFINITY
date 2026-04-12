@@ -93,3 +93,42 @@ export function extractCriticalPageErrors(entries: string[]): string[] {
       !entry.includes('Non-Error promise rejection captured')
   );
 }
+
+/**
+ * Wait for page-titane to be visible, then navigate to it.
+ * Convenience helper used by most tests as their initial setup step.
+ */
+export async function awaitAppReady(
+  page: import('@playwright/test').Page,
+  timeoutMs = 30000,
+): Promise<void> {
+  await page.goto('/');
+  await page.getByTestId('page-titane').waitFor({ state: 'visible', timeout: timeoutMs });
+}
+
+/**
+ * Returns the bounding box and viewport metrics for a given data-testid element.
+ */
+export async function getInputBoundingMetrics(
+  page: import('@playwright/test').Page,
+  testid: string,
+): Promise<{
+  top: number;
+  bottom: number;
+  left: number;
+  width: number;
+  viewportHeight: number;
+  viewportWidth: number;
+}> {
+  return page.getByTestId(testid).evaluate(el => {
+    const rect = el.getBoundingClientRect();
+    return {
+      top: rect.top,
+      bottom: rect.bottom,
+      left: rect.left,
+      width: rect.width,
+      viewportHeight: window.innerHeight,
+      viewportWidth: window.innerWidth,
+    };
+  });
+}

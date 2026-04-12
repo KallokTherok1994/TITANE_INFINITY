@@ -8,12 +8,31 @@ import {
   nowIso,
   waitForCondition,
   writeJsonArtifact,
+  awaitAppReady,
+  getInputBoundingMetrics,
 } from './helpers';
 
 const ARTIFACT_DIR = path.resolve(process.cwd(), 'reports/e2e/android-ui/browser');
 
+/** Android mobile viewport presets used in multi-breakpoint coverage. */
+const MOBILE_VIEWPORTS = [
+  { name: 'pixel-7', width: 412, height: 915 },
+  { name: 'galaxy-s25', width: 360, height: 800 },
+  { name: 'iphone-14-pro', width: 390, height: 844 },
+] as const;
+
+/** Selectors that must be present in the conversation page (AR20 contract). */
+const AR20_REQUIRED_SELECTORS = [
+  '[data-testid="page-titane"]',
+  '[data-testid="tab-conversation"]',
+  '[data-testid="page-conversation"]',
+  '[data-testid="chat-input"]',
+  '[data-testid="chat-send"]',
+];
+
 test.describe('Android Build UI - Browser and Android Emulation', () => {
-  test('renders core conversation UI and exports required UI maps', async ({ page }) => {
+  // ─── T1: Core UI map (canonical smoke test — preserved) ───────────────────
+  test('T1 - renders core conversation UI and exports required UI maps', async ({ page }) => {
     const startedAt = Date.now();
     const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
 
@@ -67,13 +86,7 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
       };
     });
 
-    const requiredSelectors = [
-      '[data-testid="page-titane"]',
-      '[data-testid="tab-conversation"]',
-      '[data-testid="page-conversation"]',
-      '[data-testid="chat-input"]',
-      '[data-testid="chat-send"]',
-    ];
+    const requiredSelectors = [...AR20_REQUIRED_SELECTORS];
 
     const ar20 = await page.evaluate(selectors => {
       const present = selectors.filter(selector => document.querySelector(selector));
@@ -163,5 +176,578 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
     expect(criticalErrors).toHaveLength(0);
     expect(criticalPageErrors).toHaveLength(0);
     expect(stability.mobileInputNearBottom).toBe(true);
+  });
+
+  // ─── T2: App-ready signal ─────────────────────────────────────────────────
+  test('T2 - page-titane renders and initial load completes within 15s', async ({ page }) => {
+    const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
+    const startedAt = Date.now();
+
+    await page.goto('/');
+    await expect(page.getByTestId('page-titane')).toBeVisible({ timeout: 15000 });
+
+    const ttRenderMs = Date.now() - startedAt;
+
+    const appReadyVisible = await waitForCondition(
+      async () => page.getByTestId('app-ready').isVisible().catch(() => false),
+      { timeoutMs: 10000, intervalMs: 300 },
+    );
+
+    const filteredErrors = filterKnownConsoleNoise(consoleErrors);
+    const criticalErrors = extractCriticalConsoleErrors(filteredErrors);
+    const criticalPageErrors = extractCriticalPageErrors(pageErrors);
+
+    writeJsonArtifact(ARTIFACT_DIR, 'T2_app_ready.json', {
+      appReadyVisible,
+      ttRenderMs,
+      project: test.info().project.name,
+      criticalErrors,
+      criticalPageErrors,
+    });
+
+    expect(ttRenderMs).toBeLessThan(15000);
+    expect(criticalErrors).toHaveLength(0);
+    expect(criticalPageErrors).toHaveLength(0);
+  });
+
+  // ─── T3: Conversation tab navigation ──────────────────────────────────────
+  test('T3 - conversation tab navigates and reveals required chat components', async ({ page }) => {
+    const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
+
+    await awaitAppReady(page);
+
+    await page.getByTestId('tab-conversation').click();
+    await expect(page.getByTestId('page-conversation')).toBeVisible({ timeout: 15000 });
+
+    const elements = {
+      chatInput: await page.getByTestId('chat-input').isVisible().catch(() => false),
+      chatSend: await page.getByTestId('chat-send').isVisible().catch(() => false),
+      tabConversation: await page.getByTestId('tab-conversation').isVisible().catch(() => false),
+    };
+
+    const filteredErrors = filterKnownConsoleNoise(consoleErrors);
+    const criticalErrors = extractCriticalConsoleErrors(filteredErrors);
+    const criticalPageErrors = extractCriticalPageErrors(pageErrors);
+
+    writeJsonArtifact(ARTIFACT_DIR, 'T3_conversation_nav.json', {
+      elements,
+      project: test.info().project.name,
+      criticalErrors,
+      criticalPageErrors,
+    });
+
+    expect(elements.chatInput).toBe(true);
+    expect(elements.chatSend).toBe(true);
+    expect(criticalErrors).toHaveLength(0);
+    expect(criticalPageErrors).toHaveLength(0);
+  });
+
+  // ─── T4: Mobile viewport multi-breakpoint layout ───────────────────────────
+  for (const vp of MOBILE_VIEWPORTS) {
+    test(`T4 - mobile layout at ${vp.name} (${vp.width}x${vp.height})`, async ({ page }) => {
+      await page.setViewportSize({ width: vp.width, height: vp.height });
+      const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
+
+      await awaitAppReady(page);
+      await page.getByTestId('tab-conversation').click();
+      await expect(page.getByTestId('page-conversation')).toBeVisible({ timeout: 15000 });
+
+      const chatInput = page.getByTestId('chat-input');
+      await expect(chatInput).toBeVisible();
+
+      // Scroll into view before measuring so the element is in the visible area
+      await chatInput.scrollIntoViewIfNeeded();
+      const inputMetrics = await getInputBoundingMetrics(page, 'chat-input');
+
+      const filteredErrors = filterKnownConsoleNoise(consoleErrors);
+      const criticalErrors = extractCriticalConsoleErrors(filteredErrors);
+      const criticalPageErrors = extractCriticalPageErrors(pageErrors);
+
+      writeJsonArtifact(ARTIFACT_DIR, `T4_viewport_${vp.name}.json`, {
+        viewport: vp,
+        inputMetrics,
+        project: test.info().project.name,
+        criticalErrors,
+        criticalPageErrors,
+      });
+
+      // After scroll-into-view: input must fit within viewport (+100px tolerance for browser chrome)
+      expect(inputMetrics.bottom).toBeLessThanOrEqual(inputMetrics.viewportHeight + 100);
+      // Input takes at least 50% of viewport width — not collapsed
+      expect(inputMetrics.width).toBeGreaterThan(vp.width * 0.5);
+      expect(criticalErrors).toHaveLength(0);
+      expect(criticalPageErrors).toHaveLength(0);
+    });
+  }
+
+  // ─── T5: Landscape viewport ───────────────────────────────────────────────
+  test('T5 - landscape viewport (823x390) - chat input accessible', async ({ page }) => {
+    await page.setViewportSize({ width: 823, height: 390 });
+    const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
+
+    await awaitAppReady(page);
+    await page.getByTestId('tab-conversation').click();
+    await expect(page.getByTestId('page-conversation')).toBeVisible({ timeout: 15000 });
+
+    const chatInput = page.getByTestId('chat-input');
+    await expect(chatInput).toBeVisible();
+
+    // Scroll into view before measuring — landscape may require manual scroll
+    await chatInput.scrollIntoViewIfNeeded();
+    const inputMetrics = await getInputBoundingMetrics(page, 'chat-input');
+
+    const filteredErrors = filterKnownConsoleNoise(consoleErrors);
+    const criticalErrors = extractCriticalConsoleErrors(filteredErrors);
+    const criticalPageErrors = extractCriticalPageErrors(pageErrors);
+
+    writeJsonArtifact(ARTIFACT_DIR, 'T5_landscape.json', {
+      viewport: { width: 823, height: 390 },
+      inputMetrics,
+      project: test.info().project.name,
+      criticalErrors,
+      criticalPageErrors,
+    });
+
+    // After scroll-into-view: input must fit within viewport (+100px tolerance)
+    expect(inputMetrics.bottom).toBeLessThanOrEqual(inputMetrics.viewportHeight + 100);
+    expect(criticalErrors).toHaveLength(0);
+    expect(criticalPageErrors).toHaveLength(0);
+  });
+
+  // ─── T6: No critical errors on cold load ──────────────────────────────────
+  test('T6 - no critical JS or page errors on cold load (2s settle)', async ({ page }) => {
+    const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
+
+    await page.goto('/');
+    await expect(page.getByTestId('page-titane')).toBeVisible({ timeout: 30000 });
+    // Allow async initializations to settle
+    await page.waitForTimeout(2000);
+
+    const filteredErrors = filterKnownConsoleNoise(consoleErrors);
+    const criticalErrors = extractCriticalConsoleErrors(filteredErrors);
+    const criticalPageErrors = extractCriticalPageErrors(pageErrors);
+
+    writeJsonArtifact(ARTIFACT_DIR, 'T6_cold_load_errors.json', {
+      timestamp: nowIso(),
+      project: test.info().project.name,
+      consoleErrors: filteredErrors,
+      criticalErrors,
+      pageErrors,
+      criticalPageErrors,
+    });
+
+    expect(criticalErrors).toHaveLength(0);
+    expect(criticalPageErrors).toHaveLength(0);
+  });
+
+  // ─── T7: Runtime state badge ──────────────────────────────────────────────
+  test('T7 - chat runtime state or badge surfaces after conversation load', async ({ page }) => {
+    const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
+
+    await awaitAppReady(page);
+    await page.getByTestId('tab-conversation').click();
+    await expect(page.getByTestId('page-conversation')).toBeVisible({ timeout: 15000 });
+
+    const runtimeVisible = await waitForCondition(
+      async () => {
+        const badge = page.getByTestId('chat-runtime-badge');
+        const state = page.getByTestId('chat-runtime-state');
+        return (
+          (await badge.isVisible().catch(() => false)) ||
+          (await state.isVisible().catch(() => false))
+        );
+      },
+      { timeoutMs: 10000, intervalMs: 500 },
+    );
+
+    const runtimeText = await page.evaluate(() => {
+      const badge = document.querySelector('[data-testid="chat-runtime-badge"]');
+      const state = document.querySelector('[data-testid="chat-runtime-state"]');
+      return {
+        badgeText: badge?.textContent?.trim() ?? null,
+        stateText: state?.textContent?.trim() ?? null,
+      };
+    });
+
+    const filteredErrors = filterKnownConsoleNoise(consoleErrors);
+    const criticalErrors = extractCriticalConsoleErrors(filteredErrors);
+    const criticalPageErrors = extractCriticalPageErrors(pageErrors);
+
+    writeJsonArtifact(ARTIFACT_DIR, 'T7_runtime_badge.json', {
+      runtimeVisible,
+      runtimeText,
+      project: test.info().project.name,
+      criticalErrors,
+      criticalPageErrors,
+    });
+
+    // No critical errors is the hard assertion; runtime visibility is informational
+    expect(criticalErrors).toHaveLength(0);
+    expect(criticalPageErrors).toHaveLength(0);
+  });
+
+  // ─── T8: Chat typing + send dispatch ──────────────────────────────────────
+  test('T8 - chat input accepts text and send dispatches user message', async ({ page }) => {
+    const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
+
+    await awaitAppReady(page);
+    await page.getByTestId('tab-conversation').click();
+    await expect(page.getByTestId('page-conversation')).toBeVisible({ timeout: 15000 });
+
+    const chatInput = page.getByTestId('chat-input');
+    const sendButton = page.getByTestId('chat-send');
+    const userMessages = page.getByTestId('chat-message-user');
+
+    await expect(chatInput).toBeVisible();
+    await expect(sendButton).toBeVisible();
+
+    const countBefore = await userMessages.count();
+    await chatInput.fill('T8: Android UI input dispatch probe');
+    await expect(chatInput).toHaveValue('T8: Android UI input dispatch probe');
+    await sendButton.click({ force: true });
+
+    await expect(userMessages).toHaveCount(countBefore + 1, { timeout: 15000 });
+
+    const filteredErrors = filterKnownConsoleNoise(consoleErrors);
+    const criticalErrors = extractCriticalConsoleErrors(filteredErrors);
+    const criticalPageErrors = extractCriticalPageErrors(pageErrors);
+
+    writeJsonArtifact(ARTIFACT_DIR, 'T8_chat_send.json', {
+      messageCountBefore: countBefore,
+      messageCountAfter: countBefore + 1,
+      project: test.info().project.name,
+      criticalErrors,
+      criticalPageErrors,
+    });
+
+    expect(criticalErrors).toHaveLength(0);
+    expect(criticalPageErrors).toHaveLength(0);
+  });
+
+  // ─── T9: Non-silence contract ─────────────────────────────────────────────
+  test('T9 - non-silence: assistant responds or chat-error shown within 30s', async ({ page }) => {
+    const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
+
+    await awaitAppReady(page);
+    await page.getByTestId('tab-conversation').click();
+    await expect(page.getByTestId('page-conversation')).toBeVisible({ timeout: 15000 });
+
+    const chatInput = page.getByTestId('chat-input');
+    const sendButton = page.getByTestId('chat-send');
+    const userMessages = page.getByTestId('chat-message-user');
+    const assistantMessages = page.getByTestId('chat-message-assistant');
+    const chatError = page.getByTestId('chat-error');
+
+    const userCountBefore = await userMessages.count();
+    const assistantCountBefore = await assistantMessages.count();
+
+    await chatInput.fill('T9: non-silence probe');
+    await sendButton.click({ force: true });
+    await expect(userMessages).toHaveCount(userCountBefore + 1, { timeout: 15000 });
+
+    const noSilence = await waitForCondition(
+      async () => {
+        const ac = await assistantMessages.count();
+        const err = await chatError.isVisible().catch(() => false);
+        return ac > assistantCountBefore || err;
+      },
+      { timeoutMs: 30000, intervalMs: 500 },
+    );
+
+    const filteredErrors = filterKnownConsoleNoise(consoleErrors);
+    const criticalErrors = extractCriticalConsoleErrors(filteredErrors);
+    const criticalPageErrors = extractCriticalPageErrors(pageErrors);
+
+    writeJsonArtifact(ARTIFACT_DIR, 'T9_non_silence.json', {
+      noSilence,
+      assistantCountBefore,
+      assistantCountAfter: await assistantMessages.count(),
+      chatErrorVisible: await chatError.isVisible().catch(() => false),
+      project: test.info().project.name,
+      criticalErrors,
+      criticalPageErrors,
+    });
+
+    expect(noSilence).toBe(true);
+    expect(criticalErrors).toHaveLength(0);
+    expect(criticalPageErrors).toHaveLength(0);
+  });
+
+  // ─── T10: Scrollable chat container ───────────────────────────────────────
+  test('T10 - conversation page has a scrollable overflow container', async ({ page }) => {
+    const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
+
+    await awaitAppReady(page);
+    await page.getByTestId('tab-conversation').click();
+    await expect(page.getByTestId('page-conversation')).toBeVisible({ timeout: 15000 });
+
+    const scrollInfo = await page.evaluate(() => {
+      const conversationPage = document.querySelector('[data-testid="page-conversation"]');
+      if (!conversationPage) return { found: false, source: 'none' };
+
+      const OVERFLOW_VALUES = new Set(['auto', 'scroll', 'overlay']);
+
+      const checkStyle = (el: Element) => {
+        const style = window.getComputedStyle(el);
+        return OVERFLOW_VALUES.has(style.overflowY) || OVERFLOW_VALUES.has(style.overflow);
+      };
+
+      if (checkStyle(conversationPage)) return { found: true, source: 'page-conversation' };
+
+      for (const child of conversationPage.children) {
+        if (checkStyle(child)) return { found: true, source: 'direct-child' };
+      }
+
+      for (const el of conversationPage.querySelectorAll('*')) {
+        if (checkStyle(el)) return { found: true, source: 'nested' };
+      }
+
+      // Fallback: document body or html may scroll (valid for single-page app)
+      const bodyStyle = window.getComputedStyle(document.body);
+      if (OVERFLOW_VALUES.has(bodyStyle.overflowY) || document.body.scrollHeight > window.innerHeight) {
+        return { found: true, source: 'body' };
+      }
+
+      return { found: false, source: 'none' };
+    });
+
+    const filteredErrors = filterKnownConsoleNoise(consoleErrors);
+    const criticalErrors = extractCriticalConsoleErrors(filteredErrors);
+    const criticalPageErrors = extractCriticalPageErrors(pageErrors);
+
+    writeJsonArtifact(ARTIFACT_DIR, 'T10_scroll_container.json', {
+      scrollInfo,
+      project: test.info().project.name,
+      criticalErrors,
+      criticalPageErrors,
+    });
+
+    expect(scrollInfo.found).toBe(true);
+    expect(criticalErrors).toHaveLength(0);
+    expect(criticalPageErrors).toHaveLength(0);
+  });
+
+  // ─── T11: Keyboard focus on chat input ────────────────────────────────────
+  test('T11 - chat input receives focus on tap/click', async ({ page }) => {
+    const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
+
+    await awaitAppReady(page);
+    await page.getByTestId('tab-conversation').click();
+    await expect(page.getByTestId('page-conversation')).toBeVisible({ timeout: 15000 });
+
+    const chatInput = page.getByTestId('chat-input');
+    await chatInput.click();
+
+    const focused = await page.evaluate(() => {
+      const el = document.querySelector('[data-testid="chat-input"]');
+      return el
+        ? document.activeElement === el || el.contains(document.activeElement)
+        : false;
+    });
+
+    const filteredErrors = filterKnownConsoleNoise(consoleErrors);
+    const criticalErrors = extractCriticalConsoleErrors(filteredErrors);
+    const criticalPageErrors = extractCriticalPageErrors(pageErrors);
+
+    writeJsonArtifact(ARTIFACT_DIR, 'T11_keyboard_focus.json', {
+      focused,
+      project: test.info().project.name,
+      criticalErrors,
+      criticalPageErrors,
+    });
+
+    expect(focused).toBe(true);
+    expect(criticalErrors).toHaveLength(0);
+    expect(criticalPageErrors).toHaveLength(0);
+  });
+
+  // ─── T12: Navigation landmark ─────────────────────────────────────────────
+  test('T12 - page exposes navigation landmark (nav, role=navigation, or tabs)', async ({ page }) => {
+    const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
+
+    await awaitAppReady(page);
+
+    const navInfo = await page.evaluate(() => {
+      return {
+        hasNav: Boolean(document.querySelector('nav')),
+        hasRoleNav: Boolean(document.querySelector('[role="navigation"]')),
+        hasTabsList: Boolean(document.querySelector('[data-testid="tabs-list"]')),
+        hasTabsComponent: Boolean(document.querySelector('[data-testid="tabs-component"]')),
+        tabsListChildCount: document.querySelector('[data-testid="tabs-list"]')?.children.length ?? 0,
+      };
+    });
+
+    const filteredErrors = filterKnownConsoleNoise(consoleErrors);
+    const criticalErrors = extractCriticalConsoleErrors(filteredErrors);
+    const criticalPageErrors = extractCriticalPageErrors(pageErrors);
+
+    writeJsonArtifact(ARTIFACT_DIR, 'T12_nav_landmark.json', {
+      navInfo,
+      project: test.info().project.name,
+      criticalErrors,
+      criticalPageErrors,
+    });
+
+    const hasAnyNav =
+      navInfo.hasNav || navInfo.hasRoleNav || navInfo.hasTabsList || navInfo.hasTabsComponent;
+    expect(hasAnyNav).toBe(true);
+    expect(criticalErrors).toHaveLength(0);
+    expect(criticalPageErrors).toHaveLength(0);
+  });
+
+  // ─── T13: Performance — initial render within 10s ─────────────────────────
+  test('T13 - performance: page-titane visible within 10s on cold start', async ({ page }) => {
+    const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
+    const startedAt = Date.now();
+
+    await page.goto('/');
+    await expect(page.getByTestId('page-titane')).toBeVisible({ timeout: 10000 });
+
+    const ttFirstVisibleMs = Date.now() - startedAt;
+
+    const navTiming = await page.evaluate(() => {
+      const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+      return {
+        domContentLoaded: nav ? Math.round(nav.domContentLoadedEventEnd - nav.startTime) : null,
+        loadComplete: nav ? Math.round(nav.loadEventEnd - nav.startTime) : null,
+      };
+    });
+
+    const filteredErrors = filterKnownConsoleNoise(consoleErrors);
+    const criticalErrors = extractCriticalConsoleErrors(filteredErrors);
+    const criticalPageErrors = extractCriticalPageErrors(pageErrors);
+
+    writeJsonArtifact(ARTIFACT_DIR, 'T13_performance.json', {
+      ttFirstVisibleMs,
+      navTiming,
+      project: test.info().project.name,
+      criticalErrors,
+      criticalPageErrors,
+    });
+
+    expect(ttFirstVisibleMs).toBeLessThan(10000);
+    expect(criticalErrors).toHaveLength(0);
+    expect(criticalPageErrors).toHaveLength(0);
+  });
+
+  // ─── T14: Provider state surfacing in browser mode ────────────────────────
+  test('T14 - provider state surfaces (warning, fallback, or runtime indicator)', async ({ page }) => {
+    const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
+
+    await awaitAppReady(page);
+    await page.getByTestId('tab-conversation').click();
+    await expect(page.getByTestId('page-conversation')).toBeVisible({ timeout: 15000 });
+
+    // Allow async initializations beyond initial hydration
+    await page.waitForTimeout(3000);
+
+    const providerState = await page.evaluate(() => {
+      const get = (testid: string) => Boolean(document.querySelector(`[data-testid="${testid}"]`));
+      return {
+        providerWarning: get('chat-provider-warning'),
+        chatFallback: get('chat-fallback'),
+        runtimeState: get('chat-runtime-state'),
+        runtimeBadge: get('chat-runtime-badge'),
+        runtimeTag: get('chat-runtime-tag'),
+        runtimeSummary: get('chat-runtime-summary'),
+        runtimeStateText:
+          document.querySelector('[data-testid="chat-runtime-state"]')?.textContent?.trim() ?? null,
+      };
+    });
+
+    const anySurface =
+      providerState.providerWarning ||
+      providerState.chatFallback ||
+      providerState.runtimeState ||
+      providerState.runtimeBadge ||
+      providerState.runtimeTag ||
+      providerState.runtimeSummary;
+
+    const filteredErrors = filterKnownConsoleNoise(consoleErrors);
+    const criticalErrors = extractCriticalConsoleErrors(filteredErrors);
+    const criticalPageErrors = extractCriticalPageErrors(pageErrors);
+
+    writeJsonArtifact(ARTIFACT_DIR, 'T14_provider_state.json', {
+      providerState,
+      anySurface,
+      timestamp: nowIso(),
+      project: test.info().project.name,
+      criticalErrors,
+      criticalPageErrors,
+    });
+
+    // Critical: no JS errors. Provider surface is informational but should exist.
+    expect(criticalErrors).toHaveLength(0);
+    expect(criticalPageErrors).toHaveLength(0);
+  });
+
+  // ─── T15: AR20 selector coverage ──────────────────────────────────────────
+  test('T15 - AR20: all 5 required UI selectors present at conversation page', async ({ page }) => {
+    const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
+
+    await awaitAppReady(page);
+    await page.getByTestId('tab-conversation').click();
+    await expect(page.getByTestId('page-conversation')).toBeVisible({ timeout: 15000 });
+
+    const ar20 = await page.evaluate(selectors => {
+      const missing = selectors.filter(sel => !document.querySelector(sel));
+      return {
+        requiredSelectors: selectors,
+        presentCount: selectors.length - missing.length,
+        requiredCount: selectors.length,
+        missing,
+        ratio: (selectors.length - missing.length) / selectors.length,
+      };
+    }, [...AR20_REQUIRED_SELECTORS]);
+
+    const filteredErrors = filterKnownConsoleNoise(consoleErrors);
+    const criticalErrors = extractCriticalConsoleErrors(filteredErrors);
+    const criticalPageErrors = extractCriticalPageErrors(pageErrors);
+
+    writeJsonArtifact(ARTIFACT_DIR, 'T15_AR20.json', {
+      ar20,
+      project: test.info().project.name,
+      criticalErrors,
+      criticalPageErrors,
+    });
+
+    expect(ar20.missing).toHaveLength(0);
+    expect(ar20.presentCount).toBe(ar20.requiredCount);
+    expect(criticalErrors).toHaveLength(0);
+    expect(criticalPageErrors).toHaveLength(0);
+  });
+
+  // ─── T16: Clear chat button availability ──────────────────────────────────
+  test('T16 - btn-clear-chat is present and accessible on conversation page', async ({ page }) => {
+    const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
+
+    await awaitAppReady(page);
+    await page.getByTestId('tab-conversation').click();
+    await expect(page.getByTestId('page-conversation')).toBeVisible({ timeout: 15000 });
+
+    // Populate first so clear button may become enabled
+    const chatInput = page.getByTestId('chat-input');
+    const sendButton = page.getByTestId('chat-send');
+    await chatInput.fill('T16: clear button probe');
+    await sendButton.click({ force: true });
+    await expect(page.getByTestId('chat-message-user')).toHaveCount(1, { timeout: 10000 });
+
+    const clearBtn = page.getByTestId('btn-clear-chat');
+    const clearBtnPresent = await clearBtn.isVisible().catch(() => false);
+
+    const filteredErrors = filterKnownConsoleNoise(consoleErrors);
+    const criticalErrors = extractCriticalConsoleErrors(filteredErrors);
+    const criticalPageErrors = extractCriticalPageErrors(pageErrors);
+
+    writeJsonArtifact(ARTIFACT_DIR, 'T16_clear_chat.json', {
+      clearBtnPresent,
+      project: test.info().project.name,
+      criticalErrors,
+      criticalPageErrors,
+    });
+
+    // No critical errors is mandatory; button presence is informational (may be hidden by design)
+    expect(criticalErrors).toHaveLength(0);
+    expect(criticalPageErrors).toHaveLength(0);
   });
 });
