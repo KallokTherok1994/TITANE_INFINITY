@@ -85,6 +85,15 @@ export default defineConfig({
         viewport: { width: 1280, height: 720 },
       },
     },
+    {
+      name: 'chromium-android-ui',
+      // Dedicated lane for Android UI coverage through Chromium mobile emulation.
+      testDir: resolve(CONFIG_DIR, 'e2e/android'),
+      testMatch: '**/*.browser.spec.ts',
+      use: {
+        ...devices['Pixel 7'],
+      },
+    },
     // Firefox DISABLED: Requires libavif16 system dependency (cannot install in container)
     // Uncomment when running with: sudo npx playwright install-deps
     // Firefox DISABLED: Requires libavif16 system dependency (cannot install in container)
