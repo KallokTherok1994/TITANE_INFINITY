@@ -185,3 +185,104 @@ pub async fn rag_generate_embeddings(texts: Vec<String>) -> Result<EmbeddingsRes
         error: None,
     })
 }
+
+// ─────────────────────────────────────────────────────────────────
+// Unit tests
+// ─────────────────────────────────────────────────────────────────
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Verify that EmbeddingResponse serializes to the canonical IPC format
+    /// { ok, content, error }.
+    #[test]
+    fn test_embedding_response_serialization() {
+        let resp = EmbeddingResponse {
+            ok: true,
+            content: Some(EmbeddingContent {
+                embedding: vec![0.1, 0.2, 0.3],
+            }),
+            error: None,
+        };
+
+        let json = serde_json::to_value(&resp).expect("serialization must succeed");
+
+        assert_eq!(json["ok"], true);
+        assert!(json["content"].is_object());
+        assert!(json["content"]["embedding"].is_array());
+        assert_eq!(json["content"]["embedding"][0], 0.1_f32);
+        assert!(json["error"].is_null());
+    }
+
+    /// Verify that EmbeddingsResponse (batch) serializes correctly.
+    #[test]
+    fn test_embeddings_batch_response_serialization() {
+        let resp = EmbeddingsResponse {
+            ok: true,
+            content: Some(EmbeddingsContent {
+                embeddings: vec![vec![0.1, 0.2], vec![0.3, 0.4]],
+            }),
+            error: None,
+        };
+
+        let json = serde_json::to_value(&resp).expect("serialization must succeed");
+
+        assert_eq!(json["ok"], true);
+        assert!(json["error"].is_null());
+        let embeddings = json["content"]["embeddings"].as_array().unwrap();
+        assert_eq!(embeddings.len(), 2);
+        assert_eq!(embeddings[0][0], 0.1_f32);
+        assert_eq!(embeddings[1][0], 0.3_f32);
+    }
+
+    /// When Ollama is unavailable, the command must return
+    /// { ok: false, content: null, error: "..." } — never a random fallback.
+    #[tokio::test]
+    async fn test_embedding_with_unavailable_ollama() {
+        // Point to a port that nothing is listening on
+        std::env::set_var("OLLAMA_BASE_URL", "http://127.0.0.1:19999");
+
+        let result = rag_generate_embedding("test text".to_string()).await;
+
+        // The command itself must not return an Err — it wraps errors in the ok:false contract
+        let resp = result.expect("command must not return Err");
+
+        assert!(!resp.ok, "ok must be false when Ollama is unavailable");
+        assert!(resp.content.is_none(), "content must be null on failure");
+        assert!(
+            resp.error.is_some(),
+            "error message must be present on failure"
+        );
+        assert!(
+            !resp.error.as_deref().unwrap_or("").is_empty(),
+            "error message must not be empty"
+        );
+    }
+
+    /// Verify the canonical IPC contract structure: { ok, content, error }.
+    #[test]
+    fn test_canonical_ipc_contract_structure() {
+        // Success response
+        let success = EmbeddingResponse {
+            ok: true,
+            content: Some(EmbeddingContent { embedding: vec![1.0] }),
+            error: None,
+        };
+        let json = serde_json::to_value(&success).unwrap();
+        assert!(json.get("ok").is_some(), "ok field required");
+        assert!(json.get("content").is_some(), "content field required");
+        assert!(json.get("error").is_some(), "error field required");
+
+        // Failure response
+        let failure = EmbeddingResponse {
+            ok: false,
+            content: None,
+            error: Some("Ollama unavailable".to_string()),
+        };
+        let json = serde_json::to_value(&failure).unwrap();
+        assert_eq!(json["ok"], false);
+        assert!(json["content"].is_null());
+        assert_eq!(json["error"], "Ollama unavailable");
+    }
+}

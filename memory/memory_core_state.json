@@ -47,6 +47,15 @@
       "description": "Deep audit identified and fixed 3 critical issues: toxic RAG fallback (random embeddings), empty memory core state, stagnant singularity meta-learning rate. Also updated capabilities manifest, optimization report, and system state.",
       "impact": "high",
       "tags": ["audit", "rag", "memory", "singularity", "optimization"]
+    },
+    {
+      "id": "tl-2026-04-12-final-optimization",
+      "timestamp": "2026-04-12T23:00:00Z",
+      "type": "optimization",
+      "title": "Final 98/100 Optimization — Tests + VectorStore + DDG Fallback",
+      "description": "Added unit tests to rag_commands.rs and web_search_commands.rs (Rule 2: proof before verdict). Created chunkingService.test.ts. Implemented in-memory VectorStore (vectorStore.ts) integrated into ragService.ts — vector-search now operational. Added DuckDuckGo Lite automatic fallback in web_search_commands.rs. Updated capabilities manifest (vector-search moved to features). Created scripts/setup-searxng.sh.",
+      "impact": "high",
+      "tags": ["tests", "vector-store", "rag", "web-search", "duckduckgo", "rule2", "rule10"]
     }
   ],
   "chat_history": [],
@@ -137,6 +146,15 @@
       "date": "2026-04-12T00:00:00Z",
       "rationale": "Rule 6 — contrat IPC canonique, aucun fallback mensonger. Rule 8 — stop-the-line sur violation d'invariant.",
       "tags": ["rag", "embedding", "fallback", "fix", "rule6", "rule8"]
+    },
+    {
+      "id": "dec-vector-store-in-memory",
+      "title": "In-memory vector store choisi pour v1 de vector-search",
+      "description": "Un VectorStore in-memory (src/services/vectorStore.ts) a été choisi pour débloquer la fonctionnalité vector-search sans dépendances externes. Intégré dans ragService.ts. La persistence IndexedDB est planifiée pour v2.",
+      "status": "active",
+      "date": "2026-04-12T23:00:00Z",
+      "rationale": "Zéro dépendance externe, déploiement immédiat, testable unitairement. La migration vers IndexedDB est possible sans changement d'API public.",
+      "tags": ["vector-search", "rag", "in-memory", "vectorStore"]
     }
   ],
   "knowledge": [
@@ -202,6 +220,15 @@
       "confidence": 1.0,
       "source": "data/knowledge_base/default/kevin_owner_profile_v30.json",
       "created_at": "2026-04-12T00:00:00Z"
+    },
+    {
+      "id": "kn-vector-store-status",
+      "title": "État du Vector Store TITANE∞",
+      "content": "Un VectorStore in-memory opérationnel est disponible dans src/services/vectorStore.ts. Il implémente la similarité cosinus, les opérations CRUD, la recherche topK avec seuil minScore, et les opérations batch. Il est intégré dans ragService.ts (depuis 2026-04-12T23:00:00Z): les chunks avec embedding sont automatiquement ajoutés au VectorStore lors de l'ingestion, et la recherche utilise le VectorStore en priorité si le queryEmbedding est disponible. Persistance IndexedDB planifiée pour v2.",
+      "domain": "rag_system",
+      "confidence": 1.0,
+      "source": "src/services/vectorStore.ts, src/services/ragService.ts",
+      "created_at": "2026-04-12T23:00:00Z"
     }
   ],
   "rituals": [
@@ -242,6 +269,6 @@
   ],
   "metadata": {
     "last_validation_ts": 1774097601039,
-    "last_compaction_ts": "2026-04-12T19:08:00Z"
+    "last_compaction_ts": "2026-04-12T23:00:00Z"
   }
 }

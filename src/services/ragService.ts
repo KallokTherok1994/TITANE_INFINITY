@@ -18,6 +18,7 @@
 import { safeInvokeCanonical } from '@/utils/invoke';
 import { logger } from '@/lib/logger';
 import { smartChunk } from './chunkingService';
+import { VectorStore, type VectorEntry } from './vectorStore';
 
 /**
  * Document chunk with metadata
@@ -63,6 +64,7 @@ export interface RAGQueryOptions {
  */
 class RAGService {
   private chunks: Map<string, DocumentChunk> = new Map();
+  private vectorStore: VectorStore = new VectorStore();
   private initialized = false;
 
   /**
@@ -123,9 +125,23 @@ class RAGService {
     // Generate embeddings (via backend)
     const chunksWithEmbeddings = await this.generateEmbeddings(documentChunks);
 
-    // Store chunks
+    // Store chunks in the local map and vector store
     chunksWithEmbeddings.forEach(chunk => {
       this.chunks.set(chunk.id, chunk);
+      // Store in vector store if embedding is available
+      if (chunk.embedding && chunk.embedding.length > 0) {
+        const entry: VectorEntry = {
+          id: chunk.id,
+          embedding: chunk.embedding,
+          metadata: {
+            source: chunk.metadata.source,
+            content: chunk.content,
+            type: chunk.metadata.type,
+            timestamp: chunk.metadata.timestamp,
+          },
+        };
+        this.vectorStore.add(entry);
+      }
     });
 
     // Persist to backend
@@ -143,7 +159,33 @@ class RAGService {
     // Generate query embedding (via backend)
     const queryEmbedding = await this.generateQueryEmbedding(query);
 
-    // Calculate similarity scores
+    // Use VectorStore for semantic search when a valid embedding is available
+    if (queryEmbedding.length > 0) {
+      const vectorResults = this.vectorStore.search(queryEmbedding, topK, minScore);
+
+      const results: SearchResult[] = [];
+      for (const vr of vectorResults) {
+        const chunk = this.chunks.get(vr.entry.id);
+        if (!chunk) continue;
+
+        // Apply filters
+        if (filters) {
+          if (filters.type && chunk.metadata?.type !== filters.type) continue;
+          if (filters.source && chunk.metadata?.source !== filters.source) continue;
+          if (filters.language && chunk.metadata?.language !== filters.language) continue;
+        }
+
+        results.push({
+          chunk,
+          score: vr.score,
+          context: includeContext ? this.getContext(chunk.id) : undefined,
+        });
+      }
+
+      return results;
+    }
+
+    // Fallback: iterate over chunks directly (no embedding available)
     const results: SearchResult[] = [];
 
     for (const [_id, chunk] of this.chunks.entries()) {
@@ -213,6 +255,9 @@ class RAGService {
       .map(chunk => chunk.id);
 
     toDelete.forEach(id => this.chunks.delete(id));
+
+    // Also remove from vector store
+    this.vectorStore.deleteBySource(source);
 
     await safeInvokeCanonical('rag_delete_chunks', { ids: toDelete });
   }
