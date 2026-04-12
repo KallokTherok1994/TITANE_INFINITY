@@ -7,9 +7,31 @@ PACKAGE_NAME="${TITANE_ANDROID_PACKAGE:-com.titane.infinity}"
 ACTIVITY_NAME="${TITANE_ANDROID_ACTIVITY:-.MainActivity}"
 DEVICE_ID="${TITANE_ANDROID_DEVICE_ID:-}"
 
+require_cmd() {
+  local cmd="$1"
+  if ! command -v "$cmd" >/dev/null 2>&1; then
+    echo "[android:dev:stable] ERROR: missing required command '$cmd'" >&2
+    exit 1
+  fi
+}
+
+pnpm_launcher() {
+  if command -v corepack >/dev/null 2>&1 && corepack pnpm --version >/dev/null 2>&1; then
+    echo "corepack pnpm"
+    return 0
+  fi
+
+  if command -v pnpm >/dev/null 2>&1; then
+    echo "pnpm"
+    return 0
+  fi
+
+  return 1
+}
+
 port_pid() {
   ss -ltnp 2>/dev/null \
-    | awk -v p=":${PORT}" '$4 ~ p {print}' \
+    | awk -v p=":${PORT}" '$4 ~ (p "$") {print}' \
     | grep -o 'pid=[0-9]*' \
     | head -1 \
     | cut -d= -f2 || true
@@ -44,6 +66,16 @@ wait_http_ready() {
   return 1
 }
 
+require_cmd adb
+require_cmd curl
+require_cmd ss
+
+PNPM_CMD="$(pnpm_launcher || true)"
+if [[ -z "$PNPM_CMD" ]]; then
+  echo "[android:dev:stable] ERROR: pnpm not available (corepack/pnpm missing)." >&2
+  exit 1
+fi
+
 echo "[android:dev:stable] Starting Vite on ${HOST}:${PORT}"
 EXISTING_PID="$(port_pid)"
 STARTED_VITE=0
@@ -58,7 +90,8 @@ if [[ -n "$EXISTING_PID" ]]; then
     exit 1
   fi
 else
-  corepack pnpm exec vite dev --host "$HOST" --port "$PORT" --strictPort &
+  # shellcheck disable=SC2086
+  $PNPM_CMD exec vite dev --host "$HOST" --port "$PORT" --strictPort &
   VITE_PID=$!
   STARTED_VITE=1
 fi
