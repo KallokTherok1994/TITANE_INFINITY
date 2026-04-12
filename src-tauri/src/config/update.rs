@@ -190,10 +190,22 @@ struct RuntimeConfigDisk {
 }
 
 fn runtime_config_path() -> PathBuf {
-    let base = dirs::data_local_dir().unwrap_or_else(std::env::temp_dir);
-    base.join("titane-infinity")
-        .join("config")
-        .join("runtime_settings_v1.json")
+    #[cfg(target_os = "android")]
+    {
+        // On Android, dirs::data_local_dir() falls back to /tmp (non-persistent).
+        // Use the known app-private files dir directly (accessible via run-as / adb push).
+        std::path::PathBuf::from("/data/user/0/com.titane.infinity/files")
+            .join("titane-infinity")
+            .join("config")
+            .join("runtime_settings_v1.json")
+    }
+    #[cfg(not(target_os = "android"))]
+    {
+        let base = dirs::data_local_dir().unwrap_or_else(std::env::temp_dir);
+        base.join("titane-infinity")
+            .join("config")
+            .join("runtime_settings_v1.json")
+    }
 }
 
 fn now_unix_ts_secs() -> u64 {
