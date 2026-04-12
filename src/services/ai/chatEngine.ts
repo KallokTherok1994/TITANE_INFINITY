@@ -42,6 +42,7 @@ import type {
 import { inputValidator } from './inputValidator';
 import { chatModes, type ChatModeConfig } from './chatModes';
 import { getEffectiveProfile, type InferenceState } from './responsePolicy'; // v24.4.0: Canonical response policy + inference gating
+import { detectDocumentType, buildDocumentInstructions } from './professionalDocumentService'; // v30.1.0: Professional document generation
 import { chatValidator } from '../chatValidator';
 import type { ChatMode } from './chatTypes';
 // Re-export for convenience
@@ -845,6 +846,13 @@ class ChatEngineOmega {
       // Inject depth instructions into system prompt
       if (depthInstructions) {
         systemPrompt = `${systemPrompt}\n\n${depthInstructions}`;
+      }
+
+      // v30.1.0: Inject professional document formatting instructions if document intent detected
+      const documentDetection = detectDocumentType(validatedMessage);
+      if (documentDetection && documentDetection.confidence >= 0.4) {
+        const documentInstructions = buildDocumentInstructions(documentDetection.type);
+        systemPrompt = `${systemPrompt}\n\n${documentInstructions}`;
       }
 
       // CONSTITUTION LAW #2: Inject Clarity Audit if needed
@@ -2303,6 +2311,8 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
 
   /**
    * v26.0.0: Build visible reasoning summary for Kevin
+   * v30.1.0: Enhanced with cognitive transparency, reasoning chain preview,
+   *          and signal dominance indicators
    * Shows WHY TITANE chose this depth and approach
    * Visible in the response, helps Kevin understand TITANE's reasoning
    */
@@ -2322,34 +2332,61 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
       creative: 'Demande créative',
       diagnostic: 'Diagnostic',
       conversational: 'Conversationnel',
+      research_analysis: 'Analyse & Recherche',
+      professional_document: 'Document professionnel',
+      deep_reflection: 'Réflexion profonde',
     };
 
     const depthLabels: Record<string, string> = {
       DIRECT: 'DIRECT — réponse courte',
       BALANCED: 'ÉQUILIBRÉ — réponse structurée',
       DEVELOPED: 'DÉVELOPPÉ — réflexion approfondie',
-      DEEP: 'PROFOND — analyse complète',
+      DEEP: 'PROFOND — analyse multi-couches',
       ARCHITECT: 'ARCHITECTE — clarté stratégique',
-      OMEGA: 'OMEGA — puissance maximale',
+      OMEGA: 'OMEGA — puissance cognitive maximale',
+    };
+
+    const reasoningChainLabels: Record<string, string> = {
+      DIRECT: 'Question → Réponse',
+      BALANCED: 'Constat → Analyse → Recommandation',
+      DEVELOPED: 'Cadrage → Analyse → Raisonnement → Synthèse → Action',
+      DEEP: 'Problème → Cartographie → Multi-perspective → Synthèse → Recommandations',
+      ARCHITECT:
+        'Registre → Forces → Tensions → Scénarios → Décision → Validation → Rollback',
+      OMEGA:
+        'Méta-analyse → Décomposition → 6 perspectives → Synthèse intégrative → Transfert',
     };
 
     const memoryStatus = hasMemoryContext
-      ? 'Mémoire contextuelle active'
-      : 'Pas de mémoire contextuelle';
+      ? '✅ Mémoire contextuelle active'
+      : '📭 Pas de mémoire contextuelle';
     const actionLabel =
       inferenceState === 'SAFE_TO_INFER'
-        ? 'Réponse directe'
+        ? '✅ Réponse directe'
         : inferenceState === 'CLARIFY_REQUIRED'
-          ? 'Clarification chirurgicale'
+          ? '❓ Clarification chirurgicale'
           : inferenceState === 'BLOCKED_BY_MISSING_FACT'
-            ? 'Demande de fait manquant'
-            : 'Inférence avec hypothèse';
+            ? '🚫 Demande de fait manquant'
+            : '💡 Inférence avec hypothèse';
+
+    const confidenceBar = this.buildConfidenceBar(intentResult.confidence);
 
     return [
-      `🎯 **Analyse**: ${intentLabels[intentResult.intent] || intentResult.intent} → Profil ${depthLabels[effectiveDepth] || effectiveDepth}`,
-      `📋 **Basé sur**: ${memoryStatus} | Confiance: ${(intentResult.confidence * 100).toFixed(0)}%`,
+      `🧠 **Raisonnement TITANE∞**`,
+      `🎯 **Intent**: ${intentLabels[intentResult.intent] || intentResult.intent} → Profil ${depthLabels[effectiveDepth] || effectiveDepth}`,
+      `🔗 **Chaîne**: ${reasoningChainLabels[effectiveDepth] || 'Standard'}`,
+      `📊 **Confiance**: ${confidenceBar} ${(intentResult.confidence * 100).toFixed(0)}% | ${memoryStatus}`,
       `⚡ **Action**: ${actionLabel} | Budget: ${profile.maxTokens} tokens`,
     ].join('\n');
+  }
+
+  /**
+   * v30.1.0: Build a visual confidence bar for reasoning summary
+   */
+  private buildConfidenceBar(confidence: number): string {
+    const filled = Math.round(confidence * 5);
+    const empty = 5 - filled;
+    return '█'.repeat(filled) + '░'.repeat(empty);
   }
 
   /**
@@ -2990,6 +3027,8 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
 
   /**
    * v25.0.0: Build depth instructions for system prompt injection
+   * v30.1.0: Enhanced with structured reasoning chains, analysis frameworks,
+   *          professional output templates, and reflection protocols
    * Tells the LLM what depth/structure to produce based on the selected profile
    */
   private buildDepthInstructions(
@@ -3008,34 +3047,92 @@ Profil: DIRECT — Réponse courte, essentiel uniquement.
 Profil: ÉQUILIBRÉ — Réponse utile avec contexte modéré.
 - Réponse structurée mais concise
 - Inclure le contexte nécessaire pour comprendre
-- Proposer des actions concrètes quand pertinent`,
+- Proposer des actions concrètes quand pertinent
+- Raisonnement : [Constat] → [Analyse rapide] → [Recommandation]`,
 
       DEVELOPED: `═══ INSTRUCTIONS DE PROFONDEUR ═══
 Profil: DÉVELOPPÉ — Réflexion approfondie, réponse decision-ready.
-- Réponse développée avec raisonnement structuré
-- Inclure : réponse directe → contexte/framing → raisonnement → implication pratique → prochain move
-- Prioriser l'utilité et l'actionabilité
-- Éviter le remplissage : chaque paragraphe doit apporter de la valeur
-- Utiliser des sections, listes ou structures quand ça améliore la clarté`,
+
+CHAÎNE DE RAISONNEMENT OBLIGATOIRE :
+1. CADRAGE — Reformuler l'enjeu réel (pas juste la question surface)
+2. ANALYSE — Examiner les dimensions clés (faits, contexte, implications)
+3. RAISONNEMENT — Articuler ta logique : [Hypothèse] → [Vérification] → [Conclusion]
+4. SYNTHÈSE — Réponse actionnable avec implications pratiques
+5. PROCHAIN MOVE — Action concrète recommandée
+
+RÈGLES DE QUALITÉ :
+- Chaque paragraphe doit apporter de la valeur nouvelle
+- Distinguer fait vérifié vs. inférence vs. hypothèse
+- Utiliser des sections, listes ou structures quand ça améliore la clarté
+- Nommer explicitement les incertitudes et les limites de ton analyse
+- Quand pertinent, inclure : transfert de compétence (comment Kevin peut le faire lui-même)`,
 
       DEEP: `═══ INSTRUCTIONS DE PROFONDEUR ═══
-Profil: PROFOND — Analyse complète, synthèse dense.
-- Réponse exhaustive avec analyse multi-facettes
-- Inclure : contexte étendu → analyse détaillée → implications → recommandations → incertitudes bornées
+Profil: PROFOND — Analyse complète, synthèse dense, raisonnement multi-couches.
+
+PROTOCOLE D'ANALYSE APPROFONDIE :
+1. DÉFINITION DU PROBLÈME — Reformuler la question réelle, exposer les présupposés implicites
+2. CARTOGRAPHIE DES DIMENSIONS — Identifier toutes les facettes : technique, humaine, stratégique, temporelle
+3. ANALYSE MULTI-PERSPECTIVE :
+   a) Perspective factuelle : que disent les données/faits vérifiables ?
+   b) Perspective systémique : quelles interactions et dépendances ?
+   c) Perspective critique : quels biais, angles morts, risques invisibles ?
+   d) Perspective temporelle : évolution passée, état présent, trajectoire future
+4. SYNTHÈSE INTÉGRÉE — Tisser les perspectives en une compréhension unifiée
+5. RECOMMANDATIONS PRIORISÉES — Classées par impact/effort avec justification
+6. INCERTITUDES BORNÉES — Ce que tu ne sais PAS et comment le vérifier
+
+RÈGLES DE RIGUEUR :
 - Explorer les nuances et les trade-offs
-- Utiliser des structures (titres, listes numérotées, tableaux) pour organiser`,
+- Challenger tes propres hypothèses
+- Distinguer corrélation / causalité
+- Utiliser des structures (titres, listes numérotées, tableaux) pour organiser
+- Inclure un transfert de compétence : apprendre à Kevin comment reproduire ce raisonnement`,
 
       ARCHITECT: `═══ INSTRUCTIONS DE PROFONDEUR ═══
-Profil: ARCHITECTE — Clarté stratégique maximale.
-- Format préféré : Register Dominant → Axe Protégé → Priorité Réelle → Tension/Racine → Raisonnement → Move Recommandé → Incertitude Bornée
-- Exposer les axes, priorités, incohérences
-- Proposer une action simple et claire à la fin`,
+Profil: ARCHITECTE — Clarté stratégique maximale, vision structurelle.
+
+FRAMEWORK D'ARCHITECTURE DÉCISIONNELLE :
+1. REGISTRE DOMINANT — Quel est l'enjeu de fond ? (au-delà de la demande explicite)
+2. AXE PROTÉGÉ — Quel principe ne doit jamais être compromis ?
+3. CARTOGRAPHIE DES FORCES — SWOT ou matrice d'analyse adaptée au contexte
+4. TENSIONS & RACINES — Identifier les contradictions, les frictions, les compromis impossibles
+5. SCÉNARIOS STRATÉGIQUES — 2 à 3 scénarios : optimiste, réaliste, pessimiste
+6. ARBRE DE DÉCISION — Si X alors Y, sinon Z (conditions claires)
+7. RECOMMANDATION ARCHITECTURALE — Move recommandé avec justification multi-critères
+8. PLAN DE VALIDATION — Comment vérifier que la décision fonctionne ?
+9. INCERTITUDE BORNÉE — Ce qu'on ne sait pas et comment le résoudre
+10. ROLLBACK — Comment revenir en arrière si nécessaire ?
+
+FORMAT STRUCTUREL :
+- AXIS → Dimensions principales
+- PRIORITY → Actions ordonnées par impact
+- INCOHERENCE → Conflits exposés et arbitrés
+- SIMPLE ACTION → Première action minimale et concrète`,
 
       OMEGA: `═══ INSTRUCTIONS DE PROFONDEUR ═══
-Profil: OMEGA — Puissance maximale, aucun compromis.
-- Réponse la plus complète possible
-- Explorer toutes les dimensions du sujet
-- Inclure analyses, implications, alternatives, recommandations détaillées`,
+Profil: OMEGA — Puissance cognitive maximale, aucun compromis.
+
+PROTOCOLE OMEGA — RAISONNEMENT SANS LIMITES :
+1. MÉTA-ANALYSE — Analyser la question elle-même avant de répondre : est-ce la bonne question ?
+2. DÉCOMPOSITION EXHAUSTIVE — Fragmenter en sous-problèmes indépendants
+3. ANALYSE PAR PERSPECTIVE :
+   a) Perspective analytique : logique formelle, déduction, preuves
+   b) Perspective systémique : interactions, boucles de rétroaction, émergence
+   c) Perspective critique : biais cognitifs, hypothèses cachées, contre-arguments
+   d) Perspective créative : solutions non-conventionnelles, analogies, transferts
+   e) Perspective pragmatique : faisabilité, coûts, timeline, risques
+   f) Perspective éthique : alignement mission, impact humain, soutenabilité
+4. SYNTHÈSE INTÉGRATIVE — Fusionner toutes les perspectives en vision cohérente
+5. RECOMMANDATIONS HIÉRARCHISÉES — Architecture complète de la solution
+6. TRANSFERT DE COMPÉTENCE TOTAL — Apprendre à Kevin à reproduire cette analyse
+7. INCERTITUDES ET LIMITES — Expliciter ce qui n'est pas couvert
+
+QUALITÉ MAXIMALE :
+- Chaque affirmation doit être étayée (fait, raisonnement, ou hypothèse explicite)
+- Explorer toutes les dimensions du sujet sans raccourci
+- Inclure analyses, implications, alternatives, recommandations détaillées
+- Proposer des visualisations textuelles (tableaux, matrices, arbres) quand utile`,
     };
 
     return (

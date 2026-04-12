@@ -383,6 +383,6 @@ describe('ResponsePolicy — Invariants de vérité', () => {
     const { RESPONSE_POLICY_VERSION, RESPONSE_POLICY_DATE } =
       await import('@/services/ai/responsePolicy');
     expect(RESPONSE_POLICY_VERSION).toBeTruthy();
-    expect(RESPONSE_POLICY_DATE).toBe('2026-03-31');
+    expect(RESPONSE_POLICY_DATE).toBe('2026-04-12');
   });
 });

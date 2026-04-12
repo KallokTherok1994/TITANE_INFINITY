@@ -681,7 +681,9 @@ export type IntentType =
   | 'creative' // User wants generation, brainstorming, writing
   | 'diagnostic' // User asking about system state, errors, health
   | 'conversational' // Greeting, acknowledgment, social
-  | 'research_analysis'; // Deep research / web analysis / synthesis request
+  | 'research_analysis' // Deep research / web analysis / synthesis request
+  | 'professional_document' // User wants a professional document generated (report, letter, plan, etc.)
+  | 'deep_reflection'; // User seeks deep reflection, philosophical analysis, introspection
 
 export interface IntentClassification {
   intent: IntentType;
@@ -783,6 +785,36 @@ const INTENT_SIGNALS: Record<
     freshness: 'current',
     memoryRelevance: 'low',
   },
+  professional_document: {
+    patterns: [
+      /\b(rédige|rédiger|rédaction|document|fichier|lettre|courrier|courriel)\b/i,
+      /\b(rapport|rapport professionnel|compte[- ]rendu|note de service|mémo)\b/i,
+      /\b(cv|curriculum|lettre de motivation|candidature|portfolio)\b/i,
+      /\b(proposition commerciale|devis|facture|contrat|cahier des charges)\b/i,
+      /\b(présentation|dossier|documentation|guide|manuel|tutoriel)\b/i,
+      /\b(business plan|plan d'affaires|executive summary|pitch deck)\b/i,
+      /\b(draft|write a report|formal document|professional letter|proposal)\b/i,
+      /\b(procès[- ]verbal|ordre du jour|agenda|template|modèle)\b/i,
+      /\b(génère un document|crée un rapport|prépare un|formalise|mets en forme)\b/i,
+    ],
+    freshness: 'stable',
+    memoryRelevance: 'high',
+  },
+  deep_reflection: {
+    patterns: [
+      /\b(réfléchis|réflexion|réfléchir|médite|méditer|contemple|contempler)\b/i,
+      /\b(sens profond|essence|fondamental|existentiel|philosophi)\b/i,
+      /\b(introspection|conscience|lucidité|discernement|sagesse)\b/i,
+      /\b(pourquoi vraiment|au fond|en réalité|à quoi bon|quel sens)\b/i,
+      /\b(prends du recul|vision d'ensemble|perspective|hauteur de vue)\b/i,
+      /\b(croyance|présupposé|biais|angle mort|hypothèse implicite)\b/i,
+      /\b(reflect|ponder|contemplate|deeper meaning|underlying|fundamental)\b/i,
+      /\b(what really matters|core question|root cause|big picture|first principles)\b/i,
+      /\b(remise en question|questionne|challenge|remet en cause)\b/i,
+    ],
+    freshness: 'stable',
+    memoryRelevance: 'high',
+  },
 };
 
 /**
@@ -859,14 +891,24 @@ export const IDENTITY_CONSTANTS = {
   /** Values clarity and usefulness over verbosity */
   conciseWhenPossible: true,
 
+  /** Applies structured reasoning chains for complex analysis */
+  structuredReasoning: true,
+
+  /** Generates professional-quality formatted output when requested */
+  professionalOutputCapable: true,
+
+  /** Deep reflection with multi-perspective analysis */
+  deepReflectionEnabled: true,
+
   /** Stable system identity label */
   systemLabel: 'TITANE∞',
 
   /** Version for identity tracking */
-  version: '24.5.0',
+  version: '30.1.0',
 
   /** Core behavioral promise */
-  promise: 'Je suis là pour comprendre vite, agir utile, et me souvenir.',
+  promise:
+    'Je suis là pour comprendre vite, agir utile, raisonner en profondeur, et me souvenir.',
 } as const;
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -885,6 +927,8 @@ export function getDepthForIntent(intent: IntentType): ResponseProfileId {
     creative: 'DEEP',
     diagnostic: 'DEEP',
     research_analysis: 'DEEP',
+    professional_document: 'ARCHITECT',
+    deep_reflection: 'DEEP',
   };
 
   return intentDepthMap[intent] ?? 'DEVELOPED';
@@ -916,8 +960,8 @@ export function computeEffectiveDepth(
   return getDepthForIntent(intent);
 }
 
-export const RESPONSE_POLICY_VERSION = '1.2.0';
-export const RESPONSE_POLICY_DATE = '2026-03-31';
+export const RESPONSE_POLICY_VERSION = '2.0.0';
+export const RESPONSE_POLICY_DATE = '2026-04-12';
 
 export default {
   profiles: RESPONSE_PROFILES,
