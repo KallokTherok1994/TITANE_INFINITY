@@ -1,0 +1,140 @@
+{
+  "version": "v30.1.0",
+  "category": "cerveau_humain_avance",
+  "description": "Cerveau humain avancé — neuroanatomie fonctionnelle (lobes, structures sous-corticales, tronc cérébral), neurotransmission, plasticité cérébrale, axe cerveau-intestin, système glymphatique, latéralisation, cerveau triunique, connectome, neuroinflammation, cerveau et émotions",
+  "cerveau_humain_avance": {
+    "introduction": "Le cerveau humain est l'objet le plus complexe de l'univers connu : 86 milliards de neurones, 100 trillions de connexions synaptiques, consommant 20% de l'énergie corporelle pour 2% de la masse. Comprendre son fonctionnement est la clé pour optimiser la performance cognitive, émotionnelle et physique. TITANE fournit une cartographie avancée du cerveau et de ses mécanismes.",
+    "neuroanatomie_fonctionnelle": {
+      "cortex_cerebral": {
+        "lobe_frontal": {
+          "localisation": "Partie antérieure du cerveau. Le plus grand lobe (40% du cortex).",
+          "fonctions": {
+            "cortex_préfrontal": "Fonctions exécutives : planification, prise de décision, jugement moral, inhibition des impulsions, mémoire de travail, personnalité. Dernière zone à maturer (25 ans). Le 'CEO du cerveau'.",
+            "cortex_préfrontal_dorsolatéral": "Mémoire de travail, planification, flexibilité cognitive. Altéré dans le TDAH et la dépression.",
+            "cortex_préfrontal_ventromédian": "Prise de décision émotionnelle, récompense, régulation des émotions. Cas Phineas Gage (1848) : destruction → changement de personnalité radical.",
+            "cortex_orbitofrontal": "Évaluation de la valeur des récompenses, contrôle social, inhibition des comportements inappropriés. Lésion → désinhibition, sociopathie acquise.",
+            "aire_de_Broca": "Production du langage (hémisphère gauche, gyrus frontal inférieur). Lésion → aphasie de Broca (comprend mais ne peut pas parler).",
+            "cortex_moteur_primaire": "Commande des mouvements volontaires. Homunculus moteur (représentation disproportionnée : main et bouche surdimensionnées)."
+          }
+        },
+        "lobe_pariétal": {
+          "localisation": "Partie supérieure postérieure.",
+          "fonctions": {
+            "cortex_somatosensoriel": "Réception et traitement du toucher, de la température, de la douleur, de la proprioception. Homunculus sensoriel.",
+            "lobe_parietal_supérieur": "Intégration spatiale, conscience corporelle, orientation dans l'espace. Lésion → négligence spatiale (héminégligence — ignore la moitié du monde).",
+            "lobule_pariétal_inférieur": "Calcul mathématique, raisonnement abstrait, langage. Le cerveau d'Einstein avait un lobule pariétal inférieur 15% plus large que la moyenne."
+          }
+        },
+        "lobe_temporal": {
+          "localisation": "Partie latérale inférieure.",
+          "fonctions": {
+            "cortex_auditif": "Traitement des sons et de la musique.",
+            "aire_de_Wernicke": "Compréhension du langage (hémisphère gauche, gyrus temporal supérieur postérieur). Lésion → aphasie de Wernicke (parle fluidement mais incompréhensiblement, ne comprend pas).",
+            "gyrus_fusiforme": "Reconnaissance des visages (prosopagnosie si lésion). Zone N170 activée spécifiquement par les visages.",
+            "cortex_temporal_médian": "Hippocampe et cortex entorhinal — mémoire déclarative et navigation spatiale."
+          }
+        },
+        "lobe_occipital": {
+          "localisation": "Partie postérieure.",
+          "fonctions": "Traitement visuel primaire (V1) et associatif. De V1 à V5 : du traitement basique (lignes, contrastes) au mouvement et à la reconnaissance d'objets complexes. Lésion → cécité corticale (yeux fonctionnels mais cerveau ne traite pas l'image)."
+        },
+        "insula": {
+          "localisation": "Cortex profond entre le lobe temporal et le lobe frontal. Souvent appelé le '5e lobe'.",
+          "fonctions": "Intéroception (conscience des sensations internes), dégoût, empathie, conscience de soi, prise de décision émotionnelle. L'insula traduit les sensations corporelles en émotions conscientes (Damasio — marqueurs somatiques). Centre de l'addiction (Naqvi et al. 2007 : lésion de l'insula → arrêt spontané du tabac)."
+        }
+      },
+      "structures_sous_corticales": {
+        "thalamus": "Le 'standard téléphonique' du cerveau. Relais de TOUTES les informations sensorielles (sauf l'odorat) vers le cortex. Filtre les informations pertinentes.",
+        "hypothalamus": {
+          "taille": "Taille d'un petit pois. 4g. Pourtant contrôle la survie de l'organisme entier.",
+          "fonctions": "Thermorégulation, faim/soif/satiété, rythme circadien (noyau suprachiasmatique), réponse au stress (CRH → axe HPA), comportement sexuel, agressivité, sommeil.",
+          "lien_endocrinien": "Interface cerveau-hormones via l'hypophyse (glande maîtresse). Le cerveau parle au corps via l'hypothalamus."
+        },
+        "hippocampe": {
+          "forme": "En forme d'hippocampe (cheval de mer). Structure bilatérale dans le lobe temporal médian.",
+          "fonctions": "Consolidation de la mémoire à court terme vers la mémoire à long terme. Mémoire spatiale (cellules de lieu — O'Keefe, prix Nobel 2014). Navigation.",
+          "neurogenèse": "Une des rares zones de neurogenèse adulte (nouvelles cellules nerveuses toute la vie). Stimulée par : exercice cardio, apprentissage, sommeil. Atrophiée par : cortisol chronique (stress), dépression, Alzheimer.",
+          "London_taxi_drivers": "Maguire et al. (2000) : les chauffeurs de taxi londoniens ont un hippocampe postérieur plus volumineux — la navigation spatiale intensive le fait croître."
+        },
+        "amygdale": {
+          "forme": "En forme d'amande. Structure bilatérale dans le lobe temporal médian, antérieure à l'hippocampe.",
+          "fonctions": {
+            "peur": "Centre de la peur et de la détection du danger. Réponse en 12 ms (avant la conscience — 'route basse' de LeDoux). Conditionnement de la peur.",
+            "émotions": "Attribution de la valence émotionnelle aux stimuli. Mémoire émotionnelle. Les souvenirs avec une forte charge émotionnelle sont mieux mémorisés (hippocampe + amygdale).",
+            "reconnaissance_sociale": "Évaluation de la fiabilité des visages. Détection des micro-expressions de menace."
+          },
+          "pathologie": "Hyperactivité → troubles anxieux, TSPT. Hypoactivité → psychopathie (absence de peur et d'empathie). Lésion bilatérale (syndrome de Klüver-Bucy) → absence totale de peur."
+        },
+        "ganglions_de_la_base": {
+          "structures": "Noyau caudé, putamen, globus pallidus, noyau sous-thalamique, substance noire.",
+          "fonctions": "Habitudes automatiques, apprentissage procédural (faire du vélo), sélection des actions, motivation. Le siège neuronal des habitudes.",
+          "pathologie": "Parkinson (substance noire), Huntington (noyau caudé), TOC (boucle cortico-striato-thalamique dysfonctionnelle)."
+        },
+        "cervelet": {
+          "neurones": "Contient 50% de tous les neurones du cerveau (69 milliards sur les 86) mais ne représente que 10% du volume.",
+          "fonctions": "Coordination motrice fine, équilibre, apprentissage moteur, timing. Découvertes récentes : rôle dans la cognition, le langage et les émotions (syndrome cérébelleux cognitif-affectif)."
+        }
+      },
+      "tronc_cérébral": {
+        "fonctions_vitales": "Respiration, rythme cardiaque, pression artérielle, déglutition, vomissement. Fonctions autonomes non conscientes.",
+        "formation_réticulaire": "Réseau diffus contrôlant l'éveil et la conscience. ARAS (Ascending Reticular Activating System) — maintient l'état d'éveil. Lésion → coma.",
+        "noyaux_du_raphé": "Production de sérotonine. Projections vers l'ensemble du cerveau. Base de la régulation de l'humeur.",
+        "locus_coeruleus": "Production de noradrénaline. Centre de l'éveil, de l'attention et de la réponse au stress."
+      }
+    },
+    "cerveau_triunique": {
+      "auteur": "Paul MacLean (1960s). Modèle simplifié mais pédagogique de l'évolution du cerveau.",
+      "reptilien": "Tronc cérébral + ganglions de la base. Survie, réflexes, territorialité, habitudes, réactions automatiques. Le plus ancien (500 millions d'années).",
+      "limbique": "Hippocampe + amygdale + hypothalamus + cortex cingulaire. Émotions, mémoire émotionnelle, attachement, motivation. Mammifères (200 millions d'années).",
+      "néocortex": "Cortex cérébral (6 couches). Raisonnement, langage, planification, créativité, conscience de soi. Primates et humains (2-3 millions d'années pour la taille humaine).",
+      "implication": "Nos réactions se déclenchent du bas vers le haut : reptilien (réflexe) → limbique (émotion) → néocortex (raisonnement). En stress intense, les couches supérieures se désactivent (amygdale hijack — Goleman)."
+    },
+    "neurotransmission": {
+      "synapse": "Jonction entre deux neurones. Le signal électrique (potentiel d'action) arrive au bouton synaptique → libère des neurotransmetteurs dans la fente synaptique → se fixent sur les récepteurs du neurone post-synaptique.",
+      "principaux_NT": {
+        "glutamate": "Neurotransmetteur excitateur principal (75% des synapses excitatrices). Apprentissage, mémoire (LTP — potentialisation à long terme). Excès → excitotoxicité (mort neuronale — AVC, épilepsie).",
+        "GABA": "Neurotransmetteur inhibiteur principal. Frein du cerveau. Cible des benzodiazépines (Valium, Xanax), de l'alcool, des barbituriques. Déficit → anxiété, épilepsie, insomnie.",
+        "acétylcholine": "Mémoire, attention, contraction musculaire. Déficit → Alzheimer. Nicotine est un agoniste cholinergique (améliore l'attention à court terme mais crée la dépendance).",
+        "noradrénaline": "Éveil, attention, vigilance, réponse au stress. Produite par le locus coeruleus. Excès → anxiété, hypervigilance. Déficit → inattention, fatigue."
+      },
+      "neuroplasticité": {
+        "Hebb": "Donald Hebb (1949) : 'Neurons that fire together, wire together.' La base de tout apprentissage. Les connexions utilisées se renforcent, celles non utilisées s'affaiblissent (élagage).",
+        "LTP": "Long-Term Potentiation. Renforcement durable de la connexion synaptique après une stimulation répétée. Mécanisme moléculaire de la mémoire (récepteurs NMDA, AMPA).",
+        "LTD": "Long-Term Depression. Affaiblissement de la connexion synaptique. Permet l'oubli sélectif et la flexibilité cognitive.",
+        "fenêtres_critiques": "Périodes de plasticité maximale pendant le développement (langage : 0-7 ans, vision : 0-2 ans). Après la fenêtre critique, la plasticité diminue mais ne disparaît JAMAIS."
+      }
+    },
+    "axe_cerveau_intestin": {
+      "deuxième_cerveau": "Le système nerveux entérique (SNE) contient 200-600 millions de neurones. Peut fonctionner indépendamment du cerveau central. Produit 30+ neurotransmetteurs identiques à ceux du cerveau.",
+      "nerf_vague": "10e nerf crânien. 80% des fibres sont afférentes (intestin → cerveau). L'intestin informe le cerveau de son état chimique, mécanique et microbien en permanence.",
+      "microbiote": {
+        "composition": "39 trillions de bactéries (légèrement plus que les cellules humaines). 1000+ espèces. 3-5 millions de gènes (150× le génome humain).",
+        "production_NT": "Les bactéries intestinales produisent : 95% de la sérotonine corporelle, GABA (Lactobacillus), dopamine (Bacillus), acétylcholine (Lactobacillus). Le microbiote influence directement l'humeur.",
+        "dysbiose": "Déséquilibre du microbiote. Corrélé avec : dépression, anxiété, autisme, TDAH, Alzheimer, Parkinson, obésité, maladies auto-immunes.",
+        "psychobiotiques": "Probiotiques qui ont un effet sur la santé mentale. Lactobacillus helveticus R0052 + Bifidobacterium longum R0175 → réduction de l'anxiété et du cortisol chez des adultes sains (Messaoudi et al. 2011)."
+      },
+      "implications_pratiques": "L'alimentation influence directement le cerveau via le microbiote et la production de neurotransmetteurs. Régime méditerranéen → 30% de réduction du risque de dépression (Lassale et al. 2019)."
+    },
+    "système_glymphatique": {
+      "découverte": "Maiken Nedergaard (2012, University of Rochester). Le cerveau a son propre système de nettoyage — analogue du système lymphatique pour le cerveau.",
+      "fonctionnement": "Pendant le sommeil profond (ondes delta), les cellules gliales se contractent de 60%, ouvrant des canaux interstitiels. Le liquide céphalo-rachidien (LCR) 'lave' le cerveau, éliminant les déchets métaboliques (dont la protéine bêta-amyloïde — responsable de l'Alzheimer).",
+      "sommeil": "Le nettoyage glymphatique se fait PRINCIPALEMENT pendant le sommeil profond. Une seule nuit de privation de sommeil → augmentation de 5% de la bêta-amyloïde cérébrale (Shokri-Kojori et al. 2018).",
+      "posture": "La position latérale (sur le côté) optimise le drainage glymphatique par rapport à la position dorsale ou ventrale (Lee et al. 2015).",
+      "implications": "Le sommeil n'est pas un luxe — c'est un système de maintenance cérébrale essentiel. Privation chronique de sommeil → accumulation de déchets → neuroinflammation → neurodégénérescence."
+    },
+    "latéralisation_cérébrale": {
+      "hémisphère_gauche": "Langage, logique séquentielle, analyse, calcul, raisonnement, détail. Contrôle le côté droit du corps.",
+      "hémisphère_droit": "Perception spatiale, reconnaissance des visages, émotions, musique, créativité, vision globale, intuition. Contrôle le côté gauche du corps.",
+      "corps_calleux": "200 millions de fibres nerveuses connectant les deux hémisphères. Communication inter-hémisphérique constante. Split-brain (Sperry, prix Nobel 1981) : couper le corps calleux → deux consciences dans un seul crâne.",
+      "mythe_90%": "Le mythe que nous n'utilisons que 10% de notre cerveau est FAUX. L'IRM fonctionnelle montre que 100% du cerveau est actif (pas tout en même temps, mais chaque zone a un rôle)."
+    },
+    "optimisation_cérébrale": {
+      "exercice": "L'exercice cardio est le facteur #1 de protection cérébrale. Augmente le BDNF, le volume hippocampique, la neurogenèse, la perfusion cérébrale. 150 min/semaine d'exercice modéré.",
+      "sommeil": "7-9h pour un adulte. Le sommeil consolide la mémoire (stade N2 : fuseaux de sommeil), nettoie le cerveau (stade N3 : glymphatique), traite les émotions (REM).",
+      "alimentation": "Oméga-3 (DHA — 60% des lipides membranaires neuronaux), antioxydants (baies, curcuma), magnésium, zinc, vitamines B. Régime méditerranéen ou MIND (Mediterranean-DASH Intervention for Neurodegenerative Delay).",
+      "apprentissage": "Apprendre une compétence nouvelle (instrument, langue, danse) → myélinisation + synaptogenèse. 'Use it or lose it' — le cerveau se restructure en fonction de ce à quoi on l'expose.",
+      "méditation": "8 semaines de méditation (MBSR) → augmentation de la matière grise dans l'hippocampe et diminution dans l'amygdale (Hölzel et al. 2011). Épaississement du cortex préfrontal.",
+      "socialisation": "L'isolement social est un facteur de risque de déclin cognitif comparable au tabagisme (Holt-Lunstad et al. 2015). La conversation est un 'workout' cérébral."
+    }
+  }
+}

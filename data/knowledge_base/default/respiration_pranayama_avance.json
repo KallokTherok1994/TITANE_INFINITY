@@ -1,0 +1,101 @@
+{
+  "version": "v30.1.0",
+  "category": "respiration_pranayama_avance",
+  "description": "Techniques respiratoires avancées — Pranayama (Ujjayi, Kapalabhati, Nadi Shodhana, Bhastrika, Kumbhaka), méthode Wim Hof, cohérence cardiaque, respiration holotropique, Buteyko, breathwork, bienfaits scientifiques, VFC, nerf vague, CO2 tolerance",
+  "respiration_pranayama_avance": {
+    "introduction": "La respiration est le seul système physiologique à la fois autonome et volontaire. En la contrôlant consciemment, on influence directement le système nerveux autonome, l'axe HPA (stress), le rythme cardiaque, le pH sanguin, l'inflammation et les états de conscience. Le pranayama (contrôle du prana/souffle) est au cœur des traditions yogiques, tandis que des méthodes modernes (Wim Hof, Buteyko, cohérence cardiaque) apportent des validations scientifiques rigoureuses.",
+    "pranayama_yogique": {
+      "definition": "Prana=énergie vitale, Ayama=extension/contrôle. Le pranayama régule le Prana dans les Nadis (72 000 canaux énergétiques) et éveille la Kundalini.",
+      "techniques": {
+        "ujjayi": {
+          "nom": "Respiration victorieuse / Souffle océanique",
+          "methode": "Inspir et expir par le nez, gorge légèrement contractée (glotte), produisant un son doux d'océan.",
+          "effets": "Calme le système nerveux, chauffe le corps intérieurement, améliore la concentration, ralentit la respiration. Utilisé tout au long de la pratique d'Ashtanga.",
+          "duree": "5-20 minutes"
+        },
+        "nadi_shodhana": {
+          "nom": "Respiration alternée / Purification des Nadis",
+          "methode": "Inspir narines gauche, rétention, expir narine droite, inspir narine droite, rétention, expir narine gauche. Ratio classique: 1:4:2.",
+          "effets": "Équilibre les hémisphères cérébraux, calme Vata, purifie Ida et Pingala Nadi, prépare à la méditation.",
+          "duree": "10-30 minutes"
+        },
+        "kapalabhati": {
+          "nom": "Crâne brillant / Souffle de feu",
+          "methode": "Expirations rapides et puissantes par le nez (abdomen contracté), inspirations passives. 30-120 cycles par série.",
+          "effets": "Nettoie les poumons et les sinus, stimule Agni (feu digestif), oxygène le cerveau, énergise, détoxifie.",
+          "precautions": "Contre-indiqué: grossesse, hypertension, épilepsie, hernie, menstruations."
+        },
+        "bhastrika": {
+          "nom": "Soufflet de forge",
+          "methode": "Inspir ET expir rapides et forcés, égale intensité. Plus puissant que Kapalabhati.",
+          "effets": "Éveille la Kundalini, augmente l'énergie vitale massivement, purifie les Nadis, stimule le système nerveux sympathique puis parasympathique.",
+          "precautions": "Supervision requise pour les débutants. Même contre-indications que Kapalabhati."
+        },
+        "kumbhaka": {
+          "nom": "Rétention du souffle",
+          "types": {
+            "antara": "Rétention après inspiration (poumons pleins). Augmente l'absorption d'oxygène, stimule le système sympathique.",
+            "bahya": "Rétention après expiration (poumons vides). Stimule le système parasympathique, augmente la tolérance au CO2."
+          },
+          "progression": "Commencer par des rétentions courtes (4-8s), augmenter progressivement. Les yogis avancés maintiennent 1-4 minutes.",
+          "effets": "Augmente la tolérance au CO2, calme le mental, prépare aux états méditatifs profonds (dharana/dhyana)."
+        },
+        "sitali_sitkari": {
+          "nom": "Respirations rafraîchissantes",
+          "methode": "Sitali: inspir par la langue enroulée en tube. Sitkari: inspir entre les dents serrées. Expir par le nez.",
+          "effets": "Rafraîchit le corps (réduit Pitta), calme la soif, apaise les bouffées de chaleur, réduit la tension artérielle."
+        }
+      }
+    },
+    "coherence_cardiaque": {
+      "principe": "Respiration lente et régulière à 6 cycles/minute (inspir 5s, expir 5s) pour synchroniser le rythme cardiaque et respiratoire.",
+      "protocole_365": "3 fois par jour, 6 respirations par minute, pendant 5 minutes.",
+      "mecanisme": "Stimule le baroréflexe, augmente la variabilité de la fréquence cardiaque (VFC), active le système parasympathique via le nerf vague.",
+      "benefices_prouves": ["Réduction du cortisol de 20-30%", "Augmentation du DHEA (anti-vieillissement)", "Amélioration de la VFC (marqueur de santé cardiovasculaire et de résilience)", "Réduction de l'anxiété et de la dépression", "Amélioration de la concentration et de la prise de décision", "Renforcement du système immunitaire (augmentation IgA salivaires)"],
+      "applications": "Gestion du stress, préparation performance (sport, examen, prise de parole), troubles du sommeil, hypertension, douleur chronique."
+    },
+    "methode_wim_hof": {
+      "composantes": ["Respiration (hyperventilation contrôlée)", "Exposition au froid", "Méditation/Engagement mental"],
+      "protocole_respiratoire": {
+        "phase_1": "30-40 respirations profondes rapides (inspir max par le nez, expir relâché par la bouche). Hyperventilation.",
+        "phase_2": "Après la dernière expir, rétention poumons vides aussi longtemps que confortable (1-3 minutes).",
+        "phase_3": "Inspir profonde, rétention poumons pleins 15 secondes, puis expir lente.",
+        "cycles": "3-4 cycles complets."
+      },
+      "mecanisme": "L'hyperventilation abaisse le CO2 sanguin, alcalinise le pH. La rétention augmente l'adrénaline, module l'inflammation, stimule l'immunité innée.",
+      "benefices_scientifiques": ["Modulation de la réponse inflammatoire (étude Kox et al., PNAS 2014)", "Réduction des cytokines pro-inflammatoires", "Augmentation de l'adrénaline (200-300% pendant la pratique)", "Amélioration de la tolérance au froid", "Résilience psychologique accrue"],
+      "precautions": "Ne jamais pratiquer dans l'eau, en conduisant, ou debout. Contre-indiqué: épilepsie, cardiopathie non contrôlée, grossesse. Supervision recommandée pour les débutants."
+    },
+    "methode_buteyko": {
+      "principe": "Réduire le volume respiratoire pour normaliser le CO2 sanguin. La plupart des gens hyperventilent chroniquement sans le savoir.",
+      "concept_cle": "La tolérance au CO2 (Control Pause / BOLT score) est un indicateur de santé respiratoire. Un BOLT score >40s indique une excellente santé respiratoire.",
+      "technique": {
+        "respiration_nasale": "Respirer exclusivement par le nez (jour ET nuit). Le nez filtre, humidifie, réchauffe l'air et produit de l'oxyde nitrique.",
+        "reduction_volume": "Respirer moins: inspirs plus légers, expirs détendues, pauses naturelles allongées.",
+        "exercices_bolt": "Expir normale, pincer le nez, mesurer le temps avant la 1ère envie de respirer. Objectif: >40 secondes."
+      },
+      "benefices_prouves": ["Réduction des crises d'asthme (méta-analyses Cochrane)", "Amélioration de la rhinite et sinusite", "Réduction de l'apnée du sommeil", "Amélioration de la performance sportive (économie d'oxygène)", "Réduction de l'anxiété et des attaques de panique"],
+      "taping_buccal_nocturne": "Technique de scellement buccal léger la nuit pour forcer la respiration nasale et améliorer le sommeil."
+    },
+    "respiration_holotropique": {
+      "createur": "Stanislav Grof (psychiatre, pionnier de la psychologie transpersonnelle)",
+      "methode": "Hyperventilation consciente prolongée (1-3h) avec musique évocatrice et travail corporel.",
+      "etats_induits": "États modifiés de conscience similaires aux expériences psychédéliques. Libération émotionnelle profonde, revécu de traumatismes, expériences périnatales et transpersonnelles.",
+      "cadre": "Toujours en groupe, avec un facilitateur formé et un accompagnant (sitter). Jamais seul.",
+      "benefices": "Libération de traumatismes, résolution de deuils bloqués, insight profond, transformation psychique.",
+      "precautions": "Contre-indiqué: troubles cardiaques, psychose active, grossesse, épilepsie, glaucome."
+    },
+    "variabilite_frequence_cardiaque_vfc": {
+      "definition": "La VFC mesure les variations entre chaque battement cardiaque. Une VFC élevée = système nerveux autonome flexible et résilient.",
+      "optimisation": ["Cohérence cardiaque quotidienne", "Exercice aérobie régulier", "Sommeil de qualité", "Réduction du stress chronique", "Respiration lente et profonde", "Douche froide/exposition au froid"],
+      "mesure": "Moniteurs de fréquence cardiaque, applications (HRV4Training, EliteHRV), capteurs optiques."
+    },
+    "science_respiration": {
+      "oxyde_nitrique_nasal": "La respiration nasale produit de l'oxyde nitrique (NO), un vasodilatateur puissant qui améliore l'oxygénation tissulaire de 10-15%.",
+      "effet_bohr": "Le CO2 facilite la libération de l'oxygène par l'hémoglobine vers les tissus. Paradoxalement, hyperventiler RÉDUIT l'oxygénation tissulaire.",
+      "nerf_vague_stimulation": "L'expiration longue (ratio inspir:expir = 1:2) stimule le nerf vague et active le parasympathique (calme, digestion, récupération).",
+      "diaphragme": "Le diaphragme est le muscle respiratoire principal. La respiration diaphragmatique (abdominale) est plus efficace que la thoracique, et stimule le nerf vague."
+    },
+    "avertissement_sante": "Les techniques respiratoires intenses (Wim Hof, holotropique, Bhastrika) nécessitent une progression graduelle et une supervision. Consultez un professionnel en cas de pathologie cardiaque, respiratoire ou neurologique."
+  }
+}

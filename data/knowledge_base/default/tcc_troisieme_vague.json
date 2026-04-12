@@ -1,0 +1,187 @@
+{
+  "version": "v30.1.0",
+  "category": "tcc_troisieme_vague",
+  "description": "TCC de troisième vague — thérapie des schémas (Young), thérapie dialectique-comportementale DBT (Linehan), thérapie métacognitive (Wells), défusion cognitive, pleine conscience clinique MBCT, thérapie centrée sur la compassion CFT (Gilbert)",
+  "tcc_troisieme_vague": {
+    "introduction": "Les thérapies cognitivo-comportementales (TCC) de troisième vague représentent une évolution majeure de la psychothérapie cognitivo-comportementale. Plutôt que de chercher à modifier directement les pensées dysfonctionnelles (2e vague), elles privilégient l'acceptation, la pleine conscience, la flexibilité psychologique et la relation à ses propres pensées et émotions.",
+    "evolution_trois_vagues": {
+      "premiere_vague": {
+        "periode": "Années 1950-1960",
+        "focus": "Comportement observable — conditionnement opérant et classique",
+        "representants": "Skinner, Watson, Pavlov, Wolpe"
+      },
+      "deuxieme_vague": {
+        "periode": "Années 1960-1990",
+        "focus": "Pensées dysfonctionnelles — restructuration cognitive",
+        "representants": "Aaron Beck (dépression), Albert Ellis (REBT)"
+      },
+      "troisieme_vague": {
+        "periode": "Années 1990-aujourd'hui",
+        "focus": "Relation aux pensées et émotions — acceptation, pleine conscience, valeurs, compassion",
+        "representants": "Steven Hayes (ACT), Marsha Linehan (DBT), Jeffrey Young (schémas), Paul Gilbert (CFT), Adrian Wells (MCT), Zindel Segal (MBCT)"
+      }
+    },
+    "therapie_schemas_young": {
+      "fondateur": "Jeffrey E. Young",
+      "definition": "Approche intégrative ciblant les schémas précoces inadaptés (SPI) — patterns émotionnels et cognitifs développés dans l'enfance sous l'effet de besoins affectifs non comblés",
+      "dix_huit_schemas": {
+        "domaine_separation_rejet": [
+          "Abandon/Instabilité",
+          "Méfiance/Abus",
+          "Carence affective",
+          "Imperfection/Honte",
+          "Isolement social/Aliénation"
+        ],
+        "domaine_autonomie_altere": [
+          "Dépendance/Incompétence",
+          "Vulnérabilité au danger",
+          "Fusionnement/Soi non développé",
+          "Échec"
+        ],
+        "domaine_limites_deficientes": [
+          "Droits personnels exagérés/Grandiosité",
+          "Contrôle de soi insuffisant"
+        ],
+        "domaine_orientation_vers_autres": [
+          "Assujettissement",
+          "Abnégation/Sacrifice de soi",
+          "Recherche d'approbation"
+        ],
+        "domaine_survigilance_inhibition": [
+          "Négativité/Pessimisme",
+          "Inhibition émotionnelle",
+          "Idéaux exigeants/Critique excessive",
+          "Punition"
+        ]
+      },
+      "modes_schemas": {
+        "enfant_vulnerable": "Le ressenti de l'enfant blessé (peur, tristesse, solitude)",
+        "enfant_en_colere": "La rage face aux besoins non comblés",
+        "parent_punitif": "La voix critique internalisée qui punit",
+        "parent_exigeant": "La voix qui exige la perfection",
+        "protecteur_detache": "Le mode de coping qui évite les émotions (dissociation, intellectualisation)",
+        "capitulateur_docile": "Le mode soumis qui cède pour éviter le conflit",
+        "sur_compensateur": "Le mode qui compense excessivement (contrôle, agressivité)",
+        "adulte_sain": "Le mode thérapeutique cible — capable de gérer émotions et besoins sainement"
+      },
+      "techniques": ["Reparentage limité", "Imagerie de restructuration", "Dialogue sur chaise (travail des modes)", "Journal de schémas", "Lettres au parent interne", "Exercices comportementaux"]
+    },
+    "dbt_linehan": {
+      "fondatrice": "Marsha M. Linehan",
+      "definition": "Thérapie combinant l'acceptation radicale et le changement, développée initialement pour le trouble de personnalité borderline (TPB)",
+      "dialectique_fondamentale": "Équilibre entre acceptation (je suis OK comme je suis maintenant) et changement (et je veux évoluer)",
+      "quatre_modules": {
+        "pleine_conscience": {
+          "objectif": "Observer ses expériences internes sans jugement",
+          "competences": ["Observer", "Décrire", "Participer", "Non-jugement", "Attention une chose à la fois", "Efficacité"]
+        },
+        "tolerance_detresse": {
+          "objectif": "Survivre aux crises sans aggraver la situation",
+          "competences": ["TIPP (Température, Intensité exercice, Respiration rythmée, Relaxation musculaire)", "Distraction (ACCEPTS)", "Auto-apaisement par les 5 sens", "IMPROVE le moment", "Acceptation radicale"]
+        },
+        "regulation_emotionnelle": {
+          "objectif": "Comprendre et moduler ses émotions",
+          "competences": ["Identifier et nommer les émotions", "Réduire la vulnérabilité émotionnelle (PLEASE)", "Accumulation d'expériences positives", "Action opposée", "Vérification des faits"]
+        },
+        "efficacite_interpersonnelle": {
+          "objectif": "Communiquer efficacement tout en préservant la relation et l'estime de soi",
+          "competences": ["DEAR MAN (Describe, Express, Assert, Reinforce, Mindful, Appear, Negotiate)", "GIVE (Gentle, Interested, Validate, Easy manner)", "FAST (Fair, no Apologies, Stick to values, Truthful)"]
+        }
+      },
+      "structure_traitement": ["Thérapie individuelle hebdomadaire", "Groupe d'entraînement aux compétences", "Coaching téléphonique entre les séances", "Équipe de consultation du thérapeute"],
+      "applications_etendues": ["Troubles alimentaires", "Addictions", "PTSD", "Dépression chronique", "Adolescents à risque suicidaire"]
+    },
+    "therapie_metacognitive_wells": {
+      "fondateur": "Adrian Wells",
+      "definition": "Approche ciblant la métacognition — la manière dont on pense à ses pensées — pour sortir des cycles de rumination et d'inquiétude",
+      "concepts_cles": {
+        "syndrome_attentionnel_cognitif_CAS": {
+          "definition": "Pattern persistant de rumination, inquiétude et monitoring des menaces qui maintient la souffrance psychologique",
+          "composantes": ["Inquiétude/Rumination", "Monitoring de la menace (attention biaisée)", "Comportements de coping contre-productifs"]
+        },
+        "croyances_metacognitives": {
+          "positives": "L'inquiétude m'aide à me préparer, ruminer me permet de comprendre",
+          "negatives": "Mes pensées sont incontrôlables, je vais devenir fou si je continue à penser ainsi"
+        },
+        "attention_detachee": {
+          "definition": "Capacité d'observer ses pensées sans s'y engager — comme regarder des voitures passer sans monter dedans",
+          "exercice_cle": "Attention Training Technique (ATT) — entraînement attentionnel systématique"
+        }
+      },
+      "objectif": "Modifier les croyances métacognitives et réduire le CAS pour permettre un traitement naturel des émotions",
+      "indications": ["Trouble anxieux généralisé", "Dépression", "TOC", "PTSD", "Phobies"]
+    },
+    "act_defusion_cognitive": {
+      "fondateur": "Steven C. Hayes",
+      "definition": "Acceptance and Commitment Therapy — thérapie centrée sur l'acceptation des expériences internes et l'engagement dans des actions guidées par les valeurs",
+      "six_processus_hexaflex": {
+        "acceptation": "Accueillir ses émotions et sensations sans chercher à les modifier",
+        "defusion_cognitive": {
+          "definition": "Observer ses pensées comme des événements mentaux transitoires plutôt que comme des vérités",
+          "techniques": ["Répéter la pensée jusqu'à ce qu'elle perde son sens", "Précéder la pensée de 'J'ai la pensée que...'", "Chanter la pensée sur un air comique", "Remercier son esprit", "Observer les pensées sur un écran mental"]
+        },
+        "contact_moment_present": "Pleine conscience — être pleinement ici et maintenant",
+        "soi_comme_contexte": "Se voir comme le ciel (constant) plutôt que comme les nuages (pensées/émotions changeantes)",
+        "valeurs": "Identifier ce qui compte vraiment — directions de vie choisies (vs objectifs)",
+        "action_engagee": "Agir en cohérence avec ses valeurs malgré l'inconfort émotionnel"
+      },
+      "matrice_act": "Outil simple en 4 quadrants : mouvements vers/loin des valeurs × expériences intérieures/actions extérieures",
+      "flexibilite_psychologique": "Capacité d'être pleinement présent, ouvert à l'expérience et d'agir selon ses valeurs — objectif central de l'ACT"
+    },
+    "mbct_pleine_conscience_clinique": {
+      "fondateurs": "Zindel Segal, Mark Williams, John Teasdale (basé sur MBSR de Jon Kabat-Zinn)",
+      "definition": "Mindfulness-Based Cognitive Therapy — programme de 8 semaines combinant méditation de pleine conscience et thérapie cognitive pour prévenir la rechute dépressive",
+      "programme_8_semaines": [
+        "Semaine 1 : Le pilote automatique — prise de conscience",
+        "Semaine 2 : Vivre dans sa tête — distinction pensées vs réalité",
+        "Semaine 3 : Rassembler l'esprit dispersé — attention focalisée",
+        "Semaine 4 : Reconnaître l'aversion — observer sans réagir",
+        "Semaine 5 : Permettre/Laisser être — acceptation",
+        "Semaine 6 : Les pensées ne sont pas des faits — défusion",
+        "Semaine 7 : Comment prendre soin de moi au mieux — auto-compassion",
+        "Semaine 8 : Utiliser ce qui a été appris — intégration dans la vie"
+      ],
+      "pratiques_cles": ["Body scan", "Méditation assise", "Marche en pleine conscience", "Espace de respiration de 3 minutes", "Mouvements conscients (yoga)", "Pratique informelle au quotidien"],
+      "evidence_scientifique": "Forte évidence pour la prévention des rechutes dépressives (réduction de 40-50% chez les patients ayant eu 3+ épisodes). Recommandée par NICE et APA."
+    },
+    "cft_gilbert": {
+      "fondateur": "Paul Gilbert",
+      "definition": "Compassion Focused Therapy — approche visant à cultiver la compassion envers soi-même, particulièrement chez les personnes dominées par la honte et l'autocritique",
+      "trois_systemes_regulation_emotionnelle": {
+        "systeme_menace": {
+          "fonction": "Protection et survie — détection du danger",
+          "emotions": "Peur, colère, dégoût, anxiété",
+          "neurotransmetteurs": "Cortisol, adrénaline",
+          "suractive_chez": "Personnes traumatisées, anxieuses, critiques envers elles-mêmes"
+        },
+        "systeme_drive": {
+          "fonction": "Motivation, récompense, réalisation d'objectifs",
+          "emotions": "Excitation, motivation, fierté",
+          "neurotransmetteurs": "Dopamine",
+          "suractive_chez": "Perfectionnistes, workaholics"
+        },
+        "systeme_apaisement_affiliation": {
+          "fonction": "Sécurité, connexion, calme, bienveillance",
+          "emotions": "Contentement, chaleur, sérénité",
+          "neurotransmetteurs": "Ocytocine, endorphines",
+          "sous_active_chez": "La majorité des patients — cible principale de la CFT"
+        }
+      },
+      "pratiques_compassion": {
+        "imagerie_compassionnelle": "Visualisation d'un être compatissant idéal ou d'un lieu sûr",
+        "lettre_compassionnelle": "Écrire à soi-même avec la sagesse et la bienveillance d'un ami compatissant",
+        "respiration_apaisante": "Respiration lente (5-6 cycles/min) pour activer le système parasympathique",
+        "mindfulness_compatissant": "Observation bienveillante de ses expériences internes",
+        "auto_compassion_kristin_neff": {
+          "trois_composantes": [
+            "Bienveillance envers soi (vs autocritique)",
+            "Humanité partagée (vs isolation — nous souffrons tous)",
+            "Pleine conscience (vs sur-identification aux émotions)"
+          ]
+        }
+      },
+      "indications": ["Honte chronique", "Autocritique sévère", "Trauma et abus", "Troubles alimentaires", "Dépression chronique", "Anxiété sociale"]
+    },
+    "avertissement_sante": "Les TCC de troisième vague sont des approches psychothérapeutiques validées scientifiquement. Elles doivent être pratiquées par des professionnels formés (psychologues, psychiatres, psychothérapeutes). Ces informations sont éducatives et ne remplacent pas une consultation professionnelle pour le diagnostic et le traitement de troubles psychologiques."
+  }
+}

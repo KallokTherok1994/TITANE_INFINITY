@@ -359,6 +359,79 @@ const PSYCHOLOGIE_RELATIONS: &str =
     include_str!("../../data/knowledge_base/default/psychologie_relations.json");
 const PSYCHOLOGIE_PERFORMANCE: &str =
     include_str!("../../data/knowledge_base/default/psychologie_performance.json");
+// ── v30.1.0 expansion — connaissances avancées bien-être, neurosciences, thérapies ──
+const NEUROCHIMIE_BONHEUR: &str =
+    include_str!("../../data/knowledge_base/default/neurochimie_bonheur.json");
+const LANGAGE_CORPOREL_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/langage_corporel_avance.json");
+const COMMUNICATION_PROFESSIONNELLE_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/communication_professionnelle_avancee.json");
+const CHIROPRATIQUE_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/chiropratique_avancee.json");
+const ACUPUNCTURE_ACUPRESSION_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/acupuncture_acupression_avancee.json");
+const PHYSIOTHERAPIE_OSTEOPATHIE_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/physiotherapie_osteopathie_avancee.json");
+const MASSAGE_THERAPEUTIQUE_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/massage_therapeutique_avance.json");
+const YOGA_KUNDALINI_MAITRE: &str =
+    include_str!("../../data/knowledge_base/default/yoga_kundalini_maitre.json");
+const THERAPIES_ALTERNATIVES_CREATIVES: &str =
+    include_str!("../../data/knowledge_base/default/therapies_alternatives_creatives.json");
+const PHYTOTHERAPIE_REMEDES_ELIXIRS: &str =
+    include_str!("../../data/knowledge_base/default/phytotherapie_remedes_elixirs.json");
+const CERVEAU_HUMAIN_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/cerveau_humain_avance.json");
+const DEPRESSION_BURNOUT_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/depression_burnout_avance.json");
+const GESTION_ENERGIE_VITALITE: &str =
+    include_str!("../../data/knowledge_base/default/gestion_energie_vitalite.json");
+const CULTURE_JAPONAISE_SAGESSE: &str =
+    include_str!("../../data/knowledge_base/default/culture_japonaise_sagesse.json");
+// v30.1.0 expansion — phase 19 (MTC avancée, Ayurveda, microbiome, hormones, respiration, Qi Gong, hypnose/PNL, trauma/résilience, détox/jeûne, réflexologie, sophrologie, santé masculine, médecine fonctionnelle, aromathérapie, psychologie positive)
+const MEDECINE_TRADITIONNELLE_CHINOISE_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/medecine_traditionnelle_chinoise_avancee.json");
+const AYURVEDA_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/ayurveda_avance.json");
+const MICROBIOME_AXE_INTESTIN_CERVEAU: &str =
+    include_str!("../../data/knowledge_base/default/microbiome_axe_intestin_cerveau.json");
+const SYSTEME_HORMONAL_ENDOCRINIEN: &str =
+    include_str!("../../data/knowledge_base/default/systeme_hormonal_endocrinien.json");
+const RESPIRATION_PRANAYAMA_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/respiration_pranayama_avance.json");
+const QI_GONG_TAI_CHI_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/qi_gong_tai_chi_avance.json");
+const HYPNOTHERAPIE_PNL_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/hypnotherapie_pnl_avancee.json");
+const TRAUMATISME_RESILIENCE_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/traumatisme_resilience_avance.json");
+const DETOX_JEUNE_PURIFICATION: &str =
+    include_str!("../../data/knowledge_base/default/detox_jeune_purification.json");
+const REFLEXOLOGIE_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/reflexologie_avancee.json");
+const SOPHROLOGIE_RELAXATION_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/sophrologie_relaxation_avancee.json");
+const SANTE_MASCULINE_NATURELLE: &str =
+    include_str!("../../data/knowledge_base/default/sante_masculine_naturelle.json");
+const MEDECINE_FONCTIONNELLE_INTEGRATIVE: &str =
+    include_str!("../../data/knowledge_base/default/medecine_fonctionnelle_integrative.json");
+const AROMATHERAPIE_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/aromatherapie_avancee.json");
+const PSYCHOLOGIE_POSITIVE_SCIENCE_BONHEUR: &str =
+    include_str!("../../data/knowledge_base/default/psychologie_positive_science_bonheur.json");
+// v30.1.0 expansion — phase 20 (PNL maître, hypnose maître, thérapie systémique, coaching génératif, TCC 3e vague, AT/psychogénéalogie)
+const PNL_MAITRE_PRATICIEN: &str =
+    include_str!("../../data/knowledge_base/default/pnl_maitre_praticien.json");
+const HYPNOSE_MAITRE_PRATICIEN: &str =
+    include_str!("../../data/knowledge_base/default/hypnose_maitre_praticien.json");
+const THERAPIE_SYSTEMIQUE_FAMILIALE: &str =
+    include_str!("../../data/knowledge_base/default/therapie_systemique_familiale.json");
+const COACHING_GENERATIF_DILTS_GILLIGAN: &str =
+    include_str!("../../data/knowledge_base/default/coaching_generatif_dilts_gilligan.json");
+const TCC_TROISIEME_VAGUE: &str =
+    include_str!("../../data/knowledge_base/default/tcc_troisieme_vague.json");
+const ANALYSE_TRANSACTIONNELLE_PSYCHOGENEALOGIE: &str =
+    include_str!("../../data/knowledge_base/default/analyse_transactionnelle_psychogenealogie.json");
 
 // ─────────────────────────────────────────────────────────────────
 // LAZY STATIC CACHE — parsed once, reused on every call
@@ -579,6 +652,44 @@ impl DefaultKnowledgeBase {
         ("jeux_video_culture", JEUX_VIDEO_CULTURE),
         ("musique_theorie_pratique", MUSIQUE_THEORIE_PRATIQUE),
         ("voyage_exploration", VOYAGE_EXPLORATION),
+        // v30.1.0 expansion — connaissances avancées bien-être, neurosciences, thérapies
+        ("neurochimie_bonheur", NEUROCHIMIE_BONHEUR),
+        ("langage_corporel_avance", LANGAGE_CORPOREL_AVANCE),
+        ("communication_professionnelle_avancee", COMMUNICATION_PROFESSIONNELLE_AVANCEE),
+        ("chiropratique_avancee", CHIROPRATIQUE_AVANCEE),
+        ("acupuncture_acupression_avancee", ACUPUNCTURE_ACUPRESSION_AVANCEE),
+        ("physiotherapie_osteopathie_avancee", PHYSIOTHERAPIE_OSTEOPATHIE_AVANCEE),
+        ("massage_therapeutique_avance", MASSAGE_THERAPEUTIQUE_AVANCE),
+        ("yoga_kundalini_maitre", YOGA_KUNDALINI_MAITRE),
+        ("therapies_alternatives_creatives", THERAPIES_ALTERNATIVES_CREATIVES),
+        ("phytotherapie_remedes_elixirs", PHYTOTHERAPIE_REMEDES_ELIXIRS),
+        ("cerveau_humain_avance", CERVEAU_HUMAIN_AVANCE),
+        ("depression_burnout_avance", DEPRESSION_BURNOUT_AVANCE),
+        ("gestion_energie_vitalite", GESTION_ENERGIE_VITALITE),
+        ("culture_japonaise_sagesse", CULTURE_JAPONAISE_SAGESSE),
+        // v30.1.0 expansion — phase 19 (santé avancée, MTC, Ayurveda, microbiome, hormones, respiration, Qi Gong, hypnose/PNL, trauma, détox, réflexologie, sophrologie, santé masculine, médecine fonctionnelle, aromathérapie, psychologie positive)
+        ("medecine_traditionnelle_chinoise_avancee", MEDECINE_TRADITIONNELLE_CHINOISE_AVANCEE),
+        ("ayurveda_avance", AYURVEDA_AVANCE),
+        ("microbiome_axe_intestin_cerveau", MICROBIOME_AXE_INTESTIN_CERVEAU),
+        ("systeme_hormonal_endocrinien", SYSTEME_HORMONAL_ENDOCRINIEN),
+        ("respiration_pranayama_avance", RESPIRATION_PRANAYAMA_AVANCE),
+        ("qi_gong_tai_chi_avance", QI_GONG_TAI_CHI_AVANCE),
+        ("hypnotherapie_pnl_avancee", HYPNOTHERAPIE_PNL_AVANCEE),
+        ("traumatisme_resilience_avance", TRAUMATISME_RESILIENCE_AVANCE),
+        ("detox_jeune_purification", DETOX_JEUNE_PURIFICATION),
+        ("reflexologie_avancee", REFLEXOLOGIE_AVANCEE),
+        ("sophrologie_relaxation_avancee", SOPHROLOGIE_RELAXATION_AVANCEE),
+        ("sante_masculine_naturelle", SANTE_MASCULINE_NATURELLE),
+        ("medecine_fonctionnelle_integrative", MEDECINE_FONCTIONNELLE_INTEGRATIVE),
+        ("aromatherapie_avancee", AROMATHERAPIE_AVANCEE),
+        ("psychologie_positive_science_bonheur", PSYCHOLOGIE_POSITIVE_SCIENCE_BONHEUR),
+        // v30.1.0 expansion — phase 20 (PNL maître, hypnose maître, thérapie systémique, coaching génératif, TCC 3e vague, AT/psychogénéalogie)
+        ("pnl_maitre_praticien", PNL_MAITRE_PRATICIEN),
+        ("hypnose_maitre_praticien", HYPNOSE_MAITRE_PRATICIEN),
+        ("therapie_systemique_familiale", THERAPIE_SYSTEMIQUE_FAMILIALE),
+        ("coaching_generatif_dilts_gilligan", COACHING_GENERATIF_DILTS_GILLIGAN),
+        ("tcc_troisieme_vague", TCC_TROISIEME_VAGUE),
+        ("analyse_transactionnelle_psychogenealogie", ANALYSE_TRANSACTIONNELLE_PSYCHOGENEALOGIE),
     ];
 
     /// Load all default knowledge entries from embedded JSON.
@@ -746,8 +857,8 @@ mod tests {
             result.errors
         );
         assert_eq!(
-            result.entries_loaded, 158,
-            "Must have exactly 158 default knowledge categories"
+            result.entries_loaded, 193,
+            "Must have exactly 193 default knowledge categories"
         );
     }
 

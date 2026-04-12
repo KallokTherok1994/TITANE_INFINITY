@@ -1,0 +1,182 @@
+{
+  "version": "v30.1.0",
+  "category": "phytotherapie_remedes_elixirs",
+  "description": "Phytothérapie avancée et remèdes/élixirs naturels — gemmothérapie (bourgeons), élixirs floraux (Bach, Bush), teintures mères, macérats huileux, hydrolats, sirops médicinaux, cataplasmes, pharmacie naturelle complète, formulations magistrales, tisanerie avancée",
+  "phytotherapie_remedes_elixirs": {
+    "introduction": "La phytothérapie avancée va au-delà de la simple connaissance des plantes — elle intègre les formes galéniques (teintures, gemmothérapie, élixirs), les synergies, les posologies précises et les interactions. Les élixirs floraux (Bach, Bush) travaillent sur un plan vibrationnel et émotionnel distinct de la phytothérapie biochimique. TITANE présente ce savoir avec rigueur pharmacognosique et honnêteté sur les limites.",
+    "gemmotherapie": {
+      "définition": "Utilisation thérapeutique des bourgeons et jeunes pousses de plantes, récoltés au stade embryonnaire. Aussi appelée 'médecine des bourgeons' ou phytembryothérapie.",
+      "auteur": "Dr Pol Henry (1960s, Belgique). Développée par Dr Max Tétau.",
+      "principe": "Le bourgeon contient le totum de la plante future — cellules souches végétales, hormones de croissance, acides nucléiques, vitamines, minéraux, enzymes. Concentration maximale de principes actifs dans un tissu méristématique en division active.",
+      "préparation": "Macération des bourgeons frais dans un mélange eau-alcool-glycérine (1:20). Macérat glycériné 1D (première décimale) selon la pharmacopée.",
+      "posologie": "5-15 gouttes/jour en cure de 3 semaines. Sous la langue (sublingual) pour absorption maximale. Possibilité de prendre 2-3 macérats différents.",
+      "principaux_bourgeons": {
+        "cassis_Ribes_nigrum": {
+          "surnom": "L'adaptogène végétal par excellence. Le 'cortisone naturel'.",
+          "actions": "Anti-inflammatoire puissant (cortisone-like via stimulation des surrénales), anti-allergique, adaptogène, anti-fatigue, anti-oxydant.",
+          "indications": "Fatigue chronique, allergies (rhume des foins, urticaire), inflammation articulaire, stress, convalescence. Synergie avec tous les autres bourgeons.",
+          "note": "Pratiquement toujours inclus dans les protocoles de gemmothérapie comme 'catalyseur'."
+        },
+        "tilleul_Tilia_tomentosa": {
+          "actions": "Sédatif nerveux, anxiolytique, drainant, améliore le sommeil.",
+          "indications": "Insomnie, anxiété, nervosité, hyperactivité de l'enfant, stress chronique."
+        },
+        "figuier_Ficus_carica": {
+          "actions": "Régulateur du système nerveux central, antispasmodique, régulateur de l'axe cortico-hypothalamique.",
+          "indications": "Anxiété, troubles psychosomatiques (estomac noué, boule dans la gorge, palpitations), burnout, somatisation du stress."
+        },
+        "chêne_Quercus_robur": {
+          "actions": "Tonifiant, stimulant surrénalien, androgénique léger.",
+          "indications": "Fatigue profonde, convalescence, épuisement, boost de vitalité."
+        },
+        "bouleau_Betula_pubescens": {
+          "actions": "Drainant hépatique et rénal, anti-inflammatoire ostéo-articulaire, reminéralisant.",
+          "indications": "Détox, douleurs articulaires, ostéoporose, calculs rénaux."
+        },
+        "romarin_Rosmarinus_officinalis": {
+          "actions": "Hépatoprotecteur, drainant hépatique, antioxydant, stimulant cognitif.",
+          "indications": "Insuffisance hépatique, fatigue digestive, surcharge hépatique (alcool, médicaments), brouillard mental."
+        },
+        "aubepine_Crataegus_oxyacantha": {
+          "actions": "Cardiotonique, régulateur du rythme cardiaque, anxiolytique, hypotenseur.",
+          "indications": "Palpitations, hypertension légère, anxiété avec composante cardiaque, trouble du rythme fonctionnel."
+        },
+        "sequoia_Sequoia_gigantea": {
+          "actions": "Tonifiant hormonal masculin, anti-âge, stimulant osseux.",
+          "indications": "Andropause, fatigue liée à l'âge, ostéoporose, baisse de vitalité masculine."
+        }
+      }
+    },
+    "elixirs_floraux": {
+      "Fleurs_de_Bach": {
+        "auteur": "Dr Edward Bach (1886-1936). Médecin bactériologiste et homéopathe britannique. A abandonné la médecine conventionnelle pour développer 38 élixirs floraux + 1 mélange d'urgence.",
+        "philosophie": "La maladie est le résultat d'un conflit entre l'âme et la personnalité. Les fleurs harmonisent les états émotionnels négatifs. 'Traitez la personne, pas la maladie.'",
+        "préparation": "Méthode solaire (fleurs flottant sur l'eau au soleil pendant 3-4h) ou par ébullition. L'eau imprégnée est ensuite conservée dans du brandy.",
+        "les_38_fleurs_classées_par_groupe": {
+          "peur": {
+            "Rock_Rose": "Terreur, panique. Pour les moments de peur extrême, les cauchemars, les accidents.",
+            "Mimulus": "Peurs connues et identifiables (araignées, avion, maladie, pauvreté).",
+            "Cherry_Plum": "Peur de perdre le contrôle, de devenir fou, de faire quelque chose de terrible.",
+            "Aspen": "Peurs vagues, inexplicables, pressentiments, angoisses diffuses.",
+            "Red_Chestnut": "Peur excessive pour les autres (surtout les proches). Surprotection."
+          },
+          "incertitude": {
+            "Cerato": "Doute de son propre jugement. Cherche constamment l'avis des autres.",
+            "Scleranthus": "Incapacité à choisir entre deux options. Hésitation chronique.",
+            "Gentian": "Découragement après un revers. Pessimisme.",
+            "Gorse": "Désespoir profond. 'À quoi bon essayer.'",
+            "Hornbeam": "Fatigue mentale du lundi matin. Procrastination. Manque de motivation pour commencer.",
+            "Wild_Oat": "Incertitude sur sa direction de vie. Insatisfaction professionnelle."
+          },
+          "manque_interet_present": {
+            "Clematis": "Rêveur, dans les nuages, manque d'ancrage dans le réel.",
+            "Honeysuckle": "Nostalgie, vit dans le passé, regrets.",
+            "Wild_Rose": "Résignation, apathie, acceptation passive de la vie.",
+            "Olive": "Épuisement total (physique et mental) après un effort prolongé.",
+            "White_Chestnut": "Pensées obsédantes, rumination mentale, mental qui tourne en boucle.",
+            "Mustard": "Dépression soudaine sans cause apparente, mélancolie.",
+            "Chestnut_Bud": "Répétition des mêmes erreurs, incapacité à apprendre de l'expérience."
+          },
+          "solitude": {
+            "Water_Violet": "Fierté, réserve, difficulté à se connecter aux autres.",
+            "Impatiens": "Impatience, irritabilité, tout va trop lentement.",
+            "Heather": "Bavard compulsif centré sur soi. Peur de la solitude."
+          },
+          "hypersensibilite_influences": {
+            "Agrimony": "Cache sa souffrance derrière un masque jovial. Torture intérieure.",
+            "Centaury": "Difficulté à dire non. Se sacrifie pour les autres.",
+            "Walnut": "Protection contre les influences extérieures et les changements de vie.",
+            "Holly": "Jalousie, envie, suspicion, haine, colère."
+          },
+          "desespoir_decouragement": {
+            "Larch": "Manque de confiance en soi. S'attend à échouer.",
+            "Pine": "Culpabilité. S'excuse constamment.",
+            "Elm": "Submergé par les responsabilités.",
+            "Sweet_Chestnut": "Angoisse extrême, nuit noire de l'âme.",
+            "Star_of_Bethlehem": "Choc, trauma, deuil, perte.",
+            "Willow": "Amertume, ressentiment, sentiment de victime.",
+            "Oak": "Surmenage, refuse de lâcher prise malgré l'épuisement.",
+            "Crab_Apple": "Dégoût de soi, obsession de la pureté, honte du corps."
+          },
+          "souci_excessif_autres": {
+            "Chicory": "Amour possessif, manipulation affective.",
+            "Vervain": "Fanatisme, excès d'enthousiasme, veut convertir tout le monde.",
+            "Vine": "Autoritarisme, besoin de contrôler.",
+            "Beech": "Intolérance, critique, perfectionnisme envers les autres.",
+            "Rock_Water": "Rigidité envers soi-même, auto-discipline excessive, ascétisme."
+          }
+        },
+        "Rescue_Remedy": "Mélange d'urgence : Star of Bethlehem + Rock Rose + Impatiens + Cherry Plum + Clematis. Pour les chocs, les crises de panique, les urgences émotionnelles. 4 gouttes sous la langue ou dans un verre d'eau.",
+        "posologie": "4 gouttes × 4 fois/jour, directement sous la langue ou dans un verre d'eau. Cure de 3-4 semaines minimum.",
+        "niveau_preuve": "Les études randomisées contrôlées ne montrent pas de différence significative avec le placebo. Cependant, l'effet subjectif est rapporté par des millions d'utilisateurs. L'approche fonctionne probablement par un mécanisme psychologique (intention, rituel, auto-observation émotionnelle) plutôt que biochimique."
+      }
+    },
+    "teintures_mères": {
+      "définition": "Préparation liquide obtenue par macération d'une plante fraîche (ou parfois sèche) dans un mélange eau-alcool pendant 21 jours minimum. Concentration élevée en principes actifs.",
+      "préparation": "Plante fraîche finement coupée + alcool 45-90° (selon la plante). Ratio 1:5 ou 1:10. Macération 21 jours à l'abri de la lumière, agitation quotidienne. Filtration et mise en bouteille ambrée.",
+      "posologie": "20-50 gouttes × 2-3 fois/jour dans un verre d'eau. Cure de 3 semaines avec 1 semaine de pause.",
+      "teintures_essentielles": {
+        "valériane": "Sédatif, anxiolytique, antispasmodique. 30-50 gouttes le soir. NE PAS combiner avec benzodiazépines.",
+        "millepertuis": "Antidépresseur naturel (ISRS naturel). 30 gouttes × 3/jour. INTERACTIONS multiples : contraceptifs, anticoagulants, antirétroviraux, cyclosporine. Photosensibilisant.",
+        "echinacee": "Immunostimulant. 30-50 gouttes × 3/jour dès les premiers symptômes du rhume. Cure de 10 jours max. Contre-indiqué dans les maladies auto-immunes.",
+        "passiflore": "Anxiolytique, favorise le sommeil. 30-50 gouttes le soir. Synergie avec valériane et mélisse.",
+        "propolis": "Antibactérien, antiviral, anti-inflammatoire. 20-30 gouttes × 3/jour. Gorge, immunité, infections ORL."
+      }
+    },
+    "macérats_huileux": {
+      "définition": "Infusion de plantes dans une huile végétale (olive, tournesol, sésame) pendant 4-6 semaines au soleil. L'huile extrait les principes actifs liposolubles.",
+      "préparation": "Remplir un bocal de plantes sèches (ou légèrement flétries). Recouvrir d'huile. Macération 4-6 semaines au soleil, agitation quotidienne. Filtration.",
+      "principaux": {
+        "millepertuis": "Huile rouge rubis. Anti-inflammatoire, cicatrisant, antalgique. Brûlures légères, coups de soleil, douleurs musculaires, sciatique. PHOTOSENSIBILISANT — ne pas s'exposer au soleil après application.",
+        "arnica": "Anti-ecchymose, anti-inflammatoire. Contusions, hématomes, douleurs musculaires. NE PAS appliquer sur plaie ouverte.",
+        "calendula": "Cicatrisant, anti-inflammatoire, antifongique. Brûlures, coupures, eczéma, gerçures, érythème fessier du nourrisson.",
+        "carotte": "Riche en bêta-carotène. Préparation au soleil, bonne mine, anti-âge cutané."
+      }
+    },
+    "hydrolats": {
+      "définition": "Eau florale obtenue lors de la distillation des huiles essentielles. Contient les molécules hydrosolubles de la plante + micro-traces d'HE. Beaucoup plus doux que les HE — adapté aux enfants, femmes enceintes, personnes sensibles.",
+      "principaux": {
+        "rose_Rosa_damascena": "Tonique cutané, anti-âge, apaisant émotionnel. En brume faciale, dans le bain, en compresse sur les yeux.",
+        "fleur_oranger_Neroli": "Calmant, sédatif, anxiolytique. En spray d'oreiller, dans le biberon du nourrisson (tradition), en cuisine.",
+        "lavande": "Calmant, cicatrisant, purifiant. En tonique après-rasage, brûlures légères, piqûres d'insectes.",
+        "camomille_romaine": "Anti-inflammatoire, calmant. Irritations oculaires (compresses), peaux sensibles, coliques du nourrisson.",
+        "hamamélis": "Astringent, circulatoire, raffermissant. Jambes lourdes, varices, couperose, après-rasage."
+      }
+    },
+    "sirops_medicinaux": {
+      "sirop_thym_miel": "Thym séché + miel + eau. Antiseptique respiratoire, expectorant, apaisant gorge. Toux, bronchite, rhume.",
+      "sirop_sureau": "Baies de sureau noir cuites + miel + épices (clou de girofle, cannelle, gingembre). Antiviral puissant (étude Zakay-Rones contre influenza). Prévention et traitement de la grippe.",
+      "oxymel": "Vinaigre de cidre + miel + herbes médicinales (thym, sauge, ail). Tonique général, immunité, digestion. Tradition ancestrale.",
+      "élixir_du_suédois": {
+        "composition": "Mélange de 11 plantes amères macérées dans l'alcool (aloès, myrrhe, safran, séné, camphre, etc.). Recette attribuée à Paracelse (XVIe siècle), popularisée par Maria Treben.",
+        "usages": "Tonique digestif, stimulant hépatique, cicatrisant (usage externe), anti-inflammatoire. Application cutanée sur les douleurs articulaires.",
+        "posologie": "1 cuillère à café dans un peu d'eau, 30 min avant les repas."
+      }
+    },
+    "cataplasmes_compresses": {
+      "argile_verte": {
+        "propriétés": "Absorbante, anti-inflammatoire, reminéralisante, cicatrisante.",
+        "préparation": "Argile en poudre + eau → pâte épaisse. Appliquer en couche de 1-2 cm sur la zone. Couvrir d'un linge. 1-2h (ne pas laisser sécher complètement). Jeter après usage — l'argile a 'absorbé'.",
+        "indications": "Entorses, tendinites, douleurs articulaires, brûlures légères, acné, abcès, piqûres d'insectes."
+      },
+      "chou": "Feuilles de chou vert écrasées au rouleau et appliquées sur la zone inflammée. Anti-inflammatoire, drainant. Tradition populaire validée empiriquement pour l'arthrose du genou, les engorgements mammaires, les varices.",
+      "gingembre": "Gingembre râpé chaud dans un linge. Appliqué sur le bas du dos pour les douleurs lombaires. Effet réchauffant et anti-inflammatoire."
+    },
+    "pharmacie_naturelle_essentielle": {
+      "kit_de_base": [
+        "Teinture mère d'échinacée (immunité)",
+        "Teinture mère de valériane (sommeil/anxiété)",
+        "Huile essentielle de lavande vraie (polyvalente — stress, brûlures, insomnie)",
+        "Huile essentielle de tea tree (antiseptique — boutons, mycoses)",
+        "Huile essentielle de menthe poivrée (maux de tête, digestion, nausée)",
+        "Macérat huileux de calendula (cicatrisation, peaux irritées)",
+        "Argile verte (cataplasmes anti-inflammatoires)",
+        "Miel de manuka (cicatrisation, gorge, immunité)",
+        "Gel d'aloe vera (brûlures, peau, digestion)",
+        "Propolis (gorge, immunité)",
+        "Rescue Remedy de Bach (urgences émotionnelles)",
+        "Macérat de bourgeons de cassis (adaptogène, anti-inflammatoire)"
+      ]
+    }
+  }
+}

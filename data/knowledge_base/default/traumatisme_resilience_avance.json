@@ -1,0 +1,91 @@
+{
+  "version": "v30.1.0",
+  "category": "traumatisme_resilience_avance",
+  "description": "Traumatisme et résilience avancés — théorie polyvagale appliquée, EMDR, Somatic Experiencing (Peter Levine), EFT (tapping), ACT (thérapie d'acceptation), TSPT, trauma complexe, mémoire traumatique, fenêtre de tolérance, régulation émotionnelle, résilience post-traumatique, neuroplasticité",
+  "traumatisme_resilience_avance": {
+    "introduction": "Le traumatisme psychologique résulte d'un événement ou d'une série d'événements qui dépassent les capacités d'intégration de l'individu. Le corps, le système nerveux et le cerveau gardent la mémoire du trauma. La guérison passe par la restauration de la sécurité corporelle, la régulation du système nerveux autonome, et le retraitement des souvenirs traumatiques.",
+    "types_trauma": {
+      "trauma_simple": "Événement unique (accident, agression, catastrophe naturelle). Développement possible de TSPT aigu.",
+      "trauma_complexe": "Expositions répétées et prolongées (maltraitance infantile, violence conjugale, négligence). Affecte le développement de la personnalité, la régulation émotionnelle, les schémas relationnels.",
+      "trauma_developpement": "Trauma survenu pendant les premières années de vie (attachement insécure, négligence, abus). Impact profond sur le système nerveux en formation.",
+      "trauma_intergenerationnel": "Transmission des effets du trauma à travers les générations (épigénétique, patterns familiaux, transmissions implicites)."
+    },
+    "neurobiologie_trauma": {
+      "cerveau_traumatise": {
+        "amygdale": "Hyperactivée — détecteur de menace en permanence en alerte. Réactions de peur disproportionnées.",
+        "hippocampe": "Réduit en volume — difficultés à contextualiser les souvenirs (le souvenir traumatique est vécu comme 'maintenant').",
+        "cortex_prefrontal": "Hypoactif — diminution du contrôle exécutif, de la régulation émotionnelle, de la capacité de raisonnement.",
+        "insula": "Altérée — difficultés d'intéroception (percevoir les signaux du corps), déconnexion corporelle."
+      },
+      "memoire_traumatique": {
+        "memoire_implicite": "Le trauma est stocké dans le corps (sensations, postures, tensions) et le système nerveux autonome plutôt que dans la mémoire narrative.",
+        "flashbacks": "Réactivation soudaine des réponses sensorielles et émotionnelles comme si l'événement se reproduisait.",
+        "dissociation": "Mécanisme de protection: déconnexion de la conscience pour survivre à l'insupportable. Peut devenir chronique."
+      }
+    },
+    "theorie_polyvagale_appliquee": {
+      "auteur": "Stephen Porges (1994)",
+      "trois_etats": {
+        "ventral_vagal": "Sécurité, connexion sociale, engagement. Système parasympathique ventral actif. État optimal.",
+        "sympathique": "Mobilisation, fight-or-flight. Adrénaline, cortisol. Hypervigilance, anxiété, irritabilité.",
+        "dorsal_vagal": "Immobilisation, effondrement, dissociation, shutdown. Système parasympathique dorsal. État de 'mort feinte'."
+      },
+      "fenetre_tolerance": {
+        "definition": "Zone dans laquelle l'individu peut traiter l'information et les émotions de manière adaptative.",
+        "hyperactivation": "Au-dessus de la fenêtre: anxiété, panique, hypervigilance, agitation, flashbacks (sympathique).",
+        "hypoactivation": "En-dessous de la fenêtre: engourdissement, dissociation, dépression, apathie, effondrement (dorsal vagal).",
+        "objectif_therapeutique": "Élargir progressivement la fenêtre de tolérance pour que le patient puisse traiter des émotions intenses sans décompenser."
+      },
+      "neuroception": "Détection inconsciente de la sécurité ou du danger par le système nerveux. Chez les traumatisés, la neuroception est calibrée sur le danger — le monde paraît menaçant même quand il est sûr.",
+      "co_regulation": "Le système nerveux s'auto-régule au contact d'un système nerveux régulé (thérapeute, proche sécurisant). Base de la guérison relationnelle."
+    },
+    "approches_therapeutiques": {
+      "somatic_experiencing": {
+        "createur": "Peter A. Levine, Ph.D.",
+        "principe": "Le trauma est piégé dans le corps sous forme d'énergie de survie non déchargée. La guérison passe par la libération de cette énergie de manière titré (dosée).",
+        "concepts_cles": {
+          "titration": "Aborder le trauma par petites doses, en oscillant entre la zone traumatique et les ressources (pendulation).",
+          "pendulation": "Mouvement naturel entre contraction (trauma) et expansion (ressource). Rétablit la capacité d'autorégulation.",
+          "decharge": "Tremblements, frissons, chaleur, mouvements involontaires — signes que le système nerveux libère l'énergie piégée.",
+          "felt_sense": "Conscience intéroceptive fine des sensations corporelles. Clé de la thérapie somatique."
+        }
+      },
+      "eft_tapping": {
+        "nom_complet": "Emotional Freedom Techniques",
+        "createur": "Gary Craig (1995), basé sur TFT de Roger Callahan",
+        "principe": "Stimulation de points d'acupuncture par tapotement (tapping) tout en se concentrant sur l'émotion/souvenir perturbant. Combine acupression et psychothérapie.",
+        "points_tapping": ["Tranche de la main (Karate chop)", "Sommet du crâne", "Début du sourcil", "Coin de l'œil", "Sous l'œil", "Sous le nez", "Menton", "Clavicule", "Sous le bras"],
+        "protocole_base": "1) Évaluer l'intensité (0-10). 2) Phrase de préparation ('Même si j'ai cette peur, je m'accepte complètement'). 3) Tapping sur les points en répétant le problème. 4) Réévaluer l'intensité. 5) Répéter jusqu'à 0-2/10.",
+        "efficacite": "Plus de 100 études cliniques. Efficace pour TSPT, anxiété, phobies, douleur chronique, performance sportive."
+      },
+      "act_therapie_acceptation_engagement": {
+        "createur": "Steven C. Hayes (1982)",
+        "principe": "Plutôt que combattre les pensées et émotions difficiles, développer la flexibilité psychologique pour vivre une vie en accord avec ses valeurs.",
+        "six_processus": {
+          "acceptation": "Accueillir les émotions difficiles sans les fuir ni les combattre.",
+          "defusion_cognitive": "Se décoller des pensées ('Je pense que je suis nul' vs 'J'observe que j'ai la pensée que je suis nul').",
+          "moment_present": "Pleine conscience, attention au ici et maintenant.",
+          "soi_observateur": "Le 'moi' qui observe n'est pas les pensées/émotions. Conscience stable derrière le flux mental.",
+          "valeurs": "Identifier ce qui compte vraiment (amour, courage, créativité, service...). Boussole intérieure.",
+          "action_engagee": "Agir en direction de ses valeurs, même en présence de douleur ou de peur."
+        },
+        "applications": "Dépression chronique, anxiété, douleur chronique, addictions, deuil, trauma complexe."
+      }
+    },
+    "resilience": {
+      "definition": "Capacité à rebondir après l'adversité, à croître à travers les épreuves. Pas l'absence de souffrance, mais la capacité de transformation.",
+      "facteurs_protecteurs": ["Lien d'attachement sécure (au moins 1 personne)", "Soutien social et communautaire", "Régulation émotionnelle développée", "Sens du sens (meaning-making)", "Flexibilité cognitive", "Activité physique régulière", "Pratiques contemplatives (méditation, prière)", "Narration de son histoire (mise en récit)"],
+      "croissance_post_traumatique": {
+        "definition": "Transformation positive suite à un trauma (PTG - Post-Traumatic Growth). Décrit par Tedeschi & Calhoun.",
+        "domaines": ["Relations plus profondes", "Nouvelles possibilités de vie", "Force personnelle reconnue", "Appréciation accrue de la vie", "Développement spirituel/existentiel"]
+      },
+      "neuroplasticite_guerison": "Le cerveau peut se réorganiser. Avec un travail thérapeutique adapté, l'hippocampe peut retrouver son volume, l'amygdale sa calibration, et le cortex préfrontal sa fonction régulatrice."
+    },
+    "pratiques_auto_regulation": {
+      "exercises_nerf_vague": ["Respiration 4-7-8 (inspir 4s, rétention 7s, expir 8s)", "Gargarisme (active le nerf vague pharyngé)", "Chant/Vocalisation prolongée (Ommm)", "Immersion visage dans l'eau froide (réflexe de plongée)", "Massage du tragus de l'oreille"],
+      "grounding_ancrage": ["5-4-3-2-1 sensoriel (5 choses vues, 4 touchées, 3 entendues, 2 senties, 1 goûtée)", "Contact pieds-sol conscient", "Objet d'ancrage (pierre, bijou)", "Auto-étreinte (butterfly hug — étreinte papillon)"],
+      "techniques_corporelles": ["Yoga restauratif (postures tenues avec supports)", "Qi Gong doux", "Marche consciente dans la nature", "Danse libre et mouvements spontanés"]
+    },
+    "avertissement_sante": "Le travail sur le trauma nécessite un thérapeute formé. Ne pas tenter de retraiter seul des traumatismes sévères. En cas de TSPT, consultez un professionnel spécialisé."
+  }
+}

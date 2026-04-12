@@ -1,0 +1,148 @@
+{
+  "version": "v30.1.0",
+  "category": "therapie_systemique_familiale",
+  "description": "Thérapie systémique familiale avancée — constellations familiales Hellinger, approche Satir, école de Palo Alto, modèle de Milan, thérapie contextuelle Boszormenyi-Nagy, triangle de Karpman, génogramme, double lien Bateson",
+  "therapie_systemique_familiale": {
+    "introduction": "La thérapie systémique familiale est un ensemble d'approches psychothérapeutiques qui considèrent l'individu non pas isolément mais comme partie d'un système relationnel (famille, couple, groupe). Les symptômes individuels sont vus comme l'expression d'un dysfonctionnement du système. Changer le système permet de transformer les individus qui le composent.",
+    "fondements_systemiques": {
+      "principes_cles": [
+        "Le tout est plus que la somme des parties — propriétés émergentes",
+        "Causalité circulaire (non linéaire) : A influence B qui influence A",
+        "Homéostasie : le système tend à maintenir son équilibre, même dysfonctionnel",
+        "Équifinalité : un même résultat peut avoir des causes différentes",
+        "Totalité : changer un élément du système change tout le système",
+        "Rétroaction (feedback) : boucles positives (amplificatrices) et négatives (stabilisatrices)"
+      ],
+      "penseurs_fondateurs": ["Ludwig von Bertalanffy (théorie générale des systèmes)", "Gregory Bateson (communication, double lien)", "Paul Watzlawick (axiomes de la communication)", "Don Jackson", "Jay Haley", "Salvador Minuchin (thérapie structurale)"]
+    },
+    "ecole_palo_alto": {
+      "fondateurs": "Gregory Bateson, Paul Watzlawick, Don Jackson, Jay Haley, John Weakland",
+      "axiomes_communication": [
+        "On ne peut pas ne pas communiquer",
+        "Toute communication a un contenu et une relation (méta-communication)",
+        "La nature d'une relation dépend de la ponctuation des séquences de communication",
+        "La communication est digitale (contenu verbal) et analogique (non-verbal, contexte)",
+        "Les échanges sont symétriques (égalité) ou complémentaires (différence)"
+      ],
+      "double_lien_bateson": {
+        "definition": "Situation communicationnelle paradoxale où une personne reçoit deux messages contradictoires à des niveaux logiques différents, sans possibilité de fuite ou de clarification",
+        "conditions": [
+          "Relation importante (parent-enfant typiquement)",
+          "Injonction primaire contradictoire avec injonction secondaire",
+          "Interdiction de méta-communiquer (commentaire sur la contradiction)",
+          "Situation récurrente"
+        ],
+        "effets": "Confusion, anxiété chronique, repli, développement de symptômes (hypothèse liée à la schizophrénie — aujourd'hui nuancée)",
+        "resolution": "Méta-communication : nommer le paradoxe, créer un espace de clarification"
+      },
+      "therapie_breve": {
+        "definition": "Intervention focalisée sur le problème présent, sans explorer le passé en profondeur",
+        "principes": ["Si ça marche, continuer", "Si ça ne marche pas, faire autre chose", "Ne pas chercher pourquoi ça pose problème mais comment le résoudre"],
+        "techniques": ["Recadrage", "Prescription du symptôme", "Tâche paradoxale", "Questionnement circulaire", "Utilisation de la résistance"]
+      }
+    },
+    "constellations_familiales_hellinger": {
+      "fondateur": "Bert Hellinger (années 1990)",
+      "definition": "Méthode psychothérapeutique mettant en scène les membres du système familial (représentants) dans l'espace pour révéler les dynamiques inconscientes transgénérationnelles",
+      "principes_fondamentaux": {
+        "appartenance": "Chaque membre du système a un droit égal d'appartenance — les exclus perturbent le système",
+        "ordre": "L'ordre chronologique d'arrivée doit être respecté — les aînés ont priorité",
+        "equilibre_donner_recevoir": "L'équilibre entre donner et recevoir maintient l'harmonie systémique"
+      },
+      "processus": [
+        "Le constellant expose brièvement sa problématique",
+        "Il choisit des représentants pour les membres de sa famille",
+        "Il les place intuitivement dans l'espace",
+        "Le facilitateur observe les mouvements et sensations des représentants",
+        "Des phrases de libération et des repositionnements sont proposés",
+        "Une image de résolution émerge naturellement"
+      ],
+      "dynamiques_revelees": [
+        "Intrications : porter le destin d'un ancêtre par loyauté inconsciente",
+        "Exclusions : membres du système oubliés, rejetés ou non nommés",
+        "Secrets de famille : traumas, suicides, avortements non reconnus",
+        "Inversions de rôle : enfant qui porte le parent, parent infantilisé",
+        "Interruptions de mouvement d'amour : amour empêché de circuler"
+      ],
+      "phrases_de_liberation": ["Je te vois. Tu as ta place.", "Ce qui t'appartient, je te le laisse.", "Je suis petit(e) et tu es grand(e).", "Maintenant je prends ma propre vie."],
+      "debat_scientifique": "Très populaire en thérapie, mais controversée dans le monde académique. Pas de validation scientifique robuste à ce jour. Utilisée avec discernement."
+    },
+    "approche_satir": {
+      "fondatrice": "Virginia Satir",
+      "focus": "Communication congruente, estime de soi, restructuration positive des relations familiales",
+      "postures_de_communication_dysfonctionnelle": {
+        "accusateur_blamer": "Attaque pour cacher sa vulnérabilité",
+        "apaisant_placater": "S'efface pour éviter le conflit",
+        "rationalisateur_computer": "Intellectualise pour éviter les émotions",
+        "distracteur_distractor": "Détourne l'attention pour fuir la situation",
+        "congruent": "Communication authentique (posture saine et objectif thérapeutique)"
+      },
+      "sculptures_familiales": "Mise en espace des membres de la famille pour figurer la dynamique émotionnelle et relationnelle — précurseur des constellations",
+      "objectif": "Développer la congruence personnelle et la capacité à exprimer ses besoins authentiques dans le respect de l'autre"
+    },
+    "modele_milan": {
+      "fondateurs": "Mara Selvini Palazzoli, Luigi Boscolo, Gianfranco Cecchin, Giuliana Prata",
+      "principes": {
+        "circularite": "Questionnement circulaire — demander à chaque membre comment il perçoit la relation entre deux autres membres",
+        "neutralite": "Le thérapeute ne prend parti pour aucun membre du système",
+        "hypothetisation": "Formulation d'hypothèses systémiques avant chaque séance, révisées en temps réel"
+      },
+      "techniques": ["Questions circulaires", "Rituel familial prescrit", "Connotation positive du symptôme", "Contre-paradoxe"],
+      "innovation": "L'analyse des alliances, coalitions et rétroactions pour faire émerger de nouvelles perspectives dans le système familial"
+    },
+    "therapie_contextuelle_boszormenyi_nagy": {
+      "fondateur": "Ivan Boszormenyi-Nagy",
+      "concepts_cles": {
+        "loyautes_invisibles": "Obligations, dettes morales, fidélités inconscientes envers la famille qui orientent les comportements et les destins",
+        "grand_livre_des_comptes": "Registre inconscient des dettes et mérites relationnels accumulés au fil des générations",
+        "justice_relationnelle": "Équilibre entre donner et recevoir dans les relations — déséquilibre = source de pathologie",
+        "parentification": "Enfant contraint de jouer un rôle parental — inversion générationnelle pathogène",
+        "merites": "Reconnaissance des contributions de chaque membre au système — donner du crédit"
+      },
+      "objectif_therapeutique": "Restaurer l'équité relationnelle et libérer les individus des loyautés destructrices tout en honorant les liens familiaux"
+    },
+    "triangle_karpman": {
+      "fondateur": "Stephen Karpman (analyse transactionnelle)",
+      "roles": {
+        "persecuteur": "Domine, critique, contrôle — cache une blessure de vulnérabilité",
+        "sauveur": "Aide de manière excessive et non demandée — cache un besoin de reconnaissance",
+        "victime": "Se sent impuissante, se plaint — cache un pouvoir non assumé"
+      },
+      "dynamique": "Les acteurs alternent entre les trois rôles de manière prévisible, créant des scénarios répétitifs insatisfaisants",
+      "sortie_du_triangle": {
+        "persecuteur_vers_assertif": "Affirmer ses limites sans domination ni agression",
+        "sauveur_vers_aidant_authentique": "Aider seulement sur demande, responsabiliser l'autre",
+        "victime_vers_responsable": "Reprendre son pouvoir, identifier ses ressources"
+      },
+      "triangle_gagnant": "Assertif — Bienveillant — Vulnérable (version saine du triangle)"
+    },
+    "genogramme": {
+      "definition": "Arbre généalogique enrichi d'informations sur les membres, liens, schémas répétitifs, secrets, traumas et dynamiques familiales",
+      "informations_encodees": [
+        "Dates de naissance, mariage, décès, séparation",
+        "Professions, maladies, causes de décès",
+        "Qualité des relations (fusion, conflit, coupure, distance)",
+        "Événements traumatiques (deuils, guerres, migrations, abus)",
+        "Patterns répétitifs transgénérationnels",
+        "Secrets de famille identifiés"
+      ],
+      "utilisation": "Outil d'exploration et de visualisation pour sensibiliser la famille à son héritage psychologique et relationnel",
+      "difference_genosociogramme": "Le génosociogramme (Schützenberger) ajoute les dates-clefs, les syndromes d'anniversaire et les contextes sociologiques"
+    },
+    "approches_complementaires": {
+      "therapie_structurale_minuchin": {
+        "focus": "Structure familiale (sous-systèmes, frontières, hiérarchies)",
+        "interventions": ["Restructuration des frontières", "Enactment (mise en acte des conflits en séance)", "Déséquilibrage thérapeutique"]
+      },
+      "therapie_strategique_haley": {
+        "focus": "Directives et tâches stratégiques pour modifier les patterns de communication",
+        "interventions": ["Prescription de tâches", "Paradoxe thérapeutique", "Ordalies"]
+      },
+      "therapie_narrative_white_epston": {
+        "focus": "Réautorisation de l'histoire de vie — séparation de la personne et du problème",
+        "interventions": ["Externalisation du problème", "Recherche d'exceptions", "Reconstruction narrative", "Témoignage externalisé"]
+      }
+    },
+    "avertissement_sante": "Les thérapies systémiques familiales interviennent sur des dynamiques relationnelles profondes. Certaines approches (constellations notamment) sont controversées et nécessitent un cadre thérapeutique rigoureux. Toute intervention familiale doit être conduite par un professionnel formé et supervisé. Ces approches complètent mais ne remplacent pas un suivi médical ou psychiatrique lorsque nécessaire."
+  }
+}

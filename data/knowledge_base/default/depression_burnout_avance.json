@@ -1,0 +1,184 @@
+{
+  "version": "v30.1.0",
+  "category": "depression_burnout_avance",
+  "description": "Dépression et burnout avancés — neurobiologie de la dépression, types (majeure, dysthymie, bipolaire, saisonnière, post-partum), burnout (stades Freudenberger, récupération), modèle biopsychosocial, traitements (pharmacologiques et non-pharmacologiques), prévention, signaux d'alerte, protocoles de récupération",
+  "depression_burnout_avance": {
+    "introduction": "La dépression est la première cause de handicap dans le monde (OMS, 2023). Le burnout touche 30-50% des travailleurs dans les pays développés. Ces deux conditions sont distinctes mais interconnectées — le burnout non traité peut mener à la dépression, et la dépression peut se manifester par un burnout. TITANE fournit une compréhension avancée pour la détection précoce, la prévention et la récupération. Ce contenu est informatif — consulter un professionnel de santé mentale en cas de souffrance.",
+    "dépression_avancée": {
+      "neurobiologie": {
+        "hypothèse_monoaminergique": {
+          "classique": "Déficit en sérotonine, noradrénaline et/ou dopamine dans les synapses. Base des antidépresseurs (ISRS, IRSN, IMAO). Molkentin et Lacasse (2012) : 'La théorie la plus critiquée mais toujours la plus utile cliniquement.'",
+          "limites": "Les ISRS augmentent la sérotonine en heures mais l'effet clinique prend 2-6 semaines → les monoamines ne sont probablement pas le mécanisme final. Environ 30% des patients ne répondent pas aux ISRS."
+        },
+        "neuroinflammation": {
+          "hypothèse": "L'inflammation chronique (cytokines pro-inflammatoires : TNF-α, IL-6, IL-1β) est un facteur causal de la dépression, pas seulement une conséquence.",
+          "mécanisme": "L'inflammation → activation de l'enzyme IDO → dérive du tryptophane vers la voie kynurénine (neurotoxique) au lieu de la voie sérotonine → déplétion sérotoninergique + toxicité neuronale directe.",
+          "preuves": "Les patients déprimés ont des marqueurs inflammatoires élevés (CRP, IL-6). Les patients sous interféron (anti-viral pro-inflammatoire) développent une dépression dans 30-50% des cas. Les anti-inflammatoires ont un effet antidépresseur modéré.",
+          "implications": "Traiter l'inflammation (alimentation anti-inflammatoire, exercice, oméga-3, curcumine, réduction du stress) est une stratégie antidépressive légitime."
+        },
+        "plasticité_altérée": {
+          "BDNF": "La dépression est associée à une diminution du BDNF (Brain-Derived Neurotrophic Factor) → réduction de la neurogenèse hippocampique → atrophie hippocampique. Les antidépresseurs augmentent le BDNF.",
+          "kétamine": "La kétamine (antagoniste NMDA) produit un effet antidépresseur rapide (heures vs semaines pour les ISRS) en stimulant la synaptogenèse via le BDNF et mTOR. Révolution thérapeutique en cours."
+        },
+        "connectivité": {
+          "default_mode_network": "Le DMN (réseau du mode par défaut — cortex préfrontal médian, cortex cingulaire postérieur, précunéus) est HYPERACTIF dans la dépression. Le DMN est associé à la rumination, l'auto-référence, la pensée en boucle.",
+          "rumination": "Les patients déprimés restent 'coincés' dans le DMN — ils ruminent sur le passé, s'auto-critiquent et catastrophisent. La méditation réduit l'activité du DMN."
+        },
+        "axe_HPA": {
+          "dérèglement": "Hyperactivité de l'axe hypothalamo-hypophyso-surrénalien → cortisol chroniquement élevé → toxicité hippocampique, résistance à l'insuline, immunosuppression, insomnie.",
+          "test_dexaméthasone": "Dans la dépression sévère, le cortisol n'est pas supprimé par la dexaméthasone → perte du feedback négatif normal."
+        }
+      },
+      "types_dépression": {
+        "épisode_dépressif_majeur": {
+          "critères_DSM5": "Au moins 5 symptômes pendant 2+ semaines, incluant OBLIGATOIREMENT humeur dépressive OU perte d'intérêt/plaisir (anhédonie).",
+          "symptômes": [
+            "Humeur dépressive la majeure partie de la journée",
+            "Anhédonie (perte d'intérêt/plaisir pour les activités habituelles)",
+            "Changement de poids ou d'appétit (↑ ou ↓ > 5% en 1 mois)",
+            "Insomnie ou hypersomnie",
+            "Agitation ou ralentissement psychomoteur",
+            "Fatigue ou perte d'énergie",
+            "Sentiment de culpabilité ou d'inutilité excessif",
+            "Difficultés de concentration ou indécision",
+            "Pensées de mort récurrentes ou idées suicidaires"
+          ],
+          "sévérité": "Léger (5-6 symptômes, fonctionnement maintenu), Modéré (6-7, fonctionnement altéré), Sévère (8-9, fonctionnement très altéré, possible psychose)."
+        },
+        "dysthymie": {
+          "DSM5": "Trouble dépressif persistant. Humeur dépressive présente la majorité du temps pendant au moins 2 ANS (1 an chez l'enfant).",
+          "caractéristiques": "Moins intense que l'épisode majeur mais plus chronique. La personne 's'habitue' à être déprimée — 'C'est juste comme je suis'. Souvent non diagnostiquée."
+        },
+        "dépression_saisonnière": {
+          "mécanisme": "Réduction de la lumière en automne/hiver → diminution de la sérotonine + dérèglement circadien (mélatonine). Plus fréquente au-delà du 45e parallèle.",
+          "traitement": "Luminothérapie 10 000 lux, 30 min chaque matin (efficacité comparable aux ISRS). Vitamine D en supplémentation. Exercice extérieur."
+        },
+        "dépression_post_partum": {
+          "prévalence": "10-20% des mères. Souvent sous-diagnostiquée (confondue avec le 'baby blues' des 2 premières semaines).",
+          "facteurs": "Chute brutale des hormones (estrogène, progestérone), privation de sommeil, stress de la parentalité, isolement, histoire personnelle.",
+          "danger": "Risque de négligence du nourrisson, détachement, dans les cas sévères : psychose post-partum (urgence psychiatrique). Dépistage systématique (Edinburgh Postnatal Depression Scale)."
+        },
+        "trouble_bipolaire": {
+          "type_I": "Épisodes maniaques francs (euphorie, grandiosité, réduction du sommeil, hyperactivité, prise de risques, discours rapide) alternant avec des épisodes dépressifs.",
+          "type_II": "Hypomanies (manies légères, souvent productives et agréables) + épisodes dépressifs majeurs. Plus difficile à diagnostiquer.",
+          "traitement": "Stabilisateurs de l'humeur (lithium, valproate, lamotrigine). Les ISRS SEULS sont CONTRE-INDIQUÉS dans le bipolaire (risque de virage maniaque)."
+        }
+      },
+      "traitements": {
+        "pharmacologiques": {
+          "ISRS": "Inhibiteurs Sélectifs de la Recapture de la Sérotonine. 1re ligne. Fluoxétine (Prozac), sertraline (Zoloft), escitalopram (Lexapro). Efficacité modérée, bien tolérés. Effets secondaires : nausées initiales, prise de poids, dysfonction sexuelle.",
+          "IRSN": "Inhibiteurs de la Recapture de la Sérotonine et de la Noradrénaline. Venlafaxine (Effexor), duloxétine (Cymbalta). Utiles si composante douloureuse ou fatigue.",
+          "kétamine_esketamine": "Révolution. Effet antidépresseur en heures. Spravato (eskétamine intranasale) approuvé par la FDA pour la dépression résistante. Administration supervisée en clinique.",
+          "psilocybine": "Études Phase II prometteuses (Johns Hopkins, Imperial College). 2 séances avec accompagnement psychothérapeutique → rémission chez 50-70% des patients résistants. Mécanisme : 'reset' du DMN hyperactif.",
+          "note": "Les antidépresseurs ne sont pas une 'drogue du bonheur' — ils restaurent un fonctionnement neurochimique de base. Ils sont les plus efficaces combinés avec la psychothérapie."
+        },
+        "non_pharmacologiques": {
+          "psychothérapie": {
+            "TCC": "Thérapie Cognitive et Comportementale. Efficacité comparable aux ISRS pour la dépression légère-modérée. Restructuration des pensées négatives automatiques. 12-20 séances.",
+            "thérapie_interpersonnelle": "IPT. Focus sur les relations et les transitions de vie. Aussi efficace que les ISRS pour la dépression légère-modérée.",
+            "ACT": "Acceptance and Commitment Therapy. Ne cherche pas à éliminer les pensées négatives mais à changer la relation avec elles."
+          },
+          "exercice": "30 min d'exercice modéré, 3-5x/semaine. Efficacité comparable aux ISRS pour la dépression légère-modérée (Blumenthal et al. 2007). Augmente le BDNF, réduit l'inflammation, augmente les endorphines et la sérotonine.",
+          "luminothérapie": "10 000 lux, 30 min le matin. Efficace pour la dépression saisonnière ET non-saisonnière.",
+          "TMS": "Stimulation Magnétique Transcrânienne. Stimulation du cortex préfrontal dorsolatéral gauche (hypoactif dans la dépression). Non invasif. Approuvé pour la dépression résistante.",
+          "ECT": "Électroconvulsothérapie. Dernier recours mais le traitement le plus efficace pour la dépression sévère résistante (70-90% de réponse). Sous anesthésie générale. Stigmatisée mais sûre.",
+          "neurofeedback": "Entraînement de l'activité cérébrale par feedback en temps réel. Réduction de l'asymétrie frontale (alpha gauche > droite dans la dépression)."
+        }
+      },
+      "signaux_alerte": {
+        "soi_même": [
+          "Perte d'intérêt progressive pour les activités habituellement plaisantes",
+          "Fatigue non expliquée par le sommeil ou l'effort",
+          "Difficultés de concentration inhabituelles",
+          "Isolement social progressif",
+          "Pensées récurrentes de nullité ou de culpabilité",
+          "Troubles du sommeil persistants (> 2 semaines)"
+        ],
+        "chez_un_proche": [
+          "Retrait social inhabituel",
+          "Changement de comportement (irritabilité, silence, pleurs)",
+          "Négligence de l'apparence ou de l'hygiène",
+          "Propos négatifs récurrents sur soi ou sur l'avenir",
+          "Dons d'objets personnels ou mise en ordre des affaires (signal d'alerte suicidaire)"
+        ],
+        "urgence": "Pensées suicidaires actives avec plan → URGENCE. Appeler le 3114 (numéro national de prévention du suicide en France) ou se rendre aux urgences."
+      }
+    },
+    "burnout_avancé": {
+      "neurobiologie_burnout": {
+        "axe_HPA": "Le burnout est un état d'épuisement de l'axe HPA. Phase initiale : cortisol élevé (stress chronique). Phase tardive : cortisol BAS (épuisement surrénalien fonctionnel — l'axe HPA ne peut plus répondre).",
+        "inflammation": "Le burnout est associé à une augmentation des marqueurs inflammatoires (CRP, IL-6). L'inflammation chronique contribue à la fatigue, au brouillard mental et à la douleur.",
+        "cerveau": "Réduction du volume du cortex préfrontal et de l'amygdale chez les personnes en burnout (Savic 2015). Altération de la mémoire de travail et des fonctions exécutives."
+      },
+      "stades_Freudenberger": {
+        "auteur": "Herbert Freudenberger (1974). Psychologue ayant lui-même vécu un burnout. A identifié 12 stades.",
+        "stades": {
+          "1_obligation_prouver": "Besoin compulsif de prouver sa valeur. Perfectionnisme. Incapacité à déléguer.",
+          "2_travailler_plus": "Heures supplémentaires, weekend. Incapacité à déconnecter. 'Je suis indispensable.'",
+          "3_négliger_besoins": "Sommeil, alimentation, exercice, relations sacrifiés au travail.",
+          "4_déplacement_conflits": "Conscience que quelque chose ne va pas mais refus de voir la cause. Symptômes physiques ignorés.",
+          "5_révision_valeurs": "Les amis, la famille, les loisirs deviennent sans importance. Seul le travail compte.",
+          "6_déni_problèmes": "Cynisme, agressivité, accusation des autres. Le problème c'est les autres, pas moi.",
+          "7_retrait_social": "Isolement progressif. Contacts sociaux réduits au minimum. Alcool/substances pour tenir.",
+          "8_changements_comportement": "Comportement observable par l'entourage. Anxiété, paranoia, sentiment de menace.",
+          "9_dépersonnalisation": "Perte de contact avec soi-même. Sentiment de vide. Automate. 'Je ne me reconnais plus.'",
+          "10_vide_intérieur": "Sentiments de vide et d'inutilité. Activités compulsives pour remplir le vide (achats, nourriture, sexe, substances).",
+          "11_dépression": "Épuisement, désespoir, indifférence. Le burnout a évolué en dépression clinique.",
+          "12_effondrement": "Effondrement physique et/ou mental. Hospitalisation possible. Point de non-retour sans intervention."
+        },
+        "point_critique": "Les stades 1-6 sont réversibles avec des ajustements de vie. Au-delà du stade 7, une intervention professionnelle est nécessaire."
+      },
+      "facteurs_de_risque": {
+        "organisationnels": [
+          "Charge de travail excessive sans contrôle (Karasek : haute demande + faible autonomie = risque max)",
+          "Manque de reconnaissance",
+          "Injustice perçue",
+          "Valeurs en conflit avec l'organisation",
+          "Absence de communauté/soutien social au travail",
+          "Ambiguïté de rôle"
+        ],
+        "individuels": [
+          "Perfectionnisme",
+          "Difficulté à dire non",
+          "Identité fusionnée avec le travail ('Je suis mon travail')",
+          "Besoin excessif de reconnaissance externe",
+          "Faible estime de soi compensée par la performance",
+          "Absence de limites travail-vie personnelle"
+        ]
+      },
+      "récupération": {
+        "phase_1_arrêt": {
+          "durée": "2-4 semaines minimum d'arrêt complet.",
+          "actions": "Dormir (le corps a une dette de sommeil massive). Alimentation réparatrice. ZÉRO travail (même pas 'un petit email'). Prévenir l'entourage. Consulter un médecin (arrêt de travail)."
+        },
+        "phase_2_restauration": {
+          "durée": "1-3 mois",
+          "actions": "Mouvement doux (marche, yoga, natation). Reconnexion avec les proches. Thérapie (TCC, ACT ou thérapie de soutien). Rétablissement du rythme circadien. Pratiques de régulation du SN (cohérence cardiaque, méditation)."
+        },
+        "phase_3_reconstruction": {
+          "durée": "3-6 mois",
+          "actions": "Identifier les causes (pas les symptômes) du burnout. Redéfinir ses valeurs et ses limites. Explorer l'ikigai. Négocier les conditions de retour au travail (ou changer). Mettre en place des systèmes de protection (limites, routines, détection précoce)."
+        },
+        "phase_4_prevention": {
+          "durée": "Vie entière",
+          "actions": "Monitoring régulier (échelle Maslach, auto-évaluation mensuelle). Limites non-négociables (horaires, vacances, déconnexion). Pratiques de bien-être intégrées (non optionnelles). Réseau de soutien social maintenu."
+        }
+      },
+      "burnout_vs_dépression": {
+        "burnout": "Lié au contexte de travail. S'améliore en quittant la situation. Le patient SE reconnaît en burnout. Estime de soi préservée (initialement).",
+        "dépression": "Envahit tous les domaines de vie. Persiste même après changement de contexte. Le patient se sent 'cassé'. Estime de soi effondrée.",
+        "overlap": "50% des burnouts évoluent vers une dépression clinique. Les deux partagent : fatigue, trouble du sommeil, trouble de la concentration, retrait social."
+      }
+    },
+    "prévention_intégrée": {
+      "quotidien": {
+        "règle_3_3_3": "3h de travail profond max par session, 3 pauses significatives par jour, 3 activités non-travail par semaine.",
+        "déconnexion": "Règle du coucher de soleil : après le coucher du soleil, plus de travail. Smartphone en mode avion 1h avant le coucher.",
+        "micro_récupération": "5 min de cohérence cardiaque entre les meetings. 20 min de marche après le déjeuner. 2 min d'étirements chaque heure."
+      },
+      "hebdomadaire": "1 journée SANS travail. 1 activité sociale significative. 1 activité physique intense. 1 pratique de connexion avec soi (journal, méditation longue, nature).",
+      "mensuel": "1 mini-bilan : énergie, sens, relations, santé. Score 1-10 chaque domaine. Si < 5 sur 2+ domaines pendant 2+ mois → agir.",
+      "annuel": "1 semaine de déconnexion totale minimum. Bilan ikigai. Ajustement des objectifs. Check-up santé."
+    }
+  }
+}

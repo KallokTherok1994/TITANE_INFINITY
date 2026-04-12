@@ -1,0 +1,64 @@
+{
+  "version": "v30.1.0",
+  "category": "microbiome_axe_intestin_cerveau",
+  "description": "Microbiome et axe intestin-cerveau — microbiote intestinal, psychobiotiques, dysbiose, perméabilité intestinale (leaky gut), neuroinflammation, nerf vague, sérotonine intestinale, probiotiques/prébiotiques, axe HPA, GABA, acides gras à chaîne courte, cerveau entérique",
+  "microbiome_axe_intestin_cerveau": {
+    "introduction": "Le microbiome intestinal héberge 100 000 milliards de micro-organismes (bactéries, virus, champignons, archées). L'axe intestin-cerveau est un système de communication bidirectionnel reliant le système nerveux entérique (cerveau intestinal) au système nerveux central via le nerf vague, les hormones, les cytokines et les métabolites microbiens.",
+    "microbiote_intestinal": {
+      "composition": "Plus de 1000 espèces bactériennes. Phyla dominants: Firmicutes, Bacteroidetes, Actinobacteria, Proteobacteria. Ratio Firmicutes/Bacteroidetes important pour la santé.",
+      "fonctions": ["Digestion des fibres alimentaires (fermentation)", "Synthèse de vitamines (B12, K, biotine, folate)", "Barrière contre les pathogènes (colonisation compétitive)", "Maturation et régulation du système immunitaire", "Production de neurotransmetteurs (sérotonine, GABA, dopamine)", "Métabolisme des médicaments et xénobiotiques"],
+      "cerveau_enterique": "Le système nerveux entérique contient 200 à 600 millions de neurones. Il produit 90% de la sérotonine corporelle et 50% de la dopamine. C'est le 2e cerveau."
+    },
+    "voies_communication": {
+      "nerf_vague": "Voie neuronale directe (10e nerf crânien). Transmet les signaux du microbiote au cerveau et inversement. 80% des fibres sont afférentes (intestin→cerveau).",
+      "voie_immunitaire": "Le microbiote module les cytokines pro/anti-inflammatoires. La dysbiose provoque une inflammation systémique qui atteint le cerveau (neuroinflammation via microglie activée).",
+      "voie_endocrinienne": "Régulation de l'axe HPA (hypothalamo-hypophyso-surrénalien). Le microbiote influence la production de cortisol et la réponse au stress.",
+      "voie_metabolique": "Acides gras à chaîne courte (AGCC: butyrate, propionate, acétate) produits par fermentation des fibres. Le butyrate nourrit les colonocytes, renforce la barrière intestinale, et a des effets anti-inflammatoires cérébraux.",
+      "neurotransmetteurs_microbiens": {
+        "serotonine": "90% produite dans l'intestin par les cellules entérochromaffines. Modulée par le microbiote. Cruciale pour l'humeur, le sommeil, l'appétit.",
+        "gaba": "Produit par Lactobacillus et Bifidobacterium. Inhibiteur principal du SNC. Anti-anxiété.",
+        "dopamine": "50% produite dans l'intestin. Motivation, récompense, plaisir.",
+        "acetylcholine": "Impliquée dans la motilité intestinale et la mémoire."
+      }
+    },
+    "dysbiose": {
+      "definition": "Déséquilibre de la composition microbienne intestinale. Perte de diversité et/ou prolifération d'espèces pathogènes.",
+      "causes": ["Antibiotiques (destruction massive)", "Alimentation ultra-transformée, pauvre en fibres", "Stress chronique (cortisol altère le microbiote)", "Sédentarité", "Alcool excessif", "Pesticides et additifs alimentaires", "Manque de sommeil"],
+      "consequences": ["Troubles digestifs (SII, MICI)", "Dépression et anxiété", "Maladies auto-immunes", "Obésité et résistance à l'insuline", "Allergies et intolérances", "Troubles cognitifs, brouillard mental", "Fatigue chronique"],
+      "diagnostic": "Analyse du microbiote par séquençage 16S rRNA, analyse des métabolites fécaux, test de zonuline (perméabilité)."
+    },
+    "permeabilite_intestinale": {
+      "definition": "La barrière intestinale (jonctions serrées entre entérocytes) empêche le passage de molécules indésirables. Quand elle est compromise (leaky gut), des endotoxines bactériennes (LPS) passent dans la circulation sanguine.",
+      "mecanisme_neuroinflammation": "LPS→activation immunitaire systémique→cytokines pro-inflammatoires (TNF-α, IL-6, IL-1β)→passage de la barrière hémato-encéphalique→activation microgliale→neuroinflammation→troubles cognitifs et psychiatriques.",
+      "facteurs_aggravants": ["Gluten (chez les sensibles)", "AINS (ibuprofène)", "Stress chronique", "Alcool", "Sucre raffiné", "Dysbiose"],
+      "restauration": ["Glutamine (acide aminé réparateur)", "Zinc carnosine", "Butyrate (supplémentation ou fibres fermentescibles)", "Aloe vera", "Curcumine", "Bouillon d'os (collagène, glycine)"]
+    },
+    "psychobiotiques": {
+      "definition": "Probiotiques et prébiotiques qui, lorsqu'ingérés en quantité adéquate, produisent un bénéfice sur la santé mentale via l'axe intestin-cerveau.",
+      "souches_cles": [
+        {"souche": "Lactobacillus rhamnosus JB-1", "effet": "Réduction de l'anxiété et du cortisol, modulation GABA via le nerf vague"},
+        {"souche": "Bifidobacterium longum 1714", "effet": "Réduction du stress perçu, amélioration de la mémoire"},
+        {"souche": "Lactobacillus helveticus R0052", "effet": "Réduction des symptômes dépressifs et anxieux"},
+        {"souche": "Bifidobacterium breve CCFM1025", "effet": "Amélioration de l'humeur, réduction de la neuroinflammation"},
+        {"souche": "Lactobacillus plantarum PS128", "effet": "Modulation dopamine/sérotonine, études sur TSA et dépression"}
+      ],
+      "prebiotiques_benefiques": ["Inuline (chicorée, artichaut)", "FOS (fructo-oligosaccharides)", "GOS (galacto-oligosaccharides)", "Polyphénols (cacao, fruits rouges, thé vert)", "Fibres de psyllium", "Amidon résistant (banane verte, riz refroidi)"],
+      "aliments_fermentés": ["Kéfir", "Kombucha", "Choucroute lacto-fermentée", "Kimchi", "Miso", "Tempeh", "Yaourt naturel (non sucré)"]
+    },
+    "strategies_optimisation": {
+      "alimentation": "Régime méditerranéen riche en fibres (30g+/jour), polyphénols, oméga-3. Éviter ultra-transformé, sucres raffinés, émulsifiants.",
+      "exercice_physique": "30 min d'exercice modéré quotidien augmente la diversité microbienne et la production de butyrate.",
+      "gestion_stress": "Méditation, cohérence cardiaque, yoga — réduisent le cortisol et protègent le microbiote.",
+      "sommeil": "7-9h de sommeil régulier. Le rythme circadien affecte directement le microbiote.",
+      "contact_nature": "Exposition à la biodiversité microbienne (jardinage, forêt, animaux) enrichit le microbiote.",
+      "antibiotiques_raisonnes": "Éviter les antibiotiques inutiles. Toujours supplémenter en probiotiques pendant et après un traitement antibiotique."
+    },
+    "recherche_recente_2024_2025": {
+      "transplantation_fecale": "Utilisée pour C. difficile résistant. Études en cours pour dépression, TSA, Parkinson.",
+      "postbiotiques": "Métabolites et fragments bactériens (butyrate, indole) utilisés directement comme supplément, sans bactéries vivantes.",
+      "microbiote_et_neurodegenerescence": "Liens établis entre dysbiose et Parkinson (α-synucléine intestinale), Alzheimer (neuroinflammation), sclérose en plaques.",
+      "precision_microbiome": "Vers une médecine du microbiome personnalisée basée sur le séquençage individuel et des interventions ciblées."
+    },
+    "avertissement_sante": "Ces informations sont éducatives. En cas de troubles digestifs ou psychologiques persistants, consultez un professionnel de santé qualifié."
+  }
+}
