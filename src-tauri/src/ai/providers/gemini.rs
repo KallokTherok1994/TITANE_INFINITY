@@ -64,13 +64,14 @@ impl GeminiProvider {
         if !response.status().is_success() {
             let status = response.status();
             let error_text = response.text().await.unwrap_or_default();
-            // Sanitize error to prevent API key leakage via URL query params
+            // Sanitize error to prevent API key leakage via URL query params or body
             let sanitized = {
-                let lower = error_text.to_lowercase();
+                let mut text = error_text.clone();
+                // Strip query params containing keys from URLs
+                let lower = text.to_lowercase();
                 if lower.contains("key=") || lower.contains("apikey=") || lower.contains("token=")
                 {
-                    // Strip query string from any URLs in error text
-                    error_text
+                    text = text
                         .split_whitespace()
                         .map(|w| {
                             if let Some(pos) = w.find("?key=") {
@@ -82,10 +83,13 @@ impl GeminiProvider {
                             }
                         })
                         .collect::<Vec<_>>()
-                        .join(" ")
-                } else {
-                    error_text
+                        .join(" ");
                 }
+                // Redact the actual API key value if it appears in the error body
+                if !self.api_key.is_empty() && text.contains(&self.api_key) {
+                    text = text.replace(&self.api_key, "[REDACTED]");
+                }
+                text
             };
 
             return Err(match status.as_u16() {

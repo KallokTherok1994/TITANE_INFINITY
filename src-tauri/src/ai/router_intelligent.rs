@@ -322,6 +322,25 @@ mod tests {
         assert!(decision.primary.contains("opus"));
     }
 
+    #[tokio::test]
+    async fn test_route_fast_latency_priority() {
+        let router = AiRouter::new(false, true); // latency priority enabled
+        let req = AiRequest {
+            prompt: "Quick question".to_string(),
+            mode: AiMode::Fast,
+            user_id: "test".to_string(),
+            session_id: "test".to_string(),
+            max_tokens: None,
+            temperature: None,
+            context: None,
+        };
+
+        let decision = router.route(&req).await;
+        // Latency priority routes to local provider first
+        assert_eq!(decision.primary, "local_llama3");
+        assert_eq!(decision.fallback, "titane_engine");
+    }
+
     #[test]
     fn test_detect_complexity() {
         let router = AiRouter::default();
