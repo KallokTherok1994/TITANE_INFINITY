@@ -61,7 +61,29 @@ impl GeminiProvider {
         if !response.status().is_success() {
             let status = response.status();
             let error_text = response.text().await.unwrap_or_default();
-            let sanitized = crate::ai::security::sanitize_api_error(&error_text);
+            // Sanitize error to prevent API key leakage via URL query params
+            let sanitized = {
+                let lower = error_text.to_lowercase();
+                if lower.contains("key=") || lower.contains("apikey=") || lower.contains("token=")
+                {
+                    // Strip query string from any URLs in error text
+                    error_text
+                        .split_whitespace()
+                        .map(|w| {
+                            if let Some(pos) = w.find("?key=") {
+                                &w[..pos]
+                            } else if let Some(pos) = w.find("&key=") {
+                                &w[..pos]
+                            } else {
+                                w
+                            }
+                        })
+                        .collect::<Vec<_>>()
+                        .join(" ")
+                } else {
+                    error_text
+                }
+            };
 
             return Err(match status.as_u16() {
                 401 | 403 => AIError::AuthenticationFailed {

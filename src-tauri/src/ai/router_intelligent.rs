@@ -270,7 +270,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_route_quality_complex() {
-        let router = AiRouter::default();
+        let router = AiRouter::new(false, false); // no cost opt
         let req = AiRequest {
             prompt: "Analyser en profondeur l'architecture système et comparer plusieurs approches"
                 .to_string(),
@@ -287,8 +287,26 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_route_quality_cost_optimized() {
+        let router = AiRouter::new(true, false); // cost opt enabled
+        let req = AiRequest {
+            prompt: "Analyser en profondeur l'architecture".to_string(),
+            mode: AiMode::Quality,
+            user_id: "test".to_string(),
+            session_id: "test".to_string(),
+            max_tokens: None,
+            temperature: None,
+            context: None,
+        };
+
+        let decision = router.route(&req).await;
+        // Cost optimization routes to Gemini for quality
+        assert_eq!(decision.primary, "gemini");
+    }
+
+    #[tokio::test]
     async fn test_route_deep() {
-        let router = AiRouter::default();
+        let router = AiRouter::new(false, false); // no cost opt
         let req = AiRequest {
             prompt: "Deep analysis".to_string(),
             mode: AiMode::Deep,
@@ -300,7 +318,7 @@ mod tests {
         };
 
         let decision = router.route(&req).await;
-        assert!(decision.primary.contains("sonnet") || decision.primary.contains("opus"));
+        assert!(decision.primary.contains("opus"));
     }
 
     #[test]
