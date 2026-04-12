@@ -119,6 +119,9 @@ export const useLivingEngines = (updateInterval = 100) => {
 
   // Initialize Persona Engine (Tauri or TypeScript fallback)
   useEffect(() => {
+    // React StrictMode (dev) runs effect cleanup + setup twice; reset mounted flag on setup.
+    mountedRef.current = true;
+
     const initWithTimeout = async (
       promise: Promise<void>,
       timeoutMs: number

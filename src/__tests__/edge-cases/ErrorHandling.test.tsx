@@ -133,6 +133,26 @@ describe('Edge Cases: Error Handling', () => {
       expect(screen.getByText(/specific error message/i)).toBeInTheDocument();
     });
 
+    it('should render object-like errors safely', () => {
+      const ThrowObject = () => {
+        throw {
+          msg: 'window.onerror payload',
+          url: '/app.js',
+          line: 10,
+          col: 20,
+          source: 'window.onerror',
+        };
+      };
+
+      render(
+        <ErrorBoundary>
+          <ThrowObject />
+        </ErrorBoundary>
+      );
+
+      expect(screen.getByText(/window.onerror payload/i)).toBeInTheDocument();
+    });
+
     it('should allow error recovery', async () => {
       const ThrowError = ({ shouldThrow }: { shouldThrow: boolean }) => {
         if (shouldThrow) throw new Error('Test');

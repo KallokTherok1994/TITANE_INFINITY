@@ -20,9 +20,62 @@ interface ErrorBoundaryProps {
 
 interface ErrorBoundaryState {
   hasError: boolean;
-  error: Error | null;
+  error: unknown;
   errorInfo: ErrorInfo | null;
 }
+
+interface NormalizedErrorDisplay {
+  message: string;
+  stack: string;
+}
+
+const safeStringify = (value: unknown): string => {
+  try {
+    const out = JSON.stringify(value, null, 2);
+    return out ?? String(value);
+  } catch {
+    return String(value);
+  }
+};
+
+const normalizeErrorDisplay = (value: unknown): NormalizedErrorDisplay => {
+  if (value instanceof Error) {
+    return {
+      message: typeof value.message === 'string' ? value.message : safeStringify(value.message),
+      stack: typeof value.stack === 'string' ? value.stack : '',
+    };
+  }
+
+  if (value && typeof value === 'object') {
+    const record = value as Record<string, unknown>;
+    const message =
+      typeof record.message === 'string'
+        ? record.message
+        : typeof record.msg === 'string'
+          ? record.msg
+          : safeStringify(value);
+    const stack =
+      typeof record.stack === 'string'
+        ? record.stack
+        : record.err && typeof record.err === 'object'
+          ? safeStringify(record.err)
+          : '';
+    return { message, stack };
+  }
+
+  return {
+    message: typeof value === 'string' ? value : safeStringify(value),
+    stack: '',
+  };
+};
+
+const toError = (value: unknown): Error => {
+  if (value instanceof Error) {
+    return value;
+  }
+  const normalized = normalizeErrorDisplay(value);
+  return new Error(normalized.message || 'Unknown error');
+};
 
 /**
  * ErrorBoundary - Composant de capture d&apos;erreurs React
@@ -44,7 +97,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     };
   }
 
-  static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
+  static getDerivedStateFromError(error: unknown): Partial<ErrorBoundaryState> {
     return {
       hasError: true,
       error,
@@ -53,6 +106,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     const { context = 'Unknown', onError } = this.props;
+    const normalizedError = toError(error);
 
     // Log structuré avec contexte
     logger.error(
@@ -62,13 +116,13 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         context,
         action: 'componentDidCatch',
       },
-      error
+      normalizedError
     );
 
     // Callback personnalisé
     if (onError) {
       try {
-        onError(error, errorInfo);
+        onError(normalizedError, errorInfo);
       } catch (callbackError) {
         logger.error(
           'onError callback failed',
@@ -88,7 +142,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     // sendUIErrorReport(context, error, errorInfo);
 
     this.setState({
-      error,
+      error: normalizedError,
       errorInfo,
     });
   }
@@ -104,6 +158,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   render(): ReactNode {
     const { hasError, error } = this.state;
     const { children, fallback, context = 'Component' } = this.props;
+    const normalized = normalizeErrorDisplay(error);
 
     if (hasError) {
       // Fallback personnalisé
@@ -151,9 +206,9 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                   maxHeight: '300px',
                 }}
               >
-                {error.message}
+                {normalized.message}
                 {'\n\n'}
-                {error.stack}
+                {normalized.stack}
               </pre>
             </details>
           )}
