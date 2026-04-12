@@ -87,10 +87,8 @@ else
 
   if [[ -z "$OLLAMA_URL" ]]; then
     fail "OLLAMA_LAN_FAIL — ollamaUrl not found in runtime config"
-  elif [[ "$OLLAMA_URL" == "127.0.0.1"* ]] || [[ "$OLLAMA_URL" == "http://127.0.0.1"* ]]; then
-    fail "OLLAMA_LAN_FAIL — ollamaUrl is $OLLAMA_URL (127.0.0.1 is loopback — use LAN IP e.g. 192.168.x.x for Android)"
-  elif [[ "$OLLAMA_URL" == "localhost"* ]] || [[ "$OLLAMA_URL" == "http://localhost"* ]]; then
-    fail "OLLAMA_LAN_FAIL — ollamaUrl is $OLLAMA_URL (localhost won't work from Android — use LAN IP)"
+  elif echo "$OLLAMA_URL" | grep -qE '(^|://)(127\.0\.0\.1|localhost)(:|/|$)'; then
+    fail "OLLAMA_LAN_FAIL — ollamaUrl is $OLLAMA_URL (loopback address won't work from Android — use LAN IP e.g. 192.168.x.x)"
   else
     pass "OLLAMA_LAN_OK — ollamaUrl=$OLLAMA_URL (non-loopback LAN address)"
   fi

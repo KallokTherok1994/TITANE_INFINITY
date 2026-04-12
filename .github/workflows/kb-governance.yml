@@ -80,13 +80,22 @@ jobs:
       - name: Make kb-health.sh executable
         run: chmod +x scripts/kb-health.sh
 
+      - name: Save committed KB checksums
+        run: |
+          CHECKSUMS_FILE="data/knowledge_base/KB_CHECKSUMS.sha256"
+          if [[ -f "$CHECKSUMS_FILE" ]]; then
+            cp "$CHECKSUMS_FILE" /tmp/KB_CHECKSUMS_committed.sha256
+          else
+            touch /tmp/KB_CHECKSUMS_committed.sha256
+          fi
+
       - name: Regenerate KB checksums
         run: bash scripts/kb-health.sh
 
       - name: Check for checksum drift
         run: |
           CHECKSUMS_FILE="data/knowledge_base/KB_CHECKSUMS.sha256"
-          if git diff --name-only HEAD | grep -q "$(basename $CHECKSUMS_FILE)"; then
+          if ! diff -q /tmp/KB_CHECKSUMS_committed.sha256 "$CHECKSUMS_FILE" >/dev/null 2>&1; then
             echo "::warning file=$CHECKSUMS_FILE::KB checksums have drifted vs committed version. Consider committing the updated checksums."
           else
             echo "KB checksums are up to date — no drift detected."
