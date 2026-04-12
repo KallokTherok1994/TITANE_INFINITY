@@ -1,8 +1,12 @@
 import { test, expect } from '@playwright/test';
 import path from 'node:path';
 import {
+  collectConsoleAndPageErrors,
+  extractCriticalPageErrors,
   extractCriticalConsoleErrors,
   filterKnownConsoleNoise,
+  nowIso,
+  waitForCondition,
   writeJsonArtifact,
 } from './helpers';
 
@@ -10,13 +14,8 @@ const ARTIFACT_DIR = path.resolve(process.cwd(), 'reports/e2e/android-ui/browser
 
 test.describe('Android Build UI - Browser and Android Emulation', () => {
   test('renders core conversation UI and exports required UI maps', async ({ page }) => {
-    const consoleErrors: string[] = [];
-
-    page.on('console', msg => {
-      if (msg.type() === 'error') {
-        consoleErrors.push(msg.text());
-      }
-    });
+    const startedAt = Date.now();
+    const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
 
     await page.goto('/');
     await expect(page.getByTestId('page-titane')).toBeVisible({ timeout: 60000 });
@@ -26,12 +25,30 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
 
     const chatInput = page.getByTestId('chat-input');
     const sendButton = page.getByTestId('chat-send');
+    const userMessages = page.getByTestId('chat-message-user');
+    const assistantMessages = page.getByTestId('chat-message-assistant');
+    const chatError = page.getByTestId('chat-error');
 
     await expect(chatInput).toBeVisible();
     await expect(sendButton).toBeVisible();
 
+    const userCountBefore = await userMessages.count();
+    const assistantCountBefore = await assistantMessages.count();
+
     await chatInput.fill('Android UI smoke message');
     await expect(chatInput).toHaveValue('Android UI smoke message');
+    await sendButton.click({ force: true });
+
+    await expect(userMessages).toHaveCount(userCountBefore + 1, { timeout: 15000 });
+
+    // Non-silence contract: assistant response OR visible chat error.
+    const noSilence = await waitForCondition(async () => {
+      const assistantCount = await assistantMessages.count();
+      const hasChatError = await chatError.isVisible().catch(() => false);
+      return assistantCount > assistantCountBefore || hasChatError;
+    }, { timeoutMs: 25000, intervalMs: 500 });
+
+    expect(noSilence).toBe(true);
 
     const viewport = page.viewportSize();
     const route = page.url();
@@ -94,15 +111,40 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
     await expect(page.getByTestId('tab-conversation')).toBeVisible();
     await expect(page.getByTestId('chat-input')).toBeVisible();
 
+    const mobileInputMetrics = await page.getByTestId('chat-input').evaluate(el => {
+      const rect = el.getBoundingClientRect();
+      return {
+        top: rect.top,
+        bottom: rect.bottom,
+        viewportHeight: window.innerHeight,
+      };
+    });
+
     const filteredErrors = filterKnownConsoleNoise(consoleErrors);
     const criticalErrors = extractCriticalConsoleErrors(filteredErrors);
+    const criticalPageErrors = extractCriticalPageErrors(pageErrors);
+
+    const assistantCountAfter = await assistantMessages.count();
+    const chatErrorVisible = await chatError.isVisible().catch(() => false);
 
     const stability = {
+      startedAt: nowIso(),
+      durationMs: Date.now() - startedAt,
       consoleErrorCount: filteredErrors.length,
       consoleErrors: filteredErrors,
       criticalConsoleErrorCount: criticalErrors.length,
       criticalConsoleErrors: criticalErrors,
-      userMessageCount: await page.getByTestId('chat-message-user').count(),
+      pageErrorCount: pageErrors.length,
+      pageErrors,
+      criticalPageErrorCount: criticalPageErrors.length,
+      criticalPageErrors,
+      userMessageCount: await userMessages.count(),
+      assistantMessageCount: assistantCountAfter,
+      chatErrorVisible,
+      noSilence,
+      mobileInputNearBottom:
+        mobileInputMetrics.bottom >= mobileInputMetrics.viewportHeight * 0.6,
+      mobileInputMetrics,
     };
 
     writeJsonArtifact(ARTIFACT_DIR, 'page_classification.json', {
@@ -119,5 +161,7 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
 
     expect(ar20.presentCount).toBe(ar20.requiredCount);
     expect(criticalErrors).toHaveLength(0);
+    expect(criticalPageErrors).toHaveLength(0);
+    expect(stability.mobileInputNearBottom).toBe(true);
   });
 });
