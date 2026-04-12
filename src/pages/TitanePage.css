@@ -225,6 +225,41 @@
   animation: fade-in 0.4s ease-out;
 }
 
+/* Inline header/tabs used by TitanePage.tsx (mobile-first stability) */
+.titane-page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.titane-inline-tabs {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.375rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(25, 30, 48, 0.9), rgba(18, 22, 38, 0.94));
+  backdrop-filter: blur(10px) saturate(160%);
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
+}
+
+.titane-inline-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.titane-inline-tabs > button {
+  flex-shrink: 0;
+  min-height: 40px;
+}
+
+.titane-content {
+  min-height: min(600px, 72dvh);
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -471,6 +506,23 @@
     display: flex;
     align-items: center;
   }
+
+  .titane-inline-tabs {
+    gap: 0.4rem;
+    padding: 0.325rem;
+    scroll-snap-type: x mandatory;
+  }
+
+  .titane-inline-tabs > button {
+    scroll-snap-align: start;
+    min-height: 44px;
+    padding: 0.55rem 0.85rem !important;
+    font-size: 0.8rem !important;
+  }
+
+  .titane-content {
+    min-height: 64dvh;
+  }
 }
 
 /* Small Mobile (< 480px) */
@@ -559,6 +611,7 @@
   flex-direction: column;
   /* v29.0: chrome compacté → +~80px de hauteur conversation réelle */
   height: calc(100vh - 155px);
+  height: calc(100dvh - 155px);
   min-height: 500px;
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
@@ -1252,6 +1305,8 @@
 @media (max-width: 768px) {
   .conversation-container {
     height: calc(100vh - 200px);
+    height: calc(100dvh - 200px);
+    min-height: 420px;
   }
 
   .conversation-toolbar {
@@ -1270,10 +1325,15 @@
 
   .conversation-input-container {
     flex-direction: column;
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
   }
 
   .conversation-send-btn {
     width: 100%;
+  }
+
+  .conversation-input {
+    min-height: 108px;
   }
 }
 
