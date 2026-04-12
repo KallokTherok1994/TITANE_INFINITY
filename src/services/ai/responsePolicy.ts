@@ -577,6 +577,12 @@ export function evaluateInferenceState(
  * Estimation de complexité lexicale/structurelle d'un message.
  * Borné : 0.0 (trivial) → 1.0 (très complexe).
  * Pure fonction, pas d'I/O, pas de réseau.
+ *
+ * v30.2.0: Enhanced with structural analysis signals:
+ * - Enumeration detection (lists, multi-point requests)
+ * - Conditional/hypothetical reasoning markers
+ * - Multi-topic detection (commas, semicolons, conjunctions with topic shifts)
+ * - Temporal markers (past/present/future framing)
  */
 export function estimateComplexity(message: string): number {
   const words = message.split(/\s+/).filter(Boolean);
@@ -589,13 +595,26 @@ export function estimateComplexity(message: string): number {
   ).length;
   const longWordRatio = words.filter(w => w.length > 8).length / Math.max(wordCount, 1);
 
-  // Score normalisé entre 0 et 1
-  const lengthScore = Math.min(wordCount / 100, 1.0) * 0.3;
-  const questionScore = Math.min(questionCount / 3, 1.0) * 0.2;
-  const conjunctionScore = Math.min(conjunctionCount / 4, 1.0) * 0.25;
-  const lexicalScore = longWordRatio * 0.25;
+  // v30.2.0: Structural complexity signals
+  const enumerationCount = (
+    message.match(/\b(\d+[\.\)]\s|premièrement|deuxièmement|d'abord|ensuite|enfin|firstly|secondly|finally|also|de plus|par ailleurs)\b/gi) || []
+  ).length;
+  const conditionalCount = (
+    message.match(/\b(si|sauf si|à condition|dans le cas|suppose|imaginons|et si|if|unless|assuming|what if|in case)\b/gi) || []
+  ).length;
+  const temporalCount = (
+    message.match(/\b(avant|après|pendant|historiquement|à l'avenir|prochainement|jadis|auparavant|dorénavant|before|after|during|previously|going forward)\b/gi) || []
+  ).length;
 
-  return Math.min(1.0, lengthScore + questionScore + conjunctionScore + lexicalScore);
+  // Score normalisé entre 0 et 1
+  // v30.2.0: 6-factor formula with structural analysis
+  const lengthScore = Math.min(wordCount / 100, 1.0) * 0.25;
+  const questionScore = Math.min(questionCount / 3, 1.0) * 0.2;
+  const conjunctionScore = Math.min(conjunctionCount / 4, 1.0) * 0.2;
+  const lexicalScore = longWordRatio * 0.2;
+  const structuralScore = Math.min((enumerationCount + conditionalCount + temporalCount) / 5, 1.0) * 0.15;
+
+  return Math.min(1.0, lengthScore + questionScore + conjunctionScore + lexicalScore + structuralScore);
 }
 
 /**
@@ -683,7 +702,10 @@ export type IntentType =
   | 'conversational' // Greeting, acknowledgment, social
   | 'research_analysis' // Deep research / web analysis / synthesis request
   | 'professional_document' // User wants a professional document generated (report, letter, plan, etc.)
-  | 'deep_reflection'; // User seeks deep reflection, philosophical analysis, introspection
+  | 'deep_reflection' // User seeks deep reflection, philosophical analysis, introspection
+  | 'memory_management' // User wants to manage, organize, review, or curate memory
+  | 'message_analysis' // User wants detailed analysis of a message, conversation, or communication
+  | 'data_collection'; // User wants to gather, aggregate, compile, or structure data
 
 export interface IntentClassification {
   intent: IntentType;
@@ -815,6 +837,53 @@ const INTENT_SIGNALS: Record<
     freshness: 'stable',
     memoryRelevance: 'high',
   },
+  memory_management: {
+    patterns: [
+      /\b(mémoire|mémorise|retiens|enregistre|sauvegarde|note ça|garde en mémoire)\b/i,
+      /\b(oublie|efface|supprime de ta mémoire|ne retiens plus|nettoie)\b/i,
+      /\b(qu'as-tu retenu|que sais-tu sur moi|mes préférences|mes habitudes)\b/i,
+      /\b(organise tes souvenirs|trie tes notes|résume ce qu'on a fait)\b/i,
+      /\b(historique|journal|archive|trace|log des conversations)\b/i,
+      /\b(remember this|save this|store this|keep track|forget this|clear memory)\b/i,
+      /\b(what do you know about me|my preferences|my history|recall all)\b/i,
+      /\b(contexte précédent|session précédente|conversation précédente|dernier échange)\b/i,
+      /\b(consolide|fusionne|déduplique|priorise en mémoire|tri mémoire)\b/i,
+    ],
+    freshness: 'stable',
+    memoryRelevance: 'high',
+  },
+  message_analysis: {
+    patterns: [
+      /\b(analyse ce message|analyse cette conversation|décortique|décompose ce texte)\b/i,
+      /\b(ton du message|intention de l'auteur|sous-texte|message implicite)\b/i,
+      /\b(sentiment|émotion|ressenti|perception|interprétation)\b/i,
+      /\b(reformule|paraphrase|résume ce message|simplifie ce texte)\b/i,
+      /\b(points clés|idées principales|arguments|structure du message)\b/i,
+      /\b(analyze this message|parse this|break down|dissect|interpret this)\b/i,
+      /\b(what does this mean|tone analysis|sentiment analysis|communication style)\b/i,
+      /\b(qualité de la communication|clarté|cohérence|pertinence du message)\b/i,
+      /\b(biais dans ce message|manipulation|rhétorique|persuasion|argumentaire)\b/i,
+      /\b(non-dit|implicite|entre les lignes|ce qu'il veut dire vraiment)\b/i,
+    ],
+    freshness: 'stable',
+    memoryRelevance: 'medium',
+  },
+  data_collection: {
+    patterns: [
+      /\b(collecte|rassemble|compile|agrège|centralise|recense|inventorie)\b/i,
+      /\b(données|data|informations|statistiques|métriques|indicateurs|KPI)\b/i,
+      /\b(tableau|listing|base de données|registre|catalogue|répertoire)\b/i,
+      /\b(extrais les données|récupère les infos|pull data|scrape|mine)\b/i,
+      /\b(structure les données|organise les infos|classe|catégorise|trie)\b/i,
+      /\b(collect data|gather information|compile a list|aggregate|census)\b/i,
+      /\b(benchmark|comparatif|état des lieux|inventaire|cartographie des données)\b/i,
+      /\b(sources de données|provenance|fiabilité des données|qualité des données)\b/i,
+      /\b(export|csv|json|tableau croisé|pivot|visualisation de données)\b/i,
+      /\b(veille|monitoring|suivi|tracking|observation systématique)\b/i,
+    ],
+    freshness: 'current',
+    memoryRelevance: 'high',
+  },
 };
 
 /**
@@ -900,15 +969,24 @@ export const IDENTITY_CONSTANTS = {
   /** Deep reflection with multi-perspective analysis */
   deepReflectionEnabled: true,
 
+  /** Active memory lifecycle management (store, organize, summarize, forget) */
+  memoryLifecycleEnabled: true,
+
+  /** Deep message analysis (tone, intent, structure, implicit meaning) */
+  messageAnalysisEnabled: true,
+
+  /** Structured data collection and aggregation */
+  dataCollectionEnabled: true,
+
   /** Stable system identity label */
   systemLabel: 'TITANE∞',
 
   /** Version for identity tracking */
-  version: '30.1.0',
+  version: '30.2.0',
 
   /** Core behavioral promise */
   promise:
-    'Je suis là pour comprendre vite, agir utile, raisonner en profondeur, et me souvenir.',
+    'Je suis là pour comprendre vite, agir utile, raisonner en profondeur, gérer ta mémoire, analyser tes messages, et me souvenir.',
 } as const;
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -929,6 +1007,9 @@ export function getDepthForIntent(intent: IntentType): ResponseProfileId {
     research_analysis: 'DEEP',
     professional_document: 'ARCHITECT',
     deep_reflection: 'DEEP',
+    memory_management: 'DEVELOPED',
+    message_analysis: 'DEEP',
+    data_collection: 'ARCHITECT',
   };
 
   return intentDepthMap[intent] ?? 'DEVELOPED';
@@ -960,7 +1041,7 @@ export function computeEffectiveDepth(
   return getDepthForIntent(intent);
 }
 
-export const RESPONSE_POLICY_VERSION = '2.0.0';
+export const RESPONSE_POLICY_VERSION = '2.1.0';
 export const RESPONSE_POLICY_DATE = '2026-04-12';
 
 export default {

@@ -2335,6 +2335,9 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
       research_analysis: 'Analyse & Recherche',
       professional_document: 'Document professionnel',
       deep_reflection: 'Réflexion profonde',
+      memory_management: 'Gestion de mémoire',
+      message_analysis: 'Analyse de message',
+      data_collection: 'Collecte de données',
     };
 
     const depthLabels: Record<string, string> = {
@@ -3002,6 +3005,8 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
 
   /**
    * v26.0.0: Format memory context into a structured block for prompt injection
+   * v30.2.0: Enhanced with richer context categories, data quality indicators,
+   *          and structured memory lifecycle metadata
    */
   private formatMemoryBlock(context: {
     sources: string[];
@@ -3010,19 +3015,36 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
     const parts: string[] = [];
 
     if (context.data.projects) {
-      parts.push(`📋 Projets: ${context.data.projects}`);
+      parts.push(`📋 Projets actifs: ${context.data.projects}`);
     }
     if (context.data.decisions) {
-      parts.push(`📝 Décisions: ${context.data.decisions}`);
+      parts.push(`📝 Décisions récentes: ${context.data.decisions}`);
     }
     if (context.data.knowledge) {
-      parts.push(`📚 Connaissances: ${context.data.knowledge}`);
+      parts.push(`📚 Connaissances pertinentes: ${context.data.knowledge}`);
     }
     if (context.data.rituals) {
-      parts.push(`🔄 Rituels: ${context.data.rituals}`);
+      parts.push(`🔄 Rituels & habitudes: ${context.data.rituals}`);
+    }
+    if (context.data.preferences) {
+      parts.push(`⚙️ Préférences utilisateur: ${context.data.preferences}`);
+    }
+    if (context.data.timeline) {
+      parts.push(`📅 Timeline récente: ${context.data.timeline}`);
     }
 
-    return parts.length > 0 ? `═══ CONTEXTE MÉMOIRE ═══\n${parts.join('\n')}` : '';
+    // v30.2.0: Memory metadata for cognitive awareness
+    const sourceCount = context.sources.length;
+    const dataKeys = Object.keys(context.data).filter(k => context.data[k]);
+    const memoryMeta = [
+      `🔗 Sources: ${sourceCount}`,
+      `📊 Catégories actives: ${dataKeys.join(', ') || 'aucune'}`,
+    ].join(' | ');
+
+    if (parts.length > 0) {
+      return `═══ CONTEXTE MÉMOIRE ═══\n${parts.join('\n')}\n─── ${memoryMeta} ───`;
+    }
+    return '';
   }
 
   /**
@@ -3060,6 +3082,17 @@ CHAÎNE DE RAISONNEMENT OBLIGATOIRE :
 4. SYNTHÈSE — Réponse actionnable avec implications pratiques
 5. PROCHAIN MOVE — Action concrète recommandée
 
+PROTOCOLE MÉMOIRE (si mémoire contextuelle active) :
+• Référencer les informations pertinentes de la mémoire dans ta réponse
+• Signaler si une info mémoire semble obsolète ou contradictoire
+• Proposer de mémoriser les décisions/insights importants de cet échange
+• Si Kevin revient sur un sujet déjà discuté, synthétiser l'historique avant de répondre
+
+PROTOCOLE D'ANALYSE DE MESSAGE :
+• Si le message est ambigu : reformuler avant de répondre
+• Identifier l'intention réelle (surface vs. profonde)
+• Détecter le registre émotionnel : factuel, frustré, exploratoire, urgent
+
 RÈGLES DE QUALITÉ :
 - Chaque paragraphe doit apporter de la valeur nouvelle
 - Distinguer fait vérifié vs. inférence vs. hypothèse
@@ -3081,6 +3114,27 @@ PROTOCOLE D'ANALYSE APPROFONDIE :
 4. SYNTHÈSE INTÉGRÉE — Tisser les perspectives en une compréhension unifiée
 5. RECOMMANDATIONS PRIORISÉES — Classées par impact/effort avec justification
 6. INCERTITUDES BORNÉES — Ce que tu ne sais PAS et comment le vérifier
+
+PROTOCOLE MÉMOIRE AVANCÉ :
+• Exploiter activement la mémoire contextuelle pour enrichir l'analyse
+• Cross-référencer les décisions passées avec le sujet actuel
+• Identifier les patterns récurrents dans les interactions précédentes
+• Proposer de consolider les insights : quoi retenir, quoi archiver, quoi oublier
+• Si saturation mémoire : résumer et comprimer avant d'ajouter
+
+PROTOCOLE D'ANALYSE DE MESSAGE AVANCÉ :
+• Décortiquer la structure du message : thèse, arguments, sous-texte, registre émotionnel
+• Identifier les biais potentiels de l'auteur (confirmation, ancrage, disponibilité)
+• Évaluer la qualité argumentative : preuves, logique, cohérence
+• Détecter les non-dits et les implications implicites
+• Signaler les incohérences entre le message et le contexte connu
+
+PROTOCOLE DE COLLECTE DE DONNÉES :
+• Identifier toutes les sources de données pertinentes au sujet
+• Évaluer la fiabilité et la fraîcheur de chaque source
+• Structurer les données collectées en format exploitable (tableau, liste, classification)
+• Identifier les lacunes dans les données et proposer comment les combler
+• Croiser les données de sources multiples pour validation croisée
 
 RÈGLES DE RIGUEUR :
 - Explorer les nuances et les trade-offs
@@ -3127,6 +3181,30 @@ PROTOCOLE OMEGA — RAISONNEMENT SANS LIMITES :
 5. RECOMMANDATIONS HIÉRARCHISÉES — Architecture complète de la solution
 6. TRANSFERT DE COMPÉTENCE TOTAL — Apprendre à Kevin à reproduire cette analyse
 7. INCERTITUDES ET LIMITES — Expliciter ce qui n'est pas couvert
+
+MÉMOIRE OMEGA — GESTION INTÉGRALE :
+• Activer toutes les couches mémoire : instantanée, court terme, moyen terme, long terme, persistante, archivale
+• Cross-référencer systématiquement avec l'historique complet des interactions
+• Identifier les patterns récurrents et les évolutions dans les demandes de Kevin
+• Proposer activement : "Je retiens X", "Je suggère d'archiver Y", "Z semble obsolète"
+• Consolider les apprentissages : transformer les échanges en connaissances structurées
+• Appliquer la Loi #9 (Mémoire Vivante) : mémoriser ce qui a un impact structurant, oublier consciemment le reste
+
+ANALYSE DE MESSAGE OMEGA — DÉCRYPTAGE TOTAL :
+• Analyse sémantique multi-couches : sens littéral, intention, sous-texte, registre émotionnel
+• Identification des présupposés implicites et des non-dits
+• Évaluation de la cohérence interne du message et avec le contexte historique
+• Détection des biais cognitifs actifs (confirmation, ancrage, disponibilité, cadrage)
+• Analyse rhétorique : argumentation, persuasion, logique, sophismes potentiels
+• Synthèse : ce que Kevin dit vs. ce qu'il veut vraiment vs. ce dont il a besoin
+
+COLLECTE DE DONNÉES OMEGA — EXHAUSTIVITÉ STRUCTURÉE :
+• Cartographier toutes les sources de données disponibles et leur fiabilité
+• Structurer en format optimal : tableaux, matrices, classifications, taxonomies
+• Croiser systématiquement : sources multiples → convergence ou divergence
+• Identifier les lacunes critiques et proposer des stratégies de comblement
+• Qualifier chaque donnée : source, date, fiabilité (haute/moyenne/basse), vérifiabilité
+• Proposer des visualisations textuelles pour les jeux de données complexes
 
 QUALITÉ MAXIMALE :
 - Chaque affirmation doit être étayée (fait, raisonnement, ou hypothèse explicite)
