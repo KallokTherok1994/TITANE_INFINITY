@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-04-12T22:30:00Z",
-  "version": "v30.2.0",
+  "timestamp": "2026-04-12T23:00:00Z",
+  "version": "v30.3.0",
   "stats": {
     "filesProcessed": 6,
     "entriesMigrated": 0,
     "duplicatesRemoved": 28,
-    "errorsFixed": 1,
+    "errorsFixed": 3,
     "backupCreated": true
   },
   "issues": [
@@ -48,15 +48,32 @@
       "description": "KB health-check and autoheal governance scripts existed but were not integrated into CI, allowing regressions to go undetected.",
       "status": "fixed",
       "fixed_at": "2026-04-12T22:30:00Z"
+    },
+    {
+      "id": "ISSUE-NO-UNIT-TESTS-NEW-BACKENDS",
+      "severity": "high",
+      "file": "src-tauri/src/commands/rag_commands.rs, src-tauri/src/commands/web_search_commands.rs, src/services/chunkingService.ts",
+      "description": "rag_commands.rs and web_search_commands.rs added in PR #288 had zero unit tests. chunkingService.ts had no test file. Rule 2 (proof before verdict) was violated.",
+      "status": "fixed",
+      "fixed_at": "2026-04-12T23:00:00Z"
+    },
+    {
+      "id": "ISSUE-NO-VECTOR-STORE",
+      "severity": "high",
+      "file": "src/services/vectorStore.ts, src/services/ragService.ts",
+      "description": "vector-search was listed as features_planned but no VectorStore implementation existed. RAG pipeline used raw Map<string, DocumentChunk> with no proper cosine similarity search infrastructure.",
+      "status": "fixed",
+      "fixed_at": "2026-04-12T23:00:00Z"
     }
   ],
   "recommendations": [
     "Intégrer ce script dans le pipeline de déploiement",
     "Configurer des backups automatiques avant chaque optimisation",
-    "Implémenter un pipeline d'embeddings vectoriels pour activer vector-search et semantic-search réelle",
+    "Migrer le vector store in-memory vers IndexedDB pour la persistance entre sessions",
     "Remplacer le stub webResearchService.ts par un vrai moteur de recherche web (Brave API ou SearXNG)",
     "Ajouter un pipeline de chunking intelligent pour les fichiers KB (paragraphe/section plutôt que fichier entier)",
     "Mettre en place un versioning automatique des fichiers KB avec changelog sémantique",
-    "Add Ollama embedding model pull to Android build pipeline (ollama pull nomic-embed-text)"
+    "Add Ollama embedding model pull to Android build pipeline (ollama pull nomic-embed-text)",
+    "Migrate in-memory vector store to IndexedDB for persistence across sessions"
   ]
 }

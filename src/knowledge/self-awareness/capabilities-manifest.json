@@ -1,8 +1,8 @@
 {
   "meta": {
-    "id": "titane-capabilities-v30.2.0",
-    "version": "30.2.0",
-    "generated_at": "2026-04-12T22:30:00Z",
+    "id": "titane-capabilities-v30.3.0",
+    "version": "30.3.0",
+    "generated_at": "2026-04-12T23:00:00Z",
     "purpose": "Capability inventory — TITANE knows what it can do"
   },
   "capabilities": {
@@ -73,10 +73,10 @@
         "episodic-memory",
         "working-memory",
         "consolidation",
-        "embedding"
+        "embedding",
+        "vector-search"
       ],
-      "features_planned": ["vector-search"],
-      "notes": "embedding generation is now active via Ollama nomic-embed-text (backend implemented in PR #288); vector-search (full vector DB integration) is still planned; keyword-based search is active"
+      "notes": "embedding generation active via Ollama nomic-embed-text (PR #288); vector-search now active via in-memory VectorStore (vectorStore.ts, integrated in ragService.ts); persistent IndexedDB storage planned"
     },
     "singularity": {
       "description": "Unified state engine — physical, cognitive, symbolic, adaptive layers",
@@ -200,9 +200,9 @@
     "research": {
       "description": "Web research and knowledge acquisition",
       "status": "partial",
-      "notes": "rag-pipeline and file-ingestion are active; semantic-search is keyword-based only (not true vector semantic); web-search backend implemented via SearXNG IPC; knowledge-import is planned",
-      "features": ["rag-pipeline", "file-ingestion"],
-      "features_partial": ["semantic-search", "web-search"],
+      "notes": "rag-pipeline and file-ingestion are active; semantic-search uses in-memory vector store (operational); web-search backend implemented via SearXNG IPC with DuckDuckGo Lite automatic fallback; knowledge-import is planned",
+      "features": ["rag-pipeline", "file-ingestion", "semantic-search"],
+      "features_partial": ["web-search"],
       "features_planned": ["knowledge-import"]
     }
   }

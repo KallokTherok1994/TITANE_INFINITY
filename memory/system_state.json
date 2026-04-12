@@ -1,7 +1,7 @@
 {
   "system_state": {
     "version": "v20.0Ω",
-    "last_update": "2026-04-12T22:30:00Z",
+    "last_update": "2026-04-12T23:00:00Z",
     "harmonia_mode": "active",
     "memory_compaction_enabled": true,
     "auto_verify_enabled": true,
@@ -45,6 +45,12 @@
       "backend": "ollama",
       "model": "nomic-embed-text",
       "dimension": 768
+    },
+    "vector_store": {
+      "status": "active",
+      "backend": "in-memory",
+      "dimensions": 768,
+      "persistence": "planned"
     }
   },
   "metrics": {
@@ -53,6 +59,6 @@
     "memory_usage_mb": 2.3,
     "cpu_usage_percent": 12,
     "response_time_avg_ms": 180,
-    "memory_entries": 42
+    "memory_entries": 48
   }
 }
