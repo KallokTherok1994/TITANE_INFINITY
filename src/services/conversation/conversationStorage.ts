@@ -159,10 +159,49 @@ export class ConversationStorageService {
   }
 
   /**
-   * Lister toutes les conversations
+   * v30.3.0: Engagement-weighted conversation listing
+   * Instead of pure timestamp sort, compute engagement score:
+   * score = recency(0.35) + message_depth(0.25) + activity_frequency(0.20) + status_weight(0.20)
+   * Active conversations float higher even if not most recent
    */
   async listConversations(): Promise<ConversationSummary[]> {
-    return [...this.index].sort((a, b) => b.updated_at - a.updated_at);
+    const now = Date.now();
+    const ONE_DAY = 86400000;
+
+    return [...this.index]
+      .map(conv => {
+        // Factor 1: Recency — exponential decay with 7-day half-life
+        const ageMs = now - conv.updated_at;
+        const recencyScore = Math.exp(-0.693 * ageMs / (7 * ONE_DAY));
+
+        // Factor 2: Message depth — logarithmic scaling, rich conversations rank higher
+        // ln(1 + messages/5) / ln(1 + 100/5) → normalizes to ~0-1 for 0-100 messages
+        const depthScore = Math.log(1 + conv.message_count / 5) / Math.log(1 + 100 / 5);
+
+        // Factor 3: Activity frequency — messages per day (higher = more active)
+        const ageInDays = Math.max(1, ageMs / ONE_DAY);
+        const messagesPerDay = conv.message_count / ageInDays;
+        const activityScore = Math.min(1.0, messagesPerDay / 10); // 10 msg/day = max
+
+        // Factor 4: Status weight — active > paused > archived
+        const statusWeights: Record<string, number> = {
+          active: 1.0,
+          paused: 0.5,
+          archived: 0.1,
+        };
+        const statusScore = statusWeights[conv.status] || 0.3;
+
+        // Weighted engagement score
+        const engagement =
+          recencyScore * 0.35 +
+          depthScore * 0.25 +
+          activityScore * 0.20 +
+          statusScore * 0.20;
+
+        return { conv, engagement };
+      })
+      .sort((a, b) => b.engagement - a.engagement)
+      .map(item => item.conv);
   }
 
   /**
