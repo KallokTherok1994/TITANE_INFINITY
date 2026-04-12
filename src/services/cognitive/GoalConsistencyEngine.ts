@@ -33,6 +33,7 @@ import {
   ConsistencyViolationType,
   GoalConsistencyConfig,
   ConsistencyStats,
+  GoalConvergenceResult,
 } from './goalConsistency.types';
 
 /**
@@ -61,6 +62,9 @@ export class GoalConsistencyEngine extends EventEmitter {
   private facts: Map<string, ConversationFact[]> = new Map();
   private violations: Map<string, ConsistencyViolation[]> = new Map();
 
+  // v30.3.0: Turn-level convergence tracking per conversation
+  private turnRelevance: Map<string, { relevant: boolean; progress: number }[]> = new Map();
+
   // Statistics
   private stats: ConsistencyStats = {
     total_goals_created: 0,
@@ -72,6 +76,9 @@ export class GoalConsistencyEngine extends EventEmitter {
     total_conversations_tracked: 0,
     most_common_violation_type: ConsistencyViolationType.GOAL_RESPONSE,
     avg_check_duration_ms: 0,
+    goal_drifts_detected: 0,
+    avg_convergence_score: 1.0,
+    subgoal_completion_rate: 0,
   };
 
   constructor(config?: Partial<GoalConsistencyConfig>) {
@@ -294,6 +301,119 @@ export class GoalConsistencyEngine extends EventEmitter {
     }, 0);
 
     return totalProgress / goal.subgoals.length;
+  }
+
+  /**
+   * v30.3.0: Analyze goal convergence — is the conversation advancing toward its goal?
+   * Tracks per-turn relevance and progress velocity to detect drift early
+   */
+  analyzeConvergence(
+    conversation_id: string,
+    response: string,
+    user_message: string
+  ): GoalConvergenceResult {
+    const goal = this.goals.get(conversation_id);
+
+    // No goal → neutral convergence
+    if (!goal) {
+      return {
+        convergence_score: 0.5,
+        drift_detected: false,
+        drift_severity: 'none',
+        progress_velocity: 0,
+        relevant_turn_ratio: 1.0,
+        recommendation: 'No goal set — conversation is freeform',
+      };
+    }
+
+    const goalKeywords = this.extractKeywords(goal.main_goal);
+    const combinedText = `${user_message} ${response}`.toLowerCase();
+
+    // Check if this turn is relevant to the goal
+    const matchedKeywords = goalKeywords.filter(kw => combinedText.includes(kw.toLowerCase()));
+    const relevanceScore = matchedKeywords.length / Math.max(1, goalKeywords.length);
+    const isTurnRelevant = relevanceScore > 0.2;
+
+    // Track turn-level relevance history
+    const history = this.turnRelevance.get(conversation_id) || [];
+    const currentProgress = this.getGoalProgress(conversation_id);
+    history.push({ relevant: isTurnRelevant, progress: currentProgress });
+    // Keep last 50 turns
+    if (history.length > 50) history.splice(0, history.length - 50);
+    this.turnRelevance.set(conversation_id, history);
+
+    // Calculate convergence metrics
+    const relevantTurns = history.filter(h => h.relevant).length;
+    const relevantTurnRatio = relevantTurns / history.length;
+
+    // Calculate progress velocity (change in progress over last 5 turns)
+    let progressVelocity = 0;
+    if (history.length >= 2) {
+      const windowSize = Math.min(5, history.length);
+      const recentProgress = history[history.length - 1]!.progress;
+      const pastProgress = history[history.length - windowSize]!.progress;
+      progressVelocity = (recentProgress - pastProgress) / windowSize;
+    }
+
+    // Convergence score: weighted combination of relevance and progress
+    const convergenceScore = Math.min(1, Math.max(0,
+      relevantTurnRatio * 0.6 +
+      Math.min(1, currentProgress) * 0.25 +
+      Math.min(0.15, Math.max(0, progressVelocity * 10)) // velocity bonus
+    ));
+
+    // Drift detection: low relevance in recent turns
+    const recentWindow = history.slice(-5);
+    const recentRelevance = recentWindow.filter(h => h.relevant).length / Math.max(1, recentWindow.length);
+    const driftDetected = recentRelevance < 0.3 && history.length >= 3;
+
+    let driftSeverity: GoalConvergenceResult['drift_severity'] = 'none';
+    if (driftDetected) {
+      if (recentRelevance < 0.1) driftSeverity = 'severe';
+      else if (recentRelevance < 0.2) driftSeverity = 'moderate';
+      else driftSeverity = 'mild';
+      this.stats.goal_drifts_detected++;
+      this.emit('goal:drift', {
+        conversation_id,
+        severity: driftSeverity,
+        convergence_score: convergenceScore,
+        recent_relevance: recentRelevance,
+      });
+    }
+
+    // Generate recommendation
+    let recommendation = '';
+    if (driftSeverity === 'severe') {
+      recommendation = `Conversation has drifted significantly from goal "${goal.main_goal}". Consider refocusing.`;
+    } else if (driftSeverity === 'moderate') {
+      recommendation = `Mild drift detected — recent turns are partly off-topic from "${goal.main_goal}".`;
+    } else if (progressVelocity < 0) {
+      recommendation = 'Goal progress is decreasing — review recent subgoal statuses.';
+    } else if (convergenceScore > 0.8) {
+      recommendation = 'Excellent convergence — conversation is well-aligned with goal.';
+    } else {
+      recommendation = 'Conversation is progressing normally toward the goal.';
+    }
+
+    // Update global stats
+    this.stats.avg_convergence_score =
+      (this.stats.avg_convergence_score * (this.stats.total_checks_performed - 1) + convergenceScore)
+      / Math.max(1, this.stats.total_checks_performed);
+
+    // Calculate subgoal completion rate
+    if (goal.subgoals.length > 0) {
+      const completedSubgoals = goal.subgoals.filter(sg => sg.status === GoalStatus.COMPLETED).length;
+      this.stats.subgoal_completion_rate = completedSubgoals / goal.subgoals.length;
+    }
+
+    return {
+      convergence_score: convergenceScore,
+      drift_detected: driftDetected,
+      drift_severity: driftSeverity,
+      progress_velocity: progressVelocity,
+      relevant_turn_ratio: relevantTurnRatio,
+      recommendation,
+    };
   }
 
   /**

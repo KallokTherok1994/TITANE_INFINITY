@@ -373,6 +373,23 @@ export interface ConsistencyStats {
   most_common_violation_type: ConsistencyViolationType;
   auto_corrections_applied: number;
   avg_check_duration_ms: number;
+  // v30.3.0: Goal convergence tracking
+  goal_drifts_detected: number;
+  avg_convergence_score: number;
+  subgoal_completion_rate: number;
+}
+
+/**
+ * v30.3.0: Goal convergence analysis result
+ * Tracks whether conversation is moving toward or away from its goal
+ */
+export interface GoalConvergenceResult {
+  convergence_score: number; // 0-1, 1 = fully converging toward goal
+  drift_detected: boolean;
+  drift_severity: 'none' | 'mild' | 'moderate' | 'severe';
+  progress_velocity: number; // change in progress per turn (positive = advancing)
+  relevant_turn_ratio: number; // relevant turns / total turns
+  recommendation: string;
 }
 
 /**
