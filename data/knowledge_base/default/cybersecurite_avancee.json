@@ -5,7 +5,12 @@
   "owasp_top_10_2025": {
     "A01_broken_access_control": {
       "description": "Contrôle d'accès défaillant — première cause de vulnérabilités",
-      "risques": ["Escalade de privilèges", "IDOR (Insecure Direct Object Reference)", "Bypass CORS", "Manipulation de JWT/tokens"],
+      "risques": [
+        "Escalade de privilèges",
+        "IDOR (Insecure Direct Object Reference)",
+        "Bypass CORS",
+        "Manipulation de JWT/tokens"
+      ],
       "prevention": {
         "principle_of_least_privilege": "Donner le minimum de permissions nécessaires",
         "deny_by_default": "Bloquer tout accès par défaut, n'autoriser que l'explicitement permis",
@@ -17,7 +22,12 @@
     },
     "A02_cryptographic_failures": {
       "description": "Échecs cryptographiques — données sensibles exposées",
-      "risques": ["Données en clair dans les logs", "Algorithmes obsolètes (MD5, SHA1)", "Clés hardcodées", "TLS mal configuré"],
+      "risques": [
+        "Données en clair dans les logs",
+        "Algorithmes obsolètes (MD5, SHA1)",
+        "Clés hardcodées",
+        "TLS mal configuré"
+      ],
       "prevention": {
         "aes256_gcm": "Chiffrement AES-256-GCM pour données au repos",
         "tls_1_3": "TLS 1.3 minimum pour données en transit",
@@ -100,7 +110,11 @@
     },
     "post_quantum": {
       "menace": "Ordinateurs quantiques peuvent briser RSA/ECC en temps polynomial",
-      "solutions": ["CRYSTALS-Kyber (échange de clés)", "CRYSTALS-Dilithium (signatures)", "SPHINCS+ (signatures hash-based)"],
+      "solutions": [
+        "CRYSTALS-Kyber (échange de clés)",
+        "CRYSTALS-Dilithium (signatures)",
+        "SPHINCS+ (signatures hash-based)"
+      ],
       "timeline": "Migration recommandée d'ici 2030, planification dès maintenant"
     }
   },

@@ -468,6 +468,8 @@ build() {
         if [[ "$OSTYPE" == "linux-gnu"* ]]; then
             cp src-tauri/target/release/bundle/appimage/*.AppImage runtime/stable/ 2>/dev/null || true
             success "AppImage ready in runtime/stable/"
+            cp src-tauri/target/release/bundle/deb/*.deb runtime/stable/ 2>/dev/null || true
+            success "DEB package ready in runtime/stable/"
         elif [[ "$OSTYPE" == "darwin"* ]]; then
             cp -r src-tauri/target/release/bundle/macos/*.app runtime/stable/ 2>/dev/null || true
             success "macOS app ready in runtime/stable/"
@@ -529,6 +531,14 @@ deploy() {
             find runtime/stable -name "*.AppImage" -type f -exec ls -lh {} \;
         else
             error "No AppImage found in runtime/stable/"
+        fi
+
+        DEB_COUNT=$(find runtime/stable -name "*.deb" -type f | wc -l)
+        if [ "$DEB_COUNT" -gt 0 ]; then
+            success "Found $DEB_COUNT DEB package(s) in runtime/stable/"
+            find runtime/stable -name "*.deb" -type f -exec ls -lh {} \;
+        else
+            error "No DEB package found in runtime/stable/"
         fi
     fi
     

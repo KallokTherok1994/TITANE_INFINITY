@@ -21,16 +21,35 @@
         "status_checks": "Rendre les checks obligatoires avant merge (tests, lint, build)"
       },
       "pipeline_titane": {
-        "stages": ["lint (ESLint + Clippy)", "test (Vitest + cargo test)", "build (Vite + Tauri)", "security (CodeQL + npm audit)", "release (Tauri action)"],
+        "stages": [
+          "lint (ESLint + Clippy)",
+          "test (Vitest + cargo test)",
+          "build (Vite + Tauri)",
+          "security (CodeQL + npm audit)",
+          "release (Tauri action)"
+        ],
         "triggers": ["push to main", "pull_request", "release tag"],
-        "artifacts": ["TITANE.msi (Windows)", "TITANE.dmg (macOS)", "TITANE.AppImage (Linux)", "TITANE.apk (Android)"]
+        "artifacts": [
+          "TITANE.msi (Windows)",
+          "TITANE.dmg (macOS)",
+          "TITANE.AppImage (Linux)",
+          "TITANE.apk (Android)"
+        ]
       }
     },
     "pipeline_patterns": {
       "trunk_based_development": {
         "description": "Branches de courte durée mergées fréquemment dans main",
-        "avantages": ["Conflits minimaux", "Feedback rapide", "Déploiement continu facilité"],
-        "pratiques": ["Feature flags pour code incomplet", "Short-lived branches (<24h)", "Pre-commit hooks pour lint/format"]
+        "avantages": [
+          "Conflits minimaux",
+          "Feedback rapide",
+          "Déploiement continu facilité"
+        ],
+        "pratiques": [
+          "Feature flags pour code incomplet",
+          "Short-lived branches (<24h)",
+          "Pre-commit hooks pour lint/format"
+        ]
       },
       "blue_green_deployment": {
         "description": "Deux environnements identiques (blue=actif, green=staging)",
@@ -104,13 +123,26 @@
       },
       "logs": {
         "description": "Événements textuels horodatés avec contexte",
-        "outils": ["ELK Stack (Elasticsearch, Logstash, Kibana)", "Loki + Grafana", "CloudWatch Logs"],
-        "bonnes_pratiques": ["Structured logging (JSON)", "Correlation IDs", "Log levels (DEBUG/INFO/WARN/ERROR)", "Rétention par tier (hot 7j, warm 30j, cold 90j)"]
+        "outils": [
+          "ELK Stack (Elasticsearch, Logstash, Kibana)",
+          "Loki + Grafana",
+          "CloudWatch Logs"
+        ],
+        "bonnes_pratiques": [
+          "Structured logging (JSON)",
+          "Correlation IDs",
+          "Log levels (DEBUG/INFO/WARN/ERROR)",
+          "Rétention par tier (hot 7j, warm 30j, cold 90j)"
+        ]
       },
       "traces": {
         "description": "Suivi distribué des requêtes à travers les services",
         "outils": ["Jaeger", "Zipkin", "OpenTelemetry (standard unifié)"],
-        "concepts": ["Span (unité de travail)", "Trace (ensemble de spans)", "Context propagation (headers W3C)"]
+        "concepts": [
+          "Span (unité de travail)",
+          "Trace (ensemble de spans)",
+          "Context propagation (headers W3C)"
+        ]
       }
     },
     "alerting": {

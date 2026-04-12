@@ -99,7 +99,11 @@
         "driving": "Interfaces utilisées pour interagir avec l'application (API, CLI, IPC)",
         "driven": "Interfaces que l'application utilise pour ses dépendances (DB, API externe, filesystem)"
       },
-      "avantages": ["Testabilité maximale (mock les adaptateurs)", "Indépendance technologique", "Remplacement facile des dépendances"]
+      "avantages": [
+        "Testabilité maximale (mock les adaptateurs)",
+        "Indépendance technologique",
+        "Remplacement facile des dépendances"
+      ]
     },
     "event_driven_architecture": {
       "description": "Communication par événements asynchrones entre composants découplés",
