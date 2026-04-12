@@ -816,9 +816,11 @@ class ChatEngineOmega {
         );
 
       // v26.0.0: Use kernel's profileId for depth instructions (single source of truth)
+      // v30.3.0: Pass complexity score for complexity-aware depth instruction selection
       const depthInstructions = this.buildDepthInstructions(
         canonicalDecision.profileId,
-        effectiveResponseProfile
+        effectiveResponseProfile,
+        canonicalDecision.messageComplexity
       );
 
       // v26.0.0: Use kernel's memoryInjection decision to control memory injection
@@ -846,6 +848,18 @@ class ChatEngineOmega {
       // Inject depth instructions into system prompt
       if (depthInstructions) {
         systemPrompt = `${systemPrompt}\n\n${depthInstructions}`;
+      }
+
+      // v30.3.0: Inject complexity awareness signal into system prompt
+      // Helps the LLM calibrate response depth to actual message complexity
+      if (canonicalDecision.messageComplexity > 0.5) {
+        const complexityLabel =
+          canonicalDecision.messageComplexity > 0.85
+            ? 'très élevée'
+            : canonicalDecision.messageComplexity > 0.72
+              ? 'élevée'
+              : 'modérée';
+        systemPrompt = `${systemPrompt}\n\n═══ SIGNAL DE COMPLEXITÉ ═══\nComplexité détectée du message: ${(canonicalDecision.messageComplexity * 100).toFixed(0)}% (${complexityLabel})\nAdapte la profondeur et la structure de ta réponse en conséquence.\nConfiance de la décision: ${(canonicalDecision.confidence * 100).toFixed(0)}%`;
       }
 
       // v30.1.0: Inject professional document formatting instructions if document intent detected
@@ -3051,12 +3065,20 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
    * v25.0.0: Build depth instructions for system prompt injection
    * v30.1.0: Enhanced with structured reasoning chains, analysis frameworks,
    *          professional output templates, and reflection protocols
+   * v30.3.0: Complexity-aware — can upgrade instructions when low-profile + high-complexity
    * Tells the LLM what depth/structure to produce based on the selected profile
    */
   private buildDepthInstructions(
     effectiveDepth: string,
-    profile: { id: string; label: string; structureLevel: number; maxTokens: number }
+    profile: { id: string; label: string; structureLevel: number; maxTokens: number },
+    messageComplexity?: number
   ): string {
+    // v30.3.0: If DIRECT profile was chosen but complexity is moderate+, upgrade to BALANCED instructions
+    let resolvedDepth = effectiveDepth;
+    if (effectiveDepth === 'DIRECT' && messageComplexity !== undefined && messageComplexity > 0.55) {
+      resolvedDepth = 'BALANCED';
+    }
+
     const depthInstructionsMap: Record<string, string> = {
       DIRECT: `═══ INSTRUCTIONS DE PROFONDEUR ═══
 Profil: DIRECT — Réponse courte, essentiel uniquement.
@@ -3264,7 +3286,7 @@ QUALITÉ MAXIMALE :
     };
 
     return (
-      depthInstructionsMap[effectiveDepth] || depthInstructionsMap['DEVELOPED'] || ''
+      depthInstructionsMap[resolvedDepth] || depthInstructionsMap['DEVELOPED'] || ''
     );
   }
 

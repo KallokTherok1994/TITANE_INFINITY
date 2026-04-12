@@ -454,50 +454,78 @@ export function selectResponseProfile(
     };
   }
 
+  // v30.3.0: Signal-weighted profile selection — count matching signals for confidence scaling
+  const directHits = DIRECT_SIGNALS.filter(s => msg.includes(s)).length;
+  const architectHits = ARCHITECT_SIGNALS.filter(s => msg.includes(s)).length;
+  const deepHits = DEEP_SIGNALS.filter(s => msg.includes(s)).length;
+
   // Règle 2 : Signaux lexicaux directs (DIRECT)
-  if (DIRECT_SIGNALS.some(s => msg.includes(s))) {
+  if (directHits > 0) {
+    // v30.3.0: Confidence scales with signal density (1 signal = 0.82, 2+ = 0.92)
+    const confidence = Math.min(0.95, 0.75 + directHits * 0.08);
     return {
       profileId: 'DIRECT',
       profile: RESPONSE_PROFILES.DIRECT,
-      reason: 'direct_lexical_signal',
+      reason: `direct_lexical_signal(${directHits})`,
       inferenceState: 'SAFE_TO_INFER',
-      confidence: 0.9,
+      confidence,
     };
   }
 
   // Règle 3 : Signaux lexicaux ARCHITECT
-  if (ARCHITECT_SIGNALS.some(s => msg.includes(s))) {
+  if (architectHits > 0) {
+    const confidence = Math.min(0.95, 0.75 + architectHits * 0.06);
     return {
       profileId: 'ARCHITECT',
       profile: RESPONSE_PROFILES.ARCHITECT,
-      reason: 'architect_lexical_signal',
+      reason: `architect_lexical_signal(${architectHits})`,
       inferenceState: 'SAFE_TO_INFER',
-      confidence: 0.85,
+      confidence,
     };
   }
 
   // Règle 4 : Signaux lexicaux DEEP
-  if (DEEP_SIGNALS.some(s => msg.includes(s))) {
+  if (deepHits > 0) {
+    const confidence = Math.min(0.95, 0.75 + deepHits * 0.06);
     return {
       profileId: 'DEEP',
       profile: RESPONSE_PROFILES.DEEP,
-      reason: 'deep_lexical_signal',
+      reason: `deep_lexical_signal(${deepHits})`,
       inferenceState: 'SAFE_TO_INFER',
-      confidence: 0.85,
+      confidence,
     };
   }
 
   // Règle 5 : Mode actif → profil par défaut du mode
   const modeDefault = MODE_PROFILE_MAP[input.mode] ?? 'BALANCED';
 
-  // Règle 6 : Complexité élevée → forcer DEEP si mode est DEVELOPED
-  if (complexity > 0.75 && modeDefault === 'DEVELOPED') {
+  // v30.3.0: Graduated complexity-based profile escalation
+  // Replaces the single DEVELOPED→DEEP rule with a multi-tier escalation ladder
+  if (complexity > 0.85 && (modeDefault === 'DEVELOPED' || modeDefault === 'DEEP')) {
+    return {
+      profileId: 'ARCHITECT',
+      profile: RESPONSE_PROFILES.ARCHITECT,
+      reason: 'very_high_complexity_escalation',
+      inferenceState: 'INFER_WITH_DISCLOSURE',
+      confidence: 0.72,
+    };
+  }
+  if (complexity > 0.72 && modeDefault === 'DEVELOPED') {
     return {
       profileId: 'DEEP',
       profile: RESPONSE_PROFILES.DEEP,
       reason: 'high_complexity_escalation',
       inferenceState: 'INFER_WITH_DISCLOSURE',
       confidence: 0.7,
+    };
+  }
+  if (complexity > 0.60 && modeDefault === 'BALANCED') {
+    return {
+      profileId: 'DEVELOPED',
+      profile: RESPONSE_PROFILES.DEVELOPED,
+      reason: 'moderate_complexity_escalation',
+      inferenceState: 'INFER_WITH_DISCLOSURE',
+      confidence: 0.68,
     };
   }
 

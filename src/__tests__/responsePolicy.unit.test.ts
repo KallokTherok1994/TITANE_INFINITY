@@ -93,7 +93,7 @@ describe('ResponsePolicy — Sélection dynamique du profil', () => {
   it('signal "fais court" → DIRECT', () => {
     const result = selectResponseProfile({ message: 'fais court stp', mode: 'default' });
     expect(result.profileId).toBe('DIRECT');
-    expect(result.reason).toBe('direct_lexical_signal');
+    expect(result.reason).toContain('direct_lexical_signal');
   });
 
   it('signal "réponds vite" → DIRECT', () => {
@@ -107,7 +107,7 @@ describe('ResponsePolicy — Sélection dynamique du profil', () => {
       mode: 'default',
     });
     expect(result.profileId).toBe('DEEP');
-    expect(result.reason).toBe('deep_lexical_signal');
+    expect(result.reason).toContain('deep_lexical_signal');
   });
 
   it('signal "structure-moi cela" → ARCHITECT', () => {
@@ -116,7 +116,7 @@ describe('ResponsePolicy — Sélection dynamique du profil', () => {
       mode: 'default',
     });
     expect(result.profileId).toBe('ARCHITECT');
-    expect(result.reason).toBe('architect_lexical_signal');
+    expect(result.reason).toContain('architect_lexical_signal');
   });
 
   it('mode "strategy" → ARCHITECT par défaut du mode', () => {

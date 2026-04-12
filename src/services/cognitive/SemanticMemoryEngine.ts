@@ -376,21 +376,23 @@ export class SemanticMemoryEngine {
   /**
    * Appliquer le scoring hybride
    * Score = (w1 * similarité) + (w2 * importance) + (w3 * récence)
+   * v30.3.0: Exponential recency decay replaces linear for smoother temporal weighting
    */
   private applyHybridScoring(
     results: SemanticMemoryResult[],
     weights: { similarity: number; importance: number; recency: number }
   ): SemanticMemoryResult[] {
     const now = Date.now();
-    const maxAge = 365 * 24 * 60 * 60 * 1000; // 1 an en ms
+    // v30.3.0: Half-life of 90 days — memory at 90 days has recency 0.5, at 180 days has 0.25
+    const halfLifeMs = 90 * 24 * 60 * 60 * 1000;
 
     return results
       .map(result => {
         const { entry, similarity } = result;
 
-        // Score de récence (1.0 = aujourd'hui, 0.0 = 1 an ou plus)
+        // v30.3.0: Exponential decay — smoother than linear, kinder to older relevant memories
         const ageMs = now - new Date(entry.last_used_at || entry.created_at).getTime();
-        const recencyScore = Math.max(0, 1 - ageMs / maxAge);
+        const recencyScore = Math.exp((-Math.LN2 * ageMs) / halfLifeMs);
 
         // Score hybride
         const hybridScore =
@@ -489,6 +491,7 @@ export class SemanticMemoryEngine {
 
   /**
    * Mettre à jour les métriques d'accès
+   * v30.3.0: Importance reinforcement — frequently accessed memories gradually increase in importance
    */
   private async updateAccessMetrics(ids: string[]): Promise<void> {
     const now = new Date().toISOString();
@@ -496,9 +499,13 @@ export class SemanticMemoryEngine {
     for (const id of ids) {
       const entry = await this.vectorStore.get(id);
       if (entry) {
+        // v30.3.0: Reinforce importance on each access (+0.03, capped at 1.0)
+        // Memories that keep getting retrieved are genuinely important
+        const reinforcedImportance = Math.min(1.0, entry.importance + 0.03);
         await this.vectorStore.update(id, {
           last_used_at: now,
           access_count: entry.access_count + 1,
+          importance: reinforcedImportance,
         });
       }
     }
