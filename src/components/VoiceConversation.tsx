@@ -12,11 +12,13 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { logger } from '@/lib/logger';
+import { createLogger } from '@/utils/logger';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import { useAudioStreaming } from '@/hooks/useAudioStreaming'; // ✅ v∞.8: Real audio streaming
 import { chatEngineCommands } from '@/services/tauri/chatEngine.commands';
 import { detectEnvironment } from '@/core/tauri/environment';
+
+const logger = createLogger('VoiceConversation');
 
 interface VoiceConversationProps {
   onTranscript?: (text: string) => void;
@@ -170,7 +172,7 @@ export const VoiceConversation = ({
 
       // En mode Tauri: utiliser CPAL audio streaming (real backend audio)
       if (env.isTauri) {
-        console.log('[VoiceConversation] ✅ Starting REAL audio streaming (CPAL)');
+        logger.info('✅ Starting REAL audio streaming (CPAL)');
         await startStreaming(); // ✅ Connecte au vrai flux audio CPAL
         return;
       }

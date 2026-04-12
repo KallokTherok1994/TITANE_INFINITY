@@ -12,9 +12,11 @@
  */
 
 import { useState } from 'react';
-import { logger as _logger } from '@/lib/logger';
+import { createLogger } from '@/utils/logger';
 import { useAudioSettings, type AudioDiagnosticStep } from '@/hooks/useAudioSettings';
 import './AudioDiagnosticsPanel.css';
+
+const logger = createLogger('AudioDiagnosticsPanel');
 
 interface AudioDiagnosticsPanelProps {
   className?: string;
@@ -492,11 +494,11 @@ export const AudioDiagnosticsPanel = ({
                     const { audioHealthService } =
                       await import('@/services/audio/audioHealthCheck');
                     const result = await audioHealthService.diagnoseAndRepair();
-                    console.log('[AudioDiagnosticsPanel] Auto-repair result:', result);
+                    logger.info('Auto-repair result:', result);
                     // Rafraîchir l'UI après réparation
                     await runDiagnostics();
                   } catch (error) {
-                    console.error('[AudioDiagnosticsPanel] Auto-repair failed:', error);
+                    logger.error('Auto-repair failed:', { error: String(error) });
                   }
                 }}
                 disabled={isDiagnosing}

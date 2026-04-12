@@ -12,6 +12,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import { createLogger } from '@/utils/logger';
 import { useAudio } from './hooks/useAudio';
 import { AudioDiagnosticsPanel } from '@/components/audio';
 import type { TTSEngine, VoiceProfile } from './types';
@@ -21,6 +22,8 @@ import {
   normalizeTitaneVoiceProfiles,
   type TitaneVoiceProfileOption,
 } from './titaneVoiceProfiles';
+
+const logger = createLogger('AudioCenterPage');
 
 // ─────────────────────────────────────────────────────────────────
 //  Voice Card Component
@@ -278,9 +281,9 @@ export const AudioCenterPage: React.FC = () => {
           setTitaneVoiceProfiles(normalizedProfiles);
         }
       } catch (error) {
-        console.warn(
-          '[AudioCenterPage] Impossible de charger les profils vocaux TITANE:',
-          error
+        logger.warn(
+          'Impossible de charger les profils vocaux TITANE:',
+          { error: String(error) }
         );
         if (!cancelled) {
           setTitaneVoiceProfiles([]);

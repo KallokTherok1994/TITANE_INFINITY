@@ -609,6 +609,14 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'audio_capture_export_wav',
   'audio_list_devices', // ✅ v30.0.0 — List audio input/output devices
   'tts_generate_test_buffer', // ✅ v30.0.0 — TTS test buffer generation
+  'start_streaming', // ✅ v30.0.0 — Audio streaming pipeline
+  'stop_streaming',
+  'get_streaming_state',
+  'get_streaming_stats',
+  'force_stop_streaming',
+  'check_elevenlabs_available', // ✅ v30.0.0 — TTS engine availability checks
+  'check_local_tts',
+  'synthesize_speech', // ✅ v30.0.0 — TTS synthesis backend
 
   // ═══════════════════════════════════════════════════════════════
   // PERSISTENCE ENGINE v∞.MPE

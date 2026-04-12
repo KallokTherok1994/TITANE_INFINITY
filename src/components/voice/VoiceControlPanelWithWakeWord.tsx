@@ -16,11 +16,13 @@
  */
 
 import React, { useState, useCallback } from 'react';
-import { logger as _logger } from '@/lib/logger';
+import { createLogger } from '@/utils/logger';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import { useActiveListening } from '@/hooks/useActiveListening';
 import { WakeWordIndicator } from './WakeWordIndicator';
 import { cn } from '@/lib/utils';
+
+const logger = createLogger('VoiceControlPanel');
 
 interface VoiceControlPanelWithWakeWordProps {
   /** Classe CSS additionnelle */
@@ -51,18 +53,18 @@ export const VoiceControlPanelWithWakeWord: React.FC<
     },
     {
       onWakeDetected: event => {
-        console.log('[VoiceControlPanel] 🎯 Wake detected:', event.mode);
+        logger.info('🎯 Wake detected:', event.mode);
       },
 
       onCommand: (text, _wakeEvent) => {
-        console.log('[VoiceControlPanel] 📝 Command:', text);
+        logger.info('📝 Command:', text);
 
         // Traiter la commande via VoiceEngine
         voiceEngine.completeTurnWithText(text);
       },
 
       onAttentionChange: state => {
-        console.log('[VoiceControlPanel] 🧠 Attention:', state);
+        logger.info('🧠 Attention:', state);
       },
     }
   );
