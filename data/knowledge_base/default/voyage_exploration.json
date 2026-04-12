@@ -1,66 +1,255 @@
 {
   "version": "v30.1.0",
   "category": "voyage_exploration",
-  "description": "Voyage et exploration — planification optimale, budget voyage, destinations emblématiques, voyage solo/couple/famille, hacking voyageur, sécurité internationale, slow travel, road trips, nomadisme digital",
+  "description": "Voyage et exploration — planification optimale avancée, budget voyage détaillé, destinations mondiales, voyage solo/couple/famille, sécurité internationale, slow travel, nomadisme digital, aventure extrême, photographie, gastronomie, tourisme durable, camping et van life, préparation terrain",
   "voyage_exploration": {
-    "introduction": "Voyager transforme davantage que déplacer le corps — c'est un outil de croissance personnelle, d'ouverture culturelle et de remise en question des certitudes. TITANE aide à planifier intelligemment, à voyager en sécurité et à maximiser les expériences tout en maîtrisant les coûts.",
+    "introduction": "Voyager transforme davantage que déplacer le corps — c'est un outil de croissance personnelle, d'ouverture culturelle et de remise en question des certitudes. TITANE aide à planifier intelligemment, voyager en sécurité et maximiser les expériences tout en maîtrisant les coûts. Cette base couvre planification, sécurité, immersion culturelle, photographie, gastronomie et pratiques responsables.",
     "planification": {
       "quand_reserver": {
-        "vols": "Long-courrier : 2-6 mois avant. Court-courrier Europe : 1-3 mois. Last minute : gamble mais parfois -50%.",
-        "hotels": "Destinations populaires : 2-3 mois avant. Flexibilité = économies. Booking.com + Airbnb comparaison.",
-        "saisons": "Haute saison = foule + prix x2. Épaule (avant/après) = meilleur ratio. Basse = économies mais météo risque."
+        "vols": "Long-courrier : 2-6 mois avant. Court-courrier Europe : 1-3 mois. Last minute : pari risqué mais parfois -50%. Mardi/mercredi statistiquement moins chers. Alertes prix sur Google Flights ou Hopper.",
+        "hotels": "Destinations populaires : 2-3 mois avant. Comparer Booking.com, Airbnb, Hostelworld et sites directs. Réservations annulables pour bloquer un tarif. Séjours longs (2+ semaines) : négocier directement.",
+        "saisons": "Haute saison = foule + prix x2-3. Épaule = meilleur ratio qualité/prix/météo. Basse = économies mais météo incertaine. Exemples : Grèce mai/octobre, Japon novembre, Islande septembre."
       },
-      "outils": "Google Flights (suivi prix), Skyscanner (comparatif), Kayak Explore (où aller selon budget), Seat61 (trains Europe), Rome2Rio (multimodal)",
+      "outils": {
+        "vols": "Google Flights (suivi prix, carte), Skyscanner (comparatif, recherche par mois), Hopper (prédiction IA), Kiwi.com (combinaisons multi-compagnies)",
+        "transport": "Seat61 (trains internationaux), Rome2Rio (multimodal), Omio (bus/train Europe), 12Go Asia (Asie SE), Flixbus (bus low-cost)",
+        "hebergement": "Booking.com (flexibilité), Airbnb (expériences locales), Hostelworld (auberges), Couchsurfing (gratuit), TrustedHousesitters (garder maison/animaux)",
+        "organisation": "Notion/Obsidian (carnets structurés), Google Maps (listes hors ligne), Tricount (dépenses groupe), Trail Wallet (budget)"
+      },
       "budget": {
-        "backpacker": "$30-50/jour (Asie SE, Amérique Latine), $60-80 (Europe Est)",
-        "confort": "$80-150/jour monde. $150-250 Europe Ouest, USA.",
-        "luxe": "$300+/jour. Business class seule peut coûter prix d'un voyage complet en eco.",
-        "hacks": "Miles/points CB (Amex, Revolut, Capital One), cartes lounge (Priority Pass), visa/remboursements"
+        "backpacker": "$30-50/jour (Asie SE, Amérique Latine). $60-80 (Europe Est). Dortoir, street food, transports locaux. Cuisiner en auberge réduit 30%.",
+        "confort": "$80-150/jour monde. $150-250 Europe Ouest, USA, Japon. Hôtels 3 étoiles, restaurants milieu de gamme.",
+        "luxe": "$300+/jour. Hôtels 5 étoiles, gastronomie, transferts privés. Luxe accessible : hôtels boutique, surclassements fidélité.",
+        "hacks": "Miles CB voyage (Amex, Revolut Metal). Cartes lounge (Priority Pass). Erreurs tarifaires (Secret Flying). Cartes sans frais change (Revolut, Wise, N26). House-sitting."
       }
     },
     "destinations": {
       "asie_se": {
-        "incontournables": "Thaïlande (temples/plages/food), Vietnam (Hanoi→Hoi An→HCMC), Cambodge (Angkor Wat), Bali (culture+surf)",
-        "budget": "Ultra-low cost possible. Street food $1-3, dorms $5-10, motos $5-10/jour.",
-        "saison": "Novembre-Mars pour la plupart (hors pluie). Variable selon latitude."
+        "incontournables": "Thaïlande (temples Chiang Mai, plages Krabi, street food Bangkok), Vietnam (Ha Long, Sapa, Hoi An), Cambodge (Angkor Wat), Bali (rizières, surf Canggu), Philippines (Palawan, Siargao)",
+        "budget": "Street food $1-3, dortoirs $5-10/nuit, motos $5-10/jour. Marchés locaux 3-5x moins chers que zones touristiques.",
+        "saison": "Novembre-Mars (hors mousson). Indonésie : avril-octobre. Philippines : janvier-mai. Vietnam Nord : octobre-décembre.",
+        "conseils": "Négocier les prix est culturellement normal. Attention arnaques : taxi sans compteur, faux moines, agences fantômes."
       },
       "europe": {
-        "classiques": "Portugal (Lisbonne+Porto, rapport qualité/prix excellent), Géorgie (prix bas, hospitalité, nature), Balkans (Croatie/Slovénie/Albanie montants)",
-        "interrail": "Pass train European pour jeunes/pas chers. 30+ pays, flexibilité maximale.",
-        "slow_travel": "1-2 semaines par ville vs city-break. Appartement > hôtel pour longue durée."
+        "classiques": "Portugal (Lisbonne, Porto, Algarve — excellent rapport qualité/prix). Géorgie (Tbilissi, Svanétie, vin qvevri). Balkans : Albanie riviera, Slovénie lac Bled, Monténégro Kotor.",
+        "interrail": "Pass 33 pays, flexibilité maximale. Trains de nuit (Nightjet) économisent une nuit d'hôtel. Réservations obligatoires TGV/Thalys.",
+        "slow_travel": "1-2 semaines par ville. Appartement plutôt qu'hôtel. S'immerger : marchés, quartiers locaux. Villes idéales : Porto, Budapest, Cracovie.",
+        "hors_sentiers": "Îles Féroé, Roumanie Transylvanie, Malte, Pays Basque, Laponie aurores boréales."
       },
       "amerique_latine": {
-        "incontournables": "Colombie (Medellín+Cartagène), Pérou (Machu Picchu+Amazonie), Argentine (Buenos Aires+Patagonie), Mexique (Oaxaca+Yucatán)",
-        "securite": "Renseignements actuels (Conseils aux voyageurs France). Éviter affichage téléphone/bijoux luxueux."
+        "incontournables": "Colombie (Medellín, Cartagène, Cocora). Pérou (Machu Picchu, Amazonie, gastronomie Lima). Argentine (Buenos Aires, Patagonie, Iguazú). Mexique (Oaxaca, Yucatán cénotes, Mexico City).",
+        "securite": "Conseils aux Voyageurs (France Diplomatie). Uber/Cabify plutôt que taxis de rue. Portefeuille leurre. Se déplacer en journée dans zones inconnues.",
+        "budget": "Amérique Centrale : $25-40/jour. Colombie/Pérou : $35-60/jour. Argentine/Chili : $60-100/jour."
       },
       "afrique": {
-        "safari": "Kenya/Tanzanie (Grande Migration), Botswana (Okavango), Namibie (Désert Namib). Budget $200-1000/jour.",
-        "accessible": "Maroc (Fès, Sahara), Cape Town, Afrique du Sud côte jardin"
-      }
+        "safari": "Kenya/Tanzanie (Grande Migration juillet-octobre). Botswana (Okavango). Namibie (Sossusvlei). Ouganda/Rwanda (gorilles, permis $700-1500). Budget $200-1000/jour.",
+        "accessible": "Maroc (Fès, Sahara, Atlas, Essaouira). Afrique du Sud (Cape Town, route des jardins, Kruger). Sénégal (Dakar, Gorée). Éthiopie (Lalibela, Simien)."
+      },
+      "asie_centrale_moyen_orient": "Ouzbékistan (Samarcande), Iran (Ispahan), Jordanie (Petra, Wadi Rum), Oman (Musandam), Kirghizistan (yourtes, trekking). Expériences culturelles profondes, hospitalité exceptionnelle.",
+      "oceanie": "Australie (Sydney, Uluru, Grande Barrière, WHV 18-35 ans). Nouvelle-Zélande (Milford Sound, Tongariro, campervan). Polynésie française (Bora Bora, luxe et lagon)."
     },
     "types_voyage": {
       "solo": {
-        "avantages": "Liberté totale, rencontres plus faciles, introspection, flexibilité",
-        "defis": "Sécurité accrue (femmes voyageuses surtout), coût logement (chambres simples chères), solitude",
-        "conseils": "Auberges jeunesse (communauté), apps rencontres voyageurs (Couchsurfing/Meetup), itinéraire partagé avec proche"
+        "avantages": "Liberté totale, rencontres faciles, introspection, flexibilité maximale, apprentissage débrouillardise",
+        "defis": "Sécurité accrue nécessaire, coût logement plus élevé, gestion solitude, prise de décision constante",
+        "conseils": "Auberges de jeunesse pour communauté. Apps : Couchsurfing Hangouts, Meetup, Backpackr, Tourlina (femmes). Itinéraire partagé avec proche."
       },
-      "couple": "Synchroniser envies avant (cultures/aventure/détente ratio). Budget commun planifié. Chambres doubles = optimisation.",
-      "famille": "Flexibilité planning (enfants imprévisibles). Appartements > hôtels. Activités adaptées âge. Snacks/sieste respectés.",
+      "couple": "Synchroniser envies (ratio culture/aventure/détente). Budget commun. Alterner choix d'activités. Destinations romantiques : Santorin, Kyoto, Bruges, Cinque Terre, Prague.",
+      "famille": "Flexibilité planning. Appartements > hôtels (cuisine, espace). Activités adaptées âge. Destinations : Espagne, Croatie, Japon, Costa Rica, Canada.",
+      "groupe": "Coordinateur principal. Tricount/Splitwise pour dépenses. Temps libre individuel prévu. Partage coûts = économies.",
       "nomadisme_digital": {
-        "hubs": "Chiang Mai (Thaïlande), Bali (Canggu), Lisbonne, Medellín, Tbilissi — communautés établies",
-        "exigences": "Wifi fiable (speedtest avant réservation), timezone client, visas travail (attention légalité)",
-        "outils": "Notion (organisation), Revolut/Wise (frais bancaires 0), eSIM (Airalo), VPN"
+        "hubs": "Chiang Mai, Bali Canggu, Lisbonne, Medellín, Tbilissi — communautés établies, coworking, wifi fiable",
+        "exigences": "Wifi 50+ Mbps, timezone client géré, visas travail (attention légalité)",
+        "outils": "Notion (organisation), Revolut/Wise (frais 0), eSIM (Airalo), VPN obligatoire wifi public"
       }
     },
+    "voyage_solo": {
+      "securite": {
+        "principes": "Informer quelqu'un de son itinéraire. Partager localisation temps réel (WhatsApp). Éviter zones isolées de nuit. Faire confiance à son instinct. Téléphone chargé avec numéros urgence locaux.",
+        "femmes_voyageuses": "Codes vestimentaires locaux. Hébergements bien notés par femmes solo. Groupes : Women Who Travel, Girls Love Travel. Alliance factice dans certains contextes.",
+        "premiers_reflexes": "Phrases urgence en langue locale. Repérer hôpital/commissariat à l'arrivée. Argent de secours caché séparément. Assurance rapatriement."
+      },
+      "rencontres": {
+        "comment": "Auberges de jeunesse (cuisines, salons = échanges spontanés). Free walking tours dès le premier jour. Activités organisées par l'auberge.",
+        "apps_indispensables": "Couchsurfing Hangouts, Meetup, Backpackr, Tourlina (femmes), EatWith (dîners chez l'habitant)",
+        "communautes": "Reddit (r/solotravel), forums Lonely Planet, groupes Facebook par destination. Cours cuisine/langue/danse = catalyseurs sociaux."
+      },
+      "hostels": {
+        "selection": "Hostelworld note >8.5. Avis propreté + atmosphère sociale. Party hostel vs chill hostel. Petit-déjeuner inclus + cuisine commune = économique.",
+        "astuces": "Boules Quies + masque sommeil indispensables. Cadenas personnel. Lit du bas si possible. Chambres 4-6 lits > dortoirs 12+."
+      },
+      "sante_mentale": "Solitude normale, fait partie de l'expérience. Journal de voyage. Appels vidéo proches. Alterner périodes seul/sociales. Burnout voyageur : s'accorder des jours repos, rester plus longtemps si un lieu plaît."
+    },
+    "voyage_sac_a_dos": {
+      "ultralight": {
+        "principe": "Sac sous 10 kg trek, sous 7 kg itinérant. Chaque objet justifie sa place. Règle des 3 : on porte, on lave, on sèche.",
+        "equipement": "Sac 40-50L (Osprey Farpoint, Decathlon Forclaz). Laine mérinos anti-odeur. Serviette microfibre. Savon solide multi-usage. Liseuse. Gourde filtrante.",
+        "erreurs": "Trop de vêtements (3-4 tenues suffisent). Chaussures neuves non rodées. Négliger qualité du sac (mal de dos garanti)."
+      },
+      "itineraires_mythiques": {
+        "camino_santiago": "Francés 800 km, 30-35 jours. Albergues 5-12€/nuit. Budget 25-40€/jour. Période : mai-juin ou septembre-octobre.",
+        "gr20_corse": "GR le plus difficile d'Europe. 180 km, 16 étapes, ~10 000 m D+. Refuges 14€/nuit (réservation obligatoire été). Juin-septembre.",
+        "pacific_crest_trail": "4 265 km Mexique-Canada. 4-6 mois thru-hike. Permis loterie annuelle. Budget $5 000-8 000. Préparation 6-12 mois.",
+        "route_66": "3 940 km Chicago-Santa Monica. 2-3 semaines. Diners vintage, déserts, Grand Canyon. Budget $80-150/jour.",
+        "tour_mont_blanc": "170 km, 11 étapes, France/Italie/Suisse. Refuges demi-pension 50-70€. Niveau intermédiaire. Fin juin-mi septembre.",
+        "transsiberien": "9 289 km Moscou-Vladivostok. 2-3 semaines avec escales (Irkoutsk, lac Baïkal). Variante transmongolienne vers Pékin."
+      }
+    },
+    "tourisme_durable": {
+      "ecotourisme": {
+        "definition": "Voyage responsable préservant l'environnement, soutenant les populations locales avec dimension éducative. Au-delà du marketing vert.",
+        "destinations": "Costa Rica (25% territoire protégé), Galápagos (visiteurs contrôlés), Bhoutan (taxe durable/jour), Norvège (friluftsliv), Nouvelle-Zélande.",
+        "labels": "Green Globe, Travelife, Clef Verte, ATR. Se méfier du greenwashing : label autoproclamé ≠ certification."
+      },
+      "impact_carbone": {
+        "bilan": "Vol Paris-NY AR : ~1,75 tCO2. Train Paris-Barcelone : 0,04 tCO2 (40x moins). Un vol long-courrier = 20-30% du budget carbone annuel d'un Français.",
+        "reduire": "Train <6h plutôt qu'avion. Voyager moins souvent, plus longtemps. Flotte récente (-20-30% conso). Compenser : Gold Standard, myclimate.org (20-50€/vol).",
+        "compensation": "Programmes certifiés Gold Standard ou Verified Carbon Standard. Reforestation, énergies renouvelables, cuisinières propres."
+      },
+      "slow_travel": "Profondeur > quantité. Rester longtemps dans moins de lieux. Train > avion. Marcher > taxi. Séjours 1-4 semaines. Marchés locaux, cuisiner, apprendre la langue. Empreinte réduite, immersion profonde, coûts plus bas.",
+      "volontariat": {
+        "opportunites": "Workaway/HelpX (4-5h/jour contre logement/repas). WWOOF (fermes bio, 130+ pays). Chantiers internationaux (SCI, Concordia).",
+        "precautions": "Éviter volontourisme néfaste : orphelinats lucratifs, projets sans impact. Organisation transparente et établie. Ne pas payer des sommes excessives."
+      }
+    },
+    "photographie_voyage": {
+      "composition": {
+        "regles": "Règle des tiers. Lignes directrices (routes, rivières). Cadre naturel (portes, arches). Profondeur (premier plan/moyen/arrière). Un sujet clair par photo.",
+        "erreurs": "Centrer systématiquement. Horizon penché. Arrière-plan encombré. Monuments sans contexte humain."
+      },
+      "lumiere": {
+        "golden_hour": "1h après lever, 1h avant coucher : lumière chaude, douce, idéale paysages/portraits. Apps : PhotoPills, Sun Surveyor.",
+        "blue_hour": "30 min avant lever, 30 min après coucher : ciels spectaculaires, villes illuminées. Trépied recommandé.",
+        "conditions_difficiles": "Midi : chercher l'ombre ou noir et blanc créatif. Couvert : parfait pour portraits/forêt. Pluie : reflets dramatiques."
+      },
+      "portrait_rue": {
+        "approche": "Permission avant de photographier. Sourire + geste suffisent souvent. Montrer la photo = connexion. Dire merci en langue locale.",
+        "technique": "35-50mm, ouverture f/1.8-2.8, mise au point yeux. Observer et attendre le bon moment.",
+        "ethique": "Jamais d'enfants sans consentement parental. Respecter les refus. Éviter clichés misérabilistes. Dignité."
+      },
+      "storytelling_visuel": {
+        "recit": "Scène ensemble (contexte), plan moyen (action), gros plan (émotion). Varier angles et focales. Capturer les moments entre les moments.",
+        "equipement": "Smartphone récent (90% des voyageurs). Compact expert : Sony RX100, Ricoh GR III. Hybride : Sony A7C, Fujifilm X-T5. Drone DJI Mini (vérifier législation). GoPro (eau, sport).",
+        "sauvegarde": "Cloud quotidien (Google Photos, iCloud) ou SSD portable. Jamais tout sur une carte. Trier le soir même."
+      }
+    },
+    "gastronomie_voyage": {
+      "street_food": {
+        "pourquoi": "Nourriture la plus authentique, fraîche et économique. Observer où mangent les locaux = garantie qualité.",
+        "destinations": "Bangkok (pad thai, mango sticky rice). Mexico City (tacos al pastor). Marrakech (tagine, Jemaa el-Fna). Istanbul (balık ekmek). Hanoï (phở, bánh mì). Singapour (hawker centers UNESCO).",
+        "securite": "Stands bondés = ingrédients frais. Cuisson devant vous. Éviter crudités premiers jours. Imodium en réserve."
+      },
+      "cours_cuisine": {
+        "experience": "Apprendre une compétence, interagir avec les locaux, comprendre la culture par la nourriture. Souvent précédé d'une visite marché.",
+        "ou": "Chiang Mai (20-40€/jour), Fès (atelier riad), Toscane (pâtes maison), Lima (ceviche), Jaipur (cuisine rajasthane), Tokyo (sushi). Réserver sur Cookly ou Airbnb Experiences."
+      },
+      "marches_locaux": "Cœur battant d'une culture. Arriver tôt. Observer avant d'acheter. Goûter. Marchés flottants (Thaïlande), souks (Maroc), mercados (Mexique) = expériences sensorielles inoubliables. Sac réutilisable, petites coupures, négocier avec sourire.",
+      "decouvertes_culinaires": "Sortir de sa zone de confort. Demander aux locaux leur plat préféré. Éviter menus 10 langues avec photos plastifiées. Food tours guidés par des locaux. Vignobles et brasseries artisanales."
+    },
+    "digital_nomad": {
+      "visas": {
+        "types": "Visa touriste (30-90 jours, travail pas toujours légal). Visa nomade digital (50+ pays post-2020) : Estonie, Portugal, Croatie, Grèce, Thaïlande DTV, Colombie, Géorgie (1 an sans visa). Revenu minimum $2 000-3 500/mois.",
+        "strategie": "Border run : toléré/risqué selon pays. Visa hopping entre pays. Règle 183 jours (résidence fiscale). Consulter fiscaliste international."
+      },
+      "coworking": {
+        "hubs": "Chiang Mai ($50-100/mois), Bali Canggu (Dojo, Outpost), Lisbonne (Second Home), Medellín (Selina), Tbilissi (coût ultra-bas), Mexico City, Las Palmas.",
+        "criteres": "Wifi 50+ Mbps, sièges ergonomiques, salles d'appel insonorisées, communauté active, accès 24/7."
+      },
+      "fuseaux_horaires": "Choisir destination selon fuseau clients. World Time Buddy pour réunions. Clients EU : Afrique (même fuseau), Géorgie (+3-4h), Thaïlande (+6h matin). Clients US Est : Colombie/Mexique (même fuseau).",
+      "equipement": "MacBook Air M2/M3 ou ThinkPad X1. Écouteurs réduction bruit. Hub USB-C. Batterie 20 000 mAh. eSIM Airalo/Holafly. VPN obligatoire wifi public.",
+      "assurance": "SafetyWing ($45/mois, mondiale). World Nomads (aventure incluse). Chapka Cap Aventure (française). Vérifier : rapatriement, hospitalisation, vol matériel pro.",
+      "fiscalite": "Résidence fiscale = 183+ jours/an dans un pays. France : démarche officielle pour quitter. Régimes avantageux : Portugal NHR, Dubaï, Panama. Registre précis jours/pays. Consulter expert fiscal avant expatriation. Plateformes : Deel, Remote."
+    },
+    "aventure_extreme": {
+      "alpinisme": {
+        "initiation": "Stages club alpin (CAF). Progression : randonnée alpine → via ferrata → alpinisme neige → courses techniques. Météo commande : annuler si mauvais.",
+        "sommets": "Mont Blanc (4 808 m, guide recommandé). Kilimandjaro (5 895 m, trek sans technique, 6-7 jours). Elbrouz (5 642 m, plus haut Europe). Aconcagua (6 961 m, 2-3 semaines).",
+        "altitude": "MAM dès 2 500-3 000 m : maux de tête, nausée, fatigue. Monter lentement (600 m D+/jour >3 000 m). Diamox sur avis médical. Redescendre si aggravation."
+      },
+      "plongee": {
+        "certifications": "PADI Open Water (18 m, 3-4 jours, 300-500€ Asie). Advanced (30 m). Rescue puis Divemaster. SSI et CMAS alternatives.",
+        "spots": "Raja Ampat (biodiversité max), Grande Barrière (iconique), Mer Rouge (épaves, rapport qualité/prix), Cenotes Mexique (souterrain cristallin), Maldives (mantas), Sipadan Malaisie.",
+        "securite": "Jamais seul. Paliers décompression. Pas d'avion 24h après. Assurance DAN. Centre certifié."
+      },
+      "parapente": "Biplace tandem 80-150€, accessible à tous. Sites : Annecy, Ölüdeniz Turquie, Interlaken, Pokhara Népal, Medellín, Bir Billing Inde.",
+      "surf": {
+        "apprendre": "Beach breaks avec mousse (Biarritz, Peniche). Cours école certifiée 3-5 jours. Mousse → vagues vertes → line-up. Respecter priorité et étiquette.",
+        "destinations": "Bali Uluwatu, Portugal Ericeira, Maroc Taghazout, Sri Lanka Arugam Bay, Costa Rica Santa Teresa, Australie Byron Bay."
+      },
+      "trek_altitude": {
+        "circuits": "Camp de base Everest (12-14 jours, 5 364 m). Tour Annapurnas (15-20 jours, col Thorong La 5 416 m). Torres del Paine (5 jours, Patagonie). Salkantay vers Machu Picchu (5 jours).",
+        "preparation": "Cardio 3-6 mois. Tester équipement. Acclimatation progressive. Guide local + porteurs. Assurance évacuation héliportée."
+      },
+      "kayak": "Mer (côtes, grottes), eaux vives (classes I-V), randonnée (multi-jours). Spots : fjords Norvège, Milford Sound, Dubrovnik, Ha Long, côte lycienne, Gorges du Verdon."
+    },
+    "preparation_avancee": {
+      "vaccins": {
+        "obligatoires": "Fièvre jaune (Afrique, Amérique Sud tropicale) avec carnet jaune. Méningite ACWY (La Mecque, ceinture africaine).",
+        "recommandes": "Hépatite A/B (universel). Typhoïde (Asie, Afrique, Am. Latine). Rage (zones rurales, 3 injections pré-expo). Encéphalite japonaise (Asie rurale). Centre vaccination 2-3 mois avant.",
+        "paludisme": "Prophylaxie (Malarone, Doxycycline). Moustiquaire imprégnée. DEET 50%. Vêtements longs crépuscule/aube."
+      },
+      "assurances": {
+        "types": "Annulation, médicale voyage (rapatriement indispensable hors UE), bagages, responsabilité civile.",
+        "comparatif": "Chapka (longs voyages), ACS (expatriés/PVT), Allianz Travel. CB premium (Visa Premier, Gold) : incluses mais plafonds souvent insuffisants.",
+        "conseils": "Lire exclusions. Garder justificatifs originaux. Déclarer sinistre sous 48h-5 jours."
+      },
+      "change_argent": "Carte sans frais (Revolut, Wise, N26) en priorité. Grosses sommes pour minimiser frais DAB. Éviter change aéroport (10-15% marge). Refuser conversion dynamique (DCC). Réserve cash USD/EUR urgences.",
+      "sim_locale": {
+        "esim": "Airalo, Holafly, Nomad : activation QR code instantanée, multi-pays. Vérifier compatibilité téléphone.",
+        "physique": "Aéroport ou boutique opérateur 5-15€/30 jours data. Passeport parfois requis."
+      },
+      "vpn": "Sécuriser wifi public. Accéder banque/streaming depuis étranger. Obligatoire en Chine. NordVPN, ExpressVPN, Surfshark. Configurer avant départ. Éviter VPN gratuits.",
+      "apps_offline": "Maps.me/OsmAnd (cartes GPS hors ligne). Google Translate (langues téléchargeables). XE Currency. Google Maps zones téléchargeables. Réservations en PDF. Adresses en langue locale screenshotées."
+    },
+    "destinations_par_budget": {
+      "budget_serre": {
+        "destinations": "Asie SE (Vietnam, Cambodge, Laos : $20-35/jour). Inde ($15-30). Népal ($20-35). Bolivie, Guatemala ($25-40). Géorgie ($25-40, vin inclus).",
+        "strategies": "Auberges, Couchsurfing. Street food, cuisine auberge. Bus/train local. Randonnée, plages, temples gratuits. Free walking tours."
+      },
+      "milieu_gamme": {
+        "destinations": "Portugal ($60-100/jour). Grèce ($70-110). Croatie ($70-120). Colombie ($50-80). Mexique ($50-90). Maroc ($50-80).",
+        "strategies": "Hôtels 3 étoiles ou Airbnb. Mix restaurant/cuisine maison. Activités sélectives. Location voiture partagée."
+      },
+      "luxe": {
+        "destinations": "Maldives ($500-2000/nuit). Japon ryokan ($200-400/jour). Suisse ($250-500). Polynésie ($300-800). Safari haut de gamme ($500-1500/jour).",
+        "luxe_accessible": "Bali resorts 5★ ($150-300/nuit). Sri Lanka boutique ($100-200). Turquie luxe ($100-250). Portugal quintas ($120-250)."
+      },
+      "rapport_qualite_prix": {
+        "europe": "Portugal, Géorgie, Albanie, Pologne, Roumanie",
+        "asie": "Vietnam, Sri Lanka, Népal, Malaisie",
+        "ameriques": "Colombie, Mexique, Guatemala, Pérou"
+      }
+    },
+    "camping_van_life": {
+      "amenagement_van": {
+        "vehicules": "Fourgon (Ducato, Sprinter, Master) : meilleur rapport espace/conduite. Combi VW (T5/T6 California) : compact, iconique. Location test : Yescapa, Indie Campers, Roadsurfer.",
+        "amenagement": "Isolation Armaflex/liège. Lit fixe vs convertible. Cuisine gaz 2 feux + évier + frigo 12V. Lanterneau Maxxfan anti-condensation.",
+        "budget": "DIY : 3 000-8 000€. Pro : 15 000-40 000€. Occasion aménagé : 20 000-50 000€. Neuf constructeur : 50 000-80 000€+."
+      },
+      "autonomie": {
+        "electricite": "Solaire 200-400W + régulateur MPPT + batterie LiFePO4 100-200 Ah. Alternateur coupleur séparateur pour recharge en roulant.",
+        "eau": "Réservoir 80-120L propre + eaux grises séparé. Pompe 12V. Remplissage fontaines/stations/campings. Douche solaire ou Truma.",
+        "chauffage": "Diesel Webasto/Planar (~0,2 L/h). Indispensable hors été. Détecteur CO obligatoire."
+      },
+      "spots_bivouac": {
+        "trouver": "Park4Night (communauté mondiale). iOverlander (long cours). Google Maps satellite. Arriver fin après-midi, repartir matin tôt. Zéro déchet.",
+        "reglementation": "France : stationnement légal, camping réglementé. Espagne : tolérant sauf côtes été. Portugal : strict depuis 2021. Scandinavie : allemansrätten permissif tente, nuancé véhicules.",
+        "alternatives": "France Passion (chez vignerons gratuit). Camping-Car Park. Aires municipales 5-15€/nuit. Campings (douche, lessive, wifi)."
+      },
+      "itineraires_van": "Espagne (3-6 mois, méditerranée/Andalousie/Galice). Scandinavie été (route atlantique, Lofoten, Cap Nord). Portugal nord-sud (Porto/Algarve/surf). Balkans (Croatie/Monténégro/Albanie). Écosse NC500."
+    },
     "securite_voyage": {
-      "avant_depart": "Photocopies papiers + cloud, assurance voyage (MAIF Laissez-vous guider ou AXA), vaccins selon destination, ambassade enregistrement",
-      "sur_place": "Pas d'affichage richesse, assurance objet de valeur, vigilance transports nuit, numéros urgence locaux",
-      "sante": "Trousse médicale basique, médicaments génériques, eau locale (boîte filtrante LifeStraw ou pastilles)"
+      "avant_depart": "Photocopies documents + cloud sécurisé. Assurance rapatriement (vérifier plafonds). Vaccins 2-3 mois avant. Inscription fil d'Ariane (France Diplomatie). Informer banque. Passeport valide 6 mois après retour.",
+      "sur_place": "Pas d'affichage richesse. Portefeuille caché (ceinture ventrale). Vigilance transports/zones touristiques. Numéros urgence locaux. Ne pas résister si agression.",
+      "sante": "Trousse : paracétamol, ibuprofène, lopéramide, pansements, antiseptique, SPF50, DEET, réhydratation orale. Gourde filtrante LifeStraw/pastilles Micropur. Contacter assurance avant hospitalisation.",
+      "arnaques_courantes": "Taxi sans compteur. Fausse monnaie au change. Attraction fermée aujourd'hui (redirection magasin). Faux policiers. Bracelets forcés. Confirmer prix avant consommation.",
+      "numerique": "Sauvegarde téléphone avant départ. Localisation à distance activée. VPN wifi public. 2FA tous comptes importants."
     },
     "impact_responsable": {
-      "empreinte": "Vol long-courrier = 1-3 tCO2. Compenser via Gold Standard. Slow travel réduit fréquence vols.",
-      "tourisme_local": "Hébergements indépendants, restaurants locaux, guides certifiés communauté, marchés producteurs",
-      "over_tourisme": "Éviter Venise/Dubrovnik/Santorini en haute saison. Explorer destinations secondaires."
+      "empreinte": "Vol long-courrier AR = 1-3 tCO2. Train = 10-50x moins. Compenser Gold Standard (myclimate.org). Slow travel réduit fréquence vols.",
+      "tourisme_local": "Hébergements indépendants locaux > chaînes internationales. Restaurants locaux > franchises. Guides communautaires. Artisanat direct. Marchés producteurs. Impact économique local 3-5x supérieur.",
+      "over_tourisme": "Éviter Venise/Dubrovnik/Santorini haute saison. Alternatives : Šibenik, Milos, Valence. Basse saison. Respecter communautés locales.",
+      "engagement_local": "Bases de la langue locale. Permission photographier. Codes vestimentaires lieux religieux. Souvenirs éthiques. Espaces naturels plus propres qu'à l'arrivée."
     }
   }
 }

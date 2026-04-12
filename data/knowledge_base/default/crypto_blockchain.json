@@ -1,69 +1,173 @@
 {
   "version": "v30.1.0",
   "category": "crypto_blockchain",
-  "description": "Cryptomonnaies et blockchain — fondamentaux techniques, Bitcoin, Ethereum, DeFi, NFTs, stablecoins, sécurité, réglementation, cycles de marché, cas d'usage réels et mythes à démythifier",
+  "description": "Cryptomonnaies et blockchain — fondamentaux, Bitcoin, Ethereum, DeFi, NFTs, stablecoins, sécurité, réglementation, L2, tokenomics, Web3, analyse technique, mining/staking, risques, histoire",
   "crypto_blockchain": {
-    "introduction": "La blockchain est une technologie réelle avec des cas d'usage légitimes. Les cryptomonnaies sont une classe d'actifs spéculative à haut risque. TITANE distingue la technologie de la spéculation, les projets solides des scams, et donne les outils pour naviguer cet espace avec discernement.",
+    "introduction": "La blockchain est une technologie réelle avec des cas d'usage légitimes. Les cryptomonnaies constituent une classe d'actifs spéculative à haut risque. TITANE distingue la technologie de la spéculation, les projets solides des arnaques, et fournit les outils pour naviguer cet écosystème avec discernement et rigueur factuelle.",
     "blockchain_fondamentaux": {
-      "definition": "Registre distribué immuable. Transactions groupées en blocs chaînés par hachage cryptographique. Aucun acteur central ne contrôle.",
+      "definition": "Registre distribué immuable où les transactions sont groupées en blocs chaînés par hachage cryptographique (SHA-256 pour Bitcoin, Keccak-256 pour Ethereum). Aucun acteur central ne contrôle le réseau.",
       "consensus": {
-        "proof_of_work": "Bitcoin — mineurs résolvent puzzle computationnel. Sécurisé, énergivore (127 TWh/an ≈ Argentine)",
-        "proof_of_stake": "Ethereum post-merge, Solana, Cardano — validateurs stakent des tokens. 99.95% moins énergivore.",
-        "autres": "DPoS (Delegated PoS), PoA (Authority), PoH (Solana)"
+        "proof_of_work": "Bitcoin, Litecoin — mineurs résolvent un puzzle computationnel. Sécurisé grâce au coût économique de l'attaque, mais énergivore (127 TWh/an ≈ Argentine). Difficulté ajustée tous les 2016 blocs.",
+        "proof_of_stake": "Ethereum post-merge, Solana, Cardano, Polkadot — validateurs stakent des tokens comme garantie. 99,95% moins énergivore. Slashing en cas de comportement malveillant.",
+        "autres": "DPoS (EOS, Tron — validateurs élus, plus rapide mais centralisé), PoA (réseaux privés), PoH (Solana — horodatage cryptographique), BFT (Cosmos/Tendermint — finalité instantanée)."
       },
-      "proprietes": "Immuabilité (modification nécessite >51% hashrate), transparence (tout public on-chain), permissionless, censorship-resistant",
-      "limites": "Scalabilité trilemme (décentralisation/sécurité/vitesse), UX complexe, financement infrastructure, réglementation"
+      "composants_techniques": "Merkle tree (intégrité des données), courbes elliptiques secp256k1 (signatures), mempool (file d'attente transactions), gas Ethereum (coût computationnel, EIP-1559 : base fee brûlé + pourboire).",
+      "proprietes": "Immuabilité (>51% hashrate pour modifier), transparence on-chain, permissionless, censorship-resistant.",
+      "limites": "Trilemme scalabilité (décentralisation/sécurité/vitesse), UX complexe, coûts infrastructure, fragmentation réglementaire."
     },
     "bitcoin": {
-      "creation": "Satoshi Nakamoto, 2008. Whitepaper 'A Peer-to-Peer Electronic Cash System'. Genèse block 3 janvier 2009.",
-      "proprietes": "Supply fixe (21M BTC), décentralisé max (10K+ nodes), ~4 ans halvings réduisent émission",
-      "store_of_value": "Or digital — réserve de valeur rare, portable, divisible (satoshi = 0.00000001 BTC). Arguments inflation hedge.",
-      "critiques": "Volatilité rend usage comme monnaie difficile, énergie, lenteur transactions (7 TPS), scalabilité",
-      "layer2": "Lightning Network — canaux de paiement off-chain. Quasi-instantané, frais micro. Adoption croissante."
+      "creation": "Satoshi Nakamoto, whitepaper 31 oct. 2008. Bloc genèse 3 jan. 2009 : 'The Times Chancellor on brink of second bailout for banks'.",
+      "proprietes": "Supply fixe 21M BTC (dernier ~2140). 15 000+ nœuds actifs. Halvings tous les 210 000 blocs (~4 ans).",
+      "store_of_value": "Or numérique — rare, portable, divisible (1 satoshi = 0,00000001 BTC). Arguments : protection inflation, actif non corrélé sur long terme.",
+      "critiques": "Volatilité extrême (drawdowns -80%), énergivore, lenteur (7 TPS, ~10 min/bloc), concentration géographique du minage.",
+      "halvings": "2012 : 50→25 BTC, prix 12$→1 100$. 2016 : 25→12,5, 650$→20 000$. 2020 : 12,5→6,25, 8 600$→69 000$. 2024 : 6,25→3,125, contexte ETF/institutionnel inédit.",
+      "adoption_institutionnelle": "ETF Bitcoin spot (jan. 2024). MicroStrategy >190 000 BTC. El Salvador : cours légal sept. 2021.",
+      "layer2": "Lightning Network — canaux de paiement off-chain, quasi-instantané, frais <1 centime. Capacité >5 000 BTC."
     },
     "ethereum": {
-      "creation": "Vitalik Buterin, 2015. Smart contracts = programmes autonomes sur blockchain.",
-      "evm": "Ethereum Virtual Machine — langage Solidity/Vyper. Déterministe, isolé.",
+      "creation": "Vitalik Buterin, 2015. Première blockchain programmable avec smart contracts autonomes.",
+      "the_merge": "Transition PoW→PoS le 15 sept. 2022. -99,95% consommation énergétique. Validateurs : minimum 32 ETH stakés.",
+      "evm": "Ethereum Virtual Machine — Turing-complète. Solidity (syntaxe JS), Vyper (Python). Exécution déterministe isolée.",
+      "eip_cles": "EIP-1559 : base fee brûlé, ETH potentiellement déflationniste. EIP-4844 : proto-danksharding, frais L2 réduits 10-100x. EIP-4337 : account abstraction, récupération sociale.",
       "defi": {
-        "definition": "Finance décentralisée — services financiers sans intermédiaires (banques, courtiers)",
-        "protocoles": "Uniswap (DEX, échanges automatiques), Aave/Compound (prêts/emprunts), Maker (DAI stablecoin), Curve (stablecoins)",
-        "risques": "Smart contract bugs (hack DAO 2016, Ronin $625M), liquidations en cascade, rug pulls, impermanent loss"
+        "definition": "Finance décentralisée — services financiers sans intermédiaires. TVL fluctuant entre 40-180 milliards $.",
+        "protocoles": "DEX : Uniswap (>$1T volume cumulé), Curve. Lending : Aave (flash loans), Compound, MakerDAO (DAI). Dérivés : dYdX, GMX. Yield : Yearn, Convex.",
+        "concepts_cles": "AMM (pools x*y=k), flash loans (prêts instantanés sans collatéral), impermanent loss (perte LP lors de changement de ratio), liquidation (health factor < 1).",
+        "risques": "Bugs smart contracts (hack DAO 2016, Ronin $625M, Wormhole $320M), liquidations en cascade, rug pulls, impermanent loss, gouvernance concentrée."
       },
-      "layer2": "Arbitrum, Optimism, Base, zkSync — transactions off-chain + preuves on-chain. Frais <$0.01 vs Ethereum $1-50."
+      "layer2": "Arbitrum (leader TVL L2), Optimism (OP Stack/Superchain), Base (Coinbase), zkSync, StarkNet. Frais <$0,01 vs L1 $1-50."
     },
     "stablecoins": {
+      "definition": "Cryptos à parité stable (généralement $1). Capitalisation >$130 milliards. Trading, transferts internationaux, refuge anti-volatilité.",
       "categories": {
-        "fiat_backed": "USDC (Circle), USDT (Tether) — 1$ de réserve pour 1 token. Centralisé mais stable.",
-        "crypto_backed": "DAI (sur-collatéralisé en ETH/BTC). Décentralisé mais liquidation risk.",
-        "algorithmique": "Luna/UST — effondrement 2022, $60B disparus. Mécanisme intrinsèquement fragile sans backing réel."
+        "fiat_backed": "USDC (Circle, réserves auditées, bons du Trésor US), USDT (Tether, >$90B, audits partiels controversés). Peuvent geler des adresses.",
+        "crypto_backed": "DAI (MakerDAO, sur-collatéralisé 150%+ en ETH/WBTC). LUSD (Liquity, ETH seul, plus décentralisé). Risque liquidation cascade.",
+        "algorithmique": "UST/Luna — effondrement mai 2022, $60B évaporés. Mécanisme fragile sans backing. FRAX : hybride partiellement collatéralisé.",
+        "rwa_backed": "Nouvelle génération : actifs réels tokenisés, bons du Trésor on-chain (Ondo, Mountain Protocol). Rendement intégré."
       },
-      "risques": "USDT audit partiel, risque contrepartie USDC (SVB bank crisis), réglementation incoming"
+      "risques": "USDT : transparence insuffisante. USDC : dépeg $0,88 lors crise SVB (mars 2023). MiCA impose réserves strictes en Europe.",
+      "usage_reel": "Transferts internationaux bas coût, refuge dans pays à forte inflation (Argentine, Turquie), paire de trading universelle."
     },
     "nfts": {
-      "technique": "Non-Fungible Token — token unique représentant ownership. Metadata généralement off-chain (IPFS).",
-      "usages_reels": "Art numérique, ticketing anti-fraude, gaming (ownership items), identité digitale, certificats",
-      "bulle_2021": "$69M Beeple. 90%+ des NFTs 2021 valent aujourd'hui proche de 0. Spéculation + wash trading.",
-      "avenir": "Utilities tangibles (concerts, access passes) ont de la valeur. JPEG spéculatif = incertain."
+      "technique": "Non-Fungible Token (ERC-721/ERC-1155). Propriété d'actif unique sur blockchain. Métadonnées sur IPFS/Arweave.",
+      "standards": "ERC-721 (unique, indivisible), ERC-1155 (multi-token, gaming), Soulbound SBT (non transférable, attestations/réputation).",
+      "usages_reels": "Art numérique (royalties auto), ticketing anti-fraude, gaming (propriété objets), identité décentralisée (ENS), certificats authenticité.",
+      "bulle_2021": "Beeple $69M. Volume >$5B/mois au pic. 90%+ valent ~0. Wash trading massif faussant les stats.",
+      "avenir": "Utilitaires tangibles (accès, services) conservent la valeur. JPEG spéculatif = incertain. La technologie reste pertinente."
     },
     "securite_crypto": {
       "wallets": {
-        "hot": "MetaMask, Phantom — connecté internet, pratique, risque hack",
-        "cold": "Ledger/Trezor hardware wallet — clés privées hors ligne. Recommandé >$1000.",
-        "seed_phrase": "12-24 mots = accès TOTAL. Jamais en ligne, jamais photo. Métal gravé = meilleure pratique."
+        "hot": "MetaMask, Phantom, Trust Wallet — connectés internet, pratiques, risque malwares/extensions malveillantes.",
+        "cold": "Ledger, Trezor, Keystone (air-gapped QR). Clés hors ligne sur composant sécurisé. Recommandé >1 000€.",
+        "seed_phrase": "12-24 mots BIP-39 = accès TOTAL irrévocable. Jamais en ligne, jamais photo. Gravure métal = meilleure pratique.",
+        "multisig": "Gnosis Safe — M/N signatures requises (ex. 2/3). Standard trésoreries DeFi et fonds institutionnels.",
+        "mpc": "Multi-Party Computation — clé fragmentée sans reconstruction. Fireblocks, Coinbase institutionnel."
       },
-      "escroqueries": "Fausses apps (toujours vérifier URL officielle), phishing Discord/Twitter, 'double your crypto', faux support",
-      "regle_or": "Jamais partager seed phrase. Personne légitime ne la demande JAMAIS."
+      "bonnes_pratiques": "Appareil dédié, 2FA matériel (YubiKey), vérifier URLs manuellement, révoquer approvals (revoke.cash), tester petit montant avant transfert.",
+      "escroqueries": "Fausses apps, phishing Discord/Twitter/Telegram, 'doublez vos crypto', faux support, sites minting drainant le wallet.",
+      "regle_or": "Jamais partager sa seed phrase. Aucune entité légitime ne la demandera JAMAIS."
     },
     "cycles_marche": {
-      "halving_bitcoin": "Tous les ~4 ans, récompense mineurs divisée par 2. Historiquement précède bull market 12-18 mois après.",
-      "indicateurs": "Fear & Greed Index, Pi Cycle Top, MVRV ratio, on-chain metrics (Glassnode)",
-      "psychologie": "FOMO sommet, désespoir creux. 'Soyez gourmands quand les autres ont peur' (Buffett — vaut aussi crypto).",
-      "avertissement": "Passé ≠ futur. Régulation, technologie, macro peuvent briser cycles historiques."
+      "halving_bitcoin": "Tous les ~4 ans, récompense mineurs ÷2. Historiquement précède bull market 12-18 mois après.",
+      "indicateurs": "On-chain : MVRV, NUPL, Exchange Flows, Whale Accumulation (Glassnode, CryptoQuant). Sentiment : Fear & Greed Index. Technique : Pi Cycle Top, Rainbow Chart, 200-Week MA.",
+      "phases": "Accumulation (smart money, sentiment négatif), expansion (dépassement résistances), euphorie (FOMO, leverage excessif), capitulation (crash, liquidations cascade, -70/-85%).",
+      "psychologie": "FOMO au sommet, désespoir au creux. Le meilleur moment pour étudier la crypto est pendant un bear market.",
+      "avertissement": "Performances passées ≠ résultats futurs. Régulation, technologie et macro peuvent briser les schémas historiques."
     },
     "regulation": {
-      "europe": "MiCA (2024) — premier cadre réglementaire complet crypto. Stablecoins sous supervision BCE.",
-      "usa": "Débat SEC/CFTC juridiction. ETF Bitcoin spot approuvé (jan 2024). Ethereum ETF en attente.",
-      "investissement": "Risque élevé. Position max recommandée : 5-10% portefeuille pour investisseur informé."
+      "europe": "MiCA (2024) — premier cadre réglementaire complet. Stablecoins sous supervision BCE. Exigences réserve, whitepaper, gouvernance.",
+      "usa": "Bataille SEC/CFTC. ETF Bitcoin spot (jan. 2024), ETF Ethereum spot (juil. 2024). Actions contre Coinbase, Binance, Ripple.",
+      "investissement": "Risque élevé. Position max 5-10% portefeuille pour investisseur informé. Ne jamais investir ce qu'on ne peut pas perdre."
+    },
+    "layer2_scaling": {
+      "definition": "Solutions de scalabilité au-dessus du L1 pour augmenter le débit et réduire les frais, en héritant de la sécurité de la chaîne principale.",
+      "rollups_optimistic": "Transactions exécutées off-chain, présumées valides. Période contestation 7 jours (preuve de fraude). Arbitrum (>50% TVL L2), Optimism (OP Stack/Superchain), Base (Coinbase). Compatibilité EVM native, coûts 10-100x inférieurs. Inconvénient : délai retrait 7j, séquenceurs centralisés.",
+      "rollups_zk": "Preuves de validité zero-knowledge vérifiées mathématiquement sur L1. zkSync Era, StarkNet (Cairo), Polygon zkEVM, Scroll, Linea. Finalité rapide, confidentialité potentielle. Inconvénient : complexité technique, compatibilité EVM partielle.",
+      "sidechains": "Chaînes indépendantes connectées au L1 par bridge. Polygon PoS, Gnosis Chain. Frais très bas mais sécurité propre.",
+      "bridges": "Transfert d'actifs entre chaînes — point de vulnérabilité majeur. Hacks : Ronin $625M, Wormhole $320M, Nomad $190M.",
+      "sharding": "Division en fragments parallèles. Abandonné par Ethereum au profit du danksharding (blobs pour L2). Near et MultiversX l'utilisent.",
+      "data_availability": "Couche critique pour rollups. Celestia, EigenDA, Avail — disponibilité de données modulaire réduisant les coûts L2."
+    },
+    "tokenomics": {
+      "definition": "Modèle économique d'un token : émission, distribution, utilité, incitations. Détermine la viabilité long terme.",
+      "supply": "Max supply (Bitcoin : 21M fixe, certains tokens sans limite). Circulating supply (market cap = prix × circulant). Attention FDV vs market cap. Emission schedule : linéaire, décroissante, ou gouvernée.",
+      "mecanismes": {
+        "burn": "Destruction permanente. ETH brûle base fee (EIP-1559), BNB burns trimestriels. Mécanisme déflationniste.",
+        "inflation_deflation": "Inflation : nouveaux tokens émis (récompenses). Déflation : brûlés > émis. ETH alterne selon activité réseau.",
+        "vesting": "Déblocage progressif tokens équipe/investisseurs. Cliff 6-12 mois + linéaire 2-4 ans. Gros déblocages = pression vendeuse.",
+        "staking_rewards": "Rendements validateurs/stakers. Rendement réel = nominal − inflation du token."
+      },
+      "types_tokens": "Governance (UNI, AAVE — droit de vote, souvent concentré chez whales). Utility (ETH gas, LINK oracles — demande liée à l'usage réel). Security (investissement avec attente profit — soumis réglementation).",
+      "red_flags": "Allocation équipe >30%, absence vesting, FDV >> market cap, inflation non contrôlée, utilité vague, supply concentrée."
+    },
+    "web3_dapps": {
+      "definition": "Applications décentralisées sur smart contracts blockchain. Web3 vise un internet détenu par ses utilisateurs.",
+      "categories": "DeFi (Uniswap, Aave, >$50B TVL). Gaming (Axie Infinity, play-to-earn controversé). Social (Lens, Farcaster, propriété données). Infrastructure (Filecoin stockage, Chainlink oracles, ENS identité).",
+      "wallets": "MetaMask (leader EVM, navigateur+mobile). WalletConnect (protocole connexion QR). Account Abstraction EIP-4337 (récupération sociale, gas payé par tiers, auth biométrique).",
+      "smart_contracts": "Langages : Solidity, Vyper, Cairo, Move, Rust. Audits (Trail of Bits, OpenZeppelin, Certik) — réduisent les risques sans les éliminer. Bugs fréquents : reentrancy, oracle manipulation, flash loan attacks. OpenZeppelin Contracts = standard de facto.",
+      "limites": "UX complexe, frais imprévisibles, irréversibilité erreurs, dépendance composants centralisés (RPC, front-ends)."
+    },
+    "regulation_mondiale": {
+      "europe_mica": "MiCA adopté 2023, application 2024-2025. Émetteurs stablecoins : licence, réserves 1:1, whitepaper. CASP : agrément, capital, AML, protection fonds clients.",
+      "usa_sec": "Test de Howey pour securities. Ripple : verdict mixte 2023. ETF BTC spot jan. 2024 (BlackRock >$20B), ETF ETH juil. 2024. Projet FIT21 en attente.",
+      "france_psan": "PSAN obligatoire (AMF), transition CASP sous MiCA. Fiscalité : PFU 30% sur plus-values. Déclaration comptes étrangers obligatoire (3916-bis). Exonération si cessions <305€/an.",
+      "kyc_aml": "Vérification identité et surveillance transactions suspectes. Travel Rule GAFI : partage infos >1 000€. Sanctions si non-conformité.",
+      "fiscalite_internationale": "Allemagne (exonération après 1 an). Portugal (désormais taxé). EAU (pas d'impôt). Suisse (canton par canton). OCDE CARF en développement."
+    },
+    "analyse_technique": {
+      "definition": "Étude prix/volumes historiques pour identifier tendances. Outil probabiliste, pas infaillible. Combiner avec analyse fondamentale et on-chain.",
+      "supports_resistances": "Support : demande stoppe la baisse. Résistance : offre stoppe la hausse. Cassure transforme l'un en l'autre. Niveaux psychologiques ronds. Trendlines : creux successifs (haussière) ou sommets (baissière).",
+      "volumes": "Volume confirme les mouvements. Hausse + volume croissant = sain. Hausse + volume décroissant = épuisement. Pics = capitulation ou climax.",
+      "indicateurs": {
+        "rsi": "Relative Strength Index (0-100). Surachat >70, survente <30. Divergences RSI/prix signalent affaiblissement tendance.",
+        "macd": "Croisement ligne MACD/signal = changement momentum. Histogramme positif = haussier. Divergences comme signal avancé.",
+        "bollinger": "MA 20 ± 2 écarts-types. Squeeze (resserrement) précède mouvement explosif. Toucher bande ≠ automatiquement surachat.",
+        "moyennes_mobiles": "SMA 50/200 jours tendance long terme. Golden Cross (50>200) = haussier. Death Cross = baissier."
+      },
+      "patterns": "Continuation : flags, pennants, triangles. Retournement : tête-épaules, double top/bottom. Chandeliers : doji, marteau, englobante.",
+      "avertissement": "AT auto-réalisatrice mais pas infaillible. Marchés crypto manipulables. Toujours : stop-loss, position sizing, max 1-2% capital/trade."
+    },
+    "mining_staking": {
+      "pow_mining": {
+        "processus": "ASICs (Bitcoin) ou GPUs résolvent puzzles cryptographiques. Premier = bloc validé + récompense + frais.",
+        "pools": "Regroupement puissance calcul. Foundry USA, AntPool, F2Pool. Risque centralisation si pool >50% hashrate.",
+        "couts": "Électricité = 60-80% coûts. Rentable <$0,05/kWh. Migration énergies renouvelables. Minage résidentiel rarement rentable.",
+        "environnement": "Bitcoin ~127 TWh/an. Débat empreinte carbone vs énergie excédentaire/renouvelable."
+      },
+      "pos_staking": {
+        "processus": "Validateurs stakent tokens minimum comme garantie. Sélection pseudo-aléatoire. Récompensés en tokens + frais.",
+        "ethereum": "Minimum 32 ETH (~$80K+). Rendement ~3-4% APY. Slashing si double signature ou inactivité.",
+        "liquid_staking": "Staker en gardant la liquidité. Lido (stETH, >30% ETH staké), Rocket Pool (rETH). Token dérivé utilisable en DeFi.",
+        "restaking": "EigenLayer : réutiliser ETH staké pour sécuriser d'autres protocoles (AVS). Rendement accru mais risques cumulés.",
+        "decentralisation": "Lido >30% staking ETH = risque concentration. DVT (Obol, SSV) pour validateurs distribués."
+      },
+      "comparaison": "PoW : éprouvé, sécurité physique, énergivore. PoS : efficient, barrière financière, risque théorique 'nothing at stake'."
+    },
+    "risques_arnaques": {
+      "types": {
+        "rug_pull": "Devs créent token, attirent liquidité, retirent tout. Prix → 0. Hard rug (instantané) vs soft rug (abandon progressif). Ex : Squid Game Token.",
+        "phishing": "Faux sites imitant protocoles légitimes. Liens piégés Discord/Twitter/Telegram. Signature transaction malveillante vide le wallet.",
+        "ponzi": "Rendements garantis élevés (1%/jour). Premiers payés par nouveaux entrants. Effondrement inévitable. Bitconnect : $2,6B perdus.",
+        "pump_and_dump": "Achat coordonné token peu liquide → prix gonflé → vente au sommet. Groupes Telegram. Participants tardifs = perdants.",
+        "faux_projets": "Whitepaper copié, équipe anonyme/fausse, code non audité, tokenomics concentrée. Milliers lancés quotidiennement.",
+        "sim_swap": "Vol numéro téléphone via ingénierie sociale. Attaquant reçoit SMS 2FA. Solution : clés matérielles YubiKey."
+      },
+      "red_flags": "Rendements irréalistes, pression temporelle, équipe anonyme, code non audité, allocation équipe massive sans vesting, liquidité non verrouillée.",
+      "protection": "Vérifier contrat (Etherscan, TokenSniffer, RugDoc). Wallet dédié pour nouveaux protocoles. Révoquer approvals. DYOR. Ne pas suivre aveuglément influenceurs crypto (souvent rémunérés)."
+    },
+    "histoire_cycles": {
+      "origines": "Cypherpunks : DigiCash (Chaum 1989), Hashcash (Back 1997), b-money (Dai 1998). Genèse BTC : 3 jan. 2009. Bitcoin Pizza Day : 10 000 BTC pour 2 pizzas (22 mai 2010).",
+      "evenements": {
+        "mt_gox": "Plus grand exchange 2011-2014. Hack fév. 2014 : 850 000 BTC disparus (~$450M). Faillite. Remboursement partiel initié 2024.",
+        "ico_2017": "Boom ICO : >$6B levés. 80%+ projets échoués ou frauduleux. Renforcement réglementaire.",
+        "defi_summer_2020": "Explosion DeFi. Yield farming. TVL de $1B à $15B en mois. COMP lance la course aux rendements.",
+        "bull_2021": "BTC ATH $69K. NFT mania, meme coins. Tesla, MicroStrategy. El Salvador adopte BTC.",
+        "terra_luna_2022": "UST perd son peg → spirale de mort LUNA. $60B évaporés en une semaine. Do Kwon recherché.",
+        "ftx_2022": "Faillite FTX (nov. 2022). SBF reconnu coupable fraude. $8B fonds clients détournés. Contagion : BlockFi, Genesis, Celsius.",
+        "etf_2024": "ETF BTC spot approuvés USA. BlackRock IBIT >$20B actifs. Validation institutionnelle majeure."
+      },
+      "bear_markets": "2014-15 : BTC $1 100→$170 (-85%), construction Ethereum. 2018-19 : $20K→$3 200 (-84%), construction DeFi. 2022-23 : $69K→$15,5K (-77%), faillites, construction L2/RWA.",
+      "lecons": "Chaque cycle renforce l'écosystème. Bear markets = périodes de construction. Diversification, patience et gestion du risque = clés de survie long terme."
     }
   }
 }

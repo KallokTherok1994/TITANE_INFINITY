@@ -1,9 +1,606 @@
 {
   "version": "v30.1.0",
   "category": "services_backend",
-  "description": "Services backend Rust TITANE∞ — cache multicouche, DB, RAG, monitoring, cluster, selfheal",
+  "description": "Services backend Rust TITANE∞ — cache multicouche, DB, RAG, monitoring, cluster, selfheal, API gateway, microservices, sécurité, DevOps et observabilité complète",
+  "api_gateway": {
+    "description": "Passerelle API centralisée — point d'entrée unique pour toutes les requêtes backend TITANE∞",
+    "path": "src-tauri/src/gateway/",
+    "architecture": "Passerelle unifiée en Rust avec routage dynamique, validation de schéma et transformation de requêtes",
+    "rest_endpoints": {
+      "description": "Points d'accès REST internes exposés via IPC Tauri",
+      "conventions": "Tous les endpoints suivent le pattern /api/v{version}/{ressource}/{action}",
+      "principaux_endpoints": {
+        "chat": {
+          "route": "/api/v1/chat/completions",
+          "methode": "POST",
+          "description": "Envoi d'un message au moteur de conversation IA avec streaming optionnel",
+          "payload": "{ model, messages[], stream, temperature, max_tokens }",
+          "reponse": "{ ok: true, content: { id, choices[], usage }, error: null }"
+        },
+        "memory": {
+          "route": "/api/v1/memory/{operation}",
+          "methodes": ["GET", "POST", "DELETE"],
+          "description": "Opérations CRUD sur la mémoire contextuelle (STM, MTM, LTM)",
+          "operations": ["store", "recall", "search", "consolidate", "prune"]
+        },
+        "providers": {
+          "route": "/api/v1/providers/{provider_id}",
+          "methodes": ["GET", "POST", "PUT"],
+          "description": "Gestion et configuration des fournisseurs IA (Ollama, OpenAI, Anthropic, etc.)",
+          "operations": ["list", "status", "configure", "test_connection", "switch"]
+        },
+        "system": {
+          "route": "/api/v1/system/{action}",
+          "methodes": ["GET", "POST"],
+          "description": "Informations système, diagnostics et actions de maintenance",
+          "operations": ["health", "metrics", "diagnostics", "restart", "config"]
+        },
+        "knowledge": {
+          "route": "/api/v1/knowledge/{action}",
+          "methodes": ["GET", "POST", "PUT", "DELETE"],
+          "description": "Gestion de la base de connaissances et du RAG pipeline",
+          "operations": ["ingest", "query", "reindex", "stats", "export"]
+        }
+      }
+    },
+    "middleware": {
+      "description": "Chaîne de middleware appliquée séquentiellement à chaque requête entrante",
+      "pipeline_ordre": [
+        "1. Authentification — vérification du jeton de session IPC",
+        "2. Rate limiting — contrôle du débit par endpoint et par utilisateur",
+        "3. Validation — vérification du schéma JSON de la requête contre le contrat IPC",
+        "4. Logging — journalisation structurée de chaque requête (timestamp, durée, statut)",
+        "5. CORS — politique de sécurité cross-origin (restreint en production Tauri)",
+        "6. Compression — compression gzip/brotli des réponses volumineuses (>1KB)",
+        "7. Transformation — normalisation des payloads vers le format IPC canonical { ok, content, error }"
+      ],
+      "middleware_personnalise": "Chaque endpoint peut enregistrer des middleware supplémentaires via le registre de plugins"
+    },
+    "rate_limiting": {
+      "description": "Contrôle du débit pour protéger les ressources backend et les providers IA externes",
+      "algorithme": "Token bucket avec fenêtre glissante par endpoint",
+      "limites_par_defaut": {
+        "chat_completions": "30 requêtes/minute — protège les quotas API provider",
+        "memory_operations": "120 requêtes/minute — opérations locales rapides",
+        "system_diagnostics": "10 requêtes/minute — opérations coûteuses en ressources",
+        "knowledge_ingest": "5 requêtes/minute — indexation lourde en CPU/IO"
+      },
+      "depassement": "Réponse HTTP 429 avec en-tête Retry-After et message utilisateur explicite",
+      "configuration": "Limites ajustables via user_preferences sans redémarrage"
+    },
+    "versioning": {
+      "description": "Stratégie de versionnage API pour garantir la compatibilité ascendante",
+      "strategie": "Versionnage par URL path (/api/v1/, /api/v2/) avec support simultané de N-1",
+      "deprecation": "Les endpoints dépréciés retournent un en-tête X-Deprecated-Since avec date et alternative",
+      "migration": "Guide de migration automatique généré pour chaque montée de version majeure",
+      "compatibilite": "Les champs additionnels dans les réponses sont toujours rétro-compatibles (ajout seul)"
+    },
+    "documentation_auto": {
+      "description": "Documentation API auto-générée à partir des définitions de routes et schémas",
+      "format": "OpenAPI 3.1 généré dynamiquement depuis les annotations Rust",
+      "acces": "Disponible via commande IPC 'gateway_get_openapi_spec'",
+      "fonctionnalites": [
+        "Schémas JSON typés pour chaque requête et réponse",
+        "Exemples de requêtes/réponses pour chaque endpoint",
+        "Codes d'erreur documentés avec messages explicatifs en français",
+        "Changelog automatique entre versions de l'API"
+      ]
+    }
+  },
+  "microservices": {
+    "description": "Architecture modulaire orientée services — chaque domaine fonctionnel est isolé en module autonome",
+    "path": "src-tauri/src/services/",
+    "philosophie": "Monolithe modulaire avec frontières claires — découpage logique sans surcoût réseau inter-processus",
+    "architecture_services": {
+      "description": "Organisation des services backend en domaines fonctionnels indépendants",
+      "services_principaux": {
+        "chat_orchestrator": {
+          "role": "Orchestration des conversations IA — routage vers le provider actif, gestion du contexte",
+          "path": "src-tauri/src/chat/",
+          "dependances": ["memory_service", "rag_service", "provider_registry"]
+        },
+        "memory_service": {
+          "role": "Gestion de la mémoire cognitive — STM, MTM, LTM avec consolidation automatique",
+          "path": "src-tauri/src/memory/",
+          "dependances": ["database_service", "embedding_service"]
+        },
+        "provider_registry": {
+          "role": "Registre des fournisseurs IA — découverte, santé, basculement automatique",
+          "path": "src-tauri/src/providers/",
+          "dependances": ["health_service", "config_service"]
+        },
+        "embedding_service": {
+          "role": "Génération et gestion des embeddings vectoriels pour la recherche sémantique",
+          "path": "src-tauri/src/embeddings/",
+          "dependances": ["cache_service", "provider_registry"]
+        },
+        "knowledge_service": {
+          "role": "Ingestion, indexation et requêtage de la base de connaissances",
+          "path": "src-tauri/src/knowledge/",
+          "dependances": ["database_service", "embedding_service", "rag_service"]
+        },
+        "config_service": {
+          "role": "Gestion centralisée de la configuration — lecture, écriture, validation, migration",
+          "path": "src-tauri/src/config/",
+          "dependances": ["database_service"]
+        }
+      }
+    },
+    "communication_inter_services": {
+      "description": "Mécanismes de communication entre les modules internes",
+      "patterns": {
+        "appel_direct": "Appel de fonction Rust synchrone pour les opérations critiques à faible latence",
+        "canal_evenements": "Bus d'événements interne (tokio::broadcast) pour les notifications asynchrones",
+        "ipc_tauri": "Canal IPC Tauri pour la communication frontend ↔ backend avec contrat { ok, content, error }",
+        "file_attente": "File d'attente interne (tokio::mpsc) pour les tâches longues différées"
+      },
+      "serialisation": "Serde JSON pour l'IPC, types Rust natifs pour les appels inter-modules directs",
+      "contrat_ipc": "Tout message IPC respecte obligatoirement le format { ok: bool, content: T | null, error: string | null }"
+    },
+    "service_discovery": {
+      "description": "Mécanisme de découverte et d'enregistrement des services au démarrage",
+      "registre": "ServiceRegistry centralisé — chaque service s'enregistre avec ses capacités et dépendances",
+      "resolution": "Injection de dépendances au démarrage via le conteneur d'application Tauri",
+      "ordre_demarrage": "Résolution topologique des dépendances pour garantir un démarrage ordonné",
+      "detection_cycles": "Vérification au compile-time et au runtime des dépendances circulaires"
+    },
+    "health_checks": {
+      "description": "Vérifications de santé périodiques pour chaque service enregistré",
+      "types": {
+        "liveness": "Le service répond — processus vivant et réactif (vérification toutes les 10s)",
+        "readiness": "Le service est prêt à traiter des requêtes — dépendances satisfaites (vérification toutes les 30s)",
+        "startup": "Le service a terminé son initialisation — exécuté une seule fois au boot"
+      },
+      "format_reponse": "{ service: string, status: 'healthy' | 'degraded' | 'unhealthy', latency_ms: number, details: object }",
+      "action_degradation": "Notification au watchdog + tentative de rétablissement automatique avant alerte utilisateur",
+      "endpoint_agrege": "Commande IPC 'system_get_health' — agrège l'état de tous les services en un rapport unifié"
+    }
+  },
+  "base_de_donnees": {
+    "description": "Couche de persistance SQLite complète — stockage structuré, migrations, optimisation et sauvegarde",
+    "path": "src-tauri/src/database/",
+    "sqlite": {
+      "description": "Moteur de base de données embarqué SQLite — léger, fiable, sans serveur",
+      "version": "SQLite 3.x via rusqlite avec bindings Rust natifs",
+      "chiffrement": "SQLCipher (AES-256-CBC) pour le chiffrement transparent au repos des données sensibles",
+      "fichier": "app_data_dir/titane.db — fichier unique portable",
+      "mode_journal": "WAL (Write-Ahead Logging) — lectures concurrentes sans blocage, écriture séquentielle performante",
+      "pragmas_optimises": [
+        "PRAGMA journal_mode = WAL",
+        "PRAGMA synchronous = NORMAL",
+        "PRAGMA cache_size = -64000",
+        "PRAGMA foreign_keys = ON",
+        "PRAGMA auto_vacuum = INCREMENTAL",
+        "PRAGMA temp_store = MEMORY"
+      ],
+      "taille_estimee": "Base typique de 10-500 Mo selon le volume de conversations et mémoire accumulée"
+    },
+    "migrations": {
+      "description": "Système de migrations de schéma pour l'évolution structurée de la base de données",
+      "strategie": "Migrations numérotées séquentiellement, appliquées automatiquement au démarrage",
+      "repertoire": "src-tauri/migrations/",
+      "versionnage": "Table interne 'schema_version' avec historique complet des migrations appliquées",
+      "rollback": "Chaque migration fournit une méthode 'down()' pour le retour arrière en cas d'échec",
+      "validation": "Vérification d'intégrité du schéma après chaque migration via PRAGMA integrity_check",
+      "exemples_migrations": [
+        "001_create_conversations.sql — table conversations avec index temporel",
+        "002_create_memory_entries.sql — table mémoire avec colonnes embedding",
+        "003_add_audit_log.sql — journal d'audit avec partitionnement par mois",
+        "004_add_knowledge_base.sql — tables pour la base de connaissances RAG",
+        "005_add_provider_configs.sql — configurations provider avec versionnage"
+      ]
+    },
+    "orm": {
+      "description": "Couche d'abstraction ORM légère pour l'accès aux données typé et sécurisé",
+      "approche": "Query builder typé en Rust — pas d'ORM lourd, requêtes SQL paramétrées via rusqlite",
+      "avantages": [
+        "Prévention des injections SQL par paramétrage systématique",
+        "Types Rust vérifiés au compile-time pour les résultats de requêtes",
+        "Mapping automatique struct Rust ↔ lignes SQLite via derive macros",
+        "Transactions ACID avec rollback automatique en cas de panique Rust"
+      ],
+      "pattern_repository": "Chaque domaine expose un Repository trait (ConversationRepo, MemoryRepo, etc.)"
+    },
+    "indexation": {
+      "description": "Stratégie d'indexation pour des requêtes performantes sur les tables volumineuses",
+      "index_principaux": {
+        "idx_conversations_timestamp": "Index B-tree sur conversations(created_at) — tri chronologique rapide",
+        "idx_memory_category": "Index composé sur memory_entries(category, importance) — filtrage catégoriel",
+        "idx_memory_embedding_hash": "Index unique sur embeddings_cache(content_hash) — déduplication O(1)",
+        "idx_audit_timestamp": "Index B-tree sur audit_log(timestamp) — requêtes d'audit temporelles",
+        "idx_knowledge_content": "Index FTS5 full-text sur knowledge_entries(content) — recherche textuelle rapide"
+      },
+      "fts5": "Module FTS5 activé pour la recherche plein texte avec tokenizer Unicode et ranking BM25",
+      "maintenance": "ANALYZE exécuté périodiquement pour mettre à jour les statistiques de l'optimiseur de requêtes"
+    },
+    "requetes_optimisees": {
+      "description": "Patrons de requêtes optimisés pour les cas d'usage fréquents",
+      "exemples": {
+        "recherche_conversation": "SELECT avec LIMIT/OFFSET + index timestamp pour la pagination efficace",
+        "memoire_contextuelle": "Requête vectorielle k-NN avec pré-filtrage par catégorie et seuil d'importance",
+        "statistiques_agregees": "Vues matérialisées pour les métriques tableau de bord (mises à jour toutes les 60s)",
+        "nettoyage_ancien": "DELETE par batch avec LIMIT pour éviter le verrouillage prolongé de la base"
+      },
+      "explain_query_plan": "Utilisation systématique de EXPLAIN QUERY PLAN en développement pour valider les plans d'exécution"
+    },
+    "backup_restore": {
+      "description": "Mécanisme de sauvegarde et restauration de la base de données",
+      "sauvegarde_automatique": "Backup SQLite Online API toutes les 24h vers app_data_dir/backups/",
+      "retention": "Conservation des 7 dernières sauvegardes avec rotation automatique",
+      "restauration": "Commande IPC 'db_restore' avec vérification d'intégrité pré et post restauration",
+      "export": "Export JSON/CSV des données utilisateur via commande IPC pour portabilité",
+      "verification_integrite": "PRAGMA integrity_check exécuté après chaque restauration et hebdomadairement"
+    },
+    "ipc_commands": ["db_execute_query", "db_get_stats", "db_optimize", "db_backup", "db_restore", "db_migrate", "db_integrity_check"]
+  },
+  "cache_strategy": {
+    "description": "Stratégie de cache multicouche avancée — performance maximale avec cohérence garantie",
+    "path": "src-tauri/src/cache/",
+    "lru": {
+      "description": "Cache Least Recently Used — éviction intelligente des entrées les moins consultées",
+      "implementation": "Structure LRU doublement chaînée avec HashMap pour accès O(1)",
+      "capacite_defaut": 1000,
+      "politique_eviction": "L'entrée la moins récemment accédée est supprimée quand la capacité maximale est atteinte",
+      "metriques": {
+        "hit_rate_cible": ">85% en usage normal — indicateur de santé du cache",
+        "eviction_count": "Compteur d'évictions pour détecter un sous-dimensionnement",
+        "access_frequency": "Histogramme de fréquence d'accès pour l'analyse des patterns d'utilisation"
+      }
+    },
+    "ttl": {
+      "description": "Time To Live — expiration automatique des entrées périmées",
+      "configuration": {
+        "reponses_ia": "TTL 3600s (1h) — les réponses récentes restent disponibles pour le contexte",
+        "embeddings": "TTL 86400s (24h) — les vecteurs sont stables et coûteux à recalculer",
+        "metriques_systeme": "TTL 30s — données volatiles nécessitant un rafraîchissement fréquent",
+        "status_providers": "TTL 60s — état des providers vérifié à intervalle raisonnable",
+        "config_utilisateur": "TTL 0 (pas d'expiration) — invalidation manuelle uniquement"
+      },
+      "nettoyage": "Tâche de purge en arrière-plan toutes les 60s pour libérer les entrées expirées"
+    },
+    "invalidation": {
+      "description": "Stratégies d'invalidation du cache pour garantir la cohérence des données",
+      "strategies": {
+        "ttl_expiration": "Invalidation passive par expiration temporelle — simple et prévisible",
+        "write_through": "Invalidation immédiate lors d'une écriture en base — cohérence forte",
+        "event_driven": "Invalidation sur événement — un changement de configuration invalide les caches dépendants",
+        "tag_based": "Invalidation par tag — un tag 'provider:ollama' invalide toutes les entrées liées à Ollama"
+      },
+      "garantie_coherence": "Aucune donnée stale n'est servie après une écriture confirmée (write-through obligatoire pour les données critiques)"
+    },
+    "cache_multicouche": {
+      "description": "Architecture de cache à trois niveaux pour optimiser latence et persistance",
+      "layers": {
+        "L1_memory": "Cache en mémoire HashMap<String, CacheEntry> — accès sub-milliseconde, volatile, ~1000 entrées max",
+        "L2_sqlite": "Cache persistant SQLite — accès milliseconde, survit aux redémarrages, capacité illimitée",
+        "L3_disque": "Cache fichier pour les objets volumineux (embeddings, documents) — accès 10ms, persistant"
+      },
+      "lookup_cascade": "Recherche L1 → L2 → L3 → source. Chaque miss provoque un remplissage ascendant (write-back)",
+      "api_unifiee": "src-tauri/src/cache_multilevel.rs — interface unique cache.get(key) abstraisant les 3 niveaux",
+      "statistiques": "Taux de hit par couche exposé via 'monitoring_get_metrics' pour le tuning"
+    },
+    "prefetch_intelligent": {
+      "description": "Pré-chargement prédictif des données susceptibles d'être demandées prochainement",
+      "strategies": [
+        "Pré-chargement des conversations adjacentes lors du scroll dans l'historique",
+        "Pré-calcul des embeddings pour les nouveaux documents ingérés en arrière-plan",
+        "Pré-résolution des configurations provider au démarrage de l'application",
+        "Pré-chargement du contexte mémoire pertinent lors de la saisie utilisateur (debounce 300ms)"
+      ],
+      "budget": "Le prefetch est limité à 10% des ressources CPU/mémoire disponibles pour ne pas impacter le foreground"
+    }
+  },
+  "queue_messaging": {
+    "description": "Système de files d'attente et messagerie événementielle — traitement asynchrone fiable et découplé",
+    "path": "src-tauri/src/queue/",
+    "event_driven": {
+      "description": "Architecture pilotée par les événements pour le découplage des composants",
+      "bus_evenements": "Bus interne tokio::broadcast pour la diffusion d'événements système en temps réel",
+      "types_evenements": {
+        "chat_message_received": "Nouveau message utilisateur reçu — déclenche l'orchestration IA",
+        "provider_status_changed": "Changement d'état d'un provider — déclenche le basculement si nécessaire",
+        "memory_consolidated": "Consolidation mémoire terminée — met à jour les index et le cache",
+        "config_updated": "Configuration modifiée — invalide les caches et notifie les services concernés",
+        "health_check_failed": "Échec d'un health check — déclenche le watchdog et l'auto-réparation",
+        "knowledge_ingested": "Nouveau document ingéré — déclenche la réindexation RAG",
+        "system_metric_alert": "Seuil métrique dépassé — déclenche une alerte et un diagnostic"
+      },
+      "garantie_livraison": "Au moins une livraison pour les événements critiques, best-effort pour les métriques"
+    },
+    "pub_sub": {
+      "description": "Pattern publication/souscription pour la communication inter-modules asynchrone",
+      "implementation": "Canaux tokio::broadcast (multi-consommateurs) et tokio::mpsc (point-à-point)",
+      "topics_principaux": [
+        "system.health — état de santé global agrégé",
+        "chat.stream — flux de tokens en temps réel vers le frontend",
+        "memory.events — événements du cycle de vie mémoire",
+        "provider.events — événements de changement d'état des providers",
+        "config.changes — notifications de modification de configuration"
+      ],
+      "filtrage": "Les souscripteurs peuvent filtrer par pattern de topic (ex: 'provider.*')"
+    },
+    "async_processing": {
+      "description": "Traitement asynchrone des tâches longues ou non critiques en arrière-plan",
+      "runtime": "Tokio multi-threadé avec pool de workers configurable",
+      "taches_asynchrones": [
+        "Consolidation mémoire STM → MTM → LTM (planifiée toutes les 15 minutes)",
+        "Génération d'embeddings par batch pour les documents volumineux",
+        "Sauvegarde automatique de la base de données",
+        "Nettoyage des entrées de cache expirées",
+        "Collecte et agrégation des métriques système",
+        "Exécution des diagnostics de santé programmés"
+      ],
+      "priorites": "File haute priorité (chat, IPC) traitée avant la file basse priorité (maintenance, nettoyage)"
+    },
+    "retry_strategy": {
+      "description": "Stratégie de réessai pour les opérations qui échouent de manière transitoire",
+      "politique": {
+        "backoff_exponentiel": "Délai initial 1s, facteur 2, maximum 30s entre chaque tentative",
+        "max_tentatives": 3,
+        "jitter": "Ajout aléatoire de 0-500ms pour éviter les tempêtes de retry simultanés",
+        "erreurs_retriables": ["timeout", "connection_reset", "provider_overloaded", "rate_limited"],
+        "erreurs_fatales": ["authentication_failed", "invalid_payload", "resource_not_found"]
+      },
+      "circuit_breaker_integration": "Après 3 échecs consécutifs, le circuit breaker s'ouvre et bloque les tentatives pendant 60s"
+    },
+    "dead_letter_queue": {
+      "description": "File des messages en échec définitif — conservation pour analyse et rejeu manuel",
+      "stockage": "Table SQLite 'dead_letter_queue' avec payload complet, erreur, timestamps et nombre de tentatives",
+      "retention": "Conservation 30 jours avec purge automatique des entrées anciennes",
+      "rejeu": "Commande IPC 'dlq_replay' pour retenter manuellement un message après correction",
+      "alerte": "Notification au monitoring si la DLQ dépasse 100 entrées — indicateur de problème systémique",
+      "analyse": "Export périodique pour analyse des patterns d'erreur récurrents"
+    }
+  },
+  "monitoring_observabilite": {
+    "description": "Observabilité complète du système — métriques, alertes, traçage et tableaux de bord en temps réel",
+    "path": "src-tauri/src/monitoring/",
+    "metriques": {
+      "description": "Collecte et exposition de métriques système et applicatives en temps réel",
+      "types_metriques": {
+        "compteurs": "Nombre total d'événements (requêtes traitées, erreurs, messages envoyés)",
+        "jauges": "Valeurs instantanées (mémoire utilisée, connexions actives, taille du cache)",
+        "histogrammes": "Distribution des latences (temps de réponse provider, durée IPC, temps de requête DB)",
+        "taux": "Ratios calculés (taux d'erreur, taux de hit cache, taux de disponibilité provider)"
+      },
+      "metriques_cles": [
+        "titane_chat_response_latency_ms — latence de réponse IA (P50, P95, P99)",
+        "titane_ipc_request_duration_ms — durée des appels IPC frontend ↔ backend",
+        "titane_cache_hit_ratio — taux de succès du cache multicouche par niveau",
+        "titane_memory_entries_total — nombre total d'entrées mémoire par catégorie",
+        "titane_provider_availability — disponibilité de chaque provider IA (0-100%)",
+        "titane_db_query_duration_ms — temps d'exécution des requêtes SQLite",
+        "titane_cpu_usage_percent — utilisation CPU du processus Tauri",
+        "titane_ram_usage_bytes — consommation mémoire vive du processus"
+      ],
+      "collecte": "Échantillonnage toutes les 5 secondes avec agrégation glissante sur 1min, 5min, 15min",
+      "retention": "Métriques conservées en mémoire sur 1h, agrégats en SQLite sur 30 jours"
+    },
+    "alerting": {
+      "description": "Système d'alertes configurables avec seuils et actions automatiques",
+      "seuils_defaut": {
+        "cpu_critique": ">90% pendant 60s — alerte rouge + diagnostic automatique",
+        "ram_critique": ">85% de la limite — alerte rouge + purge cache L1",
+        "latence_elevee": "P95 >5000ms — alerte orange + investigation provider",
+        "taux_erreur": ">5% sur fenêtre 5min — alerte rouge + circuit breaker",
+        "cache_miss_rate": ">50% — alerte orange + analyse pattern d'accès",
+        "dlq_overflow": ">100 messages — alerte orange + investigation systémique"
+      },
+      "canaux_notification": [
+        "Interface UI — badge d'alerte dans le panneau système",
+        "Journal système — entrée structurée dans audit_log",
+        "Watchdog — déclenchement de l'auto-réparation si applicable",
+        "Rapport périodique — inclusion dans le rapport de santé quotidien"
+      ],
+      "suppression": "Mécanisme de suppression pour éviter les tempêtes d'alertes (cooldown 5min par règle)"
+    },
+    "tracing_distribue": {
+      "description": "Traçage des requêtes de bout en bout à travers tous les composants du système",
+      "implementation": "Propagation de trace_id unique par requête IPC à travers toute la chaîne de traitement",
+      "format": "Traces structurées avec spans hiérarchiques (requête → service → sous-opération)",
+      "informations_tracees": [
+        "trace_id — identifiant unique de la requête de bout en bout",
+        "span_id — identifiant de chaque étape de traitement",
+        "parent_span_id — hiérarchie des opérations imbriquées",
+        "service — nom du service traitant l'opération",
+        "operation — nom de l'opération (chat, memory_recall, embedding_generate)",
+        "duration_ms — durée de chaque span en millisecondes",
+        "status — succès, erreur, ou timeout",
+        "metadata — informations contextuelles (provider utilisé, taille du payload, etc.)"
+      ],
+      "stockage": "Traces conservées en SQLite sur 7 jours avec index sur trace_id et timestamp",
+      "visualisation": "Waterfall de traces accessible via le panneau développeur de l'interface TITANE"
+    },
+    "dashboards": {
+      "description": "Tableaux de bord visuels intégrés à l'interface TITANE pour le suivi en temps réel",
+      "panneaux": {
+        "vue_globale": "État de santé agrégé — feu vert/orange/rouge avec métriques clés en un coup d'œil",
+        "performance": "Graphiques de latence, débit et taux d'erreur sur les dernières 24h",
+        "providers": "État de chaque provider IA — disponibilité, latence moyenne, quota restant",
+        "memoire": "Visualisation de la mémoire cognitive — STM, MTM, LTM avec tendances",
+        "cache": "Taux de hit par couche, évictions, taille occupée par niveau",
+        "systeme": "CPU, RAM, disque, réseau du processus Tauri et de ses enfants"
+      },
+      "rafraichissement": "Mise à jour temps réel par push via événements IPC (pas de polling côté frontend)",
+      "export": "Export des graphiques en PNG et des données brutes en CSV via commande IPC"
+    },
+    "slo_sla": {
+      "description": "Objectifs de niveau de service pour garantir la qualité de l'expérience utilisateur",
+      "slo_definis": {
+        "disponibilite": "99.5% de disponibilité de l'application par mois calendaire",
+        "latence_chat": "P95 des réponses chat complétées en moins de 3 secondes (hors temps de génération IA)",
+        "latence_ipc": "P99 des appels IPC traités en moins de 100ms",
+        "demarrage": "Application opérationnelle en moins de 5 secondes après lancement",
+        "recuperation": "Retour à l'état nominal en moins de 30 secondes après un incident détecté"
+      },
+      "budget_erreur": "Budget d'erreur mensuel calculé automatiquement — alerte quand >50% consommé",
+      "rapport_slo": "Rapport de conformité SLO généré automatiquement chaque semaine dans reports/"
+    }
+  },
+  "devops_ci_cd": {
+    "description": "Pipeline d'intégration et de déploiement continu — automatisation complète du cycle de vie logiciel",
+    "path": ".github/workflows/",
+    "pipelines": {
+      "description": "Pipelines GitHub Actions pour l'automatisation des builds, tests et déploiements",
+      "ci_principal": {
+        "declencheur": "Push sur toute branche et pull requests vers main",
+        "etapes": [
+          "1. Checkout du code source avec historique Git complet",
+          "2. Installation des dépendances (pnpm install --frozen-lockfile)",
+          "3. Vérification du formatage (prettier + eslint)",
+          "4. Compilation TypeScript (tsc --noEmit)",
+          "5. Tests unitaires (vitest run)",
+          "6. Tests d'intégration (vitest run --config vitest.integration.config.ts)",
+          "7. Build de production (vite build)",
+          "8. Vérification des instructions (bash scripts/verify_instructions.sh)",
+          "9. Analyse de sécurité (CodeQL + audit dépendances)"
+        ],
+        "duree_cible": "Pipeline CI complète en moins de 10 minutes"
+      },
+      "build_tauri": {
+        "declencheur": "Tag de release ou déclenchement manuel",
+        "etapes": [
+          "1. Incrémentation automatique du patch version (node scripts/bump-version.mjs)",
+          "2. Synchronisation des versions (node scripts/sync-versions.mjs)",
+          "3. Build Rust (cargo build --release)",
+          "4. Build frontend (vite build)",
+          "5. Packaging Tauri (tauri build) pour Windows, macOS, Linux",
+          "6. Signature des artefacts avec checksums SHA-256",
+          "7. Publication des artefacts de release"
+        ]
+      }
+    },
+    "tests_automatises": {
+      "description": "Suite de tests automatisés multi-niveaux pour la validation continue",
+      "niveaux": {
+        "unitaires": "Vitest — tests isolés des fonctions et composants individuels (>80% couverture cible)",
+        "integration": "Vitest integration — tests des interactions entre modules (API, services, DB)",
+        "e2e": "Playwright + WebdriverIO — tests bout en bout de l'interface utilisateur Tauri",
+        "securite": "CodeQL + npm audit — analyse statique et vérification des vulnérabilités connues"
+      },
+      "configuration": {
+        "vitest_unit": "vitest.unit.config.ts — configuration pour les tests unitaires rapides",
+        "vitest_integration": "vitest.integration.config.ts — configuration avec timeouts étendus",
+        "playwright": "playwright.config.ts — configuration E2E avec captures d'écran sur échec",
+        "wdio": "wdio.desktop.conf.cjs — configuration WebdriverIO pour les tests desktop natifs"
+      },
+      "parallelisation": "Tests unitaires parallélisés sur tous les cœurs disponibles, E2E séquentiels"
+    },
+    "deploiement": {
+      "description": "Stratégie de déploiement pour les releases de l'application TITANE",
+      "strategie": "Déploiement par release GitHub avec artefacts signés et notes de version automatiques",
+      "environnements": {
+        "dev": "Builds locaux avec hot-reload (tauri dev) — sans signature",
+        "staging": "Builds de pré-production déclenchés manuellement — avec vérifications complètes",
+        "production": "Builds de production protégés par les tokens GO_FOR_PROD_BUILD__TITANE_INFINITY"
+      },
+      "artefacts": [
+        "Windows: .msi et .exe (NSIS installer) signés",
+        "macOS: .dmg et .app (bundle signé + notarisé)",
+        "Linux: .AppImage et .deb (packages universels)"
+      ]
+    },
+    "rollback": {
+      "description": "Procédure de rollback en cas de régression détectée après déploiement",
+      "procedure": [
+        "1. Identification de la régression via monitoring ou rapport utilisateur",
+        "2. Décision de rollback (critères: sévérité, nombre d'utilisateurs impactés)",
+        "3. Publication de la version précédente stable comme nouvelle release",
+        "4. Communication aux utilisateurs via notes de release",
+        "5. Post-mortem et ajout de tests de non-régression"
+      ],
+      "automatisation": "Rollback automatique si le health check post-déploiement échoue dans les 5 premières minutes"
+    },
+    "feature_flags": {
+      "description": "Système de feature flags pour le déploiement progressif et les expérimentations",
+      "implementation": "Configuration JSON locale avec surcharge par préférence utilisateur",
+      "flags_actifs": {
+        "enable_streaming_response": "Activation du streaming de tokens en temps réel (défaut: true)",
+        "enable_memory_consolidation": "Activation de la consolidation mémoire automatique (défaut: true)",
+        "enable_multi_provider": "Activation du support multi-providers simultanés (défaut: false)",
+        "enable_knowledge_base": "Activation de la base de connaissances RAG (défaut: true)",
+        "enable_advanced_diagnostics": "Activation du panneau de diagnostics avancés (défaut: false)"
+      },
+      "evaluation": "Vérification au runtime via FeatureFlagService.is_enabled('flag_name')",
+      "persistance": "État des flags stocké dans user_preferences avec synchronisation au démarrage"
+    }
+  },
+  "securite_backend": {
+    "description": "Sécurité backend multicouche — authentification, autorisation, audit et chiffrement",
+    "path": "src-tauri/src/security/",
+    "authentication": {
+      "description": "Authentification des requêtes IPC et protection de l'accès aux services backend",
+      "mecanisme": "Jeton de session IPC généré au démarrage de l'application Tauri — validé pour chaque commande",
+      "session": {
+        "generation": "Token de session aléatoire cryptographiquement sûr (256 bits) généré via ring/rand",
+        "duree_vie": "Session liée au cycle de vie de l'application — invalidée à la fermeture",
+        "rotation": "Rotation automatique du token toutes les 24h pour les sessions longues",
+        "stockage": "Token conservé en mémoire uniquement — jamais persisté sur disque"
+      },
+      "protection_ipc": "Chaque commande IPC Tauri vérifie l'origine de la requête (fenêtre légitime uniquement)",
+      "anti_replay": "Nonce incrémental par session pour prévenir les attaques par rejeu"
+    },
+    "authorization": {
+      "description": "Contrôle d'accès granulaire aux fonctionnalités et données du backend",
+      "modele": "Contrôle d'accès basé sur les capacités Tauri (allowlist) et les permissions RBAC",
+      "niveaux_acces": {
+        "lecture": "Consultation des données — conversations, mémoire, métriques, configuration",
+        "ecriture": "Modification des données — envoi de messages, mise à jour de la configuration",
+        "administration": "Opérations système — diagnostics, sauvegarde, restauration, purge",
+        "debug": "Accès au panneau développeur — traces, métriques détaillées, commandes avancées"
+      },
+      "verification": "Chaque commande IPC vérifie les permissions requises avant exécution via le middleware d'autorisation"
+    },
+    "rbac": {
+      "description": "Contrôle d'accès basé sur les rôles pour les environnements multi-utilisateurs",
+      "roles": {
+        "utilisateur": "Accès standard — chat, mémoire personnelle, préférences",
+        "administrateur": "Accès complet — configuration système, diagnostics, gestion des providers",
+        "operateur": "Accès opérationnel — monitoring, backup, maintenance sans accès aux données utilisateur",
+        "auditeur": "Accès en lecture seule — journal d'audit, rapports de conformité, métriques"
+      },
+      "heritage": "Les rôles héritent des permissions de manière hiérarchique (admin ⊃ opérateur ⊃ utilisateur)",
+      "configuration": "Matrice de permissions stockée dans la table 'role_permissions' de la base SQLite"
+    },
+    "audit_trail": {
+      "description": "Journal d'audit immuable pour la traçabilité de toutes les actions sensibles",
+      "table": "audit_log — append-only avec protection contre la modification rétroactive",
+      "evenements_audites": [
+        "Démarrage et arrêt de l'application",
+        "Changements de configuration système",
+        "Opérations sur la base de données (backup, restore, migrate)",
+        "Changements de provider IA et tentatives de connexion",
+        "Échecs d'authentification ou d'autorisation",
+        "Opérations de maintenance (purge cache, consolidation mémoire)",
+        "Accès au panneau de diagnostics avancés",
+        "Modifications des rôles et permissions"
+      ],
+      "format_entree": "{ id, timestamp, action, actor, resource, result, details_json, checksum }",
+      "integrite": "Chaîne de hachage SHA-256 — chaque entrée inclut le hash de l'entrée précédente",
+      "retention": "Conservation 90 jours minimum avec archivage automatique des entrées anciennes",
+      "export": "Export du journal d'audit en JSON signé via commande IPC 'audit_export'"
+    },
+    "encryption_at_rest": {
+      "description": "Chiffrement des données sensibles au repos sur le disque local",
+      "base_de_donnees": "SQLCipher AES-256-CBC pour le chiffrement transparent de titane.db",
+      "cle_derivation": "Clé dérivée via PBKDF2-HMAC-SHA256 (600 000 itérations) depuis un secret machine",
+      "donnees_chiffrees": [
+        "Base de données complète (SQLCipher)",
+        "Clés API des providers IA stockées dans le keychain OS",
+        "Sauvegardes de la base de données",
+        "Exports de données utilisateur"
+      ],
+      "donnees_non_chiffrees": [
+        "Configuration non sensible (préférences UI, thème, langue)",
+        "Fichiers de cache temporaires (contenu non confidentiel)",
+        "Logs applicatifs (pas de données personnelles dans les logs)"
+      ],
+      "rotation_cles": "Procédure de re-chiffrement avec nouvelle clé disponible via commande IPC sécurisée",
+      "keychain_os": "Intégration avec le gestionnaire de secrets natif de l'OS (Keychain macOS, Credential Manager Windows, Secret Service Linux)"
+    }
+  },
   "cache_system": {
-    "description": "Cache multicouche haute performance",
+    "description": "Cache multicouche haute performance — composant fondamental de la stratégie de cache TITANE∞",
     "path": "src-tauri/src/cache/",
     "layers": {
       "L1_memory": "Cache en mémoire — HashMap<String, CacheEntry>. Sub-ms. Limité à ~1000 entrées.",
@@ -47,7 +644,7 @@
     "benefit": "Réponses contextuellement riches basées sur la mémoire accumulée"
   },
   "monitoring_system": {
-    "description": "Système de monitoring temps réel",
+    "description": "Système de monitoring temps réel — composant opérationnel de l'observabilité TITANE∞",
     "path": "src-tauri/src/monitoring/",
     "modules": [
       "metrics",

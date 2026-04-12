@@ -1,7 +1,7 @@
 {
   "version": "v30.1.0",
   "category": "security_privacy",
-  "description": "Sécurité et confidentialité TITANE∞ — chiffrement, auth, sandbox, CSP, secrets engine, permissions",
+  "description": "Sécurité et confidentialité TITANE∞ — chiffrement, authentification, sandbox, CSP, secrets engine, permissions, sécurité IPC, sécurité réseau, gestion des vulnérabilités, journalisation d'audit, privacy by design, sécurité des chemins",
   "security_engine": {
     "description": "Moteur de sécurité multicouche TITANE∞",
     "path": "src-tauri/src/security/",
@@ -17,18 +17,13 @@
       "sandbox": "Isolation processus — Tauri CSP strict, no eval, no inline scripts",
       "csp": "Content Security Policy — whitelist explicite des sources autorisées",
       "shell_guard": "Validation commandes shell — aucune exécution de code arbitraire",
-      "storage_guard": "Validation accès filesystem — limité au dossier app_data"
+      "storage_guard": "Validation accès filesystem — limité au dossier app_data",
+      "path_validator": "Validation et normalisation des chemins — prévention traversal path",
+      "network_guard": "Contrôle des connexions réseau — TLS pinning et validation endpoints"
     },
     "hardening": {
       "ipc_command": "run_hardening_selftest",
-      "checks": [
-        "CSP headers",
-        "Tauri allowlist",
-        "IPC validation",
-        "filesystem permissions",
-        "network gateway",
-        "rate limits"
-      ]
+      "checks": ["CSP headers", "Tauri allowlist", "IPC validation", "filesystem permissions", "network gateway", "rate limits"]
     }
   },
   "tauri_security": {
@@ -45,21 +40,8 @@
     "description": "SecureSecretsEngine — gestionnaire de secrets chiffré",
     "storage": "Chiffré AES-256-GCM sur disque dans app_data_dir",
     "passphrase_env": "TITANE_SECRETS_PASSPHRASE",
-    "managed_secrets": [
-      "OPENAI_API_KEY",
-      "ANTHROPIC_API_KEY",
-      "GEMINI_API_KEY",
-      "OLLAMA_BASE_URL",
-      "GitHub tokens",
-      "Encryption keys"
-    ],
-    "ipc_commands": [
-      "secrets_store",
-      "secrets_retrieve",
-      "secrets_delete",
-      "secrets_list_keys",
-      "secrets_export_encrypted"
-    ],
+    "managed_secrets": ["OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GEMINI_API_KEY", "OLLAMA_BASE_URL", "GitHub tokens", "Encryption keys"],
+    "ipc_commands": ["secrets_store", "secrets_retrieve", "secrets_delete", "secrets_list_keys", "secrets_export_encrypted"],
     "bootstrap": "Les clés API sont bootstrappées depuis SecureSecretsEngine vers ChatOrchestrator au démarrage (main.rs:1346-1350)"
   },
   "encryption_standards": {
@@ -82,5 +64,263 @@
     "description": "Module d'authentification optionnel",
     "method": "Local biometric ou PIN — aucune authentification cloud obligatoire",
     "session": "Tokens de session locaux — expiration configurable"
+  },
+  "chiffrement": {
+    "description": "Architecture de chiffrement complète — protection des données au repos et en transit avec gestion de clés sécurisée",
+    "au_repos": {
+      "algorithme": "AES-256-GCM — chiffrement authentifié avec IV unique par opération",
+      "donnees_protegees": ["Base SQLite (conversations, mémoire, préférences)", "Fichiers de secrets (clés API, tokens)", "Exports chiffrés (sauvegardes)", "Cache local sensible"],
+      "integrite": "Mode GCM fournit authentification intégrée — altération détectée automatiquement"
+    },
+    "en_transit": {
+      "protocole": "TLS 1.3 obligatoire pour toutes les connexions sortantes",
+      "cipher_suites": ["TLS_AES_256_GCM_SHA384", "TLS_CHACHA20_POLY1305_SHA256", "TLS_AES_128_GCM_SHA256"],
+      "validation_certificat": "Validation stricte — aucun certificat auto-signé en production",
+      "downgrade_prevention": "TLS 1.2 minimum, TLS 1.0/1.1 refusés"
+    },
+    "tls": {
+      "version_min": "TLS 1.2 (minimum), TLS 1.3 (préféré par défaut)",
+      "pinning": "Certificate pinning optionnel pour OpenAI, Anthropic, Google",
+      "ocsp": "Vérification OCSP stapling pour révocation en temps réel"
+    },
+    "aes_256": {
+      "taille_cle": "256 bits — niveau confidentiel défense ANSSI",
+      "mode": "GCM (Galois/Counter Mode) — chiffrement authentifié",
+      "taille_iv": "96 bits — taille recommandée NIST pour GCM",
+      "taille_tag": "128 bits — tag d'authentification complet",
+      "implementation": "Bibliothèque Rust ring ou aes-gcm — résistante aux timing attacks"
+    },
+    "gestion_cles": {
+      "derivation": "Argon2id — résistant GPU/ASIC (64 Mo mémoire, 3 passes, 4 threads)",
+      "rotation": "Rotation sans interruption — réchiffrement incrémental en arrière-plan",
+      "cle_maitre": "Jamais stockée en clair — dérivée à chaque démarrage depuis la passphrase",
+      "destruction": "Effacement sécurisé en mémoire (zeroize) après utilisation"
+    },
+    "stockage_securise": {
+      "emplacement": "app_data_dir exclusivement — aucun fichier sensible ailleurs",
+      "permissions": "0600 sur Unix, ACL restrictives sur Windows",
+      "integrite": "Hash SHA-256 vérifié au démarrage via pre_boot_validation"
+    }
+  },
+  "authentication": {
+    "description": "Authentification TITANE∞ — authentification locale sécurisée sans dépendance cloud",
+    "tokens": {
+      "type": "Tokens de session locaux — aucun JWT cloud",
+      "generation": "CSPRNG — 256 bits minimum par token",
+      "expiration": "24 heures par défaut, renouvelable si utilisateur actif",
+      "revocation": "Révocation immédiate via commande IPC",
+      "stockage": "En mémoire uniquement — jamais persistés en clair"
+    },
+    "sessions": {
+      "duree_max": "7 jours avec renouvellement automatique",
+      "inactivite": "Verrouillage après 30 minutes d'inactivité (configurable)",
+      "session_unique": "Une seule session active par instance — les précédentes sont invalidées",
+      "fingerprint": "Empreinte machine incluse pour détecter les usurpations"
+    },
+    "biometrie": {
+      "plateformes": ["macOS — Touch ID", "Windows — Windows Hello", "Linux — PAM (empreintes)"],
+      "fallback": "PIN local si biométrie indisponible",
+      "stockage": "Aucune donnée biométrique stockée par TITANE — délégation au système"
+    },
+    "liaison_appareil": {
+      "identifiant": "Empreinte dérivée des caractéristiques matérielles via hachage",
+      "protection": "Secrets liés à l'appareil — inutilisables sur une autre machine",
+      "migration": "Export chiffré → import sur nouvel appareil → re-liaison",
+      "detection_clonage": "Détection des copies non autorisées"
+    },
+    "multi_facteur": {
+      "facteurs": ["Quelque chose que vous savez (PIN/passphrase)", "Quelque chose que vous êtes (biométrie)", "Quelque chose que vous possédez (appareil)"],
+      "operations_protegees": ["Export de secrets", "Modification passphrase maître", "Suppression données", "Configuration sync cloud"],
+      "politique": "MFA requis pour opérations destructives — optionnel pour usage courant"
+    }
+  },
+  "privacy_by_design": {
+    "description": "Privacy by Design — la vie privée est un fondement architectural, pas une fonctionnalité ajoutée",
+    "minimisation_donnees": {
+      "collecte": "Aucune collecte non requise par une fonctionnalité active",
+      "retention": "Politique de rétention explicite par type — suppression automatique à l'expiration",
+      "anonymisation": "Données transmises aux providers IA anonymisées — aucune information personnelle identifiable",
+      "audit_collecte": "Inventaire auditable accessible à l'utilisateur via commande IPC"
+    },
+    "limitation_finalite": {
+      "finalites": ["Conversation — traitement pour réponses uniquement", "Mémoire — continuité conversationnelle", "Configuration — personnalisation", "Sécurité — détection de menaces"],
+      "interdictions": "Aucun profilage, aucune publicité, aucune vente de données, aucun partage tiers"
+    },
+    "limitation_conservation": {
+      "politique": {
+        "logs_session": "7 jours",
+        "memoire_moyen_terme": "30 jours (configurable)",
+        "memoire_long_terme": "Permanente (suppression explicite)",
+        "cache": "24 heures",
+        "logs_securite": "90 jours"
+      },
+      "droit_oubli": "Commande IPC purge_all_user_data — suppression totale et irréversible"
+    },
+    "conformite_rgpd": {
+      "base_legale": "Consentement explicite — aucun traitement sans action volontaire",
+      "droits_utilisateur": ["Accès (export JSON chiffré)", "Rectification", "Effacement (purge_all_user_data)", "Portabilité (format interopérable)", "Opposition"],
+      "transferts": "Données vers providers IA peuvent transiter hors UE — consentement utilisateur requis"
+    }
+  },
+  "ipc_security": {
+    "description": "Sécurité IPC — validation stricte des communications frontend ↔ backend Tauri",
+    "allowlist": {
+      "principe": "Seules les commandes listées dans tauri.conf.json sont accessibles",
+      "granularite": "Autorisation individuelle — pas de wildcard ni permission globale",
+      "categories": ["Chat (messages, streaming)", "Mémoire (CRUD souvenirs)", "Secrets (stockage, récupération)", "Système (version, santé, config)", "Fichiers (lecture scope autorisé)"],
+      "audit": "Allowlist auditée par selftest de hardening au démarrage"
+    },
+    "secure_invoke": {
+      "validation_type": "Chaque paramètre validé en type strict avant traitement",
+      "validation_taille": "Payload max: 1 Mo par défaut — configurable par commande",
+      "validation_origine": "Vérification origine frontend TITANE légitime",
+      "serialisation": "serde avec typage strict — aucune interprétation dynamique",
+      "erreur": "Rejet avec code d'erreur explicite — aucune exécution partielle"
+    },
+    "validation_commande": {
+      "couches": [
+        "1. Vérification allowlist",
+        "2. Validation schéma payload",
+        "3. Validation métier (plages acceptables)",
+        "4. Rate limiting",
+        "5. Journalisation audit"
+      ],
+      "rejet": "Rejet à n'importe quelle couche arrête immédiatement le traitement"
+    },
+    "sanitisation_payload": {
+      "html_escape": "Échappement HTML systématique des chaînes affichées",
+      "sql_injection": "Requêtes SQLite préparées — aucune concaténation SQL",
+      "path_injection": "Validation et normalisation des chemins",
+      "command_injection": "Aucune exécution shell depuis données utilisateur — shell_guard actif",
+      "encodage": "Validation UTF-8 — rejet des séquences invalides"
+    }
+  },
+  "path_security": {
+    "description": "Sécurité des chemins — prévention traversal path et sandboxing filesystem strict",
+    "prevention_traversal": {
+      "patterns_bloques": ["../", "..\\", "//", "\\0 (null byte)", "%2e%2e (URL encoding)", "....//"],
+      "normalisation": "Chemins canonicalisés (résolution symlinks et relatifs) avant validation",
+      "verification": "Après normalisation, le chemin résolu doit rester dans le scope autorisé",
+      "rejet": "Tout pattern de traversal → rejet immédiat avec journalisation sécurité"
+    },
+    "validation": {
+      "criteres": ["Chemin dans app_data_dir autorisé?", "Extension dans la liste autorisée?", "Taille dans les limites?", "Aucun caractère interdit?"],
+      "extensions_autorisees": [".json", ".sqlite", ".db", ".txt", ".md", ".log", ".toml", ".yaml", ".csv"],
+      "longueur_max": "260 caractères (compatibilité Windows)"
+    },
+    "sandboxing": {
+      "racine": "app_data_dir Tauri — spécifique à l'application et l'utilisateur",
+      "sous_repertoires": ["data/", "secrets/", "cache/", "exports/", "logs/"],
+      "acces_interdit": "Tout accès hors app_data_dir systématiquement refusé",
+      "liens_symboliques": "Symlinks pointant hors sandbox détectés et refusés"
+    },
+    "permissions_filesystem": {
+      "unix": "0600 pour tous les fichiers sensibles",
+      "windows": "ACL restrictives — accès limité au compte utilisateur",
+      "verification": "Permissions vérifiées au démarrage — correction automatique si nécessaire"
+    }
+  },
+  "network_security": {
+    "description": "Sécurité réseau — contrôle strict selon la politique One Door",
+    "csp": {
+      "politique": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'",
+      "interdictions": ["Aucun eval()", "Aucun inline script", "Aucune ressource externe", "Aucun iframe"],
+      "violations": "Journalisées localement pour analyse de sécurité"
+    },
+    "cors": {
+      "politique": "Aucun CORS — pas de ressources servies à des origines tierces",
+      "backend": "Pas de serveur HTTP exposé — communications IPC uniquement"
+    },
+    "one_door_policy": {
+      "chemin": "UI → IPC → Services → Network Gateway → External",
+      "gateway_unique": "NetworkGateway seul module autorisé pour requêtes sortantes",
+      "interdiction": "Aucun fetch/XMLHttpRequest/WebSocket direct depuis le frontend",
+      "enforcement": "CSP + allowlist Tauri garantissent techniquement l'impossibilité",
+      "audit": "Toutes les requêtes réseau journalisées (timestamp, destination, résultat)"
+    },
+    "gateway": {
+      "fonctions": ["Validation URL contre liste blanche", "Headers sécurité automatiques", "Timeout 30s", "Rate limiting par endpoint", "Retry avec backoff exponentiel", "Journalisation complète"],
+      "endpoints_autorises": ["api.openai.com", "api.anthropic.com", "generativelanguage.googleapis.com", "localhost:11434 (Ollama)"],
+      "blocage": "Endpoint non listé → blocage avec alerte"
+    },
+    "tls_pinning": {
+      "principe": "Vérification certificat serveur contre certificat connu attendu",
+      "providers": "Pinning pour OpenAI, Anthropic, Google — activé par défaut",
+      "fallback": "Échec pinning → connexion refusée, aucun fallback non vérifié"
+    }
+  },
+  "vulnerability_management": {
+    "description": "Gestion des vulnérabilités — identification, évaluation et correction continues",
+    "scanning": {
+      "outils": ["cargo audit (crates Rust)", "pnpm audit (dépendances npm)", "CodeQL (analyse statique)", "SBOM (sbom/)"],
+      "frequence": "Automatique à chaque CI/CD + vérification hebdomadaire",
+      "seuil": "Critique ou haute → build bloqué, correction obligatoire"
+    },
+    "patching": {
+      "critique": "CVSS ≥ 9.0 — correction sous 24h, release hotfix",
+      "haute": "CVSS 7.0-8.9 — correction sous 7 jours",
+      "moyenne": "CVSS 4.0-6.9 — prochaine release planifiée",
+      "basse": "CVSS < 4.0 — selon ressources disponibles",
+      "verification": "Test de non-régression spécifique pour chaque correction"
+    },
+    "advisories": {
+      "sources": ["RustSec Advisory Database", "GitHub Advisory Database", "NVD (NIST)", "Tauri Security Advisories"],
+      "notification": "Alerte automatique pour dépendances TITANE concernées",
+      "evaluation": "Chaque advisory évalué pour applicabilité au contexte TITANE"
+    },
+    "audit_dependances": {
+      "lockfiles": "Cargo.lock et pnpm-lock.yaml versionnés et vérifiés",
+      "transitives": "Dépendances transitives incluses dans l'audit",
+      "licences": "Vérification des licences — incompatibilités détectées",
+      "abandon": "Dépendances sans mise à jour depuis 2 ans → plan de remplacement"
+    },
+    "suivi_cve": {
+      "registre": "Registre interne avec statut (ouvert, en cours, corrigé, non applicable)",
+      "sbom": "SBOM dans sbom/ pour suivi rapide des CVE",
+      "communication": "CVE corrigées mentionnées dans CHANGELOG.md",
+      "veille": "Active sur Tauri, Rust toolchain et providers IA"
+    }
+  },
+  "audit_logging": {
+    "description": "Journalisation d'audit — enregistrement immuable de tous les événements de sécurité",
+    "evenements_securite": {
+      "catalogue": [
+        "AUTH_SUCCESS / AUTH_FAILURE — authentification (méthode, raison)",
+        "SESSION_START / SESSION_END — sessions (durée, raison)",
+        "SECRET_ACCESS — accès secrets (clé, opération)",
+        "IPC_REJECTION — commande rejetée (commande, raison)",
+        "RATE_LIMIT_HIT — rate limit atteint (commande, compteur)",
+        "PATH_VIOLATION — accès chemin interdit (chemin demandé/résolu)",
+        "CSP_VIOLATION — violation CSP (directive, source)",
+        "NETWORK_BLOCKED — requête réseau bloquée (URL, raison)",
+        "HARDENING_CHECK — résultat selftest au démarrage",
+        "DATA_EXPORT / DATA_PURGE — opérations données utilisateur"
+      ],
+      "format": "JSON structuré — timestamp ISO 8601, sévérité, identifiant, contexte",
+      "niveaux": ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO"]
+    },
+    "logs_inviolables": {
+      "append_only": "Mode append-only — aucune modification des entrées existantes",
+      "hash_chain": "Chaque entrée inclut le hash SHA-256 de la précédente — chaîne vérifiable",
+      "detection": "Vérification de la chaîne détecte toute altération",
+      "rotation": "Rotation à 10 Mo — fichiers archivés signés",
+      "retention": "90 jours minimum — configurable"
+    },
+    "alerting": {
+      "immediates": [
+        "3 échecs auth consécutifs → verrouillage 5 minutes",
+        "Traversal path → blocage immédiat",
+        "Échec hardening → notification au démarrage",
+        "Violations CSP répétées → alerte interface"
+      ],
+      "notification": "Bannière non intrusive dans l'interface TITANE",
+      "escalade": "Événements critiques répétés → journalisation renforcée + verrouillage préventif"
+    },
+    "reponse_incident": {
+      "etapes": ["1. Détection", "2. Confinement (isolation composant)", "3. Analyse (examen logs)", "4. Correction", "5. Restauration", "6. Rapport"],
+      "confinement_auto": "Le moteur de sécurité peut confiner sans intervention humaine",
+      "rollback": "Plan documenté — restauration en < 5 minutes",
+      "post_mortem": "Analyse systématique avec actions correctives"
+    }
   }
 }

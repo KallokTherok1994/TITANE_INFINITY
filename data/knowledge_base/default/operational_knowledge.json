@@ -96,5 +96,987 @@
     "src": "git restore -- src",
     "src_tauri": "git restore -- src-tauri",
     "e2e": "git restore -- e2e scripts/e2e wdio*.conf*"
+  },
+  "procedures_operationnelles": {
+    "description": "Procédures opérationnelles standard (SOP) pour l'exploitation quotidienne de TITANE∞",
+    "runbooks": {
+      "demarrage_application": {
+        "titre": "Démarrage complet de l'application TITANE∞",
+        "prerequis": [
+          "Ollama installé et accessible sur le port 11434",
+          "Node.js >= 18 et pnpm installés",
+          "Rust toolchain stable installée",
+          "Variables d'environnement configurées (TITANE_SECRETS_PASSPHRASE)"
+        ],
+        "etapes": [
+          "1. Vérifier la disponibilité d'Ollama : curl -s http://127.0.0.1:11434/api/tags",
+          "2. Installer les dépendances frontend : pnpm install",
+          "3. Construire le frontend : pnpm build",
+          "4. Lancer en mode développement : pnpm tauri dev",
+          "5. Vérifier l'initialisation via les logs console (11 étapes attendues)",
+          "6. Confirmer le chargement de la base de connaissance embarquée"
+        ],
+        "verification": "L'interface TITANE∞ s'affiche avec le numéro de version en pied de page"
+      },
+      "mise_a_jour_modele_ia": {
+        "titre": "Mise à jour d'un modèle IA local via Ollama",
+        "etapes": [
+          "1. Lister les modèles actuels : ollama list",
+          "2. Télécharger le nouveau modèle : ollama pull <nom_modele>",
+          "3. Vérifier le téléchargement : ollama show <nom_modele>",
+          "4. Mettre à jour la variable OLLAMA_DEFAULT_MODEL si nécessaire",
+          "5. Redémarrer l'application pour appliquer le changement",
+          "6. Valider avec un prompt test dans l'interface TITANE∞"
+        ],
+        "risques": "Le modèle peut nécessiter plus de RAM/VRAM que disponible"
+      },
+      "deploiement_production": {
+        "titre": "Procédure de déploiement en production",
+        "prerequis": [
+          "Token GO_FOR_PROD_BUILD__TITANE_INFINITY obtenu",
+          "Token GO_FOR_PROD_DEPLOY__TITANE_INFINITY obtenu",
+          "Tous les quality gates PASS (clippy, tests, fmt, e2e)",
+          "Version bumped via node scripts/bump-version.mjs"
+        ],
+        "etapes": [
+          "1. Exécuter la vérification complète : pnpm run check",
+          "2. Incrémenter la version : node scripts/bump-version.mjs",
+          "3. Synchroniser les versions : node scripts/sync-versions.mjs",
+          "4. Construire le bundle release : cargo build --release --manifest-path src-tauri/Cargo.toml",
+          "5. Générer les checksums : sha256sum dist/* > RELEASE_ARTIFACTS_CHECKSUMS_<version>.txt",
+          "6. Créer le proof pack de release dans proof_packs/",
+          "7. Sceller la release : créer RELEASE_v<version>_SEALED.txt",
+          "8. Taguer le commit : git tag v<version>"
+        ],
+        "rollback": "git restore -- . && git checkout <tag_precedent>"
+      }
+    },
+    "chemins_escalade": {
+      "description": "Matrice d'escalade pour les incidents opérationnels",
+      "niveaux": [
+        {
+          "niveau": "N1 — Auto-résolution",
+          "description": "Problèmes courants résolus par TITANE∞ via AutoHeal",
+          "exemples": ["Redémarrage Ollama", "Nettoyage cache", "Réinitialisation état local"],
+          "delai_max": "5 minutes"
+        },
+        {
+          "niveau": "N2 — Intervention opérateur",
+          "description": "Problèmes nécessitant une intervention manuelle de Kevin",
+          "exemples": ["Mise à jour de configuration", "Rotation de clés API", "Correction de données"],
+          "delai_max": "30 minutes"
+        },
+        {
+          "niveau": "N3 — Intervention développeur",
+          "description": "Bugs applicatifs nécessitant une correction de code",
+          "exemples": ["Régression fonctionnelle", "Fuite mémoire", "Erreur IPC non gérée"],
+          "delai_max": "4 heures"
+        },
+        {
+          "niveau": "N4 — Incident critique",
+          "description": "Panne complète ou corruption de données nécessitant un rollback",
+          "exemples": ["Corruption base SQLite", "Perte de state persistant", "Faille de sécurité"],
+          "delai_max": "1 heure (stop-the-line immédiat)"
+        }
+      ]
+    },
+    "arbres_decision": {
+      "provider_ia_indisponible": {
+        "question_racine": "Le provider IA principal est-il accessible ?",
+        "oui": "Utiliser le provider principal normalement",
+        "non": {
+          "question": "Un provider secondaire est-il disponible dans la chaîne de fallback ?",
+          "oui": "Basculer vers le provider suivant dans la chaîne de priorité",
+          "non": {
+            "question": "Ollama local est-il opérationnel sur le port 11434 ?",
+            "oui": "Utiliser Ollama avec le modèle local par défaut (gemma2:2b)",
+            "non": "Afficher une erreur explicite à l'utilisateur — JAMAIS de silence"
+          }
+        }
+      },
+      "echec_build": {
+        "question_racine": "Le build a-t-il échoué ?",
+        "clippy_warnings": "Corriger tous les warnings Clippy avant de continuer",
+        "tests_echoues": "Analyser les tests en échec, corriger, puis relancer cargo test",
+        "erreur_compilation": "Vérifier Cargo.toml, dépendances, et compatibilité de version Rust"
+      }
+    },
+    "checklists": {
+      "avant_commit": [
+        "cargo fmt --manifest-path src-tauri/Cargo.toml -- --check",
+        "cargo clippy --manifest-path src-tauri/Cargo.toml -- -D warnings",
+        "cargo test --manifest-path src-tauri/Cargo.toml",
+        "pnpm run check",
+        "bash scripts/verify_instructions.sh",
+        "bash scripts/autoheal/detect_recurrence.sh"
+      ],
+      "avant_release": [
+        "Tous les quality gates PASS",
+        "Version incrémentée (node scripts/bump-version.mjs)",
+        "Versions synchronisées (node scripts/sync-versions.mjs)",
+        "Changelog mis à jour (CHANGELOG.md)",
+        "Proof pack créé avec VERDICT.md et ROLLBACK.md",
+        "Checksums générés et vérifiés",
+        "Tag git créé et poussé",
+        "Fichier RELEASE_v<version>_SEALED.txt créé"
+      ],
+      "revue_quotidienne": [
+        "Vérifier les logs d'erreur de la dernière session",
+        "Contrôler l'espace disque disponible pour la base SQLite",
+        "Valider la disponibilité des providers IA configurés",
+        "Inspecter le registre AutoHeal pour de nouvelles entrées",
+        "Vérifier la cohérence de la mémoire persistante"
+      ]
+    }
+  },
+  "gestion_incidents": {
+    "description": "Cadre complet de gestion des incidents pour TITANE∞",
+    "classification": {
+      "categories": [
+        {
+          "code": "INC-IA",
+          "nom": "Incident provider IA",
+          "description": "Indisponibilité, timeout, ou réponse incorrecte d'un provider IA",
+          "exemples": ["Timeout API OpenAI", "Réponse vide Ollama", "Erreur 429 rate limit"]
+        },
+        {
+          "code": "INC-IPC",
+          "nom": "Incident communication IPC",
+          "description": "Échec ou corruption des messages entre frontend et backend Tauri",
+          "exemples": ["Payload IPC malformé", "Commande Tauri non trouvée", "Timeout IPC"]
+        },
+        {
+          "code": "INC-DATA",
+          "nom": "Incident données",
+          "description": "Corruption, perte ou incohérence des données persistantes",
+          "exemples": ["Base SQLite corrompue", "Mémoire persistante désynchronisée", "Perte de conversation"]
+        },
+        {
+          "code": "INC-SEC",
+          "nom": "Incident sécurité",
+          "description": "Toute anomalie liée à la sécurité de l'application",
+          "exemples": ["Fuite de clé API dans les logs", "Accès non autorisé au SecureSecretsEngine", "Violation allowlist Tauri"]
+        },
+        {
+          "code": "INC-PERF",
+          "nom": "Incident performance",
+          "description": "Dégradation significative des performances du système",
+          "exemples": ["Latence OMEGA > 100ms", "Utilisation mémoire excessive", "UI freeze"]
+        },
+        {
+          "code": "INC-BUILD",
+          "nom": "Incident build/CI",
+          "description": "Échec de compilation, de tests ou de pipeline CI/CD",
+          "exemples": ["Cargo build échoue", "Tests Clippy en échec", "E2E flaky"]
+        }
+      ]
+    },
+    "priorites": {
+      "P1_critique": {
+        "description": "Panne totale ou faille de sécurité active",
+        "sla_reponse": "15 minutes",
+        "sla_resolution": "1 heure",
+        "action": "Stop-the-line immédiat, notification Kevin, rollback si nécessaire"
+      },
+      "P2_majeur": {
+        "description": "Fonctionnalité majeure indisponible avec contournement possible",
+        "sla_reponse": "30 minutes",
+        "sla_resolution": "4 heures",
+        "action": "Activer le contournement, planifier le correctif"
+      },
+      "P3_mineur": {
+        "description": "Dysfonctionnement mineur n'empêchant pas l'utilisation",
+        "sla_reponse": "2 heures",
+        "sla_resolution": "24 heures",
+        "action": "Documenter dans le backlog, corriger au prochain cycle"
+      },
+      "P4_cosmétique": {
+        "description": "Anomalie visuelle ou amélioration mineure",
+        "sla_reponse": "24 heures",
+        "sla_resolution": "1 semaine",
+        "action": "Ajouter au backlog d'amélioration continue"
+      }
+    },
+    "processus_triage": {
+      "etapes": [
+        "1. Détecter l'incident (monitoring, logs, rapport utilisateur, AutoHeal)",
+        "2. Identifier la catégorie (INC-IA, INC-IPC, INC-DATA, INC-SEC, INC-PERF, INC-BUILD)",
+        "3. Évaluer la priorité (P1 à P4) selon l'impact et l'urgence",
+        "4. Assigner au niveau d'escalade approprié (N1 à N4)",
+        "5. Documenter dans le registre des incidents avec horodatage ISO 8601",
+        "6. Communiquer le statut initial à Kevin si P1 ou P2"
+      ]
+    },
+    "investigation": {
+      "outils": [
+        "Logs Tauri (console Rust + DevTools navigateur)",
+        "Registre AutoHeal (scripts/autoheal/autoheal_rules.jsonl)",
+        "Métriques mémoire et CPU du processus Tauri",
+        "État de la base SQLite (intégrité PRAGMA integrity_check)",
+        "Logs réseau (requêtes vers providers IA)",
+        "Historique git pour identifier la régression (git bisect)"
+      ],
+      "questions_diagnostiques": [
+        "Quand le problème a-t-il commencé ? (corrélation avec un déploiement récent ?)",
+        "Le problème est-il reproductible systématiquement ?",
+        "Quels composants sont affectés (frontend, backend, providers) ?",
+        "Y a-t-il des entrées AutoHeal similaires dans le registre ?",
+        "Le problème persiste-t-il après un redémarrage propre ?"
+      ]
+    },
+    "resolution": {
+      "etapes": [
+        "1. Appliquer le correctif minimal (Rule 1 — patch minimal uniquement)",
+        "2. Vérifier avec les quality gates (clippy, tests, fmt)",
+        "3. Ajouter une entrée AutoHeal si applicable (Rule 10)",
+        "4. Exécuter bash scripts/autoheal/detect_recurrence.sh",
+        "5. Exécuter bash scripts/verify_instructions.sh",
+        "6. Mettre à jour le statut de l'incident : PASS ou FAIL"
+      ]
+    },
+    "post_mortem": {
+      "description": "Analyse post-incident obligatoire pour tout incident P1 ou P2",
+      "sections_requises": [
+        "Chronologie complète de l'incident avec horodatages",
+        "Cause racine identifiée et documentée",
+        "Impact mesuré (durée d'indisponibilité, données affectées)",
+        "Actions correctives appliquées avec preuves",
+        "Actions préventives planifiées pour éviter la récurrence",
+        "Entrée AutoHeal ajoutée avec signature et prévention",
+        "Leçons apprises et recommandations"
+      ],
+      "archivage": "Le post-mortem est archivé dans reports/ au format append-only"
+    }
+  },
+  "automatisation": {
+    "description": "Stratégies et outils d'automatisation pour TITANE∞",
+    "scripts_operationnels": {
+      "verification": {
+        "verify_instructions": {
+          "chemin": "scripts/verify_instructions.sh",
+          "description": "Vérifie la cohérence des fichiers d'instructions et des couches de doctrine",
+          "frequence": "À chaque commit et lors de toute modification de configuration"
+        },
+        "detect_recurrence": {
+          "chemin": "scripts/autoheal/detect_recurrence.sh",
+          "description": "Détecte les récurrences de bugs précédemment corrigés via le registre AutoHeal",
+          "frequence": "À chaque fix et lors de la vérification pre-commit"
+        },
+        "verify_instruction_layers": {
+          "chemin": "scripts/verify/verify_instruction_layers.sh",
+          "description": "Valide l'architecture en couches des instructions (kernel → surface → local)",
+          "frequence": "Lors de toute modification des fichiers d'instructions"
+        },
+        "verify_no_doctrine_duplication": {
+          "chemin": "scripts/verify/verify_no_doctrine_duplication.sh",
+          "description": "S'assure qu'aucune règle de doctrine n'est dupliquée entre les couches",
+          "frequence": "Lors de toute modification des fichiers de gouvernance"
+        },
+        "verify_status_vocabulary": {
+          "chemin": "scripts/verify/verify_status_vocabulary.sh",
+          "description": "Vérifie que seul le vocabulaire de statut autorisé est utilisé (PASS/FAIL/BLOCKED/DONE/SEALED)",
+          "frequence": "Lors de toute modification des rapports et verdicts"
+        }
+      },
+      "maintenance": {
+        "bump_version": {
+          "chemin": "scripts/bump-version.mjs",
+          "description": "Incrémente automatiquement la version patch dans package.json",
+          "commande": "node scripts/bump-version.mjs"
+        },
+        "sync_versions": {
+          "chemin": "scripts/sync-versions.mjs",
+          "description": "Propage la version de package.json vers Cargo.toml, tauri.conf.json et runtime config",
+          "commande": "node scripts/sync-versions.mjs"
+        }
+      }
+    },
+    "workflows_automatises": {
+      "ci_cd": {
+        "description": "Pipeline d'intégration et déploiement continus",
+        "etapes": [
+          "Vérification du format (cargo fmt -- --check)",
+          "Analyse statique (cargo clippy -- -D warnings)",
+          "Tests unitaires et d'intégration (cargo test)",
+          "Construction frontend (pnpm build)",
+          "Tests end-to-end (wdio + tauri-driver)",
+          "Vérification des instructions (bash scripts/verify_instructions.sh)",
+          "Détection de récurrence AutoHeal"
+        ]
+      },
+      "autoheal": {
+        "description": "Système d'auto-guérison pour les problèmes récurrents",
+        "fonctionnement": [
+          "Détection automatique des signatures d'erreurs connues",
+          "Application du correctif documenté dans autoheal_rules.jsonl",
+          "Vérification post-fix avec la commande de validation associée",
+          "Journalisation de l'intervention dans le registre append-only",
+          "Alerte si le fix échoue (escalade vers N2)"
+        ],
+        "registre": "scripts/autoheal/autoheal_rules.jsonl"
+      }
+    },
+    "taches_planifiees": {
+      "nettoyage_cache": {
+        "description": "Suppression des fichiers temporaires et du cache obsolète",
+        "frequence": "Hebdomadaire",
+        "action": "Purger le cache Ollama des modèles non utilisés depuis 30 jours"
+      },
+      "rotation_logs": {
+        "description": "Rotation et archivage des fichiers de log",
+        "frequence": "Quotidienne",
+        "action": "Archiver les logs > 7 jours dans reports/ au format compressé"
+      },
+      "verification_integrite_db": {
+        "description": "Contrôle d'intégrité de la base de données SQLite",
+        "frequence": "Quotidienne",
+        "action": "Exécuter PRAGMA integrity_check sur la base option1"
+      },
+      "mise_a_jour_modeles": {
+        "description": "Vérification des mises à jour disponibles pour les modèles Ollama",
+        "frequence": "Hebdomadaire",
+        "action": "Comparer les versions locales avec les versions disponibles sur le registre Ollama"
+      }
+    },
+    "integrations": {
+      "ollama": {
+        "description": "Intégration avec le serveur Ollama pour l'inférence locale",
+        "api_endpoint": "http://127.0.0.1:11434",
+        "health_check": "GET /api/tags",
+        "auto_start": "Tentative bundled puis system au démarrage desktop"
+      },
+      "secure_secrets_engine": {
+        "description": "Moteur de gestion sécurisée des secrets et clés API",
+        "fonctionnalites": ["Chiffrement au repos", "Injection à l'exécution", "Rotation planifiable"]
+      },
+      "git": {
+        "description": "Intégration avec Git pour le versionnement et le rollback",
+        "operations": ["Tag automatique à la release", "Rollback par git restore", "Bisect pour investigation"]
+      }
+    },
+    "self_healing": {
+      "description": "Capacités d'auto-réparation intégrées à TITANE∞",
+      "mecanismes": [
+        {
+          "nom": "Reconnexion automatique provider IA",
+          "trigger": "Timeout ou erreur réseau sur le provider actif",
+          "action": "Bascule automatique vers le provider suivant dans la chaîne de fallback",
+          "verification": "Réponse valide obtenue du nouveau provider"
+        },
+        {
+          "nom": "Redémarrage Ollama automatique",
+          "trigger": "Ollama ne répond pas au health check",
+          "action": "Tenter le redémarrage (bundled puis system)",
+          "verification": "GET /api/tags retourne 200"
+        },
+        {
+          "nom": "Réinitialisation état IPC",
+          "trigger": "Messages IPC en échec consécutifs > 3",
+          "action": "Réinitialiser le bridge OMEGA et relancer l'init async",
+          "verification": "Pipeline OMEGA opérationnel avec latence < 1ms"
+        },
+        {
+          "nom": "Récupération mémoire persistante",
+          "trigger": "Erreur de lecture de la mémoire persistante v19.2Ω",
+          "action": "Charger depuis la dernière sauvegarde valide connue",
+          "verification": "Cohérence des données vérifiée par checksum"
+        }
+      ]
+    }
+  },
+  "maintenance_preventive": {
+    "description": "Programme de maintenance préventive pour assurer la fiabilité continue de TITANE∞",
+    "planification": {
+      "objectifs": [
+        "Prévenir les pannes par une maintenance régulière et proactive",
+        "Maintenir les performances optimales du système",
+        "Assurer la mise à jour continue des composants",
+        "Détecter les dérives de configuration avant qu'elles ne causent des incidents"
+      ],
+      "principes": [
+        "Toute maintenance est documentée et traçable",
+        "Les interventions sont planifiées en dehors des heures d'utilisation active",
+        "Un rollback est toujours préparé avant toute intervention",
+        "Les résultats sont archivés dans reports/ au format append-only"
+      ]
+    },
+    "calendrier": {
+      "quotidien": [
+        "Vérification des logs d'erreur et alertes système",
+        "Contrôle de la disponibilité des providers IA configurés",
+        "Inspection rapide de l'espace disque et de l'utilisation mémoire",
+        "Validation du fonctionnement du health check Ollama"
+      ],
+      "hebdomadaire": [
+        "Exécution complète des quality gates (clippy, tests, fmt, e2e)",
+        "Nettoyage du cache de build (target/, node_modules/.cache)",
+        "Revue du registre AutoHeal pour les tendances récurrentes",
+        "Mise à jour des dépendances mineures (pnpm update, cargo update)",
+        "Vérification de l'intégrité des bases de données SQLite"
+      ],
+      "mensuel": [
+        "Audit de sécurité des dépendances (cargo audit, pnpm audit)",
+        "Revue des performances avec métriques comparatives",
+        "Nettoyage des modèles Ollama obsolètes",
+        "Vérification de la conformité des fichiers d'instructions",
+        "Test de restauration à partir d'une sauvegarde"
+      ],
+      "trimestriel": [
+        "Revue complète de l'architecture 4-Ring",
+        "Audit des capabilities et allowlist Tauri",
+        "Analyse des tendances de performance sur 3 mois",
+        "Mise à jour majeure des dépendances avec tests de non-régression",
+        "Revue et mise à jour de la documentation technique"
+      ]
+    },
+    "audits": {
+      "securite": {
+        "description": "Audit régulier de la posture de sécurité",
+        "elements_controles": [
+          "Dépendances Rust (cargo audit)",
+          "Dépendances Node.js (pnpm audit)",
+          "Configuration Tauri (capabilities, allowlist, CSP)",
+          "Gestion des secrets (SecureSecretsEngine)",
+          "Conformité One Door (pas d'accès réseau direct depuis l'UI)"
+        ]
+      },
+      "performance": {
+        "description": "Audit des performances applicatives",
+        "elements_controles": [
+          "Temps de démarrage de l'application (< 3 secondes attendu)",
+          "Latence du pipeline OMEGA (< 1ms cible)",
+          "Temps de réponse IPC (< 50ms p95)",
+          "Utilisation mémoire au repos (< 200MB attendu)",
+          "Taille de la base SQLite et temps de requête"
+        ]
+      },
+      "conformite": {
+        "description": "Audit de conformité avec la doctrine TITANE∞",
+        "elements_controles": [
+          "Respect des frontières 4-Ring (pas d'import inverse)",
+          "Contrat IPC respecté ({ ok, content, error })",
+          "Vocabulaire de statut conforme (PASS/FAIL/BLOCKED/DONE/SEALED)",
+          "Politique online-first gouvernée avec fallback local opérationnel",
+          "Preuve avant verdict (pas de PASS sans preuve exécutable)"
+        ]
+      }
+    },
+    "mises_a_jour": {
+      "strategie": "Mise à jour progressive avec validation à chaque étape",
+      "processus": [
+        "1. Identifier les mises à jour disponibles (cargo outdated, pnpm outdated)",
+        "2. Évaluer l'impact et les breaking changes dans le CHANGELOG de la dépendance",
+        "3. Appliquer la mise à jour dans une branche dédiée",
+        "4. Exécuter l'intégralité des quality gates",
+        "5. Vérifier l'absence de régression via les tests e2e",
+        "6. Merger uniquement si tous les gates PASS"
+      ],
+      "composants_critiques": [
+        "Tauri framework (src-tauri/Cargo.toml)",
+        "Modèles Ollama (gemma2:2b et modèles additionnels)",
+        "Dépendances Rust sécuritaires (tokio, reqwest, serde)",
+        "Dépendances frontend (React, TypeScript, Vite)"
+      ]
+    },
+    "nettoyage": {
+      "fichiers_temporaires": [
+        "target/ — artefacts de compilation Rust",
+        "node_modules/.cache — cache du bundler",
+        "dist/ — builds frontend précédents",
+        "*.log — fichiers de log anciens (> 30 jours)"
+      ],
+      "bases_de_donnees": [
+        "VACUUM sur la base SQLite option1 (mensuel)",
+        "Purge des conversations archivées > 90 jours (si applicable)",
+        "Nettoyage de la mémoire persistante orpheline"
+      ]
+    }
+  },
+  "performance_monitoring": {
+    "description": "Cadre de surveillance et d'optimisation des performances de TITANE∞",
+    "kpis": {
+      "disponibilite": {
+        "nom": "Disponibilité de l'application",
+        "cible": "99.5% pendant les heures d'utilisation active",
+        "mesure": "Ratio temps opérationnel / temps total planifié",
+        "source": "Logs de démarrage et d'arrêt de l'application"
+      },
+      "latence_omega": {
+        "nom": "Latence du pipeline OMEGA",
+        "cible": "< 1ms pour le bridge rapide",
+        "mesure": "Temps mesuré entre l'envoi et la réception du message IPC OMEGA",
+        "seuil_alerte": "> 5ms"
+      },
+      "temps_reponse_ia": {
+        "nom": "Temps de réponse du provider IA",
+        "cible": "< 2 secondes pour les requêtes simples",
+        "mesure": "Durée entre l'envoi du prompt et la première réponse",
+        "seuil_alerte": "> 10 secondes"
+      },
+      "taux_autoheal": {
+        "nom": "Taux de succès AutoHeal",
+        "cible": "> 90% de résolution automatique",
+        "mesure": "Ratio fixes auto-résolus / total des incidents détectés par AutoHeal",
+        "source": "Registre autoheal_rules.jsonl"
+      },
+      "qualite_code": {
+        "nom": "Qualité du code",
+        "cible": "0 warning Clippy, 0 erreur TypeScript, 100% tests PASS",
+        "mesure": "Résultats agrégés des quality gates",
+        "frequence_mesure": "À chaque commit"
+      }
+    },
+    "metriques_systeme": {
+      "memoire": {
+        "description": "Utilisation de la mémoire RAM par le processus Tauri",
+        "seuil_normal": "< 200 MB au repos",
+        "seuil_alerte": "> 500 MB",
+        "seuil_critique": "> 1 GB (risque OOM)",
+        "action_alerte": "Investiguer les fuites mémoire, redémarrer si nécessaire"
+      },
+      "cpu": {
+        "description": "Utilisation CPU par le processus principal",
+        "seuil_normal": "< 5% au repos",
+        "seuil_alerte": "> 50% soutenu pendant > 30 secondes",
+        "seuil_critique": "> 90% soutenu pendant > 60 secondes",
+        "action_alerte": "Identifier le thread responsable, vérifier les boucles infinies"
+      },
+      "disque": {
+        "description": "Espace disque utilisé par TITANE∞ (DB, modèles, logs, cache)",
+        "seuil_normal": "< 5 GB total",
+        "seuil_alerte": "> 10 GB ou < 1 GB libre sur la partition",
+        "seuil_critique": "< 500 MB libre",
+        "action_alerte": "Lancer le nettoyage des fichiers temporaires et du cache"
+      },
+      "reseau": {
+        "description": "Connectivité réseau vers les providers IA externes",
+        "seuil_normal": "Latence < 200ms vers les API providers",
+        "seuil_alerte": "Latence > 1s ou taux d'erreur > 5%",
+        "seuil_critique": "Aucune connectivité (basculer vers fallback local)",
+        "action_alerte": "Vérifier la connexion réseau, activer le fallback Ollama"
+      }
+    },
+    "seuils_alerte": {
+      "description": "Politique d'alertes à trois niveaux",
+      "niveaux": {
+        "information": "Événement notable mais ne nécessitant pas d'action immédiate — journaliser",
+        "avertissement": "Seuil d'alerte atteint — surveiller et préparer une intervention",
+        "critique": "Seuil critique dépassé — intervention immédiate requise (stop-the-line)"
+      }
+    },
+    "rapports": {
+      "rapport_quotidien": {
+        "contenu": [
+          "Nombre total de requêtes IA traitées",
+          "Temps de réponse moyen et p95",
+          "Incidents détectés et résolus par AutoHeal",
+          "Utilisation mémoire moyenne et maximale",
+          "Erreurs IPC et leur catégorisation"
+        ],
+        "format": "JSON dans reports/ avec horodatage ISO 8601"
+      },
+      "rapport_hebdomadaire": {
+        "contenu": [
+          "Tendances de performance sur 7 jours",
+          "Comparaison avec la semaine précédente",
+          "Nouvelles entrées AutoHeal et récurrences détectées",
+          "Résultats des quality gates de la semaine",
+          "Recommandations d'optimisation"
+        ]
+      }
+    },
+    "tendances": {
+      "description": "Analyse des tendances pour anticiper les problèmes",
+      "indicateurs_surveilles": [
+        "Évolution de la taille de la base SQLite (croissance attendue < 10% par mois)",
+        "Évolution de l'utilisation mémoire au fil des versions",
+        "Fréquence des incidents par catégorie (INC-IA, INC-IPC, etc.)",
+        "Taux de succès des builds successifs",
+        "Temps moyen de résolution des incidents (MTTR)"
+      ]
+    }
+  },
+  "documentation_technique": {
+    "description": "Standards et processus de documentation technique pour TITANE∞",
+    "standards": {
+      "langue": "Français pour toute documentation opérationnelle et base de connaissance",
+      "format_dates": "ISO 8601 (YYYY-MM-DDTHH:mm:ssZ) pour tous les horodatages",
+      "format_versions": "Semantic Versioning (MAJOR.MINOR.PATCH) — ex: v30.1.0",
+      "encodage": "UTF-8 pour tous les fichiers texte et JSON",
+      "conventions_nommage": {
+        "fichiers_rapport": "RAPPORT_<type>_<date>.md ou .json",
+        "fichiers_release": "RELEASE_v<version>_SEALED.txt",
+        "fichiers_checksums": "RELEASE_ARTIFACTS_CHECKSUMS_<version>.txt",
+        "fichiers_proof_pack": "proof_packs/<session_id>/VERDICT.md + ROLLBACK.md",
+        "entrees_autoheal": "AH-YYYY-MM-DD-DESCRIPTION-NNN"
+      }
+    },
+    "templates": {
+      "post_mortem": {
+        "sections": ["Résumé", "Chronologie", "Cause racine", "Impact", "Actions correctives", "Prévention", "Leçons apprises"],
+        "emplacement": "reports/"
+      },
+      "proof_pack": {
+        "fichiers_requis": ["VERDICT.md", "ROLLBACK.md"],
+        "fichiers_optionnels": ["LOGS.txt", "SCREENSHOTS/", "METRICS.json"],
+        "emplacement": "proof_packs/"
+      },
+      "changelog_entry": {
+        "format": "## [v<version>] — YYYY-MM-DD\n### Ajouté\n### Modifié\n### Corrigé\n### Supprimé",
+        "fichier": "CHANGELOG.md"
+      }
+    },
+    "versionning": {
+      "description": "Politique de versionnement de la documentation",
+      "regles": [
+        "Toute modification de documentation est versionnée via Git",
+        "Les fichiers de doctrine (kernel, instructions) sont protégés par des validateurs",
+        "Les rapports et proof packs sont append-only — pas de réécriture de l'historique",
+        "La version de la base de connaissance suit la version de l'application"
+      ]
+    },
+    "revue": {
+      "description": "Processus de revue de la documentation",
+      "etapes": [
+        "1. Rédaction selon les standards et templates définis",
+        "2. Vérification par les scripts de validation (verify_instructions.sh)",
+        "3. Contrôle de la non-duplication de doctrine (verify_no_doctrine_duplication.sh)",
+        "4. Validation du vocabulaire de statut (verify_status_vocabulary.sh)",
+        "5. Archivage dans le répertoire approprié (reports/, docs/, proof_packs/)"
+      ]
+    },
+    "archivage": {
+      "description": "Politique d'archivage de la documentation",
+      "regles": [
+        "Les documents actifs sont dans docs/ et reports/",
+        "Les documents archivés sont déplacés vers _archive/ avec date",
+        "Les proof packs scellés ne sont jamais modifiés ni supprimés",
+        "Les fichiers RELEASE_*_SEALED.txt sont immuables après scellement"
+      ],
+      "retention": {
+        "rapports_operationnels": "12 mois minimum",
+        "proof_packs": "Conservation permanente",
+        "releases_scellees": "Conservation permanente",
+        "logs_debug": "30 jours puis archivage compressé"
+      }
+    }
+  },
+  "gestion_configuration": {
+    "description": "Gestion centralisée de la configuration et des paramètres de TITANE∞",
+    "parametres": {
+      "application": {
+        "tauri_conf_json": {
+          "description": "Configuration principale de l'application Tauri",
+          "chemin": "src-tauri/tauri.conf.json",
+          "elements_cles": ["productName", "version", "identifier", "windows", "security"]
+        },
+        "cargo_toml": {
+          "description": "Manifeste Rust avec dépendances et metadata",
+          "chemin": "src-tauri/Cargo.toml",
+          "elements_cles": ["package.version", "dependencies", "features"]
+        },
+        "package_json": {
+          "description": "Configuration frontend et scripts npm/pnpm",
+          "chemin": "package.json",
+          "elements_cles": ["version", "scripts", "dependencies", "devDependencies"]
+        },
+        "vite_config": {
+          "description": "Configuration du bundler Vite pour le frontend",
+          "chemin": "vite.config.ts",
+          "elements_cles": ["plugins", "build", "server"]
+        }
+      },
+      "runtime": {
+        "ollama": {
+          "host": "127.0.0.1",
+          "port": 11434,
+          "modele_defaut": "gemma2:2b",
+          "configurable_via": "Variables d'environnement OLLAMA_*"
+        },
+        "omega_pipeline": {
+          "latence_cible": "< 1ms",
+          "mode": "bridge rapide asynchrone",
+          "configurable_via": "État interne SingularityState"
+        }
+      }
+    },
+    "environnements": {
+      "developpement": {
+        "description": "Environnement de développement local",
+        "commande": "pnpm tauri dev",
+        "caracteristiques": [
+          "Hot reload activé (frontend Vite)",
+          "Logs de debug détaillés",
+          "DevTools navigateur accessibles",
+          "Provider IA : Ollama local prioritaire"
+        ]
+      },
+      "test": {
+        "description": "Environnement de test automatisé",
+        "commandes": ["cargo test", "pnpm run check", "wdio run"],
+        "caracteristiques": [
+          "Isolation de la base de données (base de test dédiée)",
+          "Mocks pour les providers IA externes",
+          "Timeouts stricts pour éviter les tests flaky",
+          "Rapports de couverture générés"
+        ]
+      },
+      "production": {
+        "description": "Environnement de production contrôlé",
+        "commande": "cargo build --release --manifest-path src-tauri/Cargo.toml",
+        "caracteristiques": [
+          "Optimisations de compilation activées",
+          "Logs de debug désactivés",
+          "DevTools inaccessibles",
+          "Tokens PROD requis pour le build et le déploiement"
+        ]
+      }
+    },
+    "secrets": {
+      "description": "Gestion sécurisée des secrets via SecureSecretsEngine",
+      "principes": [
+        "Aucun secret ne doit être committé dans le code source",
+        "Les clés API sont injectées à l'exécution via SecureSecretsEngine",
+        "La passphrase TITANE_SECRETS_PASSPHRASE est requise au démarrage",
+        "Les secrets sont chiffrés au repos et déchiffrés uniquement en mémoire",
+        "La rotation des clés API est planifiable via le moteur de secrets"
+      ],
+      "secrets_geres": [
+        "Clés API OpenAI (GPT-4)",
+        "Clés API Anthropic (Claude)",
+        "Clés API Google (Gemini)",
+        "Passphrase de chiffrement de la base de données",
+        "Tokens d'authentification pour services tiers"
+      ]
+    },
+    "feature_toggles": {
+      "description": "Mécanisme de feature flags pour activer/désactiver les fonctionnalités",
+      "toggles_actifs": {
+        "ENABLE_SEED_PACKS": {
+          "description": "Active les seed packs de recherche P12",
+          "valeur_defaut": "true",
+          "configurable_via": "Variable d'environnement"
+        },
+        "OMEGA_FAST_BRIDGE": {
+          "description": "Active le bridge rapide OMEGA < 1ms",
+          "valeur_defaut": "true",
+          "configurable_via": "État SingularityState"
+        },
+        "AUTO_START_OLLAMA": {
+          "description": "Démarrage automatique d'Ollama au lancement (desktop uniquement)",
+          "valeur_defaut": "true",
+          "configurable_via": "Configuration Tauri"
+        }
+      },
+      "regles": [
+        "Les feature toggles sont documentés avec description et valeur par défaut",
+        "Tout nouveau toggle nécessite une entrée dans cette base de connaissance",
+        "Les toggles obsolètes sont retirés lors des nettoyages trimestriels"
+      ]
+    },
+    "rollback_configuration": {
+      "description": "Procédure de rollback de la configuration",
+      "strategies": [
+        {
+          "type": "Rollback fichier unique",
+          "commande": "git restore -- <chemin_fichier>",
+          "exemple": "git restore -- src-tauri/tauri.conf.json"
+        },
+        {
+          "type": "Rollback composant complet",
+          "commande": "git restore -- <dossier_composant>",
+          "exemple": "git restore -- src-tauri/"
+        },
+        {
+          "type": "Rollback version complète",
+          "commande": "git checkout <tag_version>",
+          "exemple": "git checkout v30.0.0"
+        }
+      ],
+      "precautions": [
+        "Toujours vérifier l'état git avant le rollback (git status)",
+        "Sauvegarder les modifications locales non committées si nécessaire",
+        "Après un rollback, exécuter pnpm run check pour valider la cohérence"
+      ]
+    }
+  },
+  "continuite_activite": {
+    "description": "Plan de continuité d'activité et de reprise après sinistre pour TITANE∞",
+    "backup": {
+      "description": "Stratégie de sauvegarde des données critiques",
+      "donnees_critiques": [
+        {
+          "element": "Base de données SQLite option1",
+          "emplacement": "Répertoire données application Tauri",
+          "frequence_sauvegarde": "Quotidienne",
+          "methode": "Copie du fichier SQLite après PRAGMA wal_checkpoint(TRUNCATE)",
+          "retention": "30 jours de sauvegardes quotidiennes"
+        },
+        {
+          "element": "Mémoire persistante v19.2Ω",
+          "emplacement": "Répertoire données application Tauri",
+          "frequence_sauvegarde": "À chaque modification significative",
+          "methode": "Sérialisation JSON avec checksum SHA-256",
+          "retention": "Dernières 10 versions"
+        },
+        {
+          "element": "Configuration SecureSecretsEngine",
+          "emplacement": "Répertoire sécurisé OS",
+          "frequence_sauvegarde": "À chaque rotation de clé",
+          "methode": "Export chiffré avec passphrase dédiée",
+          "retention": "Dernières 5 versions"
+        },
+        {
+          "element": "Base de connaissance embarquée",
+          "emplacement": "data/knowledge_base/",
+          "frequence_sauvegarde": "Versionné via Git",
+          "methode": "Commit Git standard",
+          "retention": "Historique Git complet"
+        },
+        {
+          "element": "Registre AutoHeal",
+          "emplacement": "scripts/autoheal/autoheal_rules.jsonl",
+          "frequence_sauvegarde": "Versionné via Git (append-only)",
+          "methode": "Commit Git standard",
+          "retention": "Conservation permanente"
+        }
+      ],
+      "verification": {
+        "description": "Test de restauration mensuel obligatoire",
+        "etapes": [
+          "1. Sélectionner une sauvegarde récente à restaurer",
+          "2. Restaurer dans un environnement de test isolé",
+          "3. Vérifier l'intégrité des données (PRAGMA integrity_check)",
+          "4. Valider le fonctionnement de l'application avec les données restaurées",
+          "5. Documenter le résultat dans reports/"
+        ]
+      }
+    },
+    "disaster_recovery": {
+      "description": "Plan de reprise après sinistre pour TITANE∞",
+      "scenarios": [
+        {
+          "scenario": "Corruption de la base de données SQLite",
+          "probabilite": "Faible",
+          "impact": "Élevé — perte de conversations et d'état",
+          "procedure_reprise": [
+            "1. Arrêter l'application immédiatement",
+            "2. Tenter la récupération via sqlite3 .recover",
+            "3. Si échec, restaurer depuis la dernière sauvegarde valide",
+            "4. Vérifier l'intégrité post-restauration",
+            "5. Documenter la perte de données éventuelle"
+          ],
+          "rto": "30 minutes",
+          "rpo": "24 heures (dernière sauvegarde quotidienne)"
+        },
+        {
+          "scenario": "Perte du poste de travail principal",
+          "probabilite": "Très faible",
+          "impact": "Critique — perte totale de l'environnement",
+          "procedure_reprise": [
+            "1. Installer l'OS et les outils de développement sur le nouveau poste",
+            "2. Cloner le dépôt Git (code source intégralement versionné)",
+            "3. Restaurer les sauvegardes de données depuis le stockage externe",
+            "4. Reconfigurer les clés API via SecureSecretsEngine",
+            "5. Installer les modèles Ollama nécessaires",
+            "6. Valider le fonctionnement complet avec pnpm run check"
+          ],
+          "rto": "4 heures",
+          "rpo": "24 heures pour les données, 0 pour le code source (Git)"
+        },
+        {
+          "scenario": "Compromission d'une clé API",
+          "probabilite": "Faible",
+          "impact": "Moyen — risque d'utilisation frauduleuse",
+          "procedure_reprise": [
+            "1. Révoquer immédiatement la clé compromise chez le provider",
+            "2. Générer une nouvelle clé API",
+            "3. Mettre à jour SecureSecretsEngine avec la nouvelle clé",
+            "4. Auditer les logs pour identifier toute utilisation non autorisée",
+            "5. Ajouter une entrée AutoHeal avec la signature de détection"
+          ],
+          "rto": "15 minutes",
+          "rpo": "Non applicable"
+        },
+        {
+          "scenario": "Indisponibilité prolongée de tous les providers IA en ligne",
+          "probabilite": "Très faible",
+          "impact": "Moyen — fonctionnalités IA dégradées",
+          "procedure_reprise": [
+            "1. Confirmer l'activation automatique du fallback Ollama local",
+            "2. Vérifier que le modèle local (gemma2:2b) est opérationnel",
+            "3. Informer Kevin de la dégradation de service",
+            "4. Surveiller la reprise des providers en ligne",
+            "5. Basculer automatiquement dès la reprise détectée"
+          ],
+          "rto": "Immédiat (fallback automatique)",
+          "rpo": "Non applicable"
+        }
+      ]
+    },
+    "failover": {
+      "description": "Mécanismes de basculement automatique intégrés à TITANE∞",
+      "chaine_providers_ia": {
+        "description": "Basculement en cascade entre les providers IA",
+        "ordre": [
+          "1. Provider en ligne principal (OpenAI GPT-4)",
+          "2. Provider en ligne secondaire (Anthropic Claude)",
+          "3. Provider en ligne tertiaire (Google Gemini)",
+          "4. Provider local (Ollama sur port 11434)",
+          "5. Erreur explicite si aucun provider disponible — JAMAIS de silence"
+        ],
+        "detection": "Timeout de 10 secondes ou erreur HTTP >= 500",
+        "retour_normal": "Vérification périodique du provider principal toutes les 5 minutes"
+      },
+      "stockage_local": {
+        "description": "Basculement des opérations de stockage en cas de problème",
+        "strategie": "Écriture dans un journal de transaction (WAL) SQLite avec retry automatique",
+        "retry_max": 3,
+        "delai_entre_retry": "1 seconde avec backoff exponentiel"
+      }
+    },
+    "objectifs_reprise": {
+      "rto": {
+        "description": "Recovery Time Objective — durée maximale d'interruption acceptable",
+        "cibles": {
+          "fonctionnalites_ia": "Immédiat (fallback automatique)",
+          "application_complete": "30 minutes",
+          "environnement_complet": "4 heures"
+        }
+      },
+      "rpo": {
+        "description": "Recovery Point Objective — perte de données maximale acceptable",
+        "cibles": {
+          "code_source": "0 (versionné Git)",
+          "base_de_donnees": "24 heures (sauvegarde quotidienne)",
+          "memoire_persistante": "Dernière modification (sauvegarde incrémentale)",
+          "configuration": "0 (versionnée Git)"
+        }
+      }
+    },
+    "plans_reprise": {
+      "description": "Plans de reprise détaillés par composant",
+      "communication": {
+        "description": "Protocole de communication en cas de sinistre",
+        "etapes": [
+          "1. Qualifier le sinistre (impact, urgence, périmètre)",
+          "2. Notifier Kevin immédiatement pour tout sinistre P1",
+          "3. Documenter l'état initial dans reports/",
+          "4. Communiquer un statut toutes les 30 minutes pendant la reprise",
+          "5. Publier le post-mortem dans les 24 heures suivant la résolution"
+        ]
+      },
+      "validation_reprise": {
+        "description": "Critères de validation de la reprise réussie",
+        "criteres": [
+          "L'application démarre sans erreur (11 étapes d'initialisation PASS)",
+          "Le pipeline OMEGA est opérationnel (latence < 1ms)",
+          "Au moins un provider IA répond correctement",
+          "La base de données est intègre (PRAGMA integrity_check = ok)",
+          "Les quality gates passent (pnpm run check = PASS)",
+          "La version affichée en pied de page est correcte"
+        ]
+      }
+    }
   }
 }
