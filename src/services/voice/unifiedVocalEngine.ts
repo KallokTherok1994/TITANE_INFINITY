@@ -145,6 +145,7 @@ class UnifiedVocalEngine {
   private state: UnifiedVocalState;
   private config: UnifiedVocalConfig;
   private loopInterval: number | null = null;
+  private audioStateInterval: number | null = null;
   private listeners: Set<(state: UnifiedVocalState) => void> = new Set();
   private vadCheckCount = 0;
   private lastVADTimestamp = 0;

@@ -282,11 +282,17 @@ export class FullDuplexOrchestrator {
 
     logger.info('[FullDuplexOrchestrator] 🔇 Stopping listening');
 
-    await audioStreamingService.stopStreaming();
+    try {
+      await audioStreamingService.stopStreaming();
 
-    if (this.mediaStream) {
-      this.mediaStream.getTracks().forEach(track => track.stop());
-      this.mediaStream = null;
+      if (this.mediaStream) {
+        this.mediaStream.getTracks().forEach(track => track.stop());
+        this.mediaStream = null;
+      }
+    } catch (error) {
+      logger.warn('[FullDuplexOrchestrator] Error stopping listening:', {
+        error: String(error),
+      });
     }
 
     this.isListening = false;
@@ -352,29 +358,36 @@ export class FullDuplexOrchestrator {
       `[FullDuplexOrchestrator] Barge-in: ${event.type} (${event.confidence.toFixed(2)})`
     );
 
-    switch (event.type) {
-      case 'USER_INTERRUPT':
-        // Interruption forte → stop TTS
-        if (this.config.autoStopOnHardInterrupt) {
-          await this.interrupt();
-        }
-        break;
+    try {
+      switch (event.type) {
+        case 'USER_INTERRUPT':
+          // Interruption forte → stop TTS
+          if (this.config.autoStopOnHardInterrupt) {
+            await this.interrupt();
+          }
+          break;
 
-      case 'USER_SOFT_BARGE':
-        // Interruption douce → ducking
-        if (this.config.autoDuckOnSoftInterrupt) {
-          await ttsDuckingEngine.applyDucking();
-        }
-        break;
+        case 'USER_SOFT_BARGE':
+          // Interruption douce → ducking
+          if (this.config.autoDuckOnSoftInterrupt) {
+            await ttsDuckingEngine.applyDucking();
+          }
+          break;
 
-      case 'USER_OVERLAP':
-        // Overlap → duck légèrement
-        await ttsDuckingEngine.applyDucking(0.5);
-        break;
+        case 'USER_OVERLAP':
+          // Overlap → duck légèrement
+          await ttsDuckingEngine.applyDucking(0.5);
+          break;
 
-      case 'FALSE_POSITIVE':
-        // Faux positif → ignorer
-        break;
+        case 'FALSE_POSITIVE':
+          // Faux positif → ignorer
+          break;
+      }
+    } catch (error) {
+      logger.warn('[FullDuplexOrchestrator] Barge-in handling error:', {
+        type: event.type,
+        error: String(error),
+      });
     }
 
     // Émettre événement
