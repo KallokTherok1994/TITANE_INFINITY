@@ -17,6 +17,7 @@
 
 import { safeInvokeCanonical } from '@/utils/invoke';
 import { logger } from '@/lib/logger';
+import { smartChunk } from './chunkingService';
 
 /**
  * Document chunk with metadata
@@ -100,8 +101,15 @@ class RAGService {
     content: string,
     metadata: Omit<DocumentChunk['metadata'], 'timestamp'>
   ): Promise<DocumentChunk[]> {
-    // Split content into chunks (simple paragraph-based chunking)
-    const chunks = this.chunkContent(content);
+    // Split content into chunks (smart markdown/code-aware chunking)
+    const rawChunks = smartChunk(content, {
+      type: metadata.type === 'markdown' ? 'markdown' : metadata.type === 'code' ? 'code' : 'text',
+      language: metadata.language,
+      maxChunkSize: 1000,
+      minChunkSize: 100,
+      overlap: 50,
+    });
+    const chunks = rawChunks.map(c => c.content);
 
     const documentChunks: DocumentChunk[] = chunks.map((chunk, index) => ({
       id: `${metadata.source}_${index}_${Date.now()}`,
@@ -221,31 +229,6 @@ class RAGService {
   // ═══════════════════════════════════════════════════════════════
   // PRIVATE METHODS
   // ═══════════════════════════════════════════════════════════════
-
-  /**
-   * Chunk content into smaller pieces
-   */
-  private chunkContent(content: string, maxChunkSize: number = 500): string[] {
-    // Simple paragraph-based chunking
-    const paragraphs = content.split(/\n\n+/);
-    const chunks: string[] = [];
-    let currentChunk = '';
-
-    for (const para of paragraphs) {
-      if ((currentChunk + para).length > maxChunkSize && currentChunk) {
-        chunks.push(currentChunk.trim());
-        currentChunk = para;
-      } else {
-        currentChunk += (currentChunk ? '\n\n' : '') + para;
-      }
-    }
-
-    if (currentChunk) {
-      chunks.push(currentChunk.trim());
-    }
-
-    return chunks.filter(chunk => chunk.length > 0);
-  }
 
   /**
    * Generate embeddings for chunks

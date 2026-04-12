@@ -9,6 +9,8 @@ pub mod automations; // ✅ v19.2Ω: Automation System
 pub mod chat_generate_commands; // ✅ v21 Phase 1: Provider-specific AI generation (Gemini/OpenAI/Claude)
 pub mod copilot_commands;
 pub mod ollama_command; // ✅ AUDIT FIX #1: Unified Ollama provider command (replaces scattered HTTP) // ✨ v26.3: GitHub Copilot provider commands
+pub mod rag_commands; // ✅ RAG Embeddings backend via Ollama /api/embeddings
+pub mod web_search_commands; // ✅ Web search via SearXNG (One Door governed)
 pub use copilot_commands::*; // ✨ v26.3: Export Copilot commands
 
 // Tests — Phase 1 Stabilisation v20.0

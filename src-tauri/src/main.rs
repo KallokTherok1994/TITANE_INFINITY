@@ -1858,6 +1858,11 @@ fn main() {
             diagnostic_commands::check_online_capabilities,
             // P1: WebResearch Engine (EXPERIMENTAL — stub, no network)
             web_research_commands::web_research,
+            // RAG Embeddings Backend (Ollama /api/embeddings)
+            commands::rag_commands::rag_generate_embedding,
+            commands::rag_commands::rag_generate_embeddings,
+            // Web Search (One Door governed — SearXNG via IPC)
+            commands::web_search_commands::web_search,
             // V26 Production Health Telemetry
             api::telemetry_api::read_production_week1_csv,
             // Voice Engine Commands (VOICE PIPELINE v21 REPAIR - 17 commands)

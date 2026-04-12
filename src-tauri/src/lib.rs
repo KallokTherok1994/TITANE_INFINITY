@@ -480,6 +480,9 @@ pub fn run() {
     let builder = builder.invoke_handler(tauri::generate_handler![
         commands::ollama_command::ollama_generate,
         commands::orchestration_center::ping_ollama,
+        commands::rag_commands::rag_generate_embedding,
+        commands::rag_commands::rag_generate_embeddings,
+        commands::web_search_commands::web_search,
         runtime_config::boot_marker_log,
     ]);
 
