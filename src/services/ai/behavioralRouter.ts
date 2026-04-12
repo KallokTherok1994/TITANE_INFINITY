@@ -11,7 +11,7 @@
 
 import { createLogger } from '@/utils/logger';
 import type { ResponseProfileId } from './responsePolicy';
-import { RESPONSE_PROFILES, classifyIntent } from './responsePolicy';
+import { RESPONSE_PROFILES, classifyIntent, estimateComplexity } from './responsePolicy';
 import type { IntentClassification } from './responsePolicy';
 import type { MemoryContext } from './memoryIntegration';
 import { memoryIntegration } from './memoryIntegration';
@@ -87,6 +87,7 @@ export class BehavioralRouter {
 
   /**
    * Collect all behavioral signals from memory, preferences, intent
+   * v30.3.0: Complexity-aware signal scoring + multi-intent depth escalation
    */
   collectSignals(
     message: string,
@@ -106,7 +107,8 @@ export class BehavioralRouter {
       timestamp: now,
     });
 
-    // Intent-based depth hint
+    // v30.3.0: Complexity-aware depth hint — escalates based on message complexity
+    const complexity = estimateComplexity(message);
     const intentDepthMap: Record<string, ResponseProfileId> = {
       conversational: 'DIRECT',
       information_request: 'DEVELOPED',
@@ -117,15 +119,60 @@ export class BehavioralRouter {
       creative: 'DEEP',
       diagnostic: 'DEEP',
       research_analysis: 'DEEP',
+      deep_reflection: 'DEEP',
+      professional_document: 'DEVELOPED',
+      memory_management: 'DEVELOPED',
+      message_analysis: 'DEVELOPED',
+      data_collection: 'DEEP',
     };
-    const intentDepth = intentDepthMap[intentResult.intent] ?? 'DEVELOPED';
+    let intentDepth = intentDepthMap[intentResult.intent] ?? 'DEVELOPED';
+
+    // v30.3.0: Graduated complexity escalation applied to intent depth
+    const PROFILE_RANK: Record<ResponseProfileId, number> = {
+      DIRECT: 0, BALANCED: 1, DEVELOPED: 2, DEEP: 3, ARCHITECT: 4, OMEGA: 5,
+    };
+    const RANK_PROFILE: Record<number, ResponseProfileId> = {
+      0: 'DIRECT', 1: 'BALANCED', 2: 'DEVELOPED', 3: 'DEEP', 4: 'ARCHITECT', 5: 'OMEGA',
+    };
+
+    if (complexity > 0.72 && PROFILE_RANK[intentDepth] < PROFILE_RANK['DEEP']) {
+      intentDepth = 'DEEP';
+    } else if (complexity > 0.55 && PROFILE_RANK[intentDepth] < PROFILE_RANK['DEVELOPED']) {
+      intentDepth = 'DEVELOPED';
+    }
+
+    // v30.3.0: Confidence scaled by complexity alignment
+    const depthConfidence = Math.min(0.95, intentResult.confidence + complexity * 0.08);
     signals.push({
       source: 'intent',
       type: 'depth_hint',
       value: intentDepth,
-      confidence: intentResult.confidence,
+      confidence: depthConfidence,
       timestamp: now,
     });
+
+    // v30.3.0: Complexity signal for downstream consumers
+    signals.push({
+      source: 'intent',
+      type: 'complexity_score',
+      value: complexity,
+      confidence: 0.85,
+      timestamp: now,
+    });
+
+    // v30.3.0: Multi-intent secondary signal — if secondary intent exists, add depth boost
+    if (intentResult.secondaryIntent) {
+      const secondaryDepth = intentDepthMap[intentResult.secondaryIntent.intent] ?? 'DEVELOPED';
+      if (PROFILE_RANK[secondaryDepth] > PROFILE_RANK[intentDepth]) {
+        signals.push({
+          source: 'intent',
+          type: 'secondary_depth_hint',
+          value: secondaryDepth,
+          confidence: intentResult.secondaryIntent.confidence * 0.7,
+          timestamp: now,
+        });
+      }
+    }
 
     // 2. Memory signals
     if (this.config.enableMemoryInfluence) {
@@ -158,9 +205,14 @@ export class BehavioralRouter {
     }
 
     // 3. Preference signals
+    // v30.3.0: Exponential decay for preference confidence (90-day half-life)
     if (this.config.enablePreferenceInfluence && preferences.length > 0) {
+      const halfLifeMs = 90 * 24 * 60 * 60 * 1000;
       for (const pref of preferences) {
-        if (pref.durability >= 0.5) {
+        // v30.3.0: Time-weighted durability using exponential decay
+        const age = now - pref.lastSeen;
+        const decayedDurability = pref.durability * Math.exp((-Math.LN2 * age) / halfLifeMs);
+        if (decayedDurability >= 0.3) {
           // Depth preference
           if (pref.category === 'depth') {
             const prefDepthMap: Record<string, ResponseProfileId> = {
@@ -175,7 +227,7 @@ export class BehavioralRouter {
                 source: 'preference',
                 type: 'depth_hint',
                 value: prefDepth,
-                confidence: pref.durability,
+                confidence: decayedDurability,
                 timestamp: now,
               });
             }
@@ -187,7 +239,7 @@ export class BehavioralRouter {
               source: 'preference',
               type: 'structure_hint',
               value: pref.value,
-              confidence: pref.durability,
+              confidence: decayedDurability,
               timestamp: now,
             });
           }
@@ -198,7 +250,7 @@ export class BehavioralRouter {
               source: 'preference',
               type: 'action_bias',
               value: pref.value,
-              confidence: pref.durability,
+              confidence: decayedDurability,
               timestamp: now,
             });
           }

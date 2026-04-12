@@ -469,6 +469,7 @@ export function mergePreferences(
 
 /**
  * Filter preferences to keep only durable, high-quality ones
+ * v30.3.0: Exponential decay replaces linear decay for smoother temporal weighting
  */
 export function filterPreferences(
   preferences: DurablePreference[],
@@ -476,22 +477,28 @@ export function filterPreferences(
 ): DurablePreference[] {
   const minConfidence = config?.minConfidence ?? 0.6;
   const now = Date.now();
-  const decayMs = (config?.durabilityDecayDays ?? 30) * 24 * 60 * 60 * 1000;
+  // v30.3.0: Half-life based decay — preferences at halfLife age retain 50% durability
+  const halfLifeMs = (config?.durabilityDecayDays ?? 30) * 24 * 60 * 60 * 1000;
 
   return preferences
     .filter(pref => {
       // Drop low confidence
       if (pref.confidence < minConfidence) return false;
 
-      // Apply time decay to durability
+      // v30.3.0: Exponential decay (matching SemanticMemoryEngine pattern)
       const age = now - pref.lastSeen;
-      if (age > decayMs) {
-        const decayFactor = 1 - (age - decayMs) / (decayMs * 2);
-        pref.durability *= Math.max(0.1, decayFactor);
+      const decayFactor = Math.exp((-Math.LN2 * age) / halfLifeMs);
+      pref.durability *= Math.max(0.05, decayFactor);
+
+      // v30.3.0: Reinforcement bonus for frequently confirmed preferences
+      if (pref.timesConfirmed >= 5) {
+        pref.durability = Math.min(1.0, pref.durability * 1.15);
+      } else if (pref.timesConfirmed >= 3) {
+        pref.durability = Math.min(1.0, pref.durability * 1.08);
       }
 
       // Drop if durability too low
-      if (pref.durability < 0.2) return false;
+      if (pref.durability < 0.15) return false;
 
       return true;
     })
@@ -613,11 +620,75 @@ export function getPreferenceSummary(preferences: DurablePreference[]): string {
 }
 
 // ─────────────────────────────────────────────────────────────────
+// PRE-LLM PREFERENCE INJECTION — Build system prompt instructions
+// v30.3.0: Inject preferences BEFORE LLM call, not just after
+// ─────────────────────────────────────────────────────────────────
+
+/**
+ * v30.3.0: Build a system prompt block that tells the LLM about user preferences
+ * before generating the response. This is proactive (pre-LLM) vs reactive (post-LLM).
+ * Returns empty string if no strong preferences exist.
+ */
+export function buildPreferencePrompt(preferences: DurablePreference[]): string {
+  if (preferences.length === 0) return '';
+
+  const strongPrefs = preferences.filter(p => p.durability >= 0.4 && p.confidence >= 0.5);
+  if (strongPrefs.length === 0) return '';
+
+  const instructions: string[] = [];
+
+  // Group by category
+  const depthPrefs = strongPrefs.filter(p => p.category === 'depth');
+  const structurePrefs = strongPrefs.filter(p => p.category === 'structure');
+  const tonePrefs = strongPrefs.filter(p => p.category === 'tone');
+  const formatPrefs = strongPrefs.filter(p => p.category === 'format');
+  const actionPrefs = strongPrefs.filter(p => p.category === 'action_bias');
+
+  if (depthPrefs.length > 0) {
+    const best = depthPrefs[0]!;
+    const depthMap: Record<string, string> = {
+      short: 'courtes et directes',
+      standard: 'équilibrées, ni trop courtes ni trop longues',
+      developed: 'développées avec explication et contexte',
+      deep: 'profondes avec analyse multi-perspective',
+    };
+    instructions.push(`- Profondeur préférée: Réponses ${depthMap[best.value] || best.value}`);
+  }
+
+  if (structurePrefs.length > 0) {
+    const structTypes = structurePrefs.map(p => p.value).join(', ');
+    instructions.push(`- Structure préférée: ${structTypes}`);
+  }
+
+  if (tonePrefs.length > 0) {
+    instructions.push(`- Ton préféré: ${tonePrefs[0]!.value}`);
+  }
+
+  if (formatPrefs.length > 0) {
+    const fmtTypes = formatPrefs.map(p => p.value).join(', ');
+    instructions.push(`- Format préféré: ${fmtTypes}`);
+  }
+
+  if (actionPrefs.length > 0) {
+    instructions.push(`- Biais d'action: Agir directement sans demander confirmation quand possible`);
+  }
+
+  if (instructions.length === 0) return '';
+
+  return [
+    '═══ PRÉFÉRENCES UTILISATEUR APPRISES ═══',
+    "L'utilisateur a des préférences durables détectées. Adapte ta réponse en conséquence :",
+    ...instructions,
+    '═══════════════════════════════════════════',
+  ].join('\n');
+}
+
+// ─────────────────────────────────────────────────────────────────
 // EXPORTS
 // ─────────────────────────────────────────────────────────────────
 
-export const PREFERENCE_ENGINE_VERSION = '1.0.0';
-export const PREFERENCE_ENGINE_DATE = '2026-03-31';
+export const PREFERENCE_ENGINE_VERSION = '2.0.0';
+export const PREFERENCE_ENGINE_DATE = '2026-04-12';
 
 export default {
   extractPreferences,
@@ -626,5 +697,6 @@ export default {
   filterPreferences,
   shapeResponse,
   getPreferenceSummary,
+  buildPreferencePrompt,
   VERSION: PREFERENCE_ENGINE_VERSION,
 };

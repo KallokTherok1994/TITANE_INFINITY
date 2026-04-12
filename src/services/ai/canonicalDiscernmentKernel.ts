@@ -107,6 +107,8 @@ export interface CanonicalDecision {
   // Decision metadata
   reasoning: string;
   confidence: number; // 0.0-1.0
+  /** v30.3.0: Message complexity score (0.0-1.0) from 8-factor estimator */
+  messageComplexity: number;
   signals: Array<{ source: string; type: string; value: unknown; confidence: number }>;
   timestamp: number;
   processingTimeMs: number;
@@ -193,11 +195,23 @@ export class CanonicalDiscernmentKernel {
       confidence: intentResult.confidence,
     });
 
+    // ── STEP 1.5: Complexity Estimation (v30.3.0) ──
+    // Complexity score drives profile escalation and depth instructions
+    const messageComplexity = estimateComplexity(input.message);
+    signals.push({
+      source: 'complexity',
+      type: 'message_complexity',
+      value: messageComplexity,
+      confidence: 0.85,
+    });
+
     // ── STEP 2: Depth/Profile Resolution ──
+    // v30.3.0: Pass complexity score for context-aware depth escalation
     const effectiveDepth = computeEffectiveDepth(
       intentResult.intent,
       input.mode,
-      input.userDepthPreference ?? undefined
+      input.userDepthPreference ?? undefined,
+      messageComplexity
     );
 
     // Behavioral router gives us a richer signal set
@@ -238,11 +252,40 @@ export class CanonicalDiscernmentKernel {
 
     // userDepthPreference caps the profile DOWN (e.g. 'short'→DIRECT overrides DEEP).
     // When the preference would elevate the profile, behavioral routing still decides.
-    const profileId =
+    let profileId: ResponseProfileId =
       input.userDepthPreference &&
       PROFILE_RANK[effectiveDepth] < PROFILE_RANK[behavioralProfileId]
         ? effectiveDepth
         : behavioralProfileId;
+
+    // v30.3.0: Complexity-driven profile escalation in canonical pipeline
+    // High complexity messages deserve deeper analysis, even if intent/behavioral routing chose lower
+    if (
+      messageComplexity > 0.72 &&
+      intentResult.confidence > 0.6 &&
+      PROFILE_RANK[profileId] < PROFILE_RANK['DEEP']
+    ) {
+      const previous = profileId;
+      profileId = 'DEEP';
+      signals.push({
+        source: 'kernel',
+        type: 'complexity_escalation',
+        value: `${previous}→DEEP (complexity=${messageComplexity.toFixed(2)})`,
+        confidence: 0.75,
+      });
+    } else if (
+      messageComplexity > 0.85 &&
+      PROFILE_RANK[profileId] < PROFILE_RANK['ARCHITECT']
+    ) {
+      const previous = profileId;
+      profileId = 'ARCHITECT';
+      signals.push({
+        source: 'kernel',
+        type: 'complexity_escalation',
+        value: `${previous}→ARCHITECT (complexity=${messageComplexity.toFixed(2)})`,
+        confidence: 0.72,
+      });
+    }
 
     // Get full profile with params
     const { profile: effectiveProfile } = getEffectiveProfile(
@@ -353,6 +396,21 @@ export class CanonicalDiscernmentKernel {
         value: singularityCoherence,
         confidence: singularityCoherence,
       });
+
+      // v30.3.0: Very high coherence + deep reasoning mode → escalate profile toward ARCHITECT/OMEGA
+      if (
+        singularityCoherence > 0.85 &&
+        modeClassification.canonicalMode === 'DEEP_REASONING' &&
+        PROFILE_RANK[profileId] < PROFILE_RANK['ARCHITECT']
+      ) {
+        profileId = 'ARCHITECT';
+        signals.push({
+          source: 'singularity',
+          type: 'coherence_escalation',
+          value: `→ARCHITECT (coherence=${singularityCoherence.toFixed(2)})`,
+          confidence: singularityCoherence,
+        });
+      }
     }
 
     // ── Build reasoning ──
@@ -389,6 +447,7 @@ export class CanonicalDiscernmentKernel {
       truthStatus,
       reasoning,
       confidence,
+      messageComplexity,
       signals,
       timestamp: Date.now(),
       processingTimeMs,
@@ -457,6 +516,56 @@ export class CanonicalDiscernmentKernel {
         use: true,
         sources: ['preferences'],
         maxTokens: 3,
+        relevance: 'high',
+      };
+    }
+
+    // v30.3.0: Memory management → full memory access for curation/consolidation
+    if (intent.intent === 'memory_management') {
+      return {
+        use: true,
+        sources: this.extractMemorySources(memoryContext),
+        maxTokens: profile.memory.maxSources,
+        relevance: 'high',
+      };
+    }
+
+    // v30.3.0: Deep reflection → use full context for multi-perspective analysis
+    if (intent.intent === 'deep_reflection') {
+      return {
+        use: true,
+        sources: this.extractMemorySources(memoryContext),
+        maxTokens: Math.min(profile.memory.maxSources, 8),
+        relevance: 'high',
+      };
+    }
+
+    // v30.3.0: Research analysis → use memory to contextualize findings
+    if (intent.intent === 'research_analysis' && hasContext) {
+      return {
+        use: true,
+        sources: this.extractMemorySources(memoryContext),
+        maxTokens: Math.min(profile.memory.maxSources, 5),
+        relevance: 'medium',
+      };
+    }
+
+    // v30.3.0: Message analysis → relevant context for coherence checking
+    if (intent.intent === 'message_analysis' && hasContext) {
+      return {
+        use: true,
+        sources: this.extractMemorySources(memoryContext),
+        maxTokens: Math.min(profile.memory.maxSources, 4),
+        relevance: 'medium',
+      };
+    }
+
+    // v30.3.0: Data collection → memory context for continuity and deduplication
+    if (intent.intent === 'data_collection' && hasContext) {
+      return {
+        use: true,
+        sources: this.extractMemorySources(memoryContext),
+        maxTokens: Math.min(profile.memory.maxSources, 6),
         relevance: 'high',
       };
     }

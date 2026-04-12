@@ -28,7 +28,7 @@ import { aiOrchestrator } from './orchestrator';
 import { memoryIntegration } from './memoryIntegration';
 import type { MemoryContext } from './memoryIntegration';
 import { logger as structuredLogger, generateCorrelationId } from '../monitoring/logger';
-import { extractPreferences, shapeResponse } from './preferenceEngine';
+import { extractPreferences, shapeResponse, buildPreferencePrompt } from './preferenceEngine';
 // v26.0.0: Intent classification and depth computation are now inside CanonicalDiscernmentKernel
 // No longer called independently from chatEngine — kernel is the single source of truth
 
@@ -42,6 +42,7 @@ import type {
 import { inputValidator } from './inputValidator';
 import { chatModes, type ChatModeConfig } from './chatModes';
 import { getEffectiveProfile, type InferenceState } from './responsePolicy'; // v24.4.0: Canonical response policy + inference gating
+import { detectDocumentType, buildDocumentInstructions } from './professionalDocumentService'; // v30.1.0: Professional document generation
 import { chatValidator } from '../chatValidator';
 import type { ChatMode } from './chatTypes';
 // Re-export for convenience
@@ -815,9 +816,11 @@ class ChatEngineOmega {
         );
 
       // v26.0.0: Use kernel's profileId for depth instructions (single source of truth)
+      // v30.3.0: Pass complexity score for complexity-aware depth instruction selection
       const depthInstructions = this.buildDepthInstructions(
         canonicalDecision.profileId,
-        effectiveResponseProfile
+        effectiveResponseProfile,
+        canonicalDecision.messageComplexity
       );
 
       // v26.0.0: Use kernel's memoryInjection decision to control memory injection
@@ -847,6 +850,25 @@ class ChatEngineOmega {
         systemPrompt = `${systemPrompt}\n\n${depthInstructions}`;
       }
 
+      // v30.3.0: Inject complexity awareness signal into system prompt
+      // Helps the LLM calibrate response depth to actual message complexity
+      if (canonicalDecision.messageComplexity > 0.5) {
+        const complexityLabel =
+          canonicalDecision.messageComplexity > 0.85
+            ? 'très élevée'
+            : canonicalDecision.messageComplexity > 0.72
+              ? 'élevée'
+              : 'modérée';
+        systemPrompt = `${systemPrompt}\n\n═══ SIGNAL DE COMPLEXITÉ ═══\nComplexité détectée du message: ${(canonicalDecision.messageComplexity * 100).toFixed(0)}% (${complexityLabel})\nAdapte la profondeur et la structure de ta réponse en conséquence.\nConfiance de la décision: ${(canonicalDecision.confidence * 100).toFixed(0)}%`;
+      }
+
+      // v30.1.0: Inject professional document formatting instructions if document intent detected
+      const documentDetection = detectDocumentType(validatedMessage);
+      if (documentDetection && documentDetection.confidence >= 0.5) {
+        const documentInstructions = buildDocumentInstructions(documentDetection.type);
+        systemPrompt = `${systemPrompt}\n\n${documentInstructions}`;
+      }
+
       // CONSTITUTION LAW #2: Inject Clarity Audit if needed
       if (needsClarityAudit) {
         const clarityTemplate = createClarityAuditTemplate(validatedMessage);
@@ -866,6 +888,12 @@ Format: [Audit complet] + [Réponse utilisateur]
       // Inject cognitive context (memories + goals + facts)
       if (cognitiveContext.trim().length > 0) {
         systemPrompt = `${systemPrompt}\n\n${cognitiveContext}`;
+      }
+
+      // v30.3.0: Pre-LLM preference injection — tells the LLM about user preferences before generation
+      const preferencePrompt = buildPreferencePrompt(memoryIntegration.loadPreferences());
+      if (preferencePrompt) {
+        systemPrompt = `${systemPrompt}\n\n${preferencePrompt}`;
       }
 
       const backendResponse = await this.tryBackendPipeline({
@@ -2303,6 +2331,8 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
 
   /**
    * v26.0.0: Build visible reasoning summary for Kevin
+   * v30.1.0: Enhanced with cognitive transparency, reasoning chain preview,
+   *          and signal dominance indicators
    * Shows WHY TITANE chose this depth and approach
    * Visible in the response, helps Kevin understand TITANE's reasoning
    */
@@ -2322,34 +2352,64 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
       creative: 'Demande créative',
       diagnostic: 'Diagnostic',
       conversational: 'Conversationnel',
+      research_analysis: 'Analyse & Recherche',
+      professional_document: 'Document professionnel',
+      deep_reflection: 'Réflexion profonde',
+      memory_management: 'Gestion de mémoire',
+      message_analysis: 'Analyse de message',
+      data_collection: 'Collecte de données',
     };
 
     const depthLabels: Record<string, string> = {
       DIRECT: 'DIRECT — réponse courte',
       BALANCED: 'ÉQUILIBRÉ — réponse structurée',
       DEVELOPED: 'DÉVELOPPÉ — réflexion approfondie',
-      DEEP: 'PROFOND — analyse complète',
+      DEEP: 'PROFOND — analyse multi-couches',
       ARCHITECT: 'ARCHITECTE — clarté stratégique',
-      OMEGA: 'OMEGA — puissance maximale',
+      OMEGA: 'OMEGA — puissance cognitive maximale',
+    };
+
+    const reasoningChainLabels: Record<string, string> = {
+      DIRECT: 'Question → Réponse',
+      BALANCED: 'Constat → Analyse → Recommandation',
+      DEVELOPED: 'Cadrage → Analyse → Raisonnement → Synthèse → Action',
+      DEEP: 'Problème → Cartographie → Multi-perspective → Synthèse → Recommandations',
+      ARCHITECT:
+        'Registre → Forces → Tensions → Scénarios → Décision → Validation → Rollback',
+      OMEGA:
+        'Méta-analyse → Décomposition → 6 perspectives → Synthèse intégrative → Transfert',
     };
 
     const memoryStatus = hasMemoryContext
-      ? 'Mémoire contextuelle active'
-      : 'Pas de mémoire contextuelle';
+      ? '✅ Mémoire contextuelle active'
+      : '📭 Pas de mémoire contextuelle';
     const actionLabel =
       inferenceState === 'SAFE_TO_INFER'
-        ? 'Réponse directe'
+        ? '✅ Réponse directe'
         : inferenceState === 'CLARIFY_REQUIRED'
-          ? 'Clarification chirurgicale'
+          ? '❓ Clarification chirurgicale'
           : inferenceState === 'BLOCKED_BY_MISSING_FACT'
-            ? 'Demande de fait manquant'
-            : 'Inférence avec hypothèse';
+            ? '🚫 Demande de fait manquant'
+            : '💡 Inférence avec hypothèse';
+
+    const confidenceBar = this.buildConfidenceBar(intentResult.confidence);
 
     return [
-      `🎯 **Analyse**: ${intentLabels[intentResult.intent] || intentResult.intent} → Profil ${depthLabels[effectiveDepth] || effectiveDepth}`,
-      `📋 **Basé sur**: ${memoryStatus} | Confiance: ${(intentResult.confidence * 100).toFixed(0)}%`,
+      `🧠 **Raisonnement TITANE∞**`,
+      `🎯 **Intent**: ${intentLabels[intentResult.intent] || intentResult.intent} → Profil ${depthLabels[effectiveDepth] || effectiveDepth}`,
+      `🔗 **Chaîne**: ${reasoningChainLabels[effectiveDepth] || 'Standard'}`,
+      `📊 **Confiance**: ${confidenceBar} ${(intentResult.confidence * 100).toFixed(0)}% | ${memoryStatus}`,
       `⚡ **Action**: ${actionLabel} | Budget: ${profile.maxTokens} tokens`,
     ].join('\n');
+  }
+
+  /**
+   * v30.1.0: Build a visual confidence bar for reasoning summary
+   */
+  private buildConfidenceBar(confidence: number): string {
+    const filled = Math.round(confidence * 5);
+    const empty = 5 - filled;
+    return '█'.repeat(filled) + '░'.repeat(empty);
   }
 
   /**
@@ -2965,6 +3025,8 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
 
   /**
    * v26.0.0: Format memory context into a structured block for prompt injection
+   * v30.2.0: Enhanced with richer context categories, data quality indicators,
+   *          and structured memory lifecycle metadata
    */
   private formatMemoryBlock(context: {
     sources: string[];
@@ -2973,29 +3035,56 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
     const parts: string[] = [];
 
     if (context.data.projects) {
-      parts.push(`📋 Projets: ${context.data.projects}`);
+      parts.push(`📋 Projets actifs: ${context.data.projects}`);
     }
     if (context.data.decisions) {
-      parts.push(`📝 Décisions: ${context.data.decisions}`);
+      parts.push(`📝 Décisions récentes: ${context.data.decisions}`);
     }
     if (context.data.knowledge) {
-      parts.push(`📚 Connaissances: ${context.data.knowledge}`);
+      parts.push(`📚 Connaissances pertinentes: ${context.data.knowledge}`);
     }
     if (context.data.rituals) {
-      parts.push(`🔄 Rituels: ${context.data.rituals}`);
+      parts.push(`🔄 Rituels & habitudes: ${context.data.rituals}`);
+    }
+    if (context.data.preferences) {
+      parts.push(`⚙️ Préférences utilisateur: ${context.data.preferences}`);
+    }
+    if (context.data.timeline) {
+      parts.push(`📅 Timeline récente: ${context.data.timeline}`);
     }
 
-    return parts.length > 0 ? `═══ CONTEXTE MÉMOIRE ═══\n${parts.join('\n')}` : '';
+    // v30.2.0: Memory metadata for cognitive awareness
+    const sourceCount = context.sources.length;
+    const dataKeys = Object.keys(context.data).filter(k => context.data[k]);
+    const memoryMeta = [
+      `🔗 Sources: ${sourceCount}`,
+      `📊 Catégories actives: ${dataKeys.join(', ') || 'aucune'}`,
+    ].join(' | ');
+
+    if (parts.length > 0) {
+      return `═══ CONTEXTE MÉMOIRE ═══\n${parts.join('\n')}\n─── ${memoryMeta} ───`;
+    }
+    return '';
   }
 
   /**
    * v25.0.0: Build depth instructions for system prompt injection
+   * v30.1.0: Enhanced with structured reasoning chains, analysis frameworks,
+   *          professional output templates, and reflection protocols
+   * v30.3.0: Complexity-aware — can upgrade instructions when low-profile + high-complexity
    * Tells the LLM what depth/structure to produce based on the selected profile
    */
   private buildDepthInstructions(
     effectiveDepth: string,
-    profile: { id: string; label: string; structureLevel: number; maxTokens: number }
+    profile: { id: string; label: string; structureLevel: number; maxTokens: number },
+    messageComplexity?: number
   ): string {
+    // v30.3.0: If DIRECT profile was chosen but complexity is moderate+, upgrade to BALANCED instructions
+    let resolvedDepth = effectiveDepth;
+    if (effectiveDepth === 'DIRECT' && messageComplexity !== undefined && messageComplexity > 0.55) {
+      resolvedDepth = 'BALANCED';
+    }
+
     const depthInstructionsMap: Record<string, string> = {
       DIRECT: `═══ INSTRUCTIONS DE PROFONDEUR ═══
 Profil: DIRECT — Réponse courte, essentiel uniquement.
@@ -3008,38 +3097,202 @@ Profil: DIRECT — Réponse courte, essentiel uniquement.
 Profil: ÉQUILIBRÉ — Réponse utile avec contexte modéré.
 - Réponse structurée mais concise
 - Inclure le contexte nécessaire pour comprendre
-- Proposer des actions concrètes quand pertinent`,
+- Proposer des actions concrètes quand pertinent
+- Raisonnement : [Constat] → [Analyse rapide] → [Recommandation]
+
+CONSCIENCE MÉMOIRE :
+• Si tu as du contexte mémoire pertinent, l'utiliser naturellement dans ta réponse
+• Si Kevin mentionne un sujet déjà discuté, faire référence à l'échange précédent
+
+CONSCIENCE D'ANALYSE :
+• Si le message est ambigu, reformuler brièvement avant de répondre
+• Adapter le ton au registre détecté (factuel, exploratoire, urgent)`,
 
       DEVELOPED: `═══ INSTRUCTIONS DE PROFONDEUR ═══
 Profil: DÉVELOPPÉ — Réflexion approfondie, réponse decision-ready.
-- Réponse développée avec raisonnement structuré
-- Inclure : réponse directe → contexte/framing → raisonnement → implication pratique → prochain move
-- Prioriser l'utilité et l'actionabilité
-- Éviter le remplissage : chaque paragraphe doit apporter de la valeur
-- Utiliser des sections, listes ou structures quand ça améliore la clarté`,
+
+CHAÎNE DE RAISONNEMENT OBLIGATOIRE :
+1. CADRAGE — Reformuler l'enjeu réel (pas juste la question surface)
+2. ANALYSE — Examiner les dimensions clés (faits, contexte, implications)
+3. RAISONNEMENT — Articuler ta logique : [Hypothèse] → [Vérification] → [Conclusion]
+4. SYNTHÈSE — Réponse actionnable avec implications pratiques
+5. PROCHAIN MOVE — Action concrète recommandée
+
+PROTOCOLE MÉMOIRE (si mémoire contextuelle active) :
+• Référencer les informations pertinentes de la mémoire dans ta réponse
+• Signaler si une info mémoire semble obsolète ou contradictoire
+• Proposer de mémoriser les décisions/insights importants de cet échange
+• Si Kevin revient sur un sujet déjà discuté, synthétiser l'historique avant de répondre
+
+PROTOCOLE D'ANALYSE DE MESSAGE :
+• Si le message est ambigu : reformuler avant de répondre
+• Identifier l'intention réelle (surface vs. profonde)
+• Détecter le registre émotionnel : factuel, frustré, exploratoire, urgent
+
+RÈGLES DE QUALITÉ :
+- Chaque paragraphe doit apporter de la valeur nouvelle
+- Distinguer fait vérifié vs. inférence vs. hypothèse
+- Utiliser des sections, listes ou structures quand ça améliore la clarté
+- Nommer explicitement les incertitudes et les limites de ton analyse
+- Quand pertinent, inclure : transfert de compétence (comment Kevin peut le faire lui-même)`,
 
       DEEP: `═══ INSTRUCTIONS DE PROFONDEUR ═══
-Profil: PROFOND — Analyse complète, synthèse dense.
-- Réponse exhaustive avec analyse multi-facettes
-- Inclure : contexte étendu → analyse détaillée → implications → recommandations → incertitudes bornées
+Profil: PROFOND — Analyse complète, synthèse dense, raisonnement multi-couches.
+
+PROTOCOLE D'ANALYSE APPROFONDIE :
+1. DÉFINITION DU PROBLÈME — Reformuler la question réelle, exposer les présupposés implicites
+2. CARTOGRAPHIE DES DIMENSIONS — Identifier toutes les facettes : technique, humaine, stratégique, temporelle
+3. ANALYSE MULTI-PERSPECTIVE :
+   a) Perspective factuelle : que disent les données/faits vérifiables ?
+   b) Perspective systémique : quelles interactions et dépendances ?
+   c) Perspective critique : quels biais, angles morts, risques invisibles ?
+   d) Perspective temporelle : évolution passée, état présent, trajectoire future
+4. SYNTHÈSE INTÉGRÉE — Tisser les perspectives en une compréhension unifiée
+5. RECOMMANDATIONS PRIORISÉES — Classées par impact/effort avec justification
+6. INCERTITUDES BORNÉES — Ce que tu ne sais PAS et comment le vérifier
+
+PROTOCOLE MÉMOIRE AVANCÉ :
+• Exploiter activement la mémoire contextuelle pour enrichir l'analyse
+• Cross-référencer les décisions passées avec le sujet actuel
+• Identifier les patterns récurrents dans les interactions précédentes
+• Proposer de consolider les insights : quoi retenir, quoi archiver, quoi oublier
+• Si saturation mémoire : résumer et comprimer avant d'ajouter
+
+PROTOCOLE D'ANALYSE DE MESSAGE AVANCÉ :
+• Décortiquer la structure du message : thèse, arguments, sous-texte, registre émotionnel
+• Identifier les biais potentiels de l'auteur (confirmation, ancrage, disponibilité)
+• Évaluer la qualité argumentative : preuves, logique, cohérence
+• Détecter les non-dits et les implications implicites
+• Signaler les incohérences entre le message et le contexte connu
+
+PROTOCOLE DE COLLECTE DE DONNÉES :
+• Identifier toutes les sources de données pertinentes au sujet
+• Évaluer la fiabilité et la fraîcheur de chaque source
+• Structurer les données collectées en format exploitable (tableau, liste, classification)
+• Identifier les lacunes dans les données et proposer comment les combler
+• Croiser les données de sources multiples pour validation croisée
+
+PROTOCOLE DE RECHERCHE & ENRICHISSEMENT INTERNET :
+• Si le sujet nécessite des données fraîches → signaler et utiliser les outils de recherche web
+• Évaluer la fraîcheur des connaissances utilisées : fait stable vs. info potentiellement obsolète
+• Appliquer la validation croisée : au moins 2 sources convergentes pour les faits clés
+• Qualifier chaque information : source, date estimée, niveau de confiance (haute/moyenne/basse)
+• Distinguer : connaissance intégrée (stable) vs. donnée récupérée (à vérifier) vs. inférence
+• Proposer des recherches complémentaires quand les lacunes sont critiques
+
+RÈGLES DE RIGUEUR :
 - Explorer les nuances et les trade-offs
-- Utiliser des structures (titres, listes numérotées, tableaux) pour organiser`,
+- Challenger tes propres hypothèses
+- Distinguer corrélation / causalité
+- Utiliser des structures (titres, listes numérotées, tableaux) pour organiser
+- Inclure un transfert de compétence : apprendre à Kevin comment reproduire ce raisonnement`,
 
       ARCHITECT: `═══ INSTRUCTIONS DE PROFONDEUR ═══
-Profil: ARCHITECTE — Clarté stratégique maximale.
-- Format préféré : Register Dominant → Axe Protégé → Priorité Réelle → Tension/Racine → Raisonnement → Move Recommandé → Incertitude Bornée
-- Exposer les axes, priorités, incohérences
-- Proposer une action simple et claire à la fin`,
+Profil: ARCHITECTE — Clarté stratégique maximale, vision structurelle.
+
+FRAMEWORK D'ARCHITECTURE DÉCISIONNELLE :
+1. REGISTRE DOMINANT — Quel est l'enjeu de fond ? (au-delà de la demande explicite)
+2. AXE PROTÉGÉ — Quel principe ne doit jamais être compromis ?
+3. CARTOGRAPHIE DES FORCES — SWOT ou matrice d'analyse adaptée au contexte
+4. TENSIONS & RACINES — Identifier les contradictions, les frictions, les compromis impossibles
+5. SCÉNARIOS STRATÉGIQUES — 2 à 3 scénarios : optimiste, réaliste, pessimiste
+6. ARBRE DE DÉCISION — Si X alors Y, sinon Z (conditions claires)
+7. RECOMMANDATION ARCHITECTURALE — Move recommandé avec justification multi-critères
+8. PLAN DE VALIDATION — Comment vérifier que la décision fonctionne ?
+9. INCERTITUDE BORNÉE — Ce qu'on ne sait pas et comment le résoudre
+10. ROLLBACK — Comment revenir en arrière si nécessaire ?
+
+PROTOCOLE MÉMOIRE ARCHITECTE :
+• Relier les décisions passées aux choix stratégiques actuels
+• Identifier les patterns décisionnels récurrents de Kevin
+• Proposer d'archiver les insights stratégiques majeurs de cet échange
+• Vérifier la cohérence avec les préférences et valeurs connues
+
+PROTOCOLE DE RECHERCHE & ENRICHISSEMENT :
+• Identifier les domaines nécessitant des données fraîches ou une validation externe
+• Structurer les besoins d'information : quoi chercher, où chercher, quel niveau de fiabilité requis
+• Croiser les données internes (mémoire) avec les connaissances actuelles
+• Qualifier la fraîcheur des informations utilisées : connaissance stable vs. info potentiellement obsolète
+• Proposer une stratégie de vérification pour les hypothèses non validées
+
+PROTOCOLE D'ANALYSE DE DONNÉES STRATÉGIQUES :
+• Structurer les données en frameworks décisionnels (matrices, tableaux comparatifs)
+• Identifier les métriques clés et les indicateurs de succès mesurables
+• Exposer les biais potentiels dans les données disponibles
+• Proposer des sources complémentaires pour combler les lacunes critiques
+
+FORMAT STRUCTUREL :
+- AXIS → Dimensions principales
+- PRIORITY → Actions ordonnées par impact
+- INCOHERENCE → Conflits exposés et arbitrés
+- SIMPLE ACTION → Première action minimale et concrète`,
 
       OMEGA: `═══ INSTRUCTIONS DE PROFONDEUR ═══
-Profil: OMEGA — Puissance maximale, aucun compromis.
-- Réponse la plus complète possible
-- Explorer toutes les dimensions du sujet
-- Inclure analyses, implications, alternatives, recommandations détaillées`,
+Profil: OMEGA — Puissance cognitive maximale, aucun compromis.
+
+PROTOCOLE OMEGA — RAISONNEMENT SANS LIMITES :
+1. MÉTA-ANALYSE — Analyser la question elle-même avant de répondre : est-ce la bonne question ?
+2. DÉCOMPOSITION EXHAUSTIVE — Fragmenter en sous-problèmes indépendants
+3. ANALYSE PAR PERSPECTIVE :
+   a) Perspective analytique : logique formelle, déduction, preuves
+   b) Perspective systémique : interactions, boucles de rétroaction, émergence
+   c) Perspective critique : biais cognitifs, hypothèses cachées, contre-arguments
+   d) Perspective créative : solutions non-conventionnelles, analogies, transferts
+   e) Perspective pragmatique : faisabilité, coûts, timeline, risques
+   f) Perspective éthique : alignement mission, impact humain, soutenabilité
+4. SYNTHÈSE INTÉGRATIVE — Fusionner toutes les perspectives en vision cohérente
+5. RECOMMANDATIONS HIÉRARCHISÉES — Architecture complète de la solution
+6. TRANSFERT DE COMPÉTENCE TOTAL — Apprendre à Kevin à reproduire cette analyse
+7. INCERTITUDES ET LIMITES — Expliciter ce qui n'est pas couvert
+
+MÉMOIRE OMEGA — GESTION INTÉGRALE :
+• Activer toutes les couches mémoire : instantanée, court terme, moyen terme, long terme, persistante, archivale
+• Cross-référencer systématiquement avec l'historique complet des interactions
+• Identifier les patterns récurrents et les évolutions dans les demandes de Kevin
+• Proposer activement : "Je retiens X", "Je suggère d'archiver Y", "Z semble obsolète"
+• Consolider les apprentissages : transformer les échanges en connaissances structurées
+• Appliquer la Loi #9 (Mémoire Vivante) : mémoriser ce qui a un impact structurant, oublier consciemment le reste
+
+ANALYSE DE MESSAGE OMEGA — DÉCRYPTAGE TOTAL :
+• Analyse sémantique multi-couches : sens littéral, intention, sous-texte, registre émotionnel
+• Identification des présupposés implicites et des non-dits
+• Évaluation de la cohérence interne du message et avec le contexte historique
+• Détection des biais cognitifs actifs (confirmation, ancrage, disponibilité, cadrage)
+• Analyse rhétorique : argumentation, persuasion, logique, sophismes potentiels
+• Synthèse : ce que Kevin dit vs. ce qu'il veut vraiment vs. ce dont il a besoin
+
+COLLECTE DE DONNÉES OMEGA — EXHAUSTIVITÉ STRUCTURÉE :
+• Cartographier toutes les sources de données disponibles et leur fiabilité
+• Structurer en format optimal : tableaux, matrices, classifications, taxonomies
+• Croiser systématiquement : sources multiples → convergence ou divergence
+• Identifier les lacunes critiques et proposer des stratégies de comblement
+• Qualifier chaque donnée : source, date, fiabilité (haute/moyenne/basse), vérifiabilité
+• Proposer des visualisations textuelles pour les jeux de données complexes
+
+RECHERCHE & ENRICHISSEMENT OMEGA — INTELLIGENCE WEB :
+• Mobiliser activement les outils de recherche web pour enrichir l'analyse
+• Appliquer le protocole de validation croisée systématique :
+  → Fait : minimum 2 sources convergentes (ou source primaire de haute fiabilité)
+  → Tendance : 3+ sources indépendantes avec timeline cohérente
+  → Opinion : qualifier comme telle avec nuances et contre-arguments
+• Distinguer 4 niveaux de certitude :
+  → VÉRIFIÉ : source primaire fiable, croisé avec 2+ sources
+  → PROBABLE : source secondaire fiable, cohérent avec le contexte connu
+  → PLAUSIBLE : inférence logique, non contredit mais non vérifié
+  → INCERTAIN : hypothèse ou donnée non confirmée
+• Identifier les informations obsolètes dans la mémoire et proposer une mise à jour
+• Proposer proactivement des recherches complémentaires pour les zones d'ombre
+• Croiser les informations web avec la mémoire contextuelle pour enrichissement bidirectionnel
+
+QUALITÉ MAXIMALE :
+- Chaque affirmation doit être étayée (fait, raisonnement, ou hypothèse explicite)
+- Explorer toutes les dimensions du sujet sans raccourci
+- Inclure analyses, implications, alternatives, recommandations détaillées
+- Proposer des visualisations textuelles (tableaux, matrices, arbres) quand utile`,
     };
 
     return (
-      depthInstructionsMap[effectiveDepth] || depthInstructionsMap['DEVELOPED'] || ''
+      depthInstructionsMap[resolvedDepth] || depthInstructionsMap['DEVELOPED'] || ''
     );
   }
 

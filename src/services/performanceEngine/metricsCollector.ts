@@ -868,6 +868,11 @@ export class MetricsCollector {
   // CALCUL SUMMARY
   // ─────────────────────────────────────────────────────────────────────────
 
+  /**
+   * v30.3.0: Graduated multi-factor health score with smooth penalty curves
+   * Replaces flat if/else thresholds with continuous penalty functions
+   * Each metric contributes a penalty proportional to its deviation from healthy range
+   */
   private calculateSummary(
     system: SystemMetrics | null,
     frontend: FrontendMetrics | null,
@@ -877,61 +882,73 @@ export class MetricsCollector {
     let criticalIssues = 0;
     let warnings = 0;
 
-    // Pénalités système
+    // v30.3.0: Graduated system penalties — continuous curve instead of cliff thresholds
     if (system) {
-      if (system.cpu.process > 80) {
-        score -= 20;
-        criticalIssues++;
-      } else if (system.cpu.process > 50) {
-        score -= 10;
-        warnings++;
+      // CPU: smooth penalty starting at 40%, accelerating past 70%
+      // penalty = 0 at 40%, ~5 at 50%, ~12 at 70%, ~25 at 90%, max 30
+      const cpuUsage = system.cpu.process;
+      if (cpuUsage > 40) {
+        const cpuPenalty = Math.min(30, Math.pow((cpuUsage - 40) / 50, 1.5) * 30);
+        score -= cpuPenalty;
+        if (cpuUsage > 80) criticalIssues++;
+        else if (cpuUsage > 50) warnings++;
       }
 
-      if (system.ram.process.percent > 80) {
-        score -= 15;
-        criticalIssues++;
-      } else if (system.ram.process.percent > 60) {
-        score -= 5;
-        warnings++;
+      // RAM: smooth penalty starting at 50%, steep past 75%
+      const ramPercent = system.ram.process.percent;
+      if (ramPercent > 50) {
+        const ramPenalty = Math.min(25, Math.pow((ramPercent - 50) / 50, 1.8) * 25);
+        score -= ramPenalty;
+        if (ramPercent > 80) criticalIssues++;
+        else if (ramPercent > 60) warnings++;
       }
     }
 
-    // Pénalités frontend
+    // v30.3.0: Graduated frontend penalties
     if (frontend) {
-      if (frontend.fps.current < 30) {
-        score -= 20;
-        criticalIssues++;
-      } else if (frontend.fps.current < 45) {
-        score -= 10;
-        warnings++;
+      // FPS: smooth penalty below 60fps — penalty = (60-fps)/60 * 25, capped
+      const fps = frontend.fps.current;
+      if (fps < 60) {
+        const fpsPenalty = Math.min(25, Math.pow((60 - fps) / 60, 1.3) * 25);
+        score -= fpsPenalty;
+        if (fps < 30) criticalIssues++;
+        else if (fps < 45) warnings++;
       }
 
-      if (frontend.render.averageTime > 50) {
-        score -= 10;
-        warnings++;
+      // Render time: graduated penalty above 16ms (1 frame @ 60fps)
+      if (frontend.render.averageTime > 16) {
+        const renderPenalty = Math.min(15, Math.log(1 + (frontend.render.averageTime - 16) / 20) * 8);
+        score -= renderPenalty;
+        if (frontend.render.averageTime > 50) warnings++;
       }
 
-      if (frontend.tauri.invokeLatency > 500) {
-        score -= 10;
-        warnings++;
+      // Tauri invoke latency: graduated above 100ms
+      if (frontend.tauri.invokeLatency > 100) {
+        const invokePenalty = Math.min(12, Math.log(1 + (frontend.tauri.invokeLatency - 100) / 200) * 8);
+        score -= invokePenalty;
+        if (frontend.tauri.invokeLatency > 500) warnings++;
       }
     }
 
-    // Pénalités IA
+    // v30.3.0: Graduated IA penalties
     if (ia) {
-      if (ia.ollama.queueSize > 10) {
-        score -= 10;
-        warnings++;
+      // Queue: graduated penalty above 3 items
+      if (ia.ollama.queueSize > 3) {
+        const queuePenalty = Math.min(12, Math.log(1 + (ia.ollama.queueSize - 3)) * 5);
+        score -= queuePenalty;
+        if (ia.ollama.queueSize > 10) warnings++;
       }
 
+      // Error rate: steep exponential penalty above 5%
       const ollamaErrorRate =
         ia.ollama.requestCount > 0
           ? (ia.ollama.errorCount / ia.ollama.requestCount) * 100
           : 0;
-
-      if (ollamaErrorRate > 20) {
-        score -= 15;
-        criticalIssues++;
+      if (ollamaErrorRate > 5) {
+        const errorPenalty = Math.min(20, Math.pow((ollamaErrorRate - 5) / 20, 1.5) * 20);
+        score -= errorPenalty;
+        if (ollamaErrorRate > 20) criticalIssues++;
+        else if (ollamaErrorRate > 10) warnings++;
       }
     }
 

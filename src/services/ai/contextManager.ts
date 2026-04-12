@@ -101,13 +101,43 @@ export const DEFAULT_CONFIG: ContextWindowConfig = {
 };
 
 /**
- * Simple token estimation (rough approximation)
+ * Simple token estimation with language awareness
+ * v30.3.0: Detects script type for better multilingual accuracy
+ * - Latin/Cyrillic: ~3.5 chars/token
+ * - CJK (Chinese/Japanese/Korean): ~2.0 chars/token (each char ≈ 0.5 tokens)
+ * - RTL (Arabic/Hebrew): ~2.5 chars/token (morphological complexity)
  * Production: Should use tiktoken or model-specific tokenizer
  */
 function estimateTokens(text: string): number {
-  // Rough heuristic: 1 token ≈ 4 characters for English
-  // For multilingual (French, etc): 1 token ≈ 3.5 characters
-  return Math.ceil(text.length / 3.5);
+  if (!text) return 0;
+
+  // v30.3.0: Count characters by script type for weighted estimation
+  let cjkCount = 0;
+  let rtlCount = 0;
+  let latinCount = 0;
+
+  for (let i = 0; i < text.length; i++) {
+    const code = text.charCodeAt(i);
+    // CJK Unified Ideographs, Hiragana, Katakana, Hangul
+    if ((code >= 0x4E00 && code <= 0x9FFF) || // CJK Unified
+        (code >= 0x3040 && code <= 0x30FF) || // Hiragana + Katakana
+        (code >= 0xAC00 && code <= 0xD7AF)) { // Hangul
+      cjkCount++;
+    } else if ((code >= 0x0590 && code <= 0x05FF) || // Hebrew
+               (code >= 0x0600 && code <= 0x06FF) || // Arabic
+               (code >= 0x0750 && code <= 0x077F)) { // Arabic Supplement
+      rtlCount++;
+    } else {
+      latinCount++;
+    }
+  }
+
+  // Weighted token estimate per script type
+  const cjkTokens = Math.ceil(cjkCount / 2.0);
+  const rtlTokens = Math.ceil(rtlCount / 2.5);
+  const latinTokens = Math.ceil(latinCount / 3.5);
+
+  return cjkTokens + rtlTokens + latinTokens;
 }
 
 /**
@@ -175,9 +205,13 @@ export function getModelLimit(model: string): number {
 
 /**
  * Summarize a batch of messages into a single message
+ * v30.3.0: Semantic key extraction — extracts most meaningful content per message
+ * instead of arbitrary 200-char truncation
  */
 function summarizeMessages(messages: (AIMessage | ExtendedAIMessage)[]): AIMessage {
   const contentParts: string[] = [];
+  // v30.3.0: Budget per message scales inversely with message count
+  const maxCharsPerMsg = Math.max(80, Math.min(300, Math.floor(1500 / messages.length)));
 
   for (const msg of messages) {
     let content = '';
@@ -191,9 +225,9 @@ function summarizeMessages(messages: (AIMessage | ExtendedAIMessage)[]): AIMessa
         .join(' ');
     }
 
-    contentParts.push(
-      `${msg.role}: ${content.substring(0, 200)}${content.length > 200 ? '...' : ''}`
-    );
+    // v30.3.0: Extract most meaningful segment instead of blind truncation
+    const summary = extractKeySummary(content, maxCharsPerMsg);
+    contentParts.push(`${msg.role}: ${summary}`);
   }
 
   return {
@@ -201,6 +235,43 @@ function summarizeMessages(messages: (AIMessage | ExtendedAIMessage)[]): AIMessa
     content: `[Summary of ${messages.length} messages]\n${contentParts.join('\n')}`,
     timestamp: Date.now(),
   };
+}
+
+/**
+ * v30.3.0: Extract the most meaningful segment from text
+ * Prioritizes: questions, decisions, key statements over filler
+ */
+function extractKeySummary(text: string, maxChars: number): string {
+  if (text.length <= maxChars) return text;
+
+  // Split into sentences
+  const sentences = text.split(/(?<=[.!?。？！])\s+/).filter(s => s.trim().length > 0);
+  if (sentences.length === 0) return text.substring(0, maxChars) + '...';
+
+  // Score each sentence by importance
+  const scored = sentences.map((sentence, idx) => {
+    let score = 0;
+    // Questions are high priority
+    if (/[?？]/.test(sentence)) score += 3;
+    // Decision/action language
+    if (/\b(décid|choisi|conclu|important|résultat|donc|conclusion|action)\b/i.test(sentence)) score += 2;
+    // Technical content
+    if (/\b(API|code|config|error|bug|feature|service|module)\b/i.test(sentence)) score += 1;
+    // First and last sentences often most meaningful
+    if (idx === 0) score += 1;
+    if (idx === sentences.length - 1) score += 1;
+    return { sentence, score };
+  });
+
+  // Sort by score descending, pick best until budget
+  scored.sort((a, b) => b.score - a.score);
+  let result = '';
+  for (const { sentence } of scored) {
+    if (result.length + sentence.length > maxChars) break;
+    result += (result ? ' ' : '') + sentence;
+  }
+
+  return result || text.substring(0, maxChars) + '...';
 }
 
 /**

@@ -23,6 +23,11 @@ export interface ProviderStatus {
   isHealthy: boolean; // Dernière vérification de santé OK
   lastChecked: number | null;
   error?: string;
+  // v30.3.0: Provider reliability metrics for graduated fitness scoring
+  successCount: number;     // Total successful requests
+  failureCount: number;     // Total failed requests
+  lastFailure: number | null;  // Timestamp of last failure
+  consecutiveFailures: number; // Consecutive failures without success
 }
 
 export interface GovernanceConfig {
@@ -45,31 +50,37 @@ const DEFAULT_PROVIDERS: Record<
     id: 'local',
     name: 'TITANE Local',
     isActive: true,
+    successCount: 0, failureCount: 0, lastFailure: null, consecutiveFailures: 0,
   },
   tauri: {
     id: 'tauri',
     name: 'Tauri Backend',
     isActive: true,
+    successCount: 0, failureCount: 0, lastFailure: null, consecutiveFailures: 0,
   },
   ollama: {
     id: 'ollama',
     name: 'Ollama (Local LLM)',
     isActive: true,
+    successCount: 0, failureCount: 0, lastFailure: null, consecutiveFailures: 0,
   },
   gemini: {
     id: 'gemini',
     name: 'Google Gemini',
     isActive: false,
+    successCount: 0, failureCount: 0, lastFailure: null, consecutiveFailures: 0,
   },
   openai: {
     id: 'openai',
     name: 'OpenAI GPT-4',
     isActive: false,
+    successCount: 0, failureCount: 0, lastFailure: null, consecutiveFailures: 0,
   },
   claude: {
     id: 'claude',
     name: 'Anthropic Claude',
     isActive: false,
+    successCount: 0, failureCount: 0, lastFailure: null, consecutiveFailures: 0,
   },
 };
 
@@ -330,7 +341,9 @@ export class GovernanceConnector {
   }
 
   /**
-   * Sélectionne le meilleur provider disponible
+   * v30.3.0: Fitness-scored provider selection with exponential recovery
+   * Replaces linear fallback iteration with graduated fitness scoring:
+   * fitness = success_rate(0.40) + availability(0.30) + recovery(0.30)
    */
   selectProvider(preferredId?: ProviderId): ProviderId {
     // Si un provider préféré est spécifié et disponible, l'utiliser
@@ -346,31 +359,61 @@ export class GovernanceConnector {
       }
     }
 
-    // Sinon, utiliser le provider par défaut s'il est disponible
-    const defaultProvider = this.config.providers[this.config.defaultProvider];
-    if (
-      defaultProvider &&
-      defaultProvider.isConfigured &&
-      defaultProvider.isActive &&
-      defaultProvider.isHealthy
-    ) {
-      return this.config.defaultProvider;
-    }
+    // Compute fitness score for each available provider
+    const scored: Array<{ id: ProviderId; fitness: number }> = [];
 
-    // Sinon, parcourir l'ordre de fallback
     for (const id of this.config.fallbackOrder) {
       const provider = this.config.providers[id];
-      if (provider && provider.isConfigured && provider.isActive && provider.isHealthy) {
-        return id;
+      if (!provider || !provider.isConfigured || !provider.isActive) continue;
+
+      // Factor 1: Success rate (0-1) — with Laplace smoothing for new providers
+      const totalRequests = provider.successCount + provider.failureCount;
+      const successRate = totalRequests > 0
+        ? (provider.successCount + 1) / (totalRequests + 2) // Laplace smoothing
+        : 0.5; // New provider gets neutral score
+
+      // Factor 2: Availability — exponential recovery from unhealthy state
+      let availabilityScore: number;
+      if (provider.isHealthy) {
+        availabilityScore = 1.0;
+      } else if (provider.lastFailure) {
+        // Exponential recovery: 50% at 30s, 75% at 60s, 90% at 120s, 95% at 180s
+        const timeSinceFailure = Date.now() - provider.lastFailure;
+        const recoveryHalfLife = 30000; // 30 seconds
+        availabilityScore = 1 - Math.exp(-0.693 * timeSinceFailure / recoveryHalfLife);
+        // Penalty for consecutive failures: each consecutive failure doubles the recovery time
+        const consecutivePenalty = Math.pow(0.8, provider.consecutiveFailures);
+        availabilityScore *= consecutivePenalty;
+      } else {
+        availabilityScore = 0.3; // Unknown state
       }
+
+      // Factor 3: Recency penalty for recent failures
+      const recencyScore = provider.lastFailure
+        ? Math.min(1.0, (Date.now() - provider.lastFailure) / 120000) // Full recovery after 2 min
+        : 1.0;
+
+      // Weighted fitness score
+      const fitness = successRate * 0.40 + availabilityScore * 0.30 + recencyScore * 0.30;
+
+      scored.push({ id, fitness });
     }
 
-    // Toujours retourner local comme dernier recours
+    // Sort by fitness descending
+    scored.sort((a, b) => b.fitness - a.fitness);
+
+    // Return best fitness provider, or default, or local
+    if (scored.length > 0 && scored[0].fitness > 0.2) {
+      return scored[0].id;
+    }
+
+    // Absolute fallback
     return 'local';
   }
 
   /**
-   * Marque un provider comme défaillant (pour le circuit breaker)
+   * v30.3.0: Marks provider unhealthy with graduated reliability tracking
+   * Tracks consecutive failures for exponential backoff in recovery
    */
   markProviderUnhealthy(id: ProviderId, error?: string): void {
     const provider = this.config.providers[id];
@@ -378,19 +421,25 @@ export class GovernanceConnector {
       provider.isHealthy = false;
       provider.lastChecked = Date.now();
       provider.error = error;
+      provider.failureCount = (provider.failureCount || 0) + 1;
+      provider.lastFailure = Date.now();
+      provider.consecutiveFailures = (provider.consecutiveFailures || 0) + 1;
       this.saveConfig();
     }
   }
 
   /**
-   * Marque un provider comme sain
+   * v30.3.0: Marks provider healthy and resets consecutive failure counter
+   * Successful requests build up the success rate for fitness scoring
    */
   markProviderHealthy(id: ProviderId): void {
     const provider = this.config.providers[id];
     if (provider) {
       provider.lastChecked = Date.now();
       provider.error = undefined;
-      provider.isHealthy = provider.isConfigured && provider.isActive && !provider.error;
+      provider.isHealthy = provider.isConfigured && provider.isActive;
+      provider.successCount = (provider.successCount || 0) + 1;
+      provider.consecutiveFailures = 0; // Reset consecutive on success
       this.saveConfig();
     }
   }

@@ -105,23 +105,117 @@ const SEVERITY_TO_URGENCY: Record<HealingSeverity, number> = {
   critical: 10,
 };
 
-/** Actions suggérées par type d'anomalie */
-const ANOMALY_ACTIONS: Record<AnomalyType, HealingActionType[]> = {
-  js_runtime_error: ['patch_component', 'reset_state', 'restart_module'],
-  unhandled_promise: ['patch_component', 'reset_state'],
-  react_error_boundary: ['restart_module', 'reset_state', 'patch_component'],
-  tauri_command_fail: ['restart_module', 'clear_cache', 'sync_state'],
-  rust_panic: ['restart_process', 'isolate_module', 'restart_module'],
-  network_failure: ['fallback_provider', 'clear_cache', 'restart_worker'],
-  performance_degradation: ['clear_cache', 'restart_worker', 'isolate_module'],
-  memory_corruption: ['rebuild_memory', 'clear_cache', 'restart_module'],
-  tts_engine_fail: ['restart_module', 'fallback_provider', 'clear_cache'],
-  avatar_render_fail: ['restart_module', 'clear_cache', 'reset_state'],
-  pipeline_stuck: ['restart_worker', 'clear_cache', 'reset_state'],
-  state_desync: ['sync_state', 'reset_state', 'restart_module'],
-  config_invalid: ['regenerate_config', 'repair_json', 'reset_state'],
-  unknown_anomaly: ['mini_audit', 'reset_state', 'noop'],
+/**
+ * v30.3.0: Graduated action escalation — actions scored by risk level + base priority
+ * Actions ordered from lowest-risk to highest-risk per anomaly type.
+ * At runtime, getGraduatedActions() selects actions based on severity × module health.
+ */
+interface ScoredAction {
+  action: HealingActionType;
+  basePriority: number;  // 0-1, higher = preferred first
+  riskLevel: number;     // 0-1, higher = more disruptive
+}
+
+const ANOMALY_ACTIONS_SCORED: Record<AnomalyType, ScoredAction[]> = {
+  js_runtime_error: [
+    { action: 'patch_component', basePriority: 0.9, riskLevel: 0.2 },
+    { action: 'reset_state', basePriority: 0.6, riskLevel: 0.5 },
+    { action: 'restart_module', basePriority: 0.3, riskLevel: 0.8 },
+  ],
+  unhandled_promise: [
+    { action: 'patch_component', basePriority: 0.8, riskLevel: 0.2 },
+    { action: 'reset_state', basePriority: 0.5, riskLevel: 0.5 },
+  ],
+  react_error_boundary: [
+    { action: 'patch_component', basePriority: 0.7, riskLevel: 0.2 },
+    { action: 'reset_state', basePriority: 0.6, riskLevel: 0.5 },
+    { action: 'restart_module', basePriority: 0.4, riskLevel: 0.8 },
+  ],
+  tauri_command_fail: [
+    { action: 'clear_cache', basePriority: 0.8, riskLevel: 0.2 },
+    { action: 'sync_state', basePriority: 0.6, riskLevel: 0.4 },
+    { action: 'restart_module', basePriority: 0.3, riskLevel: 0.8 },
+  ],
+  rust_panic: [
+    { action: 'restart_module', basePriority: 0.7, riskLevel: 0.6 },
+    { action: 'isolate_module', basePriority: 0.5, riskLevel: 0.7 },
+    { action: 'restart_process', basePriority: 0.3, riskLevel: 0.95 },
+  ],
+  network_failure: [
+    { action: 'fallback_provider', basePriority: 0.9, riskLevel: 0.1 },
+    { action: 'clear_cache', basePriority: 0.5, riskLevel: 0.3 },
+    { action: 'restart_worker', basePriority: 0.3, riskLevel: 0.7 },
+  ],
+  performance_degradation: [
+    { action: 'clear_cache', basePriority: 0.8, riskLevel: 0.2 },
+    { action: 'restart_worker', basePriority: 0.5, riskLevel: 0.6 },
+    { action: 'isolate_module', basePriority: 0.3, riskLevel: 0.7 },
+  ],
+  memory_corruption: [
+    { action: 'rebuild_memory', basePriority: 0.8, riskLevel: 0.4 },
+    { action: 'clear_cache', basePriority: 0.6, riskLevel: 0.3 },
+    { action: 'restart_module', basePriority: 0.3, riskLevel: 0.8 },
+  ],
+  tts_engine_fail: [
+    { action: 'fallback_provider', basePriority: 0.8, riskLevel: 0.1 },
+    { action: 'restart_module', basePriority: 0.5, riskLevel: 0.6 },
+    { action: 'clear_cache', basePriority: 0.4, riskLevel: 0.3 },
+  ],
+  avatar_render_fail: [
+    { action: 'clear_cache', basePriority: 0.7, riskLevel: 0.2 },
+    { action: 'reset_state', basePriority: 0.5, riskLevel: 0.5 },
+    { action: 'restart_module', basePriority: 0.3, riskLevel: 0.8 },
+  ],
+  pipeline_stuck: [
+    { action: 'restart_worker', basePriority: 0.8, riskLevel: 0.5 },
+    { action: 'clear_cache', basePriority: 0.5, riskLevel: 0.3 },
+    { action: 'reset_state', basePriority: 0.3, riskLevel: 0.6 },
+  ],
+  state_desync: [
+    { action: 'sync_state', basePriority: 0.9, riskLevel: 0.2 },
+    { action: 'reset_state', basePriority: 0.5, riskLevel: 0.5 },
+    { action: 'restart_module', basePriority: 0.2, riskLevel: 0.8 },
+  ],
+  config_invalid: [
+    { action: 'repair_json', basePriority: 0.8, riskLevel: 0.2 },
+    { action: 'regenerate_config', basePriority: 0.6, riskLevel: 0.4 },
+    { action: 'reset_state', basePriority: 0.3, riskLevel: 0.6 },
+  ],
+  unknown_anomaly: [
+    { action: 'mini_audit', basePriority: 0.7, riskLevel: 0.1 },
+    { action: 'reset_state', basePriority: 0.4, riskLevel: 0.5 },
+    { action: 'noop', basePriority: 0.2, riskLevel: 0.0 },
+  ],
 };
+
+/**
+ * v30.3.0: Get graduated actions based on severity and module health.
+ * Low severity + healthy module → prefer low-risk actions
+ * High severity + degrading module → escalate to higher-risk actions
+ */
+function getGraduatedActions(
+  anomalyType: AnomalyType,
+  severity: HealingSeverity,
+  moduleHealthScore?: number
+): HealingActionType[] {
+  const scored = ANOMALY_ACTIONS_SCORED[anomalyType] || ANOMALY_ACTIONS_SCORED.unknown_anomaly;
+  const severityWeight = SEVERITY_TO_URGENCY[severity] / 10; // 0.1-1.0
+  // Lower health → more willing to accept risky actions
+  const healthFactor = moduleHealthScore !== undefined ? (100 - moduleHealthScore) / 100 : 0.5;
+  // Escalation factor: high severity + low health = accept more risk
+  const riskTolerance = severityWeight * 0.6 + healthFactor * 0.4;
+
+  return scored
+    .map(s => ({
+      action: s.action,
+      // Score = base priority boosted by risk tolerance matching
+      // Low risk tolerance → prefer high basePriority + low riskLevel
+      // High risk tolerance → accept all actions, prefer basePriority
+      effectiveScore: s.basePriority * 0.6 + (1 - Math.abs(s.riskLevel - riskTolerance)) * 0.4,
+    }))
+    .sort((a, b) => b.effectiveScore - a.effectiveScore)
+    .map(s => s.action);
+}
 
 /** Causes probables par type d'anomalie */
 const ANOMALY_CAUSES: Record<AnomalyType, string[]> = {
@@ -536,36 +630,85 @@ export class SelfHealingAnalyzer {
     };
   }
 
+  /**
+   * v30.3.0: Confidence-weighted multi-rule aggregation
+   * Instead of winner-takes-all, aggregate matching rules weighted by priority
+   * Combines insights from all matching rules for richer diagnosis
+   */
   private applyRules(event: HealingEvent, context: AnalysisContext): HealingDiagnosis {
     // Diagnostic de base
     let diagnosis = this.createDefaultDiagnosis(event);
-    let maxConfidence = 0.5;
 
-    // Appliquer les règles (triées par priorité)
+    // Collect all matching rules with their diagnoses
+    const matchedRules: Array<{ rule: DiagnosticRule; diag: Partial<HealingDiagnosis>; confidence: number }> = [];
+
     for (const rule of this.diagnosticRules) {
       try {
         if (rule.matchCondition(event, context)) {
           const ruleDiagnosis = rule.diagnose(event, context);
           const ruleConfidence = 0.6 + rule.priority / 200;
-
-          if (ruleConfidence > maxConfidence) {
-            diagnosis = {
-              ...diagnosis,
-              ...ruleDiagnosis,
-              confidence: ruleConfidence,
-            };
-            maxConfidence = ruleConfidence;
-          }
+          matchedRules.push({ rule, diag: ruleDiagnosis, confidence: ruleConfidence });
         }
       } catch (err) {
         console.warn(`[SelfHealingAnalyzer] Rule ${rule.id} failed:`, err);
       }
     }
 
-    // Ajouter les actions suggérées si pas déjà définies
+    if (matchedRules.length > 0) {
+      // Sort by confidence descending
+      matchedRules.sort((a, b) => b.confidence - a.confidence);
+      const primary = matchedRules[0];
+
+      // Primary rule provides the base diagnosis
+      diagnosis = {
+        ...diagnosis,
+        ...primary.diag,
+        confidence: primary.confidence,
+      };
+
+      // v30.3.0: Aggregate secondary rules — merge their insights
+      // Each additional matching rule slightly boosts confidence (diminishing returns)
+      // and contributes unique impact/pattern information
+      for (let i = 1; i < matchedRules.length; i++) {
+        const secondary = matchedRules[i];
+        // Confidence boost: +0.03 per additional rule, diminishing after 3
+        const boostIncrement = i <= 3 ? 0.03 : 0.01;
+        diagnosis.confidence = Math.min(0.98, diagnosis.confidence + boostIncrement);
+
+        // Merge unique impacts
+        if (secondary.diag.potentialImpact) {
+          const existing = new Set(diagnosis.potentialImpact || []);
+          for (const impact of secondary.diag.potentialImpact) {
+            if (!existing.has(impact)) {
+              diagnosis.potentialImpact = [...(diagnosis.potentialImpact || []), impact];
+            }
+          }
+        }
+        // Merge unique historical patterns
+        if (secondary.diag.historicalPatterns) {
+          const existing = new Set(diagnosis.historicalPatterns || []);
+          for (const pattern of secondary.diag.historicalPatterns) {
+            if (!existing.has(pattern)) {
+              diagnosis.historicalPatterns = [...(diagnosis.historicalPatterns || []), pattern];
+            }
+          }
+        }
+        // Escalation: if ANY rule requires escalation, escalate
+        if (secondary.diag.escalationRequired) {
+          diagnosis.escalationRequired = true;
+        }
+      }
+    }
+
+    // v30.3.0: Use graduated actions based on severity and module health
     if (!diagnosis.suggestedActions || diagnosis.suggestedActions.length === 0) {
       const eventType = event.eventType as AnomalyType;
-      diagnosis.suggestedActions = ANOMALY_ACTIONS[eventType] || ['noop'];
+      const moduleHealth = this.moduleHealth.get(event.moduleId);
+      diagnosis.suggestedActions = getGraduatedActions(
+        eventType,
+        event.severity,
+        moduleHealth?.score
+      );
     }
 
     // Vérifier si escalation requise
@@ -580,6 +723,10 @@ export class SelfHealingAnalyzer {
     const eventType = event.eventType as AnomalyType;
     const causes = ANOMALY_CAUSES[eventType] || ANOMALY_CAUSES.unknown_anomaly;
 
+    // v30.3.0: Use graduated actions based on severity and current module health
+    const moduleHealth = this.moduleHealth.get(event.moduleId);
+    const graduatedActions = getGraduatedActions(eventType, event.severity, moduleHealth?.score);
+
     return {
       eventId: event.id,
       timestamp: Date.now(),
@@ -590,7 +737,7 @@ export class SelfHealingAnalyzer {
       severity: event.severity,
       urgency: SEVERITY_TO_URGENCY[event.severity],
       potentialImpact: this.estimateImpact(event),
-      suggestedActions: ANOMALY_ACTIONS[eventType] || ['noop'],
+      suggestedActions: graduatedActions,
       historicalPatterns: this.getRelatedPatterns(event),
       escalationRequired: event.severity === 'critical',
       confidence: 0.5,
@@ -643,8 +790,12 @@ export class SelfHealingAnalyzer {
     return related;
   }
 
+  /**
+   * v30.3.0: Graduated escalation with multi-factor scoring
+   * Instead of binary severity threshold, compute escalation score
+   * considering severity, frequency, module health degradation trend
+   */
   private shouldEscalate(severity: HealingSeverity, context: AnalysisContext): boolean {
-    // Escalade si sévérité >= seuil
     const severityOrder: HealingSeverity[] = [
       'info',
       'low',
@@ -655,14 +806,37 @@ export class SelfHealingAnalyzer {
     const currentIndex = severityOrder.indexOf(severity);
     const thresholdIndex = severityOrder.indexOf(this.config.escalationThreshold);
 
+    // Direct escalation for severity >= threshold
     if (currentIndex >= thresholdIndex) return true;
 
-    // Escalade si trop d'erreurs récentes
-    const recentCriticalCount = context.recentEvents.filter(
+    // v30.3.0: Multi-factor escalation scoring
+    // Factor 1: Recent high-severity event density (0-1)
+    const recentHighSeverity = context.recentEvents.filter(
       e => e.severity === 'critical' || e.severity === 'high'
     ).length;
+    const eventDensityScore = Math.min(1.0, recentHighSeverity / 5);
 
-    return recentCriticalCount >= 5;
+    // Factor 2: Module degradation trend (0-1) — any degrading module adds pressure
+    let degradingModules = 0;
+    for (const health of context.moduleHealth.values()) {
+      if (health.trend === 'degrading') degradingModules++;
+    }
+    const degradationScore = Math.min(1.0, degradingModules / 3);
+
+    // Factor 3: Pattern recurrence — recurring patterns indicate systemic issue
+    const recurringPatterns = context.patterns.filter(
+      p => p.occurrences >= this.config.patternMinOccurrences
+    ).length;
+    const patternScore = Math.min(1.0, recurringPatterns / 2);
+
+    // Combined escalation score: weighted average
+    const escalationScore =
+      eventDensityScore * 0.45 +
+      degradationScore * 0.30 +
+      patternScore * 0.25;
+
+    // Escalate if combined score exceeds threshold
+    return escalationScore >= 0.6;
   }
 
   private mapSourceToCategory(source: string): ModuleCategory {

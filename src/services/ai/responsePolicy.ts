@@ -454,50 +454,78 @@ export function selectResponseProfile(
     };
   }
 
+  // v30.3.0: Signal-weighted profile selection — count matching signals for confidence scaling
+  const directHits = DIRECT_SIGNALS.filter(s => msg.includes(s)).length;
+  const architectHits = ARCHITECT_SIGNALS.filter(s => msg.includes(s)).length;
+  const deepHits = DEEP_SIGNALS.filter(s => msg.includes(s)).length;
+
   // Règle 2 : Signaux lexicaux directs (DIRECT)
-  if (DIRECT_SIGNALS.some(s => msg.includes(s))) {
+  if (directHits > 0) {
+    // v30.3.0: Confidence scales with signal density (1 signal = 0.82, 2+ = 0.92)
+    const confidence = Math.min(0.95, 0.75 + directHits * 0.08);
     return {
       profileId: 'DIRECT',
       profile: RESPONSE_PROFILES.DIRECT,
-      reason: 'direct_lexical_signal',
+      reason: `direct_lexical_signal(${directHits})`,
       inferenceState: 'SAFE_TO_INFER',
-      confidence: 0.9,
+      confidence,
     };
   }
 
   // Règle 3 : Signaux lexicaux ARCHITECT
-  if (ARCHITECT_SIGNALS.some(s => msg.includes(s))) {
+  if (architectHits > 0) {
+    const confidence = Math.min(0.95, 0.75 + architectHits * 0.06);
     return {
       profileId: 'ARCHITECT',
       profile: RESPONSE_PROFILES.ARCHITECT,
-      reason: 'architect_lexical_signal',
+      reason: `architect_lexical_signal(${architectHits})`,
       inferenceState: 'SAFE_TO_INFER',
-      confidence: 0.85,
+      confidence,
     };
   }
 
   // Règle 4 : Signaux lexicaux DEEP
-  if (DEEP_SIGNALS.some(s => msg.includes(s))) {
+  if (deepHits > 0) {
+    const confidence = Math.min(0.95, 0.75 + deepHits * 0.06);
     return {
       profileId: 'DEEP',
       profile: RESPONSE_PROFILES.DEEP,
-      reason: 'deep_lexical_signal',
+      reason: `deep_lexical_signal(${deepHits})`,
       inferenceState: 'SAFE_TO_INFER',
-      confidence: 0.85,
+      confidence,
     };
   }
 
   // Règle 5 : Mode actif → profil par défaut du mode
   const modeDefault = MODE_PROFILE_MAP[input.mode] ?? 'BALANCED';
 
-  // Règle 6 : Complexité élevée → forcer DEEP si mode est DEVELOPED
-  if (complexity > 0.75 && modeDefault === 'DEVELOPED') {
+  // v30.3.0: Graduated complexity-based profile escalation
+  // Replaces the single DEVELOPED→DEEP rule with a multi-tier escalation ladder
+  if (complexity > 0.85 && (modeDefault === 'DEVELOPED' || modeDefault === 'DEEP')) {
+    return {
+      profileId: 'ARCHITECT',
+      profile: RESPONSE_PROFILES.ARCHITECT,
+      reason: 'very_high_complexity_escalation',
+      inferenceState: 'INFER_WITH_DISCLOSURE',
+      confidence: 0.72,
+    };
+  }
+  if (complexity > 0.72 && modeDefault === 'DEVELOPED') {
     return {
       profileId: 'DEEP',
       profile: RESPONSE_PROFILES.DEEP,
       reason: 'high_complexity_escalation',
       inferenceState: 'INFER_WITH_DISCLOSURE',
       confidence: 0.7,
+    };
+  }
+  if (complexity > 0.60 && modeDefault === 'BALANCED') {
+    return {
+      profileId: 'DEVELOPED',
+      profile: RESPONSE_PROFILES.DEVELOPED,
+      reason: 'moderate_complexity_escalation',
+      inferenceState: 'INFER_WITH_DISCLOSURE',
+      confidence: 0.68,
     };
   }
 
@@ -577,6 +605,17 @@ export function evaluateInferenceState(
  * Estimation de complexité lexicale/structurelle d'un message.
  * Borné : 0.0 (trivial) → 1.0 (très complexe).
  * Pure fonction, pas d'I/O, pas de réseau.
+ *
+ * v30.2.0: Enhanced with structural analysis signals:
+ * - Enumeration detection (lists, multi-point requests)
+ * - Conditional/hypothetical reasoning markers
+ * - Multi-topic detection (commas, semicolons, conjunctions with topic shifts)
+ * - Temporal markers (past/present/future framing)
+ *
+ * v30.3.0: Enhanced with:
+ * - Topic diversity factor: detects multi-domain requests via keyword clustering
+ * - Negation/nuance signals: "mais pas", "sauf", "en revanche" indicate refined thinking
+ * - Total 8-factor scoring for higher discrimination accuracy
  */
 export function estimateComplexity(message: string): number {
   const words = message.split(/\s+/).filter(Boolean);
@@ -589,13 +628,45 @@ export function estimateComplexity(message: string): number {
   ).length;
   const longWordRatio = words.filter(w => w.length > 8).length / Math.max(wordCount, 1);
 
-  // Score normalisé entre 0 et 1
-  const lengthScore = Math.min(wordCount / 100, 1.0) * 0.3;
-  const questionScore = Math.min(questionCount / 3, 1.0) * 0.2;
-  const conjunctionScore = Math.min(conjunctionCount / 4, 1.0) * 0.25;
-  const lexicalScore = longWordRatio * 0.25;
+  // v30.2.0: Structural complexity signals
+  const enumerationCount = (
+    message.match(/\b(\d+[\.\)]\s|premièrement|deuxièmement|d'abord|ensuite|enfin|firstly|secondly|finally|also|de plus|par ailleurs)\b/gi) || []
+  ).length;
+  const conditionalCount = (
+    message.match(/\b(si|sauf si|à condition|dans le cas|suppose|imaginons|et si|if|unless|assuming|what if|in case)\b/gi) || []
+  ).length;
+  const temporalCount = (
+    message.match(/\b(avant|après|pendant|historiquement|à l'avenir|prochainement|jadis|auparavant|dorénavant|before|after|during|previously|going forward)\b/gi) || []
+  ).length;
 
-  return Math.min(1.0, lengthScore + questionScore + conjunctionScore + lexicalScore);
+  // v30.3.0: Topic diversity — count distinct domain markers
+  const domainMarkers = [
+    /\b(technique|code|développement|architecture|api|backend|frontend|infrastructure)\b/gi,
+    /\b(stratégie|business|marché|client|vente|marketing|croissance|revenue)\b/gi,
+    /\b(équipe|management|leadership|organisation|processus|workflow|rh)\b/gi,
+    /\b(personnel|vie|santé|bien-être|motivation|énergie|habitude)\b/gi,
+    /\b(finance|budget|coût|investissement|rentabilité|trésorerie)\b/gi,
+    /\b(juridique|contrat|conformité|rgpd|légal|réglementation)\b/gi,
+    /\b(créatif|design|ux|ui|branding|visuel|identité)\b/gi,
+  ];
+  const topicDiversityCount = domainMarkers.filter(rx => rx.test(message)).length;
+
+  // v30.3.0: Negation/nuance signals — indicate refined or constrained thinking
+  const negationCount = (
+    message.match(/\b(mais pas|sauf|en revanche|au contraire|toutefois|néanmoins|cependant|excepté|sans|not|except|rather|instead|without)\b/gi) || []
+  ).length;
+
+  // Score normalisé entre 0 et 1
+  // v30.3.0: 8-factor formula with topic diversity and negation
+  const lengthScore = Math.min(wordCount / 100, 1.0) * 0.20;
+  const questionScore = Math.min(questionCount / 3, 1.0) * 0.19;
+  const conjunctionScore = Math.min(conjunctionCount / 4, 1.0) * 0.17;
+  const lexicalScore = longWordRatio * 0.17;
+  const structuralScore = Math.min((enumerationCount + conditionalCount + temporalCount) / 5, 1.0) * 0.10;
+  const topicScore = Math.min(topicDiversityCount / 3, 1.0) * 0.10;
+  const negationScore = Math.min(negationCount / 3, 1.0) * 0.07;
+
+  return Math.min(1.0, lengthScore + questionScore + conjunctionScore + lexicalScore + structuralScore + topicScore + negationScore);
 }
 
 /**
@@ -681,7 +752,12 @@ export type IntentType =
   | 'creative' // User wants generation, brainstorming, writing
   | 'diagnostic' // User asking about system state, errors, health
   | 'conversational' // Greeting, acknowledgment, social
-  | 'research_analysis'; // Deep research / web analysis / synthesis request
+  | 'research_analysis' // Deep research / web analysis / synthesis request
+  | 'professional_document' // User wants a professional document generated (report, letter, plan, etc.)
+  | 'deep_reflection' // User seeks deep reflection, philosophical analysis, introspection
+  | 'memory_management' // User wants to manage, organize, review, or curate memory
+  | 'message_analysis' // User wants detailed analysis of a message, conversation, or communication
+  | 'data_collection'; // User wants to gather, aggregate, compile, or structure data
 
 export interface IntentClassification {
   intent: IntentType;
@@ -779,23 +855,113 @@ const INTENT_SIGNALS: Record<
       /\b(research|search the web|find online|analyze|study|investigate)\b/i,
       /\b(deep dive|deep analysis|comprehensive|thorough|in-depth)\b/i,
       /\b(croise les sources|recoup|compare les sources|vérifie)\b/i,
+      /\b(enrichi(?:s|r|ssez)?\s+(?:l[ea]s?\s+)?(?:connaissance|compréhension|analyse|recherche|information))\b/i,
+      /\b(état de l'art|benchmark|tendance|évolution|perspective|horizon)\b/i,
+      /\b(fiabilité|véracité|fact[- ]check|vérification des sources|validation des sources)\b/i,
     ],
     freshness: 'current',
-    memoryRelevance: 'low',
+    memoryRelevance: 'medium',
+  },
+  professional_document: {
+    patterns: [
+      /\b(rédige|rédiger|rédaction|document|fichier|lettre|courrier|courriel)\b/i,
+      /\b(rapport|rapport professionnel|compte[- ]rendu|note de service|mémo)\b/i,
+      /\b(cv|curriculum|lettre de motivation|candidature|portfolio)\b/i,
+      /\b(proposition commerciale|devis|facture|contrat|cahier des charges)\b/i,
+      /\b(présentation|dossier|documentation|guide|manuel|tutoriel)\b/i,
+      /\b(business plan|plan d'affaires|executive summary|pitch deck)\b/i,
+      /\b(draft|write a report|formal document|professional letter|proposal)\b/i,
+      /\b(procès[- ]verbal|ordre du jour|agenda|template|modèle)\b/i,
+      /\b(génère un document|crée un rapport|prépare un|formalise|mets en forme)\b/i,
+    ],
+    freshness: 'stable',
+    memoryRelevance: 'high',
+  },
+  deep_reflection: {
+    patterns: [
+      /\b(réfléchis|réflexion|réfléchir|médite|méditer|contemple|contempler)\b/i,
+      /\b(sens profond|essence|fondamental|existentiel|philosophi)\b/i,
+      /\b(introspection|conscience|lucidité|discernement|sagesse)\b/i,
+      /\b(pourquoi vraiment|au fond|en réalité|à quoi bon|quel sens)\b/i,
+      /\b(prends du recul|vision d'ensemble|perspective|hauteur de vue)\b/i,
+      /\b(croyance|présupposé|biais|angle mort|hypothèse implicite)\b/i,
+      /\b(reflect|ponder|contemplate|deeper meaning|underlying|fundamental)\b/i,
+      /\b(what really matters|core question|root cause|big picture|first principles)\b/i,
+      /\b(remise en question|questionne|challenge|remet en cause)\b/i,
+    ],
+    freshness: 'stable',
+    memoryRelevance: 'high',
+  },
+  memory_management: {
+    patterns: [
+      /\b(mémoire|mémorise|retiens|enregistre|sauvegarde|note ça|garde en mémoire)\b/i,
+      /\b(oublie|efface|supprime de ta mémoire|ne retiens plus|nettoie)\b/i,
+      /\b(qu'as-tu retenu|que sais-tu sur moi|mes préférences|mes habitudes)\b/i,
+      /\b(organise tes souvenirs|trie tes notes|résume ce qu'on a fait)\b/i,
+      /\b(historique|journal|archive|trace|log des conversations)\b/i,
+      /\b(remember this|save this|store this|keep track|forget this|clear memory)\b/i,
+      /\b(what do you know about me|my preferences|my history|recall all)\b/i,
+      /\b(contexte précédent|session précédente|conversation précédente|dernier échange)\b/i,
+      /\b(consolide|fusionne|déduplique|priorise en mémoire|tri mémoire)\b/i,
+    ],
+    freshness: 'stable',
+    memoryRelevance: 'high',
+  },
+  message_analysis: {
+    patterns: [
+      /\b(analyse ce message|analyse cette conversation|décortique|décompose ce texte)\b/i,
+      /\b(ton du message|intention de l'auteur|sous-texte|message implicite)\b/i,
+      /\b(sentiment|émotion|ressenti|perception|interprétation)\b/i,
+      /\b(reformule|paraphrase|résume ce message|simplifie ce texte)\b/i,
+      /\b(points clés|idées principales|arguments|structure du message)\b/i,
+      /\b(analyze this message|parse this|break down|dissect|interpret this)\b/i,
+      /\b(what does this mean|tone analysis|sentiment analysis|communication style)\b/i,
+      /\b(qualité de la communication|clarté|cohérence|pertinence du message)\b/i,
+      /\b(biais dans ce message|manipulation|rhétorique|persuasion|argumentaire)\b/i,
+      /\b(non-dit|implicite|entre les lignes|ce qu'il veut dire vraiment)\b/i,
+    ],
+    freshness: 'stable',
+    memoryRelevance: 'medium',
+  },
+  data_collection: {
+    patterns: [
+      /\b(collecte|rassemble|compile|agrège|centralise|recense|inventorie)\b/i,
+      /\b(données|data|informations|statistiques|métriques|indicateurs|KPI)\b/i,
+      /\b(tableau|listing|base de données|registre|catalogue|répertoire)\b/i,
+      /\b(extrais les données|récupère les infos|pull data|scrape|mine)\b/i,
+      /\b(structure les données|organise les infos|classe|catégorise|trie)\b/i,
+      /\b(collect data|gather information|compile a list|aggregate|census)\b/i,
+      /\b(benchmark|comparatif|état des lieux|inventaire|cartographie des données)\b/i,
+      /\b(sources de données|provenance|fiabilité des données|qualité des données)\b/i,
+      /\b(export|csv|json|tableau croisé|pivot|visualisation de données)\b/i,
+      /\b(veille|monitoring|suivi|tracking|observation systématique)\b/i,
+    ],
+    freshness: 'current',
+    memoryRelevance: 'high',
   },
 };
 
 /**
  * Classify the intent of a user message.
  * Returns intent type, confidence, signals, and routing metadata.
+ *
+ * v30.3.0: Enhanced with:
+ * - Multi-intent detection: secondary intent tracked for hybrid routing
+ * - Confidence penalization: conflicting strong signals reduce confidence
+ * - Semantic boosting: intent-specific combinators (e.g. research + internet = higher confidence)
+ * - Length-adaptive scoring: longer messages need proportionally more signal density
  */
 export function classifyIntent(message: string): IntentClassification {
   const msgLower = message.toLowerCase();
   const wordCount = message.split(/\s+/).filter(Boolean).length;
 
-  let bestIntent: IntentType = 'information_request';
-  let bestScore = 0;
-  const matchedSignals: string[] = [];
+  // Score all intents
+  const intentScores: Array<{
+    intent: IntentType;
+    score: number;
+    signals: string[];
+    config: (typeof INTENT_SIGNALS)[IntentType];
+  }> = [];
 
   for (const [intent, config] of Object.entries(INTENT_SIGNALS)) {
     let score = 0;
@@ -808,33 +974,109 @@ export function classifyIntent(message: string): IntentClassification {
       }
     }
 
-    // Boost for longer messages with matching patterns
+    // Length-adaptive boost: longer messages with matching patterns get scaled boost
     if (score > 0 && wordCount > 5) {
       score *= 1.2;
     }
+    // Extra boost for very long detailed messages (20+ words with 3+ signal matches)
+    if (score >= 3 && wordCount > 20) {
+      score *= 1.15;
+    }
 
-    if (score > bestScore) {
-      bestScore = score;
-      bestIntent = intent as IntentType;
-      matchedSignals.length = 0;
-      matchedSignals.push(...signals);
+    if (score > 0) {
+      intentScores.push({ intent: intent as IntentType, score, signals, config });
     }
   }
 
+  // Sort by score descending
+  intentScores.sort((a, b) => b.score - a.score);
+
   // Default to conversational for very short messages with no patterns
-  if (bestScore === 0 && wordCount <= 3) {
-    bestIntent = 'conversational';
+  if (intentScores.length === 0 && wordCount <= 3) {
+    const config = INTENT_SIGNALS['conversational'];
+    return {
+      intent: 'conversational',
+      confidence: 0.5,
+      signals: [],
+      freshnessRequired: config.freshness,
+      memoryRelevance: config.memoryRelevance,
+    };
   }
 
-  const config = INTENT_SIGNALS[bestIntent];
-  const confidence = Math.min(1.0, bestScore / 2);
+  // Default to information_request if no patterns matched
+  if (intentScores.length === 0) {
+    const config = INTENT_SIGNALS['information_request'];
+    return {
+      intent: 'information_request',
+      confidence: 0.3,
+      signals: [],
+      freshnessRequired: config.freshness,
+      memoryRelevance: config.memoryRelevance,
+    };
+  }
+
+  // At this point intentScores is guaranteed non-empty (empty cases returned above)
+  const best = intentScores[0]!;
+  const secondBest = intentScores.length > 1 ? intentScores[1] : null;
+
+  // v30.3.0: Confidence penalization for close-scoring competing intents
+  // If two intents score very close (within 20%), reduce confidence to signal ambiguity
+  let confidenceBase = best.score;
+  if (secondBest && secondBest.score > best.score * 0.8) {
+    confidenceBase *= 0.85; // 15% penalty for ambiguous intent
+  }
+
+  // v30.3.0: Semantic boosting for synergistic intent combinations
+  // Some intent pairs naturally reinforce each other
+  if (secondBest) {
+    const pair = new Set([best.intent, secondBest.intent]);
+    // research + deep_reflection → higher confidence (the user wants thorough analysis)
+    if (pair.has('research_analysis') && pair.has('deep_reflection')) {
+      confidenceBase *= 1.15;
+    }
+    // data_collection + research_analysis → higher confidence (structured research)
+    if (pair.has('data_collection') && pair.has('research_analysis')) {
+      confidenceBase *= 1.1;
+    }
+    // memory_management + memory_recall → higher confidence (memory-focused session)
+    if (pair.has('memory_management') && pair.has('memory_recall')) {
+      confidenceBase *= 1.1;
+    }
+    // message_analysis + deep_reflection → higher confidence (deep analytical intent)
+    if (pair.has('message_analysis') && pair.has('deep_reflection')) {
+      confidenceBase *= 1.1;
+    }
+  }
+
+  const confidence = Math.min(1.0, confidenceBase / 2);
+
+  // v30.3.0: Elevate memory relevance when secondary intent is memory-related
+  let effectiveMemoryRelevance = best.config.memoryRelevance;
+  if (
+    secondBest &&
+    (secondBest.intent === 'memory_recall' ||
+      secondBest.intent === 'memory_management') &&
+    effectiveMemoryRelevance === 'low'
+  ) {
+    effectiveMemoryRelevance = 'medium';
+  }
+
+  // v30.3.0: Elevate freshness when secondary intent requires current data
+  let effectiveFreshness = best.config.freshness;
+  if (
+    secondBest &&
+    secondBest.config.freshness === 'current' &&
+    effectiveFreshness === 'stable'
+  ) {
+    effectiveFreshness = 'current';
+  }
 
   return {
-    intent: bestIntent,
+    intent: best.intent,
     confidence,
-    signals: matchedSignals,
-    freshnessRequired: config.freshness,
-    memoryRelevance: config.memoryRelevance,
+    signals: best.signals,
+    freshnessRequired: effectiveFreshness,
+    memoryRelevance: effectiveMemoryRelevance,
   };
 }
 
@@ -859,14 +1101,42 @@ export const IDENTITY_CONSTANTS = {
   /** Values clarity and usefulness over verbosity */
   conciseWhenPossible: true,
 
+  /** Applies structured reasoning chains for complex analysis */
+  structuredReasoning: true,
+
+  /** Generates professional-quality formatted output when requested */
+  professionalOutputCapable: true,
+
+  /** Deep reflection with multi-perspective analysis */
+  deepReflectionEnabled: true,
+
+  /** Active memory lifecycle management (store, organize, summarize, forget) */
+  memoryLifecycleEnabled: true,
+
+  /** Deep message analysis (tone, intent, structure, implicit meaning) */
+  messageAnalysisEnabled: true,
+
+  /** Structured data collection and aggregation */
+  dataCollectionEnabled: true,
+
+  /** Internet research, analysis, and enrichment from web sources */
+  internetAnalysisEnabled: true,
+
+  /** Cross-validation of information across multiple sources */
+  crossValidationEnabled: true,
+
+  /** Adaptive depth scaling based on intent + complexity signals */
+  adaptiveDepthEnabled: true,
+
   /** Stable system identity label */
   systemLabel: 'TITANE∞',
 
   /** Version for identity tracking */
-  version: '24.5.0',
+  version: '30.3.0',
 
   /** Core behavioral promise */
-  promise: 'Je suis là pour comprendre vite, agir utile, et me souvenir.',
+  promise:
+    'Je suis là pour comprendre vite, agir utile, raisonner en profondeur, gérer ta mémoire, analyser tes messages, enrichir depuis le web, et me souvenir.',
 } as const;
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -885,6 +1155,11 @@ export function getDepthForIntent(intent: IntentType): ResponseProfileId {
     creative: 'DEEP',
     diagnostic: 'DEEP',
     research_analysis: 'DEEP',
+    professional_document: 'ARCHITECT',
+    deep_reflection: 'DEEP',
+    memory_management: 'DEVELOPED',
+    message_analysis: 'DEEP',
+    data_collection: 'ARCHITECT',
   };
 
   return intentDepthMap[intent] ?? 'DEVELOPED';
@@ -894,12 +1169,14 @@ export function getDepthForIntent(intent: IntentType): ResponseProfileId {
  * Compute effective depth considering:
  * 1. User's stored depth preference (highest priority)
  * 2. Intent-based depth
- * 3. Mode default (fallback)
+ * 3. v30.3.0: Complexity-adjusted escalation — complex queries auto-escalate depth
+ * 4. Mode default (fallback)
  */
 export function computeEffectiveDepth(
   intent: IntentType,
   mode: string,
-  userDepthPreference?: string | null
+  userDepthPreference?: string | null,
+  messageComplexity?: number
 ): ResponseProfileId {
   // User preference overrides everything
   if (userDepthPreference) {
@@ -913,11 +1190,30 @@ export function computeEffectiveDepth(
   }
 
   // Intent-based selection
-  return getDepthForIntent(intent);
+  let depth = getDepthForIntent(intent);
+
+  // v30.3.0: Complexity-adjusted escalation
+  // If message complexity is high, escalate depth by one level
+  if (typeof messageComplexity === 'number' && messageComplexity > 0) {
+    const PROFILE_RANK: Record<ResponseProfileId, number> = {
+      DIRECT: 0, BALANCED: 1, DEVELOPED: 2, DEEP: 3, ARCHITECT: 4, OMEGA: 5,
+    };
+    const RANK_TO_PROFILE: ResponseProfileId[] = ['DIRECT', 'BALANCED', 'DEVELOPED', 'DEEP', 'ARCHITECT', 'OMEGA'];
+    const currentRank = PROFILE_RANK[depth] ?? 2;
+
+    // Graduated escalation based on complexity score
+    if (messageComplexity > 0.85 && currentRank < 4) {
+      depth = RANK_TO_PROFILE[currentRank + 2] ?? depth; // Jump +2 levels for very high complexity
+    } else if (messageComplexity > 0.60 && currentRank < 4) {
+      depth = RANK_TO_PROFILE[currentRank + 1] ?? depth; // Escalate +1 level for moderate-high complexity
+    }
+  }
+
+  return depth;
 }
 
-export const RESPONSE_POLICY_VERSION = '1.2.0';
-export const RESPONSE_POLICY_DATE = '2026-03-31';
+export const RESPONSE_POLICY_VERSION = '2.2.0';
+export const RESPONSE_POLICY_DATE = '2026-04-12';
 
 export default {
   profiles: RESPONSE_PROFILES,

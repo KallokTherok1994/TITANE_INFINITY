@@ -84,6 +84,9 @@ const IS_VITEST =
 // TYPES OMEGA ORCHESTRATOR
 // ─────────────────────────────────────────────────────────────────
 
+// v30.3.0: Error type classification for intelligent failover
+type ErrorSignature = 'timeout' | 'rate_limit' | 'auth_failed' | 'network' | 'model_error' | 'unknown';
+
 interface ProviderStats {
   name: string;
   totalRequests: number;
@@ -94,6 +97,9 @@ interface ProviderStats {
   lastFailure: number;
   reliability: number; // 0-100
   status: 'healthy' | 'degraded' | 'critical' | 'offline';
+  // v30.3.0: Error-type tracking for intelligent failover
+  lastErrorType?: ErrorSignature;
+  recentErrors: { type: ErrorSignature; timestamp: number }[];
 }
 
 interface OrchestratorMetrics {
@@ -436,6 +442,7 @@ class AIOrchestrator {
         lastFailure: 0,
         reliability: 100, // Start optimistic
         status: 'healthy',
+        recentErrors: [],
       });
     });
 
@@ -451,6 +458,7 @@ class AIOrchestrator {
         lastFailure: 0,
         reliability: 100,
         status: 'offline', // Mark as offline until loaded
+        recentErrors: [],
       });
     });
 
@@ -627,6 +635,63 @@ class AIOrchestrator {
   }
 
   /**
+   * v30.3.0: Classify error type for intelligent failover routing
+   * Different error types warrant different retry strategies
+   */
+  private classifyError(error: unknown): ErrorSignature {
+    const msg = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
+
+    if (msg.includes('timeout') || msg.includes('timed out') || msg.includes('econnaborted')) {
+      return 'timeout';
+    }
+    if (msg.includes('rate limit') || msg.includes('429') || msg.includes('too many requests')) {
+      return 'rate_limit';
+    }
+    if (msg.includes('401') || msg.includes('403') || msg.includes('unauthorized') || msg.includes('forbidden') || msg.includes('api key')) {
+      return 'auth_failed';
+    }
+    if (msg.includes('econnrefused') || msg.includes('enotfound') || msg.includes('network') || msg.includes('fetch failed') || msg.includes('econnreset')) {
+      return 'network';
+    }
+    if (msg.includes('model') || msg.includes('invalid') || msg.includes('context length') || msg.includes('content filter')) {
+      return 'model_error';
+    }
+    return 'unknown';
+  }
+
+  /**
+   * v30.3.0: Compute error-type-aware penalty for provider scoring
+   * - rate_limit: heavy penalty (wait required), strongly boost others
+   * - timeout: moderate penalty (may recover soon)
+   * - auth_failed: severe penalty (won't recover without config change)
+   * - network: moderate penalty with faster recovery
+   * - model_error: light penalty (request-specific, not provider-wide)
+   */
+  private computeErrorPenalty(stats: ProviderStats): number {
+    const now = Date.now();
+    // Clean old errors (>60s)
+    stats.recentErrors = stats.recentErrors.filter(e => now - e.timestamp < 60000);
+
+    if (stats.recentErrors.length === 0) return 0;
+
+    let penalty = 0;
+    const errorCounts = new Map<ErrorSignature, number>();
+    for (const err of stats.recentErrors) {
+      errorCounts.set(err.type, (errorCounts.get(err.type) || 0) + 1);
+    }
+
+    // Type-specific penalties
+    penalty += (errorCounts.get('rate_limit') || 0) * 40;    // Heavy: must wait
+    penalty += (errorCounts.get('auth_failed') || 0) * 60;   // Severe: config broken
+    penalty += (errorCounts.get('timeout') || 0) * 20;       // Moderate: may recover
+    penalty += (errorCounts.get('network') || 0) * 25;       // Moderate: transient
+    penalty += (errorCounts.get('model_error') || 0) * 10;   // Light: request-specific
+    penalty += (errorCounts.get('unknown') || 0) * 15;
+
+    return Math.min(80, penalty); // Cap penalty
+  }
+
+  /**
    * ═══════════════════════════════════════════════════════════════════
    * PHASE 3.3: NEURAL PROVIDER SELECTION (Intelligence Adaptive)
    * ═══════════════════════════════════════════════════════════════════
@@ -683,6 +748,16 @@ class AIOrchestrator {
       message.toLowerCase().includes('temps réel') ||
       message.toLowerCase().includes('maintenant');
 
+    // v30.3.0: Graduated complexity score for context-aware provider weighting
+    // Combines message length, context depth, and structural indicators
+    const complexityIndicators = (message.match(/\?/g) || []).length
+      + (message.match(/\b(comment|pourquoi|expliqu|analys|compar|évalue)\b/gi) || []).length;
+    const queryComplexity = Math.min(1.0,
+      (messageLength / 1000) * 0.3
+      + (contextLength / 20000) * 0.3
+      + Math.min(1, complexityIndicators / 3) * 0.4
+    );
+
     // 📊 NOUVEAU v20Ω: Obtenir métriques en temps réel pour ajuster le scoring
     // v22Ω: Utiliser cache TTL 1s pour éviter appels redondants
     const { metrics: _metricsLoaded } = await ensureEngines();
@@ -716,90 +791,96 @@ class AIOrchestrator {
         }
       }
 
-      // EVOLUTION v21Ω: Recovery boost for providers that haven't been tried recently
-      // Prevents "rich get richer" feedback loops by giving idle providers a chance
+      // v30.3.0: Exponential provider recovery — replaces linear +1/10s
+      // Uses logarithmic curve for fast initial recovery tapering to plateau
+      // Prevents "rich get richer" feedback loops by giving idle providers a graduated chance
       const timeSinceLastUsed = Date.now() - stats.lastUsed;
       const timeSinceLastFailure = Date.now() - stats.lastFailure;
 
-      // If provider hasn't been used in 10s and hasn't failed in 10s, give recovery boost
       if (
         timeSinceLastUsed > 10000 &&
         timeSinceLastFailure > 10000 &&
         stats.reliability < 80
       ) {
-        const recoveryBoost = Math.min(20, (timeSinceLastUsed - 10000) / 10000); // +1 per 10s idle, max +20
-        score += recoveryBoost;
+        // Logarithmic recovery: fast initial boost, plateau at ~20
+        // ln(1 + idleSeconds/10) * 5 → at 20s: ~5.5, 50s: ~9, 110s: ~12, 290s: ~17
+        const idleSeconds = (timeSinceLastUsed - 10000) / 1000;
+        const recoveryBoost = Math.min(20, Math.log(1 + idleSeconds / 10) * 5);
+        // Reliability-scaled: lower reliability → stronger recovery push
+        const reliabilityFactor = 1 + (80 - stats.reliability) / 80 * 0.3; // 1.0 at 80, 1.3 at 0
+        const adjustedBoost = Math.min(25, recoveryBoost * reliabilityFactor);
+        score += adjustedBoost;
         logger.debug(
-          `   🔄 Recovery boost for ${provider.name}: +${recoveryBoost.toFixed(1)}`
+          `   🔄 Recovery boost for ${provider.name}: +${adjustedBoost.toFixed(1)} (idle=${idleSeconds.toFixed(0)}s, reliabilityFactor=${reliabilityFactor.toFixed(2)})`
         );
       }
 
-      // ═══ v24.3: CLOUD FIRST SCORING - Mode EN LIGNE prioritaire ═══
-      // Les APIs cloud ont des BONUS MASSIFS car elles offrent la meilleure qualité
-      // Ollama = mémoire locale (toujours actif en background pour sauvegarde)
+      // ═══ v30.3.0: COMPLEXITY-MODULATED CLOUD SCORING ═══
+      // Cloud providers get graduated bonuses scaled by query complexity (0-1)
+      // Higher complexity → stronger boost for reasoning-capable providers
+      // Replaces flat hardcoded bonuses with adaptive weighting
       switch (provider.name) {
         case 'claude':
           // 🥇 PRIORITÉ #1: Claude = meilleur raisonnement, contexte long
           score += 50; // CLOUD PRIORITY BOOST
-          score += isComplexQuery ? 35 : 25; // Excellent sur complexité
-          score += contextLength > 5000 ? 25 : 10; // Superbe contexte long
-          score -= !IS_VITEST && stats.status === 'offline' ? 30 : 0; // Malus réduit
+          // v30.3.0: Graduated complexity bonus — Claude excels at complex reasoning
+          score += 20 + queryComplexity * 20; // 20-40 based on complexity (was flat 25/35)
+          score += Math.min(25, contextLength / 5000 * 15 + 5); // Graduated context bonus (was if/else)
+          score -= !IS_VITEST && stats.status === 'offline' ? 30 : 0;
           break;
 
         case 'openai':
           // 🥈 PRIORITÉ #2: OpenAI = polyvalent, rapide
           score += 45; // CLOUD PRIORITY BOOST
-          score += isComplexQuery ? 30 : 20; // Excellent sur complexité
-          score += messageLength > 1000 ? 15 : 5; // Bon sur longs messages
-          score -= !IS_VITEST && stats.status === 'offline' ? 30 : 0; // Malus réduit
+          score += 15 + queryComplexity * 18; // 15-33 based on complexity (was flat 20/30)
+          score += Math.min(15, messageLength / 1000 * 10); // Graduated length bonus (was if/else)
+          score -= !IS_VITEST && stats.status === 'offline' ? 30 : 0;
           break;
 
         case 'copilot':
           // 🆕 PRIORITÉ #2.5: GitHub Copilot = OpenAI-compatible, écosystème GitHub
-          score += 42; // CLOUD PRIORITY BOOST (between OpenAI and Gemini)
-          score += isComplexQuery ? 28 : 18; // Très bon sur complexité (GPT-4)
-          score += messageLength > 1000 ? 12 : 5; // Bon sur longs messages
-          score -= !IS_VITEST && stats.status === 'offline' ? 30 : 0; // Malus réduit
+          score += 42; // CLOUD PRIORITY BOOST
+          score += 14 + queryComplexity * 16; // 14-30 based on complexity (was flat 18/28)
+          score += Math.min(12, messageLength / 1000 * 8); // Graduated length bonus
+          score -= !IS_VITEST && stats.status === 'offline' ? 30 : 0;
           break;
 
         case 'gemini':
           // 🥉 PRIORITÉ #3: Gemini = multimodal, gratuit
           score += 40; // CLOUD PRIORITY BOOST
-          score += isComplexQuery ? 25 : 15; // Bon sur complexe
+          score += 12 + queryComplexity * 15; // 12-27 based on complexity (was flat 15/25)
           score += requiresRealtime ? 15 : 0; // Bonus temps réel
-          score -= !IS_VITEST && stats.status === 'offline' ? 30 : 0; // Malus réduit
+          score -= !IS_VITEST && stats.status === 'offline' ? 30 : 0;
           break;
 
         case 'tauri-backend':
           // #4: Backend Rust (cascade interne)
-          score += 20; // Bonus modéré
-          score += isComplexQuery ? 15 : 10;
-          score -= contextLength > 10000 ? 10 : 0;
+          score += 20;
+          score += 8 + queryComplexity * 10; // 8-18 graduated (was flat 10/15)
+          score -= Math.min(15, contextLength / 10000 * 10); // Graduated context penalty
           break;
 
         case 'ollama': {
           // #5: Ollama — CHAMPION MODE AWARE
-          // Mode local forcé: Score très haut pour Ollama exclusif
-          // Mode champion (per registry): Score élevé pour priorité champion
-          // Mode auto sans champion: Score modéré comme fallback local
           if (preferredProvider === 'local') {
             score += 200; // Mode local forcé
             logger.debug('   🏠 LOCAL MODE FORCÉ: Ollama exclusif');
           } else if (canonicalMode) {
             const champion = getChampion(canonicalMode as CanonicalMode);
             if (champion?.provider === 'ollama') {
-              score += 120; // 🏆 OLLAMA CHAMPION: priorité maximale pour ce mode
+              score += 120;
               logger.debug(`   🏆 OLLAMA CHAMPION: mode=${canonicalMode} boost=+120`);
             } else {
-              score += 30; // Score modéré si non-champion pour ce mode
+              score += 30;
               logger.debug('   🏠 AUTO MODE: Ollama non-champion (fallback local)');
             }
           } else {
-            score += 30; // Score de base sans info de mode
+            score += 30;
             logger.debug('   🏠 AUTO MODE: Ollama fallback local (pas de canonicalMode)');
           }
-          score += messageLength < 500 ? 10 : 0; // Bonus messages courts
-          score += !requiresRealtime ? 5 : 0; // Légèrement bon si async OK
+          // v30.3.0: Graduated short-message bonus for local inference
+          score += Math.max(0, 10 - messageLength / 100); // Smooth decline, 10 at 0 chars, 0 at 1000+
+          score += !requiresRealtime ? 5 : 0;
           break;
         }
 
@@ -810,10 +891,12 @@ class AIOrchestrator {
           break;
       }
 
-      // Malus échecs récents
-      if (stats.lastFailure && Date.now() - stats.lastFailure < 30000) {
-        // 30s
-        score -= 25;
+      // v30.3.0: Error-type-aware penalty replaces flat -25pts
+      // Different error types get different penalties (rate_limit=heavy, timeout=moderate, etc.)
+      const errorPenalty = this.computeErrorPenalty(stats);
+      if (errorPenalty > 0) {
+        score -= errorPenalty;
+        logger.debug(`   ⚠️ Error penalty for ${provider.name}: -${errorPenalty} (${stats.recentErrors.map(e => e.type).join(',')})`);
       }
 
       // Encourage provider diversity by penalizing recently used engines (except titane-local emergency fallback)
@@ -1279,7 +1362,7 @@ class AIOrchestrator {
           // });
 
           // ═══ FAILURE PATH + AUTO-HEAL + COGNITIVE KERNEL ═══
-          this.updateProviderStats(providerName, false, providerFailureLatency);
+          this.updateProviderStats(providerName, false, providerFailureLatency, lastError);
 
           // 🧠 NOUVEAU v22Ω: Enregistrer échec dans Cognitive Kernel
           cognitiveKernel.recordInMemory('error', {
@@ -1620,7 +1703,8 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
   private updateProviderStats(
     providerName: string,
     success: boolean,
-    responseTime: number
+    responseTime: number,
+    error?: unknown
   ): void {
     const stats = this.providerStats.get(providerName);
     if (!stats) return;
@@ -1653,6 +1737,12 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     } else {
       stats.failureCount++;
       stats.lastFailure = Date.now();
+      // v30.3.0: Track error type for intelligent failover
+      const errorType = this.classifyError(error);
+      stats.lastErrorType = errorType;
+      stats.recentErrors.push({ type: errorType, timestamp: Date.now() });
+      // Keep only last 10 errors
+      if (stats.recentErrors.length > 10) stats.recentErrors = stats.recentErrors.slice(-10);
       if (providerName !== 'titane-local') {
         this.consecutiveLocalResponses = 0;
       }

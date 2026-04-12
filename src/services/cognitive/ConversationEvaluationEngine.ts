@@ -137,6 +137,9 @@ export class ConversationEvaluationEngine extends EventEmitter {
   private totalTests = 0;
   private totalRegressions = 0;
 
+  // v30.3.0: Rolling quality baseline per conversation for prediction
+  private rollingBaselines: Map<string, { scores: number[]; avg: number }> = new Map();
+
   constructor(config?: Partial<QAConfig>) {
     super();
 
@@ -165,6 +168,123 @@ export class ConversationEvaluationEngine extends EventEmitter {
   /**
    * METRICS CALCULATION
    */
+
+  /**
+   * v30.3.0: Predict response quality BEFORE generation
+   * Uses rolling baseline of past quality scores to estimate if this response
+   * will meet the quality threshold. Enables pre-generation routing decisions.
+   *
+   * @returns predicted quality score (0-1) and confidence level
+   */
+  predictResponseQuality(
+    conversation_id: string,
+    context: {
+      user_message: string;
+      depth_profile?: string;
+      complexity_score?: number;
+      has_memory_context?: boolean;
+      has_goal?: boolean;
+    }
+  ): { predicted_score: number; confidence: number; suggestion: string } {
+    const baseline = this.rollingBaselines.get(conversation_id);
+
+    // No history → cautiously optimistic prediction
+    if (!baseline || baseline.scores.length < 3) {
+      return {
+        predicted_score: 0.75,
+        confidence: 0.3,
+        suggestion: 'Insufficient history for accurate prediction — using default quality threshold.',
+      };
+    }
+
+    // Base prediction: rolling average of recent quality
+    let predicted = baseline.avg;
+
+    // v30.3.0: Context-based adjustments
+    const msgLength = context.user_message.length;
+
+    // Complexity adjustment: very complex queries tend to score slightly lower
+    if (context.complexity_score && context.complexity_score > 0.7) {
+      predicted -= 0.05; // Complex queries are harder to answer perfectly
+    }
+
+    // Depth adjustment: deeper profiles tend to produce higher quality
+    if (context.depth_profile === 'ARCHITECT' || context.depth_profile === 'OMEGA') {
+      predicted += 0.05;
+    } else if (context.depth_profile === 'DIRECT') {
+      predicted -= 0.03; // Simple responses may miss nuance
+    }
+
+    // Memory context boost: having context improves quality
+    if (context.has_memory_context) {
+      predicted += 0.03;
+    }
+
+    // Goal alignment boost
+    if (context.has_goal) {
+      predicted += 0.02;
+    }
+
+    // Very short messages are easier to answer well
+    if (msgLength < 50) predicted += 0.02;
+    // Very long messages may reduce quality
+    if (msgLength > 500) predicted -= 0.03;
+
+    predicted = Math.max(0, Math.min(1, predicted));
+
+    // Confidence scales with history depth
+    const confidence = Math.min(0.9, 0.3 + baseline.scores.length * 0.03);
+
+    // Generate suggestion based on prediction
+    let suggestion = '';
+    if (predicted < 0.55) {
+      suggestion = 'Low quality predicted — consider requesting clarification or escalating depth profile.';
+    } else if (predicted < 0.70) {
+      suggestion = 'Moderate quality predicted — consider increasing response depth.';
+    } else {
+      suggestion = 'Good quality predicted — proceed with current configuration.';
+    }
+
+    return { predicted_score: predicted, confidence, suggestion };
+  }
+
+  /**
+   * v30.3.0: Record quality score in rolling baseline for future predictions
+   */
+  private updateRollingBaseline(conversation_id: string, overallScore: number): void {
+    const baseline = this.rollingBaselines.get(conversation_id) || { scores: [], avg: 0.75 };
+
+    baseline.scores.push(overallScore);
+    // Keep last 20 scores for the rolling window
+    if (baseline.scores.length > 20) baseline.scores.shift();
+
+    // Recalculate average
+    baseline.avg = baseline.scores.reduce((sum, s) => sum + s, 0) / baseline.scores.length;
+
+    this.rollingBaselines.set(conversation_id, baseline);
+
+    // v30.3.0: Emit quality feedback event for orchestrator/preference engine
+    if (overallScore < 0.65) {
+      this.emit('quality:low', {
+        conversation_id,
+        score: overallScore,
+        baseline_avg: baseline.avg,
+        trend: overallScore < baseline.avg ? 'declining' : 'stable',
+        suggestion: 'Consider adjusting depth profile or enriching context.',
+      });
+    }
+
+    // v30.3.0: Regression detection — alert if quality drops >15% below baseline
+    if (baseline.scores.length >= 5 && overallScore < baseline.avg * 0.85) {
+      this.totalRegressions++;
+      this.emit('quality:regression', {
+        conversation_id,
+        current_score: overallScore,
+        baseline_avg: baseline.avg,
+        drop_percent: Math.round((1 - overallScore / baseline.avg) * 100),
+      });
+    }
+  }
 
   /**
    * Evaluate conversation turn
@@ -215,6 +335,13 @@ export class ConversationEvaluationEngine extends EventEmitter {
 
       this.emit('evaluation:completed', { conversation_id, evaluation });
     }
+
+    // v30.3.0: Update rolling baseline for quality prediction feedback loop
+    const metricValues = Object.values(metrics).filter(v => typeof v === 'number');
+    const overallScore = metricValues.length > 0
+      ? metricValues.reduce((sum, v) => sum + v, 0) / metricValues.length
+      : 0.75;
+    this.updateRollingBaseline(conversation_id, overallScore);
 
     this.log(`Evaluated conversation ${conversation_id}`, metrics);
     return metrics;
