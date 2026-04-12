@@ -1,57 +1,231 @@
 {
   "version": "v30.1.0",
   "category": "cuisine_gastronomie",
-  "description": "Cuisine et gastronomie — techniques fondamentales, chimie culinaire, cuisines du monde, nutrition culinaire, organisation cuisine professionnelle, accords mets-vins, pâtisserie scientifique, fermentation",
+  "description": "Cuisine et gastronomie — techniques fondamentales et avancées, chimie culinaire, cuisines du monde, nutrition sportive, organisation professionnelle, accords mets-vins, pâtisserie scientifique, fermentation, conservation, sauces fondamentales, cuisson avancée, cuisine moléculaire, boulangerie artisanale, café et thé, équipement professionnel.",
   "cuisine_gastronomie": {
-    "introduction": "La cuisine est à la fois science et art. Comprendre la chimie des transformations alimentaires (réaction de Maillard, caramélisation, émulsification) permet de cuisiner avec intention plutôt que par recette aveugle. TITANE aborde la cuisine comme un système : technique + goût + nutrition + culture.",
+    "introduction": "La cuisine est à la fois science et art. Comprendre la chimie des transformations alimentaires (Maillard, caramélisation, émulsification, dénaturation) permet de cuisiner avec intention. TITANE aborde la cuisine comme un système : technique + goût + nutrition + culture + conservation + équipement.",
     "techniques_fondamentales": {
       "chaleur": {
-        "sauter": "Haute chaleur, peu de matière grasse, mouvement constant. Légumes croquants, viandes dorées.",
-        "braiser": "Saisir puis cuire long en liquide couvert. Collagène → gélatine. Viandes dures deviennent fondantes.",
-        "pocher": "Cuire dans liquide frémissant (<100°C). Protéines délicates (œufs, poisson, poulet). Doux.",
-        "rotir": "Four sec. Maillard + caramélisation surfaces. Viandes + légumes.",
-        "vapeur": "Préserve nutriments, couleurs, texture. Cuisson douce sans Maillard.",
-        "frire": "Immersion huile 160-190°C. Croûte instantanée par évaporation eau. Texture unique."
+        "sauter": "Haute chaleur (200-230°C), peu de gras, mouvement constant. Maillard rapide. Ne pas surcharger la poêle.",
+        "braiser": "Saisir puis cuire en liquide couvert (150-170°C). Collagène → gélatine à 70-80°C. Paleron, joue, jarret.",
+        "pocher": "Liquide frémissant 65-95°C. Œuf 75°C, poisson 70°C, poulet 85°C. Court-bouillon aromatique.",
+        "rotir": "Four sec 180-220°C. Repos obligatoire 5 min/500g pour redistribution des jus.",
+        "vapeur": "Préserve 90% des nutriments. 100°C constant. Poisson, légumes verts, dim sum.",
+        "frire": "Immersion 160-190°C. Huile haut point de fumée (arachide 230°C). Égoutter sur grille.",
+        "griller": "Chaleur radiante >250°C. Cuisson directe/indirecte. Huiler l'aliment, pas la grille.",
+        "confire": "Cuisson lente dans un gras (80-90°C, 2-8h). Canard, ail, tomates."
       },
-      "coupes": "Brunoise (2mm), mirepoix (1cm), julienne (bâtonnets fins), chiffonnade (herbes fines). Uniformité = cuisson homogène.",
-      "assaisonnement": "Sel en début (osmose, attendrit), acide en fin (luminosité). Umami (MSG, parmesan, champignons) amplifie tout.",
-      "reduction": "Évaporation eau concentre saveurs. Fond brun, glacis, sauces. Attention au sel qui se concentre aussi."
+      "coupes": {
+        "brunoise": "Dés 2mm. Garnitures, consommés.",
+        "mirepoix": "Dés 1cm. Base aromatique (carotte, oignon, céleri 1:2:1).",
+        "julienne": "Bâtonnets 3mm × 5cm. Salades, sautés.",
+        "chiffonnade": "Feuilles roulées tranchées fin. Ciseler au dernier moment.",
+        "ciseler": "Oignon en dés fins, base préservée.",
+        "emincer": "Tranches 1-3mm. Doigts en griffe.",
+        "tourner": "Légumes en ballon de rugby à 7 faces. Classique française."
+      },
+      "assaisonnement": "Sel en début (osmose). Acide en fin (luminosité). Umami (parmesan, champignons, soja) amplifie tout. Le gras véhicule les arômes liposolubles.",
+      "reduction": "Évaporation concentre saveurs. Fond brun → demi-glace → glace de viande. Sel se concentre aussi — saler en fin.",
+      "temperatures_cles": {
+        "danger": "4-60°C : zone bactérienne. Max 2h.",
+        "proteines": "Blanc d'œuf 62°C, jaune 68°C, collagène 70-80°C, myosine 50°C.",
+        "maillard": "Commence 110°C, optimale 140-165°C, carbonisation >180°C.",
+        "fumee": "Beurre clarifié 250°C, olive EV 190°C, arachide 230°C."
+      }
     },
     "chimie_culinaire": {
-      "maillard": "Réaction acides aminés + sucres > 140°C. Crée 100+ composés aromatiques. Différente de la caramélisation.",
-      "caramelisation": "Sucres seuls > 160°C. Brun, amer-doux. Caramel, crème brûlée.",
-      "emulsification": "Mélange deux liquides non miscibles (huile+eau) via émulsifiant (lécithine jaune d'œuf). Mayonnaise, vinaigrette, hollandaise.",
-      "gelatine_agar": "Gélatine (animale) gèle à 15°C, fond à 35°C. Agar-agar (végétal) plus ferme, reste gélifié plus chaud.",
+      "maillard": "Acides aminés + sucres > 140°C → centaines de composés (pyrazines, furanes). Croûte pain, viande grillée, café. Favorisée par pH alcalin et faible humidité.",
+      "caramelisation": "Sucres seuls > 160°C. Blond 160°C, ambré 170°C, foncé 180°C, amer 190°C+.",
+      "emulsification": "Huile + eau stabilisés par émulsifiant (lécithine, moutarde). Huile/eau (mayonnaise) ou eau/huile (beurre).",
+      "gelatine_agar": "Gélatine : gèle 15°C, fond 35°C, 6-10g/L. Agar-agar : gèle 35°C, fond 85°C. 2g agar = 8g gélatine.",
+      "osmose": "Sel attire l'eau par osmose. Saumure 3-10% hydrate en profondeur. Saumurage volaille : +10-15% jutosité.",
+      "denaturation_acide": "Ceviche : citron pH ~2 dénature poisson en 15-30 min sans chaleur.",
       "fermentation": {
-        "lactique": "Bactéries lactiques consomment sucres → acide lactique. Yaourt, fromage, choucroute, kimchi.",
-        "alcoolique": "Levures consomment sucres → alcool + CO2. Pain, bière, vin.",
-        "acetique": "Bactéries acétiques oxydent alcool → vinaigre.",
-        "umami_fermente": "Miso, sauce soja, garum — fermentation longue crée glutamates concentrés"
+        "lactique": "Lactobacillus : sucres → acide lactique, pH < 4.5. Yaourt, choucroute, kimchi. 18-22°C.",
+        "alcoolique": "S. cerevisiae : sucres → éthanol + CO2. Pain, bière, vin. 20-25°C.",
+        "acetique": "Acetobacter : éthanol → acide acétique. Vinaigre. Mère = biofilm bactérien.",
+        "umami_fermente": "Glutamates concentrés. Miso 6 mois-3 ans, soja 6-36 mois, garum 3-6 mois. Koji = champignon clé.",
+        "kombucha_kefir": "SCOBY (kombucha 7-14j), kéfir lait (24-48h), kéfir fruits (24-48h). Probiotiques."
       }
     },
     "cuisines_du_monde": {
-      "francaise": "Sauces mères (béchamel, velouté, espagnole, hollandaise, tomate), brigade cuisine, terroir, fromages (1200 variétés)",
-      "japonaise": "Umami central (dashi), saisonnalité (shun), présentation zen, fermentation (miso/sake/mirin), découpe précise (katsuramuki)",
-      "mexicaine": "Mole complexe (>30 ingrédients), épices fondamentales (cumin/chile/curcuma), masa nixtamalisée, fermentation (tepache)",
-      "indienne": "Épices = médicaments (ayurvéda), cuisson en plusieurs étapes (bhuna), pain (naan/roti/paratha), curries régionaux très distincts",
-      "italienne": "Qualité ingrédients > technique (pasta fraîche, huile olive, parmesan 24 mois), terroir, régionalisme fort"
+      "francaise": "Escoffier (1903), sauces mères, fonds, braisages. 1200+ fromages, 300+ AOC. Spécialités : bouillabaisse, cassoulet, choucroute, gratin dauphinois, quenelles, aligot.",
+      "japonaise": "Umami central (dashi kombu+katsuobushi). Saisonnalité (shun), esthétique. Shoyu, mirin, sake, miso, wasabi. Découpe katsuramuki, tempura, sushi.",
+      "mexicaine": "UNESCO 2010. Nixtamalisation (maïs + chaux → niacine). Mole >30 ingrédients, salsas, al pastor. Chiles : ancho, guajillo, chipotle, habanero.",
+      "indienne": "Ayurvéda, épices = médicaments. Tadka (épices dans huile chaude), bhuna, dum pukht. Garam masala, panch phoron. Nord/Sud/Est/Ouest très distincts.",
+      "italienne": "Moins d'ingrédients, meilleure qualité. DOP. Pasta fraîche, risotto mantecatura, pizza 450°C. Parmigiano 24-36 mois, San Marzano, balsamique 12-25 ans.",
+      "thai": "Équilibre 4 saveurs : sucré, salé, acide, piquant. Lait de coco, citronnelle, galanga, combawa, nam pla, tamarin.",
+      "marocaine": "Tajine (terre cuite conique, vapeur recyclée). Ras el-hanout >20 épices. Couscous 3 passages, pastilla, méchoui, citron confit."
     },
     "patisserie_scientifique": {
-      "bases": "Mesures précises au gramme (contrairement cuisine). Œuf : liant + aérant + émulsifiant + colorant.",
-      "gluten": "Protéines farine (gluténine+gliadine) forment réseau élastique avec eau. Travail = plus gluten. Repos = relâche.",
-      "corps_gras": "Beurre froid = feuilletage. Beurre pommade = créme, moelleux. Beurre fondu = dense.",
-      "sucres": "Saccharose (standard), glucose (anti-cristallisation), fructose (pouvoir sucrant 1.5x, hygroscopique)",
-      "levures_vs_chimique": "Levure biologique = lente, arômes complexes. Levure chimique (bicarbonate) = rapide, réaction chaleur."
+      "bases": "Mesures au gramme. Œuf (50g) : liant + aérant + émulsifiant + colorant. Température ingrédients : ambiante pour crémage, froid pour feuilletage.",
+      "gluten": "Gluténine (élasticité) + gliadine (extensibilité). T45 pâtisserie, T55 tout usage, T65 pain. Ennemi en brisée, allié en boulangerie.",
+      "corps_gras": {
+        "beurre_froid": "Feuilletage : couches → vapeur → levée. 729 couches classique.",
+        "beurre_pommade": "Crémer + sucre = air incorporé. Cakes, cookies.",
+        "beurre_fondu": "Financiers, madeleines. Beurre noisette = arômes complexes."
+      },
+      "sucres": {
+        "saccharose": "Standard. Caramélise 160°C.",
+        "glucose": "Anti-cristallisation. Confiserie, sorbets.",
+        "fructose": "Pouvoir sucrant 1.5x, hygroscopique.",
+        "cuissons": "Petit boulé 116°C, grand boulé 121°C, cassé 140-155°C, caramel 160°C+."
+      },
+      "levures_vs_chimique": "Bio : lente 1-24h, arômes complexes. Chimique : rapide, neutre. 1g sèche = 3g fraîche.",
+      "meringues": {
+        "francaise": "Blancs + sucre progressif. Crue. Séchée 90-100°C.",
+        "suisse": "Bain-marie 55°C puis montée. Stable. Pavlova.",
+        "italienne": "Sirop 121°C sur blancs montés. Très stable. Buttercream, mousses."
+      },
+      "temperage_chocolat": "Forme V (bêta) : brillant, cassant, fond 34°C. Noir 50→28→31°C, lait 45→27→29°C, blanc 40→26→28°C."
     },
     "organisation_cuisine": {
-      "mise_en_place": "Préparer TOUT avant de commencer : ingrédients mesurés, équipements prêts. Clé de la cohérence.",
-      "brigade": "Chef → Sous-chef → Chef de partie → Commis. Spécialisation : saucier, garde-manger, patissier, poissonnier.",
-      "haccp": "Hygiène alimentaire : températures danger (4-60°C), contaminations croisées, chaîne du froid"
+      "mise_en_place": "Tout préparer avant : pesé, prêt, relu. 80% du temps pro = mise en place.",
+      "brigade": {
+        "hierarchie": "Chef → Sous-chef → Chef de partie → Commis. Système Escoffier 1903.",
+        "postes": "Saucier (sauces, le plus qualifié), garde-manger (froid), pâtissier, poissonnier, rôtisseur, entremetier (légumes), tournant (remplace tous)."
+      },
+      "haccp": "Zone danger 4-60°C. Chaîne du froid : <4°C frais, <-18°C surgelé. Planches couleur. FIFO.",
+      "marche_en_avant": "Flux unidirectionnel : Réception → Stockage → Préparation → Cuisson → Service."
     },
     "accords_mets_vins": {
-      "principes": "Poids similaire (léger avec léger), région avec région, complémentarité ou contraste (foie gras + Sauternes sucré)",
-      "regles": "Blanc avant rouge, sec avant doux, léger avant corsé, fromage = vin rouge souvent meilleur avec blanc",
-      "umami_vin": "Tanins rouges + umami = métallique désagréable. Umami fort → vin avec acidité, peu de tanins"
+      "principes": "Poids similaire plat/vin. Accord régional. Complémentarité ou contraste.",
+      "regles": "Blanc avant rouge, sec avant doux, léger avant corsé. Fromage souvent meilleur avec blanc.",
+      "umami_vin": "Tanins + umami = métallique. Umami fort → acidité, peu de tanins. Sake = meilleur accord umami.",
+      "classiques": {
+        "poisson": "Chablis, Muscadet — acidité, minéralité.",
+        "agneau": "Bordeaux rouge, Côtes-du-Rhône.",
+        "chocolat": "Banyuls, Maury, Porto Tawny.",
+        "chevre": "Sancerre, Pouilly-Fumé.",
+        "epice": "Gewurztraminer, Riesling demi-sec."
+      }
+    },
+    "conservation_aliments": {
+      "introduction": "Inhiber microbes et enzymes via : température, activité de l'eau, pH, atmosphère, antimicrobiens naturels.",
+      "lactofermentation": "Légumes en saumure 2-5% sel. Lactiques → acide lactique, pH < 4.5. Mois de conservation. Probiotiques. Choucroute, kimchi, pickles. 18-22°C, maintenir sous saumure.",
+      "mise_en_conserve": "Appertisation (1810). Acides (pH <4.6) : 100°C bain-marie. Peu acides : 116-121°C autoclave. Détruit C. botulinum.",
+      "sous_vide": "Élimine O2, ralentit oxydation. Viandes 6-10j vs 3-5j au frigo. Combiné pasteurisation = conservation longue. Chaîne du froid impérative.",
+      "congelation": "Rapide -18°C : petits cristaux = peu de dommages. Viandes 6-12 mois, poissons 3-6 mois. Décongeler au frigo. Ne jamais recongeler sans cuire.",
+      "deshydratation": "Activité eau < 0.6. Déshydrateur 40-70°C. Fruits, tomates, jerky, herbes. Poids réduit 80-90%.",
+      "fumage": "Froid (15-25°C) : saumon, fromage, ne cuit pas. Chaud (60-120°C) : cuit + fume. Hêtre, chêne, pommier. Jamais de résineux.",
+      "salaison": "Sel réduit aw. Sèche (jambon cru, gravlax) ou saumure (corned-beef). Jambon de Parme 12-36 mois, bresaola 2-3 mois."
+    },
+    "sauces_fondamentales": {
+      "introduction": "Pilier de la cuisine française. Système Escoffier : 5 sauces mères → centaines de dérivées.",
+      "cinq_meres": {
+        "bechamel": "Roux blanc + lait + muscade. Dérivées : Mornay (fromage), Soubise (oignons), Nantua (écrevisses).",
+        "veloute": "Roux blanc + fond blanc. Dérivées : suprême (crème + jaunes), Bercy (échalotes + vin blanc).",
+        "espagnole": "Roux brun + fond brun + mirepoix + tomate, 4-6h. Réduite = demi-glace. Dérivées : bordelaise, chasseur.",
+        "hollandaise": "Jaunes + beurre clarifié + citron, bain-marie 65°C max. Dérivées : béarnaise, Choron, maltaise. Fragile.",
+        "tomate": "Mirepoix + tomates + fond + bouquet garni, 1-2h. Dérivées : portugaise, provençale."
+      },
+      "fonds": {
+        "blanc": "Os blanchis + eau froide + mirepoix. 3-4h volaille, 6-8h veau. Frémissement, jamais ébullition.",
+        "brun": "Os colorés four 200°C + mirepoix rissolée + tomate + vin. 8-12h.",
+        "fumet_poisson": "Arêtes poisson blanc + vin blanc. 20-30 min max.",
+        "legumes": "Légumes émincés + eau froide. 30-45 min. Pas de chou/betterave."
+      },
+      "liaisons": "Roux (blanc/blond/brun), beurre manié (urgence), jaunes + crème (< 82°C), fécule (instantanée).",
+      "emulsions": "Froides : mayonnaise, aïoli, rouille. Chaudes : hollandaise, béarnaise, beurre blanc. Service immédiat."
+    },
+    "cuisson_avancee": {
+      "sous_vide": "Bain thermostaté au degré. Œuf parfait 64°C/60min, saumon 45°C/20min, bœuf 56°C/2h. Homogène, juteux. Saisir après pour Maillard.",
+      "basse_temperature": "Four 55-80°C plusieurs heures. Rôti bœuf 60°C/4-6h puis saisie 250°C. Collagène fond sans contracter fibres.",
+      "cuisson_inverse": "Reverse sear : four 120°C → température interne cible → saisie haute température. Rosé uniforme. Steaks >3cm.",
+      "en_croute": "Pâte scelle jus et arômes. Wellington (filet + duxelles + feuilletée), bar croûte de sel.",
+      "papillote": "Papier sulfurisé + aromates. Vapeur propre. 15-20 min/180°C. Ouverture à table.",
+      "plancha": "Plaque 250-350°C, contact direct rapide. Fruits de mer, légumes, viandes fines.",
+      "bbq_fume": {
+        "methode": "Low and slow : 4-18h à 95-130°C en fumée. Brisket (12-18h/110°C), pulled pork (10-14h). Stall 70°C = évaporation.",
+        "bois": "Chêne (polyvalent), hickory (porc), mesquite (intense), pommier (volaille), cerisier (fruité)."
+      }
+    },
+    "nutrition_sportive_cuisine": {
+      "introduction": "Repas optimisés pour performance, récupération et composition corporelle.",
+      "macros": {
+        "proteines": "1.6-2.2g/kg/jour. Poulet 31g/100g, thon 26g, œufs 13g, lentilles 25g sec, tofu 15g.",
+        "glucides": "Riz basmati IG 58, patate douce IG 50, avoine IG 55. Complexes avant effort, rapides après. Riz refroidi = amidon résistant.",
+        "lipides": "0.8-1.2g/kg/jour. Olive (oméga-9), saumon (oméga-3 anti-inflammatoires), avocat, noix."
+      },
+      "meal_prep": "Cuisiner en lot. Protéines, féculents, légumes séparément. Contenants verre, 3-4j frigo. Sauces à part.",
+      "timing": {
+        "pre": "2-3h avant : glucides complexes + protéines maigres.",
+        "pendant": ">60 min : 30-60g glucides/h. Hydratation 400-800 ml/h.",
+        "post": "30-60 min : 20-40g protéines + glucides rapides (whey + banane).",
+        "sommeil": "Caséine (fromage blanc) : protéine lente 6-8h."
+      }
+    },
+    "cuisine_moleculaire": {
+      "introduction": "Hervé This et Ferran Adrià. Physico-chimie pour textures inédites. Ingrédients naturels (algues, fruits, protéines).",
+      "spherification": {
+        "basique": "Liquide + alginate (0.5%) en bain CaCl2 (0.5%). Gel surface instantané. Faux caviar, perles.",
+        "inversee": "Calcium dans le liquide, bain d'alginate. Gélification s'arrête hors bain. Ravioles liquides."
+      },
+      "gelification": "Carraghénane kappa (ferme), iota (souple), gellane (résistant chaleur). Gel fluide : agar mixé.",
+      "mousses_siphon": "Siphon N2O → espumas. Tout liquide avec gélifiant ou gras. Parmesan, chocolat, betterave.",
+      "texturisation": {
+        "maltodextrine": "Graisses → poudre. Huile d'olive en poudre (ratio 60/40). Fond en bouche.",
+        "methylcellulose": "Gélifie à chaud, fond à froid. Gels chauds.",
+        "xanthane": "Épaississant 0.1-0.5%. Veloutée sans cuisson. Surdosage = visqueux."
+      },
+      "encapsulation": "Piégeage saveurs dans enveloppe comestible. Libération contrôlée en séquence."
+    },
+    "boulangerie_artisanale": {
+      "introduction": "Farine, eau, sel, levain + temps et température. Fermentations longues = arômes + digestibilité.",
+      "levain": "Culture levures sauvages + lactiques. 50g farine complète + 50g eau, nourrir 7-14j. Mature : double en 4-6h.",
+      "fermentation": "Pointage 3-5h/24°C + apprêt 1-3h ou 12-18h au froid. Froid = arômes complexes. Poke test : empreinte revient lentement.",
+      "cuisson_pain": "Four 250°C, cocotte ou pierre. Buée 15 min. Grigner 45°. Baisser 220°C. Cuit : sonne creux, 95-98°C interne.",
+      "pre_ferments": {
+        "poolish": "100% hydratation, 8-16h. Alvéolage ouvert. Baguette tradition.",
+        "biga": "50-60% hydratation, 12-24h. Force, structure. Ciabatta, panettone.",
+        "pate_fermentee": "10-30% de la fournée précédente. Profondeur aromatique."
+      },
+      "autolyse": "Farine + eau sans sel/levain, 20-60 min. Enzymes travaillent. Pétrissage réduit 30-50%. Technique Calvel.",
+      "hydratation": "Pain 60-65%, ciabatta 75-85%, focaccia 80-90%. Haute hydratation = mie ouverte. Stretch and fold.",
+      "temperatures": "TB = eau + farine + ambiante. Levain TB 58-62°C. +1°C ≈ +10% vitesse fermentation."
+    },
+    "cafe_et_the": {
+      "cafe": {
+        "origines": "Arabica (60%, complexe, 1.2% caféine) vs Robusta (40%, amer, 2.7%). Éthiopie (fruité), Colombie (équilibré), Brésil (chocolaté), Kenya (acide), Sumatra (terreux).",
+        "torrefaction": "1er crack 196°C (légère), 200-210°C (moyenne), 2e crack 224°C (foncée). Optimum 3-14j après.",
+        "extraction": {
+          "espresso": "9 bars, 90-96°C, 25-30s, ratio 1:2 (18g→36g).",
+          "v60": "Gravité, ratio 1:15-1:17, bloom 30s, 92-96°C, 2.5-3.5 min.",
+          "french_press": "Immersion, grossière, 1:15, 4 min.",
+          "aeropress": "Immersion + pression, polyvalent, 1-2 min.",
+          "moka": "Vapeur 1.5 bar, retirer au gargouillement."
+        },
+        "latte_art": "Lait 60-65°C micro-moussé. Motifs : cœur, rosetta, tulipe."
+      },
+      "the": {
+        "types": {
+          "vert": "Non oxydé. Étuvage (Japon) ou poêlage (Chine). 70-80°C, 1-3 min.",
+          "noir": "Oxydé 100%. Darjeeling, Assam, Ceylan. 90-100°C, 3-5 min.",
+          "oolong": "Semi-oxydé 10-80%. Tie Guan Yin, Da Hong Pao. 85-95°C, infusions multiples.",
+          "blanc": "Minimal. Bai Hao Yin Zhen. 75-85°C, 4-5 min.",
+          "pu_erh": "Post-fermenté. Se bonifie. 95-100°C.",
+          "matcha": "Poudre, plants ombragés 3 sem. Chasen 2g+70ml/75°C."
+        },
+        "degustation": "Feuilles, liqueur, nez, bouche. Gong fu cha : gaiwan, infusions 10-30s.",
+        "conservation": "Hermétique, opaque. Vert 6-12 mois, noir 2-3 ans, pu-erh indéfinie."
+      }
+    },
+    "equipement_professionnel": {
+      "couteaux": {
+        "chef": "20-25cm polyvalent, 80% des coupes. Gyuto japonais : 15° vs 20° européen.",
+        "office": "8-10cm, précision.",
+        "filet_sole": "Flexible 16-18cm, lever filets.",
+        "pain": "Crantée 25-30cm.",
+        "santoku": "Japonais 16-18cm, hachage vertical, alvéoles.",
+        "nakiri": "Rectangle japonais, légumes.",
+        "entretien": "Pierre 1000/3000-6000. Fusil pour réaligner. Jamais lave-vaisselle."
+      },
+      "mandoline": "Trancheuse ajustable, tranches 0.5mm. Protection obligatoire.",
+      "thermometre": "Sonde instantanée ±0.5°C. Bœuf saignant 52-55°C, volaille 74°C, poisson 48-52°C, pain 95-98°C.",
+      "siphon": "N2O : espumas, chantilly express, infusions rapides, marinades accélérées.",
+      "deshydrateur": "35-70°C. Fruits 55°C/8-12h, jerky 60°C/6-8h, herbes 40°C/2-4h.",
+      "plancha": "Fonte/acier 6-10mm, 3kW+/brûleur. Plus saine que barbecue.",
+      "four_vapeur": "Combiné vapeur + convection. Vapeur : sans dessèchement. Combiné : Maillard + jutosité."
     }
   }
 }
