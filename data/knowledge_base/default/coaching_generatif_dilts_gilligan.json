@@ -1,0 +1,160 @@
+{
+  "version": "30.1.0",
+  "category": "coaching_generatif_dilts_gilligan",
+  "description": "Coaching génératif selon Robert Dilts et Stephen Gilligan — PNL de 3e génération, transe générative, interaction conscient-inconscient, modèle SCORE, voyage du héros, intelligence somatique, champ unifié, identité générative",
+  "coaching_generatif_dilts_gilligan": {
+    "introduction": "Le coaching génératif, élaboré par Robert Dilts et Stephen Gilligan, est une approche de coaching de troisième génération alliant la PNL avancée, la transe générative issue de l'hypnose ericksonienne et l'intégration des différentes formes d'intelligence (cognitive, somatique, émotionnelle, collective). Il vise une transformation profonde et créative au-delà de la simple résolution de problèmes.",
+    "trois_generations_coaching": {
+      "premiere_generation": {
+        "focus": "Résolution de problèmes comportementaux et atteinte d'objectifs",
+        "methodes": "Techniques comportementales, planification, feedback",
+        "limites": "Reste en surface — ne touche pas l'identité ni les transformations profondes"
+      },
+      "deuxieme_generation": {
+        "focus": "Travail sur les croyances, valeurs et capacités",
+        "methodes": "PNL classique, niveaux logiques, recadrage des croyances",
+        "limites": "Cadre cognitif — peut manquer la dimension somatique et inconsciente"
+      },
+      "troisieme_generation": {
+        "focus": "Transformation identitaire, générativité, connexion au champ unifié",
+        "methodes": "Transe générative, intelligence somatique, coaching de l'esprit créatif",
+        "innovation": "Intègre le corps, l'inconscient, le champ relationnel et la créativité"
+      }
+    },
+    "transe_generative": {
+      "definition": "État amplifié de conscience créative développé par Stephen Gilligan, héritier de Milton Erickson, où le sujet accède à l'intelligence inconsciente pour générer de nouveaux états identitaires et solutions",
+      "principes": [
+        "L'inconscient est une source de créativité, pas seulement un réservoir de problèmes",
+        "La transe est un état naturel que tout le monde expérimente quotidiennement",
+        "La collaboration conscient-inconscient produit des résultats qu'aucun des deux ne pourrait produire seul",
+        "Chaque problème contient les germes de sa propre solution",
+        "Le corps est un véhicule essentiel de la transformation"
+      ],
+      "etats_generatifs": {
+        "definition": "États positifs profonds qui génèrent naturellement des solutions créatives",
+        "exemples": ["Flow créatif", "Présence centrée", "Connexion profonde", "Émerveillement", "Calme puissant"],
+        "comment_y_acceder": ["Centrage somatique", "Attention ouverte (vs focalisée)", "Intention claire", "Accueil de ce qui émerge", "Sponsoring intérieur"]
+      },
+      "interaction_conscient_inconscient": {
+        "esprit_conscient": "Volonté, planification, analyse logique, intentions verbalisées",
+        "esprit_inconscient": "Ressources cachées, créativité spontanée, émotions profondes, mémoire corporelle, sagesse intuitive",
+        "collaboration": "Le coaching génératif crée un espace où les deux esprits travaillent ensemble de manière synergique, produisant des solutions ni purement rationnelles ni purement intuitives"
+      }
+    },
+    "modele_score": {
+      "definition": "Outil diagnostic créé par Robert Dilts pour explorer les dynamiques de changement",
+      "composantes": {
+        "S_symptome": "Manifestation visible du problème — ce que le client expérimente actuellement",
+        "C_cause": "Origines profondes du symptôme — croyances, événements passés, patterns",
+        "O_objectif": "Ce que le client veut à la place — état désiré, résultat souhaité",
+        "R_ressources": "Capacités, compétences, états internes nécessaires pour atteindre l'objectif",
+        "E_effets": "Impact systémique du changement — conséquences à long terme sur le client et son environnement"
+      },
+      "utilisation_avancee": "Le modèle SCORE est utilisé comme base de diagnostic systémique avant toute intervention, permettant de cartographier la complexité de la situation du client"
+    },
+    "voyage_du_heros": {
+      "definition": "Adaptation de la structure mythique de Joseph Campbell comme cadre de transformation personnelle en coaching",
+      "etapes": {
+        "1_appel": "Le client entend un appel au changement — insatisfaction, rêve, crise",
+        "2_refus_appel": "Résistance initiale — peur, doute, attachement au connu",
+        "3_passage_du_seuil": "Engagement dans le voyage — décision de changer",
+        "4_epreuves_et_allies": "Rencontre de défis, découverte de ressources, mentors et guides",
+        "5_transformation": "Mort symbolique de l'ancienne identité — nuit noire de l'âme",
+        "6_renaissance": "Émergence d'une nouvelle identité avec de nouvelles capacités",
+        "7_retour_et_integration": "Intégration de la transformation dans la vie quotidienne — partage du don"
+      },
+      "application_coaching": "Le coach génératif utilise cette structure pour normaliser le processus de changement, honorer les épreuves et guider le client à travers les phases inévitables de la transformation"
+    },
+    "intelligence_somatique": {
+      "definition": "Forme d'intelligence portée par le corps, les sensations, les postures et les mouvements — souvent négligée dans les approches purement cognitives",
+      "principes": [
+        "Le corps possède sa propre intelligence et ses propres réponses",
+        "Les émotions sont d'abord des événements corporels avant d'être des événements mentaux",
+        "La posture et la respiration influencent directement les états internes",
+        "Les blocages émotionnels sont souvent stockés dans le corps sous forme de tensions"
+      ],
+      "pratiques": {
+        "centrage": "Attention au centre de gravité (hara/tantien), ancrage dans le corps",
+        "scanning_corporel": "Exploration systématique des sensations dans tout le corps",
+        "mouvement_spontane": "Laisser le corps bouger selon ses propres impulsions en état de transe",
+        "ancrage_postural": "Associer des postures spécifiques à des états de ressources",
+        "respiration_consciente": "Utilisation de patterns respiratoires pour modifier les états internes"
+      }
+    },
+    "champ_unifie": {
+      "definition": "Espace relationnel partagé entre le coach et le client, protecteur et fécond, où la créativité peut émerger des contradictions internes et des polarités",
+      "caracteristiques": [
+        "Présence mutuelle profonde — au-delà des rôles sociaux",
+        "Accueil inconditionnel de toutes les expériences (y compris les difficiles)",
+        "Suspension du jugement et de l'évaluation",
+        "Curiosité créative partagée",
+        "Confiance dans le processus émergent"
+      ],
+      "creation": [
+        "Centrage somatique du coach et du client",
+        "Établissement d'une connexion authentique",
+        "Définition d'une intention partagée",
+        "Ouverture de l'attention (champ élargi vs focus étroit)",
+        "Sponsoring mutuel — soutien inconditionnel"
+      ]
+    },
+    "identite_generative": {
+      "definition": "Capacité de créer de nouvelles formes d'identité en naviguant avec créativité et résilience à travers les changements de la vie",
+      "processus": [
+        "Exploration de l'identité actuelle (qui suis-je maintenant ?)",
+        "Identification de l'appel (vers quoi suis-je attiré ?)",
+        "Accueil des obstacles et des résistances comme des ressources déguisées",
+        "Connexion aux ressources profondes (lignée, mentors, nature)",
+        "Émergence d'une nouvelle synthèse identitaire",
+        "Ancrage et intégration dans la vie quotidienne"
+      ],
+      "concept_sponsoring": {
+        "definition": "Attitude d'accueil inconditionnel envers toutes les expériences internes",
+        "niveaux": {
+          "auto_sponsoring": "Je me vois, je me reçois, j'accueille toutes mes parties",
+          "sponsoring_de_lautre": "Je vois l'autre dans sa plénitude et ses potentiels",
+          "sponsoring_du_champ": "Je fais confiance au processus et au champ relationnel"
+        }
+      }
+    },
+    "six_etapes_coaching_generatif": [
+      {
+        "etape": 1,
+        "nom": "Ouvrir le champ coach",
+        "description": "Centrage, présence, connexion — créer l'espace sûr et créatif"
+      },
+      {
+        "etape": 2,
+        "nom": "Définir l'intention",
+        "description": "Clarifier ce qui veut émerger — aspiration profonde au-delà des objectifs superficiels"
+      },
+      {
+        "etape": 3,
+        "nom": "Développer un état génératif",
+        "description": "Accéder à un état interne positif, centré et créatif"
+      },
+      {
+        "etape": 4,
+        "nom": "Naviguer les obstacles",
+        "description": "Accueillir les résistances, peurs et croyances limitantes comme des parties à intégrer"
+      },
+      {
+        "etape": 5,
+        "nom": "Transformer",
+        "description": "Permettre l'émergence d'une nouvelle synthèse — ni ancien ni attendu"
+      },
+      {
+        "etape": 6,
+        "nom": "Ancrer et intégrer",
+        "description": "Transférer la transformation dans la vie quotidienne — plan d'action incarné"
+      }
+    ],
+    "outils_specifiques": {
+      "self_relations": "Approche de Gilligan pour le dialogue entre les différentes parties du soi",
+      "hero_matrix": "Grille d'analyse des archétypes du voyage du héros appliquée au coaching",
+      "somatic_modeling": "Modélisation des états d'excellence via le corps",
+      "field_practices": "Pratiques de connexion au champ relationnel et collectif"
+    },
+    "avertissement_sante": "Le coaching génératif est une approche transformationnelle puissante. Il ne constitue pas une psychothérapie et ne remplace pas un accompagnement médical ou psychologique lorsque nécessaire. Sa pratique requiert une formation spécifique certifiée par les institutions habilitées (IAGC, NLP University)."
+  }
+}

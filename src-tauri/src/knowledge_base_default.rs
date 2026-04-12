@@ -419,6 +419,19 @@ const AROMATHERAPIE_AVANCEE: &str =
     include_str!("../../data/knowledge_base/default/aromatherapie_avancee.json");
 const PSYCHOLOGIE_POSITIVE_SCIENCE_BONHEUR: &str =
     include_str!("../../data/knowledge_base/default/psychologie_positive_science_bonheur.json");
+// v30.1.0 expansion — phase 20 (PNL maître, hypnose maître, thérapie systémique, coaching génératif, TCC 3e vague, AT/psychogénéalogie)
+const PNL_MAITRE_PRATICIEN: &str =
+    include_str!("../../data/knowledge_base/default/pnl_maitre_praticien.json");
+const HYPNOSE_MAITRE_PRATICIEN: &str =
+    include_str!("../../data/knowledge_base/default/hypnose_maitre_praticien.json");
+const THERAPIE_SYSTEMIQUE_FAMILIALE: &str =
+    include_str!("../../data/knowledge_base/default/therapie_systemique_familiale.json");
+const COACHING_GENERATIF_DILTS_GILLIGAN: &str =
+    include_str!("../../data/knowledge_base/default/coaching_generatif_dilts_gilligan.json");
+const TCC_TROISIEME_VAGUE: &str =
+    include_str!("../../data/knowledge_base/default/tcc_troisieme_vague.json");
+const ANALYSE_TRANSACTIONNELLE_PSYCHOGENEALOGIE: &str =
+    include_str!("../../data/knowledge_base/default/analyse_transactionnelle_psychogenealogie.json");
 
 // ─────────────────────────────────────────────────────────────────
 // LAZY STATIC CACHE — parsed once, reused on every call
@@ -670,6 +683,13 @@ impl DefaultKnowledgeBase {
         ("medecine_fonctionnelle_integrative", MEDECINE_FONCTIONNELLE_INTEGRATIVE),
         ("aromatherapie_avancee", AROMATHERAPIE_AVANCEE),
         ("psychologie_positive_science_bonheur", PSYCHOLOGIE_POSITIVE_SCIENCE_BONHEUR),
+        // v30.1.0 expansion — phase 20 (PNL maître, hypnose maître, thérapie systémique, coaching génératif, TCC 3e vague, AT/psychogénéalogie)
+        ("pnl_maitre_praticien", PNL_MAITRE_PRATICIEN),
+        ("hypnose_maitre_praticien", HYPNOSE_MAITRE_PRATICIEN),
+        ("therapie_systemique_familiale", THERAPIE_SYSTEMIQUE_FAMILIALE),
+        ("coaching_generatif_dilts_gilligan", COACHING_GENERATIF_DILTS_GILLIGAN),
+        ("tcc_troisieme_vague", TCC_TROISIEME_VAGUE),
+        ("analyse_transactionnelle_psychogenealogie", ANALYSE_TRANSACTIONNELLE_PSYCHOGENEALOGIE),
     ];
 
     /// Load all default knowledge entries from embedded JSON.
@@ -837,8 +857,8 @@ mod tests {
             result.errors
         );
         assert_eq!(
-            result.entries_loaded, 187,
-            "Must have exactly 187 default knowledge categories"
+            result.entries_loaded, 193,
+            "Must have exactly 193 default knowledge categories"
         );
     }
 

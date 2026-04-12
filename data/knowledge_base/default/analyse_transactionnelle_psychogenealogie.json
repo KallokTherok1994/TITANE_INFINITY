@@ -1,0 +1,267 @@
+{
+  "version": "30.1.0",
+  "category": "analyse_transactionnelle_psychogenealogie",
+  "description": "Analyse transactionnelle (Berne) et psychogénéalogie (Schützenberger) — états du moi, transactions, jeux psychologiques, scénarios de vie, drivers, mini-scénario Kahler, syndrome d'anniversaire, génosociogramme, loyautés invisibles, transmissions transgénérationnelles",
+  "analyse_transactionnelle_psychogenealogie": {
+    "analyse_transactionnelle": {
+      "introduction": "L'analyse transactionnelle (AT), créée par Eric Berne dans les années 1950-60, offre un modèle complet de la personnalité, des relations et de la communication. Outil à la fois diagnostique et thérapeutique, l'AT permet de comprendre les jeux relationnels inconscients et les scénarios de vie qui gouvernent nos choix.",
+      "fondateur": "Eric Berne (1910-1970), psychiatre américain, auteur de 'Des jeux et des hommes' (1964) et 'Que dites-vous après avoir dit bonjour ?' (1972)",
+      "etats_du_moi": {
+        "definition": "Trois systèmes cohérents de pensée, d'émotion et de comportement qui composent la structure de la personnalité",
+        "parent": {
+          "parent_critique_normatif": {
+            "positif": "Protège, fixe des limites saines, transmet des valeurs",
+            "negatif": "Critique, juge, dévalorise, domine, moralise"
+          },
+          "parent_nourricier_bienveillant": {
+            "positif": "Soutient, encourage, prend soin, rassure",
+            "negatif": "Surprotège, étouffe, infantilise"
+          },
+          "origine": "Intériorisation des figures d'autorité (parents, éducateurs, société)"
+        },
+        "adulte": {
+          "fonction": "Évalue objectivement la réalité, traite l'information, prend des décisions rationnelles",
+          "caracteristiques": "Logique, factuel, neutre émotionnellement, adaptatif",
+          "objectif_therapeutique": "Renforcer l'Adulte pour qu'il puisse choisir consciemment la réponse appropriée"
+        },
+        "enfant": {
+          "enfant_libre_naturel": {
+            "positif": "Spontané, créatif, joyeux, curieux, intuitif",
+            "negatif": "Impulsif, égocentrique, sans limites"
+          },
+          "enfant_adapte_soumis": {
+            "positif": "Coopère, respecte les règles, sociable",
+            "negatif": "Soumis, inhibé, passif, culpabilisé"
+          },
+          "enfant_rebelle": {
+            "positif": "Affirme ses droits, résiste à l'injustice",
+            "negatif": "Opposition systématique, provocation, sabotage"
+          },
+          "petit_professeur": "Partie intuitive et créative de l'Enfant — imagination, manipulation naïve, lecture émotionnelle fine"
+        },
+        "egogramme": "Représentation graphique de la quantité d'énergie investie dans chaque état du moi chez un individu"
+      },
+      "transactions": {
+        "definition": "Unité de base de la communication — échange stimulus-réponse entre deux personnes",
+        "types": {
+          "complementaire": {
+            "description": "La réponse vient de l'état du moi visé et retourne à l'état du moi d'origine",
+            "effet": "Communication fluide, peut durer indéfiniment",
+            "exemple": "Parent Nourricier → Enfant Adapté (réponse de l'Enfant Adapté)"
+          },
+          "croisee": {
+            "description": "La réponse ne vient pas de l'état du moi attendu",
+            "effet": "Rupture de communication, conflit, incompréhension",
+            "exemple": "Adulte → Adulte demandé, mais Parent Critique → Enfant reçu"
+          },
+          "cachee_ulterieure": {
+            "description": "Double message — un message social apparent et un message psychologique caché",
+            "effet": "Manipulation, jeux psychologiques, malentendus chroniques",
+            "exemple": "Message social (Adulte→Adulte) : 'Il est tard.' + Message caché (Parent→Enfant) : 'Tu devrais rentrer.'"
+          }
+        }
+      },
+      "jeux_psychologiques": {
+        "definition": "Séquences de transactions répétitives, prévisibles et inconscientes qui aboutissent toujours à un bénéfice négatif (coup de théâtre émotionnel)",
+        "formule_de_berne": "Appât + Point faible → Réponse → Coup de théâtre → Bénéfice négatif",
+        "exemples_classiques": {
+          "oui_mais": "Demander des conseils pour les rejeter systématiquement — bénéfice : confirmer l'impuissance des autres",
+          "maintenant_je_te_tiens": "Provoquer une erreur pour pouvoir s'indigner — bénéfice : justifier sa colère",
+          "pauvre_de_moi": "Se plaindre chroniquement sans chercher de solution — bénéfice : recevoir de l'attention/pitié",
+          "battez_vous": "Créer un conflit entre deux personnes — bénéfice : observer sans se mouiller",
+          "jambe_de_bois": "Utiliser un handicap comme excuse permanente — bénéfice : éviter la responsabilité"
+        },
+        "degres_gravite": {
+          "premier_degre": "Jeux sociaux légers (dîners, conversations)",
+          "deuxieme_degre": "Jeux générant des conflits relationnels significatifs",
+          "troisieme_degre": "Jeux aboutissant à des conséquences graves (hôpital, tribunal, morgue)"
+        },
+        "sortir_des_jeux": [
+          "Prendre conscience du jeu en cours (position méta)",
+          "Refuser de prendre le rôle assigné",
+          "Répondre depuis l'Adulte",
+          "Nommer le processus ouvertement",
+          "Proposer une relation authentique"
+        ]
+      },
+      "scenarios_de_vie": {
+        "definition": "Plan de vie inconscient forgé dans l'enfance sous l'influence des messages parentaux, qui pilote les choix et orientations de vie à l'âge adulte",
+        "injonctions_parentales": {
+          "definition": "Messages négatifs inconscients transmis par les parents",
+          "douze_injonctions_goulding": [
+            "N'existe pas",
+            "Ne sois pas toi-même",
+            "Ne sois pas un enfant",
+            "Ne grandis pas",
+            "Ne réussis pas",
+            "Ne fais rien (ne prends pas de risque)",
+            "Ne sois pas important",
+            "N'appartiens pas",
+            "Ne sois pas proche",
+            "Ne sois pas en bonne santé",
+            "Ne pense pas",
+            "Ne ressens pas"
+          ]
+        },
+        "attributions": "Messages prescriptifs positifs ou négatifs : 'Tu es comme ton oncle', 'Tu finiras mal', 'Tu es le plus intelligent'",
+        "programme": "Ensemble des messages qui construisent le scénario de vie",
+        "positions_de_vie": {
+          "ok_ok": "Je suis OK, tu es OK — position saine, coopérative, gagnant-gagnant",
+          "ok_pas_ok": "Je suis OK, tu n'es pas OK — position de supériorité, mépris",
+          "pas_ok_ok": "Je ne suis pas OK, tu es OK — position d'infériorité, victimisation",
+          "pas_ok_pas_ok": "Je ne suis pas OK, tu n'es pas OK — position de désespoir, nihilisme"
+        }
+      },
+      "strokes_signes_reconnaissance": {
+        "definition": "Toute forme de reconnaissance qui nourrit le besoin fondamental d'attention et de validation",
+        "types": {
+          "positif_conditionnel": "Tu as bien travaillé — lié à un comportement",
+          "positif_inconditionnel": "Je t'aime tel que tu es — lié à l'être",
+          "negatif_conditionnel": "Ce travail n'est pas suffisant — critique du comportement",
+          "negatif_inconditionnel": "Tu es nul — rejet de l'être"
+        },
+        "economie_strokes": "Système de filtrage inconscient qui détermine quels strokes on accepte, demande, donne ou refuse",
+        "lois": "Mieux vaut un stroke négatif que pas de stroke du tout — explique les comportements provocateurs"
+      },
+      "drivers_mini_scenario": {
+        "definition": "Messages contraignants internalisés dans l'enfance qui dictent des comportements automatiques, surtout sous stress",
+        "cinq_drivers_kahler": {
+          "sois_parfait": {
+            "comportement": "Recherche obsessionnelle de la perfection, peur de l'erreur",
+            "permission": "Tu as le droit d'être humain et imparfait"
+          },
+          "fais_plaisir": {
+            "comportement": "Sacrifice de soi pour satisfaire les autres, difficulté à dire non",
+            "permission": "Tu as le droit de penser à toi et de dire non"
+          },
+          "depeche_toi": {
+            "comportement": "Agitation, précipitation, sentiment chronique de manquer de temps",
+            "permission": "Tu as le droit de prendre ton temps"
+          },
+          "sois_fort": {
+            "comportement": "Stoïcisme, refus de montrer sa vulnérabilité ou de demander de l'aide",
+            "permission": "Tu as le droit d'être vulnérable et de demander de l'aide"
+          },
+          "fais_effort": {
+            "comportement": "Valorisation de l'effort plutôt que du résultat, difficulté à terminer",
+            "permission": "Tu as le droit de réussir facilement"
+          }
+        },
+        "mini_scenario_kahler": {
+          "definition": "Micro-séquence comportementale activée par le driver dominant, surtout sous pression",
+          "sequence": ["Driver activé → Injonction renforcée → Racket émotionnel → Bénéfice négatif → Confirmation du scénario"]
+        },
+        "rackets": {
+          "definition": "Émotions parasites, entretenues inconsciemment pour éviter de ressentir des émotions authentiques",
+          "exemple": "Colère (racket) cachant de la tristesse (émotion authentique)"
+        }
+      },
+      "autonomie_at": {
+        "definition": "Objectif thérapeutique de l'AT — capacité de vivre librement, hors du scénario infantile",
+        "trois_composantes": {
+          "conscience": "Perception claire de la réalité sans filtres scénariques",
+          "spontaneite": "Capacité de choisir librement sa réponse parmi tout le répertoire émotionnel et comportemental",
+          "intimite": "Capacité de relations authentiques, sans jeux ni rackets"
+        }
+      }
+    },
+    "psychogenealogie": {
+      "introduction": "La psychogénéalogie est une approche psycho-clinique explorant comment les traumatismes, secrets et événements non résolus des ancêtres influencent la vie psychique, les comportements et même la santé de leurs descendants. Popularisée par Anne Ancelin Schützenberger.",
+      "fondatrice": "Anne Ancelin Schützenberger (1919-2018), psychologue et psychothérapeute française, auteure de 'Aïe, mes aïeux !' (1993)",
+      "concepts_fondamentaux": {
+        "transmissions_transgerationnelles": {
+          "transgeneration": "Transmission de contenus non élaborés, non verbalisés, non conscients — traumatismes, secrets, non-dits",
+          "intergeneration": "Transmission de contenus élaborés, verbalisés — histoires, traditions, savoirs",
+          "difference": "La transmission transgénérationnelle est inconsciente et potentiellement pathogène"
+        },
+        "syndrome_anniversaire": {
+          "definition": "Répétition inconsciente de symptômes, accidents, maladies ou événements de vie à des dates, âges ou périodes précis correspondant à des événements significatifs vécus par les ancêtres",
+          "mecanisme": "Mémoire transgénérationnelle et fidélité involontaire à la lignée",
+          "exemples": [
+            "Développer un cancer au même âge qu'un parent décédé du cancer",
+            "Avoir un accident à la date anniversaire d'un drame familial",
+            "Se marier au même âge qu'un ancêtre ou à la date d'un deuil familial"
+          ]
+        },
+        "loyautes_invisibles": {
+          "definition": "Tendance inconsciente à rester fidèle à sa lignée, souvent en répétant des schémas destructeurs ou en se 'sacrifiant' par loyauté familiale",
+          "origine": "Concept d'Ivan Boszormenyi-Nagy, intégré par Schützenberger",
+          "manifestations": [
+            "Reproduire les échecs d'un parent par loyauté inconsciente",
+            "S'interdire de réussir si un ancêtre a été puni pour sa réussite",
+            "Porter le poids émotionnel d'un ancêtre non reconnu"
+          ]
+        },
+        "fantome_abraham_torok": {
+          "fondateurs": "Nicolas Abraham et Maria Török",
+          "definition": "Persistance dans l'inconscient du descendant d'un secret ou d'un trauma non intégré par un ancêtre",
+          "crypte": "Partie de la psyché où le secret est enfoui — encapsulé mais actif, influençant le comportement du porteur",
+          "incorporation": "Le descendant 'porte' en lui le non-dit de l'ancêtre sans pouvoir le symboliser ni le verbaliser",
+          "effets": "Phobies inexplicables, comportements compulsifs, symptômes somatiques sans cause organique"
+        },
+        "secrets_de_famille": {
+          "definition": "Non-dits majeurs (avortements, suicides, incestes, crimes, faillites, naissances hors mariage) qui deviennent pathogènes lorsqu'ils sont transmis inconsciemment",
+          "niveaux": {
+            "secret_de_polichinelle": "Connu de tous mais jamais nommé",
+            "secret_partiel": "Connu de certains membres, caché aux autres",
+            "secret_total": "Entièrement enfoui — seule la crypte persiste"
+          },
+          "effets_transgeneration": "Le secret se transmet sous forme de symptômes, malaises, phobies, maladies ou répétitions de schémas inexplicables chez les descendants"
+        }
+      },
+      "genosociogramme": {
+        "definition": "Outil graphique élaboré par Schützenberger, enrichissement du génogramme classique pour explorer l'histoire familiale transgénérationnelle",
+        "elements_cartographies": [
+          "Dates de naissance, mariage, décès, séparation (avec dates exactes)",
+          "Causes de décès et circonstances",
+          "Professions et niveaux socioéconomiques",
+          "Maladies et symptômes récurrents",
+          "Relations (fusion, conflit, coupure, indifférence, alliance)",
+          "Événements traumatiques (guerres, migrations, pertes, abus)",
+          "Coïncidences de dates (syndromes d'anniversaire)",
+          "Prénoms porteurs (transmission nominative)",
+          "Secrets identifiés ou supposés",
+          "Contexte sociohistorique (guerres, crises, déplacements)"
+        ],
+        "analyse": "Repérage des répétitions, coïncidences et patterns transgénérationnels pour conscientiser les loyautés invisibles et permettre la libération"
+      },
+      "processus_therapeutique": {
+        "objectifs": [
+          "Conscientiser les transmissions transgénérationnelles",
+          "Identifier les syndromes d'anniversaire et les loyautés invisibles",
+          "Reconnaître et honorer les ancêtres sans porter leur destin",
+          "Se libérer des intrications pour prendre sa propre place",
+          "Transformer les schémas répétitifs en choix conscients"
+        ],
+        "outils": [
+          "Construction du génosociogramme",
+          "Analyse des coïncidences et répétitions",
+          "Travail sur les secrets de famille",
+          "Rituels symboliques de libération",
+          "Lettres aux ancêtres",
+          "Thérapie psychocorporelle pour libérer les mémoires corporelles"
+        ]
+      },
+      "recherches_epigenetiques": {
+        "description": "Recherches récentes en épigénétique suggérant des mécanismes biologiques de transmission du trauma",
+        "travaux_cles": [
+          "Étude Rachel Yehuda : descendants de survivants de l'Holocauste — modifications épigénétiques du gène FKBP5 (régulation du cortisol)",
+          "Étude Dias & Ressler (2013) : souris conditionnées à une odeur — peur transmise sur 2 générations",
+          "Modifications des marques de méthylation ADN potentiellement transmissibles"
+        ],
+        "prudence": "Les extrapolations chez l'humain restent hypothétiques — la communauté scientifique demande davantage de preuves. La psychogénéalogie en tant que pratique thérapeutique n'est pas validée scientifiquement au sens strict."
+      }
+    },
+    "synergies_at_psychogenealogie": {
+      "convergences": [
+        "Les deux approches explorent l'origine des schémas de vie (scénarios AT / répétitions transgénérationnelles)",
+        "Les injonctions parentales (AT) peuvent être analysées comme des transmissions transgénérationnelles",
+        "Les jeux psychologiques peuvent reproduire des dynamiques familiales ancestrales",
+        "Le génogramme / génosociogramme est un outil partagé",
+        "La libération passe par la conscientisation des patterns inconscients"
+      ],
+      "utilisation_combinee": "Un thérapeute peut utiliser l'AT pour le travail interpersonnel présent et la psychogénéalogie pour explorer les racines transgénérationnelles des patterns identifiés"
+    },
+    "avertissement_sante": "L'analyse transactionnelle est une méthode psychothérapeutique reconnue internationalement (EATA, ITAA). La psychogénéalogie reste controversée dans le monde académique et n'est pas validée scientifiquement en tant que thérapie. Les deux approches doivent être pratiquées par des professionnels formés et supervisés. Elles ne remplacent pas un traitement médical ou psychiatrique adapté. Prudence avec les risques d'induction de faux souvenirs et de culpabilisation familiale."
+  }
+}

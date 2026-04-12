@@ -1,0 +1,178 @@
+{
+  "version": "30.1.0",
+  "category": "pnl_maitre_praticien",
+  "description": "PNL niveau Maître Praticien — modélisation de l'excellence, méta-modèle linguistique, Milton modèle, niveaux logiques de Dilts, positions perceptuelles, Clean Language, stratégies de génies, méta-programmes avancés, coaching transformationnel",
+  "pnl_maitre_praticien": {
+    "introduction": "Le niveau Maître Praticien en PNL (Programmation Neuro-Linguistique) représente le plus haut niveau de compétence technique et intégrative. Il va bien au-delà de la simple application de techniques pour atteindre une posture d'accompagnant-expert, capable de modéliser l'excellence, de générer des changements profonds et durables, et d'intégrer structure, créativité, intuition et éthique professionnelle.",
+    "modelisation_excellence": {
+      "definition": "Cœur historique de la PNL, la modélisation vise à décoder, transférer et enseigner les stratégies mentales, linguistiques et comportementales d'experts dans tout domaine",
+      "processus": [
+        "Identification du modèle d'excellence (expert, performer)",
+        "Extraction des stratégies internes (séquences TOTE, sous-modalités critiques)",
+        "Cartographie des processus cognitifs (synesthésies, ancres naturelles)",
+        "Repérage des sous-modalités critiques (drivers de la compétence)",
+        "Formalisation du modèle transférable",
+        "Installation chez le sujet (rehearsal mental, ancrage, futurisation)",
+        "Validation par test en contexte réel"
+      ],
+      "niveaux_modelisation": {
+        "comportemental": "Observer et reproduire les actions visibles",
+        "cognitif": "Extraire les stratégies de pensée (TOTE, séquences représentationnelles)",
+        "linguistique": "Analyser les patterns de langage (méta-modèle, Milton modèle)",
+        "physiologique": "Capturer la posture, la respiration, la gestuelle fine",
+        "identitaire": "Comprendre les croyances, valeurs et mission du modèle"
+      },
+      "applications": ["Performance sportive", "Leadership", "Créativité artistique", "Excellence thérapeutique", "Innovation", "Enseignement expert"]
+    },
+    "meta_modele_linguistique": {
+      "definition": "Ensemble de questions précises visant à clarifier, approfondir et recadrer le langage pour accéder à la structure profonde de l'expérience",
+      "violations_et_questions": {
+        "generalisations": {
+          "quantificateurs_universels": {
+            "exemples": ["Toujours", "Jamais", "Tout le monde", "Personne"],
+            "question": "Vraiment toujours ? Y a-t-il eu une exception ?"
+          },
+          "operateurs_modaux": {
+            "necessite": {"exemples": ["Je dois", "Il faut"], "question": "Que se passerait-il si vous ne le faisiez pas ?"},
+            "impossibilite": {"exemples": ["Je ne peux pas", "C'est impossible"], "question": "Qu'est-ce qui vous en empêche exactement ?"},
+            "possibilite": {"exemples": ["Je pourrais"], "question": "Qu'est-ce qui vous permettrait de le faire ?"}
+          },
+          "origine_perdue": {
+            "exemples": ["C'est mal de...", "On ne fait pas ça"],
+            "question": "Selon qui ? D'où vient cette règle ?"
+          }
+        },
+        "omissions": {
+          "omission_simple": {"exemple": "Je suis triste", "question": "À propos de quoi exactement ?"},
+          "omission_comparative": {"exemple": "C'est mieux", "question": "Mieux que quoi ? Selon quel critère ?"},
+          "verbe_non_specifie": {"exemple": "Il m'a blessé", "question": "Comment exactement ?"},
+          "nominalisations": {"exemple": "La liberté me manque", "question": "Libre de faire quoi spécifiquement ?"},
+          "index_referentiel_non_specifie": {"exemple": "On m'a dit", "question": "Qui exactement ?"}
+        },
+        "distorsions": {
+          "lecture_de_pensee": {"exemple": "Il me déteste", "question": "Comment le savez-vous ? Qu'est-ce qui vous fait dire ça ?"},
+          "cause_effet": {"exemple": "Il me rend triste", "question": "Comment exactement fait-il cela ?"},
+          "equivalence_complexe": {"exemple": "Il ne sourit pas = il est fâché", "question": "En quoi le fait de ne pas sourire signifie qu'il est fâché ?"},
+          "presuppositions": {"exemple": "Si tu m'aimais, tu comprendrais", "question": "Qu'est-ce qui vous fait croire que je ne comprends pas ?"}
+        }
+      },
+      "objectif": "Élargir la carte du monde du sujet en reconnectant le langage de surface à l'expérience sensorielle directe"
+    },
+    "milton_modele": {
+      "definition": "Langage d'influence permissif et ambigu inspiré de Milton H. Erickson, inverse du méta-modèle, utilisé pour induire des états de ressources et faciliter des changements inconscients",
+      "patterns_principaux": {
+        "generalisations_artfully_vagues": ["Tout le monde sait que...", "D'une certaine façon..."],
+        "nominalisations": "Utilisation de termes abstraits ('changement', 'croissance', 'sagesse') permettant au sujet de projeter son propre sens",
+        "presuppositions": ["Avant que tu te détendes complètement...", "Quand tu auras découvert..."],
+        "liens_causaux": ["Et pendant que tu écoutes ma voix... tu peux commencer à te détendre"],
+        "double_lien": "Préférez-vous commencer à changer maintenant ou dans un instant ?",
+        "confusion_et_surcharge": "Techniques de saturation cognitive facilitant l'accès à l'inconscient",
+        "metaphores_enchassees": "Histoires dans les histoires créant des niveaux de transe multiples",
+        "truismes": "Affirmations tellement évidentes qu'elles créent un 'oui' intérieur",
+        "negation": "Le cerveau ne peut pas ne pas traiter : 'N'y pensez pas' = y penser"
+      },
+      "applications": ["Induction hypnotique", "Coaching", "Négociation", "Vente éthique", "Thérapie", "Communication d'influence"]
+    },
+    "niveaux_logiques_dilts": {
+      "definition": "Modèle de Robert Dilts structurant le changement sur 6 niveaux hiérarchiques, chaque niveau supérieur organisant et influençant les niveaux inférieurs",
+      "niveaux": {
+        "1_environnement": {"question": "Où ? Quand ? Avec qui ?", "description": "Contexte externe, contraintes et opportunités"},
+        "2_comportements": {"question": "Quoi ? Que fais-je ?", "description": "Actions spécifiques observables"},
+        "3_capacites_strategies": {"question": "Comment ?", "description": "Compétences, plans mentaux, stratégies cognitives"},
+        "4_croyances_valeurs": {"question": "Pourquoi ? Qu'est-ce qui est important ?", "description": "Permissions, motivations, critères d'évaluation"},
+        "5_identite": {"question": "Qui suis-je ?", "description": "Mission personnelle, métaphore de soi, rôle fondamental"},
+        "6_transpersonnel_mission": {"question": "Pour qui ? Pour quoi de plus grand ?", "description": "Sens, contribution, connexion au système plus large"}
+      },
+      "principes": [
+        "Un changement à un niveau supérieur impacte automatiquement les niveaux inférieurs",
+        "Un problème ne peut être résolu au niveau où il se manifeste — il faut intervenir un niveau au-dessus",
+        "L'alignement de tous les niveaux génère congruence et puissance",
+        "L'incongruence entre niveaux crée conflits internes et blocages"
+      ],
+      "protocole_alignement": "Marche spatiale à travers les 6 niveaux (aller-retour) pour intégrer les ressources de chaque niveau"
+    },
+    "positions_perceptuelles": {
+      "definition": "Technique de flexibilité cognitive permettant d'explorer une situation depuis différents points de vue",
+      "positions": {
+        "premiere_position": "Soi-même — associé dans sa propre expérience (émotions, besoins, valeurs)",
+        "deuxieme_position": "L'autre — empathie, perception du monde de l'autre (comme si on était l'autre)",
+        "troisieme_position": "Observateur neutre — méta-position dissociée, vue systémique",
+        "quatrieme_position": "Le système — perspective du groupe, de l'organisation, du champ relationnel"
+      },
+      "applications": ["Résolution de conflits", "Développement de l'empathie", "Préparation de négociations", "Amélioration des relations", "Supervision thérapeutique"]
+    },
+    "clean_language": {
+      "definition": "Approche développée par David Grove utilisant un questionnement épuré pour accompagner le sujet dans l'exploration de ses propres métaphores sans contamination par le thérapeute",
+      "questions_cles": [
+        "Et quand [X], c'est [X] comme quoi ?",
+        "Et [X], ça se situe où ?",
+        "Et y a-t-il autre chose à propos de [X] ?",
+        "Et que voudriez-vous qu'il se passe ?",
+        "Et qu'est-ce qui se passe juste avant [X] ?",
+        "Et qu'est-ce qui se passe ensuite ?"
+      ],
+      "principes": [
+        "Utiliser exclusivement les mots du client",
+        "Ne pas interpréter, ne pas projeter",
+        "Respecter l'écologie interne du sujet",
+        "Laisser le paysage métaphorique se déployer naturellement"
+      ]
+    },
+    "meta_programmes_avances": {
+      "definition": "Filtres inconscients qui déterminent comment une personne traite l'information, prend des décisions et se motive",
+      "meta_programmes_cles": {
+        "direction": {"aller_vers": "Motivé par les objectifs positifs", "s_eloigner_de": "Motivé par l'évitement de la douleur"},
+        "reference": {"interne": "Se fie à ses propres critères", "externe": "Se fie à l'avis des autres"},
+        "taille_chunk": {"global": "Pense en termes de vision d'ensemble", "detail": "Pense en termes de détails spécifiques"},
+        "relation": {"similitude": "Cherche ce qui est pareil", "difference": "Cherche ce qui est différent"},
+        "modalite": {"possibilite": "Motivé par les options et la créativité", "necessite": "Motivé par les obligations et procédures"},
+        "action": {"proactif": "Initie l'action rapidement", "reactif": "Attend et analyse avant d'agir"},
+        "temps": {"in_time": "Associé au moment présent", "through_time": "Dissocié, vue panoramique du temps"},
+        "attention": {"soi": "Centré sur ses propres réactions", "autre": "Attentif aux réactions des autres"},
+        "convaincre": {"canal": "Visuel, auditif, kinesthésique, lecture", "mode": "Nombre de fois, automatique, consistant, période"}
+      },
+      "utilisation": "Adapter sa communication au profil méta-programme du sujet pour maximiser l'impact du message"
+    },
+    "strategies_genies": {
+      "definition": "Protocole de modélisation des stratégies cognitives d'individus à performance exceptionnelle",
+      "exemples_modelises": {
+        "walt_disney": {
+          "strategie": "Trois chaises — Rêveur, Réaliste, Critique",
+          "description": "Séparation spatiale des trois positions pour la créativité, la planification et l'évaluation"
+        },
+        "leonard_de_vinci": {
+          "strategie": "Pensée multisensorielle et interconnexions systémiques",
+          "description": "Utilisation de tous les systèmes représentationnels et recherche de patterns transversaux"
+        },
+        "einstein": {
+          "strategie": "Expériences de pensée kinesthésiques-visuelles",
+          "description": "Imagination d'être physiquement dans le phénomène étudié avant formalisation"
+        },
+        "mozart": {
+          "strategie": "Synesthésie auditive-kinesthésique-visuelle",
+          "description": "Perception simultanée multi-modale de la composition musicale"
+        }
+      },
+      "protocole_installation": ["Identification de la stratégie", "Séquençage TOTE", "Calibration des sous-modalités critiques", "Ancrage", "Installation par rehearsal mental", "Futurisation", "Test écologique"]
+    },
+    "coaching_transformationnel_pnl": {
+      "posture_maitre": [
+        "Flexibilité multi-niveau : capacité d'intervenir à n'importe quel niveau logique",
+        "Calibration fine : lecture des micro-signaux physiologiques",
+        "Congruence personnelle : alignement de tous les niveaux chez le coach",
+        "Utilisation stratégique du langage : alternance méta-modèle / Milton modèle",
+        "Écologie systémique : vérification de l'impact sur tout le système du client",
+        "Intégration créative : capacité de combiner les outils selon la singularité du sujet",
+        "Méta-position : capacité de superviser sa propre intervention en temps réel"
+      ],
+      "ethique_maitre_praticien": [
+        "Respect de l'écologie du sujet (ne pas forcer un changement non désiré)",
+        "Transparence sur les techniques utilisées",
+        "Supervision régulière par les pairs",
+        "Formation continue et mise à jour des compétences",
+        "Refus de manipulation ou d'usage à des fins non éthiques"
+      ]
+    },
+    "avertissement_sante": "La PNL de niveau Maître Praticien est un outil puissant d'accompagnement. Elle ne remplace pas un suivi médical ou psychothérapeutique adapté. La pratique au niveau maître requiert une formation certifiée, une supervision régulière et le respect d'un cadre éthique strict."
+  }
+}
