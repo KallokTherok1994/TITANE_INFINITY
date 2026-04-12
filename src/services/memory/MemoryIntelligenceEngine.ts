@@ -534,53 +534,75 @@ export class MemoryIntelligenceEngine {
   /**
    * Calcule l'importance d'un contenu
    */
+  /**
+   * v30.3.0: Multi-factor importance scoring with graduated weighting
+   * Replaces flat additive approach with weighted formula:
+   * importance = source_weight(0.30) + content_signal(0.25) + keyword_density(0.20) + urgency(0.15) + user_pref(0.10)
+   * Each factor computed independently and combined with proper normalization
+   */
   private calculateImportance(content: string, context: CaptureContext): number {
-    let importance = 0.1;
-
-    // Longueur du contenu
-    if (content.length > 200) importance += 0.15;
-    if (content.length > 500) importance += 0.15;
-
-    // Type de source
+    // Factor 1: Source type weight (0.30 of total)
     const sourceWeights: Record<string, number> = {
-      decision: 0.4,
-      preference: 0.3,
-      file_analysis: 0.25,
-      web_search: 0.2,
-      reflection: 0.15,
-      chat_message: 0.05,
+      decision: 0.9,
+      preference: 0.75,
+      file_analysis: 0.65,
+      web_search: 0.55,
+      reflection: 0.5,
+      chat_message: 0.2,
     };
-    importance += sourceWeights[context.sourceType] || 0;
+    const sourceScore = sourceWeights[context.sourceType] || 0.2;
 
-    // Mots-clés importants
+    // Factor 2: Content signal strength (0.25 of total) — graduated by count
     const importantPatterns = [
-      /important/i,
-      /crucial/i,
-      /essentiel/i,
-      /décision/i,
-      /préférence/i,
-      /projet/i,
-      /configuration/i,
-      /architecture/i,
-      /bug/i,
-      /fix/i,
-      /solution/i,
-      /méthode/i,
+      /\b(important|crucial|essentiel|critical)\b/i,
+      /\b(décision|decision|choix)\b/i,
+      /\b(préférence|preference)\b/i,
+      /\b(projet|project)\b/i,
+      /\b(configuration|architecture)\b/i,
+      /\b(bug|fix|solution|résolu)\b/i,
+      /\b(méthode|method|stratégie|strategy)\b/i,
+      /\b(objectif|goal|target)\b/i,
     ];
-    for (const pattern of importantPatterns) {
-      if (pattern.test(content)) {
-        importance += 0.15;
-        break;
-      }
-    }
+    const matchedSignals = importantPatterns.filter(p => p.test(content)).length;
+    // Graduated: 1 match = 0.3, 2 = 0.5, 3+ = 0.7, diminishing returns after 3
+    const contentSignalScore = matchedSignals > 0
+      ? Math.min(0.9, 0.2 + matchedSignals * 0.15 - Math.max(0, matchedSignals - 3) * 0.05)
+      : 0.1;
 
-    // Ajustement selon préférences utilisateur
+    // Factor 3: Keyword density & length (0.20 of total) — graduated by content richness
+    const wordCount = content.split(/\s+/).length;
+    const uniqueWords = new Set(content.toLowerCase().split(/\s+/)).size;
+    const lexicalDensity = wordCount > 0 ? uniqueWords / wordCount : 0;
+    // Longer, more diverse content is typically more important
+    const lengthScore = Math.min(1.0, wordCount / 100); // 0-1 scaled, 100 words = max
+    const keywordDensityScore = (lengthScore * 0.5 + lexicalDensity * 0.5);
+
+    // Factor 4: Urgency (0.15 of total) — from detectUrgency
+    const urgency = this.detectUrgency(content, context);
+    const urgencyScores: Record<string, number> = {
+      critical: 1.0,
+      high: 0.7,
+      medium: 0.4,
+      low: 0.1,
+    };
+    const urgencyScore = urgencyScores[urgency] || 0.1;
+
+    // Factor 5: User preference alignment (0.10 of total)
     const lowerContent = content.toLowerCase();
+    let prefAlignmentScore = 0;
     for (const [pref, weight] of this.userPreferences) {
       if (lowerContent.includes(pref)) {
-        importance += weight * 0.1;
+        prefAlignmentScore = Math.max(prefAlignmentScore, weight); // Take highest match
       }
     }
+
+    // Weighted combination
+    const importance =
+      sourceScore * 0.30 +
+      contentSignalScore * 0.25 +
+      keywordDensityScore * 0.20 +
+      urgencyScore * 0.15 +
+      prefAlignmentScore * 0.10;
 
     return Math.min(1.0, Math.max(0.0, importance));
   }
@@ -610,29 +632,39 @@ export class MemoryIntelligenceEngine {
     }
 
     // Détecter les domaines
+    // v30.3.0: Graduated confidence by keyword density — replaces flat matchCount * 0.2
     for (const domain of this.taxonomy.domains) {
       if (!domain || !domain.keywords) continue;
       const matchCount = domain.keywords.filter(kw => lowerContent.includes(kw)).length;
       if (matchCount > 0) {
+        const totalKeywords = domain.keywords.length;
+        // Logarithmic confidence: fast rise, plateau — ln(1+matches)/ln(1+total) * 0.9
+        const confidence = Math.min(1.0, Math.log(1 + matchCount) / Math.log(1 + totalKeywords) * 0.9 + 0.1);
         categories.push({
           main: 'domain',
           sub: domain.id,
           tags: domain.keywords.filter(kw => lowerContent.includes(kw)),
-          confidence: Math.min(1.0, matchCount * 0.2),
+          confidence,
         });
       }
     }
 
     // Détecter les thèmes
+    // v30.3.0: Graduated confidence with domain-aware boosting
     for (const theme of this.taxonomy.themes) {
       if (!theme || !theme.keywords) continue;
       const matchCount = theme.keywords.filter(kw => lowerContent.includes(kw)).length;
       if (matchCount > 0) {
+        const totalKeywords = theme.keywords.length;
+        let confidence = Math.min(1.0, Math.log(1 + matchCount) / Math.log(1 + totalKeywords) * 0.85 + 0.15);
+        // Boost if parent domain was also matched
+        const parentDomainMatched = categories.some(c => c.main === 'domain' && c.sub === (theme as any).domain);
+        if (parentDomainMatched) confidence = Math.min(1.0, confidence * 1.15); // +15% if domain context aligns
         categories.push({
           main: 'theme',
           sub: theme.id,
           tags: theme.keywords.filter(kw => lowerContent.includes(kw)),
-          confidence: Math.min(1.0, matchCount * 0.25),
+          confidence,
         });
       }
     }
