@@ -3,6 +3,7 @@ set -euo pipefail
 
 ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
 cd "$ROOT_DIR"
+source "$(dirname "${BASH_SOURCE[0]}")/_rg_compat.sh"
 
 FAIL=0
 pass() { echo "PASS: $1"; }
@@ -14,7 +15,7 @@ check_rule() {
   local canonical="$3"
 
   local hits
-  hits=$(rg -n "$pattern" -S .github/copilot-instructions.md .github/instructions .github/agents .github/prompts 2>/dev/null || true)
+  hits=$(_rg -n "$pattern" -S .github/copilot-instructions.md .github/instructions .github/agents .github/prompts 2>/dev/null || true)
   if [[ -z "$hits" ]]; then
     fail "$id missing from instruction layers"
     return
