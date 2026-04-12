@@ -28,7 +28,7 @@ import { aiOrchestrator } from './orchestrator';
 import { memoryIntegration } from './memoryIntegration';
 import type { MemoryContext } from './memoryIntegration';
 import { logger as structuredLogger, generateCorrelationId } from '../monitoring/logger';
-import { extractPreferences, shapeResponse } from './preferenceEngine';
+import { extractPreferences, shapeResponse, buildPreferencePrompt } from './preferenceEngine';
 // v26.0.0: Intent classification and depth computation are now inside CanonicalDiscernmentKernel
 // No longer called independently from chatEngine — kernel is the single source of truth
 
@@ -888,6 +888,12 @@ Format: [Audit complet] + [Réponse utilisateur]
       // Inject cognitive context (memories + goals + facts)
       if (cognitiveContext.trim().length > 0) {
         systemPrompt = `${systemPrompt}\n\n${cognitiveContext}`;
+      }
+
+      // v30.3.0: Pre-LLM preference injection — tells the LLM about user preferences before generation
+      const preferencePrompt = buildPreferencePrompt(memoryIntegration.loadPreferences());
+      if (preferencePrompt) {
+        systemPrompt = `${systemPrompt}\n\n${preferencePrompt}`;
       }
 
       const backendResponse = await this.tryBackendPipeline({

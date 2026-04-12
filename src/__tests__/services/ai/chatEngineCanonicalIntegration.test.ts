@@ -125,6 +125,7 @@ vi.mock('@/services/ai/preferenceEngine', () => ({
     noiseReason: null,
   }),
   shapeResponse: vi.fn().mockImplementation((content: string) => content),
+  buildPreferencePrompt: vi.fn().mockReturnValue(''),
 }));
 
 vi.mock('@/core/prompts', () => ({
