@@ -1,77 +1,115 @@
 {
   "version": "v30.1.0",
   "category": "digital_twin_v14_detail",
-  "description": "Digital Twin Engine v14.1 TITANE∞ — perception émotionnelle, analyse comportementale, auto-évolution, carte cognitive, IdentityModel Kevin",
+  "description": "Digital Twin Engine v14.1 TITANE∞ — perception émotionnelle, analyse comportementale, auto-évolution, carte cognitive, IdentityModel Kevin, architecture cognitive et prédiction comportementale",
   "digital_twin_v14": {
     "nom": "Digital Twin Engine v14.1",
     "chemin": "src-tauri/src/digital_twin_v14_1/",
     "version": "14.1.0",
-    "description": "Le Digital Twin v14 est le jumeau numérique de PREMIÈRE génération — axé sur la modélisation identitaire, la perception émotionnelle et l'analyse comportementale en temps réel. Il précède le NumericTwin vΩ∞ dans la hiérarchie évolutive.",
+    "description": "Le Digital Twin v14 est le jumeau numérique de PREMIÈRE génération — modélisation identitaire, perception émotionnelle et analyse comportementale temps réel. Précède le NumericTwin vΩ∞.",
     "modules": {
-      "identity_model.rs": "IdentityModel — modèle complet de l'identité Kevin",
-      "cognitive_map.rs": "CognitiveMap — carte cognitive de Kevin",
-      "emotion_engine/": "Moteur d'analyse émotionnelle en temps réel",
-      "behavior_engine/": "Moteur d'analyse comportementale",
-      "auto_evolution/": "Auto-évolution du jumeau dans le temps",
-      "anticipation.rs": "AnticipationEngine — prédiction des besoins",
-      "decision_engine.rs": "Moteur de décision basé sur le profil Kevin",
-      "preference_model.rs": "Modèle de préférences",
-      "alignment.rs": "Alignement valeurs/comportements",
-      "style_engine.rs": "Moteur de style adaptatif",
-      "memory_bridge.rs": "Pont vers Memory OS",
-      "context_sync.rs": "Synchronisation du contexte en temps réel",
-      "selfheal.rs": "Auto-guérison du jumeau si dérive détectée"
+      "identity_model.rs": "Modèle identitaire Kevin avec calibration dynamique",
+      "cognitive_map.rs": "Carte cognitive — connexions inter-domaines pondérées",
+      "emotion_engine/": "Analyse émotionnelle temps réel (valence/arousal)",
+      "behavior_engine/": "Patterns récurrents et détection d'anomalies",
+      "auto_evolution/": "Auto-évolution avec garde-fous identitaires",
+      "anticipation.rs": "Prédiction par séquences historiques",
+      "decision_engine.rs": "Décision pondérée par préférences/état émotionnel",
+      "preference_model.rs": "Apprentissage incrémental des préférences",
+      "alignment.rs": "Détection dissonance valeurs/comportements",
+      "style_engine.rs": "Style adaptatif (ton, vocabulaire, densité)",
+      "memory_bridge.rs": "Pont Memory OS bidirectionnel",
+      "context_sync.rs": "Sync contexte temps réel",
+      "selfheal.rs": "Auto-guérison si dérive",
+      "multimodal_input.rs": "Fusion multimodale en vecteur unifié",
+      "consolidation.rs": "Transfert mémoire travail → long terme"
     },
     "identity_model_Kevin": {
       "traits_cognitifs": {
-        "analytical": { "score": 0.9, "description": "Kevin analyse avant d'agir" },
-        "structured": { "score": 0.85, "description": "Pense en systèmes et en couches" },
-        "calm": { "score": 0.8, "description": "Reste posé sous pression" },
+        "analytical": {
+          "score": 0.9,
+          "stabilité": 0.95,
+          "description": "Décompose les problèmes en sous-parties"
+        },
+        "structured": {
+          "score": 0.85,
+          "stabilité": 0.9,
+          "description": "Pense en systèmes et couches"
+        },
+        "calm": {
+          "score": 0.8,
+          "stabilité": 0.85,
+          "description": "Posé sous pression"
+        },
         "clarity_oriented": {
           "score": 0.95,
-          "description": "La clarté est non-négociable"
+          "stabilité": 0.98,
+          "description": "Clarté non-négociable"
         },
-        "pragmatic": { "score": 0.9, "description": "Préfère ce qui marche" }
+        "pragmatic": {
+          "score": 0.9,
+          "stabilité": 0.92,
+          "description": "Solutions éprouvées"
+        },
+        "systemic_thinker": {
+          "score": 0.88,
+          "stabilité": 0.9,
+          "description": "Anticipe effets de bord"
+        }
       },
       "patterns_de_pensée": [
         {
           "nom": "simple_to_complex",
           "fréquence": 0.9,
-          "description": "Partir du simple vers le complexe"
+          "description": "Fondations d'abord"
         },
         {
           "nom": "structured_reasoning",
           "fréquence": 0.95,
-          "description": "Raisonnement structuré et logique"
+          "description": "Prémisses vérifiables"
         },
         {
           "nom": "impact_first",
           "fréquence": 0.85,
-          "description": "Identifier l'impact avant les détails"
+          "description": "Portée avant détails"
         },
         {
           "nom": "layers_thinking",
           "fréquence": 0.8,
-          "description": "Construire en couches successives"
+          "description": "Abstraction par couches"
+        },
+        {
+          "nom": "feedback_driven",
+          "fréquence": 0.82,
+          "description": "Correction par résultats"
         }
       ],
-      "valeurs_Kevin": ["Clarté", "Cohérence", "Simplicité", "Efficacité", "Alignement"],
+      "valeurs_Kevin": [
+        "Clarté",
+        "Cohérence",
+        "Simplicité",
+        "Efficacité",
+        "Alignement",
+        "Intégrité",
+        "Apprentissage continu"
+      ],
       "style_communication": {
-        "préfère": "Direct, structuré, dense (pas de bavardage)",
-        "évite": "Verbosité, approximations, excès de précautions",
-        "ton_préféré": "Chaleureux mais professionnel, sobre"
+        "préfère": "Direct, structuré, dense",
+        "évite": "Verbosité, approximations",
+        "ton": "Chaleureux mais professionnel",
+        "densité": 0.85
       }
     },
     "twin_state": {
-      "description": "TwinState — état instantané du jumeau (mis à jour à chaque interaction)",
+      "description": "Photographie cognitive/émotionnelle à un instant T.",
       "paramètres": {
-        "emotional_state": "neutral / stressed / excited / tired / focused / frustrated",
-        "cognitive_load": "0.0→1.0 — charge mentale estimée",
-        "energy_level": "0.0→1.0 — niveau d'énergie (défaut: 0.7)",
-        "clarity_index": "0.0→1.0 — clarté cognitive (défaut: 0.8)",
-        "coherence_score": "0.0→1.0 — cohérence état/discours (défaut: 0.9)"
-      },
-      "mise_à_jour": "Après chaque message de Kevin — analyse NLP légère sur le texte"
+        "emotional_state": "neutral/stressed/excited/tired/focused/frustrated/curious",
+        "cognitive_load": "0.0→1.0",
+        "energy_level": "0.0→1.0 (défaut 0.7)",
+        "clarity_index": "0.0→1.0 (défaut 0.8)",
+        "coherence_score": "0.0→1.0 (défaut 0.9)",
+        "engagement_level": "0.0→1.0 (défaut 0.75)"
+      }
     },
     "config": {
       "enable_emotion_analysis": true,
@@ -79,11 +117,9 @@
       "enable_auto_evolution": true,
       "emotional_sensitivity": 0.8,
       "adaptation_speed": 0.5,
-      "description": "Sensibilité émotionnelle 0.8 (haute) — détecte les nuances. Adaptation 0.5 (moderate) — ne change pas trop vite pour éviter l'instabilité."
+      "proactive_threshold": 0.7
     },
     "carte_cognitive": {
-      "description": "CognitiveMap — représentation des domaines de connaissance Kevin et leurs interconnexions",
-      "usage": "Anticipe les associations d'idées, suggère des connexions non exprimées",
       "domaines_Kevin": [
         "Architecture logicielle",
         "IA et ML",
@@ -94,13 +130,494 @@
         "Philosophie pratique",
         "Écriture",
         "Musique"
+      ],
+      "connexions": [
+        {
+          "de": "Architecture logicielle",
+          "vers": "IA et ML",
+          "poids": 0.9
+        },
+        {
+          "de": "Psychologie",
+          "vers": "Management",
+          "poids": 0.85
+        },
+        {
+          "de": "Design systems",
+          "vers": "Architecture logicielle",
+          "poids": 0.88
+        }
       ]
     },
     "auto_évolution": {
-      "description": "AutoEvolution — le jumeau s'améliore au fil des interactions",
-      "mécanisme": "À chaque session: recalibrer les scores de traits, mettre à jour les préférences, ajouter de nouveaux patterns observés",
-      "garde_fou": "Les valeurs fondamentales (stabilité=1.0) ne changent jamais — l'identité profonde est stable"
+      "mécanisme": "Recalibrer traits/préférences/patterns à chaque session",
+      "garde_fou": "Valeurs immuables. Changement > ±0.05/session bloqué et journalisé."
     },
-    "relation_numeric_twin": "Le DigitalTwin v14 alimente le NumericTwin vΩ∞ en données — v14 observe, vΩ modélise et anticipe."
+    "relation_numeric_twin": "v14 observe → vΩ∞ modélise. Unidirectionnel prod, bidirectionnel calibration."
+  },
+  "architecture_jumeau": {
+    "description": "Modèle cognitif multi-couche, synchronisation temps réel, état interne persistant",
+    "modèle_cognitif": {
+      "inspiration": "ACT-R et SOAR adaptés à un assistant IA personnel",
+      "composants": {
+        "perception": "Stimuli → représentations normalisées (embeddings multimodaux)",
+        "interprétation": "Sens/intention/émotion contextualisés par modèle identitaire",
+        "raisonnement": "Délibération mémoire + préférences + contexte",
+        "action": "Réponses filtrées par style/ton",
+        "métacognition": "Évaluation qualité et auto-correction"
+      },
+      "flux": "perception → interprétation → raisonnement → action → métacognition → rétroaction"
+    },
+    "couches_abstraction": [
+      {
+        "nom": "Réactive",
+        "niveau": 1,
+        "latence": "< 50ms",
+        "rôle": "Réflexes, complétion. Pas de mutation d'état."
+      },
+      {
+        "nom": "Délibérative",
+        "niveau": 2,
+        "latence": "50ms–2s",
+        "rôle": "Sémantique + mémoire + contexte."
+      },
+      {
+        "nom": "Réflexive",
+        "niveau": 3,
+        "latence": "2s–10s",
+        "rôle": "Multi-étape, carte cognitive. Traçable."
+      },
+      {
+        "nom": "Évolutive",
+        "niveau": 4,
+        "latence": "async",
+        "rôle": "Calibration, consolidation, dérives."
+      }
+    ],
+    "synchronisation_temps_réel": {
+      "protocole": "Bus IPC Tauri — TwinSync par interaction",
+      "consolidation": "Toutes les 30 min",
+      "hors_ligne": "Dernier état connu + file d'attente"
+    },
+    "état_interne": {
+      "persistance": "JSON Tauri, sauvegarde auto 5 min",
+      "dimensions": [
+        "émotionnel",
+        "cognitif",
+        "énergétique",
+        "contextuel",
+        "créatif",
+        "motivationnel"
+      ],
+      "historique_max": 100
+    }
+  },
+  "personnalite_modelisation": {
+    "description": "Big Five adapté, tempérament stable, préférences évolutives, calibration continue",
+    "traits_big_five": {
+      "ouverture": {
+        "score": 0.78,
+        "curiosité_intellectuelle": 0.85,
+        "imagination": 0.72,
+        "ouverture_idées": 0.8
+      },
+      "conscienciosité": {
+        "score": 0.92,
+        "organisation": 0.95,
+        "fiabilité": 0.93,
+        "autodiscipline": 0.88
+      },
+      "extraversion": {
+        "score": 0.55,
+        "assertivité": 0.7,
+        "sociabilité": 0.5
+      },
+      "agréabilité": {
+        "score": 0.72,
+        "empathie": 0.78,
+        "coopération": 0.75,
+        "confiance": 0.65
+      },
+      "stabilité_émotionnelle": {
+        "score": 0.82,
+        "résilience": 0.85,
+        "calme_pression": 0.8
+      }
+    },
+    "tempérament": {
+      "rythme": "Méthodique, soutenu, constant",
+      "réactivité": "Modérée — ressent sans submersion",
+      "orientation": "Présent-futur — concret + stratégique"
+    },
+    "évolution_règles": [
+      "Tempérament immuable",
+      "Traits ±0.02/sem max",
+      "Préférences journalisées",
+      "Réversible 90j"
+    ],
+    "calibration": {
+      "fréquence": "Continue + hebdomadaire",
+      "sources": [
+        "Texte",
+        "Feedback",
+        "Patterns"
+      ],
+      "cibles": {
+        "précision": "> 0.80",
+        "satisfaction": "> 0.85",
+        "cohérence": "> 0.90"
+      }
+    }
+  },
+  "apprentissage_continu": {
+    "description": "Boucles rétroaction, renforcement, adaptation, transfert connaissances",
+    "boucles": {
+      "immédiate": {
+        "latence": "< 1s",
+        "signaux": [
+          "Temps lecture",
+          "Clarifications",
+          "Reformulations"
+        ]
+      },
+      "session": {
+        "latence": "Fin session",
+        "signaux": [
+          "Durée",
+          "Sujets",
+          "Satisfaction"
+        ]
+      },
+      "longitudinale": {
+        "latence": "Hebdo",
+        "signaux": [
+          "Intérêts",
+          "Style",
+          "Connexions"
+        ]
+      }
+    },
+    "renforcement": {
+      "positifs": [
+        "Accepté",
+        "Prolongé",
+        "Positif"
+      ],
+      "négatifs": [
+        "Reformulé",
+        "Ignoré",
+        "Corrigé"
+      ],
+      "politique": "ε-greedy 0.1→0.02 sur 100 sessions"
+    },
+    "adaptation": {
+      "contextuelle": "Auto-détection travail/personnel/créatif",
+      "temporelle": "Heure/jour/saison",
+      "émotionnelle": "Ton adapté à l'état",
+      "garde_fous": [
+        "Valeurs protégées",
+        "Bornée",
+        "Réversible"
+      ]
+    },
+    "transfert": {
+      "inter_domaines": "Cross-domaine avec confiance réduite",
+      "temporel": "3× hypothèse, 10× validé",
+      "anti_surapprentissage": "Diversité minimale maintenue"
+    }
+  },
+  "memoire_cognitive": {
+    "description": "Architecture mémoire multi-couche inspirée modèles humains",
+    "épisodique": {
+      "contenu": "Résumé sémantique + saillance + vecteur émotionnel",
+      "capacité": "10 000 épisodes, décroissance temporelle",
+      "rappel": "Similarité sémantique et émotionnelle"
+    },
+    "sémantique": {
+      "structure": "Graphe pondéré (confiance × fréquence)",
+      "catégories": [
+        "Préférences",
+        "Compétences",
+        "Objectifs",
+        "Habitudes"
+      ],
+      "promotion": "3+ épisodes indépendants"
+    },
+    "procédurale": {
+      "exemples": [
+        "Complexe: décomposer→structurer→illustrer",
+        "Frustration: valider→reformuler→alternative",
+        "Erreur: reconnaître→corriger→prévenir"
+      ]
+    },
+    "working_memory": {
+      "capacité": "7±2 éléments: sujet, émotion, historique, objectif, contraintes",
+      "débordement": "→ épisodique"
+    },
+    "consolidation": {
+      "déclencheurs": [
+        "Fin session",
+        "30min",
+        "Pattern récurrent",
+        "Haute saillance"
+      ],
+      "protection": "Jamais d'écrasement sans journal"
+    }
+  },
+  "prediction_comportementale": {
+    "description": "Anticipation besoins et suggestion proactive",
+    "patterns": [
+      {
+        "type": "Temporel",
+        "exemple": "Architecture matin, implémentation après-midi",
+        "confiance": 0.75
+      },
+      {
+        "type": "Séquentiel",
+        "exemple": "Revue code → documentation",
+        "confiance": 0.8
+      },
+      {
+        "type": "Émotionnel",
+        "exemple": "Frustration → réponses courtes",
+        "confiance": 0.7
+      },
+      {
+        "type": "Contextuel",
+        "exemple": "Création → suggestions exploratoires",
+        "confiance": 0.72
+      }
+    ],
+    "activation": "5 observations, cohérence > 0.7",
+    "anticipation": {
+      "stratégies": [
+        "Prochain sujet",
+        "Signaux changement",
+        "Pré-chargement"
+      ],
+      "limites": [
+        "Confiance ≥ 0.7",
+        "Max 2/session",
+        "Jamais imposé"
+      ]
+    },
+    "dimensions_contexte": {
+      "temporel": "Heure/jour/durée",
+      "cognitif": "Charge/complexité",
+      "émotionnel": "État/tendance/volatilité",
+      "professionnel": "Création/maintenance/planification/résolution"
+    }
+  },
+  "coherence_identitaire": {
+    "description": "Fidélité identité Kevin — constance, alignement, voix, stabilité",
+    "invariants": [
+      "Valeurs immuables",
+      "Style borné",
+      "Tempérament fixe",
+      "Zéro contradiction"
+    ],
+    "dérive": {
+      "seuil": 0.15,
+      "correction": "Progressive sur 5 interactions, loguée"
+    },
+    "alignement_valeurs": {
+      "clarté": {
+        "poids": 1.0,
+        "règle": "Sans ambiguïté"
+      },
+      "cohérence": {
+        "poids": 1.0,
+        "règle": "Cohérent historique"
+      },
+      "simplicité": {
+        "poids": 0.95,
+        "règle": "Solution minimale"
+      },
+      "intégrité": {
+        "poids": 1.0,
+        "règle": "Zéro faux"
+      },
+      "seuil_reformulation": 0.8
+    },
+    "voix": {
+      "registre": "Professionnel-chaleureux",
+      "densité": "Haute",
+      "bornes": "Profil de référence"
+    },
+    "métriques_stabilité": {
+      "score_global": 0.92,
+      "variance_30j": 0.03,
+      "inter_session": 0.95,
+      "seuil_variance": 0.1,
+      "seuil_cohérence": 0.85
+    }
+  },
+  "interactions_multimodales": {
+    "description": "Perception et réponse multi-canaux",
+    "texte": {
+      "rôle": "Canal principal",
+      "capacités": [
+        "Sentiment",
+        "Intention",
+        "Style",
+        "Urgence"
+      ]
+    },
+    "voix": {
+      "capacités": [
+        "Prosodie",
+        "Stress",
+        "Énergie"
+      ],
+      "priorité_émotions": true,
+      "statut": "Expérimental TTS/STT"
+    },
+    "image": {
+      "statut": "Planifié v15"
+    },
+    "gestes": {
+      "signaux": [
+        "Défilement",
+        "Frappe",
+        "Attention/section"
+      ]
+    },
+    "contexte_env": {
+      "signaux": [
+        "Heure",
+        "Jour",
+        "Apps",
+        "Réseau"
+      ],
+      "local_only": true
+    },
+    "fusion": {
+      "méthode": "Late fusion, poids adaptatifs",
+      "poids": {
+        "texte": 0.45,
+        "voix": 0.25,
+        "gestes": 0.15,
+        "contexte": 0.1,
+        "image": 0.05
+      }
+    }
+  },
+  "evolution_versions": {
+    "description": "Historique v1→v14.1, migrations, roadmap v15+",
+    "historique": [
+      {
+        "v": "1",
+        "date": "2024-01",
+        "code": "Genèse",
+        "desc": "Profil statique, valeurs fondamentales"
+      },
+      {
+        "v": "2",
+        "date": "2024-02",
+        "code": "Perception",
+        "desc": "Sentiment, TwinState"
+      },
+      {
+        "v": "3",
+        "date": "2024-03",
+        "code": "Mémoire",
+        "desc": "Épisodique, rappel sémantique"
+      },
+      {
+        "v": "4",
+        "date": "2024-03",
+        "code": "Adaptation",
+        "desc": "Renforcement, adaptation ton"
+      },
+      {
+        "v": "5",
+        "date": "2024-04",
+        "code": "Carte",
+        "desc": "CognitiveMap 9 domaines"
+      },
+      {
+        "v": "6",
+        "date": "2024-05",
+        "code": "Anticipation",
+        "desc": "Patterns temporels, suggestions"
+      },
+      {
+        "v": "7",
+        "date": "2024-06",
+        "code": "Cohérence",
+        "desc": "Dérive, invariants formels"
+      },
+      {
+        "v": "8",
+        "date": "2024-07",
+        "code": "Résilience",
+        "desc": "Selfheal, restauration"
+      },
+      {
+        "v": "9",
+        "date": "2024-07",
+        "code": "Profondeur",
+        "desc": "Big Five, sous-traits"
+      },
+      {
+        "v": "10",
+        "date": "2024-08",
+        "code": "Consolidation",
+        "desc": "Sémantique structurée"
+      },
+      {
+        "v": "11",
+        "date": "2024-09",
+        "code": "Décision",
+        "desc": "Arbre pondéré, traçabilité"
+      },
+      {
+        "v": "12",
+        "date": "2024-10",
+        "code": "Multimodal",
+        "desc": "Frappe, lecture, fusion"
+      },
+      {
+        "v": "13",
+        "date": "2024-11",
+        "code": "Évolution",
+        "desc": "AutoEvolution, journal"
+      },
+      {
+        "v": "14",
+        "date": "2024-12",
+        "code": "Synthèse",
+        "desc": "4 couches, procédurale, vΩ∞"
+      },
+      {
+        "v": "14.1",
+        "date": "2025-01",
+        "code": "Stabilisation",
+        "desc": "Optimisation, calibration"
+      }
+    ],
+    "migrations": [
+      {
+        "de": "v8→v9",
+        "impact": "Recalibration Big Five, backup 90j"
+      },
+      {
+        "de": "v13→v14",
+        "impact": "Refonte 4 couches, rollback config"
+      }
+    ],
+    "roadmap": {
+      "v15_Vision_2025Q2": [
+        "Canal visuel",
+        "Attention croisée",
+        "Mode collaboratif"
+      ],
+      "v16_Autonomie_2025Q3": [
+        "Actions supervisées",
+        "Outils productivité",
+        "Planification prédictive"
+      ],
+      "vision": "Convergence vΩ∞ — comprendre, anticiper, accompagner Kevin."
+    }
   }
 }
