@@ -583,6 +583,11 @@ export function evaluateInferenceState(
  * - Conditional/hypothetical reasoning markers
  * - Multi-topic detection (commas, semicolons, conjunctions with topic shifts)
  * - Temporal markers (past/present/future framing)
+ *
+ * v30.3.0: Enhanced with:
+ * - Topic diversity factor: detects multi-domain requests via keyword clustering
+ * - Negation/nuance signals: "mais pas", "sauf", "en revanche" indicate refined thinking
+ * - Total 8-factor scoring for higher discrimination accuracy
  */
 export function estimateComplexity(message: string): number {
   const words = message.split(/\s+/).filter(Boolean);
@@ -606,15 +611,34 @@ export function estimateComplexity(message: string): number {
     message.match(/\b(avant|après|pendant|historiquement|à l'avenir|prochainement|jadis|auparavant|dorénavant|before|after|during|previously|going forward)\b/gi) || []
   ).length;
 
-  // Score normalisé entre 0 et 1
-  // v30.2.0: 6-factor formula with structural analysis
-  const lengthScore = Math.min(wordCount / 100, 1.0) * 0.25;
-  const questionScore = Math.min(questionCount / 3, 1.0) * 0.2;
-  const conjunctionScore = Math.min(conjunctionCount / 4, 1.0) * 0.2;
-  const lexicalScore = longWordRatio * 0.2;
-  const structuralScore = Math.min((enumerationCount + conditionalCount + temporalCount) / 5, 1.0) * 0.15;
+  // v30.3.0: Topic diversity — count distinct domain markers
+  const domainMarkers = [
+    /\b(technique|code|développement|architecture|api|backend|frontend|infrastructure)\b/gi,
+    /\b(stratégie|business|marché|client|vente|marketing|croissance|revenue)\b/gi,
+    /\b(équipe|management|leadership|organisation|processus|workflow|rh)\b/gi,
+    /\b(personnel|vie|santé|bien-être|motivation|énergie|habitude)\b/gi,
+    /\b(finance|budget|coût|investissement|rentabilité|trésorerie)\b/gi,
+    /\b(juridique|contrat|conformité|rgpd|légal|réglementation)\b/gi,
+    /\b(créatif|design|ux|ui|branding|visuel|identité)\b/gi,
+  ];
+  const topicDiversityCount = domainMarkers.filter(rx => rx.test(message)).length;
 
-  return Math.min(1.0, lengthScore + questionScore + conjunctionScore + lexicalScore + structuralScore);
+  // v30.3.0: Negation/nuance signals — indicate refined or constrained thinking
+  const negationCount = (
+    message.match(/\b(mais pas|sauf|en revanche|au contraire|toutefois|néanmoins|cependant|excepté|sans|not|except|rather|instead|without)\b/gi) || []
+  ).length;
+
+  // Score normalisé entre 0 et 1
+  // v30.3.0: 8-factor formula with topic diversity and negation
+  const lengthScore = Math.min(wordCount / 100, 1.0) * 0.20;
+  const questionScore = Math.min(questionCount / 3, 1.0) * 0.19;
+  const conjunctionScore = Math.min(conjunctionCount / 4, 1.0) * 0.17;
+  const lexicalScore = longWordRatio * 0.17;
+  const structuralScore = Math.min((enumerationCount + conditionalCount + temporalCount) / 5, 1.0) * 0.10;
+  const topicScore = Math.min(topicDiversityCount / 3, 1.0) * 0.10;
+  const negationScore = Math.min(negationCount / 3, 1.0) * 0.07;
+
+  return Math.min(1.0, lengthScore + questionScore + conjunctionScore + lexicalScore + structuralScore + topicScore + negationScore);
 }
 
 /**
@@ -803,9 +827,12 @@ const INTENT_SIGNALS: Record<
       /\b(research|search the web|find online|analyze|study|investigate)\b/i,
       /\b(deep dive|deep analysis|comprehensive|thorough|in-depth)\b/i,
       /\b(croise les sources|recoup|compare les sources|vérifie)\b/i,
+      /\b(enrichi|enrichir|développe|développer|optimise|optimiser|améliore|améliorer)\b/i,
+      /\b(état de l'art|benchmark|tendance|évolution|perspective|horizon)\b/i,
+      /\b(fiabilité|véracité|fact-check|vérification|validation des sources)\b/i,
     ],
     freshness: 'current',
-    memoryRelevance: 'low',
+    memoryRelevance: 'medium',
   },
   professional_document: {
     patterns: [
@@ -889,14 +916,24 @@ const INTENT_SIGNALS: Record<
 /**
  * Classify the intent of a user message.
  * Returns intent type, confidence, signals, and routing metadata.
+ *
+ * v30.3.0: Enhanced with:
+ * - Multi-intent detection: secondary intent tracked for hybrid routing
+ * - Confidence penalization: conflicting strong signals reduce confidence
+ * - Semantic boosting: intent-specific combinators (e.g. research + internet = higher confidence)
+ * - Length-adaptive scoring: longer messages need proportionally more signal density
  */
 export function classifyIntent(message: string): IntentClassification {
   const msgLower = message.toLowerCase();
   const wordCount = message.split(/\s+/).filter(Boolean).length;
 
-  let bestIntent: IntentType = 'information_request';
-  let bestScore = 0;
-  const matchedSignals: string[] = [];
+  // Score all intents
+  const intentScores: Array<{
+    intent: IntentType;
+    score: number;
+    signals: string[];
+    config: (typeof INTENT_SIGNALS)[IntentType];
+  }> = [];
 
   for (const [intent, config] of Object.entries(INTENT_SIGNALS)) {
     let score = 0;
@@ -909,33 +946,109 @@ export function classifyIntent(message: string): IntentClassification {
       }
     }
 
-    // Boost for longer messages with matching patterns
+    // Length-adaptive boost: longer messages with matching patterns get scaled boost
     if (score > 0 && wordCount > 5) {
       score *= 1.2;
     }
+    // Extra boost for very long detailed messages (20+ words with 3+ signal matches)
+    if (score >= 3 && wordCount > 20) {
+      score *= 1.15;
+    }
 
-    if (score > bestScore) {
-      bestScore = score;
-      bestIntent = intent as IntentType;
-      matchedSignals.length = 0;
-      matchedSignals.push(...signals);
+    if (score > 0) {
+      intentScores.push({ intent: intent as IntentType, score, signals, config });
     }
   }
 
+  // Sort by score descending
+  intentScores.sort((a, b) => b.score - a.score);
+
   // Default to conversational for very short messages with no patterns
-  if (bestScore === 0 && wordCount <= 3) {
-    bestIntent = 'conversational';
+  if (intentScores.length === 0 && wordCount <= 3) {
+    const config = INTENT_SIGNALS['conversational'];
+    return {
+      intent: 'conversational',
+      confidence: 0.5,
+      signals: [],
+      freshnessRequired: config.freshness,
+      memoryRelevance: config.memoryRelevance,
+    };
   }
 
-  const config = INTENT_SIGNALS[bestIntent];
-  const confidence = Math.min(1.0, bestScore / 2);
+  // Default to information_request if no patterns matched
+  if (intentScores.length === 0) {
+    const config = INTENT_SIGNALS['information_request'];
+    return {
+      intent: 'information_request',
+      confidence: 0.3,
+      signals: [],
+      freshnessRequired: config.freshness,
+      memoryRelevance: config.memoryRelevance,
+    };
+  }
+
+  // At this point intentScores is guaranteed non-empty (empty cases returned above)
+  const best = intentScores[0]!;
+  const secondBest = intentScores.length > 1 ? intentScores[1] : null;
+
+  // v30.3.0: Confidence penalization for close-scoring competing intents
+  // If two intents score very close (within 20%), reduce confidence to signal ambiguity
+  let confidenceBase = best.score;
+  if (secondBest && secondBest.score > best.score * 0.8) {
+    confidenceBase *= 0.85; // 15% penalty for ambiguous intent
+  }
+
+  // v30.3.0: Semantic boosting for synergistic intent combinations
+  // Some intent pairs naturally reinforce each other
+  if (secondBest) {
+    const pair = new Set([best.intent, secondBest.intent]);
+    // research + deep_reflection → higher confidence (the user wants thorough analysis)
+    if (pair.has('research_analysis') && pair.has('deep_reflection')) {
+      confidenceBase *= 1.15;
+    }
+    // data_collection + research_analysis → higher confidence (structured research)
+    if (pair.has('data_collection') && pair.has('research_analysis')) {
+      confidenceBase *= 1.1;
+    }
+    // memory_management + memory_recall → higher confidence (memory-focused session)
+    if (pair.has('memory_management') && pair.has('memory_recall')) {
+      confidenceBase *= 1.1;
+    }
+    // message_analysis + deep_reflection → higher confidence (deep analytical intent)
+    if (pair.has('message_analysis') && pair.has('deep_reflection')) {
+      confidenceBase *= 1.1;
+    }
+  }
+
+  const confidence = Math.min(1.0, confidenceBase / 2);
+
+  // v30.3.0: Elevate memory relevance when secondary intent is memory-related
+  let effectiveMemoryRelevance = best.config.memoryRelevance;
+  if (
+    secondBest &&
+    (secondBest.intent === 'memory_recall' ||
+      secondBest.intent === 'memory_management') &&
+    effectiveMemoryRelevance === 'low'
+  ) {
+    effectiveMemoryRelevance = 'medium';
+  }
+
+  // v30.3.0: Elevate freshness when secondary intent requires current data
+  let effectiveFreshness = best.config.freshness;
+  if (
+    secondBest &&
+    secondBest.config.freshness === 'current' &&
+    effectiveFreshness === 'stable'
+  ) {
+    effectiveFreshness = 'current';
+  }
 
   return {
-    intent: bestIntent,
+    intent: best.intent,
     confidence,
-    signals: matchedSignals,
-    freshnessRequired: config.freshness,
-    memoryRelevance: config.memoryRelevance,
+    signals: best.signals,
+    freshnessRequired: effectiveFreshness,
+    memoryRelevance: effectiveMemoryRelevance,
   };
 }
 
@@ -978,15 +1091,24 @@ export const IDENTITY_CONSTANTS = {
   /** Structured data collection and aggregation */
   dataCollectionEnabled: true,
 
+  /** Internet research, analysis, and enrichment from web sources */
+  internetAnalysisEnabled: true,
+
+  /** Cross-validation of information across multiple sources */
+  crossValidationEnabled: true,
+
+  /** Adaptive depth scaling based on intent + complexity signals */
+  adaptiveDepthEnabled: true,
+
   /** Stable system identity label */
   systemLabel: 'TITANE∞',
 
   /** Version for identity tracking */
-  version: '30.2.0',
+  version: '30.3.0',
 
   /** Core behavioral promise */
   promise:
-    'Je suis là pour comprendre vite, agir utile, raisonner en profondeur, gérer ta mémoire, analyser tes messages, et me souvenir.',
+    'Je suis là pour comprendre vite, agir utile, raisonner en profondeur, gérer ta mémoire, analyser tes messages, enrichir depuis le web, et me souvenir.',
 } as const;
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1041,7 +1163,7 @@ export function computeEffectiveDepth(
   return getDepthForIntent(intent);
 }
 
-export const RESPONSE_POLICY_VERSION = '2.1.0';
+export const RESPONSE_POLICY_VERSION = '2.2.0';
 export const RESPONSE_POLICY_DATE = '2026-04-12';
 
 export default {

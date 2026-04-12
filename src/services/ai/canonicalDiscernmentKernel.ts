@@ -461,6 +461,56 @@ export class CanonicalDiscernmentKernel {
       };
     }
 
+    // v30.3.0: Memory management → full memory access for curation/consolidation
+    if (intent.intent === 'memory_management') {
+      return {
+        use: true,
+        sources: this.extractMemorySources(memoryContext),
+        maxTokens: profile.memory.maxSources,
+        relevance: 'high',
+      };
+    }
+
+    // v30.3.0: Deep reflection → use full context for multi-perspective analysis
+    if (intent.intent === 'deep_reflection') {
+      return {
+        use: true,
+        sources: this.extractMemorySources(memoryContext),
+        maxTokens: Math.min(profile.memory.maxSources, 8),
+        relevance: 'high',
+      };
+    }
+
+    // v30.3.0: Research analysis → use memory to contextualize findings
+    if (intent.intent === 'research_analysis' && hasContext) {
+      return {
+        use: true,
+        sources: this.extractMemorySources(memoryContext),
+        maxTokens: Math.min(profile.memory.maxSources, 5),
+        relevance: 'medium',
+      };
+    }
+
+    // v30.3.0: Message analysis → relevant context for coherence checking
+    if (intent.intent === 'message_analysis' && hasContext) {
+      return {
+        use: true,
+        sources: this.extractMemorySources(memoryContext),
+        maxTokens: Math.min(profile.memory.maxSources, 4),
+        relevance: 'medium',
+      };
+    }
+
+    // v30.3.0: Data collection → memory context for continuity and deduplication
+    if (intent.intent === 'data_collection' && hasContext) {
+      return {
+        use: true,
+        sources: this.extractMemorySources(memoryContext),
+        maxTokens: Math.min(profile.memory.maxSources, 6),
+        relevance: 'high',
+      };
+    }
+
     // Diagnostic with recent decisions → useful context
     if (intent.intent === 'diagnostic' && memoryContext.recentDecisions.length > 0) {
       return {
