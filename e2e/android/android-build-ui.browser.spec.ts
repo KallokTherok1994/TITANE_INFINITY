@@ -1,17 +1,12 @@
 import { test, expect } from '@playwright/test';
-import fs from 'node:fs';
 import path from 'node:path';
+import {
+  extractCriticalConsoleErrors,
+  filterKnownConsoleNoise,
+  writeJsonArtifact,
+} from './helpers';
 
 const ARTIFACT_DIR = path.resolve(process.cwd(), 'reports/e2e/android-ui/browser');
-
-function ensureArtifactDir(): void {
-  fs.mkdirSync(ARTIFACT_DIR, { recursive: true });
-}
-
-function writeJsonArtifact(fileName: string, payload: unknown): void {
-  ensureArtifactDir();
-  fs.writeFileSync(path.join(ARTIFACT_DIR, fileName), `${JSON.stringify(payload, null, 2)}\n`);
-}
 
 test.describe('Android Build UI - Browser and Android Emulation', () => {
   test('renders core conversation UI and exports required UI maps', async ({ page }) => {
@@ -94,32 +89,35 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
       };
     });
 
-    const filteredErrors = consoleErrors.filter(
-      entry =>
-        !entry.includes('favicon') &&
-        !entry.includes('HMR') &&
-        !entry.includes('socket') &&
-        !entry.includes('Failed to load resource')
-    );
+    // Quick responsive sanity check for mobile-like viewport behavior.
+    await page.setViewportSize({ width: 390, height: 844 });
+    await expect(page.getByTestId('tab-conversation')).toBeVisible();
+    await expect(page.getByTestId('chat-input')).toBeVisible();
+
+    const filteredErrors = filterKnownConsoleNoise(consoleErrors);
+    const criticalErrors = extractCriticalConsoleErrors(filteredErrors);
 
     const stability = {
       consoleErrorCount: filteredErrors.length,
       consoleErrors: filteredErrors,
+      criticalConsoleErrorCount: criticalErrors.length,
+      criticalConsoleErrors: criticalErrors,
       userMessageCount: await page.getByTestId('chat-message-user').count(),
     };
 
-    writeJsonArtifact('page_classification.json', {
+    writeJsonArtifact(ARTIFACT_DIR, 'page_classification.json', {
       route,
       viewport,
       project: test.info().project.name,
       mobileLike: Boolean(viewport && viewport.width <= 768),
     });
-    writeJsonArtifact('chat_dom_map.json', domMap);
-    writeJsonArtifact('AR20.json', ar20);
-    writeJsonArtifact('OFFLINE5.json', offline5);
-    writeJsonArtifact('navigation.json', navigation);
-    writeJsonArtifact('stability.json', stability);
+    writeJsonArtifact(ARTIFACT_DIR, 'chat_dom_map.json', domMap);
+    writeJsonArtifact(ARTIFACT_DIR, 'AR20.json', ar20);
+    writeJsonArtifact(ARTIFACT_DIR, 'OFFLINE5.json', offline5);
+    writeJsonArtifact(ARTIFACT_DIR, 'navigation.json', navigation);
+    writeJsonArtifact(ARTIFACT_DIR, 'stability.json', stability);
 
     expect(ar20.presentCount).toBe(ar20.requiredCount);
+    expect(criticalErrors).toHaveLength(0);
   });
 });

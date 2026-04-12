@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { spawnSync } from 'node:child_process';
-import fs from 'node:fs';
 import path from 'node:path';
+import { writeJsonArtifact, writeTextArtifact } from './helpers';
 
 const PACKAGE_NAME = 'com.titane.infinity';
 const ACTIVITY_NAME = `${PACKAGE_NAME}/.MainActivity`;
@@ -9,20 +9,6 @@ const ARTIFACT_DIR = path.resolve(process.cwd(), 'reports/e2e/android-ui/device'
 
 function runAdb(args: string[]) {
   return spawnSync('adb', args, { encoding: 'utf8' });
-}
-
-function ensureArtifactDir(): void {
-  fs.mkdirSync(ARTIFACT_DIR, { recursive: true });
-}
-
-function writeTextArtifact(fileName: string, value: string): void {
-  ensureArtifactDir();
-  fs.writeFileSync(path.join(ARTIFACT_DIR, fileName), `${value}\n`);
-}
-
-function writeJsonArtifact(fileName: string, payload: unknown): void {
-  ensureArtifactDir();
-  fs.writeFileSync(path.join(ARTIFACT_DIR, fileName), `${JSON.stringify(payload, null, 2)}\n`);
 }
 
 function connectedDeviceId(): string | null {
@@ -40,6 +26,28 @@ function connectedDeviceId(): string | null {
   return online[0] ?? null;
 }
 
+function focusedWindow(deviceId: string): string {
+  const focus = runAdb([
+    '-s',
+    deviceId,
+    'shell',
+    'dumpsys',
+    'window',
+    'windows',
+    '|',
+    'grep',
+    '-E',
+    'mCurrentFocus|mFocusedApp',
+  ]);
+
+  if (focus.status === 0) {
+    return `${focus.stdout}\n${focus.stderr}`;
+  }
+
+  const fallback = runAdb(['-s', deviceId, 'shell', 'dumpsys', 'window', 'windows']);
+  return `${fallback.stdout}\n${fallback.stderr}`;
+}
+
 test.describe('Android Build UI - Real Device Smoke', () => {
   const deviceEnabled = process.env.TITANE_E2E_ANDROID_DEVICE === '1';
 
@@ -54,15 +62,16 @@ test.describe('Android Build UI - Real Device Smoke', () => {
     const deviceId = connectedDeviceId();
     expect(deviceId, 'No Android device detected by adb').toBeTruthy();
 
+    const packagePath = runAdb(['-s', String(deviceId), 'shell', 'pm', 'path', PACKAGE_NAME]);
+    expect(packagePath.status, packagePath.stderr || packagePath.stdout).toBe(0);
+    expect(packagePath.stdout).toContain(PACKAGE_NAME);
+
     const launch = runAdb(['-s', String(deviceId), 'shell', 'am', 'start', '-n', ACTIVITY_NAME]);
     expect(launch.status, launch.stderr || launch.stdout).toBe(0);
 
     await expect
       .poll(
-        () => {
-          const result = runAdb(['-s', String(deviceId), 'shell', 'dumpsys', 'window', 'windows']);
-          return `${result.stdout}\n${result.stderr}`;
-        },
+        () => focusedWindow(String(deviceId)),
         {
           timeout: 30000,
           intervals: [1000, 1500, 2000],
@@ -94,39 +103,41 @@ test.describe('Android Build UI - Real Device Smoke', () => {
     expect(xml).toContain('hierarchy');
     expect(xml).toContain(PACKAGE_NAME);
 
-    const focusRaw = runAdb(['-s', String(deviceId), 'shell', 'dumpsys', 'window', 'windows']);
-    writeTextArtifact('focus.txt', focusRaw.stdout);
-    writeTextArtifact('ui_dump.xml', xml);
+    const focusRaw = focusedWindow(String(deviceId));
+    writeTextArtifact(ARTIFACT_DIR, 'focus.txt', focusRaw);
+    writeTextArtifact(ARTIFACT_DIR, 'ui_dump.xml', xml);
 
-    writeJsonArtifact('page_classification.json', {
+    writeJsonArtifact(ARTIFACT_DIR, 'page_classification.json', {
       platform: 'android-device',
       package: PACKAGE_NAME,
       activity: ACTIVITY_NAME,
       deviceId,
       launchOutput: launch.stdout.trim(),
+      packagePath: packagePath.stdout.trim(),
     });
 
-    writeJsonArtifact('chat_dom_map.json', {
+    writeJsonArtifact(ARTIFACT_DIR, 'chat_dom_map.json', {
       source: 'uiautomator-dump',
       containsPackageNode: xml.includes(PACKAGE_NAME),
     });
 
-    writeJsonArtifact('AR20.json', {
-      focusContainsPackage: focusRaw.stdout.includes(PACKAGE_NAME),
+    writeJsonArtifact(ARTIFACT_DIR, 'AR20.json', {
+      focusContainsPackage: focusRaw.includes(PACKAGE_NAME),
       dumpContainsHierarchy: xml.includes('hierarchy'),
     });
 
-    writeJsonArtifact('OFFLINE5.json', {
+    writeJsonArtifact(ARTIFACT_DIR, 'OFFLINE5.json', {
       note: 'Offline indicators are validated in browser lane; device lane validates install+focus+hierarchy.',
     });
 
-    writeJsonArtifact('navigation.json', {
-      focusDetected: focusRaw.stdout.includes(PACKAGE_NAME),
+    writeJsonArtifact(ARTIFACT_DIR, 'navigation.json', {
+      focusDetected: focusRaw.includes(PACKAGE_NAME),
       dumpsysCaptured: true,
     });
 
-    writeJsonArtifact('stability.json', {
+    writeJsonArtifact(ARTIFACT_DIR, 'stability.json', {
       launchStatus: launch.status,
+      packagePathStatus: packagePath.status,
       dumpStatus: dumpCmd.status,
       catStatus: dumpContent.status,
     });

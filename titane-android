@@ -1,0 +1,173 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
+ROOT_DIR="$(cd "$(dirname "$SCRIPT_PATH")" && pwd)"
+APK_PATH="$ROOT_DIR/src-tauri/gen/android/app/build/outputs/apk/universal/debug/app-universal-debug.apk"
+PACKAGE_NAME="com.titane.infinity"
+MAIN_ACTIVITY="$PACKAGE_NAME/.MainActivity"
+DEFAULT_MODEL="llama3.1:latest"
+DEFAULT_WAIT_SECS=20
+
+SERIAL="${ANDROID_SERIAL:-}"
+HOST_URL="${TITANE_ANDROID_OLLAMA_URL:-}"
+MODEL="${TITANE_ANDROID_OLLAMA_MODEL:-$DEFAULT_MODEL}"
+WAIT_SECS="$DEFAULT_WAIT_SECS"
+SKIP_BUILD=0
+SKIP_PROBE=0
+
+usage() {
+  cat <<'EOF'
+Usage: titane-android [options]
+
+Options:
+  --serial <id>         Android device serial (default: first device)
+  --host-url <url>      Ollama URL (default: auto-detect http://<host-ip>:11434)
+  --model <name>        Ollama model for probe (default: llama3.1:latest)
+  --wait <seconds>      Probe wait window after launch (default: 20)
+  --skip-build          Do not rebuild APK
+  --skip-probe          Do not run probe smoke test
+  -h, --help            Show help
+
+Env vars:
+  ANDROID_SERIAL
+  TITANE_ANDROID_OLLAMA_URL
+  TITANE_ANDROID_OLLAMA_MODEL
+EOF
+}
+
+log()  { printf '[titane-android] %s\n' "$*"; }
+warn() { printf '[titane-android][WARN] %s\n' "$*" >&2; }
+fail() { printf '[titane-android][FAIL] %s\n' "$*" >&2; exit 1; }
+
+require_cmd() {
+  command -v "$1" >/dev/null 2>&1 || fail "Missing command: $1"
+}
+
+detect_host_url() {
+  local ip
+  ip="$(hostname -I 2>/dev/null | awk '{print $1}')"
+  [[ -n "$ip" ]] || fail "Cannot auto-detect host IP. Use --host-url"
+  printf 'http://%s:11434' "$ip"
+}
+
+pick_serial() {
+  if [[ -n "$SERIAL" ]]; then
+    return 0
+  fi
+
+  local first
+  first="$(adb devices | awk 'NR>1 && $2=="device" {print $1; exit}')"
+  [[ -n "$first" ]] || fail "No Android device detected (adb devices)"
+  SERIAL="$first"
+}
+
+adb_s() {
+  adb -s "$SERIAL" "$@"
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --serial)
+      SERIAL="${2:-}"; shift 2 ;;
+    --host-url)
+      HOST_URL="${2:-}"; shift 2 ;;
+    --model)
+      MODEL="${2:-}"; shift 2 ;;
+    --wait)
+      WAIT_SECS="${2:-}"; shift 2 ;;
+    --skip-build)
+      SKIP_BUILD=1; shift ;;
+    --skip-probe)
+      SKIP_PROBE=1; shift ;;
+    -h|--help)
+      usage; exit 0 ;;
+    *)
+      fail "Unknown option: $1" ;;
+  esac
+done
+
+require_cmd adb
+require_cmd curl
+require_cmd corepack
+
+if [[ -z "$HOST_URL" ]]; then
+  HOST_URL="$(detect_host_url)"
+fi
+
+log "Repo root: $ROOT_DIR"
+log "Using host URL: $HOST_URL"
+log "Using model: $MODEL"
+
+log "Checking ADB connectivity"
+adb start-server >/dev/null
+pick_serial
+log "Using device serial: $SERIAL"
+
+if [[ "$SKIP_BUILD" -eq 0 ]]; then
+  log "Building Android APK (full debug)"
+  (
+    cd "$ROOT_DIR"
+    corepack pnpm run android:build:full:debug
+  )
+else
+  log "Skipping build (--skip-build)"
+fi
+
+[[ -f "$APK_PATH" ]] || fail "APK not found at $APK_PATH"
+
+log "Checking Ollama endpoint"
+if ! curl -fsS "$HOST_URL/api/version" >/dev/null; then
+  fail "Cannot reach Ollama at $HOST_URL/api/version"
+fi
+
+if ! curl -fsS "$HOST_URL/api/tags" | grep -q "\"$MODEL\""; then
+  warn "Model $MODEL not found in $HOST_URL/api/tags"
+  warn "Probe may fail unless model is available"
+fi
+
+log "Installing APK"
+adb_s install -r "$APK_PATH" >/dev/null
+
+log "Writing runtime settings on device"
+cat > /tmp/runtime_settings_v1.json <<EOF
+{"ollamaUrl":"$HOST_URL","ollamaModel":"$MODEL","updatedAt":$(date +%s)}
+EOF
+
+adb_s push /tmp/runtime_settings_v1.json /data/local/tmp/runtime_settings_v1.json >/dev/null
+adb_s shell "run-as $PACKAGE_NAME mkdir -p /data/user/0/$PACKAGE_NAME/files/titane-infinity/config"
+adb_s shell "run-as $PACKAGE_NAME cp /data/local/tmp/runtime_settings_v1.json /data/user/0/$PACKAGE_NAME/files/titane-infinity/config/runtime_settings_v1.json"
+
+log "Force-stop + cold start"
+adb_s shell am force-stop "$PACKAGE_NAME"
+adb_s logcat -c
+adb_s shell am start -W -n "$MAIN_ACTIVITY" >/dev/null
+
+if [[ "$SKIP_PROBE" -eq 1 ]]; then
+  log "Skipping probe (--skip-probe). Connection setup complete."
+  exit 0
+fi
+
+log "Arming probe flag"
+adb_s shell "run-as $PACKAGE_NAME touch /data/user/0/$PACKAGE_NAME/files/probe_ollama_generate.flag"
+
+log "Relaunching app with probe"
+adb_s shell am force-stop "$PACKAGE_NAME"
+adb_s logcat -c
+adb_s shell am start -W -n "$MAIN_ACTIVITY" >/dev/null
+
+log "Waiting $WAIT_SECS seconds for probe"
+sleep "$WAIT_SECS"
+
+probe_out="$(adb_s logcat -d 2>/dev/null | grep -E 'OLLAMA_PROBE_OK|OLLAMA_PROBE_ERR' | tail -1 || true)"
+
+if [[ "$probe_out" == *"OLLAMA_PROBE_OK"* ]]; then
+  log "PASS: $probe_out"
+  exit 0
+fi
+
+if [[ "$probe_out" == *"OLLAMA_PROBE_ERR"* ]]; then
+  fail "Probe failed: $probe_out"
+fi
+
+fail "No probe marker found. Check logcat manually."
