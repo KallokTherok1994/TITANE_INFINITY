@@ -4,6 +4,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 pub mod claude;
+pub mod gemini;
 pub mod local;
 pub mod openai;
 pub mod titane_engine;

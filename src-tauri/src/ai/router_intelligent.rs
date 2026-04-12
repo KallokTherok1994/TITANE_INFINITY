@@ -54,17 +54,25 @@ impl AiRouter {
                 fallback: "titane_engine".to_string(),
                 rationale: "Mode Fast + latency priority → Local first".to_string(),
             }
+        } else if self.cost_optimization {
+            // Cost optimization: prefer Gemini Flash (very cheap) or local
+            RoutingDecision {
+                primary: "gemini_flash".to_string(),
+                secondary: Some("local_llama3".to_string()),
+                fallback: "titane_engine".to_string(),
+                rationale: "Mode Fast + cost opt → Gemini Flash (cheapest cloud)".to_string(),
+            }
         } else if prompt_length < 500 {
             RoutingDecision {
                 primary: "claude_haiku".to_string(),
-                secondary: Some("gpt35".to_string()),
+                secondary: Some("gemini_flash".to_string()),
                 fallback: "local_llama3".to_string(),
                 rationale: "Mode Fast + short prompt → Claude Haiku".to_string(),
             }
         } else {
             RoutingDecision {
                 primary: "gpt35".to_string(),
-                secondary: Some("claude_haiku".to_string()),
+                secondary: Some("gemini_flash".to_string()),
                 fallback: "local_llama3".to_string(),
                 rationale: "Mode Fast + long prompt → GPT-3.5".to_string(),
             }
@@ -72,10 +80,18 @@ impl AiRouter {
     }
 
     fn route_quality(&self, is_complex: bool, is_code: bool) -> RoutingDecision {
-        if is_complex {
+        if self.cost_optimization {
+            // Cost optimization: prefer Gemini for general quality tasks
+            RoutingDecision {
+                primary: "gemini".to_string(),
+                secondary: Some("claude_haiku".to_string()),
+                fallback: "local_mistral".to_string(),
+                rationale: "Mode Quality + cost opt → Gemini (cost-effective quality)".to_string(),
+            }
+        } else if is_complex {
             RoutingDecision {
                 primary: "claude_sonnet".to_string(),
-                secondary: Some("gpt4_mini".to_string()),
+                secondary: Some("gemini".to_string()),
                 fallback: "claude_haiku".to_string(),
                 rationale: "Mode Quality + complex → Claude Sonnet".to_string(),
             }
@@ -89,7 +105,7 @@ impl AiRouter {
         } else {
             RoutingDecision {
                 primary: "claude_sonnet".to_string(),
-                secondary: Some("gpt4_mini".to_string()),
+                secondary: Some("gemini".to_string()),
                 fallback: "gpt35".to_string(),
                 rationale: "Mode Quality + standard → Claude Sonnet".to_string(),
             }
@@ -131,10 +147,17 @@ impl AiRouter {
                 fallback: "local_codellama".to_string(),
                 rationale: "Mode Analysis + code → GPT-4 Mini".to_string(),
             }
+        } else if self.cost_optimization {
+            RoutingDecision {
+                primary: "gemini".to_string(),
+                secondary: Some("claude_haiku".to_string()),
+                fallback: "local_mistral".to_string(),
+                rationale: "Mode Analysis + cost opt → Gemini".to_string(),
+            }
         } else {
             RoutingDecision {
                 primary: "claude_sonnet".to_string(),
-                secondary: Some("gpt4_mini".to_string()),
+                secondary: Some("gemini".to_string()),
                 fallback: "claude_haiku".to_string(),
                 rationale: "Mode Analysis → Claude Sonnet".to_string(),
             }
@@ -211,7 +234,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_route_fast_short() {
-        let router = AiRouter::default();
+        let router = AiRouter::new(false, false); // no cost opt, no latency priority
         let req = AiRequest {
             prompt: "Hello".to_string(),
             mode: AiMode::Fast,
@@ -223,14 +246,26 @@ mod tests {
         };
 
         let decision = router.route(&req).await;
-        // Fast mode peut choisir haiku, local ou titane_engine selon disponibilité
-        assert!(
-            decision.primary.contains("haiku")
-                || decision.primary.contains("local")
-                || decision.primary.contains("titane_engine")
-        );
-        // Fallback pour Fast mode avec prompt court (<500 chars) est local_llama3
-        assert!(decision.fallback == "titane_engine" || decision.fallback == "local_llama3");
+        // Fast mode with short prompt selects claude_haiku
+        assert_eq!(decision.primary, "claude_haiku");
+    }
+
+    #[tokio::test]
+    async fn test_route_fast_cost_optimized() {
+        let router = AiRouter::new(true, false); // cost opt enabled
+        let req = AiRequest {
+            prompt: "Hello".to_string(),
+            mode: AiMode::Fast,
+            user_id: "test".to_string(),
+            session_id: "test".to_string(),
+            max_tokens: None,
+            temperature: None,
+            context: None,
+        };
+
+        let decision = router.route(&req).await;
+        // Cost optimization prefers Gemini Flash
+        assert_eq!(decision.primary, "gemini_flash");
     }
 
     #[tokio::test]

@@ -1836,6 +1836,18 @@ fn main() {
             overdrive::chat_orchestrator::chat_memory_backup,    // LTM backup coverage
             overdrive::chat_orchestrator::chat_memory_restore,   // LTM restore coverage
 
+            // Multi-IA Orchestrator Commands (v28.0)
+            commands::multi_ai::multi_ai_generate,
+            commands::multi_ai::multi_ai_generate_dual,
+            commands::multi_ai::multi_ai_generate_fused,
+            commands::multi_ai::multi_ai_providers,
+            commands::multi_ai::multi_ai_best_provider,
+            commands::multi_ai::multi_ai_evaluate,
+            commands::multi_ai::multi_ai_set_fallback,
+            commands::multi_ai::multi_ai_configure_keys,
+            commands::multi_ai::multi_ai_cache_stats,
+            commands::multi_ai::multi_ai_clear_cache,
+
             // Diagnostic Commands v27 (Online capabilities check)
             diagnostic_commands::check_online_capabilities,
             // P1: WebResearch Engine (EXPERIMENTAL — stub, no network)

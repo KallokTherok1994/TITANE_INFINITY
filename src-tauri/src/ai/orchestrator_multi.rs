@@ -3,11 +3,12 @@
 //   SUPER PROMPT #8 — Main Orchestration Engine
 // ═══════════════════════════════════════════════════════════════
 
+use crate::ai::cache::{AIRouterCache, AICacheConfig, CachedAIResponse};
 use crate::ai::evaluator::{EvaluationResult, Evaluator};
 use crate::ai::fusion::{FusionEngine, FusionStrategy};
 use crate::ai::providers::{
-    claude::ClaudeProvider, local::LocalProvider, openai::OpenAiProvider,
-    titane_engine::TitaneEngineProvider, AiProvider,
+    claude::ClaudeProvider, gemini::GeminiProvider, local::LocalProvider,
+    openai::OpenAiProvider, titane_engine::TitaneEngineProvider, AiProvider,
 };
 use crate::ai::router_intelligent::AiRouter;
 use crate::ai::{AIError, AiRequest, AiResponse};
@@ -22,6 +23,7 @@ pub struct MultiAIOrchestrator {
     fusion: FusionEngine,
     evaluator: Evaluator,
     fallback_enabled: bool,
+    cache: AIRouterCache,
 }
 
 impl MultiAIOrchestrator {
@@ -39,11 +41,16 @@ impl MultiAIOrchestrator {
             fusion: FusionEngine::new(FusionStrategy::BestOnly),
             evaluator: Evaluator::default(),
             fallback_enabled: true,
+            cache: AIRouterCache::new(AICacheConfig::default()),
         }
     }
 
     /// Configure avec clés API
-    pub fn with_api_keys(claude_key: Option<String>, openai_key: Option<String>) -> Self {
+    pub fn with_api_keys(
+        claude_key: Option<String>,
+        openai_key: Option<String>,
+        gemini_key: Option<String>,
+    ) -> Self {
         let mut orchestrator = Self::new();
 
         // Claude
@@ -82,6 +89,19 @@ impl MultiAIOrchestrator {
             }
         }
 
+        // Gemini
+        if let Some(key) = gemini_key {
+            if !key.is_empty() {
+                let gemini = Arc::new(GeminiProvider::new(key));
+                orchestrator
+                    .providers
+                    .insert("gemini".to_string(), gemini.clone());
+                orchestrator
+                    .providers
+                    .insert("gemini_flash".to_string(), gemini);
+            }
+        }
+
         // Local (Ollama)
         let local = Arc::new(LocalProvider::new(None));
         orchestrator
@@ -100,13 +120,41 @@ impl MultiAIOrchestrator {
         orchestrator
     }
 
-    /// Génération simple (primary + fallback automatique)
+    /// Génération simple (primary + fallback automatique) avec cache
     pub async fn generate(&self, req: AiRequest) -> Result<AiResponse, AIError> {
+        // 0. Check cache first
+        let temperature = req.temperature.unwrap_or(0.7);
+        let max_tokens = req.max_tokens.unwrap_or(2048);
+
+        if let Some(cached) = self
+            .cache
+            .get_response(&req.prompt, temperature, max_tokens)
+            .await
+        {
+            return Ok(AiResponse {
+                output: cached.content,
+                provider: cached.provider.clone(),
+                model: "cached".to_string(),
+                tokens_in: 0,
+                tokens_out: cached.tokens,
+                latency_ms: 0,
+                confidence: 0.9,
+                metadata: crate::ai::AiMetadata {
+                    mode: req.mode.to_string(),
+                    temperature_used: Some(temperature),
+                    finish_reason: Some("cache_hit".to_string()),
+                    cached: true,
+                    fallback_triggered: false,
+                    evaluation_score: None,
+                },
+            });
+        }
+
         // 1. Routage
         let routing = self.router.route(&req).await;
 
         // 2. Tentative primary
-        match self.try_generate(&req, &routing.primary).await {
+        let result = match self.try_generate(&req, &routing.primary).await {
             Ok(response) => {
                 // 3. Évaluation
                 let evaluation = self.evaluator.evaluate(&req, &response);
@@ -129,7 +177,25 @@ impl MultiAIOrchestrator {
                     self.try_generate(&req, &routing.fallback).await
                 }
             }
+        };
+
+        // 5. Cache the successful response
+        if let Ok(ref response) = result {
+            self.cache
+                .set_response(
+                    &req.prompt,
+                    temperature,
+                    max_tokens,
+                    CachedAIResponse {
+                        content: response.output.clone(),
+                        tokens: response.tokens_out,
+                        provider: response.provider.clone(),
+                    },
+                )
+                .await;
         }
+
+        result
     }
 
     /// Génération duale (primary + secondary en parallèle)
@@ -249,6 +315,16 @@ impl MultiAIOrchestrator {
     pub fn set_fusion_strategy(&mut self, strategy: FusionStrategy) {
         self.fusion = FusionEngine::new(strategy);
     }
+
+    /// Retourne les statistiques du cache
+    pub async fn cache_stats(&self) -> crate::ai::cache::CacheStats {
+        self.cache.get_stats().await
+    }
+
+    /// Vide le cache
+    pub async fn clear_cache(&self) {
+        self.cache.clear().await;
+    }
 }
 
 impl Default for MultiAIOrchestrator {
@@ -266,10 +342,11 @@ impl OrchestratorState {
     pub fn new() -> Self {
         let claude_key = std::env::var("ANTHROPIC_API_KEY").ok();
         let openai_key = std::env::var("OPENAI_API_KEY").ok();
+        let gemini_key = std::env::var("GEMINI_API_KEY").ok();
 
         Self {
             orchestrator: Arc::new(RwLock::new(MultiAIOrchestrator::with_api_keys(
-                claude_key, openai_key,
+                claude_key, openai_key, gemini_key,
             ))),
         }
     }
