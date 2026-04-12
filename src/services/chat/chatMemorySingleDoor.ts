@@ -119,6 +119,10 @@ function readJson<T>(key: string): T | null {
   }
 }
 
+function toFiniteNumber(value: unknown, fallback = 0): number {
+  return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
+}
+
 /** Maximum age (ms) for titane_twin_fusion_v1 — 30 minutes.
  *  Values older than this are stale and excluded from context injection. */
 const TWINS_FUSION_MAX_AGE_MS = 1_800_000;
@@ -160,10 +164,10 @@ function readFreshTwinsFusion(): ChatContextEnvelope['twinsContext'] | null {
     : [];
 
   return {
-    globalScore: raw.globalScore,
-    trend: raw.trend,
+    globalScore: toFiniteNumber(raw.globalScore, 0),
+    trend: typeof raw.trend === 'string' && raw.trend.trim().length > 0 ? raw.trend : 'unknown',
     currentPhase: raw.currentPhase ?? null,
-    syncScore: raw.syncScore ?? 0,
+    syncScore: toFiniteNumber(raw.syncScore, 0),
     ownerThemes,
     sourceCount: typeof raw.sourceCount === 'number' ? raw.sourceCount : 0,
     portraitUrl: typeof raw.portraitUrl === 'string' ? raw.portraitUrl : undefined,
@@ -268,6 +272,9 @@ export function readLastChatContextEnvelope(): ChatContextEnvelope | null {
 export function formatContextEnvelopeForSystemPrompt(
   envelope: ChatContextEnvelope
 ): string {
+  const twinsFusionScore = toFiniteNumber(envelope.twinsContext?.globalScore, 0);
+  const twinsSyncScore = toFiniteNumber(envelope.twinsContext?.syncScore, 0);
+
   const recent = envelope.memorySingleDoor.recentMessages.slice(-6);
   const recentLines = recent.map(msg => {
     const compact = msg.content.replace(/\s+/g, ' ').trim().slice(0, 220);
@@ -301,10 +308,10 @@ export function formatContextEnvelopeForSystemPrompt(
       : []),
     ...(envelope.twinsContext
       ? [
-          `twins_fusion_score=${envelope.twinsContext.globalScore.toFixed(2)}`,
+          `twins_fusion_score=${twinsFusionScore.toFixed(2)}`,
           `twins_trend=${envelope.twinsContext.trend}`,
           `twins_phase=${envelope.twinsContext.currentPhase ?? 'unknown'}`,
-          `twins_sync_score=${(envelope.twinsContext.syncScore ?? 0).toFixed(2)}`,
+          `twins_sync_score=${twinsSyncScore.toFixed(2)}`,
           `twins_owner_themes=${(envelope.twinsContext.ownerThemes ?? []).join(', ') || 'none'}`,
           `twins_source_count=${envelope.twinsContext.sourceCount ?? 0}`,
           `twins_reflection_axis=${envelope.twinsContext.reflectionAxis ?? 'none'}`,
