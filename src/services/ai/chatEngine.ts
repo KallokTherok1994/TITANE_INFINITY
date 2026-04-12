@@ -850,7 +850,7 @@ class ChatEngineOmega {
 
       // v30.1.0: Inject professional document formatting instructions if document intent detected
       const documentDetection = detectDocumentType(validatedMessage);
-      if (documentDetection && documentDetection.confidence >= 0.4) {
+      if (documentDetection && documentDetection.confidence >= 0.5) {
         const documentInstructions = buildDocumentInstructions(documentDetection.type);
         systemPrompt = `${systemPrompt}\n\n${documentInstructions}`;
       }
