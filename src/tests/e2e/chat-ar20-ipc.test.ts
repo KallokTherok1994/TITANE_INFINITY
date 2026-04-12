@@ -25,7 +25,7 @@ const AR20_MESSAGES = [
   'Message 11: Parle-moi de singularité',
   'Message 12: Quel est le Ring 1 dans TITANE?',
   'Message 13: Explique One Door network',
-  'Message 14: Qu\'est-ce qu\'IPC canonical?',
+  "Message 14: Qu'est-ce qu'IPC canonical?",
   'Message 15: Tests de régression?',
   'Message 16: Politique de version?',
   'Message 17: Que signifie SEALED dans le kernel?',
@@ -76,9 +76,17 @@ describe('AR20 IPC Certification: 20 consecutive messages', () => {
 
       const success = typeof content === 'string' && content.trim().length > 0;
 
-      results.push({ index: i + 1, message: msg, success, response: content, duration_ms });
+      results.push({
+        index: i + 1,
+        message: msg,
+        success,
+        response: content,
+        duration_ms,
+      });
 
-      console.log(`[AR20-IPC] ${i + 1}/20 success=${success} duration=${Math.round(duration_ms)}ms`);
+      console.log(
+        `[AR20-IPC] ${i + 1}/20 success=${success} duration=${Math.round(duration_ms)}ms`
+      );
 
       // Each message MUST receive a non-empty response
       expect(success, `AR20 IPC message ${i + 1} received no response`).toBe(true);
@@ -87,11 +95,15 @@ describe('AR20 IPC Certification: 20 consecutive messages', () => {
     const allPass = results.every(r => r.success);
     const failedIndices = results.filter(r => !r.success).map(r => r.index);
 
-    console.log(`[AR20-IPC] VERDICT: ${allPass ? 'PASS' : 'FAIL'} — ${results.length}/20 responded`);
+    console.log(
+      `[AR20-IPC] VERDICT: ${allPass ? 'PASS' : 'FAIL'} — ${results.length}/20 responded`
+    );
     if (failedIndices.length > 0) {
       console.log(`[AR20-IPC] Failed messages: ${failedIndices.join(', ')}`);
     }
 
-    expect(allPass, `AR20 IPC: ${failedIndices.length} messages did not respond`).toBe(true);
+    expect(allPass, `AR20 IPC: ${failedIndices.length} messages did not respond`).toBe(
+      true
+    );
   }, 120000); // 120s timeout for 20 sequential IPC calls
 });

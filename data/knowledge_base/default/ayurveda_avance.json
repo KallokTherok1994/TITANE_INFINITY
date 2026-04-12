@@ -48,13 +48,29 @@
     "sept_dhatus_tissus": {
       "description": "Les 7 Dhatus sont les tissus corporels, nourris séquentiellement par Agni.",
       "sequence": [
-        {"dhatu": "Rasa", "traduction": "Plasma/lymphe", "fonction": "Nutrition, satisfaction"},
-        {"dhatu": "Rakta", "traduction": "Sang", "fonction": "Oxygénation, vitalité"},
-        {"dhatu": "Mamsa", "traduction": "Muscles", "fonction": "Force, protection"},
-        {"dhatu": "Meda", "traduction": "Tissu adipeux", "fonction": "Lubrification, amour"},
-        {"dhatu": "Asthi", "traduction": "Os", "fonction": "Soutien, structure"},
-        {"dhatu": "Majja", "traduction": "Moelle/nerfs", "fonction": "Communication, remplissage osseux"},
-        {"dhatu": "Shukra", "traduction": "Tissus reproducteurs", "fonction": "Reproduction, Ojas (immunité suprême)"}
+        {
+          "dhatu": "Rasa",
+          "traduction": "Plasma/lymphe",
+          "fonction": "Nutrition, satisfaction"
+        },
+        { "dhatu": "Rakta", "traduction": "Sang", "fonction": "Oxygénation, vitalité" },
+        { "dhatu": "Mamsa", "traduction": "Muscles", "fonction": "Force, protection" },
+        {
+          "dhatu": "Meda",
+          "traduction": "Tissu adipeux",
+          "fonction": "Lubrification, amour"
+        },
+        { "dhatu": "Asthi", "traduction": "Os", "fonction": "Soutien, structure" },
+        {
+          "dhatu": "Majja",
+          "traduction": "Moelle/nerfs",
+          "fonction": "Communication, remplissage osseux"
+        },
+        {
+          "dhatu": "Shukra",
+          "traduction": "Tissus reproducteurs",
+          "fonction": "Reproduction, Ojas (immunité suprême)"
+        }
       ]
     },
     "ojas_immunite_supreme": "Ojas est l'essence subtile produite quand tous les Dhatus sont bien nourris. C'est la force vitale suprême: immunité, vitalité, clarté mentale, aura, résistance au stress. Ojas faible = vulnérabilité aux maladies.",
@@ -76,30 +92,93 @@
     "rasayana_rajeunissement": {
       "definition": "Branche de l'Ayurveda dédiée au rajeunissement cellulaire, à la longévité et au renforcement d'Ojas.",
       "plantes_rasayana": [
-        {"nom": "Ashwagandha", "action": "Adaptogène, tonifie Vata, force, immunité, sommeil"},
-        {"nom": "Amalaki (Amla)", "action": "Antioxydant puissant, vitamine C, rajeunissement tissulaire"},
-        {"nom": "Shatavari", "action": "Tonique féminin et masculin, nourrit Ojas, fertilité"},
-        {"nom": "Brahmi", "action": "Nootropique, mémoire, concentration, calme nerveux"},
-        {"nom": "Guduchi (Tinospora)", "action": "Immunomodulateur, détoxifiant, anti-inflammatoire"},
-        {"nom": "Triphala", "action": "Trois fruits (Amalaki, Haritaki, Bibhitaki) — digestion, détox, rajeunissement"}
+        {
+          "nom": "Ashwagandha",
+          "action": "Adaptogène, tonifie Vata, force, immunité, sommeil"
+        },
+        {
+          "nom": "Amalaki (Amla)",
+          "action": "Antioxydant puissant, vitamine C, rajeunissement tissulaire"
+        },
+        {
+          "nom": "Shatavari",
+          "action": "Tonique féminin et masculin, nourrit Ojas, fertilité"
+        },
+        {
+          "nom": "Brahmi",
+          "action": "Nootropique, mémoire, concentration, calme nerveux"
+        },
+        {
+          "nom": "Guduchi (Tinospora)",
+          "action": "Immunomodulateur, détoxifiant, anti-inflammatoire"
+        },
+        {
+          "nom": "Triphala",
+          "action": "Trois fruits (Amalaki, Haritaki, Bibhitaki) — digestion, détox, rajeunissement"
+        }
       ],
       "chyawanprash": "Confiture médicinale traditionnelle à base d'Amalaki et 40+ herbes. Rasayana par excellence, pris quotidiennement pour l'immunité et la vitalité."
     },
     "dinacharya_routine": {
-      "matin": ["Réveil avant le lever du soleil (Brahma Muhurta)", "Grattage de langue (Jihwa Prakshalana)", "Tirage d'huile buccal (Gandusha/Oil pulling)", "Nettoyage nasal (Jala Neti)", "Auto-massage à l'huile (Abhyanga)", "Exercice physique adapté (Vyayama)", "Méditation/Pranayama", "Petit-déjeuner léger et chaud"],
-      "journee": ["Repas principal à midi (Agni au plus fort)", "Marche digestive après repas", "Travail/activité en accord avec sa Prakriti", "Hydratation tiède entre les repas"],
-      "soir": ["Dîner léger avant le coucher du soleil", "Rituel de gratitude", "Massage des pieds à l'huile de sésame", "Coucher avant 22h (Kapha time)"],
+      "matin": [
+        "Réveil avant le lever du soleil (Brahma Muhurta)",
+        "Grattage de langue (Jihwa Prakshalana)",
+        "Tirage d'huile buccal (Gandusha/Oil pulling)",
+        "Nettoyage nasal (Jala Neti)",
+        "Auto-massage à l'huile (Abhyanga)",
+        "Exercice physique adapté (Vyayama)",
+        "Méditation/Pranayama",
+        "Petit-déjeuner léger et chaud"
+      ],
+      "journee": [
+        "Repas principal à midi (Agni au plus fort)",
+        "Marche digestive après repas",
+        "Travail/activité en accord avec sa Prakriti",
+        "Hydratation tiède entre les repas"
+      ],
+      "soir": [
+        "Dîner léger avant le coucher du soleil",
+        "Rituel de gratitude",
+        "Massage des pieds à l'huile de sésame",
+        "Coucher avant 22h (Kapha time)"
+      ],
       "adaptation_saisonniere_ritucharya": "Adapter alimentation et mode de vie à chaque saison (Ritu): printemps=léger/épicé, été=frais/doux, automne=chaud/huileux, hiver=nourrissant/chaud."
     },
     "marma_points_vitaux": {
       "definition": "107 (ou 108) points vitaux du corps où convergent muscles, veines, ligaments, os et articulations. Siège de Prana (énergie vitale).",
-      "categories": ["Mamsa Marma (musculaires)", "Sira Marma (vasculaires)", "Snayu Marma (ligamentaires)", "Asthi Marma (osseux)", "Sandhi Marma (articulaires)"],
+      "categories": [
+        "Mamsa Marma (musculaires)",
+        "Sira Marma (vasculaires)",
+        "Snayu Marma (ligamentaires)",
+        "Asthi Marma (osseux)",
+        "Sandhi Marma (articulaires)"
+      ],
       "points_majeurs": [
-        {"nom": "Adhipati", "localisation": "Sommet du crâne (fontanelle)", "action": "Conscience, connexion spirituelle"},
-        {"nom": "Sthapani", "localisation": "Entre les sourcils (3e œil)", "action": "Clarté mentale, intuition"},
-        {"nom": "Hridaya", "localisation": "Région du cœur", "action": "Émotions, Ojas, vitalité"},
-        {"nom": "Nabhi", "localisation": "Nombril", "action": "Digestion, centre énergétique"},
-        {"nom": "Talahridaya", "localisation": "Centre de la paume/plante du pied", "action": "Circulation Prana, enracinement"}
+        {
+          "nom": "Adhipati",
+          "localisation": "Sommet du crâne (fontanelle)",
+          "action": "Conscience, connexion spirituelle"
+        },
+        {
+          "nom": "Sthapani",
+          "localisation": "Entre les sourcils (3e œil)",
+          "action": "Clarté mentale, intuition"
+        },
+        {
+          "nom": "Hridaya",
+          "localisation": "Région du cœur",
+          "action": "Émotions, Ojas, vitalité"
+        },
+        {
+          "nom": "Nabhi",
+          "localisation": "Nombril",
+          "action": "Digestion, centre énergétique"
+        },
+        {
+          "nom": "Talahridaya",
+          "localisation": "Centre de la paume/plante du pied",
+          "action": "Circulation Prana, enracinement"
+        }
       ],
       "therapie_marma": "Stimulation par massage, huiles médicinales, pression douce. Débloque le Prana, soulage la douleur, harmonise les Doshas."
     },

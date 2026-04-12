@@ -620,10 +620,10 @@ export class CognitiveObservabilityEngine extends EventEmitter {
    * - Error clustering (which phases fail most)
    */
   async synthesizeTracePatterns(conversation_id?: string): Promise<{
-    decision_stability: number;  // 0-1, 1 = always same provider chosen
+    decision_stability: number; // 0-1, 1 = always same provider chosen
     bottleneck_phase: string | null;
-    bottleneck_ratio: number;    // slowest_phase / avg_phase (>2 = bottleneck)
-    learning_velocity: number;   // positive = improving, negative = degrading
+    bottleneck_ratio: number; // slowest_phase / avg_phase (>2 = bottleneck)
+    learning_velocity: number; // positive = improving, negative = degrading
     error_clusters: Array<{ phase: string; count: number; rate: number }>;
     provider_distribution: Record<string, number>;
     insights: string[];
@@ -653,11 +653,17 @@ export class CognitiveObservabilityEngine extends EventEmitter {
     for (const trace of relevantTraces) {
       for (const decision of trace.decisions) {
         const chosen = decision.chosen_option || '';
-        if (decision.decision_point?.includes('provider') || (decision.type as string) === 'provider') {
+        if (
+          decision.decision_point?.includes('provider') ||
+          (decision.type as string) === 'provider'
+        ) {
           providerChoices.push(chosen);
           providerDistribution[chosen] = (providerDistribution[chosen] || 0) + 1;
         }
-        if (decision.decision_point?.includes('profile') || (decision.type as string) === 'profile') {
+        if (
+          decision.decision_point?.includes('profile') ||
+          (decision.type as string) === 'profile'
+        ) {
           profileChoices.push(chosen);
         }
       }
@@ -665,9 +671,10 @@ export class CognitiveObservabilityEngine extends EventEmitter {
 
     // Stability = 1 - (unique choices / total choices). Mono-provider = 1.0
     const uniqueProviders = new Set(providerChoices).size;
-    const decisionStability = providerChoices.length > 0
-      ? 1 - (uniqueProviders - 1) / Math.max(1, providerChoices.length)
-      : 1.0;
+    const decisionStability =
+      providerChoices.length > 0
+        ? 1 - (uniqueProviders - 1) / Math.max(1, providerChoices.length)
+        : 1.0;
 
     // === Phase Bottleneck Detection ===
     const phaseDurations: Map<string, number[]> = new Map();
@@ -690,9 +697,10 @@ export class CognitiveObservabilityEngine extends EventEmitter {
       allPhaseDurations.push(avg);
     }
 
-    const globalAvg = allPhaseDurations.length > 0
-      ? allPhaseDurations.reduce((s, d) => s + d, 0) / allPhaseDurations.length
-      : 0;
+    const globalAvg =
+      allPhaseDurations.length > 0
+        ? allPhaseDurations.reduce((s, d) => s + d, 0) / allPhaseDurations.length
+        : 0;
 
     for (const [name, durations] of phaseDurations) {
       const avg = durations.reduce((s, d) => s + d, 0) / durations.length;
@@ -746,18 +754,28 @@ export class CognitiveObservabilityEngine extends EventEmitter {
     const insights: string[] = [];
 
     if (decisionStability < 0.5) {
-      insights.push(`High provider churn detected (stability=${decisionStability.toFixed(2)}) — consider stabilizing provider selection.`);
+      insights.push(
+        `High provider churn detected (stability=${decisionStability.toFixed(2)}) — consider stabilizing provider selection.`
+      );
     }
     if (bottleneckPhase && bottleneckRatio > 2.0) {
-      insights.push(`Phase "${bottleneckPhase}" is ${bottleneckRatio.toFixed(1)}x slower than average — optimize or parallelize.`);
+      insights.push(
+        `Phase "${bottleneckPhase}" is ${bottleneckRatio.toFixed(1)}x slower than average — optimize or parallelize.`
+      );
     }
     if (learningVelocity > 0.15) {
-      insights.push(`System is improving: latency decreased ${(learningVelocity * 100).toFixed(0)}% from first to second half of traces.`);
+      insights.push(
+        `System is improving: latency decreased ${(learningVelocity * 100).toFixed(0)}% from first to second half of traces.`
+      );
     } else if (learningVelocity < -0.15) {
-      insights.push(`Performance degradation detected: latency increased ${(-learningVelocity * 100).toFixed(0)}% — investigate resource constraints.`);
+      insights.push(
+        `Performance degradation detected: latency increased ${(-learningVelocity * 100).toFixed(0)}% — investigate resource constraints.`
+      );
     }
     if (errorClusters.length > 0 && errorClusters[0]!.rate > 0.2) {
-      insights.push(`Error hotspot: "${errorClusters[0]!.phase}" fails ${(errorClusters[0]!.rate * 100).toFixed(0)}% of the time.`);
+      insights.push(
+        `Error hotspot: "${errorClusters[0]!.phase}" fails ${(errorClusters[0]!.rate * 100).toFixed(0)}% of the time.`
+      );
     }
     if (insights.length === 0) {
       insights.push('System is operating normally — no significant patterns detected.');

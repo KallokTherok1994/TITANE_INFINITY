@@ -74,10 +74,7 @@
         "working-memory",
         "consolidation"
       ],
-      "features_planned": [
-        "vector-search",
-        "embedding"
-      ],
+      "features_planned": ["vector-search", "embedding"],
       "notes": "vector-search and embedding require backend embedding service (planned); keyword-based search is active"
     },
     "singularity": {
@@ -203,17 +200,9 @@
       "description": "Web research and knowledge acquisition",
       "status": "partial",
       "notes": "rag-pipeline and file-ingestion are active; semantic-search is keyword-based only (not true vector semantic); web-search and knowledge-import are planned",
-      "features": [
-        "rag-pipeline",
-        "file-ingestion"
-      ],
-      "features_partial": [
-        "semantic-search"
-      ],
-      "features_planned": [
-        "web-search",
-        "knowledge-import"
-      ]
+      "features": ["rag-pipeline", "file-ingestion"],
+      "features_partial": ["semantic-search"],
+      "features_planned": ["web-search", "knowledge-import"]
     }
   }
 }

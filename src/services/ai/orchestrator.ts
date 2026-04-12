@@ -85,7 +85,13 @@ const IS_VITEST =
 // ─────────────────────────────────────────────────────────────────
 
 // v30.3.0: Error type classification for intelligent failover
-type ErrorSignature = 'timeout' | 'rate_limit' | 'auth_failed' | 'network' | 'model_error' | 'unknown';
+type ErrorSignature =
+  | 'timeout'
+  | 'rate_limit'
+  | 'auth_failed'
+  | 'network'
+  | 'model_error'
+  | 'unknown';
 
 interface ProviderStats {
   name: string;
@@ -639,21 +645,47 @@ class AIOrchestrator {
    * Different error types warrant different retry strategies
    */
   private classifyError(error: unknown): ErrorSignature {
-    const msg = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
+    const msg =
+      error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
 
-    if (msg.includes('timeout') || msg.includes('timed out') || msg.includes('econnaborted')) {
+    if (
+      msg.includes('timeout') ||
+      msg.includes('timed out') ||
+      msg.includes('econnaborted')
+    ) {
       return 'timeout';
     }
-    if (msg.includes('rate limit') || msg.includes('429') || msg.includes('too many requests')) {
+    if (
+      msg.includes('rate limit') ||
+      msg.includes('429') ||
+      msg.includes('too many requests')
+    ) {
       return 'rate_limit';
     }
-    if (msg.includes('401') || msg.includes('403') || msg.includes('unauthorized') || msg.includes('forbidden') || msg.includes('api key')) {
+    if (
+      msg.includes('401') ||
+      msg.includes('403') ||
+      msg.includes('unauthorized') ||
+      msg.includes('forbidden') ||
+      msg.includes('api key')
+    ) {
       return 'auth_failed';
     }
-    if (msg.includes('econnrefused') || msg.includes('enotfound') || msg.includes('network') || msg.includes('fetch failed') || msg.includes('econnreset')) {
+    if (
+      msg.includes('econnrefused') ||
+      msg.includes('enotfound') ||
+      msg.includes('network') ||
+      msg.includes('fetch failed') ||
+      msg.includes('econnreset')
+    ) {
       return 'network';
     }
-    if (msg.includes('model') || msg.includes('invalid') || msg.includes('context length') || msg.includes('content filter')) {
+    if (
+      msg.includes('model') ||
+      msg.includes('invalid') ||
+      msg.includes('context length') ||
+      msg.includes('content filter')
+    ) {
       return 'model_error';
     }
     return 'unknown';
@@ -681,11 +713,11 @@ class AIOrchestrator {
     }
 
     // Type-specific penalties
-    penalty += (errorCounts.get('rate_limit') || 0) * 40;    // Heavy: must wait
-    penalty += (errorCounts.get('auth_failed') || 0) * 60;   // Severe: config broken
-    penalty += (errorCounts.get('timeout') || 0) * 20;       // Moderate: may recover
-    penalty += (errorCounts.get('network') || 0) * 25;       // Moderate: transient
-    penalty += (errorCounts.get('model_error') || 0) * 10;   // Light: request-specific
+    penalty += (errorCounts.get('rate_limit') || 0) * 40; // Heavy: must wait
+    penalty += (errorCounts.get('auth_failed') || 0) * 60; // Severe: config broken
+    penalty += (errorCounts.get('timeout') || 0) * 20; // Moderate: may recover
+    penalty += (errorCounts.get('network') || 0) * 25; // Moderate: transient
+    penalty += (errorCounts.get('model_error') || 0) * 10; // Light: request-specific
     penalty += (errorCounts.get('unknown') || 0) * 15;
 
     return Math.min(80, penalty); // Cap penalty
@@ -750,12 +782,15 @@ class AIOrchestrator {
 
     // v30.3.0: Graduated complexity score for context-aware provider weighting
     // Combines message length, context depth, and structural indicators
-    const complexityIndicators = (message.match(/\?/g) || []).length
-      + (message.match(/\b(comment|pourquoi|expliqu|analys|compar|évalue)\b/gi) || []).length;
-    const queryComplexity = Math.min(1.0,
-      (messageLength / 1000) * 0.3
-      + (contextLength / 20000) * 0.3
-      + Math.min(1, complexityIndicators / 3) * 0.4
+    const complexityIndicators =
+      (message.match(/\?/g) || []).length +
+      (message.match(/\b(comment|pourquoi|expliqu|analys|compar|évalue)\b/gi) || [])
+        .length;
+    const queryComplexity = Math.min(
+      1.0,
+      (messageLength / 1000) * 0.3 +
+        (contextLength / 20000) * 0.3 +
+        Math.min(1, complexityIndicators / 3) * 0.4
     );
 
     // 📊 NOUVEAU v20Ω: Obtenir métriques en temps réel pour ajuster le scoring
@@ -807,7 +842,7 @@ class AIOrchestrator {
         const idleSeconds = (timeSinceLastUsed - 10000) / 1000;
         const recoveryBoost = Math.min(20, Math.log(1 + idleSeconds / 10) * 5);
         // Reliability-scaled: lower reliability → stronger recovery push
-        const reliabilityFactor = 1 + (80 - stats.reliability) / 80 * 0.3; // 1.0 at 80, 1.3 at 0
+        const reliabilityFactor = 1 + ((80 - stats.reliability) / 80) * 0.3; // 1.0 at 80, 1.3 at 0
         const adjustedBoost = Math.min(25, recoveryBoost * reliabilityFactor);
         score += adjustedBoost;
         logger.debug(
@@ -825,7 +860,7 @@ class AIOrchestrator {
           score += 50; // CLOUD PRIORITY BOOST
           // v30.3.0: Graduated complexity bonus — Claude excels at complex reasoning
           score += 20 + queryComplexity * 20; // 20-40 based on complexity (was flat 25/35)
-          score += Math.min(25, contextLength / 5000 * 15 + 5); // Graduated context bonus (was if/else)
+          score += Math.min(25, (contextLength / 5000) * 15 + 5); // Graduated context bonus (was if/else)
           score -= !IS_VITEST && stats.status === 'offline' ? 30 : 0;
           break;
 
@@ -833,7 +868,7 @@ class AIOrchestrator {
           // 🥈 PRIORITÉ #2: OpenAI = polyvalent, rapide
           score += 45; // CLOUD PRIORITY BOOST
           score += 15 + queryComplexity * 18; // 15-33 based on complexity (was flat 20/30)
-          score += Math.min(15, messageLength / 1000 * 10); // Graduated length bonus (was if/else)
+          score += Math.min(15, (messageLength / 1000) * 10); // Graduated length bonus (was if/else)
           score -= !IS_VITEST && stats.status === 'offline' ? 30 : 0;
           break;
 
@@ -841,7 +876,7 @@ class AIOrchestrator {
           // 🆕 PRIORITÉ #2.5: GitHub Copilot = OpenAI-compatible, écosystème GitHub
           score += 42; // CLOUD PRIORITY BOOST
           score += 14 + queryComplexity * 16; // 14-30 based on complexity (was flat 18/28)
-          score += Math.min(12, messageLength / 1000 * 8); // Graduated length bonus
+          score += Math.min(12, (messageLength / 1000) * 8); // Graduated length bonus
           score -= !IS_VITEST && stats.status === 'offline' ? 30 : 0;
           break;
 
@@ -857,7 +892,7 @@ class AIOrchestrator {
           // #4: Backend Rust (cascade interne)
           score += 20;
           score += 8 + queryComplexity * 10; // 8-18 graduated (was flat 10/15)
-          score -= Math.min(15, contextLength / 10000 * 10); // Graduated context penalty
+          score -= Math.min(15, (contextLength / 10000) * 10); // Graduated context penalty
           break;
 
         case 'ollama': {
@@ -896,7 +931,9 @@ class AIOrchestrator {
       const errorPenalty = this.computeErrorPenalty(stats);
       if (errorPenalty > 0) {
         score -= errorPenalty;
-        logger.debug(`   ⚠️ Error penalty for ${provider.name}: -${errorPenalty} (${stats.recentErrors.map(e => e.type).join(',')})`);
+        logger.debug(
+          `   ⚠️ Error penalty for ${provider.name}: -${errorPenalty} (${stats.recentErrors.map(e => e.type).join(',')})`
+        );
       }
 
       // Encourage provider diversity by penalizing recently used engines (except titane-local emergency fallback)
@@ -1362,7 +1399,12 @@ class AIOrchestrator {
           // });
 
           // ═══ FAILURE PATH + AUTO-HEAL + COGNITIVE KERNEL ═══
-          this.updateProviderStats(providerName, false, providerFailureLatency, lastError);
+          this.updateProviderStats(
+            providerName,
+            false,
+            providerFailureLatency,
+            lastError
+          );
 
           // 🧠 NOUVEAU v22Ω: Enregistrer échec dans Cognitive Kernel
           cognitiveKernel.recordInMemory('error', {
@@ -1742,7 +1784,8 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
       stats.lastErrorType = errorType;
       stats.recentErrors.push({ type: errorType, timestamp: Date.now() });
       // Keep only last 10 errors
-      if (stats.recentErrors.length > 10) stats.recentErrors = stats.recentErrors.slice(-10);
+      if (stats.recentErrors.length > 10)
+        stats.recentErrors = stats.recentErrors.slice(-10);
       if (providerName !== 'titane-local') {
         this.consecutiveLocalResponses = 0;
       }

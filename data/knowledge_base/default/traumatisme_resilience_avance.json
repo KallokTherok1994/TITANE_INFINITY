@@ -54,7 +54,17 @@
         "nom_complet": "Emotional Freedom Techniques",
         "createur": "Gary Craig (1995), basé sur TFT de Roger Callahan",
         "principe": "Stimulation de points d'acupuncture par tapotement (tapping) tout en se concentrant sur l'émotion/souvenir perturbant. Combine acupression et psychothérapie.",
-        "points_tapping": ["Tranche de la main (Karate chop)", "Sommet du crâne", "Début du sourcil", "Coin de l'œil", "Sous l'œil", "Sous le nez", "Menton", "Clavicule", "Sous le bras"],
+        "points_tapping": [
+          "Tranche de la main (Karate chop)",
+          "Sommet du crâne",
+          "Début du sourcil",
+          "Coin de l'œil",
+          "Sous l'œil",
+          "Sous le nez",
+          "Menton",
+          "Clavicule",
+          "Sous le bras"
+        ],
         "protocole_base": "1) Évaluer l'intensité (0-10). 2) Phrase de préparation ('Même si j'ai cette peur, je m'accepte complètement'). 3) Tapping sur les points en répétant le problème. 4) Réévaluer l'intensité. 5) Répéter jusqu'à 0-2/10.",
         "efficacite": "Plus de 100 études cliniques. Efficace pour TSPT, anxiété, phobies, douleur chronique, performance sportive."
       },
@@ -74,17 +84,48 @@
     },
     "resilience": {
       "definition": "Capacité à rebondir après l'adversité, à croître à travers les épreuves. Pas l'absence de souffrance, mais la capacité de transformation.",
-      "facteurs_protecteurs": ["Lien d'attachement sécure (au moins 1 personne)", "Soutien social et communautaire", "Régulation émotionnelle développée", "Sens du sens (meaning-making)", "Flexibilité cognitive", "Activité physique régulière", "Pratiques contemplatives (méditation, prière)", "Narration de son histoire (mise en récit)"],
+      "facteurs_protecteurs": [
+        "Lien d'attachement sécure (au moins 1 personne)",
+        "Soutien social et communautaire",
+        "Régulation émotionnelle développée",
+        "Sens du sens (meaning-making)",
+        "Flexibilité cognitive",
+        "Activité physique régulière",
+        "Pratiques contemplatives (méditation, prière)",
+        "Narration de son histoire (mise en récit)"
+      ],
       "croissance_post_traumatique": {
         "definition": "Transformation positive suite à un trauma (PTG - Post-Traumatic Growth). Décrit par Tedeschi & Calhoun.",
-        "domaines": ["Relations plus profondes", "Nouvelles possibilités de vie", "Force personnelle reconnue", "Appréciation accrue de la vie", "Développement spirituel/existentiel"]
+        "domaines": [
+          "Relations plus profondes",
+          "Nouvelles possibilités de vie",
+          "Force personnelle reconnue",
+          "Appréciation accrue de la vie",
+          "Développement spirituel/existentiel"
+        ]
       },
       "neuroplasticite_guerison": "Le cerveau peut se réorganiser. Avec un travail thérapeutique adapté, l'hippocampe peut retrouver son volume, l'amygdale sa calibration, et le cortex préfrontal sa fonction régulatrice."
     },
     "pratiques_auto_regulation": {
-      "exercises_nerf_vague": ["Respiration 4-7-8 (inspir 4s, rétention 7s, expir 8s)", "Gargarisme (active le nerf vague pharyngé)", "Chant/Vocalisation prolongée (Ommm)", "Immersion visage dans l'eau froide (réflexe de plongée)", "Massage du tragus de l'oreille"],
-      "grounding_ancrage": ["5-4-3-2-1 sensoriel (5 choses vues, 4 touchées, 3 entendues, 2 senties, 1 goûtée)", "Contact pieds-sol conscient", "Objet d'ancrage (pierre, bijou)", "Auto-étreinte (butterfly hug — étreinte papillon)"],
-      "techniques_corporelles": ["Yoga restauratif (postures tenues avec supports)", "Qi Gong doux", "Marche consciente dans la nature", "Danse libre et mouvements spontanés"]
+      "exercises_nerf_vague": [
+        "Respiration 4-7-8 (inspir 4s, rétention 7s, expir 8s)",
+        "Gargarisme (active le nerf vague pharyngé)",
+        "Chant/Vocalisation prolongée (Ommm)",
+        "Immersion visage dans l'eau froide (réflexe de plongée)",
+        "Massage du tragus de l'oreille"
+      ],
+      "grounding_ancrage": [
+        "5-4-3-2-1 sensoriel (5 choses vues, 4 touchées, 3 entendues, 2 senties, 1 goûtée)",
+        "Contact pieds-sol conscient",
+        "Objet d'ancrage (pierre, bijou)",
+        "Auto-étreinte (butterfly hug — étreinte papillon)"
+      ],
+      "techniques_corporelles": [
+        "Yoga restauratif (postures tenues avec supports)",
+        "Qi Gong doux",
+        "Marche consciente dans la nature",
+        "Danse libre et mouvements spontanés"
+      ]
     },
     "avertissement_sante": "Le travail sur le trauma nécessite un thérapeute formé. Ne pas tenter de retraiter seul des traumatismes sévères. En cas de TSPT, consultez un professionnel spécialisé."
   }

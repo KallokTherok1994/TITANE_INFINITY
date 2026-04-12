@@ -32,7 +32,9 @@ const AR20_REQUIRED_SELECTORS = [
 
 test.describe('Android Build UI - Browser and Android Emulation', () => {
   // ─── T1: Core UI map (canonical smoke test — preserved) ───────────────────
-  test('T1 - renders core conversation UI and exports required UI maps', async ({ page }) => {
+  test('T1 - renders core conversation UI and exports required UI maps', async ({
+    page,
+  }) => {
     const startedAt = Date.now();
     const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
 
@@ -61,11 +63,14 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
     await expect(userMessages).toHaveCount(userCountBefore + 1, { timeout: 15000 });
 
     // Non-silence contract: assistant response OR visible chat error.
-    const noSilence = await waitForCondition(async () => {
-      const assistantCount = await assistantMessages.count();
-      const hasChatError = await chatError.isVisible().catch(() => false);
-      return assistantCount > assistantCountBefore || hasChatError;
-    }, { timeoutMs: 25000, intervalMs: 500 });
+    const noSilence = await waitForCondition(
+      async () => {
+        const assistantCount = await assistantMessages.count();
+        const hasChatError = await chatError.isVisible().catch(() => false);
+        return assistantCount > assistantCountBefore || hasChatError;
+      },
+      { timeoutMs: 25000, intervalMs: 500 }
+    );
 
     expect(noSilence).toBe(true);
 
@@ -114,8 +119,11 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
       return {
         hasMainNavigation: Boolean(document.querySelector('nav,[role="navigation"]')),
         activeTabLabel:
-          text(document.querySelector('[data-testid="tab-conversation"][aria-selected="true"]')) ||
-          text(document.querySelector('[data-testid="tab-conversation"]')),
+          text(
+            document.querySelector(
+              '[data-testid="tab-conversation"][aria-selected="true"]'
+            )
+          ) || text(document.querySelector('[data-testid="tab-conversation"]')),
       };
     });
 
@@ -179,7 +187,9 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
   });
 
   // ─── T2: App-ready signal ─────────────────────────────────────────────────
-  test('T2 - page-titane renders and initial load completes within 15s', async ({ page }) => {
+  test('T2 - page-titane renders and initial load completes within 15s', async ({
+    page,
+  }) => {
     const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
     const startedAt = Date.now();
 
@@ -189,8 +199,12 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
     const ttRenderMs = Date.now() - startedAt;
 
     const appReadyVisible = await waitForCondition(
-      async () => page.getByTestId('app-ready').isVisible().catch(() => false),
-      { timeoutMs: 10000, intervalMs: 300 },
+      async () =>
+        page
+          .getByTestId('app-ready')
+          .isVisible()
+          .catch(() => false),
+      { timeoutMs: 10000, intervalMs: 300 }
     );
 
     const filteredErrors = filterKnownConsoleNoise(consoleErrors);
@@ -211,7 +225,9 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
   });
 
   // ─── T3: Conversation tab navigation ──────────────────────────────────────
-  test('T3 - conversation tab navigates and reveals required chat components', async ({ page }) => {
+  test('T3 - conversation tab navigates and reveals required chat components', async ({
+    page,
+  }) => {
     const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
 
     await awaitAppReady(page);
@@ -220,9 +236,18 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
     await expect(page.getByTestId('page-conversation')).toBeVisible({ timeout: 15000 });
 
     const elements = {
-      chatInput: await page.getByTestId('chat-input').isVisible().catch(() => false),
-      chatSend: await page.getByTestId('chat-send').isVisible().catch(() => false),
-      tabConversation: await page.getByTestId('tab-conversation').isVisible().catch(() => false),
+      chatInput: await page
+        .getByTestId('chat-input')
+        .isVisible()
+        .catch(() => false),
+      chatSend: await page
+        .getByTestId('chat-send')
+        .isVisible()
+        .catch(() => false),
+      tabConversation: await page
+        .getByTestId('tab-conversation')
+        .isVisible()
+        .catch(() => false),
     };
 
     const filteredErrors = filterKnownConsoleNoise(consoleErrors);
@@ -244,7 +269,9 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
 
   // ─── T4: Mobile viewport multi-breakpoint layout ───────────────────────────
   for (const vp of MOBILE_VIEWPORTS) {
-    test(`T4 - mobile layout at ${vp.name} (${vp.width}x${vp.height})`, async ({ page }) => {
+    test(`T4 - mobile layout at ${vp.name} (${vp.width}x${vp.height})`, async ({
+      page,
+    }) => {
       await page.setViewportSize({ width: vp.width, height: vp.height });
       const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
 
@@ -315,7 +342,9 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
   });
 
   // ─── T6: No critical errors on cold load ──────────────────────────────────
-  test('T6 - no critical JS or page errors on cold load (2s settle)', async ({ page }) => {
+  test('T6 - no critical JS or page errors on cold load (2s settle)', async ({
+    page,
+  }) => {
     const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
 
     await page.goto('/');
@@ -341,7 +370,9 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
   });
 
   // ─── T7: Runtime state badge ──────────────────────────────────────────────
-  test('T7 - chat runtime state or badge surfaces after conversation load', async ({ page }) => {
+  test('T7 - chat runtime state or badge surfaces after conversation load', async ({
+    page,
+  }) => {
     const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
 
     await awaitAppReady(page);
@@ -357,7 +388,7 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
           (await state.isVisible().catch(() => false))
         );
       },
-      { timeoutMs: 10000, intervalMs: 500 },
+      { timeoutMs: 10000, intervalMs: 500 }
     );
 
     const runtimeText = await page.evaluate(() => {
@@ -387,7 +418,9 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
   });
 
   // ─── T8: Chat typing + send dispatch ──────────────────────────────────────
-  test('T8 - chat input accepts text and send dispatches user message', async ({ page }) => {
+  test('T8 - chat input accepts text and send dispatches user message', async ({
+    page,
+  }) => {
     const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
 
     await awaitAppReady(page);
@@ -425,7 +458,9 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
   });
 
   // ─── T9: Non-silence contract ─────────────────────────────────────────────
-  test('T9 - non-silence: assistant responds or chat-error shown within 30s', async ({ page }) => {
+  test('T9 - non-silence: assistant responds or chat-error shown within 30s', async ({
+    page,
+  }) => {
     const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
 
     await awaitAppReady(page);
@@ -451,7 +486,7 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
         const err = await chatError.isVisible().catch(() => false);
         return ac > assistantCountBefore || err;
       },
-      { timeoutMs: 30000, intervalMs: 500 },
+      { timeoutMs: 30000, intervalMs: 500 }
     );
 
     const filteredErrors = filterKnownConsoleNoise(consoleErrors);
@@ -474,7 +509,9 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
   });
 
   // ─── T10: Scrollable chat container ───────────────────────────────────────
-  test('T10 - conversation page has a scrollable overflow container', async ({ page }) => {
+  test('T10 - conversation page has a scrollable overflow container', async ({
+    page,
+  }) => {
     const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
 
     await awaitAppReady(page);
@@ -482,17 +519,22 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
     await expect(page.getByTestId('page-conversation')).toBeVisible({ timeout: 15000 });
 
     const scrollInfo = await page.evaluate(() => {
-      const conversationPage = document.querySelector('[data-testid="page-conversation"]');
+      const conversationPage = document.querySelector(
+        '[data-testid="page-conversation"]'
+      );
       if (!conversationPage) return { found: false, source: 'none' };
 
       const OVERFLOW_VALUES = new Set(['auto', 'scroll', 'overlay']);
 
       const checkStyle = (el: Element) => {
         const style = window.getComputedStyle(el);
-        return OVERFLOW_VALUES.has(style.overflowY) || OVERFLOW_VALUES.has(style.overflow);
+        return (
+          OVERFLOW_VALUES.has(style.overflowY) || OVERFLOW_VALUES.has(style.overflow)
+        );
       };
 
-      if (checkStyle(conversationPage)) return { found: true, source: 'page-conversation' };
+      if (checkStyle(conversationPage))
+        return { found: true, source: 'page-conversation' };
 
       for (const child of conversationPage.children) {
         if (checkStyle(child)) return { found: true, source: 'direct-child' };
@@ -504,7 +546,10 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
 
       // Fallback: document body or html may scroll (valid for single-page app)
       const bodyStyle = window.getComputedStyle(document.body);
-      if (OVERFLOW_VALUES.has(bodyStyle.overflowY) || document.body.scrollHeight > window.innerHeight) {
+      if (
+        OVERFLOW_VALUES.has(bodyStyle.overflowY) ||
+        document.body.scrollHeight > window.innerHeight
+      ) {
         return { found: true, source: 'body' };
       }
 
@@ -562,7 +607,9 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
   });
 
   // ─── T12: Navigation landmark ─────────────────────────────────────────────
-  test('T12 - page exposes navigation landmark (nav, role=navigation, or tabs)', async ({ page }) => {
+  test('T12 - page exposes navigation landmark (nav, role=navigation, or tabs)', async ({
+    page,
+  }) => {
     const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
 
     await awaitAppReady(page);
@@ -572,8 +619,11 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
         hasNav: Boolean(document.querySelector('nav')),
         hasRoleNav: Boolean(document.querySelector('[role="navigation"]')),
         hasTabsList: Boolean(document.querySelector('[data-testid="tabs-list"]')),
-        hasTabsComponent: Boolean(document.querySelector('[data-testid="tabs-component"]')),
-        tabsListChildCount: document.querySelector('[data-testid="tabs-list"]')?.children.length ?? 0,
+        hasTabsComponent: Boolean(
+          document.querySelector('[data-testid="tabs-component"]')
+        ),
+        tabsListChildCount:
+          document.querySelector('[data-testid="tabs-list"]')?.children.length ?? 0,
       };
     });
 
@@ -589,14 +639,19 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
     });
 
     const hasAnyNav =
-      navInfo.hasNav || navInfo.hasRoleNav || navInfo.hasTabsList || navInfo.hasTabsComponent;
+      navInfo.hasNav ||
+      navInfo.hasRoleNav ||
+      navInfo.hasTabsList ||
+      navInfo.hasTabsComponent;
     expect(hasAnyNav).toBe(true);
     expect(criticalErrors).toHaveLength(0);
     expect(criticalPageErrors).toHaveLength(0);
   });
 
   // ─── T13: Performance — initial render within 10s ─────────────────────────
-  test('T13 - performance: page-titane visible within 10s on cold start', async ({ page }) => {
+  test('T13 - performance: page-titane visible within 10s on cold start', async ({
+    page,
+  }) => {
     const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
     const startedAt = Date.now();
 
@@ -606,9 +661,13 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
     const ttFirstVisibleMs = Date.now() - startedAt;
 
     const navTiming = await page.evaluate(() => {
-      const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+      const nav = performance.getEntriesByType('navigation')[0] as
+        | PerformanceNavigationTiming
+        | undefined;
       return {
-        domContentLoaded: nav ? Math.round(nav.domContentLoadedEventEnd - nav.startTime) : null,
+        domContentLoaded: nav
+          ? Math.round(nav.domContentLoadedEventEnd - nav.startTime)
+          : null,
         loadComplete: nav ? Math.round(nav.loadEventEnd - nav.startTime) : null,
       };
     });
@@ -631,7 +690,9 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
   });
 
   // ─── T14: Provider state surfacing in browser mode ────────────────────────
-  test('T14 - provider state surfaces (warning, fallback, or runtime indicator)', async ({ page }) => {
+  test('T14 - provider state surfaces (warning, fallback, or runtime indicator)', async ({
+    page,
+  }) => {
     const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
 
     await awaitAppReady(page);
@@ -642,7 +703,8 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
     await page.waitForTimeout(3000);
 
     const providerState = await page.evaluate(() => {
-      const get = (testid: string) => Boolean(document.querySelector(`[data-testid="${testid}"]`));
+      const get = (testid: string) =>
+        Boolean(document.querySelector(`[data-testid="${testid}"]`));
       return {
         providerWarning: get('chat-provider-warning'),
         chatFallback: get('chat-fallback'),
@@ -651,7 +713,9 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
         runtimeTag: get('chat-runtime-tag'),
         runtimeSummary: get('chat-runtime-summary'),
         runtimeStateText:
-          document.querySelector('[data-testid="chat-runtime-state"]')?.textContent?.trim() ?? null,
+          document
+            .querySelector('[data-testid="chat-runtime-state"]')
+            ?.textContent?.trim() ?? null,
       };
     });
 
@@ -682,23 +746,28 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
   });
 
   // ─── T15: AR20 selector coverage ──────────────────────────────────────────
-  test('T15 - AR20: all 5 required UI selectors present at conversation page', async ({ page }) => {
+  test('T15 - AR20: all 5 required UI selectors present at conversation page', async ({
+    page,
+  }) => {
     const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
 
     await awaitAppReady(page);
     await page.getByTestId('tab-conversation').click();
     await expect(page.getByTestId('page-conversation')).toBeVisible({ timeout: 15000 });
 
-    const ar20 = await page.evaluate(selectors => {
-      const missing = selectors.filter(sel => !document.querySelector(sel));
-      return {
-        requiredSelectors: selectors,
-        presentCount: selectors.length - missing.length,
-        requiredCount: selectors.length,
-        missing,
-        ratio: (selectors.length - missing.length) / selectors.length,
-      };
-    }, [...AR20_REQUIRED_SELECTORS]);
+    const ar20 = await page.evaluate(
+      selectors => {
+        const missing = selectors.filter(sel => !document.querySelector(sel));
+        return {
+          requiredSelectors: selectors,
+          presentCount: selectors.length - missing.length,
+          requiredCount: selectors.length,
+          missing,
+          ratio: (selectors.length - missing.length) / selectors.length,
+        };
+      },
+      [...AR20_REQUIRED_SELECTORS]
+    );
 
     const filteredErrors = filterKnownConsoleNoise(consoleErrors);
     const criticalErrors = extractCriticalConsoleErrors(filteredErrors);
@@ -718,7 +787,9 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
   });
 
   // ─── T16: Clear chat button availability ──────────────────────────────────
-  test('T16 - btn-clear-chat is present and accessible on conversation page', async ({ page }) => {
+  test('T16 - btn-clear-chat is present and accessible on conversation page', async ({
+    page,
+  }) => {
     const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
 
     await awaitAppReady(page);
@@ -730,7 +801,9 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
     const sendButton = page.getByTestId('chat-send');
     await chatInput.fill('T16: clear button probe');
     await sendButton.click({ force: true });
-    await expect(page.getByTestId('chat-message-user')).toHaveCount(1, { timeout: 10000 });
+    await expect(page.getByTestId('chat-message-user')).toHaveCount(1, {
+      timeout: 10000,
+    });
 
     const clearBtn = page.getByTestId('btn-clear-chat');
     const clearBtnPresent = await clearBtn.isVisible().catch(() => false);

@@ -69,9 +69,24 @@
     },
     "perturbateurs_endocriniens": {
       "definition": "Substances chimiques exogènes qui interfèrent avec la synthèse, le transport, l'action ou l'élimination des hormones naturelles.",
-      "substances_courantes": ["BPA et bisphénols (plastiques, conserves)", "Phtalates (cosmétiques, emballages)", "Pesticides (organochlorés, glyphosate)", "Parabènes (cosmétiques)", "PFAS (revêtements anti-adhésifs)", "Retardateurs de flamme (meubles, textiles)", "Dioxines (pollution industrielle)"],
+      "substances_courantes": [
+        "BPA et bisphénols (plastiques, conserves)",
+        "Phtalates (cosmétiques, emballages)",
+        "Pesticides (organochlorés, glyphosate)",
+        "Parabènes (cosmétiques)",
+        "PFAS (revêtements anti-adhésifs)",
+        "Retardateurs de flamme (meubles, textiles)",
+        "Dioxines (pollution industrielle)"
+      ],
       "effets": "Féminisation, troubles de la fertilité, puberté précoce, cancers hormonodépendants, troubles thyroïdiens, obésité, troubles neurocomportementaux.",
-      "reduction_exposition": ["Utiliser des contenants en verre/inox", "Alimentation biologique", "Cosmétiques naturels certifiés", "Filtrer l'eau de boisson", "Aérer son habitat", "Éviter le plastique chauffé"]
+      "reduction_exposition": [
+        "Utiliser des contenants en verre/inox",
+        "Alimentation biologique",
+        "Cosmétiques naturels certifiés",
+        "Filtrer l'eau de boisson",
+        "Aérer son habitat",
+        "Éviter le plastique chauffé"
+      ]
     },
     "optimisation_hormonale_naturelle": {
       "sommeil": "7-9h, obscurité totale, régularité. Crucial pour cortisol, mélatonine, GH, testostérone, leptine/ghréline.",
@@ -79,7 +94,13 @@
       "nutrition": "Graisses saines (avocat, noix, poisson gras) pour hormones stéroïdiennes. Protéines suffisantes. Micronutriments clés (Zn, Se, I, Mg, Vit D, B6).",
       "gestion_stress": "Méditation, cohérence cardiaque, nature, relations sociales — régulent l'axe HPA.",
       "lumiere_naturelle": "Exposition solaire matinale (20-30 min) synchronise le rythme circadien, stimule vitamine D et cortisol matinal.",
-      "plantes_adaptogenes": ["Ashwagandha (cortisol, thyroïde, testostérone)", "Rhodiola (fatigue, stress, cognition)", "Maca (libido, énergie, hormones sexuelles)", "Ginseng (énergie, immunité)", "Tribulus (testostérone, libido)"]
+      "plantes_adaptogenes": [
+        "Ashwagandha (cortisol, thyroïde, testostérone)",
+        "Rhodiola (fatigue, stress, cognition)",
+        "Maca (libido, énergie, hormones sexuelles)",
+        "Ginseng (énergie, immunité)",
+        "Tribulus (testostérone, libido)"
+      ]
     },
     "avertissement_sante": "Ces informations sont éducatives. Tout trouble hormonal suspecté nécessite un bilan sanguin complet et un suivi médical."
   }

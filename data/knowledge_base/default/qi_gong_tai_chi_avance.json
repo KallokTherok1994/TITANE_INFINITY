@@ -26,14 +26,54 @@
         "nom": "Huit pièces de brocart",
         "origine": "Général Yue Fei (Song du Sud) ou traditions plus anciennes",
         "exercices": [
-          {"num": 1, "nom": "Soutenir le ciel avec les deux mains", "meridien": "San Jiao (Triple Réchauffeur)", "effet": "Étire la colonne, régule les 3 foyers"},
-          {"num": 2, "nom": "Tirer à l'arc des deux côtés", "meridien": "Poumons/Cœur", "effet": "Ouvre la poitrine, renforce les bras"},
-          {"num": 3, "nom": "Lever un bras pour réguler Rate et Estomac", "meridien": "Rate/Estomac", "effet": "Étire les flancs, aide la digestion"},
-          {"num": 4, "nom": "Regarder en arrière pour prévenir les maladies", "meridien": "Du Mai/Reins", "effet": "Torsion douce de la colonne, renforce les reins"},
-          {"num": 5, "nom": "Balancer la tête et le tronc pour chasser le feu du cœur", "meridien": "Cœur", "effet": "Réduit le stress et l'excès de feu"},
-          {"num": 6, "nom": "Toucher les pieds pour renforcer les reins", "meridien": "Vessie/Reins", "effet": "Étire le dos, nourrit les reins et le Jing"},
-          {"num": 7, "nom": "Serrer les poings avec un regard courroucé", "meridien": "Foie", "effet": "Exprime/libère la colère du Foie, renforce le Qi du Foie"},
-          {"num": 8, "nom": "Soulever les talons 7 fois pour chasser les maladies", "meridien": "Tous", "effet": "Fait vibrer tout le corps, harmonise tous les méridiens"}
+          {
+            "num": 1,
+            "nom": "Soutenir le ciel avec les deux mains",
+            "meridien": "San Jiao (Triple Réchauffeur)",
+            "effet": "Étire la colonne, régule les 3 foyers"
+          },
+          {
+            "num": 2,
+            "nom": "Tirer à l'arc des deux côtés",
+            "meridien": "Poumons/Cœur",
+            "effet": "Ouvre la poitrine, renforce les bras"
+          },
+          {
+            "num": 3,
+            "nom": "Lever un bras pour réguler Rate et Estomac",
+            "meridien": "Rate/Estomac",
+            "effet": "Étire les flancs, aide la digestion"
+          },
+          {
+            "num": 4,
+            "nom": "Regarder en arrière pour prévenir les maladies",
+            "meridien": "Du Mai/Reins",
+            "effet": "Torsion douce de la colonne, renforce les reins"
+          },
+          {
+            "num": 5,
+            "nom": "Balancer la tête et le tronc pour chasser le feu du cœur",
+            "meridien": "Cœur",
+            "effet": "Réduit le stress et l'excès de feu"
+          },
+          {
+            "num": 6,
+            "nom": "Toucher les pieds pour renforcer les reins",
+            "meridien": "Vessie/Reins",
+            "effet": "Étire le dos, nourrit les reins et le Jing"
+          },
+          {
+            "num": 7,
+            "nom": "Serrer les poings avec un regard courroucé",
+            "meridien": "Foie",
+            "effet": "Exprime/libère la colère du Foie, renforce le Qi du Foie"
+          },
+          {
+            "num": 8,
+            "nom": "Soulever les talons 7 fois pour chasser les maladies",
+            "meridien": "Tous",
+            "effet": "Fait vibrer tout le corps, harmonise tous les méridiens"
+          }
         ]
       },
       "yi_jin_jing": {
@@ -46,17 +86,36 @@
         "nom": "Jeu des 5 animaux",
         "createur": "Hua Tuo (médecin légendaire, dynastie Han)",
         "animaux": [
-          {"animal": "Tigre", "organe": "Foie", "qualite": "Force, courage, tendons"},
-          {"animal": "Cerf", "organe": "Reins", "qualite": "Souplesse, Jing, longévité"},
-          {"animal": "Ours", "organe": "Rate", "qualite": "Stabilité, enracinement, digestion"},
-          {"animal": "Singe", "organe": "Cœur", "qualite": "Agilité, vivacité, Shen"},
-          {"animal": "Grue", "organe": "Poumons", "qualite": "Légèreté, équilibre, respiration"}
+          { "animal": "Tigre", "organe": "Foie", "qualite": "Force, courage, tendons" },
+          {
+            "animal": "Cerf",
+            "organe": "Reins",
+            "qualite": "Souplesse, Jing, longévité"
+          },
+          {
+            "animal": "Ours",
+            "organe": "Rate",
+            "qualite": "Stabilité, enracinement, digestion"
+          },
+          { "animal": "Singe", "organe": "Cœur", "qualite": "Agilité, vivacité, Shen" },
+          {
+            "animal": "Grue",
+            "organe": "Poumons",
+            "qualite": "Légèreté, équilibre, respiration"
+          }
         ]
       },
       "liu_zi_jue": {
         "nom": "Six sons thérapeutiques",
         "principe": "Chaque son vibre à la fréquence de résonance d'un organe spécifique, libérant les tensions et équilibrant le Qi de l'organe.",
-        "sons": ["Xu (Foie/Bois)", "He (Cœur/Feu)", "Hu (Rate/Terre)", "Si (Poumons/Métal)", "Chui (Reins/Eau)", "Xi (San Jiao)"]
+        "sons": [
+          "Xu (Foie/Bois)",
+          "He (Cœur/Feu)",
+          "Hu (Rate/Terre)",
+          "Si (Poumons/Métal)",
+          "Chui (Reins/Eau)",
+          "Xi (San Jiao)"
+        ]
       },
       "zhan_zhuang": {
         "nom": "Posture de l'arbre / Pilier debout",
@@ -66,14 +125,29 @@
       }
     },
     "tai_chi_chuan": {
-      "principes_fondamentaux": ["Relâchement (Song) total", "Lenteur et continuité", "Intention guide le Qi, le Qi guide le corps", "Racine dans les pieds, puissance des jambes, contrôle à la taille, expression dans les mains", "Équilibre Yin/Yang dans chaque mouvement"],
+      "principes_fondamentaux": [
+        "Relâchement (Song) total",
+        "Lenteur et continuité",
+        "Intention guide le Qi, le Qi guide le corps",
+        "Racine dans les pieds, puissance des jambes, contrôle à la taille, expression dans les mains",
+        "Équilibre Yin/Yang dans chaque mouvement"
+      ],
       "styles_principaux": {
         "yang": "Le plus répandu. Mouvements amples, lents, fluides. Idéal pour la santé. Forme longue (108 mouvements) et forme courte (24 mouvements de Pékin).",
         "chen": "Style originel. Combine lenteur et explosivité (fajin). Mouvements en spirale (chan si jin). Plus martial.",
         "wu": "Mouvements compacts, postures inclinées. Emphase sur la sensibilité et les applications martiales subtiles.",
         "sun": "Combine Tai Chi + Xingyi + Bagua. Pas agiles, mouvements rapides, ouverture/fermeture caractéristique."
       },
-      "benefices_scientifiques": ["Réduction des chutes chez les personnes âgées (-50%)", "Amélioration de l'équilibre et de la proprioception", "Réduction de la pression artérielle", "Gestion de l'arthrose et de la douleur chronique", "Réduction du stress et de l'anxiété", "Amélioration de la densité osseuse", "Bénéfices cardiovasculaires comparables à l'exercice aérobie modéré", "Amélioration cognitive chez les seniors"]
+      "benefices_scientifiques": [
+        "Réduction des chutes chez les personnes âgées (-50%)",
+        "Amélioration de l'équilibre et de la proprioception",
+        "Réduction de la pression artérielle",
+        "Gestion de l'arthrose et de la douleur chronique",
+        "Réduction du stress et de l'anxiété",
+        "Amélioration de la densité osseuse",
+        "Bénéfices cardiovasculaires comparables à l'exercice aérobie modéré",
+        "Amélioration cognitive chez les seniors"
+      ]
     },
     "qi_gong_medical": {
       "definition": "Application thérapeutique du Qi Gong pour prévenir et traiter des pathologies spécifiques.",

@@ -86,20 +86,57 @@
     "medecine_mitochondriale": {
       "definition": "Les mitochondries sont les centrales énergétiques de chaque cellule. Leur dysfonctionnement est impliqué dans la fatigue chronique, les maladies neurodégénératives, le diabète, le cancer et le vieillissement.",
       "soutien_mitochondrial": [
-        {"nutriment": "CoQ10 (Ubiquinol)", "role": "Transfert d'électrons dans la chaîne respiratoire. 100-300 mg/jour."},
-        {"nutriment": "PQQ (Pyrroloquinoline quinone)", "role": "Stimule la biogenèse mitochondriale (création de nouvelles mitochondries). 10-20 mg/jour."},
-        {"nutriment": "NAD+ / NMN / NR", "role": "Précurseurs du NAD+, coenzyme essentiel au métabolisme énergétique. Décline avec l'âge."},
-        {"nutriment": "D-Ribose", "role": "Sucre constitutif de l'ATP. 5-15 g/jour pour la fatigue chronique."},
-        {"nutriment": "L-Carnitine", "role": "Transport des acides gras dans les mitochondries pour la β-oxydation. 1-3 g/jour."},
-        {"nutriment": "Alpha-lipoïque (ALA)", "role": "Antioxydant mitochondrial, régénère le glutathion. 300-600 mg/jour."},
-        {"nutriment": "Magnésium", "role": "Cofacteur de 300+ enzymes dont l'ATP synthase. 400-600 mg/jour."}
+        {
+          "nutriment": "CoQ10 (Ubiquinol)",
+          "role": "Transfert d'électrons dans la chaîne respiratoire. 100-300 mg/jour."
+        },
+        {
+          "nutriment": "PQQ (Pyrroloquinoline quinone)",
+          "role": "Stimule la biogenèse mitochondriale (création de nouvelles mitochondries). 10-20 mg/jour."
+        },
+        {
+          "nutriment": "NAD+ / NMN / NR",
+          "role": "Précurseurs du NAD+, coenzyme essentiel au métabolisme énergétique. Décline avec l'âge."
+        },
+        {
+          "nutriment": "D-Ribose",
+          "role": "Sucre constitutif de l'ATP. 5-15 g/jour pour la fatigue chronique."
+        },
+        {
+          "nutriment": "L-Carnitine",
+          "role": "Transport des acides gras dans les mitochondries pour la β-oxydation. 1-3 g/jour."
+        },
+        {
+          "nutriment": "Alpha-lipoïque (ALA)",
+          "role": "Antioxydant mitochondrial, régénère le glutathion. 300-600 mg/jour."
+        },
+        {
+          "nutriment": "Magnésium",
+          "role": "Cofacteur de 300+ enzymes dont l'ATP synthase. 400-600 mg/jour."
+        }
       ],
-      "stimulation_naturelle": ["Exercice physique (HIIT et endurance augmentent le nombre de mitochondries)", "Jeûne intermittent (active la biogenèse mitochondriale via AMPK/PGC-1α)", "Exposition au froid (thermogenèse, mitochondries du tissu adipeux brun)", "Lumière rouge/infrarouge (photobiomodulation — stimule le cytochrome c oxydase)"]
+      "stimulation_naturelle": [
+        "Exercice physique (HIIT et endurance augmentent le nombre de mitochondries)",
+        "Jeûne intermittent (active la biogenèse mitochondriale via AMPK/PGC-1α)",
+        "Exposition au froid (thermogenèse, mitochondries du tissu adipeux brun)",
+        "Lumière rouge/infrarouge (photobiomodulation — stimule le cytochrome c oxydase)"
+      ]
     },
     "approche_integrative": {
       "definition": "Combinaison raisonnée de la médecine conventionnelle et des thérapies complémentaires fondées sur des preuves.",
-      "therapies_integrees": ["Nutrition fonctionnelle", "Médecine herboristique fondée sur les preuves", "Acupuncture", "Méditation et pleine conscience (MBSR, MBCT)", "Yoga thérapeutique", "Supplémentation ciblée basée sur les biomarqueurs"],
-      "centres_reference": ["Cleveland Clinic Center for Functional Medicine", "Institute for Functional Medicine (IFM)", "Andrew Weil Center for Integrative Medicine (Arizona)"]
+      "therapies_integrees": [
+        "Nutrition fonctionnelle",
+        "Médecine herboristique fondée sur les preuves",
+        "Acupuncture",
+        "Méditation et pleine conscience (MBSR, MBCT)",
+        "Yoga thérapeutique",
+        "Supplémentation ciblée basée sur les biomarqueurs"
+      ],
+      "centres_reference": [
+        "Cleveland Clinic Center for Functional Medicine",
+        "Institute for Functional Medicine (IFM)",
+        "Andrew Weil Center for Integrative Medicine (Arizona)"
+      ]
     },
     "avertissement_sante": "La médecine fonctionnelle et intégrative ne remplace pas les soins médicaux d'urgence ni les traitements conventionnels éprouvés. Consultez un médecin formé en médecine fonctionnelle pour une approche personnalisée."
   }

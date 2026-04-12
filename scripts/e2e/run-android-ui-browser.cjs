@@ -54,15 +54,23 @@ function waitForHttpReady(url, timeoutMs = 60000) {
 }
 
 async function runPlaywright(serverUrl) {
-  const playwrightCli = path.join(repoRoot, 'node_modules', '@playwright', 'test', 'cli.js');
+  const playwrightCli = path.join(
+    repoRoot,
+    'node_modules',
+    '@playwright',
+    'test',
+    'cli.js'
+  );
   const pw = spawn(
     process.execPath,
     [
       playwrightCli,
       'test',
       'e2e/android/android-build-ui.browser.spec.ts',
-      '--project', 'chromium',
-      '--project', 'chromium-android-ui',
+      '--project',
+      'chromium',
+      '--project',
+      'chromium-android-ui',
     ],
     {
       cwd: repoRoot,
@@ -71,9 +79,7 @@ async function runPlaywright(serverUrl) {
         ...process.env,
         TITANE_E2E_USE_WEBSERVER: '0',
         // Allow overriding base URL for Playwright via port env
-        ...(process.env.TITANE_ANDROID_UI_PORT
-          ? { TITANE_E2E_PORT: String(port) }
-          : {}),
+        ...(process.env.TITANE_ANDROID_UI_PORT ? { TITANE_E2E_PORT: String(port) } : {}),
       },
     }
   );
@@ -101,11 +107,15 @@ async function main() {
 
   // ── Default path: start Vite dev server ───────────────────────────────
   console.log(`[android-ui:e2e] Starting Vite on ${host}:${port}`);
-  const vite = spawn(process.execPath, [viteBin, 'dev', '--host', host, '--port', String(port), '--strictPort'], {
-    cwd: repoRoot,
-    stdio: ['ignore', 'pipe', 'pipe'],
-    env: { ...process.env },
-  });
+  const vite = spawn(
+    process.execPath,
+    [viteBin, 'dev', '--host', host, '--port', String(port), '--strictPort'],
+    {
+      cwd: repoRoot,
+      stdio: ['ignore', 'pipe', 'pipe'],
+      env: { ...process.env },
+    }
+  );
 
   vite.stdout.on('data', chunk => {
     process.stdout.write(`[android-ui:vite] ${chunk}`);

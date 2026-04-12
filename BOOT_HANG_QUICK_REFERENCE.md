@@ -5,6 +5,7 @@
 **File**: [src-tauri/src/conversation_engine/mod.rs](src-tauri/src/conversation_engine/mod.rs#L113)
 
 **Main blocking call**:
+
 ```rust
 MemoryStorage::new(storage_dir.join("conversations"), password)
   └─> fs::create_dir_all(&storage_dir)  // BLOCKS if filesystem hangs
@@ -20,6 +21,7 @@ MemoryStorage::new(storage_dir.join("conversations"), password)
 **File**: [src-tauri/src/commands/persistent_memory.rs](src-tauri/src/commands/persistent_memory.rs#L248)
 
 **Main blocking calls**:
+
 ```rust
 let base_path = resolve_persistent_memory_base_path(app_handle);  // Can hang on XDG
 fs::create_dir_all(&base_path).ok();
@@ -40,6 +42,7 @@ fs::create_dir_all(base_path.join("bundles")).ok();
 **File**: [src-tauri/src/knowledge_base_default.rs](src-tauri/src/knowledge_base_default.rs#L637)
 
 **Main blocking call**:
+
 ```rust
 pub fn initialize() -> KnowledgeBaseInitResult {
     let (entries, errors) = Self::load_all();  // Parses 158 JSON entries
@@ -48,6 +51,7 @@ pub fn initialize() -> KnowledgeBaseInitResult {
 ```
 
 **load_all() implementation**:
+
 ```rust
 pub fn load_all() -> (HashMap<String, KnowledgeBaseEntry>, Vec<String>) {
     let cached = KB_CACHE.get_or_init(|| {
@@ -73,6 +77,7 @@ pub fn load_all() -> (HashMap<String, KnowledgeBaseEntry>, Vec<String>) {
 **Window is shown at**: [src-tauri/src/main.rs:1591](src-tauri/src/main.rs#L1591)
 
 **But all 3 constructors run BEFORE this**:
+
 - ConversationEngineState::new() at [line 1314](src-tauri/src/main.rs#L1314)
 - PersistentMemoryState::new() at [line 1344](src-tauri/src/main.rs#L1344)
 - DefaultKnowledgeBase::initialize() at [line 1351](src-tauri/src/main.rs#L1351)
@@ -86,6 +91,7 @@ pub fn load_all() -> (HashMap<String, KnowledgeBaseEntry>, Vec<String>) {
 ### To find which one is hanging:
 
 1. **Add timing logs** before/after each constructor in main.rs:
+
 ```rust
 log::info!("[BOOT-TIMER] Starting ConversationEngineState::new...");
 let start = std::time::Instant::now();
@@ -96,12 +102,14 @@ log::info!("[BOOT-TIMER] ConversationEngineState::new took {}ms", start.elapsed(
 ```
 
 2. **Run with strace** to see system calls:
+
 ```bash
 strace -e trace=open,openat,mkdir,stat -f titane-infinity 2>&1 | tail -100
 # Last syscall will show which constructor is stuck
 ```
 
 3. **Check disk/filesystem health**:
+
 ```bash
 df -h
 lsblk
@@ -114,13 +122,14 @@ lsblk
 
 When boot hangs:
 
-1. **Check logs** at `/home/titane-os/.local/share/titane/logs/` 
+1. **Check logs** at `/home/titane-os/.local/share/titane/logs/`
    - Last log line shows which constructor completed
    - If ConversationEngineState log missing → constructor 1 hung
    - If PersistentMemoryState log missing → constructor 2 hung
    - If DefaultKnowledgeBase log missing → constructor 3 hung
 
 2. **Run strace during hang**:
+
 ```bash
 # Terminal 1: Start app with strace
 strace -o /tmp/titane_strace.log titane-infinity
@@ -130,6 +139,7 @@ tail -50 /tmp/titane_strace.log
 ```
 
 3. **Check system resources**:
+
 ```bash
 ps aux | grep titane
 # CPU should be ~0% if blocked on I/O (D state)
@@ -143,6 +153,7 @@ ps aux | grep titane
 **ConversationEngineState::new()** (Constructor 1)
 
 Reason:
+
 - Only constructor that calls `fs::create_dir_all()` **unconditionally without a timeout**
 - If filesystem or storage device is slow/hung, no timeout guard
 - PersistentMemoryState uses `.ok()` to swallow errors (less blocking)
@@ -151,4 +162,3 @@ Reason:
 **Next most likely**: PersistentMemoryState (XDG path lookup can hang on some systems)
 
 ---
-

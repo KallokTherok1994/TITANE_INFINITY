@@ -5,7 +5,7 @@
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ v30.1.0 — PROFESSIONAL DOCUMENT GENERATION SERVICE
  *   Templates, formatting, and document structure for professional outputs
- *   
+ *
  *   Ce service fournit :
  *   - Templates de documents professionnels (rapport, lettre, plan, CV, etc.)
  *   - Instructions de formatage pour le LLM
@@ -98,28 +98,16 @@ const DOCUMENT_SIGNALS: Record<DocumentType, RegExp[]> = {
     /\b(proposition|proposition commerciale|devis|offre|soumission)\b/i,
     /\b(proposal|quotation|bid)\b/i,
   ],
-  cv: [
-    /\b(cv|curriculum|curriculum vitae|résumé professionnel)\b/i,
-  ],
-  cover_letter: [
-    /\b(lettre de motivation|lettre de candidature|cover letter)\b/i,
-  ],
-  specification: [
-    /\b(cahier des charges|spécification|spec|requirements)\b/i,
-  ],
+  cv: [/\b(cv|curriculum|curriculum vitae|résumé professionnel)\b/i],
+  cover_letter: [/\b(lettre de motivation|lettre de candidature|cover letter)\b/i],
+  specification: [/\b(cahier des charges|spécification|spec|requirements)\b/i],
   analysis: [
     /\b(note d'analyse|analyse détaillée|étude|diagnostic écrit)\b/i,
     /\b(analysis report|detailed analysis)\b/i,
   ],
-  memo: [
-    /\b(mémo|note de service|note interne|memorandum)\b/i,
-  ],
-  presentation: [
-    /\b(présentation|pitch|pitch deck|slides|diapo)\b/i,
-  ],
-  tutorial: [
-    /\b(tutoriel|guide|manuel|documentation|mode d'emploi|how-to)\b/i,
-  ],
+  memo: [/\b(mémo|note de service|note interne|memorandum)\b/i],
+  presentation: [/\b(présentation|pitch|pitch deck|slides|diapo)\b/i],
+  tutorial: [/\b(tutoriel|guide|manuel|documentation|mode d'emploi|how-to)\b/i],
   generic: [],
 };
 
@@ -210,7 +198,7 @@ Date : [Date]
       'Coordonnées destinataire',
       'Lieu et date',
       'Objet',
-      'Formule d\'appel',
+      "Formule d'appel",
       'Corps de la lettre (introduction, développement, conclusion)',
       'Formule de politesse',
       'Signature',
@@ -255,7 +243,7 @@ Objet : [objet de la lettre]
       'Objet (clair et concis)',
       'Salutation',
       'Corps (contexte, contenu, demande)',
-      'Conclusion et appel à l\'action',
+      "Conclusion et appel à l'action",
       'Formule de fin',
       'Signature',
     ],
@@ -357,7 +345,7 @@ ACTIONS À SUIVRE :
 
 PROCHAINE RÉUNION : [date et heure prévues]`,
     toneGuidance:
-      'Factuel, concis, objectif. Distinguer clairement discussion, décision et action. Pas d\'interprétation personnelle.',
+      "Factuel, concis, objectif. Distinguer clairement discussion, décision et action. Pas d'interprétation personnelle.",
   },
 
   business_plan: {
@@ -464,7 +452,7 @@ LANGUES
     formatInstructions: `FORMAT LETTRE DE MOTIVATION :
 [Structure formelle d'une lettre avec focus sur l'adéquation poste/profil]`,
     toneGuidance:
-      'Authentique, motivé, professionnel. Montrer l\'adéquation concrète entre le profil et le poste. Éviter les formules génériques.',
+      "Authentique, motivé, professionnel. Montrer l'adéquation concrète entre le profil et le poste. Éviter les formules génériques.",
   },
 
   specification: {
@@ -477,7 +465,7 @@ LANGUES
       'Exigences fonctionnelles',
       'Exigences techniques',
       'Contraintes',
-      'Critères d\'acceptation',
+      "Critères d'acceptation",
       'Planning prévisionnel',
       'Budget estimé',
     ],
@@ -494,9 +482,9 @@ Version : [X.X] | Date : [date]
   analysis: {
     type: 'analysis',
     label: "Note d'Analyse",
-    description: 'Document d\'analyse approfondie sur un sujet',
+    description: "Document d'analyse approfondie sur un sujet",
     sections: [
-      'Objet de l\'analyse',
+      "Objet de l'analyse",
       'Méthodologie',
       'Données et constats',
       'Analyse et interprétation',
@@ -565,11 +553,11 @@ SLIDE 1 : [Titre]
     label: 'Guide / Tutoriel',
     description: 'Documentation pédagogique pas-à-pas',
     sections: [
-      'Titre et objectif d\'apprentissage',
+      "Titre et objectif d'apprentissage",
       'Prérequis',
       'Étapes détaillées',
       'Exemples pratiques',
-      'Points d\'attention / Erreurs courantes',
+      "Points d'attention / Erreurs courantes",
       'Résumé et prochaines étapes',
     ],
     formatInstructions: `FORMAT TUTORIEL :

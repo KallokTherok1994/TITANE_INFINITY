@@ -542,9 +542,7 @@ class NeuralVoiceBlendingEngine {
     const version = `v${Math.floor(this.state.learningSessionCount / 10)}.${this.state.learningSessionCount % 10}`;
     this.state.voiceSignature = `TITANE∞-Voice-${version}`;
 
-    logger.info(
-      `🎙️ Voice signature stabilized: ${this.state.voiceSignature}`
-    );
+    logger.info(`🎙️ Voice signature stabilized: ${this.state.voiceSignature}`);
   }
 
   /**

@@ -13,7 +13,14 @@
         "Totalité : changer un élément du système change tout le système",
         "Rétroaction (feedback) : boucles positives (amplificatrices) et négatives (stabilisatrices)"
       ],
-      "penseurs_fondateurs": ["Ludwig von Bertalanffy (théorie générale des systèmes)", "Gregory Bateson (communication, double lien)", "Paul Watzlawick (axiomes de la communication)", "Don Jackson", "Jay Haley", "Salvador Minuchin (thérapie structurale)"]
+      "penseurs_fondateurs": [
+        "Ludwig von Bertalanffy (théorie générale des systèmes)",
+        "Gregory Bateson (communication, double lien)",
+        "Paul Watzlawick (axiomes de la communication)",
+        "Don Jackson",
+        "Jay Haley",
+        "Salvador Minuchin (thérapie structurale)"
+      ]
     },
     "ecole_palo_alto": {
       "fondateurs": "Gregory Bateson, Paul Watzlawick, Don Jackson, Jay Haley, John Weakland",
@@ -37,8 +44,18 @@
       },
       "therapie_breve": {
         "definition": "Intervention focalisée sur le problème présent, sans explorer le passé en profondeur",
-        "principes": ["Si ça marche, continuer", "Si ça ne marche pas, faire autre chose", "Ne pas chercher pourquoi ça pose problème mais comment le résoudre"],
-        "techniques": ["Recadrage", "Prescription du symptôme", "Tâche paradoxale", "Questionnement circulaire", "Utilisation de la résistance"]
+        "principes": [
+          "Si ça marche, continuer",
+          "Si ça ne marche pas, faire autre chose",
+          "Ne pas chercher pourquoi ça pose problème mais comment le résoudre"
+        ],
+        "techniques": [
+          "Recadrage",
+          "Prescription du symptôme",
+          "Tâche paradoxale",
+          "Questionnement circulaire",
+          "Utilisation de la résistance"
+        ]
       }
     },
     "constellations_familiales_hellinger": {
@@ -64,7 +81,12 @@
         "Inversions de rôle : enfant qui porte le parent, parent infantilisé",
         "Interruptions de mouvement d'amour : amour empêché de circuler"
       ],
-      "phrases_de_liberation": ["Je te vois. Tu as ta place.", "Ce qui t'appartient, je te le laisse.", "Je suis petit(e) et tu es grand(e).", "Maintenant je prends ma propre vie."],
+      "phrases_de_liberation": [
+        "Je te vois. Tu as ta place.",
+        "Ce qui t'appartient, je te le laisse.",
+        "Je suis petit(e) et tu es grand(e).",
+        "Maintenant je prends ma propre vie."
+      ],
       "debat_scientifique": "Très populaire en thérapie, mais controversée dans le monde académique. Pas de validation scientifique robuste à ce jour. Utilisée avec discernement."
     },
     "approche_satir": {
@@ -87,7 +109,12 @@
         "neutralite": "Le thérapeute ne prend parti pour aucun membre du système",
         "hypothetisation": "Formulation d'hypothèses systémiques avant chaque séance, révisées en temps réel"
       },
-      "techniques": ["Questions circulaires", "Rituel familial prescrit", "Connotation positive du symptôme", "Contre-paradoxe"],
+      "techniques": [
+        "Questions circulaires",
+        "Rituel familial prescrit",
+        "Connotation positive du symptôme",
+        "Contre-paradoxe"
+      ],
       "innovation": "L'analyse des alliances, coalitions et rétroactions pour faire émerger de nouvelles perspectives dans le système familial"
     },
     "therapie_contextuelle_boszormenyi_nagy": {
@@ -132,7 +159,11 @@
     "approches_complementaires": {
       "therapie_structurale_minuchin": {
         "focus": "Structure familiale (sous-systèmes, frontières, hiérarchies)",
-        "interventions": ["Restructuration des frontières", "Enactment (mise en acte des conflits en séance)", "Déséquilibrage thérapeutique"]
+        "interventions": [
+          "Restructuration des frontières",
+          "Enactment (mise en acte des conflits en séance)",
+          "Déséquilibrage thérapeutique"
+        ]
       },
       "therapie_strategique_haley": {
         "focus": "Directives et tâches stratégiques pour modifier les patterns de communication",
@@ -140,7 +171,12 @@
       },
       "therapie_narrative_white_epston": {
         "focus": "Réautorisation de l'histoire de vie — séparation de la personne et du problème",
-        "interventions": ["Externalisation du problème", "Recherche d'exceptions", "Reconstruction narrative", "Témoignage externalisé"]
+        "interventions": [
+          "Externalisation du problème",
+          "Recherche d'exceptions",
+          "Reconstruction narrative",
+          "Témoignage externalisé"
+        ]
       }
     },
     "avertissement_sante": "Les thérapies systémiques familiales interviennent sur des dynamiques relationnelles profondes. Certaines approches (constellations notamment) sont controversées et nécessitent un cadre thérapeutique rigoureux. Toute intervention familiale doit être conduite par un professionnel formé et supervisé. Ces approches complètent mais ne remplacent pas un suivi médical ou psychiatrique lorsque nécessaire."

@@ -41,7 +41,12 @@
         "ancrages": {
           "definition": "Association stimulus-réponse. Un geste, mot, image ou son déclenche un état émotionnel spécifique.",
           "creation": "1) Évoquer l'état désiré intensément. 2) Au pic de l'état, appliquer l'ancre (toucher le poignet, serrer le poing). 3) Relâcher. 4) Tester.",
-          "types": ["Ancrage kinesthésique (toucher)", "Ancrage visuel (image)", "Ancrage auditif (mot/son)", "Ancrage spatial (lieu)"],
+          "types": [
+            "Ancrage kinesthésique (toucher)",
+            "Ancrage visuel (image)",
+            "Ancrage auditif (mot/son)",
+            "Ancrage spatial (lieu)"
+          ],
           "applications": "Confiance en soi, gestion du trac, état de flow, motivation instantanée.",
           "empilement": "Empiler plusieurs expériences positives sur le même ancrage pour le renforcer.",
           "effondrement": "Fusionner un ancrage positif puissant avec un ancrage négatif pour neutraliser l'état négatif."
@@ -61,7 +66,14 @@
         },
         "meta_programmes": {
           "definition": "Filtres inconscients qui déterminent comment nous traitons l'information et prenons des décisions.",
-          "exemples": ["Proactif vs Réactif", "Orienté vers (ce qu'on veut) vs Éloignement de (ce qu'on évite)", "Global vs Détail", "Interne (propre jugement) vs Externe (avis des autres)", "Options vs Procédures", "Similitudes vs Différences"]
+          "exemples": [
+            "Proactif vs Réactif",
+            "Orienté vers (ce qu'on veut) vs Éloignement de (ce qu'on évite)",
+            "Global vs Détail",
+            "Interne (propre jugement) vs Externe (avis des autres)",
+            "Options vs Procédures",
+            "Similitudes vs Différences"
+          ]
         }
       }
     },
@@ -83,12 +95,32 @@
       "creatrice": "Francine Shapiro (1987)",
       "principe": "Stimulations bilatérales (mouvements oculaires, sons alternés, tapotements) pendant l'évocation d'un souvenir traumatique. Permet au cerveau de retraiter et intégrer le souvenir.",
       "mecanisme_presume": "Simule les mouvements oculaires du sommeil REM. Facilite le retraitement adaptatif de l'information (passage de la mémoire épisodique traumatique à la mémoire narrative intégrée).",
-      "protocole_8_phases": ["Historique et plan de traitement", "Préparation et stabilisation", "Évaluation du souvenir cible", "Désensibilisation (stimulations bilatérales)", "Installation de la cognition positive", "Scanner corporel", "Clôture de la séance", "Réévaluation à la séance suivante"],
+      "protocole_8_phases": [
+        "Historique et plan de traitement",
+        "Préparation et stabilisation",
+        "Évaluation du souvenir cible",
+        "Désensibilisation (stimulations bilatérales)",
+        "Installation de la cognition positive",
+        "Scanner corporel",
+        "Clôture de la séance",
+        "Réévaluation à la séance suivante"
+      ],
       "efficacite": "Recommandé par l'OMS et la HAS pour le TSPT (trouble de stress post-traumatique). Résultats en 3-12 séances."
     },
     "therapie_breve": {
-      "principes": ["Orientée solution (pas analyse du passé)", "Durée limitée (3-10 séances)", "Objectifs clairs et mesurables", "Utilisation des exceptions (quand le problème n'est PAS présent)", "Question miracle: si demain le problème a disparu, qu'est-ce qui est différent?"],
-      "approches_combinees": ["Hypnose ericksonienne + PNL", "Thérapie brève de Palo Alto (systémique)", "Thérapie orientée solutions (Steve de Shazer)", "EFT (Emotional Freedom Techniques)"],
+      "principes": [
+        "Orientée solution (pas analyse du passé)",
+        "Durée limitée (3-10 séances)",
+        "Objectifs clairs et mesurables",
+        "Utilisation des exceptions (quand le problème n'est PAS présent)",
+        "Question miracle: si demain le problème a disparu, qu'est-ce qui est différent?"
+      ],
+      "approches_combinees": [
+        "Hypnose ericksonienne + PNL",
+        "Thérapie brève de Palo Alto (systémique)",
+        "Thérapie orientée solutions (Steve de Shazer)",
+        "EFT (Emotional Freedom Techniques)"
+      ],
       "applications": "Phobies, addictions, dépression légère-modérée, anxiété, deuil, transition de vie, confiance en soi, performance."
     },
     "avertissement_sante": "L'hypnothérapie et la PNL ne remplacent pas un suivi psychiatrique pour les troubles mentaux sévères. Choisissez un praticien certifié par une organisation reconnue."

@@ -193,7 +193,8 @@ export class ConversationEvaluationEngine extends EventEmitter {
       return {
         predicted_score: 0.75,
         confidence: 0.3,
-        suggestion: 'Insufficient history for accurate prediction — using default quality threshold.',
+        suggestion:
+          'Insufficient history for accurate prediction — using default quality threshold.',
       };
     }
 
@@ -238,8 +239,9 @@ export class ConversationEvaluationEngine extends EventEmitter {
     // Generate suggestion based on prediction
     let suggestion = '';
     if (predicted < 0.55) {
-      suggestion = 'Low quality predicted — consider requesting clarification or escalating depth profile.';
-    } else if (predicted < 0.70) {
+      suggestion =
+        'Low quality predicted — consider requesting clarification or escalating depth profile.';
+    } else if (predicted < 0.7) {
       suggestion = 'Moderate quality predicted — consider increasing response depth.';
     } else {
       suggestion = 'Good quality predicted — proceed with current configuration.';
@@ -252,14 +254,18 @@ export class ConversationEvaluationEngine extends EventEmitter {
    * v30.3.0: Record quality score in rolling baseline for future predictions
    */
   private updateRollingBaseline(conversation_id: string, overallScore: number): void {
-    const baseline = this.rollingBaselines.get(conversation_id) || { scores: [], avg: 0.75 };
+    const baseline = this.rollingBaselines.get(conversation_id) || {
+      scores: [],
+      avg: 0.75,
+    };
 
     baseline.scores.push(overallScore);
     // Keep last 20 scores for the rolling window
     if (baseline.scores.length > 20) baseline.scores.shift();
 
     // Recalculate average
-    baseline.avg = baseline.scores.reduce((sum, s) => sum + s, 0) / baseline.scores.length;
+    baseline.avg =
+      baseline.scores.reduce((sum, s) => sum + s, 0) / baseline.scores.length;
 
     this.rollingBaselines.set(conversation_id, baseline);
 
@@ -338,9 +344,10 @@ export class ConversationEvaluationEngine extends EventEmitter {
 
     // v30.3.0: Update rolling baseline for quality prediction feedback loop
     const metricValues = Object.values(metrics).filter(v => typeof v === 'number');
-    const overallScore = metricValues.length > 0
-      ? metricValues.reduce((sum, v) => sum + v, 0) / metricValues.length
-      : 0.75;
+    const overallScore =
+      metricValues.length > 0
+        ? metricValues.reduce((sum, v) => sum + v, 0) / metricValues.length
+        : 0.75;
     this.updateRollingBaseline(conversation_id, overallScore);
 
     this.log(`Evaluated conversation ${conversation_id}`, metrics);

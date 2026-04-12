@@ -406,12 +406,21 @@
     "fournisseurs": {
       "openai": {
         "modeles": ["GPT-4", "GPT-4-turbo", "GPT-3.5-turbo"],
-        "fonctionnalites": ["Chat completion", "Embeddings", "Function calling", "Vision"],
+        "fonctionnalites": [
+          "Chat completion",
+          "Embeddings",
+          "Function calling",
+          "Vision"
+        ],
         "endpoint": "Configurable via variable d'environnement OPENAI_API_BASE"
       },
       "anthropic_claude": {
         "modeles": ["Claude 3.5 Sonnet", "Claude 3 Opus", "Claude 3 Haiku"],
-        "fonctionnalites": ["Chat completion", "Analyse de documents", "Raisonnement avancé"],
+        "fonctionnalites": [
+          "Chat completion",
+          "Analyse de documents",
+          "Raisonnement avancé"
+        ],
         "endpoint": "Configurable via variable d'environnement ANTHROPIC_API_BASE"
       },
       "google_gemini": {

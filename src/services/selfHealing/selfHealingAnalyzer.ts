@@ -112,8 +112,8 @@ const SEVERITY_TO_URGENCY: Record<HealingSeverity, number> = {
  */
 interface ScoredAction {
   action: HealingActionType;
-  basePriority: number;  // 0-1, higher = preferred first
-  riskLevel: number;     // 0-1, higher = more disruptive
+  basePriority: number; // 0-1, higher = preferred first
+  riskLevel: number; // 0-1, higher = more disruptive
 }
 
 const ANOMALY_ACTIONS_SCORED: Record<AnomalyType, ScoredAction[]> = {
@@ -198,10 +198,12 @@ function getGraduatedActions(
   severity: HealingSeverity,
   moduleHealthScore?: number
 ): HealingActionType[] {
-  const scored = ANOMALY_ACTIONS_SCORED[anomalyType] || ANOMALY_ACTIONS_SCORED.unknown_anomaly;
+  const scored =
+    ANOMALY_ACTIONS_SCORED[anomalyType] || ANOMALY_ACTIONS_SCORED.unknown_anomaly;
   const severityWeight = SEVERITY_TO_URGENCY[severity] / 10; // 0.1-1.0
   // Lower health → more willing to accept risky actions
-  const healthFactor = moduleHealthScore !== undefined ? (100 - moduleHealthScore) / 100 : 0.5;
+  const healthFactor =
+    moduleHealthScore !== undefined ? (100 - moduleHealthScore) / 100 : 0.5;
   // Escalation factor: high severity + low health = accept more risk
   const riskTolerance = severityWeight * 0.6 + healthFactor * 0.4;
 
@@ -211,7 +213,8 @@ function getGraduatedActions(
       // Score = base priority boosted by risk tolerance matching
       // Low risk tolerance → prefer high basePriority + low riskLevel
       // High risk tolerance → accept all actions, prefer basePriority
-      effectiveScore: s.basePriority * 0.6 + (1 - Math.abs(s.riskLevel - riskTolerance)) * 0.4,
+      effectiveScore:
+        s.basePriority * 0.6 + (1 - Math.abs(s.riskLevel - riskTolerance)) * 0.4,
     }))
     .sort((a, b) => b.effectiveScore - a.effectiveScore)
     .map(s => s.action);
@@ -640,7 +643,11 @@ export class SelfHealingAnalyzer {
     let diagnosis = this.createDefaultDiagnosis(event);
 
     // Collect all matching rules with their diagnoses
-    const matchedRules: Array<{ rule: DiagnosticRule; diag: Partial<HealingDiagnosis>; confidence: number }> = [];
+    const matchedRules: Array<{
+      rule: DiagnosticRule;
+      diag: Partial<HealingDiagnosis>;
+      confidence: number;
+    }> = [];
 
     for (const rule of this.diagnosticRules) {
       try {
@@ -691,7 +698,10 @@ export class SelfHealingAnalyzer {
           const existing = new Set(diagnosis.historicalPatterns || []);
           for (const pattern of secondary.diag.historicalPatterns) {
             if (!existing.has(pattern)) {
-              diagnosis.historicalPatterns = [...(diagnosis.historicalPatterns || []), pattern];
+              diagnosis.historicalPatterns = [
+                ...(diagnosis.historicalPatterns || []),
+                pattern,
+              ];
             }
           }
         }
@@ -727,7 +737,11 @@ export class SelfHealingAnalyzer {
 
     // v30.3.0: Use graduated actions based on severity and current module health
     const moduleHealth = this.moduleHealth.get(event.moduleId);
-    const graduatedActions = getGraduatedActions(eventType, event.severity, moduleHealth?.score);
+    const graduatedActions = getGraduatedActions(
+      eventType,
+      event.severity,
+      moduleHealth?.score
+    );
 
     return {
       eventId: event.id,
@@ -833,9 +847,7 @@ export class SelfHealingAnalyzer {
 
     // Combined escalation score: weighted average
     const escalationScore =
-      eventDensityScore * 0.45 +
-      degradationScore * 0.30 +
-      patternScore * 0.25;
+      eventDensityScore * 0.45 + degradationScore * 0.3 + patternScore * 0.25;
 
     // Escalate if combined score exceeds threshold
     return escalationScore >= 0.6;

@@ -51,11 +51,22 @@
       "principe": "Respiration lente et régulière à 6 cycles/minute (inspir 5s, expir 5s) pour synchroniser le rythme cardiaque et respiratoire.",
       "protocole_365": "3 fois par jour, 6 respirations par minute, pendant 5 minutes.",
       "mecanisme": "Stimule le baroréflexe, augmente la variabilité de la fréquence cardiaque (VFC), active le système parasympathique via le nerf vague.",
-      "benefices_prouves": ["Réduction du cortisol de 20-30%", "Augmentation du DHEA (anti-vieillissement)", "Amélioration de la VFC (marqueur de santé cardiovasculaire et de résilience)", "Réduction de l'anxiété et de la dépression", "Amélioration de la concentration et de la prise de décision", "Renforcement du système immunitaire (augmentation IgA salivaires)"],
+      "benefices_prouves": [
+        "Réduction du cortisol de 20-30%",
+        "Augmentation du DHEA (anti-vieillissement)",
+        "Amélioration de la VFC (marqueur de santé cardiovasculaire et de résilience)",
+        "Réduction de l'anxiété et de la dépression",
+        "Amélioration de la concentration et de la prise de décision",
+        "Renforcement du système immunitaire (augmentation IgA salivaires)"
+      ],
       "applications": "Gestion du stress, préparation performance (sport, examen, prise de parole), troubles du sommeil, hypertension, douleur chronique."
     },
     "methode_wim_hof": {
-      "composantes": ["Respiration (hyperventilation contrôlée)", "Exposition au froid", "Méditation/Engagement mental"],
+      "composantes": [
+        "Respiration (hyperventilation contrôlée)",
+        "Exposition au froid",
+        "Méditation/Engagement mental"
+      ],
       "protocole_respiratoire": {
         "phase_1": "30-40 respirations profondes rapides (inspir max par le nez, expir relâché par la bouche). Hyperventilation.",
         "phase_2": "Après la dernière expir, rétention poumons vides aussi longtemps que confortable (1-3 minutes).",
@@ -63,7 +74,13 @@
         "cycles": "3-4 cycles complets."
       },
       "mecanisme": "L'hyperventilation abaisse le CO2 sanguin, alcalinise le pH. La rétention augmente l'adrénaline, module l'inflammation, stimule l'immunité innée.",
-      "benefices_scientifiques": ["Modulation de la réponse inflammatoire (étude Kox et al., PNAS 2014)", "Réduction des cytokines pro-inflammatoires", "Augmentation de l'adrénaline (200-300% pendant la pratique)", "Amélioration de la tolérance au froid", "Résilience psychologique accrue"],
+      "benefices_scientifiques": [
+        "Modulation de la réponse inflammatoire (étude Kox et al., PNAS 2014)",
+        "Réduction des cytokines pro-inflammatoires",
+        "Augmentation de l'adrénaline (200-300% pendant la pratique)",
+        "Amélioration de la tolérance au froid",
+        "Résilience psychologique accrue"
+      ],
       "precautions": "Ne jamais pratiquer dans l'eau, en conduisant, ou debout. Contre-indiqué: épilepsie, cardiopathie non contrôlée, grossesse. Supervision recommandée pour les débutants."
     },
     "methode_buteyko": {
@@ -74,7 +91,13 @@
         "reduction_volume": "Respirer moins: inspirs plus légers, expirs détendues, pauses naturelles allongées.",
         "exercices_bolt": "Expir normale, pincer le nez, mesurer le temps avant la 1ère envie de respirer. Objectif: >40 secondes."
       },
-      "benefices_prouves": ["Réduction des crises d'asthme (méta-analyses Cochrane)", "Amélioration de la rhinite et sinusite", "Réduction de l'apnée du sommeil", "Amélioration de la performance sportive (économie d'oxygène)", "Réduction de l'anxiété et des attaques de panique"],
+      "benefices_prouves": [
+        "Réduction des crises d'asthme (méta-analyses Cochrane)",
+        "Amélioration de la rhinite et sinusite",
+        "Réduction de l'apnée du sommeil",
+        "Amélioration de la performance sportive (économie d'oxygène)",
+        "Réduction de l'anxiété et des attaques de panique"
+      ],
       "taping_buccal_nocturne": "Technique de scellement buccal léger la nuit pour forcer la respiration nasale et améliorer le sommeil."
     },
     "respiration_holotropique": {
@@ -87,7 +110,14 @@
     },
     "variabilite_frequence_cardiaque_vfc": {
       "definition": "La VFC mesure les variations entre chaque battement cardiaque. Une VFC élevée = système nerveux autonome flexible et résilient.",
-      "optimisation": ["Cohérence cardiaque quotidienne", "Exercice aérobie régulier", "Sommeil de qualité", "Réduction du stress chronique", "Respiration lente et profonde", "Douche froide/exposition au froid"],
+      "optimisation": [
+        "Cohérence cardiaque quotidienne",
+        "Exercice aérobie régulier",
+        "Sommeil de qualité",
+        "Réduction du stress chronique",
+        "Respiration lente et profonde",
+        "Douche froide/exposition au froid"
+      ],
       "mesure": "Moniteurs de fréquence cardiaque, applications (HRV4Training, EliteHRV), capteurs optiques."
     },
     "science_respiration": {

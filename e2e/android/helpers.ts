@@ -5,12 +5,20 @@ export function ensureDir(dirPath: string): void {
   fs.mkdirSync(dirPath, { recursive: true });
 }
 
-export function writeJsonArtifact(dirPath: string, fileName: string, payload: unknown): void {
+export function writeJsonArtifact(
+  dirPath: string,
+  fileName: string,
+  payload: unknown
+): void {
   ensureDir(dirPath);
   fs.writeFileSync(path.join(dirPath, fileName), `${JSON.stringify(payload, null, 2)}\n`);
 }
 
-export function writeTextArtifact(dirPath: string, fileName: string, payload: string): void {
+export function writeTextArtifact(
+  dirPath: string,
+  fileName: string,
+  payload: string
+): void {
   ensureDir(dirPath);
   fs.writeFileSync(path.join(dirPath, fileName), `${payload}\n`);
 }
@@ -100,7 +108,7 @@ export function extractCriticalPageErrors(entries: string[]): string[] {
  */
 export async function awaitAppReady(
   page: import('@playwright/test').Page,
-  timeoutMs = 30000,
+  timeoutMs = 30000
 ): Promise<void> {
   await page.goto('/');
   await page.getByTestId('page-titane').waitFor({ state: 'visible', timeout: timeoutMs });
@@ -111,7 +119,7 @@ export async function awaitAppReady(
  */
 export async function getInputBoundingMetrics(
   page: import('@playwright/test').Page,
-  testid: string,
+  testid: string
 ): Promise<{
   top: number;
   bottom: number;

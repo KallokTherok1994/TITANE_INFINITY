@@ -917,14 +917,20 @@ export class MetricsCollector {
 
       // Render time: graduated penalty above 16ms (1 frame @ 60fps)
       if (frontend.render.averageTime > 16) {
-        const renderPenalty = Math.min(15, Math.log(1 + (frontend.render.averageTime - 16) / 20) * 8);
+        const renderPenalty = Math.min(
+          15,
+          Math.log(1 + (frontend.render.averageTime - 16) / 20) * 8
+        );
         score -= renderPenalty;
         if (frontend.render.averageTime > 50) warnings++;
       }
 
       // Tauri invoke latency: graduated above 100ms
       if (frontend.tauri.invokeLatency > 100) {
-        const invokePenalty = Math.min(12, Math.log(1 + (frontend.tauri.invokeLatency - 100) / 200) * 8);
+        const invokePenalty = Math.min(
+          12,
+          Math.log(1 + (frontend.tauri.invokeLatency - 100) / 200) * 8
+        );
         score -= invokePenalty;
         if (frontend.tauri.invokeLatency > 500) warnings++;
       }

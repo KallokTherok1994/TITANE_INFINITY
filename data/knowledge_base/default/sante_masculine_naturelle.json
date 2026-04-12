@@ -12,7 +12,15 @@
         "libre": "2-3% non liée. Forme biologiquement active. La plus importante cliniquement.",
         "shbg": "Sex Hormone-Binding Globulin. Lie la testostérone, la rendant inactive. Augmente avec l'âge et l'excès d'œstrogènes."
       },
-      "causes_declin": ["Vieillissement naturel (1-2%/an après 30 ans)", "Stress chronique (cortisol antagonise la testostérone)", "Manque de sommeil (même 1 semaine réduit de 10-15%)", "Sédentarité et obésité (tissu adipeux convertit testostérone en œstrogènes via aromatase)", "Perturbateurs endocriniens (BPA, phtalates)", "Alcool excessif", "Déficiences nutritionnelles (zinc, magnésium, vitamine D)"],
+      "causes_declin": [
+        "Vieillissement naturel (1-2%/an après 30 ans)",
+        "Stress chronique (cortisol antagonise la testostérone)",
+        "Manque de sommeil (même 1 semaine réduit de 10-15%)",
+        "Sédentarité et obésité (tissu adipeux convertit testostérone en œstrogènes via aromatase)",
+        "Perturbateurs endocriniens (BPA, phtalates)",
+        "Alcool excessif",
+        "Déficiences nutritionnelles (zinc, magnésium, vitamine D)"
+      ],
       "optimisation_naturelle": {
         "exercice": "Musculation composée (squats, soulevés de terre, développé) augmente la testostérone acutement et chroniquement. HIIT > cardio prolongé.",
         "sommeil": "7-9h de sommeil de qualité. La testostérone est produite principalement pendant le sommeil profond. Pic matinal.",
@@ -24,15 +32,39 @@
           "cruciferes": "Brocoli, chou-fleur, choux. Contiennent DIM (diindolylméthane) qui favorise l'élimination des œstrogènes excédentaires."
         },
         "gestion_stress": "Méditation, cohérence cardiaque, nature. Le cortisol chronique supprime la GnRH et donc la testostérone.",
-        "eviter": ["Alcool excessif (toxique pour les cellules de Leydig)", "Soja en excès (phytoœstrogènes)", "Plastiques chauffés (BPA)", "Surentraînement (cortisol)", "Cannabis chronique"]
+        "eviter": [
+          "Alcool excessif (toxique pour les cellules de Leydig)",
+          "Soja en excès (phytoœstrogènes)",
+          "Plastiques chauffés (BPA)",
+          "Surentraînement (cortisol)",
+          "Cannabis chronique"
+        ]
       },
       "plantes_et_supplements": [
-        {"nom": "Ashwagandha (KSM-66)", "action": "Augmente testostérone de 10-22%, réduit cortisol de 30%. Adaptogène majeur."},
-        {"nom": "Tongkat Ali (Eurycoma longifolia)", "action": "Stimule la production de testostérone libre, réduit SHBG. Études cliniques positives."},
-        {"nom": "Tribulus Terrestris", "action": "Stimule LH, améliore la libido. Effets sur la testostérone discutés mais bénéfices sur la vitalité."},
-        {"nom": "Fenugrec (Testofen)", "action": "Inhibe l'aromatase (conversion testostérone→œstrogènes). Améliore la force et la libido."},
-        {"nom": "Maca (Lepidium meyenii)", "action": "Améliore la libido et l'énergie sans modifier les niveaux hormonaux sanguins. Adaptogène."},
-        {"nom": "Zinc + Magnésium (ZMA)", "action": "Corrige les déficiences minérales communes chez les sportifs. Soutient la production hormonale."}
+        {
+          "nom": "Ashwagandha (KSM-66)",
+          "action": "Augmente testostérone de 10-22%, réduit cortisol de 30%. Adaptogène majeur."
+        },
+        {
+          "nom": "Tongkat Ali (Eurycoma longifolia)",
+          "action": "Stimule la production de testostérone libre, réduit SHBG. Études cliniques positives."
+        },
+        {
+          "nom": "Tribulus Terrestris",
+          "action": "Stimule LH, améliore la libido. Effets sur la testostérone discutés mais bénéfices sur la vitalité."
+        },
+        {
+          "nom": "Fenugrec (Testofen)",
+          "action": "Inhibe l'aromatase (conversion testostérone→œstrogènes). Améliore la force et la libido."
+        },
+        {
+          "nom": "Maca (Lepidium meyenii)",
+          "action": "Améliore la libido et l'énergie sans modifier les niveaux hormonaux sanguins. Adaptogène."
+        },
+        {
+          "nom": "Zinc + Magnésium (ZMA)",
+          "action": "Corrige les déficiences minérales communes chez les sportifs. Soutient la production hormonale."
+        }
       ]
     },
     "prostate": {
@@ -43,12 +75,30 @@
         "facteurs_risque": "Âge, DHT (dihydrotestostérone) élevée, obésité, sédentarité, alimentation occidentale."
       },
       "prevention_naturelle": [
-        {"nom": "Saw Palmetto (palmier nain)", "action": "Inhibe la 5-alpha-réductase (réduit la conversion testostérone→DHT). Réduit les symptômes urinaires."},
-        {"nom": "Pygeum africanum (prunier d'Afrique)", "action": "Anti-inflammatoire prostatique, réduit l'œdème, améliore le flux urinaire."},
-        {"nom": "Graines de courge", "action": "Riches en zinc, phytostérols, acides gras essentiels. Soutiennent la prostate."},
-        {"nom": "Lycopène (tomates cuites)", "action": "Antioxydant puissant. Études épidémiologiques montrant réduction du risque de cancer prostatique."},
-        {"nom": "Ortie (racine)", "action": "Réduit la SHBG prostatique, améliore les symptômes urinaires."},
-        {"nom": "Zinc", "action": "La prostate concentre le zinc plus que tout autre tissu. Essentiel à sa santé."}
+        {
+          "nom": "Saw Palmetto (palmier nain)",
+          "action": "Inhibe la 5-alpha-réductase (réduit la conversion testostérone→DHT). Réduit les symptômes urinaires."
+        },
+        {
+          "nom": "Pygeum africanum (prunier d'Afrique)",
+          "action": "Anti-inflammatoire prostatique, réduit l'œdème, améliore le flux urinaire."
+        },
+        {
+          "nom": "Graines de courge",
+          "action": "Riches en zinc, phytostérols, acides gras essentiels. Soutiennent la prostate."
+        },
+        {
+          "nom": "Lycopène (tomates cuites)",
+          "action": "Antioxydant puissant. Études épidémiologiques montrant réduction du risque de cancer prostatique."
+        },
+        {
+          "nom": "Ortie (racine)",
+          "action": "Réduit la SHBG prostatique, améliore les symptômes urinaires."
+        },
+        {
+          "nom": "Zinc",
+          "action": "La prostate concentre le zinc plus que tout autre tissu. Essentiel à sa santé."
+        }
       ],
       "psa": "Antigène Prostatique Spécifique. Marqueur sanguin. Norme <4 ng/mL mais interprétation nuancée (PSA libre/total, vélocité, densité). Dépistage recommandé à partir de 50 ans (45 ans si antécédents familiaux).",
       "exercices_prostate": "Exercices de Kegel (contraction du périnée), marche, natation, vélo modéré. Éviter les longs trajets assis."
@@ -73,7 +123,14 @@
         "Exercice modéré (pas de surentraînement)",
         "Arrêt du tabac et réduction de l'alcool"
       ],
-      "facteurs_negatifs": ["Tabac (réduit concentration de 20% et motilité)", "Alcool >14 verres/semaine", "Cannabis (réduit concentration et morphologie)", "Stéroïdes anabolisants (suppriment la spermatogenèse — azoospermie possible)", "Stress oxydatif (pollution, pesticides)", "Obésité (augmente température scrotale, convertit testostérone en œstrogènes)"]
+      "facteurs_negatifs": [
+        "Tabac (réduit concentration de 20% et motilité)",
+        "Alcool >14 verres/semaine",
+        "Cannabis (réduit concentration et morphologie)",
+        "Stéroïdes anabolisants (suppriment la spermatogenèse — azoospermie possible)",
+        "Stress oxydatif (pollution, pesticides)",
+        "Obésité (augmente température scrotale, convertit testostérone en œstrogènes)"
+      ]
     },
     "andropause": {
       "definition": "Déclin progressif de la testostérone avec l'âge (DALA - Déficit Androgénique Lié à l'Âge). Contrairement à la ménopause, le déclin est graduel et non universel.",

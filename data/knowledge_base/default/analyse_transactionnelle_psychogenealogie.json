@@ -149,7 +149,9 @@
         },
         "mini_scenario_kahler": {
           "definition": "Micro-séquence comportementale activée par le driver dominant, surtout sous pression",
-          "sequence": ["Driver activé → Injonction renforcée → Racket émotionnel → Bénéfice négatif → Confirmation du scénario"]
+          "sequence": [
+            "Driver activé → Injonction renforcée → Racket émotionnel → Bénéfice négatif → Confirmation du scénario"
+          ]
         },
         "rackets": {
           "definition": "Émotions parasites, entretenues inconsciemment pour éviter de ressentir des émotions authentiques",

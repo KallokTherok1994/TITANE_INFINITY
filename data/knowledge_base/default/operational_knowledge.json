@@ -157,25 +157,41 @@
         {
           "niveau": "N1 — Auto-résolution",
           "description": "Problèmes courants résolus par TITANE∞ via AutoHeal",
-          "exemples": ["Redémarrage Ollama", "Nettoyage cache", "Réinitialisation état local"],
+          "exemples": [
+            "Redémarrage Ollama",
+            "Nettoyage cache",
+            "Réinitialisation état local"
+          ],
           "delai_max": "5 minutes"
         },
         {
           "niveau": "N2 — Intervention opérateur",
           "description": "Problèmes nécessitant une intervention manuelle de Kevin",
-          "exemples": ["Mise à jour de configuration", "Rotation de clés API", "Correction de données"],
+          "exemples": [
+            "Mise à jour de configuration",
+            "Rotation de clés API",
+            "Correction de données"
+          ],
           "delai_max": "30 minutes"
         },
         {
           "niveau": "N3 — Intervention développeur",
           "description": "Bugs applicatifs nécessitant une correction de code",
-          "exemples": ["Régression fonctionnelle", "Fuite mémoire", "Erreur IPC non gérée"],
+          "exemples": [
+            "Régression fonctionnelle",
+            "Fuite mémoire",
+            "Erreur IPC non gérée"
+          ],
           "delai_max": "4 heures"
         },
         {
           "niveau": "N4 — Incident critique",
           "description": "Panne complète ou corruption de données nécessitant un rollback",
-          "exemples": ["Corruption base SQLite", "Perte de state persistant", "Faille de sécurité"],
+          "exemples": [
+            "Corruption base SQLite",
+            "Perte de state persistant",
+            "Faille de sécurité"
+          ],
           "delai_max": "1 heure (stop-the-line immédiat)"
         }
       ]
@@ -237,31 +253,51 @@
           "code": "INC-IA",
           "nom": "Incident provider IA",
           "description": "Indisponibilité, timeout, ou réponse incorrecte d'un provider IA",
-          "exemples": ["Timeout API OpenAI", "Réponse vide Ollama", "Erreur 429 rate limit"]
+          "exemples": [
+            "Timeout API OpenAI",
+            "Réponse vide Ollama",
+            "Erreur 429 rate limit"
+          ]
         },
         {
           "code": "INC-IPC",
           "nom": "Incident communication IPC",
           "description": "Échec ou corruption des messages entre frontend et backend Tauri",
-          "exemples": ["Payload IPC malformé", "Commande Tauri non trouvée", "Timeout IPC"]
+          "exemples": [
+            "Payload IPC malformé",
+            "Commande Tauri non trouvée",
+            "Timeout IPC"
+          ]
         },
         {
           "code": "INC-DATA",
           "nom": "Incident données",
           "description": "Corruption, perte ou incohérence des données persistantes",
-          "exemples": ["Base SQLite corrompue", "Mémoire persistante désynchronisée", "Perte de conversation"]
+          "exemples": [
+            "Base SQLite corrompue",
+            "Mémoire persistante désynchronisée",
+            "Perte de conversation"
+          ]
         },
         {
           "code": "INC-SEC",
           "nom": "Incident sécurité",
           "description": "Toute anomalie liée à la sécurité de l'application",
-          "exemples": ["Fuite de clé API dans les logs", "Accès non autorisé au SecureSecretsEngine", "Violation allowlist Tauri"]
+          "exemples": [
+            "Fuite de clé API dans les logs",
+            "Accès non autorisé au SecureSecretsEngine",
+            "Violation allowlist Tauri"
+          ]
         },
         {
           "code": "INC-PERF",
           "nom": "Incident performance",
           "description": "Dégradation significative des performances du système",
-          "exemples": ["Latence OMEGA > 100ms", "Utilisation mémoire excessive", "UI freeze"]
+          "exemples": [
+            "Latence OMEGA > 100ms",
+            "Utilisation mémoire excessive",
+            "UI freeze"
+          ]
         },
         {
           "code": "INC-BUILD",
@@ -447,11 +483,19 @@
       },
       "secure_secrets_engine": {
         "description": "Moteur de gestion sécurisée des secrets et clés API",
-        "fonctionnalites": ["Chiffrement au repos", "Injection à l'exécution", "Rotation planifiable"]
+        "fonctionnalites": [
+          "Chiffrement au repos",
+          "Injection à l'exécution",
+          "Rotation planifiable"
+        ]
       },
       "git": {
         "description": "Intégration avec Git pour le versionnement et le rollback",
-        "operations": ["Tag automatique à la release", "Rollback par git restore", "Bisect pour investigation"]
+        "operations": [
+          "Tag automatique à la release",
+          "Rollback par git restore",
+          "Bisect pour investigation"
+        ]
       }
     },
     "self_healing": {
@@ -713,7 +757,15 @@
     },
     "templates": {
       "post_mortem": {
-        "sections": ["Résumé", "Chronologie", "Cause racine", "Impact", "Actions correctives", "Prévention", "Leçons apprises"],
+        "sections": [
+          "Résumé",
+          "Chronologie",
+          "Cause racine",
+          "Impact",
+          "Actions correctives",
+          "Prévention",
+          "Leçons apprises"
+        ],
         "emplacement": "reports/"
       },
       "proof_pack": {

@@ -276,7 +276,11 @@
     "multilingual": {
       "niveau": "expert",
       "description": "Compréhension et production fluide dans plusieurs langues, avec sensibilité aux nuances culturelles et idiomatiques",
-      "langues_principales": ["Français (langue maternelle du jumeau)", "Anglais (technique et professionnel)", "Espagnol (compréhension et production)"],
+      "langues_principales": [
+        "Français (langue maternelle du jumeau)",
+        "Anglais (technique et professionnel)",
+        "Espagnol (compréhension et production)"
+      ],
       "sous_capacites": [
         "Détection automatique de la langue d'entrée de l'utilisateur",
         "Réponse dans la langue appropriée au contexte",
@@ -344,7 +348,18 @@
     "code": {
       "niveau": "expert",
       "description": "Maîtrise de la génération, révision, refactoring et optimisation de code dans de multiples langages et paradigmes",
-      "langages_maitrises": ["TypeScript", "JavaScript", "Rust", "Python", "HTML/CSS", "SQL", "Bash", "TOML", "YAML", "JSON"],
+      "langages_maitrises": [
+        "TypeScript",
+        "JavaScript",
+        "Rust",
+        "Python",
+        "HTML/CSS",
+        "SQL",
+        "Bash",
+        "TOML",
+        "YAML",
+        "JSON"
+      ],
       "sous_capacites": [
         "Génération de code idiomatique respectant les conventions du projet TITANE∞",
         "Revue de code approfondie avec détection de bugs, vulnérabilités et mauvaises pratiques",
@@ -353,7 +368,16 @@
         "Génération de tests unitaires, d'intégration et end-to-end",
         "Complétion contextuelle de code avec compréhension du projet global"
       ],
-      "frameworks_connus": ["React", "Tauri", "Vite", "Vitest", "Playwright", "WebdriverIO", "Tailwind CSS", "PostCSS"]
+      "frameworks_connus": [
+        "React",
+        "Tauri",
+        "Vite",
+        "Vitest",
+        "Playwright",
+        "WebdriverIO",
+        "Tailwind CSS",
+        "PostCSS"
+      ]
     },
     "debugging": {
       "niveau": "expert",
@@ -713,27 +737,132 @@
       }
     },
     "evaluation_par_capacite": {
-      "conversation_ia": { "niveau_actuel": "expert", "score": 4, "objectif": "expert", "progression": "100%" },
-      "memory_management": { "niveau_actuel": "expert", "score": 4, "objectif": "expert", "progression": "100%" },
-      "voice_audio": { "niveau_actuel": "avance", "score": 3, "objectif": "expert", "progression": "75%" },
-      "self_healing": { "niveau_actuel": "expert", "score": 4, "objectif": "expert", "progression": "100%" },
-      "knowledge_ingestion": { "niveau_actuel": "avance", "score": 3, "objectif": "expert", "progression": "75%" },
-      "multi_agent": { "niveau_actuel": "avance", "score": 3, "objectif": "expert", "progression": "75%" },
-      "evolution": { "niveau_actuel": "expert", "score": 4, "objectif": "expert", "progression": "100%" },
-      "security": { "niveau_actuel": "expert", "score": 4, "objectif": "expert", "progression": "100%" },
-      "agenda_temporal": { "niveau_actuel": "intermediaire", "score": 2, "objectif": "avance", "progression": "50%" },
-      "cloud_sync": { "niveau_actuel": "avance", "score": 3, "objectif": "expert", "progression": "75%" },
-      "developer_tools": { "niveau_actuel": "expert", "score": 4, "objectif": "expert", "progression": "100%" },
-      "monitoring_observability": { "niveau_actuel": "expert", "score": 4, "objectif": "expert", "progression": "100%" },
-      "agi_reasoning": { "niveau_actuel": "avance", "score": 3, "objectif": "expert", "progression": "75%" },
-      "cognitive_os": { "niveau_actuel": "expert", "score": 4, "objectif": "expert", "progression": "100%" },
-      "capacites_cognitives": { "niveau_actuel": "avance", "score": 3, "objectif": "expert", "progression": "75%" },
-      "capacites_linguistiques": { "niveau_actuel": "avance", "score": 3, "objectif": "expert", "progression": "75%" },
-      "capacites_techniques": { "niveau_actuel": "expert", "score": 4, "objectif": "expert", "progression": "100%" },
-      "capacites_relationnelles": { "niveau_actuel": "avance", "score": 3, "objectif": "expert", "progression": "75%" },
-      "capacites_organisationnelles": { "niveau_actuel": "avance", "score": 3, "objectif": "expert", "progression": "75%" },
-      "capacites_creatives": { "niveau_actuel": "avance", "score": 3, "objectif": "expert", "progression": "75%" },
-      "capacites_analytiques": { "niveau_actuel": "avance", "score": 3, "objectif": "expert", "progression": "75%" }
+      "conversation_ia": {
+        "niveau_actuel": "expert",
+        "score": 4,
+        "objectif": "expert",
+        "progression": "100%"
+      },
+      "memory_management": {
+        "niveau_actuel": "expert",
+        "score": 4,
+        "objectif": "expert",
+        "progression": "100%"
+      },
+      "voice_audio": {
+        "niveau_actuel": "avance",
+        "score": 3,
+        "objectif": "expert",
+        "progression": "75%"
+      },
+      "self_healing": {
+        "niveau_actuel": "expert",
+        "score": 4,
+        "objectif": "expert",
+        "progression": "100%"
+      },
+      "knowledge_ingestion": {
+        "niveau_actuel": "avance",
+        "score": 3,
+        "objectif": "expert",
+        "progression": "75%"
+      },
+      "multi_agent": {
+        "niveau_actuel": "avance",
+        "score": 3,
+        "objectif": "expert",
+        "progression": "75%"
+      },
+      "evolution": {
+        "niveau_actuel": "expert",
+        "score": 4,
+        "objectif": "expert",
+        "progression": "100%"
+      },
+      "security": {
+        "niveau_actuel": "expert",
+        "score": 4,
+        "objectif": "expert",
+        "progression": "100%"
+      },
+      "agenda_temporal": {
+        "niveau_actuel": "intermediaire",
+        "score": 2,
+        "objectif": "avance",
+        "progression": "50%"
+      },
+      "cloud_sync": {
+        "niveau_actuel": "avance",
+        "score": 3,
+        "objectif": "expert",
+        "progression": "75%"
+      },
+      "developer_tools": {
+        "niveau_actuel": "expert",
+        "score": 4,
+        "objectif": "expert",
+        "progression": "100%"
+      },
+      "monitoring_observability": {
+        "niveau_actuel": "expert",
+        "score": 4,
+        "objectif": "expert",
+        "progression": "100%"
+      },
+      "agi_reasoning": {
+        "niveau_actuel": "avance",
+        "score": 3,
+        "objectif": "expert",
+        "progression": "75%"
+      },
+      "cognitive_os": {
+        "niveau_actuel": "expert",
+        "score": 4,
+        "objectif": "expert",
+        "progression": "100%"
+      },
+      "capacites_cognitives": {
+        "niveau_actuel": "avance",
+        "score": 3,
+        "objectif": "expert",
+        "progression": "75%"
+      },
+      "capacites_linguistiques": {
+        "niveau_actuel": "avance",
+        "score": 3,
+        "objectif": "expert",
+        "progression": "75%"
+      },
+      "capacites_techniques": {
+        "niveau_actuel": "expert",
+        "score": 4,
+        "objectif": "expert",
+        "progression": "100%"
+      },
+      "capacites_relationnelles": {
+        "niveau_actuel": "avance",
+        "score": 3,
+        "objectif": "expert",
+        "progression": "75%"
+      },
+      "capacites_organisationnelles": {
+        "niveau_actuel": "avance",
+        "score": 3,
+        "objectif": "expert",
+        "progression": "75%"
+      },
+      "capacites_creatives": {
+        "niveau_actuel": "avance",
+        "score": 3,
+        "objectif": "expert",
+        "progression": "75%"
+      },
+      "capacites_analytiques": {
+        "niveau_actuel": "avance",
+        "score": 3,
+        "objectif": "expert",
+        "progression": "75%"
+      }
     },
     "roadmap_evolution": [
       {

@@ -565,9 +565,13 @@ export class MemoryIntelligenceEngine {
     ];
     const matchedSignals = importantPatterns.filter(p => p.test(content)).length;
     // Graduated: 1 match = 0.3, 2 = 0.5, 3+ = 0.7, diminishing returns after 3
-    const contentSignalScore = matchedSignals > 0
-      ? Math.min(0.9, 0.2 + matchedSignals * 0.15 - Math.max(0, matchedSignals - 3) * 0.05)
-      : 0.1;
+    const contentSignalScore =
+      matchedSignals > 0
+        ? Math.min(
+            0.9,
+            0.2 + matchedSignals * 0.15 - Math.max(0, matchedSignals - 3) * 0.05
+          )
+        : 0.1;
 
     // Factor 3: Keyword density & length (0.20 of total) — graduated by content richness
     const wordCount = content.split(/\s+/).length;
@@ -575,7 +579,7 @@ export class MemoryIntelligenceEngine {
     const lexicalDensity = wordCount > 0 ? uniqueWords / wordCount : 0;
     // Longer, more diverse content is typically more important
     const lengthScore = Math.min(1.0, wordCount / 100); // 0-1 scaled, 100 words = max
-    const keywordDensityScore = (lengthScore * 0.5 + lexicalDensity * 0.5);
+    const keywordDensityScore = lengthScore * 0.5 + lexicalDensity * 0.5;
 
     // Factor 4: Urgency (0.15 of total) — from detectUrgency
     const urgency = this.detectUrgency(content, context);
@@ -598,11 +602,11 @@ export class MemoryIntelligenceEngine {
 
     // Weighted combination
     const importance =
-      sourceScore * 0.30 +
+      sourceScore * 0.3 +
       contentSignalScore * 0.25 +
-      keywordDensityScore * 0.20 +
+      keywordDensityScore * 0.2 +
       urgencyScore * 0.15 +
-      prefAlignmentScore * 0.10;
+      prefAlignmentScore * 0.1;
 
     return Math.min(1.0, Math.max(0.0, importance));
   }
@@ -639,7 +643,10 @@ export class MemoryIntelligenceEngine {
       if (matchCount > 0) {
         const totalKeywords = domain.keywords.length;
         // Logarithmic confidence: fast rise, plateau — ln(1+matches)/ln(1+total) * 0.9
-        const confidence = Math.min(1.0, Math.log(1 + matchCount) / Math.log(1 + totalKeywords) * 0.9 + 0.1);
+        const confidence = Math.min(
+          1.0,
+          (Math.log(1 + matchCount) / Math.log(1 + totalKeywords)) * 0.9 + 0.1
+        );
         categories.push({
           main: 'domain',
           sub: domain.id,
@@ -656,9 +663,14 @@ export class MemoryIntelligenceEngine {
       const matchCount = theme.keywords.filter(kw => lowerContent.includes(kw)).length;
       if (matchCount > 0) {
         const totalKeywords = theme.keywords.length;
-        let confidence = Math.min(1.0, Math.log(1 + matchCount) / Math.log(1 + totalKeywords) * 0.85 + 0.15);
+        let confidence = Math.min(
+          1.0,
+          (Math.log(1 + matchCount) / Math.log(1 + totalKeywords)) * 0.85 + 0.15
+        );
         // Boost if parent domain was also matched
-        const parentDomainMatched = categories.some(c => c.main === 'domain' && c.sub === (theme as any).domain);
+        const parentDomainMatched = categories.some(
+          c => c.main === 'domain' && c.sub === (theme as any).domain
+        );
         if (parentDomainMatched) confidence = Math.min(1.0, confidence * 1.15); // +15% if domain context aligns
         categories.push({
           main: 'theme',

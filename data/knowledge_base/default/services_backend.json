@@ -231,7 +231,15 @@
       "export": "Export JSON/CSV des données utilisateur via commande IPC pour portabilité",
       "verification_integrite": "PRAGMA integrity_check exécuté après chaque restauration et hebdomadairement"
     },
-    "ipc_commands": ["db_execute_query", "db_get_stats", "db_optimize", "db_backup", "db_restore", "db_migrate", "db_integrity_check"]
+    "ipc_commands": [
+      "db_execute_query",
+      "db_get_stats",
+      "db_optimize",
+      "db_backup",
+      "db_restore",
+      "db_migrate",
+      "db_integrity_check"
+    ]
   },
   "cache_strategy": {
     "description": "Stratégie de cache multicouche avancée — performance maximale avec cohérence garantie",
@@ -338,8 +346,17 @@
         "backoff_exponentiel": "Délai initial 1s, facteur 2, maximum 30s entre chaque tentative",
         "max_tentatives": 3,
         "jitter": "Ajout aléatoire de 0-500ms pour éviter les tempêtes de retry simultanés",
-        "erreurs_retriables": ["timeout", "connection_reset", "provider_overloaded", "rate_limited"],
-        "erreurs_fatales": ["authentication_failed", "invalid_payload", "resource_not_found"]
+        "erreurs_retriables": [
+          "timeout",
+          "connection_reset",
+          "provider_overloaded",
+          "rate_limited"
+        ],
+        "erreurs_fatales": [
+          "authentication_failed",
+          "invalid_payload",
+          "resource_not_found"
+        ]
       },
       "circuit_breaker_integration": "Après 3 échecs consécutifs, le circuit breaker s'ouvre et bloque les tentatives pendant 60s"
     },

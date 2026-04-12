@@ -129,15 +129,28 @@ export class BehavioralRouter {
 
     // v30.3.0: Graduated complexity escalation applied to intent depth
     const PROFILE_RANK: Record<ResponseProfileId, number> = {
-      DIRECT: 0, BALANCED: 1, DEVELOPED: 2, DEEP: 3, ARCHITECT: 4, OMEGA: 5,
+      DIRECT: 0,
+      BALANCED: 1,
+      DEVELOPED: 2,
+      DEEP: 3,
+      ARCHITECT: 4,
+      OMEGA: 5,
     };
     const RANK_PROFILE: Record<number, ResponseProfileId> = {
-      0: 'DIRECT', 1: 'BALANCED', 2: 'DEVELOPED', 3: 'DEEP', 4: 'ARCHITECT', 5: 'OMEGA',
+      0: 'DIRECT',
+      1: 'BALANCED',
+      2: 'DEVELOPED',
+      3: 'DEEP',
+      4: 'ARCHITECT',
+      5: 'OMEGA',
     };
 
     if (complexity > 0.72 && PROFILE_RANK[intentDepth] < PROFILE_RANK['DEEP']) {
       intentDepth = 'DEEP';
-    } else if (complexity > 0.55 && PROFILE_RANK[intentDepth] < PROFILE_RANK['DEVELOPED']) {
+    } else if (
+      complexity > 0.55 &&
+      PROFILE_RANK[intentDepth] < PROFILE_RANK['DEVELOPED']
+    ) {
       intentDepth = 'DEVELOPED';
     }
 
@@ -162,7 +175,8 @@ export class BehavioralRouter {
 
     // v30.3.0: Multi-intent secondary signal — if secondary intent exists, add depth boost
     if (intentResult.secondaryIntent) {
-      const secondaryDepth = intentDepthMap[intentResult.secondaryIntent.intent] ?? 'DEVELOPED';
+      const secondaryDepth =
+        intentDepthMap[intentResult.secondaryIntent.intent] ?? 'DEVELOPED';
       if (PROFILE_RANK[secondaryDepth] > PROFILE_RANK[intentDepth]) {
         signals.push({
           source: 'intent',
@@ -211,7 +225,8 @@ export class BehavioralRouter {
       for (const pref of preferences) {
         // v30.3.0: Time-weighted durability using exponential decay
         const age = now - pref.lastSeen;
-        const decayedDurability = pref.durability * Math.exp((-Math.LN2 * age) / halfLifeMs);
+        const decayedDurability =
+          pref.durability * Math.exp((-Math.LN2 * age) / halfLifeMs);
         if (decayedDurability >= 0.3) {
           // Depth preference
           if (pref.category === 'depth') {

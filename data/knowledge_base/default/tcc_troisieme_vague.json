@@ -64,7 +64,14 @@
         "sur_compensateur": "Le mode qui compense excessivement (contrôle, agressivité)",
         "adulte_sain": "Le mode thérapeutique cible — capable de gérer émotions et besoins sainement"
       },
-      "techniques": ["Reparentage limité", "Imagerie de restructuration", "Dialogue sur chaise (travail des modes)", "Journal de schémas", "Lettres au parent interne", "Exercices comportementaux"]
+      "techniques": [
+        "Reparentage limité",
+        "Imagerie de restructuration",
+        "Dialogue sur chaise (travail des modes)",
+        "Journal de schémas",
+        "Lettres au parent interne",
+        "Exercices comportementaux"
+      ]
     },
     "dbt_linehan": {
       "fondatrice": "Marsha M. Linehan",
@@ -73,23 +80,57 @@
       "quatre_modules": {
         "pleine_conscience": {
           "objectif": "Observer ses expériences internes sans jugement",
-          "competences": ["Observer", "Décrire", "Participer", "Non-jugement", "Attention une chose à la fois", "Efficacité"]
+          "competences": [
+            "Observer",
+            "Décrire",
+            "Participer",
+            "Non-jugement",
+            "Attention une chose à la fois",
+            "Efficacité"
+          ]
         },
         "tolerance_detresse": {
           "objectif": "Survivre aux crises sans aggraver la situation",
-          "competences": ["TIPP (Température, Intensité exercice, Respiration rythmée, Relaxation musculaire)", "Distraction (ACCEPTS)", "Auto-apaisement par les 5 sens", "IMPROVE le moment", "Acceptation radicale"]
+          "competences": [
+            "TIPP (Température, Intensité exercice, Respiration rythmée, Relaxation musculaire)",
+            "Distraction (ACCEPTS)",
+            "Auto-apaisement par les 5 sens",
+            "IMPROVE le moment",
+            "Acceptation radicale"
+          ]
         },
         "regulation_emotionnelle": {
           "objectif": "Comprendre et moduler ses émotions",
-          "competences": ["Identifier et nommer les émotions", "Réduire la vulnérabilité émotionnelle (PLEASE)", "Accumulation d'expériences positives", "Action opposée", "Vérification des faits"]
+          "competences": [
+            "Identifier et nommer les émotions",
+            "Réduire la vulnérabilité émotionnelle (PLEASE)",
+            "Accumulation d'expériences positives",
+            "Action opposée",
+            "Vérification des faits"
+          ]
         },
         "efficacite_interpersonnelle": {
           "objectif": "Communiquer efficacement tout en préservant la relation et l'estime de soi",
-          "competences": ["DEAR MAN (Describe, Express, Assert, Reinforce, Mindful, Appear, Negotiate)", "GIVE (Gentle, Interested, Validate, Easy manner)", "FAST (Fair, no Apologies, Stick to values, Truthful)"]
+          "competences": [
+            "DEAR MAN (Describe, Express, Assert, Reinforce, Mindful, Appear, Negotiate)",
+            "GIVE (Gentle, Interested, Validate, Easy manner)",
+            "FAST (Fair, no Apologies, Stick to values, Truthful)"
+          ]
         }
       },
-      "structure_traitement": ["Thérapie individuelle hebdomadaire", "Groupe d'entraînement aux compétences", "Coaching téléphonique entre les séances", "Équipe de consultation du thérapeute"],
-      "applications_etendues": ["Troubles alimentaires", "Addictions", "PTSD", "Dépression chronique", "Adolescents à risque suicidaire"]
+      "structure_traitement": [
+        "Thérapie individuelle hebdomadaire",
+        "Groupe d'entraînement aux compétences",
+        "Coaching téléphonique entre les séances",
+        "Équipe de consultation du thérapeute"
+      ],
+      "applications_etendues": [
+        "Troubles alimentaires",
+        "Addictions",
+        "PTSD",
+        "Dépression chronique",
+        "Adolescents à risque suicidaire"
+      ]
     },
     "therapie_metacognitive_wells": {
       "fondateur": "Adrian Wells",
@@ -97,7 +138,11 @@
       "concepts_cles": {
         "syndrome_attentionnel_cognitif_CAS": {
           "definition": "Pattern persistant de rumination, inquiétude et monitoring des menaces qui maintient la souffrance psychologique",
-          "composantes": ["Inquiétude/Rumination", "Monitoring de la menace (attention biaisée)", "Comportements de coping contre-productifs"]
+          "composantes": [
+            "Inquiétude/Rumination",
+            "Monitoring de la menace (attention biaisée)",
+            "Comportements de coping contre-productifs"
+          ]
         },
         "croyances_metacognitives": {
           "positives": "L'inquiétude m'aide à me préparer, ruminer me permet de comprendre",
@@ -109,7 +154,13 @@
         }
       },
       "objectif": "Modifier les croyances métacognitives et réduire le CAS pour permettre un traitement naturel des émotions",
-      "indications": ["Trouble anxieux généralisé", "Dépression", "TOC", "PTSD", "Phobies"]
+      "indications": [
+        "Trouble anxieux généralisé",
+        "Dépression",
+        "TOC",
+        "PTSD",
+        "Phobies"
+      ]
     },
     "act_defusion_cognitive": {
       "fondateur": "Steven C. Hayes",
@@ -118,7 +169,13 @@
         "acceptation": "Accueillir ses émotions et sensations sans chercher à les modifier",
         "defusion_cognitive": {
           "definition": "Observer ses pensées comme des événements mentaux transitoires plutôt que comme des vérités",
-          "techniques": ["Répéter la pensée jusqu'à ce qu'elle perde son sens", "Précéder la pensée de 'J'ai la pensée que...'", "Chanter la pensée sur un air comique", "Remercier son esprit", "Observer les pensées sur un écran mental"]
+          "techniques": [
+            "Répéter la pensée jusqu'à ce qu'elle perde son sens",
+            "Précéder la pensée de 'J'ai la pensée que...'",
+            "Chanter la pensée sur un air comique",
+            "Remercier son esprit",
+            "Observer les pensées sur un écran mental"
+          ]
         },
         "contact_moment_present": "Pleine conscience — être pleinement ici et maintenant",
         "soi_comme_contexte": "Se voir comme le ciel (constant) plutôt que comme les nuages (pensées/émotions changeantes)",
@@ -141,7 +198,14 @@
         "Semaine 7 : Comment prendre soin de moi au mieux — auto-compassion",
         "Semaine 8 : Utiliser ce qui a été appris — intégration dans la vie"
       ],
-      "pratiques_cles": ["Body scan", "Méditation assise", "Marche en pleine conscience", "Espace de respiration de 3 minutes", "Mouvements conscients (yoga)", "Pratique informelle au quotidien"],
+      "pratiques_cles": [
+        "Body scan",
+        "Méditation assise",
+        "Marche en pleine conscience",
+        "Espace de respiration de 3 minutes",
+        "Mouvements conscients (yoga)",
+        "Pratique informelle au quotidien"
+      ],
       "evidence_scientifique": "Forte évidence pour la prévention des rechutes dépressives (réduction de 40-50% chez les patients ayant eu 3+ épisodes). Recommandée par NICE et APA."
     },
     "cft_gilbert": {
@@ -180,7 +244,14 @@
           ]
         }
       },
-      "indications": ["Honte chronique", "Autocritique sévère", "Trauma et abus", "Troubles alimentaires", "Dépression chronique", "Anxiété sociale"]
+      "indications": [
+        "Honte chronique",
+        "Autocritique sévère",
+        "Trauma et abus",
+        "Troubles alimentaires",
+        "Dépression chronique",
+        "Anxiété sociale"
+      ]
     },
     "avertissement_sante": "Les TCC de troisième vague sont des approches psychothérapeutiques validées scientifiquement. Elles doivent être pratiquées par des professionnels formés (psychologues, psychiatres, psychothérapeutes). Ces informations sont éducatives et ne remplacent pas une consultation professionnelle pour le diagnostic et le traitement de troubles psychologiques."
   }

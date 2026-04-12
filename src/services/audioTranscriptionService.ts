@@ -77,9 +77,7 @@ export const audioTranscriptionService = {
 
       // Fallback en cas d'erreur backend
       if (errorMsg.includes('indisponible') || errorMsg.includes('Tauri')) {
-        logger.warn(
-          'Backend Tauri unavailable, trying Web Speech API'
-        );
+        logger.warn('Backend Tauri unavailable, trying Web Speech API');
 
         // Pour Web Speech, on ne peut pas transcrire un fichier
         // Il faut utiliser le microphone

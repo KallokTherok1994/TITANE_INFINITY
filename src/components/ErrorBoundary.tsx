@@ -41,7 +41,8 @@ const safeStringify = (value: unknown): string => {
 const normalizeErrorDisplay = (value: unknown): NormalizedErrorDisplay => {
   if (value instanceof Error) {
     return {
-      message: typeof value.message === 'string' ? value.message : safeStringify(value.message),
+      message:
+        typeof value.message === 'string' ? value.message : safeStringify(value.message),
       stack: typeof value.stack === 'string' ? value.stack : '',
     };
   }

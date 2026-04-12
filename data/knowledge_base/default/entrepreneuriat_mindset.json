@@ -16,7 +16,12 @@
       "pivot_vs_persevere": "Pivoter = changer de stratégie en préservant les insights. Persévérer = continuer si les signaux sont positifs. Types de pivot : zoom-in (une feature devient le produit), zoom-out (le produit devient une feature), segment client, canal, technologie, modèle de revenus.",
       "customer_development": {
         "auteur": "Steve Blank — The Four Steps to the Epiphany (2005)",
-        "étapes": ["Découverte client (problem-solution fit)", "Validation client (product-market fit)", "Création client (scaling demande)", "Construction entreprise (organisation)"],
+        "étapes": [
+          "Découverte client (problem-solution fit)",
+          "Validation client (product-market fit)",
+          "Création client (scaling demande)",
+          "Construction entreprise (organisation)"
+        ],
         "principe": "Sortir du bâtiment (Get Out of the Building). Les hypothèses ne se valident pas derrière un écran mais en parlant aux clients potentiels.",
         "interviews": "Conduire 50-100 entretiens clients avant de coder. Questions ouvertes sur les problèmes, pas sur les solutions."
       },
@@ -30,7 +35,13 @@
         "signe_positif": "Croissance organique, rétention élevée, utilisateurs déçus si le produit disparaissait (>40% 'très déçus' = PMF selon Sean Ellis)",
         "avant_PMF": "Ne pas scale — acquisition payante avant PMF = gaspillage. Focus sur la rétention, pas l'acquisition.",
         "test_maman": "Rob Fitzpatrick — poser des questions sur le passé (comportements réels), pas l'avenir (intentions). Ne jamais demander 'achèteriez-vous ceci ?'",
-        "indicateurs_PMF": ["Taux de rétention J30 > 40%", "NPS > 50", "Croissance organique > 50% des nouveaux utilisateurs", "Temps d'usage croissant", "Demandes de fonctionnalités (signe d'engagement)"]
+        "indicateurs_PMF": [
+          "Taux de rétention J30 > 40%",
+          "NPS > 50",
+          "Croissance organique > 50% des nouveaux utilisateurs",
+          "Temps d'usage croissant",
+          "Demandes de fonctionnalités (signe d'engagement)"
+        ]
       }
     },
     "levee_fonds": {
@@ -44,26 +55,60 @@
       },
       "business_angels": {
         "définition": "Investisseurs individuels, souvent ex-entrepreneurs. Apportent capital (25-200K€) + réseau + expertise sectorielle.",
-        "réseaux_france": ["France Angels", "Femmes Business Angels", "Paris Business Angels", "réseau Entreprendre"],
+        "réseaux_france": [
+          "France Angels",
+          "Femmes Business Angels",
+          "Paris Business Angels",
+          "réseau Entreprendre"
+        ],
         "avantages_fiscaux": "Réduction IR 25% (dispositif Madelin) ou PEA-PME. Attention : conditions de détention 5 ans minimum."
       },
       "venture_capital": {
         "fonctionnement": "Les VC lèvent des fonds auprès de LP (Limited Partners : fonds de pension, family offices). Cycle de vie : 10 ans. Objectif : rendement 3-10x sur le fonds.",
-        "critères_investissement": ["Taille de marché (TAM > 1Md€)", "Équipe exceptionnelle", "Traction / PMF démontré", "Avantage compétitif défendable (moat)", "Potentiel de sortie (IPO/M&A)"],
+        "critères_investissement": [
+          "Taille de marché (TAM > 1Md€)",
+          "Équipe exceptionnelle",
+          "Traction / PMF démontré",
+          "Avantage compétitif défendable (moat)",
+          "Potentiel de sortie (IPO/M&A)"
+        ],
         "power_law": "Les VC savent que 1-2 investissements sur 10 feront le rendement du fonds entier. Ils cherchent des 100x, pas des 3x."
       },
       "crowdfunding": {
-        "types": ["Don/récompense (Kickstarter, Ulule, KissKissBankBank)", "Equity crowdfunding (Tudigo, Sowefund, WiSEED)", "Prêt participatif (October, Credit.fr)"],
+        "types": [
+          "Don/récompense (Kickstarter, Ulule, KissKissBankBank)",
+          "Equity crowdfunding (Tudigo, Sowefund, WiSEED)",
+          "Prêt participatif (October, Credit.fr)"
+        ],
         "avantages": "Validation marché + financement + communauté de premiers clients/ambassadeurs.",
         "limites": "Effort marketing important, commissions plateformes 5-10%, obligations de livraison."
       },
       "pitch_deck": {
-        "structure_classique": ["Problème (douleur réelle et mesurable)", "Solution (votre proposition unique)", "Marché (TAM/SAM/SOM)", "Modèle économique", "Traction (métriques clés)", "Équipe (pourquoi vous ?)", "Concurrence (matrice positionnement)", "Roadmap", "Ask (montant + utilisation)"],
+        "structure_classique": [
+          "Problème (douleur réelle et mesurable)",
+          "Solution (votre proposition unique)",
+          "Marché (TAM/SAM/SOM)",
+          "Modèle économique",
+          "Traction (métriques clés)",
+          "Équipe (pourquoi vous ?)",
+          "Concurrence (matrice positionnement)",
+          "Roadmap",
+          "Ask (montant + utilisation)"
+        ],
         "conseils": "10-15 slides maximum. 3 minutes de pitch, 7 minutes de Q&A. Raconter une histoire, pas réciter des chiffres."
       },
       "term_sheet": {
         "définition": "Document non-contraignant résumant les termes de l'investissement avant la documentation juridique complète.",
-        "clauses_clés": ["Valorisation pré/post-money", "Type d'actions (ordinaires vs préférentielles)", "Liquidation preference (1x non-participating standard)", "Anti-dilution (broad-based weighted average)", "Drag-along / Tag-along", "Board seats", "Vesting fondateurs", "ESOP (pool options salariés)"],
+        "clauses_clés": [
+          "Valorisation pré/post-money",
+          "Type d'actions (ordinaires vs préférentielles)",
+          "Liquidation preference (1x non-participating standard)",
+          "Anti-dilution (broad-based weighted average)",
+          "Drag-along / Tag-along",
+          "Board seats",
+          "Vesting fondateurs",
+          "ESOP (pool options salariés)"
+        ],
         "dilution": "Exemple : si vous cédez 20% en seed, 20% en série A, 15% en série B → il vous reste ~54% avant ESOP. Anticiper la dilution totale sur 3-4 tours."
       }
     },
@@ -71,7 +116,13 @@
       "introduction": "Le modèle économique définit comment l'entreprise crée, délivre et capture de la valeur. Un bon produit avec un mauvais modèle économique échoue.",
       "SaaS": {
         "définition": "Software as a Service — abonnement mensuel/annuel à un logiciel hébergé.",
-        "métriques_clés": ["MRR/ARR (revenus récurrents)", "Churn rate (taux d'attrition)", "Net Revenue Retention (NRR > 120% = excellent)", "CAC payback period", "LTV/CAC ratio"],
+        "métriques_clés": [
+          "MRR/ARR (revenus récurrents)",
+          "Churn rate (taux d'attrition)",
+          "Net Revenue Retention (NRR > 120% = excellent)",
+          "CAC payback period",
+          "LTV/CAC ratio"
+        ],
         "benchmark": "Rule of 40 : taux de croissance + marge = > 40%. Best-in-class SaaS : NRR > 130%, churn < 5%/an.",
         "pricing": "Per-seat, usage-based, tiered, freemium-to-paid. Tendance 2024 : usage-based pricing (Snowflake, Twilio)."
       },
@@ -89,7 +140,12 @@
       "abonnement": {
         "définition": "Paiement récurrent pour un accès continu à un produit ou service.",
         "avantages": "Revenus prévisibles, relation client durable, LTV élevée.",
-        "types": ["Box physique (Birchbox)", "Contenu (Netflix, Substack)", "Logiciel (SaaS)", "Service (Amazon Prime)"]
+        "types": [
+          "Box physique (Birchbox)",
+          "Contenu (Netflix, Substack)",
+          "Logiciel (SaaS)",
+          "Service (Amazon Prime)"
+        ]
       },
       "licence": {
         "définition": "Vente d'un droit d'utilisation d'un logiciel ou d'une propriété intellectuelle.",
@@ -105,17 +161,33 @@
     "ecosysteme_startup": {
       "incubateurs": {
         "définition": "Structures d'accompagnement pour startups en phase d'idéation/création. Hébergement, mentorat, formation.",
-        "exemples_france": ["Station F (plus grand campus mondial, Paris)", "Agoranov (deeptech)", "Paris&Co", "ESSEC Ventures", "HEC Incubateur"],
+        "exemples_france": [
+          "Station F (plus grand campus mondial, Paris)",
+          "Agoranov (deeptech)",
+          "Paris&Co",
+          "ESSEC Ventures",
+          "HEC Incubateur"
+        ],
         "durée": "6-24 mois. Souvent gratuit ou faible coût. Rarement prise de participation."
       },
       "accelerateurs": {
         "définition": "Programmes intensifs (3-6 mois) pour startups post-MVP. Mentorat intensif, démo day, souvent investissement.",
-        "exemples": ["Y Combinator (7% equity, 500K$ SAFE)", "Techstars (6% equity, 120K$)", "eFounders/Hexa (studio)", "The Family (France, fermé 2022)"],
+        "exemples": [
+          "Y Combinator (7% equity, 500K$ SAFE)",
+          "Techstars (6% equity, 120K$)",
+          "eFounders/Hexa (studio)",
+          "The Family (France, fermé 2022)"
+        ],
         "valeur": "Réseau alumni, crédibilité, accès investisseurs. Le réseau YC seul vaut plus que l'investissement."
       },
       "french_tech": {
         "définition": "Label et écosystème porté par la Mission French Tech (gouvernement français).",
-        "dispositifs": ["French Tech Visa (talents internationaux)", "French Tech 120 (hypercroissance)", "Bourse French Tech (amorçage)", "French Tech communautés (30+ capitales dans le monde)"],
+        "dispositifs": [
+          "French Tech Visa (talents internationaux)",
+          "French Tech 120 (hypercroissance)",
+          "Bourse French Tech (amorçage)",
+          "French Tech communautés (30+ capitales dans le monde)"
+        ],
         "BPI_France": "Banque publique d'investissement. Prêts d'honneur, avances remboursables, co-investissement, garanties bancaires. Partenaire incontournable."
       },
       "station_F": {
@@ -125,14 +197,27 @@
       },
       "ecosysteme_mondial": {
         "silicon_valley": "Épicentre historique. Stanford + VC Sand Hill Road + culture du risque. Avantage : concentration de talents et de capital.",
-        "autres_hubs": ["Tel Aviv (cybersécurité, deeptech)", "Londres (fintech)", "Berlin (B2C, marketplaces)", "Bangalore (IT services, SaaS)", "Shenzhen (hardware)", "São Paulo (Amérique Latine)", "Lagos/Nairobi (Afrique)"],
+        "autres_hubs": [
+          "Tel Aviv (cybersécurité, deeptech)",
+          "Londres (fintech)",
+          "Berlin (B2C, marketplaces)",
+          "Bangalore (IT services, SaaS)",
+          "Shenzhen (hardware)",
+          "São Paulo (Amérique Latine)",
+          "Lagos/Nairobi (Afrique)"
+        ],
         "tendance": "Décentralisation post-COVID. Remote-first permet de construire depuis n'importe où. Le capital suit le talent, pas la géographie."
       }
     },
     "gestion_equipe_fondateur": {
       "cofondateur": {
         "importance": "70% des startups financées par YC ont 2+ cofondateurs. Complémentarité technique/business est idéale.",
-        "erreurs_courantes": ["Choisir un ami plutôt qu'un complémentaire", "Ne pas discuter l'equity split dès le jour 1", "Pas de pacte d'associés", "Rôles mal définis"],
+        "erreurs_courantes": [
+          "Choisir un ami plutôt qu'un complémentaire",
+          "Ne pas discuter l'equity split dès le jour 1",
+          "Pas de pacte d'associés",
+          "Rôles mal définis"
+        ],
         "pacte_associes": "Document juridique définissant : rôles, equity, vesting, clause de départ (good/bad leaver), décisions majeures, non-concurrence."
       },
       "equity_split": {
@@ -142,12 +227,21 @@
       },
       "recrutement_early_stage": {
         "profil_ideal": "Généralistes autonomes, tolérants à l'ambiguïté, motivés par la mission. Les spécialistes viendront au scaling.",
-        "erreurs": ["Recruter trop tôt (avant PMF)", "Recruter des profils corporate pour une startup", "Sur-payer pour compenser le risque (préférer equity)"],
+        "erreurs": [
+          "Recruter trop tôt (avant PMF)",
+          "Recruter des profils corporate pour une startup",
+          "Sur-payer pour compenser le risque (préférer equity)"
+        ],
         "culture": "La culture se définit par les 10 premiers recrutements. Après, elle se perpétue d'elle-même — en bien ou en mal."
       },
       "culture_entreprise": {
         "définition": "Ensemble des valeurs, comportements et normes partagées. Netflix Culture Deck : 'Culture is what you do, not what you say.'",
-        "éléments_clés": ["Transparence radicale (Buffer, GitLab)", "Autonomie + accountability", "Feedback continu", "Tolérance à l'erreur, intolérance à l'incompétence"],
+        "éléments_clés": [
+          "Transparence radicale (Buffer, GitLab)",
+          "Autonomie + accountability",
+          "Feedback continu",
+          "Tolérance à l'erreur, intolérance à l'incompétence"
+        ],
         "remote": "Culture remote-first : documentation écrite, communication asynchrone, rituels d'équipe intentionnels."
       },
       "burn_rate": {
@@ -213,7 +307,11 @@
       },
       "internationalisation": {
         "stratégie": "Commencer par un marché similaire (France → Belgique/Suisse) avant les marchés culturellement différents.",
-        "erreurs": ["Traduire sans localiser", "Ignorer les différences réglementaires", "Envoyer des expatriés au lieu de recruter localement"],
+        "erreurs": [
+          "Traduire sans localiser",
+          "Ignorer les différences réglementaires",
+          "Envoyer des expatriés au lieu de recruter localement"
+        ],
         "go_to_market": "Tester avec un country manager local + budget limité avant de s'engager pleinement."
       },
       "automatisation": {
@@ -222,33 +320,64 @@
       },
       "recrutement_massif": {
         "défis": "Maintenir la culture en doublant l'effectif chaque année. Structurer les processus RH. Créer des niveaux de management.",
-        "conseils": ["Documenter la culture et les processus AVANT de scaler", "Recruter des managers expérimentés (pas uniquement promouvoir les premiers employés)", "Créer un onboarding structuré"]
+        "conseils": [
+          "Documenter la culture et les processus AVANT de scaler",
+          "Recruter des managers expérimentés (pas uniquement promouvoir les premiers employés)",
+          "Créer un onboarding structuré"
+        ]
       },
       "product_led_growth": {
         "définition": "Le produit lui-même est le principal vecteur d'acquisition, de conversion et d'expansion. Le produit remplace le commercial.",
         "exemples": "Slack, Notion, Figma, Calendly, Loom, Zoom. L'utilisateur découvre → adopte → invite ses collègues → l'entreprise paie.",
-        "mécanismes": ["Viralité native (invitations)", "Freemium généreux", "Time-to-value court", "Self-serve onboarding"]
+        "mécanismes": [
+          "Viralité native (invitations)",
+          "Freemium généreux",
+          "Time-to-value court",
+          "Self-serve onboarding"
+        ]
       }
     },
     "echec_resilience": {
       "statistiques": {
         "taux_echec": "90% des startups échouent. 70% échouent entre la 2e et 5e année. 10% échouent la première année.",
-        "causes_principales": ["Pas de besoin marché (42%)", "Plus de cash (29%)", "Mauvaise équipe (23%)", "Concurrence (19%)", "Pricing/coût (18%)"],
+        "causes_principales": [
+          "Pas de besoin marché (42%)",
+          "Plus de cash (29%)",
+          "Mauvaise équipe (23%)",
+          "Concurrence (19%)",
+          "Pricing/coût (18%)"
+        ],
         "source": "CB Insights — analyse de 101 post-mortems de startups."
       },
       "rebondir": {
         "principe": "L'échec en startup est normalisé dans l'écosystème. Les investisseurs préfèrent souvent un entrepreneur qui a échoué à un primo-entrepreneur.",
-        "stratégie": ["Faire le deuil (3-6 mois)", "Analyser objectivement les causes (post-mortem)", "Documenter les leçons", "Reconstruire le réseau", "Relancer avec les insights acquis"],
+        "stratégie": [
+          "Faire le deuil (3-6 mois)",
+          "Analyser objectivement les causes (post-mortem)",
+          "Documenter les leçons",
+          "Reconstruire le réseau",
+          "Relancer avec les insights acquis"
+        ],
         "exemples": "Steve Jobs (viré d'Apple → Pixar → retour Apple), Reid Hoffman (SocialNet → LinkedIn), Slack (né de l'échec du jeu Glitch)."
       },
       "post_mortem": {
         "définition": "Analyse structurée après l'arrêt d'un projet ou d'une startup. Exercice de lucidité, pas de culpabilité.",
-        "questions_clés": ["Quand avons-nous su que ça ne marchait pas ?", "Qu'aurions-nous fait différemment avec les mêmes informations ?", "Quels signaux avons-nous ignorés ?", "Quelles compétences nous manquaient ?"],
+        "questions_clés": [
+          "Quand avons-nous su que ça ne marchait pas ?",
+          "Qu'aurions-nous fait différemment avec les mêmes informations ?",
+          "Quels signaux avons-nous ignorés ?",
+          "Quelles compétences nous manquaient ?"
+        ],
         "partage": "Publier son post-mortem (blog, LinkedIn) = acte de générosité pour l'écosystème + crédibilité personnelle."
       },
       "pivot_strategique": {
         "définition": "Changement fondamental de direction basé sur les apprentissages. Pas un échec, mais une évolution informée.",
-        "exemples_celebres": ["YouTube : site de rencontre vidéo → plateforme vidéo", "Instagram : Burbn (réseau social géolocalisé) → partage de photos", "Twitter : Odeo (podcasts) → microblogging", "Shopify : boutique de snowboard en ligne → plateforme e-commerce"],
+        "exemples_celebres": [
+          "YouTube : site de rencontre vidéo → plateforme vidéo",
+          "Instagram : Burbn (réseau social géolocalisé) → partage de photos",
+          "Twitter : Odeo (podcasts) → microblogging",
+          "Shopify : boutique de snowboard en ligne → plateforme e-commerce"
+        ],
         "conditions": "Pivoter quand les métriques stagnent malgré les itérations. Garder ce qui fonctionne (équipe, technologie, audience), changer ce qui ne fonctionne pas (marché, produit, modèle)."
       },
       "lecons_transversales": {

@@ -165,7 +165,10 @@ function readFreshTwinsFusion(): ChatContextEnvelope['twinsContext'] | null {
 
   return {
     globalScore: toFiniteNumber(raw.globalScore, 0),
-    trend: typeof raw.trend === 'string' && raw.trend.trim().length > 0 ? raw.trend : 'unknown',
+    trend:
+      typeof raw.trend === 'string' && raw.trend.trim().length > 0
+        ? raw.trend
+        : 'unknown',
     currentPhase: raw.currentPhase ?? null,
     syncScore: toFiniteNumber(raw.syncScore, 0),
     ownerThemes,

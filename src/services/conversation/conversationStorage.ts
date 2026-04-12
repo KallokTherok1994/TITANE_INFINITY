@@ -172,7 +172,7 @@ export class ConversationStorageService {
       .map(conv => {
         // Factor 1: Recency — exponential decay with 7-day half-life
         const ageMs = now - conv.updated_at;
-        const recencyScore = Math.exp(-0.693 * ageMs / (7 * ONE_DAY));
+        const recencyScore = Math.exp((-0.693 * ageMs) / (7 * ONE_DAY));
 
         // Factor 2: Message depth — logarithmic scaling, rich conversations rank higher
         // ln(1 + messages/5) / ln(1 + 100/5) → normalizes to ~0-1 for 0-100 messages
@@ -195,8 +195,8 @@ export class ConversationStorageService {
         const engagement =
           recencyScore * 0.35 +
           depthScore * 0.25 +
-          activityScore * 0.20 +
-          statusScore * 0.20;
+          activityScore * 0.2 +
+          statusScore * 0.2;
 
         return { conv, engagement };
       })

@@ -50,7 +50,13 @@
         "aiguilles_semi_permanentes": "Micro-aiguilles (ASP) laissées en place 1-2 semaines.",
         "frequences_nogier": "7 fréquences thérapeutiques de Nogier appliquées par laser ou électrostimulation."
       },
-      "indications_specifiques": ["Addictions (tabac, alcool — point Shen Men)", "Douleur chronique", "Anxiété et insomnie (point zéro, Shen Men)", "Gestion du poids (point faim, estomac)", "Troubles hormonaux"]
+      "indications_specifiques": [
+        "Addictions (tabac, alcool — point Shen Men)",
+        "Douleur chronique",
+        "Anxiété et insomnie (point zéro, Shen Men)",
+        "Gestion du poids (point faim, estomac)",
+        "Troubles hormonaux"
+      ]
     },
     "dien_chan_reflexologie_faciale": {
       "createur": "Professeur Bùi Quốc Châu (Vietnam, 1980)",
@@ -64,7 +70,12 @@
         "yeux": "Foie (MTC: les yeux sont la fenêtre du Foie)",
         "levres": "Rate/Estomac (MTC: la bouche est l'ouverture de la Rate)"
       },
-      "outils": ["Rouleau multi-pointes (stimulation large)", "Détecteur (pointe fine pour les points précis)", "Marteau à 7 pointes (martelage doux)", "Moxa (chaleur sur les points)"],
+      "outils": [
+        "Rouleau multi-pointes (stimulation large)",
+        "Détecteur (pointe fine pour les points précis)",
+        "Marteau à 7 pointes (martelage doux)",
+        "Moxa (chaleur sur les points)"
+      ],
       "avantages": "Auto-pratique facile, résultats rapides (5-10 min), non invasif, combine MTC et réflexologie moderne."
     },
     "mecanismes_scientifiques": {

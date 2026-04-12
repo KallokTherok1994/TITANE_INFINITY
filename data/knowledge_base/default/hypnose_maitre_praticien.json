@@ -9,7 +9,11 @@
       "catalogue_phenomenes": {
         "catalepsie": {
           "description": "Rigidité musculaire involontaire maintenue sans effort conscient",
-          "types": ["Catalepsie du bras", "Catalepsie de la paupière", "Catalepsie complète"],
+          "types": [
+            "Catalepsie du bras",
+            "Catalepsie de la paupière",
+            "Catalepsie complète"
+          ],
           "indicateur_transe": "Transe légère à moyenne"
         },
         "levitation": {
@@ -20,14 +24,31 @@
         "analgesie_anesthesie": {
           "analgesie": "Diminution significative de la perception de la douleur",
           "anesthesie": "Suppression complète de la sensation dans une zone spécifique",
-          "techniques": ["Gant anesthésique", "Dissociation corps-esprit", "Substitution sensorielle", "Déplacement de la douleur", "Amnésie de la douleur"],
-          "applications": ["Chirurgie dentaire", "Accouchement", "Douleurs chroniques", "Brûlures", "Soins médicaux invasifs"],
+          "techniques": [
+            "Gant anesthésique",
+            "Dissociation corps-esprit",
+            "Substitution sensorielle",
+            "Déplacement de la douleur",
+            "Amnésie de la douleur"
+          ],
+          "applications": [
+            "Chirurgie dentaire",
+            "Accouchement",
+            "Douleurs chroniques",
+            "Brûlures",
+            "Soins médicaux invasifs"
+          ],
           "niveau_transe": "Transe moyenne à profonde (état somnambulique)"
         },
         "hallucinations": {
           "positive": "Percevoir quelque chose qui n'est pas physiquement présent (voir, entendre, sentir, toucher, goûter)",
           "negative": "Ne pas percevoir quelque chose qui est physiquement présent",
-          "applications": ["Désensibilisation phobique", "Rehearsal mental", "Exploration d'états de ressources", "Projection dans le futur"],
+          "applications": [
+            "Désensibilisation phobique",
+            "Rehearsal mental",
+            "Exploration d'états de ressources",
+            "Projection dans le futur"
+          ],
           "niveau_transe": "Transe très profonde (état somnambulique profond)"
         },
         "amnesie": {
@@ -88,8 +109,17 @@
           "description": "Les nombres disparaissent de la conscience — indicateur de transe somnambulique"
         }
       ],
-      "avantages": ["Rapidité (2-4 min)", "Profondeur fiable", "Testable à chaque étape", "Adaptable à la plupart des sujets"],
-      "variantes_avancees": ["Elman modifié pour enfants", "Elman rapide (30 secondes)", "Elman avec dissociation intégrée"]
+      "avantages": [
+        "Rapidité (2-4 min)",
+        "Profondeur fiable",
+        "Testable à chaque étape",
+        "Adaptable à la plupart des sujets"
+      ],
+      "variantes_avancees": [
+        "Elman modifié pour enfants",
+        "Elman rapide (30 secondes)",
+        "Elman avec dissociation intégrée"
+      ]
     },
     "hypnose_conversationnelle": {
       "definition": "Capacité de générer des états modifiés de conscience pendant une conversation apparemment normale, sans formalisme de transe traditionnelle",
@@ -131,7 +161,14 @@
         "sommeil": "Relaxation progressive + suggestions de sommeil profond + distorsion temporelle",
         "gestion_stress": "Lieu de sécurité + respiration autonome + dissociation du stress"
       },
-      "structure_seance": ["Intention claire", "Auto-induction (Elman simplifié ou ancre)", "Approfondissement", "Travail thérapeutique / suggestions", "Émergence avec ancre post-hypnotique", "Retour à l'état ordinaire"]
+      "structure_seance": [
+        "Intention claire",
+        "Auto-induction (Elman simplifié ou ancre)",
+        "Approfondissement",
+        "Travail thérapeutique / suggestions",
+        "Émergence avec ancre post-hypnotique",
+        "Retour à l'état ordinaire"
+      ]
     },
     "neurosciences_hypnose": {
       "bases_neurophysiologiques": {

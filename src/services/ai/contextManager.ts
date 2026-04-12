@@ -119,13 +119,19 @@ function estimateTokens(text: string): number {
   for (let i = 0; i < text.length; i++) {
     const code = text.charCodeAt(i);
     // CJK Unified Ideographs, Hiragana, Katakana, Hangul
-    if ((code >= 0x4E00 && code <= 0x9FFF) || // CJK Unified
-        (code >= 0x3040 && code <= 0x30FF) || // Hiragana + Katakana
-        (code >= 0xAC00 && code <= 0xD7AF)) { // Hangul
+    if (
+      (code >= 0x4e00 && code <= 0x9fff) || // CJK Unified
+      (code >= 0x3040 && code <= 0x30ff) || // Hiragana + Katakana
+      (code >= 0xac00 && code <= 0xd7af)
+    ) {
+      // Hangul
       cjkCount++;
-    } else if ((code >= 0x0590 && code <= 0x05FF) || // Hebrew
-               (code >= 0x0600 && code <= 0x06FF) || // Arabic
-               (code >= 0x0750 && code <= 0x077F)) { // Arabic Supplement
+    } else if (
+      (code >= 0x0590 && code <= 0x05ff) || // Hebrew
+      (code >= 0x0600 && code <= 0x06ff) || // Arabic
+      (code >= 0x0750 && code <= 0x077f)
+    ) {
+      // Arabic Supplement
       rtlCount++;
     } else {
       latinCount++;
@@ -254,9 +260,15 @@ function extractKeySummary(text: string, maxChars: number): string {
     // Questions are high priority
     if (/[?？]/.test(sentence)) score += 3;
     // Decision/action language
-    if (/\b(décid|choisi|conclu|important|résultat|donc|conclusion|action)\b/i.test(sentence)) score += 2;
+    if (
+      /\b(décid|choisi|conclu|important|résultat|donc|conclusion|action)\b/i.test(
+        sentence
+      )
+    )
+      score += 2;
     // Technical content
-    if (/\b(API|code|config|error|bug|feature|service|module)\b/i.test(sentence)) score += 1;
+    if (/\b(API|code|config|error|bug|feature|service|module)\b/i.test(sentence))
+      score += 1;
     // First and last sentences often most meaningful
     if (idx === 0) score += 1;
     if (idx === sentences.length - 1) score += 1;

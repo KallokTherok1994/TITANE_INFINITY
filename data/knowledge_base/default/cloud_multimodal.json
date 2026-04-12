@@ -113,15 +113,34 @@
     "path": "src-tauri/src/multimodal/vision/",
     "reconnaissance_images": {
       "description": "Classification et identification d'images par réseaux convolutifs et transformers visuels",
-      "modeles_supportes": ["CLIP ViT-L/14", "GPT-4 Vision", "Gemini 1.5 Pro Vision", "LLaVA local"],
+      "modeles_supportes": [
+        "CLIP ViT-L/14",
+        "GPT-4 Vision",
+        "Gemini 1.5 Pro Vision",
+        "LLaVA local"
+      ],
       "formats_entree": ["JPEG", "PNG", "WebP", "TIFF", "BMP", "HEIC", "RAW"],
       "resolution_max": "4096x4096 pixels (redimensionnement automatique au-delà)",
       "batch_processing": "Traitement par lots jusqu'à 50 images simultanément"
     },
     "ocr": {
       "description": "Reconnaissance optique de caractères — extraction de texte depuis images et documents scannés",
-      "moteurs": ["Tesseract 5.x (local, hors-ligne)", "Google Cloud Vision OCR", "Azure Computer Vision OCR"],
-      "langues_supportees": ["français", "anglais", "espagnol", "allemand", "italien", "portugais", "arabe", "chinois", "japonais"],
+      "moteurs": [
+        "Tesseract 5.x (local, hors-ligne)",
+        "Google Cloud Vision OCR",
+        "Azure Computer Vision OCR"
+      ],
+      "langues_supportees": [
+        "français",
+        "anglais",
+        "espagnol",
+        "allemand",
+        "italien",
+        "portugais",
+        "arabe",
+        "chinois",
+        "japonais"
+      ],
       "modes": {
         "texte_simple": "Extraction de texte brut ligne par ligne",
         "structure_preservee": "Conservation de la mise en page et formatage",
@@ -140,7 +159,11 @@
     },
     "object_detection": {
       "description": "Détection et localisation d'objets dans une image avec boîtes englobantes",
-      "modeles": ["YOLOv8 (local, temps réel)", "DETR (transformer-based)", "Cloud Vision API"],
+      "modeles": [
+        "YOLOv8 (local, temps réel)",
+        "DETR (transformer-based)",
+        "Cloud Vision API"
+      ],
       "categories": "80+ catégories COCO standard + catégories personnalisées entraînables",
       "seuil_confiance": "Configurable de 0.1 à 0.99 — défaut 0.5",
       "sortie": "Coordonnées boîtes englobantes + étiquettes + scores de confiance"
@@ -158,7 +181,14 @@
     },
     "document_parsing": {
       "description": "Parsing intelligent de documents visuels — extraction structurée depuis photos de documents",
-      "types_documents": ["cartes de visite", "reçus", "factures", "menus", "panneaux", "étiquettes"],
+      "types_documents": [
+        "cartes de visite",
+        "reçus",
+        "factures",
+        "menus",
+        "panneaux",
+        "étiquettes"
+      ],
       "extraction_structuree": "Champs clé-valeur extraits automatiquement selon le type de document",
       "confiance": "Score de confiance par champ extrait pour validation humaine"
     },
@@ -249,7 +279,11 @@
     "path": "src-tauri/src/multimodal/video/",
     "video_analysis": {
       "description": "Analyse sémantique de contenu vidéo — comprendre ce qui se passe dans une vidéo",
-      "modeles": ["Gemini 1.5 Pro (vidéo native)", "GPT-4 Vision (frame sampling)", "VideoMAE local"],
+      "modeles": [
+        "Gemini 1.5 Pro (vidéo native)",
+        "GPT-4 Vision (frame sampling)",
+        "VideoMAE local"
+      ],
       "capacites": [
         "Description textuelle du contenu vidéo",
         "Détection d'événements et changements de scène",
@@ -309,7 +343,11 @@
         "Support PDF chiffrés (avec mot de passe fourni)",
         "Détection de PDF scannés vs natifs avec bascule OCR automatique"
       ],
-      "moteurs": ["pdf-rs (Rust natif, local)", "Apache Tika (extraction avancée)", "Azure Document Intelligence"],
+      "moteurs": [
+        "pdf-rs (Rust natif, local)",
+        "Apache Tika (extraction avancée)",
+        "Azure Document Intelligence"
+      ],
       "performance": "Traitement de 100 pages en moins de 5 secondes (texte natif)"
     },
     "table_extraction": {
@@ -337,8 +375,16 @@
     "document_classification": {
       "description": "Classification automatique de documents — tri et catégorisation intelligente",
       "categories_predefinies": [
-        "Facture", "Contrat", "Correspondance", "Rapport", "CV",
-        "Formulaire", "Article", "Présentation", "Manuel technique", "Autre"
+        "Facture",
+        "Contrat",
+        "Correspondance",
+        "Rapport",
+        "CV",
+        "Formulaire",
+        "Article",
+        "Présentation",
+        "Manuel technique",
+        "Autre"
       ],
       "classification_personnalisee": "Ajout de catégories custom avec minimum 10 exemples d'entraînement",
       "confiance": "Score de confiance 0-1 avec seuil configurable pour validation humaine",
@@ -428,13 +474,20 @@
       },
       "websocket": {
         "description": "WebSocket — connexions persistantes pour données temps réel",
-        "usages": ["Sync temps réel des conversations", "Notifications push", "Streaming de réponses IA"],
+        "usages": [
+          "Sync temps réel des conversations",
+          "Notifications push",
+          "Streaming de réponses IA"
+        ],
         "reconnexion": "Backoff exponentiel avec jitter — délai initial 1s, max 60s",
         "heartbeat": "Ping toutes les 30 secondes pour maintenir la connexion"
       },
       "grpc": {
         "description": "gRPC — communication haute performance pour services internes",
-        "usages": ["Communication inter-services backend", "Streaming bidirectionnel de données"],
+        "usages": [
+          "Communication inter-services backend",
+          "Streaming bidirectionnel de données"
+        ],
         "serialisation": "Protocol Buffers v3 pour sérialisation efficace",
         "compression": "gzip activé par défaut pour réduire la bande passante"
       }

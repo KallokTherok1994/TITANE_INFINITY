@@ -24,9 +24,9 @@ export interface ProviderStatus {
   lastChecked: number | null;
   error?: string;
   // v30.3.0: Provider reliability metrics for graduated fitness scoring
-  successCount: number;     // Total successful requests
-  failureCount: number;     // Total failed requests
-  lastFailure: number | null;  // Timestamp of last failure
+  successCount: number; // Total successful requests
+  failureCount: number; // Total failed requests
+  lastFailure: number | null; // Timestamp of last failure
   consecutiveFailures: number; // Consecutive failures without success
 }
 
@@ -50,37 +50,55 @@ const DEFAULT_PROVIDERS: Record<
     id: 'local',
     name: 'TITANE Local',
     isActive: true,
-    successCount: 0, failureCount: 0, lastFailure: null, consecutiveFailures: 0,
+    successCount: 0,
+    failureCount: 0,
+    lastFailure: null,
+    consecutiveFailures: 0,
   },
   tauri: {
     id: 'tauri',
     name: 'Tauri Backend',
     isActive: true,
-    successCount: 0, failureCount: 0, lastFailure: null, consecutiveFailures: 0,
+    successCount: 0,
+    failureCount: 0,
+    lastFailure: null,
+    consecutiveFailures: 0,
   },
   ollama: {
     id: 'ollama',
     name: 'Ollama (Local LLM)',
     isActive: true,
-    successCount: 0, failureCount: 0, lastFailure: null, consecutiveFailures: 0,
+    successCount: 0,
+    failureCount: 0,
+    lastFailure: null,
+    consecutiveFailures: 0,
   },
   gemini: {
     id: 'gemini',
     name: 'Google Gemini',
     isActive: false,
-    successCount: 0, failureCount: 0, lastFailure: null, consecutiveFailures: 0,
+    successCount: 0,
+    failureCount: 0,
+    lastFailure: null,
+    consecutiveFailures: 0,
   },
   openai: {
     id: 'openai',
     name: 'OpenAI GPT-4',
     isActive: false,
-    successCount: 0, failureCount: 0, lastFailure: null, consecutiveFailures: 0,
+    successCount: 0,
+    failureCount: 0,
+    lastFailure: null,
+    consecutiveFailures: 0,
   },
   claude: {
     id: 'claude',
     name: 'Anthropic Claude',
     isActive: false,
-    successCount: 0, failureCount: 0, lastFailure: null, consecutiveFailures: 0,
+    successCount: 0,
+    failureCount: 0,
+    lastFailure: null,
+    consecutiveFailures: 0,
   },
 };
 
@@ -368,9 +386,10 @@ export class GovernanceConnector {
 
       // Factor 1: Success rate (0-1) — with Laplace smoothing for new providers
       const totalRequests = provider.successCount + provider.failureCount;
-      const successRate = totalRequests > 0
-        ? (provider.successCount + 1) / (totalRequests + 2) // Laplace smoothing
-        : 0.5; // New provider gets neutral score
+      const successRate =
+        totalRequests > 0
+          ? (provider.successCount + 1) / (totalRequests + 2) // Laplace smoothing
+          : 0.5; // New provider gets neutral score
 
       // Factor 2: Availability — exponential recovery from unhealthy state
       let availabilityScore: number;
@@ -380,7 +399,7 @@ export class GovernanceConnector {
         // Exponential recovery: 50% at 30s, 75% at 60s, 90% at 120s, 95% at 180s
         const timeSinceFailure = Date.now() - provider.lastFailure;
         const recoveryHalfLife = 30000; // 30 seconds
-        availabilityScore = 1 - Math.exp(-0.693 * timeSinceFailure / recoveryHalfLife);
+        availabilityScore = 1 - Math.exp((-0.693 * timeSinceFailure) / recoveryHalfLife);
         // Penalty for consecutive failures: each consecutive failure doubles the recovery time
         const consecutivePenalty = Math.pow(0.8, provider.consecutiveFailures);
         availabilityScore *= consecutivePenalty;
@@ -394,7 +413,7 @@ export class GovernanceConnector {
         : 1.0;
 
       // Weighted fitness score
-      const fitness = successRate * 0.40 + availabilityScore * 0.30 + recencyScore * 0.30;
+      const fitness = successRate * 0.4 + availabilityScore * 0.3 + recencyScore * 0.3;
 
       scored.push({ id, fitness });
     }

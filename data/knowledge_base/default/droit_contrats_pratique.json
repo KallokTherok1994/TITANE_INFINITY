@@ -56,8 +56,23 @@
       "introduction": "Le droit numérique encadre les activités en ligne, la protection des données et les services numériques. Cadre en constante évolution (RGPD, DSA, DMA, AI Act).",
       "RGPD": {
         "principes": "Licéité, loyauté, transparence. Limitation finalités. Minimisation données. Exactitude. Limitation conservation. Intégrité/confidentialité. Responsabilité (accountability).",
-        "bases_legales": ["Consentement (libre, spécifique, éclairé, univoque)", "Exécution d'un contrat", "Obligation légale", "Intérêts légitimes (balance des intérêts)", "Mission d'intérêt public", "Intérêts vitaux"],
-        "droits_personnes": ["Droit d'accès (art. 15)", "Droit de rectification (art. 16)", "Droit à l'effacement / droit à l'oubli (art. 17)", "Droit à la portabilité (art. 20)", "Droit d'opposition (art. 21)", "Droit à la limitation du traitement (art. 18)", "Droit de ne pas faire l'objet d'une décision automatisée (art. 22)"],
+        "bases_legales": [
+          "Consentement (libre, spécifique, éclairé, univoque)",
+          "Exécution d'un contrat",
+          "Obligation légale",
+          "Intérêts légitimes (balance des intérêts)",
+          "Mission d'intérêt public",
+          "Intérêts vitaux"
+        ],
+        "droits_personnes": [
+          "Droit d'accès (art. 15)",
+          "Droit de rectification (art. 16)",
+          "Droit à l'effacement / droit à l'oubli (art. 17)",
+          "Droit à la portabilité (art. 20)",
+          "Droit d'opposition (art. 21)",
+          "Droit à la limitation du traitement (art. 18)",
+          "Droit de ne pas faire l'objet d'une décision automatisée (art. 22)"
+        ],
         "sanctions": "CNIL peut aller jusqu'à 4% CA mondial ou 20M€. Amendes Amazon 746M€ (2021), Meta 1.2Md€ (2023). Sanctions graduées : mise en demeure, avertissement, amende.",
         "DPO": "Délégué à la Protection des Données — obligatoire pour : autorités publiques, traitement à grande échelle de données sensibles, suivi régulier et systématique de personnes.",
         "registre_traitements": "Obligatoire pour entreprises > 250 salariés et pour tout traitement non occasionnel. Recense : finalité, catégories de données, destinataires, durée, mesures de sécurité."
@@ -112,7 +127,12 @@
       },
       "contrefacon": {
         "définition": "Atteinte aux droits de propriété intellectuelle. Action civile (dommages-intérêts) et/ou pénale (3 ans + 300K€).",
-        "procédures": ["Saisie-contrefaçon (preuve)", "Référé interdiction (urgence)", "Action au fond (indemnisation)", "Douanes (retenue de marchandises)"],
+        "procédures": [
+          "Saisie-contrefaçon (preuve)",
+          "Référé interdiction (urgence)",
+          "Action au fond (indemnisation)",
+          "Douanes (retenue de marchandises)"
+        ],
         "dommages": "Préjudice commercial (manque à gagner), préjudice moral, bénéfices réalisés par le contrefacteur. Dommages punitifs non admis en France."
       },
       "licences_open_source": {
@@ -170,13 +190,24 @@
       "retractation": {
         "droit": "14 jours calendaires à compter de la réception du bien ou de la conclusion du contrat de service. Sans motif, sans pénalité.",
         "application": "Vente à distance (internet, téléphone, catalogue). Ne s'applique pas en magasin physique.",
-        "exceptions": ["Biens personnalisés", "Denrées périssables", "Contenus numériques commencés avec accord", "Prestations de services achevées", "Presse, paris, événements sportifs/culturels"],
+        "exceptions": [
+          "Biens personnalisés",
+          "Denrées périssables",
+          "Contenus numériques commencés avec accord",
+          "Prestations de services achevées",
+          "Presse, paris, événements sportifs/culturels"
+        ],
         "remboursement": "14 jours maximum après notification. Frais de retour à la charge du consommateur sauf si le professionnel les prend en charge."
       },
       "pratiques_commerciales_deloyales": {
         "trompeuses": "Fausses allégations, omissions substantielles, présentation créant confusion. Sanction : 2 ans + 300K€ (personne physique) ou 10% CA (personne morale).",
         "agressives": "Harcèlement, contrainte, influence indue. Exploitation de la vulnérabilité (âge, maladie, infirmité).",
-        "exemples": ["Faux avis consommateurs", "Prix de référence fictif", "Dark patterns (interfaces trompeuses)", "Green washing (allégations environnementales infondées)"]
+        "exemples": [
+          "Faux avis consommateurs",
+          "Prix de référence fictif",
+          "Dark patterns (interfaces trompeuses)",
+          "Green washing (allégations environnementales infondées)"
+        ]
       },
       "recours_consommateur": {
         "médiateur": "Médiation de la consommation gratuite et obligatoire (professionnel doit désigner un médiateur et l'indiquer sur ses CGV/site).",
@@ -194,13 +225,25 @@
       },
       "CDI": {
         "définition": "Contrat à Durée Indéterminée. Contrat de droit commun. Pas de durée maximale.",
-        "rupture": ["Démission (initiative salarié)", "Licenciement (initiative employeur — cause réelle et sérieuse requise)", "Rupture conventionnelle (accord mutuel, homologation DIRECCTE)", "Prise d'acte (salarié — faits graves reprochés à l'employeur)"],
+        "rupture": [
+          "Démission (initiative salarié)",
+          "Licenciement (initiative employeur — cause réelle et sérieuse requise)",
+          "Rupture conventionnelle (accord mutuel, homologation DIRECCTE)",
+          "Prise d'acte (salarié — faits graves reprochés à l'employeur)"
+        ],
         "période_essai": "CDI : 2 mois (ouvriers/employés), 3 mois (agents de maîtrise), 4 mois (cadres). Renouvelable une fois si prévu."
       },
       "freelance": {
         "contrat_prestation": "Contrat de prestation de services entre un indépendant et un client. Obligation de moyens ou de résultat selon la nature.",
         "risque_requalification": "Si lien de subordination prouvé (horaires imposés, lieu de travail imposé, exclusivité, intégration dans l'organisation) = requalification en CDI + cotisations sociales rétroactives.",
-        "clauses_essentielles": ["Périmètre de la mission", "Livrables et délais", "Rémunération et modalités", "Propriété intellectuelle", "Confidentialité", "Absence de lien de subordination"]
+        "clauses_essentielles": [
+          "Périmètre de la mission",
+          "Livrables et délais",
+          "Rémunération et modalités",
+          "Propriété intellectuelle",
+          "Confidentialité",
+          "Absence de lien de subordination"
+        ]
       },
       "NDA": {
         "définition": "Non-Disclosure Agreement / Accord de confidentialité. Protège les informations échangées lors de négociations ou collaborations.",
@@ -215,7 +258,12 @@
       },
       "mandat": {
         "définition": "Contrat par lequel une personne (mandant) donne pouvoir à une autre (mandataire) d'agir en son nom.",
-        "types": ["Mandat de vente (immobilier)", "Mandat de gestion (patrimoine)", "Procuration (actes juridiques)", "Mandat ad litem (avocat)"],
+        "types": [
+          "Mandat de vente (immobilier)",
+          "Mandat de gestion (patrimoine)",
+          "Procuration (actes juridiques)",
+          "Mandat ad litem (avocat)"
+        ],
         "obligations": "Le mandataire doit agir dans l'intérêt du mandant, rendre compte, ne pas dépasser les pouvoirs conférés."
       },
       "franchise": {
@@ -234,7 +282,14 @@
       },
       "penale": {
         "principe": "Infraction à une loi pénale. Sanctions : amendes, emprisonnement, interdictions. Preuve au-delà du doute raisonnable.",
-        "infractions_entreprise": ["Abus de biens sociaux", "Travail dissimulé", "Fraude fiscale", "Harcèlement", "Mise en danger d'autrui", "Atteinte aux données personnelles"],
+        "infractions_entreprise": [
+          "Abus de biens sociaux",
+          "Travail dissimulé",
+          "Fraude fiscale",
+          "Harcèlement",
+          "Mise en danger d'autrui",
+          "Atteinte aux données personnelles"
+        ],
         "personne_morale": "Responsabilité pénale des personnes morales (art. 121-2 CP). Amendes x5 par rapport aux personnes physiques."
       },
       "professionnelle": {
@@ -250,7 +305,12 @@
       },
       "clauses_limitatives": {
         "principe": "Les parties peuvent limiter contractuellement leur responsabilité (plafond d'indemnisation). Fréquent en B2B.",
-        "limites": ["Nulles en cas de dol ou faute lourde", "Interdites pour les dommages corporels", "Écartées en droit de la consommation (clauses abusives)", "Doivent être expressément acceptées"],
+        "limites": [
+          "Nulles en cas de dol ou faute lourde",
+          "Interdites pour les dommages corporels",
+          "Écartées en droit de la consommation (clauses abusives)",
+          "Doivent être expressément acceptées"
+        ],
         "clause_penale": "Fixe forfaitairement les dommages-intérêts. Le juge peut la réviser si manifestement excessive ou dérisoire (art. 1231-5 CC)."
       }
     },
@@ -278,7 +338,15 @@
         "cession_actions": "Libre sauf clauses statutaires (agrément, préemption, inaliénabilité). Procédure plus simple que SARL."
       },
       "statuts": {
-        "contenu_obligatoire": ["Dénomination sociale", "Forme juridique", "Siège social", "Objet social", "Capital social et répartition", "Durée (99 ans max)", "Modalités de fonctionnement"],
+        "contenu_obligatoire": [
+          "Dénomination sociale",
+          "Forme juridique",
+          "Siège social",
+          "Objet social",
+          "Capital social et répartition",
+          "Durée (99 ans max)",
+          "Modalités de fonctionnement"
+        ],
         "rédaction": "Possibilité de rédiger soi-même (modèles en ligne) ou par un professionnel (avocat, expert-comptable). Pour SAS avec investisseurs : avocat recommandé.",
         "modification": "Toute modification des statuts nécessite une décision collective des associés/actionnaires (AG extraordinaire) et publication au BODACC."
       },
@@ -293,7 +361,13 @@
         "fiscalité": "Droits d'enregistrement : 3% (SARL, abattement 23K€ proportionnel) ou 0.1% (SAS). Plus-value de cession : PFU 30% ou barème IR."
       },
       "dissolution_liquidation": {
-        "causes": ["Arrivée du terme", "Décision des associés (AGE)", "Réalisation ou extinction de l'objet social", "Jugement (liquidation judiciaire)", "Fonds propres < 50% du capital (obligation de reconstituer ou dissoudre)"],
+        "causes": [
+          "Arrivée du terme",
+          "Décision des associés (AGE)",
+          "Réalisation ou extinction de l'objet social",
+          "Jugement (liquidation judiciaire)",
+          "Fonds propres < 50% du capital (obligation de reconstituer ou dissoudre)"
+        ],
         "procédure": "Dissolution → nomination liquidateur → réalisation de l'actif → paiement du passif → partage du boni de liquidation → radiation au RCS.",
         "liquidation_judiciaire": "Cessation des paiements (passif exigible > actif disponible). Tribunal de commerce. Redressement judiciaire possible si perspectives de continuation."
       }

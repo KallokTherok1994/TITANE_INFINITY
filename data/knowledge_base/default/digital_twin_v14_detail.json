@@ -257,11 +257,7 @@
     ],
     "calibration": {
       "fréquence": "Continue + hebdomadaire",
-      "sources": [
-        "Texte",
-        "Feedback",
-        "Patterns"
-      ],
+      "sources": ["Texte", "Feedback", "Patterns"],
       "cibles": {
         "précision": "> 0.80",
         "satisfaction": "> 0.85",
@@ -274,51 +270,27 @@
     "boucles": {
       "immédiate": {
         "latence": "< 1s",
-        "signaux": [
-          "Temps lecture",
-          "Clarifications",
-          "Reformulations"
-        ]
+        "signaux": ["Temps lecture", "Clarifications", "Reformulations"]
       },
       "session": {
         "latence": "Fin session",
-        "signaux": [
-          "Durée",
-          "Sujets",
-          "Satisfaction"
-        ]
+        "signaux": ["Durée", "Sujets", "Satisfaction"]
       },
       "longitudinale": {
         "latence": "Hebdo",
-        "signaux": [
-          "Intérêts",
-          "Style",
-          "Connexions"
-        ]
+        "signaux": ["Intérêts", "Style", "Connexions"]
       }
     },
     "renforcement": {
-      "positifs": [
-        "Accepté",
-        "Prolongé",
-        "Positif"
-      ],
-      "négatifs": [
-        "Reformulé",
-        "Ignoré",
-        "Corrigé"
-      ],
+      "positifs": ["Accepté", "Prolongé", "Positif"],
+      "négatifs": ["Reformulé", "Ignoré", "Corrigé"],
       "politique": "ε-greedy 0.1→0.02 sur 100 sessions"
     },
     "adaptation": {
       "contextuelle": "Auto-détection travail/personnel/créatif",
       "temporelle": "Heure/jour/saison",
       "émotionnelle": "Ton adapté à l'état",
-      "garde_fous": [
-        "Valeurs protégées",
-        "Bornée",
-        "Réversible"
-      ]
+      "garde_fous": ["Valeurs protégées", "Bornée", "Réversible"]
     },
     "transfert": {
       "inter_domaines": "Cross-domaine avec confiance réduite",
@@ -335,12 +307,7 @@
     },
     "sémantique": {
       "structure": "Graphe pondéré (confiance × fréquence)",
-      "catégories": [
-        "Préférences",
-        "Compétences",
-        "Objectifs",
-        "Habitudes"
-      ],
+      "catégories": ["Préférences", "Compétences", "Objectifs", "Habitudes"],
       "promotion": "3+ épisodes indépendants"
     },
     "procédurale": {
@@ -355,12 +322,7 @@
       "débordement": "→ épisodique"
     },
     "consolidation": {
-      "déclencheurs": [
-        "Fin session",
-        "30min",
-        "Pattern récurrent",
-        "Haute saillance"
-      ],
+      "déclencheurs": ["Fin session", "30min", "Pattern récurrent", "Haute saillance"],
       "protection": "Jamais d'écrasement sans journal"
     }
   },
@@ -390,16 +352,8 @@
     ],
     "activation": "5 observations, cohérence > 0.7",
     "anticipation": {
-      "stratégies": [
-        "Prochain sujet",
-        "Signaux changement",
-        "Pré-chargement"
-      ],
-      "limites": [
-        "Confiance ≥ 0.7",
-        "Max 2/session",
-        "Jamais imposé"
-      ]
+      "stratégies": ["Prochain sujet", "Signaux changement", "Pré-chargement"],
+      "limites": ["Confiance ≥ 0.7", "Max 2/session", "Jamais imposé"]
     },
     "dimensions_contexte": {
       "temporel": "Heure/jour/durée",
@@ -456,19 +410,10 @@
     "description": "Perception et réponse multi-canaux",
     "texte": {
       "rôle": "Canal principal",
-      "capacités": [
-        "Sentiment",
-        "Intention",
-        "Style",
-        "Urgence"
-      ]
+      "capacités": ["Sentiment", "Intention", "Style", "Urgence"]
     },
     "voix": {
-      "capacités": [
-        "Prosodie",
-        "Stress",
-        "Énergie"
-      ],
+      "capacités": ["Prosodie", "Stress", "Énergie"],
       "priorité_émotions": true,
       "statut": "Expérimental TTS/STT"
     },
@@ -476,19 +421,10 @@
       "statut": "Planifié v15"
     },
     "gestes": {
-      "signaux": [
-        "Défilement",
-        "Frappe",
-        "Attention/section"
-      ]
+      "signaux": ["Défilement", "Frappe", "Attention/section"]
     },
     "contexte_env": {
-      "signaux": [
-        "Heure",
-        "Jour",
-        "Apps",
-        "Réseau"
-      ],
+      "signaux": ["Heure", "Jour", "Apps", "Réseau"],
       "local_only": true
     },
     "fusion": {
@@ -607,11 +543,7 @@
       }
     ],
     "roadmap": {
-      "v15_Vision_2025Q2": [
-        "Canal visuel",
-        "Attention croisée",
-        "Mode collaboratif"
-      ],
+      "v15_Vision_2025Q2": ["Canal visuel", "Attention croisée", "Mode collaboratif"],
       "v16_Autonomie_2025Q3": [
         "Actions supervisées",
         "Outils productivité",

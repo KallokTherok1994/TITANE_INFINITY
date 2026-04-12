@@ -13,45 +13,119 @@
         "thymus_vulgaris_ct_geraniol": "Antifongique et antibactérien. Doux."
       },
       "familles_biochimiques": {
-        "monoterpenes": {"exemples": "Limonène, α-pinène, β-pinène", "proprietes": "Antiseptiques atmosphériques, toniques, cortisone-like léger", "precautions": "Peuvent irriter la peau pure. Se conservent mal (oxydation)."},
-        "sesquiterpenes": {"exemples": "β-caryophyllène, chamazulène", "proprietes": "Anti-inflammatoires puissants, anti-allergiques, calmants", "precautions": "Généralement bien tolérés."},
-        "monoterpenols": {"exemples": "Linalol, géraniol, terpinéol", "proprietes": "Anti-infectieux doux, immunostimulants, neurotoniques", "precautions": "Très bonne tolérance. Famille la plus sûre."},
-        "phenols": {"exemples": "Thymol, carvacrol, eugénol", "proprietes": "Anti-infectieux majeurs, antifongiques, antiparasitaires", "precautions": "Dermocaustiques! Hépatotoxiques à forte dose. Usage court et dilué."},
-        "aldehydes_terpeniques": {"exemples": "Citral, citronellal", "proprietes": "Anti-inflammatoires, calmants, antifongiques", "precautions": "Irritants cutanés. Toujours diluer."},
-        "cetones": {"exemples": "Menthone, camphre, thuyone", "proprietes": "Mucolytiques, cicatrisants, lipolytiques", "precautions": "Neurotoxiques et abortives! Contre-indiquées chez enfants, grossesse, épilepsie."},
-        "oxydes": {"exemples": "1,8-cinéole (eucalyptol)", "proprietes": "Expectorants, mucolytiques, antiviraux respiratoires", "precautions": "Éviter chez nourrissons (<3 ans). Risque de spasme glottique."},
-        "esters": {"exemples": "Acétate de linalyle, salicylate de méthyle", "proprietes": "Antispasmodiques, calmants, anti-inflammatoires, équilibrants nerveux", "precautions": "Très bonne tolérance. Famille des HE relaxantes."}
+        "monoterpenes": {
+          "exemples": "Limonène, α-pinène, β-pinène",
+          "proprietes": "Antiseptiques atmosphériques, toniques, cortisone-like léger",
+          "precautions": "Peuvent irriter la peau pure. Se conservent mal (oxydation)."
+        },
+        "sesquiterpenes": {
+          "exemples": "β-caryophyllène, chamazulène",
+          "proprietes": "Anti-inflammatoires puissants, anti-allergiques, calmants",
+          "precautions": "Généralement bien tolérés."
+        },
+        "monoterpenols": {
+          "exemples": "Linalol, géraniol, terpinéol",
+          "proprietes": "Anti-infectieux doux, immunostimulants, neurotoniques",
+          "precautions": "Très bonne tolérance. Famille la plus sûre."
+        },
+        "phenols": {
+          "exemples": "Thymol, carvacrol, eugénol",
+          "proprietes": "Anti-infectieux majeurs, antifongiques, antiparasitaires",
+          "precautions": "Dermocaustiques! Hépatotoxiques à forte dose. Usage court et dilué."
+        },
+        "aldehydes_terpeniques": {
+          "exemples": "Citral, citronellal",
+          "proprietes": "Anti-inflammatoires, calmants, antifongiques",
+          "precautions": "Irritants cutanés. Toujours diluer."
+        },
+        "cetones": {
+          "exemples": "Menthone, camphre, thuyone",
+          "proprietes": "Mucolytiques, cicatrisants, lipolytiques",
+          "precautions": "Neurotoxiques et abortives! Contre-indiquées chez enfants, grossesse, épilepsie."
+        },
+        "oxydes": {
+          "exemples": "1,8-cinéole (eucalyptol)",
+          "proprietes": "Expectorants, mucolytiques, antiviraux respiratoires",
+          "precautions": "Éviter chez nourrissons (<3 ans). Risque de spasme glottique."
+        },
+        "esters": {
+          "exemples": "Acétate de linalyle, salicylate de méthyle",
+          "proprietes": "Antispasmodiques, calmants, anti-inflammatoires, équilibrants nerveux",
+          "precautions": "Très bonne tolérance. Famille des HE relaxantes."
+        }
       }
     },
     "huiles_essentielles_par_systeme": {
       "respiratoire": {
-        "he_cles": ["Eucalyptus radié (1,8-cinéole — expectorant, antiviral)", "Ravintsara (antiviral majeur, immunostimulant)", "Tea tree (anti-infectieux large spectre)", "Niaouli (mucolytique, radioprotecteur)", "Pin sylvestre (décongestionnant bronchique)"],
+        "he_cles": [
+          "Eucalyptus radié (1,8-cinéole — expectorant, antiviral)",
+          "Ravintsara (antiviral majeur, immunostimulant)",
+          "Tea tree (anti-infectieux large spectre)",
+          "Niaouli (mucolytique, radioprotecteur)",
+          "Pin sylvestre (décongestionnant bronchique)"
+        ],
         "synergies": "Ravintsara + Eucalyptus radié + Niaouli en diffusion pour assainir l'air et soutenir les voies respiratoires."
       },
       "digestif": {
-        "he_cles": ["Menthe poivrée (antispasmodique, digestive, analgésique)", "Basilic tropical (antispasmodique puissant, linalol+estragol)", "Gingembre (anti-nauséeux, tonique digestif)", "Citron zest (hépatoprotecteur, détoxifiant, alcalinisant)", "Estragon (antispasmodique, anti-allergique)"],
+        "he_cles": [
+          "Menthe poivrée (antispasmodique, digestive, analgésique)",
+          "Basilic tropical (antispasmodique puissant, linalol+estragol)",
+          "Gingembre (anti-nauséeux, tonique digestif)",
+          "Citron zest (hépatoprotecteur, détoxifiant, alcalinisant)",
+          "Estragon (antispasmodique, anti-allergique)"
+        ],
         "synergies": "Menthe poivrée + Basilic tropical + Citron en massage abdominal dilué pour troubles digestifs fonctionnels."
       },
       "nerveux_emotionnel": {
-        "he_cles": ["Lavande vraie (anxiolytique, sédative, cicatrisante — HE la plus polyvalente)", "Petit grain bigarade (anti-stress, rééquilibrant nerveux)", "Ylang-ylang (relaxant, hypotenseur, aphrodisiaque)", "Camomille romaine (calmant profond, anti-spasmodique nerveux)", "Néroli (anti-dépresseur, choc émotionnel)", "Encens (oliban — méditatif, anti-anxiété, anti-inflammatoire)"],
+        "he_cles": [
+          "Lavande vraie (anxiolytique, sédative, cicatrisante — HE la plus polyvalente)",
+          "Petit grain bigarade (anti-stress, rééquilibrant nerveux)",
+          "Ylang-ylang (relaxant, hypotenseur, aphrodisiaque)",
+          "Camomille romaine (calmant profond, anti-spasmodique nerveux)",
+          "Néroli (anti-dépresseur, choc émotionnel)",
+          "Encens (oliban — méditatif, anti-anxiété, anti-inflammatoire)"
+        ],
         "synergies": "Lavande + Petit grain + Camomille romaine en diffusion ou application cutanée (poignets, plexus) pour anxiété."
       },
       "musculosquelettique": {
-        "he_cles": ["Gaulthérie couchée (salicylate de méthyle >95% — anti-inflammatoire et analgésique, aspirine naturelle)", "Eucalyptus citronné (citronellal — anti-inflammatoire articulaire)", "Romarin CT camphre (décontracturant musculaire)", "Hélichryse italienne (anti-hématome, anti-inflammatoire, cicatrisant — HE la plus précieuse)"],
+        "he_cles": [
+          "Gaulthérie couchée (salicylate de méthyle >95% — anti-inflammatoire et analgésique, aspirine naturelle)",
+          "Eucalyptus citronné (citronellal — anti-inflammatoire articulaire)",
+          "Romarin CT camphre (décontracturant musculaire)",
+          "Hélichryse italienne (anti-hématome, anti-inflammatoire, cicatrisant — HE la plus précieuse)"
+        ],
         "synergies": "Gaulthérie + Eucalyptus citronné + Romarin camphre dans huile d'Arnica pour douleurs musculaires et articulaires."
       },
       "immunitaire": {
-        "he_cles": ["Ravintsara (immunostimulant n°1)", "Tea tree (anti-infectieux large spectre)", "Origan compact (anti-infectieux majeur — usage court)", "Thym CT thymol (anti-infectieux puissant — usage court)", "Cannelle de Ceylan écorce (antibactérien, antifongique — dermocaustique!)"],
+        "he_cles": [
+          "Ravintsara (immunostimulant n°1)",
+          "Tea tree (anti-infectieux large spectre)",
+          "Origan compact (anti-infectieux majeur — usage court)",
+          "Thym CT thymol (anti-infectieux puissant — usage court)",
+          "Cannelle de Ceylan écorce (antibactérien, antifongique — dermocaustique!)"
+        ],
         "cure_hivernale": "Ravintsara: 2 gouttes sur les poignets chaque matin pendant les mois d'hiver. Ou capsules origan+cannelle pour infections aigues (5 jours max)."
       },
       "cutane": {
-        "he_cles": ["Tea tree (acné, mycoses, verrues)", "Lavande aspic (brûlures, piqûres, méduses)", "Géranium rosat (cicatrisant, tonique cutané, antifongique)", "Palmarosa (antibactérien cutané, déodorant, mycoses)", "Carotte (régénérant cellulaire, taches pigmentaires)"]
+        "he_cles": [
+          "Tea tree (acné, mycoses, verrues)",
+          "Lavande aspic (brûlures, piqûres, méduses)",
+          "Géranium rosat (cicatrisant, tonique cutané, antifongique)",
+          "Palmarosa (antibactérien cutané, déodorant, mycoses)",
+          "Carotte (régénérant cellulaire, taches pigmentaires)"
+        ]
       }
     },
     "voies_administration": {
       "cutanee": {
         "methode": "Dilution dans une huile végétale (HV). Concentration standard: 5-20% pour adulte, 1-3% pour enfant/visage.",
-        "hv_courantes": ["Amande douce (neutre, peaux sèches)", "Jojoba (équilibrante, toutes peaux)", "Calophylle inophyle (circulatoire, anti-inflammatoire)", "Arnica (macérat — contusions, douleurs)", "Nigelle (anti-inflammatoire, immunostimulante)"],
+        "hv_courantes": [
+          "Amande douce (neutre, peaux sèches)",
+          "Jojoba (équilibrante, toutes peaux)",
+          "Calophylle inophyle (circulatoire, anti-inflammatoire)",
+          "Arnica (macérat — contusions, douleurs)",
+          "Nigelle (anti-inflammatoire, immunostimulante)"
+        ],
         "test_allergie": "Toujours faire un test au pli du coude 24h avant première utilisation d'une HE."
       },
       "orale": {
@@ -90,10 +164,19 @@
       "definition": "Eaux de distillation des plantes aromatiques. Contiennent une faible concentration de molécules aromatiques. Beaucoup plus doux que les HE.",
       "avantages": "Utilisables chez les bébés, femmes enceintes, personnes fragiles. Usage interne facile.",
       "exemples": [
-        {"hydrolat": "Rose de Damas", "usage": "Tonique cutané, anti-rides, calmant émotionnel"},
-        {"hydrolat": "Fleur d'oranger", "usage": "Calmant, digestif, endormissement enfants"},
-        {"hydrolat": "Camomille romaine", "usage": "Anti-inflammatoire, calmant, yeux irrités"},
-        {"hydrolat": "Lavande", "usage": "Calmant, cicatrisant, brûlures légères"}
+        {
+          "hydrolat": "Rose de Damas",
+          "usage": "Tonique cutané, anti-rides, calmant émotionnel"
+        },
+        {
+          "hydrolat": "Fleur d'oranger",
+          "usage": "Calmant, digestif, endormissement enfants"
+        },
+        {
+          "hydrolat": "Camomille romaine",
+          "usage": "Anti-inflammatoire, calmant, yeux irrités"
+        },
+        { "hydrolat": "Lavande", "usage": "Calmant, cicatrisant, brûlures légères" }
       ]
     },
     "avertissement_sante": "L'aromathérapie médicale nécessite des connaissances précises en biochimie aromatique. Ne substituez pas un traitement médical par des HE sans avis d'un aromathérapeute ou pharmacien formé. Les HE sont des substances actives puissantes."

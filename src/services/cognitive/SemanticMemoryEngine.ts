@@ -398,9 +398,10 @@ export class SemanticMemoryEngine {
         // If a memory hasn't been accessed in >60 days, gradually reduce effective importance
         // This prevents old high-importance memories from permanently crowding out newer ones
         const daysSinceAccess = ageMs / (24 * 60 * 60 * 1000);
-        const importanceDecayFactor = daysSinceAccess > 60
-          ? Math.max(0.3, 1 - (daysSinceAccess - 60) * 0.002) // -0.2% per day after 60 days, floor at 30%
-          : 1.0;
+        const importanceDecayFactor =
+          daysSinceAccess > 60
+            ? Math.max(0.3, 1 - (daysSinceAccess - 60) * 0.002) // -0.2% per day after 60 days, floor at 30%
+            : 1.0;
         const effectiveImportance = entry.importance * importanceDecayFactor;
 
         // Score hybride

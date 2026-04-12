@@ -226,7 +226,11 @@ export const TitanePage: React.FC = () => {
   useEffect(() => {
     // Keep active tab visible on small horizontal tablists.
     const activeTabButton = document.getElementById(TAB_LABEL_IDS[activeTab]);
-    activeTabButton?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+    activeTabButton?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'nearest',
+    });
 
     // On chat tab, ensure we land near the input area (mobile ergonomics).
     if (activeTab !== 'conversation') {
@@ -234,9 +238,9 @@ export const TitanePage: React.FC = () => {
     }
 
     const timer = window.setTimeout(() => {
-      const chatInput = document.querySelector('[data-testid="chat-input"]') as
-        | HTMLTextAreaElement
-        | null;
+      const chatInput = document.querySelector(
+        '[data-testid="chat-input"]'
+      ) as HTMLTextAreaElement | null;
       chatInput?.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
     }, 120);
 

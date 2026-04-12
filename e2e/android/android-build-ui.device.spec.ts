@@ -70,22 +70,34 @@ test.describe('Android Build UI - Real Device Smoke', () => {
         : 'No Android device detected by adb'
     ).toBeTruthy();
 
-    const packagePath = runAdb(['-s', String(deviceId), 'shell', 'pm', 'path', PACKAGE_NAME]);
+    const packagePath = runAdb([
+      '-s',
+      String(deviceId),
+      'shell',
+      'pm',
+      'path',
+      PACKAGE_NAME,
+    ]);
     expect(packagePath.status, packagePath.stderr || packagePath.stdout).toBe(0);
     expect(packagePath.stdout).toContain(PACKAGE_NAME);
 
-    const launch = runAdb(['-s', String(deviceId), 'shell', 'am', 'start', '-n', ACTIVITY_NAME]);
+    const launch = runAdb([
+      '-s',
+      String(deviceId),
+      'shell',
+      'am',
+      'start',
+      '-n',
+      ACTIVITY_NAME,
+    ]);
     expect(launch.status, launch.stderr || launch.stdout).toBe(0);
 
     await expect
-      .poll(
-        () => focusedWindow(String(deviceId)),
-        {
-          timeout: 30000,
-          intervals: [1000, 1500, 2000],
-          message: 'Android app did not become focused in time',
-        }
-      )
+      .poll(() => focusedWindow(String(deviceId)), {
+        timeout: 30000,
+        intervals: [1000, 1500, 2000],
+        message: 'Android app did not become focused in time',
+      })
       .toContain(PACKAGE_NAME);
 
     const dumpCmd = runAdb([

@@ -519,7 +519,7 @@ export function selectResponseProfile(
       confidence: 0.7,
     };
   }
-  if (complexity > 0.60 && modeDefault === 'BALANCED') {
+  if (complexity > 0.6 && modeDefault === 'BALANCED') {
     return {
       profileId: 'DEVELOPED',
       profile: RESPONSE_PROFILES.DEVELOPED,
@@ -630,13 +630,19 @@ export function estimateComplexity(message: string): number {
 
   // v30.2.0: Structural complexity signals
   const enumerationCount = (
-    message.match(/\b(\d+[\.\)]\s|premièrement|deuxièmement|d'abord|ensuite|enfin|firstly|secondly|finally|also|de plus|par ailleurs)\b/gi) || []
+    message.match(
+      /\b(\d+[\.\)]\s|premièrement|deuxièmement|d'abord|ensuite|enfin|firstly|secondly|finally|also|de plus|par ailleurs)\b/gi
+    ) || []
   ).length;
   const conditionalCount = (
-    message.match(/\b(si|sauf si|à condition|dans le cas|suppose|imaginons|et si|if|unless|assuming|what if|in case)\b/gi) || []
+    message.match(
+      /\b(si|sauf si|à condition|dans le cas|suppose|imaginons|et si|if|unless|assuming|what if|in case)\b/gi
+    ) || []
   ).length;
   const temporalCount = (
-    message.match(/\b(avant|après|pendant|historiquement|à l'avenir|prochainement|jadis|auparavant|dorénavant|before|after|during|previously|going forward)\b/gi) || []
+    message.match(
+      /\b(avant|après|pendant|historiquement|à l'avenir|prochainement|jadis|auparavant|dorénavant|before|after|during|previously|going forward)\b/gi
+    ) || []
   ).length;
 
   // v30.3.0: Topic diversity — count distinct domain markers
@@ -653,20 +659,32 @@ export function estimateComplexity(message: string): number {
 
   // v30.3.0: Negation/nuance signals — indicate refined or constrained thinking
   const negationCount = (
-    message.match(/\b(mais pas|sauf|en revanche|au contraire|toutefois|néanmoins|cependant|excepté|sans|not|except|rather|instead|without)\b/gi) || []
+    message.match(
+      /\b(mais pas|sauf|en revanche|au contraire|toutefois|néanmoins|cependant|excepté|sans|not|except|rather|instead|without)\b/gi
+    ) || []
   ).length;
 
   // Score normalisé entre 0 et 1
   // v30.3.0: 8-factor formula with topic diversity and negation
-  const lengthScore = Math.min(wordCount / 100, 1.0) * 0.20;
+  const lengthScore = Math.min(wordCount / 100, 1.0) * 0.2;
   const questionScore = Math.min(questionCount / 3, 1.0) * 0.19;
   const conjunctionScore = Math.min(conjunctionCount / 4, 1.0) * 0.17;
   const lexicalScore = longWordRatio * 0.17;
-  const structuralScore = Math.min((enumerationCount + conditionalCount + temporalCount) / 5, 1.0) * 0.10;
-  const topicScore = Math.min(topicDiversityCount / 3, 1.0) * 0.10;
+  const structuralScore =
+    Math.min((enumerationCount + conditionalCount + temporalCount) / 5, 1.0) * 0.1;
+  const topicScore = Math.min(topicDiversityCount / 3, 1.0) * 0.1;
   const negationScore = Math.min(negationCount / 3, 1.0) * 0.07;
 
-  return Math.min(1.0, lengthScore + questionScore + conjunctionScore + lexicalScore + structuralScore + topicScore + negationScore);
+  return Math.min(
+    1.0,
+    lengthScore +
+      questionScore +
+      conjunctionScore +
+      lexicalScore +
+      structuralScore +
+      topicScore +
+      negationScore
+  );
 }
 
 /**
@@ -1197,15 +1215,27 @@ export function computeEffectiveDepth(
   // If message complexity is high, escalate depth by one level
   if (typeof messageComplexity === 'number' && messageComplexity > 0) {
     const PROFILE_RANK: Record<ResponseProfileId, number> = {
-      DIRECT: 0, BALANCED: 1, DEVELOPED: 2, DEEP: 3, ARCHITECT: 4, OMEGA: 5,
+      DIRECT: 0,
+      BALANCED: 1,
+      DEVELOPED: 2,
+      DEEP: 3,
+      ARCHITECT: 4,
+      OMEGA: 5,
     };
-    const RANK_TO_PROFILE: ResponseProfileId[] = ['DIRECT', 'BALANCED', 'DEVELOPED', 'DEEP', 'ARCHITECT', 'OMEGA'];
+    const RANK_TO_PROFILE: ResponseProfileId[] = [
+      'DIRECT',
+      'BALANCED',
+      'DEVELOPED',
+      'DEEP',
+      'ARCHITECT',
+      'OMEGA',
+    ];
     const currentRank = PROFILE_RANK[depth] ?? 2;
 
     // Graduated escalation based on complexity score
     if (messageComplexity > 0.85 && currentRank < 4) {
       depth = RANK_TO_PROFILE[currentRank + 2] ?? depth; // Jump +2 levels for very high complexity
-    } else if (messageComplexity > 0.60 && currentRank < 4) {
+    } else if (messageComplexity > 0.6 && currentRank < 4) {
       depth = RANK_TO_PROFILE[currentRank + 1] ?? depth; // Escalate +1 level for moderate-high complexity
     }
   }

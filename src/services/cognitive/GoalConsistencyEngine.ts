@@ -63,7 +63,8 @@ export class GoalConsistencyEngine extends EventEmitter {
   private violations: Map<string, ConsistencyViolation[]> = new Map();
 
   // v30.3.0: Turn-level convergence tracking per conversation
-  private turnRelevance: Map<string, { relevant: boolean; progress: number }[]> = new Map();
+  private turnRelevance: Map<string, { relevant: boolean; progress: number }[]> =
+    new Map();
 
   // Statistics
   private stats: ConsistencyStats = {
@@ -330,7 +331,9 @@ export class GoalConsistencyEngine extends EventEmitter {
     const combinedText = `${user_message} ${response}`.toLowerCase();
 
     // Check if this turn is relevant to the goal
-    const matchedKeywords = goalKeywords.filter(kw => combinedText.includes(kw.toLowerCase()));
+    const matchedKeywords = goalKeywords.filter(kw =>
+      combinedText.includes(kw.toLowerCase())
+    );
     const relevanceScore = matchedKeywords.length / Math.max(1, goalKeywords.length);
     const isTurnRelevant = relevanceScore > 0.2;
 
@@ -356,15 +359,20 @@ export class GoalConsistencyEngine extends EventEmitter {
     }
 
     // Convergence score: weighted combination of relevance and progress
-    const convergenceScore = Math.min(1, Math.max(0,
-      relevantTurnRatio * 0.6 +
-      Math.min(1, currentProgress) * 0.25 +
-      Math.min(0.15, Math.max(0, progressVelocity * 10)) // velocity bonus
-    ));
+    const convergenceScore = Math.min(
+      1,
+      Math.max(
+        0,
+        relevantTurnRatio * 0.6 +
+          Math.min(1, currentProgress) * 0.25 +
+          Math.min(0.15, Math.max(0, progressVelocity * 10)) // velocity bonus
+      )
+    );
 
     // Drift detection: low relevance in recent turns
     const recentWindow = history.slice(-5);
-    const recentRelevance = recentWindow.filter(h => h.relevant).length / Math.max(1, recentWindow.length);
+    const recentRelevance =
+      recentWindow.filter(h => h.relevant).length / Math.max(1, recentWindow.length);
     const driftDetected = recentRelevance < 0.3 && history.length >= 3;
 
     let driftSeverity: GoalConvergenceResult['drift_severity'] = 'none';
@@ -397,12 +405,15 @@ export class GoalConsistencyEngine extends EventEmitter {
 
     // Update global stats
     this.stats.avg_convergence_score =
-      (this.stats.avg_convergence_score * (this.stats.total_checks_performed - 1) + convergenceScore)
-      / Math.max(1, this.stats.total_checks_performed);
+      (this.stats.avg_convergence_score * (this.stats.total_checks_performed - 1) +
+        convergenceScore) /
+      Math.max(1, this.stats.total_checks_performed);
 
     // Calculate subgoal completion rate
     if (goal.subgoals.length > 0) {
-      const completedSubgoals = goal.subgoals.filter(sg => sg.status === GoalStatus.COMPLETED).length;
+      const completedSubgoals = goal.subgoals.filter(
+        sg => sg.status === GoalStatus.COMPLETED
+      ).length;
       this.stats.subgoal_completion_rate = completedSubgoals / goal.subgoals.length;
     }
 

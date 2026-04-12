@@ -6,7 +6,14 @@
     "introduction": "Le microbiome intestinal héberge 100 000 milliards de micro-organismes (bactéries, virus, champignons, archées). L'axe intestin-cerveau est un système de communication bidirectionnel reliant le système nerveux entérique (cerveau intestinal) au système nerveux central via le nerf vague, les hormones, les cytokines et les métabolites microbiens.",
     "microbiote_intestinal": {
       "composition": "Plus de 1000 espèces bactériennes. Phyla dominants: Firmicutes, Bacteroidetes, Actinobacteria, Proteobacteria. Ratio Firmicutes/Bacteroidetes important pour la santé.",
-      "fonctions": ["Digestion des fibres alimentaires (fermentation)", "Synthèse de vitamines (B12, K, biotine, folate)", "Barrière contre les pathogènes (colonisation compétitive)", "Maturation et régulation du système immunitaire", "Production de neurotransmetteurs (sérotonine, GABA, dopamine)", "Métabolisme des médicaments et xénobiotiques"],
+      "fonctions": [
+        "Digestion des fibres alimentaires (fermentation)",
+        "Synthèse de vitamines (B12, K, biotine, folate)",
+        "Barrière contre les pathogènes (colonisation compétitive)",
+        "Maturation et régulation du système immunitaire",
+        "Production de neurotransmetteurs (sérotonine, GABA, dopamine)",
+        "Métabolisme des médicaments et xénobiotiques"
+      ],
       "cerveau_enterique": "Le système nerveux entérique contient 200 à 600 millions de neurones. Il produit 90% de la sérotonine corporelle et 50% de la dopamine. C'est le 2e cerveau."
     },
     "voies_communication": {
@@ -23,27 +30,87 @@
     },
     "dysbiose": {
       "definition": "Déséquilibre de la composition microbienne intestinale. Perte de diversité et/ou prolifération d'espèces pathogènes.",
-      "causes": ["Antibiotiques (destruction massive)", "Alimentation ultra-transformée, pauvre en fibres", "Stress chronique (cortisol altère le microbiote)", "Sédentarité", "Alcool excessif", "Pesticides et additifs alimentaires", "Manque de sommeil"],
-      "consequences": ["Troubles digestifs (SII, MICI)", "Dépression et anxiété", "Maladies auto-immunes", "Obésité et résistance à l'insuline", "Allergies et intolérances", "Troubles cognitifs, brouillard mental", "Fatigue chronique"],
+      "causes": [
+        "Antibiotiques (destruction massive)",
+        "Alimentation ultra-transformée, pauvre en fibres",
+        "Stress chronique (cortisol altère le microbiote)",
+        "Sédentarité",
+        "Alcool excessif",
+        "Pesticides et additifs alimentaires",
+        "Manque de sommeil"
+      ],
+      "consequences": [
+        "Troubles digestifs (SII, MICI)",
+        "Dépression et anxiété",
+        "Maladies auto-immunes",
+        "Obésité et résistance à l'insuline",
+        "Allergies et intolérances",
+        "Troubles cognitifs, brouillard mental",
+        "Fatigue chronique"
+      ],
       "diagnostic": "Analyse du microbiote par séquençage 16S rRNA, analyse des métabolites fécaux, test de zonuline (perméabilité)."
     },
     "permeabilite_intestinale": {
       "definition": "La barrière intestinale (jonctions serrées entre entérocytes) empêche le passage de molécules indésirables. Quand elle est compromise (leaky gut), des endotoxines bactériennes (LPS) passent dans la circulation sanguine.",
       "mecanisme_neuroinflammation": "LPS→activation immunitaire systémique→cytokines pro-inflammatoires (TNF-α, IL-6, IL-1β)→passage de la barrière hémato-encéphalique→activation microgliale→neuroinflammation→troubles cognitifs et psychiatriques.",
-      "facteurs_aggravants": ["Gluten (chez les sensibles)", "AINS (ibuprofène)", "Stress chronique", "Alcool", "Sucre raffiné", "Dysbiose"],
-      "restauration": ["Glutamine (acide aminé réparateur)", "Zinc carnosine", "Butyrate (supplémentation ou fibres fermentescibles)", "Aloe vera", "Curcumine", "Bouillon d'os (collagène, glycine)"]
+      "facteurs_aggravants": [
+        "Gluten (chez les sensibles)",
+        "AINS (ibuprofène)",
+        "Stress chronique",
+        "Alcool",
+        "Sucre raffiné",
+        "Dysbiose"
+      ],
+      "restauration": [
+        "Glutamine (acide aminé réparateur)",
+        "Zinc carnosine",
+        "Butyrate (supplémentation ou fibres fermentescibles)",
+        "Aloe vera",
+        "Curcumine",
+        "Bouillon d'os (collagène, glycine)"
+      ]
     },
     "psychobiotiques": {
       "definition": "Probiotiques et prébiotiques qui, lorsqu'ingérés en quantité adéquate, produisent un bénéfice sur la santé mentale via l'axe intestin-cerveau.",
       "souches_cles": [
-        {"souche": "Lactobacillus rhamnosus JB-1", "effet": "Réduction de l'anxiété et du cortisol, modulation GABA via le nerf vague"},
-        {"souche": "Bifidobacterium longum 1714", "effet": "Réduction du stress perçu, amélioration de la mémoire"},
-        {"souche": "Lactobacillus helveticus R0052", "effet": "Réduction des symptômes dépressifs et anxieux"},
-        {"souche": "Bifidobacterium breve CCFM1025", "effet": "Amélioration de l'humeur, réduction de la neuroinflammation"},
-        {"souche": "Lactobacillus plantarum PS128", "effet": "Modulation dopamine/sérotonine, études sur TSA et dépression"}
+        {
+          "souche": "Lactobacillus rhamnosus JB-1",
+          "effet": "Réduction de l'anxiété et du cortisol, modulation GABA via le nerf vague"
+        },
+        {
+          "souche": "Bifidobacterium longum 1714",
+          "effet": "Réduction du stress perçu, amélioration de la mémoire"
+        },
+        {
+          "souche": "Lactobacillus helveticus R0052",
+          "effet": "Réduction des symptômes dépressifs et anxieux"
+        },
+        {
+          "souche": "Bifidobacterium breve CCFM1025",
+          "effet": "Amélioration de l'humeur, réduction de la neuroinflammation"
+        },
+        {
+          "souche": "Lactobacillus plantarum PS128",
+          "effet": "Modulation dopamine/sérotonine, études sur TSA et dépression"
+        }
       ],
-      "prebiotiques_benefiques": ["Inuline (chicorée, artichaut)", "FOS (fructo-oligosaccharides)", "GOS (galacto-oligosaccharides)", "Polyphénols (cacao, fruits rouges, thé vert)", "Fibres de psyllium", "Amidon résistant (banane verte, riz refroidi)"],
-      "aliments_fermentés": ["Kéfir", "Kombucha", "Choucroute lacto-fermentée", "Kimchi", "Miso", "Tempeh", "Yaourt naturel (non sucré)"]
+      "prebiotiques_benefiques": [
+        "Inuline (chicorée, artichaut)",
+        "FOS (fructo-oligosaccharides)",
+        "GOS (galacto-oligosaccharides)",
+        "Polyphénols (cacao, fruits rouges, thé vert)",
+        "Fibres de psyllium",
+        "Amidon résistant (banane verte, riz refroidi)"
+      ],
+      "aliments_fermentés": [
+        "Kéfir",
+        "Kombucha",
+        "Choucroute lacto-fermentée",
+        "Kimchi",
+        "Miso",
+        "Tempeh",
+        "Yaourt naturel (non sucré)"
+      ]
     },
     "strategies_optimisation": {
       "alimentation": "Régime méditerranéen riche en fibres (30g+/jour), polyphénols, oméga-3. Éviter ultra-transformé, sucres raffinés, émulsifiants.",

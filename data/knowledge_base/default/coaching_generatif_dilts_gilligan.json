@@ -32,8 +32,20 @@
       ],
       "etats_generatifs": {
         "definition": "États positifs profonds qui génèrent naturellement des solutions créatives",
-        "exemples": ["Flow créatif", "Présence centrée", "Connexion profonde", "Émerveillement", "Calme puissant"],
-        "comment_y_acceder": ["Centrage somatique", "Attention ouverte (vs focalisée)", "Intention claire", "Accueil de ce qui émerge", "Sponsoring intérieur"]
+        "exemples": [
+          "Flow créatif",
+          "Présence centrée",
+          "Connexion profonde",
+          "Émerveillement",
+          "Calme puissant"
+        ],
+        "comment_y_acceder": [
+          "Centrage somatique",
+          "Attention ouverte (vs focalisée)",
+          "Intention claire",
+          "Accueil de ce qui émerge",
+          "Sponsoring intérieur"
+        ]
       },
       "interaction_conscient_inconscient": {
         "esprit_conscient": "Volonté, planification, analyse logique, intentions verbalisées",

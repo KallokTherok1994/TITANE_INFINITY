@@ -281,10 +281,9 @@ export const AudioCenterPage: React.FC = () => {
           setTitaneVoiceProfiles(normalizedProfiles);
         }
       } catch (error) {
-        logger.warn(
-          'Impossible de charger les profils vocaux TITANE:',
-          { error: String(error) }
-        );
+        logger.warn('Impossible de charger les profils vocaux TITANE:', {
+          error: String(error),
+        });
         if (!cancelled) {
           setTitaneVoiceProfiles([]);
         }

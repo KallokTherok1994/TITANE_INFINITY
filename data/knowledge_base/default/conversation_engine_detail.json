@@ -48,11 +48,7 @@
         "Intermediate (standard, défaut)",
         "Expert (maximal)"
       ],
-      "tons": [
-        "Neutral (défaut)",
-        "Warm (chaleureux)",
-        "Professional (formel)"
-      ],
+      "tons": ["Neutral (défaut)", "Warm (chaleureux)", "Professional (formel)"],
       "longueurs": [
         "Short (<150 mots)",
         "Medium (150-400 mots, défaut)",
@@ -174,13 +170,7 @@
       },
       "injection_persona": {
         "persona_defaut": "Assistant professionnel, compétent, chaleureux, francophone natif",
-        "traits": [
-          "Précision",
-          "Empathie",
-          "Proactivité",
-          "Humilité",
-          "Élégance"
-        ],
+        "traits": ["Précision", "Empathie", "Proactivité", "Humilité", "Élégance"],
         "coherence_session": "Persona stable sur toute la session — pas de variation brusque",
         "persona_custom": "Support de personas personnalisées via configuration"
       },
@@ -213,11 +203,7 @@
       "description": "Gestion des tours de parole — orchestration de l'échange conversationnel",
       "tour_de_parole": {
         "principe": "Alternance utilisateur → TITANE avec possibilité d'interruption",
-        "etats": [
-          "ATTENTE_UTILISATEUR",
-          "GENERATION_EN_COURS",
-          "TRAITEMENT_PIPELINE"
-        ],
+        "etats": ["ATTENTE_UTILISATEUR", "GENERATION_EN_COURS", "TRAITEMENT_PIPELINE"],
         "timeout_inactivite": "30 minutes → sauvegarde contexte et mise en pause"
       },
       "interruptions": {
@@ -348,13 +334,7 @@
         "transcription": "Progressive pendant que l'utilisateur parle"
       },
       "image": {
-        "formats": [
-          "PNG",
-          "JPEG",
-          "WebP",
-          "SVG",
-          "GIF"
-        ],
+        "formats": ["PNG", "JPEG", "WebP", "SVG", "GIF"],
         "analyse": "Via modèles multimodaux (GPT-4 Vision, Claude Vision)",
         "taille_max": "20 Mo par image",
         "contexte": "Images partagées enrichissent le contexte — référençables ultérieurement"

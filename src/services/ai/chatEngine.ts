@@ -28,7 +28,11 @@ import { aiOrchestrator } from './orchestrator';
 import { memoryIntegration } from './memoryIntegration';
 import type { MemoryContext } from './memoryIntegration';
 import { logger as structuredLogger, generateCorrelationId } from '../monitoring/logger';
-import { extractPreferences, shapeResponse, buildPreferencePrompt } from './preferenceEngine';
+import {
+  extractPreferences,
+  shapeResponse,
+  buildPreferencePrompt,
+} from './preferenceEngine';
 // v26.0.0: Intent classification and depth computation are now inside CanonicalDiscernmentKernel
 // No longer called independently from chatEngine — kernel is the single source of truth
 
@@ -42,7 +46,10 @@ import type {
 import { inputValidator } from './inputValidator';
 import { chatModes, type ChatModeConfig } from './chatModes';
 import { getEffectiveProfile, type InferenceState } from './responsePolicy'; // v24.4.0: Canonical response policy + inference gating
-import { detectDocumentType, buildDocumentInstructions } from './professionalDocumentService'; // v30.1.0: Professional document generation
+import {
+  detectDocumentType,
+  buildDocumentInstructions,
+} from './professionalDocumentService'; // v30.1.0: Professional document generation
 import { chatValidator } from '../chatValidator';
 import type { ChatMode } from './chatTypes';
 // Re-export for convenience
@@ -3081,7 +3088,11 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
   ): string {
     // v30.3.0: If DIRECT profile was chosen but complexity is moderate+, upgrade to BALANCED instructions
     let resolvedDepth = effectiveDepth;
-    if (effectiveDepth === 'DIRECT' && messageComplexity !== undefined && messageComplexity > 0.55) {
+    if (
+      effectiveDepth === 'DIRECT' &&
+      messageComplexity !== undefined &&
+      messageComplexity > 0.55
+    ) {
       resolvedDepth = 'BALANCED';
     }
 
@@ -3291,9 +3302,7 @@ QUALITÉ MAXIMALE :
 - Proposer des visualisations textuelles (tableaux, matrices, arbres) quand utile`,
     };
 
-    return (
-      depthInstructionsMap[resolvedDepth] || depthInstructionsMap['DEVELOPED'] || ''
-    );
+    return depthInstructionsMap[resolvedDepth] || depthInstructionsMap['DEVELOPED'] || '';
   }
 
   /**

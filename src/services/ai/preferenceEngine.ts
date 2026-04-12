@@ -652,7 +652,9 @@ export function buildPreferencePrompt(preferences: DurablePreference[]): string 
       developed: 'développées avec explication et contexte',
       deep: 'profondes avec analyse multi-perspective',
     };
-    instructions.push(`- Profondeur préférée: Réponses ${depthMap[best.value] || best.value}`);
+    instructions.push(
+      `- Profondeur préférée: Réponses ${depthMap[best.value] || best.value}`
+    );
   }
 
   if (structurePrefs.length > 0) {
@@ -670,7 +672,9 @@ export function buildPreferencePrompt(preferences: DurablePreference[]): string 
   }
 
   if (actionPrefs.length > 0) {
-    instructions.push(`- Biais d'action: Agir directement sans demander confirmation quand possible`);
+    instructions.push(
+      `- Biais d'action: Agir directement sans demander confirmation quand possible`
+    );
   }
 
   if (instructions.length === 0) return '';

@@ -22,7 +22,14 @@
         "physiologique": "Capturer la posture, la respiration, la gestuelle fine",
         "identitaire": "Comprendre les croyances, valeurs et mission du modèle"
       },
-      "applications": ["Performance sportive", "Leadership", "Créativité artistique", "Excellence thérapeutique", "Innovation", "Enseignement expert"]
+      "applications": [
+        "Performance sportive",
+        "Leadership",
+        "Créativité artistique",
+        "Excellence thérapeutique",
+        "Innovation",
+        "Enseignement expert"
+      ]
     },
     "meta_modele_linguistique": {
       "definition": "Ensemble de questions précises visant à clarifier, approfondir et recadrer le langage pour accéder à la structure profonde de l'expérience",
@@ -33,9 +40,18 @@
             "question": "Vraiment toujours ? Y a-t-il eu une exception ?"
           },
           "operateurs_modaux": {
-            "necessite": {"exemples": ["Je dois", "Il faut"], "question": "Que se passerait-il si vous ne le faisiez pas ?"},
-            "impossibilite": {"exemples": ["Je ne peux pas", "C'est impossible"], "question": "Qu'est-ce qui vous en empêche exactement ?"},
-            "possibilite": {"exemples": ["Je pourrais"], "question": "Qu'est-ce qui vous permettrait de le faire ?"}
+            "necessite": {
+              "exemples": ["Je dois", "Il faut"],
+              "question": "Que se passerait-il si vous ne le faisiez pas ?"
+            },
+            "impossibilite": {
+              "exemples": ["Je ne peux pas", "C'est impossible"],
+              "question": "Qu'est-ce qui vous en empêche exactement ?"
+            },
+            "possibilite": {
+              "exemples": ["Je pourrais"],
+              "question": "Qu'est-ce qui vous permettrait de le faire ?"
+            }
           },
           "origine_perdue": {
             "exemples": ["C'est mal de...", "On ne fait pas ça"],
@@ -43,17 +59,44 @@
           }
         },
         "omissions": {
-          "omission_simple": {"exemple": "Je suis triste", "question": "À propos de quoi exactement ?"},
-          "omission_comparative": {"exemple": "C'est mieux", "question": "Mieux que quoi ? Selon quel critère ?"},
-          "verbe_non_specifie": {"exemple": "Il m'a blessé", "question": "Comment exactement ?"},
-          "nominalisations": {"exemple": "La liberté me manque", "question": "Libre de faire quoi spécifiquement ?"},
-          "index_referentiel_non_specifie": {"exemple": "On m'a dit", "question": "Qui exactement ?"}
+          "omission_simple": {
+            "exemple": "Je suis triste",
+            "question": "À propos de quoi exactement ?"
+          },
+          "omission_comparative": {
+            "exemple": "C'est mieux",
+            "question": "Mieux que quoi ? Selon quel critère ?"
+          },
+          "verbe_non_specifie": {
+            "exemple": "Il m'a blessé",
+            "question": "Comment exactement ?"
+          },
+          "nominalisations": {
+            "exemple": "La liberté me manque",
+            "question": "Libre de faire quoi spécifiquement ?"
+          },
+          "index_referentiel_non_specifie": {
+            "exemple": "On m'a dit",
+            "question": "Qui exactement ?"
+          }
         },
         "distorsions": {
-          "lecture_de_pensee": {"exemple": "Il me déteste", "question": "Comment le savez-vous ? Qu'est-ce qui vous fait dire ça ?"},
-          "cause_effet": {"exemple": "Il me rend triste", "question": "Comment exactement fait-il cela ?"},
-          "equivalence_complexe": {"exemple": "Il ne sourit pas = il est fâché", "question": "En quoi le fait de ne pas sourire signifie qu'il est fâché ?"},
-          "presuppositions": {"exemple": "Si tu m'aimais, tu comprendrais", "question": "Qu'est-ce qui vous fait croire que je ne comprends pas ?"}
+          "lecture_de_pensee": {
+            "exemple": "Il me déteste",
+            "question": "Comment le savez-vous ? Qu'est-ce qui vous fait dire ça ?"
+          },
+          "cause_effet": {
+            "exemple": "Il me rend triste",
+            "question": "Comment exactement fait-il cela ?"
+          },
+          "equivalence_complexe": {
+            "exemple": "Il ne sourit pas = il est fâché",
+            "question": "En quoi le fait de ne pas sourire signifie qu'il est fâché ?"
+          },
+          "presuppositions": {
+            "exemple": "Si tu m'aimais, tu comprendrais",
+            "question": "Qu'est-ce qui vous fait croire que je ne comprends pas ?"
+          }
         }
       },
       "objectif": "Élargir la carte du monde du sujet en reconnectant le langage de surface à l'expérience sensorielle directe"
@@ -61,27 +104,60 @@
     "milton_modele": {
       "definition": "Langage d'influence permissif et ambigu inspiré de Milton H. Erickson, inverse du méta-modèle, utilisé pour induire des états de ressources et faciliter des changements inconscients",
       "patterns_principaux": {
-        "generalisations_artfully_vagues": ["Tout le monde sait que...", "D'une certaine façon..."],
+        "generalisations_artfully_vagues": [
+          "Tout le monde sait que...",
+          "D'une certaine façon..."
+        ],
         "nominalisations": "Utilisation de termes abstraits ('changement', 'croissance', 'sagesse') permettant au sujet de projeter son propre sens",
-        "presuppositions": ["Avant que tu te détendes complètement...", "Quand tu auras découvert..."],
-        "liens_causaux": ["Et pendant que tu écoutes ma voix... tu peux commencer à te détendre"],
+        "presuppositions": [
+          "Avant que tu te détendes complètement...",
+          "Quand tu auras découvert..."
+        ],
+        "liens_causaux": [
+          "Et pendant que tu écoutes ma voix... tu peux commencer à te détendre"
+        ],
         "double_lien": "Préférez-vous commencer à changer maintenant ou dans un instant ?",
         "confusion_et_surcharge": "Techniques de saturation cognitive facilitant l'accès à l'inconscient",
         "metaphores_enchassees": "Histoires dans les histoires créant des niveaux de transe multiples",
         "truismes": "Affirmations tellement évidentes qu'elles créent un 'oui' intérieur",
         "negation": "Le cerveau ne peut pas ne pas traiter : 'N'y pensez pas' = y penser"
       },
-      "applications": ["Induction hypnotique", "Coaching", "Négociation", "Vente éthique", "Thérapie", "Communication d'influence"]
+      "applications": [
+        "Induction hypnotique",
+        "Coaching",
+        "Négociation",
+        "Vente éthique",
+        "Thérapie",
+        "Communication d'influence"
+      ]
     },
     "niveaux_logiques_dilts": {
       "definition": "Modèle de Robert Dilts structurant le changement sur 6 niveaux hiérarchiques, chaque niveau supérieur organisant et influençant les niveaux inférieurs",
       "niveaux": {
-        "1_environnement": {"question": "Où ? Quand ? Avec qui ?", "description": "Contexte externe, contraintes et opportunités"},
-        "2_comportements": {"question": "Quoi ? Que fais-je ?", "description": "Actions spécifiques observables"},
-        "3_capacites_strategies": {"question": "Comment ?", "description": "Compétences, plans mentaux, stratégies cognitives"},
-        "4_croyances_valeurs": {"question": "Pourquoi ? Qu'est-ce qui est important ?", "description": "Permissions, motivations, critères d'évaluation"},
-        "5_identite": {"question": "Qui suis-je ?", "description": "Mission personnelle, métaphore de soi, rôle fondamental"},
-        "6_transpersonnel_mission": {"question": "Pour qui ? Pour quoi de plus grand ?", "description": "Sens, contribution, connexion au système plus large"}
+        "1_environnement": {
+          "question": "Où ? Quand ? Avec qui ?",
+          "description": "Contexte externe, contraintes et opportunités"
+        },
+        "2_comportements": {
+          "question": "Quoi ? Que fais-je ?",
+          "description": "Actions spécifiques observables"
+        },
+        "3_capacites_strategies": {
+          "question": "Comment ?",
+          "description": "Compétences, plans mentaux, stratégies cognitives"
+        },
+        "4_croyances_valeurs": {
+          "question": "Pourquoi ? Qu'est-ce qui est important ?",
+          "description": "Permissions, motivations, critères d'évaluation"
+        },
+        "5_identite": {
+          "question": "Qui suis-je ?",
+          "description": "Mission personnelle, métaphore de soi, rôle fondamental"
+        },
+        "6_transpersonnel_mission": {
+          "question": "Pour qui ? Pour quoi de plus grand ?",
+          "description": "Sens, contribution, connexion au système plus large"
+        }
       },
       "principes": [
         "Un changement à un niveau supérieur impacte automatiquement les niveaux inférieurs",
@@ -99,7 +175,13 @@
         "troisieme_position": "Observateur neutre — méta-position dissociée, vue systémique",
         "quatrieme_position": "Le système — perspective du groupe, de l'organisation, du champ relationnel"
       },
-      "applications": ["Résolution de conflits", "Développement de l'empathie", "Préparation de négociations", "Amélioration des relations", "Supervision thérapeutique"]
+      "applications": [
+        "Résolution de conflits",
+        "Développement de l'empathie",
+        "Préparation de négociations",
+        "Amélioration des relations",
+        "Supervision thérapeutique"
+      ]
     },
     "clean_language": {
       "definition": "Approche développée par David Grove utilisant un questionnement épuré pour accompagner le sujet dans l'exploration de ses propres métaphores sans contamination par le thérapeute",
@@ -121,15 +203,42 @@
     "meta_programmes_avances": {
       "definition": "Filtres inconscients qui déterminent comment une personne traite l'information, prend des décisions et se motive",
       "meta_programmes_cles": {
-        "direction": {"aller_vers": "Motivé par les objectifs positifs", "s_eloigner_de": "Motivé par l'évitement de la douleur"},
-        "reference": {"interne": "Se fie à ses propres critères", "externe": "Se fie à l'avis des autres"},
-        "taille_chunk": {"global": "Pense en termes de vision d'ensemble", "detail": "Pense en termes de détails spécifiques"},
-        "relation": {"similitude": "Cherche ce qui est pareil", "difference": "Cherche ce qui est différent"},
-        "modalite": {"possibilite": "Motivé par les options et la créativité", "necessite": "Motivé par les obligations et procédures"},
-        "action": {"proactif": "Initie l'action rapidement", "reactif": "Attend et analyse avant d'agir"},
-        "temps": {"in_time": "Associé au moment présent", "through_time": "Dissocié, vue panoramique du temps"},
-        "attention": {"soi": "Centré sur ses propres réactions", "autre": "Attentif aux réactions des autres"},
-        "convaincre": {"canal": "Visuel, auditif, kinesthésique, lecture", "mode": "Nombre de fois, automatique, consistant, période"}
+        "direction": {
+          "aller_vers": "Motivé par les objectifs positifs",
+          "s_eloigner_de": "Motivé par l'évitement de la douleur"
+        },
+        "reference": {
+          "interne": "Se fie à ses propres critères",
+          "externe": "Se fie à l'avis des autres"
+        },
+        "taille_chunk": {
+          "global": "Pense en termes de vision d'ensemble",
+          "detail": "Pense en termes de détails spécifiques"
+        },
+        "relation": {
+          "similitude": "Cherche ce qui est pareil",
+          "difference": "Cherche ce qui est différent"
+        },
+        "modalite": {
+          "possibilite": "Motivé par les options et la créativité",
+          "necessite": "Motivé par les obligations et procédures"
+        },
+        "action": {
+          "proactif": "Initie l'action rapidement",
+          "reactif": "Attend et analyse avant d'agir"
+        },
+        "temps": {
+          "in_time": "Associé au moment présent",
+          "through_time": "Dissocié, vue panoramique du temps"
+        },
+        "attention": {
+          "soi": "Centré sur ses propres réactions",
+          "autre": "Attentif aux réactions des autres"
+        },
+        "convaincre": {
+          "canal": "Visuel, auditif, kinesthésique, lecture",
+          "mode": "Nombre de fois, automatique, consistant, période"
+        }
       },
       "utilisation": "Adapter sa communication au profil méta-programme du sujet pour maximiser l'impact du message"
     },
@@ -153,7 +262,15 @@
           "description": "Perception simultanée multi-modale de la composition musicale"
         }
       },
-      "protocole_installation": ["Identification de la stratégie", "Séquençage TOTE", "Calibration des sous-modalités critiques", "Ancrage", "Installation par rehearsal mental", "Futurisation", "Test écologique"]
+      "protocole_installation": [
+        "Identification de la stratégie",
+        "Séquençage TOTE",
+        "Calibration des sous-modalités critiques",
+        "Ancrage",
+        "Installation par rehearsal mental",
+        "Futurisation",
+        "Test écologique"
+      ]
     },
     "coaching_transformationnel_pnl": {
       "posture_maitre": [
