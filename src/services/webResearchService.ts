@@ -64,4 +64,3 @@ export async function webResearch(
 ): Promise<ResearchReport> {
   return tauri<ResearchReport>('web_research', { query, options });
 }
-

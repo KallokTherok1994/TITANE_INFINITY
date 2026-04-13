@@ -423,8 +423,7 @@ class UnifiedMultimodalOutputEngine {
     const temporalCoherence = embodied.breath.amplitude > 0 ? 1.0 : 0.7;
 
     // Moyenne globale
-    const globalCoherence =
-      (voiceHaloSync + narrativeToneSync + temporalCoherence) / 3;
+    const globalCoherence = (voiceHaloSync + narrativeToneSync + temporalCoherence) / 3;
 
     // Mettre à jour métriques
     this.state.coherenceMetrics = {

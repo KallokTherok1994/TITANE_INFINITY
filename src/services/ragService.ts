@@ -105,7 +105,12 @@ class RAGService {
   ): Promise<DocumentChunk[]> {
     // Split content into chunks (smart markdown/code-aware chunking)
     const rawChunks = smartChunk(content, {
-      type: metadata.type === 'markdown' ? 'markdown' : metadata.type === 'code' ? 'code' : 'text',
+      type:
+        metadata.type === 'markdown'
+          ? 'markdown'
+          : metadata.type === 'code'
+            ? 'code'
+            : 'text',
       language: metadata.language,
       maxChunkSize: 1000,
       minChunkSize: 100,

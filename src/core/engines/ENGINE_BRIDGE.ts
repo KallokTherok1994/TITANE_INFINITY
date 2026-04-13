@@ -293,10 +293,4 @@ export class EngineBridge {
 export const engineBridge = new EngineBridge();
 
 // 🎨 Export des moteurs individuels pour accès direct
-export {
-  glowEngine,
-  motionEngine,
-  stateEngine,
-  soundEngine,
-  hyperDepthEngine,
-};
+export { glowEngine, motionEngine, stateEngine, soundEngine, hyperDepthEngine };

@@ -417,9 +417,7 @@ class MetaSingularityKernel {
 
     // Cohérence globale (moyenne pondérée)
     const global =
-      identityExpression * 0.4 +
-      expressionAutopoiesis * 0.3 +
-      autopoiesisIdentity * 0.3;
+      identityExpression * 0.4 + expressionAutopoiesis * 0.3 + autopoiesisIdentity * 0.3;
 
     // Harmoniques (analyse fréquentielle simplifiée)
     const harmonics = this.calculateHarmonics();
@@ -498,9 +496,8 @@ class MetaSingularityKernel {
 
     // Comparer halo expression intensity avec autopoiesis effectiveness
     const haloIntensity =
-      (((
-        (expression.halo as Record<string, unknown>)?.dynamics as Record<string, unknown>
-      )?.intensity as number) || 0.5);
+      (((expression.halo as Record<string, unknown>)?.dynamics as Record<string, unknown>)
+        ?.intensity as number) || 0.5;
     const effectiveness =
       ((autopoiesis.performance as Record<string, unknown>)
         ?.averageEffectiveness as number) || 0.5;
@@ -526,11 +523,8 @@ class MetaSingularityKernel {
 
   private calculateHarmonics(): number[] {
     // Harmoniques simplifiés basés sur les cohérences
-    const {
-      identityExpression,
-      expressionAutopoiesis,
-      autopoiesisIdentity,
-    } = this.state.coherence;
+    const { identityExpression, expressionAutopoiesis, autopoiesisIdentity } =
+      this.state.coherence;
 
     return [
       identityExpression,

@@ -86,11 +86,7 @@ export class VectorStore {
    * @param minScore - Minimum similarity threshold (default: 0.0)
    * @returns Results sorted by score descending
    */
-  search(
-    queryEmbedding: number[],
-    topK = 5,
-    minScore = 0.0
-  ): VectorSearchResult[] {
+  search(queryEmbedding: number[], topK = 5, minScore = 0.0): VectorSearchResult[] {
     if (queryEmbedding.length === 0) return [];
 
     const results: VectorSearchResult[] = [];

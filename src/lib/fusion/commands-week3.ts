@@ -6,10 +6,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
-import type {
-  LipSyncProcessRequest,
-  LipSyncProcessResponse,
-} from './types-week3';
+import type { LipSyncProcessRequest, LipSyncProcessResponse } from './types-week3';
 import { isLipSyncProcessSuccess } from './types-week3';
 
 /**

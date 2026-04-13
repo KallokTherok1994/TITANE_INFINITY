@@ -70,8 +70,10 @@ export function chunkMarkdown(
 // ─────────────────────────────────────────────────────────────────
 
 const CODE_BOUNDARIES: Record<string, RegExp> = {
-  typescript: /^(?:export\s+)?(?:async\s+)?(?:function|class|const\s+\w+\s*=\s*(?:async\s+)?\(|interface\s|type\s+\w+\s*=)/m,
-  javascript: /^(?:export\s+)?(?:async\s+)?(?:function|class|const\s+\w+\s*=\s*(?:async\s+)?\()/m,
+  typescript:
+    /^(?:export\s+)?(?:async\s+)?(?:function|class|const\s+\w+\s*=\s*(?:async\s+)?\(|interface\s|type\s+\w+\s*=)/m,
+  javascript:
+    /^(?:export\s+)?(?:async\s+)?(?:function|class|const\s+\w+\s*=\s*(?:async\s+)?\()/m,
   python: /^(?:def |class |async def )/m,
   rust: /^(?:pub\s+)?(?:async\s+)?(?:fn |struct |impl |enum |trait )/m,
   go: /^(?:func |type |var |const )/m,
@@ -235,9 +237,7 @@ export function smartChunk(
 function detectContentType(content: string): ContentType {
   const trimmed = content.trimStart();
   if (/^#{1,3}\s/.test(trimmed) || /\n#{1,3}\s/.test(trimmed)) return 'markdown';
-  if (
-    /^(?:function|class|const |import |export |def |fn |pub fn )/.test(trimmed)
-  )
+  if (/^(?:function|class|const |import |export |def |fn |pub fn )/.test(trimmed))
     return 'code';
   return 'text';
 }

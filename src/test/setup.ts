@@ -202,9 +202,7 @@ const performanceMetrics = {
   fps: 120,
 };
 
-const defaultBrokenModules = () => [
-  { module: 'cognitive', severity: 'high' },
-];
+const defaultBrokenModules = () => [{ module: 'cognitive', severity: 'high' }];
 
 let fusionState = createInitialFusionState();
 let autofixStats = createInitialAutofixStats();
