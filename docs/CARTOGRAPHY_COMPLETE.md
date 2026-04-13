@@ -68,6 +68,22 @@ Modules kernel : `kernel/`, `core/`, `security/`, `constitution/`
 | `userPreferencesEngine.ts` | — | Préférences utilisateur |
 | `experienceService.ts` | — | Gestion XP/expérience |
 
+---
+
+## Agents avancés (v30.1.8)
+
+| Agent | Dossier | Rôle principal |
+|-------|---------|---------------|
+| Monitoring Agent | monitoring/, src/services/monitoring/ | Supervision temps réel, alerting, logs croisés |
+| Auto-Diagnostic Agent | diagnostic/, src/services/diagnostic/ | Analyse proactive, auto-vérification, correction automatique |
+| Explainability Agent | explainability/, src/services/explainability/ | Traçabilité IA, justification, audit explicable |
+| Orchestrateur Dynamique Agent | orchestrator/, src/services/orchestrator/ | Répartition dynamique, gestion de la charge |
+| Agent de Sécurité Active | security_active/, src/services/security_active/ | Détection d’anomalies, sandboxing, réponse automatisée |
+
+Chaque agent est intégré dans la cartographie 4-Ring : UI (dashboard), moteur dédié (Ring 2), accès kernel (Ring 0) si besoin.
+
+---
+
 ### Ring 2 — Engine Layer (`src-tauri/src/` modules)
 
 | Moteur | Module | Rôle |

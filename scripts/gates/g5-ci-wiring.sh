@@ -91,12 +91,39 @@ for script in "${GOVERNANCE_SCRIPTS[@]}"; do
   fi
 done
 
-# Check 6: On-demand build policy documented
-log "Checking on-demand build policy..."
+# Check 6: On-demand build policy documented (no token gate, Rule 11)
+log "Checking on-demand build policy (Rule 11)..."
 if grep -rqE "BUILD ALL|on-demand|on demand" scripts/ docs/ .github/ 2>/dev/null; then
   pass "On-demand build policy documented"
 else
   fail "On-demand build policy not documented"
+fi
+
+# Check 7: No active token gate requirement in operational files (legacy REGLE archived)
+log "Checking no active token gate in operational authority files..."
+if grep -rqE "GO_FOR_PROD_BUILD__TITANE_INFINITY|GO_FOR_PROD_DEPLOY__TITANE_INFINITY" \
+     .github/copilot-instructions.md AGENTS.md \
+     .github/instructions/ \
+     .github/agents/ 2>/dev/null; then
+  fail "Active token gate reference found in operational authority files — must use Rule 11 (on-demand)"
+else
+  pass "No active token gate in operational authority files (Rule 11 compliant)"
+fi
+
+# Check 8: Rule 15 mapping obligation in copilot-instructions
+log "Checking Rule 15 mapping obligation..."
+if grep -qE "UI_SURFACE_MAP|IPC_CATALOG|CARTOGRAPHY_COMPLETE" .github/copilot-instructions.md 2>/dev/null; then
+  pass "Rule 15 mapping docs referenced in kernel"
+else
+  fail "Rule 15 mapping docs NOT referenced in kernel"
+fi
+
+# Check 9: Rule 16 test matrix in kernel
+log "Checking Rule 16 test matrix..."
+if grep -qE "Test coverage matrix|tauri-ipc-contract|Rule 16" .github/copilot-instructions.md 2>/dev/null; then
+  pass "Rule 16 test coverage matrix present in kernel"
+else
+  fail "Rule 16 test coverage matrix MISSING from kernel"
 fi
 
 log "════════════════════════════════════════"

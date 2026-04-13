@@ -114,6 +114,8 @@ export const sharedTestConfig = defineConfig({
       'tests/contract/**/*.{test,spec}.{ts,tsx}',
       'tests/unit/**/*.{test,spec}.{ts,tsx}',
       'tests/integration/**/*.{test,spec}.{ts,tsx}',
+      'tests/architecture/**/*.{test,spec}.{ts,tsx}',
+      'tests/qa/**/*.{test,spec}.{ts,tsx}',
     ],
     exclude: [
       'node_modules',

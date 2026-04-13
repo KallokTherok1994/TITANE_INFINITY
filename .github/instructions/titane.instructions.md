@@ -21,8 +21,12 @@
   - layer conflict checks
   - broader validators
   - proof-pack discipline
+  - mapping/cartography update verification (Rule 15)
+  - test creation verification (Rule 16)
 - Keep fixes minimal and reversible.
 - Route binary, repeated rules toward validator scripts.
+- For every new file in `src/` or `src-tauri/`: confirm corresponding test file exists (Rule 16).
+- For every structural change: confirm relevant mapping doc is updated (Rule 15).
 
 ## DONT
 
@@ -30,6 +34,7 @@
 - Do not duplicate PROD token doctrine in lower layers.
 - Do not keep workflow-heavy runbooks in always-on instruction files.
 - Do not claim completion without validator output.
+- Do not skip mapping update or test creation for new features (Rule 15/16 are hard gates).
 
 ## Preuves attendues
 

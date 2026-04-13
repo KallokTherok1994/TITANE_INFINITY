@@ -1,3 +1,23 @@
+### Agent de Sécurité Active (security_active/, src/services/security_active/)
+- Scope: Détection d’anomalies réseau, sandboxing, réponse automatisée aux menaces, supervision croisée.
+- Gate: Détection d’intrusion, logs de sécurité, tests E2E de résilience, intégration autoheal.
+- Required: Dashboard sécurité, alerting, tests unitaires et E2E, preuve de confinement.
+- Mapping: update `ARCHITECTURE.md`, `docs/CARTOGRAPHY_COMPLETE.md`, `UI_SURFACE_MAP.md` si dashboard UI.
+### Orchestrateur Dynamique Agent (orchestrator/, src/services/orchestrator/)
+- Scope: Répartition intelligente des tâches entre agents, adaptation dynamique à la charge, gestion des priorités et des ressources.
+- Gate: Preuve de répartition optimale, logs d’orchestration, tests E2E de charge, intégration autoheal.
+- Required: Dashboard d’orchestration, métriques de charge, tests unitaires et E2E, preuve d’auto-adaptation.
+- Mapping: update `ARCHITECTURE.md`, `docs/CARTOGRAPHY_COMPLETE.md`, `UI_SURFACE_MAP.md` si dashboard UI.
+### Explainability Agent (explainability/, src/services/explainability/)
+- Scope: Traçabilité des décisions IA, logs d’inférences, justification des choix, audit explicable.
+- Gate: Génération automatique de rapports d’explicabilité, logs d’inférences, tests E2E sur la traçabilité.
+- Required: Preuve d’explication pour chaque décision IA, intégration avec autoheal, dashboard UI si besoin.
+- Mapping: update `ARCHITECTURE.md`, `docs/CARTOGRAPHY_COMPLETE.md`, `UI_SURFACE_MAP.md` si dashboard UI.
+### Auto-Diagnostic Agent (diagnostic/, src/services/diagnostic/)
+- Scope: Analyse proactive des dérives, auto-vérification de l’intégrité, suggestions de correctifs, génération de rapports d’anomalie.
+- Gate: Détection automatique d’erreurs, auto-tests, rapport d’anomalie, intégration avec autoheal.
+- Required: Génération de rapports, tests unitaires et E2E, preuve de correction automatique.
+- Mapping: update `ARCHITECTURE.md`, `docs/CARTOGRAPHY_COMPLETE.md`.
 # TITANE∞ - Root AGENTS
 
 ## Authority
@@ -30,22 +50,25 @@ Heavy doctrine belongs to the local Codex rules file, not to the repo.
 ## Agent Specialization
 
 ### Backend Agent (src-tauri/, Rust)
-- Scope: Ring0/Ring1 — Tauri commands, IPC, capabilities, Rust services.
+- Scope: Ring 0 (Kernel Rust) + Ring 1 (Types/Data) — Tauri commands, IPC, capabilities, Rust services.
 - Gate: IPC contract `{ ok, content, error }` must be preserved.
-- Required: allowlist update + integration tests for new commands.
+- Required: allowlist update + integration tests for new commands + contract test in `tests/contract/tauri-ipc-contract.test.ts`.
+- Mapping: update `docs/IPC_CATALOG.md` + `ARCHITECTURE.md` when IPC changes.
 - AutoHeal: append entry on every fix.
 
 ### Frontend Agent (src/, TypeScript/React)
-- Scope: Ring4 — UI components, pages, hooks, stores, engines.
+- Scope: Ring 3 (Orchestration/Stores/Hooks) + Ring 4 (UI components, pages, engines).
 - Gate: stable `data-testid` selectors; ErrorBoundary on every new component.
-- Required: E2E tests for user-facing changes; registry/ui-events.jsonl entry.
+- Required: E2E tests for user-facing changes; `registry/ui-events.jsonl` entry; update `UI_SURFACE_MAP.md`.
+- Mapping: update `UI_SURFACE_MAP.md` + `docs/CARTOGRAPHY_COMPLETE.md` when UI surfaces change.
 - AutoHeal: append entry on every fix.
 
 ### QA Agent (tests/, e2e/)
-- Scope: Ring4 — unit tests, integration tests, E2E harness.
-- Gate: no feature without tests (Rule 16); deterministic selectors only.
-- Required: E2E logs + screenshots as proof artifacts.
-- Reference: `e2e/AGENTS.md` for E2E discipline.
+- Scope: Ring 3-4 — unit tests, integration tests, E2E harness.
+- Gate: no feature without tests (Rule 16); deterministic selectors only; test coverage matrix enforced.
+- Required: E2E logs + screenshots as proof artifacts; Q&A scenario tests for new capabilities.
+- Test matrix: see Rule 16 in `.github/copilot-instructions.md`.
+- AutoHeal: append entry on every fix.
 
 ### Security Agent (governance/, sbom/, scripts/verify/)
 - Scope: Cross-ring — SBOM, governance, audit trails.
@@ -53,16 +76,14 @@ Heavy doctrine belongs to the local Codex rules file, not to the repo.
 - Required: SBOM update on dependency change; audit log entry.
 
 ### Build Agent (scripts/, .github/workflows/)
-- Scope: CI/CD — build, release, artifact generation.
-- Gate: Rule 11 (on-demand), Rule 13 (version bump), Rule 14 (BUILD ALL sequence).
-- Required: version bump before every advanced build; update RELEASE_SURFACE_INVENTORY.
 
+### Monitoring Agent (monitoring/, src/services/monitoring/)
+ - Scope: Supervision temps réel de la santé des agents, collecte de métriques, alerting, auto-restart.
+ - Gate: Détection d'anomalies, logs croisés, preuve de vie agents, alertes sur dérive ou crash.
+ - Required: Dashboard de monitoring, logs d'événements, tests E2E de résilience, intégration avec autoheal.
+ - Mapping: update `ARCHITECTURE.md`, `docs/CARTOGRAPHY_COMPLETE.md`, `UI_SURFACE_MAP.md` si dashboard UI.
 ## Chain-of-Thought Validation
 
-Before applying any patch:
-1. Identify which Ring(s) are touched.
-2. Verify no inverse imports or Ring boundary violations.
-3. Confirm IPC contract preserved if IPC changed.
 4. Confirm tests exist or will be created (Rule 16).
 5. Plan AutoHeal entry (Rule 10).
 6. Identify which mapping docs need updating (Rule 15).

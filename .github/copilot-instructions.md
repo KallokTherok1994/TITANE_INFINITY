@@ -68,17 +68,20 @@ If a check cannot run, classify BLOCKED with a next action <= 30 minutes.
 
 ## Rule 10 - AutoHeal capture is mandatory and automatic
 
-For every code modification, automatically:
-- Append one entry to `scripts/autoheal/autoheal_rules.jsonl`.
-- Run anti-regression checks.
-- Run `bash scripts/autoheal/detect_recurrence.sh`.
-- Run `bash scripts/verify_instructions.sh`.
+For **every** code modification (any file change in `src/`, `src-tauri/`, `tests/`, `e2e/`, `scripts/`, `.github/`), automatically and without exception:
+- Append one entry to `scripts/autoheal/autoheal_rules.jsonl` (schema: `id, date, scope, symptom, root_cause, fix, prevention_test, commands, files_changed, rollback`).
+- Run anti-regression checks relevant to touched scope.
+- Run `bash scripts/autoheal/detect_recurrence.sh` — must exit 0 (PASS).
+- Run `bash scripts/verify_instructions.sh` — must exit 0 (PASS).
+- If either exits non-zero: classify FAIL, do not proceed, rollback immediately.
+- AutoHeal entry `id` must be unique; `prevention_test` must include `detect_recurrence`.
 
 ## Rule 11 - Production builds on demand
 
-Production builds and deploys are executed on user request or when needed.
-No token gate required.
+Production builds and deploys are executed **on user request or when needed — no token gate required**.
+There are no special tokens, passphrase, or prerequisite messages required to authorize a build or deploy.
 Use `BUILD ALL` command (Rule 14) for the full automated build and deploy sequence.
+The only pre-build checks are: version bump (Rule 13), relevant test gates, and anti-regression scan (Rule 10).
 
 ## Rule 12 - Proof pack and rollback required
 
@@ -103,18 +106,19 @@ Only one active execution authority and one active E2E authority at a time.
 
 ## Rule 14 - BUILD ALL command
 
-When the user issues `BUILD ALL`, execute the full automated sequence:
-1. Production build + deploy (Tauri).
-2. Build all artifacts: AppImage, DEB, RPM.
-3. Build Android APK.
-4. Build Windows installer (if applicable).
-5. Uninstall existing system installations and dock icons.
-6. Clean and purge all build caches.
-7. Reinstall cleanly.
-8. Update RELEASE notes, checksums, and RELEASE_SURFACE_INVENTORY.
-9. Verify and fix regressions, errors, warnings, and blockers.
-10. Run AutoHeal and ensure everything is up to date, conformant, and optimal.
-11. Bump version per Rule 13.
+When the user issues `BUILD ALL`, execute the full automated sequence **without any token gate or precondition message**:
+1. Bump version per Rule 13 (`node scripts/bump-version.mjs` + `node scripts/sync-versions.mjs`).
+2. Production build + deploy (Tauri desktop).
+3. Build all artifacts: AppImage, DEB, RPM.
+4. Build Android APK.
+5. Build Windows installer (if applicable).
+6. Uninstall existing system installations and dock icons.
+7. Clean and purge all build caches.
+8. Reinstall cleanly.
+9. Update RELEASE notes, checksums, and RELEASE_SURFACE_INVENTORY.
+10. Verify and fix regressions, errors, warnings, and blockers.
+11. Run AutoHeal (Rule 10) and ensure everything is up to date, conformant, and optimal.
+12. Update all relevant mapping/cartography docs (Rule 15).
 
 ## Rule 15 - Auto-update mapping and cartography
 
@@ -126,6 +130,19 @@ Every code modification must automatically update the relevant mapping documents
 - `docs/CARTOGRAPHY_COMPLETE.md` — if any structural change.
 - `docs/IPC_CATALOG.md` — if IPC commands changed.
 
+Trigger table (which doc to update):
+
+| Changed path | Required doc update |
+|---|---|
+| `src/**`, `src/components/**`, `src/pages/**` | `UI_SURFACE_MAP.md`, `docs/CARTOGRAPHY_COMPLETE.md` |
+| `src-tauri/src/**` (new command) | `docs/IPC_CATALOG.md`, `ARCHITECTURE.md`, `docs/CARTOGRAPHY_COMPLETE.md` |
+| `src/engines/**`, `src-tauri/src/` (Ring 2) | `ARCHITECTURE.md`, `docs/CARTOGRAPHY_COMPLETE.md` |
+| Ollama integration (`src/services/**ollama**`, `src-tauri/src/ollama**`) | `OLLAMA_RUNTIME_MAP.md` |
+| Version bump, build artifacts | `RELEASE_SURFACE_INVENTORY.md` |
+| `docs/diagrams/**` | `docs/diagrams/README.md`, `docs/diagrams/CANON_INDEX.md` |
+
+If a required mapping doc is **not updated** when its trigger path is modified: classify **FAIL** and stop until corrected.
+
 ## Rule 16 - Mandatory test creation
 
 Every new integration, capability, or function must include at the same time:
@@ -134,3 +151,16 @@ Every new integration, capability, or function must include at the same time:
 - E2E tests if user-facing.
 - Advanced Q&A scenario tests to validate capabilities.
 No feature is complete without its tests.
+
+### Test coverage matrix (Rule 16 enforcement):
+
+| New artifact | Required tests |
+|---|---|
+| New IPC command (`src-tauri/src/`) | Unit (Rust `#[cfg(test)]`) + contract test in `tests/contract/tauri-ipc-contract.test.ts` |
+| New UI component/page (`src/`) | Unit (Vitest) + E2E with `data-testid` selectors in `e2e/` |
+| New engine/service (`src/engines/`, `src/services/`) | Unit (Vitest) + Integration test |
+| New Ollama/AI integration | Provider test + offline fallback test + Q&A scenario test |
+| New capability exposed to user | E2E scenario + Q&A advanced test (verifying real capacity behavior) |
+| New build/deploy step | Smoke test verifying artifact presence + checksum |
+
+A gate that detects new source files without corresponding test files classifies the change as BLOCKED until tests exist.

@@ -181,10 +181,10 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
     );
 
     return (
-      <div className="chat-window">
-        <div className="chat-header">
-          <h2>TITANE∞ Chat IA</h2>
-          <div className="chat-header-actions">
+      <div className="chat-window chat-window-fadein">
+        <header className="chat-header chat-header-modern">
+          <div className="chat-header-main">
+            <h2 className="chat-title">TITANE∞ Chat IA</h2>
             <StatusIndicator
               online={connectionStatus.online}
               provider={connectionStatus.provider as 'Gemini' | 'Ollama' | 'Offline'}
@@ -192,6 +192,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
               connectionState={connectionState}
               unavailableReason={unavailableReason}
             />
+          </div>
+          <div className="chat-header-actions">
             <button
               type="button"
               className={`ui-shield-button ${uiIntegrity?.hasSnapshot ? 'active' : ''}`}
@@ -221,7 +223,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
               </button>
             )}
           </div>
-        </div>
+        </header>
 
         {/* VitalsPanel - Unified DEV cockpit: mode, messages, connection truth, metrics */}
         <VitalsPanel
@@ -353,7 +355,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
           </div>
         )}
 
-        <div className="chat-input-container">
+        <form className="chat-input-container chat-input-animated" onSubmit={e => { e.preventDefault(); handleSend(); }}>
           <button
             type="button"
             className="file-import-button"
@@ -371,24 +373,24 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
           <textarea
             id="chat-window-textarea"
             ref={textareaRef}
-            className="chat-input"
+            className="chat-input chat-input-modern"
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={
               !anyBackendAvailable
                 ? 'Moteurs IA indisponibles...'
-                : 'Posez votre question... (Shift+Enter pour nouvelle ligne)'
+                : 'Posez votre question... (Shift+Entrée = nouvelle ligne)'
             }
             rows={1}
             disabled={isLoading || !anyBackendAvailable}
             aria-label="Message à envoyer"
             aria-invalid={!!error}
+            autoFocus
           />
           <button
             type="submit"
-            className="send-button"
-            onClick={handleSend}
+            className="send-button send-button-animated"
             disabled={!input.trim() || isLoading || !anyBackendAvailable}
             aria-label={
               !anyBackendAvailable
@@ -401,13 +403,13 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
             title={
               !anyBackendAvailable
                 ? 'Moteurs IA indisponibles — vérifiez Ollama ou le backend Tauri'
-                : 'Envoyer (Enter)'
+                : 'Envoyer (Entrée)'
             }
           >
             <span aria-hidden="true">{isLoading ? '⏳' : '📨'}</span>
           </button>
         </div>
-      </div>
+      </form>
     );
   }
 );

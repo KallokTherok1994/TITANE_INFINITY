@@ -88,6 +88,27 @@ if has_match "NO_SKIPS|no-skips|skipped by design" .github/copilot-instructions.
 if has_match "proof pack|Proof Pack|proof_packs" .github/copilot-instructions.md .github/instructions/titane.instructions.md; then ok "G_MARKER_PROOF_PACK"; else ko "G_MARKER_PROOF_PACK"; fi
 if has_match "scripts/autoheal/autoheal_rules.jsonl" .github/copilot-instructions.md .github/instructions/tests-e2e.instructions.md .github/instructions/titane.instructions.md; then ok "G_MARKER_AUTOHEAL_CANONICAL_PATH"; else ko "G_MARKER_AUTOHEAL_CANONICAL_PATH"; fi
 
+# Rule 11 — no token gate required
+if has_match "no token gate" .github/copilot-instructions.md AGENTS.md; then ok "G_RULE11_NO_TOKEN_GATE"; else ko "G_RULE11_NO_TOKEN_GATE"; fi
+
+# Rule 14 — BUILD ALL documented
+if has_match "BUILD ALL" .github/copilot-instructions.md AGENTS.md; then ok "G_RULE14_BUILD_ALL_PRESENT"; else ko "G_RULE14_BUILD_ALL_PRESENT"; fi
+
+# Rule 15 — per-layer mapping obligation present
+if has_match "UI_SURFACE_MAP|IPC_CATALOG|CARTOGRAPHY_COMPLETE" .github/copilot-instructions.md .github/instructions/tauri.instructions.md .github/instructions/frontend.instructions.md; then ok "G_RULE15_MAPPING_OBLIGATION_PRESENT"; else ko "G_RULE15_MAPPING_OBLIGATION_PRESENT"; fi
+
+# Rule 16 — test coverage matrix present
+if has_match "Test coverage matrix|Rule 16|tauri-ipc-contract" .github/copilot-instructions.md .github/instructions/tests-e2e.instructions.md; then ok "G_RULE16_TEST_MATRIX_PRESENT"; else ko "G_RULE16_TEST_MATRIX_PRESENT"; fi
+
+# Rule 15 — FAIL if keyword FAIL missing for mapping non-update
+if has_match "classify.*FAIL.*mapping|FAIL.*mapping|mapping.*FAIL" .github/copilot-instructions.md .github/instructions/tauri.instructions.md .github/instructions/frontend.instructions.md; then ok "G_RULE15_FAIL_ON_MISSING_MAPPING"; else ko "G_RULE15_FAIL_ON_MISSING_MAPPING"; fi
+
+# Rule 16 — BLOCKED if test missing
+if has_match "BLOCKED.*test|test.*BLOCKED|until test exists" .github/copilot-instructions.md .github/instructions/tests-e2e.instructions.md .github/instructions/frontend.instructions.md .github/instructions/tauri.instructions.md; then ok "G_RULE16_BLOCKED_WITHOUT_TESTS"; else ko "G_RULE16_BLOCKED_WITHOUT_TESTS"; fi
+
+# Legacy REGLE_CRITIQUE must be archived (not active authority)
+if has_match "ARCHIVÉE|SUPERSEDED|superseded|non.op.rationnelle" .github/REGLE_CRITIQUE_DEPLOIEMENT.md; then ok "G_REGLE_CRITIQUE_ARCHIVED"; else ko "G_REGLE_CRITIQUE_ARCHIVED"; fi
+
 # detect recurrence guard
 if bash scripts/autoheal/detect_recurrence.sh >/dev/null; then ok "G_AH_RECURRENCE_GUARD_PASS"; else ko "G_AH_RECURRENCE_GUARD_PASS"; fi
 

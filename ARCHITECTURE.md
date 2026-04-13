@@ -1,3 +1,21 @@
+## Agent de Sécurité Active
+
+L’agent de sécurité active détecte les anomalies réseau, effectue du sandboxing, orchestre la réponse automatisée aux menaces et supervise les autres agents pour garantir la résilience. Il s’intègre à un dashboard sécurité UI (Ring 3/4) et au moteur de sécurité active (Ring 2), avec accès direct au kernel (Ring 0) pour la gestion des alertes critiques.
+
+- **Rôle** : Détection d’intrusion, sandboxing, réponse automatisée, supervision croisée.
+- **Flux** : Sécurité Dashboard UI → Security Active Engine → Kernel Rust (gestion) → Alertes/Logs.
+- **Gates** : Détection d’intrusion, logs de sécurité, tests E2E de résilience, intégration autoheal.
+
+---
+## Orchestrateur Dynamique Agent
+
+L’agent orchestrateur dynamique répartit intelligemment les tâches entre les agents TITANE, adapte la charge en temps réel, gère les priorités et optimise l’utilisation des ressources. Il s’intègre à un dashboard UI (Ring 3/4) et au moteur d’orchestration (Ring 2), avec accès direct au kernel (Ring 0) pour la gestion des ressources critiques.
+
+- **Rôle** : Répartition dynamique, gestion de la charge, adaptation, priorisation.
+- **Flux** : Orchestration Dashboard UI → Orchestrator Engine → Kernel Rust (gestion) → Logs/Métriques.
+- **Gates** : Preuve de répartition optimale, logs d’orchestration, tests E2E de charge, intégration autoheal.
+
+---
 # ARCHITECTURE.md — TITANE_INFINITY
 
 **Version:** 30.1.0  
@@ -38,11 +56,13 @@ flowchart TB
         Stores["Stores Zustand (18)"]
         Hooks["Hooks (110)"]
         Services["Services (IPC bridges)"]
+        MonitoringUI["Monitoring Dashboard"]
     end
 
     subgraph Ring2 ["⚙️ Ring 2 — Engines"]
         Engines["src/engines/ (25 domaines)"]
         RustCmd["src-tauri/src/commands/"]
+        MonitoringEngine["Monitoring Engine"]
     end
 
     subgraph Ring1 ["📦 Ring 1 — Types/Data"]
@@ -61,6 +81,8 @@ flowchart TB
     Ring3 -->|safeInvokeCanonical| Ring0
     Ring2 -->|types| Ring1
     Ring3 -->|engines| Ring2
+    MonitoringUI -->|metrics| MonitoringEngine
+    MonitoringEngine -->|collect| Ring0
 
     style Ring0 fill:#dc2626,color:#fff
     style Ring1 fill:#ea580c,color:#fff
@@ -133,19 +155,24 @@ function MyComponent() {
 2. **4-Ring** : pas d'import inverse. Ring 4 ne bypasse pas Ring 3.
 3. **IPC Contract** : toute réponse suit `{ ok, content, error }`. Zéro silence.
 4. **Tauri-only** : production runtime exclusivement Tauri. Aucun serveur HTTP exposé.
-5. **Online-first gouverné** : cloud providers via backend uniquement, fallback local obligatoire.
 
 ---
 
 ## Gates de vérification
 
-```bash
-bash scripts/verify_instructions.sh
-bash scripts/autoheal/detect_recurrence.sh
 bash scripts/gates/ring-integrity-gate.sh
-pnpm run check
 ```
 
 ---
 
 _TITANE_INFINITY v30.1.0 — Cognitive OS_
+
+## Explainability Agent
+
+L’agent d’explicabilité assure la traçabilité des décisions IA, la génération de logs d’inférences, la justification des choix et l’audit explicable. Il s’intègre à un dashboard UI (Ring 3/4) et au moteur explainability (Ring 2), avec accès direct au kernel (Ring 0) pour la collecte des preuves d’explication.
+
+- **Rôle** : Traçabilité, justification, audit explicable, logs d’inférences.
+- **Flux** : Explainability Dashboard UI → Explainability Engine → Kernel Rust (collecte) → Rapports/Explications.
+- **Gates** : Génération automatique de rapports d’explicabilité, logs d’inférences, tests E2E sur la traçabilité.
+
+---

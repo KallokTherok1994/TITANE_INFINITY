@@ -94,8 +94,8 @@ export const ChatPage: React.FC = () => {
       onError={handleChatError}
       onReset={handleChatReset}
     >
-      <div className="h-full w-full flex flex-col">
-        <div className="p-4 border-b">
+      <div className="chat-fullscreen">
+        <div className="chat-fullscreen-header">
           <h1 className="text-2xl font-bold">TITANE∞ Chat</h1>
           <ChatProviderSelector
             selectedProvider={selectedProvider}
@@ -103,7 +103,7 @@ export const ChatPage: React.FC = () => {
             providers={availableProviders}
           />
         </div>
-        <div className="flex-1 overflow-auto">
+        <div className="chat-fullscreen-window">
           <ChatWindow />
         </div>
       </div>
