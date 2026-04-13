@@ -36,7 +36,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v4
 
       - name: Enable Corepack (pnpm)
         run: corepack enable
@@ -87,7 +87,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v4
 
       - name: Enable Corepack (pnpm)
         run: corepack enable
@@ -194,7 +194,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v4
 
       - name: 📁 Ensure dist directory exists
         run: mkdir -p dist
@@ -264,7 +264,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v4
 
       - name: 📁 Ensure dist directory exists
         run: New-Item -ItemType Directory -Force -Path dist | Out-Null
@@ -311,7 +311,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v4
 
       - name: Enable Corepack (pnpm)
         run: corepack enable
@@ -340,7 +340,7 @@ jobs:
 
       - name: 📤 Upload Playwright report
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: playwright-report-${{ github.run_id }}
           path: playwright-report/
@@ -368,7 +368,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v4
 
       - name: Enable Corepack (pnpm)
         run: corepack enable
@@ -431,7 +431,7 @@ jobs:
           fi
       - name: 📤 Upload build artifacts
         if: success() && github.event_name == 'push' && github.ref == 'refs/heads/MAIN'
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: titane-build-ubuntu-${{ github.run_id }}
           path: |
@@ -472,7 +472,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v4
 
       - name: Setup Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v5
