@@ -52,17 +52,10 @@
       "open": true
     },
     "http": {
-      "scope": [
-        "https://api.openai.com/*",
-        "https://generativelanguage.googleapis.com/*"
-      ]
+      "scope": ["https://api.openai.com/*", "https://generativelanguage.googleapis.com/*"]
     },
     "fs": {
-      "scope": [
-        "$APPDATA/*",
-        "$APPCONFIG/*",
-        "$APPLOCALDATA/*"
-      ]
+      "scope": ["$APPDATA/*", "$APPCONFIG/*", "$APPLOCALDATA/*"]
     }
   }
 }

@@ -1,4 +1,4 @@
-# Architecture TITANE∞ v30.1.0
+# Architecture TITANE∞ v30.1.6
 
 > **Cartographie complète mise à jour le 2026-04-11**
 >
@@ -7,7 +7,7 @@
 > - 🔗 [Catalogue IPC Exhaustif](./IPC_CATALOG.md)
 > - 📦 [Carte des Dépendances](./DEPENDENCY_MAP.md)
 
-## 📊 Métriques du Projet v30.1.0
+## 📊 Métriques du Projet v30.1.6
 
 | Métrique | Valeur |
 |---------|--------|
