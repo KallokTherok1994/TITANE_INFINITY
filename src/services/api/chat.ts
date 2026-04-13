@@ -516,6 +516,8 @@ class ChatService {
           provider: config?.provider ?? 'auto',
           systemPrompt,
           requestId,
+          maxTokens: config?.maxTokens ?? undefined,
+          temperature: config?.temperature ?? undefined,
         },
       }) as Record<string, unknown>;
 

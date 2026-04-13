@@ -50,7 +50,7 @@ describe('chatEngine.commands request defaults cache', () => {
     const generateCall = secureInvokeMock.mock.calls[1];
     expect(generateCall?.[0]).toBe('generate_response');
     expect(generateCall?.[1]?.payload?.user_message).toHaveLength(12000);
-    expect(generateCall?.[1]?.payload?.max_output_tokens).toBe(8096);
+    expect(generateCall?.[1]?.payload?.max_output_tokens).toBe(16384);
   });
 
   it('invalidates cached request defaults after configuration changes', async () => {

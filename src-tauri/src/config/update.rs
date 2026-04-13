@@ -126,7 +126,7 @@ fn stable_profile_bundle() -> ChatConfigBundle {
         },
         request_defaults: ChatRequestDefaults {
             temperature: 0.7,
-            max_output_tokens: 484,
+            max_output_tokens: 8192,
             provider: ProviderPreference::Auto,
             enable_streaming: true,
         },
@@ -373,8 +373,8 @@ fn validate_engine_dto(dto: &ChatEngineConfigDto) -> Result<(), String> {
 fn validate_request_defaults(defaults: &ChatRequestDefaults) -> Result<(), String> {
     validate_temperature(defaults.temperature)?;
 
-    if defaults.max_output_tokens == 0 || defaults.max_output_tokens > 8096 {
-        return Err("max_output_tokens doit être entre 1 et 8096".to_string());
+    if defaults.max_output_tokens == 0 || defaults.max_output_tokens > 16384 {
+        return Err("max_output_tokens doit être entre 1 et 16384".to_string());
     }
 
     Ok(())

@@ -32,6 +32,8 @@ pub struct ConversationGenerateArgs {
     pub system_prompt: Option<String>,
     pub request_id: Option<String>,
     pub context_envelope: Option<serde_json::Value>,
+    pub max_tokens: Option<usize>,
+    pub temperature: Option<f32>,
 }
 
 type CommandResult<T> = Result<T, String>;
@@ -233,6 +235,8 @@ pub async fn conversation_generate(
         system_prompt,
         request_id,
         context_envelope,
+        max_tokens,
+        temperature,
     } = args;
     // Convertir le mode string en ConversationMode
     let conversation_mode = match mode.as_deref() {
@@ -808,8 +812,8 @@ pub async fn conversation_generate(
                 .unwrap_or(configured_provider);
 
             AIConfig {
-                temperature: 0.7,
-                max_tokens: None,
+                temperature: args.temperature.unwrap_or(0.7),
+                max_tokens: args.max_tokens,
                 provider_preference: provider_pref,
             }
         }),

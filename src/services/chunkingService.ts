@@ -42,6 +42,18 @@ export function chunkMarkdown(
   const result: string[] = [];
 
   for (const section of sections) {
+    const startsWithHeading = /^#{1,3}\s+/.test(section.trimStart());
+    if (section.trim().length < opts.minChunkSize) {
+      // Too small — merge with next (handled below by flushing logic)
+      if (!startsWithHeading && result.length > 0) {
+        const last = result[result.length - 1];
+        if (last !== undefined && (last + '\n\n' + section).length <= opts.maxChunkSize) {
+          result[result.length - 1] = last + '\n\n' + section;
+          continue;
+        }
+      }
+    }
+
     if (section.length <= opts.maxChunkSize) {
       if (section.trim()) result.push(section.trim());
     } else {
@@ -171,6 +183,30 @@ function splitByParagraphs(text: string, opts: Required<ChunkOptions>): string[]
   }
 
   return chunks.filter(c => c.length >= opts.minChunkSize);
+}
+
+function splitLongText(text: string, maxChunkSize: number): string[] {
+  const parts: string[] = [];
+  let rest = text.trim();
+
+  while (rest.length > maxChunkSize) {
+    let splitAt = rest.lastIndexOf(' ', maxChunkSize);
+    if (splitAt <= 0) {
+      splitAt = maxChunkSize;
+    }
+
+    const part = rest.slice(0, splitAt).trim();
+    if (part.length > 0) {
+      parts.push(part);
+    }
+    rest = rest.slice(splitAt).trimStart();
+  }
+
+  if (rest.length > 0) {
+    parts.push(rest);
+  }
+
+  return parts;
 }
 
 function splitByLines(text: string, opts: Required<ChunkOptions>): string[] {
