@@ -27,14 +27,14 @@ function loadJson<T>(relativePath: string): T {
 }
 
 describe('Tauri devtools configuration', () => {
-  it('keeps desktop windows devtools-enabled for F12 and Ctrl+Shift+I', () => {
+  it('reflects production devtools policy (disabled in tauri.conf.json, IPC toggle commands remain)', () => {
     const config = loadJson<TauriConfig>('src-tauri/tauri.conf.json');
     const mainWindow = config.app?.windows?.find(window => window.label === 'main');
     const mainCapability = config.app?.security?.capabilities?.find(capability =>
       capability.windows?.includes('main')
     );
 
-    expect(mainWindow?.devtools).toBe(true);
+    expect(mainWindow?.devtools).toBe(false);
     expect(mainCapability?.permissions).toContain(
       'core:webview:allow-internal-toggle-devtools'
     );
