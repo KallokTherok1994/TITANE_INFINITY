@@ -282,7 +282,7 @@ console.log('Recommandations:', analysis.recommendations);
   },
   "build_config": {
     "build_tool": "tauri",
-    "build_command": "GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json",
+    "build_command": "corepack pnpm exec tauri build --config src-tauri/tauri.conf.json",
     "output_directory": "src-tauri/target/release"
   },
   "test_config": {
@@ -317,14 +317,14 @@ console.log('Commandes:', buildAction.commands);
 
 // Commandes générées :
 // 1. rm -rf src-tauri/target/release
-// 2. GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
+// 2. corepack pnpm exec tauri build --config src-tauri/tauri.conf.json  # on demand (Rule 11)
 ```
 
 **Exécution manuelle** :
 ```bash
 # L'utilisateur copie/colle les commandes
 rm -rf src-tauri/target/release
-GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
+corepack pnpm exec tauri build --config src-tauri/tauri.conf.json  # on demand (Rule 11)
 ```
 
 #### Test

@@ -108,14 +108,10 @@ bash scripts/autoheal/detect_recurrence.sh
 
 ## Release workflow
 
-> **RESTRICTED** — Requires PROD governance tokens.
+> Production builds on demand — no token gate required (Rule 11).
+> Use `BUILD ALL` command for full automated sequence (Rule 14).
 
-```
-Required token: GO_FOR_PROD_BUILD__TITANE_INFINITY
-Required token: GO_FOR_PROD_DEPLOY__TITANE_INFINITY
-```
-
-Without these tokens: **STOP-THE-LINE**
+Without explicit authorization: **STOP-THE-LINE**
 
 ---
 

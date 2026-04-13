@@ -93,7 +93,7 @@ postbuild: "bash scripts/post-build.sh"
 ✅ **Invariant 2**: `build:prod-safe` contains `NPM_CONFIG_IGNORE_SCRIPTS=1` + `vite build`  
 ✅ **Invariant 3**: `postbuild` hook is **never removed**  (kept for local development)  
 ✅ **Invariant 4**: Production builds never execute postbuild (guarded by env)  
-✅ **Invariant 5**: No production build runs without explicit build token  
+✅ **Invariant 5**: Production builds are executed on user request or via BUILD ALL (Rule 11/14)  
 ✅ **Invariant 6**: Archive (`deployment/latest/certification/`) remains immutable  
 
 ### Verification
@@ -110,18 +110,14 @@ pnpm run build:prod-safe:verify
 
 ---
 
-## 4. Token Gates (P4)
+## 4. Production Build Authorization (P4)
 
 ### P4-1: Production Build
 
-**Token Required**:
-```
-GO_FOR_PROD_BUILD__TITANE_INFINITY=<token>
-```
+**Authorization**: On demand — user request or BUILD ALL command (Rule 11/14).
 
 **Command**:
 ```bash
-export GO_FOR_PROD_BUILD__TITANE_INFINITY=<token>
 pnpm run build:prod-safe
 ```
 
@@ -149,11 +145,7 @@ pnpm run build:prod-safe
 
 ### P4-3: Production Deploy
 
-**Tokens Required** (Two-step):
-```
-GO_FOR_PROD_BUILD__TITANE_INFINITY=<token1>
-GO_FOR_PROD_DEPLOY__TITANE_INFINITY=<token2>
-```
+**Authorization**: On demand — user request or BUILD ALL command (Rule 11/14).
 
 **Actions**:
 1. Create git tag: `v<version>-prod`
@@ -276,7 +268,7 @@ ls -la ~/.local/share/applications/ | grep titane
 | `build:prod-safe:verify` | ✅ Implemented | Governance gate |
 | Archive immutable | ✅ Maintained | P3-7 seal remains locked |
 | Registry append-only | ✅ Maintained | P4-1A entry added |
-| Token gates | ✅ Required | GO_FOR_PROD_BUILD, GO_FOR_PROD_DEPLOY |
+| Token gates | ✅ Removed | On-demand build policy (Rule 11/14) |
 
 ---
 

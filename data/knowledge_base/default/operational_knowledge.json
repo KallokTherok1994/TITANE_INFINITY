@@ -84,10 +84,10 @@
     "e2e": "wdio + tauri-driver (23 tests PASS)",
     "fmt": "cargo fmt -- --check (0 diffs)"
   },
-  "prod_tokens": {
-    "description": "Tokens requis pour actions PROD — ne jamais les simuler",
-    "build": "GO_FOR_PROD_BUILD__TITANE_INFINITY",
-    "deploy": "GO_FOR_PROD_DEPLOY__TITANE_INFINITY"
+  "prod_policy": {
+    "description": "Builds production à la demande — aucun token gate requis (Rule 11)",
+    "build": "corepack pnpm exec tauri build --config src-tauri/tauri.conf.json",
+    "build_all": "BUILD ALL — séquence complète automatisée (Rule 14)"
   },
   "rollback_commands": {
     "instructions": "git restore -- .github/copilot-instructions.md .github/instructions/titane.instructions.md",
@@ -133,8 +133,7 @@
       "deploiement_production": {
         "titre": "Procédure de déploiement en production",
         "prerequis": [
-          "Token GO_FOR_PROD_BUILD__TITANE_INFINITY obtenu",
-          "Token GO_FOR_PROD_DEPLOY__TITANE_INFINITY obtenu",
+          "Autorisation utilisateur obtenue (Rule 11 — on demand)",
           "Tous les quality gates PASS (clippy, tests, fmt, e2e)",
           "Version bumped via node scripts/bump-version.mjs"
         ],

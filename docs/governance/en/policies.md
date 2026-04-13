@@ -86,13 +86,11 @@
 
 ---
 
-## Policy 10 — PROD token gate (Rule 11)
+## Policy 10 — Production builds on demand (Rule 11)
 
-**Rule:** No PROD action without exact tokens:
-- `GO_FOR_PROD_BUILD__TITANE_INFINITY`
-- `GO_FOR_PROD_DEPLOY__TITANE_INFINITY`
+**Rule:** Production builds and deploys are executed on user request or when needed. No token gate required. Use `BUILD ALL` command (Rule 14) for the full automated build and deploy sequence.
 
-**Status:** PROVEN by rule (not runtime-verified)
+**Status:** PROVEN by rule
 
 ---
 
