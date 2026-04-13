@@ -12,12 +12,18 @@ on:
 env:
   NODE_VERSION: '24'
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+  ANDROID_BUILD_TOOLS_VERSION: '34.0.0'
+  ANDROID_PLATFORM_VERSION: 'android-34'
+  ANDROID_NDK_VERSION: '26.1.10909125'
+  ANDROID_CMDLINE_TOOLS_VERSION: '11076708'
 
 jobs:
   android-build:
     name: 🤖 Android APK (mock debug)
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    permissions:
+      contents: read
 
     steps:
       - name: 📥 Checkout code
@@ -31,7 +37,7 @@ jobs:
 
       - name: 📱 Setup Android SDK
         run: |
-          CMDLINE_TOOLS_VERSION="11076708"
+          CMDLINE_TOOLS_VERSION="${{ env.ANDROID_CMDLINE_TOOLS_VERSION }}"
           mkdir -p "$HOME/android-sdk/cmdline-tools"
           curl -o cmdline-tools.zip "https://dl.google.com/android/repository/commandlinetools-linux-${CMDLINE_TOOLS_VERSION}_latest.zip"
           unzip -q cmdline-tools.zip -d "$HOME/android-sdk/cmdline-tools/latest-tmp"
@@ -40,10 +46,10 @@ jobs:
           export ANDROID_HOME="$HOME/android-sdk"
           export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
           yes | sdkmanager --licenses || true
-          sdkmanager "platform-tools" "build-tools;34.0.0" "platforms;android-34" "ndk;26.1.10909125"
+          sdkmanager "platform-tools" "build-tools;${{ env.ANDROID_BUILD_TOOLS_VERSION }}" "${{ env.ANDROID_PLATFORM_VERSION }}" "ndk;${{ env.ANDROID_NDK_VERSION }}"
           echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
           echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
-          echo "NDK_HOME=$HOME/android-sdk/ndk/26.1.10909125" >> $GITHUB_ENV
+          echo "NDK_HOME=$HOME/android-sdk/ndk/${{ env.ANDROID_NDK_VERSION }}" >> $GITHUB_ENV
           echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
           echo "$HOME/android-sdk/platform-tools" >> $GITHUB_PATH
 
@@ -78,5 +84,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: titane-android-debug-mock
-          path: src-tauri/gen/android/app/build/outputs/apk/universal/debug/app-universal-debug.apk
+          path: src-tauri/gen/android/app/build/outputs/apk/**/debug/*.apk
           retention-days: 7
