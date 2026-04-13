@@ -227,7 +227,7 @@ pub async fn ai_generate_local(request: LocalAIRequest) -> Result<LocalAIRespons
                     let resolved = available
                         .iter()
                         .find(|m| m.starts_with(fallback))
-                        .unwrap()
+                        .expect("guarded by any() check above")
                         .clone();
                     log::warn!(
                         "[ai_generate_local] Fallback attempt: model='{}'",
@@ -450,7 +450,9 @@ pub async fn ai_set_local_model(model_name: String) -> Result<String, String> {
 pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
     // ✨ v27.2.1: Check cache first (anti-flapping)
     {
-        let cache = OLLAMA_STATUS_CACHE.lock().unwrap();
+        let cache = OLLAMA_STATUS_CACHE
+            .lock()
+            .map_err(|e| format!("OLLAMA_STATUS_CACHE poisoned: {}", e))?;
         if let Some((status, timestamp)) = cache.as_ref() {
             let elapsed = timestamp.elapsed().as_secs();
             if elapsed < OLLAMA_STATUS_CACHE_TTL_SECS {
@@ -511,7 +513,9 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
 
     // ✨ Update cache
     {
-        let mut cache = OLLAMA_STATUS_CACHE.lock().unwrap();
+        let mut cache = OLLAMA_STATUS_CACHE
+            .lock()
+            .map_err(|e| format!("OLLAMA_STATUS_CACHE poisoned: {}", e))?;
         *cache = Some((status.clone(), Instant::now()));
     }
 

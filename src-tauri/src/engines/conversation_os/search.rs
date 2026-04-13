@@ -170,7 +170,7 @@ impl SearchEngine {
         score += len_score;
 
         // Title presence (+0.1)
-        if title.is_some() && !title.unwrap().is_empty() {
+        if title.map_or(false, |t| !t.is_empty()) {
             score += 0.1;
         }
 
