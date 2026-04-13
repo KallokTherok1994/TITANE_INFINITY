@@ -131,7 +131,7 @@ const PLAYBOOK_REGISTRY: PlaybookPlan[] = [
     description: 'Limiter les dérives de performance et rétablir la cohérence.',
     steps: [
       'Analyser les métriques de performance récentes.',
-      'Identifier le moteur responsable (pipeline, avatar, TTS...).',
+      'Identifier le moteur responsable (pipeline, TTS...).',
       'Appliquer un correctif léger (throttle, reset ciblé).',
     ],
     successCriteria: 'Métriques stabilisées et drift contenu.',

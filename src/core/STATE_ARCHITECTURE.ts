@@ -42,7 +42,6 @@
  * - adaptive: { learning_rate, adaptation_speed, resilience }
  * - narrative: { coherence, identity_strength, purpose_alignment }
  * - physical: { cpu, ram, disk, network, temperature }
- * - avatar: { expression, gesture, position, scale }
  * - voice: { is_speaking, current_text, speed, pitch }
  * - performance: { fps, render_time, memory_usage }
  * - memory: { entries_count, size_mb, compressed }
@@ -88,7 +87,6 @@
  * │           = ORCHESTRATION TEMPS RÉEL (non persisté)              │
  * │                                                                   │
  * │  - Métriques performance live (fps, render_time)                 │
- * │  - État avatar temps réel (expression, gesture)                  │
  * │  - État TTS en cours (is_speaking, current_text)                 │
  * │  - Métriques cognitives dérivées (focus, load, depth)            │
  * │                                                                   │
@@ -109,7 +107,7 @@
  *    - Ne sont PAS persistées
  *    - Peuvent être restaurées aux valeurs par défaut
  *
- * 3. **Les métriques temps réel** (FPS, CPU, avatar expression) :
+ * 3. **Les métriques temps réel** (FPS, CPU) :
  *    - Sont gérées par SingularityFusionCore
  *    - Ne sont PAS persistées
  *    - Sont recalculées à chaque tick/frame

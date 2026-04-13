@@ -38,7 +38,6 @@ export type ModuleType =
   | 'cognitive'
   | 'adaptive'
   | 'narrative'
-  | 'avatar'
   | 'tts'
   | 'lipsync'
   | 'memory'
@@ -190,9 +189,6 @@ export class AutoHealEngine {
         case 'narrative':
           await this.healNarrativeModule(actionsTaken);
           break;
-        case 'avatar':
-          await this.healAvatarModule(actionsTaken);
-          break;
         case 'tts':
           await this.healTTSModule(actionsTaken);
           break;
@@ -249,17 +245,6 @@ export class AutoHealEngine {
 
     actions.push('Reinitializing narrative engine');
     await secureInvoke('autoheal_init_narrative');
-  }
-
-  private async healAvatarModule(actions: string[]): Promise<void> {
-    actions.push('Stopping avatar animations');
-    await secureInvoke('autoheal_stop_avatar');
-
-    actions.push('Reloading avatar model');
-    await secureInvoke('autoheal_reload_avatar');
-
-    actions.push('Restarting avatar engine');
-    await secureInvoke('autoheal_start_avatar');
   }
 
   private async healTTSModule(actions: string[]): Promise<void> {

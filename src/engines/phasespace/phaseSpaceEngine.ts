@@ -48,11 +48,6 @@ export interface PhasePoint {
     haloIntensity: number;
     narrativeDensity: number;
 
-    // HoloPresence (3D)
-    visualSize: number;
-    visualGlow: number;
-    particleCount: number;
-
     // Méta (3D)
     coherence: number;
     complexity: number;
@@ -338,10 +333,9 @@ class PhaseSpaceEngine {
     if (!metaState || !metaState.unifiedState) return;
 
     const unifiedState = metaState.unifiedState as Record<string, unknown>;
-    const { identity, expression, holoPresence } = unifiedState as {
+    const { identity, expression } = unifiedState as {
       identity?: Record<string, unknown>;
       expression?: Record<string, unknown>;
-      holoPresence?: Record<string, unknown>;
     };
     const coherence = metaState.coherence as { global?: number } | undefined;
 
@@ -356,11 +350,6 @@ class PhaseSpaceEngine {
       | undefined;
     const expressionNarrative = (expression as Record<string, unknown> | undefined)
       ?.narrative as Record<string, unknown> | undefined;
-    const holoVisuals = (holoPresence as Record<string, unknown> | undefined)?.visuals as
-      | Record<string, unknown>
-      | undefined;
-    const holoParticles = (holoPresence as Record<string, unknown> | undefined)
-      ?.particles as Record<string, unknown> | undefined;
 
     const voiceProsody = expressionVoice?.prosody as Record<string, unknown> | undefined;
     const haloDynamics = expressionHalo?.dynamics as Record<string, unknown> | undefined;
@@ -383,11 +372,6 @@ class PhaseSpaceEngine {
         voicePitch: (voiceProsody?.pitch as number) ?? 1.0,
         haloIntensity: (haloDynamics?.intensity as number) ?? 0.5,
         narrativeDensity: (narrativeStyle?.density as number) ?? 0.5,
-
-        // HoloPresence
-        visualSize: (holoVisuals?.size as number) ?? 0.5,
-        visualGlow: (holoVisuals?.glow as number) ?? 0.5,
-        particleCount: ((holoParticles?.count as number) ?? 100) / 200, // Normaliser 0-1
 
         // Méta
         coherence: coherence?.global ?? 0,
@@ -593,9 +577,6 @@ class PhaseSpaceEngine {
       voicePitch: 0,
       haloIntensity: 0,
       narrativeDensity: 0,
-      visualSize: 0,
-      visualGlow: 0,
-      particleCount: 0,
       coherence: 0,
       complexity: 0,
       stability: 0,
