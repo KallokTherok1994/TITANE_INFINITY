@@ -25,14 +25,14 @@
     "copyright": "Copyright © 2025-2026 TITANE∞",
     "copyright": "Copyright © 2025 TITANE",
     "category": "DeveloperTool",
-    "shortDescription": "TITANE∞ v30.1.0 - Stable Release",
-    "longDescription": "TITANE Infinity v30.1.0 - Cognitive Operating System, stable production release"
+    "shortDescription": "TITANE∞ v30.1.6 - Stable Release",
+    "longDescription": "TITANE Infinity v30.1.6 - Cognitive Operating System, stable production release"
   },
   "app": {
     "windows": [
       {
         "label": "main",
-        "title": "TITANE∞ v30.1.0 - Multi-Provider AI",
+        "title": "TITANE∞ v30.1.6 - Multi-Provider AI",
         "width": 1400,
         "height": 900,
         "minWidth": 1200,

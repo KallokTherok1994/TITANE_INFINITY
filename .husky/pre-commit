@@ -10,5 +10,11 @@ node ./node_modules/.bin/lint-staged || {
   exit 1
 }
 
+# Prettier guard — prevent formatting drift from reaching CI
+node ./node_modules/.bin/prettier --check --cache . || {
+  echo "❌ Prettier formatting issues detected. Run: pnpm run format"
+  exit 1
+}
+
 # COPILOT-XS gate
 node ./.github/copilot-xs/scripts/precommit.js

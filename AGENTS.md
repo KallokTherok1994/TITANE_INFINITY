@@ -30,29 +30,34 @@ Heavy doctrine belongs to the local Codex rules file, not to the repo.
 ## Agent Specialization
 
 ### Backend Agent (src-tauri/, Rust)
+
 - Scope: Ring0/Ring1 — Tauri commands, IPC, capabilities, Rust services.
 - Gate: IPC contract `{ ok, content, error }` must be preserved.
 - Required: allowlist update + integration tests for new commands.
 - AutoHeal: append entry on every fix.
 
 ### Frontend Agent (src/, TypeScript/React)
+
 - Scope: Ring4 — UI components, pages, hooks, stores, engines.
 - Gate: stable `data-testid` selectors; ErrorBoundary on every new component.
 - Required: E2E tests for user-facing changes; registry/ui-events.jsonl entry.
 - AutoHeal: append entry on every fix.
 
 ### QA Agent (tests/, e2e/)
+
 - Scope: Ring4 — unit tests, integration tests, E2E harness.
 - Gate: no feature without tests (Rule 16); deterministic selectors only.
 - Required: E2E logs + screenshots as proof artifacts.
 - Reference: `e2e/AGENTS.md` for E2E discipline.
 
 ### Security Agent (governance/, sbom/, scripts/verify/)
+
 - Scope: Cross-ring — SBOM, governance, audit trails.
 - Gate: no uncontrolled network; capabilities locked.
 - Required: SBOM update on dependency change; audit log entry.
 
 ### Build Agent (scripts/, .github/workflows/)
+
 - Scope: CI/CD — build, release, artifact generation.
 - Gate: Rule 11 (on-demand), Rule 13 (version bump), Rule 14 (BUILD ALL sequence).
 - Required: version bump before every advanced build; update RELEASE_SURFACE_INVENTORY.
@@ -60,6 +65,7 @@ Heavy doctrine belongs to the local Codex rules file, not to the repo.
 ## Chain-of-Thought Validation
 
 Before applying any patch:
+
 1. Identify which Ring(s) are touched.
 2. Verify no inverse imports or Ring boundary violations.
 3. Confirm IPC contract preserved if IPC changed.
