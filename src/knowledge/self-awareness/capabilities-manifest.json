@@ -50,10 +50,7 @@
     "visual": {
       "description": "Visual engine with effects and UI rendering",
       "status": "active",
-      "features": [
-        "effects",
-        "animation"
-      ]
+      "features": ["effects", "animation"]
     },
     "memory": {
       "description": "Persistent memory with snapshots, timeline, knowledge",

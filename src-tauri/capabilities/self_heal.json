@@ -2,12 +2,8 @@
   "$schema": "https://schema.tauri.app/config/2.0/capability.json",
   "identifier": "self-heal",
   "description": "Capability pour le Self-Healing et l'autonomie TITANE∞",
-  "windows": [
-    "main"
-  ],
-  "permissions": [
-    "core:default"
-  ],
+  "windows": ["main"],
+  "permissions": ["core:default"],
   "commands": {
     "allow": [
       "autonomy_scan_backend",
