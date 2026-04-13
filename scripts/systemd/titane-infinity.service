@@ -5,6 +5,9 @@ After=network-online.target graphical-session.target ollama-titane.service
 Wants=network-online.target
 # Start after Ollama if it's available (soft dep — TITANE runs without it in degraded mode)
 Wants=ollama-titane.service
+StartLimitIntervalSec=300
+# Alert on persistent failure
+OnFailure=titane-alert@%n.service
 
 [Service]
 Type=simple
@@ -25,14 +28,10 @@ TimeoutStopSec=15
 # Restart policy — anti-storm protection
 Restart=on-failure
 RestartSec=5
-StartLimitIntervalSec=300
 StartLimitBurst=5
 
 # SD_NOTIFY watchdog (activé si binary appelle sd_notify)
 # WatchdogSec=60
-
-# Alert on persistent failure
-OnFailure=titane-alert@%n.service
 
 [Install]
 WantedBy=default.target

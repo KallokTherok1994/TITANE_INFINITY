@@ -71,7 +71,6 @@ do_install() {
     systemctl --user enable --now titane-watchdog.timer   || warn "titane-watchdog.timer: enable partiel"
     systemctl --user enable --now titane-auto-heal.timer  || warn "titane-auto-heal.timer: enable partiel"
     systemctl --user enable titane-infinity.service       || warn "titane-infinity.service: enable partiel"
-    systemctl --user enable "titane-alert@.service"       || true  # template, pas de --now
 
     success "Unités activées."
     echo ""
@@ -109,9 +108,11 @@ do_status() {
         # Skip template units for status
         [[ "$unit" == *"@."* ]] && continue
         local state
-        state=$(systemctl --user is-active "$unit" 2>/dev/null || echo "unknown")
+        state=$(systemctl --user is-active "$unit" 2>/dev/null || true)
+        [[ -n "$state" ]] || state="unknown"
         local enabled
-        enabled=$(systemctl --user is-enabled "$unit" 2>/dev/null || echo "unknown")
+        enabled=$(systemctl --user is-enabled "$unit" 2>/dev/null || true)
+        [[ -n "$enabled" ]] || enabled="unknown"
         printf "  %-40s active=%-10s enabled=%s\n" "$unit" "$state" "$enabled"
     done
     echo ""
