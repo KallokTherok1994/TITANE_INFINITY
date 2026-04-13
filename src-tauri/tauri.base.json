@@ -1,5 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0",
+  "$comment": "TITANE∞ Canonical Production Config — this file is the authoritative production configuration. Root tauri.base.json holds shared base settings that are merged into this file at build time.",
   "productName": "TITANE-Infinity",
   "version": "30.1.6",
   "identifier": "com.titane.infinity",
@@ -20,7 +21,7 @@
       "icons/icon.ico"
     ],
     "resources": [],
-    "copyright": "Copyright © 2025 TITANE∞",
+    "copyright": "Copyright © 2025-2026 TITANE∞",
     "category": "Productivity",
     "shortDescription": "TITANE∞ - Cognitive Operating System",
     "longDescription": "TITANE Infinity - Cognitive Operating System, stable production release"
