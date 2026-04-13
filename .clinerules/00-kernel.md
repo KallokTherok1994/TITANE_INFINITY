@@ -121,14 +121,12 @@ Then run:
 
 **Cline Enforcement**: `MANUAL` — AutoHeal capture is disabled in PostToolUse; entries are written manually by operator after each fix
 
-### Rule 11 — PROD TOKEN GATE
+### Rule 11 — PRODUCTION BUILDS ON DEMAND
 
-No PROD action without exact tokens:
+Production builds and deploys are executed on user request or when needed.
+No token gate required. Use `BUILD ALL` command (Rule 14) for full automated sequence.
 
-- `GO_FOR_PROD_BUILD__TITANE_INFINITY`
-- `GO_FOR_PROD_DEPLOY__TITANE_INFINITY`
-
-**Cline Enforcement**: `RUNTIME_ACTIVE` — PreToolUse blocks `tauri build`/`Build Titan-Stable`/`build:production` without exact tokens
+**Cline Enforcement**: `RUNTIME_ACTIVE` — On-demand build policy (Rule 11)
 
 ### Rule 12 — PROOF PACK AND ROLLBACK REQUIRED
 

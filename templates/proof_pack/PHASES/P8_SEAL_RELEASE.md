@@ -17,12 +17,11 @@
 - [ ] `bash scripts/collect_support_bundle.sh` — bundle created
 - [ ] `VERDICT_GLOBAL.md` completed
 - [ ] Version gate: package.json = Cargo.toml = tauri.conf.json
-- [ ] Token `GO_FOR_PROD_BUILD__TITANE_INFINITY` provided by authorized party
-- [ ] Token `GO_FOR_PROD_DEPLOY__TITANE_INFINITY` provided by authorized party
+- [ ] Production build authorized on demand (Rule 11)
 
 ## PROD Gate
 
-> Do NOT proceed without explicit PROD tokens.
+> Production builds are executed on user request or via BUILD ALL command (Rule 14).
 
 ## Evidence
 

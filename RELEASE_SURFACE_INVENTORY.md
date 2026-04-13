@@ -163,5 +163,5 @@ Canonical target version: **30.0.0**
 | `Titan-Stable_30.0.0_amd64.deb` | ⏳ PENDING_BUILD |
 
 > v30.0.0 is the active canonical release stream for repository + deployment metadata as of 2026-04-06.
-> Build tokens required: GO_FOR_PROD_BUILD__TITANE_INFINITY
+> Production builds are executed on user request or via BUILD ALL command (Rule 11/14).
 > v30.0.0 is the active canonical release stream as of 2026-04-06. Artifacts pending build.

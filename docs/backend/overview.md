@@ -396,7 +396,7 @@ pnpm run verify:backend  # Backend seul (à créer)
 
 ### 4. Build Production
 ```bash
-GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
+corepack pnpm exec tauri build --config src-tauri/tauri.conf.json  # on demand (Rule 11)
 ```
 
 ---

@@ -31,13 +31,10 @@ All Tauri commands must return:
 { ok: boolean; content?: unknown; error?: { code: string; message: string; details?: unknown; traceId?: string } }
 ```
 
-## PROD Gate Tokens
+## Production Build Policy
 
-PROD operations require explicit tokens from authorized party:
-- `GO_FOR_PROD_BUILD__TITANE_INFINITY`
-- `GO_FOR_PROD_DEPLOY__TITANE_INFINITY`
-
-Never deduce, approximate, or reformulate these tokens.
+Production builds and deploys are executed on user request or when needed (Rule 11).
+No token gate required. Use `BUILD ALL` command (Rule 14) for full automated sequence.
 
 ## Online-First Governed Policy
 
