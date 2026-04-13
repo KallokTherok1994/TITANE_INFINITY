@@ -196,3 +196,26 @@ Canonical target version: **30.0.0**
 
 > v30.1.7 is the active canonical production release as of 2025-04-13.
 > Built via BUILD ALL sequence (Rule 14). DEB installed on host system.
+
+---
+
+## RELEASE v30.1.8 — Addendum (2026-04-13)
+
+| Artifact | Path | SHA256 |
+|---|---|---|
+| DEB | `src-tauri/target/release/bundle/deb/TITANE-Infinity_30.1.8_amd64.deb` | `faf8ea7b8e1b359ddc3c30c78caca585bfd7f7897aa346ffcf2ae591ec8a4fd8` |
+| RPM | `src-tauri/target/release/bundle/rpm/TITANE-Infinity-30.1.8-1.x86_64.rpm` | `46dd89f39a7ed2c89d6e8cfae47d9ff60bbdd6b9aafe99f2be9eef7ec8f3d1fc` |
+| AppImage | `src-tauri/target/release/bundle/appimage/TITANE-Infinity_30.1.8_amd64.AppImage` | `cc5d6600c5b374c9118ccf4da655b94370662cbbdbc2cf9a4a1043d4dd5bc4b2` |
+| APK (unsigned) | `src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk` | `dbb45dee12df7deee5a7b36a175a68e295b20a2aac188b4f467f0c705f6bdf0c` |
+| AAB | `src-tauri/gen/android/app/build/outputs/bundle/universalRelease/app-universal-release.aab` | `ba2becbbfabc75c60ceb3523d34804fe38bd0aa7924f1875aa6da224165865af` |
+
+| File | Version | Action |
+|---|---|---|
+| `package.json` | `30.1.8` | CURRENT |
+| `src-tauri/Cargo.toml` | `30.1.8` | CURRENT |
+| `src-tauri/tauri.conf.json` | `30.1.8` | CURRENT |
+| `RELEASE_v30.1.8.md` | `30.1.8` | CURRENT |
+| `RELEASE_ARTIFACTS_CHECKSUMS_30.1.8.txt` | `30.1.8` | CURRENT |
+| `RELEASE_v30.1.8_SEALED.txt` | `30.1.8` | CURRENT |
+
+Key change: feat(ui) — Zoom + / Zoom − buttons in TopNav top-right
