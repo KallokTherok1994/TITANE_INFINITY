@@ -237,9 +237,18 @@ jobs:
         working-directory: src-tauri
         run: cargo test --locked --verbose
 
-      - name: Run Clippy (linter)
+      - name: 📎 Cargo clippy
         working-directory: src-tauri
         run: cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: 📖 Cargo doc check
+        working-directory: src-tauri
+        shell: bash
+        run: |
+          set -o pipefail
+          cargo doc --no-deps --document-private-items 2>&1 | tee /tmp/cargo-doc.log
+        env:
+          RUSTDOCFLAGS: '-D warnings'
 
       - name: 📊 Summary
         if: always()
@@ -249,6 +258,7 @@ jobs:
           echo "- ✅ Cargo fmt check completed" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Cargo tests completed" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Clippy analysis completed" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Cargo doc check completed" >> $GITHUB_STEP_SUMMARY
           echo "- Rust: ${{ env.RUST_VERSION }}" >> $GITHUB_STEP_SUMMARY
 
   # ═══════════════════════════════════════════════════════════════════════════

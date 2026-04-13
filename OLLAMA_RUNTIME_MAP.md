@@ -96,7 +96,7 @@ Ollama Server
 | Health check interval | 300000ms (5 min) | `OLLAMA_CONFIG.healthCheckInterval` |
 | Timeout               | 45000ms          | `PROVIDER_TIMEOUTS.ollama`          |
 
-**Note**: Modelfile specifies `num_ctx 32768` but frontend uses `numCtx 8192`.
+**Note**: Modelfile `num_ctx` is aligned with frontend `numCtx 8192` — safe default for 8GB VRAM.
 
 ---
 
