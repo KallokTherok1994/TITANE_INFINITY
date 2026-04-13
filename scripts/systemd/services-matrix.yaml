@@ -2,7 +2,7 @@
 # Source of truth for all supervised services (Linux + Ollama)
 # Used by: install-services.sh, health-contract.sh, auto-heal.sh
 ---
-version: "1.0"
+version: '1.0'
 owner: TITANE_INFINITY
 updated: 2026-04-12
 
@@ -15,13 +15,13 @@ slo:
 
 services:
   - id: titane-infinity
-    description: "TITANE∞ — Application principale Tauri"
+    description: 'TITANE∞ — Application principale Tauri'
     unit: titane-infinity.service
-    scope: user          # user-level systemd (no root required for desktop)
+    scope: user # user-level systemd (no root required for desktop)
     binary: titane-infinity
     binary_paths:
-      - "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
-      - "/usr/local/bin/titane-infinity"
+      - '/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity'
+      - '/usr/local/bin/titane-infinity'
     restart_policy: on-failure
     restart_sec: 5
     start_limit_interval_sec: 300
@@ -31,25 +31,25 @@ services:
       - ollama-titane.service
     wants:
       - network-online.target
-    health_check: "pgrep -x titane-infinity"
+    health_check: 'pgrep -x titane-infinity'
     watchdog_sec: 60
     on_failure: titane-alert@%n.service
 
   - id: ollama-titane
-    description: "Ollama — Moteur de modèles IA local"
+    description: 'Ollama — Moteur de modèles IA local'
     unit: ollama-titane.service
-    scope: system        # system-level (Ollama typically runs as system service)
+    scope: system # system-level (Ollama typically runs as system service)
     binary: ollama
     binary_paths:
-      - "/usr/local/bin/ollama"
-      - "/usr/bin/ollama"
+      - '/usr/local/bin/ollama'
+      - '/usr/bin/ollama'
     restart_policy: always
     restart_sec: 3
     start_limit_interval_sec: 120
     start_limit_burst: 5
     after:
       - network.target
-    health_check: "curl -sf http://127.0.0.1:11434/api/tags"
+    health_check: 'curl -sf http://127.0.0.1:11434/api/tags'
     models_required:
       - gemma2:2b
     models_fallback:
@@ -57,20 +57,20 @@ services:
       - llama3.1
 
   - id: titane-auto-heal
-    description: "TITANE∞ Auto-Heal — supervision et remédiation périodique"
+    description: 'TITANE∞ Auto-Heal — supervision et remédiation périodique'
     unit: titane-auto-heal.service
     scope: user
     timer: titane-auto-heal.timer
     restart_policy: on-failure
     on_active_sec: 5min
     on_boot_sec: 5min
-    health_check: "systemctl --user is-active titane-auto-heal.timer"
+    health_check: 'systemctl --user is-active titane-auto-heal.timer'
 
   - id: titane-watchdog
-    description: "TITANE∞ Watchdog — heartbeat et alerte process"
+    description: 'TITANE∞ Watchdog — heartbeat et alerte process'
     unit: titane-watchdog.service
     scope: user
     timer: titane-watchdog.timer
     on_active_sec: 2min
     on_boot_sec: 2min
-    health_check: "systemctl --user is-active titane-watchdog.timer"
+    health_check: 'systemctl --user is-active titane-watchdog.timer'
