@@ -491,7 +491,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: 🔒 pnpm audit (critical) # PROD: set continue-on-error: false when going to production
+      - name: 🔒 pnpm audit (critical — blocks CI)
         run: pnpm audit --audit-level=critical
         continue-on-error: false
 
@@ -506,7 +506,7 @@ jobs:
         run: cargo install cargo-audit --locked
         continue-on-error: true
 
-      - name: 🔒 Cargo audit (critical) # PROD: set continue-on-error: false when going to production
+      - name: 🔒 Cargo audit (critical — blocks CI)
         working-directory: src-tauri
         run: cargo audit --deny warnings
         continue-on-error: false
