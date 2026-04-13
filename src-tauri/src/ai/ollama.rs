@@ -227,7 +227,7 @@ pub async fn ai_generate_local(request: LocalAIRequest) -> Result<LocalAIRespons
                     let resolved = available
                         .iter()
                         .find(|m| m.starts_with(fallback))
-                        .expect("guarded by any() check above")
+                        .expect("model matching fallback prefix must exist after any() verification")
                         .clone();
                     log::warn!(
                         "[ai_generate_local] Fallback attempt: model='{}'",
@@ -452,7 +452,7 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
     {
         let cache = OLLAMA_STATUS_CACHE
             .lock()
-            .map_err(|e| format!("OLLAMA_STATUS_CACHE poisoned: {}", e))?;
+            .map_err(|e| format!("Failed to acquire OLLAMA_STATUS_CACHE lock when checking status: {}", e))?;
         if let Some((status, timestamp)) = cache.as_ref() {
             let elapsed = timestamp.elapsed().as_secs();
             if elapsed < OLLAMA_STATUS_CACHE_TTL_SECS {
@@ -515,7 +515,7 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
     {
         let mut cache = OLLAMA_STATUS_CACHE
             .lock()
-            .map_err(|e| format!("OLLAMA_STATUS_CACHE poisoned: {}", e))?;
+            .map_err(|e| format!("Failed to acquire OLLAMA_STATUS_CACHE lock when updating cache: {}", e))?;
         *cache = Some((status.clone(), Instant::now()));
     }
 
