@@ -40,7 +40,6 @@
 // ═══════════════════════════════════════════════════════════════
 
 pub mod adaptive; // ✅ AdaptiveEngine v21 (NEW)
-pub mod avatar; // ✅ ImmersiveAvatarEngine v23 (NEW)
 pub mod backend_selftest; // ✅ Backend Global Self-Test v17.7 (NEW)
 pub mod bounded; // ✅ v21.1Ω - Bounded collections for memory safety (NEW)
 pub mod cache_multilevel; // ✅ v21.1Ω - Multi-level caching system (NEW)
