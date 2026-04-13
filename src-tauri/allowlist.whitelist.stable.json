@@ -7,7 +7,9 @@
         {
           "identifier": "stable-capability",
           "description": "Capability for stable production runtime - STRICT",
-          "windows": ["main"],
+          "windows": [
+            "main"
+          ],
           "permissions": [
             "core:default",
             "core:event:default",
@@ -231,21 +233,6 @@
               "command": "stop_glm46v_server"
             },
             {
-              "command": "fullbody_init"
-            },
-            {
-              "command": "fullbody_update_pose"
-            },
-            {
-              "command": "fullbody_update_expression"
-            },
-            {
-              "command": "fullbody_get_state"
-            },
-            {
-              "command": "avatar_get_expression"
-            },
-            {
               "command": "tts_speak_parler"
             },
             {
@@ -271,21 +258,6 @@
             },
             {
               "command": "stop_glm46v_server"
-            },
-            {
-              "command": "fullbody_init"
-            },
-            {
-              "command": "fullbody_update_pose"
-            },
-            {
-              "command": "fullbody_update_expression"
-            },
-            {
-              "command": "fullbody_get_state"
-            },
-            {
-              "command": "avatar_get_expression"
             },
             {
               "command": "tts_speak_parler"

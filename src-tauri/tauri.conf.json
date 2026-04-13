@@ -21,7 +21,9 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "resources": ["../dist"],
+    "resources": [
+      "../dist"
+    ],
     "copyright": "Copyright © 2025 TITANE",
     "category": "DeveloperTool",
     "shortDescription": "TITANE∞ v30.1.0 - Stable Release",
@@ -43,23 +45,6 @@
         "center": true,
         "visible": true,
         "devtools": true
-      },
-      {
-        "label": "avatar-floating",
-        "title": "TITANE Avatar",
-        "width": 400,
-        "height": 600,
-        "minWidth": 200,
-        "minHeight": 300,
-        "resizable": true,
-        "fullscreen": false,
-        "decorations": false,
-        "transparent": true,
-        "center": false,
-        "visible": false,
-        "skipTaskbar": true,
-        "alwaysOnTop": false,
-        "devtools": true
       }
     ],
     "security": {
@@ -78,7 +63,9 @@
         {
           "identifier": "main-capability",
           "description": "Capability for the main window",
-          "windows": ["main"],
+          "windows": [
+            "main"
+          ],
           "permissions": [
             "core:default",
             "core:event:default",
@@ -430,69 +417,6 @@
             },
             {
               "command": "narrative_set_archetype"
-            },
-            {
-              "command": "avatar_prepare_speech"
-            },
-            {
-              "command": "avatar_finish_speech"
-            },
-            {
-              "command": "avatar_enable_immersion"
-            },
-            {
-              "command": "avatar_on_wake_word"
-            },
-            {
-              "command": "avatar_get_current_morph"
-            },
-            {
-              "command": "avatar_advance_lip_sync"
-            },
-            {
-              "command": "avatar_get_expression"
-            },
-            {
-              "command": "avatar_get_state"
-            },
-            {
-              "command": "avatar_run_selftest"
-            },
-            {
-              "command": "fullbody_initialize"
-            },
-            {
-              "command": "fullbody_advance_frame"
-            },
-            {
-              "command": "fullbody_activate_gesture"
-            },
-            {
-              "command": "fullbody_update_expression"
-            },
-            {
-              "command": "fullbody_update_lipsync"
-            },
-            {
-              "command": "fullbody_update_state"
-            },
-            {
-              "command": "fullbody_on_wake_word"
-            },
-            {
-              "command": "fullbody_export_skeleton"
-            },
-            {
-              "command": "fullbody_update_context"
-            },
-            {
-              "command": "fullbody_get_posture"
-            },
-            {
-              "command": "fullbody_get_stats"
-            },
-            {
-              "command": "fullbody_run_selftest"
             },
             {
               "command": "engine_init"
@@ -1722,9 +1646,6 @@
               "command": "autonomy_scan_tts"
             },
             {
-              "command": "autonomy_scan_avatar"
-            },
-            {
               "command": "autonomy_scan_memory"
             },
             {
@@ -2193,106 +2114,13 @@
               "_comment": "═══════════════════════════════════════════════════════════════"
             },
             {
-              "_comment": "AVATAR APPEARANCE v∞.Ω"
+              "_comment": "═══════════════════════════════════════════════════════════════"
             },
             {
               "_comment": "═══════════════════════════════════════════════════════════════"
             },
             {
-              "command": "avatar_get_appearance"
-            },
-            {
-              "command": "avatar_set_appearance"
-            },
-            {
-              "command": "avatar_update_appearance"
-            },
-            {
-              "command": "avatar_apply_style_preset"
-            },
-            {
-              "command": "avatar_parse_style_command"
-            },
-            {
-              "command": "avatar_save_custom_style"
-            },
-            {
-              "command": "avatar_load_custom_style"
-            },
-            {
-              "command": "avatar_merge_styles"
-            },
-            {
-              "command": "avatar_list_styles"
-            },
-            {
-              "command": "avatar_add_archetype"
-            },
-            {
               "_comment": "═══════════════════════════════════════════════════════════════"
-            },
-            {
-              "_comment": "AVATAR FLOATING WINDOW v∞.Ω"
-            },
-            {
-              "_comment": "═══════════════════════════════════════════════════════════════"
-            },
-            {
-              "command": "avatar_get_display_state"
-            },
-            {
-              "command": "avatar_set_display_state"
-            },
-            {
-              "command": "avatar_update_display_state"
-            },
-            {
-              "command": "avatar_reset_display_state"
-            },
-            {
-              "command": "avatar_mode_floating"
-            },
-            {
-              "command": "avatar_mode_embed"
-            },
-            {
-              "command": "avatar_mode_hidden"
-            },
-            {
-              "command": "avatar_set_position"
-            },
-            {
-              "command": "avatar_set_size"
-            },
-            {
-              "command": "avatar_set_scale"
-            },
-            {
-              "command": "avatar_set_opacity"
-            },
-            {
-              "command": "avatar_set_always_on_top"
-            },
-            {
-              "command": "avatar_set_locked"
-            },
-            {
-              "command": "avatar_set_mirror_mode"
-            },
-            {
-              "command": "avatar_set_click_through"
-            },
-            {
-              "command": "avatar_set_anchor"
-            },
-            {
-              "command": "avatar_set_anchor_by_name"
-            },
-            {
-              "command": "avatar_list_screens"
-            },
-            {
-              "command": "avatar_move_to_screen"
             },
             {
               "_comment": "═══════════════════════════════════════════════════════════════"
@@ -2358,9 +2186,6 @@
               "command": "pipeline_prepare_tts"
             },
             {
-              "command": "pipeline_prepare_avatar_animation"
-            },
-            {
               "command": "pipeline_get_stats"
             },
             {
@@ -2389,9 +2214,6 @@
             },
             {
               "command": "autoheal_heal_cognitive_module"
-            },
-            {
-              "command": "autoheal_heal_avatar_module"
             },
             {
               "command": "autoheal_heal_tts_module"
@@ -2625,9 +2447,6 @@
               "command": "autoheal_rebuild_memory_index"
             },
             {
-              "command": "autoheal_reload_avatar"
-            },
-            {
               "command": "autoheal_reset_adaptive"
             },
             {
@@ -2637,22 +2456,13 @@
               "command": "autoheal_resync_lipsync"
             },
             {
-              "command": "autoheal_start_avatar"
-            },
-            {
               "command": "autoheal_start_pipeline"
-            },
-            {
-              "command": "autoheal_stop_avatar"
             },
             {
               "command": "autoheal_stop_pipeline"
             },
             {
               "command": "autoheal_validate_memory"
-            },
-            {
-              "command": "avatar_prepare_animation"
             },
             {
               "command": "chat_generate_claude"
@@ -2785,9 +2595,6 @@
             },
             {
               "command": "fusion_adjust_styles"
-            },
-            {
-              "command": "fusion_animate_avatar"
             },
             {
               "command": "fusion_auto_optimize"
@@ -3257,25 +3064,6 @@
             {
               "command": "submit_evolution_data"
             }
-          ]
-        },
-        {
-          "identifier": "avatar-floating-capability",
-          "description": "Capability for the floating avatar window",
-          "windows": ["avatar-floating"],
-          "permissions": [
-            "core:default",
-            "core:event:default",
-            "core:window:default",
-            "core:window:allow-set-always-on-top",
-            "core:window:allow-set-ignore-cursor-events",
-            "core:window:allow-set-position",
-            "core:window:allow-set-size",
-            "core:window:allow-show",
-            "core:window:allow-hide",
-            "core:window:allow-set-focus",
-            "core:window:allow-current-monitor",
-            "core:window:allow-available-monitors"
           ]
         }
       ]
