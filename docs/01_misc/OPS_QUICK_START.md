@@ -45,7 +45,7 @@
 
 ### Before You Start
 
-- [ ] Approval token is set: `$GO_FOR_PROD_DEPLOY__TITANE_INFINITY`
+- [ ] Production deploy authorized on demand (Rule 11)
 - [ ] 10 testers have v27.0.0 distribution (check channels A + B)
 - [ ] No P0 incidents from prior day (check INCIDENT_LOG_WEEK2.md)
 - [ ] Drift guard baseline still clean (run once to verify)

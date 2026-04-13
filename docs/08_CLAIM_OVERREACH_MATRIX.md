@@ -15,7 +15,7 @@ Un overreach existe quand une revendication dépasse le niveau de preuve disponi
 | Surface | Claim exact | Source de la claim | Niveau de preuve | Contradiction | Sévérité | Action |
 |---------|-------------|-------------------|-----------------|---------------|----------|--------|
 | `deployment/latest/MANIFEST.json` | version 28.88.0 + `"release_gate_status": "PENDING"` + tokens PROD | MANIFEST.json | DECLARED_ONLY | Package = 29.0.0; G9 FAIL | HIGH | ALIGN_AUTHORITIES |
-| `MANIFEST.json` field `"tokens": ["GO_FOR_PROD_BUILD__TITANE_INFINITY", ...]` | Tokens PROD présents dans MANIFEST | MANIFEST.json | DECLARED_ONLY | Tokens dans un fichier JSON ≠ autorisation d'exécution | HIGH | DOWNGRADE — tokens sont narrative, pas executables |
+| `MANIFEST.json` field `"tokens": [...]` | Tokens PROD présents dans MANIFEST | MANIFEST.json | DECLARED_ONLY | Tokens removed — on-demand build policy (Rule 11) | HIGH | DOWNGRADE — tokens are removed, builds on demand |
 | `"security_posture": "MAXIMUM_HARDENED"` | Sécurité maximale durcie | MANIFEST.json | FALSE_GREEN_RISK | Secret scanning/push protection UNKNOWN | HIGH | DOWNGRADE → PARTIAL_HARDENED |
 | `"production_readiness": "PENDING_BINARY_PROOF"` | Attente preuve binaire | MANIFEST.json | PARTIAL | Consistent avec G9 FAIL | MEDIUM | KEEP (honnête) |
 | G9 verdict | FAIL (release seal incomplete) | gate run | LOCAL_RUNTIME_PROVEN | Cohérent avec version mismatch | INFO | KEEP |

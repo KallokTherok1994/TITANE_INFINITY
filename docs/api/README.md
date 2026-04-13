@@ -40,8 +40,8 @@ pnpm run dev  # Titan-Dev via wrapper local complet (Tauri + orchestration local
 # 🏗️ Build production
 pnpm run build
 
-# 📦 Package Tauri
-GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
+# 📦 Package Tauri — on demand (Rule 11)
+corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
 
 # ❌ INTERDITS (Mode HTTP bloqué)
 pnpm run preview  # ❌ Bloqué - "🔒 TAURI-ONLY MODE"
@@ -528,7 +528,7 @@ pnpm run dev:tauri:no-ollama  # → Titan-Dev sans Ollama
 
 # Build production
 pnpm run build        # Frontend → dist/ (1,93s, 131KB gzip)
-GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json  # Application native (.deb, .AppImage)
+corepack pnpm exec tauri build --config src-tauri/tauri.conf.json  # Application native (.deb, .AppImage) — on demand (Rule 11)
 ```
 
 ### Installation WebKitGTK 4.1 (Requis)
@@ -1150,7 +1150,7 @@ sudo do-release-upgrade
 ```bash
 # Ouvrir : Ctrl+Alt+T (PAS VSCode Flatpak)
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
+corepack pnpm exec tauri build --config src-tauri/tauri.conf.json  # on demand (Rule 11)
 ```
 
 **Diagnostic** : `./test-build-natif.sh`

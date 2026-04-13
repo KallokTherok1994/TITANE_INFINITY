@@ -195,9 +195,9 @@ git restore \
   -- src-tauri/allowlist.whitelist.stable.json
 \`\`\`
 
-## Approval Tokens Required
-- GO_FOR_PROD_BUILD__TITANE_INFINITY (CI build)
-- GO_FOR_PROD_DEPLOY__TITANE_INFINITY (deployment)
+## Build Policy
+- Production builds and deploys are executed on user request or when needed (Rule 11).
+- Use `BUILD ALL` command for full automated build sequence (Rule 14).
 
 ## Status
 ✅ **SEALED FOR PRODUCTION RELEASE**

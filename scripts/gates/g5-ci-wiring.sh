@@ -91,19 +91,13 @@ for script in "${GOVERNANCE_SCRIPTS[@]}"; do
   fi
 done
 
-# Check 6: Token requirements documented
-log "Checking token requirements..."
-TOKEN_MARKERS=(
-  "GO_FOR_PROD_BUILD__TITANE_INFINITY"
-  "GO_FOR_PROD_DEPLOY__TITANE_INFINITY"
-)
-for token_marker in "${TOKEN_MARKERS[@]}"; do
-  if grep -rq "$token_marker" scripts/ docs/ 2>/dev/null; then
-    pass "Token requirement documented: $token_marker"
-  else
-    fail "Token requirement missing: $token_marker"
-  fi
-done
+# Check 6: On-demand build policy documented
+log "Checking on-demand build policy..."
+if grep -rqE "BUILD ALL|on-demand|on demand" scripts/ docs/ .github/ 2>/dev/null; then
+  pass "On-demand build policy documented"
+else
+  fail "On-demand build policy not documented"
+fi
 
 log "════════════════════════════════════════"
 if [[ $EXIT_CODE -eq 0 ]]; then

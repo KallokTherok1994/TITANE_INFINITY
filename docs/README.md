@@ -133,7 +133,8 @@ pnpm run dev:tauri
 
 ### Build Production
 ```bash
-GO_FOR_PROD_BUILD__TITANE_INFINITY=GO_FOR_PROD_BUILD__TITANE_INFINITY corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
+# Build production — on demand (Rule 11)
+corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
 ```
 
 ### Native Desktop Freshness Gate (preprod/prod)
@@ -242,7 +243,8 @@ pnpm run build
 pnpm run dev:tauri
 
 # Build Tauri
-GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
+# Build Tauri
+corepack pnpm exec tauri build --config src-tauri/tauri.conf.json  # on demand (Rule 11)
 ```
 
 ## 🤝 Contribution

@@ -54,12 +54,8 @@ wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0
 
 ## Préparer une release
 
-> **RESTREINT** — Tokens de gouvernance PROD requis.
-
-```
-GO_FOR_PROD_BUILD__TITANE_INFINITY
-GO_FOR_PROD_DEPLOY__TITANE_INFINITY
-```
+> Builds production à la demande — aucun token gate requis (Rule 11).
+> Utiliser la commande `BUILD ALL` pour la séquence complète (Rule 14).
 
 Étapes minimales :
 1. Vérifier que `pnpm run verify:final100` passe

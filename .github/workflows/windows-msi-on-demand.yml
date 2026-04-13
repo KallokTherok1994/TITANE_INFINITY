@@ -4,15 +4,15 @@ on:
   workflow_dispatch:
     inputs:
       release_tag:
-        description: "Optional GitHub release tag to upload MSI assets"
+        description: 'Optional GitHub release tag to upload MSI assets'
         required: false
         type: string
 
 env:
   CARGO_TERM_COLOR: always
-  NODE_VERSION: "24"
-  RUST_VERSION: "stable"
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+  NODE_VERSION: '24'
+  RUST_VERSION: 'stable'
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
 
 permissions:
   contents: write

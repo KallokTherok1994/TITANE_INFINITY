@@ -31,8 +31,6 @@ check_rule() {
   fi
 }
 
-check_rule "prod-build-token" "GO_FOR_PROD_BUILD__TITANE_INFINITY" ".github/copilot-instructions.md"
-check_rule "prod-deploy-token" "GO_FOR_PROD_DEPLOY__TITANE_INFINITY" ".github/copilot-instructions.md"
 check_rule "status-vocabulary" "PASS / FAIL / BLOCKED" ".github/copilot-instructions.md"
 check_rule "autoheal-canonical-path" "scripts/autoheal/autoheal_rules.jsonl" ".github/copilot-instructions.md"
 

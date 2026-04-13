@@ -708,9 +708,9 @@
         "6. Scellement de la release (RELEASE_v*.SEALED.txt)",
         "7. Publication des artefacts"
       ],
-      "tokens_prod": [
-        "GO_FOR_PROD_BUILD__TITANE_INFINITY — autorisation de build production",
-        "GO_FOR_PROD_DEPLOY__TITANE_INFINITY — autorisation de déploiement production"
+      "build_policy": [
+        "Builds production exécutés à la demande (Rule 11)",
+        "Commande BUILD ALL pour séquence complète automatisée (Rule 14)"
       ]
     }
   },

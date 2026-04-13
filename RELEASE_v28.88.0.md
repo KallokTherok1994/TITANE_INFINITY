@@ -15,7 +15,7 @@ TITANE∞ v28.88.0 is a **certified stable runtime** delivering the complete cog
 - **Security**: MAXIMUM_HARDENED
 - **Build Duration**: 12m 33s
 - **Artifacts**: AppImage + DEB (Linux amd64)
-- **Authorization**: Token-gated with GO_FOR_PROD_BUILD + GO_FOR_PROD_DEPLOY
+- **Authorization**: On-demand — production builds on user request (Rule 11)
 - **Deployment**: `deployment/latest/`
 
 ---

@@ -51,9 +51,11 @@ DEB:       2608165ea3b900d4f7f1f41e6ae12bf3c25201d9b94e58dc0d754204b81c3e30
 ### Installation Windows (PR #292)
 
 Guide Windows complet:
+
 - [docs/windows/SPINUP_WINDOWS.md](docs/windows/SPINUP_WINDOWS.md)
 
 Launchers Windows fournis:
+
 - [scripts/launch/launch-titane.ps1](scripts/launch/launch-titane.ps1)
 - [scripts/launch/launch-titane.bat](scripts/launch/launch-titane.bat)
 
@@ -66,11 +68,13 @@ cd TITANE_INFINITY
 ```
 
 Pack launcher publie (session PR292):
+
 - `deployment/windows/TITANE_WINDOWS_LAUNCHER_PACK_PR292_20260412.zip`
 - `deployment/windows/TITANE_WINDOWS_LAUNCHER_PACK_PR292_20260412.sha256`
 - Release GitHub: https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/windows-pr292-launcher-pack-20260412
 
 Preuve de session:
+
 - [proof_packs/WINDOWS_PR292_RELEASE_20260412_233708/REPORT.md](proof_packs/WINDOWS_PR292_RELEASE_20260412_233708/REPORT.md)
 - [proof_packs/WINDOWS_PR292_RELEASE_20260412_233708/VERDICT.md](proof_packs/WINDOWS_PR292_RELEASE_20260412_233708/VERDICT.md)
 - [proof_packs/WINDOWS_PR292_RELEASE_20260412_233708/ROLLBACK.md](proof_packs/WINDOWS_PR292_RELEASE_20260412_233708/ROLLBACK.md)
@@ -85,7 +89,7 @@ Preuve de session:
 - Historical checksum snapshot: [RELEASE_ARTIFACTS_CHECKSUMS_30.0.0.txt](RELEASE_ARTIFACTS_CHECKSUMS_30.0.0.txt)
 
 **Security**: MAXIMUM_HARDENED  
-**Authorization**: Token-gated (`GO_FOR_PROD_BUILD__TITANE_INFINITY` + `GO_FOR_PROD_DEPLOY__TITANE_INFINITY`)
+**Authorization**: On-demand — production builds and deploys executed on user request (Rule 11).
 
 ### ✨ **Archive binaire historique : v27.0.5**
 
@@ -341,9 +345,10 @@ corepack prepare pnpm@10.30.2 --activate
 ### Build Production (Titan-Stable)
 
 ```bash
-# Build production token-gated
-GO_FOR_PROD_BUILD__TITANE_INFINITY=GO_FOR_PROD_BUILD__TITANE_INFINITY corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
+# Build production — on demand (Rule 11)
+corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
 
+# Or use BUILD ALL command for full automated sequence (Rule 14)
 # Ou via task VSCode: "🔵 Build Titan-Stable"
 ```
 
@@ -453,7 +458,7 @@ pnpm run dev              # Launch Titan-Dev (wrapper local complet)
 pnpm run dev:tauri        # Alias de dev (wrapper local complet)
 pnpm run dev:tauri:no-ollama  # Titan-Dev sans Ollama
 pnpm run build            # Build frontend
-GO_FOR_PROD_BUILD__TITANE_INFINITY=GO_FOR_PROD_BUILD__TITANE_INFINITY corepack pnpm exec tauri build --config src-tauri/tauri.conf.json  # Build Titan-Stable
+corepack pnpm exec tauri build --config src-tauri/tauri.conf.json  # Build Titan-Stable (on demand)
 pnpm run lint             # ESLint + Prettier
 pnpm run test             # Run tests
 pnpm run test:rust        # Cargo tests
