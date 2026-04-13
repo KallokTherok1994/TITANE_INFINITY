@@ -33,8 +33,8 @@ for p in src/AGENTS.md src-tauri/AGENTS.md e2e/AGENTS.md docs/AGENTS.md scripts/
   fi
 done
 
-# Lower layers must not redefine build-all command
-if _rg -n "^## Rule 14" -S .github/instructions .github/agents .github/prompts >/dev/null 2>&1; then
+# Lower layers must not redefine BUILD ALL command rule
+if _rg -n "BUILD ALL.*command|command.*BUILD ALL" -S .github/instructions .github/agents .github/prompts >/dev/null 2>&1; then
   fail "LOWER_LAYER_REDEFINES_BUILD_ALL_RULE"
 else
   pass "LOWER_LAYER_NO_BUILD_ALL_REDEFINITION"
