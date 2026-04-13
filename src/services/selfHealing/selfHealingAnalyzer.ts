@@ -161,11 +161,6 @@ const ANOMALY_ACTIONS_SCORED: Record<AnomalyType, ScoredAction[]> = {
     { action: 'restart_module', basePriority: 0.5, riskLevel: 0.6 },
     { action: 'clear_cache', basePriority: 0.4, riskLevel: 0.3 },
   ],
-  avatar_render_fail: [
-    { action: 'clear_cache', basePriority: 0.7, riskLevel: 0.2 },
-    { action: 'reset_state', basePriority: 0.5, riskLevel: 0.5 },
-    { action: 'restart_module', basePriority: 0.3, riskLevel: 0.8 },
-  ],
   pipeline_stuck: [
     { action: 'restart_worker', basePriority: 0.8, riskLevel: 0.5 },
     { action: 'clear_cache', basePriority: 0.5, riskLevel: 0.3 },
@@ -275,12 +270,6 @@ const ANOMALY_CAUSES: Record<AnomalyType, string[]> = {
     'Audio context fermé',
     'Rate limit atteint',
     'Format audio non supporté',
-  ],
-  avatar_render_fail: [
-    'WebGL context perdu',
-    'Modèle 3D corrompu',
-    'Animation invalide',
-    'Ressource manquante',
   ],
   pipeline_stuck: [
     'Worker bloqué',

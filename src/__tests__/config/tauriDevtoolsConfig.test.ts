@@ -30,15 +30,11 @@ describe('Tauri devtools configuration', () => {
   it('keeps desktop windows devtools-enabled for F12 and Ctrl+Shift+I', () => {
     const config = loadJson<TauriConfig>('src-tauri/tauri.conf.json');
     const mainWindow = config.app?.windows?.find(window => window.label === 'main');
-    const avatarWindow = config.app?.windows?.find(
-      window => window.label === 'avatar-floating'
-    );
     const mainCapability = config.app?.security?.capabilities?.find(capability =>
       capability.windows?.includes('main')
     );
 
     expect(mainWindow?.devtools).toBe(true);
-    expect(avatarWindow?.devtools).toBe(true);
     expect(mainCapability?.permissions).toContain(
       'core:webview:allow-internal-toggle-devtools'
     );

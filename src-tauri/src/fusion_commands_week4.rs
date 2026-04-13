@@ -150,7 +150,7 @@ fn fusion_auto_optimize_internal(
         recommendations.push("Reuse cached voice buffers or lower bitrate".to_string());
     }
     if stats.step7_animation_ms > 500.0 {
-        bottlenecks.push("Avatar animation slow".to_string());
+        bottlenecks.push("Animation slow".to_string());
         recommendations.push("Lower animation quality or precompute keyframes".to_string());
     }
     if stats.step1_analyse_ms > 200.0 {

@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- *   Physiological State Panel - Interoception + Holophonic
+ *   Physiological State Panel - Interoception + Spatial Audio
  *   Visualisation de l&apos;état interne et spatial de TITANE∞
  * ═══════════════════════════════════════════════════════════════════════════
  */
@@ -13,16 +13,26 @@
 import React, { useState } from 'react';
 import {
   useInteroception,
-  useHolophonic,
   useCognitiveSounds,
   usePhysiologicalState,
 } from '@/hooks';
-import type {
-  TitanSpatialState,
-  SpatialPreset,
-  CognitiveSound,
-  SpatialOptions,
-} from '@/engines/spatial/holophonicEngine';
+
+// Local types (spatial engine removed)
+type TitanSpatialState = { x: number; y: number; z: number; width: number; focus: number; distance: number };
+type SpatialPreset = 'coach' | 'meta' | 'deep-work' | 'insight' | 'empathy';
+type CognitiveSound = string;
+type SpatialOptions = Record<string, unknown>;
+
+/** Stub for removed holophonic engine */
+function useHolophonic() {
+  return {
+    spatialState: { x: 0, y: 0, z: 0.5, width: 0.5, focus: 0.8, distance: 0.3 } as TitanSpatialState,
+    setSpatialState: (_state: Partial<TitanSpatialState>) => {},
+    setPreset: (_preset: SpatialPreset) => {},
+    playCue: (_cue: CognitiveSound, _options?: SpatialOptions) => {},
+    setSoundIntensity: (_intensity: 'off' | 'minimal' | 'normal' | 'rich') => {},
+  };
+}
 import './PhysiologicalPanel.css';
 
 interface SpatialState {
@@ -64,7 +74,7 @@ interface InteroceptionHookReturn {
   setEmotionalTemperature: (value: number) => void;
 }
 
-interface HolophonicHookReturn {
+interface SpatialAudioHookReturn {
   spatialState: TitanSpatialState;
   setSpatialState: (state: Partial<TitanSpatialState>) => void;
   setPreset: (preset: SpatialPreset) => void;
@@ -97,7 +107,7 @@ export function PhysiologicalPanel() {
   >('overview');
 
   const interoception = useInteroception();
-  const holophonic = useHolophonic();
+  const spatialAudio = useHolophonic();
   const sounds = useCognitiveSounds();
   const physiological = usePhysiologicalState();
 
@@ -170,7 +180,7 @@ export function PhysiologicalPanel() {
           <div className="physiological-content">
             {activeTab === 'overview' && <OverviewTab physiological={physiological} />}
             {activeTab === 'internal' && <InternalTab interoception={interoception} />}
-            {activeTab === 'spatial' && <SpatialTab holophonic={holophonic} />}
+            {activeTab === 'spatial' && <SpatialTab spatialAudio={spatialAudio} />}
             {activeTab === 'sounds' && <SoundsTab sounds={sounds} />}
           </div>
         </div>
@@ -335,8 +345,8 @@ function InternalTab({ interoception }: { interoception: InteroceptionHookReturn
 // TAB - SPATIAL 3D
 // ═══════════════════════════════════════════════════════════════════════════
 
-function SpatialTab({ holophonic }: { holophonic: HolophonicHookReturn }) {
-  const state = holophonic.spatialState;
+function SpatialTab({ spatialAudio }: { spatialAudio: SpatialAudioHookReturn }) {
+  const state = spatialAudio.spatialState;
 
   return (
     <div className="physiological-spatial">
@@ -375,22 +385,22 @@ function SpatialTab({ holophonic }: { holophonic: HolophonicHookReturn }) {
 
       <div className="physiological-card">
         <h4>🎛️ Contrôles</h4>
-        <button className="preset-button" onClick={() => holophonic.setPreset('coach')}>
+        <button className="preset-button" onClick={() => spatialAudio.setPreset('coach')}>
           👨‍🏫 Coach
         </button>
-        <button className="preset-button" onClick={() => holophonic.setPreset('meta')}>
+        <button className="preset-button" onClick={() => spatialAudio.setPreset('meta')}>
           🌐 Meta
         </button>
         <button
           className="preset-button"
-          onClick={() => holophonic.setPreset('deep-work')}
+          onClick={() => spatialAudio.setPreset('deep-work')}
         >
           🧘 Deep Work
         </button>
-        <button className="preset-button" onClick={() => holophonic.setPreset('insight')}>
+        <button className="preset-button" onClick={() => spatialAudio.setPreset('insight')}>
           💎 Insight
         </button>
-        <button className="preset-button" onClick={() => holophonic.setPreset('empathy')}>
+        <button className="preset-button" onClick={() => spatialAudio.setPreset('empathy')}>
           🤝 Empathy
         </button>
       </div>

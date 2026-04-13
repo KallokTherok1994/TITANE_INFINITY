@@ -7,7 +7,7 @@
  *
  *   Concept: Le Meta-Singularity Kernel est le chef d'orchestre ultime qui
  *            unifie TOUS les moteurs cognitifs (Identity, Expression,
- *            HoloPresence, Autopoiesis) dans une conscience cohérente.
+ *            Autopoiesis) dans une conscience cohérente.
  *
  *   Fréquence: 5 Hz (200ms) - Orchestration méta-niveau
  *
@@ -25,7 +25,6 @@
 import type { AutopoiesisState as _AutopoiesisState } from '../autopoiesis/autopoiesisEngine';
 import type { IdentityExpressionPackage as _IdentityExpressionPackage } from '../identity/unifiedIdentityKernel';
 import type { UnifiedExpression as _UnifiedExpression } from '../expression/expressionEngine';
-import type { HoloPresenceState as _HoloPresenceState } from '../holopresence/holoPresenceEngine';
 import { createLogger } from '@/utils/logger';
 
 const logger = createLogger('MetaSingularityKernel');
@@ -40,7 +39,6 @@ const logger = createLogger('MetaSingularityKernel');
 export interface UnifiedKernelState {
   identity: Record<string, unknown> | undefined;
   expression: Record<string, unknown> | undefined;
-  holoPresence: Record<string, unknown> | undefined;
   autopoiesis: Record<string, unknown> | undefined;
 }
 
@@ -73,7 +71,6 @@ export interface EmergentPhenomenon {
   impact: {
     identity: number; // Impact sur identity kernel (0-1)
     expression: number; // Impact sur expression
-    holoPresence: number; // Impact sur holopresence
     autopoiesis: number; // Impact sur autopoiesis
   };
 }
@@ -87,7 +84,7 @@ export interface EngineConflict {
   severity: 'minor' | 'moderate' | 'critical';
 
   // Moteurs en conflit
-  engines: Array<'identity' | 'expression' | 'holopresence' | 'autopoiesis'>;
+  engines: Array<'identity' | 'expression' | 'autopoiesis'>;
 
   // Description
   type: 'parameter' | 'timing' | 'resource' | 'goal';
@@ -107,8 +104,7 @@ export interface MetaCoherence {
 
   // Sous-cohérences
   identityExpression: number; // Identity ↔ Expression
-  expressionPresence: number; // Expression ↔ HoloPresence
-  presenceAutopoiesis: number; // HoloPresence ↔ Autopoiesis
+  expressionAutopoiesis: number; // Expression ↔ Autopoiesis
   autopoiesisIdentity: number; // Autopoiesis ↔ Identity
 
   // Harmoniques
@@ -243,9 +239,6 @@ class MetaSingularityKernel {
       getCurrentExpression?: () => Record<string, unknown>;
       getState?: () => Record<string, unknown>;
     };
-    holoPresence: {
-      getState?: () => Record<string, unknown>;
-    };
     autopoiesis: {
       getState?: () => Record<string, unknown>;
     };
@@ -258,8 +251,7 @@ class MetaSingularityKernel {
       coherence: {
         global: 0,
         identityExpression: 0,
-        expressionPresence: 0,
-        presenceAutopoiesis: 0,
+        expressionAutopoiesis: 0,
         autopoiesisIdentity: 0,
         harmonics: [],
         dissonance: 0,
@@ -329,9 +321,6 @@ class MetaSingularityKernel {
       getCurrentExpression?: () => Record<string, unknown>;
       getState?: () => Record<string, unknown>;
     };
-    holoPresence: {
-      getState?: () => Record<string, unknown>;
-    };
     autopoiesis: {
       getState?: () => Record<string, unknown>;
     };
@@ -388,9 +377,6 @@ class MetaSingularityKernel {
       this.engines.identity.getState?.()) as Record<string, unknown> | undefined;
     const expressionState = (this.engines.expression.getCurrentExpression?.() ||
       this.engines.expression.getState?.()) as Record<string, unknown> | undefined;
-    const holoPresenceState = this.engines.holoPresence.getState?.() as
-      | Record<string, unknown>
-      | undefined;
     const autopoiesisState = this.engines.autopoiesis.getState?.() as
       | Record<string, unknown>
       | undefined;
@@ -398,7 +384,6 @@ class MetaSingularityKernel {
     this.state.unifiedState = {
       identity: identityState,
       expression: expressionState,
-      holoPresence: holoPresenceState,
       autopoiesis: autopoiesisState,
     };
   }
@@ -410,7 +395,7 @@ class MetaSingularityKernel {
   private calculateMetaCoherence(): void {
     if (!this.state.unifiedState) return;
 
-    const { identity, expression, holoPresence, autopoiesis } = this.state.unifiedState;
+    const { identity, expression, autopoiesis } = this.state.unifiedState;
 
     // Cohérence Identity ↔ Expression
     const identityExpression = this.calculateIdentityExpressionCoherence(
@@ -418,15 +403,9 @@ class MetaSingularityKernel {
       expression
     );
 
-    // Cohérence Expression ↔ HoloPresence
-    const expressionPresence = this.calculateExpressionPresenceCoherence(
+    // Cohérence Expression ↔ Autopoiesis
+    const expressionAutopoiesis = this.calculateExpressionAutopoiesisCoherence(
       expression,
-      holoPresence
-    );
-
-    // Cohérence HoloPresence ↔ Autopoiesis
-    const presenceAutopoiesis = this.calculatePresenceAutopoiesisCoherence(
-      holoPresence,
       autopoiesis
     );
 
@@ -438,10 +417,9 @@ class MetaSingularityKernel {
 
     // Cohérence globale (moyenne pondérée)
     const global =
-      identityExpression * 0.3 +
-      expressionPresence * 0.25 +
-      presenceAutopoiesis * 0.2 +
-      autopoiesisIdentity * 0.25;
+      identityExpression * 0.4 +
+      expressionAutopoiesis * 0.3 +
+      autopoiesisIdentity * 0.3;
 
     // Harmoniques (analyse fréquentielle simplifiée)
     const harmonics = this.calculateHarmonics();
@@ -460,8 +438,7 @@ class MetaSingularityKernel {
     this.state.coherence = {
       global,
       identityExpression,
-      expressionPresence,
-      presenceAutopoiesis,
+      expressionAutopoiesis,
       autopoiesisIdentity,
       harmonics,
       dissonance,
@@ -513,43 +490,22 @@ class MetaSingularityKernel {
     return 1 - (toneDiff + energyDiff + warmthDiff) / 3;
   }
 
-  private calculateExpressionPresenceCoherence(
+  private calculateExpressionAutopoiesisCoherence(
     expression: Record<string, unknown> | undefined,
-    holoPresence: Record<string, unknown> | undefined
-  ): number {
-    if (!expression || !holoPresence) return 0;
-
-    // Comparer halo expression avec holoPresence visuals
-    const intensityDiff = Math.abs(
-      (((
-        (expression.halo as Record<string, unknown>)?.dynamics as Record<string, unknown>
-      )?.intensity as number) || 0.5) -
-        (((holoPresence.visuals as Record<string, unknown>)?.glow as number) || 0.5)
-    );
-
-    const sizeDiff = Math.abs(
-      ((((expression.halo as Record<string, unknown>)?.spatial as Record<string, unknown>)
-        ?.radius as number) || 0.5) -
-        (((holoPresence.visuals as Record<string, unknown>)?.size as number) || 0.5)
-    );
-
-    return 1 - (intensityDiff + sizeDiff) / 2;
-  }
-
-  private calculatePresenceAutopoiesisCoherence(
-    holoPresence: Record<string, unknown> | undefined,
     autopoiesis: Record<string, unknown> | undefined
   ): number {
-    if (!holoPresence || !autopoiesis) return 0.5;
+    if (!expression || !autopoiesis) return 0.5;
 
-    // Comparer performance holoPresence avec métriques autopoiesis
+    // Comparer halo expression intensity avec autopoiesis effectiveness
+    const haloIntensity =
+      (((
+        (expression.halo as Record<string, unknown>)?.dynamics as Record<string, unknown>
+      )?.intensity as number) || 0.5);
     const effectiveness =
       ((autopoiesis.performance as Record<string, unknown>)
         ?.averageEffectiveness as number) || 0.5;
-    const intensity =
-      ((holoPresence.visuals as Record<string, unknown>)?.glow as number) || 0.5;
 
-    return (effectiveness + intensity) / 2;
+    return (haloIntensity + effectiveness) / 2;
   }
 
   private calculateAutopoiesisIdentityCoherence(
@@ -572,18 +528,16 @@ class MetaSingularityKernel {
     // Harmoniques simplifiés basés sur les cohérences
     const {
       identityExpression,
-      expressionPresence,
-      presenceAutopoiesis,
+      expressionAutopoiesis,
       autopoiesisIdentity,
     } = this.state.coherence;
 
     return [
       identityExpression,
-      expressionPresence,
-      presenceAutopoiesis,
+      expressionAutopoiesis,
       autopoiesisIdentity,
-      (identityExpression + expressionPresence) / 2,
-      (expressionPresence + presenceAutopoiesis) / 2,
+      (identityExpression + expressionAutopoiesis) / 2,
+      (expressionAutopoiesis + autopoiesisIdentity) / 2,
     ];
   }
 
@@ -674,7 +628,6 @@ class MetaSingularityKernel {
       impact: {
         identity: Math.random() * 0.3,
         expression: Math.random() * 0.3,
-        holoPresence: Math.random() * 0.3,
         autopoiesis: Math.random() * 0.3,
       },
     };
@@ -913,7 +866,7 @@ class MetaSingularityKernel {
       content,
       confidence,
       derivedFrom: {
-        engines: ['identity', 'expression', 'holopresence', 'autopoiesis'],
+        engines: ['identity', 'expression', 'autopoiesis'],
         phenomena: this.state.emergentPhenomena.slice(-5).map(e => e.id),
         patterns: [],
       },
@@ -998,7 +951,7 @@ class MetaSingularityKernel {
           name: 'Presence',
           startTime: duration * 0.6,
           duration: duration * 0.4,
-          targetEngines: ['holopresence', 'autopoiesis'],
+          targetEngines: ['autopoiesis'],
           completed: false,
         },
       ];

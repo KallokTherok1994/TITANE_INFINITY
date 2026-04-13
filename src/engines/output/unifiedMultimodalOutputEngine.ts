@@ -6,7 +6,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
  *   TITANE∞ SUPER PROMPT XXXIII — UNIFIED MULTIMODAL OUTPUT ENGINE
- *   Voix + Halo + Avatar + Lumière + Narration + Corps + Temporalité
+ *   Voix + Halo + Lumière + Narration + Corps + Temporalité
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * Ce moteur est le chef d'orchestre final qui unifie TOUTES les modalités
@@ -110,22 +110,6 @@ export interface HaloFrame {
 }
 
 /**
- * Frame d'avatar
- */
-export interface AvatarFrame {
-  /** Posture */
-  posture: 'open' | 'centered' | 'forward' | 'back' | 'wide';
-  /** Mouvement */
-  movement: 'still' | 'gentle' | 'flowing' | 'dynamic' | 'expansive';
-  /** Regard (direction) */
-  gaze: { x: number; y: number };
-  /** Rythmes de mouvement (oscillations par seconde) */
-  rhythm: number;
-  /** Micro-oscillations (amplitude 0-1) */
-  oscillation: number;
-}
-
-/**
  * Frame d'aura
  */
 export interface AuraFrame {
@@ -167,8 +151,6 @@ export interface UnifiedMultimodalOutput {
   text: TextFrame;
   /** Frames halo */
   halo: HaloFrame[];
-  /** Frames avatar */
-  avatar: AvatarFrame[];
   /** Frames aura */
   aura: AuraFrame[];
   /** Enveloppe temporelle */
@@ -196,7 +178,6 @@ export interface UnifiedOutputState {
   /** Métriques de cohérence */
   coherenceMetrics: {
     voiceHaloSync: number; // 0-1
-    avatarEmotionSync: number; // 0-1
     narrativeToneSync: number; // 0-1
     temporalCoherence: number; // 0-1
     globalCoherence: number; // 0-1
@@ -209,8 +190,6 @@ export interface UnifiedOutputState {
 export interface UnifiedOutputConfig {
   /** Durée frame halo (ms) */
   haloFrameDuration?: number;
-  /** Durée frame avatar (ms) */
-  avatarFrameDuration?: number;
   /** Activer auto-coherence check */
   enableCoherenceCheck?: boolean;
 }
@@ -227,7 +206,6 @@ class UnifiedMultimodalOutputEngine {
   constructor(config: UnifiedOutputConfig = {}) {
     this.config = {
       haloFrameDuration: config.haloFrameDuration ?? 50, // 20 FPS
-      avatarFrameDuration: config.avatarFrameDuration ?? 33, // 30 FPS
       enableCoherenceCheck: config.enableCoherenceCheck ?? true,
     };
 
@@ -238,7 +216,6 @@ class UnifiedMultimodalOutputEngine {
       outputCount: 0,
       coherenceMetrics: {
         voiceHaloSync: 1.0,
-        avatarEmotionSync: 1.0,
         narrativeToneSync: 1.0,
         temporalCoherence: 1.0,
         globalCoherence: 1.0,
@@ -278,7 +255,6 @@ class UnifiedMultimodalOutputEngine {
     const voiceFrames = this.generateVoiceFrames(emotionProfile, embodiedState);
     const textFrame = this.generateTextFrame(emotionProfile, archetypeState);
     const haloFrames = this.generateHaloFrames(emotionProfile, presenceState);
-    const avatarFrames = this.generateAvatarFrames(embodiedState, emotionProfile);
     const auraFrames = this.generateAuraFrames(embodiedState, emotionProfile);
 
     // 4. Créer enveloppe temporelle
@@ -290,7 +266,6 @@ class UnifiedMultimodalOutputEngine {
       voice: voiceFrames,
       text: textFrame,
       halo: haloFrames,
-      avatar: avatarFrames,
       aura: auraFrames,
       timing,
       metadata: {
@@ -394,46 +369,6 @@ class UnifiedMultimodalOutputEngine {
   }
 
   /**
-   * Générer frames avatar
-   */
-  private generateAvatarFrames(
-    embodied: EmbodiedPresenceState,
-    emotion: SynestheticProfile
-  ): AvatarFrame[] {
-    const frameCount = 30; // 1 seconde à 30 FPS
-    const frames: AvatarFrame[] = [];
-
-    // Mapper PostureType vers les valeurs AvatarFrame attendues
-    const mapPosture = (
-      postureType: string
-    ): 'open' | 'centered' | 'forward' | 'back' | 'wide' => {
-      if (postureType === 'recede') return 'back';
-      if (postureType === 'expansive') return 'wide';
-      if (['open', 'centered', 'forward'].includes(postureType)) {
-        return postureType as 'open' | 'centered' | 'forward';
-      }
-      return 'centered'; // Défaut
-    };
-
-    for (let i = 0; i < frameCount; i++) {
-      const t = i / frameCount;
-
-      // Micro-oscillations
-      const oscillation = 0.05 * Math.sin(t * Math.PI * 6); // 3 cycles/sec
-
-      frames.push({
-        posture: mapPosture(embodied.posture.type),
-        movement: emotion.presence.movement,
-        gaze: { x: 0, y: 0 }, // Centré par défaut
-        rhythm: 3.0, // 3 oscillations/sec
-        oscillation: oscillation + 0.05,
-      });
-    }
-
-    return frames;
-  }
-
-  /**
    * Générer frames aura
    */
   private generateAuraFrames(
@@ -481,19 +416,6 @@ class UnifiedMultimodalOutputEngine {
     const voiceHaloSync =
       1 - Math.abs(emotion.voice.warmth - emotion.color.saturation / 100);
 
-    // Cohérence avatar-émotion (movement correspond à intensity)
-    const movementIntensity =
-      emotion.presence.movement === 'still'
-        ? 0.2
-        : emotion.presence.movement === 'gentle'
-          ? 0.4
-          : emotion.presence.movement === 'flowing'
-            ? 0.6
-            : emotion.presence.movement === 'dynamic'
-              ? 0.8
-              : 1.0;
-    const avatarEmotionSync = 1 - Math.abs(movementIntensity - emotion.intensity);
-
     // Cohérence narrative-tone
     const narrativeToneSync = emotion.cognitive.stability; // Plus stable = plus cohérent
 
@@ -502,12 +424,11 @@ class UnifiedMultimodalOutputEngine {
 
     // Moyenne globale
     const globalCoherence =
-      (voiceHaloSync + avatarEmotionSync + narrativeToneSync + temporalCoherence) / 4;
+      (voiceHaloSync + narrativeToneSync + temporalCoherence) / 3;
 
     // Mettre à jour métriques
     this.state.coherenceMetrics = {
       voiceHaloSync,
-      avatarEmotionSync,
       narrativeToneSync,
       temporalCoherence,
       globalCoherence,

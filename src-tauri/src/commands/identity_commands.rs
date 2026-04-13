@@ -11,7 +11,7 @@ use std::collections::HashMap;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct IdentityMatrix {
     pub persona_name: String,
-    pub avatar_style: String,
+    pub ui_style: String,
     pub language: String,
     pub theme: String,
     pub voice_enabled: bool,
@@ -39,7 +39,7 @@ pub async fn identity_get_matrix() -> Result<IdentityMatrix, String> {
     // Valeurs par défaut
     Ok(IdentityMatrix {
         persona_name: "TITANE∞".to_string(),
-        avatar_style: "default".to_string(),
+        ui_style: "default".to_string(),
         language: "fr".to_string(),
         theme: "dark".to_string(),
         voice_enabled: true,

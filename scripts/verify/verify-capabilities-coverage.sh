@@ -27,7 +27,6 @@ KNOWN_DEAD=(
   "autonomy_fix_states"
   "autonomy_heal_modules"
   "autonomy_optimize_performance"
-  "autonomy_scan_avatar"
   "autonomy_scan_backend"
   "autonomy_scan_ia"
   "autonomy_scan_memory"

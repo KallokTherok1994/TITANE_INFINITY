@@ -15,7 +15,7 @@
  * 1. ARCHETYPE STATES — 4 archétypes avec signature vocale/visuelle
  * 2. ARCHETYPE SCORE ENGINE — Calcul contextuel des activations
  * 3. RESONANCE BLENDING — Mélange harmonieux des forces
- * 4. MULTIMODAL EXPRESSION — Voix + Halo + Avatar + Posture cognitive
+ * 4. MULTIMODAL EXPRESSION — Voix + Halo + Posture cognitive
  * 5. ARCHETYPE FOCUS MODE — Dominance explicite sur demande
  * 6. ARCHETYPE SAFETY GUARD — Protection contre stress/confusion
  * 7. ARCHETYPE MEMORY — Apprentissage préférences utilisateur
@@ -653,17 +653,6 @@ class ArchetypeResonanceEngine {
         breathing: {
           amplitude: this.state.intensity * 0.7,
           cycleDuration: 4000, // Adaptable selon archétype
-        },
-        avatar: {
-          expression:
-            profile.cognitivePosture.thinkingStyle === 'contemplative'
-              ? 'neutral'
-              : profile.cognitivePosture.thinkingStyle === 'protective'
-                ? 'focus'
-                : profile.cognitivePosture.thinkingStyle === 'imaginative'
-                  ? 'smile'
-                  : 'focus',
-          facialGlow: halo.intensity * 0.7,
         },
       },
     };

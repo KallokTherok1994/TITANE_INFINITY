@@ -138,12 +138,6 @@ describe('SINGULARITY-FUSION vΩ - Integration Tests', () => {
       expect(result.module_type).toBe('cognitive');
     });
 
-    it('should heal avatar module', async () => {
-      const result = await invoke('autoheal_heal_avatar_module');
-      expect(result).toBeDefined();
-      expect(result.module_type).toBe('avatar');
-    });
-
     it('should get heal history', async () => {
       const history = await invoke('autoheal_get_history');
       expect(Array.isArray(history)).toBe(true);

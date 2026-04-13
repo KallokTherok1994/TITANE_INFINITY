@@ -15,7 +15,7 @@
  *     1. Observer l'efficacité des expressions (sync scores, user feedback)
  *     2. Détecter les patterns récurrents performants
  *     3. Apprendre et mémoriser les configurations optimales
- *     4. Suggérer des évolutions aux moteurs (Identity, Expression, HoloPresence)
+ *     4. Suggérer des évolutions aux moteurs (Identity, Expression)
  *     5. Auto-optimiser les paramètres de synchronisation
  * ═══════════════════════════════════════════════════════════════════════════
  */
@@ -23,8 +23,6 @@
 import type { IdentityExpressionPackage } from '../identity/unifiedIdentityKernel';
 
 import type { UnifiedExpression } from '../expression/expressionEngine';
-
-import type { HoloPresenceState } from '../holopresence/holoPresenceEngine';
 
 // ═══════════════════════════════════════════════════════════════════════════
 //   TYPES
@@ -93,7 +91,7 @@ export interface EvolutionRule {
 
   // Action recommandée
   action: {
-    targetEngine: 'identity' | 'expression' | 'holopresence';
+    targetEngine: 'identity' | 'expression';
     parameter: string;
     adjustment: number; // Delta à appliquer (-1 to +1)
     reason: string;
@@ -174,7 +172,6 @@ export interface Observation {
   timestamp: number;
   identity: IdentityExpressionPackage;
   expression: UnifiedExpression;
-  holoPresence: HoloPresenceState;
   outcomes: EffectivePattern['outcomes'];
   context: EffectivePattern['context'];
 }
@@ -557,7 +554,7 @@ class AutopoiesisEngine {
     // Si engagement faible, augmenter réactivité
     if (pattern.outcomes.userEngagement < 0.7) {
       return {
-        targetEngine: 'holopresence',
+        targetEngine: 'expression',
         parameter: 'reactivity',
         adjustment: 0.15,
         reason: 'Increase engagement',

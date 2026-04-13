@@ -22,7 +22,7 @@ pub enum BootPriority {
     Critical = 4,
     /// ⚡ HAUTE: Système dégradé si échec mais continue (Cognitive, Adaptive, Chat, Evolution, Watchdog)
     High = 3,
-    /// 🟡 MOYENNE: Features optionnelles (Avatar, Voice, Reality, Narrative)
+    /// 🟡 MOYENNE: Features optionnelles (Voice, Reality, Narrative)
     Medium = 2,
     /// 🟢 BASSE: Nice-to-have (Cloud, QA, DevTools)
     Low = 1,

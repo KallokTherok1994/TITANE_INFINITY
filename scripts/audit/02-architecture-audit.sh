@@ -195,8 +195,6 @@ cat > "$REPORT_DIR/CONSOLIDATION_PLAN.md" << 'EOF'
    - Consolidate: devtools/, DevTools/, apps/devtools/
 
 9. **Presence OS** - src/modules/presence/
-   - HoloPresence, embodiment
-   - Consolidate: presence/, holopresence/, embodiment/
 
 ---
 

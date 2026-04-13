@@ -1,6 +1,6 @@
 /**
  * TITANE∞ Fusion Backend - Tauri Command Wrappers - Week 3
- * Type-safe async bindings for lip-sync and avatar animation commands
+ * Type-safe async bindings for lip-sync commands
  *
  * © 2026 Kevin Thibault / TITANE Team
  */
@@ -9,11 +9,8 @@ import { secureInvoke } from '@/lib/security';
 import type {
   LipSyncProcessRequest,
   LipSyncProcessResponse,
-  AnimateAvatarRequest,
-  AnimateAvatarResponse,
-  LipSyncData,
 } from './types-week3';
-import { isLipSyncProcessSuccess, isAnimateAvatarSuccess } from './types-week3';
+import { isLipSyncProcessSuccess } from './types-week3';
 
 /**
  * Process lip-sync data from text
@@ -54,48 +51,6 @@ export async function processLipSyncText(
 ): Promise<LipSyncProcessResponse> {
   return processLipSync({
     text,
-    ...options,
-  });
-}
-
-/**
- * Generate avatar animation keyframes from lip-sync data
- */
-export async function animateAvatar(
-  request: AnimateAvatarRequest
-): Promise<AnimateAvatarResponse> {
-  try {
-    const response = await secureInvoke<AnimateAvatarResponse>('fusion_animate_avatar', {
-      request,
-    });
-
-    if (!isAnimateAvatarSuccess(response)) {
-      throw new Error(typeof response === 'string' ? response : 'Unknown error');
-    }
-
-    return response;
-  } catch (error) {
-    throw new Error(
-      `Avatar animation failed: ${error instanceof Error ? error.message : String(error)}`
-    );
-  }
-}
-
-/**
- * Animate avatar from lip-sync data with defaults
- */
-export async function animateFromLipSync(
-  lipsync: LipSyncData,
-  options?: {
-    expression?: string;
-    animation_style?: string;
-    intensity?: number;
-    fps?: number;
-    include_head_motion?: boolean;
-  }
-): Promise<AnimateAvatarResponse> {
-  return animateAvatar({
-    lipsync,
     ...options,
   });
 }

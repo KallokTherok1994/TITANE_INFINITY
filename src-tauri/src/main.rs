@@ -810,7 +810,7 @@ mod fusion_commands_week2 {
     include!("fusion_commands_week2.rs");
 }
 
-// Fusion Commands Week 3 - Lip-sync & Avatar Animation
+// Fusion Commands Week 3 - Lip-sync
 mod fusion_commands_week3 {
     include!("fusion_commands_week3.rs");
 }
@@ -931,9 +931,6 @@ mod services; // P2: WebResearch network gate
 mod types;
 mod utils;
 
-// Immersive Avatar Engine v23
-mod avatar;
-
 // System Center v∞ (Diagnostics, DevTools, Cluster)
 use titane_infinity::design_center;
 use titane_infinity::system_center;
@@ -956,8 +953,6 @@ use titane_infinity::ai::orchestrator_multi::OrchestratorState;
 // Adaptive Engine v21
 
 // Narrative Engine v22
-
-// Immersive Avatar Engine v23
 
 // Cloud Sync Engine v∞ (OPUS #13)
 
@@ -1212,7 +1207,6 @@ fn main() {
         .manage(helios_core)
         .manage(memory_core)
         .manage(core_singularity_state)
-        .manage(avatar::AvatarEngineGlobal::default())
         .manage(state_bridge_commands::FrontendStateStore::default())
         // ✅ AUDIT FIX (2026-03-06): Identity Engine State — required by identity_* commands
         .manage(titane_infinity::identity::commands::IdentityEngineState::default())
@@ -1885,84 +1879,6 @@ fn main() {
             overdrive::voice_engine::voice_disable_duplex,
             overdrive::voice_engine::voice_check_interruption,
 
-            // Immersive Avatar Engine v23 + FullBody
-            avatar::avatar_commands::avatar_prepare_speech,
-            avatar::avatar_commands::avatar_finish_speech,
-            avatar::avatar_commands::avatar_enable_immersion,
-            avatar::avatar_commands::avatar_on_wake_word,
-            avatar::avatar_commands::avatar_get_current_morph,
-            avatar::avatar_commands::avatar_advance_lip_sync,
-            avatar::avatar_commands::avatar_get_expression,
-            avatar::avatar_commands::avatar_get_state,
-            avatar::avatar_commands::avatar_prepare_animation,
-            avatar::avatar_selftest::avatar_run_selftest,
-
-            // Avatar appearance
-            avatar::appearance_commands::avatar_get_appearance,
-            avatar::appearance_commands::avatar_set_appearance,
-            avatar::appearance_commands::avatar_update_appearance,
-            avatar::appearance_commands::avatar_apply_style_preset,
-            avatar::appearance_commands::avatar_parse_style_command,
-            avatar::appearance_commands::avatar_save_custom_style,
-            avatar::appearance_commands::avatar_load_custom_style,
-            avatar::appearance_commands::avatar_merge_styles,
-            avatar::appearance_commands::avatar_list_styles,
-            avatar::appearance_commands::avatar_add_archetype,
-
-            // Avatar floating window / display state (desktop-only — window APIs not available on Android)
-            #[cfg(not(target_os = "android"))]
-            avatar::avatar_floating_commands::avatar_get_display_state,
-            #[cfg(not(target_os = "android"))]
-            avatar::avatar_floating_commands::avatar_set_display_state,
-            #[cfg(not(target_os = "android"))]
-            avatar::avatar_floating_commands::avatar_update_display_state,
-            #[cfg(not(target_os = "android"))]
-            avatar::avatar_floating_commands::avatar_reset_display_state,
-            #[cfg(not(target_os = "android"))]
-            avatar::avatar_floating_commands::avatar_mode_floating,
-            #[cfg(not(target_os = "android"))]
-            avatar::avatar_floating_commands::avatar_mode_embed,
-            #[cfg(not(target_os = "android"))]
-            avatar::avatar_floating_commands::avatar_mode_hidden,
-            #[cfg(not(target_os = "android"))]
-            avatar::avatar_floating_commands::avatar_set_position,
-            #[cfg(not(target_os = "android"))]
-            avatar::avatar_floating_commands::avatar_set_size,
-            #[cfg(not(target_os = "android"))]
-            avatar::avatar_floating_commands::avatar_set_scale,
-            #[cfg(not(target_os = "android"))]
-            avatar::avatar_floating_commands::avatar_set_opacity,
-            #[cfg(not(target_os = "android"))]
-            avatar::avatar_floating_commands::avatar_set_always_on_top,
-            #[cfg(not(target_os = "android"))]
-            avatar::avatar_floating_commands::avatar_set_locked,
-            #[cfg(not(target_os = "android"))]
-            avatar::avatar_floating_commands::avatar_set_mirror_mode,
-            #[cfg(not(target_os = "android"))]
-            avatar::avatar_floating_commands::avatar_set_click_through,
-            #[cfg(not(target_os = "android"))]
-            avatar::avatar_floating_commands::avatar_set_anchor,
-            #[cfg(not(target_os = "android"))]
-            avatar::avatar_floating_commands::avatar_set_anchor_by_name,
-            #[cfg(not(target_os = "android"))]
-            avatar::avatar_floating_commands::avatar_list_screens,
-            #[cfg(not(target_os = "android"))]
-            avatar::avatar_floating_commands::avatar_move_to_screen,
-
-            // FullBody engine
-            avatar::fullbody_commands::fullbody_initialize,
-            avatar::fullbody_commands::fullbody_advance_frame,
-            avatar::fullbody_commands::fullbody_activate_gesture,
-            avatar::fullbody_commands::fullbody_update_expression,
-            avatar::fullbody_commands::fullbody_update_lipsync,
-            avatar::fullbody_commands::fullbody_update_state,
-            avatar::fullbody_commands::fullbody_on_wake_word,
-            avatar::fullbody_commands::fullbody_export_skeleton,
-            avatar::fullbody_commands::fullbody_update_context,
-            avatar::fullbody_commands::fullbody_get_posture,
-            avatar::fullbody_commands::fullbody_get_stats,
-            avatar::fullbody_selftest::fullbody_run_selftest,
-
             // System Center Diagnostics (v∞)
             system_center::diagnostics::sc_run_quick_diagnostics,
             system_center::diagnostics::sc_run_full_diagnostics,
@@ -2336,7 +2252,6 @@ fn main() {
 
             // Fusion Backend Commands (Week 3)
             fusion_commands_week3::fusion_process_lipsync,
-            fusion_commands_week3::fusion_animate_avatar,
 
             // Fusion Backend Commands (Week 4)
             fusion_commands_week4::fusion_update_state,

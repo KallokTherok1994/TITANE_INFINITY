@@ -48,16 +48,10 @@
       ]
     },
     "visual": {
-      "description": "Visual engine with avatar, 3D, effects",
+      "description": "Visual engine with effects and UI rendering",
       "status": "active",
       "features": [
-        "avatar-3d",
-        "lip-sync",
-        "expressions",
-        "gestures",
         "effects",
-        "immersive-mode",
-        "morph-targets",
         "animation"
       ]
     },

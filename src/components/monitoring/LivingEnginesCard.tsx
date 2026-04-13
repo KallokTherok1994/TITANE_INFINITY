@@ -45,8 +45,6 @@ export const LivingEnginesCard: React.FC<LivingEnginesCardProps> = ({ state }) =
     presenceLevel,
     cognitiveLoad,
     rhythmScore,
-    holoActive,
-    particleCount,
   } = state;
 
   return (
@@ -178,24 +176,6 @@ export const LivingEnginesCard: React.FC<LivingEnginesCardProps> = ({ state }) =
         </div>
       </div>
 
-      {/* Holography Section */}
-      <div className="living-engines-section">
-        <h4 className="living-engines-section__title">🌐 Moteurs Holographiques</h4>
-        <div className="living-engines-metrics">
-          <div className="living-metric">
-            <span className="living-metric__label">Statut</span>
-            <span
-              className={`living-metric__value ${holoActive ? 'living-metric__value--active' : ''}`}
-            >
-              {holoActive ? 'Actif' : 'Inactif'}
-            </span>
-          </div>
-          <div className="living-metric">
-            <span className="living-metric__label">Particles</span>
-            <span className="living-metric__value">{particleCount}</span>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

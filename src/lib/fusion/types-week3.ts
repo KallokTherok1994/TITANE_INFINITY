@@ -1,6 +1,6 @@
 /**
  * TITANE∞ Fusion Backend - TypeScript Type Definitions - Week 3
- * Commands: fusion_process_lipsync, fusion_animate_avatar
+ * Commands: fusion_process_lipsync
  *
  * © 2026 Kevin Thibault / TITANE Team
  */
@@ -47,45 +47,6 @@ export interface LipSyncProcessResponse {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// COMMAND 6: fusion_animate_avatar
-// ═══════════════════════════════════════════════════════════════════════════
-
-export interface AnimationTransform {
-  bone: string;
-  position?: [number, number, number];
-  rotation?: [number, number, number, number];
-  scale?: [number, number, number];
-}
-
-export interface AnimationKeyframe {
-  time: number;
-  transforms: AnimationTransform[];
-}
-
-export interface AvatarAnimationData {
-  keyframes: AnimationKeyframe[];
-  duration: number;
-  fps: number;
-}
-
-export interface AnimateAvatarRequest {
-  lipsync: LipSyncData;
-  expression?: string;
-  animation_style?: string;
-  intensity?: number;
-  fps?: number;
-  include_head_motion?: boolean;
-}
-
-export interface AnimateAvatarResponse {
-  success: boolean;
-  message: string;
-  animation: AvatarAnimationData;
-  keyframe_count: number;
-  timestamp: number;
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
 // TYPE GUARDS & HELPERS
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -100,17 +61,6 @@ export function isLipSyncProcessSuccess(
   );
 }
 
-export function isAnimateAvatarSuccess(
-  response: unknown
-): response is AnimateAvatarResponse {
-  return (
-    typeof response === 'object' &&
-    response !== null &&
-    (response as AnimateAvatarResponse).success === true &&
-    'animation' in (response as AnimateAvatarResponse)
-  );
-}
-
 export function validateLipSyncIntensity(value: number): boolean {
   return value >= 0 && value <= 1.0;
 }
@@ -118,6 +68,3 @@ export function validateLipSyncIntensity(value: number): boolean {
 export function validateAnimationFps(value: number): boolean {
   return value >= 15 && value <= 120;
 }
-
-export const DEFAULT_EXPRESSIONS = ['neutral', 'smile', 'focus', 'explain'] as const;
-export const DEFAULT_ANIMATION_STYLES = ['fluid', 'snappy', 'calm', 'static'] as const;

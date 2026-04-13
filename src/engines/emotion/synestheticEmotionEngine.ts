@@ -6,7 +6,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
  *   TITANE∞ SUPER PROMPT XXXI — SYNESTHETIC EMOTION ENGINE
- *   Expression émotionnelle unifiée : voix, halo, lumière, avatar, narration
+ *   Expression émotionnelle unifiée : voix, halo, lumière, narration
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * Ce moteur fusionne tous les canaux expressifs de TITANE∞ en une seule
@@ -123,7 +123,7 @@ export interface CognitiveTension {
  * Champ de présence
  */
 export interface PresenceField {
-  /** Mouvement avatar */
+  /** Mouvement */
   movement: 'still' | 'gentle' | 'flowing' | 'dynamic' | 'expansive';
   /** Proximité (0-1) */
   proximity: number;

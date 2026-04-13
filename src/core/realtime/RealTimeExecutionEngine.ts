@@ -13,12 +13,11 @@
  * Pipeline temps réel pour TITANE∞
  *
  * Fonctionnalités :
- * - Pipeline IA → TTS → Avatar → UI en streaming continu
+ * - Pipeline IA → TTS → UI en streaming continu
  * - Events coalescés (batching intelligent)
- * - Rendu priorisé (voix > bouche > visage > corps)
+ * - Rendu priorisé (voix > UI > réseau)
  * - Synchronisation 60-120 FPS
  * - Pipeline audio isolé (Web Audio API)
- * - Pipeline avatar isolé (THREE.js renderer)
  * - Ordonnancement smart (priority queue)
  * - Message batching (debounce 16ms)
  * - Réduction payload interne (-70%)
@@ -36,28 +35,12 @@ export type Priority = 'critical' | 'high' | 'normal' | 'low';
 
 export interface RealtimeTask {
   id: string;
-  type: 'audio' | 'avatar' | 'ui' | 'network';
+  type: 'audio' | 'ui' | 'network';
   priority: Priority;
-  payload: AudioBuffer | AvatarAnimationPayload | UIEventPayload | NetworkPayload;
+  payload: AudioBuffer | UIEventPayload | NetworkPayload;
   timestamp: number;
   deadline?: number;
   cancellable: boolean;
-}
-
-/** Payload pour animation avatar */
-export interface AvatarAnimationPayload {
-  keyframes?: AvatarKeyframe[];
-  duration?: number;
-  blendMode?: 'replace' | 'additive';
-}
-
-/** Keyframe d'animation avatar */
-export interface AvatarKeyframe {
-  time: number;
-  position?: { x: number; y: number; z: number };
-  rotation?: { x: number; y: number; z: number; w: number };
-  scale?: { x: number; y: number; z: number };
-  morphTargets?: Record<string, number>;
 }
 
 /** Payload pour événement UI */
@@ -99,19 +82,14 @@ export interface AudioChunk {
   priority: Priority;
 }
 
-export interface AvatarSchedule {
-  animations: AvatarAnimation[];
-  currentIndex: number;
-  isAnimating: boolean;
+export interface ExecutionMetrics {
   fps: number;
-}
-
-export interface AvatarAnimation {
-  id: string;
-  keyframes: AvatarKeyframe[];
-  startTime: number;
-  duration: number;
-  priority: Priority;
+  avgFrameTime: number;
+  audioLatency: number;
+  uiLatency: number;
+  totalTasks: number;
+  completedTasks: number;
+  droppedFrames: number;
 }
 
 export interface UIEvent {
@@ -124,21 +102,10 @@ export interface UIEvent {
 
 export interface RenderTask {
   id: string;
-  component: 'voice' | 'mouth' | 'face' | 'body' | 'ui';
+  component: 'voice' | 'ui';
   priority: Priority;
   data: Record<string, unknown>;
   estimatedMs: number;
-}
-
-export interface ExecutionMetrics {
-  fps: number;
-  avgFrameTime: number;
-  audioLatency: number;
-  avatarLatency: number;
-  uiLatency: number;
-  totalTasks: number;
-  completedTasks: number;
-  droppedFrames: number;
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -188,7 +155,6 @@ export class RealTimeExecutionEngine {
 
   private taskQueue: SimplePriorityQueue<RealtimeTask>;
   private audioScheduler: AudioScheduler;
-  private avatarScheduler: AvatarScheduler;
   private uiEventBatcher: UIEventBatcher;
 
   private isRunning: boolean = false;
@@ -201,7 +167,6 @@ export class RealTimeExecutionEngine {
     fps: 0,
     avgFrameTime: 0,
     audioLatency: 0,
-    avatarLatency: 0,
     uiLatency: 0,
     totalTasks: 0,
     completedTasks: 0,
@@ -211,7 +176,6 @@ export class RealTimeExecutionEngine {
   private constructor() {
     this.taskQueue = new SimplePriorityQueue<RealtimeTask>();
     this.audioScheduler = new AudioScheduler();
-    this.avatarScheduler = new AvatarScheduler();
     this.uiEventBatcher = new UIEventBatcher();
   }
 
@@ -256,7 +220,6 @@ export class RealTimeExecutionEngine {
 
     this.taskQueue.clear();
     this.audioScheduler.clear();
-    this.avatarScheduler.clear();
     this.uiEventBatcher.clear();
 
     console.log('[RealtimeEngine] Stopped');
@@ -285,7 +248,6 @@ export class RealTimeExecutionEngine {
 
       // Mettre à jour schedulers
       this.audioScheduler.update(deltaTime);
-      this.avatarScheduler.update(deltaTime);
       this.uiEventBatcher.flush();
 
       // Mettre à jour métriques
@@ -329,9 +291,6 @@ export class RealTimeExecutionEngine {
       switch (task.type) {
         case 'audio':
           this.audioScheduler.scheduleChunk(task.payload as AudioBuffer);
-          break;
-        case 'avatar':
-          this.avatarScheduler.scheduleAnimation(task.payload as AvatarAnimationPayload);
           break;
         case 'ui':
           this.uiEventBatcher.addEvent(task.payload as UIEventPayload);
@@ -382,26 +341,6 @@ export class RealTimeExecutionEngine {
   }
 
   /**
-   * Ajouter tâche avatar (priorité high)
-   */
-  enqueueAvatar(
-    animation: AvatarAnimationPayload,
-    options: { id?: string; priority?: Priority } = {}
-  ): void {
-    const task: RealtimeTask = {
-      id: options.id || `avatar_${Date.now()}`,
-      type: 'avatar',
-      priority: options.priority || 'high',
-      payload: animation,
-      timestamp: Date.now(),
-      cancellable: true,
-    };
-
-    this.taskQueue.enqueue(task, options.priority || 'high');
-    this.metrics.totalTasks++;
-  }
-
-  /**
    * Ajouter événement UI (priorité normal, batching)
    */
   enqueueUIEvent(
@@ -442,7 +381,7 @@ export class RealTimeExecutionEngine {
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // PIPELINE COMPLET IA → TTS → AVATAR → UI
+  // PIPELINE COMPLET IA → TTS → UI
   // ═══════════════════════════════════════════════════════════════════
 
   /**
@@ -451,7 +390,6 @@ export class RealTimeExecutionEngine {
   async executeRealTimePipeline(input: {
     iaResponse: string;
     ttsEnabled: boolean;
-    avatarEnabled: boolean;
   }): Promise<void> {
     const pipelineId = `pipeline_${Date.now()}`;
 
@@ -466,18 +404,7 @@ export class RealTimeExecutionEngine {
         });
       }
 
-      // 2. Avatar Animation (si activé)
-      if (input.avatarEnabled) {
-        const animations = await this.generateAvatarAnimations(input.iaResponse);
-        animations.forEach((anim, index) => {
-          this.enqueueAvatar(anim, {
-            id: `${pipelineId}_avatar_${index}`,
-            priority: 'high',
-          });
-        });
-      }
-
-      // 3. UI Update
+      // 2. UI Update
       this.enqueueUIEvent({
         type: 'message_displayed',
         text: input.iaResponse,
@@ -504,24 +431,6 @@ export class RealTimeExecutionEngine {
       return audioBuffers;
     } catch (error) {
       console.error('[RealtimeEngine] TTS streaming error:', error);
-      return [];
-    }
-  }
-
-  /**
-   * Générer animations avatar
-   */
-  private async generateAvatarAnimations(
-    text: string
-  ): Promise<AvatarAnimationPayload[]> {
-    try {
-      const animations = await secureInvoke<AvatarAnimationPayload[]>(
-        'realtime_generate_avatar_animations',
-        { text }
-      );
-      return animations;
-    } catch (error) {
-      console.error('[RealtimeEngine] Avatar animation generation error:', error);
       return [];
     }
   }
@@ -620,54 +529,6 @@ class AudioScheduler {
     this.schedule.chunks = [];
     this.schedule.currentIndex = 0;
     this.schedule.isPlaying = false;
-  }
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// AVATAR SCHEDULER
-// ═══════════════════════════════════════════════════════════════════
-
-class AvatarScheduler {
-  private schedule: AvatarSchedule = {
-    animations: [],
-    currentIndex: 0,
-    isAnimating: false,
-    fps: 60,
-  };
-
-  scheduleAnimation(animation: AvatarAnimationPayload): void {
-    const anim: AvatarAnimation = {
-      id: `anim_${Date.now()}`,
-      keyframes: animation.keyframes || [],
-      startTime: Date.now(),
-      duration: animation.duration || 1000,
-      priority: 'high',
-    };
-
-    this.schedule.animations.push(anim);
-    this.schedule.isAnimating = true;
-  }
-
-  update(_deltaTime: number): void {
-    if (!this.schedule.isAnimating || this.schedule.animations.length === 0) return;
-
-    const currentTime = Date.now();
-    const currentAnim = this.schedule.animations[this.schedule.currentIndex];
-
-    if (currentAnim && currentTime - currentAnim.startTime > currentAnim.duration) {
-      this.schedule.currentIndex++;
-
-      if (this.schedule.currentIndex >= this.schedule.animations.length) {
-        this.schedule.isAnimating = false;
-        this.clear();
-      }
-    }
-  }
-
-  clear(): void {
-    this.schedule.animations = [];
-    this.schedule.currentIndex = 0;
-    this.schedule.isAnimating = false;
   }
 }
 

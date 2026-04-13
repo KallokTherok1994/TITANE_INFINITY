@@ -58,15 +58,6 @@ export interface BreathingState {
   amplitude: number;
 }
 
-export interface AvatarMicroMimics {
-  eyeMovement: { x: number; y: number };
-  headTilt: { pitch: number; yaw: number; roll: number };
-  microExpression: string;
-  facialGlow: number;
-  lastBlink: number;
-  blinkRate: number;
-}
-
 export interface MultimodalPresenceState {
   mode: PresenceMode;
   breathing: number | BreathingState;
@@ -74,7 +65,6 @@ export interface MultimodalPresenceState {
   coherence: number;
   presenceEnergy: number;
   halo: HaloState;
-  avatar: AvatarMicroMimics;
   innerState: {
     thinkingState: string | null;
     mentalColor: string | null;
@@ -109,14 +99,6 @@ const defaultMultimodalState: MultimodalPresenceState = {
     state: 'idle',
     intensity: 0.8,
     pulsation: 0,
-  },
-  avatar: {
-    eyeMovement: { x: 0, y: 0 },
-    headTilt: { pitch: 0, yaw: 0, roll: 0 },
-    microExpression: 'neutral',
-    facialGlow: 0.5,
-    lastBlink: Date.now(),
-    blinkRate: 3000,
   },
   innerState: {
     thinkingState: null,

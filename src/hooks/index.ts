@@ -286,18 +286,6 @@ export type {
 // v28.0 - Multimodal Presence Engine (Super Prompt XXVIII)
 // ═══════════════════════════════════════════════════════════════
 
-// Multimodal Presence Engine - Synchronisation Voix + Halo + Avatar + Respiration
-export {
-  useMultimodalPresence,
-  useBreathingCycle,
-  useHaloExpression,
-  useAvatarMimics,
-  useInnerState,
-  usePresenceEnergy,
-  useUserMirroring,
-  useExpressiveActions,
-} from './useMultimodalPresence';
-
 // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
 /*
 export type {
@@ -410,7 +398,6 @@ export type {
   VoiceFrame,
   TextFrame,
   HaloFrame,
-  AvatarFrame,
   AuraFrame
 } from '../engines/output/unifiedMultimodalOutputEngine';
 
@@ -451,7 +438,7 @@ export type {
 */
 
 // ═══════════════════════════════════════════════════════════════
-// v∞.13 - Physiological State (Interoception + Holophonic)
+// v∞.13 - Physiological State (Interoception)
 // ═══════════════════════════════════════════════════════════════
 
 // Stub hooks for PhysiologicalPanel (v24.3.0 - restored for build compatibility)
@@ -471,16 +458,6 @@ export function useInteroception() {
     setClarity: () => {},
     setStability: () => {},
     setEmotionalTemperature: () => {},
-  };
-}
-
-export function useHolophonic() {
-  return {
-    spatialState: { x: 0, y: 0, z: 0.5, width: 0.5, focus: 0.8, distance: 0.3 },
-    setSpatialState: () => {},
-    setPreset: () => {},
-    playCue: () => {},
-    setSoundIntensity: () => {},
   };
 }
 
@@ -516,13 +493,6 @@ export type {
   InteroceptionContext,
   InteroceptionExport,
 } from '../engines/interoception/interoceptionEngine';
-
-export type {
-  TitanSpatialState,
-  SpatialPreset,
-  CognitiveSound,
-  SpatialOptions,
-} from '../engines/spatial/holophonicEngine';
 
 // ═══════════════════════════════════════════════════════════════
 // v∞.35 - Cognitive Dynamics (Predictive + Conscious + Narrative)
@@ -639,7 +609,7 @@ export type {
 } from '../engines/identity/unifiedIdentityKernel';
 
 // ═══════════════════════════════════════════════════════════════
-// v∞.37 - Expression Engine + HoloPresence Engine (Phase 2)
+// v∞.37 - Expression Engine (Phase 2)
 // ═══════════════════════════════════════════════════════════════
 
 // Expression Orchestration Hooks
@@ -665,30 +635,6 @@ export {
   useExpressionActions,
 } from './useExpressionOrchestration';
 
-// HoloPresence Hooks
-export {
-  useHoloPresence,
-  useHoloVisuals,
-  useHoloShape,
-  useHoloColorsVisuals,
-  useHoloRotation,
-  useHoloSize,
-  useHoloOpacity,
-  useHoloGlow,
-  useAuraParticles,
-  useParticleCount,
-  useParticleBehavior,
-  useHoloAnimation,
-  useHoloBreathe,
-  useHoloPulse,
-  useHoloFlow,
-  useHoloIntensity,
-  useHoloEnergyLevel,
-  useHoloFocusPoint,
-  useHoloVisible,
-  useHoloPresenceActions,
-} from './useHoloPresence';
-
 // Types
 // ✨ PHASE 4.2 - Temporairement commenté pour lazy loading
 /*
@@ -700,15 +646,6 @@ export type {
   OrchestratedNarrative
 } from '../engines/expression/expressionEngine';
 */
-
-export type {
-  HoloPresenceState,
-  HoloVisuals,
-  AuraParticles,
-  HoloAnimation,
-  HoloEvent,
-  HoloShape,
-} from '../engines/holopresence/holoPresenceEngine';
 
 // ═══════════════════════════════════════════════════════════════
 // v21 - Visual Engine & Effects Orchestration Hooks (Session 4)

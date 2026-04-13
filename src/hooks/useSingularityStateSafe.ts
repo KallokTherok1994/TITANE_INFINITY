@@ -156,22 +156,6 @@ export function useMetaMode() {
 }
 
 /**
- * Hook useAvatarDisplay - Accède à l'état d'affichage avatar
- *
- * @returns État avatar display ou null
- *
- * @example
- * ```tsx
- * const avatarDisplay = useAvatarDisplay();
- * if (!avatarDisplay) return null;
- * return <Avatar state={avatarDisplay} />;
- * ```
- */
-export function useAvatarDisplay() {
-  return useSingularityStateSafe(state => state.avatarDisplay);
-}
-
-/**
  * Hook useSingularityHealth - État santé global système
  *
  * @returns Health status agrégé

@@ -163,7 +163,6 @@ describe('Admin Engine - Types & Constantes', () => {
         'xp',
         'evolution',
         'tts',
-        'avatar',
         'chat',
         'ollama',
         'gemini',

@@ -13,12 +13,12 @@
  * Moteur d'autonomie totale pour TITANE∞
  *
  * Fonctions :
- * - auto_scan()      : Détection globale continue (backend, frontend, IA, TTS, Avatar, Memory)
+ * - auto_scan()      : Détection globale continue (backend, frontend, IA, TTS, Memory)
  * - auto_detect()    : Analyse intelligente des patterns d'erreurs et comportements anormaux
  * - auto_fix()       : Correction automatique immédiate des états invalides et modules bloqués
  * - auto_heal()      : Réparation profonde des modules endommagés et re-synchronisation
  * - auto_optimize()  : Optimisation performance (CPU, GPU, React, Rust, TTS, IA)
- * - auto_evolve()    : Amélioration permanente (IA, TTS, avatar, heuristiques)
+ * - auto_evolve()    : Amélioration permanente (IA, TTS, heuristiques)
  * - auto_test()      : Tests continus (cohérence, latence, mémoire, modules)
  * - auto_shield()    : Protection système (corruption, crashs, states invalides)
  * - auto_analyse()   : Intelligence introspective (logs, contexte, anomalies)
@@ -55,7 +55,7 @@ export interface AutonomyState {
   health_score: number; // 0-100, santé globale du système
   stability_index: number; // 0-100, stabilité structurelle
   cognitive_load_score: number; // 0-100, charge cognitive IA
-  pipeline_integrity: number; // 0-100, intégrité pipeline IA→TTS→Avatar
+  pipeline_integrity: number; // 0-100, intégrité pipeline IA→TTS
 }
 
 export interface ScanResult {
@@ -65,7 +65,6 @@ export interface ScanResult {
   tauri_issues: string[];
   ia_anomalies: string[];
   tts_issues: string[];
-  avatar_issues: string[];
   memory_issues: string[];
   singularity_inconsistencies: string[];
 }
@@ -90,7 +89,6 @@ export interface FixResult {
   cleaned_caches: string[];
   repaired_files: string[];
   corrected_tts_delays: string[];
-  fixed_avatar_artifacts: string[];
   fixed_react_freezes: string[];
   success: boolean;
 }
@@ -123,7 +121,6 @@ export interface EvolutionResult {
   tts_behavior_adjusted: boolean;
   emotional_modulators_tuned: boolean;
   lip_sync_improved: boolean;
-  avatar_pipeline_tuned: boolean;
   user_preferences_learned: string[];
   heuristics_updated: string[];
 }
@@ -132,7 +129,6 @@ export interface TestResult {
   ia_coherence: boolean;
   memory_coherence: boolean;
   tts_coherence: boolean;
-  avatar_coherence: boolean;
   latency_acceptable: boolean;
   no_memory_leaks: boolean;
   no_warnings: boolean;
@@ -345,7 +341,6 @@ export class SingularityAutonomyEngine {
         tauri_issues: [],
         ia_anomalies: [],
         tts_issues: [],
-        avatar_issues: [],
         memory_issues: [],
         singularity_inconsistencies: [],
       };
@@ -369,9 +364,6 @@ export class SingularityAutonomyEngine {
       // Scanner TTS
       result.tts_issues = await this.scanTTSIssues();
 
-      // Scanner Avatar
-      result.avatar_issues = await this.scanAvatarIssues();
-
       // Scanner Memory
       result.memory_issues = await this.scanMemoryIssues();
 
@@ -388,7 +380,6 @@ export class SingularityAutonomyEngine {
         tauri_issues: [],
         ia_anomalies: [],
         tts_issues: [],
-        avatar_issues: [],
         memory_issues: [],
         singularity_inconsistencies: [],
       };
@@ -429,11 +420,6 @@ export class SingularityAutonomyEngine {
         result.abnormal_behaviors.push('IA: Multiple anomalies detected');
       }
 
-      // Détecter désynchronisation TTS ↔ Avatar
-      if (scanResult.tts_issues.length > 0 && scanResult.avatar_issues.length > 0) {
-        result.tts_lip_sync_errors.push('TTS-Avatar synchronization lost');
-      }
-
       // Détecter incohérences SingularityState
       if (scanResult.singularity_inconsistencies.length > 0) {
         result.state_misalignments.push(...scanResult.singularity_inconsistencies);
@@ -472,7 +458,6 @@ export class SingularityAutonomyEngine {
         cleaned_caches: [],
         repaired_files: [],
         corrected_tts_delays: [],
-        fixed_avatar_artifacts: [],
         fixed_react_freezes: [],
         success: false,
       };
@@ -513,7 +498,6 @@ export class SingularityAutonomyEngine {
         cleaned_caches: [],
         repaired_files: [],
         corrected_tts_delays: [],
-        fixed_avatar_artifacts: [],
         fixed_react_freezes: [],
         success: false,
       };
@@ -646,7 +630,6 @@ export class SingularityAutonomyEngine {
         tts_behavior_adjusted: false,
         emotional_modulators_tuned: false,
         lip_sync_improved: false,
-        avatar_pipeline_tuned: false,
         user_preferences_learned: [],
         heuristics_updated: [],
       };
@@ -671,7 +654,6 @@ export class SingularityAutonomyEngine {
         tts_behavior_adjusted: false,
         emotional_modulators_tuned: false,
         lip_sync_improved: false,
-        avatar_pipeline_tuned: false,
         user_preferences_learned: [],
         heuristics_updated: [],
       };
@@ -690,7 +672,6 @@ export class SingularityAutonomyEngine {
         ia_coherence: false,
         memory_coherence: false,
         tts_coherence: false,
-        avatar_coherence: false,
         latency_acceptable: false,
         no_memory_leaks: false,
         no_warnings: false,
@@ -730,7 +711,6 @@ export class SingularityAutonomyEngine {
         ia_coherence: false,
         memory_coherence: false,
         tts_coherence: false,
-        avatar_coherence: false,
         latency_acceptable: false,
         no_memory_leaks: false,
         no_warnings: false,
@@ -898,17 +878,6 @@ export class SingularityAutonomyEngine {
   private async scanTTSIssues(): Promise<string[]> {
     try {
       const response = await this.safeInvoke<{ issues: string[] }>('autonomy_scan_tts');
-      return response?.issues || [];
-    } catch {
-      return [];
-    }
-  }
-
-  private async scanAvatarIssues(): Promise<string[]> {
-    try {
-      const response = await this.safeInvoke<{ issues: string[] }>(
-        'autonomy_scan_avatar'
-      );
       return response?.issues || [];
     } catch {
       return [];

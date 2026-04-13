@@ -12,7 +12,7 @@
  * - Emotion Detection
  * - Intent Recognition
  * - TTS Modulation
- * - Halo & Avatar Sync
+ * - Halo Sync
  * - Full Duplex Orchestration
  * - Self-Healing
  * - Cognitive Loop (XXV)
@@ -305,7 +305,7 @@ class UnifiedVocalEngine {
     // 5. VOICE SAFETY CHECK (Self-Healing)
     this.voiceSafetyCheck();
 
-    // 6. HALO & AVATAR SYNC
+    // 6. HALO SYNC
     this.visualSync();
 
     // 7-8. INTENT MONITOR & AUTONOMIC RESPONSE (à implémenter)
@@ -407,7 +407,7 @@ class UnifiedVocalEngine {
   }
 
   /**
-   * 6. VISUAL SYNC - Synchronisation Halo + Avatar
+   * 6. VISUAL SYNC - Synchronisation Halo
    */
   private visualSync(): void {
     const { cognitiveState } = this.state;

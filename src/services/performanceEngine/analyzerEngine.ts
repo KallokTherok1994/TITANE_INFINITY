@@ -119,7 +119,6 @@ const TITANE_MODULES: TitaneModule[] = [
   'evolution',
   'prompt',
   'tts',
-  'avatar',
   'chat',
   'performance',
 ];

@@ -164,7 +164,7 @@ pub async fn boot_marker_log(window: Window, marker: String) -> Result<(), Strin
     let window_label = window.label();
 
     // Keep ENTRY_* markers authoritative to the main shell only.
-    // Secondary windows (e.g. avatar-floating) can load in parallel and emit
+    // Secondary windows can load in parallel and emit
     // non-blocking bootstrap noise that should not pollute release verdict logs.
     if window_label != "main" && marker.starts_with("BOOT:ENTRY_") {
         log::debug!(

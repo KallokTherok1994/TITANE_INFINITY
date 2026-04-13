@@ -65,7 +65,6 @@ pub mod governance_commands;
 pub mod whisper_commands;
 // audio_config_commands removed - duplicates audio::commands
 // pub mod persistent_memory_commands; // disabled: duplicates with persistent_memory module
-pub mod avatar_asset_commands;
 pub mod dashboard_metrics_commands;
 pub mod http_commands;
 pub mod identity_commands;

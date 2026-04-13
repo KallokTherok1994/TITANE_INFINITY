@@ -443,7 +443,7 @@ const TimelineSection: React.FC = () => {
     {
       id: '5',
       date: new Date('2026-01-15'),
-      title: 'TITANE v30.0.0 - Holographic UI',
+      title: 'TITANE v30.0.0 - Advanced UI',
       type: 'titane',
       description: 'Future projection',
       importance: 'high',
@@ -563,7 +563,7 @@ const TimelineSection: React.FC = () => {
           🔮 Projection Future
         </h3>
         <div className="space-y-2 text-purple-100">
-          <div>• TITANE v30.0.0 - Holographic UI (Janvier 2026)</div>
+          <div>• TITANE v30.0.0 - Advanced UI (Janvier 2026)</div>
           <div>• Phase consolidation entrepreneuriale (T1 2026)</div>
           <div>• Lancement écosystème créateurs (T2 2026)</div>
         </div>

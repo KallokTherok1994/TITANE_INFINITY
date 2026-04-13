@@ -7,13 +7,12 @@
  */
 
 // ⚡ TITANE∞ v30.0.0 — Engine Bridge
-// Pont de synchronisation entre tous les moteurs (Visual, Sound, HoloMesh, HyperDepth)
+// Pont de synchronisation entre tous les moteurs (Visual, Sound, HyperDepth)
 
 import { glowEngine } from '../visual/GLOW_ENGINE';
 import { motionEngine } from '../visual/MOTION_ENGINE';
 import { stateEngine, SystemState } from '../visual/STATE_ENGINE';
 import { soundEngine, SoundConfig } from '../sound/SOUND_ENGINE';
-import { holoMeshEngine } from '../holography/HOLOMESH_ENGINE';
 import { hyperDepthEngine } from '../hyperdepth/HYPERDEPTH_ENGINE';
 
 // 🎭 Event types
@@ -94,10 +93,7 @@ export class EngineBridge {
       soundEngine.playModuleFeedback(moduleName, value, previousValue);
     }
 
-    // 4. HoloMesh Engine : mettre à jour intensité node
-    holoMeshEngine.updateNodeIntensity(moduleName, value / 100);
-
-    // 5. Émettre événement
+    // 4. Émettre événement
     this.emitEvent({
       type: 'module-update',
       payload: { moduleName, value, previousValue },
@@ -260,7 +256,6 @@ export class EngineBridge {
     glowEngine.clearActiveGlows();
     motionEngine.stopAllMotions();
     soundEngine.stopAllSounds();
-    holoMeshEngine.reset();
     hyperDepthEngine.reset();
     this.clearEventHistory();
   }
@@ -273,7 +268,6 @@ export class EngineBridge {
     glowActive: number;
     motionActive: number;
     soundEnabled: boolean;
-    meshNodes: number;
     depthLayers: number;
   } {
     return {
@@ -290,7 +284,6 @@ export class EngineBridge {
       // - Source: soundEngine.config.enabled or !soundEngine.muted
       // - Persistence: Sync with localStorage 'sound_enabled' setting
       // - Real-time: Update when user toggles sound in settings
-      meshNodes: holoMeshEngine.getMeshData().nodes.length,
       depthLayers: hyperDepthEngine.getConfig().layers.length,
     };
   }
@@ -305,6 +298,5 @@ export {
   motionEngine,
   stateEngine,
   soundEngine,
-  holoMeshEngine,
   hyperDepthEngine,
 };

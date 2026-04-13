@@ -686,7 +686,7 @@ const AppRouter: React.FC = () => {
       {/* MASQUÉ - Analyse UI */}
       {/* <PresenceOSPanel /> */}
 
-      {/* ✨ v∞.34 - Physiological Panel (Super Prompts XI + XIII - HOLOPHONIC + INTEROCEPTION 🌬️) */}
+      {/* ✨ v∞.34 - Physiological Panel (Super Prompts XI + XIII - INTEROCEPTION 🌬️) */}
       {/* MASQUÉ - Analyse UI */}
       {/* <PhysiologicalPanel /> */}
 

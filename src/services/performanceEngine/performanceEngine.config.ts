@@ -308,7 +308,6 @@ export type TitaneModule =
   | 'evolution'
   | 'prompt'
   | 'tts'
-  | 'avatar'
   | 'chat'
   | 'performance';
 
@@ -1475,7 +1474,6 @@ export function createEmptySnapshot(): MetricsSnapshot {
     evolution: { ...emptyModuleState, module: 'evolution' },
     prompt: { ...emptyModuleState, module: 'prompt' },
     tts: { ...emptyModuleState, module: 'tts' },
-    avatar: { ...emptyModuleState, module: 'avatar' },
     chat: { ...emptyModuleState, module: 'chat' },
     performance: { ...emptyModuleState, module: 'performance' },
   };

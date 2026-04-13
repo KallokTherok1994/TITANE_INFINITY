@@ -43,7 +43,7 @@ pub enum EngineCategory {
     Core,      // Moteurs système de base
     Cognitive, // IA, raisonnement, apprentissage
     Security,  // Sécurité, permissions, sandbox
-    UI,        // Interface, avatar, TTS
+    UI,        // Interface, TTS
     Data,      // Mémoire, persistance, cache
     DevOps,    // QA, monitoring, logs
 }

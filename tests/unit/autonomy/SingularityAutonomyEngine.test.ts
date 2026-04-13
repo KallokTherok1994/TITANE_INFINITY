@@ -47,7 +47,6 @@ const createScanResult = (overrides: Partial<ScanResult> = {}): ScanResult => ({
   tauri_issues: [],
   ia_anomalies: [],
   tts_issues: [],
-  avatar_issues: [],
   memory_issues: [],
   singularity_inconsistencies: [],
   ...overrides,
@@ -127,9 +126,6 @@ describe('SingularityAutonomyEngine', () => {
         .spyOn(engine as any, 'scanIAAnomalies')
         .mockResolvedValue(['Loop']);
       const ttsSpy = vi.spyOn(engine as any, 'scanTTSIssues').mockResolvedValue(['Lag']);
-      const avatarSpy = vi
-        .spyOn(engine as any, 'scanAvatarIssues')
-        .mockResolvedValue(['Artifact']);
       const memorySpy = vi
         .spyOn(engine as any, 'scanMemoryIssues')
         .mockResolvedValue(['Leak']);
@@ -147,11 +143,10 @@ describe('SingularityAutonomyEngine', () => {
       expect(result.frontend_warnings).toEqual(['React churn']);
       expect(result.ia_anomalies).toEqual(['Loop']);
       expect(result.tts_issues).toEqual(['Lag']);
-      expect(result.avatar_issues).toEqual(['Artifact']);
       expect(result.memory_issues).toEqual(['Leak']);
       expect(result.singularity_inconsistencies).toEqual(['Drift']);
 
-      cleanupSpies(frontendSpy, iaSpy, ttsSpy, avatarSpy, memorySpy, singularitySpy);
+      cleanupSpies(frontendSpy, iaSpy, ttsSpy, memorySpy, singularitySpy);
     });
 
     it('logs backend failures without breaking the scan', async () => {
@@ -160,7 +155,6 @@ describe('SingularityAutonomyEngine', () => {
         .mockReturnValue([]);
       const iaSpy = vi.spyOn(engine as any, 'scanIAAnomalies').mockResolvedValue([]);
       const ttsSpy = vi.spyOn(engine as any, 'scanTTSIssues').mockResolvedValue([]);
-      const avatarSpy = vi.spyOn(engine as any, 'scanAvatarIssues').mockResolvedValue([]);
       const memorySpy = vi.spyOn(engine as any, 'scanMemoryIssues').mockResolvedValue([]);
       const singularitySpy = vi
         .spyOn(engine as any, 'scanSingularityState')
@@ -172,7 +166,7 @@ describe('SingularityAutonomyEngine', () => {
       // En cas d'erreur backend, le résultat peut être un array vide ou contenir un message d'erreur
       expect(Array.isArray(result.backend_errors)).toBe(true);
 
-      cleanupSpies(frontendSpy, iaSpy, ttsSpy, avatarSpy, memorySpy, singularitySpy);
+      cleanupSpies(frontendSpy, iaSpy, ttsSpy, memorySpy, singularitySpy);
     });
   });
 
@@ -182,7 +176,6 @@ describe('SingularityAutonomyEngine', () => {
         backend_errors: ['mutex lock timeout', 'request timeout'],
         ia_anomalies: ['A', 'B', 'C', 'D', 'E', 'F'],
         tts_issues: ['lag'],
-        avatar_issues: ['offset'],
         singularity_inconsistencies: ['state drift'],
       });
 
@@ -193,7 +186,6 @@ describe('SingularityAutonomyEngine', () => {
       );
       expect(result.latency_issues).toContain('Timeout detected: request timeout');
       expect(result.abnormal_behaviors).toContain('IA: Multiple anomalies detected');
-      expect(result.tts_lip_sync_errors).toContain('TTS-Avatar synchronization lost');
       expect(result.state_misalignments).toContain('state drift');
     });
   });
@@ -412,7 +404,6 @@ describe('SingularityAutonomyEngine', () => {
         cleaned_caches: [],
         repaired_files: [],
         corrected_tts_delays: [],
-        fixed_avatar_artifacts: [],
         fixed_react_freezes: [],
         success: true,
       } as FixResult);
@@ -442,7 +433,6 @@ describe('SingularityAutonomyEngine', () => {
         tts_behavior_adjusted: false,
         emotional_modulators_tuned: false,
         lip_sync_improved: false,
-        avatar_pipeline_tuned: false,
         user_preferences_learned: [],
         heuristics_updated: [],
       } as EvolutionResult);
@@ -450,7 +440,6 @@ describe('SingularityAutonomyEngine', () => {
         ia_coherence: true,
         memory_coherence: true,
         tts_coherence: true,
-        avatar_coherence: true,
         latency_acceptable: true,
         no_memory_leaks: true,
         no_warnings: true,

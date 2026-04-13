@@ -65,19 +65,6 @@ export const useMetaModeState = () =>
   useSingularityState(useShallow(state => state.metaMode));
 
 // ═══════════════════════════════════════════════════════════════
-// AVATAR DISPLAY STATE SELECTORS
-// ═══════════════════════════════════════════════════════════════
-
-export const useAvatarDisplay = () => useSingularityState(state => state.avatarDisplay);
-
-/**
- * Has avatar display (boolean)
- * Use for conditional rendering
- */
-export const useHasAvatarDisplay = () =>
-  useSingularityState(state => state.avatarDisplay !== null);
-
-// ═══════════════════════════════════════════════════════════════
 // ENGINES STATE SELECTORS
 // ═══════════════════════════════════════════════════════════════
 
@@ -86,8 +73,6 @@ export const useMotionEngine = () => useSingularityState(state => state.engines.
 export const usePersonaEngine = () => useSingularityState(state => state.engines.persona);
 export const useCognitiveEngine = () =>
   useSingularityState(state => state.engines.cognitive);
-export const useHolographyEngine = () =>
-  useSingularityState(state => state.engines.holography);
 export const useHyperDepthEngine = () =>
   useSingularityState(state => state.engines.hyperdepth);
 
@@ -205,17 +190,6 @@ export const useMetaModeActions = () =>
     useShallow(state => ({
       setMetaMode: state.setMetaMode,
       setMetaModeTransition: state.setMetaModeTransition,
-    }))
-  );
-
-/**
- * Avatar display actions
- */
-export const useAvatarDisplayActions = () =>
-  useSingularityState(
-    useShallow(state => ({
-      setAvatarDisplay: state.setAvatarDisplay,
-      updateAvatarDisplay: state.updateAvatarDisplay,
     }))
   );
 

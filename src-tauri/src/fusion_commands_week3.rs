@@ -1,11 +1,10 @@
 // ═══════════════════════════════════════════════════════════════════════════
 //   TITANE∞ FUSION COMMANDS — Week 3 Implementation
-//   Commands: fusion_process_lipsync, fusion_animate_avatar
+//   Commands: fusion_process_lipsync
 // ═══════════════════════════════════════════════════════════════════════════
 //
 // Week 3 Deliverables:
 // 1. fusion_process_lipsync - Generate lip-sync data from text/audio metadata
-// 2. fusion_animate_avatar - Generate avatar animation keyframes
 //
 // © 2026 Kevin Thibault / TITANE Team. Tous droits réservés.
 
@@ -52,51 +51,6 @@ pub struct LipSyncProcessResponse {
     pub duration_ms: u32,
     pub phoneme_count: usize,
     pub fps: u32,
-    pub timestamp: i64,
-}
-
-/// Transform entry for avatar animation
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct AnimationTransform {
-    pub bone: String,
-    pub position: Option<[f32; 3]>,
-    pub rotation: Option<[f32; 4]>,
-    pub scale: Option<[f32; 3]>,
-}
-
-/// Keyframe in avatar animation
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct AnimationKeyframe {
-    pub time: u32,
-    pub transforms: Vec<AnimationTransform>,
-}
-
-/// Avatar animation data payload
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct AvatarAnimationData {
-    pub keyframes: Vec<AnimationKeyframe>,
-    pub duration: u32,
-    pub fps: u32,
-}
-
-/// Request to animate avatar from lip-sync data
-#[derive(Debug, Clone, Deserialize)]
-pub struct AnimateAvatarRequest {
-    pub lipsync: LipSyncData,
-    pub expression: Option<String>,
-    pub animation_style: Option<String>,
-    pub intensity: Option<f32>,
-    pub fps: Option<u32>,
-    pub include_head_motion: Option<bool>,
-}
-
-/// Response for avatar animation generation
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct AnimateAvatarResponse {
-    pub success: bool,
-    pub message: String,
-    pub animation: AvatarAnimationData,
-    pub keyframe_count: usize,
     pub timestamp: i64,
 }
 
@@ -159,110 +113,6 @@ fn fusion_process_lipsync_internal(
         duration_ms,
         phoneme_count,
         fps,
-        timestamp: Utc::now().timestamp_millis(),
-    })
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// COMMAND 6: fusion_animate_avatar
-// ═══════════════════════════════════════════════════════════════════════════
-
-/// Generate avatar animation keyframes from lip-sync data
-#[tauri::command]
-pub fn fusion_animate_avatar(
-    request: AnimateAvatarRequest,
-) -> Result<AnimateAvatarResponse, String> {
-    fusion_animate_avatar_internal(request)
-}
-
-fn fusion_animate_avatar_internal(
-    request: AnimateAvatarRequest,
-) -> Result<AnimateAvatarResponse, String> {
-    let intensity = request.intensity.unwrap_or(0.7);
-    if !(0.0..=1.0).contains(&intensity) {
-        return Err("Intensity must be 0.0-1.0".to_string());
-    }
-
-    let fps = request.fps.unwrap_or(60);
-    if !(15..=120).contains(&fps) {
-        return Err("FPS must be 15-120".to_string());
-    }
-
-    if request.lipsync.phonemes.len() != request.lipsync.durations.len()
-        || request.lipsync.phonemes.len() != request.lipsync.timestamps.len()
-    {
-        return Err("Lip-sync data arrays must have the same length".to_string());
-    }
-
-    let include_head_motion = request.include_head_motion.unwrap_or(true);
-    let expression = request.expression.unwrap_or_else(|| "neutral".to_string());
-    let animation_style = request
-        .animation_style
-        .unwrap_or_else(|| "fluid".to_string());
-
-    let mut keyframes = Vec::new();
-
-    for (index, phoneme) in request.lipsync.phonemes.iter().enumerate() {
-        let timestamp = request.lipsync.timestamps.get(index).copied().unwrap_or(0);
-        let jaw_open = (phoneme.intensity * intensity).clamp(0.0, 1.0);
-        let jaw_rotation = 0.15 + jaw_open * 0.35;
-
-        let mut transforms = Vec::new();
-        transforms.push(AnimationTransform {
-            bone: "jaw".to_string(),
-            position: None,
-            rotation: Some([0.0, 0.0, jaw_rotation, 1.0]),
-            scale: None,
-        });
-
-        transforms.push(AnimationTransform {
-            bone: "lips".to_string(),
-            position: Some([0.0, 0.0, jaw_open * 0.02]),
-            rotation: None,
-            scale: Some([1.0 + jaw_open * 0.02, 1.0 + jaw_open * 0.02, 1.0]),
-        });
-
-        if include_head_motion && animation_style != "static" {
-            let sway = ((index as f32 * 0.3).sin() * 0.05).clamp(-0.05, 0.05);
-            transforms.push(AnimationTransform {
-                bone: "head".to_string(),
-                position: None,
-                rotation: Some([sway, 0.0, 0.0, 1.0]),
-                scale: None,
-            });
-        }
-
-        if expression == "smile" {
-            transforms.push(AnimationTransform {
-                bone: "cheeks".to_string(),
-                position: Some([0.0, 0.02, 0.0]),
-                rotation: None,
-                scale: Some([1.02, 1.02, 1.0]),
-            });
-        }
-
-        keyframes.push(AnimationKeyframe {
-            time: timestamp,
-            transforms,
-        });
-    }
-
-    let duration =
-        compute_animation_duration(&request.lipsync.durations, &request.lipsync.timestamps);
-
-    Ok(AnimateAvatarResponse {
-        success: true,
-        message: format!(
-            "Avatar animation generated ({}, {} keyframes)",
-            animation_style,
-            keyframes.len()
-        ),
-        animation: AvatarAnimationData {
-            keyframes,
-            duration,
-            fps,
-        },
-        keyframe_count: request.lipsync.phonemes.len(),
         timestamp: Utc::now().timestamp_millis(),
     })
 }
@@ -346,17 +196,6 @@ fn distribute_timings(duration_ms: u32, count: usize) -> (Vec<u32>, Vec<u32>) {
     (durations, timestamps)
 }
 
-fn compute_animation_duration(durations: &[u32], timestamps: &[u32]) -> u32 {
-    let mut max_duration = 0;
-    for (index, timestamp) in timestamps.iter().enumerate() {
-        let duration = durations.get(index).copied().unwrap_or(0);
-        let end = timestamp.saturating_add(duration);
-        if end > max_duration {
-            max_duration = end;
-        }
-    }
-    max_duration
-}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // UNIT TESTS
@@ -411,100 +250,6 @@ mod tests {
         };
 
         let result = fusion_process_lipsync_internal(request);
-        assert!(result.is_err());
-    }
-
-    #[test]
-    fn test_avatar_animation_basic() {
-        let request = AnimateAvatarRequest {
-            lipsync: LipSyncData {
-                phonemes: vec![
-                    LipSyncPhoneme {
-                        sound: "a".to_string(),
-                        viseme: "A".to_string(),
-                        intensity: 0.8,
-                    },
-                    LipSyncPhoneme {
-                        sound: "o".to_string(),
-                        viseme: "O".to_string(),
-                        intensity: 0.6,
-                    },
-                ],
-                durations: vec![120, 120],
-                timestamps: vec![0, 120],
-            },
-            expression: Some("smile".to_string()),
-            animation_style: Some("fluid".to_string()),
-            intensity: Some(0.7),
-            fps: Some(60),
-            include_head_motion: Some(true),
-        };
-
-        let response = fusion_animate_avatar_internal(request).unwrap();
-        assert!(response.success);
-        assert!(!response.animation.keyframes.is_empty());
-        assert_eq!(response.animation.fps, 60);
-    }
-
-    #[test]
-    fn test_avatar_animation_invalid_fps() {
-        let request = AnimateAvatarRequest {
-            lipsync: LipSyncData {
-                phonemes: vec![],
-                durations: vec![],
-                timestamps: vec![],
-            },
-            expression: None,
-            animation_style: None,
-            intensity: Some(0.5),
-            fps: Some(5),
-            include_head_motion: None,
-        };
-
-        let result = fusion_animate_avatar_internal(request);
-        assert!(result.is_err());
-    }
-
-    #[test]
-    fn test_avatar_animation_empty() {
-        let request = AnimateAvatarRequest {
-            lipsync: LipSyncData {
-                phonemes: vec![],
-                durations: vec![],
-                timestamps: vec![],
-            },
-            expression: None,
-            animation_style: None,
-            intensity: Some(0.5),
-            fps: Some(60),
-            include_head_motion: None,
-        };
-
-        let response = fusion_animate_avatar_internal(request).unwrap();
-        assert!(response.success);
-        assert!(response.animation.keyframes.is_empty());
-    }
-
-    #[test]
-    fn test_avatar_animation_mismatched_arrays() {
-        let request = AnimateAvatarRequest {
-            lipsync: LipSyncData {
-                phonemes: vec![LipSyncPhoneme {
-                    sound: "a".to_string(),
-                    viseme: "A".to_string(),
-                    intensity: 0.5,
-                }],
-                durations: vec![100, 100],
-                timestamps: vec![0],
-            },
-            expression: None,
-            animation_style: None,
-            intensity: Some(0.5),
-            fps: Some(60),
-            include_head_motion: None,
-        };
-
-        let result = fusion_animate_avatar_internal(request);
         assert!(result.is_err());
     }
 }

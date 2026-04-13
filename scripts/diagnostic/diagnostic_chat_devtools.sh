@@ -11,7 +11,6 @@ echo ""
 # 1. Vérifier configuration DevTools
 echo "📋 1. Vérification DevTools dans tauri.conf.json..."
 devtools_main=$(grep -A 15 '"label": "main"' src-tauri/tauri.conf.json | grep '"devtools"' | grep -o 'true\|false')
-devtools_avatar=$(grep -A 15 '"label": "avatar-floating"' src-tauri/tauri.conf.json | grep '"devtools"' | grep -o 'true\|false')
 
 if [ "$devtools_main" = "true" ]; then
     echo "   ✅ Main window: devtools ENABLED"
@@ -19,10 +18,7 @@ else
     echo "   ❌ Main window: devtools DISABLED"
 fi
 
-if [ "$devtools_avatar" = "true" ]; then
-    echo "   ✅ Avatar window: devtools ENABLED"
 else
-    echo "   ❌ Avatar window: devtools DISABLED"
 fi
 echo ""
 
@@ -116,7 +112,6 @@ error_count=0
 
 # Check DevTools
 if [ "$devtools_main" = "true" ]; then ((ok_count++)); else ((error_count++)); fi
-if [ "$devtools_avatar" = "true" ]; then ((ok_count++)); else ((warn_count++)); fi
 
 # Check commands
 if grep -q "chat_send_message" src-tauri/src/main.rs; then ((ok_count++)); else ((error_count++)); fi
