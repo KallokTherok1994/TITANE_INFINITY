@@ -42,17 +42,6 @@ export function chunkMarkdown(
   const result: string[] = [];
 
   for (const section of sections) {
-    if (section.trim().length < opts.minChunkSize) {
-      // Too small — merge with next (handled below by flushing logic)
-      if (result.length > 0) {
-        const last = result[result.length - 1];
-        if (last !== undefined && (last + '\n\n' + section).length <= opts.maxChunkSize) {
-          result[result.length - 1] = last + '\n\n' + section;
-          continue;
-        }
-      }
-    }
-
     if (section.length <= opts.maxChunkSize) {
       if (section.trim()) result.push(section.trim());
     } else {
@@ -149,19 +138,38 @@ function splitBySections(content: string, headingRe: RegExp): string[] {
 
 function splitByParagraphs(text: string, opts: Required<ChunkOptions>): string[] {
   const paragraphs = text.split(/\n\n+/);
-  const chunks: string[] = [];
+  const merged: string[] = [];
   let current = '';
 
   for (const para of paragraphs) {
     const candidate = current ? current + '\n\n' + para : para;
     if (candidate.length > opts.maxChunkSize && current) {
-      if (current.trim()) chunks.push(current.trim());
+      if (current.trim()) merged.push(current.trim());
       current = para;
     } else {
       current = candidate;
     }
   }
-  if (current.trim()) chunks.push(current.trim());
+  if (current.trim()) merged.push(current.trim());
+
+  // Hard-split any chunks that still exceed maxChunkSize (e.g. single long paragraphs)
+  const chunks: string[] = [];
+  for (const chunk of merged) {
+    if (chunk.length <= opts.maxChunkSize) {
+      chunks.push(chunk);
+    } else {
+      let remaining = chunk;
+      while (remaining.length > opts.maxChunkSize) {
+        const spaceIdx = remaining.lastIndexOf(' ', opts.maxChunkSize);
+        const splitPos =
+          spaceIdx > opts.maxChunkSize * 0.5 ? spaceIdx : opts.maxChunkSize;
+        chunks.push(remaining.slice(0, splitPos).trimEnd());
+        remaining = remaining.slice(splitPos).trimStart();
+      }
+      if (remaining.trim()) chunks.push(remaining.trim());
+    }
+  }
+
   return chunks.filter(c => c.length >= opts.minChunkSize);
 }
 
