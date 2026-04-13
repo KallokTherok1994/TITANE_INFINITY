@@ -52,11 +52,11 @@ function Assert-Tool {
 }
 
 function Invoke-Pnpm {
-    param([string[]]$Args)
+    param([string[]]$Arguments)
     Push-Location $ROOT
     try {
-        & pnpm @Args
-        if ($LASTEXITCODE -ne 0) { throw "pnpm $($Args -join ' ') a échoué (exit $LASTEXITCODE)" }
+        & pnpm $Arguments
+        if ($LASTEXITCODE -ne 0) { throw "pnpm $($Arguments -join ' ') a échoué (exit $LASTEXITCODE)" }
     } finally {
         Pop-Location
     }

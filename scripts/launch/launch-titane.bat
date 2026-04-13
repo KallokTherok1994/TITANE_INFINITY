@@ -49,7 +49,7 @@ if errorlevel 1 (
 if not exist "%ROOT%.env" (
     echo [WARN] Fichier .env absent. Copie de .env.example vers .env
     copy /Y "%ROOT%.env.example" "%ROOT%.env" >nul 2>&1
-    echo        Editez .env et renseignez vos cles API avant de continuer.
+    echo        Editez .env et renseignez vos cles d'API avant de continuer.
 )
 
 :: ── node_modules ────────────────────────────────────────────────
@@ -57,7 +57,7 @@ if not exist "%ROOT%node_modules" (
     echo [INFO] node_modules absent — installation en cours...
     pushd "%ROOT%"
     call pnpm install
-    if errorlevel 1 ( echo [ERROR] pnpm install a echoue. & goto :fail )
+    if errorlevel 1 ( echo [ERROR] pnpm install a echoue ^(exit non nul^). & goto :fail )
     popd
 )
 
