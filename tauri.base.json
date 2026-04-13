@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0",
-  "$comment": "TITANE∞ Base Configuration - Shared settings for all runtimes",
+  "$comment": "TITANE∞ Shared Base Config — merged at build time into src-tauri/tauri.conf.json. Canonical production config lives in src-tauri/tauri.base.json.",
   "version": "30.1.6",
   "bundle": {
     "icon": [
@@ -11,15 +11,16 @@
       "icons/icon.ico"
     ],
     "resources": [],
-    "copyright": "© 2025 TITANE∞",
+    "copyright": "© 2025-2026 TITANE∞",
     "category": "Productivity"
   },
   "app": {
     "security": {
-      "csp": "default-src 'self' tauri: asset:; script-src 'self' 'unsafe-eval' asset: tauri:; style-src 'self' 'unsafe-inline' asset: tauri:; img-src 'self' asset: data: blob:; font-src 'self' asset: data:; connect-src 'self' tauri: asset: ipc: http://localhost:* http://127.0.0.1:11434 https://generativelanguage.googleapis.com https://api.openai.com https://api.anthropic.com; media-src 'self' asset: blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
+      "csp": "default-src 'self' tauri: asset:; script-src 'self' 'wasm-unsafe-eval' asset: tauri:; style-src 'self' 'unsafe-inline' asset: tauri:; img-src 'self' asset: data: blob:; font-src 'self' asset: data:; connect-src 'self' tauri: asset: ipc: http://localhost:* http://127.0.0.1:11434 https://generativelanguage.googleapis.com https://api.openai.com https://api.anthropic.com; media-src 'self' asset: blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
       "dangerousDisableAssetCspModification": false,
       "assetProtocol": {
         "enable": true,
+        "_scopeComment": "Scopes are intentionally broad to support runtime asset loading. $APPDATA/$APPCONFIG/$APPLOCALDATA are user-data dirs; $RESOURCE is the bundled app resource dir. Restriction requires integration testing before narrowing.",
         "scope": ["$APPDATA/**", "$RESOURCE/**", "$APPCONFIG/**", "$APPLOCALDATA/**"]
       },
       "capabilities": [

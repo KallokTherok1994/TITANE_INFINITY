@@ -22,6 +22,7 @@
       "icons/icon.ico"
     ],
     "resources": ["../dist"],
+    "copyright": "Copyright © 2025-2026 TITANE∞",
     "copyright": "Copyright © 2025 TITANE",
     "category": "DeveloperTool",
     "shortDescription": "TITANE∞ v30.1.0 - Stable Release",
@@ -42,7 +43,7 @@
         "transparent": false,
         "center": true,
         "visible": true,
-        "devtools": true
+        "devtools": false
       }
     ],
     "security": {
