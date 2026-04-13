@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # scripts/phases/P0_build.sh — Build vite x3 (frontend uniquement, hors PROD Tauri)
 # Usage: bash scripts/phases/P0_build.sh [logfile]
-# NOTE: tauri build nécessite GO_FOR_PROD_BUILD__TITANE_INFINITY — NON exécuté ici.
+# NOTE: tauri build prod is executed on user request or via BUILD ALL command (Rule 11/14).
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
