@@ -1,0 +1,19 @@
+[Unit]
+Description=TITANE∞ Alert — notification on service failure (%i)
+After=default.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/titane-os/Documents/GitHub/TITANE_INFINITY
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+# Log structured alert — extensible (notify-send, webhook, etc.)
+ExecStart=/usr/bin/env bash -lc '\
+  mkdir -p ~/.titane/logs; \
+  echo "[$(date -Iseconds)] TITANE ALERT: service %i failed — restart storm or hard failure" \
+    >> ~/.titane/logs/alerts.log; \
+  command -v notify-send >/dev/null 2>&1 && \
+    notify-send -u critical "TITANE∞" "Service %i en échec — vérifiez ~/.titane/logs/alerts.log" \
+    || true'
+
+[Install]
+WantedBy=default.target

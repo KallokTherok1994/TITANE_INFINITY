@@ -336,6 +336,16 @@ mod commands {
     pub mod http_commands {
         include!("commands/http_commands.rs");
     }
+
+    // ✅ RAG Embeddings backend via Ollama /api/embeddings
+    pub mod rag_commands {
+        include!("commands/rag_commands.rs");
+    }
+
+    // ✅ Web search via SearXNG (One Door governed)
+    pub mod web_search_commands {
+        include!("commands/web_search_commands.rs");
+    }
 }
 
 // Legacy AI/Engine/Memory command bridge.

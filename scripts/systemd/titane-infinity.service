@@ -1,0 +1,37 @@
+[Unit]
+Description=TITANE∞ — Application principale (Tauri)
+Documentation=https://github.com/KallokTherok1994/TITANE_INFINITY
+After=network-online.target graphical-session.target ollama-titane.service
+Wants=network-online.target
+# Start after Ollama if it's available (soft dep — TITANE runs without it in degraded mode)
+Wants=ollama-titane.service
+StartLimitIntervalSec=300
+# Alert on persistent failure
+OnFailure=titane-alert@%n.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/titane-os/Documents/GitHub/TITANE_INFINITY
+Environment=PATH=/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin:%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=RUST_LOG=warn
+# Try installed binary first, fall back to project target
+ExecStart=/bin/sh -c '\
+  BIN=$(command -v titane-infinity 2>/dev/null || \
+        echo "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"); \
+  exec "$BIN"'
+
+# Graceful stop: SIGTERM then SIGKILL after 15s
+KillMode=mixed
+KillSignal=SIGTERM
+TimeoutStopSec=15
+
+# Restart policy — anti-storm protection
+Restart=on-failure
+RestartSec=5
+StartLimitBurst=5
+
+# SD_NOTIFY watchdog (activé si binary appelle sd_notify)
+# WatchdogSec=60
+
+[Install]
+WantedBy=default.target

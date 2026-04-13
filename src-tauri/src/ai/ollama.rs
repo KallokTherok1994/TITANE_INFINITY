@@ -15,6 +15,9 @@ use tauri::{command, Emitter, Window};
 
 const DEFAULT_OLLAMA_BASE_URL: &str = "http://127.0.0.1:11434";
 const DEFAULT_OLLAMA_MODEL: &str = "gemma2:2b";
+/// Ordered list of fallback models tried when the default/requested model is absent.
+/// Explicit, no silent switch: each fallback attempt is logged as WARN.
+const OLLAMA_FALLBACK_MODELS: &[&str] = &["llama3.2", "llama3.1", "mistral"];
 /// Env var governing the Ollama HTTP client request timeout (seconds, bounded 10..300).
 const OLLAMA_REQUEST_TIMEOUT_SECS_ENV: &str = "OLLAMA_REQUEST_TIMEOUT_SECS";
 const OLLAMA_REQUEST_TIMEOUT_SECS_DEFAULT: u64 = 120;
@@ -100,7 +103,7 @@ pub struct LocalAIResponse {
     pub eval_count: Option<u32>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 struct OllamaGenerateRequest {
     model: String,
     prompt: String,
@@ -201,7 +204,71 @@ pub async fn ai_generate_local(request: LocalAIRequest) -> Result<LocalAIRespons
         .map_err(|e| format!("Ollama HTTP error: {}", e))?;
 
     if !response.status().is_success() {
-        return Err(format!("Ollama error: HTTP {}", response.status()));
+        let status = response.status();
+        let body = response
+            .text()
+            .await
+            .unwrap_or_else(|_| String::from("<unreadable>"));
+
+        // If the specific model was not found, try fallback models explicitly.
+        // Each attempt is logged — no silent switch.
+        if status.as_u16() == 404
+            && body.to_lowercase().contains("model")
+            && body.to_lowercase().contains("not found")
+        {
+            log::warn!(
+                "[ai_generate_local] Model '{}' not found — trying fallbacks {:?}",
+                model,
+                OLLAMA_FALLBACK_MODELS
+            );
+            let available = ai_scan_local_models().await.unwrap_or_default();
+            for fallback in OLLAMA_FALLBACK_MODELS {
+                if available.iter().any(|m| m.starts_with(fallback)) {
+                    let resolved = available
+                        .iter()
+                        .find(|m| m.starts_with(fallback))
+                        .unwrap()
+                        .clone();
+                    log::warn!(
+                        "[ai_generate_local] Fallback attempt: model='{}'",
+                        resolved
+                    );
+                    let fallback_req = OllamaGenerateRequest {
+                        model: resolved.clone(),
+                        prompt: ollama_request.prompt.clone(),
+                        stream: ollama_request.stream,
+                        system: ollama_request.system.clone(),
+                        options: ollama_request.options.clone(),
+                    };
+                    let fb_resp = client
+                        .post(format!("{}/api/generate", ollama_base_url()))
+                        .json(&fallback_req)
+                        .send()
+                        .await
+                        .map_err(|e| format!("Ollama HTTP error (fallback): {}", e))?;
+                    if fb_resp.status().is_success() {
+                        let ollama_response: OllamaGenerateResponse = fb_resp
+                            .json()
+                            .await
+                            .map_err(|e| format!("Ollama JSON parse error: {}", e))?;
+                        return Ok(LocalAIResponse {
+                            content: ollama_response.response,
+                            model: ollama_response.model,
+                            done: ollama_response.done,
+                            context: ollama_response.context,
+                            total_duration: ollama_response.total_duration,
+                            eval_count: ollama_response.eval_count,
+                        });
+                    }
+                }
+            }
+            return Err(format!(
+                "Ollama model '{}' not found and no fallback available. Installed: {:?}",
+                model, available
+            ));
+        }
+
+        return Err(format!("Ollama error: HTTP {} — {}", status, body.trim()));
     }
 
     let ollama_response: OllamaGenerateResponse = response
