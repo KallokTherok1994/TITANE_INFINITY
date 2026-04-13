@@ -6,12 +6,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import {
-  chunkMarkdown,
-  chunkCode,
-  chunkText,
-  smartChunk,
-} from '../chunkingService';
+import { chunkMarkdown, chunkCode, chunkText, smartChunk } from '../chunkingService';
 
 describe('chunkingService', () => {
   // ─────────────────────────────────────────────────────────────

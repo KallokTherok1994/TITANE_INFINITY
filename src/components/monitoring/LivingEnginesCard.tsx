@@ -175,7 +175,6 @@ export const LivingEnginesCard: React.FC<LivingEnginesCardProps> = ({ state }) =
           </div>
         </div>
       </div>
-
     </div>
   );
 };

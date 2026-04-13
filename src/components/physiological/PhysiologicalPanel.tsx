@@ -11,14 +11,17 @@
  */
 
 import React, { useState } from 'react';
-import {
-  useInteroception,
-  useCognitiveSounds,
-  usePhysiologicalState,
-} from '@/hooks';
+import { useInteroception, useCognitiveSounds, usePhysiologicalState } from '@/hooks';
 
 // Local types (spatial engine removed)
-type TitanSpatialState = { x: number; y: number; z: number; width: number; focus: number; distance: number };
+type TitanSpatialState = {
+  x: number;
+  y: number;
+  z: number;
+  width: number;
+  focus: number;
+  distance: number;
+};
 type SpatialPreset = 'coach' | 'meta' | 'deep-work' | 'insight' | 'empathy';
 type CognitiveSound = string;
 type SpatialOptions = Record<string, unknown>;
@@ -26,7 +29,14 @@ type SpatialOptions = Record<string, unknown>;
 /** Stub for removed holophonic engine */
 function useHolophonic() {
   return {
-    spatialState: { x: 0, y: 0, z: 0.5, width: 0.5, focus: 0.8, distance: 0.3 } as TitanSpatialState,
+    spatialState: {
+      x: 0,
+      y: 0,
+      z: 0.5,
+      width: 0.5,
+      focus: 0.8,
+      distance: 0.3,
+    } as TitanSpatialState,
     setSpatialState: (_state: Partial<TitanSpatialState>) => {},
     setPreset: (_preset: SpatialPreset) => {},
     playCue: (_cue: CognitiveSound, _options?: SpatialOptions) => {},
@@ -397,10 +407,16 @@ function SpatialTab({ spatialAudio }: { spatialAudio: SpatialAudioHookReturn }) 
         >
           🧘 Deep Work
         </button>
-        <button className="preset-button" onClick={() => spatialAudio.setPreset('insight')}>
+        <button
+          className="preset-button"
+          onClick={() => spatialAudio.setPreset('insight')}
+        >
           💎 Insight
         </button>
-        <button className="preset-button" onClick={() => spatialAudio.setPreset('empathy')}>
+        <button
+          className="preset-button"
+          onClick={() => spatialAudio.setPreset('empathy')}
+        >
           🤝 Empathy
         </button>
       </div>
