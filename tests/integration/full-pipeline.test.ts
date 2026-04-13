@@ -212,9 +212,6 @@ const createMockRealtimeEngine = () => {
       enqueue({ type: 'audio', priority: 0, payload: { buffer, payload } });
       metrics.fps = 60;
     },
-    enqueueAvatar: (data: unknown, payload: unknown) => {
-      enqueue({ type: 'avatar', priority: 1, payload: { data, payload } });
-    },
     enqueueUIEvent: (event: unknown, payload: unknown) => {
       enqueue({ type: 'ui', priority: 2, payload: { event, payload } });
     },
@@ -288,7 +285,6 @@ const createMockPipeline = () => {
     });
 
     realtimeEngine.enqueueAudio(fusionResult.audio_buffer, {});
-    realtimeEngine.enqueueAvatar(fusionResult.animation_data, {});
 
     return { cognitiveResult, contextResult, fusionResult };
   };
@@ -338,7 +334,7 @@ describe('Full Pipeline Integration Tests', () => {
       expect(cognitiveResult.intention).toBeDefined();
       expect(contextResult.compressed_messages.length).toBeGreaterThan(0);
       expect(fusionResult.success).toBe(true);
-      expect(pipeline.realtimeEngine.taskQueue.size()).toBe(2);
+      expect(pipeline.realtimeEngine.taskQueue.size()).toBe(1);
     });
 
     it('should handle long context with compression', async () => {
@@ -383,7 +379,6 @@ describe('Full Pipeline Integration Tests', () => {
     it('should maintain 60 FPS during concurrent operations', () => {
       for (let i = 0; i < 10; i++) {
         pipeline.realtimeEngine.enqueueAudio(new ArrayBuffer(512), {});
-        pipeline.realtimeEngine.enqueueAvatar({ joint: 'jaw', rotation: 0.1 * i }, {});
         pipeline.realtimeEngine.enqueueUIEvent({ type: 'click', id: i }, {});
         pipeline.realtimeEngine.processFrame();
       }
@@ -395,7 +390,6 @@ describe('Full Pipeline Integration Tests', () => {
       pipeline.realtimeEngine.enqueueNetwork({ url: 'test' }, {});
       pipeline.realtimeEngine.enqueueUIEvent({ type: 'click' }, {});
       pipeline.realtimeEngine.enqueueAudio(new ArrayBuffer(256), {});
-      pipeline.realtimeEngine.enqueueAvatar({ joint: 'jaw' }, {});
 
       const executionOrder: string[] = [];
 

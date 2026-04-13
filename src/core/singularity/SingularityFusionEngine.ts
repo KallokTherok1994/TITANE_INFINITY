@@ -12,21 +12,19 @@
  *
  * Moteur de fusion totale de tous les engines TITANE∞
  *
- * Fusionne 14 moteurs en un cycle Singularity unifié :
+ * Fusionne 12 moteurs en un cycle Singularity unifié :
  * 1. CognitiveEngine        - Raisonnement, logique
  * 2. AdaptiveEngine v21     - Adaptation dynamique
  * 3. NarrativeEngine v22    - Continuité narrative
  * 4. EmotionEngine          - Modulation émotionnelle
  * 5. AutoFixEngine          - Réparation automatique
  * 6. LipSyncEngine          - Synchronisation voix-visage
- * 7. AvatarEngine v24.14    - Animation 3D
- * 8. AppearanceEngine v24.9 - Taxonomie fractale
- * 9. StreamingEngine        - Streaming audio/vidéo
- * 10. MemoryEngine          - Stockage/rappel mémoires
- * 11. IntentionEngine       - Classification intentions
- * 12. NetworkEngine         - Requêtes optimisées
- * 13. AnimationPipeline     - Pipeline animation 3D
- * 14. VoicePipeline         - Pipeline vocal TTS
+ * 7. AppearanceEngine v24.9 - Taxonomie fractale
+ * 8. StreamingEngine        - Streaming audio
+ * 9. MemoryEngine           - Stockage/rappel mémoires
+ * 10. IntentionEngine       - Classification intentions
+ * 11. NetworkEngine         - Requêtes optimisées
+ * 12. VoicePipeline         - Pipeline vocal TTS
  *
  * Cycle Singularity (9 étapes) :
  * 1. Analyse message        - IntentionEngine + CognitiveEngine
@@ -35,7 +33,7 @@
  * 4. Génération IA          - CognitiveEngine + MemoryEngine
  * 5. Préparation TTS        - VoicePipeline + StreamingEngine
  * 6. Lip-sync Processing    - LipSyncEngine
- * 7. Animation Avatar       - AvatarEngine + AnimationPipeline
+ * 7. (reserved)
  * 8. Mise à jour état       - SingularityState v∞
  * 9. Auto-optimisation      - AutoFixEngine + AutonomyEngine
  * ═══════════════════════════════════════════════════════════════════
@@ -70,7 +68,6 @@ export interface Message {
 export interface UserPreferences {
   voice_speed: number;
   voice_pitch: number;
-  avatar_animation_intensity: number;
   narrative_style: 'casual' | 'formal' | 'technical' | 'creative';
   emotion_modulation: number;
 }
@@ -79,7 +76,6 @@ export interface FusionResult {
   response_text: string;
   audio_buffer?: ArrayBuffer;
   lipsync_data?: LipSyncData;
-  avatar_animation?: AnimationData;
   updated_state: SingularityState;
   execution_time_ms: number;
   pipeline_stats: PipelineStats;
@@ -146,7 +142,6 @@ export interface ModuleActivation {
   emotion: boolean;
   memory: boolean;
   voice: boolean;
-  avatar: boolean;
   appearance: boolean;
   timestamp?: number;
 }
@@ -155,7 +150,6 @@ export interface StyleConfig {
   narrative_tone: string;
   emotional_intensity: number;
   voice_parameters: VoiceParams;
-  avatar_expression: string;
   animation_style: string;
   timestamp?: number;
 }
@@ -272,19 +266,15 @@ export class SingularityFusionEngine {
       // ═══════════════════════════════════════════════════════════════
       const step6Start = performance.now();
       const lipsyncData =
-        activation.avatar && audioBuffer
+        activation.voice && audioBuffer
           ? await this.step6_LipSync(audioBuffer, responseText)
           : undefined;
       stats.step6_lipsync_ms = performance.now() - step6Start;
 
       // ═══════════════════════════════════════════════════════════════
-      // STEP 7: ANIMATION AVATAR
+      // STEP 7: (reserved)
       // ═══════════════════════════════════════════════════════════════
       const step7Start = performance.now();
-      const avatarAnimation =
-        activation.avatar && lipsyncData
-          ? await this.step7_AnimateAvatar(lipsyncData, styleConfig)
-          : undefined;
       stats.step7_animation_ms = performance.now() - step7Start;
 
       // ═══════════════════════════════════════════════════════════════
@@ -315,7 +305,6 @@ export class SingularityFusionEngine {
         response_text: responseText,
         audio_buffer: audioBuffer,
         lipsync_data: lipsyncData,
-        avatar_animation: avatarAnimation,
         updated_state: updatedState,
         execution_time_ms: stats.total_ms,
         pipeline_stats: stats,
@@ -390,7 +379,6 @@ export class SingularityFusionEngine {
           emotion: intention.requires_emotion,
           memory: intention.requires_long_context,
           voice: true,
-          avatar: intention.requires_animation,
           appearance: intention.requires_animation,
         },
       });
@@ -406,7 +394,6 @@ export class SingularityFusionEngine {
         emotion: newState.telemetry ?? intention.requires_emotion,
         memory: newState.memory_sync ?? intention.requires_long_context,
         voice: newState.auto_healing ?? true,
-        avatar: newState.performance_guards ?? intention.requires_animation,
         appearance: newState.crash_protection ?? intention.requires_animation,
       };
 
@@ -425,7 +412,6 @@ export class SingularityFusionEngine {
         emotion: intention.requires_emotion,
         memory: intention.requires_long_context,
         voice: true,
-        avatar: intention.requires_animation,
         appearance: intention.requires_animation,
       };
     }
@@ -468,7 +454,6 @@ export class SingularityFusionEngine {
           volume: 1.0,
           timbre: 'warm',
         },
-        avatar_expression: 'neutral',
         animation_style: 'natural',
       };
 
@@ -489,7 +474,6 @@ export class SingularityFusionEngine {
           volume: 1.0,
           timbre: 'warm',
         },
-        avatar_expression: 'neutral',
         animation_style: 'natural',
       };
     }
@@ -623,44 +607,6 @@ export class SingularityFusionEngine {
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // STEP 7: ANIMATION AVATAR
-  // ═══════════════════════════════════════════════════════════════════
-
-  private async step7_AnimateAvatar(
-    lipsyncData: LipSyncData,
-    styleConfig: StyleConfig
-  ): Promise<AnimationData> {
-    try {
-      const response = await secureInvoke<{
-        success: boolean;
-        animation: AnimationData;
-      }>('fusion_animate_avatar', {
-        request: {
-          lipsync: lipsyncData,
-          expression: styleConfig.avatar_expression,
-          animation_style: styleConfig.animation_style,
-          intensity: Math.min(1, Math.max(0, styleConfig.emotional_intensity)),
-          fps: 60,
-          include_head_motion: true,
-        },
-      });
-
-      if (!response?.success) {
-        throw new Error('Avatar animation failed');
-      }
-
-      return response.animation;
-    } catch (error) {
-      logger.error('[FusionEngine] Step 7 error:', error);
-      return {
-        keyframes: [],
-        duration: 0,
-        fps: 60,
-      };
-    }
-  }
-
-  // ═══════════════════════════════════════════════════════════════════
   // STEP 8: MISE À JOUR ÉTAT
   // ═══════════════════════════════════════════════════════════════════
 
@@ -726,10 +672,6 @@ export class SingularityFusionEngine {
         bottlenecks.push('TTS preparation slow');
         optimizations.push('Use cached voice segments');
       }
-      if (stats.step7_animation_ms > animThreshold) {
-        bottlenecks.push('Avatar animation slow');
-        optimizations.push('Lower animation quality or pre-compute');
-      }
       if (stats.step1_analyse_ms > 200) {
         bottlenecks.push('Intention analysis slow');
         optimizations.push('Use lightweight classifier');
@@ -784,7 +726,6 @@ export class SingularityFusionEngine {
         total: `${stats.total_ms.toFixed(0)}ms`,
         ia: `${stats.step4_generation_ms.toFixed(0)}ms (${efficiency}%)`,
         tts: `${stats.step5_tts_ms.toFixed(0)}ms`,
-        avatar: `${stats.step7_animation_ms.toFixed(0)}ms`,
         bottlenecks: bottlenecks.length,
         health: stats.total_ms < 3000 ? '✅' : stats.total_ms < 5000 ? '⚠️' : '❌',
       });
@@ -840,7 +781,6 @@ export async function executeAIResponse(
   const defaultPreferences: UserPreferences = {
     voice_speed: 1.0,
     voice_pitch: 1.0,
-    avatar_animation_intensity: 1.0,
     narrative_style: 'casual',
     emotion_modulation: 0.7,
     ...preferences,

@@ -77,12 +77,12 @@ describe('RealTimeExecutionEngine', () => {
     const queue = (engine as any).taskQueue;
     queue.clear();
     queue.enqueue(createTask('network', 'low'), 'low');
-    queue.enqueue(createTask('avatar', 'high'), 'high');
+    queue.enqueue(createTask('ui', 'high'), 'high');
     queue.enqueue(createTask('ui', 'normal'), 'normal');
     queue.enqueue(createTask('audio', 'critical'), 'critical');
 
     expect(queue.dequeue()?.type).toBe('audio');
-    expect(queue.dequeue()?.type).toBe('avatar');
+    expect(queue.dequeue()?.type).toBe('ui');
     expect(queue.dequeue()?.type).toBe('ui');
     expect(queue.dequeue()?.type).toBe('network');
   });
@@ -104,15 +104,6 @@ describe('RealTimeExecutionEngine', () => {
     (engine as any).executeTask(createTask('audio', 'critical', chunk));
 
     expect(schedulerSpy).toHaveBeenCalledWith(chunk);
-  });
-
-  it('routes avatar tasks through the avatar scheduler', () => {
-    const animation = { keyframes: [{ t: 0 }], duration: 500 };
-    const schedulerSpy = vi.spyOn((engine as any).avatarScheduler, 'scheduleAnimation');
-
-    (engine as any).executeTask(createTask('avatar', 'high', animation));
-
-    expect(schedulerSpy).toHaveBeenCalledWith(animation);
   });
 
   it('adds UI events and flushes them after the debounce window', () => {
@@ -158,13 +149,12 @@ describe('RealTimeExecutionEngine', () => {
     rafSpy.mockRestore();
   });
 
-  it('prioritizes public enqueue APIs (critical > high > normal > low)', () => {
+  it('prioritizes public enqueue APIs (critical > normal > low)', () => {
     const queue = (engine as any).taskQueue;
     queue.clear();
 
     engine.enqueueNetwork({ http: true });
     engine.enqueueUIEvent({ type: 'click' });
-    engine.enqueueAvatar({ keyframes: [] });
     engine.enqueueAudio(createAudioBuffer());
 
     const order: string[] = [];
@@ -172,16 +162,13 @@ describe('RealTimeExecutionEngine', () => {
       order.push(queue.dequeue()!.type);
     }
 
-    expect(order).toEqual(['audio', 'avatar', 'ui', 'network']);
+    expect(order).toEqual(['audio', 'ui', 'network']);
   });
 
-  it('enqueues audio, avatar and UI tasks when running the realtime pipeline', async () => {
+  it('enqueues audio and UI tasks when running the realtime pipeline', async () => {
     mockInvoke.mockImplementation(async command => {
       if (command === 'realtime_stream_tts') {
         return [new ArrayBuffer(8)];
-      }
-      if (command === 'realtime_generate_avatar_animations') {
-        return [{ keyframes: [{ t: 0 }], duration: 400 }];
       }
       return undefined;
     });
@@ -192,14 +179,12 @@ describe('RealTimeExecutionEngine', () => {
     await engine.executeRealTimePipeline({
       iaResponse: 'Pipeline diagnostic',
       ttsEnabled: true,
-      avatarEnabled: true,
     });
 
     const tasks = drainQueue(queue);
     const types = tasks.map(task => task.type);
 
     expect(types.filter(t => t === 'audio')).toHaveLength(1);
-    expect(types.filter(t => t === 'avatar')).toHaveLength(1);
     expect(types.filter(t => t === 'ui')).toHaveLength(1);
   });
 });

@@ -64,7 +64,6 @@ const backendActivation: ModuleActivation = {
   emotion: true,
   memory: false,
   voice: true,
-  avatar: true,
   appearance: true,
 };
 
@@ -77,7 +76,6 @@ const backendStyle: StyleConfig = {
     volume: 1,
     timbre: 'warm',
   },
-  avatar_expression: 'smile',
   animation_style: 'fluid',
 };
 
@@ -155,16 +153,13 @@ describe('SingularityFusionEngine', () => {
     if (result.lipsync_data?.phonemes) {
       expect(result.lipsync_data.phonemes.length).toBeGreaterThanOrEqual(0);
     }
-    if (result.avatar_animation?.keyframes) {
-      expect(result.avatar_animation.keyframes.length).toBeGreaterThanOrEqual(0);
-    }
 
     // État mis à jour
     expect(result.updated_state).toBeDefined();
     expect(result.pipeline_stats.total_ms).toBeGreaterThanOrEqual(0);
   });
 
-  it('skips expensive media stages when voice and avatar modules are disabled', async () => {
+  it('skips expensive media stages when voice modules are disabled', async () => {
     const updatedState = createSingularityState({ signature: 'no-media' });
     setupSuccessfulInvoke(updatedState, {
       fusion_activate_modules: {
@@ -187,10 +182,8 @@ describe('SingularityFusionEngine', () => {
     const calledCommands = mockInvoke.mock.calls.map(call => call[0]);
     expect(calledCommands).not.toContain('fusion_prepare_tts');
     expect(calledCommands).not.toContain('fusion_process_lipsync');
-    expect(calledCommands).not.toContain('fusion_animate_avatar');
     expect(result.audio_buffer).toBeUndefined();
     expect(result.lipsync_data).toBeUndefined();
-    expect(result.avatar_animation).toBeUndefined();
   });
 
   it('provides conversational fallback when intention analysis backend fails', async () => {
@@ -223,7 +216,6 @@ describe('SingularityFusionEngine', () => {
     const preferences: UserPreferences = {
       voice_speed: 1.2,
       voice_pitch: 0.9,
-      avatar_animation_intensity: 0.4,
       narrative_style: 'technical',
       emotion_modulation: 0.5,
     };
@@ -269,18 +261,6 @@ describe('SingularityFusionEngine', () => {
 
     expect(lipsync.phonemes).toHaveLength(0);
     expect(lipsync.timestamps).toHaveLength(0);
-  });
-
-  it('returns idle animation data when avatar backend fails', async () => {
-    mockInvoke.mockRejectedValueOnce(new Error('avatar down'));
-
-    const animation = await (engine as any).step7_AnimateAvatar(
-      backendLipSync,
-      backendStyle
-    );
-
-    expect(animation.keyframes).toHaveLength(0);
-    expect(animation.duration).toBe(0);
   });
 
   it('keeps the existing SingularityState when update fails', async () => {
@@ -363,7 +343,6 @@ function setupSuccessfulInvoke(
     fusion_generate_ia_response: SUCCESS_RESPONSE_TEXT,
     fusion_prepare_tts: defaultAudioBuffer,
     fusion_process_lipsync: backendLipSync,
-    fusion_animate_avatar: backendAnimation,
     fusion_update_state: updatedState,
     fusion_auto_optimize: undefined,
     ...overrides,
@@ -397,7 +376,6 @@ function createFusionInput(overrides: FusionInputOverrides = {}): FusionInput {
   const preferences: UserPreferences = {
     voice_speed: preferencesOverride.voice_speed ?? 1,
     voice_pitch: preferencesOverride.voice_pitch ?? 1,
-    avatar_animation_intensity: preferencesOverride.avatar_animation_intensity ?? 0.8,
     narrative_style: preferencesOverride.narrative_style ?? 'casual',
     emotion_modulation: preferencesOverride.emotion_modulation ?? 0.7,
   };
