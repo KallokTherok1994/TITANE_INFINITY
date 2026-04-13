@@ -1,0 +1,88 @@
+name: 🤖 Android Build (Mock Debug)
+
+on:
+  push:
+    branches:
+      - MAIN
+  pull_request:
+    branches:
+      - MAIN
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '24'
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+  ANDROID_BUILD_TOOLS_VERSION: '34.0.0'
+  ANDROID_PLATFORM_VERSION: 'android-34'
+  ANDROID_NDK_VERSION: '26.1.10909125'
+  ANDROID_CMDLINE_TOOLS_VERSION: '11076708'
+
+jobs:
+  android-build:
+    name: 🤖 Android APK (mock debug)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: ☕ Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: 📱 Setup Android SDK
+        run: |
+          CMDLINE_TOOLS_VERSION="${{ env.ANDROID_CMDLINE_TOOLS_VERSION }}"
+          mkdir -p "$HOME/android-sdk/cmdline-tools"
+          curl -o cmdline-tools.zip "https://dl.google.com/android/repository/commandlinetools-linux-${CMDLINE_TOOLS_VERSION}_latest.zip"
+          unzip -q cmdline-tools.zip -d "$HOME/android-sdk/cmdline-tools/latest-tmp"
+          mv "$HOME/android-sdk/cmdline-tools/latest-tmp/cmdline-tools" "$HOME/android-sdk/cmdline-tools/latest"
+          rm cmdline-tools.zip
+          export ANDROID_HOME="$HOME/android-sdk"
+          export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
+          yes | sdkmanager --licenses || true
+          sdkmanager "platform-tools" "build-tools;${{ env.ANDROID_BUILD_TOOLS_VERSION }}" "${{ env.ANDROID_PLATFORM_VERSION }}" "ndk;${{ env.ANDROID_NDK_VERSION }}"
+          echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
+          echo "NDK_HOME=$HOME/android-sdk/ndk/${{ env.ANDROID_NDK_VERSION }}" >> $GITHUB_ENV
+          echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
+          echo "$HOME/android-sdk/platform-tools" >> $GITHUB_PATH
+
+      - name: 🦀 Setup Rust stable + Android targets
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+
+      - name: Enable Corepack (pnpm)
+        run: corepack enable
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+          package-manager-cache: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🏗️ Build frontend
+        run: pnpm run build
+
+      - name: 📱 Init Tauri Android
+        run: pnpm exec tauri android init
+
+      - name: 📦 Build APK debug (mock)
+        run: pnpm exec tauri android build --debug --features custom-protocol,mock
+
+      - name: 📤 Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: titane-android-debug-mock
+          path: src-tauri/gen/android/app/build/outputs/apk/**/debug/*.apk
+          retention-days: 7
