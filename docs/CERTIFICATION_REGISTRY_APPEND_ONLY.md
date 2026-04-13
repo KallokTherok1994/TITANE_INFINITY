@@ -458,7 +458,7 @@ Policy:
 
 **Status:** 🔒 **LOCKED FOR DEPLOYMENT (authorization tokens required)**
 
-**Next Phase:** Deployment authorization (GO_FOR_PROD_BUILD, GO_FOR_PROD_DEPLOY) — separate gate.
+**Next Phase:** Deployment authorization (on demand, Rule 11) — separate gate.
 
 ---
 
@@ -504,11 +504,11 @@ VERDICT: PROD_BUILD_MODE_LOCKED
 - Dev: `pnpm run build` (includes postbuild, local-only)
 - Prod: `pnpm run build:prod-safe` (skips postbuild, zero mutations) ← **REQUIRED for P4+**
 
-**Token Gates**:
-- P4-1: Requires `GO_FOR_PROD_BUILD__TITANE_INFINITY` token
-- P4-3: Requires two tokens + two-step confirmation
+**Build Authorization**:
+- P4-1: Production builds on demand (Rule 11)
+- P4-3: Deploy on user request + confirmation
 
-**Status**: 🔒 **READY FOR P4-1 PRODUCTION BUILD TOKEN**
+**Status**: 🔒 **READY FOR P4-1 PRODUCTION BUILD**
 
 
 ---

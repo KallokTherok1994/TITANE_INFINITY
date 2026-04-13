@@ -509,7 +509,7 @@
       "environnements": {
         "dev": "Builds locaux avec hot-reload (tauri dev) — sans signature",
         "staging": "Builds de pré-production déclenchés manuellement — avec vérifications complètes",
-        "production": "Builds de production protégés par les tokens GO_FOR_PROD_BUILD__TITANE_INFINITY"
+        "production": "Builds de production exécutés à la demande (Rule 11)"
       },
       "artefacts": [
         "Windows: .msi et .exe (NSIS installer) signés",

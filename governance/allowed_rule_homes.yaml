@@ -1,10 +1,10 @@
 version: 1
 rules:
-  - id: prod-build-token
-    pattern: GO_FOR_PROD_BUILD__TITANE_INFINITY
+  - id: build-all-command
+    pattern: BUILD ALL
     canonical_home: .github/copilot-instructions.md
-  - id: prod-deploy-token
-    pattern: GO_FOR_PROD_DEPLOY__TITANE_INFINITY
+  - id: on-demand-build
+    pattern: on demand
     canonical_home: .github/copilot-instructions.md
   - id: status-vocabulary
     pattern: PASS / FAIL / BLOCKED

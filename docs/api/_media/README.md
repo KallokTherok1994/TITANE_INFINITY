@@ -198,8 +198,8 @@ pnpm run build
 # Dev Tauri
 pnpm run dev:tauri
 
-# Build Tauri
-GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
+# Build Tauri — on demand (Rule 11)
+corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
 ```
 
 ## 🤝 Contribution

@@ -66,20 +66,19 @@ Classify explicitly as FAIL or BLOCKED.
 NO_SKIPS: required checks cannot be skipped by narrative.
 If a check cannot run, classify BLOCKED with a next action <= 30 minutes.
 
-## Rule 10 - AutoHeal capture is mandatory per fix
+## Rule 10 - AutoHeal capture is mandatory and automatic
 
-For each fix, append one entry to `scripts/autoheal/autoheal_rules.jsonl`.
-Then run:
+For every code modification, automatically:
+- Append one entry to `scripts/autoheal/autoheal_rules.jsonl`.
+- Run anti-regression checks.
+- Run `bash scripts/autoheal/detect_recurrence.sh`.
+- Run `bash scripts/verify_instructions.sh`.
 
-- `bash scripts/autoheal/detect_recurrence.sh`
-- `bash scripts/verify_instructions.sh`
+## Rule 11 - Production builds on demand
 
-## Rule 11 - PROD token gate
-
-No PROD action without exact tokens:
-
-- `GO_FOR_PROD_BUILD__TITANE_INFINITY`
-- `GO_FOR_PROD_DEPLOY__TITANE_INFINITY`
+Production builds and deploys are executed on user request or when needed.
+No token gate required.
+Use `BUILD ALL` command (Rule 14) for the full automated build and deploy sequence.
 
 ## Rule 12 - Proof pack and rollback required
 
@@ -101,3 +100,37 @@ The current version MUST always be visible in the bottom footer of the TITANE in
 ## Operational authority
 
 Only one active execution authority and one active E2E authority at a time.
+
+## Rule 14 - BUILD ALL command
+
+When the user issues `BUILD ALL`, execute the full automated sequence:
+1. Production build + deploy (Tauri).
+2. Build all artifacts: AppImage, DEB, RPM.
+3. Build Android APK.
+4. Build Windows installer (if applicable).
+5. Uninstall existing system installations and dock icons.
+6. Clean and purge all build caches.
+7. Reinstall cleanly.
+8. Update RELEASE notes, checksums, and RELEASE_SURFACE_INVENTORY.
+9. Verify and fix regressions, errors, warnings, and blockers.
+10. Run AutoHeal and ensure everything is up to date, conformant, and optimal.
+11. Bump version per Rule 13.
+
+## Rule 15 - Auto-update mapping and cartography
+
+Every code modification must automatically update the relevant mapping documents:
+- `UI_SURFACE_MAP.md` — if UI surfaces changed.
+- `ARCHITECTURE.md` — if architecture changed.
+- `OLLAMA_RUNTIME_MAP.md` — if Ollama integration changed.
+- `RELEASE_SURFACE_INVENTORY.md` — if version/release surfaces changed.
+- `docs/CARTOGRAPHY_COMPLETE.md` — if any structural change.
+- `docs/IPC_CATALOG.md` — if IPC commands changed.
+
+## Rule 16 - Mandatory test creation
+
+Every new integration, capability, or function must include at the same time:
+- Unit tests for the new functionality.
+- Integration tests if cross-module.
+- E2E tests if user-facing.
+- Advanced Q&A scenario tests to validate capabilities.
+No feature is complete without its tests.

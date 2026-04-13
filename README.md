@@ -85,7 +85,7 @@ Preuve de session:
 - Historical checksum snapshot: [RELEASE_ARTIFACTS_CHECKSUMS_30.0.0.txt](RELEASE_ARTIFACTS_CHECKSUMS_30.0.0.txt)
 
 **Security**: MAXIMUM_HARDENED  
-**Authorization**: Token-gated (`GO_FOR_PROD_BUILD__TITANE_INFINITY` + `GO_FOR_PROD_DEPLOY__TITANE_INFINITY`)
+**Authorization**: On-demand — production builds and deploys executed on user request (Rule 11).
 
 ### ✨ **Archive binaire historique : v27.0.5**
 
@@ -341,9 +341,10 @@ corepack prepare pnpm@10.30.2 --activate
 ### Build Production (Titan-Stable)
 
 ```bash
-# Build production token-gated
-GO_FOR_PROD_BUILD__TITANE_INFINITY=GO_FOR_PROD_BUILD__TITANE_INFINITY corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
+# Build production — on demand (Rule 11)
+corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
 
+# Or use BUILD ALL command for full automated sequence (Rule 14)
 # Ou via task VSCode: "🔵 Build Titan-Stable"
 ```
 
@@ -453,7 +454,7 @@ pnpm run dev              # Launch Titan-Dev (wrapper local complet)
 pnpm run dev:tauri        # Alias de dev (wrapper local complet)
 pnpm run dev:tauri:no-ollama  # Titan-Dev sans Ollama
 pnpm run build            # Build frontend
-GO_FOR_PROD_BUILD__TITANE_INFINITY=GO_FOR_PROD_BUILD__TITANE_INFINITY corepack pnpm exec tauri build --config src-tauri/tauri.conf.json  # Build Titan-Stable
+corepack pnpm exec tauri build --config src-tauri/tauri.conf.json  # Build Titan-Stable (on demand)
 pnpm run lint             # ESLint + Prettier
 pnpm run test             # Run tests
 pnpm run test:rust        # Cargo tests

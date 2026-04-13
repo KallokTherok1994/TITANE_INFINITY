@@ -42,3 +42,10 @@ Append-only log. Do not rewrite previous entries.
 - Proof pack: reports/instructions-seal/20260214-011649
 - Statut: PASS
 - Note: journal de verification copie depuis une execution reussie precedente (voir log dans le proof pack).
+
+## 2026-04-13
+- evolution: PROD token gate removed (Rule 11 replaced with on-demand build policy)
+- added: Rule 14 (BUILD ALL command), Rule 15 (auto-mapping), Rule 16 (mandatory tests)
+- extended: Rule 10 (AutoHeal now automatic on every modification)
+- policy: production builds and deploys on user request, no token gate required
+- verification: bash scripts/verify_instructions.sh — PASS=23 FAIL=0

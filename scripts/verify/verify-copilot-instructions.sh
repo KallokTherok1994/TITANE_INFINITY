@@ -49,8 +49,8 @@ REQUIRED_PATTERNS=(
   "allowlist|capabilities"
   "Stop-the-line"
   "diagnose -> plan -> apply -> verify -> report"
-  "GO_FOR_PROD_BUILD__TITANE_INFINITY"
-  "GO_FOR_PROD_DEPLOY__TITANE_INFINITY"
+  "BUILD ALL"
+  "on demand|on-demand"
 )
 
 FORBIDDEN_PATTERNS=(

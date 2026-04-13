@@ -69,11 +69,11 @@ On any version increment:
 2. Version updated in `package.json` and `src-tauri/Cargo.toml`
 3. `CHANGELOG.md` updated
 4. Release proof pack created
-5. Token `GO_FOR_PROD_BUILD__TITANE_INFINITY` provided
-6. Tauri build launched
+5. Production build authorized on demand (Rule 11)
+6. Tauri build launched (or use `BUILD ALL` command, Rule 14)
 7. Artifacts verified (checksums)
 8. GitHub release created
-9. Token `GO_FOR_PROD_DEPLOY__TITANE_INFINITY` provided for deployment
+9. Deploy executed on user request
 
 ---
 
