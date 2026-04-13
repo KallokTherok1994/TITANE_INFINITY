@@ -10,7 +10,8 @@ cd "$ROOT_DIR"
 BUNDLE="src-tauri/target/release/bundle"
 SHA=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 VERSION=$(python3 -c "import json; print(json.load(open('src-tauri/tauri.conf.json'))['version'])" 2>/dev/null || echo "unknown")
-OUTPUT="RELEASE_ARTIFACTS_CHECKSUMS_${VERSION}.txt"
+OUTPUT="release/checksums/RELEASE_ARTIFACTS_CHECKSUMS_${VERSION}.txt"
+mkdir -p release/checksums
 
 echo "[checksums] SHA=$SHA version=$VERSION"
 

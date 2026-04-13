@@ -24,6 +24,7 @@ TITANE∞ (Transformative Intelligence Through Adaptive Neural Engines - Infinit
 - Entrée racine: [`../README.md`](../README.md)
 - Index documentaire global: [`INDEX.md`](INDEX.md)
 - Diagrammes Mermaid: [`diagrams/README.md`](diagrams/README.md)
+- Site Docusaurus (rendered docs): [`../documentation/`](../documentation/README.md)
 
 ## 🌟 Caracteristiques v30.0.0
 
