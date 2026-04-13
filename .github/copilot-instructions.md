@@ -69,6 +69,7 @@ If a check cannot run, classify BLOCKED with a next action <= 30 minutes.
 ## Rule 10 - AutoHeal capture is mandatory and automatic
 
 For every code modification, automatically:
+
 - Append one entry to `scripts/autoheal/autoheal_rules.jsonl`.
 - Run anti-regression checks.
 - Run `bash scripts/autoheal/detect_recurrence.sh`.
@@ -104,6 +105,7 @@ Only one active execution authority and one active E2E authority at a time.
 ## Rule 14 - BUILD ALL command
 
 When the user issues `BUILD ALL`, execute the full automated sequence:
+
 1. Production build + deploy (Tauri).
 2. Build all artifacts: AppImage, DEB, RPM.
 3. Build Android APK.
@@ -119,6 +121,7 @@ When the user issues `BUILD ALL`, execute the full automated sequence:
 ## Rule 15 - Auto-update mapping and cartography
 
 Every code modification must automatically update the relevant mapping documents:
+
 - `UI_SURFACE_MAP.md` — if UI surfaces changed.
 - `ARCHITECTURE.md` — if architecture changed.
 - `OLLAMA_RUNTIME_MAP.md` — if Ollama integration changed.
@@ -129,8 +132,9 @@ Every code modification must automatically update the relevant mapping documents
 ## Rule 16 - Mandatory test creation
 
 Every new integration, capability, or function must include at the same time:
+
 - Unit tests for the new functionality.
 - Integration tests if cross-module.
 - E2E tests if user-facing.
 - Advanced Q&A scenario tests to validate capabilities.
-No feature is complete without its tests.
+  No feature is complete without its tests.
