@@ -13,7 +13,7 @@
 |---------|--------|
 | Fichiers TypeScript/TSX | 1 668 |
 | Fichiers Rust (.rs) | 880 |
-| Commandes IPC Tauri | 1 135 |
+| Commandes IPC Tauri | 1 236 |
 | Stores Zustand | 18 |
 | Hooks custom | 96 |
 | Pages React | 45+ |
@@ -27,7 +27,7 @@ graph TD
     R4["Ring 4 — UI React/TypeScript<br/>Pages · Components · UI Primitives"]
     R3["Ring 3 — Store Layer<br/>18 Zustand Stores + Selectors"]
     R2["Ring 2 — Engine Layer<br/>20+ Moteurs Rust — Cognitive · Memory · Singularity"]
-    R1["Ring 1 — Core Services<br/>IPC Bridge · 1135 Commandes Tauri"]
+    R1["Ring 1 — Core Services<br/>IPC Bridge · 1236 Commandes Tauri"]
     R0["Ring 0 — Kernel Rust<br/>main.rs · Security · Constitution"]
 
     R4 --> R3

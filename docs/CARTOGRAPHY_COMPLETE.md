@@ -1,4 +1,4 @@
-# TITANE_INFINITY — Cartographie Complète Avancée v30.1.0
+# TITANE_INFINITY — Cartographie Complète Avancée v30.1.6
 
 > **Mise à jour le 2026-04-11**
 > Document de référence architecture — généré depuis scan du dépôt
@@ -21,7 +21,7 @@ TITANE_INFINITY est organisé en 4 anneaux concentriques, du noyau Rust vers l'i
 │  20+ moteurs Rust : cognitif, mémoire, singularité, audio...        │
 ├─────────────────────────────────────────────────────────────────────┤
 │  Ring 1 — Core Services (src/services/)                             │
-│  IPC bridge · 1135 commandes Tauri · AI orchestration               │
+│  IPC bridge · 1236 commandes Tauri · AI orchestration               │
 ├─────────────────────────────────────────────────────────────────────┤
 │  Ring 0 — Kernel Rust (main.rs · security · constitution)           │
 │  Point d'entrée · Sécurité · Registre des modules                   │
@@ -32,7 +32,7 @@ TITANE_INFINITY est organisé en 4 anneaux concentriques, du noyau Rust vers l'i
 
 | Fichier | Lignes | Rôle |
 |---------|--------|------|
-| `main.rs` | 2857 | Point d'entrée, invoque ~1135 commandes Tauri via `generate_handler![]` |
+| `main.rs` | 2857 | Point d'entrée, invoque ~1236 commandes Tauri via `generate_handler![]` |
 | `lib.rs` | — | Registre des modules Rust |
 | `error.rs` | — | Définition des erreurs canoniques |
 | `error_handling.rs` | — | Gestion centralisée des erreurs |
@@ -192,7 +192,7 @@ Modules kernel : `kernel/`, `core/`, `security/`, `constitution/`
 
 > Voir le catalogue exhaustif : [IPC_CATALOG.md](./IPC_CATALOG.md)
 
-**1135 commandes IPC** réparties en 68 domaines fonctionnels.
+**1236 commandes IPC** réparties en 68 domaines fonctionnels.
 
 | Domaine | Commandes | Domaine | Commandes |
 |---------|-----------|---------|-----------|
@@ -229,7 +229,7 @@ Modules kernel : `kernel/`, `core/`, `security/`, `constitution/`
 | IDE Agent | 10 | Identity | 38 |
 | Introspection | 6 | Jobs | 6 |
 | Knowledge Base | 18 | Literary Engine | 9 |
-| **TOTAL** | **1135** | | |
+| **TOTAL** | **1236** | | |
 
 ---
 
@@ -675,7 +675,7 @@ function MyComponent() {
   const {
     metrics,           // { total_ts_files, total_rust_files, total_ipc_commands, ... }
     allCapabilities,   // ['ai_chat', 'voice', 'cognitive', 'memory', ...]
-    commandCount,      // 916
+    commandCount,      // 1236
     stores,            // ['effectsStore', 'evolutionStore', ...]
     hooks,             // ['useAIChatStreaming', 'useChat', ...]
     routes,            // ['/', '/titane', '/memory', ...]

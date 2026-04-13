@@ -17,7 +17,7 @@ TITANE_INFINITY est un **OS cognitif Tauri-only** (React/TypeScript + Rust/Tauri
 | Backend               | Rust 2021 — `src-tauri/`         |
 | Fichiers TS/TSX       | **1 668**                        |
 | Fichiers Rust         | **880**                          |
-| Commandes IPC uniques | **916**                          |
+| Commandes IPC uniques | **1 236**                        |
 | Stores Zustand        | **18**                           |
 | Hooks React custom    | **110**                          |
 | Pages                 | **41**                           |
@@ -51,7 +51,7 @@ flowchart TB
     end
 
     subgraph Ring0 ["🔴 Ring 0 — Kernel Rust"]
-        MainRs["main.rs (916 commandes)"]
+        MainRs["main.rs (1236 commandes)"]
         Handlers["handlers.rs"]
         SecEng["secure_engine.rs"]
         State["state.rs"]
@@ -96,7 +96,7 @@ UI Component
 | Document                                                                       | Description                                                              |
 | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
 | [`docs/CARTOGRAPHY_COMPLETE.md`](./docs/CARTOGRAPHY_COMPLETE.md)               | Cartographie complète avancée — 4-Ring, IPC, stores, hooks, routes, Rust |
-| [`docs/IPC_CATALOG.md`](./docs/IPC_CATALOG.md)                                 | Catalogue exhaustif des 916+ commandes IPC par domaine                   |
+| [`docs/IPC_CATALOG.md`](./docs/IPC_CATALOG.md)                                 | Catalogue exhaustif des 1236+ commandes IPC par domaine                  |
 | [`docs/DEPENDENCY_MAP.md`](./docs/DEPENDENCY_MAP.md)                           | Carte des dépendances frontend (npm) et backend (Cargo)                  |
 | [`docs/CARTOGRAPHY_TITANE_INFINITY.md`](./docs/CARTOGRAPHY_TITANE_INFINITY.md) | Cartographie canonique MAIN — architecture, IPC One Door                 |
 | [`docs/ARCHITECTURE_RINGS.md`](./docs/ARCHITECTURE_RINGS.md)                   | Architecture en anneaux détaillée                                        |
@@ -120,7 +120,7 @@ import { useSelfAwareness } from '@/hooks/useSelfAwareness';
 
 function MyComponent() {
   const { metrics, allCapabilities, getCommandsByDomain } = useSelfAwareness();
-  // metrics.total_ipc_commands === 916
+  // metrics.total_ipc_commands === 1236
   // allCapabilities === ['ai_chat', 'voice', 'cognitive', ...]
 }
 ```
