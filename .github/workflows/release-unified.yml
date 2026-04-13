@@ -366,7 +366,7 @@ jobs:
           echo "tauri.android.versionCode=$VERSION_CODE" >> "$PROPS_FILE"
           echo "📱 Android version synced: versionName=$VERSION versionCode=$VERSION_CODE"
 
-      - name: 📦 Build APK (mock)
+      - name: 📦 Build APK release (mock backend)
         run: pnpm exec tauri android build --features custom-protocol,mock
 
       - name: 🔐 Generate checksums
