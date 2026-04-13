@@ -96,7 +96,7 @@ rustfft = "6.2"                               # FFT for spectral analysis (voice
 # faiss = { version = "0.12", optional = true }  # FAISS (Linux AVX only)
 
 # SUPER PROMPT #15: Multimodal Expansion vΩ
-image = { version = "0.25", default-features = false, features = ["rayon", "bmp", "dds", "farbfeld", "gif", "hdr", "ico", "jpeg", "png", "pnm", "qoi", "tga", "tiff", "webp"] }  # Keep standard image formats on the stable pre-AVIF line to avoid unused ravif/paste audit baggage
+image = { version = "0.25", default-features = false, features = ["rayon", "bmp", "dds", "gif", "hdr", "ico", "jpeg", "png", "pnm", "qoi", "tga", "tiff", "webp"] }  # Keep standard image formats on the stable pre-AVIF line to avoid unused ravif/paste audit baggage
 ort = { version = "2.0.0-rc.10", optional = true }  # ONNX Runtime (optional, requires system libs)
 tokio-stream = "0.1.17"
 async-stream = "0.3.6"

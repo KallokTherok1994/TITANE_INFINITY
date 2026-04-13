@@ -48,12 +48,31 @@ open class BuildTask : DefaultTask() {
         val rootDirRel = rootDirRel ?: throw GradleException("rootDirRel cannot be null")
         val target = target ?: throw GradleException("target cannot be null")
         val release = release ?: throw GradleException("release cannot be null")
-        val args = listOf("tauri", "android", "android-studio-script");
+        val ideArgs = listOf("tauri", "android", "android-studio-script")
 
+        try {
+            execTauri(executable, rootDirRel, target, release, ideArgs)
+            return
+        } catch (e: Exception) {
+            // android-studio-script requires an IDE WebSocket bridge; fallback for headless CI/local shells.
+            project.logger.warn("android-studio-script failed, trying headless build fallback", e)
+        }
+
+        val headlessArgs = listOf("tauri", "android", "build")
+        execTauri(executable, rootDirRel, target, release, headlessArgs)
+    }
+
+    private fun execTauri(
+        executableName: String,
+        rootDirRel: String,
+        target: String,
+        release: Boolean,
+        baseArgs: List<String>,
+    ) {
         project.exec {
             workingDir(File(project.projectDir, rootDirRel))
-            executable(executable)
-            args(args)
+            executable(executableName)
+            args(baseArgs)
             if (project.logger.isEnabled(LogLevel.DEBUG)) {
                 args("-vv")
             } else if (project.logger.isEnabled(LogLevel.INFO)) {

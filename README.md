@@ -48,6 +48,33 @@ AppImage:  8bf170537c3f78e2179e47623f7a89ce6bb44c43304b52bd713054296364fcba
 DEB:       2608165ea3b900d4f7f1f41e6ae12bf3c25201d9b94e58dc0d754204b81c3e30
 ```
 
+### Installation Windows (PR #292)
+
+Guide Windows complet:
+- [docs/windows/SPINUP_WINDOWS.md](docs/windows/SPINUP_WINDOWS.md)
+
+Launchers Windows fournis:
+- [scripts/launch/launch-titane.ps1](scripts/launch/launch-titane.ps1)
+- [scripts/launch/launch-titane.bat](scripts/launch/launch-titane.bat)
+
+Exemple PowerShell:
+
+```powershell
+git clone https://github.com/KallokTherok1994/TITANE_INFINITY.git
+cd TITANE_INFINITY
+.\scripts\launch\launch-titane.ps1 -Mode dev
+```
+
+Pack launcher publie (session PR292):
+- `deployment/windows/TITANE_WINDOWS_LAUNCHER_PACK_PR292_20260412.zip`
+- `deployment/windows/TITANE_WINDOWS_LAUNCHER_PACK_PR292_20260412.sha256`
+- Release GitHub: https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/windows-pr292-launcher-pack-20260412
+
+Preuve de session:
+- [proof_packs/WINDOWS_PR292_RELEASE_20260412_233708/REPORT.md](proof_packs/WINDOWS_PR292_RELEASE_20260412_233708/REPORT.md)
+- [proof_packs/WINDOWS_PR292_RELEASE_20260412_233708/VERDICT.md](proof_packs/WINDOWS_PR292_RELEASE_20260412_233708/VERDICT.md)
+- [proof_packs/WINDOWS_PR292_RELEASE_20260412_233708/ROLLBACK.md](proof_packs/WINDOWS_PR292_RELEASE_20260412_233708/ROLLBACK.md)
+
 **Release Notes & Installation**:
 
 - Full release notes: [CHANGELOG.md](CHANGELOG.md)
