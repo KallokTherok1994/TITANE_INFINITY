@@ -1,10 +1,12 @@
-name: TITANE∞ Android Build (mock/debug)
+name: 🤖 Android Build (Mock Debug)
 
 on:
   push:
-    branches: [MAIN, main]
+    branches:
+      - MAIN
   pull_request:
-    branches: [MAIN, main]
+    branches:
+      - MAIN
   workflow_dispatch:
 
 concurrency:
@@ -17,10 +19,14 @@ permissions:
 env:
   NODE_VERSION: '24'
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+  ANDROID_BUILD_TOOLS_VERSION: '34.0.0'
+  ANDROID_PLATFORM_VERSION: 'android-34'
+  ANDROID_NDK_VERSION: '26.1.10909125'
+  ANDROID_CMDLINE_TOOLS_VERSION: '11076708'
 
 jobs:
   android-build:
-    name: 🤖 Android Build (mock/debug)
+    name: 🤖 Android APK (mock debug)
     runs-on: ubuntu-latest
     timeout-minutes: 45
     permissions:
@@ -34,11 +40,11 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: 17
 
-      - name: 🤖 Setup Android SDK
+      - name: 📱 Setup Android SDK
         run: |
-          CMDLINE_TOOLS_VERSION="11076708"
+          CMDLINE_TOOLS_VERSION="${{ env.ANDROID_CMDLINE_TOOLS_VERSION }}"
           mkdir -p "$HOME/android-sdk/cmdline-tools"
           curl -o cmdline-tools.zip "https://dl.google.com/android/repository/commandlinetools-linux-${CMDLINE_TOOLS_VERSION}_latest.zip"
           unzip -q cmdline-tools.zip -d "$HOME/android-sdk/cmdline-tools/latest-tmp"
@@ -47,10 +53,10 @@ jobs:
           export ANDROID_HOME="$HOME/android-sdk"
           export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
           yes | sdkmanager --licenses || true
-          sdkmanager "platform-tools" "build-tools;34.0.0" "platforms;android-34" "ndk;26.1.10909125"
+          sdkmanager "platform-tools" "build-tools;${{ env.ANDROID_BUILD_TOOLS_VERSION }}" "${{ env.ANDROID_PLATFORM_VERSION }}" "ndk;${{ env.ANDROID_NDK_VERSION }}"
           echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
           echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
-          echo "NDK_HOME=$HOME/android-sdk/ndk/26.1.10909125" >> $GITHUB_ENV
+          echo "NDK_HOME=$HOME/android-sdk/ndk/${{ env.ANDROID_NDK_VERSION }}" >> $GITHUB_ENV
           echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
           echo "$HOME/android-sdk/platform-tools" >> $GITHUB_PATH
 
@@ -75,43 +81,21 @@ jobs:
           cache: 'pnpm'
           package-manager-cache: false
 
-      - name: 📦 Install dependencies
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: 🏗️ Build frontend (mock mode)
-        run: pnpm exec vite build
+      - name: 🏗️ Build frontend
+        run: pnpm run build
 
-      - name: 📁 Ensure dist directory exists
-        run: mkdir -p dist
-
-      - name: 🤖 Init Tauri Android
+      - name: 📱 Init Tauri Android
         run: pnpm exec tauri android init
 
-      - name: 🔨 Build Android APK (mock/debug)
+      - name: 📦 Build APK debug (mock)
         run: pnpm exec tauri android build --debug --features custom-protocol,mock
-
-      - name: 🔍 Check APK artifacts
-        run: |
-          echo "=== APK artifacts generated ===" >> $GITHUB_STEP_SUMMARY
-          find src-tauri/gen/android -name "*.apk" 2>/dev/null | while read apk; do
-            echo "- $apk: $(du -sh "$apk" | cut -f1)" >> $GITHUB_STEP_SUMMARY
-          done || echo "No APK found" >> $GITHUB_STEP_SUMMARY
 
       - name: 📤 Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: android-mock-debug-${{ github.run_id }}
-          path: |
-            src-tauri/gen/android/**/*.apk
-          if-no-files-found: warn
+          name: titane-android-debug-mock
+          path: src-tauri/gen/android/app/build/outputs/apk/**/debug/*.apk
           retention-days: 7
-
-      - name: 📊 Summary
-        if: always()
-        run: |
-          echo "## 🤖 Android Build Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- Mode: mock/debug" >> $GITHUB_STEP_SUMMARY
-          echo "- Features: custom-protocol,mock" >> $GITHUB_STEP_SUMMARY
-          echo "- NDK: 26.1.10909125" >> $GITHUB_STEP_SUMMARY
-          echo "- Java: 17 (Temurin)" >> $GITHUB_STEP_SUMMARY
