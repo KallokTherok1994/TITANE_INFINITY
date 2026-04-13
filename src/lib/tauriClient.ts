@@ -280,13 +280,6 @@ class TauriClient {
     );
   }
 
-  async autohealReloadAvatar(params?: unknown): Promise<unknown> {
-    return await this.invoke(
-      TAURI_COMMANDS.AUTOHEAL_RELOAD_AVATAR,
-      (params as Record<string, unknown>) || {}
-    );
-  }
-
   async autohealResetAdaptive(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.AUTOHEAL_RESET_ADAPTIVE,
@@ -315,23 +308,9 @@ class TauriClient {
     );
   }
 
-  async autohealStartAvatar(params?: unknown): Promise<unknown> {
-    return await this.invoke(
-      TAURI_COMMANDS.AUTOHEAL_START_AVATAR,
-      (params as Record<string, unknown>) || {}
-    );
-  }
-
   async autohealStartPipeline(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.AUTOHEAL_START_PIPELINE,
-      (params as Record<string, unknown>) || {}
-    );
-  }
-
-  async autohealStopAvatar(params?: unknown): Promise<unknown> {
-    return await this.invoke(
-      TAURI_COMMANDS.AUTOHEAL_STOP_AVATAR,
       (params as Record<string, unknown>) || {}
     );
   }
