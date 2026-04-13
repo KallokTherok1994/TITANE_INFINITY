@@ -810,7 +810,7 @@ mod fusion_commands_week2 {
     include!("fusion_commands_week2.rs");
 }
 
-// Fusion Commands Week 3 - Lip-sync & Avatar Animation
+// Fusion Commands Week 3 - Lip-sync
 mod fusion_commands_week3 {
     include!("fusion_commands_week3.rs");
 }
@@ -2252,7 +2252,6 @@ fn main() {
 
             // Fusion Backend Commands (Week 3)
             fusion_commands_week3::fusion_process_lipsync,
-            fusion_commands_week3::fusion_animate_avatar,
 
             // Fusion Backend Commands (Week 4)
             fusion_commands_week4::fusion_update_state,

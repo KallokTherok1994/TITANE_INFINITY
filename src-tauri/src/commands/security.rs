@@ -410,53 +410,8 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("sc_get_diagnostic_status");
 
     // ═══════════════════════════════════════════════════════════════
-    // AVATAR & FULLBODY (v23+)
+    // FULLBODY (v23+)
     // ═══════════════════════════════════════════════════════════════
-    // Avatar core
-    commands.insert("avatar_prepare_speech");
-    commands.insert("avatar_finish_speech");
-    commands.insert("avatar_enable_immersion");
-    commands.insert("avatar_on_wake_word");
-    commands.insert("avatar_get_current_morph");
-    commands.insert("avatar_advance_lip_sync");
-    commands.insert("avatar_get_expression");
-    commands.insert("avatar_get_state");
-    commands.insert("avatar_prepare_animation");
-    commands.insert("avatar_run_selftest");
-
-    // Avatar appearance
-    commands.insert("avatar_get_appearance");
-    commands.insert("avatar_set_appearance");
-    commands.insert("avatar_update_appearance");
-    commands.insert("avatar_apply_style_preset");
-    commands.insert("avatar_parse_style_command");
-    commands.insert("avatar_save_custom_style");
-    commands.insert("avatar_load_custom_style");
-    commands.insert("avatar_merge_styles");
-    commands.insert("avatar_list_styles");
-    commands.insert("avatar_add_archetype");
-
-    // Avatar floating / display
-    commands.insert("avatar_get_display_state");
-    commands.insert("avatar_set_display_state");
-    commands.insert("avatar_update_display_state");
-    commands.insert("avatar_reset_display_state");
-    commands.insert("avatar_mode_floating");
-    commands.insert("avatar_mode_embed");
-    commands.insert("avatar_mode_hidden");
-    commands.insert("avatar_set_position");
-    commands.insert("avatar_set_size");
-    commands.insert("avatar_set_scale");
-    commands.insert("avatar_set_opacity");
-    commands.insert("avatar_set_always_on_top");
-    commands.insert("avatar_set_locked");
-    commands.insert("avatar_set_mirror_mode");
-    commands.insert("avatar_set_click_through");
-    commands.insert("avatar_set_anchor");
-    commands.insert("avatar_set_anchor_by_name");
-    commands.insert("avatar_list_screens");
-    commands.insert("avatar_move_to_screen");
-
     // FullBody
     commands.insert("fullbody_initialize");
     commands.insert("fullbody_advance_frame");
@@ -500,9 +455,6 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("autoheal_reset_adaptive");
     commands.insert("autoheal_clear_narrative");
     commands.insert("autoheal_init_narrative");
-    commands.insert("autoheal_stop_avatar");
-    commands.insert("autoheal_reload_avatar");
-    commands.insert("autoheal_start_avatar");
     commands.insert("autoheal_clear_tts_queue");
     commands.insert("autoheal_init_tts");
     commands.insert("autoheal_resync_lipsync");
@@ -512,7 +464,6 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("autoheal_clear_pipeline");
     commands.insert("autoheal_start_pipeline");
     commands.insert("autoheal_heal_cognitive_module");
-    commands.insert("autoheal_heal_avatar_module");
     commands.insert("autoheal_heal_tts_module");
     commands.insert("autoheal_heal_lipsync_module");
     commands.insert("autoheal_heal_memory_module");
@@ -544,7 +495,6 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("pipeline_analyze_intention");
     commands.insert("pipeline_generate_cognitive_response");
     commands.insert("pipeline_prepare_tts");
-    commands.insert("pipeline_prepare_avatar_animation");
     commands.insert("pipeline_get_stats");
     commands.insert("pipeline_pause");
     commands.insert("pipeline_resume");
@@ -555,12 +505,6 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     // HTTP COMMANDS (v30.0.0+)
     // ═══════════════════════════════════════════════════════════════
     commands.insert("http_request");
-
-    // ═══════════════════════════════════════════════════════════════
-    // AVATAR ASSET COMMANDS (v30.0.0+)
-    // ═══════════════════════════════════════════════════════════════
-    commands.insert("avatar_load_asset");
-    commands.insert("avatar_list_assets");
 
     // ═══════════════════════════════════════════════════════════════
     // VOICE DSP COMMANDS (v30.0.0+)
