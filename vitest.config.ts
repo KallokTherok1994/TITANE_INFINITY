@@ -147,7 +147,7 @@ export const sharedTestConfig = defineConfig({
     ],
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html'],
+      reporter: ['text', 'json', 'html', 'lcov', 'json-summary'],
       reportsDirectory: 'coverage/unit',
       exclude: [
         'node_modules/',
@@ -161,6 +161,13 @@ export const sharedTestConfig = defineConfig({
         '**/*.spec.ts',
         '**/*.spec.tsx',
       ],
+      // Quality gate: minimum coverage thresholds enforced in CI
+      thresholds: {
+        statements: 70,
+        branches: 60,
+        functions: 65,
+        lines: 70,
+      },
     },
   },
 
