@@ -24,7 +24,7 @@
     "resources": [
       "../dist"
     ],
-    "copyright": "Copyright © 2025 TITANE",
+    "copyright": "Copyright © 2025-2026 TITANE",
     "category": "DeveloperTool",
     "shortDescription": "TITANE∞ v30.1.0 - Stable Release",
     "longDescription": "TITANE Infinity v30.1.0 - Cognitive Operating System, stable production release"
@@ -44,7 +44,7 @@
         "transparent": false,
         "center": true,
         "visible": true,
-        "devtools": true
+        "devtools": false
       }
     ],
     "security": {
@@ -54,7 +54,6 @@
         "enable": true,
         "scope": [
           "$APPDATA/com.titane.infinity/**",
-          "$RESOURCE/**",
           "$APPCONFIG/com.titane.infinity/**",
           "$APPLOCALDATA/com.titane.infinity/**"
         ]

@@ -27,23 +27,30 @@ function loadJson<T>(relativePath: string): T {
 }
 
 describe('Tauri devtools configuration', () => {
-  it('keeps desktop windows devtools-enabled for F12 and Ctrl+Shift+I', () => {
+  it('disables devtools in production build (security hardening)', () => {
     const config = loadJson<TauriConfig>('src-tauri/tauri.conf.json');
     const mainWindow = config.app?.windows?.find(window => window.label === 'main');
     const mainCapability = config.app?.security?.capabilities?.find(capability =>
       capability.windows?.includes('main')
     );
 
-    expect(mainWindow?.devtools).toBe(true);
+    // devtools must be disabled by default in production (security hardening).
+    expect(mainWindow?.devtools).toBe(false);
+    // The toggle permission is intentionally retained to allow the devtools_enable/devtools_disable
+    // IPC commands to function for authorized developer debug sessions; it does not enable
+    // devtools automatically in the window.
     expect(mainCapability?.permissions).toContain(
       'core:webview:allow-internal-toggle-devtools'
     );
   });
 
-  it('keeps the base Tauri config aligned so the generator cannot disable F12 again', () => {
+  it('keeps the base Tauri config without a devtools override (inherits false from production)', () => {
     const baseConfig = loadJson<TauriConfig>('src-tauri/tauri.base.json');
+    // tauri.base.json is a base config without window definitions;
+    // devtools defaults are handled per-runtime config.
     const mainWindow = baseConfig.app?.windows?.find(window => window.label === 'main');
 
-    expect(mainWindow?.devtools).toBe(true);
+    // No windows block in base config — override lives in tauri.conf.json
+    expect(mainWindow).toBeUndefined();
   });
 });
