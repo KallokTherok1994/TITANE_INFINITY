@@ -122,7 +122,6 @@ cat > "$REPORT_DIR/COVERAGE_MATRIX.md" << 'EOF'
 - [ ] Chat interface
 - [ ] DevTools
 - [ ] Settings
-- [ ] Avatar
 - [ ] Halo
 
 ### Services

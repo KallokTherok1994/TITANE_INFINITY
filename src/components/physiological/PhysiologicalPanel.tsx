@@ -13,16 +13,26 @@
 import React, { useState } from 'react';
 import {
   useInteroception,
-  useHolophonic,
   useCognitiveSounds,
   usePhysiologicalState,
 } from '@/hooks';
-import type {
-  TitanSpatialState,
-  SpatialPreset,
-  CognitiveSound,
-  SpatialOptions,
-} from '@/engines/spatial/holophonicEngine';
+
+// Local types (spatial engine removed)
+type TitanSpatialState = { x: number; y: number; z: number; width: number; focus: number; distance: number };
+type SpatialPreset = 'coach' | 'meta' | 'deep-work' | 'insight' | 'empathy';
+type CognitiveSound = string;
+type SpatialOptions = Record<string, unknown>;
+
+/** Stub for removed holophonic engine */
+function useHolophonic() {
+  return {
+    spatialState: { x: 0, y: 0, z: 0.5, width: 0.5, focus: 0.8, distance: 0.3 } as TitanSpatialState,
+    setSpatialState: (_state: Partial<TitanSpatialState>) => {},
+    setPreset: (_preset: SpatialPreset) => {},
+    playCue: (_cue: CognitiveSound, _options?: SpatialOptions) => {},
+    setSoundIntensity: (_intensity: 'off' | 'minimal' | 'normal' | 'rich') => {},
+  };
+}
 import './PhysiologicalPanel.css';
 
 interface SpatialState {

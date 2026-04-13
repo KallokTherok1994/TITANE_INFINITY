@@ -10,7 +10,7 @@ export const DS_CONSTANTS = {
   MAX_WIDTH: 1280,
   SIDEBAR_WIDTH: 280,
   HEADER_HEIGHT: 64,
-  // Extended constants for hyperdepth/holography
+  // Extended constants for hyperdepth
   opacity: {
     subtle: 0.1,
     ghost: 0.15,

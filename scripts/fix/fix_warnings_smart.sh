@@ -47,7 +47,6 @@ sed -i '/^type Interaction = {/,/^};$/d' src/core/devops/VisualDevOpsEngine.ts |
 # ════════════════════════════════════════════════════════════════════
 
 echo "📌 Suppression MaterialProperties dans appearanceRenderer..."
-sed -i 's/, MaterialProperties//' src/modules/avatar/appearance/appearanceRenderer.ts || true
 
 echo "📌 Suppression _Role dans SystemGovernance..."
 sed -i '/^type _Role = /d' src/pages/SystemGovernance.tsx || true
@@ -80,16 +79,12 @@ echo "📌 Suppression propriétés vraiment non utilisées..."
 sed -i '163s/targetFPS/_targetFPS/' src/core/realtime/RealTimeExecutionEngine.ts || true
 
 # usePostProcessing dans ThreeJSAvatarRenderer (ligne 52)
-sed -i '52s/usePostProcessing/_usePostProcessing/' src/modules/avatar/floating/ThreeJSAvatarRenderer.ts || true
 
 # renderer dans appearanceFloatingIntegration (ligne 75)
-sed -i '75s/renderer/_renderer/' src/modules/avatar/floating/appearanceFloatingIntegration.ts || true
 
 # _targetFPS dans fullbody_engine (ligne 81) - déjà préfixé
 echo "  (fullbody_engine.ts déjà OK)"
 
-# __fullBodyAvatar dans AvatarFloatingWindow (ligne 76) - déjà double préfixe
-echo "  (AvatarFloatingWindow.tsx déjà OK)"
 
 # timeout dans chatClient (ligne 60) - property
 echo "📌 Suppression property timeout dans chatClient..."

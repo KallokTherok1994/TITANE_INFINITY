@@ -23,7 +23,6 @@ sed -i "s/const result =/const _result =/g" src/hooks/useVoiceMode.ts
 sed -i "s/const now =/const _now =/g" src/lib/slaTracker.ts
 sed -i "s/let systemStatusStr =/const _systemStatusStr =/g" src/pages/DevTools.tsx
 sed -i "s/let errorStr =/const _errorStr =/g" src/pages/DevTools.tsx
-sed -i "s/let color =/const _color =/g" src/core/holography/HOLOMESH_ENGINE.ts
 sed -i "s/const suggestions =/const _suggestions =/g" src/services/ai/chatEngine.test.ts
 sed -i "s/'ChatEngineConfig'/import type { ChatEngineConfig as _ChatEngineConfig }/g" src/services/ai/chatEngine.test.ts
 

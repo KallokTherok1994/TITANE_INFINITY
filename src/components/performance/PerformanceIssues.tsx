@@ -111,7 +111,6 @@ const MODULE_LABELS: Record<TitaneModule | 'system' | 'frontend' | 'ia', string>
   evolution: 'Évolution',
   prompt: 'Prompt',
   tts: 'TTS',
-  avatar: 'Avatar',
   chat: 'Chat',
   performance: 'Performance',
   system: 'Système',

@@ -13,7 +13,7 @@ export const DS_COLORS = {
   surface: '#1E293B',
   text: '#F8FAFC',
   textMuted: '#94A3B8',
-  // Extended colors for holography
+  // Extended colors
   nexus: {
     primary: { hex: '#00FFFF' },
     secondary: { hex: '#FF00FF' },

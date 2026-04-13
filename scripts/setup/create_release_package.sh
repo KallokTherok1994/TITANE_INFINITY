@@ -138,7 +138,6 @@ cat > "${RELEASE_DIR}/RELEASE_NOTES.md" << EOF
 ### Fonctionnalités
 - ✅ Chat IA avec debug panel intégré
 - ✅ TTS (synthèse vocale) online + local
-- ✅ Avatar 3D avec lip-sync
 - ✅ Auto-repair et self-healing
 - ✅ QA Engine v19.8
 - ✅ Adaptive Engine v21

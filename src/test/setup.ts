@@ -174,7 +174,6 @@ const createInitialMemoryStats = () => ({
 
 const createInitialMemoryProjects = () => [
   { id: 'proj-omega', title: 'Omega Hardening', status: 'active' },
-  { id: 'proj-avatar', title: 'Avatar Upgrade', status: 'active' },
 ];
 
 const createInitialMetaState = () => ({
@@ -205,7 +204,6 @@ const performanceMetrics = {
 
 const defaultBrokenModules = () => [
   { module: 'cognitive', severity: 'high' },
-  { module: 'avatar', severity: 'medium' },
 ];
 
 let fusionState = createInitialFusionState();
@@ -483,10 +481,6 @@ const handleTauriInvoke = async (
       brokenModules = brokenModules.filter(mod => mod.module !== 'cognitive');
       autohealHistory.push({ module: 'cognitive', success: true, timestamp: Date.now() });
       return { module_type: 'cognitive', success: true };
-    case 'autoheal_heal_avatar_module':
-      brokenModules = brokenModules.filter(mod => mod.module !== 'avatar');
-      autohealHistory.push({ module: 'avatar', success: true, timestamp: Date.now() });
-      return { module_type: 'avatar', success: true };
     case 'autoheal_get_history':
       return clone(autohealHistory);
     case 'autoheal_resync_state':
