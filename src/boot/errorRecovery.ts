@@ -23,19 +23,19 @@ export type TitaneBootDiagnostics = {
   timestamp: number;
 };
 
+const HTML_ESCAPES: Record<string, string> = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+};
+
 /**
  * Échapper les caractères HTML pour prévenir XSS dans les fallbacks d'erreur
  */
-export const escapeHtmlForError = (str: string): string => {
-  const htmlEscapes: Record<string, string> = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;',
-  };
-  return str.replace(/[&<>"']/g, char => htmlEscapes[char] || char);
-};
+export const escapeHtmlForError = (str: string): string =>
+  str.replace(/[&<>"']/g, char => HTML_ESCAPES[char] || char);
 
 export const tryWriteMemoryCoreLog = (
   level: MemoryCoreLogLevel,

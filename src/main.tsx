@@ -41,7 +41,7 @@ import './pages/styles.css'; // 📄 Pages styles (minimal)
 
 // ── Boot modules (extracted from monolithic main.tsx) ──────────────────────
 import { registerFatalErrorHandlers } from './boot/errorRecovery';
-import { startBootBeacon, showDebugOverlay } from './boot/beaconUI';
+import { startBootBeacon, showDebugOverlay, getUILogsSnapshot } from './boot/beaconUI';
 import {
   emitBootMarker,
   setBootStage,
@@ -114,16 +114,7 @@ if (typeof window !== 'undefined') {
           exists: Boolean(document.getElementById('root')),
           childCount: document.getElementById('root')?.childElementCount ?? null,
         },
-        uiLogs: (() => {
-          try {
-            const raw = window.localStorage.getItem('titane_ui_logs');
-            if (!raw) return [];
-            const parsed = JSON.parse(raw);
-            return Array.isArray(parsed) ? parsed.slice(-200) : parsed;
-          } catch {
-            return [];
-          }
-        })(),
+        uiLogs: getUILogsSnapshot(),
       };
 
       showDebugOverlay('UI Debug Snapshot', diagnostics);
