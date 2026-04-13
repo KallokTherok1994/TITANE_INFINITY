@@ -90,6 +90,21 @@ jobs:
       - name: 📱 Init Tauri Android
         run: pnpm exec tauri android init
 
+      - name: 🔢 Sync Android version from package.json
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          # Compute versionCode from semver (major*10000 + minor*100 + patch)
+          MAJOR=$(echo "$VERSION" | cut -d. -f1)
+          MINOR=$(echo "$VERSION" | cut -d. -f2)
+          PATCH=$(echo "$VERSION" | cut -d. -f3)
+          VERSION_CODE=$((MAJOR * 10000 + MINOR * 100 + PATCH))
+          PROPS_FILE="src-tauri/gen/android/app/tauri.properties"
+          mkdir -p "$(dirname "$PROPS_FILE")"
+          echo "tauri.android.versionName=$VERSION" > "$PROPS_FILE"
+          echo "tauri.android.versionCode=$VERSION_CODE" >> "$PROPS_FILE"
+          echo "📱 Android version synced: versionName=$VERSION versionCode=$VERSION_CODE"
+          cat "$PROPS_FILE"
+
       - name: 📦 Build APK debug (mock)
         run: pnpm exec tauri android build --debug --features custom-protocol,mock
 
