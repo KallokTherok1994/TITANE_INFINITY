@@ -1,0 +1,102 @@
+name: TITANE∞ Windows MSI On-Demand
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Optional GitHub release tag to upload MSI assets"
+        required: false
+        type: string
+
+env:
+  CARGO_TERM_COLOR: always
+  NODE_VERSION: "24"
+  RUST_VERSION: "stable"
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows-msi:
+    name: Build Windows MSI
+    runs-on: windows-latest
+    timeout-minutes: 75
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install JS dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Frontend build
+        run: pnpm run build
+
+      - name: Build MSI
+        run: pnpm exec tauri build --bundles msi
+
+      - name: Generate MSI checksums
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path src-tauri/target/release/bundle/msi | Out-Null
+          $msiFiles = Get-ChildItem src-tauri/target/release/bundle/msi/*.msi -ErrorAction SilentlyContinue
+          if ($msiFiles.Count -eq 0) {
+            Write-Error "No MSI files generated"
+            exit 1
+          }
+          Get-FileHash src-tauri/target/release/bundle/msi/*.msi -Algorithm SHA256 | ForEach-Object {
+            "{0}  {1}" -f $_.Hash.ToLower(), (Split-Path $_.Path -Leaf)
+          } | Out-File src-tauri/target/release/bundle/msi/SHA256SUMS.txt -Encoding ascii
+          Get-Content src-tauri/target/release/bundle/msi/SHA256SUMS.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-msi-${{ github.run_number }}
+          path: |
+            src-tauri/target/release/bundle/msi/*.msi
+            src-tauri/target/release/bundle/msi/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Optional release upload
+        if: ${{ github.event.inputs.release_tag != '' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ github.event.inputs.release_tag }}
+        shell: bash
+        run: |
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "Release exists: $RELEASE_TAG"
+          else
+            gh release create "$RELEASE_TAG" --title "TITANE∞ $RELEASE_TAG" --notes "Automated Windows MSI upload"
+          fi
+          find src-tauri/target/release/bundle/msi -type f \( -name "*.msi" -o -name "SHA256SUMS.txt" \) -print0 | while IFS= read -r -d '' f; do
+            gh release upload "$RELEASE_TAG" "$f" --clobber
+          done
+
+      - name: Summary
+        if: always()
+        shell: pwsh
+        run: |
+          "### Windows MSI On-Demand" >> $env:GITHUB_STEP_SUMMARY
+          "- Workflow run: $env:GITHUB_RUN_ID" >> $env:GITHUB_STEP_SUMMARY
+          "- MSI files: $((Get-ChildItem src-tauri/target/release/bundle/msi/*.msi -ErrorAction SilentlyContinue | Measure-Object).Count)" >> $env:GITHUB_STEP_SUMMARY
