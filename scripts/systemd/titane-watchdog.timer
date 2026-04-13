@@ -1,0 +1,14 @@
+[Unit]
+Description=TITANE∞ Watchdog — vérification heartbeat et alerte process
+
+[Timer]
+# Premier déclenchement 2 minutes après le boot
+OnBootSec=2min
+# Vérification toutes les 2 minutes
+OnUnitActiveSec=2min
+AccuracySec=15s
+Persistent=true
+Unit=titane-watchdog.service
+
+[Install]
+WantedBy=timers.target

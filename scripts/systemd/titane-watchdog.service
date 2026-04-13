@@ -1,0 +1,22 @@
+[Unit]
+Description=TITANE∞ Watchdog — vérification heartbeat et remédiation ciblée
+After=default.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/titane-os/Documents/GitHub/TITANE_INFINITY
+Environment=PATH=/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin:%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+# Exécute le contrat de santé et redémarre les unités dégradées si nécessaire
+ExecStart=/usr/bin/env bash -lc 'bash scripts/health/health-contract.sh >> ~/.titane/logs/watchdog.log 2>&1; \
+  RC=$?; \
+  if [ $RC -eq 2 ]; then \
+    echo "[watchdog] CRITICAL — tentative restart titane-infinity.service" >> ~/.titane/logs/watchdog.log; \
+    systemctl --user restart titane-infinity.service 2>> ~/.titane/logs/watchdog.log || true; \
+  fi'
+TimeoutSec=60
+# Watchdog itself should not restart in storm
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=default.target
