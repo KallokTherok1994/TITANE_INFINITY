@@ -6,6 +6,7 @@ import { MemorySection } from '@/components/sections/MemorySection';
 const mockUsePersistentMemory = vi.fn();
 const mockUseLTMContext = vi.fn();
 const mockGetKnowledge = vi.fn();
+const mockClearMemoryCache = vi.fn();
 const mockGetAllEntries = vi.fn();
 const mockKnowledgeVaultGetState = vi.fn();
 const mockKnowledgeVaultInitialize = vi.fn();
@@ -22,6 +23,7 @@ vi.mock('@/hooks/useLTMContext', () => ({
 vi.mock('@/services/api/memory', () => ({
   memoryService: {
     getKnowledge: (...args: unknown[]) => mockGetKnowledge(...args),
+    clearCache: () => mockClearMemoryCache(),
   },
 }));
 
@@ -150,6 +152,7 @@ vi.mock('@/utils/logger', () => ({
 describe('MemorySection', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockClearMemoryCache.mockReset();
 
     mockGetKnowledge.mockResolvedValue([]);
     mockGetAllEntries.mockResolvedValue([]);
@@ -421,6 +424,65 @@ describe('MemorySection', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent(
       /certaines sources de connaissance sont temporairement indisponibles/i
     );
+  });
+
+  it('self-heals transient contextual index failure without showing degraded warning', async () => {
+    mockUseLTMContext.mockReturnValue({
+      historyCount: 0,
+    });
+
+    mockUsePersistentMemory.mockReturnValue({
+      entries: [],
+      stats: {
+        countByLevel: {
+          session: 0,
+          intermediate: 0,
+          long_term: 0,
+        },
+      },
+      isLoading: false,
+      lastUpdate: 999,
+    });
+
+    mockGetKnowledge
+      .mockRejectedValueOnce(new Error('context index warming up'))
+      .mockResolvedValueOnce([
+        {
+          title: 'Index recovered',
+          content: 'Recovered contextual entry',
+          tags: ['recovered'],
+          relevance: 0.9,
+        },
+      ]);
+    mockGetAllEntries.mockResolvedValue([
+      {
+        id: 'default-kb-1',
+        category: 'system_architecture',
+        version: 'v30.0.0',
+        description: 'Base système disponible',
+        content: { note: 'default knowledge entry' },
+      },
+    ]);
+
+    render(
+      <MemorySection
+        stats={{
+          totalXP: 0,
+          level: 1,
+          memoryShortTerm: 0,
+          memoryMidTerm: 0,
+          memoryLongTerm: 0,
+          evolutionScore: 0,
+        }}
+        conversationId="conv-kb-self-heal"
+      />
+    );
+
+    await waitFor(() => {
+      expect(mockGetKnowledge).toHaveBeenCalledTimes(2);
+    });
+
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   });
 
   it('shows a bootstrap loading state instead of an empty-memory verdict during the first persistent sync', async () => {

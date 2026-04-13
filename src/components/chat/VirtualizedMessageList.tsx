@@ -34,7 +34,13 @@ interface VirtualizedMessageListProps {
 // Threshold pour activer virtualization (50+ messages)
 const VIRTUALIZATION_THRESHOLD = 50;
 const MESSAGE_HEIGHT = 140; // Height per message in px
-const CONTAINER_HEIGHT = 600; // Visible container height
+
+function getViewportHeight(): number {
+  if (typeof window === 'undefined') {
+    return 720;
+  }
+  return Math.max(window.innerHeight || 0, 320);
+}
 
 /**
  * Simple fallback for MessageList when message count < threshold
@@ -54,7 +60,31 @@ export const VirtualizedMessageList = React.memo(function VirtualizedMessageList
   error = null,
 }: VirtualizedMessageListProps) {
   const listRef = useRef<List>(null);
+  const [listHeight, setListHeight] = React.useState(() =>
+    Math.max(260, getViewportHeight() - 220)
+  );
   const shouldVirtualize = messages.length >= VIRTUALIZATION_THRESHOLD;
+
+  useEffect(() => {
+    const updateHeight = () => {
+      const viewport = getViewportHeight();
+      // Keep enough room for header + composer on mobile while maximizing visible messages.
+      setListHeight(Math.max(260, viewport - 220));
+    };
+
+    updateHeight();
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', updateHeight);
+      window.addEventListener('orientationchange', updateHeight);
+    }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', updateHeight);
+        window.removeEventListener('orientationchange', updateHeight);
+      }
+    };
+  }, []);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -115,7 +145,7 @@ export const VirtualizedMessageList = React.memo(function VirtualizedMessageList
       <div className="message-list__container">
         <List
           ref={listRef}
-          height={CONTAINER_HEIGHT}
+          height={listHeight}
           itemCount={validMessages.length}
           itemSize={MESSAGE_HEIGHT}
           width="100%"

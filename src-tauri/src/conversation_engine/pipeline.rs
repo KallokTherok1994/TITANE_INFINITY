@@ -430,9 +430,9 @@ impl ConversationPipeline {
 
         let default_max_tokens = match config.provider_preference {
             super::types::ProviderPreference::Local | super::types::ProviderPreference::Ollama => {
-                512
+                8192 // OMEGA default: profile-appropriate floor for local/Ollama
             }
-            _ => 2000,
+            _ => 12000, // OMEGA default: profile-appropriate floor for cloud providers
         };
 
         let ai_request = AIRequest {

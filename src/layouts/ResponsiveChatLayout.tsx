@@ -75,15 +75,9 @@ export const ResponsiveChatLayout: React.FC<ResponsiveChatLayoutProps> = ({
           margin: 0 auto;
           padding: ${padding};
           
-          /* Safe-area support (iOS notch) */
-          padding-top: max(${padding.split(' ')[0] || 'var(--space-sm)'}, env(safe-area-inset-top));
-          padding-bottom: max(${padding.split(' ')[0] || 'var(--space-sm)'}, env(safe-area-inset-bottom));
-          padding-left: max(${padding.split(' ')[1] || padding.split(' ')[0] || 'var(--space-sm)'}, env(safe-area-inset-left));
-          padding-right: max(${padding.split(' ')[1] || padding.split(' ')[0] || 'var(--space-sm)'}, env(safe-area-inset-right));
-          
           /* Full height */
-          min-height: 100vh;
-          min-height: 100dvh; /* Dynamic viewport height (mobile address bar) */
+          height: 100vh;
+          height: 100dvh; /* Dynamic viewport height (mobile address bar) */
           
           /* Flexbox layout */
           display: flex;
@@ -94,10 +88,21 @@ export const ResponsiveChatLayout: React.FC<ResponsiveChatLayoutProps> = ({
           
           /* Overflow */
           overflow-x: hidden;
-          overflow-y: auto;
+          overflow-y: hidden;
           
           /* Smooth scrolling */
           scroll-behavior: smooth;
+          
+          /* Safe-area support (iOS notch) */
+          padding-top: max(var(--space-sm), env(safe-area-inset-top));
+          padding-bottom: max(var(--space-sm), env(safe-area-inset-bottom));
+          padding-left: max(var(--space-sm), env(safe-area-inset-left));
+          padding-right: max(var(--space-sm), env(safe-area-inset-right));
+          
+          /* Box sizing */
+          box-sizing: border-box;
+          
+          /* Touch scrolling */
           -webkit-overflow-scrolling: touch;
         }
 

@@ -37,7 +37,7 @@ const SAFETY_LIMITS = {
   // Keep frontend payloads aligned with the Rust validator to avoid oversized-request churn.
   maxUserMessageChars: 12_000,
   maxSystemPromptChars: 24_000,
-  maxOutputTokens: 8_096,
+  maxOutputTokens: 16_384,
 } as const;
 
 function clampText(value: string | null | undefined, maxChars: number): string | null {
@@ -89,6 +89,10 @@ export interface OmegaGenerateArgs {
   requestId?: string;
   /** Performance profile: "fast" | "balanced" | "deep". Default: "balanced". */
   profile?: ChatPerformanceProfile;
+  /** Token budget override. Defaults to responsePolicy profile value. */
+  maxTokens?: number;
+  /** Temperature override. Defaults to responsePolicy profile value. */
+  temperature?: number;
 }
 
 export interface OmegaResponse {

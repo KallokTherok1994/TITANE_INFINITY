@@ -165,3 +165,57 @@ Canonical target version: **30.0.0**
 > v30.0.0 is the active canonical release stream for repository + deployment metadata as of 2026-04-06.
 > Production builds are executed on user request or via BUILD ALL command (Rule 11/14).
 > v30.0.0 is the active canonical release stream as of 2026-04-06. Artifacts pending build.
+
+---
+
+## ADDENDUM v30.1.7 — 2025-04-13
+
+### Version Files Updated
+
+| File | Version | Action |
+|---|---|---|
+| `package.json` | `30.1.7` | KEEP_AS_CANON |
+| `src-tauri/Cargo.toml` | `30.1.7` | KEEP_AS_CANON |
+| `src-tauri/tauri.conf.json` | `30.1.7` | KEEP_AS_CANON |
+| `tauri.base.json` | `30.1.7` | KEEP_AS_CANON |
+| `src-tauri/tauri.base.json` | `30.1.7` | KEEP_AS_CANON |
+| `runtime/stable/tauri.conf.json` | `30.1.7` | KEEP_AS_CANON |
+| `runtime/stable/manifest.json` | `30.1.7` | KEEP_AS_CANON |
+| `RELEASE_ARTIFACTS_CHECKSUMS_30.1.7.txt` | `30.1.7` | ADDED_AS_PROOF |
+| `RELEASE_v30.1.7.md` | `30.1.7` | ADDED_AS_PROOF |
+
+### Artifact Status Summary — v30.1.7
+
+| Artifact | Size | SHA256 | Status |
+|---|---|---|---|
+| `TITANE-Infinity_30.1.7_amd64.AppImage` | 95M | `d9e10549fb1d6853cdbf60f846f57e10d33d55b5959a146a6166530057f6bc6a` | BUILT ✅ |
+| `TITANE-Infinity_30.1.7_amd64.deb` | 26M | `6624179eb8fa0880ae0f74faf35b4d42cddd5683e73cb3fd6d5ef9d3b1d2d0d9` | BUILT ✅ INSTALLED ✅ |
+| `TITANE-Infinity-30.1.7-1.x86_64.rpm` | 26M | `cbc4379317ff4ca871517c30839cf5a165320608ef6492fe62c6796b762dc2e8` | BUILT ✅ |
+| Android APK (universal) | 59M | `60529efe6b4f26bbcded4843d1a11bbc587b374b20adc512904311d119c3906e` | BUILT ✅ |
+| Android AAB (universalRelease) | 38M | `c9f108a12aed344686c56588479a5c89148d6e9699d8e01ab48b21140e0cd3e3` | BUILT ✅ |
+
+> v30.1.7 is the active canonical production release as of 2025-04-13.
+> Built via BUILD ALL sequence (Rule 14). DEB installed on host system.
+
+---
+
+## RELEASE v30.1.8 — Addendum (2026-04-13)
+
+| Artifact | Path | SHA256 |
+|---|---|---|
+| DEB | `src-tauri/target/release/bundle/deb/TITANE-Infinity_30.1.8_amd64.deb` | `faf8ea7b8e1b359ddc3c30c78caca585bfd7f7897aa346ffcf2ae591ec8a4fd8` |
+| RPM | `src-tauri/target/release/bundle/rpm/TITANE-Infinity-30.1.8-1.x86_64.rpm` | `46dd89f39a7ed2c89d6e8cfae47d9ff60bbdd6b9aafe99f2be9eef7ec8f3d1fc` |
+| AppImage | `src-tauri/target/release/bundle/appimage/TITANE-Infinity_30.1.8_amd64.AppImage` | `cc5d6600c5b374c9118ccf4da655b94370662cbbdbc2cf9a4a1043d4dd5bc4b2` |
+| APK (unsigned) | `src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk` | `dbb45dee12df7deee5a7b36a175a68e295b20a2aac188b4f467f0c705f6bdf0c` |
+| AAB | `src-tauri/gen/android/app/build/outputs/bundle/universalRelease/app-universal-release.aab` | `ba2becbbfabc75c60ceb3523d34804fe38bd0aa7924f1875aa6da224165865af` |
+
+| File | Version | Action |
+|---|---|---|
+| `package.json` | `30.1.8` | CURRENT |
+| `src-tauri/Cargo.toml` | `30.1.8` | CURRENT |
+| `src-tauri/tauri.conf.json` | `30.1.8` | CURRENT |
+| `RELEASE_v30.1.8.md` | `30.1.8` | CURRENT |
+| `RELEASE_ARTIFACTS_CHECKSUMS_30.1.8.txt` | `30.1.8` | CURRENT |
+| `RELEASE_v30.1.8_SEALED.txt` | `30.1.8` | CURRENT |
+
+Key change: feat(ui) — Zoom + / Zoom − buttons in TopNav top-right

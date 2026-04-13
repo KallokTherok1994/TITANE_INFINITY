@@ -24,7 +24,16 @@ import {
   ChevronDown,
   Zap,
   ZapOff,
+  ZoomIn,
+  ZoomOut,
 } from 'lucide-react';
+import {
+  applyZoomScale,
+  readCurrentZoomScale,
+  clampZoomScale,
+  MIN_ZOOM_SCALE,
+  MAX_ZOOM_SCALE,
+} from '@/hooks/zoomScale';
 import { cn } from '@/utils/cn';
 import { TitaneLogo } from '@/components/branding/TitaneLogo';
 import { safeInvoke } from '@/utils/invoke';
@@ -94,6 +103,19 @@ export const TopNav: React.FC<TopNavProps> = ({
 }) => {
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
   const moreMenuRef = useRef<HTMLDivElement>(null);
+
+  // Zoom controls
+  const [zoomLevel, setZoomLevel] = useState<number>(() => readCurrentZoomScale());
+  const handleZoomIn = () => {
+    const next = clampZoomScale(readCurrentZoomScale() * 1.1);
+    applyZoomScale(next);
+    setZoomLevel(next);
+  };
+  const handleZoomOut = () => {
+    const next = clampZoomScale(readCurrentZoomScale() * 0.9);
+    applyZoomScale(next);
+    setZoomLevel(next);
+  };
 
   // ✨ v30.0.0 AI Provider Status Indicator
   const [aiStatus, setAiStatus] = useState<{
@@ -329,6 +351,38 @@ export const TopNav: React.FC<TopNavProps> = ({
 
       {/* Actions secondaires */}
       <div className="flex items-center gap-3 shrink-0">
+        {/* Zoom controls */}
+        <div
+          className="flex items-center gap-1 px-1.5 py-1 rounded-lg bg-titanium-bg-elevated border border-titanium-border-default"
+          data-testid="topnav-zoom-controls"
+        >
+          <button
+            className="flex items-center justify-center w-7 h-7 rounded text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-interactive transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            onClick={handleZoomOut}
+            disabled={zoomLevel <= MIN_ZOOM_SCALE}
+            title="Zoom arrière (Ctrl+-)"
+            aria-label="Zoom arrière"
+            data-testid="topnav-zoom-out"
+          >
+            <ZoomOut size={14} />
+          </button>
+          <span
+            className="text-xs text-titanium-text-secondary select-none min-w-[3rem] text-center tabular-nums"
+            title="Niveau de zoom actuel"
+          >
+            {Math.round(zoomLevel * 100)}%
+          </span>
+          <button
+            className="flex items-center justify-center w-7 h-7 rounded text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-interactive transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            onClick={handleZoomIn}
+            disabled={zoomLevel >= MAX_ZOOM_SCALE}
+            title="Zoom avant (Ctrl++)"
+            aria-label="Zoom avant"
+            data-testid="topnav-zoom-in"
+          >
+            <ZoomIn size={14} />
+          </button>
+        </div>
         {/* ✨ v30.0.0 AI Provider Status Indicator */}
         {aiStatus.percent !== null && (
           <div

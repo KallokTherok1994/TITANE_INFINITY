@@ -7,7 +7,9 @@ FROM llama3.1
 PARAMETER temperature 0.75
 PARAMETER top_p 0.92
 PARAMETER top_k 50
-PARAMETER num_ctx 32768
+PARAMETER num_ctx 8192
+# num_ctx=8192: aligned with frontend OLLAMA_CONFIG.numCtx (src/services/ai/providers/ollama.ts)
+# Safe default for 8GB VRAM — matches frontend context window to avoid wasting VRAM
 PARAMETER num_predict 8192
 PARAMETER repeat_penalty 1.08
 PARAMETER stop "<|end|>"

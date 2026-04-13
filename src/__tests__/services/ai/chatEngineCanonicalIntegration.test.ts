@@ -376,8 +376,8 @@ describe('ChatEngine ↔ CanonicalDiscernmentKernel Integration', () => {
     expect(payload.provider).toBe(
       canonicalProvider === 'auto' ? undefined : canonicalProvider
     );
-    expect(payload.temperature).toBeUndefined();
-    expect(payload.maxOutputTokens).toBeUndefined();
+    expect(payload.temperature).toBe(0.7);
+    expect(payload.maxOutputTokens).toBe(4096);
     expect(payload.profile).toBe('fast');
 
     delete (window as typeof window & { __TAURI_INTERNALS__?: unknown })

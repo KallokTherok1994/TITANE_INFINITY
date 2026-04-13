@@ -240,10 +240,15 @@ mod tests {
     /// { ok: false, content: null, error: "..." } — never a random fallback.
     #[tokio::test]
     async fn test_embedding_with_unavailable_ollama() {
-        // Point to a port that nothing is listening on
+        // Point to a port that nothing is listening on.
+        // NOTE: env vars are process-global; restore after test to prevent
+        // contaminating parallel test workers (e.g. test_collect_runtime_config_defaults).
         std::env::set_var("OLLAMA_BASE_URL", "http://127.0.0.1:19999");
 
         let result = rag_generate_embedding("test text".to_string()).await;
+
+        // Restore env immediately after the async call to minimise contamination window.
+        std::env::remove_var("OLLAMA_BASE_URL");
 
         // The command itself must not return an Err — it wraps errors in the ok:false contract
         let resp = result.expect("command must not return Err");
