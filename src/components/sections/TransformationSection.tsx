@@ -17,6 +17,7 @@ import { TMetric, TBadge, TSectionHeader } from '@/design-system';
 import { SectionLoadingFallback } from './SectionLoadingFallback';
 import { colors, spacing, fontSizes } from '@themes/tokens';
 import { detectEnvironment } from '@/core/tauri/environment';
+import { createLogger } from '@/utils/logger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -35,20 +36,56 @@ interface TransformationSectionProps {
 }
 
 // Lazy-load heavy components
-const LazyTransformationRoadmap = React.lazy(() =>
-  import('@/features/transformation/TransformationRoadmap').then(m => ({
-    default: m.TransformationRoadmap,
-  }))
+const sectionLogger = createLogger('TransformationSection');
+
+const delay = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
+
+function lazyWithRetry<TModule extends Record<string, unknown>>(
+  importer: () => Promise<TModule>,
+  selector: (module: TModule) => React.ComponentType<any>,
+  label: string,
+  retries: number = 2
+) {
+  return React.lazy(async () => {
+    let lastError: unknown;
+    for (let attempt = 0; attempt <= retries; attempt += 1) {
+      try {
+        const module = await importer();
+        return { default: selector(module) };
+      } catch (error) {
+        lastError = error;
+        sectionLogger.debug('Lazy import retry', {
+          label,
+          attempt: attempt + 1,
+          retries: retries + 1,
+          error: error instanceof Error ? error.message : String(error),
+        });
+        if (attempt < retries) {
+          await delay(300 * (attempt + 1));
+        }
+      }
+    }
+
+    throw lastError;
+  });
+}
+
+const LazyTransformationRoadmap = lazyWithRetry(
+  () => import('@/features/transformation/TransformationRoadmap'),
+  m => m.TransformationRoadmap,
+  'TransformationRoadmap'
 );
 
-const LazyMemoryEvolutionCenter = React.lazy(
-  () => import('@/components/MemoryEvolution/MemoryEvolutionCenter')
+const LazyMemoryEvolutionCenter = lazyWithRetry(
+  () => import('@/components/MemoryEvolution/MemoryEvolutionCenter'),
+  m => m.default,
+  'MemoryEvolutionCenter'
 );
 
-const LazyEvolutionTimeline = React.lazy(() =>
-  import('@/features/evolution/EvolutionTimeline').then(m => ({
-    default: m.EvolutionTimeline,
-  }))
+const LazyEvolutionTimeline = lazyWithRetry(
+  () => import('@/features/evolution/EvolutionTimeline'),
+  m => m.EvolutionTimeline,
+  'EvolutionTimeline'
 );
 
 // ═══════════════════════════════════════════════════════════════════════════

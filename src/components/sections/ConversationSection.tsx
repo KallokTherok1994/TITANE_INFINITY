@@ -148,6 +148,21 @@ const CONVERSATION_SUGGESTIONS = [
 
 const LOADING_INDICATOR_GRACE_MS = 1200;
 
+const MIN_CONVERSATION_VIEWPORT_HEIGHT = 320;
+
+function getConversationViewportHeight(): number {
+  if (typeof window === 'undefined') {
+    return 0;
+  }
+
+  const visualViewportHeight = window.visualViewport?.height;
+  if (typeof visualViewportHeight === 'number' && Number.isFinite(visualViewportHeight)) {
+    return Math.max(MIN_CONVERSATION_VIEWPORT_HEIGHT, Math.round(visualViewportHeight));
+  }
+
+  return Math.max(MIN_CONVERSATION_VIEWPORT_HEIGHT, window.innerHeight || 0);
+}
+
 export function resolveConversationDisplayProvider(
   selectedProvider: ConversationProviderPreference,
   latestProviderUsed?: string | null
@@ -1065,12 +1080,44 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
   const [sendTraceMeta, setSendTraceMeta] = useState('');
   const [activeArtifactManifest, setActiveArtifactManifest] =
     useState<ProfessionalDocumentManifest | null>(null);
+  const [conversationViewportHeight, setConversationViewportHeight] = useState<number>(
+    getConversationViewportHeight
+  );
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const sendingRef = useRef(false);
   const deferredSearchQuery = useDeferredValue(searchQuery);
 
   // ═══ THINKING STEPS ═══
   const thinking = useThinkingSteps();
+
+  useEffect(() => {
+    const updateViewportHeight = () => {
+      setConversationViewportHeight(getConversationViewportHeight());
+    };
+
+    updateViewportHeight();
+    window.addEventListener('resize', updateViewportHeight);
+    window.addEventListener('orientationchange', updateViewportHeight);
+
+    const visualViewport = window.visualViewport;
+    visualViewport?.addEventListener('resize', updateViewportHeight);
+    visualViewport?.addEventListener('scroll', updateViewportHeight);
+
+    return () => {
+      window.removeEventListener('resize', updateViewportHeight);
+      window.removeEventListener('orientationchange', updateViewportHeight);
+      visualViewport?.removeEventListener('resize', updateViewportHeight);
+      visualViewport?.removeEventListener('scroll', updateViewportHeight);
+    };
+  }, []);
+
+  const conversationContainerStyle = useMemo(
+    () =>
+      ({
+        '--conversation-vh': `${conversationViewportHeight}px`,
+      }) as React.CSSProperties,
+    [conversationViewportHeight]
+  );
 
   // ═══ VOICE ENGINE ═══
   const handleVoiceTranscript = useCallback((text: string) => {
@@ -1927,7 +1974,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
         subtitle={`Interface conversationnelle multi-provider avec modes spécialisés${ltmCount > 0 ? ` · 🗂 ${ltmCount} msg en mémoire LTM` : ''}`}
       />
 
-      <Card style={{ marginBottom: 16, padding: 16 }}>
+      <Card className="conversation-twins-card" style={{ marginBottom: 16, padding: 16 }}>
         <div
           style={{
             display: 'flex',
@@ -1984,7 +2031,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
         </div>
       </Card>
 
-      <div className="conversation-container">
+      <div className="conversation-container" style={conversationContainerStyle}>
         {/* ═══ TOOLBAR ═══ */}
         <div className="conversation-toolbar">
           <div className="conversation-toolbar-left">

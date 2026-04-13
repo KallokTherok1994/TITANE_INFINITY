@@ -1,12 +1,12 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0",
   "productName": "TITANE-Infinity",
-  "version": "30.1.6",
+  "version": "30.1.7",
   "identifier": "com.titane.infinity",
   "build": {
     "devUrl": "http://localhost:1420",
-    "beforeDevCommand": "corepack pnpm exec vite dev --host 127.0.0.1 --port 1420 --strictPort",
-    "beforeBuildCommand": "corepack pnpm exec vite build",
+    "beforeDevCommand": "bash scripts/android/vite-network-server.sh",
+    "beforeBuildCommand": "pnpm exec vite build",
     "frontendDist": "../dist"
   },
   "bundle": {
@@ -21,8 +21,9 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "resources": ["../dist"],
-    "copyright": "Copyright © 2025-2026 TITANE∞",
+    "resources": [
+      "../dist"
+    ],
     "copyright": "Copyright © 2025 TITANE",
     "category": "DeveloperTool",
     "shortDescription": "TITANE∞ v30.1.0 - Stable Release",
@@ -62,7 +63,9 @@
         {
           "identifier": "main-capability",
           "description": "Capability for the main window",
-          "windows": ["main"],
+          "windows": [
+            "main"
+          ],
           "permissions": [
             "core:default",
             "core:event:default",
@@ -3066,7 +3069,9 @@
         {
           "identifier": "avatar-floating-capability",
           "description": "Capability for the floating avatar window",
-          "windows": ["avatar-floating"],
+          "windows": [
+            "avatar-floating"
+          ],
           "permissions": [
             "core:default",
             "core:event:default",
