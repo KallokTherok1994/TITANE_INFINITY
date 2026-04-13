@@ -834,7 +834,6 @@
       "useMemory",
       "useMemoryCore",
       "useMemoryEngine",
-      "useMultimodalPresence",
       "useOmegaPipeline",
       "usePanelState",
       "useParticles",

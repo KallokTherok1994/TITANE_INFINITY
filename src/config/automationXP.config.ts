@@ -95,16 +95,6 @@ export const XP_ACTIONS: Record<XPActionId, XPAction> = {
     cooldown_ms: 1000,
     max_daily: 150,
   },
-  avatar_customization: {
-    id: 'avatar_customization',
-    label: 'Personnalisation Avatar',
-    description: "Personnaliser l'avatar TITANE",
-    base_xp: 30,
-    category: 'interaction',
-    multiplier_eligible: false,
-    cooldown_ms: 10000,
-    max_daily: 20,
-  },
   tool_usage: {
     id: 'tool_usage',
     label: 'Utilisation Outil',
