@@ -40,7 +40,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout repository
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v4
 
       - name: 🔧 Install system dependencies
         run: |
@@ -108,7 +108,7 @@ jobs:
           cat SHA256SUMS.txt || echo "No checksums generated"
 
       - name: 📤 Upload Linux artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: linux-x86_64-${{ github.event.inputs.tag || github.ref_name }}
           path: |
@@ -140,7 +140,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout repository
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v4
 
       - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v5
@@ -189,7 +189,7 @@ jobs:
         continue-on-error: true
 
       - name: 📤 Upload Windows artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: windows-x86_64-${{ github.event.inputs.tag || github.ref_name }}
           path: |
@@ -227,7 +227,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout repository
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v4
 
       - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v5
@@ -262,7 +262,7 @@ jobs:
           cat SHA256SUMS.txt || echo "No checksums generated"
 
       - name: 📤 Upload macOS artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: macos-${{ matrix.target }}-${{ github.event.inputs.tag || github.ref_name }}
           path: |
@@ -293,10 +293,10 @@ jobs:
 
     steps:
       - name: 📥 Checkout repository
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v4
 
       - name: 📥 Download artifacts
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v4
         with:
           path: artifacts
 
