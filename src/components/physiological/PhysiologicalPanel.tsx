@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- *   Physiological State Panel - Interoception + Holophonic
+ *   Physiological State Panel - Interoception + Spatial Audio
  *   Visualisation de l&apos;état interne et spatial de TITANE∞
  * ═══════════════════════════════════════════════════════════════════════════
  */
@@ -64,7 +64,7 @@ interface InteroceptionHookReturn {
   setEmotionalTemperature: (value: number) => void;
 }
 
-interface HolophonicHookReturn {
+interface SpatialAudioHookReturn {
   spatialState: TitanSpatialState;
   setSpatialState: (state: Partial<TitanSpatialState>) => void;
   setPreset: (preset: SpatialPreset) => void;
@@ -97,7 +97,7 @@ export function PhysiologicalPanel() {
   >('overview');
 
   const interoception = useInteroception();
-  const holophonic = useHolophonic();
+  const spatialAudio = useHolophonic();
   const sounds = useCognitiveSounds();
   const physiological = usePhysiologicalState();
 
@@ -170,7 +170,7 @@ export function PhysiologicalPanel() {
           <div className="physiological-content">
             {activeTab === 'overview' && <OverviewTab physiological={physiological} />}
             {activeTab === 'internal' && <InternalTab interoception={interoception} />}
-            {activeTab === 'spatial' && <SpatialTab holophonic={holophonic} />}
+            {activeTab === 'spatial' && <SpatialTab spatialAudio={spatialAudio} />}
             {activeTab === 'sounds' && <SoundsTab sounds={sounds} />}
           </div>
         </div>
@@ -335,8 +335,8 @@ function InternalTab({ interoception }: { interoception: InteroceptionHookReturn
 // TAB - SPATIAL 3D
 // ═══════════════════════════════════════════════════════════════════════════
 
-function SpatialTab({ holophonic }: { holophonic: HolophonicHookReturn }) {
-  const state = holophonic.spatialState;
+function SpatialTab({ spatialAudio }: { spatialAudio: SpatialAudioHookReturn }) {
+  const state = spatialAudio.spatialState;
 
   return (
     <div className="physiological-spatial">
@@ -375,22 +375,22 @@ function SpatialTab({ holophonic }: { holophonic: HolophonicHookReturn }) {
 
       <div className="physiological-card">
         <h4>🎛️ Contrôles</h4>
-        <button className="preset-button" onClick={() => holophonic.setPreset('coach')}>
+        <button className="preset-button" onClick={() => spatialAudio.setPreset('coach')}>
           👨‍🏫 Coach
         </button>
-        <button className="preset-button" onClick={() => holophonic.setPreset('meta')}>
+        <button className="preset-button" onClick={() => spatialAudio.setPreset('meta')}>
           🌐 Meta
         </button>
         <button
           className="preset-button"
-          onClick={() => holophonic.setPreset('deep-work')}
+          onClick={() => spatialAudio.setPreset('deep-work')}
         >
           🧘 Deep Work
         </button>
-        <button className="preset-button" onClick={() => holophonic.setPreset('insight')}>
+        <button className="preset-button" onClick={() => spatialAudio.setPreset('insight')}>
           💎 Insight
         </button>
-        <button className="preset-button" onClick={() => holophonic.setPreset('empathy')}>
+        <button className="preset-button" onClick={() => spatialAudio.setPreset('empathy')}>
           🤝 Empathy
         </button>
       </div>

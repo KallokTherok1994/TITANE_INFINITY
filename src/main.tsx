@@ -1146,7 +1146,7 @@ logger.info('✅ TITANE∞ frontend loaded successfully');
 logger.info('>>> MOUNTING REACT ROOT NOW...\n');
 
 // ⚡ FIX: NON-MAIN WINDOW GUARD
-// Root cause: avatar-floating pre-created in tauri.conf.json (no dedicated URL)
+// Root cause: secondary window pre-created in tauri.conf.json (no dedicated URL)
 // loads full React bundle → duplicate App.tsx useEffects + Ollama probes + WebKit crash
 // Evidence: tauri.conf.json:47-63, App.tsx:456, main.rs:952+976, ollama.ts:156-165
 const _titaneCurrentWindowLabel: string = (() => {
@@ -1160,7 +1160,7 @@ const _titaneCurrentWindowLabel: string = (() => {
 })();
 
 if (_titaneCurrentWindowLabel !== 'main') {
-  // Non-main window (e.g. avatar-floating): mount minimal stub only.
+  // Non-main window (e.g. secondary-floating): mount minimal stub only.
   // Prevents: duplicate Ollama probes, duplicate boot useEffects, WebKit crash.
   const _nonMainRoot = document.getElementById('root');
   if (_nonMainRoot) {

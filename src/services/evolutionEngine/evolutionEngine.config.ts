@@ -124,7 +124,6 @@ export type TitaneModule =
   | 'admin'
   | 'singularity'
   | 'chat'
-  | 'avatar'
   | 'devops'
   | 'cognitive'
   | 'autonomy'
@@ -941,7 +940,6 @@ export const MODULE_DISPLAY_NAMES: Record<TitaneModule, string> = {
   admin: 'Admin Engine',
   singularity: 'Singularity Engine',
   chat: 'Chat IA',
-  avatar: 'Avatar Engine',
   devops: 'DevOps Engine',
   cognitive: 'Cognitive Engine',
   autonomy: 'Autonomy Engine',
@@ -965,7 +963,6 @@ export const MODULE_ICONS: Record<TitaneModule, string> = {
   admin: 'Shield',
   singularity: 'Atom',
   chat: 'MessageCircle',
-  avatar: 'User',
   devops: 'GitBranch',
   cognitive: 'Brain',
   autonomy: 'Zap',

@@ -427,14 +427,14 @@ const RealityRendererSection: React.FC = () => {
     <div className="space-y-6">
       <TSectionHeader
         title="Reality Renderer"
-        subtitle="Visualisation holographique du système, flows internes"
+        subtitle="Visualisation du système, flows internes"
       />
 
       <div className="bg-gray-800 rounded-lg p-6 h-96 flex items-center justify-center">
         <div className="text-center">
           <div className="text-6xl mb-4">🌀</div>
           <h3 className="text-2xl font-bold mb-2">Visualisation 3D</h3>
-          <p className="text-gray-400">Représentation holographique en développement</p>
+          <p className="text-gray-400">Représentation 3D en développement</p>
           <div className="mt-6 space-y-2">
             <TBadge variant="info">État cognitif global: Optimal</TBadge>
             <TBadge variant="success">Flux internes: 18 actifs</TBadge>

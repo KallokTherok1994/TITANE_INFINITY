@@ -843,7 +843,6 @@ export class MetricsCollector {
       'evolution',
       'prompt',
       'tts',
-      'avatar',
       'chat',
       'performance',
     ];

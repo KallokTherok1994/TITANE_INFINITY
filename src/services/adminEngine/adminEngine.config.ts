@@ -68,7 +68,6 @@ export type TitaneModule =
   | 'xp'
   | 'evolution'
   | 'tts'
-  | 'avatar'
   | 'chat'
   | 'ollama'
   | 'gemini'
@@ -1117,7 +1116,6 @@ export const DEFAULT_DASHBOARD_CONFIG: AdminDashboardConfig = {
     'xp',
     'evolution',
     'tts',
-    'avatar',
     'chat',
     'ollama',
     'gemini',
@@ -1146,7 +1144,6 @@ export const MODULE_DISPLAY_NAMES: Record<TitaneModule, string> = {
   xp: 'XP Engine',
   evolution: 'Evolution Engine',
   tts: 'TTS Engine',
-  avatar: 'Avatar System',
   chat: 'Chat Core',
   ollama: 'Ollama IA',
   gemini: 'Gemini IA',
@@ -1169,7 +1166,6 @@ export const MODULE_ICONS: Record<TitaneModule, string> = {
   xp: 'Star',
   evolution: 'TrendingUp',
   tts: 'Volume2',
-  avatar: 'User',
   chat: 'MessageCircle',
   ollama: 'Bot',
   gemini: 'Sparkles',
@@ -1484,7 +1480,6 @@ export function createEmptySnapshot(): AdminSnapshot {
     xp: emptyModuleStatus('xp'),
     evolution: emptyModuleStatus('evolution'),
     tts: emptyModuleStatus('tts'),
-    avatar: emptyModuleStatus('avatar'),
     chat: emptyModuleStatus('chat'),
     ollama: emptyModuleStatus('ollama'),
     gemini: emptyModuleStatus('gemini'),

@@ -21,7 +21,6 @@ export type XPActionId =
   | 'memory_interaction'
   | 'file_import'
   | 'voice_interaction'
-  | 'avatar_customization'
   | 'tool_usage'
   | 'feedback_positive'
   | 'feedback_negative'

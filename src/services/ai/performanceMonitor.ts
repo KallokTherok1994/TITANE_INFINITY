@@ -217,7 +217,6 @@ export enum MetricCategory {
   CONTEXT_MANAGEMENT = 'context.management',
   MEMORY_OPERATIONS = 'memory.operations',
   VOICE_SYNTHESIS = 'voice.synthesis',
-  AVATAR_RENDERING = 'avatar.rendering',
   IPC_CALLS = 'ipc.calls',
   DATABASE = 'database',
   NETWORK = 'network',

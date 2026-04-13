@@ -81,7 +81,6 @@ export type TitaneModule =
   | 'PERFORMANCE'
   | 'EVOLUTION'
   | 'TTS'
-  | 'AVATAR'
   | 'NEURAL'
   | 'GLOBAL';
 

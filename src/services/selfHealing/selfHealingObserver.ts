@@ -42,7 +42,6 @@ export type AnomalyType =
   | 'performance_degradation'
   | 'memory_corruption'
   | 'tts_engine_fail'
-  | 'avatar_render_fail'
   | 'pipeline_stuck'
   | 'state_desync'
   | 'config_invalid'
@@ -138,7 +137,6 @@ const ANOMALY_TO_CATEGORY: Record<AnomalyType, ModuleCategory> = {
   performance_degradation: 'performance',
   memory_corruption: 'memory',
   tts_engine_fail: 'tts',
-  avatar_render_fail: 'react',
   pipeline_stuck: 'ia',
   state_desync: 'tauri',
   config_invalid: 'io',
@@ -669,7 +667,6 @@ export class SelfHealingObserver {
 
     if (lowerAnomaly.includes('memory')) return 'memory_corruption';
     if (lowerAnomaly.includes('tts')) return 'tts_engine_fail';
-    if (lowerAnomaly.includes('avatar')) return 'avatar_render_fail';
     if (lowerAnomaly.includes('pipeline')) return 'pipeline_stuck';
     if (lowerAnomaly.includes('sync')) return 'state_desync';
     if (lowerAnomaly.includes('config')) return 'config_invalid';

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ — Audio & Holophonic Types
+//   TITANE∞ — Audio & Spatial Types
 // ═══════════════════════════════════════════════════════════════
 
 export interface SoundController {
@@ -15,17 +15,17 @@ export interface SoundController {
   playError?: () => void;
 }
 
-export type HolophonicPreset = 'coach' | 'meta' | 'deep-work' | 'insight' | 'empathy';
+export type SpatialAudioPreset = 'coach' | 'meta' | 'deep-work' | 'insight' | 'empathy';
 
-export interface HolophonicController {
-  setPreset: (preset: HolophonicPreset) => void;
-  getCurrentPreset?: () => HolophonicPreset;
+export interface SpatialAudioController {
+  setPreset: (preset: SpatialAudioPreset) => void;
+  getCurrentPreset?: () => SpatialAudioPreset;
   isEnabled?: () => boolean;
 }
 
 export interface AudioManager {
   sounds: SoundController;
-  holophonic: HolophonicController;
+  spatialAudio: SpatialAudioController;
   setVolume?: (volume: number) => void;
   mute?: () => void;
   unmute?: () => void;
