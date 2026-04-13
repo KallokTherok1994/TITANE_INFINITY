@@ -23,6 +23,7 @@ export interface AppShellProps {
   children: ReactNode;
   topNav?: ReactNode;
   footer?: ReactNode;
+  footerOverlay?: boolean;
   className?: string;
 }
 
@@ -34,6 +35,7 @@ export const AppShell = ({
   children,
   topNav,
   footer,
+  footerOverlay = false,
   className,
 }: AppShellProps): JSX.Element => {
   // TEST VIOLATION: Modification UI sans entry registry (doit échouer GATE_UI_INDEX)
@@ -75,7 +77,12 @@ export const AppShell = ({
       {/* Footer */}
       {footer && (
         <motion.footer
-          className="h-footer glass-strong border-t border-titanium-border-default flex items-center px-6 text-sm text-titanium-text-tertiary z-fixed"
+          className={cn(
+            'glass-strong border-t border-titanium-border-default flex items-center px-6 text-sm text-titanium-text-tertiary z-fixed',
+            footerOverlay
+              ? 'absolute bottom-0 left-0 right-0 min-h-0 h-auto py-1 pointer-events-none'
+              : 'h-footer'
+          )}
           initial={{ y: 48 }}
           animate={{ y: 0 }}
           transition={{ duration: 0.3, ease: 'easeOut' }}

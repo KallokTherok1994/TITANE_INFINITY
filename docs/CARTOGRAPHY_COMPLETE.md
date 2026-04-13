@@ -1,4 +1,4 @@
-# TITANE_INFINITY — Cartographie Complète Avancée v30.1.0
+# TITANE_INFINITY — Cartographie Complète Avancée v30.1.8
 
 > **Mise à jour le 2026-04-11**
 > Document de référence architecture — généré depuis scan du dépôt
@@ -408,7 +408,8 @@ Modules kernel : `kernel/`, `core/`, `security/`, `constitution/`
 | `useVitals` | Métriques vitales |
 | `useVocalDevConsole` | Console dev vocale |
 | `useWindowControls` | Contrôles fenêtre |
-| `useZoomControl` | Contrôle zoom |
+| `useZoomControl` | Contrôle zoom (keyboard: Ctrl+/-/0) |
+| `useZoom` (UIReadingEngine) | Zoom TopNav — boutons +/- (v30.1.8, `data-testid: topnav-zoom-in/out`) |
 
 ---
 

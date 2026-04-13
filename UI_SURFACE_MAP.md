@@ -1,5 +1,14 @@
 # UI_SURFACE_MAP
 
+## TopNav — Navigation & Global Controls (top-right)
+
+- TopNav zoom controls container test id: `topnav-zoom-controls`
+- TopNav zoom-out button test id: `topnav-zoom-out`
+- TopNav zoom-in button test id: `topnav-zoom-in`
+- File: `src/components/layout/TopNav.tsx`
+- Zoom range: 50% – 200%, persisted to localStorage key `titane_zoom_level`
+- Keyboard equivalents: Ctrl+- (zoom out), Ctrl++ (zoom in), Ctrl+0 (reset)
+
 ## Primary Chat Surface (ConversationSection)
 
 - Input textarea test id: `chat-input`

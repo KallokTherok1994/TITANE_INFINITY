@@ -309,6 +309,7 @@ const AppRouter: React.FC = () => {
   // ✨ UI vΩ - Main app with TopNav (global navigation)
   return (
     <AppShell
+      footerOverlay={location.pathname.startsWith('/titane')}
       topNav={
         <TopNav
           items={topNavItems}
@@ -343,6 +344,8 @@ const AppRouter: React.FC = () => {
         <Routes>
           {/* Main Routes — TITANE Homepage */}
           <Route path="/" element={<Navigate to="/titane" replace />} />
+          <Route path="/titane.sh" element={<Navigate to="/titane" replace />} />
+          <Route path="/titane.sh/*" element={<Navigate to="/titane" replace />} />
           {/* ⚡ TITANE - LE CŒUR DU SYSTÈME (Chat IA + Vision + EVO unifiés) */}
           <Route
             path="/titane"

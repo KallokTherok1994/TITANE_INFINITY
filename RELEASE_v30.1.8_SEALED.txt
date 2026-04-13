@@ -1,0 +1,14 @@
+TITANE∞ v30.1.8 — SEALED
+Date: 2026-04-13
+Branch: MAIN
+
+ARTIFACTS:
+  DEB     faf8ea7b8e1b359ddc3c30c78caca585bfd7f7897aa346ffcf2ae591ec8a4fd8
+  RPM     46dd89f39a7ed2c89d6e8cfae47d9ff60bbdd6b9aafe99f2be9eef7ec8f3d1fc
+  AppImg  cc5d6600c5b374c9118ccf4da655b94370662cbbdbc2cf9a4a1043d4dd5bc4b2
+  APK     dbb45dee12df7deee5a7b36a175a68e295b20a2aac188b4f467f0c705f6bdf0c
+  AAB     ba2becbbfabc75c60ceb3523d34804fe38bd0aa7924f1875aa6da224165865af
+
+GATES: tsc=PASS vitest=PASS(7/7) detect_recurrence=PASS verify_instructions=PASS(30/30)
+FEATURE: feat(ui) Zoom+/- buttons TopNav top-right
+STATUS: SEALED

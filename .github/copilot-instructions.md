@@ -137,4 +137,5 @@ Every new integration, capability, or function must include at the same time:
 - Integration tests if cross-module.
 - E2E tests if user-facing.
 - Advanced Q&A scenario tests to validate capabilities.
-  No feature is complete without its tests.
+
+No feature is complete without its tests.

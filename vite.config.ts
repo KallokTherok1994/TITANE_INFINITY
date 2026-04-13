@@ -64,6 +64,52 @@ function workboxPlugin(): Plugin {
   };
 }
 
+// Redirect legacy shell-like route to SPA canonical route.
+function canonicalTitaneRoutePlugin(): Plugin {
+  const handleLegacyTitaneRoute = (
+    req: { url?: string },
+    res: {
+      statusCode?: number;
+      setHeader: (name: string, value: string) => void;
+      end: () => void;
+    },
+    next: () => void
+  ) => {
+    const requestUrl = req.url;
+    if (!requestUrl) {
+      next();
+      return;
+    }
+
+    const parsed = new URL(requestUrl, 'http://localhost');
+    if (parsed.pathname === '/titane.sh' || parsed.pathname === '/titane.sh/') {
+      const target = `/titane${parsed.search}`;
+      res.statusCode = 307;
+      res.setHeader('Location', target);
+      res.end();
+      return;
+    }
+
+    // In this repository, root-level `titane`/`titane.sh` launcher files can shadow
+    // SPA routes in Vite dev static middleware. Force SPA entry for canonical route.
+    if (parsed.pathname === '/titane' || parsed.pathname === '/titane/') {
+      req.url = `/index.html${parsed.search}`;
+    }
+
+    next();
+  };
+
+  return {
+    name: 'canonical-titane-route',
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => handleLegacyTitaneRoute(req, res, next));
+    },
+    configurePreviewServer(server) {
+      server.middlewares.use((req, res, next) => handleLegacyTitaneRoute(req, res, next));
+    },
+  };
+}
+
 function mainEntryMapPlugin(): Plugin {
   let resolvedConfig: ResolvedConfig | undefined;
 
@@ -179,6 +225,7 @@ export default defineConfig(({ command }) => ({
   },
 
   plugins: [
+    canonicalTitaneRoutePlugin(),
     react({
       // Optimisation React Fast Refresh
       babel: {

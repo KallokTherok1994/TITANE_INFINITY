@@ -463,14 +463,22 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
         }
 
         const unavailableSources: string[] = [];
-
-        const contextualEntries =
-          runtimeKnowledgeResult.status === 'fulfilled'
-            ? runtimeKnowledgeResult.value.map(mapRuntimeKnowledgeToMemoryEntry)
-            : (() => {
-                unavailableSources.push('index contextuel');
-                return [];
-              })();
+        let contextualEntries: MemoryEntry[] = [];
+        if (runtimeKnowledgeResult.status === 'fulfilled') {
+          contextualEntries = runtimeKnowledgeResult.value.map(
+            mapRuntimeKnowledgeToMemoryEntry
+          );
+        } else {
+          // Self-heal: contextual index can fail on first boot while backend warms up.
+          // Retry once with a clean cache before marking the source unavailable.
+          try {
+            memoryService.clearCache();
+            const recoveredContextual = await memoryService.getKnowledge(64);
+            contextualEntries = recoveredContextual.map(mapRuntimeKnowledgeToMemoryEntry);
+          } catch {
+            unavailableSources.push('index contextuel');
+          }
+        }
 
         const defaultEntries =
           defaultKnowledgeResult.status === 'fulfilled'

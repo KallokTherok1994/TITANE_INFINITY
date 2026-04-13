@@ -1,0 +1,16 @@
+TITANE∞ v30.1.7 — Release Artifacts Checksums
+Generated: 2025-04-13
+
+=== SHA256 ===
+6624179eb8fa0880ae0f74faf35b4d42cddd5683e73cb3fd6d5ef9d3b1d2d0d9  TITANE-Infinity_30.1.7_amd64.deb
+cbc4379317ff4ca871517c30839cf5a165320608ef6492fe62c6796b762dc2e8  TITANE-Infinity-30.1.7-1.x86_64.rpm
+d9e10549fb1d6853cdbf60f846f57e10d33d55b5959a146a6166530057f6bc6a  TITANE-Infinity_30.1.7_amd64.AppImage
+60529efe6b4f26bbcded4843d1a11bbc587b374b20adc512904311d119c3906e  app-universal-release-unsigned.apk
+c9f108a12aed344686c56588479a5c89148d6e9699d8e01ab48b21140e0cd3e3  app-universal-release.aab
+
+=== Sizes ===
+26M	src-tauri/target/release/bundle/deb/TITANE-Infinity_30.1.7_amd64.deb
+26M	src-tauri/target/release/bundle/rpm/TITANE-Infinity-30.1.7-1.x86_64.rpm
+95M	src-tauri/target/release/bundle/appimage/TITANE-Infinity_30.1.7_amd64.AppImage
+59M	src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk
+38M	src-tauri/gen/android/app/build/outputs/bundle/universalRelease/app-universal-release.aab
