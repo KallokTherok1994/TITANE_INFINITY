@@ -152,11 +152,16 @@ fn collect_runtime_config(secrets: &SecureSecretsEngine) -> RuntimeConfig {
 #[tauri::command]
 pub async fn get_runtime_config(
     secrets: State<'_, SecureSecretsEngine>,
-) -> Result<RuntimeConfig, String> {
+) -> Result<serde_json::Value, String> {
     log::info!("CMD:START get_runtime_config");
     let config = collect_runtime_config(&secrets);
     log::info!("CMD:END get_runtime_config ok");
-    Ok(config)
+    // Rule 6: Canonical IPC contract { ok, content, error }
+    Ok(serde_json::json!({
+        "ok": true,
+        "content": config,
+        "error": null
+    }))
 }
 
 #[tauri::command]

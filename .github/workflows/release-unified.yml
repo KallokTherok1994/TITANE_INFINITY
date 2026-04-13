@@ -280,11 +280,124 @@ jobs:
           ls -lh src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg 2>/dev/null | awk '{print "- " $9 ": " $5}' >> $GITHUB_STEP_SUMMARY || echo "- No .dmg files" >> $GITHUB_STEP_SUMMARY
 
   # ============================================================================
+  # Build Android APK (Mock Debug)
+  # ============================================================================
+  build-android:
+    name: 🤖 Build Android APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: read
+
+    env:
+      ANDROID_BUILD_TOOLS_VERSION: '34.0.0'
+      ANDROID_PLATFORM_VERSION: 'android-34'
+      ANDROID_NDK_VERSION: '26.1.10909125'
+      ANDROID_CMDLINE_TOOLS_VERSION: '11076708'
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: ☕ Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: 📱 Setup Android SDK
+        run: |
+          CMDLINE_TOOLS_VERSION="${{ env.ANDROID_CMDLINE_TOOLS_VERSION }}"
+          mkdir -p "$HOME/android-sdk/cmdline-tools"
+          curl -o cmdline-tools.zip "https://dl.google.com/android/repository/commandlinetools-linux-${CMDLINE_TOOLS_VERSION}_latest.zip"
+          unzip -q cmdline-tools.zip -d "$HOME/android-sdk/cmdline-tools/latest-tmp"
+          mv "$HOME/android-sdk/cmdline-tools/latest-tmp/cmdline-tools" "$HOME/android-sdk/cmdline-tools/latest"
+          rm cmdline-tools.zip
+          export ANDROID_HOME="$HOME/android-sdk"
+          export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
+          yes | sdkmanager --licenses || true
+          sdkmanager "platform-tools" "build-tools;${{ env.ANDROID_BUILD_TOOLS_VERSION }}" "${{ env.ANDROID_PLATFORM_VERSION }}" "ndk;${{ env.ANDROID_NDK_VERSION }}"
+          echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
+          echo "NDK_HOME=$HOME/android-sdk/ndk/${{ env.ANDROID_NDK_VERSION }}" >> $GITHUB_ENV
+          echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
+          echo "$HOME/android-sdk/platform-tools" >> $GITHUB_PATH
+
+      - name: 🦀 Setup Rust stable + Android targets
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+
+      - name: 💾 Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+          cache-on-failure: true
+
+      - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+
+      - name: 🔧 Enable Corepack (pnpm)
+        run: corepack enable
+
+      - name: 📦 Install dependencies (pnpm)
+        run: pnpm install --frozen-lockfile
+
+      - name: 🏗️ Build frontend
+        run: pnpm run build
+
+      - name: 📱 Init Tauri Android
+        run: pnpm exec tauri android init
+
+      - name: 🔢 Sync Android version from package.json
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          MAJOR=$(echo "$VERSION" | cut -d. -f1)
+          MINOR=$(echo "$VERSION" | cut -d. -f2)
+          PATCH=$(echo "$VERSION" | cut -d. -f3)
+          VERSION_CODE=$((MAJOR * 10000 + MINOR * 100 + PATCH))
+          PROPS_FILE="src-tauri/gen/android/app/tauri.properties"
+          mkdir -p "$(dirname "$PROPS_FILE")"
+          echo "tauri.android.versionName=$VERSION" > "$PROPS_FILE"
+          echo "tauri.android.versionCode=$VERSION_CODE" >> "$PROPS_FILE"
+          echo "📱 Android version synced: versionName=$VERSION versionCode=$VERSION_CODE"
+
+      - name: 📦 Build APK release (mock backend)
+        run: pnpm exec tauri android build --features custom-protocol,mock
+
+      - name: 🔐 Generate checksums
+        run: |
+          find src-tauri/gen/android/app/build/outputs/apk -name "*.apk" -exec sha256sum {} \; > android-SHA256SUMS.txt || true
+          cat android-SHA256SUMS.txt || echo "No checksums generated"
+
+      - name: 📤 Upload Android artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk-${{ github.event.inputs.tag || github.ref_name }}
+          path: |
+            src-tauri/gen/android/app/build/outputs/apk/**/*.apk
+            android-SHA256SUMS.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: 📊 Build summary
+        if: always()
+        run: |
+          echo "### 🤖 Android Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Artifacts generated:**" >> $GITHUB_STEP_SUMMARY
+          find src-tauri/gen/android/app/build/outputs/apk -name "*.apk" 2>/dev/null | while read f; do echo "- $f: $(du -h "$f" | cut -f1)" >> $GITHUB_STEP_SUMMARY; done || echo "- No APK files" >> $GITHUB_STEP_SUMMARY
+
+  # ============================================================================
   # Create GitHub Release
   # ============================================================================
   create-release:
     name: 📦 Create GitHub Release
-    needs: [build-linux, build-windows, build-macos]
+    needs: [build-linux, build-windows, build-macos, build-android]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     if: always() && (startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch')
@@ -350,7 +463,7 @@ jobs:
               --target "$RELEASE_TARGET"
           fi
 
-          find artifacts/ -type f \( -name "*.deb" -o -name "*.AppImage" -o -name "*.msi" -o -name "*.dmg" -o -name "*SHA256SUMS.txt" \) -print0 \
+          find artifacts/ -type f \( -name "*.deb" -o -name "*.AppImage" -o -name "*.msi" -o -name "*.dmg" -o -name "*.apk" -o -name "*SHA256SUMS.txt" \) -print0 \
             | while IFS= read -r -d '' file; do
                 gh release upload "$RELEASE_TAG" "$file" --clobber
               done
@@ -368,7 +481,7 @@ jobs:
           echo "**URL:** https://github.com/${{ github.repository }}/releases/tag/${{ github.event.inputs.tag || github.ref_name }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Artifacts included:**" >> $GITHUB_STEP_SUMMARY
-          find artifacts/ -type f \( -name "*.deb" -o -name "*.AppImage" -o -name "*.msi" -o -name "*.dmg" \) 2>/dev/null | wc -l | xargs echo "- Total files:" >> $GITHUB_STEP_SUMMARY || echo "- Files: 0" >> $GITHUB_STEP_SUMMARY
+          find artifacts/ -type f \( -name "*.deb" -o -name "*.AppImage" -o -name "*.msi" -o -name "*.dmg" -o -name "*.apk" \) 2>/dev/null | wc -l | xargs echo "- Total files:" >> $GITHUB_STEP_SUMMARY || echo "- Files: 0" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
           echo "🚀 Built with TITANE∞ v30.0.0 - Modernized Release Pipeline" >> $GITHUB_STEP_SUMMARY

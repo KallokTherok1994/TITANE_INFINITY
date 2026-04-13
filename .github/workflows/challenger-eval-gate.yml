@@ -3,13 +3,37 @@ name: Challenger Eval Gate
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   challenger-eval-gate:
+    name: 🏆 Challenger Eval Gate (BLOCKED_INSTRUMENTATION)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Gate Placeholder
+      - name: 📋 Gate Status
         run: |
-          echo "Challenger eval gate workflow scaffold is valid."
+          echo "## 🏆 Challenger Eval Gate" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** BLOCKED_INSTRUMENTATION" >> $GITHUB_STEP_SUMMARY
+          echo "**Reason:** Eval harness and challenger model comparison framework not yet implemented." >> $GITHUB_STEP_SUMMARY
+          echo "**Next action:** Implement eval harness with baseline model scoring (≤ 30 min scaffolding)." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Required before unblocking" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] Define eval dataset (evals/ directory)" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] Implement scoring harness (accuracy, latency, cost)" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] Set baseline thresholds for regression detection" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] Connect to CI pipeline as required gate" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Per Rule 9 (NO_SKIPS): this gate cannot be skipped by narrative." >> $GITHUB_STEP_SUMMARY
+          echo "Classified BLOCKED_INSTRUMENTATION with next action ≤ 30 minutes." >> $GITHUB_STEP_SUMMARY
+
+      - name: ⚠️ Exit with BLOCKED status
+        run: |
+          echo "::warning::Challenger Eval Gate is BLOCKED_INSTRUMENTATION — eval harness not yet implemented"
+          echo "GATE_STATUS=BLOCKED_INSTRUMENTATION" >> $GITHUB_ENV

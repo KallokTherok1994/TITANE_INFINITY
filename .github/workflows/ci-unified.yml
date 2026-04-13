@@ -528,6 +528,48 @@ jobs:
           echo "_Security checks continue-on-error to avoid blocking CI on advisory-only issues_" >> $GITHUB_STEP_SUMMARY
 
   # ═══════════════════════════════════════════════════════════════════════════
+  # STRUCTURAL GUARDRAILS (G3/G4/G5/G6)
+  # Runs on all branches including main — covers direct pushes that
+  # ci-guardrails.yml skips (branches-ignore: main).
+  # ═══════════════════════════════════════════════════════════════════════════
+  structural-guardrails:
+    name: 🛡️ Structural Guardrails (G3/G4/G5/G6)
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    timeout-minutes: 10
+    permissions:
+      contents: read
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: Make check scripts executable
+        run: chmod +x checks/*.sh scripts/*.sh
+
+      - name: G3 — UI no direct network calls
+        run: bash checks/check_G3_UI_NO_NETWORK_DIRECT.sh
+
+      - name: G4 — One door network backend
+        run: bash checks/check_G4_ONE_DOOR_NETWORK_BACKEND.sh
+
+      - name: G5 — Allowlist deny-by-default
+        run: bash checks/check_G5_ALLOWLIST_DENY_BY_DEFAULT.sh
+
+      - name: G6 — Truth consistency (versions)
+        run: bash checks/check_G6_TRUTH_CONSISTENCY.sh
+
+      - name: 📊 Summary
+        if: always()
+        run: |
+          echo "## 🛡️ Structural Guardrails Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- G3: UI no direct network calls" >> $GITHUB_STEP_SUMMARY
+          echo "- G4: One Door network backend" >> $GITHUB_STEP_SUMMARY
+          echo "- G5: Allowlist deny-by-default" >> $GITHUB_STEP_SUMMARY
+          echo "- G6: Truth consistency (versions)" >> $GITHUB_STEP_SUMMARY
+
+  # ═══════════════════════════════════════════════════════════════════════════
   # FINAL STATUS
   # ═══════════════════════════════════════════════════════════════════════════
   ci-status:
@@ -542,6 +584,7 @@ jobs:
         test-e2e,
         build-verification,
         security-audit,
+        structural-guardrails,
       ]
     if: always()
     timeout-minutes: 5
@@ -562,6 +605,7 @@ jobs:
           echo "| E2E Tests | ${{ needs.test-e2e.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Build Verification | ${{ needs.build-verification.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Security Audit | ${{ needs.security-audit.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Structural Guardrails | ${{ needs.structural-guardrails.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -579,7 +623,8 @@ jobs:
           needs.lint-and-typecheck.result == 'failure' ||
           needs.test-frontend.result == 'failure' ||
           needs.test-backend.result == 'failure' ||
-          needs.test-backend-windows.result == 'failure'
+          needs.test-backend-windows.result == 'failure' ||
+          needs.structural-guardrails.result == 'failure'
         run: |
           echo "❌ One or more required jobs failed"
           exit 1
