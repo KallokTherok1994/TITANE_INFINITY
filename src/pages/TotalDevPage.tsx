@@ -17,7 +17,16 @@ import { TAURI_COMMANDS } from '@/core/commands/TAURI_COMMANDS';
 import { logger } from '@/lib/logger';
 import './TotalDevPage.css';
 
+import AgentDashboardsPanel from '../components/AgentDashboardsPanel';
+
 // Fonction utilitaire pour calculer le hash SHA-256
+
+// Injection universelle des dashboards agents avancés
+// (affiché sur toutes les pages principales)
+// Positionné en fixed en bas à droite
+// data-testid="agent-dashboards-panel"
+// Voir AgentDashboardsPanel.tsx
+export { AgentDashboardsPanel };
 const sha256 = async (input: string): Promise<string> => {
   const encoder = new TextEncoder();
   const data = encoder.encode(input);

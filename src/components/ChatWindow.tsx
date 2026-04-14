@@ -355,7 +355,13 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
           </div>
         )}
 
-        <form className="chat-input-container chat-input-animated" onSubmit={e => { e.preventDefault(); handleSend(); }}>
+        <form
+          className="chat-input-container chat-input-animated"
+          onSubmit={e => {
+            e.preventDefault();
+            handleSend();
+          }}
+        >
           <button
             type="button"
             className="file-import-button"
@@ -408,8 +414,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
           >
             <span aria-hidden="true">{isLoading ? '⏳' : '📨'}</span>
           </button>
-        </div>
-      </form>
+        </form>
+      </div>
     );
   }
 );

@@ -13,6 +13,9 @@ applyTo: 'src-tauri/**, tauri*.json, runtime/**'
 
 ## DO
 
+- Pour chaque nouvel agent kernel (Rust, Ring 0/1), documenter dans `ARCHITECTURE.md` et `docs/IPC_CATALOG.md`.
+- Ajouter un test unitaire Rust et un test contractuel TypeScript pour chaque nouvelle commande IPC liée à un agent.
+
 - Justify any new capability with gate + tests.
 - Add timeouts and breakers to all I/O.
 - Log security-relevant decisions.

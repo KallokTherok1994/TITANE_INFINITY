@@ -25,7 +25,8 @@ function getAllTsFiles(dir: string): string[] {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      if (['node_modules', '__tests__', 'dist', 'target', '.git'].includes(entry.name)) continue;
+      if (['node_modules', '__tests__', 'dist', 'target', '.git'].includes(entry.name))
+        continue;
       results.push(...getAllTsFiles(full));
     } else if (entry.name.endsWith('.ts') || entry.name.endsWith('.tsx')) {
       results.push(full);
@@ -53,7 +54,11 @@ function resolvePath(from: string, importedPath: string): string | null {
 
 function isRing4Path(p: string): boolean {
   const rel = path.relative(ROOT, p);
-  return rel.startsWith('src/components') || rel.startsWith('src/pages') || rel.startsWith('src/ui');
+  return (
+    rel.startsWith('src/components') ||
+    rel.startsWith('src/pages') ||
+    rel.startsWith('src/ui')
+  );
 }
 
 function isRing3Path(p: string): boolean {
@@ -79,7 +84,11 @@ describe('🏛️ Architecture: Ring Boundary Validation', () => {
         const imports = getImports(file);
         for (const imp of imports) {
           // Check for @components, @pages, @ui aliases
-          if (imp.startsWith('@components') || imp.startsWith('@pages') || imp.startsWith('@ui')) {
+          if (
+            imp.startsWith('@components') ||
+            imp.startsWith('@pages') ||
+            imp.startsWith('@ui')
+          ) {
             violations.push(`${path.relative(ROOT, file)} -> ${imp}`);
             continue;
           }
@@ -92,7 +101,10 @@ describe('🏛️ Architecture: Ring Boundary Validation', () => {
       }
 
       if (violations.length > 0) {
-        console.warn('Ring 2→Ring 4 violations (static import check):\n', violations.join('\n'));
+        console.warn(
+          'Ring 2→Ring 4 violations (static import check):\n',
+          violations.join('\n')
+        );
       }
       expect(violations).toHaveLength(0);
     });
@@ -105,7 +117,11 @@ describe('🏛️ Architecture: Ring Boundary Validation', () => {
       for (const file of files) {
         const imports = getImports(file);
         for (const imp of imports) {
-          if (imp.startsWith('@components') || imp.startsWith('@pages') || imp.startsWith('@ui')) {
+          if (
+            imp.startsWith('@components') ||
+            imp.startsWith('@pages') ||
+            imp.startsWith('@ui')
+          ) {
             violations.push(`${path.relative(ROOT, file)} -> ${imp}`);
             continue;
           }
@@ -132,7 +148,11 @@ describe('🏛️ Architecture: Ring Boundary Validation', () => {
       for (const file of files) {
         const imports = getImports(file);
         for (const imp of imports) {
-          if (imp.startsWith('@components') || imp.startsWith('@pages') || imp.startsWith('@ui')) {
+          if (
+            imp.startsWith('@components') ||
+            imp.startsWith('@pages') ||
+            imp.startsWith('@ui')
+          ) {
             violations.push(`${path.relative(ROOT, file)} -> ${imp}`);
           }
           const resolved = resolvePath(file, imp);

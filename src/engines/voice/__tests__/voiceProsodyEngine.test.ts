@@ -16,7 +16,9 @@ import type { OrchestratedVoice } from '../types';
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
 
-function makeOrchestratedVoice(overrides: Partial<OrchestratedVoice> = {}): OrchestratedVoice {
+function makeOrchestratedVoice(
+  overrides: Partial<OrchestratedVoice> = {}
+): OrchestratedVoice {
   return {
     prosody: { rate: 1.0, pitch: 1.0, volume: 0.8, emphasis: 0.6 },
     timbre: { warmth: 0.7, breathiness: 0.2, resonance: 0.6, clarity: 0.8 },
@@ -80,7 +82,11 @@ describe('🎵 VoiceProsodyEngine', () => {
   describe('updateState', () => {
     it('should not update when inactive', () => {
       const before = voiceProsodyEngine.getProsody();
-      voiceProsodyEngine.updateState(makeOrchestratedVoice({ prosody: { rate: 1.8, pitch: 1.5, volume: 0.9, emphasis: 0.9 } }));
+      voiceProsodyEngine.updateState(
+        makeOrchestratedVoice({
+          prosody: { rate: 1.8, pitch: 1.5, volume: 0.9, emphasis: 0.9 },
+        })
+      );
       const after = voiceProsodyEngine.getProsody();
       // State should be unchanged when inactive
       expect(after.rate).toBe(before.rate);
@@ -88,7 +94,9 @@ describe('🎵 VoiceProsodyEngine', () => {
 
     it('should update prosody when active', () => {
       voiceProsodyEngine.activate();
-      const voice = makeOrchestratedVoice({ prosody: { rate: 1.4, pitch: 1.2, volume: 0.9, emphasis: 0.7 } });
+      const voice = makeOrchestratedVoice({
+        prosody: { rate: 1.4, pitch: 1.2, volume: 0.9, emphasis: 0.7 },
+      });
       voiceProsodyEngine.updateState(voice);
       const prosody = voiceProsodyEngine.getProsody();
       expect(prosody.rate).toBe(1.4);
@@ -106,7 +114,9 @@ describe('🎵 VoiceProsodyEngine', () => {
       voiceProsodyEngine.activate();
       const before = Date.now();
       voiceProsodyEngine.updateState(makeOrchestratedVoice());
-      expect(voiceProsodyEngine.getState().metrics.lastUpdate).toBeGreaterThanOrEqual(before);
+      expect(voiceProsodyEngine.getState().metrics.lastUpdate).toBeGreaterThanOrEqual(
+        before
+      );
     });
   });
 
@@ -175,7 +185,11 @@ describe('🎵 VoiceProsodyEngine', () => {
   describe('reset', () => {
     it('should reset to default state', () => {
       voiceProsodyEngine.activate();
-      voiceProsodyEngine.updateState(makeOrchestratedVoice({ prosody: { rate: 1.9, pitch: 1.8, volume: 0.99, emphasis: 0.99 } }));
+      voiceProsodyEngine.updateState(
+        makeOrchestratedVoice({
+          prosody: { rate: 1.9, pitch: 1.8, volume: 0.99, emphasis: 0.99 },
+        })
+      );
       voiceProsodyEngine.reset();
 
       const state = voiceProsodyEngine.getState();

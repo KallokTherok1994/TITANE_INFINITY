@@ -666,7 +666,7 @@ export async function processMessage(
     ...(options?.contextEnvelope ? { contextEnvelope: options.contextEnvelope } : {}),
   };
 
-  logger.info('[CONV_SEND] Provider request', {
+  const convSendLog = {
     mode: options?.mode || 'default',
     provider_requested: provider,
     conversation_id: conversationId,
@@ -678,7 +678,11 @@ export async function processMessage(
     budget_violations: budgetValidation.violations.length,
     user_message_truncated: userMessageBudget.wasTruncated,
     system_prompt_truncated: systemPromptBudget.wasTruncated,
-  });
+  };
+  logger.info('[CONV_SEND] Provider request', convSendLog);
+  // Fallback pour STRUCT-1: log console explicite
+  // eslint-disable-next-line no-console
+  console.log('[CONV_SEND]', JSON.stringify(convSendLog));
 
   // Preflight guard — required args must be set before IPC
   if (
@@ -1007,23 +1011,31 @@ export async function processMessage(
     },
   };
 
-  logger.info('[conversationEngine] 📥 Backend response:', {
+  const convRecvLog = {
     message_id: response.message_id,
     assistant_message_length: response.assistant_message?.length || 0,
     assistant_message_preview: response.assistant_message?.substring(0, 100),
     provider: response.metadata?.provider_used,
-  });
+  };
+  logger.info('[conversationEngine] 📥 Backend response:', convRecvLog);
+  // Fallback pour STRUCT-1: log console explicite
+  // eslint-disable-next-line no-console
+  console.log('[CONV_RECV]', JSON.stringify(convRecvLog));
 
   // ✨ OBSERVABILITY: Log provider decision meta
   if (providerMeta) {
-    logger.info('[CONV_RECV] Provider decision', {
+    const convRecvMetaLog = {
       mode: providerMeta.mode,
       reason_code: providerMeta.reason_code,
       provider_used: providerMeta.provider_used,
       network_used: providerMeta.network_used,
       attempts_count: providerMeta.attempts?.length || 0,
       latency_ms: providerMeta.latency_ms_total,
-    });
+    };
+    logger.info('[CONV_RECV] Provider decision', convRecvMetaLog);
+    // Fallback pour STRUCT-1: log console explicite
+    // eslint-disable-next-line no-console
+    console.log('[CONV_RECV]', JSON.stringify(convRecvMetaLog));
   } else {
     logger.warn('[CONV_RECV] ⚠️ Provider meta missing in response');
   }

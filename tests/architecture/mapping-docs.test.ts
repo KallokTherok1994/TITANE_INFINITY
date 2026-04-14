@@ -87,7 +87,18 @@ describe('🗺️ Architecture: Mapping Documents Integrity (Rule 15)', () => {
     it('each autoheal entry must have mandatory fields', () => {
       const full = path.join(ROOT, 'scripts/autoheal/autoheal_rules.jsonl');
       const lines = fs.readFileSync(full, 'utf-8').split('\n').filter(Boolean);
-      const requiredFields = ['id', 'date', 'scope', 'symptom', 'root_cause', 'fix', 'prevention_test', 'commands', 'files_changed', 'rollback'];
+      const requiredFields = [
+        'id',
+        'date',
+        'scope',
+        'symptom',
+        'root_cause',
+        'fix',
+        'prevention_test',
+        'commands',
+        'files_changed',
+        'rollback',
+      ];
 
       const violations: string[] = [];
       for (let i = 0; i < lines.length; i++) {
@@ -100,7 +111,9 @@ describe('🗺️ Architecture: Mapping Documents Integrity (Rule 15)', () => {
         }
         for (const field of requiredFields) {
           if (!(field in entry)) {
-            violations.push(`Line ${i + 1} (id=${entry['id'] ?? '?'}): missing field '${field}'`);
+            violations.push(
+              `Line ${i + 1} (id=${entry['id'] ?? '?'}): missing field '${field}'`
+            );
           }
         }
       }
@@ -118,7 +131,9 @@ describe('🗺️ Architecture: Mapping Documents Integrity (Rule 15)', () => {
     });
 
     it('detect_recurrence.sh must exist', () => {
-      expect(fs.existsSync(path.join(ROOT, 'scripts/autoheal/detect_recurrence.sh'))).toBe(true);
+      expect(
+        fs.existsSync(path.join(ROOT, 'scripts/autoheal/detect_recurrence.sh'))
+      ).toBe(true);
     });
 
     it('g5-ci-wiring.sh must exist', () => {

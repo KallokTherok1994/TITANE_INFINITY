@@ -7,6 +7,7 @@ L’agent de sécurité active détecte les anomalies réseau, effectue du sandb
 - **Gates** : Détection d’intrusion, logs de sécurité, tests E2E de résilience, intégration autoheal.
 
 ---
+
 ## Orchestrateur Dynamique Agent
 
 L’agent orchestrateur dynamique répartit intelligemment les tâches entre les agents TITANE, adapte la charge en temps réel, gère les priorités et optimise l’utilisation des ressources. Il s’intègre à un dashboard UI (Ring 3/4) et au moteur d’orchestration (Ring 2), avec accès direct au kernel (Ring 0) pour la gestion des ressources critiques.
@@ -16,11 +17,25 @@ L’agent orchestrateur dynamique répartit intelligemment les tâches entre les
 - **Gates** : Preuve de répartition optimale, logs d’orchestration, tests E2E de charge, intégration autoheal.
 
 ---
+
 # ARCHITECTURE.md — TITANE_INFINITY
 
 **Version:** 30.1.0  
 **Date:** 2026-04-11T21:48:00Z  
 **Classification:** CANON
+
+---
+
+## Scripts de lancement et d’installation
+
+- **Linux** : `scripts/launch/launch-titane.sh`, `scripts/launch/start_dev.sh`
+- **Windows** :
+  - `scripts/launch/launch-titane.ps1` (lancement principal)
+  - `scripts/launch/launch-titane.bat` (batch)
+  - `scripts/launch/launch-ollama.ps1` (**installation Ollama + modèles IA**)
+- **Android** : voir `titane-android/`
+
+... (voir détails dans chaque README)
 
 ---
 
@@ -161,6 +176,7 @@ function MyComponent() {
 ## Gates de vérification
 
 bash scripts/gates/ring-integrity-gate.sh
+
 ```
 
 ---
@@ -176,3 +192,4 @@ L’agent d’explicabilité assure la traçabilité des décisions IA, la gén�
 - **Gates** : Génération automatique de rapports d’explicabilité, logs d’inférences, tests E2E sur la traçabilité.
 
 ---
+```

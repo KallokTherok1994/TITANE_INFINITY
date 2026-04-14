@@ -135,7 +135,11 @@ describe('🎭 SynestheticEmotionEngine', () => {
   describe('syncWithUser', () => {
     it('should not throw on valid user state', () => {
       expect(() => {
-        synestheticEmotionEngine.syncWithUser({ emotion: 'joy', energy: 0.8, valence: 0.9 });
+        synestheticEmotionEngine.syncWithUser({
+          emotion: 'joy',
+          energy: 0.8,
+          valence: 0.9,
+        });
       }).not.toThrow();
     });
 
@@ -221,7 +225,9 @@ describe('🎭 SynestheticEmotionEngine', () => {
       const wonderProfile = synestheticEmotionEngine.getCurrentProfile();
 
       // focus_intense cognitive.focus >= wonder (during transition both blend toward target)
-      expect(focusProfile.cognitive.focus).toBeGreaterThanOrEqual(wonderProfile.cognitive.focus);
+      expect(focusProfile.cognitive.focus).toBeGreaterThanOrEqual(
+        wonderProfile.cognitive.focus
+      );
     });
   });
 });

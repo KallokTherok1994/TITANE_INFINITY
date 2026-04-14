@@ -1,6 +1,6 @@
 # RELEASE SURFACE INVENTORY — TITANE∞ (Historical baseline v28.5.0 + current addendum v29.0.0)
 
-Generated: 2026-03-21
+Generated: 2026-04-14
 Session: REPO_OFFICIALIZATION_28_5_0
 Historical baseline version: **28.5.0**
 

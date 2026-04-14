@@ -19,7 +19,15 @@ import { KnowledgeDomains } from '../components/progression/KnowledgeDomains';
 import { useExperience } from '../hooks/useExperience';
 import { colors, spacing, fontSizes, fontWeights } from '@themes/tokens';
 
+import AgentDashboardsPanel from '../components/AgentDashboardsPanel';
+
 export const ProgressionPage = (): JSX.Element => {
+  // Injection universelle des dashboards agents avancés
+  // (affiché sur toutes les pages principales)
+  // Positionné en fixed en bas à droite
+  // data-testid="agent-dashboards-panel"
+  // Voir AgentDashboardsPanel.tsx
+  // <AgentDashboardsPanel /> à placer dans le JSX principal si besoin
   const { totalXp, level, xpForNextLevel, domains, isLoading } = useExperience();
 
   if (isLoading) {

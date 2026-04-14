@@ -68,7 +68,11 @@ function workboxPlugin(): Plugin {
 function canonicalTitaneRoutePlugin(): Plugin {
   const handleLegacyTitaneRoute = (
     req: { url?: string },
-    res: { statusCode?: number; setHeader: (name: string, value: string) => void; end: () => void },
+    res: {
+      statusCode?: number;
+      setHeader: (name: string, value: string) => void;
+      end: () => void;
+    },
     next: () => void
   ) => {
     const requestUrl = req.url;

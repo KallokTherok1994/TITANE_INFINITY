@@ -136,18 +136,37 @@ pnpm run dev:tauri
 
 ---
 
-## Étape 6 — Démarrer Ollama (optionnel, IA locale)
+
+## Étape 6 — Installation et activation automatique d’Ollama (IA locale)
+
+> **NOUVEAU** : L’installation d’Ollama et des modèles nécessaires est désormais automatisée pour Windows.
 
 ```powershell
-# Dans un terminal séparé
-ollama serve
+# 1. Lancer le script d’installation Ollama + modèles (admin recommandé)
+cd scripts\launch
+./launch-ollama.ps1 install
 
-# Vérifier que le service répond
-Invoke-RestMethod http://127.0.0.1:11434/api/tags
-
-# Télécharger le modèle par défaut
-ollama pull llama3.2:latest
+# 2. Vérifier le statut Ollama et la présence des modèles
+./launch-ollama.ps1 status
 ```
+
+Ce script :
+- Installe Ollama (si absent)
+- Démarre le service Ollama
+- Télécharge tous les modèles nécessaires à TITANE∞
+- Vérifie la disponibilité de l’API et des modèles
+
+> **Remarque** : Pour démarrer Ollama manuellement :
+```powershell
+./launch-ollama.ps1 serve
+```
+
+Pour installer ou mettre à jour uniquement les modèles :
+```powershell
+./launch-ollama.ps1 pull
+```
+
+---
 
 ---
 

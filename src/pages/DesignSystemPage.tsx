@@ -20,7 +20,15 @@ import { Toggle } from '@/ui/components/Toggle';
 import type { SelectOption, ToggleOption } from '@/ui/components';
 import './DesignSystemPage.css';
 
+import AgentDashboardsPanel from '../components/AgentDashboardsPanel';
+
 export function DesignSystemPage() {
+  // Injection universelle des dashboards agents avancés
+  // (affiché sur toutes les pages principales)
+  // Positionné en fixed en bas à droite
+  // data-testid="agent-dashboards-panel"
+  // Voir AgentDashboardsPanel.tsx
+  // <AgentDashboardsPanel /> à placer dans le JSX principal si besoin
   // States for all components
   const [darkMode, setDarkMode] = useState(false);
   const [notifications, setNotifications] = useState(true);

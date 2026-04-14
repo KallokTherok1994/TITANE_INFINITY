@@ -22,6 +22,8 @@ import { useResponsive } from '@/hooks/useResponsive';
 import { extractNumber } from '../utils/dataUtils';
 import '../pages/ModulePages.css';
 
+import AgentDashboardsPanel from '../components/AgentDashboardsPanel';
+
 // ─────────────────────────────────────────────────────────────────
 // TYPES
 // ─────────────────────────────────────────────────────────────────
@@ -625,3 +627,10 @@ export const Stats: React.FC = () => {
 };
 
 export default Stats;
+
+// Injection universelle des dashboards agents avancés
+// (affiché sur toutes les pages principales)
+// Positionné en fixed en bas à droite
+// data-testid="agent-dashboards-panel"
+// Voir AgentDashboardsPanel.tsx
+export { AgentDashboardsPanel };

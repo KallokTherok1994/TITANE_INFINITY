@@ -42,6 +42,10 @@
 - Relevant validator output for touched scope.
 - Explicit rollback commands.
 
+## Indexation et mapping agents avancés
+
+- Tout nouvel agent (monitoring, diagnostic, explainability, orchestrateur, sécurité) doit être indexé dans la doc repo (README ou section dédiée), mappé dans tous les fichiers de cartographie, et disposer d’une preuve (log, capture, rapport, rollback).
+
 ## Gates specifiques
 
 - `bash scripts/verify_instructions.sh`

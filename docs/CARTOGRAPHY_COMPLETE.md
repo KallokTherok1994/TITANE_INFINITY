@@ -1,6 +1,6 @@
 # TITANE_INFINITY — Cartographie Complète Avancée v30.1.8
 
-> **Mise à jour le 2026-04-11**
+> **Mise à jour le 2026-04-14
 > Document de référence architecture — généré depuis scan du dépôt
 
 ---
@@ -43,7 +43,17 @@ TITANE_INFINITY est organisé en 4 anneaux concentriques, du noyau Rust vers l'i
 
 Modules kernel : `kernel/`, `core/`, `security/`, `constitution/`
 
-### Ring 1 — Core Services (`src/services/`)
+
+### Scripts de lancement et d’installation
+
+- **Linux** : `scripts/launch/launch-titane.sh`, `scripts/launch/start_dev.sh`
+- **Windows** : 
+  - `scripts/launch/launch-titane.ps1` (lancement principal)
+  - `scripts/launch/launch-titane.bat` (batch)
+  - `scripts/launch/launch-ollama.ps1` (**installation Ollama + modèles IA**)
+- **Android** : voir `titane-android/`
+
+---
 
 | Service | Lignes | Rôle |
 |---------|--------|------|

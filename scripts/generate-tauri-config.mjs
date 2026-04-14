@@ -37,7 +37,27 @@ if (fs.existsSync(outputPath) && !force) {
   process.exit(0);
 }
 
-const baseConfig = JSON.parse(fs.readFileSync(baseConfigPath, 'utf8'));
+function stripInvalidProps(obj, parentKey = null) {
+  if (Array.isArray(obj)) {
+    return obj.map(v => stripInvalidProps(v, parentKey));
+  } else if (obj && typeof obj === 'object') {
+    const out = {};
+    for (const [k, v] of Object.entries(obj)) {
+      // Ne jamais supprimer 'identifier' à la racine
+      if (
+        (k.startsWith('$') || k.startsWith('_')) &&
+        !(parentKey === null && k === 'identifier')
+      )
+        continue;
+      out[k] = stripInvalidProps(v, k);
+    }
+    return out;
+  }
+  return obj;
+}
+
+const baseConfigRaw = JSON.parse(fs.readFileSync(baseConfigPath, 'utf8'));
+const baseConfig = stripInvalidProps(baseConfigRaw);
 
 const envOverrides = {
   development: {
@@ -56,6 +76,11 @@ const envOverrides = {
 
 const overrides = envOverrides[environment] || envOverrides.development;
 
+// Injecter bundle.active et bundle.targets si absents
+if (!baseConfig.bundle) baseConfig.bundle = {};
+baseConfig.bundle.active = true;
+baseConfig.bundle.targets = 'all';
+
 const finalConfig = {
   ...baseConfig,
   build: {
@@ -63,6 +88,17 @@ const finalConfig = {
     ...overrides.build,
   },
 };
+
+// Copie $schema, productName, windows à la racine si présents dans baseConfig ou baseConfig.app
+if (baseConfig['$schema']) finalConfig['$schema'] = baseConfig['$schema'];
+if (baseConfig['productName']) finalConfig['productName'] = baseConfig['productName'];
+if (baseConfig.app && baseConfig.app.windows)
+  finalConfig['windows'] = baseConfig.app.windows;
+
+// Forcer devtools: false sur toutes les fenêtres
+if (finalConfig.windows && Array.isArray(finalConfig.windows)) {
+  finalConfig.windows = finalConfig.windows.map(w => ({ ...w, devtools: false }));
+}
 
 // Remove null values from build config.
 // Tauri does not accept null values in tauri.conf.json — it expects

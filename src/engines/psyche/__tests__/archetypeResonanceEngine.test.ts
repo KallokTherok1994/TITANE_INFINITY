@@ -88,7 +88,10 @@ describe('🧠 ArchetypeResonanceEngine', () => {
 
     it('all scores should be in [0, 1]', () => {
       const scores = archetypeResonanceEngine.calculateScores(
-        makeContext({ userMessage: 'aide moi à résoudre ce problème', intent: 'question' })
+        makeContext({
+          userMessage: 'aide moi à résoudre ce problème',
+          intent: 'question',
+        })
       );
       for (const [, value] of Object.entries(scores)) {
         expect(value).toBeGreaterThanOrEqual(0);
@@ -108,10 +111,17 @@ describe('🧠 ArchetypeResonanceEngine', () => {
 
     it('creative context should increase muse score', () => {
       const lowCreat = archetypeResonanceEngine.calculateScores(
-        makeContext({ userMessage: 'explique-moi cette architecture step by step', creativityLevel: 0 })
+        makeContext({
+          userMessage: 'explique-moi cette architecture step by step',
+          creativityLevel: 0,
+        })
       );
       const highCreat = archetypeResonanceEngine.calculateScores(
-        makeContext({ userMessage: 'inspire-moi avec une idée artistique créative originale', creativityLevel: 0.9, implicitNeed: 'inspiration' })
+        makeContext({
+          userMessage: 'inspire-moi avec une idée artistique créative originale',
+          creativityLevel: 0.9,
+          implicitNeed: 'inspiration',
+        })
       );
       // Muse should score higher or equal on creative queries
       expect(highCreat.muse).toBeGreaterThanOrEqual(lowCreat.muse);
@@ -132,7 +142,10 @@ describe('🧠 ArchetypeResonanceEngine', () => {
   describe('activateContext', () => {
     it('should update the engine state', () => {
       archetypeResonanceEngine.activateContext(
-        makeContext({ userMessage: 'je veux créer quelque chose de beau', creativityLevel: 0.8 })
+        makeContext({
+          userMessage: 'je veux créer quelque chose de beau',
+          creativityLevel: 0.8,
+        })
       );
       const state = archetypeResonanceEngine.getState();
       expect(state.lastUpdate).toBeGreaterThan(0);

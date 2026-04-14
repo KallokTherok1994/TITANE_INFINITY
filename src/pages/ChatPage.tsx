@@ -10,12 +10,18 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { ChatMessage as _ChatMessage } from '@/features/chat/ChatMessage';
 import { ChatProviderSelector } from '@/features/chat/ChatProviderSelector';
 import { ChatErrorBoundary } from '@/components/ChatErrorBoundary';
 import { ChatWindow } from '@/components/ChatWindow';
 import { logger } from '@/lib/logger';
+
+import MonitoringDashboard from '@/services/monitoring/MonitoringDashboard';
+import DiagnosticDashboard from '@/services/diagnostic/DiagnosticDashboard';
+import ExplainabilityDashboard from '@/services/explainability/ExplainabilityDashboard';
+import OrchestratorDashboard from '@/services/orchestrator/OrchestratorDashboard';
+import SecurityDashboard from '@/services/security_active/SecurityDashboard';
 
 const PREFERRED_PROVIDER_STORAGE_KEY = 'omega-chat-preferred-provider';
 // LOCK2: canonical key — legacy 'omega-chat-conversation-id' is migrated on boot via legacyCleanup
@@ -105,6 +111,16 @@ export const ChatPage: React.FC = () => {
         </div>
         <div className="chat-fullscreen-window">
           <ChatWindow />
+        </div>
+        {/* Dashboards agents avancés */}
+        <div className="chat-advanced-agents-dashboards">
+          <Suspense fallback={null}>
+            <MonitoringDashboard />
+            <DiagnosticDashboard />
+            <ExplainabilityDashboard />
+            <OrchestratorDashboard />
+            <SecurityDashboard />
+          </Suspense>
         </div>
       </div>
     </ChatErrorBoundary>

@@ -45,6 +45,12 @@
 
 ## Observed Active Surface in latest desktop proof
 
-- `chat-input` and `chat-send` resolved.
-- Assistant response rendered under `chat-message-assistant` + `chat-message-content`.
-- Runtime panel aligned with assistant provider metadata (`provider=Ollama`, `network=false`, `reason=OK`).
+## Agents avancés — UI Dashboards (v30.1.8)
+
+- **Monitoring Agent** : `monitoring-dashboard` (test id à définir)
+- **Auto-Diagnostic Agent** : `diagnostic-panel` (test id à définir)
+- **Explainability Agent** : `explainability-dashboard` (test id à définir)
+- **Orchestrateur Dynamique Agent** : `orchestrator-dashboard` (test id à définir)
+- **Agent de Sécurité Active** : `security-dashboard` (test id à définir)
+
+Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, logs et alerting UI.

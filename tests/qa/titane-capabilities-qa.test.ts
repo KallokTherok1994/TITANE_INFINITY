@@ -55,7 +55,8 @@ describe('🧠 Category A: Cognitive Engine Capabilities', () => {
 
     it('Q: Technical analytical request → should score architecte highest or equal to best', () => {
       const scores = archetypeResonanceEngine.calculateScores({
-        userMessage: 'Analyse cette architecture technique et propose une structure modulaire optimale',
+        userMessage:
+          'Analyse cette architecture technique et propose une structure modulaire optimale',
         intent: 'demande',
         creativityLevel: 0.1,
         stressLevel: 0.05,
@@ -127,8 +128,24 @@ describe('🧠 Category A: Cognitive Engine Capabilities', () => {
       const result = synestheticEmotionEngine.detectEmotionFromContext({
         text: 'je ressens de la passion et de la créativité pour ce projet',
       });
-      const validStates = ['joy_bright', 'passion_creative', 'amusement', 'wonder', 'confidence'];
-      expect(validStates.concat(['calm_deep', 'protection', 'connection_human', 'focus_intense', 'wisdom', 'mystery', 'transformation'])).toContain(result);
+      const validStates = [
+        'joy_bright',
+        'passion_creative',
+        'amusement',
+        'wonder',
+        'confidence',
+      ];
+      expect(
+        validStates.concat([
+          'calm_deep',
+          'protection',
+          'connection_human',
+          'focus_intense',
+          'wisdom',
+          'mystery',
+          'transformation',
+        ])
+      ).toContain(result);
     });
 
     it('Q: Archetype sage → wisdom state inferred', () => {
@@ -147,9 +164,18 @@ describe('🧠 Category A: Cognitive Engine Capabilities', () => {
 
     it('Q: All detected emotions are members of the valid 12-state set', () => {
       const validStates = [
-        'calm_deep', 'joy_bright', 'wonder', 'confidence', 'passion_creative',
-        'protection', 'connection_human', 'amusement', 'focus_intense',
-        'wisdom', 'mystery', 'transformation',
+        'calm_deep',
+        'joy_bright',
+        'wonder',
+        'confidence',
+        'passion_creative',
+        'protection',
+        'connection_human',
+        'amusement',
+        'focus_intense',
+        'wisdom',
+        'mystery',
+        'transformation',
       ];
 
       const testContexts = [
@@ -326,15 +352,13 @@ describe('🏛️ Category C: Architecture Integrity Q&A', () => {
 
   describe('C2 — Test files for required capabilities', () => {
     it('Q: cognitive-engines-e2e.test.ts must exist (scenario coverage)', () => {
-      expect(
-        fs.existsSync(path.join(ROOT, 'tests/cognitive-engines-e2e.test.ts'))
-      ).toBe(true);
+      expect(fs.existsSync(path.join(ROOT, 'tests/cognitive-engines-e2e.test.ts'))).toBe(
+        true
+      );
     });
 
     it('Q: architecture tests directory must exist', () => {
-      expect(
-        fs.existsSync(path.join(ROOT, 'tests/architecture'))
-      ).toBe(true);
+      expect(fs.existsSync(path.join(ROOT, 'tests/architecture'))).toBe(true);
     });
   });
 
@@ -373,13 +397,15 @@ describe('🎭 Category D: Multi-Turn Behavioral Scenarios', () => {
 
     it('Q: Turn 2 follow-up planning → architecte remains competitive', () => {
       archetypeResonanceEngine.activateContext({
-        userMessage: 'Quelles sont les étapes pour implémenter le système de store Zustand ?',
+        userMessage:
+          'Quelles sont les étapes pour implémenter le système de store Zustand ?',
         intent: 'question',
         creativityLevel: 0.1,
         stressLevel: 0.1,
       });
       const scores = archetypeResonanceEngine.calculateScores({
-        userMessage: 'Quelles sont les étapes pour implémenter le système de store Zustand ?',
+        userMessage:
+          'Quelles sont les étapes pour implémenter le système de store Zustand ?',
         intent: 'question',
       });
       // Architecte should still be strong for implementation questions

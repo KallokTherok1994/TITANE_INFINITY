@@ -35,7 +35,9 @@ describe('zoomScale utilities (used by TopNav zoom controls)', () => {
   beforeEach(() => {
     // Simulate a document root with initial zoom
     vi.spyOn(zoomScale, 'readCurrentZoomScale').mockReturnValue(ORIGINAL_ZOOM);
-    vi.spyOn(zoomScale, 'applyZoomScale').mockImplementation((v) => zoomScale.clampZoomScale(v));
+    vi.spyOn(zoomScale, 'applyZoomScale').mockImplementation(v =>
+      zoomScale.clampZoomScale(v)
+    );
   });
 
   afterEach(() => {

@@ -1,8 +1,23 @@
-# ⚠️ RÈGLE CRITIQUE — MODE DÉVELOPPEMENT PERMANENT
+> ## ⚠️ ARCHIVÉE — NON OPÉRATIONNELLE
+>
+> **Ce fichier est une archive historique, conservé uniquement pour traçabilité.**
+> Il a été **supplanté** par le noyau constitutionnel actif :
+>
+> - `.github/copilot-instructions.md` — **Rule 11** : production builds and deploys on user request, no token gate required.
+> - `.github/copilot-instructions.md` — **Rule 14** : `BUILD ALL` déclenche la séquence automatisée complète.
+>
+> **Les dispositions ci-dessous sont inopérantes.** Aucun agent ne doit les interpréter comme des
+> contraintes actives. La politique de build/deploy est définie exclusivement au niveau kernel.
+>
+> _Superseded: 2026-04-13 — autorité migré vers copilot-instructions.md Rule 11/14._
+
+---
+
+# ~~⚠️ RÈGLE CRITIQUE — MODE DÉVELOPPEMENT PERMANENT~~ (ARCHIVÉE)
 
 **AUTORITÉ:** Kevin Thibault (Créateur TITANE∞)  
-**DATE EFFECTIVE:** 2 janvier 2026  
-**PRIORITÉ:** ABSOLUE — Non-négociable
+**DATE EFFECTIVE:** 2 janvier 2026 _(archivée le 2026-04-13)_  
+**PRIORITÉ:** ~~ABSOLUE~~ — **NON OPÉRATIONNELLE — voir Rule 11/14 du kernel**
 
 ---
 

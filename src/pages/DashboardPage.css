@@ -1,11 +1,17 @@
 /* TITANE∞ v30.1.0 — DashboardPage Optimisé (Desktop) */
 
 .dashboard-fadein {
-  animation: dashboardFadeIn 0.5s cubic-bezier(0.4,0,0.2,1);
+  animation: dashboardFadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 @keyframes dashboardFadeIn {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .dashboard-header {
@@ -45,16 +51,18 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 .dashboard-edit-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(59,130,246,0.4);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
 }
 .dashboard-edit-btn:active {
   transform: translateY(0);
-  box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .dashboard-grid {
@@ -90,13 +98,13 @@
   align-items: center;
   gap: 1.5rem;
   padding: 1rem;
-  background: rgba(24,24,32,0.7);
+  background: rgba(24, 24, 32, 0.7);
   border-radius: 8px;
   margin-bottom: 0.5rem;
   transition: background 0.2s;
 }
 .dashboard-activity-row:hover {
-  background: rgba(59,130,246,0.08);
+  background: rgba(59, 130, 246, 0.08);
 }
 .dashboard-activity-icon {
   font-size: 1.5rem;

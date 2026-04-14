@@ -12,6 +12,12 @@ applyTo: 'src/**'
 
 ## DO
 
+- Pour chaque dashboard agent avancé (monitoring, diagnostic, explainability, orchestrateur, sécurité), ajouter :
+  - Un composant UI avec `data-testid` stable
+  - Un E2E test Playwright dédié
+  - Une entrée dans `UI_SURFACE_MAP.md` et `docs/CARTOGRAPHY_COMPLETE.md`
+  - Un log ou une capture de preuve (alerte, rapport, screenshot)
+
 - Use ErrorBoundary and visible errors.
 - Add stable data-testid for E2E selectors.
 - Keep UI changes minimal and register them.

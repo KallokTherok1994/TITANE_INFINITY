@@ -1,23 +1,45 @@
+---
+
+## Preuves attendues et patterns d'intégration (Agents avancés)
+
+| Agent                         | Preuve attendue                                              | Pattern d'intégration                                                                                                  |
+| ----------------------------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| Monitoring Agent              | Log d'anomalie, screenshot dashboard, alerte UI              | Dashboard UI (`monitoring-dashboard`), service `src/services/monitoring/`, E2E test, mapping UI_SURFACE_MAP.md         |
+| Auto-Diagnostic Agent         | Rapport d'anomalie, log autoheal, preuve de correction       | Dashboard UI (`diagnostic-panel`), service `src/services/diagnostic/`, E2E test, mapping UI_SURFACE_MAP.md             |
+| Explainability Agent          | Rapport d'explicabilité, log d'inférence, capture UI         | Dashboard UI (`explainability-dashboard`), service `src/services/explainability/`, E2E test, mapping UI_SURFACE_MAP.md |
+| Orchestrateur Dynamique Agent | Log de répartition, métrique de charge, screenshot dashboard | Dashboard UI (`orchestrator-dashboard`), service `src/services/orchestrator/`, E2E test, mapping UI_SURFACE_MAP.md     |
+| Agent de Sécurité Active      | Log de détection, alerte sécurité, preuve de confinement     | Dashboard UI (`security-dashboard`), service `src/services/security_active/`, E2E test, mapping UI_SURFACE_MAP.md      |
+
+Pour chaque nouvel agent, la preuve doit inclure : logs, dashboard visible, mapping à jour, test E2E, rollback documenté.
+
 ### Agent de Sécurité Active (security_active/, src/services/security_active/)
+
 - Scope: Détection d’anomalies réseau, sandboxing, réponse automatisée aux menaces, supervision croisée.
 - Gate: Détection d’intrusion, logs de sécurité, tests E2E de résilience, intégration autoheal.
 - Required: Dashboard sécurité, alerting, tests unitaires et E2E, preuve de confinement.
 - Mapping: update `ARCHITECTURE.md`, `docs/CARTOGRAPHY_COMPLETE.md`, `UI_SURFACE_MAP.md` si dashboard UI.
+
 ### Orchestrateur Dynamique Agent (orchestrator/, src/services/orchestrator/)
+
 - Scope: Répartition intelligente des tâches entre agents, adaptation dynamique à la charge, gestion des priorités et des ressources.
 - Gate: Preuve de répartition optimale, logs d’orchestration, tests E2E de charge, intégration autoheal.
 - Required: Dashboard d’orchestration, métriques de charge, tests unitaires et E2E, preuve d’auto-adaptation.
 - Mapping: update `ARCHITECTURE.md`, `docs/CARTOGRAPHY_COMPLETE.md`, `UI_SURFACE_MAP.md` si dashboard UI.
+
 ### Explainability Agent (explainability/, src/services/explainability/)
+
 - Scope: Traçabilité des décisions IA, logs d’inférences, justification des choix, audit explicable.
 - Gate: Génération automatique de rapports d’explicabilité, logs d’inférences, tests E2E sur la traçabilité.
 - Required: Preuve d’explication pour chaque décision IA, intégration avec autoheal, dashboard UI si besoin.
 - Mapping: update `ARCHITECTURE.md`, `docs/CARTOGRAPHY_COMPLETE.md`, `UI_SURFACE_MAP.md` si dashboard UI.
+
 ### Auto-Diagnostic Agent (diagnostic/, src/services/diagnostic/)
+
 - Scope: Analyse proactive des dérives, auto-vérification de l’intégrité, suggestions de correctifs, génération de rapports d’anomalie.
 - Gate: Détection automatique d’erreurs, auto-tests, rapport d’anomalie, intégration avec autoheal.
 - Required: Génération de rapports, tests unitaires et E2E, preuve de correction automatique.
 - Mapping: update `ARCHITECTURE.md`, `docs/CARTOGRAPHY_COMPLETE.md`.
+
 # TITANE∞ - Root AGENTS
 
 ## Authority
@@ -50,6 +72,7 @@ Heavy doctrine belongs to the local Codex rules file, not to the repo.
 ## Agent Specialization
 
 ### Backend Agent (src-tauri/, Rust)
+
 - Scope: Ring 0 (Kernel Rust) + Ring 1 (Types/Data) — Tauri commands, IPC, capabilities, Rust services.
 - Gate: IPC contract `{ ok, content, error }` must be preserved.
 - Required: allowlist update + integration tests for new commands + contract test in `tests/contract/tauri-ipc-contract.test.ts`.
@@ -57,6 +80,7 @@ Heavy doctrine belongs to the local Codex rules file, not to the repo.
 - AutoHeal: append entry on every fix.
 
 ### Frontend Agent (src/, TypeScript/React)
+
 - Scope: Ring 3 (Orchestration/Stores/Hooks) + Ring 4 (UI components, pages, engines).
 - Gate: stable `data-testid` selectors; ErrorBoundary on every new component.
 - Required: E2E tests for user-facing changes; `registry/ui-events.jsonl` entry; update `UI_SURFACE_MAP.md`.
@@ -64,6 +88,7 @@ Heavy doctrine belongs to the local Codex rules file, not to the repo.
 - AutoHeal: append entry on every fix.
 
 ### QA Agent (tests/, e2e/)
+
 - Scope: Ring 3-4 — unit tests, integration tests, E2E harness.
 - Gate: no feature without tests (Rule 16); deterministic selectors only; test coverage matrix enforced.
 - Required: E2E logs + screenshots as proof artifacts; Q&A scenario tests for new capabilities.
@@ -71,6 +96,7 @@ Heavy doctrine belongs to the local Codex rules file, not to the repo.
 - AutoHeal: append entry on every fix.
 
 ### Security Agent (governance/, sbom/, scripts/verify/)
+
 - Scope: Cross-ring — SBOM, governance, audit trails.
 - Gate: no uncontrolled network; capabilities locked.
 - Required: SBOM update on dependency change; audit log entry.
@@ -78,10 +104,12 @@ Heavy doctrine belongs to the local Codex rules file, not to the repo.
 ### Build Agent (scripts/, .github/workflows/)
 
 ### Monitoring Agent (monitoring/, src/services/monitoring/)
- - Scope: Supervision temps réel de la santé des agents, collecte de métriques, alerting, auto-restart.
- - Gate: Détection d'anomalies, logs croisés, preuve de vie agents, alertes sur dérive ou crash.
- - Required: Dashboard de monitoring, logs d'événements, tests E2E de résilience, intégration avec autoheal.
- - Mapping: update `ARCHITECTURE.md`, `docs/CARTOGRAPHY_COMPLETE.md`, `UI_SURFACE_MAP.md` si dashboard UI.
+
+- Scope: Supervision temps réel de la santé des agents, collecte de métriques, alerting, auto-restart.
+- Gate: Détection d'anomalies, logs croisés, preuve de vie agents, alertes sur dérive ou crash.
+- Required: Dashboard de monitoring, logs d'événements, tests E2E de résilience, intégration avec autoheal.
+- Mapping: update `ARCHITECTURE.md`, `docs/CARTOGRAPHY_COMPLETE.md`, `UI_SURFACE_MAP.md` si dashboard UI.
+
 ## Chain-of-Thought Validation
 
 4. Confirm tests exist or will be created (Rule 16).

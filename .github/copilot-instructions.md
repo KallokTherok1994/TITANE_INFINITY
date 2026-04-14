@@ -1,3 +1,17 @@
+## Exigences agents avancés (Monitoring, Diagnostic, Explainability, Orchestrateur, Sécurité)
+
+Pour chaque agent avancé :
+
+- Dashboard UI avec `data-testid` stable et E2E test Playwright
+- Service dédié dans `src/services/<agent>`
+- Mapping à jour dans `UI_SURFACE_MAP.md`, `CARTOGRAPHY_COMPLETE.md`, `ARCHITECTURE.md`
+- Log ou rapport de preuve (capture, alerte, log, rapport)
+- Rollback documenté (désactivation agent, suppression dashboard, restauration mapping)
+
+Exemple de preuve attendue : screenshot dashboard, log d’anomalie, rapport d’explicabilité, alerte UI, log de confinement sécurité.
+
+Tout agent non mappé, non testé ou sans preuve = BLOCKED (Rule 15/16).
+
 # TITANE_INFINITY - Copilot Kernel (Governed)
 
 Mode: AUTO
@@ -69,6 +83,7 @@ If a check cannot run, classify BLOCKED with a next action <= 30 minutes.
 ## Rule 10 - AutoHeal capture is mandatory and automatic
 
 For **every** code modification (any file change in `src/`, `src-tauri/`, `tests/`, `e2e/`, `scripts/`, `.github/`), automatically and without exception:
+
 - Append one entry to `scripts/autoheal/autoheal_rules.jsonl` (schema: `id, date, scope, symptom, root_cause, fix, prevention_test, commands, files_changed, rollback`).
 - Run anti-regression checks relevant to touched scope.
 - Run `bash scripts/autoheal/detect_recurrence.sh` — must exit 0 (PASS).
@@ -107,6 +122,7 @@ Only one active execution authority and one active E2E authority at a time.
 ## Rule 14 - BUILD ALL command
 
 When the user issues `BUILD ALL`, execute the full automated sequence **without any token gate or precondition message**:
+
 1. Bump version per Rule 13 (`node scripts/bump-version.mjs` + `node scripts/sync-versions.mjs`).
 2. Production build + deploy (Tauri desktop).
 3. Build all artifacts: AppImage, DEB, RPM.
@@ -123,6 +139,7 @@ When the user issues `BUILD ALL`, execute the full automated sequence **without 
 ## Rule 15 - Auto-update mapping and cartography
 
 Every code modification must automatically update the relevant mapping documents:
+
 - `UI_SURFACE_MAP.md` — if UI surfaces changed.
 - `ARCHITECTURE.md` — if architecture changed.
 - `OLLAMA_RUNTIME_MAP.md` — if Ollama integration changed.
@@ -132,35 +149,36 @@ Every code modification must automatically update the relevant mapping documents
 
 Trigger table (which doc to update):
 
-| Changed path | Required doc update |
-|---|---|
-| `src/**`, `src/components/**`, `src/pages/**` | `UI_SURFACE_MAP.md`, `docs/CARTOGRAPHY_COMPLETE.md` |
-| `src-tauri/src/**` (new command) | `docs/IPC_CATALOG.md`, `ARCHITECTURE.md`, `docs/CARTOGRAPHY_COMPLETE.md` |
-| `src/engines/**`, `src-tauri/src/` (Ring 2) | `ARCHITECTURE.md`, `docs/CARTOGRAPHY_COMPLETE.md` |
-| Ollama integration (`src/services/**ollama**`, `src-tauri/src/ollama**`) | `OLLAMA_RUNTIME_MAP.md` |
-| Version bump, build artifacts | `RELEASE_SURFACE_INVENTORY.md` |
-| `docs/diagrams/**` | `docs/diagrams/README.md`, `docs/diagrams/CANON_INDEX.md` |
+| Changed path                                                             | Required doc update                                                      |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| `src/**`, `src/components/**`, `src/pages/**`                            | `UI_SURFACE_MAP.md`, `docs/CARTOGRAPHY_COMPLETE.md`                      |
+| `src-tauri/src/**` (new command)                                         | `docs/IPC_CATALOG.md`, `ARCHITECTURE.md`, `docs/CARTOGRAPHY_COMPLETE.md` |
+| `src/engines/**`, `src-tauri/src/` (Ring 2)                              | `ARCHITECTURE.md`, `docs/CARTOGRAPHY_COMPLETE.md`                        |
+| Ollama integration (`src/services/**ollama**`, `src-tauri/src/ollama**`) | `OLLAMA_RUNTIME_MAP.md`                                                  |
+| Version bump, build artifacts                                            | `RELEASE_SURFACE_INVENTORY.md`                                           |
+| `docs/diagrams/**`                                                       | `docs/diagrams/README.md`, `docs/diagrams/CANON_INDEX.md`                |
 
 If a required mapping doc is **not updated** when its trigger path is modified: classify **FAIL** and stop until corrected.
 
 ## Rule 16 - Mandatory test creation
 
 Every new integration, capability, or function must include at the same time:
+
 - Unit tests for the new functionality.
 - Integration tests if cross-module.
 - E2E tests if user-facing.
 - Advanced Q&A scenario tests to validate capabilities.
-No feature is complete without its tests.
+  No feature is complete without its tests.
 
 ### Test coverage matrix (Rule 16 enforcement):
 
-| New artifact | Required tests |
-|---|---|
-| New IPC command (`src-tauri/src/`) | Unit (Rust `#[cfg(test)]`) + contract test in `tests/contract/tauri-ipc-contract.test.ts` |
-| New UI component/page (`src/`) | Unit (Vitest) + E2E with `data-testid` selectors in `e2e/` |
-| New engine/service (`src/engines/`, `src/services/`) | Unit (Vitest) + Integration test |
-| New Ollama/AI integration | Provider test + offline fallback test + Q&A scenario test |
-| New capability exposed to user | E2E scenario + Q&A advanced test (verifying real capacity behavior) |
-| New build/deploy step | Smoke test verifying artifact presence + checksum |
+| New artifact                                         | Required tests                                                                            |
+| ---------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| New IPC command (`src-tauri/src/`)                   | Unit (Rust `#[cfg(test)]`) + contract test in `tests/contract/tauri-ipc-contract.test.ts` |
+| New UI component/page (`src/`)                       | Unit (Vitest) + E2E with `data-testid` selectors in `e2e/`                                |
+| New engine/service (`src/engines/`, `src/services/`) | Unit (Vitest) + Integration test                                                          |
+| New Ollama/AI integration                            | Provider test + offline fallback test + Q&A scenario test                                 |
+| New capability exposed to user                       | E2E scenario + Q&A advanced test (verifying real capacity behavior)                       |
+| New build/deploy step                                | Smoke test verifying artifact presence + checksum                                         |
 
 A gate that detects new source files without corresponding test files classifies the change as BLOCKED until tests exist.

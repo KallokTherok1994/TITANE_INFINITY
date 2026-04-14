@@ -77,7 +77,8 @@ export const DashboardPage = (): JSX.Element => {
               <div>
                 <h1 className="dashboard-title">Bienvenue sur TITANE∞</h1>
                 <p className="dashboard-subtitle">
-                  Système d&apos;intelligence cognitive v∞.19.3Ω — Singularity Architecture Active
+                  Système d&apos;intelligence cognitive v∞.19.3Ω — Singularity
+                  Architecture Active
                 </p>
               </div>
             </div>
@@ -109,7 +110,9 @@ export const DashboardPage = (): JSX.Element => {
                 <div className="dashboard-metric-icon">🦀</div>
                 <h3 className="dashboard-metric-value">875</h3>
                 <p className="dashboard-metric-label">Commandes Tauri</p>
-                <Badge variant="success" size="sm">Backend Rust v∞</Badge>
+                <Badge variant="success" size="sm">
+                  Backend Rust v∞
+                </Badge>
               </Stack>
             </Card>
             <Card variant="glass" elevation="lg" hoverable>
@@ -117,7 +120,9 @@ export const DashboardPage = (): JSX.Element => {
                 <div className="dashboard-metric-icon">📦</div>
                 <h3 className="dashboard-metric-value">26</h3>
                 <p className="dashboard-metric-label">Modules Core (55K+ LOC)</p>
-                <Badge variant="info" size="sm">20 Engines</Badge>
+                <Badge variant="info" size="sm">
+                  20 Engines
+                </Badge>
               </Stack>
             </Card>
             <Card variant="glass" elevation="lg" hoverable>
@@ -125,7 +130,9 @@ export const DashboardPage = (): JSX.Element => {
                 <div className="dashboard-metric-icon">⚛️</div>
                 <h3 className="dashboard-metric-value">128</h3>
                 <p className="dashboard-metric-label">Composants React</p>
-                <Badge variant="primary" size="sm">229 Tests ✓</Badge>
+                <Badge variant="primary" size="sm">
+                  229 Tests ✓
+                </Badge>
               </Stack>
             </Card>
           </div>
@@ -166,7 +173,9 @@ export const DashboardPage = (): JSX.Element => {
                     <div className="dashboard-activity-title-row">{activity.title}</div>
                     <div className="dashboard-activity-time">{activity.time}</div>
                   </div>
-                  <Badge variant="neutral" size="sm">{activity.type}</Badge>
+                  <Badge variant="neutral" size="sm">
+                    {activity.type}
+                  </Badge>
                 </div>
               ))}
             </Stack>

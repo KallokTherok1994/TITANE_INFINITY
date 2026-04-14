@@ -34,14 +34,14 @@ applyTo: 'e2e/**, scripts/e2e/**, wdio*.conf*'
 
 Must be present before any E2E gate can PASS:
 
-| Artifact | Format | Location |
-|---|---|---|
-| `page_classification` | JSON | `reports/e2e/page_classification.json` |
-| `chat_dom_map` | JSON | `reports/e2e/chat_dom_map.json` |
-| `AR20` | JSON | `reports/e2e/AR20.json` |
-| `OFFLINE5` | JSON | `reports/e2e/OFFLINE5.json` |
-| `navigation` | JSON | `reports/e2e/navigation.json` |
-| `stability` | JSON | `reports/e2e/stability.json` |
+| Artifact              | Format | Location                               |
+| --------------------- | ------ | -------------------------------------- |
+| `page_classification` | JSON   | `reports/e2e/page_classification.json` |
+| `chat_dom_map`        | JSON   | `reports/e2e/chat_dom_map.json`        |
+| `AR20`                | JSON   | `reports/e2e/AR20.json`                |
+| `OFFLINE5`            | JSON   | `reports/e2e/OFFLINE5.json`            |
+| `navigation`          | JSON   | `reports/e2e/navigation.json`          |
+| `stability`           | JSON   | `reports/e2e/stability.json`           |
 
 ## Preuves attendues
 
