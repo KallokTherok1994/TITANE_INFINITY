@@ -387,7 +387,7 @@ impl LiteraryEngine {
             .filter(|s| !s.is_empty())
             .collect();
 
-        let chunk_size = (sentences.len() + 2) / 3; // diviser en 3
+        let chunk_size = sentences.len().div_ceil(3); // diviser en 3
         let mut chunks = Vec::new();
 
         for chunk in sentences.chunks(chunk_size) {

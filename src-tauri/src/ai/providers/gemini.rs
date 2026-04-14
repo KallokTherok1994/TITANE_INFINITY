@@ -69,8 +69,7 @@ impl GeminiProvider {
                 let mut text = error_text.clone();
                 // Strip query params containing keys from URLs
                 let lower = text.to_lowercase();
-                if lower.contains("key=") || lower.contains("apikey=") || lower.contains("token=")
-                {
+                if lower.contains("key=") || lower.contains("apikey=") || lower.contains("token=") {
                     text = text
                         .split_whitespace()
                         .map(|w| {

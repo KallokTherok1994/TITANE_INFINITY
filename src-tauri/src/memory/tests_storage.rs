@@ -58,13 +58,19 @@ mod tests {
         let storage = MemoryStorage::new(storage_path.clone(), "password".to_string())?;
 
         // After new(), directory must NOT exist yet (lazy init).
-        assert!(!storage_path.exists(), "Directory must not be created at new() (lazy-init)");
+        assert!(
+            !storage_path.exists(),
+            "Directory must not be created at new() (lazy-init)"
+        );
 
         // Trigger first write — directory must be created lazily.
         let conv = create_test_conversation();
         storage.save_conversation(&conv)?;
 
-        assert!(storage_path.exists(), "Directory must be created after first save_conversation()");
+        assert!(
+            storage_path.exists(),
+            "Directory must be created after first save_conversation()"
+        );
 
         Ok(())
     }

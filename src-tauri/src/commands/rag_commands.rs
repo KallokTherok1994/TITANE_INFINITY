@@ -108,9 +108,7 @@ async fn call_ollama_embed(text: &str) -> Result<Vec<f32>, String> {
     if !response.status().is_success() {
         let status = response.status();
         let err_text = response.text().await.unwrap_or_default();
-        return Err(format!(
-            "Ollama embeddings HTTP {status}: {err_text}"
-        ));
+        return Err(format!("Ollama embeddings HTTP {status}: {err_text}"));
     }
 
     let parsed: OllamaEmbedResponse = response
@@ -158,9 +156,7 @@ pub async fn rag_generate_embeddings(texts: Vec<String>) -> Result<EmbeddingsRes
     if texts.is_empty() {
         return Ok(EmbeddingsResponse {
             ok: true,
-            content: Some(EmbeddingsContent {
-                embeddings: vec![],
-            }),
+            content: Some(EmbeddingsContent { embeddings: vec![] }),
             error: None,
         });
     }
@@ -271,7 +267,9 @@ mod tests {
         // Success response
         let success = EmbeddingResponse {
             ok: true,
-            content: Some(EmbeddingContent { embedding: vec![1.0] }),
+            content: Some(EmbeddingContent {
+                embedding: vec![1.0],
+            }),
             error: None,
         };
         let json = serde_json::to_value(&success).unwrap();

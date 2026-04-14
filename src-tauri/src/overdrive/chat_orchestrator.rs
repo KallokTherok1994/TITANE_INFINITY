@@ -1886,7 +1886,7 @@ pub async fn chat_stream_message(
     let response = chat_send_message(streaming_request, state).await?;
     let full_content = response.message.content;
     let message_id = response.message.id.clone();
-    let total_chunks = (full_content.len() + chunk_size - 1) / chunk_size;
+    let total_chunks = full_content.len().div_ceil(chunk_size);
     let mut ordinal: u32 = 0;
 
     println!(

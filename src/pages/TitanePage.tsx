@@ -286,7 +286,7 @@ export const TitanePage: React.FC = () => {
   // ═══ RENDER ═══
   return (
     <ErrorBoundary context="TitanePage">
-      <Container size="xl" className="titane-page" data-testid="page-titane">
+      <Container size="full" className="titane-page" data-testid="page-titane">
         <Stack direction="vertical" gap={4}>
           {/* ═══ PAGE HEADER (Integrated, Not Navigation) ═══ */}
           <div className="titane-page-header">

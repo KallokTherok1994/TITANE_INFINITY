@@ -99,12 +99,12 @@ pub mod cache; // ✅ Intelligent Cache LRU + Persistent v19.5.2 P2-2 (NEW) // �
 
 pub mod ai; // ✅ AI Router (v15 migration in progress)
 pub mod ai_chat; // ✅ AI Chat & Training Mode v∞ (OPUS #12)
-pub mod ollama; // ✅ Canonical Ollama runtime bridge for Tauri/library builds
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 pub mod chat_engine; // ✅ High-performance Chat Engine v∞
 pub mod conversation_engine; // ✅ Conversation Engine v∞ (Unified Pipeline, Memory Map, Self-Healing)
 pub mod ia; // ✅ v∞.19.3Ω: Unified IA Engine (OpenAI + Claude + Gemini + Local)
-pub mod multi_agents; // ✅ v∞.19.3Ω: Multi-Agents avec permissions IA (NEW)
+pub mod multi_agents;
+pub mod ollama; // ✅ Canonical Ollama runtime bridge for Tauri/library builds // ✅ v∞.19.3Ω: Multi-Agents avec permissions IA (NEW)
 
 // ═════════════════════════════════════════════════════════
 // MEMORY SYSTEM v24.2 (Phase 2 Simplification)
@@ -485,11 +485,9 @@ pub fn run() {
         runtime_config::boot_marker_log,
     ]);
 
-    builder
-        .run(tauri::generate_context!())
-        .unwrap_or_else(|e| {
-            // I10: explicit error — no .expect() in production
-            eprintln!("❌ TITANE∞ run error: {e:?}");
-            std::process::exit(1);
-        });
+    builder.run(tauri::generate_context!()).unwrap_or_else(|e| {
+        // I10: explicit error — no .expect() in production
+        eprintln!("❌ TITANE∞ run error: {e:?}");
+        std::process::exit(1);
+    });
 }

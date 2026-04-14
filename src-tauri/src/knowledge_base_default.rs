@@ -124,8 +124,7 @@ const ANALYSE_PROFESSIONNELLE: &str =
     include_str!("../../data/knowledge_base/default/analyse_professionnelle.json");
 const MANAGEMENT_QUALITE: &str =
     include_str!("../../data/knowledge_base/default/management_qualite.json");
-const METIER_QUALITE: &str =
-    include_str!("../../data/knowledge_base/default/metier_qualite.json");
+const METIER_QUALITE: &str = include_str!("../../data/knowledge_base/default/metier_qualite.json");
 const DROIT_NOTARIAL_FONDAMENTAUX: &str =
     include_str!("../../data/knowledge_base/default/droit_notarial_fondamentaux.json");
 const ACTES_NOTARIAUX: &str =
@@ -156,12 +155,10 @@ const SEXUALITE_INTIMITE: &str =
 // ── v30.0.0 expansion — phase 7 (nutrition avancée, callisthénie, méditation, yoga) ─
 const NUTRITION_AVANCEE: &str =
     include_str!("../../data/knowledge_base/default/nutrition_avancee.json");
-const CALISTHENIE: &str =
-    include_str!("../../data/knowledge_base/default/calisthenie.json");
+const CALISTHENIE: &str = include_str!("../../data/knowledge_base/default/calisthenie.json");
 const MEDITATION_PRATIQUE: &str =
     include_str!("../../data/knowledge_base/default/meditation_pratique.json");
-const YOGA_PRATIQUE: &str =
-    include_str!("../../data/knowledge_base/default/yoga_pratique.json");
+const YOGA_PRATIQUE: &str = include_str!("../../data/knowledge_base/default/yoga_pratique.json");
 
 // ── v30.0.0 expansion — phase 6 (approfondissement santé naturelle & communication) ──
 const ENERGETIQUE_SOINS_CORPS: &str =
@@ -295,8 +292,7 @@ const SYNCHRONISATION_ORCHESTRATION: &str =
     include_str!("../../data/knowledge_base/default/synchronisation_orchestration.json");
 
 // ── v30.0.0 expansion — phase 17 (bourse, crypto, cuisine, droit, énergie, jeux vidéo, musique, voyage) ─
-const BOURSE_TRADING: &str =
-    include_str!("../../data/knowledge_base/default/bourse_trading.json");
+const BOURSE_TRADING: &str = include_str!("../../data/knowledge_base/default/bourse_trading.json");
 const CRYPTO_BLOCKCHAIN: &str =
     include_str!("../../data/knowledge_base/default/crypto_blockchain.json");
 const CUISINE_GASTRONOMIE: &str =
@@ -430,8 +426,9 @@ const COACHING_GENERATIF_DILTS_GILLIGAN: &str =
     include_str!("../../data/knowledge_base/default/coaching_generatif_dilts_gilligan.json");
 const TCC_TROISIEME_VAGUE: &str =
     include_str!("../../data/knowledge_base/default/tcc_troisieme_vague.json");
-const ANALYSE_TRANSACTIONNELLE_PSYCHOGENEALOGIE: &str =
-    include_str!("../../data/knowledge_base/default/analyse_transactionnelle_psychogenealogie.json");
+const ANALYSE_TRANSACTIONNELLE_PSYCHOGENEALOGIE: &str = include_str!(
+    "../../data/knowledge_base/default/analyse_transactionnelle_psychogenealogie.json"
+);
 
 // ─────────────────────────────────────────────────────────────────
 // LAZY STATIC CACHE — parsed once, reused on every call
@@ -514,7 +511,10 @@ impl DefaultKnowledgeBase {
         ("coherence_identitaire", COHERENCE_IDENTITAIRE),
         ("realisme_conversationnel", REALISME_CONVERSATIONNEL),
         // v30.0.0 expansion — phase 4 (communication & psychologie FR)
-        ("communication_interpersonnelle", COMMUNICATION_INTERPERSONNELLE),
+        (
+            "communication_interpersonnelle",
+            COMMUNICATION_INTERPERSONNELLE,
+        ),
         ("psychologie_cognitive", PSYCHOLOGIE_COGNITIVE),
         ("psychologie_emotionnelle", PSYCHOLOGIE_EMOTIONNELLE),
         ("psychologie_motivation", PSYCHOLOGIE_MOTIVATION),
@@ -527,7 +527,10 @@ impl DefaultKnowledgeBase {
         ("naturopathie_fondamentaux", NATUROPATHIE_FONDAMENTAUX),
         ("medecine_hollistique", MEDECINE_HOLLISTIQUE),
         ("nutrition_sante_naturelle", NUTRITION_SANTE_NATURELLE),
-        ("plantes_medicinales_aromatherapie", PLANTES_MEDICINALES_AROMATHERAPIE),
+        (
+            "plantes_medicinales_aromatherapie",
+            PLANTES_MEDICINALES_AROMATHERAPIE,
+        ),
         ("communication_avancee", COMMUNICATION_AVANCEE),
         ("bien_etre_mental_stress", BIEN_ETRE_MENTAL_STRESS),
         ("sante_corps_naturelle", SANTE_CORPS_NATURELLE),
@@ -542,7 +545,10 @@ impl DefaultKnowledgeBase {
         // v30.0.0 expansion — phase 10 (administration, communication, stratégie)
         ("administration_publique", ADMINISTRATION_PUBLIQUE),
         ("management_administration", MANAGEMENT_ADMINISTRATION),
-        ("communication_institutionnelle", COMMUNICATION_INSTITUTIONNELLE),
+        (
+            "communication_institutionnelle",
+            COMMUNICATION_INSTITUTIONNELLE,
+        ),
         ("communication_crise", COMMUNICATION_CRISE),
         ("strategie_entreprise", STRATEGIE_ENTREPRISE),
         ("strategie_concurrentielle", STRATEGIE_CONCURRENTIELLE),
@@ -578,33 +584,63 @@ impl DefaultKnowledgeBase {
         ("coaching_leadership", COACHING_LEADERSHIP),
         ("relations_humaines_profondes", RELATIONS_HUMAINES_PROFONDES),
         ("spiritualite_sens_existence", SPIRITUALITE_SENS_EXISTENCE),
-        ("immunite_prevention_naturelle", IMMUNITE_PREVENTION_NATURELLE),
-        ("ecriture_expression_creatrice", ECRITURE_EXPRESSION_CREATRICE),
+        (
+            "immunite_prevention_naturelle",
+            IMMUNITE_PREVENTION_NATURELLE,
+        ),
+        (
+            "ecriture_expression_creatrice",
+            ECRITURE_EXPRESSION_CREATRICE,
+        ),
         // v30.0.0 expansion — phase 12 (finance avancée, revenus, applications, copywriting, sites web, poésie, droit, vie pro/perso, coaching, médecine naturelle, revenus en ligne, peak performance, santé mentale, growth marketing)
-        ("strategies_revenus_monetisation", STRATEGIES_REVENUS_MONETISATION),
+        (
+            "strategies_revenus_monetisation",
+            STRATEGIES_REVENUS_MONETISATION,
+        ),
         ("investissement_patrimoine", INVESTISSEMENT_PATRIMOINE),
         ("creation_applications_saas", CREATION_APPLICATIONS_SAAS),
-        ("copywriting_content_marketing", COPYWRITING_CONTENT_MARKETING),
+        (
+            "copywriting_content_marketing",
+            COPYWRITING_CONTENT_MARKETING,
+        ),
         ("creation_sites_web_pratique", CREATION_SITES_WEB_PRATIQUE),
         ("poesie_ecriture_avancee", POESIE_ECRITURE_AVANCEE),
         ("droit_pratique_quotidien", DROIT_PRATIQUE_QUOTIDIEN),
         ("equilibre_vie_pro_perso", EQUILIBRE_VIE_PRO_PERSO),
-        ("coaching_transformation_personnelle", COACHING_TRANSFORMATION_PERSONNELLE),
+        (
+            "coaching_transformation_personnelle",
+            COACHING_TRANSFORMATION_PERSONNELLE,
+        ),
         ("medecine_naturelle_pratique", MEDECINE_NATURELLE_PRATIQUE),
         ("revenus_en_ligne_affiliation", REVENUS_EN_LIGNE_AFFILIATION),
-        ("plein_potentiel_peak_performance", PLEIN_POTENTIEL_PEAK_PERFORMANCE),
+        (
+            "plein_potentiel_peak_performance",
+            PLEIN_POTENTIEL_PEAK_PERFORMANCE,
+        ),
         ("sante_mentale_therapies", SANTE_MENTALE_THERAPIES),
         ("marketing_affiliation_growth", MARKETING_AFFILIATION_GROWTH),
         // v30.0.0 expansion — phase 13 VISIONNAIRE_2.0 (bourse/crypto/immobilier/ecommerce/dropship/freelance/infoproduits/automation/fiscalité/mindset argent)
         ("bourse_trading_avance", BOURSE_TRADING_AVANCE),
         ("crypto_blockchain_avance", CRYPTO_BLOCKCHAIN_AVANCE),
-        ("investissement_immobilier_avance", INVESTISSEMENT_IMMOBILIER_AVANCE),
+        (
+            "investissement_immobilier_avance",
+            INVESTISSEMENT_IMMOBILIER_AVANCE,
+        ),
         ("ecommerce_scaling_avance", ECOMMERCE_SCALING_AVANCE),
         ("dropshipping_print_on_demand", DROPSHIPPING_PRINT_ON_DEMAND),
         ("freelance_consulting_premium", FREELANCE_CONSULTING_PREMIUM),
-        ("infoproduits_formations_en_ligne", INFOPRODUITS_FORMATIONS_EN_LIGNE),
-        ("automatisation_revenus_passifs", AUTOMATISATION_REVENUS_PASSIFS),
-        ("fiscalite_optimisation_patrimoine", FISCALITE_OPTIMISATION_PATRIMOINE),
+        (
+            "infoproduits_formations_en_ligne",
+            INFOPRODUITS_FORMATIONS_EN_LIGNE,
+        ),
+        (
+            "automatisation_revenus_passifs",
+            AUTOMATISATION_REVENUS_PASSIFS,
+        ),
+        (
+            "fiscalite_optimisation_patrimoine",
+            FISCALITE_OPTIMISATION_PATRIMOINE,
+        ),
         ("mindset_financier_wealth", MINDSET_FINANCIER_WEALTH),
         // v30.0.0 expansion — phase 14 (art, artisanat, rénovation, sciences, biologie, technologie, politique, décoration, photographie, botanique, faune, chakras, astrologie)
         ("art_histoire_pratique", ART_HISTOIRE_PRATIQUE),
@@ -612,7 +648,10 @@ impl DefaultKnowledgeBase {
         ("renovation_bricolage_habitat", RENOVATION_BRICOLAGE_HABITAT),
         ("science_physique_chimie", SCIENCE_PHYSIQUE_CHIMIE),
         ("biologie_sciences_vivant", BIOLOGIE_SCIENCES_VIVANT),
-        ("technologie_innovation_avancee", TECHNOLOGIE_INNOVATION_AVANCEE),
+        (
+            "technologie_innovation_avancee",
+            TECHNOLOGIE_INNOVATION_AVANCEE,
+        ),
         ("politique_geopolitique", POLITIQUE_GEOPOLITIQUE),
         ("decoration_interieure_design", DECORATION_INTERIEURE_DESIGN),
         ("photographie_analyse_image", PHOTOGRAPHIE_ANALYSE_IMAGE),
@@ -632,17 +671,26 @@ impl DefaultKnowledgeBase {
         ("cycles_naturels_energie_lune", CYCLES_NATURELS_ENERGIE_LUNE),
         ("geologie_mineraux_terre", GEOLOGIE_MINERAUX_TERRE),
         // phase 16
-        ("langages_programmation_avance", LANGAGES_PROGRAMMATION_AVANCE),
+        (
+            "langages_programmation_avance",
+            LANGAGES_PROGRAMMATION_AVANCE,
+        ),
         ("environnements_dev_outils", ENVIRONNEMENTS_DEV_OUTILS),
         ("firebase_backend_cloud", FIREBASE_BACKEND_CLOUD),
         ("design_graphique_adobe", DESIGN_GRAPHIQUE_ADOBE),
         ("suite_office_microsoft", SUITE_OFFICE_MICROSOFT),
         ("suite_google_workspace", SUITE_GOOGLE_WORKSPACE),
         ("formats_fichiers_avance", FORMATS_FICHIERS_AVANCE),
-        ("intelligence_artificielle_pratique", INTELLIGENCE_ARTIFICIELLE_PRATIQUE),
+        (
+            "intelligence_artificielle_pratique",
+            INTELLIGENCE_ARTIFICIELLE_PRATIQUE,
+        ),
         ("developpement_jeux_unity", DEVELOPPEMENT_JEUX_UNITY),
         ("web_design_ui_ux", WEB_DESIGN_UI_UX),
-        ("synchronisation_orchestration", SYNCHRONISATION_ORCHESTRATION),
+        (
+            "synchronisation_orchestration",
+            SYNCHRONISATION_ORCHESTRATION,
+        ),
         // v30.0.0 expansion — phase 17 (bourse, crypto, cuisine, droit, énergie, jeux vidéo, musique, voyage)
         ("bourse_trading", BOURSE_TRADING),
         ("crypto_blockchain", CRYPTO_BLOCKCHAIN),
@@ -655,41 +703,83 @@ impl DefaultKnowledgeBase {
         // v30.1.0 expansion — connaissances avancées bien-être, neurosciences, thérapies
         ("neurochimie_bonheur", NEUROCHIMIE_BONHEUR),
         ("langage_corporel_avance", LANGAGE_CORPOREL_AVANCE),
-        ("communication_professionnelle_avancee", COMMUNICATION_PROFESSIONNELLE_AVANCEE),
+        (
+            "communication_professionnelle_avancee",
+            COMMUNICATION_PROFESSIONNELLE_AVANCEE,
+        ),
         ("chiropratique_avancee", CHIROPRATIQUE_AVANCEE),
-        ("acupuncture_acupression_avancee", ACUPUNCTURE_ACUPRESSION_AVANCEE),
-        ("physiotherapie_osteopathie_avancee", PHYSIOTHERAPIE_OSTEOPATHIE_AVANCEE),
+        (
+            "acupuncture_acupression_avancee",
+            ACUPUNCTURE_ACUPRESSION_AVANCEE,
+        ),
+        (
+            "physiotherapie_osteopathie_avancee",
+            PHYSIOTHERAPIE_OSTEOPATHIE_AVANCEE,
+        ),
         ("massage_therapeutique_avance", MASSAGE_THERAPEUTIQUE_AVANCE),
         ("yoga_kundalini_maitre", YOGA_KUNDALINI_MAITRE),
-        ("therapies_alternatives_creatives", THERAPIES_ALTERNATIVES_CREATIVES),
-        ("phytotherapie_remedes_elixirs", PHYTOTHERAPIE_REMEDES_ELIXIRS),
+        (
+            "therapies_alternatives_creatives",
+            THERAPIES_ALTERNATIVES_CREATIVES,
+        ),
+        (
+            "phytotherapie_remedes_elixirs",
+            PHYTOTHERAPIE_REMEDES_ELIXIRS,
+        ),
         ("cerveau_humain_avance", CERVEAU_HUMAIN_AVANCE),
         ("depression_burnout_avance", DEPRESSION_BURNOUT_AVANCE),
         ("gestion_energie_vitalite", GESTION_ENERGIE_VITALITE),
         ("culture_japonaise_sagesse", CULTURE_JAPONAISE_SAGESSE),
         // v30.1.0 expansion — phase 19 (santé avancée, MTC, Ayurveda, microbiome, hormones, respiration, Qi Gong, hypnose/PNL, trauma, détox, réflexologie, sophrologie, santé masculine, médecine fonctionnelle, aromathérapie, psychologie positive)
-        ("medecine_traditionnelle_chinoise_avancee", MEDECINE_TRADITIONNELLE_CHINOISE_AVANCEE),
+        (
+            "medecine_traditionnelle_chinoise_avancee",
+            MEDECINE_TRADITIONNELLE_CHINOISE_AVANCEE,
+        ),
         ("ayurveda_avance", AYURVEDA_AVANCE),
-        ("microbiome_axe_intestin_cerveau", MICROBIOME_AXE_INTESTIN_CERVEAU),
+        (
+            "microbiome_axe_intestin_cerveau",
+            MICROBIOME_AXE_INTESTIN_CERVEAU,
+        ),
         ("systeme_hormonal_endocrinien", SYSTEME_HORMONAL_ENDOCRINIEN),
         ("respiration_pranayama_avance", RESPIRATION_PRANAYAMA_AVANCE),
         ("qi_gong_tai_chi_avance", QI_GONG_TAI_CHI_AVANCE),
         ("hypnotherapie_pnl_avancee", HYPNOTHERAPIE_PNL_AVANCEE),
-        ("traumatisme_resilience_avance", TRAUMATISME_RESILIENCE_AVANCE),
+        (
+            "traumatisme_resilience_avance",
+            TRAUMATISME_RESILIENCE_AVANCE,
+        ),
         ("detox_jeune_purification", DETOX_JEUNE_PURIFICATION),
         ("reflexologie_avancee", REFLEXOLOGIE_AVANCEE),
-        ("sophrologie_relaxation_avancee", SOPHROLOGIE_RELAXATION_AVANCEE),
+        (
+            "sophrologie_relaxation_avancee",
+            SOPHROLOGIE_RELAXATION_AVANCEE,
+        ),
         ("sante_masculine_naturelle", SANTE_MASCULINE_NATURELLE),
-        ("medecine_fonctionnelle_integrative", MEDECINE_FONCTIONNELLE_INTEGRATIVE),
+        (
+            "medecine_fonctionnelle_integrative",
+            MEDECINE_FONCTIONNELLE_INTEGRATIVE,
+        ),
         ("aromatherapie_avancee", AROMATHERAPIE_AVANCEE),
-        ("psychologie_positive_science_bonheur", PSYCHOLOGIE_POSITIVE_SCIENCE_BONHEUR),
+        (
+            "psychologie_positive_science_bonheur",
+            PSYCHOLOGIE_POSITIVE_SCIENCE_BONHEUR,
+        ),
         // v30.1.0 expansion — phase 20 (PNL maître, hypnose maître, thérapie systémique, coaching génératif, TCC 3e vague, AT/psychogénéalogie)
         ("pnl_maitre_praticien", PNL_MAITRE_PRATICIEN),
         ("hypnose_maitre_praticien", HYPNOSE_MAITRE_PRATICIEN),
-        ("therapie_systemique_familiale", THERAPIE_SYSTEMIQUE_FAMILIALE),
-        ("coaching_generatif_dilts_gilligan", COACHING_GENERATIF_DILTS_GILLIGAN),
+        (
+            "therapie_systemique_familiale",
+            THERAPIE_SYSTEMIQUE_FAMILIALE,
+        ),
+        (
+            "coaching_generatif_dilts_gilligan",
+            COACHING_GENERATIF_DILTS_GILLIGAN,
+        ),
         ("tcc_troisieme_vague", TCC_TROISIEME_VAGUE),
-        ("analyse_transactionnelle_psychogenealogie", ANALYSE_TRANSACTIONNELLE_PSYCHOGENEALOGIE),
+        (
+            "analyse_transactionnelle_psychogenealogie",
+            ANALYSE_TRANSACTIONNELLE_PSYCHOGENEALOGIE,
+        ),
     ];
 
     /// Load all default knowledge entries from embedded JSON.
@@ -1089,18 +1179,9 @@ mod tests {
         let entry = DefaultKnowledgeBase::get_entry("ipc_commands_catalog");
         assert!(entry.is_some(), "ipc_commands_catalog must exist");
         let e = entry.unwrap();
-        let cats = e
-            .content
-            .get("categories")
-            .expect("Must have 'categories'");
-        assert!(
-            cats.get("ai_chat").is_some(),
-            "Must have ai_chat commands"
-        );
-        assert!(
-            cats.get("memory").is_some(),
-            "Must have memory commands"
-        );
+        let cats = e.content.get("categories").expect("Must have 'categories'");
+        assert!(cats.get("ai_chat").is_some(), "Must have ai_chat commands");
+        assert!(cats.get("memory").is_some(), "Must have memory commands");
         assert!(
             cats.get("singularity").is_some(),
             "Must have singularity commands"

@@ -62,21 +62,15 @@ fn search_api_url() -> String {
 // Internal implementation
 // ─────────────────────────────────────────────────────────────────
 
-async fn perform_web_search(
-    query: &str,
-    max_results: u32,
-) -> Result<Vec<WebSearchResult>, String> {
+async fn perform_web_search(query: &str, max_results: u32) -> Result<Vec<WebSearchResult>, String> {
     let base_url = search_api_url();
     let client = reqwest::Client::builder()
         .timeout(Duration::from_secs(SEARCH_TIMEOUT_SECS))
         .build()
         .map_err(|e| format!("Failed to build HTTP client: {e}"))?;
 
-    let url = reqwest::Url::parse_with_params(
-        &base_url,
-        &[("q", query), ("format", "json")],
-    )
-    .map_err(|e| format!("Failed to build search URL: {e}"))?;
+    let url = reqwest::Url::parse_with_params(&base_url, &[("q", query), ("format", "json")])
+        .map_err(|e| format!("Failed to build search URL: {e}"))?;
 
     let response = client
         .get(url)
@@ -252,7 +246,9 @@ fn parse_ddg_lite_html(html: &str, max_results: u32) -> Vec<WebSearchResult> {
             let snip_slice = &after_tag[snip_start..];
             if let Some(snip_tag_end) = snip_slice.find('>') {
                 let snip_content = &snip_slice[snip_tag_end + 1..];
-                let snip_close = snip_content.find('<').unwrap_or(snip_content.len().min(MAX_SNIPPET_LENGTH));
+                let snip_close = snip_content
+                    .find('<')
+                    .unwrap_or(snip_content.len().min(MAX_SNIPPET_LENGTH));
                 strip_tags(&snip_content[..snip_close]).trim().to_string()
             } else {
                 String::new()
@@ -331,13 +327,19 @@ mod tests {
         assert_eq!(base, DEFAULT_SEARCH_API);
 
         // Build the query URL as perform_web_search would
-        let url = reqwest::Url::parse_with_params(&base, &[("q", "hello world"), ("format", "json")])
-            .expect("URL construction must succeed");
+        let url =
+            reqwest::Url::parse_with_params(&base, &[("q", "hello world"), ("format", "json")])
+                .expect("URL construction must succeed");
 
         let url_str = url.as_str();
-        assert!(url_str.contains("q=hello+world") || url_str.contains("q=hello%20world"),
-            "query must be URL-encoded, got: {url_str}");
-        assert!(url_str.contains("format=json"), "format=json must be present");
+        assert!(
+            url_str.contains("q=hello+world") || url_str.contains("q=hello%20world"),
+            "query must be URL-encoded, got: {url_str}"
+        );
+        assert!(
+            url_str.contains("format=json"),
+            "format=json must be present"
+        );
     }
 
     /// When SearXNG is unavailable, the command must gracefully attempt the
@@ -372,7 +374,7 @@ mod tests {
         assert_eq!(DEFAULT_MAX_RESULTS, 10);
 
         // The limit calculation mirrors the command logic
-        let limit: u32 = None::<u32>.unwrap_or(DEFAULT_MAX_RESULTS);
+        let limit: u32 = DEFAULT_MAX_RESULTS;
         assert_eq!(limit, 10);
     }
 

@@ -1558,8 +1558,8 @@ const ChatComponent: React.FC = () => {
             </div>
           </div>
 
-          {/* Messages Container with Protection */}
-          <div className="chat-content">
+          {/* Messages Container + Input collé en bas (plus de footer distinct) */}
+          <div className="chat-content chat-content-fullheight">
             {error && pageState.renderError ? (
               <div className="chat-error-combined">
                 <div className="chat-error-omega">
@@ -1610,156 +1610,151 @@ const ChatComponent: React.FC = () => {
                     actionsPerformed={runtimeThinking.actionsPerformed}
                   />
                 )}
+
+                {/* Input et Toolbar collés en bas */}
+                {voiceModeActive && (
+                  <div
+                    style={{
+                      padding: '1rem',
+                      background: 'rgba(102, 126, 234, 0.1)',
+                      borderRadius: '12px',
+                      marginBottom: '1rem',
+                      border: '1px solid rgba(102, 126, 234, 0.2)',
+                    }}
+                  >
+                    <React.Suspense
+                      fallback={
+                        <div
+                          style={{ padding: '1rem', textAlign: 'center', color: '#93b399' }}
+                        >
+                          🎤 Chargement conversation vocale...
+                        </div>
+                      }
+                    >
+                      <VoiceConversation
+                        onTranscript={text => {
+                          isDev && console.log('[OMEGA] Voice transcript:', text);
+                        }}
+                        onResponse={response => {
+                          isDev && console.log('[OMEGA] Voice response:', response);
+                        }}
+                      />
+                    </React.Suspense>
+                  </div>
+                )}
+
+                {preferredProvider !== 'auto' &&
+                  preferredProvider !== 'local' &&
+                  preferredProvider !== 'ollama' &&
+                  !providerReadiness[preferredProvider] && (
+                    <div
+                      className="chat-provider-warning"
+                      style={{
+                        padding: '12px 16px',
+                        marginBottom: '8px',
+                        backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                        border: '1px solid rgba(255, 193, 7, 0.3)',
+                        borderRadius: '8px',
+                        color: '#ffc107',
+                        fontSize: '14px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                      }}
+                    >
+                      <span style={{ fontSize: '18px' }}>⚠️</span>
+                      <span>
+                        <strong>{preferredProvider.toUpperCase()}</strong> n&apos;est pas
+                        configuré. Le système basculera automatiquement vers un provider
+                        disponible. Pour utiliser {preferredProvider}, ajoutez votre clé API
+                        dans <strong>Gouvernance → Secrets</strong>.
+                      </span>
+                    </div>
+                  )}
+
+                <ChatToolbar
+                  onFilesAnalyzed={handleFilesAnalyzed}
+                  onFileImport={files => {
+                    isDev && console.log('[Chat] Files imported:', files.length);
+                    // Créer un résumé des fichiers pour le message
+                    const fileNames = Array.from(files)
+                      .map(f => f.name)
+                      .join(', ');
+                    sendMessage(
+                      `📎 Fichiers importés pour analyse: ${fileNames}\n\nAnalyse ces fichiers et donne-moi un résumé.`
+                    );
+                  }}
+                  onScreenCapture={imageData => {
+                    isDev &&
+                      console.log('[Chat] Screenshot captured, size:', imageData.length);
+                    // Stocker l&apos;image et envoyer pour analyse
+                    setAttachedImages(prev => [...prev, imageData]);
+                    sendMessage(
+                      `📸 [Capture d&apos;écran attachée]\n\nAnalyse cette capture d&apos;écran et décris ce que tu vois.`
+                    );
+                  }}
+                  onImageAnalysis={(imageData, prompt) => {
+                    isDev && console.log('[Chat] Image analysis requested:', prompt);
+                    // Stocker l&apos;image et envoyer pour analyse Vision IA
+                    setAttachedImages(prev => [...prev, imageData]);
+                    sendMessage(
+                      `👁️ [Image attachée pour analyse Vision IA]\n\n${prompt || 'Analyse cette image en détail et décris ce que tu vois.'}`
+                    );
+                  }}
+                  onDictationResult={text => {
+                    isDev && console.log('[Chat] Dictation result:', text);
+                    // Stocker le texte dicté pour l&apos;utiliser dans ChatInput
+                    setPendingDictationText(prev => (prev ? `${prev} ${text}` : text));
+                    // Envoyer directement le message dicté
+                    if (text.trim()) {
+                      sendMessage(text);
+                    }
+                  }}
+                  onAudioRecorded={audioBlob => {
+                    isDev && console.log('[Chat] Audio recorded:', audioBlob.size, 'bytes');
+                    const sizeMB = (audioBlob.size / (1024 * 1024)).toFixed(2);
+                    sendMessage(
+                      `🎤 [Message vocal enregistré - ${sizeMB} MB]\n\nTranscris et analyse ce message audio.`
+                    );
+                  }}
+                  onTranscriptionResult={text => {
+                    isDev && console.log('[Chat] Transcription result:', text);
+                    sendMessage(
+                      `📝 Transcription audio:\n\n"${text}"\n\nRésume et analyse ce contenu.`
+                    );
+                  }}
+                  onToggleAudioConversation={active => {
+                    isDev && console.log('[Chat] Audio conversation:', active ? 'ON' : 'OFF');
+                    if (active && !voiceModeActive) {
+                      toggleVoiceMode();
+                    } else if (!active && voiceModeActive) {
+                      toggleVoiceMode();
+                    }
+                  }}
+                  onToggleCameraLive={active => {
+                    isDev && console.log('[Chat] Camera live:', active ? 'ON' : 'OFF');
+                    // La caméra est gérée via useVisionStore dans ChatToolbar
+                  }}
+                  onToggleTTS={active => {
+                    isDev && console.log('[Chat] TTS:', active ? 'ON' : 'OFF');
+                    setTtsEnabled(active);
+                  }}
+                  disabled={isLoading || pageState.isCorrupted}
+                  compact={false}
+                />
+
+                <ChatInput
+                  onSend={sendMessage}
+                  onFilesAnalyzed={handleFilesAnalyzed}
+                  disabled={isLoading || pageState.isCorrupted}
+                  voiceModeActive={voiceModeActive}
+                  onToggleVoiceMode={toggleVoiceMode}
+                  placeholder={chatInputPlaceholder}
+                  enableDictation
+                  enableFileUpload
+                />
               </>
             )}
-          </div>
-
-          {/* Enhanced Input with Voice Button + Protection */}
-          <div className="chat-footer">
-            {/* Voice Conversation Panel when active */}
-            {voiceModeActive && (
-              <div
-                style={{
-                  padding: '1rem',
-                  background: 'rgba(102, 126, 234, 0.1)',
-                  borderRadius: '12px',
-                  marginBottom: '1rem',
-                  border: '1px solid rgba(102, 126, 234, 0.2)',
-                }}
-              >
-                <React.Suspense
-                  fallback={
-                    <div
-                      style={{ padding: '1rem', textAlign: 'center', color: '#93b399' }}
-                    >
-                      🎤 Chargement conversation vocale...
-                    </div>
-                  }
-                >
-                  <VoiceConversation
-                    onTranscript={text => {
-                      isDev && console.log('[OMEGA] Voice transcript:', text);
-                    }}
-                    onResponse={response => {
-                      isDev && console.log('[OMEGA] Voice response:', response);
-                    }}
-                  />
-                </React.Suspense>
-              </div>
-            )}
-
-            {/* ✨ v24.3.0 - Provider Readiness Warning */}
-            {preferredProvider !== 'auto' &&
-              preferredProvider !== 'local' &&
-              preferredProvider !== 'ollama' &&
-              !providerReadiness[preferredProvider] && (
-                <div
-                  className="chat-provider-warning"
-                  style={{
-                    padding: '12px 16px',
-                    marginBottom: '8px',
-                    backgroundColor: 'rgba(255, 193, 7, 0.1)',
-                    border: '1px solid rgba(255, 193, 7, 0.3)',
-                    borderRadius: '8px',
-                    color: '#ffc107',
-                    fontSize: '14px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                  }}
-                >
-                  <span style={{ fontSize: '18px' }}>⚠️</span>
-                  <span>
-                    <strong>{preferredProvider.toUpperCase()}</strong> n&apos;est pas
-                    configuré. Le système basculera automatiquement vers un provider
-                    disponible. Pour utiliser {preferredProvider}, ajoutez votre clé API
-                    dans <strong>Gouvernance → Secrets</strong>.
-                  </span>
-                </div>
-              )}
-
-            {/* ═══ v25.5.0 - CHAT TOOLBAR COMPLET ═══ */}
-            <ChatToolbar
-              onFilesAnalyzed={handleFilesAnalyzed}
-              onFileImport={files => {
-                isDev && console.log('[Chat] Files imported:', files.length);
-                // Créer un résumé des fichiers pour le message
-                const fileNames = Array.from(files)
-                  .map(f => f.name)
-                  .join(', ');
-                sendMessage(
-                  `📎 Fichiers importés pour analyse: ${fileNames}\n\nAnalyse ces fichiers et donne-moi un résumé.`
-                );
-              }}
-              onScreenCapture={imageData => {
-                isDev &&
-                  console.log('[Chat] Screenshot captured, size:', imageData.length);
-                // Stocker l&apos;image et envoyer pour analyse
-                setAttachedImages(prev => [...prev, imageData]);
-                sendMessage(
-                  `📸 [Capture d&apos;écran attachée]\n\nAnalyse cette capture d&apos;écran et décris ce que tu vois.`
-                );
-              }}
-              onImageAnalysis={(imageData, prompt) => {
-                isDev && console.log('[Chat] Image analysis requested:', prompt);
-                // Stocker l&apos;image et envoyer pour analyse Vision IA
-                setAttachedImages(prev => [...prev, imageData]);
-                sendMessage(
-                  `👁️ [Image attachée pour analyse Vision IA]\n\n${prompt || 'Analyse cette image en détail et décris ce que tu vois.'}`
-                );
-              }}
-              onDictationResult={text => {
-                isDev && console.log('[Chat] Dictation result:', text);
-                // Stocker le texte dicté pour l&apos;utiliser dans ChatInput
-                setPendingDictationText(prev => (prev ? `${prev} ${text}` : text));
-                // Envoyer directement le message dicté
-                if (text.trim()) {
-                  sendMessage(text);
-                }
-              }}
-              onAudioRecorded={audioBlob => {
-                isDev && console.log('[Chat] Audio recorded:', audioBlob.size, 'bytes');
-                const sizeMB = (audioBlob.size / (1024 * 1024)).toFixed(2);
-                sendMessage(
-                  `🎤 [Message vocal enregistré - ${sizeMB} MB]\n\nTranscris et analyse ce message audio.`
-                );
-              }}
-              onTranscriptionResult={text => {
-                isDev && console.log('[Chat] Transcription result:', text);
-                sendMessage(
-                  `📝 Transcription audio:\n\n"${text}"\n\nRésume et analyse ce contenu.`
-                );
-              }}
-              onToggleAudioConversation={active => {
-                isDev && console.log('[Chat] Audio conversation:', active ? 'ON' : 'OFF');
-                if (active && !voiceModeActive) {
-                  toggleVoiceMode();
-                } else if (!active && voiceModeActive) {
-                  toggleVoiceMode();
-                }
-              }}
-              onToggleCameraLive={active => {
-                isDev && console.log('[Chat] Camera live:', active ? 'ON' : 'OFF');
-                // La caméra est gérée via useVisionStore dans ChatToolbar
-              }}
-              onToggleTTS={active => {
-                isDev && console.log('[Chat] TTS:', active ? 'ON' : 'OFF');
-                setTtsEnabled(active);
-              }}
-              disabled={isLoading || pageState.isCorrupted}
-              compact={false}
-            />
-
-            <ChatInput
-              onSend={sendMessage}
-              onFilesAnalyzed={handleFilesAnalyzed}
-              disabled={isLoading || pageState.isCorrupted}
-              voiceModeActive={voiceModeActive}
-              onToggleVoiceMode={toggleVoiceMode}
-              placeholder={chatInputPlaceholder}
-              enableDictation
-              enableFileUpload
-            />
           </div>
 
           {/* Settings Panel (Modal) with OMEGA Stats */}

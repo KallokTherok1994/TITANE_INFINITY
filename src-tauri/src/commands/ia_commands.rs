@@ -3,17 +3,17 @@
 //   Secure commands for AI key management and generation
 // ═══════════════════════════════════════════════════════════════
 
+#[allow(dead_code)]
+use crate::ia::{IAEngine, UnifiedIAEngine, UnifiedIARequest, UnifiedMessage};
+use crate::profiling::IPCProfiler;
 use crate::security::secrets_engine::{
     SecretsError, SecureSecretsEngine, KEY_CLAUDE, KEY_GEMINI, KEY_OPENAI,
 };
-use crate::profiling::IPCProfiler;
 use log::{error, info};
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 use std::sync::Arc;
 use tauri::State;
-#[allow(dead_code)]
-use crate::ia::{IAEngine, UnifiedIAEngine, UnifiedIARequest, UnifiedMessage};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SetAPIKeyRequest {

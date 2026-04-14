@@ -199,9 +199,7 @@ pub async fn multi_ai_cache_stats(
 
 /// Vide le cache AI
 #[tauri::command]
-pub async fn multi_ai_clear_cache(
-    state: State<'_, OrchestratorState>,
-) -> Result<(), String> {
+pub async fn multi_ai_clear_cache(state: State<'_, OrchestratorState>) -> Result<(), String> {
     let orchestrator = state.orchestrator.read().await;
     orchestrator.clear_cache().await;
     Ok(())

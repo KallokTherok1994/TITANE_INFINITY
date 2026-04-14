@@ -229,10 +229,7 @@ pub async fn ai_generate_local(request: LocalAIRequest) -> Result<LocalAIRespons
                         .find(|m| m.starts_with(fallback))
                         .unwrap()
                         .clone();
-                    log::warn!(
-                        "[ai_generate_local] Fallback attempt: model='{}'",
-                        resolved
-                    );
+                    log::warn!("[ai_generate_local] Fallback attempt: model='{}'", resolved);
                     let fallback_req = OllamaGenerateRequest {
                         model: resolved.clone(),
                         prompt: ollama_request.prompt.clone(),

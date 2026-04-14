@@ -5,9 +5,9 @@
 
 // Note: évite les attributs crate-level ici (fichier module).
 
+use crate::api_hub::copilot::{CopilotClient, CopilotRequest, Message, TestResult};
 use crate::security::permission_guard::PERMISSION_GUARD;
 use crate::security::permissions::Role;
-use crate::api_hub::copilot::{CopilotClient, CopilotRequest, Message, TestResult};
 use crate::security::secrets_engine::{SecureSecretsEngine, KEY_COPILOT};
 use log::{debug, error, info};
 use serde::{Deserialize, Serialize};

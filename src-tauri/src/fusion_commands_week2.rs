@@ -415,7 +415,7 @@ fn fusion_prepare_tts_internal(
 
     // Calculate chunks for streaming (1 chunk ≈ 100ms of audio)
     let chunks_prepared = if enable_streaming {
-        (duration_ms + 99) / 100
+        duration_ms.div_ceil(100)
     } else {
         0
     };

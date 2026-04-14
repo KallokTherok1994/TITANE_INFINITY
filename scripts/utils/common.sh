@@ -14,8 +14,11 @@ export CYAN='\033[0;36m'
 export NC='\033[0m'
 export BOLD='\033[1m'
 
-# Variables d'environnement essentielles
-export PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+# Variables d'environnement essentielles (respecte PROJECT_ROOT déjà exporté)
+if [ -z "${PROJECT_ROOT:-}" ]; then
+    export PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+fi
 export SRC_TAURI="$PROJECT_ROOT/src-tauri"
 export FRONTEND="$PROJECT_ROOT"
 export DIST="$PROJECT_ROOT/dist"

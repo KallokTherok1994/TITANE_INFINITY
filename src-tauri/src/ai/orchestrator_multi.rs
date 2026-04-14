@@ -3,12 +3,12 @@
 //   SUPER PROMPT #8 — Main Orchestration Engine
 // ═══════════════════════════════════════════════════════════════
 
-use crate::ai::cache::{AIRouterCache, AICacheConfig, CachedAIResponse};
+use crate::ai::cache::{AICacheConfig, AIRouterCache, CachedAIResponse};
 use crate::ai::evaluator::{EvaluationResult, Evaluator};
 use crate::ai::fusion::{FusionEngine, FusionStrategy};
 use crate::ai::providers::{
-    claude::ClaudeProvider, gemini::GeminiProvider, local::LocalProvider,
-    openai::OpenAiProvider, titane_engine::TitaneEngineProvider, AiProvider,
+    claude::ClaudeProvider, gemini::GeminiProvider, local::LocalProvider, openai::OpenAiProvider,
+    titane_engine::TitaneEngineProvider, AiProvider,
 };
 use crate::ai::router_intelligent::AiRouter;
 use crate::ai::{AIError, AiRequest, AiResponse};
