@@ -1334,7 +1334,7 @@ const ChatComponent: React.FC = () => {
   // ═══ PHASE 5.7: MAIN RENDER WITH PROTECTION + v25.7.4 RESPONSIVE ═══
   try {
     return (
-      <ResponsiveChatLayout>
+      <ResponsiveChatLayout className="no-padding">
         <div
           className="chat-page"
           data-omega-version="v30.0.0"
@@ -1625,7 +1625,11 @@ const ChatComponent: React.FC = () => {
                     <React.Suspense
                       fallback={
                         <div
-                          style={{ padding: '1rem', textAlign: 'center', color: '#93b399' }}
+                          style={{
+                            padding: '1rem',
+                            textAlign: 'center',
+                            color: '#93b399',
+                          }}
                         >
                           🎤 Chargement conversation vocale...
                         </div>
@@ -1666,8 +1670,8 @@ const ChatComponent: React.FC = () => {
                       <span>
                         <strong>{preferredProvider.toUpperCase()}</strong> n&apos;est pas
                         configuré. Le système basculera automatiquement vers un provider
-                        disponible. Pour utiliser {preferredProvider}, ajoutez votre clé API
-                        dans <strong>Gouvernance → Secrets</strong>.
+                        disponible. Pour utiliser {preferredProvider}, ajoutez votre clé
+                        API dans <strong>Gouvernance → Secrets</strong>.
                       </span>
                     </div>
                   )}
@@ -1711,7 +1715,8 @@ const ChatComponent: React.FC = () => {
                     }
                   }}
                   onAudioRecorded={audioBlob => {
-                    isDev && console.log('[Chat] Audio recorded:', audioBlob.size, 'bytes');
+                    isDev &&
+                      console.log('[Chat] Audio recorded:', audioBlob.size, 'bytes');
                     const sizeMB = (audioBlob.size / (1024 * 1024)).toFixed(2);
                     sendMessage(
                       `🎤 [Message vocal enregistré - ${sizeMB} MB]\n\nTranscris et analyse ce message audio.`
@@ -1724,7 +1729,8 @@ const ChatComponent: React.FC = () => {
                     );
                   }}
                   onToggleAudioConversation={active => {
-                    isDev && console.log('[Chat] Audio conversation:', active ? 'ON' : 'OFF');
+                    isDev &&
+                      console.log('[Chat] Audio conversation:', active ? 'ON' : 'OFF');
                     if (active && !voiceModeActive) {
                       toggleVoiceMode();
                     } else if (!active && voiceModeActive) {

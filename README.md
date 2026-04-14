@@ -4,7 +4,7 @@
 
 Le pipeline officiel et unique est :
 
-  scripts/pipeline/TITANE_PIPELINE_v39.sh
+scripts/pipeline/TITANE_PIPELINE_v39.sh
 
 Toutes les opérations de build, test, packaging, mapping, rollback, logs, artefacts, E2E, autoheal, versioning, mapping docs, desktop icons, etc. sont centralisées dans ce pipeline.
 

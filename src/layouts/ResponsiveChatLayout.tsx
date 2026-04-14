@@ -52,18 +52,21 @@ export const ResponsiveChatLayout: React.FC<ResponsiveChatLayoutProps> = ({
   // Responsive max-width
   const maxWidth = isMobile ? '100%' : isTablet ? '768px' : '1280px';
 
-  // Responsive padding
-  const padding = isMobile
-    ? isLandscape
-      ? 'var(--space-xs) var(--space-sm)' // Landscape mobile compact
-      : 'var(--space-sm)'
-    : isTablet
-      ? 'var(--space-md)'
-      : 'var(--space-lg)';
+  // Patch: si la classe "no-padding" est présente, on force le padding à 0
+  const isNoPadding = className?.includes('no-padding');
+  const padding = isNoPadding
+    ? '0'
+    : isMobile
+      ? isLandscape
+        ? 'var(--space-xs) var(--space-sm)'
+        : 'var(--space-sm)'
+      : isTablet
+        ? 'var(--space-md)'
+        : 'var(--space-lg)';
 
   return (
     <div
-      className={`chat-layout-responsive ${className}`}
+      className={`chat-layout-responsive${isNoPadding ? ' no-padding' : ''} ${className}`}
       data-device={isMobile ? 'mobile' : isTablet ? 'tablet' : 'desktop'}
       data-orientation={isPortrait ? 'portrait' : 'landscape'}
       data-width={width}
@@ -74,6 +77,10 @@ export const ResponsiveChatLayout: React.FC<ResponsiveChatLayoutProps> = ({
           max-width: ${maxWidth};
           margin: 0 auto;
           padding: ${padding};
+        }
+        .chat-layout-responsive.no-padding {
+          padding: 0 !important;
+        }
           
           /* Full height */
           height: 100vh;

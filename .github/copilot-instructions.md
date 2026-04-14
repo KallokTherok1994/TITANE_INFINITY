@@ -118,11 +118,13 @@ The current version MUST always be visible in the bottom footer of the TITANE in
 ## Rule 13.1 - Desktop icons and launcher cache update
 
 After **every build** (production or tauri), you MUST:
+
 - Run `scripts/post-build/update-desktop-icons.sh` to synchronize .desktop launchers, icons, and refresh the desktop cache.
 - Always verify that `/usr/bin/titane-infinity` is the most recent built version (replace if needed).
 - Confirm the version shown in the launcher and running binary matches the latest build.
 
 ### Advanced purge (if old icons persist)
+
 - Check and remove any obsolete TITANE/Infinity launchers in `/usr/share/applications` and `~/.local/share/applications`.
 - Replace `/usr/share/icons/hicolor/128x128/apps/titane-infinity.png` with the latest build if needed.
 - Refresh all icon and desktop caches: `sudo update-icon-caches /usr/share/icons/hicolor && update-desktop-database ~/.local/share/applications && xdg-desktop-menu forceupdate`.

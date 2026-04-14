@@ -1,3 +1,36 @@
+/* ═══════════════════════════════════════════════════════════════ */
+/* TITANE∞ — PATCH GLOBAL CHAT PLEINE HAUTEUR (ANTI-GAP)         */
+/* ═══════════════════════════════════════════════════════════════ */
+html, body, #root {
+  height: 100% !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  width: 100vw !important;
+}
+
+.chat-layout-responsive,
+.chat-page,
+.chat-content-fullheight {
+  height: 100vh !important;
+  min-height: 0 !important;
+  flex: 1 1 auto !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.VirtualizedMessageList {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+}
+
+.ChatToolbar, .ChatInput {
+  flex-shrink: 0 !important;
+  margin-top: auto !important;
+}
 /**
  * TITANE∞ v30.0.0 — MAIN STYLESHEET (TITANIUM DARK)
  *
