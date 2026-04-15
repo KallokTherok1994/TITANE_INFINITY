@@ -362,3 +362,31 @@ Canonical target version: **30.1.25**
 > No Android device or emulator was connected in this session, so no install or runtime smoke proof is claimed for v30.1.25.
 > No local Windows artifact is claimed for v30.1.25 on this host: repo truth requires a Windows runner or Windows machine with MSVC/WebView2, and the Linux host lacks `pwsh`, MinGW, and `cargo-xwin`.
 > The repository does provide an on-demand Windows MSI workflow at `.github/workflows/windows-msi-on-demand.yml`, but it was not dispatched from this unpushed local v30.1.25 worktree.
+
+---
+
+## Addendum — 2026-04-15 — Windows MSI CI Artifact v30.1.25
+
+Session: `WINDOWS_MSI_CI_30_1_25`
+Canonical target version: **30.1.25**
+
+### Updated Current Surfaces
+
+| File / Surface | Version | Action |
+|---|---|---|
+| `.github/workflows/windows-msi-on-demand.yml` | action runtime refresh | UPDATED_TO_NODE24_COMPAT_ACTIONS |
+| GitHub Actions run `24465327619` | `success` | VERIFIED |
+| GitHub artifact `windows-msi-3` | `30.1.25` | VERIFIED |
+
+### Artifact Status Summary — Windows CI v30.1.25
+
+| Artifact | Size | SHA256 | Status |
+|---|---|---|---|
+| `TITANE Infinity_30.1.25_x64_en-US.msi` | `17211392` bytes | `f8f602231bd41169dc218aeb9e06e173f769cc80708835f9903b7a0444e634c6` | BUILT_CI ✅ |
+| `SHA256SUMS.txt` | `105` bytes | contains MSI hash | VERIFIED ✅ |
+| GitHub artifact archive `windows-msi-3` | `16997560` bytes | GitHub artifact payload | UPLOADED ✅ |
+
+> The Windows MSI was produced by the repository's canonical GitHub Windows lane: run `24465327619` of `.github/workflows/windows-msi-on-demand.yml` completed with `success`.
+> The downloaded artifact bundle was verified locally on 2026-04-15 with `sha256sum -c SHA256SUMS.txt` and matched the MSI payload exactly.
+> The workflow file was also refreshed to `actions/checkout@v6.0.2` and `actions/upload-artifact@v7.0.1` so future runs stop relying on Node 20-based action runtimes.
+> This addendum does not claim release-tag publication; the workflow run uploaded a build artifact only.
