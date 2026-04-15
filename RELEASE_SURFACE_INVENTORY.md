@@ -218,6 +218,40 @@ Canonical target version: **30.0.0**
 | `RELEASE_ARTIFACTS_CHECKSUMS_30.1.8.txt` | `30.1.8` | CURRENT |
 | `RELEASE_v30.1.8_SEALED.txt` | `30.1.8` | CURRENT |
 
+---
+
+## Addendum — 2026-04-15 — Local Desktop Build + Host Install v30.1.24
+
+Session: `LOCAL_DESKTOP_INSTALL_30_1_24`
+Canonical target version: **30.1.24**
+
+### Updated Current Surfaces
+
+| File / Surface | Version | Action |
+|---|---|---|
+| `package.json` | `30.1.24` | UPDATED_TO_30_1_24 |
+| `src-tauri/Cargo.toml` | `30.1.24` | UPDATED_TO_30_1_24 |
+| `src-tauri/tauri.conf.json` | `30.1.24` | UPDATED_TO_30_1_24 |
+| `src-tauri/tauri.base.json` | `30.1.24` | UPDATED_TO_30_1_24 |
+| `tauri.base.json` | `30.1.24` | UPDATED_TO_30_1_24 |
+| `runtime/stable/tauri.conf.json` | `30.1.24` | UPDATED_TO_30_1_24 |
+| `runtime/stable/manifest.json` | `30.1.24` | UPDATED_TO_30_1_24 |
+| Host package `titane-infinity` | `30.1.24` | INSTALLED_ON_HOST |
+| `~/.local/share/applications/titane-infinity.desktop` | `Name=TITANE∞ v30.1.24` | VERIFIED |
+| `/usr/share/applications/titane-infinity.desktop` | `Name=TITANE∞ v30.1.24` | VERIFIED |
+
+### Artifact Status Summary — v30.1.24
+
+| Artifact | Status |
+|---|---|
+| `TITANE Infinity_30.1.24_amd64.deb` | BUILT ✅ INSTALLED ✅ |
+| `TITANE Infinity_30.1.24_amd64.AppImage` | BUILT ✅ |
+| `TITANE Infinity-30.1.24-1.x86_64.rpm` | BUILT ✅ |
+| `/usr/bin/titane-infinity` | MATCHES_LOCAL_BUILD ✅ |
+
+> v30.1.24 is installed on the local Linux host as of 2026-04-15.
+> This addendum records local build/install truth only; deployment/latest publication surfaces were not updated in this session.
+
 Key change: feat(ui) — Zoom + / Zoom − buttons in TopNav top-right
 
 ---
