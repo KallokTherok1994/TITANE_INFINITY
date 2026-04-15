@@ -34,6 +34,24 @@ extract_version_from_path() {
     fi
 }
 
+extract_installed_package_version() {
+    local binary_path="$1"
+    local package_version=""
+
+    if [[ "$binary_path" != "/usr/bin/titane-infinity" && "$binary_path" != "/bin/titane-infinity" ]]; then
+        return 0
+    fi
+
+    if ! command -v dpkg-query >/dev/null 2>&1; then
+        return 0
+    fi
+
+    package_version="$(dpkg-query -W -f='${Version}\n' titane-infinity 2>/dev/null | head -n 1)"
+    if [[ "$package_version" =~ ^([0-9]+\.[0-9]+\.[0-9]+) ]]; then
+        printf '%s' "${BASH_REMATCH[1]}"
+    fi
+}
+
 # Créer le répertoire si nécessaire
 mkdir -p "$DESKTOP_INSTALL_DIR"
 
@@ -108,6 +126,9 @@ if [ -z "$CANONICAL_VERSION" ] && [ -f "$PROJECT_DIR/package.json" ]; then
 fi
 
 APP_VERSION="$(extract_version_from_path "$BINARY_PATH")"
+if [ -z "$APP_VERSION" ]; then
+    APP_VERSION="$(extract_installed_package_version "$BINARY_PATH")"
+fi
 if [ -z "$APP_VERSION" ]; then
     APP_VERSION="$CANONICAL_VERSION"
 fi
