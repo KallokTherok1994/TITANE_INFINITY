@@ -1,5 +1,11 @@
 # TITANE_INFINITY — Cartographie Complète Avancée v30.1.8
 
+> 2026-04-15 — Réponses longues chat: `VirtualizedMessageList` conserve `react-window` pour les historiques compacts mais rebascule vers `MessageList` quand un message exige une hauteur naturelle, afin d’éviter la coupure visuelle des réponses longues dans la surface conversation; les budgets par défaut sont alignés sur le plafond backend utile de 32768 pour supprimer les restrictions artificielles basses.
+> 2026-04-15 — Conversation fullscreen: densité compacte pilotée par le viewport réel pour préserver la visibilité au zoom, ajout du CTA flottant `chat-scroll-to-bottom`, du sélecteur `chat-messages-scroll-region`, d’un renforcement safe-area et d’une chaîne `flex/min-height/overflow` plus stricte pour maintenir visibles le bas du flux et le compositeur sur desktop/mobile.
+> 2026-04-15 — AppShell fullscreen: la chaîne de conteneurs racine React/TITANE conserve maintenant `h-dvh + min-height:0 + flex-column` jusqu’au host scrollable principal, afin que la page conversation fullscreen n’hérite plus d’un wrapper extensible recréant un vide sous le chat.
+> 2026-04-14 — Mise à jour UI: suppression définitive de l’onglet Twins dans `TitanePage`; exposition Twins uniquement via TopNav menu Plus (***) sur la route `/twins` (legacy `/identity|/persona|/twin` -> `/twins`).
+> 2026-04-14 — Mise à jour UI chat: suppression des surfaces TWINS de `ConversationSection`; l’entrée dédiée `nav-twins` reste disponible dans le menu Plus de la TopNav vers `/twins`.
+
 > **Mise à jour le 2026-04-14
 > Document de référence architecture — généré depuis scan du dépôt
 

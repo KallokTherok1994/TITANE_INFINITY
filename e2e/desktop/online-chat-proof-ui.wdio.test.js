@@ -826,13 +826,13 @@ async function prepareChatSurface() {
         key.startsWith('titane_chat_mode_') ||
         key === 'titane_chat_history' ||
         key === 'titane_chat_runtime_state' ||
-        key === 'omega-chat-preferred-provider'
+        key === 'omega-chat-preferred-provider' ||
+        key === 'titane_browser_mode'
       ) {
         localStorage.removeItem(key);
       }
     }
     localStorage.setItem('titane_onboarding_complete', '1');
-    localStorage.setItem('titane_browser_mode', '1');
     localStorage.setItem('omega-chat-preferred-provider', 'ollama');
     location.reload();
   });
@@ -849,6 +849,27 @@ async function prepareChatSurface() {
       );
     },
     { timeout: 30000, interval: 500, timeoutMsg: 'Document not ready' }
+  );
+
+  await browser.waitUntil(
+    async () => {
+      const ipcState = await browser.execute(() => {
+        return (
+          document
+            .querySelector('[data-testid="ipc-ready"]')
+            ?.getAttribute('data-state') || ''
+        )
+          .trim()
+          .toLowerCase();
+      });
+
+      return ipcState === 'ready';
+    },
+    {
+      timeout: 20000,
+      interval: 300,
+      timeoutMsg: 'IPC bridge did not become ready in Tauri runtime',
+    }
   );
 
   let sourceInfo = await detectAppSourceMode();

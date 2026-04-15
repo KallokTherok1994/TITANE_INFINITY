@@ -266,7 +266,7 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
         <p style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}>
           Les anciennes surfaces <strong>Identity</strong> et <strong>Symbiose</strong>
           sont maintenant consolidées ici. Toute navigation legacy redirige vers le point
-          d&apos;entrée unique <code>/titane?tab=twins</code>.
+          d&apos;entrée unique <code>/twins</code>.
         </p>
         <ul
           style={{
@@ -276,7 +276,7 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
             fontSize: fontSizes.sm,
           }}
         >
-          <li>🧭 Routing public unique : `?tab=twins`</li>
+          <li>🧭 Routing public unique : `/twins`</li>
           <li>💬 Contexte TWINS injecté explicitement dans le Chat IA</li>
           <li>🎯 Orchestration et personnalité pilotées depuis cette section</li>
         </ul>

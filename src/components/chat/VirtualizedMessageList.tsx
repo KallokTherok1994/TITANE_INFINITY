@@ -34,6 +34,7 @@ interface VirtualizedMessageListProps {
 // Threshold pour activer virtualization (50+ messages)
 const VIRTUALIZATION_THRESHOLD = 50;
 const MESSAGE_HEIGHT = 140; // Height per message in px
+const VARIABLE_HEIGHT_MARKERS = /\n|```|^\s*[-*]\s/m;
 
 function getViewportHeight(): number {
   if (typeof window === 'undefined') {
@@ -63,8 +64,6 @@ export const VirtualizedMessageList = React.memo(function VirtualizedMessageList
   const [listHeight, setListHeight] = React.useState(() =>
     Math.max(260, getViewportHeight() - 220)
   );
-  const shouldVirtualize = messages.length >= VIRTUALIZATION_THRESHOLD;
-
   useEffect(() => {
     const updateHeight = () => {
       const viewport = getViewportHeight();
@@ -110,8 +109,14 @@ export const VirtualizedMessageList = React.memo(function VirtualizedMessageList
     [messages]
   );
 
-  // Fallback: Use simple list for small message counts
-  if (!shouldVirtualize) {
+  const shouldVirtualize = validMessages.length >= VIRTUALIZATION_THRESHOLD;
+  const requiresNaturalHeightRendering = useMemo(
+    () => validMessages.some(messageRequiresNaturalHeight),
+    [validMessages]
+  );
+
+  // Fallback: use the non-virtualized list when a fixed row height would clip content.
+  if (!shouldVirtualize || requiresNaturalHeightRendering) {
     return (
       <React.Suspense
         fallback={<div className="message-list__loading">Chargement des messages...</div>}
@@ -192,6 +197,17 @@ export const estimateMessageHeight = (message: AIMessage | undefined): number =>
 
   const lines = Math.ceil(message.content.length / charsPerLine);
   return baseHeight + lines * lineHeight;
+};
+
+export const messageRequiresNaturalHeight = (message: AIMessage | undefined): boolean => {
+  if (!message) {
+    return false;
+  }
+
+  return (
+    estimateMessageHeight(message) > MESSAGE_HEIGHT ||
+    VARIABLE_HEIGHT_MARKERS.test(message.content)
+  );
 };
 
 /**

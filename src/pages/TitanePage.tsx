@@ -10,13 +10,12 @@
  * FUSION ULTIME de 3 modules majeurs:
  * - Chat IA (/chat) → Communication & Intelligence Conversationnelle
  * - Vision (/camera) → Perception Visuelle & Affect Estimation
- * - EVO (/evo) → Évolution Totale (Dashboard, TWINS, Memory, Progression)
+ * - EVO (/evo) → Évolution Totale (Dashboard, Memory, Progression)
  *
- * 7 SECTIONS UNIFIÉES (EXTRACTED AS INDEPENDENT COMPONENTS):
+ * 6 SECTIONS UNIFIÉES (EXTRACTED AS INDEPENDENT COMPONENTS):
  * 💬 CONVERSATION - Interface Chat IA multi-provider
  * 📷 VISION & PERCEPTION - Analyse visuelle et affective
  * 📊 VUE D'ENSEMBLE - Dashboard système et stats
- * 🧬 TWINS - Jumeau Numérique, Persona, orchestration IA auto
  * 💾 MÉMOIRE TRIPLE - Architecture court/moyen/long terme
  * ⚡ PROGRESSION & XP - Système XP, milestones, talents
  * 🌱 TRANSFORM & ÉVOLUTION - Transformation + Évolution mémoire fusionnées
@@ -40,7 +39,7 @@ import { tauriClient } from '@/lib/tauriClient';
 import type { MemoryStats } from '@/services/memory/persistentMemory.config';
 import { normalizePersistentMemoryStats } from '@/services/memory/persistentMemory.normalize';
 
-// Section Components (Phase 3C Extracted — Identity+Twins fully unified into TWINS)
+// Section Components (Phase 3C Extracted)
 import {
   ConversationSection,
   VisionSection,
@@ -50,7 +49,6 @@ import {
   TransformationSection,
 } from '@/components/sections';
 import type { TitaneStats } from '@/components/sections';
-import { TwinsSection } from '@/components/sections/TwinsSection';
 
 // UI Components
 import { ErrorBoundary } from '@/components/ErrorBoundary';
@@ -71,8 +69,7 @@ type TabId =
   | 'overview'
   | 'memory-map'
   | 'progression'
-  | 'transformation'
-  | 'twins';
+  | 'transformation';
 
 const VALID_TABS: TabId[] = [
   'conversation',
@@ -81,7 +78,6 @@ const VALID_TABS: TabId[] = [
   'memory-map',
   'progression',
   'transformation',
-  'twins',
 ];
 
 const isTabId = (value: string | null): value is TabId => {
@@ -95,7 +91,6 @@ const TAB_PANEL_IDS: Record<TabId, string> = {
   'memory-map': 'titane-panel-memory',
   progression: 'titane-panel-progression',
   transformation: 'titane-panel-transformation',
-  twins: 'titane-panel-twins',
 };
 
 const TAB_LABEL_IDS: Record<TabId, string> = {
@@ -105,7 +100,6 @@ const TAB_LABEL_IDS: Record<TabId, string> = {
   'memory-map': 'titane-tab-memory',
   progression: 'titane-tab-progression',
   transformation: 'titane-tab-transformation',
-  twins: 'titane-tab-twins',
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -213,9 +207,9 @@ export const TitanePage: React.FC = () => {
 
   useEffect(() => {
     const requestedTab = searchParams.get('tab');
-    // Backward compat: ?tab=identity or ?tab=symbiose → twins (fully unified)
+    // Backward compat: ?tab=identity or ?tab=symbiose → fallback conversation (twins tab supprimé)
     if (requestedTab === 'identity' || requestedTab === 'symbiose') {
-      updateActiveTab('twins');
+      updateActiveTab('conversation');
       return;
     }
     if (isTabId(requestedTab) && requestedTab !== activeTab) {
@@ -256,16 +250,22 @@ export const TitanePage: React.FC = () => {
       memoryMap: () => updateActiveTab('memory-map'),
       progression: () => updateActiveTab('progression'),
       transformation: () => updateActiveTab('transformation'),
-      twins: () => updateActiveTab('twins'),
     }),
     [updateActiveTab]
   );
+
+  const isConversationTab = activeTab === 'conversation';
 
   // ═══ RENDER ACTIVE SECTION ═══
   const renderActiveSection = useCallback(() => {
     switch (activeTab) {
       case 'conversation':
-        return <ConversationSection />;
+        return (
+          <ConversationSection
+            showSectionHeader={!isConversationTab}
+            fullscreen={isConversationTab}
+          />
+        );
       case 'vision':
         return <VisionSection />;
       case 'overview':
@@ -276,33 +276,53 @@ export const TitanePage: React.FC = () => {
         return <ProgressionSection progression={progression} stats={stats} />;
       case 'transformation':
         return <TransformationSection stats={stats} />;
-      case 'twins':
-        return <TwinsSection />;
       default:
-        return <ConversationSection />;
+        return (
+          <ConversationSection
+            showSectionHeader={!isConversationTab}
+            fullscreen={isConversationTab}
+          />
+        );
     }
-  }, [activeTab, progression, stats]);
+  }, [activeTab, isConversationTab, progression, stats]);
 
   // ═══ RENDER ═══
   return (
     <ErrorBoundary context="TitanePage">
-      <Container size="full" className="titane-page" data-testid="page-titane">
-        <Stack direction="vertical" gap={4}>
+      <Container
+        size="full"
+        centered={!isConversationTab}
+        padding={isConversationTab ? 0 : 4}
+        className={`titane-page${isConversationTab ? ' titane-page--conversation' : ''}`}
+        data-testid="page-titane"
+        data-layout={isConversationTab ? 'chat-fullscreen' : 'standard'}
+      >
+        <Stack
+          direction="vertical"
+          gap={isConversationTab ? 2 : 4}
+          className={`titane-page-shell${isConversationTab ? ' titane-page-shell--conversation' : ''}`}
+        >
           {/* ═══ PAGE HEADER (Integrated, Not Navigation) ═══ */}
-          <div className="titane-page-header">
-            <div className="flex items-center gap-3 mb-4">
-              <TitaneLogo size={36} />
-              <div>
-                <h1 className="text-xl font-semibold text-titanium-text-primary">
-                  ⚡ TITANE
-                </h1>
-                <p className="text-xs text-titanium-text-secondary">Le Cœur du Système</p>
+          <div
+            className={`titane-page-header${isConversationTab ? ' titane-page-header--conversation' : ''}`}
+          >
+            {!isConversationTab && (
+              <div className="titane-page-header-brand flex items-center gap-3 mb-4">
+                <TitaneLogo size={36} />
+                <div>
+                  <h1 className="text-xl font-semibold text-titanium-text-primary">
+                    ⚡ TITANE
+                  </h1>
+                  <p className="text-xs text-titanium-text-secondary">
+                    Le Cœur du Système
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* ═══ SECTION TABS (Inline Content Navigation) ═══ */}
             <div
-              className="titane-inline-tabs"
+              className={`titane-inline-tabs${isConversationTab ? ' titane-inline-tabs--conversation' : ''}`}
               role="tablist"
               aria-label="Sections principales TITANE"
             >
@@ -396,27 +416,12 @@ export const TitanePage: React.FC = () => {
               >
                 🌱 Transform & Évo
               </button>
-              <button
-                className={`px-4 py-2 text-sm font-medium rounded transition-all ${
-                  activeTab === 'twins'
-                    ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
-                    : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
-                }`}
-                data-testid="tab-twins"
-                onClick={tabHandlers.twins}
-                role="tab"
-                aria-selected={activeTab === 'twins'}
-                aria-controls={TAB_PANEL_IDS.twins}
-                id={TAB_LABEL_IDS.twins}
-              >
-                🧬 TWINS
-              </button>
             </div>
           </div>
 
           {/* ═══ CONTENT AREA (A11Y Enhanced) ═══ */}
           <div
-            className="titane-content"
+            className={`titane-content${isConversationTab ? ' titane-content--conversation' : ''}`}
             data-testid="page-titane-content"
             role="tabpanel"
             id={TAB_PANEL_IDS[activeTab]}

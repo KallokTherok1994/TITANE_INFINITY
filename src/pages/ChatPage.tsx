@@ -100,7 +100,20 @@ export const ChatPage: React.FC = () => {
       onError={handleChatError}
       onReset={handleChatReset}
     >
-      <div className="chat-fullscreen">
+      <div
+        className="chat-fullscreen"
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100vh',
+          minHeight: 0,
+          flex: '1 1 auto',
+          overflow: 'hidden',
+          padding: 0,
+          margin: 0,
+          boxSizing: 'border-box',
+        }}
+      >
         <div className="chat-fullscreen-header">
           <h1 className="text-2xl font-bold">TITANE∞ Chat</h1>
           <ChatProviderSelector
@@ -109,7 +122,10 @@ export const ChatPage: React.FC = () => {
             providers={availableProviders}
           />
         </div>
-        <div className="chat-fullscreen-window">
+        <div
+          className="chat-fullscreen-window"
+          style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}
+        >
           <ChatWindow />
         </div>
         {/* Dashboards agents avancés */}

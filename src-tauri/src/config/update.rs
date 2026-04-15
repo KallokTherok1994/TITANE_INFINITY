@@ -113,6 +113,8 @@ pub struct ChatConfigBundle {
     pub request_defaults: ChatRequestDefaults,
 }
 
+const MAX_CHAT_OUTPUT_TOKENS: u64 = 32_768;
+
 fn stable_profile_bundle() -> ChatConfigBundle {
     ChatConfigBundle {
         engine: ChatEngineConfigDto {
@@ -126,7 +128,7 @@ fn stable_profile_bundle() -> ChatConfigBundle {
         },
         request_defaults: ChatRequestDefaults {
             temperature: 0.7,
-            max_output_tokens: 8192,
+            max_output_tokens: MAX_CHAT_OUTPUT_TOKENS,
             provider: ProviderPreference::Auto,
             enable_streaming: true,
         },
@@ -148,7 +150,7 @@ fn profile_bundle(profile_name: &str) -> Option<ChatConfigBundle> {
             },
             request_defaults: ChatRequestDefaults {
                 temperature: 0.6,
-                max_output_tokens: 8096,
+                max_output_tokens: MAX_CHAT_OUTPUT_TOKENS,
                 provider: ProviderPreference::Auto,
                 enable_streaming: true,
             },
@@ -373,8 +375,11 @@ fn validate_engine_dto(dto: &ChatEngineConfigDto) -> Result<(), String> {
 fn validate_request_defaults(defaults: &ChatRequestDefaults) -> Result<(), String> {
     validate_temperature(defaults.temperature)?;
 
-    if defaults.max_output_tokens == 0 || defaults.max_output_tokens > 16384 {
-        return Err("max_output_tokens doit être entre 1 et 16384".to_string());
+    if defaults.max_output_tokens == 0 || defaults.max_output_tokens > MAX_CHAT_OUTPUT_TOKENS {
+        return Err(format!(
+            "max_output_tokens doit être entre 1 et {}",
+            MAX_CHAT_OUTPUT_TOKENS
+        ));
     }
 
     Ok(())
@@ -720,9 +725,27 @@ mod tests {
     fn test_validate_max_tokens() {
         assert!(validate_max_tokens(2048).is_ok());
         assert!(validate_max_tokens(8000).is_ok());
+        assert!(validate_max_tokens(32_768).is_ok());
         assert!(validate_max_tokens(0).is_err());
         assert!(validate_max_tokens(50).is_err());
         assert!(validate_max_tokens(200_000).is_err());
+    }
+
+    #[test]
+    fn test_validate_request_defaults_max_output_tokens_boundary() {
+        let defaults = ChatRequestDefaults {
+            temperature: 0.7,
+            max_output_tokens: MAX_CHAT_OUTPUT_TOKENS,
+            provider: ProviderPreference::Auto,
+            enable_streaming: true,
+        };
+        assert!(validate_request_defaults(&defaults).is_ok());
+
+        let invalid_defaults = ChatRequestDefaults {
+            max_output_tokens: MAX_CHAT_OUTPUT_TOKENS + 1,
+            ..defaults
+        };
+        assert!(validate_request_defaults(&invalid_defaults).is_err());
     }
 
     #[test]

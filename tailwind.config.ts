@@ -11,6 +11,21 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
+  safelist: [
+    'px-4',
+    'py-2',
+    'sm:px-6',
+    'lg:px-8',
+    'inline-flex',
+    'items-center',
+    'justify-center',
+    'text-sm',
+    'font-medium',
+    'rounded-md',
+    'w-full',
+    'max-w-5xl',
+    'mx-auto',
+  ],
   content: [
     './index.html',
     './src/**/*.{js,ts,jsx,tsx}',

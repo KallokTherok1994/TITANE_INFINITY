@@ -38,11 +38,10 @@ export const AppShell = ({
   footerOverlay = false,
   className,
 }: AppShellProps): JSX.Element => {
-  // TEST VIOLATION: Modification UI sans entry registry (doit échouer GATE_UI_INDEX)
   return (
     <div
       className={cn(
-        'flex flex-col h-screen w-full min-w-0 max-w-full overflow-hidden bg-titanium-bg-base',
+        'flex h-dvh min-h-0 w-full min-w-0 max-w-full flex-col overflow-hidden bg-titanium-bg-base',
         className
       )}
     >
@@ -57,7 +56,7 @@ export const AppShell = ({
       <main
         role="main"
         className={cn(
-          'flex-1 overflow-hidden relative flex min-w-0 flex-col max-w-full',
+          'relative flex h-full min-h-0 max-w-full min-w-0 flex-1 flex-col overflow-hidden',
           topNav && 'pt-16'
         )}
         style={
@@ -67,7 +66,7 @@ export const AppShell = ({
         }
       >
         <div
-          className="flex-1 overflow-auto scrollbar-custom w-full min-w-0 max-w-full"
+          className="scrollbar-custom flex h-full min-h-0 w-full min-w-0 max-w-full flex-1 flex-col overflow-auto"
           style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
         >
           {children}

@@ -103,6 +103,19 @@ describe('UI Navigation — Single TopNav (Article 1)', () => {
     expect(navElements).toHaveLength(1);
   });
 
+  it('keeps the AppShell main column height-locked for fullscreen chat surfaces', async () => {
+    await renderTopNavShell();
+
+    const main = screen.getByRole('main');
+    const scrollHost = main.firstElementChild;
+
+    expect(main.className).toContain('min-h-0');
+    expect(main.className).toContain('overflow-hidden');
+    expect(scrollHost).not.toBeNull();
+    expect(scrollHost?.className).toContain('min-h-0');
+    expect(scrollHost?.className).toContain('flex-col');
+  });
+
   it('marks the More menu active when the current route belongs to an overflow item', async () => {
     const items: TopNavItem[] = [
       { id: 'titane', label: 'TITANE', icon: '⚡', route: '/titane' },
@@ -176,6 +189,19 @@ describe('UI Navigation — Single TopNav (Article 1)', () => {
 describe('UI Navigation — Tabs Not Navbar-Like (Article 2)', () => {
   beforeEach(() => {
     navigationRegistry.reset();
+  });
+
+  it('TitanePage conversation opens in fullscreen chat layout', async () => {
+    await renderWithRouter(React.createElement(TitanePage, null));
+
+    expect(screen.getByTestId('page-titane')).toHaveAttribute(
+      'data-layout',
+      'chat-fullscreen'
+    );
+    expect(screen.getByTestId('page-conversation')).toHaveAttribute(
+      'data-layout',
+      'fullscreen'
+    );
   });
 
   it('TitanePage tabs do not have TopNav-like backdrop-filter', async () => {

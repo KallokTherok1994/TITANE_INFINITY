@@ -14,7 +14,7 @@ applyTo: 'docs/**, reports/**, proof_packs/**'
 
 - Keep entries short, factual, and dated.
 - Maintain indexes when required.
-- Use the full AutoHeal schema for every entry in `scripts/autoheal/autoheal_rules.jsonl`:
+- Use the full AutoHeal schema for every entry in the canonical AutoHeal JSONL registry:
   - Required fields: `id, date, scope, symptom, root_cause, fix, prevention_test, commands, files_changed, rollback`
   - `prevention_test` must include `detect_recurrence`.
 - Add a `registry/ui-events.jsonl` entry for every UI surface change.
@@ -30,7 +30,7 @@ applyTo: 'docs/**, reports/**, proof_packs/**'
 ## Preuves attendues
 
 - VERDICT.md and ROLLBACK.md in proof packs.
-- AutoHeal JSONL valid per `scripts/autoheal/detect_recurrence.sh`.
+- AutoHeal JSONL valid per the recurrence guard.
 
 ## Gates specifiques
 

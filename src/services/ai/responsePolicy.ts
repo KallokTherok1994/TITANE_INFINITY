@@ -162,7 +162,7 @@ export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
     label: 'Équilibré',
     description:
       'Mode par défaut. Structure modérée, profondeur utile sans sur-ingénierie.',
-    maxTokens: 4096,
+    maxTokens: 16384,
     temperature: 0.7,
     reasoningEffort: 'medium',
     structureLevel: 1,
@@ -196,7 +196,7 @@ export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
     label: 'Développé',
     description:
       'Profil par défaut. Réflexion approfondie, réponse développée, structure utile. Équilibre entre profondeur et efficacité.',
-    maxTokens: 6144,
+    maxTokens: 32768,
     temperature: 0.65,
     reasoningEffort: 'high',
     structureLevel: 2,
@@ -229,7 +229,7 @@ export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
     label: 'Profond',
     description:
       'Raisonnement riche, structure forte, synthèse dense. Latence accrue acceptée.',
-    maxTokens: 8192,
+    maxTokens: 24576,
     temperature: 0.65,
     reasoningEffort: 'high',
     structureLevel: 2,
@@ -263,7 +263,7 @@ export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
     label: 'Architecte',
     description:
       'Clarté stratégique maximale. Expose axes, priorités, incohérences, action simple.',
-    maxTokens: 12000,
+    maxTokens: 32768,
     temperature: 0.55,
     reasoningEffort: 'high',
     structureLevel: 3,
@@ -288,15 +288,15 @@ export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
   },
 
   /**
-   * OMEGA — Potentiel maximal absolu. Contexte total, mémoire complète, génération illimitée.
+  * OMEGA — Potentiel maximal absolu. Contexte total, mémoire complète, génération au plafond backend.
    * Cas : "godmod", "plein potentiel", tâches complexes multi-étapes, sessions hybrides admin
    */
   OMEGA: {
     id: 'OMEGA',
     label: 'Oméga ∞',
     description:
-      'Puissance maximale. Mémoire totale, génération longue, raisonnement approfondi. Aucune limitation artificielle.',
-    maxTokens: 16000,
+      'Puissance maximale. Mémoire totale, génération longue, raisonnement approfondi. Plafond backend à 32768 sans restriction artificielle basse.',
+    maxTokens: 32768,
     temperature: 0.72,
     reasoningEffort: 'max',
     structureLevel: 3,

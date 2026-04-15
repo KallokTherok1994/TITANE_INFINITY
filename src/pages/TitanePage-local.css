@@ -77,3 +77,69 @@
   outline-offset: 2px;
   box-shadow: 0 0 0 4px rgba(156, 163, 175, 0.22);
 }
+
+/* Full-page chat mode: keep tab switching visible but dedicate the content height to chat. */
+.titane-page--conversation {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100%;
+}
+
+.titane-page-shell--conversation {
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: 0.5rem;
+}
+
+.titane-page-header--conversation {
+  padding: 0.45rem 0.75rem 0;
+  margin-bottom: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+.titane-inline-tabs--conversation {
+  justify-content: flex-start;
+  gap: 0.35rem;
+  padding-bottom: 0.2rem;
+}
+
+.titane-inline-tabs--conversation button {
+  min-height: 36px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.82rem;
+  border-radius: 999px;
+}
+
+.titane-content--conversation {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.titane-section-conversation--fullscreen {
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: 0;
+  overflow: hidden;
+}
+
+.titane-section-conversation--fullscreen .conversation-container {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .titane-page-header--conversation {
+    padding: 0.45rem 0.65rem 0;
+  }
+
+  .titane-inline-tabs--conversation button {
+    min-height: 40px;
+    padding: 0.5rem 0.75rem;
+  }
+}

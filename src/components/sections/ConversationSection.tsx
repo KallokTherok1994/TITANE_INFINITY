@@ -16,7 +16,6 @@ import React, {
   useDeferredValue,
   memo,
 } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/useToast';
 import { useConversationEngine } from '@hooks/useConversationEngine';
 import type {
@@ -46,14 +45,12 @@ import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import { TSectionHeader } from '@/design-system';
 import { Download, FileText, Copy, Trash2, Search } from 'lucide-react';
 import { colors } from '@themes/tokens';
-import { Card } from '@/ui';
 import { createLogger } from '@/utils/logger';
 import { confirmAction } from '@/utils/runtimeConfirm';
 import type { ProviderDecisionMeta, ReasonCode } from '@/types/providerMeta';
 import { webResearch } from '@/services/webResearchService';
 import type { ResearchOptions, ResearchReport } from '@/types/research';
 import { useLTMContext } from '@/hooks/useLTMContext';
-import { useTwinEvolution } from '@/hooks/useTwinEvolution';
 import {
   buildArtifactActionContract,
   buildProfessionalDocumentManifest,
@@ -73,7 +70,10 @@ const pageLogger = createLogger('ConversationSection');
 // TYPES & CONSTANTS
 // ═══════════════════════════════════════════════════════════════════════════
 
-type ConversationSectionProps = Record<string, never>;
+interface ConversationSectionProps {
+  showSectionHeader?: boolean;
+  fullscreen?: boolean;
+}
 
 interface ConversationMessageItem {
   id?: string;
@@ -147,6 +147,9 @@ const CONVERSATION_SUGGESTIONS = [
 ];
 
 const LOADING_INDICATOR_GRACE_MS = 1200;
+const COMPACT_CONVERSATION_VIEWPORT_HEIGHT = 980;
+const SCROLL_TO_BOTTOM_THRESHOLD_PX = 96;
+const SCROLL_TO_BOTTOM_VISIBILITY_OFFSET_PX = 180;
 
 const MIN_CONVERSATION_VIEWPORT_HEIGHT = 320;
 
@@ -161,6 +164,38 @@ function getConversationViewportHeight(): number {
   }
 
   return Math.max(MIN_CONVERSATION_VIEWPORT_HEIGHT, window.innerHeight || 0);
+}
+
+export function shouldUseConversationCompactLayout(
+  viewportHeight: number,
+  fullscreen: boolean
+): boolean {
+  return fullscreen && viewportHeight > 0 && viewportHeight <= COMPACT_CONVERSATION_VIEWPORT_HEIGHT;
+}
+
+export function isConversationNearBottom(
+  scrollTop: number,
+  clientHeight: number,
+  scrollHeight: number,
+  thresholdPx = SCROLL_TO_BOTTOM_THRESHOLD_PX
+): boolean {
+  if (clientHeight <= 0 || scrollHeight <= 0) {
+    return true;
+  }
+
+  return scrollHeight - (scrollTop + clientHeight) <= thresholdPx;
+}
+
+export function shouldShowConversationScrollToBottom(
+  scrollTop: number,
+  clientHeight: number,
+  scrollHeight: number
+): boolean {
+  if (scrollHeight <= clientHeight + SCROLL_TO_BOTTOM_VISIBILITY_OFFSET_PX) {
+    return false;
+  }
+
+  return !isConversationNearBottom(scrollTop, clientHeight, scrollHeight);
 }
 
 export function resolveConversationDisplayProvider(
@@ -1025,1348 +1060,1370 @@ const getInitialSelectedProvider = (): ConversationProviderPreference => {
   return isConversationProviderPreference(normalizedStored) ? normalizedStored : 'ollama';
 };
 
-export const ConversationSection: React.FC<ConversationSectionProps> = memo(() => {
-  // ═══ HOOKS ═══
-  const { success: toastSuccess, error: errorToast } = useToast();
-  const navigate = useNavigate();
-  const [selectedProvider, setSelectedProvider] =
-    useState<ConversationProviderPreference>(getInitialSelectedProvider);
-  const [providerReadiness, setProviderReadiness] =
-    useState<ConversationProviderReadiness>(DEFAULT_CONVERSATION_PROVIDER_READINESS);
-  const effectiveProviderPreference = isConversationProviderReady(
-    selectedProvider,
-    providerReadiness
-  )
-    ? selectedProvider
-    : 'ollama';
-  const {
-    messages,
-    isLoading,
-    error,
-    currentMode,
-    setMode,
-    sendMessage,
-    appendLocalExchange,
-    clearMessages,
-    deleteMessage,
-    healthReport,
-    refreshHealth,
-    conversationId,
-  } = useConversationEngine({
-    mode: 'default',
-    providerPreference: effectiveProviderPreference,
-    autoHealthCheck: false,
-    maxMessages: 500,
-  });
+export const ConversationSection: React.FC<ConversationSectionProps> = memo(
+  ({ showSectionHeader = true, fullscreen = false }) => {
+    // ═══ HOOKS ═══
+    const { success: toastSuccess, error: errorToast } = useToast();
+    const [selectedProvider, setSelectedProvider] =
+      useState<ConversationProviderPreference>(getInitialSelectedProvider);
+    const [providerReadiness, setProviderReadiness] =
+      useState<ConversationProviderReadiness>(DEFAULT_CONVERSATION_PROVIDER_READINESS);
+    const effectiveProviderPreference = isConversationProviderReady(
+      selectedProvider,
+      providerReadiness
+    )
+      ? selectedProvider
+      : 'ollama';
+    const {
+      messages,
+      isLoading,
+      error,
+      currentMode,
+      setMode,
+      sendMessage,
+      appendLocalExchange,
+      clearMessages,
+      deleteMessage,
+      healthReport,
+      refreshHealth,
+      conversationId,
+    } = useConversationEngine({
+      mode: 'default',
+      providerPreference: effectiveProviderPreference,
+      autoHealthCheck: false,
+      maxMessages: 500,
+    });
 
-  // PATCH-014: LTM wired to ConversationSection — refreshes after each message
-  const { historyCount: ltmCount, refresh: refreshLTM } = useLTMContext(conversationId);
-  const { chatContextStatus, lastSyncAt, currentPhase, syncScore } = useTwinEvolution();
+    // PATCH-014: LTM wired to ConversationSection — refreshes after each message
+    const { historyCount: ltmCount, refresh: refreshLTM } = useLTMContext(conversationId);
 
-  // ═══ STATE ═══
-  const [inputValue, setInputValue] = useState('');
-  const [showModeBuilder, setShowModeBuilder] = useState(false);
-  const [audioEnabled, setAudioEnabled] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
-  const [customModes, setCustomModes] = useState<CustomMode[]>([]);
-  const [_attachedImages, setAttachedImages] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filterRole, setFilterRole] = useState<'all' | 'user' | 'assistant'>('all');
-  const [_cameraActive, setCameraActive] = useState(false);
-  const [loadingVisibleUntil, setLoadingVisibleUntil] = useState(0);
-  const [sendTraceState, setSendTraceState] = useState<
-    'idle' | 'dispatching' | 'responded' | 'errored'
-  >('idle');
-  const [sendTraceMeta, setSendTraceMeta] = useState('');
-  const [activeArtifactManifest, setActiveArtifactManifest] =
-    useState<ProfessionalDocumentManifest | null>(null);
-  const [conversationViewportHeight, setConversationViewportHeight] = useState<number>(
-    getConversationViewportHeight
-  );
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const sendingRef = useRef(false);
-  const deferredSearchQuery = useDeferredValue(searchQuery);
+    // ═══ STATE ═══
+    const [inputValue, setInputValue] = useState('');
+    const [showModeBuilder, setShowModeBuilder] = useState(false);
+    const [audioEnabled, setAudioEnabled] = useState(false);
+    const [isRecording, setIsRecording] = useState(false);
+    const [customModes, setCustomModes] = useState<CustomMode[]>([]);
+    const [_attachedImages, setAttachedImages] = useState<string[]>([]);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filterRole, setFilterRole] = useState<'all' | 'user' | 'assistant'>('all');
+    const [_cameraActive, setCameraActive] = useState(false);
+    const [loadingVisibleUntil, setLoadingVisibleUntil] = useState(0);
+    const [sendTraceState, setSendTraceState] = useState<
+      'idle' | 'dispatching' | 'responded' | 'errored'
+    >('idle');
+    const [sendTraceMeta, setSendTraceMeta] = useState('');
+    const [activeArtifactManifest, setActiveArtifactManifest] =
+      useState<ProfessionalDocumentManifest | null>(null);
+    const [conversationViewportHeight, setConversationViewportHeight] = useState<number>(
+      getConversationViewportHeight
+    );
+    const [showScrollToBottom, setShowScrollToBottom] = useState(false);
+    const messagesContainerRef = useRef<HTMLDivElement>(null);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const sendingRef = useRef(false);
+    const deferredSearchQuery = useDeferredValue(searchQuery);
 
-  // ═══ THINKING STEPS ═══
-  const thinking = useThinkingSteps();
+    // ═══ THINKING STEPS ═══
+    const thinking = useThinkingSteps();
 
-  useEffect(() => {
-    const updateViewportHeight = () => {
-      setConversationViewportHeight(getConversationViewportHeight());
-    };
+    useEffect(() => {
+      const updateViewportHeight = () => {
+        setConversationViewportHeight(getConversationViewportHeight());
+      };
 
-    updateViewportHeight();
-    window.addEventListener('resize', updateViewportHeight);
-    window.addEventListener('orientationchange', updateViewportHeight);
+      updateViewportHeight();
+      window.addEventListener('resize', updateViewportHeight);
+      window.addEventListener('orientationchange', updateViewportHeight);
 
-    const visualViewport = window.visualViewport;
-    visualViewport?.addEventListener('resize', updateViewportHeight);
-    visualViewport?.addEventListener('scroll', updateViewportHeight);
+      const visualViewport = window.visualViewport;
+      visualViewport?.addEventListener('resize', updateViewportHeight);
+      visualViewport?.addEventListener('scroll', updateViewportHeight);
 
-    return () => {
-      window.removeEventListener('resize', updateViewportHeight);
-      window.removeEventListener('orientationchange', updateViewportHeight);
-      visualViewport?.removeEventListener('resize', updateViewportHeight);
-      visualViewport?.removeEventListener('scroll', updateViewportHeight);
-    };
-  }, []);
+      return () => {
+        window.removeEventListener('resize', updateViewportHeight);
+        window.removeEventListener('orientationchange', updateViewportHeight);
+        visualViewport?.removeEventListener('resize', updateViewportHeight);
+        visualViewport?.removeEventListener('scroll', updateViewportHeight);
+      };
+    }, []);
 
-  const conversationContainerStyle = useMemo(
-    () =>
-      ({
-        '--conversation-vh': `${conversationViewportHeight}px`,
-      }) as React.CSSProperties,
-    [conversationViewportHeight]
-  );
+    const conversationContainerStyle = useMemo(
+      () =>
+        ({
+          '--conversation-vh': `${conversationViewportHeight}px`,
+          ...(fullscreen
+            ? {
+                height: '100%',
+                minHeight: 0,
+              }
+            : {}),
+        }) as React.CSSProperties,
+      [conversationViewportHeight, fullscreen]
+    );
 
-  // ═══ VOICE ENGINE ═══
-  const handleVoiceTranscript = useCallback((text: string) => {
-    setInputValue(prev => (prev ? `${prev} ${text}` : text));
-  }, []);
+    const compactConversationLayout = useMemo(
+      () => shouldUseConversationCompactLayout(conversationViewportHeight, fullscreen),
+      [conversationViewportHeight, fullscreen]
+    );
 
-  const handleVoiceError = useCallback((error: unknown) => {
-    pageLogger.error('Voice recognition error', error);
-  }, []);
-
-  const voiceEngine = useVoiceEngine({
-    language: 'fr-FR',
-    onTranscript: handleVoiceTranscript,
-    onError: handleVoiceError,
-  });
-
-  // ═══ HANDLERS ═══
-  const handleCopyMessage = useCallback(
-    async (content: string) => {
-      try {
-        await navigator.clipboard.writeText(content);
-      } catch (err) {
-        pageLogger.warn('Copy message failed', err);
-        errorToast('Impossible de copier le message');
+    const syncScrollToBottomVisibility = useCallback(() => {
+      const container = messagesContainerRef.current;
+      if (!container) {
+        setShowScrollToBottom(false);
+        return;
       }
-    },
-    [errorToast]
-  );
 
-  const handleRetryMessage = useCallback(
-    async (content: string) => {
-      if (!content.trim() || isLoading) return;
-      thinking.startThinking();
-      try {
-        await sendMessage(content);
-        void refreshLTM(); // PATCH-014: refresh LTM count after message
-      } finally {
-        thinking.stopThinking();
+      setShowScrollToBottom(
+        shouldShowConversationScrollToBottom(
+          container.scrollTop,
+          container.clientHeight,
+          container.scrollHeight
+        )
+      );
+    }, []);
+
+    const scrollMessagesToBottom = useCallback(
+      (behavior: ScrollBehavior = 'smooth') => {
+        const container = messagesContainerRef.current;
+        if (container) {
+          container.scrollTo({ top: container.scrollHeight, behavior });
+        } else {
+          messagesEndRef.current?.scrollIntoView({ behavior, block: 'end' });
+        }
+
+        setShowScrollToBottom(false);
+      },
+      []
+    );
+
+    // ═══ VOICE ENGINE ═══
+    const handleVoiceTranscript = useCallback((text: string) => {
+      setInputValue(prev => (prev ? `${prev} ${text}` : text));
+    }, []);
+
+    const handleVoiceError = useCallback((error: unknown) => {
+      pageLogger.error('Voice recognition error', error);
+    }, []);
+
+    const voiceEngine = useVoiceEngine({
+      language: 'fr-FR',
+      onTranscript: handleVoiceTranscript,
+      onError: handleVoiceError,
+    });
+
+    // ═══ HANDLERS ═══
+    const handleCopyMessage = useCallback(
+      async (content: string) => {
+        try {
+          await navigator.clipboard.writeText(content);
+        } catch (err) {
+          pageLogger.warn('Copy message failed', err);
+          errorToast('Impossible de copier le message');
+        }
+      },
+      [errorToast]
+    );
+
+    const handleRetryMessage = useCallback(
+      async (content: string) => {
+        if (!content.trim() || isLoading) return;
+        thinking.startThinking();
+        try {
+          await sendMessage(content);
+          void refreshLTM(); // PATCH-014: refresh LTM count after message
+        } finally {
+          thinking.stopThinking();
+        }
+      },
+      [isLoading, sendMessage, thinking, refreshLTM]
+    );
+
+    const handleSuggestionClick = useCallback(
+      (e: React.MouseEvent<HTMLButtonElement>) => {
+        const value = e.currentTarget.dataset.value;
+        if (value) setInputValue(value);
+      },
+      []
+    );
+
+    const handleProviderChange = useCallback((provider: string) => {
+      if (isConversationProviderPreference(provider)) {
+        setSelectedProvider(provider);
       }
-    },
-    [isLoading, sendMessage, thinking, refreshLTM]
-  );
+    }, []);
 
-  const handleSuggestionClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    const value = e.currentTarget.dataset.value;
-    if (value) setInputValue(value);
-  }, []);
+    useEffect(() => {
+      if (typeof window === 'undefined') {
+        return;
+      }
 
-  const handleProviderChange = useCallback((provider: string) => {
-    if (isConversationProviderPreference(provider)) {
-      setSelectedProvider(provider);
-    }
-  }, []);
+      window.localStorage.setItem('omega-chat-preferred-provider', selectedProvider);
+    }, [selectedProvider]);
 
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
+    useEffect(() => {
+      const isTestEnv =
+        import.meta.env.MODE === 'test' ||
+        (typeof process !== 'undefined' && Boolean(process.env.VITEST));
+      if (isTestEnv) {
+        return;
+      }
 
-    window.localStorage.setItem('omega-chat-preferred-provider', selectedProvider);
-  }, [selectedProvider]);
-
-  useEffect(() => {
-    const isTestEnv =
-      import.meta.env.MODE === 'test' ||
-      (typeof process !== 'undefined' && Boolean(process.env.VITEST));
-    if (isTestEnv) {
-      return;
-    }
-
-    let cancelled = false;
-    const withTimeout = <T,>(
-      promise: Promise<T>,
-      timeoutMs: number,
-      fallback: T
-    ): Promise<T> =>
-      Promise.race([
-        promise,
-        new Promise<T>(resolve => {
-          window.setTimeout(() => resolve(fallback), timeoutMs);
-        }),
-      ]);
-
-    void (async () => {
-      try {
-        const [openaiModule, geminiModule, claudeModule] = await Promise.all([
-          import('@/services/ai/providers/openai'),
-          import('@/services/ai/providers/gemini'),
-          import('@/services/ai/providers/claude'),
+      let cancelled = false;
+      const withTimeout = <T,>(
+        promise: Promise<T>,
+        timeoutMs: number,
+        fallback: T
+      ): Promise<T> =>
+        Promise.race([
+          promise,
+          new Promise<T>(resolve => {
+            window.setTimeout(() => resolve(fallback), timeoutMs);
+          }),
         ]);
 
-        const checks = await Promise.allSettled([
-          withTimeout(openaiModule.openaiProvider.isAvailable(), 3000, false),
-          withTimeout(geminiModule.geminiProvider.isAvailable(), 3000, false),
-          withTimeout(claudeModule.claudeProvider.isAvailable(), 3000, false),
-        ]);
+      void (async () => {
+        try {
+          const [openaiModule, geminiModule, claudeModule] = await Promise.all([
+            import('@/services/ai/providers/openai'),
+            import('@/services/ai/providers/gemini'),
+            import('@/services/ai/providers/claude'),
+          ]);
 
-        if (cancelled) {
+          const checks = await Promise.allSettled([
+            withTimeout(openaiModule.openaiProvider.isAvailable(), 3000, false),
+            withTimeout(geminiModule.geminiProvider.isAvailable(), 3000, false),
+            withTimeout(claudeModule.claudeProvider.isAvailable(), 3000, false),
+          ]);
+
+          if (cancelled) {
+            return;
+          }
+
+          const openaiAvailable =
+            checks[0] && checks[0].status === 'fulfilled' ? checks[0].value : false;
+          const geminiAvailable =
+            checks[1] && checks[1].status === 'fulfilled' ? checks[1].value : false;
+          const claudeAvailable =
+            checks[2] && checks[2].status === 'fulfilled' ? checks[2].value : false;
+
+          setProviderReadiness(prev => ({
+            ...prev,
+            openai: openaiAvailable,
+            gemini: geminiAvailable,
+            claude: claudeAvailable,
+          }));
+        } catch (providerError) {
+          if (!cancelled) {
+            pageLogger.warn('Provider readiness check failed', providerError);
+          }
+        }
+      })();
+
+      return () => {
+        cancelled = true;
+      };
+    }, []);
+
+    // ═══ COMPUTED VALUES ═══
+    const conversationModes = useMemo(() => {
+      const customModesFormatted = customModes.map(m => ({
+        id: m.id,
+        name: m.name,
+        icon: m.icon,
+        description: m.description,
+      }));
+
+      return [...BUILT_IN_CONVERSATION_MODES, ...customModesFormatted];
+    }, [customModes]);
+
+    const currentModeLabel = useMemo(
+      () => conversationModes.find(m => m.id === currentMode)?.name ?? '—',
+      [conversationModes, currentMode]
+    );
+
+    const conversationModeOptions = useMemo(
+      () =>
+        conversationModes.map(mode => (
+          <option key={mode.id} value={mode.id}>
+            {mode.icon} {mode.name}
+          </option>
+        )),
+      [conversationModes]
+    );
+
+    const hasMessages = messages.length > 0;
+    const isHealthy = healthReport?.status === 'Healthy';
+    const showLoadingIndicator = isLoading || loadingVisibleUntil > Date.now();
+
+    const latestAssistantRuntime = useMemo(() => {
+      for (let i = messages.length - 1; i >= 0; i -= 1) {
+        const message = messages[i] as ConversationMessageItem;
+        if (message.role !== 'assistant') continue;
+
+        const providerMeta = message.metadata?.providerMeta;
+        const tags = message.metadata?.tags ?? [];
+        if (!providerMeta && tags.length === 0) continue;
+
+        const runtimeSignals = deriveRuntimeSignals(providerMeta, tags);
+
+        return {
+          providerMeta,
+          tags,
+          runtimeSignals,
+        };
+      }
+
+      return null;
+    }, [messages]);
+
+    const availableProviders = useMemo(
+      () => buildConversationProviders(providerReadiness),
+      [providerReadiness]
+    );
+
+    const selectedProviderReady = useMemo(
+      () => isConversationProviderReady(selectedProvider, providerReadiness),
+      [providerReadiness, selectedProvider]
+    );
+
+    const selectedProviderLabel = useMemo(
+      () => resolveConversationDisplayProvider(selectedProvider, null),
+      [selectedProvider]
+    );
+
+    const runtimeSummary = useMemo(
+      () =>
+        buildConversationRuntimeSummary(selectedProviderLabel, latestAssistantRuntime),
+      [latestAssistantRuntime, selectedProviderLabel]
+    );
+
+    const loadingSummary = useMemo(
+      () => buildConversationLoadingLabel(selectedProviderLabel, currentModeLabel),
+      [currentModeLabel, selectedProviderLabel]
+    );
+
+    const runtimeBadges = useMemo(
+      () => buildConversationRuntimeBadges(selectedProviderLabel, latestAssistantRuntime),
+      [latestAssistantRuntime, selectedProviderLabel]
+    );
+
+    useEffect(() => {
+      if (isLoading) {
+        setLoadingVisibleUntil(Date.now() + LOADING_INDICATOR_GRACE_MS);
+        return;
+      }
+
+      if (loadingVisibleUntil <= Date.now()) {
+        return;
+      }
+
+      const remainingMs = loadingVisibleUntil - Date.now();
+      const timerId = window.setTimeout(() => {
+        setLoadingVisibleUntil(0);
+      }, remainingMs);
+
+      return () => {
+        window.clearTimeout(timerId);
+      };
+    }, [isLoading, loadingVisibleUntil]);
+
+    const latestAssistantProviderMeta = useMemo(() => {
+      for (let i = messages.length - 1; i >= 0; i -= 1) {
+        const message = messages[i];
+        if (!message) continue;
+        if (message.role === 'assistant' && message.metadata?.providerMeta) {
+          return message.metadata.providerMeta;
+        }
+      }
+      return null;
+    }, [messages]);
+
+    const thinkingState: 'idle' | 'active' | 'done' | 'error' | 'blocked' =
+      thinking.isThinking ? 'active' : error ? 'error' : hasMessages ? 'done' : 'idle';
+
+    const runtimeProviderLabel = useMemo(
+      () =>
+        resolveConversationDisplayProvider(
+          selectedProvider,
+          latestAssistantProviderMeta?.provider_used ?? null
+        ),
+      [latestAssistantProviderMeta?.provider_used, selectedProvider]
+    );
+
+    const thinkingTopology = useMemo(() => {
+      const nodes: Array<{
+        id: string;
+        label: string;
+        status: 'active' | 'done' | 'error' | 'blocked';
+      }> = [
+        {
+          id: 'conversation-runtime',
+          label: 'conversation-runtime',
+          status: (thinking.isThinking ? 'active' : 'done') as
+            | 'active'
+            | 'done'
+            | 'error'
+            | 'blocked',
+        },
+      ];
+
+      if (!latestAssistantProviderMeta) {
+        return nodes;
+      }
+
+      const reasonStatus = mapReasonCodeToNodeStatus(
+        latestAssistantProviderMeta.reason_code
+      );
+
+      nodes.push({
+        id: `mode-${latestAssistantProviderMeta.mode.toLowerCase()}`,
+        label: `mode:${latestAssistantProviderMeta.mode}`,
+        status: reasonStatus,
+      });
+
+      nodes.push({
+        id: `provider-${latestAssistantProviderMeta.provider_used}`,
+        label: `provider:${latestAssistantProviderMeta.provider_used}`,
+        status: reasonStatus,
+      });
+
+      if (latestAssistantProviderMeta.reason_code !== 'OK') {
+        nodes.push({
+          id: `reason-${latestAssistantProviderMeta.reason_code.toLowerCase()}`,
+          label: `reason:${latestAssistantProviderMeta.reason_code}`,
+          status: reasonStatus,
+        });
+      }
+
+      latestAssistantProviderMeta.attempts.slice(0, 4).forEach((attempt, index) => {
+        nodes.push({
+          id: `attempt-${index + 1}-${attempt.provider_id}`,
+          label: `attempt${index + 1}:${attempt.provider_id}/${attempt.outcome}`,
+          status: mapReasonCodeToNodeStatus(attempt.reason_code),
+        });
+      });
+
+      return nodes;
+    }, [thinking.isThinking, latestAssistantProviderMeta]);
+
+    const searchNeedle = useMemo(() => {
+      const trimmed = deferredSearchQuery.trim();
+      return trimmed ? trimmed.toLowerCase() : '';
+    }, [deferredSearchQuery]);
+
+    const filteredMessages = useMemo(() => {
+      if (!searchNeedle && filterRole === 'all') {
+        return messages;
+      }
+
+      let result = messages;
+
+      if (searchNeedle) {
+        result = result.filter(m => m.content.toLowerCase().includes(searchNeedle));
+      }
+
+      if (filterRole !== 'all') {
+        result = result.filter(m => m.role === filterRole);
+      }
+
+      return result;
+    }, [messages, searchNeedle, filterRole]);
+
+    const filteredCount = filteredMessages.length;
+    const messageCount = messages.length;
+
+    const messageItems = useMemo(
+      () =>
+        filteredMessages.map((msg, index) => (
+          <ConversationMessage
+            key={msg.id || `msg-${index}`}
+            message={msg}
+            isLoading={isLoading}
+            onCopy={handleCopyMessage}
+            onRetry={handleRetryMessage}
+            onDelete={deleteMessage}
+          />
+        )),
+      [filteredMessages, isLoading, handleCopyMessage, handleRetryMessage, deleteMessage]
+    );
+
+    const suggestionButtons = useMemo(
+      () =>
+        CONVERSATION_SUGGESTIONS.map(suggestion => (
+          <button
+            key={suggestion.value}
+            type="button"
+            data-value={suggestion.value}
+            onClick={handleSuggestionClick}
+          >
+            {suggestion.label}
+          </button>
+        )),
+      []
+    );
+
+    // ═══ EFFECTS ═══
+    useEffect(() => {
+      try {
+        const stored = localStorage.getItem('titane_custom_modes');
+        if (stored) {
+          const modes: CustomMode[] = JSON.parse(stored);
+          setCustomModes(modes);
+          // Register each custom mode so getSystemPrompt() can resolve it at runtime
+          modes.forEach(m => registerCustomMode(m.id, m.systemPrompt));
+        }
+      } catch (error) {
+        pageLogger.error('Erreur chargement modes custom', error);
+      }
+    }, []);
+
+    useEffect(() => {
+      scrollMessagesToBottom(messages.length <= 1 ? 'auto' : 'smooth');
+    }, [messages, scrollMessagesToBottom]);
+
+    useEffect(() => {
+      const container = messagesContainerRef.current;
+      if (!container) {
+        setShowScrollToBottom(false);
+        return;
+      }
+
+      syncScrollToBottomVisibility();
+
+      const handleScroll = () => {
+        syncScrollToBottomVisibility();
+      };
+
+      container.addEventListener('scroll', handleScroll, { passive: true });
+      window.addEventListener('resize', handleScroll);
+
+      const visualViewport = window.visualViewport;
+      visualViewport?.addEventListener('resize', handleScroll);
+
+      return () => {
+        container.removeEventListener('scroll', handleScroll);
+        window.removeEventListener('resize', handleScroll);
+        visualViewport?.removeEventListener('resize', handleScroll);
+      };
+    }, [
+      syncScrollToBottomVisibility,
+      filteredCount,
+      showLoadingIndicator,
+      compactConversationLayout,
+    ]);
+
+    // ═══ MORE HANDLERS ═══
+    const handleSaveCustomMode = useCallback((mode: CustomMode) => {
+      setCustomModes(prev => [...prev, mode]);
+      // Register in runtime registry so getSystemPrompt() resolves this mode immediately
+      registerCustomMode(mode.id, mode.systemPrompt);
+      pageLogger.debug('Mode personnalisé sauvegardé', mode);
+    }, []);
+
+    const handleSend = useCallback(async () => {
+      const rawInput = inputValue;
+      const trimmedInput = rawInput.trim();
+      if (!trimmedInput || isLoading || sendingRef.current) return;
+      sendingRef.current = true;
+
+      const sanitized = sanitizeInput(rawInput);
+      if (!sanitized || sanitized.length === 0) {
+        pageLogger.debug('Input vide apres sanitization');
+        sendingRef.current = false;
+        return;
+      }
+
+      const messageText = sanitized;
+      setInputValue('');
+
+      const artifactContract = buildArtifactActionContract(messageText);
+      if (artifactContract.intent !== 'ANSWER_ONLY') {
+        const route = resolveArtifactRoute(artifactContract, {
+          documentEditorAvailable: true,
+          codeEditorAvailable: false,
+        });
+        const manifest = buildProfessionalDocumentManifest(messageText, route.contract);
+        setActiveArtifactManifest(manifest);
+
+        const antiLie = validateNoFakeArtifactResponse(
+          messageText,
+          route.contract,
+          manifest
+        );
+        if (!antiLie.ok) {
+          await appendLocalExchange(
+            messageText,
+            `⛔ Requête fichier détectée, mais contrat artefact invalide: ${antiLie.violations.join(' | ')}`,
+            {
+              intention: 'artifact_intent_validation',
+              tags: ['artifact', 'anti-lie', 'blocked'],
+            }
+          );
+          sendingRef.current = false;
           return;
         }
 
-        const openaiAvailable =
-          checks[0] && checks[0].status === 'fulfilled' ? checks[0].value : false;
-        const geminiAvailable =
-          checks[1] && checks[1].status === 'fulfilled' ? checks[1].value : false;
-        const claudeAvailable =
-          checks[2] && checks[2].status === 'fulfilled' ? checks[2].value : false;
-
-        setProviderReadiness(prev => ({
-          ...prev,
-          openai: openaiAvailable,
-          gemini: geminiAvailable,
-          claude: claudeAvailable,
-        }));
-      } catch (providerError) {
-        if (!cancelled) {
-          pageLogger.warn('Provider readiness check failed', providerError);
+        if (route.status === 'BLOCKED') {
+          await appendLocalExchange(
+            messageText,
+            [
+              '⛔ Requête fichier comprise, mais ouverture éditeur non disponible depuis ce flux chat.',
+              `Intent: ${route.contract.intent}`,
+              `Motif: ${route.contract.blocked_reason ?? 'UNSPECIFIED_BLOCK'}`,
+              `Manifest: ${manifest.id}`,
+            ].join('\n'),
+            {
+              intention: 'artifact_route_blocked',
+              tags: ['artifact', 'OPEN_FROM_CHAT_UNPROVEN', 'blocked'],
+            }
+          );
+          errorToast(
+            'Demande fichier détectée, mais éditeur non ouvrable depuis le chat.'
+          );
+          sendingRef.current = false;
+          return;
         }
-      }
-    })();
 
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+        const openedEditor = route.contract.open_editor;
+        if (openedEditor) {
+          setShowModeBuilder(true);
+        }
 
-  // ═══ COMPUTED VALUES ═══
-  const conversationModes = useMemo(() => {
-    const customModesFormatted = customModes.map(m => ({
-      id: m.id,
-      name: m.name,
-      icon: m.icon,
-      description: m.description,
-    }));
+        const draft = [
+          `# ${manifest.title}`,
+          '',
+          `- Manifest: ${manifest.id}`,
+          `- Kind: ${manifest.artifact_kind}`,
+          `- Grade: ${manifest.professional_grade}`,
+          `- Format: ${manifest.target_formats.join(', ')}`,
+          '',
+          '## Context',
+          manifest.sections[0]?.content ?? '',
+        ].join('\n');
 
-    return [...BUILT_IN_CONVERSATION_MODES, ...customModesFormatted];
-  }, [customModes]);
-
-  const currentModeLabel = useMemo(
-    () => conversationModes.find(m => m.id === currentMode)?.name ?? '—',
-    [conversationModes, currentMode]
-  );
-
-  const conversationModeOptions = useMemo(
-    () =>
-      conversationModes.map(mode => (
-        <option key={mode.id} value={mode.id}>
-          {mode.icon} {mode.name}
-        </option>
-      )),
-    [conversationModes]
-  );
-
-  const hasMessages = messages.length > 0;
-  const isHealthy = healthReport?.status === 'Healthy';
-  const showLoadingIndicator = isLoading || loadingVisibleUntil > Date.now();
-
-  const latestAssistantRuntime = useMemo(() => {
-    for (let i = messages.length - 1; i >= 0; i -= 1) {
-      const message = messages[i] as ConversationMessageItem;
-      if (message.role !== 'assistant') continue;
-
-      const providerMeta = message.metadata?.providerMeta;
-      const tags = message.metadata?.tags ?? [];
-      if (!providerMeta && tags.length === 0) continue;
-
-      const runtimeSignals = deriveRuntimeSignals(providerMeta, tags);
-
-      return {
-        providerMeta,
-        tags,
-        runtimeSignals,
-      };
-    }
-
-    return null;
-  }, [messages]);
-
-  const availableProviders = useMemo(
-    () => buildConversationProviders(providerReadiness),
-    [providerReadiness]
-  );
-
-  const selectedProviderReady = useMemo(
-    () => isConversationProviderReady(selectedProvider, providerReadiness),
-    [providerReadiness, selectedProvider]
-  );
-
-  const selectedProviderLabel = useMemo(
-    () => resolveConversationDisplayProvider(selectedProvider, null),
-    [selectedProvider]
-  );
-
-  const runtimeSummary = useMemo(
-    () => buildConversationRuntimeSummary(selectedProviderLabel, latestAssistantRuntime),
-    [latestAssistantRuntime, selectedProviderLabel]
-  );
-
-  const loadingSummary = useMemo(
-    () => buildConversationLoadingLabel(selectedProviderLabel, currentModeLabel),
-    [currentModeLabel, selectedProviderLabel]
-  );
-
-  const runtimeBadges = useMemo(
-    () => buildConversationRuntimeBadges(selectedProviderLabel, latestAssistantRuntime),
-    [latestAssistantRuntime, selectedProviderLabel]
-  );
-
-  useEffect(() => {
-    if (isLoading) {
-      setLoadingVisibleUntil(Date.now() + LOADING_INDICATOR_GRACE_MS);
-      return;
-    }
-
-    if (loadingVisibleUntil <= Date.now()) {
-      return;
-    }
-
-    const remainingMs = loadingVisibleUntil - Date.now();
-    const timerId = window.setTimeout(() => {
-      setLoadingVisibleUntil(0);
-    }, remainingMs);
-
-    return () => {
-      window.clearTimeout(timerId);
-    };
-  }, [isLoading, loadingVisibleUntil]);
-
-  const latestAssistantProviderMeta = useMemo(() => {
-    for (let i = messages.length - 1; i >= 0; i -= 1) {
-      const message = messages[i];
-      if (!message) continue;
-      if (message.role === 'assistant' && message.metadata?.providerMeta) {
-        return message.metadata.providerMeta;
-      }
-    }
-    return null;
-  }, [messages]);
-
-  const thinkingState: 'idle' | 'active' | 'done' | 'error' | 'blocked' =
-    thinking.isThinking ? 'active' : error ? 'error' : hasMessages ? 'done' : 'idle';
-
-  const runtimeProviderLabel = useMemo(
-    () =>
-      resolveConversationDisplayProvider(
-        selectedProvider,
-        latestAssistantProviderMeta?.provider_used ?? null
-      ),
-    [latestAssistantProviderMeta?.provider_used, selectedProvider]
-  );
-
-  const thinkingTopology = useMemo(() => {
-    const nodes: Array<{
-      id: string;
-      label: string;
-      status: 'active' | 'done' | 'error' | 'blocked';
-    }> = [
-      {
-        id: 'conversation-runtime',
-        label: 'conversation-runtime',
-        status: (thinking.isThinking ? 'active' : 'done') as
-          | 'active'
-          | 'done'
-          | 'error'
-          | 'blocked',
-      },
-    ];
-
-    if (!latestAssistantProviderMeta) {
-      return nodes;
-    }
-
-    const reasonStatus = mapReasonCodeToNodeStatus(
-      latestAssistantProviderMeta.reason_code
-    );
-
-    nodes.push({
-      id: `mode-${latestAssistantProviderMeta.mode.toLowerCase()}`,
-      label: `mode:${latestAssistantProviderMeta.mode}`,
-      status: reasonStatus,
-    });
-
-    nodes.push({
-      id: `provider-${latestAssistantProviderMeta.provider_used}`,
-      label: `provider:${latestAssistantProviderMeta.provider_used}`,
-      status: reasonStatus,
-    });
-
-    if (latestAssistantProviderMeta.reason_code !== 'OK') {
-      nodes.push({
-        id: `reason-${latestAssistantProviderMeta.reason_code.toLowerCase()}`,
-        label: `reason:${latestAssistantProviderMeta.reason_code}`,
-        status: reasonStatus,
-      });
-    }
-
-    latestAssistantProviderMeta.attempts.slice(0, 4).forEach((attempt, index) => {
-      nodes.push({
-        id: `attempt-${index + 1}-${attempt.provider_id}`,
-        label: `attempt${index + 1}:${attempt.provider_id}/${attempt.outcome}`,
-        status: mapReasonCodeToNodeStatus(attempt.reason_code),
-      });
-    });
-
-    return nodes;
-  }, [thinking.isThinking, latestAssistantProviderMeta]);
-
-  const searchNeedle = useMemo(() => {
-    const trimmed = deferredSearchQuery.trim();
-    return trimmed ? trimmed.toLowerCase() : '';
-  }, [deferredSearchQuery]);
-
-  const filteredMessages = useMemo(() => {
-    if (!searchNeedle && filterRole === 'all') {
-      return messages;
-    }
-
-    let result = messages;
-
-    if (searchNeedle) {
-      result = result.filter(m => m.content.toLowerCase().includes(searchNeedle));
-    }
-
-    if (filterRole !== 'all') {
-      result = result.filter(m => m.role === filterRole);
-    }
-
-    return result;
-  }, [messages, searchNeedle, filterRole]);
-
-  const filteredCount = filteredMessages.length;
-  const messageCount = messages.length;
-
-  const messageItems = useMemo(
-    () =>
-      filteredMessages.map((msg, index) => (
-        <ConversationMessage
-          key={msg.id || `msg-${index}`}
-          message={msg}
-          isLoading={isLoading}
-          onCopy={handleCopyMessage}
-          onRetry={handleRetryMessage}
-          onDelete={deleteMessage}
-        />
-      )),
-    [filteredMessages, isLoading, handleCopyMessage, handleRetryMessage, deleteMessage]
-  );
-
-  const suggestionButtons = useMemo(
-    () =>
-      CONVERSATION_SUGGESTIONS.map(suggestion => (
-        <button
-          key={suggestion.value}
-          type="button"
-          data-value={suggestion.value}
-          onClick={handleSuggestionClick}
-        >
-          {suggestion.label}
-        </button>
-      )),
-    []
-  );
-
-  // ═══ EFFECTS ═══
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem('titane_custom_modes');
-      if (stored) {
-        const modes: CustomMode[] = JSON.parse(stored);
-        setCustomModes(modes);
-        // Register each custom mode so getSystemPrompt() can resolve it at runtime
-        modes.forEach(m => registerCustomMode(m.id, m.systemPrompt));
-      }
-    } catch (error) {
-      pageLogger.error('Erreur chargement modes custom', error);
-    }
-  }, []);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
-  // ═══ MORE HANDLERS ═══
-  const handleSaveCustomMode = useCallback((mode: CustomMode) => {
-    setCustomModes(prev => [...prev, mode]);
-    // Register in runtime registry so getSystemPrompt() resolves this mode immediately
-    registerCustomMode(mode.id, mode.systemPrompt);
-    pageLogger.debug('Mode personnalisé sauvegardé', mode);
-  }, []);
-
-  const handleSend = useCallback(async () => {
-    const rawInput = inputValue;
-    const trimmedInput = rawInput.trim();
-    if (!trimmedInput || isLoading || sendingRef.current) return;
-    sendingRef.current = true;
-
-    const sanitized = sanitizeInput(rawInput);
-    if (!sanitized || sanitized.length === 0) {
-      pageLogger.debug('Input vide apres sanitization');
-      sendingRef.current = false;
-      return;
-    }
-
-    const messageText = sanitized;
-    setInputValue('');
-
-    const artifactContract = buildArtifactActionContract(messageText);
-    if (artifactContract.intent !== 'ANSWER_ONLY') {
-      const route = resolveArtifactRoute(artifactContract, {
-        documentEditorAvailable: true,
-        codeEditorAvailable: false,
-      });
-      const manifest = buildProfessionalDocumentManifest(messageText, route.contract);
-      setActiveArtifactManifest(manifest);
-
-      const antiLie = validateNoFakeArtifactResponse(
-        messageText,
-        route.contract,
-        manifest
-      );
-      if (!antiLie.ok) {
-        await appendLocalExchange(
-          messageText,
-          `⛔ Requête fichier détectée, mais contrat artefact invalide: ${antiLie.violations.join(' | ')}`,
-          {
-            intention: 'artifact_intent_validation',
-            tags: ['artifact', 'anti-lie', 'blocked'],
-          }
-        );
-        sendingRef.current = false;
-        return;
-      }
-
-      if (route.status === 'BLOCKED') {
         await appendLocalExchange(
           messageText,
           [
-            '⛔ Requête fichier comprise, mais ouverture éditeur non disponible depuis ce flux chat.',
-            `Intent: ${route.contract.intent}`,
-            `Motif: ${route.contract.blocked_reason ?? 'UNSPECIFIED_BLOCK'}`,
+            '✅ Requête fichier comprise et routée vers la voie artefact.',
+            openedEditor
+              ? 'Éditeur ouvert: ModeBuilder affiché pour édition guidée.'
+              : 'Éditeur non requis pour cette requête, génération préparée côté chat.',
             `Manifest: ${manifest.id}`,
+            '',
+            draft,
           ].join('\n'),
           {
-            intention: 'artifact_route_blocked',
-            tags: ['artifact', 'OPEN_FROM_CHAT_UNPROVEN', 'blocked'],
+            intention: 'artifact_route_ready',
+            tags: [
+              'artifact',
+              'manifest',
+              openedEditor ? 'editor_opened_modebuilder' : 'no_editor_needed',
+            ],
           }
         );
-        errorToast('Demande fichier détectée, mais éditeur non ouvrable depuis le chat.');
+        toastSuccess(
+          openedEditor
+            ? 'Route artefact activée, éditeur ouvert avec manifeste canonique.'
+            : 'Route artefact activée avec manifeste canonique.'
+        );
         sendingRef.current = false;
         return;
       }
 
-      const openedEditor = route.contract.open_editor;
-      if (openedEditor) {
-        setShowModeBuilder(true);
-      }
-
-      const draft = [
-        `# ${manifest.title}`,
-        '',
-        `- Manifest: ${manifest.id}`,
-        `- Kind: ${manifest.artifact_kind}`,
-        `- Grade: ${manifest.professional_grade}`,
-        `- Format: ${manifest.target_formats.join(', ')}`,
-        '',
-        '## Context',
-        manifest.sections[0]?.content ?? '',
-      ].join('\n');
-
-      await appendLocalExchange(
-        messageText,
-        [
-          '✅ Requête fichier comprise et routée vers la voie artefact.',
-          openedEditor
-            ? 'Éditeur ouvert: ModeBuilder affiché pour édition guidée.'
-            : 'Éditeur non requis pour cette requête, génération préparée côté chat.',
-          `Manifest: ${manifest.id}`,
-          '',
-          draft,
-        ].join('\n'),
-        {
-          intention: 'artifact_route_ready',
-          tags: [
-            'artifact',
-            'manifest',
-            openedEditor ? 'editor_opened_modebuilder' : 'no_editor_needed',
-          ],
-        }
-      );
-      toastSuccess(
-        openedEditor
-          ? 'Route artefact activée, éditeur ouvert avec manifeste canonique.'
-          : 'Route artefact activée avec manifeste canonique.'
-      );
-      sendingRef.current = false;
-      return;
-    }
-
-    if (shouldHandoffToResearch(messageText)) {
-      thinking.startThinking();
-      thinking.addStep('analysis', 'Détection recherche web (mode chat intégré)...');
-      try {
-        const handoff = buildResearchHandoff(messageText);
-        const options: ResearchOptions = {
-          mode: 'WEB_LIVE',
-          target_url: handoff.target_url,
-          seed_urls: handoff.seed_urls,
-          sandbox_root: 'data/research',
-          max_depth: 1,
-          max_sources: 8,
-          max_pages: 10,
-          max_requests: 16,
-          timeout_ms: 60000,
-          cache_enabled: true,
-          respect_robots: true,
-        };
-
-        thinking.addStep('reasoning', 'Exécution web_research gouvernée...');
-        const report = await webResearch({ question: handoff.q }, options);
-        const outcome = classifyResearchOutcome(report);
-        const assistantReply = buildResearchReply(report, outcome);
-        const providerMeta = deriveResearchProviderMeta(report, outcome);
-
-        await appendLocalExchange(messageText, assistantReply, {
-          intention: 'web_research',
-          tags: ['research', 'web_live', outcome],
-          providerMeta,
-        });
-
-        if (outcome === 'blocked') {
-          errorToast('Recherche bloquée par la gouvernance/robots pour cette cible.');
-        } else if (outcome === 'limited') {
-          toastSuccess('Recherche partielle terminée dans le chat IA.');
-        } else {
-          toastSuccess('Recherche web terminée dans le chat IA.');
-        }
-      } catch (researchError) {
-        pageLogger.error('Recherche web chat error', researchError);
-        await appendLocalExchange(
-          messageText,
-          '❌ Échec de la recherche web dans le chat. Réessaie avec une URL explicite pour une cible plus précise.',
-          {
-            intention: 'web_research',
-            tags: ['research', 'web_live', 'error'],
-            providerMeta: {
-              provider_used: 'web_research',
-              provider_class: 'remote',
-              mode: 'ERROR',
-              reason_code: 'FALLBACK_OFFLINE',
-              latency_ms_total: 0,
-              timeout_ms: 30000,
-              retries: 0,
-              attempts: [],
-              network_used: false,
-              cache_hit: false,
-              policy: 'web_research_inline',
-            },
-          }
-        );
-        errorToast('Recherche web indisponible.');
-      } finally {
-        thinking.stopThinking();
-        sendingRef.current = false;
-      }
-      return;
-    }
-
-    thinking.startThinking();
-    thinking.addStep('analysis', 'Analyse de votre message...');
-    setSendTraceState('dispatching');
-    setSendTraceMeta(`provider=${selectedProvider};len=${messageText.length}`);
-
-    try {
-      thinking.addStep('reasoning', 'Traitement par le pipeline OMEGA...');
-      const response = await sendMessage(messageText);
-      setSendTraceState('responded');
-      setSendTraceMeta(
-        `provider=${response?.meta?.provider_used ?? 'unknown'};reason=${response?.meta?.reason_code ?? 'UNKNOWN'}`
-      );
-
-      thinking.addStep('synthesis', 'Génération de la réponse...');
-
-      if (response?.meta) {
-        thinking.addStep('validation', formatRuntimeThinkingSummary(response.meta));
-      }
-
-      thinking.stopThinking();
-
-      if (audioEnabled && response?.assistant_message) {
+      if (shouldHandoffToResearch(messageText)) {
+        thinking.startThinking();
+        thinking.addStep('analysis', 'Détection recherche web (mode chat intégré)...');
         try {
-          await hybridTTS.speak(response.assistant_message, {
-            rate: 1.0,
-            pitch: 1.0,
-            lang: 'fr-FR',
-          });
-        } catch (ttsError) {
-          pageLogger.warn('TTS error (non-critical)', ttsError);
-          setAudioEnabled(false);
-        }
-      }
-    } catch (err) {
-      pageLogger.error('Send message error', err);
-      setSendTraceState('errored');
-      setSendTraceMeta(err instanceof Error ? err.message : String(err));
-      thinking.stopThinking();
-    } finally {
-      sendingRef.current = false;
-    }
-  }, [
-    inputValue,
-    isLoading,
-    sendMessage,
-    appendLocalExchange,
-    audioEnabled,
-    thinking,
-    errorToast,
-    toastSuccess,
-  ]);
-
-  const handleKeyPress = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        handleSend();
-      }
-    },
-    [handleSend]
-  );
-
-  const handleClearChat = useCallback(async () => {
-    try {
-      const confirmed = await confirmAction(
-        "Voulez-vous vraiment effacer tout l'historique ?",
-        {
-          title: 'Effacer la conversation',
-          defaultToConfirmed: true,
-        }
-      );
-
-      if (confirmed) {
-        clearMessages();
-      }
-    } catch (error) {
-      pageLogger.warn('Clear chat confirmation failed', error);
-      clearMessages();
-    }
-  }, [clearMessages]);
-
-  const handleExportJson = useCallback(async () => {
-    const result = await downloadConversation('current', 'Conversation TITANE', messages);
-    if (result.ok) {
-      toastSuccess(
-        result.status === 'SAVED_TAURI'
-          ? `Conversation enregistrée (${result.path ?? 'chemin sélectionné'})`
-          : 'Conversation téléchargée via le navigateur.'
-      );
-      return;
-    }
-
-    if (result.status === 'SAVE_CANCELLED_HONEST') {
-      errorToast('Enregistrement annulé (aucun fichier écrit).');
-      return;
-    }
-
-    errorToast(`Échec export JSON: ${result.error ?? result.status}`);
-  }, [messages, toastSuccess, errorToast]);
-
-  const handleExportMarkdown = useCallback(async () => {
-    const result = await downloadMarkdown('Conversation TITANE', messages);
-    if (result.ok) {
-      toastSuccess(
-        result.status === 'SAVED_TAURI'
-          ? `Markdown enregistré (${result.path ?? 'chemin sélectionné'})`
-          : 'Markdown téléchargé via le navigateur.'
-      );
-      return;
-    }
-
-    if (result.status === 'SAVE_CANCELLED_HONEST') {
-      errorToast('Enregistrement annulé (aucun fichier écrit).');
-      return;
-    }
-
-    errorToast(`Échec export Markdown: ${result.error ?? result.status}`);
-  }, [messages, toastSuccess, errorToast]);
-
-  const handleCopyAll = useCallback(async () => {
-    const copySuccess = await copyToClipboard('Conversation TITANE', messages);
-    if (copySuccess) toastSuccess('Conversation copiée.');
-  }, [messages, toastSuccess]);
-
-  const handleVoiceInput = useCallback(async () => {
-    if (!voiceEngine.status.isMicAvailable) {
-      errorToast('Microphone non disponible. Vérifiez les permissions.');
-      return;
-    }
-
-    try {
-      if (voiceEngine.status.isRecording) {
-        const finalTranscript = await voiceEngine.stopDictation();
-        setIsRecording(false);
-        pageLogger.debug('Voice dictation stopped', finalTranscript);
-      } else {
-        await voiceEngine.startDictation();
-        setIsRecording(true);
-        pageLogger.debug('Voice dictation started');
-      }
-    } catch (error) {
-      pageLogger.error('Voice input error', error);
-      setIsRecording(false);
-      errorToast('Erreur reconnaissance vocale. Consultez la console.');
-    }
-  }, [errorToast, voiceEngine]);
-
-  const handleFilesAnalyzed = useCallback(
-    (files: AnalyzedFile[]) => {
-      sendMessage(buildImportedFilesPrompt(files));
-    },
-    [sendMessage]
-  );
-
-  const handleFileImport = useCallback(
-    (files: FileList) => {
-      const fileNames = Array.from(files)
-        .map(f => f.name)
-        .join(', ');
-      sendMessage(`📎 Fichiers: ${fileNames}\n\nAnalyse ces fichiers.`);
-    },
-    [sendMessage]
-  );
-
-  const handleScreenCapture = useCallback(
-    (imageData: string) => {
-      setAttachedImages(prev => [...prev, imageData]);
-      sendMessage('📸 [Capture ecran]\n\nAnalyse cette capture.');
-    },
-    [sendMessage]
-  );
-
-  const handleImageAnalysis = useCallback(
-    (imageData: string, prompt?: string) => {
-      setAttachedImages(prev => [...prev, imageData]);
-      sendMessage(`👁️ [Image]\n\n${prompt || 'Analyse cette image.'}`);
-    },
-    [sendMessage]
-  );
-
-  const handleDictationResult = useCallback((text: string) => {
-    if (text.trim()) setInputValue(prev => (prev ? `${prev} ${text}` : text));
-  }, []);
-
-  const handleAudioRecorded = useCallback(
-    (audioBlob: Blob) => {
-      const sizeMB = (audioBlob.size / (1024 * 1024)).toFixed(2);
-      sendMessage(`🎤 [Audio - ${sizeMB} MB]\n\nTranscris ce message.`);
-    },
-    [sendMessage]
-  );
-
-  const handleTranscriptionResult = useCallback(
-    (text: string) => {
-      sendMessage(`📝 Transcription:\n\n"${text}"\n\nAnalyse ce contenu.`);
-    },
-    [sendMessage]
-  );
-
-  const handleModeChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setMode(e.target.value as ConversationMode);
-    },
-    [setMode]
-  );
-
-  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  }, []);
-
-  const handleFilterRoleChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setFilterRole(e.target.value as typeof filterRole);
-    },
-    []
-  );
-
-  const toggleAudioEnabled = useCallback(() => {
-    setAudioEnabled(prev => !prev);
-  }, []);
-
-  const toggleModeBuilder = useCallback(() => {
-    setShowModeBuilder(prev => !prev);
-  }, []);
-
-  const handleToggleAudioConversation = useCallback((active: boolean) => {
-    setAudioEnabled(active);
-  }, []);
-
-  const handleToggleTTS = useCallback((active: boolean) => {
-    setAudioEnabled(active);
-  }, []);
-
-  const handleToggleCameraLive = useCallback(() => {
-    setCameraActive(prev => !prev);
-  }, []);
-
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInputValue(e.target.value);
-  }, []);
-
-  const handleCloseModeBuilder = useCallback(() => {
-    setShowModeBuilder(false);
-  }, []);
-
-  const openTwins = useCallback(() => {
-    navigate('/titane?tab=twins');
-  }, [navigate]);
-
-  const twinsStatusMeta =
-    chatContextStatus === 'active'
-      ? {
-          label: '🟢 TWINS connecté au Chat IA',
-          color: '#389e0d',
-          bg: 'rgba(82,196,26,0.12)',
-          border: 'rgba(82,196,26,0.45)',
-        }
-      : chatContextStatus === 'stale'
-        ? {
-            label: '🟠 TWINS à resynchroniser',
-            color: '#d48806',
-            bg: 'rgba(250,173,20,0.12)',
-            border: 'rgba(250,173,20,0.45)',
-          }
-        : {
-            label: '⚪ TWINS en attente pour cette session',
-            color: '#8c8c8c',
-            bg: 'rgba(140,140,140,0.12)',
-            border: 'rgba(140,140,140,0.4)',
+          const handoff = buildResearchHandoff(messageText);
+          const options: ResearchOptions = {
+            mode: 'WEB_LIVE',
+            target_url: handoff.target_url,
+            seed_urls: handoff.seed_urls,
+            sandbox_root: 'data/research',
+            max_depth: 1,
+            max_sources: 8,
+            max_pages: 10,
+            max_requests: 16,
+            timeout_ms: 60000,
+            cache_enabled: true,
+            respect_robots: true,
           };
 
-  const twinsLastSyncLabel = lastSyncAt
-    ? `Dernière synchronisation : ${new Date(lastSyncAt).toLocaleTimeString('fr-FR', {
-        hour: '2-digit',
-        minute: '2-digit',
-      })}`
-    : 'Le contexte TWINS sera injecté automatiquement dès la prochaine synchronisation.';
+          thinking.addStep('reasoning', 'Exécution web_research gouvernée...');
+          const report = await webResearch({ question: handoff.q }, options);
+          const outcome = classifyResearchOutcome(report);
+          const assistantReply = buildResearchReply(report, outcome);
+          const providerMeta = deriveResearchProviderMeta(report, outcome);
 
-  // ═══ RENDER ═══
-  return (
-    <div
-      className="titane-section titane-section-conversation"
-      data-testid="page-conversation"
-    >
-      <TSectionHeader
-        title="💬 Communication & Intelligence"
-        subtitle={`Interface conversationnelle multi-provider avec modes spécialisés${ltmCount > 0 ? ` · 🗂 ${ltmCount} msg en mémoire LTM` : ''}`}
-      />
+          await appendLocalExchange(messageText, assistantReply, {
+            intention: 'web_research',
+            tags: ['research', 'web_live', outcome],
+            providerMeta,
+          });
 
-      <Card className="conversation-twins-card" style={{ marginBottom: 16, padding: 16 }}>
+          if (outcome === 'blocked') {
+            errorToast('Recherche bloquée par la gouvernance/robots pour cette cible.');
+          } else if (outcome === 'limited') {
+            toastSuccess('Recherche partielle terminée dans le chat IA.');
+          } else {
+            toastSuccess('Recherche web terminée dans le chat IA.');
+          }
+        } catch (researchError) {
+          pageLogger.error('Recherche web chat error', researchError);
+          await appendLocalExchange(
+            messageText,
+            '❌ Échec de la recherche web dans le chat. Réessaie avec une URL explicite pour une cible plus précise.',
+            {
+              intention: 'web_research',
+              tags: ['research', 'web_live', 'error'],
+              providerMeta: {
+                provider_used: 'web_research',
+                provider_class: 'remote',
+                mode: 'ERROR',
+                reason_code: 'FALLBACK_OFFLINE',
+                latency_ms_total: 0,
+                timeout_ms: 30000,
+                retries: 0,
+                attempts: [],
+                network_used: false,
+                cache_hit: false,
+                policy: 'web_research_inline',
+              },
+            }
+          );
+          errorToast('Recherche web indisponible.');
+        } finally {
+          thinking.stopThinking();
+          sendingRef.current = false;
+        }
+        return;
+      }
+
+      thinking.startThinking();
+      thinking.addStep('analysis', 'Analyse de votre message...');
+      setSendTraceState('dispatching');
+      setSendTraceMeta(`provider=${selectedProvider};len=${messageText.length}`);
+
+      try {
+        thinking.addStep('reasoning', 'Traitement par le pipeline OMEGA...');
+        const response = await sendMessage(messageText);
+        setSendTraceState('responded');
+        setSendTraceMeta(
+          `provider=${response?.meta?.provider_used ?? 'unknown'};reason=${response?.meta?.reason_code ?? 'UNKNOWN'}`
+        );
+
+        thinking.addStep('synthesis', 'Génération de la réponse...');
+
+        if (response?.meta) {
+          thinking.addStep('validation', formatRuntimeThinkingSummary(response.meta));
+        }
+
+        thinking.stopThinking();
+
+        if (audioEnabled && response?.assistant_message) {
+          try {
+            await hybridTTS.speak(response.assistant_message, {
+              rate: 1.0,
+              pitch: 1.0,
+              lang: 'fr-FR',
+            });
+          } catch (ttsError) {
+            pageLogger.warn('TTS error (non-critical)', ttsError);
+            setAudioEnabled(false);
+          }
+        }
+      } catch (err) {
+        pageLogger.error('Send message error', err);
+        setSendTraceState('errored');
+        setSendTraceMeta(err instanceof Error ? err.message : String(err));
+        thinking.stopThinking();
+      } finally {
+        sendingRef.current = false;
+      }
+    }, [
+      inputValue,
+      isLoading,
+      sendMessage,
+      appendLocalExchange,
+      audioEnabled,
+      thinking,
+      errorToast,
+      toastSuccess,
+    ]);
+
+    const handleKeyPress = useCallback(
+      (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          handleSend();
+        }
+      },
+      [handleSend]
+    );
+
+    const handleClearChat = useCallback(async () => {
+      try {
+        const confirmed = await confirmAction(
+          "Voulez-vous vraiment effacer tout l'historique ?",
+          {
+            title: 'Effacer la conversation',
+            defaultToConfirmed: true,
+          }
+        );
+
+        if (confirmed) {
+          clearMessages();
+        }
+      } catch (error) {
+        pageLogger.warn('Clear chat confirmation failed', error);
+        clearMessages();
+      }
+    }, [clearMessages]);
+
+    const handleExportJson = useCallback(async () => {
+      const result = await downloadConversation(
+        'current',
+        'Conversation TITANE',
+        messages
+      );
+      if (result.ok) {
+        toastSuccess(
+          result.status === 'SAVED_TAURI'
+            ? `Conversation enregistrée (${result.path ?? 'chemin sélectionné'})`
+            : 'Conversation téléchargée via le navigateur.'
+        );
+        return;
+      }
+
+      if (result.status === 'SAVE_CANCELLED_HONEST') {
+        errorToast('Enregistrement annulé (aucun fichier écrit).');
+        return;
+      }
+
+      errorToast(`Échec export JSON: ${result.error ?? result.status}`);
+    }, [messages, toastSuccess, errorToast]);
+
+    const handleExportMarkdown = useCallback(async () => {
+      const result = await downloadMarkdown('Conversation TITANE', messages);
+      if (result.ok) {
+        toastSuccess(
+          result.status === 'SAVED_TAURI'
+            ? `Markdown enregistré (${result.path ?? 'chemin sélectionné'})`
+            : 'Markdown téléchargé via le navigateur.'
+        );
+        return;
+      }
+
+      if (result.status === 'SAVE_CANCELLED_HONEST') {
+        errorToast('Enregistrement annulé (aucun fichier écrit).');
+        return;
+      }
+
+      errorToast(`Échec export Markdown: ${result.error ?? result.status}`);
+    }, [messages, toastSuccess, errorToast]);
+
+    const handleCopyAll = useCallback(async () => {
+      const copySuccess = await copyToClipboard('Conversation TITANE', messages);
+      if (copySuccess) toastSuccess('Conversation copiée.');
+    }, [messages, toastSuccess]);
+
+    const handleVoiceInput = useCallback(async () => {
+      if (!voiceEngine.status.isMicAvailable) {
+        errorToast('Microphone non disponible. Vérifiez les permissions.');
+        return;
+      }
+
+      try {
+        if (voiceEngine.status.isRecording) {
+          const finalTranscript = await voiceEngine.stopDictation();
+          setIsRecording(false);
+          pageLogger.debug('Voice dictation stopped', finalTranscript);
+        } else {
+          await voiceEngine.startDictation();
+          setIsRecording(true);
+          pageLogger.debug('Voice dictation started');
+        }
+      } catch (error) {
+        pageLogger.error('Voice input error', error);
+        setIsRecording(false);
+        errorToast('Erreur reconnaissance vocale. Consultez la console.');
+      }
+    }, [errorToast, voiceEngine]);
+
+    const handleFilesAnalyzed = useCallback(
+      (files: AnalyzedFile[]) => {
+        sendMessage(buildImportedFilesPrompt(files));
+      },
+      [sendMessage]
+    );
+
+    const handleFileImport = useCallback(
+      (files: FileList) => {
+        const fileNames = Array.from(files)
+          .map(f => f.name)
+          .join(', ');
+        sendMessage(`📎 Fichiers: ${fileNames}\n\nAnalyse ces fichiers.`);
+      },
+      [sendMessage]
+    );
+
+    const handleScreenCapture = useCallback(
+      (imageData: string) => {
+        setAttachedImages(prev => [...prev, imageData]);
+        sendMessage('📸 [Capture ecran]\n\nAnalyse cette capture.');
+      },
+      [sendMessage]
+    );
+
+    const handleImageAnalysis = useCallback(
+      (imageData: string, prompt?: string) => {
+        setAttachedImages(prev => [...prev, imageData]);
+        sendMessage(`👁️ [Image]\n\n${prompt || 'Analyse cette image.'}`);
+      },
+      [sendMessage]
+    );
+
+    const handleDictationResult = useCallback((text: string) => {
+      if (text.trim()) setInputValue(prev => (prev ? `${prev} ${text}` : text));
+    }, []);
+
+    const handleAudioRecorded = useCallback(
+      (audioBlob: Blob) => {
+        const sizeMB = (audioBlob.size / (1024 * 1024)).toFixed(2);
+        sendMessage(`🎤 [Audio - ${sizeMB} MB]\n\nTranscris ce message.`);
+      },
+      [sendMessage]
+    );
+
+    const handleTranscriptionResult = useCallback(
+      (text: string) => {
+        sendMessage(`📝 Transcription:\n\n"${text}"\n\nAnalyse ce contenu.`);
+      },
+      [sendMessage]
+    );
+
+    const handleModeChange = useCallback(
+      (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setMode(e.target.value as ConversationMode);
+      },
+      [setMode]
+    );
+
+    const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchQuery(e.target.value);
+    }, []);
+
+    const handleFilterRoleChange = useCallback(
+      (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setFilterRole(e.target.value as typeof filterRole);
+      },
+      []
+    );
+
+    const toggleAudioEnabled = useCallback(() => {
+      setAudioEnabled(prev => !prev);
+    }, []);
+
+    const toggleModeBuilder = useCallback(() => {
+      setShowModeBuilder(prev => !prev);
+    }, []);
+
+    const handleToggleAudioConversation = useCallback((active: boolean) => {
+      setAudioEnabled(active);
+    }, []);
+
+    const handleToggleTTS = useCallback((active: boolean) => {
+      setAudioEnabled(active);
+    }, []);
+
+    const handleToggleCameraLive = useCallback(() => {
+      setCameraActive(prev => !prev);
+    }, []);
+
+    const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setInputValue(e.target.value);
+    }, []);
+
+    const handleCloseModeBuilder = useCallback(() => {
+      setShowModeBuilder(false);
+    }, []);
+
+    // ═══ RENDER ═══
+    return (
         <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: 12,
-            flexWrap: 'wrap',
-          }}
+          className={`titane-section titane-section-conversation${fullscreen ? ' titane-section-conversation--fullscreen' : ''}`}
+          data-testid="page-conversation"
+          data-layout={fullscreen ? 'fullscreen' : 'standard'}
         >
-          <div>
-            <span
-              data-testid="chat-twins-status"
-              style={{
-                display: 'inline-block',
-                padding: '4px 12px',
-                borderRadius: 999,
-                fontSize: 12,
-                fontWeight: 700,
-                color: twinsStatusMeta.color,
-                background: twinsStatusMeta.bg,
-                border: `1px solid ${twinsStatusMeta.border}`,
-              }}
-            >
-              {twinsStatusMeta.label}
-            </span>
-            <div
-              style={{ fontSize: 12, color: colors.neutral[500], marginTop: 8 }}
-              data-testid="chat-twins-meta"
-            >
-              {twinsLastSyncLabel}
-              {currentPhase ? ` · Phase : ${currentPhase}` : ''}
-              {chatContextStatus === 'active'
-                ? ` · Sync : ${Math.round(syncScore * 100)}%`
-                : ''}
-            </div>
-          </div>
-
-          <button
-            type="button"
-            data-testid="chat-open-twins"
-            onClick={openTwins}
-            style={{
-              padding: '8px 14px',
-              borderRadius: 8,
-              border: 'none',
-              cursor: 'pointer',
-              fontWeight: 700,
-              color: '#fff',
-              background: 'linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)',
-            }}
-          >
-            🧬 Ouvrir TWINS
-          </button>
-        </div>
-      </Card>
-
-      <div className="conversation-container" style={conversationContainerStyle}>
-        {/* ═══ TOOLBAR ═══ */}
-        <div className="conversation-toolbar">
-          <div className="conversation-toolbar-left">
-            <ChatProviderSelector
-              selectedProvider={selectedProvider}
-              onChange={handleProviderChange}
-              providers={availableProviders}
-            />
-
-            {/* Mode Selector */}
-            <select
-              className="conversation-mode-select"
-              data-testid="select-conversation-mode"
-              value={currentMode}
-              onChange={handleModeChange}
-            >
-              {conversationModeOptions}
-            </select>
-          </div>
-
-          <div className="conversation-toolbar-right">
-            {/* Export JSON */}
-            <button
-              className="conversation-icon-btn"
-              data-testid="btn-export-json"
-              onClick={handleExportJson}
-              title="Exporter en JSON"
-              disabled={!hasMessages}
-            >
-              <Download size={16} />
-            </button>
-
-            {/* Export Markdown */}
-            <button
-              className="conversation-icon-btn"
-              data-testid="btn-export-markdown"
-              onClick={handleExportMarkdown}
-              title="Exporter en Markdown"
-              disabled={!hasMessages}
-            >
-              <FileText size={16} />
-            </button>
-
-            {/* Copy to Clipboard */}
-            <button
-              className="conversation-icon-btn"
-              data-testid="btn-copy-chat"
-              onClick={handleCopyAll}
-              title="Copier dans le presse-papier"
-              disabled={!hasMessages}
-            >
-              <Copy size={16} />
-            </button>
-
-            {/* Audio Toggle */}
-            <button
-              className={`conversation-icon-btn ${audioEnabled ? 'active' : ''}`}
-              data-testid="toggle-audio-tts"
-              onClick={toggleAudioEnabled}
-              title="Audio (TTS)"
-              aria-label={audioEnabled ? 'Désactiver audio (TTS)' : 'Activer audio (TTS)'}
-              aria-pressed={audioEnabled}
-              role="switch"
-            >
-              {audioEnabled ? '🔊' : '🔇'}
-            </button>
-
-            {/* Voice Input */}
-            <button
-              className={`conversation-icon-btn ${isRecording ? 'recording' : ''}`}
-              data-testid="toggle-voice-input"
-              onClick={handleVoiceInput}
-              title="Reconnaissance vocale"
-              aria-label={
-                isRecording
-                  ? "Arrêter l'enregistrement"
-                  : 'Démarrer reconnaissance vocale'
-              }
-              aria-pressed={isRecording}
-            >
-              🎤
-            </button>
-
-            {/* Mode Builder */}
-            <button
-              className="conversation-icon-btn"
-              data-testid="btn-mode-builder"
-              onClick={toggleModeBuilder}
-              title="Créer un mode personnalisé"
-              aria-label="Créer un mode personnalisé"
-            >
-              ⚙️
-            </button>
-
-            {/* Health Check */}
-            <button
-              className={`conversation-icon-btn ${isHealthy ? 'healthy' : ''}`}
-              data-testid="btn-health-check"
-              onClick={refreshHealth}
-              title={`Santé: ${healthReport?.status || 'Unknown'}`}
-              aria-label={`Vérifier santé du système (Statut: ${healthReport?.status || 'Inconnu'})`}
-            >
-              {isHealthy ? '✅' : '⚠️'}
-            </button>
-
-            {/* Clear Chat */}
-            <button
-              className="conversation-icon-btn"
-              data-testid="btn-clear-chat"
-              onClick={handleClearChat}
-              title="Effacer l'historique"
-              aria-label="Effacer l'historique du chat"
-            >
-              <Trash2 size={16} aria-hidden="true" />
-            </button>
-          </div>
-        </div>
-
-        {/* ═══ SEARCH / FILTERS ═══ */}
-        <div className="conversation-filters">
-          <div className="conversation-filters-search">
-            <Search size={16} />
-            <input
-              type="search"
-              data-testid="input-conversation-search"
-              placeholder="Rechercher..."
-              value={searchQuery}
-              onChange={handleSearchChange}
-              aria-label="Rechercher dans la conversation"
-            />
-          </div>
-
-          <select
-            className="conversation-filters-role"
-            data-testid="select-conversation-role"
-            value={filterRole}
-            onChange={handleFilterRoleChange}
-            aria-label="Filtrer par rôle"
-          >
-            <option value="all">Tous</option>
-            <option value="user">Utilisateur</option>
-            <option value="assistant">TITANE</option>
-          </select>
-
-          <div className="conversation-filters-count">
-            {filteredCount}/{messageCount}
-          </div>
-        </div>
-
-        {selectedProvider !== 'auto' &&
-          selectedProvider !== 'local' &&
-          selectedProvider !== 'ollama' &&
-          !selectedProviderReady && (
-            <div
-              className="conversation-error"
-              data-testid="chat-provider-warning"
-              role="alert"
-            >
-              <strong>⚠️ Provider non configuré:</strong> {selectedProviderLabel}{' '}
-              n&apos;est pas disponible sur ce runtime. TITANE conservera ce choix sans
-              fallback silencieux et affichera un résultat dégradé tant que la clé API
-              n&apos;est pas ajoutée dans <strong>Admin → Gouvernance → Secrets</strong>.
-            </div>
-          )}
-
-        {latestAssistantRuntime && (
-          <div
-            className="conversation-runtime-panel"
-            data-testid="chat-runtime-state"
-            data-provider-mode={latestAssistantRuntime.providerMeta?.mode ?? 'unknown'}
-            data-provider-reason={
-              latestAssistantRuntime.providerMeta?.reason_code ?? 'UNKNOWN'
-            }
-            data-provider-used={
-              latestAssistantRuntime.providerMeta?.provider_used ?? 'unknown'
-            }
-            data-network-used={
-              latestAssistantRuntime.providerMeta
-                ? String(latestAssistantRuntime.providerMeta.network_used)
-                : 'false'
-            }
-            data-orchestrator-state={
-              latestAssistantRuntime.runtimeSignals.orchestratorState
-            }
-            data-memory-state={latestAssistantRuntime.runtimeSignals.memoryState}
-            data-gemini-configured={selectedProvider === 'gemini' ? 'true' : 'false'}
-            data-ollama-model={selectedProvider === 'ollama' ? 'gemma2:2b' : 'unknown'}
-            data-secrets-mode="governed"
-          >
-            <div
-              className="conversation-runtime-summary"
-              data-testid="chat-runtime-summary"
-            >
-              {runtimeSummary}
-            </div>
-            <div
-              className="conversation-runtime-summary"
-              data-testid="chat-artifact-manifest"
-            >
-              Artifact Manifest: {activeArtifactManifest?.id ?? 'none'}
-            </div>
-            <div className="conversation-runtime-badges">
-              {runtimeBadges.map((badge, index) => (
-                <span
-                  key={`${badge}-${index}`}
-                  className="conversation-runtime-badge"
-                  data-testid="chat-runtime-badge"
-                >
-                  {badge}
-                </span>
-              ))}
-            </div>
-          </div>
+        {showSectionHeader && (
+          <TSectionHeader
+            title="💬 Communication & Intelligence"
+            subtitle={`Interface conversationnelle multi-provider avec modes spécialisés${ltmCount > 0 ? ` · 🗂 ${ltmCount} msg en mémoire LTM` : ''}`}
+          />
         )}
 
-        {/* ═══ THINKING PANEL ═══ */}
-        <ThinkingPanel
-          steps={thinking.steps}
-          isThinking={thinking.isThinking}
-          state={thinkingState}
-          topology={thinkingTopology}
-          compact={thinking.compact}
-          inline={false}
-          provider={runtimeProviderLabel}
-        />
+        <div
+          className="conversation-container"
+          style={conversationContainerStyle}
+          data-density={compactConversationLayout ? 'compact' : 'comfortable'}
+        >
+          {/* ═══ TOOLBAR ═══ */}
+          <div className="conversation-toolbar">
+            <div className="conversation-toolbar-left">
+              <ChatProviderSelector
+                selectedProvider={selectedProvider}
+                onChange={handleProviderChange}
+                providers={availableProviders}
+              />
 
-        {/* ═══ MESSAGES AREA ═══ */}
-        <div className="conversation-messages">
-          {messages.length === 0 && !thinking.isThinking && (
-            <div className="conversation-empty">
-              <div className="conversation-empty-icon">🧠⚡∞</div>
-              <h3>TITANE∞ est prêt à converser</h3>
-              <p>
-                Mode actuel: <strong>{currentModeLabel}</strong>
-                <br />
-                Provider: <strong>{selectedProviderLabel}</strong>
-              </p>
-              <div className="conversation-empty-suggestions">{suggestionButtons}</div>
+              {/* Mode Selector */}
+              <select
+                className="conversation-mode-select"
+                data-testid="select-conversation-mode"
+                value={currentMode}
+                onChange={handleModeChange}
+              >
+                {conversationModeOptions}
+              </select>
             </div>
-          )}
 
-          {messageItems}
+            <div className="conversation-toolbar-right">
+              {/* Export JSON */}
+              <button
+                className="conversation-icon-btn"
+                data-testid="btn-export-json"
+                onClick={handleExportJson}
+                title="Exporter en JSON"
+                disabled={!hasMessages}
+              >
+                <Download size={16} />
+              </button>
 
-          {showLoadingIndicator && (
-            <div
-              className="conversation-message assistant loading"
-              data-testid="chat-loading"
+              {/* Export Markdown */}
+              <button
+                className="conversation-icon-btn"
+                data-testid="btn-export-markdown"
+                onClick={handleExportMarkdown}
+                title="Exporter en Markdown"
+                disabled={!hasMessages}
+              >
+                <FileText size={16} />
+              </button>
+
+              {/* Copy to Clipboard */}
+              <button
+                className="conversation-icon-btn"
+                data-testid="btn-copy-chat"
+                onClick={handleCopyAll}
+                title="Copier dans le presse-papier"
+                disabled={!hasMessages}
+              >
+                <Copy size={16} />
+              </button>
+
+              {/* Audio Toggle */}
+              <button
+                className={`conversation-icon-btn ${audioEnabled ? 'active' : ''}`}
+                data-testid="toggle-audio-tts"
+                onClick={toggleAudioEnabled}
+                title="Audio (TTS)"
+                aria-label={
+                  audioEnabled ? 'Désactiver audio (TTS)' : 'Activer audio (TTS)'
+                }
+                aria-pressed={audioEnabled}
+                role="switch"
+              >
+                {audioEnabled ? '🔊' : '🔇'}
+              </button>
+
+              {/* Voice Input */}
+              <button
+                className={`conversation-icon-btn ${isRecording ? 'recording' : ''}`}
+                data-testid="toggle-voice-input"
+                onClick={handleVoiceInput}
+                title="Reconnaissance vocale"
+                aria-label={
+                  isRecording
+                    ? "Arrêter l'enregistrement"
+                    : 'Démarrer reconnaissance vocale'
+                }
+                aria-pressed={isRecording}
+              >
+                🎤
+              </button>
+
+              {/* Mode Builder */}
+              <button
+                className="conversation-icon-btn"
+                data-testid="btn-mode-builder"
+                onClick={toggleModeBuilder}
+                title="Créer un mode personnalisé"
+                aria-label="Créer un mode personnalisé"
+              >
+                ⚙️
+              </button>
+
+              {/* Health Check */}
+              <button
+                className={`conversation-icon-btn ${isHealthy ? 'healthy' : ''}`}
+                data-testid="btn-health-check"
+                onClick={refreshHealth}
+                title={`Santé: ${healthReport?.status || 'Unknown'}`}
+                aria-label={`Vérifier santé du système (Statut: ${healthReport?.status || 'Inconnu'})`}
+              >
+                {isHealthy ? '✅' : '⚠️'}
+              </button>
+
+              {/* Clear Chat */}
+              <button
+                className="conversation-icon-btn"
+                data-testid="btn-clear-chat"
+                onClick={handleClearChat}
+                title="Effacer l'historique"
+                aria-label="Effacer l'historique du chat"
+              >
+                <Trash2 size={16} aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+
+          {/* ═══ SEARCH / FILTERS ═══ */}
+          <div className="conversation-filters">
+            <div className="conversation-filters-search">
+              <Search size={16} />
+              <input
+                type="search"
+                data-testid="input-conversation-search"
+                placeholder="Rechercher..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+                aria-label="Rechercher dans la conversation"
+              />
+            </div>
+
+            <select
+              className="conversation-filters-role"
+              data-testid="select-conversation-role"
+              value={filterRole}
+              onChange={handleFilterRoleChange}
+              aria-label="Filtrer par rôle"
             >
-              <div className="conversation-message-avatar">🧠</div>
-              <div className="conversation-message-content">
-                <div className="conversation-typing">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-                <small style={{ color: colors.neutral[400] }}>
-                  TITANE traite votre message...
-                </small>
-                <small
-                  style={{ color: colors.neutral[500], display: 'block', marginTop: 4 }}
-                  data-testid="chat-loading-summary"
-                >
-                  {loadingSummary}
-                </small>
+              <option value="all">Tous</option>
+              <option value="user">Utilisateur</option>
+              <option value="assistant">TITANE</option>
+            </select>
+
+            <div className="conversation-filters-count">
+              {filteredCount}/{messageCount}
+            </div>
+          </div>
+
+          {selectedProvider !== 'auto' &&
+            selectedProvider !== 'local' &&
+            selectedProvider !== 'ollama' &&
+            !selectedProviderReady && (
+              <div
+                className="conversation-error"
+                data-testid="chat-provider-warning"
+                role="alert"
+              >
+                <strong>⚠️ Provider non configuré:</strong> {selectedProviderLabel}{' '}
+                n&apos;est pas disponible sur ce runtime. TITANE conservera ce choix sans
+                fallback silencieux et affichera un résultat dégradé tant que la clé API
+                n&apos;est pas ajoutée dans <strong>Admin → Gouvernance → Secrets</strong>
+                .
+              </div>
+            )}
+
+          {latestAssistantRuntime && (
+            <div
+              className="conversation-runtime-panel"
+              data-testid="chat-runtime-state"
+              data-provider-mode={latestAssistantRuntime.providerMeta?.mode ?? 'unknown'}
+              data-provider-reason={
+                latestAssistantRuntime.providerMeta?.reason_code ?? 'UNKNOWN'
+              }
+              data-provider-used={
+                latestAssistantRuntime.providerMeta?.provider_used ?? 'unknown'
+              }
+              data-network-used={
+                latestAssistantRuntime.providerMeta
+                  ? String(latestAssistantRuntime.providerMeta.network_used)
+                  : 'false'
+              }
+              data-orchestrator-state={
+                latestAssistantRuntime.runtimeSignals.orchestratorState
+              }
+              data-memory-state={latestAssistantRuntime.runtimeSignals.memoryState}
+              data-gemini-configured={selectedProvider === 'gemini' ? 'true' : 'false'}
+              data-ollama-model={selectedProvider === 'ollama' ? 'gemma2:2b' : 'unknown'}
+              data-secrets-mode="governed"
+            >
+              <div
+                className="conversation-runtime-summary"
+                data-testid="chat-runtime-summary"
+              >
+                {runtimeSummary}
+              </div>
+              <div
+                className="conversation-runtime-summary"
+                data-testid="chat-artifact-manifest"
+              >
+                Artifact Manifest: {activeArtifactManifest?.id ?? 'none'}
+              </div>
+              <div className="conversation-runtime-badges">
+                {runtimeBadges.map((badge, index) => (
+                  <span
+                    key={`${badge}-${index}`}
+                    className="conversation-runtime-badge"
+                    data-testid="chat-runtime-badge"
+                  >
+                    {badge}
+                  </span>
+                ))}
               </div>
             </div>
           )}
 
-          {error && (
-            <div className="conversation-error" data-testid="chat-error" role="alert">
-              <strong>❌ Erreur:</strong> {error}
-            </div>
+          {/* ═══ THINKING PANEL ═══ */}
+          <ThinkingPanel
+            steps={thinking.steps}
+            isThinking={thinking.isThinking}
+            state={thinkingState}
+            topology={thinkingTopology}
+            compact={thinking.compact || compactConversationLayout}
+            inline={false}
+            provider={runtimeProviderLabel}
+          />
+
+          {/* ═══ MESSAGES AREA ═══ */}
+          <div
+            ref={messagesContainerRef}
+            className="conversation-messages"
+            data-testid="chat-messages-scroll-region"
+          >
+            {messages.length === 0 && !thinking.isThinking && (
+              <div className="conversation-empty">
+                <div className="conversation-empty-icon">🧠⚡∞</div>
+                <h3>TITANE∞ est prêt à converser</h3>
+                <p>
+                  Mode actuel: <strong>{currentModeLabel}</strong>
+                  <br />
+                  Provider: <strong>{selectedProviderLabel}</strong>
+                </p>
+                <div className="conversation-empty-suggestions">{suggestionButtons}</div>
+              </div>
+            )}
+
+            {messageItems}
+
+            {showLoadingIndicator && (
+              <div
+                className="conversation-message assistant loading"
+                data-testid="chat-loading"
+              >
+                <div className="conversation-message-avatar">🧠</div>
+                <div className="conversation-message-content">
+                  <div className="conversation-typing">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <small style={{ color: colors.neutral[400] }}>
+                    TITANE traite votre message...
+                  </small>
+                  <small
+                    style={{ color: colors.neutral[500], display: 'block', marginTop: 4 }}
+                    data-testid="chat-loading-summary"
+                  >
+                    {loadingSummary}
+                  </small>
+                </div>
+              </div>
+            )}
+
+            {error && (
+              <div className="conversation-error" data-testid="chat-error" role="alert">
+                <strong>❌ Erreur:</strong> {error}
+              </div>
+            )}
+
+            <div ref={messagesEndRef} />
+          </div>
+
+          {showScrollToBottom && (
+            <button
+              type="button"
+              className="conversation-scroll-to-bottom"
+              data-testid="chat-scroll-to-bottom"
+              onClick={() => scrollMessagesToBottom()}
+              aria-label="Revenir au bas de la conversation"
+              title="Revenir au dernier message"
+            >
+              <span aria-hidden="true">↓</span>
+              <span>Bas</span>
+            </button>
           )}
 
-          <div ref={messagesEndRef} />
-        </div>
-
-        {/* ═══ CHAT TOOLBAR (v30.0.0) ═══ */}
-        <ChatToolbar
-          onFilesAnalyzed={handleFilesAnalyzed}
-          onFileImport={handleFileImport}
-          onScreenCapture={handleScreenCapture}
-          onImageAnalysis={handleImageAnalysis}
-          onDictationResult={handleDictationResult}
-          onAudioRecorded={handleAudioRecorded}
-          onTranscriptionResult={handleTranscriptionResult}
-          onToggleAudioConversation={handleToggleAudioConversation}
-          onToggleCameraLive={handleToggleCameraLive}
-          onToggleTTS={handleToggleTTS}
-          disabled={isLoading}
-          compact={false}
-        />
-
-        {/* ═══ INPUT AREA ═══ */}
-        <div className="conversation-input-container">
-          <div
-            data-testid="chat-send-trace"
-            data-state={sendTraceState}
-            data-meta={sendTraceMeta}
-            aria-hidden="true"
-            style={{ display: 'none' }}
-          />
-          <div
-            data-testid="chat-ready"
-            data-state={isLoading ? 'loading' : 'ready'}
-            aria-hidden="true"
-            style={{ display: 'none' }}
-          />
-          <textarea
-            className="conversation-input"
-            data-testid="chat-input"
-            placeholder="Tapez votre message... (Entrée pour envoyer, Shift+Entrée pour nouvelle ligne)"
-            value={inputValue}
-            onChange={handleInputChange}
-            onKeyPress={handleKeyPress}
+          {/* ═══ CHAT TOOLBAR (v30.0.0) ═══ */}
+          <ChatToolbar
+            onFilesAnalyzed={handleFilesAnalyzed}
+            onFileImport={handleFileImport}
+            onScreenCapture={handleScreenCapture}
+            onImageAnalysis={handleImageAnalysis}
+            onDictationResult={handleDictationResult}
+            onAudioRecorded={handleAudioRecorded}
+            onTranscriptionResult={handleTranscriptionResult}
+            onToggleAudioConversation={handleToggleAudioConversation}
+            onToggleCameraLive={handleToggleCameraLive}
+            onToggleTTS={handleToggleTTS}
             disabled={isLoading}
-            rows={3}
+            compact={compactConversationLayout}
           />
-          <button
-            className="conversation-send-btn"
-            data-testid="chat-send"
-            onClick={handleSend}
-            disabled={!inputValue.trim() || isLoading}
-          >
-            {isLoading ? '⏳' : '📤'} Envoyer
-          </button>
-        </div>
 
-        {/* ═══ MODE BUILDER MODAL ═══ */}
-        {showModeBuilder && (
-          <ModeBuilder onClose={handleCloseModeBuilder} onSave={handleSaveCustomMode} />
-        )}
+          {/* ═══ INPUT AREA ═══ */}
+          <div className="conversation-input-container">
+            <div
+              data-testid="chat-send-trace"
+              data-state={sendTraceState}
+              data-meta={sendTraceMeta}
+              aria-hidden="true"
+              style={{ display: 'none' }}
+            />
+            <div
+              data-testid="chat-ready"
+              data-state={isLoading ? 'loading' : 'ready'}
+              aria-hidden="true"
+              style={{ display: 'none' }}
+            />
+            <textarea
+              className="conversation-input"
+              data-testid="chat-input"
+              placeholder="Tapez votre message... (Entrée pour envoyer, Shift+Entrée pour nouvelle ligne)"
+              value={inputValue}
+              onChange={handleInputChange}
+              onKeyPress={handleKeyPress}
+              disabled={isLoading}
+              rows={compactConversationLayout ? 2 : 3}
+            />
+            <button
+              className="conversation-send-btn"
+              data-testid="chat-send"
+              onClick={handleSend}
+              disabled={!inputValue.trim() || isLoading}
+            >
+              {isLoading ? '⏳' : '📤'} Envoyer
+            </button>
+          </div>
+
+          {/* ═══ MODE BUILDER MODAL ═══ */}
+          {showModeBuilder && (
+            <ModeBuilder onClose={handleCloseModeBuilder} onSave={handleSaveCustomMode} />
+          )}
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
 
 ConversationSection.displayName = 'ConversationSection';

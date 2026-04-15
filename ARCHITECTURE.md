@@ -1,3 +1,5 @@
+> 2026-04-15 — Chat runtime: les budgets par défaut de `ChatRequestDefaults` et du profil frontend ont été relevés jusqu’au plafond backend utile (`32768`) pour éviter les sorties tronquées par défaut, tout en conservant la borne IPC/Rust comme garde-fou structurel.
+
 ## Agent de Sécurité Active
 
 L’agent de sécurité active détecte les anomalies réseau, effectue du sandboxing, orchestre la réponse automatisée aux menaces et supervise les autres agents pour garantir la résilience. Il s’intègre à un dashboard sécurité UI (Ring 3/4) et au moteur de sécurité active (Ring 2), avec accès direct au kernel (Ring 0) pour la gestion des alertes critiques.

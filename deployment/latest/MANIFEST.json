@@ -1,26 +1,47 @@
 {
   "deployment": {
-    "timestamp": "2026-04-11 16:26:52 UTC",
-    "version": "30.1.0",
-    "commit": "93b180224a852d7985baa57a39d411d637973938",
+    "timestamp": "2026-04-15T02:21:01Z",
+    "version": "30.1.22",
+    "commit": "0aecd227b68e5e2ed5b4a30b0b413fe653f977e5",
     "branch": "MAIN",
-    "certification": "TITANE_INFINITY_RELEASE_20260411_122652_CERTIFIED",
-    "deployment_type": "post_certification"
+    "certification": "BUILD_ALL_LOCAL_20260415_022101",
+    "deployment_type": "build_all_local"
   },
   "artifacts": {
     "appimage": {
       "available": true,
-      "sha256": "a1933db8869c9d689ebef6c35fe654a1dee5205de03d5fa1f4a27a71c36f3472"
+      "file": "TITANE Infinity_30.1.22_amd64.AppImage",
+      "sha256": "5993ee382d3a0326b9f902b08b5b36dbf53ec053cb5b095c86fcee9306ad3a4c"
     },
     "deb": {
       "available": true,
-      "sha256": "54318d7cc8985c9dfeb6a1ffe79eff0b590871b015353fe7394ea103fa59e4af"
+      "file": "TITANE Infinity_30.1.22_amd64.deb",
+      "sha256": "d1c074bfa70d369176e83a4e2e9aad5ba750f402489100d8ed4f61a0dc1def34"
+    },
+    "rpm": {
+      "available": true,
+      "file": "TITANE Infinity-30.1.22-1.x86_64.rpm",
+      "sha256": "469d1b3fdfd9c46487d25f61b392f6bcb70144ba655c2cc3be9f9631419fd1e3"
+    },
+    "android_apk": {
+      "available": true,
+      "file": "app-universal-release-unsigned.apk",
+      "sha256": "ecae4c5bf2bed392157570817f31c2e097134e870f0a08b194e5aeaab242b637"
+    },
+    "android_aab": {
+      "available": true,
+      "file": "app-universal-release.aab",
+      "sha256": "3a4ae8f07ea35d74e099c98c80c3b5cb8aa3fb737a9b0ceffcb3c3ff8774c449"
+    },
+    "windows_msi": {
+      "available": false,
+      "reason": "not_applicable_local_linux_host"
     }
   },
   "certification": {
-    "release_gate_status": "PASSED",
-    "phase_chain_status": "P2→P3→P4→P5→P6→RELEASE: COMPLETE",
-    "security_posture": "MAXIMUM_HARDENED",
-    "production_readiness": "CERTIFIED_READY"
+    "release_gate_status": "PASS",
+    "phase_chain_status": "BUILD_ALL: VERSION→DESKTOP→ANDROID→INSTALL→PUBLISH",
+    "security_posture": "LOCAL_BUILD_VERIFIED",
+    "production_readiness": "LOCAL_READY"
   }
 }

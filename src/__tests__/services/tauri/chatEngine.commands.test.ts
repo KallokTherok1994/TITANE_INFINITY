@@ -44,13 +44,13 @@ describe('chatEngine.commands request defaults cache', () => {
 
     await module.generateResponse({
       userMessage: 'A'.repeat(13050),
-      maxOutputTokens: 20000,
+      maxOutputTokens: 50000,
     });
 
     const generateCall = secureInvokeMock.mock.calls[1];
     expect(generateCall?.[0]).toBe('generate_response');
     expect(generateCall?.[1]?.payload?.user_message).toHaveLength(12000);
-    expect(generateCall?.[1]?.payload?.max_output_tokens).toBe(16384);
+    expect(generateCall?.[1]?.payload?.max_output_tokens).toBe(32768);
   });
 
   it('invalidates cached request defaults after configuration changes', async () => {
@@ -117,6 +117,32 @@ describe('chatEngine.commands request defaults cache', () => {
         temperature: 0.9,
         max_output_tokens: 222,
         provider: 'gemini',
+      }),
+    });
+  });
+
+  it('falls back to the stable runtime token budget when request defaults are unavailable', async () => {
+    secureInvokeMock
+      .mockRejectedValueOnce(new Error('request defaults unavailable'))
+      .mockResolvedValueOnce({
+        conversation_id: 'conv-fallback',
+        message_id: 'msg-fallback',
+        provider: 'auto',
+        content: 'fallback',
+        token_count: 15,
+        latency_ms: 2,
+        timestamp: 3,
+        stop_reason: 'complete',
+        profile: 'balanced',
+      });
+
+    const module = await import('../../../services/tauri/chatEngine.commands');
+
+    await module.generateResponse({ userMessage: 'Déploie une réponse complète' });
+
+    expect(secureInvokeMock).toHaveBeenNthCalledWith(2, 'generate_response', {
+      payload: expect.objectContaining({
+        max_output_tokens: 32768,
       }),
     });
   });

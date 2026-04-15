@@ -83,6 +83,23 @@ describe('UI Navigation — Tabs Not Navbar-Like (Article 2)', () => {
     navigationRegistry.reset();
   });
 
+  it('TitanePage conversation opens in fullscreen chat layout', () => {
+    render(
+      <BrowserRouter>
+        <TitanePage />
+      </BrowserRouter>
+    );
+
+    expect(screen.getByTestId('page-titane')).toHaveAttribute(
+      'data-layout',
+      'chat-fullscreen'
+    );
+    expect(screen.getByTestId('page-conversation')).toHaveAttribute(
+      'data-layout',
+      'fullscreen'
+    );
+  });
+
   it('TitanePage tabs do not have TopNav-like backdrop-filter', () => {
     render(
       <BrowserRouter>

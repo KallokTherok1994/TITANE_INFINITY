@@ -17,11 +17,20 @@ applyTo: 'e2e/**, scripts/e2e/**, wdio*.conf*'
 - Use reports/ for all proofs.
 - For every new capability/feature, create E2E tests with stable `data-testid` selectors (Rule 16).
 - For advanced Q&A capabilities, create scenario tests that verify real behavior (Rule 16).
+- For fullscreen/zoom/chat visibility work, prefer proofs that validate the real scroll region, bottom composer visibility, and return-to-bottom behavior instead of static screenshots alone.
 - For every E2E fix, follow the kernel AutoFix/AutoHeal canonical capture rule with:
   - `signature`: failing test name + artifact marker (log/export/error marker)
   - `verification`: rerun E2E command + explicit pass markers
   - `prevention`: gate/test change that prevents silent recurrence
 - Kernel-mandated session gates apply (Rule 10 — `detect_recurrence.sh` + `verify_instructions.sh`).
+
+## Fullscreen / Zoom Proof Pattern
+
+- Seed a long enough conversation to force a truthful overflow condition when the host permits it.
+- Assert the stable scroll region selector before interacting: `chat-messages-scroll-region`.
+- Assert input/composer visibility after layout compaction.
+- If a return CTA exists, assert its visibility within the viewport and validate that it restores the latest message view.
+- Record any host divergence truthfully; do not convert a runtime gap into a narrative PASS.
 
 ## DONT
 

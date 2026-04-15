@@ -233,11 +233,23 @@
         background: #0a0a0a;
         color: #ffffff;
       }
+      html,
+      body,
       #root {
-        min-height: 100vh;
+        height: 100% !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        width: 100vw !important;
+      }
+      #root {
+        height: 100% !important;
+        /* min-height: 100vh; */
       }
       .app-shell {
-        min-height: 100vh;
+        height: 100% !important;
+        /* min-height: 100vh; */
         display: flex;
       }
       /* Loading fallback */

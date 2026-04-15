@@ -56,17 +56,17 @@ describe('moduleRouteContext memory route', () => {
     expect(cognitiveContext.moduleId).toBe('dev_center');
   });
 
-  it('normalizes legacy identity and twins aliases to the unified TITANE twins tab', () => {
+  it('normalizes legacy identity and twins aliases to the dedicated /twins route', () => {
     const identityContext = publishActiveModuleContext('/identity');
     const twinsContext = publishActiveModuleContext('/twins');
 
-    expect(identityContext.route).toBe('/titane');
-    expect(identityContext.pageState).toBe('tab=twins');
-    expect(identityContext.fullRoute).toBe('/titane?tab=twins');
+    expect(identityContext.route).toBe('/twins');
+    expect(identityContext.pageState).toBeUndefined();
+    expect(identityContext.fullRoute).toBe('/twins');
 
-    expect(twinsContext.route).toBe('/titane');
-    expect(twinsContext.pageState).toBe('tab=twins');
-    expect(twinsContext.fullRoute).toBe('/titane?tab=twins');
+    expect(twinsContext.route).toBe('/twins');
+    expect(twinsContext.pageState).toBeUndefined();
+    expect(twinsContext.fullRoute).toBe('/twins');
     expect(twinsContext.continuity.changeType).toBe('same-module');
   });
 

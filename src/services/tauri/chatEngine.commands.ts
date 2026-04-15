@@ -27,7 +27,7 @@ const COMMANDS = {
 
 const DEFAULTS = {
   temperature: 0.7,
-  maxTokens: 2048, // BALANCED profile default — aligned with responsePolicy BALANCED
+  maxTokens: 32768, // StableProduction ceiling — aligned with persisted runtime defaults
   provider: 'auto' as ProviderPreference,
   enableStreaming: true,
   profile: 'balanced' as ChatPerformanceProfile,
@@ -37,7 +37,7 @@ const SAFETY_LIMITS = {
   // Keep frontend payloads aligned with the Rust validator to avoid oversized-request churn.
   maxUserMessageChars: 12_000,
   maxSystemPromptChars: 24_000,
-  maxOutputTokens: 16_384,
+  maxOutputTokens: 32_768,
 } as const;
 
 function clampText(value: string | null | undefined, maxChars: number): string | null {

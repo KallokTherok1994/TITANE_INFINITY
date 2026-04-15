@@ -30,6 +30,9 @@ const getChatInput = (page: Page) =>
 const getSendButton = (page: Page) =>
   page.getByRole('button', { name: /Envoyer/i }).first();
 
+const getAssistantContent = (page: Page) =>
+  page.locator('[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]').last();
+
 test.describe('Critical Path: Chat Interaction', () => {
   if (!FULL_E2E_ENABLED) {
     test('gate disabled proof (set TITANE_E2E_FULL=1)', async () => {
@@ -69,6 +72,22 @@ test.describe('Critical Path: Chat Interaction', () => {
     await chatInput.fill('Beta');
     await getSendButton(page).click({ force: true });
     await expect(page.getByText('[MOCK_OK] Beta')).toBeVisible({ timeout: 15000 });
+  });
+
+  test('LONG_RESPONSE_VISIBLE_COMPLETE: réponse longue mock affichée complètement', async ({ page }) => {
+    const chatInput = getChatInput(page);
+    const longPrompt = Array.from({ length: 40 }, (_, index) => `segment-${index + 1}`)
+      .join(' ')
+      .trim();
+
+    await chatInput.fill(longPrompt);
+    await getSendButton(page).click({ force: true });
+
+    const assistantContent = getAssistantContent(page);
+    await expect(assistantContent).toContainText('[MOCK_OK]', { timeout: 15000 });
+    await expect(assistantContent).toContainText('segment-1');
+    await expect(assistantContent).toContainText('segment-20');
+    await expect(assistantContent).toContainText('segment-40');
   });
 
   test('SWITCH_CONVERSATION_PERSISTS: UI reste en SPA', async ({ page }) => {

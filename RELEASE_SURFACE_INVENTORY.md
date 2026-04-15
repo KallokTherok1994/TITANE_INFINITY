@@ -219,3 +219,42 @@ Canonical target version: **30.0.0**
 | `RELEASE_v30.1.8_SEALED.txt` | `30.1.8` | CURRENT |
 
 Key change: feat(ui) — Zoom + / Zoom − buttons in TopNav top-right
+
+---
+
+## ADDENDUM v30.1.22 — 2026-04-15
+
+### Version Files Updated
+
+| File | Version | Action |
+|---|---|---|
+| `package.json` | `30.1.22` | KEEP_AS_CANON |
+| `src-tauri/Cargo.toml` | `30.1.22` | KEEP_AS_CANON |
+| `src-tauri/tauri.conf.json` | `30.1.22` | KEEP_AS_CANON |
+| `tauri.base.json` | `30.1.22` | KEEP_AS_CANON |
+| `src-tauri/tauri.base.json` | `30.1.22` | KEEP_AS_CANON |
+| `runtime/stable/tauri.conf.json` | `30.1.22` | KEEP_AS_CANON |
+| `runtime/stable/manifest.json` | `30.1.22` | KEEP_AS_CANON |
+| `deployment/latest/MANIFEST.json` | `30.1.22` | UPDATED_TO_30_1_22 |
+| `deployment/latest/CHECKSUMS.txt` | `30.1.22` | UPDATED_TO_30_1_22 |
+| `deployment/latest/CHECKSUMS.sha256` | `30.1.22` | UPDATED_TO_30_1_22 |
+| `deployment/latest/SHA256SUMS.txt` | `30.1.22` | UPDATED_TO_30_1_22 |
+| `deployment/latest/SIZES.txt` | `30.1.22` | UPDATED_TO_30_1_22 |
+| `RELEASE_ARTIFACTS_CHECKSUMS.txt` | `30.1.22` | UPDATED_TO_30_1_22 |
+| `RELEASE_ARTIFACTS_CHECKSUMS_30.1.22.txt` | `30.1.22` | ADDED_AS_PROOF |
+| `RELEASE_v30.1.22.md` | `30.1.22` | ADDED_AS_PROOF |
+
+### Artifact Status Summary — v30.1.22
+
+| Artifact | Size | SHA256 | Status |
+|---|---|---|---|
+| `TITANE Infinity_30.1.22_amd64.AppImage` | 89M | `5993ee382d3a0326b9f902b08b5b36dbf53ec053cb5b095c86fcee9306ad3a4c` | BUILT ✅ DEPLOYED ✅ |
+| `TITANE Infinity_30.1.22_amd64.deb` | 20M | `d1c074bfa70d369176e83a4e2e9aad5ba750f402489100d8ed4f61a0dc1def34` | BUILT ✅ INSTALLED ✅ |
+| `TITANE Infinity-30.1.22-1.x86_64.rpm` | 20M | `469d1b3fdfd9c46487d25f61b392f6bcb70144ba655c2cc3be9f9631419fd1e3` | BUILT ✅ |
+| `app-universal-release-unsigned.apk` | 67M | `ecae4c5bf2bed392157570817f31c2e097134e870f0a08b194e5aeaab242b637` | BUILT ✅ |
+| `app-universal-release.aab` | 42M | `3a4ae8f07ea35d74e099c98c80c3b5cb8aa3fb737a9b0ceffcb3c3ff8774c449` | BUILT ✅ |
+| Windows MSI | — | — | N/A LOCAL_LINUX_HOST |
+
+> v30.1.22 is the active local BUILD ALL output as of 2026-04-15.
+> Desktop launchers were resynchronized after install and now point consistently to `/usr/bin/titane-infinity` with Name `TITANE∞ v30.1.22`.
+> Windows MSI remains available only through the on-demand GitHub workflow on a Windows runner; no local MSI build proof was generated on this Linux host.

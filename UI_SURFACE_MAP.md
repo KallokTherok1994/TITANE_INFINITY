@@ -1,3 +1,13 @@
+# [2026-04-15] Réponses longues chat: la surface conversation repasse automatiquement sur le rendu non virtualisé dès qu’un message dépasse la hauteur fixe compatible `react-window`, et les budgets par défaut de génération sont alignés sur le plafond backend utile de 32768 pour éviter les coupures de sortie côté runtime.
+
+# [2026-04-15] Conversation fullscreen: la surface chat compacte automatiquement son chrome quand le zoom réduit la hauteur utile; ajout du raccourci flottant `chat-scroll-to-bottom`, du sélecteur stable `chat-messages-scroll-region`, d’un traitement safe-area renforcé et d’un verrouillage `flex/min-height/overflow` plus strict pour garder le dernier message, le CTA et l’input visibles sur desktop et mobile.
+
+# [2026-04-15] AppShell fullscreen chain: le shell racine verrouille désormais `h-dvh/min-height:0/flex-col` jusqu’au conteneur scroll principal pour éviter qu’un wrapper intermédiaire recrée un gap sous la conversation fullscreen après zoom ou rebuild.
+
+# [2026-04-14] L’onglet « Twins » a été supprimé de la barre d’onglets de la page Titane. L’accès à la page Twins est désormais possible uniquement via le menu Plus (\*\*\*) de la TopNav vers la route /twins. Aucun testid «tab-twins» ne doit subsister dans l’UI.
+
+# [2026-04-14] Nettoyage UI chat: suppression complète des surfaces TWINS de la page chat (`conversation-twins-card`, `chat-twins-status`, `chat-twins-meta`, `chat-open-twins`) tout en conservant l’entrée dédiée `nav-twins` dans le menu Plus de la TopNav.
+
 # UI_SURFACE_MAP
 
 ## TopNav — Navigation & Global Controls (top-right)
@@ -8,11 +18,14 @@
 - File: `src/components/layout/TopNav.tsx`
 - Zoom range: 50% – 200%, persisted to localStorage key `titane_zoom_level`
 - Keyboard equivalents: Ctrl+- (zoom out), Ctrl++ (zoom in), Ctrl+0 (reset)
+- Item menu Plus: `nav-twins` (route `/twins`, accès unique TWINS côté UI)
 
 ## Primary Chat Surface (ConversationSection)
 
 - Input textarea test id: `chat-input`
 - Send button test id: `chat-send`
+- Messages scroll region test id: `chat-messages-scroll-region`
+- Scroll-to-bottom button test id: `chat-scroll-to-bottom`
 - Assistant message container test id: `chat-message-assistant`
 - Assistant content test id: `chat-message-content`
 - Runtime panel test id: `chat-runtime-state`
@@ -20,6 +33,9 @@
 - Ready marker test id: `chat-ready`
 - Loading marker test id: `chat-loading`
 - Error marker test id: `chat-error`
+- Density state: `data-density=comfortable|compact` on `conversation-container`
+- Long assistant replies: fixed-height virtualization is bypassed automatically when a message requires natural height rendering; selectors above remain unchanged.
+- Long response proof: la combinaison `chat-input` → `chat-send` → `chat-message-assistant`/`chat-message-content` est couverte en E2E mock pour vérifier qu’une réponse longue complète reste visible.
 
 ## Runtime Telemetry Attributes on Assistant Row
 

@@ -29,6 +29,13 @@ const TOP_NAV_SECTIONS = [
     matchRoutes: ['/reality-center', '/hyper-center', '/quantum-center', '/cloud'],
   },
   {
+    id: 'twins',
+    label: 'TWINS',
+    route: '/twins',
+    description: 'Jumeau numerique dedie',
+    matchRoutes: ['/identity-center', '/identity', '/persona', '/twin'],
+  },
+  {
     id: 'optimization',
     label: 'OPTIMIZE',
     route: '/optimization',

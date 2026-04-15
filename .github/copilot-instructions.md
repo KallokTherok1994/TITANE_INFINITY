@@ -123,6 +123,25 @@ After **every build** (production or tauri), you MUST:
 - Always verify that `/usr/bin/titane-infinity` is the most recent built version (replace if needed).
 - Confirm the version shown in the launcher and running binary matches the latest build.
 
+### Mandatory post-build execution sequence (no skip)
+
+After each build, execute this sequence in order:
+
+1. `bash scripts/post-build/update-desktop-icons.sh`
+2. `sudo update-icon-caches /usr/share/icons/hicolor`
+3. `update-desktop-database ~/.local/share/applications`
+4. `xdg-desktop-menu forceupdate`
+
+Then verify launchers and icon mapping with:
+
+- `grep -E '^(Name|Exec|Icon|StartupWMClass)=' ~/.local/share/applications/titane-infinity.desktop`
+- `grep -E '^(Name|Exec|Icon|StartupWMClass)=' /usr/share/applications/titane-infinity.desktop`
+
+Expected minimum:
+
+- `Exec=/usr/bin/titane-infinity`
+- `Icon=titane-infinity` (preferred) or explicit path to the latest icon file.
+
 ### Advanced purge (if old icons persist)
 
 - Check and remove any obsolete TITANE/Infinity launchers in `/usr/share/applications` and `~/.local/share/applications`.

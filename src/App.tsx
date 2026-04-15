@@ -105,6 +105,9 @@ const TimePage = lazy(() =>
 const Experience = lazy(() =>
   import('./pages/Experience').then(m => ({ default: m.Experience }))
 );
+const TwinsPage = lazy(() =>
+  import('./pages/TwinsPage').then(m => ({ default: m.default }))
+);
 
 // v24.3.0 - CognitiveLayoutControl déplacé dans ADMIN (ConfigurationHub)
 
@@ -179,7 +182,7 @@ const QuantumCenter = lazy(() =>
   }))
 );
 
-// ✨ TWINS — Fully unified (Identity + Twins + Persona → /titane?tab=twins)
+// ✨ TWINS — Access via dedicated page route (/twins)
 
 // ✨ MEMORY EVOLUTION - fusionné dans Transform (v30 fusion, lazy import conservé dans TransformationSection)
 
@@ -605,15 +608,19 @@ const AppRouter: React.FC = () => {
             }
           />
           <Route path="/quantum" element={<Navigate to="/quantum-center" replace />} />
-          {/* ✨ TWINS — Fully unified (Identity + Twins + Persona) */}
+          {/* ✨ TWINS — Page dédiée, accessible via menu Plus */}
+          <Route path="/identity-center" element={<Navigate to="/twins" replace />} />
+          <Route path="/identity" element={<Navigate to="/twins" replace />} />
+          <Route path="/persona" element={<Navigate to="/twins" replace />} />
           <Route
-            path="/identity-center"
-            element={<Navigate to="/titane?tab=twins" replace />}
+            path="/twins"
+            element={
+              <ErrorBoundary context="TwinsPage">
+                <TwinsPage />
+              </ErrorBoundary>
+            }
           />
-          <Route path="/identity" element={<Navigate to="/titane?tab=twins" replace />} />
-          <Route path="/persona" element={<Navigate to="/titane?tab=twins" replace />} />
-          <Route path="/twins" element={<Navigate to="/titane?tab=twins" replace />} />
-          <Route path="/twin" element={<Navigate to="/titane?tab=twins" replace />} />
+          <Route path="/twin" element={<Navigate to="/twins" replace />} />
           {/* ✨ MEMORY EVOLUTION - Memory Evolution Engine++ v∞ (OPUS #14) */}
           <Route
             path="/memory-evolution"

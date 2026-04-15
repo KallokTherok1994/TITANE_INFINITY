@@ -22,4 +22,15 @@ describe('desktop launcher scripts', () => {
     expect(desktopScript).toContain('MAIN_EXEC="$EXEC_BASE"');
     expect(desktopScript).not.toContain('Exec=$LAUNCHER_SCRIPT');
   });
+
+  it('makes the post-build launcher sync reuse the dynamic desktop generator', () => {
+    const postBuildScript = loadScript('scripts/post-build/update-desktop-icons.sh');
+
+    expect(postBuildScript).toContain('bash "$ROOT_DIR/scripts/update-desktop-icon.sh"');
+    expect(postBuildScript).toContain(
+      'SYSTEM_DESKTOP_DST1="$SYSTEM_DESKTOP_DIR/titane-infinity.desktop"'
+    );
+    expect(postBuildScript).not.toContain('DESKTOP_SRC1=');
+    expect(postBuildScript).toContain('cmp -s "$BIN_SRC" "$BIN_DST"');
+  });
 });

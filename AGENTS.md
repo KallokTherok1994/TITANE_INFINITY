@@ -103,6 +103,11 @@ Heavy doctrine belongs to the local Codex rules file, not to the repo.
 
 ### Build Agent (scripts/, .github/workflows/)
 
+- Scope: Build, packaging, deploy workflows, post-build system integration.
+- Gate: After every build (dev/prod/tauri), mandatory launcher/icon refresh sequence must run (Rule 13.1).
+- Required: run `bash scripts/post-build/update-desktop-icons.sh`, refresh desktop/icon caches, verify `Exec=/usr/bin/titane-infinity` and icon mapping in local/system `.desktop` launchers.
+- Mapping: update `RELEASE_SURFACE_INVENTORY.md` when build/release surfaces change.
+
 ### Monitoring Agent (monitoring/, src/services/monitoring/)
 
 - Scope: Supervision temps réel de la santé des agents, collecte de métriques, alerting, auto-restart.

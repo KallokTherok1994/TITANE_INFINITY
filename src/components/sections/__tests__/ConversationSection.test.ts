@@ -4,7 +4,10 @@ import {
   buildConversationLoadingLabel,
   buildConversationRuntimeBadges,
   buildConversationRuntimeSummary,
+  isConversationNearBottom,
   resolveConversationDisplayProvider,
+  shouldShowConversationScrollToBottom,
+  shouldUseConversationCompactLayout,
 } from '../ConversationSection';
 
 describe('ConversationSection runtime provider label', () => {
@@ -80,5 +83,22 @@ describe('ConversationSection runtime provider label', () => {
     expect(badges).toContain('requested:Ollama');
     expect(badges).toContain('Ollama (OMEGA+Singularity)');
     expect(badges).toContain('policy:web_research_inline');
+  });
+
+  it('switches to compact layout when fullscreen zoom reduces the viewport height', () => {
+    expect(shouldUseConversationCompactLayout(920, true)).toBe(true);
+    expect(shouldUseConversationCompactLayout(1080, true)).toBe(false);
+    expect(shouldUseConversationCompactLayout(920, false)).toBe(false);
+  });
+
+  it('detects when the conversation is already near the bottom edge', () => {
+    expect(isConversationNearBottom(860, 320, 1240)).toBe(true);
+    expect(isConversationNearBottom(620, 320, 1240)).toBe(false);
+  });
+
+  it('only exposes the return-to-bottom CTA when the history really overflows', () => {
+    expect(shouldShowConversationScrollToBottom(620, 320, 1240)).toBe(true);
+    expect(shouldShowConversationScrollToBottom(860, 320, 1240)).toBe(false);
+    expect(shouldShowConversationScrollToBottom(0, 320, 420)).toBe(false);
   });
 });

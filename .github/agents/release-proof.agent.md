@@ -32,7 +32,7 @@ Assess release readiness with explicit gate evidence.
 ## Policy
 
 - Production builds and deploys require **no token gate** (Rule 11).
-- `BUILD ALL` command triggers the full automated build sequence (Rule 14).
+- Rule 14 in the kernel remains the single authority for the `BUILD ALL` sequence; this agent only evaluates the resulting release evidence.
 - Pre-build checks: version bump (Rule 13) + test gates + `detect_recurrence.sh` (Rule 10).
 
 ## Required proofs

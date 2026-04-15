@@ -30,6 +30,74 @@ const AR20_REQUIRED_SELECTORS = [
   '[data-testid="chat-send"]',
 ];
 
+function buildSeededConversationMessages(pairCount = 18) {
+  const now = Date.now();
+  return Array.from({ length: pairCount * 2 }, (_, index) => {
+    const isAssistant = index % 2 === 1;
+    const turn = Math.floor(index / 2) + 1;
+    return {
+      id: `android-seed-${index + 1}`,
+      role: isAssistant ? 'assistant' : 'user',
+      content: isAssistant
+        ? `Assistant seed ${turn}: réponse longue pour valider la compaction mobile et la flèche retour bas.`
+        : `User seed ${turn}: message de test pour générer un historique scrollable.`,
+      timestamp: now + index,
+      metadata: isAssistant
+        ? {
+            tags: ['seed:scroll-bottom'],
+          }
+        : {},
+    };
+  });
+}
+
+async function primeConversationHistory(
+  page: import('@playwright/test').Page,
+  pairCount = 18
+) {
+  const seedConversationId = 'android-scroll-bottom-proof';
+  const seedTimestamp = Date.now();
+  const seedMessages = buildSeededConversationMessages(pairCount);
+
+  await page.addInitScript(
+    ({ conversationId, timestamp, messages }) => {
+      window.localStorage.setItem('onboarding_completed', 'true');
+      window.localStorage.setItem(
+        'onboarding_preferences',
+        JSON.stringify({
+          profile: 'e2e',
+          mode: 'default',
+        })
+      );
+      window.localStorage.setItem('titane_active_conversation_id', conversationId);
+      window.localStorage.setItem(
+        `titane_conversation_${conversationId}`,
+        JSON.stringify({
+          id: conversationId,
+          title: 'Android scroll bottom proof',
+          created_at: new Date(timestamp).toISOString(),
+          updated_at: new Date(timestamp).toISOString(),
+          messages,
+        })
+      );
+      window.localStorage.setItem(
+        'titane_chat_mode_default',
+        JSON.stringify({
+          mode: 'default',
+          messages,
+          compressed: [],
+          lastCompacted: timestamp,
+        })
+      );
+    },
+    {
+      conversationId: seedConversationId,
+      timestamp: seedTimestamp,
+      messages: seedMessages,
+    }
+  );
+}
+
 test.describe('Android Build UI - Browser and Android Emulation', () => {
   // ─── T1: Core UI map (canonical smoke test — preserved) ───────────────────
   test('T1 - renders core conversation UI and exports required UI maps', async ({
@@ -820,6 +888,148 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
     });
 
     // No critical errors is mandatory; button presence is informational (may be hidden by design)
+    expect(criticalErrors).toHaveLength(0);
+    expect(criticalPageErrors).toHaveLength(0);
+  });
+
+  // ─── T17: Compact mobile history + return-to-bottom CTA ──────────────────
+  test('T17 - long mobile history stays compact and the return-to-bottom CTA restores the latest view', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await primeConversationHistory(page, 22);
+
+    const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
+
+    await awaitAppReady(page);
+    await page.getByTestId('tab-conversation').click();
+    await expect(page.getByTestId('page-conversation')).toBeVisible({ timeout: 15000 });
+
+    const scrollRegion = page.getByTestId('chat-messages-scroll-region');
+    const chatInput = page.getByTestId('chat-input');
+
+    await expect(scrollRegion).toBeVisible();
+    await expect(chatInput).toBeVisible();
+    await expect(page.getByTestId('chat-message-assistant')).toHaveCount(22, {
+      timeout: 15000,
+    });
+
+    const beforeScroll = await page.evaluate(() => {
+      const container = document.querySelector('.conversation-container');
+      const region = document.querySelector(
+        '[data-testid="chat-messages-scroll-region"]'
+      );
+      const input = document.querySelector('[data-testid="chat-input"]');
+      if (
+        !(container instanceof HTMLElement) ||
+        !(region instanceof HTMLElement) ||
+        !input
+      ) {
+        return null;
+      }
+
+      let hostConstraintApplied = false;
+      if (region.scrollHeight <= region.clientHeight) {
+        const constrainedHeight = Math.max(260, Math.round(window.innerHeight * 0.42));
+        region.style.height = `${constrainedHeight}px`;
+        region.style.maxHeight = `${constrainedHeight}px`;
+        region.style.overflowY = 'auto';
+        hostConstraintApplied = true;
+      }
+
+      const inputRect = input.getBoundingClientRect();
+      return {
+        density: container.dataset.density ?? null,
+        scrollHeight: region.scrollHeight,
+        clientHeight: region.clientHeight,
+        inputBottom: inputRect.bottom,
+        viewportHeight: window.innerHeight,
+        hostConstraintApplied,
+      };
+    });
+
+    expect(beforeScroll).not.toBeNull();
+    expect(beforeScroll?.density).toBe('compact');
+    expect(beforeScroll?.scrollHeight ?? 0).toBeGreaterThan(
+      beforeScroll?.clientHeight ?? 0
+    );
+    expect(beforeScroll?.inputBottom ?? 0).toBeLessThanOrEqual(
+      (beforeScroll?.viewportHeight ?? 0) + 24
+    );
+
+    await page.evaluate(() => {
+      const region = document.querySelector(
+        '[data-testid="chat-messages-scroll-region"]'
+      );
+      if (region instanceof HTMLElement) {
+        region.scrollTo({ top: 0, behavior: 'auto' });
+        region.dispatchEvent(new Event('scroll', { bubbles: true }));
+      }
+    });
+
+    const scrollToBottom = page.getByTestId('chat-scroll-to-bottom');
+    await expect(scrollToBottom).toBeVisible({ timeout: 10000 });
+
+    const ctaMetrics = await scrollToBottom.evaluate(el => {
+      const rect = el.getBoundingClientRect();
+      return {
+        bottom: rect.bottom,
+        right: rect.right,
+        viewportHeight: window.innerHeight,
+        viewportWidth: window.innerWidth,
+      };
+    });
+
+    expect(ctaMetrics.bottom).toBeLessThanOrEqual(ctaMetrics.viewportHeight + 8);
+    expect(ctaMetrics.right).toBeLessThanOrEqual(ctaMetrics.viewportWidth + 8);
+
+    await scrollToBottom.evaluate((button: HTMLButtonElement) => button.click());
+
+    const returnedToBottom = await waitForCondition(
+      async () =>
+        page.evaluate(() => {
+          const region = document.querySelector(
+            '[data-testid="chat-messages-scroll-region"]'
+          );
+          if (!(region instanceof HTMLElement)) {
+            return false;
+          }
+
+          return region.scrollHeight - (region.scrollTop + region.clientHeight) <= 96;
+        }),
+      { timeoutMs: 10000, intervalMs: 200 }
+    );
+
+    const afterClick = await page.evaluate(() => {
+      const region = document.querySelector(
+        '[data-testid="chat-messages-scroll-region"]'
+      );
+      if (!(region instanceof HTMLElement)) {
+        return null;
+      }
+
+      return {
+        remaining: region.scrollHeight - (region.scrollTop + region.clientHeight),
+      };
+    });
+
+    expect(returnedToBottom).toBe(true);
+    expect(afterClick).not.toBeNull();
+    expect(afterClick?.remaining ?? Number.POSITIVE_INFINITY).toBeLessThanOrEqual(96);
+
+    const filteredErrors = filterKnownConsoleNoise(consoleErrors);
+    const criticalErrors = extractCriticalConsoleErrors(filteredErrors);
+    const criticalPageErrors = extractCriticalPageErrors(pageErrors);
+
+    writeJsonArtifact(ARTIFACT_DIR, 'T17_scroll_to_bottom_compact.json', {
+      beforeScroll,
+      ctaMetrics,
+      afterClick,
+      project: test.info().project.name,
+      criticalErrors,
+      criticalPageErrors,
+    });
+
     expect(criticalErrors).toHaveLength(0);
     expect(criticalPageErrors).toHaveLength(0);
   });

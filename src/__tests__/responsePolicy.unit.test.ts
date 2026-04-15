@@ -45,6 +45,14 @@ describe('ResponsePolicy — Profils fondamentaux', () => {
     expect(architect).toBeGreaterThan(RESPONSE_PROFILES.DIRECT.maxTokens);
   });
 
+  it('DEVELOPED, ARCHITECT et OMEGA utilisent désormais le plafond backend 32768', () => {
+    expect(RESPONSE_PROFILES.BALANCED.maxTokens).toBe(16384);
+    expect(RESPONSE_PROFILES.DEVELOPED.maxTokens).toBe(32768);
+    expect(RESPONSE_PROFILES.ARCHITECT.maxTokens).toBe(32768);
+    expect(RESPONSE_PROFILES.OMEGA.maxTokens).toBe(32768);
+    expect(RESPONSE_PROFILES.DEEP.maxTokens).toBeGreaterThanOrEqual(24576);
+  });
+
   it('DIRECT a la temperature la plus basse (réponses fixes)', () => {
     expect(RESPONSE_PROFILES.DIRECT.temperature).toBeLessThanOrEqual(
       RESPONSE_PROFILES.BALANCED.temperature
@@ -267,7 +275,7 @@ describe('ResponsePolicy — Estimation de complexité', () => {
 
 describe('ResponsePolicy — getEffectiveProfile', () => {
   it('modeMaxTokens supérieur au profil → retourne modeMaxTokens', () => {
-    // OMEGA mode est actuellement configuré à 16000 tokens.
+    // OMEGA mode est actuellement configuré au plafond backend 32768.
     // Message suffisamment long pour ne pas déclencher Rule 7 (short_message_direct)
     const { profile } = getEffectiveProfile(
       'omega',
@@ -275,7 +283,7 @@ describe('ResponsePolicy — getEffectiveProfile', () => {
       4000,
       0.6
     );
-    expect(profile.maxTokens).toBe(16000);
+    expect(profile.maxTokens).toBe(32768);
   });
 
   it('modeMaxTokens inférieur au profil DEEP → profil DEEP gagne', () => {

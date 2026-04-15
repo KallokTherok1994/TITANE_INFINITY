@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+const MAX_OUTPUT_TOKENS: usize = 32_768;
+
 /// Which provider should be used for the next request.
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
@@ -46,8 +48,13 @@ impl ChatRequestPayload {
             return Err("Temperature must be between 0.0 and 2.0".to_string());
         }
 
-        if self.max_output_tokens == 0 || self.max_output_tokens > 16384 {
-            return Err("max_output_tokens must be between 1 and 16384".to_string());
+        if self.max_output_tokens == 0 || self.max_output_tokens > MAX_OUTPUT_TOKENS {
+            return Err(
+                format!(
+                    "max_output_tokens must be between 1 and {}",
+                    MAX_OUTPUT_TOKENS
+                )
+            );
         }
 
         Ok(())
@@ -275,7 +282,7 @@ mod tests {
             user_message: "Hello".to_string(),
             system_prompt: None,
             temperature: 0.7,
-            max_output_tokens: 20000,
+            max_output_tokens: 40_000,
             provider: ProviderPreference::Auto,
             enable_streaming: false,
         };
@@ -332,11 +339,22 @@ mod tests {
             user_message: "Hello".to_string(),
             system_prompt: None,
             temperature: 0.7,
-            max_output_tokens: 16384,
+            max_output_tokens: MAX_OUTPUT_TOKENS,
             provider: ProviderPreference::Auto,
             enable_streaming: false,
         };
         assert!(payload_max.validate().is_ok());
+
+        let payload_above_max = ChatRequestPayload {
+            conversation_id: None,
+            user_message: "Hello".to_string(),
+            system_prompt: None,
+            temperature: 0.7,
+            max_output_tokens: MAX_OUTPUT_TOKENS + 1,
+            provider: ProviderPreference::Auto,
+            enable_streaming: false,
+        };
+        assert!(payload_above_max.validate().is_err());
     }
 
     #[test]

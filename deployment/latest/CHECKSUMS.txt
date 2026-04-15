@@ -1,2 +1,3 @@
-a1933db8869c9d689ebef6c35fe654a1dee5205de03d5fa1f4a27a71c36f3472  Titan-Stable_30.0.0_amd64.AppImage
-54318d7cc8985c9dfeb6a1ffe79eff0b590871b015353fe7394ea103fa59e4af  Titan-Stable_30.0.0_amd64.deb
+5993ee382d3a0326b9f902b08b5b36dbf53ec053cb5b095c86fcee9306ad3a4c  TITANE Infinity_30.1.22_amd64.AppImage
+d1c074bfa70d369176e83a4e2e9aad5ba750f402489100d8ed4f61a0dc1def34  TITANE Infinity_30.1.22_amd64.deb
+469d1b3fdfd9c46487d25f61b392f6bcb70144ba655c2cc3be9f9631419fd1e3  TITANE Infinity-30.1.22-1.x86_64.rpm
