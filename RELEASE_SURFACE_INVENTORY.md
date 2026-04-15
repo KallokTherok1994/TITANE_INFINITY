@@ -330,3 +330,35 @@ Key change: feat(ui) — Zoom + / Zoom − buttons in TopNav top-right
 > `deployment/latest` now points to the desktop 30.1.23 artifacts and binary hash.
 > Host installation and system launcher synchronization remain blocked in this session because `sudo dpkg -i ...` and `scripts/post-build/update-desktop-icons.sh` require interactive sudo approval.
 > Local launcher regeneration completed, but it still resolves `Exec=/usr/bin/titane-infinity`; `dpkg -s titane-infinity` proves the installed package is still `30.1.22`.
+
+---
+
+## Addendum — 2026-04-15 — Android Build + Windows Qualification v30.1.25
+
+Session: `WINDOWS_ANDROID_BUILD_30_1_25`
+Canonical target version: **30.1.25**
+
+### Updated Current Surfaces
+
+| File / Surface | Version | Action |
+|---|---|---|
+| `package.json` | `30.1.25` | UPDATED_TO_30_1_25 |
+| `src-tauri/Cargo.toml` | `30.1.25` | UPDATED_TO_30_1_25 |
+| `src-tauri/tauri.conf.json` | `30.1.25` | UPDATED_TO_30_1_25 |
+| `src-tauri/tauri.base.json` | `30.1.25` | UPDATED_TO_30_1_25 |
+| `tauri.base.json` | `30.1.25` | UPDATED_TO_30_1_25 |
+| `runtime/stable/tauri.conf.json` | `30.1.25` | UPDATED_TO_30_1_25 |
+| `runtime/stable/manifest.json` | `30.1.25` | UPDATED_TO_30_1_25 |
+
+### Artifact Status Summary — v30.1.25
+
+| Artifact | Size | SHA256 | Status |
+|---|---|---|---|
+| `app-universal-release-unsigned.apk` | `69936527` bytes | `4441f6ea337c7477d34f32d15f77e85aee4fcd905500066c9ddaef12aa846cd6` | BUILT ✅ |
+| `app-universal-release.aab` | `43510592` bytes | `cfe4b132610cfab40058318a5255b948503dffd222f4fa4064f6fa7b3fc08bd9` | BUILT ✅ |
+| Windows MSI local build | — | — | BLOCKED_LOCAL_TOOLCHAIN |
+
+> Android release artifacts were generated on the local Linux host and verified with `android:artifact:check` plus direct SHA256/size capture.
+> No Android device or emulator was connected in this session, so no install or runtime smoke proof is claimed for v30.1.25.
+> No local Windows artifact is claimed for v30.1.25 on this host: repo truth requires a Windows runner or Windows machine with MSVC/WebView2, and the Linux host lacks `pwsh`, MinGW, and `cargo-xwin`.
+> The repository does provide an on-demand Windows MSI workflow at `.github/workflows/windows-msi-on-demand.yml`, but it was not dispatched from this unpushed local v30.1.25 worktree.
