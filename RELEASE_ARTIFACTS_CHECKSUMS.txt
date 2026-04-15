@@ -1,9 +1,9 @@
-# SHA256 v30.1.22 — BUILD ALL LOCAL
-# Generated: 2026-04-15T02:21:01Z
-# Certification: BUILD_ALL_LOCAL_20260415_022101
-5993ee382d3a0326b9f902b08b5b36dbf53ec053cb5b095c86fcee9306ad3a4c  TITANE Infinity_30.1.22_amd64.AppImage
-d1c074bfa70d369176e83a4e2e9aad5ba750f402489100d8ed4f61a0dc1def34  TITANE Infinity_30.1.22_amd64.deb
-469d1b3fdfd9c46487d25f61b392f6bcb70144ba655c2cc3be9f9631419fd1e3  TITANE Infinity-30.1.22-1.x86_64.rpm
+# SHA256 v30.1.23 — BUILD ALL LOCAL
+# Generated: 2026-04-15T14:51:58Z
+# Certification: BUILD_ALL_LOCAL_20260415_145158
+11db4adbb7dacc5502451a3bfda05abeb364b1848a33e5cfef61d5323d31df06  TITANE Infinity_30.1.23_amd64.AppImage
+04335c44a29718838abba211d50e3664514a6b090928b54b7d02468ffbfba875  TITANE Infinity_30.1.23_amd64.deb
+76498a300170c3ee20ac36ee299efee400a3e05d4fe779bf0f26d8400b73fadf  TITANE Infinity-30.1.23-1.x86_64.rpm
 # Additional mobile proofs
-ecae4c5bf2bed392157570817f31c2e097134e870f0a08b194e5aeaab242b637  app-universal-release-unsigned.apk
+4441f6ea337c7477d34f32d15f77e85aee4fcd905500066c9ddaef12aa846cd6  app-universal-release-unsigned.apk
 3a4ae8f07ea35d74e099c98c80c3b5cb8aa3fb737a9b0ceffcb3c3ff8774c449  app-universal-release.aab

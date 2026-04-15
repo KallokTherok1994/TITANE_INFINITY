@@ -258,3 +258,41 @@ Key change: feat(ui) — Zoom + / Zoom − buttons in TopNav top-right
 > v30.1.22 is the active local BUILD ALL output as of 2026-04-15.
 > Desktop launchers were resynchronized after install and now point consistently to `/usr/bin/titane-infinity` with Name `TITANE∞ v30.1.22`.
 > Windows MSI remains available only through the on-demand GitHub workflow on a Windows runner; no local MSI build proof was generated on this Linux host.
+
+## ADDENDUM v30.1.23 — 2026-04-15
+
+### Version Files Updated
+
+| File | Version | Action |
+|---|---|---|
+| `package.json` | `30.1.23` | KEEP_AS_CANON |
+| `src-tauri/Cargo.toml` | `30.1.23` | KEEP_AS_CANON |
+| `src-tauri/tauri.conf.json` | `30.1.23` | KEEP_AS_CANON |
+| `tauri.base.json` | `30.1.23` | KEEP_AS_CANON |
+| `src-tauri/tauri.base.json` | `30.1.23` | KEEP_AS_CANON |
+| `runtime/stable/tauri.conf.json` | `30.1.23` | KEEP_AS_CANON |
+| `runtime/stable/manifest.json` | `30.1.23` | KEEP_AS_CANON |
+| `deployment/latest/MANIFEST.json` | `30.1.23` | UPDATED_TO_30_1_23 |
+| `deployment/latest/CHECKSUMS.txt` | `30.1.23` | UPDATED_TO_30_1_23 |
+| `deployment/latest/CHECKSUMS.sha256` | `30.1.23` | UPDATED_TO_30_1_23 |
+| `deployment/latest/SHA256SUMS.txt` | `30.1.23` | UPDATED_TO_30_1_23 |
+| `deployment/latest/SIZES.txt` | `30.1.23` | UPDATED_TO_30_1_23 |
+| `RELEASE_ARTIFACTS_CHECKSUMS.txt` | `30.1.23` | UPDATED_TO_30_1_23 |
+| `RELEASE_ARTIFACTS_CHECKSUMS_30.1.23.txt` | `30.1.23` | ADDED_AS_PROOF |
+| `RELEASE_v30.1.23.md` | `30.1.23` | ADDED_AS_PROOF |
+
+### Artifact Status Summary — v30.1.23
+
+| Artifact | Size | SHA256 | Status |
+|---|---|---|---|
+| `TITANE Infinity_30.1.23_amd64.AppImage` | 89M | `11db4adbb7dacc5502451a3bfda05abeb364b1848a33e5cfef61d5323d31df06` | BUILT ✅ DEPLOYED ✅ |
+| `TITANE Infinity_30.1.23_amd64.deb` | 20M | `04335c44a29718838abba211d50e3664514a6b090928b54b7d02468ffbfba875` | BUILT ✅ DEPLOYED ✅ INSTALL_BLOCKED_BY_SUDO |
+| `TITANE Infinity-30.1.23-1.x86_64.rpm` | 20M | `76498a300170c3ee20ac36ee299efee400a3e05d4fe779bf0f26d8400b73fadf` | BUILT ✅ DEPLOYED ✅ |
+| `app-universal-release-unsigned.apk` | 67M | `4441f6ea337c7477d34f32d15f77e85aee4fcd905500066c9ddaef12aa846cd6` | BUILT ✅ |
+| `app-universal-release.aab` | 42M | `3a4ae8f07ea35d74e099c98c80c3b5cb8aa3fb737a9b0ceffcb3c3ff8774c449` | BUILT ✅ |
+| Windows MSI | — | — | N/A LOCAL_LINUX_HOST |
+
+> v30.1.23 is the active local desktop BUILD ALL output as of 2026-04-15.
+> `deployment/latest` now points to the desktop 30.1.23 artifacts and binary hash.
+> Host installation and system launcher synchronization remain blocked in this session because `sudo dpkg -i ...` and `scripts/post-build/update-desktop-icons.sh` require interactive sudo approval.
+> Local launcher regeneration completed, but it still resolves `Exec=/usr/bin/titane-infinity`; `dpkg -s titane-infinity` proves the installed package is still `30.1.22`.

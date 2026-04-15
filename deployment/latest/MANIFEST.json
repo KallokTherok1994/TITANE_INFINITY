@@ -1,32 +1,32 @@
 {
   "deployment": {
-    "timestamp": "2026-04-15T02:21:01Z",
-    "version": "30.1.22",
-    "commit": "0aecd227b68e5e2ed5b4a30b0b413fe653f977e5",
+    "timestamp": "2026-04-15T14:51:58Z",
+    "version": "30.1.23",
+    "commit": "10709bc398a2f315c4fea38cef190d272c26491f",
     "branch": "MAIN",
-    "certification": "BUILD_ALL_LOCAL_20260415_022101",
+    "certification": "BUILD_ALL_LOCAL_20260415_145158",
     "deployment_type": "build_all_local"
   },
   "artifacts": {
     "appimage": {
       "available": true,
-      "file": "TITANE Infinity_30.1.22_amd64.AppImage",
-      "sha256": "5993ee382d3a0326b9f902b08b5b36dbf53ec053cb5b095c86fcee9306ad3a4c"
+      "file": "TITANE Infinity_30.1.23_amd64.AppImage",
+      "sha256": "11db4adbb7dacc5502451a3bfda05abeb364b1848a33e5cfef61d5323d31df06"
     },
     "deb": {
       "available": true,
-      "file": "TITANE Infinity_30.1.22_amd64.deb",
-      "sha256": "d1c074bfa70d369176e83a4e2e9aad5ba750f402489100d8ed4f61a0dc1def34"
+      "file": "TITANE Infinity_30.1.23_amd64.deb",
+      "sha256": "04335c44a29718838abba211d50e3664514a6b090928b54b7d02468ffbfba875"
     },
     "rpm": {
       "available": true,
-      "file": "TITANE Infinity-30.1.22-1.x86_64.rpm",
-      "sha256": "469d1b3fdfd9c46487d25f61b392f6bcb70144ba655c2cc3be9f9631419fd1e3"
+      "file": "TITANE Infinity-30.1.23-1.x86_64.rpm",
+      "sha256": "76498a300170c3ee20ac36ee299efee400a3e05d4fe779bf0f26d8400b73fadf"
     },
     "android_apk": {
       "available": true,
       "file": "app-universal-release-unsigned.apk",
-      "sha256": "ecae4c5bf2bed392157570817f31c2e097134e870f0a08b194e5aeaab242b637"
+      "sha256": "4441f6ea337c7477d34f32d15f77e85aee4fcd905500066c9ddaef12aa846cd6"
     },
     "android_aab": {
       "available": true,
@@ -41,7 +41,7 @@
   "certification": {
     "release_gate_status": "PASS",
     "phase_chain_status": "BUILD_ALL: VERSION→DESKTOP→ANDROID→INSTALL→PUBLISH",
-    "security_posture": "LOCAL_BUILD_VERIFIED",
-    "production_readiness": "LOCAL_READY"
+    "security_posture": "LOCAL_BUILD_VERIFIED_PENDING_SUDO_INSTALL",
+    "production_readiness": "PARTIAL_LOCAL_READY"
   }
 }
