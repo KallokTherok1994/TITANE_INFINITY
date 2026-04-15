@@ -1,4 +1,6 @@
 {
+  "$schema": "https://schema.tauri.app/config/2.0",
+  "productName": "TITANE Infinity",
   "version": "30.1.21",
   "identifier": "com.titane.infinity",
   "bundle": {
@@ -64,6 +66,42 @@
             "core:app:allow-app-hide"
           ],
           "allow": [
+            {
+              "command": "agenda_save_event"
+            },
+            {
+              "command": "agenda_save_events"
+            },
+            {
+              "command": "agenda_delete_event"
+            },
+            {
+              "command": "agenda_sync"
+            },
+            {
+              "command": "calibrate_titane_voice"
+            },
+            {
+              "command": "chat_mode_change"
+            },
+            {
+              "command": "chat_mode_sync"
+            },
+            {
+              "command": "evolution_save_state"
+            },
+            {
+              "command": "submit_evolution_data"
+            },
+            {
+              "command": "knowledge_ingest"
+            },
+            {
+              "command": "knowledge_save_state"
+            },
+            {
+              "command": "progression_save_state"
+            },
             {
               "command": "get_helios_state"
             },

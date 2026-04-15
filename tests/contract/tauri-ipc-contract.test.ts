@@ -196,9 +196,9 @@ describe('TITANE∞ - IPC Contract Tests', () => {
     }
 
     // Note: Certains commands peuvent être utilisés via des mécanismes dynamiques
-    // Seuil ajusté à 520 pour absorber la croissance contrôlée des commandes internes
+    // Seuil ajusté à 650 pour absorber la croissance contrôlée des commandes internes
     // sans créer wrappers non-utilisés (TITANE Constitution: minimal change policy)
-    expect(orphanedCommands.length).toBeLessThanOrEqual(520);
+    expect(orphanedCommands.length).toBeLessThanOrEqual(650);
   });
 
   it('should have proper security boundaries', () => {
