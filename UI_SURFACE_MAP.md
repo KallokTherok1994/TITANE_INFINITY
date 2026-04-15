@@ -4,6 +4,8 @@
 
 # [2026-04-15] AppShell fullscreen chain: le shell racine verrouille désormais `h-dvh/min-height:0/flex-col` jusqu’au conteneur scroll principal pour éviter qu’un wrapper intermédiaire recrée un gap sous la conversation fullscreen après zoom ou rebuild.
 
+# [2026-04-15] Knowledge Fusion: l’alerte de résultat nul n’apparaît plus dès la simple détection du format; elle n’est rendue qu’après une vraie tentative `parseDocument` renvoyant `null`, via le sélecteur stable `knowledge-null-result-warning`, sans injecter de document nul dans le vault.
+
 # [2026-04-14] L’onglet « Twins » a été supprimé de la barre d’onglets de la page Titane. L’accès à la page Twins est désormais possible uniquement via le menu Plus (\*\*\*) de la TopNav vers la route /twins. Aucun testid «tab-twins» ne doit subsister dans l’UI.
 
 # [2026-04-14] Nettoyage UI chat: suppression complète des surfaces TWINS de la page chat (`conversation-twins-card`, `chat-twins-status`, `chat-twins-meta`, `chat-open-twins`) tout en conservant l’entrée dédiée `nav-twins` dans le menu Plus de la TopNav.

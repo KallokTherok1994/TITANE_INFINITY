@@ -33,6 +33,7 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
   const [selectedFile, setSelectedFile] = useState<string>('');
   const [detectedFormat, setDetectedFormat] = useState<string | null>(null);
   const [parsedDoc, setParsedDoc] = useState<KnowledgeDocument | null>(null);
+  const [parseAttempted, setParseAttempted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [vault, setVault] = useState<KnowledgeDocument[]>([]);
@@ -43,6 +44,9 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
       if (!filePath) return;
 
       setSelectedFile(filePath);
+      setDetectedFormat(null);
+      setParsedDoc(null);
+      setParseAttempted(false);
       setError(null);
 
       // Detect format
@@ -59,15 +63,20 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
     if (!selectedFile) return;
 
     setIsProcessing(true);
+    setParseAttempted(true);
     setError(null);
 
     try {
       const doc = (await tauriClient.parseDocument({
         file_path: selectedFile,
-      })) as KnowledgeDocument;
+      })) as KnowledgeDocument | null;
       setParsedDoc(doc);
 
-      // Add to vault
+      if (!doc) {
+        return;
+      }
+
+      // Add to vault only when the backend returned a real parsed document.
       setVault(prev => [doc, ...prev].slice(0, 10));
     } catch (err) {
       setError(`Analyse échouée : ${err}`);
@@ -158,6 +167,22 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
                   </div>
                 </div>
               )}
+
+              {/* Affichage explicite si parseDocument retourne null */}
+              {selectedFile &&
+                detectedFormat &&
+                parseAttempted &&
+                parsedDoc === null &&
+                !isProcessing &&
+                !error && (
+                  <div
+                    className="bg-yellow-700/20 border border-yellow-500/50 rounded-lg p-3 text-yellow-300 text-sm"
+                    data-testid="knowledge-null-result-warning"
+                  >
+                    Aucun contenu extrait pour ce document (parseDocument a retourné
+                    null).
+                  </div>
+                )}
 
               <button
                 onClick={handleParse}

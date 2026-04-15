@@ -50,5 +50,31 @@ describe('Knowledge fusion truth', () => {
     expect(screen.getByText('Chemin saisi')).toBeInTheDocument();
     expect(screen.getByText('/tmp/guide.md')).toBeInTheDocument();
     expect(screen.getByText('MARKDOWN')).toBeInTheDocument();
+    expect(screen.queryByTestId('knowledge-null-result-warning')).not.toBeInTheDocument();
+  });
+
+  it('only shows the null-result warning after a real parse attempt returns null', async () => {
+    const user = userEvent.setup();
+    vi.stubGlobal('prompt', vi.fn().mockReturnValue('/tmp/guide.md'));
+
+    render(<KnowledgeFusionPage />);
+
+    await user.click(
+      screen.getByRole('button', { name: /Entrer un chemin de document/i })
+    );
+
+    expect(screen.queryByTestId('knowledge-null-result-warning')).not.toBeInTheDocument();
+
+    await user.click(
+      screen.getByRole('button', { name: /Analyser & Classifier|Traitement/i })
+    );
+
+    await waitFor(() => {
+      expect(parseDocument).toHaveBeenCalledWith({
+        file_path: '/tmp/guide.md',
+      });
+    });
+
+    expect(screen.getByTestId('knowledge-null-result-warning')).toBeInTheDocument();
   });
 });
