@@ -11,6 +11,7 @@ fail() { echo "FAIL: $1"; FAIL=1; }
 
 required=(
   .github/agents/architect-guardian.agent.md
+  .github/agents/anti-regression-guardian.agent.md
   .github/agents/tauri-safety.agent.md
   .github/agents/e2e-authority.agent.md
   .github/agents/release-proof.agent.md

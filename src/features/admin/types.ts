@@ -10,6 +10,7 @@ export type AdminTab =
   | 'audio' // Audio & Voix
   | 'design' // Design (Gesign)
   | 'governance' // Gouvernance & Sécurité
+  | 'anti-regression' // Dashboard anti-régression canonique
   | 'production-health'; // Production telemetry panel (V30)
 
 export interface AdminTabDefinition {
@@ -55,6 +56,13 @@ export const ADMIN_TABS: AdminTabDefinition[] = [
     icon: '🛡️',
     description: 'Sécurité, Secrets, Politiques IA, Permissions',
     badge: 'SECURE',
+  },
+  {
+    id: 'anti-regression',
+    label: 'Anti-Régression',
+    icon: '🧭',
+    description: 'Surface canonique de qualification et de pilotage anti-régression',
+    badge: 'AR',
   },
   {
     id: 'production-health',

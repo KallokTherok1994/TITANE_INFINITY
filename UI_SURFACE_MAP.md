@@ -100,10 +100,11 @@
 
 ## Agents avancés — UI Dashboards (v30.1.8)
 
-- **Monitoring Agent** : `monitoring-dashboard` (test id à définir)
-- **Auto-Diagnostic Agent** : `diagnostic-panel` (test id à définir)
-- **Explainability Agent** : `explainability-dashboard` (test id à définir)
-- **Orchestrateur Dynamique Agent** : `orchestrator-dashboard` (test id à définir)
-- **Agent de Sécurité Active** : `security-dashboard` (test id à définir)
+- **Monitoring Agent** : `monitoring-dashboard`
+- **Auto-Diagnostic Agent** : `diagnostic-panel`
+- **Explainability Agent** : `explainability-dashboard`
+- **Orchestrateur Dynamique Agent** : `orchestrator-dashboard`
+- **Agent de Sécurité Active** : `security-dashboard`
+- **Agent Anti-Régression canonique** : `self-healing-dashboard` + `anti-regression-summary` via `/admin?tab=anti-regression`
 
 Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, logs et alerting UI.

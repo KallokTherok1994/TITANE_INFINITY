@@ -6,6 +6,23 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
+vi.mock('../selfHealingIOAdapter', () => ({
+  runSelfHealing: vi.fn(async (symptoms: string) => ({
+    context: { symptoms },
+    parsed: {
+      diagnostic: 'mock-diagnostic',
+      confidence: 0.88,
+    },
+    patchResult: {
+      applied: true,
+      steps: ['mock-step'],
+    },
+    escalation: {
+      channel: 'none',
+    },
+  })),
+}));
+
 // ═══════════════════════════════════════════════════════════════════════════
 // OBSERVER TESTS
 // ═══════════════════════════════════════════════════════════════════════════
@@ -874,6 +891,59 @@ describe('SelfHealingSyncLayer', () => {
       expect(state.patterns).toBeDefined();
       expect(state.lastSyncTime).toBeDefined();
     });
+  });
+});
+
+describe('SelfHealingService anti-regression facade', () => {
+  it('builds a blocked cross-surface snapshot from active runtime signals', async () => {
+    const { buildAntiRegressionSnapshot } = await import('../selfHealingService');
+
+    const snapshot = buildAntiRegressionSnapshot({
+      anomalyScore: 0.82,
+      safeModeActive: true,
+      circuitBreakerActive: true,
+      degradedModeActive: false,
+      pendingActions: ['confirm patch'],
+      isConnected: false,
+      historySize: 7,
+    });
+
+    expect(snapshot.agentName).toBe('anti-regression-guardian');
+    expect(snapshot.status).toBe('blocked');
+    expect(snapshot.scope).toBe('cross-surface');
+    expect(snapshot.severity).toBe('high');
+    expect(snapshot.activeSignals).toContain('backend:disconnected');
+    expect(snapshot.recommendedChecks.length).toBeGreaterThan(0);
+  });
+
+  it('keeps a healthy runtime snapshot when no signal is active', async () => {
+    const { buildAntiRegressionSnapshot } = await import('../selfHealingService');
+
+    const snapshot = buildAntiRegressionSnapshot({
+      anomalyScore: 0.12,
+      safeModeActive: false,
+      circuitBreakerActive: false,
+      degradedModeActive: false,
+      pendingActions: [],
+      isConnected: true,
+      historySize: 0,
+    });
+
+    expect(snapshot.status).toBe('healthy');
+    expect(snapshot.scope).toBe('runtime');
+    expect(snapshot.activeSignals).toHaveLength(0);
+  });
+
+  it('runs an anti-regression cycle through the canonical self-healing bridge', async () => {
+    const { runAntiRegressionCycle } = await import('../selfHealingService');
+
+    const cycle = await runAntiRegressionCycle('backend disconnected with circuit breaker');
+
+    expect(cycle.snapshot.status).toBe('blocked');
+    expect(cycle.result.context.symptoms).toBe(
+      'backend disconnected with circuit breaker'
+    );
+    expect(cycle.result.patchResult.applied).toBe(true);
   });
 });
 

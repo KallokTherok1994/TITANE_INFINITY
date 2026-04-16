@@ -12,6 +12,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
 import { HUDFrame } from '../components/HUDFrame';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
+import { buildAntiRegressionSnapshot } from '@/services/selfHealing/selfHealingService';
 import './styles/SelfHealingDashboard.css';
 
 // ═══════════════════════════════════════════════════════════════
@@ -215,6 +216,16 @@ export const SelfHealingDashboard: React.FC = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [autoRefresh, setAutoRefresh] = useState(true);
 
+  const antiRegressionSnapshot = buildAntiRegressionSnapshot({
+    anomalyScore: health.anomaly_score,
+    safeModeActive: healingState.safe_mode_active,
+    circuitBreakerActive: healingState.circuit_breaker_active,
+    degradedModeActive: healingState.degraded_mode_active,
+    pendingActions,
+    isConnected,
+    historySize: history.length,
+  });
+
   // Determine overall status
   const getOverallStatus = useCallback((): 'healthy' | 'warning' | 'critical' => {
     if (health.anomaly_score > 0.7 || healingState.safe_mode_active) return 'critical';
@@ -307,7 +318,7 @@ export const SelfHealingDashboard: React.FC = () => {
   }, [autoRefresh, fetchData]);
 
   return (
-    <div className="self-healing-dashboard">
+    <div className="self-healing-dashboard" data-testid="self-healing-dashboard">
       {/* Header */}
       <div className="self-heal-header">
         <div className="header-title">
@@ -332,6 +343,38 @@ export const SelfHealingDashboard: React.FC = () => {
       </div>
 
       <div className="self-heal-grid">
+        <HUDFrame title="Agent Anti-Régression" icon="🧭" className="anti-regression-panel">
+          <div data-testid="anti-regression-summary" className="anti-regression-summary">
+            <div className="history-header">
+              <span className={`history-level level-${antiRegressionSnapshot.status}`}>
+                {antiRegressionSnapshot.status}
+              </span>
+              <span className="history-time">{antiRegressionSnapshot.agentName}</span>
+            </div>
+            <div className="history-score">Scope: {antiRegressionSnapshot.scope}</div>
+            <div className="history-score">
+              Sévérité: {antiRegressionSnapshot.severity}
+            </div>
+            <div className="history-actions">
+              {antiRegressionSnapshot.activeSignals.length === 0 ? (
+                <span className="action-tag success">signals:clear</span>
+              ) : (
+                antiRegressionSnapshot.activeSignals.map(signal => (
+                  <span key={signal} className="action-tag">
+                    {signal}
+                  </span>
+                ))
+              )}
+            </div>
+            <div className="no-actions">
+              <span>
+                {antiRegressionSnapshot.recommendedChecks[0] ??
+                  'Aucun contrôle supplémentaire requis'}
+              </span>
+            </div>
+          </div>
+        </HUDFrame>
+
         {/* System Health Panel */}
         <HUDFrame title="Santé Système" icon="💓" className="health-panel">
           <div className="health-score">
