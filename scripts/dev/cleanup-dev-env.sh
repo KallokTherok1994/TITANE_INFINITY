@@ -10,9 +10,24 @@ cd "$ROOT_DIR"
 echo "🧹 TITANE∞ DEV CLEANUP"
 echo "======================"
 
+TITANE_PROCESS_PATTERN='titane[-_ ]?infinity|dev_tauri_monitor|tauri dev|cargo run.*titane|src-tauri/target/.*/titane-infinity|runtime/stable/.*titane'
+
+get_port_pid() {
+    local port="$1"
+    (ss -ltnp 2>/dev/null || ss -ltn 2>/dev/null) | grep ":$port " | grep -o "pid=[0-9]*" | cut -d= -f2 | head -1 || true
+}
+
+get_titane_pids() {
+    pgrep -f "$TITANE_PROCESS_PATTERN" || true
+}
+
+get_titane_process_lines() {
+    pgrep -af "$TITANE_PROCESS_PATTERN" || true
+}
+
 # 1. Nettoyer les anciens processus TITANE
 echo "1️⃣ Nettoyage des processus TITANE..."
-TITANE_PIDS=$(pgrep -f "titane.*infinity" || true)
+TITANE_PIDS=$(get_titane_pids)
 if [[ -n "$TITANE_PIDS" ]]; then
     echo "   Processus TITANE trouvés: $TITANE_PIDS"
     # Arrêt propre d'abord (SIGINT)
@@ -26,7 +41,7 @@ if [[ -n "$TITANE_PIDS" ]]; then
     sleep 3
     
     # Vérification et force kill si nécessaire
-    REMAINING_PIDS=$(pgrep -f "titane.*infinity" || true)
+    REMAINING_PIDS=$(get_titane_pids)
     if [[ -n "$REMAINING_PIDS" ]]; then
         echo "   Force kill des processus restants: $REMAINING_PIDS"
         for pid in $REMAINING_PIDS; do
@@ -39,25 +54,41 @@ fi
 
 # 2. Nettoyer les processus Vite orphelins
 echo -e "\n2️⃣ Nettoyage des processus Vite..."
-VITE_PIDS=$(pgrep -f "vite.*dev" || true)
+# Le dépôt utilise aussi des Vite legacy sur 4000/4173 sans argument `dev` explicite.
+VITE_PIDS=$(pgrep -f "vite" || true)
 if [[ -n "$VITE_PIDS" ]]; then
     echo "   Arrêt des processus Vite: $VITE_PIDS"
     for pid in $VITE_PIDS; do
         kill -TERM "$pid" 2>/dev/null || true
     done
     sleep 2
+
+    REMAINING_VITE_PIDS=$(pgrep -f "vite" || true)
+    if [[ -n "$REMAINING_VITE_PIDS" ]]; then
+        echo "   Force kill des processus Vite restants: $REMAINING_VITE_PIDS"
+        for pid in $REMAINING_VITE_PIDS; do
+            kill -KILL "$pid" 2>/dev/null || true
+        done
+    fi
 else
     echo "   ✅ Aucun processus Vite orphelin"
 fi
 
 # 3. Vérifier et nettoyer les ports dev
-echo -e "\n3️⃣ Vérification des ports dev (5173, 1420)..."
-for PORT in 5173 1420; do
-    PID=$(ss -tlnp | grep ":$PORT " | grep -o "pid=[0-9]*" | cut -d= -f2 | head -1 || true)
+echo -e "\n3️⃣ Vérification des ports dev (4000, 5173, 4173, 1420, 1430)..."
+for PORT in 4000 5173 4173 1420 1430; do
+    PID=$(get_port_pid "$PORT")
     if [[ -n "$PID" ]]; then
         echo "   Port $PORT utilisé par PID $PID - arrêt..."
         kill -TERM "$PID" 2>/dev/null || true
         sleep 1
+
+        PID=$(get_port_pid "$PORT")
+        if [[ -n "$PID" ]]; then
+            echo "   Port $PORT toujours occupé par PID $PID - force kill..."
+            kill -KILL "$PID" 2>/dev/null || true
+            sleep 1
+        fi
     else
         echo "   ✅ Port $PORT libre"
     fi
@@ -90,14 +121,14 @@ fi
 
 # 6. Vérification finale
 echo -e "\n6️⃣ Vérification finale..."
-REMAINING_TITANE=$(pgrep -f "titane" || true)
-REMAINING_VITE=$(pgrep -f "vite.*dev" || true)
+REMAINING_TITANE=$(get_titane_process_lines)
+REMAINING_VITE=$(pgrep -f "vite" || true)
 
 if [[ -z "$REMAINING_TITANE" && -z "$REMAINING_VITE" ]]; then
     echo "   ✅ Nettoyage terminé - environnement dev propre"
 else
     echo "   ⚠️  Processus restants détectés:"
-    [[ -n "$REMAINING_TITANE" ]] && echo "      TITANE: $REMAINING_TITANE"
+    [[ -n "$REMAINING_TITANE" ]] && echo "      TITANE DEV: $REMAINING_TITANE"
     [[ -n "$REMAINING_VITE" ]] && echo "      Vite: $REMAINING_VITE"
 fi
 

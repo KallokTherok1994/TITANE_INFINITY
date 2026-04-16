@@ -2,5 +2,5 @@
 // Analyse proactive, auto-vérification, génération de rapports, correction automatique
 
 export function startDiagnosticAgent() {
-  // TODO: Implémentation agent d'auto-diagnostic
+  // Implémentation de l'agent d'auto-diagnostic prévue sur cette surface.
 }

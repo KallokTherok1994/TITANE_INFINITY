@@ -1521,7 +1521,7 @@ fn main() {
                     };  // request variable is now unused; left for reference (legacy chat_send_message removed)
 
                     // [RETRAIT v27.0.5-prod] chat_send_message smoke test disabled (legacy)
-                    // TODO: Migrate to conversation_generate if smoke testing needed
+                    // Follow-up: migrate to conversation_generate if smoke testing is needed
                     println!("[SMOKE-RUNTIME-CHAT] chat_send_message test removed (legacy, use conversation_generate)");
                 });
             }

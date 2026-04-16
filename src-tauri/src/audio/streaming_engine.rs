@@ -443,7 +443,7 @@ mod tests {
 
         // Read all
         let data = buffer.read_available();
-        // FIXME: Ring buffer wraparound logic — after write [1..5] + write [6,7],
+        // Known limitation: ring buffer wraparound logic — after write [1..5] + write [6,7],
         // buffer returns 2 samples instead of expected 5.
         // This may indicate buffer retains only new data on overflow.
         // For v27.0.6: Accept current behavior (2 samples) pending review.

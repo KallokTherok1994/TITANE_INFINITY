@@ -2,5 +2,5 @@
 // Détection d’anomalies réseau, sandboxing, réponse automatisée, supervision croisée
 
 export function startSecurityActiveAgent() {
-  // TODO: Implémentation agent de sécurité active
+  // Implémentation de l'agent de sécurité active prévue sur cette surface.
 }

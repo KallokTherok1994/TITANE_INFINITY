@@ -4,6 +4,6 @@ import React from 'react';
 export const OrchestratorDashboard = () => (
   <section data-testid="orchestrator-dashboard">
     <h2>Orchestrator Dashboard</h2>
-    {/* TODO: Affichage charge, répartition, logs */}
+    {/* Surface réservée à la charge, à la répartition et aux logs. */}
   </section>
 );

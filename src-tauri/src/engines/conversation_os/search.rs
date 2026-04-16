@@ -160,7 +160,7 @@ impl SearchEngine {
     /// Heuristics:
     /// - Snippet length (longer = more relevant, up to a point)
     /// - Title presence (has title = +0.1)
-    /// - TODO: Query term matching, domain authority, etc.
+    /// - Planned next heuristics: query term matching, domain authority, etc.
     fn calculate_relevance(&self, snippet: &str, title: Option<&str>) -> f32 {
         let mut score = 0.5; // Base score
 

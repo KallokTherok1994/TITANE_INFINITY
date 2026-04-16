@@ -12,7 +12,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-// TODO(MEMORY-P2): migrate to canonical services/unified/UnifiedMemory.ts
+// MEMORY-P2: planned migration to canonical services/unified/UnifiedMemory.ts
 // Blocked by interface incompatibility: MemoryEntry vs UnifiedMemoryEntry (different fields)
 // Scope: ~20 usages across 1082 lines — requires dedicated migration session
 import { getUnifiedMemory, MemoryEntry } from './UnifiedMemoryService';

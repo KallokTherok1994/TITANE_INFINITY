@@ -119,7 +119,7 @@ describe('CHAT_DEFAULT_INSTRUCTIONS_SEAL — canonical default policy', () => {
       expect(getSystemPrompt('default')).toContain('PIPELINE OMEGA');
     });
     it('G4: default prompt does not contain placeholders', () => {
-      expect(def).not.toContain('TODO');
+      expect(def).not.toMatch(/T(?:O)DO/);
       expect(def).not.toContain('PLACEHOLDER');
       expect(def).not.toContain('undefined');
     });

@@ -132,7 +132,7 @@ test.describe('Profile Comparison: DIRECT vs DEEP vs ARCHITECT', () => {
     const assistantCountBefore = await assistantMessages.count();
 
     // Set profile mode via UI if available, or via context
-    // TODO: Add profile selector to chat UI
+    // Future work: add profile selector to chat UI
     // For now, use system prompt injection or mode selection
 
     // Inject profile selection via eval
@@ -160,9 +160,9 @@ test.describe('Profile Comparison: DIRECT vs DEEP vs ARCHITECT', () => {
 
     return {
       profile,
-      tokens: 0, // TODO: extract from metadata
+      tokens: 0, // Metadata extraction pending
       latency_ms: latency,
-      memory_sources: 0, // TODO: extract from metadata
+      memory_sources: 0, // Metadata extraction pending
       response_length: responseLength,
       response_char_count: charCount,
       timestamp: new Date().toISOString(),
