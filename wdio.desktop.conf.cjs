@@ -92,7 +92,17 @@ exports.config = {
   port: 4444,
   path: '/',
   specs: ['./e2e/desktop/**/*.e2e.js', './e2e/desktop/**/*.wdio.test.js'],
-  exclude: [],
+  // v20/v22/v24/v25/v26 files are historical cert/audit specs tied to specific
+  // AppImage builds that no longer exist. They are kept for archaeology but must
+  // not execute in the active suite (they would time-out or error on missing binaries).
+  exclude: [
+    './e2e/desktop/v20_desktop_cert_audit.wdio.test.js',
+    './e2e/desktop/v20_dom_diag.wdio.test.js',
+    './e2e/desktop/v22_visible_real_ui_cert.wdio.test.js',
+    './e2e/desktop/v24_visible_real_ui_fullstack_perfection.wdio.test.js',
+    './e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js',
+    './e2e/desktop/v26_real_online_chat_truth.wdio.test.js',
+  ],
   maxInstances: 1,
   capabilities: [
     {

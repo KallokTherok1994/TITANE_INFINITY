@@ -7,7 +7,7 @@ set -euo pipefail
 echo "🔍 Checking alias resolution..."
 
 # Check if @themes/tokens can be resolved
-if ! npx vite --version > /dev/null 2>&1; then
+if ! pnpm exec vite --version > /dev/null 2>&1; then
     echo "❌ Vite not available"
     exit 1
 fi

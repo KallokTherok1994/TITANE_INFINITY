@@ -310,7 +310,11 @@ describe('Desktop (Tauri) UI connectivity critical', () => {
     );
 
     const beforeScroll = await inspectConversationScrollRegion();
-    assert.notEqual(beforeScroll, null, 'conversation scroll region should be inspectable');
+    assert.notEqual(
+      beforeScroll,
+      null,
+      'conversation scroll region should be inspectable'
+    );
     const density = beforeScroll?.density;
     assert.ok(
       density === 'comfortable' || density === 'compact',
@@ -339,7 +343,9 @@ describe('Desktop (Tauri) UI connectivity critical', () => {
     });
 
     const offsetFromBottom = await browser.execute(() => {
-      const region = document.querySelector('[data-testid="chat-messages-scroll-region"]');
+      const region = document.querySelector(
+        '[data-testid="chat-messages-scroll-region"]'
+      );
       if (!(region instanceof HTMLElement)) {
         return -1;
       }

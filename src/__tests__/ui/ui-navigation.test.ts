@@ -245,7 +245,9 @@ describe('UI Navigation — Tabs Not Navbar-Like (Article 2)', () => {
       React.createElement(
         MemoryRouter,
         { initialEntries: ['/chat'] },
-        React.createElement(React.Fragment, null,
+        React.createElement(
+          React.Fragment,
+          null,
           React.createElement(AppRouter, null),
           React.createElement(RouteLocationProbe, null)
         )

@@ -65,7 +65,7 @@ applyTo: 'src/**'
 - `bash scripts/autoheal/detect_recurrence.sh`
 - `bash scripts/verify_instructions.sh`
 
-6.1. Run the canonical surface anti-drift check for route/page regressions.
+  6.1. Run the canonical surface anti-drift check for route/page regressions.
 
 - Identify the visible runtime surface and record the canonical file/route pair before patching.
 - Realign any remaining live aliases in the same phase: active route, deprecated route, compatibility export, route preloading, and touched tooling/config references.
@@ -87,6 +87,7 @@ applyTo: 'src/**'
 - Add fetch/HTTP without explicit approval and gates.
 - Hide errors or swallow exceptions.
 - Ship a new UI surface without E2E test and `UI_SURFACE_MAP.md` update.
+- Utiliser `npm`/`npx` (pnpm uniquement, `npm` interdit).
 
 ## Preuves attendues
 

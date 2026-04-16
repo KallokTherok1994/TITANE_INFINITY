@@ -95,7 +95,7 @@ elif [[ -x "$ROOT_DIR/.tools/node/current/bin/pnpm" ]]; then
   PNPM_BIN="$ROOT_DIR/.tools/node/current/bin/pnpm"
 fi
 
-# Tauri CLI est une dépendance npm (@tauri-apps/cli). En shell direct, `tauri` n'est pas
+# Tauri CLI est une dépendance Node (@tauri-apps/cli). En shell direct, `tauri` n'est pas
 # forcément dans PATH; on force donc la résolution via pnpm.
 if [[ "${CMD[0]}" == "tauri" ]]; then
   if [[ -z "${PNPM_BIN:-}" ]]; then

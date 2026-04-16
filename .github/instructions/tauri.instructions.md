@@ -51,6 +51,7 @@ bash scripts/verify_instructions.sh          # must exit 0
 - Add new commands without allowlist update and proof.
 - Ship a new IPC command without its test counterpart.
 - Use `unwrap()` — use `?` or explicit `Result` error handling.
+- Utiliser `npm`/`npx` (pnpm uniquement, `npm` interdit).
 
 ## Preuves attendues
 

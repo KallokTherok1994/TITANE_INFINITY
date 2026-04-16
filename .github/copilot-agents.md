@@ -36,7 +36,7 @@ Create a dependency-sensitive agent for complex tasks and dependency changes.
 Mandate:
 
 - Analyze package.json + lock file + existing imports before proposing changes
-- Run dependency audit (npm audit / npm ls) before dependency changes
+- Run dependency audit (pnpm audit / pnpm list --depth 0) before dependency changes
 - Verify compatibility with project Node version
 - Prefer exact versions (or rely on lockfile) and avoid vague ranges in recommendations
 - Run tests after dependency change and summarize risks

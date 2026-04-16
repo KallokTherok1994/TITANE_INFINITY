@@ -26,6 +26,16 @@ const testsE2ELegacyIgnore = [
   '**/ui-comprehensive.spec.ts',
 ];
 
+// PATCH-010 and live-* tests are historical patch-validation specs (PATCH-010 sealed,
+// see _archive/proof_packs_2026-03-26/patch-010/PATCH-010-ARCHIVE-COMPLETE.md).
+// They require a live external provider server and must not run in CI.
+const patch010LegacyIgnore = [
+  '**/PATCH-010-*.spec.ts',
+  '**/live-provider-test.spec.ts',
+  '**/live-message-send.spec.ts',
+  '**/live-component-wait.spec.ts',
+];
+
 export default defineConfig({
   // Test directories
   // Primary browser lane: canonical e2e folder.
@@ -65,7 +75,9 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      testIgnore: includeExperimentalTests ? [] : ['**/onboarding.test.ts'],
+      testIgnore: includeExperimentalTests
+        ? []
+        : ['**/onboarding.test.ts', ...patch010LegacyIgnore],
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1280, height: 720 },

@@ -70,7 +70,7 @@ done
 
 # 8. Files check
 echo "📁 Checking critical files..."
-for file in package.json tsconfig.json src-tauri/Cargo.toml .github/workflows/ci.yml; do
+for file in package.json tsconfig.json src-tauri/Cargo.toml .github/workflows/ci-unified.yml; do
     [ -f "$file" ] && check "File: $file" || warn "Missing: $file"
 done
 

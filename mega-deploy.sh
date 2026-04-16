@@ -211,7 +211,7 @@ phase_requirements() {
   
   log_section "Checking system commands..."
   
-  local required_cmds=("git" "node" "npm" "pnpm" "cargo" "rustc" "gcc" "make")
+  local required_cmds=("git" "node" "pnpm" "cargo" "rustc" "gcc" "make")
   local missing_cmds=()
   
   for cmd in "${required_cmds[@]}"; do
@@ -342,7 +342,7 @@ phase_quality_checks() {
   local quality_passed=true
   
   log_section "TypeScript strict compilation..."
-  if run_cmd "npx tsc --noEmit --skipLibCheck" "TypeScript check"; then
+  if run_cmd "pnpm exec tsc --noEmit --skipLibCheck" "TypeScript check"; then
     log_success "TypeScript: 0 errors ✅"
   else
     log_error "TypeScript compilation failed"

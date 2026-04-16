@@ -47,6 +47,7 @@ bash scripts/verify_instructions.sh          # must exit 0
 - Use hardcoded dev URLs without env override.
 - Apply flaky band-aids (random sleeps/timeouts) instead of deterministic fixes.
 - Ship a new user-facing feature without an E2E test.
+- Utiliser `npm`/`npx` dans les commandes E2E (pnpm uniquement, `npm` interdit).
 
 ## Required Export Artifacts (reports/e2e/)
 

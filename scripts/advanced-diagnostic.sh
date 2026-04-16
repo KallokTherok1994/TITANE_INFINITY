@@ -108,7 +108,7 @@ check_critical_dependencies() {
     # Vérifier pnpm
     if ! command -v pnpm &> /dev/null; then
         log_error "pnpm not found - attempting installation"
-        if npm install -g pnpm; then
+        if corepack prepare pnpm@latest --activate; then
             log_recovery "pnpm installed successfully"
             ((ISSUES_RESOLVED++))
         else
@@ -300,11 +300,11 @@ check_network_connectivity() {
     else
         log_success "Internet connectivity OK"
         
-        # Tester les registries NPM
+        # Tester le registre pnpm (npmjs)
         if ! curl -s --max-time 5 https://registry.npmjs.org/ >/dev/null; then
-            log_warning "NPM registry not accessible"
+            log_warning "pnpm registry not accessible"
         else
-            log_success "NPM registry accessible"
+            log_success "pnpm registry accessible"
         fi
     fi
     
@@ -444,7 +444,7 @@ generate_health_report() {
   },
   "network_status": {
     "internet_connectivity": $(ping -c 1 8.8.8.8 &>/dev/null && echo "true" || echo "false"),
-    "npm_registry_accessible": $(curl -s --max-time 5 https://registry.npmjs.org/ >/dev/null && echo "true" || echo "false")
+    "pnpm_registry_accessible": $(curl -s --max-time 5 https://registry.npmjs.org/ >/dev/null && echo "true" || echo "false")
   },
   "running_processes": {
     "node_processes": $(pgrep -f "node" | wc -l),

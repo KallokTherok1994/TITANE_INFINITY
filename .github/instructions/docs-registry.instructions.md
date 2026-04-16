@@ -26,6 +26,7 @@ applyTo: 'docs/**, reports/**, proof_packs/**'
 - Rewrite history or delete proof packs.
 - Use shorthand or partial AutoHeal entries (will fail `detect_recurrence.sh`).
 - Emit a verdict other than PASS/FAIL/BLOCKED/BLOCKED_APPROVAL/DONE/SEALED.
+- Documenter des commandes `npm`/`npx` actives (pnpm uniquement, `npm` interdit).
 
 ## Preuves attendues
 

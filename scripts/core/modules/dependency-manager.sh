@@ -61,12 +61,6 @@ check_pnpm_availability() {
         return 0
     fi
 
-    # Enfin npm comme fallback
-    if command -v npm &> /dev/null; then
-        echo "npm"
-        return 0
-    fi
-
     return 1
 }
 
@@ -83,11 +77,8 @@ setup_pnpm() {
     if ! command -v pnpm &> /dev/null && command -v corepack &> /dev/null; then
         log_info "Installing pnpm via corepack..."
         corepack prepare pnpm@latest --activate 2>/dev/null || {
-            log_warning "corepack pnpm install failed, trying direct install..."
-            npm install -g pnpm 2>/dev/null || {
-                log_error "Failed to install pnpm"
-                return 1
-            }
+            log_error "corepack pnpm install failed"
+            return 1
         }
     fi
 
@@ -109,12 +100,8 @@ install_node_dependencies() {
         corepack|pnpm)
             install_with_pnpm
             ;;
-        npm)
-            log_warning "pnpm not available, falling back to npm"
-            install_with_npm
-            ;;
         *)
-            log_error "No package manager available"
+            log_error "pnpm is required; npm fallback is forbidden"
             return 1
             ;;
     esac
@@ -158,25 +145,6 @@ install_with_pnpm() {
     fi
 }
 
-install_with_npm() {
-    log_info "Installing Node.js dependencies with npm..."
-
-    cd "$REPO_ROOT"
-
-    # Démarrer télémétrie
-    telemetry_start_timer "npm_install"
-
-    if npm install; then
-        telemetry_stop_timer "npm_install"
-        log_success "Node.js dependencies installed with npm"
-        return 0
-    else
-        telemetry_stop_timer "npm_install"
-        log_error "Failed to install Node.js dependencies with npm"
-        return 1
-    fi
-}
-
 audit_dependencies() {
     log_info "Auditing dependencies for security issues..."
 
@@ -196,15 +164,6 @@ audit_dependencies() {
                     log_info "Attempting to fix vulnerabilities..."
                     pnpm audit fix 2>/dev/null || log_warning "Could not auto-fix all vulnerabilities"
                 fi
-                return 0  # Non-blocking
-            fi
-            ;;
-        npm)
-            if npm audit &> /dev/null; then
-                log_success "Dependency audit passed (npm)"
-                return 0
-            else
-                log_warning "Security issues found (npm)"
                 return 0  # Non-blocking
             fi
             ;;

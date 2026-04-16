@@ -25,7 +25,9 @@ describe('desktop launcher scripts', () => {
       'APP_VERSION="$(extract_installed_package_version "$BINARY_PATH")"'
     );
     expect(desktopScript).toContain('Icon=$ICON_VALUE');
-    expect(desktopScript).toContain('rm -f "$DESKTOP_INSTALL_DIR/TITANE-Infinity.desktop"');
+    expect(desktopScript).toContain(
+      'rm -f "$DESKTOP_INSTALL_DIR/TITANE-Infinity.desktop"'
+    );
     expect(desktopScript).not.toContain('Exec=$LAUNCHER_SCRIPT');
   });
 
@@ -36,8 +38,12 @@ describe('desktop launcher scripts', () => {
     expect(postBuildScript).toContain(
       'SYSTEM_DESKTOP_DST1="$SYSTEM_DESKTOP_DIR/titane-infinity.desktop"'
     );
-    expect(postBuildScript).toContain('sudo rm -f "$SYSTEM_DESKTOP_DIR/TITANE-Infinity.desktop"');
-    expect(postBuildScript).toContain('SYSTEM_ICON_DST="$SYSTEM_ICON_DIR/titane-infinity.png"');
+    expect(postBuildScript).toContain(
+      'sudo rm -f "$SYSTEM_DESKTOP_DIR/TITANE-Infinity.desktop"'
+    );
+    expect(postBuildScript).toContain(
+      'SYSTEM_ICON_DST="$SYSTEM_ICON_DIR/titane-infinity.png"'
+    );
     expect(postBuildScript).not.toContain('SYSTEM_DESKTOP_DST2=');
     expect(postBuildScript).not.toContain('DESKTOP_SRC1=');
     expect(postBuildScript).toContain('cmp -s "$BIN_SRC" "$BIN_DST"');

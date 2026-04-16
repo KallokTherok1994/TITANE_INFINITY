@@ -13,7 +13,12 @@ import Chat from '../ui/pages/Chat';
 import { setupE2ETest, teardownE2ETest } from './e2e-setup';
 import { createTestMessage } from './e2e-test-utils';
 
-const renderCanonicalChat = () => render(<BrowserRouter><TitanePage /></BrowserRouter>);
+const renderCanonicalChat = () =>
+  render(
+    <BrowserRouter>
+      <TitanePage />
+    </BrowserRouter>
+  );
 
 describe('🟣 OMEGA Phase 7Ω - E2E: UI Integration Tests', () => {
   beforeEach(() => {
@@ -31,7 +36,11 @@ describe('🟣 OMEGA Phase 7Ω - E2E: UI Integration Tests', () => {
   });
 
   it('should route the legacy Chat page export to the canonical conversation surface', () => {
-    const { container } = render(<BrowserRouter><Chat /></BrowserRouter>);
+    const { container } = render(
+      <BrowserRouter>
+        <Chat />
+      </BrowserRouter>
+    );
 
     expect(container).toBeTruthy();
     expect(screen.getByTestId('page-titane')).toHaveAttribute(

@@ -176,9 +176,9 @@ phase_b_prechecks() {
         
         # Tools presence
         echo "=== TOOLS PRESENCE ==="
-        command -v npx
-        npx playwright --version || echo "playwright: not found"
-        npx wdio --version || echo "wdio: not found"
+        command -v pnpm
+        pnpm exec playwright --version || echo "playwright: not found"
+        pnpm exec wdio --version || echo "wdio: not found"
         ls -lh scripts/e2e/run-desktop-suite.js
         ls -lh scripts/e2e/tauri-wrapper.sh
         ls -lh scripts/e2e/ensure-webkit-webdriver.sh

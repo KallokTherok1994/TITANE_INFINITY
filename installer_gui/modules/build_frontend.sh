@@ -7,12 +7,12 @@ PROJECT_DIR="$(dirname "$(dirname "$(dirname "$0")")")"
 cd "$PROJECT_DIR"
 
 # Installer dépendances
-echo "📦 Installation des dépendances npm..."
+echo "📦 Installation des dépendances pnpm..."
 pnpm install
 
 # Build
 echo "🏗️  Build Vite..."
-pnpm build
+pnpm run build
 
 if [ ! -d "dist" ]; then
     echo "❌ Erreur: Build frontend échoué"
