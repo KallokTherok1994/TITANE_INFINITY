@@ -22,6 +22,11 @@ Compatibility markers (required by verifier):
 - Local-first (compatibility marker; doctrine active = Online-first governed with mandatory local fallback)
 - diagnose -> plan -> apply -> verify -> report
 
+## Package manager policy (mandatory)
+
+- Toujours utiliser `pnpm` / `corepack pnpm`.
+- `npm` / `npx` sont explicitement interdits dans ce dépôt (hors références d’écosystème externes comme `package-ecosystem: npm`).
+
 ## Priority
 
 - Canonical priority: this file is the constitutional kernel.

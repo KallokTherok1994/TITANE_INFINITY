@@ -81,7 +81,7 @@ echo ""
 
 # Vérifier TypeScript compile
 echo -e "${BLUE}[3/7]${NC} Vérification TypeScript..."
-if npx tsc --noEmit --skipLibCheck 2>&1 | grep -q "error TS"; then
+if pnpm exec tsc --noEmit --skipLibCheck 2>&1 | grep -q "error TS"; then
     test_result "TypeScript compilation" 1
     echo -e "${YELLOW}⚠️${NC} Erreurs TypeScript détectées"
 else

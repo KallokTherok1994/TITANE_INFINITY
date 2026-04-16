@@ -36,7 +36,7 @@ Jusqu'à nouvelle autorisation écrite explicite de Kevin Thibault :
 
 ```bash
 # INTERDITS:
-npm run build
+pnpm run build
 tauri build
 cargo build --release
 ./runtime/stable/build.sh
@@ -60,7 +60,7 @@ cargo build --release
 
 ```bash
 # ✅ AUTORISÉ:
-npm run dev              # Titan-Dev (Vite)
+pnpm run dev              # Titan-Dev (Vite)
 ./runtime/dev/run-dev.sh # Script dev complet
 cargo run                # Rust debug mode
 ```
@@ -93,7 +93,7 @@ Le déploiement production nécessite **TOUTES** ces conditions :
 ### 1️⃣ Tests Unitaires/Intégration
 
 ```bash
-npm test -- --run          # React/TS tests
+pnpm test -- --run          # React/TS tests
 ✅ Résultat: 100/100 passés
 ```
 
@@ -107,14 +107,14 @@ cd src-tauri && cargo test
 ### 3️⃣ Tests E2E Playwright
 
 ```bash
-npm run test:e2e
+pnpm run test:e2e
 ✅ Résultat: 3/3 scénarios OMEGA v2 passés
 ```
 
 ### 4️⃣ Validation COPILOT-XS
 
 ```bash
-npm run copilot-xs:test
+pnpm run copilot-xs:test
 ✅ Résultat: EXIT:0 (pas d'erreurs)
 ```
 

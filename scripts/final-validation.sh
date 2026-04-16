@@ -17,7 +17,7 @@ cleanup() {
 
   pkill -f 'vite/bin/vite\.js dev' 2>/dev/null || true
   pkill -f 'vite\.js dev --host 127\.0\.0\.1 --port 5173' 2>/dev/null || true
-  pkill -f 'npx vite dev --host 127\.0\.0\.1 --port 5173' 2>/dev/null || true
+  pkill -f 'pnpm exec vite dev --host 127\.0\.0\.1 --port 5173' 2>/dev/null || true
   sleep 1
 }
 
@@ -51,7 +51,7 @@ run_test() {
 run_test "Nettoyage des caches" "./scripts/dev-clean.sh && echo 'Cache nettoyé'"
 
 # 2. Test de syntaxe TypeScript
-run_test "Validation TypeScript" "npx tsc --noEmit --skipLibCheck 2>/dev/null || { echo 'TS errors detected but not blocking'; true; }"
+run_test "Validation TypeScript" "pnpm exec tsc --noEmit --skipLibCheck 2>/dev/null || { echo 'TS errors detected but not blocking'; true; }"
 
 # 3. Test des utilitaires de diagnostic 
 run_test "Import des utilitaires diagnostic" "node -e 'const fs = require(\"fs\"); const content = fs.readFileSync(\"src/utils/lazyImportDiagnostic.ts\", \"utf8\"); console.log(content.includes(\"lazyWithDiagnostic\") ? \"✅ Diagnostic utils OK\" : \"❌ Missing utils\");'"
@@ -59,7 +59,7 @@ run_test "Import des utilitaires diagnostic" "node -e 'const fs = require(\"fs\"
 # 4. Test de démarrage Vite
 run_test "Démarrage Vite (15s)" "
   export VITE_FORCE_OPTIMIZE=1
-  npx vite dev --host 127.0.0.1 --port 5173 --strictPort > /tmp/final-test.log 2>&1 &
+  pnpm exec vite dev --host 127.0.0.1 --port 5173 --strictPort > /tmp/final-test.log 2>&1 &
   VITE_PID=\$!
   sleep 8
   if ps -p \$VITE_PID > /dev/null 2>&1; then
@@ -77,7 +77,7 @@ run_test "Démarrage Vite (15s)" "
 # 5. Test de connectivité HTTP
 run_test "Connectivité HTTP" "
   export VITE_FORCE_OPTIMIZE=1
-  npx vite dev --host 127.0.0.1 --port 5173 --strictPort > /tmp/http-test.log 2>&1 &
+  pnpm exec vite dev --host 127.0.0.1 --port 5173 --strictPort > /tmp/http-test.log 2>&1 &
   VITE_PID=\$!
   sleep 6
   
@@ -99,7 +99,7 @@ run_test "Connectivité HTTP" "
 # 6. Test d'absence d'erreurs critiques
 run_test "Absence erreurs critiques" "
   export VITE_FORCE_OPTIMIZE=1  
-  npx vite dev --host 127.0.0.1 --port 5173 --strictPort > /tmp/error-test.log 2>&1 &
+  pnpm exec vite dev --host 127.0.0.1 --port 5173 --strictPort > /tmp/error-test.log 2>&1 &
   VITE_PID=\$!
   sleep 8
   kill \$VITE_PID 2>/dev/null || true

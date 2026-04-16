@@ -235,25 +235,10 @@ install_prerequisites() {
 
 install_dependencies() {
     print_header "📥 Installation des Dépendances"
-    
-    # Choisir package manager
-    local pkg_manager="npm"
-    if command_exists pnpm; then
-        print_info "pnpm détecté (plus rapide)"
-        read -p "Utiliser pnpm au lieu de npm? (Y/n): " -n 1 -r
-        echo
-        if [[ ! $REPLY =~ ^[Nn]$ ]]; then
-            pkg_manager="pnpm"
-        fi
-    fi
-    
+
     # Installer dépendances Node
     print_info "Installation des dépendances Node.js..."
-    if [ "$pkg_manager" = "pnpm" ]; then
-        pnpm install
-    else
-        pnpm install
-    fi
+    pnpm install
     print_success "Dépendances Node.js installées"
     
     # Installer dépendances Rust

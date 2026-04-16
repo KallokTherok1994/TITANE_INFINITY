@@ -37,7 +37,7 @@ Deliverable: a short “dependency summary” (what changed, why, risk).
 
 ### 4) Validation
 
-- Run `npm run copilot-xs:validate` (staged scope by default).
+- Run `pnpm run copilot-xs:validate` (staged scope by default).
 - Run the project checks appropriate to the change (build/tests/lint). Prefer VS Code tasks when available.
 
 Deliverable: “validation results” with pass/fail for the commands run.
