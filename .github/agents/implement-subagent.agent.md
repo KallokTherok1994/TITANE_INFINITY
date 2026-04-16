@@ -32,7 +32,7 @@ cd src-tauri && cargo test <name>
 
 ```bash
 cargo test <name>
-npm test
+pnpm run test
 ```
 
 ### 5. Cleanup

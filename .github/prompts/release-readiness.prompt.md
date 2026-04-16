@@ -16,7 +16,7 @@ Assess release readiness without performing unauthorized PROD actions.
 
 1. Verify version synchronization.
 2. Verify mandatory gates and status checks.
-3. Confirm exact token requirements for PROD paths.
+3. Confirm no token gate is required — production builds run on demand (Rule 11).
 4. Produce GO/NO-GO with evidence only.
 
 ## Output

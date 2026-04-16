@@ -30,14 +30,14 @@ cd src-tauri && cargo clippy
 **TypeScript** :
 
 ```bash
-npx tsc --noEmit
-npx eslint <files>
+pnpm run check
+pnpm run lint
 ```
 
 ### 3. Tests
 
 ```bash
-npm test
+pnpm run test
 cd src-tauri && cargo test
 ```
 

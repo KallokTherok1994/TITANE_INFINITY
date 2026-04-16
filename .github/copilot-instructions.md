@@ -25,7 +25,7 @@ Compatibility markers (required by verifier):
 ## Priority
 
 - Canonical priority: this file is the constitutional kernel.
-- Layer order: kernel -> nearest AGENTS.md -> path-specific instructions -> selected custom agent -> selected prompt file -> task context -> runtime proof/validator truth.
+- Layer order: kernel -> path-specific instructions -> nearest AGENTS.md -> selected custom agent -> selected prompt file -> task context -> runtime proof/validator truth. (Formal layer IDs: L1=kernel, L2=path-specific, L3=local-AGENTS, L4=custom-agents, L5=prompts, L6=mechanical-truth — see governance/layer_priority.yaml.)
 - Lower layers must never redefine higher-layer invariants.
 
 ## Status Vocabulary

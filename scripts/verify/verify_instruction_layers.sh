@@ -54,6 +54,26 @@ else
   fail "LAYER_POLICY_MISSING_BLOCKED_DOCTRINE"
 fi
 
+# Rule 11 anti-contradiction: no prompt/agent must require a token gate for PROD
+if _rg -n "exact token requirements" -S .github/prompts .github/agents >/dev/null 2>&1; then
+  fail "RULE11_TOKEN_GATE_LANGUAGE_IN_PROMPTS_OR_AGENTS"
+else
+  pass "RULE11_NO_TOKEN_GATE_CONTRADICTION"
+fi
+
+# Legacy isolation: .github/copilot-agents/ must not be referenced as authority
+# in any governed instruction/agent/prompt file.
+if _rg -n "copilot-agents/" -S \
+   .github/copilot-instructions.md \
+   .github/instructions \
+   .github/agents \
+   .github/prompts \
+   governance >/dev/null 2>&1; then
+  fail "LEGACY_COPILOT_AGENTS_REFERENCED_AS_AUTHORITY"
+else
+  pass "LEGACY_COPILOT_AGENTS_ISOLATED"
+fi
+
 echo "SUMMARY: FAIL=$FAIL"
 if [[ "$FAIL" -ne 0 ]]; then
   exit 1

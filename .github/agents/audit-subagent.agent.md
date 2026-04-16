@@ -21,15 +21,15 @@ find src-tauri/src -name "*.rs" | sort
 ### 2. Qualité
 
 ```bash
-npx tsc --noEmit 2>&1 | head -100
-npx eslint src/ --ext .ts,.tsx 2>&1 | head -100
-cd src-tauri && cargo clippy --all 2>&1 | head -100
+pnpm run check 2>&1 | head -100
+pnpm run lint 2>&1 | head -100
+cd src-tauri && cargo clippy 2>&1 | head -100
 ```
 
 ### 3. Tests
 
 ```bash
-npm test -- --passWithNoTests
+pnpm run test
 cd src-tauri && cargo test --all
 ```
 
