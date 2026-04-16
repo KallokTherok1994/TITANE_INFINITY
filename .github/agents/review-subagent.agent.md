@@ -46,14 +46,25 @@ cd src-tauri && cargo test
 - ✅ Rust : pas unwrap(), async/await
 - ✅ TypeScript : pas any, types explicites
 - ✅ Tests passent
-- ✅ Architecture 9 moteurs
+- ✅ Architecture 9 moteurs (#0–#8)
+- ✅ Rule 15 : mapping docs mis à jour si surface UI/IPC touchée
+- ✅ Rule 16 : tests créés pour chaque nouvelle fonctionnalité
+
+## Gate AutoHeal (Rule 10 — obligatoire)
+
+```bash
+bash scripts/autoheal/detect_recurrence.sh  # doit sortir 0
+bash scripts/verify_instructions.sh          # doit sortir 0
+```
+
+Si l'un des deux échoue : FAIL — arrêter, signaler, ne pas approuver.
 
 ## Sortie
 
-### Approuvé
+### PASS
 
 ```markdown
-# ✅ APPROVED
+# ✅ PASS
 
 ## Changes
 
@@ -63,14 +74,15 @@ cd src-tauri && cargo test
 
 - Rust : ✅ 0 warnings
 - TS : ✅ 0 errors
+- AutoHeal : detect_recurrence.sh PASS
 
-APPROVED — Ready to commit
+PASS — Ready to commit
 ```
 
-### Révisions
+### BLOCKED (révisions nécessaires)
 
 ```markdown
-# 🟡 NEEDS REVISION
+# 🟡 BLOCKED
 
 ## 🔴 Critical
 
@@ -79,4 +91,6 @@ APPROVED — Ready to commit
 ## Fix
 
 <instructions>
+
+BLOCKED — corrections requises avant re-review
 ```

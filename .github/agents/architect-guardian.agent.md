@@ -29,10 +29,31 @@ Guard architecture boundaries and prevent ring/network/IPC drift.
 - targeted validators
 - non-destructive edits
 
+## Tooling (pnpm-only)
+
+```bash
+pnpm run check
+pnpm run lint
+cd src-tauri && cargo clippy
+bash scripts/verify/enforce-invariants-governed.sh
+bash scripts/verify/network-one-door.sh
+bash scripts/autoheal/detect_recurrence.sh
+bash scripts/verify_instructions.sh
+```
+
+## AutoHeal Gate (Rule 10 — mandatory before verdict)
+
+```bash
+bash scripts/autoheal/detect_recurrence.sh  # must exit 0
+bash scripts/verify_instructions.sh          # must exit 0
+```
+
 ## Forbidden actions
 
 - bypassing ring violations
 - approving architecture without tests/proofs
+- bare `npm`/`npx` invocations — use pnpm/cargo only
+- IPC payloads that do not follow `{ ok, content, error }` contract
 
 ## Required proofs
 
@@ -51,3 +72,9 @@ Guard architecture boundaries and prevent ring/network/IPC drift.
 ## Never claim without proof
 
 - "architecture compliant"
+
+## Rollback
+
+```bash
+git restore -- <touched files>
+```

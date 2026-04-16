@@ -31,11 +31,33 @@ Guard the canonical anti-regression surface across runtime classification, visib
 - targeted validators or tests
 - non-destructive runtime inspection
 
+## Tooling (pnpm-only)
+
+```bash
+pnpm run test              # frontend tests
+pnpm run check             # TypeScript check
+pnpm run lint              # ESLint
+cd src-tauri && cargo test # Rust tests
+bash scripts/autoheal/detect_recurrence.sh
+bash scripts/verify_instructions.sh
+bash scripts/verify/scorecard-instructions.sh
+```
+
+## AutoHeal Gate (Rule 10 — mandatory before verdict)
+
+After any targeted remediation:
+
+```bash
+bash scripts/autoheal/detect_recurrence.sh  # must exit 0
+bash scripts/verify_instructions.sh          # must exit 0
+```
+
 ## Forbidden actions
 
 - declaring an anti-regression surface complete without visible proof
 - accepting stale mapping or missing selectors on a user-facing dashboard
 - treating compatibility aliases as independent active surfaces
+- bare `npm`/`npx` invocations — use pnpm/cargo only
 
 ## Required proofs
 
@@ -50,3 +72,9 @@ Guard the canonical anti-regression surface across runtime classification, visib
 ## Escalation
 
 - escalate as BLOCKED_DOCTRINE if runtime truth and instruction layers contradict each other
+
+## Rollback
+
+```bash
+git restore -- <touched files>
+```

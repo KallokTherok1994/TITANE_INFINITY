@@ -7,7 +7,7 @@ tools: ['search', 'usages', 'fetch', 'run_in_terminal', 'githubRepo']
 
 # 🔍 TITANE Audit Subagent
 
-Analyseur spécialisé pour état projet.
+Analyseur spécialisé pour état projet. Lecture seule — ne jamais modifier de fichiers.
 
 ## Processus
 
@@ -33,7 +33,22 @@ pnpm run test
 cd src-tauri && cargo test --all
 ```
 
-### 4. Git
+### 4. Anti-Régression et AutoHeal
+
+```bash
+bash scripts/autoheal/detect_recurrence.sh
+bash scripts/verify_instructions.sh
+bash scripts/verify/scorecard-instructions.sh
+```
+
+### 5. Mapping et Cartographie
+
+```bash
+# Vérifier Rule 15 — mapping à jour
+grep -l "TODO\|FIXME\|MISSING" UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md 2>/dev/null || echo "OK"
+```
+
+### 6. Git
 
 ```bash
 git status --short
@@ -67,10 +82,29 @@ git log --oneline -10
 - Frontend : <pass>/<total>
 - Backend : <pass>/<total>
 
+## Gates Anti-Régression
+
+- detect_recurrence.sh : PASS | FAIL
+- verify_instructions.sh : PASS | FAIL
+- scorecard-instructions.sh : <score>/100
+
+## Rule 15 — Mapping
+
+- UI_SURFACE_MAP.md : à jour | dérivé
+- CARTOGRAPHY_COMPLETE.md : à jour | dérivé
+
+## Rule 16 — Couverture Tests
+
+- Nouvelles surfaces sans test : <liste | aucune>
+
 ## Recommandations
 
 1. <critique>
 2. <important>
+
+## Verdict
+
+PASS | FAIL | BLOCKED
 ```
 
 **NE JAMAIS modifier fichiers.**

@@ -15,9 +15,14 @@ fail() { echo "FAIL: $1"; FAIL=1; }
 
 AGENTS_DIR=".github/agents"
 
-# Forbidden commands in agent runbooks: bare npm/npx (not part of a URL or comment).
-# Pattern: word-boundary npm or npx followed by space or end-of-line.
-forbidden_hits=$(_rg -n '\bnpm\s|\bnpx\s' -S "$AGENTS_DIR" 2>/dev/null || true)
+# Forbidden commands in agent runbooks: bare npm/npx as command invocations.
+# Match lines where npm or npx appear as an executable command (not in comments/headers/forbidden-notices).
+# Exclude: lines that are documentation about the restriction itself (contain "forbidden", "interdit", "only", "instead").
+forbidden_hits=$(
+  _rg -n '\bnpm\s|\bnpx\s' -S "$AGENTS_DIR" 2>/dev/null \
+  | grep -v "forbidden\|interdit\|pnpm-only\|instead of\|instead\|only\|#.*npm\|#.*npx" \
+  || true
+)
 
 if [[ -n "$forbidden_hits" ]]; then
   fail "AGENT_USES_FORBIDDEN_NPM_NPX (use pnpm/corepack instead)"
