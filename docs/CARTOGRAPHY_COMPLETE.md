@@ -753,3 +753,14 @@ function MyComponent() {
 | `evolution` | Auto-amélioration continue | evolution-cycles, xp-accumulation, adaptive-learning |
 | `time` | Intelligence temporelle | agenda, calendar, temporal-search |
 | `identity` | Identité + twin cognitif | twin-identity, twin-evolution, cognitive-profile |
+
+## [2026-04-16] DevPage route-shell truth
+
+- La route `/dev` expose maintenant le marqueur canonique `page-dev` dès les états `loading` et `error`, avec `data-dev-state=loading|error|ready`.
+- Cette vérité de surface retire une dépendance implicite entre présence de page et fin de préchargements secondaires QA/ONE_CORE, ce qui stabilise la qualification desktop WRY sans masquer les erreurs visibles.
+
+## [2026-04-16] Conversation fullscreen shell truth
+
+- La surface conversation fullscreen réutilise désormais une hauteur héritée parent-bound sur `titane-page--conversation` (`flex: 1 1 auto`, `min-height: 0`, `max-height: 100%`) au lieu de conserver une contrainte verticale qui pousse artificiellement le compositeur hors viewport.
+- `AppShell` ne doit appliquer qu'une seule compensation TopNav via `paddingTop: calc(4rem + env(safe-area-inset-top, 0px))`; la classe `pt-16` y est incompatible avec la vérité fullscreen.
+- Le helper desktop WDIO borne maintenant l'overflow synthétique au budget réel entre toolbar et compositeur pour éviter un faux échec de viewport avant même d'évaluer la surface runtime réelle.

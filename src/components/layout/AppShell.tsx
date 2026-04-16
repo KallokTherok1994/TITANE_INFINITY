@@ -55,10 +55,7 @@ export const AppShell = ({
       {/* Main Content (plein écran, sans sidebar) */}
       <main
         role="main"
-        className={cn(
-          'relative flex h-full min-h-0 max-w-full min-w-0 flex-1 flex-col overflow-hidden',
-          topNav && 'pt-16'
-        )}
+        className="relative flex h-full min-h-0 max-w-full min-w-0 flex-1 flex-col overflow-hidden"
         style={
           topNav
             ? { paddingTop: 'calc(4rem + env(safe-area-inset-top, 0px))' }

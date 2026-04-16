@@ -88,12 +88,14 @@ async function inspectConversationScrollRegion() {
   return browser.execute(() => {
     const container = document.querySelector('.conversation-container');
     const region = document.querySelector('[data-testid="chat-messages-scroll-region"]');
+    const toolbar = document.querySelector('.chat-toolbar');
     const input = document.querySelector('[data-testid="chat-input"]');
     const composer = document.querySelector('.conversation-input-container');
 
     if (
       !(container instanceof HTMLElement) ||
       !(region instanceof HTMLElement) ||
+      !(toolbar instanceof HTMLElement) ||
       !(input instanceof HTMLElement) ||
       !(composer instanceof HTMLElement)
     ) {
@@ -102,7 +104,16 @@ async function inspectConversationScrollRegion() {
 
     let hostConstraintApplied = false;
     if (region.scrollHeight <= region.clientHeight) {
-      const constrainedHeight = Math.max(260, Math.round(window.innerHeight * 0.42));
+      const toolbarRect = toolbar.getBoundingClientRect();
+      const composerRect = composer.getBoundingClientRect();
+      const viewportBudget = Math.max(
+        260,
+        Math.floor(composerRect.top - toolbarRect.bottom - 24)
+      );
+      const constrainedHeight = Math.min(
+        viewportBudget,
+        Math.max(260, Math.round(window.innerHeight * 0.42))
+      );
       region.style.height = `${constrainedHeight}px`;
       region.style.maxHeight = `${constrainedHeight}px`;
       region.style.overflowY = 'auto';

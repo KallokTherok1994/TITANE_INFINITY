@@ -814,7 +814,7 @@ function DevPageContent(): JSX.Element {
 
   if (loading) {
     return (
-      <div className="dev-page">
+      <div className="dev-page" data-testid="page-dev" data-dev-state="loading">
         <div className="dev-loading">
           <span className="dev-loading-icon">⚙️</span>
           <span className="dev-loading-text">Chargement DEV...</span>
@@ -825,7 +825,7 @@ function DevPageContent(): JSX.Element {
 
   if (error) {
     return (
-      <div className="dev-page">
+      <div className="dev-page" data-testid="page-dev" data-dev-state="error">
         <div className="dev-error">
           <span className="dev-error-icon">⚠️</span>
           <span>{error}</span>
@@ -846,7 +846,7 @@ function DevPageContent(): JSX.Element {
   ];
 
   return (
-    <div className="dev-page" data-testid="page-dev">
+    <div className="dev-page" data-testid="page-dev" data-dev-state="ready">
       <header className="dev-header">
         <div className="dev-header-content">
           <h1>🔧 DEV Cockpit</h1>

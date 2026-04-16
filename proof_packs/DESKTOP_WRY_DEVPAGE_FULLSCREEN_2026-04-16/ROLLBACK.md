@@ -1,0 +1,5 @@
+git restore -- src/pages/DevPage.tsx src/__tests__/pages/DevPage.test.tsx src/components/layout/AppShell.tsx src/pages/TitanePage-local.css e2e/desktop/ui-connectivity-critical.wdio.test.js src/__tests__/ui/conversation-fullscreen-shell.test.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl
+
+git restore --staged src/pages/DevPage.tsx src/__tests__/pages/DevPage.test.tsx src/components/layout/AppShell.tsx src/pages/TitanePage-local.css e2e/desktop/ui-connectivity-critical.wdio.test.js src/__tests__/ui/conversation-fullscreen-shell.test.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl proof_packs/DESKTOP_WRY_DEVPAGE_FULLSCREEN_2026-04-16/VERDICT.md proof_packs/DESKTOP_WRY_DEVPAGE_FULLSCREEN_2026-04-16/ROLLBACK.md scripts/autoheal/autoheal_rules.jsonl
+
+git restore -- proof_packs/DESKTOP_WRY_DEVPAGE_FULLSCREEN_2026-04-16

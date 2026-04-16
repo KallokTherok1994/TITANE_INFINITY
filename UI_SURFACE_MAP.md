@@ -108,3 +108,16 @@
 - **Agent Anti-Régression canonique** : `self-healing-dashboard` + `anti-regression-summary` via `/admin?tab=anti-regression`
 
 Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, logs et alerting UI.
+
+## DevPage Surface
+
+- Route canonique: `/dev`
+- Root shell test id: `page-dev`
+- Shell state contract: `data-dev-state=loading|error|ready`
+- Runtime truth: la route `/dev` expose désormais son marqueur de surface immédiatement, y compris pendant le préchargement et en état d'erreur, pour éviter que la lane desktop WRY attende des chargements secondaires avant de qualifier la page.
+
+## Conversation Fullscreen Shell
+
+- Root shell contract: la chaîne fullscreen `AppShell -> titane-page--conversation -> titane-content--conversation -> conversation-container` doit rester parent-bound (`flex/min-height:0/max-height:100%`) et non pilotée par un double offset ou une hauteur viewport forcée.
+- App shell offset truth: la compensation TopNav reste portée uniquement par `paddingTop: calc(4rem + env(safe-area-inset-top, 0px))` dans `AppShell`.
+- Desktop proof helper truth: le helper WDIO `inspectConversationScrollRegion()` borne désormais son overflow artificiel au budget vertical réel entre `.chat-toolbar` et `.conversation-input-container`.
