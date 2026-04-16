@@ -32,7 +32,7 @@ cd src-tauri && cargo test <name>
 
 ```bash
 cargo test <name>
-npm test
+pnpm run test
 ```
 
 ### 5. Cleanup
@@ -56,6 +56,17 @@ cargo clippy --fix
 - ZERO any
 - try/catch
 
+## Gate AutoHeal (Rule 10 — obligatoire)
+
+Après chaque modification de fichier source :
+
+```bash
+bash scripts/autoheal/detect_recurrence.sh
+bash scripts/verify_instructions.sh
+```
+
+Les deux doivent sortir 0. Si non : FAIL — ne pas continuer.
+
 ## Sortie
 
 ```markdown
@@ -66,15 +77,15 @@ cargo clippy --fix
 - `<file>` : <desc>
 
 ## Tests
-```
 
 <output>
-```
 
-## Status
+## AutoHeal
 
-✅ Ready for review
+- detect_recurrence.sh : PASS
+- verify_instructions.sh : PASS
 
-```
+## Verdict
 
+PASS — ready for review-subagent
 ```

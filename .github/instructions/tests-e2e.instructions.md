@@ -24,6 +24,15 @@ applyTo: 'e2e/**, scripts/e2e/**, wdio*.conf*'
   - `prevention`: gate/test change that prevents silent recurrence
 - Kernel-mandated session gates apply (Rule 10 — `detect_recurrence.sh` + `verify_instructions.sh`).
 
+## AutoHeal Gate (Rule 10 — mandatory before verdict)
+
+After every E2E fix or new E2E test:
+
+```bash
+bash scripts/autoheal/detect_recurrence.sh  # must exit 0
+bash scripts/verify_instructions.sh          # must exit 0
+```
+
 ## Fullscreen / Zoom Proof Pattern
 
 - Seed a long enough conversation to force a truthful overflow condition when the host permits it.

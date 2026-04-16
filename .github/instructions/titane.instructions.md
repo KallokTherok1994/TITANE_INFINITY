@@ -1,7 +1,8 @@
 ---
+applyTo: 'src/**, src-tauri/**, tests/**, scripts/**'
+---
 # TITANE_INFINITY - Surface Instruction (Scoped)
 # Applies to: src/, src-tauri/, tests/, scripts/
----
 
 ## Invariants rappeles
 

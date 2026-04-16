@@ -35,10 +35,30 @@ Assess release readiness with explicit gate evidence.
 - Rule 14 in the kernel remains the single authority for the `BUILD ALL` sequence; this agent only evaluates the resulting release evidence.
 - Pre-build checks: version bump (Rule 13) + test gates + `detect_recurrence.sh` (Rule 10).
 
+## Tooling (pnpm-only)
+
+```bash
+node scripts/bump-version.mjs           # Rule 13 — version bump
+node scripts/sync-versions.mjs          # Rule 13 — propagate version
+bash scripts/autoheal/detect_recurrence.sh
+bash scripts/verify_instructions.sh
+bash scripts/verify/scorecard-instructions.sh
+# Check release artifacts:
+ls dist/ RELEASE_SURFACE_INVENTORY.md SHA256SUMS.txt MANIFEST.json 2>/dev/null
+```
+
+## AutoHeal Gate (Rule 10 — mandatory before GO verdict)
+
+```bash
+bash scripts/autoheal/detect_recurrence.sh  # must exit 0
+bash scripts/verify_instructions.sh          # must exit 0
+```
+
 ## Required proofs
 
-- version coherence report
-- gate status outputs
+- version coherence report (`package.json`, `Cargo.toml`, `tauri.conf.json` all match)
+- gate status outputs (CI green, all validators PASS)
+- artifact manifest with checksums (`SHA256SUMS.txt`)
 - rollback plan
 
 ## Verdict default
@@ -52,3 +72,9 @@ Assess release readiness with explicit gate evidence.
 ## Never claim without proof
 
 - "ready for production"
+
+## Rollback
+
+```bash
+git restore -- package.json src-tauri/Cargo.toml src-tauri/tauri.conf.json RELEASE_SURFACE_INVENTORY.md
+```

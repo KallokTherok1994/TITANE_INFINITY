@@ -26,15 +26,41 @@ Maintain evidence discipline across docs and proof artifacts.
 - proof validators
 - map refresh checks
 
+## Tooling (pnpm-only)
+
+```bash
+bash scripts/map_refresh.sh
+bash scripts/autoheal/detect_recurrence.sh
+bash scripts/verify_instructions.sh
+# Verify mandatory proof artifacts exist:
+ls proof_packs/<session>/VERDICT.md proof_packs/<session>/ROLLBACK.md
+```
+
+## AutoHeal Gate (Rule 10 — mandatory before verdict)
+
+Every proof pack session must produce an AutoHeal entry in the canonical AutoHeal registry (Rule 10):
+
+```bash
+bash scripts/autoheal/detect_recurrence.sh  # must exit 0
+```
+
+## Required AutoHeal entry schema
+
+```json
+{"id":"<unique>","date":"<ISO>","scope":"<scope>","symptom":"<symptom>","root_cause":"<cause>","fix":"<fix>","prevention_test":"detect_recurrence","commands":["..."],"files_changed":["..."],"rollback":"git restore -- ..."}
+```
+
 ## Forbidden actions
 
 - destructive proof rewrites
 - unverifiable claims
+- bare `npm`/`npx` invocations — use pnpm/cargo only
 
 ## Required proofs
 
 - mandatory artifact presence
 - gate outputs linked to files
+- VERDICT.md + ROLLBACK.md in every proof pack
 
 ## Verdict default
 
@@ -47,3 +73,9 @@ Maintain evidence discipline across docs and proof artifacts.
 ## Never claim without proof
 
 - "proof complete"
+
+## Rollback
+
+```bash
+git restore -- docs reports proof_packs
+```
