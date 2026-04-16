@@ -1,3 +1,4 @@
+> 2026-04-16 — GitHub Copilot rate-limit resilience: `src-tauri/src/api_hub/copilot.rs` applique désormais un retry borné et gouverné (`Retry-After` + backoff exponentiel plafonné) avant d’échouer, pour classer durablement les 429 GitHub comme blocage temporaire et non comme erreur logique du code.
 > 2026-04-15 — Chat runtime: les budgets par défaut de `ChatRequestDefaults` et du profil frontend ont été relevés jusqu’au plafond backend utile (`32768`) pour éviter les sorties tronquées par défaut, tout en conservant la borne IPC/Rust comme garde-fou structurel.
 
 ## Agent Anti-Régression
