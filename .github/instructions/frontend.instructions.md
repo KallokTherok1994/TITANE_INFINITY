@@ -65,8 +65,17 @@ applyTo: 'src/**'
 - `bash scripts/autoheal/detect_recurrence.sh`
 - `bash scripts/verify_instructions.sh`
 
+6.1. Run the canonical surface anti-drift check for route/page regressions.
+
+- Identify the visible runtime surface and record the canonical file/route pair before patching.
+- Realign any remaining live aliases in the same phase: active route, deprecated route, compatibility export, route preloading, and touched tooling/config references.
+- Search for the stale path/component across active source, touched tests, and touched scripts/config before closure.
+- If the legacy path must remain, keep only a thin alias and test that it renders the canonical surface.
+
 7. If a build is required to validate runtime truth, rebuild the latest version and verify the built surface, not only dev mode.
 8. If Linux, Windows, and Android cannot all be proven locally, seal the locally provable surfaces and document the remaining runner/workflow proof path explicitly.
+
+9. In direct-to-main mode requested by the user, close each validated UI correction phase with an immediate targeted commit on `MAIN`.
 
 ## DONT
 

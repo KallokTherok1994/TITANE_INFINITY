@@ -62,6 +62,8 @@ Heavy doctrine belongs to the local Codex rules file, not to the repo.
 - Every modification triggers auto anti-regression and AutoHeal (Rule 10).
 - Every modification updates relevant mapping/cartography docs (Rule 15).
 - Every new feature/integration requires tests (Rule 16).
+- Canonical runtime surface truth must be identified and protected for every UI/runtime fix; legacy aliases must not remain as divergent live surfaces.
+- In direct-to-main mode requested by the user, each finished phase must be committed on `MAIN` once its proofs are green.
 
 ## Ask-First Workflow
 
@@ -86,6 +88,7 @@ Heavy doctrine belongs to the local Codex rules file, not to the repo.
 - Required: E2E tests for user-facing changes; `registry/ui-events.jsonl` entry; update `UI_SURFACE_MAP.md`.
 - Mapping: update `UI_SURFACE_MAP.md` + `docs/CARTOGRAPHY_COMPLETE.md` when UI surfaces change.
 - AutoHeal: append entry on every fix.
+- Anti-drift: for route/page regressions, realign active router, deprecated router, compatibility exports, preloading, tests, and active tooling references to the same canonical UI surface before closure.
 
 ### QA Agent (tests/, e2e/)
 
@@ -134,6 +137,7 @@ Heavy doctrine belongs to the local Codex rules file, not to the repo.
 - Report real commands, real outputs, and explicit limits.
 - If a proof cannot run, classify `BLOCKED` or `PARTIAL` with the next action.
 - Route repeated binary rules to validators instead of duplicating prose.
+- In direct-to-main mode, proof completion for a phase is followed immediately by a targeted commit on `MAIN`; no completed proven phase should remain uncommitted.
 
 ## Integration Patterns
 

@@ -185,14 +185,11 @@ Trigger table (which doc to update):
 If a required mapping doc is **not updated** when its trigger path is modified: classify **FAIL** and stop until corrected.
 
 ## Rule 16 - Mandatory test creation
-
 Every new integration, capability, or function must include at the same time:
-
 - Unit tests for the new functionality.
 - Integration tests if cross-module.
 - E2E tests if user-facing.
-- Advanced Q&A scenario tests to validate capabilities.
-  No feature is complete without its tests.
+- Advanced Q&A scenario tests to validate capabilities. No feature is complete without its tests.
 
 ### Test coverage matrix (Rule 16 enforcement):
 
@@ -206,3 +203,16 @@ Every new integration, capability, or function must include at the same time:
 | New build/deploy step                                | Smoke test verifying artifact presence + checksum                                         |
 
 A gate that detects new source files without corresponding test files classifies the change as BLOCKED until tests exist.
+## Rule 17 - Canonical surface anti-drift
+For every UI/runtime correction involving a route alias, legacy surface, fullscreen shell, or compatibility export:
+- Identify the real active runtime surface before patching and name it explicitly in code/tests/docs.
+- Align all live entry points to that canonical surface in the same phase: active router, deprecated router, route preloading, compatibility exports, targeted tests, and active tooling scripts/config when they still point to the stale surface.
+- Before PASS, run a targeted search for the stale route/component path across active source, tests, and touched scripts/config to confirm no misleading live references remain.
+- If a legacy path must remain for compatibility, reduce it to a thin alias and document that it is compatibility-only, not an independent active surface.
+- Treat any mismatch between visible runtime truth and touched source surface as FAIL until the canonical surface, proof selectors, tests, and active tooling references are realigned.
+## Rule 18 - Direct-to-main phase commits
+When the user authorizes direct work on `MAIN` or explicitly requests "commit to main":
+- Every completed correction phase or coherent fix batch must end with a targeted commit on `MAIN` after the relevant proofs pass.
+- Do not accumulate multiple unrelated finished fixes in an uncommitted worktree.
+- Each direct-to-main commit must remain scope-limited, mention the corrected surface or subsystem, and be created only after AutoHeal and mandatory validators for that phase are PASS.
+- If proof for the current phase is not complete, do not commit that phase; classify honestly and continue or stop with the appropriate status.
