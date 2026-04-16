@@ -7,7 +7,7 @@
 #![cfg_attr(test, allow(clippy::unwrap_used))]
 
 use crate::core::http_types::{header, Client};
-use log::{debug, error, info};
+use log::{debug, error, info, warn};
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 
@@ -16,6 +16,9 @@ const COPILOT_API_BASE: &str = "https://api.github.com/models";
 const COPILOT_TIMEOUT_SECS: u64 = 60;
 const COPILOT_RATE_LIMIT_MESSAGE: &str =
     "Limite de taux Copilot atteinte. Réessayez dans quelques secondes.";
+const COPILOT_MAX_RATE_LIMIT_RETRIES: u8 = 2;
+const COPILOT_RETRY_BACKOFF_BASE_SECS: u64 = 2;
+const COPILOT_RETRY_DELAY_CAP_SECS: u64 = 60;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CopilotRequest {
@@ -73,44 +76,64 @@ impl CopilotClient {
     /// Envoyer une requête chat non-streaming
     pub async fn send_chat(&self, request: CopilotRequest) -> Result<CopilotResponse, String> {
         let url = format!("{}/chat/completions", COPILOT_API_BASE);
+        let mut rate_limit_retries: u8 = 0;
 
         debug!("Sending Copilot request: model={}", request.model);
 
-        let response = self
-            .client
-            .post(&url)
-            .header(header::AUTHORIZATION, format!("Bearer {}", self.api_key))
-            .header(header::CONTENT_TYPE, "application/json")
-            .header(header::USER_AGENT, "TITANE-Infinity/v26.3")
-            .json(&request)
-            .send()
-            .await
-            .map_err(|e| {
-                error!("Copilot HTTP request failed: {}", e);
-                format!("Network error: {}", e)
+        loop {
+            let response = self
+                .client
+                .post(&url)
+                .header(header::AUTHORIZATION, format!("Bearer {}", self.api_key))
+                .header(header::CONTENT_TYPE, "application/json")
+                .header(header::USER_AGENT, "TITANE-Infinity/v26.3")
+                .json(&request)
+                .send()
+                .await
+                .map_err(|e| {
+                    error!("Copilot HTTP request failed: {}", e);
+                    format!("Network error: {}", e)
+                })?;
+
+            let status = response.status();
+
+            if !status.is_success() {
+                let headers = response.headers().clone();
+                let error_body = response
+                    .text()
+                    .await
+                    .unwrap_or_else(|_| "Unknown error".to_string());
+                error!("Copilot API error {}: {}", status, error_body);
+
+                if is_copilot_rate_limited(status.as_u16(), &headers, &error_body)
+                    && rate_limit_retries < COPILOT_MAX_RATE_LIMIT_RETRIES
+                {
+                    rate_limit_retries = rate_limit_retries.saturating_add(1);
+                    let retry_delay =
+                        compute_rate_limit_retry_delay(&headers, rate_limit_retries);
+                    warn!(
+                        "Copilot rate limited (status {}). Retrying in {}s (attempt {}/{})",
+                        status,
+                        retry_delay,
+                        rate_limit_retries,
+                        COPILOT_MAX_RATE_LIMIT_RETRIES
+                    );
+                    tokio::time::sleep(Duration::from_secs(retry_delay)).await;
+                    continue;
+                }
+
+                return Err(classify_copilot_error(status.as_u16(), &headers, &error_body));
+            }
+
+            let copilot_response: CopilotResponse = response.json().await.map_err(|e| {
+                error!("Failed to parse Copilot response: {}", e);
+                format!("Invalid response format: {}", e)
             })?;
 
-        let status = response.status();
+            info!("Copilot response OK: model={}", copilot_response.model);
 
-        if !status.is_success() {
-            let headers = response.headers().clone();
-            let error_body = response
-                .text()
-                .await
-                .unwrap_or_else(|_| "Unknown error".to_string());
-            error!("Copilot API error {}: {}", status, error_body);
-
-            return Err(classify_copilot_error(status.as_u16(), &headers, &error_body));
+            return Ok(copilot_response);
         }
-
-        let copilot_response: CopilotResponse = response.json().await.map_err(|e| {
-            error!("Failed to parse Copilot response: {}", e);
-            format!("Invalid response format: {}", e)
-        })?;
-
-        info!("Copilot response OK: model={}", copilot_response.model);
-
-        Ok(copilot_response)
     }
 
     /// Tester la connexion (simple ping)
@@ -220,6 +243,17 @@ fn retry_after_seconds(headers: &header::HeaderMap) -> Option<u64> {
         .and_then(|value| value.trim().parse::<u64>().ok())
 }
 
+fn compute_rate_limit_retry_delay(headers: &header::HeaderMap, retry_attempt: u8) -> u64 {
+    if let Some(seconds) = retry_after_seconds(headers) {
+        return seconds.min(COPILOT_RETRY_DELAY_CAP_SECS);
+    }
+
+    let multiplier = 2u64.saturating_pow(retry_attempt.saturating_sub(1) as u32);
+    COPILOT_RETRY_BACKOFF_BASE_SECS
+        .saturating_mul(multiplier)
+        .min(COPILOT_RETRY_DELAY_CAP_SECS)
+}
+
 fn header_value_eq(headers: &header::HeaderMap, key: &str, expected: &str) -> bool {
     headers
         .get(key)
@@ -306,5 +340,23 @@ mod tests {
         let message = classify_copilot_error(429, &headers, "Too many requests");
 
         assert_eq!(message, COPILOT_RATE_LIMIT_MESSAGE);
+    }
+
+    #[test]
+    fn test_compute_rate_limit_retry_delay_prefers_retry_after_and_caps() {
+        let mut headers = header::HeaderMap::new();
+        headers.insert(header::RETRY_AFTER, header::HeaderValue::from_static("120"));
+
+        let delay = compute_rate_limit_retry_delay(&headers, 1);
+
+        assert_eq!(delay, COPILOT_RETRY_DELAY_CAP_SECS);
+    }
+
+    #[test]
+    fn test_compute_rate_limit_retry_delay_uses_exponential_backoff_without_header() {
+        let headers = header::HeaderMap::new();
+
+        assert_eq!(compute_rate_limit_retry_delay(&headers, 1), 2);
+        assert_eq!(compute_rate_limit_retry_delay(&headers, 2), 4);
     }
 }
