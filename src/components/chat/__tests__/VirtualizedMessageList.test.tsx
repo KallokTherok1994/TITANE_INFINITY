@@ -45,4 +45,19 @@ describe('VirtualizedMessageList', () => {
     expect((await screen.findAllByText('TITANE∞')).length).toBeGreaterThan(0);
     expect(document.body.textContent).toContain(snippet);
   });
+
+  it('conserve un message assistant >100k quand la surface revient au rendu naturel', () => {
+    const messages = buildMessages(59);
+    const oversizedMessage = 'A'.repeat(120000);
+    messages.push({
+      role: 'assistant',
+      content: oversizedMessage,
+      timestamp: 1001,
+    });
+
+    render(<VirtualizedMessageList messages={messages} />);
+
+    expect(screen.queryByTestId('fixed-size-list')).not.toBeInTheDocument();
+    expect(document.body.textContent || '').toContain('A'.repeat(1024));
+  });
 });

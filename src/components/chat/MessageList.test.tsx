@@ -38,4 +38,16 @@ describe('MessageList', () => {
     });
     expect(screen.queryByText('Initial content')).not.toBeInTheDocument();
   });
+
+  it('renders very long assistant messages without clipping them by default', async () => {
+    const longMessage = buildMessage('A'.repeat(120000));
+
+    render(<MessageList messages={[longMessage]} isLoading={false} error={null} />);
+
+    await waitFor(() => {
+      const rendered = document.body.textContent || '';
+      expect(rendered).toContain('A'.repeat(512));
+      expect(rendered.length).toBeGreaterThan(100000);
+    });
+  });
 });

@@ -108,6 +108,46 @@ test.describe('Runtime Validation: Chat AR20 Suite', () => {
     console.log(`✅ TEST A PASS: Response received in ${result.attempts} attempts`);
   });
 
+  test('TEST LONG MESSAGE: gros message dans la limite UI sans alerte de troncature', async ({ page }) => {
+    const input = page.locator(CHAT_INPUT_SELECTOR).first();
+    const maxLengthAttr = await input.getAttribute('maxlength');
+    const inputMaxLength = Number(maxLengthAttr || '10000');
+    const maxLen = Math.max(2048, inputMaxLength - 1);
+    const longMsg = 'A'.repeat(maxLen);
+
+    let truncationAlert = false;
+    await page.exposeFunction('onTitaneMessageTruncated', () => {
+      truncationAlert = true;
+    });
+    await page.evaluate(() => {
+      window.addEventListener('titane-message-truncated', () => {
+        // @ts-expect-error - helper injected by Playwright for test observation.
+        window.onTitaneMessageTruncated();
+      });
+    });
+
+    await sendChatMessage(page, longMsg);
+    const result = await waitForResponse(page, longMsg, 30000);
+
+    expect(result.success, '❌ TEST LONG MESSAGE: Pas de réponse').toBe(true);
+    expect(result.response, '❌ TEST LONG MESSAGE: Réponse vide').not.toBe(null);
+
+    const userMessages = page.locator(USER_MESSAGE_SELECTOR);
+    const lastUserMsg = await userMessages.last().textContent();
+    expect(lastUserMsg, '❌ TEST LONG MESSAGE: Message utilisateur absent').not.toBeNull();
+    expect(
+      lastUserMsg?.includes(longMsg),
+      '❌ TEST LONG MESSAGE: Le payload utilisateur complet n est pas visible'
+    ).toBe(true);
+    expect(truncationAlert, '❌ TEST LONG MESSAGE: Alerte troncature détectée à tort').toBe(
+      false
+    );
+
+    console.log(
+      `✅ TEST LONG MESSAGE: ${maxLen} caractères affichés sans alerte de troncature`
+    );
+  });
+
   test('TEST B: Offline mode - fallback response exists', async ({ page, context }) => {
     // Simulate offline: block all network except localhost
     await context.route('**/*', route => {

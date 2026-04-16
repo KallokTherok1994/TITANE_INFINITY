@@ -21,6 +21,7 @@ import { ChatFallback } from './ChatFallback'; // ✨ UI vΩ - Anti-Silence Cont
 import './MessageList.css';
 
 const isDev = process.env.NODE_ENV === 'development';
+const DEFAULT_RENDER_MESSAGE_LIMIT = Number.MAX_SAFE_INTEGER;
 
 // Seuil pour optimisations avancées (messages)
 const _OPTIMIZATION_THRESHOLD = 50;
@@ -38,6 +39,21 @@ interface MessageListState {
   lastRecovery: number;
   safeMessages: AIMessage[];
   hasCorruption: boolean;
+}
+
+function getRenderMessageLimit(): number {
+  if (typeof window === 'undefined') {
+    return DEFAULT_RENDER_MESSAGE_LIMIT;
+  }
+
+  const configuredLimit = Number(
+    (window as typeof window & { TITANE_MAX_MESSAGE_LENGTH?: unknown })
+      .TITANE_MAX_MESSAGE_LENGTH
+  );
+
+  return Number.isFinite(configuredLimit) && configuredLimit > 0
+    ? configuredLimit
+    : DEFAULT_RENDER_MESSAGE_LIMIT;
 }
 
 /**
@@ -65,6 +81,7 @@ function useOmegaErrorBoundary() {
   const handleError = useCallback(
     (error: Error, context: string, messages?: AIMessage[]) => {
       const now = Date.now();
+      const maxMessageLength = getRenderMessageLimit();
 
       // Auto-heal trigger
       autoHealEngine.heal('message-list', error, 'validation', {
@@ -90,7 +107,7 @@ function useOmegaErrorBoundary() {
                 typeof msg.timestamp === 'number' &&
                 // OMEGA: allow empty content for assistant streaming placeholders
                 (msg.content.length > 0 || msg.role === 'assistant') &&
-                msg.content.length < 100000 // Max 100k chars per message
+                msg.content.length <= maxMessageLength
               );
             } catch (filterError) {
               return false;
@@ -98,6 +115,25 @@ function useOmegaErrorBoundary() {
           });
         }
 
+        // Alerte UI/log si troncature détectée
+        if (safeMessages.length !== (messages?.length || 0)) {
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('titane-message-truncated', {
+              detail: {
+                originalCount: messages?.length || 0,
+                safeCount: safeMessages.length,
+                maxLength: maxMessageLength,
+              }
+            }));
+          }
+          if (isDev) {
+            logger.warn('Troncature de message détectée', {
+              originalCount: messages?.length || 0,
+              safeCount: safeMessages.length,
+              maxLength: maxMessageLength,
+            });
+          }
+        }
         return {
           renderError: error.message,
           recoveryCount: newRecoveryCount,

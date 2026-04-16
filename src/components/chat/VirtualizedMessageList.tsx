@@ -21,6 +21,7 @@
 import React, { useRef, useEffect, useMemo } from 'react';
 // @ts-expect-error - react-window types may not match exactly
 import { FixedSizeList as List } from 'react-window';
+import { logger } from '@/lib/logger';
 import { MessageBubble } from './MessageBubble';
 import type { AIMessage } from '../../services/ai/types';
 import './MessageList.css';
@@ -35,6 +36,22 @@ interface VirtualizedMessageListProps {
 const VIRTUALIZATION_THRESHOLD = 50;
 const MESSAGE_HEIGHT = 140; // Height per message in px
 const VARIABLE_HEIGHT_MARKERS = /\n|```|^\s*[-*]\s/m;
+const DEFAULT_RENDER_MESSAGE_LIMIT = Number.MAX_SAFE_INTEGER;
+
+function getRenderMessageLimit(): number {
+  if (typeof window === 'undefined') {
+    return DEFAULT_RENDER_MESSAGE_LIMIT;
+  }
+
+  const configuredLimit = Number(
+    (window as typeof window & { TITANE_MAX_MESSAGE_LENGTH?: unknown })
+      .TITANE_MAX_MESSAGE_LENGTH
+  );
+
+  return Number.isFinite(configuredLimit) && configuredLimit > 0
+    ? configuredLimit
+    : DEFAULT_RENDER_MESSAGE_LIMIT;
+}
 
 function getViewportHeight(): number {
   if (typeof window === 'undefined') {
@@ -61,6 +78,7 @@ export const VirtualizedMessageList = React.memo(function VirtualizedMessageList
   error = null,
 }: VirtualizedMessageListProps) {
   const listRef = useRef<List>(null);
+  const maxMessageLength = useMemo(() => getRenderMessageLimit(), []);
   const [listHeight, setListHeight] = React.useState(() =>
     Math.max(260, getViewportHeight() - 220)
   );
@@ -104,10 +122,34 @@ export const VirtualizedMessageList = React.memo(function VirtualizedMessageList
           typeof msg.timestamp === 'number' &&
           // Allow empty content for assistant streaming placeholders (OMEGA)
           (msg.content.length > 0 || msg.role === 'assistant') &&
-          msg.content.length < 100000
+          msg.content.length <= maxMessageLength
       ),
-    [messages]
+    [maxMessageLength, messages]
   );
+
+  useEffect(() => {
+    if (validMessages.length === messages.length || typeof window === 'undefined') {
+      return;
+    }
+
+    window.dispatchEvent(
+      new CustomEvent('titane-message-truncated', {
+        detail: {
+          originalCount: messages.length,
+          safeCount: validMessages.length,
+          maxLength: maxMessageLength,
+        },
+      })
+    );
+
+    if (process.env.NODE_ENV === 'development') {
+      logger.warn('Troncature de message détectée dans la liste virtualisée', {
+        originalCount: messages.length,
+        safeCount: validMessages.length,
+        maxLength: maxMessageLength,
+      });
+    }
+  }, [maxMessageLength, messages.length, validMessages.length]);
 
   const shouldVirtualize = validMessages.length >= VIRTUALIZATION_THRESHOLD;
   const requiresNaturalHeightRendering = useMemo(

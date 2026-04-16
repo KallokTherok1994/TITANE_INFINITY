@@ -1,0 +1,3 @@
+# ROLLBACK
+
+git restore -- src/components/chat/MessageList.tsx src/components/chat/VirtualizedMessageList.tsx src/components/chat/MessageList.test.tsx src/components/chat/__tests__/VirtualizedMessageList.test.tsx e2e/runtime-validation/chat-ar20.spec.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl reports/CHAT_LONG_MESSAGE_VISIBILITY_2026-04-16.md proof_packs/CHAT_LONG_MESSAGE_VISIBILITY_2026-04-16/GATE_REPORT.md proof_packs/CHAT_LONG_MESSAGE_VISIBILITY_2026-04-16/VERDICT.md proof_packs/CHAT_LONG_MESSAGE_VISIBILITY_2026-04-16/ROLLBACK.md scripts/autoheal/autoheal_rules.jsonl
