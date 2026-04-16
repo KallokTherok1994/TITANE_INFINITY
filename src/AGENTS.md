@@ -16,14 +16,14 @@ Ring 4 UI/module local discipline.
 ## Chain-of-Thought Validation
 
 1. Confirm Ring4 boundary — no inverse imports into Ring0/Ring1.
-2. Confirm IPC calls use `safeInvokeCanonical()` — never raw invoke.
+2. Confirm IPC calls use `secureInvoke()` from `src/lib/security.ts` — never raw `invoke()`.
 3. Add `data-testid` to new interactive elements.
 4. Create or update tests alongside changes.
 5. Update `UI_SURFACE_MAP.md` if new surface added.
 
 ## Integration Patterns
 
-- New IPC call: use `safeInvokeCanonical()`, handle `response.ok` (never try/catch reliance).
+- New IPC call: use `secureInvoke()`, handle `response.ok` (never try/catch reliance).
 - New component: wrap with ErrorBoundary, add `data-testid`, register in `registry/ui-events.jsonl`.
 - New page: add route, add E2E navigation test.
 
