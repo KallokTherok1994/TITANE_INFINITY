@@ -16,7 +16,9 @@ describe('android dev stable script', () => {
   });
 
   it('does not block on Vite child ownership when no device is connected', () => {
-    expect(devStableScript).toContain('Server remains available at http://127.0.0.1:${PORT}.');
+    expect(devStableScript).toContain(
+      'Server remains available at http://127.0.0.1:${PORT}.'
+    );
     expect(devStableScript).not.toContain('wait "$VITE_PID"');
   });
 });

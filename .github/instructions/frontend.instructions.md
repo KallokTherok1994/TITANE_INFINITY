@@ -65,7 +65,7 @@ applyTo: 'src/**'
 - `bash scripts/autoheal/detect_recurrence.sh`
 - `bash scripts/verify_instructions.sh`
 
-6.1. Run the canonical surface anti-drift check for route/page regressions.
+  6.1. Run the canonical surface anti-drift check for route/page regressions.
 
 - Identify the visible runtime surface and record the canonical file/route pair before patching.
 - Realign any remaining live aliases in the same phase: active route, deprecated route, compatibility export, route preloading, and touched tooling/config references.
