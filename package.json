@@ -39,7 +39,7 @@
     "android:dev:stable": "bash scripts/android/dev-stable.sh",
     "android:dev:stable:stop": "bash scripts/android/dev-stable-stop.sh",
     "android:dev:full": "tauri android dev --features custom-protocol,full -- --no-default-features",
-    "android:build": "node scripts/android/require-explicit-mode.mjs build",
+    "android:build": "node scripts/android/build-canonical.mjs",
     "android:build:debug": "node scripts/android/require-explicit-mode.mjs build:debug",
     "android:build:mock": "tauri android build --features custom-protocol,mock",
     "android:build:mock:debug": "tauri android build --debug --features custom-protocol,mock",
