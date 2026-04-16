@@ -131,7 +131,7 @@ echo "📂 Vérification fichiers critiques..."
 CRITICAL_FILES=(
     "src/hooks/useChat.ts"
     "src/components/chat/ChatInput.tsx"
-    "src/ui/pages/Chat.tsx"
+    "src/pages/TitanePage.tsx"
     "src/services/ai/orchestrator.ts"
     "src-tauri/src/overdrive/chat_orchestrator.rs"
 )

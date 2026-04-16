@@ -62,7 +62,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 
 # Liste des fichiers du Chat IA
 CHAT_FILES=(
-    "src/ui/pages/Chat.tsx"
+    "src/pages/TitanePage.tsx"
     "src/hooks/useChat.ts"
     "src/components/chat/ChatInput.tsx"
     "src/components/chat/MessageList.tsx"

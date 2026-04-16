@@ -95,7 +95,7 @@ echo "🎯 VÉRIFICATION FICHIERS CLÉS"
 echo "─────────────────────────────────────────────────────────────────────────"
 
 test_check "Backend chat_orchestrator.rs" "test -f src-tauri/src/overdrive/chat_orchestrator.rs"
-test_check "Frontend Chat.tsx" "test -f src/ui/pages/Chat.tsx"
+test_check "Frontend TitanePage.tsx" "test -f src/pages/TitanePage.tsx"
 test_check "Hook useChat.ts" "test -f src/hooks/useChat.ts"
 test_check "Service tauriClient.ts" "test -f src/services/tauriClient.ts"
 test_check "ChatDiagnostic.tsx" "test -f src/components/ChatDiagnostic.tsx"

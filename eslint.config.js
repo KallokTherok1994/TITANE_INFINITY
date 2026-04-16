@@ -67,10 +67,4 @@ export default [
       '@typescript-eslint/no-unused-expressions': 'off',
     },
   },
-  {
-    files: ['src/ui/pages/Chat.tsx'],
-    rules: {
-      '@typescript-eslint/no-unused-expressions': 'off',
-    },
-  },
 ];

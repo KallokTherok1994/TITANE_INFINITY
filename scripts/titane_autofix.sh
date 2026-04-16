@@ -189,7 +189,7 @@ analyze_frontend() {
         "src/App.tsx"
         "src/main.tsx"
         "src/ui/AppLayout.tsx"
-        "src/ui/pages/Chat.tsx"
+        "src/pages/TitanePage.tsx"
         "src/hooks/useChat.ts"
         "src/services/ai/orchestrator.ts"
     )
