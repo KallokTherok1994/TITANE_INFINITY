@@ -27,6 +27,7 @@ applyTo: 'src-tauri/**, tauri*.json, runtime/**'
 - Add implicit network calls or hidden HTTP servers.
 - Add new commands without allowlist update and proof.
 - Ship a new IPC command without its test counterpart.
+- Utiliser `npm`/`npx` (pnpm uniquement, `npm` interdit).
 
 ## Preuves attendues
 

@@ -40,7 +40,7 @@ echo -e "${YELLOW}[1/8] Vérifications locales...${NC}"
 
 # Check dist/ existe
 if [ ! -d "dist" ]; then
-    echo -e "${RED}❌ dist/ manquant. Exécutez: npm run build${NC}"
+    echo -e "${RED}❌ dist/ manquant. Exécutez: pnpm run build${NC}"
     exit 1
 fi
 

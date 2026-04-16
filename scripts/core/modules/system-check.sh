@@ -106,8 +106,8 @@ check_command() {
             node)
                 version=$(node --version 2>/dev/null || echo "")
                 ;;
-            npm)
-                version=$(npm --version 2>/dev/null || echo "")
+            pnpm)
+                version=$(pnpm --version 2>/dev/null || echo "")
                 ;;
             pnpm)
                 version=$(pnpm --version 2>/dev/null || echo "")
@@ -266,7 +266,7 @@ check_build_artifacts() {
 check_network_connectivity() {
     # Test connexion internet
     if curl -s --max-time 5 https://registry.npmjs.org/ &> /dev/null; then
-        echo "✅ Internet connectivity (npm registry)"
+        echo "✅ Internet connectivity (pnpm registry)"
         return 0
     elif curl -s --max-time 5 https://crates.io/ &> /dev/null; then
         echo "✅ Internet connectivity (crates.io)"
@@ -296,7 +296,7 @@ generate_recommendations() {
 
     if [[ ${#critical_missing[@]} -gt 0 ]]; then
         echo "🚨 Critical tools missing: ${critical_missing[*]}"
-        echo "   Install with: sudo apt install nodejs npm cargo rustc git (or equivalent)"
+        echo "   Install with: sudo apt install nodejs pnpm cargo rustc git (or equivalent)"
         echo ""
     fi
 

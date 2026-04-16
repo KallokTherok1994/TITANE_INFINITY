@@ -108,13 +108,7 @@ pm_run() {
         fi
     fi
 
-    # Fallback to npm if pnpm is not available
-    if command -v npm &> /dev/null; then
-        npm run "$@"
-        return $?
-    fi
-
-    error "Aucun gestionnaire de paquets trouvé (npm/pnpm requis)"
+    error "pnpm requis: aucun binaire pnpm/corepack disponible"
 }
 
 pm_exec() {
@@ -129,13 +123,7 @@ pm_exec() {
         fi
     fi
 
-    # Fallback to npx if pnpm is not available
-    if command -v npx &> /dev/null; then
-        npx "$@"
-        return $?
-    fi
-
-    error "Aucun exécuteur de paquets trouvé (npx/pnpm requis)"
+    error "pnpm requis: aucun exécuteur pnpm disponible"
 }
 
 # Print header

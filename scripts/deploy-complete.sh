@@ -84,7 +84,7 @@ check_requirements() {
   local missing=false
   
   log "Checking system dependencies..."
-  for cmd in git node npm pnpm cargo rustc; do
+  for cmd in git node pnpm cargo rustc; do
     if ! check_command "$cmd"; then
       missing=true
     fi
@@ -165,7 +165,7 @@ run_code_quality_checks() {
   
   # TypeScript check
   log "Running TypeScript compiler..."
-  if npx tsc --noEmit --skipLibCheck 2>&1 | tail -20 >> "$BUILD_LOG"; then
+  if pnpm exec tsc --noEmit --skipLibCheck 2>&1 | tail -20 >> "$BUILD_LOG"; then
     log_success "TypeScript compilation successful"
   else
     log_error "TypeScript compilation failed"

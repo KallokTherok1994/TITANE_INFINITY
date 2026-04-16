@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # TITANE∞ — Generate CycloneDX + SPDX 2.3 SBOM
-# Reproducible local SBOM generation from npm + cargo metadata
+# Reproducible local SBOM generation from pnpm + cargo metadata
 # Usage: bash scripts/sbom/generate-sbom.sh [output_dir]
 # Output: sbom-cyclonedx.json, sbom-spdx.json, sbom-cyclonedx.json.sha256
 
@@ -22,11 +22,11 @@ echo "Timestamp: $TIMESTAMP"
 echo "Output: $OUTPUT_DIR/sbom-cyclonedx.json"
 echo ""
 
-# Collect npm components
-echo "Collecting npm components..."
-NPM_COMPONENTS=$(cd "$PROJECT_ROOT" && npm ls --all --json 2>/dev/null | \
+# Collect pnpm components
+echo "Collecting pnpm components..."
+NPM_COMPONENTS=$(cd "$PROJECT_ROOT" && pnpm ls --json --depth Infinity 2>/dev/null | \
   jq -r '
-    [.dependencies // {} | to_entries[] | {
+    [.[0].dependencies // {} | to_entries[] | {
       name: .key,
       version: (.value.version // "unknown"),
       type: "library",
@@ -35,7 +35,7 @@ NPM_COMPONENTS=$(cd "$PROJECT_ROOT" && npm ls --all --json 2>/dev/null | \
   ' 2>/dev/null || echo "[]")
 
 NPM_COUNT=$(echo "$NPM_COMPONENTS" | jq 'length')
-echo "  npm components: $NPM_COUNT"
+echo "  pnpm components: $NPM_COUNT"
 
 # Collect cargo components
 echo "Collecting cargo components..."

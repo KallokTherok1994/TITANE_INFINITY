@@ -77,4 +77,4 @@ SYNCED=$(find "${PROJECT_ROOT}/${DOCS_TARGET}" -name "*.md" | wc -l)
 echo "✅ Synchronisation terminée: ${SYNCED} fichiers Markdown"
 echo ""
 echo "📋 Prochaines étapes:"
-echo "   cd documentation && npm install && npm run build"
+echo "   cd documentation && pnpm install && pnpm run build"
