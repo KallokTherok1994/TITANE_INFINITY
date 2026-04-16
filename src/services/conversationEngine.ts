@@ -51,7 +51,10 @@ const logger = createLogger('ConversationEngine');
 
 const E2E_CHAT_MOCK_FLAG = '__TITANE_E2E_CHAT_MOCK__';
 const E2E_CHAT_CONV_SEQ = '__TITANE_E2E_CHAT_CONV_SEQ__';
+const E2E_CHAT_SCENARIO_FLAG = '__TITANE_E2E_CHAT_SCENARIO__';
 const STATIC_PROMPT_CONTEXT_TTL_MS = 2000;
+
+type E2EChatScenario = 'success' | 'rate_limit';
 
 interface StaticPromptContextSnapshot {
   mode: ConversationMode;
@@ -83,6 +86,15 @@ const isE2EChatMockEnabled = (): boolean => {
   return win[E2E_CHAT_MOCK_FLAG] === true;
 };
 
+const getE2EChatScenario = (): E2EChatScenario => {
+  const win = getWindowRecord();
+  if (!win) {
+    return 'success';
+  }
+
+  return win[E2E_CHAT_SCENARIO_FLAG] === 'rate_limit' ? 'rate_limit' : 'success';
+};
+
 const createE2EConversationId = (): string => {
   const win = getWindowRecord();
   if (!win) {
@@ -96,6 +108,83 @@ const createE2EConversationId = (): string => {
   win[E2E_CHAT_CONV_SEQ] = nextSeq;
   return `e2e-conv-${nextSeq}`;
 };
+
+function buildE2EMockConversationResponse(
+  userMessage: string,
+  conversationId: string,
+  scenario: E2EChatScenario
+): ConversationResponse {
+  const now = Date.now();
+
+  if (scenario === 'rate_limit') {
+    return {
+      assistant_message:
+        'GitHub Copilot a temporairement atteint sa limite de taux. Réessaie après la fenêtre de quota.',
+      conversation_id: conversationId,
+      message_id: `e2e-rate-limit-${now}`,
+      detected_intention: 'Meta',
+      detected_emotion: {
+        valence: 0,
+        intensity: 0,
+        energy: 0,
+      },
+      cognitive_tags: ['e2e', 'mock', 'rate-limit'],
+      cognitive_summary: 'E2E mock rate limit response',
+      metadata: {
+        timestamp: now,
+        provider_used: 'github-copilot',
+        latency_ms: 0,
+        tokens_used: 0,
+        memory_effect: 'New',
+        links_to_contexts: ['reason:RATE_LIMIT'],
+      },
+      meta: {
+        provider_used: 'github-copilot',
+        provider_class: 'remote',
+        mode: 'OFFLINE',
+        reason_code: 'RATE_LIMIT',
+        latency_ms_total: 0,
+        timeout_ms: 30000,
+        retries: 1,
+        attempts: [
+          {
+            provider_id: 'github-copilot',
+            provider_class: 'remote',
+            latency_ms: 0,
+            outcome: 'error',
+            reason_code: 'RATE_LIMIT',
+            network_used_attempt: true,
+          },
+        ],
+        network_used: true,
+        cache_hit: false,
+        policy: 'conversation_engine_e2e_rate_limit_mock',
+      },
+    };
+  }
+
+  return {
+    assistant_message: `[MOCK_OK] ${userMessage}`,
+    conversation_id: conversationId,
+    message_id: `e2e-${now}`,
+    detected_intention: 'Question',
+    detected_emotion: {
+      valence: 0,
+      intensity: 0,
+      energy: 0,
+    },
+    cognitive_tags: ['e2e', 'mock'],
+    cognitive_summary: 'E2E mock response',
+    metadata: {
+      timestamp: now,
+      provider_used: 'e2e-mock',
+      latency_ms: 0,
+      tokens_used: 0,
+      memory_effect: 'New',
+      links_to_contexts: [],
+    },
+  };
+}
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
@@ -481,28 +570,11 @@ export async function processMessage(
       conversationId = createE2EConversationId();
     }
 
-    const now = Date.now();
-    return {
-      assistant_message: `[MOCK_OK] ${userMessage}`,
-      conversation_id: conversationId,
-      message_id: `e2e-${now}`,
-      detected_intention: 'Question',
-      detected_emotion: {
-        valence: 0,
-        intensity: 0,
-        energy: 0,
-      },
-      cognitive_tags: ['e2e', 'mock'],
-      cognitive_summary: 'E2E mock response',
-      metadata: {
-        timestamp: now,
-        provider_used: 'e2e-mock',
-        latency_ms: 0,
-        tokens_used: 0,
-        memory_effect: 'New',
-        links_to_contexts: [],
-      },
-    };
+    return buildE2EMockConversationResponse(
+      userMessage,
+      conversationId,
+      getE2EChatScenario()
+    );
   }
 
   if (!conversationId) {
@@ -790,7 +862,9 @@ export async function processMessage(
     | undefined;
   const isTauriProtectorFallback =
     rawMetaCheck?.policy === 'tauri_protector_runtime_fallback' ||
+    rawMetaCheck?.policy === 'tauri_protector_ipc_fallback' ||
     rawMetaCheck?.reason_code === 'FALLBACK_OFFLINE' ||
+    rawMetaCheck?.reason_code === 'CONTRACT_VIOLATION_CLAMPED' ||
     (rawProviderCheck === 'fallback' && rawMetaCheck?.mode === 'ERROR');
 
   if (isTauriProtectorFallback) {
@@ -875,7 +949,7 @@ export async function processMessage(
   if (rawMeta?.reason_code === 'CONTRACT_VIOLATION_CLAMPED') {
     const policy = typeof rawMeta?.policy === 'string' ? rawMeta.policy : 'inconnu';
     throw new Error(
-      `[IPC] Contrat conversation_generate invalide (${policy}). Vérifier que le backend Tauri est démarré.`
+      `[IPC] Contrat conversation_generate invalide (${policy}). Vérifier que le backend Tauri est démarré et synchronisé avec le frontend.`
     );
   }
 

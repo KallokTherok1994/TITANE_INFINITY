@@ -88,7 +88,7 @@
  *
  * Routes définies :
  *   / → DashboardPage
- *   /chat → ChatPage
+ *   /chat → redirection vers /titane (onglet conversation)
  *   /cognitive → CognitivePage
  *   /progression → ProgressionPage
  *   ...

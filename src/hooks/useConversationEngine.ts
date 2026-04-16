@@ -123,17 +123,34 @@ function mapRequestedProviderClass(
   }
 }
 
+export function mergeRestoredConversationMessages(
+  currentMessages: ConversationMessage[],
+  restoredMessages: ConversationMessage[]
+): ConversationMessage[] {
+  return currentMessages.length > 0 ? currentMessages : restoredMessages;
+}
+
 export function buildConversationFallbackMeta(
   errorMessage: string,
   providerPreference: ConversationProviderPreference | undefined
 ): ProviderDecisionMeta {
   const normalized = errorMessage.toLowerCase();
+  const isRateLimited =
+    normalized.includes('rate limit') ||
+    normalized.includes('secondary rate limit') ||
+    normalized.includes('too many requests') ||
+    normalized.includes('retry after') ||
+    normalized.includes('429') ||
+    normalized.includes('limite de taux');
 
   let reasonCode: ReasonCode = 'UNKNOWN';
   let mode: Mode = 'ERROR';
 
   if (normalized.includes('timeout')) {
     reasonCode = 'TIMEOUT';
+    mode = 'OFFLINE';
+  } else if (isRateLimited) {
+    reasonCode = 'RATE_LIMIT';
     mode = 'OFFLINE';
   } else if (normalized.includes('network')) {
     reasonCode = 'NETWORK_ERROR';
@@ -157,7 +174,7 @@ export function buildConversationFallbackMeta(
     timeout_ms: 30000,
     retries: 0,
     attempts: [],
-    network_used: reasonCode === 'NETWORK_ERROR',
+    network_used: reasonCode === 'NETWORK_ERROR' || reasonCode === 'RATE_LIMIT',
     cache_hit: false,
     policy: 'conversation_hook_fallback',
   };
@@ -303,7 +320,9 @@ export function useConversationEngine(
                 };
               }
             );
-            setMessages(conversationMessages);
+            setMessages(prev =>
+              mergeRestoredConversationMessages(prev, conversationMessages)
+            );
             // Messages chargés depuis localStorage
           }
         }

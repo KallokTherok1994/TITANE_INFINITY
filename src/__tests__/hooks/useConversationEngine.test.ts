@@ -110,6 +110,53 @@ describe('useConversationEngine fallback meta truth', () => {
     expect(meta.provider_class).toBe('local');
   });
 
+  it('classifies rate limit failures as a governed temporary block', async () => {
+    const { buildConversationFallbackMeta } =
+      await import('@/hooks/useConversationEngine');
+    const meta = buildConversationFallbackMeta(
+      'GitHub Copilot rate limit exceeded. Retry after 42 seconds (429)',
+      'gemini'
+    );
+
+    expect(meta.reason_code).toBe('RATE_LIMIT');
+    expect(meta.mode).toBe('OFFLINE');
+    expect(meta.network_used).toBe(true);
+    expect(meta.provider_used).toBe('gemini');
+  });
+
+  it('does not let late history hydration overwrite optimistic in-memory messages', async () => {
+    const { mergeRestoredConversationMessages } =
+      await import('@/hooks/useConversationEngine');
+
+    expect(
+      mergeRestoredConversationMessages(
+        [
+          {
+            id: 'live-user-1',
+            role: 'user',
+            content: 'Android UI smoke message',
+            timestamp: 1,
+          },
+        ],
+        [
+          {
+            id: 'restored-1',
+            role: 'assistant',
+            content: 'historique ancien',
+            timestamp: 0,
+          },
+        ]
+      )
+    ).toEqual([
+      {
+        id: 'live-user-1',
+        role: 'user',
+        content: 'Android UI smoke message',
+        timestamp: 1,
+      },
+    ]);
+  });
+
   it('surfaces a governed provider recovery message when the backend reports provider unavailability', async () => {
     processMessageMock.mockResolvedValueOnce({
       assistant_message: 'backend provider unavailable',

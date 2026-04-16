@@ -30,6 +30,17 @@ const AR20_REQUIRED_SELECTORS = [
   '[data-testid="chat-send"]',
 ];
 
+async function dispatchChatSend(
+  button: import('@playwright/test').Locator
+): Promise<void> {
+  await button.evaluate(node => {
+    if (!(node instanceof HTMLButtonElement)) {
+      throw new Error('chat-send is not a button');
+    }
+    node.click();
+  });
+}
+
 function buildSeededConversationMessages(pairCount = 18) {
   const now = Date.now();
   return Array.from({ length: pairCount * 2 }, (_, index) => {
@@ -126,7 +137,7 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
 
     await chatInput.fill('Android UI smoke message');
     await expect(chatInput).toHaveValue('Android UI smoke message');
-    await sendButton.click({ force: true });
+    await dispatchChatSend(sendButton);
 
     await expect(userMessages).toHaveCount(userCountBefore + 1, { timeout: 15000 });
 
@@ -505,7 +516,7 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
     const countBefore = await userMessages.count();
     await chatInput.fill('T8: Android UI input dispatch probe');
     await expect(chatInput).toHaveValue('T8: Android UI input dispatch probe');
-    await sendButton.click({ force: true });
+    await dispatchChatSend(sendButton);
 
     await expect(userMessages).toHaveCount(countBefore + 1, { timeout: 15000 });
 
@@ -545,7 +556,7 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
     const assistantCountBefore = await assistantMessages.count();
 
     await chatInput.fill('T9: non-silence probe');
-    await sendButton.click({ force: true });
+    await dispatchChatSend(sendButton);
     await expect(userMessages).toHaveCount(userCountBefore + 1, { timeout: 15000 });
 
     const noSilence = await waitForCondition(
@@ -868,7 +879,7 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
     const chatInput = page.getByTestId('chat-input');
     const sendButton = page.getByTestId('chat-send');
     await chatInput.fill('T16: clear button probe');
-    await sendButton.click({ force: true });
+    await dispatchChatSend(sendButton);
     await expect(page.getByTestId('chat-message-user')).toHaveCount(1, {
       timeout: 10000,
     });
@@ -920,10 +931,12 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
         '[data-testid="chat-messages-scroll-region"]'
       );
       const input = document.querySelector('[data-testid="chat-input"]');
+      const composer = document.querySelector('.conversation-input-container');
       if (
         !(container instanceof HTMLElement) ||
         !(region instanceof HTMLElement) ||
-        !input
+        !input ||
+        !(composer instanceof HTMLElement)
       ) {
         return null;
       }
@@ -938,23 +951,30 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
       }
 
       const inputRect = input.getBoundingClientRect();
+      const composerRect = composer.getBoundingClientRect();
       return {
         density: container.dataset.density ?? null,
+        fullscreen: container.dataset.fullscreen ?? null,
         scrollHeight: region.scrollHeight,
         clientHeight: region.clientHeight,
         inputBottom: inputRect.bottom,
+        composerBottom: composerRect.bottom,
         viewportHeight: window.innerHeight,
         hostConstraintApplied,
       };
     });
 
     expect(beforeScroll).not.toBeNull();
+    expect(beforeScroll?.fullscreen).toBe('true');
     expect(beforeScroll?.density).toBe('compact');
     expect(beforeScroll?.scrollHeight ?? 0).toBeGreaterThan(
       beforeScroll?.clientHeight ?? 0
     );
     expect(beforeScroll?.inputBottom ?? 0).toBeLessThanOrEqual(
       (beforeScroll?.viewportHeight ?? 0) + 24
+    );
+    expect(beforeScroll?.composerBottom ?? 0).toBeLessThanOrEqual(
+      (beforeScroll?.viewportHeight ?? 0) + 12
     );
 
     await page.evaluate(() => {

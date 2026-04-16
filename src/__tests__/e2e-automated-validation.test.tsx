@@ -23,7 +23,7 @@ import type { AIMessage } from '../services/ai/types';
 import type { ChatEngineResponse } from '../services/ai';
 import { useChat } from '../hooks/useChat';
 import { MessageList } from '../components/chat/MessageList';
-import Chat from '../ui/pages/Chat';
+import { TitanePage } from '../pages/TitanePage';
 
 // In Vitest we don't exercise the real Tauri-backend chat service. For E2E-in-unit tests,
 // force the hook to use its local streaming/generate fallback path.
@@ -127,6 +127,22 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Complete Chat Flow', () => {
 
     expect(result).toBeDefined();
     expect(result.content.toLowerCase()).toMatch(/(typescript|programming|language)/);
+  });
+});
+
+describe('🟣 OMEGA Phase 7Ω - Canonical Chat Surface', () => {
+  it('renders the active Titane conversation surface instead of the legacy chat page', () => {
+    const { container } = render(<TitanePage />);
+
+    expect(container).toBeTruthy();
+    expect(screen.getByTestId('page-titane')).toHaveAttribute(
+      'data-layout',
+      'chat-fullscreen'
+    );
+    expect(screen.getByTestId('page-conversation')).toHaveAttribute(
+      'data-layout',
+      'fullscreen'
+    );
   });
 });
 

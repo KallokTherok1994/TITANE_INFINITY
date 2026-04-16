@@ -14,6 +14,8 @@ use std::time::Duration;
 // ✅ Confirmed from API research (STEP 1)
 const COPILOT_API_BASE: &str = "https://api.github.com/models";
 const COPILOT_TIMEOUT_SECS: u64 = 60;
+const COPILOT_RATE_LIMIT_MESSAGE: &str =
+    "Limite de taux Copilot atteinte. Réessayez dans quelques secondes.";
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CopilotRequest {
@@ -91,20 +93,14 @@ impl CopilotClient {
         let status = response.status();
 
         if !status.is_success() {
+            let headers = response.headers().clone();
             let error_body = response
                 .text()
                 .await
                 .unwrap_or_else(|_| "Unknown error".to_string());
             error!("Copilot API error {}: {}", status, error_body);
 
-            return Err(match status.as_u16() {
-                401 => "Clé API Copilot invalide. Vérifiez votre token GitHub.".to_string(),
-                403 => "Accès refusé. Vérifiez les permissions de votre token GitHub.".to_string(),
-                429 => {
-                    "Limite de taux Copilot atteinte. Réessayez dans quelques secondes.".to_string()
-                }
-                _ => format!("Erreur Copilot ({}): {}", status, error_body),
-            });
+            return Err(classify_copilot_error(status.as_u16(), &headers, &error_body));
         }
 
         let copilot_response: CopilotResponse = response.json().await.map_err(|e| {
@@ -163,6 +159,75 @@ impl CopilotClient {
     }
 }
 
+fn classify_copilot_error(
+    status_code: u16,
+    headers: &header::HeaderMap,
+    error_body: &str,
+) -> String {
+    if is_copilot_rate_limited(status_code, headers, error_body) {
+        return build_copilot_rate_limit_message(headers);
+    }
+
+    match status_code {
+        401 => "Clé API Copilot invalide. Vérifiez votre token GitHub.".to_string(),
+        403 => "Accès refusé. Vérifiez les permissions de votre token GitHub.".to_string(),
+        _ => format!("Erreur Copilot ({}): {}", status_code, error_body),
+    }
+}
+
+fn is_copilot_rate_limited(
+    status_code: u16,
+    headers: &header::HeaderMap,
+    error_body: &str,
+) -> bool {
+    if status_code == 429 {
+        return true;
+    }
+
+    if status_code != 403 {
+        return false;
+    }
+
+    let body = error_body.to_ascii_lowercase();
+    let mentions_rate_limit = [
+        "rate limit",
+        "secondary rate limit",
+        "api rate limit exceeded",
+        "retry after",
+        "too many requests",
+    ]
+    .iter()
+    .any(|needle| body.contains(needle));
+
+    mentions_rate_limit
+        || headers.contains_key(header::RETRY_AFTER)
+        || header_value_eq(headers, "x-ratelimit-remaining", "0")
+}
+
+fn build_copilot_rate_limit_message(headers: &header::HeaderMap) -> String {
+    match retry_after_seconds(headers) {
+        Some(seconds) if seconds > 0 => {
+            format!("Limite de taux Copilot atteinte. Réessayez dans environ {}s.", seconds)
+        }
+        _ => COPILOT_RATE_LIMIT_MESSAGE.to_string(),
+    }
+}
+
+fn retry_after_seconds(headers: &header::HeaderMap) -> Option<u64> {
+    headers
+        .get(header::RETRY_AFTER)
+        .and_then(|value| value.to_str().ok())
+        .and_then(|value| value.trim().parse::<u64>().ok())
+}
+
+fn header_value_eq(headers: &header::HeaderMap, key: &str, expected: &str) -> bool {
+    headers
+        .get(key)
+        .and_then(|value| value.to_str().ok())
+        .map(|value| value.trim() == expected)
+        .unwrap_or(false)
+}
+
 #[derive(Debug, Clone, Serialize)]
 pub struct TestResult {
     pub success: bool,
@@ -190,5 +255,56 @@ mod tests {
         let json = serde_json::to_string(&msg).unwrap();
         assert!(json.contains("user"));
         assert!(json.contains("test"));
+    }
+
+    #[test]
+    fn test_classify_copilot_error_keeps_permission_denied_for_regular_403() {
+        let headers = header::HeaderMap::new();
+
+        let message = classify_copilot_error(403, &headers, "Resource not accessible by token");
+
+        assert_eq!(
+            message,
+            "Accès refusé. Vérifiez les permissions de votre token GitHub."
+        );
+    }
+
+    #[test]
+    fn test_classify_copilot_error_detects_rate_limit_body_on_403() {
+        let headers = header::HeaderMap::new();
+
+        let message = classify_copilot_error(
+            403,
+            &headers,
+            "You have exceeded a secondary rate limit. Please retry after a while.",
+        );
+
+        assert_eq!(message, COPILOT_RATE_LIMIT_MESSAGE);
+    }
+
+    #[test]
+    fn test_classify_copilot_error_uses_retry_after_when_rate_limited() {
+        let mut headers = header::HeaderMap::new();
+        headers.insert(header::RETRY_AFTER, header::HeaderValue::from_static("42"));
+        headers.insert(
+            "x-ratelimit-remaining",
+            header::HeaderValue::from_static("0"),
+        );
+
+        let message = classify_copilot_error(403, &headers, "Forbidden");
+
+        assert_eq!(
+            message,
+            "Limite de taux Copilot atteinte. Réessayez dans environ 42s."
+        );
+    }
+
+    #[test]
+    fn test_classify_copilot_error_preserves_429_as_rate_limit() {
+        let headers = header::HeaderMap::new();
+
+        let message = classify_copilot_error(429, &headers, "Too many requests");
+
+        assert_eq!(message, COPILOT_RATE_LIMIT_MESSAGE);
     }
 }

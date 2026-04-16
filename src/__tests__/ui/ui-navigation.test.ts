@@ -7,7 +7,9 @@
 import React from 'react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, act, fireEvent } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, MemoryRouter, useLocation } from 'react-router-dom';
+import { AppRouter } from '../../App';
+import { ChatPage } from '../../pages/ChatPage';
 import { TitanePage } from '../../pages/TitanePage';
 import { AppShell } from '../../components/layout/AppShell';
 import { TopNav, type TopNavItem } from '../../components/layout/TopNav';
@@ -17,6 +19,14 @@ import {
   checkLayoutCompliance,
   navigationRegistry,
 } from '../../types/ui-layout-contract';
+
+vi.mock('@tauri-apps/api/event', () => ({
+  listen: vi.fn(async () => () => undefined),
+}));
+
+vi.mock('../../hooks/useWindowControls', () => ({
+  useWindowControls: () => undefined,
+}));
 
 const primeChatStorage = () => {
   const conversationId = 'conv-ui-nav-test';
@@ -61,12 +71,22 @@ const renderWithRouter = async (ui: React.ReactElement) => {
   });
 };
 
+const RouteLocationProbe = () => {
+  const location = useLocation();
+  return React.createElement(
+    'div',
+    { 'data-testid': 'route-location-probe' },
+    `${location.pathname}${location.search}`
+  );
+};
+
 // ═══════════════════════════════════════════════════════════════
 // TEST 1: SINGLE TOPNAV (CONSTITUTION ARTICLE 1)
 // ═══════════════════════════════════════════════════════════════
 
 describe('UI Navigation — Single TopNav (Article 1)', () => {
   beforeEach(() => {
+    vi.stubGlobal('__APP_VERSION__', 'test');
     navigationRegistry.reset();
   });
 
@@ -188,6 +208,7 @@ describe('UI Navigation — Single TopNav (Article 1)', () => {
 
 describe('UI Navigation — Tabs Not Navbar-Like (Article 2)', () => {
   beforeEach(() => {
+    vi.stubGlobal('__APP_VERSION__', 'test');
     navigationRegistry.reset();
   });
 
@@ -201,6 +222,51 @@ describe('UI Navigation — Tabs Not Navbar-Like (Article 2)', () => {
     expect(screen.getByTestId('page-conversation')).toHaveAttribute(
       'data-layout',
       'fullscreen'
+    );
+  });
+
+  it('legacy ChatPage delegates to the canonical Titane conversation surface', async () => {
+    await renderWithRouter(React.createElement(ChatPage, null));
+
+    expect(screen.getByTestId('page-titane')).toHaveAttribute(
+      'data-layout',
+      'chat-fullscreen'
+    );
+    expect(screen.getByTestId('page-conversation')).toHaveAttribute(
+      'data-layout',
+      'fullscreen'
+    );
+  });
+
+  it('legacy /chat route redirects to the canonical Titane conversation tab', async () => {
+    primeChatStorage();
+
+    render(
+      React.createElement(
+        MemoryRouter,
+        { initialEntries: ['/chat'] },
+        React.createElement(React.Fragment, null,
+          React.createElement(AppRouter, null),
+          React.createElement(RouteLocationProbe, null)
+        )
+      )
+    );
+
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+
+    expect(screen.getByTestId('page-titane')).toHaveAttribute(
+      'data-layout',
+      'chat-fullscreen'
+    );
+    expect(screen.getByTestId('page-conversation')).toHaveAttribute(
+      'data-layout',
+      'fullscreen'
+    );
+    expect(screen.getByTestId('route-location-probe')).toHaveTextContent(
+      '/titane?tab=conversation'
     );
   });
 

@@ -358,6 +358,43 @@ Canonical target version: **30.1.25**
 | `app-universal-release.aab` | `43510592` bytes | `cfe4b132610cfab40058318a5255b948503dffd222f4fa4064f6fa7b3fc08bd9` | BUILT ✅ |
 | Windows MSI local build | — | — | BLOCKED_LOCAL_TOOLCHAIN |
 
+---
+
+## Addendum — 2026-04-15 — Local UI Build Refresh v30.1.27
+
+Session: `LOCAL_UI_BUILD_REFRESH_30_1_27`
+Canonical target version: **30.1.27**
+
+### Updated Current Surfaces
+
+| File / Surface | Version | Action |
+|---|---|---|
+| `package.json` | `30.1.27` | UPDATED_TO_30_1_27 |
+| `src-tauri/Cargo.toml` | `30.1.27` | UPDATED_TO_30_1_27 |
+| `src-tauri/tauri.conf.json` | `30.1.27` | UPDATED_TO_30_1_27 |
+| `src-tauri/tauri.base.json` | `30.1.27` | UPDATED_TO_30_1_27 |
+| `tauri.base.json` | `30.1.27` | UPDATED_TO_30_1_27 |
+| `runtime/stable/tauri.conf.json` | `30.1.27` | UPDATED_TO_30_1_27 |
+| `runtime/stable/manifest.json` | `30.1.27` | UPDATED_TO_30_1_27 |
+| `RELEASE_ARTIFACTS_CHECKSUMS_30.1.27.txt` | `30.1.27` | ADDED_AS_PROOF |
+| `RELEASE_v30.1.27.md` | `30.1.27` | ADDED_AS_PROOF |
+
+### Artifact Status Summary — v30.1.27
+
+| Artifact | Size | SHA256 | Status |
+|---|---|---|---|
+| `TITANE Infinity_30.1.27_amd64.AppImage` | `92903928` bytes | `0d025afdff213cc27a567598ada72eb716a7cd979d5f3a969d975eee174ae17e` | BUILT ✅ LOCAL_ONLY |
+| `TITANE Infinity_30.1.27_amd64.deb` | `20091694` bytes | `83f138a8a2477c91120f3c3c97a3d0456739f988a8423c403763d721a1a8b1e6` | BUILT ✅ LOCAL_ONLY |
+| `TITANE Infinity-30.1.27-1.x86_64.rpm` | `20091246` bytes | `4d8d71059ae2b396aa566f88ee6c9ba7778fc0a40fbdca7eb816e9afbd6ee2a7` | BUILT ✅ LOCAL_ONLY |
+| `src-tauri/target/release/titane-infinity` | `45109712` bytes | `6a405c49428d735087bb4f4405c6021bc87bd2f2ee216cf25521a0f74d3d5f9a` | BUILT ✅ LOCAL_ONLY |
+| `~/.local/share/applications/titane-infinity.desktop` | `Name=TITANE∞ v30.1.26` | STALE_PENDING_SUDO_SYNC |
+| `/usr/share/applications/titane-infinity.desktop` | `Name=TITANE∞ v30.1.26` | STALE_PENDING_SUDO_SYNC |
+
+> v30.1.27 is the current local desktop build truth after the recent conversation UI refresh on 2026-04-15.
+> `deployment/latest` remains on v30.1.26 because this session rebuilt desktop artifacts locally but did not republish the latest deployment surfaces.
+> Post-build Linux launcher synchronization is BLOCKED in this session by interactive `sudo` prompts, so installed/system launchers still advertise v30.1.26.
+> Android artifacts were not rebuilt in this refresh; the validated change scope for this session is the desktop build plus targeted Android browser-mobile UI proof.
+
 > Android release artifacts were generated on the local Linux host and verified with `android:artifact:check` plus direct SHA256/size capture.
 > No Android device or emulator was connected in this session, so no install or runtime smoke proof is claimed for v30.1.25.
 > No local Windows artifact is claimed for v30.1.25 on this host: repo truth requires a Windows runner or Windows machine with MSVC/WebView2, and the Linux host lacks `pwsh`, MinGW, and `cargo-xwin`.
@@ -444,3 +481,88 @@ Canonical target version: **30.1.25**
 > Release assets were refreshed at `2026-04-15T18:20:31Z`–`2026-04-15T18:20:33Z` by re-uploading the last validated Windows artifact from run `24466843763` with `gh release upload --clobber`.
 > The MSI payload checksum was revalidated locally with `sha256sum -c SHA256SUMS.txt` before the refresh, and the published asset digests remained identical to the previously sealed Windows release payload.
 > An additional rerun `24470399167` was started for a full rebuild but canceled while still in `Build MSI` to avoid a redundant later overwrite once the deterministic refresh from the already validated artifact had completed.
+
+---
+
+## Addendum — 2026-04-15 — BUILD ALL Local v30.1.28
+
+Session: `BUILD_ALL_LOCAL_30_1_28`
+Canonical target version: **30.1.28**
+
+### Updated Current Surfaces
+
+| File / Surface | Version | Action |
+|---|---|---|
+| `package.json` | `30.1.28` | VERIFIED_CANONICAL |
+| `src-tauri/Cargo.toml` | `30.1.28` | VERIFIED_CANONICAL |
+| `src-tauri/tauri.conf.json` | `30.1.28` | VERIFIED_CANONICAL |
+| `src-tauri/tauri.base.json` | `30.1.28` | VERIFIED_CANONICAL |
+| `tauri.base.json` | `30.1.28` | VERIFIED_CANONICAL |
+| `runtime/stable/tauri.conf.json` | `30.1.28` | VERIFIED_CANONICAL |
+| `runtime/stable/manifest.json` | `30.1.28` | VERIFIED_CANONICAL |
+| `deployment/latest/MANIFEST.json` | `30.1.28` | UPDATED_TO_30_1_28 |
+| `deployment/latest/CHECKSUMS.txt` | `30.1.28` | UPDATED_TO_30_1_28 |
+| `deployment/latest/CHECKSUMS.sha256` | `30.1.28` | UPDATED_TO_30_1_28 |
+| `deployment/latest/SHA256SUMS.txt` | `30.1.28` | UPDATED_TO_30_1_28 |
+| `deployment/latest/SIZES.txt` | `30.1.28` | UPDATED_TO_30_1_28 |
+| `RELEASE_ARTIFACTS_CHECKSUMS_30.1.28.txt` | `30.1.28` | ADDED_AS_PROOF |
+| `RELEASE_v30.1.28.md` | `30.1.28` | ADDED_AS_PROOF |
+
+### Artifact Status Summary — v30.1.28
+
+| Artifact | Size | SHA256 | Status |
+|---|---|---|---|
+| `TITANE Infinity_30.1.28_amd64.AppImage` | `92891640` bytes | `58567aca0006222dbd039cc35d6c01d7b104f4dd6c541ed6c1eb16a62a7a240b` | BUILT ✅ PUBLISHED_LOCAL |
+| `TITANE Infinity_30.1.28_amd64.deb` | `20078936` bytes | `3fd0202ff0a509ef4ee48e6cf566648556a4997cbc5ef99b067afdd372c3cf9b` | BUILT ✅ PUBLISHED_LOCAL |
+| `TITANE Infinity-30.1.28-1.x86_64.rpm` | `20079454` bytes | `c5c5ba2268c076558f4611d4e69b4c491215d36cc3e09e262fa806c79195f017` | BUILT ✅ PUBLISHED_LOCAL |
+| `src-tauri/target/release/titane-infinity` | `45079512` bytes | `61c1b918edb24b1d8b69bdcc2e1809493118c1bf9cd9e635dc9af90536cf9516` | BUILT ✅ LOCAL_BINARY |
+| `app-universal-release-unsigned.apk` | `69940619` bytes | `f38932fe6b5dc3f46cba9f6e593726f7cd09f83d5bee18c9dd8078d5c5f43b3b` | BUILT ✅ UNSIGNED_RELEASE |
+| `app-universal-release.aab` | `43522156` bytes | `f0f52996b39beca1184163c15880e1578595d037d04abc38157cb3564b357aff` | BUILT ✅ |
+| `dpkg -s titane-infinity` | `30.1.26` | host install truth | STALE_PENDING_SUDO_INSTALL |
+| `~/.local/share/applications/titane-infinity.desktop` | `Name=TITANE∞ v30.1.26` | `/usr/bin/titane-infinity` | ALIGNED_TO_INSTALLED_BINARY |
+
+> `deployment/latest` is now aligned to the desktop 30.1.28 artifacts and the current release binary hash.
+> The Android lane completed successfully on the local Linux host: `android:artifact:check` passed, and `android:env:check` now reports one ready device (`R5CY326GJAM`).
+> The Android release APK remains unsigned by repo truth (`explicit_signing_config=no`), so the strongest honest target remains the unsigned release APK or debug install helper.
+> Linux host installation is still on v30.1.26 because the system DEB reinstall and post-build system sync remain blocked by interactive `sudo` in this session.
+> No local Windows artifact is claimed for v30.1.28 on this Linux host: `pwsh`, MinGW, and `cargo-xwin` remain missing.
+
+---
+
+## Addendum — 2026-04-16 — BUILD ALL Attempt v30.1.29
+
+Session: `BUILD_ALL_ATTEMPT_30_1_29`
+Canonical target version: **30.1.29**
+
+### Updated Current Surfaces
+
+| File / Surface | Version | Action |
+|---|---|---|
+| `package.json` | `30.1.29` | UPDATED_TO_30_1_29 |
+| `src-tauri/Cargo.toml` | `30.1.29` | UPDATED_TO_30_1_29 |
+| `src-tauri/Cargo.lock` | `30.1.29` | UPDATED_TO_30_1_29 |
+| `src-tauri/tauri.conf.json` | `30.1.29` | UPDATED_TO_30_1_29 |
+| `src-tauri/tauri.base.json` | `30.1.29` | UPDATED_TO_30_1_29 |
+| `tauri.base.json` | `30.1.29` | UPDATED_TO_30_1_29 |
+| `runtime/stable/tauri.conf.json` | `30.1.29` | UPDATED_TO_30_1_29 |
+| `runtime/stable/manifest.json` | `30.1.29` | UPDATED_TO_30_1_29 |
+| `titane-infinity.desktop` | `Name=TITANE∞ v30.1.26` | REGENERATED_TO_INSTALLED_BINARY_TRUTH |
+| `~/.local/share/applications/titane-infinity.desktop` | `Name=TITANE∞ v30.1.26` | REGENERATED_TO_INSTALLED_BINARY_TRUTH |
+| `reports/BUILD_ALL_2026-04-16_v30.1.29.md` | `30.1.29` | ADDED_AS_BLOCKED_PROOF |
+| `proof_packs/BUILD_ALL_2026-04-16_v30.1.29/*` | `30.1.29` | ADDED_AS_BLOCKED_PROOF |
+
+### Artifact Status Summary — v30.1.29
+
+| Artifact | Size | SHA256 | Status |
+|---|---|---|---|
+| `src-tauri/target/release/bundle/*30.1.29*` | — | — | NOT_EMITTED_YET |
+| `src-tauri/target/release/titane-infinity` | `45079512` bytes | previous `30.1.28` binary still present | STALE_PREVIOUS_BUILD |
+| `app-universal-release-unsigned.apk` | previous `30.1.28` output still present | previous `30.1.28` hash | STALE_PENDING_BUILD_LOCK |
+| `app-universal-release.aab` | previous `30.1.28` output still present | previous `30.1.28` hash | STALE_PENDING_BUILD_LOCK |
+| `dpkg -s titane-infinity` | `30.1.26` | host install truth | STALE_PENDING_SUDO_INSTALL |
+
+> The desktop build command `pnpm exec tauri build --config src-tauri/tauri.conf.json` was started and remained active at proof time with `rustc` still consuming ~100% CPU while no 30.1.29 bundle file had been emitted yet.
+> The Android build command `pnpm run android:build:full` was started but remained blocked on Cargo's artifact directory lock while the desktop release link was still active.
+> `deployment/latest` was intentionally left on 30.1.28 because no honest 30.1.29 desktop artifact, size, or checksum existed yet in this session.
+> Local launcher regeneration completed truthfully through `bash scripts/update-desktop-icon.sh`, and the menu/dock entries still advertise `v30.1.26` because `/usr/bin/titane-infinity` remains the selected installed binary.
+> System install and system launcher synchronization remain blocked by interactive `sudo`, so no claim is made for `/usr/bin/titane-infinity` or `/usr/share/applications` moving to 30.1.29 in this session.

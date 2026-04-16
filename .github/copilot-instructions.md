@@ -117,39 +117,27 @@ The current version MUST always be visible in the bottom footer of the TITANE in
 
 ## Rule 13.1 - Desktop icons and launcher cache update
 
-After **every build** (production or tauri), you MUST:
-
-- Run `scripts/post-build/update-desktop-icons.sh` to synchronize .desktop launchers, icons, and refresh the desktop cache.
-- Always verify that `/usr/bin/titane-infinity` is the most recent built version (replace if needed).
-- Confirm the version shown in the launcher and running binary matches the latest build.
-
-### Mandatory post-build execution sequence (no skip)
-
-After each build, execute this sequence in order:
-
-1. `bash scripts/post-build/update-desktop-icons.sh`
-2. `sudo update-icon-caches /usr/share/icons/hicolor`
-3. `update-desktop-database ~/.local/share/applications`
-4. `xdg-desktop-menu forceupdate`
-
-Then verify launchers and icon mapping with:
-
-- `grep -E '^(Name|Exec|Icon|StartupWMClass)=' ~/.local/share/applications/titane-infinity.desktop`
-- `grep -E '^(Name|Exec|Icon|StartupWMClass)=' /usr/share/applications/titane-infinity.desktop`
-
-Expected minimum:
-
-- `Exec=/usr/bin/titane-infinity`
-- `Icon=titane-infinity` (preferred) or explicit path to the latest icon file.
+After **every build** (production or tauri), run `bash scripts/post-build/update-desktop-icons.sh`, `sudo update-icon-caches /usr/share/icons/hicolor`, `update-desktop-database ~/.local/share/applications`, and `xdg-desktop-menu forceupdate`.
+Always verify that `/usr/bin/titane-infinity` is the most recent built version and confirm both launcher files with `grep -E '^(Name|Exec|Icon|StartupWMClass)=' ~/.local/share/applications/titane-infinity.desktop` and `grep -E '^(Name|Exec|Icon|StartupWMClass)=' /usr/share/applications/titane-infinity.desktop`.
+Expected minimum: `Exec=/usr/bin/titane-infinity` and `Icon=titane-infinity` (preferred) or an explicit path to the latest icon file.
 
 ### Advanced purge (if old icons persist)
 
-- Check and remove any obsolete TITANE/Infinity launchers in `/usr/share/applications` and `~/.local/share/applications`.
-- Replace `/usr/share/icons/hicolor/128x128/apps/titane-infinity.png` with the latest build if needed.
-- Refresh all icon and desktop caches: `sudo update-icon-caches /usr/share/icons/hicolor && update-desktop-database ~/.local/share/applications && xdg-desktop-menu forceupdate`.
-- If icons still persist, clear GNOME/KDE caches (e.g. `rm -rf ~/.cache/gnome-software`, restart shell with `gnome-shell --replace` or reboot).
+Remove obsolete TITANE/Infinity launchers in `/usr/share/applications` and `~/.local/share/applications`, replace `/usr/share/icons/hicolor/128x128/apps/titane-infinity.png` with the latest build if needed, refresh the caches again, and clear GNOME/KDE caches if icons still persist.
 
 This is mandatory for all Linux desktop environments (GNOME, KDE, etc.) to ensure the UI and launchers reflect the latest build.
+
+## Rule 13.2 - Android build freshness and backend/frontend synchronization
+
+Every Android build, rebuild validation, or packaging proof must treat `dist/`, the Rust/Tauri backend, the packaged APK/native artifact, and the installed device runtime as four separate truths.
+Before PASS: rebuild the frontend first, regenerate canonical Tauri config when the path is environment-dependent, and build Android only from a repo state where frontend and backend versions match.
+For Android dev-runtime freshness, `android:dev:stable` must reuse `scripts/android/vite-network-server.sh` as the sole Vite authority; do not reintroduce a second implicit `vite dev` launch path in the stable orchestrator.
+Before sealing Android UI freshness in dev mode: prove `bash scripts/android/dev-stable.sh` keeps the canonical server reachable with `curl -I -sS --max-time 5 http://127.0.0.1:1420`, then rerun `corepack pnpm run test:e2e:android:browser` against the served UI truth.
+If no ADB device is connected, classify only the device-install lane as BLOCKED while keeping the canonical server/browser proof lane honest and available; never claim installed-device truth without `adb shell dumpsys package com.titane.infinity` evidence.
+Run `corepack pnpm run android:artifact:check`; packaged truth must be verified from the real APK/native artifact, not stale `_up_/dist` folders.
+When a device is available, install with `corepack pnpm run android:install:latest`, verify with `adb shell dumpsys package com.titane.infinity | rg 'version(Name|Code)|lastUpdateTime'`, and rerun the relevant browser/mobile plus device proofs.
+Treat `CONTRACT_VIOLATION_CLAMPED`, `tauri_protector_ipc_fallback`, or any frontend-backend IPC mismatch as desynchronization: rebuild the affected layer(s) and reverify before claiming PASS.
+Any mismatch across those four truths is FAIL until rebuilt and reverified.
 
 ## Operational authority
 

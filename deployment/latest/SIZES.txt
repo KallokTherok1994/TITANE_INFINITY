@@ -1,6 +1,6 @@
 # Artifact Sizes
-# Generated: 2026-04-15T14:51:58Z
-TITANE Infinity_30.1.23_amd64.AppImage: 92903928 bytes (89M)
-TITANE Infinity_30.1.23_amd64.deb: 20086368 bytes (20M)
-TITANE Infinity-30.1.23-1.x86_64.rpm: 20087229 bytes (20M)
-titane-infinity: 45109712 bytes (44M)
+# Generated: 2026-04-16T01:03:02Z
+TITANE Infinity_30.1.28_amd64.AppImage: 92891640 bytes (89M)
+TITANE Infinity_30.1.28_amd64.deb: 20078936 bytes (20M)
+TITANE Infinity-30.1.28-1.x86_64.rpm: 20079454 bytes (20M)
+titane-infinity: 45079512 bytes (44M)

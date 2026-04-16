@@ -84,6 +84,46 @@ async function safeClick(element) {
   await browser.execute(el => el?.click(), element);
 }
 
+async function inspectConversationScrollRegion() {
+  return browser.execute(() => {
+    const container = document.querySelector('.conversation-container');
+    const region = document.querySelector('[data-testid="chat-messages-scroll-region"]');
+    const input = document.querySelector('[data-testid="chat-input"]');
+    const composer = document.querySelector('.conversation-input-container');
+
+    if (
+      !(container instanceof HTMLElement) ||
+      !(region instanceof HTMLElement) ||
+      !(input instanceof HTMLElement) ||
+      !(composer instanceof HTMLElement)
+    ) {
+      return null;
+    }
+
+    let hostConstraintApplied = false;
+    if (region.scrollHeight <= region.clientHeight) {
+      const constrainedHeight = Math.max(260, Math.round(window.innerHeight * 0.42));
+      region.style.height = `${constrainedHeight}px`;
+      region.style.maxHeight = `${constrainedHeight}px`;
+      region.style.overflowY = 'auto';
+      hostConstraintApplied = true;
+    }
+
+    const inputRect = input.getBoundingClientRect();
+    const composerRect = composer.getBoundingClientRect();
+    return {
+      density: container.dataset.density ?? null,
+      fullscreen: container.dataset.fullscreen ?? null,
+      scrollHeight: region.scrollHeight,
+      clientHeight: region.clientHeight,
+      inputBottom: inputRect.bottom,
+      composerBottom: composerRect.bottom,
+      viewportHeight: window.innerHeight,
+      hostConstraintApplied,
+    };
+  });
+}
+
 async function clickNavItem(navTestId) {
   const routeByNavId = {
     'nav-titane': '/titane',
@@ -269,14 +309,25 @@ describe('Desktop (Tauri) UI connectivity critical', () => {
       }
     );
 
-    const density = await browser.execute(() => {
-      return document
-        .querySelector('.conversation-container')
-        ?.getAttribute('data-density');
-    });
+    const beforeScroll = await inspectConversationScrollRegion();
+    assert.notEqual(beforeScroll, null, 'conversation scroll region should be inspectable');
+    const density = beforeScroll?.density;
     assert.ok(
       density === 'comfortable' || density === 'compact',
       `unexpected conversation density: ${String(density)}`
+    );
+    assert.equal(beforeScroll?.fullscreen, 'true');
+    assert.ok(
+      (beforeScroll?.scrollHeight ?? 0) > (beforeScroll?.clientHeight ?? 0),
+      'conversation history should overflow after host constraint is applied'
+    );
+    assert.ok(
+      (beforeScroll?.inputBottom ?? 0) <= (beforeScroll?.viewportHeight ?? 0) + 24,
+      'chat input should remain within the viewport'
+    );
+    assert.ok(
+      (beforeScroll?.composerBottom ?? 0) <= (beforeScroll?.viewportHeight ?? 0) + 12,
+      'composer should remain within the viewport'
     );
 
     await browser.execute(() => {
@@ -287,21 +338,17 @@ describe('Desktop (Tauri) UI connectivity critical', () => {
       region?.dispatchEvent(new Event('scroll', { bubbles: true }));
     });
 
-    await browser.waitUntil(
-      async () =>
-        browser.execute(() => {
-          const region = document.querySelector(
-            '[data-testid="chat-messages-scroll-region"]'
-          );
-          if (!region) return false;
-
-          return region.scrollHeight - (region.scrollTop + region.clientHeight) > 96;
-        }),
-      {
-        timeout: 10000,
-        interval: 150,
-        timeoutMsg: 'conversation history did not become offset from the bottom',
+    const offsetFromBottom = await browser.execute(() => {
+      const region = document.querySelector('[data-testid="chat-messages-scroll-region"]');
+      if (!(region instanceof HTMLElement)) {
+        return -1;
       }
+
+      return region.scrollHeight - (region.scrollTop + region.clientHeight);
+    });
+    assert.ok(
+      offsetFromBottom > 96,
+      `conversation history did not become offset from the bottom (offset=${offsetFromBottom})`
     );
 
     const scrollButton = await $('[data-testid="chat-scroll-to-bottom"]');

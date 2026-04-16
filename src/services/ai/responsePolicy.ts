@@ -288,7 +288,7 @@ export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
   },
 
   /**
-  * OMEGA — Potentiel maximal absolu. Contexte total, mémoire complète, génération au plafond backend.
+   * OMEGA — Potentiel maximal absolu. Contexte total, mémoire complète, génération au plafond backend.
    * Cas : "godmod", "plein potentiel", tâches complexes multi-étapes, sessions hybrides admin
    */
   OMEGA: {

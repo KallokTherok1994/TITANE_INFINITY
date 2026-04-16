@@ -62,16 +62,14 @@ fi
 
 echo "[vite-network-server] Starting Vite on ${HOST}:${PORT} (detached, log: ${LOGFILE})"
 
-# Launch Vite in independent session — survives Tauri process-group kill
-# shellcheck disable=SC2094
-setsid pnpm exec vite dev \
+# Use nohup so the Vite process survives when the calling shell/terminal exits.
+nohup pnpm exec vite dev \
   --host "$HOST" \
   --port "$PORT" \
   --strictPort \
-  >> "$LOGFILE" 2>&1 &
+  >> "$LOGFILE" 2>&1 < /dev/null &
 VITE_PID=$!
 echo "$VITE_PID" > "$PIDFILE"
-disown "$VITE_PID"
 
 echo "[vite-network-server] Vite PID=${VITE_PID} — waiting for http://127.0.0.1:${PORT}"
 if ! wait_ready; then

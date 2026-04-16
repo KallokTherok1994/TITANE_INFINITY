@@ -367,7 +367,7 @@ export const TopNav: React.FC<TopNavProps> = ({
             <ZoomOut size={14} />
           </button>
           <span
-            className="text-xs text-titanium-text-secondary select-none min-w-[3rem] text-center tabular-nums"
+            className="text-xs text-titanium-text-secondary select-none min-w-12 text-center tabular-nums"
             title="Niveau de zoom actuel"
           >
             {Math.round(zoomLevel * 100)}%

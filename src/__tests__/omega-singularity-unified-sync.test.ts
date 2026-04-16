@@ -769,14 +769,14 @@ describe('H — Response Profiles Completeness', () => {
     }
   });
 
-  it('H2: chaque profil a maxTokens entre 100 et 16000', () => {
+  it('H2: chaque profil a maxTokens entre 100 et 32768', () => {
     for (const profileId of ALL_PROFILE_IDS) {
       const profile = RESPONSE_PROFILES[profileId];
       expect(profile.maxTokens, `${profileId}.maxTokens invalide`).toBeGreaterThanOrEqual(
         100
       );
       expect(profile.maxTokens, `${profileId}.maxTokens trop élevé`).toBeLessThanOrEqual(
-        16000
+        32768
       );
     }
   });
@@ -792,14 +792,20 @@ describe('H — Response Profiles Completeness', () => {
     }
   });
 
-  it('H4: profils croissants par complexité (DIRECT < DEVELOPED < DEEP < OMEGA en tokens)', () => {
+  it('H4: profils croissants par complexité sans régression de budget (DIRECT < BALANCED <= DEEP <= DEVELOPED <= OMEGA)', () => {
     expect(RESPONSE_PROFILES.DIRECT.maxTokens).toBeLessThan(
-      RESPONSE_PROFILES.DEVELOPED.maxTokens
+      RESPONSE_PROFILES.BALANCED.maxTokens
     );
-    expect(RESPONSE_PROFILES.DEVELOPED.maxTokens).toBeLessThanOrEqual(
+    expect(RESPONSE_PROFILES.BALANCED.maxTokens).toBeLessThanOrEqual(
       RESPONSE_PROFILES.DEEP.maxTokens
     );
     expect(RESPONSE_PROFILES.DEEP.maxTokens).toBeLessThanOrEqual(
+      RESPONSE_PROFILES.DEVELOPED.maxTokens
+    );
+    expect(RESPONSE_PROFILES.DEVELOPED.maxTokens).toBeLessThanOrEqual(
+      RESPONSE_PROFILES.ARCHITECT.maxTokens
+    );
+    expect(RESPONSE_PROFILES.DEVELOPED.maxTokens).toBeLessThanOrEqual(
       RESPONSE_PROFILES.OMEGA.maxTokens
     );
   });

@@ -170,7 +170,11 @@ export function shouldUseConversationCompactLayout(
   viewportHeight: number,
   fullscreen: boolean
 ): boolean {
-  return fullscreen && viewportHeight > 0 && viewportHeight <= COMPACT_CONVERSATION_VIEWPORT_HEIGHT;
+  return (
+    fullscreen &&
+    viewportHeight > 0 &&
+    viewportHeight <= COMPACT_CONVERSATION_VIEWPORT_HEIGHT
+  );
 }
 
 export function isConversationNearBottom(
@@ -196,6 +200,15 @@ export function shouldShowConversationScrollToBottom(
   }
 
   return !isConversationNearBottom(scrollTop, clientHeight, scrollHeight);
+}
+
+export function resolveConversationPendingInput(
+  stateValue: string,
+  bufferedValue?: string | null,
+  domValue?: string | null
+): string {
+  const candidates = [stateValue, bufferedValue ?? '', domValue ?? ''];
+  return candidates.find(candidate => candidate.trim().length > 0) ?? '';
 }
 
 export function resolveConversationDisplayProvider(
@@ -716,7 +729,7 @@ function deriveResearchProviderMeta(
   };
 }
 
-function mapReasonCodeToNodeStatus(
+export function mapReasonCodeToNodeStatus(
   reasonCode?: ReasonCode
 ): 'active' | 'done' | 'error' | 'blocked' {
   if (!reasonCode || reasonCode === 'OK' || reasonCode === 'CACHE_HIT') {
@@ -725,6 +738,7 @@ function mapReasonCodeToNodeStatus(
 
   if (
     reasonCode === 'TIMEOUT' ||
+    reasonCode === 'RATE_LIMIT' ||
     reasonCode === 'POLICY_BLOCKED' ||
     reasonCode === 'ALLOWLIST_DENIED' ||
     reasonCode === 'TOOL_DENIED' ||
@@ -1118,10 +1132,20 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       getConversationViewportHeight
     );
     const [showScrollToBottom, setShowScrollToBottom] = useState(false);
+    const conversationInputRef = useRef<HTMLTextAreaElement>(null);
     const messagesContainerRef = useRef<HTMLDivElement>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const inputValueRef = useRef('');
     const sendingRef = useRef(false);
     const deferredSearchQuery = useDeferredValue(searchQuery);
+
+    const updateInputValue = useCallback((value: React.SetStateAction<string>) => {
+      setInputValue(prev => {
+        const nextValue = typeof value === 'function' ? value(prev) : value;
+        inputValueRef.current = nextValue;
+        return nextValue;
+      });
+    }, []);
 
     // ═══ THINKING STEPS ═══
     const thinking = useThinkingSteps();
@@ -1144,6 +1168,27 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
         window.removeEventListener('orientationchange', updateViewportHeight);
         visualViewport?.removeEventListener('resize', updateViewportHeight);
         visualViewport?.removeEventListener('scroll', updateViewportHeight);
+      };
+    }, []);
+
+    useEffect(() => {
+      const textarea = conversationInputRef.current;
+      if (!textarea) {
+        return;
+      }
+
+      const syncInputFromDom = () => {
+        const domValue = textarea.value;
+        inputValueRef.current = domValue;
+        setInputValue(prev => (prev === domValue ? prev : domValue));
+      };
+
+      textarea.addEventListener('input', syncInputFromDom);
+      textarea.addEventListener('change', syncInputFromDom);
+
+      return () => {
+        textarea.removeEventListener('input', syncInputFromDom);
+        textarea.removeEventListener('change', syncInputFromDom);
       };
     }, []);
 
@@ -1182,24 +1227,24 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       );
     }, []);
 
-    const scrollMessagesToBottom = useCallback(
-      (behavior: ScrollBehavior = 'smooth') => {
-        const container = messagesContainerRef.current;
-        if (container) {
-          container.scrollTo({ top: container.scrollHeight, behavior });
-        } else {
-          messagesEndRef.current?.scrollIntoView({ behavior, block: 'end' });
-        }
+    const scrollMessagesToBottom = useCallback((behavior: ScrollBehavior = 'smooth') => {
+      const container = messagesContainerRef.current;
+      if (container) {
+        container.scrollTo({ top: container.scrollHeight, behavior });
+      } else {
+        messagesEndRef.current?.scrollIntoView({ behavior, block: 'end' });
+      }
 
-        setShowScrollToBottom(false);
-      },
-      []
-    );
+      setShowScrollToBottom(false);
+    }, []);
 
     // ═══ VOICE ENGINE ═══
-    const handleVoiceTranscript = useCallback((text: string) => {
-      setInputValue(prev => (prev ? `${prev} ${text}` : text));
-    }, []);
+    const handleVoiceTranscript = useCallback(
+      (text: string) => {
+        updateInputValue(prev => (prev ? `${prev} ${text}` : text));
+      },
+      [updateInputValue]
+    );
 
     const handleVoiceError = useCallback((error: unknown) => {
       pageLogger.error('Voice recognition error', error);
@@ -1241,9 +1286,9 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     const handleSuggestionClick = useCallback(
       (e: React.MouseEvent<HTMLButtonElement>) => {
         const value = e.currentTarget.dataset.value;
-        if (value) setInputValue(value);
+        if (value) updateInputValue(value);
       },
-      []
+      [updateInputValue]
     );
 
     const handleProviderChange = useCallback((provider: string) => {
@@ -1511,6 +1556,13 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       return trimmed ? trimmed.toLowerCase() : '';
     }, [deferredSearchQuery]);
 
+    const sendButtonReady =
+      resolveConversationPendingInput(
+        inputValue,
+        inputValueRef.current,
+        conversationInputRef.current?.value
+      ).trim().length > 0;
+
     const filteredMessages = useMemo(() => {
       if (!searchNeedle && filterRole === 'all') {
         return messages;
@@ -1621,7 +1673,11 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     }, []);
 
     const handleSend = useCallback(async () => {
-      const rawInput = inputValue;
+      const rawInput = resolveConversationPendingInput(
+        inputValue,
+        inputValueRef.current,
+        conversationInputRef.current?.value
+      );
       const trimmedInput = rawInput.trim();
       if (!trimmedInput || isLoading || sendingRef.current) return;
       sendingRef.current = true;
@@ -1634,7 +1690,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       }
 
       const messageText = sanitized;
-      setInputValue('');
+      updateInputValue('');
 
       const artifactContract = buildArtifactActionContract(messageText);
       if (artifactContract.intent !== 'ANSWER_ONLY') {
@@ -1849,6 +1905,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       thinking,
       errorToast,
       toastSuccess,
+      updateInputValue,
     ]);
 
     const handleKeyPress = useCallback(
@@ -1983,9 +2040,12 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       [sendMessage]
     );
 
-    const handleDictationResult = useCallback((text: string) => {
-      if (text.trim()) setInputValue(prev => (prev ? `${prev} ${text}` : text));
-    }, []);
+    const handleDictationResult = useCallback(
+      (text: string) => {
+        if (text.trim()) updateInputValue(prev => (prev ? `${prev} ${text}` : text));
+      },
+      [updateInputValue]
+    );
 
     const handleAudioRecorded = useCallback(
       (audioBlob: Blob) => {
@@ -2040,9 +2100,13 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       setCameraActive(prev => !prev);
     }, []);
 
-    const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setInputValue(e.target.value);
-    }, []);
+    const handleInputChange = useCallback(
+      (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        inputValueRef.current = e.target.value;
+        updateInputValue(e.target.value);
+      },
+      [updateInputValue]
+    );
 
     const handleCloseModeBuilder = useCallback(() => {
       setShowModeBuilder(false);
@@ -2050,11 +2114,11 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
 
     // ═══ RENDER ═══
     return (
-        <div
-          className={`titane-section titane-section-conversation${fullscreen ? ' titane-section-conversation--fullscreen' : ''}`}
-          data-testid="page-conversation"
-          data-layout={fullscreen ? 'fullscreen' : 'standard'}
-        >
+      <div
+        className={`titane-section titane-section-conversation${fullscreen ? ' titane-section-conversation--fullscreen' : ''}`}
+        data-testid="page-conversation"
+        data-layout={fullscreen ? 'fullscreen' : 'standard'}
+      >
         {showSectionHeader && (
           <TSectionHeader
             title="💬 Communication & Intelligence"
@@ -2066,224 +2130,233 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
           className="conversation-container"
           style={conversationContainerStyle}
           data-density={compactConversationLayout ? 'compact' : 'comfortable'}
+          data-fullscreen={fullscreen ? 'true' : 'false'}
         >
-          {/* ═══ TOOLBAR ═══ */}
-          <div className="conversation-toolbar">
-            <div className="conversation-toolbar-left">
-              <ChatProviderSelector
-                selectedProvider={selectedProvider}
-                onChange={handleProviderChange}
-                providers={availableProviders}
-              />
+          <div className="conversation-top-chrome">
+            {/* ═══ TOOLBAR ═══ */}
+            <div className="conversation-toolbar">
+              <div className="conversation-toolbar-left">
+                <ChatProviderSelector
+                  selectedProvider={selectedProvider}
+                  onChange={handleProviderChange}
+                  providers={availableProviders}
+                />
 
-              {/* Mode Selector */}
+                {/* Mode Selector */}
+                <select
+                  className="conversation-mode-select"
+                  data-testid="select-conversation-mode"
+                  value={currentMode}
+                  onChange={handleModeChange}
+                >
+                  {conversationModeOptions}
+                </select>
+              </div>
+
+              <div className="conversation-toolbar-right">
+                {/* Export JSON */}
+                <button
+                  className="conversation-icon-btn"
+                  data-testid="btn-export-json"
+                  onClick={handleExportJson}
+                  title="Exporter en JSON"
+                  disabled={!hasMessages}
+                >
+                  <Download size={16} />
+                </button>
+
+                {/* Export Markdown */}
+                <button
+                  className="conversation-icon-btn"
+                  data-testid="btn-export-markdown"
+                  onClick={handleExportMarkdown}
+                  title="Exporter en Markdown"
+                  disabled={!hasMessages}
+                >
+                  <FileText size={16} />
+                </button>
+
+                {/* Copy to Clipboard */}
+                <button
+                  className="conversation-icon-btn"
+                  data-testid="btn-copy-chat"
+                  onClick={handleCopyAll}
+                  title="Copier dans le presse-papier"
+                  disabled={!hasMessages}
+                >
+                  <Copy size={16} />
+                </button>
+
+                {/* Audio Toggle */}
+                <button
+                  className={`conversation-icon-btn ${audioEnabled ? 'active' : ''}`}
+                  data-testid="toggle-audio-tts"
+                  onClick={toggleAudioEnabled}
+                  title="Audio (TTS)"
+                  aria-label={
+                    audioEnabled ? 'Désactiver audio (TTS)' : 'Activer audio (TTS)'
+                  }
+                  aria-pressed={audioEnabled}
+                  role="switch"
+                >
+                  {audioEnabled ? '🔊' : '🔇'}
+                </button>
+
+                {/* Voice Input */}
+                <button
+                  className={`conversation-icon-btn ${isRecording ? 'recording' : ''}`}
+                  data-testid="toggle-voice-input"
+                  onClick={handleVoiceInput}
+                  title="Reconnaissance vocale"
+                  aria-label={
+                    isRecording
+                      ? "Arrêter l'enregistrement"
+                      : 'Démarrer reconnaissance vocale'
+                  }
+                  aria-pressed={isRecording}
+                >
+                  🎤
+                </button>
+
+                {/* Mode Builder */}
+                <button
+                  className="conversation-icon-btn"
+                  data-testid="btn-mode-builder"
+                  onClick={toggleModeBuilder}
+                  title="Créer un mode personnalisé"
+                  aria-label="Créer un mode personnalisé"
+                >
+                  ⚙️
+                </button>
+
+                {/* Health Check */}
+                <button
+                  className={`conversation-icon-btn ${isHealthy ? 'healthy' : ''}`}
+                  data-testid="btn-health-check"
+                  onClick={refreshHealth}
+                  title={`Santé: ${healthReport?.status || 'Unknown'}`}
+                  aria-label={`Vérifier santé du système (Statut: ${healthReport?.status || 'Inconnu'})`}
+                >
+                  {isHealthy ? '✅' : '⚠️'}
+                </button>
+
+                {/* Clear Chat */}
+                <button
+                  className="conversation-icon-btn"
+                  data-testid="btn-clear-chat"
+                  onClick={handleClearChat}
+                  title="Effacer l'historique"
+                  aria-label="Effacer l'historique du chat"
+                >
+                  <Trash2 size={16} aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+
+            {/* ═══ SEARCH / FILTERS ═══ */}
+            <div className="conversation-filters">
+              <div className="conversation-filters-search">
+                <Search size={16} />
+                <input
+                  type="search"
+                  data-testid="input-conversation-search"
+                  placeholder="Rechercher..."
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  aria-label="Rechercher dans la conversation"
+                />
+              </div>
+
               <select
-                className="conversation-mode-select"
-                data-testid="select-conversation-mode"
-                value={currentMode}
-                onChange={handleModeChange}
+                className="conversation-filters-role"
+                data-testid="select-conversation-role"
+                value={filterRole}
+                onChange={handleFilterRoleChange}
+                aria-label="Filtrer par rôle"
               >
-                {conversationModeOptions}
+                <option value="all">Tous</option>
+                <option value="user">Utilisateur</option>
+                <option value="assistant">TITANE</option>
               </select>
+
+              <div className="conversation-filters-count">
+                {filteredCount}/{messageCount}
+              </div>
             </div>
 
-            <div className="conversation-toolbar-right">
-              {/* Export JSON */}
-              <button
-                className="conversation-icon-btn"
-                data-testid="btn-export-json"
-                onClick={handleExportJson}
-                title="Exporter en JSON"
-                disabled={!hasMessages}
-              >
-                <Download size={16} />
-              </button>
+            {selectedProvider !== 'auto' &&
+              selectedProvider !== 'local' &&
+              selectedProvider !== 'ollama' &&
+              !selectedProviderReady && (
+                <div
+                  className="conversation-error"
+                  data-testid="chat-provider-warning"
+                  role="alert"
+                >
+                  <strong>⚠️ Provider non configuré:</strong> {selectedProviderLabel}{' '}
+                  n&apos;est pas disponible sur ce runtime. TITANE conservera ce choix
+                  sans fallback silencieux et affichera un résultat dégradé tant que la
+                  clé API n&apos;est pas ajoutée dans{' '}
+                  <strong>Admin → Gouvernance → Secrets</strong>.
+                </div>
+              )}
 
-              {/* Export Markdown */}
-              <button
-                className="conversation-icon-btn"
-                data-testid="btn-export-markdown"
-                onClick={handleExportMarkdown}
-                title="Exporter en Markdown"
-                disabled={!hasMessages}
-              >
-                <FileText size={16} />
-              </button>
-
-              {/* Copy to Clipboard */}
-              <button
-                className="conversation-icon-btn"
-                data-testid="btn-copy-chat"
-                onClick={handleCopyAll}
-                title="Copier dans le presse-papier"
-                disabled={!hasMessages}
-              >
-                <Copy size={16} />
-              </button>
-
-              {/* Audio Toggle */}
-              <button
-                className={`conversation-icon-btn ${audioEnabled ? 'active' : ''}`}
-                data-testid="toggle-audio-tts"
-                onClick={toggleAudioEnabled}
-                title="Audio (TTS)"
-                aria-label={
-                  audioEnabled ? 'Désactiver audio (TTS)' : 'Activer audio (TTS)'
-                }
-                aria-pressed={audioEnabled}
-                role="switch"
-              >
-                {audioEnabled ? '🔊' : '🔇'}
-              </button>
-
-              {/* Voice Input */}
-              <button
-                className={`conversation-icon-btn ${isRecording ? 'recording' : ''}`}
-                data-testid="toggle-voice-input"
-                onClick={handleVoiceInput}
-                title="Reconnaissance vocale"
-                aria-label={
-                  isRecording
-                    ? "Arrêter l'enregistrement"
-                    : 'Démarrer reconnaissance vocale'
-                }
-                aria-pressed={isRecording}
-              >
-                🎤
-              </button>
-
-              {/* Mode Builder */}
-              <button
-                className="conversation-icon-btn"
-                data-testid="btn-mode-builder"
-                onClick={toggleModeBuilder}
-                title="Créer un mode personnalisé"
-                aria-label="Créer un mode personnalisé"
-              >
-                ⚙️
-              </button>
-
-              {/* Health Check */}
-              <button
-                className={`conversation-icon-btn ${isHealthy ? 'healthy' : ''}`}
-                data-testid="btn-health-check"
-                onClick={refreshHealth}
-                title={`Santé: ${healthReport?.status || 'Unknown'}`}
-                aria-label={`Vérifier santé du système (Statut: ${healthReport?.status || 'Inconnu'})`}
-              >
-                {isHealthy ? '✅' : '⚠️'}
-              </button>
-
-              {/* Clear Chat */}
-              <button
-                className="conversation-icon-btn"
-                data-testid="btn-clear-chat"
-                onClick={handleClearChat}
-                title="Effacer l'historique"
-                aria-label="Effacer l'historique du chat"
-              >
-                <Trash2 size={16} aria-hidden="true" />
-              </button>
-            </div>
-          </div>
-
-          {/* ═══ SEARCH / FILTERS ═══ */}
-          <div className="conversation-filters">
-            <div className="conversation-filters-search">
-              <Search size={16} />
-              <input
-                type="search"
-                data-testid="input-conversation-search"
-                placeholder="Rechercher..."
-                value={searchQuery}
-                onChange={handleSearchChange}
-                aria-label="Rechercher dans la conversation"
-              />
-            </div>
-
-            <select
-              className="conversation-filters-role"
-              data-testid="select-conversation-role"
-              value={filterRole}
-              onChange={handleFilterRoleChange}
-              aria-label="Filtrer par rôle"
-            >
-              <option value="all">Tous</option>
-              <option value="user">Utilisateur</option>
-              <option value="assistant">TITANE</option>
-            </select>
-
-            <div className="conversation-filters-count">
-              {filteredCount}/{messageCount}
-            </div>
-          </div>
-
-          {selectedProvider !== 'auto' &&
-            selectedProvider !== 'local' &&
-            selectedProvider !== 'ollama' &&
-            !selectedProviderReady && (
+            {latestAssistantRuntime && (
               <div
-                className="conversation-error"
-                data-testid="chat-provider-warning"
-                role="alert"
+                className="conversation-runtime-panel"
+                data-testid="chat-runtime-state"
+                data-provider-mode={
+                  latestAssistantRuntime.providerMeta?.mode ?? 'unknown'
+                }
+                data-provider-reason={
+                  latestAssistantRuntime.providerMeta?.reason_code ?? 'UNKNOWN'
+                }
+                data-provider-used={
+                  latestAssistantRuntime.providerMeta?.provider_used ?? 'unknown'
+                }
+                data-network-used={
+                  latestAssistantRuntime.providerMeta
+                    ? String(latestAssistantRuntime.providerMeta.network_used)
+                    : 'false'
+                }
+                data-orchestrator-state={
+                  latestAssistantRuntime.runtimeSignals.orchestratorState
+                }
+                data-memory-state={latestAssistantRuntime.runtimeSignals.memoryState}
+                data-gemini-configured={selectedProvider === 'gemini' ? 'true' : 'false'}
+                data-ollama-model={
+                  selectedProvider === 'ollama' ? 'gemma2:2b' : 'unknown'
+                }
+                data-secrets-mode="governed"
               >
-                <strong>⚠️ Provider non configuré:</strong> {selectedProviderLabel}{' '}
-                n&apos;est pas disponible sur ce runtime. TITANE conservera ce choix sans
-                fallback silencieux et affichera un résultat dégradé tant que la clé API
-                n&apos;est pas ajoutée dans <strong>Admin → Gouvernance → Secrets</strong>
-                .
+                <div className="conversation-runtime-copy">
+                  <div
+                    className="conversation-runtime-summary"
+                    data-testid="chat-runtime-summary"
+                  >
+                    {runtimeSummary}
+                  </div>
+                  <div
+                    className="conversation-runtime-summary conversation-runtime-manifest"
+                    data-testid="chat-artifact-manifest"
+                  >
+                    Artifact Manifest: {activeArtifactManifest?.id ?? 'none'}
+                  </div>
+                </div>
+                <div className="conversation-runtime-badges">
+                  {runtimeBadges.map((badge, index) => (
+                    <span
+                      key={`${badge}-${index}`}
+                      className="conversation-runtime-badge"
+                      data-testid="chat-runtime-badge"
+                    >
+                      {badge}
+                    </span>
+                  ))}
+                </div>
               </div>
             )}
-
-          {latestAssistantRuntime && (
-            <div
-              className="conversation-runtime-panel"
-              data-testid="chat-runtime-state"
-              data-provider-mode={latestAssistantRuntime.providerMeta?.mode ?? 'unknown'}
-              data-provider-reason={
-                latestAssistantRuntime.providerMeta?.reason_code ?? 'UNKNOWN'
-              }
-              data-provider-used={
-                latestAssistantRuntime.providerMeta?.provider_used ?? 'unknown'
-              }
-              data-network-used={
-                latestAssistantRuntime.providerMeta
-                  ? String(latestAssistantRuntime.providerMeta.network_used)
-                  : 'false'
-              }
-              data-orchestrator-state={
-                latestAssistantRuntime.runtimeSignals.orchestratorState
-              }
-              data-memory-state={latestAssistantRuntime.runtimeSignals.memoryState}
-              data-gemini-configured={selectedProvider === 'gemini' ? 'true' : 'false'}
-              data-ollama-model={selectedProvider === 'ollama' ? 'gemma2:2b' : 'unknown'}
-              data-secrets-mode="governed"
-            >
-              <div
-                className="conversation-runtime-summary"
-                data-testid="chat-runtime-summary"
-              >
-                {runtimeSummary}
-              </div>
-              <div
-                className="conversation-runtime-summary"
-                data-testid="chat-artifact-manifest"
-              >
-                Artifact Manifest: {activeArtifactManifest?.id ?? 'none'}
-              </div>
-              <div className="conversation-runtime-badges">
-                {runtimeBadges.map((badge, index) => (
-                  <span
-                    key={`${badge}-${index}`}
-                    className="conversation-runtime-badge"
-                    data-testid="chat-runtime-badge"
-                  >
-                    {badge}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
+          </div>
 
           {/* ═══ THINKING PANEL ═══ */}
           <ThinkingPanel
@@ -2360,8 +2433,9 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
               aria-label="Revenir au bas de la conversation"
               title="Revenir au dernier message"
             >
-              <span aria-hidden="true">↓</span>
-              <span>Bas</span>
+              <span className="conversation-scroll-to-bottom-icon" aria-hidden="true">
+                ↓
+              </span>
             </button>
           )}
 
@@ -2397,6 +2471,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
               style={{ display: 'none' }}
             />
             <textarea
+              ref={conversationInputRef}
               className="conversation-input"
               data-testid="chat-input"
               placeholder="Tapez votre message... (Entrée pour envoyer, Shift+Entrée pour nouvelle ligne)"
@@ -2410,7 +2485,8 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
               className="conversation-send-btn"
               data-testid="chat-send"
               onClick={handleSend}
-              disabled={!inputValue.trim() || isLoading}
+              disabled={!sendButtonReady || isLoading}
+              aria-disabled={!sendButtonReady || isLoading}
             >
               {isLoading ? '⏳' : '📤'} Envoyer
             </button>

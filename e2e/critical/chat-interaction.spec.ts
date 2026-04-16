@@ -12,13 +12,25 @@ import { test, expect, type Page } from '@playwright/test';
 import { closeBootBeaconIfPresent, openTitane } from '../helpers/navigation';
 
 const FULL_E2E_ENABLED = process.env.TITANE_E2E_FULL === '1';
+type E2EChatScenario = 'success' | 'rate_limit';
 
 const enableE2EChatMock = async (page: Page) => {
   await page.addInitScript(() => {
     (window as { __TITANE_E2E_CHAT_MOCK__?: boolean }).__TITANE_E2E_CHAT_MOCK__ = true;
     (window as { __TITANE_E2E_CHAT_CONV_SEQ__?: number }).__TITANE_E2E_CHAT_CONV_SEQ__ =
       0;
+    (
+      window as { __TITANE_E2E_CHAT_SCENARIO__?: E2EChatScenario }
+    ).__TITANE_E2E_CHAT_SCENARIO__ = 'success';
   });
+};
+
+const setE2EChatScenario = async (page: Page, scenario: E2EChatScenario) => {
+  await page.evaluate(value => {
+    (
+      window as { __TITANE_E2E_CHAT_SCENARIO__?: E2EChatScenario }
+    ).__TITANE_E2E_CHAT_SCENARIO__ = value;
+  }, scenario);
 };
 
 const getChatInput = (page: Page) =>
@@ -31,7 +43,11 @@ const getSendButton = (page: Page) =>
   page.getByRole('button', { name: /Envoyer/i }).first();
 
 const getAssistantContent = (page: Page) =>
-  page.locator('[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]').last();
+  page
+    .locator(
+      '[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]'
+    )
+    .last();
 
 test.describe('Critical Path: Chat Interaction', () => {
   if (!FULL_E2E_ENABLED) {
@@ -74,7 +90,9 @@ test.describe('Critical Path: Chat Interaction', () => {
     await expect(page.getByText('[MOCK_OK] Beta')).toBeVisible({ timeout: 15000 });
   });
 
-  test('LONG_RESPONSE_VISIBLE_COMPLETE: réponse longue mock affichée complètement', async ({ page }) => {
+  test('LONG_RESPONSE_VISIBLE_COMPLETE: réponse longue mock affichée complètement', async ({
+    page,
+  }) => {
     const chatInput = getChatInput(page);
     const longPrompt = Array.from({ length: 40 }, (_, index) => `segment-${index + 1}`)
       .join(' ')
@@ -101,5 +119,34 @@ test.describe('Critical Path: Chat Interaction', () => {
     });
 
     expect(page.url()).toBe(initialUrl);
+  });
+
+  test('RATE_LIMIT_RUNTIME_TRUTH: le panneau runtime expose le blocage de quota GitHub', async ({
+    page,
+  }) => {
+    await setE2EChatScenario(page, 'rate_limit');
+
+    const chatInput = getChatInput(page);
+    await chatInput.fill('Lance une exploration GitHub');
+    await getSendButton(page).click({ force: true });
+
+    const runtimePanel = page.getByTestId('chat-runtime-state');
+    await expect(runtimePanel).toBeVisible({ timeout: 15000 });
+    await expect(runtimePanel).toHaveAttribute('data-provider-reason', 'RATE_LIMIT');
+    await expect(runtimePanel).toHaveAttribute('data-provider-mode', 'OFFLINE');
+    await expect(runtimePanel).toHaveAttribute('data-network-used', 'true');
+
+    await expect(page.getByTestId('chat-runtime-summary')).toContainText(
+      'Reason: RATE_LIMIT'
+    );
+    await expect(page.getByTestId('chat-runtime-summary')).toContainText(
+      'Provider: github-copilot'
+    );
+    await expect(
+      runtimePanel.getByTestId('chat-runtime-badge').getByText('RATE_LIMIT', {
+        exact: true,
+      })
+    ).toBeVisible({ timeout: 15000 });
+    await expect(getAssistantContent(page)).not.toContainText('[MOCK_OK]');
   });
 });

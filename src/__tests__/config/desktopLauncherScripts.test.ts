@@ -21,7 +21,9 @@ describe('desktop launcher scripts', () => {
 
     expect(desktopScript).toContain('MAIN_EXEC="$EXEC_BASE"');
     expect(desktopScript).toContain("dpkg-query -W -f='${Version}\\n' titane-infinity");
-    expect(desktopScript).toContain('APP_VERSION="$(extract_installed_package_version "$BINARY_PATH")"');
+    expect(desktopScript).toContain(
+      'APP_VERSION="$(extract_installed_package_version "$BINARY_PATH")"'
+    );
     expect(desktopScript).not.toContain('Exec=$LAUNCHER_SCRIPT');
   });
 

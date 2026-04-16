@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 
 import {
   buildConversationLoadingLabel,
+  mapReasonCodeToNodeStatus,
+  resolveConversationPendingInput,
   buildConversationRuntimeBadges,
   buildConversationRuntimeSummary,
   isConversationNearBottom,
@@ -56,6 +58,19 @@ describe('ConversationSection runtime provider label', () => {
     expect(buildConversationLoadingLabel('Ollama', 'Normal')).toBe(
       'Route demandee: Ollama | Mode: Normal'
     );
+  });
+
+  it('falls back to buffered or DOM input when the React state has not flushed yet', () => {
+    expect(resolveConversationPendingInput('', 'Android UI smoke message', null)).toBe(
+      'Android UI smoke message'
+    );
+    expect(resolveConversationPendingInput('', '', 'Android DOM value')).toBe(
+      'Android DOM value'
+    );
+  });
+
+  it('treats rate limit reason codes as blocked conversation runtime states', () => {
+    expect(mapReasonCodeToNodeStatus('RATE_LIMIT')).toBe('blocked');
   });
 
   it('includes requested provider and policy in runtime badges when execution differs', () => {

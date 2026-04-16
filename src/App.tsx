@@ -93,10 +93,7 @@ if (typeof window !== 'undefined') {
   });
 }
 
-// ✨ v30 - Chat page (main feature)
-const ChatPage = lazy(() =>
-  import('./pages/ChatPage').then(m => ({ default: m.ChatPage }))
-);
+// `/chat` is a legacy alias and must resolve to `/titane?tab=conversation`.
 
 // ✨ v24.3.0 - Lazy loaded pages (code splitting)
 const TimePage = lazy(() =>
@@ -243,7 +240,7 @@ const emitBootMarker = (marker: string): void => {
  * APP ROUTER - Composant interne avec accès au router + Living Engines
  * ═══════════════════════════════════════════════════════════════
  */
-const AppRouter: React.FC = () => {
+export const AppRouter: React.FC = () => {
   const location = useLocation();
   useEffect(() => {
     emitBootMarker('BOOT:AFTER_ROUTER');
@@ -359,7 +356,10 @@ const AppRouter: React.FC = () => {
             }
           />
           {/* Redirections vers TITANE */}
-          <Route path="/chat" element={<Navigate to="/titane" replace />} />
+          <Route
+            path="/chat"
+            element={<Navigate to="/titane?tab=conversation" replace />}
+          />
           <Route path="/camera" element={<Navigate to="/titane" replace />} />
           <Route path="/evo" element={<Navigate to="/titane" replace />} />
           <Route path="/dashboard" element={<Navigate to="/titane" replace />} />

@@ -23,6 +23,8 @@
   - proof-pack discipline
   - mapping/cartography update verification (Rule 15)
   - test creation verification (Rule 16)
+- For Android build/runtime work, enforce the Android freshness sequence from `.github/copilot-instructions.md` Rule 13.2: rebuild frontend first, verify packaged artifact truth, verify installed device truth, and treat `conversation_generate` IPC clamp/fallback as a backend/frontend desynchronization until proven otherwise.
+- For Android dev-runtime UI freshness, `bash scripts/android/dev-stable.sh` must delegate to `scripts/android/vite-network-server.sh` as the only Vite launcher, prove `http://127.0.0.1:1420` is still reachable after startup, then rerun `corepack pnpm run test:e2e:android:browser` before closure. Without ADB evidence, keep the device lane explicitly BLOCKED.
 - Keep fixes minimal and reversible.
 - Route binary, repeated rules toward validator scripts.
 - For every new file in `src/` or `src-tauri/`: confirm corresponding test file exists (Rule 16).

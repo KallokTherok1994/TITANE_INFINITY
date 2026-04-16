@@ -6,10 +6,14 @@
 import React from 'react';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@/test-utils';
+import { BrowserRouter } from 'react-router-dom';
 import { MessageList } from '../components/chat/MessageList';
+import { TitanePage } from '../pages/TitanePage';
 import Chat from '../ui/pages/Chat';
 import { setupE2ETest, teardownE2ETest } from './e2e-setup';
 import { createTestMessage } from './e2e-test-utils';
+
+const renderCanonicalChat = () => render(<BrowserRouter><TitanePage /></BrowserRouter>);
 
 describe('🟣 OMEGA Phase 7Ω - E2E: UI Integration Tests', () => {
   beforeEach(() => {
@@ -21,8 +25,23 @@ describe('🟣 OMEGA Phase 7Ω - E2E: UI Integration Tests', () => {
   });
 
   it('should render chat component without crashing', () => {
-    const { container } = render(<Chat />);
+    const { container } = renderCanonicalChat();
     expect(container).toBeTruthy();
+    expect(screen.getByTestId('page-conversation')).toBeTruthy();
+  });
+
+  it('should route the legacy Chat page export to the canonical conversation surface', () => {
+    const { container } = render(<BrowserRouter><Chat /></BrowserRouter>);
+
+    expect(container).toBeTruthy();
+    expect(screen.getByTestId('page-titane')).toHaveAttribute(
+      'data-layout',
+      'chat-fullscreen'
+    );
+    expect(screen.getByTestId('page-conversation')).toHaveAttribute(
+      'data-layout',
+      'fullscreen'
+    );
   });
 
   it('should render message list with messages', () => {
@@ -43,12 +62,12 @@ describe('🟣 OMEGA Phase 7Ω - E2E: UI Integration Tests', () => {
   });
 
   it('should handle user input in chat', async () => {
-    const { container } = render(<Chat />);
+    const { container } = renderCanonicalChat();
 
-    const input = screen.queryByPlaceholderText(/message|type/i);
+    const input = screen.queryByTestId('chat-input');
     if (input) {
       fireEvent.change(input, { target: { value: 'Test message' } });
-      expect((input as HTMLInputElement).value).toBe('Test message');
+      expect((input as HTMLTextAreaElement).value).toBe('Test message');
     }
   });
 });

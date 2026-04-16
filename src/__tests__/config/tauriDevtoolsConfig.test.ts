@@ -40,10 +40,10 @@ describe('Tauri devtools configuration', () => {
     );
   });
 
-  it('keeps the base Tauri config aligned so the generator cannot disable F12 again', () => {
+  it('keeps the canonical production base config aligned with disabled devtools', () => {
     const baseConfig = loadJson<TauriConfig>('src-tauri/tauri.base.json');
     const mainWindow = baseConfig.app?.windows?.find(window => window.label === 'main');
 
-    expect(mainWindow?.devtools).toBe(true);
+    expect(mainWindow?.devtools).toBe(false);
   });
 });

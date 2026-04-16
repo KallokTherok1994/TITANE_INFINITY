@@ -1,7 +1,18 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen } from '@testing-library/react';
 
-import { deriveAiStatus } from '../TopNav';
+import { deriveAiStatus, TopNav, type TopNavItem } from '../TopNav';
 import * as zoomScale from '@/hooks/zoomScale';
+import * as tauriProtector from '@/utils/tauriProtector';
+
+const TOPNAV_ITEMS: TopNavItem[] = [
+  {
+    id: 'titane',
+    label: 'Titane',
+    icon: null,
+    route: '/titane',
+  },
+];
 
 describe('TopNav AI status truth', () => {
   it('ignores local fallback in cloud health percentage', () => {
@@ -68,5 +79,25 @@ describe('zoomScale utilities (used by TopNav zoom controls)', () => {
     expect(zoomScale.clampZoomScale(1.0)).toBe(1.0);
     expect(zoomScale.clampZoomScale(0.5)).toBe(0.5);
     expect(zoomScale.clampZoomScale(2.0)).toBe(2.0);
+  });
+});
+
+describe('TopNav zoom display', () => {
+  beforeEach(() => {
+    vi.spyOn(zoomScale, 'readCurrentZoomScale').mockReturnValue(1);
+    vi.spyOn(tauriProtector, 'isTauriRuntimeAvailable').mockReturnValue(false);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('renders the zoom indicator with the canonical width utility', () => {
+    render(<TopNav items={TOPNAV_ITEMS} currentRoute="/titane" onNavigate={vi.fn()} />);
+
+    const zoomIndicator = screen.getByText('100%');
+
+    expect(zoomIndicator).toHaveClass('min-w-12');
+    expect(zoomIndicator).not.toHaveClass('min-w-[3rem]');
   });
 });

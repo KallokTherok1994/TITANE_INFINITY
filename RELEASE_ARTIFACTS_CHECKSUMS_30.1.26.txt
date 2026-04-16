@@ -1,0 +1,5 @@
+be00bc22a3845fa4db2ac284055d881880080ee6946b11a836f34ad1ecf4df2a  src-tauri/target/release/bundle/appimage/TITANE Infinity_30.1.26_amd64.AppImage
+e6b989acb78afdca9965715907fdf83b7d7d608d22cfd51355896c75ea323460  src-tauri/target/release/bundle/deb/TITANE Infinity_30.1.26_amd64.deb
+5acd5bfc77a06e16a899587082c8a066d6c7b10df2f99f1bac8893f015a5270a  src-tauri/target/release/bundle/rpm/TITANE Infinity-30.1.26-1.x86_64.rpm
+eb295c7a22c3f410c580254a3b192320ac6b14f9df53694658b0f218542bec5f  src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk
+cfe4b132610cfab40058318a5255b948503dffd222f4fa4064f6fa7b3fc08bd9  src-tauri/gen/android/app/build/outputs/bundle/universalRelease/app-universal-release.aab

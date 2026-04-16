@@ -1,37 +1,37 @@
 {
   "deployment": {
-    "timestamp": "2026-04-15T14:51:58Z",
-    "version": "30.1.23",
-    "commit": "10709bc398a2f315c4fea38cef190d272c26491f",
+    "timestamp": "2026-04-16T01:03:02Z",
+    "version": "30.1.28",
+    "commit": "90d4752a796c663354517e232deb70f9cb878079",
     "branch": "MAIN",
-    "certification": "BUILD_ALL_LOCAL_20260415_145158",
+    "certification": "BUILD_ALL_LOCAL_20260416_010302",
     "deployment_type": "build_all_local"
   },
   "artifacts": {
     "appimage": {
       "available": true,
-      "file": "TITANE Infinity_30.1.23_amd64.AppImage",
-      "sha256": "11db4adbb7dacc5502451a3bfda05abeb364b1848a33e5cfef61d5323d31df06"
+      "file": "TITANE Infinity_30.1.28_amd64.AppImage",
+      "sha256": "58567aca0006222dbd039cc35d6c01d7b104f4dd6c541ed6c1eb16a62a7a240b"
     },
     "deb": {
       "available": true,
-      "file": "TITANE Infinity_30.1.23_amd64.deb",
-      "sha256": "04335c44a29718838abba211d50e3664514a6b090928b54b7d02468ffbfba875"
+      "file": "TITANE Infinity_30.1.28_amd64.deb",
+      "sha256": "3fd0202ff0a509ef4ee48e6cf566648556a4997cbc5ef99b067afdd372c3cf9b"
     },
     "rpm": {
       "available": true,
-      "file": "TITANE Infinity-30.1.23-1.x86_64.rpm",
-      "sha256": "76498a300170c3ee20ac36ee299efee400a3e05d4fe779bf0f26d8400b73fadf"
+      "file": "TITANE Infinity-30.1.28-1.x86_64.rpm",
+      "sha256": "c5c5ba2268c076558f4611d4e69b4c491215d36cc3e09e262fa806c79195f017"
     },
     "android_apk": {
       "available": true,
       "file": "app-universal-release-unsigned.apk",
-      "sha256": "4441f6ea337c7477d34f32d15f77e85aee4fcd905500066c9ddaef12aa846cd6"
+      "sha256": "f38932fe6b5dc3f46cba9f6e593726f7cd09f83d5bee18c9dd8078d5c5f43b3b"
     },
     "android_aab": {
       "available": true,
       "file": "app-universal-release.aab",
-      "sha256": "3a4ae8f07ea35d74e099c98c80c3b5cb8aa3fb737a9b0ceffcb3c3ff8774c449"
+      "sha256": "f0f52996b39beca1184163c15880e1578595d037d04abc38157cb3564b357aff"
     },
     "windows_msi": {
       "available": false,

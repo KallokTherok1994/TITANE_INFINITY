@@ -27,12 +27,12 @@ import { useLocation } from 'react-router';
  * Used for intelligent preloading of likely next routes
  */
 const ROUTE_CHUNKS: Record<string, string[]> = {
-  '/': ['@/pages/Chat', '@/pages/centers/MemoryCenter'],
-  '/chat': ['@/pages/Agenda', '@/pages/Camera'],
+  '/': ['@/pages/TitanePage', '@/pages/centers/MemoryCenter'],
+  '/chat': ['@/pages/TitanePage', '@/pages/TimePage'],
   '/memory': ['@/pages/centers/RealityCenter'],
-  '/agenda': ['@/pages/Camera', '@/pages/Chat'],
-  '/camera': ['@/pages/Chat', '@/pages/centers/MemoryCenter'],
-  '/developer-tools': ['@/pages/Chat', '@/pages/centers/MemoryCenter'],
+  '/agenda': ['@/pages/Camera', '@/pages/TitanePage'],
+  '/camera': ['@/pages/TitanePage', '@/pages/centers/MemoryCenter'],
+  '/developer-tools': ['@/pages/TitanePage', '@/pages/centers/MemoryCenter'],
 };
 
 /* ────────────────────────────────────────────────────────────
@@ -184,7 +184,7 @@ export const predictNextRoute = (
  */
 export const preloadCriticalChunks = async (): Promise<void> => {
   const criticalChunks = [
-    '@/pages/Chat',
+    '@/pages/TitanePage',
     '@/components/layout/Navigation',
     '@/components/aura/AuraController',
   ];
@@ -231,7 +231,7 @@ export const navigateWithPreload = (
  * Hook for preloading on link hover (for advanced optimization)
  * @param path - Route path
  * @example
- *   <Link to="/chat" onMouseEnter={() => prefetchOnHover('/chat')} />
+ *   <Link to="/chat" onMouseEnter={() => prefetchOnHover('/chat')} /> // preloads TitanePage
  */
 export const prefetchOnHover = (path: string): void => {
   preloadRoute(path, 'high');

@@ -12,6 +12,8 @@
 
 import { test, expect, type Locator, type Page } from '@playwright/test';
 
+type E2EChatScenario = 'success' | 'rate_limit';
+
 type MemoryProofVerdict =
   | 'PASS_MEMORY_REAL'
   | 'HONEST_OFFLINE_DEGRADED'
@@ -50,11 +52,34 @@ function isRuntimeDegraded(snapshot: RuntimeSnapshot): boolean {
     mode === 'ERROR' ||
     mode === 'OFFLINE' ||
     reason === 'FALLBACK_OFFLINE' ||
+    reason === 'RATE_LIMIT' ||
     reason === 'TIMEOUT' ||
     reason === 'NETWORK_ERROR' ||
     reason === 'PROVIDER_UNAVAILABLE' ||
     reason === 'POLICY_BLOCKED'
   );
+}
+
+async function enableE2EChatMock(
+  page: Page,
+  scenario: E2EChatScenario = 'success'
+): Promise<void> {
+  await page.addInitScript(value => {
+    (window as { __TITANE_E2E_CHAT_MOCK__?: boolean }).__TITANE_E2E_CHAT_MOCK__ = true;
+    (window as { __TITANE_E2E_CHAT_CONV_SEQ__?: number }).__TITANE_E2E_CHAT_CONV_SEQ__ =
+      0;
+    (
+      window as { __TITANE_E2E_CHAT_SCENARIO__?: E2EChatScenario }
+    ).__TITANE_E2E_CHAT_SCENARIO__ = value;
+  }, scenario);
+}
+
+async function setE2EChatScenario(page: Page, scenario: E2EChatScenario): Promise<void> {
+  await page.evaluate(value => {
+    (
+      window as { __TITANE_E2E_CHAT_SCENARIO__?: E2EChatScenario }
+    ).__TITANE_E2E_CHAT_SCENARIO__ = value;
+  }, scenario);
 }
 
 function isStructuralTargetMismatch(snapshot: RuntimeSnapshot): boolean {
@@ -380,7 +405,7 @@ test.describe('Provider Flow v21.0', () => {
       const hasHonestDegradedMessage =
         /N'AI PAS PU|MODE .*AUTO|V[ÉE]RIFIE LA CONNEXION|INDISPONIBLE|FALLBACK/i.test(
           finalResponseText
-        ) || /FALLBACK_OFFLINE|PROVIDER_UNAVAILABLE|TIMEOUT/.test(finalUpper);
+        ) || /FALLBACK_OFFLINE|PROVIDER_UNAVAILABLE|TIMEOUT|RATE_LIMIT/.test(finalUpper);
 
       if (hasDegraded) {
         return hasHonestDegradedMessage ? 'HONEST_OFFLINE_DEGRADED' : 'FALLBACK_ONLY';
@@ -770,6 +795,34 @@ test.describe('Provider Flow v21.0', () => {
     if (outcome.kind === 'assistant' && !degradedRuntime && !targetMismatch) {
       expect(explicitUnknown).toBeTruthy();
     }
+  });
+
+  test('Test 7: RATE_LIMIT runtime truth', async ({ page }) => {
+    await enableE2EChatMock(page, 'rate_limit');
+
+    await page.goto('/chat');
+    await page.waitForLoadState('networkidle');
+    await setE2EChatScenario(page, 'rate_limit');
+
+    const { messageInput, sendButton, assistantMessages } = getChatLocators(page);
+    const outcome = await sendMessageAndWaitAssistant(
+      page,
+      messageInput,
+      sendButton,
+      assistantMessages,
+      'Test provider-flow rate limit truth'
+    );
+
+    expect(outcome.kind).not.toBe('timeout');
+    expect(isRuntimeDegraded(outcome.runtime)).toBeTruthy();
+    expect(outcome.runtime.providerReason).toBe('RATE_LIMIT');
+    expect(outcome.runtime.providerMode).toBe('OFFLINE');
+    expect(outcome.runtime.providerUsed).toBe('GITHUB-COPILOT');
+    expect(outcome.runtime.networkUsed).toBe('true');
+    expect(outcome.runtime.runtimeSummary).toContain('Reason: RATE_LIMIT');
+    expect(outcome.runtime.runtimeSummary).toContain('Provider: github-copilot');
+    expect(outcome.responseText).toContain('limite de taux');
+    expect(outcome.responseText).not.toContain('[MOCK_OK]');
   });
 });
 

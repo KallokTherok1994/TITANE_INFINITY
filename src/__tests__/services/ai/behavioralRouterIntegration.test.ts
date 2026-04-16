@@ -94,7 +94,7 @@ describe('BehavioralRouter → Profile Selection Integration', () => {
     );
 
     expect(profile.id).toBe('DEVELOPED');
-    expect(profile.maxTokens).toBe(6144);
+    expect(profile.maxTokens).toBe(32768);
     expect(profile.reasoningEffort).toBe('high');
   });
 
@@ -126,6 +126,6 @@ describe('BehavioralRouter → Profile Selection Integration', () => {
     );
 
     expect(profile.id).toBe('DEEP');
-    expect(profile.maxTokens).toBe(8192);
+    expect(profile.maxTokens).toBe(24576);
   });
 });

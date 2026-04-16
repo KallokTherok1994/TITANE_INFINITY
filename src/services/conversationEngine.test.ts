@@ -6,7 +6,16 @@ vi.mock('@/lib/security', () => {
   };
 });
 
+vi.mock('@/services/ai/orchestrator', () => {
+  return {
+    aiOrchestrator: {
+      generate: vi.fn(),
+    },
+  };
+});
+
 import { secureInvoke } from '@/lib/security';
+import { aiOrchestrator } from '@/services/ai/orchestrator';
 import {
   getStaticPromptContext,
   processMessage,
@@ -18,6 +27,8 @@ describe('conversationEngine.processMessage', () => {
     vi.clearAllMocks();
     resetStaticPromptContextCache();
     localStorage.clear();
+    (window as Record<string, unknown>).__TITANE_E2E_CHAT_MOCK__ = false;
+    delete (window as Record<string, unknown>).__TITANE_E2E_CHAT_SCENARIO__;
   });
 
   it('normalizes missing metadata with safe defaults', async () => {
@@ -94,6 +105,48 @@ describe('conversationEngine.processMessage', () => {
         }),
       })
     );
+  });
+
+  it('recovers with orchestrator fallback when tauriProtector clamps conversation_generate IPC', async () => {
+    vi.mocked(secureInvoke)
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce({
+        content: 'IPC_INVALID_ARGS: Erreur IPC: incompatibilité frontend-backend',
+        conversationId: 'c-ipc',
+        messageId: 'm-ipc',
+        latencyMs: 0,
+        meta: {
+          provider_used: 'fallback',
+          provider_class: 'local',
+          mode: 'ERROR',
+          reason_code: 'CONTRACT_VIOLATION_CLAMPED',
+          latency_ms_total: 0,
+          timeout_ms: 0,
+          retries: 0,
+          attempts: [],
+          network_used: false,
+          cache_hit: false,
+          policy: 'tauri_protector_ipc_fallback',
+        },
+      });
+
+    vi.mocked(aiOrchestrator.generate).mockResolvedValueOnce({
+      content: 'Réponse locale de secours valide',
+      provider: 'ollama',
+      metadata: {
+        totalResponseTime: 12,
+        selectedProvider: 'ollama',
+      },
+    } as Awaited<ReturnType<typeof aiOrchestrator.generate>>);
+
+    const response = await processMessage('Salut', {
+      conversationId: 'c-ipc',
+      providerPreference: 'ollama',
+    });
+
+    expect(response.assistant_message).toBe('Réponse locale de secours valide');
+    expect(response.meta.provider_used).toBe('ollama');
+    expect(response.meta.policy).toBe('conversation_engine_orchestrator_fallback');
   });
 
   it('forwards the selected provider to conversation_generate', async () => {
@@ -211,5 +264,25 @@ describe('conversationEngine.processMessage', () => {
 
     expect(first).toBe(second);
     expect(third).not.toBe(second);
+  });
+
+  it('supports a governed E2E rate-limit mock scenario', async () => {
+    (window as Record<string, unknown>).__TITANE_E2E_CHAT_MOCK__ = true;
+    (window as Record<string, unknown>).__TITANE_E2E_CHAT_SCENARIO__ = 'rate_limit';
+
+    const response = await processMessage('Explorer GitHub', {
+      conversationId: 'e2e-conv-rate-limit',
+    });
+
+    expect(response.assistant_message).toContain('limite de taux');
+    expect(response.meta).toEqual(
+      expect.objectContaining({
+        provider_used: 'github-copilot',
+        mode: 'OFFLINE',
+        reason_code: 'RATE_LIMIT',
+        network_used: true,
+      })
+    );
+    expect(vi.mocked(secureInvoke)).not.toHaveBeenCalled();
   });
 });

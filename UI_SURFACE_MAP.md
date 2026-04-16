@@ -1,3 +1,29 @@
+# [2026-04-16] Canonical chat surface truth: `src/pages/ChatPage.tsx` n'expose plus une UI chat parallèle, le router déprécié et le préchargement critique sont réalignés sur `TitanePage`, et la surface interactive réelle reste `ConversationSection` via `/titane?tab=conversation`.
+
+# [2026-04-16] Legacy chat export truth: `src/ui/pages/Chat.tsx` ne porte plus sa propre implémentation OMEGA; il agit désormais comme alias fin vers `ChatPage` puis `TitanePage`, ce qui garde les anciens imports compatibles sans réintroduire une surface chat divergente.
+
+# [2026-04-15] Conversation IPC recovery truth: la surface chat canonique conserve maintenant une génération valide même quand `conversation_generate` tombe sur un clamp IPC du `tauriProtector`; `ConversationEngine` tente alors explicitement le fallback orchestrateur au lieu d'exposer directement l'erreur technique `tauri_protector_ipc_fallback`.
+
+# [2026-04-15] TWINS canonical route context: les alias legacy `/identity`, `/identity-center`, `/persona` et `/twin` sont normalisés vers la route publique dédiée `/twins` aussi dans le contexte module-route utilisé par le chat, pour garder la navigation et la mémoire contextuelle alignées avec la surface UI réelle.
+
+# [2026-04-16] Conversation rate-limit provider-flow proof: la lane Playwright riche `tests/e2e/provider-flow.test.ts` sait maintenant injecter le scénario gouverné `RATE_LIMIT` via le mock conversationnel et exige la même vérité runtime `chat-runtime-state[data-provider-reason="RATE_LIMIT"][data-provider-mode="OFFLINE"][data-network-used="true"]` sans faux succès `[MOCK_OK]`.
+
+# [2026-04-16] Conversation rate-limit E2E proof: le harness critique Playwright peut désormais injecter un scénario gouverné `RATE_LIMIT` via le mock conversationnel, et la surface chat doit alors exposer `chat-runtime-state[data-provider-reason="RATE_LIMIT"][data-provider-mode="OFFLINE"]` avec un résumé runtime cohérent au lieu d’un faux succès mock.
+
+# [2026-04-16] Conversation rate-limit truth: les dégradations d’exploration et de fallback conversationnel marquées `RATE_LIMIT` sont désormais exposées comme un blocage gouverné temporaire, pas comme une erreur générique, afin que la surface chat affiche honnêtement une indisponibilité de quota GitHub/Copilot.
+
+# [2026-04-15] Conversation fullscreen flex chain: la surface active `ConversationSection` ne repose plus sur une hauteur fullscreen soustractive sur mobile/zoom; le conteneur plein écran remplit maintenant la hauteur disponible via la chaîne `titane-content--conversation -> titane-section-conversation--fullscreen -> conversation-container`, ce qui garde la zone d'écriture visible dans la fenêtre.
+
+# [2026-04-15] Android browser-mobile conversation: la surface chat fullscreen compacte conserve maintenant un compositeur visible sur mobile via un override de hauteur dedie dans `TitanePage-local.css`; la validation E2E Android continue de passer par les selectors stables `chat-input`, `chat-send` et `chat-message-user`, avec un dispatch DOM natif cote harness pour eviter les faux negatifs de clic synthetique sans changer la surface exposee.
+
+# [2026-04-15] Conversation composer containment: en fullscreen, la zone d'écriture du bas reste maintenant collée et bornée au viewport visible via un compositeur sticky/safe-area-aware; la preuve T17 vérifie explicitement que le bas du compositeur (`composerBottom`) ne sort pas de la fenêtre.
+
+# [2026-04-15] Conversation return-to-bottom CTA: `chat-scroll-to-bottom` est maintenant rendu comme une petite flèche ronde discrète ancrée au bas de la surface chat, sans libellé visible, pour revenir rapidement au dernier message sans alourdir le bas de page.
+
+# [2026-04-15] Conversation view polish: la surface chat regroupe maintenant toolbar, filtres et télémétrie dans un chrome haut cohérent; le panneau runtime passe en layout compact lisible et les bulles utilisateur/assistant gagnent une hiérarchie visuelle plus nette.
+
+# [2026-04-15] Conversation fullscreen immersive: `conversation-container` expose maintenant `data-fullscreen=true|false`; le mode fullscreen applique un chrome plus affirmé sur la toolbar, le panneau runtime, le flux et le compositeur pour que le basculement soit immédiatement visible, même avant l'entrée en densité `compact`.
+
 # [2026-04-15] Réponses longues chat: la surface conversation repasse automatiquement sur le rendu non virtualisé dès qu’un message dépasse la hauteur fixe compatible `react-window`, et les budgets par défaut de génération sont alignés sur le plafond backend utile de 32768 pour éviter les coupures de sortie côté runtime.
 
 # [2026-04-15] Conversation fullscreen: la surface chat compacte automatiquement son chrome quand le zoom réduit la hauteur utile; ajout du raccourci flottant `chat-scroll-to-bottom`, du sélecteur stable `chat-messages-scroll-region`, d’un traitement safe-area renforcé et d’un verrouillage `flex/min-height/overflow` plus strict pour garder le dernier message, le CTA et l’input visibles sur desktop et mobile.
@@ -28,16 +54,25 @@
 - Send button test id: `chat-send`
 - Messages scroll region test id: `chat-messages-scroll-region`
 - Scroll-to-bottom button test id: `chat-scroll-to-bottom`
+- Scroll-to-bottom visual form: petite flèche ronde discrète, sans texte visible, ancrée en bas à droite de la surface conversation
 - Assistant message container test id: `chat-message-assistant`
 - Assistant content test id: `chat-message-content`
 - Runtime panel test id: `chat-runtime-state`
 - Runtime summary test id: `chat-runtime-summary`
+- Conversation top chrome: toolbar, filtres et runtime sont visuellement regroupés dans `conversation-top-chrome`
+- Runtime panel visual contract: résumé + manifest alignés dans `conversation-runtime-copy`, badges sur une colonne d’appoint plus compacte
 - Ready marker test id: `chat-ready`
 - Loading marker test id: `chat-loading`
 - Error marker test id: `chat-error`
+- Fullscreen visual state: `data-fullscreen=true|false` on `conversation-container`
 - Density state: `data-density=comfortable|compact` on `conversation-container`
+- Fullscreen visual contract: le mode `data-fullscreen=true` renforce visiblement le shell conversationnel avant même l'éventuel resserrement `compact`
+- Fullscreen composer contract: `.conversation-input-container` reste contenu dans le viewport visible et ne doit jamais sortir sous la fenêtre active
+- Fullscreen containment contract: la hauteur fullscreen active est pilotée par la chaîne flex du shell conversation, pas par une soustraction fixe spécifique mobile
 - Long assistant replies: fixed-height virtualization is bypassed automatically when a message requires natural height rendering; selectors above remain unchanged.
 - Long response proof: la combinaison `chat-input` → `chat-send` → `chat-message-assistant`/`chat-message-content` est couverte en E2E mock pour vérifier qu’une réponse longue complète reste visible.
+- Legacy route truth: `/chat` reste un alias de navigation mais redirige explicitement vers `/titane?tab=conversation`; sa vérité UI reste `page-titane[data-layout="chat-fullscreen"]` et `page-conversation[data-layout="fullscreen"]`.
+- Legacy import truth: `src/ui/pages/Chat.tsx` conserve les exports `Chat` et `default`, mais ils rendent désormais la même surface canonique `page-titane` / `page-conversation`.
 
 ## Runtime Telemetry Attributes on Assistant Row
 

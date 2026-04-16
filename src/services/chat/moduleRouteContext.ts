@@ -253,6 +253,17 @@ const MODULE_REGISTRY: Record<string, ModuleRouteDefinition> = {
     limits: ['dev-mock-block-present'],
     memoryKeys: ['identity_mode', 'voice_profile'],
   },
+  '/twins': {
+    moduleId: 'twins_page',
+    moduleName: 'Twins Page',
+    moduleType: 'identity',
+    pageTitle: 'Twins',
+    capabilities: ['identity-sync', 'twins-dashboard', 'twin-evolution'],
+    dataTruthClass: 'MIXED_LIVE_AND_STATIC',
+    actions: ['load_twins_page'],
+    limits: ['dedicated-route-only', 'legacy-aliases-normalized-to-public-route'],
+    memoryKeys: ['twins_page_state'],
+  },
   '/memory-evolution': {
     moduleId: 'memory_evolution',
     moduleName: 'Transform & Évolution (fusionné)',
