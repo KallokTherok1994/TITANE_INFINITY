@@ -12,7 +12,7 @@ kill_vite_5173() {
 
   pkill -f 'vite/bin/vite\.js dev' 2>/dev/null || true
   pkill -f 'vite\.js dev --host 127\.0\.0\.1 --port 5173' 2>/dev/null || true
-  pkill -f 'npx vite dev --host 127\.0\.0\.1 --port 5173' 2>/dev/null || true
+  pkill -f 'pnpm exec vite dev --host 127\.0\.0\.1 --port 5173' 2>/dev/null || true
 }
 
 # Function pour nettoyer proprement
@@ -38,7 +38,7 @@ cleanup
 echo "2. Test de démarrage sécurisé (timeout 20s)..."
 # Démarrer Vite avec configuration optimisée
 export VITE_FORCE_OPTIMIZE=1
-npx vite dev --host 127.0.0.1 --port 5173 --strictPort > /tmp/boot-test-safe.log 2>&1 &
+pnpm exec vite dev --host 127.0.0.1 --port 5173 --strictPort > /tmp/boot-test-safe.log 2>&1 &
 VITE_PID=$!
 
 # Attendre que Vite soit prêt

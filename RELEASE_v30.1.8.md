@@ -34,7 +34,7 @@
 
 | Gate | Status |
 |------|--------|
-| `npx tsc --noEmit` | ✅ PASS |
+| `pnpm exec tsc --noEmit` | ✅ PASS |
 | `vitest run TopNav.test.tsx` (7/7) | ✅ PASS |
 | `detect_recurrence.sh` | ✅ PASS |
 | `verify_instructions.sh` (30/30) | ✅ PASS |

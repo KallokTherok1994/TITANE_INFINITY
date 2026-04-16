@@ -55,12 +55,12 @@ check_environment() {
         return 1
     fi
 
-    log_check "npm disponible"
-    if command -v npm &> /dev/null; then
-        NPM_VERSION=$(npm --version)
-        log_pass "npm $NPM_VERSION"
+    log_check "pnpm disponible"
+    if command -v pnpm &> /dev/null; then
+        PNPM_VERSION=$(pnpm --version)
+        log_pass "pnpm $PNPM_VERSION"
     else
-        log_fail "npm non trouvé"
+        log_fail "pnpm non trouvé"
         return 1
     fi
 

@@ -87,6 +87,7 @@ applyTo: 'src/**'
 - Add fetch/HTTP without explicit approval and gates.
 - Hide errors or swallow exceptions.
 - Ship a new UI surface without E2E test and `UI_SURFACE_MAP.md` update.
+- Utiliser `npm`/`npx` (pnpm uniquement, `npm` interdit).
 
 ## Preuves attendues
 

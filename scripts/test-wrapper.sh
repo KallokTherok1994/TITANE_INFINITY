@@ -20,8 +20,7 @@ echo ""
 TEMP_OUTPUT=$(mktemp)
 trap "rm -f $TEMP_OUTPUT" EXIT
 
-# Run tests using npx to ensure cross-env is available
-# This fixes "cross-env: command not found" error
+# Run tests with pnpm exec to ensure cross-env is resolved from local deps
 VITEST_ARGS=("$@")
 if [[ "${VITEST_ARGS[0]:-}" == "--" ]]; then
     VITEST_ARGS=("${VITEST_ARGS[@]:1}")
@@ -39,7 +38,7 @@ for arg in "${VITEST_ARGS[@]}"; do
 done
 VITEST_ARGS=("${FILTERED_ARGS[@]}")
 
-npx cross-env NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run "${VITEST_ARGS[@]}" 2>&1 | tee "$TEMP_OUTPUT"
+pnpm exec cross-env NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run "${VITEST_ARGS[@]}" 2>&1 | tee "$TEMP_OUTPUT"
 VITEST_EXIT=${PIPESTATUS[0]}
 
 # RAW mode: bypass all output parsing (useful when Vitest output formats change)

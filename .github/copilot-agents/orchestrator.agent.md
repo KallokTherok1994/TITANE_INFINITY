@@ -2,5 +2,5 @@
 
 Role: Coordinates validation and test gates.
 
-- Pre-flight: run `npm run copilot-xs:validate`
-- Gate: run `npm run test:all` (or repo verify) before merge
+- Pre-flight: run `pnpm run copilot-xs:validate`
+- Gate: run `pnpm run test:all` (or repo verify) before merge
