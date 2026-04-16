@@ -1,5 +1,7 @@
 # TITANE_INFINITY — Cartographie Complète Avancée v30.1.8
 
+> 2026-04-16 — Canonical anti-regression surface truth: `src/features/admin/AdminPage.tsx` monte désormais `SelfHealingDashboard` comme onglet actif `/admin?tab=anti-regression`; la surface visible canonique expose `self-healing-dashboard` et `anti-regression-summary`, et la classification runtime passe par `src/services/selfHealing/selfHealingService.ts`.
+
 > 2026-04-16 — Canonical chat surface truth: `src/pages/ChatPage.tsx` est désormais un alias explicite vers `TitanePage`; le router legacy `/chat` redirige maintenant explicitement vers `/titane?tab=conversation`, le router déprécié et le préchargement critique pointent eux aussi vers `TitanePage`, et la surface utilisateur réellement active reste `ConversationSection` sous cette topologie canonique.
 > 2026-04-16 — Legacy chat export truth: `src/ui/pages/Chat.tsx` a été réduit à un alias de compatibilité vers `ChatPage`, lui-même alias vers `TitanePage`; les imports hérités restent donc fonctionnels sans réintroduire l’ancienne UI chat autonome.
 

@@ -1,5 +1,13 @@
 > 2026-04-15 — Chat runtime: les budgets par défaut de `ChatRequestDefaults` et du profil frontend ont été relevés jusqu’au plafond backend utile (`32768`) pour éviter les sorties tronquées par défaut, tout en conservant la borne IPC/Rust comme garde-fou structurel.
 
+## Agent Anti-Régression
+
+L’agent anti-régression qualifie l’état visible du self-healing, consolide les signaux runtime, performance, UI et configuration, puis oriente les contrôles à exécuter avant toute fermeture de phase. Il s’intègre au dashboard anti-régression UI canonique (Ring 3/4) monté dans l’Admin et au service `selfHealingService` (Ring 3), qui délègue ensuite au moteur self-healing existant.
+
+- **Rôle** : Qualification anti-régression, classification des signaux, pilotage des contrôles, verrouillage de la surface canonique.
+- **Flux** : Admin UI → SelfHealingDashboard → selfHealingService → SelfHealing IO Adapter → moteur self-healing.
+- **Gates** : Sélecteurs stables, tests unitaires façade, E2E dédié, mappings UI/cartographie, intégration AutoHeal.
+
 ## Agent de Sécurité Active
 
 L’agent de sécurité active détecte les anomalies réseau, effectue du sandboxing, orchestre la réponse automatisée aux menaces et supervise les autres agents pour garantir la résilience. Il s’intègre à un dashboard sécurité UI (Ring 3/4) et au moteur de sécurité active (Ring 2), avec accès direct au kernel (Ring 0) pour la gestion des alertes critiques.

@@ -68,6 +68,14 @@ const GovernanceCenterPage = lazy(async () => {
   return { default: m.GovernanceCenterPage };
 });
 
+const SelfHealingDashboard = lazy(async () => {
+  const m = await import('../../ui/pages/SelfHealingDashboard');
+  if (!m.SelfHealingDashboard) {
+    throw new Error('[ADMIN_IMPORT] Export SelfHealingDashboard manquant');
+  }
+  return { default: m.SelfHealingDashboard };
+});
+
 const ProductionHealthPanel = lazy(async () => {
   const m = await import('../production-health/ProductionHealthPanel');
   if (!m.ProductionHealthPanel) {
@@ -140,6 +148,15 @@ const TabContent: React.FC<TabContentProps> = ({ tab }) => {
         <Suspense fallback={<LoadingSpinner message="Chargement Gouvernance..." />}>
           <ErrorBoundary context="AdminGovernanceCenter">
             <GovernanceCenterPage />
+          </ErrorBoundary>
+        </Suspense>
+      );
+
+    case 'anti-regression':
+      return (
+        <Suspense fallback={<LoadingSpinner message="Chargement Anti-Régression..." />}>
+          <ErrorBoundary context="AdminAntiRegressionCenter">
+            <SelfHealingDashboard />
           </ErrorBoundary>
         </Suspense>
       );
