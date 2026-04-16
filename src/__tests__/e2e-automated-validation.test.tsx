@@ -24,6 +24,7 @@ import type { ChatEngineResponse } from '../services/ai';
 import { useChat } from '../hooks/useChat';
 import { MessageList } from '../components/chat/MessageList';
 import { TitanePage } from '../pages/TitanePage';
+import Chat from '../ui/pages/Chat';
 
 // In Vitest we don't exercise the real Tauri-backend chat service. For E2E-in-unit tests,
 // force the hook to use its local streaming/generate fallback path.
