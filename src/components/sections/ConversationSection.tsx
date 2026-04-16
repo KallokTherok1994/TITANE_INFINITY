@@ -288,6 +288,60 @@ export function buildConversationRuntimeBadges(
   return Array.from(new Set(values)).slice(0, 8);
 }
 
+function normalizeTransparencyPrompt(input: string): string {
+  return input
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\s']/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+export function isConversationTransparencyPrompt(input: string): boolean {
+  const normalized = normalizeTransparencyPrompt(input);
+  if (!normalized) {
+    return false;
+  }
+
+  const asksProvider =
+    /provider\s+(reel|utilise|utilisee)/.test(normalized) ||
+    normalized.includes('provider reel utilise');
+  const asksNetwork =
+    normalized.includes('reseau') &&
+    /(a ete utilise|est utilise|utilise|usage)/.test(normalized);
+  const asksUiExport =
+    /(ui|interface)/.test(normalized) &&
+    /(permet|peut|autorise|allows|capable)/.test(normalized) &&
+    /export/.test(normalized);
+
+  return asksProvider && asksNetwork && asksUiExport;
+}
+
+export function buildConversationTransparencyReply(
+  latestAssistantRuntime: LatestAssistantRuntimeSnapshot | null
+): string {
+  const providerMeta = latestAssistantRuntime?.providerMeta;
+  const providerLine = providerMeta?.provider_used?.trim()
+    ? providerMeta.provider_used
+    : 'indisponible: aucune reponse assistant instrumentee n est encore presente dans cette conversation.';
+  const networkLine = providerMeta
+    ? providerMeta.network_used === true
+      ? 'oui'
+      : 'non'
+    : 'indisponible: aucune metadonnee runtime exploitable n est encore presente.';
+  const modeSuffix = providerMeta?.mode ? ` (mode ${providerMeta.mode})` : '';
+  const reasonSuffix = providerMeta?.reason_code
+    ? `, reason ${providerMeta.reason_code}`
+    : '';
+
+  return [
+    '1. Provider reel utilise: ' + providerLine + (providerMeta ? modeSuffix : ''),
+    '2. Reseau utilise: ' + networkLine + (providerMeta ? reasonSuffix : ''),
+    '3. Ce que l UI permet d exporter: la conversation en JSON, la conversation en Markdown, et une copie presse-papiers. Pour une demande de fichier ou document, cette surface route vers la voie artefact avec manifeste canonique; elle ne lance pas un export fichier implicite depuis cette reponse.',
+  ].join('\n');
+}
+
 function getSpeechStatusLabel(status: MessageSpeechStatus, error: string | null): string {
   switch (status) {
     case 'loading':
@@ -1786,6 +1840,19 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
         return;
       }
 
+      if (isConversationTransparencyPrompt(messageText)) {
+        await appendLocalExchange(
+          messageText,
+          buildConversationTransparencyReply(latestAssistantRuntime),
+          {
+            intention: 'runtime_transparency_answer',
+          }
+        );
+        toastSuccess('Resume de transparence runtime ajoute dans la conversation.');
+        sendingRef.current = false;
+        return;
+      }
+
       if (shouldHandoffToResearch(messageText)) {
         thinking.startThinking();
         thinking.addStep('analysis', 'Détection recherche web (mode chat intégré)...');
@@ -1901,6 +1968,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       isLoading,
       sendMessage,
       appendLocalExchange,
+      latestAssistantRuntime,
       audioEnabled,
       thinking,
       errorToast,

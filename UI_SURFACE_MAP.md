@@ -1,3 +1,7 @@
+# [2026-04-16] Conversation runtime transparency reply: quand l'utilisateur demande explicitement, sans creer de fichier, le provider reel utilise, l'usage reseau et ce que l'UI peut exporter, la surface conversation repond maintenant localement en 3 points a partir de la derniere verite runtime instrumentee; elle cite JSON, Markdown et copie presse-papiers, et rappelle que les demandes de fichier passent par la voie artefact canonique.
+
+# [2026-04-16] Conversation transparency prompt guard: la surface conversation ne bascule plus vers la voie artefact sur une question descriptive mentionnant simplement ce que l'UI peut exporter; seuls les prompts demandant réellement un export/génération de fichier déclenchent désormais le manifeste artefact.
+
 # [2026-04-16] Conversation fullscreen internal scroll budget: en viewport compact, le shell fullscreen supprime son gap vertical hérité et réserve un budget bas safe-area-aware afin que `chat-messages-scroll-region` garde le scroll interne pendant que l’onglet chat et le compositeur restent visibles simultanément.
 
 # [2026-04-16] Conversation fullscreen persistent header: la surface conversation conserve maintenant son header d’onglet visible sous zoom et en viewport compact, car `TitanePage` ne force plus le scroll vers le textarea et `titane-page-header--conversation` reste collé en haut du shell fullscreen.

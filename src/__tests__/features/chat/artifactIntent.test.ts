@@ -68,4 +68,12 @@ describe('artifactIntent', () => {
     expect(check.ok).toBe(false);
     expect(check.violations.length).toBeGreaterThan(0);
   });
+
+  it('keeps descriptive export transparency prompts in answer-only mode', () => {
+    const intent = classifyArtifactIntent(
+      "Sans inventer, reponds en 3 points: provider reel utilise, si le reseau a ete utilise, et ce que l'UI permet d'exporter."
+    );
+
+    expect(intent).toBe('ANSWER_ONLY');
+  });
 });

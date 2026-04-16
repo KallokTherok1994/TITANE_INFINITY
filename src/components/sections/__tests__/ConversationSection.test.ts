@@ -1,11 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  buildConversationTransparencyReply,
   buildConversationLoadingLabel,
   mapReasonCodeToNodeStatus,
   resolveConversationPendingInput,
   buildConversationRuntimeBadges,
   buildConversationRuntimeSummary,
+  isConversationTransparencyPrompt,
   isConversationNearBottom,
   resolveConversationDisplayProvider,
   shouldShowConversationScrollToBottom,
@@ -115,5 +117,51 @@ describe('ConversationSection runtime provider label', () => {
     expect(shouldShowConversationScrollToBottom(620, 320, 1240)).toBe(true);
     expect(shouldShowConversationScrollToBottom(860, 320, 1240)).toBe(false);
     expect(shouldShowConversationScrollToBottom(0, 320, 420)).toBe(false);
+  });
+
+  it('detects descriptive transparency prompts without treating them as artifact requests', () => {
+    expect(
+      isConversationTransparencyPrompt(
+        "Sans inventer, reponds en 3 points: provider reel utilise, si le reseau a ete utilise, et ce que l'UI permet d'exporter."
+      )
+    ).toBe(true);
+  });
+
+  it('builds a literal transparency reply from the latest runtime truth', () => {
+    const reply = buildConversationTransparencyReply({
+      providerMeta: {
+        provider_used: 'Ollama (OMEGA+Singularity)',
+        provider_class: 'local',
+        mode: 'LOCAL',
+        reason_code: 'OK',
+        latency_ms_total: 42,
+        timeout_ms: 30000,
+        retries: 0,
+        attempts: [],
+        network_used: false,
+        cache_hit: false,
+      },
+      tags: [],
+      runtimeSignals: {
+        orchestratorState: 'running',
+        memoryState: 'present',
+      },
+    });
+
+    expect(reply).toContain(
+      '1. Provider reel utilise: Ollama (OMEGA+Singularity) (mode LOCAL)'
+    );
+    expect(reply).toContain('2. Reseau utilise: non, reason OK');
+    expect(reply).toContain('la conversation en JSON');
+    expect(reply).toContain('la conversation en Markdown');
+    expect(reply).toContain('copie presse-papiers');
+    expect(reply).toContain('voie artefact avec manifeste canonique');
+  });
+
+  it('keeps the transparency reply honest when no runtime metadata exists yet', () => {
+    const reply = buildConversationTransparencyReply(null);
+
+    expect(reply).toContain('Provider reel utilise: indisponible');
+    expect(reply).toContain('Reseau utilise: indisponible');
   });
 });

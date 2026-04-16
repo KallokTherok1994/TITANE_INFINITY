@@ -95,7 +95,19 @@ export function classifyArtifactIntent(request: string): ArtifactIntent {
     /(g[eé]n[ée]re|cr[eé]e|create|produce).*(fichier|file|document|rapport)/.test(text);
   const asksOpen = /(ouvre|open).*(editeur|editor|canvas|artifact)/.test(text);
   const asksSave = /(sauve|enregistre|save)/.test(text);
-  const asksExport = /(exporte|export)/.test(text);
+  const mentionsExport = /(exporte|export|exporter)/.test(text);
+  const asksExportTarget =
+    /(exporte|export|exporter).*(conversation|chat|rapport|report|document|fichier|file|artifact|artefact|json|markdown|texte|txt)/.test(
+      text
+    ) ||
+    /(conversation|chat|rapport|report|document|fichier|file|artifact|artefact|json|markdown|texte|txt).*(exporte|export|exporter)/.test(
+      text
+    );
+  const describesExportCapability =
+    /(permet|possible|capable|autorise|allow|allows).*(exporte|export|exporter)/.test(
+      text
+    ) || /(ce que l['’]ui permet d['’]?exporter)/.test(text);
+  const asksExport = mentionsExport && asksExportTarget && !describesExportCapability;
 
   if (asksOpen && asksFile) return 'GENERATE_AND_OPEN';
   if (asksFile && asksSave) return 'GENERATE_AND_SAVE';
