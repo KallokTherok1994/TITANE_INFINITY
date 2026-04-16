@@ -1,5 +1,7 @@
 # OLLAMA RUNTIME MAP — TITANE_INFINITY
 
+> 2026-04-16 — Backend Ollama canonical loopback truth: `src-tauri/src/overdrive/chat_orchestrator.rs` utilise maintenant `http://127.0.0.1:11434` pour le probe, la génération et le streaming, et le fallback streaming par défaut est réaligné sur `gemma2:2b` afin d'éviter les dérives `localhost`/IPv6 et les écarts de modèle dans les lanes desktop gouvernées.
+
 **Date**: 2026-04-02
 **Verdict**: QUALIFIED
 **Status**: DISCOVERY_COMPLETE

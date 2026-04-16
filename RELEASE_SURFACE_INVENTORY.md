@@ -1,5 +1,36 @@
 # RELEASE SURFACE INVENTORY — TITANE∞ (Historical baseline v28.5.0 + current addendum v29.0.0)
 
+## Addendum — 2026-04-16 — TITANE∞ v30.1.31 Local Production Desktop Build
+
+Canonical target version: **30.1.31**
+
+| File / Surface | Version | Status |
+|---|---|---|
+| `package.json` | `30.1.31` | UPDATED_TO_30_1_31 |
+| `src-tauri/Cargo.toml` | `30.1.31` | UPDATED_TO_30_1_31 |
+| `src-tauri/tauri.conf.json` | `30.1.31` | UPDATED_TO_30_1_31 |
+| `src-tauri/tauri.base.json` | `30.1.31` | UPDATED_TO_30_1_31 |
+| `tauri.base.json` | `30.1.31` | UPDATED_TO_30_1_31 |
+| `runtime/stable/tauri.conf.json` | `30.1.31` | UPDATED_TO_30_1_31 |
+| `runtime/stable/manifest.json` | `30.1.31` | UPDATED_TO_30_1_31 |
+| `RELEASE_ARTIFACTS_CHECKSUMS.txt` | `30.1.31` | UPDATED_TO_CURRENT_BUILD |
+| `RELEASE_ARTIFACTS_CHECKSUMS_30.1.31.txt` | `30.1.31` | ADDED_AS_PROOF |
+| `RELEASE_v30.1.31.md` | `30.1.31` | ADDED_AS_PROOF |
+| `~/.local/share/applications/titane-infinity.desktop` | `30.1.30` | HOST_SYNC_BLOCKED |
+| `/usr/share/applications/titane-infinity.desktop` | `30.1.30` | HOST_SYNC_BLOCKED |
+| `/usr/bin/titane-infinity` | `30.1.30` | HOST_SYNC_BLOCKED |
+
+### Artifact Status Summary — v30.1.31
+
+| Artifact | Size | SHA256 | Status |
+|---|---|---|---|
+| `TITANE Infinity_30.1.31_amd64.AppImage` | `92871160` bytes | `ace698eebb8b359e27fa2d8026023bf7215e34d694523f23da53576a90620145` | BUILT |
+| `TITANE Infinity_30.1.31_amd64.deb` | `20055246` bytes | `e8e08cee9233a0f52adeaba380f18e3d05af598b3bc5b4212eb037b38d479d26` | BUILT |
+| `TITANE Infinity-30.1.31-1.x86_64.rpm` | `20055993` bytes | `04909df258c1380fad190fdeed56c6d774a11914ad2b9c330506cf901c53898c` | BUILT |
+| `titane-infinity` | `45078400` bytes | `e40316585f332503bf77f7992d91b8d1d33127a26a378951ad3cfdc88b03e286` | BUILT |
+
+> The local production desktop build succeeded on 2026-04-16, but the canonical Linux host-sync step remains blocked by interactive `sudo`, so the installed binary and launchers still expose `30.1.30`.
+
 Generated: 2026-04-14
 Session: REPO_OFFICIALIZATION_28_5_0
 Historical baseline version: **28.5.0**

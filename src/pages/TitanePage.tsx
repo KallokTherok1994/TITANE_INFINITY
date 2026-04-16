@@ -226,19 +226,8 @@ export const TitanePage: React.FC = () => {
       inline: 'nearest',
     });
 
-    // On chat tab, ensure we land near the input area (mobile ergonomics).
-    if (activeTab !== 'conversation') {
-      return;
-    }
-
-    const timer = window.setTimeout(() => {
-      const chatInput = document.querySelector(
-        '[data-testid="chat-input"]'
-      ) as HTMLTextAreaElement | null;
-      chatInput?.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
-    }, 120);
-
-    return () => window.clearTimeout(timer);
+    // Do not force-scroll the shell to the composer in fullscreen chat mode.
+    // The conversation header must remain visible under zoom and compact viewports.
   }, [activeTab]);
 
   // ═══ TAB HANDLERS ═══

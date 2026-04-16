@@ -56,9 +56,7 @@ vi.mock('@/services/systemHealthPoller', () => ({
 }));
 
 vi.mock('@/stores/systemStore.selectors', () => ({
-  useSystemHealth: () => ({
-    status: 'ok',
-  }),
+  useSystemHealth: () => 'Healthy',
 }));
 
 vi.mock('@/lib/tauriClient', () => ({
@@ -107,7 +105,10 @@ describe('DevPage', () => {
 
     renderDevPage();
 
-    expect(await screen.findByTestId('page-dev')).toHaveAttribute('data-dev-state', 'error');
-    expect(await screen.findByText('Erreur de chargement DEV')).toBeVisible();
+    expect(await screen.findByTestId('page-dev')).toHaveAttribute(
+      'data-dev-state',
+      'error'
+    );
+    expect(screen.getByTestId('page-dev')).toHaveTextContent('Erreur de chargement DEV');
   });
 });

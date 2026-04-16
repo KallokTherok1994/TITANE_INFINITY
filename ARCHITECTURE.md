@@ -44,6 +44,7 @@ L’agent orchestrateur dynamique répartit intelligemment les tâches entre les
   - `scripts/launch/launch-titane.ps1` (lancement principal)
   - `scripts/launch/launch-titane.bat` (batch)
   - `scripts/launch/launch-ollama.ps1` (**installation Ollama + modèles IA**)
+- **Backend Ollama** : la boucle locale canonique cote Rust utilise `127.0.0.1:11434` et le fallback streaming gouverne `gemma2:2b` pour eviter les derives de resolution `localhost` ou de modele dans les lanes desktop gouvernees.
 - **Android** : voir `titane-android/`
 
 ... (voir détails dans chaque README)

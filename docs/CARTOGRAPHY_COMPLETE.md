@@ -1,5 +1,7 @@
 # TITANE_INFINITY — Cartographie Complète Avancée v30.1.8
 
+> 2026-04-16 — Conversation fullscreen internal scroll budget: `conversation-container[data-fullscreen='true']` neutralise maintenant le gap vertical hérité entre ses blocs, et `titane-content--conversation` réserve un budget bas safe-area-aware sur mobile compact pour que la zone de messages garde le scroll interne pendant que l’onglet chat et le compositeur restent visibles ensemble.
+> 2026-04-16 — Conversation fullscreen persistence: `TitanePage` ne force plus un `scrollIntoView()` du textarea lors de l’activation de l’onglet chat, `titane-page-header--conversation` reste sticky dans le shell fullscreen, et `chat-messages-scroll-region` expose une scrollbar native droite renforcée pour garder visibles le header d’onglet et le repère de défilement sous zoom.
 > 2026-04-16 — GitHub Copilot rate-limit resilience: `src-tauri/src/api_hub/copilot.rs` effectue maintenant des retries bornés sur quota GitHub (`429`/`403` rate-limited) avec respect de `Retry-After` et backoff exponentiel plafonné avant remontée d’erreur, afin d’éviter les faux échecs de type code review.
 > 2026-04-16 — Canonical anti-regression surface truth: `src/features/admin/AdminPage.tsx` monte désormais `SelfHealingDashboard` comme onglet actif `/admin?tab=anti-regression`; la surface visible canonique expose `self-healing-dashboard` et `anti-regression-summary`, et la classification runtime passe par `src/services/selfHealing/selfHealingService.ts`.
 
@@ -76,6 +78,7 @@ Modules kernel : `kernel/`, `core/`, `security/`, `constitution/`
   - `scripts/launch/launch-titane.ps1` (lancement principal)
   - `scripts/launch/launch-titane.bat` (batch)
   - `scripts/launch/launch-ollama.ps1` (**installation Ollama + modèles IA**)
+- **Backend Ollama** : la boucle locale canonique cote Rust cible `127.0.0.1:11434` dans l'orchestrateur desktop et reutilise `gemma2:2b` comme fallback streaming canonique pour stabiliser les probes et generations WDIO/Tauri.
 - **Android** : voir `titane-android/`
 
 ---

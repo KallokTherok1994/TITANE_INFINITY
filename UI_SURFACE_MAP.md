@@ -1,3 +1,9 @@
+# [2026-04-16] Conversation fullscreen internal scroll budget: en viewport compact, le shell fullscreen supprime son gap vertical hérité et réserve un budget bas safe-area-aware afin que `chat-messages-scroll-region` garde le scroll interne pendant que l’onglet chat et le compositeur restent visibles simultanément.
+
+# [2026-04-16] Conversation fullscreen persistent header: la surface conversation conserve maintenant son header d’onglet visible sous zoom et en viewport compact, car `TitanePage` ne force plus le scroll vers le textarea et `titane-page-header--conversation` reste collé en haut du shell fullscreen.
+
+# [2026-04-16] Conversation visible native scrollbar: `chat-messages-scroll-region` conserve une scrollbar native droite explicitement visible, avec piste/thumb renforcées et un gutter stable, afin de garder un repère de défilement cliquable sans créer un rail parallèle.
+
 # [2026-04-16] Canonical chat surface truth: `src/pages/ChatPage.tsx` n'expose plus une UI chat parallèle, le router déprécié et le préchargement critique sont réalignés sur `TitanePage`, et la surface interactive réelle reste `ConversationSection` via `/titane?tab=conversation`.
 
 # [2026-04-16] Legacy chat export truth: `src/ui/pages/Chat.tsx` ne porte plus sa propre implémentation OMEGA; il agit désormais comme alias fin vers `ChatPage` puis `TitanePage`, ce qui garde les anciens imports compatibles sans réintroduire une surface chat divergente.
@@ -55,6 +61,7 @@
 - Messages scroll region test id: `chat-messages-scroll-region`
 - Scroll-to-bottom button test id: `chat-scroll-to-bottom`
 - Scroll-to-bottom visual form: petite flèche ronde discrète, sans texte visible, ancrée en bas à droite de la surface conversation
+- Scroll region native scrollbar: la scrollbar droite du flux reste visible en permanence avec piste/thumb contrastées; ne pas la masquer ni la remplacer par un rail séparé.
 - Assistant message container test id: `chat-message-assistant`
 - Assistant content test id: `chat-message-content`
 - Runtime panel test id: `chat-runtime-state`
@@ -119,5 +126,6 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 ## Conversation Fullscreen Shell
 
 - Root shell contract: la chaîne fullscreen `AppShell -> titane-page--conversation -> titane-content--conversation -> conversation-container` doit rester parent-bound (`flex/min-height:0/max-height:100%`) et non pilotée par un double offset ou une hauteur viewport forcée.
+- Header persistence truth: `titane-page-header--conversation` reste collé en haut du shell fullscreen pour garder l’onglet chat visible quand la hauteur utile se compacte.
 - App shell offset truth: la compensation TopNav reste portée uniquement par `paddingTop: calc(4rem + env(safe-area-inset-top, 0px))` dans `AppShell`.
 - Desktop proof helper truth: le helper WDIO `inspectConversationScrollRegion()` borne désormais son overflow artificiel au budget vertical réel entre `.chat-toolbar` et `.conversation-input-container`.

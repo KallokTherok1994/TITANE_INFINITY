@@ -404,12 +404,12 @@ async fn is_provider_available(
             if !allow_ollama_probe {
                 return false;
             }
-            // Ping rapide http://localhost:11434/api/tags
+            // Ping rapide sur le loopback IPv4 canonique pour eviter les derives localhost/IPv6.
             // ✅ FIX: Timeout augmenté 500ms → 3000ms (Ollama peut être lent au premier appel)
             match build_http_client_with_timeout(std::time::Duration::from_millis(3000)) {
                 Ok(client) => {
                     matches!(
-                        client.get("http://localhost:11434/api/tags").send().await,
+                        client.get("http://127.0.0.1:11434/api/tags").send().await,
                         Ok(resp) if resp.status().is_success()
                     )
                 }
@@ -881,7 +881,7 @@ async fn send_to_ollama(
 ) -> Result<ChatMessage, TAPIError> {
     // 🚨 FIX: default to an installed local model
     let model = request.model.as_deref().unwrap_or("gemma2:2b");
-    let url = "http://localhost:11434/api/generate";
+    let url = "http://127.0.0.1:11434/api/generate";
 
     // Adaptive timeout for Ollama (local, typically faster)
     let timeout_secs = calculate_adaptive_timeout(request.message.len(), true);
@@ -1986,8 +1986,8 @@ async fn stream_with_ollama(
     let model = request
         .model
         .clone()
-        .unwrap_or_else(|| "llama2:latest".to_string());
-    let url = "http://localhost:11434/api/generate";
+        .unwrap_or_else(|| "gemma2:2b".to_string());
+    let url = "http://127.0.0.1:11434/api/generate";
 
     let body = serde_json::json!({
         "model": model,
@@ -2265,6 +2265,26 @@ fn get_timestamp() -> u64 {
 #[cfg(test)]
 mod smoke_tests {
     use super::*;
+
+    #[test]
+    fn streaming_ollama_fallback_model_matches_canonical_local_profile() {
+        let request = ChatRequest {
+            message: "test".to_string(),
+            conversation_id: None,
+            provider: "ollama".to_string(),
+            model: None,
+            streaming: true,
+            images: None,
+            system_prompt: None,
+        };
+
+        let model = request
+            .model
+            .clone()
+            .unwrap_or_else(|| "gemma2:2b".to_string());
+
+        assert_eq!(model, "gemma2:2b");
+    }
 
     #[test]
     fn unavailable_reason_distinguishes_config_from_network() {

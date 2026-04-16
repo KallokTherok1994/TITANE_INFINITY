@@ -930,11 +930,13 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
       const region = document.querySelector(
         '[data-testid="chat-messages-scroll-region"]'
       );
+      const conversationTab = document.querySelector('[data-testid="tab-conversation"]');
       const input = document.querySelector('[data-testid="chat-input"]');
       const composer = document.querySelector('.conversation-input-container');
       if (
         !(container instanceof HTMLElement) ||
         !(region instanceof HTMLElement) ||
+        !(conversationTab instanceof HTMLElement) ||
         !input ||
         !(composer instanceof HTMLElement)
       ) {
@@ -950,6 +952,7 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
         hostConstraintApplied = true;
       }
 
+      const tabRect = conversationTab.getBoundingClientRect();
       const inputRect = input.getBoundingClientRect();
       const composerRect = composer.getBoundingClientRect();
       return {
@@ -957,6 +960,8 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
         fullscreen: container.dataset.fullscreen ?? null,
         scrollHeight: region.scrollHeight,
         clientHeight: region.clientHeight,
+        tabTop: tabRect.top,
+        tabBottom: tabRect.bottom,
         inputBottom: inputRect.bottom,
         composerBottom: composerRect.bottom,
         viewportHeight: window.innerHeight,
@@ -969,6 +974,10 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
     expect(beforeScroll?.density).toBe('compact');
     expect(beforeScroll?.scrollHeight ?? 0).toBeGreaterThan(
       beforeScroll?.clientHeight ?? 0
+    );
+    expect(beforeScroll?.tabTop ?? -1).toBeGreaterThanOrEqual(0);
+    expect(beforeScroll?.tabBottom ?? 0).toBeLessThanOrEqual(
+      beforeScroll?.viewportHeight ?? 0
     );
     expect(beforeScroll?.inputBottom ?? 0).toBeLessThanOrEqual(
       (beforeScroll?.viewportHeight ?? 0) + 24

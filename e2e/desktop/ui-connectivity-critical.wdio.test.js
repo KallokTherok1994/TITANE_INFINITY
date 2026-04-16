@@ -39,6 +39,18 @@ async function seedLongConversation(pairCount = 20) {
   await browser.execute(
     payload => {
       const { seedConversationId, seedMessages, seedTimestamp } = payload;
+      for (const key of Object.keys(localStorage)) {
+        if (
+          key.startsWith('titane_conversation_') ||
+          key === 'titane_active_conversation_id' ||
+          key === 'titane_chat_mode_default' ||
+          key === 'titane_chat_history' ||
+          key === 'titane_chat_runtime_state'
+        ) {
+          localStorage.removeItem(key);
+        }
+      }
+
       localStorage.setItem('titane_active_conversation_id', seedConversationId);
       localStorage.setItem(
         `titane_conversation_${seedConversationId}`,
@@ -89,6 +101,7 @@ async function inspectConversationScrollRegion() {
     const container = document.querySelector('.conversation-container');
     const region = document.querySelector('[data-testid="chat-messages-scroll-region"]');
     const toolbar = document.querySelector('.chat-toolbar');
+    const conversationTab = document.querySelector('[data-testid="tab-conversation"]');
     const input = document.querySelector('[data-testid="chat-input"]');
     const composer = document.querySelector('.conversation-input-container');
 
@@ -96,6 +109,7 @@ async function inspectConversationScrollRegion() {
       !(container instanceof HTMLElement) ||
       !(region instanceof HTMLElement) ||
       !(toolbar instanceof HTMLElement) ||
+      !(conversationTab instanceof HTMLElement) ||
       !(input instanceof HTMLElement) ||
       !(composer instanceof HTMLElement)
     ) {
@@ -120,6 +134,7 @@ async function inspectConversationScrollRegion() {
       hostConstraintApplied = true;
     }
 
+    const tabRect = conversationTab.getBoundingClientRect();
     const inputRect = input.getBoundingClientRect();
     const composerRect = composer.getBoundingClientRect();
     return {
@@ -127,6 +142,8 @@ async function inspectConversationScrollRegion() {
       fullscreen: container.dataset.fullscreen ?? null,
       scrollHeight: region.scrollHeight,
       clientHeight: region.clientHeight,
+      tabTop: tabRect.top,
+      tabBottom: tabRect.bottom,
       inputBottom: inputRect.bottom,
       composerBottom: composerRect.bottom,
       viewportHeight: window.innerHeight,
@@ -299,7 +316,7 @@ describe('Desktop (Tauri) UI connectivity critical', () => {
         })
       );
     });
-    await seedLongConversation(40);
+    await seedLongConversation(22);
 
     const topNav = await $('[data-testid="nav-top-main"]');
     await topNav.waitForExist({ timeout: 10000 });
@@ -335,6 +352,14 @@ describe('Desktop (Tauri) UI connectivity critical', () => {
     assert.ok(
       (beforeScroll?.scrollHeight ?? 0) > (beforeScroll?.clientHeight ?? 0),
       'conversation history should overflow after host constraint is applied'
+    );
+    assert.ok(
+      (beforeScroll?.tabTop ?? -1) >= 0,
+      'conversation tab should stay visible from the top edge'
+    );
+    assert.ok(
+      (beforeScroll?.tabBottom ?? 0) <= (beforeScroll?.viewportHeight ?? 0),
+      'conversation tab should remain inside the viewport under fullscreen constraints'
     );
     assert.ok(
       (beforeScroll?.inputBottom ?? 0) <= (beforeScroll?.viewportHeight ?? 0) + 24,

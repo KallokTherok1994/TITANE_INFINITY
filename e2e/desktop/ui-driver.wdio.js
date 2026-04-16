@@ -44,6 +44,94 @@ async function isDisplayed(selector) {
   return el.isDisplayed();
 }
 
+async function getDomNodeState(selector) {
+  return browser.execute(targetSelector => {
+    const element = document.querySelector(targetSelector);
+    if (!(element instanceof HTMLElement)) {
+      return {
+        exists: false,
+        visible: false,
+        disabled: false,
+        readOnly: false,
+        value: '',
+      };
+    }
+
+    const style = window.getComputedStyle(element);
+    const visible =
+      style.display !== 'none' &&
+      style.visibility !== 'hidden' &&
+      style.pointerEvents !== 'none';
+
+    return {
+      exists: true,
+      visible,
+      disabled:
+        'disabled' in element
+          ? Boolean(element.disabled)
+          : element.getAttribute('disabled') !== null,
+      readOnly: 'readOnly' in element ? Boolean(element.readOnly) : false,
+      value: 'value' in element ? String(element.value ?? '') : '',
+    };
+  }, selector);
+}
+
+async function isDomEditable(selector) {
+  return browser.execute(targetSelector => {
+    const element = document.querySelector(targetSelector);
+    if (
+      !(element instanceof HTMLTextAreaElement || element instanceof HTMLInputElement)
+    ) {
+      return false;
+    }
+
+    const style = window.getComputedStyle(element);
+    if (
+      style.display === 'none' ||
+      style.visibility === 'hidden' ||
+      style.pointerEvents === 'none'
+    ) {
+      return false;
+    }
+
+    return (
+      !element.disabled &&
+      !element.readOnly &&
+      !element.closest('fieldset[disabled]') &&
+      !element.closest('[inert]') &&
+      !element.closest('[hidden]')
+    );
+  }, selector);
+}
+
+async function isDomClickable(selector) {
+  return browser.execute(targetSelector => {
+    const element = document.querySelector(targetSelector);
+    if (!(element instanceof HTMLElement)) {
+      return false;
+    }
+
+    const style = window.getComputedStyle(element);
+    if (
+      style.display === 'none' ||
+      style.visibility === 'hidden' ||
+      style.pointerEvents === 'none'
+    ) {
+      return false;
+    }
+
+    const disabledAttr =
+      element.getAttribute('disabled') !== null ||
+      element.getAttribute('aria-disabled') === 'true';
+
+    return (
+      !disabledAttr &&
+      !element.closest('fieldset[disabled]') &&
+      !element.closest('[inert]')
+    );
+  }, selector);
+}
+
 async function waitForAnyDisplayed(selectors, timeout = DEFAULT_TIMEOUT) {
   await browser.waitUntil(
     async () => {
@@ -63,17 +151,17 @@ async function waitForAnyDisplayed(selectors, timeout = DEFAULT_TIMEOUT) {
 async function waitForChatInputReady(timeout = DEFAULT_TIMEOUT) {
   await browser.waitUntil(
     async () => {
-      const input = await $(testId('chat-input'));
-      if (!(await input.isExisting()) || !(await input.isDisplayed())) {
+      const inputState = await getDomNodeState(testId('chat-input'));
+      if (!inputState.exists || !inputState.visible) {
         return false;
       }
 
-      if (await input.isEnabled()) {
+      if (await isDomEditable(testId('chat-input'))) {
         return true;
       }
 
-      const err = await $(testId('chat-error'));
-      return (await err.isExisting()) && (await err.isDisplayed());
+      const errorState = await getDomNodeState(testId('chat-error'));
+      return errorState.exists && errorState.visible;
     },
     {
       timeout,
@@ -86,22 +174,22 @@ async function waitForChatInputReady(timeout = DEFAULT_TIMEOUT) {
 async function waitForChatCycleSettled(timeout = DEFAULT_TIMEOUT) {
   await browser.waitUntil(
     async () => {
-      const err = await $(testId('chat-error'));
-      if ((await err.isExisting()) && (await err.isDisplayed())) {
+      const errorState = await getDomNodeState(testId('chat-error'));
+      if (errorState.exists && errorState.visible) {
         return true;
       }
 
-      const input = await $(testId('chat-input'));
-      if (!(await input.isExisting()) || !(await input.isDisplayed())) {
+      const inputState = await getDomNodeState(testId('chat-input'));
+      if (!inputState.exists || !inputState.visible) {
         return false;
       }
 
-      if (!(await input.isEnabled())) {
+      if (!(await isDomEditable(testId('chat-input')))) {
         return false;
       }
 
-      const loading = await $(testId('chat-loading'));
-      return !(await loading.isExisting()) || !(await loading.isDisplayed());
+      const loadingState = await getDomNodeState(testId('chat-loading'));
+      return !loadingState.exists || !loadingState.visible;
     },
     {
       timeout,
@@ -163,7 +251,7 @@ async function triggerSendAction(inputSelector, sendSelector) {
   const send = await $(sendSelector);
 
   try {
-    if ((await send.isDisplayed()) && (await send.isEnabled())) {
+    if ((await send.isDisplayed()) && (await isDomClickable(sendSelector))) {
       await clickSafely(sendSelector);
       return true;
     }
@@ -290,7 +378,7 @@ async function setValueSafely(selector, value, timeout = DEFAULT_TIMEOUT) {
       return (
         (await candidate.isExisting()) &&
         (await candidate.isDisplayed()) &&
-        (await candidate.isEnabled())
+        (await isDomEditable(selector))
       );
     },
     {
@@ -666,8 +754,8 @@ export async function sendChatAndAssertNoSilence(message, timeoutMs = 45000) {
 
   await browser.waitUntil(
     async () => {
-      const value = (await input.getValue()) || '';
-      return value.trim().length > 0;
+      const inputState = await getDomNodeState(testId('chat-input'));
+      return inputState.value.trim().length > 0;
     },
     {
       timeout: 6000,
@@ -681,8 +769,7 @@ export async function sendChatAndAssertNoSilence(message, timeoutMs = 45000) {
   await browser.waitUntil(
     async () => {
       const value = (await input.getValue()) || '';
-      const disabled = await send.getAttribute('disabled');
-      return value.trim().length > 0 && disabled === null;
+      return value.trim().length > 0 && (await isDomClickable(testId('chat-send')));
     },
     {
       timeout: 6000,
@@ -702,15 +789,12 @@ export async function sendChatAndAssertNoSilence(message, timeoutMs = 45000) {
         const userAfter = (await $$(userSelector)).length;
         if (userAfter > userBefore) return true;
       }
-      const inputNow = await $(testId('chat-input'));
-      if (await inputNow.isExisting()) {
-        const val = (await inputNow.getValue()) || '';
-        if (String(val).trim().length === 0) return true;
-      }
-      if (await isExisting(testId('chat-loading'))) {
-        const loading = await $(testId('chat-loading'));
-        if (await loading.isDisplayed()) return true;
-      }
+      const inputState = await getDomNodeState(testId('chat-input'));
+      if (inputState.exists && inputState.value.trim().length === 0) return true;
+
+      const loadingState = await getDomNodeState(testId('chat-loading'));
+      if (loadingState.exists && loadingState.visible) return true;
+
       return false;
     },
     {
@@ -732,19 +816,16 @@ export async function sendChatAndAssertNoSilence(message, timeoutMs = 45000) {
         if (userAfter > userBefore) return true;
       }
 
-      const err = await $(testId('chat-error'));
-      if ((await err.isExisting()) && (await err.isDisplayed())) return true;
+      const errorState = await getDomNodeState(testId('chat-error'));
+      if (errorState.exists && errorState.visible) return true;
 
       const genericAlert = await $('[role="alert"]');
       if ((await genericAlert.isExisting()) && (await genericAlert.isDisplayed())) {
         return true;
       }
 
-      const inputNow = await $(testId('chat-input'));
-      if (await inputNow.isExisting()) {
-        const val = (await inputNow.getValue()) || '';
-        if (String(val).trim().length === 0) return true;
-      }
+      const inputState = await getDomNodeState(testId('chat-input'));
+      if (inputState.exists && inputState.value.trim().length === 0) return true;
 
       const bodyAfter = (await $('body').getText()) || '';
       if (
@@ -764,7 +845,7 @@ export async function sendChatAndAssertNoSilence(message, timeoutMs = 45000) {
   );
 
   try {
-    await waitForChatCycleSettled(chatSettleTimeout);
+    await waitForChatCycleSettled(Math.min(chatSettleTimeout, 15000));
   } catch {
     // Best-effort only: the next send path independently waits for a re-enabled input.
   }
@@ -867,7 +948,7 @@ export async function retryLatestUserMessageAndAssertNoSilence(timeoutMs = 45000
   );
 
   try {
-    await waitForChatCycleSettled(chatSettleTimeout);
+    await waitForChatCycleSettled(Math.min(chatSettleTimeout, 15000));
   } catch {
     // Best-effort only: the next send path independently waits for a re-enabled input.
   }
