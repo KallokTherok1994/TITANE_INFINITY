@@ -13,6 +13,8 @@ Validation and tooling local discipline — scripts/, build tooling, CI gates.
 - Every new gate: add corresponding test or proof of trigger/exit (Rule 16).
 - Auto anti-regression: run `detect_recurrence.sh` after every script fix (Rule 10).
 - New scripts touching `src/` or `src-tauri/` surfaces require mapping doc update (Rule 15).
+- Validators that qualify packaging or runtime truth must explicitly distinguish repo state, packaged artifact state, installed launcher/binary state, and visible runtime state; never collapse them into one PASS.
+- Any script step blocked by interactive privilege escalation must return an honest BLOCKED or FAIL path with the next required action, not a silent partial success.
 
 ## Chain-of-Thought Validation
 
@@ -21,6 +23,7 @@ Validation and tooling local discipline — scripts/, build tooling, CI gates.
 3. Does it clean up any temp files on failure?
 4. Is it referenced (or skipped with justification) in `scripts/verify_instructions.sh`?
 5. Is there an AutoHeal entry if the script was a fix (Rule 10)?
+6. Does it classify partial packaging/install truth honestly instead of implying a full publish/install PASS?
 
 ## Tooling (pnpm-only)
 

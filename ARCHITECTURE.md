@@ -1,5 +1,6 @@
 > 2026-04-16 — GitHub Copilot rate-limit resilience: `src-tauri/src/api_hub/copilot.rs` applique désormais un retry borné et gouverné (`Retry-After` + backoff exponentiel plafonné) avant d’échouer, pour classer durablement les 429 GitHub comme blocage temporaire et non comme erreur logique du code.
 > 2026-04-15 — Chat runtime: les budgets par défaut de `ChatRequestDefaults` et du profil frontend ont été relevés jusqu’au plafond backend utile (`32768`) pour éviter les sorties tronquées par défaut, tout en conservant la borne IPC/Rust comme garde-fou structurel.
+> 2026-04-16 — Discipline anti-dérive issue de l’audit v30.1.x: toute évolution frontend/backend doit désormais être qualifiée contre six risques récurrents observés sur la série 30.1.0+ — désynchronisation artefacts/launchers, manque de couverture E2E sur flows secondaires, drift frontend/backend entre UI, IPC et runtime packagé, scripts post-build bloqués par privilèges interactifs, contamination d’environnement backend, et traçabilité incomplète des corrections. Ces six points doivent être traités comme des invariants d’architecture opérationnelle, pas comme de la documentation optionnelle.
 
 ## Agent Anti-Régression
 

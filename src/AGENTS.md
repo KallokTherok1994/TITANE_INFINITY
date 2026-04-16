@@ -12,6 +12,8 @@ Ring 4 UI/module local discipline.
 - Every new UI surface: add entry to `registry/ui-events.jsonl` and update `UI_SURFACE_MAP.md` (Rule 15).
 - Every new feature requires tests: unit + E2E (Rule 16).
 - Auto anti-regression: run detect_recurrence.sh after every fix (Rule 10).
+- Treat UI, route alias, fullscreen shell, packaged runtime, and installed launcher as one anti-drift surface: do not certify a UI change until the visible runtime, E2E selectors, packaging truth, and rollback evidence all agree.
+- Any UI fix touching scroll, zoom, mobile layout, or chat runtime truth must cover both critical and secondary flows in E2E; a green unit test alone is insufficient.
 
 ## Chain-of-Thought Validation
 
@@ -20,6 +22,7 @@ Ring 4 UI/module local discipline.
 3. Add `data-testid` to new interactive elements.
 4. Create or update tests alongside changes.
 5. Update `UI_SURFACE_MAP.md` if new surface added.
+6. Recheck that no legacy UI path or stale selector still points to a divergent live surface.
 
 ## Integration Patterns
 

@@ -11,6 +11,8 @@ E2E harness local discipline.
 - Avoid flaky timing hacks; keep deterministic waits.
 - Auto anti-regression: for every E2E fix, append AutoHeal entry and run `detect_recurrence.sh` (Rule 10).
 - Every user-facing feature requires E2E tests (Rule 16).
+- Cover both primary and secondary user flows when a fix touches fullscreen, mobile layout, launcher/runtime truth, or backend/frontend synchronization; do not stop at the happy path.
+- When runtime truth is part of the bug, assert the visible provider/mode/reason selectors explicitly so the harness cannot pass on a stale or mocked state.
 
 ## Chain-of-Thought Validation
 
@@ -18,6 +20,7 @@ E2E harness local discipline.
 2. Confirm all required exports are generated.
 3. Use stable `data-testid` selectors — no fragile CSS paths.
 4. Bound retries and log them explicitly.
+5. Confirm the tested surface is the canonical live surface, not a compatibility alias.
 
 ## Integration Patterns
 

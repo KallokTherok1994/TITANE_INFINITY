@@ -28,7 +28,33 @@ Voir la documentation interne et les logs pour la preuve d’exécution, la conf
 **Qualité (2026-04-11) :** `verify:final100` PASS, `twins_memory_bridge_test` PASS, build stable Linux PASS, réinstallation desktop V30 et smoke-run `BOOT:READY` validés.
 **Archive & legacy policy:** les surfaces obsolètes sont conservées sous `docs/99_ARCHIVE/` et `_archive/`; les surfaces actives V30 restent `src/`, `src-tauri/`, `README.md`, `CHANGELOG.md` et `docs/user/{fr,en}/`.
 
-**Documentation canonique :** [docs/README.md](docs/README.md) (source principale de navigation documentaire)
+
+---
+
+## 🔒 Discipline anti-dérive TITANE (Synthèse 2026-04-16)
+
+1. **Synchronisation artefacts/launchers** :  
+  - Toute production d’artefact doit être suivie d’une synchronisation et d’une vérification explicite des launchers système ET utilisateur, avec preuve (log, screenshot, grep launcher).
+  - Aucun artefact n’est certifié sans cette preuve.
+
+2. **Couverture E2E renforcée** :  
+  - Toute évolution UI/backend doit s’accompagner de tests E2E couvrant les flows critiques ET secondaires.
+  - Les selectors `data-testid` doivent être stables et documentés.
+
+3. **Discipline de version et mapping** :  
+  - Toute modification de surface déclenche la mise à jour des mapping docs et un bump de version.
+  - Rollback/correction : documenter cause racine, plan de prévention, rollback exact.
+
+4. **Scripts post-build robustes** :  
+  - Scripts idempotents, non-interactifs ou fallback documenté, logs de preuve pour chaque étape nécessitant sudo.
+
+5. **Surveillance environnement/backend** :  
+  - Tests d’isolation d’environnement et checks automatiques sur les variables critiques.
+
+6. **Traçabilité des corrections** :  
+  - Chaque correction/rollback doit être tracé dans `autoheal_rules.jsonl` et `registry/ui-events.jsonl` avec cause racine et test de prévention.
+
+---
 
 **Statut d'autorité documentaire (LOCAL, 2026-04-05) :**
 

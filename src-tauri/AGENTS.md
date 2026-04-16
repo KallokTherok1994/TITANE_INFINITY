@@ -13,6 +13,8 @@ Tauri runtime local discipline — Ring 0 (Kernel Rust) and Ring 1 (Types/Config
 - New IPC command: update allowlist + add to `src/lib/security.ts` ALLOWED_COMMANDS + update `docs/IPC_CATALOG.md` + `ARCHITECTURE.md` (Rule 15).
 - New IPC command: create unit (`#[cfg(test)]`) + contract test in `tests/contract/tauri-ipc-contract.test.ts` (Rule 16).
 - Auto anti-regression: run `detect_recurrence.sh` after every fix (Rule 10).
+- Treat frontend bundle truth, IPC truth, packaged artifact truth, and installed runtime truth as separate checkpoints; any mismatch is a desynchronization and must block PASS until rebuilt and reverified.
+- Any backend change touching provider routing, environment variables, or fallback behavior must add explicit isolation proof so a local env leak cannot silently change runtime behavior.
 
 ## Chain-of-Thought Validation
 
@@ -22,6 +24,7 @@ Tauri runtime local discipline — Ring 0 (Kernel Rust) and Ring 1 (Types/Config
 4. Confirm corresponding `ALLOWED_COMMANDS` entry exists in `src/lib/security.ts`.
 5. Confirm `docs/IPC_CATALOG.md` and `ARCHITECTURE.md` are updated (Rule 15).
 6. Confirm unit + contract tests created (Rule 16).
+7. Confirm the packaged and installed runtimes are not lying about the backend state that the UI will consume.
 
 ## Tooling (pnpm-only)
 
