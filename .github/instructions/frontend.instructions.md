@@ -69,13 +69,18 @@ applyTo: 'src/**'
 
 - Identify the visible runtime surface and record the canonical file/route pair before patching.
 - Realign any remaining live aliases in the same phase: active route, deprecated route, compatibility export, route preloading, and touched tooling/config references.
-- Search for the stale path/component across active source, touched tests, and touched scripts/config before closure.
+- Search for the stale path/component across active source, touched tests, and touched scripts/config before closure, and treat any remaining live mismatch as FAIL.
 - If the legacy path must remain, keep only a thin alias and test that it renders the canonical surface.
+- Do not leave active validation/autofix/lint scripts targeting the stale surface when the runtime truth has moved.
 
 7. If a build is required to validate runtime truth, rebuild the latest version and verify the built surface, not only dev mode.
 8. If Linux, Windows, and Android cannot all be proven locally, seal the locally provable surfaces and document the remaining runner/workflow proof path explicitly.
 
 9. In direct-to-main mode requested by the user, close each validated UI correction phase with an immediate targeted commit on `MAIN`.
+
+- Stage only the files that belong to the validated phase.
+- Do not batch unrelated proven fixes into the same direct-to-main commit.
+- If proofs are still incomplete, do not commit the phase yet.
 
 ## DONT
 
@@ -94,6 +99,7 @@ applyTo: 'src/**'
 - verify:registry when UI registry changes.
 - Missing `UI_SURFACE_MAP.md` update for new UI surface ⇒ BLOCKED (Rule 15).
 - Missing E2E test for new UI surface ⇒ BLOCKED (Rule 16).
+- Remaining live router/preloading/tooling references to a stale UI surface after a route/page regression fix ⇒ FAIL.
 - UI work closed without the mandatory UI procedure, proof updates, and recurrence/instruction validators ⇒ FAIL.
 
 ## Rollback
