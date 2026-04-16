@@ -1,4 +1,3 @@
-import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import fs from 'fs';
 import path from 'path';
 
@@ -49,7 +48,7 @@ describe('🔍 Comprehensive Project Verification', () => {
     it('should have test scripts', () => {
       expect(packageJson.scripts).toHaveProperty('test');
       expect(packageJson.scripts).toHaveProperty('test:e2e');
-      expect(packageJson.scripts).toHaveProperty('test:a11y');
+      expect(packageJson.scripts).toHaveProperty('test:all');
     });
 
     it('should have build scripts', () => {
@@ -76,7 +75,7 @@ describe('🔍 Comprehensive Project Verification', () => {
 
   describe('♿ Accessibility Files', () => {
     it('should have a11y modules', () => {
-      expect(fs.existsSync('src/a11y/FocusManager.tsx')).toBe(true);
+      expect(fs.existsSync('src/a11y/FocusManager.ts')).toBe(true);
       expect(fs.existsSync('src/a11y/ScreenReader.tsx')).toBe(true);
       expect(fs.existsSync('src/a11y/KeyboardShortcuts.tsx')).toBe(true);
     });
@@ -133,8 +132,8 @@ describe('🔍 Comprehensive Project Verification', () => {
   describe('🧪 Test Coverage', () => {
     it('should have test files for critical modules', () => {
       const criticalModules = [
-        'tests/security.test.ts',
-        'tests/a11y.test.tsx',
+        'tests/security/advanced-security.test.ts',
+        'tests/a11y/advanced-a11y.test.tsx',
         'tests/e2e/chat.spec.ts',
       ];
 
@@ -146,8 +145,8 @@ describe('🔍 Comprehensive Project Verification', () => {
 
   describe('⚙️ Configuration', () => {
     it('should have CI/CD config', () => {
-      expect(fs.existsSync('.github/workflows/ci.yml')).toBe(true);
-      expect(fs.existsSync('.github/workflows/release.yml')).toBe(true);
+      expect(fs.existsSync('.github/workflows/ci-unified.yml')).toBe(true);
+      expect(fs.existsSync('.github/workflows/release-unified.yml')).toBe(true);
     });
 
     it('should have Playwright config', () => {
