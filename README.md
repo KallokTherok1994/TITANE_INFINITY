@@ -12,7 +12,7 @@ L’ancien pipeline V12 est archivé/supprimé pour éviter toute confusion.
 
 Voir la documentation interne et les logs pour la preuve d’exécution, la conformité doctrine, la traçabilité et le rollback.
 
-![CI/CD Status](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci.yml/badge.svg?branch=MAIN)
+![CI/CD Status](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci-unified.yml/badge.svg?branch=MAIN)
 ![Mermaid Canon](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/mermaid-verify.yml/badge.svg?branch=MAIN)
 ![Release v30.0.0](https://img.shields.io/badge/release-v30.0.0-brightgreen?logo=github)
 
