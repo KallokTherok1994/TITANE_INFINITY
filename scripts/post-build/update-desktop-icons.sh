@@ -8,7 +8,9 @@ BIN_DST="/usr/bin/titane-infinity"
 DESKTOP_SRC="$ROOT_DIR/titane-infinity.desktop"
 SYSTEM_DESKTOP_DIR="/usr/share/applications"
 SYSTEM_DESKTOP_DST1="$SYSTEM_DESKTOP_DIR/titane-infinity.desktop"
-SYSTEM_DESKTOP_DST2="$SYSTEM_DESKTOP_DIR/TITANE-Infinity.desktop"
+SYSTEM_ICON_SRC="$ROOT_DIR/src-tauri/icons/128x128.png"
+SYSTEM_ICON_DIR="/usr/share/icons/hicolor/128x128/apps"
+SYSTEM_ICON_DST="$SYSTEM_ICON_DIR/titane-infinity.png"
 CANONICAL_VERSION="$(node -p "require('./package.json').version")"
 
 # 1. Copier le binaire le plus récent
@@ -24,7 +26,11 @@ bash "$ROOT_DIR/scripts/update-desktop-icon.sh"
 # 3. Répliquer le launcher généré au niveau système pour éviter les divergences menu local/global
 if [ -f "$DESKTOP_SRC" ]; then
   sudo install -Dm644 "$DESKTOP_SRC" "$SYSTEM_DESKTOP_DST1"
-  sudo install -Dm644 "$DESKTOP_SRC" "$SYSTEM_DESKTOP_DST2"
+  sudo rm -f "$SYSTEM_DESKTOP_DIR/TITANE-Infinity.desktop"
+fi
+
+if [ -f "$SYSTEM_ICON_SRC" ]; then
+  sudo install -Dm644 "$SYSTEM_ICON_SRC" "$SYSTEM_ICON_DST"
 fi
 
 # 4. Rafraîchir les caches desktop

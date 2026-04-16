@@ -22,7 +22,9 @@ PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 ICON_DIR="$PROJECT_DIR/src-tauri/icons"
 DESKTOP_FILE="$PROJECT_DIR/titane-infinity.desktop"
 DESKTOP_INSTALL_DIR="$HOME/.local/share/applications"
+LOCAL_ICON_DIR="$HOME/.local/share/icons/hicolor/128x128/apps"
 LAUNCHER_SCRIPT="$PROJECT_DIR/launch-titane.sh"
+ICON_ID="titane-infinity"
 
 extract_version_from_path() {
     local artifact_path="$1"
@@ -54,6 +56,7 @@ extract_installed_package_version() {
 
 # Créer le répertoire si nécessaire
 mkdir -p "$DESKTOP_INSTALL_DIR"
+mkdir -p "$LOCAL_ICON_DIR"
 
 echo -e "${YELLOW}[1/4]${NC} Mise à jour du fichier .desktop avec chemins actuels..."
 
@@ -113,6 +116,12 @@ if [ ! -f "$ICON_PATH" ]; then
     ICON_PATH="$ICON_DIR/icon.png"
 fi
 
+ICON_VALUE="$ICON_PATH"
+if [ -f "$ICON_PATH" ]; then
+    cp "$ICON_PATH" "$LOCAL_ICON_DIR/${ICON_ID}.png"
+    ICON_VALUE="$ICON_ID"
+fi
+
 # Version affichée dans le menu : reflète le binaire réellement sélectionné.
 CANONICAL_VERSION=""
 if [ -f "$PROJECT_DIR/src-tauri/tauri.conf.json" ]; then
@@ -152,7 +161,7 @@ Type=Application
 Name=$APP_NAME
 Comment=🏛️ Cognitive OS - Multi-Provider AI - Production Perfect
 Exec=$MAIN_EXEC
-Icon=$ICON_PATH
+Icon=$ICON_VALUE
 Terminal=false
 Categories=Development;Utility;AI;
 Keywords=AI;Chat;Cognitive;System;Memory;Singularity;
@@ -176,17 +185,11 @@ EOF
 echo -e "${YELLOW}[2/4]${NC} Copie du fichier .desktop dans les applications..."
 cp "$DESKTOP_FILE" "$DESKTOP_INSTALL_DIR/titane-infinity.desktop"
 chmod +x "$DESKTOP_INSTALL_DIR/titane-infinity.desktop"
-
-# Sur certains systèmes, une entrée globale peut exister sous un nom différent
-# (ex: /usr/share/applications/TITANE-Infinity.desktop avec Exec=titane-infinity).
-# On installe aussi un override local avec le même nom pour garantir que le menu
-# lance le bon binaire.
-cp "$DESKTOP_FILE" "$DESKTOP_INSTALL_DIR/TITANE-Infinity.desktop"
-chmod +x "$DESKTOP_INSTALL_DIR/TITANE-Infinity.desktop"
+rm -f "$DESKTOP_INSTALL_DIR/TITANE-Infinity.desktop"
 
 echo -e "      ✓ Fichiers copiés vers:"
 echo -e "        - $DESKTOP_INSTALL_DIR/titane-infinity.desktop"
-echo -e "        - $DESKTOP_INSTALL_DIR/TITANE-Infinity.desktop"
+echo -e "      ✓ Alias obsolète supprimé si présent: $DESKTOP_INSTALL_DIR/TITANE-Infinity.desktop"
 
 echo -e "${YELLOW}[3/4]${NC} Mise à jour du cache des icônes..."
 # Mettre à jour le cache des icônes si possible
@@ -209,7 +212,7 @@ if [ -f "$DESKTOP_INSTALL_DIR/titane-infinity.desktop" ]; then
     echo -e "Détails de l'installation:"
     echo -e "  • Fichier .desktop: ${GREEN}$DESKTOP_INSTALL_DIR/titane-infinity.desktop${NC}"
     echo -e "  • Binaire: ${GREEN}$BINARY_PATH${NC}"
-    echo -e "  • Icône: ${GREEN}$ICON_PATH${NC}"
+    echo -e "  • Icône: ${GREEN}$ICON_VALUE${NC}"
     echo ""
     echo -e "${BLUE}ℹ${NC} L'application TITANE∞ est maintenant disponible dans votre menu d'applications"
     echo -e "${BLUE}ℹ${NC} Vous pouvez la lancer en cherchant 'TITANE' dans le lanceur d'applications"
