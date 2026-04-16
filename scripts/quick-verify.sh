@@ -74,7 +74,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "2. TypeScript Compilation"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-if check_verbose "TypeScript (npx tsc --noEmit)" "npx tsc --noEmit"; then
+if check_verbose "TypeScript (pnpm exec tsc --noEmit)" "pnpm exec tsc --noEmit"; then
     echo -e "${GREEN}TypeScript: 0 errors ✅${NC}"
 else
     echo -e "${RED}TypeScript: Errors found ❌${NC}"
@@ -85,10 +85,10 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "3. Dependencies"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-check "@emotion/is-prop-valid" "npm list @emotion/is-prop-valid --depth=0"
-check "@emotion/styled-base" "npm list @emotion/styled-base --depth=0"
-check "tsconfig-paths" "npm list tsconfig-paths --depth=0"
-check "madge" "npm list madge --depth=0"
+check "@emotion/is-prop-valid" "pnpm list @emotion/is-prop-valid --depth=0"
+check "@emotion/styled-base" "pnpm list @emotion/styled-base --depth=0"
+check "tsconfig-paths" "pnpm list tsconfig-paths --depth=0"
+check "madge" "pnpm list madge --depth=0"
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -119,7 +119,7 @@ echo "6. Circular Dependencies"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 if command -v madge &> /dev/null; then
-    if CIRCULAR=$(npx madge --circular src/ 2>&1); then
+    if CIRCULAR=$(pnpm exec madge --circular src/ 2>&1); then
         if echo "$CIRCULAR" | grep -q "No circular"; then
             echo -e "${GREEN}✅ No circular dependencies found${NC}"
             ((PASSED++))
@@ -133,7 +133,7 @@ if command -v madge &> /dev/null; then
         ((FAILED++))
     fi
 else
-    echo -e "${YELLOW}⚠️  Madge not installed (install with: npm install -D madge)${NC}"
+    echo -e "${YELLOW}⚠️  Madge not installed (install with: pnpm add -D madge)${NC}"
 fi
 
 echo ""

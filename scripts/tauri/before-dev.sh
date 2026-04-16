@@ -30,7 +30,7 @@ log "${BLUE}══════════════════════�
 
 # Environment info
 log "Node: $(node --version 2>/dev/null || echo 'N/A')"
-log "NPM: $(npm --version 2>/dev/null || echo 'N/A')"
+log "PNPM: $(pnpm --version 2>/dev/null || echo 'N/A')"
 log "CWD: $(pwd)"
 log "Port to check: $PORT"
 log ""

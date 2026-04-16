@@ -39,7 +39,7 @@ echo "Installing Production Dependencies"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
-npm install @emotion/is-prop-valid @emotion/styled-base
+pnpm add @emotion/is-prop-valid @emotion/styled-base
 
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}✅ Production dependencies installed successfully${NC}"
@@ -53,7 +53,7 @@ echo "Installing Development Dependencies"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
-npm install -D tsconfig-paths madge dpdm
+pnpm add -D tsconfig-paths madge dpdm
 
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}✅ Development dependencies installed successfully${NC}"
@@ -81,7 +81,7 @@ DEPS=(
 ALL_OK=true
 
 for dep in "${DEPS[@]}"; do
-    if npm list "$dep" --depth=0 > /dev/null 2>&1; then
+    if pnpm list "$dep" --depth=0 > /dev/null 2>&1; then
         echo -e "  ${GREEN}✅${NC} $dep"
     else
         echo -e "  ${YELLOW}⚠️${NC}  $dep (not found)"
@@ -98,13 +98,13 @@ if $ALL_OK; then
     echo ""
     echo "Next steps:"
     echo "  1. Commit changes: git add package*.json && git commit -m 'deps: Add missing dependencies'"
-    echo "  2. Run tests: npm test"
-    echo "  3. Check circular deps: npx madge --circular src/"
+    echo "  2. Run tests: pnpm test"
+    echo "  3. Check circular deps: pnpm exec madge --circular src/"
     echo "  4. Run verification: ./scripts/quick-verify.sh"
 else
     echo -e "${YELLOW}╔════════════════════════════════════════════════════════════════════════╗${NC}"
     echo -e "${YELLOW}║              ⚠️  SOME DEPENDENCIES MISSING ⚠️                          ║${NC}"
     echo -e "${YELLOW}╚════════════════════════════════════════════════════════════════════════╝${NC}"
     echo ""
-    echo "Please check npm output above for errors."
+    echo "Please check pnpm output above for errors."
 fi

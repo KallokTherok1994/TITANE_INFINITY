@@ -36,8 +36,8 @@
 ### Tests
 
 - [ ] J'ai ajouté des tests pour mes changements
-- [ ] Tous les tests passent localement (`npm test`)
-- [ ] Les tests Tauri passent (`npm run test:tauri`)
+- [ ] Tous les tests passent localement (`pnpm test`)
+- [ ] Les tests Tauri passent (`pnpm run test:tauri`)
 - [ ] Coverage maintenu ou amélioré
 
 ### Backend (si applicable)
@@ -49,8 +49,8 @@
 
 ### Frontend (si applicable)
 
-- [ ] Code TypeScript/React formaté (`npm run format`)
-- [ ] ESLint satisfait (`npm run lint`)
+- [ ] Code TypeScript/React formaté (`pnpm run format`)
+- [ ] ESLint satisfait (`pnpm run lint`)
 - [ ] Types TypeScript corrects
 - [ ] Composants testés
 

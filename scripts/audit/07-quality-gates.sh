@@ -250,13 +250,13 @@ check_cicd_gate() {
         return
     fi
     
-    local ci_workflow="${workflows_dir}/ci.yml"
-    local release_workflow="${workflows_dir}/release.yml"
+    local ci_workflow="${workflows_dir}/ci-unified.yml"
+    local release_workflow="${workflows_dir}/release-unified.yml"
     
     if [[ ! -f "$ci_workflow" ]]; then
-        gate_warn "CI/CD Workflows" "ci.yml not found"
+        gate_warn "CI/CD Workflows" "ci-unified.yml not found"
     elif [[ ! -f "$release_workflow" ]]; then
-        gate_warn "CI/CD Workflows" "release.yml not found"
+        gate_warn "CI/CD Workflows" "release-unified.yml not found"
     else
         gate_pass "CI/CD Workflows"
     fi

@@ -87,7 +87,7 @@ class TitaneDeployment:
         logger.info("PHASE 1: CHECKING PREREQUISITES")
         logger.info("="*60)
         
-        commands = ['git', 'node', 'npm', 'pnpm', 'cargo', 'rustc']
+        commands = ['git', 'node', 'pnpm', 'cargo', 'rustc']
         missing = []
         
         for cmd in commands:
@@ -138,7 +138,7 @@ class TitaneDeployment:
         logger.info("="*60)
         
         tests = [
-            (['npx', 'tsc', '--noEmit', '--skipLibCheck'], 'TypeScript check'),
+            (['pnpm', 'exec', 'tsc', '--noEmit', '--skipLibCheck'], 'TypeScript check'),
             (['pnpm', 'exec', 'eslint', '.', '--ext', '.ts,.tsx,.js,.jsx', '--max-warnings', '0'], 'ESLint check'),
             (['cargo', 'check', '--manifest-path', 'src-tauri/Cargo.toml'], 'Cargo check'),
         ]

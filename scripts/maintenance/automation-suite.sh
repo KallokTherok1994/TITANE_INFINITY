@@ -132,7 +132,7 @@ weekly_code_audit() {
   # 4. Security audit
   log_info "Running security audits..."
   cargo audit > "$LOG_DIR/cargo-audit.log" 2>&1 || true
-  npm audit > "$LOG_DIR/npm-audit.log" 2>&1 || true
+  pnpm audit > "$LOG_DIR/pnpm-audit.log" 2>&1 || true
   
   log_success "✅ Weekly code audit complete!"
 }
@@ -196,10 +196,10 @@ monthly_infrastructure_review() {
   cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
   
   OUTDATED_RUST=$(cargo outdated 2>/dev/null | wc -l)
-  OUTDATED_NPM=$(npm outdated 2>/dev/null | wc -l)
+  OUTDATED_PNPM=$(pnpm outdated 2>/dev/null | wc -l)
   
   log_warning "Outdated Rust crates: $OUTDATED_RUST"
-  log_warning "Outdated NPM packages: $OUTDATED_NPM"
+  log_warning "Outdated PNPM packages: $OUTDATED_PNPM"
   
   # 3. Performance comparison
   log_info "Analyzing performance trends..."
@@ -225,7 +225,7 @@ monthly_infrastructure_review() {
 
 ## Dependencies
 - Outdated Rust crates: $OUTDATED_RUST
-- Outdated NPM packages: $OUTDATED_NPM
+- Outdated PNPM packages: $OUTDATED_PNPM
 
 ## Community
 - Issues closed: $ISSUES_CLOSED
