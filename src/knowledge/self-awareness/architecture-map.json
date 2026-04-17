@@ -1,8 +1,8 @@
 {
   "meta": {
-    "id": "titane-self-architecture-v30.1.0",
-    "version": "30.1.0",
-    "generated_at": "2026-04-11T20:58:48Z",
+    "id": "titane-self-architecture-v30.1.34",
+    "version": "30.1.34",
+    "generated_at": "2026-04-17T11:43:00Z",
     "purpose": "Self-awareness: TITANE knows its own architecture"
   },
   "architecture": {
@@ -315,7 +315,7 @@
       }
     },
     "ipc_commands": {
-      "total_count": 916,
+      "total_count": 1135,
       "domains": {
         "admin": [
           "total_dev_unlock",
@@ -934,7 +934,7 @@
     "metrics": {
       "total_ts_files": 1668,
       "total_rust_files": 880,
-      "total_ipc_commands": 916,
+      "total_ipc_commands": 1135,
       "total_stores": 18,
       "total_hooks": 110,
       "total_pages": 41,

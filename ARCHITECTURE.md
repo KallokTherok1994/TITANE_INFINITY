@@ -44,8 +44,8 @@ L’agent orchestrateur dynamique répartit intelligemment les tâches entre les
 
 > 2026-04-16 — Advanced-agent live runtime surfaces: les services Ring 3 `src/services/orchestrator/`, `src/services/explainability/` et `src/services/security_active/` publient maintenant des snapshots runtime synchrones consommés directement par leurs dashboards canoniques. La vérité active reste bornée au frontend gouverné: métriques locales et santé providers pour l orchestrateur, trace conversationnelle persistée pour l explainability, et corrélation alertes/logs/politiques de confinement pour la sécurité active, sans créer de second chemin réseau hors One Door.
 
-**Version:** 30.1.0  
-**Date:** 2026-04-11T21:48:00Z  
+**Version:** 30.1.34  
+**Date:** 2026-04-17T11:43:00Z  
 **Classification:** CANON
 
 ---
@@ -75,7 +75,7 @@ TITANE_INFINITY est un **OS cognitif Tauri-only** (React/TypeScript + Rust/Tauri
 | Backend               | Rust 2021 — `src-tauri/`         |
 | Fichiers TS/TSX       | **1 668**                        |
 | Fichiers Rust         | **880**                          |
-| Commandes IPC uniques | **916**                          |
+| Commandes IPC uniques | **1135**                         |
 | Stores Zustand        | **18**                           |
 | Hooks React custom    | **110**                          |
 | Pages                 | **41**                           |
@@ -111,14 +111,14 @@ flowchart TB
     end
 
     subgraph Ring0 ["🔴 Ring 0 — Kernel Rust"]
-        MainRs["main.rs (916 commandes)"]
+        MainRs["main.rs (1135 commandes)"]
         Handlers["handlers.rs"]
         SecEng["secure_engine.rs"]
         State["state.rs"]
     end
 
     Ring4 -->|hooks & stores| Ring3
-    Ring3 -->|safeInvokeCanonical| Ring0
+    Ring3 -->|secureInvoke| Ring0
     Ring2 -->|types| Ring1
     Ring3 -->|engines| Ring2
     MonitoringUI -->|metrics| MonitoringEngine

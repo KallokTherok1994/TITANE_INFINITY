@@ -1,4 +1,4 @@
-# TITANE_INFINITY — Cartographie Complète Avancée v30.1.8
+# TITANE_INFINITY — Cartographie Complète Avancée v30.1.34
 
 > 2026-04-17 — Conversation zoom-width containment truth: `src/components/layout/AppShell.tsx` compense maintenant la largeur et la hauteur du shell racine avec `--titane-ui-scale`, tandis que `src/pages/TitanePage.css` et `src/pages/TitanePage-local.css` retirent les restes de sizing `100vw` au profit d’un bornage parent-bound strict (`width/max-width/min-width`). Les preuves `e2e/critical/chat-layout-viewport.spec.ts` et `e2e/desktop/chat-layout-viewport.wdio.test.js` vérifient désormais aussi les bornes gauche/droite de `page-titane`, `tab-conversation`, `chat-messages-scroll-region`, `chat-input` et `chat-send`.
 

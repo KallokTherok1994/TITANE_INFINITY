@@ -14,16 +14,16 @@ Voir la documentation interne et les logs pour la preuve d’exécution, la conf
 
 ![CI/CD Status](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci-unified.yml/badge.svg?branch=MAIN)
 ![Mermaid Canon](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/mermaid-verify.yml/badge.svg?branch=MAIN)
-![Release v30.0.0](https://img.shields.io/badge/release-v30.0.0-brightgreen?logo=github)
+![Release v30.1.34](https://img.shields.io/badge/release-v30.1.34-brightgreen?logo=github)
 
-**Version:** v30.0.0 (repository authority)
+**Version:** v30.1.34 (repository authority)
 **Status:** ✅ Production Ready (V30 maintained release stream)
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
-**Latest certified deployment:** `2026-04-11` via `deployment/latest/MANIFEST.json`
-**Primary release tag:** [v30.0.0-release-20260406](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260406) (current release stream)
-**Prior certification tag:** [v30.0.0-release-20260405](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260405) (historical)
+**Latest certified deployment:** `2026-04-17` via `deployment/latest/MANIFEST.json`
+**Last published GitHub release:** [v30.1.25](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.1.25) (last public binary)
+**Prior major release tag:** [v30.0.0-release-20260406](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260406) (historical)
 
-**Canal de release canonique:** v30.0.0
+**Canal de release canonique:** v30.1.34
 
 **Qualité (2026-04-11) :** `verify:final100` PASS, `twins_memory_bridge_test` PASS, build stable Linux PASS, réinstallation desktop V30 et smoke-run `BOOT:READY` validés.
 **Archive & legacy policy:** les surfaces obsolètes sont conservées sous `docs/99_ARCHIVE/` et `_archive/`; les surfaces actives V30 restent `src/`, `src-tauri/`, `README.md`, `CHANGELOG.md` et `docs/user/{fr,en}/`.
@@ -56,22 +56,23 @@ Voir la documentation interne et les logs pour la preuve d’exécution, la conf
 
 ---
 
-**Statut d'autorité documentaire (LOCAL, 2026-04-05) :**
+**Statut d'autorité documentaire (LOCAL, 2026-04-17) :**
 
-- Source de version canonique du repo: `package.json` + `CHANGELOG.md` -> `30.0.0` (`PROVEN_BY_REPO`)
-- Release canonique vérifiée: `v30.0.0` (`PROVEN_BY_REPO` + `PROVEN_BY_CHANGELOG`)
-- Lignes binaires historiques documentées: `v28.90.0`, `v28.88.0`, `v27.2.0` (`PROVEN_BY_CANON_DOC`)
-- Politique de cohérence: version canonique et release courante `30.0.0`; les surfaces historiques restent archivées et identifiées par version
+- Source de version canonique du repo: `package.json` + `CHANGELOG.md` -> `30.1.34` (`PROVEN_BY_REPO`)
+- Release canonique vérifiée: `v30.1.34` (`PROVEN_BY_REPO` + `PROVEN_BY_CHANGELOG`)
+- Dernier binaire GitHub publié: `v30.1.25` (`PROVEN_BY_GITHUB_RELEASE`)
+- Lignes binaires historiques documentées: `v30.0.0`, `v28.90.0`, `v28.88.0`, `v27.2.0` (`PROVEN_BY_CANON_DOC`)
+- Politique de cohérence: version canonique et release courante `30.1.34`; les surfaces historiques restent archivées et identifiées par version
 
 ---
 
 ## 📦 Téléchargement
 
-### ✅ Release canonique courante: v30.0.0 (Major Release)
+### ✅ Release canonique courante: v30.1.34
 
 **Status**: ✅ PRODUCTION READY — CERTIFIED & DEPLOYED  
-**Certification ID**: `TITANE_INFINITY_RELEASE_20260411_080731_CERTIFIED`  
-**Last Certification Refresh**: April 11, 2026  
+**Certification ID**: `TITANE_INFINITY_RELEASE_20260417_CORRECTION_CERTIFIED`  
+**Last Certification Refresh**: April 17, 2026  
 **Certification Scope**: verify:final100 PASS, Rust TWINS bridge PASS, rebuild/redeploy Linux V30 PASS, installed runtime smoke `BOOT:READY`
 
 Artefacts vérifiés (Linux amd64):
