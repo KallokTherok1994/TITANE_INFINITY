@@ -1,7 +1,7 @@
 import React from 'react';
 import { getExplainabilityAgentStatus } from './index';
 
-const ExplainabilityDashboard: React.FC = () => {
+export const ExplainabilityDashboard: React.FC = () => {
   const status = getExplainabilityAgentStatus();
   const detailSections = status.detailSections ?? [];
 
@@ -57,10 +57,10 @@ const ExplainabilityDashboard: React.FC = () => {
           <ul style={{ margin: 0, paddingLeft: 18 }}>
             {section.items.map((item, index) => (
               <li
-                key={`${section.key}-${item}`}
+                key={`${section.key}-${item.id}`}
                 data-testid={`explainability-dashboard-${section.key}-${index}`}
               >
-                {item}
+                {item.label}
               </li>
             ))}
           </ul>
@@ -72,4 +72,5 @@ const ExplainabilityDashboard: React.FC = () => {
     </section>
   );
 };
+
 export default ExplainabilityDashboard;

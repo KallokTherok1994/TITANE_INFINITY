@@ -1,7 +1,7 @@
 import React from 'react';
 import MonitoringDashboard from '../services/monitoring/MonitoringDashboard';
 import DiagnosticDashboard from '../services/diagnostic/DiagnosticDashboard';
-import ExplainabilityDashboard from '../services/explainability/ExplainabilityDashboard';
+import { ExplainabilityDashboard } from '../services/explainability/ExplainabilityDashboard';
 import OrchestratorDashboard from '../services/orchestrator/OrchestratorDashboard';
 import SecurityDashboard from '../services/security_active/SecurityDashboard';
 

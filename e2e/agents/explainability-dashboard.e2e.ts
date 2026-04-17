@@ -1,5 +1,6 @@
 // E2E test - Explainability Dashboard
 import { test, expect } from '@playwright/test';
+import { closeBootBeaconIfPresent } from '../helpers/navigation';
 
 test('Explainability dashboard visible et selectors présents', async ({ page }) => {
   await page.addInitScript(() => {
@@ -48,7 +49,8 @@ test('Explainability dashboard visible et selectors présents', async ({ page })
     );
   });
 
-  await page.goto('/');
+  await page.goto('/titane');
+  await closeBootBeaconIfPresent(page);
   await expect(page.getByTestId('explainability-dashboard')).toBeVisible();
   await expect(page.getByTestId('explainability-dashboard')).toHaveAttribute(
     'data-readiness',

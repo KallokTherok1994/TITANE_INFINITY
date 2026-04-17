@@ -1,9 +1,16 @@
 export type AdvancedAgentReadiness = 'planned' | 'partial' | 'qualified';
 
+export interface AdvancedAgentDetailItem {
+  id: string;
+  label: string;
+  acknowledged?: boolean;
+  correlationKey?: string;
+}
+
 export interface AdvancedAgentDetailSection {
   key: string;
   title: string;
-  items: string[];
+  items: AdvancedAgentDetailItem[];
 }
 
 export interface AdvancedAgentStatus {

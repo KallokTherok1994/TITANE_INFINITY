@@ -33,7 +33,7 @@ function normalizeProviderMeta(raw: unknown): ProviderDecisionMeta | null {
     return null;
   }
 
-  return validateProviderDecisionMeta(candidate) ? null : candidate;
+  return validateProviderDecisionMeta(candidate) === null ? candidate : null;
 }
 
 function getLatestExplainabilityTrace(): {
@@ -119,9 +119,18 @@ export function getExplainabilityAgentStatus() {
         key: 'inference-chain',
         title: 'Chaine requested -> used -> shown',
         items: [
-          `Requested: ${latestTrace.requestedProvider}`,
-          `Used: ${latestTrace.providerMeta?.provider_used ?? 'none'}`,
-          `Shown: ${latestTrace.shownSummary}`,
+          {
+            id: 'inference-chain-requested',
+            label: `Requested: ${latestTrace.requestedProvider}`,
+          },
+          {
+            id: 'inference-chain-used',
+            label: `Used: ${latestTrace.providerMeta?.provider_used ?? 'none'}`,
+          },
+          {
+            id: 'inference-chain-shown',
+            label: `Shown: ${latestTrace.shownSummary}`,
+          },
         ],
       },
       {
@@ -129,11 +138,25 @@ export function getExplainabilityAgentStatus() {
         title: 'Rapports d inference',
         items: latestTrace.providerMeta
           ? [
-              `Policy: ${latestTrace.providerMeta.policy} · timeout ${latestTrace.providerMeta.timeout_ms} ms · retries ${latestTrace.providerMeta.retries}.`,
-              `Attempts: ${latestTrace.providerMeta.attempts.length > 0 ? latestTrace.providerMeta.attempts.map(attempt => `${attempt.provider_id}:${attempt.outcome}/${attempt.reason_code}/${attempt.latency_ms}ms`).join(' | ') : 'none'}`,
-              `Preview: ${(latestTrace.assistantContent ?? '').trim().slice(0, 120) || 'empty'}`,
+              {
+                id: 'inference-report-policy',
+                label: `Policy: ${latestTrace.providerMeta.policy} · timeout ${latestTrace.providerMeta.timeout_ms} ms · retries ${latestTrace.providerMeta.retries}.`,
+              },
+              {
+                id: 'inference-report-attempts',
+                label: `Attempts: ${latestTrace.providerMeta.attempts.length > 0 ? latestTrace.providerMeta.attempts.map(attempt => `${attempt.provider_id}:${attempt.outcome}/${attempt.reason_code}/${attempt.latency_ms}ms`).join(' | ') : 'none'}`,
+              },
+              {
+                id: 'inference-report-preview',
+                label: `Preview: ${(latestTrace.assistantContent ?? '').trim().slice(0, 120) || 'empty'}`,
+              },
             ]
-          : ['Aucun rapport d inference persiste: la conversation active n expose pas encore de providerMeta assistant.'],
+          : [
+              {
+                id: 'inference-report-empty',
+                label: 'Aucun rapport d inference persiste: la conversation active n expose pas encore de providerMeta assistant.',
+              },
+            ],
       },
     ],
   };

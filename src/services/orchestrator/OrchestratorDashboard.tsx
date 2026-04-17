@@ -1,9 +1,22 @@
-import React from 'react';
-import { getOrchestratorAgentStatus } from './index';
+import React, { useEffect, useState } from 'react';
+import {
+  getOrchestratorAgentStatus,
+  getOrchestratorDashboardRefreshIntervalMs,
+} from './index';
 
 const OrchestratorDashboard: React.FC = () => {
-  const status = getOrchestratorAgentStatus();
+  const [status, setStatus] = useState(() => getOrchestratorAgentStatus());
   const detailSections = status.detailSections ?? [];
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setStatus(getOrchestratorAgentStatus());
+    }, getOrchestratorDashboardRefreshIntervalMs());
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, []);
 
   return (
     <section
@@ -29,6 +42,9 @@ const OrchestratorDashboard: React.FC = () => {
         {status.summary}
       </p>
       <p style={{ margin: '0 0 8px', fontSize: 13 }}>{status.serviceState}</p>
+      <p data-testid="orchestrator-dashboard-refresh" style={{ margin: '0 0 8px', fontSize: 12, opacity: 0.8 }}>
+        Refresh borne: {Math.round(getOrchestratorDashboardRefreshIntervalMs() / 1000)}s
+      </p>
       <ul data-testid="orchestrator-dashboard-proof-list" style={{ margin: '0 0 8px', paddingLeft: 18 }}>
         {status.evidence.map((item, index) => (
           <li key={item} data-testid={`orchestrator-dashboard-proof-${index}`}>
@@ -51,10 +67,10 @@ const OrchestratorDashboard: React.FC = () => {
           <ul style={{ margin: 0, paddingLeft: 18 }}>
             {section.items.map((item, index) => (
               <li
-                key={`${section.key}-${item}`}
+                key={`${section.key}-${item.id}`}
                 data-testid={`orchestrator-dashboard-${section.key}-${index}`}
               >
-                {item}
+                {item.label}
               </li>
             ))}
           </ul>

@@ -1,1 +1,4 @@
-export { default, default as ExplainabilityDashboard } from '@/services/explainability/ExplainabilityDashboard';
+export {
+	ExplainabilityDashboard,
+	default,
+} from '@/services/explainability/ExplainabilityDashboard';

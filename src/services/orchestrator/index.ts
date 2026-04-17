@@ -6,6 +6,92 @@ import { metricsEngine } from '@/services/ai/metricsEngine';
 import { autoHealEngine } from '@/services/ai/autoHealEngine';
 import { getGovernanceConnector } from '@/services/governance/GovernanceConnector';
 
+const ORCHESTRATOR_TIMELINE_KEY = 'titane_orchestrator_runtime_history';
+const ORCHESTRATOR_TIMELINE_LIMIT = 8;
+const ORCHESTRATOR_REFRESH_INTERVAL_MS = 15000;
+
+interface OrchestratorTimelinePoint {
+  timestamp: number;
+  totalRequests: number;
+  successRate: number;
+  healthyProviders: number;
+  providerCount: number;
+  totalFallbacks: number;
+}
+
+function formatClock(timestamp: number): string {
+  return new Date(timestamp).toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+}
+
+function loadOrchestratorTimeline(): OrchestratorTimelinePoint[] {
+  if (typeof window === 'undefined') {
+    return [];
+  }
+
+  try {
+    const raw = window.localStorage.getItem(ORCHESTRATOR_TIMELINE_KEY);
+    if (!raw) {
+      return [];
+    }
+
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+
+    return parsed.filter(point => point && typeof point.timestamp === 'number');
+  } catch {
+    return [];
+  }
+}
+
+function saveOrchestratorTimeline(history: OrchestratorTimelinePoint[]): void {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  window.localStorage.setItem(ORCHESTRATOR_TIMELINE_KEY, JSON.stringify(history));
+}
+
+function updateOrchestratorTimeline(
+  snapshot: OrchestratorTimelinePoint
+): OrchestratorTimelinePoint[] {
+  const history = loadOrchestratorTimeline();
+  const previous = history[history.length - 1];
+
+  if (!previous) {
+    const nextHistory = [snapshot];
+    saveOrchestratorTimeline(nextHistory);
+    return nextHistory;
+  }
+
+  const hasMeaningfulChange =
+    previous.totalRequests !== snapshot.totalRequests ||
+    previous.successRate !== snapshot.successRate ||
+    previous.healthyProviders !== snapshot.healthyProviders ||
+    previous.totalFallbacks !== snapshot.totalFallbacks;
+  const shouldAppend =
+    snapshot.timestamp - previous.timestamp >= ORCHESTRATOR_REFRESH_INTERVAL_MS;
+
+  const nextHistory = shouldAppend
+    ? [...history, snapshot]
+    : hasMeaningfulChange
+      ? [...history.slice(0, -1), snapshot]
+      : history;
+  const boundedHistory = nextHistory.slice(-ORCHESTRATOR_TIMELINE_LIMIT);
+
+  saveOrchestratorTimeline(boundedHistory);
+  return boundedHistory;
+}
+
+export function getOrchestratorDashboardRefreshIntervalMs(): number {
+  return ORCHESTRATOR_REFRESH_INTERVAL_MS;
+}
+
 export function getOrchestratorAgentStatus() {
   const base = getAdvancedAgentStatus('orchestrator');
   const activeProviders = getActiveAIProviders();
@@ -21,6 +107,18 @@ export function getOrchestratorAgentStatus() {
     champion => champion.provider === 'ollama'
   ).length;
   const healthyProviders = providerSnapshots.filter(provider => provider.isHealthy).length;
+  const currentSnapshot: OrchestratorTimelinePoint = {
+    timestamp: Date.now(),
+    totalRequests: metrics.totalRequests,
+    successRate: Number(metrics.successRate.toFixed(1)),
+    healthyProviders,
+    providerCount: providerSnapshots.length,
+    totalFallbacks: metrics.totalFallbacks,
+  };
+  const timeline = updateOrchestratorTimeline(currentSnapshot);
+  const topProviderLoads = [...metrics.providers]
+    .sort((left, right) => right.totalRequests - left.totalRequests)
+    .slice(0, 3);
 
   return {
     ...base,
@@ -31,22 +129,36 @@ export function getOrchestratorAgentStatus() {
       `Runtime: providers actifs ${activeProviders.join(', ')}.`,
       `Runtime: timeout Ollama ${PROVIDER_TIMEOUTS.ollama / 1000}s · tauri-backend ${PROVIDER_TIMEOUTS['tauri-backend'] / 1000}s.`,
       `Runtime: charge ${metrics.totalRequests} req · succes ${metrics.successRate.toFixed(1)}% · latence moyenne ${Math.round(metrics.avgResponseTime)} ms.`,
+      `Runtime: refresh borne ${Math.round(ORCHESTRATOR_REFRESH_INTERVAL_MS / 1000)}s sur la serie temporelle locale du dashboard.`,
       `Registre: ${localChampionCount}/${Object.keys(registry.champions).length} modes canoniques restent routes vers un champion Ollama local avec challengers cloud bornes.`,
       ...base.evidence,
     ],
     blockers: [
-      'La vue live reste un snapshot synchrone: aucune serie temporelle ni rafraichissement periodique ne sont encore publies.',
+      'La serie temporelle reste locale et bornee au dashboard: aucun stream multi-session ni export compare n est encore publie.',
     ],
     nextStep:
-      'Ajouter une serie temporelle et un rafraichissement borne pour suivre la charge provider sans quitter la surface canonique.',
+      'Etendre la serie temporelle a des comparaisons multi-session et a une ventilation champion/challenger par provider.',
     detailSections: [
       {
         key: 'live-metrics',
         title: 'Metriques live',
         items: [
-          `Charge: ${metrics.totalRequests} requetes totales · ${metrics.last24h.requests} sur 24h · ${metrics.totalFallbacks} fallbacks.`,
-          `Sante: ${metricsHealth.overall} · succes ${metrics.successRate.toFixed(1)}% · latence moyenne ${Math.round(metrics.avgResponseTime)} ms.`,
-          `Auto-heal: score ${autoHealStats.healthScore}/100 · erreurs ${autoHealStats.totalErrors} · heals ${autoHealStats.totalHeals}.`,
+          {
+            id: 'live-metrics-charge',
+            label: `Charge: ${metrics.totalRequests} requetes totales · ${metrics.last24h.requests} sur 24h · ${metrics.totalFallbacks} fallbacks.`,
+          },
+          {
+            id: 'live-metrics-health',
+            label: `Sante: ${metricsHealth.overall} · succes ${metrics.successRate.toFixed(1)}% · latence moyenne ${Math.round(metrics.avgResponseTime)} ms.`,
+          },
+          {
+            id: 'live-metrics-autoheal',
+            label: `Auto-heal: score ${autoHealStats.healthScore}/100 · erreurs ${autoHealStats.totalErrors} · heals ${autoHealStats.totalHeals}.`,
+          },
+          {
+            id: 'live-metrics-provider-load',
+            label: `Charge providers: ${topProviderLoads.length > 0 ? topProviderLoads.map(provider => `${provider.provider}=${provider.totalRequests}`).join(' | ') : 'no provider traffic yet'}`,
+          },
         ],
       },
       {
@@ -58,8 +170,19 @@ export function getOrchestratorAgentStatus() {
               ? `${Math.max(1, Math.round((Date.now() - provider.lastFailure) / 1000))}s`
               : 'none';
 
-          return `${provider.id}: configured=${provider.isConfigured ? 'yes' : 'no'} · active=${provider.isActive ? 'yes' : 'no'} · healthy=${provider.isHealthy ? 'yes' : 'no'} · fails=${provider.failureCount} · consecutive=${provider.consecutiveFailures} · lastFailureAgo=${lastFailureAgo}`;
+          return {
+            id: `provider-snapshot-${provider.id}`,
+            label: `${provider.id}: configured=${provider.isConfigured ? 'yes' : 'no'} · active=${provider.isActive ? 'yes' : 'no'} · healthy=${provider.isHealthy ? 'yes' : 'no'} · fails=${provider.failureCount} · consecutive=${provider.consecutiveFailures} · lastFailureAgo=${lastFailureAgo}`,
+          };
         }),
+      },
+      {
+        key: 'live-timeline',
+        title: 'Serie temporelle bornee',
+        items: timeline.map(point => ({
+          id: `timeline-${point.timestamp}`,
+          label: `${formatClock(point.timestamp)} · req=${point.totalRequests} · success=${point.successRate.toFixed(1)}% · healthy=${point.healthyProviders}/${point.providerCount} · fallback=${point.totalFallbacks}`,
+        })),
       },
     ],
   };

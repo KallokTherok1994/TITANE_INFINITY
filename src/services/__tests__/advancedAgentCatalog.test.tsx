@@ -1,6 +1,6 @@
 import React from 'react';
 import { describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import {
   getAdvancedAgentStatus,
   listAdvancedAgentStatuses,
@@ -152,10 +152,14 @@ describe('advanced agent dashboards', () => {
   it('renders live orchestration metrics and provider snapshots', () => {
     render(<OrchestratorDashboard />);
 
+    expect(screen.getByTestId('orchestrator-dashboard-refresh')).toHaveTextContent(
+      'Refresh borne: 15s'
+    );
     expect(screen.getByTestId('orchestrator-dashboard-live-metrics')).toBeInTheDocument();
     expect(
       screen.getByTestId('orchestrator-dashboard-provider-snapshots')
     ).toBeInTheDocument();
+    expect(screen.getByTestId('orchestrator-dashboard-live-timeline')).toBeInTheDocument();
   });
 
   it('renders the requested -> used -> shown chain and inference report from persisted conversation runtime', () => {
@@ -176,12 +180,24 @@ describe('advanced agent dashboards', () => {
     ).toHaveTextContent('Attempts: ollama:success/OK/42ms');
   });
 
-  it('renders detection and containment events on the active security surface', () => {
+  it('renders acknowledgement, history and correlation on the active security surface', () => {
     uiLogger.security('Test security alert', { scope: 'dashboard-test' });
 
     render(<SecurityDashboard />);
 
+    expect(screen.getByTestId('security-dashboard-refresh')).toHaveTextContent(
+      'Refresh borne: 10s'
+    );
     expect(screen.getByTestId('security-dashboard-detection-events')).toBeInTheDocument();
     expect(screen.getByTestId('security-dashboard-containment-events')).toBeInTheDocument();
+    expect(screen.getByTestId('security-dashboard-event-history')).toBeInTheDocument();
+    expect(screen.getByTestId('security-dashboard-correlation-summary')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId('security-dashboard-ack-detection-events-0'));
+
+    expect(screen.getByTestId('security-dashboard-detection-events-0')).toHaveAttribute(
+      'data-acknowledged',
+      'yes'
+    );
   });
 });

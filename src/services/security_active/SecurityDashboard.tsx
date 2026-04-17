@@ -1,9 +1,28 @@
-import React from 'react';
-import { getSecurityActiveAgentStatus } from './index';
+import React, { useEffect, useState } from 'react';
+import {
+  acknowledgeSecurityDashboardEvent,
+  getSecurityActiveAgentStatus,
+  getSecurityDashboardRefreshIntervalMs,
+} from './index';
 
 const SecurityDashboard: React.FC = () => {
-  const status = getSecurityActiveAgentStatus();
+  const [status, setStatus] = useState(() => getSecurityActiveAgentStatus());
   const detailSections = status.detailSections ?? [];
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setStatus(getSecurityActiveAgentStatus());
+    }, getSecurityDashboardRefreshIntervalMs());
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, []);
+
+  const acknowledgeEvent = (eventId: string) => {
+    acknowledgeSecurityDashboardEvent(eventId);
+    setStatus(getSecurityActiveAgentStatus());
+  };
 
   return (
     <section
@@ -29,6 +48,9 @@ const SecurityDashboard: React.FC = () => {
         {status.summary}
       </p>
       <p style={{ margin: '0 0 8px', fontSize: 13 }}>{status.serviceState}</p>
+      <p data-testid="security-dashboard-refresh" style={{ margin: '0 0 8px', fontSize: 12, opacity: 0.8 }}>
+        Refresh borne: {Math.round(getSecurityDashboardRefreshIntervalMs() / 1000)}s
+      </p>
       <ul data-testid="security-dashboard-proof-list" style={{ margin: '0 0 8px', paddingLeft: 18 }}>
         {status.evidence.map((item, index) => (
           <li key={item} data-testid={`security-dashboard-proof-${index}`}>
@@ -51,10 +73,22 @@ const SecurityDashboard: React.FC = () => {
           <ul style={{ margin: 0, paddingLeft: 18 }}>
             {section.items.map((item, index) => (
               <li
-                key={`${section.key}-${item}`}
+                key={`${section.key}-${item.id}`}
                 data-testid={`security-dashboard-${section.key}-${index}`}
+                data-acknowledged={item.acknowledged ? 'yes' : 'no'}
               >
-                {item}
+                <span>{item.label}</span>
+                {(section.key === 'detection-events' || section.key === 'containment-events') &&
+                !item.acknowledged ? (
+                  <button
+                    type="button"
+                    data-testid={`security-dashboard-ack-${section.key}-${index}`}
+                    onClick={() => acknowledgeEvent(item.id)}
+                    style={{ marginLeft: 8, fontSize: 12 }}
+                  >
+                    Ack
+                  </button>
+                ) : null}
               </li>
             ))}
           </ul>
