@@ -11,6 +11,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 1rem;
+  box-sizing: border-box;
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(4px);
   animation: fadeIn 0.15s ease;
@@ -28,8 +30,8 @@
 /* Panel */
 .ui-reading-panel {
   width: 380px;
-  max-width: 90vw;
-  max-height: 90vh;
+  max-width: min(100%, 380px);
+  max-height: calc(100% - 2rem);
   overflow-y: auto;
   background: #0a0a0a;
   border: 1px solid rgba(196, 196, 196, 0.2);

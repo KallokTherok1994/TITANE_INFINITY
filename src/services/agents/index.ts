@@ -7,4 +7,5 @@
 
 export * from './agents.types';
 export * from './agents.api';
+export * from './advancedAgentCatalog';
 export { AgentsAPIService } from './agents.api';

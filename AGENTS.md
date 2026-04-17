@@ -118,6 +118,13 @@ Heavy doctrine belongs to the local Codex rules file, not to the repo.
 - Required: Dashboard de monitoring, logs d'événements, tests E2E de résilience, intégration avec autoheal.
 - Mapping: update `ARCHITECTURE.md`, `docs/CARTOGRAPHY_COMPLETE.md`, `UI_SURFACE_MAP.md` si dashboard UI.
 
+## Runtime Truth Procedure
+
+- Les dashboards agents avancés doivent publier une vérité runtime ou registry réelle quand elle existe déjà dans le repo: métriques, alertes, transport IPC, registre champion/challenger, feature flags, timeouts, état provider.
+- Le catalogue agents avancés reste la base canonique de qualification, mais les services dédiés doivent enrichir ce socle avec les signaux réels au lieu d afficher un stub figé.
+- Toute évolution Ollama/Cline doit rester alignée sur `http://127.0.0.1:11434`, `gemma2:2b`, la voie IPC canonique et l absence de token gate de build/deploy.
+- La commande canonique de vérification d alignement est `pnpm run verify:ollama:cline`.
+
 ## Chain-of-Thought Validation
 
 4. Confirm tests exist or will be created (Rule 16).

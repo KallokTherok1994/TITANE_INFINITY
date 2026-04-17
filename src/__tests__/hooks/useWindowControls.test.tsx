@@ -44,7 +44,7 @@ describe('useWindowControls Hook', () => {
       });
 
       expect(result.current.zoomIn).toBeDefined();
-      expect(document.documentElement.style.zoom).toBe('0.825');
+      expect(document.documentElement.style.zoom).toBe('1.1');
     });
 
     it('supports Ctrl+NumpadAdd as a zoom-in shortcut', async () => {
@@ -61,7 +61,7 @@ describe('useWindowControls Hook', () => {
         );
       });
 
-      expect(document.documentElement.style.zoom).toBe('0.825');
+      expect(document.documentElement.style.zoom).toBe('1.1');
     });
 
     it('should zoom out', async () => {
@@ -72,7 +72,7 @@ describe('useWindowControls Hook', () => {
       });
 
       expect(result.current.zoomOut).toBeDefined();
-      expect(document.documentElement.style.zoom).toBe('0.675');
+      expect(document.documentElement.style.zoom).toBe('0.9');
     });
 
     it('should reset zoom', async () => {
@@ -83,7 +83,7 @@ describe('useWindowControls Hook', () => {
       });
 
       expect(result.current.zoomReset).toBeDefined();
-      expect(document.documentElement.style.zoom).toBe('0.75');
+      expect(document.documentElement.style.zoom).toBe('1');
     });
   });
 

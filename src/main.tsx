@@ -915,12 +915,14 @@ const handleDevtoolsShortcut = createDevtoolsShortcutHandler({
       return;
     }
 
+    const canonicalDevtoolsRoute = '/admin?tab=system&systemTab=devtools&source=f12';
+
     logger.warn('Native DevTools unavailable - routing to internal DevTools page', {
       component: 'DevTools',
-      route: '/devtools?source=f12',
+      route: canonicalDevtoolsRoute,
     });
 
-    window.history.pushState({}, '', '/devtools?source=f12');
+    window.history.pushState({}, '', canonicalDevtoolsRoute);
     window.dispatchEvent(new PopStateEvent('popstate'));
   },
   onError: (err: unknown) => {

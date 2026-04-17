@@ -1,5 +1,7 @@
 # OLLAMA RUNTIME MAP — TITANE_INFINITY
 
+> 2026-04-17 — Local AI alignment truth: the governed local stack is now normalized on `gemma2:2b` across the frontend provider default, champion/challenger registry, verification scripts, Windows Ollama spin-up proof, and local Cline safeguards. `verify:ollama:cline` is the canonical anti-drift gate for this surface, and no local tooling layer may reintroduce a token/passphrase gate for builds or deploys.
+
 > 2026-04-16 — Backend Ollama canonical loopback truth: `src-tauri/src/overdrive/chat_orchestrator.rs` utilise maintenant `http://127.0.0.1:11434` pour le probe, la génération et le streaming, et le fallback streaming par défaut est réaligné sur `gemma2:2b` afin d'éviter les dérives `localhost`/IPv6 et les écarts de modèle dans les lanes desktop gouvernées.
 
 **Date**: 2026-04-02

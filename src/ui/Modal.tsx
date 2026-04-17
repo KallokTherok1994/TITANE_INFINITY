@@ -58,7 +58,7 @@ const modalBaseStyles: React.CSSProperties = {
   border: `1px solid ${colors.rubis.primary[800]}`,
   borderRadius: radius.xl,
   boxShadow: shadows['2xl'],
-  maxHeight: '90vh',
+  maxHeight: 'calc(100% - 2rem)',
   overflow: 'auto',
   position: 'relative',
 };
@@ -68,7 +68,7 @@ const sizeStyles: Record<ModalSize, React.CSSProperties> = {
   md: { maxWidth: '600px', width: '100%' },
   lg: { maxWidth: '800px', width: '100%' },
   xl: { maxWidth: '1200px', width: '100%' },
-  full: { maxWidth: '95vw', width: '100%', maxHeight: '95vh' },
+  full: { maxWidth: '100%', width: '100%', maxHeight: '100%' },
 };
 
 const headerStyles: React.CSSProperties = {

@@ -3,6 +3,8 @@
 .modal__overlay {
   position: fixed;
   inset: 0;
+  padding: 1rem;
+  box-sizing: border-box;
   background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(16px) saturate(150%);
   -webkit-backdrop-filter: blur(16px) saturate(150%);
@@ -30,7 +32,9 @@
     0 8px 32px rgba(0, 0, 0, 0.4),
     0 0 60px rgba(139, 92, 246, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  max-height: 90vh;
+  width: min(100%, var(--modal-width, 960px));
+  max-width: 100%;
+  max-height: calc(100% - 2rem);
   display: flex;
   flex-direction: column;
   animation: slideUpModal 400ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -78,18 +82,15 @@
 }
 
 .modal__content--sm {
-  width: 420px;
-  max-width: 90vw;
+  --modal-width: 420px;
 }
 
 .modal__content--md {
-  width: 640px;
-  max-width: 90vw;
+  --modal-width: 640px;
 }
 
 .modal__content--lg {
-  width: 960px;
-  max-width: 90vw;
+  --modal-width: 960px;
 }
 
 .modal__header {

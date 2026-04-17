@@ -85,4 +85,39 @@ describe('moduleRouteContext memory route', () => {
     expect(governanceContext.continuity.changeType).toBe('same-module');
     expect(readActiveModuleContext()?.fullRoute).toBe('/admin?tab=governance');
   });
+
+  it('keeps legacy aliases aligned with their canonical query-driven destinations', () => {
+    const chatContext = publishActiveModuleContext('/chat');
+    const devtoolsContext = publishActiveModuleContext('/devtools?source=f12');
+    const monitoringContext = publishActiveModuleContext('/monitoring');
+    const statsContext = publishActiveModuleContext('/stats');
+    const evolutionCenterContext = publishActiveModuleContext('/evolution-center');
+
+    expect(chatContext.route).toBe('/titane');
+    expect(chatContext.pageState).toBe('tab=conversation');
+    expect(chatContext.fullRoute).toBe('/titane?tab=conversation');
+    expect(chatContext.aliasResolvedFrom).toBe('/chat');
+
+    expect(devtoolsContext.route).toBe('/admin');
+    expect(devtoolsContext.pageState).toBe('tab=system&systemTab=devtools&source=f12');
+    expect(devtoolsContext.fullRoute).toBe(
+      '/admin?tab=system&systemTab=devtools&source=f12'
+    );
+    expect(devtoolsContext.aliasResolvedFrom).toBe('/devtools');
+
+    expect(monitoringContext.route).toBe('/dev');
+    expect(monitoringContext.pageState).toBe('tab=diagnostics');
+    expect(monitoringContext.fullRoute).toBe('/dev?tab=diagnostics');
+    expect(monitoringContext.aliasResolvedFrom).toBe('/monitoring');
+
+    expect(statsContext.route).toBe('/dev');
+    expect(statsContext.pageState).toBe('tab=diagnostics');
+    expect(statsContext.fullRoute).toBe('/dev?tab=diagnostics');
+    expect(statsContext.aliasResolvedFrom).toBe('/stats');
+
+    expect(evolutionCenterContext.route).toBe('/titane');
+    expect(evolutionCenterContext.pageState).toBeUndefined();
+    expect(evolutionCenterContext.fullRoute).toBe('/titane');
+    expect(evolutionCenterContext.aliasResolvedFrom).toBe('/evolution-center');
+  });
 });

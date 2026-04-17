@@ -14,6 +14,9 @@
 import { type ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/utils/cn'; // Utility for conditional classes
+import AgentDashboardsPanel from '@/components/AgentDashboardsPanel';
+
+const APP_SHELL_ZOOM_VAR = 'var(--titane-ui-scale, 1)';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -41,9 +44,13 @@ export const AppShell = ({
   return (
     <div
       className={cn(
-        'flex h-dvh min-h-0 w-full min-w-0 max-w-full flex-col overflow-hidden bg-titanium-bg-base',
+        'flex h-full min-h-0 w-full min-w-0 max-w-full flex-col overflow-hidden bg-titanium-bg-base',
         className
       )}
+      style={{
+        height: `calc(100% / ${APP_SHELL_ZOOM_VAR})`,
+        minHeight: `calc(100% / ${APP_SHELL_ZOOM_VAR})`,
+      }}
     >
       {/* TopNav (remplace header + sidebar) */}
       {topNav && (
@@ -58,7 +65,9 @@ export const AppShell = ({
         className="relative flex h-full min-h-0 max-w-full min-w-0 flex-1 flex-col overflow-hidden"
         style={
           topNav
-            ? { paddingTop: 'calc(4rem + env(safe-area-inset-top, 0px))' }
+            ? {
+                paddingTop: `calc((4rem + env(safe-area-inset-top, 0px)) / ${APP_SHELL_ZOOM_VAR})`,
+              }
             : undefined
         }
       >
@@ -68,6 +77,7 @@ export const AppShell = ({
         >
           {children}
         </div>
+        <AgentDashboardsPanel />
       </main>
 
       {/* Footer */}

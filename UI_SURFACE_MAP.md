@@ -1,3 +1,19 @@
+# [2026-04-16] Monitoring lazy-loader runtime fix: le dashboard canonique `monitoring-dashboard` continue de passer par `src/services/monitoring/index.ts`, mais la façade monitoring importe désormais explicitement les bindings du lazy-loader avant de les réexporter. La vérité runtime corrigée est que `getMonitoringAgentStatus()` peut être appelée depuis `MonitoringDashboard.tsx` sans `ReferenceError`, même avant l'initialisation paresseuse complète du monitoring.
+
+# [2026-04-17] Canonical zoom authority truth: le zoom global TITANE passe maintenant par une seule autorité canonique (`src/hooks/zoomScale.ts`) partagée entre TopNav, raccourcis clavier et panneau UIReading. Le shell applicatif, les panneaux modaux et la surface chat legacy ont été réalignés sur des dimensions parent-bound (`100%`) au lieu de `vh/dvh` rigides, afin que textes et éléments grandissent/rétrécissent de façon cohérente sans réintroduire de débordement sous zoom navigateur et Tauri.
+
+# [2026-04-17] Advanced agents runtime truth: les dashboards `monitoring-dashboard`, `diagnostic-panel`, `explainability-dashboard`, `orchestrator-dashboard` et `security-dashboard` ne lisent plus seulement le catalogue de qualification; ils passent par leurs services dédiés pour afficher des signaux runtime/configuration réels déjà présents dans le repo (métriques/alertes monitoring, providers actifs, timeouts, registre champion/challenger, transport IPC, statut Ollama).
+
+# [2026-04-17] Native zoom-step truth: la surface conversation TITANE conserve maintenant un cycle de zoom symétrique dans TopNav et au clavier. Un aller-retour `zoom in` puis `zoom out` revient exactement à 100% au lieu de dériver vers `0.99`, et la page fullscreen force désormais un bornage parent-bound (`width/max-width/min-height` overrides) pour rester visible dans la fenêtre Tauri dev à `0.8`, `1.0` et `1.1`.
+
+# [2026-04-16] Canonical route-context truth: les alias query-driven ne sont plus résumés à leurs seuls chemins racine dans `moduleRouteContext`; `/chat`, `/devtools`, `/monitoring`, `/stats`, `/evolution-center` et les alias Admin/Dev conservent désormais leur destination canonique complète (`tab=...`, `systemTab=...`) afin que la mémoire contextuelle, les raccourcis et les diagnostics reflètent la surface réellement visible au lieu d'une racine générique pouvant donner une impression de rollback UI.
+
+# [2026-04-16] Canonical desktop/browser zoom truth: la surface conversation TITANE n'est plus rétrécie par un `html { zoom: 75%; }` global en desktop. La baseline revient à 100%, les raccourcis zoom/fullscreen restent l'autorité canonique, et la page conversation conserve désormais un étirement `width: 100%` parent-bound pour rester entièrement visible en HTTP, en Tauri, en plein écran et sous zoom +/-.
+
+# [2026-04-16] Conversation fullscreen bounded-height truth: la surface conversation fullscreen est maintenant contrainte par une chaîne `titane-content--conversation -> titane-section-conversation--fullscreen -> conversation-container` entièrement flex et bornée en hauteur, ce qui garde l’onglet Chat, le flux et le compositeur dans la fenêtre sans débordement bas en HTTP desktop.
+
+# [2026-04-17] TopNav zoom viewport truth: les contrôles de zoom du TopNav ne laissent plus la surface TITANE sortir de la fenêtre visible. Le shell applicatif compense désormais le zoom global via une hauteur et un offset top normalisés par `--titane-ui-scale`, ce qui garde le chat, les tabs et le compositeur entièrement visibles sous zoom avant/arrière, resize et viewport compact.
+
 # [2026-04-16] Conversation long-message visibility: la surface chat canonique ne jette plus les messages assistant tres longs dans le chemin de virtualisation; elle repasse sur le rendu naturel et ne declenche l'alerte `titane-message-truncated` que si une limite explicite a ete configuree via `window.TITANE_MAX_MESSAGE_LENGTH`.
 
 # [2026-04-16] Conversation runtime transparency reply: quand l'utilisateur demande explicitement, sans creer de fichier, le provider reel utilise, l'usage reseau et ce que l'UI peut exporter, la surface conversation repond maintenant localement en 3 points a partir de la derniere verite runtime instrumentee; elle cite JSON, Markdown et copie presse-papiers, et rappelle que les demandes de fichier passent par la voie artefact canonique.
@@ -57,6 +73,8 @@
 - TopNav zoom-in button test id: `topnav-zoom-in`
 - File: `src/components/layout/TopNav.tsx`
 - Zoom range: 50% – 200%, persisted to localStorage key `titane_zoom_level`
+- Zoom step truth: TopNav and keyboard shortcuts use the same canonical additive step, so one zoom-in followed by one zoom-out returns exactly to 100%.
+- Zoom authority truth: TopNav listens to canonical zoom-change events, so its indicator stays aligned with keyboard, Tauri window controls, and UIReading adjustments instead of keeping a stale local value.
 - Keyboard equivalents: Ctrl+- (zoom out), Ctrl++ (zoom in), Ctrl+0 (reset)
 - Item menu Plus: `nav-twins` (route `/twins`, accès unique TWINS côté UI)
 
@@ -82,6 +100,7 @@
 - Fullscreen visual contract: le mode `data-fullscreen=true` renforce visiblement le shell conversationnel avant même l'éventuel resserrement `compact`
 - Fullscreen composer contract: `.conversation-input-container` reste contenu dans le viewport visible et ne doit jamais sortir sous la fenêtre active
 - Fullscreen containment contract: la hauteur fullscreen active est pilotée par la chaîne flex du shell conversation, pas par une soustraction fixe spécifique mobile
+- Native fullscreen parent-bound contract: `.titane-page--conversation` force `width: 100% !important`, `max-width: 100% !important` et `min-height: 0 !important` pour ne pas réhériter des dimensions `100vw/100vh` quand le runtime Tauri applique un zoom inférieur à 100%.
 - Long assistant replies: fixed-height virtualization is bypassed automatically when a message requires natural height rendering; selectors above remain unchanged.
 - Long response proof: la combinaison `chat-input` → `chat-send` → `chat-message-assistant`/`chat-message-content` est couverte en E2E mock pour vérifier qu’une réponse longue complète reste visible.
 - Legacy route truth: `/chat` reste un alias de navigation mais redirige explicitement vers `/titane?tab=conversation`; sa vérité UI reste `page-titane[data-layout="chat-fullscreen"]` et `page-conversation[data-layout="fullscreen"]`.
@@ -119,6 +138,11 @@
 - **Orchestrateur Dynamique Agent** : `orchestrator-dashboard`
 - **Agent de Sécurité Active** : `security-dashboard`
 - **Agent Anti-Régression canonique** : `self-healing-dashboard` + `anti-regression-summary` via `/admin?tab=anti-regression`
+- **Panel canonique** : `agent-dashboards-panel` regroupe les 5 dashboards avancés visibles sur la surface active.
+- **Montage canonique** : `agent-dashboards-panel` est monté depuis `src/components/layout/AppShell.tsx`, donc la vérité runtime attendue est sa présence sur la surface applicative active et pas seulement dans des exports dormants.
+- **Contrat canonique commun** : chaque dashboard expose `data-readiness` sur sa racine et les selectors enfants `-status`, `-summary`, `-proof-list`, `-blockers`, `-next-step`.
+- **Readiness truth** : `monitoring-dashboard`, `diagnostic-panel`, `explainability-dashboard`, `orchestrator-dashboard` et `security-dashboard` = `partial` tant que leurs services publient déjà des signaux runtime/configuration vérifiables mais qu aucun moteur complet n est encore branché.
+- **Chat single-door truth** : la surface conversation active continue d utiliser `conversation_generate` via IPC Tauri, pas un backend HTTP direct. Depuis le correctif 2026-04-16, ce chemin actif enrichit aussi le system prompt avec la connaissance runtime issue de `memory_get_knowledge` et persiste chaque échange réussi dans le Memory Core via `persistent_memory_write_entry`, ce qui réaligne mémoire, base de connaissance et contexte Twins sur la même porte d entrée.
 
 Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, logs et alerting UI.
 
@@ -134,4 +158,5 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Root shell contract: la chaîne fullscreen `AppShell -> titane-page--conversation -> titane-content--conversation -> conversation-container` doit rester parent-bound (`flex/min-height:0/max-height:100%`) et non pilotée par un double offset ou une hauteur viewport forcée.
 - Header persistence truth: `titane-page-header--conversation` reste collé en haut du shell fullscreen pour garder l’onglet chat visible quand la hauteur utile se compacte.
 - App shell offset truth: la compensation TopNav reste portée uniquement par `paddingTop: calc(4rem + env(safe-area-inset-top, 0px))` dans `AppShell`.
+- Parent-bound shell truth: `AppShell` compense désormais le zoom sur `height/min-height: calc(100% / var(--titane-ui-scale))`, ce qui évite les dérives liées à `100dvh` quand le navigateur ou Tauri appliquent un zoom réel.
 - Desktop proof helper truth: le helper WDIO `inspectConversationScrollRegion()` borne désormais son overflow artificiel au budget vertical réel entre `.chat-toolbar` et `.conversation-input-container`.

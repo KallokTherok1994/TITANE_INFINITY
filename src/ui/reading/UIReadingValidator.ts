@@ -17,16 +17,16 @@ import type { UIScale, UIReadingSettings, FontFamilyOption } from './UIReadingCo
 // ═══════════════════════════════════════════════════════════════════
 
 export const ValidationLimits = {
-  zoom: { min: 0.7, max: 1.6 },
+  zoom: { min: 0.5, max: 2.0 },
   fontSize: { min: 10, max: 22 },
   lineHeight: { min: 1.2, max: 2.0 },
   letterSpacing: { min: -0.1, max: 0.2 },
   maxContentWidth: { min: 500, max: 2000 },
 } as const;
 
-export const ValidZoomLevels: UIScale[] = [
-  0.85, 0.9, 0.95, 1.0, 1.05, 1.1, 1.15, 1.2, 1.3, 1.4,
-];
+export const ValidZoomLevels: UIScale[] = Array.from({ length: 16 }, (_, index) =>
+  Number((ValidationLimits.zoom.min + index * 0.1).toFixed(1))
+);
 export const ValidFontFamilies: FontFamilyOption[] = ['system', 'serif', 'mono'];
 
 // ═══════════════════════════════════════════════════════════════════

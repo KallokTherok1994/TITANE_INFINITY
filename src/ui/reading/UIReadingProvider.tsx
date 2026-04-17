@@ -33,6 +33,12 @@ import {
 } from './UIReadingValidator';
 import { loadSettings, saveSettingsDebounced } from './UIReadingPersistence';
 import { createLogger } from '@/utils/logger';
+import {
+  applyZoomScale,
+  readCurrentZoomScale,
+  stepZoomScale,
+  ZOOM_SCALE_CHANGED_EVENT,
+} from '@/hooks/zoomScale';
 
 // ═══════════════════════════════════════════════════════════════════
 // CSS VARIABLE APPLICATION
@@ -60,6 +66,11 @@ function applyCSSVariables(settings: UIReadingSettings): void {
   root.style.setProperty('--ui-reading-font-family', fontFamilyMap[settings.fontFamily]);
 }
 
+function normalizeZoomLevel(scale: number): UIScale {
+  const result = validateZoom(scale);
+  return (result.clampedValue ?? DEFAULT_SETTINGS.zoomLevel) as UIScale;
+}
+
 // ═══════════════════════════════════════════════════════════════════
 // PROVIDER COMPONENT
 // ═══════════════════════════════════════════════════════════════════
@@ -70,14 +81,52 @@ interface UIReadingProviderProps {
 
 export function UIReadingProvider({ children }: UIReadingProviderProps): JSX.Element {
   // Load persisted settings on mount
-  const [settings, setSettings] = useState<UIReadingSettings>(() => loadSettings());
+  const [settings, setSettings] = useState<UIReadingSettings>(() => ({
+    ...loadSettings(),
+    zoomLevel: normalizeZoomLevel(readCurrentZoomScale()),
+  }));
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   // Apply CSS variables whenever settings change
   useEffect(() => {
-    applyCSSVariables(settings);
-    saveSettingsDebounced(settings);
+    const zoomLevel = normalizeZoomLevel(settings.zoomLevel);
+    const normalizedSettings =
+      settings.zoomLevel === zoomLevel ? settings : { ...settings, zoomLevel };
+
+    applyZoomScale(zoomLevel);
+    applyCSSVariables(normalizedSettings);
+    saveSettingsDebounced(normalizedSettings);
+
+    if (normalizedSettings !== settings) {
+      setSettings(normalizedSettings);
+    }
   }, [settings]);
+
+  useEffect(() => {
+    const syncFromCanonicalZoom = () => {
+      const zoomLevel = normalizeZoomLevel(readCurrentZoomScale());
+
+      setSettings(prev =>
+        prev.zoomLevel === zoomLevel ? prev : { ...prev, zoomLevel, preset: null }
+      );
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        syncFromCanonicalZoom();
+      }
+    };
+
+    window.addEventListener(ZOOM_SCALE_CHANGED_EVENT, syncFromCanonicalZoom);
+    window.addEventListener('focus', syncFromCanonicalZoom);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener(ZOOM_SCALE_CHANGED_EVENT, syncFromCanonicalZoom);
+      window.removeEventListener('focus', syncFromCanonicalZoom);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
 
   // ═══════════════════════════════════════════════════════════════════
   // ZOOM CONTROLS
@@ -85,20 +134,14 @@ export function UIReadingProvider({ children }: UIReadingProviderProps): JSX.Ele
 
   const zoomIn = useCallback(() => {
     setSettings(prev => {
-      const currentIndex = ValidZoomLevels.indexOf(prev.zoomLevel);
-      const nextIndex = Math.min(currentIndex + 1, ValidZoomLevels.length - 1);
-      const nextZoom = ValidZoomLevels[nextIndex];
-      if (!nextZoom) return prev;
+      const nextZoom = normalizeZoomLevel(stepZoomScale(readCurrentZoomScale(), 1));
       return { ...prev, zoomLevel: nextZoom, preset: null };
     });
   }, []);
 
   const zoomOut = useCallback(() => {
     setSettings(prev => {
-      const currentIndex = ValidZoomLevels.indexOf(prev.zoomLevel);
-      const nextIndex = Math.max(currentIndex - 1, 0);
-      const nextZoom = ValidZoomLevels[nextIndex];
-      if (!nextZoom) return prev;
+      const nextZoom = normalizeZoomLevel(stepZoomScale(readCurrentZoomScale(), -1));
       return { ...prev, zoomLevel: nextZoom, preset: null };
     });
   }, []);
@@ -112,7 +155,7 @@ export function UIReadingProvider({ children }: UIReadingProviderProps): JSX.Ele
     if (result.valid || result.clampedValue) {
       setSettings(prev => ({
         ...prev,
-        zoomLevel: (result.clampedValue ?? level) as UIScale,
+        zoomLevel: normalizeZoomLevel(result.clampedValue ?? level),
         preset: null,
       }));
     }

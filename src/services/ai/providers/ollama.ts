@@ -31,14 +31,13 @@ const runtimeEnv = (
     env?: { VITE_OLLAMA_MODEL?: string };
   }
 ).env;
-// OLLAMA CHAMPION mode: llama3.2:latest is the default (lightweight, fast).
-// For DEEP_REASONING / ARCHITECT / CERTIFY modes, the canonical kernel routes to llama3.1:latest
-// (configured via config/championChallenger.json).
-// Override via VITE_OLLAMA_MODEL env var for custom model selection.
-const DEFAULT_OLLAMA_MODEL = runtimeEnv?.VITE_OLLAMA_MODEL?.trim() || 'llama3.2:latest';
+// Canonical local model truth: gemma2:2b is the governed baseline across
+// frontend, backend, scripts, registry, and packaging.
+// Override via VITE_OLLAMA_MODEL env var for explicit local experimentation.
+const DEFAULT_OLLAMA_MODEL = runtimeEnv?.VITE_OLLAMA_MODEL?.trim() || 'gemma2:2b';
 
 // ═══════════════════════════════════════════════════════════════
-// CONFIGURATION — OLLAMA CHAMPION
+// CONFIGURATION — OLLAMA CANONICAL LOCAL FALLBACK
 // ═══════════════════════════════════════════════════════════════
 
 const OLLAMA_CONFIG = {

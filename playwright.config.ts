@@ -40,7 +40,7 @@ export default defineConfig({
   // Test directories
   // Primary browser lane: canonical e2e folder.
   testDir: resolve(CONFIG_DIR, 'e2e'),
-  testMatch: '**/*.{spec,test}.ts',
+  testMatch: '**/*.{spec,test,e2e}.ts',
 
   // Parallel execution
   fullyParallel: true,
@@ -86,7 +86,7 @@ export default defineConfig({
     {
       name: 'chromium-tests-e2e',
       testDir: resolve(CONFIG_DIR, 'tests/e2e'),
-      testMatch: '**/*.{spec,test}.ts',
+      testMatch: '**/*.{spec,test,e2e}.ts',
       // Default lane runs only governed/stable suites.
       // Use TITANE_E2E_INCLUDE_EXPERIMENTAL=1 to include legacy suites explicitly.
       testIgnore: includeExperimentalTests

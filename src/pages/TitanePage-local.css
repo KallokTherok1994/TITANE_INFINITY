@@ -83,9 +83,12 @@
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
+  width: 100% !important;
+  max-width: 100% !important;
   height: 100%;
-  min-height: 0;
+  min-height: 0 !important;
   max-height: 100%;
+  box-sizing: border-box;
   overflow: hidden;
 }
 
@@ -129,20 +132,35 @@
 }
 
 .titane-content--conversation {
+  display: flex;
+  flex-direction: column;
   flex: 1 1 auto;
+  width: 100%;
+  max-width: none;
   min-height: 0;
+  height: 100%;
+  max-height: 100%;
+  animation: none;
+  transform: none;
   overflow: hidden;
 }
 
 .titane-section-conversation--fullscreen {
+  display: flex;
+  flex-direction: column;
   flex: 1 1 auto;
+  width: 100%;
   min-height: 0;
+  height: 100%;
+  max-height: 100%;
   gap: 0;
   overflow: hidden;
 }
 
 .titane-section-conversation--fullscreen .conversation-container {
   flex: 1 1 auto;
+  width: 100%;
+  max-width: none;
   min-height: 0;
   height: 100%;
   overflow: hidden;

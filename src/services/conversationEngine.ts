@@ -12,6 +12,7 @@
 
 import { tauriClient } from '@/lib/tauriClient';
 import { getSystemPrompt } from '@/config/chatModes.config';
+import { memoryService } from '@/services/api/memory';
 import { userPreferencesEngine } from '@/services/userPreferencesEngine';
 import { classifyMode, resolveMode } from '@/services/ai/omegaModeClassifier';
 import {
@@ -44,6 +45,7 @@ import {
 import { xpEngine } from '@/cognitive/progression/xpEngine';
 import { useEvolutionStore } from '@/stores/evolutionStore';
 import { aiOrchestrator } from '@/services/ai/orchestrator';
+import type { KnowledgeEntry } from '@/services/memory/types';
 
 import { createLogger } from '@/utils/logger';
 
@@ -68,6 +70,20 @@ let staticPromptContextCache: {
   data: StaticPromptContextSnapshot;
   timestamp: number;
 } | null = null;
+
+function formatRuntimeKnowledgeBlock(entries: KnowledgeEntry[]): string {
+  if (entries.length === 0) {
+    return '';
+  }
+
+  const lines = entries.slice(0, 5).map(entry => {
+    const summary = entry.content.replace(/\s+/g, ' ').trim().slice(0, 220);
+    const tags = Array.isArray(entry.tags) && entry.tags.length > 0 ? entry.tags.join(', ') : 'none';
+    return `- ${entry.title} [${entry.category}] tags=${tags} relevance=${entry.relevance.toFixed(2)} excerpt=${summary}`;
+  });
+
+  return ['## RUNTIME_KNOWLEDGE_CONTEXT', ...lines].join('\n');
+}
 
 const getWindowRecord = (): Record<string, unknown> | null => {
   if (typeof window === 'undefined') {
@@ -615,6 +631,24 @@ export async function processMessage(
     ? formatContextEnvelopeForSystemPrompt(options.contextEnvelope)
     : '';
 
+  let runtimeKnowledgeContext = '';
+  let runtimeKnowledgeStatus: 'loaded' | 'empty' | 'unavailable' = 'unavailable';
+  try {
+    const knowledgeEntries = await memoryService.getKnowledge(5);
+    if (knowledgeEntries.length > 0) {
+      runtimeKnowledgeContext = formatRuntimeKnowledgeBlock(knowledgeEntries);
+      runtimeKnowledgeStatus = 'loaded';
+    } else {
+      runtimeKnowledgeStatus = 'empty';
+    }
+  } catch (error) {
+    runtimeKnowledgeStatus = 'unavailable';
+    logger.warn('[conversationEngine] runtime knowledge unavailable', error);
+  }
+
+  const runtimeKnowledgeStatusContext =
+    `## RUNTIME_KNOWLEDGE_STATUS\nstatus=${runtimeKnowledgeStatus}`;
+
   // Inject persistent 3-level memory context (non-blocking)
   let persistentMemoryContext = '';
   let persistentMemoryStatus: 'loaded' | 'empty' | 'unavailable' | 'skipped' =
@@ -671,6 +705,8 @@ export async function processMessage(
     contextualPrompt,
     staticPromptContext.personaContext,
     staticPromptContext.userPreferencesContext,
+    runtimeKnowledgeContext,
+    runtimeKnowledgeStatusContext,
     persistentMemoryContext,
     persistentMemoryStatusContext,
     progressionContext,
@@ -1112,6 +1148,24 @@ export async function processMessage(
     console.log('[CONV_RECV]', JSON.stringify(convRecvMetaLog));
   } else {
     logger.warn('[CONV_RECV] ⚠️ Provider meta missing in response');
+  }
+
+  try {
+    await memoryService.saveChatInteraction({
+      userMessage,
+      aiResponse: response.assistant_message,
+      mode: conversationMode,
+      timestamp: new Date(response.metadata.timestamp).toISOString(),
+      metadata: {
+        conversationId: response.conversation_id,
+        messageId: response.message_id,
+        projectId: options?.contextEnvelope?.moduleContext.moduleId,
+        provider_used: response.meta?.provider_used ?? response.metadata.provider_used,
+        singleDoorTags: options?.contextEnvelope?.memorySingleDoor.tags,
+      },
+    });
+  } catch (error) {
+    logger.warn('[conversationEngine] failed to persist chat interaction in Memory Core', error);
   }
 
   return response;

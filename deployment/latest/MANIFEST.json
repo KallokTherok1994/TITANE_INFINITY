@@ -1,27 +1,27 @@
 {
   "deployment": {
-    "timestamp": "2026-04-16T01:03:02Z",
-    "version": "30.1.28",
-    "commit": "90d4752a796c663354517e232deb70f9cb878079",
+    "timestamp": "2026-04-17T00:58:00Z",
+    "version": "30.1.33",
+    "commit": "47796384f948deeb4447745695c78074fff8e7bd",
     "branch": "MAIN",
-    "certification": "BUILD_ALL_LOCAL_20260416_010302",
-    "deployment_type": "build_all_local"
+    "certification": "PACKAGED_RUNTIME_QUALIFICATION_20260417_005800",
+    "deployment_type": "packaged_runtime_qualification"
   },
   "artifacts": {
     "appimage": {
       "available": true,
-      "file": "TITANE Infinity_30.1.28_amd64.AppImage",
-      "sha256": "58567aca0006222dbd039cc35d6c01d7b104f4dd6c541ed6c1eb16a62a7a240b"
+      "file": "TITANE Infinity_30.1.33_amd64.AppImage",
+      "sha256": "331dd0b81d7ca6585e4530350a89eba60ca61d4f499beca7e1fda53a1ca77650"
     },
     "deb": {
       "available": true,
-      "file": "TITANE Infinity_30.1.28_amd64.deb",
-      "sha256": "3fd0202ff0a509ef4ee48e6cf566648556a4997cbc5ef99b067afdd372c3cf9b"
+      "file": "TITANE Infinity_30.1.33_amd64.deb",
+      "sha256": "e68cab034a26932ac56e8bc53e8be7308f3d3685aa7e313d61c2caccbfbf59aa"
     },
     "rpm": {
       "available": true,
-      "file": "TITANE Infinity-30.1.28-1.x86_64.rpm",
-      "sha256": "c5c5ba2268c076558f4611d4e69b4c491215d36cc3e09e262fa806c79195f017"
+      "file": "TITANE Infinity-30.1.33-1.x86_64.rpm",
+      "sha256": "aa0ec13e202f001db90186ce0c244006730fde86c0671e72a76049f931019403"
     },
     "android_apk": {
       "available": true,
@@ -40,8 +40,8 @@
   },
   "certification": {
     "release_gate_status": "PASS",
-    "phase_chain_status": "BUILD_ALL: VERSION→DESKTOP→ANDROID→INSTALL→PUBLISH",
-    "security_posture": "LOCAL_BUILD_VERIFIED_PENDING_SUDO_INSTALL",
-    "production_readiness": "PARTIAL_LOCAL_READY"
+    "phase_chain_status": "PACKAGE_QUALIFICATION: ARTIFACT→INSTALL→RUNTIME→LAUNCHER",
+    "security_posture": "LOCAL_INSTALL_VERIFIED",
+    "production_readiness": "LOCAL_READY"
   }
 }

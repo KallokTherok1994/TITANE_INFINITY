@@ -41,7 +41,7 @@ describe('TopNav AI status truth', () => {
 });
 
 describe('zoomScale utilities (used by TopNav zoom controls)', () => {
-  const ORIGINAL_ZOOM = 0.75;
+  const ORIGINAL_ZOOM = 1;
 
   beforeEach(() => {
     // Simulate a document root with initial zoom
@@ -57,14 +57,22 @@ describe('zoomScale utilities (used by TopNav zoom controls)', () => {
 
   it('zoom in increases level by ~10%', () => {
     const current = zoomScale.readCurrentZoomScale();
-    const next = zoomScale.clampZoomScale(current * 1.1);
-    expect(next).toBeCloseTo(0.825, 2);
+    const next = zoomScale.stepZoomScale(current, 1);
+    expect(next).toBeCloseTo(1.1, 2);
   });
 
   it('zoom out decreases level by ~10%', () => {
     const current = zoomScale.readCurrentZoomScale();
-    const next = zoomScale.clampZoomScale(current * 0.9);
-    expect(next).toBeCloseTo(0.675, 2);
+    const next = zoomScale.stepZoomScale(current, -1);
+    expect(next).toBeCloseTo(0.9, 2);
+  });
+
+  it('returns exactly to baseline after one zoom in and one zoom out', () => {
+    const zoomIn = zoomScale.stepZoomScale(ORIGINAL_ZOOM, 1);
+    const zoomOut = zoomScale.stepZoomScale(zoomIn, -1);
+
+    expect(zoomIn).toBe(1.1);
+    expect(zoomOut).toBe(1);
   });
 
   it('clamps at MIN_ZOOM_SCALE (0.5)', () => {

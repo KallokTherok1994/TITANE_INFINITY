@@ -17,6 +17,7 @@ applyTo: 'src/**'
   - Un E2E test Playwright dédié
   - Une entrée dans `UI_SURFACE_MAP.md` et `docs/CARTOGRAPHY_COMPLETE.md`
   - Un log ou une capture de preuve (alerte, rapport, screenshot)
+  - Un `serviceState` et des `evidence` dérivés de signaux runtime/configuration réels quand le repo fournit déjà ces signaux
 
 - Use ErrorBoundary and visible errors.
 - Add stable data-testid for E2E selectors.
@@ -26,6 +27,7 @@ applyTo: 'src/**'
 - Create unit (Vitest) + E2E test with `data-testid` for every new UI surface (Rule 16).
 - Add `registry/ui-events.jsonl` entry for every UI change.
 - For every frontend/UI modification, execute the full UI procedure below before claiming PASS.
+- For advanced-agent UI work, prefer importing the dedicated service status accessor over reading the static catalog directly, so the dashboard reflects current runtime truth and not only a declaration layer.
 
 ## Mandatory UI Procedure
 

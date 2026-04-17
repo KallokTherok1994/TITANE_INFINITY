@@ -11,14 +11,14 @@ set -euo pipefail
 #   CONFIGURATION
 # ─────────────────────────────────────────────────────────────────────────────
 
-OLLAMA_BASE_URL="${OLLAMA_BASE_URL:-http://localhost:11434}"
-OLLAMA_DEFAULT_MODEL="${OLLAMA_DEFAULT_MODEL:-qwen2.5:latest}"
+OLLAMA_BASE_URL="${OLLAMA_BASE_URL:-http://127.0.0.1:11434}"
+OLLAMA_DEFAULT_MODEL="${OLLAMA_DEFAULT_MODEL:-gemma2:2b}"
 
-# Modèles recommandés pour TITANE∞
+# Modeles recommandes pour TITANE∞
 MODELS=(
-    "qwen2.5:latest"        # Modèle principal (rapide, multilingue)
-    "llama3.1:8b"           # Alternative (mémoire réduite)
-    "mistral:7b"            # Backup (français optimisé)
+    "gemma2:2b"             # Modele canonique local gouverne
+    "llama3.2:latest"       # Alternative locale plus large
+    "qwen2.5:latest"        # Option secondaire pour experimentation locale
 )
 
 # Couleurs pour output

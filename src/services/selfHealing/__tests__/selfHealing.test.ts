@@ -937,7 +937,9 @@ describe('SelfHealingService anti-regression facade', () => {
   it('runs an anti-regression cycle through the canonical self-healing bridge', async () => {
     const { runAntiRegressionCycle } = await import('../selfHealingService');
 
-    const cycle = await runAntiRegressionCycle('backend disconnected with circuit breaker');
+    const cycle = await runAntiRegressionCycle(
+      'backend disconnected with circuit breaker'
+    );
 
     expect(cycle.snapshot.status).toBe('blocked');
     expect(cycle.result.context.symptoms).toBe(

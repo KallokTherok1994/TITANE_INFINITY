@@ -23,8 +23,26 @@ ICON_DIR="$PROJECT_DIR/src-tauri/icons"
 DESKTOP_FILE="$PROJECT_DIR/titane-infinity.desktop"
 DESKTOP_INSTALL_DIR="$HOME/.local/share/applications"
 LOCAL_ICON_DIR="$HOME/.local/share/icons/hicolor/128x128/apps"
+SYSTEM_DESKTOP_DIR="/usr/share/applications"
+SYSTEM_DESKTOP_FILE="$SYSTEM_DESKTOP_DIR/titane-infinity.desktop"
+SYSTEM_ICON_DIR="/usr/share/icons/hicolor/128x128/apps"
 LAUNCHER_SCRIPT="$PROJECT_DIR/launch-titane.sh"
 ICON_ID="titane-infinity"
+SYSTEM_ICON_FILE="$SYSTEM_ICON_DIR/${ICON_ID}.png"
+
+run_with_root_if_available() {
+    if [[ "${EUID:-$(id -u)}" -eq 0 ]]; then
+        "$@"
+        return 0
+    fi
+
+    if command -v sudo >/dev/null 2>&1 && sudo -n true >/dev/null 2>&1; then
+        sudo "$@"
+        return 0
+    fi
+
+    return 1
+}
 
 extract_version_from_path() {
     local artifact_path="$1"
@@ -187,20 +205,43 @@ cp "$DESKTOP_FILE" "$DESKTOP_INSTALL_DIR/titane-infinity.desktop"
 chmod +x "$DESKTOP_INSTALL_DIR/titane-infinity.desktop"
 rm -f "$DESKTOP_INSTALL_DIR/TITANE-Infinity.desktop"
 
+SYSTEM_SYNC_STATUS="SKIPPED"
+if run_with_root_if_available install -Dm644 "$DESKTOP_FILE" "$SYSTEM_DESKTOP_FILE"; then
+    run_with_root_if_available rm -f "$SYSTEM_DESKTOP_DIR/TITANE-Infinity.desktop" || true
+    if [ -f "$ICON_PATH" ]; then
+        run_with_root_if_available install -Dm644 "$ICON_PATH" "$SYSTEM_ICON_FILE" || true
+    fi
+    SYSTEM_SYNC_STATUS="UPDATED"
+else
+    SYSTEM_SYNC_STATUS="BLOCKED_SUDO_REQUIRED"
+fi
+
 echo -e "      ✓ Fichiers copiés vers:"
 echo -e "        - $DESKTOP_INSTALL_DIR/titane-infinity.desktop"
 echo -e "      ✓ Alias obsolète supprimé si présent: $DESKTOP_INSTALL_DIR/TITANE-Infinity.desktop"
+if [[ "$SYSTEM_SYNC_STATUS" == "UPDATED" ]]; then
+    echo -e "        - $SYSTEM_DESKTOP_FILE"
+    echo -e "      ✓ Lanceur systeme synchronise"
+else
+    echo -e "      ${YELLOW}⚠ Synchronisation systeme bloquee: sudo non interactif requis${NC}"
+fi
 
 echo -e "${YELLOW}[3/4]${NC} Mise à jour du cache des icônes..."
 # Mettre à jour le cache des icônes si possible
 if command -v update-desktop-database &> /dev/null; then
     update-desktop-database "$DESKTOP_INSTALL_DIR" 2>/dev/null || true
     echo -e "      ✓ Cache des applications mis à jour"
+    if [[ "$SYSTEM_SYNC_STATUS" == "UPDATED" ]]; then
+        run_with_root_if_available update-desktop-database "$SYSTEM_DESKTOP_DIR" 2>/dev/null || true
+    fi
 fi
 
 if command -v gtk-update-icon-cache &> /dev/null; then
     gtk-update-icon-cache -f -t "$HOME/.local/share/icons/hicolor" 2>/dev/null || true
     echo -e "      ✓ Cache des icônes GTK mis à jour"
+    if [[ "$SYSTEM_SYNC_STATUS" == "UPDATED" ]]; then
+        run_with_root_if_available gtk-update-icon-cache -f -t /usr/share/icons/hicolor 2>/dev/null || true
+    fi
 fi
 
 echo -e "${YELLOW}[4/4]${NC} Vérification de l'installation..."
@@ -213,6 +254,7 @@ if [ -f "$DESKTOP_INSTALL_DIR/titane-infinity.desktop" ]; then
     echo -e "  • Fichier .desktop: ${GREEN}$DESKTOP_INSTALL_DIR/titane-infinity.desktop${NC}"
     echo -e "  • Binaire: ${GREEN}$BINARY_PATH${NC}"
     echo -e "  • Icône: ${GREEN}$ICON_VALUE${NC}"
+    echo -e "  • Sync système: ${GREEN}$SYSTEM_SYNC_STATUS${NC}"
     echo ""
     echo -e "${BLUE}ℹ${NC} L'application TITANE∞ est maintenant disponible dans votre menu d'applications"
     echo -e "${BLUE}ℹ${NC} Vous pouvez la lancer en cherchant 'TITANE' dans le lanceur d'applications"

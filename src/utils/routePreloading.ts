@@ -18,9 +18,13 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router';
 
-/* ────────────────────────────────────────────────────────────
-   1. ROUTE CHUNK MAPPING
-   ──────────────────────────────────────────────────────────── */
+/**
+ * Route chunk mapping
+ *
+ * Example:
+ *   <Link to="/titane?tab=conversation" onMouseEnter={() => prefetchOnHover('/chat')} />
+ *   The legacy alias /chat still preloads the canonical Titane conversation surface.
+ */
 
 /**
  * Map of routes to their lazy-loaded chunk paths
@@ -32,7 +36,6 @@ const ROUTE_CHUNKS: Record<string, string[]> = {
   '/memory': ['@/pages/centers/RealityCenter'],
   '/agenda': ['@/pages/Camera', '@/pages/TitanePage'],
   '/camera': ['@/pages/TitanePage', '@/pages/centers/MemoryCenter'],
-  '/developer-tools': ['@/pages/TitanePage', '@/pages/centers/MemoryCenter'],
 };
 
 /* ────────────────────────────────────────────────────────────
@@ -231,7 +234,8 @@ export const navigateWithPreload = (
  * Hook for preloading on link hover (for advanced optimization)
  * @param path - Route path
  * @example
- *   <Link to="/chat" onMouseEnter={() => prefetchOnHover('/chat')} /> // preloads TitanePage
+ *   <Link to="/titane?tab=conversation" onMouseEnter={() => prefetchOnHover('/chat')} />
+ *   The legacy alias /chat still preloads the canonical Titane conversation surface.
  */
 export const prefetchOnHover = (path: string): void => {
   preloadRoute(path, 'high');

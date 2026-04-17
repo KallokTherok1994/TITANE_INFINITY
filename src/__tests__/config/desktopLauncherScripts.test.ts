@@ -28,6 +28,9 @@ describe('desktop launcher scripts', () => {
     expect(desktopScript).toContain(
       'rm -f "$DESKTOP_INSTALL_DIR/TITANE-Infinity.desktop"'
     );
+    expect(desktopScript).toContain('SYSTEM_DESKTOP_FILE="$SYSTEM_DESKTOP_DIR/titane-infinity.desktop"');
+    expect(desktopScript).toContain('run_with_root_if_available() {');
+    expect(desktopScript).toContain('SYSTEM_SYNC_STATUS="BLOCKED_SUDO_REQUIRED"');
     expect(desktopScript).not.toContain('Exec=$LAUNCHER_SCRIPT');
   });
 

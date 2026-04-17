@@ -1,5 +1,36 @@
 # RELEASE SURFACE INVENTORY — TITANE∞ (Historical baseline v28.5.0 + current addendum v29.0.0)
 
+## Addendum — 2026-04-17 — TITANE∞ v30.1.33 Packaged Runtime Qualification
+
+Canonical target version: **30.1.33**
+
+| File / Surface | Version | Status |
+|---|---|---|
+| `package.json` | `30.1.33` | KEEP_AS_CANON |
+| `src-tauri/Cargo.toml` | `30.1.33` | KEEP_AS_CANON |
+| `src-tauri/tauri.conf.json` | `30.1.33` | KEEP_AS_CANON |
+| `runtime/stable/manifest.json` | `30.1.33` | KEEP_AS_CANON |
+| `titane-infinity.desktop` | `30.1.33` | UPDATED_TO_30_1_33 |
+| `deployment/latest/MANIFEST.json` | `30.1.33` | UPDATED_TO_30_1_33 |
+| `deployment/latest/CHECKSUMS.sha256` | `30.1.33` | UPDATED_TO_30_1_33 |
+| `deployment/latest/SHA256SUMS.txt` | `30.1.33` | UPDATED_TO_30_1_33 |
+| `deployment/latest/SIZES.txt` | `30.1.33` | UPDATED_TO_30_1_33 |
+| `RELEASE_ARTIFACTS_CHECKSUMS_30.1.33.txt` | `30.1.33` | ADDED_AS_PROOF |
+| `/usr/bin/titane-infinity` | `30.1.33` | HOST_SYNC_VERIFIED |
+| `~/.local/share/applications/titane-infinity.desktop` | `30.1.33` | HOST_SYNC_PENDING_RECHECK |
+| `/usr/share/applications/titane-infinity.desktop` | `30.1.33` | HOST_SYNC_PENDING_RECHECK |
+
+### Artifact Status Summary — v30.1.33
+
+| Artifact | Size | SHA256 | Status |
+|---|---|---|---|
+| `TITANE Infinity_30.1.33_amd64.AppImage` | `92871160` bytes | `331dd0b81d7ca6585e4530350a89eba60ca61d4f499beca7e1fda53a1ca77650` | QUALIFIED_BOOT |
+| `TITANE Infinity_30.1.33_amd64.deb` | `20055506` bytes | `e68cab034a26932ac56e8bc53e8be7308f3d3685aa7e313d61c2caccbfbf59aa` | INSTALLED |
+| `TITANE Infinity-30.1.33-1.x86_64.rpm` | `20056546` bytes | `aa0ec13e202f001db90186ce0c244006730fde86c0671e72a76049f931019403` | CHECKSUM_VERIFIED |
+| `titane-infinity` | `45081952` bytes | `858c49bca7807ff4dcecef616ce7f07e422198be453720c1258ebe90128286d0` | INSTALLED_BINARY |
+
+> The packaged AppImage and the installed DEB both reach `Main window shown successfully` and `BOOT:READY` on the 30.1.33 lane. The remaining risk before this addendum was metadata drift: stale published manifest/checksums and a stale launcher source at `v30.1.26`.
+
 ## Addendum — 2026-04-16 — TITANE∞ v30.1.31 Local Production Desktop Build
 
 Canonical target version: **30.1.31**

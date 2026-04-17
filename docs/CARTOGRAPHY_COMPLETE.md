@@ -1,5 +1,29 @@
 # TITANE_INFINITY — Cartographie Complète Avancée v30.1.8
 
+> 2026-04-16 — Advanced agents readiness alignment truth: les surfaces `diagnostic-panel`, `explainability-dashboard`, `orchestrator-dashboard` et `security-dashboard` ne restent plus documentées comme `planned` dès lors que leurs services dédiés exposent déjà des signaux runtime/configuration vérifiables. Leur statut canonique est désormais `partial`, au même titre que `monitoring-dashboard`, tant que le moteur complet correspondant n est pas encore branché.
+
+> 2026-04-16 — Chat single-door memory/knowledge alignment truth: `src/services/conversationEngine.ts` reste la porte frontend active vers `conversation_generate` via IPC Tauri, sans serveur HTTP dédié pour le chat ni pour Twins. Cette porte active précharge désormais la connaissance runtime issue du Memory Core (`memory_get_knowledge`) dans le `systemPrompt`, conserve le contexte Twins/TIME déjà présent, et persiste chaque interaction réussie via `persistent_memory_write_entry`, afin d éviter une dérive entre mémoire, base de connaissance et chemin conversationnel canonique.
+
+> 2026-04-16 — Monitoring lazy-loader binding truth: `src/services/monitoring/index.ts` n'utilise plus une réexportation directe et un import local concurrent pour `isMonitoringLoaded`. La façade charge désormais explicitement les bindings du lazy-loader puis les réexporte, ce qui réaligne `src/services/monitoring/MonitoringDashboard.tsx` avec la vérité runtime observable sur la surface active et supprime le crash `isMonitoringLoaded is not defined` au rendu du panneau monitoring.
+
+> 2026-04-17 — Advanced agents runtime signal truth: les dashboards avancés conservent `src/services/agents/advancedAgentCatalog.ts` comme base de qualification, mais les services dédiés enrichissent maintenant cette base avec les signaux réels déjà disponibles dans le runtime et la configuration canonique du repo. Le monitoring publie métriques/alertes, le diagnostic expose ses signaux passifs et l état Ollama, l explainability vérifie l alignement du registre champion/challenger, l orchestrateur expose les providers/timeouts actifs, et la sécurité active rappelle la voie IPC/One Door réellement en vigueur.
+
+> 2026-04-16 — Advanced agents runtime mount truth: `src/components/layout/AppShell.tsx` monte maintenant `src/components/AgentDashboardsPanel.tsx` dans la surface applicative active. La preuve Playwright attend donc la présence réelle de `agent-dashboards-panel` et des cinq dashboards avancés sur la route de base, au lieu de s appuyer sur des exports non montés.
+
+> 2026-04-16 — Advanced agents qualification truth: `src/services/agents/advancedAgentCatalog.ts` devient la vérité canonique des cinq agents avancés UI. Les dashboards de `src/services/monitoring/MonitoringDashboard.tsx`, `src/services/diagnostic/DiagnosticDashboard.tsx`, `src/services/explainability/ExplainabilityDashboard.tsx`, `src/services/orchestrator/OrchestratorDashboard.tsx` et `src/services/security_active/SecurityDashboard.tsx` n exposent plus des stubs opaques mais un statut gouverné (`data-readiness`), une synthèse, des preuves visibles, des blockers et une prochaine action. Les composants legacy sous `src/components/` sont désormais de simples alias vers ces surfaces canoniques pour éviter toute divergence active.
+
+> 2026-04-17 — Canonical zoom authority and parent-bound shell truth: `src/hooks/zoomScale.ts` publie désormais un événement canonique de changement d’échelle consommé par `TopNav` et `UIReadingProvider`, ce qui supprime les autorités concurrentes de zoom dans la surface active. En parallèle, `src/components/layout/AppShell.tsx`, `src/ui/reading/UIReadingPanel.css`, `src/ui/components/Modal.css`, `src/ui/Modal.tsx`, `src/index.css` et `src/ui/pages/styles/Chat.css` ont été réalignés sur des dimensions parent-bound (`100%`) au lieu de `vh/dvh` rigides, pour que textes et éléments UI restent cohérents sous zoom navigateur, zoom applicatif et runtime Tauri sans redébordement du shell.
+
+> 2026-04-17 — Native Tauri zoom-step and parent-bound truth: `src/hooks/zoomScale.ts`, `src/components/layout/TopNav.tsx` et `src/hooks/useZoomControl.ts` partagent maintenant un pas de zoom additif canonique, ce qui supprime la dérive `1 -> 1.1 -> 0.99`. En parallèle, `src/pages/TitanePage-local.css` force la surface `titane-page--conversation` à rester parent-bound (`width/max-width/min-height` overrides) afin que la vérité runtime Tauri dev garde `/titane?tab=conversation` entièrement visible à `0.8`, `1.0` et `1.1` dans la fenêtre native.
+
+> 2026-04-16 — Surface chat fullscreen/zoom: la vérité canonique desktop/browser ne dépend plus d'un zoom CSS global à 75%. La baseline UI est revenue à 100%, la surface conversation Titane est étirée par son parent fullscreen, et les contrôles de zoom/fullscreen restent portés par les raccourcis navigateur/Tauri au lieu d'un shrink global qui créait des marges noires en HTTP.
+
+> 2026-04-16 — Surface chat bounded-height chain: `src/pages/TitanePage-local.css` borne désormais explicitement la chaîne fullscreen `titane-content--conversation -> titane-section-conversation--fullscreen -> conversation-container` en `display:flex`, `flex-direction:column` et `height:100%`, afin que le compositeur ne déborde plus sous la fenêtre desktop HTTP quand l’onglet conversation est actif.
+
+> 2026-04-17 — TopNav zoom viewport compensation: `src/hooks/zoomScale.ts` publie maintenant la variable canonique `--titane-ui-scale` en même temps que le zoom inline, et `src/components/layout/AppShell.tsx` compense la hauteur racine ainsi que l’offset TopNav avec cette échelle. La vérité runtime vérifiée est que `/titane?tab=conversation` reste entièrement dans la fenêtre visible sous zoom TopNav réel, sur desktop standard et viewport compact.
+
+> 2026-04-16 — Canonical route-context anti-drift: `src/services/chat/moduleRouteContext.ts` normalise maintenant les alias query-driven vers leur destination canonique complète, pas vers une racine tronquée; `/chat` publie `/titane?tab=conversation`, `/devtools` publie `/admin?tab=system&systemTab=devtools`, et le fallback F12 de `src/main.tsx` navigue directement vers cette surface Admin/DevTools pour empêcher une vérité UI mémoire/diagnostic en retard sur la surface réellement visible.
+
 > 2026-04-16 — Audit anti-dérive v30.1.x: la cartographie canonique doit désormais expliciter qu’une surface visible n’est jamais qualifiée seule. Toute correction ou évolution doit réaligner dans la même phase la surface UI, les tests E2E associés, la chaîne IPC/backend réellement consommée, les artefacts packagés, les launchers installés et les preuves AutoHeal; toute divergence entre une de ces vérités runtime est un état FAIL tant qu’elle n’est pas requalifiée.
 
 > 2026-04-16 — Conversation long-message visibility: `src/components/chat/VirtualizedMessageList.tsx` ne filtre plus les messages assistant tres longs avec une borne fixe 100k avant de choisir la surface de rendu; la liste revient maintenant honnetement a `MessageList` pour les hauteurs naturelles, et l'evenement `titane-message-truncated` n'est emis que lorsqu'une limite explicite est configuree.
@@ -484,47 +508,47 @@ Chaque agent est intégré dans la cartographie 4-Ring : UI (dashboard), moteu
 |------|-----------|------|
 | `/` | Redirect → `/titane` | — |
 | `/titane` | TitanePage | ✓ |
-| `/cognitive` | CognitivePage | ✓ |
+| `/cognitive` | Redirect -> `/dev?tab=diagnostics` | ✓ |
 | `/experience` | Experience | ✓ |
 | `/time` | TimePage | ✓ |
 | `/admin` | AdminPage | ✓ |
-| `/system-center` | SystemGovernancePage | ✓ |
-| `/diagnostics` | DiagnosticsPage | ✓ |
-| `/devtools` | DevToolsPage | ✓ |
-| `/cluster` | ClusterPage | ✓ |
-| `/introspection` | IntrospectionPage | ✓ |
-| `/hypervision` | HypervisionPage | ✓ |
-| `/configuration` | ConfigurationHub | ✓ |
-| `/design-center` | DesignCenterPage | ✓ |
-| `/design-system` | DesignSystemPage | ✓ |
-| `/governance-center` | GovernancePage | ✓ |
-| `/governance` | GovernancePage | ✓ |
-| `/secure` | SecureSettings | ✓ |
-| `/audio-center` | AudioCenterPage | ✓ |
+| `/system-center` | Redirect -> `/admin?tab=system` | ✓ |
+| `/diagnostics` | Redirect -> `/admin?tab=production-health` | ✓ |
+| `/devtools` | Redirect -> `/admin?tab=system&systemTab=devtools` | ✓ |
+| `/cluster` | Redirect -> `/admin?tab=production-health` | ✓ |
+| `/introspection` | Redirect -> `/admin?tab=system` | ✓ |
+| `/hypervision` | Redirect -> `/admin?tab=system` | ✓ |
+| `/configuration` | Redirect -> `/admin?tab=config` | ✓ |
+| `/design-center` | Redirect -> `/admin?tab=design` | ✓ |
+| `/design-system` | Redirect -> `/admin?tab=design` | ✓ |
+| `/governance-center` | Redirect -> `/admin?tab=governance` | ✓ |
+| `/governance` | Redirect -> `/admin?tab=governance` | ✓ |
+| `/secure` | Redirect -> `/admin?tab=governance` | ✓ |
+| `/audio-center` | Redirect -> `/admin?tab=audio` | ✓ |
 | `/fusion` | FusionPage | ✓ |
 | `/optimization` | OptimizationPage | ✓ |
 | `/orchestration-intelligence` | OrchestrationIntelligenceCenter | ✓ |
 | `/orchestration-center` | OrchestrationMetaCenter | ✓ |
-| `/meta-center` | MetaCenterPage | ✓ |
-| `/multi-ai-dashboard` | MultiAIDashboard | ✓ |
-| `/nexus-engine` | NexusEngine | ✓ |
-| `/harmonia-engine` | HarmoniaEngine | ✓ |
-| `/cognitive-state` | CognitiveStatePage | ✓ |
+| `/meta-center` | Redirect -> `/orchestration-center` | ✓ |
+| `/multi-ai-dashboard` | Redirect -> `/orchestration-center` | ✓ |
+| `/nexus-engine` | Redirect -> `/orchestration-center` | ✓ |
+| `/harmonia-engine` | Redirect -> `/orchestration-center` | ✓ |
+| `/cognitive-state` | Redirect -> `/orchestration-center` | ✓ |
 | `/dev` | DevPage | ✓ |
 | `/total-dev` | TotalDevPage | ✓ |
-| `/command-center` | CommandCenter | ✓ |
-| `/qa-monitoring` | QAMonitoring | ✓ |
-| `/monitoring` | MonitoringDashboard | ✓ |
-| `/developer-mode` | DeveloperMode | ✓ |
-| `/dev-mode` | DeveloperMode | ✓ |
-| `/devmode` | DeveloperMode | ✓ |
-| `/orchestration` | Orchestration | ✓ |
+| `/command-center` | Redirect -> `/dev?tab=operations` | ✓ |
+| `/qa-monitoring` | Redirect -> `/dev?tab=validation` | ✓ |
+| `/monitoring` | Redirect -> `/dev?tab=diagnostics` | ✓ |
+| `/developer-mode` | Redirect -> `/dev?tab=operations` | ✓ |
+| `/dev-mode` | Redirect -> `/dev?tab=operations` | ✓ |
+| `/devmode` | Redirect -> `/dev?tab=operations` | ✓ |
+| `/orchestration` | Redirect -> `/orchestration-intelligence` | ✓ |
 | `/reality-center` | RealityCenter | ✓ |
 | `/hyper-center` | HyperCenter | ✓ |
 | `/quantum-center` | QuantumCenter | ✓ |
-| `/identity-center` | IdentityCenter | ✓ |
-| `/memory-evolution` | MemoryEvolution | ✓ |
-| `/memory-evo` | MemoryEvo | ✓ |
+| `/identity-center` | Redirect -> `/twins` | ✓ |
+| `/memory-evolution` | Redirect -> `/titane?tab=transformation` | ✓ |
+| `/memory-evo` | Redirect -> `/titane?tab=transformation` | ✓ |
 | `/cloud` | CloudCenter | ✓ |
 | `/knowledge` | KnowledgeFusionPage | ✓ |
 | `/creation` | CreationStudio | — |
@@ -543,7 +567,7 @@ Chaque agent est intégré dans la cartographie 4-Ring : UI (dashboard), moteu
 
 | Source | Destination |
 |--------|-------------|
-| `/chat` | `/titane` |
+| `/chat` | `/titane?tab=conversation` |
 | `/camera` | `/titane` |
 | `/evo` | `/titane` |
 | `/dashboard` | `/titane` |
@@ -568,10 +592,11 @@ Chaque agent est intégré dans la cartographie 4-Ring : UI (dashboard), moteu
 | `/hyper` | `/hyper-center` |
 | `/intelligence` | `/hyper-center` |
 | `/quantum` | `/quantum-center` |
-| `/identity` | `/titane?tab=twins` |
-| `/persona` | `/titane?tab=twins` |
-| `/twins` | `/titane?tab=twins` |
-| `/twin` | `/titane?tab=twins` |
+| `/identity-center` | `/twins` |
+| `/identity` | `/twins` |
+| `/persona` | `/twins` |
+| `/twins` | `/twins` |
+| `/twin` | `/twins` |
 | `/cloud-sync` | `/cloud` |
 | `/vault` | `/cloud` |
 | `/meta` | `/orchestration-center` |

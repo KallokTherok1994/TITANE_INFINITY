@@ -47,7 +47,18 @@ bash scripts/autoheal/detect_recurrence.sh  # must exit 0
 ## Required AutoHeal entry schema
 
 ```json
-{"id":"<unique>","date":"<ISO>","scope":"<scope>","symptom":"<symptom>","root_cause":"<cause>","fix":"<fix>","prevention_test":"detect_recurrence","commands":["..."],"files_changed":["..."],"rollback":"git restore -- ..."}
+{
+  "id": "<unique>",
+  "date": "<ISO>",
+  "scope": "<scope>",
+  "symptom": "<symptom>",
+  "root_cause": "<cause>",
+  "fix": "<fix>",
+  "prevention_test": "detect_recurrence",
+  "commands": ["..."],
+  "files_changed": ["..."],
+  "rollback": "git restore -- ..."
+}
 ```
 
 ## Forbidden actions

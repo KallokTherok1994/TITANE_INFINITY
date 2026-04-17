@@ -1,0 +1,1 @@
+ollama create titane-dev -f ~/Documents/GitHub/TITANE_INFINITY/ops/ollama/Modelfile

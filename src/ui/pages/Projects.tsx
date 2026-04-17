@@ -83,8 +83,8 @@ export const ProjectsPage = memo(function ProjectsPage() {
 
   const handleOpenChat = useCallback((_projectId: string) => {
     // Implementation: Router navigation with project context
-    // - Router: Use React Router&apos;s navigate('/chat', {state: {projectId}})
-    // - Alternative: URL params navigate(`/chat?project=${projectId}`)
+    // - Router: Use React Router&apos;s navigate('/titane?tab=conversation', {state: {projectId}})
+    // - Legacy alias tolerated: navigate('/chat', {state: {projectId}}) resolves to the same surface
     // - Context: Pass project data via ChatContext.setActiveProject(project)
     // - Persistence: Save last opened project to localStorage for restore
     // - Chat init: Pre-populate chat with "Working on {projectName}" system message

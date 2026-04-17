@@ -4,6 +4,8 @@ import { spawn } from 'node:child_process';
 import { mkdirSync, createWriteStream, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
+import { classifyMonitorLine, normalizeMonitorArgs } from './dev_tauri_monitor_rules.mjs';
+
 const ROOT = process.cwd();
 const LOG_DIR = path.join(ROOT, 'runtime', 'dev', 'logs');
 const LOG_FILE = path.join(LOG_DIR, 'tauri-dev-monitor.log');
@@ -32,7 +34,7 @@ function showHelp() {
 }
 
 // Traiter les arguments
-const passthroughArgs = process.argv.slice(2);
+const passthroughArgs = normalizeMonitorArgs(process.argv.slice(2));
 
 // Vérifier si l'aide est demandée
 if (passthroughArgs.includes('--help') || passthroughArgs.includes('-h')) {
@@ -91,45 +93,33 @@ function writeStatus(extra = {}) {
 }
 
 function inspectLine(line) {
-  const lower = line.toLowerCase();
-  const isBeforeDevCommandLine = lower.includes('running beforedevcommand (`bash -lc');
-  const isExpectedFrontendWaitLine = lower.includes(
-    'warn waiting for your frontend dev server to start on http://127.0.0.1:5173'
-  );
+  const classification = classifyMonitorLine(line);
 
   // Détection améliorée du boot
-  if (
-    lower.includes('tauri app started') ||
-    lower.includes('running dev command') ||
-    lower.includes('vite v') ||
-    lower.includes('app render') ||
-    lower.includes('local:') ||
-    lower.includes('ready in') ||
-    lower.includes('ui_boot_marker')
-  ) {
+  if (classification.bootSeen) {
     bootSeen = true;
   }
 
-  if (lower.includes('timeout')) {
+  if (classification.hasTimeout) {
     timeoutCount += 1;
   }
 
-  if (lower.includes('unknown')) {
+  if (classification.hasUnknown) {
     unknownCount += 1;
   }
 
-  if (isBeforeDevCommandLine || isExpectedFrontendWaitLine) {
+  if (classification.ignore) {
     return;
   }
 
-  if (lower.includes('error') || lower.includes('panic') || lower.includes('failed')) {
+  if (classification.isError) {
     errorCount += 1;
-    lastErrorLine = line.slice(0, 500);
+    lastErrorLine = classification.normalized.slice(0, 500);
   }
 
-  if (lower.includes('warn')) {
+  if (classification.isWarn) {
     warnCount += 1;
-    lastWarnLine = line.slice(0, 500);
+    lastWarnLine = classification.normalized.slice(0, 500);
   }
 }
 

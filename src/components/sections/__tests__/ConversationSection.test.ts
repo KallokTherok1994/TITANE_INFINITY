@@ -7,6 +7,7 @@ import {
   resolveConversationPendingInput,
   buildConversationRuntimeBadges,
   buildConversationRuntimeSummary,
+  getConversationViewportHeight,
   isConversationTransparencyPrompt,
   isConversationNearBottom,
   resolveConversationDisplayProvider,
@@ -104,13 +105,97 @@ describe('ConversationSection runtime provider label', () => {
 
   it('switches to compact layout when fullscreen zoom reduces the viewport height', () => {
     expect(shouldUseConversationCompactLayout(920, true)).toBe(true);
+    expect(shouldUseConversationCompactLayout(980, true)).toBe(true);
     expect(shouldUseConversationCompactLayout(1080, true)).toBe(false);
+    expect(shouldUseConversationCompactLayout(0, true)).toBe(false);
     expect(shouldUseConversationCompactLayout(920, false)).toBe(false);
+  });
+
+  it('prefers visualViewport height and clamps tiny values to the minimum', () => {
+    const originalVisualViewport = window.visualViewport;
+    const descriptor = Object.getOwnPropertyDescriptor(window, 'visualViewport');
+
+    Object.defineProperty(window, 'visualViewport', {
+      configurable: true,
+      value: { height: 240 },
+    });
+
+    expect(getConversationViewportHeight()).toBe(320);
+
+    if (descriptor) {
+      Object.defineProperty(window, 'visualViewport', descriptor);
+    } else {
+      Object.defineProperty(window, 'visualViewport', {
+        configurable: true,
+        value: originalVisualViewport,
+      });
+    }
+  });
+
+  it('caps visualViewport to innerHeight when zoom makes it larger than the real window', () => {
+    const originalVisualViewport = window.visualViewport;
+    const visualViewportDescriptor = Object.getOwnPropertyDescriptor(window, 'visualViewport');
+    const originalInnerHeight = window.innerHeight;
+
+    Object.defineProperty(window, 'visualViewport', {
+      configurable: true,
+      value: { height: 1500 },
+    });
+    Object.defineProperty(window, 'innerHeight', {
+      configurable: true,
+      value: 900,
+    });
+
+    expect(getConversationViewportHeight()).toBe(900);
+
+    Object.defineProperty(window, 'innerHeight', {
+      configurable: true,
+      value: originalInnerHeight,
+    });
+    if (visualViewportDescriptor) {
+      Object.defineProperty(window, 'visualViewport', visualViewportDescriptor);
+    } else {
+      Object.defineProperty(window, 'visualViewport', {
+        configurable: true,
+        value: originalVisualViewport,
+      });
+    }
+  });
+
+  it('falls back to innerHeight when visualViewport is unavailable', () => {
+    const originalVisualViewport = window.visualViewport;
+    const descriptor = Object.getOwnPropertyDescriptor(window, 'visualViewport');
+    const originalInnerHeight = window.innerHeight;
+
+    Object.defineProperty(window, 'visualViewport', {
+      configurable: true,
+      value: undefined,
+    });
+    Object.defineProperty(window, 'innerHeight', {
+      configurable: true,
+      value: 777,
+    });
+
+    expect(getConversationViewportHeight()).toBe(777);
+
+    Object.defineProperty(window, 'innerHeight', {
+      configurable: true,
+      value: originalInnerHeight,
+    });
+    if (descriptor) {
+      Object.defineProperty(window, 'visualViewport', descriptor);
+    } else {
+      Object.defineProperty(window, 'visualViewport', {
+        configurable: true,
+        value: originalVisualViewport,
+      });
+    }
   });
 
   it('detects when the conversation is already near the bottom edge', () => {
     expect(isConversationNearBottom(860, 320, 1240)).toBe(true);
     expect(isConversationNearBottom(620, 320, 1240)).toBe(false);
+    expect(isConversationNearBottom(0, 0, 0)).toBe(true);
   });
 
   it('only exposes the return-to-bottom CTA when the history really overflows', () => {

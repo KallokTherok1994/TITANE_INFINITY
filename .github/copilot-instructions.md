@@ -199,6 +199,25 @@ For every UI/runtime correction involving a route alias, legacy surface, fullscr
 - If a legacy path must remain for compatibility, reduce it to a thin alias and document that it is compatibility-only, not an independent active surface.
 - Treat any mismatch between visible runtime truth and touched source surface as FAIL until the canonical surface, proof selectors, tests, and active tooling references are realigned.
 
+## Rule 17.1 - Advanced agent runtime truth
+
+For every advanced agent surface (`monitoring`, `diagnostic`, `explainability`, `orchestrator`, `security_active`):
+
+- The dashboard must consume real runtime/configuration signals from the dedicated service or canonical config modules, not only a static catalog stub.
+- `serviceState`, `evidence`, `blockers`, and `nextStep` must be derived from verifiable runtime or registry truth whenever such truth already exists in the repo.
+- If only partial runtime signals exist, classify honestly as `planned` or `partial`; do not simulate a complete engine.
+- UI service dashboards and any compatibility aliases must stay aligned to the same runtime truth source in the same patch.
+
+## Rule 17.2 - Ollama and Cline alignment truth
+
+The governed local AI stack must stay aligned across frontend, backend, scripts, docs, and local agent tooling:
+
+- Canonical Ollama loopback URL: `http://127.0.0.1:11434`.
+- Canonical governed local model baseline: `gemma2:2b`, unless the user explicitly requests a different local model.
+- Frontend access to Ollama must remain on the canonical IPC path; no direct uncontrolled UI HTTP path.
+- Cline/local-agent safeguards may require explicit user request for critical builds/deploys, but must not introduce token/passphrase gates that contradict Rule 11.
+- When Ollama or Cline config changes, run the dedicated alignment validator and update `OLLAMA_RUNTIME_MAP.md` plus the relevant instructions/docs in the same phase.
+
 ## Discipline anti-dérive TITANE (Synthèse 2026-04-16)
 
 - Synchronisation artefacts/launchers obligatoire avec preuve sur launchers système et utilisateur; aucun artefact n’est certifié sans cette preuve.

@@ -14,7 +14,7 @@
 .twins-root {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
   min-height: 0;
   flex: 1 1 auto;
   overflow: hidden;
@@ -36,7 +36,8 @@ body,
 .chat-layout-responsive,
 .chat-page,
 .chat-content-fullheight {
-  height: 100vh !important;
+  height: 100% !important;
+  max-height: 100% !important;
   min-height: 0 !important;
   flex: 1 1 auto !important;
   overflow: hidden !important;
@@ -68,18 +69,12 @@ body,
 
 html {
   scroll-behavior: smooth;
-  /* zoom: 75% — desktop layout density setting.
-     On mobile (Android/Tauri mobile), width=device-width viewport handles scaling.
-     Media query prevents mobile layout breakage. */
   overflow-x: auto;
 }
 
-/* Desktop-only zoom for dense UI layout */
-@media (min-width: 768px) {
-  html {
-    zoom: 75%;
-  }
-}
+/* The canonical desktop/browser baseline is 100%.
+   Browser-native zoom and Tauri window controls own scaling.
+ */
 
 body {
   -webkit-font-smoothing: antialiased;

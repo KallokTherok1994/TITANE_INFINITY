@@ -1,13 +1,19 @@
 const ZOOM_STORAGE_KEY = 'titane_zoom_level';
+const ZOOM_CSS_VAR = '--titane-ui-scale';
+export const ZOOM_SCALE_CHANGED_EVENT = 'titane:zoom-scale-changed';
 
-export const BASE_ZOOM_SCALE = 0.75;
+export const BASE_ZOOM_SCALE = 1;
 export const MIN_ZOOM_SCALE = 0.5;
 export const MAX_ZOOM_SCALE = 2;
+export const ZOOM_SCALE_STEP = 0.1;
 
 const roundZoomScale = (scale: number): number => Math.round(scale * 1000) / 1000;
 
 export const clampZoomScale = (scale: number): number =>
   roundZoomScale(Math.min(MAX_ZOOM_SCALE, Math.max(MIN_ZOOM_SCALE, scale)));
+
+export const stepZoomScale = (currentScale: number, direction: 1 | -1): number =>
+  clampZoomScale(currentScale + direction * ZOOM_SCALE_STEP);
 
 export const parseZoomScale = (value: string | null | undefined): number | null => {
   if (!value) {
@@ -63,11 +69,32 @@ export const readCurrentZoomScale = (): number => {
   return getStoredZoomScale() ?? BASE_ZOOM_SCALE;
 };
 
+const syncZoomCssVariable = (scale: number): void => {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  document.documentElement.style.setProperty(ZOOM_CSS_VAR, formatZoomScale(scale));
+};
+
+const dispatchZoomScaleChanged = (scale: number): void => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  window.dispatchEvent(
+    new CustomEvent(ZOOM_SCALE_CHANGED_EVENT, {
+      detail: { scale },
+    })
+  );
+};
+
 export const applyZoomScale = (scale: number): number => {
   const normalized = clampZoomScale(scale);
 
   if (typeof document !== 'undefined') {
     document.documentElement.style.zoom = formatZoomScale(normalized);
+    syncZoomCssVariable(normalized);
   }
 
   try {
@@ -76,8 +103,12 @@ export const applyZoomScale = (scale: number): number => {
     // Ignore storage failures - zoom still applies inline.
   }
 
+  dispatchZoomScaleChanged(normalized);
+
   return normalized;
 };
 
 export const mapTauriZoomLevelToScale = (level: number): number =>
   clampZoomScale(BASE_ZOOM_SCALE * level);
+
+export const getZoomCssVariableName = (): string => ZOOM_CSS_VAR;

@@ -417,6 +417,64 @@
 			"detail": "Run dependency audit (repo lockfile)"
 		},
 		{
+			"label": "🤖 Audit: Advanced Agents",
+			"type": "shell",
+			"command": "./.tools/node/current/bin/pnpm run verify:agents:advanced",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"focus": true,
+				"showReuseMessage": false
+			},
+			"detail": "Audit advanced agents service/dashboard/E2E/mapping truth"
+		},
+		{
+			"label": "🤖 Audit: Agent Workflow",
+			"type": "shell",
+			"command": "./.tools/node/current/bin/pnpm run verify:agents:workflow",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"focus": true,
+				"showReuseMessage": false
+			},
+			"detail": "Audit VS Code/Copilot/Cline workflow configuration for agent usage"
+		},
+		{
+			"label": "🤖 Audit: Agent Stack",
+			"type": "shell",
+			"command": "./.tools/node/current/bin/pnpm run audit:agents:stack",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"focus": true,
+				"showReuseMessage": false
+			},
+			"group": "test",
+			"detail": "Run the combined audit for advanced agents and developer workflow"
+		},
+		{
 			"label": "🧩 COPILOT-XS: Test Gate (tail)",
 			"type": "shell",
 			"command": "./.tools/node/current/bin/pnpm run copilot-xs:test 2>&1 | tail -n 120",

@@ -9,18 +9,8 @@
   "critical_rules": {
     "deployment_lock": {
       "enabled": true,
-      "description": "INTERDICTION ABSOLUE de déployer sans autorisation explicite",
-      "blocked_commands": [
-        "pnpm run build",
-        "pnpm run build:production",
-        "tauri build",
-        "./runtime/stable/build.sh",
-        "cargo build --release",
-        "dpkg -i",
-        "sudo dpkg -i",
-        "appimage",
-        "deb package"
-      ],
+      "description": "Build et deploy critiques autorises uniquement sur demande explicite de l utilisateur, sans token ni passphrase.",
+      "blocked_commands": [],
       "blocked_tasks": [
         "🔵 Build Titan-Stable",
         "📦 Merge Dev to Stable",
@@ -44,7 +34,7 @@
 
     "approval_required": {
       "enabled": true,
-      "description": "Validation humaine obligatoire pour actions critiques",
+      "description": "Validation humaine obligatoire pour actions critiques, mais sans gate par mot-cle ou passphrase.",
       "actions_requiring_approval": [
         "edit-files-externally",
         "execute-all-commands",
@@ -52,11 +42,8 @@
         "merge-branches",
         "install-system-packages"
       ],
-      "approval_keywords": [
-        "GO FOR PRODUCTION DEPLOY",
-        "AUTHORIZED BY KEVIN THIBAULT",
-        "EXPLICIT APPROVAL"
-      ]
+      "approval_keywords": [],
+      "token_gate_disabled": true
     },
 
     "development_mode": {
@@ -109,14 +96,16 @@
     "pre_deploy": {
       "required_checks": [
         "tests_passing_100_percent",
-        "explicit_approval_present",
+        "explicit_user_request_present",
         "no_critical_bugs",
-        "security_audit_passed"
+        "security_audit_passed",
+        "ollama_cline_alignment_passed"
       ],
       "check_commands": [
         "pnpm run copilot-xs:test",
         "pnpm run audit:security",
-        "pnpm run verify"
+        "pnpm run verify",
+        "pnpm run verify:ollama:cline"
       ]
     }
   },

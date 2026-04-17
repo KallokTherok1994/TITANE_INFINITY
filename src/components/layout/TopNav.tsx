@@ -30,9 +30,10 @@ import {
 import {
   applyZoomScale,
   readCurrentZoomScale,
-  clampZoomScale,
   MIN_ZOOM_SCALE,
   MAX_ZOOM_SCALE,
+  stepZoomScale,
+  ZOOM_SCALE_CHANGED_EVENT,
 } from '@/hooks/zoomScale';
 import { cn } from '@/utils/cn';
 import { TitaneLogo } from '@/components/branding/TitaneLogo';
@@ -107,15 +108,37 @@ export const TopNav: React.FC<TopNavProps> = ({
   // Zoom controls
   const [zoomLevel, setZoomLevel] = useState<number>(() => readCurrentZoomScale());
   const handleZoomIn = () => {
-    const next = clampZoomScale(readCurrentZoomScale() * 1.1);
+    const next = stepZoomScale(readCurrentZoomScale(), 1);
     applyZoomScale(next);
     setZoomLevel(next);
   };
   const handleZoomOut = () => {
-    const next = clampZoomScale(readCurrentZoomScale() * 0.9);
+    const next = stepZoomScale(readCurrentZoomScale(), -1);
     applyZoomScale(next);
     setZoomLevel(next);
   };
+
+  useEffect(() => {
+    const syncZoomLevel = () => {
+      setZoomLevel(readCurrentZoomScale());
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        syncZoomLevel();
+      }
+    };
+
+    window.addEventListener(ZOOM_SCALE_CHANGED_EVENT, syncZoomLevel);
+    window.addEventListener('focus', syncZoomLevel);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener(ZOOM_SCALE_CHANGED_EVENT, syncZoomLevel);
+      window.removeEventListener('focus', syncZoomLevel);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
 
   // ✨ v30.0.0 AI Provider Status Indicator
   const [aiStatus, setAiStatus] = useState<{

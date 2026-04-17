@@ -1,5 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
 
+const memoryServiceMock = vi.hoisted(() => ({
+  getKnowledge: vi.fn(),
+  saveChatInteraction: vi.fn(),
+}));
+
 vi.mock('@/lib/security', () => {
   return {
     secureInvoke: vi.fn(),
@@ -11,6 +16,12 @@ vi.mock('@/services/ai/orchestrator', () => {
     aiOrchestrator: {
       generate: vi.fn(),
     },
+  };
+});
+
+vi.mock('@/services/api/memory', () => {
+  return {
+    memoryService: memoryServiceMock,
   };
 });
 
@@ -29,6 +40,8 @@ describe('conversationEngine.processMessage', () => {
     localStorage.clear();
     (window as Record<string, unknown>).__TITANE_E2E_CHAT_MOCK__ = false;
     delete (window as Record<string, unknown>).__TITANE_E2E_CHAT_SCENARIO__;
+    memoryServiceMock.getKnowledge.mockResolvedValue([]);
+    memoryServiceMock.saveChatInteraction.mockResolvedValue(undefined);
   });
 
   it('normalizes missing metadata with safe defaults', async () => {
@@ -284,5 +297,82 @@ describe('conversationEngine.processMessage', () => {
       })
     );
     expect(vi.mocked(secureInvoke)).not.toHaveBeenCalled();
+  });
+
+  it('injects runtime knowledge into the conversation_generate system prompt', async () => {
+    memoryServiceMock.getKnowledge.mockResolvedValue([
+      {
+        id: 'kb-1',
+        title: 'One Door Governance',
+        category: 'architecture',
+        content: 'All network access must flow through UI -> IPC -> services -> gateway -> external.',
+        relevance: 0.96,
+        lastAccessed: '2026-04-16T00:00:00.000Z',
+        tags: ['architecture', 'network'],
+      },
+    ]);
+
+    vi.mocked(secureInvoke)
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce({
+        content: 'Ok',
+        conversationId: 'c7',
+        messageId: 'm7',
+        metadata: { timestamp: 1234 },
+      });
+
+    await processMessage('Explique One Door', {
+      conversationId: 'c7',
+      providerPreference: 'ollama',
+    });
+
+    const generateCall = vi
+      .mocked(secureInvoke)
+      .mock.calls.find(([command]) => command === 'conversation_generate');
+
+    expect(generateCall?.[1]).toEqual(
+      expect.objectContaining({
+        args: expect.objectContaining({
+          systemPrompt: expect.stringContaining('## RUNTIME_KNOWLEDGE_CONTEXT'),
+        }),
+      })
+    );
+    expect(generateCall?.[1]).toEqual(
+      expect.objectContaining({
+        args: expect.objectContaining({
+          systemPrompt: expect.stringContaining('One Door Governance'),
+        }),
+      })
+    );
+  });
+
+  it('persists successful chat interactions into Memory Core on the active conversation path', async () => {
+    vi.mocked(secureInvoke)
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce({
+        content: 'Réponse mémoire',
+        conversationId: 'c8',
+        messageId: 'm8',
+        metadata: { timestamp: 5678, provider_used: 'ollama' },
+      });
+
+    const response = await processMessage('Retiens ceci', {
+      conversationId: 'c8',
+      providerPreference: 'ollama',
+    });
+
+    expect(response.assistant_message).toBe('Réponse mémoire');
+    expect(memoryServiceMock.saveChatInteraction).toHaveBeenCalledWith(
+      expect.objectContaining({
+        userMessage: 'Retiens ceci',
+        aiResponse: 'Réponse mémoire',
+        mode: 'default',
+        metadata: expect.objectContaining({
+          conversationId: 'c8',
+          messageId: 'm8',
+          provider_used: 'ollama',
+        }),
+      })
+    );
   });
 });

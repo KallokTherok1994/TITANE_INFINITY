@@ -11,6 +11,7 @@ import {
   formatZoomScale,
   getStoredZoomScale,
   readCurrentZoomScale,
+  stepZoomScale,
 } from './zoomScale';
 
 export const useZoomControl = () => {
@@ -19,14 +20,14 @@ export const useZoomControl = () => {
       // Ctrl/Cmd + Plus/Equals = Zoom in
       if ((event.ctrlKey || event.metaKey) && (event.key === '+' || event.key === '=')) {
         event.preventDefault();
-        adjustZoom(1.1); // +10%
+        adjustZoom(1); // +10%
         return;
       }
 
       // Ctrl/Cmd + Minus = Zoom out
       if ((event.ctrlKey || event.metaKey) && event.key === '-') {
         event.preventDefault();
-        adjustZoom(0.9); // -10%
+        adjustZoom(-1); // -10%
         return;
       }
 
@@ -49,13 +50,13 @@ export const useZoomControl = () => {
 /**
  * Ajuste le zoom actuellement appliqué
  */
-function adjustZoom(factor: number) {
-  const newZoom = applyZoomScale(readCurrentZoomScale() * factor);
+function adjustZoom(direction: 1 | -1) {
+  const newZoom = applyZoomScale(stepZoomScale(readCurrentZoomScale(), direction));
   console.log(`🔍 Zoom ajusté: ${(newZoom * 100).toFixed(1)}%`);
 }
 
 /**
- * Réinitialise le zoom à 75%
+ * Réinitialise le zoom à 100%
  */
 function resetZoom() {
   const defaultZoom = applyZoomScale(BASE_ZOOM_SCALE);
@@ -68,6 +69,10 @@ function resetZoom() {
 export const loadSavedZoom = () => {
   const savedZoom = getStoredZoomScale();
   if (savedZoom !== null) {
-    document.documentElement.style.zoom = formatZoomScale(savedZoom);
+    applyZoomScale(savedZoom);
+    return;
   }
+
+  document.documentElement.style.zoom = formatZoomScale(BASE_ZOOM_SCALE);
+  document.documentElement.style.setProperty('--titane-ui-scale', formatZoomScale(BASE_ZOOM_SCALE));
 };

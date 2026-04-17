@@ -8,13 +8,25 @@ describe('Conversation fullscreen shell truth', () => {
       resolve(process.cwd(), 'src/pages/TitanePage-local.css'),
       'utf8'
     );
+    const pageCss = readFileSync(resolve(process.cwd(), 'src/pages/TitanePage.css'), 'utf8');
+    const indexCss = readFileSync(resolve(process.cwd(), 'src/index.css'), 'utf8');
 
     expect(css).toContain('.titane-page--conversation');
     expect(css).toContain('flex: 1 1 auto;');
-    expect(css).toContain('min-height: 0;');
+    expect(css).toContain('width: 100% !important;');
+    expect(css).toContain('max-width: 100% !important;');
+    expect(css).toContain('min-height: 0 !important;');
     expect(css).toContain('max-height: 100%;');
+    expect(css).toContain('display: flex;');
+    expect(css).toContain('flex-direction: column;');
+    expect(css).toContain('height: 100%;');
+    expect(css).toContain('box-sizing: border-box;');
+    expect(css).toContain('animation: none;');
+    expect(css).toContain('transform: none;');
     expect(css).not.toContain('min-height: 100%;');
     expect(css).not.toContain('100dvh');
+    expect(pageCss).toContain('animation: fade-in 0.4s ease-out;');
+    expect(indexCss).not.toContain('zoom: 75%;');
   });
 
   it('avoids duplicating the TopNav offset in AppShell', () => {
@@ -23,7 +35,8 @@ describe('Conversation fullscreen shell truth', () => {
       'utf8'
     );
 
-    expect(shell).toContain("paddingTop: 'calc(4rem + env(safe-area-inset-top, 0px))'");
+    expect(shell).toContain('paddingTop: `calc((4rem + env(safe-area-inset-top, 0px)) / ${APP_SHELL_ZOOM_VAR})`');
+    expect(shell).toContain('height: `calc(100% / ${APP_SHELL_ZOOM_VAR})`');
     expect(shell).not.toContain("topNav && 'pt-16'");
   });
 

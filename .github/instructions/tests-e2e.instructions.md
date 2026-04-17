@@ -17,6 +17,7 @@ applyTo: 'e2e/**, scripts/e2e/**, wdio*.conf*'
 - Use reports/ for all proofs.
 - For every new capability/feature, create E2E tests with stable `data-testid` selectors (Rule 16).
 - For advanced Q&A capabilities, create scenario tests that verify real behavior (Rule 16).
+- For advanced-agent dashboards, assert at least one runtime-derived proof line or status marker, not only root visibility.
 - For fullscreen/zoom/chat visibility work, prefer proofs that validate the real scroll region, bottom composer visibility, and return-to-bottom behavior instead of static screenshots alone.
 - For every E2E fix, follow the kernel AutoFix/AutoHeal canonical capture rule with:
   - `signature`: failing test name + artifact marker (log/export/error marker)

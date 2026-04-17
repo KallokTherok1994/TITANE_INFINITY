@@ -17,7 +17,9 @@ const buildCanonicalScript = fs.readFileSync(
 
 describe('android canonical authorities', () => {
   it('keeps one canonical Android dev authority and one canonical Android build authority', () => {
-    expect(packageJson.scripts['android:dev:stable']).toBe('bash scripts/android/dev-stable.sh');
+    expect(packageJson.scripts['android:dev:stable']).toBe(
+      'bash scripts/android/dev-stable.sh'
+    );
     expect(packageJson.scripts['android:build']).toBe(
       'node scripts/android/build-canonical.mjs'
     );

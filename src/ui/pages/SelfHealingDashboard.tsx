@@ -343,7 +343,11 @@ export const SelfHealingDashboard: React.FC = () => {
       </div>
 
       <div className="self-heal-grid">
-        <HUDFrame title="Agent Anti-Régression" icon="🧭" className="anti-regression-panel">
+        <HUDFrame
+          title="Agent Anti-Régression"
+          icon="🧭"
+          className="anti-regression-panel"
+        >
           <div data-testid="anti-regression-summary" className="anti-regression-summary">
             <div className="history-header">
               <span className={`history-level level-${antiRegressionSnapshot.status}`}>

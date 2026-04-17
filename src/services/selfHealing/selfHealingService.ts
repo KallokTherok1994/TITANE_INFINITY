@@ -46,7 +46,10 @@ export interface AntiRegressionSnapshot {
   recommendedChecks: string[];
 }
 
-const SIGNAL_TO_SCOPE: Array<{ match: string; scope: Exclude<AntiRegressionScope, 'cross-surface'> }> = [
+const SIGNAL_TO_SCOPE: Array<{
+  match: string;
+  scope: Exclude<AntiRegressionScope, 'cross-surface'>;
+}> = [
   { match: 'backend', scope: 'runtime' },
   { match: 'safe_mode', scope: 'runtime' },
   { match: 'circuit_breaker', scope: 'runtime' },
@@ -137,7 +140,9 @@ export function buildAntiRegressionSnapshot(
     input.pendingActions.length > 0
       ? 'Traiter les actions en attente pour éviter une dérive UI non qualifiée'
       : null,
-    input.anomalyScore >= 0.4 ? 'Contrôler la stabilité et la performance de la surface active' : null,
+    input.anomalyScore >= 0.4
+      ? 'Contrôler la stabilité et la performance de la surface active'
+      : null,
   ].filter((value): value is string => value !== null);
 
   return {

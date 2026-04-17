@@ -495,6 +495,8 @@ src-tauri/src/
 pnpm run dev              # Launch Titan-Dev (wrapper local complet)
 pnpm run dev:tauri        # Alias de dev (wrapper local complet)
 pnpm run dev:tauri:no-ollama  # Titan-Dev sans Ollama
+pnpm run ollama:verify    # Vérifier la config Ollama canonique
+pnpm run verify:ollama:cline  # Vérifier l alignement Ollama + Cline + agents
 pnpm run build            # Build frontend
 corepack pnpm exec tauri build --config src-tauri/tauri.conf.json  # Build Titan-Stable (on demand)
 pnpm run lint             # ESLint + Prettier
@@ -506,6 +508,13 @@ pnpm run test:rust        # Cargo tests
 
 Par défaut, TITANE∞ utilise des providers externes **si configurés**, avec fallback automatique vers Ollama local.  
 Mode 100% local disponible en désactivant les providers cloud dans les paramètres.
+
+Vérité canonique locale gouvernée :
+
+- Base URL Ollama : `http://127.0.0.1:11434`
+- Modèle local canonique : `gemma2:2b`
+- Transport frontend vers Ollama : IPC Tauri uniquement
+- Build/deploy : autorisés sur demande explicite de l utilisateur, sans token ni passphrase
 
 - **Autoriser au build (dev/stable)** : lancer avec `VITE_ENABLE_EXTERNAL_AI=1`
   - Exemple dev : `VITE_ENABLE_EXTERNAL_AI=1 pnpm run dev:tauri`
@@ -543,12 +552,21 @@ pnpm run copilot-xs:status     # Vérifier la configuration Copilot
 pnpm run copilot-xs:precommit  # Validation + tests (pre-commit)
 ```
 
-**Agents spécialisés** (`.github/copilot-agents/`) :
+**Agents spécialisés** (`.github/agents/`) :
 
-- Guardian Agent — Qualité et sécurité
-- Dependency Guardian — Gestion des dépendances
-- Architecture Agent — Respect du modèle 4-Ring
-- Security Auditor — Audit de sécurité
+- `titane-conductor` — Orchestrateur principal TITANE_INFINITY
+- `architect-guardian` — Respect du modèle 4-Ring et One Door
+- `anti-regression-guardian` — Couverture anti-dérive, mapping, preuves
+- `e2e-authority` — Discipline E2E et artefacts déterministes
+
+Commandes d audit agents :
+
+```bash
+pnpm run audit:agents:stack
+pnpm run verify:agents:advanced
+pnpm run verify:agents:workflow
+pnpm run verify:ollama:cline
+```
 
 Pour plus d'informations : [COPILOT-XS README](.github/copilot-xs/README.md)
 

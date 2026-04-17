@@ -15,13 +15,13 @@ import React, { memo } from 'react';
 import { useUIReadingContext } from './UIReadingContext';
 import { useZoom, useTypography, usePresets } from './useUIReading';
 import { PresetMetadata, ReadingPresets } from './UIReadingPresets';
-import { ValidationLimits } from './UIReadingValidator';
+import { ValidationLimits, ValidZoomLevels } from './UIReadingValidator';
 import type { PresetName, FontFamilyOption } from './UIReadingContext';
 import './UIReadingPanel.css';
 
 export const UIReadingPanel = memo(function UIReadingPanel() {
   const { isPanelOpen, togglePanel } = useUIReadingContext();
-  const { zoomLevel, zoomOut, zoomPercent, setZoom } = useZoom();
+  const { zoomLevel, zoomIn, zoomOut, zoomPercent, setZoom } = useZoom();
   const {
     fontSizeBase,
     fontFamily,
@@ -93,11 +93,7 @@ export const UIReadingPanel = memo(function UIReadingPanel() {
               value={zoomLevel * 100}
               onChange={e => {
                 const val = parseInt(e.target.value) / 100;
-                // Round to nearest valid zoom level
-                const validZoomLevels = [
-                  0.85, 0.9, 0.95, 1.0, 1.05, 1.1, 1.15, 1.2, 1.3, 1.4,
-                ] as const;
-                const closestZoom = validZoomLevels.reduce((prev, curr) =>
+                const closestZoom = ValidZoomLevels.reduce((prev, curr) =>
                   Math.abs(curr - val) < Math.abs(prev - val) ? curr : prev
                 );
                 setZoom(closestZoom);
@@ -105,6 +101,9 @@ export const UIReadingPanel = memo(function UIReadingPanel() {
               }}
             />
             <span className="ui-reading-panel__value">{zoomPercent}%</span>
+            <button className="ui-reading-panel__btn" onClick={zoomIn}>
+              +
+            </button>
           </div>
         </section>
 

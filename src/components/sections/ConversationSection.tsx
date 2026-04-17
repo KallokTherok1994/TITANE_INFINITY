@@ -153,14 +153,22 @@ const SCROLL_TO_BOTTOM_VISIBILITY_OFFSET_PX = 180;
 
 const MIN_CONVERSATION_VIEWPORT_HEIGHT = 320;
 
-function getConversationViewportHeight(): number {
+export function getConversationViewportHeight(): number {
   if (typeof window === 'undefined') {
     return 0;
   }
 
   const visualViewportHeight = window.visualViewport?.height;
   if (typeof visualViewportHeight === 'number' && Number.isFinite(visualViewportHeight)) {
-    return Math.max(MIN_CONVERSATION_VIEWPORT_HEIGHT, Math.round(visualViewportHeight));
+    const boundedViewportHeight =
+      typeof window.innerHeight === 'number' && Number.isFinite(window.innerHeight)
+        ? Math.min(visualViewportHeight, window.innerHeight)
+        : visualViewportHeight;
+
+    return Math.max(
+      MIN_CONVERSATION_VIEWPORT_HEIGHT,
+      Math.round(boundedViewportHeight)
+    );
   }
 
   return Math.max(MIN_CONVERSATION_VIEWPORT_HEIGHT, window.innerHeight || 0);

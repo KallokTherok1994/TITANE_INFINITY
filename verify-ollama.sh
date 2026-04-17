@@ -39,12 +39,12 @@ else
 fi
 
 # Check 3: Default model
-echo -n "3️⃣  Modèle par défaut (llama3.1)... "
-if curl -s http://127.0.0.1:11434/api/tags | grep -q "llama3.1"; then
+echo -n "3️⃣  Modèle par défaut (gemma2:2b)... "
+if curl -s http://127.0.0.1:11434/api/tags | grep -q "gemma2:2b"; then
     echo -e "${GREEN}✅ Disponible${NC}"
 else
     echo -e "${YELLOW}⚠️  Non trouvé${NC}"
-    echo "   💡 Installez-le: ollama pull llama3.1"
+    echo "   💡 Installez-le: ollama pull gemma2:2b"
 fi
 
 # Check 4: .env file
@@ -59,7 +59,7 @@ if [ -f ".env" ]; then
         echo -e "   ${YELLOW}⚠️  Configuration Ollama manquante${NC}"
         echo "   💡 Ajoutez dans .env:"
         echo "      OLLAMA_BASE_URL=http://127.0.0.1:11434"
-        echo "      OLLAMA_DEFAULT_MODEL=llama3.1"
+        echo "      OLLAMA_DEFAULT_MODEL=gemma2:2b"
     fi
 else
     echo -e "${YELLOW}⚠️  Absent${NC}"
@@ -70,7 +70,7 @@ fi
 echo -n "5️⃣  Test de génération... "
 RESPONSE=$(curl -s -X POST http://127.0.0.1:11434/api/generate \
     -H "Content-Type: application/json" \
-    -d '{"model":"llama3.1","prompt":"Dis bonjour","stream":false}' \
+    -d '{"model":"gemma2:2b","prompt":"Dis bonjour","stream":false}' \
     2>/dev/null || echo "error")
 
 if echo "$RESPONSE" | grep -q "response"; then
@@ -88,7 +88,7 @@ echo ""
 echo "📋 Résumé:"
 echo "   • Service: http://127.0.0.1:11434"
 echo "   • Modèles: ${MODELS} installé(s)"
-echo "   • Modèle par défaut: llama3.1"
+echo "   • Modèle par défaut: gemma2:2b"
 echo ""
 echo "🚀 Prêt à lancer TITANE:"
 echo "   pnpm tauri dev"
