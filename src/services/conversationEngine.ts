@@ -54,9 +54,28 @@ const logger = createLogger('ConversationEngine');
 const E2E_CHAT_MOCK_FLAG = '__TITANE_E2E_CHAT_MOCK__';
 const E2E_CHAT_CONV_SEQ = '__TITANE_E2E_CHAT_CONV_SEQ__';
 const E2E_CHAT_SCENARIO_FLAG = '__TITANE_E2E_CHAT_SCENARIO__';
+const E2E_CHAT_KNOWLEDGE_SEED_FLAG = '__TITANE_E2E_CHAT_KNOWLEDGE_SEED__';
+const E2E_CHAT_MEMORY_LOG_FLAG = '__TITANE_E2E_CHAT_MEMORY_LOG__';
 const STATIC_PROMPT_CONTEXT_TTL_MS = 2000;
 
 type E2EChatScenario = 'success' | 'rate_limit';
+
+interface E2EChatKnowledgeSeedEntry {
+  title: string;
+  category: string;
+  content: string;
+  relevance: number;
+  tags: string[];
+}
+
+interface E2EChatMemoryLogEntry {
+  userMessage: string;
+  assistantMessage: string;
+  conversationId: string;
+  scenario: E2EChatScenario;
+  timestamp: number;
+  knowledgeTitles: string[];
+}
 
 interface StaticPromptContextSnapshot {
   mode: ConversationMode;
@@ -111,6 +130,117 @@ const getE2EChatScenario = (): E2EChatScenario => {
   return win[E2E_CHAT_SCENARIO_FLAG] === 'rate_limit' ? 'rate_limit' : 'success';
 };
 
+const normalizeE2EChatKnowledgeSeedEntry = (
+  value: unknown
+): E2EChatKnowledgeSeedEntry | null => {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return null;
+  }
+
+  const candidate = value as Record<string, unknown>;
+  const title =
+    typeof candidate.title === 'string' && candidate.title.trim().length > 0
+      ? candidate.title.trim()
+      : null;
+
+  if (!title) {
+    return null;
+  }
+
+  return {
+    title,
+    category:
+      typeof candidate.category === 'string' && candidate.category.trim().length > 0
+        ? candidate.category.trim()
+        : 'general',
+    content:
+      typeof candidate.content === 'string' && candidate.content.trim().length > 0
+        ? candidate.content.trim()
+        : '',
+    relevance:
+      typeof candidate.relevance === 'number' && Number.isFinite(candidate.relevance)
+        ? candidate.relevance
+        : 0.5,
+    tags: Array.isArray(candidate.tags)
+      ? candidate.tags.filter((tag): tag is string => typeof tag === 'string' && tag.length > 0)
+      : [],
+  };
+};
+
+const getE2EChatKnowledgeSeed = (): E2EChatKnowledgeSeedEntry[] => {
+  const win = getWindowRecord();
+  if (!win) {
+    return [];
+  }
+
+  const rawSeed = win[E2E_CHAT_KNOWLEDGE_SEED_FLAG];
+  if (!Array.isArray(rawSeed)) {
+    return [];
+  }
+
+  return rawSeed
+    .map(normalizeE2EChatKnowledgeSeedEntry)
+    .filter((entry): entry is E2EChatKnowledgeSeedEntry => entry !== null);
+};
+
+const getE2EChatMemoryLog = (): E2EChatMemoryLogEntry[] => {
+  const win = getWindowRecord();
+  if (!win) {
+    return [];
+  }
+
+  const rawLog = win[E2E_CHAT_MEMORY_LOG_FLAG];
+  return Array.isArray(rawLog) ? (rawLog as E2EChatMemoryLogEntry[]) : [];
+};
+
+const persistE2EChatMemoryLogEntry = (entry: E2EChatMemoryLogEntry): void => {
+  const win = getWindowRecord();
+  if (!win) {
+    return;
+  }
+
+  win[E2E_CHAT_MEMORY_LOG_FLAG] = [...getE2EChatMemoryLog(), entry];
+};
+
+const E2E_CHAT_MEMORY_TRIGGER_PATTERNS = ['rappelle', 'souviens', 'recall'];
+const E2E_CHAT_KNOWLEDGE_TRIGGER_PATTERNS = [
+  'connaissance',
+  'knowledge',
+  'one door',
+  'governance',
+  'twins',
+];
+
+const buildE2EMockAssistantMessage = (
+  userMessage: string,
+  knowledgeSeed: E2EChatKnowledgeSeedEntry[],
+  memoryLog: E2EChatMemoryLogEntry[]
+): string => {
+  const normalized = userMessage.toLowerCase();
+  const lines = [`[MOCK_OK] ${userMessage}`];
+
+  if (
+    memoryLog.length > 0 &&
+    E2E_CHAT_MEMORY_TRIGGER_PATTERNS.some(pattern => normalized.includes(pattern))
+  ) {
+    lines.push(`[MOCK_MEMORY] ${memoryLog[memoryLog.length - 1].userMessage}`);
+  }
+
+  if (
+    knowledgeSeed.length > 0 &&
+    E2E_CHAT_KNOWLEDGE_TRIGGER_PATTERNS.some(pattern => normalized.includes(pattern))
+  ) {
+    lines.push(
+      `[MOCK_KNOWLEDGE] ${knowledgeSeed
+        .slice(0, 2)
+        .map(entry => entry.title)
+        .join(' | ')}`
+    );
+  }
+
+  return lines.join('\n');
+};
+
 const createE2EConversationId = (): string => {
   const win = getWindowRecord();
   if (!win) {
@@ -128,7 +258,9 @@ const createE2EConversationId = (): string => {
 function buildE2EMockConversationResponse(
   userMessage: string,
   conversationId: string,
-  scenario: E2EChatScenario
+  scenario: E2EChatScenario,
+  knowledgeSeed: E2EChatKnowledgeSeedEntry[],
+  memoryLog: E2EChatMemoryLogEntry[]
 ): ConversationResponse {
   const now = Date.now();
 
@@ -180,7 +312,7 @@ function buildE2EMockConversationResponse(
   }
 
   return {
-    assistant_message: `[MOCK_OK] ${userMessage}`,
+    assistant_message: buildE2EMockAssistantMessage(userMessage, knowledgeSeed, memoryLog),
     conversation_id: conversationId,
     message_id: `e2e-${now}`,
     detected_intention: 'Question',
@@ -197,7 +329,7 @@ function buildE2EMockConversationResponse(
       latency_ms: 0,
       tokens_used: 0,
       memory_effect: 'New',
-      links_to_contexts: [],
+      links_to_contexts: knowledgeSeed.slice(0, 2).map(entry => `knowledge:${entry.title}`),
     },
   };
 }
@@ -586,11 +718,27 @@ export async function processMessage(
       conversationId = createE2EConversationId();
     }
 
-    return buildE2EMockConversationResponse(
+    const scenario = getE2EChatScenario();
+    const knowledgeSeed = getE2EChatKnowledgeSeed();
+    const memoryLog = getE2EChatMemoryLog();
+    const response = buildE2EMockConversationResponse(
       userMessage,
       conversationId,
-      getE2EChatScenario()
+      scenario,
+      knowledgeSeed,
+      memoryLog
     );
+
+    persistE2EChatMemoryLogEntry({
+      userMessage,
+      assistantMessage: response.assistant_message,
+      conversationId,
+      scenario,
+      timestamp: response.metadata.timestamp,
+      knowledgeTitles: knowledgeSeed.slice(0, 2).map(entry => entry.title),
+    });
+
+    return response;
   }
 
   if (!conversationId) {

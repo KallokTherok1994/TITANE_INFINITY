@@ -40,6 +40,8 @@ describe('conversationEngine.processMessage', () => {
     localStorage.clear();
     (window as Record<string, unknown>).__TITANE_E2E_CHAT_MOCK__ = false;
     delete (window as Record<string, unknown>).__TITANE_E2E_CHAT_SCENARIO__;
+    delete (window as Record<string, unknown>).__TITANE_E2E_CHAT_KNOWLEDGE_SEED__;
+    delete (window as Record<string, unknown>).__TITANE_E2E_CHAT_MEMORY_LOG__;
     memoryServiceMock.getKnowledge.mockResolvedValue([]);
     memoryServiceMock.saveChatInteraction.mockResolvedValue(undefined);
   });
@@ -374,5 +376,42 @@ describe('conversationEngine.processMessage', () => {
         }),
       })
     );
+  });
+
+  it('surfaces seeded runtime knowledge and tracks persisted exchanges on the E2E mock lane', async () => {
+    const win = window as Record<string, unknown>;
+    win.__TITANE_E2E_CHAT_MOCK__ = true;
+    win.__TITANE_E2E_CHAT_KNOWLEDGE_SEED__ = [
+      {
+        title: 'One Door Governance',
+        category: 'architecture',
+        content: 'UI -> IPC -> services -> gateway -> external',
+        relevance: 0.96,
+        tags: ['architecture', 'network'],
+      },
+    ];
+    win.__TITANE_E2E_CHAT_MEMORY_LOG__ = [];
+
+    const first = await processMessage('Active la connaissance runtime One Door', {
+      conversationId: 'e2e-c1',
+    });
+
+    expect(first.assistant_message).toContain('[MOCK_KNOWLEDGE] One Door Governance');
+    expect(win.__TITANE_E2E_CHAT_MEMORY_LOG__).toEqual([
+      expect.objectContaining({
+        userMessage: 'Active la connaissance runtime One Door',
+        conversationId: 'e2e-c1',
+        knowledgeTitles: ['One Door Governance'],
+      }),
+    ]);
+
+    const second = await processMessage('Rappelle le dernier échange mémoire', {
+      conversationId: 'e2e-c1',
+    });
+
+    expect(second.assistant_message).toContain(
+      '[MOCK_MEMORY] Active la connaissance runtime One Door'
+    );
+    expect((win.__TITANE_E2E_CHAT_MEMORY_LOG__ as unknown[])).toHaveLength(2);
   });
 });
