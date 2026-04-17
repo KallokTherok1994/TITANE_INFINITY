@@ -9,3 +9,7 @@ git restore -- src-tauri/src/security_audit_bridge.rs src-tauri/src/lib.rs src-t
 ## ADDENDUM — INSTALLED RUNTIME QUALIFICATION
 
 git restore -- package.json src-tauri/Cargo.toml src-tauri/Cargo.lock src-tauri/tauri.conf.json src-tauri/tauri.base.json tauri.base.json runtime/stable/tauri.conf.json runtime/stable/manifest.json RELEASE_SURFACE_INVENTORY.md RELEASE_ARTIFACTS_CHECKSUMS_30.1.34.txt ARCHITECTURE.md docs/CARTOGRAPHY_COMPLETE.md docs/IPC_CATALOG.md reports/SECURITY_AUDIT_BRIDGE_IPC_2026-04-17.md proof_packs/SECURITY_AUDIT_BRIDGE_IPC_2026-04-17/GATE_REPORT.md proof_packs/SECURITY_AUDIT_BRIDGE_IPC_2026-04-17/VERDICT.md proof_packs/SECURITY_AUDIT_BRIDGE_IPC_2026-04-17/ROLLBACK.md scripts/autoheal/autoheal_rules.jsonl
+
+## ADDENDUM — INSTALLED RUNTIME SEAL REFRESH
+
+git restore -- reports/SECURITY_AUDIT_BRIDGE_IPC_2026-04-17.md proof_packs/SECURITY_AUDIT_BRIDGE_IPC_2026-04-17/GATE_REPORT.md proof_packs/SECURITY_AUDIT_BRIDGE_IPC_2026-04-17/VERDICT.md proof_packs/SECURITY_AUDIT_BRIDGE_IPC_2026-04-17/ROLLBACK.md

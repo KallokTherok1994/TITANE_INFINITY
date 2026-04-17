@@ -24,3 +24,10 @@
 - PASS: `bash scripts/autoheal/detect_recurrence.sh`
 - PASS: `bash scripts/verify_instructions.sh`
 - PASS: installed binary rebuilt and launcher-synced on host as `30.1.34`
+
+## ADDENDUM — INSTALLED RUNTIME SEAL REFRESH — 2026-04-17T10:52Z
+
+- PASS: `TAURI_BINARY_PATH=/usr/bin/titane-infinity TITANE_NATIVE_BINARY_MODE=installed corepack pnpm exec wdio run wdio.desktop.conf.cjs --spec /tmp/security-audit-bridge-native-proof.wdio.test.js`
+- PASS: journal refreshed at `~/.local/share/com.titane.infinity/security_active/federated_audit_journal.json`
+- PASS: fresh signed export written to `~/.local/share/com.titane.infinity/security_active/exports/security-audit-1776423148577-1646fddd37a2.json`
+- PASS: fresh export digest `1646fddd37a217d9fc1c962654704eeaf5527f5647323cbb4d461cfdd6c6dceb`

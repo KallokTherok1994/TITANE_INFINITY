@@ -12,3 +12,9 @@ VERDICT: PASS
 - AppData journal persistence: PASS
 - AppData signed export persistence: PASS
 - installed `/usr/bin/titane-infinity` runtime: PASS
+
+## ADDENDUM — INSTALLED RUNTIME SEAL REFRESH — 2026-04-17T10:52Z
+
+- installed `/usr/bin/titane-infinity` runtime replay: PASS
+- fresh AppData journal refresh: PASS
+- fresh AppData signed export persistence: PASS

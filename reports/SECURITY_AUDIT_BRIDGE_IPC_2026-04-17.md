@@ -65,3 +65,15 @@ Status: PASS
 ## Verdict
 
 PASS
+
+## Installed Runtime Seal Refresh — 2026-04-17T10:52Z
+
+- STATUS: PASS
+- Proof command: `TAURI_BINARY_PATH=/usr/bin/titane-infinity TITANE_NATIVE_BINARY_MODE=installed corepack pnpm exec wdio run wdio.desktop.conf.cjs --spec /tmp/security-audit-bridge-native-proof.wdio.test.js`
+- Runtime result: `1 passing` on the installed desktop runtime.
+- Journal evidence: `~/.local/share/com.titane.infinity/security_active/federated_audit_journal.json`
+- Journal state after refresh: `eventCount=12`, `federatedSessionCount=7`, `updatedAt=2026-04-17T10:52:28.302176939+00:00`
+- Fresh signed export: `~/.local/share/com.titane.infinity/security_active/exports/security-audit-1776423148577-1646fddd37a2.json`
+- Fresh export digest: `1646fddd37a217d9fc1c962654704eeaf5527f5647323cbb4d461cfdd6c6dceb`
+- Fresh export signature fingerprint: `7e6f7ed98aeba955bb4faaf88831683b`
+- Scope truth: `tauri-app-data`
