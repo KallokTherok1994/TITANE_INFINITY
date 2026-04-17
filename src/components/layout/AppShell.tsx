@@ -48,6 +48,8 @@ export const AppShell = ({
         className
       )}
       style={{
+        width: `calc(100% / ${APP_SHELL_ZOOM_VAR})`,
+        maxWidth: `calc(100% / ${APP_SHELL_ZOOM_VAR})`,
         height: `calc(100% / ${APP_SHELL_ZOOM_VAR})`,
         minHeight: `calc(100% / ${APP_SHELL_ZOOM_VAR})`,
       }}

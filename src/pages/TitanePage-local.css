@@ -85,15 +85,20 @@
   flex: 1 1 auto;
   width: 100% !important;
   max-width: 100% !important;
+  min-width: 0 !important;
   height: 100%;
   min-height: 0 !important;
   max-height: 100%;
+  padding: 0 !important;
   box-sizing: border-box;
   overflow: hidden;
 }
 
 .titane-page-shell--conversation {
   flex: 1 1 auto;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   min-height: 0;
   gap: 0.5rem;
   overflow: hidden;
@@ -120,6 +125,12 @@
 
 .titane-inline-tabs--conversation {
   justify-content: flex-start;
+  flex-wrap: nowrap;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
   gap: 0.35rem;
   padding-bottom: 0.2rem;
 }
@@ -137,6 +148,7 @@
   flex: 1 1 auto;
   width: 100%;
   max-width: none;
+  min-width: 0;
   min-height: 0;
   height: 100%;
   max-height: 100%;
@@ -150,6 +162,8 @@
   flex-direction: column;
   flex: 1 1 auto;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   min-height: 0;
   height: 100%;
   max-height: 100%;
@@ -160,7 +174,8 @@
 .titane-section-conversation--fullscreen .conversation-container {
   flex: 1 1 auto;
   width: 100%;
-  max-width: none;
+  max-width: 100%;
+  min-width: 0;
   min-height: 0;
   height: 100%;
   overflow: hidden;

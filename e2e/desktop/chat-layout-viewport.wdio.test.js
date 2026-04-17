@@ -177,6 +177,19 @@ async function measureLayout(label) {
       };
     };
 
+    const rectHorizontal = selector => {
+      const element = document.querySelector(selector);
+      if (!(element instanceof HTMLElement)) {
+        return null;
+      }
+      const rect = element.getBoundingClientRect();
+      return {
+        left: rect.left,
+        right: rect.right,
+        width: rect.width,
+      };
+    };
+
     const container = document.querySelector('.conversation-container');
     return {
       label: stepLabel,
@@ -187,11 +200,17 @@ async function measureLayout(label) {
         '1',
       density: container?.getAttribute('data-density') ?? null,
       page: rectBottom('[data-testid="page-titane"]'),
+      pageHorizontal: rectHorizontal('[data-testid="page-titane"]'),
       tab: rectBottom('[data-testid="tab-conversation"]'),
+      tabHorizontal: rectHorizontal('[data-testid="tab-conversation"]'),
       container: rectBottom('.conversation-container'),
+      containerHorizontal: rectHorizontal('.conversation-container'),
       region: rectBottom('[data-testid="chat-messages-scroll-region"]'),
+      regionHorizontal: rectHorizontal('[data-testid="chat-messages-scroll-region"]'),
       input: rectBottom('[data-testid="chat-input"]'),
+      inputHorizontal: rectHorizontal('[data-testid="chat-input"]'),
       send: rectBottom('[data-testid="chat-send"]'),
+      sendHorizontal: rectHorizontal('[data-testid="chat-send"]'),
     };
   }, label);
 
@@ -202,11 +221,31 @@ async function measureLayout(label) {
 
 function assertVisibleBounds(metrics) {
   const viewportBottom = metrics.viewport.height;
+  const viewportRight = metrics.viewport.width;
   for (const key of ['page', 'tab', 'container', 'region', 'input', 'send']) {
     assert.ok(metrics[key], `missing metrics for ${key}`);
     assert.ok(
       metrics[key].bottom <= viewportBottom,
       `${metrics.label}: ${key}.bottom=${metrics[key].bottom} exceeds viewport=${viewportBottom}`
+    );
+  }
+
+  for (const key of [
+    'pageHorizontal',
+    'tabHorizontal',
+    'containerHorizontal',
+    'regionHorizontal',
+    'inputHorizontal',
+    'sendHorizontal',
+  ]) {
+    assert.ok(metrics[key], `missing metrics for ${key}`);
+    assert.ok(
+      metrics[key].left >= 0,
+      `${metrics.label}: ${key}.left=${metrics[key].left} is outside viewport`
+    );
+    assert.ok(
+      metrics[key].right <= viewportRight,
+      `${metrics.label}: ${key}.right=${metrics[key].right} exceeds viewport=${viewportRight}`
     );
   }
 }

@@ -15,7 +15,9 @@ describe('Conversation fullscreen shell truth', () => {
     expect(css).toContain('flex: 1 1 auto;');
     expect(css).toContain('width: 100% !important;');
     expect(css).toContain('max-width: 100% !important;');
+    expect(css).toContain('min-width: 0 !important;');
     expect(css).toContain('min-height: 0 !important;');
+    expect(css).toContain('padding: 0 !important;');
     expect(css).toContain('max-height: 100%;');
     expect(css).toContain('display: flex;');
     expect(css).toContain('flex-direction: column;');
@@ -25,6 +27,9 @@ describe('Conversation fullscreen shell truth', () => {
     expect(css).toContain('transform: none;');
     expect(css).not.toContain('min-height: 100%;');
     expect(css).not.toContain('100dvh');
+    expect(pageCss).toContain('width: 100% !important;');
+    expect(pageCss).toContain('max-width: 100% !important;');
+    expect(pageCss).not.toContain('width: 100vw !important;');
     expect(pageCss).toContain('animation: fade-in 0.4s ease-out;');
     expect(indexCss).not.toContain('zoom: 75%;');
   });
@@ -55,9 +60,11 @@ describe('Conversation fullscreen shell truth', () => {
     expect(css).toContain('.titane-page-shell--conversation');
     expect(css).toContain('.titane-page-header--conversation');
     expect(css).toContain('.titane-content--conversation');
+    expect(css).toContain('.titane-inline-tabs--conversation');
     expect(pageCss).toContain(".conversation-container[data-fullscreen='true'] {");
     expect(pageCss).toContain('gap: 0;');
     expect(css).toContain('overflow: hidden;');
+    expect(css).toContain('overflow-x: auto;');
     expect(css).toContain('position: sticky;');
     expect(css).toContain('top: 0;');
     expect(css).toContain(
@@ -70,6 +77,10 @@ describe('Conversation fullscreen shell truth', () => {
     const css = readFileSync(resolve(process.cwd(), 'src/pages/TitanePage.css'), 'utf8');
 
     expect(css).toContain('.conversation-messages {');
+    expect(css).toContain('width: 100%;');
+    expect(css).toContain('max-width: 100%;');
+    expect(css).toContain('min-width: 0;');
+    expect(css).toContain('overflow-x: hidden;');
     expect(css).toContain('overflow-y: scroll;');
     expect(css).toContain('scrollbar-width: auto;');
     expect(css).toContain(

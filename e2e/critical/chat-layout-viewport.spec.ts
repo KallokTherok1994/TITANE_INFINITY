@@ -15,11 +15,23 @@ type LayoutMetrics = {
   };
   htmlZoom: string;
   density: string | null;
+  pageLeft: number | null;
+  pageRight: number | null;
+  tabLeft: number | null;
+  tabRight: number | null;
   pageBottom: number | null;
   tabBottom: number | null;
+  inputLeft: number | null;
+  inputRight: number | null;
   inputBottom: number | null;
+  sendLeft: number | null;
+  sendRight: number | null;
   sendBottom: number | null;
+  regionLeft: number | null;
+  regionRight: number | null;
   regionBottom: number | null;
+  containerLeft: number | null;
+  containerRight: number | null;
   containerBottom: number | null;
 };
 
@@ -79,6 +91,14 @@ async function measureLayout(page: Page): Promise<LayoutMetrics> {
       const element = document.querySelector(selector);
       return element ? element.getBoundingClientRect().bottom : null;
     };
+    const rectLeft = (selector: string) => {
+      const element = document.querySelector(selector);
+      return element ? element.getBoundingClientRect().left : null;
+    };
+    const rectRight = (selector: string) => {
+      const element = document.querySelector(selector);
+      return element ? element.getBoundingClientRect().right : null;
+    };
 
     const container = document.querySelector('.conversation-container');
     return {
@@ -93,11 +113,23 @@ async function measureLayout(page: Page): Promise<LayoutMetrics> {
         document.documentElement.style.zoom ||
         '1',
       density: container?.getAttribute('data-density') ?? null,
+      pageLeft: rectLeft('[data-testid="page-titane"]'),
+      pageRight: rectRight('[data-testid="page-titane"]'),
+      tabLeft: rectLeft('[data-testid="tab-conversation"]'),
+      tabRight: rectRight('[data-testid="tab-conversation"]'),
       pageBottom: rectBottom('[data-testid="page-titane"]'),
       tabBottom: rectBottom('[data-testid="tab-conversation"]'),
+      inputLeft: rectLeft('[data-testid="chat-input"]'),
+      inputRight: rectRight('[data-testid="chat-input"]'),
       inputBottom: rectBottom('[data-testid="chat-input"]'),
+      sendLeft: rectLeft('[data-testid="chat-send"]'),
+      sendRight: rectRight('[data-testid="chat-send"]'),
       sendBottom: rectBottom('[data-testid="chat-send"]'),
+      regionLeft: rectLeft('[data-testid="chat-messages-scroll-region"]'),
+      regionRight: rectRight('[data-testid="chat-messages-scroll-region"]'),
       regionBottom: rectBottom('[data-testid="chat-messages-scroll-region"]'),
+      containerLeft: rectLeft('.conversation-container'),
+      containerRight: rectRight('.conversation-container'),
       containerBottom: rectBottom('.conversation-container'),
     };
   });
@@ -112,11 +144,36 @@ async function expectCriticalSurfaceInViewport(page: Page): Promise<void> {
 
 function expectVisibleWindowBounds(metrics: LayoutMetrics) {
   const viewportBottom = metrics.viewport.height;
+  const viewportRight = metrics.viewport.width;
   expect(metrics.tabBottom).not.toBeNull();
   expect(metrics.inputBottom).not.toBeNull();
   expect(metrics.sendBottom).not.toBeNull();
   expect(metrics.regionBottom).not.toBeNull();
   expect(metrics.containerBottom).not.toBeNull();
+  expect(metrics.pageLeft).not.toBeNull();
+  expect(metrics.pageRight).not.toBeNull();
+  expect(metrics.tabLeft).not.toBeNull();
+  expect(metrics.tabRight).not.toBeNull();
+  expect(metrics.inputLeft).not.toBeNull();
+  expect(metrics.inputRight).not.toBeNull();
+  expect(metrics.sendLeft).not.toBeNull();
+  expect(metrics.sendRight).not.toBeNull();
+  expect(metrics.regionLeft).not.toBeNull();
+  expect(metrics.regionRight).not.toBeNull();
+  expect(metrics.containerLeft).not.toBeNull();
+  expect(metrics.containerRight).not.toBeNull();
+  expect(metrics.pageLeft!).toBeGreaterThanOrEqual(0);
+  expect(metrics.tabLeft!).toBeGreaterThanOrEqual(0);
+  expect(metrics.inputLeft!).toBeGreaterThanOrEqual(0);
+  expect(metrics.sendLeft!).toBeGreaterThanOrEqual(0);
+  expect(metrics.regionLeft!).toBeGreaterThanOrEqual(0);
+  expect(metrics.containerLeft!).toBeGreaterThanOrEqual(0);
+  expect(metrics.pageRight!).toBeLessThanOrEqual(viewportRight);
+  expect(metrics.tabRight!).toBeLessThanOrEqual(viewportRight);
+  expect(metrics.inputRight!).toBeLessThanOrEqual(viewportRight);
+  expect(metrics.sendRight!).toBeLessThanOrEqual(viewportRight);
+  expect(metrics.regionRight!).toBeLessThanOrEqual(viewportRight);
+  expect(metrics.containerRight!).toBeLessThanOrEqual(viewportRight);
   expect(metrics.tabBottom!).toBeLessThanOrEqual(viewportBottom);
   expect(metrics.inputBottom!).toBeLessThanOrEqual(viewportBottom);
   expect(metrics.sendBottom!).toBeLessThanOrEqual(viewportBottom);
