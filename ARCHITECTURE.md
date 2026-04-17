@@ -158,7 +158,7 @@ UI Component
 | Document                                                                       | Description                                                              |
 | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
 | [`docs/CARTOGRAPHY_COMPLETE.md`](./docs/CARTOGRAPHY_COMPLETE.md)               | Cartographie complète avancée — 4-Ring, IPC, stores, hooks, routes, Rust |
-| [`docs/IPC_CATALOG.md`](./docs/IPC_CATALOG.md)                                 | Catalogue exhaustif des 916+ commandes IPC par domaine                   |
+| [`docs/IPC_CATALOG.md`](./docs/IPC_CATALOG.md)                                 | Catalogue exhaustif des 1135+ commandes IPC par domaine                  |
 | [`docs/DEPENDENCY_MAP.md`](./docs/DEPENDENCY_MAP.md)                           | Carte des dépendances frontend (pnpm) et backend (Cargo)                 |
 | [`docs/CARTOGRAPHY_TITANE_INFINITY.md`](./docs/CARTOGRAPHY_TITANE_INFINITY.md) | Cartographie canonique MAIN — architecture, IPC One Door                 |
 | [`docs/ARCHITECTURE_RINGS.md`](./docs/ARCHITECTURE_RINGS.md)                   | Architecture en anneaux détaillée                                        |
@@ -182,7 +182,7 @@ import { useSelfAwareness } from '@/hooks/useSelfAwareness';
 
 function MyComponent() {
   const { metrics, allCapabilities, getCommandsByDomain } = useSelfAwareness();
-  // metrics.total_ipc_commands === 916
+  // metrics.total_ipc_commands === 1135
   // allCapabilities === ['ai_chat', 'voice', 'cognitive', ...]
 }
 ```
@@ -206,7 +206,7 @@ bash scripts/gates/ring-integrity-gate.sh
 
 ---
 
-_TITANE_INFINITY v30.1.0 — Cognitive OS_
+_TITANE_INFINITY v30.1.34 — Cognitive OS_
 
 ## Explainability Agent
 
