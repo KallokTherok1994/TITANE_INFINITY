@@ -14,6 +14,11 @@ Canonical target version: **30.1.34**
 | `runtime/stable/tauri.conf.json` | `30.1.34` | KEEP_AS_CANON |
 | `runtime/stable/manifest.json` | `30.1.34` | KEEP_AS_CANON |
 | `RELEASE_ARTIFACTS_CHECKSUMS_30.1.34.txt` | `30.1.34` | ADDED_AS_PROOF |
+| `deployment/latest/MANIFEST.json` | `30.1.34` | UPDATED_TO_30_1_34 |
+| `deployment/latest/CHECKSUMS.sha256` | `30.1.34` | UPDATED_TO_30_1_34 |
+| `deployment/latest/CHECKSUMS.txt` | `30.1.34` | UPDATED_TO_30_1_34 |
+| `deployment/latest/SHA256SUMS.txt` | `30.1.34` | UPDATED_TO_30_1_34 |
+| `deployment/latest/SIZES.txt` | `30.1.34` | UPDATED_TO_30_1_34 |
 | `/usr/bin/titane-infinity` | `30.1.34` | HOST_SYNC_VERIFIED |
 | `~/.local/share/applications/titane-infinity.desktop` | `30.1.34` | HOST_SYNC_VERIFIED |
 | `/usr/share/applications/titane-infinity.desktop` | `30.1.34` | HOST_SYNC_VERIFIED |
