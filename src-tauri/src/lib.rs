@@ -293,7 +293,6 @@ pub mod system;
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 pub mod devtools;
 
-#[cfg(all(not(feature = "mock"), feature = "full"))]
 pub mod security_audit_bridge;
 
 #[cfg(all(not(feature = "mock"), feature = "full"))]

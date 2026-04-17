@@ -1259,8 +1259,8 @@
 | 7 | `secure_list_files` | Secure list files |
 | 8 | `secure_read_file` | Secure read file |
 | 9 | `validate_tauri_only` | Validate tauri only |
-| 10 | `security_audit_sync_journal` | Sync federated security audit journal into governed app-data storage |
-| 11 | `security_audit_publish_signed_export` | Publish a signed governed export of the security audit journal |
+| 10 | `security_audit_sync_journal` | Sync federated security audit journal into governed app-data storage; proven on the current desktop debug runtime |
+| 11 | `security_audit_publish_signed_export` | Publish a signed governed export of the security audit journal; proven on the current desktop debug runtime |
 
 ## Self-Healing (31 commandes)
 

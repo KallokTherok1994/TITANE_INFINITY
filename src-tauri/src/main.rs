@@ -2582,9 +2582,7 @@ fn main() {
             titane_infinity::devtools::api::devtools_metrics,
             #[cfg(all(not(feature = "mock"), feature = "full"))]
             titane_infinity::devtools::api::devtools_status,
-            #[cfg(all(not(feature = "mock"), feature = "full"))]
             titane_infinity::security_audit_bridge::security_audit_sync_journal,
-            #[cfg(all(not(feature = "mock"), feature = "full"))]
             titane_infinity::security_audit_bridge::security_audit_publish_signed_export,
 
             // meta_orchestrator — MetaOrchestratorPage
