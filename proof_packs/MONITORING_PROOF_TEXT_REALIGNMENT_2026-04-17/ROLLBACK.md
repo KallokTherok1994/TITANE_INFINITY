@@ -1,0 +1,3 @@
+# ROLLBACK — MONITORING PROOF TEXT REALIGNMENT — 2026-04-17
+
+git restore -- e2e/agents/monitoring-dashboard.e2e.ts registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/MONITORING_PROOF_TEXT_REALIGNMENT_2026-04-17.md proof_packs/MONITORING_PROOF_TEXT_REALIGNMENT_2026-04-17/GATE_REPORT.md proof_packs/MONITORING_PROOF_TEXT_REALIGNMENT_2026-04-17/VERDICT.md proof_packs/MONITORING_PROOF_TEXT_REALIGNMENT_2026-04-17/ROLLBACK.md
