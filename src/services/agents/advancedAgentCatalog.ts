@@ -5,6 +5,8 @@ export interface AdvancedAgentDetailItem {
   label: string;
   acknowledged?: boolean;
   correlationKey?: string;
+  severity?: string;
+  sessionId?: string;
 }
 
 export interface AdvancedAgentDetailSection {

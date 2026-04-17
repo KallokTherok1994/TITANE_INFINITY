@@ -181,7 +181,37 @@ describe('advanced agent dashboards', () => {
   });
 
   it('renders acknowledgement, history and correlation on the active security surface', () => {
+    const now = Date.now();
     uiLogger.security('Test security alert', { scope: 'dashboard-test' });
+    localStorage.setItem(
+      'titane_security_dashboard_event_history',
+      JSON.stringify([
+        {
+          id: 'seed-detection-session-alpha',
+          category: 'detection',
+          severity: 'warning',
+          source: 'uiLogger',
+          message: 'UILogger:Seed warning session alpha',
+          correlationKey: 'scope-alpha',
+          timestamp: now - 1000,
+          lastSeen: now - 1000,
+          acknowledged: false,
+          sessionId: 'session-alpha',
+        },
+        {
+          id: 'seed-containment-session-beta',
+          category: 'containment',
+          severity: 'critical',
+          source: 'provider-governance',
+          message: 'Provider:beta: active=no · healthy=no · consecutiveFailures=4',
+          correlationKey: 'provider-beta',
+          timestamp: now - 500,
+          lastSeen: now - 500,
+          acknowledged: false,
+          sessionId: 'session-beta',
+        },
+      ])
+    );
 
     render(<SecurityDashboard />);
 
@@ -192,6 +222,7 @@ describe('advanced agent dashboards', () => {
     expect(screen.getByTestId('security-dashboard-containment-events')).toBeInTheDocument();
     expect(screen.getByTestId('security-dashboard-event-history')).toBeInTheDocument();
     expect(screen.getByTestId('security-dashboard-correlation-summary')).toBeInTheDocument();
+    expect(screen.getByTestId('security-dashboard-multi-session-federation')).toBeInTheDocument();
 
     fireEvent.click(screen.getByTestId('security-dashboard-ack-detection-events-0'));
 
@@ -199,5 +230,30 @@ describe('advanced agent dashboards', () => {
       'data-acknowledged',
       'yes'
     );
+
+    fireEvent.click(screen.getByTestId('security-dashboard-filter-critical'));
+
+    expect(screen.getByTestId('security-dashboard-filter-critical')).toHaveAttribute(
+      'data-active',
+      'yes'
+    );
+    expect(screen.getByTestId('security-dashboard-severity-filter-summary')).toHaveTextContent(
+      'critical'
+    );
+    expect(screen.getByTestId('security-dashboard-event-history-0')).toHaveTextContent(
+      'severity=critical'
+    );
+    expect(screen.getByTestId('security-dashboard-multi-session-federation')).toHaveTextContent(
+      'session-beta'
+    );
+
+    fireEvent.click(screen.getByTestId('security-dashboard-export-correlations'));
+
+    expect(
+      screen.getByTestId('security-dashboard-containment-correlation-export')
+    ).toHaveTextContent('"severityFilter": "critical"');
+    expect(
+      screen.getByTestId('security-dashboard-containment-correlation-export')
+    ).toHaveTextContent('"sessionId": "session-beta"');
   });
 });

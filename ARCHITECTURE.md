@@ -36,6 +36,8 @@ L’agent orchestrateur dynamique répartit intelligemment les tâches entre les
 
 # ARCHITECTURE.md — TITANE_INFINITY
 
+> 2026-04-16 — Security audit federation truth: `src/services/security_active/` reste en Ring 3 et n ouvre aucun nouveau chemin réseau. La fédération multi-session est bornée au journal UI local via les `sessionId` déjà présents dans `UILogger`, les filtres de sévérité vivent exclusivement dans le dashboard canonique, et l export de corrélations de confinement est un artefact JSON local persistant dans le navigateur courant. Cette extension enrichit l audit sans contourner One Door ni simuler un backend partagé.
+
 > 2026-04-16 — Advanced-agent bounded refresh truth: la phase live suivante reste entièrement Ring 3 et local-first. `src/services/orchestrator/` maintient une série temporelle locale bornée dans le navigateur pour la charge providers, et `src/services/security_active/` maintient un journal local borné pour acquittement/historique/corrélation des événements sécurité. Les dashboards correspondants déclenchent uniquement un refresh périodique borné de leur service dédié; aucun second chemin réseau ni backend ad hoc n est introduit.
 
 > 2026-04-16 — Advanced-agent live runtime surfaces: les services Ring 3 `src/services/orchestrator/`, `src/services/explainability/` et `src/services/security_active/` publient maintenant des snapshots runtime synchrones consommés directement par leurs dashboards canoniques. La vérité active reste bornée au frontend gouverné: métriques locales et santé providers pour l orchestrateur, trace conversationnelle persistée pour l explainability, et corrélation alertes/logs/politiques de confinement pour la sécurité active, sans créer de second chemin réseau hors One Door.

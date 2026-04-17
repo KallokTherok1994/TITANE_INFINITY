@@ -1,27 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import {
   acknowledgeSecurityDashboardEvent,
+  exportSecurityContainmentCorrelations,
+  getLastSecurityContainmentCorrelationExport,
   getSecurityActiveAgentStatus,
   getSecurityDashboardRefreshIntervalMs,
+  type SecurityAuditSeverityFilter,
 } from './index';
 
 const SecurityDashboard: React.FC = () => {
-  const [status, setStatus] = useState(() => getSecurityActiveAgentStatus());
+  const [severityFilter, setSeverityFilter] = useState<SecurityAuditSeverityFilter>('all');
+  const [status, setStatus] = useState(() => getSecurityActiveAgentStatus('all'));
+  const [exportPayload, setExportPayload] = useState(() => getLastSecurityContainmentCorrelationExport());
   const detailSections = status.detailSections ?? [];
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
-      setStatus(getSecurityActiveAgentStatus());
+      setStatus(getSecurityActiveAgentStatus(severityFilter));
     }, getSecurityDashboardRefreshIntervalMs());
 
     return () => {
       window.clearInterval(intervalId);
     };
-  }, []);
+  }, [severityFilter]);
 
   const acknowledgeEvent = (eventId: string) => {
     acknowledgeSecurityDashboardEvent(eventId);
-    setStatus(getSecurityActiveAgentStatus());
+    setStatus(getSecurityActiveAgentStatus(severityFilter));
+  };
+
+  const setFilter = (nextFilter: SecurityAuditSeverityFilter) => {
+    setSeverityFilter(nextFilter);
+    setStatus(getSecurityActiveAgentStatus(nextFilter));
+  };
+
+  const exportCorrelations = () => {
+    const payload = exportSecurityContainmentCorrelations(severityFilter);
+    setExportPayload(payload);
   };
 
   return (
@@ -50,6 +65,23 @@ const SecurityDashboard: React.FC = () => {
       <p style={{ margin: '0 0 8px', fontSize: 13 }}>{status.serviceState}</p>
       <p data-testid="security-dashboard-refresh" style={{ margin: '0 0 8px', fontSize: 12, opacity: 0.8 }}>
         Refresh borne: {Math.round(getSecurityDashboardRefreshIntervalMs() / 1000)}s
+      </p>
+      <div data-testid="security-dashboard-severity-filters" style={{ display: 'flex', gap: 6, flexWrap: 'wrap', margin: '0 0 8px' }}>
+        {(['all', 'critical', 'warning', 'info'] as const).map(filter => (
+          <button
+            key={filter}
+            type="button"
+            data-testid={`security-dashboard-filter-${filter}`}
+            data-active={severityFilter === filter ? 'yes' : 'no'}
+            onClick={() => setFilter(filter)}
+            style={{ fontSize: 12, padding: '2px 8px' }}
+          >
+            {filter}
+          </button>
+        ))}
+      </div>
+      <p data-testid="security-dashboard-severity-filter-summary" style={{ margin: '0 0 8px', fontSize: 12, opacity: 0.8 }}>
+        Filtre severite actif: {severityFilter}
       </p>
       <ul data-testid="security-dashboard-proof-list" style={{ margin: '0 0 8px', paddingLeft: 18 }}>
         {status.evidence.map((item, index) => (
@@ -94,6 +126,22 @@ const SecurityDashboard: React.FC = () => {
           </ul>
         </div>
       ))}
+      <div data-testid="security-dashboard-export-controls" style={{ margin: '0 0 8px' }}>
+        <button
+          type="button"
+          data-testid="security-dashboard-export-correlations"
+          onClick={exportCorrelations}
+          style={{ fontSize: 12, padding: '2px 8px' }}
+        >
+          Exporter correlations confinement
+        </button>
+      </div>
+      <pre
+        data-testid="security-dashboard-containment-correlation-export"
+        style={{ margin: '0 0 8px', whiteSpace: 'pre-wrap', fontSize: 11, maxHeight: 160, overflow: 'auto' }}
+      >
+        {exportPayload ?? 'Aucun export de correlation n a encore ete genere sur cette surface.'}
+      </pre>
       <p data-testid="security-dashboard-next-step" style={{ margin: 0, fontSize: 13 }}>
         {status.nextStep}
       </p>
