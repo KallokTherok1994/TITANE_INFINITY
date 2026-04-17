@@ -3,6 +3,7 @@ import { getExplainabilityAgentStatus } from './index';
 
 const ExplainabilityDashboard: React.FC = () => {
   const status = getExplainabilityAgentStatus();
+  const detailSections = status.detailSections ?? [];
 
   return (
     <section
@@ -46,6 +47,25 @@ const ExplainabilityDashboard: React.FC = () => {
           <li key={blocker}>{blocker}</li>
         ))}
       </ul>
+      {detailSections.map(section => (
+        <div
+          key={section.key}
+          data-testid={`explainability-dashboard-${section.key}`}
+          style={{ margin: '0 0 8px' }}
+        >
+          <p style={{ margin: '0 0 4px', fontSize: 12, opacity: 0.8 }}>{section.title}</p>
+          <ul style={{ margin: 0, paddingLeft: 18 }}>
+            {section.items.map((item, index) => (
+              <li
+                key={`${section.key}-${item}`}
+                data-testid={`explainability-dashboard-${section.key}-${index}`}
+              >
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
       <p data-testid="explainability-dashboard-next-step" style={{ margin: 0, fontSize: 13 }}>
         {status.nextStep}
       </p>

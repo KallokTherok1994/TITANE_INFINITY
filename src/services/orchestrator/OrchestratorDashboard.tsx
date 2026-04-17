@@ -3,6 +3,7 @@ import { getOrchestratorAgentStatus } from './index';
 
 const OrchestratorDashboard: React.FC = () => {
   const status = getOrchestratorAgentStatus();
+  const detailSections = status.detailSections ?? [];
 
   return (
     <section
@@ -40,6 +41,25 @@ const OrchestratorDashboard: React.FC = () => {
           <li key={blocker}>{blocker}</li>
         ))}
       </ul>
+      {detailSections.map(section => (
+        <div
+          key={section.key}
+          data-testid={`orchestrator-dashboard-${section.key}`}
+          style={{ margin: '0 0 8px' }}
+        >
+          <p style={{ margin: '0 0 4px', fontSize: 12, opacity: 0.8 }}>{section.title}</p>
+          <ul style={{ margin: 0, paddingLeft: 18 }}>
+            {section.items.map((item, index) => (
+              <li
+                key={`${section.key}-${item}`}
+                data-testid={`orchestrator-dashboard-${section.key}-${index}`}
+              >
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
       <p data-testid="orchestrator-dashboard-next-step" style={{ margin: 0, fontSize: 13 }}>
         {status.nextStep}
       </p>

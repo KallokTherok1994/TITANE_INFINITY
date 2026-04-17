@@ -36,6 +36,8 @@ L’agent orchestrateur dynamique répartit intelligemment les tâches entre les
 
 # ARCHITECTURE.md — TITANE_INFINITY
 
+> 2026-04-16 — Advanced-agent live runtime surfaces: les services Ring 3 `src/services/orchestrator/`, `src/services/explainability/` et `src/services/security_active/` publient maintenant des snapshots runtime synchrones consommés directement par leurs dashboards canoniques. La vérité active reste bornée au frontend gouverné: métriques locales et santé providers pour l orchestrateur, trace conversationnelle persistée pour l explainability, et corrélation alertes/logs/politiques de confinement pour la sécurité active, sans créer de second chemin réseau hors One Door.
+
 **Version:** 30.1.0  
 **Date:** 2026-04-11T21:48:00Z  
 **Classification:** CANON

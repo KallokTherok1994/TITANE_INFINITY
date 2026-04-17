@@ -1,5 +1,11 @@
 export type AdvancedAgentReadiness = 'planned' | 'partial' | 'qualified';
 
+export interface AdvancedAgentDetailSection {
+  key: string;
+  title: string;
+  items: string[];
+}
+
 export interface AdvancedAgentStatus {
   id:
     | 'monitoring'
@@ -16,6 +22,7 @@ export interface AdvancedAgentStatus {
   evidence: string[];
   blockers: string[];
   nextStep: string;
+  detailSections?: AdvancedAgentDetailSection[];
 }
 
 const ADVANCED_AGENT_STATUS: Record<AdvancedAgentStatus['id'], AdvancedAgentStatus> = {

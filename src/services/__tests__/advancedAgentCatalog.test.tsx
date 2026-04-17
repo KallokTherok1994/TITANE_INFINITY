@@ -12,6 +12,48 @@ import ExplainabilityDashboard from '@/services/explainability/ExplainabilityDas
 import OrchestratorDashboard from '@/services/orchestrator/OrchestratorDashboard';
 import SecurityDashboard from '@/services/security_active/SecurityDashboard';
 import { AppShell } from '@/components/layout/AppShell';
+import { uiLogger } from '@/lib/UILogger';
+
+const EXPLAINABILITY_CONVERSATION_ID = 'conv-explainability-test';
+
+const EXPLAINABILITY_CONVERSATION = {
+  id: EXPLAINABILITY_CONVERSATION_ID,
+  title: 'Explainability Trace',
+  status: 'active',
+  created_at: 1,
+  updated_at: 2,
+  messages: [
+    {
+      role: 'assistant',
+      content: 'Trace de réponse canonique',
+      timestamp: 2,
+      metadata: {
+        providerMeta: {
+          provider_used: 'Ollama (OMEGA+Singularity)',
+          provider_class: 'local',
+          mode: 'LOCAL',
+          reason_code: 'OK',
+          latency_ms_total: 42,
+          timeout_ms: 30000,
+          retries: 0,
+          attempts: [
+            {
+              provider_id: 'ollama',
+              provider_class: 'local',
+              latency_ms: 42,
+              outcome: 'success',
+              reason_code: 'OK',
+              network_used_attempt: false,
+            },
+          ],
+          network_used: false,
+          cache_hit: false,
+          policy: 'default',
+        },
+      },
+    },
+  ],
+};
 
 describe('advancedAgentCatalog', () => {
   it('returns the five governed advanced agent statuses', () => {
@@ -75,6 +117,11 @@ describe('advanced agent dashboards', () => {
     },
   ] as const;
 
+  beforeEach(() => {
+    localStorage.clear();
+    uiLogger.clearLogs();
+  });
+
   it.each(cases)('renders $selector with governed status details', ({
     selector,
     readiness,
@@ -100,5 +147,41 @@ describe('advanced agent dashboards', () => {
     expect(screen.getByTestId('agent-dashboards-panel')).toBeInTheDocument();
     expect(screen.getByTestId('monitoring-dashboard')).toBeInTheDocument();
     expect(screen.getByTestId('diagnostic-panel')).toBeInTheDocument();
+  });
+
+  it('renders live orchestration metrics and provider snapshots', () => {
+    render(<OrchestratorDashboard />);
+
+    expect(screen.getByTestId('orchestrator-dashboard-live-metrics')).toBeInTheDocument();
+    expect(
+      screen.getByTestId('orchestrator-dashboard-provider-snapshots')
+    ).toBeInTheDocument();
+  });
+
+  it('renders the requested -> used -> shown chain and inference report from persisted conversation runtime', () => {
+    localStorage.setItem('omega-chat-preferred-provider', 'ollama');
+    localStorage.setItem('titane_active_conversation_id', EXPLAINABILITY_CONVERSATION_ID);
+    localStorage.setItem(
+      `titane_conversation_${EXPLAINABILITY_CONVERSATION_ID}`,
+      JSON.stringify(EXPLAINABILITY_CONVERSATION)
+    );
+
+    render(<ExplainabilityDashboard />);
+
+    expect(
+      screen.getByTestId('explainability-dashboard-inference-chain-0')
+    ).toHaveTextContent('Requested: Ollama');
+    expect(
+      screen.getByTestId('explainability-dashboard-inference-report-1')
+    ).toHaveTextContent('Attempts: ollama:success/OK/42ms');
+  });
+
+  it('renders detection and containment events on the active security surface', () => {
+    uiLogger.security('Test security alert', { scope: 'dashboard-test' });
+
+    render(<SecurityDashboard />);
+
+    expect(screen.getByTestId('security-dashboard-detection-events')).toBeInTheDocument();
+    expect(screen.getByTestId('security-dashboard-containment-events')).toBeInTheDocument();
   });
 });

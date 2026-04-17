@@ -2,6 +2,20 @@
 import { test, expect } from '@playwright/test';
 
 test('Security dashboard visible et selectors présents', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem(
+      'titane_ui_logs',
+      JSON.stringify([
+        {
+          timestamp: Date.now(),
+          level: 'security',
+          message: 'Injected dashboard security event',
+          sessionId: 'e2e-security',
+        },
+      ])
+    );
+  });
+
   await page.goto('/');
   await expect(page.getByTestId('security-dashboard')).toBeVisible();
   await expect(page.getByTestId('security-dashboard')).toHaveAttribute(
@@ -10,7 +24,12 @@ test('Security dashboard visible et selectors présents', async ({ page }) => {
   );
   await expect(page.getByTestId('security-dashboard-status')).toContainText('PARTIAL');
   await expect(page.getByTestId('security-dashboard-proof-0')).toBeVisible();
+  await expect(page.getByTestId('security-dashboard-detection-events')).toBeVisible();
+  await expect(page.getByTestId('security-dashboard-detection-events-0')).toContainText(
+    'UILogger:Injected dashboard security event'
+  );
+  await expect(page.getByTestId('security-dashboard-containment-events')).toBeVisible();
   await expect(page.getByTestId('security-dashboard-next-step')).toContainText(
-    'Publier les evenements de detection et de confinement'
+    'historique'
   );
 });
