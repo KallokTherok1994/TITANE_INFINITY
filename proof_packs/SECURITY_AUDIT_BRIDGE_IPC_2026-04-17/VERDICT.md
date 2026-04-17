@@ -11,4 +11,4 @@ VERDICT: PASS
 - workspace debug binary runtime: PASS
 - AppData journal persistence: PASS
 - AppData signed export persistence: PASS
-- installed `/usr/bin/titane-infinity` runtime: BLOCKED
+- installed `/usr/bin/titane-infinity` runtime: PASS

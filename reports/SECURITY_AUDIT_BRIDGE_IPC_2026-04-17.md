@@ -24,8 +24,12 @@
 
 ## Installed Lane Status
 
-- BLOCKED: `TAURI_BINARY_PATH=/usr/bin/titane-infinity ... wdio ... /tmp/security-audit-bridge-native-proof.wdio.test.js`
-- Reason: installed binary still returns `Command security_audit_sync_journal not found` and therefore requires a separate governed package rebuild/reinstall phase with version bump before closure of the installed-runtime lane.# SECURITY AUDIT BRIDGE IPC — 2026-04-17
+- PASS: `TAURI_BINARY_PATH=/usr/bin/titane-infinity TITANE_NATIVE_BINARY_MODE=installed corepack pnpm exec wdio run wdio.desktop.conf.cjs --spec /tmp/security-audit-bridge-native-proof.wdio.test.js`
+- PASS: `dpkg -s titane-infinity` now reports `Version: 30.1.34`
+- PASS: `sha256sum /usr/bin/titane-infinity src-tauri/target/release/titane-infinity` returns the same digest `ed4bd1b40cdac7289c20a41d05710f91eb487968ba63b30051eb3b23dfcc9674`
+- Evidence: installed runtime published `security-audit-1776421623450-fa9d5af77d8f.json` under `~/.local/share/com.titane.infinity/security_active/exports/` and updated the shared federated journal in the same AppData scope.
+
+# SECURITY AUDIT BRIDGE IPC — 2026-04-17
 
 Date: 2026-04-17
 Status: PASS
@@ -50,6 +54,9 @@ Status: PASS
 - PASS: `cargo test --manifest-path src-tauri/Cargo.toml security_audit_bridge`
 - PASS: `corepack pnpm exec playwright test e2e/agents/security-dashboard.e2e.ts --reporter=line`
 - PASS: `corepack pnpm exec vitest run tests/contract/tauri-ipc-contract.test.ts`
+- PASS: `corepack pnpm run build && corepack pnpm tauri build`
+- PASS: `sudo dpkg -i src-tauri/target/release/bundle/deb/TITANE Infinity_30.1.34_amd64.deb`
+- PASS: `TAURI_BINARY_PATH=/usr/bin/titane-infinity TITANE_NATIVE_BINARY_MODE=installed corepack pnpm exec wdio run wdio.desktop.conf.cjs --spec /tmp/security-audit-bridge-native-proof.wdio.test.js`
 - PASS: `corepack pnpm run verify:tauri-only`
 - PASS: `corepack pnpm run verify:tauri-configs`
 - PASS: `bash scripts/autoheal/detect_recurrence.sh`

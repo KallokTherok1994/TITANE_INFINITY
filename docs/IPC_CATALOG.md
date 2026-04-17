@@ -1,5 +1,7 @@
 # TITANE_INFINITY — Catalogue IPC Exhaustif
 
+> 2026-04-17 — Security audit installed-runtime proof truth: `security_audit_sync_journal` et `security_audit_publish_signed_export` sont qualifiées sur la lane debug desktop et sur la lane installée `/usr/bin/titane-infinity` en version 30.1.34. Les deux commandes conservent le contrat `{ ok, content, error }` et écrivent leurs preuves dans `~/.local/share/com.titane.infinity/security_active/` sans ouvrir de voie réseau alternative.
+
 > **1135 commandes IPC Tauri** — Générées le 2026-04-11
 > Toutes les commandes exposées par `main.rs` via `tauri::generate_handler![]`
 

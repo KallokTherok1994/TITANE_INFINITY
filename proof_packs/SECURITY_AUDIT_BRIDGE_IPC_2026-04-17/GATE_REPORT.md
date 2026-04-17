@@ -17,7 +17,10 @@
 - PASS: `cargo test --manifest-path src-tauri/Cargo.toml security_audit_bridge`
 - PASS: `corepack pnpm exec vitest run tests/contract/tauri-ipc-contract.test.ts`
 - PASS: `TAURI_BINARY_PATH=$PWD/src-tauri/target/debug/titane-infinity TITANE_NATIVE_BINARY_MODE=debug corepack pnpm exec wdio run wdio.desktop.conf.cjs --spec /tmp/security-audit-bridge-native-proof.wdio.test.js`
+- PASS: `corepack pnpm run build && corepack pnpm tauri build`
+- PASS: `sudo dpkg -i src-tauri/target/release/bundle/deb/TITANE Infinity_30.1.34_amd64.deb`
+- PASS: `TAURI_BINARY_PATH=/usr/bin/titane-infinity TITANE_NATIVE_BINARY_MODE=installed corepack pnpm exec wdio run wdio.desktop.conf.cjs --spec /tmp/security-audit-bridge-native-proof.wdio.test.js`
+- PASS: `sha256sum /usr/bin/titane-infinity src-tauri/target/release/titane-infinity`
 - PASS: `bash scripts/autoheal/detect_recurrence.sh`
 - PASS: `bash scripts/verify_instructions.sh`
-- BLOCKED: `TAURI_BINARY_PATH=/usr/bin/titane-infinity corepack pnpm exec wdio run wdio.desktop.conf.cjs --spec /tmp/security-audit-bridge-native-proof.wdio.test.js`
-- BLOCKED REASON: installed binary not rebuilt yet; command `security_audit_sync_journal` absent on `/usr/bin/titane-infinity`.
+- PASS: installed binary rebuilt and launcher-synced on host as `30.1.34`

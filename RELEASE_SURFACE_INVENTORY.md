@@ -1,5 +1,34 @@
 # RELEASE SURFACE INVENTORY — TITANE∞ (Historical baseline v28.5.0 + current addendum v29.0.0)
 
+## Addendum — 2026-04-17 — TITANE∞ v30.1.34 Packaged Runtime Qualification
+
+Canonical target version: **30.1.34**
+
+| File / Surface | Version | Status |
+|---|---|---|
+| `package.json` | `30.1.34` | KEEP_AS_CANON |
+| `src-tauri/Cargo.toml` | `30.1.34` | KEEP_AS_CANON |
+| `src-tauri/tauri.conf.json` | `30.1.34` | KEEP_AS_CANON |
+| `src-tauri/tauri.base.json` | `30.1.34` | KEEP_AS_CANON |
+| `tauri.base.json` | `30.1.34` | KEEP_AS_CANON |
+| `runtime/stable/tauri.conf.json` | `30.1.34` | KEEP_AS_CANON |
+| `runtime/stable/manifest.json` | `30.1.34` | KEEP_AS_CANON |
+| `RELEASE_ARTIFACTS_CHECKSUMS_30.1.34.txt` | `30.1.34` | ADDED_AS_PROOF |
+| `/usr/bin/titane-infinity` | `30.1.34` | HOST_SYNC_VERIFIED |
+| `~/.local/share/applications/titane-infinity.desktop` | `30.1.34` | HOST_SYNC_VERIFIED |
+| `/usr/share/applications/titane-infinity.desktop` | `30.1.34` | HOST_SYNC_VERIFIED |
+
+### Artifact Status Summary — v30.1.34
+
+| Artifact | Size | SHA256 | Status |
+|---|---|---|---|
+| `TITANE Infinity_30.1.34_amd64.AppImage` | `92957176` bytes | `c1988796092df2193732e86afbe5fbe357f523637ef04951574b7fb8d06ecdba` | QUALIFIED_BUILD |
+| `TITANE Infinity_30.1.34_amd64.deb` | `20177926` bytes | `b82e416a7ac642ec973640cf9629088d8fe873cfa55cc2a62439689793894559` | INSTALLED_AND_QUALIFIED |
+| `TITANE Infinity-30.1.34-1.x86_64.rpm` | `20178719` bytes | `f6a6d824068b505250b89138410bc2a09f30c054d80a9149d766e665cee0917c` | CHECKSUM_VERIFIED |
+| `titane-infinity` | `45287240` bytes | `ed4bd1b40cdac7289c20a41d05710f91eb487968ba63b30051eb3b23dfcc9674` | INSTALLED_BINARY_MATCHED |
+
+> The 30.1.34 desktop packaging lane is now fully aligned: the installed DEB exposes the governed security audit bridge on `/usr/bin/titane-infinity`, both launchers point to the canonical installed binary, and the installed/runtime WDIO proof writes the federated journal plus signed export into AppData without falling back to the workspace debug binary.
+
 ## Addendum — 2026-04-17 — TITANE∞ v30.1.33 Packaged Runtime Qualification
 
 Canonical target version: **30.1.33**
