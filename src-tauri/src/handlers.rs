@@ -106,6 +106,8 @@ macro_rules! generate_titane_handlers {
                     $crate::devtools::api::devtools_status,
                     $crate::devtools::api::devtools_enable,
                     $crate::devtools::api::devtools_disable,
+                    $crate::security_audit_bridge::security_audit_sync_journal,
+                    $crate::security_audit_bridge::security_audit_publish_signed_export,
 
                     commands::create_conversation,
                     commands::load_conversation,

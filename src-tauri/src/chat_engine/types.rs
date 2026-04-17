@@ -49,12 +49,10 @@ impl ChatRequestPayload {
         }
 
         if self.max_output_tokens == 0 || self.max_output_tokens > MAX_OUTPUT_TOKENS {
-            return Err(
-                format!(
-                    "max_output_tokens must be between 1 and {}",
-                    MAX_OUTPUT_TOKENS
-                )
-            );
+            return Err(format!(
+                "max_output_tokens must be between 1 and {}",
+                MAX_OUTPUT_TOKENS
+            ));
         }
 
         Ok(())

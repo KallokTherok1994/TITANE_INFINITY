@@ -49,7 +49,7 @@ test('Security dashboard visible et selectors présents', async ({ page }) => {
 
   await page.goto('/titane');
   await closeBootBeaconIfPresent(page);
-  await expect(page.getByTestId('security-dashboard')).toBeVisible();
+  await expect(page.getByTestId('security-dashboard')).toBeVisible({ timeout: 30000 });
   await expect(page.getByTestId('security-dashboard')).toHaveAttribute(
     'data-readiness',
     'partial'

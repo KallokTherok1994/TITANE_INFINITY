@@ -1,3 +1,5 @@
+import { isTauriAvailable } from '@/api/tauriClient';
+import { tauriClient } from '@/lib/tauriClient';
 import { getAdvancedAgentStatus } from '@/services/agents/advancedAgentCatalog';
 import { FEATURE_FLAGS, getActiveAIProviders } from '@/config/featureFlags';
 import { getTransportMode } from '@/services/ai/transports/ollamaTransport';
@@ -56,6 +58,52 @@ interface SecurityAuditView {
   multiSessionFederation: SecuritySessionSummary[];
   unacknowledgedEvents: number;
   severityFilter: SecurityAuditSeverityFilter;
+}
+
+interface SecurityDashboardEventPayload {
+  id: string;
+  category: SecurityEventCategory;
+  severity: SecurityEventSeverity;
+  source: string;
+  message: string;
+  correlationKey: string;
+  timestamp: number;
+  lastSeen: number;
+  acknowledged: boolean;
+  sessionId?: string;
+}
+
+interface SecurityAuditPublishedExport {
+  exportId: string;
+  exportPath: string;
+  sha256: string;
+  signature: string;
+  publicKey: string;
+  fingerprint: string;
+  publishedAt: string;
+  severityFilter: string;
+  eventCount: number;
+  scope: string;
+}
+
+interface SecurityAuditSyncContent {
+  storagePath: string;
+  eventCount: number;
+  federatedSessionCount: number;
+  updatedAt: string;
+  events: SecurityDashboardEventPayload[];
+  lastPublishedExport?: SecurityAuditPublishedExport | null;
+}
+
+interface SecurityAuditGovernedSnapshot {
+  status: ReturnType<typeof getSecurityActiveAgentStatus>;
+  exportPayload: string | null;
+}
+
+interface TauriIpcEnvelope<T> {
+  ok: boolean;
+  content?: T;
+  error?: unknown;
 }
 
 const SECURITY_SEVERITY_ORDER: Record<SecurityEventSeverity, number> = {
@@ -329,6 +377,13 @@ function buildSecurityAuditView(
   severityFilter: SecurityAuditSeverityFilter
 ): SecurityAuditView {
   const eventHistory = mergeSecurityEventHistory(currentEvents);
+  return buildSecurityAuditViewFromHistory(eventHistory, severityFilter);
+}
+
+function buildSecurityAuditViewFromHistory(
+  eventHistory: SecurityDashboardEvent[],
+  severityFilter: SecurityAuditSeverityFilter
+): SecurityAuditView {
   const filteredHistory = eventHistory.filter(event => matchesSeverityFilter(event, severityFilter));
 
   return {
@@ -344,6 +399,305 @@ function buildSecurityAuditView(
     multiSessionFederation: getMultiSessionFederation(filteredHistory),
     unacknowledgedEvents: filteredHistory.filter(event => !event.acknowledged).length,
     severityFilter,
+  };
+}
+
+function unwrapTauriEnvelope<T>(result: T | TauriIpcEnvelope<T>): T {
+  if (result && typeof result === 'object' && 'ok' in result) {
+    const envelope = result as TauriIpcEnvelope<T>;
+
+    if (!envelope.ok) {
+      throw new Error(
+        typeof envelope.error === 'string' ? envelope.error : 'Unknown governed IPC error'
+      );
+    }
+
+    return envelope.content as T;
+  }
+
+  return result as T;
+}
+
+function isSecurityAuditSyncContent(value: unknown): value is SecurityAuditSyncContent {
+  return Boolean(
+    value &&
+      typeof value === 'object' &&
+      Array.isArray((value as SecurityAuditSyncContent).events) &&
+      typeof (value as SecurityAuditSyncContent).storagePath === 'string'
+  );
+}
+
+function isSecurityAuditPublishedExport(value: unknown): value is SecurityAuditPublishedExport {
+  return Boolean(
+    value &&
+      typeof value === 'object' &&
+      typeof (value as SecurityAuditPublishedExport).exportId === 'string' &&
+      typeof (value as SecurityAuditPublishedExport).exportPath === 'string'
+  );
+}
+
+function toSecurityDashboardEventPayload(
+  event: SecurityDashboardEvent
+): SecurityDashboardEventPayload {
+  return {
+    id: event.id,
+    category: event.category,
+    severity: event.severity,
+    source: event.source,
+    message: event.message,
+    correlationKey: event.correlationKey,
+    timestamp: event.timestamp,
+    lastSeen: event.lastSeen,
+    acknowledged: event.acknowledged,
+    sessionId: event.sessionId,
+  };
+}
+
+function fromSecurityDashboardEventPayload(
+  event: SecurityDashboardEventPayload
+): SecurityDashboardEvent {
+  return {
+    id: event.id,
+    category: event.category,
+    severity: event.severity,
+    source: event.source,
+    message: event.message,
+    correlationKey: event.correlationKey,
+    timestamp: event.timestamp,
+    lastSeen: event.lastSeen,
+    acknowledged: event.acknowledged,
+    sessionId: event.sessionId,
+  };
+}
+
+function buildGovernedSecurityExportPayload(
+  localPayload: string,
+  publishedExport: SecurityAuditPublishedExport
+): string {
+  let parsedLocalPayload: unknown = localPayload;
+
+  try {
+    parsedLocalPayload = JSON.parse(localPayload);
+  } catch {
+    parsedLocalPayload = localPayload;
+  }
+
+  return JSON.stringify(
+    {
+      governance: {
+        scope: publishedExport.scope,
+        signed: true,
+        exportId: publishedExport.exportId,
+        exportPath: publishedExport.exportPath,
+        sha256: publishedExport.sha256,
+        signature: publishedExport.signature,
+        publicKey: publishedExport.publicKey,
+        fingerprint: publishedExport.fingerprint,
+        publishedAt: publishedExport.publishedAt,
+      },
+      content: parsedLocalPayload,
+    },
+    null,
+    2
+  );
+}
+
+function createSecurityActiveAgentStatus(
+  severityFilter: SecurityAuditSeverityFilter,
+  auditView: SecurityAuditView,
+  options: {
+    transportMode: string;
+    activeProviders: string[];
+    healthAlertCount: number;
+    performanceEventCount: number;
+    predictiveEventCount: number;
+    securityLogCount: number;
+    baseEvidence: string[];
+    oneDoorHealthy: boolean;
+    exportPayload: string | null;
+    governedSync: SecurityAuditSyncContent | null;
+  }
+) {
+  const base = getAdvancedAgentStatus('security_active');
+  const detectionCount =
+    options.healthAlertCount +
+    options.performanceEventCount +
+    options.predictiveEventCount +
+    options.securityLogCount;
+  const containmentCount = auditView.eventHistory.filter(event => event.category === 'containment').length;
+  const governedActive = Boolean(options.governedSync);
+  const federationLabel = governedActive
+    ? `federation gouvernee ${options.governedSync?.federatedSessionCount ?? auditView.multiSessionFederation.length} sessions via AppData`
+    : `federation locale multi-session ${auditView.multiSessionFederation.length} sessions`;
+  const exportLabel = governedActive
+    ? options.governedSync?.lastPublishedExport
+      ? 'export gouverne signe publie en AppData'
+      : 'export gouverne signe pret a publier en AppData'
+    : `export local des correlations de confinement ${options.exportPayload ? 'pret' : 'non genere'}`;
+
+  return {
+    ...base,
+    readiness: 'partial',
+    readinessLabel: 'PARTIAL',
+    serviceState: `Transport ${options.transportMode.toUpperCase()} · filtre severite=${severityFilter} · ${detectionCount} evenements detection publies · ${containmentCount} evenements confinement publies · ${auditView.unacknowledgedEvents} non acquittes`,
+    evidence: [
+      `One Door: la voie Ollama exposee au frontend passe par ${options.transportMode.toUpperCase()}.`,
+      `Runtime: providers actifs ${options.activeProviders.join(', ')}.`,
+      `Runtime: ${options.securityLogCount} logs security UI · ${options.healthAlertCount} alertes health · ${options.performanceEventCount} alertes performance · ${options.predictiveEventCount} alertes predictives high+.`,
+      `Runtime: journal borne ${auditView.eventHistory.length}/${SECURITY_HISTORY_LIMIT} evenements avec acquittement persistant.`,
+      `Runtime: ${federationLabel} sur le filtre ${severityFilter}.`,
+      `Runtime: ${exportLabel}.`,
+      ...options.baseEvidence,
+    ],
+    blockers: [
+      ...(governedActive
+        ? ['La preuve desktop installee du lane signe n est pas encore rattachee a cette surface canonique.']
+        : [
+            'La federation et l export restent bornes au navigateur courant: aucun backend partage ni signature d audit n est encore branche.',
+          ]),
+      ...(!options.oneDoorHealthy
+        ? ['Le transport Ollama n est plus sur IPC, ce qui viole la voie canonique UI -> IPC -> services.']
+        : []),
+    ],
+    nextStep: !options.oneDoorHealthy
+      ? 'Restaurer le transport IPC canonique avant d etendre la reponse securite active.'
+      : governedActive
+        ? 'Sceller une preuve desktop installee du journal partage signe pour fermer le lane gouverne jusqu au runtime Tauri.'
+        : 'Publier un export gouverne signe et federer ce journal au-dela du navigateur courant sans rompre la voie canonique.',
+    detailSections: [
+      {
+        key: 'detection-events',
+        title: 'Evenements de detection',
+        items: auditView.activeDetectionEvents.map(event => ({
+          id: event.id,
+          label: `${event.message} · severity=${event.severity} · at=${formatEventTime(event.lastSeen)} · ack=${event.acknowledged ? 'yes' : 'no'}`,
+          acknowledged: event.acknowledged,
+          correlationKey: event.correlationKey,
+          severity: event.severity,
+          sessionId: event.sessionId,
+        })),
+      },
+      {
+        key: 'containment-events',
+        title: 'Evenements de confinement',
+        items: auditView.activeContainmentEvents.map(event => ({
+          id: event.id,
+          label: `${event.message} · severity=${event.severity} · at=${formatEventTime(event.lastSeen)} · ack=${event.acknowledged ? 'yes' : 'no'}`,
+          acknowledged: event.acknowledged,
+          correlationKey: event.correlationKey,
+          severity: event.severity,
+          sessionId: event.sessionId,
+        })),
+      },
+      {
+        key: 'event-history',
+        title: 'Historique borne',
+        items: auditView.filteredHistory.slice(0, 6).map(event => ({
+          id: `history-${event.id}`,
+          label: `${formatEventTime(event.lastSeen)} · ${event.category} · severity=${event.severity} · ${event.message} · correlation=${event.correlationKey} · session=${event.sessionId ?? 'runtime-shared'} · ack=${event.acknowledged ? 'yes' : 'no'}`,
+          acknowledged: event.acknowledged,
+          correlationKey: event.correlationKey,
+          severity: event.severity,
+          sessionId: event.sessionId,
+        })),
+      },
+      {
+        key: 'correlation-summary',
+        title: 'Correlation croisee',
+        items:
+          auditView.correlationSummary.length > 0
+            ? auditView.correlationSummary.map(summary => ({
+                id: `correlation-${summary.key}`,
+                label: `${summary.key}: detection=${summary.detectionCount} · confinement=${summary.containmentCount} · open=${summary.openCount} · maxSeverity=${summary.highestSeverity}`,
+                correlationKey: summary.key,
+                severity: summary.highestSeverity,
+              }))
+            : [
+                {
+                  id: 'correlation-empty',
+                  label: 'Aucune correlation croisee exploitable n est encore disponible sur le journal local.',
+                },
+              ],
+      },
+      {
+        key: 'multi-session-federation',
+        title: 'Federation multi-session',
+        items:
+          auditView.multiSessionFederation.length > 0
+            ? auditView.multiSessionFederation.map(session => ({
+                id: `session-${session.sessionId}`,
+                label: `${session.sessionId}: detection=${session.detectionCount} · confinement=${session.containmentCount} · open=${session.openCount} · maxSeverity=${session.highestSeverity} · lastSeen=${formatEventTime(session.lastSeen)}`,
+                severity: session.highestSeverity,
+                sessionId: session.sessionId,
+              }))
+            : [
+                {
+                  id: 'session-empty',
+                  label: 'Aucune federation multi-session exploitable n est encore disponible sur le filtre courant.',
+                },
+              ],
+      },
+    ],
+  };
+}
+
+async function syncGovernedSecurityAuditJournal(
+  currentEvents: SecurityDashboardEvent[]
+): Promise<SecurityAuditSyncContent | null> {
+  if (!isTauriAvailable()) {
+    return null;
+  }
+
+  try {
+    const content = unwrapTauriEnvelope(
+      (await tauriClient.securityAuditSyncJournal({
+        events: currentEvents.map(toSecurityDashboardEventPayload),
+      })) as SecurityAuditSyncContent | TauriIpcEnvelope<SecurityAuditSyncContent>
+    );
+
+    return isSecurityAuditSyncContent(content) ? content : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function getGovernedSecurityAuditSnapshot(
+  severityFilter: SecurityAuditSeverityFilter = 'all'
+): Promise<SecurityAuditGovernedSnapshot> {
+  const transportMode = getTransportMode();
+  const activeProviders = getActiveAIProviders();
+  const healthAlerts = aiHealthMonitor.getActiveAlerts().slice(0, 3);
+  const performanceEvents = performanceAlerts.getAlerts(3);
+  const predictiveEvents = PredictiveAlerts.getAlerts('high').slice(0, 3);
+  const securityLogs = uiLogger.getLogs({ level: 'security', limit: 12 });
+  const oneDoorHealthy = transportMode.toUpperCase() === 'IPC';
+  const currentEvents = collectCurrentSecurityEvents();
+  const governedSync = await syncGovernedSecurityAuditJournal(currentEvents);
+  const auditView = buildSecurityAuditViewFromHistory(
+    governedSync
+      ? governedSync.events.map(fromSecurityDashboardEventPayload)
+      : buildSecurityAuditView(currentEvents, severityFilter).eventHistory,
+    severityFilter
+  );
+  const exportPayload = loadSecurityCorrelationExport();
+
+  return {
+    status: createSecurityActiveAgentStatus(severityFilter, auditView, {
+      transportMode,
+      activeProviders,
+      healthAlertCount: healthAlerts.length,
+      performanceEventCount: performanceEvents.length,
+      predictiveEventCount: predictiveEvents.length,
+      securityLogCount: securityLogs.length,
+      baseEvidence: getAdvancedAgentStatus('security_active').evidence,
+      oneDoorHealthy,
+      exportPayload,
+      governedSync,
+    }),
+    exportPayload:
+      governedSync?.lastPublishedExport && exportPayload
+        ? buildGovernedSecurityExportPayload(exportPayload, governedSync.lastPublishedExport)
+        : exportPayload,
   };
 }
 
@@ -368,11 +722,50 @@ export function getLastSecurityContainmentCorrelationExport(): string | null {
 
 export function exportSecurityContainmentCorrelations(
   severityFilter: SecurityAuditSeverityFilter = 'all'
-): string {
-  const view = buildSecurityAuditView(collectCurrentSecurityEvents(), severityFilter);
-  const payload = buildSecurityCorrelationExport(view);
-  saveSecurityCorrelationExport(payload);
-  return payload;
+): Promise<string> {
+  return publishSecurityContainmentCorrelations(severityFilter);
+}
+
+async function publishSecurityContainmentCorrelations(
+  severityFilter: SecurityAuditSeverityFilter = 'all'
+): Promise<string> {
+  const currentEvents = collectCurrentSecurityEvents();
+  const localView = buildSecurityAuditView(currentEvents, severityFilter);
+  const localPayload = buildSecurityCorrelationExport(localView);
+  saveSecurityCorrelationExport(localPayload);
+
+  if (!isTauriAvailable()) {
+    return localPayload;
+  }
+
+  const governedSync = await syncGovernedSecurityAuditJournal(currentEvents);
+  const governedView = buildSecurityAuditViewFromHistory(
+    governedSync
+      ? governedSync.events.map(fromSecurityDashboardEventPayload)
+      : localView.eventHistory,
+    severityFilter
+  );
+
+  try {
+    const publishedExport = unwrapTauriEnvelope(
+      (await tauriClient.securityAuditPublishSignedExport({
+        severityFilter,
+        events: governedView.filteredHistory.map(toSecurityDashboardEventPayload),
+        correlationSummaries: governedView.correlationSummary,
+        sessionSummaries: governedView.multiSessionFederation,
+      })) as SecurityAuditPublishedExport | TauriIpcEnvelope<SecurityAuditPublishedExport>
+    );
+
+    if (!isSecurityAuditPublishedExport(publishedExport)) {
+      return localPayload;
+    }
+
+    const governedPayload = buildGovernedSecurityExportPayload(localPayload, publishedExport);
+    saveSecurityCorrelationExport(governedPayload);
+    return governedPayload;
+  } catch {
+    return localPayload;
+  }
 }
 
 function collectCurrentSecurityEvents(): SecurityDashboardEvent[] {
@@ -492,7 +885,6 @@ function collectCurrentSecurityEvents(): SecurityDashboardEvent[] {
 export function getSecurityActiveAgentStatus(
   severityFilter: SecurityAuditSeverityFilter = 'all'
 ) {
-  const base = getAdvancedAgentStatus('security_active');
   const transportMode = getTransportMode();
   const activeProviders = getActiveAIProviders();
   const healthAlerts = aiHealthMonitor.getActiveAlerts().slice(0, 3);
@@ -502,106 +894,18 @@ export function getSecurityActiveAgentStatus(
   const oneDoorHealthy = transportMode.toUpperCase() === 'IPC';
   const auditView = buildSecurityAuditView(collectCurrentSecurityEvents(), severityFilter);
   const lastExport = loadSecurityCorrelationExport();
-  const detectionCount =
-    healthAlerts.length + performanceEvents.length + predictiveEvents.length + securityLogs.length;
-  const containmentCount = auditView.eventHistory.filter(event => event.category === 'containment').length;
-
-  return {
-    ...base,
-    readiness: 'partial',
-    readinessLabel: 'PARTIAL',
-    serviceState: `Transport ${transportMode.toUpperCase()} · filtre severite=${severityFilter} · ${detectionCount} evenements detection publies · ${containmentCount} evenements confinement publies · ${auditView.unacknowledgedEvents} non acquittes`,
-    evidence: [
-      `One Door: la voie Ollama exposee au frontend passe par ${transportMode.toUpperCase()}.`,
-      `Runtime: providers actifs ${activeProviders.join(', ')}.`,
-      `Runtime: ${securityLogs.length} logs security UI · ${healthAlerts.length} alertes health · ${predictiveEvents.length} alertes predictives high+.`,
-      `Runtime: journal local borne ${auditView.eventHistory.length}/${SECURITY_HISTORY_LIMIT} evenements avec acquittement persistant.`,
-      `Runtime: federation locale multi-session ${auditView.multiSessionFederation.length} sessions visibles sur le filtre ${severityFilter}.`,
-      `Runtime: export local des correlations de confinement ${lastExport ? 'pret' : 'non genere'} sur la surface canonique.`,
-      ...base.evidence,
-    ],
-    blockers: [
-      'La federation et l export restent bornes au navigateur courant: aucun backend partage ni signature d audit n est encore branche.',
-      ...(!oneDoorHealthy
-        ? ['Le transport Ollama n est plus sur IPC, ce qui viole la voie canonique UI -> IPC -> services.']
-        : []),
-    ],
-    nextStep: oneDoorHealthy
-      ? 'Publier un export gouverne signe et federer ce journal au-dela du navigateur courant sans rompre la voie canonique.'
-      : 'Restaurer le transport IPC canonique avant d etendre la reponse securite active.',
-    detailSections: [
-      {
-        key: 'detection-events',
-        title: 'Evenements de detection',
-        items: auditView.activeDetectionEvents.map(event => ({
-          id: event.id,
-          label: `${event.message} · severity=${event.severity} · at=${formatEventTime(event.lastSeen)} · ack=${event.acknowledged ? 'yes' : 'no'}`,
-          acknowledged: event.acknowledged,
-          correlationKey: event.correlationKey,
-          severity: event.severity,
-          sessionId: event.sessionId,
-        })),
-      },
-      {
-        key: 'containment-events',
-        title: 'Evenements de confinement',
-        items: auditView.activeContainmentEvents.map(event => ({
-          id: event.id,
-          label: `${event.message} · severity=${event.severity} · at=${formatEventTime(event.lastSeen)} · ack=${event.acknowledged ? 'yes' : 'no'}`,
-          acknowledged: event.acknowledged,
-          correlationKey: event.correlationKey,
-          severity: event.severity,
-          sessionId: event.sessionId,
-        })),
-      },
-      {
-        key: 'event-history',
-        title: 'Historique borne',
-        items: auditView.filteredHistory.slice(0, 6).map(event => ({
-          id: `history-${event.id}`,
-          label: `${formatEventTime(event.lastSeen)} · ${event.category} · severity=${event.severity} · ${event.message} · correlation=${event.correlationKey} · session=${event.sessionId ?? 'runtime-shared'} · ack=${event.acknowledged ? 'yes' : 'no'}`,
-          acknowledged: event.acknowledged,
-          correlationKey: event.correlationKey,
-          severity: event.severity,
-          sessionId: event.sessionId,
-        })),
-      },
-      {
-        key: 'correlation-summary',
-        title: 'Correlation croisee',
-        items: auditView.correlationSummary.length > 0
-          ? auditView.correlationSummary.map(summary => ({
-              id: `correlation-${summary.key}`,
-              label: `${summary.key}: detection=${summary.detectionCount} · confinement=${summary.containmentCount} · open=${summary.openCount} · maxSeverity=${summary.highestSeverity}`,
-              correlationKey: summary.key,
-              severity: summary.highestSeverity,
-            }))
-          : [
-              {
-                id: 'correlation-empty',
-                label: 'Aucune correlation croisee exploitable n est encore disponible sur le journal local.',
-              },
-            ],
-      },
-      {
-        key: 'multi-session-federation',
-        title: 'Federation multi-session',
-        items: auditView.multiSessionFederation.length > 0
-          ? auditView.multiSessionFederation.map(session => ({
-              id: `session-${session.sessionId}`,
-              label: `${session.sessionId}: detection=${session.detectionCount} · confinement=${session.containmentCount} · open=${session.openCount} · maxSeverity=${session.highestSeverity} · lastSeen=${formatEventTime(session.lastSeen)}`,
-              severity: session.highestSeverity,
-              sessionId: session.sessionId,
-            }))
-          : [
-              {
-                id: 'session-empty',
-                label: 'Aucune federation multi-session exploitable n est encore disponible sur le filtre courant.',
-              },
-            ],
-      },
-    ],
-  };
+  return createSecurityActiveAgentStatus(severityFilter, auditView, {
+    transportMode,
+    activeProviders,
+    healthAlertCount: healthAlerts.length,
+    performanceEventCount: performanceEvents.length,
+    predictiveEventCount: predictiveEvents.length,
+    securityLogCount: securityLogs.length,
+    baseEvidence: getAdvancedAgentStatus('security_active').evidence,
+    oneDoorHealthy,
+    exportPayload: lastExport,
+    governedSync: null,
+  });
 }
 
 export function startSecurityActiveAgent() {

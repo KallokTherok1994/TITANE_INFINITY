@@ -327,6 +327,8 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'persistent_memory_archive_entry',
   'persistent_memory_delete_entry',
   'persistent_memory_export',
+  'security_audit_sync_journal',
+  'security_audit_publish_signed_export',
 
   // ═══════════════════════════════════════════════════════════════
   // AI / CHAT COMMANDS

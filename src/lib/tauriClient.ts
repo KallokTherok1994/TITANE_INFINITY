@@ -972,6 +972,18 @@ class TauriClient {
     );
   }
 
+  async securityAuditSyncJournal(params?: unknown): Promise<unknown> {
+    return await this.invoke(TAURI_COMMANDS.SECURITY_AUDIT_SYNC_JOURNAL, {
+      payload: params,
+    });
+  }
+
+  async securityAuditPublishSignedExport(params?: unknown): Promise<unknown> {
+    return await this.invoke(TAURI_COMMANDS.SECURITY_AUDIT_PUBLISH_SIGNED_EXPORT, {
+      payload: params,
+    });
+  }
+
   async engineInit(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.ENGINE_INIT,

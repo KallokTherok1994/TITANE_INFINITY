@@ -1246,7 +1246,7 @@
 | 5 | `repair_get_integrity_map` | Repair get integrity map |
 | 6 | `repair_regenerate_module` | Repair regenerate module |
 
-## Security (9 commandes)
+## Security (11 commandes)
 
 | # | Commande | Description |
 |---|----------|-------------|
@@ -1259,6 +1259,8 @@
 | 7 | `secure_list_files` | Secure list files |
 | 8 | `secure_read_file` | Secure read file |
 | 9 | `validate_tauri_only` | Validate tauri only |
+| 10 | `security_audit_sync_journal` | Sync federated security audit journal into governed app-data storage |
+| 11 | `security_audit_publish_signed_export` | Publish a signed governed export of the security audit journal |
 
 ## Self-Healing (31 commandes)
 

@@ -126,6 +126,8 @@ export const TAURI_COMMANDS = {
   DEVTOOLS_KNN: 'devtools_knn',
   DEVTOOLS_ANALYZE: 'devtools_analyze',
   DEVTOOLS_STATUS: 'devtools_status',
+  SECURITY_AUDIT_SYNC_JOURNAL: 'security_audit_sync_journal',
+  SECURITY_AUDIT_PUBLISH_SIGNED_EXPORT: 'security_audit_publish_signed_export',
   // Developer Mode Commands
   ENGINES_DEVMODE_GET_STATE: 'engines_devmode_get_state',
   ENGINES_DEVMODE_ENABLE: 'engines_devmode_enable',

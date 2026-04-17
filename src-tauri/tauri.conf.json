@@ -398,6 +398,12 @@
               "command": "persistent_memory_export"
             },
             {
+              "command": "security_audit_sync_journal"
+            },
+            {
+              "command": "security_audit_publish_signed_export"
+            },
+            {
               "command": "ai_send_prompt"
             },
             {

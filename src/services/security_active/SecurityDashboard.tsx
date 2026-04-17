@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   acknowledgeSecurityDashboardEvent,
   exportSecurityContainmentCorrelations,
+  getGovernedSecurityAuditSnapshot,
   getLastSecurityContainmentCorrelationExport,
   getSecurityActiveAgentStatus,
   getSecurityDashboardRefreshIntervalMs,
@@ -15,8 +16,16 @@ const SecurityDashboard: React.FC = () => {
   const detailSections = status.detailSections ?? [];
 
   useEffect(() => {
+    const refresh = async () => {
+      const snapshot = await getGovernedSecurityAuditSnapshot(severityFilter);
+      setStatus(snapshot.status);
+      setExportPayload(snapshot.exportPayload);
+    };
+
+    void refresh();
+
     const intervalId = window.setInterval(() => {
-      setStatus(getSecurityActiveAgentStatus(severityFilter));
+      void refresh();
     }, getSecurityDashboardRefreshIntervalMs());
 
     return () => {
@@ -27,16 +36,26 @@ const SecurityDashboard: React.FC = () => {
   const acknowledgeEvent = (eventId: string) => {
     acknowledgeSecurityDashboardEvent(eventId);
     setStatus(getSecurityActiveAgentStatus(severityFilter));
+    void getGovernedSecurityAuditSnapshot(severityFilter).then(snapshot => {
+      setStatus(snapshot.status);
+      setExportPayload(snapshot.exportPayload);
+    });
   };
 
   const setFilter = (nextFilter: SecurityAuditSeverityFilter) => {
     setSeverityFilter(nextFilter);
     setStatus(getSecurityActiveAgentStatus(nextFilter));
+    void getGovernedSecurityAuditSnapshot(nextFilter).then(snapshot => {
+      setStatus(snapshot.status);
+      setExportPayload(snapshot.exportPayload);
+    });
   };
 
-  const exportCorrelations = () => {
-    const payload = exportSecurityContainmentCorrelations(severityFilter);
-    setExportPayload(payload);
+  const exportCorrelations = async () => {
+    const payload = await exportSecurityContainmentCorrelations(severityFilter);
+    const snapshot = await getGovernedSecurityAuditSnapshot(severityFilter);
+    setStatus(snapshot.status);
+    setExportPayload(snapshot.exportPayload ?? payload);
   };
 
   return (
@@ -130,7 +149,9 @@ const SecurityDashboard: React.FC = () => {
         <button
           type="button"
           data-testid="security-dashboard-export-correlations"
-          onClick={exportCorrelations}
+          onClick={() => {
+            void exportCorrelations();
+          }}
           style={{ fontSize: 12, padding: '2px 8px' }}
         >
           Exporter correlations confinement

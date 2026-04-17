@@ -294,6 +294,9 @@ pub mod system;
 pub mod devtools;
 
 #[cfg(all(not(feature = "mock"), feature = "full"))]
+pub mod security_audit_bridge;
+
+#[cfg(all(not(feature = "mock"), feature = "full"))]
 pub mod services;
 
 // ═══════════════════════════════════════════════════════════════

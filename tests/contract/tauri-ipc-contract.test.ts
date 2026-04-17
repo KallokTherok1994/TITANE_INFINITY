@@ -238,6 +238,24 @@ describe('TITANE∞ - IPC Contract Tests', () => {
     expect(ok.args.conversationId).toBe('ok');
   });
 
+  it('should expose security audit bridge commands in Rust and Tauri allowlist', () => {
+    const requiredCommands = [
+      'security_audit_sync_journal',
+      'security_audit_publish_signed_export',
+    ];
+
+    for (const command of requiredCommands) {
+      expect(
+        rustCommands.has(command) || rustNormalized.has(normalize(command)),
+        `Missing Rust IPC command: ${command}`
+      ).toBe(true);
+      expect(
+        allowedCommands.has(command) || allowedNormalized.has(normalize(command)),
+        `Missing Tauri allowlist command: ${command}`
+      ).toBe(true);
+    }
+  });
+
   it('should require args wrapper for conversation_generate', () => {
     expect(() =>
       validateIpcPayload('conversation_generate', {
@@ -245,6 +263,17 @@ describe('TITANE∞ - IPC Contract Tests', () => {
         conversationId: 'flat',
       })
     ).toThrow(/IPC contract error: (Missing required field|Invalid field)[: ]?args/i);
+  });
+
+  it('should expose governed security audit commands canonically', () => {
+    expect(TAURI_COMMANDS.SECURITY_AUDIT_SYNC_JOURNAL).toBe('security_audit_sync_journal');
+    expect(TAURI_COMMANDS.SECURITY_AUDIT_PUBLISH_SIGNED_EXPORT).toBe(
+      'security_audit_publish_signed_export'
+    );
+    expect(allowedCommands.has('security_audit_sync_journal')).toBe(true);
+    expect(allowedCommands.has('security_audit_publish_signed_export')).toBe(true);
+    expect(rustCommands.has('security_audit_sync_journal')).toBe(true);
+    expect(rustCommands.has('security_audit_publish_signed_export')).toBe(true);
   });
 
   // Test de performance du contrat

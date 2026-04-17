@@ -109,20 +109,20 @@ impl CopilotClient {
                     && rate_limit_retries < COPILOT_MAX_RATE_LIMIT_RETRIES
                 {
                     rate_limit_retries = rate_limit_retries.saturating_add(1);
-                    let retry_delay =
-                        compute_rate_limit_retry_delay(&headers, rate_limit_retries);
+                    let retry_delay = compute_rate_limit_retry_delay(&headers, rate_limit_retries);
                     warn!(
                         "Copilot rate limited (status {}). Retrying in {}s (attempt {}/{})",
-                        status,
-                        retry_delay,
-                        rate_limit_retries,
-                        COPILOT_MAX_RATE_LIMIT_RETRIES
+                        status, retry_delay, rate_limit_retries, COPILOT_MAX_RATE_LIMIT_RETRIES
                     );
                     tokio::time::sleep(Duration::from_secs(retry_delay)).await;
                     continue;
                 }
 
-                return Err(classify_copilot_error(status.as_u16(), &headers, &error_body));
+                return Err(classify_copilot_error(
+                    status.as_u16(),
+                    &headers,
+                    &error_body,
+                ));
             }
 
             let copilot_response: CopilotResponse = response.json().await.map_err(|e| {
@@ -230,7 +230,10 @@ fn is_copilot_rate_limited(
 fn build_copilot_rate_limit_message(headers: &header::HeaderMap) -> String {
     match retry_after_seconds(headers) {
         Some(seconds) if seconds > 0 => {
-            format!("Limite de taux Copilot atteinte. Réessayez dans environ {}s.", seconds)
+            format!(
+                "Limite de taux Copilot atteinte. Réessayez dans environ {}s.",
+                seconds
+            )
         }
         _ => COPILOT_RATE_LIMIT_MESSAGE.to_string(),
     }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { describe, expect, it } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import {
   getAdvancedAgentStatus,
   listAdvancedAgentStatuses,
@@ -11,6 +11,7 @@ import DiagnosticDashboard from '@/services/diagnostic/DiagnosticDashboard';
 import ExplainabilityDashboard from '@/services/explainability/ExplainabilityDashboard';
 import OrchestratorDashboard from '@/services/orchestrator/OrchestratorDashboard';
 import SecurityDashboard from '@/services/security_active/SecurityDashboard';
+import { exportSecurityContainmentCorrelations } from '@/services/security_active';
 import { AppShell } from '@/components/layout/AppShell';
 import { uiLogger } from '@/lib/UILogger';
 
@@ -180,7 +181,7 @@ describe('advanced agent dashboards', () => {
     ).toHaveTextContent('Attempts: ollama:success/OK/42ms');
   });
 
-  it('renders acknowledgement, history and correlation on the active security surface', () => {
+  it('renders acknowledgement, history and correlation on the active security surface', async () => {
     const now = Date.now();
     uiLogger.security('Test security alert', { scope: 'dashboard-test' });
     localStorage.setItem(
@@ -233,27 +234,48 @@ describe('advanced agent dashboards', () => {
 
     fireEvent.click(screen.getByTestId('security-dashboard-filter-critical'));
 
-    expect(screen.getByTestId('security-dashboard-filter-critical')).toHaveAttribute(
-      'data-active',
-      'yes'
-    );
-    expect(screen.getByTestId('security-dashboard-severity-filter-summary')).toHaveTextContent(
-      'critical'
-    );
-    expect(screen.getByTestId('security-dashboard-event-history-0')).toHaveTextContent(
-      'severity=critical'
-    );
-    expect(screen.getByTestId('security-dashboard-multi-session-federation')).toHaveTextContent(
-      'session-beta'
+    await waitFor(() => {
+      expect(screen.getByTestId('security-dashboard-filter-critical')).toHaveAttribute(
+        'data-active',
+        'yes'
+      );
+      expect(screen.getByTestId('security-dashboard-severity-filter-summary')).toHaveTextContent(
+        'critical'
+      );
+      expect(screen.getByTestId('security-dashboard-event-history-0')).toHaveTextContent(
+        'severity=critical'
+      );
+      expect(screen.getByTestId('security-dashboard-multi-session-federation')).toHaveTextContent(
+        'session-beta'
+      );
+    });
+
+    expect(screen.getByTestId('security-dashboard-export-correlations')).toBeInTheDocument();
+  });
+
+  it('exports containment correlations for the active security service', async () => {
+    const now = Date.now();
+    localStorage.setItem(
+      'titane_security_dashboard_event_history',
+      JSON.stringify([
+        {
+          id: 'seed-containment-session-beta',
+          category: 'containment',
+          severity: 'critical',
+          source: 'provider-governance',
+          message: 'Provider:beta: active=no · healthy=no · consecutiveFailures=4',
+          correlationKey: 'provider-beta',
+          timestamp: now - 500,
+          lastSeen: now - 500,
+          acknowledged: false,
+          sessionId: 'session-beta',
+        },
+      ])
     );
 
-    fireEvent.click(screen.getByTestId('security-dashboard-export-correlations'));
+    const payload = await exportSecurityContainmentCorrelations('critical');
 
-    expect(
-      screen.getByTestId('security-dashboard-containment-correlation-export')
-    ).toHaveTextContent('"severityFilter": "critical"');
-    expect(
-      screen.getByTestId('security-dashboard-containment-correlation-export')
-    ).toHaveTextContent('"sessionId": "session-beta"');
+    expect(payload).toContain('"severityFilter": "critical"');
+    expect(payload).toContain('"sessionId": "session-beta"');
   });
 });
