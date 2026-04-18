@@ -137,7 +137,7 @@ impl Default for LocalConfig {
     fn default() -> Self {
         Self {
             enabled: true,
-            ollama_url: "http://localhost:11434".to_string(),
+            ollama_url: "http://127.0.0.1:11434".to_string(),
             models: vec![
                 "llama3".to_string(),
                 "mistral".to_string(),

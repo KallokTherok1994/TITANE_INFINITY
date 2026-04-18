@@ -103,7 +103,7 @@ fn initialize_default_apis(state: &ApiBridgeState) {
         "ollama".to_string(),
         ApiConfig {
             name: "ollama".to_string(),
-            base_url: "http://localhost:11434".to_string(),
+            base_url: "http://127.0.0.1:11434".to_string(),
             api_key: None,
             headers: HashMap::new(),
             timeout_ms: 60000,

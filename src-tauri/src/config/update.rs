@@ -218,11 +218,11 @@ fn now_unix_ts_secs() -> u64 {
 }
 
 fn default_ollama_url() -> String {
-    "http://localhost:11434".to_string()
+    "http://127.0.0.1:11434".to_string()
 }
 
 fn default_ollama_model() -> String {
-    "qwen2.5:latest".to_string()
+    "gemma2:2b".to_string()
 }
 
 fn load_runtime_config_from_disk() -> Option<RuntimeConfigDisk> {

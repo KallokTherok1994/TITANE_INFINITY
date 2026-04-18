@@ -1,4 +1,4 @@
-# RELEASE SURFACE INVENTORY — TITANE∞ (Historical baseline v28.5.0 + current addendum v29.0.0)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v30.1.34 — Historical baseline preserved below)
 
 ## Addendum — 2026-04-17 — TITANE∞ v30.1.34 Packaged Runtime Qualification
 

@@ -144,7 +144,7 @@
 
 ## Observed Active Surface in latest desktop proof
 
-## Agents avancés — UI Dashboards (v30.1.8)
+## Agents avancés — UI Dashboards (v30.1.34)
 
 - **Monitoring Agent** : `monitoring-dashboard`
 - **Auto-Diagnostic Agent** : `diagnostic-panel`

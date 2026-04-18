@@ -236,7 +236,7 @@ async fn check_anthropic_connectivity() -> ProviderOnlineStatus {
 
 async fn check_ollama_connectivity() -> ProviderOnlineStatus {
     let mut status =
-        check_provider_connectivity("Ollama (Local)", "http://localhost:11434/api/tags").await;
+        check_provider_connectivity("Ollama (Local)", "http://127.0.0.1:11434/api/tags").await;
     if !status.can_reach {
         status.error = status
             .error

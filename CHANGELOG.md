@@ -14,6 +14,17 @@ All notable changes to this project are documented in this file.
 - Removed lingering V30 metadata drift across runtime/UI surfaces and eliminated the `useChat` `TimeoutNaNWarning` regression with a dedicated test guard.
 - Corrected stale user-facing release guidance that still referenced `v28.0.0` / `v27.0.5` as the current public binary.
 
+## [30.1.34] - 2026-04-17 (Governed Total Correction — Authority Resync)
+
+### Fixed
+
+- Version authority drift: README, ARCHITECTURE.md, CARTOGRAPHY.md, Cargo.toml, runtime/stable/tauri.conf.json, architecture-map.json all aligned to `30.1.34`
+- IPC count drift: ARCHITECTURE.md, architecture-map.json updated from stale `916` to canonical `1135` (source: IPC_CATALOG.md generated 2026-04-11)
+- `safeInvokeCanonical` mermaid annotation in ARCHITECTURE.md corrected to `secureInvoke` (canonical frontend IPC call)
+- Ollama baseline drift: `config/update.rs`, `config_multi.rs`, `api_bridge.rs`, `memory_vectorizer.rs`, `diagnostic_commands.rs` normalized to `127.0.0.1:11434` + `gemma2:2b`
+- CARTOGRAPHY_COMPLETE.md title updated from `v30.1.8` to `v30.1.34`
+- architecture-map.json meta.id, version, generated_at fields updated to current canonical truth
+
 ## [30.0.0] - 2026-04-06 (Major Release — V30 Full Upgrade Cycle)
 
 ### Added
