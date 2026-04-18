@@ -18,6 +18,7 @@
 | [Commandes](./commandes.md) | Référence des commandes de développement |
 | [Workflows](./workflows.md) | Workflows de développement, bugfix, release |
 | [Tests, preuves et gates](./tests-preuves-et-gates.md) | Stratégie de test et gouvernance des gates |
+| [Runbook de verdict](./runbook-verdict.md) | Comment choisir PASS, FAIL, BLOCKED, DONE ou SEALED |
 | [Build, release et rollback](./build-release-et-rollback.md) | Pipeline de build et procédures de rollback |
 | [Observabilité et debug](./observabilite-et-debug.md) | Logs, diagnostics, proof packs |
 | [Conventions](./conventions.md) | Standards de code et documentation |
