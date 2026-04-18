@@ -1,5 +1,7 @@
 # Unreleased
 
+- Fixed: stabilise `security::sandbox::FileImportSandbox::list_files` en triant lexicographiquement les noms retournes, ce qui rend `secure_list_files` deterministe pour un meme contenu de sandbox au lieu de dependre de l ordre variable de `read_dir`.
+
 - Fixed: durcit `security::sandbox::FileImportSandbox::list_files` pour retourner une liste vide quand le dossier sandbox n existe pas encore, ce qui rend `secure_list_files` stable avant tout premier import ou prechauffage explicite du repertoire.
 
 - Fixed: durcit `security::sandbox::FileImportSandbox::import_file` pour creer automatiquement le dossier parent avant ecriture, ce qui rend l import via `secure_import_file` robuste meme sans initialisation prealable explicite de la sandbox.

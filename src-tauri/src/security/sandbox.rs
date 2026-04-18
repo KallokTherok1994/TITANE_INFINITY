@@ -389,6 +389,8 @@ impl FileImportSandbox {
             }
         }
 
+        files.sort();
+
         Ok(files)
     }
 }
@@ -535,6 +537,43 @@ mod tests {
 
         assert_eq!(files.len(), 1);
         assert_eq!(files[0], imported.safe_name);
+
+        fs::remove_dir_all(&sandbox_path)
+            .await
+            .expect("temporary sandbox path should be removable");
+    }
+
+    #[tokio::test]
+    async fn test_list_files_returns_sorted_safe_names() {
+        let unique = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map(|duration| duration.as_nanos())
+            .unwrap_or(0);
+        let sandbox_path = std::env::temp_dir()
+            .join("titane_infinity")
+            .join(format!("sandbox-list-sorted-{}", unique));
+        let sandbox = FileImportSandbox {
+            sandbox_path: sandbox_path.clone(),
+        };
+
+        let first = sandbox
+            .import_file("zeta.txt", b"zeta".to_vec())
+            .await
+            .expect("first import should succeed");
+        let second = sandbox
+            .import_file("alpha.txt", b"alpha".to_vec())
+            .await
+            .expect("second import should succeed");
+
+        let files = sandbox
+            .list_files()
+            .await
+            .expect("list_files should return a deterministic order");
+
+        let mut expected = vec![first.safe_name, second.safe_name];
+        expected.sort();
+
+        assert_eq!(files, expected);
 
         fs::remove_dir_all(&sandbox_path)
             .await
