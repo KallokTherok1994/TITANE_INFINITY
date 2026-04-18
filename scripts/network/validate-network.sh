@@ -14,7 +14,33 @@ echo ""
 PASS=0
 FAIL=0
 LOCAL_IP="$(hostname -I 2>/dev/null | awk '{print $1}' || true)"
-DEV_PORT=5173
+
+detect_dev_port() {
+    local candidates=()
+
+    if [[ -n "${PORT:-}" ]]; then
+        candidates+=("${PORT}")
+    fi
+
+    candidates+=(4000 4001 5173)
+
+    for port in "${candidates[@]}"; do
+        local html
+        html="$(curl -sS --max-time 3 "http://127.0.0.1:${port}" 2>/dev/null || true)"
+        if echo "$html" | grep -qiE '(TITANE_INFINITY|<title>|vite)'; then
+            echo "$port"
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+DEV_PORT="$(detect_dev_port || true)"
+
+if [[ -z "$DEV_PORT" ]]; then
+    DEV_PORT="${PORT:-4000}"
+fi
 
 http_code() {
     local url="$1"

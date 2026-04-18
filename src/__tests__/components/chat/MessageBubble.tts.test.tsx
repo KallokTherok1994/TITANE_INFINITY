@@ -131,4 +131,44 @@ describe('MessageBubble TTS controls', () => {
     expect(screen.getByText('p=2, c≈40')).toBeInTheDocument();
     expect(screen.getByText('accessed: 2026-04-18T10:00:00Z')).toBeInTheDocument();
   });
+
+  it('rend la vérité modèle requested-used-fallback sur la surface de compatibilité', () => {
+    vi.mocked(useMessageSpeechState).mockReturnValue({
+      messageId: 'assistant-7',
+      status: 'idle',
+      provider: null,
+      error: null,
+      supportsPause: true,
+      canPlay: false,
+    });
+
+    render(
+      <MessageBubble
+        role="assistant"
+        content="Compat model truth"
+        timestamp={7}
+        metadata={{
+          providerUsed: 'Ollama (OMEGA+Singularity)',
+          requestedProvider: 'Ollama',
+          modelRequested: 'gemma2:2b',
+          modelUsed: 'llama3.2:latest',
+          fallbackUsed: true,
+        }}
+      />
+    );
+
+    expect(screen.getByTestId('message-provider-badge-7')).toHaveTextContent(
+      'Ollama (OMEGA+Singularity)'
+    );
+    expect(screen.getByTestId('message-provider-mismatch-7')).toBeInTheDocument();
+    expect(screen.getByTestId('message-model-used-7')).toHaveTextContent(
+      'Model: llama3.2:latest'
+    );
+    expect(screen.getByTestId('message-model-requested-7')).toHaveTextContent(
+      'Requested: gemma2:2b'
+    );
+    expect(screen.getByTestId('message-model-fallback-7')).toHaveTextContent(
+      'Fallback'
+    );
+  });
 });

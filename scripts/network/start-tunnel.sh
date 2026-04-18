@@ -19,9 +19,34 @@ echo "🌐 TITANE∞ NETWORK DEV TUNNEL - START"
 echo "======================================"
 echo ""
 
+detect_dev_port() {
+    local candidates=()
+
+    if [[ -n "${PORT:-}" ]]; then
+        candidates+=("${PORT}")
+    fi
+
+    candidates+=(4000 4001 5173)
+
+    for port in "${candidates[@]}"; do
+        local html
+        html="$(curl -sS --max-time 3 "http://127.0.0.1:${port}" 2>/dev/null || true)"
+        if echo "$html" | grep -qiE '(TITANE_INFINITY|<title>|vite)'; then
+            echo "$port"
+            return 0
+        fi
+    done
+
+    return 1
+}
+
 # Get local IP
 LOCAL_IP=$(hostname -I | awk '{print $1}')
-DEV_PORT=5173
+DEV_PORT="$(detect_dev_port || true)"
+
+if [[ -z "$DEV_PORT" ]]; then
+    DEV_PORT="${PORT:-4000}"
+fi
 
 echo "📍 Local IP: $LOCAL_IP"
 echo "🔌 Dev Port: $DEV_PORT"
@@ -31,28 +56,21 @@ echo ""
 if ! curl -s http://localhost:$DEV_PORT > /dev/null 2>&1; then
     echo "⚠️  Vite dev server not detected on port $DEV_PORT"
     echo "💡 Suggested: start web dev server (no Tauri)"
-    echo "   bash ./deploy-http-server-pure.sh"
+    echo "   corepack pnpm exec vite --host 0.0.0.0 --port ${PORT:-4000}"
     echo ""
-
-    if [[ "$AUTO_START_WEB" == "1" ]]; then
-        echo "🚀 Starting web dev server (Vite standalone)..."
-        NON_INTERACTIVE=1 AUTO_KILL_PORT=1 ENABLE_TUNNEL=0 bash ./deploy-http-server-pure.sh >/dev/null 2>&1 || true
-        echo "⏳ Waiting for Vite server..."
-        sleep 4
-    fi
 
     if ! curl -s http://localhost:$DEV_PORT > /dev/null 2>&1; then
         if [[ "$NON_INTERACTIVE" == "1" ]]; then
             echo "❌ Dev server still not running. Start it first:" 
-            echo "   bash ./deploy-http-server-pure.sh"
+            echo "   corepack pnpm exec vite --host 0.0.0.0 --port ${PORT:-4000}"
             exit 1
         fi
 
         read -p "Start web dev server now? (y/n) " -n 1 -r
         echo
         if [[ $REPLY =~ ^[Yy]$ ]]; then
-            echo "🚀 Starting web dev server..."
-            bash ./deploy-http-server-pure.sh
+            echo "❌ Start the server in another terminal first:"
+            echo "   corepack pnpm exec vite --host 0.0.0.0 --port ${PORT:-4000}"
             echo "⏳ Waiting for Vite server..."
             sleep 4
         else

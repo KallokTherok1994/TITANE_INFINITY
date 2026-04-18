@@ -53,7 +53,10 @@ async function setBrowserScaleFactor(page: Page, scale: number): Promise<void> {
 async function openConversationSurface(page: Page): Promise<void> {
   await openTitane(page);
   await closeBootBeaconIfPresent(page);
-  await page.getByTestId('tab-conversation').click({ force: true }).catch(() => undefined);
+  await page
+    .getByTestId('tab-conversation')
+    .click({ force: true })
+    .catch(() => undefined);
   await expect(page.getByTestId('tab-conversation')).toBeVisible({ timeout: 15000 });
   await expect(page.getByTestId('chat-input')).toBeVisible({ timeout: 15000 });
   await expect(page.getByTestId('chat-send')).toBeVisible({ timeout: 15000 });

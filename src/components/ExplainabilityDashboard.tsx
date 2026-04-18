@@ -1,4 +1,4 @@
 export {
-	ExplainabilityDashboard,
-	default,
+  ExplainabilityDashboard,
+  default,
 } from '@/services/explainability/ExplainabilityDashboard';

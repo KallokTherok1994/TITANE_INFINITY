@@ -36,23 +36,34 @@ const OrchestratorDashboard: React.FC = () => {
           <p style={{ margin: 0, fontSize: 12, opacity: 0.8 }}>Agent avance</p>
           <h2 style={{ margin: '4px 0 0', fontSize: 16 }}>{status.title}</h2>
         </div>
-        <strong data-testid="orchestrator-dashboard-status">{status.readinessLabel}</strong>
+        <strong data-testid="orchestrator-dashboard-status">
+          {status.readinessLabel}
+        </strong>
       </header>
       <p data-testid="orchestrator-dashboard-summary" style={{ marginBottom: 10 }}>
         {status.summary}
       </p>
       <p style={{ margin: '0 0 8px', fontSize: 13 }}>{status.serviceState}</p>
-      <p data-testid="orchestrator-dashboard-refresh" style={{ margin: '0 0 8px', fontSize: 12, opacity: 0.8 }}>
+      <p
+        data-testid="orchestrator-dashboard-refresh"
+        style={{ margin: '0 0 8px', fontSize: 12, opacity: 0.8 }}
+      >
         Refresh borne: {Math.round(getOrchestratorDashboardRefreshIntervalMs() / 1000)}s
       </p>
-      <ul data-testid="orchestrator-dashboard-proof-list" style={{ margin: '0 0 8px', paddingLeft: 18 }}>
+      <ul
+        data-testid="orchestrator-dashboard-proof-list"
+        style={{ margin: '0 0 8px', paddingLeft: 18 }}
+      >
         {status.evidence.map((item, index) => (
           <li key={item} data-testid={`orchestrator-dashboard-proof-${index}`}>
             {item}
           </li>
         ))}
       </ul>
-      <ul data-testid="orchestrator-dashboard-blockers" style={{ margin: '0 0 8px', paddingLeft: 18 }}>
+      <ul
+        data-testid="orchestrator-dashboard-blockers"
+        style={{ margin: '0 0 8px', paddingLeft: 18 }}
+      >
         {status.blockers.map(blocker => (
           <li key={blocker}>{blocker}</li>
         ))}
@@ -76,7 +87,10 @@ const OrchestratorDashboard: React.FC = () => {
           </ul>
         </div>
       ))}
-      <p data-testid="orchestrator-dashboard-next-step" style={{ margin: 0, fontSize: 13 }}>
+      <p
+        data-testid="orchestrator-dashboard-next-step"
+        style={{ margin: 0, fontSize: 13 }}
+      >
         {status.nextStep}
       </p>
     </section>

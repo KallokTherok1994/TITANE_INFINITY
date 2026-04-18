@@ -745,8 +745,8 @@ const GitPanel = memo<{ lockState: LockState }>(({ lockState }) => {
       </div>
 
       <p className="total-dev-git-note" data-testid="total-dev-git-readonly-note">
-        Surface Git read-only gouvernee: inspection locale seulement. Les operations d'ecriture
-        git restent hors de ce panneau.
+        Surface Git read-only gouvernee: inspection locale seulement. Les operations
+        d'ecriture git restent hors de ce panneau.
       </p>
 
       {output && (

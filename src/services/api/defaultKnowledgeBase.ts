@@ -618,11 +618,17 @@ function parseKnowledgeBaseEntries(raw: unknown): KnowledgeBaseEntry[] | null {
 
   const runtimePayload = raw as RuntimeKnowledgeBaseSnapshot;
   const runtimeEntries = runtimePayload?.content?.entries;
-  if (runtimeEntries && typeof runtimeEntries === 'object' && !Array.isArray(runtimeEntries)) {
+  if (
+    runtimeEntries &&
+    typeof runtimeEntries === 'object' &&
+    !Array.isArray(runtimeEntries)
+  ) {
     return dedupeKnowledgeBaseEntries(Object.values(runtimeEntries));
   }
 
-  return dedupeKnowledgeBaseEntries(Object.values(raw as Record<string, KnowledgeBaseEntry>));
+  return dedupeKnowledgeBaseEntries(
+    Object.values(raw as Record<string, KnowledgeBaseEntry>)
+  );
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -669,10 +675,10 @@ export async function getAllEntries(): Promise<KnowledgeBaseEntry[]> {
     if (!ipcSucceeded) {
       try {
         const raw = await invokeWithRetry<unknown>(
-        'knowledge_base_get_all',
-        {},
-        { ...FAST_COMMAND_OPTIONS, context: 'DefaultKB' }
-      );
+          'knowledge_base_get_all',
+          {},
+          { ...FAST_COMMAND_OPTIONS, context: 'DefaultKB' }
+        );
         const parsed = parseKnowledgeBaseEntries(raw);
         if (parsed) {
           _allEntriesCache = parsed;
@@ -708,7 +714,9 @@ export async function getAllEntries(): Promise<KnowledgeBaseEntry[]> {
  */
 export async function getCategory(category: string): Promise<KnowledgeBaseEntry | null> {
   const entries = await getAllEntries();
-  return entries.find(entry => entry.category === category || entry.id === category) ?? null;
+  return (
+    entries.find(entry => entry.category === category || entry.id === category) ?? null
+  );
 }
 
 /**

@@ -160,6 +160,33 @@ info() {
     log "${CYAN}${SYM_INFO} $1${NC}"
 }
 
+run_with_heartbeat() {
+    local heartbeat_label="$1"
+    shift
+
+    local heartbeat_interval="${TITANE_BUILD_HEARTBEAT_SEC:-30}"
+
+    "$@" &
+    local command_pid=$!
+
+    while kill -0 "$command_pid" 2>/dev/null; do
+        sleep "$heartbeat_interval"
+
+        if ! kill -0 "$command_pid" 2>/dev/null; then
+            break
+        fi
+
+        local elapsed
+        local cpu
+        elapsed="$(ps -o etime= -p "$command_pid" 2>/dev/null | awk '{$1=$1; print}')"
+        cpu="$(ps -o %cpu= -p "$command_pid" 2>/dev/null | awk '{$1=$1; print}')"
+
+        info "$heartbeat_label still running (pid=$command_pid, elapsed=${elapsed:-unknown}, cpu=${cpu:-unknown}%)"
+    done
+
+    wait "$command_pid"
+}
+
 # ──────────────────────────────────────────────────────────────────────────────
 # SYSTEM HEALTH CHECK
 # ──────────────────────────────────────────────────────────────────────────────
@@ -447,7 +474,8 @@ build() {
     
     if [ "$mode" = "stable" ]; then
         info "Using stable runtime configuration..."
-        pm_exec tauri build --config runtime/stable/tauri.conf.json
+        info "Stable Rust link may stay silent for several minutes with release reproducibility flags; heartbeat enabled every ${TITANE_BUILD_HEARTBEAT_SEC:-30}s"
+        TITANE_SKIP_FRONTEND_BUILD=1 run_with_heartbeat "Stable Tauri build" pm_exec tauri build --config runtime/stable/tauri.conf.json
         
         # Copy to runtime/stable
         print_section "Copying build artifacts..."

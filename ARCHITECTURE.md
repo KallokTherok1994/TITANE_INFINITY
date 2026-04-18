@@ -4,18 +4,13 @@
 
 > 2026-04-18 — Conversation metadata continuity alignment: src-tauri/src/conversation_engine/commands.rs et src/services/conversationEngine.ts partagent maintenant la même vérité de metadata conversation pour provider_used et citations. Le backend sérialise explicitement ces champs dans metadata, la couche frontend sait encore retomber honnêtement sur meta.provider_used et trace.citations pendant une phase transitoire, et src/hooks/useConversationEngine.ts les persiste ensuite sur la surface UI active sans reformulation silencieuse.
 
-
 > 2026-04-18 — Window zoom finite-value truth: `src-tauri/src/commands/window_controls_commands.rs` traite maintenant `window_set_zoom` comme une surface n acceptant que des niveaux de zoom finis. Les valeurs `NaN` ou infinies sont rabattues sur `1.0` avant stockage et emission de l evenement `zoom-change`, ce qui garde la voie CSS frontend sur une echelle canonique et exploitable.
-
 
 > 2026-04-18 — Memory telemetry env-lock truth: `src-tauri/src/memory/telemetry.rs` traite maintenant le mutex de test `ENV_LOCK` comme une barriere de serialisation recuperable et non comme une source de cascade d echecs. Les tests qui partagent l environnement recuperent desormais le guard meme si un test precedent a empoisonne le mutex, ce qui garde la lane telemetry focalisee sur le vrai echec initial.
 
-
 > 2026-04-18 — Telemetry CSV timestamp truth: `src-tauri/src/api/telemetry_api.rs` traite maintenant `parse_csv_line` comme une surface de donnees qui exige un timestamp non vide, et non comme un parseur permissif de colonnes minimales. Les lignes CSV avec colonne `timestamp` vide ou blanche sont rejetees avant toute construction de `ProductionHealthSample`, ce qui garde `parse_and_summarize` aligne sur une verite de telemetry horodatee.
 
-
 > 2026-04-18 — Unified memory tier list-order truth: `src-tauri/src/unified_memory_v2/persistence.rs` traite maintenant `MemoryPersistence::list_tier` comme une surface backend deterministe et non comme un simple reflet de l ordre natif de `read_dir`. Les ids `.json` retournes sont tries avant reponse, ce qui garde `load_tier` et `clear_tier` alignes sur le contenu logique du tier plutot que sur l ordre variable du filesystem.
-
 
 > 2026-04-18 — IO service list-order truth: `src-tauri/src/services/io_service.rs` traite maintenant `IoService::list_dir` comme une surface backend deterministe et non comme un simple reflet de l ordre natif de `read_dir`. Les chemins retournes sont tries avant reponse, ce qui garde les consommateurs runtime alignes sur le contenu logique du repertoire plutot que sur l ordre variable du filesystem.
 
@@ -32,6 +27,14 @@
 > 2026-04-18 — Message control-character truth: `src-tauri/src/security/validation.rs` traite maintenant `InputValidator::validate_message` comme une garde d entree alignee sur `PayloadValidator::validate_string`. Les messages utilisateur/runtime contenant des caracteres de controle interdits sont refuses avant les controles de longueur et de patterns, ce qui garde `commands/chat` et `SecurityManager` sur une verite unique d entree texte.
 
 > 2026-04-18 — Audit logger parent-directory truth: `src-tauri/src/security/audit.rs` traite maintenant la cible de journal d audit comme une sortie persistante qui doit garantir l existence de sa racine avant append. `AuditLogger::log` cree desormais le dossier parent si necessaire, ce qui preserve la preuve runtime produite par `security::commands`, `main`, `ai/ollama` et `overdrive` au lieu d echouer quand la racine de logs n existe pas encore.
+
+> 2026-04-18 — Governance Ollama authority truth: la commande canonique `ai_check_ollama_status` reste l unique porte IPC pour l état Ollama consommé par la gouvernance UI. `src-tauri/src/ai/ollama.rs` résout désormais l URL et le modèle effectifs depuis `runtime_config` (persisté > env > défaut), classe l endpoint en `local_loopback` ou `remote_cloudflare/custom_remote`, et publie cette vérité enrichie jusqu à `src/features/governance-center/hooks/useGovernance.ts` sans nouvelle surface réseau frontend.
+
+> 2026-04-18 — Ollama runtime propagation truth: `src/hooks/useBackendHealth.ts` et `src/pages/ConfigurationHub.tsx` consomment maintenant la même porte IPC `ai_check_ollama_status` pour afficher le statut Ollama hors Governance. La santé backend garde un fallback local provider-only quand Tauri n est pas disponible, mais la classification `endpointKind/endpointSource/networkUsed/health` reste dérivée de la vérité backend dès que cette voie existe.
+
+> 2026-04-18 — Ollama transport health truth: `src/services/ai/transports/ollamaTransport.ts` ne déduit plus la santé d un simple `ping_ollama` suivi d une liste de modèles statique. La couche transport interroge désormais `ai_check_ollama_status` pour récupérer la disponibilité réelle et l inventaire runtime des modèles, ce qui réaligne la chaîne transport -> provider sur la même vérité backend que les surfaces Governance, health et configuration.
+
+> 2026-04-18 — Conversation model truth propagation: la chaîne frontend `conversationEngine -> useConversationEngine -> ConversationSection` relaie maintenant aussi `model_requested`, `model_used` et `fallback_used` issus des métadonnées runtime au lieu de s arrêter à `provider_used`. La surface conversation active peut donc afficher le modèle demandé, le modèle effectivement exécuté et l activation éventuelle d un fallback sans créer un second contrat parallèle à l IPC.
 
 > 2026-04-18 — Audit user-id canonicalization truth: `src-tauri/src/security/audit.rs` traite maintenant `AuditEvent.user_id` comme un identifiant de journal structure gouverne et non comme une chaine libre. `AuditEvent::new` supprime les caracteres de controle, tronque a 128 caracteres et rabat sur `anonymous` quand rien de journalisable ne subsiste, ce qui borne les journaux runtime produits par `security::commands`, `main`, `ai/ollama` et `overdrive` a des identifiants JSON canoniques.
 

@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { classifyMonitorLine, stripAnsi } from '../../../scripts/launch/dev_tauri_monitor_rules.mjs';
+import {
+  classifyMonitorLine,
+  stripAnsi,
+} from '../../../scripts/launch/dev_tauri_monitor_rules.mjs';
 
 describe('dev tauri monitor rules', () => {
   it('ignores cargo compile progress lines even when crate names contain error substrings', () => {
@@ -15,10 +18,12 @@ describe('dev tauri monitor rules', () => {
   });
 
   it('still counts real runtime errors', () => {
-    expect(classifyMonitorLine('error: could not compile titane-infinity')).toMatchObject({
-      ignore: false,
-      isError: true,
-    });
+    expect(classifyMonitorLine('error: could not compile titane-infinity')).toMatchObject(
+      {
+        ignore: false,
+        isError: true,
+      }
+    );
     expect(
       classifyMonitorLine("thread 'main' panicked at src/main.rs:1:1:")
     ).toMatchObject({

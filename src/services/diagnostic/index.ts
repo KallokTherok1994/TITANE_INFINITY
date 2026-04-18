@@ -22,6 +22,15 @@ interface DiagnosticRuntimeReport {
   activeProviders: string[];
 }
 
+type DiagnosticOllamaStats = {
+  errorCount: number;
+  endpointHealthy: boolean | null;
+  config: {
+    model: string;
+    endpoint: string;
+  };
+};
+
 function formatDiagnosticClock(timestamp: number): string {
   return new Date(timestamp).toLocaleTimeString('fr-FR', {
     hour: '2-digit',
@@ -101,7 +110,14 @@ export function getDiagnosticAgentStatus() {
   const base = getAdvancedAgentStatus('diagnostic');
   const globalMetrics = chatMetrics.getGlobalMetrics();
   const activeAlerts = alerting.getActiveAlerts().filter(alert => !alert.resolved);
-  const ollamaStats = ollamaProvider.getStats();
+  const ollamaStats = (ollamaProvider.getStats?.() ?? {
+    errorCount: 0,
+    endpointHealthy: null,
+    config: {
+      model: 'unknown',
+      endpoint: 'unknown',
+    },
+  }) as DiagnosticOllamaStats;
   const activeProviders = getActiveAIProviders();
   const diagnosticSignals = activeAlerts.length + globalMetrics.totalErrors;
   const ollamaHealth =
@@ -156,7 +172,9 @@ export function getDiagnosticAgentStatus() {
           ]
         : base.blockers),
       ...(ollamaStats.errorCount > 0
-        ? [`Le provider Ollama conserve ${ollamaStats.errorCount} erreurs recentes non resolues dans son etat runtime.`]
+        ? [
+            `Le provider Ollama conserve ${ollamaStats.errorCount} erreurs recentes non resolues dans son etat runtime.`,
+          ]
         : []),
       ...(history.length > 0 ? base.blockers : []),
     ],

@@ -8,7 +8,10 @@ describe('Conversation fullscreen shell truth', () => {
       resolve(process.cwd(), 'src/pages/TitanePage-local.css'),
       'utf8'
     );
-    const pageCss = readFileSync(resolve(process.cwd(), 'src/pages/TitanePage.css'), 'utf8');
+    const pageCss = readFileSync(
+      resolve(process.cwd(), 'src/pages/TitanePage.css'),
+      'utf8'
+    );
     const indexCss = readFileSync(resolve(process.cwd(), 'src/index.css'), 'utf8');
     const chatWindowCss = readFileSync(
       resolve(process.cwd(), 'src/components/ChatWindow.css'),
@@ -38,8 +41,12 @@ describe('Conversation fullscreen shell truth', () => {
     expect(pageCss).toContain('flex: 1 1 auto;');
     expect(pageCss).toContain('height: 100%;');
     expect(pageCss).toContain('min-height: 0;');
-    expect(pageCss).not.toContain('height: calc(var(--conversation-vh, 100dvh) - 155px);');
-    expect(pageCss).not.toContain('height: calc(var(--conversation-vh, 100dvh) - 176px);');
+    expect(pageCss).not.toContain(
+      'height: calc(var(--conversation-vh, 100dvh) - 155px);'
+    );
+    expect(pageCss).not.toContain(
+      'height: calc(var(--conversation-vh, 100dvh) - 176px);'
+    );
     expect(pageCss).not.toContain('height: calc(var(--conversation-vh, 100dvh) - 82px);');
     expect(indexCss).toContain('width: 100% !important;');
     expect(indexCss).toContain('max-width: 100% !important;');

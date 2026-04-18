@@ -111,14 +111,22 @@ describe('advancedAgentCatalog', () => {
   it('publishes a bounded structural diagnostic report without duplicating unchanged snapshots', () => {
     const firstStatus = getDiagnosticAgentStatus();
     const secondStatus = getDiagnosticAgentStatus();
-    const firstHistory = firstStatus.detailSections?.find(section => section.key === 'diagnostic-history');
-    const secondHistory = secondStatus.detailSections?.find(section => section.key === 'diagnostic-history');
+    const firstHistory = firstStatus.detailSections?.find(
+      section => section.key === 'diagnostic-history'
+    );
+    const secondHistory = secondStatus.detailSections?.find(
+      section => section.key === 'diagnostic-history'
+    );
 
     expect(firstStatus.serviceState).toContain('rapports bornes');
-    expect(firstStatus.detailSections?.find(section => section.key === 'diagnostic-report')).toBeDefined();
+    expect(
+      firstStatus.detailSections?.find(section => section.key === 'diagnostic-report')
+    ).toBeDefined();
     expect(firstHistory?.items).toHaveLength(1);
     expect(secondHistory?.items).toHaveLength(1);
-    expect(firstStatus.evidence.some(item => item.includes('dernier rapport'))).toBe(true);
+    expect(firstStatus.evidence.some(item => item.includes('dernier rapport'))).toBe(
+      true
+    );
   });
 
   it('publishes a bounded explainability history when multiple runtime traces are observed', () => {
@@ -132,9 +140,14 @@ describe('advancedAgentCatalog', () => {
     );
 
     const firstStatus = getExplainabilityAgentStatus();
-    const firstHistory = firstStatus.detailSections?.find(section => section.key === 'inference-history');
+    const firstHistory = firstStatus.detailSections?.find(
+      section => section.key === 'inference-history'
+    );
 
-    localStorage.setItem('titane_active_conversation_id', SECOND_EXPLAINABILITY_CONVERSATION_ID);
+    localStorage.setItem(
+      'titane_active_conversation_id',
+      SECOND_EXPLAINABILITY_CONVERSATION_ID
+    );
     localStorage.setItem(
       `titane_conversation_${SECOND_EXPLAINABILITY_CONVERSATION_ID}`,
       JSON.stringify({
@@ -177,11 +190,15 @@ describe('advancedAgentCatalog', () => {
     );
 
     const secondStatus = getExplainabilityAgentStatus();
-    const secondHistory = secondStatus.detailSections?.find(section => section.key === 'inference-history');
+    const secondHistory = secondStatus.detailSections?.find(
+      section => section.key === 'inference-history'
+    );
 
     expect(firstHistory?.items).toHaveLength(1);
     expect(secondHistory?.items).toHaveLength(2);
-    expect(secondStatus.evidence.some(item => item.includes('historique local'))).toBe(true);
+    expect(secondStatus.evidence.some(item => item.includes('historique local'))).toBe(
+      true
+    );
   });
 
   it('publishes local multi-session comparison and champion breakdown on orchestrator status', () => {
@@ -249,20 +266,19 @@ describe('advanced agent dashboards', () => {
     uiLogger.clearLogs();
   });
 
-  it.each(cases)('renders $selector with governed status details', ({
-    selector,
-    readiness,
-    Component,
-  }) => {
-    render(<Component />);
+  it.each(cases)(
+    'renders $selector with governed status details',
+    ({ selector, readiness, Component }) => {
+      render(<Component />);
 
-    expect(screen.getByTestId(selector)).toHaveAttribute('data-readiness', readiness);
-    expect(screen.getByTestId(`${selector}-status`)).toBeInTheDocument();
-    expect(screen.getByTestId(`${selector}-summary`)).toBeInTheDocument();
-    expect(screen.getByTestId(`${selector}-proof-0`)).toBeInTheDocument();
-    expect(screen.getByTestId(`${selector}-next-step`)).toBeInTheDocument();
-    expect(screen.getByTestId(`${selector}-blockers`)).toBeInTheDocument();
-  });
+      expect(screen.getByTestId(selector)).toHaveAttribute('data-readiness', readiness);
+      expect(screen.getByTestId(`${selector}-status`)).toBeInTheDocument();
+      expect(screen.getByTestId(`${selector}-summary`)).toBeInTheDocument();
+      expect(screen.getByTestId(`${selector}-proof-0`)).toBeInTheDocument();
+      expect(screen.getByTestId(`${selector}-next-step`)).toBeInTheDocument();
+      expect(screen.getByTestId(`${selector}-blockers`)).toBeInTheDocument();
+    }
+  );
 
   it('mounts the canonical dashboards panel inside AppShell', () => {
     render(
@@ -286,9 +302,15 @@ describe('advanced agent dashboards', () => {
     expect(
       screen.getByTestId('orchestrator-dashboard-provider-snapshots')
     ).toBeInTheDocument();
-    expect(screen.getByTestId('orchestrator-dashboard-live-timeline')).toBeInTheDocument();
-    expect(screen.getByTestId('orchestrator-dashboard-multi-session-compare')).toBeInTheDocument();
-    expect(screen.getByTestId('orchestrator-dashboard-champion-breakdown')).toBeInTheDocument();
+    expect(
+      screen.getByTestId('orchestrator-dashboard-live-timeline')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByTestId('orchestrator-dashboard-multi-session-compare')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByTestId('orchestrator-dashboard-champion-breakdown')
+    ).toBeInTheDocument();
   });
 
   it('renders the requested -> used -> shown chain and inference report from persisted conversation runtime', () => {
@@ -307,7 +329,9 @@ describe('advanced agent dashboards', () => {
     expect(
       screen.getByTestId('explainability-dashboard-inference-report-1')
     ).toHaveTextContent('Attempts: ollama:success/OK/42ms');
-    expect(screen.getByTestId('explainability-dashboard-inference-history')).toBeInTheDocument();
+    expect(
+      screen.getByTestId('explainability-dashboard-inference-history')
+    ).toBeInTheDocument();
   });
 
   it('renders a structural diagnostic report and bounded history on the canonical diagnostic surface', () => {
@@ -359,10 +383,16 @@ describe('advanced agent dashboards', () => {
       'Refresh borne: 10s'
     );
     expect(screen.getByTestId('security-dashboard-detection-events')).toBeInTheDocument();
-    expect(screen.getByTestId('security-dashboard-containment-events')).toBeInTheDocument();
+    expect(
+      screen.getByTestId('security-dashboard-containment-events')
+    ).toBeInTheDocument();
     expect(screen.getByTestId('security-dashboard-event-history')).toBeInTheDocument();
-    expect(screen.getByTestId('security-dashboard-correlation-summary')).toBeInTheDocument();
-    expect(screen.getByTestId('security-dashboard-multi-session-federation')).toBeInTheDocument();
+    expect(
+      screen.getByTestId('security-dashboard-correlation-summary')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByTestId('security-dashboard-multi-session-federation')
+    ).toBeInTheDocument();
     expect(screen.getByTestId('security-dashboard-governed-export')).toBeInTheDocument();
 
     fireEvent.click(screen.getByTestId('security-dashboard-ack-detection-events-0'));
@@ -379,18 +409,20 @@ describe('advanced agent dashboards', () => {
         'data-active',
         'yes'
       );
-      expect(screen.getByTestId('security-dashboard-severity-filter-summary')).toHaveTextContent(
-        'critical'
-      );
+      expect(
+        screen.getByTestId('security-dashboard-severity-filter-summary')
+      ).toHaveTextContent('critical');
       expect(screen.getByTestId('security-dashboard-event-history-0')).toHaveTextContent(
         'severity=critical'
       );
-      expect(screen.getByTestId('security-dashboard-multi-session-federation')).toHaveTextContent(
-        'session-beta'
-      );
+      expect(
+        screen.getByTestId('security-dashboard-multi-session-federation')
+      ).toHaveTextContent('session-beta');
     });
 
-    expect(screen.getByTestId('security-dashboard-export-correlations')).toBeInTheDocument();
+    expect(
+      screen.getByTestId('security-dashboard-export-correlations')
+    ).toBeInTheDocument();
   });
 
   it('exports containment correlations for the active security service', async () => {

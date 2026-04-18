@@ -118,13 +118,15 @@ function useOmegaErrorBoundary() {
         // Alerte UI/log si troncature détectée
         if (safeMessages.length !== (messages?.length || 0)) {
           if (typeof window !== 'undefined') {
-            window.dispatchEvent(new CustomEvent('titane-message-truncated', {
-              detail: {
-                originalCount: messages?.length || 0,
-                safeCount: safeMessages.length,
-                maxLength: maxMessageLength,
-              }
-            }));
+            window.dispatchEvent(
+              new CustomEvent('titane-message-truncated', {
+                detail: {
+                  originalCount: messages?.length || 0,
+                  safeCount: safeMessages.length,
+                  maxLength: maxMessageLength,
+                },
+              })
+            );
           }
           if (isDev) {
             logger.warn('Troncature de message détectée', {

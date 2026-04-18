@@ -21,17 +21,21 @@ describe('ui version truth capture script', () => {
     expect(truthCaptureScript).toContain('## Host Install Truth');
     expect(truthCaptureScript).toContain('## Launcher Truth');
     expect(truthCaptureScript).toContain('## Repo Runtime Truth');
-    expect(truthCaptureScript).toContain("which -a titane-infinity");
+    expect(truthCaptureScript).toContain('which -a titane-infinity');
     expect(truthCaptureScript).toContain('dpkg-query -W');
     expect(truthCaptureScript).toContain("grep -E '^(Name|Exec|Icon|StartupWMClass)='");
   });
 
   it('produces a bisect-friendly markdown snapshot rather than raw shell-only output', () => {
     expect(truthCaptureScript).toContain('# UI VERSION TRUTH SNAPSHOT');
-    expect(truthCaptureScript).toContain("printf 'Version label: %s\\n\\n' \"$VERSION_LABEL\"");
+    expect(truthCaptureScript).toContain(
+      'printf \'Version label: %s\\n\\n\' "$VERSION_LABEL"'
+    );
     expect(truthCaptureScript).toContain('```text');
     expect(truthCaptureScript).toContain("printf '```text\\n%s\\n```\\n\\n'");
     expect(truthCaptureScript).not.toContain('cat > "$OUTPUT_PATH" <<EOF');
-    expect(truthCaptureScript).toContain('Copy the artifact, host, launcher, and repo/runtime findings into the bisect matrix row');
+    expect(truthCaptureScript).toContain(
+      'Copy the artifact, host, launcher, and repo/runtime findings into the bisect matrix row'
+    );
   });
 });

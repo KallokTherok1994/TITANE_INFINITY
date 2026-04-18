@@ -38,13 +38,15 @@ const enableE2EChatMock = async (page: Page) => {
     (
       window as { __TITANE_E2E_CHAT_KNOWLEDGE_SEED__?: E2EChatKnowledgeSeedEntry[] }
     ).__TITANE_E2E_CHAT_KNOWLEDGE_SEED__ = [];
-    (window as { __TITANE_E2E_CHAT_MEMORY_LOG__?: unknown[] }).__TITANE_E2E_CHAT_MEMORY_LOG__ =
-      [];
+    (
+      window as { __TITANE_E2E_CHAT_MEMORY_LOG__?: unknown[] }
+    ).__TITANE_E2E_CHAT_MEMORY_LOG__ = [];
     (
       window as { __TITANE_E2E_CHAT_SCENARIO__?: E2EChatScenario }
     ).__TITANE_E2E_CHAT_SCENARIO__ = 'success';
-    (window as { __TITANE_E2E_WEB_RESEARCH_MOCK__?: boolean }).__TITANE_E2E_WEB_RESEARCH_MOCK__ =
-      false;
+    (
+      window as { __TITANE_E2E_WEB_RESEARCH_MOCK__?: boolean }
+    ).__TITANE_E2E_WEB_RESEARCH_MOCK__ = false;
     (
       window as { __TITANE_E2E_WEB_RESEARCH_REPORT__?: unknown }
     ).__TITANE_E2E_WEB_RESEARCH_REPORT__ = undefined;
@@ -56,8 +58,9 @@ const enableInlineWebResearchMock = async (
   citations: E2EInlineCitation[]
 ) => {
   await page.evaluate(value => {
-    (window as { __TITANE_E2E_WEB_RESEARCH_MOCK__?: boolean }).__TITANE_E2E_WEB_RESEARCH_MOCK__ =
-      true;
+    (
+      window as { __TITANE_E2E_WEB_RESEARCH_MOCK__?: boolean }
+    ).__TITANE_E2E_WEB_RESEARCH_MOCK__ = true;
     (
       window as { __TITANE_E2E_WEB_RESEARCH_REPORT__?: unknown }
     ).__TITANE_E2E_WEB_RESEARCH_REPORT__ = {
@@ -86,16 +89,14 @@ const setE2EChatScenario = async (page: Page, scenario: E2EChatScenario) => {
   }, scenario);
 };
 
-const setE2EChatKnowledgeSeed = async (
-  page: Page,
-  seed: E2EChatKnowledgeSeedEntry[]
-) => {
+const setE2EChatKnowledgeSeed = async (page: Page, seed: E2EChatKnowledgeSeedEntry[]) => {
   await page.evaluate(value => {
     (
       window as { __TITANE_E2E_CHAT_KNOWLEDGE_SEED__?: E2EChatKnowledgeSeedEntry[] }
     ).__TITANE_E2E_CHAT_KNOWLEDGE_SEED__ = value;
-    (window as { __TITANE_E2E_CHAT_MEMORY_LOG__?: unknown[] }).__TITANE_E2E_CHAT_MEMORY_LOG__ =
-      [];
+    (
+      window as { __TITANE_E2E_CHAT_MEMORY_LOG__?: unknown[] }
+    ).__TITANE_E2E_CHAT_MEMORY_LOG__ = [];
   }, seed);
 };
 
@@ -217,7 +218,8 @@ test.describe('Critical Path: Chat Interaction', () => {
       {
         title: 'One Door Governance',
         category: 'architecture',
-        content: 'All network access must flow through UI -> IPC -> services -> gateway -> external.',
+        content:
+          'All network access must flow through UI -> IPC -> services -> gateway -> external.',
         relevance: 0.96,
         tags: ['architecture', 'network'],
       },
@@ -225,7 +227,9 @@ test.describe('Critical Path: Chat Interaction', () => {
 
     await submitChatMessage(page, 'Active la connaissance runtime One Door');
 
-    await expect(page.getByText(/\[MOCK_OK\].*Active la connaissance runtime One Door/s)).toBeVisible({
+    await expect(
+      page.getByText(/\[MOCK_OK\].*Active la connaissance runtime One Door/s)
+    ).toBeVisible({
       timeout: 15000,
     });
     await expect(page.getByText(/\[MOCK_KNOWLEDGE\].*One Door Governance/s)).toBeVisible({
@@ -234,8 +238,8 @@ test.describe('Critical Path: Chat Interaction', () => {
 
     const firstMemoryLog = await page.evaluate(() => {
       return (
-        (window as { __TITANE_E2E_CHAT_MEMORY_LOG__?: unknown[] }).__TITANE_E2E_CHAT_MEMORY_LOG__ ||
-        []
+        (window as { __TITANE_E2E_CHAT_MEMORY_LOG__?: unknown[] })
+          .__TITANE_E2E_CHAT_MEMORY_LOG__ || []
       );
     });
 
@@ -255,8 +259,8 @@ test.describe('Critical Path: Chat Interaction', () => {
 
     const finalMemoryLog = await page.evaluate(() => {
       return (
-        (window as { __TITANE_E2E_CHAT_MEMORY_LOG__?: unknown[] }).__TITANE_E2E_CHAT_MEMORY_LOG__ ||
-        []
+        (window as { __TITANE_E2E_CHAT_MEMORY_LOG__?: unknown[] })
+          .__TITANE_E2E_CHAT_MEMORY_LOG__ || []
       );
     });
 
@@ -291,7 +295,9 @@ test.describe('Critical Path: Chat Interaction', () => {
     await expect(citationsContainer.getByText('Source A')).toBeVisible();
     await expect(citationsContainer.getByText('Extrait gouverné A')).toBeVisible();
     await expect(citationsContainer.getByText('p=2, c≈40')).toBeVisible();
-    await expect(citationsContainer.getByText('accessed: 2026-04-18T10:00:00Z')).toBeVisible();
+    await expect(
+      citationsContainer.getByText('accessed: 2026-04-18T10:00:00Z')
+    ).toBeVisible();
     await expect(citationsContainer.getByText('Source B')).toBeVisible();
   });
 });

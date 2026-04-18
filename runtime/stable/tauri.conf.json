@@ -1,11 +1,11 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0",
   "productName": "Titan-Stable",
-  "version": "30.1.36",
+  "version": "31.0.1",
   "identifier": "com.titane.infinity.stable",
   "build": {
     "beforeDevCommand": "",
-    "beforeBuildCommand": "corepack pnpm exec vite build",
+    "beforeBuildCommand": "bash -lc 'if [[ \"${TITANE_SKIP_FRONTEND_BUILD:-0}\" == \"1\" ]]; then echo \"[tauri.stable] frontend deja prepare — skip beforeBuildCommand\"; exit 0; fi; corepack pnpm exec vite build'",
     "frontendDist": "../dist"
   },
   "bundle": {
@@ -14,6 +14,25 @@
       "appimage",
       "deb"
     ],
+    "linux": {
+      "deb": {
+        "depends": [
+          "libayatana-appindicator3-1",
+          "libwebkit2gtk-4.1-0",
+          "libgtk-3-0"
+        ],
+        "conflicts": [
+          "titane-infinity"
+        ],
+        "replaces": [
+          "titane-infinity"
+        ],
+        "provides": [
+          "titane-infinity"
+        ],
+        "postInstallScript": "../scripts/install/stable-postinst.sh"
+      }
+    },
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -24,14 +43,14 @@
     "resources": [],
     "copyright": "© 2025 TITANE∞",
     "category": "Productivity",
-    "shortDescription": "TITANE∞ v30.1.34 - Cognitive Operating System (Stable Runtime)",
-    "longDescription": "TITANE∞ Stable Runtime v30.1.34 - Your daily cognitive operating system with full OMEGA pipeline, MemoryOS, and multi-dimensional visual engine. Optimized for production use."
+    "shortDescription": "TITANE∞ v31.0.0 - Cognitive Operating System (Stable Runtime)",
+    "longDescription": "TITANE∞ Stable Runtime v31.0.0 - Your daily cognitive operating system with full OMEGA pipeline, MemoryOS, and multi-dimensional visual engine. Optimized for production use."
   },
   "app": {
     "windows": [
       {
         "label": "main",
-        "title": "Titan-Stable v30.1.0 — TITANE∞ Cognitive OS",
+        "title": "Titan-Stable v31.0.0 — TITANE∞ Cognitive OS",
         "width": 1400,
         "height": 900,
         "minWidth": 1200,

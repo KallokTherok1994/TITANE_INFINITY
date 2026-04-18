@@ -23,7 +23,9 @@ export const ExplainabilityDashboard: React.FC = () => {
           <p style={{ margin: 0, fontSize: 12, opacity: 0.8 }}>Agent avance</p>
           <h2 style={{ margin: '4px 0 0', fontSize: 16 }}>{status.title}</h2>
         </div>
-        <strong data-testid="explainability-dashboard-status">{status.readinessLabel}</strong>
+        <strong data-testid="explainability-dashboard-status">
+          {status.readinessLabel}
+        </strong>
       </header>
       <p data-testid="explainability-dashboard-summary" style={{ marginBottom: 10 }}>
         {status.summary}
@@ -66,7 +68,10 @@ export const ExplainabilityDashboard: React.FC = () => {
           </ul>
         </div>
       ))}
-      <p data-testid="explainability-dashboard-next-step" style={{ margin: 0, fontSize: 13 }}>
+      <p
+        data-testid="explainability-dashboard-next-step"
+        style={{ margin: 0, fontSize: 13 }}
+      >
         {status.nextStep}
       </p>
     </section>

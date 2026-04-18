@@ -87,7 +87,10 @@ const getChatInput = (page: Page) =>
 async function openConversationSurface(page: Page): Promise<void> {
   await openTitane(page);
   await closeBootBeaconIfPresent(page);
-  await page.getByTestId('tab-conversation').click({ force: true }).catch(() => undefined);
+  await page
+    .getByTestId('tab-conversation')
+    .click({ force: true })
+    .catch(() => undefined);
   await expect(page.getByTestId('tab-conversation')).toBeVisible({ timeout: 15000 });
   await expect(getChatInput(page)).toBeVisible({ timeout: 15000 });
   await expect(page.getByTestId('chat-send')).toBeVisible({ timeout: 15000 });
@@ -116,7 +119,9 @@ async function measureLayout(page: Page): Promise<LayoutMetrics> {
     };
 
     const container = document.querySelector('.conversation-container');
-    const panelContent = document.querySelector('[data-testid="agent-dashboards-panel-content"]');
+    const panelContent = document.querySelector(
+      '[data-testid="agent-dashboards-panel-content"]'
+    );
     const conversationViewportHeightValue = container
       ? getComputedStyle(container).getPropertyValue('--conversation-vh').trim()
       : '';
@@ -136,7 +141,8 @@ async function measureLayout(page: Page): Promise<LayoutMetrics> {
         scale: window.visualViewport?.scale ?? null,
       },
       devicePixelRatio:
-        typeof window.devicePixelRatio === 'number' && Number.isFinite(window.devicePixelRatio)
+        typeof window.devicePixelRatio === 'number' &&
+        Number.isFinite(window.devicePixelRatio)
           ? window.devicePixelRatio
           : null,
       effectiveViewportHeight: Number.isFinite(effectiveViewportHeight)
@@ -152,7 +158,9 @@ async function measureLayout(page: Page): Promise<LayoutMetrics> {
         '1',
       uiScale:
         document.documentElement.style.getPropertyValue('--titane-ui-scale') ||
-        getComputedStyle(document.documentElement).getPropertyValue('--titane-ui-scale') ||
+        getComputedStyle(document.documentElement).getPropertyValue(
+          '--titane-ui-scale'
+        ) ||
         '1',
       density: container?.getAttribute('data-density') ?? null,
       pageLeft: rectLeft('[data-testid="page-titane"]'),
@@ -247,16 +255,7 @@ function rectsOverlap(params: {
   topB: number | null;
   bottomB: number | null;
 }) {
-  const {
-    leftA,
-    rightA,
-    topA,
-    bottomA,
-    leftB,
-    rightB,
-    topB,
-    bottomB,
-  } = params;
+  const { leftA, rightA, topA, bottomA, leftB, rightB, topB, bottomB } = params;
 
   if (
     leftA === null ||
@@ -343,7 +342,9 @@ test.describe('Critical Path: Chat Layout Viewport', () => {
     }
   });
 
-  test('chat shell remains visible after topnav zoom in and zoom out', async ({ page }) => {
+  test('chat shell remains visible after topnav zoom in and zoom out', async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await openConversationSurface(page);
 

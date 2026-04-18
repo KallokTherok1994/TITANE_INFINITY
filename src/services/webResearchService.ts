@@ -27,7 +27,7 @@ function getWindowRecord(): WindowRecord | null {
     return null;
   }
 
-  return window as WindowRecord;
+  return window as unknown as WindowRecord;
 }
 
 function getE2EWebResearchMockReport(): ResearchReport | null {

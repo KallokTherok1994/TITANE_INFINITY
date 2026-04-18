@@ -82,7 +82,9 @@ function getAgentDashboardsPanelRuntimeState(): {
  * Injecté sur toutes les pages principales TITANE
  */
 const AgentDashboardsPanel: React.FC = () => {
-  const [runtimeState, setRuntimeState] = useState(() => getAgentDashboardsPanelRuntimeState());
+  const [runtimeState, setRuntimeState] = useState(() =>
+    getAgentDashboardsPanelRuntimeState()
+  );
   const [isExpanded, setIsExpanded] = useState(runtimeState.mode === 'default');
 
   useEffect(() => {
@@ -133,7 +135,9 @@ const AgentDashboardsPanel: React.FC = () => {
   }, [runtimeState.mode]);
 
   const panelLabel = useMemo(() => {
-    return isExpanded ? 'Masquer les dashboards agents' : 'Afficher les dashboards agents';
+    return isExpanded
+      ? 'Masquer les dashboards agents'
+      : 'Afficher les dashboards agents';
   }, [isExpanded]);
 
   return (
@@ -145,7 +149,9 @@ const AgentDashboardsPanel: React.FC = () => {
       className={[
         'agent-dashboards-panel',
         runtimeState.mode === 'compact' ? 'agent-dashboards-panel--compact' : '',
-        isExpanded ? 'agent-dashboards-panel--expanded' : 'agent-dashboards-panel--collapsed',
+        isExpanded
+          ? 'agent-dashboards-panel--expanded'
+          : 'agent-dashboards-panel--collapsed',
       ]
         .filter(Boolean)
         .join(' ')}

@@ -1005,6 +1005,36 @@
   border-color: rgba(245, 158, 11, 0.3);
 }
 
+.message-model-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: 8px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  background: rgba(14, 165, 233, 0.12);
+  color: rgba(125, 211, 252, 0.92);
+  border: 1px solid rgba(14, 165, 233, 0.25);
+  vertical-align: middle;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.message-model-badge-requested {
+  background: rgba(217, 70, 239, 0.12);
+  color: rgba(233, 213, 255, 0.92);
+  border-color: rgba(217, 70, 239, 0.25);
+}
+
+.message-model-badge-fallback {
+  background: rgba(245, 158, 11, 0.12);
+  color: rgba(253, 224, 71, 0.95);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
 .message-provider-mismatch-indicator {
   font-size: 9px;
   opacity: 0.8;

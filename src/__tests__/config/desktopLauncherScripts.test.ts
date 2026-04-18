@@ -28,7 +28,9 @@ describe('desktop launcher scripts', () => {
     expect(desktopScript).toContain(
       'rm -f "$DESKTOP_INSTALL_DIR/TITANE-Infinity.desktop"'
     );
-    expect(desktopScript).toContain('SYSTEM_DESKTOP_FILE="$SYSTEM_DESKTOP_DIR/titane-infinity.desktop"');
+    expect(desktopScript).toContain(
+      'SYSTEM_DESKTOP_FILE="$SYSTEM_DESKTOP_DIR/titane-infinity.desktop"'
+    );
     expect(desktopScript).toContain('run_with_root_if_available() {');
     expect(desktopScript).toContain('SYSTEM_SYNC_STATUS="BLOCKED_SUDO_REQUIRED"');
     expect(desktopScript).not.toContain('Exec=$LAUNCHER_SCRIPT');
@@ -50,5 +52,25 @@ describe('desktop launcher scripts', () => {
     expect(postBuildScript).not.toContain('SYSTEM_DESKTOP_DST2=');
     expect(postBuildScript).not.toContain('DESKTOP_SRC1=');
     expect(postBuildScript).toContain('cmp -s "$BIN_SRC" "$BIN_DST"');
+  });
+
+  it('declares stable deb replacement metadata and launcher postinst', () => {
+    const stableTauriConfig = loadScript('runtime/stable/tauri.conf.json');
+    const stablePostInstallScript = loadScript('scripts/install/stable-postinst.sh');
+
+    expect(stableTauriConfig).toContain('"conflicts": ["titane-infinity"]');
+    expect(stableTauriConfig).toContain('"replaces": ["titane-infinity"]');
+    expect(stableTauriConfig).toContain('"provides": ["titane-infinity"]');
+    expect(stableTauriConfig).toContain(
+      '"postInstallScript": "../scripts/install/stable-postinst.sh"'
+    );
+
+    expect(stablePostInstallScript).toContain('PACKAGE_NAME="titan-stable"');
+    expect(stablePostInstallScript).toContain(
+      'CANONICAL_DESKTOP_NAME="titane-infinity.desktop"'
+    );
+    expect(stablePostInstallScript).toContain('Name=TITANE∞ v$package_version');
+    expect(stablePostInstallScript).toContain('Exec=/usr/bin/titane-infinity');
+    expect(stablePostInstallScript).toContain('rm -f "$SYSTEM_LEGACY_DESKTOP_PATH"');
   });
 });

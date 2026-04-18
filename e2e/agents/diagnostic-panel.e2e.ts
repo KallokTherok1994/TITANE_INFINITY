@@ -12,10 +12,7 @@ test('Diagnostic panel visible et selectors présents', async ({ page }) => {
   }
 
   await expect(diagnosticPanel).toBeVisible();
-  await expect(diagnosticPanel).toHaveAttribute(
-    'data-readiness',
-    'partial'
-  );
+  await expect(diagnosticPanel).toHaveAttribute('data-readiness', 'partial');
   await expect(page.getByTestId('diagnostic-panel-status')).toContainText('PARTIAL');
   await expect(page.getByTestId('diagnostic-panel-proof-0')).toBeVisible();
   await expect(page.getByTestId('diagnostic-panel-diagnostic-report')).toBeVisible();

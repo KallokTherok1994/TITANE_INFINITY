@@ -266,7 +266,9 @@ describe('TITANE∞ - IPC Contract Tests', () => {
   });
 
   it('should expose governed security audit commands canonically', () => {
-    expect(TAURI_COMMANDS.SECURITY_AUDIT_SYNC_JOURNAL).toBe('security_audit_sync_journal');
+    expect(TAURI_COMMANDS.SECURITY_AUDIT_SYNC_JOURNAL).toBe(
+      'security_audit_sync_journal'
+    );
     expect(TAURI_COMMANDS.SECURITY_AUDIT_PUBLISH_SIGNED_EXPORT).toBe(
       'security_audit_publish_signed_export'
     );

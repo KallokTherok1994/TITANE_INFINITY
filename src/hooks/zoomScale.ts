@@ -85,7 +85,9 @@ export const readCurrentZoomScale = (): number => {
 
   if (typeof window !== 'undefined' && typeof window.getComputedStyle === 'function') {
     const computedStyle = window.getComputedStyle(root);
-    const computedCssVarScale = parseZoomScale(computedStyle.getPropertyValue(ZOOM_CSS_VAR));
+    const computedCssVarScale = parseZoomScale(
+      computedStyle.getPropertyValue(ZOOM_CSS_VAR)
+    );
     if (computedCssVarScale !== null) {
       return computedCssVarScale;
     }

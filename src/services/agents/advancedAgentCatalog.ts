@@ -16,12 +16,7 @@ export interface AdvancedAgentDetailSection {
 }
 
 export interface AdvancedAgentStatus {
-  id:
-    | 'monitoring'
-    | 'diagnostic'
-    | 'explainability'
-    | 'orchestrator'
-    | 'security_active';
+  id: 'monitoring' | 'diagnostic' | 'explainability' | 'orchestrator' | 'security_active';
   title: string;
   summary: string;
   testId: string;
@@ -123,7 +118,8 @@ const ADVANCED_AGENT_STATUS: Record<AdvancedAgentStatus['id'], AdvancedAgentStat
     testId: 'security-dashboard',
     readiness: 'partial',
     readinessLabel: 'PARTIAL',
-    serviceState: 'Surface de qualification disponible, posture runtime partiellement qualifiée',
+    serviceState:
+      'Surface de qualification disponible, posture runtime partiellement qualifiée',
     evidence: [
       'Dashboard sécurité aligné sur le selector security-dashboard documenté.',
       'Les preuves affichées distinguent la qualification UI des capacités runtime restantes.',

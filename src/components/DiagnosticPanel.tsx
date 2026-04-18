@@ -1,1 +1,4 @@
-export { default, default as DiagnosticPanel } from '@/services/diagnostic/DiagnosticDashboard';
+export {
+  default,
+  default as DiagnosticPanel,
+} from '@/services/diagnostic/DiagnosticDashboard';

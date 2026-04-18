@@ -23,7 +23,9 @@ describe('ui version bisect script', () => {
     expect(bisectScript).toContain('Installed host package truth');
     expect(bisectScript).toContain('Launcher truth');
     expect(bisectScript).toContain('Repo/runtime truth');
-    expect(bisectScript).toContain('| Version | Artifact Truth | Host Truth | Launcher Truth | Repo Runtime Truth |');
+    expect(bisectScript).toContain(
+      '| Version | Artifact Truth | Host Truth | Launcher Truth | Repo Runtime Truth |'
+    );
     expect(bisectScript).toContain('TopNav zoom');
     expect(bisectScript).toContain('Long-message visibility');
     expect(bisectScript).toContain('Return-to-bottom CTA');

@@ -1,5 +1,13 @@
 # OLLAMA RUNTIME MAP — TITANE_INFINITY
 
+> 2026-04-18 — Governance endpoint classification truth: `src-tauri/src/ai/ollama.rs::ai_check_ollama_status` ne se contente plus de répondre `available/models`. La voie canonique résout maintenant `url`, `model`, `endpoint_kind`, `endpoint_source`, `model_source`, `network_used` et `health` depuis `src-tauri/src/runtime_config.rs` avant probe, puis `src/features/governance-center/components/APIProviderCard.tsx` expose cette vérité sur la carte `provider-card-ollama` sans retomber sur le faux alias `/api/ollama`.
+
+> 2026-04-18 — Hook/config propagation truth: la même réponse enrichie `ai_check_ollama_status` alimente désormais `src/hooks/useBackendHealth.ts` et `src/pages/ConfigurationHub.tsx`. Le hook publie `ollamaDetails` pour distinguer loopback vs distant dans les surfaces de dégradation, et ConfigurationHub rend les champs runtime `endpoint/source/model-source/network-used/health` en lecture seule sans maintenir un deuxième modèle de vérité frontend.
+
+> 2026-04-18 — Transport inventory truth: `src/services/ai/transports/ollamaTransport.ts` aligne désormais `ollamaCheckHealth()` sur `ai_check_ollama_status` au lieu de renvoyer un faux inventaire `[gemma2:2b]` après `ping_ollama`. Les providers qui consomment ce transport reçoivent donc la liste réelle des modèles détectés et un statut offline honnête quand le backend déclare un endpoint indisponible.
+
+> 2026-04-18 — Requested-used-shown model truth: la voie conversationnelle active conserve désormais la vérité du modèle au-delà du provider. `src/services/conversationEngine.ts` normalise `model_requested`, `model_used` et `fallback_used`, `src/hooks/useConversationEngine.ts` les persiste sur le message assistant, et `src/components/sections/ConversationSection.tsx` les expose dans le résumé runtime et les badges de la surface canonique `/titane?tab=conversation`.
+
 > 2026-04-17 — Local AI alignment truth: the governed local stack is now normalized on `gemma2:2b` across the frontend provider default, champion/challenger registry, verification scripts, Windows Ollama spin-up proof, and local Cline safeguards. `verify:ollama:cline` is the canonical anti-drift gate for this surface, and no local tooling layer may reintroduce a token/passphrase gate for builds or deploys.
 
 > 2026-04-16 — Backend Ollama canonical loopback truth: `src-tauri/src/overdrive/chat_orchestrator.rs` utilise maintenant `http://127.0.0.1:11434` pour le probe, la génération et le streaming, et le fallback streaming par défaut est réaligné sur `gemma2:2b` afin d'éviter les dérives `localhost`/IPv6 et les écarts de modèle dans les lanes desktop gouvernées.

@@ -77,10 +77,7 @@ test('Security dashboard visible et selectors présents', async ({ page }) => {
   }
 
   await expect(securityDashboard).toBeVisible({ timeout: 30000 });
-  await expect(securityDashboard).toHaveAttribute(
-    'data-readiness',
-    'partial'
-  );
+  await expect(securityDashboard).toHaveAttribute('data-readiness', 'partial');
   await expect(page.getByTestId('security-dashboard-status')).toContainText('PARTIAL');
   await expect(page.getByTestId('security-dashboard-proof-0')).toBeVisible();
   await expect(page.getByTestId('security-dashboard-refresh')).toContainText('10s');
@@ -98,7 +95,9 @@ test('Security dashboard visible et selectors présents', async ({ page }) => {
   await expect(page.getByTestId('security-dashboard-containment-events')).toBeVisible();
   await expect(page.getByTestId('security-dashboard-event-history')).toBeVisible();
   await expect(page.getByTestId('security-dashboard-correlation-summary')).toBeVisible();
-  await expect(page.getByTestId('security-dashboard-multi-session-federation')).toBeVisible();
+  await expect(
+    page.getByTestId('security-dashboard-multi-session-federation')
+  ).toBeVisible();
   await expect(page.getByTestId('security-dashboard-governed-export')).toBeVisible();
   await expect(page.getByTestId('security-dashboard-governed-export-0')).toContainText(
     'exportId=security-audit-seeded-e2e'
@@ -106,9 +105,9 @@ test('Security dashboard visible et selectors présents', async ({ page }) => {
   await expect(page.getByTestId('security-dashboard-governed-export-2')).toContainText(
     'fingerprint=fp-seeded-e2e'
   );
-  await expect(page.getByTestId('security-dashboard-multi-session-federation')).toContainText(
-    'session-beta'
-  );
+  await expect(
+    page.getByTestId('security-dashboard-multi-session-federation')
+  ).toContainText('session-beta');
   await page
     .getByTestId('security-dashboard-filter-critical')
     .evaluate((button: HTMLButtonElement) => button.click());
@@ -116,9 +115,9 @@ test('Security dashboard visible et selectors présents', async ({ page }) => {
     'data-active',
     'yes'
   );
-  await expect(page.getByTestId('security-dashboard-severity-filter-summary')).toContainText(
-    'critical'
-  );
+  await expect(
+    page.getByTestId('security-dashboard-severity-filter-summary')
+  ).toContainText('critical');
   await expect(page.getByTestId('security-dashboard-event-history-0')).toContainText(
     'severity=critical'
   );

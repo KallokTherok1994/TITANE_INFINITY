@@ -1,6 +1,9 @@
 import { isTauriAvailable } from '@/api/tauriClient';
 import { tauriClient } from '@/lib/tauriClient';
-import { getAdvancedAgentStatus } from '@/services/agents/advancedAgentCatalog';
+import {
+  getAdvancedAgentStatus,
+  type AdvancedAgentStatus,
+} from '@/services/agents/advancedAgentCatalog';
 import { FEATURE_FLAGS, getActiveAIProviders } from '@/config/featureFlags';
 import { getTransportMode } from '@/services/ai/transports/ollamaTransport';
 import { aiHealthMonitor } from '@/services/ai/healthMonitor';
@@ -18,6 +21,20 @@ const SECURITY_REFRESH_INTERVAL_MS = 10000;
 type SecurityEventCategory = 'detection' | 'containment';
 type SecurityEventSeverity = 'info' | 'warning' | 'critical';
 export type SecurityAuditSeverityFilter = 'all' | SecurityEventSeverity;
+
+function normalizeSecuritySeverity(
+  severity: string | null | undefined
+): SecurityEventSeverity {
+  if (severity === 'critical') {
+    return 'critical';
+  }
+
+  if (severity === 'warning') {
+    return 'warning';
+  }
+
+  return 'info';
+}
 
 interface SecurityDashboardEvent {
   id: string;
@@ -261,7 +278,9 @@ function matchesSeverityFilter(
   return event.severity === severityFilter;
 }
 
-function getCorrelationSummary(history: SecurityDashboardEvent[]): SecurityCorrelationSummary[] {
+function getCorrelationSummary(
+  history: SecurityDashboardEvent[]
+): SecurityCorrelationSummary[] {
   const groups = new Map<
     string,
     {
@@ -291,18 +310,29 @@ function getCorrelationSummary(history: SecurityDashboardEvent[]): SecurityCorre
       existing.openCount += 1;
     }
 
-    existing.highestSeverity = maxSecuritySeverity(existing.highestSeverity, event.severity);
+    existing.highestSeverity = maxSecuritySeverity(
+      existing.highestSeverity,
+      event.severity
+    );
 
     groups.set(key, existing);
   });
 
   return Array.from(groups.entries())
     .map(([key, value]) => ({ key, ...value }))
-    .sort((left, right) => right.openCount - left.openCount || right.detectionCount + right.containmentCount - (left.detectionCount + left.containmentCount))
+    .sort(
+      (left, right) =>
+        right.openCount - left.openCount ||
+        right.detectionCount +
+          right.containmentCount -
+          (left.detectionCount + left.containmentCount)
+    )
     .slice(0, 4);
 }
 
-function getMultiSessionFederation(history: SecurityDashboardEvent[]): SecuritySessionSummary[] {
+function getMultiSessionFederation(
+  history: SecurityDashboardEvent[]
+): SecuritySessionSummary[] {
   const groups = new Map<string, SecuritySessionSummary>();
 
   history.forEach(event => {
@@ -326,7 +356,10 @@ function getMultiSessionFederation(history: SecurityDashboardEvent[]): SecurityS
       existing.openCount += 1;
     }
 
-    existing.highestSeverity = maxSecuritySeverity(existing.highestSeverity, event.severity);
+    existing.highestSeverity = maxSecuritySeverity(
+      existing.highestSeverity,
+      event.severity
+    );
     existing.lastSeen = Math.max(existing.lastSeen, event.lastSeen);
     groups.set(sessionId, existing);
   });
@@ -343,7 +376,10 @@ function getMultiSessionFederation(history: SecurityDashboardEvent[]): SecurityS
 }
 
 function buildSecurityCorrelationExport(
-  view: Pick<SecurityAuditView, 'correlationSummary' | 'multiSessionFederation' | 'filteredHistory' | 'severityFilter'>
+  view: Pick<
+    SecurityAuditView,
+    'correlationSummary' | 'multiSessionFederation' | 'filteredHistory' | 'severityFilter'
+  >
 ): string {
   return JSON.stringify(
     {
@@ -395,7 +431,9 @@ function buildSecurityAuditViewFromHistory(
   eventHistory: SecurityDashboardEvent[],
   severityFilter: SecurityAuditSeverityFilter
 ): SecurityAuditView {
-  const filteredHistory = eventHistory.filter(event => matchesSeverityFilter(event, severityFilter));
+  const filteredHistory = eventHistory.filter(event =>
+    matchesSeverityFilter(event, severityFilter)
+  );
 
   return {
     eventHistory,
@@ -432,18 +470,20 @@ function unwrapTauriEnvelope<T>(result: T | TauriIpcEnvelope<T>): T {
 function isSecurityAuditSyncContent(value: unknown): value is SecurityAuditSyncContent {
   return Boolean(
     value &&
-      typeof value === 'object' &&
-      Array.isArray((value as SecurityAuditSyncContent).events) &&
-      typeof (value as SecurityAuditSyncContent).storagePath === 'string'
+    typeof value === 'object' &&
+    Array.isArray((value as SecurityAuditSyncContent).events) &&
+    typeof (value as SecurityAuditSyncContent).storagePath === 'string'
   );
 }
 
-function isSecurityAuditPublishedExport(value: unknown): value is SecurityAuditPublishedExport {
+function isSecurityAuditPublishedExport(
+  value: unknown
+): value is SecurityAuditPublishedExport {
   return Boolean(
     value &&
-      typeof value === 'object' &&
-      typeof (value as SecurityAuditPublishedExport).exportId === 'string' &&
-      typeof (value as SecurityAuditPublishedExport).exportPath === 'string'
+    typeof value === 'object' &&
+    typeof (value as SecurityAuditPublishedExport).exportId === 'string' &&
+    typeof (value as SecurityAuditPublishedExport).exportPath === 'string'
   );
 }
 
@@ -587,14 +627,16 @@ function createSecurityActiveAgentStatus(
     exportPayload: string | null;
     governedSync: SecurityAuditSyncContent | null;
   }
-) {
+): AdvancedAgentStatus {
   const base = getAdvancedAgentStatus('security_active');
   const detectionCount =
     options.healthAlertCount +
     options.performanceEventCount +
     options.predictiveEventCount +
     options.securityLogCount;
-  const containmentCount = auditView.eventHistory.filter(event => event.category === 'containment').length;
+  const containmentCount = auditView.eventHistory.filter(
+    event => event.category === 'containment'
+  ).length;
   const governedActive = Boolean(options.governedSync);
   const federationLabel = governedActive
     ? `federation gouvernee ${options.governedSync?.federatedSessionCount ?? auditView.multiSessionFederation.length} sessions via AppData`
@@ -630,12 +672,16 @@ function createSecurityActiveAgentStatus(
     ],
     blockers: [
       ...(governedActive
-        ? ['La preuve desktop installee du lane signe n est pas encore rattachee a cette surface canonique.']
+        ? [
+            'La preuve desktop installee du lane signe n est pas encore rattachee a cette surface canonique.',
+          ]
         : [
             'La federation et l export restent bornes au navigateur courant: aucun backend partage ni signature d audit n est encore branche.',
           ]),
       ...(!options.oneDoorHealthy
-        ? ['Le transport Ollama n est plus sur IPC, ce qui viole la voie canonique UI -> IPC -> services.']
+        ? [
+            'Le transport Ollama n est plus sur IPC, ce qui viole la voie canonique UI -> IPC -> services.',
+          ]
         : []),
     ],
     nextStep: !options.oneDoorHealthy
@@ -694,7 +740,8 @@ function createSecurityActiveAgentStatus(
             : [
                 {
                   id: 'correlation-empty',
-                  label: 'Aucune correlation croisee exploitable n est encore disponible sur le journal local.',
+                  label:
+                    'Aucune correlation croisee exploitable n est encore disponible sur le journal local.',
                 },
               ],
       },
@@ -712,7 +759,8 @@ function createSecurityActiveAgentStatus(
             : [
                 {
                   id: 'session-empty',
-                  label: 'Aucune federation multi-session exploitable n est encore disponible sur le filtre courant.',
+                  label:
+                    'Aucune federation multi-session exploitable n est encore disponible sur le filtre courant.',
                 },
               ],
       },
@@ -741,7 +789,8 @@ function createSecurityActiveAgentStatus(
           : [
               {
                 id: 'governed-export-empty',
-                label: 'Aucun export gouverne signe n est encore disponible sur cette surface.',
+                label:
+                  'Aucun export gouverne signe n est encore disponible sur cette surface.',
               },
             ],
       },
@@ -804,7 +853,10 @@ export async function getGovernedSecurityAuditSnapshot(
     }),
     exportPayload:
       governedSync?.lastPublishedExport && exportPayload
-        ? buildGovernedSecurityExportPayload(exportPayload, governedSync.lastPublishedExport)
+        ? buildGovernedSecurityExportPayload(
+            exportPayload,
+            governedSync.lastPublishedExport
+          )
         : exportPayload,
   };
 }
@@ -868,7 +920,10 @@ async function publishSecurityContainmentCorrelations(
       return localPayload;
     }
 
-    const governedPayload = buildGovernedSecurityExportPayload(localPayload, publishedExport);
+    const governedPayload = buildGovernedSecurityExportPayload(
+      localPayload,
+      publishedExport
+    );
     saveSecurityCorrelationExport(governedPayload);
     return governedPayload;
   } catch {
@@ -906,7 +961,7 @@ function collectCurrentSecurityEvents(): SecurityDashboardEvent[] {
     ...healthAlerts.map(alert => ({
       id: `health-${alert.id}`,
       category: 'detection' as const,
-      severity: alert.severity === 'critical' ? 'critical' : alert.severity === 'warning' ? 'warning' : 'info',
+      severity: normalizeSecuritySeverity(alert.severity),
       source: 'health',
       message: `Health:${alert.severity}:${alert.title}`,
       correlationKey: alert.component,
@@ -918,7 +973,7 @@ function collectCurrentSecurityEvents(): SecurityDashboardEvent[] {
     ...performanceEvents.map(alert => ({
       id: `performance-${alert.id}`,
       category: 'detection' as const,
-      severity: alert.severity === 'critical' ? 'critical' : alert.severity === 'warning' ? 'warning' : 'info',
+      severity: normalizeSecuritySeverity(alert.severity),
       source: 'performance',
       message: `Perf:${alert.severity}:${alert.metricName}:${alert.message}`,
       correlationKey: alert.metricName,
@@ -930,7 +985,7 @@ function collectCurrentSecurityEvents(): SecurityDashboardEvent[] {
     ...predictiveEvents.map(alert => ({
       id: `predictive-${alert.id}`,
       category: 'detection' as const,
-      severity: alert.severity === 'critical' ? 'critical' : 'warning',
+      severity: normalizeSecuritySeverity(alert.severity),
       source: 'predictive',
       message: `Predictive:${alert.severity}:${alert.service}/${alert.metric}`,
       correlationKey: alert.service,
@@ -942,7 +997,7 @@ function collectCurrentSecurityEvents(): SecurityDashboardEvent[] {
     {
       id: `containment-transport-${transportMode.toUpperCase()}`,
       category: 'containment' as const,
-      severity: oneDoorHealthy ? 'info' as const : 'critical' as const,
+      severity: oneDoorHealthy ? ('info' as const) : ('critical' as const),
       source: 'transport',
       message: `Transport gate: ${oneDoorHealthy ? 'IPC enforced' : 'IPC violation detected'}`,
       correlationKey: 'transport',
@@ -954,7 +1009,9 @@ function collectCurrentSecurityEvents(): SecurityDashboardEvent[] {
     {
       id: `containment-external-${FEATURE_FLAGS.ENABLE_EXTERNAL_AI ? 'enabled' : 'confined'}`,
       category: 'containment' as const,
-      severity: FEATURE_FLAGS.ENABLE_EXTERNAL_AI ? 'warning' as const : 'info' as const,
+      severity: FEATURE_FLAGS.ENABLE_EXTERNAL_AI
+        ? ('warning' as const)
+        : ('info' as const),
       source: 'policy',
       message: `External AI: ${FEATURE_FLAGS.ENABLE_EXTERNAL_AI ? 'enabled' : 'confined'}`,
       correlationKey: 'external-ai',
@@ -966,7 +1023,7 @@ function collectCurrentSecurityEvents(): SecurityDashboardEvent[] {
     {
       id: `containment-local-${FEATURE_FLAGS.ENABLE_LOCAL_LLM ? 'enabled' : 'disabled'}`,
       category: 'containment' as const,
-      severity: FEATURE_FLAGS.ENABLE_LOCAL_LLM ? 'info' as const : 'warning' as const,
+      severity: FEATURE_FLAGS.ENABLE_LOCAL_LLM ? ('info' as const) : ('warning' as const),
       source: 'policy',
       message: `Local LLM: ${FEATURE_FLAGS.ENABLE_LOCAL_LLM ? 'enabled' : 'disabled'}`,
       correlationKey: 'local-llm',
@@ -978,7 +1035,7 @@ function collectCurrentSecurityEvents(): SecurityDashboardEvent[] {
     ...containmentProviders.map(provider => ({
       id: `containment-provider-${provider.id}-${provider.isActive ? 'active' : 'inactive'}-${provider.isHealthy ? 'healthy' : 'degraded'}`,
       category: 'containment' as const,
-      severity: provider.isHealthy ? 'warning' as const : 'critical' as const,
+      severity: provider.isHealthy ? ('warning' as const) : ('critical' as const),
       source: 'provider-governance',
       message: `Provider:${provider.id}: active=${provider.isActive ? 'yes' : 'no'} · healthy=${provider.isHealthy ? 'yes' : 'no'} · consecutiveFailures=${provider.consecutiveFailures}`,
       correlationKey: provider.id,
@@ -1000,7 +1057,10 @@ export function getSecurityActiveAgentStatus(
   const predictiveEvents = PredictiveAlerts.getAlerts('high').slice(0, 3);
   const securityLogs = uiLogger.getLogs({ level: 'security', limit: 12 });
   const oneDoorHealthy = transportMode.toUpperCase() === 'IPC';
-  const auditView = buildSecurityAuditView(collectCurrentSecurityEvents(), severityFilter);
+  const auditView = buildSecurityAuditView(
+    collectCurrentSecurityEvents(),
+    severityFilter
+  );
   const lastExport = loadSecurityCorrelationExport();
   return createSecurityActiveAgentStatus(severityFilter, auditView, {
     transportMode,

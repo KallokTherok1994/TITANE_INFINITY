@@ -5,7 +5,10 @@ import { closeBootBeaconIfPresent } from '../helpers/navigation';
 test('Explainability dashboard visible et selectors présents', async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.setItem('omega-chat-preferred-provider', 'ollama');
-    window.localStorage.setItem('titane_active_conversation_id', 'conv-explainability-e2e');
+    window.localStorage.setItem(
+      'titane_active_conversation_id',
+      'conv-explainability-e2e'
+    );
     window.localStorage.setItem(
       'titane_conversation_conv-explainability-e2e',
       JSON.stringify({
@@ -60,23 +63,26 @@ test('Explainability dashboard visible et selectors présents', async ({ page })
   }
 
   await expect(explainabilityDashboard).toBeVisible();
-  await expect(explainabilityDashboard).toHaveAttribute(
-    'data-readiness',
-    'partial'
-  );
+  await expect(explainabilityDashboard).toHaveAttribute('data-readiness', 'partial');
   await expect(page.getByTestId('explainability-dashboard-status')).toContainText(
     'PARTIAL'
   );
   await expect(page.getByTestId('explainability-dashboard-proof-0')).toBeVisible();
-  await expect(page.getByTestId('explainability-dashboard-inference-chain')).toBeVisible();
-  await expect(page.getByTestId('explainability-dashboard-inference-chain-1')).toContainText(
-    'Used: Ollama'
-  );
-  await expect(page.getByTestId('explainability-dashboard-inference-report')).toBeVisible();
-  await expect(page.getByTestId('explainability-dashboard-inference-history')).toBeVisible();
-  await expect(page.getByTestId('explainability-dashboard-inference-history-0')).toContainText(
-    'requested=Ollama'
-  );
+  await expect(
+    page.getByTestId('explainability-dashboard-inference-chain')
+  ).toBeVisible();
+  await expect(
+    page.getByTestId('explainability-dashboard-inference-chain-1')
+  ).toContainText('Used: Ollama');
+  await expect(
+    page.getByTestId('explainability-dashboard-inference-report')
+  ).toBeVisible();
+  await expect(
+    page.getByTestId('explainability-dashboard-inference-history')
+  ).toBeVisible();
+  await expect(
+    page.getByTestId('explainability-dashboard-inference-history-0')
+  ).toContainText('requested=Ollama');
   await expect(page.getByTestId('explainability-dashboard-next-step')).toContainText(
     'historique horodate'
   );

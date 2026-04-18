@@ -93,7 +93,10 @@ function loadOrchestratorSessionSnapshots(): OrchestratorSessionSnapshot[] {
     }
 
     return parsed.filter(
-      point => point && typeof point.timestamp === 'number' && typeof point.sessionId === 'string'
+      point =>
+        point &&
+        typeof point.timestamp === 'number' &&
+        typeof point.sessionId === 'string'
     );
   } catch {
     return [];
@@ -116,7 +119,9 @@ function updateOrchestratorSessionSnapshots(
 ): OrchestratorSessionSnapshot[] {
   const now = Date.now();
   const oneDayAgo = now - 24 * 60 * 60 * 1000;
-  const history = loadOrchestratorSessionSnapshots().filter(entry => entry.timestamp >= oneDayAgo);
+  const history = loadOrchestratorSessionSnapshots().filter(
+    entry => entry.timestamp >= oneDayAgo
+  );
   const bySession = new Map(history.map(entry => [entry.sessionId, entry]));
   bySession.set(snapshot.sessionId, snapshot);
 
@@ -218,11 +223,15 @@ export function getOrchestratorAgentStatus() {
   const autoHealStats = autoHealEngine.getStats();
   const providerSnapshots = governance
     .getAllProviders()
-    .filter(provider => provider.isActive || provider.id === 'local' || provider.id === 'tauri');
+    .filter(
+      provider => provider.isActive || provider.id === 'local' || provider.id === 'tauri'
+    );
   const localChampionCount = Object.values(registry.champions).filter(
     champion => champion.provider === 'ollama'
   ).length;
-  const healthyProviders = providerSnapshots.filter(provider => provider.isHealthy).length;
+  const healthyProviders = providerSnapshots.filter(
+    provider => provider.isHealthy
+  ).length;
   const currentSnapshot: OrchestratorTimelinePoint = {
     timestamp: Date.now(),
     totalRequests: metrics.totalRequests,
@@ -324,7 +333,8 @@ export function getOrchestratorAgentStatus() {
             : [
                 {
                   id: 'champion-breakdown-empty',
-                  label: 'Aucune ventilation champion/challenger exploitable n est encore disponible.',
+                  label:
+                    'Aucune ventilation champion/challenger exploitable n est encore disponible.',
                 },
               ],
       },

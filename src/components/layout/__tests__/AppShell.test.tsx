@@ -18,6 +18,8 @@ describe('AppShell fullscreen shell', () => {
     const shellStyle = shell?.getAttribute('style') ?? '';
 
     expect(shellStyle).toBe('');
-    expect(main).toHaveStyle({ paddingTop: 'calc(4rem + env(safe-area-inset-top, 0px))' });
+    expect(main).toHaveStyle({
+      paddingTop: 'calc(4rem + env(safe-area-inset-top, 0px))',
+    });
   });
 });

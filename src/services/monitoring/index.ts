@@ -72,10 +72,10 @@ export function getMonitoringAgentStatus() {
             'Le lazy loader monitoring a bien ete demande au boot canonique, mais il n est pas encore initialise sur cette session runtime.',
             ...base.blockers,
           ]
-      : [
-          'Le lazy loader monitoring n est pas encore initialise sur cette session runtime.',
-          ...base.blockers,
-        ],
+        : [
+            'Le lazy loader monitoring n est pas encore initialise sur cette session runtime.',
+            ...base.blockers,
+          ],
     nextStep: monitoringLoaded
       ? 'Connecter le flux live des metriques et alertes puis publier les metriques live dans le dashboard canonique.'
       : loaderState.requestSource === 'boot'

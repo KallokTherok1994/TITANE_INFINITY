@@ -10,9 +10,12 @@ import {
 } from './index';
 
 const SecurityDashboard: React.FC = () => {
-  const [severityFilter, setSeverityFilter] = useState<SecurityAuditSeverityFilter>('all');
+  const [severityFilter, setSeverityFilter] =
+    useState<SecurityAuditSeverityFilter>('all');
   const [status, setStatus] = useState(() => getSecurityActiveAgentStatus('all'));
-  const [exportPayload, setExportPayload] = useState(() => getLastSecurityContainmentCorrelationExport());
+  const [exportPayload, setExportPayload] = useState(() =>
+    getLastSecurityContainmentCorrelationExport()
+  );
   const detailSections = status.detailSections ?? [];
 
   useEffect(() => {
@@ -82,10 +85,16 @@ const SecurityDashboard: React.FC = () => {
         {status.summary}
       </p>
       <p style={{ margin: '0 0 8px', fontSize: 13 }}>{status.serviceState}</p>
-      <p data-testid="security-dashboard-refresh" style={{ margin: '0 0 8px', fontSize: 12, opacity: 0.8 }}>
+      <p
+        data-testid="security-dashboard-refresh"
+        style={{ margin: '0 0 8px', fontSize: 12, opacity: 0.8 }}
+      >
         Refresh borne: {Math.round(getSecurityDashboardRefreshIntervalMs() / 1000)}s
       </p>
-      <div data-testid="security-dashboard-severity-filters" style={{ display: 'flex', gap: 6, flexWrap: 'wrap', margin: '0 0 8px' }}>
+      <div
+        data-testid="security-dashboard-severity-filters"
+        style={{ display: 'flex', gap: 6, flexWrap: 'wrap', margin: '0 0 8px' }}
+      >
         {(['all', 'critical', 'warning', 'info'] as const).map(filter => (
           <button
             key={filter}
@@ -99,17 +108,26 @@ const SecurityDashboard: React.FC = () => {
           </button>
         ))}
       </div>
-      <p data-testid="security-dashboard-severity-filter-summary" style={{ margin: '0 0 8px', fontSize: 12, opacity: 0.8 }}>
+      <p
+        data-testid="security-dashboard-severity-filter-summary"
+        style={{ margin: '0 0 8px', fontSize: 12, opacity: 0.8 }}
+      >
         Filtre severite actif: {severityFilter}
       </p>
-      <ul data-testid="security-dashboard-proof-list" style={{ margin: '0 0 8px', paddingLeft: 18 }}>
+      <ul
+        data-testid="security-dashboard-proof-list"
+        style={{ margin: '0 0 8px', paddingLeft: 18 }}
+      >
         {status.evidence.map((item, index) => (
           <li key={item} data-testid={`security-dashboard-proof-${index}`}>
             {item}
           </li>
         ))}
       </ul>
-      <ul data-testid="security-dashboard-blockers" style={{ margin: '0 0 8px', paddingLeft: 18 }}>
+      <ul
+        data-testid="security-dashboard-blockers"
+        style={{ margin: '0 0 8px', paddingLeft: 18 }}
+      >
         {status.blockers.map(blocker => (
           <li key={blocker}>{blocker}</li>
         ))}
@@ -129,7 +147,8 @@ const SecurityDashboard: React.FC = () => {
                 data-acknowledged={item.acknowledged ? 'yes' : 'no'}
               >
                 <span>{item.label}</span>
-                {(section.key === 'detection-events' || section.key === 'containment-events') &&
+                {(section.key === 'detection-events' ||
+                  section.key === 'containment-events') &&
                 !item.acknowledged ? (
                   <button
                     type="button"
@@ -159,9 +178,16 @@ const SecurityDashboard: React.FC = () => {
       </div>
       <pre
         data-testid="security-dashboard-containment-correlation-export"
-        style={{ margin: '0 0 8px', whiteSpace: 'pre-wrap', fontSize: 11, maxHeight: 160, overflow: 'auto' }}
+        style={{
+          margin: '0 0 8px',
+          whiteSpace: 'pre-wrap',
+          fontSize: 11,
+          maxHeight: 160,
+          overflow: 'auto',
+        }}
       >
-        {exportPayload ?? 'Aucun export de correlation n a encore ete genere sur cette surface.'}
+        {exportPayload ??
+          'Aucun export de correlation n a encore ete genere sur cette surface.'}
       </pre>
       <p data-testid="security-dashboard-next-step" style={{ margin: 0, fontSize: 13 }}>
         {status.nextStep}

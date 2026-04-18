@@ -28,14 +28,20 @@ const MonitoringDashboard: React.FC = () => {
         {status.summary}
       </p>
       <p style={{ margin: '0 0 8px', fontSize: 13 }}>{status.serviceState}</p>
-      <ul data-testid="monitoring-dashboard-proof-list" style={{ margin: '0 0 8px', paddingLeft: 18 }}>
+      <ul
+        data-testid="monitoring-dashboard-proof-list"
+        style={{ margin: '0 0 8px', paddingLeft: 18 }}
+      >
         {status.evidence.map((item, index) => (
           <li key={item} data-testid={`monitoring-dashboard-proof-${index}`}>
             {item}
           </li>
         ))}
       </ul>
-      <ul data-testid="monitoring-dashboard-blockers" style={{ margin: '0 0 8px', paddingLeft: 18 }}>
+      <ul
+        data-testid="monitoring-dashboard-blockers"
+        style={{ margin: '0 0 8px', paddingLeft: 18 }}
+      >
         {status.blockers.map(blocker => (
           <li key={blocker}>{blocker}</li>
         ))}

@@ -4,6 +4,33 @@
 
 set -e
 
+run_with_heartbeat() {
+    local heartbeat_label="$1"
+    shift
+
+    local heartbeat_interval="${TITANE_BUILD_HEARTBEAT_SEC:-30}"
+
+    "$@" &
+    local command_pid=$!
+
+    while kill -0 "$command_pid" 2>/dev/null; do
+        sleep "$heartbeat_interval"
+
+        if ! kill -0 "$command_pid" 2>/dev/null; then
+            break
+        fi
+
+        local elapsed
+        local cpu
+        elapsed="$(ps -o etime= -p "$command_pid" 2>/dev/null | awk '{$1=$1; print}')"
+        cpu="$(ps -o %cpu= -p "$command_pid" 2>/dev/null | awk '{$1=$1; print}')"
+
+        echo "ℹ️  ${heartbeat_label} still running (pid=${command_pid}, elapsed=${elapsed:-unknown}, cpu=${cpu:-unknown}%)"
+    done
+
+    wait "$command_pid"
+}
+
 echo "🔵 TITANE∞ — Building STABLE RUNTIME"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
@@ -105,20 +132,21 @@ fi
 # Build Tauri app (production)
 echo ""
 echo "🦀 Building Tauri app (production)..."
+echo "ℹ️  Stable Rust link may stay silent for several minutes with release reproducibility flags; heartbeat enabled every ${TITANE_BUILD_HEARTBEAT_SEC:-30}s"
 if node -e "const p=require('./package.json'); process.exit(p.scripts && p.scripts.tauri ? 0 : 1)"; then
     if command -v corepack >/dev/null 2>&1; then
-        corepack pnpm run tauri build --config runtime/stable/tauri.conf.json
+        TITANE_SKIP_FRONTEND_BUILD=1 run_with_heartbeat "Stable Tauri build" corepack pnpm run tauri build --config runtime/stable/tauri.conf.json
     elif command -v pnpm >/dev/null 2>&1; then
-        pnpm run tauri build --config runtime/stable/tauri.conf.json
+        TITANE_SKIP_FRONTEND_BUILD=1 run_with_heartbeat "Stable Tauri build" pnpm run tauri build --config runtime/stable/tauri.conf.json
     else
         echo "❌ pnpm requis mais introuvable (corepack/pnpm)."
         exit 1
     fi
 else
     if command -v corepack >/dev/null 2>&1; then
-        corepack pnpm exec tauri build --config runtime/stable/tauri.conf.json
+        TITANE_SKIP_FRONTEND_BUILD=1 run_with_heartbeat "Stable Tauri build" corepack pnpm exec tauri build --config runtime/stable/tauri.conf.json
     elif command -v pnpm >/dev/null 2>&1; then
-        pnpm exec tauri build --config runtime/stable/tauri.conf.json
+        TITANE_SKIP_FRONTEND_BUILD=1 run_with_heartbeat "Stable Tauri build" pnpm exec tauri build --config runtime/stable/tauri.conf.json
     else
         echo "❌ pnpm requis mais introuvable (corepack/pnpm)."
         exit 1

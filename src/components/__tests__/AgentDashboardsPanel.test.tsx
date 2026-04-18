@@ -76,7 +76,9 @@ describe('AgentDashboardsPanel', () => {
       'data-expanded',
       'false'
     );
-    expect(screen.getByTestId('agent-dashboards-panel-content')).toHaveAttribute('hidden');
+    expect(screen.getByTestId('agent-dashboards-panel-content')).toHaveAttribute(
+      'hidden'
+    );
 
     fireEvent.click(screen.getByTestId('agent-dashboards-panel-toggle'));
 

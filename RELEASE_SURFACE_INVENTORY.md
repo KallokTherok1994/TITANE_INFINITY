@@ -1,22 +1,22 @@
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v30.1.36 — Historical baseline preserved below)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.0.1 — Historical baseline preserved below)
 
-## Addendum — 2026-04-18 — TITANE∞ v30.1.36 Source Version Surface Sync
+## Addendum — 2026-04-18 — TITANE∞ v31.0.1 Source Version Surface Sync
 
-Canonical target version: **30.1.36**
+Canonical target version: **31.0.1**
 
 | File / Surface | Version | Status |
 |---|---|---|
-| `package.json` | `30.1.36` | UPDATED_TO_30_1_36 |
-| `src-tauri/Cargo.toml` | `30.1.36` | UPDATED_TO_30_1_36 |
-| `src-tauri/Cargo.lock` | `30.1.36` | UPDATED_TO_30_1_36 |
-| `src-tauri/tauri.conf.json` | `30.1.36` | UPDATED_TO_30_1_36 |
-| `src-tauri/tauri.base.json` | `30.1.36` | UPDATED_TO_30_1_36 |
-| `tauri.base.json` | `30.1.36` | UPDATED_TO_30_1_36 |
-| `runtime/stable/tauri.conf.json` | `30.1.36` | UPDATED_TO_30_1_36 |
-| `runtime/stable/manifest.json` | `30.1.36` | UPDATED_TO_30_1_36 |
-| `RELEASE_SURFACE_INVENTORY.md` | `30.1.36` | UPDATED_TO_30_1_36 |
+| `package.json` | `31.0.1` | UPDATED_TO_31_0_1 |
+| `src-tauri/Cargo.toml` | `31.0.1` | UPDATED_TO_31_0_1 |
+| `src-tauri/Cargo.lock` | `31.0.1` | PENDING_BUILD_SYNC |
+| `src-tauri/tauri.conf.json` | `31.0.1` | UPDATED_TO_31_0_1 |
+| `src-tauri/tauri.base.json` | `31.0.1` | UPDATED_TO_31_0_1 |
+| `tauri.base.json` | `31.0.1` | UPDATED_TO_31_0_1 |
+| `runtime/stable/tauri.conf.json` | `31.0.1` | UPDATED_TO_31_0_1 |
+| `runtime/stable/manifest.json` | `31.0.1` | UPDATED_TO_31_0_1 |
+| `RELEASE_SURFACE_INVENTORY.md` | `31.0.1` | UPDATED_TO_31_0_1 |
 
-> This lot qualifies source version surfaces only. No new packaged artifact, launcher, or installed-host truth is claimed here; the last packaged runtime qualification remains the v30.1.34 addendum below until a governed build revalidates artifacts and host sync.
+> This addendum reopens source-version sync so the embedded conversation proof can be rebuilt against the current chat/journal fixes instead of a stale release binary. No packaged artifact, launcher, or installed-host truth is claimed until the governed rebuild and rerun complete.
 
 ## Addendum — 2026-04-17 — TITANE∞ v30.1.34 Packaged Runtime Qualification
 

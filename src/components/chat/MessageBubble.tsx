@@ -69,6 +69,19 @@ const AUTHOR_NAMES: Record<MessageBubbleProps['role'], string> = {
   assistant: 'TITANE∞',
 };
 
+const readMetadataString = (
+  metadata: Record<string, unknown> | undefined,
+  key: string
+): string | null => {
+  const value = metadata?.[key];
+  return typeof value === 'string' && value.trim() ? value.trim() : null;
+};
+
+const readMetadataBoolean = (
+  metadata: Record<string, unknown> | undefined,
+  key: string
+): boolean => metadata?.[key] === true;
+
 const getSpeechStatusLabel = (
   status: MessageSpeechStatus,
   provider: 'tauri' | 'webspeech' | null,
@@ -201,6 +214,18 @@ export const MessageBubble = memo(function MessageBubble({
     const raw = metadata?.citations;
     return Array.isArray(raw) ? raw.filter(isCitation) : [];
   }, [metadata]);
+  const providerUsed = readMetadataString(metadata, 'providerUsed');
+  const requestedProvider = readMetadataString(metadata, 'requestedProvider');
+  const providerMismatch =
+    requestedProvider !== null &&
+    requestedProvider !== 'auto' &&
+    providerUsed !== null &&
+    providerUsed !== requestedProvider;
+  const modelRequested = readMetadataString(metadata, 'modelRequested');
+  const modelUsed = readMetadataString(metadata, 'modelUsed');
+  const fallbackUsed = readMetadataBoolean(metadata, 'fallbackUsed');
+  const shouldShowRequestedModel =
+    modelRequested !== null && modelRequested !== modelUsed;
 
   // Memoize les classes CSS
   const bubbleClasses = useMemo(
@@ -310,33 +335,55 @@ export const MessageBubble = memo(function MessageBubble({
             </span>
           )}
           {/* LOCK1 — PROVIDER_DISPLAY_TRUTH: actual provider from backend, not localStorage */}
-          {role === 'assistant' && typeof metadata?.providerUsed === 'string' && (
+          {role === 'assistant' && providerUsed && (
             <span
-              className={`message-provider-badge${
-                typeof metadata.requestedProvider === 'string' &&
-                metadata.requestedProvider !== 'auto' &&
-                metadata.providerUsed !== metadata.requestedProvider
-                  ? ' message-provider-badge-mismatch'
-                  : ''
-              }`}
+              className={`message-provider-badge${providerMismatch ? ' message-provider-badge-mismatch' : ''}`}
               data-testid={`message-provider-badge-${timestamp}`}
-              title={`Fournisseur réel: ${metadata.providerUsed}`}
-              aria-label={`Fournisseur utilisé: ${metadata.providerUsed as string}`}
+              title={`Fournisseur réel: ${providerUsed}`}
+              aria-label={`Fournisseur utilisé: ${providerUsed}`}
             >
-              {metadata.providerUsed as string}
-              {typeof metadata.requestedProvider === 'string' &&
-                metadata.requestedProvider !== 'auto' &&
-                metadata.providerUsed !== metadata.requestedProvider && (
+              {providerUsed}
+              {providerMismatch && (
                   <span
                     className="message-provider-mismatch-indicator"
                     data-testid={`message-provider-mismatch-${timestamp}`}
-                    title={`Demandé: ${metadata.requestedProvider}, fallback: ${metadata.providerUsed as string}`}
-                    aria-label={`Avertissement: demandé ${metadata.requestedProvider}, utilisé ${metadata.providerUsed as string}`}
+                    title={`Demandé: ${requestedProvider}, fallback: ${providerUsed}`}
+                    aria-label={`Avertissement: demandé ${requestedProvider}, utilisé ${providerUsed}`}
                   >
                     {' '}
                     ⚠
                   </span>
                 )}
+            </span>
+          )}
+          {role === 'assistant' && modelUsed && (
+            <span
+              className="message-model-badge"
+              data-testid={`message-model-used-${timestamp}`}
+              title={`Modèle exécuté: ${modelUsed}`}
+              aria-label={`Modèle utilisé: ${modelUsed}`}
+            >
+              {`Model: ${modelUsed}`}
+            </span>
+          )}
+          {role === 'assistant' && shouldShowRequestedModel && modelRequested && (
+            <span
+              className="message-model-badge message-model-badge-requested"
+              data-testid={`message-model-requested-${timestamp}`}
+              title={`Modèle demandé: ${modelRequested}`}
+              aria-label={`Modèle demandé: ${modelRequested}`}
+            >
+              {`Requested: ${modelRequested}`}
+            </span>
+          )}
+          {role === 'assistant' && fallbackUsed && (
+            <span
+              className="message-model-badge message-model-badge-fallback"
+              data-testid={`message-model-fallback-${timestamp}`}
+              title="Fallback modèle actif"
+              aria-label="Fallback modèle actif"
+            >
+              Fallback
             </span>
           )}
         </div>

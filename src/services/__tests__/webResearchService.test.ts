@@ -45,7 +45,10 @@ describe('webResearchService', () => {
     windowRecord.__TITANE_E2E_WEB_RESEARCH_REPORT__ = mockReport;
 
     const { webResearch } = await import('../webResearchService');
-    const result = await webResearch({ question: 'recherche web test' }, { mode: 'WEB_LIVE' });
+    const result = await webResearch(
+      { question: 'recherche web test' },
+      { mode: 'WEB_LIVE' }
+    );
 
     expect(result).toEqual(mockReport);
     expect(tauriMock).not.toHaveBeenCalled();
@@ -70,7 +73,10 @@ describe('webResearchService', () => {
     tauriMock.mockResolvedValueOnce(ipcReport);
 
     const { webResearch } = await import('../webResearchService');
-    const result = await webResearch({ question: 'recherche web test' }, { mode: 'WEB_LIVE' });
+    const result = await webResearch(
+      { question: 'recherche web test' },
+      { mode: 'WEB_LIVE' }
+    );
 
     expect(tauriMock).toHaveBeenCalledWith('web_research', {
       query: { question: 'recherche web test' },

@@ -44,7 +44,10 @@ function normalizeProviderMeta(raw: unknown): ProviderDecisionMeta | null {
   }
 
   const candidate = raw as ProviderDecisionMeta;
-  if (typeof candidate.provider_used !== 'string' || typeof candidate.reason_code !== 'string') {
+  if (
+    typeof candidate.provider_used !== 'string' ||
+    typeof candidate.reason_code !== 'string'
+  ) {
     return null;
   }
 
@@ -81,7 +84,9 @@ function loadExplainabilityTraceHistory(): ExplainabilityTraceHistoryEntry[] {
   }
 }
 
-function saveExplainabilityTraceHistory(history: ExplainabilityTraceHistoryEntry[]): void {
+function saveExplainabilityTraceHistory(
+  history: ExplainabilityTraceHistoryEntry[]
+): void {
   if (typeof window === 'undefined') {
     return;
   }
@@ -156,7 +161,9 @@ function getLatestExplainabilityTrace(): {
   }
 
   const requestedPrefix =
-    requestedProvider !== providerMeta.provider_used ? `Requested: ${requestedProvider} | ` : '';
+    requestedProvider !== providerMeta.provider_used
+      ? `Requested: ${requestedProvider} | `
+      : '';
 
   return {
     activeConversationId,
@@ -172,7 +179,21 @@ function getLatestExplainabilityTrace(): {
 export function getExplainabilityAgentStatus() {
   const base = getAdvancedAgentStatus('explainability');
   const registry = loadRegistry();
-  const ollamaStats = ollamaProvider.getStats();
+  const ollamaStats = (ollamaProvider.getStats?.() ?? {
+    errorCount: 0,
+    endpointHealthy: null,
+    config: {
+      model: 'unknown',
+      endpoint: 'unknown',
+    },
+  }) as {
+    errorCount: number;
+    endpointHealthy: boolean | null;
+    config: {
+      model: string;
+      endpoint: string;
+    };
+  };
   const latestTrace = getLatestExplainabilityTrace();
   const canonicalModel = ollamaStats.config.model;
   const championModels = Object.values(registry.champions)
@@ -213,8 +234,12 @@ export function getExplainabilityAgentStatus() {
     ],
     blockers: [
       ...(latestTrace.providerMeta
-        ? ['La surface publie maintenant un historique local horodate, mais aucun export gouverne multi-session n est encore disponible.']
-        : ['Aucune trace assistant persistée avec providerMeta n est encore disponible sur la conversation active.']),
+        ? [
+            'La surface publie maintenant un historique local horodate, mais aucun export gouverne multi-session n est encore disponible.',
+          ]
+        : [
+            'Aucune trace assistant persistée avec providerMeta n est encore disponible sur la conversation active.',
+          ]),
       ...(!registryAligned
         ? [
             `Le registre champion/challenger n est pas aligne sur le modele local canonique ${canonicalModel}.`,
@@ -264,7 +289,8 @@ export function getExplainabilityAgentStatus() {
           : [
               {
                 id: 'inference-report-empty',
-                label: 'Aucun rapport d inference persiste: la conversation active n expose pas encore de providerMeta assistant.',
+                label:
+                  'Aucun rapport d inference persiste: la conversation active n expose pas encore de providerMeta assistant.',
               },
             ],
       },
@@ -283,7 +309,8 @@ export function getExplainabilityAgentStatus() {
             : [
                 {
                   id: 'inference-history-empty',
-                  label: 'Aucun historique horodate n est encore disponible sur la conversation active.',
+                  label:
+                    'Aucun historique horodate n est encore disponible sur la conversation active.',
                 },
               ],
       },

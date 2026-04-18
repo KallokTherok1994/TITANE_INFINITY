@@ -48,7 +48,9 @@ describe('useWindowControls Hook', () => {
       });
 
       expect(result.current.zoomIn).toBeDefined();
-      expect(document.documentElement.style.getPropertyValue('--titane-ui-scale')).toBe('1.1');
+      expect(document.documentElement.style.getPropertyValue('--titane-ui-scale')).toBe(
+        '1.1'
+      );
       expect(document.documentElement.style.fontSize).toBe('17.6px');
     });
 
@@ -66,7 +68,9 @@ describe('useWindowControls Hook', () => {
         );
       });
 
-      expect(document.documentElement.style.getPropertyValue('--titane-ui-scale')).toBe('1.1');
+      expect(document.documentElement.style.getPropertyValue('--titane-ui-scale')).toBe(
+        '1.1'
+      );
       expect(document.documentElement.style.fontSize).toBe('17.6px');
     });
 
@@ -78,7 +82,9 @@ describe('useWindowControls Hook', () => {
       });
 
       expect(result.current.zoomOut).toBeDefined();
-      expect(document.documentElement.style.getPropertyValue('--titane-ui-scale')).toBe('0.9');
+      expect(document.documentElement.style.getPropertyValue('--titane-ui-scale')).toBe(
+        '0.9'
+      );
       expect(document.documentElement.style.fontSize).toBe('14.4px');
     });
 
@@ -90,7 +96,9 @@ describe('useWindowControls Hook', () => {
       });
 
       expect(result.current.zoomReset).toBeDefined();
-      expect(document.documentElement.style.getPropertyValue('--titane-ui-scale')).toBe('1');
+      expect(document.documentElement.style.getPropertyValue('--titane-ui-scale')).toBe(
+        '1'
+      );
       expect(document.documentElement.style.fontSize).toBe('16px');
     });
   });

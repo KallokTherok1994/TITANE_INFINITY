@@ -25,7 +25,8 @@ export const LoggingProvider: React.FC<LoggingProviderProps> = ({
   const value = useMemo<LoggingContextValue>(
     () => ({
       logger: rootLogger,
-      createModuleLogger: createModuleLogger ?? ((moduleName: string) => createLogger(moduleName)),
+      createModuleLogger:
+        createModuleLogger ?? ((moduleName: string) => createLogger(moduleName)),
     }),
     [createModuleLogger, rootLogger]
   );

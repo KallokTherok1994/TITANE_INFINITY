@@ -32,21 +32,26 @@ test('Orchestrator dashboard visible et selectors présents', async ({ page }) =
   }
 
   await expect(orchestratorDashboard).toBeVisible();
-  await expect(orchestratorDashboard).toHaveAttribute(
-    'data-readiness',
-    'partial'
+  await expect(orchestratorDashboard).toHaveAttribute('data-readiness', 'partial');
+  await expect(page.getByTestId('orchestrator-dashboard-status')).toContainText(
+    'PARTIAL'
   );
-  await expect(page.getByTestId('orchestrator-dashboard-status')).toContainText('PARTIAL');
   await expect(page.getByTestId('orchestrator-dashboard-proof-0')).toBeVisible();
   await expect(page.getByTestId('orchestrator-dashboard-refresh')).toContainText('15s');
   await expect(page.getByTestId('orchestrator-dashboard-live-metrics')).toBeVisible();
-  await expect(page.getByTestId('orchestrator-dashboard-provider-snapshots')).toBeVisible();
+  await expect(
+    page.getByTestId('orchestrator-dashboard-provider-snapshots')
+  ).toBeVisible();
   await expect(page.getByTestId('orchestrator-dashboard-live-timeline')).toBeVisible();
-  await expect(page.getByTestId('orchestrator-dashboard-multi-session-compare')).toBeVisible();
-  await expect(page.getByTestId('orchestrator-dashboard-champion-breakdown')).toBeVisible();
-  await expect(page.getByTestId('orchestrator-dashboard-champion-breakdown-0')).toContainText(
-    'champion='
-  );
+  await expect(
+    page.getByTestId('orchestrator-dashboard-multi-session-compare')
+  ).toBeVisible();
+  await expect(
+    page.getByTestId('orchestrator-dashboard-champion-breakdown')
+  ).toBeVisible();
+  await expect(
+    page.getByTestId('orchestrator-dashboard-champion-breakdown-0')
+  ).toContainText('champion=');
   await expect(page.getByTestId('orchestrator-dashboard-next-step')).toContainText(
     'multi-session'
   );

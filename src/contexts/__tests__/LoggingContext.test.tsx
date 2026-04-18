@@ -59,6 +59,8 @@ describe('LoggingContext', () => {
       return null;
     };
 
-    expect(() => render(<Probe />)).toThrow('useLogging must be used within LoggingProvider');
+    expect(() => render(<Probe />)).toThrow(
+      'useLogging must be used within LoggingProvider'
+    );
   });
 });

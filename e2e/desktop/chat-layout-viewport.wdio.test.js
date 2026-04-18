@@ -69,35 +69,40 @@ async function loadCanonicalConversationSurface() {
 
   for (const url of candidates) {
     await browser.url(url).catch(() => {});
-    const visible = await browser.waitUntil(
-      async () => {
-        return browser.execute(() => {
-          return Boolean(
-            document.querySelector('[data-testid="nav-top-main"]') ||
+    const visible = await browser
+      .waitUntil(
+        async () => {
+          return browser.execute(() => {
+            return Boolean(
+              document.querySelector('[data-testid="nav-top-main"]') ||
               document.querySelector('[data-testid="page-titane"]') ||
               document.querySelector('[data-testid="chat-input"]')
-          );
-        });
-      },
-      {
-        timeout: 5000,
-        interval: 200,
-        timeoutMsg: `surface not ready for ${url}`,
-      }
-    ).catch(() => false);
+            );
+          });
+        },
+        {
+          timeout: 5000,
+          interval: 200,
+          timeoutMsg: `surface not ready for ${url}`,
+        }
+      )
+      .catch(() => false);
 
     if (!visible) {
       continue;
     }
 
     const resolved = await browser.execute(() => window.location.href || '');
-    report.sourceMode = devServerUrl && resolved.startsWith(devServerUrl) ? 'dev-server' : 'embedded';
+    report.sourceMode =
+      devServerUrl && resolved.startsWith(devServerUrl) ? 'dev-server' : 'embedded';
     report.loadedUrl = resolved;
     await persistReport();
     return;
   }
 
-  throw new Error(`unable to load conversation surface from candidates: ${candidates.join(', ')}`);
+  throw new Error(
+    `unable to load conversation surface from candidates: ${candidates.join(', ')}`
+  );
 }
 
 async function ensureConversationSurface() {
@@ -195,7 +200,9 @@ async function measureLayout(label) {
       };
     };
 
-    const panelContent = document.querySelector('[data-testid="agent-dashboards-panel-content"]');
+    const panelContent = document.querySelector(
+      '[data-testid="agent-dashboards-panel-content"]'
+    );
 
     const container = document.querySelector('.conversation-container');
     const conversationViewportHeightValue = container
@@ -218,7 +225,8 @@ async function measureLayout(label) {
         scale: window.visualViewport?.scale ?? null,
       },
       devicePixelRatio:
-        typeof window.devicePixelRatio === 'number' && Number.isFinite(window.devicePixelRatio)
+        typeof window.devicePixelRatio === 'number' &&
+        Number.isFinite(window.devicePixelRatio)
           ? window.devicePixelRatio
           : null,
       effectiveViewportHeight: Number.isFinite(effectiveViewportHeight)
@@ -234,7 +242,9 @@ async function measureLayout(label) {
         '1',
       uiScale:
         document.documentElement.style.getPropertyValue('--titane-ui-scale') ||
-        getComputedStyle(document.documentElement).getPropertyValue('--titane-ui-scale') ||
+        getComputedStyle(document.documentElement).getPropertyValue(
+          '--titane-ui-scale'
+        ) ||
         '1',
       density: container?.getAttribute('data-density') ?? null,
       page: rectBottom('[data-testid="page-titane"]'),
@@ -279,12 +289,22 @@ function assertPanelDoesNotOccludeComposer(metrics) {
   }
 
   assert.equal(
-    rectsOverlap(metrics.panel, metrics.panelHorizontal, metrics.input, metrics.inputHorizontal),
+    rectsOverlap(
+      metrics.panel,
+      metrics.panelHorizontal,
+      metrics.input,
+      metrics.inputHorizontal
+    ),
     false,
     `${metrics.label}: agent dashboards panel overlaps chat input`
   );
   assert.equal(
-    rectsOverlap(metrics.panel, metrics.panelHorizontal, metrics.send, metrics.sendHorizontal),
+    rectsOverlap(
+      metrics.panel,
+      metrics.panelHorizontal,
+      metrics.send,
+      metrics.sendHorizontal
+    ),
     false,
     `${metrics.label}: agent dashboards panel overlaps send button`
   );
@@ -383,7 +403,11 @@ describe('Desktop (Tauri) chat layout viewport truth', () => {
 
     await clickZoom('topnav-zoom-out');
     const zoomReset = await measureLayout('desktop-zoom-reset');
-    assert.equal(Number(zoomReset.uiScale), 1, 'topnav zoom-out did not reset to baseline');
+    assert.equal(
+      Number(zoomReset.uiScale),
+      1,
+      'topnav zoom-out did not reset to baseline'
+    );
     assertVisibleBounds(zoomReset);
     assertConversationViewportVariable(zoomReset);
     assertPanelDoesNotOccludeComposer(zoomReset);
