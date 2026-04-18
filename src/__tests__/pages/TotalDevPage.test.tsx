@@ -122,4 +122,43 @@ describe('TotalDevPage', () => {
       })
     );
   });
+
+  it('exposes a read-only git panel and removes write actions', async () => {
+    secureInvokeMock
+      .mockResolvedValueOnce({
+        lock_state: 'UNLOCKED',
+        expires_at_unix: 1712271600,
+        now_unix: 1712268000,
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        content: 'On branch MAIN\n',
+        exit_code: 0,
+        op: 'status',
+      });
+
+    await act(async () => {
+      renderTotalDevPage();
+    });
+
+    await act(async () => {
+      fireEvent.click(await screen.findByTestId('total-dev-tab-git'));
+    });
+
+    expect(await screen.findByTestId('total-dev-git-readonly-note')).toHaveTextContent(
+      /read-only gouvernee/i
+    );
+    expect(screen.queryByRole('button', { name: /git add/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /commit/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /push head/i })).not.toBeInTheDocument();
+
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('total-dev-git-status'));
+    });
+
+    expect(secureInvokeMock).toHaveBeenNthCalledWith(2, TAURI_COMMANDS.TOTAL_DEV_GIT_OP, {
+      op: 'status',
+      args: [],
+    });
+  });
 });

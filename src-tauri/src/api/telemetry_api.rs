@@ -6,6 +6,7 @@
  */
 use serde::{Deserialize, Serialize};
 use std::fs;
+use std::path::Path;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -47,6 +48,34 @@ fn csv_path() -> std::path::PathBuf {
     std::env::temp_dir().join(CSV_FILENAME)
 }
 
+fn validate_csv_source_path(path: &Path) -> Result<(), String> {
+    let metadata = fs::symlink_metadata(path)
+        .map_err(|e| format!("SOURCE_INVALID: impossible d'inspecter la source CSV: {}", e))?;
+
+    if metadata.file_type().is_symlink() {
+        return Err(format!(
+            "SOURCE_INVALID: {} doit etre un fichier CSV local, pas un lien symbolique",
+            path.display()
+        ));
+    }
+
+    if !metadata.is_file() {
+        return Err(format!(
+            "SOURCE_INVALID: {} doit etre un fichier CSV regulier",
+            path.display()
+        ));
+    }
+
+    if metadata.len() as usize > MAX_CSV_SIZE {
+        return Err(format!(
+            "SOURCE_INVALID: fichier CSV trop volumineux ({} octets)",
+            metadata.len()
+        ));
+    }
+
+    Ok(())
+}
+
 #[tauri::command]
 pub async fn read_production_week1_csv() -> Result<ProductionHealthSummary, String> {
     let path = csv_path();
@@ -57,6 +86,8 @@ pub async fn read_production_week1_csv() -> Result<ProductionHealthSummary, Stri
             path.display()
         ));
     }
+
+    validate_csv_source_path(&path)?;
 
     let content = fs::read_to_string(&path).map_err(|e| format!("Failed to read CSV: {}", e))?;
 
@@ -187,6 +218,7 @@ fn compute_status(rss_mb: f64, growth_percent: f64) -> &'static str {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use tempfile::tempdir;
 
     fn make_line(timestamp: &str, rss_init: f64, rss_cur: f64) -> String {
         format!("{},{},{}", timestamp, rss_init, rss_cur)
@@ -323,5 +355,32 @@ mod tests {
     #[test]
     fn test_compute_status_red() {
         assert_eq!(compute_status(250.0, 5.0), "RED");
+    }
+
+    #[test]
+    fn test_validate_csv_source_path_rejects_directory() {
+        let dir = tempdir().expect("tempdir");
+        let err = validate_csv_source_path(dir.path())
+            .expect_err("directories must be rejected as telemetry CSV sources");
+
+        assert!(err.starts_with("SOURCE_INVALID"));
+        assert!(err.contains("fichier CSV regulier"));
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn test_validate_csv_source_path_rejects_symlink() {
+        let dir = tempdir().expect("tempdir");
+        let target = dir.path().join("real.csv");
+        let symlink = dir.path().join("linked.csv");
+        std::fs::write(&target, b"timestamp,rss_initial_mb,rss_current_mb\n2026-01-01T00:00:00Z,180.0,192.0\n")
+            .expect("write target csv");
+        std::os::unix::fs::symlink(&target, &symlink).expect("create symlink");
+
+        let err = validate_csv_source_path(&symlink)
+            .expect_err("symlinked telemetry CSV must be rejected");
+
+        assert!(err.starts_with("SOURCE_INVALID"));
+        assert!(err.contains("lien symbolique"));
     }
 }

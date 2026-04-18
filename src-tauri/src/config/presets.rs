@@ -14,6 +14,17 @@ use tauri::{AppHandle, Manager};
 
 use super::ConfigSnapshot;
 
+fn validate_preset_name(name: &str) -> Result<(), String> {
+    if name.is_empty() {
+        return Err("Nom du preset vide".to_string());
+    }
+    if name.contains('/') || name.contains('\\') {
+        return Err("Nom invalide (pas de chemins)".to_string());
+    }
+
+    Ok(())
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ConfigPreset {
     pub name: String,
@@ -37,12 +48,7 @@ pub async fn save_config_preset(
     log::info!("💾 [PRESETS] Saving config preset: {}", name);
 
     // Validate name
-    if name.is_empty() {
-        return Err("Nom du preset vide".to_string());
-    }
-    if name.contains('/') || name.contains('\\') {
-        return Err("Nom invalide (pas de chemins)".to_string());
-    }
+    validate_preset_name(&name)?;
 
     // Get presets directory
     let data_dir = app
@@ -104,6 +110,8 @@ pub async fn save_config_preset(
 #[tauri::command]
 pub async fn load_config_preset(app: AppHandle, name: String) -> Result<ConfigSnapshot, String> {
     log::info!("📥 [PRESETS] Loading preset: {}", name);
+
+    validate_preset_name(&name)?;
 
     // Get presets directory
     let data_dir = app
@@ -194,6 +202,8 @@ pub async fn list_config_presets(app: AppHandle) -> Result<Vec<ConfigPreset>, St
 pub async fn delete_config_preset(app: AppHandle, name: String) -> Result<(), String> {
     log::info!("🗑️  [PRESETS] Deleting preset: {}", name);
 
+    validate_preset_name(&name)?;
+
     // Get presets directory
     let data_dir = app
         .path()
@@ -209,4 +219,26 @@ pub async fn delete_config_preset(app: AppHandle, name: String) -> Result<(), St
 
     log::info!("✅ [PRESETS] Preset deleted: {}", name);
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::validate_preset_name;
+
+    #[test]
+    fn validate_preset_name_accepts_simple_name() {
+        assert!(validate_preset_name("preset-technique").is_ok());
+    }
+
+    #[test]
+    fn validate_preset_name_rejects_traversal() {
+        let err = validate_preset_name("../preset").expect_err("traversal must be rejected");
+        assert!(err.contains("Nom invalide"));
+    }
+
+    #[test]
+    fn validate_preset_name_rejects_absolute_like_path() {
+        let err = validate_preset_name("folder/preset").expect_err("path must be rejected");
+        assert!(err.contains("Nom invalide"));
+    }
 }

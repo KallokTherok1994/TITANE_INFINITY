@@ -13,7 +13,18 @@
 import { tauriClient } from '@/lib/tauriClient';
 import { getSystemPrompt } from '@/config/chatModes.config';
 import { memoryService } from '@/services/api/memory';
+import { getRelevantPromptContext as getDefaultKbPromptContext } from '@/services/api/defaultKnowledgeBase';
 import { userPreferencesEngine } from '@/services/userPreferencesEngine';
+import { getMonitoringAgentStatus } from '@/services/monitoring';
+import { getDiagnosticAgentStatus } from '@/services/diagnostic';
+import { getExplainabilityAgentStatus } from '@/services/explainability';
+import { getOrchestratorAgentStatus } from '@/services/orchestrator';
+import { getSecurityActiveAgentStatus } from '@/services/security_active';
+import {
+  getActiveSkill,
+  getActiveSkillId,
+  getSystemPromptForSkill,
+} from '@/services/skills/activation/skillActivator';
 import { classifyMode, resolveMode } from '@/services/ai/omegaModeClassifier';
 import {
   RESPONSE_PROFILES,
@@ -102,6 +113,122 @@ function formatRuntimeKnowledgeBlock(entries: KnowledgeEntry[]): string {
   });
 
   return ['## RUNTIME_KNOWLEDGE_CONTEXT', ...lines].join('\n');
+}
+
+function formatDefaultKnowledgeBlock(context: string): string {
+  const trimmed = context.trim();
+  if (!trimmed) {
+    return '';
+  }
+
+  return ['## DEFAULT_KNOWLEDGE_BASE_CONTEXT', trimmed].join('\n');
+}
+
+function formatActiveSkillBlock(skillName: string, prompt: string): string {
+  const trimmed = prompt.trim();
+  if (!trimmed) {
+    return '';
+  }
+
+  return [`## ACTIVE_SKILL_CONTEXT`, `skill=${skillName}`, trimmed].join('\n');
+}
+
+function formatOnlineCapabilityBlock(input: {
+  onlineCapabilityStatus: 'available' | 'offline';
+  deepAnalysisStatus: 'enabled' | 'disabled';
+}): string {
+  return [
+    '## ONLINE_CAPABILITY_CONTEXT',
+    `status=${input.onlineCapabilityStatus}`,
+    'governed_web_research=available',
+    'one_door_only=true',
+    `deep_analysis=${input.deepAnalysisStatus}`,
+  ].join('\n');
+}
+
+type RuntimeAdvancedAgentStatus = {
+  id: string;
+  readiness: string;
+  serviceState: string;
+  nextStep: string;
+};
+
+function getRuntimeAdvancedAgentStatuses(): RuntimeAdvancedAgentStatus[] {
+  try {
+    return [
+      getMonitoringAgentStatus(),
+      getDiagnosticAgentStatus(),
+      getExplainabilityAgentStatus(),
+      getOrchestratorAgentStatus(),
+      getSecurityActiveAgentStatus(),
+    ].map(status => ({
+      id: status.id,
+      readiness: status.readiness,
+      serviceState: status.serviceState,
+      nextStep: status.nextStep,
+    }));
+  } catch (error) {
+    logger.warn('[conversationEngine] advanced agent runtime status unavailable', error);
+    return [];
+  }
+}
+
+function formatAdvancedAgentRuntimeBlock(statuses: RuntimeAdvancedAgentStatus[]): string {
+  if (statuses.length === 0) {
+    return '';
+  }
+
+  return [
+    '## ADVANCED_AGENT_RUNTIME_CONTEXT',
+    ...statuses.map(
+      status =>
+        `${status.id}: readiness=${status.readiness}; service=${status.serviceState}; next=${status.nextStep}`
+    ),
+  ].join('\n');
+}
+
+function buildContextStatusTags(input: {
+  runtimeKnowledgeStatus: 'loaded' | 'empty' | 'unavailable';
+  defaultKnowledgeStatus: 'loaded' | 'empty' | 'unavailable';
+  persistentMemoryStatus: 'loaded' | 'empty' | 'unavailable' | 'skipped';
+  activeSkillStatus: 'active' | 'inactive';
+  activeSkillId?: string;
+  onlineCapabilityStatus: 'available' | 'offline';
+  deepAnalysisStatus: 'enabled' | 'disabled';
+  advancedAgentStatuses: RuntimeAdvancedAgentStatus[];
+  contextEnvelope?: ChatContextEnvelope;
+}): string[] {
+  const tags = [
+    `runtime-knowledge:${input.runtimeKnowledgeStatus}`,
+    `default-kb:${input.defaultKnowledgeStatus}`,
+    `persistent-memory:${input.persistentMemoryStatus}`,
+    `skill:${input.activeSkillStatus}`,
+    `online:${input.onlineCapabilityStatus}`,
+    `deep-analysis:${input.deepAnalysisStatus}`,
+  ];
+
+  if (input.activeSkillId) {
+    tags.push(`skill-id:${input.activeSkillId}`);
+  }
+
+  if (input.advancedAgentStatuses.length > 0) {
+    tags.push('advanced-agents:present');
+    tags.push(
+      ...input.advancedAgentStatuses.map(
+        status => `agent:${status.id}:${status.readiness}`
+      )
+    );
+  }
+
+  if (input.contextEnvelope?.twinsContext) {
+    tags.push('twins:present');
+  }
+
+  if (input.contextEnvelope?.cognitiveContext) {
+    tags.push('cognitive-context:present');
+  }
+
+  return tags;
 }
 
 const getWindowRecord = (): Record<string, unknown> | null => {
@@ -797,6 +924,59 @@ export async function processMessage(
   const runtimeKnowledgeStatusContext =
     `## RUNTIME_KNOWLEDGE_STATUS\nstatus=${runtimeKnowledgeStatus}`;
 
+  const activeSkillId = getActiveSkillId() ?? undefined;
+  const activeSkillPrompt = activeSkillId
+    ? getSystemPromptForSkill(activeSkillId)?.trim() ?? ''
+    : '';
+  const activeSkillStatus: 'active' | 'inactive' =
+    activeSkillId && activeSkillPrompt.length > 0 ? 'active' : 'inactive';
+  const activeSkillName = getActiveSkill()?.manifest.name ?? activeSkillId ?? 'none';
+  const activeSkillContext =
+    activeSkillStatus === 'active'
+      ? formatActiveSkillBlock(activeSkillName, activeSkillPrompt)
+      : '';
+  const activeSkillStatusContext =
+    `## ACTIVE_SKILL_STATUS\nstatus=${activeSkillStatus}${
+      activeSkillId ? `\nskill_id=${activeSkillId}` : ''
+    }`;
+
+  let defaultKnowledgeContext = '';
+  let defaultKnowledgeStatus: 'loaded' | 'empty' | 'unavailable' = 'unavailable';
+  try {
+    const relevantDefaultKnowledge = await getDefaultKbPromptContext(userMessage, 4);
+    if (relevantDefaultKnowledge.trim().length > 0) {
+      defaultKnowledgeContext = formatDefaultKnowledgeBlock(relevantDefaultKnowledge);
+      defaultKnowledgeStatus = 'loaded';
+    } else {
+      defaultKnowledgeStatus = 'empty';
+    }
+  } catch (error) {
+    defaultKnowledgeStatus = 'unavailable';
+    logger.warn('[conversationEngine] default knowledge base unavailable', error);
+  }
+
+  const defaultKnowledgeStatusContext =
+    `## DEFAULT_KNOWLEDGE_BASE_STATUS\nstatus=${defaultKnowledgeStatus}`;
+
+  const deepAnalysisStatus: 'enabled' | 'disabled' =
+    userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] ===
+    true
+      ? 'enabled'
+      : 'disabled';
+  const onlineCapabilityStatus: 'available' | 'offline' =
+    typeof navigator !== 'undefined' && navigator.onLine === false ? 'offline' : 'available';
+  const onlineCapabilityContext = formatOnlineCapabilityBlock({
+    onlineCapabilityStatus,
+    deepAnalysisStatus,
+  });
+  const onlineCapabilityStatusContext =
+    `## ONLINE_CAPABILITY_STATUS\nstatus=${onlineCapabilityStatus}\ndeep_analysis=${deepAnalysisStatus}`;
+  const advancedAgentStatuses = getRuntimeAdvancedAgentStatuses();
+  const advancedAgentRuntimeContext = formatAdvancedAgentRuntimeBlock(advancedAgentStatuses);
+  const advancedAgentRuntimeStatusContext = `## ADVANCED_AGENT_RUNTIME_STATUS\nstatus=${
+    advancedAgentStatuses.length > 0 ? 'available' : 'unavailable'
+  }\ncount=${advancedAgentStatuses.length}`;
+
   // Inject persistent 3-level memory context (non-blocking)
   let persistentMemoryContext = '';
   let persistentMemoryStatus: 'loaded' | 'empty' | 'unavailable' | 'skipped' =
@@ -851,10 +1031,18 @@ export async function processMessage(
   const systemPrompt = [
     staticPromptContext.systemPrompt,
     contextualPrompt,
+    activeSkillContext,
+    activeSkillStatusContext,
     staticPromptContext.personaContext,
     staticPromptContext.userPreferencesContext,
     runtimeKnowledgeContext,
     runtimeKnowledgeStatusContext,
+    defaultKnowledgeContext,
+    defaultKnowledgeStatusContext,
+    onlineCapabilityContext,
+    onlineCapabilityStatusContext,
+    advancedAgentRuntimeContext,
+    advancedAgentRuntimeStatusContext,
     persistentMemoryContext,
     persistentMemoryStatusContext,
     progressionContext,
@@ -1166,9 +1354,24 @@ export async function processMessage(
   }
 
   const cognitiveTagsRaw = metadata['cognitiveTags'];
-  const cognitiveTags = Array.isArray(cognitiveTagsRaw)
-    ? cognitiveTagsRaw.filter((v): v is string => typeof v === 'string')
-    : [];
+  const cognitiveTags = Array.from(
+    new Set([
+      ...(Array.isArray(cognitiveTagsRaw)
+        ? cognitiveTagsRaw.filter((v): v is string => typeof v === 'string')
+        : []),
+      ...buildContextStatusTags({
+        runtimeKnowledgeStatus,
+        defaultKnowledgeStatus,
+        persistentMemoryStatus,
+        activeSkillStatus,
+        activeSkillId,
+        onlineCapabilityStatus,
+        deepAnalysisStatus,
+        advancedAgentStatuses,
+        contextEnvelope: options?.contextEnvelope,
+      }),
+    ])
+  );
 
   const detectedIntentionRaw = metadata['intention'];
   const detectedIntention: Intention =
@@ -1205,6 +1408,31 @@ export async function processMessage(
       ])
     );
   }
+
+  normalizedMetadata.links_to_contexts = Array.from(
+    new Set([
+      ...normalizedMetadata.links_to_contexts,
+      `runtime_knowledge:${runtimeKnowledgeStatus}`,
+      `default_kb:${defaultKnowledgeStatus}`,
+      `persistent_memory:${persistentMemoryStatus}`,
+      `skill:${activeSkillStatus}`,
+      ...(activeSkillId ? [`skill_id:${activeSkillId}`] : []),
+      `online:${onlineCapabilityStatus}`,
+      `deep_analysis:${deepAnalysisStatus}`,
+      ...(advancedAgentStatuses.length > 0
+        ? [
+            'advanced_agents:present',
+            ...advancedAgentStatuses.map(
+              status => `agent_${status.id}:${status.readiness}`
+            ),
+          ]
+        : []),
+      ...(options?.contextEnvelope?.twinsContext ? ['twins:present'] : []),
+      ...(options?.contextEnvelope?.cognitiveContext
+        ? ['cognitive_context:present']
+        : []),
+    ])
+  );
 
   // Minimal discernment decision (frontend stub, not authoritative)
   const inferenceState: InferenceState =

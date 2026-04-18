@@ -5,7 +5,7 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
 
 use serde::{Deserialize, Serialize};
-use std::path::{Path, PathBuf};
+use std::path::{Component, Path, PathBuf};
 
 /// Macro for safe mutex locking with auto-recovery
 #[allow(unused_macros)]
@@ -170,6 +170,59 @@ impl BackupEngine {
         path.push("TITANE_INFINITY");
         path.push("persistence");
         path
+    }
+
+    #[cfg(test)]
+    fn with_data_dir(data_dir: PathBuf) -> Self {
+        Self {
+            data_dir,
+            last_export: None,
+            last_import: None,
+        }
+    }
+
+    fn resolve_archive_import_target(&self, file_name: &str) -> Result<PathBuf, BackupError> {
+        let trimmed = file_name.trim();
+
+        if trimmed.is_empty() {
+            return Err(BackupError::InvalidArchive(
+                "Nom de fichier d archive vide".to_string(),
+            ));
+        }
+
+        if trimmed.contains('\0') {
+            return Err(BackupError::InvalidArchive(
+                "Nom de fichier d archive contient un NUL".to_string(),
+            ));
+        }
+
+        let candidate = Path::new(trimmed);
+        if candidate.is_absolute()
+            || candidate.has_root()
+            || candidate.components().any(|component| {
+                matches!(
+                    component,
+                    Component::ParentDir | Component::RootDir | Component::Prefix(_)
+                )
+            })
+            || trimmed.contains('/')
+            || trimmed.contains('\\')
+        {
+            return Err(BackupError::InvalidArchive(format!(
+                "Nom de fichier d archive invalide: {}",
+                trimmed
+            )));
+        }
+
+        match trimmed {
+            "titan_events.db.events.json" | "titan_events.db.snapshots.json" => {
+                Ok(self.data_dir.join(trimmed))
+            }
+            _ => Err(BackupError::InvalidArchive(format!(
+                "Nom de fichier d archive non autorise: {}",
+                trimmed
+            ))),
+        }
     }
 
     /// Exporter les données vers une archive
@@ -518,7 +571,7 @@ impl BackupEngine {
             cursor += size;
 
             // Restaurer le fichier
-            let target_path = self.data_dir.join(&file_name);
+            let target_path = self.resolve_archive_import_target(&file_name)?;
 
             match mode {
                 ImportMode::Replace => {
@@ -566,14 +619,14 @@ impl BackupEngine {
             report.files_imported += 1;
 
             // Compter events/snapshots
-            if file_name.contains("events") {
-                if let Ok(events) = serde_json::from_slice::<Vec<serde_json::Value>>(content) {
-                    report.events_imported = events.len() as u64;
-                }
-            } else if file_name.contains("snapshots") {
-                if let Ok(snapshots) = serde_json::from_slice::<Vec<serde_json::Value>>(content) {
-                    report.snapshots_imported = snapshots.len() as u32;
-                }
+                if file_name.contains("snapshots") {
+                    if let Ok(snapshots) = serde_json::from_slice::<Vec<serde_json::Value>>(content) {
+                        report.snapshots_imported = snapshots.len() as u32;
+                    }
+                } else if file_name.contains("events") {
+                    if let Ok(events) = serde_json::from_slice::<Vec<serde_json::Value>>(content) {
+                        report.events_imported = events.len() as u64;
+                    }
             }
         }
 
@@ -700,5 +753,113 @@ mod tests {
 
         // Note: Ce test nécessiterait un setup plus complet
         // avec de vrais fichiers dans le répertoire de données
+    }
+
+    fn build_test_archive(files: &[(&str, &[u8])]) -> Vec<u8> {
+        let archive_files = files
+            .iter()
+            .map(|(name, content)| ArchiveFile {
+                name: (*name).to_string(),
+                size: content.len() as u64,
+                checksum: BackupEngine::compute_checksum(content),
+                file_type: if name.contains("snapshots") {
+                    ArchiveFileType::Snapshot
+                } else {
+                    ArchiveFileType::Events
+                },
+            })
+            .collect::<Vec<_>>();
+
+        let mut archive_data = Vec::new();
+        for (name, content) in files {
+            archive_data.extend_from_slice(name.as_bytes());
+            archive_data.push(0);
+            archive_data.extend_from_slice(&(content.len() as u64).to_le_bytes());
+            archive_data.extend_from_slice(content);
+        }
+
+        let metadata = ArchiveMetadata {
+            titane_version: env!("CARGO_PKG_VERSION").to_string(),
+            schema_version: super::super::migrations::CURRENT_SCHEMA_VERSION,
+            created_at: 0,
+            description: Some("test archive".to_string()),
+            checksum: BackupEngine::compute_checksum(&archive_data),
+            files: archive_files,
+            uncompressed_size: archive_data.len() as u64,
+        };
+
+        let metadata_json = serde_json::to_vec(&metadata).expect("metadata should serialize");
+        let compressed = BackupEngine::compress_data(&archive_data).expect("archive should compress");
+
+        let mut final_archive = Vec::new();
+        final_archive.extend_from_slice(b"TITANE_ARCHIVE\x00\x01");
+        final_archive.extend_from_slice(&(metadata_json.len() as u32).to_le_bytes());
+        final_archive.extend_from_slice(&metadata_json);
+        final_archive.extend_from_slice(&(compressed.len() as u64).to_le_bytes());
+        final_archive.extend_from_slice(&compressed);
+        final_archive
+    }
+
+    #[tokio::test]
+    async fn test_import_rejects_archive_entry_path_traversal() {
+        let temp_dir = tempdir().expect("should create temp dir");
+        let archive_path = temp_dir.path().join("malicious_backup.titane");
+        let archive = build_test_archive(&[("../escape.json", b"[]")]);
+        tokio::fs::write(&archive_path, archive)
+            .await
+            .expect("archive should be written");
+
+        let mut engine = BackupEngine::with_data_dir(temp_dir.path().join("persistence"));
+        tokio::fs::create_dir_all(&engine.data_dir)
+            .await
+            .expect("data dir should exist");
+
+        let result = engine
+            .import(&archive_path, ImportMode::Replace)
+            .await
+            .expect_err("malicious archive entry must be rejected");
+
+        assert!(matches!(result, BackupError::InvalidArchive(_)));
+        assert!(!temp_dir.path().join("escape.json").exists());
+    }
+
+    #[tokio::test]
+    async fn test_import_restores_allowed_archive_entries() {
+        let temp_dir = tempdir().expect("should create temp dir");
+        let archive_path = temp_dir.path().join("valid_backup.titane");
+        let events = br#"[{"id":"evt-1"}]"#;
+        let snapshots = br#"[{"id":"snap-1"}]"#;
+        let archive = build_test_archive(&[
+            ("titan_events.db.events.json", events),
+            ("titan_events.db.snapshots.json", snapshots),
+        ]);
+        tokio::fs::write(&archive_path, archive)
+            .await
+            .expect("archive should be written");
+
+        let data_dir = temp_dir.path().join("persistence");
+        tokio::fs::create_dir_all(&data_dir)
+            .await
+            .expect("data dir should exist");
+        let mut engine = BackupEngine::with_data_dir(data_dir.clone());
+
+        let report = engine
+            .import(&archive_path, ImportMode::Replace)
+            .await
+            .expect("valid archive should import");
+
+        let restored_events = tokio::fs::read(data_dir.join("titan_events.db.events.json"))
+            .await
+            .expect("events file should exist");
+        let restored_snapshots = tokio::fs::read(data_dir.join("titan_events.db.snapshots.json"))
+            .await
+            .expect("snapshots file should exist");
+
+        assert!(report.success);
+        assert_eq!(report.files_imported, 2);
+        assert_eq!(report.events_imported, 1);
+        assert_eq!(report.snapshots_imported, 1);
+        assert_eq!(restored_events, events);
+        assert_eq!(restored_snapshots, snapshots);
     }
 }

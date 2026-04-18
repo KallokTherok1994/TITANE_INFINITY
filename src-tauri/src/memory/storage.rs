@@ -12,7 +12,7 @@ use super::model::{Conversation, ConversationSummary, MemoryIndex};
 use super::{MemoryError, MemoryResult};
 use crate::memory_compactor::{CompactorConfig, MemoryCompactor};
 use std::fs;
-use std::path::PathBuf;
+use std::path::{Component, Path, PathBuf};
 
 pub trait MemoryStoragePort: Send + Sync {
     fn save_conversation(&self, conversation: &Conversation) -> MemoryResult<()>;
@@ -53,9 +53,42 @@ impl MemoryStorage {
         &self.storage_dir
     }
 
-    fn get_conversation_path(&self, conversation_id: &str) -> PathBuf {
-        self.storage_dir
-            .join(format!("{}.json.enc", conversation_id))
+    fn validate_conversation_id(conversation_id: &str) -> MemoryResult<()> {
+        if conversation_id.is_empty() {
+            return Err(MemoryError::ValidationError(
+                "Conversation id cannot be empty".to_string(),
+            ));
+        }
+
+        if conversation_id.contains('\0') {
+            return Err(MemoryError::ValidationError(
+                "Conversation id contains null byte".to_string(),
+            ));
+        }
+
+        let path = Path::new(conversation_id);
+        if path.is_absolute()
+            || path.has_root()
+            || path
+                .components()
+                .any(|component| matches!(component, Component::ParentDir | Component::RootDir))
+            || conversation_id.contains(std::path::MAIN_SEPARATOR)
+            || conversation_id.contains('/')
+            || conversation_id.contains('\\')
+        {
+            return Err(MemoryError::ValidationError(
+                "Conversation id contains invalid path components".to_string(),
+            ));
+        }
+
+        Ok(())
+    }
+
+    fn get_conversation_path(&self, conversation_id: &str) -> MemoryResult<PathBuf> {
+        Self::validate_conversation_id(conversation_id)?;
+        Ok(self
+            .storage_dir
+            .join(format!("{}.json.enc", conversation_id)))
     }
 
     fn get_index_path(&self) -> PathBuf {
@@ -79,7 +112,7 @@ impl MemoryStorage {
         let encrypted = self.encryption.encrypt(json.as_bytes())?;
 
         // Write to file
-        let path = self.get_conversation_path(&conversation.id);
+        let path = self.get_conversation_path(&conversation.id)?;
         fs::write(path, encrypted).map_err(|e| MemoryError::StorageError(e.to_string()))?;
 
         // Update index
@@ -89,7 +122,7 @@ impl MemoryStorage {
     }
 
     pub fn load_conversation(&self, conversation_id: &str) -> MemoryResult<Conversation> {
-        let path = self.get_conversation_path(conversation_id);
+        let path = self.get_conversation_path(conversation_id)?;
 
         if !path.exists() {
             return Err(MemoryError::StorageError(format!(
@@ -113,7 +146,7 @@ impl MemoryStorage {
     }
 
     pub fn delete_conversation(&self, conversation_id: &str) -> MemoryResult<()> {
-        let path = self.get_conversation_path(conversation_id);
+        let path = self.get_conversation_path(conversation_id)?;
 
         if path.exists() {
             fs::remove_file(path).map_err(|e| MemoryError::StorageError(e.to_string()))?;

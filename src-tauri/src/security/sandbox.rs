@@ -8,7 +8,7 @@
 
 use super::validation::PayloadValidator;
 use std::collections::HashSet;
-use std::path::{Path, PathBuf};
+use std::path::{Component, Path, PathBuf};
 use tokio::fs;
 
 const MAX_FILE_SIZE: u64 = 25 * 1024 * 1024; // 25 MB
@@ -195,6 +195,27 @@ impl FileImportSandbox {
         format!("{}_{}.{}", safe_base, timestamp, extension)
     }
 
+    fn validate_safe_name(&self, safe_name: &str) -> Result<(), SandboxError> {
+        PayloadValidator::validate_path(safe_name)
+            .map_err(|e| SandboxError::ValidationFailed(e.to_string()))?;
+
+        let path = Path::new(safe_name);
+        let is_flat_filename = path.file_name().and_then(|name| name.to_str()) == Some(safe_name)
+            && !path.is_absolute()
+            && !path.has_root()
+            && path
+                .components()
+                .all(|component| matches!(component, Component::Normal(_)));
+
+        if !is_flat_filename || safe_name.contains('/') || safe_name.contains('\\') {
+            return Err(SandboxError::SandboxViolation(
+                "Safe name must be a flat sandbox filename".to_string(),
+            ));
+        }
+
+        Ok(())
+    }
+
     /// Calculer SHA-256
     async fn calculate_sha256(&self, data: &[u8]) -> String {
         use sha2::{Digest, Sha256};
@@ -269,6 +290,11 @@ impl FileImportSandbox {
 
         // Écrire dans sandbox
         let file_path = self.sandbox_path.join(&safe_name);
+        if let Some(parent) = file_path.parent() {
+            fs::create_dir_all(parent)
+                .await
+                .map_err(|e| SandboxError::IoError(e.to_string()))?;
+        }
         fs::write(&file_path, &data)
             .await
             .map_err(|e| SandboxError::IoError(e.to_string()))?;
@@ -300,9 +326,7 @@ impl FileImportSandbox {
 
     /// Lire fichier depuis sandbox
     pub async fn read_file(&self, safe_name: &str) -> Result<Vec<u8>, SandboxError> {
-        // Valider nom
-        PayloadValidator::validate_path(safe_name)
-            .map_err(|e| SandboxError::ValidationFailed(e.to_string()))?;
+        self.validate_safe_name(safe_name)?;
 
         let file_path = self.sandbox_path.join(safe_name);
 
@@ -323,9 +347,7 @@ impl FileImportSandbox {
 
     /// Supprimer fichier
     pub async fn delete_file(&self, safe_name: &str) -> Result<(), SandboxError> {
-        // Valider nom
-        PayloadValidator::validate_path(safe_name)
-            .map_err(|e| SandboxError::ValidationFailed(e.to_string()))?;
+        self.validate_safe_name(safe_name)?;
 
         let file_path = self.sandbox_path.join(safe_name);
 
@@ -347,6 +369,10 @@ impl FileImportSandbox {
 
     /// Lister fichiers dans sandbox
     pub async fn list_files(&self) -> Result<Vec<String>, SandboxError> {
+        if fs::metadata(&self.sandbox_path).await.is_err() {
+            return Ok(Vec::new());
+        }
+
         let mut entries = fs::read_dir(&self.sandbox_path)
             .await
             .map_err(|e| SandboxError::IoError(e.to_string()))?;
@@ -411,11 +437,107 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_import_file_creates_parent_directory() {
+        let unique = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map(|duration| duration.as_nanos())
+            .unwrap_or(0);
+        let sandbox_path = std::env::temp_dir()
+            .join("titane_infinity")
+            .join(format!("sandbox-import-{}", unique));
+        let sandbox = FileImportSandbox {
+            sandbox_path: sandbox_path.clone(),
+        };
+
+        let data = b"sandbox import".to_vec();
+        let imported = sandbox
+            .import_file("proof.txt", data)
+            .await
+            .expect("import should create parent directory");
+
+        assert!(sandbox_path.exists());
+        assert!(sandbox_path.join(imported.safe_name).exists());
+
+        fs::remove_dir_all(&sandbox_path)
+            .await
+            .expect("temporary sandbox path should be removable");
+    }
+
+    #[tokio::test]
     async fn test_file_too_large() {
         let sandbox = FileImportSandbox::new();
         let data = vec![0u8; (MAX_FILE_SIZE + 1) as usize];
         let result = sandbox.import_file("huge.txt", data).await;
 
         assert!(matches!(result, Err(SandboxError::FileTooLarge(_, _))));
+    }
+
+    #[tokio::test]
+    async fn test_read_file_rejects_nested_safe_name() {
+        let sandbox = FileImportSandbox::new();
+        let result = sandbox.read_file("nested/escape.txt").await;
+
+        assert!(matches!(result, Err(SandboxError::SandboxViolation(_))));
+    }
+
+    #[tokio::test]
+    async fn test_delete_file_rejects_nested_safe_name() {
+        let sandbox = FileImportSandbox::new();
+        let result = sandbox.delete_file("nested/escape.txt").await;
+
+        assert!(matches!(result, Err(SandboxError::SandboxViolation(_))));
+    }
+
+    #[tokio::test]
+    async fn test_list_files_returns_empty_when_directory_missing() {
+        let unique = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map(|duration| duration.as_nanos())
+            .unwrap_or(0);
+        let sandbox_path = std::env::temp_dir()
+            .join("titane_infinity")
+            .join(format!("sandbox-list-{}", unique));
+        let sandbox = FileImportSandbox {
+            sandbox_path: sandbox_path.clone(),
+        };
+
+        let files = sandbox
+            .list_files()
+            .await
+            .expect("missing sandbox directory should return an empty list");
+
+        assert!(files.is_empty());
+        assert!(!sandbox_path.exists());
+    }
+
+    #[tokio::test]
+    async fn test_list_files_returns_imported_safe_name() {
+        let unique = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map(|duration| duration.as_nanos())
+            .unwrap_or(0);
+        let sandbox_path = std::env::temp_dir()
+            .join("titane_infinity")
+            .join(format!("sandbox-list-existing-{}", unique));
+        let sandbox = FileImportSandbox {
+            sandbox_path: sandbox_path.clone(),
+        };
+
+        let imported = sandbox
+            .import_file("listed.txt", b"listed content".to_vec())
+            .await
+            .expect("import should succeed before list_files");
+
+        let files = sandbox
+            .list_files()
+            .await
+            .expect("list_files should return imported file names");
+
+        assert_eq!(files.len(), 1);
+        assert_eq!(files[0], imported.safe_name);
+
+        fs::remove_dir_all(&sandbox_path)
+            .await
+            .expect("temporary sandbox path should be removable");
     }
 }

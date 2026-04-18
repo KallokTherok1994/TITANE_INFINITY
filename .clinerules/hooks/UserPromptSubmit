@@ -9,10 +9,9 @@ context=""
 
 # Détection de demandes de déploiement
 if echo "$prompt" | grep -qiE 'deploy|build.*production|create.*appimage|create.*deb|install.*system'; then
-  context="DEPLOYMENT_WARNING: Déploiement production nécessite autorisation explicite (Rule 11).\n"
-  context+="Tokens exacts requis:\n"
-  context+="  GO_FOR_PROD_BUILD__TITANE_INFINITY\n"
-  context+="  GO_FOR_PROD_DEPLOY__TITANE_INFINITY\n"
+  context="DEPLOYMENT_WARNING: Déploiement production gouverné (Rule 11).\n"
+  context+="Aucun token/passphrase local n'est autorisé. Une demande explicite de l'utilisateur suffit.\n"
+  context+="Si la demande n'est pas explicite, classifier BLOCKED_APPROVAL.\n"
   context+="En développement: utiliser '🟢 Launch Titan-Dev' uniquement."
 fi
 

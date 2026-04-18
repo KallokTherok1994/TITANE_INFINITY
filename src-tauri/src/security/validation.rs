@@ -182,6 +182,16 @@ impl PayloadValidator {
     pub fn validate_path(path: &str) -> Result<(), ValidationError> {
         Self::validate_string(path, "path", true)?;
 
+        if path.trim().is_empty() {
+            return Err(ValidationError::EmptyRequired("path".to_string()));
+        }
+
+        if path.contains("://") {
+            return Err(ValidationError::ForbiddenCharacters(
+                "Path schemes not allowed".to_string(),
+            ));
+        }
+
         // Empêcher directory traversal
         if path.contains("..") {
             return Err(ValidationError::ForbiddenCharacters(
@@ -212,6 +222,7 @@ impl PayloadValidator {
         allowed: &[&str],
     ) -> Result<(), ValidationError> {
         Self::validate_string(filename, "filename", true)?;
+        Self::validate_path(filename)?;
 
         let ext = std::path::Path::new(filename)
             .extension()
@@ -230,11 +241,11 @@ impl PayloadValidator {
 
     /// Sanitize HTML (empêcher XSS)
     pub fn sanitize_html(html: &str) -> String {
-        html.replace('<', "&lt;")
+        html.replace('&', "&amp;")
+            .replace('<', "&lt;")
             .replace('>', "&gt;")
             .replace('"', "&quot;")
             .replace('\'', "&#x27;")
-            .replace('&', "&amp;")
     }
 
     /// Échapper caractères spéciaux SQL
@@ -307,6 +318,12 @@ impl InputValidator {
     }
 
     pub fn validate_message(&self, message: &str) -> TitaneResult<()> {
+        if let Err(error) = PayloadValidator::validate_string(message, "message", true) {
+            return Err(TitaneError::ValidationError {
+                message: error.to_string(),
+            });
+        }
+
         if message.is_empty() {
             return Err(TitaneError::ValidationError {
                 message: "Message cannot be empty".to_string(),
@@ -374,6 +391,12 @@ mod tests {
         assert!(PayloadValidator::validate_path("../etc/passwd").is_err());
         assert!(PayloadValidator::validate_path("/etc/passwd").is_err());
         assert!(PayloadValidator::validate_path("C:\\Windows").is_err());
+        assert!(PayloadValidator::validate_path("file:///etc/passwd").is_err());
+    }
+
+    #[test]
+    fn test_validate_path_rejects_whitespace_only_path() {
+        assert!(PayloadValidator::validate_path("   \t\n").is_err());
     }
 
     #[test]
@@ -383,10 +406,22 @@ mod tests {
     }
 
     #[test]
+    fn test_validate_file_extension_rejects_traversal_path() {
+        assert!(PayloadValidator::validate_file_extension("../secret.txt", &["txt"]).is_err());
+    }
+
+    #[test]
+    fn test_validate_file_extension_rejects_scheme_path() {
+        assert!(PayloadValidator::validate_file_extension("file:///tmp/test.txt", &["txt"]).is_err());
+    }
+
+    #[test]
     fn test_sanitize_html() {
         let dirty = "<script>alert('XSS')</script>";
         let clean = PayloadValidator::sanitize_html(dirty);
         assert!(!clean.contains("<script>"));
+        assert!(clean.contains("&lt;script&gt;alert(&#x27;XSS&#x27;)&lt;/script&gt;"));
+        assert!(!clean.contains("&amp;lt;script"));
     }
 
     #[test]
@@ -398,6 +433,12 @@ mod tests {
         assert!(validator
             .validate_message("<script>alert('XSS')</script>")
             .is_err());
+    }
+
+    #[test]
+    fn test_validate_message_rejects_control_characters() {
+        let validator = InputValidator::default();
+        assert!(validator.validate_message("hello\u{0000}world").is_err());
     }
 
     #[test]

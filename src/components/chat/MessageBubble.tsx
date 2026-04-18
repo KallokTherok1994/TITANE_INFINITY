@@ -19,6 +19,7 @@ import './MessageBubble.css';
 import { MarkdownContent } from './MarkdownContent';
 import { ChatFallback } from './ChatFallback';
 import { MessageReactions } from './MessageReactions'; // Sprint 6 Phase 3
+import type { Citation } from '@/types/research';
 import {
   messageSpeechController,
   useMessageSpeechState,
@@ -108,6 +109,72 @@ const TypingIndicator = memo(function TypingIndicator() {
   );
 });
 
+function isCitation(value: unknown): value is Citation {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return false;
+  }
+
+  const candidate = value as Record<string, unknown>;
+  return (
+    typeof candidate.url === 'string' &&
+    typeof candidate.excerpt === 'string' &&
+    typeof candidate.accessed_at === 'string'
+  );
+}
+
+const CitationList = memo(function CitationList({
+  citations,
+  timestamp,
+}: {
+  citations: Citation[];
+  timestamp: number;
+}) {
+  if (citations.length === 0) {
+    return null;
+  }
+
+  return (
+    <section
+      className="message-bubble-citations"
+      data-testid={`message-citations-${timestamp}`}
+      aria-label="Sources web associees"
+    >
+      <div className="message-bubble-citations-title">Sources en ligne</div>
+      <ul className="message-bubble-citations-list">
+        {citations.map((citation, index) => {
+          const label = citation.title?.trim() || citation.url;
+          const locator = citation.locator_text || citation.locator || null;
+
+          return (
+            <li
+              key={`${citation.url}-${index}`}
+              className="message-bubble-citation-item"
+              data-testid={`message-citation-${timestamp}-${index}`}
+            >
+              <div className="message-bubble-citation-index">[{index + 1}]</div>
+              <a
+                className="message-bubble-citation-link"
+                href={citation.url}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {label}
+              </a>
+              {locator && (
+                <div className="message-bubble-citation-locator">{locator}</div>
+              )}
+              <div className="message-bubble-citation-excerpt">{citation.excerpt}</div>
+              <div className="message-bubble-citation-accessed">
+                accessed: {citation.accessed_at}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
+});
+
 /**
  * Composant MessageBubble optimisé
  * Utilise React.memo pour éviter les re-renders inutiles
@@ -130,6 +197,10 @@ export const MessageBubble = memo(function MessageBubble({
 
   // Memoize le temps formaté
   const formattedTime = useMemo(() => formatTime(timestamp), [timestamp]);
+  const citations = useMemo(() => {
+    const raw = metadata?.citations;
+    return Array.isArray(raw) ? raw.filter(isCitation) : [];
+  }, [metadata]);
 
   // Memoize les classes CSS
   const bubbleClasses = useMemo(
@@ -271,6 +342,10 @@ export const MessageBubble = memo(function MessageBubble({
         </div>
 
         <div className="message-bubble-text">{messageContent}</div>
+
+        {role === 'assistant' && citations.length > 0 && (
+          <CitationList citations={citations} timestamp={timestamp} />
+        )}
 
         {role === 'assistant' &&
           content &&

@@ -35,6 +35,7 @@ import type {
   ProviderDecisionMeta,
   ReasonCode,
 } from '@/types/providerMeta';
+import type { Citation } from '@/types/research';
 import {
   buildChatContextEnvelope,
   type ChatContextEnvelope,
@@ -194,6 +195,9 @@ export interface ConversationMessage {
     emotion?: EmotionState;
     tags?: string[];
     providerMeta?: ProviderDecisionMeta;
+    providerUsed?: string;
+    requestedProvider?: ConversationProviderPreference;
+    citations?: Citation[];
     contextBinding?: {
       route: string;
       pageState?: string;
@@ -524,7 +528,6 @@ export function useConversationEngine(
 
         const noProviderPayload =
           /no ai provider available/i.test(response.assistant_message) ||
-          response.meta?.reason_code === 'FALLBACK_OFFLINE' ||
           response.meta?.reason_code === 'PROVIDER_UNAVAILABLE';
 
         const requestedProvider = options.providerPreference ?? 'auto';
@@ -553,6 +556,8 @@ Actions immédiates:
             emotion: response.detected_emotion,
             tags: response.cognitive_tags,
             providerMeta: response.meta,
+            providerUsed: response.meta?.provider_used,
+            requestedProvider,
             contextBinding,
             singleDoorTags: contextEnvelope?.memorySingleDoor.tags,
           },
@@ -667,6 +672,8 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
               errorMessage,
               options.providerPreference
             ),
+            providerUsed: options.providerPreference ?? 'fallback',
+            requestedProvider: options.providerPreference ?? 'auto',
             contextBinding,
             singleDoorTags: contextEnvelope?.memorySingleDoor.tags,
           },
@@ -723,6 +730,10 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
       const contextBinding = toContextBinding(contextEnvelope);
       const mergedMetadata: ConversationMessage['metadata'] = {
         ...(metadata || {}),
+        providerUsed:
+          metadata?.providerUsed ?? metadata?.providerMeta?.provider_used ?? undefined,
+        requestedProvider:
+          metadata?.requestedProvider ?? options.providerPreference ?? undefined,
         contextBinding: metadata?.contextBinding ?? contextBinding,
         singleDoorTags:
           metadata?.singleDoorTags ?? contextEnvelope?.memorySingleDoor.tags,

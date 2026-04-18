@@ -1221,6 +1221,8 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'devtools_disable',
   'devtools_debug_clear',
   'camera_start',
+  'fs_exists',
+  'read_json_file',
 
   // ═══════════════════════════════════════════════════════════════
   // DEV SUDO (v24.4+)

@@ -7,6 +7,7 @@ use std::fs;
 
 use titane_infinity::secure_engine::{
     decrypt_secret, derive_key_from_passphrase, encrypt_secret, purge_env_key,
+    read_secret_file, write_secret_file,
 };
 
 #[test]
@@ -43,4 +44,37 @@ async fn test_purge_env_key_removes_line() {
     assert!(contents.contains("FOO=bar"));
 
     std::env::set_current_dir(original_dir).expect("restore dir");
+}
+
+#[tokio::test]
+async fn test_write_secret_file_roundtrip_and_creates_parent() {
+    let temp_dir = tempfile::tempdir().expect("temp dir");
+    let secret_path = temp_dir.path().join("nested/secrets/payload.enc");
+    let payload = b"encrypted-secret-payload";
+
+    write_secret_file(&secret_path, payload)
+        .await
+        .expect("write secret file");
+
+    let loaded = read_secret_file(&secret_path)
+        .await
+        .expect("read secret file");
+
+    assert_eq!(loaded, payload);
+}
+
+#[cfg(unix)]
+#[tokio::test]
+async fn test_write_secret_file_sets_owner_only_permissions() {
+    use std::os::unix::fs::PermissionsExt;
+
+    let temp_dir = tempfile::tempdir().expect("temp dir");
+    let secret_path = temp_dir.path().join("secret.enc");
+
+    write_secret_file(&secret_path, b"top-secret")
+        .await
+        .expect("write secret file");
+
+    let metadata = fs::metadata(&secret_path).expect("secret metadata");
+    assert_eq!(metadata.permissions().mode() & 0o777, 0o600);
 }

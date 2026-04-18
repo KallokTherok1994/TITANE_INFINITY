@@ -18,11 +18,12 @@
 import React, { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
-import { useLivingEngines } from './hooks';
+import { useLivingEngines } from './hooks/useLivingEngines';
 import { logger } from './lib/logger';
 import { ThemeProvider } from './themes/ThemeProvider';
 import { UIThemeProvider } from './features/design-center';
 import { AnimationProvider } from './contexts/AnimationContext';
+import { LoggingProvider } from './contexts/LoggingContext';
 import { TitanStateProvider } from './context/TitanStateContext'; // ✨ v∞.MPE - Persistence
 import { AppShell, TopNav } from '@components/layout';
 import { BackendDownIndicator } from '@/components/system/BackendDownIndicator'; // ✨ UI vΩ Phase F - Mode dégradé
@@ -749,32 +750,34 @@ const App: React.FC = () => {
 
       <ThemeProvider>
         <UIThemeProvider>
-          <AnimationProvider fpsThreshold={40} cpuThreshold={80}>
-            <TitanStateProvider>
-              {/* ✨ v30.0.0 - Console Monitor Dashboard (Dev only) */}
-              {import.meta.env.DEV && (
-                <Suspense fallback={null}>
-                  <ConsoleMonitorDashboard />
-                </Suspense>
-              )}
+          <LoggingProvider>
+            <AnimationProvider fpsThreshold={40} cpuThreshold={80}>
+              <TitanStateProvider>
+                {/* ✨ v30.0.0 - Console Monitor Dashboard (Dev only) */}
+                {import.meta.env.DEV && (
+                  <Suspense fallback={null}>
+                    <ConsoleMonitorDashboard />
+                  </Suspense>
+                )}
 
-              {/* ✨ v30.0.0 - Predictive AI Dashboard (Dev only) */}
-              {import.meta.env.DEV && (
-                <Suspense fallback={null}>
-                  <PredictiveDashboard />
-                </Suspense>
-              )}
+                {/* ✨ v30.0.0 - Predictive AI Dashboard (Dev only) */}
+                {import.meta.env.DEV && (
+                  <Suspense fallback={null}>
+                    <PredictiveDashboard />
+                  </Suspense>
+                )}
 
-              {/* ✨ v30.0.0 - Quantum Particles Background (Global) - Connected to Aura Orchestrator */}
-              <AuraConnectedParticles />
+                {/* ✨ v30.0.0 - Quantum Particles Background (Global) - Connected to Aura Orchestrator */}
+                <AuraConnectedParticles />
 
-              <BrowserRouter>
-                <AutoHealErrorBoundary>
-                  <AppRouter />
-                </AutoHealErrorBoundary>
-              </BrowserRouter>
-            </TitanStateProvider>
-          </AnimationProvider>
+                <BrowserRouter>
+                  <AutoHealErrorBoundary>
+                    <AppRouter />
+                  </AutoHealErrorBoundary>
+                </BrowserRouter>
+              </TitanStateProvider>
+            </AnimationProvider>
+          </LoggingProvider>
         </UIThemeProvider>
       </ThemeProvider>
     </ToastProvider>

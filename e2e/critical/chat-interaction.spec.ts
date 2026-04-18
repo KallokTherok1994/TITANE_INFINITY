@@ -21,6 +21,15 @@ type E2EChatKnowledgeSeedEntry = {
   tags: string[];
 };
 
+type E2EInlineCitation = {
+  url: string;
+  title?: string | null;
+  excerpt: string;
+  accessed_at: string;
+  locator?: string | null;
+  locator_text?: string | null;
+};
+
 const enableE2EChatMock = async (page: Page) => {
   await page.addInitScript(() => {
     (window as { __TITANE_E2E_CHAT_MOCK__?: boolean }).__TITANE_E2E_CHAT_MOCK__ = true;
@@ -34,7 +43,39 @@ const enableE2EChatMock = async (page: Page) => {
     (
       window as { __TITANE_E2E_CHAT_SCENARIO__?: E2EChatScenario }
     ).__TITANE_E2E_CHAT_SCENARIO__ = 'success';
+    (window as { __TITANE_E2E_WEB_RESEARCH_MOCK__?: boolean }).__TITANE_E2E_WEB_RESEARCH_MOCK__ =
+      false;
+    (
+      window as { __TITANE_E2E_WEB_RESEARCH_REPORT__?: unknown }
+    ).__TITANE_E2E_WEB_RESEARCH_REPORT__ = undefined;
   });
+};
+
+const enableInlineWebResearchMock = async (
+  page: Page,
+  citations: E2EInlineCitation[]
+) => {
+  await page.evaluate(value => {
+    (window as { __TITANE_E2E_WEB_RESEARCH_MOCK__?: boolean }).__TITANE_E2E_WEB_RESEARCH_MOCK__ =
+      true;
+    (
+      window as { __TITANE_E2E_WEB_RESEARCH_REPORT__?: unknown }
+    ).__TITANE_E2E_WEB_RESEARCH_REPORT__ = {
+      answer: {
+        answer: 'Synthèse mock inline web research.',
+        citations: value,
+        limitations: [],
+        trace_id: 'trace-e2e-inline-citations',
+        sources_count: value.length,
+        retrieved_passages_count: value.length,
+      },
+      trace: {
+        trace_id: 'trace-e2e-inline-citations',
+        markers: ['M_CITATIONS_BUILD_OK', 'VERDICT_PASS'],
+        errors: [],
+      },
+    };
+  }, citations);
 };
 
 const setE2EChatScenario = async (page: Page, scenario: E2EChatScenario) => {
@@ -220,5 +261,37 @@ test.describe('Critical Path: Chat Interaction', () => {
     });
 
     expect(finalMemoryLog).toHaveLength(2);
+  });
+
+  test('INLINE_WEB_RESEARCH_CITATIONS_TRUTH: la conversation rend les citations inline du handoff web', async ({
+    page,
+  }) => {
+    await enableInlineWebResearchMock(page, [
+      {
+        url: 'https://example.com/source-a',
+        title: 'Source A',
+        excerpt: 'Extrait gouverné A',
+        accessed_at: '2026-04-18T10:00:00Z',
+        locator_text: 'p=2, c≈40',
+      },
+      {
+        url: 'https://example.com/source-b',
+        title: 'Source B',
+        excerpt: 'Extrait gouverné B',
+        accessed_at: '2026-04-18T10:02:00Z',
+        locator: '§4',
+      },
+    ]);
+
+    await submitChatMessage(page, 'Fais une recherche web en ligne sur TITANE');
+
+    const citationsContainer = page.locator('[data-testid^="message-citations-"]').last();
+    await expect(citationsContainer).toBeVisible({ timeout: 15000 });
+    await expect(citationsContainer).toContainText('Sources en ligne');
+    await expect(citationsContainer.getByText('Source A')).toBeVisible();
+    await expect(citationsContainer.getByText('Extrait gouverné A')).toBeVisible();
+    await expect(citationsContainer.getByText('p=2, c≈40')).toBeVisible();
+    await expect(citationsContainer.getByText('accessed: 2026-04-18T10:00:00Z')).toBeVisible();
+    await expect(citationsContainer.getByText('Source B')).toBeVisible();
   });
 });

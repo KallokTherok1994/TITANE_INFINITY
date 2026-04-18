@@ -65,6 +65,9 @@ jobs:
       - name: Format check
         run: pnpm run format:check
 
+      - name: Frontend circular dependency gate
+        run: pnpm run verify:frontend-circular-deps
+
       - name: 📊 Summary
         if: always()
         run: |

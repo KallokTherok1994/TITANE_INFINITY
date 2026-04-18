@@ -218,6 +218,66 @@ describe('useConversationEngine fallback meta truth', () => {
         mode: 'ERROR',
       })
     );
+    expect(result.current.messages.at(-1)?.metadata?.providerUsed).toBe('local-unavailable');
+    expect(result.current.messages.at(-1)?.metadata?.requestedProvider).toBe('ollama');
+  });
+
+  it('preserves truthful degraded assistant content for fallback offline responses', async () => {
+    processMessageMock.mockResolvedValueOnce({
+      assistant_message: 'Réponse dégradée mais valide via mode offline gouverné.',
+      conversation_id: 'conv-offline-truth',
+      message_id: 'assistant-offline-truth',
+      detected_intention: 'Meta' as const,
+      detected_emotion: { valence: 0, intensity: 0.1, energy: 0.1 },
+      cognitive_tags: ['offline-truth'],
+      cognitive_summary: 'offline truth path',
+      metadata: {
+        timestamp: Date.now(),
+        provider_used: 'ollama',
+        latency_ms: 10,
+        tokens_used: 0,
+        memory_effect: 'New' as const,
+        links_to_contexts: [],
+      },
+      meta: {
+        provider_used: 'ollama',
+        provider_class: 'local' as const,
+        mode: 'OFFLINE' as const,
+        reason_code: 'FALLBACK_OFFLINE' as const,
+        latency_ms_total: 10,
+        timeout_ms: 30000,
+        retries: 0,
+        attempts: [],
+        network_used: false,
+        cache_hit: false,
+        policy: 'offline-truth-test',
+      },
+    });
+
+    const { useConversationEngine } = await import('@/hooks/useConversationEngine');
+    const { result } = renderHook(() =>
+      useConversationEngine({
+        autoHealthCheck: false,
+        providerPreference: 'auto',
+      })
+    );
+
+    await act(async () => {
+      await result.current.sendMessage('donne la vérité offline');
+    });
+
+    await waitFor(() => {
+      expect(result.current.messages.at(-1)?.content).toBe(
+        'Réponse dégradée mais valide via mode offline gouverné.'
+      );
+    });
+
+    expect(result.current.messages.at(-1)?.metadata?.providerMeta).toEqual(
+      expect.objectContaining({
+        reason_code: 'FALLBACK_OFFLINE',
+        mode: 'OFFLINE',
+      })
+    );
   });
 
   it('avoids overlapping health checks while a previous probe is still pending', async () => {

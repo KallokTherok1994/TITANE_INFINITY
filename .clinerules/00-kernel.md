@@ -73,7 +73,7 @@ No inverse imports. No Ring1/Ring2 I/O.
 Production runtime is Tauri-only.
 Any change to capabilities/allowlist requires explicit tests and rollback.
 
-**Cline Enforcement**: Block production build commands without explicit tokens (see Rule 11)
+**Cline Enforcement**: Require explicit user request for production build commands without introducing any token gate (see Rule 11)
 
 ### Rule 5 — ONE DOOR NETWORK GOVERNANCE
 
@@ -161,7 +161,7 @@ Only one active execution authority and one active E2E authority at a time.
 
 - **TaskStart**: Inject constitutional context, not competing rules
 - **PostToolUse**: Log operations; classify failures only (no fake-PASS)
-- **PreToolUse**: Block prod builds without tokens; check for secrets in src/\*\*
+- **PreToolUse**: Require explicit user request for prod builds; check for secrets in src/\*\*
 - **UserPromptSubmit**: Remind deploy/test/package gates when relevant
 
 ### File Path Integration

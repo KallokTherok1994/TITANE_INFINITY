@@ -14,7 +14,7 @@ use super::release_policy::{
 };
 use crate::security::encryption::SigningKeypair;
 use sha2::{Digest, Sha256};
-use std::path::PathBuf;
+use std::path::{Component, Path, PathBuf};
 use std::sync::Arc;
 use tokio::fs;
 use tokio::sync::RwLock;
@@ -87,6 +87,39 @@ pub struct UpdateEngine {
 }
 
 impl UpdateEngine {
+    fn validate_migration_id(migration_id: &str) -> Result<(), UpdateError> {
+        if migration_id.is_empty() {
+            return Err(UpdateError::MigrationFailed(
+                "Migration id cannot be empty".to_string(),
+            ));
+        }
+
+        if migration_id.contains('\0') {
+            return Err(UpdateError::MigrationFailed(
+                "Migration id cannot contain NUL bytes".to_string(),
+            ));
+        }
+
+        let path = Path::new(migration_id);
+        if path.is_absolute()
+            || path.has_root()
+            || migration_id.contains('/')
+            || migration_id.contains('\\')
+            || path.components().any(|component| {
+                matches!(
+                    component,
+                    Component::ParentDir | Component::RootDir | Component::Prefix(_)
+                )
+            })
+        {
+            return Err(UpdateError::MigrationFailed(
+                "Migration id contains invalid path components".to_string(),
+            ));
+        }
+
+        Ok(())
+    }
+
     /// Créer nouveau UpdateEngine
     pub async fn new(
         keypair: Arc<SigningKeypair>,
@@ -312,6 +345,8 @@ impl UpdateEngine {
     async fn run_migration(&self, migration_id: &str) -> Result<(), UpdateError> {
         log::info!("🔧 [UPDATE] Running migration: {}", migration_id);
 
+        Self::validate_migration_id(migration_id)?;
+
         // Charger script de migration
         let script_path = self
             .update_dir
@@ -410,5 +445,41 @@ mod tests {
 
         // Vérifier signature
         assert!(engine.verify_manifest_signature(&manifest).is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_run_migration_rejects_path_traversal_id() {
+        let keypair = Arc::new(SigningKeypair::generate());
+        let engine = UpdateEngine::new(keypair, "v1.0.0".to_string())
+            .await
+            .expect("update engine should initialize");
+
+        let result = engine.run_migration("../escape").await;
+
+        assert!(matches!(result, Err(UpdateError::MigrationFailed(_))));
+    }
+
+    #[tokio::test]
+    async fn test_run_migration_rejects_absolute_id() {
+        let keypair = Arc::new(SigningKeypair::generate());
+        let engine = UpdateEngine::new(keypair, "v1.0.0".to_string())
+            .await
+            .expect("update engine should initialize");
+
+        let result = engine.run_migration("/tmp/escape").await;
+
+        assert!(matches!(result, Err(UpdateError::MigrationFailed(_))));
+    }
+
+    #[tokio::test]
+    async fn test_run_migration_accepts_simple_id_before_missing_script() {
+        let keypair = Arc::new(SigningKeypair::generate());
+        let engine = UpdateEngine::new(keypair, "v1.0.0".to_string())
+            .await
+            .expect("update engine should initialize");
+
+        let result = engine.run_migration("migration_v1_to_v2").await;
+
+        assert!(matches!(result, Err(UpdateError::MigrationFailed(message)) if message.contains("Script not found")));
     }
 }

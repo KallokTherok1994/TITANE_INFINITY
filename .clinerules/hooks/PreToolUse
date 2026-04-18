@@ -12,11 +12,9 @@ if [[ "$tool_name" == "execute_command" ]]; then
   
   # Détecter les tentatives de build production
   if echo "$command" | grep -qiE 'tauri build|Build Titan-Stable|build:production'; then
-    error_msg="VIOLATION CRITIQUE (Rule 11): Build/déploiement production non autorisé.\n"
-    error_msg+="Tokens exacts requis:\n"
-    error_msg+="  GO_FOR_PROD_BUILD__TITANE_INFINITY\n"
-    error_msg+="  GO_FOR_PROD_DEPLOY__TITANE_INFINITY\n"
-    error_msg+="Sans ces tokens exacts: BLOCKED_APPROVAL."
+    error_msg="RULE 11 NOTICE: Build/déploiement production gouverné détecté.\n"
+    error_msg+="Aucun token local n'est autorisé. Une demande utilisateur explicite suffit.\n"
+    error_msg+="Si la demande n'est pas explicite dans le prompt courant: BLOCKED_APPROVAL."
     
     jq -n --arg msg "$error_msg" '{"cancel": true, "errorMessage": $msg}'
     exit 0

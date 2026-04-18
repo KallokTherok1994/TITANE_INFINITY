@@ -5,9 +5,12 @@
  * Valide tous les engines, systèmes critiques, sécurité
  */
 use crate::cognitive::selftest::cognitive_selftest;
+use crate::memory::model::Conversation;
+use crate::memory::storage::MemoryStorage;
 use crate::security::hardening::hardening_selftest;
 use crate::watchdog::selftest::watchdog_selftest;
 use serde::{Deserialize, Serialize};
+use std::path::Path;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BackendSelfTestReport {
@@ -126,14 +129,42 @@ pub async fn backend_global_selftest() -> BackendSelfTestReport {
  * Test santé MemoryEngine
  */
 fn test_memory_health() -> bool {
-    // Vérifie que le système mémoire est accessible
-    match std::fs::metadata("memory") {
-        Ok(metadata) => metadata.is_dir(),
-        Err(_) => {
-            // Dossier memory n'existe pas, créons-le
-            std::fs::create_dir_all("memory").is_ok()
+    let probe_dir = std::env::temp_dir().join(format!(
+        "titane-backend-selftest-memory-{}-{}",
+        std::process::id(),
+        chrono::Utc::now().timestamp_nanos_opt().unwrap_or_default()
+    ));
+
+    test_memory_health_with_probe_dir(&probe_dir)
+}
+
+fn test_memory_health_with_probe_dir(probe_dir: &Path) -> bool {
+    let outcome = (|| -> Result<(), String> {
+        let storage = MemoryStorage::new(probe_dir.to_path_buf(), "selftest_password".to_string())
+            .map_err(|e| e.to_string())?;
+        let conversation = Conversation::new("backend-selftest".to_string());
+
+        storage
+            .save_conversation(&conversation)
+            .map_err(|e| e.to_string())?;
+        let loaded = storage
+            .load_conversation(&conversation.id)
+            .map_err(|e| e.to_string())?;
+
+        if loaded.id != conversation.id {
+            return Err("loaded conversation id mismatch".to_string());
         }
-    }
+
+        Ok(())
+    })();
+
+    let cleanup = if probe_dir.exists() {
+        std::fs::remove_dir_all(probe_dir)
+    } else {
+        Ok(())
+    };
+
+    outcome.is_ok() && cleanup.is_ok()
 }
 
 /**
@@ -179,6 +210,7 @@ pub async fn backend_run_global_selftest() -> Result<BackendSelfTestReport, Stri
 #[cfg(test)]
 mod tests {
     use super::*;
+    use tempfile::tempdir;
 
     #[tokio::test]
     async fn test_backend_global_selftest() {
@@ -209,5 +241,14 @@ mod tests {
             report.system_health.singularity_ok
         );
         println!("  AI Router Health: {}", report.system_health.ai_router_ok);
+    }
+
+    #[test]
+    fn test_memory_health_uses_probe_dir_without_leaking_files() {
+        let temp = tempdir().expect("tempdir");
+        let probe_dir = temp.path().join("memory-health-probe");
+
+        assert!(test_memory_health_with_probe_dir(&probe_dir));
+        assert!(!probe_dir.exists());
     }
 }

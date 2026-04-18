@@ -193,6 +193,33 @@ mod tests {
         Ok(())
     }
 
+    #[test]
+    fn test_save_rejects_path_traversal_conversation_id() -> Result<(), Box<dyn Error>> {
+        let (storage, temp_dir) = create_test_storage()?;
+        let mut conv = create_test_conversation();
+        conv.id = "../escaped".to_string();
+
+        let result = storage.save_conversation(&conv);
+
+        assert!(result.is_err());
+        assert!(!temp_dir.path().join("../escaped.json.enc").exists());
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_load_rejects_absolute_conversation_id() -> Result<(), Box<dyn Error>> {
+        let (storage, _temp_dir) = create_test_storage()?;
+
+        let result = storage.load_conversation("/tmp/escaped");
+
+        assert!(result.is_err());
+        let err = result.expect_err("absolute ids must be rejected");
+        assert!(err.to_string().contains("invalid path components"));
+
+        Ok(())
+    }
+
     // ═══════════════════════════════════════════════════════════════
     //   TESTS UNITAIRES — LIST & INDEX
     // ═══════════════════════════════════════════════════════════════

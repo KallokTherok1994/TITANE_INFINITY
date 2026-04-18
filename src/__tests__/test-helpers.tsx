@@ -5,6 +5,7 @@
 import { render, RenderOptions } from '@testing-library/react';
 import { ReactElement, ReactNode } from 'react';
 import { AnimationProvider } from '@/contexts/AnimationContext';
+import { LoggingProvider } from '@/contexts/LoggingContext';
 
 interface ProvidersWrapperProps {
   children: ReactNode;
@@ -14,7 +15,11 @@ interface ProvidersWrapperProps {
  * Wrapper avec AnimationProvider (requis pour certains composants)
  */
 function ProvidersWrapper({ children }: ProvidersWrapperProps) {
-  return <AnimationProvider>{children}</AnimationProvider>;
+  return (
+    <LoggingProvider>
+      <AnimationProvider>{children}</AnimationProvider>
+    </LoggingProvider>
+  );
 }
 
 /**

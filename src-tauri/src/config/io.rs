@@ -10,9 +10,85 @@
  */
 use serde::{Deserialize, Serialize};
 use std::fs;
+use std::path::{Component, Path, PathBuf};
 use tauri::{AppHandle, Manager};
 
 use super::{ChatEngineConfig, ConfigSnapshot, RuntimeConfig};
+
+const MAX_IMPORTED_CONFIG_BYTES: u64 = 1024 * 1024;
+
+fn validate_filename(filename: &str) -> Result<(), String> {
+    if filename.is_empty() {
+        return Err("Nom de fichier vide".to_string());
+    }
+    if filename.contains('/') || filename.contains('\\') {
+        return Err("Nom de fichier invalide".to_string());
+    }
+    Ok(())
+}
+
+fn validate_import_file_path(file_path: &str) -> Result<PathBuf, String> {
+    let trimmed = file_path.trim();
+
+    if trimmed.is_empty() {
+        return Err("Chemin d'import vide".to_string());
+    }
+
+    if trimmed.contains('\0') {
+        return Err("Chemin d'import contient un NUL".to_string());
+    }
+
+    if trimmed.contains("://") {
+        return Err("Chemin d'import ne peut pas utiliser de scheme".to_string());
+    }
+
+    let path = Path::new(trimmed);
+    if path
+        .components()
+        .any(|component| matches!(component, Component::ParentDir))
+    {
+        return Err("Path traversal interdit pour l'import de configuration".to_string());
+    }
+
+    let resolved = if path.is_absolute() {
+        path.to_path_buf()
+    } else {
+        std::env::current_dir()
+            .map_err(|e| format!("Impossible de lire le cwd: {}", e))?
+            .join(path)
+    };
+
+    let metadata = fs::symlink_metadata(&resolved)
+        .map_err(|e| format!("Impossible de lire le fichier d'import: {}", e))?;
+
+    if metadata.file_type().is_symlink() {
+        return Err("Import de configuration refuse pour les symlinks".to_string());
+    }
+
+    if !metadata.is_file() {
+        return Err("Import de configuration reserve aux fichiers JSON locaux".to_string());
+    }
+
+    let is_json_file = resolved
+        .extension()
+        .and_then(|extension| extension.to_str())
+        .map(|extension| extension.eq_ignore_ascii_case("json"))
+        .unwrap_or(false);
+    if !is_json_file {
+        return Err("Import de configuration reserve aux fichiers .json".to_string());
+    }
+
+    if metadata.len() > MAX_IMPORTED_CONFIG_BYTES {
+        return Err(format!(
+            "Fichier d'import trop volumineux (max {} bytes)",
+            MAX_IMPORTED_CONFIG_BYTES
+        ));
+    }
+
+    resolved
+        .canonicalize()
+        .map_err(|e| format!("Impossible de resoudre le fichier d'import: {}", e))
+}
 
 /**
  * Export Configuration to JSON File
@@ -35,13 +111,8 @@ pub async fn export_config(app: AppHandle, filename: String) -> Result<String, S
     log::info!("📤 [CONFIG] Exporting configuration to file: {}", filename);
 
     // Validate filename
-    if filename.is_empty() {
-        return Err("Nom de fichier vide".to_string());
-    }
-
-    if filename.contains('/') || filename.contains('\\') {
-        return Err("Nom de fichier invalide (pas de chemins autorisés)".to_string());
-    }
+    validate_filename(&filename)
+        .map_err(|_| "Nom de fichier invalide (pas de chemins autorisés)".to_string())?;
 
     // Get app data directory
     let data_dir = app
@@ -126,8 +197,10 @@ pub async fn export_config(app: AppHandle, filename: String) -> Result<String, S
 pub async fn import_config(file_path: String) -> Result<ConfigSnapshot, String> {
     log::info!("📥 [CONFIG] Importing configuration from: {}", file_path);
 
+    let resolved_path = validate_import_file_path(&file_path)?;
+
     // Read file
-    let json = fs::read_to_string(&file_path)
+    let json = fs::read_to_string(&resolved_path)
         .map_err(|e| format!("Impossible de lire le fichier: {}", e))?;
 
     // Parse JSON
@@ -212,6 +285,9 @@ pub async fn list_config_exports(app: AppHandle) -> Result<Vec<String>, String> 
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+    use tempfile::tempdir;
+
     #[test]
     fn test_filename_validation() {
         // Valid filenames
@@ -226,13 +302,56 @@ mod tests {
         assert!(validate_filename("C:\\config").is_err());
     }
 
-    fn validate_filename(filename: &str) -> Result<(), String> {
-        if filename.is_empty() {
-            return Err("Nom de fichier vide".to_string());
+    #[test]
+    fn test_validate_import_file_path_accepts_local_json_file() {
+        let dir = tempdir().expect("temp dir");
+        let file_path = dir.path().join("config-import.json");
+        fs::write(&file_path, r#"{"config":{"runtime":{"ollama_url":"http://127.0.0.1:11434","ollama_model":"gemma2:2b","secrets_mode":"encrypted","gemini_configured":false,"timestamp":1},"chat_engine":{"timeout_ms":1000,"chunk_size":256,"max_tokens":1024,"temperature":0.7}}}"#)
+            .expect("config fixture should be written");
+
+        let validated = validate_import_file_path(file_path.to_string_lossy().as_ref())
+            .expect("local json import file should be accepted");
+
+        assert_eq!(validated, file_path.canonicalize().expect("canonical file path"));
+    }
+
+    #[test]
+    fn test_validate_import_file_path_rejects_path_traversal() {
+        let err = validate_import_file_path("../config.json")
+            .expect_err("path traversal should be rejected");
+
+        assert!(err.contains("Path traversal"));
+    }
+
+    #[test]
+    fn test_validate_import_file_path_rejects_symlink() {
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::symlink;
+
+            let dir = tempdir().expect("temp dir");
+            let target = dir.path().join("target.json");
+            let symlink_path = dir.path().join("config-link.json");
+            fs::write(&target, "{}").expect("target should exist");
+            symlink(&target, &symlink_path).expect("symlink should be created");
+
+            let err = validate_import_file_path(symlink_path.to_string_lossy().as_ref())
+                .expect_err("symlink should be rejected");
+
+            assert!(err.contains("symlinks"));
         }
-        if filename.contains('/') || filename.contains('\\') {
-            return Err("Nom de fichier invalide".to_string());
-        }
-        Ok(())
+    }
+
+    #[test]
+    fn test_validate_import_file_path_rejects_large_file() {
+        let dir = tempdir().expect("temp dir");
+        let file_path = dir.path().join("oversized.json");
+        fs::write(&file_path, "x".repeat((MAX_IMPORTED_CONFIG_BYTES as usize) + 1))
+            .expect("oversized fixture should be written");
+
+        let err = validate_import_file_path(file_path.to_string_lossy().as_ref())
+            .expect_err("oversized file should be rejected");
+
+        assert!(err.contains("trop volumineux"));
     }
 }

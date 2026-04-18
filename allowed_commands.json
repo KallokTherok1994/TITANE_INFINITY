@@ -2085,6 +2085,12 @@
     "command": "camera_start"
   },
   {
+    "command": "fs_exists"
+  },
+  {
+    "command": "read_json_file"
+  },
+  {
     "command": "dev_inspect_file"
   },
   {

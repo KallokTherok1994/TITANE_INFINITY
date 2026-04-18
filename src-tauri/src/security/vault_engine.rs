@@ -11,7 +11,7 @@ use super::encryption::MasterKeyGenerator;
 use super::encryption::{CryptoEngine, MasterKey};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
-use std::path::PathBuf;
+use std::path::{Component, Path, PathBuf};
 use std::sync::Arc;
 use tokio::fs;
 use tokio::sync::RwLock;
@@ -73,6 +73,32 @@ pub struct VaultEngine {
 }
 
 impl VaultEngine {
+    fn validate_file_id(file_id: &str) -> Result<(), VaultError> {
+        if file_id.is_empty() {
+            return Err(VaultError::IoError("Invalid file id: empty".to_string()));
+        }
+
+        if file_id.contains('\0') {
+            return Err(VaultError::IoError("Invalid file id: null byte".to_string()));
+        }
+
+        let path = Path::new(file_id);
+        if path.is_absolute()
+            || path.has_root()
+            || path
+                .components()
+                .any(|component| matches!(component, Component::ParentDir | Component::RootDir))
+            || file_id.contains('/')
+            || file_id.contains('\\')
+        {
+            return Err(VaultError::IoError(
+                "Invalid file id: path components forbidden".to_string(),
+            ));
+        }
+
+        Ok(())
+    }
+
     /// Créer nouveau VaultEngine
     pub async fn new(master_key: &MasterKey) -> Result<Self, VaultError> {
         let crypto = Arc::new(CryptoEngine::new(master_key));
@@ -99,6 +125,7 @@ impl VaultEngine {
         file_id: &str,
         data: &T,
     ) -> Result<VaultMetadata, VaultError> {
+        Self::validate_file_id(file_id)?;
         // 1. Sérialiser
         let json =
             serde_json::to_vec(data).map_err(|e| VaultError::SerializationError(e.to_string()))?;
@@ -174,6 +201,7 @@ impl VaultEngine {
 
     /// Charger données déchiffrées (avec vérification intégrité)
     pub async fn load<T: for<'de> Deserialize<'de>>(&self, file_id: &str) -> Result<T, VaultError> {
+        Self::validate_file_id(file_id)?;
         let file_path = self.get_file_path(file_id);
         let checksum_path = self.get_checksum_path(file_id);
 
@@ -231,6 +259,7 @@ impl VaultEngine {
 
     /// Supprimer fichier chiffré
     pub async fn delete(&self, file_id: &str) -> Result<(), VaultError> {
+        Self::validate_file_id(file_id)?;
         let file_path = self.get_file_path(file_id);
         let checksum_path = self.get_checksum_path(file_id);
 
@@ -282,6 +311,7 @@ impl VaultEngine {
 
     /// Vérifier intégrité d'un fichier spécifique
     async fn verify_file_integrity(&self, file_id: &str) -> Result<(), VaultError> {
+        Self::validate_file_id(file_id)?;
         let file_path = self.get_file_path(file_id);
         let checksum_path = self.get_checksum_path(file_id);
 
@@ -610,5 +640,31 @@ mod tests {
         assert_eq!(loaded, data);
 
         Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_vault_save_rejects_path_traversal_file_id() {
+        let master_key = MasterKey::generate();
+        let vault = VaultEngine::new(&master_key).await.expect("vault init should succeed");
+
+        let err = vault
+            .save("../escape", &"blocked")
+            .await
+            .expect_err("traversal file id must be rejected");
+
+        assert!(err.to_string().contains("path components forbidden"));
+    }
+
+    #[tokio::test]
+    async fn test_vault_load_rejects_absolute_file_id() {
+        let master_key = MasterKey::generate();
+        let vault = VaultEngine::new(&master_key).await.expect("vault init should succeed");
+
+        let err = vault
+            .load::<String>("/tmp/escape")
+            .await
+            .expect_err("absolute file id must be rejected");
+
+        assert!(err.to_string().contains("path components forbidden"));
     }
 }

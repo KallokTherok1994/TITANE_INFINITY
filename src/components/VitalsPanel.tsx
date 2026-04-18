@@ -6,7 +6,7 @@
 
 import React from 'react';
 import type { ChatMode } from '@/services/ai';
-import type { ConnectionState } from '@/hooks';
+import type { ConnectionState } from '@/hooks/useConnection';
 import type { BackendUnavailableReason } from '@/hooks/useBackendHealth';
 
 export interface VitalsPanelProps {

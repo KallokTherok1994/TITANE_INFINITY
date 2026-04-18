@@ -3,11 +3,14 @@
 //   Disk I/O operations (migré depuis memory_persistence.rs)
 // ═══════════════════════════════════════════════════════════════
 
-use std::path::{Path, PathBuf};
+use std::path::{Component, Path, PathBuf};
 use tokio::fs;
 
 use super::encryption::MemoryEncryption;
 use super::types::{MemoryEntry, MemoryError, MemoryResult};
+
+#[cfg(test)]
+use super::types::{MemoryTier, MemoryType};
 
 /// Memory persistence manager
 pub struct MemoryPersistence {
@@ -16,6 +19,46 @@ pub struct MemoryPersistence {
 }
 
 impl MemoryPersistence {
+    fn validate_entry_id(id: &str) -> MemoryResult<()> {
+        if id.is_empty() {
+            return Err(MemoryError::ValidationError(
+                "Memory id cannot be empty".to_string(),
+            ));
+        }
+
+        if id.contains('\0') {
+            return Err(MemoryError::ValidationError(
+                "Memory id contains null byte".to_string(),
+            ));
+        }
+
+        let path = Path::new(id);
+        if path.is_absolute()
+            || path.has_root()
+            || path
+                .components()
+                .any(|component| matches!(component, Component::ParentDir | Component::RootDir))
+            || id.contains('/')
+            || id.contains('\\')
+        {
+            return Err(MemoryError::ValidationError(
+                "Memory id contains invalid path components".to_string(),
+            ));
+        }
+
+        Ok(())
+    }
+
+    fn validate_tier_name(tier: &str) -> MemoryResult<()> {
+        match tier {
+            "stm" | "mtm" | "ltm" => Ok(()),
+            _ => Err(MemoryError::ValidationError(format!(
+                "Unsupported memory tier: {}",
+                tier
+            ))),
+        }
+    }
+
     /// Create new persistence manager
     pub fn new(data_dir: impl AsRef<Path>, encryption: Option<MemoryEncryption>) -> Self {
         Self {
@@ -43,6 +86,7 @@ impl MemoryPersistence {
 
     /// Save memory entry to disk
     pub async fn save(&self, entry: &MemoryEntry) -> MemoryResult<()> {
+        Self::validate_entry_id(&entry.id)?;
         let tier_dir = self.data_dir.join(entry.tier.name().to_lowercase());
         let file_path = tier_dir.join(format!("{}.json", entry.id));
 
@@ -64,6 +108,8 @@ impl MemoryPersistence {
 
     /// Load memory entry from disk
     pub async fn load(&self, id: &str, tier: &str) -> MemoryResult<MemoryEntry> {
+        Self::validate_entry_id(id)?;
+        Self::validate_tier_name(tier)?;
         let file_path = self.data_dir.join(tier).join(format!("{}.json", id));
 
         let data = fs::read_to_string(&file_path)
@@ -82,6 +128,8 @@ impl MemoryPersistence {
 
     /// Delete memory entry from disk
     pub async fn delete(&self, id: &str, tier: &str) -> MemoryResult<()> {
+        Self::validate_entry_id(id)?;
+        Self::validate_tier_name(tier)?;
         let file_path = self.data_dir.join(tier).join(format!("{}.json", id));
 
         fs::remove_file(&file_path)
@@ -93,6 +141,7 @@ impl MemoryPersistence {
 
     /// List all memory IDs in a tier
     pub async fn list_tier(&self, tier: &str) -> MemoryResult<Vec<String>> {
+        Self::validate_tier_name(tier)?;
         let tier_dir = self.data_dir.join(tier);
 
         let mut entries = fs::read_dir(&tier_dir)
@@ -118,6 +167,7 @@ impl MemoryPersistence {
 
     /// Load all memories from a tier
     pub async fn load_tier(&self, tier: &str) -> MemoryResult<Vec<MemoryEntry>> {
+        Self::validate_tier_name(tier)?;
         let ids = self.list_tier(tier).await?;
         let mut memories = Vec::new();
 
@@ -135,6 +185,7 @@ impl MemoryPersistence {
 
     /// Clear all memories in a tier
     pub async fn clear_tier(&self, tier: &str) -> MemoryResult<usize> {
+        Self::validate_tier_name(tier)?;
         let ids = self.list_tier(tier).await?;
         let count = ids.len();
 
@@ -145,5 +196,58 @@ impl MemoryPersistence {
         }
 
         Ok(count)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tempfile::tempdir;
+
+    #[tokio::test]
+    async fn load_rejects_path_traversal_id() {
+        let dir = tempdir().expect("temp dir");
+        let persistence = MemoryPersistence::new(dir.path(), None);
+
+        let err = persistence
+            .load("../escape", "stm")
+            .await
+            .expect_err("traversal id must be rejected");
+
+        assert!(err.to_string().contains("invalid path components"));
+    }
+
+    #[tokio::test]
+    async fn list_tier_rejects_absolute_tier() {
+        let dir = tempdir().expect("temp dir");
+        let persistence = MemoryPersistence::new(dir.path(), None);
+
+        let err = persistence
+            .list_tier("/tmp")
+            .await
+            .expect_err("absolute tier must be rejected");
+
+        assert!(err.to_string().contains("Unsupported memory tier"));
+    }
+
+    #[tokio::test]
+    async fn save_and_load_round_trip_with_valid_id() {
+        let dir = tempdir().expect("temp dir");
+        let persistence = MemoryPersistence::new(dir.path(), None);
+        persistence.init().await.expect("init should succeed");
+
+        let mut entry = MemoryEntry::new("hello memory".to_string(), 0.8, MemoryType::Conversation);
+        entry.id = "entry-1".to_string();
+        entry.tier = MemoryTier::STM;
+
+        persistence.save(&entry).await.expect("save should succeed");
+        let loaded = persistence
+            .load("entry-1", "stm")
+            .await
+            .expect("load should succeed");
+
+        assert_eq!(loaded.id, entry.id);
+        assert_eq!(loaded.content, entry.content);
+        assert_eq!(loaded.tier, entry.tier);
     }
 }

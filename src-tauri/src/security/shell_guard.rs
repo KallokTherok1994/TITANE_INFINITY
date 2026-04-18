@@ -23,18 +23,22 @@ impl ShellGuard {
     /// Exécute une commande vérifiée avec arguments validés
     pub fn execute_verified(&self, command: &str, args: &[&str]) -> Result<String, String> {
         // 1. Validation commande via whitelist
-        self.validate_command(command)?;
+        let validated_command = self.validate_command(command)?;
 
         // 2. Validation des arguments
         Self::validate_args(args)?;
 
         // 3. Log tentative
         if self.policy.security_logging {
-            eprintln!("[SECURITY:SHELL] Executing: {} {}", command, args.join(" "));
+            eprintln!(
+                "[SECURITY:SHELL] Executing: {} {}",
+                validated_command,
+                args.join(" ")
+            );
         }
 
         // 4. Exécution
-        let output = Command::new(command)
+        let output = Command::new(&validated_command)
             .args(args)
             .output()
             .map_err(|e| format!("Command execution failed: {}", e))?;
@@ -42,14 +46,17 @@ impl ShellGuard {
         // 5. Vérification status
         if !output.status.success() {
             let stderr = String::from_utf8_lossy(&output.stderr);
-            return Err(format!("Command failed: {} (stderr: {})", command, stderr));
+            return Err(format!(
+                "Command failed: {} (stderr: {})",
+                validated_command, stderr
+            ));
         }
 
         Ok(String::from_utf8_lossy(&output.stdout).to_string())
     }
 
     /// Valide que la commande est dans la whitelist
-    pub fn validate_command(&self, command: &str) -> Result<(), String> {
+    pub fn validate_command(&self, command: &str) -> Result<String, String> {
         if command.is_empty() {
             return Err("Empty command".into());
         }
@@ -59,6 +66,20 @@ impl ShellGuard {
             .file_name()
             .and_then(|s| s.to_str())
             .unwrap_or(command);
+
+        if command != command_name {
+            if self.policy.security_logging {
+                eprintln!(
+                    "[SECURITY:SHELL] BLOCKED: Command path is not allowed: {}",
+                    command
+                );
+            }
+
+            return Err(format!(
+                "Command path is not allowed: '{}'. Use the whitelisted binary name only.",
+                command
+            ));
+        }
 
         if !self
             .policy
@@ -78,7 +99,7 @@ impl ShellGuard {
             ));
         }
 
-        Ok(())
+        Ok(command_name.to_string())
     }
 
     /// Valide les arguments (pas de caractères dangereux)
@@ -102,13 +123,23 @@ impl ShellGuard {
             }
 
             // Vérification chemins suspects
-            if arg.contains("..") && !arg.starts_with("--") {
-                // Autoriser les flags longs (--option) mais pas path traversal
+            if arg.contains("..") && !Self::is_safe_long_flag(arg) {
                 return Err(format!("Suspicious path in argument: {}", arg));
             }
         }
 
         Ok(())
+    }
+
+    fn is_safe_long_flag(arg: &str) -> bool {
+        let Some(flag_name) = arg.strip_prefix("--") else {
+            return false;
+        };
+
+        !flag_name.is_empty()
+            && flag_name
+                .chars()
+                .all(|character| character.is_ascii_alphanumeric() || character == '-')
     }
 
     /// Helper TTS sécurisé - Espeak
@@ -168,12 +199,17 @@ impl ShellGuard {
             return false;
         }
 
-        if Self::validate_args(&[command]).is_err() {
+        let validated_command = match self.validate_command(command) {
+            Ok(validated_command) => validated_command,
+            Err(_) => return false,
+        };
+
+        if Self::validate_args(&[&validated_command]).is_err() {
             return false;
         }
 
         Command::new("which")
-            .arg(command)
+            .arg(validated_command)
             .output()
             .map(|output| output.status.success())
             .unwrap_or(false)
@@ -225,6 +261,18 @@ mod tests {
     }
 
     #[test]
+    fn test_validate_args_rejects_long_flag_path_traversal_value() {
+        let args = vec!["--output=../../etc/passwd"];
+        assert!(ShellGuard::validate_args(&args).is_err());
+    }
+
+    #[test]
+    fn test_validate_args_allows_safe_long_flag_name() {
+        let args = vec!["--keep-going", "file.wav"];
+        assert!(ShellGuard::validate_args(&args).is_ok());
+    }
+
+    #[test]
     fn test_sanitize_text() {
         let input = "Bonjour! Comment ça va? | rm -rf /";
         let output = ShellGuard::sanitize_text(input);
@@ -235,8 +283,15 @@ mod tests {
     #[test]
     fn test_validate_command_whitelist() {
         let guard = ShellGuard::new();
-        assert!(guard.validate_command("espeak").is_ok());
-        assert!(guard.validate_command("whisper").is_ok());
+        assert_eq!(guard.validate_command("espeak").unwrap(), "espeak");
+        assert_eq!(guard.validate_command("whisper").unwrap(), "whisper");
         assert!(guard.validate_command("rm").is_err()); // Non whitelisté
+    }
+
+    #[test]
+    fn test_validate_command_rejects_command_paths() {
+        let guard = ShellGuard::new();
+        assert!(guard.validate_command("/tmp/espeak").is_err());
+        assert!(guard.validate_command("./whisper").is_err());
     }
 }

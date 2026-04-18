@@ -11,7 +11,11 @@
  */
 
 import React, { useState } from 'react';
-import { useInteroception, useCognitiveSounds, usePhysiologicalState } from '@/hooks';
+import {
+  useInteroception,
+  useCognitiveSounds,
+  usePhysiologicalState,
+} from '@/hooks/usePhysiological';
 
 // Local types (spatial engine removed)
 type TitanSpatialState = {

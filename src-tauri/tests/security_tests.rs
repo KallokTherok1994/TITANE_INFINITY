@@ -94,6 +94,40 @@ fn test_null_byte_injection_blocked() {
     let _ = std::fs::remove_dir_all(&temp_dir);
 }
 
+#[test]
+fn test_scheme_like_path_blocked() {
+    use titane_infinity::security::storage_guard::StorageGuard;
+
+    let temp_dir = env::temp_dir().join("titane_security_test_scheme");
+    std::fs::create_dir_all(&temp_dir).unwrap();
+
+    let guard = StorageGuard::new(temp_dir.clone());
+
+    let result = guard.validate_and_resolve("file:///etc/passwd");
+    assert!(result.is_err(), "Les chemins de type scheme doivent etre bloques");
+
+    let _ = std::fs::remove_dir_all(&temp_dir);
+}
+
+#[test]
+fn test_absolute_path_inside_sandbox_blocked() {
+    use titane_infinity::security::storage_guard::StorageGuard;
+
+    let temp_dir = env::temp_dir().join("titane_security_test_absolute");
+    std::fs::create_dir_all(&temp_dir).unwrap();
+
+    let guard = StorageGuard::new(temp_dir.clone());
+    let absolute_inside = temp_dir.join("already_inside.txt");
+
+    let result = guard.validate_and_resolve(&absolute_inside.to_string_lossy());
+    assert!(
+        result.is_err(),
+        "Les chemins absolus doivent etre bloques meme s ils pointent sous la sandbox"
+    );
+
+    let _ = std::fs::remove_dir_all(&temp_dir);
+}
+
 #[tokio::test]
 async fn test_sandbox_enforcement() {
     use titane_infinity::security::storage_guard::StorageGuard;

@@ -11,6 +11,7 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
+import { LogLevel } from '@/types/logLevel';
 import type { LogArgs, LogParts, TableData } from '@/types/logger';
 
 // Lazy import to avoid circular dependency
@@ -41,17 +42,7 @@ const getLogLevelManager = () => {
   return logLevelManager;
 };
 
-/**
- * Log levels (par ordre de priorité)
- */
-export enum LogLevel {
-  TRACE = 0,
-  DEBUG = 1,
-  INFO = 2,
-  WARN = 3,
-  ERROR = 4,
-  FATAL = 5,
-}
+export { LogLevel } from '@/types/logLevel';
 
 /**
  * Configuration logger

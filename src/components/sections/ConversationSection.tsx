@@ -49,7 +49,7 @@ import { createLogger } from '@/utils/logger';
 import { confirmAction } from '@/utils/runtimeConfirm';
 import type { ProviderDecisionMeta, ReasonCode } from '@/types/providerMeta';
 import { webResearch } from '@/services/webResearchService';
-import type { ResearchOptions, ResearchReport } from '@/types/research';
+import type { Citation, ResearchOptions, ResearchReport } from '@/types/research';
 import { useLTMContext } from '@/hooks/useLTMContext';
 import {
   buildArtifactActionContract,
@@ -83,6 +83,7 @@ interface ConversationMessageItem {
     tags?: string[];
     intention?: string;
     providerMeta?: ProviderDecisionMeta;
+    citations?: Citation[];
   };
 }
 
@@ -449,6 +450,25 @@ function shouldHandoffToResearch(input: string): boolean {
     normalized.includes('online');
 
   return hasResearchVerb && hasWebTarget;
+}
+
+export function resolveConversationCitations(
+  citations: Citation[] | null | undefined
+): Citation[] {
+  if (!Array.isArray(citations)) {
+    return [];
+  }
+
+  return citations.filter(citation => {
+    return (
+      typeof citation?.url === 'string' &&
+      citation.url.trim().length > 0 &&
+      typeof citation?.excerpt === 'string' &&
+      citation.excerpt.trim().length > 0 &&
+      typeof citation?.accessed_at === 'string' &&
+      citation.accessed_at.trim().length > 0
+    );
+  });
 }
 
 function extractResearchTopic(input: string): string {
@@ -860,12 +880,14 @@ function formatRuntimeThinkingSummary(meta: ProviderDecisionMeta): string {
 const ConversationMessage = memo(
   ({
     message,
+    itemIndex,
     isLoading,
     onCopy,
     onRetry,
     onDelete,
   }: {
     message: ConversationMessageItem;
+    itemIndex: number;
     isLoading: boolean;
     onCopy: (content: string) => void;
     onRetry: (content: string) => void;
@@ -887,6 +909,7 @@ const ConversationMessage = memo(
     const classLabel = providerMeta?.provider_class;
     const reasonLabel = providerMeta?.reason_code;
     const cacheHit = providerMeta?.cache_hit === true;
+    const citations = resolveConversationCitations(message.metadata?.citations);
 
     const handleCopy = useCallback(
       () => onCopy(message.content),
@@ -992,6 +1015,49 @@ const ConversationMessage = memo(
           <div className="conversation-message-text" data-testid="chat-message-content">
             {message.content}
           </div>
+          {message.role === 'assistant' && citations.length > 0 && (
+            <div
+              className="conversation-message-citations"
+              data-testid={`message-citations-${itemIndex}`}
+            >
+              <div className="conversation-message-citations-title">Sources en ligne</div>
+              <ul className="conversation-message-citations-list">
+                {citations.map((citation, citationIndex) => {
+                  const label = citation.title?.trim() || citation.url;
+                  const locator = citation.locator_text || citation.locator || null;
+
+                  return (
+                    <li
+                      key={`${citation.url}-${citationIndex}`}
+                      className="conversation-message-citation-item"
+                      data-testid={`message-citation-${itemIndex}-${citationIndex}`}
+                    >
+                      <div className="conversation-message-citation-index">
+                        [{citationIndex + 1}]
+                      </div>
+                      <a
+                        className="conversation-message-citation-link"
+                        href={citation.url}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {label}
+                      </a>
+                      {locator && (
+                        <div className="conversation-message-citation-locator">{locator}</div>
+                      )}
+                      <div className="conversation-message-citation-excerpt">
+                        {citation.excerpt}
+                      </div>
+                      <div className="conversation-message-citation-accessed">
+                        accessed: {citation.accessed_at}
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
           {message.metadata?.intention && (
             <div className="conversation-message-meta">
               <span className="meta-intention">{message.metadata.intention}</span>
@@ -1766,6 +1832,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
           <ConversationMessage
             key={msg.id || `msg-${index}`}
             message={msg}
+            itemIndex={index}
             isLoading={isLoading}
             onCopy={handleCopyMessage}
             onRetry={handleRetryMessage}
@@ -2004,6 +2071,9 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
             intention: 'web_research',
             tags: ['research', 'web_live', outcome],
             providerMeta,
+            providerUsed: providerMeta.provider_used,
+            requestedProvider: selectedProvider,
+            citations: report.answer.citations,
           });
 
           if (outcome === 'blocked') {
@@ -2034,6 +2104,8 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                 cache_hit: false,
                 policy: 'web_research_inline',
               },
+              providerUsed: 'web_research',
+              requestedProvider: selectedProvider,
             }
           );
           errorToast('Recherche web indisponible.');

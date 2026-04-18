@@ -124,6 +124,16 @@ impl StorageGuard {
             return Err("Null byte in path".into());
         }
 
+        if relative_path.contains("://") {
+            if self.policy.security_logging {
+                eprintln!(
+                    "[SECURITY:STORAGE] BLOCKED: Scheme-like path rejected: {}",
+                    relative_path
+                );
+            }
+            return Err("Scheme-like paths are not allowed".into());
+        }
+
         // 2. Interdire path traversal évident
         if relative_path.contains("..") {
             if self.policy.security_logging {
@@ -135,25 +145,21 @@ impl StorageGuard {
             return Err("Path traversal detected (..)".into());
         }
 
-        // 3. Interdire chemins absolus/rootés hors sandbox
+        // 3. Interdire tous les chemins absolus/rootés: l API n accepte que des chemins relatifs sandboxés.
         let path = Path::new(relative_path);
         let is_rooted_path = path.is_absolute() || path.has_root();
-        if is_rooted_path && !path.starts_with(&sandbox_root) {
+        if is_rooted_path {
             if self.policy.security_logging {
                 eprintln!(
-                    "[SECURITY:STORAGE] BLOCKED: Absolute/rooted path outside sandbox: {}",
+                    "[SECURITY:STORAGE] BLOCKED: Absolute/rooted path rejected: {}",
                     relative_path
                 );
             }
-            return Err("Absolute paths not allowed outside sandbox".into());
+            return Err("Absolute or rooted paths are not allowed".into());
         }
 
         // 4. Construction chemin complet
-        let full_path = if is_rooted_path {
-            path.to_path_buf()
-        } else {
-            sandbox_root.join(relative_path)
-        };
+        let full_path = sandbox_root.join(relative_path);
 
         // 5. Vérification finale sandbox (si activé)
         if self.policy.fs_sandbox_enabled {
@@ -165,16 +171,16 @@ impl StorageGuard {
             }
 
             // Tenter canonicalisation (résout symlinks, ..)
-            // Note: échoue si le fichier n'existe pas encore, donc on vérifie aussi le parent
+            // Note: échoue si le fichier n'existe pas encore, donc on vérifie aussi l ancetre existant le plus proche
             let canonical = if full_path.exists() {
                 full_path
                     .canonicalize()
                     .map_err(|e| format!("Canonicalize failed: {}", e))?
             } else {
-                // Pour nouveaux fichiers, vérifier le répertoire parent
-                if let Some(parent) = full_path.parent() {
-                    if parent.exists() {
-                        let canonical_parent = parent
+                let mut ancestor = full_path.parent().map(Path::to_path_buf);
+                while let Some(candidate) = ancestor {
+                    if candidate.exists() {
+                        let canonical_parent = candidate
                             .canonicalize()
                             .map_err(|e| format!("Canonicalize parent failed: {}", e))?;
 
@@ -184,8 +190,13 @@ impl StorageGuard {
                                 canonical_parent, sandbox_root
                             ));
                         }
+
+                        break;
                     }
+
+                    ancestor = candidate.parent().map(Path::to_path_buf);
                 }
+
                 full_path.clone()
             };
 
@@ -208,11 +219,23 @@ impl StorageGuard {
 
     /// Sanitize filename (enlever caractères interdits)
     pub fn sanitize_filename(filename: &str) -> String {
-        filename
+        let sanitized: String = filename
             .chars()
             .filter(|c| c.is_alphanumeric() || *c == '_' || *c == '-' || *c == '.')
             .take(255) // Limite longueur nom fichier
-            .collect()
+            .collect();
+
+        let trimmed = sanitized.trim_matches('.');
+        if !trimmed.is_empty() {
+            return trimmed.to_string();
+        }
+
+        let mut checksum = 0u64;
+        for byte in filename.as_bytes() {
+            checksum = checksum.wrapping_mul(131).wrapping_add(u64::from(*byte));
+        }
+
+        format!("file_{checksum:x}")
     }
 }
 
@@ -220,6 +243,9 @@ impl StorageGuard {
 mod tests {
     use super::*;
     use std::env;
+
+    #[cfg(unix)]
+    use std::os::unix::fs::symlink;
 
     #[test]
     fn test_validate_path_traversal() {
@@ -254,10 +280,10 @@ mod tests {
             "helloworld.txt"
         );
 
-        // Dots at beginning are preserved (....etcpasswd)
+        // Leading dots are removed to avoid hidden/ambiguous storage names
         assert_eq!(
             StorageGuard::sanitize_filename("../../etc/passwd"),
-            "....etcpasswd"
+            "etcpasswd"
         );
 
         // Pipes removed, hyphens preserved
@@ -265,6 +291,8 @@ mod tests {
             StorageGuard::sanitize_filename("file|rm -rf /.txt"),
             "filerm-rf.txt"
         );
+
+        assert!(StorageGuard::sanitize_filename("!!!").starts_with("file_"));
     }
 
     #[tokio::test]
@@ -293,5 +321,34 @@ mod tests {
 
         // Cleanup
         let _ = std::fs::remove_dir_all(&temp_dir);
+    }
+
+    #[cfg(unix)]
+    #[tokio::test]
+    async fn test_safe_write_rejects_nested_symlink_escape() {
+        let temp_root = env::temp_dir().join(format!(
+            "titane_test_storage_symlink_escape_{}",
+            std::process::id()
+        ));
+        let sandbox_root = temp_root.join("sandbox");
+        let outside_root = temp_root.join("outside");
+
+        std::fs::create_dir_all(&sandbox_root)
+            .expect("sandbox root should be creatable for storage guard symlink test");
+        std::fs::create_dir_all(&outside_root)
+            .expect("outside root should be creatable for storage guard symlink test");
+
+        symlink(&outside_root, sandbox_root.join("linked_out"))
+            .expect("symlink should be creatable for storage guard symlink test");
+
+        let guard = StorageGuard::new(sandbox_root.clone());
+        let result = guard
+            .safe_write_string("linked_out/newdir/escape.txt", "Hello TITANE")
+            .await;
+
+        assert!(result.is_err());
+        assert!(!outside_root.join("newdir/escape.txt").exists());
+
+        let _ = std::fs::remove_dir_all(&temp_root);
     }
 }

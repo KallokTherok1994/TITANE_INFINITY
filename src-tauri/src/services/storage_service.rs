@@ -87,7 +87,7 @@ impl StorageService {
         // ✅ SECURED: Use StorageGuard list_dir
         let files = self
             .storage_guard
-            .safe_list_dir("")
+            .safe_list_dir(".")
             .await
             .map_err(AppError::Io)?;
 
@@ -98,5 +98,63 @@ impl StorageService {
             .collect();
 
         Ok(keys)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde::{Deserialize, Serialize};
+    use tempfile::tempdir;
+
+    #[derive(Debug, Serialize, Deserialize, PartialEq)]
+    struct StorageFixture {
+        value: String,
+    }
+
+    #[tokio::test]
+    async fn list_keys_returns_json_keys_from_storage_root() {
+        let dir = tempdir().expect("temp dir");
+        let service = StorageService::new(dir.path().to_path_buf()).expect("storage service");
+
+        service
+            .save(
+                "alpha",
+                &StorageFixture {
+                    value: "one".to_string(),
+                },
+            )
+            .await
+            .expect("save alpha");
+        service
+            .save(
+                "beta",
+                &StorageFixture {
+                    value: "two".to_string(),
+                },
+            )
+            .await
+            .expect("save beta");
+        std::fs::write(dir.path().join("notes.txt"), "ignore me").expect("write non-json fixture");
+
+        let mut keys = service.list_keys().await.expect("list keys should succeed");
+        keys.sort();
+
+        assert_eq!(keys, vec!["alpha".to_string(), "beta".to_string()]);
+    }
+
+    #[tokio::test]
+    async fn save_and_load_round_trip_works() {
+        let dir = tempdir().expect("temp dir");
+        let service = StorageService::new(dir.path().to_path_buf()).expect("storage service");
+        let fixture = StorageFixture {
+            value: "persisted".to_string(),
+        };
+
+        service.save("roundtrip", &fixture).await.expect("save fixture");
+        let loaded: StorageFixture = service.load("roundtrip").await.expect("load fixture");
+
+        assert_eq!(loaded, fixture);
+        assert!(service.exists("roundtrip"));
     }
 }

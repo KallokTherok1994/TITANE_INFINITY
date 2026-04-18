@@ -15,6 +15,7 @@
 //! RÈGLE ABSOLUE: Seul Kevin Thibault peut utiliser ce module
 
 use serde::{Deserialize, Serialize};
+use std::path::{Component, Path, PathBuf};
 use tauri::command;
 
 // ============================================================================
@@ -178,6 +179,74 @@ pub struct DiffChange {
     pub modified: Option<String>,
 }
 
+fn workspace_root() -> PathBuf {
+    Path::new(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .unwrap_or_else(|| Path::new(env!("CARGO_MANIFEST_DIR")))
+        .to_path_buf()
+}
+
+fn workspace_root_canonical() -> Result<PathBuf, String> {
+    workspace_root()
+        .canonicalize()
+        .map_err(|e| format!("Developer Mode workspace resolution failed: {}", e))
+}
+
+fn resolve_developer_mode_patch_path(path: &str) -> Result<PathBuf, String> {
+    let trimmed = path.trim();
+
+    if trimmed.is_empty() {
+        return Err("Patch file path cannot be empty".to_string());
+    }
+
+    if trimmed.contains('\0') {
+        return Err("Patch file path contains a NUL byte".to_string());
+    }
+
+    if trimmed.contains("://") {
+        return Err("Patch file path cannot use a protocol scheme".to_string());
+    }
+
+    let candidate = Path::new(trimmed);
+    if candidate
+        .components()
+        .any(|component| matches!(component, Component::ParentDir))
+    {
+        return Err("Patch file path traversal is not allowed".to_string());
+    }
+
+    let workspace_root = workspace_root();
+    let workspace_root_canonical = workspace_root_canonical()?;
+    let resolved = if candidate.is_absolute() {
+        candidate.to_path_buf()
+    } else {
+        workspace_root.join(candidate)
+    };
+
+    let anchor = if resolved.exists() {
+        resolved
+            .canonicalize()
+            .map_err(|e| format!("Patch file resolution failed: {}", e))?
+    } else if let Some(parent) = resolved.parent() {
+        if parent.exists() {
+            parent
+                .canonicalize()
+                .map_err(|e| format!("Patch parent resolution failed: {}", e))?
+                .join(resolved.file_name().unwrap_or_default())
+        } else {
+            resolved.clone()
+        }
+    } else {
+        resolved.clone()
+    };
+
+    if !anchor.starts_with(&workspace_root_canonical) {
+        return Err(format!("Patch file path escapes workspace root: {}", trimmed));
+    }
+
+    Ok(resolved)
+}
+
 // ============================================================================
 // Developer Mode Implementation
 // ============================================================================
@@ -233,11 +302,23 @@ pub async fn dev_mode_validate_patch(
         issues.push("User not authorized for Developer Mode".to_string());
     }
 
+    let resolved_patch_path = resolve_developer_mode_patch_path(&patch.file);
+    if let Err(err) = &resolved_patch_path {
+        issues.push(err.clone());
+    }
+
     // Vérification fichier autorisé
     let allowed_extensions = [".rs", ".ts", ".tsx", ".css", ".json"];
-    let file_allowed = allowed_extensions
-        .iter()
-        .any(|ext| patch.file.ends_with(ext));
+    let file_allowed = resolved_patch_path
+        .as_ref()
+        .ok()
+        .and_then(|path| path.extension().and_then(|extension| extension.to_str()))
+        .map(|extension| {
+            allowed_extensions
+                .iter()
+                .any(|allowed| extension.eq_ignore_ascii_case(allowed.trim_start_matches('.')))
+        })
+        .unwrap_or(false);
     if !file_allowed {
         issues.push(format!("File type not allowed: {}", patch.file));
     }
@@ -286,6 +367,91 @@ pub async fn dev_mode_validate_patch(
         no_dangerous_code,
         issues,
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn valid_patch(file: &str) -> PatchAction {
+        PatchAction {
+            id: "patch-test".to_string(),
+            patch_type: PatchType::Replace,
+            file: file.to_string(),
+            change: PatchChange {
+                target: Some("old".to_string()),
+                with: Some("new".to_string()),
+                location: None,
+                content: None,
+            },
+            reason: "test".to_string(),
+            tests: vec!["cargo test".to_string()],
+            metadata: PatchMetadata {
+                author: "Kevin Thibault".to_string(),
+                approved_by: "Kevin Thibault".to_string(),
+                severity: ChangeSeverity::Minor,
+                reversible: true,
+                tags: vec!["test".to_string()],
+            },
+        }
+    }
+
+    #[tokio::test]
+    async fn test_dev_mode_validate_patch_accepts_workspace_file() {
+        let result = dev_mode_validate_patch(valid_patch("src-tauri/src/engines/developer_mode.rs"), "Kevin Thibault".to_string())
+            .await
+            .expect("validation should succeed");
+
+        assert!(result.valid);
+        assert!(result.file_allowed);
+        assert!(result.issues.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_dev_mode_validate_patch_rejects_path_traversal() {
+        let result = dev_mode_validate_patch(valid_patch("../package.json"), "Kevin Thibault".to_string())
+            .await
+            .expect("validation should return structured rejection");
+
+        assert!(!result.valid);
+        assert!(result.issues.iter().any(|issue| issue.contains("traversal")));
+    }
+
+    #[tokio::test]
+    async fn test_dev_mode_validate_patch_rejects_outside_workspace_absolute_path() {
+        let result = dev_mode_validate_patch(valid_patch("/etc/passwd"), "Kevin Thibault".to_string())
+            .await
+            .expect("validation should return structured rejection");
+
+        assert!(!result.valid);
+        assert!(result
+            .issues
+            .iter()
+            .any(|issue| issue.contains("escapes workspace root")));
+    }
+
+    #[tokio::test]
+    async fn test_dev_mode_validate_patch_rejects_protocol_scheme() {
+        let result = dev_mode_validate_patch(valid_patch("https://example.com/file.ts"), "Kevin Thibault".to_string())
+            .await
+            .expect("validation should return structured rejection");
+
+        assert!(!result.valid);
+        assert!(result.issues.iter().any(|issue| issue.contains("protocol scheme")));
+    }
+
+    #[tokio::test]
+    async fn test_dev_mode_validate_patch_rejects_unsupported_extension() {
+        let result = dev_mode_validate_patch(valid_patch("README.md"), "Kevin Thibault".to_string())
+            .await
+            .expect("validation should return structured rejection");
+
+        assert!(!result.valid);
+        assert!(result
+            .issues
+            .iter()
+            .any(|issue| issue.contains("File type not allowed")));
+    }
 }
 
 /// Prévisualiser un patch (diff)

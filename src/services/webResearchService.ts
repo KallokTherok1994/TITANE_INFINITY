@@ -17,6 +17,29 @@ import type { IpcErrorPayload } from '@/utils/invoke';
 import { tauri } from '@/api/tauriClient';
 import type { ResearchOptions, ResearchQuery, ResearchReport } from '@/types/research';
 
+const E2E_WEB_RESEARCH_MOCK_FLAG = '__TITANE_E2E_WEB_RESEARCH_MOCK__';
+const E2E_WEB_RESEARCH_REPORT_FLAG = '__TITANE_E2E_WEB_RESEARCH_REPORT__';
+
+type WindowRecord = Record<string, unknown>;
+
+function getWindowRecord(): WindowRecord | null {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  return window as WindowRecord;
+}
+
+function getE2EWebResearchMockReport(): ResearchReport | null {
+  const win = getWindowRecord();
+  if (!win || win[E2E_WEB_RESEARCH_MOCK_FLAG] !== true) {
+    return null;
+  }
+
+  const report = win[E2E_WEB_RESEARCH_REPORT_FLAG];
+  return report && typeof report === 'object' ? (report as ResearchReport) : null;
+}
+
 export interface WebSearchResult {
   title: string;
   url: string;
@@ -62,5 +85,10 @@ export async function webResearch(
   query: ResearchQuery,
   options: ResearchOptions
 ): Promise<ResearchReport> {
+  const e2eMockReport = getE2EWebResearchMockReport();
+  if (e2eMockReport) {
+    return e2eMockReport;
+  }
+
   return tauri<ResearchReport>('web_research', { query, options });
 }

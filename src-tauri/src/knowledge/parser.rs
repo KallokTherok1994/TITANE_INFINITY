@@ -3,7 +3,7 @@
  * Universal Parser - Ingestion PDF/DOCX/JSON/OCR/Audio
  */
 use serde::{Deserialize, Serialize};
-use std::path::Path;
+use std::path::{Component, Path, PathBuf};
 use std::process::Stdio;
 use tokio::time::{timeout, Duration};
 
@@ -490,23 +490,82 @@ impl Default for UniversalParser {
 // ══════════════════════════════════════════════════════════════════
 
 /// Validates that a file path is safe (no traversal attacks).
-/// Rejects paths containing `..` components, NUL bytes, or protocol schemes.
-fn validate_file_path(file_path: &str) -> Result<std::path::PathBuf, String> {
-    if file_path.contains('\0') {
+/// Rejects paths containing `..` components, NUL bytes, protocol schemes,
+/// sensitive filenames/extensions, or non-file targets.
+fn validate_file_path(file_path: &str) -> Result<PathBuf, String> {
+    let trimmed = file_path.trim();
+
+    if trimmed.is_empty() {
+        return Err("Invalid file path: empty path".to_string());
+    }
+
+    if trimmed.contains('\0') {
         return Err("Invalid file path: contains NUL byte".to_string());
     }
-    let path = std::path::PathBuf::from(file_path);
+
+    if trimmed.contains("://") {
+        return Err("Invalid file path: protocol schemes not allowed".to_string());
+    }
+
+    let path = PathBuf::from(trimmed);
+
     // Reject any path with .. components (traversal)
     for component in path.components() {
-        if matches!(component, std::path::Component::ParentDir) {
+        if matches!(component, Component::ParentDir) {
             return Err("Invalid file path: path traversal detected".to_string());
         }
     }
-    // Reject protocol schemes (e.g. file://, http://)
-    if file_path.contains("://") {
-        return Err("Invalid file path: protocol schemes not allowed".to_string());
+
+    if path.is_dir() {
+        return Err("Invalid file path: directories are not supported".to_string());
     }
-    Ok(path)
+
+    let canonical = path
+        .canonicalize()
+        .map_err(|e| format!("Invalid file path: {}", e))?;
+
+    if !canonical.is_file() {
+        return Err("Invalid file path: target is not a file".to_string());
+    }
+
+    if is_sensitive_document_path(&canonical) {
+        return Err(format!(
+            "Invalid file path: sensitive files are not allowed ({})",
+            trimmed
+        ));
+    }
+
+    Ok(canonical)
+}
+
+fn is_sensitive_document_path(path: &Path) -> bool {
+    let file_name = path
+        .file_name()
+        .and_then(|value| value.to_str())
+        .map(|value| value.to_ascii_lowercase())
+        .unwrap_or_default();
+
+    let extension = path
+        .extension()
+        .and_then(|value| value.to_str())
+        .map(|value| value.to_ascii_lowercase())
+        .unwrap_or_default();
+
+    matches!(
+        file_name.as_str(),
+        ".env"
+            | ".env.local"
+            | ".env.production"
+            | ".env.development"
+            | "id_rsa"
+            | "id_dsa"
+            | "id_ecdsa"
+            | "id_ed25519"
+            | "known_hosts"
+    ) || matches!(
+        extension.as_str(),
+        "env" | "pem" | "key" | "p12" | "pfx" | "kdbx" | "secret" | "crt" | "cer"
+    )
 }
 
 #[tauri::command]
@@ -632,10 +691,51 @@ mod tests {
         assert!(validate_file_path("http://evil.com/payload").is_err());
     }
 
-    #[test]
-    fn validate_file_path_accepts_safe_paths() {
-        assert!(validate_file_path("/home/user/docs/report.pdf").is_ok());
-        assert!(validate_file_path("report.pdf").is_ok());
-        assert!(validate_file_path("/tmp/REPORT.PDF").is_ok());
+    #[tokio::test]
+    async fn validate_file_path_accepts_existing_document_file() {
+        let dir = tempdir().expect("tempdir");
+        let file_path = dir.path().join("report.pdf");
+        std::fs::write(&file_path, b"%PDF-1.4\n").expect("write file");
+
+        let validated = validate_file_path(file_path.to_string_lossy().as_ref())
+            .expect("existing file should be accepted");
+
+        assert_eq!(validated, file_path.canonicalize().expect("canonical path"));
+    }
+
+    #[tokio::test]
+    async fn validate_file_path_rejects_missing_file() {
+        let dir = tempdir().expect("tempdir");
+        let missing_path = dir.path().join("missing.pdf");
+
+        let error = validate_file_path(missing_path.to_string_lossy().as_ref())
+            .expect_err("missing files must be rejected");
+
+        assert!(error.contains("Invalid file path"));
+    }
+
+    #[tokio::test]
+    async fn validate_file_path_rejects_sensitive_files() {
+        let dir = tempdir().expect("tempdir");
+        let sensitive_path = dir.path().join("secret.env");
+        std::fs::write(&sensitive_path, b"TOKEN=secret\n").expect("write file");
+
+        let error = validate_file_path(sensitive_path.to_string_lossy().as_ref())
+            .expect_err("sensitive files must be rejected");
+
+        assert!(error.contains("sensitive files are not allowed"));
+    }
+
+    #[tokio::test]
+    async fn detect_file_format_uses_validated_existing_file() {
+        let dir = tempdir().expect("tempdir");
+        let file_path = dir.path().join("sample.DOCX");
+        std::fs::write(&file_path, b"docx-placeholder").expect("write file");
+
+        let format = detect_file_format(file_path.to_string_lossy().to_string())
+            .await
+            .expect("detect_file_format should succeed");
+
+        assert_eq!(format, "DOCX");
     }
 }

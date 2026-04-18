@@ -9,7 +9,7 @@
 use super::snapshot::{Snapshot, SnapshotContext, SnapshotIndex, SnapshotMetadata};
 use crate::security::encryption::{CryptoEngine, MasterKey, SigningKeypair};
 use std::collections::VecDeque;
-use std::path::PathBuf;
+use std::path::{Component, Path, PathBuf};
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
@@ -57,6 +57,36 @@ pub struct TravelEngine {
 }
 
 impl TravelEngine {
+    fn validate_snapshot_id(id: &str) -> Result<(), TravelError> {
+        if id.is_empty() {
+            return Err(TravelError::CorruptedSnapshot(
+                "Invalid snapshot id: empty".to_string(),
+            ));
+        }
+
+        if id.contains('\0') {
+            return Err(TravelError::CorruptedSnapshot(
+                "Invalid snapshot id: null byte".to_string(),
+            ));
+        }
+
+        let path = Path::new(id);
+        if path.is_absolute()
+            || path.has_root()
+            || path
+                .components()
+                .any(|component| matches!(component, Component::ParentDir | Component::RootDir))
+            || id.contains('/')
+            || id.contains('\\')
+        {
+            return Err(TravelError::CorruptedSnapshot(
+                "Invalid snapshot id: path components forbidden".to_string(),
+            ));
+        }
+
+        Ok(())
+    }
+
     /// Créer nouveau moteur
     pub async fn new(master_key: &MasterKey, keypair: SigningKeypair) -> Result<Self, TravelError> {
         let base_path = Self::get_base_path();
@@ -132,6 +162,7 @@ impl TravelEngine {
 
     /// Restaurer snapshot (rollback)
     pub async fn restore_snapshot(&self, id: &str) -> Result<Vec<u8>, TravelError> {
+        Self::validate_snapshot_id(id)?;
         log::info!("⏮️ Restoring snapshot: {}", id);
 
         // Chercher dans cache RAM d'abord (rollback court)
@@ -168,6 +199,7 @@ impl TravelEngine {
 
     /// Supprimer snapshot
     pub async fn delete_snapshot(&self, id: &str) -> Result<(), TravelError> {
+        Self::validate_snapshot_id(id)?;
         log::info!("🗑️ Deleting snapshot: {}", id);
 
         // Supprimer fichier
@@ -274,6 +306,7 @@ impl TravelEngine {
 
     /// Charger snapshot depuis disque
     async fn load_snapshot(&self, id: &str) -> Result<Snapshot, TravelError> {
+        Self::validate_snapshot_id(id)?;
         let path = self.base_path.join(format!("{}.snapshot", id));
 
         if !path.exists() {
@@ -376,5 +409,19 @@ mod tests {
             .delete_snapshot(&id)
             .await
             .expect("snapshot deletion should succeed");
+    }
+
+    #[test]
+    fn test_validate_snapshot_id_rejects_traversal() {
+        let err = TravelEngine::validate_snapshot_id("../escape")
+            .expect_err("traversal id must be rejected");
+        assert!(err.to_string().contains("path components forbidden"));
+    }
+
+    #[test]
+    fn test_validate_snapshot_id_rejects_absolute_path() {
+        let err = TravelEngine::validate_snapshot_id("/tmp/escape")
+            .expect_err("absolute id must be rejected");
+        assert!(err.to_string().contains("path components forbidden"));
     }
 }

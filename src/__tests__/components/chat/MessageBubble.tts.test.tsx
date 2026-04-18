@@ -94,4 +94,41 @@ describe('MessageBubble TTS controls', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Reprendre' }));
     expect(messageSpeechController.resume).toHaveBeenCalledTimes(1);
   });
+
+  it('rend les citations en ligne sur la bulle assistant canonique', () => {
+    vi.mocked(useMessageSpeechState).mockReturnValue({
+      messageId: 'assistant-4',
+      status: 'idle',
+      provider: null,
+      error: null,
+      supportsPause: true,
+      canPlay: false,
+    });
+
+    render(
+      <MessageBubble
+        role="assistant"
+        content="Synthèse avec sources"
+        timestamp={4}
+        metadata={{
+          citations: [
+            {
+              url: 'https://example.com/a',
+              title: 'Source A',
+              excerpt: 'Extrait A',
+              accessed_at: '2026-04-18T10:00:00Z',
+              locator_text: 'p=2, c≈40',
+            },
+          ],
+        }}
+      />
+    );
+
+    expect(screen.getByTestId('message-citations-4')).toBeInTheDocument();
+    expect(screen.getByTestId('message-citation-4-0')).toHaveTextContent('Source A');
+    expect(screen.getByText('[1]')).toBeInTheDocument();
+    expect(screen.getByText('Extrait A')).toBeInTheDocument();
+    expect(screen.getByText('p=2, c≈40')).toBeInTheDocument();
+    expect(screen.getByText('accessed: 2026-04-18T10:00:00Z')).toBeInTheDocument();
+  });
 });

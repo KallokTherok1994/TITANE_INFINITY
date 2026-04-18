@@ -665,6 +665,73 @@
   border-top: 1px solid rgba(148, 163, 184, 0.14);
 }
 
+.message-bubble-citations {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+.message-bubble-citations-title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(103, 232, 249, 0.92);
+  margin-bottom: 10px;
+}
+
+.message-bubble-citations-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.message-bubble-citation-item {
+  padding: 10px 12px;
+  border: 1px solid rgba(103, 232, 249, 0.16);
+  border-radius: 10px;
+  background: rgba(8, 47, 73, 0.2);
+}
+
+.message-bubble-citation-index {
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(125, 211, 252, 0.92);
+}
+
+.message-bubble-citation-link {
+  color: rgba(165, 243, 252, 0.98);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.message-bubble-citation-link:hover {
+  text-decoration: underline;
+}
+
+.message-bubble-citation-locator {
+  margin-top: 4px;
+  font-size: 12px;
+  color: rgba(125, 211, 252, 0.75);
+}
+
+.message-bubble-citation-excerpt {
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(226, 232, 240, 0.84);
+}
+
+.message-bubble-citation-accessed {
+  margin-top: 8px;
+  font-size: 11px;
+  color: rgba(148, 163, 184, 0.84);
+}
+
 .message-bubble-audio-status {
   font-size: 13px;
   line-height: 1.5;

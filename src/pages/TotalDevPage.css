@@ -652,29 +652,14 @@
   border-bottom: 1px solid #1e2a3a;
 }
 
-.total-dev-git-ops-row {
-  display: flex;
-  gap: 8px;
-  padding: 8px 14px;
-  align-items: center;
+.total-dev-git-note {
+  margin: 0;
+  padding: 10px 14px;
   border-bottom: 1px solid #1a2230;
-}
-
-.total-dev-git-input {
-  flex: 1;
-  padding: 6px 10px;
-  background: #161c27;
-  border: 1px solid #2a3a50;
-  border-radius: 4px;
-  color: #e0e6f0;
-  font-family: inherit;
-  font-size: 12px;
-  outline-offset: 2px;
-}
-
-.total-dev-git-input:focus {
-  border-color: #2a5a3a;
-  outline: 2px solid #0f2a1a;
+  color: #8ba3c0;
+  font-size: 11px;
+  line-height: 1.5;
+  background: #0a1019;
 }
 
 .total-dev-git-output {

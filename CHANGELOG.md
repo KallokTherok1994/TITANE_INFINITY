@@ -1,3 +1,64 @@
+# Unreleased
+
+- Fixed: durcit `security::sandbox::FileImportSandbox::list_files` pour retourner une liste vide quand le dossier sandbox n existe pas encore, ce qui rend `secure_list_files` stable avant tout premier import ou prechauffage explicite du repertoire.
+
+- Fixed: durcit `security::sandbox::FileImportSandbox::import_file` pour creer automatiquement le dossier parent avant ecriture, ce qui rend l import via `secure_import_file` robuste meme sans initialisation prealable explicite de la sandbox.
+
+- Fixed: durcit `security::audit::AuditEventType::Custom` en nettoyant le libelle avant journalisation structuree, avec suppression des caracteres de controle, borne a 128 caracteres et fallback `custom` quand rien de journalisable ne subsiste, ce qui bloque la pollution des types d evenements audit libres sans casser les variantes stables.
+
+- Fixed: durcit `security::validation::PayloadValidator::validate_path` pour refuser aussi les chemins vides apres trim, ce qui bloque les `safe_name` ou chemins purement blancs avant leur propagation vers `secure_commands` et `security::sandbox`.
+
+- Fixed: aligne `security::validation::InputValidator::validate_message` sur la garde bas niveau des chaines en rejetant aussi les caracteres de controle interdits, ce qui bloque des payloads message bruts incoherents sur les surfaces runtime chat/securite sans changer le contrat nominal.
+
+- Fixed: durcit `security::audit::AuditLogger::log` pour creer automatiquement le dossier parent de la cible d audit avant append, ce qui evite la perte silencieuse de preuves runtime quand la racine de logs n existe pas encore.
+
+- Fixed: durcit `security::audit::AuditEvent::new` pour nettoyer les `user_id` d audit avant journalisation structurée, en supprimant les caracteres de controle, en bornant la charge a 128 caracteres et en rabattant les identifiants vides sur `anonymous`, ce qui bloque la pollution des journaux JSON par identifiants bruts sans casser l API runtime.
+
+- Fixed: corrige l ordre d echappement de `security::validation::PayloadValidator::sanitize_html` pour encoder `&` avant `<`, `>`, guillemets et apostrophes, ce qui supprime la double-escape de contenu deja protege et aligne la surface runtime `secure_commands` sur une sanitation HTML/XSS deterministe.
+
+- Fixed: durcit `security::shell_guard::validate_args` pour refuser les arguments contenant `..` meme quand ils commencent par `--` si ce ne sont pas de vrais noms de flags longs. Cela bloque des formes comme `--output=../../etc/passwd` sans casser les flags simples du type `--keep-going`.
+
+- Fixed: durcit `security::storage_guard::sanitize_filename` pour retirer les points de tete/queue et produire un fallback deterministe non cache quand un nom ne contient aucun caractere autorise, ce qui evite les cibles ambiguës du type `.json` ou `....etcpasswd` dans les surfaces qui derivent leurs fichiers depuis des cles externes.
+
+- Fixed: durcit `security::secrets_engine::SecureSecretsEngine` pour refuser les cles de secret vides, avec espaces, caracteres de controle, caracteres hors `[A-Za-z0-9_-]` ou > 128 caracteres avant tout `set/get/has/clear`, ce qui bloque la pollution du coffre chiffre par cles arbitraires meme hors commandes Tauri.
+
+- Fixed: durcit `security::rate_limit::RateLimiter` pour refuser les `user_id` vides, blancs, avec caracteres de controle ou > 128 caracteres avant toute allocation de cle de rate limiting, et aligne `get_stats` / `reset_rate_limit` sur cette meme garde pour bloquer la croissance memoire triviale par identifiants arbitraires.
+
+- Fixed: durcit `security::validation::PayloadValidator` pour refuser explicitement les chemins de type scheme `://` et pour faire requalifier `validate_file_extension` par la meme garde de chemin, ce qui bloque les noms traversal, absolus ou schemes acceptes jusque-la sur la seule base de leur extension.
+- Fixed: durcit `security::permission_guard::log_audit` en nettoyant les bytes de controle et en bornant `action` et `source` avant persistance/export JSON, ce qui bloque le log poisoning et les charges d audit demesurees sans changer la semantique d autorisation.
+- Fixed: resserre `security::storage_guard::validate_and_resolve` pour n accepter que des chemins relatifs sandboxes et pour refuser les chemins de type scheme `://` ainsi que tout chemin absolu ou rooted avant toute resolution de fichier.
+- Fixed: durcit `config::io::import_config` pour n accepter que des fichiers JSON locaux reguliers, non symlinkes, bornes a 1 MiB, et pour refuser les chemins vides, traversal ou schemes avant toute lecture.
+- Fixed: durcit les `voice_id` Piper dans `audio::commands` et `tts::local_tts` pour refuser les identifiants vides, traversants ou non canoniques avant toute construction de chemin `.onnx` sous `~/.local/share/piper/voices`.
+- Fixed: durcit `read_production_week1_csv` dans `api::telemetry_api` pour rejeter les sources CSV symlinkees, non fichier ou surdimensionnees avant toute lecture du chemin fixe sous `temp_dir()`.
+- Fixed: durcit `secure_engine::write_secret_file` pour appliquer explicitement des permissions proprietaire-seul sur les fichiers secrets ecrits sur Unix, tout en conservant la creation automatique des repertoires parents et le round-trip nominal des payloads chiffrés.
+- Fixed: borne `FileImportSandbox::read_file` et `delete_file` a de vrais noms de fichiers plats issus de la sandbox, en refusant les noms imbriques avec separateurs meme s ils passaient la validation textuelle generale.
+- Fixed: durcit `StorageGuard` pour remonter jusqu au plus proche ancetre existant canonique avant toute ecriture vers une cible absente, ce qui bloque les echappements sandbox via repertoire symlinké suivi de sous-dossiers encore inexistants.
+- Fixed: borne `persistence::BackupEngine::import` aux noms d entrees d archive persistence autorises et rejette les noms absolus, traversants ou hors surface canonique avant toute ecriture sous `data_dir`.
+- Fixed: bloque dans `UpdateEngine::run_migration` les `migration_id` absolus, traversants ou contenant des separateurs avant toute lecture de `migrations/{id}.json`.
+- Fixed: durcit `neural_memory::LongTermMemory` contre les `entry.id` et `metadata.file_path` pathologiques avant toute ecriture, lecture ou suppression sous `entries/`.
+- Fixed: bloque dans `memory_os::LongTermMemory` les `metadata.file_path` pathologiques relus depuis l index avant tout load, delete ou remove disque.
+- Fixed: verrouille `MemoryPersistence` contre les `id` et `tier` pathologiques avant toute construction de chemin `.json` dans unified memory v2.
+- Fixed: bloque dans `VaultEngine` les `file_id` absolus, traversants ou contenant des separateurs avant toute lecture, ecriture, suppression ou verification d integrite.
+- Fixed: rejette dans `TravelEngine` les `snapshot id` externes contenant un chemin absolu, des separateurs ou du traversal avant toute lecture/suppression disque.
+- Fixed: aligne `load_config_preset` et `delete_config_preset` sur la meme validation de nom que `save_config_preset`, pour bloquer les noms de preset contenant des chemins ou du traversal.
+- Fixed: remplace dans `backend_selftest` la sonde mémoire basée sur la création opportuniste d un dossier `memory` dans le répertoire courant par un probe temporaire contrôlé, validé par un test de non-fuite.
+- Fixed: durcit `MemoryStorage` contre les `conversation_id` contenant des composants de chemin invalides avant construction du fichier `.json.enc`, avec regressions Rust pour traversal et chemin absolu.
+- Fixed: corrige `StorageService::list_keys` pour lister la racine de stockage via `.` au lieu d un chemin vide rejeté par `StorageGuard`, et couvre le listing JSON ainsi que le round-trip de persistance par tests Rust.
+- Fixed: durcit `CacheService::enforce_sandbox_path` pour que la fallback sandbox verifie un ancetre canonique et des composants de chemin au lieu d un simple prefixe textuel, ce qui bloque les faux siblings du type `sandbox_evil`.
+- Fixed: corrige `IoService` pour resoudre les chemins relatifs sous `base_path`, autoriser l ecriture de nouvelles cibles internes via l ancetre existant canonique, et rejeter traversal ou chemins absolus hors racine autorisee.
+- Fixed: durcit `parse_document` et `detect_file_format` pour n accepter que de vrais fichiers locaux canoniques, rejeter schemes/traversal/repertoires/fichiers absents et bloquer les cibles sensibles (`.env`, `.pem`, `.key`, certificats, coffres) incompatibles avec une surface d ingestion documentaire.
+- Fixed: durcit `ShellGuard` en refusant les commandes passees comme chemins et en executant uniquement le nom whitelisté validé, ce qui ferme le contournement par basename (`/tmp/espeak`).
+- Fixed: borne `dev_mode_validate_patch` au workspace canonique, refuse traversal/scheme/NUL/hors-workspace et deplace la validation d extension sur la cible resolue plutot que sur le chemin brut.
+- Fixed: borne `total_dev_read_file` au workspace canonique, refuse traversal/scheme/NUL/hors-workspace, bloque les extensions sensibles de facon canonique et retourne a nouveau un miss structure pour les chemins repo absents.
+- Fixed: borne `dev_apply_patch` cote Tauri a des fichiers existants du workspace canonique, rejette traversal/scheme/NUL/hors-workspace, et couvre cette garde par des tests Rust de succes et de rejet cibles.
+- Fixed: stabilise le socle HMR/logging en rebranchant `LogLevel` sur le module partage `src/types/logLevel.ts`, en cassant le cycle `utils/logger -> config/logLevelConfig -> utils/logger`, et en ajoutant un `LoggingProvider` de migration pour les futures sorties du barrel hooks.
+- Fixed: reduit la surface runtime du barrel `src/hooks/index.ts` en basculant les imports actifs vers des modules de hooks dedies, extrait les hooks physiologiques dans `src/hooks/usePhysiological.ts`, et durcit `dev_run_command` cote Tauri avec une allowlist stricte et le rejet des operateurs shell.
+- Fixed: borne `dev_inspect_file` cote Tauri a la racine workspace canonique, rejette les chemins traversal/scheme/NUL/hors-workspace, et couvre cette garde par des tests Rust de succes et de rejet cibles.
+- Fixed: borne `fs_exists` et `read_json_file` cote Tauri au workspace canonique, refuse traversal/scheme/NUL/hors-workspace, limite `read_json_file` aux vrais `.json` <= 2 MiB, et aligne la voie securisee frontend sur ces deux commandes.
+- Fixed: ajoute un gate repo `verify:frontend-circular-deps` base sur Madge pour verrouiller le corridor HMR frontend (`hooks`, `contexts`, `utils`, `config`, `types`) contre le retour de cycles circulaires, et l accroche au pipeline CI unifie.
+- Fixed: durcit `total_dev_run_command` cote Tauri avec une allowlist exacte, le rejet explicite des operateurs shell et la suppression des prefixes larges (`git `, `pnpm run `, `cargo `, `cat src*`) qui contournaient encore l intention de surface gouvernee.
+- Fixed: reduit `total_dev_git_op` a une surface d inspection git read-only avec arguments exacts (`status`, `diff --stat`, `log --oneline -10|-20`, `branch`, `show`, `rev-parse --short HEAD`) et retire les actions d ecriture `git add` / `commit` / `push` du panneau TOTAL_DEV.
+
 # Changelog
 
 All notable changes to this project are documented in this file.
@@ -13,6 +74,7 @@ All notable changes to this project are documented in this file.
 
 - Removed lingering V30 metadata drift across runtime/UI surfaces and eliminated the `useChat` `TimeoutNaNWarning` regression with a dedicated test guard.
 - Corrected stale user-facing release guidance that still referenced `v28.0.0` / `v27.0.5` as the current public binary.
+- Reworked the conversation viewport height under browser zoom so the chat container no longer depends on fixed `vh` subtraction and keeps the composer visible across zoom, compact viewport, and desktop runtime proofs.
 
 ## [30.1.34] - 2026-04-17 (Governed Total Correction — Authority Resync)
 

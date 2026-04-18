@@ -11,6 +11,8 @@ use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
+const MAX_AUDIT_FIELD_LEN: usize = 256;
+
 /// Audit log entry
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PermissionAudit {
@@ -40,6 +42,14 @@ impl PermissionGuard {
             audit_log: Arc::new(RwLock::new(Vec::new())),
             max_log_size: 10000,
         }
+    }
+
+    fn sanitize_audit_field(value: &str) -> String {
+        value
+            .chars()
+            .filter(|character| !character.is_control() || matches!(character, '\n' | '\r' | '\t'))
+            .take(MAX_AUDIT_FIELD_LEN)
+            .collect()
     }
 
     /// Vérifier permission avec audit
@@ -78,9 +88,9 @@ impl PermissionGuard {
                 .map(|d| d.as_millis() as u64)
                 .unwrap_or(0),
             role,
-            action,
+            action: Self::sanitize_audit_field(&action),
             status,
-            source,
+            source: Self::sanitize_audit_field(&source),
         };
 
         let mut log = self.audit_log.write().await;
@@ -184,5 +194,35 @@ mod tests {
 
         let json = guard.export_audit(Role::Root).await;
         assert!(json.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_audit_fields_strip_control_bytes() {
+        let guard = PermissionGuard::new();
+
+        guard
+            .check("perm\u{0000}ission\u{0008}_write", Role::User, "pane\u{0000}l\u{0007}")
+            .await
+            .ok();
+
+        let log = guard.get_audit_log().await;
+        assert_eq!(log.len(), 1);
+        assert!(!log[0].action.contains('\0'));
+        assert!(!log[0].source.contains('\0'));
+        assert!(!log[0].action.contains('\u{0008}'));
+        assert!(!log[0].source.contains('\u{0007}'));
+    }
+
+    #[tokio::test]
+    async fn test_audit_fields_are_bounded() {
+        let guard = PermissionGuard::new();
+        let oversized = "a".repeat(MAX_AUDIT_FIELD_LEN + 64);
+
+        guard.check(&oversized, Role::User, &oversized).await.ok();
+
+        let log = guard.get_audit_log().await;
+        assert_eq!(log.len(), 1);
+        assert_eq!(log[0].action.len(), MAX_AUDIT_FIELD_LEN);
+        assert_eq!(log[0].source.len(), MAX_AUDIT_FIELD_LEN);
     }
 }

@@ -784,10 +784,13 @@ mod tests {
     #[test]
     fn test_sanitize_html() {
         // Test direct PayloadValidator instead of full command (avoids permission guard)
-        let input = "Hello <script>alert('xss')</script> world";
+        let input = "Hello & <script>alert('xss')</script> world";
         let sanitized = PayloadValidator::sanitize_html(input);
         assert!(!sanitized.contains("<script>"));
         assert!(sanitized.contains("Hello"));
+        assert!(sanitized.contains("&amp;"));
+        assert!(sanitized.contains("&lt;script&gt;"));
+        assert!(!sanitized.contains("&amp;lt;script"));
     }
 
     #[test]

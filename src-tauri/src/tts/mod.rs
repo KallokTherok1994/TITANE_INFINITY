@@ -51,6 +51,32 @@ impl std::error::Error for TTSError {}
 
 pub type TTSResult<T> = Result<T, TTSError>;
 
+pub(crate) fn validate_piper_voice_id(voice_id: &str) -> Result<&str, TTSError> {
+    let trimmed = voice_id.trim();
+    if trimmed.is_empty() {
+        return Err(TTSError::AudioError(
+            "Piper voice id must not be empty".to_string(),
+        ));
+    }
+
+    if trimmed.contains('/') || trimmed.contains('\\') || trimmed.contains("..") {
+        return Err(TTSError::AudioError(
+            "Piper voice id must not contain path components".to_string(),
+        ));
+    }
+
+    if !trimmed
+        .bytes()
+        .all(|byte| byte.is_ascii_alphanumeric() || byte == b'_' || byte == b'-')
+    {
+        return Err(TTSError::AudioError(
+            "Piper voice id contains unsupported characters".to_string(),
+        ));
+    }
+
+    Ok(trimmed)
+}
+
 /// v24.20 Phase 8: Split text into chunks for streaming TTS with SmallVec optimization
 /// Target: ~500ms of speech per chunk (approx 50-80 chars at normal speed)
 /// Optimization: SmallVec<[String; 4]> avoids heap allocation for small texts (<=4 chunks)

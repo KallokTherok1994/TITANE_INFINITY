@@ -1,6 +1,24 @@
+> 2026-04-18 — Knowledge parser hardening truth: `parse_document` et `detect_file_format` n acceptent plus un chemin documentaire purement textuel. Les commandes valident maintenant un fichier local canonique, refusent les entrees vides, NUL, schemes `://`, segments `..`, repertoires, cibles absentes et fichiers sensibles, puis executent la detection ou le parsing sur le fichier valide seulement.
+
+> 2026-04-18 — Developer Mode patch validation hardening truth: `dev_mode_validate_patch` ne se contente plus d un filtre de suffixe sur `patch.file`. La commande resolve maintenant la cible contre la racine workspace canonique, refuse les entrees vides, NUL, schemes `://`, segments `..` et chemins absolus hors workspace, puis n autorise les extensions `.rs`, `.ts`, `.tsx`, `.css`, `.json` qu apres cette resolution.
+
+> 2026-04-18 — TOTAL_DEV file read hardening truth: `total_dev_read_file` ne s appuie plus sur une canonicalisation immediate du chemin fourni qui cassait le cas `not found` et laissait des gardes incompletes. La commande resolve maintenant la cible contre le workspace canonique, refuse les entrees vides, NUL, schemes `://`, segments `..`, chemins absolus hors workspace et extensions sensibles, puis renvoie encore un resultat structure pour les cibles absentes dans le repo.
+
+> 2026-04-18 — Hybrid patch hardening truth: `dev_apply_patch` ne traite plus un chemin de patch arbitraire. La commande resolve maintenant la cible contre la racine workspace canonique, refuse les entrees vides, NUL, schemes `://`, segments `..`, chemins absolus hors workspace et cibles non fichier, puis applique le remplacement de lignes uniquement sur ce fichier gouverne.
+
+> 2026-04-18 — Stub filesystem bridge hardening truth: `fs_exists` et `read_json_file` ne traitent plus des chemins arbitraires. Les deux commandes resolvent maintenant leur cible contre la racine workspace canonique, refusent les entrees vides, NUL, schemes `://`, segments `..` et chemins absolus hors workspace; `read_json_file` refuse aussi les extensions non `.json` et les fichiers > 2 MiB.
+
+> 2026-04-18 — Hybrid file inspection hardening truth: `dev_inspect_file` conserve son usage dev d inspection locale, mais la commande ne lit plus de chemin arbitraire. Elle resolve maintenant le chemin contre la racine workspace canonique, refuse les entrees vides, les NUL, les schemes `://`, les segments `..` et les chemins absolus hors workspace, avec des tests Rust de succes repo-local et de rejet traversal/hors-workspace.
+
 # TITANE_INFINITY — Catalogue IPC Exhaustif
 
 > 2026-04-17 — Security audit installed-runtime proof truth: `security_audit_sync_journal` et `security_audit_publish_signed_export` sont qualifiées sur la lane debug desktop et sur la lane installée `/usr/bin/titane-infinity` en version 30.1.34. Les deux commandes conservent le contrat `{ ok, content, error }` et écrivent leurs preuves dans `~/.local/share/com.titane.infinity/security_active/` sans ouvrir de voie réseau alternative.
+
+> 2026-04-17 — Hybrid dev command hardening truth: `dev_run_command` reste une commande IPC de support dev, mais elle ne relaie plus une ligne shell arbitraire. La commande applique maintenant une allowlist explicite de commandes de diagnostic/build strictement autorisees, refuse les operateurs shell (`;`, `&&`, `|`, redirections, sauts de ligne) et s execute depuis la racine workspace canonique, avec des tests Rust exacts de succes et de rejet.
+
+> 2026-04-17 — TOTAL_DEV console hardening truth: `total_dev_run_command` conserve le contrat IPC de console gouvernee pour la session TOTAL_DEV, mais l execution est maintenant bornee a une allowlist exacte au lieu d une combinaison allowlist + prefixes ouverts. Les operateurs shell sont refuses, les variantes non repertoriees comme `git status --porcelain` ou `pnpm run verify:registry` sont bloquees, et les lectures de fichiers passent explicitement par `total_dev_read_file` plutot que par `cat src*`.
+
+> 2026-04-17 — TOTAL_DEV Git read-only truth: `total_dev_git_op` conserve son contrat IPC de pilotage git gouverne, mais il n autorise plus les operations mutantes ni des arguments libres. La commande accepte uniquement des inspections read-only qualifiees (`status`, `diff --stat`, `log --oneline -10|-20`, `branch`, `show --stat --oneline HEAD`, `rev-parse --short HEAD`) et refuse les ecritures git ainsi que les variantes non repertoriees.
 
 > **1135 commandes IPC Tauri** — Générées le 2026-04-11
 > Toutes les commandes exposées par `main.rs` via `tauri::generate_handler![]`

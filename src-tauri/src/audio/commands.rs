@@ -14,6 +14,26 @@ use std::sync::{
 
 type CommandResult<T> = Result<T, String>;
 
+fn validate_piper_voice_id(voice_id: &str) -> CommandResult<&str> {
+    let trimmed = voice_id.trim();
+    if trimmed.is_empty() {
+        return Err("Piper voice id must not be empty".to_string());
+    }
+
+    if trimmed.contains('/') || trimmed.contains('\\') || trimmed.contains("..") {
+        return Err("Piper voice id must not contain path components".to_string());
+    }
+
+    if !trimmed
+        .bytes()
+        .all(|byte| byte.is_ascii_alphanumeric() || byte == b'_' || byte == b'-')
+    {
+        return Err("Piper voice id contains unsupported characters".to_string());
+    }
+
+    Ok(trimmed)
+}
+
 static ACTIVE_TTS_PID: Lazy<StdMutex<Option<u32>>> = Lazy::new(|| StdMutex::new(None));
 
 static IS_TTS_PAUSED: Lazy<AtomicBool> = Lazy::new(|| AtomicBool::new(false));
@@ -185,9 +205,11 @@ pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()>
     let result = match settings.engine.as_str() {
         "piper" => {
             let piper_bin = format!("{}/.local/bin/piper", home);
+            let voice_id =
+                validate_piper_voice_id(&settings.voice_id).map_err(|err| format!("Invalid Piper voice id: {}", err))?;
             let model_path = format!(
                 "{}/.local/share/piper/voices/{}.onnx",
-                home, settings.voice_id
+                home, voice_id
             );
 
             log::info!("[TTS] Piper binary: {}", piper_bin);
@@ -207,7 +229,7 @@ pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()>
                 if settings.auto_fallback {
                     return tts_speak_espeak(&text, &settings).await;
                 }
-                return Err(format!("Modèle Piper non trouvé: {}", settings.voice_id));
+                return Err(format!("Modèle Piper non trouvé: {}", voice_id));
             }
 
             let output_path = std::env::temp_dir().join("titane_tts_output.wav");
@@ -286,6 +308,53 @@ pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()>
     IS_TTS_PAUSED.store(false, Ordering::Relaxed);
     IS_SPEAKING.store(false, Ordering::Relaxed);
     result
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn sample_tts_settings() -> TTSSettings {
+        TTSSettings {
+            engine: "piper".to_string(),
+            voice_id: "fr_FR-siwis-medium".to_string(),
+            rate: 1.0,
+            pitch: 1.0,
+            volume: 1.0,
+            language: "fr-FR".to_string(),
+            emotion_enabled: false,
+            auto_fallback: false,
+            output_device_id: None,
+        }
+    }
+
+    #[test]
+    fn test_piper_voice_id_accepts_canonical_value() {
+        let settings = sample_tts_settings();
+        let validated = validate_piper_voice_id(&settings.voice_id)
+            .expect("canonical Piper voice id should pass");
+        assert_eq!(validated, "fr_FR-siwis-medium");
+    }
+
+    #[test]
+    fn test_piper_voice_id_rejects_path_traversal() {
+        let mut settings = sample_tts_settings();
+        settings.voice_id = "../evil".to_string();
+
+        let error = validate_piper_voice_id(&settings.voice_id)
+            .expect_err("path traversal Piper voice id must be rejected");
+        assert!(error.contains("path components"));
+    }
+
+    #[test]
+    fn test_piper_voice_id_rejects_non_canonical_characters() {
+        let mut settings = sample_tts_settings();
+        settings.voice_id = "fr_FR-siwis-medium$".to_string();
+
+        let error = validate_piper_voice_id(&settings.voice_id)
+            .expect_err("unexpected Piper voice id characters must be rejected");
+        assert!(error.contains("unsupported characters"));
+    }
 }
 
 async fn tts_speak_espeak(text: &str, settings: &TTSSettings) -> CommandResult<()> {

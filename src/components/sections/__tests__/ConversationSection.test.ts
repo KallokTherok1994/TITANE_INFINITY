@@ -11,6 +11,7 @@ import {
   getConversationViewportHeight,
   isConversationTransparencyPrompt,
   isConversationNearBottom,
+  resolveConversationCitations,
   resolveConversationDisplayProvider,
   shouldShowConversationScrollToBottom,
   shouldUseConversationCompactLayout,
@@ -102,6 +103,30 @@ describe('ConversationSection runtime provider label', () => {
     expect(badges).toContain('requested:Ollama');
     expect(badges).toContain('Ollama (OMEGA+Singularity)');
     expect(badges).toContain('policy:web_research_inline');
+  });
+
+  it('retains only structurally valid inline citations for the active conversation surface', () => {
+    const citations = resolveConversationCitations([
+      {
+        url: 'https://example.com/source-a',
+        title: 'Source A',
+        excerpt: 'Extrait A',
+        accessed_at: '2026-04-18T10:00:00Z',
+      },
+      {
+        url: '',
+        excerpt: 'Invalide',
+        accessed_at: '2026-04-18T10:00:00Z',
+      },
+      {
+        url: 'https://example.com/source-b',
+        excerpt: '',
+        accessed_at: '2026-04-18T10:00:00Z',
+      },
+    ]);
+
+    expect(citations).toHaveLength(1);
+    expect(citations[0]?.title).toBe('Source A');
   });
 
   it('switches to compact layout when fullscreen zoom reduces the viewport height', () => {

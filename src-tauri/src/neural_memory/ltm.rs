@@ -8,7 +8,7 @@ use crate::unified_memory_v2::types::{
     MemoryEntry, MemoryError, MemoryResult, MemoryTier, MemoryType,
 };
 use std::collections::HashMap;
-use std::path::PathBuf;
+use std::path::{Component, Path, PathBuf};
 
 /// LTM metadata for fast index lookup
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
@@ -51,6 +51,90 @@ pub struct LongTermMemory {
 }
 
 impl LongTermMemory {
+    fn validate_entry_id(id: &str) -> MemoryResult<()> {
+        if id.is_empty() {
+            return Err(MemoryError::ValidationError(
+                "LTM entry id cannot be empty".to_string(),
+            ));
+        }
+
+        if id.contains('\0') {
+            return Err(MemoryError::ValidationError(
+                "LTM entry id cannot contain NUL bytes".to_string(),
+            ));
+        }
+
+        let id_path = Path::new(id);
+        if id_path.is_absolute() {
+            return Err(MemoryError::ValidationError(
+                "LTM entry id cannot be absolute".to_string(),
+            ));
+        }
+
+        if id.contains('/') || id.contains('\\') {
+            return Err(MemoryError::ValidationError(
+                "LTM entry id cannot contain path separators".to_string(),
+            ));
+        }
+
+        if id_path
+            .components()
+            .any(|component| matches!(component, Component::ParentDir | Component::RootDir | Component::Prefix(_)))
+        {
+            return Err(MemoryError::ValidationError(
+                "LTM entry id cannot escape entries directory".to_string(),
+            ));
+        }
+
+        Ok(())
+    }
+
+    fn validate_metadata_file_path(id: &str, file_path: &str) -> MemoryResult<()> {
+        if file_path.is_empty() {
+            return Err(MemoryError::ValidationError(
+                "LTM metadata file_path cannot be empty".to_string(),
+            ));
+        }
+
+        if file_path.contains('\0') {
+            return Err(MemoryError::ValidationError(
+                "LTM metadata file_path cannot contain NUL bytes".to_string(),
+            ));
+        }
+
+        let file_path_value = Path::new(file_path);
+        if file_path_value.is_absolute() {
+            return Err(MemoryError::ValidationError(
+                "LTM metadata file_path cannot be absolute".to_string(),
+            ));
+        }
+
+        if file_path.contains('/') || file_path.contains('\\') {
+            return Err(MemoryError::ValidationError(
+                "LTM metadata file_path cannot contain path separators".to_string(),
+            ));
+        }
+
+        if file_path_value
+            .components()
+            .any(|component| matches!(component, Component::ParentDir | Component::RootDir | Component::Prefix(_)))
+        {
+            return Err(MemoryError::ValidationError(
+                "LTM metadata file_path cannot escape entries directory".to_string(),
+            ));
+        }
+
+        let expected = format!("{}.json", id);
+        if file_path != expected {
+            return Err(MemoryError::ValidationError(format!(
+                "LTM metadata file_path must match expected entry file: {}",
+                expected
+            )));
+        }
+
+        Ok(())
+    }
+
     /// Create new LTM with storage path
     pub fn new(storage_path: impl Into<PathBuf>) -> Self {
         Self {
@@ -107,6 +191,7 @@ impl LongTermMemory {
 
     /// Store entry to LTM
     pub async fn store(&mut self, mut entry: MemoryEntry) -> MemoryResult<()> {
+        Self::validate_entry_id(&entry.id)?;
         entry.tier = MemoryTier::LTM;
 
         let file_name = format!("{}.json", entry.id);
@@ -150,6 +235,7 @@ impl LongTermMemory {
             .get(id)
             .ok_or_else(|| MemoryError::NotFound(format!("Entry not found: {}", id)))?;
 
+        Self::validate_metadata_file_path(id, &metadata.file_path)?;
         let file_path = self.storage_path.join("entries").join(&metadata.file_path);
         let content = tokio::fs::read_to_string(&file_path)
             .await
@@ -177,6 +263,7 @@ impl LongTermMemory {
     /// Remove entry
     pub async fn remove(&mut self, id: &str) -> MemoryResult<()> {
         if let Some(metadata) = self.index.remove(id) {
+            Self::validate_metadata_file_path(id, &metadata.file_path)?;
             let file_path = self.storage_path.join("entries").join(&metadata.file_path);
             let _ = tokio::fs::remove_file(&file_path).await;
             self.index_dirty = true;
@@ -213,5 +300,72 @@ impl LongTermMemory {
 impl Default for LongTermMemory {
     fn default() -> Self {
         Self::new("data/memory/ltm")
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tempfile::TempDir;
+
+    fn create_test_entry(id: &str) -> MemoryEntry {
+        let mut entry = MemoryEntry::new(
+            format!("Content for {}", id),
+            0.8,
+            MemoryType::Conversation,
+        );
+        entry.id = id.to_string();
+        entry
+    }
+
+    async fn create_test_ltm() -> (LongTermMemory, TempDir) {
+        let temp_dir = TempDir::new().expect("TempDir should be created");
+        let mut ltm = LongTermMemory::new(temp_dir.path());
+        ltm.init().await.expect("LTM init should succeed");
+        (ltm, temp_dir)
+    }
+
+    #[tokio::test]
+    async fn test_ltm_store_rejects_path_traversal_id() {
+        let (mut ltm, _temp_dir) = create_test_ltm().await;
+        let entry = create_test_entry("../escape");
+
+        let result = ltm.store(entry).await;
+
+        assert!(matches!(result, Err(MemoryError::ValidationError(_))));
+    }
+
+    #[tokio::test]
+    async fn test_ltm_load_rejects_traversal_metadata_file_path() {
+        let (mut ltm, _temp_dir) = create_test_ltm().await;
+        let entry = create_test_entry("entry-1");
+        ltm.store(entry).await.expect("LTM store should succeed");
+
+        let metadata = ltm
+            .index
+            .get_mut("entry-1")
+            .expect("metadata should exist after store");
+        metadata.file_path = "../escape.json".to_string();
+
+        let result = ltm.load("entry-1").await;
+
+        assert!(matches!(result, Err(MemoryError::ValidationError(_))));
+    }
+
+    #[tokio::test]
+    async fn test_ltm_remove_rejects_absolute_metadata_file_path() {
+        let (mut ltm, _temp_dir) = create_test_ltm().await;
+        let entry = create_test_entry("entry-2");
+        ltm.store(entry).await.expect("LTM store should succeed");
+
+        let metadata = ltm
+            .index
+            .get_mut("entry-2")
+            .expect("metadata should exist after store");
+        metadata.file_path = "/tmp/escape.json".to_string();
+
+        let result = ltm.remove("entry-2").await;
+
+        assert!(matches!(result, Err(MemoryError::ValidationError(_))));
     }
 }

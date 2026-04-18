@@ -12,12 +12,10 @@ Exemple de preuve attendue : screenshot dashboard, log d’anomalie, rapport d
 Tout agent non mappé, non testé ou sans preuve = BLOCKED (Rule 15/16).
 
 # TITANE_INFINITY - Copilot Kernel (Governed)
-Mode: AUTO
-Objective: execute with proof-first discipline and zero drift.
+Mode: AUTO | Objective: execute with proof-first discipline and zero drift.
 
 Compatibility markers (required by verifier):
-- Local-first (compatibility marker; doctrine active = Online-first governed with mandatory local fallback)
-- diagnose -> plan -> apply -> verify -> report
+- Local-first (compatibility marker; doctrine active = Online-first governed with mandatory local fallback); diagnose -> plan -> apply -> verify -> report
 
 ## Priority
 
@@ -26,9 +24,7 @@ Compatibility markers (required by verifier):
 - Lower layers must never redefine higher-layer invariants.
 
 ## Status Vocabulary
-
 Use one status vocabulary only:
-
 - PASS / FAIL / BLOCKED / BLOCKED_APPROVAL / DONE / SEALED
 - Verdict unique is mandatory.
 
@@ -69,7 +65,6 @@ NO_SKIPS: required checks cannot be skipped by narrative.
 If a check cannot run, classify BLOCKED with a next action <= 30 minutes.
 
 ## Rule 10 - AutoHeal capture is mandatory and automatic
-
 For **every** code modification (any file change in `src/`, `src-tauri/`, `tests/`, `e2e/`, `scripts/`, `.github/`), automatically and without exception:
 
 - Append one entry to `scripts/autoheal/autoheal_rules.jsonl` (schema: `id, date, scope, symptom, root_cause, fix, prevention_test, commands, files_changed, rollback`).
@@ -90,7 +85,6 @@ Each governed session must produce evidence in proof_packs and reports.
 Mandatory: gate report, rollback plan, and final unique verdict.
 
 ## Doctrine conflict handling
-
 If contradiction remains unresolved after minimal patch: classify `BLOCKED_DOCTRINE`.
 
 ## Rule 13 - Version bump at each advanced BUILD
@@ -100,18 +94,15 @@ After bumping, run `node scripts/sync-versions.mjs` (or `pnpm run sync:versions`
 This ensures every build artifact carries a unique, traceable version number.
 The current version MUST always be visible in the bottom footer of the TITANE interface.
 
-## Rule 13.1 - Desktop icons and launcher cache update
+### Desktop icons and launcher cache update
 After **every build** (production or tauri), run `bash scripts/post-build/update-desktop-icons.sh`, `sudo update-icon-caches /usr/share/icons/hicolor`, `update-desktop-database ~/.local/share/applications`, and `xdg-desktop-menu forceupdate`.
 Always verify that `/usr/bin/titane-infinity` is the most recent built version and confirm both launcher files with `grep -E '^(Name|Exec|Icon|StartupWMClass)=' ~/.local/share/applications/titane-infinity.desktop` and `grep -E '^(Name|Exec|Icon|StartupWMClass)=' /usr/share/applications/titane-infinity.desktop`.
 Expected minimum: `Exec=/usr/bin/titane-infinity` and `Icon=titane-infinity` (preferred) or an explicit path to the latest icon file.
-
 ### Advanced purge (if old icons persist)
-
 Remove obsolete TITANE/Infinity launchers in `/usr/share/applications` and `~/.local/share/applications`, replace `/usr/share/icons/hicolor/128x128/apps/titane-infinity.png` with the latest build if needed, refresh the caches again, and clear GNOME/KDE caches if icons still persist.
-
 This is mandatory for all Linux desktop environments (GNOME, KDE, etc.) to ensure the UI and launchers reflect the latest build.
 
-## Rule 13.2 - Android build freshness and backend/frontend synchronization
+### Android build freshness and backend/frontend synchronization
 Every Android build, rebuild validation, or packaging proof must treat `dist/`, the Rust/Tauri backend, the packaged APK/native artifact, and the installed device runtime as four separate truths.
 Before PASS: rebuild the frontend first, regenerate canonical Tauri config when the path is environment-dependent, and build Android only from a repo state where frontend and backend versions match.
 For Android dev-runtime freshness, `android:dev:stable` must reuse `scripts/android/vite-network-server.sh` as the sole Vite authority; do not reintroduce a second implicit `vite dev` launch path in the stable orchestrator.
@@ -123,11 +114,9 @@ Treat `CONTRACT_VIOLATION_CLAMPED`, `tauri_protector_ipc_fallback`, or any front
 Any mismatch across those four truths is FAIL until rebuilt and reverified.
 
 ## Operational authority
-
 Only one active execution authority and one active E2E authority at a time.
 
 ## Rule 14 - BUILD ALL command
-
 When the user issues `BUILD ALL`, execute the full automated sequence **without any token gate or precondition message**:
 
 1. Bump version per Rule 13 (`node scripts/bump-version.mjs` + `node scripts/sync-versions.mjs`).
@@ -144,7 +133,6 @@ When the user issues `BUILD ALL`, execute the full automated sequence **without 
 12. Update all relevant mapping/cartography docs (Rule 15).
 
 ## Rule 15 - Auto-update mapping and cartography
-
 Every code modification must automatically update the relevant mapping documents:
 
 - `UI_SURFACE_MAP.md` — if UI surfaces changed.
@@ -168,7 +156,6 @@ Trigger table (which doc to update):
 If a required mapping doc is **not updated** when its trigger path is modified: classify **FAIL** and stop until corrected.
 
 ## Rule 16 - Mandatory test creation
-
 Every new integration, capability, or function must include at the same time:
 
 - Unit tests for the new functionality.
@@ -188,7 +175,6 @@ Every new integration, capability, or function must include at the same time:
 | New build/deploy step                                | Smoke test verifying artifact presence + checksum                                         |
 
 A gate that detects new source files without corresponding test files classifies the change as BLOCKED until tests exist.
-
 ## Rule 17 - Canonical surface anti-drift
 
 For every UI/runtime correction involving a route alias, legacy surface, fullscreen shell, or compatibility export:
@@ -199,7 +185,7 @@ For every UI/runtime correction involving a route alias, legacy surface, fullscr
 - If a legacy path must remain for compatibility, reduce it to a thin alias and document that it is compatibility-only, not an independent active surface.
 - Treat any mismatch between visible runtime truth and touched source surface as FAIL until the canonical surface, proof selectors, tests, and active tooling references are realigned.
 
-## Rule 17.1 - Advanced agent runtime truth
+### Advanced agent runtime truth
 
 For every advanced agent surface (`monitoring`, `diagnostic`, `explainability`, `orchestrator`, `security_active`):
 
@@ -208,7 +194,7 @@ For every advanced agent surface (`monitoring`, `diagnostic`, `explainability`, 
 - If only partial runtime signals exist, classify honestly as `planned` or `partial`; do not simulate a complete engine.
 - UI service dashboards and any compatibility aliases must stay aligned to the same runtime truth source in the same patch.
 
-## Rule 17.2 - Ollama and Cline alignment truth
+### Ollama and Cline alignment truth
 
 The governed local AI stack must stay aligned across frontend, backend, scripts, docs, and local agent tooling:
 
@@ -217,16 +203,13 @@ The governed local AI stack must stay aligned across frontend, backend, scripts,
 - Frontend access to Ollama must remain on the canonical IPC path; no direct uncontrolled UI HTTP path.
 - Cline/local-agent safeguards may require explicit user request for critical builds/deploys, but must not introduce token/passphrase gates that contradict Rule 11.
 - When Ollama or Cline config changes, run the dedicated alignment validator and update `OLLAMA_RUNTIME_MAP.md` plus the relevant instructions/docs in the same phase.
-
 ## Discipline anti-dérive TITANE (Synthèse 2026-04-16)
 
 - Synchronisation artefacts/launchers obligatoire avec preuve sur launchers système et utilisateur; aucun artefact n’est certifié sans cette preuve.
 - Toute évolution UI/backend impose des tests E2E couvrant flows critiques et secondaires, avec `data-testid` stables et documentés.
-- Toute modification de surface impose mise à jour des mappings, bump de version, et rollback documenté avec cause racine et prévention.
-- Les scripts post-build doivent être idempotents, non-interactifs ou munis d’un fallback documenté, avec logs de preuve pour chaque étape `sudo`.
+- Toute modification de surface impose mise à jour des mappings, bump de version, rollback documenté, scripts post-build idempotents ou avec fallback documenté, et logs de preuve pour chaque étape `sudo`.
 - Le backend doit être qualifié par des tests d’isolation d’environnement et des checks automatiques sur les variables critiques.
 - Chaque correction/rollback doit être tracé dans `autoheal_rules.jsonl` et `registry/ui-events.jsonl` avec cause racine et test de prévention.
-
 ## Rule 18 - Direct-to-main phase commits
 
 When the user authorizes direct work on `MAIN` or explicitly requests "commit to main":

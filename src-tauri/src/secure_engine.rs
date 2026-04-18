@@ -108,7 +108,18 @@ pub async fn write_secret_file(path: &Path, data: &[u8]) -> SecureEngineResult<(
 
     fs::write(path, data)
         .await
-        .map_err(|e| SecureEngineError::Io(e.to_string()))
+        .map_err(|e| SecureEngineError::Io(e.to_string()))?;
+
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+
+        fs::set_permissions(path, std::fs::Permissions::from_mode(0o600))
+            .await
+            .map_err(|e| SecureEngineError::Io(e.to_string()))?;
+    }
+
+    Ok(())
 }
 
 /// Read a secret file returning its raw bytes.

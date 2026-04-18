@@ -5,7 +5,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 use std::collections::HashMap;
-use std::path::PathBuf;
+use std::path::{Component, Path, PathBuf};
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use uuid::Uuid;
@@ -83,6 +83,44 @@ pub struct LongTermMemory {
 }
 
 impl LongTermMemory {
+    fn validate_metadata_file_path(id: &Uuid, file_path: &str) -> Result<(), LTMError> {
+        if file_path.is_empty() {
+            return Err(LTMError::Storage(
+                "Invalid metadata file path: empty".to_string(),
+            ));
+        }
+
+        if file_path.contains('\0') {
+            return Err(LTMError::Storage(
+                "Invalid metadata file path: null byte".to_string(),
+            ));
+        }
+
+        let path = Path::new(file_path);
+        if path.is_absolute()
+            || path.has_root()
+            || path
+                .components()
+                .any(|component| matches!(component, Component::ParentDir | Component::RootDir))
+            || file_path.contains('/')
+            || file_path.contains('\\')
+        {
+            return Err(LTMError::Storage(
+                "Invalid metadata file path: path components forbidden".to_string(),
+            ));
+        }
+
+        let expected = format!("{}.json", id);
+        if file_path != expected {
+            return Err(LTMError::Storage(format!(
+                "Invalid metadata file path: expected {}",
+                expected
+            )));
+        }
+
+        Ok(())
+    }
+
     /// Create new LTM with storage path
     pub fn new(storage_path: impl Into<PathBuf>) -> Self {
         let path = storage_path.into();
@@ -195,6 +233,8 @@ impl LongTermMemory {
             .get(id)
             .ok_or_else(|| LTMError::NotFound(format!("Entry not found: {}", id)))?;
 
+        Self::validate_metadata_file_path(id, &metadata.file_path)?;
+
         let file_path = self.storage_path.join(DATA_DIR).join(&metadata.file_path);
         let content = tokio::fs::read_to_string(&file_path)
             .await
@@ -304,6 +344,7 @@ impl LongTermMemory {
         let mut index = self.index.write().await;
 
         if let Some(metadata) = index.remove(id) {
+            Self::validate_metadata_file_path(id, &metadata.file_path)?;
             let file_path = self.storage_path.join(DATA_DIR).join(&metadata.file_path);
             tokio::fs::remove_file(&file_path).await.ok(); // Ignore if file doesn't exist
             *self.index_dirty.write().await = true;
@@ -420,6 +461,9 @@ impl LongTermMemory {
         let mut index = self.index.write().await;
 
         if let Some(metadata) = index.remove(id) {
+            if Self::validate_metadata_file_path(id, &metadata.file_path).is_err() {
+                return None;
+            }
             let file_path = self.storage_path.join(DATA_DIR).join(&metadata.file_path);
             tokio::fs::remove_file(&file_path).await.ok();
             *self.index_dirty.write().await = true;
@@ -753,5 +797,67 @@ mod tests {
         assert_eq!(LTM_BATCH_SIZE, 100);
         assert_eq!(INDEX_FILE, "ltm_index.json");
         assert_eq!(DATA_DIR, "entries");
+    }
+
+    #[tokio::test]
+    async fn test_ltm_load_rejects_traversal_metadata_file_path() {
+        let (ltm, _temp) = create_test_ltm().await;
+        let id = Uuid::new_v4();
+
+        let mut index = ltm.index.write().await;
+        index.insert(
+            id,
+            LTMMetadata {
+                id,
+                timestamp: chrono::Utc::now().timestamp_millis(),
+                importance: 0.5,
+                memory_type: MemoryType::Knowledge,
+                tags: Vec::new(),
+                content_preview: "bad".to_string(),
+                file_path: "../escape.json".to_string(),
+                size_bytes: 0,
+                compressed: false,
+                access_count: 0,
+                last_accessed: 0,
+            },
+        );
+        drop(index);
+
+        let err = ltm
+            .load(&id)
+            .await
+            .expect_err("traversal metadata path must be rejected");
+        assert!(err.to_string().contains("path components forbidden"));
+    }
+
+    #[tokio::test]
+    async fn test_ltm_delete_rejects_absolute_metadata_file_path() {
+        let (ltm, _temp) = create_test_ltm().await;
+        let id = Uuid::new_v4();
+
+        let mut index = ltm.index.write().await;
+        index.insert(
+            id,
+            LTMMetadata {
+                id,
+                timestamp: chrono::Utc::now().timestamp_millis(),
+                importance: 0.5,
+                memory_type: MemoryType::Knowledge,
+                tags: Vec::new(),
+                content_preview: "bad".to_string(),
+                file_path: "/tmp/escape.json".to_string(),
+                size_bytes: 0,
+                compressed: false,
+                access_count: 0,
+                last_accessed: 0,
+            },
+        );
+        drop(index);
+
+        let err = ltm
+            .delete(&id)
+            .await
+            .expect_err("absolute metadata path must be rejected");
+        assert!(err.to_string().contains("path components forbidden"));
     }
 }

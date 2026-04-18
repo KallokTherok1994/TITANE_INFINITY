@@ -1212,6 +1212,74 @@
   opacity: 0.76;
 }
 
+.conversation-message-citations {
+  margin-top: 0.65rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(103, 232, 249, 0.16);
+  border-radius: 14px;
+  background: rgba(8, 47, 73, 0.18);
+}
+
+.conversation-message-citations-title {
+  margin-bottom: 0.55rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(165, 243, 252, 0.96);
+}
+
+.conversation-message-citations-list {
+  display: grid;
+  gap: 0.65rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.conversation-message-citation-item {
+  padding: 0.8rem 0.9rem;
+  border: 1px solid rgba(103, 232, 249, 0.14);
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.28);
+}
+
+.conversation-message-citation-index {
+  margin-bottom: 0.35rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: rgba(125, 211, 252, 0.92);
+}
+
+.conversation-message-citation-link {
+  color: rgba(224, 242, 254, 0.96);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.conversation-message-citation-link:hover {
+  text-decoration: underline;
+}
+
+.conversation-message-citation-locator {
+  margin-top: 0.3rem;
+  font-size: 0.74rem;
+  color: rgba(125, 211, 252, 0.88);
+}
+
+.conversation-message-citation-excerpt {
+  margin-top: 0.42rem;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: rgba(226, 232, 240, 0.84);
+}
+
+.conversation-message-citation-accessed {
+  margin-top: 0.45rem;
+  font-size: 0.7rem;
+  color: rgba(148, 163, 184, 0.84);
+}
+
 .conversation-message-actions {
   display: flex;
   gap: 0.5rem;

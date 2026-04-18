@@ -667,8 +667,6 @@ ConsoleDevPanel.displayName = 'ConsoleDevPanel';
 const GitPanel = memo<{ lockState: LockState }>(({ lockState }) => {
   const [output, setOutput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [commitMsg, setCommitMsg] = useState('');
-  const [fileArg, setFileArg] = useState('');
 
   const runGit = useCallback(
     async (op: string, args: string[] = []) => {
@@ -708,6 +706,7 @@ const GitPanel = memo<{ lockState: LockState }>(({ lockState }) => {
           onClick={() => runGit('status')}
           disabled={loading}
           className="total-dev-btn total-dev-btn--git"
+          data-testid="total-dev-git-status"
         >
           status
         </button>
@@ -715,6 +714,7 @@ const GitPanel = memo<{ lockState: LockState }>(({ lockState }) => {
           onClick={() => runGit('diff', ['--stat'])}
           disabled={loading}
           className="total-dev-btn total-dev-btn--git"
+          data-testid="total-dev-git-diff-stat"
         >
           diff --stat
         </button>
@@ -722,6 +722,7 @@ const GitPanel = memo<{ lockState: LockState }>(({ lockState }) => {
           onClick={() => runGit('log', ['--oneline', '-10'])}
           disabled={loading}
           className="total-dev-btn total-dev-btn--git"
+          data-testid="total-dev-git-log"
         >
           log -10
         </button>
@@ -729,6 +730,7 @@ const GitPanel = memo<{ lockState: LockState }>(({ lockState }) => {
           onClick={() => runGit('branch')}
           disabled={loading}
           className="total-dev-btn total-dev-btn--git"
+          data-testid="total-dev-git-branch"
         >
           branch
         </button>
@@ -736,52 +738,16 @@ const GitPanel = memo<{ lockState: LockState }>(({ lockState }) => {
           onClick={() => runGit('rev-parse', ['--short', 'HEAD'])}
           disabled={loading}
           className="total-dev-btn total-dev-btn--git"
+          data-testid="total-dev-git-head-sha"
         >
           HEAD SHA
         </button>
       </div>
 
-      <div className="total-dev-git-ops-row">
-        <input
-          type="text"
-          value={fileArg}
-          onChange={e => setFileArg(e.target.value)}
-          placeholder="fichier(s) ou '.' pour git add"
-          className="total-dev-git-input"
-        />
-        <button
-          onClick={() => runGit('add', fileArg ? [fileArg] : ['.'])}
-          disabled={loading || lockState !== 'UNLOCKED'}
-          className="total-dev-btn total-dev-btn--git-write"
-        >
-          git add
-        </button>
-      </div>
-
-      <div className="total-dev-git-ops-row">
-        <input
-          type="text"
-          value={commitMsg}
-          onChange={e => setCommitMsg(e.target.value)}
-          placeholder="Message de commit..."
-          className="total-dev-git-input"
-        />
-        <button
-          onClick={() => commitMsg.trim() && runGit('commit', ['-m', commitMsg])}
-          disabled={loading || !commitMsg.trim() || lockState !== 'UNLOCKED'}
-          className="total-dev-btn total-dev-btn--git-write"
-        >
-          commit
-        </button>
-        <button
-          onClick={() => runGit('push', ['origin', 'HEAD'])}
-          disabled={loading || lockState !== 'UNLOCKED'}
-          className="total-dev-btn total-dev-btn--git-danger"
-          title="Push vers origin/HEAD — suit la branche courante et requiert auth SSH/HTTPS"
-        >
-          push HEAD
-        </button>
-      </div>
+      <p className="total-dev-git-note" data-testid="total-dev-git-readonly-note">
+        Surface Git read-only gouvernee: inspection locale seulement. Les operations d'ecriture
+        git restent hors de ce panneau.
+      </p>
 
       {output && (
         <pre className="total-dev-git-output">

@@ -19,6 +19,7 @@ use std::sync::{Arc, RwLock};
 
 const SALT_LEN: usize = 16;
 const NONCE_LEN: usize = 12;
+const MAX_SECRET_KEY_LEN: usize = 128;
 
 // API Keys constants
 pub const KEY_OPENAI: &str = "openai_api_key";
@@ -67,6 +68,38 @@ pub struct SecureSecretsEngine {
 }
 
 impl SecureSecretsEngine {
+    fn validate_secret_key(key: &str) -> Result<&str, SecretsError> {
+        let normalized = key.trim();
+
+        if normalized.is_empty() {
+            return Err(SecretsError::InvalidKey("Empty secret key".into()));
+        }
+
+        if normalized.len() > MAX_SECRET_KEY_LEN {
+            return Err(SecretsError::InvalidKey(format!(
+                "Secret key too long (max {} chars)",
+                MAX_SECRET_KEY_LEN
+            )));
+        }
+
+        if normalized.chars().any(|character| character.is_control()) {
+            return Err(SecretsError::InvalidKey(
+                "Secret key contains control characters".into(),
+            ));
+        }
+
+        if !normalized
+            .chars()
+            .all(|character| character.is_ascii_alphanumeric() || matches!(character, '_' | '-'))
+        {
+            return Err(SecretsError::InvalidKey(
+                "Secret key must be alphanumeric with optional '_' or '-'".into(),
+            ));
+        }
+
+        Ok(normalized)
+    }
+
     /// Initialise le moteur. Si un mot de passe est fourni, les secrets sont persistant chiffrés.
     pub fn new(passphrase: Option<String>) -> Result<Self, SecretsError> {
         let trimmed = passphrase.and_then(|p| {
@@ -147,6 +180,7 @@ impl SecureSecretsEngine {
     }
 
     pub fn get_secret(&self, key: &str) -> Result<Option<String>, SecretsError> {
+        let key = Self::validate_secret_key(key)?;
         let guard = self
             .inner
             .secrets
@@ -156,6 +190,7 @@ impl SecureSecretsEngine {
     }
 
     pub fn has_secret(&self, key: &str) -> Result<bool, SecretsError> {
+        let key = Self::validate_secret_key(key)?;
         let guard = self
             .inner
             .secrets
@@ -165,6 +200,7 @@ impl SecureSecretsEngine {
     }
 
     pub fn set_secret(&self, key: &str, value: String) -> Result<(), SecretsError> {
+        let key = Self::validate_secret_key(key)?;
         {
             let mut guard = self
                 .inner
@@ -185,6 +221,7 @@ impl SecureSecretsEngine {
     }
 
     pub fn clear_secret(&self, key: &str) -> Result<(), SecretsError> {
+        let key = Self::validate_secret_key(key)?;
         {
             let mut guard = self
                 .inner
@@ -410,5 +447,53 @@ impl Default for SecureSecretsEngine {
                 secrets: RwLock::new(HashMap::new()),
             }),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_set_secret_rejects_invalid_key() {
+        let engine = SecureSecretsEngine::default();
+
+        let err = engine
+            .set_secret(" bad key ", "value".to_string())
+            .expect_err("invalid secret key must be rejected");
+
+        assert!(matches!(err, SecretsError::InvalidKey(_)));
+    }
+
+    #[test]
+    fn test_get_secret_rejects_oversized_key() {
+        let engine = SecureSecretsEngine::default();
+        let oversized = "k".repeat(MAX_SECRET_KEY_LEN + 1);
+
+        let err = engine
+            .get_secret(&oversized)
+            .expect_err("oversized secret key must be rejected");
+
+        assert!(matches!(err, SecretsError::InvalidKey(_)));
+    }
+
+    #[test]
+    fn test_secret_round_trip_with_valid_key() {
+        let engine = SecureSecretsEngine::default();
+
+        engine
+            .set_secret(KEY_GEMINI, "token-value".to_string())
+            .expect("valid key should be accepted");
+
+        assert!(engine.has_secret(KEY_GEMINI).expect("has_secret should succeed"));
+        assert_eq!(
+            engine.get_secret(KEY_GEMINI).expect("get_secret should succeed"),
+            Some("token-value".to_string())
+        );
+
+        engine
+            .clear_secret(KEY_GEMINI)
+            .expect("clear_secret should succeed");
+        assert!(!engine.has_secret(KEY_GEMINI).expect("has_secret should succeed after clear"));
     }
 }

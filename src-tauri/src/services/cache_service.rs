@@ -7,7 +7,7 @@
 use crate::types::research::{CacheEvent, CacheEventKind};
 use rusqlite::{params, Connection};
 use sha2::{Digest, Sha256};
-use std::path::{Path, PathBuf};
+use std::path::{Component, Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 // ─────────────────────────────────────────────────────────────────
@@ -84,6 +84,16 @@ impl CacheService {
     /// Uses canonicalization when both paths exist; falls back to lexical check
     /// for paths not yet created (e.g., new blob files).
     pub fn enforce_sandbox_path(&self, path: &Path) -> Result<(), CacheError> {
+        if path
+            .components()
+            .any(|component| matches!(component, Component::ParentDir))
+        {
+            return Err(CacheError::SandboxViolation(format!(
+                "Path '{}' contains '..' and cannot be verified against sandbox",
+                path.display()
+            )));
+        }
+
         // Try canonicalize-based check first (resolves symlinks and ..)
         if let (Ok(canon_path), Ok(canon_root)) =
             (path.canonicalize(), self.sandbox_root.canonicalize())
@@ -98,28 +108,63 @@ impl CacheService {
             return Ok(());
         }
 
-        // Fallback: lexical check for paths not yet created
-        let root = self
-            .sandbox_root
-            .to_str()
-            .unwrap_or("")
-            .trim_end_matches('/');
-        let p = path.to_str().unwrap_or("").trim_end_matches('/');
+        let sandbox_root = if self.sandbox_root.is_absolute() {
+            self.sandbox_root.clone()
+        } else {
+            self.sandbox_root
+                .canonicalize()
+                .unwrap_or_else(|_| self.sandbox_root.clone())
+        };
 
-        // Reject any path containing ".." (basic traversal guard for non-existent paths)
-        if p.contains("..") {
-            return Err(CacheError::SandboxViolation(format!(
-                "Path '{}' contains '..' and cannot be verified against sandbox '{}'",
-                p, root
-            )));
+        let requested = if path.is_absolute() {
+            path.to_path_buf()
+        } else {
+            sandbox_root.join(path)
+        };
+
+        let mut existing_ancestor = requested.as_path();
+        while !existing_ancestor.exists() {
+            existing_ancestor = existing_ancestor.parent().ok_or_else(|| {
+                CacheError::SandboxViolation(format!(
+                    "Path '{}' is outside sandbox '{}'",
+                    requested.display(),
+                    sandbox_root.display()
+                ))
+            })?;
         }
 
-        if !p.starts_with(root) && p != root {
+        let canon_root = self
+            .sandbox_root
+            .canonicalize()
+            .unwrap_or_else(|_| self.sandbox_root.clone());
+        let canon_ancestor = existing_ancestor
+            .canonicalize()
+            .map_err(|e| CacheError::SandboxViolation(format!("Canonicalize failed: {}", e)))?;
+
+        if !canon_ancestor.starts_with(&canon_root) {
             return Err(CacheError::SandboxViolation(format!(
                 "Path '{}' is outside sandbox '{}'",
-                p, root
+                requested.display(),
+                canon_root.display()
             )));
         }
+
+        let relative_tail = requested.strip_prefix(existing_ancestor).map_err(|_| {
+            CacheError::SandboxViolation(format!(
+                "Path '{}' is outside sandbox '{}'",
+                requested.display(),
+                canon_root.display()
+            ))
+        })?;
+        let reconstructed = canon_ancestor.join(relative_tail);
+        if !reconstructed.starts_with(&canon_root) {
+            return Err(CacheError::SandboxViolation(format!(
+                "Path '{}' is outside sandbox '{}'",
+                requested.display(),
+                canon_root.display()
+            )));
+        }
+
         Ok(())
     }
 
@@ -422,6 +467,20 @@ mod tests {
         let svc = CacheService::new(sandbox.clone()).unwrap();
         let inside = sandbox.join("cache").join("blobs").join("abc.bin");
         assert!(svc.enforce_sandbox_path(&inside).is_ok());
+    }
+
+    #[test]
+    fn g_sandbox_rejects_prefix_sibling_path() {
+        let sandbox = tmp_sandbox();
+        let svc = CacheService::new(sandbox.clone()).unwrap();
+        let sibling = PathBuf::from(format!("{}_evil/cache/blobs/abc.bin", sandbox.display()));
+
+        let result = svc.enforce_sandbox_path(&sibling);
+        assert!(result.is_err());
+        match result.unwrap_err() {
+            CacheError::SandboxViolation(_) => {}
+            e => panic!("expected SandboxViolation, got {:?}", e),
+        }
     }
 
     // G_CACHE_HIT_NO_NETWORK: write then lookup
