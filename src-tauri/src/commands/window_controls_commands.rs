@@ -10,6 +10,14 @@ lazy_static::lazy_static! {
     static ref ZOOM_LEVELS: Mutex<std::collections::HashMap<String, f64>> = Mutex::new(std::collections::HashMap::new());
 }
 
+fn sanitize_zoom_level(level: f64) -> f64 {
+    if level.is_finite() {
+        level.clamp(0.5, 5.0)
+    } else {
+        1.0
+    }
+}
+
 /// Get current zoom level (returns scale factor)
 #[command]
 pub async fn window_get_zoom(window: Window) -> Result<f64, String> {
@@ -23,7 +31,7 @@ pub async fn window_get_zoom(window: Window) -> Result<f64, String> {
 /// Set zoom level (emits event to frontend for CSS application)
 #[command]
 pub async fn window_set_zoom(window: Window, level: f64) -> Result<(), String> {
-    let clamped_level = level.clamp(0.5, 5.0); // Clamp between 50% and 500%
+    let clamped_level = sanitize_zoom_level(level); // Clamp between 50% and 500%
 
     // Store zoom level
     let label = window.label().to_string();
@@ -94,4 +102,20 @@ pub async fn window_is_fullscreen(window: Window) -> Result<bool, String> {
     window
         .is_fullscreen()
         .map_err(|e| format!("Failed to check fullscreen state: {}", e))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::sanitize_zoom_level;
+
+    #[test]
+    fn test_sanitize_zoom_level_rejects_nan() {
+        assert_eq!(sanitize_zoom_level(f64::NAN), 1.0);
+    }
+
+    #[test]
+    fn test_sanitize_zoom_level_rejects_infinity() {
+        assert_eq!(sanitize_zoom_level(f64::INFINITY), 1.0);
+        assert_eq!(sanitize_zoom_level(f64::NEG_INFINITY), 1.0);
+    }
 }

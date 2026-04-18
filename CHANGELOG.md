@@ -1,5 +1,7 @@
 # Unreleased
 
+- Fixed: durcit `commands::window_controls_commands::window_set_zoom` pour rabattre les niveaux de zoom non finis (`NaN`, `+/-Infinity`) sur `1.0`, ce qui evite de propager des echelles invalides vers la voie CSS frontend.
+
 - Fixed: durcit les tests de `memory::telemetry` contre le mutex poisoning de `ENV_LOCK`, afin qu un panic d un test n entraine plus une cascade de faux echecs sur les tests suivants partageant le verrou d environnement.
 
 - Fixed: durcit `api::telemetry_api::parse_csv_line` pour refuser un timestamp CSV vide ou compose seulement d espaces avant toute synthese, ce qui bloque l ingestion de lignes telemetry mal formees avec champ temps absent.

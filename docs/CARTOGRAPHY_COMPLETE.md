@@ -1,8 +1,12 @@
 # TITANE_INFINITY — Cartographie Complète Avancée v30.1.34
 
+> 2026-04-18 — Conversation runtime-disk knowledge base truth: `src/services/api/defaultKnowledgeBase.ts` tente maintenant d abord la commande IPC `knowledge_base_runtime_snapshot` pour hydrater la KB par défaut depuis le dossier runtime `data/knowledge_base/default` visible par Tauri, avant de retomber sur `knowledge_base_get_all` puis sur le bundle frontend. `src-tauri/src/knowledge_base_default.rs` publie cette snapshot gouvernée avec exclusion des fichiers privés Kevin, ce qui laisse la route active du chat consommer la vérité disque réelle quand elle existe sans casser le fallback embarqué.
+
 > 2026-04-18 — Conversation canonical-kernel authority truth: src/services/conversationEngine.ts appelle maintenant src/services/ai/canonicalDiscernmentKernel.ts sur la voie chat active avec memoryIntegration, santé providers issue de aiOrchestrator.getProvidersStatus() et cohérence SingularityBridge.getCachedCoherence(). La décision canonique pilote le provider backend demandé, le profil runtime utilisé pour aiConfig, et la vérité exposée dans response.cognitive_tags, metadata.links_to_contexts et omega_trace_meta, ce qui rapproche la surface conversation standard du contrat déjà en vigueur dans src/services/ai/chatEngine.ts.
 
 > 2026-04-18 — Conversation provider/citations continuity truth: src-tauri/src/conversation_engine/commands.rs publie maintenant provider_used et des citations normalisées dans metadata au même format canonique que les surfaces web research, tandis que src/services/conversationEngine.ts conserve cette vérité même si seul meta.provider_used ou trace.citations est présent. src/hooks/useConversationEngine.ts persiste ensuite providerUsed et citations sur le message assistant de la surface active, ce qui supprime le faux fallback provider et les pertes de Sources en ligne sur la voie standard du chat.
+
+> 2026-04-18 — Window zoom finite-value truth: `src-tauri/src/commands/window_controls_commands.rs` rabat maintenant `NaN` et `+/-Infinity` sur `1.0` avant de stocker ou d emettre le zoom runtime. La preuve active passe par `commands::window_controls_commands::tests::test_sanitize_zoom_level_rejects_nan` et `commands::window_controls_commands::tests::test_sanitize_zoom_level_rejects_infinity`.
 
 > 2026-04-18 — Memory telemetry env-lock truth: `src-tauri/src/memory/telemetry.rs` recupere maintenant le guard de `ENV_LOCK` meme quand le mutex a ete empoisonne par un panic de test precedent. La preuve active passe par `memory::telemetry::tests` execute en sequence avec `--test-threads=1` pour confirmer que la lane telemetry ne s auto-casse plus sur le poison du verrou partage.
 
@@ -231,7 +235,7 @@ TITANE_INFINITY est organisé en 4 anneaux concentriques, du noyau Rust vers l'i
 │  20+ moteurs Rust : cognitif, mémoire, singularité, audio...        │
 ├─────────────────────────────────────────────────────────────────────┤
 │  Ring 1 — Core Services (src/services/)                             │
-│  IPC bridge · 1135 commandes Tauri · AI orchestration               │
+│  IPC bridge · 1136 commandes Tauri · AI orchestration               │
 ├─────────────────────────────────────────────────────────────────────┤
 │  Ring 0 — Kernel Rust (main.rs · security · constitution)           │
 │  Point d'entrée · Sécurité · Registre des modules                   │
@@ -242,7 +246,7 @@ TITANE_INFINITY est organisé en 4 anneaux concentriques, du noyau Rust vers l'i
 
 | Fichier | Lignes | Rôle |
 |---------|--------|------|
-| `main.rs` | 2857 | Point d'entrée, invoque ~1135 commandes Tauri via `generate_handler![]` |
+| `main.rs` | 2858 | Point d'entrée, invoque ~1136 commandes Tauri via `generate_handler![]` |
 | `lib.rs` | — | Registre des modules Rust |
 | `error.rs` | — | Définition des erreurs canoniques |
 | `error_handling.rs` | — | Gestion centralisée des erreurs |
@@ -430,7 +434,7 @@ Chaque agent est intégré dans la cartographie 4-Ring : UI (dashboard), moteu
 
 > Voir le catalogue exhaustif : [IPC_CATALOG.md](./IPC_CATALOG.md)
 
-**1135 commandes IPC** réparties en 68 domaines fonctionnels.
+**1136 commandes IPC** réparties en 68 domaines fonctionnels.
 
 | Domaine | Commandes | Domaine | Commandes |
 |---------|-----------|---------|-----------|
@@ -466,8 +470,8 @@ Chaque agent est intégré dans la cartographie 4-Ring : UI (dashboard), moteu
 | Health/Diagnostics | 24 | HyperIntelligence | 11 |
 | IDE Agent | 10 | Identity | 38 |
 | Introspection | 6 | Jobs | 6 |
-| Knowledge Base | 18 | Literary Engine | 9 |
-| **TOTAL** | **1135** | | |
+| Knowledge Base | 19 | Literary Engine | 9 |
+| **TOTAL** | **1136** | | |
 
 ---
 
