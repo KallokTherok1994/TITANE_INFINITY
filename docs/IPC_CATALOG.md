@@ -20,7 +20,9 @@
 
 > 2026-04-17 — TOTAL_DEV Git read-only truth: `total_dev_git_op` conserve son contrat IPC de pilotage git gouverne, mais il n autorise plus les operations mutantes ni des arguments libres. La commande accepte uniquement des inspections read-only qualifiees (`status`, `diff --stat`, `log --oneline -10|-20`, `branch`, `show --stat --oneline HEAD`, `rev-parse --short HEAD`) et refuse les ecritures git ainsi que les variantes non repertoriees.
 
-> **1135 commandes IPC Tauri** — Générées le 2026-04-11
+> 2026-04-18 — Knowledge base runtime snapshot truth: `knowledge_base_runtime_snapshot` expose maintenant une snapshot gouvernée `{ ok, content, error }` de la KB par défaut depuis `src-tauri/src/knowledge_base_default.rs`. La commande tente d abord la lecture runtime de `data/knowledge_base/default`, exclut les fichiers privés Kevin, publie `source`, `source_path`, `fallback_used`, `entry_count`, `errors` et `entries`, puis retombe honnêtement sur la KB embarquée si le disque runtime est indisponible.
+
+> **1136 commandes IPC Tauri** — Générées le 2026-04-11
 > Toutes les commandes exposées par `main.rs` via `tauri::generate_handler![]`
 
 ## Résumé par domaine
@@ -62,7 +64,7 @@
 | 33 | Identity | 38 |
 | 34 | Introspection | 6 |
 | 35 | Jobs | 6 |
-| 36 | Knowledge Base | 18 |
+| 36 | Knowledge Base | 19 |
 | 37 | Literary Engine | 9 |
 | 38 | Logging | 13 |
 | 39 | Memory | 114 |
@@ -93,7 +95,7 @@
 | 64 | Training | 15 |
 | 65 | VAD | 7 |
 | 66 | Voice | 19 |
-| | **TOTAL** | **1135** |
+| | **TOTAL** | **1136** |
 
 ---
 
@@ -865,7 +867,7 @@
 | 5 | `job_start` | Job start |
 | 6 | `job_status` | Job status |
 
-## Knowledge Base (18 commandes)
+## Knowledge Base (19 commandes)
 
 | # | Commande | Description |
 |---|----------|-------------|
@@ -876,17 +878,18 @@
 | 5 | `knowledge_base_get_all` | Knowledge base get all |
 | 6 | `knowledge_base_get_category` | Knowledge base get category |
 | 7 | `knowledge_base_list_categories` | Knowledge base list categories |
-| 8 | `knowledge_base_validate` | Knowledge base validate |
-| 9 | `memory_get_knowledge` | Memory get knowledge |
-| 10 | `parse_document` | Parse document |
-| 11 | `upload_and_process_file` | Upload and process file |
-| 12 | `vector_search` | Vector search |
-| 13 | `vector_store_delete` | Vector store delete |
-| 14 | `vector_store_get` | Vector store get |
-| 15 | `vector_store_get_stats` | Vector store get stats |
-| 16 | `vector_store_init` | Vector store init |
-| 17 | `vector_store_insert` | Vector store insert |
-| 18 | `vector_store_update` | Vector store update |
+| 8 | `knowledge_base_runtime_snapshot` | Knowledge base runtime snapshot |
+| 9 | `knowledge_base_validate` | Knowledge base validate |
+| 10 | `memory_get_knowledge` | Memory get knowledge |
+| 11 | `parse_document` | Parse document |
+| 12 | `upload_and_process_file` | Upload and process file |
+| 13 | `vector_search` | Vector search |
+| 14 | `vector_store_delete` | Vector store delete |
+| 15 | `vector_store_get` | Vector store get |
+| 16 | `vector_store_get_stats` | Vector store get stats |
+| 17 | `vector_store_init` | Vector store init |
+| 18 | `vector_store_insert` | Vector store insert |
+| 19 | `vector_store_update` | Vector store update |
 
 ## Literary Engine (9 commandes)
 

@@ -556,8 +556,10 @@ Actions immédiates:
             emotion: response.detected_emotion,
             tags: response.cognitive_tags,
             providerMeta: response.meta,
-            providerUsed: response.meta?.provider_used,
+            providerUsed:
+              response.metadata?.provider_used ?? response.meta?.provider_used,
             requestedProvider,
+            citations: response.metadata?.citations,
             contextBinding,
             singleDoorTags: contextEnvelope?.memorySingleDoor.tags,
           },

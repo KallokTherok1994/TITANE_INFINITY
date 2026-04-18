@@ -7,6 +7,8 @@
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use std::fs;
+use std::path::{Path, PathBuf};
 use std::sync::OnceLock;
 
 // ─────────────────────────────────────────────────────────────────
@@ -435,6 +437,12 @@ const ANALYSE_TRANSACTIONNELLE_PSYCHOGENEALOGIE: &str = include_str!(
 // ─────────────────────────────────────────────────────────────────
 
 static KB_CACHE: OnceLock<(HashMap<String, KnowledgeBaseEntry>, Vec<String>)> = OnceLock::new();
+const RUNTIME_KB_EXCLUDED_IDS: &[&str] = &[
+    "kevin_book_registry_v30",
+    "kevin_owner_profile_v30",
+    "kevin_public_corpus_v30",
+    "kevin_workflow_v30",
+];
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -458,6 +466,17 @@ pub struct KnowledgeBaseInitResult {
     pub categories_loaded: Vec<String>,
     pub errors: Vec<String>,
     pub version: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct KnowledgeBaseRuntimeSnapshot {
+    pub source: String,
+    pub source_path: Option<String>,
+    pub fallback_used: bool,
+    pub entry_count: usize,
+    pub errors: Vec<String>,
+    pub entries: HashMap<String, KnowledgeBaseEntry>,
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -885,6 +904,144 @@ impl DefaultKnowledgeBase {
         let (_, errors) = Self::load_all();
         errors.is_empty()
     }
+
+    fn runtime_default_dir_candidates() -> Vec<PathBuf> {
+        let mut candidates = Vec::new();
+
+        if let Ok(env_path) = std::env::var("TITANE_KNOWLEDGE_BASE_DIR") {
+            let env_path = PathBuf::from(env_path);
+            if env_path.ends_with("default") {
+                candidates.push(env_path);
+            } else {
+                candidates.push(env_path.join("default"));
+            }
+        }
+
+        if let Ok(current_dir) = std::env::current_dir() {
+            candidates.push(current_dir.join("data/knowledge_base/default"));
+            candidates.push(current_dir.join("knowledge_base/default"));
+        }
+
+        candidates.push(
+            PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+                .join("..")
+                .join("data/knowledge_base/default"),
+        );
+
+        candidates
+    }
+
+    fn resolve_runtime_default_dir() -> Option<PathBuf> {
+        Self::runtime_default_dir_candidates()
+            .into_iter()
+            .find(|candidate| candidate.is_dir())
+    }
+
+    fn load_entries_from_directory(
+        dir: &Path,
+    ) -> (HashMap<String, KnowledgeBaseEntry>, Vec<String>) {
+        let mut entries: HashMap<String, KnowledgeBaseEntry> = HashMap::new();
+        let mut errors: Vec<String> = Vec::new();
+
+        let read_dir = match fs::read_dir(dir) {
+            Ok(read_dir) => read_dir,
+            Err(error) => {
+                errors.push(format!("Failed to read '{}': {}", dir.display(), error));
+                return (entries, errors);
+            }
+        };
+
+        let mut file_paths: Vec<PathBuf> = read_dir
+            .filter_map(|entry| entry.ok().map(|value| value.path()))
+            .filter(|path| path.extension().and_then(|ext| ext.to_str()) == Some("json"))
+            .collect();
+        file_paths.sort();
+
+        for file_path in file_paths {
+            let Some(stem) = file_path
+                .file_stem()
+                .and_then(|value| value.to_str())
+                .map(|value| value.to_string())
+            else {
+                continue;
+            };
+
+            if RUNTIME_KB_EXCLUDED_IDS.contains(&stem.as_str()) {
+                continue;
+            }
+
+            match fs::read_to_string(&file_path) {
+                Ok(raw) => match serde_json::from_str::<serde_json::Value>(&raw) {
+                    Ok(value) => {
+                        let category = value
+                            .get("category")
+                            .and_then(|candidate| candidate.as_str())
+                            .unwrap_or(&stem)
+                            .to_string();
+                        let version = value
+                            .get("version")
+                            .and_then(|candidate| candidate.as_str())
+                            .unwrap_or("v30.0.0")
+                            .to_string();
+                        let description = value
+                            .get("description")
+                            .and_then(|candidate| candidate.as_str())
+                            .unwrap_or("")
+                            .to_string();
+
+                        entries.insert(
+                            category.clone(),
+                            KnowledgeBaseEntry {
+                                id: stem,
+                                category,
+                                version,
+                                description,
+                                content: value,
+                            },
+                        );
+                    }
+                    Err(error) => errors.push(format!(
+                        "Failed to parse '{}': {}",
+                        file_path.display(),
+                        error
+                    )),
+                },
+                Err(error) => errors.push(format!(
+                    "Failed to read '{}': {}",
+                    file_path.display(),
+                    error
+                )),
+            }
+        }
+
+        (entries, errors)
+    }
+
+    pub fn load_runtime_snapshot() -> KnowledgeBaseRuntimeSnapshot {
+        if let Some(runtime_dir) = Self::resolve_runtime_default_dir() {
+            let (entries, errors) = Self::load_entries_from_directory(&runtime_dir);
+            if !entries.is_empty() {
+                return KnowledgeBaseRuntimeSnapshot {
+                    source: "runtime_disk".to_string(),
+                    source_path: Some(runtime_dir.display().to_string()),
+                    fallback_used: false,
+                    entry_count: entries.len(),
+                    errors,
+                    entries,
+                };
+            }
+        }
+
+        let (entries, errors) = Self::load_all();
+        KnowledgeBaseRuntimeSnapshot {
+            source: "embedded_default".to_string(),
+            source_path: None,
+            fallback_used: true,
+            entry_count: entries.len(),
+            errors,
+            entries,
+        }
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -930,6 +1087,16 @@ pub fn knowledge_base_validate() -> Result<bool, String> {
     Ok(DefaultKnowledgeBase::validate())
 }
 
+#[tauri::command]
+pub fn knowledge_base_runtime_snapshot() -> Result<serde_json::Value, String> {
+    let snapshot = DefaultKnowledgeBase::load_runtime_snapshot();
+    Ok(serde_json::json!({
+        "ok": true,
+        "content": snapshot,
+        "error": null,
+    }))
+}
+
 // ─────────────────────────────────────────────────────────────────
 // UNIT TESTS
 // ─────────────────────────────────────────────────────────────────
@@ -937,6 +1104,7 @@ pub fn knowledge_base_validate() -> Result<bool, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::time::{SystemTime, UNIX_EPOCH};
 
     #[test]
     fn test_knowledge_base_loads_all_categories() {
@@ -1186,5 +1354,61 @@ mod tests {
             cats.get("singularity").is_some(),
             "Must have singularity commands"
         );
+    }
+
+    #[test]
+    fn test_load_entries_from_directory_skips_private_runtime_files() {
+        let unique_suffix = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("clock should be monotonic enough for test temp dir")
+            .as_nanos();
+        let dir = std::env::temp_dir().join(format!("titane-kb-runtime-{unique_suffix}"));
+        fs::create_dir_all(&dir).expect("create temp runtime KB dir");
+
+        let kept_path = dir.join("system_architecture.json");
+        let excluded_path = dir.join("kevin_owner_profile_v30.json");
+
+        fs::write(
+            &kept_path,
+            r#"{
+                "category": "system_architecture",
+                "version": "v30.1.35",
+                "description": "Architecture",
+                "content": {"rings": 4}
+            }"#,
+        )
+        .expect("write kept file");
+        fs::write(
+            &excluded_path,
+            r#"{
+                "category": "kevin_owner_profile_v30",
+                "version": "v30.1.35",
+                "description": "Private",
+                "content": {"scope": "private"}
+            }"#,
+        )
+        .expect("write excluded file");
+
+        let (entries, errors) = DefaultKnowledgeBase::load_entries_from_directory(&dir);
+        assert!(errors.is_empty());
+        assert_eq!(entries.len(), 1);
+        assert!(entries.contains_key("system_architecture"));
+        assert!(!entries.contains_key("kevin_owner_profile_v30"));
+
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn test_runtime_snapshot_uses_runtime_disk_when_workspace_data_exists() {
+        let snapshot = DefaultKnowledgeBase::load_runtime_snapshot();
+
+        assert!(snapshot.entry_count >= 193);
+        assert_eq!(snapshot.entry_count, snapshot.entries.len());
+        assert!(!snapshot.entries.is_empty());
+
+        if snapshot.source == "runtime_disk" {
+            assert!(!snapshot.fallback_used);
+            assert!(snapshot.source_path.is_some());
+        }
     }
 }

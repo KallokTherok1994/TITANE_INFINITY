@@ -2617,6 +2617,7 @@ fn main() {
             titane_infinity::knowledge_base_default::knowledge_base_get_all,
             titane_infinity::knowledge_base_default::knowledge_base_get_category,
             titane_infinity::knowledge_base_default::knowledge_base_list_categories,
+            titane_infinity::knowledge_base_default::knowledge_base_runtime_snapshot,
             titane_infinity::knowledge_base_default::knowledge_base_validate,
 
             // security::hardening

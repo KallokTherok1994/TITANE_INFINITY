@@ -23,19 +23,61 @@ const advancedAgentStatusMocks = vi.hoisted(() => ({
   getSecurityActiveAgentStatus: vi.fn(),
 }));
 
+const canonicalKernelMock = vi.hoisted(() => ({
+  discern: vi.fn(),
+}));
+
+const memoryIntegrationMock = vi.hoisted(() => ({
+  loadContext: vi.fn(),
+  loadPreferences: vi.fn(),
+  getDepthPreference: vi.fn(),
+}));
+
+const singularityBridgeMock = vi.hoisted(() => ({
+  getCachedCoherence: vi.fn(),
+}));
+
 vi.mock('@/lib/security', () => {
   return {
     secureInvoke: vi.fn(),
+    ALLOWED_COMMANDS: new Set([
+      'web_research',
+      'http_request',
+      'memory_recall_semantic',
+      'vector_store_search',
+      'conversation_generate',
+    ]),
   };
 });
+
+const mcpOrchestratorMock = vi.hoisted(() => ({
+  getHealth: vi.fn(),
+}));
+
+vi.mock('@/services/mcp/MCPOrchestrator', () => ({
+  MCPOrchestrator: mcpOrchestratorMock,
+}));
 
 vi.mock('@/services/ai/orchestrator', () => {
   return {
     aiOrchestrator: {
       generate: vi.fn(),
+      getProvidersStatus: vi.fn(),
     },
   };
 });
+
+vi.mock('@/services/ai/canonicalDiscernmentKernel', () => ({
+  canonicalDiscernmentKernel: canonicalKernelMock,
+}));
+
+vi.mock('@/services/ai/memoryIntegration', () => ({
+  memoryIntegration: memoryIntegrationMock,
+}));
+
+vi.mock('@/services/singularityBridge', () => ({
+  SingularityBridge: singularityBridgeMock,
+}));
 
 vi.mock('@/services/api/memory', () => {
   return {
@@ -85,6 +127,45 @@ import {
   resetStaticPromptContextCache,
 } from '@/services/conversationEngine';
 
+function createCanonicalDecisionMock(overrides: Record<string, unknown> = {}) {
+  return {
+    mode: 'default',
+    modeClassification: {
+      canonicalMode: 'STANDARD_CHAT',
+      confidence: 0.82,
+      reasonCode: 'KERNEL_OK',
+      signals: ['kernel'],
+    },
+    profileId: 'BALANCED',
+    profileLabel: 'Equilibre',
+    inferenceState: 'SAFE_TO_INFER',
+    memoryInjection: {
+      use: false,
+      sources: [],
+      maxTokens: 0,
+      relevance: 'low',
+    },
+    provider: {
+      name: 'ollama',
+      model: 'auto',
+      fallback: ['titane-local'],
+      temperature: 0.7,
+      maxTokens: 16384,
+      reasoningEffort: 'medium',
+    },
+    skillId: null,
+    fallbackChain: ['titane-local'],
+    truthStatus: 'STABLE_PARTIAL',
+    reasoning: 'kernel reasoning',
+    confidence: 0.82,
+    messageComplexity: 0.41,
+    signals: [],
+    timestamp: 1713390000000,
+    processingTimeMs: 5,
+    ...overrides,
+  };
+}
+
 describe('conversationEngine.processMessage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -129,6 +210,23 @@ describe('conversationEngine.processMessage', () => {
       readiness: 'partial',
       serviceState: 'security runtime',
       nextStep: 'next security',
+    });
+    memoryIntegrationMock.loadContext.mockResolvedValue({
+      activeProjects: [],
+      recentDecisions: [],
+      relevantKnowledge: [],
+      activeRituals: [],
+      timeline: [],
+    });
+    memoryIntegrationMock.loadPreferences.mockReturnValue([]);
+    memoryIntegrationMock.getDepthPreference.mockReturnValue(null);
+    singularityBridgeMock.getCachedCoherence.mockReturnValue(0.5);
+    canonicalKernelMock.discern.mockReturnValue(createCanonicalDecisionMock());
+    vi.mocked(aiOrchestrator.getProvidersStatus).mockResolvedValue({
+      providers: [{ name: 'ollama', reliability: 98 }],
+    } as Awaited<ReturnType<typeof aiOrchestrator.getProvidersStatus>>);
+    mcpOrchestratorMock.getHealth.mockReturnValue({
+      globalStatus: 'HEALTHY',
     });
   });
 
@@ -839,6 +937,242 @@ describe('conversationEngine.processMessage', () => {
         'agent_security_active:partial',
       ])
     );
+  });
+
+  it('surfaces governed tool lane truth and code discernment on the active conversation path', async () => {
+    vi.mocked(secureInvoke).mockImplementation(async command => {
+      if (command === 'persistent_memory_get_context') {
+        return null;
+      }
+
+      if (command === 'conversation_generate') {
+        return {
+          content: 'Ok tools',
+          conversationId: 'c14',
+          messageId: 'm14',
+          metadata: { timestamp: 1414 },
+        };
+      }
+
+      return null;
+    });
+
+    const response = await processMessage('Écris une fonction TypeScript pour parser ce JSON', {
+      conversationId: 'c14',
+      providerPreference: 'ollama',
+    });
+
+    const generateCall = vi
+      .mocked(secureInvoke)
+      .mock.calls.find(([command]) => command === 'conversation_generate');
+
+    expect(generateCall?.[1]).toEqual(
+      expect.objectContaining({
+        args: expect.objectContaining({
+          systemPrompt: expect.stringContaining('## GOVERNED_TOOL_LANE_CONTEXT'),
+        }),
+      })
+    );
+    expect(generateCall?.[1]).toEqual(
+      expect.objectContaining({
+        args: expect.objectContaining({
+          systemPrompt: expect.stringContaining('status=available'),
+        }),
+      })
+    );
+    expect(response.discernment?.toolAction).toBe('tool');
+    expect(response.cognitive_tags).toEqual(
+      expect.arrayContaining([
+        'tool-lane:available',
+        'task-type:code',
+        'tool-action:tool',
+      ])
+    );
+    expect(response.metadata.links_to_contexts).toEqual(
+      expect.arrayContaining([
+        'tool_lane:available',
+        'task_type:code',
+        'tool_action:tool',
+      ])
+    );
+  });
+
+  it('lets the canonical kernel drive provider, profile and truth on the active conversation path', async () => {
+    canonicalKernelMock.discern.mockReturnValue(
+      createCanonicalDecisionMock({
+        profileId: 'ARCHITECT',
+        truthStatus: 'PROVEN_RUNTIME',
+        confidence: 0.93,
+        provider: {
+          name: 'gemini',
+          model: 'auto',
+          fallback: ['ollama'],
+          temperature: 0.33,
+          maxTokens: 8192,
+          reasoningEffort: 'high',
+        },
+      })
+    );
+
+    vi.mocked(secureInvoke).mockImplementation(async command => {
+      if (command === 'persistent_memory_get_context') {
+        return null;
+      }
+
+      if (command === 'conversation_generate') {
+        return {
+          content: 'Ok kernel',
+          conversationId: 'c15',
+          messageId: 'm15',
+          metadata: { timestamp: 1515, provider_used: 'gemini' },
+        };
+      }
+
+      return null;
+    });
+
+    const response = await processMessage('Fais une analyse architecture approfondie', {
+      conversationId: 'c15',
+      providerPreference: 'ollama',
+    });
+
+    const generateCall = vi
+      .mocked(secureInvoke)
+      .mock.calls.find(([command]) => command === 'conversation_generate');
+
+    expect(generateCall?.[1]).toEqual(
+      expect.objectContaining({
+        args: expect.objectContaining({
+          provider: 'gemini',
+          aiConfig: expect.objectContaining({
+            temperature: 0.33,
+            max_tokens: 8192,
+            provider_preference: 'gemini',
+          }),
+          classifierMeta: expect.objectContaining({
+            profile_id: 'ARCHITECT',
+            effort_level: 'high',
+          }),
+          systemPrompt: expect.stringContaining('## CANONICAL_DISCERNMENT_CONTEXT'),
+        }),
+      })
+    );
+    expect(response.omega_trace_meta).toEqual(
+      expect.objectContaining({
+        profile_id: 'ARCHITECT',
+        canonical_truth_status: 'PROVEN_RUNTIME',
+        canonical_confidence: 0.93,
+      })
+    );
+    expect(response.cognitive_tags).toEqual(
+      expect.arrayContaining([
+        'kernel-profile:ARCHITECT',
+        'kernel-provider:gemini',
+        'kernel-truth:proven_runtime',
+      ])
+    );
+    expect(response.metadata.links_to_contexts).toEqual(
+      expect.arrayContaining([
+        'kernel_profile:ARCHITECT',
+        'kernel_provider:gemini',
+        'kernel_truth:proven_runtime',
+      ])
+    );
+  });
+
+  it('preserves provider_used from meta when metadata omits it', async () => {
+    vi.mocked(secureInvoke).mockImplementation(async command => {
+      if (command === 'persistent_memory_get_context') {
+        return null;
+      }
+
+      if (command === 'conversation_generate') {
+        return {
+          content: 'Provider meta truth',
+          conversationId: 'c16',
+          messageId: 'm16',
+          metadata: { timestamp: 1616 },
+          meta: {
+            provider_used: 'ollama-runtime',
+            provider_class: 'local',
+            mode: 'LOCAL',
+            reason_code: 'OK',
+            latency_ms_total: 16,
+            timeout_ms: 30000,
+            retries: 0,
+            attempts: [],
+            network_used: false,
+            cache_hit: false,
+            policy: 'provider-meta-only',
+          },
+        };
+      }
+
+      return null;
+    });
+
+    const response = await processMessage('Donne le provider réel', {
+      conversationId: 'c16',
+      providerPreference: 'ollama',
+    });
+
+    expect(response.metadata.provider_used).toBe('ollama-runtime');
+    expect(response.omega_trace_meta?.provider_used).toBe('ollama-runtime');
+  });
+
+  it('normalizes inline citations from conversation metadata or trace on the active conversation path', async () => {
+    vi.mocked(secureInvoke).mockImplementation(async command => {
+      if (command === 'persistent_memory_get_context') {
+        return null;
+      }
+
+      if (command === 'conversation_generate') {
+        return {
+          content: 'Réponse avec citations',
+          conversationId: 'c17',
+          messageId: 'm17',
+          metadata: {
+            timestamp: 1717,
+            citations: [
+              {
+                url: 'https://example.com/source-a',
+                title: 'Source A',
+                excerpt: 'Extrait A',
+                accessed_at: '2026-04-18T10:00:00Z',
+              },
+            ],
+          },
+          trace: {
+            citations: [
+              {
+                url: 'https://example.com/source-b',
+                title: 'Source B',
+                snippet: 'Extrait B',
+                timestamp: '2026-04-18T10:05:00Z',
+              },
+            ],
+          },
+        };
+      }
+
+      return null;
+    });
+
+    const response = await processMessage('Montre les sources en ligne', {
+      conversationId: 'c17',
+      providerPreference: 'ollama',
+    });
+
+    expect(response.metadata.citations).toEqual([
+      {
+        url: 'https://example.com/source-a',
+        title: 'Source A',
+        excerpt: 'Extrait A',
+        accessed_at: '2026-04-18T10:00:00Z',
+        locator: null,
+        locator_text: null,
+      },
+    ]);
   });
 
   it('persists successful chat interactions into Memory Core on the active conversation path', async () => {

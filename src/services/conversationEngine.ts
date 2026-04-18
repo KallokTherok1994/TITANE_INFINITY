@@ -11,6 +11,7 @@
  */
 
 import { tauriClient } from '@/lib/tauriClient';
+import { ALLOWED_COMMANDS } from '@/lib/security';
 import { getSystemPrompt } from '@/config/chatModes.config';
 import { memoryService } from '@/services/api/memory';
 import { getRelevantPromptContext as getDefaultKbPromptContext } from '@/services/api/defaultKnowledgeBase';
@@ -31,6 +32,11 @@ import {
   type ResponseProfileId,
   type InferenceState,
 } from '@/services/ai/responsePolicy';
+import {
+  canonicalDiscernmentKernel,
+  type CanonicalDecision,
+} from '@/services/ai/canonicalDiscernmentKernel';
+import { memoryIntegration } from '@/services/ai/memoryIntegration';
 import {
   buildDiscernmentDecision,
   type DiscernmentDecision,
@@ -56,7 +62,10 @@ import {
 import { xpEngine } from '@/cognitive/progression/xpEngine';
 import { useEvolutionStore } from '@/stores/evolutionStore';
 import { aiOrchestrator } from '@/services/ai/orchestrator';
+import { MCPOrchestrator } from '@/services/mcp/MCPOrchestrator';
+import { SingularityBridge } from '@/services/singularityBridge';
 import type { KnowledgeEntry } from '@/services/memory/types';
+import type { Citation } from '@/types/research';
 
 import { createLogger } from '@/utils/logger';
 
@@ -68,6 +77,7 @@ const E2E_CHAT_SCENARIO_FLAG = '__TITANE_E2E_CHAT_SCENARIO__';
 const E2E_CHAT_KNOWLEDGE_SEED_FLAG = '__TITANE_E2E_CHAT_KNOWLEDGE_SEED__';
 const E2E_CHAT_MEMORY_LOG_FLAG = '__TITANE_E2E_CHAT_MEMORY_LOG__';
 const STATIC_PROMPT_CONTEXT_TTL_MS = 2000;
+const OVERRIDABLE_DEPTH_PREFS = new Set<string | null>(['standard', 'developed', null]);
 
 type E2EChatScenario = 'success' | 'rate_limit';
 
@@ -146,6 +156,119 @@ function formatOnlineCapabilityBlock(input: {
   ].join('\n');
 }
 
+function resolveConversationDepthPref(base: string | null): string | null {
+  const deepActive =
+    userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] ===
+    true;
+  if (deepActive && OVERRIDABLE_DEPTH_PREFS.has(base)) {
+    return 'deep';
+  }
+
+  return base;
+}
+
+function normalizeKernelProviderPreference(
+  providerName: string | undefined,
+  fallback: ConversationProviderPreference
+): ConversationProviderPreference {
+  switch (providerName) {
+    case 'ollama':
+    case 'gemini':
+    case 'openai':
+    case 'claude':
+    case 'local':
+    case 'auto':
+      return providerName;
+    case 'titane-local':
+      return 'local';
+    default:
+      return fallback;
+  }
+}
+
+function formatCanonicalDecisionBlock(
+  decision: CanonicalDecision,
+  providerPreference: ConversationProviderPreference
+): string {
+  return [
+    '## CANONICAL_DISCERNMENT_CONTEXT',
+    `mode=${decision.mode}`,
+    `profile=${decision.profileId}`,
+    `inference=${decision.inferenceState}`,
+    `provider=${providerPreference}`,
+    `truth=${decision.truthStatus}`,
+    `confidence=${decision.confidence.toFixed(2)}`,
+    `skill=${decision.skillId ?? 'none'}`,
+  ].join('\n');
+}
+
+type GovernedToolLaneStatus = {
+  status: 'available' | 'unavailable';
+  mcpHealth: string;
+  availableCommands: string[];
+};
+
+function detectTaskType(
+  message: string,
+  detectedIntention?: Intention
+): 'question' | 'instruction' | 'multi-step' | 'code' | 'data' {
+  const normalized = message.toLowerCase();
+
+  if (
+    /(typescript|javascript|python|rust|sql|regex|fonction|function|class|interface|bug|stack trace|compiler|refactor|test unitaire|vitest|playwright|json schema|api)/.test(
+      normalized
+    )
+  ) {
+    return 'code';
+  }
+
+  if (/(csv|tableau|dataset|metrics|métriques|statistiques|json|yaml|xml|rapport de données)/.test(normalized)) {
+    return 'data';
+  }
+
+  if (/(étape|etape|plan|roadmap|checklist|d'abord|ensuite|puis|finally|step by step)/.test(normalized)) {
+    return 'multi-step';
+  }
+
+  return detectedIntention === 'Action' ? 'instruction' : 'question';
+}
+
+function getGovernedToolLaneStatus(): GovernedToolLaneStatus {
+  const governedCommands = [
+    'web_research',
+    'http_request',
+    'memory_recall_semantic',
+    'vector_store_search',
+  ];
+  const availableCommands = governedCommands.filter(command => ALLOWED_COMMANDS.has(command));
+
+  let mcpHealth = 'UNKNOWN';
+  try {
+    mcpHealth = MCPOrchestrator.getHealth().globalStatus;
+  } catch (error) {
+    logger.warn('[conversationEngine] governed tool lane MCP health unavailable', error);
+  }
+
+  return {
+    status:
+      availableCommands.length >= 3 && mcpHealth !== 'CRITICAL'
+        ? 'available'
+        : 'unavailable',
+    mcpHealth,
+    availableCommands,
+  };
+}
+
+function formatGovernedToolLaneBlock(status: GovernedToolLaneStatus): string {
+  return [
+    '## GOVERNED_TOOL_LANE_CONTEXT',
+    `status=${status.status}`,
+    `mcp_health=${status.mcpHealth}`,
+    `available_commands=${status.availableCommands.join(',') || 'none'}`,
+    'execution_mode=governed_not_auto',
+  ].join('\n');
+}
+
 type RuntimeAdvancedAgentStatus = {
   id: string;
   readiness: string;
@@ -196,6 +319,10 @@ function buildContextStatusTags(input: {
   onlineCapabilityStatus: 'available' | 'offline';
   deepAnalysisStatus: 'enabled' | 'disabled';
   advancedAgentStatuses: RuntimeAdvancedAgentStatus[];
+  governedToolLaneStatus: GovernedToolLaneStatus;
+  taskType: 'question' | 'instruction' | 'multi-step' | 'code' | 'data';
+  canonicalDecision: CanonicalDecision;
+  kernelProviderPreference: ConversationProviderPreference;
   contextEnvelope?: ChatContextEnvelope;
 }): string[] {
   const tags = [
@@ -205,10 +332,19 @@ function buildContextStatusTags(input: {
     `skill:${input.activeSkillStatus}`,
     `online:${input.onlineCapabilityStatus}`,
     `deep-analysis:${input.deepAnalysisStatus}`,
+    `tool-lane:${input.governedToolLaneStatus.status}`,
+    `task-type:${input.taskType}`,
+    `kernel-profile:${input.canonicalDecision.profileId}`,
+    `kernel-provider:${input.kernelProviderPreference}`,
+    `kernel-truth:${input.canonicalDecision.truthStatus.toLowerCase()}`,
   ];
 
   if (input.activeSkillId) {
     tags.push(`skill-id:${input.activeSkillId}`);
+  }
+
+  if (input.canonicalDecision.skillId) {
+    tags.push(`kernel-skill:${input.canonicalDecision.skillId}`);
   }
 
   if (input.advancedAgentStatuses.length > 0) {
@@ -526,6 +662,7 @@ export interface ConversationMetadata {
   tokens_used: number;
   memory_effect: MemoryEffect;
   links_to_contexts: string[];
+  citations?: Citation[];
 }
 
 /** Trace metadata emitted by OMEGA_AUTO_ORCHESTRATION_CHAIN (Lock #1) */
@@ -540,6 +677,9 @@ export interface OmegaTraceMeta {
   resolved_backend_mode: string;
   provider_used: string;
   fallback_used: boolean;
+  canonical_truth_status?: string;
+  canonical_confidence?: number;
+  canonical_skill_id?: string;
 }
 
 interface OmegaGenerateResponse {
@@ -553,6 +693,52 @@ interface OmegaGenerateResponse {
   provider?: string;
   meta?: ProviderDecisionMeta;
   decision?: OnlineDecision;
+  trace?: Record<string, unknown>;
+}
+
+function normalizeCitation(raw: unknown): Citation | null {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+    return null;
+  }
+
+  const candidate = raw as Record<string, unknown>;
+  const url = typeof candidate.url === 'string' ? candidate.url.trim() : '';
+  const excerptSource =
+    typeof candidate.excerpt === 'string'
+      ? candidate.excerpt
+      : typeof candidate.snippet === 'string'
+        ? candidate.snippet
+        : '';
+  const excerpt = excerptSource.trim();
+  const accessedAtSource =
+    typeof candidate.accessed_at === 'string'
+      ? candidate.accessed_at
+      : typeof candidate.timestamp === 'string'
+        ? candidate.timestamp
+        : '';
+  const accessed_at = accessedAtSource.trim();
+
+  if (!url || !excerpt || !accessed_at) {
+    return null;
+  }
+
+  return {
+    url,
+    title:
+      typeof candidate.title === 'string' && candidate.title.trim().length > 0
+        ? candidate.title.trim()
+        : null,
+    excerpt,
+    locator:
+      typeof candidate.locator === 'string' && candidate.locator.trim().length > 0
+        ? candidate.locator.trim()
+        : null,
+    locator_text:
+      typeof candidate.locator_text === 'string' && candidate.locator_text.trim().length > 0
+        ? candidate.locator_text.trim()
+        : null,
+    accessed_at,
+  };
 }
 
 function normalizeProviderMeta(raw: unknown): ProviderDecisionMeta | undefined {
@@ -710,6 +896,9 @@ function normalizeConversationMetadata(meta: unknown): ConversationMetadata {
   const links = Array.isArray(m.links_to_contexts)
     ? m.links_to_contexts.filter((v): v is string => typeof v === 'string')
     : [];
+  const citations = Array.isArray(m.citations)
+    ? m.citations.map(normalizeCitation).filter((citation): citation is Citation => citation !== null)
+    : [];
 
   return {
     timestamp: typeof m.timestamp === 'number' ? m.timestamp : Date.now(),
@@ -718,6 +907,7 @@ function normalizeConversationMetadata(meta: unknown): ConversationMetadata {
     tokens_used: typeof m.tokens_used === 'number' ? m.tokens_used : 0,
     memory_effect: isMemoryEffect(m.memory_effect) ? m.memory_effect : 'New',
     links_to_contexts: links,
+    citations,
   };
 }
 
@@ -906,6 +1096,49 @@ export async function processMessage(
     ? formatContextEnvelopeForSystemPrompt(options.contextEnvelope)
     : '';
 
+  let kernelMemoryContext = {
+    activeProjects: [],
+    recentDecisions: [],
+    relevantKnowledge: [],
+    activeRituals: [],
+    timeline: [],
+  };
+  try {
+    kernelMemoryContext = await memoryIntegration.loadContext({
+      includeProjects: true,
+      includeDecisions: true,
+      includeKnowledge: true,
+      includeRituals: true,
+      includeTimeline: false,
+      maxProjects: 5,
+      maxDecisions: 6,
+      maxKnowledge: 6,
+      timeWindow: '7d',
+    });
+  } catch (error) {
+    logger.warn('[conversationEngine] canonical kernel memory context unavailable', error);
+  }
+
+  let providerHealthForKernel: Record<string, number> | undefined;
+  try {
+    const providerStatus = await aiOrchestrator.getProvidersStatus();
+    providerHealthForKernel = Object.fromEntries(
+      providerStatus.providers.map(providerEntry => [
+        providerEntry.name,
+        providerEntry.reliability / 100,
+      ])
+    );
+  } catch (error) {
+    logger.debug('[conversationEngine] canonical kernel provider health unavailable', {
+      error: String(error),
+    });
+  }
+
+  const userDepthPreference = resolveConversationDepthPref(
+    memoryIntegration.getDepthPreference()
+  );
+  const singularityCoherence = SingularityBridge.getCachedCoherence();
+
   let runtimeKnowledgeContext = '';
   let runtimeKnowledgeStatus: 'loaded' | 'empty' | 'unavailable' = 'unavailable';
   try {
@@ -939,6 +1172,42 @@ export async function processMessage(
     `## ACTIVE_SKILL_STATUS\nstatus=${activeSkillStatus}${
       activeSkillId ? `\nskill_id=${activeSkillId}` : ''
     }`;
+  const taskType = detectTaskType(userMessage);
+  const availableSkills = activeSkillId
+    ? [
+        {
+          id: activeSkillId,
+          healthy: activeSkillStatus === 'active',
+          intentMatch: ['action_request', 'diagnostic', 'research_analysis'],
+        },
+      ]
+    : undefined;
+  const canonicalDecision = canonicalDiscernmentKernel.discern({
+    message: userMessage,
+    mode: conversationMode,
+    memoryContext: kernelMemoryContext,
+    preferences: memoryIntegration.loadPreferences(),
+    userDepthPreference,
+    providerPreference: provider,
+    runtimeState: {
+      ...(providerHealthForKernel ? { providerHealth: providerHealthForKernel } : {}),
+      singularityCoherence,
+    },
+    availableSkills,
+  });
+  const kernelProviderPreference = normalizeKernelProviderPreference(
+    canonicalDecision.provider.name,
+    provider
+  );
+  const canonicalDecisionContext = formatCanonicalDecisionBlock(
+    canonicalDecision,
+    kernelProviderPreference
+  );
+  const canonicalDecisionStatusContext = [
+    '## CANONICAL_DISCERNMENT_STATUS',
+    `truth=${canonicalDecision.truthStatus}`,
+    `confidence=${canonicalDecision.confidence.toFixed(2)}`,
+  ].join('\n');
 
   let defaultKnowledgeContext = '';
   let defaultKnowledgeStatus: 'loaded' | 'empty' | 'unavailable' = 'unavailable';
@@ -971,6 +1240,10 @@ export async function processMessage(
   });
   const onlineCapabilityStatusContext =
     `## ONLINE_CAPABILITY_STATUS\nstatus=${onlineCapabilityStatus}\ndeep_analysis=${deepAnalysisStatus}`;
+  const governedToolLaneStatus = getGovernedToolLaneStatus();
+  const governedToolLaneContext = formatGovernedToolLaneBlock(governedToolLaneStatus);
+  const governedToolLaneStatusContext =
+    `## GOVERNED_TOOL_LANE_STATUS\nstatus=${governedToolLaneStatus.status}\nmcp_health=${governedToolLaneStatus.mcpHealth}`;
   const advancedAgentStatuses = getRuntimeAdvancedAgentStatuses();
   const advancedAgentRuntimeContext = formatAdvancedAgentRuntimeBlock(advancedAgentStatuses);
   const advancedAgentRuntimeStatusContext = `## ADVANCED_AGENT_RUNTIME_STATUS\nstatus=${
@@ -1041,6 +1314,10 @@ export async function processMessage(
     defaultKnowledgeStatusContext,
     onlineCapabilityContext,
     onlineCapabilityStatusContext,
+    governedToolLaneContext,
+    governedToolLaneStatusContext,
+    canonicalDecisionContext,
+    canonicalDecisionStatusContext,
     advancedAgentRuntimeContext,
     advancedAgentRuntimeStatusContext,
     persistentMemoryContext,
@@ -1083,36 +1360,40 @@ export async function processMessage(
   const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
   // OMEGA: wire classifier profile → ai_config temperature + maxTokens
-  const classifierProfile = RESPONSE_PROFILES[modeClassification.profileId];
+  const classifierProfile = RESPONSE_PROFILES[canonicalDecision.profileId];
   const classifierTemperature = classifierProfile?.temperature ?? 0.7;
   const classifierMaxTokens = classifierProfile?.maxTokens;
+  const backendConversationMode = canonicalDecision.mode as ConversationMode;
 
   const payload = {
     message: userMessageBudget.text,
     conversationId,
-    mode: resolvedConversationMode,
-    provider,
+    mode: backendConversationMode,
+    provider: kernelProviderPreference,
     systemPrompt: systemPromptBudget.text,
     requestId,
     classifierMeta: {
-      canonical_mode: modeClassification.canonicalMode,
-      profile_id: modeClassification.profileId,
-      effort_level: modeClassification.effortLevel,
+      canonical_mode:
+        canonicalDecision.modeClassification?.canonicalMode ?? modeClassification.canonicalMode,
+      profile_id: canonicalDecision.profileId,
+      effort_level: canonicalDecision.provider.reasoningEffort,
       model_class: modeClassification.modelClass,
-      confidence: modeClassification.confidence,
-      reason_code: modeClassification.reasonCode,
+      confidence:
+        canonicalDecision.modeClassification?.confidence ?? modeClassification.confidence,
+      reason_code:
+        canonicalDecision.modeClassification?.reasonCode ?? modeClassification.reasonCode,
     },
     aiConfig: {
-      temperature: classifierTemperature,
-      max_tokens: classifierMaxTokens,
-      provider_preference: provider,
+      temperature: canonicalDecision.provider.temperature ?? classifierTemperature,
+      max_tokens: canonicalDecision.provider.maxTokens ?? classifierMaxTokens,
+      provider_preference: kernelProviderPreference,
     },
     ...(options?.contextEnvelope ? { contextEnvelope: options.contextEnvelope } : {}),
   };
 
   const convSendLog = {
     mode: options?.mode || 'default',
-    provider_requested: provider,
+    provider_requested: kernelProviderPreference,
     conversation_id: conversationId,
     message_length: userMessageBudget.text.length,
     module_id: options?.contextEnvelope?.moduleContext.moduleId || 'unknown',
@@ -1159,11 +1440,11 @@ export async function processMessage(
 
     try {
       const aiConfig = {
-        preferredProvider: (provider === 'ollama'
+        preferredProvider: (kernelProviderPreference === 'ollama'
           ? 'ollama'
-          : provider === 'local'
+          : kernelProviderPreference === 'local'
             ? 'local'
-            : provider === 'gemini'
+            : kernelProviderPreference === 'gemini'
               ? 'gemini'
               : 'auto') as 'auto' | 'ollama' | 'local' | 'gemini' | 'openai' | 'claude',
       };
@@ -1247,11 +1528,11 @@ export async function processMessage(
 
     try {
       const aiConfig = {
-        preferredProvider: (provider === 'ollama'
+        preferredProvider: (kernelProviderPreference === 'ollama'
           ? 'ollama'
-          : provider === 'local'
+          : kernelProviderPreference === 'local'
             ? 'local'
-            : provider === 'gemini'
+            : kernelProviderPreference === 'gemini'
               ? 'gemini'
               : 'auto') as 'auto' | 'ollama' | 'local' | 'gemini' | 'openai' | 'claude',
       };
@@ -1368,6 +1649,10 @@ export async function processMessage(
         onlineCapabilityStatus,
         deepAnalysisStatus,
         advancedAgentStatuses,
+        governedToolLaneStatus,
+        taskType,
+        canonicalDecision,
+        kernelProviderPreference,
         contextEnvelope: options?.contextEnvelope,
       }),
     ])
@@ -1383,11 +1668,28 @@ export async function processMessage(
       ? detectedIntentionRaw
       : 'Question';
 
+  const traceRecord = raw?.trace;
+  const traceCitations =
+    traceRecord && typeof traceRecord === 'object' && Array.isArray(traceRecord['citations'])
+      ? traceRecord['citations']
+      : [];
+  const metadataCitations = Array.isArray(metadata['citations']) ? metadata['citations'] : [];
+  const normalizedCitations = (metadataCitations.length > 0
+    ? metadataCitations
+    : traceCitations
+  )
+    .map(normalizeCitation)
+    .filter((citation): citation is Citation => citation !== null);
+
   const normalizedMetadata = normalizeConversationMetadata({
     ...metadata,
+    citations: normalizedCitations,
     provider_used:
       (typeof raw?.provider === 'string' && raw.provider.trim().length > 0
         ? raw.provider
+        : undefined) ??
+      (typeof providerMeta?.provider_used === 'string' && providerMeta.provider_used.trim().length > 0
+        ? providerMeta.provider_used
         : undefined) ??
       (typeof metadata['provider_used'] === 'string'
         ? metadata['provider_used']
@@ -1419,6 +1721,10 @@ export async function processMessage(
       ...(activeSkillId ? [`skill_id:${activeSkillId}`] : []),
       `online:${onlineCapabilityStatus}`,
       `deep_analysis:${deepAnalysisStatus}`,
+      `kernel_profile:${canonicalDecision.profileId}`,
+      `kernel_provider:${kernelProviderPreference}`,
+      `kernel_truth:${canonicalDecision.truthStatus.toLowerCase()}`,
+      ...(canonicalDecision.skillId ? [`kernel_skill:${canonicalDecision.skillId}`] : []),
       ...(advancedAgentStatuses.length > 0
         ? [
             'advanced_agents:present',
@@ -1435,20 +1741,19 @@ export async function processMessage(
   );
 
   // Minimal discernment decision (frontend stub, not authoritative)
-  const inferenceState: InferenceState =
-    detectedIntention === 'Clarification' ? 'CLARIFY_REQUIRED' : 'SAFE_TO_INFER';
-  const taskType: 'question' | 'instruction' | 'multi-step' | 'code' | 'data' =
-    detectedIntention === 'Action' ? 'instruction' : 'question';
-  const memoryAvailable = persistentMemoryStatus === 'loaded';
+  const inferenceState: InferenceState = canonicalDecision.inferenceState;
+  const memoryAvailable =
+    canonicalDecision.memoryInjection.use || persistentMemoryStatus === 'loaded';
   const webAvailable =
     typeof navigator !== 'undefined' ? navigator.onLine === true : false;
-  const toolAvailable = false; // frontend has no direct tool lane
+  const toolAvailable = governedToolLaneStatus.status === 'available';
   const providerAvailable =
-    typeof normalizedMetadata.provider_used === 'string' &&
-    normalizedMetadata.provider_used !== 'fallback';
+    kernelProviderPreference !== 'auto' ||
+    (typeof normalizedMetadata.provider_used === 'string' &&
+      normalizedMetadata.provider_used !== 'fallback');
 
   const discernmentDecision = buildDiscernmentDecision({
-    profileId: modeClassification.profileId as ResponseProfileId,
+    profileId: canonicalDecision.profileId as ResponseProfileId,
     inferenceState,
     taskType,
     memoryAvailable,
@@ -1457,6 +1762,29 @@ export async function processMessage(
     providerAvailable,
     safetyMode: 'normal',
   });
+
+  const discernmentTags = [
+    `tool-action:${discernmentDecision.toolAction}`,
+    `web-action:${discernmentDecision.webAction}`,
+    `memory-action:${discernmentDecision.memoryAction}`,
+    `ask-act-hold:${discernmentDecision.askActHold}`,
+  ];
+  const finalCognitiveTags = Array.from(new Set([...cognitiveTags, ...discernmentTags]));
+  normalizedMetadata.links_to_contexts = Array.from(
+    new Set([
+      ...normalizedMetadata.links_to_contexts,
+      `tool_lane:${governedToolLaneStatus.status}`,
+      `task_type:${taskType}`,
+      `kernel_profile:${canonicalDecision.profileId}`,
+      `kernel_provider:${kernelProviderPreference}`,
+      `kernel_truth:${canonicalDecision.truthStatus.toLowerCase()}`,
+      ...(canonicalDecision.skillId ? [`kernel_skill:${canonicalDecision.skillId}`] : []),
+      `tool_action:${discernmentDecision.toolAction}`,
+      `web_action:${discernmentDecision.webAction}`,
+      `memory_action:${discernmentDecision.memoryAction}`,
+      `ask_act_hold:${discernmentDecision.askActHold}`,
+    ])
+  );
 
   const response: ConversationResponse = {
     assistant_message: content,
@@ -1474,7 +1802,7 @@ export async function processMessage(
       intensity: 0,
       energy: 0,
     },
-    cognitive_tags: cognitiveTags,
+    cognitive_tags: finalCognitiveTags,
     cognitive_summary:
       typeof metadata['cognitiveSummary'] === 'string'
         ? (metadata['cognitiveSummary'] as string)
@@ -1484,16 +1812,23 @@ export async function processMessage(
     decision,
     discernment: discernmentDecision,
     omega_trace_meta: {
-      canonical_mode: modeClassification.canonicalMode,
-      profile_id: modeClassification.profileId,
-      effort_level: modeClassification.effortLevel,
+      canonical_mode:
+        canonicalDecision.modeClassification?.canonicalMode ?? modeClassification.canonicalMode,
+      profile_id: canonicalDecision.profileId,
+      effort_level: canonicalDecision.provider.reasoningEffort,
       model_class: modeClassification.modelClass,
-      classifier_confidence: modeClassification.confidence,
-      classifier_reason_code: modeClassification.reasonCode,
-      classifier_signals: modeClassification.signals,
-      resolved_backend_mode: resolvedConversationMode,
+      classifier_confidence:
+        canonicalDecision.modeClassification?.confidence ?? modeClassification.confidence,
+      classifier_reason_code:
+        canonicalDecision.modeClassification?.reasonCode ?? modeClassification.reasonCode,
+      classifier_signals:
+        canonicalDecision.modeClassification?.signals ?? modeClassification.signals,
+      resolved_backend_mode: backendConversationMode,
       provider_used: normalizedMetadata.provider_used,
       fallback_used: Boolean(metadata['fallback_used']),
+      canonical_truth_status: canonicalDecision.truthStatus,
+      canonical_confidence: canonicalDecision.confidence,
+      canonical_skill_id: canonicalDecision.skillId ?? undefined,
     },
   };
 

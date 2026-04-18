@@ -276,6 +276,14 @@ describe('TITANE∞ - IPC Contract Tests', () => {
     expect(rustCommands.has('security_audit_publish_signed_export')).toBe(true);
   });
 
+  it('should expose the knowledge base runtime snapshot command in Rust and Tauri allowlist', () => {
+    expect(TAURI_COMMANDS.KNOWLEDGE_BASE_RUNTIME_SNAPSHOT).toBe(
+      'knowledge_base_runtime_snapshot'
+    );
+    expect(allowedCommands.has('knowledge_base_runtime_snapshot')).toBe(true);
+    expect(rustCommands.has('knowledge_base_runtime_snapshot')).toBe(true);
+  });
+
   // Test de performance du contrat
   it('should maintain contract performance', () => {
     const startTime = Date.now();

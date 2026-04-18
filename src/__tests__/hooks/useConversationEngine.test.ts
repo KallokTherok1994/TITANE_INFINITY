@@ -280,6 +280,72 @@ describe('useConversationEngine fallback meta truth', () => {
     );
   });
 
+  it('persists canonical citations and the real provider on the assistant message metadata', async () => {
+    processMessageMock.mockResolvedValueOnce({
+      assistant_message: 'Réponse avec sources',
+      conversation_id: 'conv-citations',
+      message_id: 'assistant-citations',
+      detected_intention: 'Question' as const,
+      detected_emotion: { valence: 0, intensity: 0.1, energy: 0.1 },
+      cognitive_tags: ['inline-citations'],
+      cognitive_summary: 'citation path',
+      metadata: {
+        timestamp: Date.now(),
+        provider_used: 'ollama-runtime',
+        latency_ms: 22,
+        tokens_used: 4,
+        memory_effect: 'New' as const,
+        links_to_contexts: [],
+        citations: [
+          {
+            url: 'https://example.com/source-a',
+            title: 'Source A',
+            excerpt: 'Extrait A',
+            accessed_at: '2026-04-18T10:00:00Z',
+            locator_text: 'p=2, c≈40',
+          },
+        ],
+      },
+      meta: {
+        provider_used: 'ollama-runtime',
+        provider_class: 'local' as const,
+        mode: 'LOCAL' as const,
+        reason_code: 'OK' as const,
+        latency_ms_total: 22,
+        timeout_ms: 30000,
+        retries: 0,
+        attempts: [],
+        network_used: false,
+        cache_hit: false,
+        policy: 'citation-test',
+      },
+    });
+
+    const { useConversationEngine } = await import('@/hooks/useConversationEngine');
+    const { result } = renderHook(() =>
+      useConversationEngine({
+        autoHealthCheck: false,
+        providerPreference: 'ollama',
+      })
+    );
+
+    await act(async () => {
+      await result.current.sendMessage('montre les sources');
+    });
+
+    const assistantMessage = result.current.messages.at(-1);
+    expect(assistantMessage?.metadata?.providerUsed).toBe('ollama-runtime');
+    expect(assistantMessage?.metadata?.citations).toEqual([
+      {
+        url: 'https://example.com/source-a',
+        title: 'Source A',
+        excerpt: 'Extrait A',
+        accessed_at: '2026-04-18T10:00:00Z',
+        locator_text: 'p=2, c≈40',
+      },
+    ]);
+  });
+
   it('avoids overlapping health checks while a previous probe is still pending', async () => {
     vi.useFakeTimers();
 

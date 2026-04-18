@@ -291,6 +291,7 @@ export const TAURI_COMMANDS = {
   IDENTITY_SET_MODE: 'identity_set_mode',
   IDENTITY_SET_ACTIVE_VOICE_PROFILE: 'identity_set_active_voice_profile',
   INSTALL_UPDATE: 'install_update',
+  KNOWLEDGE_BASE_RUNTIME_SNAPSHOT: 'knowledge_base_runtime_snapshot',
   KNOWLEDGE_INGEST: 'knowledge_ingest',
   KNOWLEDGE_SAVE_STATE: 'knowledge_save_state',
   LOAD_CONFIG_PRESET: 'load_config_preset',

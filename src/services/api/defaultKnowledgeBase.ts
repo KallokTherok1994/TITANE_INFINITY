@@ -46,6 +46,19 @@ let _allEntriesCache: KnowledgeBaseEntry[] | null = null;
 let _allEntriesLoadingPromise: Promise<KnowledgeBaseEntry[]> | null = null;
 let _compactIndexCache: string | null = null;
 
+type RuntimeKnowledgeBaseSnapshot = {
+  ok?: boolean;
+  content?: {
+    entries?: Record<string, KnowledgeBaseEntry>;
+    source?: string;
+    sourcePath?: string | null;
+    fallbackUsed?: boolean;
+    entryCount?: number;
+    errors?: string[];
+  };
+  error?: string | null;
+};
+
 const BUNDLED_DEFAULT_KB_MODULES = import.meta.glob(
   '../../../data/knowledge_base/default/*.json',
   {
@@ -590,6 +603,28 @@ function getFallbackEntries(): KnowledgeBaseEntry[] {
 
 export const DEFAULT_KB_CANONICAL_ENTRY_COUNT = getFallbackEntries().length;
 
+function parseKnowledgeBaseEntries(raw: unknown): KnowledgeBaseEntry[] | null {
+  if (typeof raw === 'string') {
+    try {
+      return parseKnowledgeBaseEntries(JSON.parse(raw));
+    } catch {
+      return null;
+    }
+  }
+
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+    return null;
+  }
+
+  const runtimePayload = raw as RuntimeKnowledgeBaseSnapshot;
+  const runtimeEntries = runtimePayload?.content?.entries;
+  if (runtimeEntries && typeof runtimeEntries === 'object' && !Array.isArray(runtimeEntries)) {
+    return dedupeKnowledgeBaseEntries(Object.values(runtimeEntries));
+  }
+
+  return dedupeKnowledgeBaseEntries(Object.values(raw as Record<string, KnowledgeBaseEntry>));
+}
+
 // ─────────────────────────────────────────────────────────────────
 // Public API
 // ─────────────────────────────────────────────────────────────────
@@ -600,22 +635,8 @@ export const DEFAULT_KB_CANONICAL_ENTRY_COUNT = getFallbackEntries().length;
  */
 export async function listCategories(): Promise<string[]> {
   if (_categoriesCache) return _categoriesCache;
-  // Re-use loaded entries rather than making a second IPC call
-  if (_allEntriesCache) {
-    _categoriesCache = _allEntriesCache.map(e => e.category).sort();
-    return _categoriesCache;
-  }
-  try {
-    const cats = await invokeWithRetry<string[]>(
-      'knowledge_base_list_categories',
-      {},
-      { ...FAST_COMMAND_OPTIONS, context: 'DefaultKB' }
-    );
-    _categoriesCache = Array.isArray(cats) ? cats : [];
-  } catch {
-    const entries = await getAllEntries();
-    _categoriesCache = entries.map(e => e.category).sort();
-  }
+  const entries = await getAllEntries();
+  _categoriesCache = entries.map(e => e.category).sort();
   return _categoriesCache;
 }
 
@@ -631,19 +652,35 @@ export async function getAllEntries(): Promise<KnowledgeBaseEntry[]> {
   _allEntriesLoadingPromise = (async (): Promise<KnowledgeBaseEntry[]> => {
     let ipcSucceeded = false;
     try {
-      const raw = await invokeWithRetry<string>(
+      const raw = await invokeWithRetry<unknown>(
+        'knowledge_base_runtime_snapshot',
+        {},
+        { ...FAST_COMMAND_OPTIONS, context: 'DefaultKB' }
+      );
+      const parsed = parseKnowledgeBaseEntries(raw);
+      if (parsed) {
+        _allEntriesCache = parsed;
+        ipcSucceeded = true;
+      }
+    } catch {
+      _allEntriesCache = null;
+    }
+
+    if (!ipcSucceeded) {
+      try {
+        const raw = await invokeWithRetry<unknown>(
         'knowledge_base_get_all',
         {},
         { ...FAST_COMMAND_OPTIONS, context: 'DefaultKB' }
       );
-      const parsed: Record<string, KnowledgeBaseEntry> =
-        typeof raw === 'string'
-          ? JSON.parse(raw)
-          : (raw as Record<string, KnowledgeBaseEntry>);
-      _allEntriesCache = dedupeKnowledgeBaseEntries(Object.values(parsed));
-      ipcSucceeded = true;
-    } catch {
-      _allEntriesCache = null;
+        const parsed = parseKnowledgeBaseEntries(raw);
+        if (parsed) {
+          _allEntriesCache = parsed;
+          ipcSucceeded = true;
+        }
+      } catch {
+        _allEntriesCache = null;
+      }
     }
 
     // Only use local fallback when IPC failed (not when backend explicitly returned empty)
@@ -670,21 +707,8 @@ export async function getAllEntries(): Promise<KnowledgeBaseEntry[]> {
  * The Rust side returns a JSON string; we parse it here.
  */
 export async function getCategory(category: string): Promise<KnowledgeBaseEntry | null> {
-  try {
-    const raw = await invokeWithRetry<string>(
-      'knowledge_base_get_category',
-      { category },
-      { ...FAST_COMMAND_OPTIONS, context: 'DefaultKB' }
-    );
-    return typeof raw === 'string'
-      ? (JSON.parse(raw) as KnowledgeBaseEntry)
-      : (raw as KnowledgeBaseEntry);
-  } catch {
-    const entries = await getAllEntries();
-    return (
-      entries.find(entry => entry.category === category || entry.id === category) ?? null
-    );
-  }
+  const entries = await getAllEntries();
+  return entries.find(entry => entry.category === category || entry.id === category) ?? null;
 }
 
 /**

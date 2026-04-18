@@ -84,6 +84,75 @@ describe('defaultKnowledgeBase', () => {
     expect(mockedInvokeWithRetry).toHaveBeenCalledTimes(1);
   });
 
+  it('prefers the runtime snapshot payload when the governed IPC bridge is available', async () => {
+    mockedInvokeWithRetry.mockResolvedValueOnce({
+      ok: true,
+      content: {
+        source: 'runtime_disk',
+        sourcePath: '/workspace/data/knowledge_base/default',
+        fallbackUsed: false,
+        entryCount: 1,
+        errors: [],
+        entries: {
+          system_architecture: {
+            id: 'system_architecture',
+            category: 'system_architecture',
+            version: 'v30.1.35',
+            description: 'Architecture runtime disque',
+            content: {
+              architecture: {
+                rings: 4,
+                source: 'runtime',
+              },
+            },
+          },
+        },
+      },
+      error: null,
+    });
+
+    const entries = await getAllEntries();
+
+    expect(entries).toHaveLength(1);
+    expect(entries[0]?.description).toContain('runtime disque');
+    expect(mockedInvokeWithRetry).toHaveBeenCalledWith(
+      'knowledge_base_runtime_snapshot',
+      {},
+      expect.objectContaining({ context: 'DefaultKB' })
+    );
+  });
+
+  it('falls back to legacy embedded IPC when the runtime snapshot bridge is unavailable', async () => {
+    mockedInvokeWithRetry
+      .mockRejectedValueOnce(new Error('runtime bridge unavailable'))
+      .mockResolvedValueOnce(
+        JSON.stringify({
+          system_architecture: {
+            id: 'system_architecture',
+            category: 'system_architecture',
+            version: 'v30.0.0',
+            description: 'Architecture embarquée',
+            content: {
+              architecture: {
+                rings: 4,
+              },
+            },
+          },
+        })
+      );
+
+    const entries = await getAllEntries();
+
+    expect(entries).toHaveLength(1);
+    expect(entries[0]?.description).toContain('embarquée');
+    expect(mockedInvokeWithRetry).toHaveBeenNthCalledWith(
+      2,
+      'knowledge_base_get_all',
+      {},
+      expect.objectContaining({ context: 'DefaultKB' })
+    );
+  });
+
   it('falls back to bundled knowledge entries when the IPC payload is malformed', async () => {
     mockedInvokeWithRetry.mockResolvedValueOnce('{not-json');
 

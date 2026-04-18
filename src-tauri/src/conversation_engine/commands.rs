@@ -864,6 +864,10 @@ pub async fn conversation_generate(
     } else {
         response.assistant_message.clone()
     };
+    let citations_for_frontend: Vec<serde_json::Value> = search_citations_json
+        .iter()
+        .map(normalize_search_citation_for_frontend)
+        .collect();
 
     Ok(serde_json::json!({
         "ok": true,
@@ -886,6 +890,8 @@ pub async fn conversation_generate(
             "contextBinding": context_binding,
             "memoryRecallIds": memory_recall_ids,
             "memoryRecallCount": memory_recall_ids.len(),
+            "provider_used": meta.provider_used,
+            "citations": citations_for_frontend,
         }
     }))
 }
@@ -1448,6 +1454,13 @@ mod tests {
                 "cognitiveTags": response.cognitive_tags,
                 "cognitiveSummary": response.cognitive_summary,
                 "requestId": "req_test",
+                "provider_used": "local",
+                "citations": [normalize_search_citation_for_frontend(&serde_json::json!({
+                    "title": "Source test",
+                    "url": "https://example.com/source",
+                    "snippet": "Extrait test",
+                    "timestamp": "2026-04-18T10:00:00Z"
+                }))]
             }
         });
 
@@ -1459,8 +1472,28 @@ mod tests {
         assert!(meta.get("network_used").is_some());
         assert!(meta.get("attempts").is_some());
         assert!(meta.get("latency_ms_total").is_some());
+        let metadata = json.get("metadata").expect("metadata missing");
+        assert_eq!(metadata.get("provider_used").and_then(|value| value.as_str()), Some("local"));
+        assert_eq!(metadata["citations"][0]["excerpt"], "Extrait test");
+        assert_eq!(metadata["citations"][0]["accessed_at"], "2026-04-18T10:00:00Z");
 
         write_output(&json);
+    }
+
+    #[test]
+    fn normalize_search_citation_for_frontend_maps_backend_shape_to_canonical_fields() {
+        let normalized = normalize_search_citation_for_frontend(&serde_json::json!({
+            "title": "Source canonique",
+            "url": "https://example.com/canonical",
+            "snippet": "Extrait backend",
+            "timestamp": "2026-04-18T12:00:00Z",
+            "source": "search_gateway"
+        }));
+
+        assert_eq!(normalized["url"], "https://example.com/canonical");
+        assert_eq!(normalized["title"], "Source canonique");
+        assert_eq!(normalized["excerpt"], "Extrait backend");
+        assert_eq!(normalized["accessed_at"], "2026-04-18T12:00:00Z");
     }
 
     #[test]
@@ -1741,6 +1774,47 @@ mod tests {
             assert!(!ids.iter().any(|id| id.contains("external")));
         }
     }
+}
+
+fn normalize_search_citation_for_frontend(citation: &serde_json::Value) -> serde_json::Value {
+    let url = citation
+        .get("url")
+        .and_then(|value| value.as_str())
+        .unwrap_or_default()
+        .to_string();
+    let title = citation
+        .get("title")
+        .and_then(|value| value.as_str())
+        .map(|value| value.to_string());
+    let excerpt = citation
+        .get("excerpt")
+        .and_then(|value| value.as_str())
+        .or_else(|| citation.get("snippet").and_then(|value| value.as_str()))
+        .unwrap_or_default()
+        .to_string();
+    let accessed_at = citation
+        .get("accessed_at")
+        .and_then(|value| value.as_str())
+        .or_else(|| citation.get("timestamp").and_then(|value| value.as_str()))
+        .unwrap_or_default()
+        .to_string();
+    let locator = citation
+        .get("locator")
+        .and_then(|value| value.as_str())
+        .map(|value| value.to_string());
+    let locator_text = citation
+        .get("locator_text")
+        .and_then(|value| value.as_str())
+        .map(|value| value.to_string());
+
+    serde_json::json!({
+        "url": url,
+        "title": title,
+        "excerpt": excerpt,
+        "accessed_at": accessed_at,
+        "locator": locator,
+        "locator_text": locator_text,
+    })
 }
 
 /// Traiter un message (ancienne interface - conservée pour compatibilité)

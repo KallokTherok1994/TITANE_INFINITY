@@ -1474,6 +1474,13 @@ class TauriClient {
     );
   }
 
+  async knowledgeBaseRuntimeSnapshot(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.KNOWLEDGE_BASE_RUNTIME_SNAPSHOT,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async knowledgeSaveState(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.KNOWLEDGE_SAVE_STATE,

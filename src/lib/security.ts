@@ -1006,6 +1006,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // KNOWLEDGE VAULT (v30.0.0)
   // ═══════════════════════════════════════════════════════════════
   'knowledge_ingest',
+  'knowledge_base_runtime_snapshot',
   'knowledge_save_state',
 
   // ═══════════════════════════════════════════════════════════════

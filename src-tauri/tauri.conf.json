@@ -104,6 +104,9 @@
               "command": "knowledge_ingest"
             },
             {
+              "command": "knowledge_base_runtime_snapshot"
+            },
+            {
               "command": "knowledge_save_state"
             },
             {
