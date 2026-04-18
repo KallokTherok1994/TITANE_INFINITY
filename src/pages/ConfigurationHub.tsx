@@ -25,9 +25,25 @@ const logger = createLogger('ConfigHub');
 interface RuntimeConfig {
   ollama_url: string;
   ollama_model: string;
+  ollama_endpoint_kind: 'local_loopback' | 'remote_cloudflare' | 'custom_remote' | 'not_checked';
+  ollama_endpoint_source: 'runtime_persisted' | 'env' | 'default' | 'not_checked';
+  ollama_model_source: 'runtime_persisted' | 'env' | 'default' | 'not_checked';
+  ollama_network_used: boolean;
+  ollama_health: 'healthy' | 'degraded' | 'offline' | 'not_checked';
   secrets_mode: string;
   gemini_configured: boolean;
   timestamp: number;
+}
+
+interface OllamaRuntimeStatus {
+  available: boolean;
+  url: string;
+  model: string;
+  endpoint_kind: RuntimeConfig['ollama_endpoint_kind'];
+  endpoint_source: RuntimeConfig['ollama_endpoint_source'];
+  model_source: RuntimeConfig['ollama_model_source'];
+  network_used: boolean;
+  health: RuntimeConfig['ollama_health'];
 }
 
 interface ChatEngineConfig {
@@ -117,6 +133,8 @@ const asNumber = (value: unknown): number | undefined => {
 const asBoolean = (value: unknown): boolean | undefined =>
   typeof value === 'boolean' ? value : undefined;
 
+import { DEFAULT_OLLAMA_MODEL, DEFAULT_OLLAMA_URL } from '@/config/ollamaDefaults';
+
 const normalizeProvider = (value: unknown): ChatRequestDefaults['provider'] => {
   const raw = asString(value)?.toLowerCase();
   if (raw === 'gemini' || raw === 'ollama' || raw === 'local') {
@@ -125,7 +143,7 @@ const normalizeProvider = (value: unknown): ChatRequestDefaults['provider'] => {
   return 'auto';
 };
 
-const normalizeRuntimeConfig = (value: unknown): RuntimeConfig => {
+export const normalizeRuntimeConfig = (value: unknown): RuntimeConfig => {
   const raw = toRecord(value);
   if (!raw) {
     throw new Error('Runtime config invalide');
@@ -134,14 +152,34 @@ const normalizeRuntimeConfig = (value: unknown): RuntimeConfig => {
   // Keep the page operational even when a partial runtime payload is returned.
   const ollama_url =
     pickDefined(asString(raw.ollama_url), asString(raw.ollamaUrl)) ??
-    'http://127.0.0.1:11434';
+    DEFAULT_OLLAMA_URL;
   const ollama_model =
     pickDefined(asString(raw.ollama_model), asString(raw.ollamaModel)) ??
-    'gemma2:2b';
+    DEFAULT_OLLAMA_MODEL;
 
   return {
     ollama_url,
     ollama_model,
+    ollama_endpoint_kind:
+      (pickDefined(asString(raw.ollama_endpoint_kind), asString(raw.ollamaEndpointKind)) as
+        | RuntimeConfig['ollama_endpoint_kind']
+        | undefined) ?? 'not_checked',
+    ollama_endpoint_source:
+      (pickDefined(
+        asString(raw.ollama_endpoint_source),
+        asString(raw.ollamaEndpointSource)
+      ) as RuntimeConfig['ollama_endpoint_source'] | undefined) ?? 'not_checked',
+    ollama_model_source:
+      (pickDefined(asString(raw.ollama_model_source), asString(raw.ollamaModelSource)) as
+        | RuntimeConfig['ollama_model_source']
+        | undefined) ?? 'not_checked',
+    ollama_network_used:
+      pickDefined(asBoolean(raw.ollama_network_used), asBoolean(raw.ollamaNetworkUsed)) ??
+      false,
+    ollama_health:
+      (pickDefined(asString(raw.ollama_health), asString(raw.ollamaHealth)) as
+        | RuntimeConfig['ollama_health']
+        | undefined) ?? 'not_checked',
     secrets_mode:
       pickDefined(asString(raw.secrets_mode), asString(raw.secretsMode)) ?? 'encrypted',
     gemini_configured:
@@ -150,6 +188,62 @@ const normalizeRuntimeConfig = (value: unknown): RuntimeConfig => {
     timestamp:
       pickDefined(asNumber(raw.timestamp), asNumber(raw.updatedAt)) ??
       Math.floor(Date.now() / 1000),
+  };
+};
+
+export const normalizeOllamaRuntimeStatus = (
+  value: unknown
+): OllamaRuntimeStatus | null => {
+  const raw = toRecord(value);
+  if (!raw) {
+    return null;
+  }
+
+  const payload =
+    typeof raw.ok === 'boolean' && toRecord(raw.content) ? toRecord(raw.content) : raw;
+
+  if (!payload) {
+    return null;
+  }
+
+  return {
+    available: asBoolean(payload.available) ?? false,
+    url: asString(payload.url) ?? 'not_checked',
+    model: asString(payload.model) ?? 'not_checked',
+    endpoint_kind:
+      (asString(payload.endpoint_kind) as OllamaRuntimeStatus['endpoint_kind'] | undefined) ??
+      'not_checked',
+    endpoint_source:
+      (asString(payload.endpoint_source) as OllamaRuntimeStatus['endpoint_source'] | undefined) ??
+      'not_checked',
+    model_source:
+      (asString(payload.model_source) as OllamaRuntimeStatus['model_source'] | undefined) ??
+      'not_checked',
+    network_used: asBoolean(payload.network_used) ?? false,
+    health:
+      (asString(payload.health) as OllamaRuntimeStatus['health'] | undefined) ??
+      'not_checked',
+  };
+};
+
+export const mergeRuntimeConfigWithOllamaStatus = (
+  runtime: RuntimeConfig,
+  ollamaStatus: OllamaRuntimeStatus | null
+): RuntimeConfig => {
+  if (!ollamaStatus) {
+    return runtime;
+  }
+
+  return {
+    ...runtime,
+    ollama_url: ollamaStatus.url !== 'not_checked' ? ollamaStatus.url : runtime.ollama_url,
+    ollama_model:
+      ollamaStatus.model !== 'not_checked' ? ollamaStatus.model : runtime.ollama_model,
+    ollama_endpoint_kind: ollamaStatus.endpoint_kind,
+    ollama_endpoint_source: ollamaStatus.endpoint_source,
+    ollama_model_source: ollamaStatus.model_source,
+    ollama_network_used: ollamaStatus.network_used,
+    ollama_health: ollamaStatus.health,
   };
 };
 
@@ -422,7 +516,15 @@ export const ConfigurationHub: React.FC = () => {
 
     try {
       logger.info('🎯 [ConfigHub] Loading configuration snapshot...');
-      const snapshot = normalizeSnapshotResponse(await tauriClient.getAllConfigs());
+      const [snapshotRaw, ollamaStatusRaw] = await Promise.all([
+        tauriClient.getAllConfigs(),
+        tauriClient.aiCheckOllamaStatus().catch(() => null),
+      ]);
+      const snapshot = normalizeSnapshotResponse(snapshotRaw);
+      const runtime = mergeRuntimeConfigWithOllamaStatus(
+        snapshot.runtime,
+        normalizeOllamaRuntimeStatus(ollamaStatusRaw)
+      );
       const engineEnvelope = normalizeEnvelope(
         await tauriClient.getChatEngineConfig(),
         normalizeChatEngineConfig
@@ -448,6 +550,7 @@ export const ConfigurationHub: React.FC = () => {
       logger.info('✅ [ConfigHub] Configuration loaded:', snapshot);
       setConfig({
         ...snapshot,
+        runtime,
         chat_engine: {
           timeout_ms: engineEnvelope.content.response_timeout_ms,
           chunk_size: engineEnvelope.content.stream_chunk_size,
@@ -1263,7 +1366,7 @@ export const ConfigurationHub: React.FC = () => {
               <ConfigFieldEditable
                 label="Ollama URL"
                 value={currentRuntime.ollama_url}
-                description="Endpoint du serveur Ollama local"
+                description="Endpoint Ollama effectivement résolu par le backend"
                 icon="🌐"
                 valueType="url"
                 editable={editMode}
@@ -1274,12 +1377,53 @@ export const ConfigurationHub: React.FC = () => {
               <ConfigFieldEditable
                 label="Ollama Model"
                 value={currentRuntime.ollama_model}
-                description="Modèle LLM utilisé par défaut"
+                description="Modèle Ollama effectivement résolu par le backend"
                 icon="🧠"
                 editable={editMode}
                 testId="input-ollama-model"
                 onChange={value => handleRuntimeFieldChange('ollama_model', value)}
                 validationError={validationErrors['runtime.ollama_model']}
+              />
+              <ConfigFieldEditable
+                label="Ollama Endpoint Type"
+                value={currentRuntime.ollama_endpoint_kind}
+                description="Classification locale ou distante de l'endpoint Ollama"
+                icon="🧭"
+                editable={false}
+                testId="runtime-ollama-endpoint-kind"
+              />
+              <ConfigFieldEditable
+                label="Ollama Config Source"
+                value={currentRuntime.ollama_endpoint_source}
+                description="Origine de l'endpoint Ollama utilisé au runtime"
+                icon="📦"
+                editable={false}
+                testId="runtime-ollama-endpoint-source"
+              />
+              <ConfigFieldEditable
+                label="Ollama Model Source"
+                value={currentRuntime.ollama_model_source}
+                description="Origine de la valeur de modèle Ollama"
+                icon="🗂️"
+                editable={false}
+                testId="runtime-ollama-model-source"
+              />
+              <ConfigFieldEditable
+                label="Ollama Network Used"
+                value={currentRuntime.ollama_network_used}
+                description="Indique si l'endpoint Ollama actif sort du loopback local"
+                icon="📡"
+                valueType="boolean"
+                editable={false}
+                testId="runtime-ollama-network-used"
+              />
+              <ConfigFieldEditable
+                label="Ollama Health"
+                value={currentRuntime.ollama_health}
+                description="Santé du dernier probe backend Ollama"
+                icon="💓"
+                editable={false}
+                testId="runtime-ollama-health"
               />
               <ConfigFieldEditable
                 label="Secrets Mode"

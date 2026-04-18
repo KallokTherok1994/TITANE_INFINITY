@@ -9,6 +9,15 @@ const saveMessageMock = vi.fn(() => {
 });
 const clearModeMock = vi.fn();
 const replaceMessagesMock = vi.fn();
+const awardExperienceMock = vi.fn(async () => null);
+const getExperienceStateMock = vi.fn(() => ({
+  totalXp: 145,
+  level: 1,
+  domains: {
+    chat: { xp: 120 },
+    cognitive: { xp: 25 },
+  },
+}));
 
 const processMessageMock = vi.fn(async (content: string) => ({
   assistant_message: `ok:${content}`,
@@ -21,6 +30,9 @@ const processMessageMock = vi.fn(async (content: string) => ({
   metadata: {
     timestamp: Date.now(),
     provider_used: 'ollama',
+    model_requested: 'gemma2:2b',
+    model_used: 'gemma2:2b',
+    fallback_used: false,
     latency_ms: 12,
     tokens_used: 1,
     memory_effect: 'New' as const,
@@ -73,12 +85,28 @@ vi.mock('@/services/chatMemoryCompactor', () => ({
   },
 }));
 
+vi.mock('@/services/experienceService', () => ({
+  awardExperience: awardExperienceMock,
+  getExperienceState: getExperienceStateMock,
+}));
+
 describe('useConversationEngine fallback meta truth', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     saveResolvers.splice(0, saveResolvers.length);
     clearModeMock.mockReset();
     replaceMessagesMock.mockReset();
+    awardExperienceMock.mockReset();
+    awardExperienceMock.mockResolvedValue(null);
+    getExperienceStateMock.mockReset();
+    getExperienceStateMock.mockReturnValue({
+      totalXp: 145,
+      level: 1,
+      domains: {
+        chat: { xp: 120 },
+        cognitive: { xp: 25 },
+      },
+    });
   });
 
   afterEach(() => {
@@ -218,7 +246,9 @@ describe('useConversationEngine fallback meta truth', () => {
         mode: 'ERROR',
       })
     );
-    expect(result.current.messages.at(-1)?.metadata?.providerUsed).toBe('local-unavailable');
+    expect(result.current.messages.at(-1)?.metadata?.providerUsed).toBe(
+      'local-unavailable'
+    );
     expect(result.current.messages.at(-1)?.metadata?.requestedProvider).toBe('ollama');
   });
 
@@ -344,6 +374,107 @@ describe('useConversationEngine fallback meta truth', () => {
         locator_text: 'p=2, c≈40',
       },
     ]);
+  });
+
+  it('persists model requested/used truth on the assistant message metadata', async () => {
+    processMessageMock.mockResolvedValueOnce({
+      assistant_message: 'Réponse avec vérité modèle',
+      conversation_id: 'conv-model-truth',
+      message_id: 'assistant-model-truth',
+      detected_intention: 'Question' as const,
+      detected_emotion: { valence: 0, intensity: 0.1, energy: 0.1 },
+      cognitive_tags: ['model-truth'],
+      cognitive_summary: 'model truth path',
+      metadata: {
+        timestamp: Date.now(),
+        provider_used: 'ollama-runtime',
+        model_requested: 'gemma2:2b',
+        model_used: 'llama3.2:latest',
+        fallback_used: true,
+        latency_ms: 22,
+        tokens_used: 4,
+        memory_effect: 'New' as const,
+        links_to_contexts: [],
+      },
+      meta: {
+        provider_used: 'ollama-runtime',
+        provider_class: 'local' as const,
+        mode: 'LOCAL' as const,
+        reason_code: 'OK' as const,
+        latency_ms_total: 22,
+        timeout_ms: 30000,
+        retries: 0,
+        attempts: [],
+        network_used: false,
+        cache_hit: false,
+        policy: 'model-truth-test',
+      },
+    });
+
+    const { useConversationEngine } = await import('@/hooks/useConversationEngine');
+    const { result } = renderHook(() =>
+      useConversationEngine({
+        autoHealthCheck: false,
+        providerPreference: 'ollama',
+      })
+    );
+
+    await act(async () => {
+      await result.current.sendMessage('montre le modèle utilisé');
+    });
+
+    const assistantMessage = result.current.messages.at(-1);
+    expect(assistantMessage?.metadata?.modelRequested).toBe('gemma2:2b');
+    expect(assistantMessage?.metadata?.modelUsed).toBe('llama3.2:latest');
+    expect(assistantMessage?.metadata?.fallbackUsed).toBe(true);
+  });
+
+  it('captures journal runtime metadata for the active conversation surface', async () => {
+    const { useConversationEngine } = await import('@/hooks/useConversationEngine');
+    const { result } = renderHook(() =>
+      useConversationEngine({
+        autoHealthCheck: false,
+        providerPreference: 'ollama',
+      })
+    );
+
+    await act(async () => {
+      await result.current.sendMessage('corrige le journal omega');
+    });
+
+    while (saveResolvers.length > 0) {
+      const resolve = saveResolvers.shift();
+      resolve?.();
+    }
+
+    await waitFor(() => {
+      expect(result.current.messages.at(-1)?.metadata?.saveStatus).toBe('saved');
+    });
+
+    const assistantMessage = result.current.messages.at(-1);
+    expect(assistantMessage?.metadata?.latencyMs).toBe(12);
+    expect(assistantMessage?.metadata?.tokensUsed).toBe(1);
+    expect(assistantMessage?.metadata?.memoryEffect).toBe('New');
+    expect(assistantMessage?.metadata?.webSearchStatus).toBe('unused');
+    expect(assistantMessage?.metadata?.xpTrace).toEqual({
+      chatXP: 120,
+      cognitiveXP: 25,
+      totalXP: 145,
+      level: 1,
+      lastGainDomain: 'chat',
+      lastGainAmount: expect.any(Number),
+      lastGainTimestamp: expect.any(Number),
+    });
+    expect(assistantMessage?.metadata?.qualityScore).toBeGreaterThan(0);
+    expect(assistantMessage?.metadata?.actionsPerformed).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          label: 'Pipeline OMEGA exécuté',
+          status: 'done',
+        }),
+      ])
+    );
+    expect(awardExperienceMock).toHaveBeenCalled();
   });
 
   it('avoids overlapping health checks while a previous probe is still pending', async () => {

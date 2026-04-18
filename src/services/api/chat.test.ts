@@ -40,6 +40,31 @@ describe('ChatService normalizeResponse', () => {
     expect(response.provider).toBe('auto');
     expect(response.latencyMs).toBe(0);
   });
+
+  it('forwards the canonical output ceiling when no maxTokens override is provided', async () => {
+    vi.mocked(invokeWithRetry).mockResolvedValueOnce({
+      ok: true,
+      content: 'Réponse complète.',
+      conversationId: 'conv-budget',
+      messageId: 'msg-budget',
+      latencyMs: 80,
+      metadata: {},
+      meta: {
+        provider_used: 'ollama',
+      },
+    } as any);
+
+    await chatService.sendMessage('hi', 'conv-budget', { provider: 'auto' });
+
+    const conversationGenerateCall = vi
+      .mocked(invokeWithRetry)
+      .mock.calls.find(([command]) => command === 'conversation_generate');
+
+    expect(conversationGenerateCall).toBeDefined();
+    expect(
+      (conversationGenerateCall?.[1] as { args?: { maxTokens?: number } }).args?.maxTokens
+    ).toBe(32768);
+  });
 });
 
 // ═══════════════════════════════════════════════════════════════

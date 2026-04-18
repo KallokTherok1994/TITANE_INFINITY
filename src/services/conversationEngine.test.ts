@@ -309,6 +309,59 @@ describe('conversationEngine.processMessage', () => {
         args: expect.objectContaining({
           message: 'Hi',
           conversationId: 'c3',
+          aiConfig: expect.objectContaining({
+            max_tokens: 32768,
+          }),
+        }),
+      })
+    );
+  });
+
+  it('floors canonical chat output tokens to the backend ceiling on the active surface', async () => {
+    canonicalKernelMock.discern.mockReturnValue(
+      createCanonicalDecisionMock({
+        profileId: 'BALANCED',
+        provider: {
+          name: 'ollama',
+          model: 'auto',
+          fallback: ['titane-local'],
+          temperature: 0.61,
+          maxTokens: 16384,
+          reasoningEffort: 'medium',
+        },
+      })
+    );
+
+    vi.mocked(secureInvoke).mockImplementation(async command => {
+      if (command === 'persistent_memory_get_context') {
+        return null;
+      }
+
+      if (command === 'conversation_generate') {
+        return {
+          content: 'Budget canonique',
+          conversationId: 'c3-floor',
+          messageId: 'm3-floor',
+          metadata: {},
+        };
+      }
+
+      return null;
+    });
+
+    await processMessage('Hi', { conversationId: 'c3-floor' });
+
+    const generateCall = vi
+      .mocked(secureInvoke)
+      .mock.calls.find(([command]) => command === 'conversation_generate');
+
+    expect(generateCall?.[1]).toEqual(
+      expect.objectContaining({
+        args: expect.objectContaining({
+          aiConfig: expect.objectContaining({
+            temperature: 0.61,
+            max_tokens: 32768,
+          }),
         }),
       })
     );
@@ -499,7 +552,8 @@ describe('conversationEngine.processMessage', () => {
         id: 'kb-1',
         title: 'One Door Governance',
         category: 'architecture',
-        content: 'All network access must flow through UI -> IPC -> services -> gateway -> external.',
+        content:
+          'All network access must flow through UI -> IPC -> services -> gateway -> external.',
         relevance: 0.96,
         lastAccessed: '2026-04-16T00:00:00.000Z',
         tags: ['architecture', 'network'],
@@ -609,7 +663,9 @@ describe('conversationEngine.processMessage', () => {
     expect(generateCall?.[1]).toEqual(
       expect.objectContaining({
         args: expect.objectContaining({
-          systemPrompt: expect.stringContaining('## DEFAULT_KNOWLEDGE_BASE_STATUS\nstatus=unavailable'),
+          systemPrompt: expect.stringContaining(
+            '## DEFAULT_KNOWLEDGE_BASE_STATUS\nstatus=unavailable'
+          ),
         }),
       })
     );
@@ -651,10 +707,13 @@ describe('conversationEngine.processMessage', () => {
       return null;
     });
 
-    const response = await processMessage('Explique la gouvernance One Door et l architecture système', {
-      conversationId: 'c9',
-      providerPreference: 'ollama',
-    });
+    const response = await processMessage(
+      'Explique la gouvernance One Door et l architecture système',
+      {
+        conversationId: 'c9',
+        providerPreference: 'ollama',
+      }
+    );
 
     expect(response.cognitive_tags).toEqual(
       expect.arrayContaining([
@@ -957,10 +1016,13 @@ describe('conversationEngine.processMessage', () => {
       return null;
     });
 
-    const response = await processMessage('Écris une fonction TypeScript pour parser ce JSON', {
-      conversationId: 'c14',
-      providerPreference: 'ollama',
-    });
+    const response = await processMessage(
+      'Écris une fonction TypeScript pour parser ce JSON',
+      {
+        conversationId: 'c14',
+        providerPreference: 'ollama',
+      }
+    );
 
     const generateCall = vi
       .mocked(secureInvoke)
@@ -1046,7 +1108,7 @@ describe('conversationEngine.processMessage', () => {
           provider: 'gemini',
           aiConfig: expect.objectContaining({
             temperature: 0.33,
-            max_tokens: 8192,
+            max_tokens: 32768,
             provider_preference: 'gemini',
           }),
           classifierMeta: expect.objectContaining({
@@ -1118,6 +1180,52 @@ describe('conversationEngine.processMessage', () => {
 
     expect(response.metadata.provider_used).toBe('ollama-runtime');
     expect(response.omega_trace_meta?.provider_used).toBe('ollama-runtime');
+  });
+
+  it('preserves model requested/used truth from metadata on the active conversation path', async () => {
+    vi.mocked(secureInvoke).mockImplementation(async command => {
+      if (command === 'persistent_memory_get_context') {
+        return null;
+      }
+
+      if (command === 'conversation_generate') {
+        return {
+          content: 'Provider model truth',
+          conversationId: 'c16b',
+          messageId: 'm16b',
+          metadata: {
+            timestamp: 1617,
+            model_requested: 'gemma2:2b',
+            model_used: 'llama3.2:latest',
+            fallback_used: true,
+          },
+          meta: {
+            provider_used: 'ollama-runtime',
+            provider_class: 'local',
+            mode: 'LOCAL',
+            reason_code: 'OK',
+            latency_ms_total: 16,
+            timeout_ms: 30000,
+            retries: 0,
+            attempts: [],
+            network_used: false,
+            cache_hit: false,
+            policy: 'provider-model-truth',
+          },
+        };
+      }
+
+      return null;
+    });
+
+    const response = await processMessage('Donne le modèle réel', {
+      conversationId: 'c16b',
+      providerPreference: 'ollama',
+    });
+
+    expect(response.metadata.model_requested).toBe('gemma2:2b');
+    expect(response.metadata.model_used).toBe('llama3.2:latest');
+    expect(response.metadata.fallback_used).toBe(true);
   });
 
   it('normalizes inline citations from conversation metadata or trace on the active conversation path', async () => {
@@ -1247,6 +1355,6 @@ describe('conversationEngine.processMessage', () => {
     expect(second.assistant_message).toContain(
       '[MOCK_MEMORY] Active la connaissance runtime One Door'
     );
-    expect((win.__TITANE_E2E_CHAT_MEMORY_LOG__ as unknown[])).toHaveLength(2);
+    expect(win.__TITANE_E2E_CHAT_MEMORY_LOG__ as unknown[]).toHaveLength(2);
   });
 });

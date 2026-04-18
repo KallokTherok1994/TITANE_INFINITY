@@ -6,6 +6,7 @@
 
 use super::{AIError, AIProvider, AIRequest, AIResponse, AIResult};
 use crate::core::http_types::Client;
+use crate::runtime_config::{get_persisted_ollama_model, get_persisted_ollama_url};
 use crate::security::shell_guard::ShellGuard;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -29,13 +30,17 @@ const OLLAMA_STATUS_CACHE_TTL_SECS: u64 = 10;
 // Simple cache with Mutex (thread-safe)
 static OLLAMA_STATUS_CACHE: Mutex<Option<(OllamaStatus, Instant)>> = Mutex::new(None);
 
-fn ollama_base_url() -> String {
-    let raw = std::env::var("OLLAMA_BASE_URL")
-        .ok()
-        .filter(|s| !s.is_empty())
-        .or_else(|| std::env::var("OLLAMA_URL").ok().filter(|s| !s.is_empty()))
-        .unwrap_or_else(|| DEFAULT_OLLAMA_BASE_URL.to_string());
+#[derive(Debug, Clone)]
+struct ResolvedOllamaRuntime {
+    base_url: String,
+    model: String,
+    endpoint_kind: String,
+    endpoint_source: String,
+    model_source: String,
+    network_used: bool,
+}
 
+fn normalize_ollama_base_url(raw: &str) -> String {
     let mut normalized = raw.trim().trim_end_matches('/').to_string();
     if normalized.ends_with("/v1") {
         normalized = normalized.trim_end_matches("/v1").to_string();
@@ -51,12 +56,133 @@ fn ollama_base_url() -> String {
     }
 }
 
+fn normalize_ollama_model(raw: &str) -> String {
+    let trimmed = raw.trim();
+    if trimmed.is_empty() {
+        DEFAULT_OLLAMA_MODEL.to_string()
+    } else {
+        trimmed.to_string()
+    }
+}
+
+fn pick_runtime_value(
+    persisted: Option<String>,
+    primary_env: Option<String>,
+    secondary_env: Option<String>,
+    default_value: &str,
+) -> (String, String) {
+    let persisted_value = persisted
+        .as_deref()
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .map(str::to_string);
+
+    if let Some(value) = persisted_value {
+        return (value, "runtime_persisted".to_string());
+    }
+
+    let primary_value = primary_env
+        .as_deref()
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .map(str::to_string);
+
+    if let Some(value) = primary_value {
+        return (value, "env".to_string());
+    }
+
+    let secondary_value = secondary_env
+        .as_deref()
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .map(str::to_string);
+
+    if let Some(value) = secondary_value {
+        return (value, "env".to_string());
+    }
+
+    (default_value.to_string(), "default".to_string())
+}
+
+fn classify_ollama_endpoint_kind(base_url: &str) -> String {
+    if let Ok(parsed) = url::Url::parse(base_url) {
+        if let Some(host) = parsed.host_str() {
+            if matches!(host, "127.0.0.1" | "localhost" | "::1") {
+                return "local_loopback".to_string();
+            }
+        }
+
+        if parsed.scheme().eq_ignore_ascii_case("https") {
+            return "remote_cloudflare".to_string();
+        }
+    }
+
+    "custom_remote".to_string()
+}
+
+fn resolve_ollama_runtime_from_sources(
+    persisted_url: Option<String>,
+    env_base_url: Option<String>,
+    env_url: Option<String>,
+    persisted_model: Option<String>,
+    env_default_model: Option<String>,
+    env_model: Option<String>,
+) -> ResolvedOllamaRuntime {
+    let (url_raw, endpoint_source) = pick_runtime_value(
+        persisted_url,
+        env_base_url,
+        env_url,
+        DEFAULT_OLLAMA_BASE_URL,
+    );
+    let (model_raw, model_source) = pick_runtime_value(
+        persisted_model,
+        env_default_model,
+        env_model,
+        DEFAULT_OLLAMA_MODEL,
+    );
+
+    let base_url = normalize_ollama_base_url(&url_raw);
+    let model = normalize_ollama_model(&model_raw);
+    let endpoint_kind = classify_ollama_endpoint_kind(&base_url);
+    let network_used = endpoint_kind != "local_loopback";
+
+    ResolvedOllamaRuntime {
+        base_url,
+        model,
+        endpoint_kind,
+        endpoint_source,
+        model_source,
+        network_used,
+    }
+}
+
+fn resolve_ollama_runtime() -> ResolvedOllamaRuntime {
+    resolve_ollama_runtime_from_sources(
+        get_persisted_ollama_url(),
+        std::env::var("OLLAMA_BASE_URL").ok(),
+        std::env::var("OLLAMA_URL").ok(),
+        get_persisted_ollama_model(),
+        std::env::var("OLLAMA_DEFAULT_MODEL").ok(),
+        std::env::var("OLLAMA_MODEL").ok(),
+    )
+}
+
+fn ollama_base_url() -> String {
+    resolve_ollama_runtime().base_url
+}
+
 fn ollama_default_model() -> String {
-    std::env::var("OLLAMA_DEFAULT_MODEL")
+    resolve_ollama_runtime().model
+}
+
+fn ollama_env_base_url() -> String {
+    let raw = std::env::var("OLLAMA_BASE_URL")
         .ok()
         .filter(|s| !s.is_empty())
-        .or_else(|| std::env::var("OLLAMA_MODEL").ok().filter(|s| !s.is_empty()))
-        .unwrap_or_else(|| DEFAULT_OLLAMA_MODEL.to_string())
+        .or_else(|| std::env::var("OLLAMA_URL").ok().filter(|s| !s.is_empty()))
+        .unwrap_or_else(|| DEFAULT_OLLAMA_BASE_URL.to_string());
+
+    normalize_ollama_base_url(&raw)
 }
 
 /// Returns the effective Ollama HTTP request timeout.
@@ -140,6 +266,13 @@ pub struct OllamaStatus {
     pub available: bool,
     pub version: Option<String>,
     pub models: Vec<String>,
+    pub url: String,
+    pub model: String,
+    pub endpoint_kind: String,
+    pub endpoint_source: String,
+    pub model_source: String,
+    pub network_used: bool,
+    pub health: String,
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -463,10 +596,11 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
 
     // Cache miss or expired → perform actual check
     let client = build_ollama_client()?;
+    let runtime = resolve_ollama_runtime();
 
     // Test de disponibilité
     let response = client
-        .get(format!("{}/api/tags", ollama_base_url()))
+        .get(format!("{}/api/tags", runtime.base_url))
         .send()
         .await;
 
@@ -485,6 +619,13 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
                 available: true,
                 version: Some("unknown".to_string()), // Ollama n'expose pas facilement la version
                 models: model_names,
+                url: runtime.base_url.clone(),
+                model: runtime.model.clone(),
+                endpoint_kind: runtime.endpoint_kind.clone(),
+                endpoint_source: runtime.endpoint_source.clone(),
+                model_source: runtime.model_source.clone(),
+                network_used: runtime.network_used,
+                health: "healthy".to_string(),
             }
         }
         Ok(resp) => {
@@ -493,6 +634,13 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
                 available: false,
                 version: None,
                 models: vec![],
+                url: runtime.base_url.clone(),
+                model: runtime.model.clone(),
+                endpoint_kind: runtime.endpoint_kind.clone(),
+                endpoint_source: runtime.endpoint_source.clone(),
+                model_source: runtime.model_source.clone(),
+                network_used: runtime.network_used,
+                health: "degraded".to_string(),
             }
         }
         Err(e) => {
@@ -502,6 +650,13 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
                 available: false,
                 version: None,
                 models: vec![],
+                url: runtime.base_url.clone(),
+                model: runtime.model.clone(),
+                endpoint_kind: runtime.endpoint_kind.clone(),
+                endpoint_source: runtime.endpoint_source.clone(),
+                model_source: runtime.model_source.clone(),
+                network_used: runtime.network_used,
+                health: "offline".to_string(),
             }
         }
     };
@@ -788,6 +943,43 @@ mod tests {
 
         let selected_unknown = select_fallback_model("unknown:latest", &models);
         assert_eq!(selected_unknown.as_deref(), Some("llama3.1:latest"));
+    }
+
+    #[test]
+    fn test_resolve_ollama_runtime_prefers_persisted_values() {
+        let runtime = resolve_ollama_runtime_from_sources(
+            Some("https://titane.example.com/api".to_string()),
+            Some("http://127.0.0.1:11434".to_string()),
+            None,
+            Some("qwen2.5:latest".to_string()),
+            Some("gemma2:2b".to_string()),
+            None,
+        );
+
+        assert_eq!(runtime.base_url, "https://titane.example.com");
+        assert_eq!(runtime.model, "qwen2.5:latest");
+        assert_eq!(runtime.endpoint_kind, "remote_cloudflare");
+        assert_eq!(runtime.endpoint_source, "runtime_persisted");
+        assert_eq!(runtime.model_source, "runtime_persisted");
+        assert!(runtime.network_used);
+    }
+
+    #[test]
+    fn test_resolve_ollama_runtime_classifies_loopback_as_local() {
+        let runtime = resolve_ollama_runtime_from_sources(
+            None,
+            Some("http://127.0.0.1:11434/api".to_string()),
+            None,
+            None,
+            Some("gemma2:2b".to_string()),
+            None,
+        );
+
+        assert_eq!(runtime.base_url, "http://127.0.0.1:11434");
+        assert_eq!(runtime.endpoint_kind, "local_loopback");
+        assert_eq!(runtime.endpoint_source, "env");
+        assert_eq!(runtime.model_source, "env");
+        assert!(!runtime.network_used);
     }
 
     // ─────────────────────────────────────────────────────────────────────────

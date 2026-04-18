@@ -17,7 +17,12 @@ import React, {
   memo,
 } from 'react';
 import { useToast } from '@/hooks/useToast';
-import { useConversationEngine } from '@hooks/useConversationEngine';
+import {
+  useConversationEngine,
+  type ConversationMessage,
+  type ConversationSaveStatus,
+  type ConversationWebSearchStatus,
+} from '@hooks/useConversationEngine';
 import type {
   ConversationMode,
   ConversationProviderPreference,
@@ -75,17 +80,8 @@ interface ConversationSectionProps {
   fullscreen?: boolean;
 }
 
-interface ConversationMessageItem {
-  id?: string;
-  role: 'user' | 'assistant' | string;
-  content: string;
-  metadata?: {
-    tags?: string[];
-    intention?: string;
-    providerMeta?: ProviderDecisionMeta;
-    citations?: Citation[];
-  };
-}
+interface ConversationMessageItem
+  extends Pick<ConversationMessage, 'id' | 'role' | 'content' | 'metadata'> {}
 
 interface RuntimeSignals {
   orchestratorState: string;
@@ -96,6 +92,9 @@ interface LatestAssistantRuntimeSnapshot {
   providerMeta?: ProviderDecisionMeta;
   tags: string[];
   runtimeSignals: RuntimeSignals;
+  modelRequested?: string;
+  modelUsed?: string;
+  fallbackUsed?: boolean;
 }
 
 const BUILT_IN_CONVERSATION_MODES = [
@@ -160,7 +159,9 @@ function readConversationViewportScale(): number {
   }
 
   const viewportScale = window.visualViewport?.scale;
-  return typeof viewportScale === 'number' && Number.isFinite(viewportScale) && viewportScale > 0
+  return typeof viewportScale === 'number' &&
+    Number.isFinite(viewportScale) &&
+    viewportScale > 0
     ? viewportScale
     : 1;
 }
@@ -272,7 +273,17 @@ export function buildConversationRuntimeSummary(
       ? `Requested: ${requestedProviderLabel} | `
       : '';
 
-  return `${requestedPrefix}Provider: ${provider} | Mode: ${mode} | Reason: ${reason} | Network: ${networkUsed}`;
+  const modelUsed = latestAssistantRuntime.modelUsed?.trim();
+  const modelRequested = latestAssistantRuntime.modelRequested?.trim();
+  const modelRequestedPrefix =
+    modelRequested && modelRequested !== modelUsed
+      ? `Model requested: ${modelRequested} | `
+      : '';
+  const modelUsedSuffix = modelUsed ? ` | Model used: ${modelUsed}` : '';
+  const fallbackSuffix =
+    latestAssistantRuntime.fallbackUsed === true ? ' | Model fallback: true' : '';
+
+  return `${requestedPrefix}${modelRequestedPrefix}Provider: ${provider} | Mode: ${mode} | Reason: ${reason} | Network: ${networkUsed}${modelUsedSuffix}${fallbackSuffix}`;
 }
 
 export function buildConversationLoadingLabel(
@@ -310,10 +321,17 @@ export function buildConversationRuntimeBadges(
     providerMeta?.policy && providerMeta.policy !== 'default'
       ? `policy:${providerMeta.policy}`
       : null,
+    latestAssistantRuntime.modelRequested
+      ? `model-requested:${latestAssistantRuntime.modelRequested}`
+      : null,
+    latestAssistantRuntime.modelUsed
+      ? `model-used:${latestAssistantRuntime.modelUsed}`
+      : null,
+    latestAssistantRuntime.fallbackUsed === true ? 'model-fallback:true' : null,
     ...tags,
   ].filter((value): value is string => Boolean(value && value.trim()));
 
-  return Array.from(new Set(values)).slice(0, 8);
+  return Array.from(new Set(values)).slice(0, 10);
 }
 
 function normalizeTransparencyPrompt(input: string): string {
@@ -420,6 +438,37 @@ function deriveRuntimeSignals(
   }
 
   return { orchestratorState, memoryState };
+}
+
+export function buildConversationJournalSaveLabel(
+  saveStatus?: ConversationSaveStatus
+): string {
+  switch (saveStatus) {
+    case 'saved':
+      return 'Sauvegarde persistante validee';
+    case 'failed':
+      return 'Echec de sauvegarde detecte';
+    case 'pending':
+      return 'Sauvegarde en cours';
+    default:
+      return 'Aucun statut de sauvegarde capture';
+  }
+}
+
+export function buildConversationJournalSearchLabel(
+  webSearchStatus?: ConversationWebSearchStatus,
+  citationCount: number = 0,
+  networkUsed?: boolean
+): string {
+  if (webSearchStatus === 'used' || citationCount > 0) {
+    return `${citationCount} source${citationCount > 1 ? 's' : ''} inline capturee${citationCount > 1 ? 's' : ''}`;
+  }
+
+  if (networkUsed === true) {
+    return 'Reseau utilise sans citation inline publiee';
+  }
+
+  return 'Non utilisee sur ce tour';
 }
 
 /**
@@ -1044,7 +1093,9 @@ const ConversationMessage = memo(
                         {label}
                       </a>
                       {locator && (
-                        <div className="conversation-message-citation-locator">{locator}</div>
+                        <div className="conversation-message-citation-locator">
+                          {locator}
+                        </div>
                       )}
                       <div className="conversation-message-citation-excerpt">
                         {citation.excerpt}
@@ -1248,6 +1299,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       healthReport,
       refreshHealth,
       conversationId,
+      lastResponse,
     } = useConversationEngine({
       mode: 'default',
       providerPreference: effectiveProviderPreference,
@@ -1641,23 +1693,47 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     const hasMessages = messages.length > 0;
     const isHealthy = healthReport?.status === 'Healthy';
     const showLoadingIndicator = isLoading || loadingVisibleUntil > Date.now();
-
-    const latestAssistantRuntime = useMemo(() => {
+    const latestAssistantMessage = useMemo(() => {
       for (let i = messages.length - 1; i >= 0; i -= 1) {
         const message = messages[i] as ConversationMessageItem;
-        if (message.role !== 'assistant') continue;
+        if (message.role === 'assistant') {
+          return message;
+        }
+      }
 
-        const providerMeta = message.metadata?.providerMeta;
-        const tags = message.metadata?.tags ?? [];
-        if (!providerMeta && tags.length === 0) continue;
+      return null;
+    }, [messages]);
+    const latestAssistantMetadata = latestAssistantMessage?.metadata;
 
-        const runtimeSignals = deriveRuntimeSignals(providerMeta, tags);
+    const latestAssistantRuntime = useMemo(() => {
+      if (!latestAssistantMessage) {
+        return null;
+      }
 
-        return {
-          providerMeta,
-          tags,
-          runtimeSignals,
-        };
+      const providerMeta = latestAssistantMetadata?.providerMeta;
+      const tags = latestAssistantMetadata?.tags ?? [];
+      if (!providerMeta && tags.length === 0) {
+        return null;
+      }
+
+      const runtimeSignals = deriveRuntimeSignals(providerMeta, tags);
+
+      return {
+        providerMeta,
+        tags,
+        runtimeSignals,
+        modelRequested: latestAssistantMetadata?.modelRequested,
+        modelUsed: latestAssistantMetadata?.modelUsed,
+        fallbackUsed: latestAssistantMetadata?.fallbackUsed,
+      };
+    }, [latestAssistantMessage, latestAssistantMetadata]);
+
+    const latestUserMessage = useMemo(() => {
+      for (let i = messages.length - 1; i >= 0; i -= 1) {
+        const message = messages[i] as ConversationMessageItem;
+        if (message.role === 'user') {
+          return message;
+        }
       }
 
       return null;
@@ -1736,6 +1812,55 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
         ),
       [latestAssistantProviderMeta?.provider_used, selectedProvider]
     );
+
+    const thinkingElapsedTime = useMemo(() => {
+      const latencyMs =
+        latestAssistantMetadata?.latencyMs ?? lastResponse?.metadata?.latency_ms;
+      return typeof latencyMs === 'number' ? latencyMs / 1000 : undefined;
+    }, [lastResponse?.metadata?.latency_ms, latestAssistantMetadata?.latencyMs]);
+
+    const thinkingSearchLabel = useMemo(
+      () =>
+        buildConversationJournalSearchLabel(
+          latestAssistantMetadata?.webSearchStatus,
+          resolveConversationCitations(latestAssistantMetadata?.citations).length,
+          latestAssistantMetadata?.providerMeta?.network_used ??
+            lastResponse?.meta?.network_used
+        ),
+      [
+        lastResponse?.meta?.network_used,
+        latestAssistantMetadata?.citations,
+        latestAssistantMetadata?.providerMeta?.network_used,
+        latestAssistantMetadata?.webSearchStatus,
+      ]
+    );
+
+    const thinkingSaveLabel = useMemo(
+      () => buildConversationJournalSaveLabel(latestAssistantMetadata?.saveStatus),
+      [latestAssistantMetadata?.saveStatus]
+    );
+
+    const thinkingMemoryTrace = useMemo(() => {
+      const systemPromptSources = latestAssistantMetadata?.systemPromptSources ?? [];
+      const linksToContexts = latestAssistantMetadata?.linksToContexts ?? [];
+      const hasInjectedContext =
+        Boolean(latestAssistantMetadata?.memoryEffect) ||
+        systemPromptSources.length > 0 ||
+        linksToContexts.length > 0 ||
+        (latestAssistantMetadata?.singleDoorTags?.length ?? 0) > 0;
+
+      return {
+        injected: hasInjectedContext,
+        savedAfter: latestAssistantMetadata?.saveStatus === 'saved',
+        systemPromptSources,
+      };
+    }, [
+      latestAssistantMetadata?.linksToContexts,
+      latestAssistantMetadata?.memoryEffect,
+      latestAssistantMetadata?.saveStatus,
+      latestAssistantMetadata?.singleDoorTags,
+      latestAssistantMetadata?.systemPromptSources,
+    ]);
 
     const thinkingTopology = useMemo(() => {
       const nodes: Array<{
@@ -2629,6 +2754,19 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
             compact={thinking.compact || compactConversationLayout}
             inline={false}
             provider={runtimeProviderLabel}
+            elapsedTime={thinkingElapsedTime}
+            xpTrace={latestAssistantMetadata?.xpTrace ?? null}
+            memoryTrace={thinkingMemoryTrace}
+            qualityScore={latestAssistantMetadata?.qualityScore ?? null}
+            messageLength={latestUserMessage?.content.length}
+            responseLength={latestAssistantMessage?.content.length}
+            reasoningSummary={
+              latestAssistantMetadata?.cognitiveSummary ?? lastResponse?.cognitive_summary
+            }
+            actionsPerformed={latestAssistantMetadata?.actionsPerformed}
+            modeLabel={latestAssistantMetadata?.providerMeta?.mode ?? lastResponse?.meta?.mode}
+            searchLabel={thinkingSearchLabel}
+            saveLabel={thinkingSaveLabel}
           />
 
           {/* ═══ MESSAGES AREA ═══ */}

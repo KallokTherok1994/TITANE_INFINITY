@@ -40,6 +40,46 @@ echo "[E2E_CHAT_PROOF] USE_TAURI_DEV=$TITANE_E2E_USE_TAURI_DEV"
 echo "[E2E_CHAT_PROOF] OLLAMA_DEFAULT_MODEL=$OLLAMA_DEFAULT_MODEL"
 echo "[E2E_CHAT_PROOF] OLLAMA_REQUEST_TIMEOUT_SECS=$OLLAMA_REQUEST_TIMEOUT_SECS [effective Rust HTTP client cap]"
 
+if [[ "${TITANE_E2E_EXPECT_SOURCE:-embedded}" == "embedded" ]] && [[ -z "${TAURI_DEV_SERVER_URL:-}" ]]; then
+  if [[ "${TITANE_E2E_SKIP_NATIVE_FRESHNESS_GUARD:-0}" == "1" ]]; then
+    echo "[E2E_NATIVE_POLICY] SKIP requested via TITANE_E2E_SKIP_NATIVE_FRESHNESS_GUARD=1"
+  else
+    if ! node <<'EOF'
+const { resolveNativeBinaryPolicy } = require('./scripts/e2e/native-binary-policy.cjs');
+
+const policy = resolveNativeBinaryPolicy({
+  rootDir: process.cwd(),
+  explicitBinaryPath: process.env.TAURI_BINARY_PATH || '',
+  tauriDevServerUrl: process.env.TAURI_DEV_SERVER_URL || '',
+  mode: process.env.TITANE_NATIVE_BINARY_MODE || 'release',
+});
+
+console.log(
+  `[E2E_NATIVE_POLICY] selected=${policy.selectedBinaryPath || '<none>'} freshness=${policy.freshnessClass} buildRequired=${policy.buildRequired}`
+);
+
+if (policy.buildRequired) {
+  console.error(
+    `[E2E_NATIVE_POLICY] BLOCKED workspaceAhead=${policy.workspaceAhead} paths=${JSON.stringify(policy.workspaceAheadPaths || [])}`
+  );
+  console.error(
+    '[E2E_NATIVE_POLICY] next_step=Run pnpm run build:tauri:e2e before retrying the embedded desktop proof.'
+  );
+  process.exit(1);
+}
+EOF
+    then
+      exit 1
+    fi
+  fi
+
+  if [[ "${TITANE_E2E_SKIP_EMBEDDED_MARKER_GUARD:-0}" == "1" ]]; then
+    echo "[E2E_EMBEDDED_FRESHNESS] SKIP requested via TITANE_E2E_SKIP_EMBEDDED_MARKER_GUARD=1"
+  else
+    node scripts/e2e/verify_online_chat_proof_markers.mjs "${TITANE_E2E_DIST_DIR:-dist}"
+  fi
+fi
+
 # ── Ollama Pre-warm Preflight ─────────────────────────────────────────────────
 # Purpose: load the target model into memory BEFORE starting Tauri/WDIO to avoid
 # cold-start HTTP timeout (Rust Ollama client has a hard 60s cap in the binary).
@@ -89,9 +129,9 @@ for _ in $(seq 1 20); do
 done
 
 if [[ -n "${TAURI_DEV_SERVER_URL:-}" ]]; then
-  TITANE_E2E_URL_DEFAULT="${TAURI_DEV_SERVER_URL%/}/#/chat"
+  TITANE_E2E_URL_DEFAULT="${TAURI_DEV_SERVER_URL%/}/titane?tab=conversation"
 else
-  TITANE_E2E_URL_DEFAULT="tauri://localhost/#/chat"
+  TITANE_E2E_URL_DEFAULT="tauri://localhost/#/titane?tab=conversation"
 fi
 
 TITANE_E2E_URL="${TITANE_E2E_URL:-$TITANE_E2E_URL_DEFAULT}" \

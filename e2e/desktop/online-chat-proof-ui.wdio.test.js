@@ -50,8 +50,8 @@ function getDefaultAppUrl() {
   return (
     process.env.TITANE_E2E_URL ||
     (expectedSource === 'dev-server' && devServerUrl
-      ? `${devServerUrl}/#/chat`
-      : 'tauri://localhost/#/chat')
+      ? `${devServerUrl}/titane?tab=conversation`
+      : 'tauri://localhost/#/titane?tab=conversation')
   );
 }
 
@@ -93,9 +93,21 @@ async function detectAppSourceMode() {
 async function ensureTauriPageLoaded(appUrl) {
   const candidates = [appUrl];
   if (devServerUrl) {
-    candidates.push(`${devServerUrl}/#/chat`, devServerUrl);
+    candidates.push(
+      `${devServerUrl}/titane?tab=conversation`,
+      `${devServerUrl}/titane`,
+      `${devServerUrl}/#/titane?tab=conversation`,
+      `${devServerUrl}/#/titane`,
+      `${devServerUrl}/#/chat`,
+      devServerUrl
+    );
   }
-  candidates.push('tauri://localhost/#/chat', 'tauri://localhost');
+  candidates.push(
+    'tauri://localhost/#/titane?tab=conversation',
+    'tauri://localhost/#/titane',
+    'tauri://localhost/#/chat',
+    'tauri://localhost'
+  );
 
   const allowedPrefixes = getAllowedHrefPrefixes();
 
@@ -274,6 +286,69 @@ async function resetConversationGenerateTrace() {
   });
 }
 
+async function installMessageTruncationProbe() {
+  await browser.execute(() => {
+    const w = window;
+    if (w.__TITANE_TRUNCATION_PROBE_INSTALLED__) {
+      w.__TITANE_TRUNCATION_EVENTS__ = [];
+      return;
+    }
+
+    w.__TITANE_TRUNCATION_EVENTS__ = [];
+    window.addEventListener('titane-message-truncated', event => {
+      w.__TITANE_TRUNCATION_EVENTS__.push({
+        detail: event?.detail || null,
+        timestamp: Date.now(),
+      });
+    });
+    w.__TITANE_TRUNCATION_PROBE_INSTALLED__ = true;
+  });
+}
+
+async function readMessageTruncationProbe() {
+  return await browser.execute(() => {
+    const events = Array.isArray(window.__TITANE_TRUNCATION_EVENTS__)
+      ? window.__TITANE_TRUNCATION_EVENTS__
+      : [];
+    return {
+      count: events.length,
+      lastEvent: events.length > 0 ? events[events.length - 1] : null,
+    };
+  });
+}
+
+async function readOmegaJournalRuntimeFacts() {
+  return await browser.execute(() => {
+    const panel = document.querySelector('[data-testid="reasoning-progress"]');
+    const readAttr = name => (panel?.getAttribute(name) || '').replace(/\s+/g, ' ').trim();
+
+    return {
+      mode: readAttr('data-runtime-mode'),
+      duration: readAttr('data-runtime-duration'),
+      quality: readAttr('data-runtime-quality'),
+      save: readAttr('data-runtime-save'),
+      search: readAttr('data-runtime-search'),
+      sources: readAttr('data-runtime-sources'),
+    };
+  });
+}
+
+async function waitForOmegaJournalRuntimeFacts() {
+  await browser.waitUntil(
+    async () => {
+      const facts = await readOmegaJournalRuntimeFacts();
+      return facts.mode.length > 0 || facts.save.length > 0 || facts.search.length > 0;
+    },
+    {
+      timeout: 10000,
+      interval: 250,
+      timeoutMsg: 'OMEGA runtime labels did not hydrate on reasoning-progress',
+    }
+  );
+
+  return await readOmegaJournalRuntimeFacts();
+}
+
 async function readConversationGenerateTrace() {
   return await browser.execute(() => {
     const response = window.__TITANE_LAST_CONV_RESPONSE__;
@@ -370,6 +445,34 @@ async function ensureChatOpen(selectors) {
       await panel.waitForExist({ timeout: 25000 });
     }
   }
+}
+
+async function ensureCanonicalConversationTab() {
+  const conversationTab = await $('[data-testid="tab-conversation"]');
+  if (!(await conversationTab.isExisting())) {
+    return;
+  }
+
+  const currentSelected = ((await conversationTab.getAttribute('aria-selected')) || '')
+    .trim()
+    .toLowerCase();
+
+  if (currentSelected !== 'true') {
+    await conversationTab.scrollIntoView();
+    await conversationTab.click();
+  }
+
+  await browser.waitUntil(
+    async () => {
+      const chatInput = await $('[data-testid="chat-input"]');
+      return await chatInput.isExisting();
+    },
+    {
+      timeout: 15000,
+      interval: 300,
+      timeoutMsg: 'Canonical Titane conversation tab did not expose chat input',
+    }
+  );
 }
 
 async function getLastText(selector) {
@@ -563,6 +666,7 @@ async function readRuntimeSnapshot(selectors) {
       ipcReadyState: (ipcReady?.getAttribute('data-state') || '').trim().toUpperCase(),
       sendTraceState: (sendTrace?.getAttribute('data-state') || '').trim().toUpperCase(),
       sendTraceMeta: (sendTrace?.getAttribute('data-meta') || '').trim(),
+        assistantCount: assistantRows.length,
       browserMode: window.localStorage?.getItem('titane_browser_mode') === '1',
       providerUsed: (
         panel?.getAttribute('data-provider-used') ||
@@ -924,6 +1028,8 @@ async function prepareChatSurface() {
     await trigger.waitForDisplayed({ timeout: 25000 });
   }
 
+  await ensureCanonicalConversationTab();
+
   let selectors = await resolveSelectors();
   if (!selectors) {
     const diagnostic = await collectDomDiagnostic();
@@ -1000,17 +1106,15 @@ async function sendMessageAndWaitOutcome(
   let responseText = '';
   let afterAssistantCount = beforeAssistantCount;
   let runtime = await readRuntimeSnapshot(selectors);
-  let trace = await readConversationGenerateTrace();
+  let trace = null;
 
   while (Date.now() - startTime < timeoutMs) {
-    responseText = await getLastText(selectors.response);
-    afterAssistantCount = await countMatches(selectors.response);
     runtime = await readRuntimeSnapshot(selectors);
-    trace = await readConversationGenerateTrace();
+    responseText = runtime.assistantText;
+    afterAssistantCount = runtime.assistantCount;
 
     const hasDomAssistant =
       (responseText.length > 0 && responseText !== beforeText) ||
-      (runtime.assistantText.length > 0 && runtime.assistantText !== beforeText) ||
       afterAssistantCount > beforeAssistantCount;
 
     if (hasDomAssistant) {
@@ -1030,10 +1134,13 @@ async function sendMessageAndWaitOutcome(
       }
 
       runtime = await readRuntimeSnapshot(selectors);
+      if (!responseText && !runtime.assistantText) {
+        trace = await readConversationGenerateTrace();
+      }
       return {
         kind: 'assistant',
         latencyMs: Date.now() - startTime,
-        responseText: responseText || runtime.assistantText || trace.content,
+        responseText: responseText || runtime.assistantText || trace?.content || '',
         runtime,
         beforeAssistantCount,
         afterAssistantCount,
@@ -1055,10 +1162,11 @@ async function sendMessageAndWaitOutcome(
   }
 
   runtime = await readRuntimeSnapshot(selectors);
+  trace = await readConversationGenerateTrace();
   return {
     kind: 'timeout',
     latencyMs: Date.now() - startTime,
-    responseText: responseText || runtime.assistantText || trace.content,
+    responseText: responseText || runtime.assistantText || trace?.content || '',
     runtime,
     beforeAssistantCount,
     afterAssistantCount,
@@ -1185,7 +1293,14 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       return;
     }
 
-    const msg = `[${scenario}/${runId}] preuve UI ${new Date().toISOString()}`;
+    await installMessageTruncationProbe();
+
+    const msg = [
+      `[${scenario}/${runId}] preuve UI longue ${new Date().toISOString()}`,
+      'Réponds en français avec 6 sections numérotées et développées.',
+      'Chaque section doit contenir au moins deux phrases complètes et utiles.',
+      'N utilise ni tableau ni JSON.',
+    ].join(' ');
     const outcome = await sendMessageAndWaitOutcome(selectors, msg);
     assert.equal(
       outcome.kind,
@@ -1236,6 +1351,45 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
     assert.ok(
       after.length >= 5,
       `[G_CONTENT_QUALITY] Response suspiciously short (${after.length} chars) — possible stub or empty`
+    );
+    assert.ok(
+      after.length >= 450,
+      `[G_LONG_RESPONSE_VISIBLE] Assistant response too short for a strong long-output proof (${after.length} chars)`
+    );
+    const truncationProbe = await readMessageTruncationProbe();
+    assert.equal(
+      truncationProbe.count,
+      0,
+      `[G_NO_RENDER_TRUNCATION] unexpected titane-message-truncated event: ${JSON.stringify(truncationProbe)}`
+    );
+
+    const omegaJournal = await waitForOmegaJournalRuntimeFacts();
+
+    assert.ok(
+      omegaJournal.mode.length > 0 && omegaJournal.mode !== 'Mode runtime indisponible',
+      `[G_OMEGA_MODE_RUNTIME] invalid journal mode label: ${JSON.stringify(omegaJournal)}`
+    );
+    assert.ok(
+      /s$/.test(omegaJournal.duration),
+      `[G_OMEGA_DURATION_RUNTIME] invalid duration label: ${JSON.stringify(omegaJournal)}`
+    );
+    assert.ok(
+      omegaJournal.quality.length > 0,
+      `[G_OMEGA_QUALITY_RUNTIME] missing quality runtime label: ${JSON.stringify(omegaJournal)}`
+    );
+    assert.ok(
+      /Sauvegarde persistante validee|Sauvegarde en attente de confirmation|Sauvegarde persistante impossible/i.test(
+        omegaJournal.save
+      ),
+      `[G_OMEGA_SAVE_RUNTIME] invalid save label: ${JSON.stringify(omegaJournal)}`
+    );
+    assert.ok(
+      !/Aucune trace de recherche web capturee/i.test(omegaJournal.search),
+      `[G_OMEGA_SEARCH_RUNTIME] missing search runtime label: ${JSON.stringify(omegaJournal)}`
+    );
+    assert.ok(
+      !/Aucune source contexte capturee/i.test(omegaJournal.sources),
+      `[G_OMEGA_CONTEXT_RUNTIME] missing context sources label: ${JSON.stringify(omegaJournal)}`
     );
 
     // G_UI_BACKEND_TRUTH_ALIGNED: compare backend meta captured at invoke-time vs DOM data attributes
@@ -1334,6 +1488,8 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
     console.log(`[PROOF] scenario=${scenario} run=${runId}`);
     console.log(`[PROVIDER_USED_DOM] ${providerAttr}`);
     console.log(`[DOM_ATTRS] ${JSON.stringify(domAttrs.allAttrs)}`);
+    console.log(`[MESSAGE_TRUNCATION_PROBE] ${JSON.stringify(truncationProbe)}`);
+    console.log(`[OMEGA_JOURNAL_RUNTIME] ${JSON.stringify(omegaJournal)}`);
     console.log(`[UI_BACKEND_ALIGNMENT] ${JSON.stringify(alignment)}`);
     console.log(`[ASSISTANT_TEXT] ${String(after).slice(0, 220)}`);
   });

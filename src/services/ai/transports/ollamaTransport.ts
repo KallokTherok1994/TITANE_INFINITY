@@ -13,6 +13,7 @@ import { createLogger } from '@/utils/logger';
 import type { AiResult, AiOk, AiErr } from '../types';
 import { classifyError, isAbortError } from '@/lib/errorClassification';
 import { getProviderTimeout } from '@/config/aiTimeouts.config';
+import { tauriClient } from '@/lib/tauriClient';
 
 const logger = createLogger('OllamaTransport');
 
@@ -34,6 +35,7 @@ const HEALTH_CACHE_TTL_MS = 10_000;
 let lastHealthCheckTs = 0;
 let lastHealthCheckOk = false;
 let lastHealthError: string | null = null;
+let lastHealthModels: OllamaTagsResponse['models'] = [];
 
 logger.info(`🚀 Ollama Transport Mode: ${TRANSPORT_MODE}`);
 
@@ -74,6 +76,44 @@ export interface OllamaGenerateResponse {
   done_reason?: string;
 }
 
+interface NormalizedOllamaStatus {
+  available: boolean;
+  models: string[];
+  url: string;
+  model: string;
+  health: string;
+}
+
+function normalizeOllamaStatus(raw: unknown): NormalizedOllamaStatus {
+  if (!raw || typeof raw !== 'object') {
+    return {
+      available: false,
+      models: [],
+      url: 'unknown',
+      model: 'unknown',
+      health: 'not_checked',
+    };
+  }
+
+  const payload = raw as Record<string, unknown>;
+  const content =
+    typeof payload.ok === 'boolean' && payload.content && typeof payload.content === 'object'
+      ? (payload.content as Record<string, unknown>)
+      : payload;
+
+  const models = Array.isArray(content.models)
+    ? content.models.filter((entry): entry is string => typeof entry === 'string')
+    : [];
+
+  return {
+    available: Boolean(content.available),
+    models,
+    url: typeof content.url === 'string' ? content.url : 'unknown',
+    model: typeof content.model === 'string' ? content.model : 'unknown',
+    health: typeof content.health === 'string' ? content.health : 'not_checked',
+  };
+}
+
 // ============================================================
 // HTTP TRANSPORT
 // ============================================================
@@ -110,7 +150,7 @@ async function ipcCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
         ok: true,
         provider: 'ollama',
         content: {
-          models: [{ name: 'gemma2:2b', modified_at: '', size: 0 }],
+          models: lastHealthModels,
         },
       };
     }
@@ -127,18 +167,32 @@ async function ipcCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
   }
 
   try {
-    // Use lightweight backend ping command to avoid expensive /generate probes.
-    await secureInvoke<number>('ping_ollama');
-    lastHealthCheckTs = now;
-    lastHealthCheckOk = true;
-    lastHealthError = null;
+    const status = normalizeOllamaStatus(await tauriClient.aiCheckOllamaStatus());
 
-    // Health check passed, return fake tags response
+    lastHealthCheckTs = now;
+    lastHealthCheckOk = status.available;
+    lastHealthModels = status.models.map(name => ({ name, modified_at: '', size: 0 }));
+    lastHealthError = status.available
+      ? null
+      : `Ollama unavailable via ${status.url} (${status.health})`;
+
+    if (status.available) {
+      return {
+        ok: true,
+        provider: 'ollama',
+        content: {
+          models: lastHealthModels,
+        },
+      };
+    }
+
     return {
-      ok: true,
+      ok: false,
       provider: 'ollama',
-      content: {
-        models: [{ name: 'gemma2:2b', modified_at: '', size: 0 }],
+      error: {
+        code: 'OLLAMA_IPC_FAILED',
+        message: lastHealthError,
+        retryable: true,
       },
     };
   } catch (error) {
@@ -147,6 +201,7 @@ async function ipcCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
     const isAbort = isAbortError(error);
     lastHealthCheckTs = now;
     lastHealthCheckOk = false;
+    lastHealthModels = [];
     lastHealthError = classification.message;
 
     return {

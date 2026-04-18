@@ -75,6 +75,9 @@ interface ThinkingPanelProps {
   inline?: boolean; // Mode inline dans le message (v2)
   provider?: string; // Provider utilisé (ex: "GPT-4o", "Claude", "Gemini", "Local") (v2.1)
   elapsedTime?: number; // Temps écoulé en secondes (v2.1)
+  modeLabel?: string | null;
+  searchLabel?: string | null;
+  saveLabel?: string | null;
   state?: 'idle' | 'active' | 'done' | 'error' | 'blocked';
   topology?: ThinkingTopologyNode[];
   // ── Nouvelles dimensions OMEGA v4 ──────────────────────────────
@@ -99,6 +102,9 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
   inline = false,
   provider,
   elapsedTime,
+  modeLabel,
+  searchLabel,
+  saveLabel,
   state,
   topology = [],
   xpTrace,
@@ -206,6 +212,24 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
   ).length;
   const errorSteps = steps.filter(s => s.status === 'error').length;
   const durationDisplay = elapsedTime !== undefined ? `${elapsedTime.toFixed(1)}s` : null;
+  const resolvedModeLabel = modeLabel?.trim()
+    ? modeLabel
+    : isThinking
+      ? 'Execution en cours'
+      : 'Mode runtime indisponible';
+  const resolvedSearchLabel = searchLabel?.trim()
+    ? searchLabel
+    : 'Aucune trace de recherche web capturee';
+  const resolvedSaveLabel = saveLabel?.trim()
+    ? saveLabel
+    : resolvedState === 'error'
+      ? 'Sauvegarde interrompue par erreur pipeline'
+      : 'Aucun statut de sauvegarde capture';
+  const systemPromptSourceCount = memoryTrace?.systemPromptSources?.length ?? 0;
+  const systemPromptSourcesLabel =
+    systemPromptSourceCount > 0
+      ? `${systemPromptSourceCount} source${systemPromptSourceCount > 1 ? 's' : ''} contexte injectee${systemPromptSourceCount > 1 ? 's' : ''}`
+      : 'Aucune source contexte capturee';
 
   // ── Mode compact ─────────────────────────────────────────────────────────
   if (!isExpanded) {
@@ -215,6 +239,16 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
           className={`thinking-panel-compact ${inline ? 'thinking-panel-inline' : ''}`}
           data-testid="reasoning-progress"
           data-state={resolvedState}
+          data-runtime-mode={resolvedModeLabel}
+          data-runtime-duration={durationDisplay ?? ''}
+          data-runtime-search={resolvedSearchLabel}
+          data-runtime-save={resolvedSaveLabel}
+          data-runtime-sources={systemPromptSourcesLabel}
+          data-runtime-quality={
+            qualityScore !== null && qualityScore !== undefined
+              ? `${(qualityScore * 100).toFixed(0)}%`
+              : ''
+          }
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
@@ -285,6 +319,16 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
         className={`thinking-panel oj-journal ${inline ? 'thinking-panel-inline' : ''}`}
         data-testid="reasoning-progress"
         data-state={resolvedState}
+        data-runtime-mode={resolvedModeLabel}
+        data-runtime-duration={durationDisplay ?? ''}
+        data-runtime-search={resolvedSearchLabel}
+        data-runtime-save={resolvedSaveLabel}
+        data-runtime-sources={systemPromptSourcesLabel}
+        data-runtime-quality={
+          qualityScore !== null && qualityScore !== undefined
+            ? `${(qualityScore * 100).toFixed(0)}%`
+            : ''
+        }
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -16 }}
@@ -448,19 +492,9 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
             <div className="oj-summary-row oj-summary-row--caption">
               <Globe size={11} className="oj-icon-muted" />
               <span className="oj-non-capture">
-                Recherche en ligne : non effectuée · Fichiers système :{' '}
-                <span
-                  className={
-                    memoryTrace?.systemPromptSources &&
-                    memoryTrace.systemPromptSources.length > 0
-                      ? ''
-                      : 'oj-non-capture'
-                  }
-                >
-                  {memoryTrace?.systemPromptSources &&
-                  memoryTrace.systemPromptSources.length > 0
-                    ? `${memoryTrace.systemPromptSources.length} sources injectées`
-                    : 'NON INSTRUMENTÉ'}
+                Recherche en ligne : {resolvedSearchLabel} · Sources contexte :{' '}
+                <span className={systemPromptSourceCount > 0 ? '' : 'oj-non-capture'}>
+                  {systemPromptSourcesLabel}
                 </span>{' '}
                 · Commandes IPC : conversation_generate (toujours)
               </span>
@@ -595,21 +629,15 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                 </div>
                 <div className="oj-runtime-item">
                   <span className="oj-runtime-label">Mode</span>
-                  <span className="oj-runtime-value">
-                    {isThinking ? (
-                      'Online (en cours)'
-                    ) : resolvedState === 'done' ? (
-                      'Online'
-                    ) : (
-                      <span className="oj-non-capture">Inconnu</span>
-                    )}
+                  <span className="oj-runtime-value" data-testid="reasoning-runtime-mode">
+                    {resolvedModeLabel}
                   </span>
                 </div>
                 <div className="oj-runtime-item">
                   <span className="oj-runtime-label">Durée</span>
-                  <span className="oj-runtime-value">
+                  <span className="oj-runtime-value" data-testid="reasoning-runtime-duration">
                     {durationDisplay ?? (
-                      <span className="oj-non-capture">NON CAPTURÉ</span>
+                      <span className="oj-non-capture">Aucune duree capturee</span>
                     )}
                   </span>
                 </div>
@@ -622,7 +650,7 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                 </div>
                 <div className="oj-runtime-item">
                   <span className="oj-runtime-label">XP gagné</span>
-                  <span className="oj-runtime-value">
+                  <span className="oj-runtime-value" data-testid="reasoning-runtime-xp">
                     {xpTrace ? (
                       <>
                         {xpTrace.lastGainDomain === 'chat' &&
@@ -640,17 +668,19 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                         )}
                       </>
                     ) : (
-                      <span className="oj-non-capture">NON DISPONIBLE</span>
+                      <span className="oj-non-capture">Aucun XP capture sur ce tour</span>
                     )}
                   </span>
                 </div>
                 <div className="oj-runtime-item">
                   <span className="oj-runtime-label">Score qualité</span>
-                  <span className="oj-runtime-value">
+                  <span className="oj-runtime-value" data-testid="reasoning-runtime-quality">
                     {qualityScore !== null && qualityScore !== undefined ? (
                       `${(qualityScore * 100).toFixed(0)}%`
                     ) : (
-                      <span className="oj-non-capture">NON INSTRUMENTÉ</span>
+                      <span className="oj-non-capture">
+                        Score qualite non evalue sur ce tour
+                      </span>
                     )}
                   </span>
                 </div>
@@ -754,7 +784,7 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                 </div>
               ) : (
                 <div className="oj-step-placeholder oj-non-capture">
-                  Données XP non disponibles pour ce tour
+                  Aucune donnee XP capturee pour ce tour
                 </div>
               )}
             </div>
@@ -771,46 +801,38 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                   <span className="oj-runtime-label">Mémoire injectée</span>
                   <span className="oj-runtime-value">
                     {memoryTrace?.injected ? (
-                      <span className="oj-icon-green">
-                        ✓ Oui — 3 niveaux (session, intermédiaire, long terme)
-                      </span>
+                      <span className="oj-icon-green">✓ Oui - contexte canonique lie</span>
                     ) : (
-                      <span className="oj-non-capture">Inconnu</span>
+                      <span className="oj-non-capture">
+                        Aucun contexte injecte detecte sur ce tour
+                      </span>
                     )}
                   </span>
                 </div>
                 <div className="oj-runtime-item">
                   <span className="oj-runtime-label">Message sauvegardé</span>
-                  <span className="oj-runtime-value">
-                    {memoryTrace?.savedAfter ? (
-                      <span className="oj-icon-green">✓ Oui — mémoire persistante</span>
-                    ) : resolvedState === 'error' ? (
-                      <span className="oj-icon-red">✗ Non (erreur pipeline)</span>
-                    ) : (
-                      <span className="oj-non-capture">Inconnu</span>
-                    )}
+                  <span
+                    className={`oj-runtime-value${
+                      memoryTrace?.savedAfter ? ' oj-icon-green' : ''
+                    }`}
+                    data-testid="reasoning-memory-save"
+                  >
+                    {memoryTrace?.savedAfter ? `✓ ${resolvedSaveLabel}` : resolvedSaveLabel}
                   </span>
                 </div>
                 <div className="oj-runtime-item">
                   <span className="oj-runtime-label">Recherche en ligne</span>
-                  <span className="oj-runtime-value oj-non-capture">
-                    Non effectuée — LLM local/IPC uniquement
+                  <span className="oj-runtime-value" data-testid="reasoning-memory-search">
+                    {resolvedSearchLabel}
                   </span>
                 </div>
                 <div className="oj-runtime-item">
-                  <span className="oj-runtime-label">Fichiers système</span>
+                  <span className="oj-runtime-label">Sources contexte</span>
                   <span
-                    className={`oj-runtime-value${
-                      memoryTrace?.systemPromptSources &&
-                      memoryTrace.systemPromptSources.length > 0
-                        ? ''
-                        : ' oj-non-capture'
-                    }`}
+                    className={`oj-runtime-value${systemPromptSourceCount > 0 ? '' : ' oj-non-capture'}`}
+                    data-testid="reasoning-memory-sources"
                   >
-                    {memoryTrace?.systemPromptSources &&
-                    memoryTrace.systemPromptSources.length > 0
-                      ? `${memoryTrace.systemPromptSources.length} sources mémoire injectées`
-                      : 'NON INSTRUMENTÉ'}
+                    {systemPromptSourcesLabel}
                   </span>
                 </div>
               </div>
@@ -819,7 +841,7 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                 memoryTrace.systemPromptSources.length > 0 && (
                   <div className="oj-sources-list">
                     <span className="oj-section-subtitle">
-                      Sources assemblées dans le systemPrompt :
+                      Sources runtime assemblees pour ce tour :
                     </span>
                     {memoryTrace.systemPromptSources.map((src, i) => (
                       <div key={i} className="oj-source-item">
@@ -830,8 +852,7 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                     <div className="oj-source-item oj-source-item--nc">
                       <span className="oj-non-capture">—</span>
                       <span className="oj-non-capture">
-                        Handlers IPC : conversation_generate · persistent_memory_get_stats
-                        · persistent_memory_get_context
+                        Handler IPC principal : conversation_generate
                       </span>
                     </div>
                   </div>

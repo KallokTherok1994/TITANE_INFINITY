@@ -90,14 +90,30 @@ export interface GeminiKeyStatus {
   was_updated: boolean;
 }
 
+export type OllamaEndpointKind =
+  | 'local_loopback'
+  | 'remote_cloudflare'
+  | 'custom_remote'
+  | 'not_checked';
+
+export type OllamaConfigSource = 'runtime_persisted' | 'env' | 'default' | 'not_checked';
+
+export type OllamaHealth = 'healthy' | 'degraded' | 'offline' | 'not_checked';
+
 /**
- * Status d'Ollama (local, pas de clé)
+ * Status d'Ollama (endpoint gouverné, pas de clé)
  */
 export interface OllamaStatus {
   provider_enabled: boolean;
   available: boolean;
   url: string;
+  model: string;
   models: string[];
+  endpoint_kind: OllamaEndpointKind;
+  endpoint_source: OllamaConfigSource;
+  model_source: OllamaConfigSource;
+  network_used: boolean;
+  health: OllamaHealth;
 }
 
 /**

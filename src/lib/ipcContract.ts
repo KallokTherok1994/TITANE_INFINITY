@@ -18,6 +18,8 @@ const ConversationGenerateArgsSchema = z.object({
   provider: z.string().nullable().optional(),
   systemPrompt: z.string().nullable().optional(),
   requestId: z.string().nullable().optional(),
+  maxTokens: z.number().int().positive().optional(),
+  temperature: z.number().finite().optional(),
   contextEnvelope: z.record(z.string(), z.unknown()).nullable().optional(),
 });
 

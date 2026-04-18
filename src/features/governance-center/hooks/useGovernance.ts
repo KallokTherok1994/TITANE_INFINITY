@@ -112,12 +112,17 @@ export function useGovernance() {
   }, []);
 
   const loadOllamaStatus = useCallback(async () => {
-    // ✅ v24.3.8: Ollama status checked with timeout + silent fallback
     const status: OllamaStatus = {
       provider_enabled: false,
       available: false,
-      url: '/api/ollama',
+      url: 'not_checked',
+      model: 'not_checked',
       models: [],
+      endpoint_kind: 'not_checked',
+      endpoint_source: 'not_checked',
+      model_source: 'not_checked',
+      network_used: false,
+      health: 'not_checked',
     };
 
     // Opt-in only: Ollama is an optional local service.
@@ -138,17 +143,31 @@ export function useGovernance() {
 
     try {
       const response = await governanceService.getOllamaStatus();
-      if (response.ok && response.data) {
-        status.provider_enabled = true;
-        status.available = Boolean(response.data.available);
-        status.models = response.data.models ?? [];
-      }
-    } catch {
-      // ✅ v24.3.8: Silent fallback - Ollama est optionnel
-    }
+      const mergedStatus: OllamaStatus = response.data
+        ? {
+            ...status,
+            ...response.data,
+            provider_enabled: Boolean(response.data.available),
+            models: response.data.models ?? [],
+          }
+        : status;
 
-    setState(prev => ({ ...prev, ollamaStatus: status }));
-    return { ok: true, data: status, error: null };
+      setState(prev => ({ ...prev, ollamaStatus: mergedStatus }));
+
+      if (response.ok && response.data) {
+        return { ok: true, data: mergedStatus, error: null };
+      }
+
+      return {
+        ok: false,
+        data: mergedStatus,
+        error: response.error || 'Impossible de récupérer le statut Ollama',
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Impossible de récupérer le statut Ollama';
+      setState(prev => ({ ...prev, ollamaStatus: status }));
+      return { ok: false, data: status, error: message };
+    }
   }, []);
 
   const setGeminiKey = useCallback(

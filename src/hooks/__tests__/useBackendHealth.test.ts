@@ -1,6 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useBackendHealth } from '../useBackendHealth';
+import { tauriClient } from '@/lib/tauriClient';
+import { DEFAULT_OLLAMA_MODEL, DEFAULT_OLLAMA_URL } from '@/config/ollamaDefaults';
 import { tauriChatProvider } from '@/services/ai/providers/tauriChat';
 import { ollamaProvider } from '@/services/ai/providers/ollama';
 
@@ -17,14 +19,32 @@ vi.mock('@/services/ai/providers/ollama', () => ({
   },
 }));
 
+vi.mock('@/lib/tauriClient', () => ({
+  tauriClient: {
+    aiCheckOllamaStatus: vi.fn(),
+  },
+}));
+
 describe('useBackendHealth Hook', () => {
   const getTauriMock = () => vi.mocked(tauriChatProvider);
   const getOllamaMock = () => vi.mocked(ollamaProvider);
+  const getTauriClientMock = () => vi.mocked(tauriClient);
 
   beforeEach(() => {
     vi.clearAllMocks();
     getTauriMock().isAvailable.mockResolvedValue(true);
     getOllamaMock().isAvailable.mockResolvedValue(true);
+    getTauriClientMock().aiCheckOllamaStatus.mockResolvedValue({
+      available: true,
+      url: DEFAULT_OLLAMA_URL,
+      model: DEFAULT_OLLAMA_MODEL,
+      endpoint_kind: 'local_loopback',
+      endpoint_source: 'default',
+      model_source: 'default',
+      network_used: false,
+      health: 'healthy',
+      models: ['gemma2:2b'],
+    });
   });
 
   afterEach(() => {
@@ -73,7 +93,7 @@ describe('useBackendHealth Hook', () => {
         expect(result.current.ollamaStatus).not.toBe('unknown');
       });
       expect(getTauriMock().isAvailable).toHaveBeenCalled();
-      expect(getOllamaMock().isAvailable).toHaveBeenCalled();
+      expect(getTauriClientMock().aiCheckOllamaStatus).toHaveBeenCalled();
     });
 
     it('should handle provider timeouts gracefully', async () => {
@@ -86,7 +106,17 @@ describe('useBackendHealth Hook', () => {
 
     it('should return unavailable when both providers down', async () => {
       getTauriMock().isAvailable.mockResolvedValueOnce(false);
-      getOllamaMock().isAvailable.mockResolvedValueOnce(false);
+      getTauriClientMock().aiCheckOllamaStatus.mockResolvedValueOnce({
+        available: false,
+        url: DEFAULT_OLLAMA_URL,
+        model: DEFAULT_OLLAMA_MODEL,
+        endpoint_kind: 'local_loopback',
+        endpoint_source: 'default',
+        model_source: 'default',
+        network_used: false,
+        health: 'offline',
+        models: [],
+      });
       const { result } = renderHook(() => useBackendHealth());
       await waitFor(() => {
         expect(result.current.allBackendsDown).toBe(true);
@@ -96,11 +126,45 @@ describe('useBackendHealth Hook', () => {
 
     it('should return available when at least one provider up', async () => {
       getTauriMock().isAvailable.mockResolvedValueOnce(true);
-      getOllamaMock().isAvailable.mockResolvedValueOnce(false);
+      getTauriClientMock().aiCheckOllamaStatus.mockResolvedValueOnce({
+        available: false,
+        url: DEFAULT_OLLAMA_URL,
+        model: DEFAULT_OLLAMA_MODEL,
+        endpoint_kind: 'local_loopback',
+        endpoint_source: 'default',
+        model_source: 'default',
+        network_used: false,
+        health: 'offline',
+        models: [],
+      });
       const { result } = renderHook(() => useBackendHealth());
       await waitFor(() => {
         expect(result.current.anyBackendAvailable).toBe(true);
       });
+    });
+
+    it('should expose remote ollama details from tauri runtime truth', async () => {
+      getTauriClientMock().aiCheckOllamaStatus.mockResolvedValueOnce({
+        available: true,
+        url: 'https://titane.example.com',
+        model: 'gemma2:2b',
+        endpoint_kind: 'remote_cloudflare',
+        endpoint_source: 'runtime_persisted',
+        model_source: 'runtime_persisted',
+        network_used: true,
+        health: 'healthy',
+        models: ['gemma2:2b'],
+      });
+
+      const { result } = renderHook(() => useBackendHealth());
+
+      await waitFor(() => {
+        expect(result.current.ollamaDetails.endpointKind).toBe('remote_cloudflare');
+      });
+
+      expect(result.current.ollamaDetails.url).toBe('https://titane.example.com');
+      expect(result.current.ollamaDetails.endpointSource).toBe('runtime_persisted');
+      expect(result.current.ollamaDetails.networkUsed).toBe(true);
     });
   });
 
@@ -119,6 +183,7 @@ describe('useBackendHealth Hook', () => {
       });
 
       expect(getTauriMock().isAvailable.mock.calls.length).toBeGreaterThanOrEqual(2);
+      expect(getTauriClientMock().aiCheckOllamaStatus.mock.calls.length).toBeGreaterThanOrEqual(2);
     });
 
     it('should have recheck function', () => {
@@ -144,7 +209,7 @@ describe('useBackendHealth Hook', () => {
 
       await waitFor(() => {
         expect(getTauriMock().isAvailable).toHaveBeenCalledTimes(1);
-        expect(getOllamaMock().isAvailable).toHaveBeenCalledTimes(1);
+        expect(getTauriClientMock().aiCheckOllamaStatus).toHaveBeenCalledTimes(1);
       });
     });
   });
@@ -152,7 +217,17 @@ describe('useBackendHealth Hook', () => {
   describe('Unavailable Reasons', () => {
     it('should track unavailable reasons', async () => {
       getTauriMock().isAvailable.mockResolvedValueOnce(false);
-      getOllamaMock().isAvailable.mockResolvedValueOnce(false);
+      getTauriClientMock().aiCheckOllamaStatus.mockResolvedValueOnce({
+        available: false,
+        url: 'https://titane.example.com',
+        model: 'gemma2:2b',
+        endpoint_kind: 'remote_cloudflare',
+        endpoint_source: 'runtime_persisted',
+        model_source: 'runtime_persisted',
+        network_used: true,
+        health: 'offline',
+        models: [],
+      });
       const { result } = renderHook(() => useBackendHealth());
       await waitFor(() => {
         expect(result.current.unavailableReason).toBeDefined();
@@ -163,6 +238,7 @@ describe('useBackendHealth Hook', () => {
       const validReasons = [
         'all-backends-down',
         'ollama-offline',
+        'ollama-remote-unavailable',
         'tauri-backend-down',
         'unknown-error',
       ];

@@ -26,9 +26,14 @@ import {
   healthCheck,
   getMemoryStats as _getMemoryStats,
 } from '@/services/conversationEngine';
+import {
+  awardExperience,
+  getExperienceState,
+} from '@/services/experienceService';
 import { useChatMemory } from './useChatMemory';
 import type { AIMessage } from '@/types';
 import { chatMemoryCompactor } from '@/services/chatMemoryCompactor';
+import { XPSource } from '@/types/experience';
 import type {
   Mode,
   ProviderClass,
@@ -36,6 +41,11 @@ import type {
   ReasonCode,
 } from '@/types/providerMeta';
 import type { Citation } from '@/types/research';
+import {
+  calculateQualityXPReward,
+  calculateTitaneResponseXP,
+  type ConversationContext as QualityConversationContext,
+} from '@/services/xp/messageQualityScorer';
 import {
   buildChatContextEnvelope,
   type ChatContextEnvelope,
@@ -197,20 +207,98 @@ export interface ConversationMessage {
     providerMeta?: ProviderDecisionMeta;
     providerUsed?: string;
     requestedProvider?: ConversationProviderPreference;
+    modelRequested?: string;
+    modelUsed?: string;
+    fallbackUsed?: boolean;
     citations?: Citation[];
-    contextBinding?: {
-      route: string;
-      pageState?: string;
-      fullRoute?: string;
-      moduleId: string;
-      moduleName: string;
-      sequence: number;
-      changeType: 'initial' | 'same-module' | 'module-switch';
-      staleGuard: 'steady' | 'resync';
-      generatedAt: number;
+    latencyMs?: number;
+    tokensUsed?: number;
+    memoryEffect?: string;
+    linksToContexts?: string[];
+    cognitiveSummary?: string;
+    omegaTraceMeta?: OmegaTraceMeta;
+    saveStatus?: ConversationSaveStatus;
+    systemPromptSources?: string[];
+    webSearchStatus?: ConversationWebSearchStatus;
+    xpTrace?: {
+      chatXP: number;
+      cognitiveXP: number;
+      totalXP: number;
+      level: number;
+      lastGainDomain?: string;
+      lastGainAmount?: number;
+      lastGainTimestamp?: number;
     };
+    qualityScore?: number;
+    qualityTier?: string;
+    xpAwarded?: number;
+    actionsPerformed?: Array<{
+      label: string;
+      status: 'done' | 'skipped' | 'error';
+    }>;
+    contextBinding?: ConversationContextBinding;
     singleDoorTags?: string[];
   };
+}
+
+export type ConversationSaveStatus = 'pending' | 'saved' | 'failed';
+export type ConversationWebSearchStatus = 'used' | 'unused';
+
+export interface ConversationContextBinding {
+  route: string;
+  pageState?: string;
+  fullRoute?: string;
+  moduleId: string;
+  moduleName: string;
+  sequence: number;
+  changeType: 'initial' | 'same-module' | 'module-switch';
+  staleGuard: 'steady' | 'resync';
+  generatedAt: number;
+}
+
+function buildSystemPromptSources(
+  contextBinding: ConversationContextBinding | undefined,
+  singleDoorTags: string[] | undefined,
+  linksToContexts: string[] | undefined
+): string[] {
+  const values = [
+    contextBinding?.route ? `route:${contextBinding.route}` : null,
+    contextBinding?.moduleId ? `module:${contextBinding.moduleId}` : null,
+    contextBinding?.moduleName ? `surface:${contextBinding.moduleName}` : null,
+    ...(singleDoorTags ?? []),
+    ...(linksToContexts ?? []),
+  ];
+
+  return Array.from(
+    new Set(
+      values.filter(
+        (value): value is string => typeof value === 'string' && value.trim().length > 0
+      )
+    )
+  ).slice(0, 10);
+}
+
+function buildActionsPerformed(
+  hasContextSources: boolean,
+  citationsCount: number
+): NonNullable<ConversationMessage['metadata']>['actionsPerformed'] {
+  return [
+    {
+      label: 'Pipeline OMEGA exécuté',
+      status: 'done',
+    },
+    {
+      label: hasContextSources ? 'Contexte canonique injecté' : 'Contexte canonique absent',
+      status: hasContextSources ? 'done' : 'skipped',
+    },
+    {
+      label:
+        citationsCount > 0
+          ? `${citationsCount} source${citationsCount > 1 ? 's' : ''} web inline`
+          : 'Recherche web inline non utilisée',
+      status: citationsCount > 0 ? 'done' : 'skipped',
+    },
+  ];
 }
 
 export interface UseConversationEngineOptions {
@@ -287,6 +375,28 @@ export function useConversationEngine(
     clearMode: clearPersistedMode = () => undefined,
     replaceMessages = () => undefined,
   } = useChatMemory({ mode: currentMode });
+
+  const patchMessageMetadata = useCallback(
+    (
+      messageId: string,
+      patch: Partial<NonNullable<ConversationMessage['metadata']>>
+    ) => {
+      setMessages(prev =>
+        prev.map(message =>
+          message.id === messageId
+            ? {
+                ...message,
+                metadata: {
+                  ...(message.metadata || {}),
+                  ...patch,
+                },
+              }
+            : message
+        )
+      );
+    },
+    []
+  );
 
   // ═══ LOAD MESSAGES FROM LOCALSTORAGE ON MOUNT ═══
   useEffect(() => {
@@ -545,6 +655,85 @@ Actions immédiates:
 - Ou démarre Ollama local si tu veux un mode local`
           : response.assistant_message;
 
+        const previousUserMessage = [...messages]
+          .reverse()
+          .find(message => message.role === 'user')?.content;
+        const previousAssistantResponse = [...messages]
+          .reverse()
+          .find(message => message.role === 'assistant')?.content;
+        const qualityContext: QualityConversationContext = {
+          messageCount: messages.length + 1,
+          recentTopics: [],
+          previousUserMessage,
+          previousAssistantResponse,
+        };
+        const qualityReward = calculateQualityXPReward(content, qualityContext);
+        const titaneResponseXP = calculateTitaneResponseXP(
+          assistantContent.length,
+          !noProviderPayload
+        );
+
+        let xpTrace: NonNullable<ConversationMessage['metadata']>['xpTrace'] | undefined;
+        try {
+          await awardExperience('chat', qualityReward.baseXP, XPSource.ChatMessage, {
+            messageLength: content.length,
+            provider:
+              response.metadata?.provider_used ?? response.meta?.provider_used ?? 'unknown',
+            mode: response.meta?.mode ?? currentMode,
+          });
+
+          if (qualityReward.qualityBonusXP > 0) {
+            await awardExperience(
+              'chat',
+              qualityReward.qualityBonusXP,
+              XPSource.ChatQualityBonus,
+              {
+                qualityTier: qualityReward.tier,
+                qualityScore: qualityReward.score.total,
+              }
+            );
+          }
+
+          await awardExperience(
+            'cognitive',
+            titaneResponseXP,
+            XPSource.ChatTitaneResponse,
+            {
+              responseLength: assistantContent.length,
+              provider:
+                response.metadata?.provider_used ?? response.meta?.provider_used ?? 'unknown',
+              titaneResponseXP: true,
+            }
+          );
+
+          const experienceState = getExperienceState();
+          xpTrace = {
+            chatXP: experienceState.domains.chat?.xp ?? 0,
+            cognitiveXP: experienceState.domains.cognitive?.xp ?? 0,
+            totalXP: experienceState.totalXp,
+            level: experienceState.level,
+            lastGainDomain: 'chat',
+            lastGainAmount: qualityReward.totalXP,
+            lastGainTimestamp: Date.now(),
+          };
+        } catch (xpError) {
+          logger.warn('[useConversationEngine] XP instrumentation warning', {
+            error:
+              xpError instanceof Error ? xpError.message : String(xpError ?? 'unknown'),
+          });
+        }
+
+        const systemPromptSources = buildSystemPromptSources(
+          contextBinding,
+          contextEnvelope?.memorySingleDoor.tags,
+          response.metadata?.links_to_contexts
+        );
+        const citationsCount = response.metadata?.citations?.length ?? 0;
+        const actionsPerformed = buildActionsPerformed(
+          systemPromptSources.length > 0,
+          citationsCount
+        );
+
         // Ajouter réponse assistant
         const assistantMessage: ConversationMessage = {
           id: response.message_id,
@@ -559,7 +748,24 @@ Actions immédiates:
             providerUsed:
               response.metadata?.provider_used ?? response.meta?.provider_used,
             requestedProvider,
+            modelRequested: response.metadata?.model_requested,
+            modelUsed: response.metadata?.model_used,
+            fallbackUsed: response.metadata?.fallback_used,
             citations: response.metadata?.citations,
+            latencyMs: response.metadata?.latency_ms,
+            tokensUsed: response.metadata?.tokens_used,
+            memoryEffect: response.metadata?.memory_effect,
+            linksToContexts: response.metadata?.links_to_contexts,
+            cognitiveSummary: response.cognitive_summary,
+            omegaTraceMeta: response.omega_trace_meta,
+            saveStatus: 'pending',
+            systemPromptSources,
+            webSearchStatus: citationsCount > 0 ? 'used' : 'unused',
+            xpTrace,
+            qualityScore: qualityReward.score.total / 100,
+            qualityTier: qualityReward.tier,
+            xpAwarded: qualityReward.totalXP,
+            actionsPerformed,
             contextBinding,
             singleDoorTags: contextEnvelope?.memorySingleDoor.tags,
           },
@@ -616,11 +822,16 @@ Actions immédiates:
           timestamp: assistantMessage.timestamp,
           metadata: assistantMessage.metadata || {},
         };
-        persistAssistantMessageInBackground(
-          saveMessage,
-          assistantAIMessage,
-          '[useConversationEngine] ⚠️ Failed to persist messages'
-        );
+        void (async () => {
+          try {
+            await saveMessage(assistantAIMessage);
+            chatMemoryCompactor.flushPendingSaves();
+            patchMessageMetadata(assistantMessage.id, { saveStatus: 'saved' });
+          } catch (persistError) {
+            logger.warn('[useConversationEngine] ⚠️ Failed to persist messages');
+            patchMessageMetadata(assistantMessage.id, { saveStatus: 'failed' });
+          }
+        })();
 
         setLastResponse(response);
 
@@ -676,6 +887,18 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
             ),
             providerUsed: options.providerPreference ?? 'fallback',
             requestedProvider: options.providerPreference ?? 'auto',
+            cognitiveSummary: 'Réponse fallback canonique après erreur de génération',
+            saveStatus: 'pending',
+            systemPromptSources: buildSystemPromptSources(
+              contextBinding,
+              contextEnvelope?.memorySingleDoor.tags,
+              undefined
+            ),
+            webSearchStatus: 'unused',
+            actionsPerformed: [
+              { label: 'Pipeline OMEGA exécuté', status: 'error' },
+              { label: 'Fallback d’erreur affiché', status: 'done' },
+            ],
             contextBinding,
             singleDoorTags: contextEnvelope?.memorySingleDoor.tags,
           },
@@ -689,11 +912,16 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
           timestamp: fallbackMessage.timestamp,
           metadata: fallbackMessage.metadata || {},
         };
-        persistAssistantMessageInBackground(
-          saveMessage,
-          assistantAIMessage,
-          '[useConversationEngine] ⚠️ Failed to persist fallback message'
-        );
+        void (async () => {
+          try {
+            await saveMessage(assistantAIMessage);
+            chatMemoryCompactor.flushPendingSaves();
+            patchMessageMetadata(fallbackMessage.id, { saveStatus: 'saved' });
+          } catch (persistError) {
+            logger.warn('[useConversationEngine] ⚠️ Failed to persist fallback message');
+            patchMessageMetadata(fallbackMessage.id, { saveStatus: 'failed' });
+          }
+        })();
 
         logger.error(
           '[ConversationEngine] Erreur finale:',
@@ -715,8 +943,10 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
       options.onError,
       options.onResponse,
       options.providerPreference,
+      patchMessageMetadata,
       saveMessage,
       toContextBinding,
+      messages,
     ]
   );
 
@@ -736,6 +966,9 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
           metadata?.providerUsed ?? metadata?.providerMeta?.provider_used ?? undefined,
         requestedProvider:
           metadata?.requestedProvider ?? options.providerPreference ?? undefined,
+        modelRequested: metadata?.modelRequested,
+        modelUsed: metadata?.modelUsed,
+        fallbackUsed: metadata?.fallbackUsed,
         contextBinding: metadata?.contextBinding ?? contextBinding,
         singleDoorTags:
           metadata?.singleDoorTags ?? contextEnvelope?.memorySingleDoor.tags,

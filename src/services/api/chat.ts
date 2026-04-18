@@ -17,6 +17,7 @@ import type { AIMessage } from '@/services/ai/types';
 import { createLogger } from '@/utils/logger';
 
 const logger = createLogger('ChatAPI');
+const DEFAULT_CHAT_OUTPUT_TOKENS = 32768;
 
 type MonitoringBridge = {
   trackRequest: () => void;
@@ -516,7 +517,7 @@ class ChatService {
           provider: config?.provider ?? 'auto',
           systemPrompt,
           requestId,
-          maxTokens: config?.maxTokens ?? undefined,
+          maxTokens: config?.maxTokens ?? DEFAULT_CHAT_OUTPUT_TOKENS,
           temperature: config?.temperature ?? undefined,
         },
       }) as Record<string, unknown>;

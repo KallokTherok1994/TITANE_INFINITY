@@ -518,6 +518,7 @@ import { TAURI_COMMANDS } from './core/commands/TAURI_COMMANDS';
 
 // Phase 3 (v19): UI Logger - Isolate frontend logs from backend
 import { logInfo } from './lib/UILogger';
+import { DEFAULT_OLLAMA_MODEL, DEFAULT_OLLAMA_URL } from './config/ollamaDefaults';
 
 // Initialize Singularity Engine
 // import { singularityEngine } from './core/engines/SINGULARITY_ENGINE'; // DÉSACTIVÉ pour debug
@@ -541,8 +542,8 @@ type RuntimeConfigPayload = {
 };
 
 const DEFAULT_RUNTIME_CONFIG: RuntimeConfigPayload = Object.freeze({
-  ollamaUrl: 'http://127.0.0.1:11434',
-  ollamaModel: 'gemma2:2b',
+  ollamaUrl: DEFAULT_OLLAMA_URL,
+  ollamaModel: DEFAULT_OLLAMA_MODEL,
   secretsMode: 'ephemeral',
   geminiConfigured: false,
   timestamp: Date.now(),

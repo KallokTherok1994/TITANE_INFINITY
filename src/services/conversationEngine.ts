@@ -36,7 +36,7 @@ import {
   canonicalDiscernmentKernel,
   type CanonicalDecision,
 } from '@/services/ai/canonicalDiscernmentKernel';
-import { memoryIntegration } from '@/services/ai/memoryIntegration';
+import { memoryIntegration, type MemoryContext } from '@/services/ai/memoryIntegration';
 import {
   buildDiscernmentDecision,
   type DiscernmentDecision,
@@ -70,6 +70,7 @@ import type { Citation } from '@/types/research';
 import { createLogger } from '@/utils/logger';
 
 const logger = createLogger('ConversationEngine');
+const MIN_CANONICAL_CHAT_OUTPUT_TOKENS = 32768;
 
 const E2E_CHAT_MOCK_FLAG = '__TITANE_E2E_CHAT_MOCK__';
 const E2E_CHAT_CONV_SEQ = '__TITANE_E2E_CHAT_CONV_SEQ__';
@@ -118,7 +119,8 @@ function formatRuntimeKnowledgeBlock(entries: KnowledgeEntry[]): string {
 
   const lines = entries.slice(0, 5).map(entry => {
     const summary = entry.content.replace(/\s+/g, ' ').trim().slice(0, 220);
-    const tags = Array.isArray(entry.tags) && entry.tags.length > 0 ? entry.tags.join(', ') : 'none';
+    const tags =
+      Array.isArray(entry.tags) && entry.tags.length > 0 ? entry.tags.join(', ') : 'none';
     return `- ${entry.title} [${entry.category}] tags=${tags} relevance=${entry.relevance.toFixed(2)} excerpt=${summary}`;
   });
 
@@ -222,11 +224,19 @@ function detectTaskType(
     return 'code';
   }
 
-  if (/(csv|tableau|dataset|metrics|métriques|statistiques|json|yaml|xml|rapport de données)/.test(normalized)) {
+  if (
+    /(csv|tableau|dataset|metrics|métriques|statistiques|json|yaml|xml|rapport de données)/.test(
+      normalized
+    )
+  ) {
     return 'data';
   }
 
-  if (/(étape|etape|plan|roadmap|checklist|d'abord|ensuite|puis|finally|step by step)/.test(normalized)) {
+  if (
+    /(étape|etape|plan|roadmap|checklist|d'abord|ensuite|puis|finally|step by step)/.test(
+      normalized
+    )
+  ) {
     return 'multi-step';
   }
 
@@ -240,7 +250,9 @@ function getGovernedToolLaneStatus(): GovernedToolLaneStatus {
     'memory_recall_semantic',
     'vector_store_search',
   ];
-  const availableCommands = governedCommands.filter(command => ALLOWED_COMMANDS.has(command));
+  const availableCommands = governedCommands.filter(command =>
+    ALLOWED_COMMANDS.has(command)
+  );
 
   let mcpHealth = 'UNKNOWN';
   try {
@@ -425,7 +437,9 @@ const normalizeE2EChatKnowledgeSeedEntry = (
         ? candidate.relevance
         : 0.5,
     tags: Array.isArray(candidate.tags)
-      ? candidate.tags.filter((tag): tag is string => typeof tag === 'string' && tag.length > 0)
+      ? candidate.tags.filter(
+          (tag): tag is string => typeof tag === 'string' && tag.length > 0
+        )
       : [],
   };
 };
@@ -481,12 +495,14 @@ const buildE2EMockAssistantMessage = (
 ): string => {
   const normalized = userMessage.toLowerCase();
   const lines = [`[MOCK_OK] ${userMessage}`];
+  const latestMemoryEntry =
+    memoryLog.length > 0 ? memoryLog[memoryLog.length - 1] : undefined;
 
   if (
-    memoryLog.length > 0 &&
+    latestMemoryEntry &&
     E2E_CHAT_MEMORY_TRIGGER_PATTERNS.some(pattern => normalized.includes(pattern))
   ) {
-    lines.push(`[MOCK_MEMORY] ${memoryLog[memoryLog.length - 1].userMessage}`);
+    lines.push(`[MOCK_MEMORY] ${latestMemoryEntry.userMessage}`);
   }
 
   if (
@@ -575,7 +591,11 @@ function buildE2EMockConversationResponse(
   }
 
   return {
-    assistant_message: buildE2EMockAssistantMessage(userMessage, knowledgeSeed, memoryLog),
+    assistant_message: buildE2EMockAssistantMessage(
+      userMessage,
+      knowledgeSeed,
+      memoryLog
+    ),
     conversation_id: conversationId,
     message_id: `e2e-${now}`,
     detected_intention: 'Question',
@@ -592,7 +612,9 @@ function buildE2EMockConversationResponse(
       latency_ms: 0,
       tokens_used: 0,
       memory_effect: 'New',
-      links_to_contexts: knowledgeSeed.slice(0, 2).map(entry => `knowledge:${entry.title}`),
+      links_to_contexts: knowledgeSeed
+        .slice(0, 2)
+        .map(entry => `knowledge:${entry.title}`),
     },
   };
 }
@@ -663,6 +685,9 @@ export interface ConversationMetadata {
   memory_effect: MemoryEffect;
   links_to_contexts: string[];
   citations?: Citation[];
+  model_requested?: string;
+  model_used?: string;
+  fallback_used?: boolean;
 }
 
 /** Trace metadata emitted by OMEGA_AUTO_ORCHESTRATION_CHAIN (Lock #1) */
@@ -734,7 +759,8 @@ function normalizeCitation(raw: unknown): Citation | null {
         ? candidate.locator.trim()
         : null,
     locator_text:
-      typeof candidate.locator_text === 'string' && candidate.locator_text.trim().length > 0
+      typeof candidate.locator_text === 'string' &&
+      candidate.locator_text.trim().length > 0
         ? candidate.locator_text.trim()
         : null,
     accessed_at,
@@ -897,7 +923,9 @@ function normalizeConversationMetadata(meta: unknown): ConversationMetadata {
     ? m.links_to_contexts.filter((v): v is string => typeof v === 'string')
     : [];
   const citations = Array.isArray(m.citations)
-    ? m.citations.map(normalizeCitation).filter((citation): citation is Citation => citation !== null)
+    ? m.citations
+        .map(normalizeCitation)
+        .filter((citation): citation is Citation => citation !== null)
     : [];
 
   return {
@@ -908,6 +936,24 @@ function normalizeConversationMetadata(meta: unknown): ConversationMetadata {
     memory_effect: isMemoryEffect(m.memory_effect) ? m.memory_effect : 'New',
     links_to_contexts: links,
     citations,
+    model_requested:
+      typeof m.model_requested === 'string'
+        ? m.model_requested
+        : typeof m.modelRequested === 'string'
+          ? m.modelRequested
+          : undefined,
+    model_used:
+      typeof m.model_used === 'string'
+        ? m.model_used
+        : typeof m.modelUsed === 'string'
+          ? m.modelUsed
+          : undefined,
+    fallback_used:
+      typeof m.fallback_used === 'boolean'
+        ? m.fallback_used
+        : typeof m.fallbackUsed === 'boolean'
+          ? m.fallbackUsed
+          : undefined,
   };
 }
 
@@ -1096,7 +1142,7 @@ export async function processMessage(
     ? formatContextEnvelopeForSystemPrompt(options.contextEnvelope)
     : '';
 
-  let kernelMemoryContext = {
+  let kernelMemoryContext: MemoryContext = {
     activeProjects: [],
     recentDecisions: [],
     relevantKnowledge: [],
@@ -1116,7 +1162,10 @@ export async function processMessage(
       timeWindow: '7d',
     });
   } catch (error) {
-    logger.warn('[conversationEngine] canonical kernel memory context unavailable', error);
+    logger.warn(
+      '[conversationEngine] canonical kernel memory context unavailable',
+      error
+    );
   }
 
   let providerHealthForKernel: Record<string, number> | undefined;
@@ -1154,12 +1203,11 @@ export async function processMessage(
     logger.warn('[conversationEngine] runtime knowledge unavailable', error);
   }
 
-  const runtimeKnowledgeStatusContext =
-    `## RUNTIME_KNOWLEDGE_STATUS\nstatus=${runtimeKnowledgeStatus}`;
+  const runtimeKnowledgeStatusContext = `## RUNTIME_KNOWLEDGE_STATUS\nstatus=${runtimeKnowledgeStatus}`;
 
   const activeSkillId = getActiveSkillId() ?? undefined;
   const activeSkillPrompt = activeSkillId
-    ? getSystemPromptForSkill(activeSkillId)?.trim() ?? ''
+    ? (getSystemPromptForSkill(activeSkillId)?.trim() ?? '')
     : '';
   const activeSkillStatus: 'active' | 'inactive' =
     activeSkillId && activeSkillPrompt.length > 0 ? 'active' : 'inactive';
@@ -1168,10 +1216,9 @@ export async function processMessage(
     activeSkillStatus === 'active'
       ? formatActiveSkillBlock(activeSkillName, activeSkillPrompt)
       : '';
-  const activeSkillStatusContext =
-    `## ACTIVE_SKILL_STATUS\nstatus=${activeSkillStatus}${
-      activeSkillId ? `\nskill_id=${activeSkillId}` : ''
-    }`;
+  const activeSkillStatusContext = `## ACTIVE_SKILL_STATUS\nstatus=${activeSkillStatus}${
+    activeSkillId ? `\nskill_id=${activeSkillId}` : ''
+  }`;
   const taskType = detectTaskType(userMessage);
   const availableSkills = activeSkillId
     ? [
@@ -1224,8 +1271,7 @@ export async function processMessage(
     logger.warn('[conversationEngine] default knowledge base unavailable', error);
   }
 
-  const defaultKnowledgeStatusContext =
-    `## DEFAULT_KNOWLEDGE_BASE_STATUS\nstatus=${defaultKnowledgeStatus}`;
+  const defaultKnowledgeStatusContext = `## DEFAULT_KNOWLEDGE_BASE_STATUS\nstatus=${defaultKnowledgeStatus}`;
 
   const deepAnalysisStatus: 'enabled' | 'disabled' =
     userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] ===
@@ -1233,19 +1279,20 @@ export async function processMessage(
       ? 'enabled'
       : 'disabled';
   const onlineCapabilityStatus: 'available' | 'offline' =
-    typeof navigator !== 'undefined' && navigator.onLine === false ? 'offline' : 'available';
+    typeof navigator !== 'undefined' && navigator.onLine === false
+      ? 'offline'
+      : 'available';
   const onlineCapabilityContext = formatOnlineCapabilityBlock({
     onlineCapabilityStatus,
     deepAnalysisStatus,
   });
-  const onlineCapabilityStatusContext =
-    `## ONLINE_CAPABILITY_STATUS\nstatus=${onlineCapabilityStatus}\ndeep_analysis=${deepAnalysisStatus}`;
+  const onlineCapabilityStatusContext = `## ONLINE_CAPABILITY_STATUS\nstatus=${onlineCapabilityStatus}\ndeep_analysis=${deepAnalysisStatus}`;
   const governedToolLaneStatus = getGovernedToolLaneStatus();
   const governedToolLaneContext = formatGovernedToolLaneBlock(governedToolLaneStatus);
-  const governedToolLaneStatusContext =
-    `## GOVERNED_TOOL_LANE_STATUS\nstatus=${governedToolLaneStatus.status}\nmcp_health=${governedToolLaneStatus.mcpHealth}`;
+  const governedToolLaneStatusContext = `## GOVERNED_TOOL_LANE_STATUS\nstatus=${governedToolLaneStatus.status}\nmcp_health=${governedToolLaneStatus.mcpHealth}`;
   const advancedAgentStatuses = getRuntimeAdvancedAgentStatuses();
-  const advancedAgentRuntimeContext = formatAdvancedAgentRuntimeBlock(advancedAgentStatuses);
+  const advancedAgentRuntimeContext =
+    formatAdvancedAgentRuntimeBlock(advancedAgentStatuses);
   const advancedAgentRuntimeStatusContext = `## ADVANCED_AGENT_RUNTIME_STATUS\nstatus=${
     advancedAgentStatuses.length > 0 ? 'available' : 'unavailable'
   }\ncount=${advancedAgentStatuses.length}`;
@@ -1363,6 +1410,10 @@ export async function processMessage(
   const classifierProfile = RESPONSE_PROFILES[canonicalDecision.profileId];
   const classifierTemperature = classifierProfile?.temperature ?? 0.7;
   const classifierMaxTokens = classifierProfile?.maxTokens;
+  const resolvedMaxTokens = Math.max(
+    canonicalDecision.provider.maxTokens ?? classifierMaxTokens ?? 0,
+    MIN_CANONICAL_CHAT_OUTPUT_TOKENS
+  );
   const backendConversationMode = canonicalDecision.mode as ConversationMode;
 
   const payload = {
@@ -1374,7 +1425,8 @@ export async function processMessage(
     requestId,
     classifierMeta: {
       canonical_mode:
-        canonicalDecision.modeClassification?.canonicalMode ?? modeClassification.canonicalMode,
+        canonicalDecision.modeClassification?.canonicalMode ??
+        modeClassification.canonicalMode,
       profile_id: canonicalDecision.profileId,
       effort_level: canonicalDecision.provider.reasoningEffort,
       model_class: modeClassification.modelClass,
@@ -1385,7 +1437,7 @@ export async function processMessage(
     },
     aiConfig: {
       temperature: canonicalDecision.provider.temperature ?? classifierTemperature,
-      max_tokens: canonicalDecision.provider.maxTokens ?? classifierMaxTokens,
+      max_tokens: resolvedMaxTokens,
       provider_preference: kernelProviderPreference,
     },
     ...(options?.contextEnvelope ? { contextEnvelope: options.contextEnvelope } : {}),
@@ -1670,13 +1722,16 @@ export async function processMessage(
 
   const traceRecord = raw?.trace;
   const traceCitations =
-    traceRecord && typeof traceRecord === 'object' && Array.isArray(traceRecord['citations'])
+    traceRecord &&
+    typeof traceRecord === 'object' &&
+    Array.isArray(traceRecord['citations'])
       ? traceRecord['citations']
       : [];
-  const metadataCitations = Array.isArray(metadata['citations']) ? metadata['citations'] : [];
-  const normalizedCitations = (metadataCitations.length > 0
-    ? metadataCitations
-    : traceCitations
+  const metadataCitations = Array.isArray(metadata['citations'])
+    ? metadata['citations']
+    : [];
+  const normalizedCitations = (
+    metadataCitations.length > 0 ? metadataCitations : traceCitations
   )
     .map(normalizeCitation)
     .filter((citation): citation is Citation => citation !== null);
@@ -1688,7 +1743,8 @@ export async function processMessage(
       (typeof raw?.provider === 'string' && raw.provider.trim().length > 0
         ? raw.provider
         : undefined) ??
-      (typeof providerMeta?.provider_used === 'string' && providerMeta.provider_used.trim().length > 0
+      (typeof providerMeta?.provider_used === 'string' &&
+      providerMeta.provider_used.trim().length > 0
         ? providerMeta.provider_used
         : undefined) ??
       (typeof metadata['provider_used'] === 'string'
@@ -1813,7 +1869,8 @@ export async function processMessage(
     discernment: discernmentDecision,
     omega_trace_meta: {
       canonical_mode:
-        canonicalDecision.modeClassification?.canonicalMode ?? modeClassification.canonicalMode,
+        canonicalDecision.modeClassification?.canonicalMode ??
+        modeClassification.canonicalMode,
       profile_id: canonicalDecision.profileId,
       effort_level: canonicalDecision.provider.reasoningEffort,
       model_class: modeClassification.modelClass,
@@ -1876,7 +1933,10 @@ export async function processMessage(
       },
     });
   } catch (error) {
-    logger.warn('[conversationEngine] failed to persist chat interaction in Memory Core', error);
+    logger.warn(
+      '[conversationEngine] failed to persist chat interaction in Memory Core',
+      error
+    );
   }
 
   return response;

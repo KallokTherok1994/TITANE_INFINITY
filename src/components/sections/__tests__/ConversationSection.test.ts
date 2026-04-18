@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  buildConversationJournalSaveLabel,
+  buildConversationJournalSearchLabel,
   buildConversationTransparencyReply,
   buildConversationLoadingLabel,
   getEffectiveViewportHeight,
@@ -48,6 +50,9 @@ describe('ConversationSection runtime provider label', () => {
         network_used: false,
         cache_hit: false,
       },
+      modelRequested: 'gemma2:2b',
+      modelUsed: 'llama3.2:latest',
+      fallbackUsed: true,
       tags: [],
       runtimeSignals: {
         orchestratorState: 'running',
@@ -56,6 +61,9 @@ describe('ConversationSection runtime provider label', () => {
     });
 
     expect(summary).toContain('Requested: Ollama');
+    expect(summary).toContain('Model requested: gemma2:2b');
+    expect(summary).toContain('Model used: llama3.2:latest');
+    expect(summary).toContain('Model fallback: true');
     expect(summary).toContain('Provider: Ollama (OMEGA+Singularity)');
   });
 
@@ -94,6 +102,9 @@ describe('ConversationSection runtime provider label', () => {
         policy: 'web_research_inline',
       },
       tags: ['memory:present'],
+      modelRequested: 'gemma2:2b',
+      modelUsed: 'llama3.2:latest',
+      fallbackUsed: true,
       runtimeSignals: {
         orchestratorState: 'running',
         memoryState: 'present',
@@ -103,6 +114,24 @@ describe('ConversationSection runtime provider label', () => {
     expect(badges).toContain('requested:Ollama');
     expect(badges).toContain('Ollama (OMEGA+Singularity)');
     expect(badges).toContain('policy:web_research_inline');
+    expect(badges).toContain('model-requested:gemma2:2b');
+    expect(badges).toContain('model-used:llama3.2:latest');
+    expect(badges).toContain('model-fallback:true');
+  });
+
+  it('publishes explicit journal labels for save and search states', () => {
+    expect(buildConversationJournalSaveLabel('saved')).toBe(
+      'Sauvegarde persistante validee'
+    );
+    expect(buildConversationJournalSaveLabel(undefined)).toBe(
+      'Aucun statut de sauvegarde capture'
+    );
+    expect(buildConversationJournalSearchLabel('used', 2, true)).toBe(
+      '2 sources inline capturees'
+    );
+    expect(buildConversationJournalSearchLabel('unused', 0, false)).toBe(
+      'Non utilisee sur ce tour'
+    );
   });
 
   it('retains only structurally valid inline citations for the active conversation surface', () => {
@@ -139,7 +168,10 @@ describe('ConversationSection runtime provider label', () => {
 
   it('derives the effective viewport height from innerHeight and visualViewport scale', () => {
     const originalVisualViewport = window.visualViewport;
-    const visualViewportDescriptor = Object.getOwnPropertyDescriptor(window, 'visualViewport');
+    const visualViewportDescriptor = Object.getOwnPropertyDescriptor(
+      window,
+      'visualViewport'
+    );
     const originalInnerHeight = window.innerHeight;
 
     Object.defineProperty(window, 'visualViewport', {
@@ -170,7 +202,10 @@ describe('ConversationSection runtime provider label', () => {
 
   it('clamps tiny effective heights to the minimum viewport threshold', () => {
     const originalVisualViewport = window.visualViewport;
-    const visualViewportDescriptor = Object.getOwnPropertyDescriptor(window, 'visualViewport');
+    const visualViewportDescriptor = Object.getOwnPropertyDescriptor(
+      window,
+      'visualViewport'
+    );
     const originalInnerHeight = window.innerHeight;
 
     Object.defineProperty(window, 'visualViewport', {
@@ -232,7 +267,10 @@ describe('ConversationSection runtime provider label', () => {
 
   it('falls back to visualViewport height when innerHeight is unavailable', () => {
     const originalVisualViewport = window.visualViewport;
-    const visualViewportDescriptor = Object.getOwnPropertyDescriptor(window, 'visualViewport');
+    const visualViewportDescriptor = Object.getOwnPropertyDescriptor(
+      window,
+      'visualViewport'
+    );
     const originalInnerHeight = window.innerHeight;
 
     Object.defineProperty(window, 'visualViewport', {

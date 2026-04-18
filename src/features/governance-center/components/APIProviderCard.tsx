@@ -86,11 +86,44 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
     return s !== null && 'configured' in s;
   };
 
+  const isOllamaStatus = (s: typeof status): s is OllamaStatus => {
+    return s !== null && 'available' in s && 'url' in s && 'models' in s;
+  };
+
+  const ollamaStatus = provider === 'ollama' && isOllamaStatus(status) ? status : null;
+
+  const ollamaEndpointLabel = (() => {
+    switch (ollamaStatus?.endpoint_kind) {
+      case 'local_loopback':
+        return 'local loopback';
+      case 'remote_cloudflare':
+        return 'distant HTTPS';
+      case 'custom_remote':
+        return 'distant personnalisé';
+      default:
+        return 'non vérifié';
+    }
+  })();
+
+  const ollamaSourceLabel = (() => {
+    switch (ollamaStatus?.endpoint_source) {
+      case 'runtime_persisted':
+        return 'config runtime persistée';
+      case 'env':
+        return 'variables d’environnement';
+      case 'default':
+        return 'valeur par défaut';
+      default:
+        return 'non vérifiée';
+    }
+  })();
+
   const isConfigured = isGeminiStatus(status) ? status.configured : false;
-  const isEnabled = status?.provider_enabled || false;
+  const isEnabled = provider === 'ollama' ? Boolean(ollamaStatus?.available) : status?.provider_enabled || false;
 
   return (
     <div
+      data-testid={`provider-card-${provider}`}
       className={`relative overflow-hidden rounded-xl border-2 bg-gray-900/50 backdrop-blur-sm transition-all duration-300 ${
         isEnabled
           ? `border-${config.color}-500/50 shadow-lg shadow-${config.color}-500/20`
@@ -140,6 +173,7 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
           /* Ollama - No API key needed */
           <div className="space-y-3">
             <div
+              data-testid="ollama-provider-runtime-summary"
               className={`rounded-lg border p-3 ${
                 isEnabled
                   ? 'border-amber-500/30 bg-amber-500/10'
@@ -148,15 +182,43 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
             >
               <p className="text-sm text-gray-300">
                 {isEnabled ? (
-                  <>✅ Ollama est opérationnel via la passerelle locale Tauri</>
+                  <>✅ Ollama est joignable via un endpoint {ollamaEndpointLabel}</>
                 ) : (
                   <>
-                    ⚠️ Ollama n&apos;est pas détecté. Assurez-vous qu&apos;il est installé
-                    et lancé.
+                    ⚠️ Ollama n&apos;est pas joignable sur {ollamaStatus?.url || 'un endpoint non vérifié'}.
                   </>
                 )}
               </p>
             </div>
+
+            <div className="grid gap-2 rounded-lg border border-gray-700/50 bg-gray-800/30 p-3 text-xs text-gray-300 sm:grid-cols-2">
+              <div data-testid="ollama-provider-url">
+                <span className="font-semibold text-white">Endpoint:</span> {ollamaStatus?.url || 'non vérifié'}
+              </div>
+              <div data-testid="ollama-provider-model">
+                <span className="font-semibold text-white">Modèle:</span> {ollamaStatus?.model || 'non vérifié'}
+              </div>
+              <div data-testid="ollama-provider-endpoint-kind">
+                <span className="font-semibold text-white">Type:</span> {ollamaEndpointLabel}
+              </div>
+              <div data-testid="ollama-provider-endpoint-source">
+                <span className="font-semibold text-white">Source:</span> {ollamaSourceLabel}
+              </div>
+              <div data-testid="ollama-provider-health">
+                <span className="font-semibold text-white">Santé:</span> {ollamaStatus?.health || 'non vérifiée'}
+              </div>
+              <div data-testid="ollama-provider-network-used">
+                <span className="font-semibold text-white">Réseau:</span>{' '}
+                {ollamaStatus?.network_used ? 'oui' : 'non'}
+              </div>
+            </div>
+
+            {Boolean(ollamaStatus?.models?.length) && (
+              <div data-testid="ollama-provider-model-list" className="rounded-lg border border-gray-700/50 bg-gray-800/20 p-3 text-xs text-gray-300">
+                <span className="font-semibold text-white">Modèles détectés:</span>{' '}
+                {ollamaStatus?.models.join(', ')}
+              </div>
+            )}
 
             {!isEnabled && (
               <div className="space-y-2">
