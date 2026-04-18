@@ -3,6 +3,9 @@
 > 2026-04-18 — Conversation metadata continuity alignment: src-tauri/src/conversation_engine/commands.rs et src/services/conversationEngine.ts partagent maintenant la même vérité de metadata conversation pour provider_used et citations. Le backend sérialise explicitement ces champs dans metadata, la couche frontend sait encore retomber honnêtement sur meta.provider_used et trace.citations pendant une phase transitoire, et src/hooks/useConversationEngine.ts les persiste ensuite sur la surface UI active sans reformulation silencieuse.
 
 
+> 2026-04-18 — Telemetry CSV timestamp truth: `src-tauri/src/api/telemetry_api.rs` traite maintenant `parse_csv_line` comme une surface de donnees qui exige un timestamp non vide, et non comme un parseur permissif de colonnes minimales. Les lignes CSV avec colonne `timestamp` vide ou blanche sont rejetees avant toute construction de `ProductionHealthSample`, ce qui garde `parse_and_summarize` aligne sur une verite de telemetry horodatee.
+
+
 > 2026-04-18 — Unified memory tier list-order truth: `src-tauri/src/unified_memory_v2/persistence.rs` traite maintenant `MemoryPersistence::list_tier` comme une surface backend deterministe et non comme un simple reflet de l ordre natif de `read_dir`. Les ids `.json` retournes sont tries avant reponse, ce qui garde `load_tier` et `clear_tier` alignes sur le contenu logique du tier plutot que sur l ordre variable du filesystem.
 
 

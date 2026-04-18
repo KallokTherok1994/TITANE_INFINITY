@@ -166,7 +166,11 @@ fn parse_csv_line(line: &str) -> Result<ProductionHealthSample, String> {
         ));
     }
 
-    let timestamp = parts[0].trim().to_string();
+    let timestamp = parts[0].trim();
+    if timestamp.is_empty() {
+        return Err("PARSER_ERROR: colonne timestamp (index 0) vide".to_string());
+    }
+    let timestamp = timestamp.to_string();
     let rss_initial_mb = parts[1].trim().parse::<f64>().map_err(|e| {
         format!(
             "PARSER_ERROR: colonne rss_initial_mb (index 1) non numérique '{}': {}",
@@ -271,6 +275,20 @@ mod tests {
         let line = " 2026-01-01T00:00:00Z , 180.0 , 192.0 ";
         let sample = parse_csv_line(line).expect("should trim whitespace");
         assert!((sample.rss_initial_mb - 180.0).abs() < 0.01);
+    }
+
+    #[test]
+    fn test_parse_empty_timestamp_returns_parser_error() {
+        let err = parse_csv_line(",180.0,192.0").unwrap_err();
+        assert!(err.starts_with("PARSER_ERROR"));
+        assert!(err.contains("timestamp"));
+    }
+
+    #[test]
+    fn test_parse_whitespace_timestamp_returns_parser_error() {
+        let err = parse_csv_line("   ,180.0,192.0").unwrap_err();
+        assert!(err.starts_with("PARSER_ERROR"));
+        assert!(err.contains("timestamp"));
     }
 
     // ─── parse_and_summarize ──────────────────────────────────────────────
