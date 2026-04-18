@@ -159,6 +159,8 @@ impl IoService {
             files.push(entry.path());
         }
 
+        files.sort();
+
         Ok(files)
     }
 }
@@ -225,5 +227,25 @@ mod tests {
 
         assert!(matches!(err, AppError::Validation(_)));
         assert!(err.to_string().contains("outside allowed directory"));
+    }
+
+    #[tokio::test]
+    async fn list_dir_returns_sorted_paths() {
+        let dir = tempdir().expect("temp dir");
+        std::fs::write(dir.path().join("zeta.txt"), "zeta").expect("write zeta");
+        std::fs::write(dir.path().join("alpha.txt"), "alpha").expect("write alpha");
+
+        let service = IoService::new(dir.path().to_path_buf());
+        let files = service
+            .list_dir(Path::new("."))
+            .await
+            .expect("list dir should succeed");
+
+        let expected = vec![
+            dir.path().join("alpha.txt").canonicalize().expect("alpha canonical"),
+            dir.path().join("zeta.txt").canonicalize().expect("zeta canonical"),
+        ];
+
+        assert_eq!(files, expected);
     }
 }

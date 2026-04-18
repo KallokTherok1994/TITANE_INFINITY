@@ -1,5 +1,7 @@
 # Unreleased
 
+- Fixed: stabilise `services::io_service::IoService::list_dir` en triant les chemins retournes, ce qui rend les lectures de repertoire backend deterministes pour un meme contenu au lieu de dependre de l ordre variable de `read_dir`.
+
 - Fixed: stabilise `security::sandbox::FileImportSandbox::list_files` en triant lexicographiquement les noms retournes, ce qui rend `secure_list_files` deterministe pour un meme contenu de sandbox au lieu de dependre de l ordre variable de `read_dir`.
 
 - Fixed: durcit `security::sandbox::FileImportSandbox::list_files` pour retourner une liste vide quand le dossier sandbox n existe pas encore, ce qui rend `secure_list_files` stable avant tout premier import ou prechauffage explicite du repertoire.
