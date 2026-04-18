@@ -1,5 +1,18 @@
 # RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.0.2 — Historical baseline preserved below)
 
+## Addendum — 2026-04-18 — TITANE∞ v31.0.2 Windows MSI Release Truth
+
+Canonical target version: **31.0.2**
+
+| Surface | Truth | Status |
+|---|---|---|
+| `GitHub Actions run 24615984266` | Windows MSI fallback lane completed on `e370ff71068b4786c7e77b92dee6e9f64d957313` | PASS |
+| `GitHub release v31.0.2` | Published | PASS |
+| `TITANE.Infinity_31.0.2_x64_en-US.msi` | Uploaded to release | PASS |
+| `SHA256SUMS.txt` | Uploaded to release | PASS |
+
+> This addendum seals the Windows remote MSI publication truth for 31.0.2. Android build/install proof remains outside the current PASS scope and is still required before BUILD ALL can be sealed.
+
 ## Addendum — 2026-04-18 — TITANE∞ v31.0.2 Desktop Publication Truth
 
 Canonical target version: **31.0.2**
