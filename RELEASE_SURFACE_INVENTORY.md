@@ -1,4 +1,40 @@
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.0.1 — Historical baseline preserved below)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.0.2 — Historical baseline preserved below)
+
+## Addendum — 2026-04-18 — TITANE∞ v31.0.2 Desktop Publication Truth
+
+Canonical target version: **31.0.2**
+
+| Surface | Truth | Status |
+|---|---|---|
+| `src-tauri/target/release/bundle/appimage/TITANE Infinity_31.0.2_amd64.AppImage` | Built locally | PASS |
+| `src-tauri/target/release/bundle/deb/TITANE Infinity_31.0.2_amd64.deb` | Built locally | PASS |
+| `src-tauri/target/release/bundle/rpm/TITANE Infinity-31.0.2-1.x86_64.rpm` | Built locally | PASS |
+| `deployment/latest/MANIFEST.json` | Published to 31.0.2 desktop truth | PASS |
+| `deployment/latest/SHA256SUMS.txt` | Published to 31.0.2 desktop truth | PASS |
+| `deployment/latest/SIZES.txt` | Published to 31.0.2 desktop truth | PASS |
+| `/usr/bin/titane-infinity` | Synchronized with local 31.0.2 build | PASS |
+| `~/.local/share/applications/titane-infinity.desktop` | `Name=TITANE∞ v31.0.2` | PASS |
+| `/usr/share/applications/titane-infinity.desktop` | `Name=TITANE∞ v31.0.2` | PASS |
+
+> This addendum seals the Linux desktop publication truth for 31.0.2 only. Android build/install proof and Windows MSI proof are not claimed by this addendum and remain outside the current desktop-only PASS scope.
+
+## Addendum — 2026-04-18 — TITANE∞ v31.0.2 Source Version Surface Sync
+
+Canonical target version: **31.0.2**
+
+| File / Surface | Version | Status |
+|---|---|---|
+| `package.json` | `31.0.2` | UPDATED_TO_31_0_2 |
+| `src-tauri/Cargo.toml` | `31.0.2` | UPDATED_TO_31_0_2 |
+| `src-tauri/Cargo.lock` | `31.0.2` | UPDATED_TO_31_0_2 |
+| `src-tauri/tauri.conf.json` | `31.0.2` | UPDATED_TO_31_0_2 |
+| `src-tauri/tauri.base.json` | `31.0.2` | UPDATED_TO_31_0_2 |
+| `tauri.base.json` | `31.0.2` | UPDATED_TO_31_0_2 |
+| `runtime/stable/tauri.conf.json` | `31.0.2` | UPDATED_TO_31_0_2 |
+| `runtime/stable/manifest.json` | `31.0.2` | UPDATED_TO_31_0_2 |
+| `RELEASE_SURFACE_INVENTORY.md` | `31.0.2` | UPDATED_TO_31_0_2 |
+
+> This addendum records the governed Rule 13 patch bump and source-surface sync to 31.0.2. No packaged artifact, deployment/latest publication, launcher sync, or installed-host truth is claimed until the current BUILD ALL execution produces executable proof.
 
 ## Addendum — 2026-04-18 — TITANE∞ v31.0.1 Source Version Surface Sync
 
