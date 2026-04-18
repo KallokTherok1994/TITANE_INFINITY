@@ -1,0 +1,21 @@
+# ORCHESTRATOR_MULTI_SESSION_BREAKDOWN_2026-04-17
+
+- Date: 2026-04-17
+- Scope: orchestrator multi-session comparison + champion/challenger provider breakdown
+- Symptom: the orchestrator dashboard exposed live metrics and a bounded local timeline, but still had no session-to-session comparison and no provider-level view of the existing champion/challenger registry
+- Root cause: the service only persisted per-tab timeline points and did not project registry data into a dashboard-readable provider breakdown
+- Fix: persist bounded local session snapshots, expose `orchestrator-dashboard-multi-session-compare`, derive `orchestrator-dashboard-champion-breakdown` from the canonical registry, and align unit/E2E proof plus mapping docs
+- Proof commands:
+  - `runTests src/services/__tests__/advancedAgentCatalog.test.tsx`
+  - `pnpm exec playwright test e2e/agents/orchestrator-dashboard.e2e.ts --project=chromium --reporter=line`
+  - `bash scripts/verify/verify-advanced-agents.sh`
+  - `bash scripts/autoheal/detect_recurrence.sh`
+  - `bash scripts/verify_instructions.sh`
+- Results:
+  - `runTests src/services/__tests__/advancedAgentCatalog.test.tsx` => PASS (34 passed, 0 failed)
+  - `pnpm exec playwright test e2e/agents/orchestrator-dashboard.e2e.ts --project=chromium --reporter=line` => PASS (1 passed)
+  - `bash scripts/verify/verify-advanced-agents.sh` => PASS (`FAIL=0`)
+  - `bash scripts/autoheal/detect_recurrence.sh` => PASS (`entries=1119`)
+  - `bash scripts/verify_instructions.sh` => PASS (`SUMMARY: PASS=32 FAIL=0`)
+- Rollback: `git restore -- src/services/orchestrator/index.ts src/services/__tests__/advancedAgentCatalog.test.tsx e2e/agents/orchestrator-dashboard.e2e.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl reports/ORCHESTRATOR_MULTI_SESSION_BREAKDOWN_2026-04-17.md proof_packs/ORCHESTRATOR_MULTI_SESSION_BREAKDOWN_2026-04-17/GATE_REPORT.md proof_packs/ORCHESTRATOR_MULTI_SESSION_BREAKDOWN_2026-04-17/VERDICT.md proof_packs/ORCHESTRATOR_MULTI_SESSION_BREAKDOWN_2026-04-17/ROLLBACK.md scripts/autoheal/autoheal_rules.jsonl`
+- Verdict: PASS

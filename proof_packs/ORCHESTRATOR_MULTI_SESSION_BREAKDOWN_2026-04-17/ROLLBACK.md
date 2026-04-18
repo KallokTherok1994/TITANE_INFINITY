@@ -1,0 +1,3 @@
+# ROLLBACK
+
+`git restore -- src/services/orchestrator/index.ts src/services/__tests__/advancedAgentCatalog.test.tsx e2e/agents/orchestrator-dashboard.e2e.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl reports/ORCHESTRATOR_MULTI_SESSION_BREAKDOWN_2026-04-17.md proof_packs/ORCHESTRATOR_MULTI_SESSION_BREAKDOWN_2026-04-17/GATE_REPORT.md proof_packs/ORCHESTRATOR_MULTI_SESSION_BREAKDOWN_2026-04-17/VERDICT.md proof_packs/ORCHESTRATOR_MULTI_SESSION_BREAKDOWN_2026-04-17/ROLLBACK.md scripts/autoheal/autoheal_rules.jsonl`

@@ -7,7 +7,10 @@ import { autoHealEngine } from '@/services/ai/autoHealEngine';
 import { getGovernanceConnector } from '@/services/governance/GovernanceConnector';
 
 const ORCHESTRATOR_TIMELINE_KEY = 'titane_orchestrator_runtime_history';
+const ORCHESTRATOR_SESSION_SNAPSHOTS_KEY = 'titane_orchestrator_session_snapshots';
+const ORCHESTRATOR_SESSION_ID_KEY = 'titane_orchestrator_session_id';
 const ORCHESTRATOR_TIMELINE_LIMIT = 8;
+const ORCHESTRATOR_SESSION_LIMIT = 6;
 const ORCHESTRATOR_REFRESH_INTERVAL_MS = 15000;
 
 interface OrchestratorTimelinePoint {
@@ -17,6 +20,11 @@ interface OrchestratorTimelinePoint {
   healthyProviders: number;
   providerCount: number;
   totalFallbacks: number;
+}
+
+interface OrchestratorSessionSnapshot extends OrchestratorTimelinePoint {
+  sessionId: string;
+  topProvider: string;
 }
 
 function formatClock(timestamp: number): string {
@@ -47,6 +55,114 @@ function loadOrchestratorTimeline(): OrchestratorTimelinePoint[] {
   } catch {
     return [];
   }
+}
+
+function getOrchestratorSessionId(): string {
+  if (typeof window === 'undefined') {
+    return 'server';
+  }
+
+  const storage = window.sessionStorage;
+  const existing = storage.getItem(ORCHESTRATOR_SESSION_ID_KEY);
+  if (existing) {
+    return existing;
+  }
+
+  const sessionId =
+    typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+      ? crypto.randomUUID()
+      : `orchestrator-${Date.now()}`;
+  storage.setItem(ORCHESTRATOR_SESSION_ID_KEY, sessionId);
+  return sessionId;
+}
+
+function loadOrchestratorSessionSnapshots(): OrchestratorSessionSnapshot[] {
+  if (typeof window === 'undefined') {
+    return [];
+  }
+
+  try {
+    const raw = window.localStorage.getItem(ORCHESTRATOR_SESSION_SNAPSHOTS_KEY);
+    if (!raw) {
+      return [];
+    }
+
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+
+    return parsed.filter(
+      point => point && typeof point.timestamp === 'number' && typeof point.sessionId === 'string'
+    );
+  } catch {
+    return [];
+  }
+}
+
+function saveOrchestratorSessionSnapshots(history: OrchestratorSessionSnapshot[]): void {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  window.localStorage.setItem(
+    ORCHESTRATOR_SESSION_SNAPSHOTS_KEY,
+    JSON.stringify(history)
+  );
+}
+
+function updateOrchestratorSessionSnapshots(
+  snapshot: OrchestratorSessionSnapshot
+): OrchestratorSessionSnapshot[] {
+  const now = Date.now();
+  const oneDayAgo = now - 24 * 60 * 60 * 1000;
+  const history = loadOrchestratorSessionSnapshots().filter(entry => entry.timestamp >= oneDayAgo);
+  const bySession = new Map(history.map(entry => [entry.sessionId, entry]));
+  bySession.set(snapshot.sessionId, snapshot);
+
+  const nextHistory = Array.from(bySession.values())
+    .sort((left, right) => right.timestamp - left.timestamp)
+    .slice(0, ORCHESTRATOR_SESSION_LIMIT);
+
+  saveOrchestratorSessionSnapshots(nextHistory);
+  return nextHistory;
+}
+
+function buildChampionBreakdown(
+  registry: ReturnType<typeof loadRegistry>
+): Array<{ id: string; label: string }> {
+  const providerModes = new Map<string, number>();
+  const challengerProviders = new Map<string, number>();
+
+  Object.values(registry.champions).forEach(champion => {
+    providerModes.set(champion.provider, (providerModes.get(champion.provider) ?? 0) + 1);
+  });
+
+  Object.values(registry.challengers)
+    .flat()
+    .forEach(challenger => {
+      challengerProviders.set(
+        challenger.provider,
+        (challengerProviders.get(challenger.provider) ?? 0) + 1
+      );
+    });
+
+  return Array.from(providerModes.entries())
+    .sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]))
+    .map(([provider, championCount]) => ({
+      id: `champion-breakdown-${provider}`,
+      label: `${provider}: champion=${championCount} modes · challengers=${challengerProviders.get(provider) ?? 0}`,
+    }));
+}
+
+export function resetOrchestratorSessionSnapshotsForTests(): void {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  window.localStorage.removeItem(ORCHESTRATOR_SESSION_SNAPSHOTS_KEY);
+  window.localStorage.removeItem(ORCHESTRATOR_TIMELINE_KEY);
+  window.sessionStorage.removeItem(ORCHESTRATOR_SESSION_ID_KEY);
 }
 
 function saveOrchestratorTimeline(history: OrchestratorTimelinePoint[]): void {
@@ -119,22 +235,29 @@ export function getOrchestratorAgentStatus() {
   const topProviderLoads = [...metrics.providers]
     .sort((left, right) => right.totalRequests - left.totalRequests)
     .slice(0, 3);
+  const sessionSnapshots = updateOrchestratorSessionSnapshots({
+    ...currentSnapshot,
+    sessionId: getOrchestratorSessionId(),
+    topProvider: topProviderLoads[0]?.provider ?? 'none',
+  });
+  const championBreakdown = buildChampionBreakdown(registry);
 
   return {
     ...base,
     readiness: 'partial',
     readinessLabel: 'PARTIAL',
-    serviceState: `${activeProviders.length} providers actifs · ${healthyProviders}/${providerSnapshots.length} snapshots healthy · ${metrics.totalRequests} requetes tracees`,
+    serviceState: `${activeProviders.length} providers actifs · ${healthyProviders}/${providerSnapshots.length} snapshots healthy · ${metrics.totalRequests} requetes tracees · ${sessionSnapshots.length} sessions locales`,
     evidence: [
       `Runtime: providers actifs ${activeProviders.join(', ')}.`,
       `Runtime: timeout Ollama ${PROVIDER_TIMEOUTS.ollama / 1000}s · tauri-backend ${PROVIDER_TIMEOUTS['tauri-backend'] / 1000}s.`,
       `Runtime: charge ${metrics.totalRequests} req · succes ${metrics.successRate.toFixed(1)}% · latence moyenne ${Math.round(metrics.avgResponseTime)} ms.`,
       `Runtime: refresh borne ${Math.round(ORCHESTRATOR_REFRESH_INTERVAL_MS / 1000)}s sur la serie temporelle locale du dashboard.`,
+      `Runtime: federation locale ${sessionSnapshots.length}/${ORCHESTRATOR_SESSION_LIMIT} sessions comparees sans export backend partage.`,
       `Registre: ${localChampionCount}/${Object.keys(registry.champions).length} modes canoniques restent routes vers un champion Ollama local avec challengers cloud bornes.`,
       ...base.evidence,
     ],
     blockers: [
-      'La serie temporelle reste locale et bornee au dashboard: aucun stream multi-session ni export compare n est encore publie.',
+      'La comparaison multi-session et la ventilation champion/challenger restent locales au navigateur: aucun export compare ni federation backend n est encore publie.',
     ],
     nextStep:
       'Etendre la serie temporelle a des comparaisons multi-session et a une ventilation champion/challenger par provider.',
@@ -183,6 +306,27 @@ export function getOrchestratorAgentStatus() {
           id: `timeline-${point.timestamp}`,
           label: `${formatClock(point.timestamp)} · req=${point.totalRequests} · success=${point.successRate.toFixed(1)}% · healthy=${point.healthyProviders}/${point.providerCount} · fallback=${point.totalFallbacks}`,
         })),
+      },
+      {
+        key: 'multi-session-compare',
+        title: 'Comparaison multi-session locale',
+        items: sessionSnapshots.map(snapshot => ({
+          id: `multi-session-${snapshot.sessionId}`,
+          label: `${snapshot.sessionId}: ${formatClock(snapshot.timestamp)} · req=${snapshot.totalRequests} · success=${snapshot.successRate.toFixed(1)}% · healthy=${snapshot.healthyProviders}/${snapshot.providerCount} · topProvider=${snapshot.topProvider}`,
+        })),
+      },
+      {
+        key: 'champion-breakdown',
+        title: 'Ventilation champion/challenger',
+        items:
+          championBreakdown.length > 0
+            ? championBreakdown
+            : [
+                {
+                  id: 'champion-breakdown-empty',
+                  label: 'Aucune ventilation champion/challenger exploitable n est encore disponible.',
+                },
+              ],
       },
     ],
   };

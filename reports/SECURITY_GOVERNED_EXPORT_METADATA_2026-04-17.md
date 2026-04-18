@@ -1,0 +1,21 @@
+# SECURITY_GOVERNED_EXPORT_METADATA_2026-04-17
+
+- Date: 2026-04-17
+- Scope: security governed export metadata on the canonical advanced-agent dashboard
+- Symptom: the Security dashboard already exposed a governed export JSON blob, but not the signed export metadata as stable selectors usable for UI audit and E2E proof
+- Root cause: the UI consumed the governed export payload without projecting `exportId`, `exportPath`, `sha256`, `fingerprint`, `publishedAt`, and `eventCount` into a dedicated dashboard section
+- Fix: parse governed export metadata from `lastPublishedExport` when Tauri is active or from the last persisted governed payload otherwise, then expose a stable `security-dashboard-governed-export` section
+- Proof commands:
+  - `runTests src/services/__tests__/advancedAgentCatalog.test.tsx`
+  - `pnpm exec playwright test e2e/agents/security-dashboard.e2e.ts --project=chromium --reporter=line`
+  - `bash scripts/verify/verify-advanced-agents.sh`
+  - `bash scripts/autoheal/detect_recurrence.sh`
+  - `bash scripts/verify_instructions.sh`
+- Results:
+  - `runTests src/services/__tests__/advancedAgentCatalog.test.tsx` => PASS (36 passed, 0 failed)
+  - `pnpm exec playwright test e2e/agents/security-dashboard.e2e.ts --project=chromium --reporter=line` => PASS (1 passed)
+  - `bash scripts/verify/verify-advanced-agents.sh` => PASS (`FAIL=0`)
+  - `bash scripts/autoheal/detect_recurrence.sh` => PASS (`entries=1120`)
+  - `bash scripts/verify_instructions.sh` => PASS (`SUMMARY: PASS=32 FAIL=0`)
+- Rollback: `git restore -- src/services/security_active/index.ts src/services/__tests__/advancedAgentCatalog.test.tsx e2e/agents/security-dashboard.e2e.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl reports/SECURITY_GOVERNED_EXPORT_METADATA_2026-04-17.md proof_packs/SECURITY_GOVERNED_EXPORT_METADATA_2026-04-17/GATE_REPORT.md proof_packs/SECURITY_GOVERNED_EXPORT_METADATA_2026-04-17/VERDICT.md proof_packs/SECURITY_GOVERNED_EXPORT_METADATA_2026-04-17/ROLLBACK.md scripts/autoheal/autoheal_rules.jsonl`
+- Verdict: PASS

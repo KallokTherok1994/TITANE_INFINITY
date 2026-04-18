@@ -100,6 +100,17 @@ interface SecurityAuditGovernedSnapshot {
   exportPayload: string | null;
 }
 
+interface GovernedSecurityExportMetadata {
+  scope: string;
+  exportId: string;
+  exportPath: string;
+  sha256: string;
+  fingerprint: string;
+  publishedAt: string;
+  eventCount?: number;
+  severityFilter?: string;
+}
+
 interface TauriIpcEnvelope<T> {
   ok: boolean;
   content?: T;
@@ -502,6 +513,65 @@ function buildGovernedSecurityExportPayload(
   );
 }
 
+function parseGovernedSecurityExportMetadata(
+  exportPayload: string | null,
+  governedSync: SecurityAuditSyncContent | null
+): GovernedSecurityExportMetadata | null {
+  const authoritativeExport = governedSync?.lastPublishedExport;
+  if (authoritativeExport) {
+    return {
+      scope: authoritativeExport.scope,
+      exportId: authoritativeExport.exportId,
+      exportPath: authoritativeExport.exportPath,
+      sha256: authoritativeExport.sha256,
+      fingerprint: authoritativeExport.fingerprint,
+      publishedAt: authoritativeExport.publishedAt,
+      eventCount: authoritativeExport.eventCount,
+      severityFilter: authoritativeExport.severityFilter,
+    };
+  }
+
+  if (!exportPayload) {
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(exportPayload) as {
+      governance?: {
+        scope?: string;
+        exportId?: string;
+        exportPath?: string;
+        sha256?: string;
+        fingerprint?: string;
+        publishedAt?: string;
+      };
+      content?: {
+        severityFilter?: string;
+        exportedEvents?: unknown[];
+      };
+    };
+
+    if (!parsed.governance?.exportId || !parsed.governance.exportPath) {
+      return null;
+    }
+
+    return {
+      scope: parsed.governance.scope ?? 'unknown',
+      exportId: parsed.governance.exportId,
+      exportPath: parsed.governance.exportPath,
+      sha256: parsed.governance.sha256 ?? 'unknown',
+      fingerprint: parsed.governance.fingerprint ?? 'unknown',
+      publishedAt: parsed.governance.publishedAt ?? 'unknown',
+      eventCount: Array.isArray(parsed.content?.exportedEvents)
+        ? parsed.content.exportedEvents.length
+        : undefined,
+      severityFilter: parsed.content?.severityFilter,
+    };
+  } catch {
+    return null;
+  }
+}
+
 function createSecurityActiveAgentStatus(
   severityFilter: SecurityAuditSeverityFilter,
   auditView: SecurityAuditView,
@@ -534,6 +604,10 @@ function createSecurityActiveAgentStatus(
       ? 'export gouverne signe publie en AppData'
       : 'export gouverne signe pret a publier en AppData'
     : `export local des correlations de confinement ${options.exportPayload ? 'pret' : 'non genere'}`;
+  const governedExportMetadata = parseGovernedSecurityExportMetadata(
+    options.exportPayload,
+    options.governedSync
+  );
 
   return {
     ...base,
@@ -547,6 +621,11 @@ function createSecurityActiveAgentStatus(
       `Runtime: journal borne ${auditView.eventHistory.length}/${SECURITY_HISTORY_LIMIT} evenements avec acquittement persistant.`,
       `Runtime: ${federationLabel} sur le filtre ${severityFilter}.`,
       `Runtime: ${exportLabel}.`,
+      ...(governedExportMetadata
+        ? [
+            `Runtime: export signe ${governedExportMetadata.exportId} · fingerprint ${governedExportMetadata.fingerprint} · scope ${governedExportMetadata.scope}.`,
+          ]
+        : []),
       ...options.baseEvidence,
     ],
     blockers: [
@@ -636,6 +715,35 @@ function createSecurityActiveAgentStatus(
                   label: 'Aucune federation multi-session exploitable n est encore disponible sur le filtre courant.',
                 },
               ],
+      },
+      {
+        key: 'governed-export',
+        title: 'Export gouverne signe',
+        items: governedExportMetadata
+          ? [
+              {
+                id: 'governed-export-export-id',
+                label: `exportId=${governedExportMetadata.exportId} · scope=${governedExportMetadata.scope} · severityFilter=${governedExportMetadata.severityFilter ?? severityFilter}`,
+              },
+              {
+                id: 'governed-export-export-path',
+                label: `exportPath=${governedExportMetadata.exportPath}`,
+              },
+              {
+                id: 'governed-export-sha',
+                label: `sha256=${governedExportMetadata.sha256} · fingerprint=${governedExportMetadata.fingerprint}`,
+              },
+              {
+                id: 'governed-export-published-at',
+                label: `publishedAt=${governedExportMetadata.publishedAt} · eventCount=${governedExportMetadata.eventCount ?? auditView.filteredHistory.length}`,
+              },
+            ]
+          : [
+              {
+                id: 'governed-export-empty',
+                label: 'Aucun export gouverne signe n est encore disponible sur cette surface.',
+              },
+            ],
       },
     ],
   };

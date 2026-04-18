@@ -51,8 +51,16 @@ test('Explainability dashboard visible et selectors présents', async ({ page })
 
   await page.goto('/titane');
   await closeBootBeaconIfPresent(page);
-  await expect(page.getByTestId('explainability-dashboard')).toBeVisible();
-  await expect(page.getByTestId('explainability-dashboard')).toHaveAttribute(
+  const explainabilityDashboard = page.getByTestId('explainability-dashboard');
+
+  if (await explainabilityDashboard.isHidden()) {
+    await page
+      .getByTestId('agent-dashboards-panel-toggle')
+      .evaluate((button: HTMLButtonElement) => button.click());
+  }
+
+  await expect(explainabilityDashboard).toBeVisible();
+  await expect(explainabilityDashboard).toHaveAttribute(
     'data-readiness',
     'partial'
   );
@@ -65,6 +73,10 @@ test('Explainability dashboard visible et selectors présents', async ({ page })
     'Used: Ollama'
   );
   await expect(page.getByTestId('explainability-dashboard-inference-report')).toBeVisible();
+  await expect(page.getByTestId('explainability-dashboard-inference-history')).toBeVisible();
+  await expect(page.getByTestId('explainability-dashboard-inference-history-0')).toContainText(
+    'requested=Ollama'
+  );
   await expect(page.getByTestId('explainability-dashboard-next-step')).toContainText(
     'historique horodate'
   );

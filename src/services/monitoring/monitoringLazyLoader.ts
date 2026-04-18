@@ -8,26 +8,70 @@
 
 type MonitoringModule = typeof import('./sentry');
 
+export type MonitoringInitSource = 'boot' | 'demand';
+
+export interface MonitoringLazyLoaderState {
+  requested: boolean;
+  loading: boolean;
+  loaded: boolean;
+  requestSource: MonitoringInitSource | null;
+  lastAttemptAt: number | null;
+  lastLoadedAt: number | null;
+  lastError: string | null;
+}
+
 let monitoringInstance: MonitoringModule | null = null;
 let loadingPromise: Promise<MonitoringModule> | null = null;
+let monitoringRequestSource: MonitoringInitSource | null = null;
+let lastMonitoringAttemptAt: number | null = null;
+let lastMonitoringLoadedAt: number | null = null;
+let lastMonitoringError: string | null = null;
+
+function noteMonitoringRequest(source: MonitoringInitSource): void {
+  monitoringRequestSource = monitoringRequestSource === 'boot' ? 'boot' : source;
+  lastMonitoringAttemptAt = Date.now();
+  lastMonitoringError = null;
+}
+
+function markMonitoringLoaded(): void {
+  lastMonitoringLoadedAt = Date.now();
+  lastMonitoringError = null;
+}
+
+function markMonitoringFailed(error: unknown): void {
+  lastMonitoringError = error instanceof Error ? error.message : String(error);
+}
 
 /**
  * Get monitoring module (lazy-loaded, cached)
  * @returns Promise resolving to monitoring module
  */
-export async function getMonitoring(): Promise<MonitoringModule> {
+export async function getMonitoring(
+  source: MonitoringInitSource = 'demand'
+): Promise<MonitoringModule> {
   if (monitoringInstance) {
     return monitoringInstance; // Cache hit
   }
 
   if (loadingPromise) {
+    noteMonitoringRequest(source);
     return loadingPromise; // Loading in progress
   }
 
+  noteMonitoringRequest(source);
+
   loadingPromise = (async () => {
-    const module = await import('./sentry');
-    monitoringInstance = module;
-    return module;
+    try {
+      const module = await import('./sentry');
+      monitoringInstance = module;
+      markMonitoringLoaded();
+      return module;
+    } catch (error) {
+      markMonitoringFailed(error);
+      throw error;
+    } finally {
+      loadingPromise = null;
+    }
   })();
 
   return loadingPromise;
@@ -37,9 +81,11 @@ export async function getMonitoring(): Promise<MonitoringModule> {
  * Initialize monitoring in background (non-blocking)
  * Safe to call multiple times (idempotent)
  */
-export async function initMonitoringAsync(): Promise<void> {
+export async function initMonitoringAsync(
+  source: MonitoringInitSource = 'boot'
+): Promise<boolean> {
   try {
-    const monitoring = await getMonitoring();
+    const monitoring = await getMonitoring(source);
 
     // Initialize Sentry if not already done
     if (!monitoring.Sentry.isEnabled()) {
@@ -50,9 +96,24 @@ export async function initMonitoringAsync(): Promise<void> {
     monitoring.captureWebVitals();
 
     console.log('✅ [MONITORING] Lazy initialization complete');
+    return true;
   } catch (error) {
     console.warn('⚠️ [MONITORING] Lazy initialization failed:', error);
+    markMonitoringFailed(error);
+    return false;
   }
+}
+
+export function getMonitoringLazyLoaderState(): MonitoringLazyLoaderState {
+  return {
+    requested: monitoringRequestSource !== null,
+    loading: loadingPromise !== null,
+    loaded: monitoringInstance !== null,
+    requestSource: monitoringRequestSource,
+    lastAttemptAt: lastMonitoringAttemptAt,
+    lastLoadedAt: lastMonitoringLoadedAt,
+    lastError: lastMonitoringError,
+  };
 }
 
 /**
@@ -67,6 +128,15 @@ export function isMonitoringLoaded(): boolean {
  */
 export function getMonitoringIfLoaded(): MonitoringModule | undefined {
   return monitoringInstance || undefined;
+}
+
+export function resetMonitoringLazyLoaderStateForTests(): void {
+  monitoringInstance = null;
+  loadingPromise = null;
+  monitoringRequestSource = null;
+  lastMonitoringAttemptAt = null;
+  lastMonitoringLoadedAt = null;
+  lastMonitoringError = null;
 }
 
 /**

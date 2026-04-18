@@ -15,6 +15,7 @@ import { useEffect } from 'react';
 import { toast } from 'sonner';
 import { initializeOllama } from '../services/ai/providers/ollama';
 import { consoleMonitor } from '../services/monitoring/consoleMonitor';
+import { initMonitoringAsync } from '../services/monitoring';
 import { presenceOS } from '../engines/presence/_stubs';
 import { loadSavedZoom } from './useZoomControl';
 import { logger } from '../lib/logger';
@@ -63,6 +64,34 @@ export const useAppInitialization = (): void => {
         error: error instanceof Error ? error.message : String(error),
       });
     }
+  }, []);
+
+  // ─── Monitoring lazy loader boot ──────────────────────────────────────────
+  useEffect(() => {
+    let active = true;
+
+    void initMonitoringAsync('boot').then(initialized => {
+      if (!active) {
+        return;
+      }
+
+      if (initialized) {
+        logger.info('Monitoring lazy loader requested from canonical boot', {
+          component: 'Monitoring',
+          source: 'boot',
+        });
+        return;
+      }
+
+      logger.warn('Monitoring lazy loader boot request did not complete', {
+        component: 'Monitoring',
+        source: 'boot',
+      });
+    });
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   // ─── Ollama local AI provider ──────────────────────────────────────────────

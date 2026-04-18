@@ -45,12 +45,39 @@ test('Security dashboard visible et selectors présents', async ({ page }) => {
         },
       ])
     );
+    window.localStorage.setItem(
+      'titane_security_dashboard_correlation_export',
+      JSON.stringify({
+        governance: {
+          scope: 'tauri-app-data',
+          exportId: 'security-audit-seeded-e2e',
+          exportPath: '/tmp/security-audit-seeded-e2e.json',
+          sha256: 'sha-seeded-e2e',
+          signature: 'sig',
+          publicKey: 'pub',
+          fingerprint: 'fp-seeded-e2e',
+          publishedAt: '2026-04-17T23:59:00.000Z',
+        },
+        content: {
+          severityFilter: 'critical',
+          exportedEvents: [{ id: 'seed-containment-session-beta' }],
+        },
+      })
+    );
   });
 
   await page.goto('/titane');
   await closeBootBeaconIfPresent(page);
-  await expect(page.getByTestId('security-dashboard')).toBeVisible({ timeout: 30000 });
-  await expect(page.getByTestId('security-dashboard')).toHaveAttribute(
+  const securityDashboard = page.getByTestId('security-dashboard');
+
+  if (await securityDashboard.isHidden()) {
+    await page
+      .getByTestId('agent-dashboards-panel-toggle')
+      .evaluate((button: HTMLButtonElement) => button.click());
+  }
+
+  await expect(securityDashboard).toBeVisible({ timeout: 30000 });
+  await expect(securityDashboard).toHaveAttribute(
     'data-readiness',
     'partial'
   );
@@ -72,6 +99,13 @@ test('Security dashboard visible et selectors présents', async ({ page }) => {
   await expect(page.getByTestId('security-dashboard-event-history')).toBeVisible();
   await expect(page.getByTestId('security-dashboard-correlation-summary')).toBeVisible();
   await expect(page.getByTestId('security-dashboard-multi-session-federation')).toBeVisible();
+  await expect(page.getByTestId('security-dashboard-governed-export')).toBeVisible();
+  await expect(page.getByTestId('security-dashboard-governed-export-0')).toContainText(
+    'exportId=security-audit-seeded-e2e'
+  );
+  await expect(page.getByTestId('security-dashboard-governed-export-2')).toContainText(
+    'fingerprint=fp-seeded-e2e'
+  );
   await expect(page.getByTestId('security-dashboard-multi-session-federation')).toContainText(
     'session-beta'
   );

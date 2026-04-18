@@ -3,6 +3,7 @@ import { getDiagnosticAgentStatus } from './index';
 
 const DiagnosticDashboard: React.FC = () => {
   const status = getDiagnosticAgentStatus();
+  const detailSections = status.detailSections ?? [];
 
   return (
     <section
@@ -40,6 +41,25 @@ const DiagnosticDashboard: React.FC = () => {
           <li key={blocker}>{blocker}</li>
         ))}
       </ul>
+      {detailSections.map(section => (
+        <div
+          key={section.key}
+          data-testid={`diagnostic-panel-${section.key}`}
+          style={{ margin: '0 0 8px' }}
+        >
+          <p style={{ margin: '0 0 4px', fontSize: 12, opacity: 0.8 }}>{section.title}</p>
+          <ul style={{ margin: 0, paddingLeft: 18 }}>
+            {section.items.map((item, index) => (
+              <li
+                key={`${section.key}-${item.id}`}
+                data-testid={`diagnostic-panel-${section.key}-${index}`}
+              >
+                {item.label}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
       <p data-testid="diagnostic-panel-next-step" style={{ margin: 0, fontSize: 13 }}>
         {status.nextStep}
       </p>

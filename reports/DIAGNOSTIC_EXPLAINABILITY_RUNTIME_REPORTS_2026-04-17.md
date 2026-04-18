@@ -1,0 +1,41 @@
+# DIAGNOSTIC_EXPLAINABILITY_RUNTIME_REPORTS_2026-04-17
+
+- Date: 2026-04-17
+- Scope: structural diagnostic report + bounded explainability trace history on the canonical advanced-agent dashboards
+- Symptom: the diagnostic dashboard still exposed only an instant summary without a structural report, and the explainability dashboard still surfaced only the latest providerMeta trace despite the repo already exposing enough runtime state to persist more than one observed decision
+- Root cause: both services read real runtime/configuration signals but did not persist bounded local snapshots that the dashboards could render as structured history
+- Fix: add bounded local persistence for diagnostic snapshots and explainability traces, expose the new detail sections on the canonical dashboards, and realign the targeted unit/E2E proofs and mapping docs to those selectors
+- Proof commands:
+  - `pnpm exec vitest run src/services/__tests__/advancedAgentCatalog.test.tsx`
+  - `pnpm exec playwright test e2e/agents/diagnostic-panel.e2e.ts e2e/agents/explainability-dashboard.e2e.ts --project=chromium --reporter=line`
+  - `bash scripts/verify/verify-advanced-agents.sh`
+  - `bash scripts/autoheal/detect_recurrence.sh`
+  - `bash scripts/verify_instructions.sh`
+- Results:
+  - `pnpm exec vitest run src/services/__tests__/advancedAgentCatalog.test.tsx` => PASS (32 passed, 0 failed)
+  - `pnpm exec playwright test e2e/agents/diagnostic-panel.e2e.ts e2e/agents/explainability-dashboard.e2e.ts --project=chromium --reporter=line` => PASS (2 passed)
+  - `bash scripts/verify/verify-advanced-agents.sh` => PASS (`FAIL=0`)
+  - `bash scripts/autoheal/detect_recurrence.sh` => PASS (`entries=1115`)
+  - `bash scripts/verify_instructions.sh` => PASS (`SUMMARY: PASS=32 FAIL=0`)
+- Rollback: `git restore -- src/services/diagnostic/index.ts src/services/diagnostic/DiagnosticDashboard.tsx src/services/explainability/index.ts src/services/__tests__/advancedAgentCatalog.test.tsx e2e/agents/diagnostic-panel.e2e.ts e2e/agents/explainability-dashboard.e2e.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl reports/DIAGNOSTIC_EXPLAINABILITY_RUNTIME_REPORTS_2026-04-17.md proof_packs/DIAGNOSTIC_EXPLAINABILITY_RUNTIME_REPORTS_2026-04-17/GATE_REPORT.md proof_packs/DIAGNOSTIC_EXPLAINABILITY_RUNTIME_REPORTS_2026-04-17/VERDICT.md proof_packs/DIAGNOSTIC_EXPLAINABILITY_RUNTIME_REPORTS_2026-04-17/ROLLBACK.md scripts/autoheal/autoheal_rules.jsonl`
+- Verdict: PASS# DIAGNOSTIC_EXPLAINABILITY_RUNTIME_REPORTS_2026-04-17
+
+- Date: 2026-04-17
+- Scope: structural diagnostic report + bounded explainability trace history on the canonical advanced-agent dashboards
+- Symptom: the diagnostic dashboard still exposed only an instant summary without a structural report, and the explainability dashboard still surfaced only the latest providerMeta trace despite the repo already exposing enough runtime state to persist more than one observed decision
+- Root cause: both services read real runtime/configuration signals but did not persist bounded local snapshots that the dashboards could render as structured history
+- Fix: add bounded local persistence for diagnostic snapshots and explainability traces, expose the new detail sections on the canonical dashboards, and realign the targeted unit/E2E proofs and mapping docs to those selectors
+- Proof commands:
+  - `pnpm exec vitest run src/services/__tests__/advancedAgentCatalog.test.tsx`
+  - `pnpm exec playwright test e2e/agents/diagnostic-panel.e2e.ts e2e/agents/explainability-dashboard.e2e.ts --project=chromium --reporter=line`
+  - `bash scripts/verify/verify-advanced-agents.sh`
+  - `bash scripts/autoheal/detect_recurrence.sh`
+  - `bash scripts/verify_instructions.sh`
+- Results:
+  - `pnpm exec vitest run src/services/__tests__/advancedAgentCatalog.test.tsx` => PASS (32 passed, 0 failed)
+  - `pnpm exec playwright test e2e/agents/diagnostic-panel.e2e.ts e2e/agents/explainability-dashboard.e2e.ts --project=chromium --reporter=line` => PASS (2 passed)
+  - `bash scripts/verify/verify-advanced-agents.sh` => PASS (`FAIL=0`)
+  - `bash scripts/autoheal/detect_recurrence.sh` => PASS (`entries=1115`)
+  - `bash scripts/verify_instructions.sh` => PASS (`SUMMARY: PASS=32 FAIL=0`)
+- Rollback: `git restore -- src/services/diagnostic/index.ts src/services/diagnostic/DiagnosticDashboard.tsx src/services/explainability/index.ts src/services/__tests__/advancedAgentCatalog.test.tsx e2e/agents/diagnostic-panel.e2e.ts e2e/agents/explainability-dashboard.e2e.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl reports/DIAGNOSTIC_EXPLAINABILITY_RUNTIME_REPORTS_2026-04-17.md proof_packs/DIAGNOSTIC_EXPLAINABILITY_RUNTIME_REPORTS_2026-04-17/GATE_REPORT.md proof_packs/DIAGNOSTIC_EXPLAINABILITY_RUNTIME_REPORTS_2026-04-17/VERDICT.md proof_packs/DIAGNOSTIC_EXPLAINABILITY_RUNTIME_REPORTS_2026-04-17/ROLLBACK.md scripts/autoheal/autoheal_rules.jsonl`
+- Verdict: PASS

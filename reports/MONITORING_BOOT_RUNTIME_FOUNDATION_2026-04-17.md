@@ -1,0 +1,21 @@
+# MONITORING_BOOT_RUNTIME_FOUNDATION_2026-04-17
+
+- Date: 2026-04-17
+- Scope: canonical monitoring boot request and observable lazy-loader runtime state
+- Symptom: the monitoring dashboard exposed a truthful uninitialized state, but the canonical app boot still did not request monitoring initialization and the runtime could not distinguish standby from a boot-requested loader state
+- Root cause: `monitoringLazyLoader.ts` only exposed `isMonitoringLoaded()` and no canonical boot hook called `initMonitoringAsync`, so the dashboard could not report the real bootstrap progression
+- Fix: expose a richer monitoring lazy-loader state, request `initMonitoringAsync('boot')` from `useAppInitialization`, consume that state in `getMonitoringAgentStatus()`, and realign the targeted monitoring proofs
+- Proof commands:
+  - `pnpm exec vitest run src/services/monitoring/__tests__/monitoringLazyLoader.test.ts src/services/__tests__/advancedAgentCatalog.test.tsx`
+  - `pnpm exec playwright test e2e/agents/monitoring-dashboard.e2e.ts --project=chromium --reporter=line`
+  - `bash scripts/verify/verify-advanced-agents.sh`
+  - `bash scripts/autoheal/detect_recurrence.sh`
+  - `bash scripts/verify_instructions.sh`
+- Results:
+  - `pnpm exec vitest run src/services/monitoring/__tests__/monitoringLazyLoader.test.ts src/services/__tests__/advancedAgentCatalog.test.tsx` => PASS (28 passed, 0 failed)
+  - `pnpm exec playwright test e2e/agents/monitoring-dashboard.e2e.ts --project=chromium --reporter=line` => PASS (1 passed)
+  - `bash scripts/verify/verify-advanced-agents.sh` => PASS (`FAIL=0`)
+  - `bash scripts/autoheal/detect_recurrence.sh` => PASS (`entries=1114`)
+  - `bash scripts/verify_instructions.sh` => PASS (`SUMMARY: PASS=32 FAIL=0`)
+- Rollback: `git restore -- src/services/monitoring/monitoringLazyLoader.ts src/services/monitoring/index.ts src/hooks/useAppInitialization.ts src/services/monitoring/__tests__/monitoringLazyLoader.test.ts e2e/agents/monitoring-dashboard.e2e.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl reports/MONITORING_BOOT_RUNTIME_FOUNDATION_2026-04-17.md proof_packs/MONITORING_BOOT_RUNTIME_FOUNDATION_2026-04-17/GATE_REPORT.md proof_packs/MONITORING_BOOT_RUNTIME_FOUNDATION_2026-04-17/VERDICT.md proof_packs/MONITORING_BOOT_RUNTIME_FOUNDATION_2026-04-17/ROLLBACK.md scripts/autoheal/autoheal_rules.jsonl`
+- Verdict: PASS

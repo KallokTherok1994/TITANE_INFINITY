@@ -6,6 +6,21 @@ import type { AIMessage } from '@/types/ai';
 import type { ProviderDecisionMeta } from '@/types/providerMeta';
 import { validateProviderDecisionMeta } from '@/types/providerDecisionMeta';
 
+const EXPLAINABILITY_TRACE_HISTORY_KEY = 'titane_explainability_trace_history';
+const EXPLAINABILITY_TRACE_HISTORY_LIMIT = 8;
+
+interface ExplainabilityTraceHistoryEntry {
+  id: string;
+  conversationId: string | null;
+  timestamp: number;
+  requestedProvider: string;
+  usedProvider: string;
+  shownSummary: string;
+  reasonCode: string;
+  networkUsed: boolean;
+  preview: string;
+}
+
 const REQUESTED_PROVIDER_LABELS: Record<string, string> = {
   auto: 'Auto',
   ollama: 'Ollama',
@@ -36,11 +51,84 @@ function normalizeProviderMeta(raw: unknown): ProviderDecisionMeta | null {
   return validateProviderDecisionMeta(candidate) === null ? candidate : null;
 }
 
+function formatExplainabilityClock(timestamp: number): string {
+  return new Date(timestamp).toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+}
+
+function loadExplainabilityTraceHistory(): ExplainabilityTraceHistoryEntry[] {
+  if (typeof window === 'undefined') {
+    return [];
+  }
+
+  try {
+    const raw = window.localStorage.getItem(EXPLAINABILITY_TRACE_HISTORY_KEY);
+    if (!raw) {
+      return [];
+    }
+
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+
+    return parsed.filter(entry => entry && typeof entry.timestamp === 'number');
+  } catch {
+    return [];
+  }
+}
+
+function saveExplainabilityTraceHistory(history: ExplainabilityTraceHistoryEntry[]): void {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  window.localStorage.setItem(EXPLAINABILITY_TRACE_HISTORY_KEY, JSON.stringify(history));
+}
+
+function updateExplainabilityTraceHistory(
+  entry: ExplainabilityTraceHistoryEntry | null
+): ExplainabilityTraceHistoryEntry[] {
+  const history = loadExplainabilityTraceHistory();
+
+  if (!entry) {
+    return history;
+  }
+
+  const previous = history[history.length - 1];
+  if (
+    previous &&
+    previous.conversationId === entry.conversationId &&
+    previous.timestamp === entry.timestamp &&
+    previous.usedProvider === entry.usedProvider &&
+    previous.reasonCode === entry.reasonCode
+  ) {
+    return history;
+  }
+
+  const nextHistory = [...history, entry].slice(-EXPLAINABILITY_TRACE_HISTORY_LIMIT);
+  saveExplainabilityTraceHistory(nextHistory);
+  return nextHistory;
+}
+
+export function resetExplainabilityTraceHistoryForTests(): void {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  window.localStorage.removeItem(EXPLAINABILITY_TRACE_HISTORY_KEY);
+}
+
 function getLatestExplainabilityTrace(): {
+  activeConversationId: string | null;
   requestedProvider: string;
   providerMeta: ProviderDecisionMeta | null;
   shownSummary: string;
   assistantContent: string | null;
+  assistantTimestamp: number | null;
 } {
   const requestedProvider = getRequestedProviderLabel();
   const activeConversationId = conversationStorage.getActiveConversationId();
@@ -57,10 +145,13 @@ function getLatestExplainabilityTrace(): {
 
   if (!providerMeta) {
     return {
+      activeConversationId,
       requestedProvider,
       providerMeta: null,
       shownSummary: `Requested: ${requestedProvider} | Provider: none | Mode: unknown | Reason: UNKNOWN | Network: false`,
       assistantContent: latestAssistant?.content ?? null,
+      assistantTimestamp:
+        typeof latestAssistant?.timestamp === 'number' ? latestAssistant.timestamp : null,
     };
   }
 
@@ -68,10 +159,13 @@ function getLatestExplainabilityTrace(): {
     requestedProvider !== providerMeta.provider_used ? `Requested: ${requestedProvider} | ` : '';
 
   return {
+    activeConversationId,
     requestedProvider,
     providerMeta,
     shownSummary: `${requestedPrefix}Provider: ${providerMeta.provider_used} | Mode: ${providerMeta.mode} | Reason: ${providerMeta.reason_code} | Network: ${providerMeta.network_used ? 'true' : 'false'}`,
     assistantContent: latestAssistant?.content ?? null,
+    assistantTimestamp:
+      typeof latestAssistant?.timestamp === 'number' ? latestAssistant.timestamp : null,
   };
 }
 
@@ -85,6 +179,21 @@ export function getExplainabilityAgentStatus() {
     .filter(entry => entry.provider === 'ollama')
     .map(entry => entry.model);
   const registryAligned = championModels.every(model => model === canonicalModel);
+  const history = updateExplainabilityTraceHistory(
+    latestTrace.providerMeta
+      ? {
+          id: `trace-${latestTrace.activeConversationId ?? 'unknown'}-${latestTrace.assistantTimestamp ?? Date.now()}`,
+          conversationId: latestTrace.activeConversationId,
+          timestamp: latestTrace.assistantTimestamp ?? Date.now(),
+          requestedProvider: latestTrace.requestedProvider,
+          usedProvider: latestTrace.providerMeta.provider_used,
+          shownSummary: latestTrace.shownSummary,
+          reasonCode: latestTrace.providerMeta.reason_code,
+          networkUsed: latestTrace.providerMeta.network_used,
+          preview: (latestTrace.assistantContent ?? '').trim().slice(0, 120) || 'empty',
+        }
+      : null
+  );
 
   return {
     ...base,
@@ -99,11 +208,12 @@ export function getExplainabilityAgentStatus() {
       `Registre: ${Object.keys(registry.champions).length} modes canoniques, comparaison ${registry.comparison.enabled ? 'activee' : 'desactivee'} a ${(registry.comparison.sample_rate * 100).toFixed(0)}%.`,
       `Runtime: modele Ollama canonique ${canonicalModel}.`,
       `Runtime: ${latestTrace.shownSummary}.`,
+      `Runtime: historique local ${history.length}/${EXPLAINABILITY_TRACE_HISTORY_LIMIT} traces d inference bornees.`,
       ...base.evidence,
     ],
     blockers: [
       ...(latestTrace.providerMeta
-        ? ['La surface publie la derniere trace d inference, mais pas encore un historique multi-requetes horodate.']
+        ? ['La surface publie maintenant un historique local horodate, mais aucun export gouverne multi-session n est encore disponible.']
         : ['Aucune trace assistant persistée avec providerMeta n est encore disponible sur la conversation active.']),
       ...(!registryAligned
         ? [
@@ -157,6 +267,25 @@ export function getExplainabilityAgentStatus() {
                 label: 'Aucun rapport d inference persiste: la conversation active n expose pas encore de providerMeta assistant.',
               },
             ],
+      },
+      {
+        key: 'inference-history',
+        title: 'Historique horodate',
+        items:
+          history.length > 0
+            ? history
+                .slice()
+                .reverse()
+                .map(entry => ({
+                  id: entry.id,
+                  label: `${formatExplainabilityClock(entry.timestamp)} · requested=${entry.requestedProvider} · used=${entry.usedProvider} · reason=${entry.reasonCode} · network=${entry.networkUsed ? 'true' : 'false'} · preview=${entry.preview}`,
+                }))
+            : [
+                {
+                  id: 'inference-history-empty',
+                  label: 'Aucun historique horodate n est encore disponible sur la conversation active.',
+                },
+              ],
       },
     ],
   };
