@@ -1,21 +1,4 @@
 # TITANE_INFINITY — Cartographie Complète Avancée v30.1.34
-
-> 2026-04-18 — Conversation runtime-disk knowledge base truth: `src/services/api/defaultKnowledgeBase.ts` tente maintenant d abord la commande IPC `knowledge_base_runtime_snapshot` pour hydrater la KB par défaut depuis le dossier runtime `data/knowledge_base/default` visible par Tauri, avant de retomber sur `knowledge_base_get_all` puis sur le bundle frontend. `src-tauri/src/knowledge_base_default.rs` publie cette snapshot gouvernée avec exclusion des fichiers privés Kevin, ce qui laisse la route active du chat consommer la vérité disque réelle quand elle existe sans casser le fallback embarqué.
-
-> 2026-04-18 — Conversation canonical-kernel authority truth: src/services/conversationEngine.ts appelle maintenant src/services/ai/canonicalDiscernmentKernel.ts sur la voie chat active avec memoryIntegration, santé providers issue de aiOrchestrator.getProvidersStatus() et cohérence SingularityBridge.getCachedCoherence(). La décision canonique pilote le provider backend demandé, le profil runtime utilisé pour aiConfig, et la vérité exposée dans response.cognitive_tags, metadata.links_to_contexts et omega_trace_meta, ce qui rapproche la surface conversation standard du contrat déjà en vigueur dans src/services/ai/chatEngine.ts.
-
-> 2026-04-18 — Conversation provider/citations continuity truth: src-tauri/src/conversation_engine/commands.rs publie maintenant provider_used et des citations normalisées dans metadata au même format canonique que les surfaces web research, tandis que src/services/conversationEngine.ts conserve cette vérité même si seul meta.provider_used ou trace.citations est présent. src/hooks/useConversationEngine.ts persiste ensuite providerUsed et citations sur le message assistant de la surface active, ce qui supprime le faux fallback provider et les pertes de Sources en ligne sur la voie standard du chat.
-
-> 2026-04-18 — Window zoom finite-value truth: `src-tauri/src/commands/window_controls_commands.rs` rabat maintenant `NaN` et `+/-Infinity` sur `1.0` avant de stocker ou d emettre le zoom runtime. La preuve active passe par `commands::window_controls_commands::tests::test_sanitize_zoom_level_rejects_nan` et `commands::window_controls_commands::tests::test_sanitize_zoom_level_rejects_infinity`.
-
-> 2026-04-18 — Memory telemetry env-lock truth: `src-tauri/src/memory/telemetry.rs` recupere maintenant le guard de `ENV_LOCK` meme quand le mutex a ete empoisonne par un panic de test precedent. La preuve active passe par `memory::telemetry::tests` execute en sequence avec `--test-threads=1` pour confirmer que la lane telemetry ne s auto-casse plus sur le poison du verrou partage.
-
-> 2026-04-18 — Telemetry CSV timestamp truth: `src-tauri/src/api/telemetry_api.rs` rejette maintenant les lignes CSV dont `timestamp` est vide ou whitespace-only dans `parse_csv_line`. La preuve active passe par `api::telemetry_api::tests::test_parse_empty_timestamp_returns_parser_error` et `api::telemetry_api::tests::test_parse_whitespace_timestamp_returns_parser_error`.
-
-> 2026-04-18 — Unified memory tier list-order truth: `src-tauri/src/unified_memory_v2/persistence.rs` retourne maintenant les ids de `MemoryPersistence::list_tier` dans un ordre trie stable. Les surfaces backend `load_tier` et `clear_tier` ne dependent donc plus de l ordre non deterministe de `read_dir` pour un meme tier, et la preuve active passe par `unified_memory_v2::persistence::tests::list_tier_returns_sorted_ids`.
-
-> 2026-04-18 — Conversation governed tool-lane truth: `src/services/conversationEngine.ts` détecte maintenant une capacité tools/functions gouvernée depuis `src/lib/security.ts` (`ALLOWED_COMMANDS`) et `src/services/mcp/MCPOrchestrator.ts` (`getHealth()`), au lieu d imposer `toolAvailable=false`. La route active du chat injecte `GOVERNED_TOOL_LANE_CONTEXT` / `GOVERNED_TOOL_LANE_STATUS`, classifie le `taskType` minimal (`question|instruction|multi-step|code|data`) et projette `tool-lane:*`, `task-type:*`, `tool-action:*`, `web-action:*`, `memory-action:*` et `ask-act-hold:*` dans `response.cognitive_tags` et `metadata.links_to_contexts`, tout en conservant la vérité `execution_mode=governed_not_auto`.
-
 > 2026-04-18 — Conversation advanced-agent runtime truth: `src/services/conversationEngine.ts` agrège maintenant la vérité runtime déjà publiée par `src/services/monitoring/index.ts`, `src/services/diagnostic/index.ts`, `src/services/explainability/index.ts`, `src/services/orchestrator/index.ts` et `src/services/security_active/index.ts`. La route active du chat injecte `ADVANCED_AGENT_RUNTIME_CONTEXT` et `ADVANCED_AGENT_RUNTIME_STATUS`, puis projette `advanced-agents:present` et `agent:*:*` dans `response.cognitive_tags` et `metadata.links_to_contexts`, sans présenter ces signaux comme une boucle de décision agentique complète quand ils ne sont encore que des résumés runtime canoniques.
 
 > 2026-04-18 — Conversation skill and online runtime truth: `src/services/conversationEngine.ts` réaligne maintenant la route active du chat avec la Skill OS déjà présente dans `src/services/skills/activation/skillActivator.ts`, en injectant `ACTIVE_SKILL_CONTEXT` et `ACTIVE_SKILL_STATUS` quand un skill actif existe réellement. Le même service publie aussi `ONLINE_CAPABILITY_CONTEXT` / `ONLINE_CAPABILITY_STATUS` avec la vérité gouvernée `one_door_only=true`, l état `online:available|offline` et la préférence `deep_analysis:enabled|disabled`, puis projette ces signaux dans `response.cognitive_tags` et `metadata.links_to_contexts` consommés par `src/components/sections/ConversationSection.tsx`.
@@ -27,10 +10,6 @@
 > 2026-04-18 — Conversation inline citations E2E truth: la surface active `/titane?tab=conversation` rend maintenant les citations inline dans `src/components/sections/ConversationSection.tsx`, pas seulement dans la surface de compatibilité `src/components/chat/MessageBubble.tsx`. `src/services/webResearchService.ts` expose un crochet Playwright strictement borné via `__TITANE_E2E_WEB_RESEARCH_MOCK__` et `__TITANE_E2E_WEB_RESEARCH_REPORT__` pour prouver la voie canonique de handoff web inline sans ouvrir de fetch UI direct, et `e2e/critical/chat-interaction.spec.ts` scelle cette vérité sur les testids `message-citations-{index}` / `message-citation-{index}-{citationIndex}`.
 
 > 2026-04-18 — Conversation provider recovery and inline citations truth: `src/hooks/useConversationEngine.ts` ne traite plus `FALLBACK_OFFLINE` comme une indisponibilité provider à reformuler en recovery message. La vérité canonique garde le contenu assistant backend quand la réponse dégradée est valide, ne réserve le message “mode récupération provider” qu à `PROVIDER_UNAVAILABLE`, et projette aussi `providerUsed` / `requestedProvider` dans la metadata de bulle. En parallèle, `src/components/sections/ConversationSection.tsx` transmet maintenant les `report.answer.citations` de la voie gouvernée `webResearch` et les rend sur la surface active via `message-citations-{index}` / `message-citation-{index}-{citationIndex}`, tandis que `src/components/chat/MessageBubble.tsx` reste aligné comme surface de compatibilité.
-
-> 2026-04-18 — IO service list-order truth: `src-tauri/src/services/io_service.rs` retourne maintenant les chemins de `IoService::list_dir` dans un ordre trie stable. La surface backend ne depend donc plus de l ordre non deterministe de `read_dir` pour un meme repertoire, et la preuve active passe par `services::io_service::tests::list_dir_returns_sorted_paths`.
-
-> 2026-04-18 — Sandbox list-order truth: `src-tauri/src/security/sandbox.rs` retourne maintenant les `safe_name` de `FileImportSandbox::list_files` dans un ordre lexicographique stable. La surface runtime Tauri `secure_list_files` ne depend donc plus de l ordre non deterministe du filesystem pour un meme contenu de sandbox, et la preuve active passe par `security::sandbox::tests::test_list_files_returns_sorted_safe_names`.
 
 > 2026-04-18 — Sandbox list-empty truth: `src-tauri/src/security/sandbox.rs` renvoie maintenant `[]` quand `FileImportSandbox::list_files` est appele avant creation du repertoire sandbox. Les preuves Rust actives couvrent explicitement `security::sandbox::tests::test_list_files_returns_empty_when_directory_missing` et le nominal `security::sandbox::tests::test_list_files_returns_imported_safe_name`.
 
@@ -235,7 +214,7 @@ TITANE_INFINITY est organisé en 4 anneaux concentriques, du noyau Rust vers l'i
 │  20+ moteurs Rust : cognitif, mémoire, singularité, audio...        │
 ├─────────────────────────────────────────────────────────────────────┤
 │  Ring 1 — Core Services (src/services/)                             │
-│  IPC bridge · 1136 commandes Tauri · AI orchestration               │
+│  IPC bridge · 1135 commandes Tauri · AI orchestration               │
 ├─────────────────────────────────────────────────────────────────────┤
 │  Ring 0 — Kernel Rust (main.rs · security · constitution)           │
 │  Point d'entrée · Sécurité · Registre des modules                   │
@@ -246,7 +225,7 @@ TITANE_INFINITY est organisé en 4 anneaux concentriques, du noyau Rust vers l'i
 
 | Fichier | Lignes | Rôle |
 |---------|--------|------|
-| `main.rs` | 2858 | Point d'entrée, invoque ~1136 commandes Tauri via `generate_handler![]` |
+| `main.rs` | 2857 | Point d'entrée, invoque ~1135 commandes Tauri via `generate_handler![]` |
 | `lib.rs` | — | Registre des modules Rust |
 | `error.rs` | — | Définition des erreurs canoniques |
 | `error_handling.rs` | — | Gestion centralisée des erreurs |
@@ -434,7 +413,7 @@ Chaque agent est intégré dans la cartographie 4-Ring : UI (dashboard), moteu
 
 > Voir le catalogue exhaustif : [IPC_CATALOG.md](./IPC_CATALOG.md)
 
-**1136 commandes IPC** réparties en 68 domaines fonctionnels.
+**1135 commandes IPC** réparties en 68 domaines fonctionnels.
 
 | Domaine | Commandes | Domaine | Commandes |
 |---------|-----------|---------|-----------|
@@ -470,8 +449,8 @@ Chaque agent est intégré dans la cartographie 4-Ring : UI (dashboard), moteu
 | Health/Diagnostics | 24 | HyperIntelligence | 11 |
 | IDE Agent | 10 | Identity | 38 |
 | Introspection | 6 | Jobs | 6 |
-| Knowledge Base | 19 | Literary Engine | 9 |
-| **TOTAL** | **1136** | | |
+| Knowledge Base | 18 | Literary Engine | 9 |
+| **TOTAL** | **1135** | | |
 
 ---
 
