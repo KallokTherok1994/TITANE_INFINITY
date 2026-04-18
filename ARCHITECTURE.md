@@ -3,6 +3,9 @@
 > 2026-04-18 — Conversation metadata continuity alignment: src-tauri/src/conversation_engine/commands.rs et src/services/conversationEngine.ts partagent maintenant la même vérité de metadata conversation pour provider_used et citations. Le backend sérialise explicitement ces champs dans metadata, la couche frontend sait encore retomber honnêtement sur meta.provider_used et trace.citations pendant une phase transitoire, et src/hooks/useConversationEngine.ts les persiste ensuite sur la surface UI active sans reformulation silencieuse.
 
 
+> 2026-04-18 — Memory telemetry env-lock truth: `src-tauri/src/memory/telemetry.rs` traite maintenant le mutex de test `ENV_LOCK` comme une barriere de serialisation recuperable et non comme une source de cascade d echecs. Les tests qui partagent l environnement recuperent desormais le guard meme si un test precedent a empoisonne le mutex, ce qui garde la lane telemetry focalisee sur le vrai echec initial.
+
+
 > 2026-04-18 — Telemetry CSV timestamp truth: `src-tauri/src/api/telemetry_api.rs` traite maintenant `parse_csv_line` comme une surface de donnees qui exige un timestamp non vide, et non comme un parseur permissif de colonnes minimales. Les lignes CSV avec colonne `timestamp` vide ou blanche sont rejetees avant toute construction de `ProductionHealthSample`, ce qui garde `parse_and_summarize` aligne sur une verite de telemetry horodatee.
 
 

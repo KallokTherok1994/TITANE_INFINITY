@@ -1,5 +1,7 @@
 # Unreleased
 
+- Fixed: durcit les tests de `memory::telemetry` contre le mutex poisoning de `ENV_LOCK`, afin qu un panic d un test n entraine plus une cascade de faux echecs sur les tests suivants partageant le verrou d environnement.
+
 - Fixed: durcit `api::telemetry_api::parse_csv_line` pour refuser un timestamp CSV vide ou compose seulement d espaces avant toute synthese, ce qui bloque l ingestion de lignes telemetry mal formees avec champ temps absent.
 
 - Fixed: stabilise `unified_memory_v2::persistence::MemoryPersistence::list_tier` en triant les ids retournes, ce qui rend l enumeration backend d un tier deterministe pour un meme contenu au lieu de dependre de l ordre variable de `read_dir`.

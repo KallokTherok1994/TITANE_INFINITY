@@ -214,7 +214,7 @@ mod tests {
     fn test_resolve_memory_dir_default() {
         let _env_guard = ENV_LOCK
             .lock()
-            .expect("ENV_LOCK mutex should not be poisoned");
+            .unwrap_or_else(|poisoned| poisoned.into_inner());
         // Clear env var to test default behavior
         std::env::remove_var("TITANE_MEMORY_DIR");
         std::env::remove_var("TITANE_E2E");
@@ -227,7 +227,7 @@ mod tests {
     fn test_resolve_memory_dir_custom() {
         let _env_guard = ENV_LOCK
             .lock()
-            .expect("ENV_LOCK mutex should not be poisoned");
+            .unwrap_or_else(|poisoned| poisoned.into_inner());
         std::env::set_var("TITANE_MEMORY_DIR", "/custom/memory/path");
         std::env::remove_var("TITANE_E2E");
         let dir = resolve_memory_dir();
@@ -241,7 +241,7 @@ mod tests {
     fn test_resolve_memory_dir_empty_env() {
         let _env_guard = ENV_LOCK
             .lock()
-            .expect("ENV_LOCK mutex should not be poisoned");
+            .unwrap_or_else(|poisoned| poisoned.into_inner());
         std::env::set_var("TITANE_MEMORY_DIR", "   ");
         std::env::remove_var("TITANE_E2E");
         let dir = resolve_memory_dir();
@@ -256,7 +256,7 @@ mod tests {
     fn test_resolve_memory_dir_e2e_default() {
         let _env_guard = ENV_LOCK
             .lock()
-            .expect("ENV_LOCK mutex should not be poisoned");
+            .unwrap_or_else(|poisoned| poisoned.into_inner());
         std::env::remove_var("TITANE_MEMORY_DIR");
         std::env::set_var("TITANE_E2E", "1");
 
@@ -270,7 +270,7 @@ mod tests {
     fn test_resolve_memory_dir_e2e_custom_override() {
         let _env_guard = ENV_LOCK
             .lock()
-            .expect("ENV_LOCK mutex should not be poisoned");
+            .unwrap_or_else(|poisoned| poisoned.into_inner());
         let custom_dir = env::temp_dir().join("titane_e2e_custom");
         std::env::set_var(
             "TITANE_MEMORY_DIR",
@@ -289,7 +289,7 @@ mod tests {
     fn test_resolve_memory_dir_e2e_blocks_default_dir() {
         let _env_guard = ENV_LOCK
             .lock()
-            .expect("ENV_LOCK mutex should not be poisoned");
+            .unwrap_or_else(|poisoned| poisoned.into_inner());
         let default_dir = fallback_memory_dir();
         std::env::set_var(
             "TITANE_MEMORY_DIR",
@@ -308,7 +308,7 @@ mod tests {
     fn test_scan_memory_directory_missing() {
         let _env_guard = ENV_LOCK
             .lock()
-            .expect("ENV_LOCK mutex should not be poisoned");
+            .unwrap_or_else(|poisoned| poisoned.into_inner());
         std::env::set_var("TITANE_MEMORY_DIR", "/nonexistent/path/that/does/not/exist");
         let report = scan_memory_directory();
 
