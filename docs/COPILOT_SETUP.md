@@ -1,5 +1,12 @@
 # GitHub Copilot Instructions Setup - Complete Guide
 
+## 2026-04-18 Update
+
+- Current canonical stack: `.github/copilot-instructions.md` (kernel), `.github/instructions/*.instructions.md` (scoped rules), root and local `AGENTS.md` files, `.github/agents/*.agent.md`, `.github/prompts/*.prompt.md`, plus validator truth under `scripts/verify/` and `scripts/autoheal/`.
+- Current repo agents live under `.github/agents/`; prompt files live under `.github/prompts/`; the validator-backed local AGENTS layer is present in `src/`, `src-tauri/`, `e2e/`, `docs/` and `scripts/`.
+- Production/build token gates are obsolete. Rule 11 is now on-demand build/deploy with no token gate, and `BUILD ALL` is the canonical full build command.
+- Historical references below to older routing, token-gated policies, or legacy Copilot setup surfaces should be read as archive context, not as the active instruction authority.
+
 **Date:** 2025-12-20  
 **Author:** GitHub Copilot Coding Agent  
 **Issue:** #[issue-number] - Set up Copilot instructions

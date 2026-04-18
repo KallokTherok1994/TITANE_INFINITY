@@ -9,6 +9,8 @@ Audit the instruction system only.
 - `.github/copilot-instructions.md`
 - `.github/instructions/*.instructions.md`
 - `.github/agents/*.agent.md`
+- `.github/prompts/*.prompt.md`
+- `src/AGENTS.md`, `src-tauri/AGENTS.md`, `e2e/AGENTS.md`, `docs/AGENTS.md`, `scripts/AGENTS.md`
 - `scripts/verify*.sh`, `scripts/map_refresh.sh`, `scripts/autoheal/*`
 
 ## Steps
@@ -22,7 +24,12 @@ Audit the instruction system only.
 ```bash
 bash scripts/verify_instructions.sh
 bash scripts/verify/verify_instruction_layers.sh
-bash scripts/verify/verify-agent-tooling.sh
+bash scripts/verify/verify_no_doctrine_duplication.sh
+bash scripts/verify/verify_status_vocabulary.sh
+bash scripts/verify/verify_agents_index.sh
+bash scripts/verify/verify_prompt_files_index.sh
+bash scripts/verify/verify_local_markers_consistency.sh
+bash scripts/verify/verify_kernel_budget.sh
 bash scripts/verify/scorecard-instructions.sh
 bash scripts/autoheal/detect_recurrence.sh
 ```

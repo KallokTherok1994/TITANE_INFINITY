@@ -21,14 +21,19 @@ Apply minimal patches to remove instruction drift.
 ```bash
 bash scripts/verify_instructions.sh
 bash scripts/verify/verify_instruction_layers.sh
-bash scripts/verify/verify-agent-tooling.sh
 bash scripts/verify/verify_no_doctrine_duplication.sh
 bash scripts/verify/verify_status_vocabulary.sh
+bash scripts/verify/verify_agents_index.sh
+bash scripts/verify/verify_prompt_files_index.sh
+bash scripts/verify/verify_local_markers_consistency.sh
+bash scripts/verify/verify_kernel_budget.sh
 bash scripts/verify/scorecard-instructions.sh
 bash scripts/autoheal/detect_recurrence.sh
 ```
 
 6. Confirm scorecard reaches 100/100.
+
+If scorecard stays below 100 while all mandatory validators pass, report the remaining drift honestly instead of claiming PASS by score alone.
 
 ## Output
 
