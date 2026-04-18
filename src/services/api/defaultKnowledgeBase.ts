@@ -24,6 +24,7 @@
  */
 
 import { invokeWithRetry, FAST_COMMAND_OPTIONS } from '../../lib/serviceInvoker';
+import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 
 // ─────────────────────────────────────────────────────────────────
 // Types (mirror of Rust KnowledgeBaseEntry)
@@ -653,6 +654,13 @@ export async function listCategories(): Promise<string[]> {
  */
 export async function getAllEntries(): Promise<KnowledgeBaseEntry[]> {
   if (_allEntriesCache) return _allEntriesCache;
+  if (!isTauriRuntimeAvailable()) {
+    _allEntriesCache = getFallbackEntries();
+    if (!_categoriesCache) {
+      _categoriesCache = _allEntriesCache.map(e => e.category).sort();
+    }
+    return _allEntriesCache;
+  }
   // Guard: if a load is already in flight, wait for it instead of issuing a second IPC call
   if (_allEntriesLoadingPromise) return _allEntriesLoadingPromise;
   _allEntriesLoadingPromise = (async (): Promise<KnowledgeBaseEntry[]> => {

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const { spawn } = require('node:child_process');
 const http = require('node:http');
+const path = require('node:path');
 
 const repoRoot = process.cwd();
 const canonicalServerUrl =
@@ -49,7 +50,10 @@ function waitForHttpReady(url, timeoutMs = 60000) {
 }
 
 async function runPlaywright(serverUrl) {
-  const playwrightCli = require.resolve('@playwright/test/cli.js', { paths: [repoRoot] });
+  const playwrightPackageJson = require.resolve('@playwright/test/package.json', {
+    paths: [repoRoot],
+  });
+  const playwrightCli = path.join(path.dirname(playwrightPackageJson), 'cli.js');
   const port = derivePlaywrightPort(serverUrl);
   const pw = spawn(
     process.execPath,

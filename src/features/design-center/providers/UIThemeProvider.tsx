@@ -15,6 +15,7 @@ import React, {
 } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
 import { logger } from '@/lib/logger';
+import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 import {
   DEFAULT_UI_THEME_TOKENS,
   type UIThemeContext,
@@ -190,6 +191,15 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
   // ────────────────────────────────────────────────────────────
   const loadTokens = useCallback(async () => {
     dispatch({ type: 'SET_LOADING', isLoading: true });
+    if (!isTauriRuntimeAvailable()) {
+      dispatch({
+        type: 'SET_TOKENS',
+        tokens: DEFAULT_UI_THEME_TOKENS,
+        source: 'fallback-local',
+      });
+      dispatch({ type: 'SET_DIRTY', isDirty: false });
+      return;
+    }
     try {
       const tokens = (await withIpcTimeout(
         tauriClient.loadUiTheme() as Promise<UIThemeTokens | null>,

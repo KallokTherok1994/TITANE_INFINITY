@@ -15,6 +15,7 @@
 
 import { safeInvoke } from '../utils/invoke';
 import { createLogger } from '../utils/logger';
+import { isTauriRuntimeAvailable } from '../utils/tauriProtector';
 import type {
   ExperienceState,
   ExperienceDomain,
@@ -201,6 +202,10 @@ export const getProgressToNextLevel = (): number => {
  */
 const saveState = async (): Promise<void> => {
   try {
+    if (!isTauriRuntimeAvailable()) {
+      localStorage.setItem('titane_experience', JSON.stringify(experienceState));
+      return;
+    }
     await safeInvoke('experience_update_state', { state: experienceState });
   } catch (err) {
     // Fallback localStorage si Tauri non disponible

@@ -1446,7 +1446,7 @@ class AIOrchestrator {
             this.orchestratorMetrics.autoHealTriggers++;
           }
 
-          logger.error(`Provider ${providerName} failed`, {
+          logger.warn(`Provider ${providerName} failed`, {
             error: lastError.message,
             latency: providerFailureLatency,
           });

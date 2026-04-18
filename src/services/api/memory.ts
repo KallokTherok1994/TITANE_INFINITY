@@ -18,6 +18,7 @@ import {
   STANDARD_COMMAND_OPTIONS,
   FAST_COMMAND_OPTIONS,
 } from '../../lib/serviceInvoker';
+import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 import type { StructuredMemoryEntry } from '@/core/prompts/memoryTemplates';
 import type {
   MemoryContext,
@@ -105,6 +106,7 @@ export class MemoryService {
    * Récupère projets actifs
    */
   async getActiveProjects(limit: number = 5): Promise<ProjectSummary[]> {
+    if (!isTauriRuntimeAvailable()) return [];
     const cached = this.getFromCache('active_projects');
     if (cached) return cached as ProjectSummary[];
 
@@ -125,6 +127,7 @@ export class MemoryService {
     limit: number = 10,
     timeWindow: string = '7d'
   ): Promise<DecisionSummary[]> {
+    if (!isTauriRuntimeAvailable()) return [];
     const cacheKey = `recent_decisions_${timeWindow}`;
     const cached = this.getFromCache(cacheKey);
     if (cached) return cached as DecisionSummary[];
@@ -143,6 +146,7 @@ export class MemoryService {
    * Récupère connaissances pertinentes
    */
   async getKnowledge(limit: number = 20): Promise<KnowledgeEntry[]> {
+    if (!isTauriRuntimeAvailable()) return [];
     const cached = this.getFromCache('knowledge');
     if (cached) return cached as KnowledgeEntry[];
 
@@ -160,6 +164,7 @@ export class MemoryService {
    * Récupère rituels actifs
    */
   async getActiveRituals(): Promise<RitualInfo[]> {
+    if (!isTauriRuntimeAvailable()) return [];
     const cached = this.getFromCache('active_rituals');
     if (cached) return cached as RitualInfo[];
 
@@ -177,6 +182,7 @@ export class MemoryService {
    * Récupère timeline récente
    */
   async getTimeline(timeWindow: string = '7d'): Promise<TimelineEntry[]> {
+    if (!isTauriRuntimeAvailable()) return [];
     const timeline = await invokeWithRetry<TimelineEntry[]>(
       'memory_get_timeline',
       { time_window: timeWindow },
@@ -190,6 +196,15 @@ export class MemoryService {
    * Charge contexte complet pour chat
    */
   async loadContext(config: MemoryLoadConfig = {}): Promise<MemoryContext> {
+    if (!isTauriRuntimeAvailable()) {
+      return {
+        activeProjects: [],
+        recentDecisions: [],
+        relevantKnowledge: [],
+        activeRituals: [],
+        timeline: [],
+      };
+    }
     const {
       includeProjects = true,
       includeDecisions = true,

@@ -345,6 +345,12 @@ class ChatService {
       );
       return [];
     }
+    if (!isTauriRuntimeAvailable()) {
+      logger.info(
+        '[ChatService] loadConversationHistory: browser runtime detected — returning []'
+      );
+      return [];
+    }
     if (isE2EChatMockEnabled()) {
       logger.info('[ChatService] loadConversationHistory: E2E mock mode — returning []');
       return [];

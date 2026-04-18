@@ -11,6 +11,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES
@@ -190,17 +191,21 @@ class KnowledgeVaultEngine {
     if (this.initialized) return;
 
     try {
-      // Essayer de charger depuis Tauri backend
-      const backendState = await secureInvoke<KnowledgeVaultState>(
-        'cognitive_get_knowledge_vault'
-      );
-      if (backendState) {
-        this.state = { ...createDefaultState(), ...backendState };
-        console.log(
-          '[KnowledgeVault] État chargé depuis backend:',
-          this.state.totalDocuments,
-          'documents'
+      if (isTauriRuntimeAvailable()) {
+        // Essayer de charger depuis Tauri backend
+        const backendState = await secureInvoke<KnowledgeVaultState>(
+          'cognitive_get_knowledge_vault'
         );
+        if (backendState) {
+          this.state = { ...createDefaultState(), ...backendState };
+          console.log(
+            '[KnowledgeVault] État chargé depuis backend:',
+            this.state.totalDocuments,
+            'documents'
+          );
+        }
+      } else {
+        throw new Error('Tauri runtime unavailable');
       }
     } catch {
       // Fallback: charger depuis localStorage
