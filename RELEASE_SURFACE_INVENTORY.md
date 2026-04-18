@@ -1,4 +1,22 @@
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v30.1.34 — Historical baseline preserved below)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v30.1.36 — Historical baseline preserved below)
+
+## Addendum — 2026-04-18 — TITANE∞ v30.1.36 Source Version Surface Sync
+
+Canonical target version: **30.1.36**
+
+| File / Surface | Version | Status |
+|---|---|---|
+| `package.json` | `30.1.36` | UPDATED_TO_30_1_36 |
+| `src-tauri/Cargo.toml` | `30.1.36` | UPDATED_TO_30_1_36 |
+| `src-tauri/Cargo.lock` | `30.1.36` | UPDATED_TO_30_1_36 |
+| `src-tauri/tauri.conf.json` | `30.1.36` | UPDATED_TO_30_1_36 |
+| `src-tauri/tauri.base.json` | `30.1.36` | UPDATED_TO_30_1_36 |
+| `tauri.base.json` | `30.1.36` | UPDATED_TO_30_1_36 |
+| `runtime/stable/tauri.conf.json` | `30.1.36` | UPDATED_TO_30_1_36 |
+| `runtime/stable/manifest.json` | `30.1.36` | UPDATED_TO_30_1_36 |
+| `RELEASE_SURFACE_INVENTORY.md` | `30.1.36` | UPDATED_TO_30_1_36 |
+
+> This lot qualifies source version surfaces only. No new packaged artifact, launcher, or installed-host truth is claimed here; the last packaged runtime qualification remains the v30.1.34 addendum below until a governed build revalidates artifacts and host sync.
 
 ## Addendum — 2026-04-17 — TITANE∞ v30.1.34 Packaged Runtime Qualification
 
