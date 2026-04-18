@@ -162,6 +162,8 @@ impl MemoryPersistence {
             }
         }
 
+        ids.sort();
+
         Ok(ids)
     }
 
@@ -249,5 +251,24 @@ mod tests {
         assert_eq!(loaded.id, entry.id);
         assert_eq!(loaded.content, entry.content);
         assert_eq!(loaded.tier, entry.tier);
+    }
+
+    #[tokio::test]
+    async fn list_tier_returns_sorted_ids() {
+        let dir = tempdir().expect("temp dir");
+        let persistence = MemoryPersistence::new(dir.path(), None);
+        persistence.init().await.expect("init should succeed");
+
+        std::fs::write(dir.path().join("stm").join("zeta.json"), "{}")
+            .expect("write zeta fixture");
+        std::fs::write(dir.path().join("stm").join("alpha.json"), "{}")
+            .expect("write alpha fixture");
+
+        let ids = persistence
+            .list_tier("stm")
+            .await
+            .expect("list tier should succeed");
+
+        assert_eq!(ids, vec!["alpha".to_string(), "zeta".to_string()]);
     }
 }

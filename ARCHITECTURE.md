@@ -3,6 +3,9 @@
 > 2026-04-18 — Conversation metadata continuity alignment: src-tauri/src/conversation_engine/commands.rs et src/services/conversationEngine.ts partagent maintenant la même vérité de metadata conversation pour provider_used et citations. Le backend sérialise explicitement ces champs dans metadata, la couche frontend sait encore retomber honnêtement sur meta.provider_used et trace.citations pendant une phase transitoire, et src/hooks/useConversationEngine.ts les persiste ensuite sur la surface UI active sans reformulation silencieuse.
 
 
+> 2026-04-18 — Unified memory tier list-order truth: `src-tauri/src/unified_memory_v2/persistence.rs` traite maintenant `MemoryPersistence::list_tier` comme une surface backend deterministe et non comme un simple reflet de l ordre natif de `read_dir`. Les ids `.json` retournes sont tries avant reponse, ce qui garde `load_tier` et `clear_tier` alignes sur le contenu logique du tier plutot que sur l ordre variable du filesystem.
+
+
 > 2026-04-18 — IO service list-order truth: `src-tauri/src/services/io_service.rs` traite maintenant `IoService::list_dir` comme une surface backend deterministe et non comme un simple reflet de l ordre natif de `read_dir`. Les chemins retournes sont tries avant reponse, ce qui garde les consommateurs runtime alignes sur le contenu logique du repertoire plutot que sur l ordre variable du filesystem.
 
 > 2026-04-18 — Sandbox list-order truth: `src-tauri/src/security/sandbox.rs` traite maintenant `FileImportSandbox::list_files` comme une surface runtime deterministe, et non comme un simple reflet de l ordre natif de `read_dir`. Les noms de fichiers sandbox sont tries lexicographiquement avant reponse, ce qui garde `secure_list_files` stable pour un meme contenu de repertoire et borne les deltas UI/tests a de vraies mutations de fichiers.
