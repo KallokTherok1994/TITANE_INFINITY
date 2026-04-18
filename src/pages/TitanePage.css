@@ -286,6 +286,11 @@
 .titane-section-conversation .conversation-container {
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: 100%;
   min-height: 0;
   gap: 1rem;
 }
@@ -623,9 +628,12 @@
   --conversation-stream-max-width: 1120px;
   display: flex;
   flex-direction: column;
-  /* v29.0: chrome compacté → +~80px de hauteur conversation réelle */
-  height: calc(var(--conversation-vh, 100dvh) - 155px);
-  min-height: 500px;
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
@@ -1727,11 +1735,6 @@
     padding: 0.48rem 0.6rem 0.58rem;
   }
 
-  .conversation-container {
-    height: calc(var(--conversation-vh, 100dvh) - 176px);
-    min-height: 420px;
-  }
-
   .conversation-runtime-panel {
     margin: 0;
     padding: 0.5rem 0.625rem;
@@ -1989,10 +1992,6 @@
     padding: 0.5rem 0.75rem !important;
   }
 
-  .conversation-container {
-    min-height: 260px;
-  }
-
   .conversation-filters-role {
     display: none;
   }
@@ -2082,11 +2081,6 @@
     min-height: 34px;
     padding: 0.25rem 0.65rem;
     font-size: max(0.7rem, 11px);
-  }
-
-  .conversation-container {
-    height: calc(var(--conversation-vh, 100dvh) - 82px);
-    min-height: 200px;
   }
 
   .conversation-runtime-panel {

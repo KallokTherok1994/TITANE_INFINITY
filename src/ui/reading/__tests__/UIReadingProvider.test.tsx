@@ -14,7 +14,9 @@ function ZoomProbe(): JSX.Element {
 describe('UIReadingProvider zoom synchronization', () => {
   beforeEach(() => {
     localStorage.clear();
-    document.documentElement.style.zoom = '1';
+    document.documentElement.style.removeProperty('zoom');
+    document.documentElement.style.fontSize = '16px';
+    document.documentElement.style.setProperty('--titane-ui-scale', '1');
     vi.useFakeTimers();
   });
 
@@ -24,7 +26,8 @@ describe('UIReadingProvider zoom synchronization', () => {
   });
 
   it('starts from the canonical zoom truth', () => {
-    document.documentElement.style.zoom = '1.2';
+    document.documentElement.style.fontSize = '19.2px';
+    document.documentElement.style.setProperty('--titane-ui-scale', '1.2');
 
     render(
       <UIReadingProvider>

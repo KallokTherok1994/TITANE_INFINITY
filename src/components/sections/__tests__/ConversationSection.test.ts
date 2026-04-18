@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildConversationTransparencyReply,
   buildConversationLoadingLabel,
+  getEffectiveViewportHeight,
   mapReasonCodeToNodeStatus,
   resolveConversationPendingInput,
   buildConversationRuntimeBadges,
@@ -111,19 +112,29 @@ describe('ConversationSection runtime provider label', () => {
     expect(shouldUseConversationCompactLayout(920, false)).toBe(false);
   });
 
-  it('prefers visualViewport height and clamps tiny values to the minimum', () => {
+  it('derives the effective viewport height from innerHeight and visualViewport scale', () => {
     const originalVisualViewport = window.visualViewport;
-    const descriptor = Object.getOwnPropertyDescriptor(window, 'visualViewport');
+    const visualViewportDescriptor = Object.getOwnPropertyDescriptor(window, 'visualViewport');
+    const originalInnerHeight = window.innerHeight;
 
     Object.defineProperty(window, 'visualViewport', {
       configurable: true,
-      value: { height: 240 },
+      value: { height: 1500, scale: 1.25 },
+    });
+    Object.defineProperty(window, 'innerHeight', {
+      configurable: true,
+      value: 900,
     });
 
-    expect(getConversationViewportHeight()).toBe(320);
+    expect(getEffectiveViewportHeight()).toBe(720);
+    expect(getConversationViewportHeight()).toBe(720);
 
-    if (descriptor) {
-      Object.defineProperty(window, 'visualViewport', descriptor);
+    Object.defineProperty(window, 'innerHeight', {
+      configurable: true,
+      value: originalInnerHeight,
+    });
+    if (visualViewportDescriptor) {
+      Object.defineProperty(window, 'visualViewport', visualViewportDescriptor);
     } else {
       Object.defineProperty(window, 'visualViewport', {
         configurable: true,
@@ -132,21 +143,22 @@ describe('ConversationSection runtime provider label', () => {
     }
   });
 
-  it('caps visualViewport to innerHeight when zoom makes it larger than the real window', () => {
+  it('clamps tiny effective heights to the minimum viewport threshold', () => {
     const originalVisualViewport = window.visualViewport;
     const visualViewportDescriptor = Object.getOwnPropertyDescriptor(window, 'visualViewport');
     const originalInnerHeight = window.innerHeight;
 
     Object.defineProperty(window, 'visualViewport', {
       configurable: true,
-      value: { height: 1500 },
+      value: { height: 240, scale: 2 },
     });
     Object.defineProperty(window, 'innerHeight', {
       configurable: true,
-      value: 900,
+      value: 240,
     });
 
-    expect(getConversationViewportHeight()).toBe(900);
+    expect(getEffectiveViewportHeight()).toBe(320);
+    expect(getConversationViewportHeight()).toBe(320);
 
     Object.defineProperty(window, 'innerHeight', {
       configurable: true,
@@ -176,6 +188,7 @@ describe('ConversationSection runtime provider label', () => {
       value: 777,
     });
 
+    expect(getEffectiveViewportHeight()).toBe(777);
     expect(getConversationViewportHeight()).toBe(777);
 
     Object.defineProperty(window, 'innerHeight', {
@@ -184,6 +197,37 @@ describe('ConversationSection runtime provider label', () => {
     });
     if (descriptor) {
       Object.defineProperty(window, 'visualViewport', descriptor);
+    } else {
+      Object.defineProperty(window, 'visualViewport', {
+        configurable: true,
+        value: originalVisualViewport,
+      });
+    }
+  });
+
+  it('falls back to visualViewport height when innerHeight is unavailable', () => {
+    const originalVisualViewport = window.visualViewport;
+    const visualViewportDescriptor = Object.getOwnPropertyDescriptor(window, 'visualViewport');
+    const originalInnerHeight = window.innerHeight;
+
+    Object.defineProperty(window, 'visualViewport', {
+      configurable: true,
+      value: { height: 612, scale: 1.15 },
+    });
+    Object.defineProperty(window, 'innerHeight', {
+      configurable: true,
+      value: undefined,
+    });
+
+    expect(getEffectiveViewportHeight()).toBe(612);
+    expect(getConversationViewportHeight()).toBe(612);
+
+    Object.defineProperty(window, 'innerHeight', {
+      configurable: true,
+      value: originalInnerHeight,
+    });
+    if (visualViewportDescriptor) {
+      Object.defineProperty(window, 'visualViewport', visualViewportDescriptor);
     } else {
       Object.defineProperty(window, 'visualViewport', {
         configurable: true,

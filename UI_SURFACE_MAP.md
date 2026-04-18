@@ -1,3 +1,13 @@
+# [2026-04-18] Chat layout zoom authority runtime truth: la surface canonique `AppShell -> /titane?tab=conversation` n applique plus de contre-echelle geometrique sur le shell racine. `src/hooks/zoomScale.ts` pilote le zoom via `--titane-ui-scale` et la taille de police racine, `src/components/layout/AppShell.tsx` reste strictement parent-bound avec un offset TopNav fixe, et `src/components/sections/ConversationSection.tsx` resynchronise `--conversation-vh` via `ResizeObserver` + sync differee pour suivre les resizes WRY natifs. La preuve ciblee est PASS sur navigateur et desktop WRY pour `100% -> 110% -> 100% -> 90%` puis resize compact, avec `page-titane`, `tab-conversation`, `chat-messages-scroll-region`, `chat-input`, `chat-send` et `--conversation-vh` aligns a la hauteur effective visible.
+
+# [2026-04-17] Logging context and HMR stability truth: la surface applicative canonique est maintenant enveloppee par `LoggingProvider` dans `App`, ce qui pose une facade de migration pour le logging frontend sans fusion brutale des implementations existantes. La verite anti-cycle est egalement explicite: `LogLevel` vit dans `src/types/logLevel.ts`, `src/utils/logger.ts` le re-exporte seulement pour compatibilite, et `src/config/logLevelConfig.ts` depend du type partage au lieu d importer le logger runtime.
+
+# [2026-04-17] Runtime hooks barrel isolation truth: la surface runtime canonique n importe plus le barrel racine `src/hooks/index.ts` pour `App`, `VitalsPanel`, `StatusIndicator` et `PhysiologicalPanel`. Les hooks physiologiques de compatibilite vivent maintenant dans `src/hooks/usePhysiological.ts`, tandis qu un garde d architecture interdit les nouveaux imports runtime depuis `@/hooks` hors tests, afin de reduire le blast radius HMR sans casser la surface publique du barrel pour les tests et migrations progressives.
+
+# [2026-04-17] Conversation effective viewport height truth: la surface chat canonique `/titane?tab=conversation` derive maintenant `--conversation-vh` depuis une hauteur effective calculee a partir de `window.innerHeight / visualViewport.scale`, avec borne minimale a `320px`, au lieu de se fier a un offset fixe `-155px/-176px/-82px`. `conversation-container`, `chat-messages-scroll-region`, `chat-input` et `chat-send` restent ainsi dans le viewport visible sous zoom navigateur, zoom TopNav et resize compact, et les preuves Playwright/WDIO verifient en plus la valeur runtime de `--conversation-vh`.
+
+# [2026-04-17] Agent dashboards conversation-safe dock truth: `agent-dashboards-panel` conserve son montage canonique dans `AppShell`, mais la surface conversation fullscreen ne l'affiche plus comme une pile fixe collée au coin bas. Le panneau passe désormais en dock compact non-obstructif avec `agent-dashboards-panel-toggle` et `agent-dashboards-panel-content`, ancré hors du compositeur chat pour éviter toute occultation de `chat-input` et `chat-send` sous zoom et viewport compact.
+
 # [2026-04-17] Conversation zoom-width containment truth: la surface chat canonique `/titane?tab=conversation` ne sort plus de la fenêtre sur la lane navigateur quand le zoom TopNav passe à `1.1`. `AppShell` compense désormais largeur et hauteur via `--titane-ui-scale`, `TitanePage` supprime les restes de `100vw`, et l’onglet `tab-conversation`, le flux, l’input et le bouton d’envoi restent tous bornés horizontalement et verticalement dans le viewport actif.
 
 # [2026-04-17] Security audit governed bridge truth: `security-dashboard` conserve les selectors `security-dashboard-severity-filters`, `security-dashboard-filter-all|critical|warning|info`, `security-dashboard-multi-session-federation`, `security-dashboard-export-correlations` et `security-dashboard-containment-correlation-export`, mais la surface canonique publie désormais un export gouverné signé quand le runtime Tauri est disponible. Le journal fédéré reste rendu sur la même surface UI, sans second écran ni chemin réseau direct.
@@ -94,6 +104,8 @@
 
 ## Primary Chat Surface (ConversationSection)
 
+- Runtime config fallback truth: the active frontend defaults in `src/main.tsx` and `src/pages/ConfigurationHub.tsx` align on `http://127.0.0.1:11434` + `gemma2:2b`; no active UI fallback should regress to `/api/ollama` or `qwen2.5:latest` when the runtime payload is partial.
+
 - Input textarea test id: `chat-input`
 - Send button test id: `chat-send`
 - Messages scroll region test id: `chat-messages-scroll-region`
@@ -153,6 +165,7 @@
 - **Agent de Sécurité Active** : `security-dashboard`
 - **Agent Anti-Régression canonique** : `self-healing-dashboard` + `anti-regression-summary` via `/admin?tab=anti-regression`
 - **Panel canonique** : `agent-dashboards-panel` regroupe les 5 dashboards avancés visibles sur la surface active.
+- **Dock compact conversation-safe** : sur la surface chat fullscreen ou un viewport très contraint, `agent-dashboards-panel` passe en `data-mode=compact`, expose `agent-dashboards-panel-toggle` et garde `agent-dashboards-panel-content` replié par défaut pour ne pas recouvrir `chat-input` ni `chat-send`.
 - **Montage canonique** : `agent-dashboards-panel` est monté depuis `src/components/layout/AppShell.tsx`, donc la vérité runtime attendue est sa présence sur la surface applicative active et pas seulement dans des exports dormants.
 - **Contrat canonique commun** : chaque dashboard expose `data-readiness` sur sa racine et les selectors enfants `-status`, `-summary`, `-proof-list`, `-blockers`, `-next-step`.
 - **Runtime detail truth** : `explainability-dashboard` publie `-inference-chain` et `-inference-report`, `orchestrator-dashboard` publie `-live-metrics` et `-provider-snapshots`, `security-dashboard` publie `-detection-events` et `-containment-events`; ces sections doivent rester alimentées par des signaux runtime/configuration réellement présents dans le repo.
@@ -168,10 +181,18 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Shell state contract: `data-dev-state=loading|error|ready`
 - Runtime truth: la route `/dev` expose désormais son marqueur de surface immédiatement, y compris pendant le préchargement et en état d'erreur, pour éviter que la lane desktop WRY attende des chargements secondaires avant de qualifier la page.
 
+## TOTAL_DEV Git Surface
+
+- Route canonique: `/total-dev` onglet `git`
+- Root shell test id: `total-dev-tab-git`
+- Action selectors stables: `total-dev-git-status`, `total-dev-git-diff-stat`, `total-dev-git-log`, `total-dev-git-branch`, `total-dev-git-head-sha`
+- Read-only truth marker: `total-dev-git-readonly-note`
+- Runtime truth: le panneau Git TOTAL_DEV n expose plus d actions d ecriture et documente explicitement une surface d inspection locale seulement. La voie canonique backend `total_dev_git_op` accepte maintenant uniquement les operations read-only qualifiees et leurs arguments exacts.
+
 ## Conversation Fullscreen Shell
 
 - Root shell contract: la chaîne fullscreen `AppShell -> titane-page--conversation -> titane-content--conversation -> conversation-container` doit rester parent-bound (`flex/min-height:0/max-height:100%`) et non pilotée par un double offset ou une hauteur viewport forcée.
 - Header persistence truth: `titane-page-header--conversation` reste collé en haut du shell fullscreen pour garder l’onglet chat visible quand la hauteur utile se compacte.
 - App shell offset truth: la compensation TopNav reste portée uniquement par `paddingTop: calc(4rem + env(safe-area-inset-top, 0px))` dans `AppShell`.
-- Parent-bound shell truth: `AppShell` compense désormais le zoom sur `height/min-height: calc(100% / var(--titane-ui-scale))`, ce qui évite les dérives liées à `100dvh` quand le navigateur ou Tauri appliquent un zoom réel.
+- Parent-bound shell truth: `AppShell` ne contre-echelle plus largeur/hauteur contre `--titane-ui-scale`; le shell racine reste en `h-full/w-full/min-h-0/max-w-full`, et la mise a l echelle canonique passe par `src/hooks/zoomScale.ts` via la taille de police racine et `--titane-ui-scale`.
 - Desktop proof helper truth: le helper WDIO `inspectConversationScrollRegion()` borne désormais son overflow artificiel au budget vertical réel entre `.chat-toolbar` et `.conversation-input-container`.

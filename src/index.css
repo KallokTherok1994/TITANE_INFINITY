@@ -27,10 +27,12 @@ body,
 #root {
   height: 100% !important;
   min-height: 0 !important;
+  min-width: 0 !important;
   margin: 0 !important;
   padding: 0 !important;
   overflow: hidden !important;
-  width: 100vw !important;
+  width: 100% !important;
+  max-width: 100% !important;
 }
 
 .chat-layout-responsive,
@@ -69,7 +71,7 @@ body,
 
 html {
   scroll-behavior: smooth;
-  overflow-x: auto;
+  overflow-x: hidden;
 }
 
 /* The canonical desktop/browser baseline is 100%.

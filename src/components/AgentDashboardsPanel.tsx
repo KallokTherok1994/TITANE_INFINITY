@@ -1,25 +1,183 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import MonitoringDashboard from '../services/monitoring/MonitoringDashboard';
 import DiagnosticDashboard from '../services/diagnostic/DiagnosticDashboard';
 import { ExplainabilityDashboard } from '../services/explainability/ExplainabilityDashboard';
 import OrchestratorDashboard from '../services/orchestrator/OrchestratorDashboard';
 import SecurityDashboard from '../services/security_active/SecurityDashboard';
+import './AgentDashboardsPanel.css';
+
+type AgentDashboardsPanelMode = 'default' | 'compact';
+
+const COMPACT_PANEL_VIEWPORT_HEIGHT = 760;
+
+export function resolveAgentDashboardsPanelMode(params: {
+  pathname?: string;
+  search?: string;
+  hash?: string;
+  hasFullscreenConversation: boolean;
+  viewportHeight: number;
+}): AgentDashboardsPanelMode {
+  const {
+    pathname = '',
+    search = '',
+    hash = '',
+    hasFullscreenConversation,
+    viewportHeight,
+  } = params;
+
+  if (hasFullscreenConversation) {
+    return 'compact';
+  }
+
+  const normalizedPathname = pathname.toLowerCase();
+  const normalizedHash = hash.toLowerCase();
+  const routeLooksLikeConversation =
+    normalizedPathname === '/chat' ||
+    normalizedPathname.endsWith('/chat') ||
+    normalizedHash.includes('/chat');
+
+  const searchParams = new URLSearchParams(search);
+  const hashQueryIndex = hash.indexOf('?');
+  const hashSearchParams =
+    hashQueryIndex >= 0 ? new URLSearchParams(hash.slice(hashQueryIndex + 1)) : null;
+  const requestedTab = searchParams.get('tab') ?? hashSearchParams?.get('tab');
+
+  if (routeLooksLikeConversation || requestedTab === 'conversation') {
+    return 'compact';
+  }
+
+  if (viewportHeight > 0 && viewportHeight <= COMPACT_PANEL_VIEWPORT_HEIGHT) {
+    return 'compact';
+  }
+
+  return 'default';
+}
+
+function getAgentDashboardsPanelRuntimeState(): {
+  mode: AgentDashboardsPanelMode;
+  hasFullscreenConversation: boolean;
+} {
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    return { mode: 'default', hasFullscreenConversation: false };
+  }
+
+  const hasFullscreenConversation = Boolean(
+    document.querySelector('[data-testid="page-conversation"][data-layout="fullscreen"]')
+  );
+
+  return {
+    mode: resolveAgentDashboardsPanelMode({
+      pathname: window.location.pathname,
+      search: window.location.search,
+      hash: window.location.hash,
+      hasFullscreenConversation,
+      viewportHeight: window.innerHeight,
+    }),
+    hasFullscreenConversation,
+  };
+}
 
 /**
  * AgentDashboardsPanel — panneau universel pour tous les dashboards agents avancés
  * Injecté sur toutes les pages principales TITANE
  */
-const AgentDashboardsPanel: React.FC = () => (
-  <div
-    data-testid="agent-dashboards-panel"
-    style={{ position: 'fixed', bottom: 0, right: 0, zIndex: 2000, maxWidth: 420 }}
-  >
-    <MonitoringDashboard />
-    <DiagnosticDashboard />
-    <ExplainabilityDashboard />
-    <OrchestratorDashboard />
-    <SecurityDashboard />
-  </div>
-);
+const AgentDashboardsPanel: React.FC = () => {
+  const [runtimeState, setRuntimeState] = useState(() => getAgentDashboardsPanelRuntimeState());
+  const [isExpanded, setIsExpanded] = useState(runtimeState.mode === 'default');
+
+  useEffect(() => {
+    const syncRuntimeState = () => {
+      const nextState = getAgentDashboardsPanelRuntimeState();
+      setRuntimeState(prevState => {
+        if (
+          prevState.mode === nextState.mode &&
+          prevState.hasFullscreenConversation === nextState.hasFullscreenConversation
+        ) {
+          return prevState;
+        }
+
+        return nextState;
+      });
+    };
+
+    syncRuntimeState();
+
+    const mutationObserver =
+      typeof MutationObserver === 'function'
+        ? new MutationObserver(() => {
+            syncRuntimeState();
+          })
+        : null;
+
+    mutationObserver?.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['data-layout', 'data-testid'],
+    });
+
+    window.addEventListener('resize', syncRuntimeState);
+    window.addEventListener('hashchange', syncRuntimeState);
+    window.addEventListener('popstate', syncRuntimeState);
+
+    return () => {
+      mutationObserver?.disconnect();
+      window.removeEventListener('resize', syncRuntimeState);
+      window.removeEventListener('hashchange', syncRuntimeState);
+      window.removeEventListener('popstate', syncRuntimeState);
+    };
+  }, []);
+
+  useEffect(() => {
+    setIsExpanded(runtimeState.mode === 'default');
+  }, [runtimeState.mode]);
+
+  const panelLabel = useMemo(() => {
+    return isExpanded ? 'Masquer les dashboards agents' : 'Afficher les dashboards agents';
+  }, [isExpanded]);
+
+  return (
+    <aside
+      data-testid="agent-dashboards-panel"
+      data-mode={runtimeState.mode}
+      data-expanded={isExpanded ? 'true' : 'false'}
+      data-conversation-safe={runtimeState.hasFullscreenConversation ? 'true' : 'false'}
+      className={[
+        'agent-dashboards-panel',
+        runtimeState.mode === 'compact' ? 'agent-dashboards-panel--compact' : '',
+        isExpanded ? 'agent-dashboards-panel--expanded' : 'agent-dashboards-panel--collapsed',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+    >
+      <button
+        type="button"
+        data-testid="agent-dashboards-panel-toggle"
+        className="agent-dashboards-panel__toggle"
+        aria-expanded={isExpanded}
+        aria-label={panelLabel}
+        title={panelLabel}
+        onClick={() => {
+          setIsExpanded(prev => !prev);
+        }}
+      >
+        <span className="agent-dashboards-panel__toggle-title">Agents</span>
+        <span className="agent-dashboards-panel__toggle-meta">5 dashboards</span>
+      </button>
+
+      <div
+        data-testid="agent-dashboards-panel-content"
+        className="agent-dashboards-panel__content"
+        hidden={!isExpanded}
+      >
+        <MonitoringDashboard />
+        <DiagnosticDashboard />
+        <ExplainabilityDashboard />
+        <OrchestratorDashboard />
+        <SecurityDashboard />
+      </div>
+    </aside>
+  );
+};
 
 export default AgentDashboardsPanel;

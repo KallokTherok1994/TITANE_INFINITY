@@ -16,8 +16,6 @@ import { motion } from 'framer-motion';
 import { cn } from '@/utils/cn'; // Utility for conditional classes
 import AgentDashboardsPanel from '@/components/AgentDashboardsPanel';
 
-const APP_SHELL_ZOOM_VAR = 'var(--titane-ui-scale, 1)';
-
 // ─────────────────────────────────────────────────────────────────
 // TYPES
 // ─────────────────────────────────────────────────────────────────
@@ -47,12 +45,6 @@ export const AppShell = ({
         'flex h-full min-h-0 w-full min-w-0 max-w-full flex-col overflow-hidden bg-titanium-bg-base',
         className
       )}
-      style={{
-        width: `calc(100% / ${APP_SHELL_ZOOM_VAR})`,
-        maxWidth: `calc(100% / ${APP_SHELL_ZOOM_VAR})`,
-        height: `calc(100% / ${APP_SHELL_ZOOM_VAR})`,
-        minHeight: `calc(100% / ${APP_SHELL_ZOOM_VAR})`,
-      }}
     >
       {/* TopNav (remplace header + sidebar) */}
       {topNav && (
@@ -68,7 +60,7 @@ export const AppShell = ({
         style={
           topNav
             ? {
-                paddingTop: `calc((4rem + env(safe-area-inset-top, 0px)) / ${APP_SHELL_ZOOM_VAR})`,
+                paddingTop: 'calc(4rem + env(safe-area-inset-top, 0px))',
               }
             : undefined
         }

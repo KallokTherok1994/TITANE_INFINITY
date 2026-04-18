@@ -13,7 +13,11 @@ type LayoutMetrics = {
     height: number | null;
     scale: number | null;
   };
+  devicePixelRatio: number | null;
+  effectiveViewportHeight: number | null;
+  conversationViewportHeight: number | null;
   htmlZoom: string;
+  uiScale: string;
   density: string | null;
   pageLeft: number | null;
   pageRight: number | null;
@@ -23,9 +27,11 @@ type LayoutMetrics = {
   tabBottom: number | null;
   inputLeft: number | null;
   inputRight: number | null;
+  inputTop: number | null;
   inputBottom: number | null;
   sendLeft: number | null;
   sendRight: number | null;
+  sendTop: number | null;
   sendBottom: number | null;
   regionLeft: number | null;
   regionRight: number | null;
@@ -33,6 +39,11 @@ type LayoutMetrics = {
   containerLeft: number | null;
   containerRight: number | null;
   containerBottom: number | null;
+  panelLeft: number | null;
+  panelRight: number | null;
+  panelTop: number | null;
+  panelBottom: number | null;
+  panelHidden: boolean;
 };
 
 async function setBrowserScaleFactor(page: Page, scale: number): Promise<void> {
@@ -99,8 +110,24 @@ async function measureLayout(page: Page): Promise<LayoutMetrics> {
       const element = document.querySelector(selector);
       return element ? element.getBoundingClientRect().right : null;
     };
+    const rectTop = (selector: string) => {
+      const element = document.querySelector(selector);
+      return element ? element.getBoundingClientRect().top : null;
+    };
 
     const container = document.querySelector('.conversation-container');
+    const panelContent = document.querySelector('[data-testid="agent-dashboards-panel-content"]');
+    const conversationViewportHeightValue = container
+      ? getComputedStyle(container).getPropertyValue('--conversation-vh').trim()
+      : '';
+    const effectiveViewportHeight = Math.floor(
+      window.innerHeight /
+        ((typeof window.visualViewport?.scale === 'number' &&
+        Number.isFinite(window.visualViewport.scale) &&
+        window.visualViewport.scale > 0
+          ? window.visualViewport.scale
+          : 1) || 1)
+    );
     return {
       viewport: { width: window.innerWidth, height: window.innerHeight },
       visualViewport: {
@@ -108,9 +135,24 @@ async function measureLayout(page: Page): Promise<LayoutMetrics> {
         height: window.visualViewport?.height ?? null,
         scale: window.visualViewport?.scale ?? null,
       },
+      devicePixelRatio:
+        typeof window.devicePixelRatio === 'number' && Number.isFinite(window.devicePixelRatio)
+          ? window.devicePixelRatio
+          : null,
+      effectiveViewportHeight: Number.isFinite(effectiveViewportHeight)
+        ? effectiveViewportHeight
+        : null,
+      conversationViewportHeight:
+        conversationViewportHeightValue && conversationViewportHeightValue.endsWith('px')
+          ? Number.parseInt(conversationViewportHeightValue, 10)
+          : null,
       htmlZoom:
         getComputedStyle(document.documentElement).zoom ||
         document.documentElement.style.zoom ||
+        '1',
+      uiScale:
+        document.documentElement.style.getPropertyValue('--titane-ui-scale') ||
+        getComputedStyle(document.documentElement).getPropertyValue('--titane-ui-scale') ||
         '1',
       density: container?.getAttribute('data-density') ?? null,
       pageLeft: rectLeft('[data-testid="page-titane"]'),
@@ -121,9 +163,11 @@ async function measureLayout(page: Page): Promise<LayoutMetrics> {
       tabBottom: rectBottom('[data-testid="tab-conversation"]'),
       inputLeft: rectLeft('[data-testid="chat-input"]'),
       inputRight: rectRight('[data-testid="chat-input"]'),
+      inputTop: rectTop('[data-testid="chat-input"]'),
       inputBottom: rectBottom('[data-testid="chat-input"]'),
       sendLeft: rectLeft('[data-testid="chat-send"]'),
       sendRight: rectRight('[data-testid="chat-send"]'),
+      sendTop: rectTop('[data-testid="chat-send"]'),
       sendBottom: rectBottom('[data-testid="chat-send"]'),
       regionLeft: rectLeft('[data-testid="chat-messages-scroll-region"]'),
       regionRight: rectRight('[data-testid="chat-messages-scroll-region"]'),
@@ -131,6 +175,11 @@ async function measureLayout(page: Page): Promise<LayoutMetrics> {
       containerLeft: rectLeft('.conversation-container'),
       containerRight: rectRight('.conversation-container'),
       containerBottom: rectBottom('.conversation-container'),
+      panelLeft: rectLeft('[data-testid="agent-dashboards-panel"]'),
+      panelRight: rectRight('[data-testid="agent-dashboards-panel"]'),
+      panelTop: rectTop('[data-testid="agent-dashboards-panel"]'),
+      panelBottom: rectBottom('[data-testid="agent-dashboards-panel"]'),
+      panelHidden: panelContent?.hasAttribute('hidden') ?? true,
     };
   });
 }
@@ -181,6 +230,81 @@ function expectVisibleWindowBounds(metrics: LayoutMetrics) {
   expect(metrics.containerBottom!).toBeLessThanOrEqual(viewportBottom);
 }
 
+function expectConversationViewportVariable(metrics: LayoutMetrics) {
+  expect(metrics.conversationViewportHeight).not.toBeNull();
+  expect(metrics.effectiveViewportHeight).not.toBeNull();
+  expect(metrics.conversationViewportHeight!).toBeGreaterThanOrEqual(320);
+  expect(metrics.conversationViewportHeight!).toBe(metrics.effectiveViewportHeight);
+}
+
+function rectsOverlap(params: {
+  leftA: number | null;
+  rightA: number | null;
+  topA: number | null;
+  bottomA: number | null;
+  leftB: number | null;
+  rightB: number | null;
+  topB: number | null;
+  bottomB: number | null;
+}) {
+  const {
+    leftA,
+    rightA,
+    topA,
+    bottomA,
+    leftB,
+    rightB,
+    topB,
+    bottomB,
+  } = params;
+
+  if (
+    leftA === null ||
+    rightA === null ||
+    topA === null ||
+    bottomA === null ||
+    leftB === null ||
+    rightB === null ||
+    topB === null ||
+    bottomB === null
+  ) {
+    return false;
+  }
+
+  return !(rightA <= leftB || rightB <= leftA || bottomA <= topB || bottomB <= topA);
+}
+
+function expectPanelDoesNotOccludeComposer(metrics: LayoutMetrics) {
+  if (!metrics.panelHidden) {
+    return;
+  }
+
+  const inputOverlap = rectsOverlap({
+    leftA: metrics.panelLeft,
+    rightA: metrics.panelRight,
+    topA: metrics.panelTop,
+    bottomA: metrics.panelBottom,
+    leftB: metrics.inputLeft,
+    rightB: metrics.inputRight,
+    topB: metrics.inputTop,
+    bottomB: metrics.inputBottom,
+  });
+
+  const sendOverlap = rectsOverlap({
+    leftA: metrics.panelLeft,
+    rightA: metrics.panelRight,
+    topA: metrics.panelTop,
+    bottomA: metrics.panelBottom,
+    leftB: metrics.sendLeft,
+    rightB: metrics.sendRight,
+    topB: metrics.sendTop,
+    bottomB: metrics.sendBottom,
+  });
+
+  expect(inputOverlap).toBe(false);
+  expect(sendOverlap).toBe(false);
+}
+
 test.describe('Critical Path: Chat Layout Viewport', () => {
   if (!FULL_E2E_ENABLED) {
     test('gate disabled proof (set TITANE_E2E_FULL=1)', async () => {
@@ -210,6 +334,8 @@ test.describe('Critical Path: Chat Layout Viewport', () => {
 
       expect(metrics.viewport).toEqual(viewport);
       expectVisibleWindowBounds(metrics);
+      expectConversationViewportVariable(metrics);
+      expectPanelDoesNotOccludeComposer(metrics);
       await expectCriticalSurfaceInViewport(page);
       if (viewport.height <= 980) {
         expect(metrics.density).toBe('compact');
@@ -222,22 +348,36 @@ test.describe('Critical Path: Chat Layout Viewport', () => {
     await openConversationSurface(page);
 
     const baseline = await measureLayout(page);
-    expect(baseline.htmlZoom).toBe('1');
+    expect(Number(baseline.uiScale)).toBe(1);
     expectVisibleWindowBounds(baseline);
+    expectConversationViewportVariable(baseline);
     await expectCriticalSurfaceInViewport(page);
 
     await page.getByTestId('topnav-zoom-in').click({ force: true });
     await page.waitForTimeout(200);
     const zoomIn = await measureLayout(page);
-    expect(Number(zoomIn.htmlZoom)).toBeGreaterThan(1);
+    expect(Number(zoomIn.uiScale)).toBeGreaterThan(1);
     expectVisibleWindowBounds(zoomIn);
+    expectConversationViewportVariable(zoomIn);
+    expectPanelDoesNotOccludeComposer(zoomIn);
+    await expectCriticalSurfaceInViewport(page);
+
+    await page.getByTestId('topnav-zoom-out').click({ force: true });
+    await page.waitForTimeout(200);
+    const zoomReset = await measureLayout(page);
+    expect(Number(zoomReset.uiScale)).toBe(1);
+    expectVisibleWindowBounds(zoomReset);
+    expectConversationViewportVariable(zoomReset);
+    expectPanelDoesNotOccludeComposer(zoomReset);
     await expectCriticalSurfaceInViewport(page);
 
     await page.getByTestId('topnav-zoom-out').click({ force: true });
     await page.waitForTimeout(200);
     const zoomOut = await measureLayout(page);
-    expect(Number(zoomOut.htmlZoom)).toBeGreaterThan(0);
+    expect(Number(zoomOut.uiScale)).toBeLessThan(1);
     expectVisibleWindowBounds(zoomOut);
+    expectConversationViewportVariable(zoomOut);
+    expectPanelDoesNotOccludeComposer(zoomOut);
     await expectCriticalSurfaceInViewport(page);
   });
 
@@ -261,6 +401,8 @@ test.describe('Critical Path: Chat Layout Viewport', () => {
       expect(metrics.viewport).toEqual({ width: target.width, height: target.height });
       expect(metrics.density).toBe(target.expectedDensity);
       expectVisibleWindowBounds(metrics);
+      expectConversationViewportVariable(metrics);
+      expectPanelDoesNotOccludeComposer(metrics);
       await expectCriticalSurfaceInViewport(page);
     }
   });
@@ -279,6 +421,8 @@ test.describe('Critical Path: Chat Layout Viewport', () => {
     expect(baseline.viewport.width).toBeLessThanOrEqual(430);
     expect(baseline.visualViewport.height).not.toBeNull();
     expectVisibleWindowBounds(baseline);
+    expectConversationViewportVariable(baseline);
+    expectPanelDoesNotOccludeComposer(baseline);
     await expectCriticalSurfaceInViewport(page);
 
     await setBrowserScaleFactor(page, 1.2);
@@ -288,6 +432,11 @@ test.describe('Critical Path: Chat Layout Viewport', () => {
     expect(pinchZoom.visualViewport.scale).not.toBeNull();
     expect(pinchZoom.visualViewport.scale!).toBeGreaterThanOrEqual(1.1);
     expectVisibleWindowBounds(pinchZoom);
+    expectConversationViewportVariable(pinchZoom);
+    expect(pinchZoom.conversationViewportHeight!).toBeLessThan(
+      baseline.conversationViewportHeight!
+    );
+    expectPanelDoesNotOccludeComposer(pinchZoom);
     await expectCriticalSurfaceInViewport(page);
 
     await setBrowserScaleFactor(page, 1);
@@ -306,6 +455,8 @@ test.describe('Critical Path: Chat Layout Viewport', () => {
 
     const baseline = await measureLayout(page);
     expectVisibleWindowBounds(baseline);
+    expectConversationViewportVariable(baseline);
+    expectPanelDoesNotOccludeComposer(baseline);
     await expectCriticalSurfaceInViewport(page);
 
     await setBrowserScaleFactor(page, 1.15);
@@ -315,6 +466,11 @@ test.describe('Critical Path: Chat Layout Viewport', () => {
     expect(browserZoomIn.visualViewport.scale).not.toBeNull();
     expect(browserZoomIn.visualViewport.scale!).toBeGreaterThanOrEqual(1.1);
     expectVisibleWindowBounds(browserZoomIn);
+    expectConversationViewportVariable(browserZoomIn);
+    expect(browserZoomIn.conversationViewportHeight!).toBeLessThan(
+      baseline.conversationViewportHeight!
+    );
+    expectPanelDoesNotOccludeComposer(browserZoomIn);
     await expectCriticalSurfaceInViewport(page);
 
     await setBrowserScaleFactor(page, 1);
@@ -324,6 +480,10 @@ test.describe('Critical Path: Chat Layout Viewport', () => {
     expect(reset.visualViewport.scale).not.toBeNull();
     expect(reset.visualViewport.scale!).toBeLessThanOrEqual(1.01);
     expectVisibleWindowBounds(reset);
+    expectConversationViewportVariable(reset);
+    expect(
+      Math.abs(reset.conversationViewportHeight! - baseline.conversationViewportHeight!)
+    ).toBeLessThanOrEqual(2);
     await expectCriticalSurfaceInViewport(page);
   });
 });

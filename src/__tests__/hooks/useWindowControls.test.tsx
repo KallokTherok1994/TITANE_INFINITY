@@ -23,6 +23,10 @@ vi.mock('@/lib/security', () => ({
 describe('useWindowControls Hook', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    localStorage.clear();
+    document.documentElement.style.removeProperty('zoom');
+    document.documentElement.style.fontSize = '16px';
+    document.documentElement.style.setProperty('--titane-ui-scale', '1');
   });
 
   describe('Initialization', () => {
@@ -44,7 +48,8 @@ describe('useWindowControls Hook', () => {
       });
 
       expect(result.current.zoomIn).toBeDefined();
-      expect(document.documentElement.style.zoom).toBe('1.1');
+      expect(document.documentElement.style.getPropertyValue('--titane-ui-scale')).toBe('1.1');
+      expect(document.documentElement.style.fontSize).toBe('17.6px');
     });
 
     it('supports Ctrl+NumpadAdd as a zoom-in shortcut', async () => {
@@ -61,7 +66,8 @@ describe('useWindowControls Hook', () => {
         );
       });
 
-      expect(document.documentElement.style.zoom).toBe('1.1');
+      expect(document.documentElement.style.getPropertyValue('--titane-ui-scale')).toBe('1.1');
+      expect(document.documentElement.style.fontSize).toBe('17.6px');
     });
 
     it('should zoom out', async () => {
@@ -72,7 +78,8 @@ describe('useWindowControls Hook', () => {
       });
 
       expect(result.current.zoomOut).toBeDefined();
-      expect(document.documentElement.style.zoom).toBe('0.9');
+      expect(document.documentElement.style.getPropertyValue('--titane-ui-scale')).toBe('0.9');
+      expect(document.documentElement.style.fontSize).toBe('14.4px');
     });
 
     it('should reset zoom', async () => {
@@ -83,7 +90,8 @@ describe('useWindowControls Hook', () => {
       });
 
       expect(result.current.zoomReset).toBeDefined();
-      expect(document.documentElement.style.zoom).toBe('1');
+      expect(document.documentElement.style.getPropertyValue('--titane-ui-scale')).toBe('1');
+      expect(document.documentElement.style.fontSize).toBe('16px');
     });
   });
 

@@ -3,8 +3,8 @@ import { describe, expect, it } from 'vitest';
 
 import { AppShell } from '../AppShell';
 
-describe('AppShell zoom compensation', () => {
-  it('compensates width and height with the canonical zoom css variable', () => {
+describe('AppShell fullscreen shell', () => {
+  it('keeps the main shell parent-bound under zoom changes', () => {
     const { container } = render(
       <AppShell topNav={<div>TopNav</div>}>
         <div>Content</div>
@@ -17,12 +17,7 @@ describe('AppShell zoom compensation', () => {
     expect(shell).not.toBeNull();
     const shellStyle = shell?.getAttribute('style') ?? '';
 
-    expect(shellStyle).toContain('width: calc(100% / var(--titane-ui-scale, 1));');
-    expect(shellStyle).toContain('max-width: calc(100% / var(--titane-ui-scale, 1));');
-    expect(shellStyle).toContain('height: calc(100% / var(--titane-ui-scale, 1));');
-    expect(shellStyle).toContain('min-height: calc(100% / var(--titane-ui-scale, 1));');
-    expect(main).toHaveStyle({
-      paddingTop: 'calc((4rem + env(safe-area-inset-top, 0px)) / var(--titane-ui-scale, 1))',
-    });
+    expect(shellStyle).toBe('');
+    expect(main).toHaveStyle({ paddingTop: 'calc(4rem + env(safe-area-inset-top, 0px))' });
   });
 });

@@ -6,11 +6,14 @@ import { loadSavedZoom, useZoomControl } from '@/hooks/useZoomControl';
 describe('useZoomControl', () => {
   beforeEach(() => {
     localStorage.clear();
-    document.documentElement.style.zoom = '1';
+    document.documentElement.style.removeProperty('zoom');
+    document.documentElement.style.fontSize = '16px';
+    document.documentElement.style.setProperty('--titane-ui-scale', '1');
   });
 
   it('applies keyboard zoom from the current computed scale using the canonical +10pt step', () => {
-    document.documentElement.style.zoom = '1.1';
+    document.documentElement.style.fontSize = '17.6px';
+    document.documentElement.style.setProperty('--titane-ui-scale', '1.1');
 
     renderHook(() => useZoomControl());
 
@@ -22,7 +25,8 @@ describe('useZoomControl', () => {
       })
     );
 
-    expect(document.documentElement.style.zoom).toBe('1.2');
+    expect(document.documentElement.style.getPropertyValue('--titane-ui-scale')).toBe('1.2');
+    expect(document.documentElement.style.fontSize).toBe('19.2px');
     expect(localStorage.getItem('titane_zoom_level')).toBe('1.2');
   });
 
@@ -45,12 +49,14 @@ describe('useZoomControl', () => {
       })
     );
 
-    expect(document.documentElement.style.zoom).toBe('1');
+    expect(document.documentElement.style.getPropertyValue('--titane-ui-scale')).toBe('1');
+    expect(document.documentElement.style.fontSize).toBe('16px');
     expect(localStorage.getItem('titane_zoom_level')).toBe('1');
   });
 
   it('restores the baseline zoom on Ctrl+0', () => {
-    document.documentElement.style.zoom = '1.4';
+    document.documentElement.style.fontSize = '22.4px';
+    document.documentElement.style.setProperty('--titane-ui-scale', '1.4');
 
     renderHook(() => useZoomControl());
 
@@ -62,7 +68,8 @@ describe('useZoomControl', () => {
       })
     );
 
-    expect(document.documentElement.style.zoom).toBe('1');
+    expect(document.documentElement.style.getPropertyValue('--titane-ui-scale')).toBe('1');
+    expect(document.documentElement.style.fontSize).toBe('16px');
     expect(localStorage.getItem('titane_zoom_level')).toBe('1');
   });
 
@@ -71,6 +78,7 @@ describe('useZoomControl', () => {
 
     loadSavedZoom();
 
-    expect(document.documentElement.style.zoom).toBe('1.1');
+    expect(document.documentElement.style.getPropertyValue('--titane-ui-scale')).toBe('1.1');
+    expect(document.documentElement.style.fontSize).toBe('17.6px');
   });
 });

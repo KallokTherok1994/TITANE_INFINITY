@@ -119,6 +119,10 @@ async function ensureConversationSurface() {
     });
   }
 
+  // The app bootstrap can reapply the persisted zoom after the first navigation.
+  // Reset again once the canonical conversation surface is actually active.
+  await resetUiZoomToBaseline();
+
   await waitForDisplayed('[data-testid="tab-conversation"]');
   await waitForDisplayed('[data-testid="chat-input"]');
   await waitForDisplayed('[data-testid="chat-send"]');
@@ -139,7 +143,8 @@ async function resetUiZoomToBaseline() {
         // Best effort only.
       }
 
-      document.documentElement.style.zoom = '1';
+      document.documentElement.style.removeProperty('zoom');
+      document.documentElement.style.fontSize = '16px';
       document.documentElement.style.setProperty('--titane-ui-scale', '1');
       done(null);
     };
@@ -190,13 +195,46 @@ async function measureLayout(label) {
       };
     };
 
+    const panelContent = document.querySelector('[data-testid="agent-dashboards-panel-content"]');
+
     const container = document.querySelector('.conversation-container');
+    const conversationViewportHeightValue = container
+      ? getComputedStyle(container).getPropertyValue('--conversation-vh').trim()
+      : '';
+    const effectiveViewportHeight = Math.floor(
+      window.innerHeight /
+        ((typeof window.visualViewport?.scale === 'number' &&
+        Number.isFinite(window.visualViewport.scale) &&
+        window.visualViewport.scale > 0
+          ? window.visualViewport.scale
+          : 1) || 1)
+    );
     return {
       label: stepLabel,
       viewport: { width: window.innerWidth, height: window.innerHeight },
+      visualViewport: {
+        width: window.visualViewport?.width ?? null,
+        height: window.visualViewport?.height ?? null,
+        scale: window.visualViewport?.scale ?? null,
+      },
+      devicePixelRatio:
+        typeof window.devicePixelRatio === 'number' && Number.isFinite(window.devicePixelRatio)
+          ? window.devicePixelRatio
+          : null,
+      effectiveViewportHeight: Number.isFinite(effectiveViewportHeight)
+        ? effectiveViewportHeight
+        : null,
+      conversationViewportHeight:
+        conversationViewportHeightValue && conversationViewportHeightValue.endsWith('px')
+          ? Number.parseInt(conversationViewportHeightValue, 10)
+          : null,
       htmlZoom:
         getComputedStyle(document.documentElement).zoom ||
         document.documentElement.style.zoom ||
+        '1',
+      uiScale:
+        document.documentElement.style.getPropertyValue('--titane-ui-scale') ||
+        getComputedStyle(document.documentElement).getPropertyValue('--titane-ui-scale') ||
         '1',
       density: container?.getAttribute('data-density') ?? null,
       page: rectBottom('[data-testid="page-titane"]'),
@@ -211,12 +249,45 @@ async function measureLayout(label) {
       inputHorizontal: rectHorizontal('[data-testid="chat-input"]'),
       send: rectBottom('[data-testid="chat-send"]'),
       sendHorizontal: rectHorizontal('[data-testid="chat-send"]'),
+      panel: rectBottom('[data-testid="agent-dashboards-panel"]'),
+      panelHorizontal: rectHorizontal('[data-testid="agent-dashboards-panel"]'),
+      panelHidden: panelContent?.hasAttribute('hidden') ?? true,
     };
   }, label);
 
   report.checks.push(metrics);
   await persistReport();
   return metrics;
+}
+
+function rectsOverlap(verticalA, horizontalA, verticalB, horizontalB) {
+  if (!verticalA || !horizontalA || !verticalB || !horizontalB) {
+    return false;
+  }
+
+  return !(
+    horizontalA.right <= horizontalB.left ||
+    horizontalB.right <= horizontalA.left ||
+    verticalA.bottom <= verticalB.top ||
+    verticalB.bottom <= verticalA.top
+  );
+}
+
+function assertPanelDoesNotOccludeComposer(metrics) {
+  if (!metrics.panelHidden) {
+    return;
+  }
+
+  assert.equal(
+    rectsOverlap(metrics.panel, metrics.panelHorizontal, metrics.input, metrics.inputHorizontal),
+    false,
+    `${metrics.label}: agent dashboards panel overlaps chat input`
+  );
+  assert.equal(
+    rectsOverlap(metrics.panel, metrics.panelHorizontal, metrics.send, metrics.sendHorizontal),
+    false,
+    `${metrics.label}: agent dashboards panel overlaps send button`
+  );
 }
 
 function assertVisibleBounds(metrics) {
@@ -250,6 +321,28 @@ function assertVisibleBounds(metrics) {
   }
 }
 
+function assertConversationViewportVariable(metrics) {
+  assert.notEqual(
+    metrics.conversationViewportHeight,
+    null,
+    `${metrics.label}: missing --conversation-vh value`
+  );
+  assert.notEqual(
+    metrics.effectiveViewportHeight,
+    null,
+    `${metrics.label}: missing effective viewport height`
+  );
+  assert.ok(
+    metrics.conversationViewportHeight >= 320,
+    `${metrics.label}: conversationViewportHeight=${metrics.conversationViewportHeight} is below minimum`
+  );
+  assert.equal(
+    metrics.conversationViewportHeight,
+    metrics.effectiveViewportHeight,
+    `${metrics.label}: --conversation-vh does not match effective viewport height`
+  );
+}
+
 async function clickZoom(testId) {
   const selector = `[data-testid="${testId}"]`;
   await waitForDisplayed(selector);
@@ -278,19 +371,35 @@ describe('Desktop (Tauri) chat layout viewport truth', () => {
 
     const baseline = await measureLayout('desktop-baseline');
     assertVisibleBounds(baseline);
+    assertConversationViewportVariable(baseline);
+    assertPanelDoesNotOccludeComposer(baseline);
 
     await clickZoom('topnav-zoom-in');
     const zoomIn = await measureLayout('desktop-zoom-in');
-    assert.ok(Number(zoomIn.htmlZoom) > 1, 'topnav zoom-in did not increase ui zoom');
+    assert.ok(Number(zoomIn.uiScale) > 1, 'topnav zoom-in did not increase ui zoom');
     assertVisibleBounds(zoomIn);
+    assertConversationViewportVariable(zoomIn);
+    assertPanelDoesNotOccludeComposer(zoomIn);
 
     await clickZoom('topnav-zoom-out');
-    const zoomOut = await measureLayout('desktop-zoom-out');
+    const zoomReset = await measureLayout('desktop-zoom-reset');
+    assert.equal(Number(zoomReset.uiScale), 1, 'topnav zoom-out did not reset to baseline');
+    assertVisibleBounds(zoomReset);
+    assertConversationViewportVariable(zoomReset);
+    assertPanelDoesNotOccludeComposer(zoomReset);
+
+    await clickZoom('topnav-zoom-out');
+    const zoomOut = await measureLayout('desktop-zoom-out-below-baseline');
+    assert.ok(Number(zoomOut.uiScale) < 1, 'topnav zoom-out did not go below baseline');
     assertVisibleBounds(zoomOut);
+    assertConversationViewportVariable(zoomOut);
+    assertPanelDoesNotOccludeComposer(zoomOut);
 
     await setViewport(1024, 640);
     const compact = await measureLayout('desktop-compact-resize');
     assert.equal(compact.density, 'compact');
     assertVisibleBounds(compact);
+    assertConversationViewportVariable(compact);
+    assertPanelDoesNotOccludeComposer(compact);
   });
 });

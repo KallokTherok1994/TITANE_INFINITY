@@ -153,25 +153,44 @@ const SCROLL_TO_BOTTOM_VISIBILITY_OFFSET_PX = 180;
 
 const MIN_CONVERSATION_VIEWPORT_HEIGHT = 320;
 
-export function getConversationViewportHeight(): number {
+function readConversationViewportScale(): number {
+  if (typeof window === 'undefined') {
+    return 1;
+  }
+
+  const viewportScale = window.visualViewport?.scale;
+  return typeof viewportScale === 'number' && Number.isFinite(viewportScale) && viewportScale > 0
+    ? viewportScale
+    : 1;
+}
+
+export function getEffectiveViewportHeight(): number {
   if (typeof window === 'undefined') {
     return 0;
   }
 
-  const visualViewportHeight = window.visualViewport?.height;
-  if (typeof visualViewportHeight === 'number' && Number.isFinite(visualViewportHeight)) {
-    const boundedViewportHeight =
-      typeof window.innerHeight === 'number' && Number.isFinite(window.innerHeight)
-        ? Math.min(visualViewportHeight, window.innerHeight)
-        : visualViewportHeight;
+  const boundedInnerHeight =
+    typeof window.innerHeight === 'number' && Number.isFinite(window.innerHeight)
+      ? window.innerHeight
+      : 0;
 
+  if (boundedInnerHeight > 0) {
     return Math.max(
       MIN_CONVERSATION_VIEWPORT_HEIGHT,
-      Math.round(boundedViewportHeight)
+      Math.floor(boundedInnerHeight / readConversationViewportScale())
     );
   }
 
-  return Math.max(MIN_CONVERSATION_VIEWPORT_HEIGHT, window.innerHeight || 0);
+  const visualViewportHeight = window.visualViewport?.height;
+  if (typeof visualViewportHeight === 'number' && Number.isFinite(visualViewportHeight)) {
+    return Math.max(MIN_CONVERSATION_VIEWPORT_HEIGHT, Math.floor(visualViewportHeight));
+  }
+
+  return MIN_CONVERSATION_VIEWPORT_HEIGHT;
+}
+
+export function getConversationViewportHeight(): number {
+  return getEffectiveViewportHeight();
 }
 
 export function shouldUseConversationCompactLayout(
@@ -1199,6 +1218,8 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputValueRef = useRef('');
     const sendingRef = useRef(false);
+    const lastViewportScaleRef = useRef(1);
+    const lastDevicePixelRatioRef = useRef(1);
     const deferredSearchQuery = useDeferredValue(searchQuery);
 
     const updateInputValue = useCallback((value: React.SetStateAction<string>) => {
@@ -1213,23 +1234,116 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     const thinking = useThinkingSteps();
 
     useEffect(() => {
+      if (typeof window === 'undefined') {
+        return undefined;
+      }
+
+      let resolutionQuery: MediaQueryList | null = null;
+      let rootResizeObserver: ResizeObserver | null = null;
+      let viewportSyncFrameId = 0;
+      let viewportSyncTimeoutId: number | null = null;
+
       const updateViewportHeight = () => {
-        setConversationViewportHeight(getConversationViewportHeight());
+        const nextViewportHeight = getConversationViewportHeight();
+        setConversationViewportHeight(prevHeight =>
+          prevHeight === nextViewportHeight ? prevHeight : nextViewportHeight
+        );
       };
 
-      updateViewportHeight();
-      window.addEventListener('resize', updateViewportHeight);
-      window.addEventListener('orientationchange', updateViewportHeight);
+      const clearScheduledViewportSync = () => {
+        if (viewportSyncFrameId !== 0) {
+          window.cancelAnimationFrame(viewportSyncFrameId);
+          viewportSyncFrameId = 0;
+        }
+
+        if (viewportSyncTimeoutId !== null) {
+          window.clearTimeout(viewportSyncTimeoutId);
+          viewportSyncTimeoutId = null;
+        }
+      };
+
+      function handleResolutionChange() {
+        syncViewportMetrics();
+      }
+
+      const bindResolutionListener = () => {
+        if (typeof window.matchMedia !== 'function') {
+          return;
+        }
+
+        resolutionQuery?.removeEventListener('change', handleResolutionChange);
+        resolutionQuery = window.matchMedia(
+          `(resolution: ${(window.devicePixelRatio || 1).toFixed(2)}dppx)`
+        );
+        resolutionQuery.addEventListener('change', handleResolutionChange);
+      };
+
+      const syncViewportMetrics = () => {
+        const nextViewportScale = readConversationViewportScale();
+        const nextDevicePixelRatio = window.devicePixelRatio || 1;
+
+        if (
+          nextViewportScale !== lastViewportScaleRef.current ||
+          nextDevicePixelRatio !== lastDevicePixelRatioRef.current
+        ) {
+          lastViewportScaleRef.current = nextViewportScale;
+          lastDevicePixelRatioRef.current = nextDevicePixelRatio;
+          bindResolutionListener();
+        }
+
+        updateViewportHeight();
+      };
+
+      const scheduleViewportMetricsSync = () => {
+        clearScheduledViewportSync();
+
+        viewportSyncFrameId = window.requestAnimationFrame(() => {
+          viewportSyncFrameId = 0;
+          syncViewportMetrics();
+        });
+
+        // WRY can apply the native resize before React observes the final layout.
+        viewportSyncTimeoutId = window.setTimeout(() => {
+          viewportSyncTimeoutId = null;
+          syncViewportMetrics();
+        }, 120);
+      };
+
+      const handleViewportMetricChange = () => {
+        scheduleViewportMetricsSync();
+      };
+
+      lastViewportScaleRef.current = readConversationViewportScale();
+      lastDevicePixelRatioRef.current = window.devicePixelRatio || 1;
+      bindResolutionListener();
+      syncViewportMetrics();
+
+      window.addEventListener('resize', handleViewportMetricChange);
+      window.addEventListener('orientationchange', handleViewportMetricChange);
 
       const visualViewport = window.visualViewport;
-      visualViewport?.addEventListener('resize', updateViewportHeight);
-      visualViewport?.addEventListener('scroll', updateViewportHeight);
+      visualViewport?.addEventListener('resize', handleViewportMetricChange);
+      visualViewport?.addEventListener('scroll', handleViewportMetricChange);
+
+      if (typeof ResizeObserver === 'function') {
+        rootResizeObserver = new ResizeObserver(() => {
+          scheduleViewportMetricsSync();
+        });
+
+        rootResizeObserver.observe(document.documentElement);
+        if (document.body) {
+          rootResizeObserver.observe(document.body);
+        }
+      }
 
       return () => {
-        window.removeEventListener('resize', updateViewportHeight);
-        window.removeEventListener('orientationchange', updateViewportHeight);
-        visualViewport?.removeEventListener('resize', updateViewportHeight);
-        visualViewport?.removeEventListener('scroll', updateViewportHeight);
+        clearScheduledViewportSync();
+        rootResizeObserver?.disconnect();
+        resolutionQuery?.removeEventListener('change', handleResolutionChange);
+        window.removeEventListener('resize', handleViewportMetricChange);
+        window.removeEventListener('orientationchange', handleViewportMetricChange);
+        visualViewport?.removeEventListener('resize', handleViewportMetricChange);
+        visualViewport?.removeEventListener('scroll', handleViewportMetricChange);
       };
     }, []);
 

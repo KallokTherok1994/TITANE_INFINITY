@@ -1,0 +1,85 @@
+.agent-dashboards-panel {
+  position: fixed;
+  right: max(0.75rem, calc(env(safe-area-inset-right, 0px) + 0.75rem));
+  bottom: max(0.75rem, calc(env(safe-area-inset-bottom, 0px) + 0.75rem));
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  max-width: min(420px, calc(100vw - 1.5rem));
+  pointer-events: none;
+}
+
+.agent-dashboards-panel--compact {
+  top: auto;
+  bottom: calc((6.5rem + env(safe-area-inset-bottom, 0px)) / var(--titane-ui-scale, 1));
+}
+
+.agent-dashboards-panel__toggle,
+.agent-dashboards-panel__content {
+  pointer-events: auto;
+}
+
+.agent-dashboards-panel__toggle {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.1rem;
+  min-width: 112px;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid rgba(125, 211, 252, 0.22);
+  border-radius: 14px;
+  background: rgba(8, 12, 24, 0.88);
+  color: rgba(226, 232, 240, 0.96);
+  box-shadow: 0 14px 30px rgba(2, 6, 23, 0.32);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+}
+
+.agent-dashboards-panel--expanded .agent-dashboards-panel__toggle {
+  min-width: 148px;
+}
+
+.agent-dashboards-panel__toggle-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.agent-dashboards-panel__toggle-meta {
+  font-size: 0.7rem;
+  line-height: 1.1;
+  color: rgba(148, 163, 184, 0.96);
+}
+
+.agent-dashboards-panel__content {
+  width: min(420px, calc(100vw - 1.5rem));
+  max-height: min(72vh, calc(100vh - 7rem));
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  border-radius: 16px;
+  background: rgba(2, 6, 23, 0.4);
+  padding: 0.25rem;
+  box-shadow: 0 20px 40px rgba(2, 6, 23, 0.35);
+}
+
+.agent-dashboards-panel--compact .agent-dashboards-panel__content {
+  max-height: min(62vh, calc(100vh - 9rem));
+}
+
+@media (max-width: 768px) {
+  .agent-dashboards-panel {
+    right: max(0.5rem, calc(env(safe-area-inset-right, 0px) + 0.5rem));
+  }
+
+  .agent-dashboards-panel__toggle {
+    min-width: 102px;
+    padding: 0.5rem 0.65rem;
+  }
+
+  .agent-dashboards-panel__content {
+    width: min(360px, calc(100vw - 1rem));
+  }
+}

@@ -73,6 +73,5 @@ export const loadSavedZoom = () => {
     return;
   }
 
-  document.documentElement.style.zoom = formatZoomScale(BASE_ZOOM_SCALE);
-  document.documentElement.style.setProperty('--titane-ui-scale', formatZoomScale(BASE_ZOOM_SCALE));
+  applyZoomScale(BASE_ZOOM_SCALE);
 };

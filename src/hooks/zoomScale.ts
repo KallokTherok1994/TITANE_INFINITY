@@ -1,6 +1,7 @@
 const ZOOM_STORAGE_KEY = 'titane_zoom_level';
 const ZOOM_CSS_VAR = '--titane-ui-scale';
 export const ZOOM_SCALE_CHANGED_EVENT = 'titane:zoom-scale-changed';
+const ROOT_FONT_SIZE_PX = 16;
 
 export const BASE_ZOOM_SCALE = 1;
 export const MIN_ZOOM_SCALE = 0.5;
@@ -47,6 +48,19 @@ export const getStoredZoomScale = (): number | null => {
   }
 };
 
+const parseFontSizeScale = (value: string | null | undefined): number | null => {
+  if (!value) {
+    return null;
+  }
+
+  const numeric = Number.parseFloat(value.trim());
+  if (!Number.isFinite(numeric) || numeric <= 0) {
+    return null;
+  }
+
+  return clampZoomScale(numeric / ROOT_FONT_SIZE_PX);
+};
+
 export const readCurrentZoomScale = (): number => {
   if (typeof document === 'undefined') {
     return BASE_ZOOM_SCALE;
@@ -54,13 +68,34 @@ export const readCurrentZoomScale = (): number => {
 
   const root = document.documentElement;
 
+  const inlineCssVarScale = parseZoomScale(root.style.getPropertyValue(ZOOM_CSS_VAR));
+  if (inlineCssVarScale !== null) {
+    return inlineCssVarScale;
+  }
+
+  const inlineFontSizeScale = parseFontSizeScale(root.style.fontSize);
+  if (inlineFontSizeScale !== null) {
+    return inlineFontSizeScale;
+  }
+
   const inlineScale = parseZoomScale(root.style.zoom);
   if (inlineScale !== null) {
     return inlineScale;
   }
 
   if (typeof window !== 'undefined' && typeof window.getComputedStyle === 'function') {
-    const computedScale = parseZoomScale(window.getComputedStyle(root).zoom);
+    const computedStyle = window.getComputedStyle(root);
+    const computedCssVarScale = parseZoomScale(computedStyle.getPropertyValue(ZOOM_CSS_VAR));
+    if (computedCssVarScale !== null) {
+      return computedCssVarScale;
+    }
+
+    const computedFontSizeScale = parseFontSizeScale(computedStyle.fontSize);
+    if (computedFontSizeScale !== null) {
+      return computedFontSizeScale;
+    }
+
+    const computedScale = parseZoomScale(computedStyle.zoom);
     if (computedScale !== null) {
       return computedScale;
     }
@@ -93,7 +128,8 @@ export const applyZoomScale = (scale: number): number => {
   const normalized = clampZoomScale(scale);
 
   if (typeof document !== 'undefined') {
-    document.documentElement.style.zoom = formatZoomScale(normalized);
+    document.documentElement.style.removeProperty('zoom');
+    document.documentElement.style.fontSize = `${ROOT_FONT_SIZE_PX * normalized}px`;
     syncZoomCssVariable(normalized);
   }
 

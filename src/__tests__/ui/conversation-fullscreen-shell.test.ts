@@ -10,6 +10,10 @@ describe('Conversation fullscreen shell truth', () => {
     );
     const pageCss = readFileSync(resolve(process.cwd(), 'src/pages/TitanePage.css'), 'utf8');
     const indexCss = readFileSync(resolve(process.cwd(), 'src/index.css'), 'utf8');
+    const chatWindowCss = readFileSync(
+      resolve(process.cwd(), 'src/components/ChatWindow.css'),
+      'utf8'
+    );
 
     expect(css).toContain('.titane-page--conversation');
     expect(css).toContain('flex: 1 1 auto;');
@@ -30,8 +34,26 @@ describe('Conversation fullscreen shell truth', () => {
     expect(pageCss).toContain('width: 100% !important;');
     expect(pageCss).toContain('max-width: 100% !important;');
     expect(pageCss).not.toContain('width: 100vw !important;');
+    expect(pageCss).toContain('.conversation-container {');
+    expect(pageCss).toContain('flex: 1 1 auto;');
+    expect(pageCss).toContain('height: 100%;');
+    expect(pageCss).toContain('min-height: 0;');
+    expect(pageCss).not.toContain('height: calc(var(--conversation-vh, 100dvh) - 155px);');
+    expect(pageCss).not.toContain('height: calc(var(--conversation-vh, 100dvh) - 176px);');
+    expect(pageCss).not.toContain('height: calc(var(--conversation-vh, 100dvh) - 82px);');
+    expect(indexCss).toContain('width: 100% !important;');
+    expect(indexCss).toContain('max-width: 100% !important;');
+    expect(indexCss).not.toContain('width: 100vw !important;');
     expect(pageCss).toContain('animation: fade-in 0.4s ease-out;');
     expect(indexCss).not.toContain('zoom: 75%;');
+    expect(chatWindowCss).toContain('.chat-fullscreen {');
+    expect(chatWindowCss).toContain('position: relative;');
+    expect(chatWindowCss).toContain('width: 100%;');
+    expect(chatWindowCss).toContain('max-width: 100%;');
+    expect(chatWindowCss).toContain('height: 100%;');
+    expect(chatWindowCss).toContain('max-height: 100%;');
+    expect(chatWindowCss).not.toContain('width: 100vw;');
+    expect(chatWindowCss).not.toContain('height: 100vh;');
   });
 
   it('avoids duplicating the TopNav offset in AppShell', () => {
@@ -40,8 +62,9 @@ describe('Conversation fullscreen shell truth', () => {
       'utf8'
     );
 
-    expect(shell).toContain('paddingTop: `calc((4rem + env(safe-area-inset-top, 0px)) / ${APP_SHELL_ZOOM_VAR})`');
-    expect(shell).toContain('height: `calc(100% / ${APP_SHELL_ZOOM_VAR})`');
+    expect(shell).toContain("paddingTop: 'calc(4rem + env(safe-area-inset-top, 0px))'");
+    expect(shell).not.toContain('APP_SHELL_COMPENSATED_ZOOM_VAR');
+    expect(shell).not.toContain('calc(100% /');
     expect(shell).not.toContain("topNav && 'pt-16'");
   });
 
