@@ -252,6 +252,36 @@ const KB_CORPUS_HINTS = [
   'priere d ancrage',
 ];
 
+const KB_RUNTIME_HINTS = [
+  'etat reel',
+  'state detection',
+  'golden rule',
+  'regle d or',
+  'charge mentale',
+  'surcharge',
+  'fatigue verbale',
+  'derive',
+  'drift',
+  'protocole',
+  'priorites runtime',
+  'recentrage',
+];
+
+const KB_POSITIONING_HINTS = [
+  'positionnement',
+  'positioning',
+  'promesse',
+  'tagline',
+  'signature publique',
+  'bio',
+  'biographie',
+  'clarte express',
+  'offre',
+  'audience',
+  'public cible',
+  'message principal',
+];
+
 const KB_DEVOPS_HINTS = [
   'cicd',
   'ci/cd',
@@ -447,6 +477,48 @@ function expandQueryContext(query: string): {
       'style_expression_kevin',
       'titane_identity_kernel_v31',
       'kevin_owner_profile_v30'
+    );
+  }
+
+  if (KB_RUNTIME_HINTS.some(hint => normalized.includes(hint))) {
+    addTokens(
+      'runtime',
+      'doctrine',
+      'state',
+      'overloaded',
+      'fragmented',
+      'tired',
+      'energized',
+      'charge',
+      'axe',
+      'protocole',
+      'drift'
+    );
+    pin(
+      'titane_runtime_rules_v31',
+      'titane_identity_kernel_v31',
+      'kevin_workflow_v30',
+      'identity_profile'
+    );
+  }
+
+  if (KB_POSITIONING_HINTS.some(hint => normalized.includes(hint))) {
+    addTokens(
+      'positionnement',
+      'signature',
+      'promesse',
+      'clarte',
+      'express',
+      'offre',
+      'audience',
+      'noyau',
+      'message'
+    );
+    pin(
+      'titane_public_positioning_v31',
+      'kevin_owner_profile_v30',
+      'titane_identity_kernel_v31',
+      'identity_profile'
     );
   }
 

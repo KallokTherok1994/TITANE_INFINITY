@@ -1,4 +1,8 @@
 # TITANE_INFINITY — Cartographie Complète Avancée v30.1.34
+> 2026-04-18 — Runtime doctrine KB truth: la cartographie embarque maintenant `data/knowledge_base/default/titane_runtime_rules_v31.json` comme source publique additionnelle distincte du noyau identitaire. Cette couche est chargee dans la KB frontend via le glob canonique de `src/services/api/defaultKnowledgeBase.ts`, embarquee dans `src-tauri/src/knowledge_base_default.rs`, et remontee par des heuristiques de retrieval ciblees sur etat reel, surcharge, derive et protocole.
+
+> 2026-04-18 — Public positioning KB truth: la cartographie embarque aussi `data/knowledge_base/default/titane_public_positioning_v31.json` comme autorite dediee au message public de TITANE pour Kevin. Les requetes sur bio, promesse, tagline, offre ou audience peuvent maintenant recuperer cette source sans reouvrir les surfaces prompt, persona ou hybrid-memory deja traitees separativement.
+
 > 2026-04-18 — TITANE identity kernel source truth: le dépôt embarque maintenant une nouvelle source structurée publique `data/knowledge_base/default/titane_identity_kernel_v31.json` dédiée au noyau identitaire opératoire de TITANE pour Kevin. Cette source reste publique-safe, sépare la vérité structurée du matériau privé local, et devient réutilisable par la KB canonique, les prompts et la persona par défaut.
 
 > 2026-04-18 — Prompt summary adapter truth: `src/services/ai/titaneIdentityKernel.ts` dérive désormais un bloc de prompt compact depuis `titane_identity_kernel_v31` et l expose aux deux surfaces de modes actives `src/services/ai/chatModes.ts` et `src/services/ai/chatModes.config.ts`. La topologie conversationnelle ne change pas, mais la couche d identité injectée n est plus dupliquée manuellement dans plusieurs prompts concurrents.
@@ -32,6 +36,8 @@
 > 2026-04-18 — Hybrid memory near-match surface truth: la surface mémoire active ajoute une vue dédiée aux quasi-correspondances shadow-read. Le runtime y expose les candidats proches du seuil via `lastShadowReadNearMatches`, distincts des paires validées et des manques critiques, pour guider le diagnostic sans fusion effective.
 
 > 2026-04-18 — Hybrid memory near-match stability surface truth: la surface mémoire active ajoute une sous-vue de stabilité des quasi-correspondances. Le runtime y publie la récurrence, la fenêtre d observation et la similarité moyenne des near-matches récents afin d isoler les signaux persistants des occurrences ponctuelles.
+
+> 2026-04-18 — Hybrid memory rollout surface truth: la surface mémoire active expose aussi le mode de rollout shadow-read, la décision canari et une tendance étendue bornée. Ce contrat rend visible le déploiement contrôlé du shadow-read sans l élever au rang de vérité canonique.
 
 > 2026-04-18 — Conversation assistant markdown typography truth: `src/components/chat/MarkdownContent.tsx` accentue désormais les headings markdown par niveau et affiche le langage des blocs code dans un en-tête dédié, tandis que `src/pages/TitanePage.css` maintient leur containment sur la surface conversation canonique. La route active `/titane?tab=conversation` garde donc la même topologie mais gagne une hiérarchie typographique plus explicite pour les réponses assistant structurées.
 

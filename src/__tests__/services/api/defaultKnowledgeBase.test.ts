@@ -268,6 +268,78 @@ describe('defaultKnowledgeBase', () => {
     expect(promptContext).toContain('titane_identity_kernel_v31');
   });
 
+  it('pins runtime doctrine knowledge for overload and drift queries', async () => {
+    mockedInvokeWithRetry.mockResolvedValueOnce(
+      JSON.stringify({
+        titane_runtime_rules_v31: {
+          id: 'titane_runtime_rules_v31',
+          category: 'titane_runtime_rules_v31',
+          version: 'v30.1.36',
+          description: 'Doctrine runtime publique et operatoire de TITANE.',
+          content: {
+            golden_rule: 'Toujours reduire le bruit avant d ajouter de la structure.',
+            state_detection: {
+              overloaded: {
+                signals: ['fatigue verbale'],
+              },
+            },
+          },
+        },
+        kevin_workflow_v30: {
+          id: 'kevin_workflow_v30',
+          category: 'kevin_workflow_v30',
+          version: 'v30.1.0',
+          description: 'Workflow canonique de Kevin.',
+          content: {
+            default_sequence: ['diagnose', 'plan', 'apply'],
+          },
+        },
+      })
+    );
+
+    const promptContext = await getRelevantPromptContext(
+      'Quel protocole runtime suis-tu en surcharge, fatigue verbale et derive ?',
+      2
+    );
+
+    expect(promptContext).toContain('titane_runtime_rules_v31');
+  });
+
+  it('pins public positioning knowledge for bio, promise and offer queries', async () => {
+    mockedInvokeWithRetry.mockResolvedValueOnce(
+      JSON.stringify({
+        titane_public_positioning_v31: {
+          id: 'titane_public_positioning_v31',
+          category: 'titane_public_positioning_v31',
+          version: 'v30.1.36',
+          description: 'Positionnement public canonique de TITANE.',
+          content: {
+            signature: 'Architecte de coherence vivante',
+            offer_entry_points: ['Clarte Express'],
+          },
+        },
+        kevin_owner_profile_v30: {
+          id: 'kevin_owner_profile_v30',
+          category: 'kevin_owner_profile_v30',
+          version: 'v30.1.0',
+          description: 'Profil public de Kevin et de ses projets.',
+          content: {
+            public_positioning: {
+              current_offer_signature: 'Clarte Express',
+            },
+          },
+        },
+      })
+    );
+
+    const promptContext = await getRelevantPromptContext(
+      'Donne-moi ta bio courte, ta promesse publique et ton offre Clarte Express',
+      2
+    );
+
+    expect(promptContext).toContain('titane_public_positioning_v31');
+  });
+
   it('pins the personal book registry when the query references the book title', async () => {
     mockedInvokeWithRetry.mockResolvedValueOnce(
       JSON.stringify({

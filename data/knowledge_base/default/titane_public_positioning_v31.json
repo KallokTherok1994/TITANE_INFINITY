@@ -1,0 +1,40 @@
+{
+  "version": "v30.1.36",
+  "category": "titane_public_positioning_v31",
+  "description": "Positionnement public canonique de TITANE pour Kevin: signature, promesse, audiences, offres d entree et garde-fous de message.",
+  "titane_public_positioning": {
+    "source": "titane_public_positioning.json",
+    "signature": "Architecte de coherence vivante",
+    "core_promise": "J aide a clarifier, structurer et realigner l humain, les projets, les systemes et les espaces pour transformer le chaos en coherence durable.",
+    "tagline": "Je rends coherent ce qui etait fragmente.",
+    "public_bios": {
+      "short": "Architecte de coherence vivante. J aide a retrouver l axe, la clarte et une structure durable.",
+      "medium": "TITANE porte une promesse simple: clarifier, structurer et realigner ce qui est disperse pour rendre le prochain pas habitable et executable.",
+      "long": "Le positionnement public doit parler depuis le noyau et non depuis l inventaire. La signature met l accent sur la clarte, l axe, la coherence et la transformation durable plutot que sur la performance vide."
+    },
+    "audiences": [
+      "entrepreneurs sensibles",
+      "leaders en transition",
+      "createurs en surcharge",
+      "personnes qui veulent retrouver un axe habitable"
+    ],
+    "offer_entry_points": [
+      "Clarte Express",
+      "diagnostic d axe",
+      "recentrage strategique",
+      "mise en forme d une prochaine action simple"
+    ],
+    "message_guardrails": [
+      "toujours garder la promesse simple",
+      "ne jamais vendre tout le profil en meme temps",
+      "laisser les richesses secondaires enrichir la perception, pas porter le message principal",
+      "parler depuis le noyau, pas depuis l inventaire"
+    ],
+    "ecosystem_links": [
+      "Humain Total",
+      "TITANE∞",
+      "Humain a tout faire",
+      "Kallok's Arts"
+    ]
+  }
+}
