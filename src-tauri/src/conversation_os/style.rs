@@ -6,6 +6,55 @@
 use super::persona::{PersonaProfile, ResponseLength, StructureLevel};
 use serde::{Deserialize, Serialize};
 
+pub(super) fn truncate_text_safely(text: &str, max_chars: usize) -> String {
+    if text.chars().count() <= max_chars {
+        return text.to_string();
+    }
+
+    let safe_end = text
+        .char_indices()
+        .nth(max_chars)
+        .map(|(index, _)| index)
+        .unwrap_or(text.len());
+    let candidate = text[..safe_end].trim_end();
+
+    if candidate.is_empty() {
+        return "...".to_string();
+    }
+
+    let sentence_boundary = candidate.char_indices().rev().find_map(|(index, ch)| {
+        if matches!(ch, '.' | '!' | '?' | '…') {
+            Some(index + ch.len_utf8())
+        } else {
+            None
+        }
+    });
+
+    if let Some(boundary) = sentence_boundary {
+        let prefix = candidate[..boundary].trim_end();
+        if !prefix.is_empty() {
+            return prefix.to_string();
+        }
+    }
+
+    let word_boundary = candidate.char_indices().rev().find_map(|(index, ch)| {
+        if ch.is_whitespace() {
+            Some(index)
+        } else {
+            None
+        }
+    });
+
+    if let Some(boundary) = word_boundary {
+        let prefix = candidate[..boundary].trim_end();
+        if !prefix.is_empty() {
+            return format!("{}...", prefix);
+        }
+    }
+
+    format!("{}...", candidate)
+}
+
 /// Configuration de style
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct StyleConfig {
@@ -226,13 +275,8 @@ impl StyleEngine {
             ResponseLength::Comprehensive => 5000,
         };
 
-        if text.len() > max_chars {
-            let truncated = &text[..max_chars];
-            if let Some(last_period) = truncated.rfind(". ") {
-                format!("{}.", &truncated[..last_period])
-            } else {
-                format!("{}...", truncated.trim())
-            }
+        if text.chars().count() > max_chars {
+            truncate_text_safely(text, max_chars)
         } else {
             text.to_string()
         }
@@ -367,5 +411,33 @@ mod tests {
         assert!(!result.contains('😀'));
         assert!(result.contains("Hello"));
         assert!(result.contains("World"));
+    }
+
+    #[test]
+    fn truncate_text_safely_keeps_sentence_boundary_when_available() {
+        let text = "Premiere phrase complete. Deuxieme phrase encore plus longue sans fin utile";
+
+        let truncated = truncate_text_safely(text, 40);
+
+        assert_eq!(truncated, "Premiere phrase complete.");
+    }
+
+    #[test]
+    fn truncate_text_safely_falls_back_to_word_boundary() {
+        let text = "motif de test sans ponctuation finale mais avec plusieurs espaces utiles";
+
+        let truncated = truncate_text_safely(text, 33);
+
+        assert_eq!(truncated, "motif de test sans ponctuation...");
+    }
+
+    #[test]
+    fn truncate_text_safely_preserves_unicode_boundaries() {
+        let text = "énergie réflexion précision 🚀 continuité durable";
+
+        let truncated = truncate_text_safely(text, 13);
+
+        assert_eq!(truncated, "énergie...");
+        assert!(!truncated.contains('�'));
     }
 }

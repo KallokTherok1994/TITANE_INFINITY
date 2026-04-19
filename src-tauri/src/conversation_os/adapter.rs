@@ -3,7 +3,7 @@
 //! Super Prompt #9 — Adaptation des réponses au canal et contexte
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use super::style::StyledText;
+use super::style::{truncate_text_safely, StyledText};
 use serde::{Deserialize, Serialize};
 
 /// Canal de sortie
@@ -89,7 +89,7 @@ impl ResponseAdapter {
                 voice_optimized = true;
                 adaptations.push("voice_optimization".to_string());
 
-                if content.len() > self.voice_max_length {
+                if content.chars().count() > self.voice_max_length {
                     content = self.truncate(&content, self.voice_max_length);
                     truncated = true;
                     adaptations.push("truncated".to_string());
@@ -310,17 +310,11 @@ impl ResponseAdapter {
 
     /// Tronque le texte
     fn truncate(&self, text: &str, max_len: usize) -> String {
-        if text.len() <= max_len {
+        if text.chars().count() <= max_len {
             return text.to_string();
         }
 
-        // Trouver la dernière phrase complète
-        let truncated = &text[..max_len];
-        if let Some(last_period) = truncated.rfind(". ") {
-            format!("{}.", &truncated[..last_period])
-        } else {
-            format!("{}...", truncated.trim())
-        }
+        truncate_text_safely(text, max_len)
     }
 
     /// Crée un contexte d'adaptation
@@ -409,5 +403,14 @@ mod tests {
         let adapter = ResponseAdapter::new();
         let result = adapter.expand_abbreviations("e.g. this is an example");
         assert!(result.contains("par exemple"));
+    }
+
+    #[test]
+    fn truncate_respects_unicode_boundaries_and_words() {
+        let adapter = ResponseAdapter::new();
+        let result = adapter.truncate("énergie réflexion précision durable", 12);
+
+        assert_eq!(result, "énergie...");
+        assert!(!result.contains('�'));
     }
 }

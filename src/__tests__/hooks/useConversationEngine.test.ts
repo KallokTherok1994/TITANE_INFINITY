@@ -429,6 +429,70 @@ describe('useConversationEngine fallback meta truth', () => {
     expect(assistantMessage?.metadata?.fallbackUsed).toBe(true);
   });
 
+  it('preserves the full assistant payload including its terminal marker in hook state', async () => {
+    const longAssistantPayload = [
+      '# Audit de réponse',
+      '',
+      'Voici une réponse longue et structurée qui ne doit perdre aucun suffixe lors du transit frontend.',
+      '',
+      '- Conserver l introduction',
+      '- Conserver les blocs markdown',
+      '',
+      '> Citation de contrôle',
+      '',
+      '## Bloc terminal',
+      'OMEGA-HOOK-TERMINAL-MARKER',
+    ].join('\n');
+
+    processMessageMock.mockResolvedValueOnce({
+      assistant_message: longAssistantPayload,
+      conversation_id: 'conv-long-answer',
+      message_id: 'assistant-long-answer',
+      detected_intention: 'Question' as const,
+      detected_emotion: { valence: 0.1, intensity: 0.2, energy: 0.1 },
+      cognitive_tags: ['long-answer'],
+      cognitive_summary: 'long answer integrity path',
+      metadata: {
+        timestamp: Date.now(),
+        provider_used: 'ollama-runtime',
+        latency_ms: 37,
+        tokens_used: 128,
+        memory_effect: 'New' as const,
+        links_to_contexts: ['omega:conversation'],
+      },
+      meta: {
+        provider_used: 'ollama-runtime',
+        provider_class: 'local' as const,
+        mode: 'LOCAL' as const,
+        reason_code: 'OK' as const,
+        latency_ms_total: 37,
+        timeout_ms: 30000,
+        retries: 0,
+        attempts: [],
+        network_used: false,
+        cache_hit: false,
+        policy: 'long-answer-integrity',
+      },
+    });
+
+    const { useConversationEngine } = await import('@/hooks/useConversationEngine');
+    const { result } = renderHook(() =>
+      useConversationEngine({
+        autoHealthCheck: false,
+        providerPreference: 'ollama',
+      })
+    );
+
+    await act(async () => {
+      await result.current.sendMessage('valide la réponse complète');
+    });
+
+    const assistantMessage = result.current.messages.at(-1);
+    expect(assistantMessage?.content).toBe(longAssistantPayload);
+    expect(assistantMessage?.content).toContain('OMEGA-HOOK-TERMINAL-MARKER');
+    expect(assistantMessage?.content.length).toBe(longAssistantPayload.length);
+  });
+
   it('captures journal runtime metadata for the active conversation surface', async () => {
     const { useConversationEngine } = await import('@/hooks/useConversationEngine');
     const { result } = renderHook(() =>
