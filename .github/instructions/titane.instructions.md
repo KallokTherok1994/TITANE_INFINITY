@@ -30,6 +30,7 @@ applyTo: 'src/**, src-tauri/**, tests/**, scripts/**'
 - For Android dev-runtime UI freshness, `bash scripts/android/dev-stable.sh` must delegate to `scripts/android/vite-network-server.sh` as the only Vite launcher, prove `http://127.0.0.1:1420` is still reachable after startup, then rerun `corepack pnpm run test:e2e:android:browser` before closure. Without ADB evidence, keep the device lane explicitly BLOCKED.
 - Keep fixes minimal and reversible.
 - Route binary, repeated rules toward validator scripts.
+- If a custom agent, specialist delegation, or exploration-oriented handoff is unavailable because of platform quota or tooling unavailability, continue immediately with canonical local discovery or evidence collection whenever the task remains locally provable; classify the delegation gap honestly instead of blocking on the delegation itself.
 - For every new file in `src/` or `src-tauri/`: confirm corresponding test file exists (Rule 16).
 - For every structural change: confirm relevant mapping doc is updated (Rule 15).
 - For frontend/UI work, enforce the scoped mandatory UI procedure from `frontend.instructions.md` as part of PATH_HEAVY verification whenever runtime truth, fullscreen, zoom, build, or cross-platform proof is involved.

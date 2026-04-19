@@ -23,11 +23,12 @@ handoffs:
 ## Workflow
 
 1. collect baseline truth
-2. assign scoped work to each master
-3. require one report per phase
-4. compare evidence and detect contradictions
-5. escalate blockers to the root commander
-6. stop the line if any gate fails
+2. if a delegated master is unavailable, continue immediately with canonical local truth collection for that workstream using the current toolset and classify the delegation gap honestly before escalating
+3. assign scoped work to each master
+4. require one report per phase
+5. compare evidence and detect contradictions
+6. escalate blockers to the root commander
+7. stop the line if any gate fails
 
 ## Mandatory outputs
 

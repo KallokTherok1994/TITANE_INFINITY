@@ -34,6 +34,7 @@ Control the hybrid-memory program end to end and never approve a phase without f
 - escalate contradictions or safety gaps immediately
 - require explicit rollback readiness before activation
 - issue the final unique verdict for the workstream
+- if a delegated specialist handoff is unavailable, continue immediately with canonical local truth collection using the current toolset and classify the delegation gap honestly before declaring BLOCKED
 
 ## Default verdict discipline
 

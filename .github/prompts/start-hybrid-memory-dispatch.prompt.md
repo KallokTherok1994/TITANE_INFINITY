@@ -17,3 +17,5 @@ Launch the governed hybrid-memory dispatch program.
 ## Starter brief
 
 Use the handoff pack under `ops/hybrid-memory-dispatch/` as the execution charter, then delegate to `memory-orchestrator` to build the phase board and assign masters.
+
+If any exploration-oriented delegation is unavailable because of Explore quota, classify the quota as external truth and continue immediately with canonical local discovery via search_subagent or direct workspace search tools before declaring BLOCKED.

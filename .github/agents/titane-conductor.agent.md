@@ -44,9 +44,10 @@ Tu es le **Conductor** du projet TITANE_INFINITY, responsable de l'orchestration
 ### Phase 1 : PLANNING
 
 1. Analyser contexte (déléguer audit-subagent si besoin)
-2. Lire orchestration/roadmap.yaml
-3. Créer plan 2-5 micro-phases → plans/<task-id>-plan.md
-4. Confirmer plan avec l'utilisateur avant d'implémenter
+2. Si une délégation d'exploration est indisponible à cause d'un quota Explore, classifier ce quota comme limite plateforme externe puis continuer immédiatement via discovery locale canonique (`search_subagent`, `search`, `usages`, lecture ciblée) au lieu de bloquer le workflow
+3. Lire orchestration/roadmap.yaml
+4. Créer plan 2-5 micro-phases → plans/<task-id>-plan.md
+5. Confirmer plan avec l'utilisateur avant d'implémenter
 
 ### Phase 2 : IMPLEMENTATION
 

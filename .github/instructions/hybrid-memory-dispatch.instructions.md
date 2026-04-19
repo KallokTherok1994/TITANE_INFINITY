@@ -9,6 +9,9 @@ applyTo: 'src/**, src-tauri/**, tests/**, e2e/**, scripts/**, docs/**, .github/*
 
 - keep the current semantic and unified memory stack as the production-safe baseline
 - do not replace the current behavior in one step
+- treat Explore weekly quota failures as an external platform limit, not as a repository defect
+- if Explore is unavailable because of quota, continue immediately with canonical local discovery via search_subagent or direct workspace search tools instead of blocking the session
+- classify the quota truth explicitly in evidence and continue unless local fallback is insufficient for the task
 - use shadow write before feature activation
 - use shadow read before user-visible exposure
 - require feature flags for rollout steps
