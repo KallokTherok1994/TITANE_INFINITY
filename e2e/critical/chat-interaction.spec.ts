@@ -121,6 +121,39 @@ const submitChatMessage = async (page: Page, message: string) => {
   await chatInput.press('Enter');
 };
 
+const buildLongStructuredPrompt = () => {
+  const paragraphs = Array.from(
+    { length: 14 },
+    (_, index) =>
+      `Paragraphe ${index + 1}: la reponse doit rester atteignable jusqu au dernier bloc de verification.`
+  ).join('\n\n');
+
+  return [
+    '# Rapport complet',
+    '',
+    'Introduction de verification.',
+    '',
+    '- Segment A',
+    '- Segment B',
+    '',
+    '> Citation de controle',
+    '',
+    '| Bloc | Etat |',
+    '| --- | --- |',
+    '| Debut | visible |',
+    '| Terminal | attendu |',
+    '',
+    '```json',
+    '{"marker":"SIGMA-CODE"}',
+    '```',
+    '',
+    paragraphs,
+    '',
+    '## Bloc terminal',
+    'OMEGA-FINAL-BLOCK',
+  ].join('\n');
+};
+
 test.describe('Critical Path: Chat Interaction', () => {
   if (!FULL_E2E_ENABLED) {
     test('gate disabled proof (set TITANE_E2E_FULL=1)', async () => {
@@ -200,6 +233,45 @@ test.describe('Critical Path: Chat Interaction', () => {
     await expect(assistantContent.locator('table thead th')).toHaveCount(2);
     await expect(assistantContent.locator('table tbody td').first()).toHaveText('Alpha');
     await expect(assistantContent).not.toContainText('| --- | --- |');
+  });
+
+  test('ASSISTANT_LONG_RESPONSE_TERMINAL_BLOCK_REACHABLE', async ({ page }) => {
+    const scrollRegion = page.getByTestId('chat-messages-scroll-region');
+
+    await submitChatMessage(page, buildLongStructuredPrompt());
+
+    const assistantContent = getAssistantContent(page);
+    await expect(assistantContent).toContainText('Rapport complet', { timeout: 15000 });
+    await expect(assistantContent.locator('table')).toBeVisible();
+    await expect(assistantContent.locator('pre code')).toContainText('SIGMA-CODE');
+
+    const overflow = await scrollRegion.evaluate(element => ({
+      clientHeight: element.clientHeight,
+      scrollHeight: element.scrollHeight,
+    }));
+
+    expect(overflow.scrollHeight).toBeGreaterThan(overflow.clientHeight);
+
+    await scrollRegion.evaluate(element => {
+      element.scrollTop = element.scrollHeight;
+    });
+    await page.waitForTimeout(120);
+
+    const terminalMarker = assistantContent.getByText('OMEGA-FINAL-BLOCK', {
+      exact: true,
+    });
+    await expect(terminalMarker).toBeVisible();
+    await expect(terminalMarker).toBeInViewport();
+    await expect(assistantContent).toContainText('Bloc terminal');
+
+    const scrollState = await scrollRegion.evaluate(element => ({
+      clientHeight: element.clientHeight,
+      scrollHeight: element.scrollHeight,
+      scrollTop: element.scrollTop,
+    }));
+
+    expect(scrollState.scrollHeight).toBeGreaterThan(scrollState.clientHeight);
+    expect(scrollState.scrollTop).toBeGreaterThan(0);
   });
 
   test('SWITCH_CONVERSATION_PERSISTS: UI reste en SPA', async ({ page }) => {

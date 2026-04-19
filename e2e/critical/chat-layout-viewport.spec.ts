@@ -84,6 +84,48 @@ const getChatInput = (page: Page) =>
     .or(page.getByTestId('chat-input'))
     .first();
 
+const getAssistantContent = (page: Page) =>
+  page.getByTestId('chat-message-assistant').getByTestId('chat-message-content').last();
+
+const buildLongStructuredPrompt = () => {
+  const paragraphs = Array.from(
+    { length: 16 },
+    (_, index) =>
+      `Paragraphe ${index + 1}: la zone scroll doit permettre d atteindre le bloc terminal sans sortir du viewport.`
+  ).join('\n\n');
+
+  return [
+    '# Rapport complet',
+    '',
+    'Introduction de verification.',
+    '',
+    '- Segment A',
+    '- Segment B',
+    '',
+    '> Citation de controle',
+    '',
+    '| Bloc | Etat |',
+    '| --- | --- |',
+    '| Debut | visible |',
+    '| Terminal | attendu |',
+    '',
+    '```json',
+    '{"marker":"SIGMA-CODE"}',
+    '```',
+    '',
+    paragraphs,
+    '',
+    '## Bloc terminal',
+    'OMEGA-FINAL-BLOCK',
+  ].join('\n');
+};
+
+const submitChatMessage = async (page: Page, message: string) => {
+  const chatInput = getChatInput(page);
+  await chatInput.fill(message);
+  await chatInput.press('Enter');
+};
+
 async function openConversationSurface(page: Page): Promise<void> {
   await openTitane(page);
   await closeBootBeaconIfPresent(page);
@@ -406,6 +448,67 @@ test.describe('Critical Path: Chat Layout Viewport', () => {
       expectPanelDoesNotOccludeComposer(metrics);
       await expectCriticalSurfaceInViewport(page);
     }
+  });
+
+  test('latest assistant block remains reachable inside the bounded scroll region', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await openConversationSurface(page);
+
+    const scrollRegion = page.getByTestId('chat-messages-scroll-region');
+    await submitChatMessage(page, buildLongStructuredPrompt());
+
+    const assistantContent = getAssistantContent(page);
+    const terminalMarker = assistantContent.getByText('OMEGA-FINAL-BLOCK', {
+      exact: true,
+    });
+
+    await expect(assistantContent).toContainText('Rapport complet', { timeout: 15000 });
+    await expect(terminalMarker).toHaveCount(1);
+
+    const baseline = await measureLayout(page);
+    expectVisibleWindowBounds(baseline);
+    expectConversationViewportVariable(baseline);
+    expectPanelDoesNotOccludeComposer(baseline);
+    await expectCriticalSurfaceInViewport(page);
+
+    const overflow = await scrollRegion.evaluate(element => ({
+      clientHeight: element.clientHeight,
+      scrollHeight: element.scrollHeight,
+    }));
+    expect(overflow.scrollHeight).toBeGreaterThan(overflow.clientHeight);
+
+    await scrollRegion.evaluate(element => {
+      element.scrollTop = 0;
+    });
+    await page.waitForTimeout(120);
+    const topScrollState = await scrollRegion.evaluate(element => ({
+      clientHeight: element.clientHeight,
+      scrollHeight: element.scrollHeight,
+      scrollTop: element.scrollTop,
+    }));
+    expect(topScrollState.scrollTop).toBeGreaterThanOrEqual(0);
+    expect(topScrollState.scrollTop).toBeLessThan(topScrollState.scrollHeight);
+
+    await scrollRegion.evaluate(element => {
+      element.scrollTop = element.scrollHeight;
+    });
+    await page.waitForTimeout(120);
+    await expect(terminalMarker).toBeVisible();
+    await expect(terminalMarker).toBeInViewport();
+    await expect(assistantContent).toContainText('Bloc terminal');
+    await expect(page.getByTestId('chat-input')).toBeInViewport();
+    await expect(page.getByTestId('chat-send')).toBeInViewport();
+
+    const bottomScrollState = await scrollRegion.evaluate(element => ({
+      clientHeight: element.clientHeight,
+      scrollHeight: element.scrollHeight,
+      scrollTop: element.scrollTop,
+    }));
+
+    expect(bottomScrollState.scrollHeight).toBeGreaterThan(bottomScrollState.clientHeight);
+    expect(bottomScrollState.scrollTop).toBeGreaterThan(topScrollState.scrollTop);
   });
 
   test('chat shell stays inside the visual viewport on mobile chromium', async ({

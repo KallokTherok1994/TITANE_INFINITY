@@ -1,0 +1,3 @@
+# ROLLBACK
+
+`git restore -- src/components/chat/__tests__/MarkdownContent.test.tsx e2e/critical/chat-interaction.spec.ts e2e/critical/chat-layout-viewport.spec.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/CONVERSATION_ASSISTANT_COMPLETENESS_VERIFICATION_2026-04-18.md proof_packs/CONVERSATION_ASSISTANT_COMPLETENESS_VERIFICATION_2026-04-18/GATE_REPORT.md proof_packs/CONVERSATION_ASSISTANT_COMPLETENESS_VERIFICATION_2026-04-18/VERDICT.md proof_packs/CONVERSATION_ASSISTANT_COMPLETENESS_VERIFICATION_2026-04-18/ROLLBACK.md`

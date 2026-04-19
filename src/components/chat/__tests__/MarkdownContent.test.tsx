@@ -42,4 +42,52 @@ describe('MarkdownContent', () => {
     expect(container.querySelector('table tbody td')?.textContent).toBe('Alpha');
     expect(container.textContent).not.toContain('| --- | --- |');
   });
+
+  it('preserves a long mixed markdown answer through its terminal block', () => {
+    const longParagraphs = Array.from(
+      { length: 8 },
+      (_, index) =>
+        `Paragraphe ${index + 1}: la surface canonique doit garder ce bloc lisible et complet jusqu au terminal.`
+    ).join('\n\n');
+    const { container } = render(
+      <MarkdownContent
+        content={[
+          '# Audit complet',
+          '',
+          'Introduction de controle.',
+          '',
+          '- Etape 1',
+          '- Etape 2',
+          '',
+          '> Citation de verification',
+          '',
+          '| Segment | Etat |',
+          '| --- | --- |',
+          '| Debut | visible |',
+          '| Terminal | attendu |',
+          '',
+          '```json',
+          '{"marker":"SIGMA-CODE"}',
+          '```',
+          '',
+          longParagraphs,
+          '',
+          '## Bloc terminal',
+          'OMEGA-FINAL-BLOCK',
+        ].join('\n')}
+      />
+    );
+
+    expect(container.querySelector('h1')?.textContent).toBe('Audit complet');
+    expect(container.textContent).toContain('Bloc terminal');
+    expect(container.querySelectorAll('ul li')).toHaveLength(2);
+    expect(container.querySelector('blockquote')?.textContent).toContain(
+      'Citation de verification'
+    );
+    expect(container.querySelectorAll('table tbody tr')).toHaveLength(2);
+    expect(container.querySelector('pre code')?.textContent).toContain('SIGMA-CODE');
+    expect(container.textContent).toContain('OMEGA-FINAL-BLOCK');
+    expect(container.textContent).not.toContain('```json');
+    expect(container.textContent).not.toContain('| --- | --- |');
+  });
 });
