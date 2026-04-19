@@ -12,6 +12,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { usePersistentMemory } from '@/hooks/usePersistentMemory';
+import type { HybridMemoryDiagnostics } from '@/services/ai/memoryIntegration';
 import type {
   MemoryEntry,
   MemoryLevel,
@@ -43,6 +44,8 @@ export interface MemoryDashboardProps {
   compact?: boolean;
   /** Entrées mémoire additionnelles déjà consolidées côté page (ex: bases de connaissances) */
   additionalEntries?: MemoryEntry[];
+  /** Diagnostic hybride relayé depuis la surface mémoire canonique */
+  hybridDiagnostics?: HybridMemoryDiagnostics;
 }
 
 type ViewMode = 'grid' | 'list' | 'timeline';
@@ -390,6 +393,7 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
   selectedEntryId: controlledSelectedEntryId,
   compact = false,
   additionalEntries = [],
+  hybridDiagnostics,
 }) => {
   // État local
   const [selectedLevel, setSelectedLevel] = useState<MemoryLevel | 'all'>('all');
@@ -582,6 +586,51 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
 
       {/* Stats */}
       {!compact && <StatsPanel stats={resolvedStats} isLoading={isLoading} />}
+
+      {hybridDiagnostics && (
+        <div
+          data-testid="memory-dashboard-hybrid-summary"
+          className="p-3 bg-cyan-950/30 border border-cyan-500/20 rounded-lg"
+        >
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <div>
+              <p className="text-xs uppercase tracking-wide text-cyan-300">
+                Hybrid memory
+              </p>
+              <p
+                data-testid="memory-dashboard-hybrid-active-preset"
+                className="text-sm text-white"
+              >
+                Preset actif: {hybridDiagnostics.shadowReadActivePresetLabel}
+              </p>
+            </div>
+            <span
+              data-testid="memory-dashboard-hybrid-status"
+              className="px-2 py-0.5 text-xs rounded-full bg-cyan-500/10 text-cyan-200"
+            >
+              {hybridDiagnostics.shadowReadEnabled
+                ? `shadow read ${hybridDiagnostics.lastShadowReadStatus}`
+                : 'shadow read inactif'}
+            </span>
+          </div>
+          <p
+            data-testid="memory-dashboard-hybrid-operator-hint"
+            className="mt-2 text-sm text-gray-300"
+          >
+            {hybridDiagnostics.shadowReadCanaryOperatorHint}
+          </p>
+          <p
+            data-testid="memory-dashboard-hybrid-preset-history"
+            className="mt-2 text-xs text-gray-400"
+          >
+            {hybridDiagnostics.recentShadowReadPresetChanges.length > 0
+              ? hybridDiagnostics.recentShadowReadPresetChanges
+                  .map(entry => `${entry.fromPresetLabel} -> ${entry.toPresetLabel} (${entry.source})`)
+                  .join(' | ')
+              : 'Aucun changement de preset persiste.'}
+          </p>
+        </div>
+      )}
 
       {/* Filtres */}
       <FilterBar

@@ -237,6 +237,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'memory_get_active_rituals',
   'memory_get_timeline',
   'memory_ingest_file',
+  'hybrid_memory_publish_governed_report',
   'import_file',
   'get_all_files',
   'get_files_by_category',

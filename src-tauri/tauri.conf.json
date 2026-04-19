@@ -407,6 +407,9 @@
               "command": "security_audit_publish_signed_export"
             },
             {
+              "command": "hybrid_memory_publish_governed_report"
+            },
+            {
               "command": "ai_send_prompt"
             },
             {

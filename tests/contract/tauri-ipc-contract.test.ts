@@ -278,6 +278,14 @@ describe('TITANE∞ - IPC Contract Tests', () => {
     expect(rustCommands.has('security_audit_publish_signed_export')).toBe(true);
   });
 
+  it('should expose governed hybrid memory export command canonically', () => {
+    expect(TAURI_COMMANDS.HYBRID_MEMORY_PUBLISH_GOVERNED_REPORT).toBe(
+      'hybrid_memory_publish_governed_report'
+    );
+    expect(allowedCommands.has('hybrid_memory_publish_governed_report')).toBe(true);
+    expect(rustCommands.has('hybrid_memory_publish_governed_report')).toBe(true);
+  });
+
   it('should expose the knowledge base runtime snapshot command in Rust and Tauri allowlist', () => {
     expect(TAURI_COMMANDS.KNOWLEDGE_BASE_RUNTIME_SNAPSHOT).toBe(
       'knowledge_base_runtime_snapshot'

@@ -41,6 +41,11 @@ const RICH_MEMORY: MemoryContext = {
       typeof EMPTY_MEMORY.relevantKnowledge.push
     >[0],
   ],
+  hybridSupplementalKnowledge: [
+    { title: 'UnifiedMemory Atlas hint' } as Parameters<
+      typeof EMPTY_MEMORY.relevantKnowledge.push
+    >[0],
+  ],
   activeRituals: [],
   timeline: [],
 };
@@ -75,6 +80,12 @@ describe('Response Assembly Truth — formatMemoryContext', () => {
     expect(result.sources).toContain('knowledge');
   });
 
+  test('hybrid supplemental knowledge populates sources with "hybrid_knowledge"', () => {
+    // @ts-expect-error: accessing private method for testing
+    const result = chatEngine.formatMemoryContext(RICH_MEMORY);
+    expect(result.sources).toContain('hybrid_knowledge');
+  });
+
   test('data.projects contains project title from MemoryContext', () => {
     // @ts-expect-error: accessing private method for testing
     const result = chatEngine.formatMemoryContext(RICH_MEMORY);
@@ -85,6 +96,12 @@ describe('Response Assembly Truth — formatMemoryContext', () => {
     // @ts-expect-error: accessing private method for testing
     const result = chatEngine.formatMemoryContext(RICH_MEMORY);
     expect(String(result.data.decisions)).toContain('Tauri-only production runtime');
+  });
+
+  test('data.hybridKnowledge contains additive hybrid title from MemoryContext', () => {
+    // @ts-expect-error: accessing private method for testing
+    const result = chatEngine.formatMemoryContext(RICH_MEMORY);
+    expect(String(result.data.hybridKnowledge)).toContain('UnifiedMemory Atlas hint');
   });
 });
 

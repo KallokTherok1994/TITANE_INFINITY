@@ -2584,6 +2584,7 @@ fn main() {
             titane_infinity::devtools::api::devtools_status,
             titane_infinity::security_audit_bridge::security_audit_sync_journal,
             titane_infinity::security_audit_bridge::security_audit_publish_signed_export,
+            titane_infinity::hybrid_memory_bridge::hybrid_memory_publish_governed_report,
 
             // meta_orchestrator — MetaOrchestratorPage
             meta_orchestrator::commands::orchestrator_init,

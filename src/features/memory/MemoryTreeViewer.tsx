@@ -13,6 +13,10 @@ import Tree from 'react-d3-tree';
 import { Search, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
 import { filterMemoryTree, type MemoryTreeNodeData } from './memoryTreeData';
 import { useDebounce } from '@/hooks/useDebounce';
+import type {
+  HybridMemoryDiagnostics,
+  HybridShadowReadRolloutConfig,
+} from '@/services/ai/memoryIntegration';
 import './MemoryTreeViewer.css';
 
 interface MemoryTreeViewerProps {
@@ -21,7 +25,33 @@ interface MemoryTreeViewerProps {
   showAttributes?: boolean;
   selectedEntryId?: string | null;
   isLoading?: boolean;
+  diagnostics?: HybridMemoryDiagnostics;
+  onShadowReadRolloutConfigChange?: (config: HybridShadowReadRolloutConfig) => void;
+  onShadowReadProbeRequest?: () => void;
+  isShadowReadRolloutBusy?: boolean;
 }
+
+const SHADOW_READ_ROLLOUT_PRESETS: Array<{
+  id: string;
+  label: string;
+  config: HybridShadowReadRolloutConfig;
+}> = [
+  {
+    id: 'observe',
+    label: 'Observation',
+    config: { mode: 'canary', percentage: 10, trendWindow: 12 },
+  },
+  {
+    id: 'balanced',
+    label: 'Equilibre',
+    config: { mode: 'canary', percentage: 25, trendWindow: 10 },
+  },
+  {
+    id: 'full',
+    label: 'Full',
+    config: { mode: 'full', percentage: 100, trendWindow: 8 },
+  },
+];
 
 export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
   data,
@@ -29,6 +59,10 @@ export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
   showAttributes = true,
   selectedEntryId = null,
   isLoading = false,
+  diagnostics,
+  onShadowReadRolloutConfigChange,
+  onShadowReadProbeRequest,
+  isShadowReadRolloutBusy = false,
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const selectedHierarchyPointRef = useRef<{ x: number; y: number } | null>(null);
@@ -38,6 +72,10 @@ export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const [selectedType, setSelectedType] = useState<string>('all');
+  const [rolloutModeDraft, setRolloutModeDraft] = useState<'full' | 'canary'>('full');
+  const [canaryPercentageDraft, setCanaryPercentageDraft] = useState(100);
+  const [trendWindowDraft, setTrendWindowDraft] = useState(12);
+  const [isRolloutDraftDirty, setIsRolloutDraftDirty] = useState(false);
 
   selectedHierarchyPointRef.current = null;
 
@@ -51,6 +89,79 @@ export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
   const isBootstrappingMemory = isLoading && !data;
   const hasPersistentTree = Boolean(data);
   const hasFilteredTree = Boolean(treeData);
+  const hybridCoveragePercent = diagnostics
+    ? Math.round(diagnostics.lastShadowReadCoverageRatio * 100)
+    : 0;
+  const hybridAverageSimilarityPercent = diagnostics
+    ? Math.round(diagnostics.lastShadowReadAverageSimilarity * 100)
+    : 0;
+  const hybridAverageRetrievalScorePercent = diagnostics
+    ? Math.round(diagnostics.lastShadowReadAverageRetrievalScore * 100)
+    : 0;
+  const hybridCompositeScorePercent = diagnostics
+    ? Math.round(diagnostics.lastShadowReadCompositeScore * 100)
+    : 0;
+  const hybridQualificationLabel = diagnostics
+    ? diagnostics.lastShadowReadQualification === 'ready'
+      ? 'pret'
+      : diagnostics.lastShadowReadQualification === 'partial'
+        ? 'partiel'
+        : 'insuffisant'
+    : 'insuffisant';
+  const hybridRecentQualifications = diagnostics?.recentShadowReadQualifications ?? [];
+  const hybridExtendedTrend = diagnostics?.recentShadowReadExtendedTrend ?? [];
+  const hybridMatchedPairs = diagnostics?.lastShadowReadMatchedPairs ?? [];
+  const hybridNearMatches = diagnostics?.lastShadowReadNearMatches ?? [];
+  const hybridNearMatchStability = diagnostics?.lastShadowReadNearMatchStability ?? [];
+  const hybridMissingReasons = diagnostics?.lastShadowReadMissingReasons ?? [];
+  const hybridPresetHistory = diagnostics?.recentShadowReadPresetChanges ?? [];
+  const hybridTrendSummaryPercent = diagnostics
+    ? Math.round(diagnostics.lastShadowReadTrendSummary.averageCompositeScore * 100)
+    : 0;
+  const hybridHistoryPoints = useMemo(() => {
+    if (hybridRecentQualifications.length === 0) {
+      return [] as Array<{
+        x: number;
+        y: number;
+        label: string;
+        scoreLabel: string;
+        qualification: string;
+      }>;
+    }
+
+    const sortedEntries = [...hybridRecentQualifications].reverse();
+    const width = 180;
+    const height = 48;
+
+    return sortedEntries.map((entry, index) => {
+      const x = sortedEntries.length === 1 ? width / 2 : (index / (sortedEntries.length - 1)) * width;
+      const y = height - entry.compositeScore * height;
+      const label = new Date(entry.at).toLocaleTimeString('fr-FR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      });
+
+      return {
+        x: Number(x.toFixed(2)),
+        y: Number(y.toFixed(2)),
+        label,
+        scoreLabel: `${Math.round(entry.compositeScore * 100)}%`,
+        qualification: entry.qualification,
+      };
+    });
+  }, [hybridRecentQualifications]);
+  const hybridHistoryPolyline = hybridHistoryPoints.map(point => `${point.x},${point.y}`).join(' ');
+
+  useEffect(() => {
+    if (!diagnostics || isRolloutDraftDirty) {
+      return;
+    }
+
+    setRolloutModeDraft(diagnostics.shadowReadRolloutMode);
+    setCanaryPercentageDraft(diagnostics.shadowReadCanaryPercentage);
+    setTrendWindowDraft(diagnostics.shadowReadTrendWindow);
+  }, [diagnostics, isRolloutDraftDirty]);
 
   // Store searchTerm in ref to check match without re-creating callback
   const searchTermRef = React.useRef(debouncedSearchTerm);
@@ -183,6 +294,25 @@ export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
     setTranslate({ x: 400, y: 200 });
   };
 
+  const handleApplyShadowReadRollout = () => {
+    setIsRolloutDraftDirty(false);
+    onShadowReadRolloutConfigChange?.({
+      mode: rolloutModeDraft,
+      percentage: canaryPercentageDraft,
+      trendWindow: trendWindowDraft,
+    });
+  };
+
+  const handleApplyShadowReadPreset = (config: HybridShadowReadRolloutConfig) => {
+    setIsRolloutDraftDirty(false);
+    setRolloutModeDraft(config.mode);
+    setCanaryPercentageDraft(config.percentage);
+    setTrendWindowDraft(config.trendWindow);
+    onShadowReadRolloutConfigChange?.(config);
+  };
+
+  const activePresetId = diagnostics?.shadowReadActivePresetId ?? 'custom';
+
   const handleTreeUpdate = useCallback(
     (nextState: { translate: { x: number; y: number }; zoom: number }) => {
       setTranslate(prev =>
@@ -204,6 +334,372 @@ export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
           data-testid="memory-tree-selection-state"
         >
           Entree synchronisee: {selectedEntryId}
+        </div>
+      )}
+
+      {hasPersistentTree && !isBootstrappingMemory && diagnostics && (
+        <div
+          className="memory-tree-hybrid-diagnostics"
+          data-testid="memory-hybrid-diagnostics"
+        >
+          <strong>Mode hybride mémoire</strong>
+          <div className="memory-tree-hybrid-diagnostics-grid">
+            <span data-testid="memory-hybrid-shadow-write-state">
+              Shadow write: {diagnostics.shadowWriteEnabled ? 'actif' : 'inactif'}
+            </span>
+            <span data-testid="memory-hybrid-shadow-read-state">
+              Shadow read: {diagnostics.shadowReadEnabled ? diagnostics.lastShadowReadStatus : 'inactif'}
+            </span>
+            <span data-testid="memory-hybrid-shadow-write-count">
+              Ecritures dupliquees: {diagnostics.shadowWriteCount}
+            </span>
+            <span data-testid="memory-hybrid-shadow-read-count">
+              Lectures de controle: {diagnostics.shadowReadCount}
+            </span>
+            <span data-testid="memory-hybrid-orchestration-state">
+              Orchestration hybride: {diagnostics.hybridOrchestrationEnabled
+                ? diagnostics.lastHybridOrchestrationStatus
+                : 'inactive'}
+            </span>
+            <span data-testid="memory-hybrid-orchestration-count">
+              Complements injectes: {diagnostics.lastHybridOrchestrationCount}
+            </span>
+            <span data-testid="memory-hybrid-orchestration-preview">
+              Apercu orchestration: {diagnostics.lastHybridOrchestrationPreview.join(' | ') || 'aucun'}
+            </span>
+            <span data-testid="memory-hybrid-orchestration-reason">
+              Raison orchestration: {diagnostics.lastHybridOrchestrationReason}
+            </span>
+            <span data-testid="memory-hybrid-shadow-read-rollout-mode">
+              Rollout shadow read: {diagnostics.shadowReadRolloutMode}
+            </span>
+            <span data-testid="memory-hybrid-shadow-read-active-preset">
+              Preset actif: {diagnostics.shadowReadActivePresetLabel}
+            </span>
+            <span data-testid="memory-hybrid-shadow-read-canary-state">
+              Canari: {diagnostics.shadowReadCanaryEligible ? 'eligible' : 'hors-cible'}
+              {diagnostics.shadowReadCanaryBucket !== null
+                ? ` (${diagnostics.shadowReadCanaryBucket}/${diagnostics.shadowReadCanaryPercentage})`
+                : ''}
+            </span>
+            <span data-testid="memory-hybrid-shadow-read-canary-reason">
+              Raison canari: {diagnostics.shadowReadCanaryReason}
+            </span>
+            <span data-testid="memory-hybrid-shadow-read-canary-operator-hint">
+              Action: {diagnostics.shadowReadCanaryOperatorHint}
+            </span>
+            <span data-testid="memory-hybrid-shadow-read-canary-query-preview">
+              Requete canari: {diagnostics.shadowReadCanaryQueryPreview ?? 'aucune'}
+            </span>
+            <span data-testid="memory-hybrid-shadow-read-preset-history">
+              Historique presets: {hybridPresetHistory.length > 0
+                ? hybridPresetHistory
+                    .map(entry => `${entry.fromPresetLabel} -> ${entry.toPresetLabel} (${entry.source})`)
+                    .join(' | ')
+                : 'aucun'}
+            </span>
+            {(onShadowReadRolloutConfigChange || onShadowReadProbeRequest) && (
+              <div
+                className="memory-hybrid-shadow-read-rollout-controls"
+                data-testid="memory-hybrid-shadow-read-rollout-controls"
+              >
+                <div
+                  className="memory-hybrid-shadow-read-rollout-presets"
+                  data-testid="memory-hybrid-shadow-read-rollout-presets"
+                >
+                  {SHADOW_READ_ROLLOUT_PRESETS.map(preset => (
+                    <button
+                      key={preset.id}
+                      type="button"
+                      className={`memory-hybrid-shadow-read-action${activePresetId === preset.id ? ' memory-hybrid-shadow-read-action-active' : ''}`}
+                      data-testid={`memory-hybrid-shadow-read-rollout-preset-${preset.id}`}
+                      onClick={() => handleApplyShadowReadPreset(preset.config)}
+                      disabled={isShadowReadRolloutBusy}
+                    >
+                      {preset.label}
+                    </button>
+                  ))}
+                </div>
+                <label className="memory-hybrid-shadow-read-control">
+                  <span>Mode</span>
+                  <select
+                    data-testid="memory-hybrid-shadow-read-rollout-mode-select"
+                    value={rolloutModeDraft}
+                    onChange={event => {
+                      setIsRolloutDraftDirty(true);
+                      setRolloutModeDraft(event.target.value as 'full' | 'canary');
+                    }}
+                    disabled={isShadowReadRolloutBusy}
+                  >
+                    <option value="full">full</option>
+                    <option value="canary">canary</option>
+                  </select>
+                </label>
+                <label className="memory-hybrid-shadow-read-control">
+                  <span>Canari %</span>
+                  <select
+                    data-testid="memory-hybrid-shadow-read-canary-percentage-select"
+                    value={String(canaryPercentageDraft)}
+                    onChange={event => {
+                      setIsRolloutDraftDirty(true);
+                      setCanaryPercentageDraft(Number(event.target.value));
+                    }}
+                    disabled={isShadowReadRolloutBusy}
+                  >
+                    {[0, 10, 25, 50, 100].map(value => (
+                      <option key={value} value={value}>
+                        {value}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="memory-hybrid-shadow-read-control">
+                  <span>Fenetre</span>
+                  <select
+                    data-testid="memory-hybrid-shadow-read-trend-window-select"
+                    value={String(trendWindowDraft)}
+                    onChange={event => {
+                      setIsRolloutDraftDirty(true);
+                      setTrendWindowDraft(Number(event.target.value));
+                    }}
+                    disabled={isShadowReadRolloutBusy}
+                  >
+                    {[6, 8, 10, 12, 16, 20].map(value => (
+                      <option key={value} value={value}>
+                        {value}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <div className="memory-hybrid-shadow-read-rollout-actions">
+                  {onShadowReadRolloutConfigChange && (
+                    <button
+                      type="button"
+                      className="memory-hybrid-shadow-read-action"
+                      data-testid="memory-hybrid-shadow-read-rollout-apply"
+                      onClick={handleApplyShadowReadRollout}
+                      disabled={isShadowReadRolloutBusy}
+                    >
+                      {isShadowReadRolloutBusy ? 'Application…' : 'Appliquer'}
+                    </button>
+                  )}
+                  {onShadowReadProbeRequest && (
+                    <button
+                      type="button"
+                      className="memory-hybrid-shadow-read-action"
+                      data-testid="memory-hybrid-shadow-read-rollout-probe"
+                      onClick={() => {
+                        setIsRolloutDraftDirty(false);
+                        onShadowReadProbeRequest();
+                      }}
+                      disabled={isShadowReadRolloutBusy}
+                    >
+                      {isShadowReadRolloutBusy ? 'Probe…' : 'Tester maintenant'}
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+            <span data-testid="memory-hybrid-shadow-read-sample">
+              Echantillon shadow: {diagnostics.lastShadowReadSampleCount}
+            </span>
+            <span data-testid="memory-hybrid-shadow-read-total">
+              Total UnifiedMemory: {diagnostics.lastShadowReadTotalMemories}
+            </span>
+            <span data-testid="memory-hybrid-shadow-read-coverage">
+              Recouvrement canonique: {hybridCoveragePercent}%
+            </span>
+            <span data-testid="memory-hybrid-shadow-read-average-similarity">
+              Similarite moyenne: {hybridAverageSimilarityPercent}%
+            </span>
+            <span data-testid="memory-hybrid-shadow-read-average-score">
+              Score retrieval moyen: {hybridAverageRetrievalScorePercent}%
+            </span>
+            <span data-testid="memory-hybrid-shadow-read-composite-score">
+              Score compose: {hybridCompositeScorePercent}%
+            </span>
+            <span data-testid="memory-hybrid-shadow-read-qualification">
+              Qualification: {hybridQualificationLabel}
+            </span>
+            <span data-testid="memory-hybrid-shadow-read-delta">
+              Manquants: {diagnostics.lastShadowReadMissingCount} | Surplus: {diagnostics.lastShadowReadExtraCount}
+            </span>
+            <span data-testid="memory-hybrid-shadow-read-canonical-preview">
+              Canonique: {diagnostics.lastShadowReadCanonicalPreview.join(' | ') || 'aucun'}
+            </span>
+            <span data-testid="memory-hybrid-shadow-read-unified-preview">
+              UnifiedMemory: {diagnostics.lastShadowReadUnifiedPreview.join(' | ') || 'aucun'}
+            </span>
+            <span data-testid="memory-hybrid-shadow-read-matched-pairs">
+              Paires: {hybridMatchedPairs.length > 0
+                ? hybridMatchedPairs
+                    .map(pair => `${pair.canonicalLabel} -> ${pair.unifiedLabel} (${Math.round(pair.similarity * 100)}%)`)
+                    .join(' | ')
+                : 'aucune'}
+            </span>
+            <span data-testid="memory-hybrid-shadow-read-history">
+              Historique: {hybridRecentQualifications.length > 0
+                ? hybridRecentQualifications
+                    .map(entry => `${entry.qualification}:${Math.round(entry.compositeScore * 100)}%`)
+                    .join(' | ')
+                : 'aucun'}
+            </span>
+            <span data-testid="memory-hybrid-shadow-read-trend-summary">
+              Tendance {diagnostics.lastShadowReadTrendSummary.windowSize}: pret {diagnostics.lastShadowReadTrendSummary.readyCount}
+              {' '}| partiel {diagnostics.lastShadowReadTrendSummary.partialCount}
+              {' '}| insuffisant {diagnostics.lastShadowReadTrendSummary.insufficientCount}
+              {' '}| score moyen {hybridTrendSummaryPercent}%
+            </span>
+            <span data-testid="memory-hybrid-shadow-read-extended-trend">
+              Fenetre etendue: {hybridExtendedTrend.length > 0
+                ? hybridExtendedTrend
+                    .map(entry => `${entry.qualification}:${Math.round(entry.compositeScore * 100)}%`)
+                    .join(' | ')
+                : 'aucune'}
+            </span>
+            <div
+              className="memory-hybrid-shadow-read-history-chart"
+              data-testid="memory-hybrid-shadow-read-history-chart"
+            >
+              {hybridHistoryPoints.length > 0 ? (
+                <>
+                  <svg
+                    className="memory-hybrid-history-sparkline"
+                    data-testid="memory-hybrid-shadow-read-history-sparkline"
+                    viewBox="0 0 180 48"
+                    preserveAspectRatio="none"
+                  >
+                    <polyline
+                      className="memory-hybrid-history-line"
+                      points={hybridHistoryPolyline}
+                    />
+                    {hybridHistoryPoints.map(point => (
+                      <circle
+                        key={`${point.label}-${point.x}`}
+                        className={`memory-hybrid-history-point memory-hybrid-history-point-${point.qualification}`}
+                        data-testid="memory-hybrid-shadow-read-history-point"
+                        cx={point.x}
+                        cy={point.y}
+                        r="3"
+                      />
+                    ))}
+                  </svg>
+                  <div className="memory-hybrid-history-axis" data-testid="memory-hybrid-shadow-read-history-axis">
+                    {hybridHistoryPoints.map(point => (
+                      <span key={`${point.label}-${point.scoreLabel}`}>
+                        {point.label} {point.scoreLabel}
+                      </span>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <span className="memory-hybrid-history-empty">aucun</span>
+              )}
+            </div>
+            <span data-testid="memory-hybrid-shadow-read-query">
+              Requete: {diagnostics.lastShadowReadQuery ?? 'aucune'}
+            </span>
+            <span data-testid="memory-hybrid-shadow-read-error">
+              Derniere erreur: {diagnostics.lastError ?? 'aucune'}
+            </span>
+            <div
+              className="memory-hybrid-shadow-read-pairs-list"
+              data-testid="memory-hybrid-shadow-read-pairs-list"
+            >
+              {hybridMatchedPairs.length > 0 ? (
+                hybridMatchedPairs.map((pair, index) => (
+                  <div
+                    key={`${pair.canonicalLabel}-${index}`}
+                    className="memory-hybrid-shadow-read-row"
+                    data-testid="memory-hybrid-shadow-read-pair-row"
+                  >
+                    <strong>{pair.canonicalLabel}</strong>
+                    <span>{pair.unifiedLabel}</span>
+                    <span>{Math.round(pair.similarity * 100)}%</span>
+                  </div>
+                ))
+              ) : (
+                <span className="memory-hybrid-shadow-read-empty">aucune paire</span>
+              )}
+            </div>
+            <div
+              className="memory-hybrid-shadow-read-near-list"
+              data-testid="memory-hybrid-shadow-read-near-matches"
+            >
+              {hybridNearMatches.length > 0 ? (
+                hybridNearMatches.map((item, index) => (
+                  <div
+                    key={`${item.canonicalLabel}-${index}`}
+                    className="memory-hybrid-shadow-read-row memory-hybrid-shadow-read-row-near"
+                    data-testid="memory-hybrid-shadow-read-near-row"
+                  >
+                    <strong>{item.canonicalLabel}</strong>
+                    <span>{item.unifiedLabel}</span>
+                    <span>Similarite: {Math.round(item.similarity * 100)}%</span>
+                    <span>Ecart au seuil: {Math.round(item.gapToThreshold * 100)}%</span>
+                  </div>
+                ))
+              ) : (
+                <span className="memory-hybrid-shadow-read-empty">aucune quasi-correspondance</span>
+              )}
+            </div>
+            <div
+              className="memory-hybrid-shadow-read-near-stability-list"
+              data-testid="memory-hybrid-shadow-read-near-stability"
+            >
+              {hybridNearMatchStability.length > 0 ? (
+                hybridNearMatchStability.map((item, index) => (
+                  <div
+                    key={`${item.canonicalLabel}-${index}`}
+                    className="memory-hybrid-shadow-read-row memory-hybrid-shadow-read-row-stability"
+                    data-testid="memory-hybrid-shadow-read-near-stability-row"
+                  >
+                    <strong>{item.canonicalLabel}</strong>
+                    <span>{item.unifiedLabel}</span>
+                    <span>Stabilite: {item.stability}</span>
+                    <span>Occurrences: {item.seenCount}/{item.observationWindow}</span>
+                    <span>Similarite moyenne: {Math.round(item.averageSimilarity * 100)}%</span>
+                  </div>
+                ))
+              ) : (
+                <span className="memory-hybrid-shadow-read-empty">aucune stabilite exploitable</span>
+              )}
+            </div>
+            <div
+              className="memory-hybrid-shadow-read-missing-list"
+              data-testid="memory-hybrid-shadow-read-missing-list"
+            >
+              {hybridMissingReasons.length > 0 ? (
+                hybridMissingReasons.map((item, index) => (
+                  <div
+                    key={`${item.canonicalLabel}-${index}`}
+                    className="memory-hybrid-shadow-read-row memory-hybrid-shadow-read-row-missing"
+                    data-testid="memory-hybrid-shadow-read-missing-row"
+                  >
+                    <strong>{item.canonicalLabel}</strong>
+                    <span className={`memory-hybrid-missing-priority memory-hybrid-missing-priority-${item.priority}`}>
+                      {item.priority}
+                    </span>
+                    <span>{item.bestUnifiedLabel ?? 'aucun candidat'}</span>
+                    <span>{item.reason}</span>
+                    <span>Ecart au seuil: {Math.round(item.gapToThreshold * 100)}%</span>
+                  </div>
+                ))
+              ) : (
+                <span className="memory-hybrid-shadow-read-empty">aucun manque critique</span>
+              )}
+            </div>
+            {diagnostics.lastShadowReadMissingLabels.length > 0 && (
+              <span data-testid="memory-hybrid-shadow-read-missing-labels">
+                Libelles absents: {diagnostics.lastShadowReadMissingLabels.join(', ')}
+              </span>
+            )}
+            {diagnostics.lastShadowReadExtraLabels.length > 0 && (
+              <span data-testid="memory-hybrid-shadow-read-extra-labels">
+                Libelles en surplus: {diagnostics.lastShadowReadExtraLabels.join(', ')}
+              </span>
+            )}
+          </div>
         </div>
       )}
 

@@ -22,7 +22,9 @@
 
 > 2026-04-18 — Knowledge base runtime snapshot truth: `knowledge_base_runtime_snapshot` expose maintenant une snapshot gouvernée `{ ok, content, error }` de la KB par défaut depuis `src-tauri/src/knowledge_base_default.rs`. La commande tente d abord la lecture runtime de `data/knowledge_base/default`, exclut les fichiers privés Kevin, publie `source`, `source_path`, `fallback_used`, `entry_count`, `errors` et `entries`, puis retombe honnêtement sur la KB embarquée si le disque runtime est indisponible.
 
-> **1136 commandes IPC Tauri** — Générées le 2026-04-11
+> 2026-04-19 — Hybrid memory governed export truth: `hybrid_memory_publish_governed_report` publie maintenant un rapport hybride markdown et un sidecar JSON signé localement sous `~/.local/share/com.titane.infinity/hybrid_memory/exports/`, via `src-tauri/src/hybrid_memory_bridge.rs`. La commande conserve le contrat `{ ok, content, error }`, reste Tauri-only, est alignée sur `src/lib/security.ts` et `tests/contract/tauri-ipc-contract.test.ts`, et laisse le fallback Blob navigateur actif quand la voie desktop n existe pas.
+
+> **1137 commandes IPC Tauri** — Générées le 2026-04-11
 > Toutes les commandes exposées par `main.rs` via `tauri::generate_handler![]`
 
 ## Résumé par domaine
@@ -67,7 +69,7 @@
 | 36 | Knowledge Base | 19 |
 | 37 | Literary Engine | 9 |
 | 38 | Logging | 13 |
-| 39 | Memory | 114 |
+| 39 | Memory | 115 |
 | 40 | Meta-Orchestration | 48 |
 | 41 | Monitoring | 16 |
 | 42 | Multi-AI | 24 |
@@ -95,7 +97,7 @@
 | 64 | Training | 15 |
 | 65 | VAD | 7 |
 | 66 | Voice | 19 |
-| | **TOTAL** | **1136** |
+| | **TOTAL** | **1137** |
 
 ---
 
@@ -923,7 +925,7 @@
 | 12 | `read_logs` | Read logs |
 | 13 | `search_logs` | Search logs |
 
-## Memory (114 commandes)
+## Memory (115 commandes)
 
 | # | Commande | Description |
 |---|----------|-------------|
@@ -1041,6 +1043,7 @@
 | 112 | `save_memory` | Save memory |
 | 113 | `store_memory` | Store memory |
 | 114 | `validate_memory_file` | Validate memory file |
+| 115 | `hybrid_memory_publish_governed_report` | Publish a governed hybrid memory report into desktop app-data storage with signed metadata |
 
 ## Meta-Orchestration (48 commandes)
 

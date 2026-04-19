@@ -18,6 +18,11 @@ import { usePersistentMemory } from '@/hooks/usePersistentMemory';
 import { useLTMContext } from '@/hooks/useLTMContext';
 import { memoryService } from '@/services/api/memory';
 import {
+  memoryIntegration,
+  type HybridMemoryDiagnostics,
+  type HybridShadowReadRolloutConfig,
+} from '@/services/ai/memoryIntegration';
+import {
   getAllEntries as getDefaultKnowledgeBaseEntries,
   type KnowledgeBaseEntry,
 } from '@/services/api/defaultKnowledgeBase';
@@ -45,28 +50,21 @@ import type { KnowledgeEntry as RuntimeKnowledgeEntry } from '@/services/memory/
 const pageLogger = createLogger('MemorySection');
 const MEMORY_SECTION_MODE = 'admin' as const;
 const noopAsync = async () => undefined;
+const HYBRID_REPORT_FILE_PREFIX = 'titane-hybrid-memory-report';
 
 type MemorySectionTab = 'overview' | 'dashboard' | 'tree' | 'search';
 
 const SECTION_TABS: { id: MemorySectionTab; label: string; icon: string }[] = [
-  { id: 'overview', label: "Vue d'ensemble", icon: '📊' },
+  { id: 'overview', label: 'Vue d\'ensemble', icon: '📊' },
   { id: 'dashboard', label: 'Dashboard', icon: '📚' },
   { id: 'tree', label: 'Arbre', icon: '🌳' },
   { id: 'search', label: 'Recherche', icon: '🔍' },
 ];
 
-/** Maximum number of knowledge entries visible before "show all" */
 const INITIAL_VISIBLE_KNOWLEDGE_COUNT = 24;
-/** Maximum content preview length for knowledge cards */
 const KNOWLEDGE_PREVIEW_LENGTH = 160;
-/** Maximum number of tags shown per knowledge card */
 const MAX_VISIBLE_TAGS = 3;
-/** Maximum importance level (star scale) */
 const MAX_IMPORTANCE = 5;
-
-// ═══════════════════════════════════════════════════════════════════════════
-// TYPES
-// ═══════════════════════════════════════════════════════════════════════════
 
 export interface TitaneStats {
   totalXP: number;
@@ -373,6 +371,11 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
     const [surfaceSyncTimestamp, setSurfaceSyncTimestamp] = useState<number | null>(null);
     const [isSurfaceSyncing, setIsSurfaceSyncing] = useState(false);
     const [activeTab, setActiveTab] = useState<MemorySectionTab>('overview');
+    const [hybridDiagnostics, setHybridDiagnostics] = useState<HybridMemoryDiagnostics>(
+      memoryIntegration.getHybridMemoryDiagnostics()
+    );
+    const [isHybridRolloutApplying, setIsHybridRolloutApplying] = useState(false);
+    const [hybridReportStatus, setHybridReportStatus] = useState<string | null>(null);
     const [knowledgeSearch, setKnowledgeSearch] = useState('');
     const [knowledgeTopicFilter, setKnowledgeTopicFilter] = useState<MemoryTopic | 'all'>(
       'all'
@@ -647,6 +650,35 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
       }
     }, [persistentMemoryLastUpdate, requestSurfaceSync]);
 
+    useEffect(() => {
+      const refreshDiagnostics = () => {
+        setHybridDiagnostics(memoryIntegration.getHybridMemoryDiagnostics());
+      };
+
+      refreshDiagnostics();
+
+      if (typeof window === 'undefined') {
+        return;
+      }
+
+      const intervalId = window.setInterval(refreshDiagnostics, 1500);
+      const handleStorage = (event: StorageEvent) => {
+        if (
+          event.key === 'titane_hybrid_memory_shadow_write_enabled' ||
+          event.key === 'titane_hybrid_memory_shadow_read_enabled' ||
+          event.key === 'titane_hybrid_memory_shadow_read_rollout'
+        ) {
+          refreshDiagnostics();
+        }
+      };
+
+      window.addEventListener('storage', handleStorage);
+      return () => {
+        window.clearInterval(intervalId);
+        window.removeEventListener('storage', handleStorage);
+      };
+    }, []);
+
     const isBootstrappingPersistentMemory =
       persistentMemoryLoading &&
       persistentMemoryLastUpdate === null &&
@@ -806,6 +838,108 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
       });
     }, [persistentMemoryLastUpdate, surfaceSyncTimestamp]);
 
+    const hybridPresetHistorySummary = useMemo(() => {
+      if (hybridDiagnostics.recentShadowReadPresetChanges.length === 0) {
+        return 'Aucun changement de preset applique dans cette session.';
+      }
+
+      return hybridDiagnostics.recentShadowReadPresetChanges
+        .map(entry => {
+          const timeLabel = new Date(entry.at).toLocaleTimeString('fr-FR', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+          });
+
+          return `${timeLabel}: ${entry.fromPresetLabel} -> ${entry.toPresetLabel} (${entry.source})`;
+        })
+        .join(' | ');
+    }, [hybridDiagnostics.recentShadowReadPresetChanges]);
+
+    const hybridReportContent = useMemo(() => {
+      const presetHistoryLines =
+        hybridDiagnostics.recentShadowReadPresetChanges.length > 0
+          ? hybridDiagnostics.recentShadowReadPresetChanges.map(entry => {
+              const timeLabel = new Date(entry.at).toLocaleString('fr-FR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+              });
+
+              return `- ${timeLabel}: ${entry.fromPresetLabel} -> ${entry.toPresetLabel} (${entry.source}, ${entry.mode}, ${entry.percentage}%, fenetre ${entry.trendWindow})`;
+            })
+          : ['- Aucun changement de preset persiste.'];
+
+      return [
+        '# TITANE Hybrid Memory Report',
+        '',
+        `- Date: ${new Date().toLocaleString('fr-FR')}`,
+        `- Preset actif: ${hybridDiagnostics.shadowReadActivePresetLabel}`,
+        `- Etat shadow read: ${hybridDiagnostics.shadowReadEnabled ? hybridDiagnostics.lastShadowReadStatus : 'inactif'}`,
+        `- Etat orchestration hybride: ${hybridDiagnostics.hybridOrchestrationEnabled ? hybridDiagnostics.lastHybridOrchestrationStatus : 'inactive'}`,
+        `- Complements hybrides injectes: ${hybridDiagnostics.lastHybridOrchestrationCount}`,
+        `- Qualification: ${hybridDiagnostics.lastShadowReadQualification}`,
+        `- Requete: ${hybridDiagnostics.lastShadowReadQuery ?? 'aucune'}`,
+        '',
+        '## Guidance operateur',
+        '',
+        hybridDiagnostics.shadowReadCanaryOperatorHint,
+        '',
+        '## Orchestration hybride',
+        '',
+        hybridDiagnostics.lastHybridOrchestrationReason,
+        ...(hybridDiagnostics.lastHybridOrchestrationPreview.length > 0
+          ? [
+              '',
+              '### Apercu des complements',
+              '',
+              ...hybridDiagnostics.lastHybridOrchestrationPreview.map(title => `- ${title}`),
+            ]
+          : []),
+        '',
+        '## Historique recent des presets',
+        '',
+        ...presetHistoryLines,
+      ].join('\n');
+    }, [hybridDiagnostics]);
+
+    const handleExportHybridReport = useCallback(async () => {
+      if (typeof window === 'undefined' || typeof document === 'undefined') {
+        setHybridReportStatus('Export indisponible sur cette surface.');
+        return;
+      }
+
+      try {
+        const governedExport = await memoryIntegration.publishGovernedHybridReport(
+          hybridReportContent
+        );
+
+        if (governedExport) {
+          setHybridReportStatus(
+            `Rapport hybride exporte. Export gouverne: ${governedExport.exportPath}`
+          );
+          return;
+        }
+
+        const blob = new Blob([hybridReportContent], { type: 'text/markdown;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = `${HYBRID_REPORT_FILE_PREFIX}-${Date.now()}.md`;
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
+        URL.revokeObjectURL(url);
+        setHybridReportStatus('Rapport hybride exporte.');
+      } catch (error) {
+        pageLogger.debug('Hybrid report export failed', error);
+        setHybridReportStatus('Echec de l export du rapport hybride.');
+      }
+    }, [hybridReportContent]);
+
     const memoryTreeData = useMemo(
       () =>
         isBootstrappingPersistentMemory || isBootstrappingKnowledgeSurface
@@ -882,6 +1016,49 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
         selectPersistentEntry(entry);
       },
       [selectPersistentEntry]
+    );
+
+    const runHybridShadowReadProbe = useCallback(async () => {
+      setIsHybridRolloutApplying(true);
+      try {
+        await memoryIntegration.loadContext({
+          includeProjects: true,
+          includeDecisions: true,
+          includeKnowledge: true,
+          includeRituals: true,
+          includeTimeline: false,
+          maxProjects: 5,
+          maxDecisions: 5,
+          maxKnowledge: 8,
+        });
+      } finally {
+        setHybridDiagnostics(memoryIntegration.getHybridMemoryDiagnostics());
+        setIsHybridRolloutApplying(false);
+      }
+    }, []);
+
+    const handleShadowReadRolloutConfigChange = useCallback(
+      async (config: HybridShadowReadRolloutConfig) => {
+        setIsHybridRolloutApplying(true);
+        try {
+          memoryIntegration.updateShadowReadRolloutConfig(config);
+          setHybridDiagnostics(memoryIntegration.getHybridMemoryDiagnostics());
+          await memoryIntegration.loadContext({
+            includeProjects: true,
+            includeDecisions: true,
+            includeKnowledge: true,
+            includeRituals: true,
+            includeTimeline: false,
+            maxProjects: 5,
+            maxDecisions: 5,
+            maxKnowledge: 8,
+          });
+        } finally {
+          setHybridDiagnostics(memoryIntegration.getHybridMemoryDiagnostics());
+          setIsHybridRolloutApplying(false);
+        }
+      },
+      []
     );
 
     const selectedEntry = useMemo(
@@ -1101,6 +1278,98 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
                 {knowledgeLoadWarning}
               </p>
+            </div>
+          </Card>
+        )}
+
+        {activeTab === 'overview' && (
+          <Card
+            style={{
+              marginTop: spacing[6],
+              border: `1px solid ${colors.neutral[500]}`,
+            }}
+          >
+            <div data-testid="memory-hybrid-overview-summary">
+              <h3 style={{ marginBottom: spacing[2] }}>Hybrid memory rollout</h3>
+              <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
+                Preset actif: <span data-testid="memory-hybrid-overview-active-preset">{hybridDiagnostics.shadowReadActivePresetLabel}</span>
+              </p>
+              <p
+                data-testid="memory-hybrid-overview-orchestration-status"
+                style={{ fontSize: fontSizes.sm, color: colors.neutral[400], marginTop: spacing[2] }}
+              >
+                Orchestration hybride: {hybridDiagnostics.hybridOrchestrationEnabled
+                  ? `${hybridDiagnostics.lastHybridOrchestrationStatus} (${hybridDiagnostics.lastHybridOrchestrationCount})`
+                  : 'inactive'}
+              </p>
+              <p
+                data-testid="memory-hybrid-overview-operator-hint"
+                style={{
+                  fontSize: fontSizes.sm,
+                  color: colors.neutral[400],
+                  marginTop: spacing[2],
+                }}
+              >
+                {hybridDiagnostics.shadowReadCanaryOperatorHint}
+              </p>
+              <p
+                data-testid="memory-hybrid-overview-orchestration-preview"
+                style={{
+                  fontSize: fontSizes.xs,
+                  color: colors.neutral[500],
+                  marginTop: spacing[2],
+                }}
+              >
+                {hybridDiagnostics.lastHybridOrchestrationPreview.length > 0
+                  ? `Complements: ${hybridDiagnostics.lastHybridOrchestrationPreview.join(' | ')}`
+                  : hybridDiagnostics.lastHybridOrchestrationReason}
+              </p>
+              <p
+                data-testid="memory-hybrid-overview-preset-history"
+                style={{
+                  fontSize: fontSizes.xs,
+                  color: colors.neutral[500],
+                  marginTop: spacing[2],
+                }}
+              >
+                {hybridPresetHistorySummary}
+              </p>
+              <div
+                style={{
+                  display: 'flex',
+                  gap: spacing[2],
+                  alignItems: 'center',
+                  flexWrap: 'wrap',
+                  marginTop: spacing[3],
+                }}
+              >
+                <button
+                  type="button"
+                  data-testid="memory-hybrid-overview-export-report"
+                  onClick={() => {
+                    void handleExportHybridReport();
+                  }}
+                  style={{
+                    padding: `${spacing[2]} ${spacing[3]}`,
+                    borderRadius: '8px',
+                    border: `1px solid ${colors.neutral[500]}`,
+                    background: 'transparent',
+                    color: colors.neutral[400],
+                    cursor: 'pointer',
+                  }}
+                >
+                  Exporter le rapport hybride
+                </button>
+                <span
+                  data-testid="memory-hybrid-overview-export-status"
+                  style={{
+                    fontSize: fontSizes.xs,
+                    color: colors.neutral[500],
+                  }}
+                >
+                  {hybridReportStatus ?? 'Aucun export recent.'}
+                </span>
+              </div>
             </div>
           </Card>
         )}
@@ -1517,6 +1786,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                   onEntrySelect={selectPersistentEntry}
                   selectedEntryId={selectedEntryId}
                   additionalEntries={[...consolidatedMemoryEntries, ...knowledgeEntries]}
+                  hybridDiagnostics={hybridDiagnostics}
                 />
               </React.Suspense>
             </Card>
@@ -1541,9 +1811,15 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                 onNodeClick={handleNodeClick}
                 showAttributes={true}
                 selectedEntryId={selectedEntryId}
+                diagnostics={hybridDiagnostics}
                 isLoading={
                   isBootstrappingPersistentMemory || isBootstrappingKnowledgeSurface
                 }
+                onShadowReadRolloutConfigChange={handleShadowReadRolloutConfigChange}
+                onShadowReadProbeRequest={() => {
+                  void runHybridShadowReadProbe();
+                }}
+                isShadowReadRolloutBusy={isHybridRolloutApplying}
               />
             </React.Suspense>
             {selectedNode && (

@@ -127,6 +127,20 @@ function formatRuntimeKnowledgeBlock(entries: KnowledgeEntry[]): string {
   return ['## RUNTIME_KNOWLEDGE_CONTEXT', ...lines].join('\n');
 }
 
+function formatHybridMemoryBlock(entries: KnowledgeEntry[]): string {
+  if (entries.length === 0) {
+    return '';
+  }
+
+  const lines = entries.slice(0, 3).map(entry => {
+    const summary = entry.content.replace(/\s+/g, ' ').trim().slice(0, 180);
+    const tags = Array.isArray(entry.tags) && entry.tags.length > 0 ? entry.tags.join(', ') : 'none';
+    return `- ${entry.title} [${entry.category}] relevance=${entry.relevance.toFixed(2)} tags=${tags} excerpt=${summary}`;
+  });
+
+  return ['## HYBRID_MEMORY_ORCHESTRATION_CONTEXT', ...lines].join('\n');
+}
+
 function formatDefaultKnowledgeBlock(context: string): string {
   const trimmed = context.trim();
   if (!trimmed) {
@@ -1167,6 +1181,17 @@ export async function processMessage(
       error
     );
   }
+  const hybridMemoryDiagnostics = memoryIntegration.getHybridMemoryDiagnostics();
+  const hybridMemoryContext = formatHybridMemoryBlock(
+    kernelMemoryContext.hybridSupplementalKnowledge ?? []
+  );
+  const hybridMemoryStatusContext = [
+    '## HYBRID_MEMORY_ORCHESTRATION_STATUS',
+    `enabled=${hybridMemoryDiagnostics.hybridOrchestrationEnabled ? 'true' : 'false'}`,
+    `status=${hybridMemoryDiagnostics.lastHybridOrchestrationStatus}`,
+    `count=${hybridMemoryDiagnostics.lastHybridOrchestrationCount}`,
+    `reason=${hybridMemoryDiagnostics.lastHybridOrchestrationReason}`,
+  ].join('\n');
 
   let providerHealthForKernel: Record<string, number> | undefined;
   try {
@@ -1355,6 +1380,8 @@ export async function processMessage(
     activeSkillStatusContext,
     staticPromptContext.personaContext,
     staticPromptContext.userPreferencesContext,
+    hybridMemoryContext,
+    hybridMemoryStatusContext,
     runtimeKnowledgeContext,
     runtimeKnowledgeStatusContext,
     defaultKnowledgeContext,

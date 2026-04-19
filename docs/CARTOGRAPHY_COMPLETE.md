@@ -35,9 +35,25 @@
 
 > 2026-04-18 — Hybrid memory near-match surface truth: la surface mémoire active ajoute une vue dédiée aux quasi-correspondances shadow-read. Le runtime y expose les candidats proches du seuil via `lastShadowReadNearMatches`, distincts des paires validées et des manques critiques, pour guider le diagnostic sans fusion effective.
 
+> 2026-04-19 — Hybrid memory retained overview export truth: `src/services/ai/memoryIntegration.ts` nettoie maintenant l historique persisté des presets shadow-read avec une rétention bornée à sept jours et une validation de structure avant toute réhydratation. `src/components/sections/MemorySection.tsx` exploite ensuite cette vérité runtime pour proposer un export markdown visible depuis la vue d ensemble via `memory-hybrid-overview-export-report` et `memory-hybrid-overview-export-status`, ce qui rend le diagnostic hybride partageable sans quitter la surface canonique `/titane?tab=memory`.
+
+> 2026-04-19 — Hybrid memory governed desktop export truth: `src-tauri/src/hybrid_memory_bridge.rs` ancre maintenant ce même rapport overview dans une voie desktop gouvernée `hybrid_memory_publish_governed_report`, exposée via `src/lib/tauriCommands.ts`, `src/lib/tauriClient.ts` et `src/lib/security.ts`. `MemorySection` préfère cette publication persistante sur desktop puis retombe honnêtement sur l export navigateur existant hors Tauri, ce qui garde une seule surface UI active tout en ajoutant un artefact AppData vérifiable.
+
+> 2026-04-19 — Hybrid memory orchestration surface truth: `src/services/ai/memoryIntegration.ts` peut maintenant attacher des complements `hybridSupplementalKnowledge` au `MemoryContext` sans remplacer les tableaux canoniques historiques, a condition que `titane_hybrid_memory_orchestration_enabled` soit actif et que la shadow-read UnifiedMemory fournisse des candidats distincts suffisamment qualifiés. `src/components/sections/MemorySection.tsx` publie alors `memory-hybrid-overview-orchestration-status` et `memory-hybrid-overview-orchestration-preview`, tandis que `src/features/memory/MemoryTreeViewer.tsx` expose `memory-hybrid-orchestration-state`, `memory-hybrid-orchestration-count`, `memory-hybrid-orchestration-preview` et `memory-hybrid-orchestration-reason`; la topologie de `/titane?tab=memory` reste donc inchangée mais passe d un diagnostic pur a une orchestration additive bornée et visible.
+
 > 2026-04-18 — Hybrid memory near-match stability surface truth: la surface mémoire active ajoute une sous-vue de stabilité des quasi-correspondances. Le runtime y publie la récurrence, la fenêtre d observation et la similarité moyenne des near-matches récents afin d isoler les signaux persistants des occurrences ponctuelles.
 
 > 2026-04-18 — Hybrid memory rollout surface truth: la surface mémoire active expose aussi le mode de rollout shadow-read, la décision canari et une tendance étendue bornée. Ce contrat rend visible le déploiement contrôlé du shadow-read sans l élever au rang de vérité canonique.
+
+> 2026-04-18 — Hybrid memory rollout control surface truth: la surface mémoire active expose maintenant des contrôles de pilotage pour appliquer le mode de rollout shadow-read et déclencher un probe immédiat. Cette capacité reste bornée à la page mémoire active et réutilise les diagnostics déjà publiés par le runtime.
+
+> 2026-04-18 — Hybrid memory canary explainability surface truth: la surface mémoire active ajoute une explication textuelle de la décision canari ainsi qu une rangée de presets opérateur. Le diagnostic devient directement interprétable sans inspection manuelle du hash ou du localStorage.
+
+> 2026-04-19 — Hybrid memory active preset surface truth: la surface mémoire active affiche désormais le preset réellement reconnu côté runtime et une recommandation opérateur lisible. L opérateur sait immédiatement si le preset courant est Observation, Equilibre, Full ou Custom, et quelle action appliquer quand un contexte reste hors-cible.
+
+> 2026-04-19 — Hybrid memory overview summary truth: la vue d ensemble mémoire expose maintenant le preset actif, la recommandation opérateur et un historique borné des derniers changements de preset. La même vérité runtime est ainsi visible sans ouvrir l arbre détaillé.
+
+> 2026-04-19 — Hybrid memory dashboard summary truth: le dashboard mémoire compact expose à son tour une synthèse du preset actif, de l état shadow-read et de l historique persistant récent. Cette surface reste un relais visuel du diagnostic runtime produit par `memoryIntegration`.
 
 > 2026-04-18 — Conversation assistant markdown typography truth: `src/components/chat/MarkdownContent.tsx` accentue désormais les headings markdown par niveau et affiche le langage des blocs code dans un en-tête dédié, tandis que `src/pages/TitanePage.css` maintient leur containment sur la surface conversation canonique. La route active `/titane?tab=conversation` garde donc la même topologie mais gagne une hiérarchie typographique plus explicite pour les réponses assistant structurées.
 

@@ -2854,6 +2854,13 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
           .join(', ');
       }
 
+      if ((memory.hybridSupplementalKnowledge?.length ?? 0) > 0) {
+        sources.push('hybrid_knowledge');
+        data.hybridKnowledge = memory.hybridSupplementalKnowledge
+          ?.map((k: KnowledgeEntry) => k.title)
+          .join(', ');
+      }
+
       // Rituels
       if (memory.activeRituals.length > 0) {
         sources.push('rituals');

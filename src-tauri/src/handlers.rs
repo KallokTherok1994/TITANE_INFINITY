@@ -108,6 +108,7 @@ macro_rules! generate_titane_handlers {
                     $crate::devtools::api::devtools_disable,
                     $crate::security_audit_bridge::security_audit_sync_journal,
                     $crate::security_audit_bridge::security_audit_publish_signed_export,
+                    $crate::hybrid_memory_bridge::hybrid_memory_publish_governed_report,
 
                     commands::create_conversation,
                     commands::load_conversation,

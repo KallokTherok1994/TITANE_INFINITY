@@ -16,6 +16,7 @@ export interface MemoryContext {
   relevantKnowledge: KnowledgeEntry[];
   activeRituals: RitualInfo[];
   timeline: TimelineEntry[];
+  hybridSupplementalKnowledge?: KnowledgeEntry[];
 }
 
 export interface ProjectSummary {

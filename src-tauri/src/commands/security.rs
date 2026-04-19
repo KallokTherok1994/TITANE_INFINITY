@@ -315,6 +315,7 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("qa_health_check");
     commands.insert("security_audit_sync_journal");
     commands.insert("security_audit_publish_signed_export");
+    commands.insert("hybrid_memory_publish_governed_report");
 
     // ═══════════════════════════════════════════════════════════════
     // VOICE COMMANDS - TTS & ASR (v16.2.2+ / v∞.7)

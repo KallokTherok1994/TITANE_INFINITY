@@ -11,6 +11,12 @@ const mockGetAllEntries = vi.fn();
 const mockKnowledgeVaultGetState = vi.fn();
 const mockKnowledgeVaultInitialize = vi.fn();
 const mockKnowledgeVaultSubscribe = vi.fn(() => () => {});
+const mockGetHybridMemoryDiagnostics = vi.fn();
+const mockUpdateShadowReadRolloutConfig = vi.fn();
+const mockMemoryIntegrationLoadContext = vi.fn();
+const mockPublishGovernedHybridReport = vi.fn();
+const mockCreateObjectURL = vi.fn(() => 'blob:memory-hybrid-report');
+const mockRevokeObjectURL = vi.fn();
 
 vi.mock('@/hooks/usePersistentMemory', () => ({
   usePersistentMemory: (options: unknown) => mockUsePersistentMemory(options),
@@ -31,6 +37,17 @@ vi.mock('@/services/api/defaultKnowledgeBase', () => ({
   getAllEntries: (...args: unknown[]) => mockGetAllEntries(...args),
 }));
 
+vi.mock('@/services/ai/memoryIntegration', () => ({
+  memoryIntegration: {
+    getHybridMemoryDiagnostics: () => mockGetHybridMemoryDiagnostics(),
+    updateShadowReadRolloutConfig: (...args: unknown[]) =>
+      mockUpdateShadowReadRolloutConfig(...args),
+    loadContext: (...args: unknown[]) => mockMemoryIntegrationLoadContext(...args),
+    publishGovernedHybridReport: (...args: unknown[]) =>
+      mockPublishGovernedHybridReport(...args),
+  },
+}));
+
 vi.mock('@/cognitive/knowledge/knowledgeVault', () => ({
   knowledgeVault: {
     getState: () => mockKnowledgeVaultGetState(),
@@ -44,6 +61,7 @@ vi.mock('@/components/chat/MemoryDashboard', () => ({
     modeId,
     onEntrySelect,
     selectedEntryId,
+    hybridDiagnostics,
   }: {
     modeId: string;
     onEntrySelect?: (entry: {
@@ -55,9 +73,15 @@ vi.mock('@/components/chat/MemoryDashboard', () => ({
       metadata: { createdAt: number; accessCount: number };
     }) => void;
     selectedEntryId?: string | null;
+    hybridDiagnostics?: {
+      shadowReadActivePresetLabel?: string;
+      recentShadowReadPresetChanges?: Array<{ fromPresetLabel: string; toPresetLabel: string }>;
+    };
   }) => (
     <div data-testid="memory-dashboard">
       dashboard:{modeId}:selected:{selectedEntryId ?? 'none'}
+      :preset:{hybridDiagnostics?.shadowReadActivePresetLabel ?? 'none'}
+      :history:{hybridDiagnostics?.recentShadowReadPresetChanges?.length ?? 0}
       <button
         data-testid="memory-dashboard-select"
         onClick={() =>
@@ -81,12 +105,45 @@ vi.mock('@/features/memory/MemoryTreeViewer', () => ({
   MemoryTreeViewer: ({
     data,
     isLoading,
+    diagnostics,
+    onShadowReadRolloutConfigChange,
+    onShadowReadProbeRequest,
   }: {
     data?: { name?: string };
     isLoading?: boolean;
+    diagnostics?: { lastShadowReadQuery?: string | null; lastError?: string | null };
+    onShadowReadRolloutConfigChange?: (config: {
+      mode: 'full' | 'canary';
+      percentage: number;
+      trendWindow: number;
+    }) => void;
+    onShadowReadProbeRequest?: () => void;
   }) => (
     <div data-testid="memory-tree-viewer">
       {isLoading ? 'loading-tree' : (data?.name ?? 'no-tree')}
+      :query:{diagnostics?.lastShadowReadQuery ?? 'none'}
+      :error:{diagnostics?.lastError ?? 'none'}
+      :preset-history:{Array.isArray((diagnostics as any)?.recentShadowReadPresetChanges)
+        ? (diagnostics as any).recentShadowReadPresetChanges.length
+        : 0}
+      <button
+        data-testid="memory-tree-rollout-apply"
+        onClick={() =>
+          onShadowReadRolloutConfigChange?.({
+            mode: 'canary',
+            percentage: 25,
+            trendWindow: 8,
+          })
+        }
+      >
+        apply-rollout
+      </button>
+      <button
+        data-testid="memory-tree-rollout-probe"
+        onClick={() => onShadowReadProbeRequest?.()}
+      >
+        probe-rollout
+      </button>
     </div>
   ),
 }));
@@ -149,6 +206,16 @@ vi.mock('@/utils/logger', () => ({
   }),
 }));
 
+Object.defineProperty(global.URL, 'createObjectURL', {
+  value: mockCreateObjectURL,
+  writable: true,
+});
+
+Object.defineProperty(global.URL, 'revokeObjectURL', {
+  value: mockRevokeObjectURL,
+  writable: true,
+});
+
 describe('MemorySection', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -156,6 +223,14 @@ describe('MemorySection', () => {
 
     mockGetKnowledge.mockResolvedValue([]);
     mockGetAllEntries.mockResolvedValue([]);
+    mockUpdateShadowReadRolloutConfig.mockReset();
+    mockUpdateShadowReadRolloutConfig.mockImplementation(config => config);
+    mockMemoryIntegrationLoadContext.mockReset();
+    mockMemoryIntegrationLoadContext.mockResolvedValue({});
+    mockPublishGovernedHybridReport.mockReset();
+    mockPublishGovernedHybridReport.mockResolvedValue(null);
+    mockCreateObjectURL.mockClear();
+    mockRevokeObjectURL.mockClear();
 
     mockUseLTMContext.mockReturnValue({
       historyCount: 4,
@@ -226,6 +301,106 @@ describe('MemorySection', () => {
       lastUpdate: 123,
       refresh: vi.fn(),
     });
+
+    mockGetHybridMemoryDiagnostics.mockReturnValue({
+      shadowWriteEnabled: true,
+      shadowReadEnabled: true,
+      hybridOrchestrationEnabled: true,
+      shadowWriteCount: 2,
+      shadowReadCount: 1,
+      lastHybridOrchestrationStatus: 'ready',
+      lastHybridOrchestrationCount: 1,
+      lastHybridOrchestrationPreview: ['Atlas runtime addendum'],
+      lastHybridOrchestrationReason:
+        'supplements hybrides additifs injectes dans le contexte prompt',
+      shadowReadRolloutMode: 'canary',
+      shadowReadActivePresetId: 'balanced',
+      shadowReadActivePresetLabel: 'Equilibre',
+      shadowReadCanaryEligible: true,
+      shadowReadCanaryBucket: 12,
+      shadowReadCanaryPercentage: 20,
+      shadowReadTrendWindow: 10,
+      shadowReadCanaryReason: 'bucket 12 inclus dans la cible < 20',
+      shadowReadCanaryQueryPreview: 'Atlas memory',
+      shadowReadCanaryOperatorHint:
+        'Le contexte est dans le canari courant. Conserver ce preset pour observation ou passer en Full pour generaliser.',
+      lastShadowWriteAt: 100,
+      lastShadowReadAt: 200,
+      lastShadowReadStatus: 'ready',
+      lastShadowReadSampleCount: 2,
+      lastShadowReadTotalMemories: 5,
+      lastCanonicalContextCount: 3,
+      lastShadowReadQualification: 'partial',
+      lastShadowReadCoverageRatio: 0.67,
+      lastShadowReadAverageSimilarity: 0.58,
+      lastShadowReadAverageRetrievalScore: 0.71,
+      lastShadowReadCompositeScore: 0.65,
+      lastShadowReadMatchedCount: 2,
+      lastShadowReadMissingCount: 1,
+      lastShadowReadExtraCount: 1,
+      lastShadowReadCanonicalPreview: ['Atlas memory'],
+      lastShadowReadUnifiedPreview: ['Atlas memory', 'Shadow extra'],
+      lastShadowReadMatchedPairs: [
+        { canonicalLabel: 'Atlas memory', unifiedLabel: 'Atlas memory', similarity: 1 },
+      ],
+      lastShadowReadNearMatches: [
+        {
+          canonicalLabel: 'Nebula route',
+          unifiedLabel: 'Nebula shadow route',
+          similarity: 0.3,
+          gapToThreshold: 0.1,
+        },
+      ],
+      lastShadowReadNearMatchStability: [
+        {
+          canonicalLabel: 'Nebula route',
+          unifiedLabel: 'Nebula shadow route',
+          seenCount: 2,
+          observationWindow: 4,
+          averageSimilarity: 0.29,
+          stability: 'recurrent',
+        },
+      ],
+      lastShadowReadMissingReasons: [
+        {
+          canonicalLabel: 'Nebula route',
+          bestUnifiedLabel: 'Nebula shadow',
+          bestSimilarity: 0.3,
+          gapToThreshold: 0.1,
+          priority: 'proche-seuil',
+          reason: 'similarite inferieure au seuil (30%)',
+        },
+      ],
+      recentShadowReadQualifications: [
+        { at: 1, qualification: 'partial', compositeScore: 0.65 },
+      ],
+      recentShadowReadExtendedTrend: [
+        { at: 1, qualification: 'partial', compositeScore: 0.65 },
+        { at: 0, qualification: 'ready', compositeScore: 0.82 },
+      ],
+      recentShadowReadPresetChanges: [
+        {
+          at: 1,
+          fromPresetLabel: 'Observation',
+          toPresetLabel: 'Equilibre',
+          mode: 'canary',
+          percentage: 20,
+          trendWindow: 10,
+          source: 'preset',
+        },
+      ],
+      lastShadowReadTrendSummary: {
+        windowSize: 10,
+        readyCount: 1,
+        partialCount: 1,
+        insufficientCount: 0,
+        averageCompositeScore: 0.735,
+      },
+      lastShadowReadMissingLabels: ['Atlas'],
+      lastShadowReadExtraLabels: ['Shadow extra'],
+      lastShadowReadQuery: 'Atlas memory',
+      lastError: null,
+    });
   });
 
   it('uses admin memory scope and keeps long-term count separate from conversation history', async () => {
@@ -261,8 +436,36 @@ describe('MemorySection', () => {
     expect(await screen.findByTestId('memory-dashboard')).toHaveTextContent(
       'dashboard:admin:selected:none'
     );
+    expect(await screen.findByTestId('memory-dashboard')).toHaveTextContent(
+      'preset:Equilibre'
+    );
+    expect(await screen.findByTestId('memory-dashboard')).toHaveTextContent(
+      'history:1'
+    );
     expect(await screen.findByTestId('memory-tree-viewer')).toHaveTextContent(
       'Memoire TITANE'
+    );
+    expect(await screen.findByTestId('memory-tree-viewer')).toHaveTextContent(
+      'query:Atlas memory'
+    );
+    expect(await screen.findByTestId('memory-tree-viewer')).toHaveTextContent(
+      'preset-history:1'
+    );
+    expect(await screen.findByTestId('memory-hybrid-overview-summary')).toBeInTheDocument();
+    expect(await screen.findByTestId('memory-hybrid-overview-active-preset')).toHaveTextContent(
+      'Equilibre'
+    );
+    expect(
+      await screen.findByTestId('memory-hybrid-overview-orchestration-status')
+    ).toHaveTextContent('ready (1)');
+    expect(await screen.findByTestId('memory-hybrid-overview-operator-hint')).toHaveTextContent(
+      'Le contexte est dans le canari courant.'
+    );
+    expect(
+      await screen.findByTestId('memory-hybrid-overview-orchestration-preview')
+    ).toHaveTextContent('Atlas runtime addendum');
+    expect(await screen.findByTestId('memory-hybrid-overview-preset-history')).toHaveTextContent(
+      'Observation -> Equilibre (preset)'
     );
     expect(await screen.findByTestId('memory-search-panel')).toHaveTextContent(
       'entries:1'
@@ -272,6 +475,99 @@ describe('MemorySection', () => {
     );
     expect(await screen.findByTestId('memory-search-panel')).toHaveTextContent(
       'loading:no'
+    );
+  });
+
+  it('forwards rollout control changes and probe requests to memoryIntegration', async () => {
+    render(
+      <MemorySection
+        stats={{
+          totalXP: 0,
+          level: 1,
+          memoryShortTerm: 0,
+          memoryMidTerm: 0,
+          memoryLongTerm: 0,
+          evolutionScore: 0,
+        }}
+        conversationId="conv-rollout"
+      />
+    );
+
+    fireEvent.click(await screen.findByTestId('memory-tree-rollout-apply'));
+
+    await waitFor(() => {
+      expect(mockUpdateShadowReadRolloutConfig).toHaveBeenCalledWith({
+        mode: 'canary',
+        percentage: 25,
+        trendWindow: 8,
+      });
+    });
+    await waitFor(() => {
+      expect(mockMemoryIntegrationLoadContext).toHaveBeenCalled();
+    });
+
+    mockMemoryIntegrationLoadContext.mockClear();
+
+    fireEvent.click(await screen.findByTestId('memory-tree-rollout-probe'));
+
+    await waitFor(() => {
+      expect(mockMemoryIntegrationLoadContext).toHaveBeenCalled();
+    });
+  });
+
+  it('exports a user-readable hybrid report from the overview surface', async () => {
+    render(
+      <MemorySection
+        stats={{
+          totalXP: 0,
+          level: 1,
+          memoryShortTerm: 0,
+          memoryMidTerm: 0,
+          memoryLongTerm: 0,
+          evolutionScore: 0,
+        }}
+        conversationId="conv-export"
+      />
+    );
+
+    fireEvent.click(await screen.findByTestId('memory-hybrid-overview-export-report'));
+
+    await waitFor(() => {
+      expect(mockCreateObjectURL).toHaveBeenCalled();
+    });
+    expect(await screen.findByTestId('memory-hybrid-overview-export-status')).toHaveTextContent(
+      'Rapport hybride exporte.'
+    );
+  });
+
+  it('prefers the governed desktop export when available', async () => {
+    mockPublishGovernedHybridReport.mockResolvedValue({
+      exportPath: '/tmp/hybrid-memory-1.md',
+      metadataPath: '/tmp/hybrid-memory-1.json',
+    });
+
+    render(
+      <MemorySection
+        stats={{
+          totalXP: 0,
+          level: 1,
+          memoryShortTerm: 0,
+          memoryMidTerm: 0,
+          memoryLongTerm: 0,
+          evolutionScore: 0,
+        }}
+        conversationId="conv-governed-export"
+      />
+    );
+
+    fireEvent.click(await screen.findByTestId('memory-hybrid-overview-export-report'));
+
+    await waitFor(() => {
+      expect(mockPublishGovernedHybridReport).toHaveBeenCalled();
+    });
+    expect(mockCreateObjectURL).not.toHaveBeenCalled();
+    expect(await screen.findByTestId('memory-hybrid-overview-export-status')).toHaveTextContent(
+      'Export gouverne: /tmp/hybrid-memory-1.md'
     );
   });
 

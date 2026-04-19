@@ -984,6 +984,12 @@ class TauriClient {
     });
   }
 
+  async hybridMemoryPublishGovernedReport(params?: unknown): Promise<unknown> {
+    return await this.invoke(TAURI_COMMANDS.HYBRID_MEMORY_PUBLISH_GOVERNED_REPORT, {
+      payload: params,
+    });
+  }
+
   async engineInit(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.ENGINE_INIT,
