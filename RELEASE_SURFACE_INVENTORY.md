@@ -1,4 +1,44 @@
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.0.2 — Historical baseline preserved below)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.0.3 — Historical baseline preserved below)
+
+## Addendum — 2026-04-19 — TITANE∞ v31.0.3 Desktop Publication Truth
+
+Canonical target version: **31.0.3**
+
+| Surface | Truth | Status |
+|---|---|---|
+| `src-tauri/target/release/bundle/appimage/TITANE Infinity_31.0.3_amd64.AppImage` | Built locally | PASS |
+| `src-tauri/target/release/bundle/deb/TITANE Infinity_31.0.3_amd64.deb` | Built locally | PASS |
+| `src-tauri/target/release/bundle/rpm/TITANE Infinity-31.0.3-1.x86_64.rpm` | Built locally | PASS |
+| `deployment/latest/MANIFEST.json` | Published to 31.0.3 desktop truth | PASS |
+| `deployment/latest/SHA256SUMS.txt` | Published to 31.0.3 desktop truth | PASS |
+| `deployment/latest/CHECKSUMS.sha256` | Published to 31.0.3 desktop truth | PASS |
+| `deployment/latest/CHECKSUMS.txt` | Published to 31.0.3 desktop truth | PASS |
+| `deployment/latest/SIZES.txt` | Published to 31.0.3 desktop truth | PASS |
+| `deployment/latest/titane-infinity` | Published to 31.0.3 desktop truth | PASS |
+| `~/.local/share/applications/titane-infinity.desktop` | `Name=TITANE∞ v31.0.3` | PASS |
+| `/usr/bin/titane-infinity` | Still exposes installed 31.0.2 binary | BLOCKED_SUDO_REQUIRED |
+| `/usr/share/applications/titane-infinity.desktop` | Still exposes `Name=TITANE∞ v31.0.2` | BLOCKED_SUDO_REQUIRED |
+| `Android build/install lane` | No connected device or emulator in this governed session | BLOCKED |
+
+> This addendum seals the Linux desktop publication truth for 31.0.3 while keeping the full BUILD ALL verdict blocked: the local desktop bundles and deployment/latest are real, but the host-wide installed binary and system launcher were not refreshed because system sync requires interactive sudo, and Android device truth remains unavailable.
+
+## Addendum — 2026-04-19 — TITANE∞ v31.0.3 Source Version Surface Sync
+
+Canonical target version: **31.0.3**
+
+| File / Surface | Version | Status |
+|---|---|---|
+| `package.json` | `31.0.3` | UPDATED_TO_31_0_3 |
+| `src-tauri/Cargo.toml` | `31.0.3` | UPDATED_TO_31_0_3 |
+| `src-tauri/Cargo.lock` | `31.0.3` | UPDATED_TO_31_0_3 |
+| `src-tauri/tauri.conf.json` | `31.0.3` | UPDATED_TO_31_0_3 |
+| `src-tauri/tauri.base.json` | `31.0.3` | UPDATED_TO_31_0_3 |
+| `tauri.base.json` | `31.0.3` | UPDATED_TO_31_0_3 |
+| `runtime/stable/tauri.conf.json` | `31.0.3` | UPDATED_TO_31_0_3 |
+| `runtime/stable/manifest.json` | `31.0.3` | UPDATED_TO_31_0_3 |
+| `RELEASE_SURFACE_INVENTORY.md` | `31.0.3` | UPDATED_TO_31_0_3 |
+
+> This addendum records the governed Rule 13 patch bump and source-surface sync to 31.0.3. Desktop bundles now exist and deployment/latest is aligned to the same version, but BUILD ALL cannot be sealed until system launcher sync and Android device truth are proven.
 
 ## Addendum — 2026-04-18 — TITANE∞ v31.0.2 Windows MSI Release Truth
 

@@ -1,0 +1,58 @@
+{
+  "deployment": {
+    "timestamp": "2026-04-19T15:32:31Z",
+    "version": "31.0.3",
+    "commit": "23c04c03016a1f8babab0b69dfe9a9625ccdafd7",
+    "branch": "MAIN",
+    "certification": "BUILD_ALL_2026-04-19_v31.0.3_DESKTOP",
+    "deployment_type": "governed_desktop_release_publication"
+  },
+  "artifacts": {
+    "appimage": {
+      "available": true,
+      "file": "TITANE Infinity_31.0.3_amd64.AppImage",
+      "sha256": "34bb5f827f8246c5e1d27ac8583983e80bbb1acf4bcd6a98e832185f692033ff",
+      "size_bytes": 93551096,
+      "size_human": "90M"
+    },
+    "deb": {
+      "available": true,
+      "file": "TITANE Infinity_31.0.3_amd64.deb",
+      "sha256": "2b20be2f31107ad6cfd0fc864e14890365787b2d3e61f14efae8da052554959d",
+      "size_bytes": 20772338,
+      "size_human": "20M"
+    },
+    "rpm": {
+      "available": true,
+      "file": "TITANE Infinity-31.0.3-1.x86_64.rpm",
+      "sha256": "29ab2ec64981bc6cb0adc0ef8c626e91004a2e2eb8d9b5ce37f17831e47378ad",
+      "size_bytes": 20772632,
+      "size_human": "20M"
+    },
+    "binary": {
+      "available": true,
+      "file": "titane-infinity",
+      "sha256": "6bd12a9ed1b43f99f9e071e1f775ed990c764972abdddc33a152e0ae97236ae1",
+      "size_bytes": 45959384,
+      "size_human": "44M"
+    },
+    "android_apk": {
+      "available": false,
+      "reason": "no_connected_device_or_emulator_in_this_governed_session"
+    },
+    "android_aab": {
+      "available": false,
+      "reason": "no_connected_device_or_emulator_in_this_governed_session"
+    },
+    "windows_msi": {
+      "available": false,
+      "reason": "not_applicable_local_linux_host"
+    }
+  },
+  "certification": {
+    "release_gate_status": "BLOCKED",
+    "phase_chain_status": "VERSION_SYNC→DESKTOP_ARTIFACT→DEPLOYMENT_LATEST→LAUNCHER_SYNC",
+    "security_posture": "LOCAL_BUILD_VERIFIED",
+    "production_readiness": "DESKTOP_READY_ONLY"
+  }
+}
