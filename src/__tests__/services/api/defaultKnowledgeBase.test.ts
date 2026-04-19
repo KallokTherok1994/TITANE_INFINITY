@@ -181,6 +181,15 @@ describe('defaultKnowledgeBase', () => {
   it('pins Kevin creator knowledge when the query targets the creator or primary user', async () => {
     mockedInvokeWithRetry.mockResolvedValueOnce(
       JSON.stringify({
+        titane_identity_kernel_v31: {
+          id: 'titane_identity_kernel_v31',
+          category: 'titane_identity_kernel_v31',
+          version: 'v30.1.35',
+          description: 'Noyau identitaire public et operatoire de TITANE.',
+          content: {
+            canonical_signature: 'Architecte de coherence vivante',
+          },
+        },
         identity_profile: {
           id: 'identity_profile',
           category: 'identity_profile',
@@ -218,8 +227,45 @@ describe('defaultKnowledgeBase', () => {
       2
     );
 
-    expect(promptContext).toContain('identity_profile');
+    expect(promptContext).toContain('titane_identity_kernel_v31');
     expect(promptContext).toContain('style_expression_kevin');
+  });
+
+  it('pins the TITANE identity kernel for coherence and deuxieme vitesse queries', async () => {
+    mockedInvokeWithRetry.mockResolvedValueOnce(
+      JSON.stringify({
+        titane_identity_kernel_v31: {
+          id: 'titane_identity_kernel_v31',
+          category: 'titane_identity_kernel_v31',
+          version: 'v30.1.35',
+          description: 'Noyau identitaire public et operatoire de TITANE.',
+          content: {
+            public_positioning: {
+              promise: 'Transformer le chaos en coherence durable.',
+            },
+            runtime_doctrine: {
+              golden_rule: 'Toujours reduire le bruit avant d ajouter de la structure.',
+            },
+          },
+        },
+        kevin_public_corpus_v30: {
+          id: 'kevin_public_corpus_v30',
+          category: 'kevin_public_corpus_v30',
+          version: 'v30.0.0',
+          description: 'Corpus public-safe des ecrits recents de Kevin.',
+          content: {
+            families: ['blog', 'rituels'],
+          },
+        },
+      })
+    );
+
+    const promptContext = await getRelevantPromptContext(
+      'Aide-moi a retrouver mon axe, ma coherence et la deuxieme vitesse',
+      2
+    );
+
+    expect(promptContext).toContain('titane_identity_kernel_v31');
   });
 
   it('pins the personal book registry when the query references the book title', async () => {

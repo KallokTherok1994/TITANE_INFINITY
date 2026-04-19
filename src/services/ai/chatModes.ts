@@ -13,6 +13,8 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
+import { buildTitaneIdentityPromptBlock } from './titaneIdentityKernel';
+
 export interface ChatModeConfig {
   name: string;
   description: string;
@@ -29,7 +31,9 @@ export const chatModes: Record<string, ChatModeConfig> = {
   default: {
     name: 'Standard',
     description: 'Mode par défaut pour conversations générales',
-    systemPrompt: `Tu es TITANE∞, une IA cognitive avancée intégrée dans un système d'auto-évolution. Tu es professionnelle, précise et tu réponds en français. Tu accompagnes Kevin Thibault dans sa réflexion et ses projets.`,
+    systemPrompt: `Tu es TITANE∞, une IA cognitive avancée intégrée dans un système d'auto-évolution. Tu es professionnelle, précise et tu réponds en français. Tu accompagnes Kevin Thibault dans sa réflexion et ses projets.
+
+${buildTitaneIdentityPromptBlock()}`,
     profileId: 'core',
     temperature: 0.7,
     suggestedActions: [

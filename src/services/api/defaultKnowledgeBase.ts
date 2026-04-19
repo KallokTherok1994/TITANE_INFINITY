@@ -10,7 +10,7 @@
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ v30.0.0 — DEFAULT KNOWLEDGE BASE SERVICE (FRONTEND)
  *   Wraps the 4 IPC commands exposed by knowledge_base_default.rs
- *   so TITANE chat AI can access its 193 built-in knowledge categories.
+ *   so TITANE chat AI can access its built-in knowledge categories.
  *
  *   Commands bridged:
  *     knowledge_base_get_all       → getAllEntries()
@@ -383,20 +383,32 @@ function expandQueryContext(query: string): {
   };
 
   if (KB_CREATOR_HINTS.some(hint => normalized.includes(hint))) {
-    addTokens('kevin', 'creator', 'owner', 'style', 'mission', 'workflow');
+    addTokens(
+      'kevin',
+      'creator',
+      'owner',
+      'style',
+      'mission',
+      'workflow',
+      'titane',
+      'coherence',
+      'axe'
+    );
     pin(
       'identity_profile',
       'style_expression_kevin',
+      'titane_identity_kernel_v31',
       'kevin_owner_profile_v30',
       'kevin_workflow_v30'
     );
   }
 
   if (KB_TWINS_HINTS.some(hint => normalized.includes(hint))) {
-    addTokens('twin', 'symbiose', 'fusion', 'sync', 'kevin');
+    addTokens('twin', 'symbiose', 'fusion', 'sync', 'kevin', 'titane', 'coherence');
     pin(
       'digital_twin_symbiosis',
       'numeric_twin_detail',
+      'titane_identity_kernel_v31',
       'kevin_workflow_v30',
       'identity_profile'
     );
@@ -404,7 +416,12 @@ function expandQueryContext(query: string): {
 
   if (KB_BOOK_HINTS.some(hint => normalized.includes(hint))) {
     addTokens('book', 'livre', 'manuscrit', 'chapter', 'auteur', 'kevin');
-    pin('kevin_book_registry_v30', 'style_expression_kevin', 'kevin_owner_profile_v30');
+    pin(
+      'kevin_book_registry_v30',
+      'style_expression_kevin',
+      'titane_identity_kernel_v31',
+      'kevin_owner_profile_v30'
+    );
   }
 
   if (KB_CORPUS_HINTS.some(hint => normalized.includes(hint))) {
@@ -417,12 +434,18 @@ function expandQueryContext(query: string): {
       'module',
       'humain',
       'total',
-      'kevin'
+      'kevin',
+      'coherence',
+      'axe',
+      'deuxieme',
+      'vitesse',
+      'titane'
     );
     pin(
       'kevin_public_corpus_v30',
       'kevin_book_registry_v30',
       'style_expression_kevin',
+      'titane_identity_kernel_v31',
       'kevin_owner_profile_v30'
     );
   }

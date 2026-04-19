@@ -79,6 +79,8 @@ const DIGITAL_TWIN_V14_DETAIL: &str =
     include_str!("../../data/knowledge_base/default/digital_twin_v14_detail.json");
 const STYLE_EXPRESSION_KEVIN: &str =
     include_str!("../../data/knowledge_base/default/style_expression_kevin.json");
+const TITANE_IDENTITY_KERNEL_V31: &str =
+    include_str!("../../data/knowledge_base/default/titane_identity_kernel_v31.json");
 const INTELLIGENCE_EMOTIONNELLE: &str =
     include_str!("../../data/knowledge_base/default/intelligence_emotionnelle.json");
 const COHERENCE_IDENTITAIRE: &str =
@@ -526,6 +528,7 @@ impl DefaultKnowledgeBase {
         ("numeric_twin_detail", NUMERIC_TWIN_DETAIL),
         ("digital_twin_v14_detail", DIGITAL_TWIN_V14_DETAIL),
         ("style_expression_kevin", STYLE_EXPRESSION_KEVIN),
+        ("titane_identity_kernel_v31", TITANE_IDENTITY_KERNEL_V31),
         ("intelligence_emotionnelle", INTELLIGENCE_EMOTIONNELLE),
         ("coherence_identitaire", COHERENCE_IDENTITAIRE),
         ("realisme_conversationnel", REALISME_CONVERSATIONNEL),
@@ -1320,6 +1323,18 @@ mod tests {
         assert!(
             e.content.get("identity").is_some(),
             "identity_profile must have 'identity' field"
+        );
+    }
+
+    #[test]
+    fn test_knowledge_base_titane_identity_kernel_v31() {
+        let entry = DefaultKnowledgeBase::get_entry("titane_identity_kernel_v31");
+        assert!(entry.is_some(), "titane_identity_kernel_v31 must exist");
+        let e = entry.unwrap();
+        assert_eq!(e.version, "v30.1.35");
+        assert!(
+            e.content.get("titane_identity_kernel").is_some(),
+            "titane_identity_kernel_v31 must expose titane_identity_kernel"
         );
     }
 
