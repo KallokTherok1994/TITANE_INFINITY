@@ -8,10 +8,18 @@ BIN_DST="/usr/bin/titane-infinity"
 DESKTOP_SRC="$ROOT_DIR/titane-infinity.desktop"
 SYSTEM_DESKTOP_DIR="/usr/share/applications"
 SYSTEM_DESKTOP_DST1="$SYSTEM_DESKTOP_DIR/titane-infinity.desktop"
-SYSTEM_ICON_SRC="$ROOT_DIR/src-tauri/icons/128x128.png"
-SYSTEM_ICON_DIR="/usr/share/icons/hicolor/128x128/apps"
-SYSTEM_ICON_DST="$SYSTEM_ICON_DIR/titane-infinity.png"
 CANONICAL_VERSION="$(node -p "require('./package.json').version")"
+ICON_RESOLUTIONS=(128 256 512)
+
+install_system_icon_resolution() {
+  local resolution="$1"
+  local icon_source="$ROOT_DIR/src-tauri/icons/${resolution}x${resolution}.png"
+  local system_icon_dir="/usr/share/icons/hicolor/${resolution}x${resolution}/apps"
+
+  if [ -f "$icon_source" ]; then
+    sudo install -Dm644 "$icon_source" "$system_icon_dir/titane-infinity.png"
+  fi
+}
 
 # 1. Copier le binaire le plus récent
 if [ -f "$BIN_SRC" ]; then
@@ -29,14 +37,17 @@ if [ -f "$DESKTOP_SRC" ]; then
   sudo rm -f "$SYSTEM_DESKTOP_DIR/TITANE-Infinity.desktop"
 fi
 
-if [ -f "$SYSTEM_ICON_SRC" ]; then
-  sudo install -Dm644 "$SYSTEM_ICON_SRC" "$SYSTEM_ICON_DST"
-fi
+for resolution in "${ICON_RESOLUTIONS[@]}"; do
+  install_system_icon_resolution "$resolution"
+done
 
 # 4. Rafraîchir les caches desktop
 update-desktop-database "$HOME/.local/share/applications"
 sudo update-desktop-database "$SYSTEM_DESKTOP_DIR"
-sudo update-icon-caches /usr/share/icons/hicolor 2>/dev/null || true
+if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+  gtk-update-icon-cache -f -t "$HOME/.local/share/icons/hicolor" 2>/dev/null || true
+  sudo gtk-update-icon-cache -f -t /usr/share/icons/hicolor 2>/dev/null || true
+fi
 xdg-desktop-menu forceupdate || true
 
 echo "[TITANE∞] Post-build: lanceurs, icônes, cache desktop et binaire synchronisés."

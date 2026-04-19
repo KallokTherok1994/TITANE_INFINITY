@@ -37,6 +37,24 @@ if ! command -v adb &>/dev/null; then
   exit 1
 fi
 
+if ! command -v jq &>/dev/null; then
+  fail "ANDROID_JQ_FAIL — jq command not found. Install jq for runtime config validation."
+  echo ""
+  echo "═══════════════════════════════════════════════════════════════"
+  echo "  SUMMARY: ANDROID_BACKEND_FAIL — jq not available"
+  echo "═══════════════════════════════════════════════════════════════"
+  exit 1
+fi
+
+if ! command -v curl &>/dev/null; then
+  fail "ANDROID_CURL_FAIL — curl command not found. Install curl for Ollama reachability validation."
+  echo ""
+  echo "═══════════════════════════════════════════════════════════════"
+  echo "  SUMMARY: ANDROID_BACKEND_FAIL — curl not available"
+  echo "═══════════════════════════════════════════════════════════════"
+  exit 1
+fi
+
 DEVICE_COUNT=$(adb devices | grep -v "^$" | grep -v "List" | wc -l | tr -d ' ')
 if [[ "$DEVICE_COUNT" -gt 0 ]]; then
   pass "ADB_CONNECTED — $DEVICE_COUNT device(s) found"
@@ -80,10 +98,13 @@ echo ""
 # 4. Check Ollama LAN reachable from device perspective
 # ─────────────────────────────────────────────────────────────────
 echo "── Check 4: Ollama LAN URL Configuration ───────────────────────"
+OLLAMA_URL=""
+OLLAMA_MODEL=""
 if [[ "$RUNTIME_CONFIG" == "RUNTIME_CONFIG_NOT_FOUND" ]]; then
   fail "OLLAMA_LAN_FAIL — cannot check Ollama URL (runtime config unavailable)"
 else
   OLLAMA_URL=$(echo "$RUNTIME_CONFIG" | jq -r '.ollamaUrl // .ollama_url // .ollama_base_url // empty' 2>/dev/null || echo "")
+  OLLAMA_MODEL=$(echo "$RUNTIME_CONFIG" | jq -r '.ollamaModel // .ollama_model // empty' 2>/dev/null || echo "")
 
   if [[ -z "$OLLAMA_URL" ]]; then
     fail "OLLAMA_LAN_FAIL — ollamaUrl not found in runtime config"
@@ -92,11 +113,44 @@ else
   else
     pass "OLLAMA_LAN_OK — ollamaUrl=$OLLAMA_URL (non-loopback LAN address)"
   fi
+
+  if [[ -z "$OLLAMA_MODEL" ]]; then
+    fail "OLLAMA_MODEL_FAIL — ollamaModel not found in runtime config"
+  else
+    pass "OLLAMA_MODEL_OK — ollamaModel=$OLLAMA_MODEL"
+  fi
 fi
 echo ""
 
 # ─────────────────────────────────────────────────────────────────
-# 5. Summary
+# 5. Check configured Ollama endpoint is reachable and model is present
+# ─────────────────────────────────────────────────────────────────
+echo "── Check 5: Ollama Endpoint Reachability ───────────────────────"
+if [[ -z "$OLLAMA_URL" ]]; then
+  fail "OLLAMA_ENDPOINT_FAIL — cannot probe endpoint without ollamaUrl"
+elif [[ -z "$OLLAMA_MODEL" ]]; then
+  fail "OLLAMA_ENDPOINT_FAIL — cannot verify model inventory without ollamaModel"
+else
+  OLLAMA_TAGS_URL="${OLLAMA_URL%/}/api/tags"
+  OLLAMA_TAGS_RESPONSE=$(curl -fsS --max-time 10 "$OLLAMA_TAGS_URL" 2>/dev/null || echo "")
+
+  if [[ -z "$OLLAMA_TAGS_RESPONSE" ]]; then
+    fail "OLLAMA_ENDPOINT_FAIL — unable to reach $OLLAMA_TAGS_URL"
+  elif ! echo "$OLLAMA_TAGS_RESPONSE" | jq . >/dev/null 2>&1; then
+    fail "OLLAMA_ENDPOINT_FAIL — invalid JSON returned by $OLLAMA_TAGS_URL"
+  else
+    pass "OLLAMA_ENDPOINT_OK — endpoint reachable at $OLLAMA_TAGS_URL"
+    if echo "$OLLAMA_TAGS_RESPONSE" | jq -r '.models[]?.name' | grep -Fxq "$OLLAMA_MODEL"; then
+      pass "OLLAMA_MODEL_PRESENT_OK — model $OLLAMA_MODEL advertised by endpoint"
+    else
+      fail "OLLAMA_MODEL_PRESENT_FAIL — model $OLLAMA_MODEL missing from $OLLAMA_TAGS_URL inventory"
+    fi
+  fi
+fi
+echo ""
+
+# ─────────────────────────────────────────────────────────────────
+# 6. Summary
 # ─────────────────────────────────────────────────────────────────
 echo "═══════════════════════════════════════════════════════════════"
 echo "  SUMMARY"

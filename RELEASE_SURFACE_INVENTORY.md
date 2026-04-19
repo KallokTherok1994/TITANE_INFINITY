@@ -1,5 +1,28 @@
 # RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.0.3 — Historical baseline preserved below)
 
+## Addendum — 2026-04-19 — Linux System Launcher User-Home Truth
+
+| Surface | Truth | Status |
+|---|---|---|
+| `/usr/share/applications/titane-infinity.desktop` | Version and icon are synchronized to v31.0.3, but the existing `Logs` / `Config` actions were generated once under `/root/.titane` before the sudo-home fix landed | BLOCKED_SUDO_RERUN_REQUIRED |
+| `scripts/update-desktop-icon.sh` | Now resolves the real target user home from `SUDO_USER` before generating launcher actions | PASS |
+| `tests/unit/scripts/updateDesktopIconScripts.test.ts` | Locks sudo-home preservation in the launcher generator | PASS |
+
+> This addendum records the follow-up fix after the first successful system icon sync. The host-wide launcher needs one more sudo rerun of the canonical post-build script so the already-updated v31.0.3 entry regenerates `Logs` and `Config` against the real user home instead of `/root/.titane`.
+
+## Addendum — 2026-04-19 — Linux Menu And Dock Icon Refresh Truth
+
+| Surface | Truth | Status |
+|---|---|---|
+| `~/.local/share/applications/titane-infinity.desktop` | Refreshed with `Name=TITANE∞ v31.0.3`, `Exec=/usr/bin/titane-infinity`, `Icon=titane-infinity` | PASS |
+| `~/.local/share/icons/hicolor/128x128/apps/titane-infinity.png` | Refreshed from repo canonical icon set | PASS |
+| `~/.local/share/icons/hicolor/256x256/apps/titane-infinity.png` | Refreshed from repo canonical icon set | PASS |
+| `~/.local/share/icons/hicolor/512x512/apps/titane-infinity.png` | Refreshed from repo canonical icon set | PASS |
+| `/usr/share/applications/titane-infinity.desktop` | System refresh still requires interactive sudo | BLOCKED_SUDO_REQUIRED |
+| `/usr/share/icons/hicolor/*/apps/titane-infinity.png` | System multi-resolution refresh still requires interactive sudo | BLOCKED_SUDO_REQUIRED |
+
+> This addendum seals the local Linux menu/dock icon refresh truth for the current session. The user-scoped launcher and hicolor icon set are refreshed and cached, while host-wide launcher/icon replication remains blocked until interactive sudo is available.
+
 ## Addendum — 2026-04-19 — TITANE∞ v31.0.3 Desktop Publication Truth
 
 Canonical target version: **31.0.3**

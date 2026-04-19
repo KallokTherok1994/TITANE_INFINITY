@@ -21,14 +21,30 @@ echo ""
 PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 ICON_DIR="$PROJECT_DIR/src-tauri/icons"
 DESKTOP_FILE="$PROJECT_DIR/titane-infinity.desktop"
-DESKTOP_INSTALL_DIR="$HOME/.local/share/applications"
-LOCAL_ICON_DIR="$HOME/.local/share/icons/hicolor/128x128/apps"
 SYSTEM_DESKTOP_DIR="/usr/share/applications"
 SYSTEM_DESKTOP_FILE="$SYSTEM_DESKTOP_DIR/titane-infinity.desktop"
-SYSTEM_ICON_DIR="/usr/share/icons/hicolor/128x128/apps"
 LAUNCHER_SCRIPT="$PROJECT_DIR/launch-titane.sh"
 ICON_ID="titane-infinity"
-SYSTEM_ICON_FILE="$SYSTEM_ICON_DIR/${ICON_ID}.png"
+
+ICON_RESOLUTIONS=(128 256 512)
+
+resolve_target_user_home() {
+    if [[ -n "${SUDO_USER:-}" ]] && command -v getent >/dev/null 2>&1; then
+        local sudo_home
+        sudo_home="$(getent passwd "$SUDO_USER" | cut -d: -f6)"
+        if [[ -n "$sudo_home" ]]; then
+            printf '%s' "$sudo_home"
+            return 0
+        fi
+    fi
+
+    printf '%s' "$HOME"
+}
+
+TARGET_USER_HOME="$(resolve_target_user_home)"
+DESKTOP_INSTALL_DIR="$TARGET_USER_HOME/.local/share/applications"
+LOCAL_ICON_ROOT="$TARGET_USER_HOME/.local/share/icons/hicolor"
+TARGET_CONFIG_DIR="$TARGET_USER_HOME/.titane"
 
 run_with_root_if_available() {
     if [[ "${EUID:-$(id -u)}" -eq 0 ]]; then
@@ -72,9 +88,35 @@ extract_installed_package_version() {
     fi
 }
 
+copy_icon_resolution() {
+    local icon_root="$1"
+    local resolution="$2"
+    local icon_source="$ICON_DIR/${resolution}x${resolution}.png"
+
+    if [[ ! -f "$icon_source" ]]; then
+        return 0
+    fi
+
+    local icon_target_dir="$icon_root/${resolution}x${resolution}/apps"
+    mkdir -p "$icon_target_dir"
+    install -Dm644 "$icon_source" "$icon_target_dir/${ICON_ID}.png"
+}
+
+sync_system_icon_resolution() {
+    local resolution="$1"
+    local icon_source="$ICON_DIR/${resolution}x${resolution}.png"
+    local icon_target_dir="/usr/share/icons/hicolor/${resolution}x${resolution}/apps"
+
+    if [[ ! -f "$icon_source" ]]; then
+        return 0
+    fi
+
+    run_with_root_if_available install -Dm644 "$icon_source" "$icon_target_dir/${ICON_ID}.png"
+}
+
 # Créer le répertoire si nécessaire
 mkdir -p "$DESKTOP_INSTALL_DIR"
-mkdir -p "$LOCAL_ICON_DIR"
+mkdir -p "$LOCAL_ICON_ROOT"
 
 echo -e "${YELLOW}[1/4]${NC} Mise à jour du fichier .desktop avec chemins actuels..."
 
@@ -106,7 +148,7 @@ else
 fi
 
 # Assurer les répertoires de logs attendus par l'action "Logs"
-mkdir -p "$HOME/.titane/logs"
+mkdir -p "$TARGET_CONFIG_DIR/logs"
 chmod +x "$LAUNCHER_SCRIPT" 2>/dev/null || true
 
 # Si on lance une AppImage, vérifier si FUSE est utilisable.
@@ -136,7 +178,9 @@ fi
 
 ICON_VALUE="$ICON_PATH"
 if [ -f "$ICON_PATH" ]; then
-    cp "$ICON_PATH" "$LOCAL_ICON_DIR/${ICON_ID}.png"
+    for resolution in "${ICON_RESOLUTIONS[@]}"; do
+        copy_icon_resolution "$LOCAL_ICON_ROOT" "$resolution"
+    done
     ICON_VALUE="$ICON_ID"
 fi
 
@@ -193,11 +237,11 @@ Exec=$DEV_EXEC
 
 [Desktop Action Logs]
 Name=📋 View Logs
-Exec=gnome-terminal -- tail -f $HOME/.titane/logs/titane.log
+Exec=gnome-terminal -- tail -f $TARGET_CONFIG_DIR/logs/titane.log
 
 [Desktop Action Config]
 Name=⚙️ Configuration
-Exec=xdg-open $HOME/.titane/
+Exec=xdg-open $TARGET_CONFIG_DIR/
 EOF
 
 echo -e "${YELLOW}[2/4]${NC} Copie du fichier .desktop dans les applications..."
@@ -208,9 +252,9 @@ rm -f "$DESKTOP_INSTALL_DIR/TITANE-Infinity.desktop"
 SYSTEM_SYNC_STATUS="SKIPPED"
 if run_with_root_if_available install -Dm644 "$DESKTOP_FILE" "$SYSTEM_DESKTOP_FILE"; then
     run_with_root_if_available rm -f "$SYSTEM_DESKTOP_DIR/TITANE-Infinity.desktop" || true
-    if [ -f "$ICON_PATH" ]; then
-        run_with_root_if_available install -Dm644 "$ICON_PATH" "$SYSTEM_ICON_FILE" || true
-    fi
+    for resolution in "${ICON_RESOLUTIONS[@]}"; do
+        sync_system_icon_resolution "$resolution" || true
+    done
     SYSTEM_SYNC_STATUS="UPDATED"
 else
     SYSTEM_SYNC_STATUS="BLOCKED_SUDO_REQUIRED"

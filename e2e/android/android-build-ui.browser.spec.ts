@@ -30,6 +30,25 @@ const AR20_REQUIRED_SELECTORS = [
   '[data-testid="chat-send"]',
 ];
 
+type E2EChatScenario = 'success' | 'rate_limit';
+
+type E2EChatKnowledgeSeedEntry = {
+  title: string;
+  category: string;
+  content: string;
+  relevance: number;
+  tags: string[];
+};
+
+type E2EInlineCitation = {
+  url: string;
+  title?: string | null;
+  excerpt: string;
+  accessed_at: string;
+  locator?: string | null;
+  locator_text?: string | null;
+};
+
 async function dispatchChatSend(
   button: import('@playwright/test').Locator
 ): Promise<void> {
@@ -39,6 +58,95 @@ async function dispatchChatSend(
     }
     node.click();
   });
+}
+
+async function enableE2EChatMock(page: import('@playwright/test').Page): Promise<void> {
+  await page.evaluate(() => {
+    (window as { __TITANE_E2E_CHAT_MOCK__?: boolean }).__TITANE_E2E_CHAT_MOCK__ = true;
+    (window as { __TITANE_E2E_CHAT_CONV_SEQ__?: number }).__TITANE_E2E_CHAT_CONV_SEQ__ =
+      0;
+    (
+      window as { __TITANE_E2E_CHAT_KNOWLEDGE_SEED__?: E2EChatKnowledgeSeedEntry[] }
+    ).__TITANE_E2E_CHAT_KNOWLEDGE_SEED__ = [];
+    (
+      window as { __TITANE_E2E_CHAT_MEMORY_LOG__?: unknown[] }
+    ).__TITANE_E2E_CHAT_MEMORY_LOG__ = [];
+    (
+      window as { __TITANE_E2E_CHAT_SCENARIO__?: E2EChatScenario }
+    ).__TITANE_E2E_CHAT_SCENARIO__ = 'success';
+    (
+      window as { __TITANE_E2E_WEB_RESEARCH_MOCK__?: boolean }
+    ).__TITANE_E2E_WEB_RESEARCH_MOCK__ = false;
+    (
+      window as { __TITANE_E2E_WEB_RESEARCH_REPORT__?: unknown }
+    ).__TITANE_E2E_WEB_RESEARCH_REPORT__ = undefined;
+  });
+}
+
+async function setE2EChatScenario(
+  page: import('@playwright/test').Page,
+  scenario: E2EChatScenario
+): Promise<void> {
+  await page.evaluate(value => {
+    (
+      window as { __TITANE_E2E_CHAT_SCENARIO__?: E2EChatScenario }
+    ).__TITANE_E2E_CHAT_SCENARIO__ = value;
+  }, scenario);
+}
+
+async function setE2EChatKnowledgeSeed(
+  page: import('@playwright/test').Page,
+  seed: E2EChatKnowledgeSeedEntry[]
+): Promise<void> {
+  await page.evaluate(value => {
+    (
+      window as { __TITANE_E2E_CHAT_KNOWLEDGE_SEED__?: E2EChatKnowledgeSeedEntry[] }
+    ).__TITANE_E2E_CHAT_KNOWLEDGE_SEED__ = value;
+    (
+      window as { __TITANE_E2E_CHAT_MEMORY_LOG__?: unknown[] }
+    ).__TITANE_E2E_CHAT_MEMORY_LOG__ = [];
+  }, seed);
+}
+
+async function enableInlineWebResearchMock(
+  page: import('@playwright/test').Page,
+  citations: E2EInlineCitation[]
+): Promise<void> {
+  await page.evaluate(value => {
+    (
+      window as { __TITANE_E2E_WEB_RESEARCH_MOCK__?: boolean }
+    ).__TITANE_E2E_WEB_RESEARCH_MOCK__ = true;
+    (
+      window as { __TITANE_E2E_WEB_RESEARCH_REPORT__?: unknown }
+    ).__TITANE_E2E_WEB_RESEARCH_REPORT__ = {
+      answer: {
+        answer: 'Synthese mock inline web research.',
+        citations: value,
+        limitations: [],
+        trace_id: 'trace-android-inline-citations',
+        sources_count: value.length,
+        retrieved_passages_count: value.length,
+      },
+      trace: {
+        trace_id: 'trace-android-inline-citations',
+        markers: ['M_CITATIONS_BUILD_OK', 'VERDICT_PASS'],
+        errors: [],
+      },
+    };
+  }, citations);
+}
+
+async function submitChatMessage(
+  page: import('@playwright/test').Page,
+  message: string
+): Promise<void> {
+  const chatInput = page.getByTestId('chat-input');
+  const sendButton = page.getByTestId('chat-send');
+
+  await expect(chatInput).toBeVisible({ timeout: 15000 });
+  await expect(sendButton).toBeVisible({ timeout: 15000 });
+  await chatInput.fill(message);
+  await dispatchChatSend(sendButton);
 }
 
 function buildSeededConversationMessages(pairCount = 18) {
@@ -1054,6 +1162,243 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
       beforeScroll,
       ctaMetrics,
       afterClick,
+      project: test.info().project.name,
+      criticalErrors,
+      criticalPageErrors,
+    });
+
+    expect(criticalErrors).toHaveLength(0);
+    expect(criticalPageErrors).toHaveLength(0);
+  });
+
+  // ─── T18: Runtime truth under mobile rate limit ─────────────────────────
+  test('T18 - mobile runtime surfaces quota degradation honestly', async ({ page }) => {
+    const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
+
+    await awaitAppReady(page);
+    await page.getByTestId('tab-conversation').click();
+    await expect(page.getByTestId('page-conversation')).toBeVisible({ timeout: 15000 });
+
+    await enableE2EChatMock(page);
+    await setE2EChatScenario(page, 'rate_limit');
+    await submitChatMessage(page, 'Lance une exploration GitHub');
+
+    const readRateLimitRuntimeProof = async () => {
+      return page.evaluate(() => {
+        const panel = document.querySelector('[data-testid="chat-runtime-state"]');
+        const summary = document.querySelector('[data-testid="chat-runtime-summary"]');
+        const badge = Array.from(
+          document.querySelectorAll('[data-testid="chat-runtime-badge"]')
+        )
+          .map(node => node.textContent?.trim() ?? '')
+          .find(text => text.includes('RATE_LIMIT'));
+
+        return {
+          providerReason: panel?.getAttribute('data-provider-reason') ?? null,
+          providerMode: panel?.getAttribute('data-provider-mode') ?? null,
+          networkUsed: panel?.getAttribute('data-network-used') ?? null,
+          summary: summary?.textContent?.trim() ?? null,
+          badgeText: badge ?? null,
+        };
+      });
+    };
+
+    await expect.poll(readRateLimitRuntimeProof, {
+      timeout: 15000,
+      intervals: [250, 500, 1000],
+    }).toMatchObject({
+        providerReason: 'RATE_LIMIT',
+        providerMode: 'OFFLINE',
+        networkUsed: 'true',
+      });
+
+    const runtimeProof = await readRateLimitRuntimeProof();
+
+    expect(runtimeProof.summary ?? '').toContain('Reason: RATE_LIMIT');
+    expect(runtimeProof.summary ?? '').toContain('Provider: github-copilot');
+    expect(runtimeProof.badgeText ?? '').toContain('RATE_LIMIT');
+    await expect(page.getByTestId('chat-message-content').last()).not.toContainText(
+      '[MOCK_OK]'
+    );
+
+    const filteredErrors = filterKnownConsoleNoise(consoleErrors);
+    const criticalErrors = extractCriticalConsoleErrors(filteredErrors);
+    const criticalPageErrors = extractCriticalPageErrors(pageErrors);
+
+    writeJsonArtifact(ARTIFACT_DIR, 'T18_rate_limit_runtime_truth.json', {
+      runtimeTruth: runtimeProof,
+      project: test.info().project.name,
+      criticalErrors,
+      criticalPageErrors,
+    });
+
+    expect(criticalErrors).toHaveLength(0);
+    expect(criticalPageErrors).toHaveLength(0);
+  });
+
+  // ─── T19: Mobile memory + knowledge runtime tags ────────────────────────
+  test('T19 - mobile chat renders knowledge and memory runtime proof tags', async ({
+    page,
+  }) => {
+    const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
+
+    await awaitAppReady(page);
+    await page.getByTestId('tab-conversation').click();
+    await expect(page.getByTestId('page-conversation')).toBeVisible({ timeout: 15000 });
+
+    await enableE2EChatMock(page);
+    await setE2EChatKnowledgeSeed(page, [
+      {
+        title: 'One Door Governance',
+        category: 'architecture',
+        content:
+          'All network access must flow through UI -> IPC -> services -> gateway -> external.',
+        relevance: 0.96,
+        tags: ['architecture', 'network'],
+      },
+    ]);
+
+    await submitChatMessage(page, 'Active la connaissance runtime One Door');
+
+    const readMockAssistantProof = async () => {
+      return page.evaluate(() => {
+        const assistants = document.querySelectorAll(
+          '[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]'
+        );
+        const lastAssistant = assistants[assistants.length - 1];
+        return {
+          memoryLog:
+            (
+              window as {
+                __TITANE_E2E_CHAT_MEMORY_LOG__?: Array<{
+                  userMessage?: string;
+                  knowledgeTitles?: string[];
+                }>;
+              }
+            ).__TITANE_E2E_CHAT_MEMORY_LOG__ || [],
+          assistantText: lastAssistant?.textContent?.trim() ?? '',
+        };
+      });
+    };
+
+    await expect.poll(readMockAssistantProof, {
+      timeout: 15000,
+      intervals: [250, 500, 1000],
+    }).toMatchObject({
+        memoryLog: [
+          expect.objectContaining({
+            userMessage: 'Active la connaissance runtime One Door',
+            knowledgeTitles: ['One Door Governance'],
+          }),
+        ],
+      });
+
+    const firstAssistantProof = await readMockAssistantProof();
+
+    expect(firstAssistantProof.assistantText).toContain('MOCKOK');
+    expect(firstAssistantProof.assistantText).toContain('Active la connaissance runtime One Door');
+    expect(firstAssistantProof.assistantText).toContain('MOCKKNOWLEDGE');
+    expect(firstAssistantProof.assistantText).toContain('One Door Governance');
+
+    await submitChatMessage(page, 'Rappelle le dernier echange memoire');
+    await expect.poll(readMockAssistantProof, {
+      timeout: 15000,
+      intervals: [250, 500, 1000],
+    }).toMatchObject({
+        memoryLog: [
+          expect.anything(),
+          expect.objectContaining({
+            userMessage: 'Rappelle le dernier echange memoire',
+          }),
+        ],
+      });
+
+    const runtimeProof = await readMockAssistantProof();
+
+    expect(runtimeProof.memoryLog).toHaveLength(2);
+    expect(runtimeProof.memoryLog[0]).toEqual(
+      expect.objectContaining({
+        userMessage: 'Active la connaissance runtime One Door',
+        knowledgeTitles: ['One Door Governance'],
+      })
+    );
+    expect(runtimeProof.assistantText).toContain('MOCKMEMORY');
+    expect(runtimeProof.assistantText).toContain(
+      'Active la connaissance runtime One Door'
+    );
+    const filteredErrors = filterKnownConsoleNoise(consoleErrors);
+    const criticalErrors = extractCriticalConsoleErrors(filteredErrors);
+    const criticalPageErrors = extractCriticalPageErrors(pageErrors);
+
+    writeJsonArtifact(ARTIFACT_DIR, 'T19_knowledge_memory_runtime_truth.json', {
+      runtimeProof,
+      project: test.info().project.name,
+      criticalErrors,
+      criticalPageErrors,
+    });
+
+    expect(criticalErrors).toHaveLength(0);
+    expect(criticalPageErrors).toHaveLength(0);
+  });
+
+  // ─── T20: Mobile inline online citations ────────────────────────────────
+  test('T20 - mobile chat renders inline web research citations on the canonical surface', async ({
+    page,
+  }) => {
+    const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
+
+    await awaitAppReady(page);
+    await page.getByTestId('tab-conversation').click();
+    await expect(page.getByTestId('page-conversation')).toBeVisible({ timeout: 15000 });
+
+    await enableE2EChatMock(page);
+    await enableInlineWebResearchMock(page, [
+      {
+        url: 'https://example.com/source-a',
+        title: 'Source A',
+        excerpt: 'Extrait gouverne A',
+        accessed_at: '2026-04-18T10:00:00Z',
+        locator_text: 'p=2, c≈40',
+      },
+      {
+        url: 'https://example.com/source-b',
+        title: 'Source B',
+        excerpt: 'Extrait gouverne B',
+        accessed_at: '2026-04-18T10:02:00Z',
+        locator: '§4',
+      },
+    ]);
+
+    await submitChatMessage(page, 'Fais une recherche web en ligne sur TITANE');
+
+    const citationsContainer = page.locator('[data-testid^="message-citations-"]').last();
+    await expect(citationsContainer).toBeVisible({ timeout: 15000 });
+    await expect(citationsContainer).toContainText('Sources en ligne');
+    await expect(citationsContainer.getByText('Source A')).toBeVisible();
+    await expect(citationsContainer.getByText('Extrait gouverne A')).toBeVisible();
+    await expect(citationsContainer.getByText('p=2, c≈40')).toBeVisible();
+    await expect(
+      citationsContainer.getByText('accessed: 2026-04-18T10:00:00Z')
+    ).toBeVisible();
+    await expect(citationsContainer.getByText('Source B')).toBeVisible();
+
+    const citationProof = await page.evaluate(() => {
+      const container = document.querySelector('[data-testid^="message-citations-"]');
+      const citations = Array.from(
+        document.querySelectorAll('[data-testid^="message-citation-"]')
+      ).map(node => node.textContent?.trim() ?? '');
+      return {
+        containerText: container?.textContent?.trim() ?? null,
+        citations,
+      };
+    });
+
+    const filteredErrors = filterKnownConsoleNoise(consoleErrors);
+    const criticalErrors = extractCriticalConsoleErrors(filteredErrors);
+    const criticalPageErrors = extractCriticalPageErrors(pageErrors);
+
+    writeJsonArtifact(ARTIFACT_DIR, 'T20_inline_citations_runtime_truth.json', {
+      citationProof,
       project: test.info().project.name,
       criticalErrors,
       criticalPageErrors,

@@ -7,6 +7,8 @@ const PACKAGE_NAME = 'com.titane.infinity';
 const ACTIVITY_NAME = `${PACKAGE_NAME}/.MainActivity`;
 const ARTIFACT_DIR = path.resolve(process.cwd(), 'reports/e2e/android-ui/device');
 const REQUESTED_DEVICE_ID = process.env.TITANE_ANDROID_DEVICE_ID?.trim() || null;
+const RUNTIME_CONFIG_PATH =
+  '/data/user/0/com.titane.infinity/files/titane-infinity/config/runtime_settings_v1.json';
 
 function runAdb(args: string[]) {
   return spawnSync('adb', args, {
@@ -48,6 +50,18 @@ function focusedWindow(deviceId: string): string {
   }
 
   return text;
+}
+
+function readRuntimeConfig(deviceId: string) {
+  return runAdb([
+    '-s',
+    deviceId,
+    'shell',
+    'run-as',
+    PACKAGE_NAME,
+    'cat',
+    RUNTIME_CONFIG_PATH,
+  ]);
 }
 
 test.describe('Android Build UI - Real Device Smoke', () => {
@@ -127,10 +141,37 @@ test.describe('Android Build UI - Real Device Smoke', () => {
     const packagePathRaw = packagePath.stdout.trim();
     const launchRaw = launch.stdout.trim();
     const selectedDevice = String(deviceId);
+    const runtimeConfigResult = readRuntimeConfig(selectedDevice);
+    expect(
+      runtimeConfigResult.status,
+      runtimeConfigResult.stderr || runtimeConfigResult.stdout
+    ).toBe(0);
+
+    const runtimeConfigText = runtimeConfigResult.stdout.trim();
+    expect(runtimeConfigText.length).toBeGreaterThan(0);
+
+    const runtimeConfig = JSON.parse(runtimeConfigText) as {
+      ollamaUrl?: string;
+      ollama_url?: string;
+      ollama_base_url?: string;
+      ollamaModel?: string;
+      ollama_model?: string;
+    };
+    const ollamaUrl =
+      runtimeConfig.ollamaUrl ||
+      runtimeConfig.ollama_url ||
+      runtimeConfig.ollama_base_url ||
+      '';
+    const ollamaModel = runtimeConfig.ollamaModel || runtimeConfig.ollama_model || '';
+
+    expect(ollamaUrl).toBeTruthy();
+    expect(ollamaUrl).not.toMatch(/(^|:\/\/)(127\.0\.0\.1|localhost)(:|\/|$)/);
+    expect(ollamaModel.trim().length).toBeGreaterThan(0);
 
     writeTextArtifact(ARTIFACT_DIR, 'focus.txt', focusRaw);
     writeTextArtifact(ARTIFACT_DIR, 'ui_dump.xml', xml);
     writeTextArtifact(ARTIFACT_DIR, 'adb_devices.txt', runAdb(['devices']).stdout.trim());
+    writeTextArtifact(ARTIFACT_DIR, 'runtime_settings_v1.json', runtimeConfigText);
 
     writeJsonArtifact(ARTIFACT_DIR, 'page_classification.json', {
       platform: 'android-device',
@@ -140,6 +181,7 @@ test.describe('Android Build UI - Real Device Smoke', () => {
       requestedDeviceId: REQUESTED_DEVICE_ID,
       launchOutput: launchRaw,
       packagePath: packagePathRaw,
+      runtimeConfigPath: RUNTIME_CONFIG_PATH,
       startedAt: nowIso(),
     });
 
@@ -154,12 +196,20 @@ test.describe('Android Build UI - Real Device Smoke', () => {
     });
 
     writeJsonArtifact(ARTIFACT_DIR, 'OFFLINE5.json', {
-      note: 'Offline indicators are validated in browser lane; device lane validates install+focus+hierarchy.',
+      note: 'Offline indicators are validated in browser lane; device lane validates install+focus+hierarchy+runtime-config.',
     });
 
     writeJsonArtifact(ARTIFACT_DIR, 'navigation.json', {
       focusDetected: focusRaw.includes(PACKAGE_NAME),
       dumpsysCaptured: true,
+      runtimeConfigDetected: true,
+    });
+
+    writeJsonArtifact(ARTIFACT_DIR, 'runtime_config.json', {
+      runtimeConfigPath: RUNTIME_CONFIG_PATH,
+      ollamaUrl,
+      ollamaModel,
+      selectedDevice,
     });
 
     writeJsonArtifact(ARTIFACT_DIR, 'stability.json', {
@@ -168,6 +218,7 @@ test.describe('Android Build UI - Real Device Smoke', () => {
       packagePathStatus: packagePath.status,
       dumpStatus: dumpCmd.status,
       catStatus: dumpContent.status,
+      runtimeConfigStatus: runtimeConfigResult.status,
       focusLinesDetected: focusRaw.split(/\r?\n/).length,
     });
   });
